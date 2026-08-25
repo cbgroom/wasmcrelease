@@ -1,0 +1,20 @@
+schema: wasmc-release-maintainer-skills/v1
+bootstrap: .agents/MAINTAINERS.md
+handoff: .agents/HANDOFF.md
+
+selection:
+  - Read only the smallest Skill set needed for the current task.
+  - Use release-integrity for artifacts, versions, manifests, checksums, or publication.
+  - Use release-agent-docs for AGENTS.md, LANGUAGE.md, examples, or capability claims.
+  - Use release-host-integration for JavaScript, raw Wasm, Rust, Wasmtime, or Host guidance.
+
+skills:
+  - id: release-integrity
+    path: .agents/skills/release-integrity
+    description: Preserve immutable release identity, source-authority boundaries, and package integrity.
+  - id: release-agent-docs
+    path: .agents/skills/release-agent-docs
+    description: Maintain a zero-context Agent writing journey grounded in shipped capability and executable examples.
+  - id: release-host-integration
+    path: .agents/skills/release-host-integration
+    description: Maintain truthful JavaScript, raw Wasm, Rust, Wasmtime, and explicit Host integration guidance.

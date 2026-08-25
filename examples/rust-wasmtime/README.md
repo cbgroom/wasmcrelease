@@ -10,3 +10,5 @@ randomness, process, secret, or device imports to guest modules.
 
 This is executable reference code, not a stable Rust SDK API. The preview does
 not yet expose a general managed-source-to-FastAPI-bundle compiler entrypoint.
+See [`../../HOSTING.md`](../../HOSTING.md) for Host selection and
+[`../../FASTAPI.md`](../../FASTAPI.md) for the exact public boundary.

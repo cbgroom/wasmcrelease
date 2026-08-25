@@ -1,9 +1,15 @@
 # Writing WAsmC
 
-This is the public starting point for an Agent that needs to write WAsmC.
+This is the public language guide for an Agent that needs to write WAsmC.
 WAsmC combines a WIT-shaped declaration shell, Rust-familiar expressions, and
 standard Core WebAssembly output. It is not full Rust and does not use Cargo,
 modules, macros, traits, references, or a borrow-checker syntax.
+
+For `v0.0.2`, use this guide for direct Core-lane programs: scalars, control
+flow, private functions, flattened structured values, and explicit Host
+imports. New managed source using `string`, lists, maps, or identity-bearing
+objects is not publicly buildable in this release; read `FASTAPI.md` instead
+of guessing provider operations.
 
 Start by copying a complete program, compiling it, and changing one behavior at
 a time. The five numbered teaching programs are exercised by
@@ -116,7 +122,7 @@ Core import.
 
 ## Types
 
-The direct public compiler is the clearest starting point for these types:
+The direct public compiler supports these Core-lane type families:
 
 ```text
 s8 u8 s16 u16 s32 u32 i64 f32 f64 bool
@@ -126,10 +132,22 @@ record tuple option result variant enum
 Use fixed-width names. `s32` is the normal signed integer; `u32` is suitable
 for non-negative sizes and indices. There is no target-dependent `usize`.
 
-Common structured declarations and constructors:
+Put named WIT-shaped declarations inside the interface that uses them:
 
 ```wasmc
-record Point { x: s32, y: s32 }
+interface api {
+  record point { x: s32, y: s32 }
+  enum color { red, green, blue }
+
+  sum: func(value: point) -> s32 {
+    return value.x + value.y;
+  }
+}
+```
+
+Common value constructors are:
+
+```wasmc
 
 { x: 4, y: 5 }
 tuple(4, true)
@@ -147,11 +165,10 @@ objects. Keep the first runnable entrypoint scalar unless the host already
 knows and verifies the exact ABI.
 
 `string`, `list<T>`, maps, identity-bearing mutable objects, and resource
-methods belong to the managed FastAPI path. WAsmC source support exists for
-reviewed managed families, but the public compiler facade in this release does
-not yet construct and link a general managed-source FastAPI product bundle.
+methods belong to the managed FastAPI path. The public compiler facade in this
+release does not construct and link a general managed-source FastAPI product bundle.
 Do not guess provider calls or manipulate handles, layouts, reference counts,
-Store nonces, or activation plans in generated source.
+Store nonces, or lifecycle plans in generated source. See `FASTAPI.md`.
 
 ## Variables and assignments
 
