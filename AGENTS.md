@@ -1,153 +1,103 @@
-# WAsmC agent guide
+# WAsmC public Agent entrypoint
 
-This repository is the public, source-free distribution channel for WAsmC.
-Use this file when an agent needs to integrate the compiler or explain its
-current capabilities. The private compiler repository remains the build and
-language authority; do not infer missing semantics from these binary packages.
+This is the source-free public distribution of WAsmC. Start here when you need
+to write a WAsmC program or embed the compiler. The immutable current release
+is `v0.0.2`; pin that tag or its full commit, not `main` or `latest`.
 
-If you need to write WAsmC source, read `LANGUAGE.md` first and then run
-`node examples/agent-start/run.mjs`. Do not infer the language from Rust alone.
+## Pick your task
 
-## Choose the smallest integration
+| Task | Start here | Current status |
+|---|---|---|
+| Write scalar/control-flow/Core-lane WAsmC | [Language guide](LANGUAGE.md), then `node examples/agent-start/run.mjs` | Shipped and executable |
+| Compile from JavaScript/TypeScript | [JavaScript Host path](HOSTING.md#javascript) | Shipped |
+| Embed raw compiler Core Wasm | [Raw compiler ABI](HOSTING.md#raw-compiler-abi) | Shipped |
+| Integrate from Rust/Wasmtime | [Rust demo](examples/rust-wasmtime) | Executable demo, not an SDK |
+| Use `string`, `list<T>`, maps, or managed objects from new source | [FastAPI availability](FASTAPI.md) | Not available in `v0.0.2` |
+| Maintain this public repository | [Maintainer bootstrap](.agents/MAINTAINERS.md) | Maintainer-only guidance |
 
-- JavaScript, TypeScript, Node.js, Bun, Deno, or a browser: use
-  `dist/wasmc.mjs` with `dist/wasmc_compiler.wasm` beside it.
-- Rust native/server code: start from `examples/rust-wasmtime`. It uses plain
-  Wasmtime and is executable reference code, not a published WAsmC SDK crate.
-- Another WebAssembly host: embed `dist/wasmc_compiler.wasm` and implement the
-  compiler ABI described below.
-- Managed records, strings, lists, maps, options, results, or variants: also
-  use the exact `dist/fastapi_core.wasm` and `dist/fastapi_core.json` shipped in
-  the same candidate. Do not mix provider bytes from another version.
+Do not infer the language from Rust alone. WAsmC uses a WIT-shaped declaration
+shell and Rust-familiar executable expressions, but it is not full Rust.
 
-## Integrity and version selection
+## Run before changing anything
 
-The current formal initial-development release is `v0.0.2`. Before consuming
-any release:
-
-1. Resolve and record the full 40-character public Git commit.
-2. Fetch files from that commit, never from `main`, `latest`, or a version
-   range when immutable bytes matter.
-3. Verify every selected file against `SHA256SUMS` and `manifest.json`.
-4. Keep compiler, JavaScript facade, FastAPI Core, and metadata from one commit.
-
-The jsDelivr form is:
-
-```text
-https://cdn.jsdelivr.net/gh/cbgroom/wasmcrelease@<FULL_COMMIT>/<PATH>
+```bash
+node examples/agent-start/run.mjs
 ```
 
-`package-index.json.latest` is a mutable discovery pointer. Its selected entry
-in `versions` identifies the immutable tag. Version `0.0.x` is formally
-released but not API-stable; do not turn `latest` into a compatibility claim.
+Expected: five `PASS` lines. This compiles the checked-in programs with the
+published compiler, verifies imports, instantiates the output, and checks exact
+results. Then copy the nearest `.wasmc` example and change one behavior at a time.
 
-## JavaScript entrypoint
+## Smallest complete program
 
-The facade exports `createCompiler`, `compile`, `compilePackage`,
-`flattenWasmcPackage`, `inspectWasm`, `loadFastApiCoreBytes`, and
-`FASTAPI_CORE_URL`.
+```wasmc
+package local:add;
+
+interface api {
+  run: func(a: s32, b: s32) -> s32 {
+    return a + b * 2;
+  }
+}
+
+world app { export api; }
+```
+
+Compile and run it in JavaScript:
 
 ```js
-import { compile } from "./dist/wasmc.mjs";
-
-const source = `package local:add;
-interface api {
-  run: func(a: s32, b: s32) -> s32 { return a + b * 2; }
-}
-world app { export api; }
-`;
+import { compile, inspectWasm } from "./dist/wasmc.mjs";
 
 const wasm = await compile(source);
-const { instance } = await WebAssembly.instantiate(wasm, {});
+const inspected = inspectWasm(wasm);
+if (inspected.imports.length !== 0) throw new Error("unexpected authority");
+const instance = await WebAssembly.instantiate(inspected.module, {});
 console.log(instance.exports.run(5, 6)); // 17
 ```
 
-`compilePackage(files)` sorts `{name, source}` entries by UTF-8 file name,
-concatenates their source, and performs an ordinary compilation. Despite its
-name, it does not currently construct or link a FastAPI product bundle.
+## `v0.0.2` capability contract
 
-## Raw compiler ABI
+| Capability | Availability | Public proof |
+|---|---|---|
+| `package`, `interface`, `world`, exported functions | Shipped | numbered examples |
+| fixed-width scalars, expressions, locals, assignment | Shipped | examples 01-03 |
+| `if`, `while`, `break`, `continue`, `return` | Shipped | example 02 |
+| private top-level functions | Shipped | example 03 |
+| Core-lane record/tuple/option/result/variant/enum values | Shipped; Host sees flattened lanes | language guide + compiler |
+| explicit Host function imports | Shipped; Host must authorize | example 05 |
+| standard Core Wasm output | Shipped | JS and Rust journeys |
+| FastAPI Core Provider 4.3 bytes and metadata | Shipped provider only | Rust provider validation/init |
+| general managed-source compile/link (`string`, lists, maps, objects) | Not shipped | no public facade entrypoint or end-to-end example |
+| automatic Component Model or JS object lifting | Not shipped | Core Wasm facade only |
 
-The compiler is import-free standard Core Wasm. A host must provide a fresh or
-otherwise exclusively owned instance while compiling because adapter buffers
-are instance-local mutable state.
+“Provider shipped” does not mean “managed source is usable.” In `v0.0.2`, the
+public facade does not export `compileFastapi`, and there is no supported
+general managed caller builder. Do not guess provider calls, handles, layouts,
+nonces, activation plans, or lifecycle operations. See `FASTAPI.md`.
 
-Required exports:
+## Immutable selection and integrity
+
+1. Resolve the full public commit for the selected immutable tag.
+2. Fetch every file from that tag or commit.
+3. Verify selected files against `SHA256SUMS` and `manifest.json`.
+4. Keep compiler, facade, FastAPI provider, metadata, and examples together.
 
 ```text
-memory
-wasmc_alloc(len: i32) -> i32
-wasmc_compile(ptr: i32, len: i32) -> i32
-wasmc_output_ptr() -> i32
-wasmc_output_len() -> i32
-wasmc_error_ptr() -> i32
-wasmc_error_len() -> i32
-wasmc_clear()
+https://cdn.jsdelivr.net/gh/cbgroom/wasmcrelease@<TAG_OR_FULL_COMMIT>/<PATH>
 ```
 
-Write UTF-8 source into the allocation returned by `wasmc_alloc`. A compile
-status of zero means the output pointer and length identify generated standard
-Core Wasm. A nonzero status identifies a UTF-8 diagnostic. Copy output or error
-bytes before calling `wasmc_clear`, and call `wasmc_clear` on every path.
+`package-index.json.latest`, `main`, and unversioned CDN URLs are mutable
+discovery pointers. Version `0.0.x` is released but not API-stable.
 
-Generated programs declare their own import requirements. Review the complete
-import set and bind only explicitly authorized host functions before
-instantiation. Never invent filesystem, network, clock, entropy, process,
-secret, or device authority merely because an application could use it.
+## Authority rule
 
-## FastAPI Core boundary
+Generated programs request external authority only through their Wasm imports.
+Inspect the full import set and bind only reviewed functions. Never invent
+filesystem, network, clock, entropy, process, environment, secret, database,
+or device access merely because an application could use it.
 
-`dist/fastapi_core.wasm` is FastAPI Core Provider 4.3.0. It is an import-free,
-pure-compute managed-value heap and lifetime provider. Its metadata and exact
-Core signatures are in `dist/fastapi_core.json`.
+## Handoff contract
 
-The provider is not a network API, HTTP framework, ambient host service, or
-general source compiler. A managed caller must be built for the exact provider
-contract, linked explicitly in the same Store, initialized in the required
-order, and retired with that Store. The Rust demo validates the public provider
-and calls `provider_domain_init(domain, store_nonce)`; it does not yet compile a
-general managed source into a linked product bundle.
-
-Until a formal public managed-source entrypoint is published, an agent must
-either use a reviewed prebuilt managed caller supplied by its application or
-state that managed product construction is not available through this public
-preview. Do not silently substitute private tooling or hard-coded examples.
-
-## Rust and Wasmtime
-
-Run the complete reference project with:
-
-```bash
-cd examples/rust-wasmtime
-cargo run --locked
-cargo test --locked
-```
-
-The lockfile pins Wasmtime 47.0.3. Reuse `Engine` and compiled `Module` values,
-but create a fresh bounded `Store` for each independent request. Keep import
-allowlists explicit. Wasmtime serialized/AOT artifacts are target-, version-,
-and configuration-bound caches; portable `.wasm` remains the package identity.
-
-## When generating an integration
-
-An agent should report:
-
-- the exact public commit or immutable tag;
-- compiler and FastAPI SHA-256 identities;
-- selected host and explicit import policy;
-- whether the path is ordinary compilation or a prebuilt managed caller;
-- the behavior test that actually ran;
-- any unvalidated browser, deployment, performance, or compatibility scope.
-
-Prefer a small copyable integration over a new abstraction. Do not call the
-Rust demo an SDK, claim source availability, add a hidden runtime layer, or
-describe an initial-development release as API-stable.
-
-## Editing this distribution repository
-
-This repository cannot rebuild the compiler. Changes to public packages must
-come from the private clean synchronized source authority and pass its release
-admission. Documentation-only changes must still update `manifest.json` when
-the changed file is an artifact and regenerate `SHA256SUMS` for every listed
-file. Never add private source, private paths, maintainer state, credentials,
-GitHub Actions as a required build path, or mutable production CDN examples.
+Report the exact tag/commit, compiler and provider hashes, complete source,
+generated imports/exports, Host bindings, behavior test that ran, and any
+untested browser/deployment/performance/compatibility scope. Do not call the
+Rust demo an SDK or a provider-init test a managed-source product test.

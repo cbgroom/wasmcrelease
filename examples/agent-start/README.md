@@ -11,4 +11,7 @@ flow, a private function, a structured record lowered to Core lanes, and one
 explicit Host import. The runner compiles every source with the published
 compiler, rejects unexpected imports, instantiates it, and checks exact output.
 
-See [`../../LANGUAGE.md`](../../LANGUAGE.md) before generating a larger program.
+See [`../../LANGUAGE.md`](../../LANGUAGE.md) before generating a larger direct
+Core-lane program. If the task needs strings, lists, maps, or managed objects,
+read [`../../FASTAPI.md`](../../FASTAPI.md) first; general managed-source
+construction is not public in `v0.0.2`.

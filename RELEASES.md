@@ -16,6 +16,14 @@ portable compiler Wasm identity.
 Rust integration is a complete executable Cargo demo with a pinned Wasmtime
 dependency and behavior test, not a WAsmC SDK or published crate API.
 
+## Unreleased
+
+Mutable `main` adds a repository-owned maintainer Skill system and separates
+the public Agent entrypoint, language guide, Host guide, and FastAPI availability
+contract. Compiler, facade, and provider bytes are unchanged. General managed
+source remains unavailable in the public package; `package-index.json.latest`
+continues to point to immutable `v0.0.2`.
+
 ## v0.0.2
 
 Adds the public `LANGUAGE.md` Agent writing guide and five executable teaching

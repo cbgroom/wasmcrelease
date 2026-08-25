@@ -16,8 +16,8 @@ Keep planned/private capability visibly separate from shipped public capability.
 
 ## 2. Current Focus
 
-Establish a minimal maintainer Skill system, then rewrite public documentation
-around one canonical capability matrix and executable consumer journeys.
+Integrate the reset-safe maintainer system and zero-context public documentation
+into `main`, then use its FastAPI acceptance gate for the next public version.
 
 ## 3. Recent Progress
 
@@ -25,30 +25,29 @@ around one canonical capability matrix and executable consumer journeys.
   Wasmtime demo, language guide, and five executable Agent examples.
 - Live inspection confirms the public facade does not export `compileFastapi`.
 - The public scalar examples pass through the shipped facade and compiler.
+- Three narrow Skills now own release integrity, Agent docs, and Host integration.
+- Public docs now separate task routing, language, hosting, and FastAPI availability.
+- Deterministic validation checks Skill structure, manifest/checksums, Markdown
+  links, facade exports, structured language probes, and managed-source nonclaims.
 
 ## 4. Current Action
 
-Task state: started
+Task state: completed
 
-- Objective: make release maintenance reset-safe and make public docs usable by
-  a new Agent without relying on private-repository context.
-- Technical basis: current documentation mixes integration, language,
-  availability, and maintenance rules; current release capability is not
-  summarized in one early decision surface.
-- Plan: add three narrow maintainer Skills and deterministic validation; then
-  revise the public Agent entrypoint, capability guide, and cross-links.
-- Boundaries: no compiler/provider rebuild, no tag move, no private source or
-  private path disclosure, and no claim that managed-source compilation ships.
-- Validation: maintainer structure, checksums/manifest consistency, facade
-  export inspection, Agent examples, Rust demo, and zero-context doc audit.
-- Resume point: finish and checkpoint the maintainer scaffold, then implement
-  the consumer documentation under `release-agent-docs`.
+- Result: the release repository has a minimal repository-owned maintainer Skill
+  tree and a first-screen public Agent contract grounded in `v0.0.2` behavior.
+- Evidence: `./scripts/validate-maintainer.sh`, the five-case Agent runner, and
+  `cargo test --locked` in the Rust Wasmtime demo all pass.
+- Residual risk: no independent external zero-context Agent has yet consumed the
+  branch; browser/CDN behavior was not rerun because package bytes did not change.
+- Next action: merge this branch into public `main`, rerun orientation from
+  `main`, then prepare the next FastAPI-capable immutable release candidate.
 
 ## 5. Next Actions
 
-1. Implement the public capability matrix and first-screen Agent routing.
-2. Validate both JavaScript and Rust public journeys.
-3. Record the next-release FastAPI consumer closure as a maintainer-owned gap.
+1. Integrate `work/release-maintainer-skills-v0` into public `main` without moving `v0.0.2`.
+2. Add the public managed-source facade and complete link/init/invoke/cleanup example.
+3. Run a zero-context external Agent consumer gate before the next tag.
 
 ## 6. Validation Commands
 

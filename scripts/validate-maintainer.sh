@@ -19,8 +19,6 @@ for path in "${required[@]}"; do
   test -f "$path" || { echo "missing required file: $path" >&2; exit 1; }
 done
 
-mapfile_cmd=false
-if command -v mapfile >/dev/null 2>&1; then mapfile_cmd=true; fi
 skill_paths=()
 while IFS= read -r path; do skill_paths+=("$path"); done < <(
   awk '$1 == "path:" { print $2 }' .agents/skills.registry.yaml
@@ -53,6 +51,7 @@ done
 python3 - <<'PY'
 import hashlib
 import json
+import re
 from pathlib import Path
 
 root = Path('.')
@@ -75,6 +74,16 @@ for path, expected in checksums.items():
 index = json.loads((root / 'package-index.json').read_text())
 versions = {entry['version']: entry for entry in index['versions']}
 assert index['latest'] in versions, 'latest is absent from versions'
+
+for markdown in root.rglob('*.md'):
+    if '.git' in markdown.parts:
+        continue
+    for target in re.findall(r'\[[^]]*\]\(([^)]+)\)', markdown.read_text()):
+        if target.startswith(('http://', 'https://', '#', 'mailto:')):
+            continue
+        relative = target.split('#', 1)[0]
+        if relative and not (markdown.parent / relative).resolve().exists():
+            raise AssertionError(f"broken link in {markdown}: {target}")
 PY
 
 node --input-type=module <<'JS'
@@ -84,5 +93,7 @@ for (const name of required) {
   if (typeof facade[name] !== 'function') throw new Error(`missing facade export: ${name}`);
 }
 JS
+
+node scripts/validate-agent-docs.mjs
 
 echo "PASS maintainer structure, release integrity, and facade contract"
