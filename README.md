@@ -15,4 +15,4 @@ and verify `SHA256SUMS`; `main` is mutable and is not a production version.
 
 No stable compiler version has been published yet. See
 [RELEASES.md](RELEASES.md) for admission and [package-index.json](package-index.json)
-for accepted versions.
+for accepted versions. Coding agents should start with [AGENTS.md](AGENTS.md).
