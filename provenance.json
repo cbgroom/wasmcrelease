@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "predicate_type": "wasmc.public-main-candidate.provenance/v0",
+  "source": {
+    "repository": "yxsicd/wasmc",
+    "commit": "c0d2af78cfb71c41916b219c5b4aa4745ab9c9ae",
+    "tree": "bfe242e58be69775a7bf7b485182c31752dd6371",
+    "cargo_lock_sha256": "6655c45ed9a31c246541e4eceabd656f3f0972078575ba292157c42c9b89dafa",
+    "clean_and_equal_to_origin_master": true
+  },
+  "builder": {
+    "rustc": "1.96.0",
+    "cargo": "1.96.0",
+    "compiler_profile": "release opt-level=3",
+    "compiler_target": "wasm32-unknown-unknown",
+    "fastapi_package": "wasmc.fastapi_managed_object_core_provider 4.3.0",
+    "wasmtime_demo": "47.0.3"
+  },
+  "verification": {
+    "javascript": "Node compiled 44 bytes, run(5,6)=17, provider imports=0, init=0",
+    "rust": "cargo test --locked --offline passed unit and e2e journeys",
+    "store_policy": "fresh Wasmtime Store per operation",
+    "host_import_policy": "empty for compiler, sample output, and FastAPI Core"
+  },
+  "publisher_signature": null,
+  "formal_release": false
+}

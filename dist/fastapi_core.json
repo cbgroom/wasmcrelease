@@ -1,0 +1,416 @@
+{
+  "abi_epoch": 1,
+  "artifact": {
+    "bytes": 34158,
+    "path": "artifact.wasm",
+    "sha256": "86670b35fe4ff01f9ad4392b42ce8816e4679f680ab788599905edb1bbe6e749"
+  },
+  "bindings": [
+    {
+      "core_export": "type_record_begin",
+      "name": "type_record_begin",
+      "params": [
+        "i32",
+        "i32",
+        "i32"
+      ],
+      "results": [
+        "i64"
+      ]
+    },
+    {
+      "core_export": "type_record_field",
+      "name": "type_record_field",
+      "params": [
+        "i64",
+        "i32",
+        "i32",
+        "i32",
+        "i32"
+      ],
+      "results": [
+        "i32"
+      ]
+    },
+    {
+      "core_export": "type_record_child",
+      "name": "type_record_child",
+      "params": [
+        "i64",
+        "i32",
+        "i64"
+      ],
+      "results": [
+        "i32"
+      ]
+    },
+    {
+      "core_export": "type_string",
+      "name": "type_string",
+      "params": [],
+      "results": [
+        "i64"
+      ]
+    },
+    {
+      "core_export": "type_record_list_child",
+      "name": "type_record_list_child",
+      "params": [
+        "i64",
+        "i32",
+        "i64"
+      ],
+      "results": [
+        "i32"
+      ]
+    },
+    {
+      "core_export": "type_record_finish",
+      "name": "type_record_finish",
+      "params": [
+        "i64"
+      ],
+      "results": [
+        "i64"
+      ]
+    },
+    {
+      "core_export": "object_new",
+      "name": "object_new",
+      "params": [
+        "i64"
+      ],
+      "results": [
+        "i64"
+      ]
+    },
+    {
+      "core_export": "object_drop",
+      "name": "object_drop",
+      "params": [
+        "i64",
+        "i64"
+      ],
+      "results": [
+        "i32"
+      ]
+    },
+    {
+      "core_export": "object_get_scalar_status",
+      "name": "object_get_scalar_status",
+      "params": [
+        "i64",
+        "i64",
+        "i32"
+      ],
+      "results": [
+        "i32"
+      ]
+    },
+    {
+      "core_export": "object_get_scalar_bits",
+      "name": "object_get_scalar_bits",
+      "params": [
+        "i64",
+        "i64",
+        "i32"
+      ],
+      "results": [
+        "i64"
+      ]
+    },
+    {
+      "core_export": "object_set_scalar",
+      "name": "object_set_scalar",
+      "params": [
+        "i64",
+        "i64",
+        "i32",
+        "i64"
+      ],
+      "results": [
+        "i32"
+      ]
+    },
+    {
+      "core_export": "object_set_child_move",
+      "name": "object_set_child_move",
+      "params": [
+        "i64",
+        "i64",
+        "i32",
+        "i64",
+        "i64"
+      ],
+      "results": [
+        "i32"
+      ]
+    },
+    {
+      "core_export": "object_get_child_borrow",
+      "name": "object_get_child_borrow",
+      "params": [
+        "i64",
+        "i64",
+        "i32",
+        "i64"
+      ],
+      "results": [
+        "i64"
+      ]
+    },
+    {
+      "core_export": "object_get_child_mut_borrow",
+      "name": "object_get_child_mut_borrow",
+      "params": [
+        "i64",
+        "i64",
+        "i32",
+        "i64"
+      ],
+      "results": [
+        "i64"
+      ]
+    },
+    {
+      "core_export": "object_set_list_child_move",
+      "name": "object_set_list_child_move",
+      "params": [
+        "i64",
+        "i64",
+        "i32",
+        "i64",
+        "i64"
+      ],
+      "results": [
+        "i32"
+      ]
+    },
+    {
+      "core_export": "object_get_list_child_borrow",
+      "name": "object_get_list_child_borrow",
+      "params": [
+        "i64",
+        "i64",
+        "i32",
+        "i64"
+      ],
+      "results": [
+        "i64"
+      ]
+    },
+    {
+      "core_export": "string_builder_new",
+      "name": "string_builder_new",
+      "params": [
+        "i64"
+      ],
+      "results": [
+        "i64"
+      ]
+    },
+    {
+      "core_export": "string_builder_push_u64_le",
+      "name": "string_builder_push_u64_le",
+      "params": [
+        "i64",
+        "i64",
+        "i64",
+        "i32"
+      ],
+      "results": [
+        "i32"
+      ]
+    },
+    {
+      "core_export": "string_builder_finish",
+      "name": "string_builder_finish",
+      "params": [
+        "i64",
+        "i64"
+      ],
+      "results": [
+        "i32"
+      ]
+    },
+    {
+      "core_export": "string_clone",
+      "name": "string_clone",
+      "params": [
+        "i64",
+        "i64"
+      ],
+      "results": [
+        "i64"
+      ]
+    },
+    {
+      "core_export": "string_len",
+      "name": "string_len",
+      "params": [
+        "i64",
+        "i64"
+      ],
+      "results": [
+        "i64"
+      ]
+    },
+    {
+      "core_export": "string_byte_at",
+      "name": "string_byte_at",
+      "params": [
+        "i64",
+        "i64",
+        "i32"
+      ],
+      "results": [
+        "i64"
+      ]
+    },
+    {
+      "core_export": "string_eq",
+      "name": "string_eq",
+      "params": [
+        "i64",
+        "i64",
+        "i64"
+      ],
+      "results": [
+        "i64"
+      ]
+    },
+    {
+      "core_export": "list_new",
+      "name": "list_new",
+      "params": [
+        "i64"
+      ],
+      "results": [
+        "i64"
+      ]
+    },
+    {
+      "core_export": "list_drop",
+      "name": "list_drop",
+      "params": [
+        "i64",
+        "i64"
+      ],
+      "results": [
+        "i32"
+      ]
+    },
+    {
+      "core_export": "list_push_move",
+      "name": "list_push_move",
+      "params": [
+        "i64",
+        "i64",
+        "i64"
+      ],
+      "results": [
+        "i32"
+      ]
+    },
+    {
+      "core_export": "list_len",
+      "name": "list_len",
+      "params": [
+        "i64",
+        "i64"
+      ],
+      "results": [
+        "i64"
+      ]
+    },
+    {
+      "core_export": "list_get_borrow",
+      "name": "list_get_borrow",
+      "params": [
+        "i64",
+        "i32",
+        "i64"
+      ],
+      "results": [
+        "i64"
+      ]
+    },
+    {
+      "core_export": "list_get_mut_borrow",
+      "name": "list_get_mut_borrow",
+      "params": [
+        "i64",
+        "i32",
+        "i64"
+      ],
+      "results": [
+        "i64"
+      ]
+    },
+    {
+      "core_export": "borrow_drop",
+      "name": "borrow_drop",
+      "params": [
+        "i64",
+        "i64"
+      ],
+      "results": [
+        "i32"
+      ]
+    },
+    {
+      "core_export": "provider_domain_init",
+      "name": "provider_domain_init",
+      "params": [
+        "i32",
+        "i32"
+      ],
+      "results": [
+        "i32"
+      ]
+    }
+  ],
+  "class": "core_fastlib",
+  "id": "wasmc.fastapi_managed_object_core_provider",
+  "provenance": {
+    "inputs": [
+      {
+        "kind": "wit",
+        "path": "interface.wit",
+        "sha256": "aeac2584c6e3c2e4b7a2767dd02ea7e61c99bfc87df886ba9b54dc5fe57d15a9"
+      },
+      {
+        "kind": "package-metadata",
+        "path": "rust-fastapi-package.json",
+        "sha256": "472dcf6b83c14aa988d60bf587b02598c1d01532c636757de5e73ba25226931f"
+      },
+      {
+        "kind": "build-inputs",
+        "path": "provenance/build-inputs.json",
+        "sha256": "4b68bdbd69b8034ba6a83a2eb6c45b6312fe3ec5702c4414c19edde02fadc02a"
+      },
+      {
+        "kind": "generated-adapter",
+        "path": "provenance/adapter.rs",
+        "sha256": "8a9ad85385e53991804238c1cd75d08511cbe8b61edd92bc6f66d1cd9c5b2f39"
+      },
+      {
+        "kind": "adapter-manifest",
+        "path": "provenance/adapter-Cargo.toml",
+        "sha256": "a1e9f865172e869452d1995322804bffd25ee0c028232db0492092bec5a1a51a"
+      },
+      {
+        "kind": "lockfile",
+        "path": "provenance/Cargo.lock",
+        "sha256": "8e54ac300dc639497cf190ecb327a1bf03ba3b498f9487dcff02a1070a814376"
+      }
+    ],
+    "language": "rust",
+    "target": "wasm32-unknown-unknown"
+  },
+  "schema_version": 1,
+  "version": "4.3.0",
+  "wit_fallback": {
+    "status": "not_packaged"
+  }
+}

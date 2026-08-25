@@ -14,3 +14,12 @@ portable compiler Wasm identity.
 
 Rust integration is a complete executable Cargo demo with a pinned Wasmtime
 dependency and behavior test, not a WAsmC SDK or published crate API.
+
+## Main preview
+
+The default branch may carry one untagged candidate before formal release.
+Consumers must pin its full commit and verify checksums. A main candidate does
+not enter the stable `versions` list and makes no compatibility, signing,
+automatic-update, or rollback claim. The current candidate publishes compiler
+and FastAPI bytes atomically, but general managed-source product compilation is
+not part of the public compiler ABI yet.
