@@ -5,7 +5,7 @@ compiler.
 
 This repository is a distribution channel, not the compiler source or build
 authority. Every version uses one standard Core Wasm compiler digest shared by
-the raw Wasm, JavaScript sidecar, and Rust Wasmtime SDK packages. Immutable
+the raw Wasm, JavaScript sidecar, and executable Rust Wasmtime demo. Immutable
 repository tags are also served through jsDelivr's GitHub CDN.
 
 No compiler version has been published yet. See [RELEASES.md](RELEASES.md) for
