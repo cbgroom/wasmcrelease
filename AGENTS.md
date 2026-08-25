@@ -19,7 +19,8 @@ language authority; do not infer missing semantics from these binary packages.
 
 ## Integrity and version selection
 
-`main` is a mutable preview channel. Before consuming it:
+The current formal initial-development release is `v0.0.1`. Before consuming
+any release:
 
 1. Resolve and record the full 40-character public Git commit.
 2. Fetch files from that commit, never from `main`, `latest`, or a version
@@ -33,8 +34,9 @@ The jsDelivr form is:
 https://cdn.jsdelivr.net/gh/cbgroom/wasmcrelease@<FULL_COMMIT>/<PATH>
 ```
 
-An empty `versions` array in `package-index.json` means there is no formally
-released stable version yet. Do not manufacture a SemVer or stability claim.
+`package-index.json.latest` is a mutable discovery pointer. Its selected entry
+in `versions` identifies the immutable tag. Version `0.0.x` is formally
+released but not API-stable; do not turn `latest` into a compatibility claim.
 
 ## JavaScript entrypoint
 
@@ -136,7 +138,7 @@ An agent should report:
 
 Prefer a small copyable integration over a new abstraction. Do not call the
 Rust demo an SDK, claim source availability, add a hidden runtime layer, or
-describe this preview as a formal release.
+describe an initial-development release as API-stable.
 
 ## Editing this distribution repository
 
