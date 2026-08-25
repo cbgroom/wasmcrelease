@@ -16,6 +16,17 @@ portable compiler Wasm identity.
 Rust integration is a complete executable Cargo demo with a pinned Wasmtime
 dependency and behavior test, not a WAsmC SDK or published crate API.
 
+## v0.0.2
+
+Adds the public `LANGUAGE.md` Agent writing guide and five executable teaching
+programs covering the complete source shell, scalar expressions, control flow,
+private functions, Core-lane records, and explicit Host imports. The language,
+compiler, FastAPI Provider, JS facade, and Rust demo bytes are unchanged from
+`v0.0.1`; this release closes the first-run documentation gap.
+
+`package-index.json.latest` moves to `0.0.2`. The immutable `v0.0.1` tag and
+Release remain available unchanged.
+
 ## v0.0.1
 
 This is the first formal initial-development release. It publishes compiler and
@@ -23,6 +34,6 @@ FastAPI Core 4.3 bytes atomically with the JavaScript facade, Rust Wasmtime
 demo, manifest, provenance, checksums, and Agent integration guide.
 
 The immutable identity is `v0.0.1`. `package-index.json` records `0.0.1` as
-`latest`; a later `v0.0.2` will preserve `v0.0.1` and move only that mutable
-index pointer. Version `0.0.1` does not claim stable APIs, publisher signing,
+`latest` at publication; later releases preserve `v0.0.1` and move only that
+mutable index pointer. Version `0.0.1` does not claim stable APIs, publisher signing,
 automatic update/rollback, or a general managed-source product compiler.

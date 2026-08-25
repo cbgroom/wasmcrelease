@@ -1,0 +1,14 @@
+package local:private_function;
+
+interface api {
+  run: func(value: s32) -> s32 {
+    return abs(value) + 1;
+  }
+}
+
+world app { export api; }
+
+fn abs(value: s32) -> s32 {
+  if (value < 0) { return -value; }
+  return value;
+}

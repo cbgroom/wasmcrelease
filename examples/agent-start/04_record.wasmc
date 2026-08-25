@@ -1,0 +1,9 @@
+package local:record_demo;
+
+interface api {
+  run: func(point: record { x: s32, y: s32 }) -> s32 {
+    return point.x + point.y;
+  }
+}
+
+world app { export api; }

@@ -1,0 +1,13 @@
+package local:host_demo;
+
+interface host {
+  double: func(value: s32) -> s32;
+}
+
+interface api {
+  run: func(value: s32) -> s32 {
+    return double(value) + 1;
+  }
+}
+
+world app { import host; export api; }

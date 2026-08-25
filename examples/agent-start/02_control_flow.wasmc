@@ -1,0 +1,16 @@
+package local:control_flow;
+
+interface api {
+  run: func(stop: s32, limit: s32) -> s32 {
+    let total: s32 = 0;
+    let i: s32 = 0;
+    while (i < limit) {
+      if (i == stop) { break; }
+      total = total + i;
+      i = i + 1;
+    }
+    return total;
+  }
+}
+
+world app { export api; }

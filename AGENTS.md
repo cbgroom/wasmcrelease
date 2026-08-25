@@ -5,6 +5,9 @@ Use this file when an agent needs to integrate the compiler or explain its
 current capabilities. The private compiler repository remains the build and
 language authority; do not infer missing semantics from these binary packages.
 
+If you need to write WAsmC source, read `LANGUAGE.md` first and then run
+`node examples/agent-start/run.mjs`. Do not infer the language from Rust alone.
+
 ## Choose the smallest integration
 
 - JavaScript, TypeScript, Node.js, Bun, Deno, or a browser: use
@@ -19,7 +22,7 @@ language authority; do not infer missing semantics from these binary packages.
 
 ## Integrity and version selection
 
-The current formal initial-development release is `v0.0.1`. Before consuming
+The current formal initial-development release is `v0.0.2`. Before consuming
 any release:
 
 1. Resolve and record the full 40-character public Git commit.
