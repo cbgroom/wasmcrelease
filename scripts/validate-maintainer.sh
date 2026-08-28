@@ -7,6 +7,7 @@ cd "$repo_root"
 required=(
   AGENTS.md
   LANGUAGE.md
+  LIB.md
   .agents/MAINTAINERS.md
   .agents/HANDOFF.md
   .agents/skills.registry.yaml
@@ -88,7 +89,7 @@ PY
 
 node --input-type=module <<'JS'
 const facade = await import('./dist/wasmc.mjs');
-const required = ['compile', 'compilePackage', 'createCompiler', 'inspectWasm'];
+const required = ['compile', 'compilePackage', 'compileLib', 'instantiateLib', 'createCompiler', 'inspectWasm'];
 for (const name of required) {
   if (typeof facade[name] !== 'function') throw new Error(`missing facade export: ${name}`);
 }

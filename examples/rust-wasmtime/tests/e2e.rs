@@ -1,4 +1,4 @@
 #[test]
-fn public_artifacts_work_together() {
-    assert_eq!(wasmc_wasmtime_demo::exercise().unwrap(), (44, 17));
+fn release_journey() {
+    assert_eq!(wasmc_wasmtime_demo::exercise().unwrap(), (44, 17, 15, 42));
 }

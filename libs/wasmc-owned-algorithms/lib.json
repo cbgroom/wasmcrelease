@@ -1,0 +1,51 @@
+{
+  "agent": {
+    "delta": {
+      "path": "references/agent-delta.json",
+      "sha256": "c39d1352237a44a5a77789facfc9bb2eef6223dec78998a4f41a59b995247db7"
+    },
+    "skill": {
+      "path": "SKILL.md",
+      "sha256": "64ca6ad61a5cb52ae9070a23fca740d49e92319b8ffb0ebdb6b10c685e763bb6"
+    }
+  },
+  "artifact": {
+    "bytes": 25235,
+    "format": "core-wasm",
+    "path": "artifact.wasm",
+    "sha256": "44638f7cfa5a653f986e2237db4f26f1534539c8c0d0d1e7258c51a976df19e3"
+  },
+  "build": {
+    "inputs": [
+      {
+        "kind": "cargo-lock",
+        "path": "generated-adapter/Cargo.lock",
+        "sha256": "54226877604a195218a64fcc3a92bb321c36a8c3acc580108c05dbb32b980582"
+      }
+    ],
+    "language": "rust",
+    "locked": true,
+    "offline": true,
+    "profile": "release",
+    "target": "wasm32-unknown-unknown"
+  },
+  "compatibility": {
+    "abi_epoch": 1,
+    "wasmc_min": "0.0.1"
+  },
+  "component": {
+    "bytes": 25583,
+    "format": "component-wasm",
+    "path": "component.wasm",
+    "sha256": "a534046129d2d41e15de98020f0387dec78ff2a68b674f8b96692ad20e4e3e10"
+  },
+  "id": "wasmc-owned-algorithms",
+  "schema": "wasmc.lib/v0",
+  "version": "0.1.0",
+  "wit": {
+    "package": "wasmc:owned-algorithms@0.1.0",
+    "path": "lib.wit",
+    "sha256": "b7715f218bcaa15097ad1d217002dbffe61bc28016951c8dc41561ccc69d8f12",
+    "world": "owned-algorithms"
+  }
+}

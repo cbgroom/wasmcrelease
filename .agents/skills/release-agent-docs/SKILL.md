@@ -1,6 +1,6 @@
 ---
 name: release-agent-docs
-description: Create or revise WAsmC public Agent guidance, language documentation, capability matrices, and examples so a zero-context model can use only shipped public features.
+description: Create or revise wasmc public Agent guidance, language documentation, capability matrices, and examples so a zero-context model can use only shipped public features.
 ---
 
 # Release Agent documentation
@@ -25,13 +25,13 @@ which exact command proves the path, and what evidence to report.
 - Error guidance should repair the smallest construct and must not invent Host
   authority or provider-private operations.
 
-## FastAPI boundary
+## Lib boundary
 
-The presence of `fastapi_core.wasm` proves a provider is shipped, not that an
-Agent can compile arbitrary managed source. For each release, inspect the
-facade exports and executable journey. Until a public managed-source entrypoint
-and full link/init example both pass, state the managed path as unavailable for
-new source and do not teach activation plans, raw handles, or private lifecycle calls.
+A managed-source claim requires both `compileLib`/`instantiateLib` and an
+executable link/init/invoke journey using the matching release Lib. Teach only
+ordinary typed source and reviewed WIT; do not expose activation plans, raw
+handles, Store nonces, private lanes, or lifecycle helpers. Each standalone
+Lib begins at its root `SKILL.md` and states its exact delta and Host authority.
 
 ## Completion gate
 

@@ -1,0 +1,14 @@
+package wasmc:host-clock@0.0.1;
+
+interface clock-host {
+  now: func() -> s32;
+}
+
+interface clock-api {
+  sampled: func(offset: s32) -> s32;
+}
+
+world host-clock {
+  import clock-host;
+  export clock-api;
+}

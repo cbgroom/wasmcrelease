@@ -1,15 +1,14 @@
-# Writing WAsmC
+# Writing wasmc
 
-This is the public language guide for an Agent that needs to write WAsmC.
-WAsmC combines a WIT-shaped declaration shell, Rust-familiar expressions, and
+This is the public language guide for an Agent that needs to write wasmc.
+wasmc combines a WIT-shaped declaration shell, Rust-familiar expressions, and
 standard Core WebAssembly output. It is not full Rust and does not use Cargo,
 modules, macros, traits, references, or a borrow-checker syntax.
 
-For `v0.0.2`, use this guide for direct Core-lane programs: scalars, control
-flow, private functions, flattened structured values, and explicit Host
-imports. New managed source using `string`, lists, maps, or identity-bearing
-objects is not publicly buildable in this release; read `FASTAPI.md` instead
-of guessing provider operations.
+For `v0.0.3`, this guide covers direct Core-lane programs and the source-language
+shell used by managed Lib applications. For String/List/Map/record/resource
+semantics, read `LIB.md` and the bundled developer Skill rather than guessing
+private operations.
 
 Start by copying a complete program, compiling it, and changing one behavior at
 a time. The five numbered teaching programs are exercised by
@@ -164,11 +163,11 @@ sees flattened Core parameters/results, not automatic JavaScript or Rust
 objects. Keep the first runnable entrypoint scalar unless the host already
 knows and verifies the exact ABI.
 
-`string`, `list<T>`, maps, identity-bearing mutable objects, and resource
-methods belong to the managed FastAPI path. The public compiler facade in this
-release does not construct and link a general managed-source FastAPI product bundle.
-Do not guess provider calls or manipulate handles, layouts, reference counts,
-Store nonces, or lifecycle plans in generated source. See `FASTAPI.md`.
+`string`, `list<T>`, maps, identity-bearing mutable objects, and resources use
+the matching WIT Lib path. `instantiateLib` constructs the supported ordinary
+managed application; standalone resource Components are called through their
+published WIT. Do not manipulate handles, layouts, reference counts, Store
+nonces, or lifecycle plans in generated source. See `LIB.md`.
 
 ## Variables and assignments
 
@@ -182,8 +181,7 @@ total = total + 1;
 
 Explicit types make generated programs easier to repair and audit. Scalars are
 copy values. Managed owned values use Rust-familiar move-by-default semantics,
-but new Agents should stay on the scalar/structured direct path until they have
-a reviewed FastAPI product builder.
+and Agents should use the released Lib facade rather than private operations.
 
 ## Expressions
 
@@ -261,7 +259,7 @@ destructuring unless a selected managed profile explicitly documents them.
 
 Use Rust-style `snake_case` for packages, interfaces, worlds, functions,
 parameters, fields, and cases. Named types may use `PascalCase`. Do not write
-hyphenated source identifiers: `-` is subtraction. WAsmC owns the mapping to
+hyphenated source identifiers: `-` is subtraction. wasmc owns the mapping to
 canonical WIT kebab-case where required.
 
 ## What not to generate
@@ -274,7 +272,7 @@ Do not assume support for full Rust or full WIT. In particular, avoid:
   first-run programs;
 - implicit filesystem, network, clock, entropy, process, environment, secret,
   database, or device access;
-- provider-private FastAPI functions or raw managed handles;
+- Lib-private functions or raw managed handles;
 - automatic JavaScript object lifting for Core structured values.
 
 If a capability is external, declare it as an imported WIT-shaped interface
@@ -290,7 +288,7 @@ mistakes are:
 - giving an imported signature a body;
 - calling `host.double(...)` instead of `double(...)`;
 - using `for`, implicit return, Rust `match` patterns, or unsupported generics;
-- expecting `compilePackage` to create a FastAPI product bundle;
+- expecting `compilePackage` to create a Lib bundle; use `compileLib`;
 - binding imports that were not present in the compiled module.
 
 Never add an import merely to silence an error. Imports are authority requests.
@@ -299,9 +297,9 @@ Never add an import merely to silence an error. Imports are authority requests.
 
 An Agent-generated integration is complete only when it reports:
 
-- exact WAsmC release tag or full commit;
+- exact wasmc release tag or full commit;
 - the complete source files;
-- compiler and FastAPI digests used;
+- compiler and Lib digests used;
 - generated Wasm import/export lists;
 - explicit Host bindings and limits;
 - one exact behavior oracle that ran;

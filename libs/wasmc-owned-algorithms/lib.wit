@@ -1,0 +1,18 @@
+package wasmc:owned-algorithms@0.1.0;
+
+interface algorithms {
+  record request {
+    label: string,
+    values: list<s32>,
+    enabled: bool,
+  }
+
+  count-true: func(values: list<bool>) -> u32;
+  request-score: func(value: request) -> s64;
+  sum-s32: func(values: list<s32>) -> s64;
+  utf8-score: func(value: string) -> s32;
+}
+
+world owned-algorithms {
+  export algorithms;
+}

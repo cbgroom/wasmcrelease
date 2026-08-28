@@ -1,0 +1,51 @@
+{
+  "agent": {
+    "delta": {
+      "path": "references/agent-delta.json",
+      "sha256": "c20d16927cb7df33256327d5e7a2d4bf1eb92a41bde417a77e54d14a1159ecc7"
+    },
+    "skill": {
+      "path": "SKILL.md",
+      "sha256": "1a394bd25cf1e025d7b5fe62c220e994cc9f51387b1d9ce46a75667369e90329"
+    }
+  },
+  "artifact": {
+    "bytes": 20371,
+    "format": "core-wasm",
+    "path": "artifact.wasm",
+    "sha256": "cb6be53fcf77fa28864ee77c998a6bd8c3bee1004460b1e6df1cc84fdbc4bbfd"
+  },
+  "build": {
+    "inputs": [
+      {
+        "kind": "cargo-lock",
+        "path": "host-clock/Cargo.lock",
+        "sha256": "e0ab821c9bf9a50b631e1838c8bf3e760e0aa24f75fd50644b4b0d53fb71fb2a"
+      }
+    ],
+    "language": "rust",
+    "locked": true,
+    "offline": true,
+    "profile": "release",
+    "target": "wasm32-unknown-unknown"
+  },
+  "compatibility": {
+    "abi_epoch": 1,
+    "wasmc_min": "0.0.1"
+  },
+  "component": {
+    "bytes": 21055,
+    "format": "component-wasm",
+    "path": "component.wasm",
+    "sha256": "d887d35a19d04f7ce6ad18c2c50f87332f43a0cb9d251b1613d40d887a06951e"
+  },
+  "id": "wasmc-host-clock",
+  "schema": "wasmc.lib/v0",
+  "version": "0.0.1",
+  "wit": {
+    "package": "wasmc:host-clock@0.0.1",
+    "path": "lib.wit",
+    "sha256": "c33f2e31c57bc64fed6c56b45e1abcf9d4768b336bdafa24fa5a46dc49644bab",
+    "world": "host-clock"
+  }
+}
