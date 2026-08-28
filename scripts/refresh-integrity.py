@@ -12,7 +12,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 MANIFEST = ROOT / "manifest.json"
 CHECKSUMS = ROOT / "SHA256SUMS"
-PUBLIC_DOCS = ("AGENTS.md", "LANGUAGE.md", "HOSTING.md", "FASTAPI.md")
+PUBLIC_DOCS = ("AGENTS.md", "LANGUAGE.md", "HOSTING.md", "LIB.md")
 
 
 def digest(path: Path) -> str:
@@ -20,10 +20,33 @@ def digest(path: Path) -> str:
 
 
 manifest = json.loads(MANIFEST.read_text())
-artifact_paths = [item["path"] for item in manifest["artifacts"]]
-for path in PUBLIC_DOCS:
+release_path = ROOT / "release.json"
+release = json.loads(release_path.read_text())
+artifact_paths = [item["path"] for item in release["artifacts"]]
+for path in reversed(PUBLIC_DOCS):
     if path not in artifact_paths:
-        artifact_paths.insert(artifact_paths.index("dist/wasmc_compiler.wasm"), path)
+        artifact_paths.insert(0, path)
+
+manifest.pop("fastapi", None)
+manifest.update({
+    "release_id": "wasmc-v0.0.3",
+    "version": "0.0.3",
+    "release_date": "2026-08-28",
+    "tag": "v0.0.3",
+    "released": True,
+    "source_available": False,
+    "compiler_abi": "wasmc-core-compiler-abi-v0",
+})
+
+release["artifacts"] = [
+    {
+        "path": path,
+        "bytes": (ROOT / path).stat().st_size,
+        "sha256": digest(ROOT / path),
+    }
+    for path in [item["path"] for item in release["artifacts"]]
+]
+release_path.write_text(json.dumps(release, indent=2) + "\n")
 
 manifest["artifacts"] = [
     {

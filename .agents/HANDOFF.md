@@ -1,75 +1,61 @@
-# WAsmC release maintainer handoff
+# wasmc release maintainer handoff
 
 ## 0. Status
 
-- Branch: `main`
-- Base: public `main` at `39bccad7fa509000bb76a9975665aa4b0f5c6fdf`
-- Public release truth: immutable tag `v0.0.2`
-- Repository role: source-free public distribution and integration guidance
+- Branch: `work/release-v0.0.3`
+- Base: public `main@f89ae98`
+- Candidate: source-free `v0.0.3` built from private `wasmc@421aaa33`
+- Existing immutable truth: `v0.0.1` and `v0.0.2` remain unchanged
 
 ## 1. North Star
 
-Let a zero-context Agent select an immutable WAsmC release, write supported
-source using model-prior-familiar Rust/WIT concepts, compile it through the
-smallest public host path, grant only explicit imports, and prove behavior.
-Keep planned/private capability visibly separate from shipped public capability.
+Let a zero-context Agent select an immutable release, load the bundled developer or Lib Skill, reuse Rust/WIT priors, compile through the smallest public path, grant only explicit imports, and prove behavior without private-source knowledge.
 
 ## 2. Current Focus
 
-Use the integrated maintainer system and FastAPI acceptance gate to prepare the
-next public managed-source-capable release without weakening `v0.0.2` identity.
+Admit and publish `v0.0.3` with compiler/JS bytes, matching Lib Core, three WIT-native Core/Component Libs, developer/per-Lib Skills, and locked Rust/Wasmtime evidence. Remove the FastAPI public name from this version without changing old tags.
 
 ## 3. Recent Progress
 
-- `v0.0.2` ships compiler Wasm, FastAPI Core 4.3, JavaScript facade, Rust
-  Wasmtime demo, language guide, and five executable Agent examples.
-- Live inspection confirms the public facade does not export `compileFastapi`.
-- The public scalar examples pass through the shipped facade and compiler.
-- Three narrow Skills now own release integrity, Agent docs, and Host integration.
-- Public docs now separate task routing, language, hosting, and FastAPI availability.
-- Deterministic validation checks Skill structure, manifest/checksums, Markdown
-  links, facade exports, structured language probes, and managed-source nonclaims.
-- Workstream `work/release-maintainer-skills-v0` is integrated into public `main`.
+- Private delivery is accepted from clean synchronized source commit `421aaa33f2d340c312f394a8c0cf5c95a9ad186c`.
+- Node, Bun, and Deno package/single/global/CLI outputs are byte-identical.
+- WIT resources, receiver methods, drop, explicit Host imports, and negative drift checks pass under Wasmtime.
+- The public assembler produced 54 source-free files, developer/per-Lib Skills, admission receipts, and SHA-256 identities.
 
 ## 4. Current Action
 
-Task state: completed
+Task state: candidate-complete
 
-- Result: public `main` has a minimal repository-owned maintainer Skill tree and
-  a first-screen public Agent contract grounded in `v0.0.2` behavior.
-- Evidence: `./scripts/validate-maintainer.sh`, the five-case Agent runner, and
-  `cargo test --locked` in the Rust Wasmtime demo all pass.
-- Residual risk: no independent external zero-context Agent has yet consumed the
-  branch; browser/CDN behavior was not rerun because package bytes did not change.
-- Next action: admit the next compiler/facade/provider candidate from the private
-  source authority, then satisfy the public FastAPI acceptance gate before tagging.
+- Result: the source-free public tree and Agent/Lib Skill routing are candidate-complete for `v0.0.3`.
+- Evidence: refreshed manifest/checksums pass; scalar and managed Lib Agent journeys pass; five teaching programs pass; locked Wasmtime compiler/resource/Host tests and executable return `44/17/15/42`.
+- Residual risk: no public capability exists until commit, immutable tag, push, and independent fetch checks pass.
+- Next action: scan the committed candidate history, merge to public main, tag `v0.0.3`, then verify GitHub/jsDelivr bytes and latest metadata.
 
 ## 5. Next Actions
 
-1. Add the public managed-source facade and complete link/init/invoke/cleanup example.
-2. Add executable string/list/map/object consumer examples from the same candidate.
-3. Run a zero-context external Agent consumer gate before the next tag.
+1. Regenerate `manifest.json`, `release.json`, and `SHA256SUMS` over the final tree.
+2. Run public JavaScript, Agent, Lib, and Rust/Wasmtime journeys from this worktree.
+3. Push `main`, create immutable `v0.0.3`, and verify pinned and latest CDN identities.
 
 ## 6. Validation Commands
 
 ```bash
 ./scripts/validate-maintainer.sh
 node examples/agent-start/run.mjs
-(cd examples/rust-wasmtime && cargo test --locked)
+(cd examples/rust-wasmtime && cargo test --locked && cargo run --locked)
 ```
 
 ## 7. Do Not Do
 
-- Do not publish private-main capability as current `v0.0.2` behavior.
-- Do not teach Agents to call provider-private handles or lifecycle functions.
-- Do not mutate or retag `v0.0.2`.
-- Do not make GitHub Actions a required release path.
+- Do not copy private compiler source or build caches.
+- Do not restore FastAPI aliases in `v0.0.3`.
+- Do not mutate or retag `v0.0.1` or `v0.0.2`.
+- Do not call the Rust demo an SDK or make GitHub Actions a release dependency.
 
 ## 8. Recovery / Resume Commands
 
 ```bash
-cd /Users/youxianshi/code/wasmcrelease
+cd /Users/youxianshi/code/.worktrees/wasmcrelease/release-v0.0.3
 git status --short --branch
-git fetch --prune origin
 ./scripts/maintainer-orient.sh
 ```

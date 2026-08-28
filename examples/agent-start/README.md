@@ -13,5 +13,5 @@ compiler, rejects unexpected imports, instantiates it, and checks exact output.
 
 See [`../../LANGUAGE.md`](../../LANGUAGE.md) before generating a larger direct
 Core-lane program. If the task needs strings, lists, maps, or managed objects,
-read [`../../FASTAPI.md`](../../FASTAPI.md) first; general managed-source
-construction is not public in `v0.0.2`.
+read [`../../LIB.md`](../../LIB.md) and the bundled developer Skill; managed
+source is public through `compileLib` and `instantiateLib` in `v0.0.3`.

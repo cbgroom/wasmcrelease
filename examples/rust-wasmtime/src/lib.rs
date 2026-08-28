@@ -1,5 +1,8 @@
 use std::{error::Error, fs, path::PathBuf};
-use wasmtime::{Engine, Instance, Module, Store};
+use wasmtime::{
+    component::{Component, Linker, Val},
+    Engine, Instance, Module, Store,
+};
 
 const SAMPLE: &str = r#"package local:add;
 interface api {
@@ -8,19 +11,16 @@ interface api {
 world app { export api; }
 "#;
 
-fn artifact(name: &str) -> PathBuf {
-    PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../dist").join(name)
+fn release_file(path: &str) -> PathBuf {
+    PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../..").join(path)
 }
 
-pub fn exercise() -> Result<(usize, i32), Box<dyn Error>> {
+pub fn exercise() -> Result<(usize, i32, i32, i32), Box<dyn Error>> {
     let engine = Engine::default();
-    let compiler_bytes = fs::read(artifact("wasmc_compiler.wasm"))?;
-    let compiler = Module::new(&engine, compiler_bytes)?;
+    let compiler = Module::new(&engine, fs::read(release_file("dist/wasmc_compiler.wasm"))?)?;
     if compiler.imports().next().is_some() {
-        return Err("compiler unexpectedly requires host imports".into());
+        return Err("compiler unexpectedly requires Host imports".into());
     }
-
-    // The module is reusable; request-local state is not.
     let generated = {
         let mut store = Store::new(&engine, ());
         let instance = Instance::new(&mut store, &compiler, &[])?;
@@ -35,8 +35,7 @@ pub fn exercise() -> Result<(usize, i32), Box<dyn Error>> {
         let input = SAMPLE.as_bytes();
         let pointer = alloc.call(&mut store, input.len() as i32)?;
         memory.write(&mut store, pointer as usize, input)?;
-        let status = compile.call(&mut store, (pointer, input.len() as i32))?;
-        if status != 0 {
+        if compile.call(&mut store, (pointer, input.len() as i32))? != 0 {
             let pointer = error_ptr.call(&mut store, ())? as usize;
             let length = error_len.call(&mut store, ())? as usize;
             let mut message = vec![0; length];
@@ -50,38 +49,41 @@ pub fn exercise() -> Result<(usize, i32), Box<dyn Error>> {
         clear.call(&mut store, ())?;
         bytes
     };
-
-    let result = {
+    let scalar = {
         let app = Module::new(&engine, &generated)?;
-        if app.imports().next().is_some() {
-            return Err("sample output unexpectedly requires host imports".into());
-        }
         let mut store = Store::new(&engine, ());
-        let instance = Instance::new(&mut store, &app, &[])?;
-        instance.get_typed_func::<(i32, i32), i32>(&mut store, "run")?
-            .call(&mut store, (5, 6))?
+        Instance::new(&mut store, &app, &[])?.get_typed_func::<(i32, i32), i32>(&mut store, "run")?.call(&mut store, (5, 6))?
     };
 
-    let provider_bytes = fs::read(artifact("fastapi_core.wasm"))?;
-    let provider = Module::new(&engine, provider_bytes)?;
-    if provider.imports().next().is_some() {
-        return Err("FastAPI Core unexpectedly requires host imports".into());
-    }
-    let mut store = Store::new(&engine, ());
-    let instance = Instance::new(&mut store, &provider, &[])?;
-    let init = instance.get_typed_func::<(i32, i32), i32>(&mut store, "provider_domain_init")?;
-    if init.call(&mut store, (1, 1))? != 0 {
-        return Err("FastAPI Core initialization failed".into());
-    }
-    Ok((generated.len(), result))
+    let resource = Component::new(&engine, fs::read(release_file("libs/wasmc-resource-counter/component.wasm"))?)?;
+    let mut resource_store = Store::new(&engine, ());
+    let resource_instance = Linker::new(&engine).instantiate(&mut resource_store, &resource)?;
+    let counters = resource.get_export_index(None, "wasmc:resource-counter/counters@0.0.1").ok_or("counter interface missing")?;
+    let constructor = resource_instance.get_func(&mut resource_store, &resource.get_export_index(Some(&counters), "[constructor]counter").ok_or("constructor missing")?).ok_or("constructor function missing")?;
+    let add = resource_instance.get_func(&mut resource_store, &resource.get_export_index(Some(&counters), "[method]counter.add").ok_or("add missing")?).ok_or("add function missing")?;
+    let mut result = [Val::Bool(false)];
+    constructor.call(&mut resource_store, &[Val::S32(10)], &mut result)?;
+    let counter = match &result[0] { Val::Resource(value) => value.clone(), _ => return Err("constructor did not return a resource".into()) };
+    add.call(&mut resource_store, &[Val::Resource(counter.clone()), Val::S32(5)], &mut result)?;
+    let counter_value = match result[0] { Val::S32(value) => value, _ => return Err("counter add did not return s32".into()) };
+    counter.resource_drop(&mut resource_store)?;
+
+    let host = Component::new(&engine, fs::read(release_file("libs/wasmc-host-clock/component.wasm"))?)?;
+    let mut host_linker = Linker::new(&engine);
+    host_linker.instance("wasmc:host-clock/clock-host@0.0.1")?.func_wrap("now", |_store, (): ()| Ok((40_i32,)))?;
+    let mut host_store = Store::new(&engine, ());
+    let host_instance = host_linker.instantiate(&mut host_store, &host)?;
+    let clock = host.get_export_index(None, "wasmc:host-clock/clock-api@0.0.1").ok_or("clock interface missing")?;
+    let sampled = host_instance.get_func(&mut host_store, &host.get_export_index(Some(&clock), "sampled").ok_or("sampled missing")?).ok_or("sampled function missing")?;
+    sampled.call(&mut host_store, &[Val::S32(2)], &mut result)?;
+    let sampled_value = match result[0] { Val::S32(value) => value, _ => return Err("sampled did not return s32".into()) };
+    Ok((generated.len(), scalar, counter_value, sampled_value))
 }
 
 #[cfg(test)]
 mod tests {
     #[test]
-    fn compiler_and_fastapi_artifacts_execute() {
-        let (bytes, result) = super::exercise().unwrap();
-        assert_eq!(bytes, 44);
-        assert_eq!(result, 17);
+    fn compiler_resource_and_explicit_host_lib_execute() {
+        assert_eq!(super::exercise().unwrap(), (44, 17, 15, 42));
     }
 }

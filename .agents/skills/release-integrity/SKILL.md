@@ -8,17 +8,17 @@ description: Maintain WAsmC public release artifacts, manifests, checksums, vers
 ## Mental model
 
 This repository is a source-free delivery boundary. A release is one atomic
-set of compiler bytes, facade, FastAPI provider, metadata, examples, manifest,
+set of compiler bytes, facade, matching Libs, metadata, examples, manifest,
 provenance, and checksums admitted by the private source authority. A branch or
 CDN alias is discovery state; an immutable tag or full commit is package identity.
 
 ## Rules
 
 - Inspect the exact public tag and mutable branch independently.
-- Never rebuild compiler or provider bytes here.
+- Never rebuild compiler or Lib bytes here.
 - Accept new binary packages only with the private clean synchronized source
   commit, toolchain/profile, behavior evidence, and matching public files.
-- Keep version, provider contract, JavaScript exports, examples, manifest,
+- Keep version, Lib contracts, JavaScript exports, examples, manifest,
   provenance, package index, and release notes consistent.
 - Exclude reproducible local build outputs such as Cargo `target/` directories
   before regenerating repository checksums; package integrity must not absorb a

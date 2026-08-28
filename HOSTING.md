@@ -1,84 +1,29 @@
-# Hosting WAsmC
+# Hosting wasmc v0.0.3
 
-Choose the smallest public layer that fits the caller. All paths produce or
-consume standard Core Wasm; none grant ambient Host authority.
+Choose the smallest standard layer that fits the caller.
 
 ## JavaScript
 
-Use `dist/wasmc.mjs` in Node.js, Bun, Deno, browsers, or TypeScript projects.
-Keep `dist/wasmc_compiler.wasm` beside the facade, or pass an explicit immutable
-compiler URL to `createCompiler`.
-
-The `v0.0.2` facade exports:
-
-```text
-FASTAPI_CORE_METADATA_URL  FASTAPI_CORE_URL
-WasmcBrowserCompiler       createCompiler
-compile                    compilePackage
-flattenWasmcPackage        inspectWasm
-loadFastApiCoreBytes       loadWasmcBrowserCompiler
-main
-```
-
 ```js
-import { compile, inspectWasm } from "./dist/wasmc.mjs";
-
-const wasm = await compile(source);
-const inspected = inspectWasm(wasm);
-const imports = inspected.imports.map(({ module, name }) => `${module}.${name}`);
-if (imports.length !== 0) throw new Error(`unexpected imports: ${imports}`);
-const instance = await WebAssembly.instantiate(inspected.module, {});
+import { compile, compileLib, instantiateLib, inspectWasm } from "./dist/wasmc.mjs";
 ```
 
-`compilePackage(files)` sorts `{name, source}` entries by UTF-8 filename,
-concatenates the sources, and performs ordinary compilation. It is not a module
-system, linker, or FastAPI product-bundle builder.
+`compile` emits standard Core Wasm. `compileLib` returns matching application and Lib bytes. `instantiateLib` is the default managed-value path and returns an ordinary `WebAssembly.Instance`. The facade also exports `compilePackage`, `compileDetailed`, `flattenWasmcPackage`, and `createCompiler`; see [skills/wasmc-developer/references/javascript.md](skills/wasmc-developer/references/javascript.md).
+
+The classic file exposes the same surface as `globalThis.Wasmc`. Browser fetch policy, Workers, CORS, CSP, caching, and permissions remain application decisions.
 
 ## Raw compiler ABI
 
-`dist/wasmc_compiler.wasm` is import-free standard Core Wasm. Its adapter
-buffers are instance-local mutable state, so compile with a fresh or otherwise
-exclusively owned instance.
-
-Required exports:
-
-```text
-memory
-wasmc_alloc(len: i32) -> i32
-wasmc_compile(ptr: i32, len: i32) -> i32
-wasmc_output_ptr() -> i32
-wasmc_output_len() -> i32
-wasmc_error_ptr() -> i32
-wasmc_error_len() -> i32
-wasmc_clear()
-```
-
-Write UTF-8 source into the allocation from `wasmc_alloc`. Status zero means
-the output pointer/length identify generated Wasm; nonzero means the error
-pointer/length identify a UTF-8 diagnostic. Copy the selected bytes before
-`wasmc_clear`, and clear on every success and failure path.
+`dist/wasmc_compiler.wasm` is import-free Core Wasm. It exports `memory`, `wasmc_alloc`, `wasmc_compile`, output/error pointer and length accessors, and `wasmc_clear`. Adapter buffers are instance-local mutable state: use exclusive access, copy output before clear, and clear success and failure paths.
 
 ## Rust and Wasmtime
 
-The executable reference project is `examples/rust-wasmtime`:
-
 ```bash
 cd examples/rust-wasmtime
-cargo run --locked
 cargo test --locked
+cargo run --locked
 ```
 
-It pins Wasmtime 47.0.3, compiles WAsmC source through the public compiler,
-executes the result, and validates/initializes the matching FastAPI provider.
-It is demo source, not a published SDK crate.
+The demo compiles and executes scalar source, invokes a stateful resource Component, and binds the one explicit `clock-host.now` import. It is copyable reference code, not a published SDK. Reuse Engine/compiled modules where appropriate and create a fresh bounded Store for independent requests.
 
-Reuse `Engine` and compiled `Module` values when appropriate. Create a fresh,
-bounded `Store` for each independent request and keep import allowlists
-explicit. Serialized/AOT Wasmtime artifacts are target-, Wasmtime-version-,
-and configuration-bound caches; portable `.wasm` remains package identity.
-
-## FastAPI
-
-The public FastAPI provider has a separate lifecycle and contract. Loading or
-initializing it does not link a generated program. Read `FASTAPI.md` before
-claiming managed-source support.
+Generated imports are authority requests. Reject unknown modules/functions/signatures; no release file grants ambient filesystem, network, clock, randomness, credentials, process, or device access.

@@ -1,47 +1,19 @@
-# Release process
+# Releases
 
-Packages are built and verified locally from the private WAsmC source
-authority. GitHub Actions is not required and this repository cannot rebuild
-the compiler.
+Packages are built and verified locally from clean synchronized private source, then pushed directly. GitHub Actions cannot rebuild the compiler and is not required.
 
-A version becomes available only after fixed repository files, an immutable
-SemVer tag, SHA-256 verification, and independent jsDelivr tests pass for the
-raw compiler Wasm, JavaScript sidecar, and Rust Wasmtime demo. Production URLs
-must pin an exact tag or full commit. `latest`, unversioned, range, and branch
-URLs are mutable discovery conveniences and must not be used as reproducible
-identities. GitHub Releases are convenience mirrors. Wasmtime
-AOT files, when supplied, are target-bound caches and never replace the
-portable compiler Wasm identity.
+## v0.0.3
 
-Rust integration is a complete executable Cargo demo with a pinned Wasmtime
-dependency and behavior test, not a WAsmC SDK or published crate API.
+First release of the current architecture: lowercase `wasmc`, WIT-authoritative Lib identity, `compileLib`/`instantiateLib`, managed String/List/Map/record support, stateful resource and explicit Host-import Component examples, developer/per-Lib Skills, and a locked Rust/Wasmtime journey. It is built from private source commit `421aaa33f2d340c312f394a8c0cf5c95a9ad186c`.
 
-## Unreleased
-
-Mutable `main` adds a repository-owned maintainer Skill system and separates
-the public Agent entrypoint, language guide, Host guide, and FastAPI availability
-contract. Compiler, facade, and provider bytes are unchanged. General managed
-source remains unavailable in the public package; `package-index.json.latest`
-continues to point to immutable `v0.0.2`.
+The immutable identity is tag `v0.0.3`. `package-index.json.latest` moves to `0.0.3`; old `v0.0.1` and `v0.0.2` tags remain unchanged.
 
 ## v0.0.2
 
-Adds the public `LANGUAGE.md` Agent writing guide and five executable teaching
-programs covering the complete source shell, scalar expressions, control flow,
-private functions, Core-lane records, and explicit Host imports. The language,
-compiler, FastAPI Provider, JS facade, and Rust demo bytes are unchanged from
-`v0.0.1`; this release closes the first-run documentation gap.
-
-`package-index.json.latest` moves to `0.0.2`. The immutable `v0.0.1` tag and
-Release remain available unchanged.
+Added the first public language guide and executable Agent examples. Its public FastAPI provider was prebuilt but did not expose a complete managed-source facade.
 
 ## v0.0.1
 
-This is the first formal initial-development release. It publishes compiler and
-FastAPI Core 4.3 bytes atomically with the JavaScript facade, Rust Wasmtime
-demo, manifest, provenance, checksums, and Agent integration guide.
+Initial compiler, JavaScript facade, provider bytes, manifest, checksums, and Rust demo.
 
-The immutable identity is `v0.0.1`. `package-index.json` records `0.0.1` as
-`latest` at publication; later releases preserve `v0.0.1` and move only that
-mutable index pointer. Version `0.0.1` does not claim stable APIs, publisher signing,
-automatic update/rollback, or a general managed-source product compiler.
+All `0.0.x` releases are intentionally not 1.x-stable. Publisher signing and automatic update/rollback are not provided.
