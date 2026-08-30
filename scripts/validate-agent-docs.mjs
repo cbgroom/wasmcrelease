@@ -3,10 +3,13 @@ import * as facade from "../dist/wasmc.mjs";
 
 const manifest = JSON.parse(await readFile(new URL("../manifest.json", import.meta.url)));
 const release = JSON.parse(await readFile(new URL("../release.json", import.meta.url)));
+const index = JSON.parse(await readFile(new URL("../package-index.json", import.meta.url)));
 const agents = await readFile(new URL("../AGENTS.md", import.meta.url), "utf8");
 const libGuide = await readFile(new URL("../LIB.md", import.meta.url), "utf8");
 
-if (manifest.version !== "0.0.3" || release.version !== "0.0.3") throw new Error("release metadata is not v0.0.3");
+if (manifest.version !== release.version || release.version !== index.latest || release.tag !== `v${index.latest}`) {
+  throw new Error("manifest, release, and latest metadata identities differ");
+}
 for (const name of ["compile", "compileLib", "instantiateLib", "inspectWasm"]) {
   if (typeof facade[name] !== "function") throw new Error(`missing public facade function: ${name}`);
 }

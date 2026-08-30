@@ -1,4 +1,4 @@
-# Hosting wasmc v0.0.3
+# Hosting wasmc v0.0.4
 
 Choose the smallest standard layer that fits the caller.
 

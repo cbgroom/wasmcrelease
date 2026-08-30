@@ -5,7 +5,7 @@ wasmc combines a WIT-shaped declaration shell, Rust-familiar expressions, and
 standard Core WebAssembly output. It is not full Rust and does not use Cargo,
 modules, macros, traits, references, or a borrow-checker syntax.
 
-For `v0.0.3`, this guide covers direct Core-lane programs and the source-language
+For `v0.0.4`, this guide covers direct Core-lane programs and the source-language
 shell used by managed Lib applications. For String/List/Map/record/resource
 semantics, read `LIB.md` and the bundled developer Skill rather than guessing
 private operations.

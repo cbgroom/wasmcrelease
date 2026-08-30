@@ -14,4 +14,4 @@ compiler, rejects unexpected imports, instantiates it, and checks exact output.
 See [`../../LANGUAGE.md`](../../LANGUAGE.md) before generating a larger direct
 Core-lane program. If the task needs strings, lists, maps, or managed objects,
 read [`../../LIB.md`](../../LIB.md) and the bundled developer Skill; managed
-source is public through `compileLib` and `instantiateLib` in `v0.0.3`.
+source is public through `compileLib` and `instantiateLib` in `v0.0.4`.

@@ -1,6 +1,6 @@
 # wasmc public Agent entrypoint
 
-This source-free repository publishes standard Core Wasm compiler and Lib packages. The current immutable release is `v0.0.3`; pin that tag or its full commit for reproducible use.
+This source-free repository publishes standard Core Wasm compiler and Lib packages. The current immutable release is `v0.0.4`; pin that tag or its full commit for reproducible use.
 
 ## Start here
 
@@ -23,7 +23,7 @@ const instance = await WebAssembly.instantiate(inspected.module, {});
 console.log(instance.exports.run(5, 6)); // 17
 ```
 
-## v0.0.3 capability contract
+## v0.0.4 capability contract
 
 | Task | Status | Canonical path |
 |---|---|---|
@@ -48,7 +48,7 @@ console.log(instance.exports.run(5, 6)); // 17
 Inspect every generated import and bind only reviewed Host functions. Never expose private handles, plans, Store nonces, lifecycle helpers, or JSON invented as a WIT replacement.
 
 ```text
-https://cdn.jsdelivr.net/gh/cbgroom/wasmcrelease@v0.0.3/<PATH>
+https://cdn.jsdelivr.net/gh/cbgroom/wasmcrelease@v0.0.4/<PATH>
 ```
 
 Verify files against `SHA256SUMS`, `manifest.json`, and `release.json`. `main`, unversioned URLs, and `package-index.json.latest` are mutable discovery state.

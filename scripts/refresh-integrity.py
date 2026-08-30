@@ -29,10 +29,10 @@ for path in reversed(PUBLIC_DOCS):
 
 manifest.pop("fastapi", None)
 manifest.update({
-    "release_id": "wasmc-v0.0.3",
-    "version": "0.0.3",
-    "release_date": "2026-08-28",
-    "tag": "v0.0.3",
+    "release_id": f"wasmc-v{release['version']}",
+    "version": release["version"],
+    "release_date": "2026-08-30",
+    "tag": release["tag"],
     "released": True,
     "source_available": False,
     "compiler_abi": "wasmc-core-compiler-abi-v0",
