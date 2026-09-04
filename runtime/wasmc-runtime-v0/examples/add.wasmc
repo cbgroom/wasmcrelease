@@ -1,0 +1,7 @@
+package local:runtime_add;
+interface api {
+  run: func(a: s32, b: s32) -> s32 {
+    return a + b * 2;
+  }
+}
+world app { export api; }

@@ -1,0 +1,28 @@
+package wasmc:runtime-host@0.1.0;
+
+interface filesystem {
+  read-file: func(path: string) -> result<list<u8>, string>;
+  write-file: func(path: string, bytes: list<u8>) -> result<unit, string>;
+}
+
+interface process {
+  argv: func() -> list<string>;
+  stdout: func(text: string);
+  stderr: func(text: string);
+  exit: func(code: s32);
+}
+
+interface hash {
+  sha256: func(bytes: list<u8>) -> list<u8>;
+}
+
+interface http {
+  get: func(url: string) -> result<list<u8>, string>;
+}
+
+world runtime-host {
+  import filesystem;
+  import process;
+  import hash;
+  import http;
+}

@@ -1,169 +1,90 @@
 {
+  "schema_version": 1,
+  "predicate_type": "wasmc.public-release.provenance/v1",
   "builder": {
-    "cargo": "cargo 1.96.0 (30a34c682 2026-05-25)",
+    "node": "v26.5.1",
     "machine": "arm64",
-    "python": "3.14.6",
-    "release": "25.5.0",
-    "rustc": "rustc 1.96.0 (ac68faa20 2026-05-25)",
-    "system": "Darwin"
+    "system": "darwin",
+    "release": "25.6.0"
   },
   "invocation": {
     "commands": [
-      "cargo build --release --target wasm32-unknown-unknown --manifest-path crates/wasmc_wasm_cdylib/Cargo.toml",
-      "python3 scripts/build-wasmc-js-distributions.py --compiler-wasm <canonical-compiler-wasm> --outdir <distribution-staging>"
+      "node runtime/wasmc-runtime-v0/bootstrap.mjs self-test",
+      "node scripts/refresh-integrity.mjs",
+      "./scripts/validate-maintainer.sh"
     ]
   },
   "materials": [
     {
+      "uri": "https://github.com/cbgroom/wasmcrelease.git",
       "digest": {
-        "gitCommit": "b8344d65a942133f6af62b9a27093f50e2c22b79"
+        "gitCommit": "573dda3b5fd771596814f5546923974b9fc9cbd5"
       },
-      "uri": "https://github.com/yxsicd/wasmc.git"
+      "role": "byte-frozen-v0.0.4-compatibility-surface"
     },
     {
+      "uri": "https://github.com/yxsicd/wasmc.git",
       "digest": {
-        "gitTree": "a5b9d816a56c1687c5265e3ec8549292ff68f13e"
+        "gitCommit": "62e33753f8c89ebba353f974c47beafac7921997"
       },
-      "uri": "git-tree"
+      "role": "v0.0.5-runtime-source-authority"
     },
     {
+      "uri": "git-tree",
       "digest": {
-        "sha256": "557dc59a9078d195966c29b5e78cc02477479468aba94c27e0d474e6280a9587"
+        "gitTree": "43098eb721cdb4006a1917e234184b70f77ea8a4"
       },
-      "uri": "Cargo.lock"
+      "role": "v0.0.5-runtime-source-tree"
+    }
+  ],
+  "source": {
+    "compatibility_public_commit": "573dda3b5fd771596814f5546923974b9fc9cbd5",
+    "runtime_private_commit": "62e33753f8c89ebba353f974c47beafac7921997",
+    "runtime_private_tree": "43098eb721cdb4006a1917e234184b70f77ea8a4",
+    "dirty": false
+  },
+  "subjects": [
+    {
+      "name": "dist/wasmc_compiler.wasm",
+      "bytes": 1483217,
+      "digest": {
+        "sha256": "8f79429d5499380d93abbb980df6c16a99adc15fee8987068906af11aa757027"
+      }
+    },
+    {
+      "name": "runtime/wasmc-runtime-v0/compiler.wasm",
+      "bytes": 1484773,
+      "digest": {
+        "sha256": "c96ee185af38febf197467acefa3389a076b0eef9c54d6ac4ba7d25397bcbd3b"
+      }
+    },
+    {
+      "name": "runtime/wasmc-runtime-v0/bootstrap.mjs",
+      "bytes": 1038,
+      "digest": {
+        "sha256": "9264bfea2c27bcd2526ff77a80426124d5c277d6679747f00e1e5d0b60bab422"
+      }
+    },
+    {
+      "name": "runtime/wasmc-runtime-v0/manifest.json",
+      "bytes": 3128,
+      "digest": {
+        "sha256": "7513259761af7cb454fb94e1bbad08ee71e36117151c34d993d8fe7229fa36c6"
+      }
+    },
+    {
+      "name": "skills/wasmc-developer/SKILL.md",
+      "bytes": 1933,
+      "digest": {
+        "sha256": "f347d97037b03bb2687a5248e96dc50c4cd24a9566fdc6e1e0def6bbdeb11314"
+      }
     }
   ],
   "non_claims": [
     "publisher signature or publisher authenticity",
     "cross-host byte-reproducible compiler-Wasm rebuilding",
-    "native CLI or runtime bundle release",
-    "Chromium resource, CSP, CORS, or Worker policy evidence",
-    "automatic installation, update, rollback, or authority grant"
-  ],
-  "predicate_type": "wasmc.compiler-release.provenance/v0",
-  "schema_version": 1,
-  "source": {
-    "cargo_lock_sha256": "557dc59a9078d195966c29b5e78cc02477479468aba94c27e0d474e6280a9587",
-    "commit": "b8344d65a942133f6af62b9a27093f50e2c22b79",
-    "dirty": false,
-    "head_origin_master": [
-      0,
-      0
-    ],
-    "tree": "a5b9d816a56c1687c5265e3ec8549292ff68f13e"
-  },
-  "subjects": [
-    {
-      "bytes": 1483217,
-      "digest": {
-        "sha256": "8f79429d5499380d93abbb980df6c16a99adc15fee8987068906af11aa757027"
-      },
-      "name": "compiler/wasmc_compiler.wasm"
-    },
-    {
-      "bytes": 875,
-      "digest": {
-        "sha256": "270985bedd74b8315c2e5ace555c05de0c43494307cb12bd773daa98b8052146"
-      },
-      "name": "package/AGENTS.md"
-    },
-    {
-      "bytes": 247,
-      "digest": {
-        "sha256": "68c9511464319520cc7b4b04ae3d12b7499ad2754476b75aeb93a04c065319fd"
-      },
-      "name": "package/cli.mjs"
-    },
-    {
-      "bytes": 34158,
-      "digest": {
-        "sha256": "86670b35fe4ff01f9ad4392b42ce8816e4679f680ab788599905edb1bbe6e749"
-      },
-      "name": "package/lib_core.wasm"
-    },
-    {
-      "bytes": 18957,
-      "digest": {
-        "sha256": "950b518b5f81ef59c8ea768cbb7689da2c7b456a62f05d597057984c29a33250"
-      },
-      "name": "package/index.mjs"
-    },
-    {
-      "bytes": 473,
-      "digest": {
-        "sha256": "88ab6346b4ddc04b6f3ee417f235482aca601d829da4140b1340caad3d18e293"
-      },
-      "name": "package/package.json"
-    },
-    {
-      "bytes": 1483217,
-      "digest": {
-        "sha256": "8f79429d5499380d93abbb980df6c16a99adc15fee8987068906af11aa757027"
-      },
-      "name": "package/wasmc_compiler.wasm"
-    },
-    {
-      "bytes": 1834,
-      "digest": {
-        "sha256": "42b1221b9b2fd5214755e14b2b019e3440a9ff145df23773820765e73e9f0051"
-      },
-      "name": "package/skills/wasmc-developer/SKILL.md"
-    },
-    {
-      "bytes": 267,
-      "digest": {
-        "sha256": "e1096fe47654775b41272a6575ec846144e82321e3240e94d3d270d0b1cc2fe6"
-      },
-      "name": "package/skills/wasmc-developer/agents/openai.yaml"
-    },
-    {
-      "bytes": 9668,
-      "digest": {
-        "sha256": "44b26d2af67e67bde9e3a576f0349bfed810c0e148e5b5bc08b4a4f833b001da"
-      },
-      "name": "package/skills/wasmc-developer/references/authoring-libs.md"
-    },
-    {
-      "bytes": 2714,
-      "digest": {
-        "sha256": "40e5597d845bbde0ba178f39377f5b242bb40ce6af4657790d388f108740930a"
-      },
-      "name": "package/skills/wasmc-developer/references/lib.md"
-    },
-    {
-      "bytes": 2010,
-      "digest": {
-        "sha256": "d33b4e0aad4a12b2170efc52c3121bfc12428f0c8b89d6d40aa1c2137f81a15a"
-      },
-      "name": "package/skills/wasmc-developer/references/javascript.md"
-    },
-    {
-      "bytes": 2945,
-      "digest": {
-        "sha256": "f0a7c1d4ce801d7863d4e0e4e94a2a14a22b3f767757dfb3f09d3a0edf394879"
-      },
-      "name": "package/skills/wasmc-developer/references/language-and-wit.md"
-    },
-    {
-      "bytes": 2038,
-      "digest": {
-        "sha256": "9bc357c0e5c20bde521ae43d9cb935e9bad2de35f785773c68d66b7e24e00207"
-      },
-      "name": "package/skills/wasmc-developer/references/rust-wasmtime.md"
-    },
-    {
-      "bytes": 2040866,
-      "digest": {
-        "sha256": "322e8b3130bbef69942a7cfccd6de78f755fb1ab0537156892119194d1ae16b9"
-      },
-      "name": "single/wasmc.global.js"
-    },
-    {
-      "bytes": 2042705,
-      "digest": {
-        "sha256": "001ae5e9843c8a87a53c3c9b2c80bf4b20d7f87ba650c2393b87b2ceedaa34ac"
-      },
-      "name": "single/wasmc.mjs"
-    }
+    "Bun live-runtime evidence for the v0.0.5 Runtime package",
+    "automatic installation, update, rollback, or authority grant",
+    "v0.0.4 compatibility facades rebuilt from the v0.0.5 runtime source commit"
   ]
 }

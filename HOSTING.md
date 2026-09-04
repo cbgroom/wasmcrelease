@@ -1,6 +1,20 @@
-# Hosting wasmc v0.0.4
+# Hosting wasmc v0.0.5
 
 Choose the smallest standard layer that fits the caller.
+
+## Runtime package — preferred for new compile-only Agents
+
+No npm install is required:
+
+```bash
+cd runtime/wasmc-runtime-v0
+node bootstrap.mjs self-test
+node bootstrap.mjs compile --input examples/add.wasmc --output /tmp/add.wasm
+```
+
+The same package shape has Bun and Deno adapters. Node and Deno are release-evidenced; Bun remains an adapter contract until a Bun-capable host is available for independent live validation. Verify `manifest.json` and `receipts/compiler-wasm.json` before activation. The repo-local resolver metadata is under `runtime/registry-v0`.
+
+The internal registry's `dev` label is package-local resolver metadata. The outer immutable `v0.0.5` Git tag is the public release identity.
 
 ## JavaScript
 

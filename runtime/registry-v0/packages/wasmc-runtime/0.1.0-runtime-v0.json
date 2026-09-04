@@ -1,0 +1,47 @@
+{
+  "channel": "dev",
+  "compiler": {
+    "adapter_abi": "wasmc-wasm-c-abi/v0",
+    "bytes": 1484773,
+    "path": "compiler.wasm",
+    "sha256": "c96ee185af38febf197467acefa3389a076b0eef9c54d6ac4ba7d25397bcbd3b",
+    "target": "wasm32-unknown-unknown"
+  },
+  "entrypoints": {
+    "bun": "host/bun.mjs",
+    "deno": "host/deno.mjs",
+    "node": "host/node.mjs",
+    "universal": "bootstrap.mjs"
+  },
+  "host_abi": {
+    "authorities": [
+      "filesystem",
+      "process",
+      "hash",
+      "http"
+    ],
+    "wit": {
+      "bytes": 568,
+      "path": "wit/host.wit",
+      "sha256": "4418ee5d3985c74742c023ef13ba10ea991c4591beaf299c6daacbd2a2f695b0"
+    }
+  },
+  "id": "wasmc:runtime",
+  "manifest": {
+    "bytes": 3128,
+    "path": "manifest.json",
+    "sha256": "7513259761af7cb454fb94e1bbad08ee71e36117151c34d993d8fe7229fa36c6"
+  },
+  "policy": {
+    "external_js_package_registry": false,
+    "node_bun_deno_are_host_providers_only": true,
+    "python_active_tree_allowed": false
+  },
+  "schema": "wasmc.runtime-registry-package/v0",
+  "source": {
+    "kind": "repo-local-runtime-package",
+    "package_report_sha256": "d5cf9a6ee1dc64e89195cd5cf43cc416c930091ebd4886131059030d423c5a2b",
+    "package_root": "runtime/wasmc-runtime-v0"
+  },
+  "version": "0.1.0-runtime-v0"
+}

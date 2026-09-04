@@ -9,9 +9,9 @@ git status --short --branch
 printf 'head: '
 git rev-parse HEAD
 printf 'latest release: '
-python3 -c 'import json; print(json.load(open("package-index.json"))["latest"])'
+node -e 'console.log(JSON.parse(require("fs").readFileSync("package-index.json","utf8")).latest)'
 printf 'manifest: '
-python3 -c 'import json; m=json.load(open("manifest.json")); print(m["release_id"], "released=" + str(m["released"]).lower())'
+node -e 'const m=JSON.parse(require("fs").readFileSync("manifest.json","utf8")); console.log(m.release_id, `released=${String(m.released)}`)'
 echo "facade exports:"
 node -e 'import("./dist/wasmc.mjs").then(m => console.log(Object.keys(m).sort().join(", ")))'
 ./scripts/validate-maintainer.sh

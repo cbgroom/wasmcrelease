@@ -25,7 +25,7 @@ credentials, or internal implementation details here.
 3. Read `.agents/skills.registry.yaml` and only the Skill(s) selected by the task.
 4. Inspect the immutable release tag separately from mutable `main`.
 5. Make a bounded change and stage only the intended files. If a tracked
-   delivery file changed, run `./scripts/refresh-integrity.py`, review and stage
+   delivery file changed, run `node ./scripts/refresh-integrity.mjs`, review and stage
    its output, then run `./scripts/validate-maintainer.sh` plus the focused examples.
 6. Update `.agents/HANDOFF.md` whenever the current truth, evidence, or next
    action changes.
@@ -44,7 +44,7 @@ credentials, or internal implementation details here.
 
 ```bash
 ./scripts/maintainer-orient.sh
-./scripts/refresh-integrity.py
+node ./scripts/refresh-integrity.mjs
 ./scripts/validate-maintainer.sh
 node examples/agent-start/run.mjs
 (cd examples/rust-wasmtime && cargo test --locked)

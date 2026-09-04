@@ -2,10 +2,10 @@
 
 ## 0. Status
 
-- Branch: public release candidate for `main`
-- Release: additive `v0.0.4` built from private `wasmc@b8344d65`
+- Branch: `release/v0.0.5` public release candidate for `main`
+- Release: additive `v0.0.5`; v0.0.4 compatibility trees are frozen and the new Runtime comes from private `wasmc@62e33753`
 - Public tag target: the final source-free release commit
-- Existing immutable truth: `v0.0.1`, `v0.0.2`, and `v0.0.3` remain unchanged
+- Existing immutable truth: `v0.0.1` through `v0.0.4` remain unchanged
 
 ## 1. North Star
 
@@ -13,24 +13,23 @@ Let a zero-context Agent select an immutable release, load the bundled developer
 
 ## 2. Current Focus
 
-Publish `v0.0.4` additively while mutable `main` becomes the discovery surface for `latest=0.0.4`. The source-free release contains compiler/JS bytes, matching Lib Core, three WIT-native Core/Component Libs, developer/per-Lib Skills, and a locked Rust/Wasmtime demo; it exposes no FastAPI compatibility name.
+Publish `v0.0.5` additively while mutable `main` becomes the discovery surface for `latest=0.0.5`. The source-free release preserves the v0.0.4 `dist/`, `package/`, and `libs/` trees byte-for-byte and adds the Python-free/no-npm Runtime/Registry package from private `wasmc@62e33753`.
 
 ## 3. Recent Progress
 
-- Private delivery is accepted from clean synchronized source commit `b8344d65a942133f6af62b9a27093f50e2c22b79`.
-- Node, Bun, and Deno package/single/global/CLI outputs are byte-identical.
-- WIT resources, receiver methods, drop, explicit Host imports, and negative drift checks pass under Wasmtime.
-- The public assembler produced 56 source-free files, developer/per-Lib Skills, admission receipts, and SHA-256 identities.
-- Exact v0.0.4 distribution observations remain below frozen budgets: compiler Wasm `1483217`, package `1537927`, single ESM `2042705`, and classic script `2040866` bytes.
+- Compatibility source is immutable public `v0.0.4@573dda3b`; its `dist`, `package`, and `libs` Git trees are frozen.
+- The new Runtime is exact private `wasmc@62e33753f8c89ebba353f974c47beafac7921997`, compiler 1,484,773 bytes SHA-256 `c96ee185...bcbd3b`.
+- Runtime Node/Deno receipts are present; Node self-test and compile are re-run in the public candidate. Bun remains adapter-only evidence on this publisher host.
+- Public maintainer integrity/orientation is migrated from Python to Node; active `.py` files are zero.
 
 ## 4. Current Action
 
-Task state: publication-ready
+Task state: publication-ready after candidate validation
 
-- Result: source-free `v0.0.4` is locally assembled and verified from the fixed private-source commit, ready for one immutable tag and mutable latest-pointer update.
-- Evidence: complete private workspace tests, three-host JS parity, generated Lib/WIT gates, delivery closure, assembler verification, and source-free checks pass.
-- Residual risk: CDN propagation and independent pinned-download parity are external post-push evidence; `v0.0.4` remains an early `stable=false` release.
-- Next action: push public `main` and annotated `v0.0.4`, then verify GitHub Raw, pinned jsDelivr, latest metadata, downloaded JS execution, and fresh-tag Rust/Wasmtime execution.
+- Result: `v0.0.5` candidate is additive: byte-frozen v0.0.4 compatibility plus the new source-free Runtime/Registry and Python-free public maintenance path.
+- Evidence: validate-maintainer, legacy Agent scalar/managed journeys, Runtime Node self-test/compile, checksum/manifest/receipt checks, and compatibility-tree immutability are required before tag.
+- Residual risk: Bun live-runtime evidence and CDN propagation remain external post-push evidence; `v0.0.5` remains `stable=false`.
+- Next action: validate, commit, push `release/v0.0.5`, fast-forward public `main`, tag immutable `v0.0.5`, then perform a clean new-Agent pinned-tag evaluation.
 
 ## 5. Next Actions
 
@@ -50,13 +49,13 @@ node examples/agent-start/run.mjs
 
 - Do not copy private compiler source or build caches.
 - Do not restore FastAPI aliases.
-- Do not mutate or retag `v0.0.1` through `v0.0.3`.
+- Do not mutate or retag `v0.0.1` through `v0.0.4`.
 - Do not call the Rust demo an SDK or make GitHub Actions a release dependency.
 
 ## 8. Recovery / Resume Commands
 
 ```bash
-cd /Users/youxianshi/code/wasmcrelease
+cd <wasmcrelease-checkout>
 git status --short --branch
 ./scripts/maintainer-orient.sh
 ```

@@ -1,0 +1,109 @@
+{
+  "schema": "wasmc.runtime-package/v0",
+  "id": "wasmc:runtime",
+  "version": "0.1.0-runtime-v0",
+  "channel": "dev",
+  "distribution": {
+    "registry": "wasmc-registry",
+    "external_js_package_registry": false,
+    "node_bun_deno_are_host_providers_only": true
+  },
+  "compiler": {
+    "file": {
+      "path": "compiler.wasm",
+      "bytes": 1484773,
+      "sha256": "c96ee185af38febf197467acefa3389a076b0eef9c54d6ac4ba7d25397bcbd3b"
+    },
+    "target": "wasm32-unknown-unknown",
+    "adapter_abi": "wasmc-wasm-c-abi/v0",
+    "max_uncompressed_bytes": 20971520
+  },
+  "entrypoints": {
+    "universal": "bootstrap.mjs",
+    "node": "host/node.mjs",
+    "bun": "host/bun.mjs",
+    "deno": "host/deno.mjs"
+  },
+  "host_abi": {
+    "wit": {
+      "path": "wit/host.wit",
+      "bytes": 568,
+      "sha256": "4418ee5d3985c74742c023ef13ba10ea991c4591beaf299c6daacbd2a2f695b0"
+    },
+    "authorities": [
+      "filesystem",
+      "process",
+      "hash",
+      "http"
+    ]
+  },
+  "files": {
+    "VERSION": {
+      "path": "VERSION",
+      "bytes": 17,
+      "sha256": "b10e46f75ee7c58896204f308750f3d2407d335d029053d5780212e23e06fb5b"
+    },
+    "README.md": {
+      "path": "README.md",
+      "bytes": 706,
+      "sha256": "c2c02dd339877646da42248e6a4141e4d79c95195bc46d219cd367c22dc49d58"
+    },
+    "compiler.wasm": {
+      "path": "compiler.wasm",
+      "bytes": 1484773,
+      "sha256": "c96ee185af38febf197467acefa3389a076b0eef9c54d6ac4ba7d25397bcbd3b"
+    },
+    "bootstrap.mjs": {
+      "path": "bootstrap.mjs",
+      "bytes": 1038,
+      "sha256": "9264bfea2c27bcd2526ff77a80426124d5c277d6679747f00e1e5d0b60bab422"
+    },
+    "host/common.mjs": {
+      "path": "host/common.mjs",
+      "bytes": 4771,
+      "sha256": "90bcd68beb7088ddc384d28d810e420940d624d4338cd82c83c5f69898c59bf9"
+    },
+    "host/node.mjs": {
+      "path": "host/node.mjs",
+      "bytes": 836,
+      "sha256": "c7f187f13ed6ae74b090bd65e6acf005efe4e43a60b9d1ff5d0d4310d7464e3a"
+    },
+    "host/bun.mjs": {
+      "path": "host/bun.mjs",
+      "bytes": 361,
+      "sha256": "3040514b15f8baa7ccf2428f53836a51fdb350cb9f377032a7d4362a771dc6d3"
+    },
+    "host/deno.mjs": {
+      "path": "host/deno.mjs",
+      "bytes": 821,
+      "sha256": "08e4764ff360ba3877e3af4d21a6130166b08279307358881294060d887b9f3c"
+    },
+    "wit/host.wit": {
+      "path": "wit/host.wit",
+      "bytes": 568,
+      "sha256": "4418ee5d3985c74742c023ef13ba10ea991c4591beaf299c6daacbd2a2f695b0"
+    },
+    "examples/add.wasmc": {
+      "path": "examples/add.wasmc",
+      "bytes": 134,
+      "sha256": "129b276fd0d708109d8c028706402857c453cdd2437236961c7199fc661d5781"
+    }
+  },
+  "required_exports": [
+    "memory",
+    "wasmc_alloc",
+    "wasmc_compile",
+    "wasmc_output_ptr",
+    "wasmc_output_len",
+    "wasmc_error_ptr",
+    "wasmc_error_len",
+    "wasmc_diagnostic_ptr",
+    "wasmc_diagnostic_len",
+    "wasmc_clear"
+  ],
+  "non_claims": [
+    "the package does not require npm or another external JS package registry",
+    "the JavaScript Host adapters do not own compiler semantics",
+    "Git/HTTP/cache/publish authorities remain explicit Host capabilities"
+  ]
+}

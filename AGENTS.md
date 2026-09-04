@@ -1,10 +1,10 @@
 # wasmc public Agent entrypoint
 
-This source-free repository publishes standard Core Wasm compiler and Lib packages. The current immutable release is `v0.0.4`; pin that tag or its full commit for reproducible use.
+This source-free repository publishes standard Core Wasm compiler, Lib packages, and a package-manager-free Runtime/Registry bootstrap. The current immutable release is `v0.0.5`; pin that tag or its full commit for reproducible use.
 
 ## Start here
 
-Read [skills/wasmc-developer/SKILL.md](skills/wasmc-developer/SKILL.md) completely. It routes only the reference needed for source/WIT, Lib authoring, JavaScript, or Rust/Wasmtime. Reuse Rust and WIT priors and learn only the documented wasmc delta.
+Read [skills/wasmc-developer/SKILL.md](skills/wasmc-developer/SKILL.md) completely. It routes only the reference needed for Runtime bootstrap, source/WIT, Lib authoring, JavaScript, or Rust/Wasmtime. Reuse Rust and WIT priors and learn only the documented wasmc delta.
 
 ```wasmc
 package local:add;
@@ -23,10 +23,11 @@ const instance = await WebAssembly.instantiate(inspected.module, {});
 console.log(instance.exports.run(5, 6)); // 17
 ```
 
-## v0.0.4 capability contract
+## v0.0.5 capability contract
 
 | Task | Status | Canonical path |
 |---|---|---|
+| Package-manager-free compile/self-test on Node/Deno/Bun | shipped; Node+Deno evidenced | [runtime/README.md](runtime/README.md), `runtime/wasmc-runtime-v0` |
 | Scalars, control flow, private functions, WIT values | shipped | [LANGUAGE.md](LANGUAGE.md) |
 | Managed String/List/Map/record applications | shipped through matching Lib | [LIB.md](LIB.md), `instantiateLib` |
 | Build a reviewed Rust crate as a WIT Lib | shipped locally | developer Skill authoring reference |
@@ -36,6 +37,8 @@ console.log(instance.exports.run(5, 6)); // 17
 | async Libs, traits, open generics, automatic Rust API discovery | unsupported | do not invent a bridge |
 | signing, auto-update, ambient filesystem/network/device access | not provided | application/publisher authority |
 
+The v0.0.4 `dist/`, `package/`, and `libs/` compatibility trees are carried forward byte-for-byte. v0.0.5 adds the Runtime/Registry surface; it does not silently rebuild or replace those established compatibility bytes.
+
 ## Artifact selection
 
 - `dist/wasmc.mjs`: self-contained ESM facade.
@@ -44,11 +47,13 @@ console.log(instance.exports.run(5, 6)); // 17
 - `package/`: sidecar package with compiler, matching `lib_core.wasm`, and developer Skill.
 - `libs/*/`: Core/Component, WIT, metadata, and root `SKILL.md` per Lib.
 - `examples/rust-wasmtime/`: locked executable reference project, not an SDK.
+- `runtime/wasmc-runtime-v0/`: current `compiler.wasm` plus thin universal/Node/Bun/Deno Host adapters; no npm or external JS registry.
+- `runtime/registry-v0/`: repo-local resolver/channel/mirror metadata for `wasmc:runtime`.
 
 Inspect every generated import and bind only reviewed Host functions. Never expose private handles, plans, Store nonces, lifecycle helpers, or JSON invented as a WIT replacement.
 
 ```text
-https://cdn.jsdelivr.net/gh/cbgroom/wasmcrelease@v0.0.4/<PATH>
+https://cdn.jsdelivr.net/gh/cbgroom/wasmcrelease@v0.0.5/<PATH>
 ```
 
 Verify files against `SHA256SUMS`, `manifest.json`, and `release.json`. `main`, unversioned URLs, and `package-index.json.latest` are mutable discovery state.

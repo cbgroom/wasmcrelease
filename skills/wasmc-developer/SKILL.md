@@ -11,14 +11,15 @@ or an unreleased capability.
 ## Start
 
 1. Reuse WIT and Rust knowledge; learn only the wasmc deltas.
-2. For ordinary code read [language-and-wit.md](references/language-and-wit.md).
-3. For managed String/List/Map/record/resource code also read
+2. For a package-manager-free compiler/runtime bootstrap read [runtime.md](references/runtime.md).
+3. For ordinary code read [language-and-wit.md](references/language-and-wit.md).
+4. For managed String/List/Map/record/resource code also read
    [lib.md](references/lib.md).
-4. To expose a reviewed Rust crate as a Lib, read
+5. To expose a reviewed Rust crate as a Lib, read
    [authoring-libs.md](references/authoring-libs.md).
-5. For execution read either [javascript.md](references/javascript.md) or
+6. For execution read either [javascript.md](references/javascript.md) or
    [rust-wasmtime.md](references/rust-wasmtime.md).
-6. Compile the smallest complete program, validate the Wasm, and inspect every
+7. Compile the smallest complete program, validate the Wasm, and inspect every
    import before adding Host bindings.
 
 ## Mental model

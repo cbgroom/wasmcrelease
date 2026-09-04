@@ -1,5 +1,12 @@
 import { readFile } from "node:fs/promises";
+import { execFile } from "node:child_process";
+import { mkdtemp, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { promisify } from "node:util";
 import * as facade from "../dist/wasmc.mjs";
+
+const execFileAsync = promisify(execFile);
 
 const manifest = JSON.parse(await readFile(new URL("../manifest.json", import.meta.url)));
 const release = JSON.parse(await readFile(new URL("../release.json", import.meta.url)));
@@ -41,4 +48,26 @@ world app { export api; }`;
 const managedInstance = await facade.instantiateLib(managed);
 if (managedInstance.exports.count() !== 2) throw new Error("managed Lib behavior drifted");
 
-console.log("PASS public Agent scalar and managed Lib journeys");
+const runtimeRoot = new URL("../runtime/wasmc-runtime-v0/", import.meta.url);
+const selfTest = await execFileAsync(process.execPath, [new URL("bootstrap.mjs", runtimeRoot).pathname, "self-test"]);
+const selfTestJson = JSON.parse(selfTest.stdout);
+if (!selfTestJson.accepted || selfTestJson.runtime !== "node" || selfTestJson.compiler_bytes !== 1484773) {
+  throw new Error("runtime Node self-test drifted");
+}
+const temporary = await mkdtemp(join(tmpdir(), "wasmc-agent-docs-"));
+try {
+  const output = join(temporary, "add.wasm");
+  await execFileAsync(process.execPath, [
+    new URL("bootstrap.mjs", runtimeRoot).pathname,
+    "compile",
+    "--input",
+    new URL("examples/add.wasmc", runtimeRoot).pathname,
+    "--output",
+    output,
+  ]);
+  await WebAssembly.compile(await readFile(output));
+} finally {
+  await rm(temporary, { recursive: true, force: true });
+}
+
+console.log("PASS public Agent legacy scalar/Lib journeys plus package-manager-free Runtime journey");

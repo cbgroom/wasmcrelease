@@ -37,7 +37,7 @@ browser, CDN, deployment, AOT, or compatibility scope only when actually run.
 Use `./scripts/validate-maintainer.sh` for repository consistency, then run the
 host journeys selected by `release-host-integration`.
 
-After changing a tracked delivery file, run `./scripts/refresh-integrity.py`
+After changing a tracked delivery file, run `node ./scripts/refresh-integrity.mjs`
 after staging only the intended paths and before validation. The checksum
 generator deliberately binds only Git-tracked files. Review the resulting
 manifest and checksum diff; generated hash consistency does not authorize or

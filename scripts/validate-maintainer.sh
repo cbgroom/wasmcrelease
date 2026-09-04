@@ -15,6 +15,9 @@ required=(
   package-index.json
   provenance.json
   SHA256SUMS
+  runtime/README.md
+  runtime/wasmc-runtime-v0/manifest.json
+  runtime/registry-v0/registry.json
 )
 for path in "${required[@]}"; do
   test -f "$path" || { echo "missing required file: $path" >&2; exit 1; }
@@ -49,43 +52,7 @@ for heading in {0..8}; do
   }
 done
 
-python3 - <<'PY'
-import hashlib
-import json
-import re
-from pathlib import Path
-
-root = Path('.')
-manifest = json.loads((root / 'manifest.json').read_text())
-for artifact in manifest['artifacts']:
-    path = root / artifact['path']
-    data = path.read_bytes()
-    assert len(data) == artifact['bytes'], f"manifest byte mismatch: {path}"
-    digest = hashlib.sha256(data).hexdigest()
-    assert digest == artifact['sha256'], f"manifest hash mismatch: {path}"
-
-checksums = {}
-for line in (root / 'SHA256SUMS').read_text().splitlines():
-    digest, path = line.split('  ', 1)
-    checksums[path] = digest
-for path, expected in checksums.items():
-    actual = hashlib.sha256((root / path).read_bytes()).hexdigest()
-    assert actual == expected, f"SHA256SUMS mismatch: {path}"
-
-index = json.loads((root / 'package-index.json').read_text())
-versions = {entry['version']: entry for entry in index['versions']}
-assert index['latest'] in versions, 'latest is absent from versions'
-
-for markdown in root.rglob('*.md'):
-    if '.git' in markdown.parts:
-        continue
-    for target in re.findall(r'\[[^]]*\]\(([^)]+)\)', markdown.read_text()):
-        if target.startswith(('http://', 'https://', '#', 'mailto:')):
-            continue
-        relative = target.split('#', 1)[0]
-        if relative and not (markdown.parent / relative).resolve().exists():
-            raise AssertionError(f"broken link in {markdown}: {target}")
-PY
+node scripts/validate-integrity.mjs
 
 node --input-type=module <<'JS'
 const facade = await import('./dist/wasmc.mjs');
