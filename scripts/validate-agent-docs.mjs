@@ -45,13 +45,29 @@ interface api {
   }
 }
 world app { export api; }`;
-const managedInstance = await facade.instantiateLib(managed);
+const runtimeCompilerBytes = await readFile(new URL("../runtime/wasmc-runtime-v0/compiler.wasm", import.meta.url));
+const managedOptions = { compilerWasmBytes: runtimeCompilerBytes };
+const managedInstance = await facade.instantiateLib(managed, managedOptions);
 if (managedInstance.exports.count() !== 2) throw new Error("managed Lib behavior drifted");
+
+const recordless = `package local:recordless_public;
+interface api {
+  run: func() -> u32 {
+    let mut names: list<string> = list.new();
+    names.push("alpha");
+    let mut scores: map<string,s32> = map.new();
+    scores.insert("alpha", 7);
+    return names.len() + scores.len();
+  }
+}
+world app { export api; }`;
+const recordlessInstance = await facade.instantiateLib(recordless, managedOptions);
+if (recordlessInstance.exports.run() !== 2) throw new Error("recordless managed Runtime compiler behavior drifted");
 
 const runtimeRoot = new URL("../runtime/wasmc-runtime-v0/", import.meta.url);
 const selfTest = await execFileAsync(process.execPath, [new URL("bootstrap.mjs", runtimeRoot).pathname, "self-test"]);
 const selfTestJson = JSON.parse(selfTest.stdout);
-if (!selfTestJson.accepted || selfTestJson.runtime !== "node" || selfTestJson.compiler_bytes !== 1484773) {
+if (!selfTestJson.accepted || selfTestJson.runtime !== "node" || selfTestJson.compiler_bytes !== release.runtime.compiler_bytes) {
   throw new Error("runtime Node self-test drifted");
 }
 const temporary = await mkdtemp(join(tmpdir(), "wasmc-agent-docs-"));
@@ -70,4 +86,4 @@ try {
   await rm(temporary, { recursive: true, force: true });
 }
 
-console.log("PASS public Agent legacy scalar/Lib journeys plus package-manager-free Runtime journey");
+console.log("PASS public Agent scalar/record-backed/recordless managed journeys plus package-manager-free Runtime journey");

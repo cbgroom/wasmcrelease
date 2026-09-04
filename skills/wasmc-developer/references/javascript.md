@@ -2,6 +2,24 @@
 
 ## Direct Core compilation
 
+### Source-free repository checkout
+
+From the root of a checked-out source-free release, use the checked-in ESM
+facade. This route does not require package installation.
+
+```js
+import { compile, inspectWasm } from "./dist/wasmc.mjs";
+const wasm = await compile(source);
+const inspected = inspectWasm(wasm);
+console.table(inspected.imports);
+const instance = await WebAssembly.instantiate(inspected.module, approvedImports);
+```
+
+### Installed package
+
+Use the package name only after the application environment has explicitly
+installed or resolved `@wasmc/compiler`.
+
 ```js
 import { compile, inspectWasm } from "@wasmc/compiler";
 const wasm = await compile(source);
@@ -10,11 +28,14 @@ console.table(inspected.imports);
 const instance = await WebAssembly.instantiate(inspected.module, approvedImports);
 ```
 
+Both routes expose the same public API. Choose from the actual deployment
+context; do not probe one form and silently fall back to the other.
+
 Build `approvedImports` from an application-owned exact allowlist. Reject
 unknown modules, functions, kinds, or signatures before instantiation. For a
 no-import module, pass `{}` and assert the inspected import set is empty.
 
-The package exposes:
+The ESM facade exposes:
 
 - `compile(source)` for one logical source;
 - `compilePackage([{name, source}, ...])` for deterministic multi-file source;

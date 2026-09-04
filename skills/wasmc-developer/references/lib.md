@@ -37,11 +37,33 @@ create and expose implementation handles.
   libs whose effects, failure adapters, bindings, package identity, or authority
   cannot be derived safely from declared WIT.
 
+### Source-free repository checkout
+
+From the root of a checked-out source-free release, import the checked-in ESM
+facade directly. This route requires no package installation or external
+JavaScript registry.
+
+```js
+import { instantiateLib } from "./dist/wasmc.mjs";
+const instance = await instantiateLib(source);
+const count = instance.exports.count();
+```
+
+### Installed package
+
+Use the package name only when the application environment has explicitly
+installed or otherwise resolved `@wasmc/compiler`.
+
 ```js
 import { instantiateLib } from "@wasmc/compiler";
 const instance = await instantiateLib(source);
 const count = instance.exports.count();
 ```
+
+These are two paths to the same public facade, not fallback guesses. Do not use
+the package import merely because a source-free checkout contains a
+`package.json`, and do not use the repository-relative path from an unrelated
+application directory.
 
 Never manually initialize a bundled lib when the facade can do it. Internal
 exports, Store nonces, reference lanes, lifecycle calls, and activation plans

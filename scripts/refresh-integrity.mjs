@@ -2,7 +2,7 @@
 import { createHash } from 'node:crypto';
 import { readdir, readFile, stat, writeFile } from 'node:fs/promises';
 import { arch, platform, release as osRelease } from 'node:os';
-import { dirname, join, relative } from 'node:path';
+import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -29,6 +29,10 @@ const indexPath = join(root, 'package-index.json');
 const releaseJson = JSON.parse(await readFile(releasePath, 'utf8'));
 const manifest = JSON.parse(await readFile(manifestPath, 'utf8'));
 const index = JSON.parse(await readFile(indexPath, 'utf8'));
+const versionRow = index.versions.find((row) => row.version === releaseJson.version);
+if (index.latest !== releaseJson.version || !versionRow || versionRow.tag !== releaseJson.tag) {
+  throw new Error('package-index latest/version row must equal release version before integrity refresh');
+}
 
 const runtimeFiles = (await walk('runtime')).sort();
 const rootSkillFiles = (await walk('skills/wasmc-developer')).sort();
@@ -45,7 +49,7 @@ const publicDocs = ['AGENTS.md', 'LANGUAGE.md', 'HOSTING.md', 'LIB.md'];
 const manifestPaths = [...new Set([...publicDocs, ...releasePaths])];
 manifest.release_id = `wasmc-v${releaseJson.version}`;
 manifest.version = releaseJson.version;
-manifest.release_date = '2026-09-04';
+manifest.release_date = versionRow.release_date;
 manifest.channel = 'release';
 manifest.released = true;
 manifest.stable = false;
@@ -63,20 +67,25 @@ const runtimeManifestPath = 'runtime/wasmc-runtime-v0/manifest.json';
 const runtimeCompilerPath = 'runtime/wasmc-runtime-v0/compiler.wasm';
 const runtimeBootstrapPath = 'runtime/wasmc-runtime-v0/bootstrap.mjs';
 const compatibilityCompilerPath = 'dist/wasmc_compiler.wasm';
+const materials = [
+  { uri: 'https://github.com/cbgroom/wasmcrelease.git', digest: { gitCommit: releaseJson.compatibility.public_commit }, role: 'byte-frozen-v0.0.4-compatibility-surface' },
+  { uri: 'https://github.com/yxsicd/wasmc.git', digest: { gitCommit: releaseJson.source_commit }, role: `${releaseJson.tag}-integrated-private-authority` },
+  { uri: 'https://github.com/yxsicd/wasmc.git', digest: { gitCommit: releaseJson.product_candidate_commit }, role: `${releaseJson.tag}-runtime-product-candidate` },
+  { uri: 'https://github.com/yxsicd/wasmc.git', digest: { gitCommit: releaseJson.evidence_commit }, role: `${releaseJson.tag}-same-candidate-live-evidence` },
+  { uri: 'git-tree', digest: { gitTree: releaseJson.source_tree }, role: `${releaseJson.tag}-integrated-private-tree` },
+];
 const provenance = {
   schema_version: 1,
   predicate_type: 'wasmc.public-release.provenance/v1',
   builder: { node: process.version, machine: arch(), system: platform(), release: osRelease() },
   invocation: { commands: ['node runtime/wasmc-runtime-v0/bootstrap.mjs self-test', 'node scripts/refresh-integrity.mjs', './scripts/validate-maintainer.sh'] },
-  materials: [
-    { uri: 'https://github.com/cbgroom/wasmcrelease.git', digest: { gitCommit: '573dda3b5fd771596814f5546923974b9fc9cbd5' }, role: 'byte-frozen-v0.0.4-compatibility-surface' },
-    { uri: 'https://github.com/yxsicd/wasmc.git', digest: { gitCommit: '62e33753f8c89ebba353f974c47beafac7921997' }, role: 'v0.0.5-runtime-source-authority' },
-    { uri: 'git-tree', digest: { gitTree: '43098eb721cdb4006a1917e234184b70f77ea8a4' }, role: 'v0.0.5-runtime-source-tree' },
-  ],
+  materials,
   source: {
-    compatibility_public_commit: '573dda3b5fd771596814f5546923974b9fc9cbd5',
-    runtime_private_commit: '62e33753f8c89ebba353f974c47beafac7921997',
-    runtime_private_tree: '43098eb721cdb4006a1917e234184b70f77ea8a4',
+    compatibility_public_commit: releaseJson.compatibility.public_commit,
+    integrated_private_commit: releaseJson.source_commit,
+    integrated_private_tree: releaseJson.source_tree,
+    product_candidate_commit: releaseJson.product_candidate_commit,
+    evidence_commit: releaseJson.evidence_commit,
     dirty: false,
   },
   subjects: await Promise.all([
@@ -84,7 +93,9 @@ const provenance = {
     runtimeCompilerPath,
     runtimeBootstrapPath,
     runtimeManifestPath,
+    'runtime/wasmc-runtime-v0/receipts/bun-self-test.json',
     'skills/wasmc-developer/SKILL.md',
+    'skills/wasmc-developer/references/lib.md',
   ].map(async (name) => {
     const bytes = await readFile(join(root, name));
     return { name, bytes: bytes.length, digest: { sha256: sha(bytes) } };
@@ -92,14 +103,12 @@ const provenance = {
   non_claims: [
     'publisher signature or publisher authenticity',
     'cross-host byte-reproducible compiler-Wasm rebuilding',
-    'Bun live-runtime evidence for the v0.0.5 Runtime package',
     'automatic installation, update, rollback, or authority grant',
-    'v0.0.4 compatibility facades rebuilt from the v0.0.5 runtime source commit',
+    'v0.0.4 compatibility facades rebuilt from the current Runtime source',
   ],
 };
 await writeFile(provenancePath, `${JSON.stringify(provenance, null, 2)}\n`);
 
-if (index.latest !== releaseJson.version) throw new Error('package-index latest must equal release version before integrity refresh');
 const allFiles = (await walk()).filter((path) => path !== 'SHA256SUMS').sort();
 const sums = [];
 for (const path of allFiles) sums.push(`${await fileSha(path)}  ${path}`);

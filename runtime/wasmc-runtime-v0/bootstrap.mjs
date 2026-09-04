@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { runCli } from './host/common.mjs';
+import { formatRuntimeCliError, runCli } from './host/common.mjs';
 
 async function runtimeHost() {
   if (typeof globalThis.Deno !== 'undefined') {
@@ -20,11 +20,20 @@ function runtimeArgs() {
   return process.argv.slice(2);
 }
 
+const args = runtimeArgs();
+let host = null;
+
 try {
-  await runCli(await runtimeHost(), runtimeArgs());
+  host = await runtimeHost();
+  await runCli(host, args);
 } catch (error) {
-  const message = error instanceof Error ? error.message : String(error);
-  if (typeof console !== 'undefined') console.error(message);
+  const message = formatRuntimeCliError(error, {
+    jsonErrors: args.includes('--json-errors') || args.includes('--json'),
+    runtime: host?.name ?? 'unknown',
+    command: typeof args[0] === 'string' ? args[0] : 'self-test'
+  });
+  if (host) host.stderr(message);
+  else if (typeof console !== 'undefined') console.error(message);
   if (typeof globalThis.Deno !== 'undefined') globalThis.Deno.exit(1);
   if (typeof process !== 'undefined') process.exitCode = 1;
 }

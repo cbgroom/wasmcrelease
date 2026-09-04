@@ -1,6 +1,6 @@
-# wasmc Runtime / Registry — public v0.0.5 surface
+# wasmc Runtime / Registry — public v0.0.6 surface
 
-This directory is the additive Runtime bootstrap introduced by public `v0.0.5`.
+This directory carries the current source-free Runtime/Registry path for public `v0.0.6`.
 
 The primary package is `wasmc-runtime-v0/`:
 
@@ -10,15 +10,17 @@ node bootstrap.mjs self-test
 node bootstrap.mjs compile --input examples/add.wasmc --output /tmp/add.wasm
 ```
 
-It contains the current import-free Core compiler plus thin Node, Bun, and Deno Host adapters. It does not require npm or another external JavaScript package registry. Node and Deno self-tests are recorded in package receipts; Bun has the same adapter shape but was not independently live-run on the publishing host.
+It contains the current import-free Core compiler plus thin Node, Bun, and Deno Host adapters. It requires no npm or external JavaScript package registry. The exact v0.0.6 product candidate was independently executed from one source-free Runtime archive under Node, Bun, and Deno; each Host passed self-test, compilation, WebAssembly validation, instantiation, and the same behavior oracle. The receipts in `wasmc-runtime-v0/receipts/` bind those runs to the product candidate, compiler digest, archive identity, Host identity, and runtime version.
 
-`registry-v0/` is a repo-local registry/channel/mirror description for `wasmc:runtime@0.1.0-runtime-v0`. Its internal `dev` label is resolver metadata, not the public update channel. The immutable outer `v0.0.5` tag/full commit is the release authority.
+`registry-v0/` is repo-local resolver/channel/mirror metadata for `wasmc:runtime@0.1.0-runtime-v0`. Its internal `dev` label is resolver metadata, not the public update channel. The immutable outer `v0.0.6` tag/full commit is publication authority.
 
 Current compiler identity:
 
 ```text
-bytes   1484773
-sha256  c96ee185af38febf197467acefa3389a076b0eef9c54d6ac4ba7d25397bcbd3b
+bytes   1487329
+sha256  44b87828c2b5b01631066cf1a2bc1246534f6d97a741a111437cd39caeb884f9
 ```
 
-Verify the package `manifest.json`, `receipts/compiler-wasm.json`, and repository `SHA256SUMS` before use.
+The v0.0.4 `dist/`, `package/`, and `libs/` compatibility trees remain byte-frozen. When a managed source needs the v0.0.6 compiler capability while using the established facade, pass this Runtime compiler through the documented `compilerWasmBytes` option rather than replacing compatibility bytes.
+
+Verify the package `manifest.json`, `receipts/compiler-wasm.json`, Host receipts, and repository `SHA256SUMS` before use.

@@ -95,4 +95,29 @@ if (
   throw new Error('runtime registry identity drifted');
 }
 
-console.log('PASS release/manifest/checksum/runtime integrity and active Python=0');
+const hostArchives = new Set();
+for (const name of ['node', 'bun', 'deno']) {
+  const hostReceipt = await json(`runtime/wasmc-runtime-v0/receipts/${name}-self-test.json`);
+  const execution = hostReceipt.execution;
+  if (
+    hostReceipt.schema !== 'wasmc.runtime-js-self-test/v0' ||
+    hostReceipt.accepted !== true ||
+    hostReceipt.runtime !== name ||
+    hostReceipt.candidate_commit !== release.runtime.product_candidate_commit ||
+    hostReceipt.compiler_bytes !== compiler.length ||
+    hostReceipt.compiler_sha256 !== sha(compiler) ||
+    typeof hostReceipt.runtime_version !== 'string' || !hostReceipt.runtime_version ||
+    hostReceipt.source_free_package?.archive_sha256 !== release.runtime.source_free_archive_sha256 ||
+    hostReceipt.source_free_package?.private_source_checked_out !== false ||
+    typeof hostReceipt.host?.hostname !== 'string' || !hostReceipt.host.hostname ||
+    typeof hostReceipt.host?.uname !== 'string' || !hostReceipt.host.uname ||
+    execution?.self_test !== true || execution?.compile !== true ||
+    execution?.compile_output_bytes !== 44 || execution?.wasm_validate !== true ||
+    execution?.instantiate !== true || execution?.oracle_export !== 'run' ||
+    JSON.stringify(execution?.oracle_args) !== JSON.stringify([6, 18]) || execution?.oracle_result !== 42
+  ) throw new Error(`strict Host receipt drifted: ${name}`);
+  hostArchives.add(hostReceipt.source_free_package.archive_sha256);
+}
+if (hostArchives.size !== 1) throw new Error('Host receipts do not bind one source-free Runtime archive');
+
+console.log('PASS release/manifest/checksum/runtime/Host evidence integrity and active Python=0');

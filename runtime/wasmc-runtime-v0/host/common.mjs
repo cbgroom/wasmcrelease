@@ -1,5 +1,6 @@
 const textEncoder = new TextEncoder();
 const textDecoder = new TextDecoder();
+const runtimeErrorSchema = 'wasmc.runtime-js-error/v0';
 
 function bytesAt(memory, ptr, len) {
   return new Uint8Array(memory.buffer, Number(ptr), Number(len)).slice();
@@ -13,6 +14,49 @@ function requiredExport(exports, name) {
   const value = exports[name];
   if (typeof value === 'undefined') throw new Error(`compiler.wasm missing export ${name}`);
   return value;
+}
+
+function errorMessage(error) {
+  return error instanceof Error ? error.message : String(error);
+}
+
+export function parseCompilerDiagnostic(text) {
+  if (typeof text !== 'string' || text.length === 0) return null;
+  try {
+    const value = JSON.parse(text);
+    return value !== null && typeof value === 'object' && !Array.isArray(value) ? value : null;
+  } catch (_) {
+    return null;
+  }
+}
+
+export function runtimeCliErrorReport(error, { runtime = 'unknown', command = null } = {}) {
+  const diagnosticText = typeof error?.diagnostic === 'string' ? error.diagnostic : '';
+  const diagnostic =
+    error?.diagnosticObject !== null && typeof error?.diagnosticObject === 'object'
+      ? error.diagnosticObject
+      : parseCompilerDiagnostic(diagnosticText);
+  const compilerStatus = Number.isInteger(error?.code) ? Number(error.code) : null;
+  return {
+    schema: runtimeErrorSchema,
+    accepted: false,
+    runtime,
+    command,
+    process_exit_code: 1,
+    compiler_status: compilerStatus,
+    error: {
+      message: errorMessage(error),
+      diagnostic,
+      diagnostic_state: diagnostic ? 'parsed' : diagnosticText ? 'malformed-json' : 'absent'
+    }
+  };
+}
+
+export function formatRuntimeCliError(error, options = {}) {
+  if (options.jsonErrors === true) {
+    return JSON.stringify(runtimeCliErrorReport(error, options), null, 2);
+  }
+  return errorMessage(error);
 }
 
 export async function loadCompiler(host, compilerPath = host.resolve('compiler.wasm')) {
@@ -48,8 +92,10 @@ export class WasmcCompiler {
       const message = textAt(this.memory, this.errorPtr(), this.errorLen()) || `compiler failed with code ${code}`;
       const diagnostic = textAt(this.memory, this.diagnosticPtr(), this.diagnosticLen());
       const error = new Error(message);
+      error.name = 'WasmcCompileError';
       error.code = code;
       error.diagnostic = diagnostic;
+      error.diagnosticObject = parseCompilerDiagnostic(diagnostic);
       throw error;
     }
     return bytesAt(this.memory, this.outputPtr(), this.outputLen());
@@ -57,14 +103,25 @@ export class WasmcCompiler {
 }
 
 function parseArgs(args) {
-  const options = { command: args[0] || 'self-test', input: null, output: null, compiler: null, json: false };
+  const options = {
+    command: args[0] || 'self-test',
+    input: null,
+    output: null,
+    compiler: null,
+    json: false,
+    jsonErrors: false
+  };
   const rest = args.slice(1);
   for (let i = 0; i < rest.length; i += 1) {
     const arg = rest[i];
     if (arg === '--input') options.input = rest[++i];
     else if (arg === '--output') options.output = rest[++i];
     else if (arg === '--compiler') options.compiler = rest[++i];
-    else if (arg === '--json') options.json = true;
+    else if (arg === '--json') {
+      options.json = true;
+      options.jsonErrors = true;
+    }
+    else if (arg === '--json-errors') options.jsonErrors = true;
     else if (!options.input && options.command === 'compile') options.input = arg;
     else if (!options.output && options.command === 'compile') options.output = arg;
     else throw new Error(`unknown argument: ${arg}`);
@@ -98,7 +155,7 @@ export async function runCli(host, args) {
     return;
   }
   if (options.command === 'help' || options.command === '--help' || options.command === '-h') {
-    host.stdout('usage: bootstrap.mjs <self-test|compile> [--compiler compiler.wasm] [--input source.wasmc --output output.wasm]');
+    host.stdout('usage: bootstrap.mjs <self-test|compile> [--compiler compiler.wasm] [--input source.wasmc --output output.wasm] [--json-errors]');
     return;
   }
   throw new Error(`unknown command: ${options.command}`);

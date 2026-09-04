@@ -9,6 +9,18 @@ node bootstrap.mjs self-test
 node bootstrap.mjs compile --input examples/add.wasmc --output target/add.wasm
 ```
 
+For an Agent-readable failure envelope, add `--json-errors`:
+
+```text
+node bootstrap.mjs compile --input broken.wasmc --output target/broken.wasm --json-errors
+```
+
+Failure is written to stderr as `wasmc.runtime-js-error/v0`. The envelope keeps
+the compiler status, message, and compiler-owned diagnostic object including
+category, source range, and `fix_hint`. No output file is written on failure.
+Without `--json-errors`, stderr remains the concise human-readable compiler
+message.
+
 Bun and Deno are Host providers for the same package shape:
 
 ```text

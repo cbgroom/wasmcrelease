@@ -1,14 +1,21 @@
 # wasmc Libs
 
-`lib` is the public reusable-compute layer; there is no FastAPI compatibility name in `v0.0.4`. WIT owns public identity and signatures. A Lib may implement pure algorithms in Core Wasm or forward explicit effects to the Host without changing the Core caller vocabulary.
+`lib` is the public reusable-compute layer. WIT owns public identity and signatures. A Lib may implement pure algorithms in Core Wasm or forward explicit effects to the Host without changing the Core caller vocabulary.
 
 For ordinary managed String/List/Map/record applications, write typed wasmc source and use `instantiateLib(source)`. The compiler derives the finite graph and selects the matching bundled Lib; Agents must not construct handles or activation plans.
 
+The established v0.0.4 facade bytes remain frozen in v0.0.6. Record-backed applications therefore retain their old default behavior. To use v0.0.6 finite **recordless** String/List/Map planning from a source-free repository checkout, bind the current Runtime compiler through the facade's existing compiler override:
+
 ```js
+import { readFile } from "node:fs/promises";
 import { instantiateLib } from "./dist/wasmc.mjs";
-const instance = await instantiateLib(source);
-console.log(instance.exports.count());
+
+const compilerWasmBytes = await readFile("./runtime/wasmc-runtime-v0/compiler.wasm");
+const instance = await instantiateLib(source, { compilerWasmBytes });
+console.log(instance.exports.run());
 ```
+
+Browser or other hosts supply the same verified Runtime compiler bytes through `compilerWasmBytes`; acquiring those bytes remains application policy. The compiler-internal finite managed roots are not a public plan vocabulary and cannot be injected by caller-pinned JSON plans.
 
 Standalone packages demonstrate the boundary:
 

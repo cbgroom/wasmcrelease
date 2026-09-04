@@ -25,22 +25,38 @@
     {
       "uri": "https://github.com/yxsicd/wasmc.git",
       "digest": {
-        "gitCommit": "62e33753f8c89ebba353f974c47beafac7921997"
+        "gitCommit": "5081fbba5af4e4231c1231e591a22271f59487ca"
       },
-      "role": "v0.0.5-runtime-source-authority"
+      "role": "v0.0.6-integrated-private-authority"
+    },
+    {
+      "uri": "https://github.com/yxsicd/wasmc.git",
+      "digest": {
+        "gitCommit": "2b844a141bda2aaf5843b787cd649bfca558bce9"
+      },
+      "role": "v0.0.6-runtime-product-candidate"
+    },
+    {
+      "uri": "https://github.com/yxsicd/wasmc.git",
+      "digest": {
+        "gitCommit": "8f6a42ba313c534e4461a765c99527339bbb6e8e"
+      },
+      "role": "v0.0.6-same-candidate-live-evidence"
     },
     {
       "uri": "git-tree",
       "digest": {
-        "gitTree": "43098eb721cdb4006a1917e234184b70f77ea8a4"
+        "gitTree": "3e37a811b778e691875ff687a388308e4af6987c"
       },
-      "role": "v0.0.5-runtime-source-tree"
+      "role": "v0.0.6-integrated-private-tree"
     }
   ],
   "source": {
     "compatibility_public_commit": "573dda3b5fd771596814f5546923974b9fc9cbd5",
-    "runtime_private_commit": "62e33753f8c89ebba353f974c47beafac7921997",
-    "runtime_private_tree": "43098eb721cdb4006a1917e234184b70f77ea8a4",
+    "integrated_private_commit": "5081fbba5af4e4231c1231e591a22271f59487ca",
+    "integrated_private_tree": "3e37a811b778e691875ff687a388308e4af6987c",
+    "product_candidate_commit": "2b844a141bda2aaf5843b787cd649bfca558bce9",
+    "evidence_commit": "8f6a42ba313c534e4461a765c99527339bbb6e8e",
     "dirty": false
   },
   "subjects": [
@@ -53,23 +69,30 @@
     },
     {
       "name": "runtime/wasmc-runtime-v0/compiler.wasm",
-      "bytes": 1484773,
+      "bytes": 1487329,
       "digest": {
-        "sha256": "c96ee185af38febf197467acefa3389a076b0eef9c54d6ac4ba7d25397bcbd3b"
+        "sha256": "44b87828c2b5b01631066cf1a2bc1246534f6d97a741a111437cd39caeb884f9"
       }
     },
     {
       "name": "runtime/wasmc-runtime-v0/bootstrap.mjs",
-      "bytes": 1038,
+      "bytes": 1311,
       "digest": {
-        "sha256": "9264bfea2c27bcd2526ff77a80426124d5c277d6679747f00e1e5d0b60bab422"
+        "sha256": "f91bd85040e9b8e0075eade5aa782d4e0d66d984bc99048a4f6e58b939fc6717"
       }
     },
     {
       "name": "runtime/wasmc-runtime-v0/manifest.json",
-      "bytes": 3128,
+      "bytes": 3129,
       "digest": {
-        "sha256": "7513259761af7cb454fb94e1bbad08ee71e36117151c34d993d8fe7229fa36c6"
+        "sha256": "ec8ce33dc6e9cc573dd17cb267312d112a1a936170c5e0c087d3955aa26017a1"
+      }
+    },
+    {
+      "name": "runtime/wasmc-runtime-v0/receipts/bun-self-test.json",
+      "bytes": 904,
+      "digest": {
+        "sha256": "4ff34f16521fcbc8937dc168181e4d479e14583278edd85011b7914724cf1b2b"
       }
     },
     {
@@ -78,13 +101,19 @@
       "digest": {
         "sha256": "f347d97037b03bb2687a5248e96dc50c4cd24a9566fdc6e1e0def6bbdeb11314"
       }
+    },
+    {
+      "name": "skills/wasmc-developer/references/lib.md",
+      "bytes": 3472,
+      "digest": {
+        "sha256": "c91be59883878cc54e906ca120aee34768a225a2b6a0ebf7c14c9fffb6007b5a"
+      }
     }
   ],
   "non_claims": [
     "publisher signature or publisher authenticity",
     "cross-host byte-reproducible compiler-Wasm rebuilding",
-    "Bun live-runtime evidence for the v0.0.5 Runtime package",
     "automatic installation, update, rollback, or authority grant",
-    "v0.0.4 compatibility facades rebuilt from the v0.0.5 runtime source commit"
+    "v0.0.4 compatibility facades rebuilt from the current Runtime source"
   ]
 }

@@ -2,6 +2,14 @@
 
 Packages are built and verified locally from clean synchronized private source, then pushed directly. GitHub Actions cannot rebuild the compiler and is not required.
 
+## v0.0.6
+
+Fresh-Agent closure release. The additive Runtime compiler advances to 1,487,329 bytes at SHA-256 `44b87828c2b5b01631066cf1a2bc1246534f6d97a741a111437cd39caeb884f9`, preserves compiler-owned structured diagnostics, and derives bounded recordless String/List/Map managed roots without exposing internal plan authority. Node v24.15.0, Bun 1.3.14, and Deno 2.9.6 independently executed one exact source-free Runtime product candidate and passed self-test, 44-byte compile, WebAssembly validation, instantiation, and `run(6,18)=42`. Strict evidence rejects stale candidate identity and split archive identity.
+
+The public v0.0.4 `dist/`, `package/`, and `libs/` trees remain byte-for-byte unchanged. v0.0.6 updates only additive Runtime/Registry, root Agent guidance, and public evidence/integrity metadata. The product bytes are rooted at private candidate `2b844a141bda2aaf5843b787cd649bfca558bce9`; the integrated release authority is private parent `5081fbba5af4e4231c1231e591a22271f59487ca`.
+
+The immutable identity is tag `v0.0.6`. `package-index.json.latest` moves to `0.0.6`; tags `v0.0.1` through `v0.0.5` remain unchanged.
+
 ## v0.0.5
 
 Additive Runtime/Registry bootstrap release. It introduces `runtime/wasmc-runtime-v0` with the current 1,484,773-byte Core compiler (`c96ee185...bcbd3b`), thin Node/Bun/Deno adapters, package receipts, and `runtime/registry-v0` without npm or another external JavaScript package registry. Active public maintainer tooling is also Python-free.
