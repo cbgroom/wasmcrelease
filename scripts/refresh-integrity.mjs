@@ -9,6 +9,8 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const slash = (value) => value.split('\\').join('/');
 const sha = (bytes) => createHash('sha256').update(bytes).digest('hex');
 const fileSha = async (path) => sha(await readFile(join(root, path)));
+const executableArtifacts = new Set(['dist/wasmc.mjs', 'package/cli.mjs']);
+const expectedMode = (path) => executableArtifacts.has(path) ? '0755' : '0644';
 
 async function walk(dir = '') {
   const base = join(root, dir);
@@ -59,7 +61,9 @@ manifest.compiler_abi = 'wasmc-core-compiler-abi-v0';
 manifest.artifacts = await Promise.all(manifestPaths.map(async (path) => {
   const bytes = await readFile(join(root, path));
   const info = await stat(join(root, path));
-  return { path, bytes: bytes.length, mode: (info.mode & 0o111) ? '0755' : '0644', sha256: sha(bytes) };
+  const mode = (info.mode & 0o111) ? '0755' : '0644';
+  if (mode !== expectedMode(path)) throw new Error(`artifact mode violates release policy: ${path}`);
+  return { path, bytes: bytes.length, mode, sha256: sha(bytes) };
 }));
 await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
 

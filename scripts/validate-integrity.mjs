@@ -10,6 +10,8 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const execFileAsync = promisify(execFile);
 const sha = (bytes) => createHash('sha256').update(bytes).digest('hex');
 const json = async (path) => JSON.parse(await readFile(join(root, path), 'utf8'));
+const executableArtifacts = new Set(['dist/wasmc.mjs', 'package/cli.mjs']);
+const expectedMode = (path) => executableArtifacts.has(path) ? '0755' : '0644';
 
 async function walk(dir = '') {
   const rows = [];
@@ -32,6 +34,7 @@ for (const row of manifest.artifacts) {
   if (bytes.length !== row.bytes || sha(bytes) !== row.sha256) throw new Error(`manifest identity mismatch: ${row.path}`);
   const mode = (info.mode & 0o111) ? '0755' : '0644';
   if (mode !== row.mode) throw new Error(`manifest mode mismatch: ${row.path}`);
+  if (mode !== expectedMode(row.path)) throw new Error(`artifact mode violates release policy: ${row.path}`);
 }
 for (const row of release.artifacts) {
   const bytes = await readFile(join(root, row.path));
