@@ -53,6 +53,7 @@ for heading in {0..8}; do
 done
 
 node scripts/validate-integrity.mjs
+node scripts/validate-libs.mjs
 
 node --input-type=module <<'JS'
 const facade = await import('./dist/wasmc.mjs');

@@ -2,7 +2,9 @@
 
 Source-free public packages for the private-source `wasmc` compiler.
 
-Current release: `v0.0.7`. It advances the additive Runtime compiler to the exact aggregate-semantic baseline while preserving the established compatibility surface: the v0.0.4 `dist/`, `package/`, and `libs/` trees remain byte-for-byte frozen. The release has source-free same-candidate Node/Bun/Deno evidence and Fresh-Agent 100/100; GitHub Actions is not part of the release path.
+Current release: `v0.0.7`. It advances the additive Runtime compiler to the exact aggregate-semantic baseline while preserving the established compatibility surface: the v0.0.4 `dist/`, `package/`, and `libs/` trees remain byte-for-byte frozen. The release has source-free same-candidate Node/Bun/Deno evidence and Fresh-Agent 100/100.
+
+GitHub Actions continuously exercises the public repository as a source-free consumer: staged deployment, Node/Bun/Deno compile and execution, JavaScript examples, Lib package contracts, and Rust/Wasmtime Component behavior. It does not build, replace, or admit canonical compiler/Lib bytes; immutable release publication remains a separate maintainer-controlled process.
 
 - Agents and developers: [AGENTS.md](AGENTS.md)
 - Language delta: [LANGUAGE.md](LANGUAGE.md)

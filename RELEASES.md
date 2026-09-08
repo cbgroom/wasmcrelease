@@ -1,6 +1,6 @@
 # Releases
 
-Packages are built and verified locally from clean synchronized private source, then pushed directly. GitHub Actions cannot rebuild the compiler and is not required.
+Packages are built and admitted locally from clean synchronized private source, then pushed directly. GitHub Actions independently verifies the source-free public consumer paths, but cannot rebuild or admit canonical compiler/Lib bytes and is not a publication dependency.
 
 ## v0.0.7
 
