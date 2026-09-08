@@ -2,6 +2,12 @@
 
 Packages are built and verified locally from clean synchronized private source, then pushed directly. GitHub Actions cannot rebuild the compiler and is not required.
 
+## v0.0.7
+
+This additive release advances only the Runtime/Registry and release evidence. The 1,488,174-byte compiler at SHA-256 `5e82679bd75b2da65d3f3c59069a98b72aaf64be18060797e2575ecc95495119` includes the WIT-shaped aggregate semantic baseline used by the paired Rust/wasmc App differential. Exact product commit `b6659654cdbfbc4c53a5eb92ca6d67db881c0491` is source-free executed under Node v26.5.1, Bun 1.3.14, and Deno 2.9.4; all pass self-test, 44-byte compile, validation, instantiation, and `run(6,18)=42`, while strict Fresh-Agent scores 100/100 with no findings.
+
+The public v0.0.4 `dist/`, `package/`, and `libs/` trees remain byte-for-byte unchanged. The immutable identity is tag `v0.0.7`; `package-index.json.latest` moves to `0.0.7`, while tags `v0.0.1` through `v0.0.6` remain unchanged.
+
 ## v0.0.6
 
 Fresh-Agent closure release. The additive Runtime compiler advances to 1,487,329 bytes at SHA-256 `44b87828c2b5b01631066cf1a2bc1246534f6d97a741a111437cd39caeb884f9`, preserves compiler-owned structured diagnostics, and derives bounded recordless String/List/Map managed roots without exposing internal plan authority. Node v24.15.0, Bun 1.3.14, and Deno 2.9.6 independently executed one exact source-free Runtime product candidate and passed self-test, 44-byte compile, WebAssembly validation, instantiation, and `run(6,18)=42`. Strict evidence rejects stale candidate identity and split archive identity.

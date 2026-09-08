@@ -2,48 +2,35 @@
 
 ## 0. Status
 
-- Branch: `release/v0.0.6` public release candidate for `main`
-- Release: additive `v0.0.6`; v0.0.4 compatibility trees remain frozen
-- Integrated private authority: `wasmc@5081fbba5af4e4231c1231e591a22271f59487ca`
-- Runtime product candidate: `2b844a141bda2aaf5843b787cd649bfca558bce9`
-- Strict evidence commit: `8f6a42ba313c534e4461a765c99527339bbb6e8e`
-- Existing immutable truth: `v0.0.1` through `v0.0.5` remain unchanged
+- Branch: `release/v0.0.7` public release candidate for `main`
+- Release: additive `v0.0.7`; v0.0.4 compatibility trees frozen
+- Integrated private authority: `wasmc@d4c5c27ecce6e4bb718a7c167cf584121d9c5baf`
+- Runtime product candidate: `b6659654cdbfbc4c53a5eb92ca6d67db881c0491`
+- Strict evidence commit: `731de07725bc01a0d806348c5cecb3b80faa2ce3`
+- Existing immutable truth: `v0.0.1` through `v0.0.6` remain unchanged
 
 ## 1. North Star
 
-Let a zero-context Agent select an immutable release, load the bundled developer or Lib Skill, reuse Rust/WIT priors, compile through the smallest public path, grant only explicit imports, and prove behavior without private-source knowledge.
+Let a zero-context Agent select an immutable release, load the bundled developer
+or Lib Skill, reuse Rust/WIT priors, compile through the smallest public path,
+grant only explicit imports, and prove behavior without private-source knowledge.
 
 ## 2. Current Focus
 
-Publish `v0.0.6` additively while mutable `main` becomes discovery state for `latest=0.0.6`. Preserve the v0.0.4 `dist/`, `package/`, and `libs/` trees byte-for-byte. Advance only Runtime/Registry, root Agent guidance, and evidence/integrity metadata.
+Publish `v0.0.7` additively while mutable `main` becomes discovery state for
+`latest=0.0.7`. Preserve `dist/`, `package/`, and `libs/` byte-for-byte from
+v0.0.4. Advance only Runtime/Registry, Agent guidance, and evidence metadata.
 
-## 3. Recent Progress
+## 3. Release Evidence
 
-- Fresh-Agent score progressed 81 -> 91 -> 94 -> 97 -> 100/100 with findings=0.
-- Current Runtime compiler is 1,487,329 bytes, SHA-256 `44b87828c2b5b01631066cf1a2bc1246534f6d97a741a111437cd39caeb884f9`.
-- Runtime structured diagnostics retain compiler-owned category/range/message/fix hints and never publish failed output.
-- Finite recordless managed String/List/Map roots are compiler-internal only; external pinned plans cannot populate them.
-- One exact source-free Runtime archive was independently executed under Node v24.15.0, Bun 1.3.14, and Deno 2.9.6; every Host passed self-test, compile, validation, instantiation, and the same behavior oracle.
-- Strict evidence rejects stale candidate commit and split source-free archive identities.
-- Active public maintenance remains Python-free and npm is not required for repository-local use.
+- Runtime compiler: 1,488,174 bytes, SHA-256 `5e82679b...495119`.
+- One exact source-free archive: `f48bc6f3...2d2359`.
+- Node v26.5.1, Bun 1.3.14, and Deno 2.9.4 each pass self-test, compile,
+  WebAssembly validation, instantiation, and `run(6,18)=42`.
+- Strict Fresh-Agent: 100/100, findings=0; stale candidate and split archive
+  negative gates fail closed.
 
-## 4. Current Action
-
-Task state: publication authorized; candidate validation required before immutable tag creation.
-
-- Preserve exact compatibility trees and all older tags.
-- Refresh v0.0.6 manifest/provenance/SHA256SUMS only after candidate files are final.
-- Require public maintainer, Fresh-Agent 100/100, Runtime, legacy scalar/Lib, and Rust/Wasmtime gates before push/tag.
-- After push, verify pinned GitHub/jsDelivr bytes and run one clean pinned-tag Fresh-Agent evaluation.
-
-## 5. Next Actions
-
-1. Validate and commit `release/v0.0.6`.
-2. Push the release branch, fast-forward public `main`, and create annotated immutable `v0.0.6`.
-3. Verify GitHub Raw/jsDelivr pinned bytes and mutable latest metadata.
-4. Record the published identity in the private/YXSGIT handoff.
-
-## 6. Validation Commands
+## 4. Validation Commands
 
 ```bash
 ./scripts/validate-maintainer.sh
@@ -51,11 +38,23 @@ node examples/agent-start/run.mjs
 (cd examples/rust-wasmtime && cargo test --locked && cargo run --locked)
 ```
 
+## 5. Current Action
+
+Task state: publication authorized; exact-identity candidate validation required
+before immutable tag creation.
+
+## 6. Next Actions
+
+1. Validate and commit `release/v0.0.7`.
+2. Push the release branch, fast-forward public `main`, and create annotated `v0.0.7`.
+3. Verify GitHub Raw/jsDelivr pinned bytes and mutable latest metadata.
+4. Record the published identity in private integrated truth.
+
 ## 7. Do Not Do
 
-- Do not copy private compiler source or build caches.
-- Do not mutate `dist/`, `package/`, or `libs/` compatibility trees in v0.0.6.
-- Do not mutate or retag `v0.0.1` through `v0.0.5`.
+- Do not copy private compiler source or caches.
+- Do not mutate frozen compatibility trees or older tags.
+- Do not mutate or retag `v0.0.1` through `v0.0.6`.
 - Do not make npm, an external JavaScript registry, or GitHub Actions a release dependency.
 
 ## 8. Recovery / Resume Commands
@@ -65,3 +64,9 @@ cd <wasmcrelease-checkout>
 git status --short --branch
 ./scripts/maintainer-orient.sh
 ```
+
+## 9. Completion Gate
+
+Completion means the exact release commit is present on `release/v0.0.7`,
+`main`, and annotated `v0.0.7`; integrity, public Agent, Rust/Wasmtime, strict
+Fresh-Agent, frozen-tree, and pinned GitHub/jsDelivr byte checks all pass.
