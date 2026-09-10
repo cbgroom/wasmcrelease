@@ -37,9 +37,19 @@ if (index.latest !== releaseJson.version || !versionRow || versionRow.tag !== re
 }
 
 const runtimeFiles = (await walk('runtime')).sort();
+const admissionFiles = (await walk('admission')).sort();
 const rootSkillFiles = (await walk('skills/wasmc-developer')).sort();
+const sdkFiles = (await walk('sdk')).sort();
+const rustWorkspaceFiles = ['Cargo.toml', 'Cargo.lock'];
 const existing = releaseJson.artifacts.map((row) => row.path);
-const releasePaths = [...new Set([...existing, ...runtimeFiles, ...rootSkillFiles])].sort();
+const releasePaths = [...new Set([
+  ...existing,
+  ...admissionFiles,
+  ...runtimeFiles,
+  ...rootSkillFiles,
+  ...sdkFiles,
+  ...rustWorkspaceFiles,
+])].sort();
 
 releaseJson.artifacts = await Promise.all(releasePaths.map(async (path) => {
   const bytes = await readFile(join(root, path));
@@ -100,6 +110,9 @@ const provenance = {
     'runtime/wasmc-runtime-v0/receipts/bun-self-test.json',
     'skills/wasmc-developer/SKILL.md',
     'skills/wasmc-developer/references/lib.md',
+    'sdk/wasmc-core-runtime/Cargo.toml',
+    'sdk/wasmc-core-runtime/src/lib.rs',
+    'sdk/wasmc-core-runtime/src/module_inspection.rs',
   ].map(async (name) => {
     const bytes = await readFile(join(root, name));
     return { name, bytes: bytes.length, digest: { sha256: sha(bytes) } };

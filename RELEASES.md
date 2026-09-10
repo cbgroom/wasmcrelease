@@ -2,6 +2,21 @@
 
 Packages are built and admitted locally from clean synchronized private source, then pushed directly. GitHub Actions independently verifies the source-free public consumer paths, but cannot rebuild or admit canonical compiler/Lib bytes and is not a publication dependency.
 
+## v0.0.8
+
+This additive release publishes `wasmc-core-runtime` as a reusable Rust SDK
+with Wasmi-first completion, bounded optional Wasmtime promotion, exact
+selected-backend no-replay semantics, request-local Host state, cancellation
+and resource limits, and engine-neutral Core module inspection. The SDK bytes
+are copied from and bound to private source authority
+`bddf8a371698ac7f1ced87b02952df5be5359dad`.
+
+The Runtime compiler product and the established v0.0.4 `dist/`, `package/`,
+and `libs/` compatibility trees remain byte-for-byte unchanged. Node, Bun, and
+Deno source-free execution, Fresh-Agent 100/100, strict Rust SDK tests, and
+public integrity validation are rerun for the exact v0.0.8 candidate. Earlier
+tags remain immutable.
+
 ## v0.0.7
 
 This additive release advances only the Runtime/Registry and release evidence. The 1,488,174-byte compiler at SHA-256 `5e82679bd75b2da65d3f3c59069a98b72aaf64be18060797e2575ecc95495119` includes the WIT-shaped aggregate semantic baseline used by the paired Rust/wasmc App differential. Exact product commit `b6659654cdbfbc4c53a5eb92ca6d67db881c0491` is source-free executed under Node v26.5.1, Bun 1.3.14, and Deno 2.9.4; all pass self-test, 44-byte compile, validation, instantiation, and `run(6,18)=42`, while strict Fresh-Agent scores 100/100 with no findings.

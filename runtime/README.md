@@ -1,6 +1,7 @@
-# wasmc Runtime / Registry — public v0.0.7 surface
+# wasmc Runtime / Registry — public v0.0.8 surface
 
-This directory carries the current source-free Runtime/Registry path for public `v0.0.7`.
+This directory carries the source-free Runtime/Registry path retained by public
+`v0.0.8` from the exact v0.0.7 Runtime product.
 
 The primary package is `wasmc-runtime-v0/`:
 
@@ -12,7 +13,7 @@ node bootstrap.mjs compile --input examples/add.wasmc --output /tmp/add.wasm
 
 It contains the current import-free Core compiler plus thin Node, Bun, and Deno Host adapters. It requires no npm or external JavaScript package registry. The exact v0.0.7 product candidate was executed from one source-free Runtime archive under Node, Bun, and Deno; each Host passed self-test, compilation, WebAssembly validation, instantiation, and the same behavior oracle. The receipts in `wasmc-runtime-v0/receipts/` bind those runs to the product candidate, compiler digest, archive identity, Host identity, and runtime version.
 
-`registry-v0/` is repo-local resolver/channel/mirror metadata for `wasmc:runtime@0.1.0-runtime-v0`. Its internal `dev` label is resolver metadata, not the public update channel. The immutable outer `v0.0.7` tag/full commit is publication authority.
+`registry-v0/` is repo-local resolver/channel/mirror metadata for `wasmc:runtime@0.1.0-runtime-v0`. Its internal `dev` label is resolver metadata, not the public update channel. The immutable outer `v0.0.8` tag/full commit is publication authority.
 
 Current compiler identity:
 

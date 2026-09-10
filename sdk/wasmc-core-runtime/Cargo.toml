@@ -1,0 +1,24 @@
+[package]
+name = "wasmc-core-runtime"
+version = "0.1.0"
+edition = "2021"
+description = "Bounded Wasmi completion and Wasmtime promotion SDK for WebAssembly Core"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/yxsicd/wasmc"
+readme = "README.md"
+keywords = ["wasm", "wasmi", "wasmtime", "runtime"]
+categories = ["wasm", "development-tools"]
+
+[features]
+default = ["core-runtime-sdk"]
+wasmi-runtime = ["dep:wasmi"]
+wasmtime-runtime = ["dep:wasmtime"]
+core-runtime-sdk = ["wasmi-runtime", "wasmtime-runtime"]
+
+[dependencies]
+sha2 = "0.10"
+wasmi = { version = "=2.0.0", optional = true, default-features = false, features = ["std", "validate", "auto-dispatch"] }
+wasmtime = { version = "=47.0.4", optional = true, default-features = false, features = ["runtime", "cranelift"] }
+
+[dev-dependencies]
+wat = "1.238"

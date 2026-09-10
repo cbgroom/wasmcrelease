@@ -1,0 +1,38 @@
+{
+  "schema": "wasmc.core-runtime-sdk-public-admission/v1",
+  "accepted": true,
+  "release": "v0.0.8",
+  "private_source_authority": {
+    "repository": "https://github.com/yxsicd/wasmc.git",
+    "commit": "bddf8a371698ac7f1ced87b02952df5be5359dad",
+    "tree": "8bc8fa4ba33c490cc74a56fe2c5bf4aad48b6ac5",
+    "path": "crates/wasmc_core_runtime"
+  },
+  "public_package": {
+    "name": "wasmc-core-runtime",
+    "version": "0.1.0",
+    "path": "sdk/wasmc-core-runtime",
+    "engines": ["wasmi", "wasmtime"],
+    "default_feature": "core-runtime-sdk"
+  },
+  "verification": {
+    "command": "cargo test --locked -p wasmc-core-runtime",
+    "tests_passed": 18,
+    "tests_failed": 0,
+    "module_inspection_without_synchronous_wasmtime_module": true,
+    "selected_backend_failure_replay": false
+  },
+  "runtime_product": {
+    "compiler_rebuilt": false,
+    "compiler_bytes_unchanged": true,
+    "compiler_sha256": "5e82679bd75b2da65d3f3c59069a98b72aaf64be18060797e2575ecc95495119",
+    "product_candidate_commit": "b6659654cdbfbc4c53a5eb92ca6d67db881c0491"
+  },
+  "boundaries": {
+    "engine_mechanics_only": true,
+    "business_admission_host_owned": true,
+    "wit_profile_policy_host_owned": true,
+    "capability_and_persistence_host_owned": true,
+    "private_compiler_source_included": false
+  }
+}

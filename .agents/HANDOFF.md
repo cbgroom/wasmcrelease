@@ -2,12 +2,12 @@
 
 ## 0. Status
 
-- Branch: mutable `main` after immutable `v0.0.7` publication
-- Release: additive `v0.0.7`; v0.0.4 compatibility trees frozen
-- Integrated private authority: `wasmc@d4c5c27ecce6e4bb718a7c167cf584121d9c5baf`
+- Branch: `release/v0.0.8-candidate` from current public `main`
+- Release: additive `v0.0.8` candidate; v0.0.4 compatibility trees frozen
+- Integrated private SDK authority: `wasmc@bddf8a371698ac7f1ced87b02952df5be5359dad`
 - Runtime product candidate: `b6659654cdbfbc4c53a5eb92ca6d67db881c0491`
-- Strict evidence commit: `731de07725bc01a0d806348c5cecb3b80faa2ce3`
-- Existing immutable truth: `v0.0.1` through `v0.0.6` remain unchanged
+- Strict evidence runner/SDK authority: `bddf8a371698ac7f1ced87b02952df5be5359dad`
+- Existing immutable truth: `v0.0.1` through `v0.0.7` remain unchanged
 
 ## 1. North Star
 
@@ -17,10 +17,11 @@ grant only explicit imports, and prove behavior without private-source knowledge
 
 ## 2. Current Focus
 
-Keep immutable `v0.0.7` unchanged while mutable `main` gains source-free
-consumer verification. Preserve `dist/`, `package/`, and `libs/` byte-for-byte
-from v0.0.4. GitHub Actions may test published bytes but must not build or admit
-canonical compiler/Lib artifacts.
+Publish the engine-neutral `wasmc-core-runtime` Rust SDK without rebuilding the
+Runtime compiler or frozen compatibility artifacts. Preserve `dist/`,
+`package/`, and `libs/` byte-for-byte from v0.0.4. GitHub Actions may test
+published bytes and SDK source but must not build or admit canonical
+compiler/Lib artifacts.
 
 ## 3. Release Evidence
 
@@ -30,11 +31,14 @@ canonical compiler/Lib artifacts.
   WebAssembly validation, instantiation, and `run(6,18)=42`.
 - Strict Fresh-Agent: 100/100, findings=0; stale candidate and split archive
   negative gates fail closed.
+- Public Core Runtime SDK: 18/18 tests pass with Wasmi and Wasmtime enabled;
+  module inspection remains independent of synchronous Wasmtime compilation.
 
 ## 4. Validation Commands
 
 ```bash
 ./scripts/validate-maintainer.sh
+cargo test --locked -p wasmc-core-runtime
 node examples/agent-start/run.mjs
 (for runtime in node bun deno; do ./scripts/validate-source-free-runtime.sh "$runtime"; done)
 (cd examples/rust-wasmtime && cargo test --locked && cargo run --locked)
@@ -42,21 +46,21 @@ node examples/agent-start/run.mjs
 
 ## 5. Current Action
 
-Task state: `v0.0.7` is published. Add continuous source-free deployment,
-Node/Bun/Deno execution, JavaScript baseline, Lib-contract, and Rust/Wasmtime
-behavior validation on mutable `main`.
+Task state: exact `v0.0.8` candidate is assembled and locally verified. Finish
+the high-confidence reachable-blob scan, commit and push the immutable release
+branch/tag, verify Raw/jsDelivr bytes, then advance mutable `main`.
 
 ## 6. Next Actions
 
-1. Keep the source-free consumer workflow green on `main` and pull requests.
-2. Treat failures as consumer regressions; never regenerate canonical bytes here.
-3. For the next release, repeat private admission and create a new immutable tag.
+1. Run the final public-history and reachable-blob scan immediately before publication.
+2. Publish the exact candidate through a new immutable `v0.0.8` tag without moving older tags.
+3. Verify fresh GitHub Raw/jsDelivr and Git-consumer SDK use, then advance `main`.
 
 ## 7. Do Not Do
 
 - Do not copy private compiler source or caches.
 - Do not mutate frozen compatibility trees or older tags.
-- Do not mutate or retag `v0.0.1` through `v0.0.6`.
+- Do not mutate or retag `v0.0.1` through `v0.0.7`.
 - Do not make npm, an external JavaScript registry, or GitHub Actions a release-publication dependency.
 
 ## 8. Recovery / Resume Commands
@@ -69,6 +73,7 @@ git status --short --branch
 
 ## 9. Completion Gate
 
-Completion means immutable `v0.0.7` remains unchanged and mutable `main` passes
-integrity, public Agent, staged Node/Bun/Deno, Lib-contract, and Rust/Wasmtime
-consumer tests without rebuilding canonical artifacts.
+Completion means immutable `v0.0.8` and mutable `main` resolve to the admitted
+candidate, older tags remain unchanged, Raw/jsDelivr bytes match, and public
+Agent, staged Node/Bun/Deno, Lib, Rust/Wasmtime, and Core Runtime SDK consumer
+tests pass without rebuilding canonical compiler/Lib artifacts.

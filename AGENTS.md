@@ -1,6 +1,9 @@
 # wasmc public Agent entrypoint
 
-This source-free repository publishes a standard Core Wasm compiler, Lib packages, and a package-manager-free Runtime/Registry bootstrap. The current immutable release is `v0.0.7`; pin that tag or its full commit for reproducible use.
+This source-free compiler repository publishes a standard Core Wasm compiler,
+Lib packages, a package-manager-free Runtime/Registry bootstrap, and the
+public `wasmc-core-runtime` Rust SDK. The current immutable release is
+`v0.0.8`; pin that tag or its full commit for reproducible use.
 
 ## Start here
 
@@ -23,7 +26,7 @@ const instance = await WebAssembly.instantiate(inspected.module, {});
 console.log(instance.exports.run(5, 6)); // 17
 ```
 
-## v0.0.7 capability contract
+## v0.0.8 capability contract
 
 | Task | Status | Canonical path |
 |---|---|---|
@@ -34,10 +37,14 @@ console.log(instance.exports.run(5, 6)); // 17
 | WIT resources, constructors, receiver methods | shipped Component profile | `libs/wasmc-resource-counter` |
 | Explicit synchronous scalar Host imports | shipped; exact allowlist | `libs/wasmc-host-clock` |
 | JavaScript, raw Core Wasm, Rust/Wasmtime | shipped | [HOSTING.md](HOSTING.md) |
+| Wasmi-first Core execution, Wasmtime promotion, module inspection | shipped | `sdk/wasmc-core-runtime` |
 | async Libs, traits, open generics, automatic Rust API discovery | unsupported | do not invent a bridge |
 | signing, auto-update, ambient filesystem/network/device access | not provided | application/publisher authority |
 
-The v0.0.4 `dist/`, `package/`, and `libs/` compatibility trees remain byte-for-byte frozen. v0.0.7 advances only the additive Runtime/Registry, Agent guidance, and evidence surface; it does not silently rebuild or replace those established compatibility bytes.
+The v0.0.4 `dist/`, `package/`, and `libs/` compatibility trees remain
+byte-for-byte frozen. v0.0.8 adds the public Core Runtime SDK while retaining
+the v0.0.7 Runtime compiler product; it does not silently rebuild or replace
+those established compatibility bytes.
 
 ## Artifact selection
 
@@ -53,7 +60,7 @@ The v0.0.4 `dist/`, `package/`, and `libs/` compatibility trees remain byte-for-
 Inspect every generated import and bind only reviewed Host functions. Never expose private handles, plans, Store nonces, lifecycle helpers, or JSON invented as a WIT replacement.
 
 ```text
-https://cdn.jsdelivr.net/gh/cbgroom/wasmcrelease@v0.0.7/<PATH>
+https://cdn.jsdelivr.net/gh/cbgroom/wasmcrelease@v0.0.8/<PATH>
 ```
 
 Verify files against `SHA256SUMS`, `manifest.json`, and `release.json`. `main`, unversioned URLs, and `package-index.json.latest` are mutable discovery state.

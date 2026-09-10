@@ -75,6 +75,8 @@ jobs:
       - name: Compile and test the Rust Wasmtime consumer
         working-directory: examples/rust-wasmtime
         run: cargo test --locked
+      - name: Compile and test the public Wasmi plus Wasmtime Core Runtime SDK
+        run: cargo test --locked -p wasmc-core-runtime
       - name: Run compiler, resource Lib, and Host Lib journey
         working-directory: examples/rust-wasmtime
         run: cargo run --locked

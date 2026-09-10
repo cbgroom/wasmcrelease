@@ -1,4 +1,4 @@
-# Hosting wasmc v0.0.5
+# Hosting wasmc v0.0.8
 
 Choose the smallest standard layer that fits the caller.
 
@@ -31,6 +31,18 @@ The classic file exposes the same surface as `globalThis.Wasmc`. Browser fetch p
 `dist/wasmc_compiler.wasm` is import-free Core Wasm. It exports `memory`, `wasmc_alloc`, `wasmc_compile`, output/error pointer and length accessors, and `wasmc_clear`. Adapter buffers are instance-local mutable state: use exclusive access, copy output before clear, and clear success and failure paths.
 
 ## Rust and Wasmtime
+
+For reusable Core-module mechanics, use the published dual-engine SDK:
+
+```toml
+wasmc-core-runtime = { git = "https://github.com/cbgroom/wasmcrelease.git", tag = "v0.0.8" }
+```
+
+`CoreRuntimeSdk::inspect_core` validates and describes imports, exports, kinds,
+and function signatures without synchronously constructing a Wasmtime Module.
+Cache misses complete through Wasmi; eligible future calls may promote to
+Wasmtime. Business admission, WIT/profile policy, capabilities, routing,
+persistence, limits, and deployment remain Host-owned.
 
 ```bash
 cd examples/rust-wasmtime
