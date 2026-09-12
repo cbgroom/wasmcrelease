@@ -17,6 +17,8 @@ grant only explicit imports, and prove behavior without private-source knowledge
 
 ## 2. Current Focus
 
+Task state: started — authorized WAsmC v0.0.9 testing release. Public base is immutable v0.0.8; private clean pushed construction authority is recorded by the candidate receipt. Build latest compiler in the private repository, import admitted bytes only, expose current/ separately from frozen compatibility trees, exercise Node/Bun/Deno and independent Rust/WAsmC standard Lib callers, refresh exact integrity and scan all reachable blobs before immutable publication. No MCPGit release or deployment. Resume: assemble current carriers from qualified compiler bytes and matching CoreLib, then execute public black-box gates. Existing v0.0.1 through v0.0.8 tags remain unchanged.
+
 Publish the engine-neutral `wasmc-core-runtime` Rust SDK without rebuilding the
 Runtime compiler or frozen compatibility artifacts. Preserve `dist/`,
 `package/`, and `libs/` byte-for-byte from v0.0.4. GitHub Actions may test
