@@ -17,7 +17,18 @@ grant only explicit imports, and prove behavior without private-source knowledge
 
 ## 2. Current Focus
 
-Task state: blocked — authorized v0.0.9 latest compiler testing release. Immutable public latest remains v0.0.8; all historical tags and main remain unchanged. Unstaged current/ candidate contains import-free1350429-byte compiler SHA256b80c1f836959115ad8a56c53c19413cd146f59cb39887f1037dbbc55cd171484 built from clean private aa00dbb227eef9aed8d786a49ba4ff77474c84d8. Node/Bun/Deno each pass30 exact corpus outputs,23 expression cases and192 managed loop invocations. Source-free std1.4.0 and regenerated App reproduce qualified bytes; Node dual callers pass5120calls. Raw all-ref nine-detector scan covered305blobs/15785125bytes, zero skips/errors but two historical dist blobs hit AWS-format patterns. Readonly attribution finds only exact frozen compiler Base64 embeddings, decoded SHA8f79429d5499380d93abbb980df6c16a99adc15fee8987068906af11aa757027 and zero decoded raw AWS-format hits. Suspected carrier false positive does not satisfy zero-findings admission. Resume: obtain explicit narrow remediation authority, preserve raw scan and historical identities, complete native/Host/integrity qualification before tag/main promotion. Do not commit unfinished candidate artifacts or waive the scanner; no MCPGit release/deployment.
+Task state: active — user authorized the narrow encoded-artifact false-positive
+repair on 2026-09-13. Public latest remains immutable v0.0.8. Preserve raw and
+authorized receipts in admission/credential-scan-v009-*.json: raw findings are
+not erased. Only two exact historical compiler carrier blobs can qualify,
+after exact decoded compiler digest, canonical Base64, import-free Wasm and
+all-nine-detector decoded-byte proof. Unknown carriers and deleted historical
+credentials reject; scripts/test-credential-scan.mjs passes these negatives.
+The earlier aa00 private compiler candidate passed all 90 distribution outputs,
+23 expression cases per Host and 192 managed-loop calls per Host; it is now
+superseded by newer private main. Rebuild that exact latest clean source and
+repeat qualification before immutable v0.0.9 tag or main promotion. Unstaged
+artifacts are unfinished. No MCPGit release/deployment is in scope.
 
 Publish the engine-neutral `wasmc-core-runtime` Rust SDK without rebuilding the
 Runtime compiler or frozen compatibility artifacts. Preserve `dist/`,
