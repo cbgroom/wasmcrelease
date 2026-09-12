@@ -41,6 +41,8 @@ host journeys selected by `release-host-integration`.
 
 After changing a tracked delivery file, run `node ./scripts/refresh-integrity.mjs`
 after staging only the intended paths and before validation. The checksum
-generator deliberately binds only Git-tracked files. Review the resulting
+generator walks candidate files excluding .git, target, .DS_Store and temporary
+outputs; verify every included file is intended and staged before admission.
+Review the resulting
 manifest and checksum diff; generated hash consistency does not authorize or
 validate the underlying change.

@@ -2,6 +2,22 @@
 
 Packages are built and admitted locally from clean synchronized private source, then pushed directly. GitHub Actions independently verifies the source-free public consumer paths, but cannot rebuild or admit canonical compiler/Lib bytes and is not a publication dependency.
 
+## v0.0.9
+
+Latest compiler source authority is recorded in admission/compiler-build-v009.json.
+The compiler is1351666 bytes, import-free. The current/ package and embedded
+facades replace historical dist/ as the current compiler entrance. Compatibility
+trees remain frozen. The source-free wasmc:std@1.4.0 package exposes73 semantic
+APIs with generated Rust SDK; the 4.8 CoreLib deployment companion is outside
+the strict package root. The package reuses its qualified producer bytes.
+
+Node/Bun/Deno each pass30 frozen outputs,23 reconstructed expression cases,
+192 managed-loop calls and5120 paired standard-Lib caller checks. Public
+Wasmi/Wasmtime SDK tests pass18/18. Final publication requires coherent exact
+same-archive Host receipts and integrity, and a fresh all-ref credential scan.
+Two historical raw scan findings are retained and narrowly classified only
+under explicit authorization and exact decoded-artifact proof.
+
 ## v0.0.8
 
 This additive release publishes `wasmc-core-runtime` as a reusable Rust SDK

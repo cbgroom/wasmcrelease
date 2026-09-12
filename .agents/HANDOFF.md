@@ -3,11 +3,11 @@
 ## 0. Status
 
 - Branch: `release/v0.0.9` from current public `main`
-- Release: active authorized v0.0.9 qualification; public latest remains v0.0.8
+- Release: v0.0.9 local qualification PASS; resolve actual tag/main from Git
 - Integrated private SDK authority: `wasmc@bddf8a371698ac7f1ced87b02952df5be5359dad`
-- Runtime product candidate: `b6659654cdbfbc4c53a5eb92ca6d67db881c0491`
+- Runtime product candidate: resolve release.json runtime.product_candidate_commit
 - Strict evidence runner/SDK authority: `bddf8a371698ac7f1ced87b02952df5be5359dad`
-- Existing immutable truth: `v0.0.1` through `v0.0.7` remain unchanged
+- Existing immutable truth: `v0.0.1` through `v0.0.8` remain unchanged
 
 ## 1. North Star
 
@@ -34,19 +34,20 @@ cases or a fresh LLM generation benchmark. Finish same-archive Host receipts
 and final integrity/scan before immutable v0.0.9 tag or main promotion.
 Candidate checkpoint is not publication acceptance. No MCPGit deployment.
 
-Publish the engine-neutral `wasmc-core-runtime` Rust SDK without rebuilding the
-Runtime compiler or frozen compatibility artifacts. Preserve `dist/`,
+Publish the latest compiler, standard Lib and existing engine-neutral
+`wasmc-core-runtime` Rust SDK. Preserve `dist/`,
 `package/`, and `libs/` byte-for-byte from v0.0.4. GitHub Actions may test
 published bytes and SDK source but must not build or admit canonical
 compiler/Lib artifacts.
 
 ## 3. Release Evidence
 
-- Runtime compiler: 1,488,174 bytes, SHA-256 `5e82679b...495119`.
-- One exact source-free archive: `f48bc6f3...2d2359`.
+- Runtime compiler:1351666 bytes; exact SHA in compiler-build-v009.json.
+- One exact source-free archive: resolve runtime-local-host-evidence-v009.json.
 - Node v26.5.1, Bun 1.3.14, and Deno 2.9.4 each pass self-test, compile,
   WebAssembly validation, instantiation, and `run(6,18)=42`.
-- Strict Fresh-Agent: 100/100, findings=0; stale candidate and split archive
+- Deterministic black-box Fresh-Agent harness:100/100 (not new LLM generation),
+  findings=0; stale candidate and split archive
   negative gates fail closed.
 - Public Core Runtime SDK: 18/18 tests pass with Wasmi and Wasmtime enabled;
   module inspection remains independent of synchronous Wasmtime compilation.
@@ -63,21 +64,21 @@ node examples/agent-start/run.mjs
 
 ## 5. Current Action
 
-Task state: exact `v0.0.8` candidate is assembled and locally verified. Finish
+Task state: exact `v0.0.9` candidate is assembled and locally verified. Finish
 the high-confidence reachable-blob scan, commit and push the immutable release
 branch/tag, verify Raw/jsDelivr bytes, then advance mutable `main`.
 
 ## 6. Next Actions
 
 1. Run the final public-history and reachable-blob scan immediately before publication.
-2. Publish the exact candidate through a new immutable `v0.0.8` tag without moving older tags.
+2. Publish the exact candidate through a new immutable `v0.0.9` tag without moving older tags.
 3. Verify fresh GitHub Raw/jsDelivr and Git-consumer SDK use, then advance `main`.
 
 ## 7. Do Not Do
 
 - Do not copy private compiler source or caches.
 - Do not mutate frozen compatibility trees or older tags.
-- Do not mutate or retag `v0.0.1` through `v0.0.7`.
+- Do not mutate or retag `v0.0.1` through `v0.0.8`.
 - Do not make npm, an external JavaScript registry, or GitHub Actions a release-publication dependency.
 
 ## 8. Recovery / Resume Commands
@@ -90,7 +91,7 @@ git status --short --branch
 
 ## 9. Completion Gate
 
-Completion means immutable `v0.0.8` and mutable `main` resolve to the admitted
+Completion means immutable `v0.0.9` and mutable `main` resolve to the admitted
 candidate, older tags remain unchanged, Raw/jsDelivr bytes match, and public
 Agent, staged Node/Bun/Deno, Lib, Rust/Wasmtime, and Core Runtime SDK consumer
 tests pass without rebuilding canonical compiler/Lib artifacts.

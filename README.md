@@ -2,7 +2,7 @@
 
 Source-free public packages for the private-source `wasmc` compiler.
 
-Candidate release: `v0.0.9`, built from exact private source
+Current release: `v0.0.9`, built from exact private source
 `e69abb73f667f3810b0c40937fd1a1e2d04d4255`. Use `current/` for the
 latest compiler facade; `dist/`, `package/`, and `libs/` are frozen v0.0.4
 compatibility trees, not current compiler entrances. The Wasmi/Wasmtime
@@ -42,6 +42,5 @@ import { compile, inspectWasm } from "@wasmc/compiler";
 
 These are explicit contexts, not fallback probes. Repository-local use does not require npm or another external JavaScript registry.
 
-Consumers must pin an admitted immutable tag or its full commit and verify
-`SHA256SUMS`. Until v0.0.9 publication completes, v0.0.8 remains public latest.
+Consumers must pin `v0.0.9` or its full commit and verify `SHA256SUMS`.
 `main` and latest metadata are mutable discovery conveniences.

@@ -90,8 +90,8 @@ const compatibilityCompilerPath = 'dist/wasmc_compiler.wasm';
 const materials = [
   { uri: 'https://github.com/cbgroom/wasmcrelease.git', digest: { gitCommit: releaseJson.compatibility.public_commit }, role: 'byte-frozen-v0.0.4-compatibility-surface' },
   { uri: 'https://github.com/yxsicd/wasmc.git', digest: { gitCommit: releaseJson.source_commit }, role: `${releaseJson.tag}-integrated-private-authority` },
-  { uri: 'https://github.com/yxsicd/wasmc.git', digest: { gitCommit: releaseJson.product_candidate_commit }, role: `${releaseJson.tag}-runtime-product-candidate` },
-  { uri: 'https://github.com/yxsicd/wasmc.git', digest: { gitCommit: releaseJson.evidence_commit }, role: `${releaseJson.tag}-same-candidate-live-evidence` },
+  { uri: 'https://github.com/cbgroom/wasmcrelease.git', digest: { gitCommit: releaseJson.product_candidate_commit }, role: `${releaseJson.tag}-source-free-runtime-product-candidate` },
+  { uri: 'https://github.com/cbgroom/wasmcrelease.git', digest: { gitCommit: releaseJson.evidence_commit }, role: `${releaseJson.tag}-same-candidate-live-evidence` },
   { uri: 'git-tree', digest: { gitTree: releaseJson.source_tree }, role: `${releaseJson.tag}-integrated-private-tree` },
 ];
 const provenance = {
@@ -108,18 +108,7 @@ const provenance = {
     evidence_commit: releaseJson.evidence_commit,
     dirty: false,
   },
-  subjects: await Promise.all([
-    compatibilityCompilerPath,
-    runtimeCompilerPath,
-    runtimeBootstrapPath,
-    runtimeManifestPath,
-    'runtime/wasmc-runtime-v0/receipts/bun-self-test.json',
-    'skills/wasmc-developer/SKILL.md',
-    'skills/wasmc-developer/references/lib.md',
-    'sdk/wasmc-core-runtime/Cargo.toml',
-    'sdk/wasmc-core-runtime/src/lib.rs',
-    'sdk/wasmc-core-runtime/src/module_inspection.rs',
-  ].map(async (name) => {
+  subjects: await Promise.all(manifestPaths.map(async (name) => {
     const bytes = await readFile(join(root, name));
     return { name, bytes: bytes.length, digest: { sha256: sha(bytes) } };
   })),

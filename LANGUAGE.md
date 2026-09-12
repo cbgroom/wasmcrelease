@@ -5,7 +5,15 @@ wasmc combines a WIT-shaped declaration shell, Rust-familiar expressions, and
 standard Core WebAssembly output. It is not full Rust and does not use Cargo,
 modules, macros, traits, references, or a borrow-checker syntax.
 
-For `v0.0.4`, this guide covers direct Core-lane programs and the source-language
+For the current compiler, use `current/wasmc.mjs`, not frozen `dist/`.
+The v0.0.9 expression regression corpus lives in `examples/current/expressions.json`:
+it covers bitwise/shift, while with managed record-list operations, minimal
+String len paths, and explicit scalar casts. More algorithms belong in the
+73-API standard Lib, not new language features; see `examples/current/standard.wasmc`.
+Raw pointers, general Rust generics/traits, arbitrary async CFG and automatic
+cross-domain managed transport are not promised by these tests.
+
+This guide covers direct Core-lane programs and the source-language
 shell used by managed Lib applications. For String/List/Map/record/resource
 semantics, read `LIB.md` and the bundled developer Skill rather than guessing
 private operations.

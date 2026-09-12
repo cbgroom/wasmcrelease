@@ -17,7 +17,7 @@ fn release_file(path: &str) -> PathBuf {
 
 pub fn exercise() -> Result<(usize, i32, i32, i32), Box<dyn Error>> {
     let engine = Engine::default();
-    let compiler = Module::new(&engine, fs::read(release_file("dist/wasmc_compiler.wasm"))?)?;
+    let compiler = Module::new(&engine, fs::read(release_file("current/wasmc_compiler.wasm"))?)?;
     if compiler.imports().next().is_some() {
         return Err("compiler unexpectedly requires Host imports".into());
     }

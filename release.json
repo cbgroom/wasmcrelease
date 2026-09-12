@@ -1,14 +1,14 @@
 {
   "schema": "wasmc-public-release/v1",
   "name": "wasmc",
-  "version": "0.0.8",
-  "tag": "v0.0.8",
+  "version": "0.0.9",
+  "tag": "v0.0.9",
   "source_available": false,
   "compiler_source_available": false,
   "core_runtime_sdk_source_available": true,
-  "source_commit": "bddf8a371698ac7f1ced87b02952df5be5359dad",
-  "source_tree": "8bc8fa4ba33c490cc74a56fe2c5bf4aad48b6ac5",
-  "cdn": "https://cdn.jsdelivr.net/gh/cbgroom/wasmcrelease@v0.0.8",
+  "source_commit": "e69abb73f667f3810b0c40937fd1a1e2d04d4255",
+  "source_tree": "861aa57f8919aa5b79cafdf9eaedaab50ba1ce26",
+  "cdn": "https://cdn.jsdelivr.net/gh/cbgroom/wasmcrelease@v0.0.9",
   "artifacts": [
     {
       "path": "Cargo.lock",
@@ -26,6 +26,11 @@
       "sha256": "bb426bfa612ce5b901d7f2953ed85400f44443160d83c5892a71044ee50335ae"
     },
     {
+      "path": "admission/compiler-build-v009.json",
+      "bytes": 1012,
+      "sha256": "19ad861c9545ea40a2e146943fb773d152a81c0c4e8e3152a1ca7591df789823"
+    },
+    {
       "path": "admission/compiler-verification-summary.json",
       "bytes": 366,
       "sha256": "dc5bffebb3ee1d306417dc744d644f01a41bd80781dd631d61410b50b6c11d87"
@@ -34,6 +39,16 @@
       "path": "admission/core-runtime-sdk-v008.json",
       "bytes": 1303,
       "sha256": "0a7269c9ddc277533cd2b659be88ee68f0142966dc5762b8ee22ccb5c75bc5f6"
+    },
+    {
+      "path": "admission/credential-scan-v009-authorized.json",
+      "bytes": 1771,
+      "sha256": "830684ce950049b7be96cbf2620538d764cadb1550ed05779f3b0f29c01adddb"
+    },
+    {
+      "path": "admission/credential-scan-v009-raw.json",
+      "bytes": 1139,
+      "sha256": "6f2ec4f8cb7f980866494d47ff318e9bca8c5b149fde5de97aaf7437d73f23ba"
     },
     {
       "path": "admission/js-lib-verification-summary.json",
@@ -56,9 +71,59 @@
       "sha256": "f49e904ff4b6f7092305a789e00e2e6aaf373c01647fe39d4dbfc0094b3df32f"
     },
     {
+      "path": "admission/qualification-v009.json",
+      "bytes": 3217,
+      "sha256": "374a6cd54629727c80a335755dd17d9b2f6183dbfa8a421b395aa925b39604a4"
+    },
+    {
       "path": "admission/runtime-local-host-evidence-v008.json",
       "bytes": 1874,
       "sha256": "02df1ed838b04ad4710f690911f96e0a0375f502a10c1dcca4aa5a5961f9e51a"
+    },
+    {
+      "path": "admission/runtime-local-host-evidence-v009-raw.json",
+      "bytes": 1874,
+      "sha256": "7252bbeeb8805106d4efe077e27f9948321ccd898bfa18de3e855226eda057a9"
+    },
+    {
+      "path": "admission/runtime-local-host-evidence-v009.json",
+      "bytes": 2317,
+      "sha256": "aa85ca18ac86f384f96d1848bce5081b994b51fef294cfa2ae68a7e426d2e960"
+    },
+    {
+      "path": "admission/runtime-local-host-evidence-v009.md",
+      "bytes": 543,
+      "sha256": "561420f6456e54232be53bba15e8e50f908ffc20ffaefbf7af652d4dd5d6603d"
+    },
+    {
+      "path": "current/cli.mjs",
+      "bytes": 247,
+      "sha256": "68c9511464319520cc7b4b04ae3d12b7499ad2754476b75aeb93a04c065319fd"
+    },
+    {
+      "path": "current/index.mjs",
+      "bytes": 18957,
+      "sha256": "950b518b5f81ef59c8ea768cbb7689da2c7b456a62f05d597057984c29a33250"
+    },
+    {
+      "path": "current/lib_core.wasm",
+      "bytes": 34158,
+      "sha256": "86670b35fe4ff01f9ad4392b42ce8816e4679f680ab788599905edb1bbe6e749"
+    },
+    {
+      "path": "current/wasmc.global.js",
+      "bytes": 1865466,
+      "sha256": "e195adfafb64430fc6ce5c1480908137db7759b1e2d25c78c480953c61ceee3f"
+    },
+    {
+      "path": "current/wasmc.mjs",
+      "bytes": 1867305,
+      "sha256": "6f1cd2f94d66966ed0de6db462432ea82523ab02de0ad956f51be9f6944caffe"
+    },
+    {
+      "path": "current/wasmc_compiler.wasm",
+      "bytes": 1351666,
+      "sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90"
     },
     {
       "path": "dist/lib_core.wasm",
@@ -81,14 +146,44 @@
       "sha256": "8f79429d5499380d93abbb980df6c16a99adc15fee8987068906af11aa757027"
     },
     {
+      "path": "examples/current/corpus.json",
+      "bytes": 150518,
+      "sha256": "7f3b74e2ae59cd45bd904c5ef3103f7d5f59b9c6163e326cbb8ff04ba2a62771"
+    },
+    {
+      "path": "examples/current/expressions.json",
+      "bytes": 6673,
+      "sha256": "a14f593dd45669f8963430534007615da5df44b07c2830165e0a0e8b46fb7d5c"
+    },
+    {
+      "path": "examples/current/standard-rust.wasm",
+      "bytes": 1462,
+      "sha256": "cfa1022826dfabf2455efc61050005401a770e0d9349dd299c6ce76845172a88"
+    },
+    {
+      "path": "examples/current/standard-wasmc.wasm",
+      "bytes": 2580,
+      "sha256": "6d6f16c109a942196cfd81ba6e41f014d6b51776bed5de486dce277b80358bf9"
+    },
+    {
+      "path": "examples/current/standard.mjs",
+      "bytes": 2366,
+      "sha256": "a3cd5ae3a989d1464116fcab31c800a814e0033c965ee7c9f94fd93377ab1288"
+    },
+    {
+      "path": "examples/current/standard.wasmc",
+      "bytes": 1577,
+      "sha256": "9bf53362e8740426bdbe13a7e48d21c3e4143a7baefc170225136f72e5f18707"
+    },
+    {
       "path": "examples/rust-wasmtime/Cargo.lock",
-      "bytes": 28535,
-      "sha256": "a8db04b9939d67a231460db01da912903486b6932c5c80f9530e07b58e8a6dcf"
+      "bytes": 30356,
+      "sha256": "8b065f033dbb7805661f1fb9dc4db5e587de4a512aef46bc12e7077ddcb846fa"
     },
     {
       "path": "examples/rust-wasmtime/Cargo.toml",
       "bytes": 236,
-      "sha256": "9a23c3fad497846986943668b86ea1a8ca1802ab94f39519779d4ce21c4f1013"
+      "sha256": "1ff85f6087264f1a6e38d10c8eb7eb8f46bec552c6eb7f57dbb9552a6bcd1f34"
     },
     {
       "path": "examples/rust-wasmtime/README.md",
@@ -97,8 +192,8 @@
     },
     {
       "path": "examples/rust-wasmtime/src/lib.rs",
-      "bytes": 5129,
-      "sha256": "730021fb1473a95f272d68127b9ba629e4202184c8de2596b6d2f30a80c111df"
+      "bytes": 5132,
+      "sha256": "6e4ecc7c730483088a6a3ed10f2c03f8ae1c3f16830eb025d01db5ce333ef415"
     },
     {
       "path": "examples/rust-wasmtime/src/main.rs",
@@ -278,17 +373,17 @@
     {
       "path": "runtime/registry-v0/channels/dev.json",
       "bytes": 503,
-      "sha256": "f0f29dd0b00783ff81cc2cf01c8b3838d4a1528dc42c5fb5541098e800fa0da0"
+      "sha256": "b946308802cf9d899b12193fe15638e1194c6d42f9753962560ba6412aded17d"
     },
     {
       "path": "runtime/registry-v0/mirrors/local.json",
       "bytes": 494,
-      "sha256": "d8df888324c7627e185861445bb2caa22b332c50d9fa6277320c495da7f465cb"
+      "sha256": "a4197749e996c0831a14e77d16e1c42833bcbb5ec8f1b7a652037aaf2f68f0a0"
     },
     {
       "path": "runtime/registry-v0/packages/wasmc-runtime/0.1.0-runtime-v0.json",
       "bytes": 1280,
-      "sha256": "996ce84d939e4eb1ec101833381cc3ec5de372b40aa4d4d63b7f0533231ffa07"
+      "sha256": "f6a4e8926a948404c9ea9173cebaf6574db40d11e252ca8b5d0d10bcd7a61f6d"
     },
     {
       "path": "runtime/registry-v0/registry.json",
@@ -312,8 +407,8 @@
     },
     {
       "path": "runtime/wasmc-runtime-v0/compiler.wasm",
-      "bytes": 1488174,
-      "sha256": "5e82679bd75b2da65d3f3c59069a98b72aaf64be18060797e2575ecc95495119"
+      "bytes": 1351666,
+      "sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90"
     },
     {
       "path": "runtime/wasmc-runtime-v0/examples/add.wasmc",
@@ -343,22 +438,22 @@
     {
       "path": "runtime/wasmc-runtime-v0/manifest.json",
       "bytes": 3129,
-      "sha256": "4e1971d2afbeb3571acaa7c056bf6c2e2e948e84e304f4cba8dcaacb729a864f"
+      "sha256": "b639927c1dda5e042c6ee8d47f891d956ae36b6d5d8301d2fc9ebec8eb28b7eb"
     },
     {
       "path": "runtime/wasmc-runtime-v0/receipts/bun-self-test.json",
       "bytes": 1124,
-      "sha256": "b150d2467310f593f1fb91b446e1f150717678ff79b9d46f7a8d572ed3e88625"
+      "sha256": "b70e38046284c23382ccdbbe7ada8f7a2312c0716366bc99cf6ae6265ce012d5"
     },
     {
       "path": "runtime/wasmc-runtime-v0/receipts/compiler-wasm.json",
       "bytes": 1161,
-      "sha256": "274ba3461a3ee8725425e5d1a3c9c491a821a8dbbb2cecf78beebdb959149eca"
+      "sha256": "0468fe303c9149401dae1eb1faf3cf8b9f337b0d88d6f608c669732198d6cb54"
     },
     {
       "path": "runtime/wasmc-runtime-v0/receipts/deno-self-test.json",
       "bytes": 1170,
-      "sha256": "c3f679984b013c9af2c23f6435bb86603ff04ff46a6204d232ef5420c27ca0a1"
+      "sha256": "872a1813ae34f58b8a43e1107fc4ad7f422e9004bc9e23912567444c4fdffb9f"
     },
     {
       "path": "runtime/wasmc-runtime-v0/receipts/node-compile.json",
@@ -368,7 +463,7 @@
     {
       "path": "runtime/wasmc-runtime-v0/receipts/node-self-test.json",
       "bytes": 1127,
-      "sha256": "e9624f2d319ee88256b8ca91eae1ea9ad6d5dd2d8436b20405a73347e1852d58"
+      "sha256": "489002605e569d727dae853b95ab92abba0f4c8070f94e1a3a4b69caae1e72f2"
     },
     {
       "path": "runtime/wasmc-runtime-v0/wit/host.wit",
@@ -457,8 +552,8 @@
     },
     {
       "path": "skills/wasmc-developer/references/javascript.md",
-      "bytes": 2725,
-      "sha256": "e60fd3b47929041c3281eedfb4ce16768f63f9cc25502dd4bd37871a2e43f4eb"
+      "bytes": 2728,
+      "sha256": "47ab158d195b6beb4c5e827860b16983786869c19edac7ed68283040a11493c4"
     },
     {
       "path": "skills/wasmc-developer/references/language-and-wit.md",
@@ -467,18 +562,73 @@
     },
     {
       "path": "skills/wasmc-developer/references/lib.md",
-      "bytes": 3472,
-      "sha256": "c91be59883878cc54e906ca120aee34768a225a2b6a0ebf7c14c9fffb6007b5a"
+      "bytes": 3475,
+      "sha256": "51024a2eed19627c6aa1a831844b25c335541984596cb178b61102ca226b6c0c"
     },
     {
       "path": "skills/wasmc-developer/references/runtime.md",
-      "bytes": 1244,
-      "sha256": "f043c26c369e2ace07ccadac474277d62615fbc33cd4c05dcf1d4577e8859e30"
+      "bytes": 1247,
+      "sha256": "488e8341be3e20adfba761a5de503f3a33b551581e45a3baaf6156afd0b2ddb2"
     },
     {
       "path": "skills/wasmc-developer/references/rust-wasmtime.md",
       "bytes": 2038,
       "sha256": "9bc357c0e5c20bde521ae43d9cb935e9bad2de35f785773c68d66b7e24e00207"
+    },
+    {
+      "path": "standard/corelib/4.8.0/corelib.wasm",
+      "bytes": 245810,
+      "sha256": "f54a892aff9068e5c79464029423a2e8f753ddb44010af9ac34a5c9efce2069c"
+    },
+    {
+      "path": "standard/wasmc-std/1.4.0/SKILL.md",
+      "bytes": 403,
+      "sha256": "355b8abd7f2d6fadbde9e8b75b29c28e987cc89dc384b5172fd364b211bfe079"
+    },
+    {
+      "path": "standard/wasmc-std/1.4.0/artifact.wasm",
+      "bytes": 44443,
+      "sha256": "f8a8ce447f776a47680e02e19ea3a69827edbbc46e01985803ce3d3df51178d7"
+    },
+    {
+      "path": "standard/wasmc-std/1.4.0/bindings/rust/Cargo.toml",
+      "bytes": 127,
+      "sha256": "361667c579d4750269e03b5b23e13128020768612a9735a0c4e1e204a379ea6f"
+    },
+    {
+      "path": "standard/wasmc-std/1.4.0/bindings/rust/src/lib.rs",
+      "bytes": 28360,
+      "sha256": "83e0bff3238b0cf90c9fe774a2a2b03e736081d7b717f73a042a8b0dc445490e"
+    },
+    {
+      "path": "standard/wasmc-std/1.4.0/component.wasm",
+      "bytes": 139462,
+      "sha256": "36f27edda9dd219d7ce86b5afb9a880023fa9ad31d7b5e4f6dd6a526c63d3fa2"
+    },
+    {
+      "path": "standard/wasmc-std/1.4.0/core-abi.json",
+      "bytes": 26407,
+      "sha256": "e76350f00a2a655a53e7137213c07a5ee6898c803eb9feb15f69c6495faae107"
+    },
+    {
+      "path": "standard/wasmc-std/1.4.0/lib.json",
+      "bytes": 3087,
+      "sha256": "0fe6425034fa1ffa1cdd0c8edd6d33c54b1bc2b7a7da2ca9f829dfd31687abe5"
+    },
+    {
+      "path": "standard/wasmc-std/1.4.0/lib.wit",
+      "bytes": 5704,
+      "sha256": "d565f00e91c36da68da3645ec5231dd11d1b25299a3ba5cbe3adbd9f5760d91d"
+    },
+    {
+      "path": "standard/wasmc-std/1.4.0/references/agent-delta.json",
+      "bytes": 314,
+      "sha256": "830b5046b0bdd7fb1c07360a0f3584117e00dab02060085f6c6661c139799721"
+    },
+    {
+      "path": "standard/wasmc-std/1.4.0/typed-resource-plan.json",
+      "bytes": 36177,
+      "sha256": "b83e1db2a815ea1ce7618ca402dd0bcf9aba1301270393b7452036531afe5664"
     }
   ],
   "capabilities": [
@@ -516,11 +666,12 @@
     "package": "wasmc:runtime@0.1.0-runtime-v0",
     "path": "runtime/wasmc-runtime-v0",
     "registry": "runtime/registry-v0",
-    "compiler_bytes": 1488174,
-    "compiler_sha256": "5e82679bd75b2da65d3f3c59069a98b72aaf64be18060797e2575ecc95495119",
-    "product_candidate_commit": "b6659654cdbfbc4c53a5eb92ca6d67db881c0491",
-    "evidence_commit": "bddf8a371698ac7f1ced87b02952df5be5359dad",
-    "source_free_archive_sha256": "f48bc6f374423165fe8be0616858f60d751127151b745cf63f0bca35ee2d2359",
+    "compiler_bytes": 1351666,
+    "compiler_sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90",
+    "product_candidate_commit": "1508726253d774b8987bba29406b7d1de2f6f220",
+    "product_candidate_repository": "cbgroom/wasmcrelease",
+    "evidence_commit": "1508726253d774b8987bba29406b7d1de2f6f220",
+    "source_free_archive_sha256": "f8c7f9a2ba4d9c9676b4d98bd1cf479857daf3ced948c56fbca7163bacdaa587",
     "host_providers": [
       "node",
       "bun",
@@ -530,7 +681,7 @@
     "external_js_package_registry": false,
     "python_active_tree_allowed": false
   },
-  "release_date": "2026-09-10",
-  "product_candidate_commit": "b6659654cdbfbc4c53a5eb92ca6d67db881c0491",
-  "evidence_commit": "bddf8a371698ac7f1ced87b02952df5be5359dad"
+  "release_date": "2026-09-13",
+  "product_candidate_commit": "1508726253d774b8987bba29406b7d1de2f6f220",
+  "evidence_commit": "1508726253d774b8987bba29406b7d1de2f6f220"
 }
