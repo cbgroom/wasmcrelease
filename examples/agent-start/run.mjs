@@ -1,5 +1,5 @@
 import { readFile } from "node:fs/promises";
-import { compile, inspectWasm } from "../../dist/wasmc.mjs";
+import { compile, inspectWasm } from "../../current/wasmc.mjs";
 
 const cases = [
   { file: "01_add.wasmc", args: [5, 6], expected: 17 },

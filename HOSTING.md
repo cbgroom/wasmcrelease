@@ -19,7 +19,7 @@ The internal registry's `dev` label is package-local resolver metadata. The oute
 ## JavaScript
 
 ```js
-import { compile, compileLib, instantiateLib, inspectWasm } from "./dist/wasmc.mjs";
+import { compile, compileLib, instantiateLib, inspectWasm } from "./current/wasmc.mjs";
 ```
 
 `compile` emits standard Core Wasm. `compileLib` returns matching application and Lib bytes. `instantiateLib` is the default managed-value path and returns an ordinary `WebAssembly.Instance`. The facade also exports `compilePackage`, `compileDetailed`, `flattenWasmcPackage`, and `createCompiler`; see [skills/wasmc-developer/references/javascript.md](skills/wasmc-developer/references/javascript.md).

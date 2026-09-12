@@ -8,7 +8,7 @@ The established v0.0.4 facade bytes remain frozen in v0.0.7. Record-backed appli
 
 ```js
 import { readFile } from "node:fs/promises";
-import { instantiateLib } from "./dist/wasmc.mjs";
+import { instantiateLib } from "./current/wasmc.mjs";
 
 const compilerWasmBytes = await readFile("./runtime/wasmc-runtime-v0/compiler.wasm");
 const instance = await instantiateLib(source, { compilerWasmBytes });

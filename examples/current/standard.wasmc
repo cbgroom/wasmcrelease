@@ -1,0 +1,39 @@
+package local:m1;
+interface app {
+    enum failure { invalid_reference }
+    run: func(index:u32,item:u8)->result<s32,failure> {
+        let value: own<byte_buffer> = bytes::new();
+        bytes::push(value,0);
+        bytes::push(value,1);
+        bytes::push(value,1);
+        bytes::push(value,255);
+        let needle: own<byte_buffer> = bytes::new();
+        bytes::push(needle,item);
+        let found:bool=bytes::contains(value,needle);
+        let count:u32=bytes::count_byte(value,item);
+        let text: own<text> = string::new();
+        let suffix: own<text> = string::new();
+        let ends:bool=string::ends_with(text,suffix);
+        let xs: own<s32_list> = list::new_s32();
+        list::push_s32(xs,-7);
+        list::push_s32(xs,0);
+        list::push_s32(xs,2147483647);
+        let received: option<s32> = list::get_s32(xs,index);
+        let read: s32 = received.unwrap_or(9);
+        let n:u32=list::len_s32(xs);
+        let cursor: u32 = 0;
+        while (cursor < n) {
+            let element: option<s32> = list::get_s32(xs,cursor);
+            let current: s32 = element.unwrap_or(65535);
+            if (current == 65535) { return ok(65535); }
+            cursor = cursor + 1;
+        }
+        if (n != 3 || !ends) { return ok(65535); }
+        if (item == 1 && count != 2) { return ok(65535); }
+        if ((item == 0 || item == 255) && count != 1) { return ok(65535); }
+        if (item == 128 && count != 0) { return ok(65535); }
+        if (found != (count != 0)) { return ok(65535); }
+        return ok(read);
+    }
+}
+world app {export app;}

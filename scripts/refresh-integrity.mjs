@@ -9,7 +9,7 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const slash = (value) => value.split('\\').join('/');
 const sha = (bytes) => createHash('sha256').update(bytes).digest('hex');
 const fileSha = async (path) => sha(await readFile(join(root, path)));
-const executableArtifacts = new Set(['dist/wasmc.mjs', 'package/cli.mjs']);
+const executableArtifacts = new Set(['dist/wasmc.mjs', 'package/cli.mjs', 'current/wasmc.mjs', 'current/cli.mjs']);
 const expectedMode = (path) => executableArtifacts.has(path) ? '0755' : '0644';
 
 async function walk(dir = '') {
@@ -40,6 +40,9 @@ const runtimeFiles = (await walk('runtime')).sort();
 const admissionFiles = (await walk('admission')).sort();
 const rootSkillFiles = (await walk('skills/wasmc-developer')).sort();
 const sdkFiles = (await walk('sdk')).sort();
+const currentFiles = (await walk('current')).sort();
+const standardFiles = (await walk('standard')).sort();
+const currentExampleFiles = (await walk('examples/current')).sort();
 const rustWorkspaceFiles = ['Cargo.toml', 'Cargo.lock'];
 const existing = releaseJson.artifacts.map((row) => row.path);
 const releasePaths = [...new Set([
@@ -48,6 +51,9 @@ const releasePaths = [...new Set([
   ...runtimeFiles,
   ...rootSkillFiles,
   ...sdkFiles,
+  ...currentFiles,
+  ...standardFiles,
+  ...currentExampleFiles,
   ...rustWorkspaceFiles,
 ])].sort();
 

@@ -44,7 +44,7 @@ facade directly. This route requires no package installation or external
 JavaScript registry.
 
 ```js
-import { instantiateLib } from "./dist/wasmc.mjs";
+import { instantiateLib } from "./current/wasmc.mjs";
 const instance = await instantiateLib(source);
 const count = instance.exports.count();
 ```

@@ -1,0 +1,193 @@
+{
+  "schema": "wasmc.s4-expression-cases/v1",
+  "authority": "Semantic subset reconstructed from user report; not original114 raw test entries",
+  "cases": [
+    {
+      "id": "bits",
+      "profile": "scalar",
+      "source": "package local:probe_bits; interface api { run: func(x:u32,y:u32)->u32 { return ((x & y) | (x ^ y)) << 1; } } world app { export api; }",
+      "vectors": [
+        [
+          3,
+          5,
+          14
+        ]
+      ]
+    },
+    {
+      "id": "shift_i64",
+      "profile": "scalar",
+      "source": "package local:probe_shift_i64; interface api { run: func(x:i64)->i64 { return x >> 1; } } world app { export api; }",
+      "vectors": []
+    },
+    {
+      "id": "float_bits",
+      "profile": "scalar",
+      "source": "package local:probe_float_bits; interface api { run: func(x:f64)->f64 { return x & x; } } world app { export api; }",
+      "vectors": []
+    },
+    {
+      "id": "while",
+      "profile": "scalar",
+      "source": "package local:probe_while; interface api { run: func(n:s32)->s32 { let i:s32=0; let s:s32=0; while(i<n){ i=i+1; if(i==2){continue;} s=s+i; } return s; } } world app { export api; }",
+      "vectors": [
+        [
+          4,
+          8
+        ]
+      ]
+    },
+    {
+      "id": "option_match_expr",
+      "profile": "scalar",
+      "source": "package local:probe_option_match_expr; interface api { run: func(v:option<s32>)->s32 { return match v { none=>0, some(x)=>x+1, }; } } world app { export api; }",
+      "vectors": []
+    },
+    {
+      "id": "option_unwrap",
+      "profile": "scalar",
+      "source": "package local:probe_option_unwrap; interface api { run: func(v:option<s32>,fallback:s32)->s32 { return v.unwrap_or(fallback); } } world app { export api; }",
+      "vectors": []
+    },
+    {
+      "id": "enum_pass",
+      "profile": "scalar",
+      "source": "package local:probe_enum_pass; interface api { enum Color { red,green,blue } run: func(v:Color)->Color { return v; } } world app { export api; }",
+      "vectors": [
+        [
+          2,
+          2
+        ]
+      ]
+    },
+    {
+      "id": "enum_match",
+      "profile": "scalar",
+      "source": "package local:probe_enum_match; interface api { enum Color { red,green,blue } run: func(v:Color)->s32 { return match v { red=>1,green=>2,blue=>3, }; } } world app { export api; }",
+      "vectors": []
+    },
+    {
+      "id": "enum_constructor",
+      "profile": "scalar",
+      "source": "package local:probe_enum_constructor; interface api { enum Color { red,green,blue } run: func()->Color { return Color.red; } } world app { export api; }",
+      "vectors": []
+    },
+    {
+      "id": "string_local_len",
+      "profile": "managed",
+      "source": "package local:probe_string_local_len; interface api { run: func()->u32 { let s:string=\"Алиса-🙂\"; return s.len(); } } world app { export api; }",
+      "vectors": [
+        [
+          15
+        ]
+      ]
+    },
+    {
+      "id": "string_field_len",
+      "profile": "managed",
+      "source": "package local:probe_string_field_len; interface api { record Item { name:string } run: func()->u32 { let p:Item={name:\"abc\"}; return p.name.len(); } } world app { export api; }",
+      "vectors": [
+        [
+          3
+        ]
+      ]
+    },
+    {
+      "id": "string_parameter_len",
+      "profile": "managed",
+      "source": "package local:probe_string_parameter_len; interface api { run: func(s:string)->u32 { return s.len(); } } world app { export api; }",
+      "vectors": []
+    },
+    {
+      "id": "string_clone",
+      "profile": "managed",
+      "source": "package local:probe_string_clone; interface api { run: func()->u32 { let s:string=\"abc\"; let t:string=s.clone(); return t.len(); } } world app { export api; }",
+      "vectors": [
+        [
+          3
+        ]
+      ]
+    },
+    {
+      "id": "string_concat",
+      "profile": "managed",
+      "source": "package local:probe_string_concat; interface api { run: func()->u32 { let s:string=\"a\"+\"b\"; return s.len(); } } world app { export api; }",
+      "vectors": [
+        [
+          2
+        ]
+      ]
+    },
+    {
+      "id": "string_byte_loop",
+      "profile": "managed",
+      "source": "package local:probe_string_byte_loop; interface api { run: func()->u32 { let s:string=\"abc\"; let i:u32=0; let sum:u32=0; while(i<s.len()){ sum=sum+(s.byte_at(i).unwrap_or(0) as u32); i=i+1; } return sum; } } world app { export api; }",
+      "vectors": [
+        [
+          294
+        ]
+      ]
+    },
+    {
+      "id": "list_record_index",
+      "profile": "managed",
+      "source": "package local:probe_list_record_index; interface api { record Cell { v:s32 } run: func(i:u32)->s32 { let mut xs:list<Cell> = list.new(); xs.push({v:3}); xs.push({v:7}); return xs.get(i).v; } } world app { export api; }",
+      "vectors": [
+        [
+          1,
+          7
+        ]
+      ]
+    },
+    {
+      "id": "list_record_push_loop",
+      "profile": "managed",
+      "source": "package local:probe_list_record_push_loop; interface api { record Cell { v:s32 } run: func()->u32 { let mut xs:list<Cell> = list.new(); let i:s32=0; while(i<3){xs.push({v:i});i=i+1;} return xs.len(); } } world app { export api; }",
+      "vectors": [
+        [
+          3
+        ]
+      ]
+    },
+    {
+      "id": "list_scalar",
+      "profile": "managed",
+      "source": "package local:probe_list_scalar; interface api { run: func()->u32 { let mut xs:list<s32> = list.new(); xs.push(1); return xs.len(); } } world app { export api; }",
+      "vectors": [
+        [
+          1
+        ]
+      ]
+    },
+    {
+      "id": "array",
+      "profile": "scalar",
+      "source": "package local:probe_array; interface api { run: func()->s32 { let a:[s32;4]=[1,2,3,4]; return a[0]; } } world app { export api; }",
+      "vectors": []
+    },
+    {
+      "id": "mixed_numeric",
+      "profile": "scalar",
+      "source": "package local:probe_mixed_numeric; interface api { run: func(x:s32,y:f64)->f64 { return x+y; } } world app { export api; }",
+      "vectors": []
+    },
+    {
+      "id": "explicit_cast",
+      "profile": "scalar",
+      "source": "package local:probe_explicit_cast; interface api { run: func(x:s32)->f64 { return x as f64; } } world app { export api; }",
+      "vectors": []
+    },
+    {
+      "id": "u64",
+      "profile": "scalar",
+      "source": "package local:probe_u64; interface api { run: func(x:u64)->u64 { return x; } } world app { export api; }",
+      "vectors": []
+    },
+    {
+      "id": "generic",
+      "profile": "scalar",
+      "source": "package local:probe_generic; interface api { run: func<T>(x:T)->T { return x; } } world app { export api; }",
+      "vectors": []
+    }
+  ]
+}

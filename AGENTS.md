@@ -18,7 +18,7 @@ world app { export api; }
 ```
 
 ```js
-import { compile, inspectWasm } from "./dist/wasmc.mjs";
+import { compile, inspectWasm } from "./current/wasmc.mjs";
 const bytes = await compile(source);
 const inspected = inspectWasm(bytes);
 if (inspected.imports.length) throw new Error("unexpected Host authority");
@@ -48,7 +48,7 @@ those established compatibility bytes.
 
 ## Artifact selection
 
-- `dist/wasmc.mjs`: self-contained ESM facade.
+- `current/wasmc.mjs`: self-contained ESM facade.
 - `dist/wasmc.global.js`: classic `globalThis.Wasmc` facade.
 - `dist/wasmc_compiler.wasm`: import-free compiler Core Wasm.
 - `package/`: sidecar package with compiler, matching `lib_core.wasm`, and developer Skill.

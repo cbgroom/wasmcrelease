@@ -1,0 +1,100 @@
+{
+  "accepted": true,
+  "compiler": {
+    "adapter_abi": "wasmc-wasm-c-abi/v0",
+    "bytes": 1351666,
+    "path": "compiler.wasm",
+    "sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90",
+    "target": "wasm32-unknown-unknown"
+  },
+  "distribution": {
+    "external_js_package_registry": false,
+    "node_bun_deno_are_host_providers_only": true,
+    "registry": "wasmc-registry"
+  },
+  "entrypoints": {
+    "bun": "host/bun.mjs",
+    "deno": "host/deno.mjs",
+    "node": "host/node.mjs",
+    "universal": "bootstrap.mjs"
+  },
+  "host_abi": {
+    "authorities": [
+      "filesystem",
+      "process",
+      "hash",
+      "http"
+    ],
+    "wit": {
+      "bytes": 568,
+      "path": "wit/host.wit",
+      "sha256": "4418ee5d3985c74742c023ef13ba10ea991c4591beaf299c6daacbd2a2f695b0"
+    }
+  },
+  "id": "wasmc:runtime",
+  "manifest": {
+    "bytes": 3129,
+    "path": "manifest.json",
+    "sha256": "b639927c1dda5e042c6ee8d47f891d956ae36b6d5d8301d2fc9ebec8eb28b7eb"
+  },
+  "package_root": "runtime/wasmc-runtime-v0",
+  "receipt": {
+    "bytes": 1161,
+    "path": "receipts/compiler-wasm.json",
+    "sha256": "0468fe303c9149401dae1eb1faf3cf8b9f337b0d88d6f608c669732198d6cb54"
+  },
+  "schema": "wasmc.runtime-package-audit/v0",
+  "verified_files": [
+    {
+      "bytes": 17,
+      "path": "VERSION",
+      "sha256": "b10e46f75ee7c58896204f308750f3d2407d335d029053d5780212e23e06fb5b"
+    },
+    {
+      "bytes": 1192,
+      "path": "README.md",
+      "sha256": "30bcec8bd9e26b100346a8d5d20a722e3d9e619f8d5cb99710e8beaaad9093ef"
+    },
+    {
+      "bytes": 1351666,
+      "path": "compiler.wasm",
+      "sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90"
+    },
+    {
+      "bytes": 1311,
+      "path": "bootstrap.mjs",
+      "sha256": "f91bd85040e9b8e0075eade5aa782d4e0d66d984bc99048a4f6e58b939fc6717"
+    },
+    {
+      "bytes": 6488,
+      "path": "host/common.mjs",
+      "sha256": "0335cc677a0a61925e25562942608e71e4aa2896301d6ebc1fc9c25480b5825d"
+    },
+    {
+      "bytes": 836,
+      "path": "host/node.mjs",
+      "sha256": "c7f187f13ed6ae74b090bd65e6acf005efe4e43a60b9d1ff5d0d4310d7464e3a"
+    },
+    {
+      "bytes": 361,
+      "path": "host/bun.mjs",
+      "sha256": "3040514b15f8baa7ccf2428f53836a51fdb350cb9f377032a7d4362a771dc6d3"
+    },
+    {
+      "bytes": 821,
+      "path": "host/deno.mjs",
+      "sha256": "08e4764ff360ba3877e3af4d21a6130166b08279307358881294060d887b9f3c"
+    },
+    {
+      "bytes": 568,
+      "path": "wit/host.wit",
+      "sha256": "4418ee5d3985c74742c023ef13ba10ea991c4591beaf299c6daacbd2a2f695b0"
+    },
+    {
+      "bytes": 134,
+      "path": "examples/add.wasmc",
+      "sha256": "129b276fd0d708109d8c028706402857c453cdd2437236961c7199fc661d5781"
+    }
+  ],
+  "version": "0.1.0-runtime-v0"
+}

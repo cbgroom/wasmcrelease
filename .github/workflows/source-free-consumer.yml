@@ -58,6 +58,19 @@ jobs:
           deno-version: 2.9.4
       - name: Deploy, compile, instantiate, and run
         run: ./scripts/validate-source-free-runtime.sh "${{ matrix.runtime }}"
+      - name: Test latest compiler and shared standard Lib callers
+        shell: bash
+        run: |
+          case "${{ matrix.runtime }}" in
+            node|bun)
+              "${{ matrix.runtime }}" scripts/validate-current.mjs
+              "${{ matrix.runtime }}" examples/current/standard.mjs
+              ;;
+            deno)
+              deno run --allow-read --allow-write --allow-run --allow-env scripts/validate-current.mjs
+              deno run --allow-read examples/current/standard.mjs
+              ;;
+          esac
 
   rust-wasmtime-and-libs:
     name: Rust, Wasmtime, and Lib behavior

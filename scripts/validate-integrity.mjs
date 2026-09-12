@@ -10,7 +10,7 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const execFileAsync = promisify(execFile);
 const sha = (bytes) => createHash('sha256').update(bytes).digest('hex');
 const json = async (path) => JSON.parse(await readFile(join(root, path), 'utf8'));
-const executableArtifacts = new Set(['dist/wasmc.mjs', 'package/cli.mjs']);
+const executableArtifacts = new Set(['dist/wasmc.mjs', 'package/cli.mjs', 'current/wasmc.mjs', 'current/cli.mjs']);
 const expectedMode = (path) => executableArtifacts.has(path) ? '0755' : '0644';
 
 async function walk(dir = '') {

@@ -2,8 +2,8 @@
 
 ## 0. Status
 
-- Branch: `release/v0.0.8-candidate` from current public `main`
-- Release: additive `v0.0.8` candidate; v0.0.4 compatibility trees frozen
+- Branch: `release/v0.0.9` from current public `main`
+- Release: active authorized v0.0.9 qualification; public latest remains v0.0.8
 - Integrated private SDK authority: `wasmc@bddf8a371698ac7f1ced87b02952df5be5359dad`
 - Runtime product candidate: `b6659654cdbfbc4c53a5eb92ca6d67db881c0491`
 - Strict evidence runner/SDK authority: `bddf8a371698ac7f1ced87b02952df5be5359dad`
@@ -24,11 +24,15 @@ not erased. Only two exact historical compiler carrier blobs can qualify,
 after exact decoded compiler digest, canonical Base64, import-free Wasm and
 all-nine-detector decoded-byte proof. Unknown carriers and deleted historical
 credentials reject; scripts/test-credential-scan.mjs passes these negatives.
-The earlier aa00 private compiler candidate passed all 90 distribution outputs,
-23 expression cases per Host and 192 managed-loop calls per Host; it is now
-superseded by newer private main. Rebuild that exact latest clean source and
-repeat qualification before immutable v0.0.9 tag or main promotion. Unstaged
-artifacts are unfinished. No MCPGit release/deployment is in scope.
+Latest clean private compiler authority is recorded in
+admission/compiler-build-v009.json:1351666 bytes, zero imports. Its exact
+current/ carriers passed90 distribution outputs,23 reconstructed expression
+cases and192 managed-loop calls per Host. Standard Lib strict package verify
+passes; each Host passes5120 WAsmC/Rust same-Lib caller checks. Public SDK
+Wasmi/Wasmtime tests pass18/18. These tests are not the original114 external
+cases or a fresh LLM generation benchmark. Finish same-archive Host receipts
+and final integrity/scan before immutable v0.0.9 tag or main promotion.
+Candidate checkpoint is not publication acceptance. No MCPGit deployment.
 
 Publish the engine-neutral `wasmc-core-runtime` Rust SDK without rebuilding the
 Runtime compiler or frozen compatibility artifacts. Preserve `dist/`,

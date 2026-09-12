@@ -8,7 +8,7 @@ From the root of a checked-out source-free release, use the checked-in ESM
 facade. This route does not require package installation.
 
 ```js
-import { compile, inspectWasm } from "./dist/wasmc.mjs";
+import { compile, inspectWasm } from "./current/wasmc.mjs";
 const wasm = await compile(source);
 const inspected = inspectWasm(wasm);
 console.table(inspected.imports);

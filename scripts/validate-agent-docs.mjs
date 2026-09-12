@@ -4,7 +4,7 @@ import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { promisify } from "node:util";
-import * as facade from "../dist/wasmc.mjs";
+import * as facade from "../current/wasmc.mjs";
 
 const execFileAsync = promisify(execFile);
 

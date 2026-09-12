@@ -14,4 +14,4 @@ Before activation, verify `manifest.json`, `receipts/compiler-wasm.json`, and th
 
 The registry's internal `dev` label is local resolver metadata for `wasmc:runtime@0.1.0-runtime-v0`. When using the public release, the immutable outer Git tag or full commit is the publication identity.
 
-Use the legacy `dist/wasmc.mjs` compatibility facade only when its richer convenience API such as `compileLib`/`instantiateLib` is useful. v0.0.5 intentionally keeps the v0.0.4 compatibility trees byte-identical while adding the newer Runtime path.
+Use the legacy `current/wasmc.mjs` compatibility facade only when its richer convenience API such as `compileLib`/`instantiateLib` is useful. v0.0.5 intentionally keeps the v0.0.4 compatibility trees byte-identical while adding the newer Runtime path.

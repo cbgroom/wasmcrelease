@@ -56,7 +56,7 @@ node scripts/validate-integrity.mjs
 node scripts/validate-libs.mjs
 
 node --input-type=module <<'JS'
-const facade = await import('./dist/wasmc.mjs');
+const facade = await import('./current/wasmc.mjs');
 const required = ['compile', 'compilePackage', 'compileLib', 'instantiateLib', 'createCompiler', 'inspectWasm'];
 for (const name of required) {
   if (typeof facade[name] !== 'function') throw new Error(`missing facade export: ${name}`);
