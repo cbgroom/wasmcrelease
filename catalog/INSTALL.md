@@ -1,7 +1,8 @@
 # Pinned download and no-clobber installation
 
-This is supplemental tooling on later main commits, not an API inside the
-immutable v0.0.9 tag. Pin a full tooling commit and verify SHA256SUMS first.
+This tooling ships in v0.0.10, not immutable v0.0.9. Pin the release or a full
+supplemental tooling commit and verify SHA256SUMS first. Installation still uses
+the independently pinned four-package catalog snapshot, not search selection.
 The downloaded package bytes are pinned to public commit
 `0fec38d59872a7f1527dc94799da542e968f1f8a`.
 

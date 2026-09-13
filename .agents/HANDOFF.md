@@ -2,14 +2,19 @@
 
 ## 0. Status
 
-Task state: started — library-first Agent discovery guidance strengthening.
+Task state: in-progress — library-first Agent discovery guidance strengthening.
 Own branch: docs/agent-library-first-guidance. Base is published v0.0.10.
 Plan: route AGENTS/developer to a concrete discovery Skill, teach search hits,
 exact selection/installation and verification; exercise canonical examples and
 reject missing routes, escaping paths and drift. Frozen Lib roots and all64
 promoted product files stay unchanged. Supplemental guidance lives on this
 branch/full commit until its next immutable release. No binaries or tags rebuilt.
-Resume: push this START, then bounded docs and executable guidance regression.
+START is pushed. AGENTS/developer now route to concrete wasmc-lib-discovery;
+catalog/install availability and search-v2 descriptions are corrected without
+changing frozen product Skills. Two teaching commands verify five target hits;
+six rejection controls, eight-Skill/three-parent validation and64-product
+digest check PASS. Resume: refresh integrity, maintainer + public guidance CI,
+then advance main by checked fast-forward; no new immutable release is implied.
 Branch: release/lib-search-v010. Public v0.0.9 is already released;
 immutable tag and release branch remain unchanged. Main may carry follow-up
 consumer tooling/docs, not new admitted compiler or Lib binaries.

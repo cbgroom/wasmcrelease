@@ -1,8 +1,9 @@
 # Public Lib discovery and exact resolution
 
-These supplemental source-free tools live on commits after v0.0.9, not in its
-immutable tag. Pin a full tooling commit, verify SHA256SUMS, then run from that
-checkout. Existing compiler, Lib roots and historical trees are unchanged.
+Search, exact resolution and installation ship in v0.0.10, not immutable
+v0.0.9. Pin the release or a full supplemental tooling commit and verify
+SHA256SUMS before execution. The resolver catalog retains its exact four-package
+v0.0.9 snapshot; this is distinct from the embedded five-package search index.
 
 ## Copy-run-change
 
@@ -24,11 +25,13 @@ with that root's SKILL.md/WIT and [standard Host reference](../examples/current/
 Verify engine support separately using [Core compatibility](../compatibility/README.md).
 Resolution never instantiates modules or grants capabilities.
 
-`search` is case-insensitive all-token matching of identity and finite reviewed
-keywords, with stable identity ordering. It returns no relevance-based version
-winner. Current search returns the standard Lib only; `--historical` includes
-the three frozen qualification Libs. This is package discovery, not inferred
-mapping from arbitrary Rust APIs or natural-language tasks.
+`search` executes the embedded Wasm index and returns v2 package/API `hits`.
+Matching is all-token with ASCII-only case folding and stable identity order,
+not relevance ranking. The finite snapshot contains five packages/89 entries,
+including search itself; `--historical` exposes frozen qualification entries.
+See [Library-first workflow](../skills/wasmc-lib-discovery/SKILL.md) and
+[precise search rules](../examples/lib-search/README.md). Search is not inferred
+mapping from arbitrary Rust APIs or natural-language tasks, or a version winner.
 
 `resolve` requires caller-owned catalog, WIT and Core artifact SHA-256 pins plus
 exact id/version. Copying a search result is a discovery step, not proof of

@@ -17,6 +17,7 @@ export function suiteCases(family,runtime='node',mirror='github') {
     item('compiler-expression-only','scripts/validate-current.mjs',['--compile-only'],['--allow-read','--allow-write','--allow-run','--allow-env'])
   ];
   if(family==='integrity')return [
+    item('library-first-teaching-and-routes','scripts/test-library-first.mjs'),
     item('release-channel-promotion-negatives','scripts/test-release-channel.mjs'),
     item('release-product-identity','scripts/release-candidate.mjs',['verify','channels/candidates/0.0.10.json']),
     item('ci-reporting-failure-controls','scripts/test-ci-reporting.mjs'),

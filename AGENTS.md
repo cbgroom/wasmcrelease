@@ -9,6 +9,13 @@ embedded-index LibSearch. See [release scope](docs/RELEASE_V010.md).
 
 ## Start here
 
+For reusable algorithms, text, bytes or collections, begin with
+[the Library-first discovery Skill](skills/wasmc-lib-discovery/SKILL.md):
+search → read the target Skill/WIT → approve exact identity → resolve/install
+where supported → check engine/imports → verify behavior → write missing glue.
+This strengthened guidance is a post-v0.0.10 supplement: pin its full tooling
+commit and checksums separately; the immutable v0.0.10 tag is unchanged.
+
 Read [skills/wasmc-developer/SKILL.md](skills/wasmc-developer/SKILL.md) completely. It routes only the reference needed for Runtime bootstrap, source/WIT, Lib authoring, JavaScript, or Rust/Wasmtime. Reuse Rust and WIT priors and learn only the documented wasmc delta.
 
 ```wasmc

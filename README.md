@@ -4,6 +4,12 @@
 
 Source-free public packages for the private-source `wasmc` compiler.
 
+Post-v0.0.10 Agent guidance strengthening: start with
+[Library-first discovery](skills/wasmc-lib-discovery/SKILL.md) before implementing
+reusable algorithms/data operations. It teaches real search hits, exact selection,
+installation and supported execution, with an executable documentation regression.
+Pin this supplemental tooling commit separately; v0.0.10 products/tags stay frozen.
+
 Current staged version: **v0.0.10**, with the [ordinary embedded-index search Lib](examples/lib-search/README.md).
 The [channel policy](docs/RELEASE_CHANNELS.md) defines immutable `-dev.N` →
 `-main.N` → suffix-free prod. The default prod is v0.0.10;

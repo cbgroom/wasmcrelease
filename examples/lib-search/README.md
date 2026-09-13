@@ -1,5 +1,10 @@
 # Release Lib search
 
+For the default Agent workflow and interpretation of package/API hits, start
+with [Library-first discovery](../../skills/wasmc-lib-discovery/SKILL.md).
+That strengthened Skill is a post-v0.0.10 guidance supplement; pin its full
+tooling commit independently of the unchanged immutable product tag.
+
 `wasmc:lib-search@0.1.0` is an ordinary hermetic WIT Lib. Its read-only index
 is embedded in Wasm: five packages and89 package/API entries, including itself.
 It snapshots admitted v0.0.9 packages plus its own source-bound WIT/path semantics.

@@ -32,6 +32,13 @@ which exact command proves the path, and what evidence to report.
 
 ## Lib boundary
 
+Route reusable computation through Library-first discovery before source
+generation. Teach package/API hit interpretation, exact selection and a real
+execution oracle separately. Preserve frozen package Skills; strengthen their
+public discovery route without rewriting an admitted product inventory.
+Run `node scripts/test-library-first.mjs` to exercise teaching commands against
+the actual embedded index and reject missing routes or escaping target paths.
+
 A managed-source claim requires both `compileLib`/`instantiateLib` and an
 executable link/init/invoke journey using the matching release Lib. Teach only
 ordinary typed source and reviewed WIT; do not expose activation plans, raw
