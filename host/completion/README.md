@@ -1,5 +1,35 @@
 # Session-bound completion guard (experimental)
 
+## Nonblocking Native read owner
+
+`rust/src/nonblocking_tcp.rs` owns one explicitly preopened TCP descriptor and
+reads at most16bytes with one nonblocking syscall per poll. No DNS/listener,
+thread, raw guest memory, new Host import or business dispatch is added.
+Admission under `NativeOwnerSupervisor` bounds active plus quarantined owners.
+Cancellation is a request, not close acknowledgement: retain quota and pins
+until poll closes the owned descriptor. Cancel precedes deadline, both precede
+reading even when bytes are ready. EOF is empty success; settlement is one-shot.
+No alias closure or rollback of bytes already consumed by a completed read is
+promised. Constructor rejects zero/oversized capacity and returns the descriptor.
+
+The supervisor's cleanup-only `acknowledge_quarantine_close` hook preserves
+existing backends by default. This owner cancels without reading, settles and
+closes before acknowledgement. Premature completion stays quarantined until
+this real cleanup, never force-unpins an open descriptor. Other backend failures
+still retain their original quota and require their own close/settlement proof.
+
+The embedding serializes polls and supplies monotonic time; **a readiness reactor
+and cancellation/timer wakeup adapter are not implemented here**. Nor is a typed
+guest async SDK. Local and desktop Actions run25completion tests (10new TCP/owner
+controls), with exact source/input-digest receipts via:
+
+```sh
+node scripts/test-host-nonblocking-read.mjs
+```
+
+CI qualifies Linux/macOS/Windows independently; local PASS is not their receipt.
+No engine dependency, compiler source or immutable artifact is changed.
+
 Follow-up [startup binding identity](SCOPED_IDENTITY.md) scopes references before
 local lookup; actual independent-process tests cover reset-local-ID collisions.
 The original unscoped guard below remains single-registry/process-local; use the

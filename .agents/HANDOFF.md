@@ -3,15 +3,25 @@
 ## 0. Status
 
 Active branch: nonblocking TCP read owner. This slice adds no Host import or
-guest ABI. Start from accepted main (resolve parent with Git). Implement a
+guest ABI. Start from accepted main (resolve parent with Git). Implemented a
 preopened, exclusive socket owner that performs only nonblocking reads, checks
 cancellation/deadline before each read and closes its owned descriptor before
 settlement. Reuse NativeOwnerSupervisor for scoped identity and retained quotas.
 Local-first; existing desktop Actions qualify portability, not mobile devices.
-Resource admission: standalone rustc outputs at most64MiB in ignored local
-target; no Cargo rebuild or writes to the already over-budget private pool.
+Resource admission: outputs at most64MiB in ignored local target, including
+the small standalone completion crate's release-only Cargo graph (no engines);
+no engine Cargo rebuild or writes to the over-budget private pool.
 Existing engine caches remain untouched. Typed async guest transport and a
 readiness reactor remain separate unqualified gates; polling is not a reactor.
+Local qualification: release completion crate25/25 tests, warnings-denied
+Clippy and fmt PASS; JS fault10/snapshot9 and80000lifetime cycles PASS;
+maintainer/integrity and workflow YAML syntax PASS. Local output35456KiB is
+within65536KiB admission. scripts/test-host-nonblocking-read.mjs binds exact
+Git source, dirty-state and three implementation digests in reproducible receipts.
+New dedicated Actions emits independent Linux/macOS/Windows receipts; no
+cross-platform acceptance is claimed until downloaded exact-source receipts.
+This implementation slice is locally complete; Host delivery remains1/5gates
+(20%). Next: readiness/timer/cancel wakeup adapter, then typed Core async SDK.
 
 Portable Std1.4.1 source-free candidate passed all18exact-source Actions cells.
 It is admitted for main integration, not an immutable prod/discovery winner.

@@ -3,8 +3,32 @@ use std::{
     sync::atomic::{AtomicU32, Ordering},
 };
 static NEXT: AtomicU32 = AtomicU32::new(1);
+pub mod nonblocking_tcp;
 pub mod owner_supervisor;
 pub mod scoped;
+impl owner_supervisor::QuarantineEndpoint for nonblocking_tcp::NonblockingTcpRead {
+    fn acknowledge_quarantine_close(&mut self) -> Result<(), i32> {
+        if !self.close_acknowledged() {
+            // Cleanup never performs a read: cancellation wins before poll.
+            let _ = self.cancel();
+            match self.poll(std::time::Instant::now())? {
+                nonblocking_tcp::ReadProgress::Settled(Err(-10)) => (),
+                _ => return Err(-8),
+            }
+        }
+        self.acknowledge_close()
+    }
+    fn acknowledge_close(&mut self) -> Result<(), i32> {
+        if self.close_acknowledged() {
+            Ok(())
+        } else {
+            Err(-4)
+        }
+    }
+    fn retire(&mut self) -> Result<(), i32> {
+        self.acknowledge_close()
+    }
+}
 struct Window {
     size: usize,
     pins: bool,
@@ -194,3 +218,65 @@ mod tests;
 
 #[cfg(test)]
 mod scoped_tests;
+
+#[cfg(test)]
+mod nonblocking_owner_tests {
+    use super::{
+        nonblocking_tcp::{NonblockingTcpRead, ReadProgress},
+        owner_supervisor::NativeOwnerSupervisor,
+    };
+    use std::{
+        io::Write,
+        net::{TcpListener, TcpStream},
+        time::{Duration, Instant},
+    };
+    fn endpoint() -> (NonblockingTcpRead, TcpStream) {
+        let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+        let peer = TcpStream::connect(listener.local_addr().unwrap()).unwrap();
+        let stream = listener.accept().unwrap().0;
+        (
+            NonblockingTcpRead::new(stream, 16, Instant::now() + Duration::from_secs(2))
+                .unwrap_or_else(|_| panic!("endpoint")),
+            peer,
+        )
+    }
+    #[test]
+    fn cancellation_retains_quota_until_real_descriptor_close() {
+        let mut supervisor = NativeOwnerSupervisor::new(1).unwrap();
+        let (read, mut peer) = endpoint();
+        let ticket = supervisor
+            .admit(read, 16)
+            .unwrap_or_else(|_| panic!("admit"));
+        supervisor.endpoint_mut(ticket).unwrap().cancel().unwrap();
+        assert_eq!(supervisor.counts(), [1, 0]);
+        assert_eq!(supervisor.resource_counts(ticket).unwrap(), [1, 1]);
+        let (other, _other_peer) = endpoint();
+        assert!(matches!(supervisor.admit(other, 16), Err((-3, _))));
+        peer.write_all(b"suppressed").unwrap();
+        assert_eq!(
+            supervisor
+                .endpoint_mut(ticket)
+                .unwrap()
+                .poll(Instant::now())
+                .unwrap(),
+            ReadProgress::Settled(Err(-10))
+        );
+        assert_eq!(supervisor.finish_settled(ticket, &[], -10), Err(-10));
+        assert_eq!(supervisor.counts(), [0, 0]);
+        assert_eq!(supervisor.finish_settled(ticket, b"stale", 0), Err(-1));
+    }
+    #[test]
+    fn premature_settlement_quarantines_without_freeing_live_socket() {
+        let mut supervisor = NativeOwnerSupervisor::new(1).unwrap();
+        let (read, _peer) = endpoint();
+        let ticket = supervisor
+            .admit(read, 16)
+            .unwrap_or_else(|_| panic!("admit"));
+        assert_eq!(supervisor.finish_settled(ticket, b"fake", 0), Err(-4));
+        assert_eq!(supervisor.counts(), [0, 1]);
+        assert_eq!(supervisor.resource_counts(ticket).unwrap(), [1, 1]);
+        supervisor.retire_quarantine(ticket).unwrap();
+        assert_eq!(supervisor.counts(), [0, 0]);
+        assert_eq!(supervisor.retire_quarantine(ticket), Err(-1));
+    }
+}

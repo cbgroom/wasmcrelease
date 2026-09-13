@@ -5,6 +5,11 @@ use std::collections::BTreeMap;
 pub trait QuarantineEndpoint {
     /// Must acknowledge real close AND already-issued I/O settlement.
     fn acknowledge_close(&mut self) -> Result<(), i32>;
+    /// Cleanup-only stop path. Default preserves existing settled backends.
+    /// Must settle issued I/O and close before returning success; never replay.
+    fn acknowledge_quarantine_close(&mut self) -> Result<(), i32> {
+        self.acknowledge_close()
+    }
     fn retire(&mut self) -> Result<(), i32>;
 }
 #[derive(Clone, Copy, PartialEq, Eq)]
@@ -189,7 +194,7 @@ impl<E: QuarantineEndpoint> NativeOwnerSupervisor<E> {
         if !owner.quarantined {
             return Err(-4);
         }
-        owner.endpoint.acknowledge_close()?;
+        owner.endpoint.acknowledge_quarantine_close()?;
         owner.endpoint.retire()?;
         owner.guard.complete(&owner.operation, &[], -8)?;
         owner.guard.release(&owner.operation)?;
