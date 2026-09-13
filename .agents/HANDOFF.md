@@ -2,7 +2,13 @@
 
 ## 0. Status
 
-Active source line: work/host-tcp-buffer-budget. Task state: local proof complete;
+Active source line: work/host-core-bytes-snapshot. Task state: local proof complete;
+CoreBytes Host packing snapshots validated indexed bytes before Core allocation,
+reads each getter once, rejects sparse/out-of-range input with no allocation.
+Original valid7 then256 getter silently produced Core sum0; seven controls now
+pass Node/Bun/restricted Deno. Actual file and100000-cycle ownership regressions
+pass with unchanged Native profiles and frozen CoreLib. This is curated private
+ABI conformance glue, not an Agent SDK or full Std portable closure.
 JS retained unread snapshot budget defaults65536bytes per endpoint, optional
 trusted limit1..65536. Reject overflow before new copy, suppress delivery/writes,
 retain prior bytes until explicit close ack. Ten controls include invalid limits,
