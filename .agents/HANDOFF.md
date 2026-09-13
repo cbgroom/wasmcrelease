@@ -1,5 +1,14 @@
 # WAsmC release maintainer handoff
 
+## Iteration cadence
+
+User confirms local-first functional development and milestone GitHub pushes.
+Local checks/commits continue while Actions run; batch coherent changes for
+cross-platform acceptance, do not stall on queues or push every small edit.
+Owning Host Skill and maintainer bootstrap updated. Relevant exact-source CI
+remains required for cross-platform/main/release acceptance; no skipped gates.
+Policy-only local checkpoint can travel with next coherent functional milestone.
+
 ## Startup binding identity START
 
 Own branch work/host-startup-identity, based on accepted completion guard main.

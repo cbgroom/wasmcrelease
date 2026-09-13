@@ -25,6 +25,12 @@ This permission does not authorize rebuilding private compiler/CoreLib products.
 
 ## Required loop
 
+Use the local/CI split in `release-host-integration`: validate each functional
+change on available local platforms, commit local checkpoints, and push coherent
+milestones for broad cross-platform qualification. CI queues are not a reason to
+stop safe development. Remote recovery checkpoints and release admission remain
+required at their milestones, not at every small edit.
+
 1. Read this file and `.agents/HANDOFF.md`.
 2. Run `./scripts/maintainer-orient.sh`.
 3. Read `.agents/skills.registry.yaml` and only the Skill(s) selected by the task.

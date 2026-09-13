@@ -5,6 +5,24 @@ description: Maintain wasmc JavaScript, raw Core Wasm, Lib Component, Rust, and 
 
 # Release Host integration
 
+## Local-first iteration, milestone cross-platform qualification
+
+Use available local platforms for the fast functional loop: focused regression,
+actual App/Lib/Host execution, error/lifecycle tests and relevant Rust checks.
+Commit reproducible local checkpoints; batch small verified improvements into a
+coherent milestone before pushing for GitHub Actions. Do not push every edit or
+wait for a queued/running workflow before continuing safe local development.
+Keep independent workstreams isolated when they overlap an in-flight candidate.
+
+Actions qualify broad OS/architecture/engine coverage against an exact commit,
+not the changing worktree. Old-source PASS never qualifies newer product code;
+submit the next milestone independently. Label local PASS, cross-platform PASS,
+main integration and immutable release separately. Preserve actual failure
+receipts and fix regressions locally; do not disable gates, skip required cells
+or relax safety to accelerate iteration. Cross-platform acceptance and formal
+release still require their relevant exact-candidate evidence. Report progress
+with explicit denominators; local validation completion is not ecosystem closure.
+
 ## Minimal, low-frequency evolving Host
 
 Core Host mechanisms aim to support a broad CoreLib ecosystem without native
