@@ -2,7 +2,11 @@
 
 ## 0. Status
 
-Active source line: work/host-native-completion-quarantine. Task state: local
+Active source line: work/host-corelib-resource-lifetime. Task state: started.
+Objective: bounded100000 owned bytes/App/drop cycles per consumer with actual
+CoreLib memory samples and long-range stale rejection. Separate preparation
+from steady calls; not file/network throughput, RSS leak proof or full Std
+portable qualification. Native completion quarantine source local
 proof complete; exact CI/main pending. Malformed settled Native completion now
 quarantines/revokes, denies correction/new I/O, retains primary versus close
 failure observation without raw bytes or new guest imports.15guard/owner tests,
