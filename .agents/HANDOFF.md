@@ -2,7 +2,15 @@
 
 ## 0. Status
 
-Active source line: work/host-stream-snapshot. Task state: local proof complete;
+Active source line: work/host-file-write-snapshot. Task state: local proof complete;
+File write captures owned bytes before partial asynchronous I/O, validates
+completion lengths and never re-reads mutated caller arrays. Old implementation
+reproduced reporting/writing4 instead of3 bytes. Seven controlled cases pass
+Node/Bun/permission-free Deno; preserve actual disk regression before milestone.
+Current stream-snapshot Linux fast jobs failed: fetch exact completed job logs
+and diagnose the JS lane; snapshot fix is not a proven Linux root resolution.
+Negotiation and scoped lifetime are now accepted on main; resolve admission
+files and Git rather than requalifying or borrowing their PASS for newer code.
 exact Linux/full-platform CI and main acceptance pending.
 Objective: retain bounded owned snapshots before transport callbacks invalidate
 borrowed views; write acknowledgement must use snapshot length, not caller's

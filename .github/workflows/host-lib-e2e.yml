@@ -31,6 +31,9 @@ jobs:
           node host/tcp/stream-snapshot-test.mjs
           bun host/tcp/stream-snapshot-test.mjs
           deno run host/tcp/stream-snapshot-test.mjs
+          node host/file-io/write-snapshot-test.mjs
+          bun host/file-io/write-snapshot-test.mjs
+          deno run host/file-io/write-snapshot-test.mjs
           node host/tcp/server-test.mjs --js-only
           bun host/tcp/server-test.mjs --js-only --diagnose
           deno run --allow-net=127.0.0.1 --allow-read=current,host/lib-e2e,libs/wasmc-owned-algorithms --allow-write=target/host-tcp-app host/tcp/server-test.mjs --js-only
@@ -62,6 +65,7 @@ jobs:
       - run: node host/tcp/stop-failure-test.mjs
       - run: node host/tcp/driver-error-test.mjs
       - run: node host/file-io/retirement-test.mjs
+      - run: node host/file-io/write-snapshot-test.mjs
       - run: node host/tcp/driver-retirement-test.mjs --real-tcp
       - run: node host/tcp/stream-snapshot-test.mjs
       - run: node host/tcp/supervisor-test.mjs
@@ -164,6 +168,8 @@ jobs:
           deno run host/tcp/driver-error-test.mjs
           bun host/file-io/retirement-test.mjs
           deno run host/file-io/retirement-test.mjs
+          bun host/file-io/write-snapshot-test.mjs
+          deno run host/file-io/write-snapshot-test.mjs
           bun host/tcp/stream-snapshot-test.mjs
           deno run host/tcp/stream-snapshot-test.mjs
           bun host/tcp/driver-retirement-test.mjs --real-tcp
