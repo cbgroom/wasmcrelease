@@ -10,6 +10,9 @@ real output file + explicit sync. The same App/Lib bytes run in JS and Wasmi;
 independent disk oracles cover readonly denial and trap-before-flush. This is
 scheduled I/O composition, not a complete guest async ABI or production SDK.
 [![Host and Lib E2E](https://github.com/cbgroom/wasmcrelease/actions/workflows/host-lib-e2e.yml/badge.svg?branch=main)](https://github.com/cbgroom/wasmcrelease/actions/workflows/host-lib-e2e.yml)
+The initial [exact-source Actions run](https://github.com/cbgroom/wasmcrelease/actions/runs/34748498886)
+passed all six desktop targets and fourteen JS/native pairs, twelve cases each;
+[retained evidence](admission/host-lib-e2e.json) records the qualified boundary.
 
 Next experimental Host capability: [real preopened file I/O](host/file-io/README.md).
 Independent JS/Rust adapters reuse read/write/invoke-sync/release without guest

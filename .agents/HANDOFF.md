@@ -335,3 +335,10 @@ Local Node/Bun/restricted Deno against Wasmi PASS, strict Clippy/actionlint PASS
 Same digest-bound immutable Lib and compiled App; independent final disk oracle.
 Public README links scope and Actions badge. No general guest async ABI added.
 Push exact implementation, read actual six-platform run before main acceptance.
+Exact implementation run34748498886 PASS all6native targets and required job.
+Independently read14JS/native receipts each12cases with identical App/Lib digests.
+Retained admission/host-lib-e2e.json. Frozen64promoted products unchanged.
+Expected-base remote main is previous real-file acceptance; advance normally
+only if still unchanged. Next: session-bound typed resources/transport and
+fault controls, then restricted TCP + Lib protocol composition. Host scheduled
+chain subtask closed; complete Host delivery remains1/5fully qualified gates.
