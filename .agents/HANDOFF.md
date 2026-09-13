@@ -160,14 +160,26 @@ Cancel obsolete known-defective own runs only; never weaken required gates.
 
 ## 5. Current Action
 
+The quarantine-retirement-fence branch adds six controlled internal faults for
+explicit cleanup. A missing/throwing guard release acknowledgement now retains
+the same owner ticket/quota, transitions to unknown internal retirement, and
+rejects further cleanup without reclose or replay. Node/Bun/permission-free Deno
+focused tests pass locally; exact cross-platform qualification remains pending.
+The composition workflow gives Node UDP retirement its own step: a continuation
+of a plain YAML run scalar was passed as arguments instead of a second command.
+No existing receipt may be interpreted as this previously missing Node check.
+Std compatibility production must originate in the private producer; public
+artifact rewriting is not authorized by release-integrity. No Std bytes changed.
+
 Full Host delivery denominator is five gates from host/v0/README.md, not
 all-standard-library coverage. Only gate1 is currently fully accepted:20%.
 Do not count locally completed slices as all-platform/full SDK completion.
 
 ## 6. Next Actions
 
-Next: complete qualified stream/CoreLib integration. Independently inspect
-later quarantine/UDP/mobile exact runs and fix real failures locally. Earlier
+Next: inspect pool and dependency-gate exact runs, then qualify the explicit
+quarantine-cleanup fence. Stream/CoreLib, bounds and UDP are main-integrated.
+Independently inspect later quarantine/UDP/mobile exact runs and fix failures. Earlier
 accepted sources need no redo.
 Accept relevant source only with exact receipts, merge current main metadata
 without discarding it, refresh integrity, then normal expected-base FF promotion.

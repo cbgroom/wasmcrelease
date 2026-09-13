@@ -63,16 +63,19 @@ jobs:
           node host/completion/snapshot-test.mjs
           node host/tcp/write-snapshot-test.mjs
           node host/tcp/guard-retirement-test.mjs
+          node host/tcp/quarantine-retirement-test.mjs
           node host/tcp/guard-pool-test.mjs
           node host/tcp/completion-quarantine-test.mjs --real-tcp
           bun host/completion/snapshot-test.mjs
           bun host/tcp/write-snapshot-test.mjs
           bun host/tcp/guard-retirement-test.mjs
+          bun host/tcp/quarantine-retirement-test.mjs
           bun host/tcp/guard-pool-test.mjs
           bun host/tcp/completion-quarantine-test.mjs --real-tcp
           deno run host/completion/snapshot-test.mjs
           deno run host/tcp/write-snapshot-test.mjs
           deno run host/tcp/guard-retirement-test.mjs
+          deno run host/tcp/quarantine-retirement-test.mjs
           deno run host/tcp/guard-pool-test.mjs
           deno run --allow-net=127.0.0.1 host/tcp/completion-quarantine-test.mjs --real-tcp
           node host/file-io/write-snapshot-test.mjs
@@ -132,13 +135,14 @@ jobs:
       - run: node host/completion/snapshot-test.mjs
       - run: node host/tcp/write-snapshot-test.mjs
       - run: node host/tcp/guard-retirement-test.mjs
+      - run: node host/tcp/quarantine-retirement-test.mjs
       - run: node host/tcp/guard-pool-test.mjs
       - run: node host/tcp/completion-quarantine-test.mjs --real-tcp
       - run: node host/corelib-io/snapshot-test.mjs
       - run: node host/tcp/supervisor-test.mjs
       - run: node host/udp/test.mjs
       - run: node host/udp/fault-test.mjs
-          node host/udp/retirement-test.mjs
+      - run: node host/udp/retirement-test.mjs
       - name: Independent process startup identity
         shell: bash
         run: |
@@ -261,11 +265,13 @@ jobs:
           bun host/completion/snapshot-test.mjs
           bun host/tcp/write-snapshot-test.mjs
           bun host/tcp/guard-retirement-test.mjs
+          bun host/tcp/quarantine-retirement-test.mjs
           bun host/tcp/guard-pool-test.mjs
           bun host/tcp/completion-quarantine-test.mjs --real-tcp
           deno run host/completion/snapshot-test.mjs
           deno run host/tcp/write-snapshot-test.mjs
           deno run host/tcp/guard-retirement-test.mjs
+          deno run host/tcp/quarantine-retirement-test.mjs
           deno run host/tcp/guard-pool-test.mjs
           deno run --allow-net=127.0.0.1 host/tcp/completion-quarantine-test.mjs --real-tcp
           bun host/corelib-io/snapshot-test.mjs
