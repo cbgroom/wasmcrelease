@@ -2,7 +2,17 @@
 
 ## 0. Status
 
-Active source line: work/host-read-completion-quarantine. Task state: local proof complete;
+Active source line: work/host-udp-endpoint. Task state: local proof complete;
+UDP prebound loopback/fixed peer backend reuses endpoint/read/write/release
+families without new kernel imports. Preserve complete datagrams; oversize17/64
+and foreign source deny dispatch. Node/Bun/restricted Deno x Wasmi/Wasmtime
+actual8-message parity passes; five Lib calls, three rejects. Eleven JS rights/
+queue/cancel-close/snapshot controls pass, Linux ARM/Bun real JS proof passes.
+Default/optional strict Clippy and Native7TCP/UDP/listener unit tests pass.
+See host/udp/README.md; source filtering is not authentication or UDP reliability.
+Native async/close faults, browser raw UDP and full Std/no-JIT are not implied.
+Exact source milestone CI/main acceptance remains pending. Frozen products stay
+unchanged; no tag/release/deployment performed.
 Malformed settled JS TCP completion now throws supervisor-owned quarantine,
 retains pinned endpoint/window/operation and revokes grants. Original ordinary
 failure lost the owner. Six malformed controls plus actual TCP read corruption

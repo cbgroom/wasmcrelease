@@ -3,6 +3,7 @@ pub mod listener;
 pub mod resident_app;
 pub mod resident_sum;
 pub mod tcp;
+pub mod udp;
 #[cfg(feature = "wasmtime-engine")]
 pub mod wasmtime_app;
 

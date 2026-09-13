@@ -1,4 +1,4 @@
-689d850552a4748379fc9a2200b6f54300adc878485d1cb2d0843930d0e30c4f  .agents/HANDOFF.md
+a8ff16f9a7d9ffc32d5f2f1d1e89d6098a92769c9ff3151832d52dedba30d69a  .agents/HANDOFF.md
 0b9ca3ec3c6c3dfcdaeddd89a78161d2479f7f70a799468dfca69dc961fcb64d  .agents/MAINTAINERS.md
 a3f6d43b8c0786bb054ace93007c34a6c8bf83de9a7b4c20aa075ee88e254c23  .agents/history/host-handoff-before-consolidation.md
 7d334eb009ebfa245ad46108ece2d6b1f79487703b83ffa829d8724bfb068880  .agents/skills.registry.yaml
@@ -7,7 +7,7 @@ e39048c7e58c12dc71fe89cc6c239ee6540020e755a47a5afc55373ee10be020  .agents/skills
 c602c29377999f8f1d9873a4924ded603e412d2f1faabb9605a3491a52a30509  .agents/skills/release-integrity/SKILL.md
 27a646f79e5a8b1b4bab624e21a7a9e08da003eb0b8e386930d15135764e7946  .github/workflows/agent-discovery.yml
 3cb83de066089ca9182cd411de3a7a3bc291345c53ace82edd23a1e1c25bc581  .github/workflows/host-file-io.yml
-1eaeab3c5bed4e9e2548c3c1c4691751c84a7f7d72709d9047403b94fc0a9518  .github/workflows/host-lib-e2e.yml
+127bdf319ddd4d76d3c40b946cf510963dd92e9ad9dcc83885fcdf10c347c368  .github/workflows/host-lib-e2e.yml
 a6122ed274a305579d5b70cb04eccffe534ead087f1c023b9a5e9ffb167fce47  .github/workflows/lib-search.yml
 0951be4643b26ee3e9d1f98a2418f84c52b7b5dde3a0b1a71cc21b0f83f49990  .github/workflows/native-compiler.yml
 d1bb579e303456566afc670641319e7dbe96bf7db22b424a5d40308bc410172f  .github/workflows/source-free-consumer.yml
@@ -161,13 +161,15 @@ f5a6c7d3c6e5e7313ae744301d803ef9c917eb3dddb449dbae6028cbbecc7578  host/lib-e2e/r
 9d92aee1501ff74a4d994397f8557a1d4541c7aea25a7e5fd712dd72d8ab2fce  host/lib-e2e/rust/src/bin/tcp-server-reference.rs
 2acd3082c96ad880a4d1d9916671c90a11242f3f6d285aef3d9664f015e754bf  host/lib-e2e/rust/src/bin/tcp-stop-reference.rs
 b4d9efa39ab4432a7cd42a94a6ff9fa80a6c04bb7a501784c234594652d65850  host/lib-e2e/rust/src/bin/tcp-write-reference.rs
+700e71b467c3fea6f2c6b4474dcbf8e5f13a120415760ef25acca42f460f7fed  host/lib-e2e/rust/src/bin/udp-server-reference.rs
 62774d96b7e04a8a83c817a13c3abcd1d610eba52cccdf43fb2e962ab97cbd61  host/lib-e2e/rust/src/corelib_io_conformance.rs
-0d85ffc9799c06f805b852ad7212bf5a76d46dc1ed2556d099db5c4dcc45b355  host/lib-e2e/rust/src/lib.rs
+29343cefd26e880a3f8dac8e31dd79043eb4c3f31abd44fa19272db047e90af3  host/lib-e2e/rust/src/lib.rs
 0091e1dcd316fc3e1bb9d60ec9fbc2514279694709fd9e8effa43a766bb0a202  host/lib-e2e/rust/src/listener.rs
 8bcbc68c9c14dee03ffc879db7465556fde8762d0dc943d342b18259c16fc54b  host/lib-e2e/rust/src/main.rs
 f7fcc1346ab2e15cf6875d66c9a772c82468fc3e404a79e4a86e31d7b3de0567  host/lib-e2e/rust/src/resident_app.rs
 c3eff9aa903e1c612861f126867bc98e5daa7a8d6ca314cd40702350cdfd6be8  host/lib-e2e/rust/src/resident_sum.rs
 ac960293cf64c5e0444e0736fe26b890211a834429d34ac04ec5d470b3f389e6  host/lib-e2e/rust/src/tcp.rs
+4ac951cdec52ef994d540060f1e50491bd342a9b0890d19a943fb21011248582  host/lib-e2e/rust/src/udp.rs
 c4fb7c93d174ba888d5e582250d1820ddf02042de4fe69d99081b9c54815875e  host/lib-e2e/rust/src/wasmtime_app.rs
 f0b37ed02e04f6c142e0ffd679b1da8211506e4423739323811ab53c74d63a92  host/lib-e2e/test.mjs
 277bd3d2fb41a7dc4ee3903551dae710c668df308ce6ac7413b7bb2222423cae  host/tcp/BENCHMARK.md
@@ -204,6 +206,11 @@ d216d1b3729cdb5b0de179e96ee0e9d771864115a8c7ac580e5e4093589bf7ba  host/tcp/super
 d5fe42a83eb529e03f90c415afc85ccbbd4147c1fa829cb7cad6eed41d1de252  host/tcp/test.mjs
 c86108aadb94394eb0f9a9f576b4de00248b1220b7f54bcebca7e3f7c01e3ebc  host/tcp/write-test.mjs
 5ee424fad46367aa61a11080bf5a3ec2b9997a8bcdf12ec3e8bb1a086b0231ee  host/tcp/write-window.mjs
+bda33ad7d627920644be730c27a5397adfd8e2e937abad9f38be8ec81fd86681  host/udp/README.md
+7719416f8ddf8ec8ae9ac0a26abcb6a7cac7bda6175d043fbf8b5e58924fff5b  host/udp/adapter.mjs
+dda5047a546867756c2d06667f045126931593f5f188fc354f8aea25af8433bc  host/udp/fault-test.mjs
+f91ad944284a525d6fdfe2e989404483addd193feb98be608401b73e1d1b5206  host/udp/native-test.mjs
+d433fea505e6a5889f02d37ea8e35b874c76829b59ad49d4f46293b7e17a74de  host/udp/test.mjs
 15aba3517bfdb9e6664d6629140008a46c6a4cc2af710d18f5da16dcbf1c3015  host/v0/NEGOTIATION.md
 e38357599afdf4e6a54cbaa6635eb50bed6071132cc8dd1072663b6985145a9b  host/v0/README.md
 d2babfd2b9f9f42ba67be3f55a6f4d839996eea4ca46aab49b000ef2af10d04f  host/v0/contract.json
