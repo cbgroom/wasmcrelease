@@ -14,14 +14,13 @@ source, regenerated package identities, toolchain and local results from
 admission/portable-std-v0/manifest.json. Local private Std suite10/10 and public
 Node18/Node26/Bun/Deno plus Wasmi2/Wasmtime47 paired execution passed.
 Public native glue was locally compiled directly against compatible warm
-dependencies; full Cargo cross-platform compilation belongs to Actions.
+dependencies; full Cargo cross-platform compilation passed all3Native cells.
 The new workflow requires15JS cells plus3native cells (both engines), exact
 checkout-SHA receipts,13JS rejection controls and frozen64product integrity.
 All18required cells now independently verified PASS from downloaded receipts.
-No compiler
-source is published, old1.4.0 and prod pointers remain unchanged. Next: accept
-the candidate's exact Actions run, then integrate its public tooling/package
-candidate; embedded catalog/search and immutable release promotion are separate.
+No compiler source is published; old1.4.0 and prod pointers remain unchanged.
+Next: verify main publication of this receipt with unchanged qualified inputs;
+embedded catalog/search and immutable release promotion remain separate.
 Local Deno initially rejected unnecessary child-process environment access;
 the runner now records CI SHA without spawning Git. Actions checks Git itself.
 Bounded local output is not exhaustive73API edge or mobile-device qualification.
