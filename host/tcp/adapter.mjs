@@ -2,26 +2,34 @@
 // No guest address, DNS, listener or implicit reconnect authority.
 export class PreconnectedTcp {
   #socket; #busy=false; #error=false; #ended=false; #stopped=false; #closed; #pending=null;
-  constructor(socket, writable=true) {
+  #bufferLimit;
+  constructor(socket, writable=true, maxBufferedBytes=65536) {
+    if(!Number.isInteger(maxBufferedBytes)||maxBufferedBytes<1||maxBufferedBytes>65536)throw -5;
+    this.#bufferLimit=maxBufferedBytes;
     if(socket.destroyed||socket.closed) throw -1;
     this.#socket=socket; this.writable=writable; socket.pause();
     this.#closed=socket.closed?Promise.resolve():new Promise(resolve=>socket.once('close',resolve));
-    socket.on('error',()=>{this.#error=true;});
+    socket.on('error',()=>{if(!this.#error)this.#error=-8;});
     socket.on('end',()=>{this.#ended=true;});
     // Keep a data owner attached even between read requests.
     socket.on('data',bytes=>{
+      if(this.#stopped||this.#error){socket.pause();socket.emit('wasmc-data-ready');return;}
+      if(bytes.length+(this.#pending?.length??0)>this.#bufferLimit){
+        this.#error=-3;socket.pause();socket.emit('wasmc-data-ready');return;
+      }
       const owned=Uint8Array.from(bytes);
       if(this.#pending){const joined=new Uint8Array(this.#pending.length+owned.length);joined.set(this.#pending);joined.set(owned,this.#pending.length);this.#pending=joined;}
       else this.#pending=owned;
       socket.pause();socket.emit('wasmc-data-ready');
     });socket.pause();
   }
+  bufferedBytes(){return this.#pending?.length??0;} // Trusted Host diagnostic only.
   #check(length) {
     if(!this.#socket) throw -1;
     if(this.#busy) throw -4;
     if(this.#stopped) throw -1;
     if(!Number.isInteger(length)||length<0||length>16) throw -5;
-    if(this.#error) throw -8;
+    if(this.#error) throw this.#error;
   }
   async read(length) {
     this.#check(length); if(!length) return [];
@@ -34,11 +42,11 @@ export class PreconnectedTcp {
     try {
       return await new Promise((resolve,reject)=>{
         const clean=()=>{socket.pause();socket.off('wasmc-data-ready',readable);socket.off('end',end);socket.off('close',close);socket.off('error',fail);};
-        const fail=()=>{clean();reject(-8);};
+        const fail=()=>{clean();reject(this.#error||-8);};
         const end=()=>{clean();resolve([]);};
         const close=()=>{if(this.#ended||socket.readableEnded) end();else fail();};
         const readable=()=>{
-          if(this.#stopped) return fail();
+          if(this.#stopped||this.#error) return fail();
           const bytes=this.#pending;if(bytes===null)return;
           const delivered=Array.from(bytes.subarray(0,length));
           this.#pending=bytes.length>length?Uint8Array.from(bytes.subarray(length)):null;

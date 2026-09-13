@@ -2,7 +2,15 @@
 
 ## 0. Status
 
-Active source line: work/host-file-completion-bounds. Task state: local proof complete;
+Active source line: work/host-tcp-buffer-budget. Task state: local proof complete;
+JS retained unread snapshot budget defaults65536bytes per endpoint, optional
+trusted limit1..65536. Reject overflow before new copy, suppress delivery/writes,
+retain prior bytes until explicit close ack. Ten controls include invalid limits,
+queued/in-flight/combined overflow and delayed ack. This is not a process/OS
+buffer budget or Native parity proof; concatenation has temporary old/new copies.
+Previous exact TCP ownership source remains independently in-flight; both Linux
+fast cells passed, full Native/browser acceptance must still finish. New file
+read and buffer changes must receive their own exact milestone qualification.
 File read validates backend completion length before returning data. Original
 negative count silently published a slice instead of rejection. Five invalid
 and three valid completion controls pass locally; no read replay/new Host ABI.
