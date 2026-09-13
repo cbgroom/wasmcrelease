@@ -160,6 +160,17 @@ Cancel obsolete known-defective own runs only; never weaken required gates.
 
 ## 5. Current Action
 
+The ci-build-cache branch isolates fixed-toolchain/lock/platform Cargo dependency
+caches. Owned Host packages are always cleaned and rebuilt; all qualification
+steps remain unconditional. This is workflow efficiency, not prior-source
+acceptance. Cold/warm real runs are needed before any speedup claim.
+Local isolated offline cache probe rebuilds all three owned crates after clean
+while reusing upstream compilation. The new candidate also fixes an observed
+three-engine entrypoint ordering error: Node-only before setup, all engines
+after their admitted Unix setup. Missing runtime is never silently skipped.
+Failed source/runs are preserved in host/udp/entrypoint-regression.json;
+the earlier fence composition cannot qualify the fixed candidate.
+
 The quarantine-retirement-fence branch adds six controlled internal faults for
 explicit cleanup. A missing/throwing guard release acknowledgement now retains
 the same owner ticket/quota, transitions to unknown internal retirement, and

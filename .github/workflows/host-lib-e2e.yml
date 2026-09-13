@@ -114,6 +114,20 @@ jobs:
           node-version: 26.5.1
       - run: rustup toolchain install 1.96.0 --profile minimal --component clippy,rustfmt
       - run: rustup target add wasm32-unknown-unknown --toolchain 1.96.0
+      - name: Restore locked desktop dependency compilation cache
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830
+        with:
+          path: |
+            host/lib-e2e/rust/target
+            host/completion/rust/target
+            host/file-io/rust/target
+          key: host-composition-v1-${{ matrix.os }}-${{ runner.arch }}-rust1.96.0-${{ hashFiles('host/**/Cargo.lock', 'host/**/Cargo.toml') }}
+      - name: Always rebuild owned Host crates after cache restore
+        shell: bash
+        run: |
+          cargo +1.96.0 clean --locked --manifest-path host/lib-e2e/rust/Cargo.toml -p wasmc-lib-host-e2e -p wasmc-completion-guard -p wasmc-preopened-file-reference
+          cargo +1.96.0 clean --locked --manifest-path host/completion/rust/Cargo.toml -p wasmc-completion-guard
+          cargo +1.96.0 clean --locked --manifest-path host/file-io/rust/Cargo.toml -p wasmc-preopened-file-reference
       - name: Compile reviewed Rust CoreLib conformance caller
         shell: bash
         run: |
@@ -144,7 +158,7 @@ jobs:
       - run: node host/udp/test.mjs
       - run: node host/udp/fault-test.mjs
       - run: node host/udp/retirement-test.mjs
-      - run: node host/udp/entrypoint-test.mjs
+      - run: node host/udp/entrypoint-test.mjs --node-only
       - name: Independent process startup identity
         shell: bash
         run: |
@@ -221,6 +235,7 @@ jobs:
         name: Bun and restricted Deno composition
         shell: bash
         run: |
+          node host/udp/entrypoint-test.mjs
           binary=host/lib-e2e/rust/target/release/wasmc-lib-host-e2e
           completion=host/completion/rust/target/release/wasmc-completion-guard
           file=host/file-io/rust/target/release/wasmc-preopened-file-reference
