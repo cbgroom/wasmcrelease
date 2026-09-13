@@ -9,9 +9,16 @@ single compiler-produced WAsmC App calls the existing digest-bound, zero-import
 `wasmc-owned-algorithms@0.1.0` Core Lib `sum-s32` through a fixture transport
 adapter. Byte-to-s32 marshalling, not summation, belongs to that adapter. After
 successful guest completion, the Host writes an eight-byte little-endian i64
-result and explicitly synchronizes the preopened output file. Independent
-oracles verify disk bytes, empty/full windows, readonly denial and no flush on
+result and explicitly synchronizes the preopened output file.
+The input read is now tracked by the experimental
+[session/completion guard](../completion/README.md) in both JS and Native;
+guard windows and terminal records are released before computation.
+Independent oracles verify disk bytes, empty/full windows, readonly denial and no flush on
 guest trap. JS WebAssembly and Wasmi2 run identical App and Lib bytes.
+Four additional controls cancel delivery before real file-read completion:
+bytes are discarded, guard records/windows released, output left unchanged.
+JS schedules a real asynchronous read; Native holds cancellation before its
+blocking read/completion. These ordered controls do not prove OS thread races.
 
 This is Host-scheduled read/compute/write, not an implementation of guest async
 continuations or public typed Core resource SDK. JSON is not used as a Host ABI.

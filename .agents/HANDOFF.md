@@ -11,6 +11,14 @@ in existing WAsmC/Lib E2E. No new Host primitive or completed guest async ABI.
 Trusted Host-side fixture integration; process restart/session persistence and
 untrusted thread concurrency remain explicit gaps. START precedes source edits.
 Preserve immutable products. Local tests and actual Actions precede main advance.
+Independent JS/Rust73transition trace PASS with per-step counts and explicit
+oracles, plus deferred JS Promise cancel/late completion. Real file read in
+ same-App/same-Lib16case E2E uses guard and releases all guard records/windows.
+Local Node/Bun/restricted Deno PASS; both Rust strict Clippy PASS. Existing
+owning Host Skill now distinguishes suppressed delivery from external effects.
+Extend existing six-platform E2E Actions to run both guard and guarded chain;
+read exact-source receipts before expected-base main advancement. Complete
+Host delivery still1/5 gates, no typed Core/boot identity or real thread races.
 
 ## Current: minimal Host discipline and real file I/O START
 

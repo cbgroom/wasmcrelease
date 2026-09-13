@@ -55,6 +55,18 @@ copyable reference code exposes the contract more clearly.
 
 ## Host authority and lifecycle
 
+Real asynchronous I/O cancellation suppresses delivery, not already-issued
+external effects. Keep window ownership pinned until backend completion proves
+it has stopped accessing the window; a late completion may drain but must not
+publish cancelled bytes or replay an effect. Never force-release on timeout
+without safely terminating/quarantining the backend. Revocation must deny new
+grants/delivery while still permitting drain and cleanup. Qualify malformed,
+foreign/stale/duplicate completions and terminal-record quotas with independent
+state/resource oracles. Read [completion guard](../../../host/completion/README.md)
+when extending the public prototype; its single-registry process-local identity
+is not restart-safe or a completed typed Core ABI. Serialized trace success is
+not OS concurrency/fault proof. Simulator cancel guarantees remain narrower.
+
 - Inspect every generated program import and bind only explicitly authorized functions.
 - Compiler adapter buffers are instance-local mutable state; use exclusive
   access, copy results before clear, and clear on success and failure.

@@ -4,8 +4,31 @@ use wasmi::{Config, Engine, Linker, Module, Store};
 
 fn run(args: &[String]) -> Result<i64, Box<dyn std::error::Error>> {
     let mut input = PreopenedFile::new(OpenOptions::new().read(true).open(&args[1])?, false);
+    let mut guard =
+        wasmc_completion_guard::CompletionGuard::new().map_err(|c| format!("guard {c}"))?;
+    let window = guard.acquire(16).map_err(|c| format!("window {c}"))?;
+    let operation = guard.submit(window).map_err(|c| format!("submit {c}"))?;
+    if args[6] == "2" {
+        guard.cancel(operation).map_err(|c| format!("cancel {c}"))?;
+    }
     let bytes = input.read(0, 16).map_err(|c| format!("read {c}"))?;
+    guard
+        .complete(operation, &bytes, 0)
+        .map_err(|c| format!("complete {c}"))?;
+    let bytes = guard.read(window).map_err(|c| format!("window read {c}"))?;
+    if args[6] == "2" {
+        assert!(bytes.is_empty());
+        assert_eq!(guard.poll(operation).unwrap().0, "cancelled");
+    }
+    guard
+        .release(operation)
+        .map_err(|c| format!("release {c}"))?;
+    guard.release(window).map_err(|c| format!("release {c}"))?;
+    assert_eq!(guard.counts(), [0, 0]);
     input.release().map_err(|c| format!("release {c}"))?;
+    if args[6] == "2" {
+        return Err("cancelled completion".into());
+    }
     let mut config = Config::default();
     config.consume_fuel(true);
     let engine = Engine::new(&config);

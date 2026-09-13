@@ -4,6 +4,12 @@
 
 Source-free public packages for the private-source `wasmc` compiler.
 
+Experimental [session/completion guard](host/completion/README.md) protects the
+Lib/Host chain's staged read: foreign/stale/duplicate completions reject;
+cancelled delivery retains the window pin until backend acknowledgement.
+Cancellation does not prove an external effect was undone. Process/restart
+identity and full typed guest async transport remain unqualified.
+
 Experimental [published Lib + real Host end-to-end chain](host/lib-e2e/README.md):
 real input file → bounded staging → WAsmC App → reviewed Rust algorithm Lib →
 real output file + explicit sync. The same App/Lib bytes run in JS and Wasmi;

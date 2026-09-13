@@ -1,7 +1,7 @@
 name: Public Host and Lib end-to-end
 on:
   push:
-    branches: [main, work/host-lib-e2e]
+    branches: [main, work/host-lib-e2e, work/host-completion-guard]
   pull_request:
   workflow_dispatch:
 permissions:
@@ -20,6 +20,15 @@ jobs:
         with:
           node-version: 26.5.1
       - run: rustup toolchain install 1.96.0 --profile minimal --component clippy,rustfmt
+      - run: cargo +1.96.0 fmt --check --manifest-path host/completion/rust/Cargo.toml
+      - run: cargo +1.96.0 clippy --locked --manifest-path host/completion/rust/Cargo.toml --all-targets -- -D warnings
+      - run: cargo +1.96.0 build --release --locked --manifest-path host/completion/rust/Cargo.toml
+      - name: Session, cancellation and late completion parity
+        shell: bash
+        run: |
+          binary=host/completion/rust/target/release/wasmc-completion-guard
+          if [[ "$RUNNER_OS" == Windows ]]; then binary="$binary.exe"; fi
+          node host/completion/test.mjs "$binary"
       - run: cargo +1.96.0 fmt --check --manifest-path host/lib-e2e/rust/Cargo.toml
       - run: cargo +1.96.0 clippy --locked --manifest-path host/lib-e2e/rust/Cargo.toml --all-targets -- -D warnings
       - run: cargo +1.96.0 build --release --locked --manifest-path host/lib-e2e/rust/Cargo.toml
@@ -42,9 +51,12 @@ jobs:
         shell: bash
         run: |
           binary=host/lib-e2e/rust/target/release/wasmc-lib-host-e2e
+          completion=host/completion/rust/target/release/wasmc-completion-guard
+          bun host/completion/test.mjs "$completion"
+          deno run --allow-env=NODE_V8_COVERAGE --allow-run="$completion" host/completion/test.mjs "$completion"
           bun host/lib-e2e/test.mjs "$binary"
           mkdir -p target/host-file-tmp
-          TMPDIR="$PWD/target/host-file-tmp" deno run --allow-read=current,libs/wasmc-owned-algorithms,host/lib-e2e,target --allow-write=target --allow-env=TMPDIR,NODE_V8_COVERAGE --allow-run="$binary" host/lib-e2e/test.mjs "$binary"
+          TMPDIR="$PWD/target/host-file-tmp" deno run --allow-read=current,libs/wasmc-owned-algorithms,host/completion,host/lib-e2e,target --allow-write=target --allow-env=TMPDIR,NODE_V8_COVERAGE --allow-run="$binary" host/lib-e2e/test.mjs "$binary"
       - name: Public integrity
         if: runner.os == 'Linux'
         run: ./scripts/validate-maintainer.sh
@@ -53,7 +65,7 @@ jobs:
         env:
           SOURCE: ${{ github.sha }}
         run: |
-          printf '%s\n' "Source $SOURCE; $RUNNER_OS/$RUNNER_ARCH; 12 Lib/App/real-file cases; scheduled I/O, not guest async ABI" >> "$GITHUB_STEP_SUMMARY"
+          printf '%s\n' "Source $SOURCE; $RUNNER_OS/$RUNNER_ARCH; 73 guard transitions and 16 Lib/App/real-file cases; scheduled I/O, not guest async ABI" >> "$GITHUB_STEP_SUMMARY"
   required:
     if: always()
     needs: composition
