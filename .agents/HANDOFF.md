@@ -2,7 +2,7 @@
 
 ## 0. Status
 
-Active source line: work/host-native-owner-supervisor, following pushed kernel
+Active source line: work/host-scoped-owner-lifetime, following pushed Native owner/kernel
 and handoff consolidation. Resolve exact revisions with Git; inspect
 status/worktrees before editing and preserve unrelated changes. Linked worktrees
 belong under /Users/youxianshi/code/.worktrees/wasmcrelease.
@@ -55,9 +55,13 @@ Both Native profiles reset fuel per call; no hidden WASI or guest authority.
 
 Native owner registry adds scoped quota/ownership return/settled completion/
 quarantine with exclusive borrow, four unit controls plus actual TCP timeout ->
-injected failed ack -> real shutdown/peer EOF with one read.12guard/5TCP tests.
-This is internal Host Rust, not general async recovery/guest ABI. Underlying
-raw guard terminal32767-owner process budget is explicit in NATIVE_SUPERVISOR.md.
+injected failed ack -> real shutdown/peer EOF with one read.14guard/5TCP tests.
+Fresh CSPRNG scoped guards use private binding-local integers; injected identity
+constructors and raw guards keep global exhaustion protection. JS/Native owner
+registries rotate identity only when exhausted AND completely empty. Local
+40000 guard and 40000 registry cycles pass, live quarantine blocks rotation,
+old epoch tickets remain invalid. See host/completion/LIFETIME.md; this is not
+general async recovery/guest ABI or long-run RSS/network qualification.
 Mac ARM Bun Kernel CI empty sync-spawn stdout is corrected with event-driven
 spawn/pipe-drain/close, no replay. Changed source requires own qualification.
 
@@ -90,7 +94,7 @@ Do not count locally completed slices as all-platform/full SDK completion.
 
 ## 6. Next Actions
 
-Next: inspect latest native-owner-supervisor exact runs (Host composition and Core
+Next: inspect latest scoped-owner-lifetime exact runs (Host composition and Core
 Host contract); fix real failures locally. Prior accepted source needs no redo.
 Accept relevant source only with exact receipts, merge current main metadata
 without discarding it, refresh integrity, then normal expected-base FF promotion.

@@ -1,5 +1,34 @@
 use crate::scoped::*;
 #[test]
+fn fresh_bindings_survive_process_owner_budget_without_stale_access() {
+    let mut old = ScopedCompletionGuard::fresh().unwrap();
+    let w = old.acquire(1).unwrap();
+    let op = old.submit(&w).unwrap();
+    for _ in 0..40000 {
+        let mut g = ScopedCompletionGuard::fresh().unwrap();
+        let fresh_w = g.acquire(1).unwrap();
+        let fresh_op = g.submit(&fresh_w).unwrap();
+        assert_eq!(
+            w.to_wire().split(':').nth(1),
+            fresh_w.to_wire().split(':').nth(1)
+        );
+        assert_ne!(w, fresh_w);
+        assert_eq!(g.complete(&op, &[9], 0), Err(-1));
+        assert_eq!(g.release(&w), Err(-1));
+        assert_eq!(g.counts(), [1, 1]);
+        g.complete(&fresh_op, &[7], 0).unwrap();
+        assert_eq!(g.read(&fresh_w), Ok(vec![7]));
+        g.release(&fresh_op).unwrap();
+        g.release(&fresh_w).unwrap();
+        assert_eq!(g.counts(), [0, 0]);
+    }
+    assert_eq!(old.counts(), [1, 1]);
+    old.cancel(&op).unwrap();
+    old.complete(&op, &[], -8).unwrap();
+    old.release(&op).unwrap();
+    old.release(&w).unwrap();
+}
+#[test]
 fn strict_identity_and_token_round_trip() {
     assert_eq!(BindingIdentity::from_bytes([0; 32]), Err(-5));
     for text in [

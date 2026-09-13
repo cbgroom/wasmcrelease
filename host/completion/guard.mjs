@@ -1,8 +1,14 @@
 let nextSession=1;
+const bindingLocal=Symbol('fresh-binding-local');
+// Internal scoped wrapper only: never export its raw integers across bindings.
+export function createFreshBindingLocalGuard() {return new CompletionGuard(bindingLocal);}
 // Trusted Host-side registry; opaque fixture integers are not public guest API.
 export class CompletionGuard {
   #owner; #seq=1; #revoked=false; #windows=new Map(); #ops=new Map();
-  constructor() { if(nextSession>32767) throw -3;this.#owner=nextSession++; }
+  constructor(mode) {
+    if(mode===bindingLocal) {this.#owner=1;return;}
+    if(nextSession>32767) throw -3;this.#owner=nextSession++;
+  }
   #id() { if(this.#seq>32767) throw -3;return this.#owner*65536+this.#seq++; }
   #get(map,id) { if(!Number.isInteger(id)||Math.floor(id/65536)!==this.#owner||!map.has(id)) throw -1;return map.get(id); }
   acquire(size) {

@@ -72,7 +72,10 @@ pub struct ScopedCompletionGuard {
 }
 impl ScopedCompletionGuard {
     pub fn fresh() -> Result<Self, i32> {
-        Self::new(BindingIdentity::issue()?)
+        Ok(Self {
+            identity: BindingIdentity::issue()?,
+            guard: CompletionGuard::fresh_binding_local(),
+        })
     }
     pub fn new(identity: BindingIdentity) -> Result<Self, i32> {
         Ok(Self {

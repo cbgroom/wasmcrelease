@@ -31,13 +31,20 @@ impl CompletionGuard {
                 (n <= 32767).then_some(n + 1)
             })
             .map_err(|_| -3)? as i32;
-        Ok(Self {
+        Ok(Self::with_owner(owner))
+    }
+    // Scoped fresh CSPRNG binding only. Raw integers must remain private.
+    pub(crate) fn fresh_binding_local() -> Self {
+        Self::with_owner(1)
+    }
+    fn with_owner(owner: i32) -> Self {
+        Self {
             owner,
             seq: 1,
             revoked: false,
             windows: BTreeMap::new(),
             ops: BTreeMap::new(),
-        })
+        }
     }
     fn id(&mut self) -> Result<i32, i32> {
         if self.seq > 32767 {

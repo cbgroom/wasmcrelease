@@ -14,7 +14,12 @@ export class TcpOwnerSupervisor {
   async #run(input,task){
     if(!input||typeof input!=='object')throw -5;
     if(this.#endpoints.has(input))throw -4;
-    if(this.#owners.size>=this.#limit||this.#next>32767)throw -3;
+    if(this.#owners.size>=this.#limit)throw -3;
+    if(this.#next>32767){
+      if(this.#owners.size)throw -3;
+      // Fresh identity only after all previous owners/pins are retired.
+      const identity=issueBindingIdentity();this.#identity=identity;this.#next=1;
+    }
     const guard=ScopedCompletionGuard.fresh(),ticket=`${this.#identity}:${this.#next++}`;
     const owner={input,guard,failure:null,retiring:false};
     this.#owners.set(ticket,owner);this.#endpoints.add(input);

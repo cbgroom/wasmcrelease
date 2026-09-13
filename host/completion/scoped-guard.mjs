@@ -1,4 +1,5 @@
-import { CompletionGuard } from './guard.mjs';
+import { CompletionGuard, createFreshBindingLocalGuard } from './guard.mjs';
+const freshBinding=Symbol('host-issued-fresh-binding');
 // Trusted synchronous CSPRNG adapter; never supplied by guest code.
 export function issueBindingIdentity(fill = bytes => globalThis.crypto.getRandomValues(bytes)) {
   const bytes=new Uint8Array(32);
@@ -12,10 +13,10 @@ export function issueBindingIdentity(fill = bytes => globalThis.crypto.getRandom
 // Trusted Host binding identity. Do not inject guest-selected or repeated seeds.
 export class ScopedCompletionGuard {
   #identity;#guard;
-  static fresh() {return new ScopedCompletionGuard(issueBindingIdentity());}
-  constructor(identity) {
+  static fresh() {return new ScopedCompletionGuard(issueBindingIdentity(),freshBinding);}
+  constructor(identity,mode) {
     if(typeof identity!=='string'||! /^[0-9a-f]{64}$/.test(identity)||/^0+$/.test(identity)) throw -5;
-    this.#identity=identity;this.#guard=new CompletionGuard();
+    this.#identity=identity;this.#guard=mode===freshBinding?createFreshBindingLocalGuard():new CompletionGuard();
   }
   #wrap(local) { return `${this.#identity}:${local}`; }
   #unwrap(ticket) {
