@@ -2,7 +2,7 @@
 
 ## 0. Status
 
-Task state: in-progress — library-first Agent discovery guidance strengthening.
+Task state: completed — library-first Agent discovery guidance strengthening.
 Own branch: docs/agent-library-first-guidance. Base is published v0.0.10.
 Plan: route AGENTS/developer to a concrete discovery Skill, teach search hits,
 exact selection/installation and verification; exercise canonical examples and
@@ -13,8 +13,12 @@ START is pushed. AGENTS/developer now route to concrete wasmc-lib-discovery;
 catalog/install availability and search-v2 descriptions are corrected without
 changing frozen product Skills. Two teaching commands verify five target hits;
 six rejection controls, eight-Skill/three-parent validation and64-product
-digest check PASS. Resume: refresh integrity, maintainer + public guidance CI,
-then advance main by checked fast-forward; no new immutable release is implied.
+digest check PASS. Maintainer validation and deterministic Fresh-Agent100/100
+PASS. Exact implementation public guidance CI run34743590650 PASS. No new
+immutable release is implied; v0.0.10 remains frozen. This is supplemental
+main/full-commit guidance. Resume: verify origin/main reachability and both new
+guidance/full consumer workflows at their exact source; next work is stronger
+zero-context task-corpus evaluation, not another language syntax expansion.
 Branch: release/lib-search-v010. Public v0.0.9 is already released;
 immutable tag and release branch remain unchanged. Main may carry follow-up
 consumer tooling/docs, not new admitted compiler or Lib binaries.
