@@ -75,8 +75,16 @@ both whole workflows PASS;20 five-control suites and3 actual browser reuse probe
 are independently read. Private scoped counters never reset; only acknowledged,
 empty, unrevoked, unexhausted guards enter the owner-bounded pool. Pending and
 all quarantine remain excluded, even with zero records. Native pooling and full
-performance/release acceptance are not implied. Explicit-quarantine release
-and resident input snapshot fixes remain later-source qualification work.
+performance/release acceptance are not implied. Explicit-quarantine cleanup, fail-closed entrypoint ordering, locked dependency
+caches and resident input snapshots now qualify through
+admission/host-resident-snapshot-qualification.json. Both whole workflows PASS;
+20 suites each cover9 resident,6 cleanup,5 pool and12 UDP retirement controls.
+Three actual browsers additionally cover3 resident capture cases and1 unknown
+cleanup case. Node-only and three-engine entrypoint checks each have6 receipts.
+Core28ordinary/28negotiated receipts retain canonical digests/denials/failures.
+Only metadata/docs follow that qualified product source; no runtime diff.
+Local paired observations remain local in resident-snapshot-performance.json,
+not full performance/release acceptance. Full Host gate count remains1of5.
 
 ## 1. North Star
 
@@ -160,8 +168,10 @@ Do not count locally completed slices as all-platform/full SDK completion.
 
 ## 6. Next Actions
 
-Next: independently qualify idle-pool and explicit-quarantine-cleanup runs.
-The latter fixes the folded Node UDP command with a fail-closed negative test. Earlier
+Next: typed guest transport/SDK and full Std portable proof under their owning
+producer workstreams. See host/TYPED_TRANSPORT_REVIEW.md. Public Host-only
+fixtures cannot substitute for generic typed guest I/O; producer scope is not
+transferred here. No new compiler semantics by default, no frozen byte rewrite. Earlier
 accepted sources need no redo.
 Accept relevant source only with exact receipts, merge current main metadata
 without discarding it, refresh integrity, then normal expected-base FF promotion.

@@ -1,0 +1,27 @@
+{
+  "schema": "wasmc-host-resident-snapshot-local-performance/v1",
+  "baseline_source": "b6579128438720933774830a1903a01771b361fe",
+  "candidate_product_source": "785c608ed0d30e7fe1ca0d74b6de5f50ac59e55b",
+  "scope": "local macOS arm64 paired JS App-to-curated-Lib bookkeeping, not formal performance qualification",
+  "paired_alternating_order": true,
+  "warmup_per_side": 10000,
+  "samples": 7,
+  "calls_per_sample": 100000,
+  "lib_calls_per_side": 710000,
+  "checksum_per_sample": 10650000,
+  "app_sha256": "4eff84eccf06251a0b5de89e81d4faaeb5f51bce18724d8f011b95ea0ab7fd19",
+  "lib_sha256": "44638f7cfa5a653f986e2237db4f26f1534539c8c0d0d1e7258c51a976df19e3",
+  "results": [
+    {"runtime": "Node26.5.1", "before_median_ns": 104.80375, "candidate_median_ns": 93.00625, "before_ms": [11.361041,11.505083,10.520709,10.479375,10.4445,10.361375,10.480375], "candidate_ms": [11.056292,9.903417,9.238375,9.140292,9.300625,9.314166,8.600833]},
+    {"runtime": "Bun1.3.14", "before_median_ns": 95.22667, "candidate_median_ns": 75.62834, "before_ms": [13.595625,9.522667,9.1305,9.207666,9.807958,8.987708,9.910541], "candidate_ms": [9.350208,8.489167,7.562834,6.955875,8.554042,7.212834,6.505083]},
+    {"runtime": "Deno2.9.4", "before_median_ns": 96.39416, "candidate_median_ns": 88.79125, "before_ms": [11.512833,10.368375,9.639416,9.285208,9.449917,9.669541,9.31225], "candidate_ms": [10.069459,9.508083,8.620625,8.751458,8.879125,8.760167,9.362209]}
+  ],
+  "local_helper": "target/resident-paired-benchmark.mjs (excluded maintainer output; alternating two createResidentApp implementations with identical digest-checked bytes)",
+  "formal_cross_platform_acceptance": false,
+  "speed_guarantee": false,
+  "timing_threshold_enforced": false,
+  "network_tps": false,
+  "durable_tps": false,
+  "full_std_wasmi": false,
+  "native_source_performance_claim": false
+}

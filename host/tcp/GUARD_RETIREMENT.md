@@ -27,3 +27,15 @@ Whole-process teardown supplies test isolation; it is not successful SDK recover
 Ordinary failed-stop/driver-retirement recovery and40000-cycle lifetime remain
 separate mandatory regressions. Arbitrary registry/revoke corruption, Native
 faults, never-settling containment and immutable SDK release remain unqualified.
+
+Explicit quarantine cleanup uses the same release acknowledgement fence. Six
+additional controls in `quarantine-retirement-test.mjs` start from a malformed
+completion owner, acknowledge network close, then fault operation/window release
+before/after mutation or omit its acknowledgement. The owner transitions to
+internal unknown-retirement quarantine with the same ticket and primary error;
+quota remains occupied even with zero records. A further cleanup rejects without
+another close or I/O. Run this test with Node, Bun and permission-free Deno.
+
+CI also runs `node host/udp/entrypoint-test.mjs`: three subprocess controls reject
+the old folded YAML command shape in Node/Bun/Deno before network access. The
+Node UDP retirement test now has an independent mandatory workflow step.

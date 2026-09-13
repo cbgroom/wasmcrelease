@@ -1,7 +1,7 @@
 import {ScopedCompletionGuard,issueBindingIdentity} from '../completion/scoped-guard.mjs';
 import {readTcpWindow} from './read-window.mjs';
 import {writeTcpWindow} from './write-window.mjs';
-import {TcpStopFailure,requestTcpStop} from './stop-fence.mjs';
+import {TcpStopFailure,TcpGuardRetirementFailure,requestTcpStop} from './stop-fence.mjs';
 
 // Trusted per-Host owner admission; not a guest API or global process registry.
 export class TcpOwnerSupervisor {
@@ -51,9 +51,19 @@ export class TcpOwnerSupervisor {
       const ack=await requestTcpStop(owner.input,owner.guard);if(!ack.ok)throw ack.error;
       // Keep pins if endpoint retirement itself fails, even after close ack.
       await owner.input.release();
-      const {operation,window}=owner.failure.owner;
-      if(operation!==undefined){if(!owner.guard.poll(operation).drained)owner.guard.complete(operation,[],-8);owner.guard.release(operation);}
-      if(window!==undefined)owner.guard.release(window);
+      let {operation,window}=owner.failure.owner;
+      try {
+        if(operation!==undefined){
+          if(!owner.guard.poll(operation).drained)owner.guard.complete(operation,[],-8);
+          if(owner.guard.release(operation)!==0)throw -8;operation=undefined;
+        }
+        if(window!==undefined){if(owner.guard.release(window)!==0)throw -8;window=undefined;}
+      }catch(cause){
+        // Even an explicit cleanup must not retry an unknown guard mutation.
+        // Endpoint retirement is acknowledged, but zero counts are not an ack.
+        const failure=new TcpGuardRetirementFailure({input:owner.input,guard:owner.guard,operation,window},cause,owner.failure.primary);
+        failure.quarantineTicket=ticket;owner.failure=failure;throw failure;
+      }
       this.#owners.delete(ticket);this.#endpoints.delete(owner.input);
     }finally{owner.retiring=false;}
   }
