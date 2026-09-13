@@ -14,6 +14,12 @@ downloaded execution runs without Cargo rebuild. Local release macOS arm64
 package5 byte-parity/5 actual executions/5 no-clobber plus9 rejection controls
 PASS. Actionlint PASS. README documents developmental scope and exact verifier.
 Push coherent checkpoint, read actual six-target run; only then accept main.
+Exact implementation native run34745887997 completed PASS12/12: six native
+builds and six fresh downloaded-consumer jobs. Six uploaded packages were
+independently downloaded and all file hashes/sizes checked; manifest digests
+retained in admission/native-desktop-qualification.json. Same-source complete
+consumer run34745902717 and LibSearch run34745904387 are still running their
+Rust jobs; no failures observed, but do not call them fully accepted yet.
 Formal release/mobile/dual-engine remain unclosed, do not promote incomplete
 SDK as full-platform production support.
 Own branch: work/native-wasmi-compiler, based on origin/main at START.
