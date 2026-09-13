@@ -6,7 +6,9 @@ Main acceptance now includes browser/resident engine and bounded JS supervisor.
 Resolve exact sources/runs from admission/host-browser-engine-qualification.json
 and admission/host-supervisor-qualification.json. Independently read14supervisor
 and3browser recovery receipts; all six desktop/three browser/required cells PASS.
-Native owner, Kernel and lifetime source remain subsequent independent candidates.
+Native owner and Kernel exact acceptance is recorded in
+admission/host-native-kernel-qualification.json. Lifetime/negotiation/half-close
+remain subsequent independent candidates requiring their own qualification.
 The historical sections referenced below retain their earlier evidence scope.
 
 Active source line: work/host-scoped-owner-lifetime, following Native owner and
@@ -23,8 +25,8 @@ runs, independently read receipts and scope. Do not redo those implementations.
 
 Optional Wasmtime, benchmarks, failed-stop/error-path protection,
 real browser probes and bounded JS quarantine supervisor are accepted in main.
-Subsequent Kernel, Native owner and scoped lifetime source require their own
-exact-source cross-platform acceptance before main.
+Kernel and Native internal owner registry are now qualified; scoped lifetime,
+negotiation and half-close source require their own exact acceptance before main.
 Never borrow an old-source PASS. No release/tag/deployment was performed.
 
 ## 1. North Star
@@ -57,6 +59,19 @@ Receipts identify exact App/Lib digests. Pure microbenchmark observed Native
 Wasmi about216-230ns and Wasmtime about69ns per two-byte App/Lib call; not an
 exact-source qualified performance guarantee. Repeat at accepted source.
 
+Kernel scalar simulator now has explicit optional Wasmtime profile, default
+Wasmi-only. Local four Core cases agree with JS; browser probes also run the
+same digest-bound kernel. This is simulator-only, not canonical typed SDK.
+Both Native profiles reset fuel per call; no hidden WASI or guest authority.
+
+Native owner registry adds scoped quota/ownership return/settled completion/
+quarantine with exclusive borrow, four unit controls plus actual TCP timeout ->
+injected failed ack -> real shutdown/peer EOF with one read.12guard/5TCP tests.
+This is internal Host Rust, not general async recovery/guest ABI. Underlying
+raw guard terminal32767-owner process budget is explicit in NATIVE_SUPERVISOR.md.
+Mac ARM Bun Kernel CI empty sync-spawn stdout is corrected with event-driven
+spawn/pipe-drain/close, no replay. Changed source requires own qualification.
+
 ## 4. Plan and Validation
 
 Read release-host-integration, release-integrity and release-agent-docs Skills.
@@ -86,7 +101,7 @@ Do not count locally completed slices as all-platform/full SDK completion.
 
 ## 6. Next Actions
 
-Next: inspect latest Native owner and scoped lifetime runs in both Host workflows;
+Next: inspect latest scoped lifetime/negotiation/half-close runs in both workflows;
 fix real failures locally while CI runs. Kernel Bun pipe-drain fix belongs to
 Native owner source; old failed Kernel run does not qualify changed source.
 Accept relevant source only with exact receipts, merge current main metadata

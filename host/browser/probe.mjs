@@ -4,6 +4,7 @@ import {readTcpWindow} from '../tcp/read-window.mjs';
 import {writeTcpWindow} from '../tcp/write-window.mjs';
 import {TcpStopFailure} from '../tcp/stop-fence.mjs';
 import {TcpOwnerSupervisor} from '../tcp/supervisor.mjs';
+import {MemoryHost} from '../v0/reference.mjs';
 
 const check=(condition,message)=>{if(!condition)throw Error(message);};
 const equal=(a,b)=>check(JSON.stringify(a)===JSON.stringify(b),'value mismatch');
@@ -11,6 +12,11 @@ const rejects=(call,code)=>{try{call();}catch(error){check(error===code,'error m
 const digest=async bytes=>Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',bytes)),b=>b.toString(16).padStart(2,'0')).join('');
 async function load(url){const response=await fetch(url);check(response.ok,'fixture unavailable');return new Uint8Array(await response.arrayBuffer());}
 async function run(){
+  const kernelBytes=await load('/fixture/kernel.wasm'),memoryHost=new MemoryHost(),imports={};
+  check(await digest(kernelBytes)==='3774b4d3484abf247f56dbd0adc28295fcafe2e06fe0247b797d2b7aef1abe21','kernel drift');
+  for(const name of ['describe','window_acquire','window_commit','invoke','wait','cancel','release'])imports[name]=(a,b)=>memoryHost.step([name,a,b]);
+  const kernel=await WebAssembly.instantiate(kernelBytes,{host:imports});
+  for(const size of [0,1,4,16]){check(kernel.instance.exports.run(size)===size,'kernel result');check(memoryHost.windows.size===0&&memoryHost.ops.size===0,'kernel cleanup');equal(memoryHost.bytes,Array(size).fill(42));}
   const lib=await load('/libs/wasmc-owned-algorithms/artifact.wasm'),guest=await load('/fixture/guest.wasm');
   const libSha=await digest(lib),appSha=await digest(guest);
   check(libSha==='44638f7cfa5a653f986e2237db4f26f1534539c8c0d0d1e7258c51a976df19e3','Lib drift');
@@ -50,7 +56,7 @@ async function run(){
   try{await supervisor.read({read:()=>{throw Error('quota I/O');}});throw Error('quota missing');}catch(error){check(error===-3,'quota error');}
   closed=true;await supervisor.retireQuarantine(failure.quarantineTicket);check(reads===1,'supervisor replay');
   equal(failure.owner.guard.counts(),[0,0]);equal(supervisor.status(),{active:0,quarantined:0,limit:1});
-  return {accepted:true,browser_user_agent:navigator.userAgent,app_sha256:appSha,lib_sha256:libSha,resident_calls:1000,core_cases:4,guard_cases:guardCases,stop_failure_cases:stopCases,supervisor_cases:1,trap_poisoned:true,no_replay:true,resource_cleanup:true,quarantine_retained:true,raw_tcp:false,real_device_io:false,mobile_qualified:false};
+  return {accepted:true,browser_user_agent:navigator.userAgent,app_sha256:appSha,lib_sha256:libSha,kernel_sha256:await digest(kernelBytes),kernel_core_cases:4,kernel_simulator_only:true,resident_calls:1000,core_cases:4,guard_cases:guardCases,stop_failure_cases:stopCases,supervisor_cases:1,trap_poisoned:true,no_replay:true,resource_cleanup:true,quarantine_retained:true,raw_tcp:false,real_device_io:false,mobile_qualified:false};
 }
 globalThis.receiptPromise=run().catch(error=>({accepted:false,error:String(error)})).then(receipt=>{
   document.querySelector('#receipt').textContent=JSON.stringify(receipt);

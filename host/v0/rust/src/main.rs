@@ -1,4 +1,6 @@
 use serde_json::Value;
+#[cfg(feature = "wasmtime-engine")]
+mod wasmtime_profile;
 use std::{
     collections::BTreeMap,
     io::{self, Read},
@@ -130,6 +132,21 @@ impl Host {
 }
 fn main() {
     if let Some(path) = std::env::args().nth(1) {
+        if std::env::args().any(|arg| arg == "--wasmtime") {
+            #[cfg(feature = "wasmtime-engine")]
+            {
+                println!(
+                    "{}",
+                    serde_json::to_string(&wasmtime_profile::run(&path)).unwrap()
+                );
+                return;
+            }
+            #[cfg(not(feature = "wasmtime-engine"))]
+            {
+                eprintln!("optional Wasmtime profile unavailable");
+                std::process::exit(2);
+            }
+        }
         use wasmi::{Caller, Config, Engine, Linker, Module, Store};
         let mut config = Config::default();
         config.consume_fuel(true);
@@ -167,6 +184,7 @@ fn main() {
         let run = instance.get_typed_func::<i32, i32>(&store, "run").unwrap();
         let mut rows = Vec::new();
         for size in [0, 1, 4, 16] {
+            store.set_fuel(100_000).unwrap();
             let result = run.call(&mut store, size).unwrap();
             let mut row = vec![
                 result as i64,
