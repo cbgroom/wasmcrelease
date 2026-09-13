@@ -18,6 +18,13 @@ native subprocess env remains empty. No broad ambient env or external I/O.
 Actions six native desktop targets compare Node; four Unix targets also compare
 Bun/Deno. Browser/Wasmtime/real backends and typed physical SDK remain gaps.
 Push coherent implementation, read exact-source Actions before main acceptance.
+Exact implementation run34747009152 completed PASS including required job.
+Independent log readback: six native targets, fourteen JS/native pairs each
+104scenarios/10037transitions and4same-Core guest cases; strict Clippy PASS.
+Retained admission/thin-host-v0.json. Expected-base main remains native packaging
+acceptance checkpoint; advance normally only after readback, no forced push.
+Next is typed transport/session identity and ownership review, not stable ABI
+claim. Delivery gate1/5 qualified; browser/real effects/mobile not covered.
 
 ## 0. Status
 

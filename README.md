@@ -9,7 +9,10 @@ low-frequency evolving Native mechanisms, reusable CoreLib policy/protocols,
 JS/Native semantic parity without requiring identical acceleration. Seven
 bounded memory-simulator operations are implemented; twelve-operation draft,
 real I/O, browser execution and typed SDK remain separate qualification gates.
-[![Core Host contract](https://github.com/cbgroom/wasmcrelease/actions/workflows/thin-host.yml/badge.svg?branch=work/thin-host-contract)](https://github.com/cbgroom/wasmcrelease/actions/workflows/thin-host.yml)
+[![Core Host contract](https://github.com/cbgroom/wasmcrelease/actions/workflows/thin-host.yml/badge.svg?branch=main)](https://github.com/cbgroom/wasmcrelease/actions/workflows/thin-host.yml)
+Initial [exact-source run](https://github.com/cbgroom/wasmcrelease/actions/runs/34747009152)
+passed all six native targets and fourteen JS/native pairs; scope and source
+are retained in [prototype evidence](admission/thin-host-v0.json).
 
 Post-v0.0.10 native packaging is in development: the public
 [Wasmi-only compiler SDK/CLI](sdk/wasmc-native-compiler/README.md) embeds the

@@ -81,3 +81,10 @@ Next: review draft semantic WIT and define negotiated Core transport; one sessio
 resource model; browser/Wasmtime parity; real restricted backend with deadlines,
 revocation and late-completion fault tests. Only then consider shared-window
 and batch acceleration. Internal String/List/Map allocation stays in CoreLib.
+
+Delivery gates (not all-stdlib progress): (1) bounded cross-language prototype;
+(2) reviewed typed transport/ownership/session identity; (3) browser/Wasmtime
+adapters and parity; (4) restricted real backend with cancellation/revocation/
+late-completion fault tests; (5) performance qualification and immutable SDK
+release. Gate1 is qualified; the other four are not. This is20% by gate count,
+not an estimate of engineering time or overall WAsmC completion.
