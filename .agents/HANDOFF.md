@@ -2,7 +2,7 @@
 
 ## 0. Status
 
-Active source line: work/host-tcp-half-close-probe, following pushed Core negotiation/lifetime/Native owner/kernel
+Active source line: work/host-core-quota-safety, following pushed half-close/Core negotiation/lifetime
 and handoff consolidation. Resolve exact revisions with Git; inspect
 status/worktrees before editing and preserve unrelated changes. Linked worktrees
 belong under /Users/youxianshi/code/.worktrees/wasmcrelease.
@@ -17,7 +17,9 @@ Optional Wasmtime, benchmarks, failed-stop/error-path protection, real browser
 and bounded JS supervisor are now accepted in main. Read the current admission
 host-browser-engine-qualification.json and host-supervisor-qualification.json
 from main for exact receipts. Kernel, Native owner, lifetime and negotiation
-source still need their own exact-source cross-platform acceptance before main.
+source initially required their own qualification. Native owner and Kernel are
+now accepted; resolve admission/host-native-kernel-qualification.json in main.
+Lifetime/negotiation/half-close/quota source still require their own qualification.
 Never borrow an old-source PASS. No release/tag/deployment was performed.
 
 ## 1. North Star
@@ -80,6 +82,13 @@ pass; Bun1.3.14 macOS ARM JS client still loses reply. Characterization records
 accepted=false/profile_supported=false, never counts as positive parity.
 See host/tcp/HALF_CLOSE.md; no new Host import/private-runtime workaround.
 
+Negotiated caller now preserves allocation/commit/submission errors instead of
+continuing with negative handles. Local quota proof fixed -3 -> misleading -4.
+Five new JS/Native failure controls pass all six runtime/engine pairs; unknown
+completion retains pending window/operation, not forced free. Receipt cleanup
+scope excludes preexisting owners and unknown-completion quarantine. Actual
+Native/Kernel work already qualified; new caller source still needs exact CI.
+
 ## 4. Plan and Validation
 
 Read release-host-integration, release-integrity and release-agent-docs Skills.
@@ -109,7 +118,7 @@ Do not count locally completed slices as all-platform/full SDK completion.
 
 ## 6. Next Actions
 
-Next: inspect latest half-close-probe exact runs (Host composition and Core
+Next: inspect latest core-quota-safety exact runs (Host composition and Core
 Host contract); fix real failures locally. Prior accepted source needs no redo.
 Accept relevant source only with exact receipts, merge current main metadata
 without discarding it, refresh integrity, then normal expected-base FF promotion.

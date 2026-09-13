@@ -46,3 +46,26 @@ Node/Bun/Deno x Wasmi/Wasmtime cases enter the six-platform Core Host Action.
 description oracles. No arbitrary-device, asynchronous completion, browser
 mobile, power-failure or immutable SDK qualification is implied. Full transport
 ownership/session/resource SDK review remains a separate delivery gate.
+
+## Failure propagation and retained owners
+
+The caller checks allocation/commit/submission responses before using a handle.
+It returns the original error, not a sum of later failures on invalid handles.
+Known pre-submission failure releases its newly acquired unpinned window; it
+does not touch preexisting owners. Unknown completion returns its error without
+releasing the pending operation or pinned window. Host supervision must resolve
+settlement/termination; a completed Core call is not proof backend I/O stopped.
+Only the reference's terminal cancellation path permits normal release attempts.
+This does not inherit simulator cancellation guarantees into a real backend.
+
+Five further Core controls execute identically in JS and Native: preexisting
+window quota and injected failure before allocation, commit, invoke or wait.
+Native trusted test CLI uses --preload-window-quota or --fail-before=name:code;
+these are fixture seams, not guest API or runtime RPC. Quota preserves eight
+preexisting windows; allocation failure stops after one non-describe call.
+Commit/invoke failures free only their new window. Unknown wait error retains
+one window/operation and zero simulated device bytes, with no retries/replay.
+Receipt resource_cleanup is scoped to successful/known preissue failures,
+excluding preexisting or unknown-completion owners; retained counts are explicit.
+Store teardown is safe only for this no-async memory simulator, not a model for
+disposing real asynchronous backends with live pins.

@@ -33,7 +33,7 @@ pub fn run(path: &str, host: Host) -> Vec<Vec<i64>> {
         .get_typed_func::<i32, i32>(&mut store, "run")
         .unwrap();
     let mut rows = Vec::new();
-    let fault = store.data().description_override.is_some();
+    let fault = store.data().probe;
     let sizes = if fault { vec![4] } else { vec![0, 1, 4, 16] };
     for size in sizes {
         store.set_fuel(100_000).unwrap();
