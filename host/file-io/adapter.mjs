@@ -1,23 +1,27 @@
 // Host receives a trusted, preopened FileHandle. Guest paths are not accepted.
 export class PreopenedFile {
+  #busy = false;
   constructor(file, writable) { this.file = file; this.writable = writable; }
   check(offset, length) {
     if (!this.file) throw -1;
+    if (this.#busy) throw -4;
     if (!Number.isSafeInteger(offset) || !Number.isSafeInteger(length) || offset < 0 || length < 0 || length > 16 || offset + length > 64) throw -5;
   }
   async read(offset, length) {
     this.check(offset, length);
     const bytes = new Uint8Array(length);
+    this.#busy = true;
     try {
       const { bytesRead } = await this.file.read(bytes, 0, length, offset);
       return [...bytes.slice(0, bytesRead)];
-    } catch { throw -8; }
+    } catch { throw -8; } finally { this.#busy = false; }
   }
   async write(offset, data) {
-    if (!Array.isArray(data) || !data.every(b => Number.isInteger(b) && b >= 0 && b <= 255)) throw -5;
+    if (!Array.isArray(data) || data.length > 16 || Array.from(data).some(b => !Number.isInteger(b) || b < 0 || b > 255)) throw -5;
     this.check(offset, data.length);
     if (!this.writable) throw -2;
     let count = 0;
+    this.#busy = true;
     try {
       while (count < data.length) {
         const { bytesWritten } = await this.file.write(Uint8Array.from(data.slice(count)), 0, data.length - count, offset + count);
@@ -25,15 +29,18 @@ export class PreopenedFile {
         count += bytesWritten;
       }
       return count;
-    } catch { throw -9; } // No rollback/retry after potentially partial effects.
+    } catch { throw -9; } finally { this.#busy = false; } // No rollback/retry after potentially partial effects.
   }
   async invokeSync() {
     if (!this.file) throw -1;
+    if (this.#busy) throw -4;
     if (!this.writable) throw -2;
-    try { await this.file.sync(); return 0; } catch { throw -8; }
+    this.#busy = true;
+    try { await this.file.sync(); return 0; } catch { throw -8; } finally { this.#busy = false; }
   }
   async release() {
     if (!this.file) throw -1;
+    if (this.#busy) throw -4;
     const file = this.file; this.file = null;
     try { await file.close(); return 0; } catch { throw -8; }
   }

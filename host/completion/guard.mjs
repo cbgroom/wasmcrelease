@@ -28,8 +28,8 @@ export class CompletionGuard {
     const op=this.#get(this.#ops,id);
     if(op.drained) throw -1;
     const w=this.#get(this.#windows,op.window);
-    if(!Number.isInteger(error)||error>0) throw -5;
-    if(!Array.isArray(bytes)||bytes.some(b=>!Number.isInteger(b)||b<0||b>255)|| (op.state!=='cancelled' && bytes.length>w.size)) throw -5;
+    if(!Number.isInteger(error)||error>0||error< -2147483648) throw -5;
+    if(!Array.isArray(bytes)||bytes.length>w.size||Array.from(bytes).some(b=>!Number.isInteger(b)||b<0||b>255)) throw -5;
     if(op.state!=='cancelled') {
       op.state=error?'failed':'done';op.error=error;w.bytes=error?[]:[...bytes];
     }

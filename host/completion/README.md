@@ -45,3 +45,20 @@ production boot/session identity and negotiated typed Core SDK remain unclosed.
 No browser/mobile/Wasmtime, untrusted memory, power-loss or immutable SDK release
 qualification is claimed. The original memory simulator retains its narrower
 cancel-before-effect semantics; it is not substituted for this real-I/O guard.
+
+`read-window.mjs` consumes a trusted preopened input. It awaits the issued read
+even when cancellation request fails, converts read failure into a drained
+terminal record, releases window/record and closes the input. Cleanup failure
+does not mask the original read failure. There is no timeout force-release.
+The guarded chain includes actual write-only descriptor read failures with
+unchanged output and zero live guard resources. JS file operations are serialized
+and reject concurrent read/write/sync/release while busy, matching exclusive
+Native access. `fault-test.mjs` adds ten controls including descriptor lifetime,
+read/close failure precedence, old completion after window reuse, independent
+input/output snapshots and 32767 allocations through exact sequence exhaustion.
+Four Rust unit tests include those state invariants and 512 unique sessions
+allocated across eight threads (allocator uniqueness, not shared-state races).
+Sparse byte arrays, oversized cancelled completions and non-i32 status values
+reject rather than silently filling zeros or truncating lanes. The trusted
+Native JSON test launcher also rejects out-of-range IDs/status without casting
+them to another live token. Current parity trace contains76transitions.

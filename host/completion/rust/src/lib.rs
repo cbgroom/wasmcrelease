@@ -8,6 +8,7 @@ struct Window {
     pins: bool,
     bytes: Vec<u8>,
 }
+
 struct Operation {
     window: i32,
     state: &'static str,
@@ -114,7 +115,7 @@ impl CompletionGuard {
             return Err(-1);
         }
         let w = self.windows.get_mut(&o.window).ok_or(-1)?;
-        if error > 0 || (o.state != "cancelled" && bytes.len() > w.size) {
+        if error > 0 || bytes.len() > w.size {
             return Err(-5);
         }
         if o.state != "cancelled" {
@@ -178,3 +179,6 @@ impl CompletionGuard {
         [self.windows.len(), self.ops.len()]
     }
 }
+
+#[cfg(test)]
+mod tests;

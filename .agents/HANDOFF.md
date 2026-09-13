@@ -2,6 +2,22 @@
 
 ## Current: session/completion guard START
 
+Continuation while Actions queued: local hardening is not blocked by CI. Found
+read failure could leave pending pin and busy cleanup masked its I/O error.
+Implemented settled failure completion and cleanup preserving primary error;
+JS descriptor serializes pending I/O/release, matching Native exclusive access.
+Add10fault controls,32767sequence exhaustion and4Rust tests (512concurrent session
+allocations; not shared-transition concurrency). Guarded real file chain now
+20cases including write-only-descriptor read failure/no output/zero resources.
+Extend same six-platform Actions including original20op file regression. New
+implementation must qualify at its own exact source, not older queued run.
+Sparse array zero-fill and Native JSON integer truncation now reject; cancelled
+completion payload remains bounded. Current76step parity,10fault controls and
+20real-file chain pass Node/Bun/restricted Deno locally. Strict Clippy,4Rust tests,
+original20op file regression and frozen64product digests PASS. Run exact new
+implementation Actions asynchronously; queued validation does not block further
+local work. No main acceptance or immutable release qualification claimed.
+
 Own branch work/host-completion-guard, based on previous accepted Lib/Host chain
 (resolve Git ancestry). Add session-qualified, non-reused bounded resources and
 completion records; cancellation rejects delivery but holds pin until backend

@@ -52,3 +52,11 @@ Next: map preopened resources to session-bound handles and bounded windows;
 bind completion-aware Core transport; qualify restricted TCP/UDP and resident
 service. Reusable certificate parsing/location/trust policy and TLS remain in
 Libs where existing external primitives suffice.
+
+## In-flight access
+
+The JS adapter rejects concurrent read/write/sync/release with busy (-4) until
+the issued operation settles. In particular, release cannot close a descriptor
+still used by I/O. Rust's exclusive mutable borrow supplies this serialization.
+This is trusted owner discipline, not protection against a caller directly
+closing the underlying file outside the adapter or general OS fault recovery.

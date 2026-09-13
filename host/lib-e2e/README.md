@@ -19,6 +19,9 @@ Four additional controls cancel delivery before real file-read completion:
 bytes are discarded, guard records/windows released, output left unchanged.
 JS schedules a real asynchronous read; Native holds cancellation before its
 blocking read/completion. These ordered controls do not prove OS thread races.
+Four more controls use actual write-only input descriptors to provoke read
+failure. Both implementations drain and release the failed read's resources,
+preserve the read error and leave output untouched (20 total fixture cases).
 
 This is Host-scheduled read/compute/write, not an implementation of guest async
 continuations or public typed Core resource SDK. JSON is not used as a Host ABI.
