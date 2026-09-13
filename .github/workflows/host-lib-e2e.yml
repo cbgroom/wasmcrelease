@@ -1,7 +1,7 @@
 name: Public Host and Lib end-to-end
 on:
   push:
-    branches: [main, work/host-lib-e2e, work/host-completion-guard, work/host-startup-identity, work/host-tcp-endpoint, work/host-tcp-read-stop, work/host-tcp-listener, work/host-resident-app, work/host-tcp-write-outcome, work/host-engine-parity, work/host-resident-benchmark]
+    branches: [main, work/host-lib-e2e, work/host-completion-guard, work/host-startup-identity, work/host-tcp-endpoint, work/host-tcp-read-stop, work/host-tcp-listener, work/host-resident-app, work/host-tcp-write-outcome, work/host-engine-parity, work/host-resident-benchmark, work/host-stop-failure]
   pull_request:
   workflow_dispatch:
 permissions:
@@ -25,6 +25,7 @@ jobs:
       - run: cargo +1.96.0 build --release --locked --manifest-path host/completion/rust/Cargo.toml
       - run: cargo +1.96.0 test --release --locked --manifest-path host/completion/rust/Cargo.toml
       - run: node host/completion/fault-test.mjs
+      - run: node host/tcp/stop-failure-test.mjs
       - name: Independent process startup identity
         shell: bash
         run: |
@@ -97,6 +98,8 @@ jobs:
           resident=host/lib-e2e/rust/target/release/resident-app-reference
           write=host/lib-e2e/rust/target/release/tcp-write-reference
           bun host/tcp/write-test.mjs "$write"
+          bun host/tcp/stop-failure-test.mjs
+          deno run host/tcp/stop-failure-test.mjs
           deno run --allow-net=127.0.0.1 --allow-env=NODE_V8_COVERAGE --allow-run="$write" host/tcp/write-test.mjs "$write"
           bun host/tcp/server-test.mjs "$server" "$resident"
           mkdir -p target/host-tcp-app

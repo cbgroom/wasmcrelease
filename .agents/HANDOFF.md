@@ -1,5 +1,18 @@
 # WAsmC release maintainer handoff
 
+## Failed stop acknowledgement safety
+
+Own branch work/host-stop-failure follows pushed benchmark candidate.
+Stop request catches synchronous throws and attaches async rejection handler
+at issuance, avoiding uncaught abort/unhandled rejection while I/O is pending.
+After issued I/O settles, failed close throws Host-only TcpStopFailure retaining
+endpoint/guard/tickets and primary outcome; revoke grants, never complete/free
+pins or recycle endpoint without acknowledgement. Supervisor must retain and
+bound quarantine; no automatic recovery/replay or fabricated acknowledgement.
+Local6controls and earlier read/write matrices; extend same desktop Actions.
+STOP_FAILURE.md states never-settling I/O/native failed-shutdown/races remain
+unqualified. New guest ABI0, old products unchanged. Full Host delivery1/5.
+
 ## Resident engine performance harness
 
 Own branch work/host-resident-benchmark follows pushed engine-parity candidate.
