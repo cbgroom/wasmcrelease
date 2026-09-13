@@ -6,6 +6,14 @@ new binaries, changes immutable tags or deploys production.
 
 ## Matrix and evidence
 
+Supplemental main additionally checks root release/capability/CDN identity and
+all public Skill names and parent chains. Seven rejection fixtures guard stale
+guidance, absent standard discovery, missing parents, ambiguity and cycles.
+Fresh-Agent acceptance now requires this contract independently of its score.
+This does not validate every prose statement or every Markdown reference.
+The Runtime SDK tests do not prove the complete App→Std→CoreLib graph on Wasmi;
+Std1.4.0's function-reference/tail-call artifact still needs a Portable variant.
+
 The first complete expanded [run34730577345](https://github.com/cbgroom/wasmcrelease/actions/runs/34730577345)
 passed all22 jobs (21 suite cells and aggregate), all130 flow checks, and all18
 active SDK tests with zero failures/ignored/filtered tests. Source is exactly

@@ -74,6 +74,26 @@ current corpus, standard caller oracle, integrity and unchanged artifacts.
 
 ## 5. Current Action
 
+Agent guidance branch has full successful source-free CI run34740318776 at its
+exact source. It is integrated here without altering release tags/products.
+This closes the generated Lib Skill's otherwise missing wasmc-lib parent.
+
+Root release/capability/CDN identity and public Skill unique-name/parent-chain
+validation is now shared by maintainer and Fresh-Agent gates. Seven negative
+fixtures cover stale identities, missing standard discovery, missing parent,
+duplicate identity and parent cycle. Added real wasmc-lib consumer guidance
+outside frozen Std package; no frozen inventory or binary changed. Initial
+Fresh-Agent execution before checksum refresh rejects stale candidate integrity
+(95points); guidance itself passes. After refresh, maintainer gate and all seven
+negative fixtures pass; Fresh-Agent accepts100/100 with guidance contract true.
+An archived immutable v0.0.9 independently rejects stale root version, missing
+standard route and missing parent after controlled in-memory normalization.
+No archived tag files were changed. Push this checkpoint and read live CI next.
+SDK18 does not exercise App→Std→CoreLib on Wasmi. That complete graph and a
+source-authority Portable variant remain unclosed; do not label this stage
+cross-platform Std support. Five closure items: Portable, preflight release,
+catalog/install release, Agent guidance, public build. No new release yet.
+
 Expanded run34730577345 fully succeeded:22 jobs,21/21 suite cells,130/130 flow
 checks, SDK18/18 with0failure/ignored/filtered. Exact source31259 resolves from
 admission/public-ci-coverage-v009.json. Aggregate JSON was independently

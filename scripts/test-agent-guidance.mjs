@@ -1,0 +1,16 @@
+import assert from 'node:assert/strict';
+import { guidanceSnapshot, validateGuidance } from './agent-guidance-contract.mjs';
+const snapshot = await guidanceSnapshot(new URL('../', import.meta.url).pathname);
+const result = validateGuidance(snapshot);
+const reject = mutate => {
+  const candidate = structuredClone(snapshot); mutate(candidate);
+  assert.throws(() => validateGuidance(candidate), /agent.guidance_invalid/);
+};
+reject(s => s.agents = s.agents.replace('release is\n`v0.0.9`', 'release is\n`v0.0.8`'));
+reject(s => s.agents = s.agents.replace('## v0.0.9 capability', '## v0.0.8 capability'));
+reject(s => s.agents = s.agents.replace('@v0.0.9/', '@v0.0.8/'));
+reject(s => s.agents = s.agents.replaceAll('standard/wasmc-std/1.4.0/', 'missing-standard/'));
+reject(s => s.skills = s.skills.filter(row => !row.path.includes('skills/wasmc-lib/')));
+reject(s => s.skills.push(s.skills[0]));
+reject(s => { const row = s.skills.find(row => row.path.includes('skills/wasmc-lib/')); row.text = row.text.replace('name: wasmc-lib', 'name: wasmc-lib\nparent_skill: "wasmc-lib"'); });
+console.log(JSON.stringify({ ...result, negative_tests: 7 }));

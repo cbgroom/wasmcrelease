@@ -64,5 +64,6 @@ for (const name of required) {
 JS
 
 node scripts/validate-agent-docs.mjs
+node scripts/test-agent-guidance.mjs
 
 echo "PASS maintainer structure, release integrity, and facade contract"

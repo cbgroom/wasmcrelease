@@ -5,6 +5,9 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { promisify } from "node:util";
 import * as facade from "../current/wasmc.mjs";
+import { guidanceSnapshot, validateGuidance } from './agent-guidance-contract.mjs';
+
+validateGuidance(await guidanceSnapshot(new URL('../', import.meta.url).pathname));
 
 const execFileAsync = promisify(execFile);
 

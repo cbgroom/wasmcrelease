@@ -12,6 +12,7 @@ import { tmpdir } from 'node:os';
 import { dirname, isAbsolute, join, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { pathToFileURL } from 'node:url';
+import { guidanceSnapshot, validateGuidance } from './agent-guidance-contract.mjs';
 
 function parseArgs(argv) {
   const out = {
@@ -148,6 +149,17 @@ function guidanceFile(relative) {
 }
 
 try {
+  let guidanceContract = { accepted: !fullRelease, scope: 'runtime-only' };
+  if (fullRelease) {
+    try {
+      const snapshot = await guidanceSnapshot(releaseRoot);
+      snapshot.agents = readFileSync(guidanceFile('AGENTS.md').path, 'utf8');
+      guidanceContract = validateGuidance(snapshot);
+    } catch (error) {
+      guidanceContract = { accepted: false, error: error.message };
+      findings.push({ id: 'agent-guidance-consistency', priority: 'P0', summary: error.message });
+    }
+  }
   let discoveryPoints = 0;
   const discovery = {};
   if (fullRelease) {
@@ -620,7 +632,8 @@ world app { export api; }`;
   );
   const report = {
     schema: 'wasmc.fresh-agent-evaluation/v0',
-    accepted: criticalPass && score >= 80,
+    accepted: criticalPass && score >= 80 && guidanceContract.accepted,
+    guidance_contract: guidanceContract,
     release_root: releaseRoot,
     guidance_root: guidanceRoot,
     guidance_override: options.guidanceRoot !== null,
