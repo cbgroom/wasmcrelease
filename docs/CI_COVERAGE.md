@@ -6,6 +6,16 @@ new binaries, changes immutable tags or deploys production.
 
 ## Matrix and evidence
 
+The first complete expanded [run34730577345](https://github.com/cbgroom/wasmcrelease/actions/runs/34730577345)
+passed all22 jobs (21 suite cells and aggregate), all130 flow checks, and all18
+active SDK tests with zero failures/ignored/filtered tests. Source is exactly
+`31259c781042a693c05e5b0400e51e9002a66545`. The
+[retained JSON snapshot](../admission/public-ci-coverage-v009.json) is independent
+of artifact expiry. Hosts were Linux x64 and macOS arm64. Credential scan had
+two retained raw findings, zero unresolved/skipped/errors. Deterministic
+Fresh-Agent scored100/100 under its documented retained-evidence mode.
+Later metadata/checksum updates are not a new exact-source full-run claim.
+
 `.github/workflows/source-free-consumer.yml` runs:
 
 - Six compatibility cells: Linux/macOS × Node18.19.1/22.0.0/26.5.1. Probe,

@@ -2,7 +2,7 @@
 
 ## 0. Status
 
-Task state: locally qualified — comprehensive public CI and visible test evidence.
+Task state: fully qualified — comprehensive public CI and visible test evidence.
 Branch: ci/full-public-coverage. Public v0.0.9 is already released;
 immutable tag and release branch remain unchanged. Main may carry follow-up
 consumer tooling/docs, not new admitted compiler or Lib binaries.
@@ -62,6 +62,15 @@ current corpus, standard caller oracle, integrity and unchanged artifacts.
 
 ## 5. Current Action
 
+Expanded run34730577345 fully succeeded:22 jobs,21/21 suite cells,130/130 flow
+checks, SDK18/18 with0failure/ignored/filtered. Exact source31259 resolves from
+admission/public-ci-coverage-v009.json. Aggregate JSON was independently
+downloaded/read, all source identities and required cells match. Snapshot
+retained in Git; README live badge plus exact tested baseline/link are separate.
+These following receipts change metadata only, not workflow/test/binary code.
+Resume: validate this receipt integrity/current reporting controls, push own
+branch and expected-base main, then exact remote/unchanged-tag readback.
+
 Comprehensive workflow defines21 test-suite cells and required aggregate job.
 Both OS Hosts/mirrors, compatibility, full archived execution, security history,
 Fresh-Agent and locked release Rust are registered in ci-suite.mjs.
@@ -70,8 +79,8 @@ Reporting controls reject exit failure, false accepted JSON, timeout, missing/
 duplicate/source/Host/test mismatches and skipped family. Actionlint1.7.12 and
 YAML parse pass. Local integrity/Fresh-Agent and full Deno/jsDelivr pass.
 An early dirty candidate correctly failed stale checksum checks; refresh passed.
-Resume: push exact candidate, dispatch full Actions, inspect every job and final
-aggregate/artifact readback; no main acceptance before full run succeeds.
+Original candidate/source and its full run remain preserved. No source-line
+coverage, producer rebuild, production/browser or third-party authoring claim.
 
 Controlled install tests pass Node/Bun/Deno: ten failure boundaries, one winner
 under concurrency, competing-directory preservation and failed-stage cleanup.

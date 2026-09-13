@@ -1,0 +1,4495 @@
+{
+  "schema": "wasmc.public-ci-aggregate/v1",
+  "source_commit": "31259c781042a693c05e5b0400e51e9002a66545",
+  "accepted": true,
+  "needs": {
+    "core-compatibility": {
+      "result": "success",
+      "outputs": {}
+    },
+    "integrity-and-javascript": {
+      "result": "success",
+      "outputs": {}
+    },
+    "runtime-consumer": {
+      "result": "success",
+      "outputs": {}
+    },
+    "security-history": {
+      "result": "success",
+      "outputs": {}
+    },
+    "rust-wasmtime-and-libs": {
+      "result": "success",
+      "outputs": {}
+    }
+  },
+  "expected": {
+    "compatibility": 6,
+    "runtime": 12,
+    "integrity": 1,
+    "security": 1,
+    "rust": 1
+  },
+  "suites": [
+    {
+      "schema": "wasmc.public-ci-suite/v1",
+      "label": "compatibility-macos-15-18.19.1",
+      "family": "compatibility",
+      "runtime": "node",
+      "mirror": "github",
+      "source_commit": "31259c781042a693c05e5b0400e51e9002a66545",
+      "dirty": false,
+      "platform": "darwin",
+      "arch": "arm64",
+      "compiler_sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90",
+      "runtime_version": "v18.19.1",
+      "tests": [
+        {
+          "id": "core-feature-probes-and-negatives",
+          "invocation": {
+            "command": "node",
+            "args": [
+              "scripts/test-core-compatibility.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 48,
+          "observation": {
+            "accepted": true,
+            "host": {
+              "name": "node",
+              "version": "v18.19.1",
+              "v8": "10.2.154.26-node.28"
+            },
+            "features": {
+              "function-references": false,
+              "tail-call": false
+            },
+            "negative_tests": 6,
+            "supported_probe_oracle": 7
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "catalog-exact-resolution",
+          "invocation": {
+            "command": "node",
+            "args": [
+              "scripts/test-lib-catalog.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 51,
+          "observation": {
+            "accepted": true,
+            "packages": 4,
+            "negative_tests": 10,
+            "selection": "unique exact lock",
+            "network_access": false,
+            "artifact_changes": false
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "install-no-clobber-and-faults",
+          "invocation": {
+            "command": "node",
+            "args": [
+              "scripts/test-lib-install.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 271,
+          "observation": {
+            "accepted": true,
+            "files_verified": 11,
+            "negative_tests": 10,
+            "concurrent_single_winner": true,
+            "competing_directory_preserved": true,
+            "failed_stage_cleanup": true,
+            "network_access": false
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "compiler-expression-only",
+          "invocation": {
+            "command": "node",
+            "args": [
+              "scripts/validate-current.mjs",
+              "--compile-only"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 1646,
+          "observation": {
+            "accepted": true,
+            "runtime": "node",
+            "compiler_sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90",
+            "frozen_corpus_outputs": 30,
+            "expression_cases": 23,
+            "mode": "compile-only",
+            "managed_repeated_calls": null
+          },
+          "rust_test_summaries": []
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "schema": "wasmc.public-ci-suite/v1",
+      "label": "compatibility-macos-15-22.0.0",
+      "family": "compatibility",
+      "runtime": "node",
+      "mirror": "github",
+      "source_commit": "31259c781042a693c05e5b0400e51e9002a66545",
+      "dirty": false,
+      "platform": "darwin",
+      "arch": "arm64",
+      "compiler_sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90",
+      "runtime_version": "v22.0.0",
+      "tests": [
+        {
+          "id": "core-feature-probes-and-negatives",
+          "invocation": {
+            "command": "node",
+            "args": [
+              "scripts/test-core-compatibility.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 86,
+          "observation": {
+            "accepted": true,
+            "host": {
+              "name": "node",
+              "version": "v22.0.0",
+              "v8": "12.4.254.14-node.10"
+            },
+            "features": {
+              "function-references": true,
+              "tail-call": true
+            },
+            "negative_tests": 6,
+            "supported_probe_oracle": 7
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "catalog-exact-resolution",
+          "invocation": {
+            "command": "node",
+            "args": [
+              "scripts/test-lib-catalog.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 105,
+          "observation": {
+            "accepted": true,
+            "packages": 4,
+            "negative_tests": 10,
+            "selection": "unique exact lock",
+            "network_access": false,
+            "artifact_changes": false
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "install-no-clobber-and-faults",
+          "invocation": {
+            "command": "node",
+            "args": [
+              "scripts/test-lib-install.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 305,
+          "observation": {
+            "accepted": true,
+            "files_verified": 11,
+            "negative_tests": 10,
+            "concurrent_single_winner": true,
+            "competing_directory_preserved": true,
+            "failed_stage_cleanup": true,
+            "network_access": false
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "compiler-expression-only",
+          "invocation": {
+            "command": "node",
+            "args": [
+              "scripts/validate-current.mjs",
+              "--compile-only"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 1379,
+          "observation": {
+            "accepted": true,
+            "runtime": "node",
+            "compiler_sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90",
+            "frozen_corpus_outputs": 30,
+            "expression_cases": 23,
+            "mode": "compile-only",
+            "managed_repeated_calls": null
+          },
+          "rust_test_summaries": []
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "schema": "wasmc.public-ci-suite/v1",
+      "label": "compatibility-macos-15-26.5.1",
+      "family": "compatibility",
+      "runtime": "node",
+      "mirror": "github",
+      "source_commit": "31259c781042a693c05e5b0400e51e9002a66545",
+      "dirty": false,
+      "platform": "darwin",
+      "arch": "arm64",
+      "compiler_sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90",
+      "runtime_version": "v26.5.1",
+      "tests": [
+        {
+          "id": "core-feature-probes-and-negatives",
+          "invocation": {
+            "command": "node",
+            "args": [
+              "scripts/test-core-compatibility.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 46,
+          "observation": {
+            "accepted": true,
+            "host": {
+              "name": "node",
+              "version": "v26.5.1",
+              "v8": "14.6.202.34-node.24"
+            },
+            "features": {
+              "function-references": true,
+              "tail-call": true
+            },
+            "negative_tests": 6,
+            "supported_probe_oracle": 7
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "catalog-exact-resolution",
+          "invocation": {
+            "command": "node",
+            "args": [
+              "scripts/test-lib-catalog.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 47,
+          "observation": {
+            "accepted": true,
+            "packages": 4,
+            "negative_tests": 10,
+            "selection": "unique exact lock",
+            "network_access": false,
+            "artifact_changes": false
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "install-no-clobber-and-faults",
+          "invocation": {
+            "command": "node",
+            "args": [
+              "scripts/test-lib-install.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 197,
+          "observation": {
+            "accepted": true,
+            "files_verified": 11,
+            "negative_tests": 10,
+            "concurrent_single_winner": true,
+            "competing_directory_preserved": true,
+            "failed_stage_cleanup": true,
+            "network_access": false
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "compiler-expression-only",
+          "invocation": {
+            "command": "node",
+            "args": [
+              "scripts/validate-current.mjs",
+              "--compile-only"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 784,
+          "observation": {
+            "accepted": true,
+            "runtime": "node",
+            "compiler_sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90",
+            "frozen_corpus_outputs": 30,
+            "expression_cases": 23,
+            "mode": "compile-only",
+            "managed_repeated_calls": null
+          },
+          "rust_test_summaries": []
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "schema": "wasmc.public-ci-suite/v1",
+      "label": "compatibility-ubuntu-24.04-18.19.1",
+      "family": "compatibility",
+      "runtime": "node",
+      "mirror": "github",
+      "source_commit": "31259c781042a693c05e5b0400e51e9002a66545",
+      "dirty": false,
+      "platform": "linux",
+      "arch": "x64",
+      "compiler_sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90",
+      "runtime_version": "v18.19.1",
+      "tests": [
+        {
+          "id": "core-feature-probes-and-negatives",
+          "invocation": {
+            "command": "node",
+            "args": [
+              "scripts/test-core-compatibility.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 56,
+          "observation": {
+            "accepted": true,
+            "host": {
+              "name": "node",
+              "version": "v18.19.1",
+              "v8": "10.2.154.26-node.28"
+            },
+            "features": {
+              "function-references": false,
+              "tail-call": false
+            },
+            "negative_tests": 6,
+            "supported_probe_oracle": 7
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "catalog-exact-resolution",
+          "invocation": {
+            "command": "node",
+            "args": [
+              "scripts/test-lib-catalog.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 60,
+          "observation": {
+            "accepted": true,
+            "packages": 4,
+            "negative_tests": 10,
+            "selection": "unique exact lock",
+            "network_access": false,
+            "artifact_changes": false
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "install-no-clobber-and-faults",
+          "invocation": {
+            "command": "node",
+            "args": [
+              "scripts/test-lib-install.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 242,
+          "observation": {
+            "accepted": true,
+            "files_verified": 11,
+            "negative_tests": 10,
+            "concurrent_single_winner": true,
+            "competing_directory_preserved": true,
+            "failed_stage_cleanup": true,
+            "network_access": false
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "compiler-expression-only",
+          "invocation": {
+            "command": "node",
+            "args": [
+              "scripts/validate-current.mjs",
+              "--compile-only"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 2195,
+          "observation": {
+            "accepted": true,
+            "runtime": "node",
+            "compiler_sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90",
+            "frozen_corpus_outputs": 30,
+            "expression_cases": 23,
+            "mode": "compile-only",
+            "managed_repeated_calls": null
+          },
+          "rust_test_summaries": []
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "schema": "wasmc.public-ci-suite/v1",
+      "label": "compatibility-ubuntu-24.04-22.0.0",
+      "family": "compatibility",
+      "runtime": "node",
+      "mirror": "github",
+      "source_commit": "31259c781042a693c05e5b0400e51e9002a66545",
+      "dirty": false,
+      "platform": "linux",
+      "arch": "x64",
+      "compiler_sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90",
+      "runtime_version": "v22.0.0",
+      "tests": [
+        {
+          "id": "core-feature-probes-and-negatives",
+          "invocation": {
+            "command": "node",
+            "args": [
+              "scripts/test-core-compatibility.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 48,
+          "observation": {
+            "accepted": true,
+            "host": {
+              "name": "node",
+              "version": "v22.0.0",
+              "v8": "12.4.254.14-node.10"
+            },
+            "features": {
+              "function-references": true,
+              "tail-call": true
+            },
+            "negative_tests": 6,
+            "supported_probe_oracle": 7
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "catalog-exact-resolution",
+          "invocation": {
+            "command": "node",
+            "args": [
+              "scripts/test-lib-catalog.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 54,
+          "observation": {
+            "accepted": true,
+            "packages": 4,
+            "negative_tests": 10,
+            "selection": "unique exact lock",
+            "network_access": false,
+            "artifact_changes": false
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "install-no-clobber-and-faults",
+          "invocation": {
+            "command": "node",
+            "args": [
+              "scripts/test-lib-install.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 206,
+          "observation": {
+            "accepted": true,
+            "files_verified": 11,
+            "negative_tests": 10,
+            "concurrent_single_winner": true,
+            "competing_directory_preserved": true,
+            "failed_stage_cleanup": true,
+            "network_access": false
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "compiler-expression-only",
+          "invocation": {
+            "command": "node",
+            "args": [
+              "scripts/validate-current.mjs",
+              "--compile-only"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 1119,
+          "observation": {
+            "accepted": true,
+            "runtime": "node",
+            "compiler_sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90",
+            "frozen_corpus_outputs": 30,
+            "expression_cases": 23,
+            "mode": "compile-only",
+            "managed_repeated_calls": null
+          },
+          "rust_test_summaries": []
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "schema": "wasmc.public-ci-suite/v1",
+      "label": "compatibility-ubuntu-24.04-26.5.1",
+      "family": "compatibility",
+      "runtime": "node",
+      "mirror": "github",
+      "source_commit": "31259c781042a693c05e5b0400e51e9002a66545",
+      "dirty": false,
+      "platform": "linux",
+      "arch": "x64",
+      "compiler_sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90",
+      "runtime_version": "v26.5.1",
+      "tests": [
+        {
+          "id": "core-feature-probes-and-negatives",
+          "invocation": {
+            "command": "node",
+            "args": [
+              "scripts/test-core-compatibility.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 50,
+          "observation": {
+            "accepted": true,
+            "host": {
+              "name": "node",
+              "version": "v26.5.1",
+              "v8": "14.6.202.34-node.24"
+            },
+            "features": {
+              "function-references": true,
+              "tail-call": true
+            },
+            "negative_tests": 6,
+            "supported_probe_oracle": 7
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "catalog-exact-resolution",
+          "invocation": {
+            "command": "node",
+            "args": [
+              "scripts/test-lib-catalog.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 55,
+          "observation": {
+            "accepted": true,
+            "packages": 4,
+            "negative_tests": 10,
+            "selection": "unique exact lock",
+            "network_access": false,
+            "artifact_changes": false
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "install-no-clobber-and-faults",
+          "invocation": {
+            "command": "node",
+            "args": [
+              "scripts/test-lib-install.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 194,
+          "observation": {
+            "accepted": true,
+            "files_verified": 11,
+            "negative_tests": 10,
+            "concurrent_single_winner": true,
+            "competing_directory_preserved": true,
+            "failed_stage_cleanup": true,
+            "network_access": false
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "compiler-expression-only",
+          "invocation": {
+            "command": "node",
+            "args": [
+              "scripts/validate-current.mjs",
+              "--compile-only"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 1124,
+          "observation": {
+            "accepted": true,
+            "runtime": "node",
+            "compiler_sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90",
+            "frozen_corpus_outputs": 30,
+            "expression_cases": 23,
+            "mode": "compile-only",
+            "managed_repeated_calls": null
+          },
+          "rust_test_summaries": []
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "schema": "wasmc.public-ci-suite/v1",
+      "label": "integrity-ubuntu",
+      "family": "integrity",
+      "runtime": "node",
+      "mirror": "github",
+      "source_commit": "31259c781042a693c05e5b0400e51e9002a66545",
+      "dirty": false,
+      "platform": "linux",
+      "arch": "x64",
+      "compiler_sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90",
+      "runtime_version": "v26.5.1",
+      "tests": [
+        {
+          "id": "ci-reporting-failure-controls",
+          "invocation": {
+            "command": "node",
+            "args": [
+              "scripts/test-ci-reporting.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 186,
+          "observation": null,
+          "rust_test_summaries": []
+        },
+        {
+          "id": "maintainer-integrity-lib-agent-contracts",
+          "invocation": {
+            "command": "bash",
+            "args": [
+              "scripts/validate-maintainer.sh"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 724,
+          "observation": null,
+          "rust_test_summaries": []
+        },
+        {
+          "id": "agent-start-execution",
+          "invocation": {
+            "command": "node",
+            "args": [
+              "examples/agent-start/run.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 95,
+          "observation": null,
+          "rust_test_summaries": []
+        },
+        {
+          "id": "deterministic-fresh-agent-regression",
+          "invocation": {
+            "command": "node",
+            "args": [
+              "scripts/wasmc-fresh-agent-evaluation-v0.mjs",
+              "--release-root",
+              ".",
+              "--json-out",
+              "target/ci/fresh-agent.json"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 394,
+          "observation": {
+            "schema": "wasmc.fresh-agent-evaluation/v0",
+            "accepted": true,
+            "release_root": "/home/runner/work/wasmcrelease/wasmcrelease",
+            "guidance_root": "/home/runner/work/wasmcrelease/wasmcrelease",
+            "guidance_override": false,
+            "runtime_root": "/home/runner/work/wasmcrelease/wasmcrelease/runtime/wasmc-runtime-v0",
+            "runtime_override": false,
+            "managed_compiler": null,
+            "managed_compiler_override": false,
+            "candidate_commit": null,
+            "strict_host_provider_evidence": false,
+            "release": "0.0.9",
+            "runtime": {
+              "id": "wasmc:runtime",
+              "version": "0.1.0-runtime-v0",
+              "compiler_bytes": 1351666,
+              "compiler_sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90"
+            },
+            "score": {
+              "points": 100,
+              "maximum": 100,
+              "percent": 100
+            },
+            "dimensions": [
+              {
+                "id": "discovery",
+                "weight": 15,
+                "points": 15,
+                "passed": true,
+                "details": {
+                  "guidance_sources": {
+                    "agents": "release-root",
+                    "developer_skill": "release-root",
+                    "runtime_reference": "release-root",
+                    "lib_reference": "release-root"
+                  },
+                  "public_agent_entry": true,
+                  "developer_skill": true,
+                  "runtime_route": true,
+                  "repository_package_import_guidance": {
+                    "repository_heading": true,
+                    "installed_package_heading": true,
+                    "repository_import": true,
+                    "installed_package_import": true,
+                    "repository_context_isolated": true,
+                    "installed_package_context_isolated": true,
+                    "repository_before_package": true,
+                    "clear": true
+                  },
+                  "repository_package_import_forms_clear": true
+                }
+              },
+              {
+                "id": "integrity",
+                "weight": 15,
+                "points": 15,
+                "passed": true,
+                "details": {
+                  "compiler_bytes": 1351666,
+                  "compiler_sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90",
+                  "release_checksum_inventory": {
+                    "rows": 191,
+                    "valid": true
+                  },
+                  "manifest_receipt_match": true,
+                  "compiler_is_wasm": true
+                }
+              },
+              {
+                "id": "novel-scalar",
+                "weight": 15,
+                "points": 15,
+                "passed": true,
+                "details": {
+                  "compiled": true,
+                  "imports": [],
+                  "result": 26,
+                  "output_bytes": 44
+                }
+              },
+              {
+                "id": "explicit-host-authority",
+                "weight": 15,
+                "points": 15,
+                "passed": true,
+                "details": {
+                  "imports": [
+                    {
+                      "module": "host",
+                      "name": "double",
+                      "kind": "function"
+                    }
+                  ],
+                  "missing_binding_rejected": true,
+                  "result": 21,
+                  "output_bytes": 64
+                }
+              },
+              {
+                "id": "diagnostics-and-repair",
+                "weight": 15,
+                "points": 15,
+                "passed": true,
+                "details": {
+                  "rejected": true,
+                  "output_absent": true,
+                  "machine_envelope": true,
+                  "compiler_diagnostic": true,
+                  "plain_stderr": "{\n  \"schema\": \"wasmc.runtime-js-error/v0\",\n  \"accepted\": false,\n  \"runtime\": \"node\",\n  \"command\": \"compile\",\n  \"process_exit_code\": 1,\n  \"compiler_status\": 2,\n  \"error\": {\n    \"message\": \"parse error at byte 81: expected Semi, got Return\",\n    \"diagnostic\": {\n      \"category\": \"parse.expected_token\",\n      \"kind\": \"parse\",\n      \"source\": \"\",\n      \"line\": 1,\n      \"column\": 82,\n      \"range_kind\": \"insertion\",\n      \"range_start_byte\": 81,\n      \"range_end_byte\": 81,\n      \"range_start_line\": 1,\n      \"range_start_column\": 82,\n      \"range_end_line\": 1,\n      \"range_end_column\": 82,\n      \"message\": \"expected Semi, got Return\",\n      \"fix_hint\": \"check syntax against canonical examples in wasmc-agent-spec.json\"\n    },\n    \"diagnostic_state\": \"parsed\"\n  }\n}",
+                  "report": {
+                    "schema": "wasmc.runtime-js-error/v0",
+                    "accepted": false,
+                    "runtime": "node",
+                    "command": "compile",
+                    "process_exit_code": 1,
+                    "compiler_status": 2,
+                    "error": {
+                      "message": "parse error at byte 81: expected Semi, got Return",
+                      "diagnostic": {
+                        "category": "parse.expected_token",
+                        "kind": "parse",
+                        "source": "",
+                        "line": 1,
+                        "column": 82,
+                        "range_kind": "insertion",
+                        "range_start_byte": 81,
+                        "range_end_byte": 81,
+                        "range_start_line": 1,
+                        "range_start_column": 82,
+                        "range_end_line": 1,
+                        "range_end_column": 82,
+                        "message": "expected Semi, got Return",
+                        "fix_hint": "check syntax against canonical examples in wasmc-agent-spec.json"
+                      },
+                      "diagnostic_state": "parsed"
+                    }
+                  }
+                }
+              },
+              {
+                "id": "managed-values",
+                "weight": 10,
+                "points": 10,
+                "passed": true,
+                "details": {
+                  "available": true,
+                  "record_backed_result": 3,
+                  "recordless_result": 2,
+                  "compiler_override": false,
+                  "compiler_path": null,
+                  "compiler_sha256": null,
+                  "runtime_compiler_match": true
+                }
+              },
+              {
+                "id": "host-provider-evidence",
+                "weight": 10,
+                "points": 10,
+                "passed": true,
+                "details": {
+                  "evidence_mode": "legacy-unbound",
+                  "candidate_commit": null,
+                  "same_source_free_archive": null,
+                  "node": {
+                    "evidenced": true,
+                    "receipt": "/home/runner/work/wasmcrelease/wasmcrelease/runtime/wasmc-runtime-v0/receipts/node-self-test.json",
+                    "compiler_identity_match": true,
+                    "candidate_commit_match": false,
+                    "source_free_execution": true,
+                    "live_execution_complete": true,
+                    "runtime_version": "v26.5.1",
+                    "archive_sha256": "f8c7f9a2ba4d9c9676b4d98bd1cf479857daf3ced948c56fbca7163bacdaa587"
+                  },
+                  "deno": {
+                    "evidenced": true,
+                    "receipt": "/home/runner/work/wasmcrelease/wasmcrelease/runtime/wasmc-runtime-v0/receipts/deno-self-test.json",
+                    "compiler_identity_match": true,
+                    "candidate_commit_match": false,
+                    "source_free_execution": true,
+                    "live_execution_complete": true,
+                    "runtime_version": "deno 2.9.4 (stable, release, aarch64-apple-darwin)",
+                    "archive_sha256": "f8c7f9a2ba4d9c9676b4d98bd1cf479857daf3ced948c56fbca7163bacdaa587"
+                  },
+                  "bun": {
+                    "evidenced": true,
+                    "receipt": "/home/runner/work/wasmcrelease/wasmcrelease/runtime/wasmc-runtime-v0/receipts/bun-self-test.json",
+                    "compiler_identity_match": true,
+                    "candidate_commit_match": false,
+                    "source_free_execution": true,
+                    "live_execution_complete": true,
+                    "runtime_version": "1.3.14",
+                    "archive_sha256": "f8c7f9a2ba4d9c9676b4d98bd1cf479857daf3ced948c56fbca7163bacdaa587"
+                  }
+                }
+              },
+              {
+                "id": "policy-boundary",
+                "weight": 5,
+                "points": 5,
+                "passed": true,
+                "details": {
+                  "external_js_package_registry": false,
+                  "python_active_tree_allowed": false,
+                  "evaluation_used_external_packages": false,
+                  "runtime_python_files": []
+                }
+              }
+            ],
+            "findings": [],
+            "next_priority": null
+          },
+          "rust_test_summaries": []
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "schema": "wasmc.public-ci-suite/v1",
+      "label": "runtime-macos-15-bun-github",
+      "family": "runtime",
+      "runtime": "bun",
+      "mirror": "github",
+      "source_commit": "31259c781042a693c05e5b0400e51e9002a66545",
+      "dirty": false,
+      "platform": "darwin",
+      "arch": "arm64",
+      "compiler_sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90",
+      "runtime_version": "1.3.14",
+      "tests": [
+        {
+          "id": "source-free-archive-deployment",
+          "invocation": {
+            "command": "bash",
+            "args": [
+              "scripts/validate-source-free-runtime.sh",
+              "bun"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 1293,
+          "observation": {
+            "accepted": true,
+            "standard_lib": "wasmc:std@1.4.0",
+            "functions": 73,
+            "dual_consumer_calls": 5120,
+            "current_hosted_compiler_reproduced": true
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "core-full-artifact-admission",
+          "invocation": {
+            "command": "bun",
+            "args": [
+              "scripts/check-core-compatibility.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 33,
+          "observation": {
+            "schema": "wasmc.core-compatibility-check/v1",
+            "accepted": true,
+            "host": {
+              "name": "bun",
+              "version": "1.3.14",
+              "v8": "13.6.233.10-node.18"
+            },
+            "results": [
+              {
+                "accepted": true,
+                "artifact": "compiler",
+                "sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90",
+                "validation_profile": "wasm2",
+                "feature_support": {
+                  "function-references": true,
+                  "tail-call": true
+                }
+              },
+              {
+                "accepted": true,
+                "artifact": "automatic-provider",
+                "sha256": "86670b35fe4ff01f9ad4392b42ce8816e4679f680ab788599905edb1bbe6e749",
+                "validation_profile": "wasm2",
+                "feature_support": {
+                  "function-references": true,
+                  "tail-call": true
+                }
+              },
+              {
+                "accepted": true,
+                "artifact": "standard-provider",
+                "sha256": "f54a892aff9068e5c79464029423a2e8f753ddb44010af9ac34a5c9efce2069c",
+                "validation_profile": "wasm2",
+                "feature_support": {
+                  "function-references": true,
+                  "tail-call": true
+                }
+              },
+              {
+                "accepted": true,
+                "artifact": "standard",
+                "sha256": "f8a8ce447f776a47680e02e19ea3a69827edbbc46e01985803ce3d3df51178d7",
+                "validation_profile": "wasm2,function-references,tail-call",
+                "feature_support": {
+                  "function-references": true,
+                  "tail-call": true
+                }
+              }
+            ]
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "core-feature-probes-and-negatives",
+          "invocation": {
+            "command": "bun",
+            "args": [
+              "scripts/test-core-compatibility.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 38,
+          "observation": {
+            "accepted": true,
+            "host": {
+              "name": "bun",
+              "version": "1.3.14",
+              "v8": "13.6.233.10-node.18"
+            },
+            "features": {
+              "function-references": true,
+              "tail-call": true
+            },
+            "negative_tests": 6,
+            "supported_probe_oracle": 7
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "catalog-exact-resolution",
+          "invocation": {
+            "command": "bun",
+            "args": [
+              "scripts/test-lib-catalog.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 33,
+          "observation": {
+            "accepted": true,
+            "packages": 4,
+            "negative_tests": 10,
+            "selection": "unique exact lock",
+            "network_access": false,
+            "artifact_changes": false
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "install-no-clobber-and-faults",
+          "invocation": {
+            "command": "bun",
+            "args": [
+              "scripts/test-lib-install.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 87,
+          "observation": {
+            "accepted": true,
+            "files_verified": 11,
+            "negative_tests": 10,
+            "concurrent_single_winner": true,
+            "competing_directory_preserved": true,
+            "failed_stage_cleanup": true,
+            "network_access": false
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "fresh-mirror-install-and-paired-execution",
+          "invocation": {
+            "command": "bun",
+            "args": [
+              "scripts/validate-lib-install.mjs",
+              "github"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 1032,
+          "observation": {
+            "accepted": true,
+            "host": "bun",
+            "mirror": "github",
+            "lock_sha256": "63806ae6ee83164fd955753091cbfe74dac689d29c29a5371eadfc07b0ca1953",
+            "receipt": {
+              "schema": "wasmc.public-lib-install/v1",
+              "lock_sha256": "63806ae6ee83164fd955753091cbfe74dac689d29c29a5371eadfc07b0ca1953",
+              "release_commit": "0fec38d59872a7f1527dc94799da542e968f1f8a",
+              "id": "wasmc-std",
+              "version": "1.4.0",
+              "files_verified": 11,
+              "mirror": "github",
+              "publication": "exclusive-directory-symlink",
+              "authority_granted": false
+            },
+            "execution": {
+              "accepted": true,
+              "standard_lib": "wasmc:std@1.4.0",
+              "functions": 73,
+              "dual_consumer_calls": 5120,
+              "current_hosted_compiler_reproduced": true
+            },
+            "source": "fresh exact-public-commit HTTPS downloads",
+            "artifact_changes": false
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "compiler-and-managed-regression",
+          "invocation": {
+            "command": "bun",
+            "args": [
+              "scripts/validate-current.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 847,
+          "observation": {
+            "accepted": true,
+            "runtime": "bun",
+            "compiler_sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90",
+            "frozen_corpus_outputs": 30,
+            "expression_cases": 23,
+            "mode": "full",
+            "managed_repeated_calls": 192
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "standard-wasmc-rust-paired-execution",
+          "invocation": {
+            "command": "bun",
+            "args": [
+              "examples/current/standard.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 110,
+          "observation": {
+            "accepted": true,
+            "standard_lib": "wasmc:std@1.4.0",
+            "functions": 73,
+            "dual_consumer_calls": 5120,
+            "current_hosted_compiler_reproduced": true
+          },
+          "rust_test_summaries": []
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "schema": "wasmc.public-ci-suite/v1",
+      "label": "runtime-macos-15-bun-jsdelivr",
+      "family": "runtime",
+      "runtime": "bun",
+      "mirror": "jsdelivr",
+      "source_commit": "31259c781042a693c05e5b0400e51e9002a66545",
+      "dirty": false,
+      "platform": "darwin",
+      "arch": "arm64",
+      "compiler_sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90",
+      "runtime_version": "1.3.14",
+      "tests": [
+        {
+          "id": "source-free-archive-deployment",
+          "invocation": {
+            "command": "bash",
+            "args": [
+              "scripts/validate-source-free-runtime.sh",
+              "bun"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 1190,
+          "observation": {
+            "accepted": true,
+            "standard_lib": "wasmc:std@1.4.0",
+            "functions": 73,
+            "dual_consumer_calls": 5120,
+            "current_hosted_compiler_reproduced": true
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "core-full-artifact-admission",
+          "invocation": {
+            "command": "bun",
+            "args": [
+              "scripts/check-core-compatibility.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 32,
+          "observation": {
+            "schema": "wasmc.core-compatibility-check/v1",
+            "accepted": true,
+            "host": {
+              "name": "bun",
+              "version": "1.3.14",
+              "v8": "13.6.233.10-node.18"
+            },
+            "results": [
+              {
+                "accepted": true,
+                "artifact": "compiler",
+                "sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90",
+                "validation_profile": "wasm2",
+                "feature_support": {
+                  "function-references": true,
+                  "tail-call": true
+                }
+              },
+              {
+                "accepted": true,
+                "artifact": "automatic-provider",
+                "sha256": "86670b35fe4ff01f9ad4392b42ce8816e4679f680ab788599905edb1bbe6e749",
+                "validation_profile": "wasm2",
+                "feature_support": {
+                  "function-references": true,
+                  "tail-call": true
+                }
+              },
+              {
+                "accepted": true,
+                "artifact": "standard-provider",
+                "sha256": "f54a892aff9068e5c79464029423a2e8f753ddb44010af9ac34a5c9efce2069c",
+                "validation_profile": "wasm2",
+                "feature_support": {
+                  "function-references": true,
+                  "tail-call": true
+                }
+              },
+              {
+                "accepted": true,
+                "artifact": "standard",
+                "sha256": "f8a8ce447f776a47680e02e19ea3a69827edbbc46e01985803ce3d3df51178d7",
+                "validation_profile": "wasm2,function-references,tail-call",
+                "feature_support": {
+                  "function-references": true,
+                  "tail-call": true
+                }
+              }
+            ]
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "core-feature-probes-and-negatives",
+          "invocation": {
+            "command": "bun",
+            "args": [
+              "scripts/test-core-compatibility.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 34,
+          "observation": {
+            "accepted": true,
+            "host": {
+              "name": "bun",
+              "version": "1.3.14",
+              "v8": "13.6.233.10-node.18"
+            },
+            "features": {
+              "function-references": true,
+              "tail-call": true
+            },
+            "negative_tests": 6,
+            "supported_probe_oracle": 7
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "catalog-exact-resolution",
+          "invocation": {
+            "command": "bun",
+            "args": [
+              "scripts/test-lib-catalog.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 30,
+          "observation": {
+            "accepted": true,
+            "packages": 4,
+            "negative_tests": 10,
+            "selection": "unique exact lock",
+            "network_access": false,
+            "artifact_changes": false
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "install-no-clobber-and-faults",
+          "invocation": {
+            "command": "bun",
+            "args": [
+              "scripts/test-lib-install.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 77,
+          "observation": {
+            "accepted": true,
+            "files_verified": 11,
+            "negative_tests": 10,
+            "concurrent_single_winner": true,
+            "competing_directory_preserved": true,
+            "failed_stage_cleanup": true,
+            "network_access": false
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "fresh-mirror-install-and-paired-execution",
+          "invocation": {
+            "command": "bun",
+            "args": [
+              "scripts/validate-lib-install.mjs",
+              "jsdelivr"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 1465,
+          "observation": {
+            "accepted": true,
+            "host": "bun",
+            "mirror": "jsdelivr",
+            "lock_sha256": "63806ae6ee83164fd955753091cbfe74dac689d29c29a5371eadfc07b0ca1953",
+            "receipt": {
+              "schema": "wasmc.public-lib-install/v1",
+              "lock_sha256": "63806ae6ee83164fd955753091cbfe74dac689d29c29a5371eadfc07b0ca1953",
+              "release_commit": "0fec38d59872a7f1527dc94799da542e968f1f8a",
+              "id": "wasmc-std",
+              "version": "1.4.0",
+              "files_verified": 11,
+              "mirror": "jsdelivr",
+              "publication": "exclusive-directory-symlink",
+              "authority_granted": false
+            },
+            "execution": {
+              "accepted": true,
+              "standard_lib": "wasmc:std@1.4.0",
+              "functions": 73,
+              "dual_consumer_calls": 5120,
+              "current_hosted_compiler_reproduced": true
+            },
+            "source": "fresh exact-public-commit HTTPS downloads",
+            "artifact_changes": false
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "compiler-and-managed-regression",
+          "invocation": {
+            "command": "bun",
+            "args": [
+              "scripts/validate-current.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 932,
+          "observation": {
+            "accepted": true,
+            "runtime": "bun",
+            "compiler_sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90",
+            "frozen_corpus_outputs": 30,
+            "expression_cases": 23,
+            "mode": "full",
+            "managed_repeated_calls": 192
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "standard-wasmc-rust-paired-execution",
+          "invocation": {
+            "command": "bun",
+            "args": [
+              "examples/current/standard.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 100,
+          "observation": {
+            "accepted": true,
+            "standard_lib": "wasmc:std@1.4.0",
+            "functions": 73,
+            "dual_consumer_calls": 5120,
+            "current_hosted_compiler_reproduced": true
+          },
+          "rust_test_summaries": []
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "schema": "wasmc.public-ci-suite/v1",
+      "label": "runtime-macos-15-deno-github",
+      "family": "runtime",
+      "runtime": "deno",
+      "mirror": "github",
+      "source_commit": "31259c781042a693c05e5b0400e51e9002a66545",
+      "dirty": false,
+      "platform": "darwin",
+      "arch": "arm64",
+      "compiler_sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90",
+      "runtime_version": "deno 2.9.4 (stable, release, aarch64-apple-darwin)\nv8 15.0.245.2-rusty\ntypescript 6.0.3",
+      "tests": [
+        {
+          "id": "source-free-archive-deployment",
+          "invocation": {
+            "command": "bash",
+            "args": [
+              "scripts/validate-source-free-runtime.sh",
+              "deno"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 1692,
+          "observation": {
+            "accepted": true,
+            "standard_lib": "wasmc:std@1.4.0",
+            "functions": 73,
+            "dual_consumer_calls": 5120,
+            "current_hosted_compiler_reproduced": true
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "core-full-artifact-admission",
+          "invocation": {
+            "command": "deno",
+            "args": [
+              "run",
+              "--allow-read",
+              "scripts/check-core-compatibility.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 71,
+          "observation": {
+            "schema": "wasmc.core-compatibility-check/v1",
+            "accepted": true,
+            "host": {
+              "name": "deno",
+              "version": "2.9.4",
+              "v8": "15.0.245.2-rusty"
+            },
+            "results": [
+              {
+                "accepted": true,
+                "artifact": "compiler",
+                "sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90",
+                "validation_profile": "wasm2",
+                "feature_support": {
+                  "function-references": true,
+                  "tail-call": true
+                }
+              },
+              {
+                "accepted": true,
+                "artifact": "automatic-provider",
+                "sha256": "86670b35fe4ff01f9ad4392b42ce8816e4679f680ab788599905edb1bbe6e749",
+                "validation_profile": "wasm2",
+                "feature_support": {
+                  "function-references": true,
+                  "tail-call": true
+                }
+              },
+              {
+                "accepted": true,
+                "artifact": "standard-provider",
+                "sha256": "f54a892aff9068e5c79464029423a2e8f753ddb44010af9ac34a5c9efce2069c",
+                "validation_profile": "wasm2",
+                "feature_support": {
+                  "function-references": true,
+                  "tail-call": true
+                }
+              },
+              {
+                "accepted": true,
+                "artifact": "standard",
+                "sha256": "f8a8ce447f776a47680e02e19ea3a69827edbbc46e01985803ce3d3df51178d7",
+                "validation_profile": "wasm2,function-references,tail-call",
+                "feature_support": {
+                  "function-references": true,
+                  "tail-call": true
+                }
+              }
+            ]
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "core-feature-probes-and-negatives",
+          "invocation": {
+            "command": "deno",
+            "args": [
+              "run",
+              "--allow-read",
+              "scripts/test-core-compatibility.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 63,
+          "observation": {
+            "accepted": true,
+            "host": {
+              "name": "deno",
+              "version": "2.9.4",
+              "v8": "15.0.245.2-rusty"
+            },
+            "features": {
+              "function-references": true,
+              "tail-call": true
+            },
+            "negative_tests": 6,
+            "supported_probe_oracle": 7
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "catalog-exact-resolution",
+          "invocation": {
+            "command": "deno",
+            "args": [
+              "run",
+              "--allow-read",
+              "--allow-write",
+              "--allow-env=TMPDIR,TMP,TEMP",
+              "scripts/test-lib-catalog.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 72,
+          "observation": {
+            "accepted": true,
+            "packages": 4,
+            "negative_tests": 10,
+            "selection": "unique exact lock",
+            "network_access": false,
+            "artifact_changes": false
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "install-no-clobber-and-faults",
+          "invocation": {
+            "command": "deno",
+            "args": [
+              "run",
+              "--allow-read",
+              "--allow-write",
+              "--allow-env=TMPDIR,TMP,TEMP",
+              "scripts/test-lib-install.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 313,
+          "observation": {
+            "accepted": true,
+            "files_verified": 11,
+            "negative_tests": 10,
+            "concurrent_single_winner": true,
+            "competing_directory_preserved": true,
+            "failed_stage_cleanup": true,
+            "network_access": false
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "fresh-mirror-install-and-paired-execution",
+          "invocation": {
+            "command": "deno",
+            "args": [
+              "run",
+              "--allow-read",
+              "--allow-write",
+              "--allow-env=TMPDIR,TMP,TEMP",
+              "--allow-run",
+              "scripts/validate-lib-install.mjs",
+              "github"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 1236,
+          "observation": {
+            "accepted": true,
+            "host": "deno",
+            "mirror": "github",
+            "lock_sha256": "63806ae6ee83164fd955753091cbfe74dac689d29c29a5371eadfc07b0ca1953",
+            "receipt": {
+              "schema": "wasmc.public-lib-install/v1",
+              "lock_sha256": "63806ae6ee83164fd955753091cbfe74dac689d29c29a5371eadfc07b0ca1953",
+              "release_commit": "0fec38d59872a7f1527dc94799da542e968f1f8a",
+              "id": "wasmc-std",
+              "version": "1.4.0",
+              "files_verified": 11,
+              "mirror": "github",
+              "publication": "exclusive-directory-symlink",
+              "authority_granted": false
+            },
+            "execution": {
+              "accepted": true,
+              "standard_lib": "wasmc:std@1.4.0",
+              "functions": 73,
+              "dual_consumer_calls": 5120,
+              "current_hosted_compiler_reproduced": true
+            },
+            "source": "fresh exact-public-commit HTTPS downloads",
+            "artifact_changes": false
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "compiler-and-managed-regression",
+          "invocation": {
+            "command": "deno",
+            "args": [
+              "run",
+              "--allow-read",
+              "--allow-write",
+              "--allow-run",
+              "--allow-env",
+              "scripts/validate-current.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 967,
+          "observation": {
+            "accepted": true,
+            "runtime": "deno",
+            "compiler_sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90",
+            "frozen_corpus_outputs": 30,
+            "expression_cases": 23,
+            "mode": "full",
+            "managed_repeated_calls": 192
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "standard-wasmc-rust-paired-execution",
+          "invocation": {
+            "command": "deno",
+            "args": [
+              "run",
+              "--allow-read",
+              "examples/current/standard.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 187,
+          "observation": {
+            "accepted": true,
+            "standard_lib": "wasmc:std@1.4.0",
+            "functions": 73,
+            "dual_consumer_calls": 5120,
+            "current_hosted_compiler_reproduced": true
+          },
+          "rust_test_summaries": []
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "schema": "wasmc.public-ci-suite/v1",
+      "label": "runtime-macos-15-deno-jsdelivr",
+      "family": "runtime",
+      "runtime": "deno",
+      "mirror": "jsdelivr",
+      "source_commit": "31259c781042a693c05e5b0400e51e9002a66545",
+      "dirty": false,
+      "platform": "darwin",
+      "arch": "arm64",
+      "compiler_sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90",
+      "runtime_version": "deno 2.9.4 (stable, release, aarch64-apple-darwin)\nv8 15.0.245.2-rusty\ntypescript 6.0.3",
+      "tests": [
+        {
+          "id": "source-free-archive-deployment",
+          "invocation": {
+            "command": "bash",
+            "args": [
+              "scripts/validate-source-free-runtime.sh",
+              "deno"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 1388,
+          "observation": {
+            "accepted": true,
+            "standard_lib": "wasmc:std@1.4.0",
+            "functions": 73,
+            "dual_consumer_calls": 5120,
+            "current_hosted_compiler_reproduced": true
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "core-full-artifact-admission",
+          "invocation": {
+            "command": "deno",
+            "args": [
+              "run",
+              "--allow-read",
+              "scripts/check-core-compatibility.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 42,
+          "observation": {
+            "schema": "wasmc.core-compatibility-check/v1",
+            "accepted": true,
+            "host": {
+              "name": "deno",
+              "version": "2.9.4",
+              "v8": "15.0.245.2-rusty"
+            },
+            "results": [
+              {
+                "accepted": true,
+                "artifact": "compiler",
+                "sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90",
+                "validation_profile": "wasm2",
+                "feature_support": {
+                  "function-references": true,
+                  "tail-call": true
+                }
+              },
+              {
+                "accepted": true,
+                "artifact": "automatic-provider",
+                "sha256": "86670b35fe4ff01f9ad4392b42ce8816e4679f680ab788599905edb1bbe6e749",
+                "validation_profile": "wasm2",
+                "feature_support": {
+                  "function-references": true,
+                  "tail-call": true
+                }
+              },
+              {
+                "accepted": true,
+                "artifact": "standard-provider",
+                "sha256": "f54a892aff9068e5c79464029423a2e8f753ddb44010af9ac34a5c9efce2069c",
+                "validation_profile": "wasm2",
+                "feature_support": {
+                  "function-references": true,
+                  "tail-call": true
+                }
+              },
+              {
+                "accepted": true,
+                "artifact": "standard",
+                "sha256": "f8a8ce447f776a47680e02e19ea3a69827edbbc46e01985803ce3d3df51178d7",
+                "validation_profile": "wasm2,function-references,tail-call",
+                "feature_support": {
+                  "function-references": true,
+                  "tail-call": true
+                }
+              }
+            ]
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "core-feature-probes-and-negatives",
+          "invocation": {
+            "command": "deno",
+            "args": [
+              "run",
+              "--allow-read",
+              "scripts/test-core-compatibility.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 54,
+          "observation": {
+            "accepted": true,
+            "host": {
+              "name": "deno",
+              "version": "2.9.4",
+              "v8": "15.0.245.2-rusty"
+            },
+            "features": {
+              "function-references": true,
+              "tail-call": true
+            },
+            "negative_tests": 6,
+            "supported_probe_oracle": 7
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "catalog-exact-resolution",
+          "invocation": {
+            "command": "deno",
+            "args": [
+              "run",
+              "--allow-read",
+              "--allow-write",
+              "--allow-env=TMPDIR,TMP,TEMP",
+              "scripts/test-lib-catalog.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 57,
+          "observation": {
+            "accepted": true,
+            "packages": 4,
+            "negative_tests": 10,
+            "selection": "unique exact lock",
+            "network_access": false,
+            "artifact_changes": false
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "install-no-clobber-and-faults",
+          "invocation": {
+            "command": "deno",
+            "args": [
+              "run",
+              "--allow-read",
+              "--allow-write",
+              "--allow-env=TMPDIR,TMP,TEMP",
+              "scripts/test-lib-install.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 205,
+          "observation": {
+            "accepted": true,
+            "files_verified": 11,
+            "negative_tests": 10,
+            "concurrent_single_winner": true,
+            "competing_directory_preserved": true,
+            "failed_stage_cleanup": true,
+            "network_access": false
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "fresh-mirror-install-and-paired-execution",
+          "invocation": {
+            "command": "deno",
+            "args": [
+              "run",
+              "--allow-read",
+              "--allow-write",
+              "--allow-env=TMPDIR,TMP,TEMP",
+              "--allow-run",
+              "scripts/validate-lib-install.mjs",
+              "jsdelivr"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 495,
+          "observation": {
+            "accepted": true,
+            "host": "deno",
+            "mirror": "jsdelivr",
+            "lock_sha256": "63806ae6ee83164fd955753091cbfe74dac689d29c29a5371eadfc07b0ca1953",
+            "receipt": {
+              "schema": "wasmc.public-lib-install/v1",
+              "lock_sha256": "63806ae6ee83164fd955753091cbfe74dac689d29c29a5371eadfc07b0ca1953",
+              "release_commit": "0fec38d59872a7f1527dc94799da542e968f1f8a",
+              "id": "wasmc-std",
+              "version": "1.4.0",
+              "files_verified": 11,
+              "mirror": "jsdelivr",
+              "publication": "exclusive-directory-symlink",
+              "authority_granted": false
+            },
+            "execution": {
+              "accepted": true,
+              "standard_lib": "wasmc:std@1.4.0",
+              "functions": 73,
+              "dual_consumer_calls": 5120,
+              "current_hosted_compiler_reproduced": true
+            },
+            "source": "fresh exact-public-commit HTTPS downloads",
+            "artifact_changes": false
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "compiler-and-managed-regression",
+          "invocation": {
+            "command": "deno",
+            "args": [
+              "run",
+              "--allow-read",
+              "--allow-write",
+              "--allow-run",
+              "--allow-env",
+              "scripts/validate-current.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 744,
+          "observation": {
+            "accepted": true,
+            "runtime": "deno",
+            "compiler_sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90",
+            "frozen_corpus_outputs": 30,
+            "expression_cases": 23,
+            "mode": "full",
+            "managed_repeated_calls": 192
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "standard-wasmc-rust-paired-execution",
+          "invocation": {
+            "command": "deno",
+            "args": [
+              "run",
+              "--allow-read",
+              "examples/current/standard.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 122,
+          "observation": {
+            "accepted": true,
+            "standard_lib": "wasmc:std@1.4.0",
+            "functions": 73,
+            "dual_consumer_calls": 5120,
+            "current_hosted_compiler_reproduced": true
+          },
+          "rust_test_summaries": []
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "schema": "wasmc.public-ci-suite/v1",
+      "label": "runtime-macos-15-node-github",
+      "family": "runtime",
+      "runtime": "node",
+      "mirror": "github",
+      "source_commit": "31259c781042a693c05e5b0400e51e9002a66545",
+      "dirty": false,
+      "platform": "darwin",
+      "arch": "arm64",
+      "compiler_sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90",
+      "runtime_version": "v26.5.1",
+      "tests": [
+        {
+          "id": "source-free-archive-deployment",
+          "invocation": {
+            "command": "bash",
+            "args": [
+              "scripts/validate-source-free-runtime.sh",
+              "node"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 1213,
+          "observation": {
+            "accepted": true,
+            "standard_lib": "wasmc:std@1.4.0",
+            "functions": 73,
+            "dual_consumer_calls": 5120,
+            "current_hosted_compiler_reproduced": true
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "core-full-artifact-admission",
+          "invocation": {
+            "command": "node",
+            "args": [
+              "scripts/check-core-compatibility.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 46,
+          "observation": {
+            "schema": "wasmc.core-compatibility-check/v1",
+            "accepted": true,
+            "host": {
+              "name": "node",
+              "version": "v26.5.1",
+              "v8": "14.6.202.34-node.24"
+            },
+            "results": [
+              {
+                "accepted": true,
+                "artifact": "compiler",
+                "sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90",
+                "validation_profile": "wasm2",
+                "feature_support": {
+                  "function-references": true,
+                  "tail-call": true
+                }
+              },
+              {
+                "accepted": true,
+                "artifact": "automatic-provider",
+                "sha256": "86670b35fe4ff01f9ad4392b42ce8816e4679f680ab788599905edb1bbe6e749",
+                "validation_profile": "wasm2",
+                "feature_support": {
+                  "function-references": true,
+                  "tail-call": true
+                }
+              },
+              {
+                "accepted": true,
+                "artifact": "standard-provider",
+                "sha256": "f54a892aff9068e5c79464029423a2e8f753ddb44010af9ac34a5c9efce2069c",
+                "validation_profile": "wasm2",
+                "feature_support": {
+                  "function-references": true,
+                  "tail-call": true
+                }
+              },
+              {
+                "accepted": true,
+                "artifact": "standard",
+                "sha256": "f8a8ce447f776a47680e02e19ea3a69827edbbc46e01985803ce3d3df51178d7",
+                "validation_profile": "wasm2,function-references,tail-call",
+                "feature_support": {
+                  "function-references": true,
+                  "tail-call": true
+                }
+              }
+            ]
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "core-feature-probes-and-negatives",
+          "invocation": {
+            "command": "node",
+            "args": [
+              "scripts/test-core-compatibility.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 41,
+          "observation": {
+            "accepted": true,
+            "host": {
+              "name": "node",
+              "version": "v26.5.1",
+              "v8": "14.6.202.34-node.24"
+            },
+            "features": {
+              "function-references": true,
+              "tail-call": true
+            },
+            "negative_tests": 6,
+            "supported_probe_oracle": 7
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "catalog-exact-resolution",
+          "invocation": {
+            "command": "node",
+            "args": [
+              "scripts/test-lib-catalog.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 44,
+          "observation": {
+            "accepted": true,
+            "packages": 4,
+            "negative_tests": 10,
+            "selection": "unique exact lock",
+            "network_access": false,
+            "artifact_changes": false
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "install-no-clobber-and-faults",
+          "invocation": {
+            "command": "node",
+            "args": [
+              "scripts/test-lib-install.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 179,
+          "observation": {
+            "accepted": true,
+            "files_verified": 11,
+            "negative_tests": 10,
+            "concurrent_single_winner": true,
+            "competing_directory_preserved": true,
+            "failed_stage_cleanup": true,
+            "network_access": false
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "fresh-mirror-install-and-paired-execution",
+          "invocation": {
+            "command": "node",
+            "args": [
+              "scripts/validate-lib-install.mjs",
+              "github"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 358,
+          "observation": {
+            "accepted": true,
+            "host": "node",
+            "mirror": "github",
+            "lock_sha256": "63806ae6ee83164fd955753091cbfe74dac689d29c29a5371eadfc07b0ca1953",
+            "receipt": {
+              "schema": "wasmc.public-lib-install/v1",
+              "lock_sha256": "63806ae6ee83164fd955753091cbfe74dac689d29c29a5371eadfc07b0ca1953",
+              "release_commit": "0fec38d59872a7f1527dc94799da542e968f1f8a",
+              "id": "wasmc-std",
+              "version": "1.4.0",
+              "files_verified": 11,
+              "mirror": "github",
+              "publication": "exclusive-directory-symlink",
+              "authority_granted": false
+            },
+            "execution": {
+              "accepted": true,
+              "standard_lib": "wasmc:std@1.4.0",
+              "functions": 73,
+              "dual_consumer_calls": 5120,
+              "current_hosted_compiler_reproduced": true
+            },
+            "source": "fresh exact-public-commit HTTPS downloads",
+            "artifact_changes": false
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "compiler-and-managed-regression",
+          "invocation": {
+            "command": "node",
+            "args": [
+              "scripts/validate-current.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 759,
+          "observation": {
+            "accepted": true,
+            "runtime": "node",
+            "compiler_sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90",
+            "frozen_corpus_outputs": 30,
+            "expression_cases": 23,
+            "mode": "full",
+            "managed_repeated_calls": 192
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "standard-wasmc-rust-paired-execution",
+          "invocation": {
+            "command": "node",
+            "args": [
+              "examples/current/standard.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 88,
+          "observation": {
+            "accepted": true,
+            "standard_lib": "wasmc:std@1.4.0",
+            "functions": 73,
+            "dual_consumer_calls": 5120,
+            "current_hosted_compiler_reproduced": true
+          },
+          "rust_test_summaries": []
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "schema": "wasmc.public-ci-suite/v1",
+      "label": "runtime-macos-15-node-jsdelivr",
+      "family": "runtime",
+      "runtime": "node",
+      "mirror": "jsdelivr",
+      "source_commit": "31259c781042a693c05e5b0400e51e9002a66545",
+      "dirty": false,
+      "platform": "darwin",
+      "arch": "arm64",
+      "compiler_sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90",
+      "runtime_version": "v26.5.1",
+      "tests": [
+        {
+          "id": "source-free-archive-deployment",
+          "invocation": {
+            "command": "bash",
+            "args": [
+              "scripts/validate-source-free-runtime.sh",
+              "node"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 1063,
+          "observation": {
+            "accepted": true,
+            "standard_lib": "wasmc:std@1.4.0",
+            "functions": 73,
+            "dual_consumer_calls": 5120,
+            "current_hosted_compiler_reproduced": true
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "core-full-artifact-admission",
+          "invocation": {
+            "command": "node",
+            "args": [
+              "scripts/check-core-compatibility.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 34,
+          "observation": {
+            "schema": "wasmc.core-compatibility-check/v1",
+            "accepted": true,
+            "host": {
+              "name": "node",
+              "version": "v26.5.1",
+              "v8": "14.6.202.34-node.24"
+            },
+            "results": [
+              {
+                "accepted": true,
+                "artifact": "compiler",
+                "sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90",
+                "validation_profile": "wasm2",
+                "feature_support": {
+                  "function-references": true,
+                  "tail-call": true
+                }
+              },
+              {
+                "accepted": true,
+                "artifact": "automatic-provider",
+                "sha256": "86670b35fe4ff01f9ad4392b42ce8816e4679f680ab788599905edb1bbe6e749",
+                "validation_profile": "wasm2",
+                "feature_support": {
+                  "function-references": true,
+                  "tail-call": true
+                }
+              },
+              {
+                "accepted": true,
+                "artifact": "standard-provider",
+                "sha256": "f54a892aff9068e5c79464029423a2e8f753ddb44010af9ac34a5c9efce2069c",
+                "validation_profile": "wasm2",
+                "feature_support": {
+                  "function-references": true,
+                  "tail-call": true
+                }
+              },
+              {
+                "accepted": true,
+                "artifact": "standard",
+                "sha256": "f8a8ce447f776a47680e02e19ea3a69827edbbc46e01985803ce3d3df51178d7",
+                "validation_profile": "wasm2,function-references,tail-call",
+                "feature_support": {
+                  "function-references": true,
+                  "tail-call": true
+                }
+              }
+            ]
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "core-feature-probes-and-negatives",
+          "invocation": {
+            "command": "node",
+            "args": [
+              "scripts/test-core-compatibility.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 38,
+          "observation": {
+            "accepted": true,
+            "host": {
+              "name": "node",
+              "version": "v26.5.1",
+              "v8": "14.6.202.34-node.24"
+            },
+            "features": {
+              "function-references": true,
+              "tail-call": true
+            },
+            "negative_tests": 6,
+            "supported_probe_oracle": 7
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "catalog-exact-resolution",
+          "invocation": {
+            "command": "node",
+            "args": [
+              "scripts/test-lib-catalog.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 42,
+          "observation": {
+            "accepted": true,
+            "packages": 4,
+            "negative_tests": 10,
+            "selection": "unique exact lock",
+            "network_access": false,
+            "artifact_changes": false
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "install-no-clobber-and-faults",
+          "invocation": {
+            "command": "node",
+            "args": [
+              "scripts/test-lib-install.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 172,
+          "observation": {
+            "accepted": true,
+            "files_verified": 11,
+            "negative_tests": 10,
+            "concurrent_single_winner": true,
+            "competing_directory_preserved": true,
+            "failed_stage_cleanup": true,
+            "network_access": false
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "fresh-mirror-install-and-paired-execution",
+          "invocation": {
+            "command": "node",
+            "args": [
+              "scripts/validate-lib-install.mjs",
+              "jsdelivr"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 959,
+          "observation": {
+            "accepted": true,
+            "host": "node",
+            "mirror": "jsdelivr",
+            "lock_sha256": "63806ae6ee83164fd955753091cbfe74dac689d29c29a5371eadfc07b0ca1953",
+            "receipt": {
+              "schema": "wasmc.public-lib-install/v1",
+              "lock_sha256": "63806ae6ee83164fd955753091cbfe74dac689d29c29a5371eadfc07b0ca1953",
+              "release_commit": "0fec38d59872a7f1527dc94799da542e968f1f8a",
+              "id": "wasmc-std",
+              "version": "1.4.0",
+              "files_verified": 11,
+              "mirror": "jsdelivr",
+              "publication": "exclusive-directory-symlink",
+              "authority_granted": false
+            },
+            "execution": {
+              "accepted": true,
+              "standard_lib": "wasmc:std@1.4.0",
+              "functions": 73,
+              "dual_consumer_calls": 5120,
+              "current_hosted_compiler_reproduced": true
+            },
+            "source": "fresh exact-public-commit HTTPS downloads",
+            "artifact_changes": false
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "compiler-and-managed-regression",
+          "invocation": {
+            "command": "node",
+            "args": [
+              "scripts/validate-current.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 816,
+          "observation": {
+            "accepted": true,
+            "runtime": "node",
+            "compiler_sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90",
+            "frozen_corpus_outputs": 30,
+            "expression_cases": 23,
+            "mode": "full",
+            "managed_repeated_calls": 192
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "standard-wasmc-rust-paired-execution",
+          "invocation": {
+            "command": "node",
+            "args": [
+              "examples/current/standard.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 94,
+          "observation": {
+            "accepted": true,
+            "standard_lib": "wasmc:std@1.4.0",
+            "functions": 73,
+            "dual_consumer_calls": 5120,
+            "current_hosted_compiler_reproduced": true
+          },
+          "rust_test_summaries": []
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "schema": "wasmc.public-ci-suite/v1",
+      "label": "runtime-ubuntu-24.04-bun-github",
+      "family": "runtime",
+      "runtime": "bun",
+      "mirror": "github",
+      "source_commit": "31259c781042a693c05e5b0400e51e9002a66545",
+      "dirty": false,
+      "platform": "linux",
+      "arch": "x64",
+      "compiler_sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90",
+      "runtime_version": "1.3.14",
+      "tests": [
+        {
+          "id": "source-free-archive-deployment",
+          "invocation": {
+            "command": "bash",
+            "args": [
+              "scripts/validate-source-free-runtime.sh",
+              "bun"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 1669,
+          "observation": {
+            "accepted": true,
+            "standard_lib": "wasmc:std@1.4.0",
+            "functions": 73,
+            "dual_consumer_calls": 5120,
+            "current_hosted_compiler_reproduced": true
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "core-full-artifact-admission",
+          "invocation": {
+            "command": "bun",
+            "args": [
+              "scripts/check-core-compatibility.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 54,
+          "observation": {
+            "schema": "wasmc.core-compatibility-check/v1",
+            "accepted": true,
+            "host": {
+              "name": "bun",
+              "version": "1.3.14",
+              "v8": "13.6.233.10-node.18"
+            },
+            "results": [
+              {
+                "accepted": true,
+                "artifact": "compiler",
+                "sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90",
+                "validation_profile": "wasm2",
+                "feature_support": {
+                  "function-references": true,
+                  "tail-call": true
+                }
+              },
+              {
+                "accepted": true,
+                "artifact": "automatic-provider",
+                "sha256": "86670b35fe4ff01f9ad4392b42ce8816e4679f680ab788599905edb1bbe6e749",
+                "validation_profile": "wasm2",
+                "feature_support": {
+                  "function-references": true,
+                  "tail-call": true
+                }
+              },
+              {
+                "accepted": true,
+                "artifact": "standard-provider",
+                "sha256": "f54a892aff9068e5c79464029423a2e8f753ddb44010af9ac34a5c9efce2069c",
+                "validation_profile": "wasm2",
+                "feature_support": {
+                  "function-references": true,
+                  "tail-call": true
+                }
+              },
+              {
+                "accepted": true,
+                "artifact": "standard",
+                "sha256": "f8a8ce447f776a47680e02e19ea3a69827edbbc46e01985803ce3d3df51178d7",
+                "validation_profile": "wasm2,function-references,tail-call",
+                "feature_support": {
+                  "function-references": true,
+                  "tail-call": true
+                }
+              }
+            ]
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "core-feature-probes-and-negatives",
+          "invocation": {
+            "command": "bun",
+            "args": [
+              "scripts/test-core-compatibility.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 61,
+          "observation": {
+            "accepted": true,
+            "host": {
+              "name": "bun",
+              "version": "1.3.14",
+              "v8": "13.6.233.10-node.18"
+            },
+            "features": {
+              "function-references": true,
+              "tail-call": true
+            },
+            "negative_tests": 6,
+            "supported_probe_oracle": 7
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "catalog-exact-resolution",
+          "invocation": {
+            "command": "bun",
+            "args": [
+              "scripts/test-lib-catalog.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 49,
+          "observation": {
+            "accepted": true,
+            "packages": 4,
+            "negative_tests": 10,
+            "selection": "unique exact lock",
+            "network_access": false,
+            "artifact_changes": false
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "install-no-clobber-and-faults",
+          "invocation": {
+            "command": "bun",
+            "args": [
+              "scripts/test-lib-install.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 151,
+          "observation": {
+            "accepted": true,
+            "files_verified": 11,
+            "negative_tests": 10,
+            "concurrent_single_winner": true,
+            "competing_directory_preserved": true,
+            "failed_stage_cleanup": true,
+            "network_access": false
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "fresh-mirror-install-and-paired-execution",
+          "invocation": {
+            "command": "bun",
+            "args": [
+              "scripts/validate-lib-install.mjs",
+              "github"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 905,
+          "observation": {
+            "accepted": true,
+            "host": "bun",
+            "mirror": "github",
+            "lock_sha256": "63806ae6ee83164fd955753091cbfe74dac689d29c29a5371eadfc07b0ca1953",
+            "receipt": {
+              "schema": "wasmc.public-lib-install/v1",
+              "lock_sha256": "63806ae6ee83164fd955753091cbfe74dac689d29c29a5371eadfc07b0ca1953",
+              "release_commit": "0fec38d59872a7f1527dc94799da542e968f1f8a",
+              "id": "wasmc-std",
+              "version": "1.4.0",
+              "files_verified": 11,
+              "mirror": "github",
+              "publication": "exclusive-directory-symlink",
+              "authority_granted": false
+            },
+            "execution": {
+              "accepted": true,
+              "standard_lib": "wasmc:std@1.4.0",
+              "functions": 73,
+              "dual_consumer_calls": 5120,
+              "current_hosted_compiler_reproduced": true
+            },
+            "source": "fresh exact-public-commit HTTPS downloads",
+            "artifact_changes": false
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "compiler-and-managed-regression",
+          "invocation": {
+            "command": "bun",
+            "args": [
+              "scripts/validate-current.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 1279,
+          "observation": {
+            "accepted": true,
+            "runtime": "bun",
+            "compiler_sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90",
+            "frozen_corpus_outputs": 30,
+            "expression_cases": 23,
+            "mode": "full",
+            "managed_repeated_calls": 192
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "standard-wasmc-rust-paired-execution",
+          "invocation": {
+            "command": "bun",
+            "args": [
+              "examples/current/standard.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 179,
+          "observation": {
+            "accepted": true,
+            "standard_lib": "wasmc:std@1.4.0",
+            "functions": 73,
+            "dual_consumer_calls": 5120,
+            "current_hosted_compiler_reproduced": true
+          },
+          "rust_test_summaries": []
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "schema": "wasmc.public-ci-suite/v1",
+      "label": "runtime-ubuntu-24.04-bun-jsdelivr",
+      "family": "runtime",
+      "runtime": "bun",
+      "mirror": "jsdelivr",
+      "source_commit": "31259c781042a693c05e5b0400e51e9002a66545",
+      "dirty": false,
+      "platform": "linux",
+      "arch": "x64",
+      "compiler_sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90",
+      "runtime_version": "1.3.14",
+      "tests": [
+        {
+          "id": "source-free-archive-deployment",
+          "invocation": {
+            "command": "bash",
+            "args": [
+              "scripts/validate-source-free-runtime.sh",
+              "bun"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 1341,
+          "observation": {
+            "accepted": true,
+            "standard_lib": "wasmc:std@1.4.0",
+            "functions": 73,
+            "dual_consumer_calls": 5120,
+            "current_hosted_compiler_reproduced": true
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "core-full-artifact-admission",
+          "invocation": {
+            "command": "bun",
+            "args": [
+              "scripts/check-core-compatibility.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 38,
+          "observation": {
+            "schema": "wasmc.core-compatibility-check/v1",
+            "accepted": true,
+            "host": {
+              "name": "bun",
+              "version": "1.3.14",
+              "v8": "13.6.233.10-node.18"
+            },
+            "results": [
+              {
+                "accepted": true,
+                "artifact": "compiler",
+                "sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90",
+                "validation_profile": "wasm2",
+                "feature_support": {
+                  "function-references": true,
+                  "tail-call": true
+                }
+              },
+              {
+                "accepted": true,
+                "artifact": "automatic-provider",
+                "sha256": "86670b35fe4ff01f9ad4392b42ce8816e4679f680ab788599905edb1bbe6e749",
+                "validation_profile": "wasm2",
+                "feature_support": {
+                  "function-references": true,
+                  "tail-call": true
+                }
+              },
+              {
+                "accepted": true,
+                "artifact": "standard-provider",
+                "sha256": "f54a892aff9068e5c79464029423a2e8f753ddb44010af9ac34a5c9efce2069c",
+                "validation_profile": "wasm2",
+                "feature_support": {
+                  "function-references": true,
+                  "tail-call": true
+                }
+              },
+              {
+                "accepted": true,
+                "artifact": "standard",
+                "sha256": "f8a8ce447f776a47680e02e19ea3a69827edbbc46e01985803ce3d3df51178d7",
+                "validation_profile": "wasm2,function-references,tail-call",
+                "feature_support": {
+                  "function-references": true,
+                  "tail-call": true
+                }
+              }
+            ]
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "core-feature-probes-and-negatives",
+          "invocation": {
+            "command": "bun",
+            "args": [
+              "scripts/test-core-compatibility.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 47,
+          "observation": {
+            "accepted": true,
+            "host": {
+              "name": "bun",
+              "version": "1.3.14",
+              "v8": "13.6.233.10-node.18"
+            },
+            "features": {
+              "function-references": true,
+              "tail-call": true
+            },
+            "negative_tests": 6,
+            "supported_probe_oracle": 7
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "catalog-exact-resolution",
+          "invocation": {
+            "command": "bun",
+            "args": [
+              "scripts/test-lib-catalog.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 38,
+          "observation": {
+            "accepted": true,
+            "packages": 4,
+            "negative_tests": 10,
+            "selection": "unique exact lock",
+            "network_access": false,
+            "artifact_changes": false
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "install-no-clobber-and-faults",
+          "invocation": {
+            "command": "bun",
+            "args": [
+              "scripts/test-lib-install.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 224,
+          "observation": {
+            "accepted": true,
+            "files_verified": 11,
+            "negative_tests": 10,
+            "concurrent_single_winner": true,
+            "competing_directory_preserved": true,
+            "failed_stage_cleanup": true,
+            "network_access": false
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "fresh-mirror-install-and-paired-execution",
+          "invocation": {
+            "command": "bun",
+            "args": [
+              "scripts/validate-lib-install.mjs",
+              "jsdelivr"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 3166,
+          "observation": {
+            "accepted": true,
+            "host": "bun",
+            "mirror": "jsdelivr",
+            "lock_sha256": "63806ae6ee83164fd955753091cbfe74dac689d29c29a5371eadfc07b0ca1953",
+            "receipt": {
+              "schema": "wasmc.public-lib-install/v1",
+              "lock_sha256": "63806ae6ee83164fd955753091cbfe74dac689d29c29a5371eadfc07b0ca1953",
+              "release_commit": "0fec38d59872a7f1527dc94799da542e968f1f8a",
+              "id": "wasmc-std",
+              "version": "1.4.0",
+              "files_verified": 11,
+              "mirror": "jsdelivr",
+              "publication": "exclusive-directory-symlink",
+              "authority_granted": false
+            },
+            "execution": {
+              "accepted": true,
+              "standard_lib": "wasmc:std@1.4.0",
+              "functions": 73,
+              "dual_consumer_calls": 5120,
+              "current_hosted_compiler_reproduced": true
+            },
+            "source": "fresh exact-public-commit HTTPS downloads",
+            "artifact_changes": false
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "compiler-and-managed-regression",
+          "invocation": {
+            "command": "bun",
+            "args": [
+              "scripts/validate-current.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 959,
+          "observation": {
+            "accepted": true,
+            "runtime": "bun",
+            "compiler_sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90",
+            "frozen_corpus_outputs": 30,
+            "expression_cases": 23,
+            "mode": "full",
+            "managed_repeated_calls": 192
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "standard-wasmc-rust-paired-execution",
+          "invocation": {
+            "command": "bun",
+            "args": [
+              "examples/current/standard.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 133,
+          "observation": {
+            "accepted": true,
+            "standard_lib": "wasmc:std@1.4.0",
+            "functions": 73,
+            "dual_consumer_calls": 5120,
+            "current_hosted_compiler_reproduced": true
+          },
+          "rust_test_summaries": []
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "schema": "wasmc.public-ci-suite/v1",
+      "label": "runtime-ubuntu-24.04-deno-github",
+      "family": "runtime",
+      "runtime": "deno",
+      "mirror": "github",
+      "source_commit": "31259c781042a693c05e5b0400e51e9002a66545",
+      "dirty": false,
+      "platform": "linux",
+      "arch": "x64",
+      "compiler_sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90",
+      "runtime_version": "deno 2.9.4 (stable, release, x86_64-unknown-linux-gnu)\nv8 15.0.245.2-rusty\ntypescript 6.0.3",
+      "tests": [
+        {
+          "id": "source-free-archive-deployment",
+          "invocation": {
+            "command": "bash",
+            "args": [
+              "scripts/validate-source-free-runtime.sh",
+              "deno"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 1028,
+          "observation": {
+            "accepted": true,
+            "standard_lib": "wasmc:std@1.4.0",
+            "functions": 73,
+            "dual_consumer_calls": 5120,
+            "current_hosted_compiler_reproduced": true
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "core-full-artifact-admission",
+          "invocation": {
+            "command": "deno",
+            "args": [
+              "run",
+              "--allow-read",
+              "scripts/check-core-compatibility.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 41,
+          "observation": {
+            "schema": "wasmc.core-compatibility-check/v1",
+            "accepted": true,
+            "host": {
+              "name": "deno",
+              "version": "2.9.4",
+              "v8": "15.0.245.2-rusty"
+            },
+            "results": [
+              {
+                "accepted": true,
+                "artifact": "compiler",
+                "sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90",
+                "validation_profile": "wasm2",
+                "feature_support": {
+                  "function-references": true,
+                  "tail-call": true
+                }
+              },
+              {
+                "accepted": true,
+                "artifact": "automatic-provider",
+                "sha256": "86670b35fe4ff01f9ad4392b42ce8816e4679f680ab788599905edb1bbe6e749",
+                "validation_profile": "wasm2",
+                "feature_support": {
+                  "function-references": true,
+                  "tail-call": true
+                }
+              },
+              {
+                "accepted": true,
+                "artifact": "standard-provider",
+                "sha256": "f54a892aff9068e5c79464029423a2e8f753ddb44010af9ac34a5c9efce2069c",
+                "validation_profile": "wasm2",
+                "feature_support": {
+                  "function-references": true,
+                  "tail-call": true
+                }
+              },
+              {
+                "accepted": true,
+                "artifact": "standard",
+                "sha256": "f8a8ce447f776a47680e02e19ea3a69827edbbc46e01985803ce3d3df51178d7",
+                "validation_profile": "wasm2,function-references,tail-call",
+                "feature_support": {
+                  "function-references": true,
+                  "tail-call": true
+                }
+              }
+            ]
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "core-feature-probes-and-negatives",
+          "invocation": {
+            "command": "deno",
+            "args": [
+              "run",
+              "--allow-read",
+              "scripts/test-core-compatibility.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 44,
+          "observation": {
+            "accepted": true,
+            "host": {
+              "name": "deno",
+              "version": "2.9.4",
+              "v8": "15.0.245.2-rusty"
+            },
+            "features": {
+              "function-references": true,
+              "tail-call": true
+            },
+            "negative_tests": 6,
+            "supported_probe_oracle": 7
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "catalog-exact-resolution",
+          "invocation": {
+            "command": "deno",
+            "args": [
+              "run",
+              "--allow-read",
+              "--allow-write",
+              "--allow-env=TMPDIR,TMP,TEMP",
+              "scripts/test-lib-catalog.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 51,
+          "observation": {
+            "accepted": true,
+            "packages": 4,
+            "negative_tests": 10,
+            "selection": "unique exact lock",
+            "network_access": false,
+            "artifact_changes": false
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "install-no-clobber-and-faults",
+          "invocation": {
+            "command": "deno",
+            "args": [
+              "run",
+              "--allow-read",
+              "--allow-write",
+              "--allow-env=TMPDIR,TMP,TEMP",
+              "scripts/test-lib-install.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 207,
+          "observation": {
+            "accepted": true,
+            "files_verified": 11,
+            "negative_tests": 10,
+            "concurrent_single_winner": true,
+            "competing_directory_preserved": true,
+            "failed_stage_cleanup": true,
+            "network_access": false
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "fresh-mirror-install-and-paired-execution",
+          "invocation": {
+            "command": "deno",
+            "args": [
+              "run",
+              "--allow-read",
+              "--allow-write",
+              "--allow-env=TMPDIR,TMP,TEMP",
+              "--allow-run",
+              "scripts/validate-lib-install.mjs",
+              "github"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 507,
+          "observation": {
+            "accepted": true,
+            "host": "deno",
+            "mirror": "github",
+            "lock_sha256": "63806ae6ee83164fd955753091cbfe74dac689d29c29a5371eadfc07b0ca1953",
+            "receipt": {
+              "schema": "wasmc.public-lib-install/v1",
+              "lock_sha256": "63806ae6ee83164fd955753091cbfe74dac689d29c29a5371eadfc07b0ca1953",
+              "release_commit": "0fec38d59872a7f1527dc94799da542e968f1f8a",
+              "id": "wasmc-std",
+              "version": "1.4.0",
+              "files_verified": 11,
+              "mirror": "github",
+              "publication": "exclusive-directory-symlink",
+              "authority_granted": false
+            },
+            "execution": {
+              "accepted": true,
+              "standard_lib": "wasmc:std@1.4.0",
+              "functions": 73,
+              "dual_consumer_calls": 5120,
+              "current_hosted_compiler_reproduced": true
+            },
+            "source": "fresh exact-public-commit HTTPS downloads",
+            "artifact_changes": false
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "compiler-and-managed-regression",
+          "invocation": {
+            "command": "deno",
+            "args": [
+              "run",
+              "--allow-read",
+              "--allow-write",
+              "--allow-run",
+              "--allow-env",
+              "scripts/validate-current.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 837,
+          "observation": {
+            "accepted": true,
+            "runtime": "deno",
+            "compiler_sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90",
+            "frozen_corpus_outputs": 30,
+            "expression_cases": 23,
+            "mode": "full",
+            "managed_repeated_calls": 192
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "standard-wasmc-rust-paired-execution",
+          "invocation": {
+            "command": "deno",
+            "args": [
+              "run",
+              "--allow-read",
+              "examples/current/standard.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 99,
+          "observation": {
+            "accepted": true,
+            "standard_lib": "wasmc:std@1.4.0",
+            "functions": 73,
+            "dual_consumer_calls": 5120,
+            "current_hosted_compiler_reproduced": true
+          },
+          "rust_test_summaries": []
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "schema": "wasmc.public-ci-suite/v1",
+      "label": "runtime-ubuntu-24.04-deno-jsdelivr",
+      "family": "runtime",
+      "runtime": "deno",
+      "mirror": "jsdelivr",
+      "source_commit": "31259c781042a693c05e5b0400e51e9002a66545",
+      "dirty": false,
+      "platform": "linux",
+      "arch": "x64",
+      "compiler_sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90",
+      "runtime_version": "deno 2.9.4 (stable, release, x86_64-unknown-linux-gnu)\nv8 15.0.245.2-rusty\ntypescript 6.0.3",
+      "tests": [
+        {
+          "id": "source-free-archive-deployment",
+          "invocation": {
+            "command": "bash",
+            "args": [
+              "scripts/validate-source-free-runtime.sh",
+              "deno"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 1545,
+          "observation": {
+            "accepted": true,
+            "standard_lib": "wasmc:std@1.4.0",
+            "functions": 73,
+            "dual_consumer_calls": 5120,
+            "current_hosted_compiler_reproduced": true
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "core-full-artifact-admission",
+          "invocation": {
+            "command": "deno",
+            "args": [
+              "run",
+              "--allow-read",
+              "scripts/check-core-compatibility.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 72,
+          "observation": {
+            "schema": "wasmc.core-compatibility-check/v1",
+            "accepted": true,
+            "host": {
+              "name": "deno",
+              "version": "2.9.4",
+              "v8": "15.0.245.2-rusty"
+            },
+            "results": [
+              {
+                "accepted": true,
+                "artifact": "compiler",
+                "sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90",
+                "validation_profile": "wasm2",
+                "feature_support": {
+                  "function-references": true,
+                  "tail-call": true
+                }
+              },
+              {
+                "accepted": true,
+                "artifact": "automatic-provider",
+                "sha256": "86670b35fe4ff01f9ad4392b42ce8816e4679f680ab788599905edb1bbe6e749",
+                "validation_profile": "wasm2",
+                "feature_support": {
+                  "function-references": true,
+                  "tail-call": true
+                }
+              },
+              {
+                "accepted": true,
+                "artifact": "standard-provider",
+                "sha256": "f54a892aff9068e5c79464029423a2e8f753ddb44010af9ac34a5c9efce2069c",
+                "validation_profile": "wasm2",
+                "feature_support": {
+                  "function-references": true,
+                  "tail-call": true
+                }
+              },
+              {
+                "accepted": true,
+                "artifact": "standard",
+                "sha256": "f8a8ce447f776a47680e02e19ea3a69827edbbc46e01985803ce3d3df51178d7",
+                "validation_profile": "wasm2,function-references,tail-call",
+                "feature_support": {
+                  "function-references": true,
+                  "tail-call": true
+                }
+              }
+            ]
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "core-feature-probes-and-negatives",
+          "invocation": {
+            "command": "deno",
+            "args": [
+              "run",
+              "--allow-read",
+              "scripts/test-core-compatibility.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 65,
+          "observation": {
+            "accepted": true,
+            "host": {
+              "name": "deno",
+              "version": "2.9.4",
+              "v8": "15.0.245.2-rusty"
+            },
+            "features": {
+              "function-references": true,
+              "tail-call": true
+            },
+            "negative_tests": 6,
+            "supported_probe_oracle": 7
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "catalog-exact-resolution",
+          "invocation": {
+            "command": "deno",
+            "args": [
+              "run",
+              "--allow-read",
+              "--allow-write",
+              "--allow-env=TMPDIR,TMP,TEMP",
+              "scripts/test-lib-catalog.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 78,
+          "observation": {
+            "accepted": true,
+            "packages": 4,
+            "negative_tests": 10,
+            "selection": "unique exact lock",
+            "network_access": false,
+            "artifact_changes": false
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "install-no-clobber-and-faults",
+          "invocation": {
+            "command": "deno",
+            "args": [
+              "run",
+              "--allow-read",
+              "--allow-write",
+              "--allow-env=TMPDIR,TMP,TEMP",
+              "scripts/test-lib-install.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 178,
+          "observation": {
+            "accepted": true,
+            "files_verified": 11,
+            "negative_tests": 10,
+            "concurrent_single_winner": true,
+            "competing_directory_preserved": true,
+            "failed_stage_cleanup": true,
+            "network_access": false
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "fresh-mirror-install-and-paired-execution",
+          "invocation": {
+            "command": "deno",
+            "args": [
+              "run",
+              "--allow-read",
+              "--allow-write",
+              "--allow-env=TMPDIR,TMP,TEMP",
+              "--allow-run",
+              "scripts/validate-lib-install.mjs",
+              "jsdelivr"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 3658,
+          "observation": {
+            "accepted": true,
+            "host": "deno",
+            "mirror": "jsdelivr",
+            "lock_sha256": "63806ae6ee83164fd955753091cbfe74dac689d29c29a5371eadfc07b0ca1953",
+            "receipt": {
+              "schema": "wasmc.public-lib-install/v1",
+              "lock_sha256": "63806ae6ee83164fd955753091cbfe74dac689d29c29a5371eadfc07b0ca1953",
+              "release_commit": "0fec38d59872a7f1527dc94799da542e968f1f8a",
+              "id": "wasmc-std",
+              "version": "1.4.0",
+              "files_verified": 11,
+              "mirror": "jsdelivr",
+              "publication": "exclusive-directory-symlink",
+              "authority_granted": false
+            },
+            "execution": {
+              "accepted": true,
+              "standard_lib": "wasmc:std@1.4.0",
+              "functions": 73,
+              "dual_consumer_calls": 5120,
+              "current_hosted_compiler_reproduced": true
+            },
+            "source": "fresh exact-public-commit HTTPS downloads",
+            "artifact_changes": false
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "compiler-and-managed-regression",
+          "invocation": {
+            "command": "deno",
+            "args": [
+              "run",
+              "--allow-read",
+              "--allow-write",
+              "--allow-run",
+              "--allow-env",
+              "scripts/validate-current.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 1048,
+          "observation": {
+            "accepted": true,
+            "runtime": "deno",
+            "compiler_sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90",
+            "frozen_corpus_outputs": 30,
+            "expression_cases": 23,
+            "mode": "full",
+            "managed_repeated_calls": 192
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "standard-wasmc-rust-paired-execution",
+          "invocation": {
+            "command": "deno",
+            "args": [
+              "run",
+              "--allow-read",
+              "examples/current/standard.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 164,
+          "observation": {
+            "accepted": true,
+            "standard_lib": "wasmc:std@1.4.0",
+            "functions": 73,
+            "dual_consumer_calls": 5120,
+            "current_hosted_compiler_reproduced": true
+          },
+          "rust_test_summaries": []
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "schema": "wasmc.public-ci-suite/v1",
+      "label": "runtime-ubuntu-24.04-node-github",
+      "family": "runtime",
+      "runtime": "node",
+      "mirror": "github",
+      "source_commit": "31259c781042a693c05e5b0400e51e9002a66545",
+      "dirty": false,
+      "platform": "linux",
+      "arch": "x64",
+      "compiler_sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90",
+      "runtime_version": "v26.5.1",
+      "tests": [
+        {
+          "id": "source-free-archive-deployment",
+          "invocation": {
+            "command": "bash",
+            "args": [
+              "scripts/validate-source-free-runtime.sh",
+              "node"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 1549,
+          "observation": {
+            "accepted": true,
+            "standard_lib": "wasmc:std@1.4.0",
+            "functions": 73,
+            "dual_consumer_calls": 5120,
+            "current_hosted_compiler_reproduced": true
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "core-full-artifact-admission",
+          "invocation": {
+            "command": "node",
+            "args": [
+              "scripts/check-core-compatibility.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 44,
+          "observation": {
+            "schema": "wasmc.core-compatibility-check/v1",
+            "accepted": true,
+            "host": {
+              "name": "node",
+              "version": "v26.5.1",
+              "v8": "14.6.202.34-node.24"
+            },
+            "results": [
+              {
+                "accepted": true,
+                "artifact": "compiler",
+                "sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90",
+                "validation_profile": "wasm2",
+                "feature_support": {
+                  "function-references": true,
+                  "tail-call": true
+                }
+              },
+              {
+                "accepted": true,
+                "artifact": "automatic-provider",
+                "sha256": "86670b35fe4ff01f9ad4392b42ce8816e4679f680ab788599905edb1bbe6e749",
+                "validation_profile": "wasm2",
+                "feature_support": {
+                  "function-references": true,
+                  "tail-call": true
+                }
+              },
+              {
+                "accepted": true,
+                "artifact": "standard-provider",
+                "sha256": "f54a892aff9068e5c79464029423a2e8f753ddb44010af9ac34a5c9efce2069c",
+                "validation_profile": "wasm2",
+                "feature_support": {
+                  "function-references": true,
+                  "tail-call": true
+                }
+              },
+              {
+                "accepted": true,
+                "artifact": "standard",
+                "sha256": "f8a8ce447f776a47680e02e19ea3a69827edbbc46e01985803ce3d3df51178d7",
+                "validation_profile": "wasm2,function-references,tail-call",
+                "feature_support": {
+                  "function-references": true,
+                  "tail-call": true
+                }
+              }
+            ]
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "core-feature-probes-and-negatives",
+          "invocation": {
+            "command": "node",
+            "args": [
+              "scripts/test-core-compatibility.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 48,
+          "observation": {
+            "accepted": true,
+            "host": {
+              "name": "node",
+              "version": "v26.5.1",
+              "v8": "14.6.202.34-node.24"
+            },
+            "features": {
+              "function-references": true,
+              "tail-call": true
+            },
+            "negative_tests": 6,
+            "supported_probe_oracle": 7
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "catalog-exact-resolution",
+          "invocation": {
+            "command": "node",
+            "args": [
+              "scripts/test-lib-catalog.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 52,
+          "observation": {
+            "accepted": true,
+            "packages": 4,
+            "negative_tests": 10,
+            "selection": "unique exact lock",
+            "network_access": false,
+            "artifact_changes": false
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "install-no-clobber-and-faults",
+          "invocation": {
+            "command": "node",
+            "args": [
+              "scripts/test-lib-install.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 190,
+          "observation": {
+            "accepted": true,
+            "files_verified": 11,
+            "negative_tests": 10,
+            "concurrent_single_winner": true,
+            "competing_directory_preserved": true,
+            "failed_stage_cleanup": true,
+            "network_access": false
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "fresh-mirror-install-and-paired-execution",
+          "invocation": {
+            "command": "node",
+            "args": [
+              "scripts/validate-lib-install.mjs",
+              "github"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 925,
+          "observation": {
+            "accepted": true,
+            "host": "node",
+            "mirror": "github",
+            "lock_sha256": "63806ae6ee83164fd955753091cbfe74dac689d29c29a5371eadfc07b0ca1953",
+            "receipt": {
+              "schema": "wasmc.public-lib-install/v1",
+              "lock_sha256": "63806ae6ee83164fd955753091cbfe74dac689d29c29a5371eadfc07b0ca1953",
+              "release_commit": "0fec38d59872a7f1527dc94799da542e968f1f8a",
+              "id": "wasmc-std",
+              "version": "1.4.0",
+              "files_verified": 11,
+              "mirror": "github",
+              "publication": "exclusive-directory-symlink",
+              "authority_granted": false
+            },
+            "execution": {
+              "accepted": true,
+              "standard_lib": "wasmc:std@1.4.0",
+              "functions": 73,
+              "dual_consumer_calls": 5120,
+              "current_hosted_compiler_reproduced": true
+            },
+            "source": "fresh exact-public-commit HTTPS downloads",
+            "artifact_changes": false
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "compiler-and-managed-regression",
+          "invocation": {
+            "command": "node",
+            "args": [
+              "scripts/validate-current.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 1119,
+          "observation": {
+            "accepted": true,
+            "runtime": "node",
+            "compiler_sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90",
+            "frozen_corpus_outputs": 30,
+            "expression_cases": 23,
+            "mode": "full",
+            "managed_repeated_calls": 192
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "standard-wasmc-rust-paired-execution",
+          "invocation": {
+            "command": "node",
+            "args": [
+              "examples/current/standard.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 150,
+          "observation": {
+            "accepted": true,
+            "standard_lib": "wasmc:std@1.4.0",
+            "functions": 73,
+            "dual_consumer_calls": 5120,
+            "current_hosted_compiler_reproduced": true
+          },
+          "rust_test_summaries": []
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "schema": "wasmc.public-ci-suite/v1",
+      "label": "runtime-ubuntu-24.04-node-jsdelivr",
+      "family": "runtime",
+      "runtime": "node",
+      "mirror": "jsdelivr",
+      "source_commit": "31259c781042a693c05e5b0400e51e9002a66545",
+      "dirty": false,
+      "platform": "linux",
+      "arch": "x64",
+      "compiler_sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90",
+      "runtime_version": "v26.5.1",
+      "tests": [
+        {
+          "id": "source-free-archive-deployment",
+          "invocation": {
+            "command": "bash",
+            "args": [
+              "scripts/validate-source-free-runtime.sh",
+              "node"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 1524,
+          "observation": {
+            "accepted": true,
+            "standard_lib": "wasmc:std@1.4.0",
+            "functions": 73,
+            "dual_consumer_calls": 5120,
+            "current_hosted_compiler_reproduced": true
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "core-full-artifact-admission",
+          "invocation": {
+            "command": "node",
+            "args": [
+              "scripts/check-core-compatibility.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 46,
+          "observation": {
+            "schema": "wasmc.core-compatibility-check/v1",
+            "accepted": true,
+            "host": {
+              "name": "node",
+              "version": "v26.5.1",
+              "v8": "14.6.202.34-node.24"
+            },
+            "results": [
+              {
+                "accepted": true,
+                "artifact": "compiler",
+                "sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90",
+                "validation_profile": "wasm2",
+                "feature_support": {
+                  "function-references": true,
+                  "tail-call": true
+                }
+              },
+              {
+                "accepted": true,
+                "artifact": "automatic-provider",
+                "sha256": "86670b35fe4ff01f9ad4392b42ce8816e4679f680ab788599905edb1bbe6e749",
+                "validation_profile": "wasm2",
+                "feature_support": {
+                  "function-references": true,
+                  "tail-call": true
+                }
+              },
+              {
+                "accepted": true,
+                "artifact": "standard-provider",
+                "sha256": "f54a892aff9068e5c79464029423a2e8f753ddb44010af9ac34a5c9efce2069c",
+                "validation_profile": "wasm2",
+                "feature_support": {
+                  "function-references": true,
+                  "tail-call": true
+                }
+              },
+              {
+                "accepted": true,
+                "artifact": "standard",
+                "sha256": "f8a8ce447f776a47680e02e19ea3a69827edbbc46e01985803ce3d3df51178d7",
+                "validation_profile": "wasm2,function-references,tail-call",
+                "feature_support": {
+                  "function-references": true,
+                  "tail-call": true
+                }
+              }
+            ]
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "core-feature-probes-and-negatives",
+          "invocation": {
+            "command": "node",
+            "args": [
+              "scripts/test-core-compatibility.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 51,
+          "observation": {
+            "accepted": true,
+            "host": {
+              "name": "node",
+              "version": "v26.5.1",
+              "v8": "14.6.202.34-node.24"
+            },
+            "features": {
+              "function-references": true,
+              "tail-call": true
+            },
+            "negative_tests": 6,
+            "supported_probe_oracle": 7
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "catalog-exact-resolution",
+          "invocation": {
+            "command": "node",
+            "args": [
+              "scripts/test-lib-catalog.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 55,
+          "observation": {
+            "accepted": true,
+            "packages": 4,
+            "negative_tests": 10,
+            "selection": "unique exact lock",
+            "network_access": false,
+            "artifact_changes": false
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "install-no-clobber-and-faults",
+          "invocation": {
+            "command": "node",
+            "args": [
+              "scripts/test-lib-install.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 181,
+          "observation": {
+            "accepted": true,
+            "files_verified": 11,
+            "negative_tests": 10,
+            "concurrent_single_winner": true,
+            "competing_directory_preserved": true,
+            "failed_stage_cleanup": true,
+            "network_access": false
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "fresh-mirror-install-and-paired-execution",
+          "invocation": {
+            "command": "node",
+            "args": [
+              "scripts/validate-lib-install.mjs",
+              "jsdelivr"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 1870,
+          "observation": {
+            "accepted": true,
+            "host": "node",
+            "mirror": "jsdelivr",
+            "lock_sha256": "63806ae6ee83164fd955753091cbfe74dac689d29c29a5371eadfc07b0ca1953",
+            "receipt": {
+              "schema": "wasmc.public-lib-install/v1",
+              "lock_sha256": "63806ae6ee83164fd955753091cbfe74dac689d29c29a5371eadfc07b0ca1953",
+              "release_commit": "0fec38d59872a7f1527dc94799da542e968f1f8a",
+              "id": "wasmc-std",
+              "version": "1.4.0",
+              "files_verified": 11,
+              "mirror": "jsdelivr",
+              "publication": "exclusive-directory-symlink",
+              "authority_granted": false
+            },
+            "execution": {
+              "accepted": true,
+              "standard_lib": "wasmc:std@1.4.0",
+              "functions": 73,
+              "dual_consumer_calls": 5120,
+              "current_hosted_compiler_reproduced": true
+            },
+            "source": "fresh exact-public-commit HTTPS downloads",
+            "artifact_changes": false
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "compiler-and-managed-regression",
+          "invocation": {
+            "command": "node",
+            "args": [
+              "scripts/validate-current.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 1084,
+          "observation": {
+            "accepted": true,
+            "runtime": "node",
+            "compiler_sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90",
+            "frozen_corpus_outputs": 30,
+            "expression_cases": 23,
+            "mode": "full",
+            "managed_repeated_calls": 192
+          },
+          "rust_test_summaries": []
+        },
+        {
+          "id": "standard-wasmc-rust-paired-execution",
+          "invocation": {
+            "command": "node",
+            "args": [
+              "examples/current/standard.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 146,
+          "observation": {
+            "accepted": true,
+            "standard_lib": "wasmc:std@1.4.0",
+            "functions": 73,
+            "dual_consumer_calls": 5120,
+            "current_hosted_compiler_reproduced": true
+          },
+          "rust_test_summaries": []
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "schema": "wasmc.public-ci-suite/v1",
+      "label": "rust-release-ubuntu",
+      "family": "rust",
+      "runtime": "node",
+      "mirror": "github",
+      "source_commit": "31259c781042a693c05e5b0400e51e9002a66545",
+      "dirty": false,
+      "platform": "linux",
+      "arch": "x64",
+      "compiler_sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90",
+      "runtime_version": "v26.5.1",
+      "tests": [
+        {
+          "id": "lib-package-contracts",
+          "invocation": {
+            "command": "node",
+            "args": [
+              "scripts/validate-libs.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 41,
+          "observation": null,
+          "rust_test_summaries": []
+        },
+        {
+          "id": "wasmtime-component-consumer-tests",
+          "invocation": {
+            "command": "cargo",
+            "args": [
+              "test",
+              "--locked",
+              "--release"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 178064,
+          "observation": null,
+          "rust_test_summaries": [
+            {
+              "result": "ok",
+              "passed": 1,
+              "failed": 0,
+              "ignored": 0,
+              "measured": 0,
+              "filtered": 0
+            },
+            {
+              "result": "ok",
+              "passed": 0,
+              "failed": 0,
+              "ignored": 0,
+              "measured": 0,
+              "filtered": 0
+            },
+            {
+              "result": "ok",
+              "passed": 1,
+              "failed": 0,
+              "ignored": 0,
+              "measured": 0,
+              "filtered": 0
+            },
+            {
+              "result": "ok",
+              "passed": 1,
+              "failed": 0,
+              "ignored": 0,
+              "measured": 0,
+              "filtered": 0
+            },
+            {
+              "result": "ok",
+              "passed": 0,
+              "failed": 0,
+              "ignored": 0,
+              "measured": 0,
+              "filtered": 0
+            }
+          ]
+        },
+        {
+          "id": "wasmi-wasmtime-runtime-sdk-tests",
+          "invocation": {
+            "command": "cargo",
+            "args": [
+              "test",
+              "--locked",
+              "--release",
+              "-p",
+              "wasmc-core-runtime"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 137318,
+          "observation": null,
+          "rust_test_summaries": [
+            {
+              "result": "ok",
+              "passed": 0,
+              "failed": 0,
+              "ignored": 0,
+              "measured": 0,
+              "filtered": 0
+            },
+            {
+              "result": "ok",
+              "passed": 18,
+              "failed": 0,
+              "ignored": 0,
+              "measured": 0,
+              "filtered": 0
+            },
+            {
+              "result": "ok",
+              "passed": 0,
+              "failed": 0,
+              "ignored": 0,
+              "measured": 0,
+              "filtered": 0
+            }
+          ]
+        },
+        {
+          "id": "wasmtime-compiler-resource-host-execution",
+          "invocation": {
+            "command": "cargo",
+            "args": [
+              "run",
+              "--locked",
+              "--release"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 1297,
+          "observation": null,
+          "rust_test_summaries": []
+        }
+      ],
+      "accepted": true,
+      "rust_toolchain": {
+        "rustc": "rustc 1.98.1 (48a229cea 2026-09-01)",
+        "cargo": "cargo 1.98.1 (797e8a9bc 2026-08-05)",
+        "profile": "release",
+        "build_jobs": "2"
+      }
+    },
+    {
+      "schema": "wasmc.public-ci-suite/v1",
+      "label": "security-full-history",
+      "family": "security",
+      "runtime": "node",
+      "mirror": "github",
+      "source_commit": "31259c781042a693c05e5b0400e51e9002a66545",
+      "dirty": false,
+      "platform": "linux",
+      "arch": "x64",
+      "compiler_sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90",
+      "runtime_version": "v26.5.1",
+      "tests": [
+        {
+          "id": "credential-deleted-unknown-carrier-negatives",
+          "invocation": {
+            "command": "node",
+            "args": [
+              "scripts/test-credential-scan.mjs"
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 1065,
+          "observation": null,
+          "rust_test_summaries": []
+        },
+        {
+          "id": "credential-all-reachable-history",
+          "invocation": {
+            "command": "node",
+            "args": [
+              "scripts/scan-reachable-credentials.mjs",
+              "."
+            ]
+          },
+          "accepted": true,
+          "exit_code": 0,
+          "timed_out": false,
+          "elapsed_ms": 383,
+          "observation": {
+            "schema": "wasmc.reachable-credential-scan/v1",
+            "detector_set": "high-confidence-credentials-v0",
+            "accepted": true,
+            "raw_only": false,
+            "reachable_objects": 769,
+            "scanned_blobs": 475,
+            "raw_bytes": 22993564,
+            "skipped_blobs": 0,
+            "scan_errors": 0,
+            "refs_sha256": "49e2eb5d609cb88d7b8c93580126188c85279688a73e1dedcc801c9a6bf1013f",
+            "objects_sha256": "b4a073baea7dac604eed0634a6bfe848e16eb2bbeb7166827ad87fb23d3230c3",
+            "raw_findings": [
+              {
+                "object": "111e78b2bed5a9658cecb3660e547aee698b273b",
+                "detector": "aws_access_key_id"
+              },
+              {
+                "object": "1a12d7ae32eb35885f6f2cbf472d9f82f4252440",
+                "detector": "aws_access_key_id"
+              }
+            ],
+            "classified_false_positives": [
+              {
+                "object": "111e78b2bed5a9658cecb3660e547aee698b273b",
+                "detector": "aws_access_key_id",
+                "raw_match_count": 2,
+                "classification": "verified-frozen-compiler-base64-false-positive",
+                "decoded_sha256": "8f79429d5499380d93abbb980df6c16a99adc15fee8987068906af11aa757027",
+                "decoded_all_detectors_clear": true,
+                "authorization": "user explicit narrow remediation approval 2026-09-13"
+              },
+              {
+                "object": "1a12d7ae32eb35885f6f2cbf472d9f82f4252440",
+                "detector": "aws_access_key_id",
+                "raw_match_count": 2,
+                "classification": "verified-frozen-compiler-base64-false-positive",
+                "decoded_sha256": "8f79429d5499380d93abbb980df6c16a99adc15fee8987068906af11aa757027",
+                "decoded_all_detectors_clear": true,
+                "authorization": "user explicit narrow remediation approval 2026-09-13"
+              }
+            ],
+            "findings": [],
+            "scope": "all raw bytes scanned; only two exact approved frozen carriers classified after digest/format/import/decoded-nine-detector proof; not exhaustive secret-free proof"
+          },
+          "rust_test_summaries": []
+        }
+      ],
+      "accepted": true
+    }
+  ],
+  "errors": [],
+  "non_claims": [
+    "source-line coverage",
+    "all standard-library task coverage",
+    "new LLM-generation benchmark",
+    "private compiler rebuilt or admitted",
+    "production deployment"
+  ],
+  "workflow_run": {
+    "id": 34730577345,
+    "url": "https://github.com/cbgroom/wasmcrelease/actions/runs/34730577345",
+    "conclusion": "success",
+    "suite_cells": 21,
+    "flow_checks": 130
+  }
+}

@@ -30,6 +30,13 @@ exact commit, every matrix result, and case pass/fail counts. Download
 stdout/stderr logs, observed execution counts and tool versions, including failures.
 See [complete CI scope and reproduction](docs/CI_COVERAGE.md).
 
+Latest complete verified baseline: [21/21 suite cells, 130/130 flow checks,
+18/18 SDK tests](https://github.com/cbgroom/wasmcrelease/actions/runs/34730577345).
+The exact tested source is `31259c781042a693c05e5b0400e51e9002a66545`;
+see [retained result snapshot](admission/public-ci-coverage-v009.json).
+Later documentation receipts do not retarget that measurement; the badge above
+tracks their independent main runs, which may be pending.
+
 | Coverage dimension | Continuous checks |
 |---|---|
 | Host/platform | Linux + macOS; Node26.5.1, Bun1.3.14, Deno2.9.4; both HTTPS mirrors |
