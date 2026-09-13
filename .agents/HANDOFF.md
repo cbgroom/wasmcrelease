@@ -1,5 +1,23 @@
 # WAsmC release maintainer handoff
 
+## Resident WAsmC App and cancellable Native accept
+
+Own branch work/host-resident-app from preceding pushed listener milestone.
+Server now reuses same digest-bound WAsmC App -> frozen Lib, not Lib-only.
+Native exclusive resident Store/input/fuel; JS exclusive slab/instances. Both
+poison App after trap, reject subsequent call without replaying Lib. Invalid
+budget rejected before Lib. Native accept uses fresh terminal cancellation
+handle checked before accept/handoff; independent thread can cancel pending
+wait without retiring listener, next fresh wait succeeds. No guest address,
+new syscall, automatic rebuild/retry or unrestricted guest SDK.
+Local Node/Bun/restricted Deno PASS19connection parity and1000resident calls
+per engine with trap/budget/no-replay oracles,8listener controls. Native4tests,
+strict Clippy PASS. Exact App/Lib digests unchanged; no compiler/provider rebuild.
+Owning LISTENER.md and six-platform Actions extended. Push coherent source;
+continue independent work while CI qualifies, then retain receipts and safely
+advance main only from expected accepted base. Full Host delivery1/5 gates;
+typed transport/browser/Wasmtime/write/TLS/release remain unclosed.
+
 ## Preauthorized listener/resident Lib milestone
 
 Own branch work/host-tcp-listener from pushed read-stop milestone; old-source

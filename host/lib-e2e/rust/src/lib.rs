@@ -1,4 +1,5 @@
 pub mod listener;
+pub mod resident_app;
 pub mod resident_sum;
 pub mod tcp;
 
