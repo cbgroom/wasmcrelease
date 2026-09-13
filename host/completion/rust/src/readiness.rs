@@ -15,6 +15,32 @@ struct Control {
     terminal: bool,
     wake: Option<Waker>,
 }
+/// Internal integration seam, not a new guest API or capability grant.
+#[doc(hidden)]
+pub trait ReadyReadOwner {
+    fn register(&mut self, registry: &mio::Registry, token: Token) -> Result<(), i32>;
+    fn deadline(&self) -> Instant;
+    fn cancel(&mut self) -> Result<(), i32>;
+    fn poll(&mut self, now: Instant) -> Result<ReadProgress, i32>;
+    fn close_acknowledged(&self) -> bool;
+}
+impl ReadyReadOwner for NonblockingTcpRead {
+    fn register(&mut self, registry: &mio::Registry, token: Token) -> Result<(), i32> {
+        self.register(registry, token)
+    }
+    fn deadline(&self) -> Instant {
+        self.deadline()
+    }
+    fn cancel(&mut self) -> Result<(), i32> {
+        self.cancel()
+    }
+    fn poll(&mut self, now: Instant) -> Result<ReadProgress, i32> {
+        self.poll(now)
+    }
+    fn close_acknowledged(&self) -> bool {
+        self.close_acknowledged()
+    }
+}
 /// Single issued cancellation capability. Old handles never target a new read.
 pub struct ReadCancellation {
     control: Arc<Mutex<Control>>,
@@ -36,18 +62,17 @@ impl ReadCancellation {
 /// One preopened read, one OS event queue, one wakeup and four event slots.
 /// Admit under a finite NativeOwnerSupervisor before wait. No thread is spawned;
 /// the embedding runs wait on its bounded I/O owner, not a guest executor thread.
-pub struct ReadyTcpRead {
-    read: NonblockingTcpRead,
+pub struct ReadyRead<R: ReadyReadOwner> {
+    read: R,
     poll: Poll,
     events: Events,
     control: Arc<Mutex<Control>>,
     waits: usize,
 }
-impl ReadyTcpRead {
+pub type ReadyTcpRead = ReadyRead<NonblockingTcpRead>;
+impl<R: ReadyReadOwner> ReadyRead<R> {
     /// Registration failure returns the read owner, retaining its descriptor.
-    pub fn new(
-        mut read: NonblockingTcpRead,
-    ) -> Result<(Self, ReadCancellation), (i32, NonblockingTcpRead)> {
+    pub fn new(mut read: R) -> Result<(Self, ReadCancellation), (i32, R)> {
         let setup = (|| {
             let poll = Poll::new().map_err(|_| -8)?;
             let wake = Waker::new(poll.registry(), Token(1)).map_err(|_| -8)?;
@@ -123,7 +148,7 @@ impl ReadyTcpRead {
         self.read.close_acknowledged()
     }
 }
-impl QuarantineEndpoint for ReadyTcpRead {
+impl<R: ReadyReadOwner> QuarantineEndpoint for ReadyRead<R> {
     fn acknowledge_close(&mut self) -> Result<(), i32> {
         if self.close_acknowledged() {
             Ok(())
@@ -148,7 +173,7 @@ impl QuarantineEndpoint for ReadyTcpRead {
         self.acknowledge_close()
     }
 }
-impl Drop for ReadyTcpRead {
+impl<R: ReadyReadOwner> Drop for ReadyRead<R> {
     fn drop(&mut self) {
         // No user code executes under this mutex; preserve closure even if poisoned.
         let mut state = self.control.lock().unwrap_or_else(|p| p.into_inner());

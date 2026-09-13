@@ -1,0 +1,31 @@
+{
+  "stage": "Shared Native TCP and connected-UDP OS readiness kernel",
+  "source_authority": "Resolve containing exact checkpoint from Git",
+  "inputs_sha256": {
+    "host/completion/rust/src/lib.rs": "0af0a7adf5efbaa33b9b765b69a00f9d9f257eff81ce33db43383ee313a3d24e",
+    "host/completion/rust/src/readiness.rs": "0deccc19b0bcf540d3b7e469ed97b28b8ed23e5c1fa15109356588d4c9aa7673",
+    "host/completion/rust/src/nonblocking_udp.rs": "5d5a9259d0f5613a44f5319418142ae50a4c8ca9d6aaf93ce292aac9bd04551e"
+  },
+  "local": {
+    "platform": "Darwin arm64",
+    "qualification": "fresh direct rustc with locked existing Mio1.2.3/getrandom0.4.3 dependencies; not a fresh Cargo dependency graph",
+    "native_readiness_tests": 42,
+    "default_tests": 25,
+    "failed": 0,
+    "ignored": 0,
+    "strict_readiness_test_clippy": "PASS",
+    "workflow_yaml_syntax": "PASS",
+    "fixed_output_cap_kib": 262144,
+    "observed_peak_and_terminal_kib": 251488
+  },
+  "controls": [
+    "empty, exact-capacity, one-byte oversize and larger datagrams",
+    "real pending OS wait and cross-thread cancellation wakeup",
+    "absolute deadline with descriptor closed before publication",
+    "cancel before ready message/deadline, stale terminal cancel/wait rejection",
+    "capacity/connected-peer admission returns caller descriptor on error"
+  ],
+  "retained_attempt": "Start HANDOFF checkpoint initially failed checksum validation; required integrity refresh was committed as a separate correction before implementation qualification. Original immutable history retained.",
+  "cross_platform": "Actions updated for42 native-readiness tests; execution acceptance pending exact-source run",
+  "boundary": "No new Host primitive, compiler/Lib byte change or guest ABI. Preopened connected peers must already be policy-admitted. Descriptor aliases remain separately owned. UDP excess-message consumption is not reversible and errors never authorize replay. This is actual Native owner evidence, not typed guest UDP/Common SDK, JS/Native parity or mobile proof."
+}

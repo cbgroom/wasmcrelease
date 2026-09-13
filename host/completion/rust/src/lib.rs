@@ -4,6 +4,8 @@ use std::{
 };
 static NEXT: AtomicU32 = AtomicU32::new(1);
 pub mod nonblocking_tcp;
+#[cfg(feature = "native-readiness")]
+pub mod nonblocking_udp;
 pub mod owner_supervisor;
 #[cfg(feature = "native-readiness")]
 pub mod read_reactor;

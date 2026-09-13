@@ -2,6 +2,16 @@
 
 ## Nonblocking Native read owner
 
+The Native readiness profile also provides `ReadyUdpRead`, using the SAME
+`ReadyRead` OS wait/cancellation kernel as TCP. Its preopened socket must already
+be connected to an explicitly admitted peer; it adds no bind, DNS or ambient
+network authority. Empty datagrams are successful messages, not stream EOF.
+Read capacity is1..16bytes; an extra detection byte makes oversized datagrams
+fail instead of silently truncating. That rejected message was consumed, so
+error must not trigger replay. Cancellation wins over deadline and ready data;
+the owner closes its descriptor before settlement. Embedding aliases remain
+separately owned. This does not yet qualify typed guest UDP or mobile execution.
+
 `rust/src/nonblocking_tcp.rs` owns one explicitly preopened TCP descriptor and
 reads at most16bytes with one nonblocking syscall per poll. No DNS/listener,
 thread, raw guest memory, new Host import or business dispatch is added.
@@ -39,7 +49,7 @@ node scripts/test-host-nonblocking-read.mjs
 node scripts/test-host-nonblocking-read.mjs --readiness
 ```
 
-The readiness profile runs39tests including six OS wakeup and eight shared
+The readiness profile runs42tests including six OS wakeup, three UDP owner and eight shared
 reactor controls. `read_reactor.rs` shares one OS queue, one wakeup and17event
 slots across at most16preopened reads. Each read has its own scoped owner key,
 cancellation and deadline. Completion closes before releasing supervisor pins;
