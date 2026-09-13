@@ -27,7 +27,7 @@ export function parseCatalog(bytes) {
   for (const row of catalog.packages) {
     if (typeof row.id !== 'string' || !row.id || !/^\d+\.\d+\.\d+$/.test(row.version) || typeof row.wit_package !== 'string' || !digest(row.wit_sha256) || !digest(row.artifact_sha256) || !Array.isArray(row.files) || !row.files.length || row.files.length > 256 || !Array.isArray(row.keywords) || !row.keywords.every(k => typeof k === 'string') || typeof row.historical !== 'boolean') fail('catalog.invalid');
     safePath(row.root);
-    if (row.companion && (row.id !== 'wasmc-std' || row.companion.path !== 'standard/corelib/4.8.0/corelib.wasm' || !digest(row.companion.sha256) || !Number.isSafeInteger(row.companion.bytes) || row.companion.bytes <= 0)) fail('catalog.invalid');
+    if (row.companion && (row.id !== 'wasmc-std' || row.companion.path !== 'standard/corelib/4.8.0/corelib.wasm' || !digest(row.companion.sha256) || !Number.isSafeInteger(row.companion.bytes) || row.companion.bytes <= 0 || row.companion.bytes > 16777216)) fail('catalog.invalid');
     if (row.id === 'wasmc-std' && !row.companion) fail('catalog.invalid');
     const paths = new Set();
     for (const file of row.files) {
@@ -46,7 +46,7 @@ export function searchCatalog(bytes, query = '', includeHistorical = false) {
     .sort((a,b) => `${a.id}@${a.version}` < `${b.id}@${b.version}` ? -1 : `${a.id}@${a.version}` > `${b.id}@${b.version}` ? 1 : 0)
     .map(({files, ...row}) => row);
 }
-export function resolveCatalog(bytes, request, read = packageReader()) {
+export function selectCatalog(bytes, request) {
   if (!request || !digest(request.catalog_sha256) || sha256(bytes) !== request.catalog_sha256) fail('catalog.identity_mismatch');
   if (typeof request.id !== 'string' || typeof request.version !== 'string' || !digest(request.wit_sha256) || !digest(request.artifact_sha256)) fail('resolve.exact_lock_required');
   const catalog = parseCatalog(bytes);
@@ -55,6 +55,10 @@ export function resolveCatalog(bytes, request, read = packageReader()) {
   if (matches.length !== 1) fail('resolve.ambiguous');
   const row = matches[0];
   if (row.wit_sha256 !== request.wit_sha256 || row.artifact_sha256 !== request.artifact_sha256) fail('resolve.identity_mismatch');
+  return {catalog, row};
+}
+export function resolveCatalog(bytes, request, read = packageReader()) {
+  const {catalog, row} = selectCatalog(bytes, request);
   const contents = new Map();
   for (const file of row.files) {
     let data;

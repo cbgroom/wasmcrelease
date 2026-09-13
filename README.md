@@ -49,8 +49,10 @@ Consumers must pin `v0.0.9` or its full commit and verify `SHA256SUMS`.
 
 Supplemental public [Lib discovery and exact resolver](catalog/README.md)
 provides offline `search → resolve` over verified published package bytes.
-It lives on later main commits, not the immutable v0.0.9 tag. Installation and
-third-party authoring remain separate next stages; no new binaries are implied.
+It lives on later main commits, not the immutable v0.0.9 tag.
+[Pinned download/install](catalog/INSTALL.md) now verifies the full package and
+publishes without overwriting existing destinations. Third-party authoring
+remains the next stage; no new compiler or Lib binaries are implied.
 
 Compatibility follow-up: [complete engine contract and independent Node18
 reproduction](compatibility/README.md). The standard Core artifact requires

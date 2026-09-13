@@ -31,6 +31,8 @@ jobs:
         run: node scripts/test-core-compatibility.mjs
       - name: Verify public Lib discovery and exact selection boundaries
         run: node scripts/test-lib-catalog.mjs
+      - name: Verify no-clobber installation and transport rejection boundaries
+        run: node scripts/test-lib-install.mjs
       - name: Verify compiler and expressions independently of managed Host support
         run: node scripts/validate-current.mjs --compile-only
 
@@ -86,11 +88,15 @@ jobs:
           case "${{ matrix.runtime }}" in
             node|bun)
               "${{ matrix.runtime }}" scripts/test-lib-catalog.mjs
+              "${{ matrix.runtime }}" scripts/test-lib-install.mjs
+              "${{ matrix.runtime }}" scripts/validate-lib-install.mjs github
               "${{ matrix.runtime }}" scripts/validate-current.mjs
               "${{ matrix.runtime }}" examples/current/standard.mjs
               ;;
             deno)
               deno run --allow-read --allow-write --allow-env=TMPDIR,TMP,TEMP scripts/test-lib-catalog.mjs
+              deno run --allow-read --allow-write --allow-env=TMPDIR,TMP,TEMP scripts/test-lib-install.mjs
+              deno run --allow-read --allow-write --allow-env=TMPDIR,TMP,TEMP --allow-run scripts/validate-lib-install.mjs github
               deno run --allow-read --allow-write --allow-run --allow-env scripts/validate-current.mjs
               deno run --allow-read examples/current/standard.mjs
               ;;

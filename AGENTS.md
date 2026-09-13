@@ -35,8 +35,8 @@ console.log(instance.exports.run(5, 6)); // 17
 | Package-manager-free compile/self-test on Node/Deno/Bun | shipped; Node+Bun+Deno same-candidate evidenced | [runtime/README.md](runtime/README.md), `runtime/wasmc-runtime-v0` |
 | Scalars, control flow, private functions, WIT values | shipped | [LANGUAGE.md](LANGUAGE.md) |
 | Managed String/List/Map/record applications | shipped through matching Lib | [LIB.md](LIB.md), `instantiateLib` |
-| Discover existing public Libs and resolve exact local bytes | supplemental main tool | [catalog/README.md](catalog/README.md) |
-| Public third-party Lib build/install/publish | not closed | do not infer availability from authoring documentation |
+| Discover Libs, resolve exact bytes and pinned download/install | supplemental main tools | [catalog/README.md](catalog/README.md), [installation](catalog/INSTALL.md) |
+| Public third-party Lib build/publish | not closed | do not infer availability from authoring documentation |
 | WIT resources, constructors, receiver methods | shipped Component profile | `libs/wasmc-resource-counter` |
 | Explicit synchronous scalar Host imports | shipped; exact allowlist | `libs/wasmc-host-clock` |
 | JavaScript, raw Core Wasm, Rust/Wasmtime | shipped | [HOSTING.md](HOSTING.md) |

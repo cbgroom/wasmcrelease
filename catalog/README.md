@@ -53,8 +53,9 @@ passed seven JS/compatibility/integrity jobs, including catalog tests. Its full
 Rust rebuild was still running at this checkpoint; read the live final status
 before calling the whole run green.
 Delivery closure has four distinct gates: compatibility, offline catalog/exact
-resolve, pinned download/install, and public third-party build. First two are
-implemented (2/4); the latter two remain. This is not an all-stdlib coverage
+resolve, pinned download/install, and public third-party build. First three are
+implemented (3/4); authoring remains. See [pinned installation](INSTALL.md).
+This is not an all-stdlib coverage
 percentage, complete ecosystem readiness or a claim of Ultra/System completion.
 
 `test-lib-catalog.mjs` resolves all four real packages twice with equal receipts
@@ -64,8 +65,8 @@ missing file, companion drift and symlink escape. Existing standard Host tests
 remain the execution oracle; catalog verification alone proves no new behavior.
 
 `refresh-lib-catalog.mjs` is a maintainer generator over an explicit approved
-list, not public installation or authoring. New packages require source-authority
-admission and manifest review. Public download/install, third-party build and
-publish remain next stages, not implemented commands. Reuse existing private
+list, not public authoring. New packages require source-authority
+admission and manifest review. Pinned download/install is now documented in
+INSTALL.md; third-party build and publish remain next stages. Reuse existing private
 exact-WIT/root machinery for authoring rather than adding language syntax or a
 second allocator/ownership model.

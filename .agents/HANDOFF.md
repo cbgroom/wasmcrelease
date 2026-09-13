@@ -2,7 +2,7 @@
 
 ## 0. Status
 
-Task state: started — pinned public Lib download/install.
+Task state: qualification in progress — pinned public Lib download/install.
 Branch: feat/public-lib-install. Public v0.0.9 is already released;
 immutable tag and release branch remain unchanged. Main may carry follow-up
 consumer tooling/docs, not new admitted compiler or Lib binaries.
@@ -15,9 +15,9 @@ major-version promise or a language-memory-management change.
 
 ## 2. Current Focus
 
-Expose verified existing Lib packages through offline search and unique exact
-resolve. Discovery never selects versions or authorizes imports. Catalog is
-finite, digest-bound and derived from admitted files, not a new registry authority.
+Install caller-pinned exact public Lib bytes from fixed HTTPS mirrors after
+complete validation; publish atomically without overwriting any destination.
+CoreLib companion remains exact; installation never grants Host capability.
 
 ## 3. Existing Evidence
 
@@ -53,6 +53,18 @@ current corpus, standard caller oracle, integrity and unchanged artifacts.
 
 ## 5. Current Action
 
+Controlled install tests pass Node/Bun/Deno: ten failure boundaries, one winner
+under concurrency, competing-directory preservation and failed-stage cleanup.
+Actual install CLI freshly downloads eleven std/companion files. GitHub Raw
+passes all three Hosts; jsDelivr passes Node; each installed standard execution
+passes5120 paired calls. Exact harness evidence is being collected in
+admission/public-lib-install-v009.json. Deno Node-compat launcher permission
+failures are preserved; native clearEnv launcher passes without broad env grant.
+No compiler/Lib binaries changed. Unix symlink atomic visibility is not
+directory-fsync/power-loss durability or a Windows promise.
+Resume: finalize evidence/integrity, push owning branch, run targeted Actions,
+expected-base main advance, unchanged-tag readback and Release notes readback.
+
 Offline public search/exact resolve verifies four real package inventories and
 std CoreLib companion. Three JS Hosts pass ten negative boundaries and equal
 repeated receipts; existing standard caller5120 checks pass each Host.
@@ -73,11 +85,11 @@ No original114-case reproduction or external performance-number adoption.
 
 ## 6. Next Actions
 
-Current bounded catalog/exact-resolve slice is locally100percent. The four
+Current bounded download/install slice is under final qualification. The four
 delivery closure gates are compatibility, catalog/exact resolve, download/
-install, and public third-party build: first two implemented (2/4), last two
-remain. This denominator is not all-stdlib coverage or system/Ultra readiness.
-Next implement explicit pinned download/install, then delegate authoring to
+install, and public third-party build: first three implemented (3/4), authoring
+remains. This denominator is not all-stdlib coverage or system/Ultra readiness.
+Next close public third-party authoring through
 existing private source-authority machinery, without inventing language APIs.
 
 Compatibility instructions/evidence and v0.0.9 Release notes are published.
@@ -86,8 +98,8 @@ Actions run34729449573 passed all seven JavaScript/integrity/compatibility jobs;
 the unrelated full Rust rebuild was still running at this checkpoint.
 Local complete current tests, maintainer gate and credential negatives passed.
 Do not call this new Actions run fully green before reading its final status.
-Defer catalog/third-party build work to
-its own source-authority stage; do not invent shipped commands here.
+Third-party build remains its own source-authority stage; do not invent shipped
+commands or duplicate compiler build/semantic machinery here.
 
 ## 7. Boundaries
 

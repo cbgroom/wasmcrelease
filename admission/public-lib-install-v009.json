@@ -1,0 +1,235 @@
+{
+  "schema": "wasmc.public-lib-install-evidence/v1",
+  "platform": "darwin",
+  "arch": "arm64",
+  "release_commit": "0fec38d59872a7f1527dc94799da542e968f1f8a",
+  "results": [
+    {
+      "host": "node",
+      "args": [
+        "scripts/test-lib-install.mjs"
+      ],
+      "status": 0,
+      "result": {
+        "accepted": true,
+        "files_verified": 11,
+        "negative_tests": 10,
+        "concurrent_single_winner": true,
+        "competing_directory_preserved": true,
+        "failed_stage_cleanup": true,
+        "network_access": false
+      }
+    },
+    {
+      "host": "bun",
+      "args": [
+        "scripts/test-lib-install.mjs"
+      ],
+      "status": 0,
+      "result": {
+        "accepted": true,
+        "files_verified": 11,
+        "negative_tests": 10,
+        "concurrent_single_winner": true,
+        "competing_directory_preserved": true,
+        "failed_stage_cleanup": true,
+        "network_access": false
+      }
+    },
+    {
+      "host": "deno",
+      "args": [
+        "run",
+        "--allow-read",
+        "--allow-write",
+        "--allow-env=TMPDIR,TMP,TEMP",
+        "scripts/test-lib-install.mjs"
+      ],
+      "status": 0,
+      "result": {
+        "accepted": true,
+        "files_verified": 11,
+        "negative_tests": 10,
+        "concurrent_single_winner": true,
+        "competing_directory_preserved": true,
+        "failed_stage_cleanup": true,
+        "network_access": false
+      }
+    },
+    {
+      "host": "node",
+      "args": [
+        "scripts/validate-lib-install.mjs",
+        "github"
+      ],
+      "status": 0,
+      "result": {
+        "accepted": true,
+        "host": "node",
+        "mirror": "github",
+        "lock_sha256": "63806ae6ee83164fd955753091cbfe74dac689d29c29a5371eadfc07b0ca1953",
+        "receipt": {
+          "schema": "wasmc.public-lib-install/v1",
+          "lock_sha256": "63806ae6ee83164fd955753091cbfe74dac689d29c29a5371eadfc07b0ca1953",
+          "release_commit": "0fec38d59872a7f1527dc94799da542e968f1f8a",
+          "id": "wasmc-std",
+          "version": "1.4.0",
+          "files_verified": 11,
+          "mirror": "github",
+          "publication": "exclusive-directory-symlink",
+          "authority_granted": false
+        },
+        "execution": {
+          "accepted": true,
+          "standard_lib": "wasmc:std@1.4.0",
+          "functions": 73,
+          "dual_consumer_calls": 5120,
+          "current_hosted_compiler_reproduced": true
+        },
+        "source": "fresh exact-public-commit HTTPS downloads",
+        "artifact_changes": false
+      }
+    },
+    {
+      "host": "node",
+      "args": [
+        "scripts/validate-lib-install.mjs",
+        "jsdelivr"
+      ],
+      "status": 0,
+      "result": {
+        "accepted": true,
+        "host": "node",
+        "mirror": "jsdelivr",
+        "lock_sha256": "63806ae6ee83164fd955753091cbfe74dac689d29c29a5371eadfc07b0ca1953",
+        "receipt": {
+          "schema": "wasmc.public-lib-install/v1",
+          "lock_sha256": "63806ae6ee83164fd955753091cbfe74dac689d29c29a5371eadfc07b0ca1953",
+          "release_commit": "0fec38d59872a7f1527dc94799da542e968f1f8a",
+          "id": "wasmc-std",
+          "version": "1.4.0",
+          "files_verified": 11,
+          "mirror": "jsdelivr",
+          "publication": "exclusive-directory-symlink",
+          "authority_granted": false
+        },
+        "execution": {
+          "accepted": true,
+          "standard_lib": "wasmc:std@1.4.0",
+          "functions": 73,
+          "dual_consumer_calls": 5120,
+          "current_hosted_compiler_reproduced": true
+        },
+        "source": "fresh exact-public-commit HTTPS downloads",
+        "artifact_changes": false
+      }
+    },
+    {
+      "host": "bun",
+      "args": [
+        "scripts/validate-lib-install.mjs",
+        "github"
+      ],
+      "status": 0,
+      "result": {
+        "accepted": true,
+        "host": "bun",
+        "mirror": "github",
+        "lock_sha256": "63806ae6ee83164fd955753091cbfe74dac689d29c29a5371eadfc07b0ca1953",
+        "receipt": {
+          "schema": "wasmc.public-lib-install/v1",
+          "lock_sha256": "63806ae6ee83164fd955753091cbfe74dac689d29c29a5371eadfc07b0ca1953",
+          "release_commit": "0fec38d59872a7f1527dc94799da542e968f1f8a",
+          "id": "wasmc-std",
+          "version": "1.4.0",
+          "files_verified": 11,
+          "mirror": "github",
+          "publication": "exclusive-directory-symlink",
+          "authority_granted": false
+        },
+        "execution": {
+          "accepted": true,
+          "standard_lib": "wasmc:std@1.4.0",
+          "functions": 73,
+          "dual_consumer_calls": 5120,
+          "current_hosted_compiler_reproduced": true
+        },
+        "source": "fresh exact-public-commit HTTPS downloads",
+        "artifact_changes": false
+      }
+    },
+    {
+      "host": "deno",
+      "args": [
+        "run",
+        "--allow-read",
+        "--allow-write",
+        "--allow-env=TMPDIR,TMP,TEMP",
+        "--allow-run",
+        "scripts/validate-lib-install.mjs",
+        "github"
+      ],
+      "status": 0,
+      "result": {
+        "accepted": true,
+        "host": "deno",
+        "mirror": "github",
+        "lock_sha256": "63806ae6ee83164fd955753091cbfe74dac689d29c29a5371eadfc07b0ca1953",
+        "receipt": {
+          "schema": "wasmc.public-lib-install/v1",
+          "lock_sha256": "63806ae6ee83164fd955753091cbfe74dac689d29c29a5371eadfc07b0ca1953",
+          "release_commit": "0fec38d59872a7f1527dc94799da542e968f1f8a",
+          "id": "wasmc-std",
+          "version": "1.4.0",
+          "files_verified": 11,
+          "mirror": "github",
+          "publication": "exclusive-directory-symlink",
+          "authority_granted": false
+        },
+        "execution": {
+          "accepted": true,
+          "standard_lib": "wasmc:std@1.4.0",
+          "functions": 73,
+          "dual_consumer_calls": 5120,
+          "current_hosted_compiler_reproduced": true
+        },
+        "source": "fresh exact-public-commit HTTPS downloads",
+        "artifact_changes": false
+      }
+    }
+  ],
+  "harness_sha256": {
+    "scripts/lib-catalog.mjs": "eb599fcd4295a0a4636f151bc803d433b402171e789bcc77990bc6e480723730",
+    "scripts/lib-install.mjs": "ef0640ce2da54f16ac89f85e2b7ab9d7dbbc191bac134ad14d30786ce3331b5f",
+    "scripts/wasmc-lib.mjs": "70b4fec4d64997267240af5d4600e29629f5dd1729e721898ff215b84c45ec8e",
+    "scripts/test-lib-install.mjs": "63b4564b628cb53a0f9eac579253ac45d3a86fd80ebc700f0328ebd1dc0e18d0",
+    "scripts/validate-lib-install.mjs": "6f55e2bd2796557d96f19361bc4b05ac14064c4b55d4aa1c183dc90209975dc2",
+    "examples/current/standard.mjs": "5cba60a3c9f3359043995ef5343058d925afbed150a37f8213d1bdea4decdc68",
+    "catalog/libs-v009.json": "13fe84e7faf77467b45d97460e9cd9fa1ba7d17c17b0175fb16ce5d694c82d82"
+  },
+  "preserved_failed_controls": [
+    {
+      "category": "Deno Node-compat child launcher permission",
+      "diagnostic": "Requires env access; then Requires env access to NODE_V8_COVERAGE",
+      "resolution": "native Deno.Command with clearEnv true; no new App authority"
+    }
+  ],
+  "stage_completion": {
+    "compatibility": true,
+    "offline_catalog_exact_resolve": true,
+    "download_install": true,
+    "public_third_party_build": false
+  },
+  "non_claims": [
+    "power-loss directory durability",
+    "publisher authenticity",
+    "Windows installation",
+    "third-party package admission",
+    "full standard library coverage"
+  ],
+  "tested_versions": {
+    "node": "v26.5.1",
+    "bun": "1.3.14",
+    "deno": "deno 2.9.4 (stable, release, aarch64-apple-darwin)\nv8 15.0.245.2-rusty\ntypescript 6.0.3"
+  }
+}
