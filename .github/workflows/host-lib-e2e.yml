@@ -372,7 +372,8 @@ jobs:
           npm exec --yes --package=@playwright/cli@0.1.19 -- playwright-cli -s=wasmc-host-ci open "$url" --browser "$BROWSER"
           npm exec --yes --package=@playwright/cli@0.1.19 -- playwright-cli -s=wasmc-host-ci --raw eval 'async () => { const receipt=await globalThis.receiptPromise; if(!receipt.accepted) throw Error(receipt.error); return receipt; }' > "$RUNNER_TEMP/wasmc-browser-receipt.json"
           node --input-type=module -e 'import{readFileSync}from"node:fs";import assert from"node:assert/strict";const r=JSON.parse(readFileSync(process.argv[1]));assert.ok(r.accepted&&r.no_replay&&r.trap_poisoned&&r.resource_cleanup&&r.quarantine_retained);assert.equal(r.resident_calls,1000);assert.equal(r.guard_cases,4);assert.equal(r.stop_failure_cases,4);assert.equal(r.supervisor_cases,1);assert.equal(r.completion_snapshot_cases,3);assert.equal(r.driver_write_snapshot_cases,1);assert.equal(r.guard_pool_cases,1);assert.equal(r.kernel_core_cases,4);console.log(JSON.stringify(r));' "$RUNNER_TEMP/wasmc-browser-receipt.json"
-          printf '%s\n' "Source $SOURCE; real $BROWSER; App/Lib1000 resident calls; four Core/guard/quarantine probes; no raw TCP/mobile claim" >> "$GITHUB_STEP_SUMMARY"
+          node --input-type=module -e 'import{readFileSync}from"node:fs";import assert from"node:assert/strict";const r=JSON.parse(readFileSync(process.argv[1]));assert.equal(r.quarantine_retirement_cases,1);' "$RUNNER_TEMP/wasmc-browser-receipt.json"
+          printf '%s\n' "Source $SOURCE; real $BROWSER; App/Lib1000 resident calls; Core/guard/quarantine probes plus explicit unknown-retirement fence; no raw TCP/mobile claim" >> "$GITHUB_STEP_SUMMARY"
   required:
     if: always()
     needs: [composition, browser, stream-shapes, mobile-compile]

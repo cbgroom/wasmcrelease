@@ -2,7 +2,7 @@ import {createResidentApp} from '../tcp/resident-app.mjs';
 import {ScopedCompletionGuard} from '../completion/scoped-guard.mjs';
 import {readTcpWindow} from '../tcp/read-window.mjs';
 import {writeTcpWindow} from '../tcp/write-window.mjs';
-import {TcpStopFailure} from '../tcp/stop-fence.mjs';
+import {TcpStopFailure,TcpGuardRetirementFailure} from '../tcp/stop-fence.mjs';
 import {TcpOwnerSupervisor} from '../tcp/supervisor.mjs';
 import {MemoryHost} from '../v0/reference.mjs';
 
@@ -87,7 +87,19 @@ async function run(){
     rejects(()=>seen[0].guard.complete(seen[0].op,[9]),-1);equal(seen[1].guard.counts(),[1,1]);
     deliver([7]);equal(await next,[7]);equal(seen[1].guard.counts(),[0,0]);equal(pooled.status(),{active:0,quarantined:0,limit:1});guardPoolCases++;
   }finally{ScopedCompletionGuard.prototype.submit=originalSubmit;}
-  return {accepted:true,browser_user_agent:navigator.userAgent,app_sha256:appSha,lib_sha256:libSha,kernel_sha256:await digest(kernelBytes),kernel_core_cases:4,kernel_simulator_only:true,resident_calls:1000,core_cases:4,guard_cases:guardCases,completion_snapshot_cases:completionSnapshotCases,driver_write_snapshot_cases:writeSnapshotCases,guard_pool_cases:guardPoolCases,stop_failure_cases:stopCases,supervisor_cases:1,trap_poisoned:true,no_replay:true,resource_cleanup:true,quarantine_retained:true,raw_tcp:false,real_device_io:false,mobile_qualified:false};
+  let quarantineRetirementCases=0;const originalRelease=ScopedCompletionGuard.prototype.release;
+  const isolated=new TcpOwnerSupervisor(1);let isolatedReads=0,isolatedCloses=0,isolatedStops=0,releaseCalls=0;
+  const malformed={read:async()=>{isolatedReads++;return new Array(17).fill(7);},release:async()=>{isolatedCloses++;},terminateRead:async()=>{isolatedStops++;}};
+  const rejected=await isolated.read(malformed).catch(error=>error);check(rejected.reason==='malformed-completion','missing malformed quarantine');
+  ScopedCompletionGuard.prototype.release=function(ticket){const result=originalRelease.call(this,ticket);return ++releaseCalls===2?undefined:result;};
+  try {
+    const unknown=await isolated.retireQuarantine(rejected.quarantineTicket).catch(error=>error);
+    check(unknown instanceof TcpGuardRetirementFailure&&unknown.quarantineTicket===rejected.quarantineTicket,'unknown cleanup not retained');
+    equal(unknown.owner.guard.counts(),[0,0]);equal(isolated.status(),{active:0,quarantined:1,limit:1});
+    check(await isolated.retireQuarantine(rejected.quarantineTicket).catch(error=>error)===-7,'unknown cleanup retried');
+    check(isolatedReads===1&&isolatedCloses===1&&isolatedStops===1&&releaseCalls===2,'cleanup replay');quarantineRetirementCases++;
+  }finally{ScopedCompletionGuard.prototype.release=originalRelease;}
+  return {accepted:true,browser_user_agent:navigator.userAgent,app_sha256:appSha,lib_sha256:libSha,kernel_sha256:await digest(kernelBytes),kernel_core_cases:4,kernel_simulator_only:true,resident_calls:1000,core_cases:4,guard_cases:guardCases,completion_snapshot_cases:completionSnapshotCases,driver_write_snapshot_cases:writeSnapshotCases,guard_pool_cases:guardPoolCases,quarantine_retirement_cases:quarantineRetirementCases,stop_failure_cases:stopCases,supervisor_cases:1,trap_poisoned:true,no_replay:true,resource_cleanup:true,quarantine_retained:true,raw_tcp:false,real_device_io:false,mobile_qualified:false};
 }
 globalThis.receiptPromise=run().catch(error=>({accepted:false,error:String(error)})).then(receipt=>{
   document.querySelector('#receipt').textContent=JSON.stringify(receipt);

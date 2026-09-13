@@ -170,6 +170,15 @@ of a plain YAML run scalar was passed as arguments instead of a second command.
 No existing receipt may be interpreted as this previously missing Node check.
 The UDP fault entrypoint rejects extra arguments before issuing network I/O;
 the folded-command shape is a local negative regression, not a successful test.
+Its three-runtime subprocess regression passes, as do the real local UDP faults.
+Chrome152, Firefox155 and WebKit26.5 each pass the new explicit quarantine
+retirement probe and earlier1000-call/Core/snapshot/pool controls. Sessions and
+the temporary loopback server are closed after local testing. These are local
+controlled glue results, not mobile runtime or Native internal-fault acceptance.
+The dependency-gate checkpoint has complete successful composition/Core runs;
+resolve that source through its branch and runs. Independent composition logs
+show20 guard-retirement suites but only14 UDP-retirement suites: the folded
+Node command is not counted. Pool and this later fence need their own evidence.
 Std compatibility production must originate in the private producer; public
 artifact rewriting is not authorized by release-integrity. No Std bytes changed.
 
