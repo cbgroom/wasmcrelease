@@ -2,6 +2,16 @@
 
 ## 0. Status
 
+File journey now requires an independently pure-rustc-compiled Rust Core caller
+alongside WAsmC. Same real files, admitted Lib and expected disk/error oracles:
+8 positives/8 negatives per Node/Bun/Deno locally PASS; strict Rust build/fmt
+PASS. Added controlled sync failure after actual write: written bytes retained,
+no durability acknowledgement, one sync attempt and no App replay. Not OS fault
+or power-loss evidence. Guest still does not initiate I/O; uniform typed carrier,
+Native equivalent binding and production containment remain unfinished.
+Previous source Actions 34772492928 completed all nine jobs PASS. New dual-caller
+workflow compiles Rust with no Cargo and requires separate exact-source receipts.
+
 Focused three-journey iteration: real file vertical fixture now compiles the
 ordinary WAsmC caller, calls the admitted Lib, writes/syncs and independently
 checks disk output. Four positives plus cancelled/trap/readonly empty-output

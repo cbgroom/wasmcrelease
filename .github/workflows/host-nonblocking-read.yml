@@ -107,6 +107,9 @@ jobs:
       - run: node host/scenarios/environment-test.mjs
       - run: bun host/scenarios/environment-test.mjs
       - run: deno run host/scenarios/environment-test.mjs
+      - run: rustup toolchain install 1.96.0 --profile minimal --target wasm32-unknown-unknown
+      - name: Independently compile Rust file caller without Cargo
+        run: rustc +1.96.0 --edition=2024 --crate-type cdylib --target wasm32-unknown-unknown -C opt-level=s -C panic=abort -C strip=symbols -D warnings host/scenarios/file-app.rs -o "$RUNNER_TEMP/file-rust.wasm"
       - name: Twelve-family component behavior coverage and ownership controls
         run: |
           node host/file-io/root-test.mjs
@@ -118,9 +121,9 @@ jobs:
           node host/scenarios/all-api-test.mjs > "$RUNNER_TEMP/all-api-node.json"
           bun host/scenarios/all-api-test.mjs > "$RUNNER_TEMP/all-api-bun.json"
           deno run --allow-read --allow-write host/scenarios/all-api-test.mjs > "$RUNNER_TEMP/all-api-deno.json"
-          node host/scenarios/file-app-test.mjs > "$RUNNER_TEMP/file-app-node.json"
-          bun host/scenarios/file-app-test.mjs > "$RUNNER_TEMP/file-app-bun.json"
-          deno run --allow-read --allow-write host/scenarios/file-app-test.mjs > "$RUNNER_TEMP/file-app-deno.json"
+          node host/scenarios/file-app-test.mjs "$RUNNER_TEMP/file-rust.wasm" > "$RUNNER_TEMP/file-app-node.json"
+          bun host/scenarios/file-app-test.mjs "$RUNNER_TEMP/file-rust.wasm" > "$RUNNER_TEMP/file-app-bun.json"
+          deno run --allow-read --allow-write host/scenarios/file-app-test.mjs "$RUNNER_TEMP/file-rust.wasm" > "$RUNNER_TEMP/file-app-deno.json"
           node --input-type=module -e 'import fs from "node:fs";for(const name of ["node","bun","deno"]){const p=`${process.env.RUNNER_TEMP}/file-app-${name}.json`;const r=JSON.parse(fs.readFileSync(p));r.exact_source=process.env.GITHUB_SHA;r.os=process.env.RUNNER_OS;r.arch=process.env.RUNNER_ARCH;fs.writeFileSync(p,JSON.stringify(r));console.log(JSON.stringify(r));}'
           node --input-type=module -e 'import fs from "node:fs";for(const name of ["node","bun","deno"]){const p=`${process.env.RUNNER_TEMP}/all-api-${name}.json`;const r=JSON.parse(fs.readFileSync(p));r.exact_source=process.env.GITHUB_SHA;r.os=process.env.RUNNER_OS;r.arch=process.env.RUNNER_ARCH;fs.writeFileSync(p,JSON.stringify(r));console.log(JSON.stringify(r));}'
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02

@@ -52,21 +52,29 @@ journeys rather than growing the test catalog:
 | Resident network (S3/S4) | `../tcp/server-test.mjs --js-only`, `../udp/test.mjs`: actual framed service and fixed-peer datagrams with resident App/Lib | uniform carrier and reviewed HTTP/TLS composition |
 | Failure/retirement (S5) | file cancellation/trap/readonly plus `../tcp/stop-failure-test.mjs`, existing root/window and completion controls | actual backend race/stop and unified guest Future cleanup |
 
-The file journey runs four real positive inputs and three negative paths on
-Node/Bun/Deno locally. TCP locally verifies 19 connections, 17 accepted frames,
+The file journey runs four real positive inputs and four negative paths for
+each independently compiled WAsmC/Rust caller (8 positives/8 negatives per
+runtime) on Node/Bun/Deno locally. Sync failure is a controlled fault: written
+bytes remain visible, durability is not acknowledged, and neither App nor sync
+is automatically replayed. This is not OS crash/recovery evidence.
+TCP locally verifies 19 connections, 17 accepted frames,
 two rejected frames and 1,000 resident calls; UDP verifies five accepted and
 three rejected messages. Stop-failure controls deliberately inject faults;
 they are not positive OS stop proof. These are restricted vertical fixtures,
 not uniform v1 acceptance. In the file fixture the trusted embedding initiates
 I/O and the ordinary guest performs the Lib computation; do not label it a
 guest resource SDK. Cancellation is ordered delivery suppression, not OS abort.
-Cross-platform Actions now retains nine source-bound file journey receipts;
-new-candidate CI is pending until actually complete.
+Previous WAsmC-only file candidate Actions 34772492928 completed all nine jobs
+PASS on three OSes. The new dual-caller source requires its own qualification;
+Actions compiles the Rust caller with pure rustc and retains nine file receipts.
 
 ```sh
-node host/scenarios/file-app-test.mjs
-bun host/scenarios/file-app-test.mjs
-deno run --allow-read --allow-write host/scenarios/file-app-test.mjs
+rustc --edition=2024 --crate-type cdylib --target wasm32-unknown-unknown \
+  -C opt-level=s -C panic=abort -C strip=symbols -D warnings \
+  host/scenarios/file-app.rs -o target/nonblocking-read/file-rust.wasm
+node host/scenarios/file-app-test.mjs target/nonblocking-read/file-rust.wasm
+bun host/scenarios/file-app-test.mjs target/nonblocking-read/file-rust.wasm
+deno run --allow-read --allow-write host/scenarios/file-app-test.mjs target/nonblocking-read/file-rust.wasm
 node host/tcp/server-test.mjs --js-only
 node host/udp/test.mjs
 node host/tcp/stop-failure-test.mjs
