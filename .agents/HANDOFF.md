@@ -2,6 +2,23 @@
 
 ## 0. Status
 
+Portable Std1.4.1 is a source-free qualification candidate on its own branch,
+not an accepted main/prod package or discovery winner. Resolve exact private
+source, regenerated package identities, toolchain and local results from
+admission/portable-std-v0/manifest.json. Local private Std suite10/10 and public
+Node18/Node26/Bun/Deno plus Wasmi2/Wasmtime47 paired execution passed.
+Public native glue was locally compiled directly against compatible warm
+dependencies; full Cargo cross-platform compilation belongs to Actions.
+The new workflow requires15JS cells plus3native cells (both engines), exact
+checkout-SHA receipts,12JS rejection controls and frozen64product integrity.
+Read the exact run before claiming cross-platform acceptance. No compiler
+source is published, old1.4.0 and prod pointers remain unchanged. Next: accept
+the candidate's exact Actions run, then integrate its public tooling/package
+candidate; embedded catalog/search and immutable release promotion are separate.
+Local Deno initially rejected unnecessary child-process environment access;
+the runner now records CI SHA without spawning Git. Actions checks Git itself.
+Bounded local output is not exhaustive73API edge or mobile-device qualification.
+
 Compiler protection is explicit: source/internal implementation remains private;
 Wasmi/Wasmtime integration, Host adapters, CLI and conformance/build glue may be
 public. User authorizes private compiler edits, not disclosure. Public CI only

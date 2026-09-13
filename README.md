@@ -4,6 +4,14 @@
 
 Source-free public packages for the private-source `wasmc` compiler.
 
+The [Portable Std1.4.1 qualification candidate](admission/portable-std-v0/README.md)
+regenerates the unchanged73-API Std contract for Wasmi2 and Node18, with matching
+Rust/WAsmC consumers. It is **not released/default**. The
+[18-cell public verification workflow](https://github.com/cbgroom/wasmcrelease/actions/workflows/portable-std.yml)
+tests Linux/macOS/Windows, Node18/22/26, Bun/Deno and both Native engines,
+retaining exact-SHA results and rejection controls. No private compiler source
+is compiled by this workflow; old Std1.4.0 and prod remain frozen.
+
 Development [preconnected TCP + Lib reference](host/tcp/README.md) exercises real
 restricted loopback streams and frozen Wasm algorithm computation in JS/Wasmi.
 It is not a production network SDK, browser raw TCP, TLS or a new guest syscall.

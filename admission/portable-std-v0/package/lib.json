@@ -1,0 +1,98 @@
+{
+  "agent": {
+    "delta": {
+      "path": "references/agent-delta.json",
+      "sha256": "830b5046b0bdd7fb1c07360a0f3584117e00dab02060085f6c6661c139799721"
+    },
+    "skill": {
+      "path": "SKILL.md",
+      "sha256": "f8e87fad5499b56f528a8c75f712faad977747b1da9e1b557ca91fc20da479ac"
+    }
+  },
+  "artifact": {
+    "bytes": 44201,
+    "format": "core-wasm",
+    "path": "artifact.wasm",
+    "sha256": "2f2ca2e92ddf87591125c7bad322ae3680702e43e007c2c0a06f1ddcff31ad63"
+  },
+  "bindings": {
+    "rust_core": {
+      "artifact_sha256": "2f2ca2e92ddf87591125c7bad322ae3680702e43e007c2c0a06f1ddcff31ad63",
+      "cargo_toml": {
+        "path": "bindings/rust/Cargo.toml",
+        "sha256": "92529d517f02428c5fe9cffb54b040539a80af82e97c6fd6273a3f2852eb756a"
+      },
+      "crate": "wasmc-std-core",
+      "functions": 73,
+      "import_module": "wasmc:lib/wasmc.std@1.4.1",
+      "path": "bindings/rust",
+      "plan_sha256": "3b9f8181ac376a103f628ac719744ad8c9a27770e45ca223a77185c40c94633f",
+      "schema": "wasmc.lib-rust-core-sdk/v0",
+      "source": {
+        "path": "bindings/rust/src/lib.rs",
+        "sha256": "b92b480bfc6ca926104b649f2a9c4aca065b49cbe2ed167d9d1ff9d2ddffff47"
+      },
+      "wit_sha256": "5abbed39c185835cfbbc5c2b961fb904b3ad66f42b22aef1ac7a40835ee246e9"
+    }
+  },
+  "build": {
+    "inputs": [
+      {
+        "kind": "cargo-lock",
+        "path": "component-oracle/Cargo.lock",
+        "sha256": "18ba52ad6a2fe9a1fa396bb846b2d8b2bad641dbb0abcc0dbbef1c42d2da9fad"
+      },
+      {
+        "kind": "typed-resource-core",
+        "path": "private/typed-resource-core.wasm",
+        "sha256": "2f2ca2e92ddf87591125c7bad322ae3680702e43e007c2c0a06f1ddcff31ad63"
+      },
+      {
+        "kind": "typed-resource-plan",
+        "path": "typed-resource-plan.json",
+        "sha256": "3b9f8181ac376a103f628ac719744ad8c9a27770e45ca223a77185c40c94633f"
+      }
+    ],
+    "language": "rust+core-wasm",
+    "locked": true,
+    "offline": true,
+    "profile": "release",
+    "target": "wasm32-unknown-unknown"
+  },
+  "closure": {
+    "build_dependencies": "linked-into-artifact",
+    "public_exports": "root-wit-only",
+    "public_lib_dependencies": [],
+    "schema": "wasmc.lib-closure/v0"
+  },
+  "compatibility": {
+    "abi_epoch": 1,
+    "wasmc_min": "0.0.1"
+  },
+  "component": {
+    "bytes": 139462,
+    "format": "component-wasm",
+    "path": "component.wasm",
+    "sha256": "f7ba31dc6391b70318910706fad7e11f635e893b934325828118941eba8fface"
+  },
+  "core_abi": {
+    "bytes": 26407,
+    "path": "core-abi.json",
+    "schema": "wasmc.lib-core-abi/v0",
+    "sha256": "f963017d6e4467d77c72f1a971c1e394069d3606be13ed419b8e49ac06477ab6"
+  },
+  "id": "wasmc-std",
+  "schema": "wasmc.lib/v2",
+  "typed_resource_plan": {
+    "bytes": 36177,
+    "path": "typed-resource-plan.json",
+    "sha256": "3b9f8181ac376a103f628ac719744ad8c9a27770e45ca223a77185c40c94633f"
+  },
+  "version": "1.4.1",
+  "wit": {
+    "package": "wasmc:std@1.4.1",
+    "path": "lib.wit",
+    "sha256": "5abbed39c185835cfbbc5c2b961fb904b3ad66f42b22aef1ac7a40835ee246e9",
+    "world": "standard-lib"
+  }
+}

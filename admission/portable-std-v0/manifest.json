@@ -1,0 +1,122 @@
+{
+  "schema": "wasmc.portable-std-admission/v0",
+  "stage": "qualification-candidate-not-release",
+  "private_source_revision": "b57b70739295c79b56491d38cfcbcd75f57e8a09",
+  "package": {
+    "id": "wasmc-std",
+    "version": "1.4.1",
+    "wit_package": "wasmc:std@1.4.1",
+    "abi_epoch": 1
+  },
+  "corelib": {
+    "path": "standard/corelib/4.8.0/corelib.wasm",
+    "bytes": 245810,
+    "sha256": "f54a892aff9068e5c79464029423a2e8f753ddb44010af9ac34a5c9efce2069c"
+  },
+  "profile": {
+    "id": "portable-scalar-wasm2-v0",
+    "actual_core_validation": "complete wasmparser WASM2 without SIMD",
+    "unadmitted": [
+      "function-references",
+      "tail-call",
+      "simd",
+      "multi-memory"
+    ],
+    "model": "CoreLib-owned memory; scalar and opaque handles, not shared-everything"
+  },
+  "files": [
+    {
+      "bytes": 403,
+      "path": "package/SKILL.md",
+      "sha256": "f8e87fad5499b56f528a8c75f712faad977747b1da9e1b557ca91fc20da479ac"
+    },
+    {
+      "bytes": 44201,
+      "path": "package/artifact.wasm",
+      "sha256": "2f2ca2e92ddf87591125c7bad322ae3680702e43e007c2c0a06f1ddcff31ad63"
+    },
+    {
+      "bytes": 127,
+      "path": "package/bindings/rust/Cargo.toml",
+      "sha256": "92529d517f02428c5fe9cffb54b040539a80af82e97c6fd6273a3f2852eb756a"
+    },
+    {
+      "bytes": 28360,
+      "path": "package/bindings/rust/src/lib.rs",
+      "sha256": "b92b480bfc6ca926104b649f2a9c4aca065b49cbe2ed167d9d1ff9d2ddffff47"
+    },
+    {
+      "bytes": 139462,
+      "path": "package/component.wasm",
+      "sha256": "f7ba31dc6391b70318910706fad7e11f635e893b934325828118941eba8fface"
+    },
+    {
+      "bytes": 26407,
+      "path": "package/core-abi.json",
+      "sha256": "f963017d6e4467d77c72f1a971c1e394069d3606be13ed419b8e49ac06477ab6"
+    },
+    {
+      "bytes": 3087,
+      "path": "package/lib.json",
+      "sha256": "eef347a4d5c857638b72e8e4939b28f3dd4237c39c019f2b7d899fa0a2e05f3c"
+    },
+    {
+      "bytes": 5704,
+      "path": "package/lib.wit",
+      "sha256": "5abbed39c185835cfbbc5c2b961fb904b3ad66f42b22aef1ac7a40835ee246e9"
+    },
+    {
+      "bytes": 314,
+      "path": "package/references/agent-delta.json",
+      "sha256": "830b5046b0bdd7fb1c07360a0f3584117e00dab02060085f6c6661c139799721"
+    },
+    {
+      "bytes": 36177,
+      "path": "package/typed-resource-plan.json",
+      "sha256": "3b9f8181ac376a103f628ac719744ad8c9a27770e45ca223a77185c40c94633f"
+    },
+    {
+      "bytes": 1462,
+      "path": "rust.wasm",
+      "sha256": "7f99164e4da3af70749ad11cb65611e89c6bc649a5e40033bd4b78c3744b0950"
+    },
+    {
+      "bytes": 2580,
+      "path": "wasmc.wasm",
+      "sha256": "8823d3744b00e26aa4e0812ec1c9e652282c19ed1367be8bb1ba668451b42ad5"
+    }
+  ],
+  "toolchain": {
+    "rust": "1.96.0",
+    "binaryen": "126",
+    "wasmi": "2.0.0",
+    "wasmtime": "47.0.4"
+  },
+  "local_qualification": {
+    "std_suite": {
+      "passed": 10,
+      "failed": 0,
+      "ignored": 0,
+      "filtered": 0,
+      "seconds": 76.67
+    },
+    "paired_engines": [
+      "Wasmi2.0.0",
+      "Wasmtime47.0.4",
+      "Node18.19.1",
+      "Node26.5.1",
+      "Bun1.3.14",
+      "Deno2.9.4"
+    ],
+    "calls_per_engine": 5120,
+    "rounds": 128,
+    "vectors": 20,
+    "frozen_product_files_unchanged": 64
+  },
+  "limits": [
+    "Representative paired corpus, not exhaustive standalone73API edge tests.",
+    "Desktop JS/Native qualification is not mobile-device or browser Host-global proof.",
+    "Component view is separately packaged; Core parity does not prove Component feature portability.",
+    "No catalog/search snapshot or prod pointer promotion in this candidate."
+  ]
+}
