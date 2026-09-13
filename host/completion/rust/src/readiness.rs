@@ -51,7 +51,7 @@ impl ReadyTcpRead {
         let setup = (|| {
             let poll = Poll::new().map_err(|_| -8)?;
             let wake = Waker::new(poll.registry(), Token(1)).map_err(|_| -8)?;
-            read.register(poll.registry())?;
+            read.register(poll.registry(), Token(0))?;
             Ok::<_, i32>((poll, wake))
         })();
         let (poll, wake) = match setup {

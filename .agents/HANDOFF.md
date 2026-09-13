@@ -2,14 +2,25 @@
 
 ## 0. Status
 
-Active next slice: shared bounded read reactor, maximum16owned reads, one OS
+Active slice: shared bounded read reactor, maximum16owned reads, one OS
 queue/wakeup, independent cancellation and absolute deadlines. Reuse existing
 NativeOwnerSupervisor pins/quota/close fences. No guest ABI or Host syscall.
 Prior run34769384047 complete PASS; new source needs its own receipts.
 Local output admission remains64MiB, start46428KiB; no engine-cache writes.
 Guest Future/typed transport remains a later slice, not claimed by reactor tests.
+Local completion: default25/25 and readiness38/38 PASS, including7shared-reactor
+controls; strict readiness Clippy,fmt and existing JSfault/lifetime regressions
+PASS. Output46536KiB remains below65536KiB. Reactor reuses scoped supervisor,
+never-reused private tokens, close acknowledgement and bounded in-flight quotas.
+Fatal inconsistent backend control proves retained pin and denied admission.
+Prior single-owner run's six exact-source receipts have been downloaded and
+their input digests compared with Git; retained under
+.agents/workstreams/host-readiness/single-owner-receipts. They do not qualify
+this new reactor. Cross-platform milestone requires own38test receipts on3OSes.
+Local implementation100%; full Host gate acceptance remains1/5(20%). Next:
+guest Future delivery with bounded queued-result lifetime, then typed Core SDK.
 
-Active local slice: optional native-readiness backend using OS readiness and a
+Previous single-owner slice: optional native-readiness using OS readiness and a
 cross-thread cancellation wakeup, without sleep polling or internal worker
 creation. Explicit opt-in; default completion crate dependency graph unchanged.
 Reuse one owned read and supervisor close fences; close cancellation wakeup
@@ -30,10 +41,10 @@ within64MiB. Existing downstream default Cargo lock resolves without mutation.
 New milestone workflow requires both profiles on all3desktop OSes; qualify it
 against its own exact-source downloaded receipts before main integration.
 Implementation slice locally100%; complete Host acceptance still1/5(20%).
-Next: shared bounded multi-operation reactor and guest Future adapter; this
+At that checkpoint, next was shared reactor and guest Future adapter; the
 single-owner wait is not an executor or complete typed Core async transport.
 
-Active branch: nonblocking TCP read owner. This slice adds no Host import or
+Earlier checkpoint: nonblocking TCP read owner. This adds no Host import or
 guest ABI. Start from accepted main (resolve parent with Git). Implemented a
 preopened, exclusive socket owner that performs only nonblocking reads, checks
 cancellation/deadline before each read and closes its owned descriptor before

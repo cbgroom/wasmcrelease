@@ -65,7 +65,11 @@ impl NonblockingTcpRead {
         stream
     }
     #[cfg(feature = "native-readiness")]
-    pub(crate) fn register(&mut self, registry: &mio::Registry) -> Result<(), i32> {
+    pub(crate) fn register(
+        &mut self,
+        registry: &mio::Registry,
+        token: mio::Token,
+    ) -> Result<(), i32> {
         let stream = self.stream.take().ok_or(-4)?;
         let mut registered = match stream {
             OwnedStream::Plain(s) => mio::net::TcpStream::from_std(s),
@@ -75,7 +79,7 @@ impl NonblockingTcpRead {
             }
         };
         let result = registry
-            .register(&mut registered, mio::Token(0), mio::Interest::READABLE)
+            .register(&mut registered, token, mio::Interest::READABLE)
             .map_err(|_| -8);
         self.stream = Some(OwnedStream::Registered(registered));
         result

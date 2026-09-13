@@ -6,6 +6,8 @@ static NEXT: AtomicU32 = AtomicU32::new(1);
 pub mod nonblocking_tcp;
 pub mod owner_supervisor;
 #[cfg(feature = "native-readiness")]
+pub mod read_reactor;
+#[cfg(feature = "native-readiness")]
 pub mod readiness;
 pub mod scoped;
 impl owner_supervisor::QuarantineEndpoint for nonblocking_tcp::NonblockingTcpRead {

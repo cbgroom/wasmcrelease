@@ -28,8 +28,8 @@ Default dependency graph stays unchanged. Native readiness uses Mio1.2.3 without
 default features, only `os-poll` and `net` (not WASI, TLS or an engine dependency).
 
 `wait` blocks the embedding's bounded I/O owner: it must not run on a guest
-executor thread. It creates no worker threads. **A shared multi-operation reactor,
-guest Future/executor adapter and typed guest async SDK remain unimplemented.**
+executor thread. It creates no worker threads. **A guest Future/executor adapter
+and typed guest async SDK remain unimplemented.**
 Socket reads still copy at most16bytes; this is not shared-memory/zero-copy.
 Local and desktop Actions run25default tests (10new TCP/owner
 controls), with exact source/input-digest receipts via:
@@ -39,7 +39,16 @@ node scripts/test-host-nonblocking-read.mjs
 node scripts/test-host-nonblocking-read.mjs --readiness
 ```
 
-The readiness profile runs31tests including six real OS wakeup controls.
+The readiness profile runs38tests including six OS wakeup and seven shared
+reactor controls. `read_reactor.rs` shares one OS queue, one wakeup and17event
+slots across at most16preopened reads. Each read has its own scoped owner key,
+cancellation and deadline. Completion closes before releasing supervisor pins;
+cancel requests retain quota until driven. A batch returns at most256owned bytes;
+the embedding separately budgets queued/retained delivered results. Private
+readiness IDs never reuse and reject at32767rather than wrap. Completed/dropped
+cancellation capabilities reject; fatal driver state denies further admission
+and retains remaining owners/pins until explicit outer teardown. No thread per
+read, periodically sleeping reactor, shared memory or guest-visible opcode.
 CI qualifies Linux/macOS/Windows independently; local PASS is not their receipt.
 No engine dependency, compiler source or immutable artifact is changed.
 
