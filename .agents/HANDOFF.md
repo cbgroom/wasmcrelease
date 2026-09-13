@@ -2,6 +2,16 @@
 
 ## 0. Status
 
+Desktop milestone Actions 34771863772 completed all nine jobs PASS. Offline
+review of 21 downloaded component/JS-S1/Native-S1 receipts verifies exact Git
+source, all recorded source inputs, shared caller digest consistency and narrow
+acceptance flags. Reproduce with host/scenarios/verify-desktop-receipts.mjs;
+the review is not an independent caller rebuild or runtime identity attestation.
+S2 implementation review now records typed correlation, initialized windows,
+non-consuming retirement and backend-drain acceptance requirements. No accepted
+v1 WIT/SDK, new compiler binary or immutable release is claimed. Next implement
+the producer-owned generic carrier and ordinary real-file App vertical path.
+
 Current twelve-family component coverage slice: inventory-driven tests execute
 all candidate families without a memory-device simulator. Add bounded named
 preopened-root attenuation/ownership transfer and initialized copied write
@@ -12,9 +22,8 @@ Node/Bun/Deno locally pass 24 suite rejection controls, 12 root fault/ownership
 controls and 13 window controls each. Real commit/write proves owned snapshot,
 busy retention, actual backend settlement and reentrant pin protection.
 Failed root close retains ownership; only explicit retirement retries close.
-Actions requires these suites on three OSes and nine exact-source component
-receipts. Prior Native S1 run 34770899122 completed PASS; newer component source
-requires its own qualification. Native parity for new root/window adapters,
+Actions qualified these suites on three OSes with nine exact-source component
+receipts. Native S1 on the same candidate also passed. Native parity for new root/window adapters,
 generic typed batch/deadline wait and formal resource/Future SDK remain pending.
 
 Current Native S1 slice: same public WAsmC/Rust Core bytes and admitted Lib,

@@ -58,6 +58,24 @@ from missing implementation. First close S1 typed round-trip plus one S2 vertica
 read/process/write path; then S3/S4, with S5 required throughout. Don't let new
 Host-only fixture work postpone the typed App path.
 
+The [S2 implementation review](TYPED_FILE_PATH.md) records the carrier/lifetime
+requirements and the actual App acceptance gate before signatures are fixed.
+It is a proposal, not an additional API baseline or accepted SDK.
+
+Desktop run [34771863772](https://github.com/cbgroom/wasmcrelease/actions/runs/34771863772)
+completed all nine jobs against source
+`3eb64351e057a18a1412f6b36b50faeb74864290`. Independently downloaded 21 receipts
+pass exact Git-source/input-digest and narrow evidence-level review: nine
+component, nine JS S1 and three Native S1 receipts. Caller binary digests agree
+across all receipts; this review alone does not rebuild the binaries or prove
+runtime identity independently of the workflow. Uniform v1 remains unaccepted.
+
+```sh
+gh run download 34771863772 --dir target/all-api-qualified-receipts
+node host/scenarios/verify-desktop-receipts.mjs target/all-api-qualified-receipts \
+  3eb64351e057a18a1412f6b36b50faeb74864290
+```
+
 Local preflight commands (default tested JS sources require no FS/network grant):
 
 ```sh
