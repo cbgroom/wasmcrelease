@@ -444,6 +444,17 @@ Cancel obsolete known-defective own runs only; never weaken required gates.
 
 ## 5. Current Action
 
+Native resident-read milestone: idle readiness-ID exhaustion no longer
+permanently disables a drained reactor. Replace queue/cancellation namespace
+only with zero active/quarantined owners, release the old wakeup and keep stale
+cancel tokens attached to the retired namespace. Live-owner exhaustion returns
+the unopened-for-reactor offered descriptor unchanged. Local Darwin direct-rustc
+readiness suite39/39 PASS, strict warnings, reused exact warm Mio/getrandom/JSON
+dependencies and refreshed owned test binary; pool61644KiB <64MiB. Old-source
+38-test desktop receipts do not qualify this change. Full-source Actions now
+expects39 tests/eight reactor controls; new desktop receipts remain pending.
+No Host primitive, compiler/Provider bytes or immutable package identity changed.
+
 Full Host delivery denominator is five gates from host/v0/README.md, not
 all-standard-library coverage. Only gate1 is currently fully accepted:20%.
 Do not count locally completed slices as all-platform/full SDK completion.

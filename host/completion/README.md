@@ -39,13 +39,19 @@ node scripts/test-host-nonblocking-read.mjs
 node scripts/test-host-nonblocking-read.mjs --readiness
 ```
 
-The readiness profile runs38tests including six OS wakeup and seven shared
+The readiness profile runs39tests including six OS wakeup and eight shared
 reactor controls. `read_reactor.rs` shares one OS queue, one wakeup and17event
 slots across at most16preopened reads. Each read has its own scoped owner key,
 cancellation and deadline. Completion closes before releasing supervisor pins;
 cancel requests retain quota until driven. A batch returns at most256owned bytes;
 the embedding separately budgets queued/retained delivered results. Private
-readiness IDs never reuse and reject at32767rather than wrap. Completed/dropped
+readiness IDs never reuse within an OS queue. At32767, a fully idle reactor
+replaces the OS queue and cancellation namespace before admitting another read;
+live/quarantined owners still reject rotation. Old cancellation capabilities
+retain an empty retired namespace with no wakeup and cannot cancel a new read
+even when its numeric ID matches. Boundary tests use real sockets and verify
+descriptor ownership on rejected admission; they are not a40K OS throughput
+soak. Completed/dropped
 cancellation capabilities reject; fatal driver state denies further admission
 and retains remaining owners/pins until explicit outer teardown. No thread per
 read, periodically sleeping reactor, shared memory or guest-visible opcode.

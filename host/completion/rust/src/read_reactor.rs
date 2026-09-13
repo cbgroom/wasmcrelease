@@ -80,8 +80,16 @@ impl ReadReactor {
         if self.poisoned {
             return Err((-8, read));
         }
-        if self.entries.len() >= self.limit || self.next > 32767 {
+        if self.entries.len() >= self.limit {
             return Err((-3, read));
+        }
+        if self.next > 32767 {
+            if !self.entries.is_empty() || self.supervisor.counts() != [0, 0] {
+                return Err((-3, read));
+            }
+            if let Err(code) = self.rotate_idle_queue() {
+                return Err((code, read));
+            }
         }
         let id = self.next;
         self.next += 1;
@@ -105,6 +113,28 @@ impl ReadReactor {
     }
     pub fn counts(&self) -> [usize; 2] {
         self.supervisor.counts()
+    }
+    /// Rotate only after every old operation has settled and released its pins.
+    /// Old cancellation capabilities retain the old, empty Control, never the
+    /// new queue's numeric IDs. All fallible setup precedes namespace retirement.
+    fn rotate_idle_queue(&mut self) -> Result<(), i32> {
+        let poll = Poll::new().map_err(|_| -8)?;
+        let wake = Waker::new(poll.registry(), Token(0)).map_err(|_| -8)?;
+        let control = Arc::new(Mutex::new(Control {
+            pending: BTreeMap::new(),
+            wake: Some(wake),
+        }));
+        let mut old = self.control.lock().map_err(|_| -8)?;
+        if !old.pending.is_empty() {
+            return Err(-8);
+        }
+        old.wake.take();
+        drop(old);
+        self.poll = poll;
+        self.control = control;
+        self.events = Events::with_capacity(17);
+        self.next = 1;
+        Ok(())
     }
     fn scan(&mut self) -> Result<Vec<ReadCompletion>, i32> {
         let mut completed = Vec::with_capacity(self.entries.len());
@@ -312,15 +342,41 @@ mod tests {
         assert_eq!(reactor.drive().unwrap()[0].result, Err(-10));
     }
     #[test]
-    fn private_token_exhaustion_never_wraps_to_old_operation() {
+    fn idle_token_exhaustion_rotates_queue_without_reviving_old_cancel() {
         let mut reactor = ReadReactor::new(1).unwrap();
-        reactor.next = 32767;
         let (_, cancel, _peer) = admit(&mut reactor, Duration::from_secs(2));
         cancel.cancel().unwrap();
         reactor.drive().unwrap();
-        let (read, _peer2) = read(Duration::from_secs(2));
-        assert!(matches!(reactor.admit(read), Err((-3, _))));
+        reactor.next = 32768;
+        let (_, next, mut peer) = admit(&mut reactor, Duration::from_secs(2));
+        assert_eq!(next.id, cancel.id);
+        assert!(!Arc::ptr_eq(&next.control, &cancel.control));
+        assert!(cancel.control.lock().unwrap().wake.is_none());
         assert_eq!(cancel.cancel(), Err(-1));
+        peer.write_all(b"new").unwrap();
+        assert_eq!(reactor.drive().unwrap()[0].result.as_ref().unwrap(), b"new");
+        assert_eq!(next.cancel(), Err(-1));
+        assert_eq!(reactor.counts(), [0, 0]);
+    }
+    #[test]
+    fn exhausted_queue_retains_live_owner_and_rejected_descriptor() {
+        let mut reactor = ReadReactor::new(2).unwrap();
+        reactor.next = 32767;
+        let (_, cancel, _peer) = admit(&mut reactor, Duration::from_secs(2));
+        let (read, _peer2) = read(Duration::from_secs(2));
+        let read = match reactor.admit(read) {
+            Err((-3, read)) => read,
+            _ => panic!("exhausted active queue must reject"),
+        };
+        assert!(!read.close_acknowledged());
+        assert_eq!(reactor.counts(), [1, 0]);
+        cancel.cancel().unwrap();
+        assert_eq!(reactor.drive().unwrap()[0].result, Err(-10));
+        let (_, next) = reactor
+            .admit(read)
+            .unwrap_or_else(|_| panic!("idle recovery"));
+        next.cancel().unwrap();
+        assert_eq!(reactor.drive().unwrap()[0].result, Err(-10));
         assert_eq!(reactor.counts(), [0, 0]);
     }
     #[test]
