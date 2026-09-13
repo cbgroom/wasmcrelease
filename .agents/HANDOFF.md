@@ -2,6 +2,19 @@
 
 ## 0. Status
 
+Active scenario qualification slice: select five end-to-end scenarios covering
+all 12 candidate families, separate platform preflight from uniform v1 proof.
+Add real clock/entropy JS and Native source preflights, negative unsupported
+checks and a reviewed scenario/platform matrix. No new Host ABI or producer
+artifact; copied/internal test sources are not App-through-v1 evidence.
+Local Cargo uses only existing small completion target under 64 MiB; no engines.
+Local Node/Bun/Deno source probes PASS with five negative controls each;
+Native environment integration tests 2/2 PASS, focused strict Clippy/fmt PASS.
+Scenario inventory checks all 12 families and disallows false acceptance.
+Actions now checks JS sources on three OS families and Native environment
+sources alongside existing reactor tests. Browser/mobile source probes pending;
+uniform v1 App execution remains planned, not accepted. Next: typed S1/S2 path.
+
 Active specification slice: Host Core API v1 candidate baseline,12mechanism
 families and20family design budget. Document contracts, authority/lifecycle,
 platform negotiation and acceptance gaps; add machine-readable inventory and

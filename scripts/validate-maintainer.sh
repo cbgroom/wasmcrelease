@@ -55,6 +55,7 @@ done
 node scripts/validate-integrity.mjs
 node scripts/validate-libs.mjs
 node scripts/test-host-core-api-baseline.mjs
+node scripts/test-host-scenario-plan.mjs
 
 node --input-type=module <<'JS'
 const facade = await import('./current/wasmc.mjs');

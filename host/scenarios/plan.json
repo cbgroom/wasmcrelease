@@ -1,0 +1,21 @@
+{
+  "schema":"wasmc.host-scenario-plan/v1",
+  "baseline_revision":"1.0.0-draft.1",
+  "uniform_v1_accepted":false,
+  "platform_targets":["node","bun","deno","wasmi","wasmtime","chrome","firefox","webkit","ios","android","harmonyos"],
+  "scenarios":[
+    {"id":"S1","name":"clock-entropy-response","families":["describe","clock-read","entropy-fill","window-acquire","window-commit","release"],"uniform_v1_status":"planned","browser_execution":"secure-context-required","mobile_execution":"real-device-required"},
+    {"id":"S2","name":"restricted-file-transform","families":["describe","open","read","write","invoke","wait","window-acquire","window-commit","release"],"uniform_v1_status":"planned","browser_execution":"optional-permission-bound-storage","mobile_execution":"real-device-required"},
+    {"id":"S3","name":"bounded-http-client","families":["describe","open","read","write","invoke","wait","cancel","window-acquire","window-commit","release"],"uniform_v1_status":"planned","browser_execution":"explicit-http-client-contract","mobile_execution":"real-device-required"},
+    {"id":"S4","name":"resident-tcp-udp-service","families":["describe","open","read","write","invoke","wait","cancel","window-acquire","window-commit","release"],"uniform_v1_status":"planned","browser_execution":"unsupported-raw-network-rejection-required","mobile_execution":"optional-os-permission-and-device-required"},
+    {"id":"S5","name":"lifecycle-fault-isolation","families":["describe","wait","cancel","release","window-acquire","window-commit"],"uniform_v1_status":"planned","browser_execution":"supported-real-backends-only","mobile_execution":"real-device-required"}
+  ],
+  "evidence_policy":{
+    "preflight_counts_as_v1_execution":false,
+    "unsupported_counts_as_positive_execution":false,
+    "compile_counts_as_device_execution":false,
+    "fetch_counts_as_raw_tcp":false,
+    "typed_wasmc_rust_equivalence_required":true,
+    "exact_source_receipts_required":true
+  }
+}
