@@ -1,5 +1,5 @@
 // Consumes one exclusive endpoint. Result is trusted Host state, not guest ABI.
-import {requestTcpStop,requireTcpStop,TcpStopFailure} from './stop-fence.mjs';
+import {requestTcpStop,requireTcpStop,TcpStopFailure,TcpGuardRetirementFailure} from './stop-fence.mjs';
 export async function writeTcpWindow(input,guard,data,{signal,deadlineMs=1000}={}) {
   let window,operation,timer,closed,result,failure,quarantine,stopped=false;
   const stop=()=>{
@@ -43,8 +43,10 @@ export async function writeTcpWindow(input,guard,data,{signal,deadlineMs=1000}={
       try {await input.release();} catch(cause) {quarantine=new TcpStopFailure({input,guard,operation,window},cause,failure??result);}
     }
     if(!quarantine) {
-      if(operation!==undefined) guard.release(operation);
-      if(window!==undefined) guard.release(window);
+      try {
+        if(operation!==undefined){if(guard.release(operation)!==0)throw -8;operation=undefined;}
+        if(window!==undefined){if(guard.release(window)!==0)throw -8;window=undefined;}
+      }catch(cause){quarantine=new TcpGuardRetirementFailure({input,guard,operation,window},cause,failure??result);}
     }
   }
   if(quarantine) throw quarantine;

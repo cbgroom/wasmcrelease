@@ -2,7 +2,14 @@
 
 ## 0. Status
 
-Active source line: work/host-guard-owned-completion. Task state: local proof complete;
+Active source line: work/host-guard-retirement-quarantine. Task state: local proof complete;
+Internal guard release faults no longer lose owner/endpoint admission. Twelve
+before/after/unacknowledged operation/window cases pass Node/Bun/Deno. Preserve
+primary effect, retained quota even with zero records, no I/O replay/reclose.
+Unknown registry mutations explicitly require outer isolation; automatic guard
+recovery remains unsupported. See host/tcp/GUARD_RETIREMENT.md. Exact CI/main
+pending, compiler/CoreLib/SDK unchanged. Ordinary stop/retirement recovery and
+40Klife regressions remain green, not Native OS/internal-corruption proof.
 Completion guard and TCP driver write previously validated then reread mutable
 arrays; getter7->256 reproduced invalid delivery/issued bytes. Both now capture
 indexed bytes/length once; reentrant nested completion cannot be overwritten.

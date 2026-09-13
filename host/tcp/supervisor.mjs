@@ -36,6 +36,9 @@ export class TcpOwnerSupervisor {
   async retireQuarantine(ticket){
     const owner=this.#owners.get(ticket);if(!owner)throw -1;
     if(!owner.failure||owner.retiring)throw -4;
+    // Unknown internal registry mutation cannot be repaired by network close
+    // or blind release retries, even if current diagnostic counts are zero.
+    if(owner.failure.reason==='guard-retirement')throw -7;
     owner.retiring=true;
     try{
       // Explicit supervisor close, never another read/write or fabricated ack.
