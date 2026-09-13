@@ -6,9 +6,10 @@ const reject = mutate => {
   const candidate = structuredClone(snapshot); mutate(candidate);
   assert.throws(() => validateGuidance(candidate), /agent.guidance_invalid/);
 };
-reject(s => s.agents = s.agents.replace('release is\n`v0.0.9`', 'release is\n`v0.0.8`'));
-reject(s => s.agents = s.agents.replace('## v0.0.9 capability', '## v0.0.8 capability'));
-reject(s => s.agents = s.agents.replace('@v0.0.9/', '@v0.0.8/'));
+const tag=snapshot.release.tag;
+reject(s => s.agents = s.agents.replace(`release is\n\`${tag}\``, 'release is\n`v0.0.0`'));
+reject(s => s.agents = s.agents.replace(`## ${tag} capability`, '## v0.0.0 capability'));
+reject(s => s.agents = s.agents.replace(`@${tag}/`, '@v0.0.0/'));
 reject(s => s.agents = s.agents.replaceAll('standard/wasmc-std/1.4.0/', 'missing-standard/'));
 reject(s => s.skills = s.skills.filter(row => !row.path.includes('skills/wasmc-lib/')));
 reject(s => s.skills.push(s.skills[0]));

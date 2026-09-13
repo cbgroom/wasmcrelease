@@ -1,0 +1,13 @@
+[package]
+name = "wasmc-lib-search-public-consumer"
+version = "0.1.0"
+edition = "2021"
+publish = false
+[workspace]
+[dependencies]
+wasmc-lib-search-component = {path = "../../../standard/wasmc-lib-search/0.1.0/bindings/rust"}
+sha2 = "=0.10.9"
+[dev-dependencies]
+wasmi = {version = "=2.0.0", default-features = false, features = ["std", "validate", "auto-dispatch"]}
+[profile.dev]
+debug = false

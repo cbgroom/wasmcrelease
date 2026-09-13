@@ -4,6 +4,20 @@
 
 Source-free public packages for the private-source `wasmc` compiler.
 
+Next staged version: **v0.0.10**, with the [ordinary embedded-index search Lib](examples/lib-search/README.md).
+The [channel policy](docs/RELEASE_CHANNELS.md) defines immutable `-dev.N` →
+`-main.N` → suffix-free prod. The default prod remains v0.0.9 until promotion;
+this candidate does not overwrite that tag or imply stable1.x.
+[![LibSearch equivalence](https://github.com/cbgroom/wasmcrelease/actions/workflows/lib-search.yml/badge.svg?branch=release/lib-search-v010)](https://github.com/cbgroom/wasmcrelease/actions/workflows/lib-search.yml)
+
+Search now runs inside the Lib's Wasm, with no runtime catalog/config input:
+`node scripts/wasmc-lib.mjs search "base64 decode"`. It returns v2 typed `hits`
+(packages and APIs), rather than the older v1 package-only JSON. Exact resolve/
+install still use their separately pinned v0.0.9 catalog; search does not select
+a version or authorize installation. The new Lib has zero imports and a portable
+Core/Component value view. It is not a shared-memory/CoreLib fast ABI and does
+not solve Wasmi/Node18 compatibility of the existing Std1.4.0.
+
 Current release: `v0.0.9`, built from exact private source
 `e69abb73f667f3810b0c40937fd1a1e2d04d4255`. Use `current/` for the
 latest compiler facade; `dist/`, `package/`, and `libs/` are frozen v0.0.4

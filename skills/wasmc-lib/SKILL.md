@@ -5,6 +5,11 @@ description: Consume reviewed WAsmC WIT Lib packages with exact provider identit
 
 # WAsmC Lib consumer
 
+This release tree provides [the ordinary search Lib](../../examples/lib-search/README.md).
+`node scripts/wasmc-lib.mjs search "base64"` executes its embedded Wasm index,
+not a JS catalog search. Results are typed package/API hits, not version selection.
+This capability does not retroactively change immutable v0.0.9.
+
 WIT is semantic authority. Reuse the selected package's ordinary typed APIs;
 private handles, status lanes and lifecycle helpers are not application APIs.
 CoreLib owns managed storage. A provider version is not interchangeable with

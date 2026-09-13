@@ -1,13 +1,27 @@
 import { readFileSync } from 'node:fs';
-import { repositoryRoot, sha256, searchCatalog, resolveCatalog } from './lib-catalog.mjs';
+import { repositoryRoot, resolveCatalog } from './lib-catalog.mjs';
 import { join } from 'node:path';
 import { installLib } from './lib-install.mjs';
+import {instantiateLibSearch} from '../examples/lib-search/client.mjs';
 const [command, ...args] = process.argv.slice(2);
 try {
-  const bytes = readFileSync(join(repositoryRoot, 'catalog/libs-v009.json'));
+  const bytes = command==='search'?null:readFileSync(join(repositoryRoot, 'catalog/libs-v009.json'));
   let result;
   if (command === 'search') {
-    result = {schema:'wasmc.public-lib-search/v1', catalog_sha256:sha256(bytes), selection_authority:false, packages:searchCatalog(bytes,args.filter(a=>a !== '--historical').join(' '),args.includes('--historical'))};
+    const lib=instantiateLibSearch(readFileSync(join(repositoryRoot,'standard/wasmc-lib-search/0.1.0/artifact.wasm')),{artifact_sha256:'44944d542d818b8ad8a9794a555694b8e56ed4f147d4370b1ff975e26b204c80',index_sha256:'c1ccd8f5086b3d3ae0643383f2d3e3e682358b4ccc4a99042233bd35fa73b534'});
+    const words=[];let historical=false,offset=0,limit=64;
+    for(let i=0;i<args.length;i++) {
+      const arg=args[i];
+      if(arg==='--historical')historical=true;
+      else if(arg==='--offset'||arg==='--limit') {
+        const value=args[++i];if(!/^(0|[1-9][0-9]*)$/.test(value??''))throw Object.assign(new Error('cli.arguments_invalid'),{code:'cli.arguments_invalid'});
+        if(arg==='--offset')offset=Number(value);else limit=Number(value);
+      } else if(arg.startsWith('--'))throw Object.assign(new Error('cli.arguments_invalid'),{code:'cli.arguments_invalid'});
+      else words.push(arg);
+    }
+    const page=lib.search({text:words.join(' '),include_historical:historical},offset,limit);
+    if(page.error)throw Object.assign(new Error(page.error),{code:page.error});
+    result={schema:'wasmc.public-lib-search/v2',snapshot:lib.snapshot(),selection_authority:false,offset,limit,hits:page.ok};
   } else if (command === 'install') {
     const [lockPath,destination,...flags]=args;
     const values={};const allowed=new Set(['--lock-sha256','--mirror']);

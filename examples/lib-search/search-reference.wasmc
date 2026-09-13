@@ -1,0 +1,73 @@
+package local:search_reference;
+interface corpus {
+  entry_count: func() -> s32;
+  entry_length: func(entry: s32) -> s32;
+  entry_byte: func(entry: s32, at: s32) -> s32;
+  entry_historical: func(entry: s32) -> s32;
+  query_length: func() -> s32;
+  query_byte: func(at: s32) -> s32;
+}
+interface api {
+  run: func(offset: s32, limit: s32, historical: s32, wanted: s32) -> s32 {
+    if (query_length() > 256) { return -2; }
+    let q: s32 = 0;
+    let tokens: s32 = 0;
+    while (q < query_length()) {
+      while (q < query_length() && space(query_byte(q))) { q = q + 1; }
+      if (q < query_length()) { tokens = tokens + 1; }
+      while (q < query_length() && !space(query_byte(q))) { q = q + 1; }
+    }
+    if (tokens > 16) { return -2; }
+    if (limit < 0 || limit > 64) { return -3; }
+    // High-bit offsets represent unsigned values above this bounded corpus.
+    if (offset < 0) { if (wanted < 0) { return 0; } return -1; }
+    let e: s32 = 0;
+    let skipped: s32 = 0;
+    let count: s32 = 0;
+    while (e < entry_count()) {
+      if ((historical != 0 || entry_historical(e) == 0) && matches(e)) {
+        if (skipped < offset) { skipped = skipped + 1; }
+        else {
+          if (count >= limit) { break; }
+          if (wanted == count) { return e; }
+          count = count + 1;
+        }
+      }
+      e = e + 1;
+    }
+    if (wanted >= 0) { return -1; }
+    return count;
+  }
+}
+world app { import corpus; export api; }
+fn fold(c: s32) -> s32 {
+  if (c >= 65 && c <= 90) { return c + 32; }
+  return c;
+}
+fn space(c: s32) -> bool { return c == 32 || c == 9 || c == 10 || c == 13 || c == 12; }
+fn contains(entry: s32, start: s32, end: s32) -> bool {
+  let n: s32 = entry_length(entry);
+  let i: s32 = 0;
+  while (i + end - start <= n) {
+    let j: s32 = start;
+    let same: bool = true;
+    while (j < end) {
+      if (fold(entry_byte(entry, i + j - start)) != fold(query_byte(j))) { same = false; break; }
+      j = j + 1;
+    }
+    if (same) { return true; }
+    i = i + 1;
+  }
+  return false;
+}
+fn matches(entry: s32) -> bool {
+  let i: s32 = 0;
+  let n: s32 = query_length();
+  while (i < n) {
+    while (i < n && space(query_byte(i))) { i = i + 1; }
+    let start: s32 = i;
+    while (i < n && !space(query_byte(i))) { i = i + 1; }
+    if (start < i && !contains(entry, start, i)) { return false; }
+  }
+  return true;
+}

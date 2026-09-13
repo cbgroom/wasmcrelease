@@ -44,10 +44,12 @@ const sdkFiles = (await walk('sdk')).sort();
 const currentFiles = (await walk('current')).sort();
 const standardFiles = (await walk('standard')).sort();
 const currentExampleFiles = (await walk('examples/current')).sort();
+const libSearchFiles = (await walk('examples/lib-search')).sort();
+const channelFiles = (await walk('channels')).sort();
 const compatibilityFiles = (await walk('compatibility')).sort();
 const catalogFiles = (await walk('catalog')).sort();
 const catalogTools = ['scripts/lib-catalog.mjs', 'scripts/wasmc-lib.mjs', 'scripts/refresh-lib-catalog.mjs', 'scripts/test-lib-catalog.mjs', 'scripts/lib-install.mjs', 'scripts/test-lib-install.mjs', 'scripts/validate-lib-install.mjs'];
-const ciTools = ['scripts/ci-suite.mjs','scripts/ci-summary.mjs','scripts/test-ci-reporting.mjs'];
+const ciTools = ['scripts/ci-suite.mjs','scripts/ci-summary.mjs','scripts/test-ci-reporting.mjs','scripts/release-candidate.mjs','scripts/test-release-channel.mjs'];
 ciTools.push('scripts/agent-guidance-contract.mjs', 'scripts/test-agent-guidance.mjs');
 const compatibilityTools = ['scripts/core-compatibility.mjs', 'scripts/check-core-compatibility.mjs', 'scripts/test-core-compatibility.mjs'];
 const rustWorkspaceFiles = ['Cargo.toml', 'Cargo.lock'];
@@ -61,6 +63,8 @@ const releasePaths = [...new Set([
   ...currentFiles,
   ...standardFiles,
   ...currentExampleFiles,
+  ...libSearchFiles,
+  ...channelFiles,
   ...compatibilityFiles,
   ...compatibilityTools,
   ...catalogFiles,

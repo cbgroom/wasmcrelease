@@ -58,6 +58,7 @@ before treating compiler success as standard-Lib or managed Host support.
 - `current/index.mjs`: sidecar facade with sibling compiler and matching CoreLib.
 - `standard/wasmc-std/1.4.0/`: current WIT standard Lib and generated Rust bindings.
 - `standard/corelib/4.8.0/`: matching standard Lib CoreLib companion.
+- `standard/wasmc-lib-search/0.1.0/`: independently admitted embedded-index Lib in the new candidate tree, not immutable v0.0.9. Start with [its executable guide](examples/lib-search/README.md); `node scripts/wasmc-lib.mjs search "base64"` executes this Lib. See [dev/main/prod status policy](docs/RELEASE_CHANNELS.md).
 - `libs/*/`: frozen historical qualification Libs, not the current standard Lib.
 - `examples/rust-wasmtime/`: locked executable reference project, not an SDK.
 - `runtime/wasmc-runtime-v0/`: current `compiler.wasm` plus thin universal/Node/Bun/Deno Host adapters; no npm or external JS registry.

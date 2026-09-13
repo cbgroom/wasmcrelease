@@ -2,7 +2,7 @@
 
 ## 0. Status
 
-Task state: started — production LibSearch qualification and staged publication.
+Task state: qualifying — production LibSearch and staged publication.
 Branch: release/lib-search-v010. Public v0.0.9 is already released;
 immutable tag and release branch remain unchanged. Main may carry follow-up
 consumer tooling/docs, not new admitted compiler or Lib binaries.
@@ -17,15 +17,15 @@ major-version promise or a language-memory-management change.
 
 User authorized production-grade LibSearch after qualification and accepted
 dev -> main -> suffix-free prod identities. Policy is docs/RELEASE_CHANNELS.md.
-No new Lib binary has been admitted/published at this START checkpoint. Private
-producer remains build authority; public branch will import only its verified
-root, immutable index and public comparison corpus after a clean pushed source
-checkpoint. Candidate version remains subject to fresh tag inspection.
+The new Lib root is imported from the clean pushed private authority recorded
+in admission/lib-search-v010.json. Private producer remains build authority;
+the public tree contains only verified products and public comparison corpus.
+No new version tag has been published yet.
 Plan: portable formal API/Component/SDK tests, all negative controls, exact-source
 product provenance, public source-free CI comparison and stage-aware promotion.
 No compiler rebuild here; do not move v0.0.9 or make dev/main default prod.
-Resume: own START push, then source-free tests and metadata; wait for private
-candidate acceptance before adding any new binary.
+Resume: qualify and push the exact candidate, read both live CI workflows,
+then publish/promote stages without changing product bytes.
 
 Install caller-pinned exact public Lib bytes from fixed HTTPS mirrors after
 complete validation; publish atomically without overwriting any destination.
@@ -73,6 +73,18 @@ deterministic preflight only after actual evidence. Validate probes/negatives,
 current corpus, standard caller oracle, integrity and unchanged artifacts.
 
 ## 5. Current Action
+
+New search Root imported from clean pushed private authority in
+admission/lib-search-v010.json; compiler/CoreLib unchanged. Public source-free
+Node18/26, Bun and Deno formal API576-case comparison run locally. Each
+compares Rust-produced search with independent WAsmC and JS algorithms,
+including ASCII-only folding, non-ASCII whitespace and bounded u32 paging;
+each also completes11000 resident calls with18 memory pages. Typed client passes.
+New lib-search workflow covers10 JS OS/runtime cells, actual Wasmi Core and
+generated Rust Component SDK in release profile; full CI also checks immutable
+product inventory and12 promotion negatives. dev publication/main/prod are
+pending exact public CI. Product identity is channels/candidates/0.0.10.json,
+not the root's default-prod discovery version. All parent Skills now exist.
 
 Agent guidance branch has full successful source-free CI run34740318776 at its
 exact source. It is integrated here without altering release tags/products.
