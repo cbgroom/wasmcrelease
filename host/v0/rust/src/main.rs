@@ -21,15 +21,54 @@ struct Host {
     ops: BTreeMap<i64, Operation>,
     next: i64,
     bytes: Vec<i64>,
+    description_override: Option<(i64, i64)>,
+    effect_calls: i64,
 }
 impl Host {
+    fn fixture() -> Self {
+        let description_override = std::env::args().find_map(|arg| {
+            let text = arg.strip_prefix("--describe-override=")?;
+            let (field, value) = text.split_once(':').expect("trusted fault fixture format");
+            let field = field.parse::<i32>().expect("i32 field");
+            let value = value.parse::<i32>().expect("i32 value");
+            assert!((0..=4).contains(&field));
+            Some((i64::from(field), i64::from(value)))
+        });
+        Self {
+            next: 100,
+            description_override,
+            ..Self::default()
+        }
+    }
     fn step(&mut self, name: &str, a: i64, b: i64) -> i64 {
+        if name != "describe" {
+            self.effect_calls += 1;
+        }
         match name {
-            "describe" => match a {
-                1 => 3,
-                2 => 1,
-                _ => -1,
-            },
+            "describe" => {
+                if a != 1 && a != 2 {
+                    return -1;
+                }
+                if let Some((field, value)) = self.description_override {
+                    if b == field {
+                        return value;
+                    }
+                }
+                match b {
+                    0 => {
+                        if a == 1 {
+                            3
+                        } else {
+                            1
+                        }
+                    }
+                    1 => 1,
+                    2 => 1,
+                    3 => 16,
+                    4 => 8,
+                    _ => -7,
+                }
+            }
             "window_acquire" => {
                 if !(0..=16).contains(&a) || self.windows.len() >= 8 {
                     return -3;
@@ -137,7 +176,7 @@ fn main() {
             {
                 println!(
                     "{}",
-                    serde_json::to_string(&wasmtime_profile::run(&path)).unwrap()
+                    serde_json::to_string(&wasmtime_profile::run(&path, Host::fixture())).unwrap()
                 );
                 return;
             }
@@ -172,18 +211,14 @@ fn main() {
                 )
                 .unwrap();
         }
-        let mut store = Store::new(
-            &engine,
-            Host {
-                next: 100,
-                ..Host::default()
-            },
-        );
+        let mut store = Store::new(&engine, Host::fixture());
         store.set_fuel(100_000).unwrap();
         let instance = linker.instantiate_and_start(&mut store, &module).unwrap();
         let run = instance.get_typed_func::<i32, i32>(&store, "run").unwrap();
         let mut rows = Vec::new();
-        for size in [0, 1, 4, 16] {
+        let fault = store.data().description_override.is_some();
+        let sizes = if fault { vec![4] } else { vec![0, 1, 4, 16] };
+        for size in sizes {
             store.set_fuel(100_000).unwrap();
             let result = run.call(&mut store, size).unwrap();
             let mut row = vec![
@@ -192,6 +227,9 @@ fn main() {
                 store.data().ops.len() as i64,
             ];
             row.extend(&store.data().bytes);
+            if fault {
+                row.push(store.data().effect_calls);
+            }
             rows.push(row);
         }
         println!("{}", serde_json::to_string(&rows).unwrap());

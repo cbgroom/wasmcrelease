@@ -8,11 +8,12 @@ and admission/host-supervisor-qualification.json. Independently read14supervisor
 and3browser recovery receipts; all six desktop/three browser/required cells PASS.
 Native owner and Kernel exact acceptance is recorded in
 admission/host-native-kernel-qualification.json. Scoped lifetime is now accepted
-via admission/host-lifetime-qualification.json; negotiation/half-close/quota and
-CoreLib file-chain remain independent candidates requiring own qualification.
+via admission/host-lifetime-qualification.json; Core negotiation now accepted
+via admission/host-negotiation-qualification.json. Half-close/quota/CoreLib
+file-chain and subsequent retirement/snapshot sources require own qualification.
 The historical sections referenced below retain their earlier evidence scope.
 
-Active source line: work/host-scoped-owner-lifetime, following Native owner and
+Active source line: work/host-core-negotiation, following scoped lifetime and
 Kernel branches. Metadata consolidation: work/host-handoff-consolidation.
 Resolve exact revisions with Git; inspect
 status/worktrees before editing and preserve unrelated changes. Linked worktrees
@@ -26,8 +27,9 @@ runs, independently read receipts and scope. Do not redo those implementations.
 
 Optional Wasmtime, benchmarks, failed-stop/error-path protection,
 real browser probes and bounded JS quarantine supervisor are accepted in main.
-Kernel, Native internal owner registry and scoped lifetime are now accepted;
-negotiation and half-close source require their own exact acceptance before main.
+Kernel, Native internal owner, scoped lifetime and negotiation are accepted.
+Later sources require independent acceptance; Bun/Linux frame regression at
+later CoreLib-bytes source must be resolved before accepting that candidate.
 Never borrow an old-source PASS. No release/tag/deployment was performed.
 
 ## 1. North Star
@@ -77,6 +79,12 @@ general async recovery/guest ABI or long-run RSS/network qualification.
 Mac ARM Bun Kernel CI empty sync-spawn stdout is corrected with event-driven
 spawn/pipe-drain/close, no replay. Changed source requires own qualification.
 
+Bounded Core describe now exposes profile version/copy feature/limits without
+new Host imports. Negotiated guest performs preflight before allocation/invoke.
+Local six JS/Native engine pairs pass four lengths and seven denial cases;
+Native denies with zero non-describe calls/resources/effects. Typed WIT SDK and
+arbitrary-device description are not implied. Owning host/v0/NEGOTIATION.md.
+
 ## 4. Plan and Validation
 
 Read release-host-integration, release-integrity and release-agent-docs Skills.
@@ -106,9 +114,8 @@ Do not count locally completed slices as all-platform/full SDK completion.
 
 ## 6. Next Actions
 
-Next: inspect latest scoped lifetime/negotiation/half-close runs in both workflows;
-fix real failures locally while CI runs. Kernel Bun pipe-drain fix belongs to
-Native owner source; old failed Kernel run does not qualify changed source.
+Next: inspect latest stream-snapshot candidate/Linux fast job, fix real frame
+regression locally while full CI runs. Prior accepted source needs no redo.
 Accept relevant source only with exact receipts, merge current main metadata
 without discarding it, refresh integrity, then normal expected-base FF promotion.
 Continue typed Core transport/SDK and Native supervision parity afterwards.

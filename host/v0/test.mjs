@@ -8,6 +8,9 @@ assert.deepEqual(new MemoryHost().trace(cancelled).at(-1),[0,0,0]);
 const scenarios = [success,cancelled,
   [['invoke',2,100],['invoke',999,100],['window_acquire',17],['window_acquire',-1],['window_acquire',2],['window_commit',100,3],['release',999],['open',1]],
   Array.from({length:10},()=>['window_acquire',16])];
+const negotiation=[['describe',1,0],['describe',2,0],['describe',1,1],['describe',1,2],['describe',1,3],['describe',1,4],['describe',1,5],['describe',1,-1],['describe',999,1]];
+assert.deepEqual(new MemoryHost().trace(negotiation).map(r=>r[0]),[3,1,1,1,16,8,-7,-7,-1]);
+assert.deepEqual(new MemoryHost().trace(negotiation).at(-1),[-1,0,0]);scenarios.push(negotiation);
 assert.deepEqual(new MemoryHost().trace(scenarios[2]).map(r=>r[0]),[-2,-1,-3,-3,100,-5,-1,-7]);
 assert.deepEqual(new MemoryHost().trace(scenarios[3]).map(r=>r[0]),[100,101,102,103,104,105,106,107,-3,-3]);
 // Deterministic adversarial corpus, independent of either implementation.

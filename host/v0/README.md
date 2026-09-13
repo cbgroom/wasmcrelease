@@ -51,8 +51,9 @@ sixteen bytes/window. The low-level fixture uses session-local integer tokens,
 not application-visible API or transferable capabilities. Cross-session identity,
 capability revocation, arbitrary buffer access, batch/deadline/wakeup semantics
 and typed WIT SDK generation remain unclosed. `wait` is deterministic simulator
-progress, not real event-loop blocking. `describe` currently reports only
-fixture rights, not full version/feature negotiation. `invoke` supports exactly
+progress, not real event-loop blocking. `describe` now exposes bounded scalar
+profile version/features/limits (see NEGOTIATION.md), not full semantic WIT
+description or arbitrary device authentication. `invoke` supports exactly
 the memory-write operation; it is not an extensible arbitrary dispatch service.
 
 ## Reproduce
@@ -63,7 +64,7 @@ node host/v0/test.mjs host/v0/rust/target/debug/wasmc-host-contract-reference
 node host/v0/core-test.mjs host/v0/rust/target/debug/wasmc-host-contract-reference
 ```
 
-The first command pair compares104 scenarios/10037 transitions, checking
+The first command pair compares105 scenarios/10046 transitions, checking
 responses, live resource counts and device bytes at every transition. Explicit
 oracles cover completion, denial, bounds, busy release and cancellation; random
 adversarial traces are deterministic, not an exhaustive proof.
