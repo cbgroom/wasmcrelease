@@ -47,6 +47,11 @@ Consumers must pin `v0.0.9` or its full commit and verify `SHA256SUMS`.
 
 ## v0.0.9 testing instructions
 
+Supplemental public [Lib discovery and exact resolver](catalog/README.md)
+provides offline `search → resolve` over verified published package bytes.
+It lives on later main commits, not the immutable v0.0.9 tag. Installation and
+third-party authoring remain separate next stages; no new binaries are implied.
+
 Compatibility follow-up: [complete engine contract and independent Node18
 reproduction](compatibility/README.md). The standard Core artifact requires
 typed function references and tail calls. Original v0.0.9 does not contain the

@@ -3,7 +3,9 @@
 This source-free compiler repository publishes a standard Core Wasm compiler,
 Lib packages, a package-manager-free Runtime/Registry bootstrap, and the
 public `wasmc-core-runtime` Rust SDK. The current immutable release is
-`v0.0.8`; pin that tag or its full commit for reproducible use.
+`v0.0.9`; pin that tag or its full commit for reproducible use. Supplemental
+catalog/compatibility tooling is on later `main` commits, not inside that tag;
+pin its full commit separately and verify its checksums.
 
 ## Start here
 
@@ -26,14 +28,15 @@ const instance = await WebAssembly.instantiate(inspected.module, {});
 console.log(instance.exports.run(5, 6)); // 17
 ```
 
-## v0.0.8 capability contract
+## v0.0.9 capability contract
 
 | Task | Status | Canonical path |
 |---|---|---|
 | Package-manager-free compile/self-test on Node/Deno/Bun | shipped; Node+Bun+Deno same-candidate evidenced | [runtime/README.md](runtime/README.md), `runtime/wasmc-runtime-v0` |
 | Scalars, control flow, private functions, WIT values | shipped | [LANGUAGE.md](LANGUAGE.md) |
 | Managed String/List/Map/record applications | shipped through matching Lib | [LIB.md](LIB.md), `instantiateLib` |
-| Build a reviewed Rust crate as a WIT Lib | shipped locally | developer Skill authoring reference |
+| Discover existing public Libs and resolve exact local bytes | supplemental main tool | [catalog/README.md](catalog/README.md) |
+| Public third-party Lib build/install/publish | not closed | do not infer availability from authoring documentation |
 | WIT resources, constructors, receiver methods | shipped Component profile | `libs/wasmc-resource-counter` |
 | Explicit synchronous scalar Host imports | shipped; exact allowlist | `libs/wasmc-host-clock` |
 | JavaScript, raw Core Wasm, Rust/Wasmtime | shipped | [HOSTING.md](HOSTING.md) |
@@ -42,17 +45,20 @@ console.log(instance.exports.run(5, 6)); // 17
 | signing, auto-update, ambient filesystem/network/device access | not provided | application/publisher authority |
 
 The v0.0.4 `dist/`, `package/`, and `libs/` compatibility trees remain
-byte-for-byte frozen. v0.0.8 adds the public Core Runtime SDK while retaining
-the v0.0.7 Runtime compiler product; it does not silently rebuild or replace
-those established compatibility bytes.
+byte-for-byte frozen. v0.0.9 publishes current compiler facades and standard
+Lib1.4.0 with its matching CoreLib4.8 companion. Engine compatibility is
+artifact-specific: read [compatibility/README.md](compatibility/README.md)
+before treating compiler success as standard-Lib or managed Host support.
 
 ## Artifact selection
 
 - `current/wasmc.mjs`: self-contained ESM facade.
-- `dist/wasmc.global.js`: classic `globalThis.Wasmc` facade.
-- `dist/wasmc_compiler.wasm`: import-free compiler Core Wasm.
-- `package/`: sidecar package with compiler, matching `lib_core.wasm`, and developer Skill.
-- `libs/*/`: Core/Component, WIT, metadata, and root `SKILL.md` per Lib.
+- `current/wasmc.global.js`: current classic `globalThis.Wasmc` facade.
+- `current/wasmc_compiler.wasm`: current import-free compiler Core Wasm.
+- `current/index.mjs`: sidecar facade with sibling compiler and matching CoreLib.
+- `standard/wasmc-std/1.4.0/`: current WIT standard Lib and generated Rust bindings.
+- `standard/corelib/4.8.0/`: matching standard Lib CoreLib companion.
+- `libs/*/`: frozen historical qualification Libs, not the current standard Lib.
 - `examples/rust-wasmtime/`: locked executable reference project, not an SDK.
 - `runtime/wasmc-runtime-v0/`: current `compiler.wasm` plus thin universal/Node/Bun/Deno Host adapters; no npm or external JS registry.
 - `runtime/registry-v0/`: repo-local resolver/channel/mirror metadata for `wasmc:runtime`.
@@ -60,7 +66,7 @@ those established compatibility bytes.
 Inspect every generated import and bind only reviewed Host functions. Never expose private handles, plans, Store nonces, lifecycle helpers, or JSON invented as a WIT replacement.
 
 ```text
-https://cdn.jsdelivr.net/gh/cbgroom/wasmcrelease@v0.0.8/<PATH>
+https://cdn.jsdelivr.net/gh/cbgroom/wasmcrelease@v0.0.9/<PATH>
 ```
 
 Verify files against `SHA256SUMS`, `manifest.json`, and `release.json`. `main`, unversioned URLs, and `package-index.json.latest` are mutable discovery state.

@@ -2,7 +2,7 @@
 
 ## 0. Status
 
-Task state: started — public offline Lib discovery and exact resolution.
+Task state: locally qualified — public offline Lib discovery and exact resolution.
 Branch: feat/public-lib-catalog. Public v0.0.9 is already released;
 immutable tag and release branch remain unchanged. Main may carry follow-up
 consumer tooling/docs, not new admitted compiler or Lib binaries.
@@ -46,6 +46,15 @@ current corpus, standard caller oracle, integrity and unchanged artifacts.
 
 ## 5. Current Action
 
+Offline public search/exact resolve verifies four real package inventories and
+std CoreLib companion. Three JS Hosts pass ten negative boundaries and equal
+repeated receipts; existing standard caller5120 checks pass each Host.
+admission/public-lib-catalog-v009.json binds harness/catalog hashes and Hosts.
+AGENTS current version/artifact paths and public authoring status corrected.
+Compatibility run34729449573 subsequently completed full success.
+Resume: integrity/checksum, commit/push own branch, run targeted public Actions,
+ordinary main advance only if unchanged base, and Release instruction readback.
+
 Independent five-Host evidence is admission/core-compatibility-v009.json.
 Node18 reproduces value-type0x64 at265; standard requires function-references
 and tail-call beyond wasm2. Node22/26, Bun and Deno pass full standard calls.
@@ -54,6 +63,13 @@ Digest-bound preflight and six negative tests pass on all five Hosts.
 No original114-case reproduction or external performance-number adoption.
 
 ## 6. Next Actions
+
+Current bounded catalog/exact-resolve slice is locally100percent. The four
+delivery closure gates are compatibility, catalog/exact resolve, download/
+install, and public third-party build: first two implemented (2/4), last two
+remain. This denominator is not all-stdlib coverage or system/Ultra readiness.
+Next implement explicit pinned download/install, then delegate authoring to
+existing private source-authority machinery, without inventing language APIs.
 
 Compatibility instructions/evidence and v0.0.9 Release notes are published.
 Main and this branch are synchronized; the immutable release tag is unchanged.
