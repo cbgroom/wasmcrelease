@@ -1,5 +1,18 @@
 # WAsmC release maintainer handoff
 
+## Real browser ownership/App Lib probe
+
+Own branch work/host-browser-parity follows pushed driver-error candidate.
+Local actual Chrome/Firefox/WebKit via Playwright CLI PASS same App/Lib digests,1000resident
+calls,4Core size/4guard/4failed-stop probes, budget/trap/poison/no-replay checks.
+No Node shims, browser WebCrypto identity, raw TCP false. Page supervisor keeps
+quarantine owners; normal App/guard cleanup distinct from failed-stop retention.
+GET allowlisted loopback fixture compiles guest via public compiler. CLI runtime
+artifacts remain under target/temporary directories, never release inventory.
+Actions requires Chrome/Firefox/WebKit cells plus6desktop Native cells; exact
+new source needs own receipts. Owning host/browser/README.md states simulated
+failure backend/mobile/real device limitations. Full Host delivery still1/5.
+
 ## Driver error-path regression
 
 Own branch work/host-driver-errors follows pushed corrected CI candidate.
