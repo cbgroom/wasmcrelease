@@ -1,5 +1,17 @@
 # WAsmC release maintainer handoff
 
+## Current: session/completion guard START
+
+Own branch work/host-completion-guard, based on previous accepted Lib/Host chain
+(resolve Git ancestry). Add session-qualified, non-reused bounded resources and
+completion records; cancellation rejects delivery but holds pin until backend
+acknowledges completion. Late/duplicate/foreign completions cannot overwrite or
+replay. Independent JS/Rust adversarial parity, then guard the real file read
+in existing WAsmC/Lib E2E. No new Host primitive or completed guest async ABI.
+Trusted Host-side fixture integration; process restart/session persistence and
+untrusted thread concurrency remain explicit gaps. START precedes source edits.
+Preserve immutable products. Local tests and actual Actions precede main advance.
+
 ## Current: minimal Host discipline and real file I/O START
 
 Own branch: work/thin-host-file-io. User authorizes updating owning maintainer
