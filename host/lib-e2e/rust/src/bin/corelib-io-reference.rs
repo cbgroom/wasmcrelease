@@ -40,9 +40,21 @@ fn main() -> Result<(), Failure> {
     }
     if args.iter().any(|a| a == "--wasmtime") {
         #[cfg(feature = "wasmtime-engine")]
-        return compiled::proof(&args[1], &args[2], &args[3], &args[4]);
+        return compiled::proof(
+            &args[1],
+            &args[2],
+            &args[3],
+            &args[4],
+            args.iter().any(|a| a == "--lifetime-only"),
+        );
         #[cfg(not(feature = "wasmtime-engine"))]
         return Err("wasmtime profile unavailable".into());
     }
-    interpreted::proof(&args[1], &args[2], &args[3], &args[4])
+    interpreted::proof(
+        &args[1],
+        &args[2],
+        &args[3],
+        &args[4],
+        args.iter().any(|a| a == "--lifetime-only"),
+    )
 }

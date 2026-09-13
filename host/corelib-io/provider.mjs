@@ -8,6 +8,7 @@ export async function createCoreBytesProvider(bytes,domain=19) {
   const live=new Set(),callers=new WeakSet();
   return {
     count:()=>live.size,
+    memoryBytes:()=>e.memory.buffer.byteLength,
     async caller(wasm) {
       const module=new WebAssembly.Module(wasm);
       for(const i of WebAssembly.Module.imports(module))

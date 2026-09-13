@@ -80,3 +80,33 @@ explicitly typed i64 intermediate and typed zero instead. Explicit `as s32` /
 `as i64` conversions are not admitted here; use the existing canonical source
 surface, not a hidden compiler capability. This workaround is not a compiler
 fix; preserve the defect as a producer-side follow-up before claiming closure.
+
+## Bounded resource lifetime / cost probe
+
+After building the reviewed callers/reference above:
+
+```sh
+node host/corelib-io/lifetime-test.mjs host/lib-e2e/rust/target/release/corelib-io-reference
+node host/corelib-io/lifetime-test.mjs host/lib-e2e/rust/target/release/corelib-io-reference --wasmtime
+```
+
+Each JS/Native pair executes100000 owned3-byte allocations/App/drop cycles for
+each consumer, checksum14342320. Samples every20000 cycles must reach a plateau;
+the very first reference must still reject after100000 subsequent allocations.
+Native verifies100000 allocations and100000 successful drops. JS tracks no live
+owner records. Both report actual CoreLib linear-memory size, not process RSS.
+
+Local Node/Bun/restricted Deno with both Native engines passed; six samples all
+1310720bytes(1.25MiB). Observed whole-cycle costs were roughly0.4-0.7us JS,
+1.8-2.4us Wasmi and0.4-0.5us Wasmtime; preparation is separately reported.
+Timing includes allocation, input packing, App read/sum, drop, counters/oracles
+and Host overhead. No speed threshold/engine minimum or peak guarantee is
+claimed. Units are `steady_ms * 1e6 / calls`; informational timings are not
+portable performance assertions. The prior8-byte/result file benchmark is a
+different workload. This is not full Std73API execution, RSS leak proof,
+network/file throughput or infinite-lifetime qualification.
+
+Without a Native argument the lifetime test needs read permission only. For
+Deno use `--allow-read=standard/corelib,target/corelib-io`; Native pairs additionally
+need only `--allow-env=NODE_V8_COVERAGE` and the exact `--allow-run` path. No file
+writes, network or ambient credentials are used by this memory-only probe.

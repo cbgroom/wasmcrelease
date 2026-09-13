@@ -4,8 +4,10 @@ pub fn proof(
     caller: &str,
     directory: &str,
     name: &str,
+    lifetime_only: bool,
 ) -> Result<(), super::Failure> {
     use std::io::{Read, Write};
+    let preparation = std::time::Instant::now();
     let engine = engine()?;
     let module = Module::new(&engine, std::fs::read(provider)?)?;
     if module.imports().next().is_some() {
@@ -56,6 +58,44 @@ pub fn proof(
         Ok(value)
     };
     let mut results = Vec::new();
+    if lifetime_only {
+        let memory = heap
+            .get_memory(&mut store, "memory")
+            .ok_or("provider memory missing")?;
+        let mut samples = vec![memory.data_size(&store)];
+        let mut first = 0i64;
+        let mut checksum = 0i64;
+        let preparation_ms = preparation.elapsed().as_secs_f64() * 1000.0;
+        let start = std::time::Instant::now();
+        for i in 0..100000usize {
+            store.set_fuel(100_000)?;
+            let reference = allocate.call(&mut store, ty)?;
+            assert_ne!(reference, 0);
+            if i == 0 {
+                first = reference;
+            }
+            let packed = 7 | ((i & 255) << 8) | (9 << 16);
+            assert_eq!(push.call(&mut store, (reference, ty, packed as i64, 3))?, 0);
+            assert_eq!(finish.call(&mut store, (reference, ty))?, 0);
+            let value = dispatch(&mut store, reference, 0, &mut poisoned, &mut calls);
+            store.set_fuel(100_000)?;
+            assert_eq!(drop_object.call(&mut store, (reference, ty))?, 0);
+            let value = value?;
+            assert_eq!(value, 16 + (i & 255) as i64);
+            checksum += value;
+            if (i + 1) % 20000 == 0 {
+                samples.push(memory.data_size(&store));
+            }
+        }
+        let steady_ms = start.elapsed().as_secs_f64() * 1000.0;
+        assert_eq!(calls, 100000);
+        assert_eq!(checksum, 14342320);
+        assert_eq!(samples.last(), samples.get(1));
+        assert_ne!((length.call(&mut store, (first, ty))? as u64) >> 32, 0);
+        let ns_per_cycle = steady_ms * 1e6 / 100000.0;
+        println!("{{\"accepted\":true,\"corelib_owned_lifetime\":true,\"calls\":{calls},\"checksum\":{checksum},\"preparation_ms\":{preparation_ms},\"steady_ms\":{steady_ms},\"ns_per_cycle\":{ns_per_cycle},\"memory_bytes\":{samples:?},\"long_range_stale_rejected\":true,\"owned_allocations\":100000,\"owned_drops\":100000,\"rss_leak_qualified\":false,\"file_network_throughput\":false}}");
+        return Ok(());
+    }
     for i in 0..4 {
         let input = format!("{directory}/{name}-{i}.input");
         let output = format!("{directory}/{name}-{i}.output");

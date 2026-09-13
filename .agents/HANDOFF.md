@@ -2,7 +2,10 @@
 
 ## 0. Status
 
-Active source line: work/host-corelib-resource-lifetime. Task state: started.
+Active source line: work/host-corelib-resource-lifetime. Task state: local proof
+complete; exact CI/main pending. Node/Bun/restricted Deno and both Native engines
+passed100000 bytes/App/drop cycles per consumer; checksum14342320, actual CoreLib
+memory1310720bytes across six samples, earliest stale reference rejected.
 Objective: bounded100000 owned bytes/App/drop cycles per consumer with actual
 CoreLib memory samples and long-range stale rejection. Separate preparation
 from steady calls; not file/network throughput, RSS leak proof or full Std
@@ -13,6 +16,10 @@ failure observation without raw bytes or new guest imports.15guard/owner tests,
 strict Clippy and optional-profile6TCP tests passed. Existing40000-cycle JS
 lifetime and ordinary driver retirement regressions pass. Native async/OS races
 remain unqualified; see host/tcp/NATIVE_SUPERVISOR.md.
+Current-source CI exposed a separate Bun/Linux frame data mismatch in both
+architectures. Resolve completed job logs for the CoreLib-bytes candidate;
+do not accept or dismiss it as queued infrastructure. Inspect stream ownership
+and preserve the failure before any fix. No new platform skip or timing retry.
 Driver-retirement source local proof complete;
 exact CI/main acceptance pending. Ordinary TCP driver close failure now enters
 owner quarantine before resource retirement; primary/effect preserved with no
