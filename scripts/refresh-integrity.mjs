@@ -46,6 +46,7 @@ const currentExampleFiles = (await walk('examples/current')).sort();
 const compatibilityFiles = (await walk('compatibility')).sort();
 const catalogFiles = (await walk('catalog')).sort();
 const catalogTools = ['scripts/lib-catalog.mjs', 'scripts/wasmc-lib.mjs', 'scripts/refresh-lib-catalog.mjs', 'scripts/test-lib-catalog.mjs', 'scripts/lib-install.mjs', 'scripts/test-lib-install.mjs', 'scripts/validate-lib-install.mjs'];
+const ciTools = ['scripts/ci-suite.mjs','scripts/ci-summary.mjs','scripts/test-ci-reporting.mjs'];
 const compatibilityTools = ['scripts/core-compatibility.mjs', 'scripts/check-core-compatibility.mjs', 'scripts/test-core-compatibility.mjs'];
 const rustWorkspaceFiles = ['Cargo.toml', 'Cargo.lock'];
 const existing = releaseJson.artifacts.map((row) => row.path);
@@ -62,6 +63,7 @@ const releasePaths = [...new Set([
   ...compatibilityTools,
   ...catalogFiles,
   ...catalogTools,
+  ...ciTools,
   ...rustWorkspaceFiles,
 ])].sort();
 

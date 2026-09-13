@@ -1,125 +1,171 @@
 name: Source-free consumer verification
-
 on:
   push:
     branches: [main]
   pull_request:
   workflow_dispatch:
-
 permissions:
   contents: read
-
 concurrency:
   group: source-free-consumer-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
-
 jobs:
   core-compatibility:
-    name: Node ${{ matrix.node }} artifact compatibility
-    runs-on: ubuntu-24.04
+    name: Compatibility ${{ matrix.os }} Node ${{ matrix.node }}
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 10
     strategy:
       fail-fast: false
       matrix:
+        os: [ubuntu-24.04, macos-15]
         node: ['18.19.1', '22.0.0', '26.5.1']
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
           node-version: ${{ matrix.node }}
-      - name: Verify supported features and intentional rejection boundaries
-        run: node scripts/test-core-compatibility.mjs
-      - name: Verify public Lib discovery and exact selection boundaries
-        run: node scripts/test-lib-catalog.mjs
-      - name: Verify no-clobber installation and transport rejection boundaries
-        run: node scripts/test-lib-install.mjs
-      - name: Verify compiler and expressions independently of managed Host support
-        run: node scripts/validate-current.mjs --compile-only
-
+      - name: Feature, exact-resolution, install-fault and compiler-only regression
+        env:
+          WASMC_CI_LABEL: compatibility-${{ matrix.os }}-${{ matrix.node }}
+        run: node scripts/ci-suite.mjs compatibility
+      - if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: ci-compatibility-${{ matrix.os }}-${{ matrix.node }}
+          path: target/ci/**
+          retention-days: 14
+          if-no-files-found: error
   integrity-and-javascript:
-    name: Integrity and JavaScript facade
+    name: Integrity, Agent guidance and reporting controls
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
-      - name: Check out public release repository
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - name: Install Node.js
-        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
-          node-version: 24
-      - name: Validate release identity and Lib contracts
-        run: ./scripts/validate-maintainer.sh
-      - name: Compile and execute the public JavaScript baseline
-        run: node examples/agent-start/run.mjs
-      - name: Verify artifact compatibility and rejection boundaries
-        run: node scripts/test-core-compatibility.mjs
-
+          node-version: '26.5.1'
+      - name: Integrity and deterministic Agent journeys
+        env:
+          WASMC_CI_LABEL: integrity-ubuntu
+        run: node scripts/ci-suite.mjs integrity
+      - if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ci-integrity
+          path: target/ci/**
+          retention-days: 14
+          if-no-files-found: error
   runtime-consumer:
-    name: ${{ matrix.runtime }} source-free deployment
-    runs-on: ubuntu-24.04
-    timeout-minutes: 10
+    name: ${{ matrix.runtime }} ${{ matrix.os }} ${{ matrix.mirror }} full journey
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
     strategy:
       fail-fast: false
       matrix:
+        os: [ubuntu-24.04, macos-15]
         runtime: [node, bun, deno]
+        mirror: [github, jsdelivr]
     steps:
-      - name: Check out public release repository
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - name: Install Node.js
-        if: matrix.runtime == 'node'
-        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
-          node-version: 24
-      - name: Install Bun
-        if: matrix.runtime == 'bun'
-        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
+          node-version: '26.5.1'
+      - if: matrix.runtime == 'bun'
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6
         with:
           bun-version: 1.3.14
-      - name: Install Deno
-        if: matrix.runtime == 'deno'
-        uses: denoland/setup-deno@22d081ff2d3a40755e97629de92e3bcbfa7cf2ed # v2.0.5
+      - if: matrix.runtime == 'deno'
+        uses: denoland/setup-deno@22d081ff2d3a40755e97629de92e3bcbfa7cf2ed
         with:
           deno-version: 2.9.4
-      - name: Deploy, compile, instantiate, and run
-        run: ./scripts/validate-source-free-runtime.sh "${{ matrix.runtime }}"
-      - name: Test latest compiler and shared standard Lib callers
-        shell: bash
-        run: |
-          case "${{ matrix.runtime }}" in
-            node|bun)
-              "${{ matrix.runtime }}" scripts/test-lib-catalog.mjs
-              "${{ matrix.runtime }}" scripts/test-lib-install.mjs
-              "${{ matrix.runtime }}" scripts/validate-lib-install.mjs github
-              "${{ matrix.runtime }}" scripts/validate-current.mjs
-              "${{ matrix.runtime }}" examples/current/standard.mjs
-              ;;
-            deno)
-              deno run --allow-read --allow-write --allow-env=TMPDIR,TMP,TEMP scripts/test-lib-catalog.mjs
-              deno run --allow-read --allow-write --allow-env=TMPDIR,TMP,TEMP scripts/test-lib-install.mjs
-              deno run --allow-read --allow-write --allow-env=TMPDIR,TMP,TEMP --allow-run scripts/validate-lib-install.mjs github
-              deno run --allow-read --allow-write --allow-run --allow-env scripts/validate-current.mjs
-              deno run --allow-read examples/current/standard.mjs
-              ;;
-          esac
-
-  rust-wasmtime-and-libs:
-    name: Rust, Wasmtime, and Lib behavior
+      - name: Source-free deployment, full expressions/managed/standard, fresh mirror install
+        env:
+          WASMC_CI_LABEL: runtime-${{ matrix.os }}-${{ matrix.runtime }}-${{ matrix.mirror }}
+        run: node scripts/ci-suite.mjs runtime "${{ matrix.runtime }}" "${{ matrix.mirror }}"
+      - if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ci-runtime-${{ matrix.os }}-${{ matrix.runtime }}-${{ matrix.mirror }}
+          path: target/ci/**
+          retention-days: 14
+          if-no-files-found: error
+  security-history:
+    name: All-reachable history and credential rejection boundaries
     runs-on: ubuntu-24.04
-    timeout-minutes: 25
+    timeout-minutes: 10
     steps:
-      - name: Check out public release repository
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - name: Install latest stable Rust
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: '26.5.1'
+      - name: Preserve raw hits and require zero unresolved findings/skips/errors
+        env:
+          WASMC_CI_LABEL: security-full-history
+        run: node scripts/ci-suite.mjs security
+      - if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ci-security
+          path: target/ci/**
+          retention-days: 14
+          if-no-files-found: error
+  rust-wasmtime-and-libs:
+    name: Release-profile Rust, Wasmi, Wasmtime and Component Libs
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      CARGO_BUILD_JOBS: 2
+      CARGO_TARGET_DIR: ${{ github.workspace }}/target/ci-rust
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: '26.5.1'
+      - name: Install stable Rust and capture versions
         run: |
           rustup toolchain install stable --profile minimal --no-self-update
           rustup default stable
-      - name: Validate Lib package contracts
-        run: node scripts/validate-libs.mjs
-      - name: Compile and test the Rust Wasmtime consumer
-        working-directory: examples/rust-wasmtime
-        run: cargo test --locked
-      - name: Compile and test the public Wasmi plus Wasmtime Core Runtime SDK
-        run: cargo test --locked -p wasmc-core-runtime
-      - name: Run compiler, resource Lib, and Host Lib journey
-        working-directory: examples/rust-wasmtime
-        run: cargo run --locked
+          rustc --version
+          cargo --version
+      - name: Run locked release consumer and runtime SDK qualification
+        env:
+          WASMC_CI_LABEL: rust-release-ubuntu
+        run: node scripts/ci-suite.mjs rust
+      - if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: ci-rust
+          path: target/ci/**
+          retention-days: 14
+          if-no-files-found: error
+  verification-summary:
+    name: Required aggregate verification and downloadable report
+    if: always()
+    needs: [core-compatibility, integrity-and-javascript, runtime-consumer, security-history, rust-wasmtime-and-libs]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: '26.5.1'
+      - name: Collect all matrix receipts
+        if: always()
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          pattern: ci-*
+          path: target/ci-downloads
+      - name: Fail closed for failed/skipped/missing/source-mismatched reports
+        if: always()
+        env:
+          WASMC_CI_NEEDS: ${{ toJSON(needs) }}
+        run: node scripts/ci-summary.mjs
+      - if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: verification-report
+          path: target/ci-aggregate/**
+          retention-days: 30
+          if-no-files-found: error

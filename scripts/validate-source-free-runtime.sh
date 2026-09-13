@@ -32,16 +32,22 @@ case "$runtime" in
     (cd "$runtime_root" && node bootstrap.mjs self-test)
     (cd "$runtime_root" && node bootstrap.mjs compile --input examples/add.wasmc --output "$output")
     node "$stage_root/scripts/assert-runtime-output.mjs" "$output"
+    node "$stage_root/scripts/validate-current.mjs"
+    node "$stage_root/examples/current/standard.mjs"
     ;;
   bun)
     (cd "$runtime_root" && bun bootstrap.mjs self-test)
     (cd "$runtime_root" && bun bootstrap.mjs compile --input examples/add.wasmc --output "$output")
     bun "$stage_root/scripts/assert-runtime-output.mjs" "$output"
+    bun "$stage_root/scripts/validate-current.mjs"
+    bun "$stage_root/examples/current/standard.mjs"
     ;;
   deno)
     (cd "$runtime_root" && deno run --allow-read --allow-write bootstrap.mjs self-test)
     (cd "$runtime_root" && deno run --allow-read --allow-write bootstrap.mjs compile --input examples/add.wasmc --output "$output")
     deno run --allow-read "$stage_root/scripts/assert-runtime-output.mjs" "$output"
+    deno run --allow-read --allow-write --allow-run --allow-env "$stage_root/scripts/validate-current.mjs"
+    deno run --allow-read "$stage_root/examples/current/standard.mjs"
     ;;
 esac
 

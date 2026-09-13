@@ -2,7 +2,7 @@
 
 ## 0. Status
 
-Task state: started — comprehensive public CI and visible test evidence.
+Task state: locally qualified — comprehensive public CI and visible test evidence.
 Branch: ci/full-public-coverage. Public v0.0.9 is already released;
 immutable tag and release branch remain unchanged. Main may carry follow-up
 consumer tooling/docs, not new admitted compiler or Lib binaries.
@@ -61,6 +61,17 @@ deterministic preflight only after actual evidence. Validate probes/negatives,
 current corpus, standard caller oracle, integrity and unchanged artifacts.
 
 ## 5. Current Action
+
+Comprehensive workflow defines21 test-suite cells and required aggregate job.
+Both OS Hosts/mirrors, compatibility, full archived execution, security history,
+Fresh-Agent and locked release Rust are registered in ci-suite.mjs.
+README native main/push badge and scope table route to summaries/artifacts.
+Reporting controls reject exit failure, false accepted JSON, timeout, missing/
+duplicate/source/Host/test mismatches and skipped family. Actionlint1.7.12 and
+YAML parse pass. Local integrity/Fresh-Agent and full Deno/jsDelivr pass.
+An early dirty candidate correctly failed stale checksum checks; refresh passed.
+Resume: push exact candidate, dispatch full Actions, inspect every job and final
+aggregate/artifact readback; no main acceptance before full run succeeds.
 
 Controlled install tests pass Node/Bun/Deno: ten failure boundaries, one winner
 under concurrency, competing-directory preservation and failed-stage cleanup.

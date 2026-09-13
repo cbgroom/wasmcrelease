@@ -1,5 +1,7 @@
 # wasmc release channel
 
+[![Public verification](https://github.com/cbgroom/wasmcrelease/actions/workflows/source-free-consumer.yml/badge.svg?branch=main&event=push)](https://github.com/cbgroom/wasmcrelease/actions/workflows/source-free-consumer.yml)
+
 Source-free public packages for the private-source `wasmc` compiler.
 
 Current release: `v0.0.9`, built from exact private source
@@ -17,6 +19,36 @@ See [current examples](examples/current/standard.wasmc) and run
 original external 114-entry evaluation or a fresh LLM-generated benchmark.
 
 GitHub Actions continuously exercises the public repository as a source-free consumer: staged deployment, Node/Bun/Deno compile and execution, JavaScript examples, Lib package contracts, and Rust/Wasmtime Component behavior. It does not build, replace, or admit canonical compiler/Lib bytes; immutable release publication remains a separate maintainer-controlled process.
+
+## Continuous verification results
+
+The badge above is GitHub's live **main/push workflow status**, not a frozen
+release certificate or source-line coverage percentage. Click it, select a run,
+and open **Required aggregate verification and downloadable report** for the
+exact commit, every matrix result, and case pass/fail counts. Download
+`verification-report` for JSON/Markdown; `ci-*` artifacts contain individual
+stdout/stderr logs, observed execution counts and tool versions, including failures.
+See [complete CI scope and reproduction](docs/CI_COVERAGE.md).
+
+| Coverage dimension | Continuous checks |
+|---|---|
+| Host/platform | Linux + macOS; Node26.5.1, Bun1.3.14, Deno2.9.4; both HTTPS mirrors |
+| Compatibility boundaries | Node18.19.1/22.0.0/26.5.1 on both platforms; probes, tampering, whole-module rejection |
+| Compiler/source expression | 30 corpus outputs, 23 expression cases, 192 managed calls per full journey |
+| Standard Lib | 73-API package; 5,120 representative WAsmC/Rust paired calls per execution journey |
+| Catalog and installation | Four exact packages, ten resolution negatives, ten install negatives, concurrency and cleanup |
+| Public deployment | Git-free archive compiler/managed/std execution; fresh GitHub Raw and jsDelivr installation |
+| Runtime and Lib integration | Locked release-profile Wasmi/Wasmtime SDK tests and Rust Component/resource/Host consumer |
+| Safety/integrity/Agent guidance | Complete manifests/checksums/frozen trees, all-reachable credential scan + negatives, deterministic Fresh-Agent regression |
+
+The workflow has 21 required suite cells plus an aggregate job. Expected negative
+rejections count as passing only when their assertions succeed. Failed, skipped,
+missing or source-mismatched receipts fail aggregate verification; no README bot
+commits, write token or third-party badge service is required. Counts describe
+scoped behavior, not all 73 APIs exhaustively, every algorithm, or private compiler
+source coverage. Node18 full managed/std execution is **not** supported by these
+compatibility passes. Browser/device/production/performance and third-party Lib
+authoring remain separate acceptance gates.
 
 - Agents and developers: [AGENTS.md](AGENTS.md)
 - Language delta: [LANGUAGE.md](LANGUAGE.md)
