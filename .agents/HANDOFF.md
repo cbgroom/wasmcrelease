@@ -2,6 +2,17 @@
 
 ## 0. Status
 
+Next local slice: optional native-readiness backend using OS readiness and a
+cross-thread cancellation wakeup, without sleep polling or internal worker
+creation. Explicit opt-in; default completion crate dependency graph unchanged.
+Reuse one owned read and supervisor close fences; close cancellation wakeup
+resources on settlement so stale cancellation cannot affect a new owner.
+Prior three desktop receipts downloaded and independently checked: source
+resolve from Git previous implementation commit,25passed,clean,all3OS PASS;
+run34769045498. Source-bound receipts are in ignored local target/ci-previous.
+Resource admission remains64MiB local target; no engine-cache writes. Start
+measurement35456KiB; stop if the small optional graph reaches65536KiB.
+
 Active branch: nonblocking TCP read owner. This slice adds no Host import or
 guest ABI. Start from accepted main (resolve parent with Git). Implemented a
 preopened, exclusive socket owner that performs only nonblocking reads, checks
