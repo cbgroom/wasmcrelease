@@ -2,8 +2,12 @@
 
 ## 0. Status
 
-Active source line: work/host-corelib-bytes-io. Task state: local JS/Native proof
-complete; exact CI/main acceptance remain pending.
+Active source line: work/host-endpoint-retirement. Task state: started.
+Objective: ordinary File/TCP release must retain its endpoint until verified
+close acknowledgement; pending/failed close denies new business I/O and only
+explicit retirement may retry close. Not whole-driver quarantine SDK closure.
+CoreLib bytes source local JS/Native proof is complete and exact CI/main
+acceptance remains pending; resolve its candidate with Git/run metadata.
 Objective: restricted settled file bytes -> exact existing CoreLib Provider ->
 reviewed WAsmC/Rust physical-ABI conformance callers -> verified output.
 Use producer authority and published signatures, never guess opaque ABI or
