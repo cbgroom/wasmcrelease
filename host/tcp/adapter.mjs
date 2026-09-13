@@ -1,13 +1,20 @@
 // Trusted Host supplies an already connected, paused Node-compatible socket.
 // No guest address, DNS, listener or implicit reconnect authority.
 export class PreconnectedTcp {
-  #socket; #busy=false; #error=false; #ended=false; #stopped=false; #closed;
+  #socket; #busy=false; #error=false; #ended=false; #stopped=false; #closed; #pending=null;
   constructor(socket, writable=true) {
     if(socket.destroyed||socket.closed) throw -1;
     this.#socket=socket; this.writable=writable; socket.pause();
     this.#closed=socket.closed?Promise.resolve():new Promise(resolve=>socket.once('close',resolve));
     socket.on('error',()=>{this.#error=true;});
     socket.on('end',()=>{this.#ended=true;});
+    // Keep a data owner attached even between read requests.
+    socket.on('data',bytes=>{
+      const owned=Uint8Array.from(bytes);
+      if(this.#pending){const joined=new Uint8Array(this.#pending.length+owned.length);joined.set(this.#pending);joined.set(owned,this.#pending.length);this.#pending=joined;}
+      else this.#pending=owned;
+      socket.pause();socket.emit('wasmc-data-ready');
+    });socket.pause();
   }
   #check(length) {
     if(!this.#socket) throw -1;
@@ -18,27 +25,29 @@ export class PreconnectedTcp {
   }
   async read(length) {
     this.#check(length); if(!length) return [];
+    if(this.#pending) {
+      const bytes=this.#pending,delivered=Array.from(bytes.subarray(0,length));
+      this.#pending=bytes.length>length?bytes.slice(length):null;
+      return delivered;
+    }
     const socket=this.#socket; this.#busy=true;
     try {
       return await new Promise((resolve,reject)=>{
-        const clean=()=>{socket.pause();socket.off('data',data);socket.off('end',end);socket.off('close',close);socket.off('error',fail);};
+        const clean=()=>{socket.pause();socket.off('wasmc-data-ready',readable);socket.off('end',end);socket.off('close',close);socket.off('error',fail);};
         const fail=()=>{clean();reject(-8);};
         const end=()=>{clean();resolve([]);};
         const close=()=>{if(this.#ended||socket.readableEnded) end();else fail();};
-        const data=bytes=>{
+        const readable=()=>{
           if(this.#stopped) return fail();
-          // Copy a backend view before pause/handler cleanup can invalidate it.
+          const bytes=this.#pending;if(bytes===null)return;
           const delivered=Array.from(bytes.subarray(0,length));
-          const tail=bytes.length>length?Uint8Array.from(bytes.subarray(length)):null;
+          this.#pending=bytes.length>length?Uint8Array.from(bytes.subarray(length)):null;
           clean();
-          if(tail) socket.unshift(tail);
           resolve(delivered);
         };
-        socket.on('data',data);socket.on('end',end);socket.on('close',close);socket.on('error',fail);
+        socket.on('wasmc-data-ready',readable);socket.on('end',end);socket.on('close',close);socket.on('error',fail);
         if(this.#error) fail();
-        else if(this.#ended||socket.readableEnded) end();
-        else if(socket.destroyed) fail();
-        else socket.resume();
+        else if(this.#ended||socket.readableEnded)end();else if(socket.destroyed)fail();else socket.resume();
       });
     } finally {this.#busy=false;}
   }
@@ -63,7 +72,7 @@ export class PreconnectedTcp {
     try {
       if(!socket.destroyed) socket.destroy();
       await this.#closed;
-      this.#socket=null;return 0;
+      this.#socket=null;this.#pending=null;return 0;
     } finally {this.#busy=false;}
   }
   terminateRead() {

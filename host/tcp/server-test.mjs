@@ -50,13 +50,13 @@ async function jsService(listener) {
         try {return await tcp.read(n);} finally {clearTimeout(timer);}
       };
       try {
-        const header=await read(1);if(header.length!==1||header[0]>16) throw -5;
+        const header=await read(1);if(diagnose)console.error(JSON.stringify({diagnostic:'js_header',index:i,header}));if(header.length!==1||header[0]>16) throw -5;
         const input=[];
         while(input.length<header[0]) {const chunk=await read(header[0]-input.length);if(!chunk.length) throw -8;input.push(...chunk);}
         if(diagnose)console.error(JSON.stringify({diagnostic:'js_frame',index:i,expected:cases[i],received:input}));
         const value=app.call(input);calls++;
         const output=Buffer.alloc(8);output.writeBigInt64LE(value);await tcp.write([...output]);
-      } catch {rejected++;}
+      } catch(error) {if(diagnose)console.error(JSON.stringify({diagnostic:'js_rejection',index:i,error:String(error)}));rejected++;}
       finally {await tcp.release();}
     }
   } finally {app.release();await listener.release();}

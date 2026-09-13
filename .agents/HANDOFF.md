@@ -2,7 +2,15 @@
 
 ## 0. Status
 
-Active source line: work/host-file-write-snapshot. Task state: local proof complete;
+Active source line: work/host-linux-frame-diagnosis. Task state: local proof complete;
+Original Bun1.3.14 Linux ARM frame12 loss reproduced in a local isolated
+container. Header4 was received before owner attachment but later read as1;
+App/CoreLib only saw payload2. Early queued endpoint construction and persistent
+data ownership preserve every between-request chunk. Unchanged19-connection
+corpus now passes macOS Node/Bun/Deno plus local Linux ARM. Pull/readable-only
+experiment failed Deno and was removed. Seven ownership controls include data
+arriving between requests. Exact Linux/full Native/browser CI remains required;
+preserved earlier failures remain failures. No feature skip/retry/expected change.
 File write captures owned bytes before partial asynchronous I/O, validates
 completion lengths and never re-reads mutated caller arrays. Old implementation
 reproduced reporting/writing4 instead of3 bytes. Seven controlled cases pass

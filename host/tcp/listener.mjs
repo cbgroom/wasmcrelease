@@ -2,6 +2,7 @@ import { PreconnectedTcp } from './adapter.mjs';
 // Trusted Host supplies an already listening Server, never a guest bind address.
 export class PreauthorizedTcpListener {
   #server;#queue=[];#active=new Set();#waiter;#retired=false;#closed;#rejected=0;#failed=false;
+  #endpoints=new WeakMap();
   constructor(server) {
     if(!server.listening) throw -1;
     this.#server=server;
@@ -13,6 +14,7 @@ export class PreauthorizedTcpListener {
       socket.on('error',()=>{});socket.pause();
       socket.once('close',()=>{this.#queue=this.#queue.filter(queued=>queued!==socket);});
       if(this.#retired||this.#queue.length>=2) {this.#rejected++;socket.destroy();return;}
+      this.#endpoints.set(socket,new PreconnectedTcp(socket));
       if(this.#waiter) {const waiter=this.#waiter;this.#waiter=null;waiter.resolve(this.#wrap(socket));}
       else this.#queue.push(socket);
     });
@@ -21,7 +23,7 @@ export class PreauthorizedTcpListener {
   }
   #wrap(socket) {
     this.#active.add(socket);socket.once('close',()=>this.#active.delete(socket));
-    return new PreconnectedTcp(socket);
+    return this.#endpoints.get(socket);
   }
   async accept() {
     if(this.#retired) throw -1;
