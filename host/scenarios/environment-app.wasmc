@@ -1,0 +1,17 @@
+package local:environment_probe;
+interface environment {
+  clock_read: func() -> i64;
+  entropy_fill: func() -> s32;
+  nonce_sum: func() -> i64;
+}
+interface api {
+  run: func() -> i64 {
+    let before: i64 = clock_read();
+    let count: s32 = entropy_fill();
+    let after: i64 = clock_read();
+    if (after < before) { return -1; }
+    if (count != 16) { return -2; }
+    return nonce_sum();
+  }
+}
+world app { import environment; export api; }

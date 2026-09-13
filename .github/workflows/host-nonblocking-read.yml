@@ -68,6 +68,20 @@ jobs:
       - run: node host/scenarios/environment-test.mjs
       - run: bun host/scenarios/environment-test.mjs
       - run: deno run host/scenarios/environment-test.mjs
+      - run: rustup toolchain install 1.96.0 --profile minimal --target wasm32-unknown-unknown
+      - name: Build public Rust conformance caller, no Cargo or private source
+        run: rustc +1.96.0 --edition=2024 --crate-type cdylib --target wasm32-unknown-unknown -C opt-level=s -C panic=abort -C strip=symbols host/scenarios/environment-app.rs -o "$RUNNER_TEMP/environment-rust.wasm"
+      - name: App to real clock and entropy to admitted Lib, both callers
+        run: |
+          node host/scenarios/environment-app-test.mjs "$RUNNER_TEMP/environment-rust.wasm" > "$RUNNER_TEMP/environment-node.json"
+          bun host/scenarios/environment-app-test.mjs "$RUNNER_TEMP/environment-rust.wasm" > "$RUNNER_TEMP/environment-bun.json"
+          deno run --allow-read host/scenarios/environment-app-test.mjs "$RUNNER_TEMP/environment-rust.wasm" > "$RUNNER_TEMP/environment-deno.json"
+          node --input-type=module -e 'import fs from "node:fs"; for (const name of ["node","bun","deno"]) { const p = `${process.env.RUNNER_TEMP}/environment-${name}.json`; const receipt = JSON.parse(fs.readFileSync(p)); receipt.exact_source = process.env.GITHUB_SHA; receipt.os = process.env.RUNNER_OS; receipt.arch = process.env.RUNNER_ARCH; fs.writeFileSync(p, JSON.stringify(receipt)); console.log(JSON.stringify(receipt)); }'
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: environment-app-${{ matrix.os }}
+          path: ${{ runner.temp }}/environment-*.json
+          if-no-files-found: error
       - name: Evidence boundary
         run: |
-          printf '%s\n' "Source $GITHUB_SHA; $RUNNER_OS/$RUNNER_ARCH: Node/Bun/Deno source preflights only. No uniform guest v1, browser or mobile proof." >> "$GITHUB_STEP_SUMMARY"
+          printf '%s\n' "Source $GITHUB_SHA; $RUNNER_OS/$RUNNER_ARCH: Node/Bun/Deno source preflight and restricted synchronous WAsmC/Rust App-Lib-Host profile. No uniform v1 resource ABI, Native engine, browser or mobile proof." >> "$GITHUB_STEP_SUMMARY"

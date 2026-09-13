@@ -71,3 +71,36 @@ For browsers, invoke `probeEnvironment` in a real secure-context page and retain
 browser/source receipts; Node execution is not browser proof. The probe's
 injected missing-source controls are explicit negative tests, not positive
 simulated sources. No insecure fallback, numerical guest handle or JSON RPC.
+
+## S1 restricted App/Lib/Host profile
+
+`environment-app.wasmc` and `environment-app.rs` implement the same synchronous
+logical interface. Each App initiates two monotonic clock reads and one real
+secure-entropy fill, then calls the admitted `wasmc-owned-algorithms` Lib to
+sum the sixteen initialized bytes. The embedding owns the scratch window;
+neither caller sees a pointer, resource token or opcode. The `nonce_sum` import
+is fixture Lib marshalling, **not a new Host mechanism** or public standard API.
+
+This is a restricted scalar validation profile, not a generated typed v1 SDK:
+implicit prebound capabilities/windows, thrown embedding errors and no async
+operation/result/resource carrier. It does not qualify describe, public window
+acquisition/commit/release, wall clocks, revocation or cancellation. Do not copy
+these physical imports into the final v1 ABI. Formal SDK/package production
+still belongs to its owning producer workstream.
+
+Each runtime checks 64 real-source App calls (32 per caller), one paired replay
+oracle and four denial/unavailable-source controls. Replay uses one captured
+real input solely to compare pure consumer behavior; it is not entropy evidence.
+Denied/unsupported paths cannot call the Lib. Scratch is cleared/freed on both
+success and failure; retained binding callbacks reject after retirement. These
+are fixture-lifecycle checks, not long-run allocator/RSS or cryptography proof.
+Actions retains nine exact-source JSON receipts across three desktop OSes.
+
+```sh
+rustc --edition=2024 --crate-type cdylib --target wasm32-unknown-unknown \
+  -C opt-level=s -C panic=abort -C strip=symbols \
+  host/scenarios/environment-app.rs -o target/nonblocking-read/environment-rust.wasm
+node host/scenarios/environment-app-test.mjs target/nonblocking-read/environment-rust.wasm
+bun host/scenarios/environment-app-test.mjs target/nonblocking-read/environment-rust.wasm
+deno run --allow-read host/scenarios/environment-app-test.mjs target/nonblocking-read/environment-rust.wasm
+```

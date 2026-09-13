@@ -2,6 +2,18 @@
 
 ## 0. Status
 
+Current S1 slice: actual WAsmC and public Rust Core callers initiate authorized
+monotonic clock reads and secure entropy, then call the admitted computation
+Lib. Restricted synchronous profile, not v1 typed resource/async SDK. No caller
+pointers/tokens/opcodes; temporary embedding scratch is freed on failure too.
+Local Node/Bun/Deno each passed 64 actual-source calls, one paired replay oracle
+and four denial/unavailable controls. Physical imports are fixture-only, not ABI
+assignments; v1 selectors/results/windows/Future require owning producer work.
+Prior scenario run 34770332990 completed six tasks PASS on three desktop OSes.
+New workflow retains nine exact-source restricted App receipts; new-source
+cross-platform acceptance remains pending. Browser/mobile/Native engines not
+qualified by this JS profile. Compiler/provider bytes and prod remain unchanged.
+
 Active scenario qualification slice: select five end-to-end scenarios covering
 all 12 candidate families, separate platform preflight from uniform v1 proof.
 Add real clock/entropy JS and Native source preflights, negative unsupported
