@@ -1,7 +1,7 @@
 name: Public Host and Lib end-to-end
 on:
   push:
-    branches: [main, work/host-lib-e2e, work/host-completion-guard, work/host-startup-identity]
+    branches: [main, work/host-lib-e2e, work/host-completion-guard, work/host-startup-identity, work/host-tcp-endpoint]
   pull_request:
   workflow_dispatch:
 permissions:
@@ -47,6 +47,13 @@ jobs:
       - run: cargo +1.96.0 fmt --check --manifest-path host/lib-e2e/rust/Cargo.toml
       - run: cargo +1.96.0 clippy --locked --manifest-path host/lib-e2e/rust/Cargo.toml --all-targets -- -D warnings
       - run: cargo +1.96.0 build --release --locked --manifest-path host/lib-e2e/rust/Cargo.toml
+      - run: cargo +1.96.0 test --release --locked --manifest-path host/lib-e2e/rust/Cargo.toml
+      - name: Preconnected TCP and frozen algorithm Lib
+        shell: bash
+        run: |
+          binary=host/lib-e2e/rust/target/release/tcp-reference
+          if [[ "$RUNNER_OS" == Windows ]]; then binary="$binary.exe"; fi
+          node host/tcp/test.mjs "$binary"
       - name: Same App and published Lib through real file Host
         shell: bash
         run: |
@@ -69,6 +76,9 @@ jobs:
           completion=host/completion/rust/target/release/wasmc-completion-guard
           file=host/file-io/rust/target/release/wasmc-preopened-file-reference
           scoped=host/completion/rust/target/release/scoped-reference
+          tcp=host/lib-e2e/rust/target/release/tcp-reference
+          bun host/tcp/test.mjs "$tcp"
+          deno run --allow-net=127.0.0.1 --allow-read=libs/wasmc-owned-algorithms --allow-env=NODE_V8_COVERAGE --allow-run="$tcp" host/tcp/test.mjs "$tcp"
           bun host/completion/scoped-test.mjs "$scoped"
           deno run --allow-env=NODE_V8_COVERAGE --allow-run="$scoped,$(command -v deno)" host/completion/scoped-test.mjs "$scoped"
           bun host/completion/fault-test.mjs

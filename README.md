@@ -4,6 +4,10 @@
 
 Source-free public packages for the private-source `wasmc` compiler.
 
+Development [preconnected TCP + Lib reference](host/tcp/README.md) exercises real
+restricted loopback streams and frozen Wasm algorithm computation in JS/Wasmi.
+It is not a production network SDK, browser raw TCP, TLS or a new guest syscall.
+
 Experimental [startup binding identity](host/completion/SCOPED_IDENTITY.md) rejects
 old full references even when fresh processes recycle local IDs. The reviewed
 Lib/Host driver now issues scoped references with JS WebCrypto or Native OS

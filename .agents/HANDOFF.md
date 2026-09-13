@@ -1,5 +1,26 @@
 # WAsmC release maintainer handoff
 
+## Preconnected TCP START
+
+Own branch work/host-tcp-endpoint from previous pushed entropy-issuer milestone;
+old-source CI proceeds independently. Trusted Host preconnects streams, exposes
+bounded read/write/release without guest address/DNS/reconnect authority. Real
+loopback JS/Native tests use frozen owned-algorithms Lib for computation, not
+Host sum. Preserve TCP prefix/EOF and partial-write semantics. No general Host
+syscall added, TLS/guest async/resident service not claimed. Local-first tests
+before coherent push; no main advance or old immutable product/tag changes.
+Local Node/Bun/restricted Deno PASS8paired TCP/Lib cases each. JS3byte reads
+verify suffix retention, busy read/write/release rejection, malformed payload
+and retired resource denial. Native2tests include actual read deadline failure.
+Mac shutdown NotConnected retires normally; other failures remain errors.
+Initial EOF-framed response failed Bun, so portable fixture uses explicit
+trusted input length. Half-close response parity remains a documented gap,
+not fixed or waived. Deno paused EOF required explicit scoped read advancement.
+Original20case file/App/Lib regression PASS Node; strict Clippy/actionlint and
+maintainer integrity PASS. Six-target Actions now include TCP/Lib test on Node
+and four Unix Bun/Deno targets with loopback-only permissions. Push milestone,
+continue locally; exact new candidate needs qualification before main acceptance.
+
 ## Host entropy issuer — local development checkpoint
 
 Scoped guards now issue their own fresh256-bit binding identity: JS WebCrypto,
