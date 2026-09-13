@@ -228,6 +228,10 @@ accepted sources need no redo.
 Accept relevant source only with exact receipts, merge current main metadata
 without discarding it, refresh integrity, then normal expected-base FF promotion.
 Continue typed Core transport/SDK and Native supervision parity afterwards.
+Use host/TYPED_TRANSPORT_REVIEW.md to distinguish actual guest-driven typed I/O
+from Host-only drivers/simulator imports. The next gate must use existing generic
+plans first and preserve private package/SDK producer authority; this review
+does not authorize a private build or replace any frozen artifact.
 
 ## 7. Boundaries
 
