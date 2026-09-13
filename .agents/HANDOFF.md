@@ -2,6 +2,14 @@
 
 ## 0. Status
 
+Compiler protection is explicit: source/internal implementation remains private;
+Wasmi/Wasmtime integration, Host adapters, CLI and conformance/build glue may be
+public. User authorizes private compiler edits, not disclosure. Public CI only
+consumes admitted artifacts; no private-source cache/log/archive leakage.
+Portable Std investigation must first isolate producer/bindings/optimizer
+features, not assume an engine rejection requires compiler changes. Current
+frozen compiler and Lib artifacts remain unchanged by this policy checkpoint.
+
 Main acceptance now includes browser/resident engine and bounded JS supervisor.
 Resolve exact sources/runs from admission/host-browser-engine-qualification.json
 and admission/host-supervisor-qualification.json. Independently read14supervisor

@@ -9,6 +9,11 @@ embedded-index LibSearch. See [release scope](docs/RELEASE_V010.md).
 
 ## Start here
 
+Compiler source and internal compilation implementations are private. Reviewed
+compiler Wasm artifacts are public; Wasmi/Wasmtime integration glue, Host
+adapters, CLI, tests and cross-platform build workflows may be public. Compiler
+modification permission does not grant compiler-source publication permission.
+
 For reusable algorithms, text, bytes or collections, begin with
 [the Library-first discovery Skill](skills/wasmc-lib-discovery/SKILL.md):
 search → read the target Skill/WIT → approve exact identity → resolve/install

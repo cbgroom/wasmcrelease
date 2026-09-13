@@ -5,6 +5,22 @@ description: Maintain wasmc JavaScript, raw Core Wasm, Lib Component, Rust, and 
 
 # Release Host integration
 
+## Compiler protection and open engine integration
+
+Compiler source and internal compilation implementations remain private. Permission
+to modify the compiler is not permission to publish its source. Public delivery
+may contain the reviewed compiler Wasm, Wasmi/Wasmtime integration source, Host
+adapters, CLI, conformance tests and cross-platform build workflows. Public CI
+consumes admitted compiler/Lib artifacts; it does not fetch private compiler
+source or embed it in caches, logs, source maps or build archives.
+
+An engine rejecting a standard Lib is not evidence that the compiler must change.
+Inspect the exact failing artifact, its producer, generated bindings and linking/
+optimization feature settings first. Prefer a compatible Lib build behind the
+same WIT/API. Change private compiler code only for an independently reproduced
+compiler defect or missing generic mechanism; retain separate source-bound
+qualification. Engine glue itself requires no compiler disclosure.
+
 ## Local-first iteration, milestone cross-platform qualification
 
 Use available local platforms for the fast functional loop: focused regression,

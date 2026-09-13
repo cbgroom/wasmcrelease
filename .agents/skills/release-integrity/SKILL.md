@@ -16,6 +16,10 @@ CDN alias is discovery state; an immutable tag or full commit is package identit
 
 - Inspect the exact public tag and mutable branch independently.
 - Never rebuild compiler or Lib bytes here.
+- Compiler modification approval never implies source-publication approval.
+  Open Wasmi/Wasmtime glue, Host adapters, CLI and tests may be built here against
+  admitted Wasm artifacts; private compiler source, implementation-bearing source
+  maps, build archives and private-source caches must not enter public delivery.
 - Accept new binary packages only with the private clean synchronized source
   commit, toolchain/profile, behavior evidence, and matching public files.
 - Keep version, Lib contracts, JavaScript exports, examples, manifest,

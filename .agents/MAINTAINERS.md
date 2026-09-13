@@ -23,6 +23,12 @@ are intentionally open standardization surfaces. Their owning judgment is
 `release-host-integration`; keep low-level additions justified and reusable.
 This permission does not authorize rebuilding private compiler/CoreLib products.
 
+Compiler edits may be authorized independently in the private producer, without
+authorizing any compiler-source disclosure. Wasmi/Wasmtime integration, Host
+adapters, CLI and conformance/build code can remain public and consume reviewed
+Wasm artifacts. Public workflows must not download or expose private compiler
+source, internal source maps, source-bearing archives or private-source caches.
+
 ## Required loop
 
 Use the local/CI split in `release-host-integration`: validate each functional
