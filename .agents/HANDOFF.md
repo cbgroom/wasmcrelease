@@ -2,8 +2,8 @@
 
 ## 0. Status
 
-Task state: qualified for main — pinned public Lib download/install.
-Branch: feat/public-lib-install. Public v0.0.9 is already released;
+Task state: started — comprehensive public CI and visible test evidence.
+Branch: ci/full-public-coverage. Public v0.0.9 is already released;
 immutable tag and release branch remain unchanged. Main may carry follow-up
 consumer tooling/docs, not new admitted compiler or Lib binaries.
 
@@ -27,6 +27,15 @@ results cover their named Hosts, not Node18 or every future engine version.
 Current/ owns current compiler entrances; dist/package/libs are frozen v0.0.4.
 
 ## 4. Plan and Validation
+
+User requested all current public tests in Actions and README result display.
+Add finite executable suites, Linux/macOS JS matrices, both live mirrors,
+full-history credential negatives/scan, deterministic Fresh-Agent regression,
+Rust/Wasmi/Wasmtime consumer tests, always-written exact-source reports and
+workflow aggregate status. README native badge is CI status, never fabricated
+source-line or all-stdlib coverage. No automatic README commits/write token,
+binary rebuilding, release/tag move or production deployment. Validate runner
+failure controls, YAML and live Actions before main acceptance.
 
 Implement caller-pinned lock-file installation from fixed exact-source HTTPS
 mirrors. Share exact catalog selection; verify all files/companion before atomic
