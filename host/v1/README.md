@@ -47,6 +47,11 @@ Core hot path.
 
 ## Remaining production work
 
+The [typed task implementation basis](TYPED_TASK_IMPLEMENTATION.md) records a
+reproduced owned-async source boundary and the generic lifetime/CoreLib path
+required to close it. This is deliberately non-positive characterization, not
+an accepted SDK or evidence that private compiler modification is unnecessary.
+
 The [JS session](../session/README.md) has opaque resources and one-shot result
 claims but still uses relative wait timeouts, embedding-injected authority,
 fixed transfer metadata and blocking retirement. It does not yet implement

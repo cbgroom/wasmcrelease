@@ -140,6 +140,10 @@ jobs:
           node host/session/finish-write-test.mjs > "$RUNNER_TEMP/session-finish-node.json"
           bun host/session/finish-write-test.mjs --expect-unsupported > "$RUNNER_TEMP/session-finish-bun.json"
           deno run --allow-net=127.0.0.1 host/session/finish-write-test.mjs > "$RUNNER_TEMP/session-finish-deno.json"
+          node host/v1/typed-task-boundary-test.mjs > "$RUNNER_TEMP/session-boundary-node.json"
+          bun host/v1/typed-task-boundary-test.mjs > "$RUNNER_TEMP/session-boundary-bun.json"
+          deno run --allow-read host/v1/typed-task-boundary-test.mjs > "$RUNNER_TEMP/session-boundary-deno.json"
+          node --input-type=module -e 'import fs from "node:fs";for(const name of ["node","bun","deno"]){const p=`${process.env.RUNNER_TEMP}/session-boundary-${name}.json`;const r=JSON.parse(fs.readFileSync(p));if(r.accepted!==false||r.characterization_pass!==true||r.typed_owned_async_supported!==false)throw Error("boundary is not positive SDK proof");r.exact_source=process.env.GITHUB_SHA;r.os=process.env.RUNNER_OS;r.arch=process.env.RUNNER_ARCH;fs.writeFileSync(p,JSON.stringify(r));console.log(JSON.stringify(r));}'
           node --input-type=module -e 'import fs from "node:fs";for(const kind of ["file","network","fault","finish"])for(const name of ["node","bun","deno"]){const p=`${process.env.RUNNER_TEMP}/session-${kind}-${name}.json`;const r=JSON.parse(fs.readFileSync(p));if(kind==="finish"&&name==="bun"){if(r.accepted!==false||r.negative_contract_pass!==true)throw Error("unsupported must not count as positive");}else if(r.accepted!==true)throw Error("positive failed");r.exact_source=process.env.GITHUB_SHA;r.os=process.env.RUNNER_OS;r.arch=process.env.RUNNER_ARCH;fs.writeFileSync(p,JSON.stringify(r));console.log(JSON.stringify(r));}'
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:

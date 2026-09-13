@@ -2,6 +2,16 @@
 
 ## 0. Status
 
+Typed Host SDK blocker independently reproduced against admitted compiler:
+existing sync-owned and scalar-async Apps compile, while owned local before
+await and owned await result reject with sequential s32-local restriction.
+Node/Bun/Deno agree; receipts bind compiler/plan/source and accepted=false.
+See host/v1/typed-task-boundary-test.mjs and TYPED_TASK_IMPLEMENTATION.md.
+Next inspect private current generic machinery, then durable START before a
+generic typed continuation/CoreLib lifetime implementation; do not add captured
+scalar fixtures or expose numeric tokens as the resource SDK. Private producer
+read-only orientation is ongoing; no private edit/build or publication made.
+
 Candidate finish-write now exposes the missing reverse half-close oracle:
 Node/Deno peer sees FIN then sends a byte, same endpoint reads it; repeated
 finish/write denied and zero retained resources. Bun1.3.14 Node-compatible
