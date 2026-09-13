@@ -8,6 +8,14 @@ Prior exact-source run34745618036 PASS on Linux x64/macOS arm64/Windows x64.
 Expand to six native desktop targets with package manifests and download-stage
 execution. Mobile and dual SDK remain distinct gates; do not call six desktop
 targets all devices. No old tag movement or compiler rebuild.
+Implemented six native matrix targets and six fresh downloaded-consumer jobs.
+Package identity binds source/target/profile/compiler/toolchain and file hashes;
+downloaded execution runs without Cargo rebuild. Local release macOS arm64
+package5 byte-parity/5 actual executions/5 no-clobber plus9 rejection controls
+PASS. Actionlint PASS. README documents developmental scope and exact verifier.
+Push coherent checkpoint, read actual six-target run; only then accept main.
+Formal release/mobile/dual-engine remain unclosed, do not promote incomplete
+SDK as full-platform production support.
 Own branch: work/native-wasmi-compiler, based on origin/main at START.
 Approved design: privately produced compiler Wasm stays digest-bound; public
 Actions build only integration glue. Separate Wasmi-only and dual-engine

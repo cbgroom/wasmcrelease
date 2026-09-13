@@ -11,7 +11,19 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-24.04, macos-14, windows-2025]
+        include:
+          - os: ubuntu-24.04
+            target: x86_64-unknown-linux-gnu
+          - os: ubuntu-24.04-arm
+            target: aarch64-unknown-linux-gnu
+          - os: macos-15-intel
+            target: x86_64-apple-darwin
+          - os: macos-14
+            target: aarch64-apple-darwin
+          - os: windows-2025
+            target: x86_64-pc-windows-msvc
+          - os: windows-11-arm
+            target: aarch64-pc-windows-msvc
     runs-on: ${{ matrix.os }}
     timeout-minutes: 20
     steps:
@@ -23,17 +35,40 @@ jobs:
       - run: cargo +1.96.0 test --locked --manifest-path sdk/wasmc-native-compiler/Cargo.toml
       - run: cargo +1.96.0 clippy --locked --manifest-path sdk/wasmc-native-compiler/Cargo.toml --all-targets -- -D warnings
       - run: cargo +1.96.0 build --release --locked --manifest-path sdk/wasmc-native-compiler/Cargo.toml
-      - shell: bash
-        run: |
-          binary=sdk/wasmc-native-compiler/target/release/wasmc-wasmi
-          if [[ "$RUNNER_OS" == Windows ]]; then binary="$binary.exe"; fi
-          node scripts/test-native-compiler.mjs "$binary"
-          cargo +1.96.0 tree --locked --manifest-path sdk/wasmc-native-compiler/Cargo.toml > dependency-tree.txt
-          if grep -Ei 'wasmtime|cranelift' dependency-tree.txt; then exit 1; fi
+      - run: node scripts/native-package.mjs build native-package ${{ matrix.target }} ${{ github.sha }}
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: wasmc-wasmi-${{ matrix.os }}-${{ runner.arch }}-${{ github.sha }}
-          path: |
-            sdk/wasmc-native-compiler/target/release/wasmc-wasmi
-            sdk/wasmc-native-compiler/target/release/wasmc-wasmi.exe
-            dependency-tree.txt
+          name: wasmc-wasmi-${{ matrix.target }}-${{ github.sha }}
+          path: native-package/
+          if-no-files-found: error
+  downloaded-consumer:
+    needs: native
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-24.04
+            target: x86_64-unknown-linux-gnu
+          - os: ubuntu-24.04-arm
+            target: aarch64-unknown-linux-gnu
+          - os: macos-15-intel
+            target: x86_64-apple-darwin
+          - os: macos-14
+            target: aarch64-apple-darwin
+          - os: windows-2025
+            target: x86_64-pc-windows-msvc
+          - os: windows-11-arm
+            target: aarch64-pc-windows-msvc
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: 26.5.1
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: wasmc-wasmi-${{ matrix.target }}-${{ github.sha }}
+          path: downloaded/
+      - run: node scripts/native-package.mjs verify downloaded ${{ matrix.target }} ${{ github.sha }}
+      - run: node scripts/test-native-package.mjs downloaded ${{ matrix.target }} ${{ github.sha }}

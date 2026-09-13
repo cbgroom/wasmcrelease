@@ -4,6 +4,14 @@
 
 Source-free public packages for the private-source `wasmc` compiler.
 
+Post-v0.0.10 native packaging is in development: the public
+[Wasmi-only compiler SDK/CLI](sdk/wasmc-native-compiler/README.md) embeds the
+exact admitted compiler Wasm; Actions build only glue. Its six-target desktop
+matrix tests Linux/macOS/Windows x64/arm64, then downloads, verifies and reruns
+the same packages. This is not a new formal release, dual-engine CLI or mobile
+qualification. See the workflow summaries/artifacts for the exact tested source.
+[![Native compiler qualification](https://github.com/cbgroom/wasmcrelease/actions/workflows/native-compiler.yml/badge.svg?branch=work/native-wasmi-compiler)](https://github.com/cbgroom/wasmcrelease/actions/workflows/native-compiler.yml)
+
 Post-v0.0.10 Agent guidance strengthening: start with
 [Library-first discovery](skills/wasmc-lib-discovery/SKILL.md) before implementing
 reusable algorithms/data operations. It teaches real search hits, exact selection,
