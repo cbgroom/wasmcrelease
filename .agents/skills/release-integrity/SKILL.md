@@ -22,6 +22,12 @@ CDN alias is discovery state; an immutable tag or full commit is package identit
   maps, build archives and private-source caches must not enter public delivery.
 - Accept new binary packages only with the private clean synchronized source
   commit, toolchain/profile, behavior evidence, and matching public files.
+- Git checkout must preserve exact delivery bytes on every platform. Disable
+  automatic newline/text filters with the repository attributes contract;
+  generated WIT/SDK/metadata are hash-bound products, not editable formatting.
+  Windows CRLF transformation is an integrity failure, not engine incompatibility.
+  Reproduce it with controlled checkout and retain rejection tests; never relax
+  the digest check or rewrite admitted payloads to conceal the failure.
 - Keep version, Lib contracts, JavaScript exports, examples, manifest,
   provenance, package index, and release notes consistent.
 - Exclude reproducible local build outputs such as Cargo `target/` directories

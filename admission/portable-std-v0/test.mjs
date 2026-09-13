@@ -50,6 +50,8 @@ reject(()=>{},path=>{const b=read(path);return path==='package/artifact.wasm'?b.
 reject(()=>{},path=>{if(path==='rust.wasm')fail('fixture.missing');return read(path);});
 reject(m=>m.corelib.sha256='0'.repeat(64));
 reject(()=>{},read,repoRead,()=>false);
+reject(()=>{},path=>path==='package/SKILL.md'?Buffer.from(read(path).toString().replaceAll('\n','\r\n')):read(path));
+assert.match(repoRead('.gitattributes').toString(),/^\* -text$/m);
 const providerModule=new WebAssembly.Module(data.get('provider.wasm'));
 assert.equal(WebAssembly.Module.imports(providerModule).length,0);
 const libModule=new WebAssembly.Module(data.get('package/artifact.wasm'));

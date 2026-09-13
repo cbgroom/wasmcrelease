@@ -10,7 +10,7 @@ Node18/Node26/Bun/Deno plus Wasmi2/Wasmtime47 paired execution passed.
 Public native glue was locally compiled directly against compatible warm
 dependencies; full Cargo cross-platform compilation belongs to Actions.
 The new workflow requires15JS cells plus3native cells (both engines), exact
-checkout-SHA receipts,12JS rejection controls and frozen64product integrity.
+checkout-SHA receipts,13JS rejection controls and frozen64product integrity.
 Read the exact run before claiming cross-platform acceptance. No compiler
 source is published, old1.4.0 and prod pointers remain unchanged. Next: accept
 the candidate's exact Actions run, then integrate its public tooling/package
@@ -18,6 +18,14 @@ candidate; embedded catalog/search and immutable release promotion are separate.
 Local Deno initially rejected unnecessary child-process environment access;
 the runner now records CI SHA without spawning Git. Actions checks Git itself.
 Bounded local output is not exhaustive73API edge or mobile-device qualification.
+Initial candidate Actions passed Linux/macOS JS, but Windows rejected exact
+input identity before execution because checkout applied CRLF conversion.
+The delivery attributes now preserve all bytes; the owning integrity Skill
+records this lesson and the CRLF negative control remains rejecting.
+No admitted payload was edited; generated SDK's trailing blank-line diff
+warning is deliberately preserved as exact private-producer byte identity.
+The corrected commit requires a fresh complete18-cell run; old-source PASS
+cannot qualify it, and previous failure receipts remain retained.
 
 Compiler protection is explicit: source/internal implementation remains private;
 Wasmi/Wasmtime integration, Host adapters, CLI and conformance/build glue may be

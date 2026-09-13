@@ -40,6 +40,7 @@ jobs:
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
           mkdir -p target/portable-std
+          node admission/portable-std-v0/test-checkout.mjs | tee target/portable-std/checkout.json
           case "$RUNTIME" in
             bun) runner=(bun);;
             deno) runner=(deno run --allow-read --allow-env=GITHUB_SHA);;
@@ -51,7 +52,7 @@ jobs:
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: portable-std-${{ matrix.os }}-${{ matrix.runtime }}
-          path: target/portable-std/receipt.json
+          path: target/portable-std/*.json
           if-no-files-found: error
           retention-days: 14
   native:
