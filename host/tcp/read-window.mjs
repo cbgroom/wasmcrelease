@@ -38,9 +38,13 @@ export async function readTcpWindow(input,guard,{signal,deadlineMs=1000,revokeOn
       try {if(stopPromise) await requireTcpStop(stopPromise,{input,guard,operation,window},failure);} catch(cause) {failure=cause;}
     }
     if(!(failure instanceof TcpStopFailure)) {
+      try {await input.release();} catch(cause) {
+        failure=new TcpStopFailure({input,guard,operation,window},cause,failure??{state:'done',delivery:'suppressed_by_failed_retirement'});
+      }
+    }
+    if(!(failure instanceof TcpStopFailure)) {
       try {if(operation!==undefined) guard.release(operation);} catch(cause) {failure??=cause;}
       try {if(window!==undefined) guard.release(window);} catch(cause) {failure??=cause;}
-      try {await input.release();} catch(cause) {failure??=cause;}
     }
   }
   if(failure!==undefined) throw failure;

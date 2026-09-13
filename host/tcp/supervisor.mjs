@@ -43,7 +43,7 @@ export class TcpOwnerSupervisor {
       // Keep pins if endpoint retirement itself fails, even after close ack.
       await owner.input.release();
       const {operation,window}=owner.failure.owner;
-      if(operation!==undefined){owner.guard.complete(operation,[],-8);owner.guard.release(operation);}
+      if(operation!==undefined){if(!owner.guard.poll(operation).drained)owner.guard.complete(operation,[],-8);owner.guard.release(operation);}
       if(window!==undefined)owner.guard.release(window);
       this.#owners.delete(ticket);this.#endpoints.delete(owner.input);
     }finally{owner.retiring=false;}

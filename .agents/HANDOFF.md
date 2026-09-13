@@ -2,10 +2,14 @@
 
 ## 0. Status
 
-Active source line: work/host-driver-retirement. Task state: started.
-Objective: ordinary TCP driver close failure must enter owner quarantine before
-resource retirement; preserve primary outcome and no replay, handle already
-drained completion on explicit retirement. Endpoint-retirement local controls
+Active source line: work/host-driver-retirement. Task state: local proof complete;
+exact CI/main acceptance pending. Ordinary TCP driver close failure now enters
+owner quarantine before resource retirement; primary/effect preserved with no
+replay, already-drained completion is not completed twice. Node/Bun/restricted
+Deno passed four controlled failures plus actual TCP retirement with injected
+first close failure; read-stop/write/resident/lifetime regressions passed.
+See host/tcp/DRIVER_RETIREMENT.md; Native OS close faults/guard-release faults
+remain outside scope. Endpoint-retirement local controls
 and real TCP regressions passed; exact CI/main acceptance pending.
 Ordinary File/TCP release now retains its endpoint until verified
 close acknowledgement; pending/failed close denies new business I/O and only
