@@ -88,6 +88,10 @@ checks. Deno uses its native child launcher, not Node-compat environment copying
 Temporary-fixture permissions belong only to this harness.
 
 Evidence is in [public install qualification](../admission/public-lib-install-v009.json).
+[Linux CI](https://github.com/cbgroom/wasmcrelease/actions/runs/34730052200)
+passed seven JavaScript/compatibility/integrity jobs including fresh install and
+installed execution on Node/Bun/Deno. The full Rust rebuild was still running
+at this checkpoint; consult its live status before calling the whole run green.
 The delivery closure now has compatibility, offline catalog/exact resolve and
 pinned download/install implemented (3/4, 75%); public third-party Lib build
 remains. This denominator is not complete standard-library coverage or System/

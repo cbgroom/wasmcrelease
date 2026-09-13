@@ -2,7 +2,7 @@
 
 ## 0. Status
 
-Task state: qualification in progress — pinned public Lib download/install.
+Task state: qualified for main — pinned public Lib download/install.
 Branch: feat/public-lib-install. Public v0.0.9 is already released;
 immutable tag and release branch remain unchanged. Main may carry follow-up
 consumer tooling/docs, not new admitted compiler or Lib binaries.
@@ -58,7 +58,11 @@ under concurrency, competing-directory preservation and failed-stage cleanup.
 Actual install CLI freshly downloads eleven std/companion files. GitHub Raw
 passes all three Hosts; jsDelivr passes Node; each installed standard execution
 passes5120 paired calls. Exact harness evidence is being collected in
-admission/public-lib-install-v009.json. Deno Node-compat launcher permission
+admission/public-lib-install-v009.json. Exact harness collection completed.
+Actions run34730052200 passed seven JS/compatibility/integrity jobs, including
+fresh install and installed execution on all three Hosts; full Rust rebuild
+still running at this checkpoint. Prior catalog run34729685220 is full success.
+Deno Node-compat launcher permission
 failures are preserved; native clearEnv launcher passes without broad env grant.
 No compiler/Lib binaries changed. Unix symlink atomic visibility is not
 directory-fsync/power-loss durability or a Windows promise.
@@ -85,7 +89,7 @@ No original114-case reproduction or external performance-number adoption.
 
 ## 6. Next Actions
 
-Current bounded download/install slice is under final qualification. The four
+Current bounded download/install slice is qualified100percent. The four
 delivery closure gates are compatibility, catalog/exact resolve, download/
 install, and public third-party build: first three implemented (3/4), authoring
 remains. This denominator is not all-stdlib coverage or system/Ultra readiness.
