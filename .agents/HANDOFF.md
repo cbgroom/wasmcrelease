@@ -1,5 +1,16 @@
 # WAsmC release maintainer handoff
 
+## Current: minimal Host discipline and real file I/O START
+
+Own branch: work/thin-host-file-io. User authorizes updating owning maintainer
+Skill and beginning cross-platform real Host capability work. First real adapter
+uses explicitly preopened files, bounded positional read/write and sync, not
+guest paths or a filesystem permission oracle. Reuse draft endpoint/read/write/
+release mechanisms; no certificate/TLS/business-specific native operation.
+Existing draft remains evolving, not frozen. Private compiler/source unchanged.
+START checkpoint precedes implementation. Qualify JS/native file behavior and
+permissions on Actions, preserving old artifacts and unrelated worktrees.
+
 ## Thin Host contract START
 
 Own branch: work/thin-host-contract. User authorizes public evolving Core Host
