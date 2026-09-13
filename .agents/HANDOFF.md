@@ -1,5 +1,16 @@
 # WAsmC release maintainer handoff
 
+## Thin Host contract START
+
+Own branch: work/thin-host-contract. User authorizes public evolving Core Host
+standard and JS/Native prototype. Not WASI/Component dependency, not forever
+frozen. First gate is independent JS/Rust bounded memory-device state machines
+with shared adversarial operation corpus and actual Core Wasm guest follow-up.
+No real network/filesystem/device grants, compiler changes or old tag movement.
+Publish public contract/status/profile docs; Actions compare Node/Bun/Deno and
+native reference behavior. Browser execution and hardware remain explicit gaps.
+START precedes implementation. Resume bounded lifecycle/capability prototype.
+
 ## 0. Status
 
 Task state: in-progress — public Wasmi-only compiler adapter and native packaging.
