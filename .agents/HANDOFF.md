@@ -173,6 +173,10 @@ around the curated Lib slab. Nine Node/Bun/restricted Deno controls and real
 preserved in host/tcp/resident-snapshot-regression.json. No frozen compiler,
 Lib/CoreLib, Native source, Core ABI or Host import changes. Separate candidate
 qualification remains required; earlier cache/pool source PASS cannot qualify it.
+The subsequent metadata-only checkpoint records local paired source-bound
+samples in host/tcp/resident-snapshot-performance.json; production inputs remain
+identical to its candidate_product_source. Do not call local observations full
+performance/release acceptance or use unrelated-source workflow results.
 Chrome152/Firefox155/WebKit26.5 also pass three resident snapshot controls plus
 all earlier Core/guard/quarantine/pool/1000-call probes. Local browser sessions
 and the temporary server are closed after testing. Narrow local milestone is

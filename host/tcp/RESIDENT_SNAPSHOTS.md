@@ -18,3 +18,13 @@ The browser additionally requires three capture/traversal/reentry controls.
 Real TCP server regressions still require19 frames/17 calls/2 rejections and1000
 resident calls. These are copying curated Host mechanics, not hostile module
 admission, typed Agent SDK, shared-memory/zero-copy or full Std Wasmi proof.
+
+Local paired observations and all seven samples per side are recorded in
+`resident-snapshot-performance.json`. Two independent resident providers use
+identical digest-bound App/Lib bytes,10000 warmup calls per side and alternating
+before/after order. Both validate710000 Lib calls and exact per-sample sums.
+The local helper remains an excluded maintainer output, not a shipped benchmark
+CLI. These measurements are not formal cross-platform qualification, universal
+speed guarantees, Native optimization or network/durable TPS. Earlier separate
+process Deno runs also showed large noise in unchanged Native binaries; use the
+paired observations rather than attributing that variance to this JS change.
