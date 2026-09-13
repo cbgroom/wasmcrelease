@@ -2,6 +2,17 @@
 
 ## 0. Status
 
+Active branch: nonblocking TCP read owner. This slice adds no Host import or
+guest ABI. Start from accepted main (resolve parent with Git). Implement a
+preopened, exclusive socket owner that performs only nonblocking reads, checks
+cancellation/deadline before each read and closes its owned descriptor before
+settlement. Reuse NativeOwnerSupervisor for scoped identity and retained quotas.
+Local-first; existing desktop Actions qualify portability, not mobile devices.
+Resource admission: standalone rustc outputs at most64MiB in ignored local
+target; no Cargo rebuild or writes to the already over-budget private pool.
+Existing engine caches remain untouched. Typed async guest transport and a
+readiness reactor remain separate unqualified gates; polling is not a reactor.
+
 Portable Std1.4.1 source-free candidate passed all18exact-source Actions cells.
 It is admitted for main integration, not an immutable prod/discovery winner.
 Resolve exact source/run/job receipts from
