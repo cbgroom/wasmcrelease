@@ -2,7 +2,7 @@
 
 ## 0. Status
 
-Task state: locally qualified — public offline Lib discovery and exact resolution.
+Task state: qualified for main — public offline Lib discovery and exact resolution.
 Branch: feat/public-lib-catalog. Public v0.0.9 is already released;
 immutable tag and release branch remain unchanged. Main may carry follow-up
 consumer tooling/docs, not new admitted compiler or Lib binaries.
@@ -15,10 +15,9 @@ major-version promise or a language-memory-management change.
 
 ## 2. Current Focus
 
-External tpc02 report says Node18.19.1 accepts the current compiler but rejects
-std1.4.0 artifact with value-type0x64. Original scripts/logs are unavailable.
-Treat that report as attributed observation, not official measurement. Rebuild
-a minimal independent test against immutable public v0.0.9 artifact digests.
+Expose verified existing Lib packages through offline search and unique exact
+resolve. Discovery never selects versions or authorizes imports. Catalog is
+finite, digest-bound and derived from admitted files, not a new registry authority.
 
 ## 3. Existing Evidence
 
@@ -52,8 +51,10 @@ repeated receipts; existing standard caller5120 checks pass each Host.
 admission/public-lib-catalog-v009.json binds harness/catalog hashes and Hosts.
 AGENTS current version/artifact paths and public authoring status corrected.
 Compatibility run34729449573 subsequently completed full success.
-Resume: integrity/checksum, commit/push own branch, run targeted public Actions,
-ordinary main advance only if unchanged base, and Release instruction readback.
+Actions run34729685220 passed seven JS/compatibility/integrity jobs, including
+the new catalog tests; full Rust rebuild remains running at this checkpoint.
+Resume: publish own branch/main with expected-base fast-forward, verify remote
+and unchanged tag, update Release instructions/readback, then pinned install.
 
 Independent five-Host evidence is admission/core-compatibility-v009.json.
 Node18 reproduces value-type0x64 at265; standard requires function-references

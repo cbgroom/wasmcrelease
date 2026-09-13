@@ -48,6 +48,10 @@ delivery entrypoint, not a replacement compiler-side semantic resolver.
 ## Evidence and next stages
 
 See [three-Host exact-harness evidence](../admission/public-lib-catalog-v009.json).
+[Linux CI](https://github.com/cbgroom/wasmcrelease/actions/runs/34729685220)
+passed seven JS/compatibility/integrity jobs, including catalog tests. Its full
+Rust rebuild was still running at this checkpoint; read the live final status
+before calling the whole run green.
 Delivery closure has four distinct gates: compatibility, offline catalog/exact
 resolve, pinned download/install, and public third-party build. First two are
 implemented (2/4); the latter two remain. This is not an all-stdlib coverage
