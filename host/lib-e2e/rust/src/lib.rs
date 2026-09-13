@@ -33,3 +33,14 @@ pub fn sum_bytes(bytes: &[u8], lib_path: &str) -> Result<i64, Box<dyn std::error
     alloc.call(&mut store, (ptr, 64, 4, 0))?;
     Ok(result)
 }
+
+#[cfg(test)]
+mod binary_contract {
+    #[test]
+    fn accepts_binary_core_and_rejects_text_and_malformed_binary() {
+        let engine = wasmi::Engine::default();
+        assert!(wasmi::Module::new(&engine, b"\0asm\x01\0\0\0").is_ok());
+        assert!(wasmi::Module::new(&engine, b"(module)").is_err());
+        assert!(wasmi::Module::new(&engine, b"\0asm\x01\0\0\0\x01\x01\xff").is_err());
+    }
+}

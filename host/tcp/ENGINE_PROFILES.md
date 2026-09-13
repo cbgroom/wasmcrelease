@@ -6,6 +6,12 @@ The optional `wasmtime-engine` feature adds exact Wasmtime 47.0.4 (runtime and
 Cranelift, no WASI). It is intentionally absent from the default dependency
 graph. Mobile/no-JIT qualification is not implied by desktop Wasmi tests.
 
+The mutable default reference consumes binary Core Wasm only, not WAT text.
+Wasmi text parsing is omitted; stable/std/validate/memory64/auto-dispatch remain
+explicitly enabled. Binary module validation and per-call fuel are not disabled.
+The optional Wasmtime graph may include its own text tooling; this restriction
+describes the default Wasmi reference, not every dependency or the frozen SDK.
+
 Both profiles instantiate the same digest-bound WAsmC App and reviewed
 owned-algorithms Core Lib once, allocate one private Lib slab, reset fuel per
 call and enforce 16-byte inputs. Computation stays in the Lib. Only trusted

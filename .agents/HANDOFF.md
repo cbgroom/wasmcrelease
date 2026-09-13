@@ -2,7 +2,14 @@
 
 ## 0. Status
 
-Active source line: work/host-mobile-compile. Task state: local proof complete;
+Active source line: work/host-native-binary-only. Task state: local proof complete;
+Default Wasmi reference omits only WAT parsing, preserving stable/std/validate/
+memory64/auto-dispatch and fuel. Binary acceptance plus text/malformed rejection
+tests pass with default and optional engine:8Rust controls, strict Clippy, real
+Node/Bun/Deno UDP default and Node optional UDP/TCP parity. Local macOS arm64
+default UDP file3634784->2643840bytes, unique packages27->21, not cross-platform
+size/performance guarantee. Read host/NATIVE_BINARY_PROFILE.md. Exact CI/main
+acceptance pending; producer/frozen SDK unchanged.
 Default Wasmi-only iOS/Android/OHOS all-target checks pass locally; mobile Action
 also checks iOS-sim and rejects Wasmtime/WASI/TLS dependency drift. This mandatory
 matrix is compile-only, not signed artifact/install/device/network entitlement
