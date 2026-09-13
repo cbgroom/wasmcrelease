@@ -2,7 +2,20 @@
 
 ## 0. Status
 
-Task state: completed — library-first Agent discovery guidance strengthening.
+Task state: in-progress — public Wasmi-only compiler adapter and native packaging.
+Own branch: work/native-wasmi-compiler, based on origin/main at START.
+Approved design: privately produced compiler Wasm stays digest-bound; public
+Actions build only integration glue. Separate Wasmi-only and dual-engine
+profiles, CLI plus SDK; mobile packaging and promotion are subsequent gates.
+First slice: exclusive resident compiler instance with fuel/memory/input limits,
+copy-before-clear output, import rejection, native compile/inspect and JS byte
+parity. Existing frozen SDK and all64 promoted product files remain untouched.
+START checkpoint precedes implementation. Do not claim a new release or full
+Wasmi Std compatibility: Std1.4 still requires unsupported engine features.
+Resume: implement independent public adapter, focused tests, locked dependency
+tree, integrity/maintainer gate, push and exact-source Actions qualification.
+
+Previous completed stage:
 Own branch: docs/agent-library-first-guidance. Base is published v0.0.10.
 Plan: route AGENTS/developer to a concrete discovery Skill, teach search hits,
 exact selection/installation and verification; exercise canonical examples and
