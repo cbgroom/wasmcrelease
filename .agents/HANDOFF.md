@@ -1,5 +1,23 @@
 # WAsmC release maintainer handoff
 
+## TCP read-stop local milestone
+
+Own branch work/host-tcp-read-stop from prior pushed TCP reference. JS driver
+owns one endpoint; cancel/revoke/deadline terminates read, awaits settled read
+and socket close before draining/unpinning. No force-release/replay. Scoped
+revocation denies new grants; pre-aborted requests issue no I/O. Invalid Host
+deadline rejects; cleanup preserves primary read error. Adapter rejects retired
+socket wrappers and awaits close, not just destroyed=true. Native independent
+stop thread shuts down a cloned descriptor, joins/drops it before serialized
+guard drain; not general concurrent revocation or guest async SDK.
+Local Node/Bun/restricted Deno PASS4real paired cases and9additional controls
+including late bytes before deferred close acknowledgement. Prior8TCP/Lib pairs
+remain green on all3Hosts. Native2tests/strict Clippy and actionlint PASS.
+New owning docs READ_STOP.md expose limits and exact commands. Extend same
+six-target Actions, push coherent milestone, no waiting before further local
+work. Main acceptance needs exact-source cross-platform receipts. Full Host
+delivery remains1/5 gates; write cancellation/resident/TLS not qualified.
+
 ## Preconnected TCP START
 
 Own branch work/host-tcp-endpoint from previous pushed entropy-issuer milestone;

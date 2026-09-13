@@ -1,5 +1,8 @@
 # Preconnected TCP + algorithm Lib — development reference
 
+Follow-up [read stop/drain reference](READ_STOP.md) covers real cancellation,
+deadline and revoked delivery cleanup. It does not qualify write cancellation.
+
 The trusted Host provides an already connected stream. The adapter exposes
 bounded `read`/`write`/`release`, no guest-selected address, DNS, listener,
 reconnection or protocol-specific syscall. This is public integration glue,
@@ -28,6 +31,10 @@ there is no automatic retry. Readonly writes reject `-2`, invalid lengths `-5`,
 retired resources `-1`, reads/backend failures `-8`, writes `-9`. JS exclusive
 pending I/O rejects concurrent operations/release with `-4`; Native uses exclusive
 mutable access. Release retires the descriptor, even if Native shutdown fails.
+`release` is descriptor retirement, not a graceful protocol shutdown or a flush
+guarantee. JS destroys the socket and awaits its close event; `destroyed=true`
+alone is not the acknowledgement. Native shutdown/drop retires the descriptor.
+Only live preconnected JS sockets may be wrapped; already destroyed ones reject.
 Host code owns connection limits, timeouts and socket lifetime; guest code cannot
 select these. The test sets five-second Native socket deadlines and a six-second
 server cleanup bound. These are fixture bounds, not a negotiated deadline ABI.

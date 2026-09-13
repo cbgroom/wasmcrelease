@@ -1,7 +1,7 @@
 name: Public Host and Lib end-to-end
 on:
   push:
-    branches: [main, work/host-lib-e2e, work/host-completion-guard, work/host-startup-identity, work/host-tcp-endpoint]
+    branches: [main, work/host-lib-e2e, work/host-completion-guard, work/host-startup-identity, work/host-tcp-endpoint, work/host-tcp-read-stop]
   pull_request:
   workflow_dispatch:
 permissions:
@@ -54,6 +54,9 @@ jobs:
           binary=host/lib-e2e/rust/target/release/tcp-reference
           if [[ "$RUNNER_OS" == Windows ]]; then binary="$binary.exe"; fi
           node host/tcp/test.mjs "$binary"
+          stop=host/lib-e2e/rust/target/release/tcp-stop-reference
+          if [[ "$RUNNER_OS" == Windows ]]; then stop="$stop.exe"; fi
+          node host/tcp/fault-test.mjs "$stop"
       - name: Same App and published Lib through real file Host
         shell: bash
         run: |
@@ -77,8 +80,11 @@ jobs:
           file=host/file-io/rust/target/release/wasmc-preopened-file-reference
           scoped=host/completion/rust/target/release/scoped-reference
           tcp=host/lib-e2e/rust/target/release/tcp-reference
+          stop=host/lib-e2e/rust/target/release/tcp-stop-reference
           bun host/tcp/test.mjs "$tcp"
           deno run --allow-net=127.0.0.1 --allow-read=libs/wasmc-owned-algorithms --allow-env=NODE_V8_COVERAGE --allow-run="$tcp" host/tcp/test.mjs "$tcp"
+          bun host/tcp/fault-test.mjs "$stop"
+          deno run --allow-net=127.0.0.1 --allow-env=NODE_V8_COVERAGE --allow-run="$stop" host/tcp/fault-test.mjs "$stop"
           bun host/completion/scoped-test.mjs "$scoped"
           deno run --allow-env=NODE_V8_COVERAGE --allow-run="$scoped,$(command -v deno)" host/completion/scoped-test.mjs "$scoped"
           bun host/completion/fault-test.mjs
@@ -98,7 +104,7 @@ jobs:
         env:
           SOURCE: ${{ github.sha }}
         run: |
-          printf '%s\n' "Source $SOURCE; $RUNNER_OS/$RUNNER_ARCH; 76 guard transitions, 10 fault controls, 8 Rust tests, 8-process scoped identity with Host entropy issuance and 20 Lib/App/real-file cases; scheduled I/O, not guest async ABI" >> "$GITHUB_STEP_SUMMARY"
+          printf '%s\n' "Source $SOURCE; $RUNNER_OS/$RUNNER_ARCH; 76 guard transitions, 10 fault controls, 8 guard Rust tests, 2 TCP Rust tests, 8-process identity, 20 file/App/Lib cases, 8 TCP/Lib pairs and 4 read-stop pairs with 9 additional controls; not guest async ABI or write cancellation qualification" >> "$GITHUB_STEP_SUMMARY"
   required:
     if: always()
     needs: composition

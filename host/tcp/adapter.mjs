@@ -1,15 +1,18 @@
 // Trusted Host supplies an already connected, paused Node-compatible socket.
 // No guest address, DNS, listener or implicit reconnect authority.
 export class PreconnectedTcp {
-  #socket; #busy=false; #error=false; #ended=false;
+  #socket; #busy=false; #error=false; #ended=false; #stopped=false; #closed;
   constructor(socket, writable=true) {
+    if(socket.destroyed||socket.closed) throw -1;
     this.#socket=socket; this.writable=writable; socket.pause();
+    this.#closed=socket.closed?Promise.resolve():new Promise(resolve=>socket.once('close',resolve));
     socket.on('error',()=>{this.#error=true;});
     socket.on('end',()=>{this.#ended=true;});
   }
   #check(length) {
     if(!this.#socket) throw -1;
     if(this.#busy) throw -4;
+    if(this.#stopped) throw -1;
     if(!Number.isInteger(length)||length<0||length>16) throw -5;
     if(this.#error) throw -8;
   }
@@ -23,6 +26,7 @@ export class PreconnectedTcp {
         const end=()=>{clean();resolve([]);};
         const close=()=>{if(this.#ended||socket.readableEnded) end();else fail();};
         const data=bytes=>{
+          if(this.#stopped) return fail();
           clean();
           if(bytes.length>length) socket.unshift(bytes.subarray(length));
           resolve([...bytes.subarray(0,length)]);
@@ -47,10 +51,15 @@ export class PreconnectedTcp {
   async release() {
     if(!this.#socket) throw -1; if(this.#busy) throw -4;
     const socket=this.#socket;this.#socket=null;
-    if(!socket.destroyed) await new Promise(resolve=>{
-      socket.once('close',resolve);
-      if(this.writable&&!this.#error) socket.end(); else socket.destroy();
-    });
+    // Resource retirement awaits close acknowledgement, not destroyed=true alone.
+    if(!socket.destroyed) socket.destroy();
+    await this.#closed;
     return 0;
+  }
+  terminateRead() {
+    if(!this.#socket) throw -1;
+    this.#stopped=true;
+    this.#socket.destroy();
+    return this.#closed;
   }
 }

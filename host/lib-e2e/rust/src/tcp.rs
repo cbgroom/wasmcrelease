@@ -7,6 +7,10 @@ pub struct PreconnectedTcp {
 }
 
 impl PreconnectedTcp {
+    /// Trusted backend stop handle; never exposed as a guest capability.
+    pub fn stop_handle(&self) -> Result<TcpStream, i32> {
+        self.stream.as_ref().ok_or(-1)?.try_clone().map_err(|_| -8)
+    }
     pub fn new(stream: TcpStream, writable: bool) -> Self {
         Self {
             stream: Some(stream),
