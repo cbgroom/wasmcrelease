@@ -1,0 +1,31 @@
+package wasmc:host@0.0.1;
+
+// Semantic design draft. Not the executable scalar fixture ABI.
+interface kernel {
+  resource endpoint;
+  resource window;
+  resource operation;
+  enum error { invalid-resource, permission-denied, limit, busy, bounds,
+    cancelled, unsupported, timeout, external-failure, outcome-unknown }
+  enum feature { copy-windows, shared-windows, batch, ring }
+  record description { contract: string, version: string, features: list<feature>,
+    max-window-bytes: u64, max-pending: u32 }
+  record completion { transferred: u64 }
+  variant submission { completed(completion), pending(own<operation>) }
+  enum clock-kind { monotonic, wall }
+
+  describe: func(target: borrow<endpoint>) -> result<description, error>;
+  open: func(parent: borrow<endpoint>, selector: borrow<window>) -> result<own<endpoint>, error>;
+  read: func(target: borrow<endpoint>, destination: borrow<window>, position: option<u64>) -> result<submission, error>;
+  write: func(target: borrow<endpoint>, source: borrow<window>, position: option<u64>) -> result<submission, error>;
+  invoke: func(target: borrow<endpoint>, opcode: u32, request: borrow<window>) -> result<submission, error>;
+  wait: func(pending: list<borrow<operation>>, deadline-ns: option<u64>) -> result<list<completion>, error>;
+  cancel: func(pending: borrow<operation>) -> result<_, error>;
+  variant releasable { endpoint(own<endpoint>), window(own<window>), operation(own<operation>) }
+  release: func(target: releasable);
+  window-acquire: func(bytes: u64) -> result<own<window>, error>;
+  window-commit: func(target: borrow<window>, valid-bytes: u64) -> result<_, error>;
+  clock-read: func(source: borrow<endpoint>, kind: clock-kind) -> result<u64, error>;
+  entropy-fill: func(source: borrow<endpoint>, destination: borrow<window>) -> result<submission, error>;
+}
+world host-contract { import kernel; }

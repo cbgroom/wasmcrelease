@@ -10,6 +10,14 @@ No real network/filesystem/device grants, compiler changes or old tag movement.
 Publish public contract/status/profile docs; Actions compare Node/Bun/Deno and
 native reference behavior. Browser execution and hardware remain explicit gaps.
 START precedes implementation. Resume bounded lifecycle/capability prototype.
+Implemented public v0 draft WIT/contract and seven-operation memory profile.
+Independent JS/Rust104 scenarios/10037 transitions and same WAsmC guest4 cases
+PASS on local Node/Bun/Deno against native Wasmi2. Strict Clippy and WIT parser
+PASS. Deno initially rejected NODE_V8_COVERAGE; only that env permission added,
+native subprocess env remains empty. No broad ambient env or external I/O.
+Actions six native desktop targets compare Node; four Unix targets also compare
+Bun/Deno. Browser/Wasmtime/real backends and typed physical SDK remain gaps.
+Push coherent implementation, read exact-source Actions before main acceptance.
 
 ## 0. Status
 

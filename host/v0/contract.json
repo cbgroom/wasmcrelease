@@ -1,0 +1,14 @@
+{
+  "schema": "wasmc-core-host-contract/v0-draft",
+  "stable": false,
+  "profile": "bounded-memory-device-reference",
+  "semantic_operations": ["describe", "open", "read", "write", "invoke", "wait", "cancel", "release", "window-acquire", "window-commit", "clock-read", "entropy-fill"],
+  "implemented_reference_operations": ["describe", "window_acquire", "window_commit", "invoke", "wait", "cancel", "release"],
+  "required_features": ["copy-windows", "pending-completion", "bounded-resources"],
+  "optional_future_features": ["shared-windows", "batch", "ring"],
+  "limits": { "windows": 8, "operations": 8, "window_bytes": 16 },
+  "errors": { "invalid-resource": -1, "permission-denied": -2, "limit": -3, "busy": -4, "bounds": -5, "cancelled": -6, "unsupported": -7 },
+  "backends": ["independent-js-memory-simulator", "independent-rust-memory-simulator"],
+  "real_io": false,
+  "zero_copy": false
+}

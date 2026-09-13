@@ -4,6 +4,13 @@
 
 Source-free public packages for the private-source `wasmc` compiler.
 
+Public experimental [Core Host v0 contract/reference](host/v0/README.md):
+low-frequency evolving Native mechanisms, reusable CoreLib policy/protocols,
+JS/Native semantic parity without requiring identical acceleration. Seven
+bounded memory-simulator operations are implemented; twelve-operation draft,
+real I/O, browser execution and typed SDK remain separate qualification gates.
+[![Core Host contract](https://github.com/cbgroom/wasmcrelease/actions/workflows/thin-host.yml/badge.svg?branch=work/thin-host-contract)](https://github.com/cbgroom/wasmcrelease/actions/workflows/thin-host.yml)
+
 Post-v0.0.10 native packaging is in development: the public
 [Wasmi-only compiler SDK/CLI](sdk/wasmc-native-compiler/README.md) embeds the
 exact admitted compiler Wasm; Actions build only glue. Its six-target desktop
