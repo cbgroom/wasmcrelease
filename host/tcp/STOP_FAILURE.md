@@ -33,3 +33,9 @@ I/O is pending, and pre-aborted close failure. Checks assert retained pins,
 revoked grants/read denial, no endpoint release, no uncaught abort-hook failure
 and preserved partial-write status. Actions repeats them on desktop Node and
 Unix Bun/Deno. There are no new Core exports or public guest ABI fields.
+
+`driver-error-test.mjs` separately covers ten ordinary failure controls:
+invalid signal policies are rejected before I/O without calling foreign
+cleanup hooks, and immediate/async read failures both complete/drain normally.
+An immediate read throw does not establish a failed close; it is a failed
+issued read with no later backend activity, not a reason to strand a pin.

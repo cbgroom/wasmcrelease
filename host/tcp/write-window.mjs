@@ -28,7 +28,7 @@ export async function writeTcpWindow(input,guard,data,{signal,deadlineMs=1000}={
     }
   } catch(cause) {if(cause instanceof TcpStopFailure) quarantine=cause;else throw cause;}
   finally {
-    clearTimeout(timer);signal?.removeEventListener('abort',stop);
+    clearTimeout(timer);if(signal instanceof AbortSignal) signal.removeEventListener('abort',stop);
     if(closed&&!quarantine) {
       try {await requireTcpStop(closed,{input,guard,operation,window},result);} catch(cause) {quarantine=cause;}
     }

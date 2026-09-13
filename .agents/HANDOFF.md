@@ -1,5 +1,16 @@
 # WAsmC release maintainer handoff
 
+## Driver error-path regression
+
+Own branch work/host-driver-errors follows pushed corrected CI candidate.
+Invalid AbortSignal policy must preserve-5, never call foreign cleanup hooks
+or issue I/O. Immediate read throws now enter same failed completion/drain
+path as async rejection, not strand a pending pin. Local10controls PASS on
+Node/Bun/restricted Deno, with zero resource and exactly-one release/read.
+Extend same six-platform matrix; prior normal read/write and failed-stop
+regressions remain required. No new guest ABI/frozen artifact changes.
+Queued current qualification does not block local work or authorize main.
+
 ## CI temporary inventory correction
 
 Engine-parity run passed optional engine tests but Linux integrity rejected
