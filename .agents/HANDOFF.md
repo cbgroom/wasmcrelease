@@ -2,10 +2,14 @@
 
 ## 0. Status
 
-Active source line: work/host-native-completion-quarantine. Task state: started.
-Objective: malformed settled Native completion fails closed into retained owner
-quarantine; preserve primary versus close-failure observation without raw bytes
-or new guest imports. Driver-retirement source local proof complete;
+Active source line: work/host-native-completion-quarantine. Task state: local
+proof complete; exact CI/main pending. Malformed settled Native completion now
+quarantines/revokes, denies correction/new I/O, retains primary versus close
+failure observation without raw bytes or new guest imports.15guard/owner tests,
+strict Clippy and optional-profile6TCP tests passed. Existing40000-cycle JS
+lifetime and ordinary driver retirement regressions pass. Native async/OS races
+remain unqualified; see host/tcp/NATIVE_SUPERVISOR.md.
+Driver-retirement source local proof complete;
 exact CI/main acceptance pending. Ordinary TCP driver close failure now enters
 owner quarantine before resource retirement; primary/effect preserved with no
 replay, already-drained completion is not completed twice. Node/Bun/restricted
@@ -93,7 +97,7 @@ Both Native profiles reset fuel per call; no hidden WASI or guest authority.
 
 Native owner registry adds scoped quota/ownership return/settled completion/
 quarantine with exclusive borrow, four unit controls plus actual TCP timeout ->
-injected failed ack -> real shutdown/peer EOF with one read.14guard/6TCP tests.
+injected failed ack -> real shutdown/peer EOF with one read.15guard/6TCP tests.
 Fresh CSPRNG scoped guards use private binding-local integers; injected identity
 constructors and raw guards keep global exhaustion protection. JS/Native owner
 registries rotate identity only when exhausted AND completely empty. Local

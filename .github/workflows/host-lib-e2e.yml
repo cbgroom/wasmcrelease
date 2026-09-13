@@ -190,7 +190,7 @@ jobs:
         env:
           SOURCE: ${{ github.sha }}
         run: |
-          printf '%s\n' "Source $SOURCE; $RUNNER_OS/$RUNNER_ARCH; 76 guard transitions, 10 fault controls, 14 guard/owner Rust tests, 40000 scoped and supervisor cycles, 6 TCP/listener Rust tests, Native-peer half-close reply proof, 8-process identity, 20 file/App/Lib cases, 8 TCP/Lib pairs, 4 read-stop pairs with 9 controls, 19 resident App/Lib server connections, 1000 resident calls per engine and 8 listener controls; Bun JS-client half-close is separate characterization, not positive parity; guest trap poisons with no replay, not guest async ABI or generic failed-shutdown qualification" >> "$GITHUB_STEP_SUMMARY"
+          printf '%s\n' "Source $SOURCE; $RUNNER_OS/$RUNNER_ARCH; 76 guard transitions, 10 fault controls, 15 guard/owner Rust tests, 40000 scoped and supervisor cycles, 6 TCP/listener Rust tests, Native-peer half-close reply proof, 8-process identity, 20 file/App/Lib cases, 8 TCP/Lib pairs, 4 read-stop pairs with 9 controls, 19 resident App/Lib server connections, 1000 resident calls per engine and 8 listener controls; Bun JS-client half-close is separate characterization, not positive parity; guest trap poisons with no replay, not guest async ABI or generic failed-shutdown qualification" >> "$GITHUB_STEP_SUMMARY"
   browser:
     strategy:
       fail-fast: false
