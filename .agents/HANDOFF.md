@@ -70,6 +70,10 @@ specifically for function references. Negative is not portable acceptance.
 No SDK mechanism, API, binary or immutable inventory changed. Test-only
 Wasmtime gc feature enables typed-function-reference configuration; no new
 dependency version or production SDK feature is introduced.
+Repository artifact test is explicitly excluded from standalone cargo package:
+its include_bytes fixtures belong to the public release tree, not the SDK
+crate. Self-contained SDK mechanics tests remain packaged. Follow-up metadata
+checkpoint preserves original graph source and CI attempt for recovery.
 Use existing Actions release Cargo lane for validation, not a new cold local
 target pool. Source checkpoint must remain separate until full CI passes.
 

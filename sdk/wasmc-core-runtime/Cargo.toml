@@ -8,6 +8,10 @@ repository = "https://github.com/yxsicd/wasmc"
 readme = "README.md"
 keywords = ["wasm", "wasmi", "wasmtime", "runtime"]
 categories = ["wasm", "development-tools"]
+# Repository conformance uses the public release tree, which is not shipped
+# inside this standalone SDK crate. Keep its artifact fixture test out of the
+# packaged crate; ordinary self-contained SDK tests remain packaged.
+exclude = ["tests/public_standard_graph.rs"]
 
 [features]
 default = ["core-runtime-sdk"]
