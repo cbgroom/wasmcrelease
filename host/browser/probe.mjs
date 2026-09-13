@@ -78,7 +78,16 @@ async function run(){
   try{await supervisor.read({read:()=>{throw Error('quota I/O');}});throw Error('quota missing');}catch(error){check(error===-3,'quota error');}
   closed=true;await supervisor.retireQuarantine(failure.quarantineTicket);check(reads===1,'supervisor replay');
   equal(failure.owner.guard.counts(),[0,0]);equal(supervisor.status(),{active:0,quarantined:0,limit:1});
-  return {accepted:true,browser_user_agent:navigator.userAgent,app_sha256:appSha,lib_sha256:libSha,kernel_sha256:await digest(kernelBytes),kernel_core_cases:4,kernel_simulator_only:true,resident_calls:1000,core_cases:4,guard_cases:guardCases,completion_snapshot_cases:completionSnapshotCases,driver_write_snapshot_cases:writeSnapshotCases,stop_failure_cases:stopCases,supervisor_cases:1,trap_poisoned:true,no_replay:true,resource_cleanup:true,quarantine_retained:true,raw_tcp:false,real_device_io:false,mobile_qualified:false};
+  let guardPoolCases=0;const originalSubmit=ScopedCompletionGuard.prototype.submit,seen=[];
+  ScopedCompletionGuard.prototype.submit=function(window){const op=originalSubmit.call(this,window);seen.push({guard:this,window,op});return op;};
+  try {
+    const pooled=new TcpOwnerSupervisor(1);equal(await pooled.read({read:async()=>[7],release:async()=>{}}),[7]);let deliver;
+    const next=pooled.read({read:()=>new Promise(resolve=>{deliver=resolve;}),release:async()=>{}});
+    check(seen.length===2&&seen[0].guard===seen[1].guard,'idle guard not reused');
+    rejects(()=>seen[0].guard.complete(seen[0].op,[9]),-1);equal(seen[1].guard.counts(),[1,1]);
+    deliver([7]);equal(await next,[7]);equal(seen[1].guard.counts(),[0,0]);equal(pooled.status(),{active:0,quarantined:0,limit:1});guardPoolCases++;
+  }finally{ScopedCompletionGuard.prototype.submit=originalSubmit;}
+  return {accepted:true,browser_user_agent:navigator.userAgent,app_sha256:appSha,lib_sha256:libSha,kernel_sha256:await digest(kernelBytes),kernel_core_cases:4,kernel_simulator_only:true,resident_calls:1000,core_cases:4,guard_cases:guardCases,completion_snapshot_cases:completionSnapshotCases,driver_write_snapshot_cases:writeSnapshotCases,guard_pool_cases:guardPoolCases,stop_failure_cases:stopCases,supervisor_cases:1,trap_poisoned:true,no_replay:true,resource_cleanup:true,quarantine_retained:true,raw_tcp:false,real_device_io:false,mobile_qualified:false};
 }
 globalThis.receiptPromise=run().catch(error=>({accepted:false,error:String(error)})).then(receipt=>{
   document.querySelector('#receipt').textContent=JSON.stringify(receipt);

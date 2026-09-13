@@ -20,6 +20,13 @@ owners, including quarantine, are gone. Otherwise admission fails before I/O.
 Entropy failure never uses time, fixed seeds or old identity as a fallback.
 An old epoch ticket is foreign to the new epoch and cannot drain or free it.
 
+Mutable JS TCP supervision may now reuse an empty non-revoked binding with two
+local IDs remaining. This is the same binding/counter, not a reset or reassigned
+identity. Pending/quarantined/revoked guards are excluded. Exhausted empty scopes
+are discarded and replaced by fresh CSPRNG scopes; see ../tcp/GUARD_POOL.md.
+The explicit40000-fresh-binding regression below still creates independent
+bindings; its supervised half also checks safe bounded pooling/epoch rotation.
+
 ## Verification
 
 Run `node host/completion/lifetime-test.mjs` (also Bun or permission-free Deno).

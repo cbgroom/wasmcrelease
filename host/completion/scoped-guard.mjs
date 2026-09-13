@@ -34,4 +34,5 @@ export class ScopedCompletionGuard {
   release(resource) {return this.#guard.release(this.#unwrap(resource));}
   revoke() {return this.#guard.revoke();}
   counts() {return this.#guard.counts();}
+  reusable() {return this.#guard.reusable();}
 }

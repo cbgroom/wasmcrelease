@@ -40,6 +40,9 @@ TCP-driver write snapshot case. Getter/Proxy length is captured once; a nested
 completion cannot be overwritten by the outer call. These deterministic glue
 controls are not real browser network I/O. Their separate receipt counters are
 required by Actions, alongside all earlier guard/stop/supervisor counters.
+One idle-guard reuse/stale-ticket probe is also required: stale completion must
+not alter the next pending window on that same scoped guard. Trusted temporary
+test hooks restore in finally and expose no tickets in the published receipt.
 
 Local Chrome, Firefox and WebKit were exercised through Playwright CLI. Actions adds separate
 Chrome/Firefox/WebKit cells and requires them alongside six Native desktop

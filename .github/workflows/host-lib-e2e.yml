@@ -63,14 +63,17 @@ jobs:
           node host/completion/snapshot-test.mjs
           node host/tcp/write-snapshot-test.mjs
           node host/tcp/guard-retirement-test.mjs
+          node host/tcp/guard-pool-test.mjs
           node host/tcp/completion-quarantine-test.mjs --real-tcp
           bun host/completion/snapshot-test.mjs
           bun host/tcp/write-snapshot-test.mjs
           bun host/tcp/guard-retirement-test.mjs
+          bun host/tcp/guard-pool-test.mjs
           bun host/tcp/completion-quarantine-test.mjs --real-tcp
           deno run host/completion/snapshot-test.mjs
           deno run host/tcp/write-snapshot-test.mjs
           deno run host/tcp/guard-retirement-test.mjs
+          deno run host/tcp/guard-pool-test.mjs
           deno run --allow-net=127.0.0.1 host/tcp/completion-quarantine-test.mjs --real-tcp
           node host/file-io/write-snapshot-test.mjs
           bun host/file-io/write-snapshot-test.mjs
@@ -129,6 +132,7 @@ jobs:
       - run: node host/completion/snapshot-test.mjs
       - run: node host/tcp/write-snapshot-test.mjs
       - run: node host/tcp/guard-retirement-test.mjs
+      - run: node host/tcp/guard-pool-test.mjs
       - run: node host/tcp/completion-quarantine-test.mjs --real-tcp
       - run: node host/corelib-io/snapshot-test.mjs
       - run: node host/tcp/supervisor-test.mjs
@@ -257,10 +261,12 @@ jobs:
           bun host/completion/snapshot-test.mjs
           bun host/tcp/write-snapshot-test.mjs
           bun host/tcp/guard-retirement-test.mjs
+          bun host/tcp/guard-pool-test.mjs
           bun host/tcp/completion-quarantine-test.mjs --real-tcp
           deno run host/completion/snapshot-test.mjs
           deno run host/tcp/write-snapshot-test.mjs
           deno run host/tcp/guard-retirement-test.mjs
+          deno run host/tcp/guard-pool-test.mjs
           deno run --allow-net=127.0.0.1 host/tcp/completion-quarantine-test.mjs --real-tcp
           bun host/corelib-io/snapshot-test.mjs
           deno run --allow-read=standard/corelib,current,host/corelib-io host/corelib-io/snapshot-test.mjs
@@ -357,7 +363,7 @@ jobs:
           [[ "$url" == http://127.0.0.1:* ]] || { cat "$RUNNER_TEMP/wasmc-browser-server.err"; exit 1; }
           npm exec --yes --package=@playwright/cli@0.1.19 -- playwright-cli -s=wasmc-host-ci open "$url" --browser "$BROWSER"
           npm exec --yes --package=@playwright/cli@0.1.19 -- playwright-cli -s=wasmc-host-ci --raw eval 'async () => { const receipt=await globalThis.receiptPromise; if(!receipt.accepted) throw Error(receipt.error); return receipt; }' > "$RUNNER_TEMP/wasmc-browser-receipt.json"
-          node --input-type=module -e 'import{readFileSync}from"node:fs";import assert from"node:assert/strict";const r=JSON.parse(readFileSync(process.argv[1]));assert.ok(r.accepted&&r.no_replay&&r.trap_poisoned&&r.resource_cleanup&&r.quarantine_retained);assert.equal(r.resident_calls,1000);assert.equal(r.guard_cases,4);assert.equal(r.stop_failure_cases,4);assert.equal(r.supervisor_cases,1);assert.equal(r.completion_snapshot_cases,3);assert.equal(r.driver_write_snapshot_cases,1);assert.equal(r.kernel_core_cases,4);console.log(JSON.stringify(r));' "$RUNNER_TEMP/wasmc-browser-receipt.json"
+          node --input-type=module -e 'import{readFileSync}from"node:fs";import assert from"node:assert/strict";const r=JSON.parse(readFileSync(process.argv[1]));assert.ok(r.accepted&&r.no_replay&&r.trap_poisoned&&r.resource_cleanup&&r.quarantine_retained);assert.equal(r.resident_calls,1000);assert.equal(r.guard_cases,4);assert.equal(r.stop_failure_cases,4);assert.equal(r.supervisor_cases,1);assert.equal(r.completion_snapshot_cases,3);assert.equal(r.driver_write_snapshot_cases,1);assert.equal(r.guard_pool_cases,1);assert.equal(r.kernel_core_cases,4);console.log(JSON.stringify(r));' "$RUNNER_TEMP/wasmc-browser-receipt.json"
           printf '%s\n' "Source $SOURCE; real $BROWSER; App/Lib1000 resident calls; four Core/guard/quarantine probes; no raw TCP/mobile claim" >> "$GITHUB_STEP_SUMMARY"
   required:
     if: always()
