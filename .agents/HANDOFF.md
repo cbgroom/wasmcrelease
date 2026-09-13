@@ -2,7 +2,7 @@
 
 ## 0. Status
 
-Task state: validated locally — independent Node18/standard-Lib feature reproduction.
+Task state: published — independent Node18/standard-Lib feature reproduction.
 Branch: fix/node18-feature-admission. Public v0.0.9 is already released;
 immutable tag and release branch remain unchanged. Main may carry follow-up
 consumer tooling/docs, not new admitted compiler or Lib binaries.
@@ -47,8 +47,13 @@ No original114-case reproduction or external performance-number adoption.
 
 ## 6. Next Actions
 
-Publish self-contained compatibility evidence/instructions and update the
-Release explanation after integrity/credential/remote checks. Defer catalog/third-party build work to
+Compatibility instructions/evidence and v0.0.9 Release notes are published.
+Main and this branch are synchronized; the immutable release tag is unchanged.
+Actions run34729449573 passed all seven JavaScript/integrity/compatibility jobs;
+the unrelated full Rust rebuild was still running at this checkpoint.
+Local complete current tests, maintainer gate and credential negatives passed.
+Do not call this new Actions run fully green before reading its final status.
+Defer catalog/third-party build work to
 its own source-authority stage; do not invent shipped commands here.
 
 ## 7. Boundaries

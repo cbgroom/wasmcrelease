@@ -68,6 +68,11 @@ source-authority change, admission and new publication, not retagging v0.0.9.
 ## Evidence and limits
 
 See [independent evidence](../admission/core-compatibility-v009.json). Official
+Linux CI [run34729449573](https://github.com/cbgroom/wasmcrelease/actions/runs/34729449573)
+passed the three pinned Node compatibility jobs, three JS deployment jobs and
+integrity job. At this documentation checkpoint its full Rust rebuild remained
+in progress; consult the linked live result rather than treating it as a full-run PASS.
+Official
 runtime archive SHA checks prove equality with their published checksums, not
 an independent publisher-signature verification. Minimal feature probes execute
 `run()=7` where supported. Negative tests cover tampering before engine work,
