@@ -127,11 +127,11 @@ jobs:
         with:
           name: all-api-components-${{ matrix.os }}
           path: ${{ runner.temp }}/all-api-*.json
+          if-no-files-found: error
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: file-app-${{ matrix.os }}
           path: ${{ runner.temp }}/file-app-*.json
-          if-no-files-found: error
           if-no-files-found: error
       - run: rustup toolchain install 1.96.0 --profile minimal --target wasm32-unknown-unknown
       - name: Build public Rust conformance caller, no Cargo or private source
