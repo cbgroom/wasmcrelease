@@ -2,8 +2,8 @@
 
 ## 0. Status
 
-Task state: fully qualified — comprehensive public CI and visible test evidence.
-Branch: ci/full-public-coverage. Public v0.0.9 is already released;
+Task state: started — production LibSearch qualification and staged publication.
+Branch: release/lib-search-v010. Public v0.0.9 is already released;
 immutable tag and release branch remain unchanged. Main may carry follow-up
 consumer tooling/docs, not new admitted compiler or Lib binaries.
 
@@ -14,6 +14,18 @@ authority. Feature compatibility is artifact-specific, not a guessed Node
 major-version promise or a language-memory-management change.
 
 ## 2. Current Focus
+
+User authorized production-grade LibSearch after qualification and accepted
+dev -> main -> suffix-free prod identities. Policy is docs/RELEASE_CHANNELS.md.
+No new Lib binary has been admitted/published at this START checkpoint. Private
+producer remains build authority; public branch will import only its verified
+root, immutable index and public comparison corpus after a clean pushed source
+checkpoint. Candidate version remains subject to fresh tag inspection.
+Plan: portable formal API/Component/SDK tests, all negative controls, exact-source
+product provenance, public source-free CI comparison and stage-aware promotion.
+No compiler rebuild here; do not move v0.0.9 or make dev/main default prod.
+Resume: own START push, then source-free tests and metadata; wait for private
+candidate acceptance before adding any new binary.
 
 Install caller-pinned exact public Lib bytes from fixed HTTPS mirrors after
 complete validation; publish atomically without overwriting any destination.
