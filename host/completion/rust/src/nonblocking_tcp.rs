@@ -15,11 +15,27 @@ pub enum ReadProgress {
 /// The preopened descriptor must not have aliases that the embedding expects us
 /// to close. No thread, detached syscall, allocation on Pending or read replay.
 pub struct NonblockingTcpRead {
-    stream: Option<TcpStream>,
+    stream: Option<OwnedStream>,
     capacity: usize,
     deadline: Instant,
     cancelled: bool,
 }
+#[cfg(feature = "native-readiness")]
+enum OwnedStream {
+    Plain(TcpStream),
+    Registered(mio::net::TcpStream),
+}
+#[cfg(feature = "native-readiness")]
+impl Read for OwnedStream {
+    fn read(&mut self, bytes: &mut [u8]) -> io::Result<usize> {
+        match self {
+            Self::Plain(s) => s.read(bytes),
+            Self::Registered(s) => s.read(bytes),
+        }
+    }
+}
+#[cfg(not(feature = "native-readiness"))]
+type OwnedStream = TcpStream;
 impl NonblockingTcpRead {
     /// Failure returns ownership of the descriptor to its caller.
     pub fn new(
@@ -34,11 +50,39 @@ impl NonblockingTcpRead {
             return Err((-8, stream));
         }
         Ok(Self {
-            stream: Some(stream),
+            stream: Some(Self::owned_stream(stream)),
             capacity,
             deadline,
             cancelled: false,
         })
+    }
+    #[cfg(feature = "native-readiness")]
+    fn owned_stream(stream: TcpStream) -> OwnedStream {
+        OwnedStream::Plain(stream)
+    }
+    #[cfg(not(feature = "native-readiness"))]
+    fn owned_stream(stream: TcpStream) -> OwnedStream {
+        stream
+    }
+    #[cfg(feature = "native-readiness")]
+    pub(crate) fn register(&mut self, registry: &mio::Registry) -> Result<(), i32> {
+        let stream = self.stream.take().ok_or(-4)?;
+        let mut registered = match stream {
+            OwnedStream::Plain(s) => mio::net::TcpStream::from_std(s),
+            already @ OwnedStream::Registered(_) => {
+                self.stream = Some(already);
+                return Err(-4);
+            }
+        };
+        let result = registry
+            .register(&mut registered, mio::Token(0), mio::Interest::READABLE)
+            .map_err(|_| -8);
+        self.stream = Some(OwnedStream::Registered(registered));
+        result
+    }
+    #[cfg(feature = "native-readiness")]
+    pub(crate) fn deadline(&self) -> Instant {
+        self.deadline
     }
     /// Request only: a live descriptor/quota stays owned until poll closes it.
     pub fn cancel(&mut self) -> Result<(), i32> {

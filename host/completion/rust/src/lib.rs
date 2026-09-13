@@ -5,6 +5,8 @@ use std::{
 static NEXT: AtomicU32 = AtomicU32::new(1);
 pub mod nonblocking_tcp;
 pub mod owner_supervisor;
+#[cfg(feature = "native-readiness")]
+pub mod readiness;
 pub mod scoped;
 impl owner_supervisor::QuarantineEndpoint for nonblocking_tcp::NonblockingTcpRead {
     fn acknowledge_quarantine_close(&mut self) -> Result<(), i32> {

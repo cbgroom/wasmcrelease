@@ -28,11 +28,16 @@ jobs:
       - run: cargo clippy --release --locked --manifest-path host/completion/rust/Cargo.toml --lib --tests -- -D warnings
       - name: Real TCP lifecycle and retained quota controls
         run: node scripts/test-host-nonblocking-read.mjs "$RUNNER_TEMP/nonblocking-read.json"
+      - run: cargo clippy --release --locked --manifest-path host/completion/rust/Cargo.toml --features native-readiness --lib --tests -- -D warnings
+      - name: OS readiness, deadline and cross-thread cancellation wakeups
+        run: node scripts/test-host-nonblocking-read.mjs --readiness "$RUNNER_TEMP/readiness.json"
       - name: Summary
         run: |
-          printf '%s\n' "Source $GITHUB_SHA; $RUNNER_OS/$RUNNER_ARCH: 25 completion tests, including 10 real nonblocking TCP/owner controls. No guest async/reactor/mobile qualification." >> "$GITHUB_STEP_SUMMARY"
+          printf '%s\n' "Source $GITHUB_SHA; $RUNNER_OS/$RUNNER_ARCH: default25 + readiness31 tests (6 new OS wakeup controls). No guest async/executor/shared-reactor/mobile qualification." >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: nonblocking-read-${{ matrix.os }}
-          path: ${{ runner.temp }}/nonblocking-read.json
+          path: |
+            ${{ runner.temp }}/nonblocking-read.json
+            ${{ runner.temp }}/readiness.json
           if-no-files-found: error

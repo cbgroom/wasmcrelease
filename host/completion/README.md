@@ -18,15 +18,28 @@ closes before acknowledgement. Premature completion stays quarantined until
 this real cleanup, never force-unpins an open descriptor. Other backend failures
 still retain their original quota and require their own close/settlement proof.
 
-The embedding serializes polls and supplies monotonic time; **a readiness reactor
-and cancellation/timer wakeup adapter are not implemented here**. Nor is a typed
-guest async SDK. Local and desktop Actions run25completion tests (10new TCP/owner
+The embedding serializes polls and supplies monotonic time. The optional
+`native-readiness` feature adds `ReadyTcpRead`: one OS queue, four event slots,
+one owned read, one cancellation capability. `wait` uses OS readiness with the
+remaining absolute deadline, not periodic sleep polling. Cross-thread cancel
+wakes that same queue; completion/drop retires its wakeup so old cancellation
+cannot act on another owner. Spurious/EINTR wakes recheck cancellation/deadline.
+Default dependency graph stays unchanged. Native readiness uses Mio1.2.3 without
+default features, only `os-poll` and `net` (not WASI, TLS or an engine dependency).
+
+`wait` blocks the embedding's bounded I/O owner: it must not run on a guest
+executor thread. It creates no worker threads. **A shared multi-operation reactor,
+guest Future/executor adapter and typed guest async SDK remain unimplemented.**
+Socket reads still copy at most16bytes; this is not shared-memory/zero-copy.
+Local and desktop Actions run25default tests (10new TCP/owner
 controls), with exact source/input-digest receipts via:
 
 ```sh
 node scripts/test-host-nonblocking-read.mjs
+node scripts/test-host-nonblocking-read.mjs --readiness
 ```
 
+The readiness profile runs31tests including six real OS wakeup controls.
 CI qualifies Linux/macOS/Windows independently; local PASS is not their receipt.
 No engine dependency, compiler source or immutable artifact is changed.
 

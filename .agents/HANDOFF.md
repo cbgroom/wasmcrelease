@@ -2,16 +2,29 @@
 
 ## 0. Status
 
-Next local slice: optional native-readiness backend using OS readiness and a
+Active local slice: optional native-readiness backend using OS readiness and a
 cross-thread cancellation wakeup, without sleep polling or internal worker
 creation. Explicit opt-in; default completion crate dependency graph unchanged.
 Reuse one owned read and supervisor close fences; close cancellation wakeup
 resources on settlement so stale cancellation cannot affect a new owner.
 Prior three desktop receipts downloaded and independently checked: source
 resolve from Git previous implementation commit,25passed,clean,all3OS PASS;
-run34769045498. Source-bound receipts are in ignored local target/ci-previous.
+run34769045498. Source-bound receipts are retained in
+.agents/workstreams/host-readiness/previous-receipts; all recorded input hashes
+were independently compared with the referenced Git objects. They qualify only
+the previous owner implementation, not this new optional readiness Source.
 Resource admission remains64MiB local target; no engine-cache writes. Start
 measurement35456KiB; stop if the small optional graph reaches65536KiB.
+Current local result: default25/25 and readiness31/31 PASS; both profiles strict
+Clippy PASS,fmt/JSfault10/lifetime80000/YAML PASS. Actual OS readiness, deadline
+and cross-thread cancellation tests include no production sleep polling;
+cleanup retires wakeup and suppresses old cancellation. Local target46424KiB,
+within64MiB. Existing downstream default Cargo lock resolves without mutation.
+New milestone workflow requires both profiles on all3desktop OSes; qualify it
+against its own exact-source downloaded receipts before main integration.
+Implementation slice locally100%; complete Host acceptance still1/5(20%).
+Next: shared bounded multi-operation reactor and guest Future adapter; this
+single-owner wait is not an executor or complete typed Core async transport.
 
 Active branch: nonblocking TCP read owner. This slice adds no Host import or
 guest ABI. Start from accepted main (resolve parent with Git). Implemented a
