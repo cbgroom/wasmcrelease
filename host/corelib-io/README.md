@@ -22,6 +22,14 @@ envelopes use high 32 bits for status, low 32 bits for the payload. Do not
 confuse handle sign with success/error or expose this carrier as semantic API.
 Provider identity is fixed by digest, not inferred from version ordering.
 
+Host packing captures at most16 indexed bytes once before calling the Core
+builder, so validation cannot disagree with a second getter read. Invalid/sparse
+input makes zero Core builder-allocation calls. `snapshot-test.mjs` exercises
+seven real-provider controls on Node/Bun/restricted Deno, including the original
+valid7 then256 getter that silently produced sum0. `allocationCalls` is a trusted
+conformance counter, not a guest syscall or public application API. CoreLib
+remains the only owner/allocator of the resulting object graph.
+
 ## Reproduce locally
 
 From the repository root (installed Rust wasm32 target required):

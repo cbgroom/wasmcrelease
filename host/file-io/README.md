@@ -16,8 +16,13 @@ configuration, outside the guest API; it uses exclusive creation without clobber
 Initial profile limits:16bytes/call,64-byte accessible range, one preopened
 resource per harness run. These deliberately small test budgets are not an
 application throughput or certificate-bundle size limit for a future SDK.
-Read returns the available prefix, including EOF. Write completes all supplied
-bytes or reports possibly partial/unknown effects; no implicit rollback/retry.
+Read returns the available prefix, including EOF.
+Backend read completion length must be an integer in0..requested. Invalid,
+negative, fractional or oversized completion rejects -8 without publishing
+bytes or repeating I/O. Run `node host/file-io/read-completion-test.mjs` (Bun/
+permission-free Deno also work) for five invalid and three valid controls.
+Write completes all supplied bytes or reports possibly partial/unknown effects;
+no implicit rollback/retry.
 Release invalidates the resource. Explicit sync uses FileHandle.sync / sync_all;
 it does not prove directory-entry durability, crash recovery or every filesystem's
 power-loss behavior. Native drop closes the descriptor but cannot report every

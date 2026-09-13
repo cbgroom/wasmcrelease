@@ -31,9 +31,21 @@ jobs:
           node host/tcp/stream-snapshot-test.mjs
           bun host/tcp/stream-snapshot-test.mjs
           deno run host/tcp/stream-snapshot-test.mjs
+          node host/tcp/buffer-budget-test.mjs
+          bun host/tcp/buffer-budget-test.mjs
+          deno run host/tcp/buffer-budget-test.mjs
+          node host/tcp/completion-quarantine-test.mjs --real-tcp
+          bun host/tcp/completion-quarantine-test.mjs --real-tcp
+          deno run --allow-net=127.0.0.1 host/tcp/completion-quarantine-test.mjs --real-tcp
           node host/file-io/write-snapshot-test.mjs
           bun host/file-io/write-snapshot-test.mjs
           deno run host/file-io/write-snapshot-test.mjs
+          node host/file-io/read-completion-test.mjs
+          bun host/file-io/read-completion-test.mjs
+          deno run host/file-io/read-completion-test.mjs
+          node host/corelib-io/snapshot-test.mjs
+          bun host/corelib-io/snapshot-test.mjs
+          deno run --allow-read=standard/corelib,current,host/corelib-io host/corelib-io/snapshot-test.mjs
           node host/tcp/server-test.mjs --js-only
           bun host/tcp/server-test.mjs --js-only --diagnose
           deno run --allow-net=127.0.0.1 --allow-read=current,host/lib-e2e,libs/wasmc-owned-algorithms --allow-write=target/host-tcp-app host/tcp/server-test.mjs --js-only
@@ -66,8 +78,12 @@ jobs:
       - run: node host/tcp/driver-error-test.mjs
       - run: node host/file-io/retirement-test.mjs
       - run: node host/file-io/write-snapshot-test.mjs
+      - run: node host/file-io/read-completion-test.mjs
       - run: node host/tcp/driver-retirement-test.mjs --real-tcp
       - run: node host/tcp/stream-snapshot-test.mjs
+      - run: node host/tcp/buffer-budget-test.mjs
+      - run: node host/tcp/completion-quarantine-test.mjs --real-tcp
+      - run: node host/corelib-io/snapshot-test.mjs
       - run: node host/tcp/supervisor-test.mjs
       - name: Independent process startup identity
         shell: bash
@@ -170,8 +186,16 @@ jobs:
           deno run host/file-io/retirement-test.mjs
           bun host/file-io/write-snapshot-test.mjs
           deno run host/file-io/write-snapshot-test.mjs
+          bun host/file-io/read-completion-test.mjs
+          deno run host/file-io/read-completion-test.mjs
           bun host/tcp/stream-snapshot-test.mjs
           deno run host/tcp/stream-snapshot-test.mjs
+          bun host/tcp/buffer-budget-test.mjs
+          deno run host/tcp/buffer-budget-test.mjs
+          bun host/tcp/completion-quarantine-test.mjs --real-tcp
+          deno run --allow-net=127.0.0.1 host/tcp/completion-quarantine-test.mjs --real-tcp
+          bun host/corelib-io/snapshot-test.mjs
+          deno run --allow-read=standard/corelib,current,host/corelib-io host/corelib-io/snapshot-test.mjs
           bun host/tcp/driver-retirement-test.mjs --real-tcp
           deno run --allow-net=127.0.0.1 host/tcp/driver-retirement-test.mjs --real-tcp
           bun host/tcp/supervisor-test.mjs

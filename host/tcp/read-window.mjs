@@ -1,5 +1,5 @@
 // Consumes a trusted preconnected endpoint. Host chooses signal/deadline policy.
-import {requestTcpStop,requireTcpStop,TcpStopFailure} from './stop-fence.mjs';
+import {requestTcpStop,requireTcpStop,TcpStopFailure,TcpCompletionFailure} from './stop-fence.mjs';
 export async function readTcpWindow(input,guard,{signal,deadlineMs=1000,revokeOnAbort=false}={}) {
   let window,operation,timer,stopPromise,value,failure,stopped=0;
   const stop=revoked=>{
@@ -26,7 +26,8 @@ export async function readTcpWindow(input,guard,{signal,deadlineMs=1000,revokeOn
     // Clear policy hooks once the issued backend read settles. No replay.
     clearTimeout(timer);if(signal instanceof AbortSignal) signal.removeEventListener('abort',abort);
     if(stopPromise) await requireTcpStop(stopPromise,{input,guard,operation,window},stopped||error);
-    guard.complete(operation,bytes,error);
+    try {guard.complete(operation,bytes,error);}
+    catch(cause){throw new TcpCompletionFailure({input,guard,operation,window},cause);}
     if(stopped) throw stopped;
     const state=guard.poll(operation);
     if(state.state==='failed') throw state.error;

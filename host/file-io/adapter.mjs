@@ -14,6 +14,7 @@ export class PreopenedFile {
     this.#busy = true;
     try {
       const { bytesRead } = await this.file.read(bytes, 0, length, offset);
+      if(!Number.isInteger(bytesRead)||bytesRead<0||bytesRead>length) throw -8;
       return [...bytes.slice(0, bytesRead)];
     } catch { throw -8; } finally { this.#busy = false; }
   }

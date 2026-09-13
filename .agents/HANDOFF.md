@@ -15,8 +15,15 @@ admission/host-corelib-stream-qualification.json. Later quarantine/UDP/mobile
 sources require their own exact-source qualification.
 The historical sections referenced below retain their earlier evidence scope.
 
-Active later source lines: work/host-read-completion-quarantine,
-work/host-udp-endpoint and work/host-mobile-compile.
+File read bounds, TCP buffered-byte quotas, CoreLib packing snapshots and
+malformed JS completion quarantine are now independently qualified through
+admission/host-completion-bounds-qualification.json: both full workflows pass.
+Each of four control suites has20 receipts including Linux fast; eight read
+controls, ten buffer controls, seven Core snapshot controls, six completion
+controls plus one actual TCP corrupted-completion case per receipt. Retained
+owners require explicit close acknowledgement before drain; no I/O replay.
+Active later source lines: work/host-udp-endpoint, work/host-mobile-compile and
+work/host-native-binary-only; those changes require their own qualification.
 Resolve exact revisions with Git; inspect
 status/worktrees before editing and preserve unrelated changes. Linked worktrees
 belong under /Users/youxianshi/code/.worktrees/wasmcrelease.

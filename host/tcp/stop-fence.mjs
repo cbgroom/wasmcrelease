@@ -18,6 +18,15 @@ export class TcpStopFailure extends Error {
   }
 }
 
+// A settled malformed completion must not lose its still-pinned owner.
+export class TcpCompletionFailure extends TcpStopFailure {
+  constructor(owner,cause) {
+    super(owner,cause,-5);this.name='TcpCompletionFailure';
+    this.message='TCP completion rejected; resources quarantined';
+    this.reason='malformed-completion';
+  }
+}
+
 export async function requireTcpStop(acknowledgement,owner,primary) {
   const result=await acknowledgement;
   if(!result.ok) throw new TcpStopFailure(owner,result.error,primary);

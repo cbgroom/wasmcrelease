@@ -8,7 +8,16 @@ captured even if a compatibility backend emits while nominally paused; read
 requests consume owned prefixes. No `unshift` or ownerless data-handler gap.
 Delivered windows remain at most16bytes; a preserved unread
 tail is a backend-stream chunk and is **not a16-byte window allocation**.
-This fix is not a total transport-buffer memory budget or zero-copy guarantee.
+The JS copying adapter now bounds retained unread bytes per endpoint: default
+65536, trusted constructor override1..65536. Check incoming chunk plus queued
+bytes before making a copy; overflow returns limit(-3), suppresses all delivery/
+new writes and retains the endpoint/previous buffer until explicit close ack.
+It is not a process/backend-buffer budget: an incoming OS chunk already exists,
+and concatenation may temporarily hold old plus new snapshots; delivered16-byte
+results are separate. Native/browser budgets require their own profile evidence.
+No zero-copy or forced timeout cleanup guarantee. Ten controlled cases in
+`buffer-budget-test.mjs` cover overflow before/during read, concatenation, exact
+boundary, invalid limits and delayed close ack, without replay.
 
 Write validates bounded indexed values once into an owned Uint8Array. Its
 callback retains that snapshot until local acknowledgement and reports the
