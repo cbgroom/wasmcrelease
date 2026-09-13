@@ -2,6 +2,8 @@
 
 Follow-up [read stop/drain reference](READ_STOP.md) covers real cancellation,
 deadline and revoked delivery cleanup. It does not qualify write cancellation.
+The [preauthorized listener/resident Lib service](LISTENER.md) reuses one Lib
+across19 connections, including malformed input and subsequent valid requests.
 
 The trusted Host provides an already connected stream. The adapter exposes
 bounded `read`/`write`/`release`, no guest-selected address, DNS, listener,

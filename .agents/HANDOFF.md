@@ -1,5 +1,22 @@
 # WAsmC release maintainer handoff
 
+## Preauthorized listener/resident Lib milestone
+
+Own branch work/host-tcp-listener from pushed read-stop milestone; old-source
+Actions continue independently. JS trusted prebound listener owns two queued/
+two active sockets and one pending accept; release cancels waiter and closes
+queue, rejects active release. Native serialized bounded nonblocking accept,
+explicit blocking accepted socket (Mac inheritance exposed by real test),
+500ms read/write fixtures. Resident Wasmi Lib/slab reused, fuel reset and error
+poisoning, no algorithm in Host or new physical guest syscall. Nineteen paired
+connections per Node/Bun/restricted Deno:17calls,2pre-Lib frame rejections,1Lib
+instance; valid calls after malformed/truncated requests survive. JS8listener
+controls plus Native idle-deadline/retirement unit test. Native queue/accept
+cancellation parity, resident App/typed guest SDK and TLS remain unqualified.
+Publish exact commands/scope in LISTENER.md; add same six-platform Actions.
+No old binary/tag changes. Local regression and integrity before coherent push;
+main acceptance still needs exact-source receipts. Full Host delivery1/5 gates.
+
 ## TCP read-stop local milestone
 
 Own branch work/host-tcp-read-stop from prior pushed TCP reference. JS driver
