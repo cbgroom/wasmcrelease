@@ -6,7 +6,7 @@ import { mkdtemp, open, readFile, writeFile, mkdir, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { spawnSync } from 'node:child_process';
-import { createHash, randomBytes } from 'node:crypto';
+import { createHash } from 'node:crypto';
 import assert from 'node:assert/strict';
 
 const libPath='libs/wasmc-owned-algorithms/artifact.wasm';
@@ -29,9 +29,7 @@ try {
       await writeFile(jsPath,sentinel); await writeFile(nativePath,sentinel);
       // A real write-only descriptor makes the filesystem reject read.
       const input=new PreopenedFile(await open(inputPath,mode==='read-failure'?'a':'r'),false);
-      const identity=randomBytes(32).toString('hex');
-      const nativeIdentity=randomBytes(32).toString('hex');assert.notEqual(identity,nativeIdentity);
-      const guard=new ScopedCompletionGuard(identity);
+      const guard=ScopedCompletionGuard.fresh();
       let window=[],readFailure;
       try {
         window=await readWindow(input,guard,{cancelDelivery:mode==='cancel'});
@@ -68,7 +66,7 @@ try {
       }
       // Canonical input is borrowed/copied by this Lib; harness slab is reclaimed.
       lib.exports.cabi_realloc(ptr,64,4,0);
-      const native=spawnSync(process.argv[2],[inputPath,nativePath,appPath,libPath,mode==='write'?'write':'read',mode==='trap'?'1':mode==='cancel'?'2':mode==='read-failure'?'3':'0',nativeIdentity],{env:{},encoding:'utf8',timeout:30000});
+      const native=spawnSync(process.argv[2],[inputPath,nativePath,appPath,libPath,mode==='write'?'write':'read',mode==='trap'?'1':mode==='cancel'?'2':mode==='read-failure'?'3':'0'],{env:{},encoding:'utf8',timeout:30000});
       const expected=Buffer.alloc(8);expected.writeBigInt64LE(BigInt(bytes.reduce((a,b)=>a+b,0)));
       assert.equal(error,mode!=='write');
       assert.equal(native.status===0,mode==='write',native.stderr);

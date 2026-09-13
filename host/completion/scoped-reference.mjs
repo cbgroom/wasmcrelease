@@ -1,7 +1,7 @@
 import { ScopedCompletionGuard } from './scoped-guard.mjs';
 const [mode,identity,oldWindow,oldOperation]=process.argv.slice(2);
-const g=new ScopedCompletionGuard(identity),window=g.acquire(1),operation=g.submit(window);
-if(mode==='create') console.log(JSON.stringify({window,operation}));
+const g=mode.startsWith('fresh-')?ScopedCompletionGuard.fresh():new ScopedCompletionGuard(identity),window=g.acquire(1),operation=g.submit(window);
+if(mode==='create'||mode==='fresh-create') console.log(JSON.stringify({window,operation}));
 else {
   const foreign=[];
   for(const attempt of [()=>g.submit(oldWindow),()=>g.read(oldWindow),()=>g.release(oldWindow),()=>g.poll(oldOperation),()=>g.cancel(oldOperation),()=>g.complete(oldOperation,[9])]) {

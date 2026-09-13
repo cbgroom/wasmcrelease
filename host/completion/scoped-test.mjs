@@ -1,4 +1,4 @@
-import { ScopedCompletionGuard } from './scoped-guard.mjs';
+import { ScopedCompletionGuard, issueBindingIdentity } from './scoped-guard.mjs';
 import { randomBytes } from 'node:crypto';
 import { spawnSync } from 'node:child_process';
 import assert from 'node:assert/strict';
@@ -26,4 +26,19 @@ for(const ticket of [null,{},'',a+':0',a+':065537',a+':2147483648',a+':65537:ext
 }
 g.cancel(op);assert.throws(()=>g.release(w),e=>e===-4);g.complete(op,[7]);assert.deepEqual(g.read(w),[]);
 g.release(op);g.release(w);assert.deepEqual(g.counts(),[0,0]);
-console.log(JSON.stringify({accepted:true,independent_processes:4,local_id_collision_verified:true,foreign_operations_denied:6,negative_controls:negative,resource_cleanup:true,entropy_injected_by_test_host:true,guest_abi_changed:false}));
+let entropyControls=0;
+for(const [fill,error] of [[()=>{throw Error('entropy unavailable');},-8],[bytes=>{bytes[0]=7;throw Error('partial failure');},-8],[()=>{},-5],[()=>Promise.resolve(),-8]]) {
+  assert.throws(()=>issueBindingIdentity(fill),e=>e===error);entropyControls++;
+}
+assert.equal(issueBindingIdentity(bytes=>bytes.fill(7)),'07'.repeat(32));entropyControls++;
+const seen=new Set();
+for(const [binary,prefix] of [[process.execPath,runtimeArgs],[native,[]]]) {
+  const old=child(binary,prefix,['fresh-create']);
+  const fresh=child(binary,prefix,['fresh-exercise','',old.window,old.operation]);
+  assert.equal(old.window.split(':')[1],fresh.window.split(':')[1]);
+  for(const ticket of [old.window,fresh.window]) {
+    const identity=ticket.split(':')[0];assert.match(identity,/^[0-9a-f]{64}$/);assert.notEqual(identity,'0'.repeat(64));assert.ok(!seen.has(identity));seen.add(identity);
+  }
+  assert.deepEqual(fresh.foreign,Array(6).fill(-1));assert.deepEqual(fresh.live,[1,1]);assert.deepEqual(fresh.bytes,[7]);assert.deepEqual(fresh.final,[0,0]);
+}
+console.log(JSON.stringify({accepted:true,independent_processes:8,local_id_collision_verified:true,foreign_operations_denied:6,negative_controls:negative,entropy_controls:entropyControls,host_issued_identities:seen.size,resource_cleanup:true,injected_wire_fixture_only:true,guest_abi_changed:false}));

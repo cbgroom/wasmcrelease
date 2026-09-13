@@ -1,5 +1,5 @@
 use std::{fs::OpenOptions, path::Path};
-use wasmc_completion_guard::scoped::{BindingIdentity, ScopedCompletionGuard};
+use wasmc_completion_guard::scoped::ScopedCompletionGuard;
 use wasmc_preopened_file_reference::PreopenedFile;
 use wasmi::{Config, Engine, Linker, Module, Store};
 
@@ -42,8 +42,7 @@ fn run(args: &[String]) -> Result<i64, Box<dyn std::error::Error>> {
             .open(&args[1])?,
         false,
     );
-    let identity = BindingIdentity::from_hex(&args[7]).map_err(|c| format!("identity {c}"))?;
-    let mut guard = ScopedCompletionGuard::new(identity).map_err(|c| format!("guard {c}"))?;
+    let mut guard = ScopedCompletionGuard::fresh().map_err(|c| format!("guard {c}"))?;
     let read = read_window(&mut input, &mut guard, args[6] == "2");
     let close = input.release();
     let bytes = read.map_err(|e| {

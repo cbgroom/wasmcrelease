@@ -1,5 +1,28 @@
 # WAsmC release maintainer handoff
 
+## Host entropy issuer — local development checkpoint
+
+Scoped guards now issue their own fresh256-bit binding identity: JS WebCrypto,
+Native getrandom exact0.4.3 with locked dependencies. Entropy/partial failure
+rejects-8, zero output-5; no timestamp/fixed fallback. Trusted JS adapter seam
+rejects asynchronous providers. Actual Lib/App/file chain uses Host-local
+issuance, no parent-supplied Native seed. Eight independent process journeys
+include real issuers and reset-local-ID collisions/foreign rejection;14ticket
+negatives and5JS entropy controls. Rust8tests include issuer faults and OS smoke.
+Old injected wire comparison remains a fixture only. Public docs distinguish
+nonce collision resistance from absolute/durable uniqueness. New candidate
+must qualify independently; previous run cannot qualify these source changes.
+Local-first iteration continues without waiting for queued Actions. Preserve
+all frozen64 products/tags; full Host delivery still1/5 gates, not20% stdlib.
+Local Node/Bun/restricted Deno each PASS8process identity and20real-file chain
+cases. Rust8/8, both strict Clippy,76transition guard and10fault controls PASS;
+actionlint and maintainer gate PASS, frozen64 products unchanged. Coherent
+milestone includes preceding local-first policy checkpoint. Push own branch
+for exact-source six-target qualification, without waiting for CI to develop.
+Next narrow slice: preauthorized TCP endpoint plus Lib protocol composition;
+read owning contract and preserve completion pins/backend cleanup. No main
+advance until exact new candidate qualifies; no new immutable release claimed.
+
 ## Iteration cadence
 
 User confirms local-first functional development and milestone GitHub pushes.

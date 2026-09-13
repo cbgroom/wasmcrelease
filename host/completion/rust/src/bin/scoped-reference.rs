@@ -2,10 +2,14 @@ use serde_json::json;
 use wasmc_completion_guard::scoped::{BindingIdentity, ScopedCompletionGuard, ScopedToken};
 fn main() {
     let args: Vec<_> = std::env::args().collect();
-    let mut g = ScopedCompletionGuard::new(BindingIdentity::from_hex(&args[2]).unwrap()).unwrap();
+    let mut g = if args[1].starts_with("fresh-") {
+        ScopedCompletionGuard::fresh().unwrap()
+    } else {
+        ScopedCompletionGuard::new(BindingIdentity::from_hex(&args[2]).unwrap()).unwrap()
+    };
     let w = g.acquire(1).unwrap();
     let op = g.submit(&w).unwrap();
-    if args[1] == "create" {
+    if args[1] == "create" || args[1] == "fresh-create" {
         println!("{}", json!({"window":w.to_wire(),"operation":op.to_wire()}));
         return;
     }

@@ -2,6 +2,14 @@ use crate::CompletionGuard;
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct BindingIdentity([u8; 32]);
 impl BindingIdentity {
+    pub fn issue() -> Result<Self, i32> {
+        Self::issue_with(|bytes| getrandom::fill(bytes).map_err(|_| ()))
+    }
+    fn issue_with(fill: impl FnOnce(&mut [u8; 32]) -> Result<(), ()>) -> Result<Self, i32> {
+        let mut bytes = [0; 32];
+        fill(&mut bytes).map_err(|_| -8)?;
+        Self::from_bytes(bytes)
+    }
     pub fn from_bytes(bytes: [u8; 32]) -> Result<Self, i32> {
         if bytes == [0; 32] {
             Err(-5)
@@ -63,6 +71,9 @@ pub struct ScopedCompletionGuard {
     guard: CompletionGuard,
 }
 impl ScopedCompletionGuard {
+    pub fn fresh() -> Result<Self, i32> {
+        Self::new(BindingIdentity::issue()?)
+    }
     pub fn new(identity: BindingIdentity) -> Result<Self, i32> {
         Ok(Self {
             identity,
@@ -110,5 +121,30 @@ impl ScopedCompletionGuard {
     }
     pub fn counts(&self) -> [usize; 2] {
         self.guard.counts()
+    }
+}
+
+#[cfg(test)]
+mod issuer_tests {
+    use super::*;
+    #[test]
+    fn entropy_failure_and_zero_reject_without_fallback() {
+        assert_eq!(BindingIdentity::issue_with(|_| Err(())), Err(-8));
+        assert_eq!(
+            BindingIdentity::issue_with(|bytes| {
+                bytes[0] = 7;
+                Err(())
+            }),
+            Err(-8)
+        );
+        assert_eq!(BindingIdentity::issue_with(|_| Ok(())), Err(-5));
+    }
+    #[test]
+    fn system_issuance_smoke() {
+        let mut seen = std::collections::HashSet::new();
+        for _ in 0..32 {
+            assert!(seen.insert(BindingIdentity::issue().unwrap().hex()));
+        }
+        assert_eq!(ScopedCompletionGuard::fresh().unwrap().counts(), [0, 0]);
     }
 }

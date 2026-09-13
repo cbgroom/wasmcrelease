@@ -6,8 +6,10 @@ Source-free public packages for the private-source `wasmc` compiler.
 
 Experimental [startup binding identity](host/completion/SCOPED_IDENTITY.md) rejects
 old full references even when fresh processes recycle local IDs. The reviewed
-Lib/Host driver now uses scoped references; trusted fresh identity issuance is
-required, not automatically proved by accepting a nonzero identifier. Neither
+Lib/Host driver now issues scoped references with JS WebCrypto or Native OS
+randomness, rejecting entropy errors and zero output without fallback. Local
+Node/Bun/Deno tests pass; exact-candidate cross-platform acceptance remains
+pending. Freshness is not proved by accepting an injected nonzero identifier. Neither
 the Agent API nor generated App/Lib bytes change.
 
 Experimental [session/completion guard](host/completion/README.md) protects the

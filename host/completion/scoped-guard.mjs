@@ -1,7 +1,18 @@
 import { CompletionGuard } from './guard.mjs';
+// Trusted synchronous CSPRNG adapter; never supplied by guest code.
+export function issueBindingIdentity(fill = bytes => globalThis.crypto.getRandomValues(bytes)) {
+  const bytes=new Uint8Array(32);
+  try {
+    const result=fill(bytes);
+    if(result && typeof result.then==='function') {result.catch?.(()=>{});throw -8;}
+  } catch { throw -8; }
+  if(bytes.every(byte=>byte===0)) throw -5;
+  return Array.from(bytes,byte=>byte.toString(16).padStart(2,'0')).join('');
+}
 // Trusted Host binding identity. Do not inject guest-selected or repeated seeds.
 export class ScopedCompletionGuard {
   #identity;#guard;
+  static fresh() {return new ScopedCompletionGuard(issueBindingIdentity());}
   constructor(identity) {
     if(typeof identity!=='string'||! /^[0-9a-f]{64}$/.test(identity)||/^0+$/.test(identity)) throw -5;
     this.#identity=identity;this.#guard=new CompletionGuard();

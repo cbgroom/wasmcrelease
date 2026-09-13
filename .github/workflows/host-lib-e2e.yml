@@ -88,7 +88,7 @@ jobs:
         env:
           SOURCE: ${{ github.sha }}
         run: |
-          printf '%s\n' "Source $SOURCE; $RUNNER_OS/$RUNNER_ARCH; 76 guard transitions, 10 fault controls, 6 Rust tests, independent-process scoped identity and 20 Lib/App/real-file cases; scheduled I/O, not guest async ABI" >> "$GITHUB_STEP_SUMMARY"
+          printf '%s\n' "Source $SOURCE; $RUNNER_OS/$RUNNER_ARCH; 76 guard transitions, 10 fault controls, 8 Rust tests, 8-process scoped identity with Host entropy issuance and 20 Lib/App/real-file cases; scheduled I/O, not guest async ABI" >> "$GITHUB_STEP_SUMMARY"
   required:
     if: always()
     needs: composition
