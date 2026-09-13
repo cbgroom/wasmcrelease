@@ -2,6 +2,14 @@
 
 ## 0. Status
 
+START Native UDP readiness owner: reuse the TCP OS queue/cancellation machinery
+through a generic read-owner adapter; preserve message boundaries, empty-message
+success and explicit oversize failure, descriptor close before settlement.
+Validate fresh local strict Rust tests using existing admitted dependencies and
+bounded private qualification output; no new heavy Cargo pool. Bind exact public
+source/receipts, preserve compiler/Lib bytes. Typed guest integration and broad
+cross-platform qualification remain separate unfinished gates.
+
 Typed Host SDK blocker independently reproduced against admitted compiler:
 existing sync-owned and scalar-async Apps compile, while owned local before
 await and owned await result reject with sequential s32-local restriction.
