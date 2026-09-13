@@ -1,7 +1,7 @@
 name: Public Host and Lib end-to-end
 on:
   push:
-    branches: [main, work/host-lib-e2e, work/host-completion-guard, work/host-startup-identity, work/host-tcp-endpoint, work/host-tcp-read-stop, work/host-tcp-listener, work/host-resident-app, work/host-tcp-write-outcome, work/host-engine-parity, work/host-resident-benchmark, work/host-stop-failure, work/host-driver-errors, work/host-browser-parity, work/host-quarantine-supervisor, work/host-kernel-engine-parity, work/host-native-owner-supervisor]
+    branches: [main, work/host-lib-e2e, work/host-completion-guard, work/host-startup-identity, work/host-tcp-endpoint, work/host-tcp-read-stop, work/host-tcp-listener, work/host-resident-app, work/host-tcp-write-outcome, work/host-engine-parity, work/host-resident-benchmark, work/host-stop-failure, work/host-driver-errors, work/host-browser-parity, work/host-quarantine-supervisor, work/host-kernel-engine-parity, work/host-native-owner-supervisor, work/host-scoped-owner-lifetime]
   pull_request:
   workflow_dispatch:
 permissions:
@@ -25,6 +25,7 @@ jobs:
       - run: cargo +1.96.0 build --release --locked --manifest-path host/completion/rust/Cargo.toml
       - run: cargo +1.96.0 test --release --locked --manifest-path host/completion/rust/Cargo.toml
       - run: node host/completion/fault-test.mjs
+      - run: node host/completion/lifetime-test.mjs
       - run: node host/tcp/stop-failure-test.mjs
       - run: node host/tcp/driver-error-test.mjs
       - run: node host/tcp/supervisor-test.mjs
@@ -116,6 +117,8 @@ jobs:
           deno run --allow-net=127.0.0.1 --allow-env=NODE_V8_COVERAGE --allow-run="$stop" host/tcp/fault-test.mjs "$stop"
           bun host/completion/scoped-test.mjs "$scoped"
           deno run --allow-env=NODE_V8_COVERAGE --allow-run="$scoped,$(command -v deno)" host/completion/scoped-test.mjs "$scoped"
+          bun host/completion/lifetime-test.mjs
+          deno run host/completion/lifetime-test.mjs
           bun host/completion/fault-test.mjs
           deno run host/completion/fault-test.mjs
           bun host/file-io/test.mjs "$file"
@@ -152,7 +155,7 @@ jobs:
         env:
           SOURCE: ${{ github.sha }}
         run: |
-          printf '%s\n' "Source $SOURCE; $RUNNER_OS/$RUNNER_ARCH; 76 guard transitions, 10 fault controls, 12 guard/owner Rust tests, 5 TCP/listener Rust tests, 8-process identity, 20 file/App/Lib cases, 8 TCP/Lib pairs, 4 read-stop pairs with 9 controls, 19 resident App/Lib server connections, 1000 resident calls per engine and 8 listener controls; guest trap poisons with no replay, not guest async ABI or generic failed-shutdown qualification" >> "$GITHUB_STEP_SUMMARY"
+          printf '%s\n' "Source $SOURCE; $RUNNER_OS/$RUNNER_ARCH; 76 guard transitions, 10 fault controls, 14 guard/owner Rust tests, 40000 scoped and supervisor cycles, 5 TCP/listener Rust tests, 8-process identity, 20 file/App/Lib cases, 8 TCP/Lib pairs, 4 read-stop pairs with 9 controls, 19 resident App/Lib server connections, 1000 resident calls per engine and 8 listener controls; guest trap poisons with no replay, not guest async ABI or generic failed-shutdown qualification" >> "$GITHUB_STEP_SUMMARY"
   browser:
     strategy:
       fail-fast: false

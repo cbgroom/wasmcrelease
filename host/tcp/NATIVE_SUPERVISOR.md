@@ -24,17 +24,19 @@ cargo test --release --locked --manifest-path host/lib-e2e/rust/Cargo.toml
 
 Four new registry unit tests cover invalid quota/capacity, quota ownership
 return, foreign/stale tickets, normal completion, failed close/retirement and
-terminal ticket exhaustion. Existing eight guard tests remain required.
+live-owner epoch rotation denial. Existing eight guard tests remain required.
 An additional real loopback TCP test settles an actual read timeout, injects
 one failed close acknowledgement, checks pinned quarantine, then obtains real
 shutdown/descriptor retirement and peer EOF. Its read count remains one.
 It is not a real failed OS-shutdown/crash-recovery or concurrent revocation
 qualification; the injected failure is a trusted test seam.
 
-Current underlying raw guard allocator has a terminal32767-owner process
-budget; supervisor tickets also exhaust rather than wrap. This fail-closed
-limit must be included in long-running performance/SDK design, not hidden by
-microbenchmark numbers (which do not allocate these guards per call). Native
+Raw and injected-identity guards retain their terminal32767-owner process
+budget. Fresh CSPRNG scoped guards no longer consume that global budget;
+their integers remain private to the unique binding. Supervisor epochs rotate
+only after all active/quarantined owners retire, otherwise fail closed. Local
+40000 guard and registry cycles include old-ticket denial and live quarantine
+rotation denial. See ../completion/LIFETIME.md. This is not RSS/leak proof. Native
 evented I/O, general never-settling containment, complete typed guest SDK,
 unbounded service-lifetime qualification and immutable release remain unclosed.
 

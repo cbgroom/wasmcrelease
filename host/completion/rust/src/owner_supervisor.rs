@@ -40,8 +40,20 @@ impl<E: QuarantineEndpoint> NativeOwnerSupervisor<E> {
     }
     /// Failure returns the untouched endpoint; caller retains ownership.
     pub fn admit(&mut self, endpoint: E, size: i32) -> Result<OwnerTicket, (i32, E)> {
-        if self.owners.len() >= self.limit || self.next > 32767 {
+        if self.owners.len() >= self.limit {
             return Err((-3, endpoint));
+        }
+        if self.next > 32767 {
+            // No old owner/pin may survive identity rotation.
+            if !self.owners.is_empty() {
+                return Err((-3, endpoint));
+            }
+            let identity = match BindingIdentity::issue() {
+                Ok(identity) => identity,
+                Err(code) => return Err((code, endpoint)),
+            };
+            self.identity = identity;
+            self.next = 1;
         }
         let resources = (|| {
             let mut guard = ScopedCompletionGuard::fresh()?;
@@ -221,7 +233,7 @@ mod tests {
         assert_eq!(s.retire_quarantine(t), Err(-1));
     }
     #[test]
-    fn retirement_failure_and_terminal_ticket_exhaustion_fail_closed() {
+    fn retirement_failure_and_live_owner_prevent_epoch_rotation() {
         let mut s = NativeOwnerSupervisor::new(1).unwrap();
         let t = admit(&mut s);
         s.quarantine_settled(t).unwrap();
@@ -231,10 +243,34 @@ mod tests {
         e.retire_ok = false;
         assert_eq!(s.retire_quarantine(t), Err(-8));
         assert_eq!(s.resource_counts(t), Ok([1, 1]));
-        s.owners.get_mut(&local).unwrap().endpoint.retire_ok = true;
-        s.retire_quarantine(t).unwrap();
         s.next = 32768;
         assert_eq!(s.admit(endpoint(), 1).err().unwrap().0, -3);
+        s.owners.get_mut(&local).unwrap().endpoint.retire_ok = true;
+        s.retire_quarantine(t).unwrap();
+        let fresh = admit(&mut s);
+        assert!(fresh.identity != t.identity);
+        assert_eq!(s.retire_quarantine(t), Err(-1));
+        s.quarantine_settled(fresh).unwrap();
+        let local = s.local(fresh).unwrap();
+        s.owners.get_mut(&local).unwrap().endpoint.closed = true;
+        s.retire_quarantine(fresh).unwrap();
+    }
+    #[test]
+    fn forty_thousand_settled_owners_rotate_only_after_retirement() {
+        let mut s = NativeOwnerSupervisor::new(1).unwrap();
+        let mut first = None;
+        for _ in 0..40000 {
+            let mut e = endpoint();
+            e.closed = true;
+            let ticket = s.admit(e, 1).ok().unwrap();
+            if let Some(old) = first {
+                assert_eq!(s.retire_quarantine(old), Err(-1));
+            } else {
+                first = Some(ticket);
+            }
+            assert_eq!(s.finish_settled(ticket, &[7], 0), Ok(vec![7]));
+            assert_eq!(s.counts(), [0, 0]);
+        }
     }
     #[test]
     fn invalid_limits_and_size_do_not_consume_endpoint() {

@@ -7,8 +7,9 @@ Resolve exact sources/runs from admission/host-browser-engine-qualification.json
 and admission/host-supervisor-qualification.json. Independently read14supervisor
 and3browser recovery receipts; all six desktop/three browser/required cells PASS.
 Native owner and Kernel exact acceptance is recorded in
-admission/host-native-kernel-qualification.json. Lifetime/negotiation/half-close
-remain subsequent independent candidates requiring their own qualification.
+admission/host-native-kernel-qualification.json. Scoped lifetime is now accepted
+via admission/host-lifetime-qualification.json; negotiation/half-close/quota and
+CoreLib file-chain remain independent candidates requiring own qualification.
 The historical sections referenced below retain their earlier evidence scope.
 
 Active source line: work/host-scoped-owner-lifetime, following Native owner and
@@ -25,7 +26,7 @@ runs, independently read receipts and scope. Do not redo those implementations.
 
 Optional Wasmtime, benchmarks, failed-stop/error-path protection,
 real browser probes and bounded JS quarantine supervisor are accepted in main.
-Kernel and Native internal owner registry are now qualified; scoped lifetime,
+Kernel, Native internal owner registry and scoped lifetime are now accepted;
 negotiation and half-close source require their own exact acceptance before main.
 Never borrow an old-source PASS. No release/tag/deployment was performed.
 
@@ -66,9 +67,13 @@ Both Native profiles reset fuel per call; no hidden WASI or guest authority.
 
 Native owner registry adds scoped quota/ownership return/settled completion/
 quarantine with exclusive borrow, four unit controls plus actual TCP timeout ->
-injected failed ack -> real shutdown/peer EOF with one read.12guard/5TCP tests.
-This is internal Host Rust, not general async recovery/guest ABI. Underlying
-raw guard terminal32767-owner process budget is explicit in NATIVE_SUPERVISOR.md.
+injected failed ack -> real shutdown/peer EOF with one read.14guard/5TCP tests.
+Fresh CSPRNG scoped guards use private binding-local integers; injected identity
+constructors and raw guards keep global exhaustion protection. JS/Native owner
+registries rotate identity only when exhausted AND completely empty. Local
+40000 guard and 40000 registry cycles pass, live quarantine blocks rotation,
+old epoch tickets remain invalid. See host/completion/LIFETIME.md; this is not
+general async recovery/guest ABI or long-run RSS/network qualification.
 Mac ARM Bun Kernel CI empty sync-spawn stdout is corrected with event-driven
 spawn/pipe-drain/close, no replay. Changed source requires own qualification.
 
