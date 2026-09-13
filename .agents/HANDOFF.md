@@ -22,8 +22,15 @@ Each of four control suites has20 receipts including Linux fast; eight read
 controls, ten buffer controls, seven Core snapshot controls, six completion
 controls plus one actual TCP corrupted-completion case per receipt. Retained
 owners require explicit close acknowledgement before drain; no I/O replay.
-Active later source lines: work/host-udp-endpoint, work/host-mobile-compile and
-work/host-native-binary-only; those changes require their own qualification.
+UDP prebound/fixed-peer candidate is now independently accepted through
+admission/host-udp-qualification.json: both full workflows PASS.28Native pairs
+(14Wasmi/14Wasmtime) each prove eight datagrams/five calls/three rejections,
+zero foreign replies and retired resources.20JSfault receipts each have11controls.
+This is loopback source filtering, not authentication, reliability or Native
+async/mobile/browser UDP qualification. No new Kernel import or frozen product.
+Later mobile/native-binary/UDP-send/guard-capture/guard-retirement candidates
+still require their own qualification. Preserved missing-rg mobile gate failure
+must be fixed by current-source portable inventory checks before acceptance.
 Resolve exact revisions with Git; inspect
 status/worktrees before editing and preserve unrelated changes. Linked worktrees
 belong under /Users/youxianshi/code/.worktrees/wasmcrelease.
