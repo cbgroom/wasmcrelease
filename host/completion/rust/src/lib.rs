@@ -3,6 +3,7 @@ use std::{
     sync::atomic::{AtomicU32, Ordering},
 };
 static NEXT: AtomicU32 = AtomicU32::new(1);
+pub mod scoped;
 struct Window {
     size: usize,
     pins: bool,
@@ -182,3 +183,6 @@ impl CompletionGuard {
 
 #[cfg(test)]
 mod tests;
+
+#[cfg(test)]
+mod scoped_tests;

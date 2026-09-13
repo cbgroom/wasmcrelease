@@ -1,7 +1,7 @@
 name: Public Host and Lib end-to-end
 on:
   push:
-    branches: [main, work/host-lib-e2e, work/host-completion-guard]
+    branches: [main, work/host-lib-e2e, work/host-completion-guard, work/host-startup-identity]
   pull_request:
   workflow_dispatch:
 permissions:
@@ -25,6 +25,12 @@ jobs:
       - run: cargo +1.96.0 build --release --locked --manifest-path host/completion/rust/Cargo.toml
       - run: cargo +1.96.0 test --release --locked --manifest-path host/completion/rust/Cargo.toml
       - run: node host/completion/fault-test.mjs
+      - name: Independent process startup identity
+        shell: bash
+        run: |
+          binary=host/completion/rust/target/release/scoped-reference
+          if [[ "$RUNNER_OS" == Windows ]]; then binary="$binary.exe"; fi
+          node host/completion/scoped-test.mjs "$binary"
       - run: cargo +1.96.0 build --release --locked --manifest-path host/file-io/rust/Cargo.toml
       - name: Existing real file adapter regression
         shell: bash
@@ -62,6 +68,9 @@ jobs:
           binary=host/lib-e2e/rust/target/release/wasmc-lib-host-e2e
           completion=host/completion/rust/target/release/wasmc-completion-guard
           file=host/file-io/rust/target/release/wasmc-preopened-file-reference
+          scoped=host/completion/rust/target/release/scoped-reference
+          bun host/completion/scoped-test.mjs "$scoped"
+          deno run --allow-env=NODE_V8_COVERAGE --allow-run="$scoped,$(command -v deno)" host/completion/scoped-test.mjs "$scoped"
           bun host/completion/fault-test.mjs
           deno run host/completion/fault-test.mjs
           bun host/file-io/test.mjs "$file"
@@ -79,7 +88,7 @@ jobs:
         env:
           SOURCE: ${{ github.sha }}
         run: |
-          printf '%s\n' "Source $SOURCE; $RUNNER_OS/$RUNNER_ARCH; 76 guard transitions, 10 fault controls, 4 Rust tests, 20 Lib/App/real-file cases; scheduled I/O, not guest async ABI" >> "$GITHUB_STEP_SUMMARY"
+          printf '%s\n' "Source $SOURCE; $RUNNER_OS/$RUNNER_ARCH; 76 guard transitions, 10 fault controls, 6 Rust tests, independent-process scoped identity and 20 Lib/App/real-file cases; scheduled I/O, not guest async ABI" >> "$GITHUB_STEP_SUMMARY"
   required:
     if: always()
     needs: composition

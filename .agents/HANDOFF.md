@@ -13,6 +13,20 @@ full tickets under a different instance identity. Same-identity reuse is not
 claimed detectable across independent processes. Scoped boundary precedes
 typed Core SDK/transport; preserve old compiler/Lib products and tags.
 START precedes implementation. Local tests proceed while old/new Actions run.
+Implemented JS/Rust scoped wrapper before local lookup, strict canonical tickets
+and validated injected256-bit identity (no fixed/default production identity).
+Local Node/Bun/restricted Deno independent4process journey PASS: local window/op
+IDs collide after reset;6foreign operations denied,14negative controls and final
+cleanup verified. Rust6tests PASS; scoped real-file/App/Lib20case chain Node PASS.
+Public docs state fresh Host issuance is required, not automatically implemented;
+same identity reused across resets still unsafe. No guest ABI change. Extend
+existing six-platform Actions, continue local regression then push exact source.
+Scoped20case chain now PASS all3localJSHosts against Native; same App/Lib digests.
+Each real JS/Native binding has its own fresh identity. Shared test identities
+only occur in deliberate canonical-wire conformance, not production grants.
+Strict Clippy/6Rust tests/actionlint/maintainer gate PASS. Baseline76transition/
+10fault regressions must remain green. Overall Host delivery remains1/5 gates;
+injected identity wrapper is not Native entropy issuer or negotiated guest ABI.
 
 ## Completion guard acceptance
 

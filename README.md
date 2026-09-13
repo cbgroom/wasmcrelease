@@ -4,6 +4,12 @@
 
 Source-free public packages for the private-source `wasmc` compiler.
 
+Experimental [startup binding identity](host/completion/SCOPED_IDENTITY.md) rejects
+old full references even when fresh processes recycle local IDs. The reviewed
+Lib/Host driver now uses scoped references; trusted fresh identity issuance is
+required, not automatically proved by accepting a nonzero identifier. Neither
+the Agent API nor generated App/Lib bytes change.
+
 Experimental [session/completion guard](host/completion/README.md) protects the
 Lib/Host chain's staged read: foreign/stale/duplicate completions reject;
 cancelled delivery retains the window pin until backend acknowledgement.

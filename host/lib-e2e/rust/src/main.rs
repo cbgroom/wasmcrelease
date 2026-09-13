@@ -1,35 +1,36 @@
 use std::{fs::OpenOptions, path::Path};
+use wasmc_completion_guard::scoped::{BindingIdentity, ScopedCompletionGuard};
 use wasmc_preopened_file_reference::PreopenedFile;
 use wasmi::{Config, Engine, Linker, Module, Store};
 
 fn read_window(
     input: &mut PreopenedFile,
-    guard: &mut wasmc_completion_guard::CompletionGuard,
+    guard: &mut ScopedCompletionGuard,
     cancel: bool,
 ) -> Result<Vec<u8>, i32> {
     let window = guard.acquire(16)?;
-    let operation = match guard.submit(window) {
+    let operation = match guard.submit(&window) {
         Ok(id) => id,
         Err(e) => {
-            guard.release(window)?;
+            guard.release(&window)?;
             return Err(e);
         }
     };
     if cancel {
-        guard.cancel(operation)?;
+        guard.cancel(&operation)?;
     }
     let read = input.read(0, 16);
     match &read {
-        Ok(bytes) => guard.complete(operation, bytes, 0)?,
-        Err(e) => guard.complete(operation, &[], *e)?,
+        Ok(bytes) => guard.complete(&operation, bytes, 0)?,
+        Err(e) => guard.complete(&operation, &[], *e)?,
     };
     let result = if cancel {
         Err(-6)
     } else {
-        read.and_then(|_| guard.read(window))
+        read.and_then(|_| guard.read(&window))
     };
-    guard.release(operation)?;
-    guard.release(window)?;
+    guard.release(&operation)?;
+    guard.release(&window)?;
     assert_eq!(guard.counts(), [0, 0]);
     result
 }
@@ -41,8 +42,8 @@ fn run(args: &[String]) -> Result<i64, Box<dyn std::error::Error>> {
             .open(&args[1])?,
         false,
     );
-    let mut guard =
-        wasmc_completion_guard::CompletionGuard::new().map_err(|c| format!("guard {c}"))?;
+    let identity = BindingIdentity::from_hex(&args[7]).map_err(|c| format!("identity {c}"))?;
+    let mut guard = ScopedCompletionGuard::new(identity).map_err(|c| format!("guard {c}"))?;
     let read = read_window(&mut input, &mut guard, args[6] == "2");
     let close = input.release();
     let bytes = read.map_err(|e| {

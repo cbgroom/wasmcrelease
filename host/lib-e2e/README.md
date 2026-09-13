@@ -13,6 +13,9 @@ result and explicitly synchronizes the preopened output file.
 The input read is now tracked by the experimental
 [session/completion guard](../completion/README.md) in both JS and Native;
 guard windows and terminal records are released before computation.
+The reviewed driver now uses scoped tickets with a freshly generated test-Host
+binding identity; [issuance obligations](../completion/SCOPED_IDENTITY.md) remain
+explicit. This does not change the App's Core import signatures.
 Independent oracles verify disk bytes, empty/full windows, readonly denial and no flush on
 guest trap. JS WebAssembly and Wasmi2 run identical App and Lib bytes.
 Four additional controls cancel delivery before real file-read completion:

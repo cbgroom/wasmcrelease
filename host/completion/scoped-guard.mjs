@@ -1,0 +1,25 @@
+import { CompletionGuard } from './guard.mjs';
+// Trusted Host binding identity. Do not inject guest-selected or repeated seeds.
+export class ScopedCompletionGuard {
+  #identity;#guard;
+  constructor(identity) {
+    if(typeof identity!=='string'||! /^[0-9a-f]{64}$/.test(identity)||/^0+$/.test(identity)) throw -5;
+    this.#identity=identity;this.#guard=new CompletionGuard();
+  }
+  #wrap(local) { return `${this.#identity}:${local}`; }
+  #unwrap(ticket) {
+    if(typeof ticket!=='string'||ticket.length>75) throw -1;
+    const [identity,local,...extra]=ticket.split(':');
+    if(extra.length||identity!==this.#identity||! /^[1-9][0-9]{0,9}$/.test(local)||Number(local)>2147483647) throw -1;
+    return Number(local);
+  }
+  acquire(size) {return this.#wrap(this.#guard.acquire(size));}
+  submit(window) {return this.#wrap(this.#guard.submit(this.#unwrap(window)));}
+  cancel(operation) {return this.#guard.cancel(this.#unwrap(operation));}
+  complete(operation,bytes,error=0) {return this.#guard.complete(this.#unwrap(operation),bytes,error);}
+  poll(operation) {return this.#guard.poll(this.#unwrap(operation));}
+  read(window) {return this.#guard.read(this.#unwrap(window));}
+  release(resource) {return this.#guard.release(this.#unwrap(resource));}
+  revoke() {return this.#guard.revoke();}
+  counts() {return this.#guard.counts();}
+}

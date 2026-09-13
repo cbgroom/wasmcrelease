@@ -1,5 +1,10 @@
 # Session-bound completion guard (experimental)
 
+Follow-up [startup binding identity](SCOPED_IDENTITY.md) scopes references before
+local lookup; actual independent-process tests cover reset-local-ID collisions.
+The original unscoped guard below remains single-registry/process-local; use the
+scoped driver plus trusted fresh identity issuance when crossing that boundary.
+
 This public Host-side guard adds no external primitive. Within one registry
 namespace, session-qualified opaque IDs are never reused; exhaustion rejects.
 Four windows/four operation records (including terminal records), sixteen bytes
