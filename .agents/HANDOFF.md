@@ -2,7 +2,15 @@
 
 ## 0. Status
 
-Active source line: work/host-core-bytes-snapshot. Task state: local proof complete;
+Active source line: work/host-read-completion-quarantine. Task state: local proof complete;
+Malformed settled JS TCP completion now throws supervisor-owned quarantine,
+retains pinned endpoint/window/operation and revokes grants. Original ordinary
+failure lost the owner. Six malformed controls plus actual TCP read corruption
+pass Node/Bun/restricted Deno: failed stop retains[1,1], explicit actual close
+drains[0,0], one read/no response/no replay. Read COMPLETION_QUARANTINE.md.
+No Native async/thread or generic guard-release-fault recovery claim. Batch file
+read/write completion, buffer budget and Core packing corrections into the next
+exact qualification milestone; old TCP ownership PASS cannot qualify these.
 CoreBytes Host packing snapshots validated indexed bytes before Core allocation,
 reads each getter once, rejects sparse/out-of-range input with no allocation.
 Original valid7 then256 getter silently produced Core sum0; seven controls now

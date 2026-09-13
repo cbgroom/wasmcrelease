@@ -34,6 +34,9 @@ jobs:
           node host/tcp/buffer-budget-test.mjs
           bun host/tcp/buffer-budget-test.mjs
           deno run host/tcp/buffer-budget-test.mjs
+          node host/tcp/completion-quarantine-test.mjs --real-tcp
+          bun host/tcp/completion-quarantine-test.mjs --real-tcp
+          deno run --allow-net=127.0.0.1 host/tcp/completion-quarantine-test.mjs --real-tcp
           node host/file-io/write-snapshot-test.mjs
           bun host/file-io/write-snapshot-test.mjs
           deno run host/file-io/write-snapshot-test.mjs
@@ -79,6 +82,7 @@ jobs:
       - run: node host/tcp/driver-retirement-test.mjs --real-tcp
       - run: node host/tcp/stream-snapshot-test.mjs
       - run: node host/tcp/buffer-budget-test.mjs
+      - run: node host/tcp/completion-quarantine-test.mjs --real-tcp
       - run: node host/corelib-io/snapshot-test.mjs
       - run: node host/tcp/supervisor-test.mjs
       - name: Independent process startup identity
@@ -188,6 +192,8 @@ jobs:
           deno run host/tcp/stream-snapshot-test.mjs
           bun host/tcp/buffer-budget-test.mjs
           deno run host/tcp/buffer-budget-test.mjs
+          bun host/tcp/completion-quarantine-test.mjs --real-tcp
+          deno run --allow-net=127.0.0.1 host/tcp/completion-quarantine-test.mjs --real-tcp
           bun host/corelib-io/snapshot-test.mjs
           deno run --allow-read=standard/corelib,current,host/corelib-io host/corelib-io/snapshot-test.mjs
           bun host/tcp/driver-retirement-test.mjs --real-tcp
