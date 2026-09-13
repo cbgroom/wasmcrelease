@@ -2,6 +2,19 @@
 
 ## 0. Status
 
+Durable full Host goal remains ACTIVE, not complete. Shared JS HostSession now
+implements twelve mechanism families with opaque typed objects and one bounded
+kernel across actual file/TCP/UDP adapters. Local file E2E passes on all three
+JS runtimes (4 positives/issued-read cancellation); 32 controlled lifetime
+checks each pass. Resident network passes 12 TCP/4 UDP plus actual wait-timeout
+cancel-close and oversized datagram rejection, using one App/Lib and zero live
+resources. Node/Deno same-runtime peer pass; Bun same-runtime half-close client
+loses responses (retained strict failure). Bun SERVICE passes independent Native
+peer; do not count Bun client half-close as qualified. See host/session/README.md.
+Actions adds 27 exact-source session receipts across three OSes with peer-profile
+distinction. Core ABI, WIT, Native shared session, Rust consumer and containment
+remain unfinished; do not relabel JS objects/scalar Native fixture as v1 SDK.
+
 Native guest-initiated file task is now implemented once for Wasmi/Wasmtime.
 Same exact WAsmC async Wasm/Lib as JS. Local Wasmi passes 4 real positives,
 8 suppressed/failure paths and 12 independent no-clobber controls. Dual-engine

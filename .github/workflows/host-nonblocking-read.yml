@@ -123,6 +123,26 @@ jobs:
       - run: rustup toolchain install 1.96.0 --profile minimal --target wasm32-unknown-unknown
       - name: Independently compile Rust file caller without Cargo
         run: rustc +1.96.0 --edition=2024 --crate-type cdylib --target wasm32-unknown-unknown -C opt-level=s -C panic=abort -C strip=symbols -D warnings host/scenarios/file-app.rs -o "$RUNNER_TEMP/file-rust.wasm"
+      - name: Shared session file, network and failure end-to-end
+        run: |
+          peer="$RUNNER_TEMP/network-peer"
+          if [ "$RUNNER_OS" = Windows ]; then peer="$peer.exe"; fi
+          rustc +1.96.0 --edition=2024 -C opt-level=s -C strip=symbols -D warnings host/session/network-peer.rs -o "$peer"
+          node host/session/file-test.mjs > "$RUNNER_TEMP/session-file-node.json"
+          bun host/session/file-test.mjs > "$RUNNER_TEMP/session-file-bun.json"
+          deno run --allow-read --allow-write host/session/file-test.mjs > "$RUNNER_TEMP/session-file-deno.json"
+          node host/session/network-test.mjs > "$RUNNER_TEMP/session-network-node.json"
+          bun host/session/network-test.mjs "$peer" > "$RUNNER_TEMP/session-network-bun.json"
+          deno run --allow-read --allow-net=127.0.0.1 host/session/network-test.mjs > "$RUNNER_TEMP/session-network-deno.json"
+          node host/session/fault-test.mjs > "$RUNNER_TEMP/session-fault-node.json"
+          bun host/session/fault-test.mjs > "$RUNNER_TEMP/session-fault-bun.json"
+          deno run host/session/fault-test.mjs > "$RUNNER_TEMP/session-fault-deno.json"
+          node --input-type=module -e 'import fs from "node:fs";for(const kind of ["file","network","fault"])for(const name of ["node","bun","deno"]){const p=`${process.env.RUNNER_TEMP}/session-${kind}-${name}.json`;const r=JSON.parse(fs.readFileSync(p));r.exact_source=process.env.GITHUB_SHA;r.os=process.env.RUNNER_OS;r.arch=process.env.RUNNER_ARCH;fs.writeFileSync(p,JSON.stringify(r));console.log(JSON.stringify(r));}'
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: shared-session-${{ matrix.os }}
+          path: ${{ runner.temp }}/session-*.json
+          if-no-files-found: error
       - name: Twelve-family component behavior coverage and ownership controls
         run: |
           node host/file-io/root-test.mjs
