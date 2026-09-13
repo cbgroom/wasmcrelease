@@ -2,7 +2,10 @@
 
 ## 0. Status
 
-Active source line: work/host-driver-retirement. Task state: local proof complete;
+Active source line: work/host-native-completion-quarantine. Task state: started.
+Objective: malformed settled Native completion fails closed into retained owner
+quarantine; preserve primary versus close-failure observation without raw bytes
+or new guest imports. Driver-retirement source local proof complete;
 exact CI/main acceptance pending. Ordinary TCP driver close failure now enters
 owner quarantine before resource retirement; primary/effect preserved with no
 replay, already-drained completion is not completed twice. Node/Bun/restricted
