@@ -2,6 +2,21 @@
 
 ## 0. Status
 
+Current twelve-family component coverage slice: inventory-driven tests execute
+all candidate families without a memory-device simulator. Add bounded named
+preopened-root attenuation/ownership transfer and initialized copied write
+window; algorithms/general allocation stay in CoreLib. No guest Core ABI or
+compiler/provider bytes changed. Real file read/write/sync/close and ordered
+cancel/drain are positive components, not a completed unified twelve-API SDK.
+Node/Bun/Deno locally pass 24 suite rejection controls, 12 root fault/ownership
+controls and 13 window controls each. Real commit/write proves owned snapshot,
+busy retention, actual backend settlement and reentrant pin protection.
+Failed root close retains ownership; only explicit retirement retries close.
+Actions requires these suites on three OSes and nine exact-source component
+receipts. Prior Native S1 run 34770899122 completed PASS; newer component source
+requires its own qualification. Native parity for new root/window adapters,
+generic typed batch/deadline wait and formal resource/Future SDK remain pending.
+
 Current Native S1 slice: same public WAsmC/Rust Core bytes and admitted Lib,
 real OS monotonic/entropy sources through the restricted synchronous profile.
 Both Wasmi 2.0.0 and Wasmtime 47.0.4 locally pass 64 real-source calls, two

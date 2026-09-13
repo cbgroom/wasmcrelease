@@ -127,3 +127,42 @@ The twelve-family uniform-v1 plan remains planned. Native Actions requires
 default and dual-engine strict checks plus full locked Cargo compilation on
 Linux/macOS/Windows; local direct linking with warm exact-version dependencies
 is only local validation, not that Cargo or cross-platform proof.
+
+## Twelve-family component coverage
+
+`all-api-test.mjs` executes behaviors mapped to the single baseline inventory;
+it is **not twelve functions implemented behind one accepted Core ABI**.
+Each receipt reports the narrower evidence level and keeps v1 acceptance false.
+No memory-device simulator is used by this suite.
+
+| Families | Actual test path | Remaining v1 gap |
+|---|---|---|
+| describe/open | bounded named preopened file grants, detached description, rights attenuation, single child transfer | typed selectors/endpoint carrier; arbitrary OS open not granted |
+| read/write/invoke/release | real disk bytes/EOF/ranges, readonly rejection, finite storage sync, actual close and busy retention | generic typed invocation/results and asynchronous closing |
+| wait/cancel | real issued file read plus correlated scoped guard; cancelled payload discarded only after settlement | generic batch wait, wait/operation deadlines, guest Future and OS cancellation races |
+| window-acquire | scoped guard resource/size quotas, foreign and stale rejection | formal external-window SDK/carrier |
+| window-commit | bounded initialized copy window, real file write, captured snapshot, pinned mutation/release rejection | interoperable Core resource/memory carrier |
+| clock-read/entropy-fill | real monotonic/wall/WebCrypto sources; S1 App path tested separately | uniform authorized endpoint/window binding |
+
+Per runtime: 24 rejection controls in the twelve-family suite, 12 root ownership
+controls and 13 write-window controls. Real-I/O positives and deliberately
+controlled fault negatives are separately labelled. Failed root close retains
+ownership, denies subsequent business use and retries only explicit retirement.
+Write windows await actual issued backend settlement, never timeout-unpin or
+automatically retry. Reentrant source getters cannot mutate a newly pinned window.
+These Host-side windows are external-I/O copies, not ordinary CoreLib allocation.
+
+```sh
+node host/scenarios/all-api-test.mjs
+bun host/scenarios/all-api-test.mjs
+deno run --allow-read --allow-write host/scenarios/all-api-test.mjs
+node host/file-io/root-test.mjs
+node host/file-io/write-window-test.mjs
+```
+
+Fault suites also run unchanged on Bun and Deno without grants. The Deno
+real-I/O harness uses its native temporary-directory primitive and needs no
+environment/network/process grant. Desktop Actions retains nine component
+receipts (three runtimes × three OSes), including exact checkout and input hashes.
+Native S1 is separately qualified; this suite does not establish Native parity
+for these new adapters, browser storage, mobile execution or all-endpoint support.
