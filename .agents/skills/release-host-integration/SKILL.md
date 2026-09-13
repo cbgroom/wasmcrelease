@@ -41,6 +41,17 @@ with explicit denominators; local validation completion is not ecosystem closure
 
 ## Minimal, low-frequency evolving Host
 
+For Host API design or adapter evolution, first read
+[Host Core API v1 baseline](../../../host/CORE_API_V1_BASELINE.md) and its
+machine-readable inventory. The candidate fixes12mechanism families with a
+20family design budget, not accepted physical signatures or a released SDK.
+Count extensions even when dispatched through invoke; inventory physical
+helpers separately at ABI review. Copy-window helpers are required for the
+selected Core carrier; only shared/zero-copy acceleration is optional.
+Preserve correlated completion, non-consuming busy release and terminal-result
+quotas. Existing v0 WIT/simulator must not be treated as v1 authority. Do not
+rename the baseline or create alternative catalogs without explicit review.
+
 Core Host mechanisms aim to support a broad CoreLib ecosystem without native
 updates per feature. Stable means low-frequency justified evolution, not an
 immutable Host forever. The twelve-operation v0 list is a draft to compress and

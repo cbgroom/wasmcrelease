@@ -2,6 +2,21 @@
 
 ## 0. Status
 
+Active specification slice: Host Core API v1 candidate baseline,12mechanism
+families and20family design budget. Document contracts, authority/lifecycle,
+platform negotiation and acceptance gaps; add machine-readable inventory and
+negative checks. No runtime/producer/frozen ABI changes and no release promotion.
+Use the Host integration Skill as the single maintainer route to the baseline.
+No Cargo build required; specification/tests use local Node only.
+Baseline files: host/CORE_API_V1_BASELINE.md and core-api-v1-baseline.json.
+The12family inventory and20family budget do not assign physical function IDs;
+WIT/carrier ABI acceptance remains pending. Copy-window carrier helpers required;
+shared/zero-copy acceleration optional. Busy release never consumes, wait timeout
+does not cancel an operation, every completion correlated and result quota counts
+undelivered payload. Baseline checks integrated into validate-maintainer.sh.
+Next: review typed selectors/result variants and Core carrier against this
+baseline before continuing Future/SDK implementation. No new released support.
+
 Active slice: shared bounded read reactor, maximum16owned reads, one OS
 queue/wakeup, independent cancellation and absolute deadlines. Reuse existing
 NativeOwnerSupervisor pins/quota/close fences. No guest ABI or Host syscall.

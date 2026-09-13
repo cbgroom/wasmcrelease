@@ -1,0 +1,45 @@
+{
+  "schema": "wasmc.host-core-api.baseline/v1",
+  "revision": "1.0.0-draft.1",
+  "status": "candidate",
+  "runtime_abi_accepted": false,
+  "physical_signatures": null,
+  "count_scope": "mechanism-families-not-physical-import-count",
+  "design_budget": 20,
+  "inventory": [
+    {"name":"describe","group":"semantic","effect":"none"},
+    {"name":"open","group":"semantic","effect":"external"},
+    {"name":"read","group":"semantic","effect":"external"},
+    {"name":"write","group":"semantic","effect":"external"},
+    {"name":"invoke","group":"semantic","effect":"external"},
+    {"name":"wait","group":"semantic","effect":"observe-completion"},
+    {"name":"cancel","group":"semantic","effect":"request-stop"},
+    {"name":"release","group":"semantic","effect":"retire-resource"},
+    {"name":"clock-read","group":"semantic","effect":"observe-environment"},
+    {"name":"entropy-fill","group":"semantic","effect":"external"},
+    {"name":"window-acquire","group":"carrier","effect":"acquire-io-window"},
+    {"name":"window-commit","group":"carrier","effect":"publish-io-window"}
+  ],
+  "core_carrier": {
+    "required": ["copy-windows","bounded-resources","correlated-completion","scoped-identity"],
+    "optional": ["shared-windows","zero-copy","batch-acceleration","ring"],
+    "window_helpers_required": true,
+    "guest_raw_handles": false,
+    "general_allocation_owner": "corelib",
+    "unknown_operation_policy": "reject-before-effect"
+  },
+  "lifecycle": {
+    "cancel_is_rollback": false,
+    "wait_timeout_cancels_operation": false,
+    "timeout_force_releases": false,
+    "busy_release_consumes": false,
+    "quota_counts_quarantine": true,
+    "quota_counts_undelivered_results": true,
+    "retirement_requires_stop_close_ack": true,
+    "completion_correlation_required": true,
+    "automatic_replay": false
+  },
+  "platform_policy": "explicit-negotiated-capabilities-no-silent-fallback",
+  "normative_reference": "CORE_API_V1_BASELINE.md",
+  "semantic_wit": "pending-v1-review-not-v0-host.wit"
+}

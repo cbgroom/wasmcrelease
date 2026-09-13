@@ -1,5 +1,10 @@
 # Core Host v0 — public design and executable reference
 
+For current design decisions use the
+[Host Core API v1 candidate baseline](../CORE_API_V1_BASELINE.md).
+This v0 reference and its WIT/physical fixtures remain historical prototypes;
+the candidate does not modify their ABI or claim uniform v1 support.
+
 Experimental standardization prototype, not stable ABI or production I/O SDK.
 No dependency on WASI0.3 or Component execution. Core Wasm is the execution
 boundary; WIT remains the intended typed semantic authority above transport.
