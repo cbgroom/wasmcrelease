@@ -9,7 +9,10 @@ regenerates the unchanged73-API Std contract for Wasmi2 and Node18, with matchin
 Rust/WAsmC consumers. It is **not released/default**. The
 [18-cell public verification workflow](https://github.com/cbgroom/wasmcrelease/actions/workflows/portable-std.yml)
 tests Linux/macOS/Windows, Node18/22/26, Bun/Deno and both Native engines,
-retaining exact-SHA results and rejection controls. No private compiler source
+retaining exact-SHA results and rejection controls. The corrected
+[18/18qualified Source run](https://github.com/cbgroom/wasmcrelease/actions/runs/34765946479)
+passed107520paired calls; [exact receipts](admission/portable-std-v0/qualification.json)
+separate main admission from formal release. No private compiler source
 is compiled by this workflow; old Std1.4.0 and prod remain frozen.
 
 Development [preconnected TCP + Lib reference](host/tcp/README.md) exercises real

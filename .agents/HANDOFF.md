@@ -2,8 +2,14 @@
 
 ## 0. Status
 
-Portable Std1.4.1 is a source-free qualification candidate on its own branch,
-not an accepted main/prod package or discovery winner. Resolve exact private
+Portable Std1.4.1 source-free candidate passed all18exact-source Actions cells.
+It is admitted for main integration, not an immutable prod/discovery winner.
+Resolve exact source/run/job receipts from
+admission/portable-std-v0/qualification.json;107520paired calls passed across
+15JS and3Native dual-engine cells. This containing global-only receipt changes
+no executable/package bytes from the qualified Source. Main promotion still
+requires exact parent check and remote readback; no formal prod/tag is advanced.
+Resolve exact private
 source, regenerated package identities, toolchain and local results from
 admission/portable-std-v0/manifest.json. Local private Std suite10/10 and public
 Node18/Node26/Bun/Deno plus Wasmi2/Wasmtime47 paired execution passed.
@@ -11,7 +17,8 @@ Public native glue was locally compiled directly against compatible warm
 dependencies; full Cargo cross-platform compilation belongs to Actions.
 The new workflow requires15JS cells plus3native cells (both engines), exact
 checkout-SHA receipts,13JS rejection controls and frozen64product integrity.
-Read the exact run before claiming cross-platform acceptance. No compiler
+All18required cells now independently verified PASS from downloaded receipts.
+No compiler
 source is published, old1.4.0 and prod pointers remain unchanged. Next: accept
 the candidate's exact Actions run, then integrate its public tooling/package
 candidate; embedded catalog/search and immutable release promotion are separate.
@@ -21,11 +28,13 @@ Bounded local output is not exhaustive73API edge or mobile-device qualification.
 Initial candidate Actions passed Linux/macOS JS, but Windows rejected exact
 input identity before execution because checkout applied CRLF conversion.
 The delivery attributes now preserve all bytes; the owning integrity Skill
-records this lesson and the CRLF negative control remains rejecting.
+records this lesson and the CRLF negative/real checkout controls passed allOSes.
 No admitted payload was edited; generated SDK's trailing blank-line diff
 warning is deliberately preserved as exact private-producer byte identity.
-The corrected commit requires a fresh complete18-cell run; old-source PASS
-cannot qualify it, and previous failure receipts remain retained.
+The corrected complete18-cell run is now PASS; its exact Source remains the
+execution authority and previous failure receipts are retained. Next: verify
+main promotion, then integrate new version into a separately bound future
+catalog/search/release candidate without rewriting frozen prod inventories.
 
 Compiler protection is explicit: source/internal implementation remains private;
 Wasmi/Wasmtime integration, Host adapters, CLI and conformance/build glue may be

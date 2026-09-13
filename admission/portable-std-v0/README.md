@@ -35,8 +35,12 @@ only open integration code is compiled against admitted binary products.
 Local private qualification passed10/10 unfiltered Std tests and5120paired
 calls per engine under Wasmi2, Wasmtime47, Node18.19.1, Node26.5.1, Bun1.3.14
 and Deno2.9.4. These are exact tested versions, not arbitrary minimum guarantees.
-Actions independently qualify Linux/macOS/Windows against the exact public SHA
-and retain receipts. Read the run status before calling cross-platform PASS.
+The corrected [18/18Actions run](https://github.com/cbgroom/wasmcrelease/actions/runs/34765946479)
+independently passed Linux/macOS/Windows at the exact Source commit recorded in
+`qualification.json`:107520paired calls, all input identities and actual native
+test logs independently checked.15JS cells and3dual-engine Native cells passed.
+This main admission remains a candidate, not an immutable release or default
+Catalog/search selection. Receipt-only changes do not rebuild executable inputs.
 
 This representative73-API root corpus is not exhaustive standalone edge testing
 of all73functions. Core parity does not prove portable Component internals,
