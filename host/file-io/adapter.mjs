@@ -1,10 +1,11 @@
 // Host receives a trusted, preopened FileHandle. Guest paths are not accepted.
 export class PreopenedFile {
-  #busy = false;
+  #busy = false; #stopped = false;
   constructor(file, writable) { this.file = file; this.writable = writable; }
   check(offset, length) {
     if (!this.file) throw -1;
     if (this.#busy) throw -4;
+    if (this.#stopped) throw -1;
     if (!Number.isSafeInteger(offset) || !Number.isSafeInteger(length) || offset < 0 || length < 0 || length > 16 || offset + length > 64) throw -5;
   }
   async read(offset, length) {
@@ -34,6 +35,7 @@ export class PreopenedFile {
   async invokeSync() {
     if (!this.file) throw -1;
     if (this.#busy) throw -4;
+    if (this.#stopped) throw -1;
     if (!this.writable) throw -2;
     this.#busy = true;
     try { await this.file.sync(); return 0; } catch { throw -8; } finally { this.#busy = false; }
@@ -41,7 +43,10 @@ export class PreopenedFile {
   async release() {
     if (!this.file) throw -1;
     if (this.#busy) throw -4;
-    const file = this.file; this.file = null;
-    try { await file.close(); return 0; } catch { throw -8; }
+    const file = this.file; this.#busy=true; this.#stopped=true;
+    // Keep ownership on failure. Only an explicit later release may retry close;
+    // no subsequent business I/O, even if the backend reports still open.
+    try { await file.close(); this.file=null; return 0; } catch { throw -8; }
+    finally { this.#busy=false; }
   }
 }

@@ -50,11 +50,13 @@ export class PreconnectedTcp {
   }
   async release() {
     if(!this.#socket) throw -1; if(this.#busy) throw -4;
-    const socket=this.#socket;this.#socket=null;
+    const socket=this.#socket;this.#busy=true;this.#stopped=true;
     // Resource retirement awaits close acknowledgement, not destroyed=true alone.
-    if(!socket.destroyed) socket.destroy();
-    await this.#closed;
-    return 0;
+    try {
+      if(!socket.destroyed) socket.destroy();
+      await this.#closed;
+      this.#socket=null;return 0;
+    } finally {this.#busy=false;}
   }
   terminateRead() {
     if(!this.#socket) throw -1;

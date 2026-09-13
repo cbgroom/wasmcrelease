@@ -34,6 +34,7 @@ jobs:
       - run: node host/completion/lifetime-test.mjs
       - run: node host/tcp/stop-failure-test.mjs
       - run: node host/tcp/driver-error-test.mjs
+      - run: node host/file-io/retirement-test.mjs
       - run: node host/tcp/supervisor-test.mjs
       - name: Independent process startup identity
         shell: bash
@@ -129,6 +130,8 @@ jobs:
           deno run host/tcp/stop-failure-test.mjs
           bun host/tcp/driver-error-test.mjs
           deno run host/tcp/driver-error-test.mjs
+          bun host/file-io/retirement-test.mjs
+          deno run host/file-io/retirement-test.mjs
           bun host/tcp/supervisor-test.mjs
           deno run host/tcp/supervisor-test.mjs
           deno run --allow-net=127.0.0.1 --allow-env=NODE_V8_COVERAGE --allow-run="$write" host/tcp/write-test.mjs "$write"

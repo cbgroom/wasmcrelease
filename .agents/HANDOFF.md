@@ -2,10 +2,13 @@
 
 ## 0. Status
 
-Active source line: work/host-endpoint-retirement. Task state: started.
-Objective: ordinary File/TCP release must retain its endpoint until verified
+Active source line: work/host-endpoint-retirement. Task state: local lifecycle
+controls and real TCP regressions passed; exact CI/main acceptance pending.
+Ordinary File/TCP release now retains its endpoint until verified
 close acknowledgement; pending/failed close denies new business I/O and only
 explicit retirement may retry close. Not whole-driver quarantine SDK closure.
+Three controlled failure cases pass Node/Bun/permission-free Deno. Actual
+TCP/read-stop/write/resident regressions pass; see host/file-io/RETIREMENT.md.
 CoreLib bytes source local JS/Native proof is complete and exact CI/main
 acceptance remains pending; resolve its candidate with Git/run metadata.
 Objective: restricted settled file bytes -> exact existing CoreLib Provider ->
