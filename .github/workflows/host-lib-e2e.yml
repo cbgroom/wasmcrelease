@@ -52,8 +52,8 @@ jobs:
       - name: Wasmi-only dependency contract
         shell: bash
         run: |
-          cargo +1.96.0 tree --locked --manifest-path host/lib-e2e/rust/Cargo.toml > default-tree.txt
-          if grep -E 'wasmtime|cranelift' default-tree.txt; then exit 1; fi
+          cargo +1.96.0 tree --locked --manifest-path host/lib-e2e/rust/Cargo.toml > "$RUNNER_TEMP/wasmi-default-tree.txt"
+          if grep -E 'wasmtime|cranelift' "$RUNNER_TEMP/wasmi-default-tree.txt"; then exit 1; fi
       - name: Preconnected TCP and frozen algorithm Lib
         shell: bash
         run: |

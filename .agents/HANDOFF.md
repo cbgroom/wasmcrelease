@@ -1,5 +1,13 @@
 # WAsmC release maintainer handoff
 
+## CI temporary inventory correction
+
+Engine-parity run passed optional engine tests but Linux integrity rejected
+untracked default-tree.txt created by dependency check in publication root.
+Move generated Cargo tree into RUNNER_TEMP, never relax checksum inventory.
+Owning Actions correction travels with current stop-failure candidate; old
+run is not accepted and changed exact source must qualify independently.
+
 ## Failed stop acknowledgement safety
 
 Own branch work/host-stop-failure follows pushed benchmark candidate.
