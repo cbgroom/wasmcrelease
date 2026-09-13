@@ -2,7 +2,12 @@
 
 ## 0. Status
 
-Active source line: work/host-linux-frame-diagnosis. Task state: local proof complete;
+Active source line: work/host-file-completion-bounds. Task state: local proof complete;
+File read validates backend completion length before returning data. Original
+negative count silently published a slice instead of rejection. Five invalid
+and three valid completion controls pass locally; no read replay/new Host ABI.
+The previous exact TCP ownership candidate is in-flight; resolve runs from GitHub
+and never apply that older-source result to this changed file adapter.
 Original Bun1.3.14 Linux ARM frame12 loss reproduced in a local isolated
 container. Header4 was received before owner attachment but later read as1;
 App/CoreLib only saw payload2. Early queued endpoint construction and persistent
