@@ -7,6 +7,45 @@ on:
 permissions:
   contents: read
 jobs:
+  native-environment-app:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, macos-15, windows-2025]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: 26.5.1
+      - run: rustup toolchain install 1.96.0 --profile minimal --component clippy --component rustfmt --target wasm32-unknown-unknown
+      - run: rustup override set 1.96.0
+      - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830
+        with:
+          path: host/lib-e2e/rust/target
+          key: environment-app-v1-${{ matrix.os }}-${{ runner.arch }}-rust1.96.0-${{ hashFiles('host/**/Cargo.lock', 'host/**/Cargo.toml') }}
+      - name: Rebuild owned source, reuse only locked dependencies
+        run: cargo clean --locked --manifest-path host/lib-e2e/rust/Cargo.toml -p wasmc-lib-host-e2e -p wasmc-completion-guard -p wasmc-preopened-file-reference
+      - run: cargo fmt --check --manifest-path host/lib-e2e/rust/Cargo.toml
+      - run: cargo clippy --release --locked --manifest-path host/lib-e2e/rust/Cargo.toml --bin environment-app-reference -- -D warnings
+      - run: cargo clippy --release --locked --manifest-path host/lib-e2e/rust/Cargo.toml --features wasmtime-engine --bin environment-app-reference -- -D warnings
+      - run: cargo build --release --locked --manifest-path host/lib-e2e/rust/Cargo.toml --features wasmtime-engine --bin environment-app-reference
+      - run: rustc --edition=2024 --crate-type cdylib --target wasm32-unknown-unknown -C opt-level=s -C panic=abort -C strip=symbols host/scenarios/environment-app.rs -o "$RUNNER_TEMP/environment-rust.wasm"
+      - name: Same WAsmC and Rust callers, real OS sources, both Native engines
+        run: |
+          binary="host/lib-e2e/rust/target/release/environment-app-reference"
+          if [ "$RUNNER_OS" = Windows ]; then binary="$binary.exe"; fi
+          node host/scenarios/environment-native-test.mjs "$binary" "$RUNNER_TEMP/environment-rust.wasm" --wasmtime > "$RUNNER_TEMP/environment-native.json"
+          cat "$RUNNER_TEMP/environment-native.json"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: environment-native-${{ matrix.os }}
+          path: ${{ runner.temp }}/environment-native.json
+          if-no-files-found: error
   native-read-owner:
     strategy:
       fail-fast: false

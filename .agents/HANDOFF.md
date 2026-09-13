@@ -2,6 +2,21 @@
 
 ## 0. Status
 
+Current Native S1 slice: same public WAsmC/Rust Core bytes and admitted Lib,
+real OS monotonic/entropy sources through the restricted synchronous profile.
+Both Wasmi 2.0.0 and Wasmtime 47.0.4 locally pass 64 real-source calls, two
+controlled consumer oracles and four denial/unavailable checks per engine.
+Strict direct rustc/Clippy checks reuse read-only exact-version dependencies;
+no engine Cargo rebuild or cache writes. Target remains below 64 MiB.
+Full Cargo default/dual-engine build and strict checks are required on three
+OSes by Actions; local cached builds do not replace those exact-source receipts.
+Whole-crate fmt now passes after mechanical formatting of existing portable
+Std test fixture (no admitted package or binding bytes changed).
+Prior JS run 34770535200 completed PASS; its nine App receipts are independently
+downloaded and checked against source/consumer identity. New Native source
+requires its own run. No v1 resource/Future SDK or mobile/browser acceptance.
+Next: formal typed window/result carrier and S2 vertical file-transform path.
+
 Current S1 slice: actual WAsmC and public Rust Core callers initiate authorized
 monotonic clock reads and secure entropy, then call the admitted computation
 Lib. Restricted synchronous profile, not v1 typed resource/async SDK. No caller

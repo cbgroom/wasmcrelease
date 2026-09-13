@@ -104,3 +104,26 @@ node host/scenarios/environment-app-test.mjs target/nonblocking-read/environment
 bun host/scenarios/environment-app-test.mjs target/nonblocking-read/environment-rust.wasm
 deno run --allow-read host/scenarios/environment-app-test.mjs target/nonblocking-read/environment-rust.wasm
 ```
+
+Native shares the same App/Lib bytes and restricted semantic profile:
+
+```sh
+cargo build --release --locked --manifest-path host/lib-e2e/rust/Cargo.toml \
+  --features wasmtime-engine --bin environment-app-reference
+node host/scenarios/environment-native-test.mjs \
+  host/lib-e2e/rust/target/release/environment-app-reference \
+  target/nonblocking-read/environment-rust.wasm --wasmtime
+```
+
+Windows adds `.exe`. Default compilation without `wasmtime-engine` remains
+Wasmi-only; omit `--wasmtime` to test it. Each engine executes 64 real OS-source
+calls, two explicitly controlled consumer oracles and four rejection controls.
+Nonce scratch is cleared and the private Lib slab freed on success/denial.
+Both App and Lib have finite fuel; input and callback counts are bounded.
+These trusted fixtures do not provide arbitrary hostile-module admission,
+general Store memory limits, asynchronous completion, wall-clock preemption,
+automatic promotion, replay or a formal generated guest resource SDK.
+The twelve-family uniform-v1 plan remains planned. Native Actions requires
+default and dual-engine strict checks plus full locked Cargo compilation on
+Linux/macOS/Windows; local direct linking with warm exact-version dependencies
+is only local validation, not that Cargo or cross-platform proof.

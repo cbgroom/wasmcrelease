@@ -8,6 +8,7 @@ publish = false
 default = []
 wasmtime-engine = ["dep:wasmtime"]
 [dependencies]
+getrandom = "=0.4.3"
 wasmtime = { version = "=47.0.4", optional = true, default-features = false, features = ["runtime", "cranelift"] }
 # Public execution consumes binary Core Wasm, never WAT text. Preserve runtime
 # validation, stable behavior, memory64 and dispatch; omit only text parsing.
