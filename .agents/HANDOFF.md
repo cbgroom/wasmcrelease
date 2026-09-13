@@ -1,5 +1,15 @@
 # WAsmC release maintainer handoff
 
+## Completion guard acceptance
+
+Current exact-source run34749085033 PASS all6desktop targets and required job.
+Independently read14guard,14fault and14chain receipts:76transitions/10fault
+controls/20real-file cases per pair;4Rust tests per platform. Retained
+admission/host-completion-guard.json. Normal expected-base main advancement
+only while main remains preceding accepted Lib/Host chain. No release/tag change.
+Next branch can develop startup registry identity from this qualified baseline;
+Host-side guard does not yet close negotiated typed Core transport delivery gate.
+
 ## Current: session/completion guard START
 
 Continuation while Actions queued: local hardening is not blocked by CI. Found
