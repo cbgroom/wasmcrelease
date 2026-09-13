@@ -2,13 +2,13 @@ use std::io::Write;
 use std::net::TcpListener;
 use std::time::Duration;
 use wasmc_lib_host_e2e::{
-    listener::PreauthorizedTcpListener, resident_sum::ResidentSum, tcp::PreconnectedTcp,
+    listener::PreauthorizedTcpListener, resident_app::ResidentApp, tcp::PreconnectedTcp,
 };
 fn main() {
     let args: Vec<_> = std::env::args().collect();
     let limit: usize = args[2].parse().unwrap();
     assert!((1..=64).contains(&limit));
-    let mut lib = ResidentSum::new(&args[1]).unwrap();
+    let mut app = ResidentApp::new(&args[1], &args[3]).unwrap();
     // Bind policy belongs solely to trusted fixture launcher, never guest.
     let socket = TcpListener::bind("127.0.0.1:0").unwrap();
     let port = socket.local_addr().unwrap().port();
@@ -40,7 +40,7 @@ fn main() {
                 }
                 bytes.extend(chunk);
             }
-            let value = lib.call(&bytes).map_err(|error| {
+            let value = app.call(&bytes, 0).map_err(|error| {
                 eprintln!("Lib call: {error}");
                 -8
             })?;
@@ -55,5 +55,6 @@ fn main() {
     }
     listener.release().unwrap();
     assert!(matches!(listener.accept(1), Err(-1)));
-    println!("{{\"accepted\":true,\"calls\":{calls},\"rejected\":{rejected},\"lib_instances\":1,\"listener_retired\":true}}");
+    assert_eq!(app.lib_calls(), calls);
+    println!("{{\"accepted\":true,\"calls\":{calls},\"rejected\":{rejected},\"lib_instances\":1,\"app_instances\":1,\"listener_retired\":true}}");
 }

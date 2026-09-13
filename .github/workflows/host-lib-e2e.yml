@@ -1,7 +1,7 @@
 name: Public Host and Lib end-to-end
 on:
   push:
-    branches: [main, work/host-lib-e2e, work/host-completion-guard, work/host-startup-identity, work/host-tcp-endpoint, work/host-tcp-read-stop, work/host-tcp-listener]
+    branches: [main, work/host-lib-e2e, work/host-completion-guard, work/host-startup-identity, work/host-tcp-endpoint, work/host-tcp-read-stop, work/host-tcp-listener, work/host-resident-app, work/host-tcp-write-outcome]
   pull_request:
   workflow_dispatch:
 permissions:
@@ -58,8 +58,12 @@ jobs:
           if [[ "$RUNNER_OS" == Windows ]]; then stop="$stop.exe"; fi
           node host/tcp/fault-test.mjs "$stop"
           server=host/lib-e2e/rust/target/release/tcp-server-reference
-          if [[ "$RUNNER_OS" == Windows ]]; then server="$server.exe"; fi
-          node host/tcp/server-test.mjs "$server"
+          resident=host/lib-e2e/rust/target/release/resident-app-reference
+          if [[ "$RUNNER_OS" == Windows ]]; then server="$server.exe"; resident="$resident.exe"; fi
+          node host/tcp/server-test.mjs "$server" "$resident"
+          write=host/lib-e2e/rust/target/release/tcp-write-reference
+          if [[ "$RUNNER_OS" == Windows ]]; then write="$write.exe"; fi
+          node host/tcp/write-test.mjs "$write"
       - name: Same App and published Lib through real file Host
         shell: bash
         run: |
@@ -85,8 +89,13 @@ jobs:
           tcp=host/lib-e2e/rust/target/release/tcp-reference
           stop=host/lib-e2e/rust/target/release/tcp-stop-reference
           server=host/lib-e2e/rust/target/release/tcp-server-reference
-          bun host/tcp/server-test.mjs "$server"
-          deno run --allow-net=127.0.0.1 --allow-read=libs/wasmc-owned-algorithms --allow-env=NODE_V8_COVERAGE --allow-run="$server" host/tcp/server-test.mjs "$server"
+          resident=host/lib-e2e/rust/target/release/resident-app-reference
+          write=host/lib-e2e/rust/target/release/tcp-write-reference
+          bun host/tcp/write-test.mjs "$write"
+          deno run --allow-net=127.0.0.1 --allow-env=NODE_V8_COVERAGE --allow-run="$write" host/tcp/write-test.mjs "$write"
+          bun host/tcp/server-test.mjs "$server" "$resident"
+          mkdir -p target/host-tcp-app
+          deno run --allow-net=127.0.0.1 --allow-read=current,host/lib-e2e,libs/wasmc-owned-algorithms,target --allow-write=target/host-tcp-app --allow-env=NODE_V8_COVERAGE --allow-run="$server,$resident" host/tcp/server-test.mjs "$server" "$resident"
           bun host/tcp/test.mjs "$tcp"
           deno run --allow-net=127.0.0.1 --allow-read=libs/wasmc-owned-algorithms --allow-env=NODE_V8_COVERAGE --allow-run="$tcp" host/tcp/test.mjs "$tcp"
           bun host/tcp/fault-test.mjs "$stop"
@@ -110,7 +119,7 @@ jobs:
         env:
           SOURCE: ${{ github.sha }}
         run: |
-          printf '%s\n' "Source $SOURCE; $RUNNER_OS/$RUNNER_ARCH; 76 guard transitions, 10 fault controls, 8 guard Rust tests, 3 TCP/listener Rust tests, 8-process identity, 20 file/App/Lib cases, 8 TCP/Lib pairs, 4 read-stop pairs with 9 controls, 19 resident-Lib server connections and 8 listener controls; not resident guest App, guest async ABI or write cancellation qualification" >> "$GITHUB_STEP_SUMMARY"
+          printf '%s\n' "Source $SOURCE; $RUNNER_OS/$RUNNER_ARCH; 76 guard transitions, 10 fault controls, 8 guard Rust tests, 4 TCP/listener Rust tests, 8-process identity, 20 file/App/Lib cases, 8 TCP/Lib pairs, 4 read-stop pairs with 9 controls, 19 resident App/Lib server connections, 1000 resident calls per engine and 8 listener controls; guest trap poisons with no replay, not guest async ABI or write cancellation qualification" >> "$GITHUB_STEP_SUMMARY"
   required:
     if: always()
     needs: composition

@@ -1,6 +1,19 @@
 # WAsmC release maintainer handoff
 
-## Transport integration acceptance
+## Resident App/write integration acceptance
+
+Current exact candidate/run and receipts are recorded in
+admission/host-resident-write-qualification.json. Six desktop platforms and
+required job PASS; independently read14resident App server and14write receipts.
+Same App/Lib digests,19connections/1000resident calls, poison/no-replay/cleanup,
+peer-observed cancelled effect and5write controls all match. Native cancellation
+of pending accept is included. Not blocked-write preemption, generic failed-stop
+quarantine, typed guest async, TLS/browser/mobile or immutable SDK release.
+Resolve expected main from Git before normal FF promotion; no force or tags.
+Optional Wasmtime source remains separate and needs its own exact-source gate.
+Full Host delivery1/5 gates; keep local iteration independent of queued Actions.
+
+## Earlier transport integration acceptance
 
 Qualified exact listener candidate and GitHub run are recorded in
 admission/host-transport-qualification.json. Actual run success on6desktop
@@ -13,6 +26,39 @@ advance normally only while remote main remains prior accepted completion
 guard base (resolve Git origin and admission); no force/tag/product changes.
 Full Host delivery remains1/5 gates. Next accept later exact candidates from
 their own receipts, close typed transport/engine/profile gates, then release.
+
+## Write completion outcome milestone
+
+Own branch work/host-tcp-write-outcome from pushed resident-App candidate.
+JS snapshot/pinned write driver waits backend settlement/stop acknowledgement
+before drain. Host outcome distinguishes accepted_locally vs possibly_partial;
+only pre-issue abort may claim no effect. No auto replay/retry. Peer first
+observes4bytes, then JS/Native cancel completion; both retain acknowledged4
+and possibly_partial, zero resources. Local Node/Bun/restricted Deno PASS plus
+5JS failure/partial/preabort/deadline/snapshot controls. Native fixture cancels
+after peer acknowledgement, not blocked-write preemption. Reliable-stop failures,
+general write races and cryptographic/TLS qualification remain unclosed.
+Owning WRITE_OUTCOMES.md documents records as trusted Host results, not guest
+ABI. Add same six-platform Actions. Earlier resident-App CI is independent;
+new source needs own qualification before main. Full Host delivery1/5 gates.
+
+## Resident WAsmC App and cancellable Native accept
+
+Own branch work/host-resident-app from preceding pushed listener milestone.
+Server now reuses same digest-bound WAsmC App -> frozen Lib, not Lib-only.
+Native exclusive resident Store/input/fuel; JS exclusive slab/instances. Both
+poison App after trap, reject subsequent call without replaying Lib. Invalid
+budget rejected before Lib. Native accept uses fresh terminal cancellation
+handle checked before accept/handoff; independent thread can cancel pending
+wait without retiring listener, next fresh wait succeeds. No guest address,
+new syscall, automatic rebuild/retry or unrestricted guest SDK.
+Local Node/Bun/restricted Deno PASS19connection parity and1000resident calls
+per engine with trap/budget/no-replay oracles,8listener controls. Native4tests,
+strict Clippy PASS. Exact App/Lib digests unchanged; no compiler/provider rebuild.
+Owning LISTENER.md and six-platform Actions extended. Push coherent source;
+continue independent work while CI qualifies, then retain receipts and safely
+advance main only from expected accepted base. Full Host delivery1/5 gates;
+typed transport/browser/Wasmtime/write/TLS/release remain unclosed.
 
 ## Preauthorized listener/resident Lib milestone
 
