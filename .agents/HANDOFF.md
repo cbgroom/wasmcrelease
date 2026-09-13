@@ -10,6 +10,15 @@ release mechanisms; no certificate/TLS/business-specific native operation.
 Existing draft remains evolving, not frozen. Private compiler/source unchanged.
 START checkpoint precedes implementation. Qualify JS/native file behavior and
 permissions on Actions, preserving old artifacts and unrelated worktrees.
+Owning release-host-integration Skill updated: minimize native additions through
+CoreLib/existing I/O composition; low-frequency evolution, not forever freeze;
+draft12 not mandatory; certificate file reuse and optional platform services;
+JS/Native semantics shared, acceleration optional, missing capabilities reject.
+Real preopened file JS/Rust adapter implemented; local Node/Bun/Deno20 operations
+across2rights profiles plus2no-clobber controls PASS; strict Clippy PASS.
+No guest path resolver or new business syscall. File sync is explicit, not a
+power-loss claim. Core async transport and browser remain gaps. Six-platform
+Actions implemented; read exact-source run before expected-base main advance.
 
 ## Thin Host contract START
 

@@ -4,6 +4,13 @@
 
 Source-free public packages for the private-source `wasmc` compiler.
 
+Next experimental Host capability: [real preopened file I/O](host/file-io/README.md).
+Independent JS/Rust adapters reuse read/write/invoke-sync/release without guest
+paths or certificate-specific native calls. It is not a completed Core/WIT
+transport or browser filesystem adapter. The owning maintainer Skill now requires
+proving an irreducible need before adding Host primitives.
+[![Real Host file I/O](https://github.com/cbgroom/wasmcrelease/actions/workflows/host-file-io.yml/badge.svg?branch=work/thin-host-file-io)](https://github.com/cbgroom/wasmcrelease/actions/workflows/host-file-io.yml)
+
 Public experimental [Core Host v0 contract/reference](host/v0/README.md):
 low-frequency evolving Native mechanisms, reusable CoreLib policy/protocols,
 JS/Native semantic parity without requiring identical acceleration. Seven

@@ -18,6 +18,11 @@ compiler construction, FastAPI construction, and release admission. Import
 only reviewed artifacts and public facts; never copy private paths, source,
 credentials, or internal implementation details here.
 
+Public Core Host contracts, native/JS integration glue and conformance fixtures
+are intentionally open standardization surfaces. Their owning judgment is
+`release-host-integration`; keep low-level additions justified and reusable.
+This permission does not authorize rebuilding private compiler/CoreLib products.
+
 ## Required loop
 
 1. Read this file and `.agents/HANDOFF.md`.
