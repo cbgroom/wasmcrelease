@@ -2,6 +2,18 @@
 
 ## 0. Status
 
+Candidate finish-write now exposes the missing reverse half-close oracle:
+Node/Deno peer sees FIN then sends a byte, same endpoint reads it; repeated
+finish/write denied and zero retained resources. Bun1.3.14 Node-compatible
+socket returns EOF even with independent Native peer; adapter now rejects
+unsupported BEFORE FIN rather than falsely acknowledging half-close. Native
+Bun transport probes inconclusive, not evidence of universal impossibility.
+See host/session/FIN_PROFILE.md. Actions adds nine FIN receipts with explicit
+non-positive Bun result. 64 controlled faults pass across three JS runtimes;
+regular five-stage network App remains unchanged and does not claim FIN.
+Full delivery remains active: real Bun/native transport, typed Core SDK,
+Native shared ownership and containment still require implementation.
+
 JS network vertical now uses one resident HostSession and ordinary WAsmC
 guest-initiated listener accept. Pending/undelivered accepted endpoints reserve
 quota and remain private to operations; passive wait never transfers them.
@@ -25,7 +37,7 @@ PASS; downloaded independent receipt review is still pending.
 Durable full Host goal remains ACTIVE, not complete. Shared JS HostSession now
 implements twelve mechanism families with opaque typed objects and one bounded
 kernel across actual file/TCP/UDP adapters. Local file E2E passes on all three
-JS runtimes (4 positives/issued-read cancellation); 57 controlled lifetime
+JS runtimes (4 positives/issued-read cancellation); 64 controlled lifetime
 checks each pass. Resident network passes 12 TCP/4 UDP plus actual wait-timeout
 cancel-close and oversized datagram rejection, using one App/Lib and zero live
 resources. Node/Deno same-runtime peer pass; Bun same-runtime half-close client

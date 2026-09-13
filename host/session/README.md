@@ -17,6 +17,10 @@ objects. No application sees the private object registry or integer handles.
   retain the accepted endpoint in its operation until `take_result`, and close
   an unclaimed/cancelled endpoint during operation retirement. A failed close
   retains ownership for cleanup only; it cannot reopen result claiming.
+  `finish-write` is the candidate stream half-close control; see
+  [exact profiles and the remaining Bun gap](FIN_PROFILE.md). Node/Deno actual
+  receive-after-FIN passes; Bun Node-compatible transport explicitly rejects
+  before FIN and is not positively qualified.
 - `wait`, `cancel`, `release`: correlated passive results, bounded wakeups,
   non-consuming busy/failed cleanup, actual settlement/close acknowledgement.
   `take_result` is a carrier helper that claims the terminal result exactly
@@ -78,7 +82,7 @@ and receives its connection through the shared one-shot result helper. A
 pending accept cancellation detaches the readiness waiter before retirement;
 it does not imply the listener has closed. Actual listener release awaits close.
 
-Fault: 57 deliberately controlled lifetime checks cover terminal-result quota,
+Fault: 64 deliberately controlled lifetime checks cover terminal-result quota,
 bounded waiters, foreign/stale resources, failed stop/close ownership, explicit
 cleanup retry and reentrant retirement. These do not prove OS failure recovery.
 

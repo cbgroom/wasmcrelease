@@ -130,6 +130,24 @@ throws(()=>quota.invoke(quotaListener,'accept'),/limit/);
 assert.equal(quotaAccepts,3);assert.equal(quota.counts().endpoints,4);controls++;
 for(const op of held)await quota.release(op);
 await quota.release(quotaListener);await quota.release(quota.root);empty(quota);
+const fin=deferred();let fins=0;
+const finishing=new HostSession([{name:'peer',kind:'stream',read:true,write:true,
+  backend:{read:async()=>[],write:async bytes=>bytes.length,finishWrite:()=>{fins++;return fin.promise;},release:async()=>{}}}]);
+const finPeer=finishing.open(finishing.root,'peer',{write:true});
+throws(()=>finishing.invoke(finPeer,'unknown-control'),/unsupported/);
+const finOp=finishing.invoke(finPeer,'finish-write');
+await rejects(finishing.release(finPeer),/busy/);
+assert.deepEqual(await finishing.wait([finOp],{timeoutMs:0}),[]);controls++;
+assert.equal(finishing.cancel(finOp),'accepted');controls++;
+fin.resolve();const finReceipt=(await finishing.wait([finOp]))[0];
+assert.equal(finReceipt.result.status,'cancelled');assert.equal(finReceipt.result.outcome,'unknown');assert.equal(fins,1);controls++;
+throws(()=>finishing.take_result(finOp),/cancelled/);
+await finishing.release(finOp);await finishing.release(finPeer);await finishing.release(finishing.root);empty(finishing);
+const deniedFin=new HostSession([{name:'peer',kind:'stream',read:true,write:false,
+  backend:{read:async()=>[],finishWrite:()=>{throw Error('must not issue');},release:async()=>{}}}]);
+const readonlyFin=deniedFin.open(deniedFin.root,'peer');
+throws(()=>deniedFin.invoke(readonlyFin,'finish-write'),/permission-denied/);
+await deniedFin.release(readonlyFin);await deniedFin.release(deniedFin.root);empty(deniedFin);
 console.log(JSON.stringify({accepted:true,scope:'controlled-shared-session-lifetime-faults',controls,
   terminal_results_count_against_quota:true,waiters_bounded:true,foreign_stale_denied:true,
   failed_stop_and_close_retain_pins:true,explicit_cleanup_retry_only:true,reentrant_retirement_no_revival:true,

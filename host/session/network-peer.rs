@@ -8,6 +8,20 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         return Err("usage: network-peer PORT comma-separated-bytes".into());
     }
     let port: u16 = args[1].parse()?;
+    if args[2] == "--after-fin" {
+        let mut socket = TcpStream::connect(SocketAddrV4::new(Ipv4Addr::LOCALHOST, port))?;
+        socket.set_read_timeout(Some(Duration::from_secs(2)))?;
+        socket.set_write_timeout(Some(Duration::from_secs(2)))?;
+        let mut response = Vec::new();
+        (&mut socket).take(2).read_to_end(&mut response)?;
+        if response != [7] {
+            return Err("FIN response mismatch".into());
+        }
+        socket.write_all(&[3])?;
+        socket.shutdown(Shutdown::Write)?;
+        println!("{{\"accepted\":true,\"after_fin_write\":true}}");
+        return Ok(());
+    }
     let bytes: Vec<u8> = if args[2].is_empty() {
         Vec::new()
     } else {

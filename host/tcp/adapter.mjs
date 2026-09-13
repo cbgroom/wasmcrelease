@@ -2,7 +2,7 @@
 // No guest address, DNS, listener or implicit reconnect authority.
 export class PreconnectedTcp {
   #socket; #busy=false; #error=false; #ended=false; #stopped=false; #closed; #pending=null;
-  #bufferLimit;
+  #bufferLimit; #writeEnded=false;
   constructor(socket, writable=true, maxBufferedBytes=65536) {
     if(!Number.isInteger(maxBufferedBytes)||maxBufferedBytes<1||maxBufferedBytes>65536)throw -5;
     this.#bufferLimit=maxBufferedBytes;
@@ -64,13 +64,26 @@ export class PreconnectedTcp {
     const count=bytes.length;if(!Number.isInteger(count)||count<0||count>16)throw -5;
     const snapshot=new Uint8Array(count);
     for(let i=0;i<count;i++){const byte=bytes[i];if(!Number.isInteger(byte)||byte<0||byte>255)throw -5;snapshot[i]=byte;}
-    this.#check(count); if(!this.writable) throw -2;
+    this.#check(count); if(!this.writable) throw -2;if(this.#writeEnded)throw -1;
     this.#busy=true;
     try {
       // Callback retains the owned view until local acknowledgement, not caller
       // array length/mutation or a transient temporary's lifetime.
       await new Promise((resolve,reject)=>this.#socket.write(snapshot,error=>error||snapshot.byteLength!==count?reject(-9):resolve()));
       return count;
+    } catch {throw -9;} finally {this.#busy=false;}
+  }
+  async finishWrite() {
+    // Bun 1.3.14 Node-compatible sockets fail the independent receive-after-
+    // FIN oracle. Do not issue a whole-close while claiming half-close support.
+    if(typeof globalThis.Bun!=='undefined')throw -7;
+    this.#check(0);if(!this.writable)throw -2;if(this.#writeEnded)throw -1;
+    this.#busy=true;this.#writeEnded=true;
+    try {
+      // Local flush/FIN acknowledgement, not peer receipt or whole-socket close.
+      // Read ownership remains live; retirement still awaits actual close.
+      await new Promise((resolve,reject)=>this.#socket.end(error=>error?reject(-9):resolve()));
+      return 0;
     } catch {throw -9;} finally {this.#busy=false;}
   }
   async release() {

@@ -130,6 +130,11 @@ export class HostSession {
   }
   invoke(endpoint, operation) {
     const e=this.#get(this.#endpoints,endpoint);
+    if(operation==='finish-write') {
+      if(e.kind!=='stream'||typeof e.backend.finishWrite!=='function')fail('unsupported');
+      if(!e.write)fail('permission-denied');
+      return this.#submit(endpoint,null,async()=>{await e.backend.finishWrite();return {status:'ok',writeFinished:true};},null,true);
+    }
     if(operation==='accept') {
       this.#admit();this.#idle(e);
       if(e.kind!=='listener'||typeof e.backend.accept!=='function') fail('unsupported');
