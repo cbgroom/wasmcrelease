@@ -2,8 +2,12 @@
 
 ## 0. Status
 
-Active source line: work/host-corelib-resource-lifetime. Task state: local proof
-complete; exact CI/main pending. Node/Bun/restricted Deno and both Native engines
+Active source line: work/host-stream-snapshot. Task state: started.
+Objective: retain bounded owned snapshots before transport callbacks invalidate
+borrowed views; write acknowledgement must use snapshot length, not caller's
+later-mutated array. Diagnose Bun/Linux frame failure without assuming this
+is its exact root cause or relaxing acceptance. CoreLib resource-lifetime local
+proof complete; exact CI/main pending. Node/Bun/restricted Deno and both Native engines
 passed100000 bytes/App/drop cycles per consumer; checksum14342320, actual CoreLib
 memory1310720bytes across six samples, earliest stale reference rejected.
 Objective: bounded100000 owned bytes/App/drop cycles per consumer with actual
