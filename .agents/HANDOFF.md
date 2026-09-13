@@ -2,7 +2,7 @@
 
 ## 0. Status
 
-Active source line: work/host-scoped-owner-lifetime, following pushed Native owner/kernel
+Active source line: work/host-core-negotiation, following pushed scoped lifetime/Native owner/kernel
 and handoff consolidation. Resolve exact revisions with Git; inspect
 status/worktrees before editing and preserve unrelated changes. Linked worktrees
 belong under /Users/youxianshi/code/.worktrees/wasmcrelease.
@@ -13,9 +13,11 @@ admission/host-transport-qualification.json and
 admission/host-resident-write-qualification.json for accepted exact sources,
 runs, independently read receipts and scope. Do not redo those implementations.
 
-Subsequent optional Wasmtime, kernel engine parity, benchmarks, failed-stop/error-path protection,
-real browser probes and bounded quarantine supervisor are pushed source work.
-They need their own exact-source cross-platform acceptance before main.
+Optional Wasmtime, benchmarks, failed-stop/error-path protection, real browser
+and bounded JS supervisor are now accepted in main. Read the current admission
+host-browser-engine-qualification.json and host-supervisor-qualification.json
+from main for exact receipts. Kernel, Native owner, lifetime and negotiation
+source still need their own exact-source cross-platform acceptance before main.
 Never borrow an old-source PASS. No release/tag/deployment was performed.
 
 ## 1. North Star
@@ -65,6 +67,12 @@ general async recovery/guest ABI or long-run RSS/network qualification.
 Mac ARM Bun Kernel CI empty sync-spawn stdout is corrected with event-driven
 spawn/pipe-drain/close, no replay. Changed source requires own qualification.
 
+Bounded Core describe now exposes profile version/copy feature/limits without
+new Host imports. Negotiated guest performs preflight before allocation/invoke.
+Local six JS/Native engine pairs pass four lengths and seven denial cases;
+Native denies with zero non-describe calls/resources/effects. Typed WIT SDK and
+arbitrary-device description are not implied. Owning host/v0/NEGOTIATION.md.
+
 ## 4. Plan and Validation
 
 Read release-host-integration, release-integrity and release-agent-docs Skills.
@@ -94,7 +102,7 @@ Do not count locally completed slices as all-platform/full SDK completion.
 
 ## 6. Next Actions
 
-Next: inspect latest scoped-owner-lifetime exact runs (Host composition and Core
+Next: inspect latest core-negotiation exact runs (Host composition and Core
 Host contract); fix real failures locally. Prior accepted source needs no redo.
 Accept relevant source only with exact receipts, merge current main metadata
 without discarding it, refresh integrity, then normal expected-base FF promotion.

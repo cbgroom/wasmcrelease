@@ -4,7 +4,11 @@ export class MemoryHost {
   step([name, a = 0, b = 0]) {
     // Physical prototype results: negative error, zero success, positive token.
     switch (name) {
-      case 'describe': return a === 1 ? 3 : a === 2 ? 1 : -1;
+      case 'describe': {
+        if(a!==1&&a!==2)return -1;
+        // Bounded profile fields, not full semantic WIT lowering.
+        return [a===1?3:1,1,1,16,8][b]??-7;
+      }
       case 'window_acquire':
         if (!Number.isInteger(a) || a < 0 || a > 16 || this.windows.size >= 8) return -3;
         this.windows.set(this.next, { data: Array(a).fill(42), length: 0, busy: false });

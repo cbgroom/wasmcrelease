@@ -1,0 +1,30 @@
+package local:negotiated_host;
+interface host {
+  describe: func(endpoint:s32, field:s32) -> s32;
+  window_acquire: func(size:s32, unused:s32) -> s32;
+  window_commit: func(window:s32, length:s32) -> s32;
+  invoke: func(endpoint:s32, window:s32) -> s32;
+  wait: func(operation:s32, unused:s32) -> s32;
+  cancel: func(operation:s32, unused:s32) -> s32;
+  release: func(resource:s32, unused:s32) -> s32;
+}
+interface api {
+  run: func(length:s32) -> s32 {
+    if (length < 0) { return -5; }
+    if (describe(1,0) != 3) { return -7; }
+    if (describe(1,1) != 1) { return -7; }
+    let features:s32 = describe(1,2);
+    if (features < 0) { return -7; }
+    if ((features & 1) != 1) { return -7; }
+    if (describe(1,3) < length) { return -7; }
+    if (describe(1,4) < 1) { return -7; }
+    let w:s32 = window_acquire(length,0);
+    let committed:s32 = window_commit(w,length);
+    let op:s32 = invoke(1,w);
+    let count:s32 = wait(op,0);
+    let r1:s32 = release(op,0);
+    let r2:s32 = release(w,0);
+    return count + committed + r1 + r2;
+  }
+}
+world app { import host; export api; }

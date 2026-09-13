@@ -1,7 +1,7 @@
 use super::Host;
 use wasmtime::{Caller, Config, Engine, Linker, Module, Store};
 
-pub fn run(path: &str) -> Vec<Vec<i64>> {
+pub fn run(path: &str, host: Host) -> Vec<Vec<i64>> {
     let mut config = Config::new();
     config.consume_fuel(true);
     let engine = Engine::new(&config).unwrap();
@@ -26,20 +26,16 @@ pub fn run(path: &str) -> Vec<Vec<i64>> {
             )
             .unwrap();
     }
-    let mut store = Store::new(
-        &engine,
-        Host {
-            next: 100,
-            ..Host::default()
-        },
-    );
+    let mut store = Store::new(&engine, host);
     store.set_fuel(100_000).unwrap();
     let instance = linker.instantiate(&mut store, &module).unwrap();
     let run = instance
         .get_typed_func::<i32, i32>(&mut store, "run")
         .unwrap();
     let mut rows = Vec::new();
-    for size in [0, 1, 4, 16] {
+    let fault = store.data().description_override.is_some();
+    let sizes = if fault { vec![4] } else { vec![0, 1, 4, 16] };
+    for size in sizes {
         store.set_fuel(100_000).unwrap();
         let result = run.call(&mut store, size).unwrap();
         let mut row = vec![
@@ -48,6 +44,9 @@ pub fn run(path: &str) -> Vec<Vec<i64>> {
             store.data().ops.len() as i64,
         ];
         row.extend(&store.data().bytes);
+        if fault {
+            row.push(store.data().effect_calls);
+        }
         rows.push(row);
     }
     rows
