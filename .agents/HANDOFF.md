@@ -2,7 +2,13 @@
 
 ## 0. Status
 
-Active source line: work/host-native-binary-only. Task state: local proof complete;
+Active source line: work/host-udp-write-retirement. Task state: local proof complete;
+UDP read termination now rejects an issued send instead of closing its socket.
+Original implementation reproduced closing before send acknowledgement. Twelve
+controlled send/retirement cases pass Node/Bun/permission-free Deno, plus real
+UDP8messages and11fault controls. Snapshot retained through callback; release
+waits close ack and only explicit close retirement retries. No send replay or
+OS/native async fault claim. See host/udp/RETIREMENT.md. Exact CI/main pending.
 Default Wasmi reference omits only WAT parsing, preserving stable/std/validate/
 memory64/auto-dispatch and fuel. Binary acceptance plus text/malformed rejection
 tests pass with default and optional engine:8Rust controls, strict Clippy, real

@@ -71,10 +71,13 @@ jobs:
           deno run --allow-read=standard/corelib,current,host/corelib-io host/corelib-io/snapshot-test.mjs
           node host/udp/test.mjs
           node host/udp/fault-test.mjs
+          node host/udp/retirement-test.mjs
           bun host/udp/test.mjs
           bun host/udp/fault-test.mjs
+          bun host/udp/retirement-test.mjs
           deno run --allow-net=127.0.0.1 --allow-read=current,host/lib-e2e,libs/wasmc-owned-algorithms host/udp/test.mjs
           deno run --allow-net=127.0.0.1 host/udp/fault-test.mjs
+          deno run host/udp/retirement-test.mjs
           node host/tcp/server-test.mjs --js-only
           bun host/tcp/server-test.mjs --js-only --diagnose
           deno run --allow-net=127.0.0.1 --allow-read=current,host/lib-e2e,libs/wasmc-owned-algorithms --allow-write=target/host-tcp-app host/tcp/server-test.mjs --js-only
@@ -116,6 +119,7 @@ jobs:
       - run: node host/tcp/supervisor-test.mjs
       - run: node host/udp/test.mjs
       - run: node host/udp/fault-test.mjs
+          node host/udp/retirement-test.mjs
       - name: Independent process startup identity
         shell: bash
         run: |
@@ -210,8 +214,10 @@ jobs:
           udp=host/lib-e2e/rust/target/release/udp-server-reference
           bun host/udp/test.mjs
           bun host/udp/fault-test.mjs
+          bun host/udp/retirement-test.mjs
           deno run --allow-net=127.0.0.1 --allow-read=current,host/lib-e2e,libs/wasmc-owned-algorithms host/udp/test.mjs
           deno run --allow-net=127.0.0.1 host/udp/fault-test.mjs
+          deno run host/udp/retirement-test.mjs
           bun host/udp/native-test.mjs "$udp"
           deno run --allow-net=127.0.0.1 --allow-read=current,host/lib-e2e,libs/wasmc-owned-algorithms --allow-write=target/host-udp --allow-env=NODE_V8_COVERAGE --allow-run="$udp" host/udp/native-test.mjs "$udp"
           bun host/corelib-io/test.mjs "$core"
@@ -302,7 +308,7 @@ jobs:
         env:
           SOURCE: ${{ github.sha }}
         run: |
-          printf '%s\n' "Source $SOURCE; $RUNNER_OS/$RUNNER_ARCH; 76 guard transitions, 10 fault controls, 15 guard/owner Rust tests, 40000 scoped and supervisor cycles, 8 binary-contract/TCP/UDP/listener Rust tests, Native-peer half-close reply proof, 8-process identity, 20 file/App/Lib cases, 8 TCP/Lib pairs, 4 read-stop pairs with 9 controls, 19 resident App/Lib server connections, 1000 resident calls per engine and 8 listener controls; UDP8messages/5calls/3rejects plus11JScontrols; file read8/write7, stream7/buffer10/Core-packing7/malformed-completion6plus1realTCP controls; Bun JS-client half-close is separate characterization, not positive parity; guest trap poisons with no replay, not guest async ABI or generic failed-shutdown qualification" >> "$GITHUB_STEP_SUMMARY"
+          printf '%s\n' "Source $SOURCE; $RUNNER_OS/$RUNNER_ARCH; 76 guard transitions, 10 fault controls, 15 guard/owner Rust tests, 40000 scoped and supervisor cycles, 8 binary-contract/TCP/UDP/listener Rust tests, Native-peer half-close reply proof, 8-process identity, 20 file/App/Lib cases, 8 TCP/Lib pairs, 4 read-stop pairs with 9 controls, 19 resident App/Lib server connections, 1000 resident calls per engine and 8 listener controls; UDP8messages/5calls/3rejects plus11JScontrols/12controlled-retirement-controls; file read8/write7, stream7/buffer10/Core-packing7/malformed-completion6plus1realTCP controls; Bun JS-client half-close is separate characterization, not positive parity; guest trap poisons with no replay, not guest async ABI or generic failed-shutdown qualification" >> "$GITHUB_STEP_SUMMARY"
   browser:
     strategy:
       fail-fast: false

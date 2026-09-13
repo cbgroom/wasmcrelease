@@ -1,6 +1,6 @@
 // Trusted already-bound IPv4 loopback socket + fixed peer; no guest addresses.
 export class PreauthorizedDatagram {
-  #socket;#peer;#writable;#busy=false;#stopped=false;#closing=false;
+  #socket;#peer;#writable;#busy=false;#reading=false;#stopped=false;#closing=false;
   #queue=[];#error=0;#wake;#closed;#closeSeen=false;
   constructor(socket,peer,writable=true) {
     if(peer?.address!=='127.0.0.1'||!Number.isInteger(peer.port)||peer.port<1||peer.port>65535||typeof writable!=='boolean')throw -5;
@@ -17,7 +17,7 @@ export class PreauthorizedDatagram {
   }
   #check(){if(!this.#socket)throw -1;if(this.#busy)throw -4;if(this.#stopped||this.#closeSeen)throw -1;if(this.#error)throw this.#error;}
   async read() {
-    this.#check();this.#busy=true;
+    this.#check();this.#busy=true;this.#reading=true;
     try {
       return await new Promise((resolve,reject)=>{
         this.#wake=()=>{
@@ -27,7 +27,7 @@ export class PreauthorizedDatagram {
           if(message.error)reject(message.error);else resolve(message.bytes);
         };this.#wake();
       });
-    } finally {this.#wake=undefined;this.#busy=false;}
+    } finally {this.#wake=undefined;this.#reading=false;this.#busy=false;}
   }
   async write(data) {
     if(!Array.isArray(data))throw -5;
@@ -39,6 +39,6 @@ export class PreauthorizedDatagram {
     catch{throw -9;}finally{this.#busy=false;}
   }
   #close(){if(!this.#closing&&!this.#closeSeen){this.#closing=true;try{this.#socket.close();}catch(error){this.#closing=false;throw error;}}return this.#closed;}
-  terminateRead(){if(!this.#socket)throw -1;this.#stopped=true;return this.#close();}
+  terminateRead(){if(!this.#socket)throw -1;if(this.#busy&&!this.#reading)throw -4;this.#stopped=true;return this.#close();}
   async release(){if(!this.#socket)throw -1;if(this.#busy)throw -4;this.#stopped=true;this.#busy=true;try{await this.#close();this.#socket=null;this.#queue=[];return 0;}finally{this.#busy=false;}}
 }
