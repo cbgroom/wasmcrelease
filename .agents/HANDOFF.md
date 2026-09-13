@@ -2,7 +2,8 @@
 
 ## 0. Status
 
-Active source line: work/host-corelib-bytes-io. Task state: started.
+Active source line: work/host-corelib-bytes-io. Task state: local JS proof complete;
+Native and exact CI/main acceptance remain pending.
 Objective: restricted settled file bytes -> exact existing CoreLib Provider ->
 reviewed WAsmC/Rust physical-ABI conformance callers -> verified output.
 Use producer authority and published signatures, never guess opaque ABI or
@@ -10,8 +11,11 @@ rebuild compiler/provider. Raw references stay in curated private-ABI fixtures,
 not Agent-facing SDK. Plan: local JS proof, Native parity, fault/cleanup controls,
 exact milestone CI then main acceptance. No new Host syscall or language memory
 model, std artifact substitute, product tag or production SDK claim. Resume:
-implement host/corelib-io using provider digest from examples/current/standard.mjs.
-and handoff consolidation. Resolve exact revisions with Git; inspect
+continue Native parity from host/corelib-io/README.md. Local Node/Bun/restricted
+Deno each passed 8 real file cases and 10 ownership/cancel/trap controls, zero
+Core objects remaining. Typed i64 canonical intermediates avoid a confirmed
+frozen compiler derived-expression comparison defect; not a producer fix.
+Resolve exact revisions with Git; inspect
 status/worktrees before editing and preserve unrelated changes. Linked worktrees
 belong under /Users/youxianshi/code/.worktrees/wasmcrelease.
 

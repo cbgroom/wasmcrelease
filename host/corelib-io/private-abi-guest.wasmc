@@ -1,0 +1,34 @@
+// Curated physical-ABI conformance fixture, NOT Agent-facing raw-handle API.
+package local:core_bytes_conformance;
+interface heap {
+  type_bytes: func() -> i64;
+  bytes_len: func(reference:i64, typehandle:i64) -> i64;
+  bytes_byte_at: func(reference:i64, typehandle:i64, index:s32) -> i64;
+}
+interface api {
+  run: func(reference:i64, fail:s32) -> i64 {
+    let typehandle:i64 = type_bytes();
+    let zero:i64 = 0;
+    let envelope:i64 = bytes_len(reference,typehandle);
+    let status:i64 = envelope >> 32;
+    if (status != zero) { return -8; }
+    let length:i64 = envelope;
+    let cursor:i64 = 0;
+    let index:s32 = 0;
+    let total:i64 = 0;
+    while (cursor < length) {
+      let item:i64 = bytes_byte_at(reference,typehandle,index);
+      let itemstatus:i64 = item >> 32;
+      if (itemstatus != zero) { return -8; }
+      total = total + (item & 255);
+      index = index + 1;
+      cursor = cursor + 1;
+    }
+    if (fail != 0) {
+      let divisor:i64 = total - total;
+      return total / divisor;
+    }
+    return total;
+  }
+}
+world app { import heap; export api; }

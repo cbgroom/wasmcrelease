@@ -1,0 +1,65 @@
+# CoreLib-owned bytes + actual file I/O conformance
+
+This is reviewed private physical-ABI integration reference code, **not an
+application SDK or a general grant to untrusted modules**. Only the two curated
+callers in this directory may be linked here. Their `heap` import whitelist
+checks names/kinds, not full hostile-module safety or digest authorization.
+Agent applications continue to use typed semantic APIs/generated bindings;
+they must not discover, construct or pass these private raw references.
+
+The Host preopens the input read-only and output writable. Guest paths are not
+accepted. A successful settled read and acknowledged file close precede creating
+CoreLib-owned bytes. CoreLib stores/allocates the bytes; the WAsmC/Rust App reads
+them through the same three scalar/handle imports and performs the sum. The
+Host writes the resulting eight-byte little-endian integer and syncs the file.
+The Host does not implement the algorithm. No new Host operation or language
+memory model is introduced, and no compiler/provider artifact is rebuilt.
+
+Provider: `standard/corelib/4.8.0/corelib.wasm`, SHA-256
+`f54a892aff9068e5c79464029423a2e8f753ddb44010af9ac34a5c9efce2069c`.
+Opaque i64 references/type handles may be negative; zero is failure. Value
+envelopes use high 32 bits for status, low 32 bits for the payload. Do not
+confuse handle sign with success/error or expose this carrier as semantic API.
+Provider identity is fixed by digest, not inferred from version ordering.
+
+## Reproduce locally
+
+From the repository root (installed Rust wasm32 target required):
+
+```sh
+mkdir -p target/corelib-io
+rustc --edition=2024 --crate-type=cdylib --target=wasm32-unknown-unknown -O -D warnings -C panic=abort host/corelib-io/private-abi-guest.rs -o target/corelib-io/rust-guest.wasm
+node host/corelib-io/test.mjs
+bun host/corelib-io/test.mjs
+deno run --allow-read=current,host/corelib-io,standard/corelib,target/corelib-io --allow-write=target/corelib-io host/corelib-io/test.mjs
+```
+
+Rust compilation uses local rustc CLI, not Cargo or a remote service. The WAsmC
+caller is compiled with the frozen current facade, and full-module validation
+is mandatory before instantiation. Temporary test files are isolated beneath
+`target/corelib-io`, removed in finally; no repository-wide cleanup occurs.
+
+Each engine checks eight successful real input/output cases across two callers
+and ten controls: cancelled read settles without allocating/calling the App,
+oversize allocation rejects, foreign Provider caller rejects before dispatch,
+trap releases the read-only Core object and poisons the App, poisoned App does
+not replay. Every dropped reference is rejected by CoreLib and the wrapper.
+Pre-existing output is not touched by these non-output controls. Failed close,
+async Core borrow retention and hostile code are outside this narrow fixture;
+the existing supervised failed-stop path remains required for uncertain I/O.
+
+## Scope and next acceptance
+
+Local Node/Bun/restricted Deno proof is not Native or cross-platform qualification.
+Next: independent Wasmi/optional Wasmtime file-chain parity, fault/resource
+receipts, exact-source CI, then main acceptance. This is a packing/copy profile,
+not shared linear memory, zero-copy windows, portable Std qualification, or a
+release. Std1.4.0 still requires function references/tail calls; using its exact
+CoreLib Provider alone does not repair that unrelated compatibility gap.
+
+Known frozen compiler defect: comparison of a derived i64 expression against an
+untyped zero can emit an invalid i32 comparison. The reviewed caller uses an
+explicitly typed i64 intermediate and typed zero instead. Explicit `as s32` /
+`as i64` conversions are not admitted here; use the existing canonical source
+surface, not a hidden compiler capability. This workaround is not a compiler
+fix; preserve the defect as a producer-side follow-up before claiming closure.
