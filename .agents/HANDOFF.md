@@ -2,8 +2,8 @@
 
 ## 0. Status
 
-Task state: qualified for main — public offline Lib discovery and exact resolution.
-Branch: feat/public-lib-catalog. Public v0.0.9 is already released;
+Task state: started — pinned public Lib download/install.
+Branch: feat/public-lib-install. Public v0.0.9 is already released;
 immutable tag and release branch remain unchanged. Main may carry follow-up
 consumer tooling/docs, not new admitted compiler or Lib binaries.
 
@@ -27,6 +27,14 @@ results cover their named Hosts, not Node18 or every future engine version.
 Current/ owns current compiler entrances; dist/package/libs are frozen v0.0.4.
 
 ## 4. Plan and Validation
+
+Implement caller-pinned lock-file installation from fixed exact-source HTTPS
+mirrors. Share exact catalog selection; verify all files/companion before atomic
+no-clobber symlink publication. Private staging cleanup on failure, no fallback,
+redirect, automatic engine admission or Host grant. Unix Node/Bun/Deno only.
+Use controlled fault fixtures, concurrent install rejection and fresh public
+downloads with installed standard execution. No binary rebuild or Cargo pool.
+Resume: own START push, then narrow install implementation/tests/docs and CI.
 
 Add a finite approved catalog of existing immutable v0.0.9 packages; discovery
 is not selection authority. Resolve only caller-pinned catalog/WIT/artifact
