@@ -320,3 +320,13 @@ test outputs under ignored target/; preserve unrelated worktrees and caches.
 Independent exact-artifact reproduction, proven feature diagnosis, deterministic
 compatibility rejection before instantiation, digest/negative tests and clear
 public instructions. Start/partial checkpoints do not imply completed work.
+# Host + published Lib E2E START
+
+Own branch work/host-lib-e2e, based on previous accepted public main (resolve
+Git ancestry). Real preopened file read, bounded staging, same WAsmC App and
+immutable owned-algorithms Core Lib in JS/Wasmi, then explicit write/sync.
+Independent bytes oracle, readonly denial and trap-before-flush controls.
+Host scheduled I/O phases, not a completed guest async/resource ABI. No private
+compiler changes, product mutation, new primitive, networking or old tag move.
+START precedes implementation. Qualify local and actual public Actions before
+normal expected-base main advancement. Existing five-gate Host scope unchanged.
