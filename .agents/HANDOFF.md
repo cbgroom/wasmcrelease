@@ -2,8 +2,11 @@
 
 ## 0. Status
 
-Active source line: work/host-endpoint-retirement. Task state: local lifecycle
-controls and real TCP regressions passed; exact CI/main acceptance pending.
+Active source line: work/host-driver-retirement. Task state: started.
+Objective: ordinary TCP driver close failure must enter owner quarantine before
+resource retirement; preserve primary outcome and no replay, handle already
+drained completion on explicit retirement. Endpoint-retirement local controls
+and real TCP regressions passed; exact CI/main acceptance pending.
 Ordinary File/TCP release now retains its endpoint until verified
 close acknowledgement; pending/failed close denies new business I/O and only
 explicit retirement may retry close. Not whole-driver quarantine SDK closure.
