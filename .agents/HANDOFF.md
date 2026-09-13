@@ -2,7 +2,7 @@
 
 ## 0. Status
 
-Task state: qualifying — production LibSearch and staged publication.
+Task state: qualified products — dev/main published; resolve prod state remotely.
 Branch: release/lib-search-v010. Public v0.0.9 is already released;
 immutable tag and release branch remain unchanged. Main may carry follow-up
 consumer tooling/docs, not new admitted compiler or Lib binaries.
@@ -20,7 +20,11 @@ dev -> main -> suffix-free prod identities. Policy is docs/RELEASE_CHANNELS.md.
 The new Lib root is imported from the clean pushed private authority recorded
 in admission/lib-search-v010.json. Private producer remains build authority;
 the public tree contains only verified products and public comparison corpus.
-No new version tag has been published yet.
+dev/main prerelease tags are published with unchanged products. This tree holds
+final prod metadata. Resolve publication from remote tag peel, GitHub Release
+and origin/main rather than treating candidate metadata as proof. If all agree
+and both exact-candidate workflows pass, publication is complete; otherwise
+resume qualification/promotion without moving tags or rebuilding products.
 Plan: portable formal API/Component/SDK tests, all negative controls, exact-source
 product provenance, public source-free CI comparison and stage-aware promotion.
 No compiler rebuild here; do not move v0.0.9 or make dev/main default prod.
@@ -82,8 +86,11 @@ including ASCII-only folding, non-ASCII whitespace and bounded u32 paging;
 each also completes11000 resident calls with18 memory pages. Typed client passes.
 New lib-search workflow covers10 JS OS/runtime cells, actual Wasmi Core and
 generated Rust Component SDK in release profile; full CI also checks immutable
-product inventory and12 promotion negatives. dev publication/main/prod are
-pending exact public CI. Product identity is channels/candidates/0.0.10.json,
+product inventory and12 promotion negatives. dev/main products are accepted by
+both complete exact-source runs in channels/main.json and eligible for prod.
+Publication requires final-candidate gates and fresh tag/main checks; inspect
+live runs at this tree's exact Git source and verify the immutable public tag.
+Product identity is channels/candidates/0.0.10.json,
 not the root's default-prod discovery version. All parent Skills now exist.
 
 Agent guidance branch has full successful source-free CI run34740318776 at its

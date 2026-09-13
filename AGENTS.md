@@ -3,9 +3,9 @@
 This source-free compiler repository publishes a standard Core Wasm compiler,
 Lib packages, a package-manager-free Runtime/Registry bootstrap, and the
 public `wasmc-core-runtime` Rust SDK. The current immutable release is
-`v0.0.9`; pin that tag or its full commit for reproducible use. Supplemental
-catalog/compatibility tooling is on later `main` commits, not inside that tag;
-pin its full commit separately and verify its checksums.
+`v0.0.10`; pin that tag or its full commit for reproducible use. This release
+includes compatibility admission, pinned resolve/install and the ordinary
+embedded-index LibSearch. See [release scope](docs/RELEASE_V010.md).
 
 ## Start here
 
@@ -28,14 +28,14 @@ const instance = await WebAssembly.instantiate(inspected.module, {});
 console.log(instance.exports.run(5, 6)); // 17
 ```
 
-## v0.0.9 capability contract
+## v0.0.10 capability contract
 
 | Task | Status | Canonical path |
 |---|---|---|
 | Package-manager-free compile/self-test on Node/Deno/Bun | shipped; Node+Bun+Deno same-candidate evidenced | [runtime/README.md](runtime/README.md), `runtime/wasmc-runtime-v0` |
 | Scalars, control flow, private functions, WIT values | shipped | [LANGUAGE.md](LANGUAGE.md) |
 | Managed String/List/Map/record applications | shipped through matching Lib | [LIB.md](LIB.md), `instantiateLib` |
-| Discover Libs, resolve exact bytes and pinned download/install | supplemental main tools | [catalog/README.md](catalog/README.md), [installation](catalog/INSTALL.md) |
+| Embedded Wasm package/API search; exact resolve and pinned install | shipped; search is not selection authority | [LibSearch](examples/lib-search/README.md), [catalog](catalog/README.md), [installation](catalog/INSTALL.md) |
 | Public third-party Lib build/publish | not closed | do not infer availability from authoring documentation |
 | WIT resources, constructors, receiver methods | shipped Component profile | `libs/wasmc-resource-counter` |
 | Explicit synchronous scalar Host imports | shipped; exact allowlist | `libs/wasmc-host-clock` |
@@ -45,7 +45,7 @@ console.log(instance.exports.run(5, 6)); // 17
 | signing, auto-update, ambient filesystem/network/device access | not provided | application/publisher authority |
 
 The v0.0.4 `dist/`, `package/`, and `libs/` compatibility trees remain
-byte-for-byte frozen. v0.0.9 publishes current compiler facades and standard
+byte-for-byte frozen. v0.0.10 reuses the qualified compiler facades and standard
 Lib1.4.0 with its matching CoreLib4.8 companion. Engine compatibility is
 artifact-specific: read [compatibility/README.md](compatibility/README.md)
 before treating compiler success as standard-Lib or managed Host support.
@@ -58,7 +58,7 @@ before treating compiler success as standard-Lib or managed Host support.
 - `current/index.mjs`: sidecar facade with sibling compiler and matching CoreLib.
 - `standard/wasmc-std/1.4.0/`: current WIT standard Lib and generated Rust bindings.
 - `standard/corelib/4.8.0/`: matching standard Lib CoreLib companion.
-- `standard/wasmc-lib-search/0.1.0/`: independently admitted embedded-index Lib in the new candidate tree, not immutable v0.0.9. Start with [its executable guide](examples/lib-search/README.md); `node scripts/wasmc-lib.mjs search "base64"` executes this Lib. See [dev/main/prod status policy](docs/RELEASE_CHANNELS.md).
+- `standard/wasmc-lib-search/0.1.0/`: independently admitted embedded-index Lib. Start with [its executable guide](examples/lib-search/README.md); `node scripts/wasmc-lib.mjs search "base64"` executes this Lib. See [dev/main/prod status policy](docs/RELEASE_CHANNELS.md).
 - `libs/*/`: frozen historical qualification Libs, not the current standard Lib.
 - `examples/rust-wasmtime/`: locked executable reference project, not an SDK.
 - `runtime/wasmc-runtime-v0/`: current `compiler.wasm` plus thin universal/Node/Bun/Deno Host adapters; no npm or external JS registry.
@@ -67,7 +67,7 @@ before treating compiler success as standard-Lib or managed Host support.
 Inspect every generated import and bind only reviewed Host functions. Never expose private handles, plans, Store nonces, lifecycle helpers, or JSON invented as a WIT replacement.
 
 ```text
-https://cdn.jsdelivr.net/gh/cbgroom/wasmcrelease@v0.0.9/<PATH>
+https://cdn.jsdelivr.net/gh/cbgroom/wasmcrelease@v0.0.10/<PATH>
 ```
 
 Verify files against `SHA256SUMS`, `manifest.json`, and `release.json`. `main`, unversioned URLs, and `package-index.json.latest` are mutable discovery state.

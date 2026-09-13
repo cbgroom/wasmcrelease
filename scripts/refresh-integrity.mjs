@@ -111,6 +111,9 @@ const materials = [
   { uri: 'git-tree', digest: { gitTree: releaseJson.source_tree }, role: `${releaseJson.tag}-integrated-private-tree` },
 ];
 const provenance = {
+  lib_source_authority: releaseJson.lib_source_authority ?? null,
+  staged_product_manifest: releaseJson.staged_product_manifest ?? null,
+  staged_qualification: releaseJson.staged_qualification ?? null,
   schema_version: 1,
   predicate_type: 'wasmc.public-release.provenance/v1',
   builder: { node: process.version, machine: arch(), system: platform(), release: osRelease() },
