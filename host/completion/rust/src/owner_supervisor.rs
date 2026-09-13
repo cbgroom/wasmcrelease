@@ -12,6 +12,13 @@ pub struct OwnerTicket {
     identity: BindingIdentity,
     local: u16,
 }
+/// Host-only observation: never publishes otherwise suppressed read bytes.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct FailureObservation {
+    pub primary: i32,
+    pub retirement: Option<i32>,
+    pub invalid_completion: bool,
+}
 struct Owner<E> {
     endpoint: E,
     guard: ScopedCompletionGuard,
@@ -19,6 +26,7 @@ struct Owner<E> {
     operation: ScopedToken,
     quarantined: bool,
     capacity: usize,
+    failure: Option<FailureObservation>,
 }
 pub struct NativeOwnerSupervisor<E> {
     identity: BindingIdentity,
@@ -79,6 +87,7 @@ impl<E: QuarantineEndpoint> NativeOwnerSupervisor<E> {
                 operation,
                 quarantined: false,
                 capacity: size as usize,
+                failure: None,
             },
         );
         Ok(ticket)
@@ -112,6 +121,12 @@ impl<E: QuarantineEndpoint> NativeOwnerSupervisor<E> {
             return Err(-2);
         }
         if bytes.len() > owner.capacity || error > 0 {
+            owner.failure = Some(FailureObservation {
+                primary: -5,
+                retirement: None,
+                invalid_completion: true,
+            });
+            self.quarantine_settled(ticket)?;
             return Err(-5);
         }
         if let Err(code) = owner
@@ -119,6 +134,11 @@ impl<E: QuarantineEndpoint> NativeOwnerSupervisor<E> {
             .acknowledge_close()
             .and_then(|()| owner.endpoint.retire())
         {
+            owner.failure = Some(FailureObservation {
+                primary: error,
+                retirement: Some(code),
+                invalid_completion: false,
+            });
             self.quarantine_settled(ticket)?;
             return Err(code);
         }
@@ -155,6 +175,12 @@ impl<E: QuarantineEndpoint> NativeOwnerSupervisor<E> {
     }
     pub fn resource_counts(&self, ticket: OwnerTicket) -> Result<[usize; 2], i32> {
         Ok(self.owners[&self.local(ticket)?].guard.counts())
+    }
+    pub fn failure_observation(
+        &self,
+        ticket: OwnerTicket,
+    ) -> Result<Option<FailureObservation>, i32> {
+        Ok(self.owners[&self.local(ticket)?].failure)
     }
     /// Exclusive &mut prevents overlapping retirement. Never reissues I/O.
     pub fn retire_quarantine(&mut self, ticket: OwnerTicket) -> Result<(), i32> {
@@ -291,8 +317,12 @@ mod tests {
         let t = admit(&mut s);
         assert_eq!(s.finish_settled(t, &[1; 17], 0), Err(-5));
         assert_eq!(s.resource_counts(t), Ok([1, 1]));
-        s.endpoint_mut(t).unwrap().closed = true;
-        assert_eq!(s.finish_settled(t, &[7], 0), Ok(vec![7]));
+        assert_eq!(s.counts(), [0, 1]);
+        assert!(matches!(s.endpoint_mut(t), Err(-2)));
+        assert_eq!(s.finish_settled(t, &[7], 0), Err(-2));
+        let local = s.local(t).unwrap();
+        s.owners.get_mut(&local).unwrap().endpoint.closed = true;
+        s.retire_quarantine(t).unwrap();
         assert_eq!(s.counts(), [0, 0]);
         let t = admit(&mut s);
         assert_eq!(s.finish_settled(t, &[7], 0), Err(-8));
@@ -303,5 +333,57 @@ mod tests {
         s.owners.get_mut(&local).unwrap().endpoint.closed = true;
         s.retire_quarantine(t).unwrap();
         assert_eq!(s.counts(), [0, 0]);
+    }
+    #[test]
+    fn failed_settled_completion_observes_primary_and_close_without_replay() {
+        for (bytes, error, expected, code) in [
+            (
+                vec![1; 17],
+                0,
+                FailureObservation {
+                    primary: -5,
+                    retirement: None,
+                    invalid_completion: true,
+                },
+                -5,
+            ),
+            (
+                vec![7],
+                1,
+                FailureObservation {
+                    primary: -5,
+                    retirement: None,
+                    invalid_completion: true,
+                },
+                -5,
+            ),
+            (
+                vec![],
+                -9,
+                FailureObservation {
+                    primary: -9,
+                    retirement: Some(-8),
+                    invalid_completion: false,
+                },
+                -8,
+            ),
+        ] {
+            let mut s = NativeOwnerSupervisor::new(1).unwrap();
+            let ticket = admit(&mut s);
+            assert_eq!(s.finish_settled(ticket, &bytes, error), Err(code));
+            assert_eq!(s.failure_observation(ticket), Ok(Some(expected)));
+            assert_eq!(s.counts(), [0, 1]);
+            assert_eq!(s.resource_counts(ticket), Ok([1, 1]));
+            assert!(matches!(s.endpoint_mut(ticket), Err(-2)));
+            assert_eq!(s.finish_settled(ticket, &[7], 0), Err(-2));
+            let foreign = NativeOwnerSupervisor::<Endpoint>::new(1).unwrap();
+            assert_eq!(foreign.failure_observation(ticket), Err(-1));
+            assert_eq!(s.retire_quarantine(ticket), Err(-8));
+            let local = s.local(ticket).unwrap();
+            s.owners.get_mut(&local).unwrap().endpoint.closed = true;
+            s.retire_quarantine(ticket).unwrap();
+            assert_eq!(s.counts(), [0, 0]);
+            assert_eq!(s.failure_observation(ticket), Err(-1));
+        }
     }
 }

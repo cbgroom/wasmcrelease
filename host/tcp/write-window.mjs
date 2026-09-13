@@ -1,7 +1,7 @@
 // Consumes one exclusive endpoint. Result is trusted Host state, not guest ABI.
 import {requestTcpStop,requireTcpStop,TcpStopFailure} from './stop-fence.mjs';
 export async function writeTcpWindow(input,guard,data,{signal,deadlineMs=1000}={}) {
-  let window,operation,timer,closed,result,cleanupError,quarantine,stopped=false;
+  let window,operation,timer,closed,result,failure,quarantine,stopped=false;
   const stop=()=>{
     if(stopped) return;stopped=true;
     if(operation!==undefined) guard.cancel(operation);
@@ -26,19 +26,21 @@ export async function writeTcpWindow(input,guard,data,{signal,deadlineMs=1000}={
       if(closed) await requireTcpStop(closed,{input,guard,operation,window},result);
       guard.complete(operation,[],error);
     }
-  } catch(cause) {if(cause instanceof TcpStopFailure) quarantine=cause;else throw cause;}
+  } catch(cause) {if(cause instanceof TcpStopFailure) quarantine=cause;else failure=cause;}
   finally {
     clearTimeout(timer);if(signal instanceof AbortSignal) signal.removeEventListener('abort',stop);
     if(closed&&!quarantine) {
       try {await requireTcpStop(closed,{input,guard,operation,window},result);} catch(cause) {quarantine=cause;}
     }
     if(!quarantine) {
+      try {await input.release();} catch(cause) {quarantine=new TcpStopFailure({input,guard,operation,window},cause,failure??result);}
+    }
+    if(!quarantine) {
       if(operation!==undefined) guard.release(operation);
       if(window!==undefined) guard.release(window);
-      try {await input.release();} catch(cause) {cleanupError=cause;}
     }
   }
   if(quarantine) throw quarantine;
-  if(cleanupError!==undefined) result={...result,cleanup_error:cleanupError};
+  if(failure!==undefined) throw failure;
   return result;
 }

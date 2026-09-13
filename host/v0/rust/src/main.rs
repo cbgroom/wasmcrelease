@@ -23,6 +23,8 @@ struct Host {
     bytes: Vec<i64>,
     description_override: Option<(i64, i64)>,
     effect_calls: i64,
+    fail_before: Option<(String, i64)>,
+    probe: bool,
 }
 impl Host {
     fn fixture() -> Self {
@@ -34,15 +36,40 @@ impl Host {
             assert!((0..=4).contains(&field));
             Some((i64::from(field), i64::from(value)))
         });
-        Self {
+        let fail_before = std::env::args().find_map(|arg| {
+            let text = arg.strip_prefix("--fail-before=")?;
+            let (name, code) = text
+                .split_once(':')
+                .expect("trusted failure fixture format");
+            assert!(["window_acquire", "window_commit", "invoke", "wait"].contains(&name));
+            let code = code.parse::<i32>().expect("i32 error");
+            assert!(code < 0);
+            Some((name.to_owned(), i64::from(code)))
+        });
+        let preload = std::env::args().any(|arg| arg == "--preload-window-quota");
+        let mut host = Self {
             next: 100,
+            probe: description_override.is_some() || fail_before.is_some() || preload,
             description_override,
+            fail_before,
             ..Self::default()
+        };
+        if preload {
+            for _ in 0..8 {
+                assert!(host.step("window_acquire", 1, 0) > 0);
+            }
+            host.effect_calls = 0;
         }
+        host
     }
     fn step(&mut self, name: &str, a: i64, b: i64) -> i64 {
         if name != "describe" {
             self.effect_calls += 1;
+        }
+        if let Some((operation, code)) = &self.fail_before {
+            if name == operation {
+                return *code;
+            }
         }
         match name {
             "describe" => {
@@ -216,7 +243,7 @@ fn main() {
         let instance = linker.instantiate_and_start(&mut store, &module).unwrap();
         let run = instance.get_typed_func::<i32, i32>(&store, "run").unwrap();
         let mut rows = Vec::new();
-        let fault = store.data().description_override.is_some();
+        let fault = store.data().probe;
         let sizes = if fault { vec![4] } else { vec![0, 1, 4, 16] };
         for size in sizes {
             store.set_fuel(100_000).unwrap();

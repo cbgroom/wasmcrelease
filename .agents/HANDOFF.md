@@ -10,11 +10,13 @@ Native owner and Kernel exact acceptance is recorded in
 admission/host-native-kernel-qualification.json. Scoped lifetime is now accepted
 via admission/host-lifetime-qualification.json; Core negotiation now accepted
 via admission/host-negotiation-qualification.json. Half-close/quota/CoreLib
-file-chain and subsequent retirement/snapshot sources require own qualification.
+file-chain and retirement/snapshot source are accepted through
+admission/host-corelib-stream-qualification.json. Later quarantine/UDP/mobile
+sources require their own exact-source qualification.
 The historical sections referenced below retain their earlier evidence scope.
 
-Active source line: work/host-core-negotiation, following scoped lifetime and
-Kernel branches. Metadata consolidation: work/host-handoff-consolidation.
+Active later source lines: work/host-read-completion-quarantine,
+work/host-udp-endpoint and work/host-mobile-compile.
 Resolve exact revisions with Git; inspect
 status/worktrees before editing and preserve unrelated changes. Linked worktrees
 belong under /Users/youxianshi/code/.worktrees/wasmcrelease.
@@ -28,8 +30,26 @@ runs, independently read receipts and scope. Do not redo those implementations.
 Optional Wasmtime, benchmarks, failed-stop/error-path protection,
 real browser probes and bounded JS quarantine supervisor are accepted in main.
 Kernel, Native internal owner, scoped lifetime and negotiation are accepted.
-Later sources require independent acceptance; Bun/Linux frame regression at
-later CoreLib-bytes source must be resolved before accepting that candidate.
+Stream/CoreLib candidate passed both complete workflows and mandatory Linux fast.
+Early queued endpoint construction and persistent data ownership resolve the
+locally reproduced Bun/Linux header loss. Preserve historical failed evidence
+in host/tcp/linux-frame-regression.json. Removed readable experiment failed Deno.
+28 service pairs, 28 CoreLib file pairs and 28 lifetime pairs pass: each consumer
+100000 cycles, checksum14342320, warm CoreLib memory1310720bytes stable, earliest
+stale reference rejected. JS owners end empty; Native drops100000 per caller.
+File pairs cover eight real cases, ten JS controls and eight Native cases.
+Raw signed i64/status fixtures are private curated ABI, not typed Agent SDK or
+hostile admission. Frozen compiler derived i64 comparison remains defective;
+typed canonical intermediates are a workaround, not a producer fix.
+Seven stream and seven file-write snapshot controls pass. Snapshot bytes are
+captured before async I/O and completion lengths checked, never replayed.
+Native owner fifteen-test suites quarantine malformed settled completion;
+primary versus retirement failures retained. Four driver retirement controls
+plus real TCP and three endpoint controls retain refs until close acknowledgement.
+Only explicit retirement retries close. Generic guard-release faults and Native
+async/OS races remain outside scope. Native-peer half-close is positive; Bun
+JS-client half-close remains negative characterization. Bun/Deno setup ordering
+is corrected; older defective workflows cannot qualify this source.
 Never borrow an old-source PASS. No release/tag/deployment was performed.
 
 ## 1. North Star
@@ -114,8 +134,9 @@ Do not count locally completed slices as all-platform/full SDK completion.
 
 ## 6. Next Actions
 
-Next: inspect latest stream-snapshot candidate/Linux fast job, fix real frame
-regression locally while full CI runs. Prior accepted source needs no redo.
+Next: complete qualified stream/CoreLib integration. Independently inspect
+later quarantine/UDP/mobile exact runs and fix real failures locally. Earlier
+accepted sources need no redo.
 Accept relevant source only with exact receipts, merge current main metadata
 without discarding it, refresh integrity, then normal expected-base FF promotion.
 Continue typed Core transport/SDK and Native supervision parity afterwards.
@@ -125,7 +146,9 @@ Continue typed Core transport/SDK and Native supervision parity afterwards.
 Still unclosed: reviewed typed guest async/resource transport; full browser/
 Wasmtime adapter acceptance; Native failed-stop/race and blocked-write
 preemption; generic never-settling containment; Bun half-close response parity;
-TLS/device/system Lib integration; full performance/memory qualification and
+TLS/device/system Lib integration; full Std portable Wasmi/Node18 (Heap-only
+fixtures are not a substitute); mobile link/sign/install/device runtime;
+full performance/memory qualification and
 immutable Host SDK release. No unsafe API freeze or production claim.
 
 ## 8. Recovery

@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 import {PreconnectedTcp} from './adapter.mjs';
 import {readTcpWindow} from './read-window.mjs';
 import {ScopedCompletionGuard} from '../completion/scoped-guard.mjs';
+import {TcpStopFailure} from './stop-fence.mjs';
 const watchdog=setTimeout(()=>{console.error('TCP read-stop timeout');process.exit(1);},30000);
 async function run(mode,native) {
   const peers=new Set();let outputBytes=0;
@@ -55,9 +56,15 @@ controller.abort();assert.deepEqual(g.counts(),[1,1]);
 resolveRead([9]);await Promise.resolve();assert.deepEqual(g.counts(),[1,1]);
 closeAck=true;resolveClose();await assert.rejects(pending,e=>e===-6);assert.deepEqual(g.counts(),[0,0]);
 let controls=1;
-// Primary read error survives a later close failure; pin still drains.
-const failed=ScopedCompletionGuard.fresh();
-await assert.rejects(readTcpWindow({read:async()=>{throw -8;},release:async()=>{throw -9;}},failed),e=>e===-8);
+// Primary read error survives close failure; retain owners until explicit ack.
+const failed=ScopedCompletionGuard.fresh();let retained,closeCalls=0,readCalls=0;
+const failedInput={read:async()=>{readCalls++;throw -8;},release:async()=>{if(++closeCalls===1)throw -9;}};
+await assert.rejects(readTcpWindow(failedInput,failed),e=>{retained=e;return e instanceof TcpStopFailure&&e.primary===-8&&e.cause===-9;});
+assert.deepEqual(failed.counts(),[1,1]);assert.equal(failed.poll(retained.owner.operation).drained,true);
+assert.throws(()=>failed.acquire(1),e=>e===-2);
+await retained.owner.input.release(); // Controlled backend now acknowledges close.
+failed.release(retained.owner.operation);failed.release(retained.owner.window);
+assert.equal(readCalls,1);assert.equal(closeCalls,2);
 assert.deepEqual(failed.counts(),[0,0]);controls++;
 // Pre-aborted/revoked calls must not issue a read or allocate a window.
 for(const revoked of [false,true]) {

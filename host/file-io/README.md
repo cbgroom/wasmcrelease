@@ -55,6 +55,16 @@ Libs where existing external primitives suffice.
 
 ## In-flight access
 
+JS writes capture at most16 bytes before issuing I/O, reading each array index
+once. Caller mutation during a partial write cannot change subsequent bytes or
+the reported length. Each backend acknowledgement must be an integer in
+1..remaining; malformed acknowledgement reports -9 after possibly external
+effects, without replay. Partial-progress continuation writes only the remaining
+owned suffix. Local acknowledgement is not storage durability; sync is separate.
+Run `node host/file-io/write-snapshot-test.mjs` (also Bun/permission-free Deno)
+for seven mutation/getter/malformed-completion controls. These controlled seams
+are not OS fault/recovery qualification.
+
 The JS adapter rejects concurrent read/write/sync/release with busy (-4) until
 the issued operation settles. In particular, release cannot close a descriptor
 still used by I/O. Rust's exclusive mutable borrow supplies this serialization.

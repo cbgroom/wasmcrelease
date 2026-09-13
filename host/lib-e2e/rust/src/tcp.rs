@@ -54,6 +54,29 @@ mod tests {
     use super::*;
     use std::net::TcpListener;
     #[test]
+    fn read_eof_preserves_write_until_explicit_retirement() {
+        let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+        let mut client = TcpStream::connect(listener.local_addr().unwrap()).unwrap();
+        let (stream, _) = listener.accept().unwrap();
+        client
+            .set_read_timeout(Some(std::time::Duration::from_secs(1)))
+            .unwrap();
+        stream
+            .set_read_timeout(Some(std::time::Duration::from_secs(1)))
+            .unwrap();
+        let mut tcp = PreconnectedTcp::new(stream, true);
+        client.write_all(&[7, 8, 9]).unwrap();
+        client.shutdown(Shutdown::Write).unwrap();
+        assert_eq!(tcp.read(3), Ok(vec![7, 8, 9]));
+        assert_eq!(tcp.read(1), Ok(vec![]));
+        assert_eq!(tcp.write(&[24]), Ok(1));
+        tcp.release().unwrap();
+        let mut response = Vec::new();
+        client.read_to_end(&mut response).unwrap();
+        assert_eq!(response, [24]);
+        assert_eq!(tcp.write(&[24]), Err(-1));
+    }
+    #[test]
     fn native_supervisor_retires_real_tcp_only_after_close_ack() {
         use std::sync::{
             atomic::{AtomicBool, AtomicUsize, Ordering},

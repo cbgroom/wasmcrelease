@@ -41,4 +41,20 @@ if(negotiated)for(const [field,value] of [[0,1],[1,2],[2,0],[3,0],[4,0],[1,-7],[
   assert.equal(denied.windows.size,0);assert.equal(denied.ops.size,0);assert.deepEqual(denied.bytes,[]);denials++;
   assert.deepEqual(await native([`--describe-override=${field}:${value}`]),[[-7,0,0,0]]);
 }
-console.log(JSON.stringify({accepted:true,core_guest_cases:4,negotiated,preflight_denials:denials,guest_sha256:createHash('sha256').update(wasm).digest('hex'),resource_cleanup:true,engines:jit?'JS WebAssembly / Wasmtime47':'JS WebAssembly / Wasmi2',real_io:false}));
+let failureControls=0;
+if(negotiated)for(const [name,code,windows,operations,calls] of [['quota',-3,8,0,1],['window_acquire',-3,0,0,1],['window_commit',-5,0,0,3],['invoke',-3,0,0,4],['wait',-8,1,1,4]]) {
+  const state=new MemoryHost(),bound={};let effects=0;
+  if(name==='quota')for(let i=0;i<8;i++)state.step(['window_acquire',1,0]);
+  for(const operation of Object.keys(imports))bound[operation]=(a,b)=>{
+    if(operation!=='describe')effects++;
+    if(operation===name)return code;return state.step([operation,a,b]);
+  };
+  const {instance}=await WebAssembly.instantiate(wasm,{host:bound});
+  assert.equal(instance.exports.run(4),code);
+  assert.equal(state.windows.size,windows);assert.equal(state.ops.size,operations);
+  assert.equal(effects,calls);assert.deepEqual(state.bytes,[]);
+  if(name==='wait')assert.equal([...state.windows.values()][0].busy,true);
+  const args=name==='quota'?['--preload-window-quota']:[`--fail-before=${name}:${code}`];
+  assert.deepEqual(await native(args),[[code,windows,operations,calls]]);failureControls++;
+}
+console.log(JSON.stringify({accepted:true,core_guest_cases:4,negotiated,preflight_denials:denials,failure_controls:failureControls,unknown_completion_retained:negotiated,retained_resources_after_unknown_completion:negotiated?[1,1]:[],cleanup_scope:'successful_and_known_preissue_failures_excluding_preexisting_owners',guest_sha256:createHash('sha256').update(wasm).digest('hex'),resource_cleanup:true,engines:jit?'JS WebAssembly / Wasmtime47':'JS WebAssembly / Wasmi2',real_io:false}));
