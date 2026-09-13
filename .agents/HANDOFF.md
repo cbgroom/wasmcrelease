@@ -2,6 +2,17 @@
 
 ## 0. Status
 
+Focused three-journey iteration: real file vertical fixture now compiles the
+ordinary WAsmC caller, calls the admitted Lib, writes/syncs and independently
+checks disk output. Four positives plus cancelled/trap/readonly empty-output
+controls locally PASS on Node/Bun/Deno. Issued real read blocks release until
+actual settlement; post-trap guest cannot replay. Trusted embedding still
+initiates I/O: guest typed Core resource/Future and Rust/Native parity pending.
+Existing TCP service (19 connections/1000 resident calls), UDP (5 accepted/3
+rejected) and six injected failed-stop controls locally revalidated on Node.
+Actions adds nine exact-source file receipts; new candidate CI still pending.
+No new mechanism, compiler/provider binary, v1 acceptance or release promotion.
+
 Desktop milestone Actions 34771863772 completed all nine jobs PASS. Offline
 review of 21 downloaded component/JS-S1/Native-S1 receipts verifies exact Git
 source, all recorded source inputs, shared caller digest consistency and narrow

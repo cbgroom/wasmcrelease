@@ -41,6 +41,37 @@ but **not positive execution coverage** for the unavailable capability.
 
 ## Evidence levels and next work
 
+### Three focused maturation journeys
+
+Keep the five acceptance scenarios unchanged, but iterate through three grouped
+journeys rather than growing the test catalog:
+
+| Journey | Reused executable path | Main unresolved acceptance |
+|---|---|---|
+| File (S1/S2) | `file-app-test.mjs`: real read -> compiled WAsmC App -> admitted Lib -> committed write -> sync -> independent disk oracle | ordinary guest-initiated typed I/O, Rust/Native equivalent carrier |
+| Resident network (S3/S4) | `../tcp/server-test.mjs --js-only`, `../udp/test.mjs`: actual framed service and fixed-peer datagrams with resident App/Lib | uniform carrier and reviewed HTTP/TLS composition |
+| Failure/retirement (S5) | file cancellation/trap/readonly plus `../tcp/stop-failure-test.mjs`, existing root/window and completion controls | actual backend race/stop and unified guest Future cleanup |
+
+The file journey runs four real positive inputs and three negative paths on
+Node/Bun/Deno locally. TCP locally verifies 19 connections, 17 accepted frames,
+two rejected frames and 1,000 resident calls; UDP verifies five accepted and
+three rejected messages. Stop-failure controls deliberately inject faults;
+they are not positive OS stop proof. These are restricted vertical fixtures,
+not uniform v1 acceptance. In the file fixture the trusted embedding initiates
+I/O and the ordinary guest performs the Lib computation; do not label it a
+guest resource SDK. Cancellation is ordered delivery suppression, not OS abort.
+Cross-platform Actions now retains nine source-bound file journey receipts;
+new-candidate CI is pending until actually complete.
+
+```sh
+node host/scenarios/file-app-test.mjs
+bun host/scenarios/file-app-test.mjs
+deno run --allow-read --allow-write host/scenarios/file-app-test.mjs
+node host/tcp/server-test.mjs --js-only
+node host/udp/test.mjs
+node host/tcp/stop-failure-test.mjs
+```
+
 1. Platform source preflight: real OS/browser source availability. New S1 probe
    checks WebCrypto, monotonic and wall clocks; Native uses getrandom/Instant/
    SystemTime. It does not implement describe/entropy-fill/clock-read guest calls.
