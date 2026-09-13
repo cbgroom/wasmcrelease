@@ -2,6 +2,18 @@
 
 ## 0. Status
 
+Native guest-initiated file task is now implemented once for Wasmi/Wasmtime.
+Same exact WAsmC async Wasm/Lib as JS. Local Wasmi passes 4 real positives,
+8 suppressed/failure paths and 12 independent no-clobber controls. Dual-engine
+strict rustc metadata build and whole-crate fmt PASS; local pool stays below
+64 MiB, no engine Cargo rebuild. Actions adds strict default/dual-engine Cargo
+checks and execution on three OSes with source-bound Native receipts.
+This is blocking preopened I/O and ordered cancellation/sync suppression, not
+OS abort/fault proof, close-error acknowledgement, production reactor or typed
+v1 SDK. Full Host delivery still requires generic carrier, real readiness and
+failure containment, ordinary Rust async consumer and network parity. Do not
+call the complete Host goal achieved from fixture counts or queued Actions.
+
 Guest-initiated async file vertical now locally PASS on Node/Bun/Deno: ordinary
 WAsmC async source requests read -> admitted local Lib sum -> write -> sync ->
 release using existing scalar Core task ABI v0. No compiler modification.

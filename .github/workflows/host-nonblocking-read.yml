@@ -33,7 +33,20 @@ jobs:
       - run: cargo fmt --check --manifest-path host/lib-e2e/rust/Cargo.toml
       - run: cargo clippy --release --locked --manifest-path host/lib-e2e/rust/Cargo.toml --bin environment-app-reference -- -D warnings
       - run: cargo clippy --release --locked --manifest-path host/lib-e2e/rust/Cargo.toml --features wasmtime-engine --bin environment-app-reference -- -D warnings
-      - run: cargo build --release --locked --manifest-path host/lib-e2e/rust/Cargo.toml --features wasmtime-engine --bin environment-app-reference
+      - run: cargo clippy --release --locked --manifest-path host/lib-e2e/rust/Cargo.toml --bin file-task-reference -- -D warnings
+      - run: cargo clippy --release --locked --manifest-path host/lib-e2e/rust/Cargo.toml --features wasmtime-engine --bin file-task-reference -- -D warnings
+      - run: cargo build --release --locked --manifest-path host/lib-e2e/rust/Cargo.toml --features wasmtime-engine --bin environment-app-reference --bin file-task-reference
+      - name: Guest initiated file task on both Native engines
+        run: |
+          binary="host/lib-e2e/rust/target/release/file-task-reference"
+          if [ "$RUNNER_OS" = Windows ]; then binary="$binary.exe"; fi
+          node host/scenarios/file-native-test.mjs "$binary" --wasmtime > "$RUNNER_TEMP/file-native.json"
+          node --input-type=module -e 'import fs from "node:fs";const p=`${process.env.RUNNER_TEMP}/file-native.json`;const r=JSON.parse(fs.readFileSync(p));r.exact_source=process.env.GITHUB_SHA;r.os=process.env.RUNNER_OS;r.arch=process.env.RUNNER_ARCH;fs.writeFileSync(p,JSON.stringify(r));console.log(JSON.stringify(r));'
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: file-native-${{ matrix.os }}
+          path: ${{ runner.temp }}/file-native.json
+          if-no-files-found: error
       - run: rustc --edition=2024 --crate-type cdylib --target wasm32-unknown-unknown -C opt-level=s -C panic=abort -C strip=symbols host/scenarios/environment-app.rs -o "$RUNNER_TEMP/environment-rust.wasm"
       - name: Same WAsmC and Rust callers, real OS sources, both Native engines
         run: |

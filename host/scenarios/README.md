@@ -43,6 +43,34 @@ but **not positive execution coverage** for the unavailable capability.
 
 ### Three focused maturation journeys
 
+Native file task now uses the exact same guest transition Wasm and admitted Lib
+as JS, behind one shared binding implementation for Wasmi/Wasmtime. Native
+fixtures execute four real inputs, eight failure/suppression paths and twelve
+exclusive-create/no-clobber controls per engine; the independent harness checks
+actual disk bytes, guest effect counts and private Lib scratch cleanup.
+
+```sh
+cargo build --release --locked --manifest-path host/lib-e2e/rust/Cargo.toml \
+  --features wasmtime-engine --bin file-task-reference
+node host/scenarios/file-native-test.mjs \
+  host/lib-e2e/rust/target/release/file-task-reference --wasmtime
+```
+
+Omit `--wasmtime` for a Wasmi-only binary; Windows adds `.exe`. Local Wasmi
+execution passes; dual-engine source compiles with exact warm dependencies.
+Full Cargo strict default/dual-engine checks and both-engine execution are
+required on three OSes in Actions. Native cancellation here is ordered
+suppression after a blocking read; the controlled sync-failure profile stops
+before sync acknowledgement. Neither is actual OS cancellation/fault proof.
+Native file drop/release cannot attest close errors. The CLI is a trusted
+fixture, not an untrusted guest path resolver or a production async executor.
+The profile is admitted by the harness's exact effect metadata and import
+checks; direct arbitrary CLI inputs are not a supported sandbox interface.
+The unified typed carrier, actual readiness-backed file completion, batch wait,
+revocation/deadline/never-settling containment and Rust async Wasm equivalence
+remain required Host delivery gates. This Native milestone must not mark them
+accepted or erase the five-scenario acceptance plan.
+
 Guest-initiated file milestone: `file-async-app.wasmc` requests the five stages
 read -> local Lib sum -> write -> sync -> release. `scalar-task-driver.mjs`
 drives the existing Core task ABI v0 `(state,event,value)` transitions, awaits
