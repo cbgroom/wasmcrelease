@@ -19,6 +19,15 @@ across2rights profiles plus2no-clobber controls PASS; strict Clippy PASS.
 No guest path resolver or new business syscall. File sync is explicit, not a
 power-loss claim. Core async transport and browser remain gaps. Six-platform
 Actions implemented; read exact-source run before expected-base main advance.
+Exact implementation run34748136391 completed PASS including required job.
+Log readback14JS/native pairs on6desktop targets each20real-file operations,
+2rights profiles and2no-clobber controls. Disk content checks are independent.
+Retained admission/host-preopened-file-v0.json; no new global Host primitive.
+Normal main advancement allowed only while remote main equals previous public
+thin-Host acceptance. Then resume session-bound resources/windows/completion
+transport before networking/resident services. Real adapter probe does not close
+production backend/fault/recovery gate; overall Host closure remains1/5 fully
+qualified. Updated owning public Skill, not private compiler construction Skills.
 
 ## Thin Host contract START
 

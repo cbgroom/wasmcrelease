@@ -9,7 +9,10 @@ Independent JS/Rust adapters reuse read/write/invoke-sync/release without guest
 paths or certificate-specific native calls. It is not a completed Core/WIT
 transport or browser filesystem adapter. The owning maintainer Skill now requires
 proving an irreducible need before adding Host primitives.
-[![Real Host file I/O](https://github.com/cbgroom/wasmcrelease/actions/workflows/host-file-io.yml/badge.svg?branch=work/thin-host-file-io)](https://github.com/cbgroom/wasmcrelease/actions/workflows/host-file-io.yml)
+[![Real Host file I/O](https://github.com/cbgroom/wasmcrelease/actions/workflows/host-file-io.yml/badge.svg?branch=main)](https://github.com/cbgroom/wasmcrelease/actions/workflows/host-file-io.yml)
+Initial [six-platform exact-source run](https://github.com/cbgroom/wasmcrelease/actions/runs/34748136391)
+passed all14JS/native pairs; [retained evidence](admission/host-preopened-file-v0.json)
+separates real file behavior from unqualified Core transport/browser/durability.
 
 Public experimental [Core Host v0 contract/reference](host/v0/README.md):
 low-frequency evolving Native mechanisms, reusable CoreLib policy/protocols,
