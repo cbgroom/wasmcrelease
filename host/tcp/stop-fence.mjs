@@ -13,7 +13,7 @@ export class TcpStopFailure extends Error {
   constructor(owner,cause,primary) {
     super('TCP close acknowledgement failed; resources quarantined',{cause});
     this.name='TcpStopFailure';this.quarantined=true;
-    this.owner=Object.freeze({...owner});this.primary=primary;
+    Object.defineProperty(this,'owner',{value:Object.freeze({...owner}),enumerable:true});this.primary=primary;
     owner.guard.revoke();
   }
 }

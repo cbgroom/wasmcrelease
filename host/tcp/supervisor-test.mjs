@@ -1,0 +1,33 @@
+import assert from 'node:assert/strict';
+import {TcpOwnerSupervisor} from './supervisor.mjs';
+import {TcpStopFailure} from './stop-fence.mjs';
+
+let controls=0;
+for(const limit of [0,17,1.5]){assert.throws(()=>new TcpOwnerSupervisor(limit),error=>error===-5);controls++;}
+const supervisor=new TcpOwnerSupervisor(1),abort=new AbortController();let finish,stops=0,reads=0,releases=0,allowClose=false;
+const input={read(){reads++;return new Promise(resolve=>{finish=resolve;});},terminateRead(){stops++;return allowClose?Promise.resolve():Promise.reject(-8);},release:async()=>{releases++;}};
+const pending=supervisor.read(input,{signal:abort.signal});
+await assert.rejects(supervisor.read(input),error=>error===-4);controls++;
+const untouched={read:()=>assert.fail('quota issued I/O'),release:()=>assert.fail('rejected ownership transfer')};
+await assert.rejects(supervisor.read(untouched),error=>error===-3);controls++;
+abort.abort();finish([1]);const failure=await pending.catch(error=>error);assert.ok(failure instanceof TcpStopFailure);
+assert.deepEqual(supervisor.status(),{active:0,quarantined:1,limit:1});assert.equal(reads,1);assert.equal(releases,0);
+await assert.rejects(supervisor.read(untouched),error=>error===-3);controls++;
+await assert.rejects(supervisor.retireQuarantine(failure.quarantineTicket),error=>error===-8);
+assert.deepEqual(failure.owner.guard.counts(),[1,1]);assert.equal(releases,0);controls++;
+const foreign=new TcpOwnerSupervisor(1);await assert.rejects(foreign.retireQuarantine(failure.quarantineTicket),error=>error===-1);controls++;
+let acknowledge;allowClose=true;input.terminateRead=()=>{stops++;return new Promise(resolve=>{acknowledge=resolve;});};
+const retiring=supervisor.retireQuarantine(failure.quarantineTicket);
+await assert.rejects(supervisor.retireQuarantine(failure.quarantineTicket),error=>error===-4);controls++;
+assert.deepEqual(failure.owner.guard.counts(),[1,1]);assert.equal(releases,0);acknowledge();await retiring;
+assert.deepEqual(failure.owner.guard.counts(),[0,0]);assert.equal(reads,1);assert.equal(releases,1);assert.equal(stops,3);
+assert.deepEqual(supervisor.status(),{active:0,quarantined:0,limit:1});controls++;
+await assert.rejects(supervisor.retireQuarantine(failure.quarantineTicket),error=>error===-1);controls++;
+assert.deepEqual(await supervisor.read({read:async()=>[7],release:async()=>{}}),[7]);controls++;
+const s2=new TcpOwnerSupervisor(1),a2=new AbortController();let stopCount=0,releaseCount=0;
+const e2={read:async()=>[1],terminateRead:()=>++stopCount===1?Promise.reject(-8):Promise.resolve(),release:async()=>{if(++releaseCount===1)throw -8;}};
+const p2=s2.read(e2,{signal:a2.signal});a2.abort();const f2=await p2.catch(error=>error);
+await assert.rejects(s2.retireQuarantine(f2.quarantineTicket),error=>error===-8);
+assert.deepEqual(f2.owner.guard.counts(),[1,1]);assert.equal(s2.status().quarantined,1);controls++;
+await s2.retireQuarantine(f2.quarantineTicket);assert.deepEqual(f2.owner.guard.counts(),[0,0]);assert.equal(releaseCount,2);controls++;
+console.log(JSON.stringify({accepted:true,supervisor_controls:controls,active_and_quarantine_bounded:true,foreign_owner_denied:true,close_ack_before_recycle:true,concurrent_retire_single_winner:true,no_io_replay:true,native_supervisor_qualified:false}));

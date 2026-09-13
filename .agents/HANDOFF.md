@@ -1,5 +1,18 @@
 # WAsmC release maintainer handoff
 
+## Bounded quarantine owner supervision
+
+Own branch work/host-quarantine-supervisor follows pushed real-browser source.
+Optional trusted JS supervisor counts active+quarantine slots, rejects quota
+and duplicate endpoint before I/O. Fresh scoped owner tickets; terminal32767
+exhaustion, foreign/stale denial. Explicit retirement obtains backend close
+ack and endpoint retirement before drain/free, no fabricated ack/business replay.
+Failures retain pins/quota; concurrent retirement single active attempt. Local
+14controls on JS Hosts plus browser quota/recovery probe. Owning SUPERVISOR.md
+states exclusive per-supervisor ownership/ordinary release-fault/native/race/
+never-settling limitations. Extend exact-source nine-cell matrix. No new guest
+ABI or frozen artifact changes; full Host delivery1/5 pending remaining gates.
+
 ## Real browser ownership/App Lib probe
 
 Own branch work/host-browser-parity follows pushed driver-error candidate.

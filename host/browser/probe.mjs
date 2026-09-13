@@ -3,6 +3,7 @@ import {ScopedCompletionGuard} from '../completion/scoped-guard.mjs';
 import {readTcpWindow} from '../tcp/read-window.mjs';
 import {writeTcpWindow} from '../tcp/write-window.mjs';
 import {TcpStopFailure} from '../tcp/stop-fence.mjs';
+import {TcpOwnerSupervisor} from '../tcp/supervisor.mjs';
 
 const check=(condition,message)=>{if(!condition)throw Error(message);};
 const equal=(a,b)=>check(JSON.stringify(a)===JSON.stringify(b),'value mismatch');
@@ -41,7 +42,15 @@ async function run(){
     globalThis.probeQuarantineOwners.push(error);
     equal(guard.counts(),[1,1]);stopCases++;
   }
-  return {accepted:true,browser_user_agent:navigator.userAgent,app_sha256:appSha,lib_sha256:libSha,resident_calls:1000,core_cases:4,guard_cases:guardCases,stop_failure_cases:stopCases,trap_poisoned:true,no_replay:true,resource_cleanup:true,quarantine_retained:true,raw_tcp:false,real_device_io:false,mobile_qualified:false};
+  const supervisor=new TcpOwnerSupervisor(1),abort=new AbortController();let settle,closed=false,reads=0;
+  const endpoint={read(){reads++;return new Promise(resolve=>{settle=resolve;});},terminateRead:()=>closed?Promise.resolve():Promise.reject(-8),release:async()=>{}};
+  const pending=supervisor.read(endpoint,{signal:abort.signal});abort.abort();settle([1]);
+  const failure=await pending.catch(error=>error);check(failure instanceof TcpStopFailure,'supervisor quarantine');
+  equal(supervisor.status(),{active:0,quarantined:1,limit:1});
+  try{await supervisor.read({read:()=>{throw Error('quota I/O');}});throw Error('quota missing');}catch(error){check(error===-3,'quota error');}
+  closed=true;await supervisor.retireQuarantine(failure.quarantineTicket);check(reads===1,'supervisor replay');
+  equal(failure.owner.guard.counts(),[0,0]);equal(supervisor.status(),{active:0,quarantined:0,limit:1});
+  return {accepted:true,browser_user_agent:navigator.userAgent,app_sha256:appSha,lib_sha256:libSha,resident_calls:1000,core_cases:4,guard_cases:guardCases,stop_failure_cases:stopCases,supervisor_cases:1,trap_poisoned:true,no_replay:true,resource_cleanup:true,quarantine_retained:true,raw_tcp:false,real_device_io:false,mobile_qualified:false};
 }
 globalThis.receiptPromise=run().catch(error=>({accepted:false,error:String(error)})).then(receipt=>{
   document.querySelector('#receipt').textContent=JSON.stringify(receipt);
