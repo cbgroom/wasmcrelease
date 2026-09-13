@@ -43,9 +43,8 @@ async function run(bytes, mode='normal') {
       operations.add(operation);
       const receipts=await session.wait([operation]);
       assert.equal(receipts.length,1);assert.equal(receipts[0].operation,operation);
-      const result=receipts[0].result;
-      await session.release(operation);operations.delete(operation);
-      if(result.status!=='ok') throw Error(result.status);
+      let result;
+      try{result=session.take_result(operation);}finally{await session.release(operation);operations.delete(operation);}
       return result;
     };
     await check(session.entropy_fill(readWindow,16));assert.equal(session.copy_out(readWindow).length,16);
@@ -62,7 +61,7 @@ async function run(bytes, mode='normal') {
           assert.equal(receipts[0].result.status,'cancelled');assert.deepEqual(session.copy_out(readWindow),[]);
           await session.release(op);operations.delete(op);return 0;
         }
-        assert.equal(receipts[0].result.status,'ok');readBytes=session.copy_out(readWindow);
+        assert.equal(session.take_result(op).status,'ok');readBytes=session.copy_out(readWindow);
         assert.deepEqual(readBytes,bytes);await session.release(op);operations.delete(op);return readBytes.length;
       },
       async length=>{

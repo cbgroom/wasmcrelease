@@ -85,6 +85,51 @@ assert.equal(rootSession.counts().unopened_grants,1);controls++;
 throws(()=>rootSession.open(root,'file'),/permission-denied/);
 const rootRetiring=rootSession.release(root);await rejects(rootSession.release(root),/busy/);
 rootClose.resolve();await rootRetiring;assert.equal(attempts,2);empty(rootSession);
+
+// An accepted endpoint belongs to its operation until exactly-once claim.
+let acceptedCloses=0,accepts=0,failedClose=true;
+const acceptedBackend={read:async()=>[],write:async bytes=>bytes.length,release:async()=>{
+  acceptedCloses++;if(failedClose){failedClose=false;throw Error('accepted-close-failure');}}};
+const listening=new HostSession([{name:'listener',kind:'listener',read:true,write:true,
+  backend:{accept:async()=>{accepts++;return acceptedBackend;},release:async()=>{}}}]);
+const listener=listening.open(listening.root,'listener',{write:true});
+const acceptedOp=listening.invoke(listener,'accept');
+assert.equal(listening.counts().endpoints,2);controls++;
+const passive=await listening.wait([acceptedOp]);
+assert.equal(passive[0].result.kind,'endpoint');assert.equal('endpoint' in passive[0].result,false);controls++;
+await rejects(listening.release(acceptedOp),/accepted-close-failure/);
+throws(()=>listening.take_result(acceptedOp),/invalid-resource/); // Failed retirement is cleanup-only, never resurrection.
+assert.equal(listening.counts().endpoints,2);assert.equal(listening.counts().operations,1);controls++;
+await listening.release(acceptedOp);assert.equal(acceptedCloses,2);controls++;
+const claimedOp=listening.invoke(listener,'accept');await listening.wait([claimedOp]);
+const claimed=listening.take_result(claimedOp).endpoint;
+assert.deepEqual(Object.keys(claimed),[]);controls++;
+throws(()=>listening.take_result(claimedOp),/already-terminal/);
+await listening.release(claimedOp);assert.equal(acceptedCloses,2);controls++;
+await listening.release(claimed);assert.equal(acceptedCloses,3);assert.equal(accepts,2);controls++;
+const revokedOp=listening.invoke(listener,'accept');await listening.wait([revokedOp]);listening.revoke();
+throws(()=>listening.take_result(revokedOp),/permission-denied/);
+await listening.release(revokedOp);await listening.release(listener);await listening.release(listening.root);empty(listening);
+const arriving=deferred();let lateClosed=0;
+const late=new HostSession([{name:'listener',kind:'listener',read:true,write:false,
+  backend:{accept:()=>arriving.promise,terminateAccept:async()=>{},release:async()=>{}}}]);
+const lateListener=late.open(late.root,'listener'),lateOp=late.invoke(lateListener,'accept');
+assert.equal(late.cancel(lateOp),'accepted');controls++;
+await rejects(late.release(lateOp),/busy/);
+arriving.resolve({read:async()=>[],release:async()=>{lateClosed++;}});
+await late.wait([lateOp]);throws(()=>late.take_result(lateOp),/cancelled/);
+assert.equal(lateClosed,0);assert.equal(late.counts().endpoints,2);controls++;
+await late.release(lateOp);assert.equal(lateClosed,1);controls++;
+await late.release(lateListener);await late.release(late.root);empty(late);
+let quotaAccepts=0;
+const quota=new HostSession([{name:'listener',kind:'listener',read:true,write:false,
+  backend:{accept:async()=>{quotaAccepts++;return {read:async()=>[],release:async()=>{}};},release:async()=>{}}}]);
+const quotaListener=quota.open(quota.root,'listener'),held=[];
+for(let i=0;i<3;i++){const op=quota.invoke(quotaListener,'accept');await quota.wait([op]);held.push(op);}
+throws(()=>quota.invoke(quotaListener,'accept'),/limit/);
+assert.equal(quotaAccepts,3);assert.equal(quota.counts().endpoints,4);controls++;
+for(const op of held)await quota.release(op);
+await quota.release(quotaListener);await quota.release(quota.root);empty(quota);
 console.log(JSON.stringify({accepted:true,scope:'controlled-shared-session-lifetime-faults',controls,
   terminal_results_count_against_quota:true,waiters_bounded:true,foreign_stale_denied:true,
   failed_stop_and_close_retain_pins:true,explicit_cleanup_retry_only:true,reentrant_retirement_no_revival:true,

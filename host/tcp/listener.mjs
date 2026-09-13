@@ -37,6 +37,13 @@ export class PreauthorizedTcpListener {
     return new Promise((resolve,reject)=>{this.#waiter={resolve,reject};});
   }
   counts() {return {queued:this.#queue.length,active:this.#active.size,rejected:this.#rejected};}
+  terminateAccept() {
+    if(this.#retired) throw -1;
+    // Remove the readiness waiter synchronously. Already accepted sockets are
+    // owned by their completion, not destroyed through this cancellation path.
+    if(this.#waiter) {const waiter=this.#waiter;this.#waiter=null;waiter.reject(-6);}
+    return Promise.resolve();
+  }
   async release() {
     if(this.#retired) throw -1;
     if(this.#active.size) throw -4;

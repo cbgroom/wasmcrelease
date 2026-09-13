@@ -50,8 +50,10 @@ Core hot path.
 The [JS session](../session/README.md) has opaque resources and one-shot result
 claims but still uses relative wait timeouts, embedding-injected authority,
 fixed transfer metadata and blocking retirement. It does not yet implement
-this WIT's accepted endpoint results, negotiated description, guest accept or
-finish-write. Native's scalar file task is not the shared typed session.
+this WIT's negotiated description or finish-write. JS listener accept now
+transfers an opaque endpoint through one-shot result claiming, while its
+blocking retirement shape still differs. Native's scalar file task is not the
+shared typed session.
 
 Before acceptance: review a deterministic Core mapping and generated typed
 WAsmC/Rust consumers; align JS/Native ownership, deadlines and budgets; prove

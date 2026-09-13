@@ -27,22 +27,22 @@ const appBytes=await compile(await readFile('host/session/network-app.wasmc','ut
 const module=new WebAssembly.Module(appBytes);
 assert.deepEqual(WebAssembly.Module.imports(module),[]);
 assert.equal(sha(new Uint8Array(WebAssembly.Module.customSections(module,'wasmc-async-effects')[0])),
-  '387c79355dcc1da4d756b49b3e3b40d3d4b1f6ba5f289160c1c1a1bfeb1d5b0b');
+  '2e579aa29e189470ef9b040a9e531141e5b3740d4146b1973b81cc5a81443dcb');
 const libBytes=await readFile('libs/wasmc-owned-algorithms/artifact.wasm');
 assert.equal(sha(libBytes),'44638f7cfa5a653f986e2237db4f26f1534539c8c0d0d1e7258c51a976df19e3');
 const {instance:app}=await WebAssembly.instantiate(appBytes,{});
 const {instance:lib}=await WebAssembly.instantiate(libBytes,{});
 const ptr=lib.exports.cabi_realloc(0,0,4,64);
 let libCalls=0,tcpPositive=0,udpPositive=0,networkNegative=0;
-async function serve(backend,kind,{timeout=false}={}) {
-  const session=new HostSession([{name:'peer',backend,kind,read:true,write:true}]);
-  const root=session.root,endpoint=session.open(root,'peer',{write:true});
+async function serve(backend,kind,{timeout=false,session:shared,listenerEndpoint}={}) {
+  const session=shared??new HostSession([{name:'peer',backend,kind,read:true,write:true}]);
+  const root=session.root;let endpoint=shared?null:session.open(root,'peer',{write:true});
   const input=session.window_acquire(16),output=session.window_acquire(8);
-  const windows=new Set([input,output]),endpoints=new Set([endpoint]),ops=new Set();
+  const windows=new Set([input,output]),endpoints=new Set(endpoint?[endpoint]:[]),ops=new Set();
   const before=libCalls; let data=[];
-  const result=async operation=>{
+  const result=async (operation,timed=false)=>{
     ops.add(operation);
-    const receipts=await session.wait([operation],{timeoutMs:timeout?5:1000});
+    const receipts=await session.wait([operation],{timeoutMs:timeout&&timed?5:1000});
     if(!receipts.length){
       // Wait timeout leaves actual operation and pins untouched.
       assert.equal(session.counts().operations,1);
@@ -54,18 +54,23 @@ async function serve(backend,kind,{timeout=false}={}) {
       await session.release(operation);ops.delete(operation);throw Error('wait-timeout-drained');
     }
     assert.equal(receipts[0].operation,operation);
-    const value=receipts[0].result;await session.release(operation);ops.delete(operation);
-    if(value.status!=='ok')throw Error(value.status);return value;
+    let value;
+    try{value=session.take_result(operation);}finally{await session.release(operation);ops.delete(operation);}
+    return value;
   };
   try {
     return await driveScalarTask(app.exports.run,16,[
       async limit=>{
+        if(shared){endpoint=(await result(session.invoke(listenerEndpoint,'accept'))).endpoint;endpoints.add(endpoint);}
+        return limit;
+      },
+      async limit=>{
         if(kind==='datagram'){
-          await result(session.read(endpoint,input,{length:limit}));data=session.copy_out(input);
+          await result(session.read(endpoint,input,{length:limit}),true);data=session.copy_out(input);
         }else{
           // Bounded read-to-EOF transport fixture, not a general HTTP parser.
           for(let reads=0;reads<=17;reads++){
-            const receipt=await result(session.read(endpoint,input,{length:Math.max(1,limit-data.length)}));
+            const receipt=await result(session.read(endpoint,input,{length:Math.max(1,limit-data.length)}),true);
             const chunk=session.copy_out(input);
             if(receipt.eof)break;
             if(data.length+chunk.length>limit)throw Error('bounds');
@@ -97,17 +102,19 @@ async function serve(backend,kind,{timeout=false}={}) {
     for(const op of ops){await session.wait([op]);await session.release(op);}
     for(const window of windows)await session.release(window);
     for(const endpoint of endpoints)await session.release(endpoint);
-    await session.release(root);
-    assert.deepEqual(session.counts(),{endpoints:0,unopened_grants:0,windows:0,operations:0,waiters:0,window_bytes:0});
+    if(!shared)await session.release(root);
+    assert.deepEqual(session.counts(),{endpoints:shared?1:0,unopened_grants:0,windows:0,operations:0,waiters:0,window_bytes:0});
   }
 }
 const inputs=[[],[7],[1,2,3,255],Array.from({length:16},(_,i)=>i)];
 const server=createServer({allowHalfOpen:true});await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
 const listener=new PreauthorizedTcpListener(server);
+const tcpSession=new HostSession([{name:'listener',kind:'listener',backend:listener,read:true,write:true}]);
+const listenerEndpoint=tcpSession.open(tcpSession.root,'listener',{write:true});
 try {
   for(let repeat=0;repeat<3;repeat++)for(const bytes of inputs){
-    const pending=listener.accept();
-    pending.catch(()=>{}); // Cleanup may cancel accept if trusted peer startup fails.
+    const service=serve(null,'stream',{session:tcpSession,listenerEndpoint});
+    service.catch(()=>{});
     let closed,socket;
     if(nativePeer)closed=independentPeer(server.address().port,bytes);
     else{
@@ -115,19 +122,30 @@ try {
       const chunks=[];closed=new Promise(resolve=>socket.once('close',()=>resolve(Buffer.concat(chunks))));
       socket.on('data',bytes=>chunks.push(bytes));
     }
-    const service=serve(await pending,'stream');socket?.end(Uint8Array.from(bytes));
+    socket?.end(Uint8Array.from(bytes));
     assert.equal(await service,8);
     const expected=Buffer.alloc(8);expected.writeBigInt64LE(BigInt(bytes.reduce((a,b)=>a+b,0)));
     assert.deepEqual(await closed,expected);tcpPositive++;
   }
-  const pending=listener.accept();
+  const service=serve(null,'stream',{timeout:true,session:tcpSession,listenerEndpoint});
+  service.catch(()=>{});
   const socket=createConnection({host:'127.0.0.1',port:server.address().port});socket.on('error',()=>{});
   let delivered=0;socket.on('data',bytes=>delivered+=bytes.length);
   const closed=new Promise(resolve=>socket.once('close',resolve));
-  await assert.rejects(serve(await pending,'stream',{timeout:true}),/wait-timeout-drained/);
+  await assert.rejects(service,/wait-timeout-drained/);
   await closed;assert.equal(delivered,0);networkNegative++;
   assert.equal(listener.counts().active,0);
-}finally{await listener.release();}
+  const accepting=tcpSession.invoke(listenerEndpoint,'accept');
+  assert.equal(tcpSession.counts().endpoints,2); // Reserved child counts while no peer exists.
+  assert.deepEqual(await tcpSession.wait([accepting],{timeoutMs:0}),[]);
+  await assert.rejects(tcpSession.release(listenerEndpoint),/busy/);
+  assert.equal(tcpSession.cancel(accepting),'accepted');
+  const cancelledAccept=await tcpSession.wait([accepting]);
+  assert.equal(cancelledAccept[0].result.status,'cancelled');
+  assert.throws(()=>tcpSession.take_result(accepting),/cancelled/);
+  await tcpSession.release(accepting);assert.equal(tcpSession.counts().endpoints,1);
+  assert.equal(listener.counts().active,0);networkNegative++;
+}finally{await tcpSession.release(listenerEndpoint);await tcpSession.release(tcpSession.root);assert.equal(tcpSession.counts().endpoints,0);}
 const bound=async()=>{const socket=createSocket('udp4');await new Promise(resolve=>socket.bind(0,'127.0.0.1',resolve));return socket;};
 const close=socket=>new Promise(resolve=>socket.close(resolve));
 try{
@@ -150,6 +168,7 @@ try{
 }
 console.log(JSON.stringify({accepted:true,scope:'shared-js-session-guest-network-e2e',tcpPositive,udpPositive,networkNegative,
   libCalls,resident_app_instances:1,resident_lib_instances:1,actual_tcp_close_ack:true,
+  guest_initiated_accept:true,accepted_endpoint_claim_once:true,resident_tcp_session_instances:1,
   tcp_peer_profile:nativePeer?'independent-native':'same-js-runtime',
   wait_timeout_retains_pins:true,cancelled_response_bytes:0,resource_counts_zero:true,
   uniform_core_abi_accepted:false,native_session_parity:false,session_sha256:sha(await readFile('host/session/session.mjs'))}));

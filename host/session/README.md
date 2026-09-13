@@ -13,6 +13,10 @@ objects. No application sees the private object registry or integer handles.
   exactly one transfer. No guest-selected OS paths or peers.
 - `read`, `write`, `invoke`: one owned operation/result model; finite
   `storage-sync` is the initial invoke profile, not arbitrary native dispatch.
+  `accept` is a listener-only profile: reserve the child slot before issuing,
+  retain the accepted endpoint in its operation until `take_result`, and close
+  an unclaimed/cancelled endpoint during operation retirement. A failed close
+  retains ownership for cleanup only; it cannot reopen result claiming.
 - `wait`, `cancel`, `release`: correlated passive results, bounded wakeups,
   non-consuming busy/failed cleanup, actual settlement/close acknowledgement.
   `take_result` is a carrier helper that claims the terminal result exactly
@@ -66,12 +70,15 @@ durability. The local Lib sum effect is fixture marshalling, not a general async
 Lib SDK. These frozen qualification Lib bytes are reused, not rebuilt here.
 
 Network: twelve real TCP sessions and four UDP requests reuse one resident
-App/Lib. Wait timeout retains pins; explicit cancel drains actual TCP close and
+App/Lib. TCP also reuses one HostSession and guest-initiated accept. Wait timeout retains pins; explicit cancel drains actual TCP close and
 delivers zero response bytes. Oversized datagrams reject without partial
 delivery. Transport is bounded read-to-EOF or one datagram, **not HTTP/TLS**.
-Listener setup/accept remains embedding-owned, not a guest accept carrier.
+Listener bind remains embedding-owned; the ordinary WAsmC App requests accept
+and receives its connection through the shared one-shot result helper. A
+pending accept cancellation detaches the readiness waiter before retirement;
+it does not imply the listener has closed. Actual listener release awaits close.
 
-Fault: 32 deliberately controlled lifetime checks cover terminal-result quota,
+Fault: 57 deliberately controlled lifetime checks cover terminal-result quota,
 bounded waiters, foreign/stale resources, failed stop/close ownership, explicit
 cleanup retry and reentrant retirement. These do not prove OS failure recovery.
 

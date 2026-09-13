@@ -17,11 +17,11 @@ export class HostSession {
     const backends = new Set();
     for(const grant of grants) {
       if(!/^[a-z][a-z0-9-]{0,31}$/.test(grant.name) || this.#grants.has(grant.name)
-          || !['file','stream','datagram'].includes(grant.kind)
+          || !['file','stream','datagram','listener'].includes(grant.kind)
           || !grant.backend || backends.has(grant.backend)
           || typeof grant.backend.release !== 'function'
-          || (grant.read && typeof grant.backend.read !== 'function')
-          || (grant.write && typeof grant.backend.write !== 'function')
+          || (grant.read && typeof grant.backend[grant.kind==='listener'?'accept':'read'] !== 'function')
+          || (grant.write && grant.kind!=='listener' && typeof grant.backend.write !== 'function')
           || typeof grant.read !== 'boolean' || typeof grant.write !== 'boolean') fail('bounds');
       backends.add(grant.backend);
       this.#grants.set(grant.name,{...grant});
@@ -74,14 +74,14 @@ export class HostSession {
     this.#admit(); const w=this.#get(this.#windows,window); this.#idle(w);
     return Array.from(w.bytes.subarray(0,w.valid)); // Required SDK copy helper, not a new external mechanism.
   }
-  #submit(endpoint, window, issue, stop, effectUnknown) {
+  #submit(endpoint, window, issue, stop, effectUnknown, ownedEndpoint=null) {
     this.#admit();
     const e=endpoint ? this.#get(this.#endpoints,endpoint) : null;
     const w=window ? this.#get(this.#windows,window) : null;
     if(e) this.#idle(e); if(w) this.#idle(w);
     if(this.#operations.size>=4) fail('limit'); // Includes undelivered terminal and quarantined records.
     const ref=ticket(), o={endpoint,window,e,w,pending:true,suppressed:false,stopFailed:false,
-      backendSettled:false,result:null,resultTaken:false,stopAck:Promise.resolve(),stop,pinsReleased:false,closing:false};
+      backendSettled:false,result:null,resultTaken:false,ownedEndpoint,retirementStarted:false,stopAck:Promise.resolve(),stop,pinsReleased:false,closing:false};
     this.#operations.set(ref,o); if(e)e.pins++; if(w)w.pins++;
     o.settled = (async()=>{
       let result;
@@ -102,6 +102,7 @@ export class HostSession {
   }
   read(endpoint, window, {offset=0,length=16}={}) {
     const e=this.#get(this.#endpoints,endpoint),w=this.#get(this.#windows,window);
+    if(e.kind==='listener') fail('unsupported');
     if(!e.read) fail('permission-denied');
     if(!Number.isSafeInteger(offset)||offset<0||!Number.isInteger(length)||length<0||length>w.bytes.length||offset+length>64) fail('bounds');
     if(e.kind!=='file' && offset!==0) fail('unsupported');
@@ -116,6 +117,7 @@ export class HostSession {
   }
   write(endpoint, window, {offset=0}={}) {
     const e=this.#get(this.#endpoints,endpoint),w=this.#get(this.#windows,window);
+    if(e.kind==='listener') fail('unsupported');
     if(!e.write) fail('permission-denied'); if(!w.committed) fail('bounds');
     if(!Number.isSafeInteger(offset)||offset<0||offset+w.valid>64) fail('bounds');
     if(e.kind!=='file' && offset!==0) fail('unsupported');
@@ -128,6 +130,21 @@ export class HostSession {
   }
   invoke(endpoint, operation) {
     const e=this.#get(this.#endpoints,endpoint);
+    if(operation==='accept') {
+      this.#admit();this.#idle(e);
+      if(e.kind!=='listener'||typeof e.backend.accept!=='function') fail('unsupported');
+      if(!e.read) fail('permission-denied');
+      if(this.#endpoints.size>=4||this.#operations.size>=4) fail('limit');
+      // Reserve before issuing accept. The token remains private to its owned
+      // operation; passive receipts never expose or duplicate the connection.
+      const child=ticket(),row={kind:'stream',read:e.read,write:e.write,backend:null,pins:0,closing:false,stopped:true};
+      this.#endpoints.set(child,row);
+      const stop=typeof e.backend.terminateAccept==='function'?()=>e.backend.terminateAccept():null;
+      try {return this.#submit(endpoint,null,async()=>{
+        row.backend=await e.backend.accept();
+        return {status:'ok',kind:'endpoint'};
+      },stop,false,child);} catch(error) {this.#endpoints.delete(child);throw error;}
+    }
     if(operation!=='storage-sync'||e.kind!=='file'||typeof e.backend.invokeSync!=='function') fail('unsupported');
     if(!e.write) fail('permission-denied');
     return this.#submit(endpoint,null,async()=>{await e.backend.invokeSync();return {status:'ok',durability:'sync-acknowledged'};},null,true);
@@ -161,11 +178,18 @@ export class HostSession {
   take_result(operation) {
     const o=this.#get(this.#operations,operation);
     if(o.pending||o.closing) fail('busy');
+    if(o.retirementStarted) fail('invalid-resource');
     if(o.resultTaken) fail('already-terminal');
+    if(o.ownedEndpoint)this.#admit(); // Revocation cannot grant a completed but unclaimed connection.
     // Claim before reporting a terminal error too: observing an error cannot
     // make a second claim possible. Quarantine ownership is still retained.
     o.resultTaken=true;
     if(o.result.status!=='ok') fail(o.result.status);
+    if(o.ownedEndpoint) {
+      const endpoint=o.ownedEndpoint,row=this.#get(this.#endpoints,endpoint);
+      row.stopped=false;o.ownedEndpoint=null;
+      return Object.freeze({status:'ok',kind:'endpoint',endpoint});
+    }
     return o.result;
   }
   clock_read(kind) {
@@ -195,13 +219,20 @@ export class HostSession {
     }
     if(this.#operations.has(resource)) {
       const o=this.#get(this.#operations,resource);if(o.pending||o.closing)fail('busy');
-      if(o.stopFailed) {
+      if(o.stopFailed||o.ownedEndpoint) {
         if(!o.backendSettled)fail('busy');
         // Cleanup-only retirement after actual backend settlement; failed close retains every pin and record.
-        o.closing=true;
+        o.closing=true;o.retirementStarted=true;
         try {
-          await o.e.backend.release();
-          this.#endpoints.delete(o.endpoint);o.e.pins--;if(o.w)o.w.pins--;o.pinsReleased=true;
+          if(o.ownedEndpoint) {
+            const child=this.#get(this.#endpoints,o.ownedEndpoint);
+            if(child.backend)await child.backend.release();
+            this.#endpoints.delete(o.ownedEndpoint);o.ownedEndpoint=null;
+          }
+          if(o.stopFailed) {
+            await o.e.backend.release();
+            this.#endpoints.delete(o.endpoint);o.e.pins--;if(o.w)o.w.pins--;o.pinsReleased=true;
+          }
         } finally {o.closing=false;}
       }
       this.#operations.delete(resource);return;

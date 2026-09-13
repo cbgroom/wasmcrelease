@@ -1,5 +1,6 @@
 package local:network_session_probe;
 interface io {
+  accept: async func(limit:s32)->s32;
   read: async func(limit:s32)->s32;
   write: async func(value:s32)->s32;
   release: async func(value:s32)->s32;
@@ -7,7 +8,8 @@ interface io {
 interface algorithms {sum: async func(length:s32)->s32;}
 interface api {
   run: async func(limit:s32)->s32 {
-    let length:s32=read(limit).await;
+    let accepted:s32=accept(limit).await;
+    let length:s32=read(accepted).await;
     let total:s32=sum(length).await;
     let written:s32=write(total).await;
     let closed:s32=release(written).await;

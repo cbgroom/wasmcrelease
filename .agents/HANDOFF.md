@@ -2,6 +2,17 @@
 
 ## 0. Status
 
+JS network vertical now uses one resident HostSession and ordinary WAsmC
+guest-initiated listener accept. Pending/undelivered accepted endpoints reserve
+quota and remain private to operations; passive wait never transfers them.
+One-shot claim transfers ownership; unclaimed/cancelled retirement closes them.
+Failed close is cleanup-only, not a chance to revive the connection. Local
+Node/Bun(service with Native peer)/Deno network passes 12 TCP/4 UDP and three
+negative paths including pending accept cancellation. File consumers now
+actually claim their results. Controlled faults cover late accepted arrival,
+reservation quotas, failed retirement and revocation. No Core mapping, Native
+shared typed session or full Host completion claimed.
+
 Host v1 semantic WIT candidate now resolves and passes official Component
 template encoding/type validation; see host/v1/README.md for exact commands
 and remaining mapping gaps. Borrowed retirement retains ownership on failure;
@@ -14,7 +25,7 @@ PASS; downloaded independent receipt review is still pending.
 Durable full Host goal remains ACTIVE, not complete. Shared JS HostSession now
 implements twelve mechanism families with opaque typed objects and one bounded
 kernel across actual file/TCP/UDP adapters. Local file E2E passes on all three
-JS runtimes (4 positives/issued-read cancellation); 39 controlled lifetime
+JS runtimes (4 positives/issued-read cancellation); 57 controlled lifetime
 checks each pass. Resident network passes 12 TCP/4 UDP plus actual wait-timeout
 cancel-close and oversized datagram rejection, using one App/Lib and zero live
 resources. Node/Deno same-runtime peer pass; Bun same-runtime half-close client
