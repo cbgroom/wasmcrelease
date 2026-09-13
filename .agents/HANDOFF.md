@@ -2,7 +2,15 @@
 
 ## 0. Status
 
-Active source line: work/host-udp-write-retirement. Task state: local proof complete;
+Active source line: work/host-guard-owned-completion. Task state: local proof complete;
+Completion guard and TCP driver write previously validated then reread mutable
+arrays; getter7->256 reproduced invalid delivery/issued bytes. Both now capture
+indexed bytes/length once; reentrant nested completion cannot be overwritten.
+Nine completion/eight driver write controls pass Node/Bun/permission-free Deno,
+76 JS/Native transitions and10fault controls remain equal;40Klife,14supervisor,
+actual TCP cancellation/retirement pass. Real Chrome/Firefox/WebKit each pass
+three completion snapshots plus one write snapshot alongside prior probes.
+Read host/completion/SNAPSHOTS.md. Exact CI/main pending, no producer/API change.
 UDP read termination now rejects an issued send instead of closing its socket.
 Original implementation reproduced closing before send acknowledgement. Twelve
 controlled send/retirement cases pass Node/Bun/permission-free Deno, plus real
