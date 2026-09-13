@@ -1,5 +1,19 @@
 # WAsmC release maintainer handoff
 
+## Transport integration acceptance
+
+Qualified exact listener candidate and GitHub run are recorded in
+admission/host-transport-qualification.json. Actual run success on6desktop
+targets/required job; independently read14server/14TCP/14read-stop receipts,
+matching expected19connections/8cases/4cases+9controls and frozen Lib digest.
+This candidate includes preceding scoped Host issuer/TCP/read-stop work.
+No resident guest App/Native accept cancellation/write qualification claim:
+those source branches remain independent subsequent candidates. Main may
+advance normally only while remote main remains prior accepted completion
+guard base (resolve Git origin and admission); no force/tag/product changes.
+Full Host delivery remains1/5 gates. Next accept later exact candidates from
+their own receipts, close typed transport/engine/profile gates, then release.
+
 ## Preauthorized listener/resident Lib milestone
 
 Own branch work/host-tcp-listener from pushed read-stop milestone; old-source
