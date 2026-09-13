@@ -1,5 +1,5 @@
 // Consumes one exclusive endpoint. Result is trusted Host state, not guest ABI.
-import {requestTcpStop,requireTcpStop,TcpStopFailure} from './stop-fence.mjs';
+import {requestTcpStop,requireTcpStop,TcpStopFailure,TcpGuardRetirementFailure} from './stop-fence.mjs';
 export async function writeTcpWindow(input,guard,data,{signal,deadlineMs=1000}={}) {
   let window,operation,timer,closed,result,failure,quarantine,stopped=false;
   const stop=()=>{
@@ -8,8 +8,15 @@ export async function writeTcpWindow(input,guard,data,{signal,deadlineMs=1000}={
     closed=requestTcpStop(input,guard);
   };
   try {
-    if(!Array.isArray(data)||data.length>16||Array.from(data).some(b=>!Number.isInteger(b)||b<0||b>255)||!Number.isInteger(deadlineMs)||deadlineMs<1||deadlineMs>5000||(signal!=null&&!(signal instanceof AbortSignal))) throw -5;
-    const snapshot=[...data];
+    if(!Array.isArray(data)||!Number.isInteger(deadlineMs)||deadlineMs<1||deadlineMs>5000||(signal!=null&&!(signal instanceof AbortSignal))) throw -5;
+    const length=data.length;
+    if(!Number.isInteger(length)||length<0||length>16) throw -5;
+    const snapshot=new Array(length);
+    for(let i=0;i<length;i++) {
+      const value=data[i];
+      if(!Number.isInteger(value)||value<0||value>255) throw -5;
+      snapshot[i]=value;
+    }
     if(signal?.aborted) {stop();result={state:'cancelled',effect:'none',acknowledged:0};}
     else {
       window=guard.acquire(snapshot.length);operation=guard.submit(window);
@@ -36,8 +43,10 @@ export async function writeTcpWindow(input,guard,data,{signal,deadlineMs=1000}={
       try {await input.release();} catch(cause) {quarantine=new TcpStopFailure({input,guard,operation,window},cause,failure??result);}
     }
     if(!quarantine) {
-      if(operation!==undefined) guard.release(operation);
-      if(window!==undefined) guard.release(window);
+      try {
+        if(operation!==undefined){if(guard.release(operation)!==0)throw -8;operation=undefined;}
+        if(window!==undefined){if(guard.release(window)!==0)throw -8;window=undefined;}
+      }catch(cause){quarantine=new TcpGuardRetirementFailure({input,guard,operation,window},cause,failure??result);}
     }
   }
   if(quarantine) throw quarantine;

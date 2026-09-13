@@ -35,9 +35,19 @@ export class CompletionGuard {
     if(op.drained) throw -1;
     const w=this.#get(this.#windows,op.window);
     if(!Number.isInteger(error)||error>0||error< -2147483648) throw -5;
-    if(!Array.isArray(bytes)||bytes.length>w.size||Array.from(bytes).some(b=>!Number.isInteger(b)||b<0||b>255)) throw -5;
+    if(!Array.isArray(bytes)) throw -5;
+    const length=bytes.length;
+    if(!Number.isInteger(length)||length<0||length>w.size) throw -5;
+    const snapshot=new Uint8Array(length);
+    for(let i=0;i<length;i++) {
+      const value=bytes[i];
+      if(!Number.isInteger(value)||value<0||value>255) throw -5;
+      snapshot[i]=value;
+    }
+    // Trusted glue getters may reenter; do not overwrite another completion.
+    if(this.#get(this.#ops,id)!==op||op.drained||this.#get(this.#windows,op.window)!==w) throw -1;
     if(op.state!=='cancelled') {
-      op.state=error?'failed':'done';op.error=error;w.bytes=error?[]:[...bytes];
+      op.state=error?'failed':'done';op.error=error;w.bytes=error?[]:Array.from(snapshot);
     }
     op.drained=true;w.pins=0;return 0;
   }

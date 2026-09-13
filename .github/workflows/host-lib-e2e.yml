@@ -7,6 +7,32 @@ on:
 permissions:
   contents: read
 jobs:
+  mobile-compile:
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [aarch64-apple-ios, aarch64-apple-ios-sim, aarch64-linux-android, aarch64-unknown-linux-ohos]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: 26.5.1
+      - run: rustup toolchain install 1.96.0 --profile minimal
+      - env:
+          TARGET: ${{ matrix.target }}
+        run: rustup target add "$TARGET" --toolchain 1.96.0
+      - name: Wasmi-only cross-target check, no device or link claim
+        env:
+          TARGET: ${{ matrix.target }}
+          SOURCE: ${{ github.sha }}
+        run: |
+          cargo +1.96.0 check --locked --manifest-path host/lib-e2e/rust/Cargo.toml --target "$TARGET" --all-targets
+          cargo +1.96.0 tree --locked --manifest-path host/lib-e2e/rust/Cargo.toml --target "$TARGET" --prefix none > "$RUNNER_TEMP/default-dependencies.txt"
+          node scripts/test-native-reference-dependencies.mjs
+          sh scripts/check-native-reference-dependencies.sh "$RUNNER_TEMP/default-dependencies.txt"
+          printf '%s\n' "Source $SOURCE; $TARGET Wasmi-only compile PASS; no link/sign/install/device/network-permission/runtime qualification" >> "$GITHUB_STEP_SUMMARY"
   stream-shapes:
     strategy:
       fail-fast: false
@@ -34,8 +60,17 @@ jobs:
           node host/tcp/buffer-budget-test.mjs
           bun host/tcp/buffer-budget-test.mjs
           deno run host/tcp/buffer-budget-test.mjs
+          node host/completion/snapshot-test.mjs
+          node host/tcp/write-snapshot-test.mjs
+          node host/tcp/guard-retirement-test.mjs
           node host/tcp/completion-quarantine-test.mjs --real-tcp
+          bun host/completion/snapshot-test.mjs
+          bun host/tcp/write-snapshot-test.mjs
+          bun host/tcp/guard-retirement-test.mjs
           bun host/tcp/completion-quarantine-test.mjs --real-tcp
+          deno run host/completion/snapshot-test.mjs
+          deno run host/tcp/write-snapshot-test.mjs
+          deno run host/tcp/guard-retirement-test.mjs
           deno run --allow-net=127.0.0.1 host/tcp/completion-quarantine-test.mjs --real-tcp
           node host/file-io/write-snapshot-test.mjs
           bun host/file-io/write-snapshot-test.mjs
@@ -48,10 +83,13 @@ jobs:
           deno run --allow-read=standard/corelib,current,host/corelib-io host/corelib-io/snapshot-test.mjs
           node host/udp/test.mjs
           node host/udp/fault-test.mjs
+          node host/udp/retirement-test.mjs
           bun host/udp/test.mjs
           bun host/udp/fault-test.mjs
+          bun host/udp/retirement-test.mjs
           deno run --allow-net=127.0.0.1 --allow-read=current,host/lib-e2e,libs/wasmc-owned-algorithms host/udp/test.mjs
           deno run --allow-net=127.0.0.1 host/udp/fault-test.mjs
+          deno run host/udp/retirement-test.mjs
           node host/tcp/server-test.mjs --js-only
           bun host/tcp/server-test.mjs --js-only --diagnose
           deno run --allow-net=127.0.0.1 --allow-read=current,host/lib-e2e,libs/wasmc-owned-algorithms --allow-write=target/host-tcp-app host/tcp/server-test.mjs --js-only
@@ -88,11 +126,15 @@ jobs:
       - run: node host/tcp/driver-retirement-test.mjs --real-tcp
       - run: node host/tcp/stream-snapshot-test.mjs
       - run: node host/tcp/buffer-budget-test.mjs
+      - run: node host/completion/snapshot-test.mjs
+      - run: node host/tcp/write-snapshot-test.mjs
+      - run: node host/tcp/guard-retirement-test.mjs
       - run: node host/tcp/completion-quarantine-test.mjs --real-tcp
       - run: node host/corelib-io/snapshot-test.mjs
       - run: node host/tcp/supervisor-test.mjs
       - run: node host/udp/test.mjs
       - run: node host/udp/fault-test.mjs
+          node host/udp/retirement-test.mjs
       - name: Independent process startup identity
         shell: bash
         run: |
@@ -187,8 +229,10 @@ jobs:
           udp=host/lib-e2e/rust/target/release/udp-server-reference
           bun host/udp/test.mjs
           bun host/udp/fault-test.mjs
+          bun host/udp/retirement-test.mjs
           deno run --allow-net=127.0.0.1 --allow-read=current,host/lib-e2e,libs/wasmc-owned-algorithms host/udp/test.mjs
           deno run --allow-net=127.0.0.1 host/udp/fault-test.mjs
+          deno run host/udp/retirement-test.mjs
           bun host/udp/native-test.mjs "$udp"
           deno run --allow-net=127.0.0.1 --allow-read=current,host/lib-e2e,libs/wasmc-owned-algorithms --allow-write=target/host-udp --allow-env=NODE_V8_COVERAGE --allow-run="$udp" host/udp/native-test.mjs "$udp"
           bun host/corelib-io/test.mjs "$core"
@@ -210,7 +254,13 @@ jobs:
           deno run host/tcp/stream-snapshot-test.mjs
           bun host/tcp/buffer-budget-test.mjs
           deno run host/tcp/buffer-budget-test.mjs
+          bun host/completion/snapshot-test.mjs
+          bun host/tcp/write-snapshot-test.mjs
+          bun host/tcp/guard-retirement-test.mjs
           bun host/tcp/completion-quarantine-test.mjs --real-tcp
+          deno run host/completion/snapshot-test.mjs
+          deno run host/tcp/write-snapshot-test.mjs
+          deno run host/tcp/guard-retirement-test.mjs
           deno run --allow-net=127.0.0.1 host/tcp/completion-quarantine-test.mjs --real-tcp
           bun host/corelib-io/snapshot-test.mjs
           deno run --allow-read=standard/corelib,current,host/corelib-io host/corelib-io/snapshot-test.mjs
@@ -279,7 +329,7 @@ jobs:
         env:
           SOURCE: ${{ github.sha }}
         run: |
-          printf '%s\n' "Source $SOURCE; $RUNNER_OS/$RUNNER_ARCH; 76 guard transitions, 10 fault controls, 15 guard/owner Rust tests, 40000 scoped and supervisor cycles, 7 TCP/UDP/listener Rust tests, Native-peer half-close reply proof, 8-process identity, 20 file/App/Lib cases, 8 TCP/Lib pairs, 4 read-stop pairs with 9 controls, 19 resident App/Lib server connections, 1000 resident calls per engine and 8 listener controls; UDP8messages/5calls/3rejects plus11JScontrols; file read8/write7, stream7/buffer10/Core-packing7/malformed-completion6plus1realTCP controls; Bun JS-client half-close is separate characterization, not positive parity; guest trap poisons with no replay, not guest async ABI or generic failed-shutdown qualification" >> "$GITHUB_STEP_SUMMARY"
+          printf '%s\n' "Source $SOURCE; $RUNNER_OS/$RUNNER_ARCH; 76 guard transitions, 10 fault controls, 15 guard/owner Rust tests, 40000 scoped and supervisor cycles, 8 binary-contract/TCP/UDP/listener Rust tests, Native-peer half-close reply proof, 8-process identity, 20 file/App/Lib cases, 8 TCP/Lib pairs, 4 read-stop pairs with 9 controls, 19 resident App/Lib server connections, 1000 resident calls per engine and 8 listener controls; UDP8messages/5calls/3rejects plus11JScontrols/12controlled-retirement-controls; file read8/write7, stream7/buffer10/Core-packing7/malformed-completion6plus1realTCP controls; Bun JS-client half-close is separate characterization, not positive parity; guest trap poisons with no replay, not guest async ABI or generic failed-shutdown qualification" >> "$GITHUB_STEP_SUMMARY"
   browser:
     strategy:
       fail-fast: false
@@ -307,15 +357,16 @@ jobs:
           [[ "$url" == http://127.0.0.1:* ]] || { cat "$RUNNER_TEMP/wasmc-browser-server.err"; exit 1; }
           npm exec --yes --package=@playwright/cli@0.1.19 -- playwright-cli -s=wasmc-host-ci open "$url" --browser "$BROWSER"
           npm exec --yes --package=@playwright/cli@0.1.19 -- playwright-cli -s=wasmc-host-ci --raw eval 'async () => { const receipt=await globalThis.receiptPromise; if(!receipt.accepted) throw Error(receipt.error); return receipt; }' > "$RUNNER_TEMP/wasmc-browser-receipt.json"
-          node --input-type=module -e 'import{readFileSync}from"node:fs";import assert from"node:assert/strict";const r=JSON.parse(readFileSync(process.argv[1]));assert.ok(r.accepted&&r.no_replay&&r.trap_poisoned&&r.resource_cleanup&&r.quarantine_retained);assert.equal(r.resident_calls,1000);assert.equal(r.guard_cases,4);assert.equal(r.stop_failure_cases,4);assert.equal(r.supervisor_cases,1);assert.equal(r.kernel_core_cases,4);console.log(JSON.stringify(r));' "$RUNNER_TEMP/wasmc-browser-receipt.json"
+          node --input-type=module -e 'import{readFileSync}from"node:fs";import assert from"node:assert/strict";const r=JSON.parse(readFileSync(process.argv[1]));assert.ok(r.accepted&&r.no_replay&&r.trap_poisoned&&r.resource_cleanup&&r.quarantine_retained);assert.equal(r.resident_calls,1000);assert.equal(r.guard_cases,4);assert.equal(r.stop_failure_cases,4);assert.equal(r.supervisor_cases,1);assert.equal(r.completion_snapshot_cases,3);assert.equal(r.driver_write_snapshot_cases,1);assert.equal(r.kernel_core_cases,4);console.log(JSON.stringify(r));' "$RUNNER_TEMP/wasmc-browser-receipt.json"
           printf '%s\n' "Source $SOURCE; real $BROWSER; App/Lib1000 resident calls; four Core/guard/quarantine probes; no raw TCP/mobile claim" >> "$GITHUB_STEP_SUMMARY"
   required:
     if: always()
-    needs: [composition, browser, stream-shapes]
+    needs: [composition, browser, stream-shapes, mobile-compile]
     runs-on: ubuntu-24.04
     steps:
       - env:
           RESULT: ${{ needs.composition.result }}
           BROWSER_RESULT: ${{ needs.browser.result }}
           STREAM_RESULT: ${{ needs.stream-shapes.result }}
-        run: test "$RESULT" = success && test "$BROWSER_RESULT" = success && test "$STREAM_RESULT" = success
+          MOBILE_RESULT: ${{ needs.mobile-compile.result }}
+        run: test "$RESULT" = success && test "$BROWSER_RESULT" = success && test "$STREAM_RESULT" = success && test "$MOBILE_RESULT" = success

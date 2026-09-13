@@ -1,5 +1,5 @@
 // Consumes a trusted preconnected endpoint. Host chooses signal/deadline policy.
-import {requestTcpStop,requireTcpStop,TcpStopFailure,TcpCompletionFailure} from './stop-fence.mjs';
+import {requestTcpStop,requireTcpStop,TcpStopFailure,TcpCompletionFailure,TcpGuardRetirementFailure} from './stop-fence.mjs';
 export async function readTcpWindow(input,guard,{signal,deadlineMs=1000,revokeOnAbort=false}={}) {
   let window,operation,timer,stopPromise,value,failure,stopped=0;
   const stop=revoked=>{
@@ -44,8 +44,10 @@ export async function readTcpWindow(input,guard,{signal,deadlineMs=1000,revokeOn
       }
     }
     if(!(failure instanceof TcpStopFailure)) {
-      try {if(operation!==undefined) guard.release(operation);} catch(cause) {failure??=cause;}
-      try {if(window!==undefined) guard.release(window);} catch(cause) {failure??=cause;}
+      try {
+        if(operation!==undefined){if(guard.release(operation)!==0)throw -8;operation=undefined;}
+        if(window!==undefined){if(guard.release(window)!==0)throw -8;window=undefined;}
+      }catch(cause){failure=new TcpGuardRetirementFailure({input,guard,operation,window},cause,failure??{state:'done',delivery:'suppressed_by_failed_retirement'});}
     }
   }
   if(failure!==undefined) throw failure;

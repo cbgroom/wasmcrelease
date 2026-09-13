@@ -35,6 +35,12 @@ cancel behavior is not a real asynchronous I/O backend; do not use it in place
 of the completion pin/close fences. Browser supervisor admission/recovery is
 additionally exercised once with a deliberately failed-close fixture.
 
+Mutable probes also assert three completion snapshot/reentry cases and one
+TCP-driver write snapshot case. Getter/Proxy length is captured once; a nested
+completion cannot be overwritten by the outer call. These deterministic glue
+controls are not real browser network I/O. Their separate receipt counters are
+required by Actions, alongside all earlier guard/stop/supervisor counters.
+
 Local Chrome, Firefox and WebKit were exercised through Playwright CLI. Actions adds separate
 Chrome/Firefox/WebKit cells and requires them alongside six Native desktop
 cells. Receipts include actual user agent; source authority is the exact run

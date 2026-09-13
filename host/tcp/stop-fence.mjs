@@ -27,6 +27,16 @@ export class TcpCompletionFailure extends TcpStopFailure {
   }
 }
 
+// Internal guard release may have failed before or after retirement. Retain
+// ownership even with zero records; do not guess/retry an unknown mutation.
+export class TcpGuardRetirementFailure extends TcpStopFailure {
+  constructor(owner,cause,primary) {
+    super({...owner,endpointRetired:true},cause,primary);
+    this.name='TcpGuardRetirementFailure';this.reason='guard-retirement';
+    this.message='TCP guard retirement outcome unknown; isolate retained owner';
+  }
+}
+
 export async function requireTcpStop(acknowledgement,owner,primary) {
   const result=await acknowledgement;
   if(!result.ok) throw new TcpStopFailure(owner,result.error,primary);

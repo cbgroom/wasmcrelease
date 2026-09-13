@@ -36,6 +36,28 @@ async function run(){
     rejects(()=>foreign.poll(op),-1);guard.cancel(op);guard.complete(op,Array(size).fill(1));
     guard.release(op);guard.release(window);equal(guard.counts(),[0,0]);guardCases++;
   }
+  let completionSnapshotCases=0;
+  for(const mode of ['getter','length']) {
+    const guard=ScopedCompletionGuard.fresh(),window=guard.acquire(1),op=guard.submit(window);let reads=0;
+    const bytes=mode==='length'?new Proxy([7],{get(target,key){return key==='length'?(++reads===1?1:17):Reflect.get(target,key);}}):[];
+    if(mode==='getter')Object.defineProperty(bytes,0,{get(){return ++reads===1?7:256;}});
+    guard.complete(op,bytes);check(reads===1,'completion read twice');equal(guard.read(window),[7]);
+    guard.release(op);guard.release(window);equal(guard.counts(),[0,0]);completionSnapshotCases++;
+  }
+  {
+    const guard=ScopedCompletionGuard.fresh(),window=guard.acquire(1),op=guard.submit(window),bytes=[];
+    Object.defineProperty(bytes,0,{get(){guard.complete(op,[9]);return 7;}});
+    rejects(()=>guard.complete(op,bytes),-1);equal(guard.read(window),[9]);
+    guard.release(op);guard.release(window);equal(guard.counts(),[0,0]);completionSnapshotCases++;
+  }
+  let writeSnapshotCases=0;
+  {
+    const guard=ScopedCompletionGuard.fresh(),data=[];let reads=0,writes=0,closes=0;
+    Object.defineProperty(data,0,{get(){return ++reads===1?7:256;}});
+    const input={write:async bytes=>{writes++;equal(bytes,[7]);return 1;},release:async()=>{closes++;}};
+    equal(await writeTcpWindow(input,guard,data),{state:'done',effect:'accepted_locally',acknowledged:1});
+    check(reads===1&&writes===1&&closes===1,'write snapshot ownership');equal(guard.counts(),[0,0]);writeSnapshotCases++;
+  }
   let stopCases=0;globalThis.probeQuarantineOwners=[];
   for(const write of [false,true])for(const sync of [false,true]){
     const guard=ScopedCompletionGuard.fresh(),abort=new AbortController();let settle,released=false;
@@ -56,7 +78,7 @@ async function run(){
   try{await supervisor.read({read:()=>{throw Error('quota I/O');}});throw Error('quota missing');}catch(error){check(error===-3,'quota error');}
   closed=true;await supervisor.retireQuarantine(failure.quarantineTicket);check(reads===1,'supervisor replay');
   equal(failure.owner.guard.counts(),[0,0]);equal(supervisor.status(),{active:0,quarantined:0,limit:1});
-  return {accepted:true,browser_user_agent:navigator.userAgent,app_sha256:appSha,lib_sha256:libSha,kernel_sha256:await digest(kernelBytes),kernel_core_cases:4,kernel_simulator_only:true,resident_calls:1000,core_cases:4,guard_cases:guardCases,stop_failure_cases:stopCases,supervisor_cases:1,trap_poisoned:true,no_replay:true,resource_cleanup:true,quarantine_retained:true,raw_tcp:false,real_device_io:false,mobile_qualified:false};
+  return {accepted:true,browser_user_agent:navigator.userAgent,app_sha256:appSha,lib_sha256:libSha,kernel_sha256:await digest(kernelBytes),kernel_core_cases:4,kernel_simulator_only:true,resident_calls:1000,core_cases:4,guard_cases:guardCases,completion_snapshot_cases:completionSnapshotCases,driver_write_snapshot_cases:writeSnapshotCases,stop_failure_cases:stopCases,supervisor_cases:1,trap_poisoned:true,no_replay:true,resource_cleanup:true,quarantine_retained:true,raw_tcp:false,real_device_io:false,mobile_qualified:false};
 }
 globalThis.receiptPromise=run().catch(error=>({accepted:false,error:String(error)})).then(receipt=>{
   document.querySelector('#receipt').textContent=JSON.stringify(receipt);

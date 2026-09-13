@@ -28,9 +28,13 @@ admission/host-udp-qualification.json: both full workflows PASS.28Native pairs
 zero foreign replies and retired resources.20JSfault receipts each have11controls.
 This is loopback source filtering, not authentication, reliability or Native
 async/mobile/browser UDP qualification. No new Kernel import or frozen product.
-Later mobile/native-binary/UDP-send/guard-capture/guard-retirement candidates
-still require their own qualification. Preserved missing-rg mobile gate failure
-must be fixed by current-source portable inventory checks before acceptance.
+Native binary-only, UDP pending-send retirement, completion/write snapshots,
+unknown guard retirement and portable mobile dependency gates are accepted via
+admission/host-mobile-dependency-qualification.json. Both exact full workflows
+PASS; four mobile target compile/dependency cells pass. This is compilation,
+not mobile linking/install/device execution.20 guard-retirement receipts and14
+UDP-retirement receipts are observed; the old folded Node command is not counted.
+Later idle-pool and explicit-quarantine-cleanup candidates remain unqualified.
 Resolve exact revisions with Git; inspect
 status/worktrees before editing and preserve unrelated changes. Linked worktrees
 belong under /Users/youxianshi/code/.worktrees/wasmcrelease.
@@ -148,8 +152,8 @@ Do not count locally completed slices as all-platform/full SDK completion.
 
 ## 6. Next Actions
 
-Next: complete qualified stream/CoreLib integration. Independently inspect
-later quarantine/UDP/mobile exact runs and fix real failures locally. Earlier
+Next: independently qualify idle-pool and explicit-quarantine-cleanup runs.
+The latter fixes the folded Node UDP command with a fail-closed negative test. Earlier
 accepted sources need no redo.
 Accept relevant source only with exact receipts, merge current main metadata
 without discarding it, refresh integrity, then normal expected-base FF promotion.
