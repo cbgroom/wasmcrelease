@@ -3,6 +3,11 @@
 ## 0. Status
 
 Task state: in-progress — public Wasmi-only compiler adapter and native packaging.
+Next coherent stage START: user authorizes all-platform Actions delivery.
+Prior exact-source run34745618036 PASS on Linux x64/macOS arm64/Windows x64.
+Expand to six native desktop targets with package manifests and download-stage
+execution. Mobile and dual SDK remain distinct gates; do not call six desktop
+targets all devices. No old tag movement or compiler rebuild.
 Own branch: work/native-wasmi-compiler, based on origin/main at START.
 Approved design: privately produced compiler Wasm stays digest-bound; public
 Actions build only integration glue. Separate Wasmi-only and dual-engine
