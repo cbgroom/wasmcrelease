@@ -2,6 +2,8 @@
 
 Follow-up [read stop/drain reference](READ_STOP.md) covers real cancellation,
 deadline and revoked delivery cleanup. It does not qualify write cancellation.
+The [write-outcome reference](WRITE_OUTCOMES.md) preserves possibly-partial
+effects on cancellation; blocked OS write preemption remains unqualified.
 The [preauthorized listener/resident Lib service](LISTENER.md) reuses one Lib
 across19 connections, including malformed input and subsequent valid requests.
 

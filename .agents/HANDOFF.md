@@ -1,5 +1,20 @@
 # WAsmC release maintainer handoff
 
+## Write completion outcome milestone
+
+Own branch work/host-tcp-write-outcome from pushed resident-App candidate.
+JS snapshot/pinned write driver waits backend settlement/stop acknowledgement
+before drain. Host outcome distinguishes accepted_locally vs possibly_partial;
+only pre-issue abort may claim no effect. No auto replay/retry. Peer first
+observes4bytes, then JS/Native cancel completion; both retain acknowledged4
+and possibly_partial, zero resources. Local Node/Bun/restricted Deno PASS plus
+5JS failure/partial/preabort/deadline/snapshot controls. Native fixture cancels
+after peer acknowledgement, not blocked-write preemption. Reliable-stop failures,
+general write races and cryptographic/TLS qualification remain unclosed.
+Owning WRITE_OUTCOMES.md documents records as trusted Host results, not guest
+ABI. Add same six-platform Actions. Earlier resident-App CI is independent;
+new source needs own qualification before main. Full Host delivery1/5 gates.
+
 ## Resident WAsmC App and cancellable Native accept
 
 Own branch work/host-resident-app from preceding pushed listener milestone.
