@@ -1,5 +1,16 @@
 # WAsmC release maintainer handoff
 
+## Resident engine performance harness
+
+Own branch work/host-resident-benchmark follows pushed engine-parity candidate.
+Same digest-bound App/Lib with1000warmup and7x100000calls per engine; exact
+checksum and701000Lib calls asserted. Receipt separates initialization from
+steady samples, includes all observations and JS RSS. Not network/durable TPS,
+leak proof, speed guarantee or full Host performance qualification. Owning
+BENCHMARK.md has commands/evidence boundaries. Run Node/Bun/restricted Deno
+locally, six-platform Actions at milestone; bind exact source via Git/run SHA.
+Do not promote queued changed source using prior PASS. Full Host delivery1/5.
+
 ## Optional resident Core engine parity
 
 Own branch work/host-engine-parity follows pushed write-outcome candidate.

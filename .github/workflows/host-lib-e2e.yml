@@ -1,7 +1,7 @@
 name: Public Host and Lib end-to-end
 on:
   push:
-    branches: [main, work/host-lib-e2e, work/host-completion-guard, work/host-startup-identity, work/host-tcp-endpoint, work/host-tcp-read-stop, work/host-tcp-listener, work/host-resident-app, work/host-tcp-write-outcome, work/host-engine-parity]
+    branches: [main, work/host-lib-e2e, work/host-completion-guard, work/host-startup-identity, work/host-tcp-endpoint, work/host-tcp-read-stop, work/host-tcp-listener, work/host-resident-app, work/host-tcp-write-outcome, work/host-engine-parity, work/host-resident-benchmark]
   pull_request:
   workflow_dispatch:
 permissions:
@@ -126,9 +126,14 @@ jobs:
           resident=host/lib-e2e/rust/target/release/resident-app-reference
           if [[ "$RUNNER_OS" == Windows ]]; then server="$server.exe"; resident="$resident.exe"; fi
           node host/tcp/server-test.mjs "$server" "$resident" --wasmtime
+          benchmark=host/lib-e2e/rust/target/release/resident-benchmark
+          if [[ "$RUNNER_OS" == Windows ]]; then benchmark="$benchmark.exe"; fi
+          node host/tcp/benchmark.mjs "$benchmark" target/host-tcp-app/guest.wasm --wasmtime
           if [[ "$RUNNER_OS" != Windows ]]; then
             bun host/tcp/server-test.mjs "$server" "$resident" --wasmtime
             deno run --allow-net=127.0.0.1 --allow-read=current,host/lib-e2e,libs/wasmc-owned-algorithms,target --allow-write=target/host-tcp-app --allow-env=NODE_V8_COVERAGE --allow-run="$server,$resident" host/tcp/server-test.mjs "$server" "$resident" --wasmtime
+            bun host/tcp/benchmark.mjs "$benchmark" target/host-tcp-app/guest.wasm --wasmtime
+            deno run --allow-read=libs/wasmc-owned-algorithms,target/host-tcp-app --allow-env=NODE_V8_COVERAGE --allow-run="$benchmark" host/tcp/benchmark.mjs "$benchmark" target/host-tcp-app/guest.wasm --wasmtime
           fi
       - name: Public integrity
         if: runner.os == 'Linux'
