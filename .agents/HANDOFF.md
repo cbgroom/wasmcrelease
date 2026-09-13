@@ -2,8 +2,8 @@
 
 ## 0. Status
 
-Task state: published — independent Node18/standard-Lib feature reproduction.
-Branch: fix/node18-feature-admission. Public v0.0.9 is already released;
+Task state: started — public offline Lib discovery and exact resolution.
+Branch: feat/public-lib-catalog. Public v0.0.9 is already released;
 immutable tag and release branch remain unchanged. Main may carry follow-up
 consumer tooling/docs, not new admitted compiler or Lib binaries.
 
@@ -28,6 +28,14 @@ results cover their named Hosts, not Node18 or every future engine version.
 Current/ owns current compiler entrances; dist/package/libs are frozen v0.0.4.
 
 ## 4. Plan and Validation
+
+Add a finite approved catalog of existing immutable v0.0.9 packages; discovery
+is not selection authority. Resolve only caller-pinned catalog/WIT/artifact
+digests and exact version, with one unique candidate and complete file checks.
+No semver solving, downloads, installation, builds, authority or binary changes.
+Fix stale v0.0.8 public entrypoint without changing frozen trees.
+Validate real package resolution, ambiguity/drift/path rejection and all current
+Host regression gates. This is a supplemental main tool, not an original tag API.
 
 Inspect actual Core types/operators with wasm-tools; obtain official pinned
 Node18 runtime with SHA verification; compare compiler/provider/std separately.
