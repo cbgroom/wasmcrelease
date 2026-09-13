@@ -18,8 +18,14 @@ Exact implementation native run34745887997 completed PASS12/12: six native
 builds and six fresh downloaded-consumer jobs. Six uploaded packages were
 independently downloaded and all file hashes/sizes checked; manifest digests
 retained in admission/native-desktop-qualification.json. Same-source complete
-consumer run34745902717 and LibSearch run34745904387 are still running their
-Rust jobs; no failures observed, but do not call them fully accepted yet.
+consumer run34745902717 and LibSearch run34745904387 completed PASS. Full
+aggregate downloaded/read: accepted=true, exact implementation source matches,
+21suite cells/133flow checks. No failures/skipped suite families. This qualifies
+desktop Wasmi-only compiler packaging, not formal release/mobile/dual SDK.
+Expected-base main advancement is authorized after this metadata checkpoint;
+remote main must still equal START base. Verify normal fast-forward and retain
+all immutable tags. Resume dual runtime CLI and mobile embedding qualification,
+then immutable release manifests retaining tested native bytes.
 Formal release/mobile/dual-engine remain unclosed, do not promote incomplete
 SDK as full-platform production support.
 Own branch: work/native-wasmi-compiler, based on origin/main at START.

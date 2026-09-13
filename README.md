@@ -10,7 +10,13 @@ exact admitted compiler Wasm; Actions build only glue. Its six-target desktop
 matrix tests Linux/macOS/Windows x64/arm64, then downloads, verifies and reruns
 the same packages. This is not a new formal release, dual-engine CLI or mobile
 qualification. See the workflow summaries/artifacts for the exact tested source.
-[![Native compiler qualification](https://github.com/cbgroom/wasmcrelease/actions/workflows/native-compiler.yml/badge.svg?branch=work/native-wasmi-compiler)](https://github.com/cbgroom/wasmcrelease/actions/workflows/native-compiler.yml)
+[![Native compiler qualification](https://github.com/cbgroom/wasmcrelease/actions/workflows/native-compiler.yml/badge.svg?branch=main)](https://github.com/cbgroom/wasmcrelease/actions/workflows/native-compiler.yml)
+Qualified implementation: [six native builds + six downloaded-consumer jobs](https://github.com/cbgroom/wasmcrelease/actions/runs/34745887997),
+[complete consumer regression](https://github.com/cbgroom/wasmcrelease/actions/runs/34745902717)
+and [LibSearch regression](https://github.com/cbgroom/wasmcrelease/actions/runs/34745904387).
+The [retained receipt](admission/native-desktop-qualification.json) binds the
+exact implementation source and six package manifest digests. Main's live badge
+may be pending independently of these successful retained runs.
 
 Post-v0.0.10 Agent guidance strengthening: start with
 [Library-first discovery](skills/wasmc-lib-discovery/SKILL.md) before implementing
