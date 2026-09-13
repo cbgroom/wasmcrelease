@@ -2,13 +2,18 @@ use std::io::Write;
 use std::net::TcpListener;
 use std::time::Duration;
 use wasmc_lib_host_e2e::{
-    listener::PreauthorizedTcpListener, resident_app::ResidentApp, tcp::PreconnectedTcp,
+    app_engine::AppEngine, listener::PreauthorizedTcpListener, tcp::PreconnectedTcp,
 };
 fn main() {
     let args: Vec<_> = std::env::args().collect();
     let limit: usize = args[2].parse().unwrap();
     assert!((1..=64).contains(&limit));
-    let mut app = ResidentApp::new(&args[1], &args[3]).unwrap();
+    let mut app = AppEngine::new(
+        &args[1],
+        &args[3],
+        args.iter().any(|arg| arg == "--wasmtime"),
+    )
+    .unwrap();
     // Bind policy belongs solely to trusted fixture launcher, never guest.
     let socket = TcpListener::bind("127.0.0.1:0").unwrap();
     let port = socket.local_addr().unwrap().port();

@@ -1,7 +1,10 @@
+pub mod app_engine;
 pub mod listener;
 pub mod resident_app;
 pub mod resident_sum;
 pub mod tcp;
+#[cfg(feature = "wasmtime-engine")]
+pub mod wasmtime_app;
 
 /// Reviewed fixture marshalling into the frozen zero-import algorithm Lib.
 pub fn sum_bytes(bytes: &[u8], lib_path: &str) -> Result<i64, Box<dyn std::error::Error>> {

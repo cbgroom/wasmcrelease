@@ -1,7 +1,12 @@
-use wasmc_lib_host_e2e::resident_app::ResidentApp;
+use wasmc_lib_host_e2e::app_engine::AppEngine;
 fn main() {
     let args: Vec<_> = std::env::args().collect();
-    let mut app = ResidentApp::new(&args[1], &args[2]).unwrap();
+    let mut app = AppEngine::new(
+        &args[1],
+        &args[2],
+        args.iter().any(|arg| arg == "--wasmtime"),
+    )
+    .unwrap();
     for i in 0..1000 {
         assert_eq!(app.call(&[7, i as u8], 0).unwrap(), 7 + i64::from(i as u8));
     }

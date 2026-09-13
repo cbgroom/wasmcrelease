@@ -1,7 +1,7 @@
 name: Public Host and Lib end-to-end
 on:
   push:
-    branches: [main, work/host-lib-e2e, work/host-completion-guard, work/host-startup-identity, work/host-tcp-endpoint, work/host-tcp-read-stop, work/host-tcp-listener, work/host-resident-app, work/host-tcp-write-outcome]
+    branches: [main, work/host-lib-e2e, work/host-completion-guard, work/host-startup-identity, work/host-tcp-endpoint, work/host-tcp-read-stop, work/host-tcp-listener, work/host-resident-app, work/host-tcp-write-outcome, work/host-engine-parity]
   pull_request:
   workflow_dispatch:
 permissions:
@@ -13,7 +13,7 @@ jobs:
       matrix:
         os: [ubuntu-24.04, ubuntu-24.04-arm, macos-14, macos-15-intel, windows-2025, windows-11-arm]
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 20
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
@@ -48,6 +48,11 @@ jobs:
       - run: cargo +1.96.0 clippy --locked --manifest-path host/lib-e2e/rust/Cargo.toml --all-targets -- -D warnings
       - run: cargo +1.96.0 build --release --locked --manifest-path host/lib-e2e/rust/Cargo.toml
       - run: cargo +1.96.0 test --release --locked --manifest-path host/lib-e2e/rust/Cargo.toml
+      - name: Wasmi-only dependency contract
+        shell: bash
+        run: |
+          cargo +1.96.0 tree --locked --manifest-path host/lib-e2e/rust/Cargo.toml > default-tree.txt
+          if grep -E 'wasmtime|cranelift' default-tree.txt; then exit 1; fi
       - name: Preconnected TCP and frozen algorithm Lib
         shell: bash
         run: |
@@ -111,6 +116,20 @@ jobs:
           mkdir -p target/host-file-tmp
           TMPDIR="$PWD/target/host-file-tmp" deno run --allow-read=target --allow-write=target --allow-env=TMPDIR,NODE_V8_COVERAGE --allow-run="$file" host/file-io/test.mjs "$file"
           TMPDIR="$PWD/target/host-file-tmp" deno run --allow-read=current,libs/wasmc-owned-algorithms,host/completion,host/lib-e2e,target --allow-write=target --allow-env=TMPDIR,NODE_V8_COVERAGE --allow-run="$binary" host/lib-e2e/test.mjs "$binary"
+      - name: Optional Wasmtime profile qualification
+        shell: bash
+        run: |
+          cargo +1.96.0 clippy --locked --manifest-path host/lib-e2e/rust/Cargo.toml --features wasmtime-engine --all-targets -- -D warnings
+          cargo +1.96.0 test --release --locked --manifest-path host/lib-e2e/rust/Cargo.toml --features wasmtime-engine
+          cargo +1.96.0 build --release --locked --manifest-path host/lib-e2e/rust/Cargo.toml --features wasmtime-engine
+          server=host/lib-e2e/rust/target/release/tcp-server-reference
+          resident=host/lib-e2e/rust/target/release/resident-app-reference
+          if [[ "$RUNNER_OS" == Windows ]]; then server="$server.exe"; resident="$resident.exe"; fi
+          node host/tcp/server-test.mjs "$server" "$resident" --wasmtime
+          if [[ "$RUNNER_OS" != Windows ]]; then
+            bun host/tcp/server-test.mjs "$server" "$resident" --wasmtime
+            deno run --allow-net=127.0.0.1 --allow-read=current,host/lib-e2e,libs/wasmc-owned-algorithms,target --allow-write=target/host-tcp-app --allow-env=NODE_V8_COVERAGE --allow-run="$server,$resident" host/tcp/server-test.mjs "$server" "$resident" --wasmtime
+          fi
       - name: Public integrity
         if: runner.os == 'Linux'
         run: ./scripts/validate-maintainer.sh

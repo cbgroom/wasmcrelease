@@ -1,5 +1,18 @@
 # WAsmC release maintainer handoff
 
+## Optional resident Core engine parity
+
+Own branch work/host-engine-parity follows pushed write-outcome candidate.
+Default dependency graph remains Wasmi-only; optional wasmtime-engine adds
+exact47.0.4 runtime/Cranelift without WASI. Same digest-bound App and Lib,
+resident Stores/private slab,16byte bound and fuel reset. Trap poisons App,
+later call refuses without Lib replay. No new guest ABI or automatic promotion.
+Local Node/Bun/restricted Deno Wasmtime parity PASS19connections/1000calls,
+8listener controls and trap/budget/cleanup oracles. Six-platform Actions now
+qualifies both profiles; exact-source receipts required before main. Owning
+ENGINE_PROFILES.md exposes commands and limits. Full Host delivery1/5 gates;
+browser/mobile/typed async/blocked write/TLS/performance/release remain open.
+
 ## Write completion outcome milestone
 
 Own branch work/host-tcp-write-outcome from pushed resident-App candidate.
