@@ -2,6 +2,13 @@
 
 ## 0. Status
 
+Active next slice: shared bounded read reactor, maximum16owned reads, one OS
+queue/wakeup, independent cancellation and absolute deadlines. Reuse existing
+NativeOwnerSupervisor pins/quota/close fences. No guest ABI or Host syscall.
+Prior run34769384047 complete PASS; new source needs its own receipts.
+Local output admission remains64MiB, start46428KiB; no engine-cache writes.
+Guest Future/typed transport remains a later slice, not claimed by reactor tests.
+
 Active local slice: optional native-readiness backend using OS readiness and a
 cross-thread cancellation wakeup, without sleep polling or internal worker
 creation. Explicit opt-in; default completion crate dependency graph unchanged.
