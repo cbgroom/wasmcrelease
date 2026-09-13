@@ -452,7 +452,12 @@ the unopened-for-reactor offered descriptor unchanged. Local Darwin direct-rustc
 readiness suite39/39 PASS, strict warnings, reused exact warm Mio/getrandom/JSON
 dependencies and refreshed owned test binary; pool61644KiB <64MiB. Old-source
 38-test desktop receipts do not qualify this change. Full-source Actions now
-expects39 tests/eight reactor controls; new desktop receipts remain pending.
+expects39 tests/eight reactor controls. Actions run34776881599 completed SUCCESS,
+all nine jobs; actual native-readiness receipts for Darwinarm64, Linuxx64 and
+Windowsx64 each bind clean source8a7bb50997c648b5fc387fbc3e6aee17b6494c78,
+39 passes, six readiness/eight reactor controls and identical reactor source
+digest5760ad942c54dd74a139ed665bdc79711acc364829deb7ca1c4994eda4a78636.
+This accepts that bounded reactor milestone, not generic typed Host completion.
 No Host primitive, compiler/Provider bytes or immutable package identity changed.
 
 Full Host delivery denominator is five gates from host/v0/README.md, not
