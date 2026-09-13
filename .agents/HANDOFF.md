@@ -1,104 +1,67 @@
-# wasmc release maintainer handoff
+# WAsmC release maintainer handoff
 
 ## 0. Status
 
-- Branch: `release/v0.0.9` from current public `main`
-- Release: v0.0.9 local qualification PASS; resolve actual tag/main from Git
-- Integrated private SDK authority: `wasmc@bddf8a371698ac7f1ced87b02952df5be5359dad`
-- Runtime product candidate: resolve release.json runtime.product_candidate_commit
-- Strict evidence runner/SDK authority: `bddf8a371698ac7f1ced87b02952df5be5359dad`
-- Existing immutable truth: `v0.0.1` through `v0.0.8` remain unchanged
+Task state: started — independent Node18/standard-Lib feature reproduction.
+Branch: fix/node18-feature-admission. Public v0.0.9 is already released;
+immutable tag and release branch remain unchanged. Main may carry follow-up
+consumer tooling/docs, not new admitted compiler or Lib binaries.
 
 ## 1. North Star
 
-Let a zero-context Agent select an immutable release, load the bundled developer
-or Lib Skill, reuse Rust/WIT priors, compile through the smallest public path,
-grant only explicit imports, and prove behavior without private-source knowledge.
+Library-first typed WIT programming, CoreLib-owned storage and explicit Host
+authority. Feature compatibility is artifact-specific, not a guessed Node
+major-version promise or a language-memory-management change.
 
 ## 2. Current Focus
 
-Documentation-only follow-up completed: README owns the full v0.0.9 testing
-handoff, including exact selection/verification, current vs frozen entrances,
-provider compatibility, commands, passed scope, exclusions and failure reports.
-Release page follows that same explanation. Immutable v0.0.9 and release branch
-remain unchanged; only main documentation and its integrity metadata advance.
-The exact release Actions run completed with all five jobs successful.
+External tpc02 report says Node18.19.1 accepts the current compiler but rejects
+std1.4.0 artifact with value-type0x64. Original scripts/logs are unavailable.
+Treat that report as attributed observation, not official measurement. Rebuild
+a minimal independent test against immutable public v0.0.9 artifact digests.
 
-Task state: active — user authorized the narrow encoded-artifact false-positive
-repair on 2026-09-13. Public latest remains immutable v0.0.8. Preserve raw and
-authorized receipts in admission/credential-scan-v009-*.json: raw findings are
-not erased. Only two exact historical compiler carrier blobs can qualify,
-after exact decoded compiler digest, canonical Base64, import-free Wasm and
-all-nine-detector decoded-byte proof. Unknown carriers and deleted historical
-credentials reject; scripts/test-credential-scan.mjs passes these negatives.
-Latest clean private compiler authority is recorded in
-admission/compiler-build-v009.json:1351666 bytes, zero imports. Its exact
-current/ carriers passed90 distribution outputs,23 reconstructed expression
-cases and192 managed-loop calls per Host. Standard Lib strict package verify
-passes; each Host passes5120 WAsmC/Rust same-Lib caller checks. Public SDK
-Wasmi/Wasmtime tests pass18/18. These tests are not the original114 external
-cases or a fresh LLM generation benchmark. Finish same-archive Host receipts
-and final integrity/scan before immutable v0.0.9 tag or main promotion.
-Candidate checkpoint is not publication acceptance. No MCPGit deployment.
+## 3. Existing Evidence
 
-Publish the latest compiler, standard Lib and existing engine-neutral
-`wasmc-core-runtime` Rust SDK. Preserve `dist/`,
-`package/`, and `libs/` byte-for-byte from v0.0.4. GitHub Actions may test
-published bytes and SDK source but must not build or admit canonical
-compiler/Lib artifacts.
+v0.0.9 compiler build/qualification and same-archive Host receipts live under
+admission/. Exact-release Actions run34726851005 passed all five jobs. Those
+results cover their named Hosts, not Node18 or every future engine version.
+Current/ owns current compiler entrances; dist/package/libs are frozen v0.0.4.
 
-## 3. Release Evidence
+## 4. Plan and Validation
 
-- Runtime compiler:1351666 bytes; exact SHA in compiler-build-v009.json.
-- One exact source-free archive: resolve runtime-local-host-evidence-v009.json.
-- Node v26.5.1, Bun 1.3.14, and Deno 2.9.4 each pass self-test, compile,
-  WebAssembly validation, instantiation, and `run(6,18)=42`.
-- Deterministic black-box Fresh-Agent harness:100/100 (not new LLM generation),
-  findings=0; stale candidate and split archive
-  negative gates fail closed.
-- Public Core Runtime SDK: 18/18 tests pass with Wasmi and Wasmtime enabled;
-  module inspection remains independent of synchronous Wasmtime compilation.
-
-## 4. Validation Commands
-
-```bash
-./scripts/validate-maintainer.sh
-cargo test --locked -p wasmc-core-runtime
-node examples/agent-start/run.mjs
-(for runtime in node bun deno; do ./scripts/validate-source-free-runtime.sh "$runtime"; done)
-(cd examples/rust-wasmtime && cargo test --locked && cargo run --locked)
-```
+Inspect actual Core types/operators with wasm-tools; obtain official pinned
+Node18 runtime with SHA verification; compare compiler/provider/std separately.
+Use independent minimal feature probes and feature-disabled validation to
+identify the rejection. Add digest-bound consumer compatibility metadata and
+deterministic preflight only after actual evidence. Validate probes/negatives,
+current corpus, standard caller oracle, integrity and unchanged artifacts.
 
 ## 5. Current Action
 
-Task state: exact `v0.0.9` candidate is assembled and locally verified. Finish
-the high-confidence reachable-blob scan, commit and push the immutable release
-branch/tag, verify Raw/jsDelivr bytes, then advance mutable `main`.
+Resume by independently testing exact artifacts on Node18 and current Hosts.
+No original114-case reproduction or external performance-number adoption.
 
 ## 6. Next Actions
 
-1. Run the final public-history and reachable-blob scan immediately before publication.
-2. Publish the exact candidate through a new immutable `v0.0.9` tag without moving older tags.
-3. Verify fresh GitHub Raw/jsDelivr and Git-consumer SDK use, then advance `main`.
+After reproduction, publish self-contained compatibility evidence/instructions
+and update the Release explanation. Defer catalog/third-party build work to
+its own source-authority stage; do not invent shipped commands here.
 
-## 7. Do Not Do
+## 7. Boundaries
 
-- Do not copy private compiler source or caches.
-- Do not mutate frozen compatibility trees or older tags.
-- Do not mutate or retag `v0.0.1` through `v0.0.8`.
-- Do not make npm, an external JavaScript registry, or GitHub Actions a release-publication dependency.
+No tag/immutable release-branch movement, binary regeneration, private compiler
+source exposure, MCPGit deployment, Python workflow or new heavy Cargo pool.
+Do not infer complete required features from target_features custom metadata.
+Do not label the complete module's validation a proof of allocator isolation.
 
-## 8. Recovery / Resume Commands
+## 8. Recovery
 
-```bash
-cd <wasmcrelease-checkout>
-git status --short --branch
-./scripts/maintainer-orient.sh
-```
+git status --short --branch; git rev-parse HEAD; git ls-remote origin
+Read branch HANDOFF and committed evidence. Keep owned downloaded runtimes and
+test outputs under ignored target/; preserve unrelated worktrees and caches.
 
 ## 9. Completion Gate
 
-Completion means immutable `v0.0.9` and mutable `main` resolve to the admitted
-candidate, older tags remain unchanged, Raw/jsDelivr bytes match, and public
-Agent, staged Node/Bun/Deno, Lib, Rust/Wasmtime, and Core Runtime SDK consumer
-tests pass without rebuilding canonical compiler/Lib artifacts.
+Independent exact-artifact reproduction, proven feature diagnosis, deterministic
+compatibility rejection before instantiation, digest/negative tests and clear
+public instructions. Start/partial checkpoints do not imply completed work.
