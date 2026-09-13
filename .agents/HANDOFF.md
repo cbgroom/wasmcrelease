@@ -1,5 +1,19 @@
 # WAsmC release maintainer handoff
 
+## Startup binding identity START
+
+Own branch work/host-startup-identity, based on accepted completion guard main.
+Keep existing i32 fixture IDs inside registry; add Host-side scoped tickets
+validated before lookup (fresh binding-instance256-bit identity + local token).
+No new external primitive or physical guest ABI. Identity supplied by trusted
+Host entropy/bootstrap, never guest-selected or default fixed. Reject zero/
+malformed identity; uniqueness across restarts depends on fresh Host issuance.
+Actual independent JS/Native process tests must collide local IDs but reject old
+full tickets under a different instance identity. Same-identity reuse is not
+claimed detectable across independent processes. Scoped boundary precedes
+typed Core SDK/transport; preserve old compiler/Lib products and tags.
+START precedes implementation. Local tests proceed while old/new Actions run.
+
 ## Completion guard acceptance
 
 Current exact-source run34749085033 PASS all6desktop targets and required job.
