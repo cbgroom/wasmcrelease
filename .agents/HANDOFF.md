@@ -2,8 +2,8 @@
 
 ## 0. Status
 
-Active source line: work/host-quarantine-supervisor. Metadata consolidation:
-work/host-handoff-consolidation. Resolve exact revisions with Git; inspect
+Active source line: work/host-kernel-engine-parity, following pushed supervisor
+and handoff consolidation. Resolve exact revisions with Git; inspect
 status/worktrees before editing and preserve unrelated changes. Linked worktrees
 belong under /Users/youxianshi/code/.worktrees/wasmcrelease.
 
@@ -13,7 +13,7 @@ admission/host-transport-qualification.json and
 admission/host-resident-write-qualification.json for accepted exact sources,
 runs, independently read receipts and scope. Do not redo those implementations.
 
-Subsequent optional Wasmtime, benchmarks, failed-stop/error-path protection,
+Subsequent optional Wasmtime, kernel engine parity, benchmarks, failed-stop/error-path protection,
 real browser probes and bounded quarantine supervisor are pushed source work.
 They need their own exact-source cross-platform acceptance before main.
 Never borrow an old-source PASS. No release/tag/deployment was performed.
@@ -48,6 +48,11 @@ Receipts identify exact App/Lib digests. Pure microbenchmark observed Native
 Wasmi about216-230ns and Wasmtime about69ns per two-byte App/Lib call; not an
 exact-source qualified performance guarantee. Repeat at accepted source.
 
+Kernel scalar simulator now has explicit optional Wasmtime profile, default
+Wasmi-only. Local four Core cases agree with JS; browser probes also run the
+same digest-bound kernel. This is simulator-only, not canonical typed SDK.
+Both Native profiles reset fuel per call; no hidden WASI or guest authority.
+
 ## 4. Plan and Validation
 
 Read release-host-integration, release-integrity and release-agent-docs Skills.
@@ -77,7 +82,8 @@ Do not count locally completed slices as all-platform/full SDK completion.
 
 ## 6. Next Actions
 
-Next: inspect latest quarantine-supervisor exact run; fix real failures locally.
+Next: inspect latest kernel-engine-parity exact runs (Host composition and Core
+Host contract); fix real failures locally. Prior accepted source needs no redo.
 Accept relevant source only with exact receipts, merge current main metadata
 without discarding it, refresh integrity, then normal expected-base FF promotion.
 Continue typed Core transport/SDK and Native supervision parity afterwards.

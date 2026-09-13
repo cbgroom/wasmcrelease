@@ -29,6 +29,12 @@ are deliberately retained in the page supervisor until teardown. It does not
 mean all resources freed after a failed close. Backends in those four failure
 controls are deterministic fixtures, not real browser device I/O.
 
+The same scalar Host kernel guest also runs four size cases against MemoryHost,
+with a digest checked against Native Wasmi/Wasmtime receipts. The simulator's
+cancel behavior is not a real asynchronous I/O backend; do not use it in place
+of the completion pin/close fences. Browser supervisor admission/recovery is
+additionally exercised once with a deliberately failed-close fixture.
+
 Local Chrome, Firefox and WebKit were exercised through Playwright CLI. Actions adds separate
 Chrome/Firefox/WebKit cells and requires them alongside six Native desktop
 cells. Receipts include actual user agent; source authority is the exact run

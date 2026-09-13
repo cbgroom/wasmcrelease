@@ -77,6 +77,24 @@ Wasmtime parity, cancellation races and performance qualification are subsequent
 gates. This prototype does not replace the existing Runtime SDK or old release
 artifacts, and existing immutable tags remain unchanged.
 
+The subsequent mutable reference now offers explicit optional Wasmtime47 Core
+execution (`wasmtime-engine`), while default dependency graph stays Wasmi-only.
+Both profiles bind the same seven scalar Host imports and reset fuel per call.
+The four size cases match JS and report the compiled guest digest. This does
+not make the semantic WIT draft a completed typed resource/async SDK, and the
+memory simulator cancellation must not substitute for real I/O close fences.
+
+```sh
+cargo build --release --locked --manifest-path host/v0/rust/Cargo.toml --features wasmtime-engine
+node host/v0/core-test.mjs host/v0/rust/target/release/wasmc-host-contract-reference
+node host/v0/core-test.mjs host/v0/rust/target/release/wasmc-host-contract-reference --wasmtime
+```
+
+Real browser probes in host/browser additionally execute this same digest-bound
+Core guest alongside App/Lib/guard ownership tests. Cross-platform acceptance
+must read exact candidate runs in both Host workflows, not treat local proof
+or existing prototype acceptance as final immutable SDK qualification.
+
 Next: review draft semantic WIT and define negotiated Core transport; one session-bound
 resource model; browser/Wasmtime parity; real restricted backend with deadlines,
 revocation and late-completion fault tests. Only then consider shared-window
