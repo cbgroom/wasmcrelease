@@ -1,7 +1,7 @@
 name: Public Host and Lib end-to-end
 on:
   push:
-    branches: [main, work/host-lib-e2e, work/host-completion-guard, work/host-startup-identity, work/host-tcp-endpoint, work/host-tcp-read-stop, work/host-tcp-listener, work/host-resident-app, work/host-tcp-write-outcome, work/host-engine-parity, work/host-resident-benchmark, work/host-stop-failure, work/host-driver-errors, work/host-browser-parity, work/host-quarantine-supervisor, work/host-kernel-engine-parity]
+    branches: [main, work/host-lib-e2e, work/host-completion-guard, work/host-startup-identity, work/host-tcp-endpoint, work/host-tcp-read-stop, work/host-tcp-listener, work/host-resident-app, work/host-tcp-write-outcome, work/host-engine-parity, work/host-resident-benchmark, work/host-stop-failure, work/host-driver-errors, work/host-browser-parity, work/host-quarantine-supervisor, work/host-kernel-engine-parity, work/host-native-owner-supervisor]
   pull_request:
   workflow_dispatch:
 permissions:
@@ -152,7 +152,7 @@ jobs:
         env:
           SOURCE: ${{ github.sha }}
         run: |
-          printf '%s\n' "Source $SOURCE; $RUNNER_OS/$RUNNER_ARCH; 76 guard transitions, 10 fault controls, 8 guard Rust tests, 4 TCP/listener Rust tests, 8-process identity, 20 file/App/Lib cases, 8 TCP/Lib pairs, 4 read-stop pairs with 9 controls, 19 resident App/Lib server connections, 1000 resident calls per engine and 8 listener controls; guest trap poisons with no replay, not guest async ABI or write cancellation qualification" >> "$GITHUB_STEP_SUMMARY"
+          printf '%s\n' "Source $SOURCE; $RUNNER_OS/$RUNNER_ARCH; 76 guard transitions, 10 fault controls, 12 guard/owner Rust tests, 5 TCP/listener Rust tests, 8-process identity, 20 file/App/Lib cases, 8 TCP/Lib pairs, 4 read-stop pairs with 9 controls, 19 resident App/Lib server connections, 1000 resident calls per engine and 8 listener controls; guest trap poisons with no replay, not guest async ABI or generic failed-shutdown qualification" >> "$GITHUB_STEP_SUMMARY"
   browser:
     strategy:
       fail-fast: false

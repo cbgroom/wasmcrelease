@@ -3,6 +3,7 @@ use std::{
     sync::atomic::{AtomicU32, Ordering},
 };
 static NEXT: AtomicU32 = AtomicU32::new(1);
+pub mod owner_supervisor;
 pub mod scoped;
 struct Window {
     size: usize,

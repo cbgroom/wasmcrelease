@@ -54,6 +54,69 @@ mod tests {
     use super::*;
     use std::net::TcpListener;
     #[test]
+    fn native_supervisor_retires_real_tcp_only_after_close_ack() {
+        use std::sync::{
+            atomic::{AtomicBool, AtomicUsize, Ordering},
+            Arc,
+        };
+        use wasmc_completion_guard::owner_supervisor::{NativeOwnerSupervisor, QuarantineEndpoint};
+        struct Fence {
+            tcp: PreconnectedTcp,
+            close: Arc<AtomicBool>,
+            reads: Arc<AtomicUsize>,
+        }
+        impl QuarantineEndpoint for Fence {
+            fn acknowledge_close(&mut self) -> Result<(), i32> {
+                if !self.close.load(Ordering::Acquire) {
+                    return Err(-8);
+                }
+                let handle = self.tcp.stop_handle()?;
+                match handle.shutdown(Shutdown::Both) {
+                    Ok(()) => Ok(()),
+                    Err(e) if e.kind() == std::io::ErrorKind::NotConnected => Ok(()),
+                    Err(_) => Err(-8),
+                }
+            }
+            fn retire(&mut self) -> Result<(), i32> {
+                self.tcp.release()
+            }
+        }
+        let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+        let client = TcpStream::connect(listener.local_addr().unwrap()).unwrap();
+        let (mut peer, _) = listener.accept().unwrap();
+        client
+            .set_read_timeout(Some(std::time::Duration::from_millis(30)))
+            .unwrap();
+        peer.set_read_timeout(Some(std::time::Duration::from_secs(1)))
+            .unwrap();
+        let close = Arc::new(AtomicBool::new(false));
+        let reads = Arc::new(AtomicUsize::new(0));
+        let mut supervisor = NativeOwnerSupervisor::new(1).unwrap();
+        let ticket = match supervisor.admit(
+            Fence {
+                tcp: PreconnectedTcp::new(client, false),
+                close: close.clone(),
+                reads: reads.clone(),
+            },
+            16,
+        ) {
+            Ok(t) => t,
+            Err(_) => panic!("admission failed"),
+        };
+        let owner = supervisor.endpoint_mut(ticket).unwrap();
+        owner.reads.fetch_add(1, Ordering::Relaxed);
+        assert_eq!(owner.tcp.read(1), Err(-8)); // actual timeout has settled I/O
+        supervisor.quarantine_settled(ticket).unwrap();
+        assert_eq!(supervisor.retire_quarantine(ticket), Err(-8));
+        assert_eq!(supervisor.resource_counts(ticket), Ok([1, 1]));
+        assert_eq!(supervisor.counts(), [0, 1]);
+        close.store(true, Ordering::Release);
+        supervisor.retire_quarantine(ticket).unwrap();
+        assert_eq!(supervisor.counts(), [0, 0]);
+        assert_eq!(reads.load(Ordering::Relaxed), 1);
+        assert_eq!(peer.read(&mut [0; 1]).unwrap(), 0);
+    }
+    #[test]
     fn read_deadline_failure_releases_descriptor() {
         let listener = TcpListener::bind("127.0.0.1:0").unwrap();
         let client = TcpStream::connect(listener.local_addr().unwrap()).unwrap();

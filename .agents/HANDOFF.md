@@ -2,7 +2,7 @@
 
 ## 0. Status
 
-Active source line: work/host-kernel-engine-parity, following pushed supervisor
+Active source line: work/host-native-owner-supervisor, following pushed kernel
 and handoff consolidation. Resolve exact revisions with Git; inspect
 status/worktrees before editing and preserve unrelated changes. Linked worktrees
 belong under /Users/youxianshi/code/.worktrees/wasmcrelease.
@@ -53,6 +53,14 @@ Wasmi-only. Local four Core cases agree with JS; browser probes also run the
 same digest-bound kernel. This is simulator-only, not canonical typed SDK.
 Both Native profiles reset fuel per call; no hidden WASI or guest authority.
 
+Native owner registry adds scoped quota/ownership return/settled completion/
+quarantine with exclusive borrow, four unit controls plus actual TCP timeout ->
+injected failed ack -> real shutdown/peer EOF with one read.12guard/5TCP tests.
+This is internal Host Rust, not general async recovery/guest ABI. Underlying
+raw guard terminal32767-owner process budget is explicit in NATIVE_SUPERVISOR.md.
+Mac ARM Bun Kernel CI empty sync-spawn stdout is corrected with event-driven
+spawn/pipe-drain/close, no replay. Changed source requires own qualification.
+
 ## 4. Plan and Validation
 
 Read release-host-integration, release-integrity and release-agent-docs Skills.
@@ -82,7 +90,7 @@ Do not count locally completed slices as all-platform/full SDK completion.
 
 ## 6. Next Actions
 
-Next: inspect latest kernel-engine-parity exact runs (Host composition and Core
+Next: inspect latest native-owner-supervisor exact runs (Host composition and Core
 Host contract); fix real failures locally. Prior accepted source needs no redo.
 Accept relevant source only with exact receipts, merge current main metadata
 without discarding it, refresh integrity, then normal expected-base FF promotion.
