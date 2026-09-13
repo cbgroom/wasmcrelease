@@ -1,0 +1,13 @@
+package local:lib_host_e2e;
+interface transport {
+  sum_window: func(length:s32) -> i64;
+}
+interface api {
+  run: func(length:s32, fail:s32) -> i64 {
+    let total:i64 = sum_window(length);
+    let guard:s32 = 1 / (1 - fail);
+    if (guard == 1) { return total; }
+    return total + 1;
+  }
+}
+world app { import transport; export api; }

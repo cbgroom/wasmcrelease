@@ -330,3 +330,8 @@ Host scheduled I/O phases, not a completed guest async/resource ABI. No private
 compiler changes, product mutation, new primitive, networking or old tag move.
 START precedes implementation. Qualify local and actual public Actions before
 normal expected-base main advancement. Existing five-gate Host scope unchanged.
+Implemented12cases across empty/1/4/16-byte windows and write/readonly/trap.
+Local Node/Bun/restricted Deno against Wasmi PASS, strict Clippy/actionlint PASS.
+Same digest-bound immutable Lib and compiled App; independent final disk oracle.
+Public README links scope and Actions badge. No general guest async ABI added.
+Push exact implementation, read actual six-platform run before main acceptance.

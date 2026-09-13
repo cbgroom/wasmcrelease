@@ -4,6 +4,13 @@
 
 Source-free public packages for the private-source `wasmc` compiler.
 
+Experimental [published Lib + real Host end-to-end chain](host/lib-e2e/README.md):
+real input file → bounded staging → WAsmC App → reviewed Rust algorithm Lib →
+real output file + explicit sync. The same App/Lib bytes run in JS and Wasmi;
+independent disk oracles cover readonly denial and trap-before-flush. This is
+scheduled I/O composition, not a complete guest async ABI or production SDK.
+[![Host and Lib E2E](https://github.com/cbgroom/wasmcrelease/actions/workflows/host-lib-e2e.yml/badge.svg?branch=main)](https://github.com/cbgroom/wasmcrelease/actions/workflows/host-lib-e2e.yml)
+
 Next experimental Host capability: [real preopened file I/O](host/file-io/README.md).
 Independent JS/Rust adapters reuse read/write/invoke-sync/release without guest
 paths or certificate-specific native calls. It is not a completed Core/WIT
