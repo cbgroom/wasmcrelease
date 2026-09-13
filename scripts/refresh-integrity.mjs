@@ -39,6 +39,7 @@ if (index.latest !== releaseJson.version || !versionRow || versionRow.tag !== re
 const runtimeFiles = (await walk('runtime')).sort();
 const admissionFiles = (await walk('admission')).sort();
 const rootSkillFiles = (await walk('skills/wasmc-developer')).sort();
+rootSkillFiles.push(...await walk('skills/wasmc-lib'));
 const sdkFiles = (await walk('sdk')).sort();
 const currentFiles = (await walk('current')).sort();
 const standardFiles = (await walk('standard')).sort();
@@ -47,6 +48,7 @@ const compatibilityFiles = (await walk('compatibility')).sort();
 const catalogFiles = (await walk('catalog')).sort();
 const catalogTools = ['scripts/lib-catalog.mjs', 'scripts/wasmc-lib.mjs', 'scripts/refresh-lib-catalog.mjs', 'scripts/test-lib-catalog.mjs', 'scripts/lib-install.mjs', 'scripts/test-lib-install.mjs', 'scripts/validate-lib-install.mjs'];
 const ciTools = ['scripts/ci-suite.mjs','scripts/ci-summary.mjs','scripts/test-ci-reporting.mjs'];
+ciTools.push('scripts/agent-guidance-contract.mjs', 'scripts/test-agent-guidance.mjs');
 const compatibilityTools = ['scripts/core-compatibility.mjs', 'scripts/check-core-compatibility.mjs', 'scripts/test-core-compatibility.mjs'];
 const rustWorkspaceFiles = ['Cargo.toml', 'Cargo.lock'];
 const existing = releaseJson.artifacts.map((row) => row.path);
