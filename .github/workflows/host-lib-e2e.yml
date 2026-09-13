@@ -1,7 +1,7 @@
 name: Public Host and Lib end-to-end
 on:
   push:
-    branches: [main, work/host-lib-e2e, work/host-completion-guard, work/host-startup-identity, work/host-tcp-endpoint, work/host-tcp-read-stop, work/host-tcp-listener, work/host-resident-app, work/host-tcp-write-outcome, work/host-engine-parity, work/host-resident-benchmark, work/host-stop-failure, work/host-driver-errors, work/host-browser-parity]
+    branches: [main, work/host-lib-e2e, work/host-completion-guard, work/host-startup-identity, work/host-tcp-endpoint, work/host-tcp-read-stop, work/host-tcp-listener, work/host-resident-app, work/host-tcp-write-outcome, work/host-engine-parity, work/host-resident-benchmark, work/host-stop-failure, work/host-driver-errors, work/host-browser-parity, work/host-quarantine-supervisor]
   pull_request:
   workflow_dispatch:
 permissions:
@@ -27,6 +27,7 @@ jobs:
       - run: node host/completion/fault-test.mjs
       - run: node host/tcp/stop-failure-test.mjs
       - run: node host/tcp/driver-error-test.mjs
+      - run: node host/tcp/supervisor-test.mjs
       - name: Independent process startup identity
         shell: bash
         run: |
@@ -103,6 +104,8 @@ jobs:
           deno run host/tcp/stop-failure-test.mjs
           bun host/tcp/driver-error-test.mjs
           deno run host/tcp/driver-error-test.mjs
+          bun host/tcp/supervisor-test.mjs
+          deno run host/tcp/supervisor-test.mjs
           deno run --allow-net=127.0.0.1 --allow-env=NODE_V8_COVERAGE --allow-run="$write" host/tcp/write-test.mjs "$write"
           bun host/tcp/server-test.mjs "$server" "$resident"
           mkdir -p target/host-tcp-app
@@ -177,7 +180,7 @@ jobs:
           [[ "$url" == http://127.0.0.1:* ]] || { cat "$RUNNER_TEMP/wasmc-browser-server.err"; exit 1; }
           npm exec --yes --package=@playwright/cli@0.1.19 -- playwright-cli -s=wasmc-host-ci open "$url" --browser "$BROWSER"
           npm exec --yes --package=@playwright/cli@0.1.19 -- playwright-cli -s=wasmc-host-ci --raw eval 'async () => { const receipt=await globalThis.receiptPromise; if(!receipt.accepted) throw Error(receipt.error); return receipt; }' > "$RUNNER_TEMP/wasmc-browser-receipt.json"
-          node --input-type=module -e 'import{readFileSync}from"node:fs";import assert from"node:assert/strict";const r=JSON.parse(readFileSync(process.argv[1]));assert.ok(r.accepted&&r.no_replay&&r.trap_poisoned&&r.resource_cleanup&&r.quarantine_retained);assert.equal(r.resident_calls,1000);assert.equal(r.guard_cases,4);assert.equal(r.stop_failure_cases,4);console.log(JSON.stringify(r));' "$RUNNER_TEMP/wasmc-browser-receipt.json"
+          node --input-type=module -e 'import{readFileSync}from"node:fs";import assert from"node:assert/strict";const r=JSON.parse(readFileSync(process.argv[1]));assert.ok(r.accepted&&r.no_replay&&r.trap_poisoned&&r.resource_cleanup&&r.quarantine_retained);assert.equal(r.resident_calls,1000);assert.equal(r.guard_cases,4);assert.equal(r.stop_failure_cases,4);assert.equal(r.supervisor_cases,1);console.log(JSON.stringify(r));' "$RUNNER_TEMP/wasmc-browser-receipt.json"
           printf '%s\n' "Source $SOURCE; real $BROWSER; App/Lib1000 resident calls; four Core/guard/quarantine probes; no raw TCP/mobile claim" >> "$GITHUB_STEP_SUMMARY"
   required:
     if: always()

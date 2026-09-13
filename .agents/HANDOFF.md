@@ -1,5 +1,13 @@
 # WAsmC release maintainer handoff
 
+## Bounded supervisor acceptance
+
+Exact source/run and independently read14supervisor/3browser recovery receipts
+are in admission/host-supervisor-qualification.json. All six Native platform,
+three browser and required cells PASS. This accepts bounded JS supervision,
+not subsequent Native registry/Kernel/lifetime source or immutable release.
+Earlier sections below retain their chronological scope and limitations.
+
 ## Browser/resident engine acceptance
 
 Current exact source/run and independently read receipts are retained in
@@ -38,6 +46,18 @@ advance normally only while remote main remains prior accepted completion
 guard base (resolve Git origin and admission); no force/tag/product changes.
 Full Host delivery remains1/5 gates. Next accept later exact candidates from
 their own receipts, close typed transport/engine/profile gates, then release.
+## Bounded quarantine owner supervision
+
+Own branch work/host-quarantine-supervisor follows pushed real-browser source.
+Optional trusted JS supervisor counts active+quarantine slots, rejects quota
+and duplicate endpoint before I/O. Fresh scoped owner tickets; terminal32767
+exhaustion, foreign/stale denial. Explicit retirement obtains backend close
+ack and endpoint retirement before drain/free, no fabricated ack/business replay.
+Failures retain pins/quota; concurrent retirement single active attempt. Local
+14controls on JS Hosts plus browser quota/recovery probe. Owning SUPERVISOR.md
+states exclusive per-supervisor ownership/ordinary release-fault/native/race/
+never-settling limitations. Extend exact-source nine-cell matrix. No new guest
+ABI or frozen artifact changes; full Host delivery1/5 pending remaining gates.
 
 ## Real browser ownership/App Lib probe
 
