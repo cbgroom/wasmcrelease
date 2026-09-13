@@ -46,6 +46,8 @@ test hooks restore in finally and expose no tickets in the published receipt.
 One explicit-quarantine retirement probe also omits the final internal release
 acknowledgement after mutation. Even zero records retain quota; another cleanup
 rejects without reclose or replay. This remains controlled glue, not device I/O.
+Three resident input controls require owned getter capture, ignored external
+traversal and denied call/release reentry before marshalling into the Lib slab.
 
 Local Chrome, Firefox and WebKit were exercised through Playwright CLI. Actions adds separate
 Chrome/Firefox/WebKit cells and requires them alongside six Native desktop

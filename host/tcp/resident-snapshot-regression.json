@@ -1,0 +1,13 @@
+{
+  "schema": "wasmc-host-resident-snapshot-regression/v1",
+  "source": "b6579128438720933774830a1903a01771b361fe",
+  "local_engine": "Node26.5.1 macOS arm64",
+  "source_byte_first_read": 7,
+  "source_byte_second_read": 256,
+  "expected_lib_result": 7,
+  "observed_lib_result": 256,
+  "accepted": false,
+  "cause": "Array.from validation followed by caller-controlled forEach rereading source",
+  "repair": "owned indexed snapshot before provider mutation plus exclusive capture/execution/release fence",
+  "compiler_or_lib_binary_changed": false
+}

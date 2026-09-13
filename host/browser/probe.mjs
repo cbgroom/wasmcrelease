@@ -29,6 +29,15 @@ async function run(){
     try{app.call([7],1);throw Error('expected guest trap');}catch(error){check(error instanceof WebAssembly.RuntimeError,'wrong trap');}
     rejects(()=>app.call([7]),-8);check(app.libCalls()===1005,'guest replay');
   }finally{app.release();}
+  const capturedApp=await createResidentApp(lib,guest);let residentSnapshotCases=0;
+  try {
+    let reads=0;const bytes=[7];Object.defineProperty(bytes,0,{get:()=>++reads===1?7:256});
+    check(capturedApp.call(bytes)===7n&&reads===1,'resident input read twice');residentSnapshotCases++;
+    let traversals=0;const traversal=[7];traversal.forEach=fn=>{traversals++;fn(256,16);};
+    check(capturedApp.call(traversal)===7n&&traversals===0,'external traversal trusted');residentSnapshotCases++;
+    const reentrant=[9];Object.defineProperty(reentrant,0,{get:()=>{rejects(()=>capturedApp.call([1]),-8);rejects(()=>capturedApp.release(),-4);return 9;}});
+    check(capturedApp.call(reentrant)===9n&&capturedApp.libCalls()===3,'resident capture reentry');residentSnapshotCases++;
+  }finally{capturedApp.release();}
   let guardCases=0;
   for(const size of [0,1,4,16]){
     const guard=ScopedCompletionGuard.fresh(),foreign=ScopedCompletionGuard.fresh();
@@ -99,7 +108,7 @@ async function run(){
     check(await isolated.retireQuarantine(rejected.quarantineTicket).catch(error=>error)===-7,'unknown cleanup retried');
     check(isolatedReads===1&&isolatedCloses===1&&isolatedStops===1&&releaseCalls===2,'cleanup replay');quarantineRetirementCases++;
   }finally{ScopedCompletionGuard.prototype.release=originalRelease;}
-  return {accepted:true,browser_user_agent:navigator.userAgent,app_sha256:appSha,lib_sha256:libSha,kernel_sha256:await digest(kernelBytes),kernel_core_cases:4,kernel_simulator_only:true,resident_calls:1000,core_cases:4,guard_cases:guardCases,completion_snapshot_cases:completionSnapshotCases,driver_write_snapshot_cases:writeSnapshotCases,guard_pool_cases:guardPoolCases,quarantine_retirement_cases:quarantineRetirementCases,stop_failure_cases:stopCases,supervisor_cases:1,trap_poisoned:true,no_replay:true,resource_cleanup:true,quarantine_retained:true,raw_tcp:false,real_device_io:false,mobile_qualified:false};
+  return {accepted:true,browser_user_agent:navigator.userAgent,app_sha256:appSha,lib_sha256:libSha,kernel_sha256:await digest(kernelBytes),kernel_core_cases:4,kernel_simulator_only:true,resident_calls:1000,resident_snapshot_cases:residentSnapshotCases,core_cases:4,guard_cases:guardCases,completion_snapshot_cases:completionSnapshotCases,driver_write_snapshot_cases:writeSnapshotCases,guard_pool_cases:guardPoolCases,quarantine_retirement_cases:quarantineRetirementCases,stop_failure_cases:stopCases,supervisor_cases:1,trap_poisoned:true,no_replay:true,resource_cleanup:true,quarantine_retained:true,raw_tcp:false,real_device_io:false,mobile_qualified:false};
 }
 globalThis.receiptPromise=run().catch(error=>({accepted:false,error:String(error)})).then(receipt=>{
   document.querySelector('#receipt').textContent=JSON.stringify(receipt);

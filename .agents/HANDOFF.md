@@ -2,6 +2,13 @@
 
 ## 0. Status
 
+Live main now also accepts the dependency-gate milestone through
+admission/host-mobile-dependency-qualification.json. Resolve main/current exact
+source from Git; both whole workflows for that checkpoint pass. New source
+here includes the later explicit-cleanup fence and fixed entrypoint ordering,
+plus dependency caches and resident input capture. This containing candidate
+requires its own full qualification before promotion.
+
 Active source: work/host-empty-guard-pool. Local proof complete; exact CI/main
 acceptance pending (current milestone33%, full Host delivery20%). Idle JS guards
 reuse only after acknowledged retirement, zero records, no revoke and two fresh
@@ -159,6 +166,17 @@ engine correctness paths and benchmark checks. Read actual per-case receipts.
 Cancel obsolete known-defective own runs only; never weaken required gates.
 
 ## 5. Current Action
+
+The resident-input-snapshot branch fixes actual double-read/traversal/reentry
+around the curated Lib slab. Nine Node/Bun/restricted Deno controls and real
+19-frame TCP server regressions pass locally. The old256-versus7 result is
+preserved in host/tcp/resident-snapshot-regression.json. No frozen compiler,
+Lib/CoreLib, Native source, Core ABI or Host import changes. Separate candidate
+qualification remains required; earlier cache/pool source PASS cannot qualify it.
+Chrome152/Firefox155/WebKit26.5 also pass three resident snapshot controls plus
+all earlier Core/guard/quarantine/pool/1000-call probes. Local browser sessions
+and the temporary server are closed after testing. Narrow local milestone is
+33% by local/CI/main gates, full Host remains20% by five delivery gates.
 
 The ci-build-cache branch isolates fixed-toolchain/lock/platform Cargo dependency
 caches. Owned Host packages are always cleaned and rebuilt; all qualification
