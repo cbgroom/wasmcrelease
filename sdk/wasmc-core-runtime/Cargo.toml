@@ -22,3 +22,6 @@ wasmtime = { version = "=47.0.4", optional = true, default-features = false, fea
 
 [dev-dependencies]
 wat = "1.238"
+# Test-only engine support for Std1.4's typed function references. This does
+# not expand the SDK's production engine configuration or imply Wasmi parity.
+wasmtime = { version = "=47.0.4", default-features = false, features = ["runtime", "cranelift", "gc"] }

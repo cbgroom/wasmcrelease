@@ -13,6 +13,13 @@ Fresh-Agent acceptance now requires this contract independently of its score.
 This does not validate every prose statement or every Markdown reference.
 The Runtime SDK tests do not prove the complete App→Std→CoreLib graph on Wasmi;
 Std1.4.0's function-reference/tail-call artifact still needs a Portable variant.
+The SDK Cargo lane additionally registers public-artifact graph conformance:
+Wasmtime initializes CoreLib/Std and executes both callers (5,120 comparisons).
+Wasmi initializes CoreLib and validates callers but must reject current Std.
+That expected rejection is a compatibility boundary, not Portable acceptance.
+Wasmtime typed-function-reference support is enabled by a test-only `gc`
+feature; production SDK engine defaults remain unchanged. These new tests are
+pending exact-source CI qualification, not part of the historical18-test count.
 
 The first complete expanded [run34730577345](https://github.com/cbgroom/wasmcrelease/actions/runs/34730577345)
 passed all22 jobs (21 suite cells and aggregate), all130 flow checks, and all18

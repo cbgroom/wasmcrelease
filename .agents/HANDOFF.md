@@ -3,7 +3,7 @@
 ## 0. Status
 
 Task state: implementation — Agent guidance closure; full Std portability next.
-Branch: fix/agent-guidance-closure. Public v0.0.9 is already released;
+Branch: test/std-engine-graph. Public v0.0.9 is already released;
 immutable tag and release branch remain unchanged. Main may carry follow-up
 consumer tooling/docs, not new admitted compiler or Lib binaries.
 
@@ -61,6 +61,17 @@ deterministic preflight only after actual evidence. Validate probes/negatives,
 current corpus, standard caller oracle, integrity and unchanged artifacts.
 
 ## 5. Current Action
+
+Added public_standard_graph integration tests to the already required SDK Cargo
+suite. Wasmtime must instantiate exact CoreLib4.8/Std1.4 and both frozen callers
+in separate domains and pass5120 comparisons; namespaces and init are checked.
+Wasmi2 must initialize CoreLib, validate both callers and reject current Std
+specifically for function references. Negative is not portable acceptance.
+No SDK mechanism, API, binary or immutable inventory changed. Test-only
+Wasmtime gc feature enables typed-function-reference configuration; no new
+dependency version or production SDK feature is introduced.
+Use existing Actions release Cargo lane for validation, not a new cold local
+target pool. Source checkpoint must remain separate until full CI passes.
 
 Root release/capability/CDN identity and public Skill unique-name/parent-chain
 validation is now shared by maintainer and Fresh-Agent gates. Seven negative
