@@ -1,7 +1,7 @@
 name: Public Host and Lib end-to-end
 on:
   push:
-    branches: [main, work/host-lib-e2e, work/host-completion-guard, work/host-startup-identity, work/host-tcp-endpoint, work/host-tcp-read-stop, work/host-tcp-listener, work/host-resident-app, work/host-tcp-write-outcome, work/host-engine-parity, work/host-resident-benchmark, work/host-stop-failure, work/host-driver-errors, work/host-browser-parity, work/host-quarantine-supervisor, work/host-kernel-engine-parity, work/host-native-owner-supervisor, work/host-scoped-owner-lifetime, work/host-core-negotiation, work/host-tcp-half-close-probe, work/host-core-quota-safety]
+    branches: [main, work/host-lib-e2e, work/host-completion-guard, work/host-startup-identity, work/host-tcp-endpoint, work/host-tcp-read-stop, work/host-tcp-listener, work/host-resident-app, work/host-tcp-write-outcome, work/host-engine-parity, work/host-resident-benchmark, work/host-stop-failure, work/host-driver-errors, work/host-browser-parity, work/host-quarantine-supervisor, work/host-kernel-engine-parity, work/host-native-owner-supervisor, work/host-scoped-owner-lifetime, work/host-core-negotiation, work/host-tcp-half-close-probe, work/host-core-quota-safety, work/host-corelib-bytes-io]
   pull_request:
   workflow_dispatch:
 permissions:
@@ -20,6 +20,12 @@ jobs:
         with:
           node-version: 26.5.1
       - run: rustup toolchain install 1.96.0 --profile minimal --component clippy,rustfmt
+      - run: rustup target add wasm32-unknown-unknown --toolchain 1.96.0
+      - name: Compile reviewed Rust CoreLib conformance caller
+        shell: bash
+        run: |
+          mkdir -p target/corelib-io
+          rustc +1.96.0 --edition=2024 --crate-type=cdylib --target=wasm32-unknown-unknown -O -D warnings -C panic=abort host/corelib-io/private-abi-guest.rs -o target/corelib-io/rust-guest.wasm
       - run: cargo +1.96.0 fmt --check --manifest-path host/completion/rust/Cargo.toml
       - run: cargo +1.96.0 clippy --locked --manifest-path host/completion/rust/Cargo.toml --all-targets -- -D warnings
       - run: cargo +1.96.0 build --release --locked --manifest-path host/completion/rust/Cargo.toml
@@ -78,11 +84,6 @@ jobs:
           if [[ "$RUNNER_OS" == Windows ]]; then server="$server.exe"; resident="$resident.exe"; fi
           node host/tcp/server-test.mjs "$server" "$resident"
           write=host/lib-e2e/rust/target/release/tcp-write-reference
-          peer=host/lib-e2e/rust/target/release/tcp-half-close-peer
-          bun host/tcp/half-close-test.mjs "$peer"
-          deno run --allow-net=127.0.0.1 --allow-env=NODE_V8_COVERAGE --allow-run="$peer" host/tcp/half-close-test.mjs "$peer"
-          deno run --allow-net=127.0.0.1 host/tcp/half-close-test.mjs
-          bun host/tcp/half-close-test.mjs --characterize-js-peer
           if [[ "$RUNNER_OS" == Windows ]]; then write="$write.exe"; fi
           node host/tcp/write-test.mjs "$write"
       - name: Same App and published Lib through real file Host
@@ -91,6 +92,9 @@ jobs:
           binary=host/lib-e2e/rust/target/release/wasmc-lib-host-e2e
           if [[ "$RUNNER_OS" == Windows ]]; then binary="$binary.exe"; fi
           node host/lib-e2e/test.mjs "$binary"
+          core=host/lib-e2e/rust/target/release/corelib-io-reference
+          if [[ "$RUNNER_OS" == Windows ]]; then core="$core.exe"; fi
+          node host/corelib-io/test.mjs "$core"
       - if: runner.os != 'Windows'
         uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6
         with:
@@ -112,6 +116,14 @@ jobs:
           server=host/lib-e2e/rust/target/release/tcp-server-reference
           resident=host/lib-e2e/rust/target/release/resident-app-reference
           write=host/lib-e2e/rust/target/release/tcp-write-reference
+          peer=host/lib-e2e/rust/target/release/tcp-half-close-peer
+          bun host/tcp/half-close-test.mjs "$peer"
+          deno run --allow-net=127.0.0.1 --allow-env=NODE_V8_COVERAGE --allow-run="$peer" host/tcp/half-close-test.mjs "$peer"
+          deno run --allow-net=127.0.0.1 host/tcp/half-close-test.mjs
+          bun host/tcp/half-close-test.mjs --characterize-js-peer
+          core=host/lib-e2e/rust/target/release/corelib-io-reference
+          bun host/corelib-io/test.mjs "$core"
+          deno run --allow-read=current,host/corelib-io,standard/corelib,target/corelib-io --allow-write=target/corelib-io --allow-env=NODE_V8_COVERAGE --allow-run="$core" host/corelib-io/test.mjs "$core"
           bun host/tcp/write-test.mjs "$write"
           bun host/tcp/stop-failure-test.mjs
           deno run host/tcp/stop-failure-test.mjs
@@ -150,10 +162,15 @@ jobs:
           resident=host/lib-e2e/rust/target/release/resident-app-reference
           if [[ "$RUNNER_OS" == Windows ]]; then server="$server.exe"; resident="$resident.exe"; fi
           node host/tcp/server-test.mjs "$server" "$resident" --wasmtime
+          core=host/lib-e2e/rust/target/release/corelib-io-reference
+          if [[ "$RUNNER_OS" == Windows ]]; then core="$core.exe"; fi
+          node host/corelib-io/test.mjs "$core" --wasmtime
           benchmark=host/lib-e2e/rust/target/release/resident-benchmark
           if [[ "$RUNNER_OS" == Windows ]]; then benchmark="$benchmark.exe"; fi
           node host/tcp/benchmark.mjs "$benchmark" target/host-tcp-app/guest.wasm --wasmtime
           if [[ "$RUNNER_OS" != Windows ]]; then
+            bun host/corelib-io/test.mjs "$core" --wasmtime
+            deno run --allow-read=current,host/corelib-io,standard/corelib,target/corelib-io --allow-write=target/corelib-io --allow-env=NODE_V8_COVERAGE --allow-run="$core" host/corelib-io/test.mjs "$core" --wasmtime
             bun host/tcp/server-test.mjs "$server" "$resident" --wasmtime
             deno run --allow-net=127.0.0.1 --allow-read=current,host/lib-e2e,libs/wasmc-owned-algorithms,target --allow-write=target/host-tcp-app --allow-env=NODE_V8_COVERAGE --allow-run="$server,$resident" host/tcp/server-test.mjs "$server" "$resident" --wasmtime
             bun host/tcp/benchmark.mjs "$benchmark" target/host-tcp-app/guest.wasm --wasmtime

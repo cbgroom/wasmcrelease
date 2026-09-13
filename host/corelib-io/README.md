@@ -50,9 +50,26 @@ the existing supervised failed-stop path remains required for uncertain I/O.
 
 ## Scope and next acceptance
 
-Local Node/Bun/restricted Deno proof is not Native or cross-platform qualification.
-Next: independent Wasmi/optional Wasmtime file-chain parity, fault/resource
-receipts, exact-source CI, then main acceptance. This is a packing/copy profile,
+Local Node/Bun/restricted Deno plus both Native engines pass eight actual-file
+cases per JS/Native pair. Native also proves trap cleanup/stale rejection and
+poisoned dispatch denial; it does not claim the JS asynchronous read-cancel
+control is implemented by its synchronous file fixture. Native input File drops
+after the scoped read; this is not a general failed-close supervisor SDK.
+
+Build/run Native parity (the optional feature also retains Wasmi):
+
+```sh
+cargo build --release --locked --features wasmtime-engine --manifest-path host/lib-e2e/rust/Cargo.toml
+node host/corelib-io/test.mjs host/lib-e2e/rust/target/release/corelib-io-reference
+node host/corelib-io/test.mjs host/lib-e2e/rust/target/release/corelib-io-reference --wasmtime
+```
+
+For Deno Native pairs add only `--allow-env=NODE_V8_COVERAGE` and
+`--allow-run=host/lib-e2e/rust/target/release/corelib-io-reference` to the above
+restricted command. Windows uses the `.exe` suffix. The harness awaits Native
+pipe drain/close with a 30s test-process watchdog; it never replays business I/O.
+
+Next: exact-source cross-platform CI, then main acceptance. This is a packing/copy profile,
 not shared linear memory, zero-copy windows, portable Std qualification, or a
 release. Std1.4.0 still requires function references/tail calls; using its exact
 CoreLib Provider alone does not repair that unrelated compatibility gap.
