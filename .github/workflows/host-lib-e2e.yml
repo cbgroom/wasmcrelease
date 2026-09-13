@@ -1,7 +1,7 @@
 name: Public Host and Lib end-to-end
 on:
   push:
-    branches: [main, work/host-lib-e2e, work/host-completion-guard, work/host-startup-identity, work/host-tcp-endpoint, work/host-tcp-read-stop, work/host-tcp-listener, work/host-resident-app, work/host-tcp-write-outcome]
+    branches: [main, work/host-lib-e2e, work/host-completion-guard, work/host-startup-identity, work/host-tcp-endpoint, work/host-tcp-read-stop, work/host-tcp-listener, work/host-resident-app, work/host-tcp-write-outcome, work/host-engine-parity, work/host-resident-benchmark, work/host-stop-failure, work/host-driver-errors, work/host-browser-parity]
   pull_request:
   workflow_dispatch:
 permissions:
@@ -13,7 +13,7 @@ jobs:
       matrix:
         os: [ubuntu-24.04, ubuntu-24.04-arm, macos-14, macos-15-intel, windows-2025, windows-11-arm]
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 20
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
@@ -25,6 +25,8 @@ jobs:
       - run: cargo +1.96.0 build --release --locked --manifest-path host/completion/rust/Cargo.toml
       - run: cargo +1.96.0 test --release --locked --manifest-path host/completion/rust/Cargo.toml
       - run: node host/completion/fault-test.mjs
+      - run: node host/tcp/stop-failure-test.mjs
+      - run: node host/tcp/driver-error-test.mjs
       - name: Independent process startup identity
         shell: bash
         run: |
@@ -48,6 +50,11 @@ jobs:
       - run: cargo +1.96.0 clippy --locked --manifest-path host/lib-e2e/rust/Cargo.toml --all-targets -- -D warnings
       - run: cargo +1.96.0 build --release --locked --manifest-path host/lib-e2e/rust/Cargo.toml
       - run: cargo +1.96.0 test --release --locked --manifest-path host/lib-e2e/rust/Cargo.toml
+      - name: Wasmi-only dependency contract
+        shell: bash
+        run: |
+          cargo +1.96.0 tree --locked --manifest-path host/lib-e2e/rust/Cargo.toml > "$RUNNER_TEMP/wasmi-default-tree.txt"
+          if grep -E 'wasmtime|cranelift' "$RUNNER_TEMP/wasmi-default-tree.txt"; then exit 1; fi
       - name: Preconnected TCP and frozen algorithm Lib
         shell: bash
         run: |
@@ -92,6 +99,10 @@ jobs:
           resident=host/lib-e2e/rust/target/release/resident-app-reference
           write=host/lib-e2e/rust/target/release/tcp-write-reference
           bun host/tcp/write-test.mjs "$write"
+          bun host/tcp/stop-failure-test.mjs
+          deno run host/tcp/stop-failure-test.mjs
+          bun host/tcp/driver-error-test.mjs
+          deno run host/tcp/driver-error-test.mjs
           deno run --allow-net=127.0.0.1 --allow-env=NODE_V8_COVERAGE --allow-run="$write" host/tcp/write-test.mjs "$write"
           bun host/tcp/server-test.mjs "$server" "$resident"
           mkdir -p target/host-tcp-app
@@ -111,6 +122,25 @@ jobs:
           mkdir -p target/host-file-tmp
           TMPDIR="$PWD/target/host-file-tmp" deno run --allow-read=target --allow-write=target --allow-env=TMPDIR,NODE_V8_COVERAGE --allow-run="$file" host/file-io/test.mjs "$file"
           TMPDIR="$PWD/target/host-file-tmp" deno run --allow-read=current,libs/wasmc-owned-algorithms,host/completion,host/lib-e2e,target --allow-write=target --allow-env=TMPDIR,NODE_V8_COVERAGE --allow-run="$binary" host/lib-e2e/test.mjs "$binary"
+      - name: Optional Wasmtime profile qualification
+        shell: bash
+        run: |
+          cargo +1.96.0 clippy --locked --manifest-path host/lib-e2e/rust/Cargo.toml --features wasmtime-engine --all-targets -- -D warnings
+          cargo +1.96.0 test --release --locked --manifest-path host/lib-e2e/rust/Cargo.toml --features wasmtime-engine
+          cargo +1.96.0 build --release --locked --manifest-path host/lib-e2e/rust/Cargo.toml --features wasmtime-engine
+          server=host/lib-e2e/rust/target/release/tcp-server-reference
+          resident=host/lib-e2e/rust/target/release/resident-app-reference
+          if [[ "$RUNNER_OS" == Windows ]]; then server="$server.exe"; resident="$resident.exe"; fi
+          node host/tcp/server-test.mjs "$server" "$resident" --wasmtime
+          benchmark=host/lib-e2e/rust/target/release/resident-benchmark
+          if [[ "$RUNNER_OS" == Windows ]]; then benchmark="$benchmark.exe"; fi
+          node host/tcp/benchmark.mjs "$benchmark" target/host-tcp-app/guest.wasm --wasmtime
+          if [[ "$RUNNER_OS" != Windows ]]; then
+            bun host/tcp/server-test.mjs "$server" "$resident" --wasmtime
+            deno run --allow-net=127.0.0.1 --allow-read=current,host/lib-e2e,libs/wasmc-owned-algorithms,target --allow-write=target/host-tcp-app --allow-env=NODE_V8_COVERAGE --allow-run="$server,$resident" host/tcp/server-test.mjs "$server" "$resident" --wasmtime
+            bun host/tcp/benchmark.mjs "$benchmark" target/host-tcp-app/guest.wasm --wasmtime
+            deno run --allow-read=libs/wasmc-owned-algorithms,target/host-tcp-app --allow-env=NODE_V8_COVERAGE --allow-run="$benchmark" host/tcp/benchmark.mjs "$benchmark" target/host-tcp-app/guest.wasm --wasmtime
+          fi
       - name: Public integrity
         if: runner.os == 'Linux'
         run: ./scripts/validate-maintainer.sh
@@ -120,11 +150,41 @@ jobs:
           SOURCE: ${{ github.sha }}
         run: |
           printf '%s\n' "Source $SOURCE; $RUNNER_OS/$RUNNER_ARCH; 76 guard transitions, 10 fault controls, 8 guard Rust tests, 4 TCP/listener Rust tests, 8-process identity, 20 file/App/Lib cases, 8 TCP/Lib pairs, 4 read-stop pairs with 9 controls, 19 resident App/Lib server connections, 1000 resident calls per engine and 8 listener controls; guest trap poisons with no replay, not guest async ABI or write cancellation qualification" >> "$GITHUB_STEP_SUMMARY"
+  browser:
+    strategy:
+      fail-fast: false
+      matrix:
+        engine: [chrome, firefox, webkit]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: 26.5.1
+      - name: Real browser App Lib and ownership probes
+        shell: bash
+        env:
+          BROWSER: ${{ matrix.engine }}
+          SOURCE: ${{ github.sha }}
+        run: |
+          node host/browser/server.mjs > "$RUNNER_TEMP/wasmc-browser-url.txt" 2> "$RUNNER_TEMP/wasmc-browser-server.err" &
+          server_pid=$!
+          cd "$RUNNER_TEMP"
+          trap 'npm exec --yes --package=@playwright/cli@0.1.19 -- playwright-cli -s=wasmc-host-ci close || true; kill "$server_pid" || true' EXIT
+          npm exec --yes --package=@playwright/cli@0.1.19 -- playwright-cli install-browser "$BROWSER" --with-deps
+          url=$(head -n 1 "$RUNNER_TEMP/wasmc-browser-url.txt")
+          [[ "$url" == http://127.0.0.1:* ]] || { cat "$RUNNER_TEMP/wasmc-browser-server.err"; exit 1; }
+          npm exec --yes --package=@playwright/cli@0.1.19 -- playwright-cli -s=wasmc-host-ci open "$url" --browser "$BROWSER"
+          npm exec --yes --package=@playwright/cli@0.1.19 -- playwright-cli -s=wasmc-host-ci --raw eval 'async () => { const receipt=await globalThis.receiptPromise; if(!receipt.accepted) throw Error(receipt.error); return receipt; }' > "$RUNNER_TEMP/wasmc-browser-receipt.json"
+          node --input-type=module -e 'import{readFileSync}from"node:fs";import assert from"node:assert/strict";const r=JSON.parse(readFileSync(process.argv[1]));assert.ok(r.accepted&&r.no_replay&&r.trap_poisoned&&r.resource_cleanup&&r.quarantine_retained);assert.equal(r.resident_calls,1000);assert.equal(r.guard_cases,4);assert.equal(r.stop_failure_cases,4);console.log(JSON.stringify(r));' "$RUNNER_TEMP/wasmc-browser-receipt.json"
+          printf '%s\n' "Source $SOURCE; real $BROWSER; App/Lib1000 resident calls; four Core/guard/quarantine probes; no raw TCP/mobile claim" >> "$GITHUB_STEP_SUMMARY"
   required:
     if: always()
-    needs: composition
+    needs: [composition, browser]
     runs-on: ubuntu-24.04
     steps:
       - env:
           RESULT: ${{ needs.composition.result }}
-        run: test "$RESULT" = success
+          BROWSER_RESULT: ${{ needs.browser.result }}
+        run: test "$RESULT" = success && test "$BROWSER_RESULT" = success

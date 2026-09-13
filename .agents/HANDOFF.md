@@ -1,6 +1,18 @@
 # WAsmC release maintainer handoff
 
-## Resident App/write integration acceptance
+## Browser/resident engine acceptance
+
+Current exact source/run and independently read receipts are retained in
+admission/host-browser-engine-qualification.json. Six Native platforms plus
+Chrome/Firefox/WebKit and required job PASS.14Wasmi/14Wasmtime resident server
+receipts,3browser receipts match App/Lib/trap/no-replay/cleanup/retained-owner
+oracles. Includes benchmarks and earlier failed-stop/ordinary-error controls.
+Bounded supervisor and kernel engine parity source are subsequent independent
+candidates, not accepted by this run. No immutable release, mobile or typed
+guest async SDK claim. Resolve expected main live before normal FF; no force.
+Full Host delivery1/5 accepted gates; complete typed/profile/fault/release gates.
+
+## Earlier resident App/write integration acceptance
 
 Current exact candidate/run and receipts are recorded in
 admission/host-resident-write-qualification.json. Six desktop platforms and
@@ -26,6 +38,75 @@ advance normally only while remote main remains prior accepted completion
 guard base (resolve Git origin and admission); no force/tag/product changes.
 Full Host delivery remains1/5 gates. Next accept later exact candidates from
 their own receipts, close typed transport/engine/profile gates, then release.
+
+## Real browser ownership/App Lib probe
+
+Own branch work/host-browser-parity follows pushed driver-error candidate.
+Local actual Chrome/Firefox/WebKit via Playwright CLI PASS same App/Lib digests,1000resident
+calls,4Core size/4guard/4failed-stop probes, budget/trap/poison/no-replay checks.
+No Node shims, browser WebCrypto identity, raw TCP false. Page supervisor keeps
+quarantine owners; normal App/guard cleanup distinct from failed-stop retention.
+GET allowlisted loopback fixture compiles guest via public compiler. CLI runtime
+artifacts remain under target/temporary directories, never release inventory.
+Actions requires Chrome/Firefox/WebKit cells plus6desktop Native cells; exact
+new source needs own receipts. Owning host/browser/README.md states simulated
+failure backend/mobile/real device limitations. Full Host delivery still1/5.
+
+## Driver error-path regression
+
+Own branch work/host-driver-errors follows pushed corrected CI candidate.
+Invalid AbortSignal policy must preserve-5, never call foreign cleanup hooks
+or issue I/O. Immediate read throws now enter same failed completion/drain
+path as async rejection, not strand a pending pin. Local10controls PASS on
+Node/Bun/restricted Deno, with zero resource and exactly-one release/read.
+Extend same six-platform matrix; prior normal read/write and failed-stop
+regressions remain required. No new guest ABI/frozen artifact changes.
+Queued current qualification does not block local work or authorize main.
+
+## CI temporary inventory correction
+
+Engine-parity run passed optional engine tests but Linux integrity rejected
+untracked default-tree.txt created by dependency check in publication root.
+Move generated Cargo tree into RUNNER_TEMP, never relax checksum inventory.
+Owning Actions correction travels with current stop-failure candidate; old
+run is not accepted and changed exact source must qualify independently.
+
+## Failed stop acknowledgement safety
+
+Own branch work/host-stop-failure follows pushed benchmark candidate.
+Stop request catches synchronous throws and attaches async rejection handler
+at issuance, avoiding uncaught abort/unhandled rejection while I/O is pending.
+After issued I/O settles, failed close throws Host-only TcpStopFailure retaining
+endpoint/guard/tickets and primary outcome; revoke grants, never complete/free
+pins or recycle endpoint without acknowledgement. Supervisor must retain and
+bound quarantine; no automatic recovery/replay or fabricated acknowledgement.
+Local6controls and earlier read/write matrices; extend same desktop Actions.
+STOP_FAILURE.md states never-settling I/O/native failed-shutdown/races remain
+unqualified. New guest ABI0, old products unchanged. Full Host delivery1/5.
+
+## Resident engine performance harness
+
+Own branch work/host-resident-benchmark follows pushed engine-parity candidate.
+Same digest-bound App/Lib with1000warmup and7x100000calls per engine; exact
+checksum and701000Lib calls asserted. Receipt separates initialization from
+steady samples, includes all observations and JS RSS. Not network/durable TPS,
+leak proof, speed guarantee or full Host performance qualification. Owning
+BENCHMARK.md has commands/evidence boundaries. Run Node/Bun/restricted Deno
+locally, six-platform Actions at milestone; bind exact source via Git/run SHA.
+Do not promote queued changed source using prior PASS. Full Host delivery1/5.
+
+## Optional resident Core engine parity
+
+Own branch work/host-engine-parity follows pushed write-outcome candidate.
+Default dependency graph remains Wasmi-only; optional wasmtime-engine adds
+exact47.0.4 runtime/Cranelift without WASI. Same digest-bound App and Lib,
+resident Stores/private slab,16byte bound and fuel reset. Trap poisons App,
+later call refuses without Lib replay. No new guest ABI or automatic promotion.
+Local Node/Bun/restricted Deno Wasmtime parity PASS19connections/1000calls,
+8listener controls and trap/budget/cleanup oracles. Six-platform Actions now
+qualifies both profiles; exact-source receipts required before main. Owning
+ENGINE_PROFILES.md exposes commands and limits. Full Host delivery1/5 gates;
+browser/mobile/typed async/blocked write/TLS/performance/release remain open.
 
 ## Write completion outcome milestone
 
