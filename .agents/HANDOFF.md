@@ -2,11 +2,18 @@
 
 ## 0. Status
 
-Active source line: work/host-stream-snapshot. Task state: started.
+Active source line: work/host-stream-snapshot. Task state: local proof complete;
+exact Linux/full-platform CI and main acceptance pending.
 Objective: retain bounded owned snapshots before transport callbacks invalidate
 borrowed views; write acknowledgement must use snapshot length, not caller's
 later-mutated array. Diagnose Bun/Linux frame failure without assuming this
-is its exact root cause or relaxing acceptance. CoreLib resource-lifetime local
+is its exact root cause or relaxing acceptance. Six ownership controls passed
+Node/Bun/permission-free Deno, proving read-view invalidation and mutated-array
+write-count defects. Real local JS-only service and paired TCP/retirement
+regressions pass. Required Linux fast job retains actual JS service proof plus
+lane/frame diagnostics; full Native/browser gates remain required. Read
+host/tcp/STREAM_SNAPSHOTS.md and preserved failure; Linux is not declared fixed.
+CoreLib resource-lifetime local
 proof complete; exact CI/main pending. Node/Bun/restricted Deno and both Native engines
 passed100000 bytes/App/drop cycles per consumer; checksum14342320, actual CoreLib
 memory1310720bytes across six samples, earliest stale reference rejected.

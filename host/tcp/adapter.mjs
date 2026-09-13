@@ -27,9 +27,12 @@ export class PreconnectedTcp {
         const close=()=>{if(this.#ended||socket.readableEnded) end();else fail();};
         const data=bytes=>{
           if(this.#stopped) return fail();
+          // Copy a backend view before pause/handler cleanup can invalidate it.
+          const delivered=Array.from(bytes.subarray(0,length));
+          const tail=bytes.length>length?Uint8Array.from(bytes.subarray(length)):null;
           clean();
-          if(bytes.length>length) socket.unshift(bytes.subarray(length));
-          resolve([...bytes.subarray(0,length)]);
+          if(tail) socket.unshift(tail);
+          resolve(delivered);
         };
         socket.on('data',data);socket.on('end',end);socket.on('close',close);socket.on('error',fail);
         if(this.#error) fail();
@@ -40,12 +43,17 @@ export class PreconnectedTcp {
     } finally {this.#busy=false;}
   }
   async write(bytes) {
-    if(!Array.isArray(bytes)||bytes.length>16||Array.from(bytes).some(b=>!Number.isInteger(b)||b<0||b>255)) throw -5;
-    this.#check(bytes.length); if(!this.writable) throw -2;
+    if(!Array.isArray(bytes)) throw -5;
+    const count=bytes.length;if(!Number.isInteger(count)||count<0||count>16)throw -5;
+    const snapshot=new Uint8Array(count);
+    for(let i=0;i<count;i++){const byte=bytes[i];if(!Number.isInteger(byte)||byte<0||byte>255)throw -5;snapshot[i]=byte;}
+    this.#check(count); if(!this.writable) throw -2;
     this.#busy=true;
     try {
-      await new Promise((resolve,reject)=>this.#socket.write(Uint8Array.from(bytes),error=>error?reject(-9):resolve()));
-      return bytes.length;
+      // Callback retains the owned view until local acknowledgement, not caller
+      // array length/mutation or a transient temporary's lifetime.
+      await new Promise((resolve,reject)=>this.#socket.write(snapshot,error=>error||snapshot.byteLength!==count?reject(-9):resolve()));
+      return count;
     } catch {throw -9;} finally {this.#busy=false;}
   }
   async release() {
