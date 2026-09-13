@@ -5,7 +5,7 @@ import {TcpStopFailure,requestTcpStop} from './stop-fence.mjs';
 
 // Trusted per-Host owner admission; not a guest API or global process registry.
 export class TcpOwnerSupervisor {
-  #owners=new Map();#endpoints=new WeakSet();#identity;#next=1;#limit;
+  #owners=new Map();#endpoints=new WeakSet();#identity;#next=1;#limit;#idle=[];
   constructor(maxOwners=4){
     if(!Number.isInteger(maxOwners)||maxOwners<1||maxOwners>16)throw -5;
     this.#limit=maxOwners;this.#identity=issueBindingIdentity();
@@ -20,7 +20,8 @@ export class TcpOwnerSupervisor {
       // Fresh identity only after all previous owners/pins are retired.
       const identity=issueBindingIdentity();this.#identity=identity;this.#next=1;
     }
-    const guard=ScopedCompletionGuard.fresh(),ticket=`${this.#identity}:${this.#next++}`;
+    const cached=this.#idle.pop();
+    const guard=cached?.reusable()?cached:ScopedCompletionGuard.fresh(),ticket=`${this.#identity}:${this.#next++}`;
     const owner={input,guard,failure:null,retiring:false};
     this.#owners.set(ticket,owner);this.#endpoints.add(input);
     try{return await task(guard);}
@@ -28,7 +29,12 @@ export class TcpOwnerSupervisor {
       if(error instanceof TcpStopFailure){owner.failure=error;error.quarantineTicket=ticket;}
       throw error;
     }finally{
-      if(!owner.failure){this.#owners.delete(ticket);this.#endpoints.delete(input);}
+      if(!owner.failure){
+        // Successful cleanup only: pending/revoked/exhausted guards never enter
+        // this private bounded pool; local IDs and scoped identity are not reset.
+        if(guard.reusable())this.#idle.push(guard);
+        this.#owners.delete(ticket);this.#endpoints.delete(input);
+      }
     }
   }
   read(input,policy){return this.#run(input,guard=>readTcpWindow(input,guard,policy));}

@@ -70,6 +70,14 @@ JS-client half-close remains negative characterization. Bun/Deno setup ordering
 is corrected; older defective workflows cannot qualify this source.
 Never borrow an old-source PASS. No release/tag/deployment was performed.
 
+Idle-guard reuse is now qualified through admission/host-guard-pool-qualification.json:
+both whole workflows PASS;20 five-control suites and3 actual browser reuse probes
+are independently read. Private scoped counters never reset; only acknowledged,
+empty, unrevoked, unexhausted guards enter the owner-bounded pool. Pending and
+all quarantine remain excluded, even with zero records. Native pooling and full
+performance/release acceptance are not implied. Explicit-quarantine release
+and resident input snapshot fixes remain later-source qualification work.
+
 ## 1. North Star
 
 Core/Lib performs algorithms and memory management; public Host owns authority,

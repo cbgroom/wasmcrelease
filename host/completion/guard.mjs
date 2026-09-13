@@ -60,4 +60,6 @@ export class CompletionGuard {
   }
   revoke() { this.#revoked=true;for(const o of this.#ops.values()) if(o.state==='pending') o.state='cancelled';for(const w of this.#windows.values()) w.bytes=[];return 0; }
   counts() { return [this.#windows.size,this.#ops.size]; }
+  // Host-only cache admission: the next operation needs two fresh local IDs.
+  reusable() {return !this.#revoked&&!this.#windows.size&&!this.#ops.size&&this.#seq<=32766;}
 }
