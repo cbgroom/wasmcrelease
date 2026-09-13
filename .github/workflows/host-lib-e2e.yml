@@ -7,6 +7,29 @@ on:
 permissions:
   contents: read
 jobs:
+  mobile-compile:
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [aarch64-apple-ios, aarch64-apple-ios-sim, aarch64-linux-android, aarch64-unknown-linux-ohos]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - run: rustup toolchain install 1.96.0 --profile minimal
+      - env:
+          TARGET: ${{ matrix.target }}
+        run: rustup target add "$TARGET" --toolchain 1.96.0
+      - name: Wasmi-only cross-target check, no device or link claim
+        env:
+          TARGET: ${{ matrix.target }}
+          SOURCE: ${{ github.sha }}
+        run: |
+          cargo +1.96.0 check --locked --manifest-path host/lib-e2e/rust/Cargo.toml --target "$TARGET" --all-targets
+          cargo +1.96.0 tree --locked --manifest-path host/lib-e2e/rust/Cargo.toml --target "$TARGET" > "$RUNNER_TEMP/default-dependencies.txt"
+          command -v rg > /dev/null
+          if rg '(^|[[:space:]])(wasmtime[^[:space:]]*|wasi[^[:space:]]*|wasip[23]|rustls[^[:space:]]*|openssl[^[:space:]]*|native-tls)([[:space:]]|$)' "$RUNNER_TEMP/default-dependencies.txt"; then exit 1; fi
+          printf '%s\n' "Source $SOURCE; $TARGET Wasmi-only compile PASS; no link/sign/install/device/network-permission/runtime qualification" >> "$GITHUB_STEP_SUMMARY"
   stream-shapes:
     strategy:
       fail-fast: false
@@ -311,11 +334,12 @@ jobs:
           printf '%s\n' "Source $SOURCE; real $BROWSER; App/Lib1000 resident calls; four Core/guard/quarantine probes; no raw TCP/mobile claim" >> "$GITHUB_STEP_SUMMARY"
   required:
     if: always()
-    needs: [composition, browser, stream-shapes]
+    needs: [composition, browser, stream-shapes, mobile-compile]
     runs-on: ubuntu-24.04
     steps:
       - env:
           RESULT: ${{ needs.composition.result }}
           BROWSER_RESULT: ${{ needs.browser.result }}
           STREAM_RESULT: ${{ needs.stream-shapes.result }}
-        run: test "$RESULT" = success && test "$BROWSER_RESULT" = success && test "$STREAM_RESULT" = success
+          MOBILE_RESULT: ${{ needs.mobile-compile.result }}
+        run: test "$RESULT" = success && test "$BROWSER_RESULT" = success && test "$STREAM_RESULT" = success && test "$MOBILE_RESULT" = success

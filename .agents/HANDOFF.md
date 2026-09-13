@@ -2,7 +2,13 @@
 
 ## 0. Status
 
-Active source line: work/host-udp-endpoint. Task state: local proof complete;
+Active source line: work/host-mobile-compile. Task state: local proof complete;
+Default Wasmi-only iOS/Android/OHOS all-target checks pass locally; mobile Action
+also checks iOS-sim and rejects Wasmtime/WASI/TLS dependency drift. This mandatory
+matrix is compile-only, not signed artifact/install/device/network entitlement
+or runtime proof. See host/MOBILE_COMPILE.md. Existing UDP and completion source
+milestones require their own exact cross-platform acceptance. No compiler/heap
+rebuild, immutable SDK/tag/pointer promotion or production deployment performed.
 UDP prebound loopback/fixed peer backend reuses endpoint/read/write/release
 families without new kernel imports. Preserve complete datagrams; oversize17/64
 and foreign source deny dispatch. Node/Bun/restricted Deno x Wasmi/Wasmtime
