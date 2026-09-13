@@ -12,7 +12,10 @@ Rust1.96 locked default `host/lib-e2e/rust` all-target checks cover:
 - aarch64-unknown-linux-ohos
 
 The mandatory Action mobile-compile matrix verifies compilation and absence of
-Wasmtime/WASI/TLS dependencies. It does not link/sign/install a native artifact,
+Wasmtime/WASI/TLS/WAT dependencies. Inventory checks use portable fail-closed
+grep, require exact root/Wasmi entries and reject empty/incomplete inventories;
+twenty controls prevent missing tools/files or inspection errors becoming PASS.
+Preserved older missing-rg CI failure is not acceptance. It does not link/sign/install a native artifact,
 execute an iOS simulator or phone, validate entitlements/local-network permission,
 JNI/N-API/App embedding, shutdown races, throughput or power-loss behavior.
 Browser raw UDP/TCP remains unavailable. Full Std1.4 function-reference/tail-call

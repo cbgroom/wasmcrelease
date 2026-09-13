@@ -16,6 +16,9 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: 26.5.1
       - run: rustup toolchain install 1.96.0 --profile minimal
       - env:
           TARGET: ${{ matrix.target }}
@@ -26,9 +29,9 @@ jobs:
           SOURCE: ${{ github.sha }}
         run: |
           cargo +1.96.0 check --locked --manifest-path host/lib-e2e/rust/Cargo.toml --target "$TARGET" --all-targets
-          cargo +1.96.0 tree --locked --manifest-path host/lib-e2e/rust/Cargo.toml --target "$TARGET" > "$RUNNER_TEMP/default-dependencies.txt"
-          command -v rg > /dev/null
-          if rg '(^|[[:space:]])(wasmtime[^[:space:]]*|wasi[^[:space:]]*|wasip[23]|wat|wast|rustls[^[:space:]]*|openssl[^[:space:]]*|native-tls)([[:space:]]|$)' "$RUNNER_TEMP/default-dependencies.txt"; then exit 1; fi
+          cargo +1.96.0 tree --locked --manifest-path host/lib-e2e/rust/Cargo.toml --target "$TARGET" --prefix none > "$RUNNER_TEMP/default-dependencies.txt"
+          node scripts/test-native-reference-dependencies.mjs
+          sh scripts/check-native-reference-dependencies.sh "$RUNNER_TEMP/default-dependencies.txt"
           printf '%s\n' "Source $SOURCE; $TARGET Wasmi-only compile PASS; no link/sign/install/device/network-permission/runtime qualification" >> "$GITHUB_STEP_SUMMARY"
   stream-shapes:
     strategy:

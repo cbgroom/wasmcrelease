@@ -2,7 +2,13 @@
 
 ## 0. Status
 
-Active source line: work/host-guard-retirement-quarantine. Task state: local proof complete;
+Active source line: work/host-mobile-dependency-gate. Task state: local proof complete;
+Preserved mobile CI regression records successful iOS/OHOS compilation followed
+by missing-rg gate failure, not acceptance. Portable fail-closed inventory gate
+now rejects twelve dependency families plus missing/extra/directory controls:
+20Nodecontrols and actual default iOS graph pass. Empty/incomplete inventory
+also denies acceptance. Exact rerun required; see
+host/mobile-dependency-regression.json and scripts/check-native-reference-dependencies.sh.
 Internal guard release faults no longer lose owner/endpoint admission. Twelve
 before/after/unacknowledged operation/window cases pass Node/Bun/Deno. Preserve
 primary effect, retained quota even with zero records, no I/O replay/reclose.
