@@ -2,6 +2,17 @@
 
 ## 0. Status
 
+Guest-initiated async file vertical now locally PASS on Node/Bun/Deno: ordinary
+WAsmC async source requests read -> admitted local Lib sum -> write -> sync ->
+release using existing scalar Core task ABI v0. No compiler modification.
+Exact effect metadata binds the five fixture callbacks before I/O. Four positive
+inputs/two failures/two driver controls per runtime; cancelled issued read is
+actually settled before cleanup; sync failure stops guest without replay and
+embedding performs cleanup. Not generic async Lib SDK, typed v1 resources,
+hostile-module preemption or never-settling backend containment. Native/Rust
+async parity remains next alongside carrier production gates. Actions adds nine
+async-file receipts; this new source is not yet cross-platform qualified.
+
 File journey now requires an independently pure-rustc-compiled Rust Core caller
 alongside WAsmC. Same real files, admitted Lib and expected disk/error oracles:
 8 positives/8 negatives per Node/Bun/Deno locally PASS; strict Rust build/fmt

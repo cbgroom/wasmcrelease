@@ -1,0 +1,21 @@
+package local:file_async_probe;
+interface io {
+  read: async func(limit:s32)->s32;
+  write: async func(value:s32)->s32;
+  sync: async func(value:s32)->s32;
+  release: async func(value:s32)->s32;
+}
+interface algorithms {
+  sum: async func(length:s32)->s32;
+}
+interface api {
+  run: async func(limit:s32)->s32 {
+    let length:s32=read(limit).await;
+    let total:s32=sum(length).await;
+    let written:s32=write(total).await;
+    let durable:s32=sync(written).await;
+    let closed:s32=release(durable).await;
+    return closed;
+  }
+}
+world app {import io;import algorithms;export api;}

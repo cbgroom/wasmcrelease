@@ -43,6 +43,33 @@ but **not positive execution coverage** for the unavailable capability.
 
 ### Three focused maturation journeys
 
+Guest-initiated file milestone: `file-async-app.wasmc` requests the five stages
+read -> local Lib sum -> write -> sync -> release. `scalar-task-driver.mjs`
+drives the existing Core task ABI v0 `(state,event,value)` transitions, awaits
+actual effect settlement and never resumes/replays after cancellation/failure.
+The fixture checks the exact effect-metadata digest before any I/O, allows only
+five fixed bindings and keeps pointers/resources private to the embedding.
+The sum stage dispatches the admitted local Lib; declaring it as an async effect
+here is a restricted fixture adapter, not general async Lib SDK support or a
+new Host mechanism. The guest has no memory/global continuation state.
+
+```sh
+node host/scenarios/file-async-test.mjs
+bun host/scenarios/file-async-test.mjs
+deno run --allow-read --allow-write host/scenarios/file-async-test.mjs
+```
+
+Per runtime, four actual-file positives, cancelled issued-read and controlled
+sync-failure paths, plus two malformed-driver controls locally pass. Output is
+independently reopened and checked. Cancellation awaits real read settlement
+before outer cleanup; sync failure preserves written bytes and stops the guest
+before its release stage, so embedding cleanup is mandatory. The driver has
+bounded transitions but no general hostile-module fuel/preemption, batch wait,
+typed resource carrier, full cancellation races or never-settling containment.
+These are remaining production gates, not implied by this fixture. Native/Rust
+async equivalent and browser/mobile acceptance are still pending. Actions
+retains nine exact-source async-file receipts across three desktop OSes.
+
 Keep the five acceptance scenarios unchanged, but iterate through three grouped
 journeys rather than growing the test catalog:
 

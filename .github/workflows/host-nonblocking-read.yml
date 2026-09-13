@@ -124,6 +124,10 @@ jobs:
           node host/scenarios/file-app-test.mjs "$RUNNER_TEMP/file-rust.wasm" > "$RUNNER_TEMP/file-app-node.json"
           bun host/scenarios/file-app-test.mjs "$RUNNER_TEMP/file-rust.wasm" > "$RUNNER_TEMP/file-app-bun.json"
           deno run --allow-read --allow-write host/scenarios/file-app-test.mjs "$RUNNER_TEMP/file-rust.wasm" > "$RUNNER_TEMP/file-app-deno.json"
+          node host/scenarios/file-async-test.mjs > "$RUNNER_TEMP/file-async-node.json"
+          bun host/scenarios/file-async-test.mjs > "$RUNNER_TEMP/file-async-bun.json"
+          deno run --allow-read --allow-write host/scenarios/file-async-test.mjs > "$RUNNER_TEMP/file-async-deno.json"
+          node --input-type=module -e 'import fs from "node:fs";for(const name of ["node","bun","deno"]){const p=`${process.env.RUNNER_TEMP}/file-async-${name}.json`;const r=JSON.parse(fs.readFileSync(p));r.exact_source=process.env.GITHUB_SHA;r.os=process.env.RUNNER_OS;r.arch=process.env.RUNNER_ARCH;fs.writeFileSync(p,JSON.stringify(r));}'
           node --input-type=module -e 'import fs from "node:fs";for(const name of ["node","bun","deno"]){const p=`${process.env.RUNNER_TEMP}/file-app-${name}.json`;const r=JSON.parse(fs.readFileSync(p));r.exact_source=process.env.GITHUB_SHA;r.os=process.env.RUNNER_OS;r.arch=process.env.RUNNER_ARCH;fs.writeFileSync(p,JSON.stringify(r));console.log(JSON.stringify(r));}'
           node --input-type=module -e 'import fs from "node:fs";for(const name of ["node","bun","deno"]){const p=`${process.env.RUNNER_TEMP}/all-api-${name}.json`;const r=JSON.parse(fs.readFileSync(p));r.exact_source=process.env.GITHUB_SHA;r.os=process.env.RUNNER_OS;r.arch=process.env.RUNNER_ARCH;fs.writeFileSync(p,JSON.stringify(r));console.log(JSON.stringify(r));}'
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
@@ -135,6 +139,11 @@ jobs:
         with:
           name: file-app-${{ matrix.os }}
           path: ${{ runner.temp }}/file-app-*.json
+          if-no-files-found: error
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: file-async-${{ matrix.os }}
+          path: ${{ runner.temp }}/file-async-*.json
           if-no-files-found: error
       - run: rustup toolchain install 1.96.0 --profile minimal --target wasm32-unknown-unknown
       - name: Build public Rust conformance caller, no Cargo or private source
