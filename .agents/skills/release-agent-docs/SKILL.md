@@ -13,6 +13,11 @@ which exact command proves the path, and what evidence to report.
 
 ## Writing model
 
+- Published repository instructions and the Release page must be self-contained:
+  entrypoints, immutable selection, verification, commands, evidence and limits
+  cannot depend on supplementary chat caveats. Keep README as the canonical
+  complete handoff and link detailed evidence rather than duplicating claims.
+
 - Reuse Rust expression/control-flow vocabulary and WIT declaration/type
   vocabulary when semantics align; document only the WAsmC delta.
 - Put one canonical current-capability matrix near the public entrypoint. Route

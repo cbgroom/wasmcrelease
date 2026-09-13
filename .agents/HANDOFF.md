@@ -17,6 +17,13 @@ grant only explicit imports, and prove behavior without private-source knowledge
 
 ## 2. Current Focus
 
+Documentation-only follow-up completed: README owns the full v0.0.9 testing
+handoff, including exact selection/verification, current vs frozen entrances,
+provider compatibility, commands, passed scope, exclusions and failure reports.
+Release page follows that same explanation. Immutable v0.0.9 and release branch
+remain unchanged; only main documentation and its integrity metadata advance.
+The exact release Actions run completed with all five jobs successful.
+
 Task state: active — user authorized the narrow encoded-artifact false-positive
 repair on 2026-09-13. Public latest remains immutable v0.0.8. Preserve raw and
 authorized receipts in admission/credential-scan-v009-*.json: raw findings are

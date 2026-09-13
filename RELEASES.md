@@ -13,8 +13,10 @@ the strict package root. The package reuses its qualified producer bytes.
 
 Node/Bun/Deno each pass30 frozen outputs,23 reconstructed expression cases,
 192 managed-loop calls and5120 paired standard-Lib caller checks. Public
-Wasmi/Wasmtime SDK tests pass18/18. Final publication requires coherent exact
-same-archive Host receipts and integrity, and a fresh all-ref credential scan.
+Wasmi/Wasmtime SDK tests pass18/18. Publication completed with coherent exact
+same-archive Host receipts, integrity and a fresh all-ref credential scan.
+All five exact-release Actions jobs passed. Complete testing instructions and
+scope boundaries are maintained in [README.md](README.md).
 Two historical raw scan findings are retained and narrowly classified only
 under explicit authorization and exact decoded-artifact proof.
 
