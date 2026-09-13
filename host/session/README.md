@@ -15,6 +15,9 @@ objects. No application sees the private object registry or integer handles.
   `storage-sync` is the initial invoke profile, not arbitrary native dispatch.
 - `wait`, `cancel`, `release`: correlated passive results, bounded wakeups,
   non-consuming busy/failed cleanup, actual settlement/close acknowledgement.
+  `take_result` is a carrier helper that claims the terminal result exactly
+  once, including errors; observing with `wait` never claims it. Claiming does
+  not retire the operation or free quarantined pins.
 - `clock_read`, `entropy_fill`: explicitly injected sources, no fallback.
 - `window_acquire`, `window_commit`: bounded external-I/O copies, not a general
   allocator. `copy_out` is a required SDK copy helper, not another external

@@ -2,10 +2,19 @@
 
 ## 0. Status
 
+Host v1 semantic WIT candidate now resolves and passes official Component
+template encoding/type validation; see host/v1/README.md for exact commands
+and remaining mapping gaps. Borrowed retirement retains ownership on failure;
+passive selected receipts cannot duplicate owned endpoint results. JS session
+adds one-shot terminal result claim, including errors, without retiring quota
+or freeing quarantine. No accepted ABI/WIT baseline or Native SDK is implied.
+Previous shared-session source Actions 34773731359 completed all nine jobs
+PASS; downloaded independent receipt review is still pending.
+
 Durable full Host goal remains ACTIVE, not complete. Shared JS HostSession now
 implements twelve mechanism families with opaque typed objects and one bounded
 kernel across actual file/TCP/UDP adapters. Local file E2E passes on all three
-JS runtimes (4 positives/issued-read cancellation); 32 controlled lifetime
+JS runtimes (4 positives/issued-read cancellation); 39 controlled lifetime
 checks each pass. Resident network passes 12 TCP/4 UDP plus actual wait-timeout
 cancel-close and oversized datagram rejection, using one App/Lib and zero live
 resources. Node/Deno same-runtime peer pass; Bun same-runtime half-close client

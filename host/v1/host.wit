@@ -1,0 +1,82 @@
+package wasmc:host@1.0.0-draft.1;
+
+/// Semantic review candidate, not an accepted Core ABI or released SDK.
+interface kernel {
+  enum error {
+    invalid-resource, permission-denied, unsupported, limit, busy, bounds,
+    cancelled, timeout, external-failure, outcome-unknown, already-terminal,
+  }
+  enum endpoint-kind { root, file, %stream, datagram, listener }
+  record rights { read: bool, write: bool, derive: bool }
+  record grant { name: string, kind: endpoint-kind, rights: rights }
+  record description {
+    contract: string,
+    core-abi: string,
+    grants: list<grant>,
+    operations: list<control>,
+    max-window-bytes: u32,
+    max-resources: u32,
+    max-operations: u32,
+    max-result-bytes: u32,
+  }
+  resource endpoint;
+  resource window {
+    /// Pure carrier copy helper; rejects pinned/foreign/stale windows.
+    copy-out: func() -> result<list<u8>, error>;
+  }
+  enum effect-outcome { known, unknown, no-payload }
+  enum completion-kind { endpoint, transfer, synchronized, closed }
+  record transfer {
+    transferred: u32,
+    eof: bool,
+    message-complete: bool,
+  }
+  variant operation-value {
+    endpoint(own<endpoint>),
+    transfer(transfer),
+    synchronized,
+    closed,
+  }
+  resource operation {
+    /// Exactly-once terminal payload consumption, not effect replay.
+    /// Owned endpoint results are transferred here, never by passive wait.
+    take-result: func() -> result<operation-value, error>;
+  }
+  record receipt {
+    /// Correlates to the exact bounded input selection, not a resource handle.
+    selection-index: u32,
+    kind: completion-kind,
+    status: result<_, error>,
+    outcome: effect-outcome,
+    quarantined: bool,
+  }
+  record selector { grant-name: string, rights: rights }
+  variant opened { endpoint(own<endpoint>), pending(own<operation>) }
+  enum control { storage-sync, accept, finish-write }
+  enum cancel-result { accepted, already-terminal, unsupported }
+  variant resource-ref {
+    endpoint(borrow<endpoint>),
+    window(borrow<window>),
+    operation(borrow<operation>),
+  }
+  variant retirement { released, closing(own<operation>) }
+  enum clock-kind { monotonic, wall }
+
+  describe: func(target: borrow<endpoint>) -> result<description, error>;
+  open: func(parent: borrow<endpoint>, selector: selector) -> result<opened, error>;
+  read: func(target: borrow<endpoint>, destination: borrow<window>, offset: option<u64>, length: u32) -> result<own<operation>, error>;
+  write: func(target: borrow<endpoint>, source: borrow<window>, offset: option<u64>) -> result<own<operation>, error>;
+  invoke: func(target: borrow<endpoint>, control: control) -> result<own<operation>, error>;
+  /// Absolute deadline in the negotiated monotonic clock domain. Empty means
+  /// wait timed out only; it does not cancel or consume any selected operation.
+  wait: func(selected: list<borrow<operation>>, deadline: option<u64>) -> result<list<receipt>, error>;
+  cancel: func(target: borrow<operation>) -> result<cancel-result, error>;
+  /// Borrowed references preserve ownership on busy/failure. Resource drop
+  /// transfers supervision to embedding cleanup, never implies physical stop.
+  release: func(target: resource-ref) -> result<retirement, error>;
+  clock-read: func(authority: borrow<endpoint>, kind: clock-kind) -> result<u64, error>;
+  entropy-fill: func(authority: borrow<endpoint>, destination: borrow<window>, length: u32) -> result<own<operation>, error>;
+  window-acquire: func(authority: borrow<endpoint>, capacity: u32) -> result<own<window>, error>;
+  window-commit: func(target: borrow<window>, initialized: list<u8>, valid-bytes: u32) -> result<_, error>;
+}
+world host-contract { import kernel; }

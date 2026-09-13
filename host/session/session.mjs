@@ -81,7 +81,7 @@ export class HostSession {
     if(e) this.#idle(e); if(w) this.#idle(w);
     if(this.#operations.size>=4) fail('limit'); // Includes undelivered terminal and quarantined records.
     const ref=ticket(), o={endpoint,window,e,w,pending:true,suppressed:false,stopFailed:false,
-      backendSettled:false,result:null,stopAck:Promise.resolve(),stop,pinsReleased:false,closing:false};
+      backendSettled:false,result:null,resultTaken:false,stopAck:Promise.resolve(),stop,pinsReleased:false,closing:false};
     this.#operations.set(ref,o); if(e)e.pins++; if(w)w.pins++;
     o.settled = (async()=>{
       let result;
@@ -157,6 +157,16 @@ export class HostSession {
       const wake=()=>{if(collect().length)finish();};
       this.#wake.add(wake);timer=setTimeout(finish,timeoutMs);wake();
     });
+  }
+  take_result(operation) {
+    const o=this.#get(this.#operations,operation);
+    if(o.pending||o.closing) fail('busy');
+    if(o.resultTaken) fail('already-terminal');
+    // Claim before reporting a terminal error too: observing an error cannot
+    // make a second claim possible. Quarantine ownership is still retained.
+    o.resultTaken=true;
+    if(o.result.status!=='ok') fail(o.result.status);
+    return o.result;
   }
   clock_read(kind) {
     this.#admit(); if(!['monotonic','wall'].includes(kind)) fail('unsupported');
