@@ -47,6 +47,12 @@ Consumers must pin `v0.0.9` or its full commit and verify `SHA256SUMS`.
 
 ## v0.0.9 testing instructions
 
+Compatibility follow-up: [complete engine contract and independent Node18
+reproduction](compatibility/README.md). The standard Core artifact requires
+typed function references and tail calls. Original v0.0.9 does not contain the
+later preflight scripts; use an exact pinned follow-up main commit for them.
+Node18 is not covered by the release's passing full managed-Host matrix.
+
 Publication is complete. The immutable release commit is
 `0fec38d59872a7f1527dc94799da542e968f1f8a`.
 Documentation-only additions on `main` do not change that tag or its artifacts.

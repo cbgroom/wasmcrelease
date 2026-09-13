@@ -2,7 +2,7 @@
 
 ## 0. Status
 
-Task state: started — independent Node18/standard-Lib feature reproduction.
+Task state: validated locally — independent Node18/standard-Lib feature reproduction.
 Branch: fix/node18-feature-admission. Public v0.0.9 is already released;
 immutable tag and release branch remain unchanged. Main may carry follow-up
 consumer tooling/docs, not new admitted compiler or Lib binaries.
@@ -38,13 +38,17 @@ current corpus, standard caller oracle, integrity and unchanged artifacts.
 
 ## 5. Current Action
 
-Resume by independently testing exact artifacts on Node18 and current Hosts.
+Independent five-Host evidence is admission/core-compatibility-v009.json.
+Node18 reproduces value-type0x64 at265; standard requires function-references
+and tail-call beyond wasm2. Node22/26, Bun and Deno pass full standard calls.
+Compiler-only Node18 passes; full managed Host also lacks global WebCrypto.
+Digest-bound preflight and six negative tests pass on all five Hosts.
 No original114-case reproduction or external performance-number adoption.
 
 ## 6. Next Actions
 
-After reproduction, publish self-contained compatibility evidence/instructions
-and update the Release explanation. Defer catalog/third-party build work to
+Publish self-contained compatibility evidence/instructions and update the
+Release explanation after integrity/credential/remote checks. Defer catalog/third-party build work to
 its own source-authority stage; do not invent shipped commands here.
 
 ## 7. Boundaries

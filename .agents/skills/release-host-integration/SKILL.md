@@ -29,6 +29,14 @@ copyable reference code exposes the contract more clearly.
 
 ## Evidence
 
+Diagnose feature incompatibility from complete artifact validation and minimal
+executable probes, not target_features metadata or the first byte-offset error.
+Bind contracts to exact artifact digests; distinguish Core capabilities from
+JavaScript Host globals. Tested exact engines are not minimum-version guarantees.
+Check identity and engine support before instantiation; probe success never
+replaces full-module validation. Follow-up tooling must not pretend it was
+shipped inside an older immutable tag or alter strict Lib root inventories.
+
 Validate the actual public files and record exact tag/commit, hashes, imports,
 Host policy, behavior result, and untested scope. A module that validates, a
 Lib that initializes, and a source program that links are distinct claims.

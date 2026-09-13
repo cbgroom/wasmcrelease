@@ -43,6 +43,8 @@ const sdkFiles = (await walk('sdk')).sort();
 const currentFiles = (await walk('current')).sort();
 const standardFiles = (await walk('standard')).sort();
 const currentExampleFiles = (await walk('examples/current')).sort();
+const compatibilityFiles = (await walk('compatibility')).sort();
+const compatibilityTools = ['scripts/core-compatibility.mjs', 'scripts/check-core-compatibility.mjs', 'scripts/test-core-compatibility.mjs'];
 const rustWorkspaceFiles = ['Cargo.toml', 'Cargo.lock'];
 const existing = releaseJson.artifacts.map((row) => row.path);
 const releasePaths = [...new Set([
@@ -54,6 +56,8 @@ const releasePaths = [...new Set([
   ...currentFiles,
   ...standardFiles,
   ...currentExampleFiles,
+  ...compatibilityFiles,
+  ...compatibilityTools,
   ...rustWorkspaceFiles,
 ])].sort();
 

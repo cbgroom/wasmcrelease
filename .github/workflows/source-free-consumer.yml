@@ -14,6 +14,24 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  core-compatibility:
+    name: Node ${{ matrix.node }} artifact compatibility
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ['18.19.1', '22.0.0', '26.5.1']
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: ${{ matrix.node }}
+      - name: Verify supported features and intentional rejection boundaries
+        run: node scripts/test-core-compatibility.mjs
+      - name: Verify compiler and expressions independently of managed Host support
+        run: node scripts/validate-current.mjs --compile-only
+
   integrity-and-javascript:
     name: Integrity and JavaScript facade
     runs-on: ubuntu-24.04
@@ -29,6 +47,8 @@ jobs:
         run: ./scripts/validate-maintainer.sh
       - name: Compile and execute the public JavaScript baseline
         run: node examples/agent-start/run.mjs
+      - name: Verify artifact compatibility and rejection boundaries
+        run: node scripts/test-core-compatibility.mjs
 
   runtime-consumer:
     name: ${{ matrix.runtime }} source-free deployment

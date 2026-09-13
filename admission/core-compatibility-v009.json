@@ -1,0 +1,302 @@
+{
+  "schema": "wasmc.independent-core-compatibility/v1",
+  "release_tag": "v0.0.9",
+  "release_commit": "0fec38d59872a7f1527dc94799da542e968f1f8a",
+  "platform": "darwin",
+  "arch": "arm64",
+  "runtime_downloads": [
+    {
+      "version": "18.19.1",
+      "archive_sha256": "0c7249318868877032ed21cc0ed450015ee44b31b9b281955521cd3fc39fbfa3",
+      "bytes": 40664739,
+      "url": "https://nodejs.org/dist/v18.19.1/node-v18.19.1-darwin-arm64.tar.gz",
+      "checksum_url": "https://nodejs.org/dist/v18.19.1/SHASUMS256.txt"
+    },
+    {
+      "version": "22.0.0",
+      "archive_sha256": "ea96d349cfaa67aa87ceeaa3e5b52c9167f7ac302fd8d1ff162d0785e9dc0785",
+      "bytes": 44987783,
+      "url": "https://nodejs.org/dist/v22.0.0/node-v22.0.0-darwin-arm64.tar.gz",
+      "checksum_url": "https://nodejs.org/dist/v22.0.0/SHASUMS256.txt"
+    }
+  ],
+  "original_observation": "External tpc02 report; original raw evidence unavailable",
+  "initial_reproduction": [
+    {
+      "version": "18.19.1",
+      "file": "scripts/validate-current.mjs",
+      "status": 1,
+      "stdout": "",
+      "stderr": "file://<source-free-checkout>/current/index.mjs:442\n  const digest = new Uint8Array(await crypto.subtle.digest(\"SHA-256\", libWasm));\n                                      ^\n\nReferenceError: crypto is not defined\n    at verifyLib (file://<source-free-checkout>/current/index.mjs:442:39)\n    at Module.instantiateLib (file://<source-free-checkout>/current/index.mjs:457:27)\n    at async file://<source-free-checkout>/scripts/validate-current.mjs:76:17\n\nNode.js v18.19.1\n"
+    },
+    {
+      "version": "18.19.1",
+      "file": "examples/current/standard.mjs",
+      "status": 1,
+      "stdout": "",
+      "stderr": "file://<source-free-checkout>/examples/current/standard.mjs:24\n const lm=new WebAssembly.Module(lib);\n          ^\n\nCompileError: WebAssembly.Module(): invalid value type 0x64 @+265\n    at file://<source-free-checkout>/examples/current/standard.mjs:24:11\n\nNode.js v18.19.1\n"
+    },
+    {
+      "version": "22.0.0",
+      "file": "scripts/validate-current.mjs",
+      "status": 0,
+      "stdout": "{\"accepted\":true,\"runtime\":\"node\",\"compiler_sha256\":\"93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90\",\"frozen_corpus_outputs\":30,\"expression_cases\":23,\"managed_repeated_calls\":192}\n",
+      "stderr": ""
+    },
+    {
+      "version": "22.0.0",
+      "file": "examples/current/standard.mjs",
+      "status": 0,
+      "stdout": "{\"accepted\":true,\"standard_lib\":\"wasmc:std@1.4.0\",\"functions\":73,\"dual_consumer_calls\":5120,\"current_hosted_compiler_reproduced\":true}\n",
+      "stderr": ""
+    }
+  ],
+  "validation": [
+    {
+      "path": "current/wasmc_compiler.wasm",
+      "profile": "wasm2",
+      "status": 0,
+      "diagnostic": "",
+      "sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90"
+    },
+    {
+      "path": "current/lib_core.wasm",
+      "profile": "wasm2",
+      "status": 0,
+      "diagnostic": "",
+      "sha256": "86670b35fe4ff01f9ad4392b42ce8816e4679f680ab788599905edb1bbe6e749"
+    },
+    {
+      "path": "standard/corelib/4.8.0/corelib.wasm",
+      "profile": "wasm2",
+      "status": 0,
+      "diagnostic": "",
+      "sha256": "f54a892aff9068e5c79464029423a2e8f753ddb44010af9ac34a5c9efce2069c"
+    },
+    {
+      "path": "standard/wasmc-std/1.4.0/artifact.wasm",
+      "profile": "wasm2",
+      "status": 1,
+      "diagnostic": "error: function references required for index reference types (at offset 0x106)\n",
+      "sha256": "f8a8ce447f776a47680e02e19ea3a69827edbbc46e01985803ce3d3df51178d7"
+    },
+    {
+      "path": "standard/wasmc-std/1.4.0/artifact.wasm",
+      "profile": "wasm2,function-references",
+      "status": 1,
+      "diagnostic": "error: func 101 failed to validate\n\nCaused by:\n    0: tail calls support is not enabled (at offset 0x7dce)\n",
+      "sha256": "f8a8ce447f776a47680e02e19ea3a69827edbbc46e01985803ce3d3df51178d7"
+    },
+    {
+      "path": "standard/wasmc-std/1.4.0/artifact.wasm",
+      "profile": "wasm2,function-references,tail-call",
+      "status": 0,
+      "diagnostic": "",
+      "sha256": "f8a8ce447f776a47680e02e19ea3a69827edbbc46e01985803ce3d3df51178d7"
+    }
+  ],
+  "hosts": [
+    {
+      "name": "node18",
+      "tests": [
+        {
+          "args": [
+            "scripts/check-core-compatibility.mjs"
+          ],
+          "status": 1,
+          "stdout": "{\"schema\":\"wasmc.core-compatibility-check/v1\",\"accepted\":false,\"host\":{\"name\":\"node\",\"version\":\"v18.19.1\",\"v8\":\"10.2.154.26-node.28\"},\"results\":[{\"accepted\":true,\"artifact\":\"compiler\",\"sha256\":\"93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90\",\"validation_profile\":\"wasm2\",\"feature_support\":{\"function-references\":false,\"tail-call\":false}},{\"accepted\":true,\"artifact\":\"automatic-provider\",\"sha256\":\"86670b35fe4ff01f9ad4392b42ce8816e4679f680ab788599905edb1bbe6e749\",\"validation_profile\":\"wasm2\",\"feature_support\":{\"function-references\":false,\"tail-call\":false}},{\"accepted\":true,\"artifact\":\"standard-provider\",\"sha256\":\"f54a892aff9068e5c79464029423a2e8f753ddb44010af9ac34a5c9efce2069c\",\"validation_profile\":\"wasm2\",\"feature_support\":{\"function-references\":false,\"tail-call\":false}},{\"accepted\":false,\"code\":\"engine.feature_unsupported\",\"artifact\":\"standard\",\"missing_features\":[\"function-references\",\"tail-call\"],\"sha256\":\"f8a8ce447f776a47680e02e19ea3a69827edbbc46e01985803ce3d3df51178d7\",\"action\":\"Use a supported engine or a separately admitted portable variant; do not change immutable bytes or enable flags silently.\"}]}\n",
+          "stderr": ""
+        },
+        {
+          "args": [
+            "scripts/test-core-compatibility.mjs"
+          ],
+          "status": 0,
+          "stdout": "{\"accepted\":true,\"host\":{\"name\":\"node\",\"version\":\"v18.19.1\",\"v8\":\"10.2.154.26-node.28\"},\"features\":{\"function-references\":false,\"tail-call\":false},\"negative_tests\":6,\"supported_probe_oracle\":7}\n",
+          "stderr": ""
+        },
+        {
+          "args": [
+            "scripts/validate-current.mjs",
+            "--compile-only"
+          ],
+          "status": 0,
+          "stdout": "{\"accepted\":true,\"runtime\":\"node\",\"compiler_sha256\":\"93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90\",\"frozen_corpus_outputs\":30,\"expression_cases\":23,\"mode\":\"compile-only\",\"managed_repeated_calls\":null}\n",
+          "stderr": ""
+        },
+        {
+          "args": [
+            "examples/current/standard.mjs"
+          ],
+          "status": 1,
+          "stdout": "",
+          "stderr": "file://<source-free-checkout>/scripts/core-compatibility.mjs:33\n  const reject = (code, extra = {}) => { throw new CoreCompatibilityError({accepted:false, code, artifact:id, ...extra}); };\n                                               ^\n\nCoreCompatibilityError: {\"accepted\":false,\"code\":\"engine.feature_unsupported\",\"artifact\":\"standard\",\"missing_features\":[\"function-references\",\"tail-call\"],\"sha256\":\"f8a8ce447f776a47680e02e19ea3a69827edbbc46e01985803ce3d3df51178d7\",\"action\":\"Use a supported engine or a separately admitted portable variant; do not change immutable bytes or enable flags silently.\"}\n    at reject (file://<source-free-checkout>/scripts/core-compatibility.mjs:33:48)\n    at preflightCoreArtifact (file://<source-free-checkout>/scripts/core-compatibility.mjs:40:23)\n    at file://<source-free-checkout>/examples/current/standard.mjs:13:1 {\n  diagnostic: {\n    accepted: false,\n    code: 'engine.feature_unsupported',\n    artifact: 'standard',\n    missing_features: [ 'function-references', 'tail-call' ],\n    sha256: 'f8a8ce447f776a47680e02e19ea3a69827edbbc46e01985803ce3d3df51178d7',\n    action: 'Use a supported engine or a separately admitted portable variant; do not change immutable bytes or enable flags silently.'\n  }\n}\n\nNode.js v18.19.1\n"
+        }
+      ]
+    },
+    {
+      "name": "node22",
+      "tests": [
+        {
+          "args": [
+            "scripts/check-core-compatibility.mjs"
+          ],
+          "status": 0,
+          "stdout": "{\"schema\":\"wasmc.core-compatibility-check/v1\",\"accepted\":true,\"host\":{\"name\":\"node\",\"version\":\"v22.0.0\",\"v8\":\"12.4.254.14-node.10\"},\"results\":[{\"accepted\":true,\"artifact\":\"compiler\",\"sha256\":\"93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90\",\"validation_profile\":\"wasm2\",\"feature_support\":{\"function-references\":true,\"tail-call\":true}},{\"accepted\":true,\"artifact\":\"automatic-provider\",\"sha256\":\"86670b35fe4ff01f9ad4392b42ce8816e4679f680ab788599905edb1bbe6e749\",\"validation_profile\":\"wasm2\",\"feature_support\":{\"function-references\":true,\"tail-call\":true}},{\"accepted\":true,\"artifact\":\"standard-provider\",\"sha256\":\"f54a892aff9068e5c79464029423a2e8f753ddb44010af9ac34a5c9efce2069c\",\"validation_profile\":\"wasm2\",\"feature_support\":{\"function-references\":true,\"tail-call\":true}},{\"accepted\":true,\"artifact\":\"standard\",\"sha256\":\"f8a8ce447f776a47680e02e19ea3a69827edbbc46e01985803ce3d3df51178d7\",\"validation_profile\":\"wasm2,function-references,tail-call\",\"feature_support\":{\"function-references\":true,\"tail-call\":true}}]}\n",
+          "stderr": ""
+        },
+        {
+          "args": [
+            "scripts/test-core-compatibility.mjs"
+          ],
+          "status": 0,
+          "stdout": "{\"accepted\":true,\"host\":{\"name\":\"node\",\"version\":\"v22.0.0\",\"v8\":\"12.4.254.14-node.10\"},\"features\":{\"function-references\":true,\"tail-call\":true},\"negative_tests\":6,\"supported_probe_oracle\":7}\n",
+          "stderr": ""
+        },
+        {
+          "args": [
+            "scripts/validate-current.mjs",
+            "--compile-only"
+          ],
+          "status": 0,
+          "stdout": "{\"accepted\":true,\"runtime\":\"node\",\"compiler_sha256\":\"93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90\",\"frozen_corpus_outputs\":30,\"expression_cases\":23,\"mode\":\"compile-only\",\"managed_repeated_calls\":null}\n",
+          "stderr": ""
+        },
+        {
+          "args": [
+            "examples/current/standard.mjs"
+          ],
+          "status": 0,
+          "stdout": "{\"accepted\":true,\"standard_lib\":\"wasmc:std@1.4.0\",\"functions\":73,\"dual_consumer_calls\":5120,\"current_hosted_compiler_reproduced\":true}\n",
+          "stderr": ""
+        }
+      ]
+    },
+    {
+      "name": "node26",
+      "tests": [
+        {
+          "args": [
+            "scripts/check-core-compatibility.mjs"
+          ],
+          "status": 0,
+          "stdout": "{\"schema\":\"wasmc.core-compatibility-check/v1\",\"accepted\":true,\"host\":{\"name\":\"node\",\"version\":\"v26.5.1\",\"v8\":\"14.6.202.34-node.24\"},\"results\":[{\"accepted\":true,\"artifact\":\"compiler\",\"sha256\":\"93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90\",\"validation_profile\":\"wasm2\",\"feature_support\":{\"function-references\":true,\"tail-call\":true}},{\"accepted\":true,\"artifact\":\"automatic-provider\",\"sha256\":\"86670b35fe4ff01f9ad4392b42ce8816e4679f680ab788599905edb1bbe6e749\",\"validation_profile\":\"wasm2\",\"feature_support\":{\"function-references\":true,\"tail-call\":true}},{\"accepted\":true,\"artifact\":\"standard-provider\",\"sha256\":\"f54a892aff9068e5c79464029423a2e8f753ddb44010af9ac34a5c9efce2069c\",\"validation_profile\":\"wasm2\",\"feature_support\":{\"function-references\":true,\"tail-call\":true}},{\"accepted\":true,\"artifact\":\"standard\",\"sha256\":\"f8a8ce447f776a47680e02e19ea3a69827edbbc46e01985803ce3d3df51178d7\",\"validation_profile\":\"wasm2,function-references,tail-call\",\"feature_support\":{\"function-references\":true,\"tail-call\":true}}]}\n",
+          "stderr": ""
+        },
+        {
+          "args": [
+            "scripts/test-core-compatibility.mjs"
+          ],
+          "status": 0,
+          "stdout": "{\"accepted\":true,\"host\":{\"name\":\"node\",\"version\":\"v26.5.1\",\"v8\":\"14.6.202.34-node.24\"},\"features\":{\"function-references\":true,\"tail-call\":true},\"negative_tests\":6,\"supported_probe_oracle\":7}\n",
+          "stderr": ""
+        },
+        {
+          "args": [
+            "scripts/validate-current.mjs",
+            "--compile-only"
+          ],
+          "status": 0,
+          "stdout": "{\"accepted\":true,\"runtime\":\"node\",\"compiler_sha256\":\"93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90\",\"frozen_corpus_outputs\":30,\"expression_cases\":23,\"mode\":\"compile-only\",\"managed_repeated_calls\":null}\n",
+          "stderr": ""
+        },
+        {
+          "args": [
+            "examples/current/standard.mjs"
+          ],
+          "status": 0,
+          "stdout": "{\"accepted\":true,\"standard_lib\":\"wasmc:std@1.4.0\",\"functions\":73,\"dual_consumer_calls\":5120,\"current_hosted_compiler_reproduced\":true}\n",
+          "stderr": ""
+        }
+      ]
+    },
+    {
+      "name": "bun",
+      "tests": [
+        {
+          "args": [
+            "scripts/check-core-compatibility.mjs"
+          ],
+          "status": 0,
+          "stdout": "{\"schema\":\"wasmc.core-compatibility-check/v1\",\"accepted\":true,\"host\":{\"name\":\"bun\",\"version\":\"1.3.14\",\"v8\":\"13.6.233.10-node.18\"},\"results\":[{\"accepted\":true,\"artifact\":\"compiler\",\"sha256\":\"93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90\",\"validation_profile\":\"wasm2\",\"feature_support\":{\"function-references\":true,\"tail-call\":true}},{\"accepted\":true,\"artifact\":\"automatic-provider\",\"sha256\":\"86670b35fe4ff01f9ad4392b42ce8816e4679f680ab788599905edb1bbe6e749\",\"validation_profile\":\"wasm2\",\"feature_support\":{\"function-references\":true,\"tail-call\":true}},{\"accepted\":true,\"artifact\":\"standard-provider\",\"sha256\":\"f54a892aff9068e5c79464029423a2e8f753ddb44010af9ac34a5c9efce2069c\",\"validation_profile\":\"wasm2\",\"feature_support\":{\"function-references\":true,\"tail-call\":true}},{\"accepted\":true,\"artifact\":\"standard\",\"sha256\":\"f8a8ce447f776a47680e02e19ea3a69827edbbc46e01985803ce3d3df51178d7\",\"validation_profile\":\"wasm2,function-references,tail-call\",\"feature_support\":{\"function-references\":true,\"tail-call\":true}}]}\n",
+          "stderr": ""
+        },
+        {
+          "args": [
+            "scripts/test-core-compatibility.mjs"
+          ],
+          "status": 0,
+          "stdout": "{\"accepted\":true,\"host\":{\"name\":\"bun\",\"version\":\"1.3.14\",\"v8\":\"13.6.233.10-node.18\"},\"features\":{\"function-references\":true,\"tail-call\":true},\"negative_tests\":6,\"supported_probe_oracle\":7}\n",
+          "stderr": ""
+        },
+        {
+          "args": [
+            "scripts/validate-current.mjs",
+            "--compile-only"
+          ],
+          "status": 0,
+          "stdout": "{\"accepted\":true,\"runtime\":\"bun\",\"compiler_sha256\":\"93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90\",\"frozen_corpus_outputs\":30,\"expression_cases\":23,\"mode\":\"compile-only\",\"managed_repeated_calls\":null}\n",
+          "stderr": ""
+        },
+        {
+          "args": [
+            "examples/current/standard.mjs"
+          ],
+          "status": 0,
+          "stdout": "{\"accepted\":true,\"standard_lib\":\"wasmc:std@1.4.0\",\"functions\":73,\"dual_consumer_calls\":5120,\"current_hosted_compiler_reproduced\":true}\n",
+          "stderr": ""
+        }
+      ]
+    },
+    {
+      "name": "deno",
+      "tests": [
+        {
+          "args": [
+            "scripts/check-core-compatibility.mjs"
+          ],
+          "status": 0,
+          "stdout": "{\"schema\":\"wasmc.core-compatibility-check/v1\",\"accepted\":true,\"host\":{\"name\":\"deno\",\"version\":\"2.9.4\",\"v8\":\"15.0.245.2-rusty\"},\"results\":[{\"accepted\":true,\"artifact\":\"compiler\",\"sha256\":\"93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90\",\"validation_profile\":\"wasm2\",\"feature_support\":{\"function-references\":true,\"tail-call\":true}},{\"accepted\":true,\"artifact\":\"automatic-provider\",\"sha256\":\"86670b35fe4ff01f9ad4392b42ce8816e4679f680ab788599905edb1bbe6e749\",\"validation_profile\":\"wasm2\",\"feature_support\":{\"function-references\":true,\"tail-call\":true}},{\"accepted\":true,\"artifact\":\"standard-provider\",\"sha256\":\"f54a892aff9068e5c79464029423a2e8f753ddb44010af9ac34a5c9efce2069c\",\"validation_profile\":\"wasm2\",\"feature_support\":{\"function-references\":true,\"tail-call\":true}},{\"accepted\":true,\"artifact\":\"standard\",\"sha256\":\"f8a8ce447f776a47680e02e19ea3a69827edbbc46e01985803ce3d3df51178d7\",\"validation_profile\":\"wasm2,function-references,tail-call\",\"feature_support\":{\"function-references\":true,\"tail-call\":true}}]}\n",
+          "stderr": ""
+        },
+        {
+          "args": [
+            "scripts/test-core-compatibility.mjs"
+          ],
+          "status": 0,
+          "stdout": "{\"accepted\":true,\"host\":{\"name\":\"deno\",\"version\":\"2.9.4\",\"v8\":\"15.0.245.2-rusty\"},\"features\":{\"function-references\":true,\"tail-call\":true},\"negative_tests\":6,\"supported_probe_oracle\":7}\n",
+          "stderr": ""
+        },
+        {
+          "args": [
+            "scripts/validate-current.mjs",
+            "--compile-only"
+          ],
+          "status": 0,
+          "stdout": "{\"accepted\":true,\"runtime\":\"deno\",\"compiler_sha256\":\"93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90\",\"frozen_corpus_outputs\":30,\"expression_cases\":23,\"mode\":\"compile-only\",\"managed_repeated_calls\":null}\n",
+          "stderr": ""
+        },
+        {
+          "args": [
+            "examples/current/standard.mjs"
+          ],
+          "status": 0,
+          "stdout": "{\"accepted\":true,\"standard_lib\":\"wasmc:std@1.4.0\",\"functions\":73,\"dual_consumer_calls\":5120,\"current_hosted_compiler_reproduced\":true}\n",
+          "stderr": ""
+        }
+      ]
+    }
+  ],
+  "accepted": true,
+  "artifact_changes": false,
+  "path_redaction": "Operator checkout root replaced with <source-free-checkout>; diagnostics otherwise retained.",
+  "wasm_tools_version": "wasm-tools 1.255.0",
+  "harness_sha256": {
+    "scripts/core-compatibility.mjs": "d6a6884b23f3c00aef84bcb7aac71e8ba667f8e2984cfc15d2f4b30e7b71156c",
+    "scripts/check-core-compatibility.mjs": "6bd90983a12011bad2e2404834cb098d4d7ae5f9b47d059281f7fee26e5c2b1e",
+    "scripts/test-core-compatibility.mjs": "0101a1e8a48618d9f5e8dd2af5e8af755b5950d7e42949f9afe2c1cc8e508ceb",
+    "scripts/validate-current.mjs": "484ae9d3661f13ba50ca14735f7b22960cdaf8f3959f632e8b358d6722beee53",
+    "examples/current/standard.mjs": "57208fb11c83262fe2613e23ab7c1a72d99d2aaf28701e132df97ae3cdfdd9c9",
+    "compatibility/core-artifacts-v009.json": "9a5c2350e97371bbb13f0e83cefb926ae3985f6453e52ed1a4d4cf5ee77f54c2"
+  }
+}

@@ -72,9 +72,10 @@ interface api {
  }
 }
 world app {export api;}`;
-for (const facade of [api,single,globalThis.Wasmc]) {
+const compileOnly = process.argv.includes('--compile-only');
+if (!compileOnly) for (const facade of [api,single,globalThis.Wasmc]) {
  const linked = await facade.instantiateLib(managed);
  for(let i=0;i<64;i++) assert.equal(linked.exports.run(),12);
 }
 assert.equal(outputs,30);
-console.log(JSON.stringify({accepted:true,runtime,compiler_sha256:hash(wasm),frozen_corpus_outputs:outputs,expression_cases:cases.length,managed_repeated_calls:192}));
+console.log(JSON.stringify({accepted:true,runtime,compiler_sha256:hash(wasm),frozen_corpus_outputs:outputs,expression_cases:cases.length,mode:compileOnly?'compile-only':'full',managed_repeated_calls:compileOnly?null:192}));
