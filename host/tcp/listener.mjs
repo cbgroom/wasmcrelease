@@ -7,6 +7,9 @@ export class PreauthorizedTcpListener {
     this.#server=server;
     this.#closed=new Promise(resolve=>server.once('close',resolve));
     server.on('connection',socket=>{
+      // Some Node-compatible runtimes fail to inherit the trusted server policy.
+      // Apply it before readable EOF; do not grant half-open behavior by default.
+      socket.allowHalfOpen=server.allowHalfOpen===true;
       socket.on('error',()=>{});socket.pause();
       socket.once('close',()=>{this.#queue=this.#queue.filter(queued=>queued!==socket);});
       if(this.#retired||this.#queue.length>=2) {this.#rejected++;socket.destroy();return;}

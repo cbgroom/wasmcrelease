@@ -2,7 +2,7 @@
 
 ## 0. Status
 
-Active source line: work/host-core-negotiation, following pushed scoped lifetime/Native owner/kernel
+Active source line: work/host-tcp-half-close-probe, following pushed Core negotiation/lifetime/Native owner/kernel
 and handoff consolidation. Resolve exact revisions with Git; inspect
 status/worktrees before editing and preserve unrelated changes. Linked worktrees
 belong under /Users/youxianshi/code/.worktrees/wasmcrelease.
@@ -57,7 +57,7 @@ Both Native profiles reset fuel per call; no hidden WASI or guest authority.
 
 Native owner registry adds scoped quota/ownership return/settled completion/
 quarantine with exclusive borrow, four unit controls plus actual TCP timeout ->
-injected failed ack -> real shutdown/peer EOF with one read.14guard/5TCP tests.
+injected failed ack -> real shutdown/peer EOF with one read.14guard/6TCP tests.
 Fresh CSPRNG scoped guards use private binding-local integers; injected identity
 constructors and raw guards keep global exhaustion protection. JS/Native owner
 registries rotate identity only when exhausted AND completely empty. Local
@@ -72,6 +72,13 @@ new Host imports. Negotiated guest performs preflight before allocation/invoke.
 Local six JS/Native engine pairs pass four lengths and seven denial cases;
 Native denies with zero non-describe calls/resources/effects. Typed WIT SDK and
 arbitrary-device description are not implied. Owning host/v0/NEGOTIATION.md.
+
+Half-close probe fixes accepted socket inheritance of trusted server policy;
+local Node/Bun/Deno -> independent Rust peer all receive reply after peer FIN.
+Native EOF -> write -> explicit retire test also passes. Node/Deno JS peers
+pass; Bun1.3.14 macOS ARM JS client still loses reply. Characterization records
+accepted=false/profile_supported=false, never counts as positive parity.
+See host/tcp/HALF_CLOSE.md; no new Host import/private-runtime workaround.
 
 ## 4. Plan and Validation
 
@@ -102,7 +109,7 @@ Do not count locally completed slices as all-platform/full SDK completion.
 
 ## 6. Next Actions
 
-Next: inspect latest core-negotiation exact runs (Host composition and Core
+Next: inspect latest half-close-probe exact runs (Host composition and Core
 Host contract); fix real failures locally. Prior accepted source needs no redo.
 Accept relevant source only with exact receipts, merge current main metadata
 without discarding it, refresh integrity, then normal expected-base FF promotion.

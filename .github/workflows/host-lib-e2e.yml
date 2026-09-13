@@ -1,7 +1,7 @@
 name: Public Host and Lib end-to-end
 on:
   push:
-    branches: [main, work/host-lib-e2e, work/host-completion-guard, work/host-startup-identity, work/host-tcp-endpoint, work/host-tcp-read-stop, work/host-tcp-listener, work/host-resident-app, work/host-tcp-write-outcome, work/host-engine-parity, work/host-resident-benchmark, work/host-stop-failure, work/host-driver-errors, work/host-browser-parity, work/host-quarantine-supervisor, work/host-kernel-engine-parity, work/host-native-owner-supervisor, work/host-scoped-owner-lifetime, work/host-core-negotiation]
+    branches: [main, work/host-lib-e2e, work/host-completion-guard, work/host-startup-identity, work/host-tcp-endpoint, work/host-tcp-read-stop, work/host-tcp-listener, work/host-resident-app, work/host-tcp-write-outcome, work/host-engine-parity, work/host-resident-benchmark, work/host-stop-failure, work/host-driver-errors, work/host-browser-parity, work/host-quarantine-supervisor, work/host-kernel-engine-parity, work/host-native-owner-supervisor, work/host-scoped-owner-lifetime, work/host-core-negotiation, work/host-tcp-half-close-probe]
   pull_request:
   workflow_dispatch:
 permissions:
@@ -52,6 +52,13 @@ jobs:
       - run: cargo +1.96.0 clippy --locked --manifest-path host/lib-e2e/rust/Cargo.toml --all-targets -- -D warnings
       - run: cargo +1.96.0 build --release --locked --manifest-path host/lib-e2e/rust/Cargo.toml
       - run: cargo +1.96.0 test --release --locked --manifest-path host/lib-e2e/rust/Cargo.toml
+      - name: Half-close reply with independent Native peer
+        shell: bash
+        run: |
+          peer=host/lib-e2e/rust/target/release/tcp-half-close-peer
+          if [[ "$RUNNER_OS" == Windows ]]; then peer="$peer.exe"; fi
+          node host/tcp/half-close-test.mjs "$peer"
+          node host/tcp/half-close-test.mjs
       - name: Wasmi-only dependency contract
         shell: bash
         run: |
@@ -71,6 +78,11 @@ jobs:
           if [[ "$RUNNER_OS" == Windows ]]; then server="$server.exe"; resident="$resident.exe"; fi
           node host/tcp/server-test.mjs "$server" "$resident"
           write=host/lib-e2e/rust/target/release/tcp-write-reference
+          peer=host/lib-e2e/rust/target/release/tcp-half-close-peer
+          bun host/tcp/half-close-test.mjs "$peer"
+          deno run --allow-net=127.0.0.1 --allow-env=NODE_V8_COVERAGE --allow-run="$peer" host/tcp/half-close-test.mjs "$peer"
+          deno run --allow-net=127.0.0.1 host/tcp/half-close-test.mjs
+          bun host/tcp/half-close-test.mjs --characterize-js-peer
           if [[ "$RUNNER_OS" == Windows ]]; then write="$write.exe"; fi
           node host/tcp/write-test.mjs "$write"
       - name: Same App and published Lib through real file Host
@@ -155,7 +167,7 @@ jobs:
         env:
           SOURCE: ${{ github.sha }}
         run: |
-          printf '%s\n' "Source $SOURCE; $RUNNER_OS/$RUNNER_ARCH; 76 guard transitions, 10 fault controls, 14 guard/owner Rust tests, 40000 scoped and supervisor cycles, 5 TCP/listener Rust tests, 8-process identity, 20 file/App/Lib cases, 8 TCP/Lib pairs, 4 read-stop pairs with 9 controls, 19 resident App/Lib server connections, 1000 resident calls per engine and 8 listener controls; guest trap poisons with no replay, not guest async ABI or generic failed-shutdown qualification" >> "$GITHUB_STEP_SUMMARY"
+          printf '%s\n' "Source $SOURCE; $RUNNER_OS/$RUNNER_ARCH; 76 guard transitions, 10 fault controls, 14 guard/owner Rust tests, 40000 scoped and supervisor cycles, 6 TCP/listener Rust tests, Native-peer half-close reply proof, 8-process identity, 20 file/App/Lib cases, 8 TCP/Lib pairs, 4 read-stop pairs with 9 controls, 19 resident App/Lib server connections, 1000 resident calls per engine and 8 listener controls; Bun JS-client half-close is separate characterization, not positive parity; guest trap poisons with no replay, not guest async ABI or generic failed-shutdown qualification" >> "$GITHUB_STEP_SUMMARY"
   browser:
     strategy:
       fail-fast: false
