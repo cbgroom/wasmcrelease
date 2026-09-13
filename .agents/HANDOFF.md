@@ -10,7 +10,15 @@ profiles, CLI plus SDK; mobile packaging and promotion are subsequent gates.
 First slice: exclusive resident compiler instance with fuel/memory/input limits,
 copy-before-clear output, import rejection, native compile/inspect and JS byte
 parity. Existing frozen SDK and all64 promoted product files remain untouched.
-START checkpoint precedes implementation. Do not claim a new release or full
+START checkpoint pushed. Public independent compiler SDK/CLI implemented:
+fixed compiler digest, bounded resident Wasmi instance, copy-before-clear,
+diagnostic recovery and trap poisoning, no-clobber scalar compile command.
+Local Rust3/3, strict Clippy, JS byte parity5/5, no-clobber5/5 and actionlint
+PASS. Locked dependency tree has no Wasmtime/Cranelift. Three-OS native Actions
+build/test/parity plus exact-source development artifacts added; remote results
+must still be read. No inspect/run/serve, Host SDK, dual promotion or mobile
+packaging claim. New independent crate does not replace the frozen SDK.
+Do not claim a new release or full
 Wasmi Std compatibility: Std1.4 still requires unsupported engine features.
 Resume: implement independent public adapter, focused tests, locked dependency
 tree, integrity/maintainer gate, push and exact-source Actions qualification.

@@ -1,0 +1,39 @@
+name: Native Wasmi compiler glue
+on:
+  push:
+    branches: [main, work/native-wasmi-compiler]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  native:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, macos-14, windows-2025]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: 26.5.1
+      - run: rustup toolchain install 1.96.0 --profile minimal --component clippy,rustfmt
+      - run: cargo +1.96.0 test --locked --manifest-path sdk/wasmc-native-compiler/Cargo.toml
+      - run: cargo +1.96.0 clippy --locked --manifest-path sdk/wasmc-native-compiler/Cargo.toml --all-targets -- -D warnings
+      - run: cargo +1.96.0 build --release --locked --manifest-path sdk/wasmc-native-compiler/Cargo.toml
+      - shell: bash
+        run: |
+          binary=sdk/wasmc-native-compiler/target/release/wasmc-wasmi
+          if [[ "$RUNNER_OS" == Windows ]]; then binary="$binary.exe"; fi
+          node scripts/test-native-compiler.mjs "$binary"
+          cargo +1.96.0 tree --locked --manifest-path sdk/wasmc-native-compiler/Cargo.toml > dependency-tree.txt
+          if grep -Ei 'wasmtime|cranelift' dependency-tree.txt; then exit 1; fi
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: wasmc-wasmi-${{ matrix.os }}-${{ runner.arch }}-${{ github.sha }}
+          path: |
+            sdk/wasmc-native-compiler/target/release/wasmc-wasmi
+            sdk/wasmc-native-compiler/target/release/wasmc-wasmi.exe
+            dependency-tree.txt
