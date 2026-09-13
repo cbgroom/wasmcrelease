@@ -168,6 +168,8 @@ focused tests pass locally; exact cross-platform qualification remains pending.
 The composition workflow gives Node UDP retirement its own step: a continuation
 of a plain YAML run scalar was passed as arguments instead of a second command.
 No existing receipt may be interpreted as this previously missing Node check.
+The UDP fault entrypoint rejects extra arguments before issuing network I/O;
+the folded-command shape is a local negative regression, not a successful test.
 Std compatibility production must originate in the private producer; public
 artifact rewriting is not authorized by release-integrity. No Std bytes changed.
 

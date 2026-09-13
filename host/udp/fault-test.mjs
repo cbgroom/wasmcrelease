@@ -2,6 +2,8 @@ import assert from 'node:assert/strict';
 import {createSocket} from 'node:dgram';
 import {EventEmitter} from 'node:events';
 import {PreauthorizedDatagram} from './adapter.mjs';
+// Fail closed if workflow YAML folds another command into our argument list.
+if(process.argv.length!==2)throw new Error('UDP fault test accepts no arguments');
 const watchdog=setTimeout(()=>{console.error('UDP ownership timeout');process.exit(1);},5000);
 async function bound(){const s=createSocket('udp4');s.on('error',()=>{});await new Promise(resolve=>s.bind(0,'127.0.0.1',resolve));return s;}
 async function send(socket,port,bytes){await new Promise((resolve,reject)=>socket.send(Uint8Array.from(bytes),port,'127.0.0.1',error=>error?reject(error):resolve()));}

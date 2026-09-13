@@ -54,6 +54,7 @@ jobs:
       - name: Fast stream ownership and actual JS service proof
         shell: bash
         run: |
+          node host/udp/entrypoint-test.mjs
           node host/tcp/stream-snapshot-test.mjs
           bun host/tcp/stream-snapshot-test.mjs
           deno run host/tcp/stream-snapshot-test.mjs
@@ -143,6 +144,7 @@ jobs:
       - run: node host/udp/test.mjs
       - run: node host/udp/fault-test.mjs
       - run: node host/udp/retirement-test.mjs
+      - run: node host/udp/entrypoint-test.mjs
       - name: Independent process startup identity
         shell: bash
         run: |

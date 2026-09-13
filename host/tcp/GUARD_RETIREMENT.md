@@ -35,3 +35,7 @@ before/after mutation or omit its acknowledgement. The owner transitions to
 internal unknown-retirement quarantine with the same ticket and primary error;
 quota remains occupied even with zero records. A further cleanup rejects without
 another close or I/O. Run this test with Node, Bun and permission-free Deno.
+
+CI also runs `node host/udp/entrypoint-test.mjs`: three subprocess controls reject
+the old folded YAML command shape in Node/Bun/Deno before network access. The
+Node UDP retirement test now has an independent mandatory workflow step.
