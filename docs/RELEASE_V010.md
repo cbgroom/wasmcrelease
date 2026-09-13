@@ -1,6 +1,10 @@
 # v0.0.10 staged release
 
 First development identity: `v0.0.10-dev.1`. This is a GitHub prerelease;
+Main acceptance identity: `v0.0.10-main.1`, also a prerelease. Both complete
+workflows passed at the dev tag's exact source; [retained stage receipt](../channels/main.json)
+binds that source and unchanged product digest set. Later stage metadata does
+not retarget those measurements or claim its own source was already tested.
 the default prod remains immutable `v0.0.9`. All0.0.x retain `stable=false`.
 Main acceptance and suffix-free prod require successful full source-free CI
 and LibSearch equivalence on the retained exact candidate. See
