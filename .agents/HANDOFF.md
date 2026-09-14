@@ -2,6 +2,11 @@
 
 ## 0. Status
 
+IN PROGRESS resident owner wake/admission convergence: add a Host-only coalesced
+wake that yields the blocking driver without cancelling or releasing live reads.
+Retain token-rotation and teardown isolation; current verified45-test checkpoint
+remains independently recoverable. SDK Future/session wiring follows locally.
+
 DONE shared TCP/connected-UDP supervisor/reactor: same generic driver, one OS
 queue and active/quarantine budget. Fresh local readiness45/45 strict Clippy PASS;
 source evidence: workstreams/host-readiness/mixed-reactor-evidence.json. Mixed16
