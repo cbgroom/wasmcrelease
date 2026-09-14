@@ -2,14 +2,14 @@
 
 ## 0. Status
 
-DONE Native connected-UDP owner uses the SAME generic TCP OS wait/cancel kernel.
-Fresh local Darwin arm64 readiness42/42 and default25/25 PASS; strict test Clippy,
-workflow YAML and public integrity/maintainer gate PASS. UDP preserves empty
-messages, rejects oversize without silent truncation and closes before settlement.
-Resolve source/input receipts from workstreams/host-readiness/udp-owner-evidence.json.
-Actions now require42 readiness controls on desktop OSes; do not count queue as
-qualification. NEXT actual typed UDP App/CoreLib/common completion + supervisor,
-JS/Wasmtime parity and exact-source cross-platform acceptance; full goal ACTIVE.
+DONE UDP owner42/default25 locally; prior evidence retained. START shared socket
+supervisor/reactor: generic existing read-owner seam, mixed TCP/connected-UDP in
+one OS queue and one finite active/quarantine budget; preserve stream/message
+differences, one-shot cancellation/deadline/close proof and no replay. Add mixed
+success/failure/quota/drop controls; fresh local strict tests under existing
+bounded qualification pool, then exact-source desktop Actions. No compiler/Lib
+bytes or Host primitive added. SDK Future/session integration, JS/Wasmtime and
+full production acceptance remain separate unfinished gates; full goal ACTIVE.
 
 Typed Host SDK blocker independently reproduced against admitted compiler:
 existing sync-owned and scalar-async Apps compile, while owned local before
