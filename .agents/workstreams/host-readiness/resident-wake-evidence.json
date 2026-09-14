@@ -1,0 +1,26 @@
+{
+  "stage": "Resident shared owner command wake substrate",
+  "authority": "Resolve containing source checkpoint from Git",
+  "inputs_sha256": {
+    "host/completion/rust/src/read_reactor.rs": "5e0b4ff85098e022ca1c5feedd3c29a712e5a6787b1d61f5c410c684c13d0572"
+  },
+  "local": {
+    "platform": "Darwin arm64",
+    "qualification": "Fresh direct rustc and strict test Clippy with existing locked Mio/getrandom dependencies",
+    "passed": 47,
+    "failed": 0,
+    "ignored": 0,
+    "elapsed_seconds": 0.73,
+    "strict_clippy": "PASS",
+    "fixed_output_cap_kib": 262144,
+    "terminal_kib": 251744,
+    "transient_peak": "Not sampled in this final run"
+  },
+  "controls": [
+    "Cross-thread command wake yields a real pending driver without settling its live TCP owner; another read can then be admitted and both deliver exactly once",
+    "Notifications coalesce, survive idle readiness-token rotation and reject after actual reactor teardown",
+    "Previous 45 tests remain enabled, including mixed TCP/UDP ownership and effective-registration-error containment"
+  ],
+  "cross_platform": "Exact new source Actions pending",
+  "boundary": "Wake is an embedding command notification, not a Guest Host API, external stop acknowledgement or completion. Command queues require separate quotas. No internal thread is spawned. This substrate is not yet the common SDK Future/session owner service or JS/Wasmtime full-goal qualification."
+}

@@ -14,7 +14,23 @@ use std::{
 
 struct Control {
     pending: BTreeMap<usize, bool>,
-    wake: Option<Waker>,
+    wake: Option<Arc<Waker>>,
+}
+struct WakeControl {
+    requested: bool,
+    wake: Option<Arc<Waker>>,
+}
+/// Host-only command notification. Coalesces notifications, never settles a
+/// read or acknowledges external stop. Survives an idle queue rotation.
+#[derive(Clone)]
+pub struct ReactorWake(Arc<Mutex<WakeControl>>);
+impl ReactorWake {
+    pub fn wake(&self) -> Result<(), i32> {
+        let mut state = self.0.lock().map_err(|_| -8)?;
+        let wake = Arc::clone(state.wake.as_ref().ok_or(-1)?);
+        state.requested = true;
+        wake.wake().map_err(|_| -8)
+    }
 }
 pub struct ReactorCancellation {
     id: usize,
@@ -48,6 +64,7 @@ pub struct GenericReadReactor<R: ReadyReadOwner + QuarantineEndpoint> {
     entries: BTreeMap<usize, OwnerTicket>,
     control: Arc<Mutex<Control>>,
     poll: Poll,
+    wake_control: Arc<Mutex<WakeControl>>,
     events: Events,
     next: usize,
     limit: usize,
@@ -59,7 +76,11 @@ impl<R: ReadyReadOwner + QuarantineEndpoint> GenericReadReactor<R> {
     pub fn new(limit: usize) -> Result<Self, i32> {
         let supervisor = NativeOwnerSupervisor::new(limit)?;
         let poll = Poll::new().map_err(|_| -8)?;
-        let wake = Waker::new(poll.registry(), Token(0)).map_err(|_| -8)?;
+        let wake = Arc::new(Waker::new(poll.registry(), Token(0)).map_err(|_| -8)?);
+        let wake_control = Arc::new(Mutex::new(WakeControl {
+            requested: false,
+            wake: Some(Arc::clone(&wake)),
+        }));
         Ok(Self {
             supervisor,
             entries: BTreeMap::new(),
@@ -68,6 +89,7 @@ impl<R: ReadyReadOwner + QuarantineEndpoint> GenericReadReactor<R> {
                 wake: Some(wake),
             })),
             poll,
+            wake_control,
             events: Events::with_capacity(17),
             next: 1,
             limit,
@@ -123,16 +145,22 @@ impl<R: ReadyReadOwner + QuarantineEndpoint> GenericReadReactor<R> {
     pub fn counts(&self) -> [usize; 2] {
         self.supervisor.counts()
     }
+    /// Embedding queues must be independently bounded. Enqueue before waking;
+    /// a failed wake is not evidence that the queued command was unissued.
+    pub fn wake_handle(&self) -> ReactorWake {
+        ReactorWake(Arc::clone(&self.wake_control))
+    }
     /// Rotate only after every old operation has settled and released its pins.
     /// Old cancellation capabilities retain the old, empty Control, never the
     /// new queue's numeric IDs. All fallible setup precedes namespace retirement.
     fn rotate_idle_queue(&mut self) -> Result<(), i32> {
         let poll = Poll::new().map_err(|_| -8)?;
-        let wake = Waker::new(poll.registry(), Token(0)).map_err(|_| -8)?;
+        let wake = Arc::new(Waker::new(poll.registry(), Token(0)).map_err(|_| -8)?);
         let control = Arc::new(Mutex::new(Control {
             pending: BTreeMap::new(),
-            wake: Some(wake),
+            wake: Some(Arc::clone(&wake)),
         }));
+        let mut notification = self.wake_control.lock().map_err(|_| -8)?;
         let mut old = self.control.lock().map_err(|_| -8)?;
         if !old.pending.is_empty() {
             return Err(-8);
@@ -141,6 +169,7 @@ impl<R: ReadyReadOwner + QuarantineEndpoint> GenericReadReactor<R> {
         drop(old);
         self.poll = poll;
         self.control = control;
+        notification.wake = Some(wake);
         self.events = Events::with_capacity(17);
         self.next = 1;
         Ok(())
@@ -191,7 +220,9 @@ impl<R: ReadyReadOwner + QuarantineEndpoint> GenericReadReactor<R> {
         }
         Ok(completed)
     }
-    /// Return a finite batch as soon as any operation settles, or empty if idle.
+    /// Return a finite batch when operations settle, or empty if idle/notified.
+    /// A notification retains all pending ownership and quota; process bounded
+    /// embedding commands before driving again. It is not an I/O completion.
     /// Fatal errors retain ownership and poison admission until outer teardown.
     pub fn drive(&mut self) -> Result<Vec<ReadCompletion>, i32> {
         if self.poisoned {
@@ -208,6 +239,13 @@ impl<R: ReadyReadOwner + QuarantineEndpoint> GenericReadReactor<R> {
             let completed = self.scan()?;
             if !completed.is_empty() || self.entries.is_empty() {
                 return Ok(completed);
+            }
+            {
+                let mut notification = self.wake_control.lock().map_err(|_| -8)?;
+                if notification.requested {
+                    notification.requested = false;
+                    return Ok(Vec::new());
+                }
             }
             let mut deadline = None;
             for ticket in self.entries.values() {
@@ -229,6 +267,9 @@ impl<R: ReadyReadOwner + QuarantineEndpoint> Drop for GenericReadReactor<R> {
         state.pending.clear();
         state.wake.take(); // Retained cancellation capabilities own no OS queue.
                            // Supervisor drops all owned descriptors; no successful delivery/replay.
+        let mut notification = self.wake_control.lock().unwrap_or_else(|p| p.into_inner());
+        notification.wake.take();
+        notification.requested = false;
     }
 }
 
@@ -419,5 +460,53 @@ mod tests {
         assert!(matches!(reactor.drive(), Err(-8)));
         drop(reactor);
         assert_eq!(cancel.cancel(), Err(-1));
+    }
+    #[test]
+    fn command_wake_yields_pending_driver_without_releasing_or_cancelling_owner() {
+        let mut reactor = ReadReactor::new(2).unwrap();
+        let (first, cancel, mut peer) = admit(&mut reactor, Duration::from_secs(2));
+        let wake = reactor.wake_handle();
+        let mut reactor = thread::scope(|scope| {
+            let worker = scope.spawn(move || {
+                assert!(reactor.drive().unwrap().is_empty());
+                reactor
+            });
+            thread::sleep(Duration::from_millis(30));
+            wake.wake().unwrap();
+            worker.join().unwrap()
+        });
+        assert_eq!(reactor.counts(), [1, 0]);
+        let (second, stop, mut other) = admit(&mut reactor, Duration::from_secs(2));
+        peer.write_all(b"a").unwrap();
+        other.write_all(b"b").unwrap();
+        let mut keys = Vec::new();
+        while reactor.counts() != [0, 0] {
+            for item in reactor.drive().unwrap() {
+                assert!(item.key == first || item.key == second);
+                assert!(!keys.contains(&item.key));
+                keys.push(item.key);
+            }
+        }
+        assert_eq!(keys.len(), 2);
+        assert_eq!(cancel.cancel(), Err(-1));
+        assert_eq!(stop.cancel(), Err(-1));
+        drop(reactor);
+        assert_eq!(wake.wake(), Err(-1));
+    }
+    #[test]
+    fn command_wake_coalesces_and_survives_idle_token_rotation() {
+        let mut reactor = ReadReactor::new(1).unwrap();
+        let wake = reactor.wake_handle();
+        reactor.next = 32768;
+        let (_, cancel, _peer) = admit(&mut reactor, Duration::from_secs(2));
+        wake.wake().unwrap();
+        wake.wake().unwrap();
+        assert!(reactor.drive().unwrap().is_empty());
+        assert_eq!(reactor.counts(), [1, 0]);
+        // No second notification remains; cancellation, not a spin, settles it.
+        cancel.cancel().unwrap();
+        assert_eq!(reactor.drive().unwrap()[0].result, Err(-10));
+        drop(reactor);
+        assert_eq!(wake.wake(), Err(-1));
     }
 }

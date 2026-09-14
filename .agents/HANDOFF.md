@@ -2,10 +2,11 @@
 
 ## 0. Status
 
-IN PROGRESS resident owner wake/admission convergence: add a Host-only coalesced
-wake that yields the blocking driver without cancelling or releasing live reads.
-Retain token-rotation and teardown isolation; current verified45-test checkpoint
-remains independently recoverable. SDK Future/session wiring follows locally.
+DONE resident owner wake substrate: Host-only coalesced notification yields the
+blocking driver without cancelling or releasing live reads; survives idle token
+rotation and rejects after teardown. Fresh47/47 and strict Clippy PASS locally.
+See workstreams/host-readiness/resident-wake-evidence.json. Previous45-test
+checkpoint remains independent; SDK Future/session wiring and full goal ACTIVE.
 
 DONE shared TCP/connected-UDP supervisor/reactor: same generic driver, one OS
 queue and active/quarantine budget. Fresh local readiness45/45 strict Clippy PASS;

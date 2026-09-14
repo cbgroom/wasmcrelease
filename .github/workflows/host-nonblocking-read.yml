@@ -87,7 +87,7 @@ jobs:
         run: node scripts/test-host-nonblocking-read.mjs --readiness "$RUNNER_TEMP/readiness.json"
       - name: Summary
         run: |
-          printf '%s\n' "Source $GITHUB_SHA; $RUNNER_OS/$RUNNER_ARCH: default25 + readiness45 tests (6 OS wakeup + 11 shared/mixed reactor + 3 UDP owner controls). No guest async/executor/mobile qualification." >> "$GITHUB_STEP_SUMMARY"
+          printf '%s\n' "Source $GITHUB_SHA; $RUNNER_OS/$RUNNER_ARCH: default25 + readiness47 tests (6 OS wakeup + 13 shared/mixed reactor + 3 UDP owner controls). No guest async/executor/mobile qualification." >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: nonblocking-read-${{ matrix.os }}

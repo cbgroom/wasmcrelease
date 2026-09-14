@@ -49,7 +49,7 @@ node scripts/test-host-nonblocking-read.mjs
 node scripts/test-host-nonblocking-read.mjs --readiness
 ```
 
-The readiness profile runs45tests including six OS wakeup, three UDP owner and eleven shared/mixed
+The readiness profile runs47tests including six OS wakeup, three UDP owner and thirteen shared/mixed
 reactor controls. `read_reactor.rs` shares one OS queue, one wakeup and17event
 slots across at most16preopened reads. Each read has its own scoped owner key,
 cancellation and deadline. Completion closes before releasing supervisor pins;
