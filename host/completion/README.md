@@ -49,10 +49,17 @@ node scripts/test-host-nonblocking-read.mjs
 node scripts/test-host-nonblocking-read.mjs --readiness
 ```
 
-The readiness profile runs42tests including six OS wakeup, three UDP owner and eight shared
+The readiness profile runs45tests including six OS wakeup, three UDP owner and eleven shared/mixed
 reactor controls. `read_reactor.rs` shares one OS queue, one wakeup and17event
 slots across at most16preopened reads. Each read has its own scoped owner key,
 cancellation and deadline. Completion closes before releasing supervisor pins;
+`SocketReadReactor` uses that SAME generic driver/supervisor for mixed TCP and
+connected-UDP reads. `ReadReactor` retains its TCP-only source-compatible view.
+Both share finite quotas and cancellation namespaces; transport selection is
+Host-only, not a guest opcode. Empty datagrams, stream EOF and explicit datagram
+oversize results stay distinct. Mixed conformance runs16actual socket owners,
+independent cancellation/deadline/oversize/success, quota rejection with returned
+descriptor ownership, and real remaining-UDP-port reuse after owner teardown.
 cancel requests retain quota until driven. A batch returns at most256owned bytes;
 the embedding separately budgets queued/retained delivered results. Private
 readiness IDs never reuse within an OS queue. At32767, a fully idle reactor

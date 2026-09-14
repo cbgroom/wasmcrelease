@@ -2,24 +2,26 @@
 
 ## 0. Status
 
-DONE UDP owner42/default25 locally; prior evidence retained. START shared socket
-supervisor/reactor: generic existing read-owner seam, mixed TCP/connected-UDP in
-one OS queue and one finite active/quarantine budget; preserve stream/message
-differences, one-shot cancellation/deadline/close proof and no replay. Add mixed
-success/failure/quota/drop controls; fresh local strict tests under existing
-bounded qualification pool, then exact-source desktop Actions. No compiler/Lib
-bytes or Host primitive added. SDK Future/session integration, JS/Wasmtime and
-full production acceptance remain separate unfinished gates; full goal ACTIVE.
+DONE shared TCP/connected-UDP supervisor/reactor: same generic driver, one OS
+queue and active/quarantine budget. Fresh local readiness45/45 strict Clippy PASS;
+source evidence: workstreams/host-readiness/mixed-reactor-evidence.json. Mixed16
+reads preserve exact/empty results; cancel/deadline/oversize isolation and returned
+ownership on quota rejection pass; dropped remaining UDP owner permits real
+same-port reuse. Actions now require45 tests, new-source acceptance pending.
+Effective registration followed by error seals drive/admission; returned owner
+is retained and its Drop closes the real socket. Fresh45/45 includes this fault.
+NEXT SDK Future/session supervisor integration, JS/Wasmtime and full production
+acceptance. No compiler/Lib bytes or Host primitive added; full goal ACTIVE.
 
 Typed Host SDK blocker independently reproduced against admitted compiler:
 existing sync-owned and scalar-async Apps compile, while owned local before
 await and owned await result reject with sequential s32-local restriction.
 Node/Bun/Deno agree; receipts bind compiler/plan/source and accepted=false.
 See host/v1/typed-task-boundary-test.mjs and TYPED_TASK_IMPLEMENTATION.md.
-Next inspect private current generic machinery, then durable START before a
-generic typed continuation/CoreLib lifetime implementation; do not add captured
-scalar fixtures or expose numeric tokens as the resource SDK. Private producer
-read-only orientation is ongoing; no private edit/build or publication made.
+This remains the admitted PUBLIC compiler boundary, not private-development
+status. Private candidate work is not shipped or accepted by this public SDK.
+Do not redo producer orientation from this historical boundary receipt or expose
+numeric fixtures as the resource SDK. Private compiler source remains protected.
 
 Candidate finish-write now exposes the missing reverse half-close oracle:
 Node/Deno peer sees FIN then sends a byte, same endpoint reads it; repeated

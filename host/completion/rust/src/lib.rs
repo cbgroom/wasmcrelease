@@ -11,6 +11,8 @@ pub mod owner_supervisor;
 pub mod read_reactor;
 #[cfg(feature = "native-readiness")]
 pub mod readiness;
+#[cfg(feature = "native-readiness")]
+pub mod socket_read;
 pub mod scoped;
 impl owner_supervisor::QuarantineEndpoint for nonblocking_tcp::NonblockingTcpRead {
     fn acknowledge_quarantine_close(&mut self) -> Result<(), i32> {

@@ -14,9 +14,9 @@ const output = execFileSync('cargo', ['test', '--release', '--locked', '--manife
 { encoding: 'utf8', timeout: 120000, maxBuffer: 1024 * 1024 });
 process.stdout.write(output);
 const result = /test result: ok\. (\d+) passed; 0 failed; 0 ignored;/.exec(output);
-const expected = readiness ? 42 : 25;
+const expected = readiness ? 45 : 25;
 if (!result || Number(result[1]) !== expected) throw new Error('completion test coverage changed; review receipt contract');
-const paths = ['lib.rs', 'owner_supervisor.rs', 'nonblocking_tcp.rs', ...(readiness ? ['readiness.rs', 'read_reactor.rs', 'nonblocking_udp.rs'] : [])]
+const paths = ['lib.rs', 'owner_supervisor.rs', 'nonblocking_tcp.rs', ...(readiness ? ['readiness.rs', 'read_reactor.rs', 'nonblocking_udp.rs', 'socket_read.rs'] : [])]
   .map(name => `host/completion/rust/src/${name}`);
 paths.push('host/completion/rust/Cargo.toml', 'host/completion/rust/Cargo.lock');
 const inputs = Object.fromEntries(paths.map(path => {
@@ -24,7 +24,7 @@ const inputs = Object.fromEntries(paths.map(path => {
 }));
 const receipt = { schema_version: 1, source, source_dirty: dirty, platform: platform(), arch: arch(),
   passed: expected, added_nonblocking_controls: 10, readiness_controls: readiness ? 6 : 0, inputs,
-  shared_reactor_controls: readiness ? 8 : 0,
+  shared_reactor_controls: readiness ? 11 : 0,
   datagram_owner_controls: readiness ? 3 : 0,
   profile: readiness ? 'native-readiness' : 'default',
   scope: 'preopened exclusive TCP/connected-UDP read owners + scoped supervisor; optional bounded OS reactor, no guest Future/executor or mobile proof' };

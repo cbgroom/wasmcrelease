@@ -1,0 +1,33 @@
+{
+  "stage": "Shared mixed TCP/connected-UDP supervisor and OS reactor",
+  "authority": "Resolve containing exact source checkpoint from Git",
+  "inputs_sha256": {
+    "host/completion/rust/src/lib.rs": "3b726140159cf7f37f85152dc49c9aba3b85ec2c856e9679cbfda154bd3f4d25",
+    "host/completion/rust/src/read_reactor.rs": "a5a78f51197bf7c092ffc6bbcf2b8fb2cb307eceae664e2b31d88b5047f5f444",
+    "host/completion/rust/src/socket_read.rs": "e1a04ae03129e74396efa59ab583490d511b9c14f756a947d7749f3ff8004adf"
+  },
+  "local": {
+    "platform": "Darwin arm64",
+    "qualification": "fresh direct rustc tests with existing locked Mio1.2.3/getrandom0.4.3 dependencies, not a fresh Cargo dependency graph",
+    "native_readiness_passed": 45,
+    "failed": 0,
+    "ignored": 0,
+    "elapsed_seconds": 0.68,
+    "strict_readiness_test_clippy": "PASS",
+    "workflow_yaml_syntax": "PASS",
+    "fixed_output_cap_kib": 262144,
+    "prior_qualification_observed_peak_kib": 252368,
+    "terminal_kib": 251728,
+    "final_qualification_budget_check": "Terminal cap PASS; final run did not sample transient peak"
+  },
+  "controls": [
+    "16 mixed TCP/UDP socket owners share one driver and supervisor, exact unique results including empty UDP messages; TCP EOF after close",
+    "Independent mixed cancellation, absolute deadline, oversize rejection and stream success cannot cross-deliver",
+    "Real OS pending wait wakes on cross-thread cancellation while unrelated UDP owner retains quota",
+    "Quota rejection returns an unclosed descriptor; remaining owned UDP descriptor closes on reactor teardown and same address rebind succeeds",
+    "Existing eight TCP-only reactor controls retain poison/quarantine, namespace exhaustion, admission, stop and no-replay assertions",
+    "Actual registration followed by an error seals admission and drive; returned owner remains recoverable and descriptor Drop produces peer EOF"
+  ],
+  "cross_platform": "Updated Actions requires45 readiness tests with socket_read.rs in source receipts; exact-source execution still pending",
+  "boundary": "No new Host mechanism, guest ABI or compiler/Lib byte change. Host-only transport selection is not business dispatch. Supervisor consumes only preopened policy-admitted sockets. Results are bounded per batch, but embedding must budget retained delivery. This is real transport/supervisor evidence, not common SDK Future/session integration, production outer Store ownership, JS/Wasmtime parity or mobile proof."
+}

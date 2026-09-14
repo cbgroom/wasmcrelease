@@ -1,7 +1,8 @@
 //! Shared bounded Native read driver, not guest transport or an executor.
 use crate::{
     nonblocking_tcp::{NonblockingTcpRead, ReadProgress},
-    owner_supervisor::{NativeOwnerSupervisor, OwnerTicket},
+    owner_supervisor::{NativeOwnerSupervisor, OwnerTicket, QuarantineEndpoint},
+    readiness::ReadyReadOwner,
 };
 use mio::{Events, Poll, Token, Waker};
 use std::{
@@ -42,8 +43,8 @@ pub struct ReadCompletion {
 /// Maximum16 in-flight/quarantined reads,256 output bytes per returned batch.
 /// Returned owned results are subject to embedding delivery budgets. No internal
 /// threads; drive blocks a bounded I/O owner, never the guest executor thread.
-pub struct ReadReactor {
-    supervisor: NativeOwnerSupervisor<NonblockingTcpRead>,
+pub struct GenericReadReactor<R: ReadyReadOwner + QuarantineEndpoint> {
+    supervisor: NativeOwnerSupervisor<R>,
     entries: BTreeMap<usize, OwnerTicket>,
     control: Arc<Mutex<Control>>,
     poll: Poll,
@@ -52,7 +53,9 @@ pub struct ReadReactor {
     limit: usize,
     poisoned: bool,
 }
-impl ReadReactor {
+pub type ReadReactor = GenericReadReactor<NonblockingTcpRead>;
+pub type SocketReadReactor = GenericReadReactor<crate::socket_read::NativeSocketRead>;
+impl<R: ReadyReadOwner + QuarantineEndpoint> GenericReadReactor<R> {
     pub fn new(limit: usize) -> Result<Self, i32> {
         let supervisor = NativeOwnerSupervisor::new(limit)?;
         let poll = Poll::new().map_err(|_| -8)?;
@@ -73,10 +76,7 @@ impl ReadReactor {
     }
     /// Reject before registration on quota/exhaustion; ownership is returned.
     /// Private readiness tokens never reuse within this queue, including failure.
-    pub fn admit(
-        &mut self,
-        mut read: NonblockingTcpRead,
-    ) -> Result<(ReadKey, ReactorCancellation), (i32, NonblockingTcpRead)> {
+    pub fn admit(&mut self, mut read: R) -> Result<(ReadKey, ReactorCancellation), (i32, R)> {
         if self.poisoned {
             return Err((-8, read));
         }
@@ -94,9 +94,18 @@ impl ReadReactor {
         let id = self.next;
         self.next += 1;
         if let Err(code) = read.register(self.poll.registry(), Token(id)) {
+            self.poisoned = true; // Registration effects may be unknown; no retry/spin.
             return Err((code, read));
         }
-        let ticket = self.supervisor.admit(read, 16)?;
+        let ticket = match self.supervisor.admit(read, 16) {
+            Ok(ticket) => ticket,
+            Err(error) => {
+                // A registered, returned owner must not leave an untracked
+                // readiness source in an otherwise healthy drive loop.
+                self.poisoned = true;
+                return Err(error);
+            }
+        };
         self.entries.insert(id, ticket);
         self.control
             .lock()
@@ -214,7 +223,7 @@ impl ReadReactor {
         }
     }
 }
-impl Drop for ReadReactor {
+impl<R: ReadyReadOwner + QuarantineEndpoint> Drop for GenericReadReactor<R> {
     fn drop(&mut self) {
         let mut state = self.control.lock().unwrap_or_else(|p| p.into_inner());
         state.pending.clear();
