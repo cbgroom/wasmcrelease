@@ -7,6 +7,10 @@ blocking driver without cancelling or releasing live reads; survives idle token
 rotation and rejects after teardown. Fresh47/47 and strict Clippy PASS locally.
 See workstreams/host-readiness/resident-wake-evidence.json. Previous45-test
 checkpoint remains independent; SDK Future/session wiring and full goal ACTIVE.
+Cross-platform run34792371228 retained FAILURE: all three Native readiness jobs
+failed module-order cargo fmt before compilation; six other jobs PASS. Local
+full-crate fmt now PASS and fresh47 tests/strict Clippy requalified after sorting.
+See workstreams/host-readiness/mixed-reactor-ci-recovery.json; new source pending.
 
 DONE shared TCP/connected-UDP supervisor/reactor: same generic driver, one OS
 queue and active/quarantine budget. Fresh local readiness45/45 strict Clippy PASS;

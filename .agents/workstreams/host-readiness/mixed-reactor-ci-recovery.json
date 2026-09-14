@@ -1,0 +1,26 @@
+{
+  "authority": "Resolve containing corrected source checkpoint from Git",
+  "failed_run": {
+    "id": 34792371228,
+    "source": "255064672b4c68afc2360a4d1222ab802d2cc0d9",
+    "conclusion": "failure",
+    "native_readiness_os_failures": 3,
+    "other_jobs_passed": 6,
+    "cause": "cargo fmt --check requires scoped module before socket_read; Native tests were not reached"
+  },
+  "corrected_inputs_sha256": {
+    "host/completion/rust/src/lib.rs": "2aa02ca92c90eb6c1d276839e3d4fb3003a9189be29a258b01b42efa2601336e"
+  },
+  "local": {
+    "full_crate_cargo_fmt_check": "PASS",
+    "fresh_native_readiness_tests": 47,
+    "failed": 0,
+    "ignored": 0,
+    "elapsed_seconds": 0.67,
+    "strict_clippy": "PASS",
+    "fixed_output_cap_kib": 262144,
+    "terminal_kib": 251744,
+    "transient_peak": "Not sampled in final run"
+  },
+  "boundary": "Formatting recovery does not convert earlier failed or queued jobs into acceptance. Exact corrected-source cross-platform run is still required."
+}
