@@ -1,0 +1,1098 @@
+{
+  "schema": "wasmc-public-performance-summary/v1",
+  "commit": "1a7309ad4ecf2b42f220754529c958966cecedb4",
+  "measured_at": "2026-09-17T20:24:16.487Z",
+  "platform_count": 6,
+  "corpus_count": 5,
+  "policy": "GitHub-hosted timings are comparative observations. Source/Wasm identity and behavior are hard gates; timing regression is advisory until repeated history establishes a stable threshold.",
+  "summary": [
+    {
+      "platform": "linux-aarch64",
+      "cli_bytes": 9835288,
+      "build_wasm_geomean_ms": 14.623,
+      "native_miss_geomean_ms": 45.698,
+      "native_hit_geomean_ms": 25.826,
+      "run_wasmi_p50_ms": 11.357,
+      "native_run_p50_ms": 3.971
+    },
+    {
+      "platform": "linux-x86_64",
+      "cli_bytes": 11654880,
+      "build_wasm_geomean_ms": 12.052,
+      "native_miss_geomean_ms": 41.443,
+      "native_hit_geomean_ms": 23.839,
+      "run_wasmi_p50_ms": 8.653,
+      "native_run_p50_ms": 2.33
+    },
+    {
+      "platform": "macos-aarch64",
+      "cli_bytes": 8724944,
+      "build_wasm_geomean_ms": 22.441,
+      "native_miss_geomean_ms": 72.51,
+      "native_hit_geomean_ms": 44.305,
+      "run_wasmi_p50_ms": 24.764,
+      "native_run_p50_ms": 5.798
+    },
+    {
+      "platform": "macos-x86_64",
+      "cli_bytes": 10710336,
+      "build_wasm_geomean_ms": 28.172,
+      "native_miss_geomean_ms": 113.736,
+      "native_hit_geomean_ms": 58.88,
+      "run_wasmi_p50_ms": 23.149,
+      "native_run_p50_ms": 5.97
+    },
+    {
+      "platform": "windows-aarch64",
+      "cli_bytes": 9323008,
+      "build_wasm_geomean_ms": 25.454,
+      "native_miss_geomean_ms": 55.475,
+      "native_hit_geomean_ms": 35.431,
+      "run_wasmi_p50_ms": 18.854,
+      "native_run_p50_ms": 17.141
+    },
+    {
+      "platform": "windows-x86_64",
+      "cli_bytes": 10624512,
+      "build_wasm_geomean_ms": 25.255,
+      "native_miss_geomean_ms": 63.155,
+      "native_hit_geomean_ms": 34.074,
+      "run_wasmi_p50_ms": 20.377,
+      "native_run_p50_ms": 10.916
+    }
+  ],
+  "reports": [
+    {
+      "schema": "wasmc-native-cli-performance/v1",
+      "measured_at": "2026-09-17T20:18:01.221Z",
+      "commit": "1a7309ad4ecf2b42f220754529c958966cecedb4",
+      "platform": "linux-aarch64",
+      "host": {
+        "os": "linux",
+        "arch": "arm64",
+        "node": "v26.5.1"
+      },
+      "cli": {
+        "bytes": 9835288,
+        "sha256": "1048fe95f1a00a2c1379baeffdb26d5a7907e55986475d026f45fe1ea9bd9263"
+      },
+      "corpus_schema": "wasmc-public-benchmark-corpus/v1",
+      "policy": "GitHub-hosted timings are comparative observations, not absolute SLA authority. Source identity and generated Wasm parity are hard gates.",
+      "cases": {
+        "small_scalar": {
+          "source_bytes": 126,
+          "source_sha256": "bbc6049a0404552aff61e2d07db9e3672c1079083dbad92904cc73d14a6cc069",
+          "wasm_bytes": 44,
+          "wasm_sha256": "29996fa74541742737704f64e48add2a5079ed8c57783cda4912046d5acb32c9",
+          "build_wasm": {
+            "samples": 9,
+            "p50_ms": 11.465,
+            "p95_ms": 12.835,
+            "min_ms": 11.089,
+            "max_ms": 12.835
+          },
+          "native_build_miss": {
+            "samples": 5,
+            "p50_ms": 22.977,
+            "p95_ms": 23.32,
+            "min_ms": 22.515,
+            "max_ms": 23.32
+          },
+          "native_build_hit": {
+            "samples": 9,
+            "p50_ms": 21.827,
+            "p95_ms": 23.438,
+            "min_ms": 21.203,
+            "max_ms": 23.438
+          },
+          "run_wasmi": {
+            "samples": 20,
+            "p50_ms": 11.357,
+            "p95_ms": 11.803,
+            "min_ms": 11.1,
+            "max_ms": 11.918
+          },
+          "native_run": {
+            "samples": 20,
+            "p50_ms": 3.971,
+            "p95_ms": 4.14,
+            "min_ms": 3.837,
+            "max_ms": 4.436
+          },
+          "native_executable": {
+            "bytes": 10033276,
+            "sha256": "43ae56b50cf9ce085dd9977e10c31e01cb3ac41e82e81c7bd73c8e6d72143818"
+          }
+        },
+        "structured_variant": {
+          "source_bytes": 697,
+          "source_sha256": "b778d2cc39b8baa92274ed3bd55b45c046a986c52fc5a4d1c8749a9ad6acdd5d",
+          "wasm_bytes": 208,
+          "wasm_sha256": "d36db890efb5550ffe7510ef1c1522d8974473a90f636049d12543821016689a",
+          "build_wasm": {
+            "samples": 9,
+            "p50_ms": 11.962,
+            "p95_ms": 12.528,
+            "min_ms": 11.886,
+            "max_ms": 12.528
+          },
+          "native_build_miss": {
+            "samples": 5,
+            "p50_ms": 25.219,
+            "p95_ms": 26.288,
+            "min_ms": 24.371,
+            "max_ms": 26.288
+          },
+          "native_build_hit": {
+            "samples": 9,
+            "p50_ms": 22.931,
+            "p95_ms": 24.078,
+            "min_ms": 21.649,
+            "max_ms": 24.078
+          }
+        },
+        "policy_small": {
+          "source_bytes": 2562,
+          "source_sha256": "72b662c5a115fa8133fc1c695758c028d98434250b6fb4e8950eda7b55b2aabc",
+          "wasm_bytes": 733,
+          "wasm_sha256": "c7ddfc63b10f5611d87063dd166e3417f7c9b82d9c3abebbbde311b58403a9ba",
+          "build_wasm": {
+            "samples": 9,
+            "p50_ms": 12.15,
+            "p95_ms": 12.217,
+            "min_ms": 11.852,
+            "max_ms": 12.217
+          },
+          "native_build_miss": {
+            "samples": 5,
+            "p50_ms": 27.863,
+            "p95_ms": 28.236,
+            "min_ms": 27.691,
+            "max_ms": 28.236
+          },
+          "native_build_hit": {
+            "samples": 9,
+            "p50_ms": 23.056,
+            "p95_ms": 24.32,
+            "min_ms": 22.112,
+            "max_ms": 24.32
+          }
+        },
+        "policy_large": {
+          "source_bytes": 30995,
+          "source_sha256": "5b417c06b4a872341e702c05aaa8aa62a691b713ec5ffe1412b24781f8764ce3",
+          "wasm_bytes": 9454,
+          "wasm_sha256": "97272a3752fc5e4697eb5533b9fec8d64abf814145826175f542023938492172",
+          "build_wasm": {
+            "samples": 9,
+            "p50_ms": 15.791,
+            "p95_ms": 16.255,
+            "min_ms": 15.648,
+            "max_ms": 16.255
+          },
+          "native_build_miss": {
+            "samples": 5,
+            "p50_ms": 74.846,
+            "p95_ms": 75.457,
+            "min_ms": 73.835,
+            "max_ms": 75.457
+          },
+          "native_build_hit": {
+            "samples": 9,
+            "p50_ms": 26.602,
+            "p95_ms": 27.469,
+            "min_ms": 26.431,
+            "max_ms": 27.469
+          }
+        },
+        "std_mix_large": {
+          "source_bytes": 112300,
+          "source_sha256": "2988b03b159735b30150aafc19c1a67d046117e151709390fbe9a586ce104700",
+          "wasm_bytes": 31242,
+          "wasm_sha256": "62c03505822faef45ba787d933cf3f4ce49541524a1439efb73f9ad58861d489",
+          "build_wasm": {
+            "samples": 9,
+            "p50_ms": 25.414,
+            "p95_ms": 25.822,
+            "min_ms": 24.986,
+            "max_ms": 25.822
+          },
+          "native_build_miss": {
+            "samples": 5,
+            "p50_ms": 164.912,
+            "p95_ms": 165.244,
+            "min_ms": 164.79,
+            "max_ms": 165.244
+          },
+          "native_build_hit": {
+            "samples": 9,
+            "p50_ms": 37.427,
+            "p95_ms": 38.076,
+            "min_ms": 36.887,
+            "max_ms": 38.076
+          }
+        }
+      }
+    },
+    {
+      "schema": "wasmc-native-cli-performance/v1",
+      "measured_at": "2026-09-17T20:19:13.983Z",
+      "commit": "1a7309ad4ecf2b42f220754529c958966cecedb4",
+      "platform": "linux-x86_64",
+      "host": {
+        "os": "linux",
+        "arch": "x64",
+        "node": "v26.5.1"
+      },
+      "cli": {
+        "bytes": 11654880,
+        "sha256": "ea8067356ce3e7066a9bceb0af113be1b9ea98074fa7dad958f313d57a2cf497"
+      },
+      "corpus_schema": "wasmc-public-benchmark-corpus/v1",
+      "policy": "GitHub-hosted timings are comparative observations, not absolute SLA authority. Source identity and generated Wasm parity are hard gates.",
+      "cases": {
+        "small_scalar": {
+          "source_bytes": 126,
+          "source_sha256": "bbc6049a0404552aff61e2d07db9e3672c1079083dbad92904cc73d14a6cc069",
+          "wasm_bytes": 44,
+          "wasm_sha256": "29996fa74541742737704f64e48add2a5079ed8c57783cda4912046d5acb32c9",
+          "build_wasm": {
+            "samples": 9,
+            "p50_ms": 8.937,
+            "p95_ms": 10.059,
+            "min_ms": 8.408,
+            "max_ms": 10.059
+          },
+          "native_build_miss": {
+            "samples": 5,
+            "p50_ms": 20.233,
+            "p95_ms": 24.674,
+            "min_ms": 20.017,
+            "max_ms": 24.674
+          },
+          "native_build_hit": {
+            "samples": 9,
+            "p50_ms": 19.855,
+            "p95_ms": 25.076,
+            "min_ms": 18.649,
+            "max_ms": 25.076
+          },
+          "run_wasmi": {
+            "samples": 20,
+            "p50_ms": 8.653,
+            "p95_ms": 9.134,
+            "min_ms": 8.256,
+            "max_ms": 9.917
+          },
+          "native_run": {
+            "samples": 20,
+            "p50_ms": 2.33,
+            "p95_ms": 2.544,
+            "min_ms": 2.272,
+            "max_ms": 2.582
+          },
+          "native_executable": {
+            "bytes": 11668548,
+            "sha256": "c782b803747461f368923ea1f254e5c42a4f8691ef9b33fc0f098325375069a5"
+          }
+        },
+        "structured_variant": {
+          "source_bytes": 697,
+          "source_sha256": "b778d2cc39b8baa92274ed3bd55b45c046a986c52fc5a4d1c8749a9ad6acdd5d",
+          "wasm_bytes": 208,
+          "wasm_sha256": "d36db890efb5550ffe7510ef1c1522d8974473a90f636049d12543821016689a",
+          "build_wasm": {
+            "samples": 9,
+            "p50_ms": 9.047,
+            "p95_ms": 11.336,
+            "min_ms": 8.527,
+            "max_ms": 11.336
+          },
+          "native_build_miss": {
+            "samples": 5,
+            "p50_ms": 22.162,
+            "p95_ms": 26.512,
+            "min_ms": 21.476,
+            "max_ms": 26.512
+          },
+          "native_build_hit": {
+            "samples": 9,
+            "p50_ms": 19.653,
+            "p95_ms": 19.865,
+            "min_ms": 19.15,
+            "max_ms": 19.865
+          }
+        },
+        "policy_small": {
+          "source_bytes": 2562,
+          "source_sha256": "72b662c5a115fa8133fc1c695758c028d98434250b6fb4e8950eda7b55b2aabc",
+          "wasm_bytes": 733,
+          "wasm_sha256": "c7ddfc63b10f5611d87063dd166e3417f7c9b82d9c3abebbbde311b58403a9ba",
+          "build_wasm": {
+            "samples": 9,
+            "p50_ms": 9.174,
+            "p95_ms": 9.675,
+            "min_ms": 8.741,
+            "max_ms": 9.675
+          },
+          "native_build_miss": {
+            "samples": 5,
+            "p50_ms": 24.373,
+            "p95_ms": 27.951,
+            "min_ms": 24.159,
+            "max_ms": 27.951
+          },
+          "native_build_hit": {
+            "samples": 9,
+            "p50_ms": 19.806,
+            "p95_ms": 24.526,
+            "min_ms": 19.207,
+            "max_ms": 24.526
+          }
+        },
+        "policy_large": {
+          "source_bytes": 30995,
+          "source_sha256": "5b417c06b4a872341e702c05aaa8aa62a691b713ec5ffe1412b24781f8764ce3",
+          "wasm_bytes": 9454,
+          "wasm_sha256": "97272a3752fc5e4697eb5533b9fec8d64abf814145826175f542023938492172",
+          "build_wasm": {
+            "samples": 9,
+            "p50_ms": 13.59,
+            "p95_ms": 14.549,
+            "min_ms": 13.19,
+            "max_ms": 14.549
+          },
+          "native_build_miss": {
+            "samples": 5,
+            "p50_ms": 69.628,
+            "p95_ms": 73.8,
+            "min_ms": 68.567,
+            "max_ms": 73.8
+          },
+          "native_build_hit": {
+            "samples": 9,
+            "p50_ms": 26.106,
+            "p95_ms": 31.799,
+            "min_ms": 24.507,
+            "max_ms": 31.799
+          }
+        },
+        "std_mix_large": {
+          "source_bytes": 112300,
+          "source_sha256": "2988b03b159735b30150aafc19c1a67d046117e151709390fbe9a586ce104700",
+          "wasm_bytes": 31242,
+          "wasm_sha256": "62c03505822faef45ba787d933cf3f4ce49541524a1439efb73f9ad58861d489",
+          "build_wasm": {
+            "samples": 9,
+            "p50_ms": 25.222,
+            "p95_ms": 32.538,
+            "min_ms": 24.911,
+            "max_ms": 32.538
+          },
+          "native_build_miss": {
+            "samples": 5,
+            "p50_ms": 160.65,
+            "p95_ms": 170.696,
+            "min_ms": 157.833,
+            "max_ms": 170.696
+          },
+          "native_build_hit": {
+            "samples": 9,
+            "p50_ms": 38.157,
+            "p95_ms": 44.587,
+            "min_ms": 37.1,
+            "max_ms": 44.587
+          }
+        }
+      }
+    },
+    {
+      "schema": "wasmc-native-cli-performance/v1",
+      "measured_at": "2026-09-17T20:19:19.465Z",
+      "commit": "1a7309ad4ecf2b42f220754529c958966cecedb4",
+      "platform": "macos-aarch64",
+      "host": {
+        "os": "darwin",
+        "arch": "arm64",
+        "node": "v26.5.1"
+      },
+      "cli": {
+        "bytes": 8724944,
+        "sha256": "fdf6c9929cf7d70a644da12fa0a49aca6f62faca9d2f4dbcc20e0b111f11ced4"
+      },
+      "corpus_schema": "wasmc-public-benchmark-corpus/v1",
+      "policy": "GitHub-hosted timings are comparative observations, not absolute SLA authority. Source identity and generated Wasm parity are hard gates.",
+      "cases": {
+        "small_scalar": {
+          "source_bytes": 126,
+          "source_sha256": "bbc6049a0404552aff61e2d07db9e3672c1079083dbad92904cc73d14a6cc069",
+          "wasm_bytes": 44,
+          "wasm_sha256": "29996fa74541742737704f64e48add2a5079ed8c57783cda4912046d5acb32c9",
+          "build_wasm": {
+            "samples": 9,
+            "p50_ms": 20.124,
+            "p95_ms": 28.462,
+            "min_ms": 15.381,
+            "max_ms": 28.462
+          },
+          "native_build_miss": {
+            "samples": 5,
+            "p50_ms": 37.046,
+            "p95_ms": 49.874,
+            "min_ms": 28.675,
+            "max_ms": 49.874
+          },
+          "native_build_hit": {
+            "samples": 9,
+            "p50_ms": 35.978,
+            "p95_ms": 45.206,
+            "min_ms": 28.69,
+            "max_ms": 45.206
+          },
+          "run_wasmi": {
+            "samples": 20,
+            "p50_ms": 24.764,
+            "p95_ms": 30.994,
+            "min_ms": 17.696,
+            "max_ms": 36.051
+          },
+          "native_run": {
+            "samples": 20,
+            "p50_ms": 5.798,
+            "p95_ms": 8.571,
+            "min_ms": 3.27,
+            "max_ms": 8.95
+          },
+          "native_executable": {
+            "bytes": 8775476,
+            "sha256": "d75def8c2ae9ef2b2ab7c0887260bece3e6767dd09b200db88469017fd3d4c74"
+          }
+        },
+        "structured_variant": {
+          "source_bytes": 697,
+          "source_sha256": "b778d2cc39b8baa92274ed3bd55b45c046a986c52fc5a4d1c8749a9ad6acdd5d",
+          "wasm_bytes": 208,
+          "wasm_sha256": "d36db890efb5550ffe7510ef1c1522d8974473a90f636049d12543821016689a",
+          "build_wasm": {
+            "samples": 9,
+            "p50_ms": 17.81,
+            "p95_ms": 25.639,
+            "min_ms": 15.768,
+            "max_ms": 25.639
+          },
+          "native_build_miss": {
+            "samples": 5,
+            "p50_ms": 40.679,
+            "p95_ms": 65.298,
+            "min_ms": 35.142,
+            "max_ms": 65.298
+          },
+          "native_build_hit": {
+            "samples": 9,
+            "p50_ms": 44.949,
+            "p95_ms": 76.764,
+            "min_ms": 41.372,
+            "max_ms": 76.764
+          }
+        },
+        "policy_small": {
+          "source_bytes": 2562,
+          "source_sha256": "72b662c5a115fa8133fc1c695758c028d98434250b6fb4e8950eda7b55b2aabc",
+          "wasm_bytes": 733,
+          "wasm_sha256": "c7ddfc63b10f5611d87063dd166e3417f7c9b82d9c3abebbbde311b58403a9ba",
+          "build_wasm": {
+            "samples": 9,
+            "p50_ms": 18.969,
+            "p95_ms": 24.382,
+            "min_ms": 16.664,
+            "max_ms": 24.382
+          },
+          "native_build_miss": {
+            "samples": 5,
+            "p50_ms": 53.671,
+            "p95_ms": 68.034,
+            "min_ms": 48.838,
+            "max_ms": 68.034
+          },
+          "native_build_hit": {
+            "samples": 9,
+            "p50_ms": 55.065,
+            "p95_ms": 61.535,
+            "min_ms": 40.1,
+            "max_ms": 61.535
+          }
+        },
+        "policy_large": {
+          "source_bytes": 30995,
+          "source_sha256": "5b417c06b4a872341e702c05aaa8aa62a691b713ec5ffe1412b24781f8764ce3",
+          "wasm_bytes": 9454,
+          "wasm_sha256": "97272a3752fc5e4697eb5533b9fec8d64abf814145826175f542023938492172",
+          "build_wasm": {
+            "samples": 9,
+            "p50_ms": 27.704,
+            "p95_ms": 40.458,
+            "min_ms": 21.375,
+            "max_ms": 40.458
+          },
+          "native_build_miss": {
+            "samples": 5,
+            "p50_ms": 100.659,
+            "p95_ms": 128.56,
+            "min_ms": 73.612,
+            "max_ms": 128.56
+          },
+          "native_build_hit": {
+            "samples": 9,
+            "p50_ms": 38.835,
+            "p95_ms": 51.549,
+            "min_ms": 36.548,
+            "max_ms": 51.549
+          }
+        },
+        "std_mix_large": {
+          "source_bytes": 112300,
+          "source_sha256": "2988b03b159735b30150aafc19c1a67d046117e151709390fbe9a586ce104700",
+          "wasm_bytes": 31242,
+          "wasm_sha256": "62c03505822faef45ba787d933cf3f4ce49541524a1439efb73f9ad58861d489",
+          "build_wasm": {
+            "samples": 9,
+            "p50_ms": 30.217,
+            "p95_ms": 48.832,
+            "min_ms": 29.165,
+            "max_ms": 48.832
+          },
+          "native_build_miss": {
+            "samples": 5,
+            "p50_ms": 246.197,
+            "p95_ms": 334.608,
+            "min_ms": 187.051,
+            "max_ms": 334.608
+          },
+          "native_build_hit": {
+            "samples": 9,
+            "p50_ms": 49.364,
+            "p95_ms": 58.25,
+            "min_ms": 41.488,
+            "max_ms": 58.25
+          }
+        }
+      }
+    },
+    {
+      "schema": "wasmc-native-cli-performance/v1",
+      "measured_at": "2026-09-17T20:23:56.908Z",
+      "commit": "1a7309ad4ecf2b42f220754529c958966cecedb4",
+      "platform": "macos-x86_64",
+      "host": {
+        "os": "darwin",
+        "arch": "x64",
+        "node": "v26.5.1"
+      },
+      "cli": {
+        "bytes": 10710336,
+        "sha256": "11631511ef1e88484c94872798147cb0914e5a0c2629d8e3a1f39dce385cc6d4"
+      },
+      "corpus_schema": "wasmc-public-benchmark-corpus/v1",
+      "policy": "GitHub-hosted timings are comparative observations, not absolute SLA authority. Source identity and generated Wasm parity are hard gates.",
+      "cases": {
+        "small_scalar": {
+          "source_bytes": 126,
+          "source_sha256": "bbc6049a0404552aff61e2d07db9e3672c1079083dbad92904cc73d14a6cc069",
+          "wasm_bytes": 44,
+          "wasm_sha256": "29996fa74541742737704f64e48add2a5079ed8c57783cda4912046d5acb32c9",
+          "build_wasm": {
+            "samples": 9,
+            "p50_ms": 23.426,
+            "p95_ms": 31.437,
+            "min_ms": 23.024,
+            "max_ms": 31.437
+          },
+          "native_build_miss": {
+            "samples": 5,
+            "p50_ms": 46.172,
+            "p95_ms": 50.792,
+            "min_ms": 44.58,
+            "max_ms": 50.792
+          },
+          "native_build_hit": {
+            "samples": 9,
+            "p50_ms": 48.292,
+            "p95_ms": 226.753,
+            "min_ms": 42.969,
+            "max_ms": 226.753
+          },
+          "run_wasmi": {
+            "samples": 20,
+            "p50_ms": 23.149,
+            "p95_ms": 24.045,
+            "min_ms": 22.859,
+            "max_ms": 24.081
+          },
+          "native_run": {
+            "samples": 20,
+            "p50_ms": 5.97,
+            "p95_ms": 6.758,
+            "min_ms": 5.72,
+            "max_ms": 7.047
+          },
+          "native_executable": {
+            "bytes": 10724004,
+            "sha256": "39db6f3003a3def1e43badfa717641e33920cf6399cea9eac55a74525d9f7570"
+          }
+        },
+        "structured_variant": {
+          "source_bytes": 697,
+          "source_sha256": "b778d2cc39b8baa92274ed3bd55b45c046a986c52fc5a4d1c8749a9ad6acdd5d",
+          "wasm_bytes": 208,
+          "wasm_sha256": "d36db890efb5550ffe7510ef1c1522d8974473a90f636049d12543821016689a",
+          "build_wasm": {
+            "samples": 9,
+            "p50_ms": 23.788,
+            "p95_ms": 24.1,
+            "min_ms": 23.447,
+            "max_ms": 24.1
+          },
+          "native_build_miss": {
+            "samples": 5,
+            "p50_ms": 171.4,
+            "p95_ms": 201.915,
+            "min_ms": 47.722,
+            "max_ms": 201.915
+          },
+          "native_build_hit": {
+            "samples": 9,
+            "p50_ms": 71.856,
+            "p95_ms": 154.171,
+            "min_ms": 47.055,
+            "max_ms": 154.171
+          }
+        },
+        "policy_small": {
+          "source_bytes": 2562,
+          "source_sha256": "72b662c5a115fa8133fc1c695758c028d98434250b6fb4e8950eda7b55b2aabc",
+          "wasm_bytes": 733,
+          "wasm_sha256": "c7ddfc63b10f5611d87063dd166e3417f7c9b82d9c3abebbbde311b58403a9ba",
+          "build_wasm": {
+            "samples": 9,
+            "p50_ms": 25.116,
+            "p95_ms": 26.243,
+            "min_ms": 24.234,
+            "max_ms": 26.243
+          },
+          "native_build_miss": {
+            "samples": 5,
+            "p50_ms": 50.564,
+            "p95_ms": 83.576,
+            "min_ms": 48.457,
+            "max_ms": 83.576
+          },
+          "native_build_hit": {
+            "samples": 9,
+            "p50_ms": 43.997,
+            "p95_ms": 45.986,
+            "min_ms": 43.042,
+            "max_ms": 45.986
+          }
+        },
+        "policy_large": {
+          "source_bytes": 30995,
+          "source_sha256": "5b417c06b4a872341e702c05aaa8aa62a691b713ec5ffe1412b24781f8764ce3",
+          "wasm_bytes": 9454,
+          "wasm_sha256": "97272a3752fc5e4697eb5533b9fec8d64abf814145826175f542023938492172",
+          "build_wasm": {
+            "samples": 9,
+            "p50_ms": 29.601,
+            "p95_ms": 30.77,
+            "min_ms": 29.479,
+            "max_ms": 30.77
+          },
+          "native_build_miss": {
+            "samples": 5,
+            "p50_ms": 221.411,
+            "p95_ms": 279.096,
+            "min_ms": 99.657,
+            "max_ms": 279.096
+          },
+          "native_build_hit": {
+            "samples": 9,
+            "p50_ms": 70.933,
+            "p95_ms": 78.851,
+            "min_ms": 50.834,
+            "max_ms": 78.851
+          }
+        },
+        "std_mix_large": {
+          "source_bytes": 112300,
+          "source_sha256": "2988b03b159735b30150aafc19c1a67d046117e151709390fbe9a586ce104700",
+          "wasm_bytes": 31242,
+          "wasm_sha256": "62c03505822faef45ba787d933cf3f4ce49541524a1439efb73f9ad58861d489",
+          "build_wasm": {
+            "samples": 9,
+            "p50_ms": 42.832,
+            "p95_ms": 45.158,
+            "min_ms": 41.941,
+            "max_ms": 45.158
+          },
+          "native_build_miss": {
+            "samples": 5,
+            "p50_ms": 214.816,
+            "p95_ms": 861.54,
+            "min_ms": 203.606,
+            "max_ms": 861.54
+          },
+          "native_build_hit": {
+            "samples": 9,
+            "p50_ms": 65.349,
+            "p95_ms": 66.415,
+            "min_ms": 63.764,
+            "max_ms": 66.415
+          }
+        }
+      }
+    },
+    {
+      "schema": "wasmc-native-cli-performance/v1",
+      "measured_at": "2026-09-17T20:21:49.459Z",
+      "commit": "1a7309ad4ecf2b42f220754529c958966cecedb4",
+      "platform": "windows-aarch64",
+      "host": {
+        "os": "win32",
+        "arch": "arm64",
+        "node": "v26.5.1"
+      },
+      "cli": {
+        "bytes": 9323008,
+        "sha256": "ff3bbe1cd9ac02ae31eab1cfe85fb2519d09d9ccbdc5d8b82c6828f7954a0f3b"
+      },
+      "corpus_schema": "wasmc-public-benchmark-corpus/v1",
+      "policy": "GitHub-hosted timings are comparative observations, not absolute SLA authority. Source identity and generated Wasm parity are hard gates.",
+      "cases": {
+        "small_scalar": {
+          "source_bytes": 126,
+          "source_sha256": "bbc6049a0404552aff61e2d07db9e3672c1079083dbad92904cc73d14a6cc069",
+          "wasm_bytes": 44,
+          "wasm_sha256": "29996fa74541742737704f64e48add2a5079ed8c57783cda4912046d5acb32c9",
+          "build_wasm": {
+            "samples": 9,
+            "p50_ms": 22.512,
+            "p95_ms": 35.652,
+            "min_ms": 22.086,
+            "max_ms": 35.652
+          },
+          "native_build_miss": {
+            "samples": 5,
+            "p50_ms": 36.11,
+            "p95_ms": 38.082,
+            "min_ms": 34.914,
+            "max_ms": 38.082
+          },
+          "native_build_hit": {
+            "samples": 9,
+            "p50_ms": 32.02,
+            "p95_ms": 35.401,
+            "min_ms": 31.446,
+            "max_ms": 35.401
+          },
+          "run_wasmi": {
+            "samples": 20,
+            "p50_ms": 18.854,
+            "p95_ms": 19.382,
+            "min_ms": 18.144,
+            "max_ms": 19.794
+          },
+          "native_run": {
+            "samples": 20,
+            "p50_ms": 17.141,
+            "p95_ms": 17.564,
+            "min_ms": 16.802,
+            "max_ms": 18.329
+          },
+          "native_executable": {
+            "bytes": 9521068,
+            "sha256": "3051999138c352fbbf495c45a20e228693a2304af4d971a2082512d377e024f1"
+          }
+        },
+        "structured_variant": {
+          "source_bytes": 697,
+          "source_sha256": "b778d2cc39b8baa92274ed3bd55b45c046a986c52fc5a4d1c8749a9ad6acdd5d",
+          "wasm_bytes": 208,
+          "wasm_sha256": "d36db890efb5550ffe7510ef1c1522d8974473a90f636049d12543821016689a",
+          "build_wasm": {
+            "samples": 9,
+            "p50_ms": 22.476,
+            "p95_ms": 25.458,
+            "min_ms": 22.058,
+            "max_ms": 25.458
+          },
+          "native_build_miss": {
+            "samples": 5,
+            "p50_ms": 35.989,
+            "p95_ms": 41.88,
+            "min_ms": 35.45,
+            "max_ms": 41.88
+          },
+          "native_build_hit": {
+            "samples": 9,
+            "p50_ms": 31.857,
+            "p95_ms": 34.822,
+            "min_ms": 31.352,
+            "max_ms": 34.822
+          }
+        },
+        "policy_small": {
+          "source_bytes": 2562,
+          "source_sha256": "72b662c5a115fa8133fc1c695758c028d98434250b6fb4e8950eda7b55b2aabc",
+          "wasm_bytes": 733,
+          "wasm_sha256": "c7ddfc63b10f5611d87063dd166e3417f7c9b82d9c3abebbbde311b58403a9ba",
+          "build_wasm": {
+            "samples": 9,
+            "p50_ms": 22.641,
+            "p95_ms": 25.848,
+            "min_ms": 22.183,
+            "max_ms": 25.848
+          },
+          "native_build_miss": {
+            "samples": 5,
+            "p50_ms": 37.654,
+            "p95_ms": 41.177,
+            "min_ms": 37.014,
+            "max_ms": 41.177
+          },
+          "native_build_hit": {
+            "samples": 9,
+            "p50_ms": 32.111,
+            "p95_ms": 33.266,
+            "min_ms": 31.588,
+            "max_ms": 33.266
+          }
+        },
+        "policy_large": {
+          "source_bytes": 30995,
+          "source_sha256": "5b417c06b4a872341e702c05aaa8aa62a691b713ec5ffe1412b24781f8764ce3",
+          "wasm_bytes": 9454,
+          "wasm_sha256": "97272a3752fc5e4697eb5533b9fec8d64abf814145826175f542023938492172",
+          "build_wasm": {
+            "samples": 9,
+            "p50_ms": 26.034,
+            "p95_ms": 29.427,
+            "min_ms": 25.817,
+            "max_ms": 29.427
+          },
+          "native_build_miss": {
+            "samples": 5,
+            "p50_ms": 73.359,
+            "p95_ms": 74.967,
+            "min_ms": 73.032,
+            "max_ms": 74.967
+          },
+          "native_build_hit": {
+            "samples": 9,
+            "p50_ms": 36.239,
+            "p95_ms": 37.253,
+            "min_ms": 35.868,
+            "max_ms": 37.253
+          }
+        },
+        "std_mix_large": {
+          "source_bytes": 112300,
+          "source_sha256": "2988b03b159735b30150aafc19c1a67d046117e151709390fbe9a586ce104700",
+          "wasm_bytes": 31242,
+          "wasm_sha256": "62c03505822faef45ba787d933cf3f4ce49541524a1439efb73f9ad58861d489",
+          "build_wasm": {
+            "samples": 9,
+            "p50_ms": 35.825,
+            "p95_ms": 50.328,
+            "min_ms": 35.181,
+            "max_ms": 50.328
+          },
+          "native_build_miss": {
+            "samples": 5,
+            "p50_ms": 146.364,
+            "p95_ms": 175.481,
+            "min_ms": 143.665,
+            "max_ms": 175.481
+          },
+          "native_build_hit": {
+            "samples": 9,
+            "p50_ms": 47.039,
+            "p95_ms": 47.9,
+            "min_ms": 46.446,
+            "max_ms": 47.9
+          }
+        }
+      }
+    },
+    {
+      "schema": "wasmc-native-cli-performance/v1",
+      "measured_at": "2026-09-17T20:21:25.631Z",
+      "commit": "1a7309ad4ecf2b42f220754529c958966cecedb4",
+      "platform": "windows-x86_64",
+      "host": {
+        "os": "win32",
+        "arch": "x64",
+        "node": "v26.5.1"
+      },
+      "cli": {
+        "bytes": 10624512,
+        "sha256": "b3f0ae73bf7e9701697d63cca2058bb1cf3773cd2819db3676baea7f657d732e"
+      },
+      "corpus_schema": "wasmc-public-benchmark-corpus/v1",
+      "policy": "GitHub-hosted timings are comparative observations, not absolute SLA authority. Source identity and generated Wasm parity are hard gates.",
+      "cases": {
+        "small_scalar": {
+          "source_bytes": 126,
+          "source_sha256": "bbc6049a0404552aff61e2d07db9e3672c1079083dbad92904cc73d14a6cc069",
+          "wasm_bytes": 44,
+          "wasm_sha256": "29996fa74541742737704f64e48add2a5079ed8c57783cda4912046d5acb32c9",
+          "build_wasm": {
+            "samples": 9,
+            "p50_ms": 21.768,
+            "p95_ms": 32.3,
+            "min_ms": 19.245,
+            "max_ms": 32.3
+          },
+          "native_build_miss": {
+            "samples": 5,
+            "p50_ms": 35.841,
+            "p95_ms": 38.784,
+            "min_ms": 34.022,
+            "max_ms": 38.784
+          },
+          "native_build_hit": {
+            "samples": 9,
+            "p50_ms": 29.243,
+            "p95_ms": 213.483,
+            "min_ms": 27.427,
+            "max_ms": 213.483
+          },
+          "run_wasmi": {
+            "samples": 20,
+            "p50_ms": 20.377,
+            "p95_ms": 23.038,
+            "min_ms": 16.589,
+            "max_ms": 23.184
+          },
+          "native_run": {
+            "samples": 20,
+            "p50_ms": 10.916,
+            "p95_ms": 11.368,
+            "min_ms": 9.77,
+            "max_ms": 11.51
+          },
+          "native_executable": {
+            "bytes": 10638252,
+            "sha256": "b22a24424b237f2f20f5869b6a2eea855676bcb44a2969d70c0c6648aceb33d3"
+          }
+        },
+        "structured_variant": {
+          "source_bytes": 697,
+          "source_sha256": "b778d2cc39b8baa92274ed3bd55b45c046a986c52fc5a4d1c8749a9ad6acdd5d",
+          "wasm_bytes": 208,
+          "wasm_sha256": "d36db890efb5550ffe7510ef1c1522d8974473a90f636049d12543821016689a",
+          "build_wasm": {
+            "samples": 9,
+            "p50_ms": 21.687,
+            "p95_ms": 24.279,
+            "min_ms": 18.112,
+            "max_ms": 24.279
+          },
+          "native_build_miss": {
+            "samples": 5,
+            "p50_ms": 36.563,
+            "p95_ms": 38.305,
+            "min_ms": 32.802,
+            "max_ms": 38.305
+          },
+          "native_build_hit": {
+            "samples": 9,
+            "p50_ms": 32.163,
+            "p95_ms": 684.809,
+            "min_ms": 27.783,
+            "max_ms": 684.809
+          }
+        },
+        "policy_small": {
+          "source_bytes": 2562,
+          "source_sha256": "72b662c5a115fa8133fc1c695758c028d98434250b6fb4e8950eda7b55b2aabc",
+          "wasm_bytes": 733,
+          "wasm_sha256": "c7ddfc63b10f5611d87063dd166e3417f7c9b82d9c3abebbbde311b58403a9ba",
+          "build_wasm": {
+            "samples": 9,
+            "p50_ms": 21.357,
+            "p95_ms": 21.614,
+            "min_ms": 18.26,
+            "max_ms": 21.614
+          },
+          "native_build_miss": {
+            "samples": 5,
+            "p50_ms": 40.358,
+            "p95_ms": 43.279,
+            "min_ms": 34.942,
+            "max_ms": 43.279
+          },
+          "native_build_hit": {
+            "samples": 9,
+            "p50_ms": 30.552,
+            "p95_ms": 33.587,
+            "min_ms": 26.628,
+            "max_ms": 33.587
+          }
+        },
+        "policy_large": {
+          "source_bytes": 30995,
+          "source_sha256": "5b417c06b4a872341e702c05aaa8aa62a691b713ec5ffe1412b24781f8764ce3",
+          "wasm_bytes": 9454,
+          "wasm_sha256": "97272a3752fc5e4697eb5533b9fec8d64abf814145826175f542023938492172",
+          "build_wasm": {
+            "samples": 9,
+            "p50_ms": 27.314,
+            "p95_ms": 31.694,
+            "min_ms": 22.189,
+            "max_ms": 31.694
+          },
+          "native_build_miss": {
+            "samples": 5,
+            "p50_ms": 94.376,
+            "p95_ms": 106.585,
+            "min_ms": 87.938,
+            "max_ms": 106.585
+          },
+          "native_build_hit": {
+            "samples": 9,
+            "p50_ms": 34.653,
+            "p95_ms": 41.945,
+            "min_ms": 31.512,
+            "max_ms": 41.945
+          }
+        },
+        "std_mix_large": {
+          "source_bytes": 112300,
+          "source_sha256": "2988b03b159735b30150aafc19c1a67d046117e151709390fbe9a586ce104700",
+          "wasm_bytes": 31242,
+          "wasm_sha256": "62c03505822faef45ba787d933cf3f4ce49541524a1439efb73f9ad58861d489",
+          "build_wasm": {
+            "samples": 9,
+            "p50_ms": 37.309,
+            "p95_ms": 43.876,
+            "min_ms": 33.39,
+            "max_ms": 43.876
+          },
+          "native_build_miss": {
+            "samples": 5,
+            "p50_ms": 201.295,
+            "p95_ms": 205.436,
+            "min_ms": 193.477,
+            "max_ms": 205.436
+          },
+          "native_build_hit": {
+            "samples": 9,
+            "p50_ms": 46.13,
+            "p95_ms": 59.498,
+            "min_ms": 43.667,
+            "max_ms": 59.498
+          }
+        }
+      }
+    }
+  ]
+}
