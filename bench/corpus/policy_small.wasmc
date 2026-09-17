@@ -1,0 +1,54 @@
+package local:policy_small;
+
+interface deps {
+  host_metric_0: func(tenant: s32, key: s32) -> s32;
+}
+
+interface std_list {
+  sum_s32: func(xs: list<s32>) -> s32;
+  count_positive_s32: func(xs: list<s32>) -> u32;
+  get_or_list_s32: func(xs: list<s32>, index: u32, default: s32) -> s32;
+}
+
+interface std_map {
+  get_or_s32: func(values: map<string, s32>, key: string, default: s32) -> s32;
+  count_present_s32: func(values: map<string, s32>, keys: list<string>) -> u32;
+  sum_present_s32: func(values: map<string, s32>, keys: list<string>) -> s32;
+}
+
+interface api {
+  record request { tenant: s32, plan: s32, risk: s32, quota: s32 }
+  record response { decision: s32, route: s32, score: s32 }
+  enum decision { deny, allow, review }
+  base_score: func(req: request) -> s32 { return req.plan + req.risk + req.quota; }
+
+  policy_step_0: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_0(req.tenant, 1);
+    if (count_positive_s32(flags) > 0) { return local + get_or_list_s32(flags, 0, 1); }
+    return local - 1;
+  }
+  policy_step_1: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_0(req.tenant, 2);
+    if (count_positive_s32(flags) > 1) { return local + get_or_list_s32(flags, 1, 2); }
+    return local - 2;
+  }
+  route_0: func(req: request, flags: list<s32>, values: map<string, s32>, key: string) -> response {
+    let score: s32 = policy_step_0(req, flags) + policy_step_1(req, flags) + get_or_s32(values, key, 0);
+    if (score > 80) { return { decision: 1, route: 0, score: score }; }
+    if (score > 40) { return { decision: 2, route: 0, score: score }; }
+    return { decision: 0, route: 0, score: score };
+  }
+  route_1: func(req: request, flags: list<s32>, values: map<string, s32>, key: string) -> response {
+    let score: s32 = policy_step_1(req, flags) + policy_step_0(req, flags) + get_or_s32(values, key, 1);
+    if (score > 81) { return { decision: 1, route: 1, score: score }; }
+    if (score > 41) { return { decision: 2, route: 1, score: score }; }
+    return { decision: 0, route: 1, score: score };
+  }
+  aggregate: func(req: request, flags: list<s32>, values: map<string, s32>, keys: list<string>, key: string) -> s32 {
+    let part_0: s32 = policy_step_0(req, flags) + policy_step_1(req, flags);
+    let host_part: s32 = get_or_s32(values, key, 0) + sum_s32(flags) + sum_present_s32(values, keys) + count_present_s32(values, keys);
+    return part_0 + host_part;
+  }
+}
+
+world app { import deps; import std_list; import std_map; export api; }

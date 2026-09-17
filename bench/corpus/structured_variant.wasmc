@@ -1,0 +1,30 @@
+package local:demo;
+
+interface deps {
+  record point { z: s32 }
+  enum code { other }
+  other: func() -> s32;
+}
+
+interface api {
+  record point { x: s32, y: s32 }
+  enum code { ok, warn, fail }
+
+  sum_point: func() -> s32 {
+    return match make_point() { none => other(), point(p) => other() + p.x + p.y };
+  }
+
+  classify: func(flag: bool) -> code {
+    return match make_code(flag) { none => 0, code(c) => c };
+  }
+
+  make_point: func() -> variant { none, point(point) } {
+    return variant.point({ x: 4, y: 9 });
+  }
+
+  make_code: func(flag: bool) -> variant { none, code(code) } {
+    return if (flag) { variant.code(1) } else { variant.none };
+  }
+}
+
+world app { import deps; export api; }

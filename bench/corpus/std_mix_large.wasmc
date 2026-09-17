@@ -1,0 +1,1983 @@
+package local:std_mix_large;
+
+interface std_math {
+  double_s32: func(value: s32) -> s32;
+  abs_s32: func(value: s32) -> s32;
+}
+
+interface std_string {
+  len: func(value: string) -> u32;
+  is_empty: func(value: string) -> bool;
+  contains: func(value: string, needle: string) -> bool;
+  index_of: func(value: string, needle: string) -> s32;
+  count_matches: func(value: string, needle: string) -> u32;
+  slice: func(value: string, start: u32, len: u32) -> string;
+  trim: func(value: string) -> string;
+  replace: func(value: string, from: string, to: string) -> string;
+  concat: func(a: string, b: string) -> string;
+  starts_with: func(value: string, prefix: string) -> bool;
+  ends_with: func(value: string, suffix: string) -> bool;
+  eq: func(a: string, b: string) -> bool;
+}
+
+interface std_list {
+  sum_s32: func(xs: list<s32>) -> s32;
+  min_s32: func(xs: list<s32>) -> s32;
+  max_s32: func(xs: list<s32>) -> s32;
+  get_or_list_s32: func(xs: list<s32>, index: u32, default: s32) -> s32;
+  first_s32: func(xs: list<s32>) -> s32;
+  last_s32: func(xs: list<s32>) -> s32;
+  contains_s32: func(xs: list<s32>, value: s32) -> bool;
+  any_positive_s32: func(xs: list<s32>) -> bool;
+  all_positive_s32: func(xs: list<s32>) -> bool;
+  count_positive_s32: func(xs: list<s32>) -> u32;
+  any_negative_s32: func(xs: list<s32>) -> bool;
+  all_negative_s32: func(xs: list<s32>) -> bool;
+  count_negative_s32: func(xs: list<s32>) -> u32;
+}
+
+interface std_map {
+  has_s32: func(values: map<string, s32>, key: string) -> bool;
+  get_or_s32: func(values: map<string, s32>, key: string, default: s32) -> s32;
+  count_present_s32: func(values: map<string, s32>, keys: list<string>) -> u32;
+  count_missing_s32: func(values: map<string, s32>, keys: list<string>) -> u32;
+  any_present_s32: func(values: map<string, s32>, keys: list<string>) -> bool;
+  any_missing_s32: func(values: map<string, s32>, keys: list<string>) -> bool;
+  all_present_s32: func(values: map<string, s32>, keys: list<string>) -> bool;
+  all_missing_s32: func(values: map<string, s32>, keys: list<string>) -> bool;
+  sum_present_s32: func(values: map<string, s32>, keys: list<string>) -> s32;
+}
+
+interface api {
+  record request { tenant: s32, risk: s32, quota: s32, bias: s32 }
+  record decision { route: s32, score: s32, confidence: s32 }
+  enum action { deny, review, allow }
+  base_score: func(req: request) -> s32 { return abs_s32(req.risk) + req.quota + double_s32(req.bias); }
+
+  string_gate_0: func(name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let pos: s32 = index_of(name, needle);
+    if (eq(trim(name), needle)) { return pos + 100; }
+    if (contains(replace(name, needle, prefix), prefix)) { return pos + 20; }
+    if (starts_with(concat(prefix, name), prefix)) { return pos + 10; }
+    if (ends_with(concat(name, suffix), suffix)) { return pos + 5; }
+    if (count_matches(slice(name, 0, 1), needle) > 0) { return pos + 1; }
+    if (is_empty(name)) { return 0; }
+    if (len(name) > 0) { return pos + 0; }
+    return pos;
+  }
+  list_gate_0: func(flags: list<s32>) -> s32 {
+    let total: s32 = sum_s32(flags) + get_or_list_s32(flags, 0, 1);
+    if (contains_s32(flags, 1)) { return total + first_s32(flags); }
+    if (any_positive_s32(flags)) { return total + max_s32(flags); }
+    if (all_positive_s32(flags)) { return total + min_s32(flags); }
+    if (count_positive_s32(flags) > 0) { return total + last_s32(flags); }
+    if (any_negative_s32(flags)) { return total - min_s32(flags); }
+    if (all_negative_s32(flags)) { return total - max_s32(flags); }
+    if (count_negative_s32(flags) > 0) { return total - last_s32(flags); }
+    return total;
+  }
+  map_gate_0: func(values: map<string, s32>, keys: list<string>, key: string) -> s32 {
+    let base: s32 = get_or_s32(values, key, 1) + sum_present_s32(values, keys);
+    if (has_s32(values, key)) { return base + 0; }
+    if (all_present_s32(values, keys)) { return base + 20; }
+    if (any_present_s32(values, keys)) { return base + 10; }
+    if (any_missing_s32(values, keys)) { return base - 1; }
+    if (all_missing_s32(values, keys)) { return base - 20; }
+    if (count_present_s32(values, keys) > 0) { return base + 0; }
+    if (count_missing_s32(values, keys) > 0) { return base - 0; }
+    return base;
+  }
+  decision_0: func(req: request, flags: list<s32>, values: map<string, s32>, keys: list<string>, key: string, name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let score: s32 = base_score(req) + string_gate_0(name, needle, prefix, suffix) + list_gate_0(flags) + map_gate_0(values, keys, key);
+    if (score > 200) { return score + 90; }
+    if (score > 100) { return score + 60; }
+    return score + 30;
+  }
+
+  string_gate_1: func(name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let pos: s32 = index_of(name, needle);
+    if (eq(trim(name), needle)) { return pos + 101; }
+    if (contains(replace(name, needle, prefix), prefix)) { return pos + 21; }
+    if (starts_with(concat(prefix, name), prefix)) { return pos + 11; }
+    if (ends_with(concat(name, suffix), suffix)) { return pos + 6; }
+    if (count_matches(slice(name, 0, 2), needle) > 0) { return pos + 2; }
+    if (is_empty(name)) { return 0; }
+    if (len(name) > 1) { return pos + 1; }
+    return pos;
+  }
+  list_gate_1: func(flags: list<s32>) -> s32 {
+    let total: s32 = sum_s32(flags) + get_or_list_s32(flags, 1, 2);
+    if (contains_s32(flags, 2)) { return total + first_s32(flags); }
+    if (any_positive_s32(flags)) { return total + max_s32(flags); }
+    if (all_positive_s32(flags)) { return total + min_s32(flags); }
+    if (count_positive_s32(flags) > 1) { return total + last_s32(flags); }
+    if (any_negative_s32(flags)) { return total - min_s32(flags); }
+    if (all_negative_s32(flags)) { return total - max_s32(flags); }
+    if (count_negative_s32(flags) > 1) { return total - last_s32(flags); }
+    return total;
+  }
+  map_gate_1: func(values: map<string, s32>, keys: list<string>, key: string) -> s32 {
+    let base: s32 = get_or_s32(values, key, 2) + sum_present_s32(values, keys);
+    if (has_s32(values, key)) { return base + 1; }
+    if (all_present_s32(values, keys)) { return base + 21; }
+    if (any_present_s32(values, keys)) { return base + 11; }
+    if (any_missing_s32(values, keys)) { return base - 2; }
+    if (all_missing_s32(values, keys)) { return base - 21; }
+    if (count_present_s32(values, keys) > 1) { return base + 1; }
+    if (count_missing_s32(values, keys) > 1) { return base - 1; }
+    return base;
+  }
+  decision_1: func(req: request, flags: list<s32>, values: map<string, s32>, keys: list<string>, key: string, name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let score: s32 = base_score(req) + string_gate_1(name, needle, prefix, suffix) + list_gate_1(flags) + map_gate_1(values, keys, key);
+    if (score > 201) { return score + 91; }
+    if (score > 101) { return score + 61; }
+    return score + 31;
+  }
+
+  string_gate_2: func(name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let pos: s32 = index_of(name, needle);
+    if (eq(trim(name), needle)) { return pos + 102; }
+    if (contains(replace(name, needle, prefix), prefix)) { return pos + 22; }
+    if (starts_with(concat(prefix, name), prefix)) { return pos + 12; }
+    if (ends_with(concat(name, suffix), suffix)) { return pos + 7; }
+    if (count_matches(slice(name, 0, 3), needle) > 0) { return pos + 3; }
+    if (is_empty(name)) { return 0; }
+    if (len(name) > 2) { return pos + 2; }
+    return pos;
+  }
+  list_gate_2: func(flags: list<s32>) -> s32 {
+    let total: s32 = sum_s32(flags) + get_or_list_s32(flags, 2, 3);
+    if (contains_s32(flags, 3)) { return total + first_s32(flags); }
+    if (any_positive_s32(flags)) { return total + max_s32(flags); }
+    if (all_positive_s32(flags)) { return total + min_s32(flags); }
+    if (count_positive_s32(flags) > 2) { return total + last_s32(flags); }
+    if (any_negative_s32(flags)) { return total - min_s32(flags); }
+    if (all_negative_s32(flags)) { return total - max_s32(flags); }
+    if (count_negative_s32(flags) > 2) { return total - last_s32(flags); }
+    return total;
+  }
+  map_gate_2: func(values: map<string, s32>, keys: list<string>, key: string) -> s32 {
+    let base: s32 = get_or_s32(values, key, 3) + sum_present_s32(values, keys);
+    if (has_s32(values, key)) { return base + 2; }
+    if (all_present_s32(values, keys)) { return base + 22; }
+    if (any_present_s32(values, keys)) { return base + 12; }
+    if (any_missing_s32(values, keys)) { return base - 3; }
+    if (all_missing_s32(values, keys)) { return base - 22; }
+    if (count_present_s32(values, keys) > 2) { return base + 2; }
+    if (count_missing_s32(values, keys) > 2) { return base - 2; }
+    return base;
+  }
+  decision_2: func(req: request, flags: list<s32>, values: map<string, s32>, keys: list<string>, key: string, name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let score: s32 = base_score(req) + string_gate_2(name, needle, prefix, suffix) + list_gate_2(flags) + map_gate_2(values, keys, key);
+    if (score > 202) { return score + 92; }
+    if (score > 102) { return score + 62; }
+    return score + 32;
+  }
+
+  string_gate_3: func(name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let pos: s32 = index_of(name, needle);
+    if (eq(trim(name), needle)) { return pos + 103; }
+    if (contains(replace(name, needle, prefix), prefix)) { return pos + 23; }
+    if (starts_with(concat(prefix, name), prefix)) { return pos + 13; }
+    if (ends_with(concat(name, suffix), suffix)) { return pos + 8; }
+    if (count_matches(slice(name, 0, 4), needle) > 0) { return pos + 4; }
+    if (is_empty(name)) { return 0; }
+    if (len(name) > 3) { return pos + 3; }
+    return pos;
+  }
+  list_gate_3: func(flags: list<s32>) -> s32 {
+    let total: s32 = sum_s32(flags) + get_or_list_s32(flags, 3, 4);
+    if (contains_s32(flags, 4)) { return total + first_s32(flags); }
+    if (any_positive_s32(flags)) { return total + max_s32(flags); }
+    if (all_positive_s32(flags)) { return total + min_s32(flags); }
+    if (count_positive_s32(flags) > 3) { return total + last_s32(flags); }
+    if (any_negative_s32(flags)) { return total - min_s32(flags); }
+    if (all_negative_s32(flags)) { return total - max_s32(flags); }
+    if (count_negative_s32(flags) > 3) { return total - last_s32(flags); }
+    return total;
+  }
+  map_gate_3: func(values: map<string, s32>, keys: list<string>, key: string) -> s32 {
+    let base: s32 = get_or_s32(values, key, 4) + sum_present_s32(values, keys);
+    if (has_s32(values, key)) { return base + 3; }
+    if (all_present_s32(values, keys)) { return base + 23; }
+    if (any_present_s32(values, keys)) { return base + 13; }
+    if (any_missing_s32(values, keys)) { return base - 4; }
+    if (all_missing_s32(values, keys)) { return base - 23; }
+    if (count_present_s32(values, keys) > 3) { return base + 3; }
+    if (count_missing_s32(values, keys) > 3) { return base - 3; }
+    return base;
+  }
+  decision_3: func(req: request, flags: list<s32>, values: map<string, s32>, keys: list<string>, key: string, name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let score: s32 = base_score(req) + string_gate_3(name, needle, prefix, suffix) + list_gate_3(flags) + map_gate_3(values, keys, key);
+    if (score > 203) { return score + 93; }
+    if (score > 103) { return score + 63; }
+    return score + 33;
+  }
+
+  string_gate_4: func(name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let pos: s32 = index_of(name, needle);
+    if (eq(trim(name), needle)) { return pos + 104; }
+    if (contains(replace(name, needle, prefix), prefix)) { return pos + 24; }
+    if (starts_with(concat(prefix, name), prefix)) { return pos + 14; }
+    if (ends_with(concat(name, suffix), suffix)) { return pos + 9; }
+    if (count_matches(slice(name, 0, 5), needle) > 0) { return pos + 5; }
+    if (is_empty(name)) { return 0; }
+    if (len(name) > 4) { return pos + 4; }
+    return pos;
+  }
+  list_gate_4: func(flags: list<s32>) -> s32 {
+    let total: s32 = sum_s32(flags) + get_or_list_s32(flags, 4, 5);
+    if (contains_s32(flags, 5)) { return total + first_s32(flags); }
+    if (any_positive_s32(flags)) { return total + max_s32(flags); }
+    if (all_positive_s32(flags)) { return total + min_s32(flags); }
+    if (count_positive_s32(flags) > 4) { return total + last_s32(flags); }
+    if (any_negative_s32(flags)) { return total - min_s32(flags); }
+    if (all_negative_s32(flags)) { return total - max_s32(flags); }
+    if (count_negative_s32(flags) > 4) { return total - last_s32(flags); }
+    return total;
+  }
+  map_gate_4: func(values: map<string, s32>, keys: list<string>, key: string) -> s32 {
+    let base: s32 = get_or_s32(values, key, 5) + sum_present_s32(values, keys);
+    if (has_s32(values, key)) { return base + 4; }
+    if (all_present_s32(values, keys)) { return base + 24; }
+    if (any_present_s32(values, keys)) { return base + 14; }
+    if (any_missing_s32(values, keys)) { return base - 5; }
+    if (all_missing_s32(values, keys)) { return base - 24; }
+    if (count_present_s32(values, keys) > 4) { return base + 4; }
+    if (count_missing_s32(values, keys) > 4) { return base - 4; }
+    return base;
+  }
+  decision_4: func(req: request, flags: list<s32>, values: map<string, s32>, keys: list<string>, key: string, name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let score: s32 = base_score(req) + string_gate_4(name, needle, prefix, suffix) + list_gate_4(flags) + map_gate_4(values, keys, key);
+    if (score > 204) { return score + 94; }
+    if (score > 104) { return score + 64; }
+    return score + 34;
+  }
+
+  string_gate_5: func(name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let pos: s32 = index_of(name, needle);
+    if (eq(trim(name), needle)) { return pos + 105; }
+    if (contains(replace(name, needle, prefix), prefix)) { return pos + 25; }
+    if (starts_with(concat(prefix, name), prefix)) { return pos + 15; }
+    if (ends_with(concat(name, suffix), suffix)) { return pos + 10; }
+    if (count_matches(slice(name, 0, 6), needle) > 0) { return pos + 6; }
+    if (is_empty(name)) { return 0; }
+    if (len(name) > 0) { return pos + 0; }
+    return pos;
+  }
+  list_gate_5: func(flags: list<s32>) -> s32 {
+    let total: s32 = sum_s32(flags) + get_or_list_s32(flags, 0, 6);
+    if (contains_s32(flags, 6)) { return total + first_s32(flags); }
+    if (any_positive_s32(flags)) { return total + max_s32(flags); }
+    if (all_positive_s32(flags)) { return total + min_s32(flags); }
+    if (count_positive_s32(flags) > 0) { return total + last_s32(flags); }
+    if (any_negative_s32(flags)) { return total - min_s32(flags); }
+    if (all_negative_s32(flags)) { return total - max_s32(flags); }
+    if (count_negative_s32(flags) > 0) { return total - last_s32(flags); }
+    return total;
+  }
+  map_gate_5: func(values: map<string, s32>, keys: list<string>, key: string) -> s32 {
+    let base: s32 = get_or_s32(values, key, 6) + sum_present_s32(values, keys);
+    if (has_s32(values, key)) { return base + 5; }
+    if (all_present_s32(values, keys)) { return base + 25; }
+    if (any_present_s32(values, keys)) { return base + 15; }
+    if (any_missing_s32(values, keys)) { return base - 6; }
+    if (all_missing_s32(values, keys)) { return base - 25; }
+    if (count_present_s32(values, keys) > 0) { return base + 0; }
+    if (count_missing_s32(values, keys) > 0) { return base - 0; }
+    return base;
+  }
+  decision_5: func(req: request, flags: list<s32>, values: map<string, s32>, keys: list<string>, key: string, name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let score: s32 = base_score(req) + string_gate_5(name, needle, prefix, suffix) + list_gate_5(flags) + map_gate_5(values, keys, key);
+    if (score > 205) { return score + 95; }
+    if (score > 105) { return score + 65; }
+    return score + 35;
+  }
+
+  string_gate_6: func(name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let pos: s32 = index_of(name, needle);
+    if (eq(trim(name), needle)) { return pos + 106; }
+    if (contains(replace(name, needle, prefix), prefix)) { return pos + 26; }
+    if (starts_with(concat(prefix, name), prefix)) { return pos + 16; }
+    if (ends_with(concat(name, suffix), suffix)) { return pos + 11; }
+    if (count_matches(slice(name, 0, 7), needle) > 0) { return pos + 7; }
+    if (is_empty(name)) { return 0; }
+    if (len(name) > 1) { return pos + 1; }
+    return pos;
+  }
+  list_gate_6: func(flags: list<s32>) -> s32 {
+    let total: s32 = sum_s32(flags) + get_or_list_s32(flags, 1, 7);
+    if (contains_s32(flags, 7)) { return total + first_s32(flags); }
+    if (any_positive_s32(flags)) { return total + max_s32(flags); }
+    if (all_positive_s32(flags)) { return total + min_s32(flags); }
+    if (count_positive_s32(flags) > 1) { return total + last_s32(flags); }
+    if (any_negative_s32(flags)) { return total - min_s32(flags); }
+    if (all_negative_s32(flags)) { return total - max_s32(flags); }
+    if (count_negative_s32(flags) > 1) { return total - last_s32(flags); }
+    return total;
+  }
+  map_gate_6: func(values: map<string, s32>, keys: list<string>, key: string) -> s32 {
+    let base: s32 = get_or_s32(values, key, 7) + sum_present_s32(values, keys);
+    if (has_s32(values, key)) { return base + 6; }
+    if (all_present_s32(values, keys)) { return base + 26; }
+    if (any_present_s32(values, keys)) { return base + 16; }
+    if (any_missing_s32(values, keys)) { return base - 7; }
+    if (all_missing_s32(values, keys)) { return base - 26; }
+    if (count_present_s32(values, keys) > 1) { return base + 1; }
+    if (count_missing_s32(values, keys) > 1) { return base - 1; }
+    return base;
+  }
+  decision_6: func(req: request, flags: list<s32>, values: map<string, s32>, keys: list<string>, key: string, name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let score: s32 = base_score(req) + string_gate_6(name, needle, prefix, suffix) + list_gate_6(flags) + map_gate_6(values, keys, key);
+    if (score > 206) { return score + 96; }
+    if (score > 106) { return score + 66; }
+    return score + 36;
+  }
+
+  string_gate_7: func(name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let pos: s32 = index_of(name, needle);
+    if (eq(trim(name), needle)) { return pos + 107; }
+    if (contains(replace(name, needle, prefix), prefix)) { return pos + 27; }
+    if (starts_with(concat(prefix, name), prefix)) { return pos + 17; }
+    if (ends_with(concat(name, suffix), suffix)) { return pos + 12; }
+    if (count_matches(slice(name, 0, 8), needle) > 0) { return pos + 8; }
+    if (is_empty(name)) { return 0; }
+    if (len(name) > 2) { return pos + 2; }
+    return pos;
+  }
+  list_gate_7: func(flags: list<s32>) -> s32 {
+    let total: s32 = sum_s32(flags) + get_or_list_s32(flags, 2, 8);
+    if (contains_s32(flags, 8)) { return total + first_s32(flags); }
+    if (any_positive_s32(flags)) { return total + max_s32(flags); }
+    if (all_positive_s32(flags)) { return total + min_s32(flags); }
+    if (count_positive_s32(flags) > 2) { return total + last_s32(flags); }
+    if (any_negative_s32(flags)) { return total - min_s32(flags); }
+    if (all_negative_s32(flags)) { return total - max_s32(flags); }
+    if (count_negative_s32(flags) > 2) { return total - last_s32(flags); }
+    return total;
+  }
+  map_gate_7: func(values: map<string, s32>, keys: list<string>, key: string) -> s32 {
+    let base: s32 = get_or_s32(values, key, 8) + sum_present_s32(values, keys);
+    if (has_s32(values, key)) { return base + 7; }
+    if (all_present_s32(values, keys)) { return base + 27; }
+    if (any_present_s32(values, keys)) { return base + 17; }
+    if (any_missing_s32(values, keys)) { return base - 8; }
+    if (all_missing_s32(values, keys)) { return base - 27; }
+    if (count_present_s32(values, keys) > 2) { return base + 2; }
+    if (count_missing_s32(values, keys) > 2) { return base - 2; }
+    return base;
+  }
+  decision_7: func(req: request, flags: list<s32>, values: map<string, s32>, keys: list<string>, key: string, name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let score: s32 = base_score(req) + string_gate_7(name, needle, prefix, suffix) + list_gate_7(flags) + map_gate_7(values, keys, key);
+    if (score > 207) { return score + 97; }
+    if (score > 107) { return score + 67; }
+    return score + 37;
+  }
+
+  string_gate_8: func(name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let pos: s32 = index_of(name, needle);
+    if (eq(trim(name), needle)) { return pos + 108; }
+    if (contains(replace(name, needle, prefix), prefix)) { return pos + 28; }
+    if (starts_with(concat(prefix, name), prefix)) { return pos + 18; }
+    if (ends_with(concat(name, suffix), suffix)) { return pos + 13; }
+    if (count_matches(slice(name, 0, 9), needle) > 0) { return pos + 9; }
+    if (is_empty(name)) { return 0; }
+    if (len(name) > 3) { return pos + 3; }
+    return pos;
+  }
+  list_gate_8: func(flags: list<s32>) -> s32 {
+    let total: s32 = sum_s32(flags) + get_or_list_s32(flags, 3, 9);
+    if (contains_s32(flags, 9)) { return total + first_s32(flags); }
+    if (any_positive_s32(flags)) { return total + max_s32(flags); }
+    if (all_positive_s32(flags)) { return total + min_s32(flags); }
+    if (count_positive_s32(flags) > 3) { return total + last_s32(flags); }
+    if (any_negative_s32(flags)) { return total - min_s32(flags); }
+    if (all_negative_s32(flags)) { return total - max_s32(flags); }
+    if (count_negative_s32(flags) > 3) { return total - last_s32(flags); }
+    return total;
+  }
+  map_gate_8: func(values: map<string, s32>, keys: list<string>, key: string) -> s32 {
+    let base: s32 = get_or_s32(values, key, 9) + sum_present_s32(values, keys);
+    if (has_s32(values, key)) { return base + 8; }
+    if (all_present_s32(values, keys)) { return base + 28; }
+    if (any_present_s32(values, keys)) { return base + 18; }
+    if (any_missing_s32(values, keys)) { return base - 9; }
+    if (all_missing_s32(values, keys)) { return base - 28; }
+    if (count_present_s32(values, keys) > 3) { return base + 3; }
+    if (count_missing_s32(values, keys) > 3) { return base - 3; }
+    return base;
+  }
+  decision_8: func(req: request, flags: list<s32>, values: map<string, s32>, keys: list<string>, key: string, name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let score: s32 = base_score(req) + string_gate_8(name, needle, prefix, suffix) + list_gate_8(flags) + map_gate_8(values, keys, key);
+    if (score > 208) { return score + 98; }
+    if (score > 108) { return score + 68; }
+    return score + 38;
+  }
+
+  string_gate_9: func(name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let pos: s32 = index_of(name, needle);
+    if (eq(trim(name), needle)) { return pos + 109; }
+    if (contains(replace(name, needle, prefix), prefix)) { return pos + 29; }
+    if (starts_with(concat(prefix, name), prefix)) { return pos + 19; }
+    if (ends_with(concat(name, suffix), suffix)) { return pos + 14; }
+    if (count_matches(slice(name, 0, 10), needle) > 0) { return pos + 10; }
+    if (is_empty(name)) { return 0; }
+    if (len(name) > 4) { return pos + 4; }
+    return pos;
+  }
+  list_gate_9: func(flags: list<s32>) -> s32 {
+    let total: s32 = sum_s32(flags) + get_or_list_s32(flags, 4, 10);
+    if (contains_s32(flags, 10)) { return total + first_s32(flags); }
+    if (any_positive_s32(flags)) { return total + max_s32(flags); }
+    if (all_positive_s32(flags)) { return total + min_s32(flags); }
+    if (count_positive_s32(flags) > 4) { return total + last_s32(flags); }
+    if (any_negative_s32(flags)) { return total - min_s32(flags); }
+    if (all_negative_s32(flags)) { return total - max_s32(flags); }
+    if (count_negative_s32(flags) > 4) { return total - last_s32(flags); }
+    return total;
+  }
+  map_gate_9: func(values: map<string, s32>, keys: list<string>, key: string) -> s32 {
+    let base: s32 = get_or_s32(values, key, 10) + sum_present_s32(values, keys);
+    if (has_s32(values, key)) { return base + 9; }
+    if (all_present_s32(values, keys)) { return base + 29; }
+    if (any_present_s32(values, keys)) { return base + 19; }
+    if (any_missing_s32(values, keys)) { return base - 10; }
+    if (all_missing_s32(values, keys)) { return base - 29; }
+    if (count_present_s32(values, keys) > 4) { return base + 4; }
+    if (count_missing_s32(values, keys) > 4) { return base - 4; }
+    return base;
+  }
+  decision_9: func(req: request, flags: list<s32>, values: map<string, s32>, keys: list<string>, key: string, name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let score: s32 = base_score(req) + string_gate_9(name, needle, prefix, suffix) + list_gate_9(flags) + map_gate_9(values, keys, key);
+    if (score > 209) { return score + 99; }
+    if (score > 109) { return score + 69; }
+    return score + 39;
+  }
+
+  string_gate_10: func(name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let pos: s32 = index_of(name, needle);
+    if (eq(trim(name), needle)) { return pos + 110; }
+    if (contains(replace(name, needle, prefix), prefix)) { return pos + 30; }
+    if (starts_with(concat(prefix, name), prefix)) { return pos + 20; }
+    if (ends_with(concat(name, suffix), suffix)) { return pos + 15; }
+    if (count_matches(slice(name, 0, 11), needle) > 0) { return pos + 11; }
+    if (is_empty(name)) { return 0; }
+    if (len(name) > 0) { return pos + 0; }
+    return pos;
+  }
+  list_gate_10: func(flags: list<s32>) -> s32 {
+    let total: s32 = sum_s32(flags) + get_or_list_s32(flags, 0, 11);
+    if (contains_s32(flags, 11)) { return total + first_s32(flags); }
+    if (any_positive_s32(flags)) { return total + max_s32(flags); }
+    if (all_positive_s32(flags)) { return total + min_s32(flags); }
+    if (count_positive_s32(flags) > 0) { return total + last_s32(flags); }
+    if (any_negative_s32(flags)) { return total - min_s32(flags); }
+    if (all_negative_s32(flags)) { return total - max_s32(flags); }
+    if (count_negative_s32(flags) > 0) { return total - last_s32(flags); }
+    return total;
+  }
+  map_gate_10: func(values: map<string, s32>, keys: list<string>, key: string) -> s32 {
+    let base: s32 = get_or_s32(values, key, 11) + sum_present_s32(values, keys);
+    if (has_s32(values, key)) { return base + 10; }
+    if (all_present_s32(values, keys)) { return base + 30; }
+    if (any_present_s32(values, keys)) { return base + 20; }
+    if (any_missing_s32(values, keys)) { return base - 11; }
+    if (all_missing_s32(values, keys)) { return base - 30; }
+    if (count_present_s32(values, keys) > 0) { return base + 0; }
+    if (count_missing_s32(values, keys) > 0) { return base - 0; }
+    return base;
+  }
+  decision_10: func(req: request, flags: list<s32>, values: map<string, s32>, keys: list<string>, key: string, name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let score: s32 = base_score(req) + string_gate_10(name, needle, prefix, suffix) + list_gate_10(flags) + map_gate_10(values, keys, key);
+    if (score > 210) { return score + 90; }
+    if (score > 110) { return score + 60; }
+    return score + 30;
+  }
+
+  string_gate_11: func(name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let pos: s32 = index_of(name, needle);
+    if (eq(trim(name), needle)) { return pos + 111; }
+    if (contains(replace(name, needle, prefix), prefix)) { return pos + 31; }
+    if (starts_with(concat(prefix, name), prefix)) { return pos + 21; }
+    if (ends_with(concat(name, suffix), suffix)) { return pos + 16; }
+    if (count_matches(slice(name, 0, 1), needle) > 0) { return pos + 1; }
+    if (is_empty(name)) { return 0; }
+    if (len(name) > 1) { return pos + 1; }
+    return pos;
+  }
+  list_gate_11: func(flags: list<s32>) -> s32 {
+    let total: s32 = sum_s32(flags) + get_or_list_s32(flags, 1, 1);
+    if (contains_s32(flags, 1)) { return total + first_s32(flags); }
+    if (any_positive_s32(flags)) { return total + max_s32(flags); }
+    if (all_positive_s32(flags)) { return total + min_s32(flags); }
+    if (count_positive_s32(flags) > 1) { return total + last_s32(flags); }
+    if (any_negative_s32(flags)) { return total - min_s32(flags); }
+    if (all_negative_s32(flags)) { return total - max_s32(flags); }
+    if (count_negative_s32(flags) > 1) { return total - last_s32(flags); }
+    return total;
+  }
+  map_gate_11: func(values: map<string, s32>, keys: list<string>, key: string) -> s32 {
+    let base: s32 = get_or_s32(values, key, 1) + sum_present_s32(values, keys);
+    if (has_s32(values, key)) { return base + 11; }
+    if (all_present_s32(values, keys)) { return base + 31; }
+    if (any_present_s32(values, keys)) { return base + 21; }
+    if (any_missing_s32(values, keys)) { return base - 1; }
+    if (all_missing_s32(values, keys)) { return base - 31; }
+    if (count_present_s32(values, keys) > 1) { return base + 1; }
+    if (count_missing_s32(values, keys) > 1) { return base - 1; }
+    return base;
+  }
+  decision_11: func(req: request, flags: list<s32>, values: map<string, s32>, keys: list<string>, key: string, name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let score: s32 = base_score(req) + string_gate_11(name, needle, prefix, suffix) + list_gate_11(flags) + map_gate_11(values, keys, key);
+    if (score > 211) { return score + 91; }
+    if (score > 111) { return score + 61; }
+    return score + 31;
+  }
+
+  string_gate_12: func(name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let pos: s32 = index_of(name, needle);
+    if (eq(trim(name), needle)) { return pos + 112; }
+    if (contains(replace(name, needle, prefix), prefix)) { return pos + 32; }
+    if (starts_with(concat(prefix, name), prefix)) { return pos + 22; }
+    if (ends_with(concat(name, suffix), suffix)) { return pos + 17; }
+    if (count_matches(slice(name, 0, 2), needle) > 0) { return pos + 2; }
+    if (is_empty(name)) { return 0; }
+    if (len(name) > 2) { return pos + 2; }
+    return pos;
+  }
+  list_gate_12: func(flags: list<s32>) -> s32 {
+    let total: s32 = sum_s32(flags) + get_or_list_s32(flags, 2, 2);
+    if (contains_s32(flags, 2)) { return total + first_s32(flags); }
+    if (any_positive_s32(flags)) { return total + max_s32(flags); }
+    if (all_positive_s32(flags)) { return total + min_s32(flags); }
+    if (count_positive_s32(flags) > 2) { return total + last_s32(flags); }
+    if (any_negative_s32(flags)) { return total - min_s32(flags); }
+    if (all_negative_s32(flags)) { return total - max_s32(flags); }
+    if (count_negative_s32(flags) > 2) { return total - last_s32(flags); }
+    return total;
+  }
+  map_gate_12: func(values: map<string, s32>, keys: list<string>, key: string) -> s32 {
+    let base: s32 = get_or_s32(values, key, 2) + sum_present_s32(values, keys);
+    if (has_s32(values, key)) { return base + 12; }
+    if (all_present_s32(values, keys)) { return base + 32; }
+    if (any_present_s32(values, keys)) { return base + 22; }
+    if (any_missing_s32(values, keys)) { return base - 2; }
+    if (all_missing_s32(values, keys)) { return base - 32; }
+    if (count_present_s32(values, keys) > 2) { return base + 2; }
+    if (count_missing_s32(values, keys) > 2) { return base - 2; }
+    return base;
+  }
+  decision_12: func(req: request, flags: list<s32>, values: map<string, s32>, keys: list<string>, key: string, name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let score: s32 = base_score(req) + string_gate_12(name, needle, prefix, suffix) + list_gate_12(flags) + map_gate_12(values, keys, key);
+    if (score > 212) { return score + 92; }
+    if (score > 112) { return score + 62; }
+    return score + 32;
+  }
+
+  string_gate_13: func(name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let pos: s32 = index_of(name, needle);
+    if (eq(trim(name), needle)) { return pos + 113; }
+    if (contains(replace(name, needle, prefix), prefix)) { return pos + 33; }
+    if (starts_with(concat(prefix, name), prefix)) { return pos + 23; }
+    if (ends_with(concat(name, suffix), suffix)) { return pos + 18; }
+    if (count_matches(slice(name, 0, 3), needle) > 0) { return pos + 3; }
+    if (is_empty(name)) { return 0; }
+    if (len(name) > 3) { return pos + 3; }
+    return pos;
+  }
+  list_gate_13: func(flags: list<s32>) -> s32 {
+    let total: s32 = sum_s32(flags) + get_or_list_s32(flags, 3, 3);
+    if (contains_s32(flags, 3)) { return total + first_s32(flags); }
+    if (any_positive_s32(flags)) { return total + max_s32(flags); }
+    if (all_positive_s32(flags)) { return total + min_s32(flags); }
+    if (count_positive_s32(flags) > 3) { return total + last_s32(flags); }
+    if (any_negative_s32(flags)) { return total - min_s32(flags); }
+    if (all_negative_s32(flags)) { return total - max_s32(flags); }
+    if (count_negative_s32(flags) > 3) { return total - last_s32(flags); }
+    return total;
+  }
+  map_gate_13: func(values: map<string, s32>, keys: list<string>, key: string) -> s32 {
+    let base: s32 = get_or_s32(values, key, 3) + sum_present_s32(values, keys);
+    if (has_s32(values, key)) { return base + 13; }
+    if (all_present_s32(values, keys)) { return base + 33; }
+    if (any_present_s32(values, keys)) { return base + 23; }
+    if (any_missing_s32(values, keys)) { return base - 3; }
+    if (all_missing_s32(values, keys)) { return base - 33; }
+    if (count_present_s32(values, keys) > 3) { return base + 3; }
+    if (count_missing_s32(values, keys) > 3) { return base - 3; }
+    return base;
+  }
+  decision_13: func(req: request, flags: list<s32>, values: map<string, s32>, keys: list<string>, key: string, name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let score: s32 = base_score(req) + string_gate_13(name, needle, prefix, suffix) + list_gate_13(flags) + map_gate_13(values, keys, key);
+    if (score > 213) { return score + 93; }
+    if (score > 113) { return score + 63; }
+    return score + 33;
+  }
+
+  string_gate_14: func(name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let pos: s32 = index_of(name, needle);
+    if (eq(trim(name), needle)) { return pos + 114; }
+    if (contains(replace(name, needle, prefix), prefix)) { return pos + 34; }
+    if (starts_with(concat(prefix, name), prefix)) { return pos + 24; }
+    if (ends_with(concat(name, suffix), suffix)) { return pos + 19; }
+    if (count_matches(slice(name, 0, 4), needle) > 0) { return pos + 4; }
+    if (is_empty(name)) { return 0; }
+    if (len(name) > 4) { return pos + 4; }
+    return pos;
+  }
+  list_gate_14: func(flags: list<s32>) -> s32 {
+    let total: s32 = sum_s32(flags) + get_or_list_s32(flags, 4, 4);
+    if (contains_s32(flags, 4)) { return total + first_s32(flags); }
+    if (any_positive_s32(flags)) { return total + max_s32(flags); }
+    if (all_positive_s32(flags)) { return total + min_s32(flags); }
+    if (count_positive_s32(flags) > 4) { return total + last_s32(flags); }
+    if (any_negative_s32(flags)) { return total - min_s32(flags); }
+    if (all_negative_s32(flags)) { return total - max_s32(flags); }
+    if (count_negative_s32(flags) > 4) { return total - last_s32(flags); }
+    return total;
+  }
+  map_gate_14: func(values: map<string, s32>, keys: list<string>, key: string) -> s32 {
+    let base: s32 = get_or_s32(values, key, 4) + sum_present_s32(values, keys);
+    if (has_s32(values, key)) { return base + 14; }
+    if (all_present_s32(values, keys)) { return base + 34; }
+    if (any_present_s32(values, keys)) { return base + 24; }
+    if (any_missing_s32(values, keys)) { return base - 4; }
+    if (all_missing_s32(values, keys)) { return base - 34; }
+    if (count_present_s32(values, keys) > 4) { return base + 4; }
+    if (count_missing_s32(values, keys) > 4) { return base - 4; }
+    return base;
+  }
+  decision_14: func(req: request, flags: list<s32>, values: map<string, s32>, keys: list<string>, key: string, name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let score: s32 = base_score(req) + string_gate_14(name, needle, prefix, suffix) + list_gate_14(flags) + map_gate_14(values, keys, key);
+    if (score > 214) { return score + 94; }
+    if (score > 114) { return score + 64; }
+    return score + 34;
+  }
+
+  string_gate_15: func(name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let pos: s32 = index_of(name, needle);
+    if (eq(trim(name), needle)) { return pos + 115; }
+    if (contains(replace(name, needle, prefix), prefix)) { return pos + 35; }
+    if (starts_with(concat(prefix, name), prefix)) { return pos + 25; }
+    if (ends_with(concat(name, suffix), suffix)) { return pos + 20; }
+    if (count_matches(slice(name, 0, 5), needle) > 0) { return pos + 5; }
+    if (is_empty(name)) { return 0; }
+    if (len(name) > 0) { return pos + 0; }
+    return pos;
+  }
+  list_gate_15: func(flags: list<s32>) -> s32 {
+    let total: s32 = sum_s32(flags) + get_or_list_s32(flags, 0, 5);
+    if (contains_s32(flags, 5)) { return total + first_s32(flags); }
+    if (any_positive_s32(flags)) { return total + max_s32(flags); }
+    if (all_positive_s32(flags)) { return total + min_s32(flags); }
+    if (count_positive_s32(flags) > 0) { return total + last_s32(flags); }
+    if (any_negative_s32(flags)) { return total - min_s32(flags); }
+    if (all_negative_s32(flags)) { return total - max_s32(flags); }
+    if (count_negative_s32(flags) > 0) { return total - last_s32(flags); }
+    return total;
+  }
+  map_gate_15: func(values: map<string, s32>, keys: list<string>, key: string) -> s32 {
+    let base: s32 = get_or_s32(values, key, 5) + sum_present_s32(values, keys);
+    if (has_s32(values, key)) { return base + 15; }
+    if (all_present_s32(values, keys)) { return base + 35; }
+    if (any_present_s32(values, keys)) { return base + 25; }
+    if (any_missing_s32(values, keys)) { return base - 5; }
+    if (all_missing_s32(values, keys)) { return base - 35; }
+    if (count_present_s32(values, keys) > 0) { return base + 0; }
+    if (count_missing_s32(values, keys) > 0) { return base - 0; }
+    return base;
+  }
+  decision_15: func(req: request, flags: list<s32>, values: map<string, s32>, keys: list<string>, key: string, name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let score: s32 = base_score(req) + string_gate_15(name, needle, prefix, suffix) + list_gate_15(flags) + map_gate_15(values, keys, key);
+    if (score > 215) { return score + 95; }
+    if (score > 115) { return score + 65; }
+    return score + 35;
+  }
+
+  string_gate_16: func(name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let pos: s32 = index_of(name, needle);
+    if (eq(trim(name), needle)) { return pos + 116; }
+    if (contains(replace(name, needle, prefix), prefix)) { return pos + 36; }
+    if (starts_with(concat(prefix, name), prefix)) { return pos + 26; }
+    if (ends_with(concat(name, suffix), suffix)) { return pos + 21; }
+    if (count_matches(slice(name, 0, 6), needle) > 0) { return pos + 6; }
+    if (is_empty(name)) { return 0; }
+    if (len(name) > 1) { return pos + 1; }
+    return pos;
+  }
+  list_gate_16: func(flags: list<s32>) -> s32 {
+    let total: s32 = sum_s32(flags) + get_or_list_s32(flags, 1, 6);
+    if (contains_s32(flags, 6)) { return total + first_s32(flags); }
+    if (any_positive_s32(flags)) { return total + max_s32(flags); }
+    if (all_positive_s32(flags)) { return total + min_s32(flags); }
+    if (count_positive_s32(flags) > 1) { return total + last_s32(flags); }
+    if (any_negative_s32(flags)) { return total - min_s32(flags); }
+    if (all_negative_s32(flags)) { return total - max_s32(flags); }
+    if (count_negative_s32(flags) > 1) { return total - last_s32(flags); }
+    return total;
+  }
+  map_gate_16: func(values: map<string, s32>, keys: list<string>, key: string) -> s32 {
+    let base: s32 = get_or_s32(values, key, 6) + sum_present_s32(values, keys);
+    if (has_s32(values, key)) { return base + 16; }
+    if (all_present_s32(values, keys)) { return base + 36; }
+    if (any_present_s32(values, keys)) { return base + 26; }
+    if (any_missing_s32(values, keys)) { return base - 6; }
+    if (all_missing_s32(values, keys)) { return base - 36; }
+    if (count_present_s32(values, keys) > 1) { return base + 1; }
+    if (count_missing_s32(values, keys) > 1) { return base - 1; }
+    return base;
+  }
+  decision_16: func(req: request, flags: list<s32>, values: map<string, s32>, keys: list<string>, key: string, name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let score: s32 = base_score(req) + string_gate_16(name, needle, prefix, suffix) + list_gate_16(flags) + map_gate_16(values, keys, key);
+    if (score > 216) { return score + 96; }
+    if (score > 116) { return score + 66; }
+    return score + 36;
+  }
+
+  string_gate_17: func(name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let pos: s32 = index_of(name, needle);
+    if (eq(trim(name), needle)) { return pos + 117; }
+    if (contains(replace(name, needle, prefix), prefix)) { return pos + 37; }
+    if (starts_with(concat(prefix, name), prefix)) { return pos + 27; }
+    if (ends_with(concat(name, suffix), suffix)) { return pos + 22; }
+    if (count_matches(slice(name, 0, 7), needle) > 0) { return pos + 7; }
+    if (is_empty(name)) { return 0; }
+    if (len(name) > 2) { return pos + 2; }
+    return pos;
+  }
+  list_gate_17: func(flags: list<s32>) -> s32 {
+    let total: s32 = sum_s32(flags) + get_or_list_s32(flags, 2, 7);
+    if (contains_s32(flags, 7)) { return total + first_s32(flags); }
+    if (any_positive_s32(flags)) { return total + max_s32(flags); }
+    if (all_positive_s32(flags)) { return total + min_s32(flags); }
+    if (count_positive_s32(flags) > 2) { return total + last_s32(flags); }
+    if (any_negative_s32(flags)) { return total - min_s32(flags); }
+    if (all_negative_s32(flags)) { return total - max_s32(flags); }
+    if (count_negative_s32(flags) > 2) { return total - last_s32(flags); }
+    return total;
+  }
+  map_gate_17: func(values: map<string, s32>, keys: list<string>, key: string) -> s32 {
+    let base: s32 = get_or_s32(values, key, 7) + sum_present_s32(values, keys);
+    if (has_s32(values, key)) { return base + 17; }
+    if (all_present_s32(values, keys)) { return base + 37; }
+    if (any_present_s32(values, keys)) { return base + 27; }
+    if (any_missing_s32(values, keys)) { return base - 7; }
+    if (all_missing_s32(values, keys)) { return base - 37; }
+    if (count_present_s32(values, keys) > 2) { return base + 2; }
+    if (count_missing_s32(values, keys) > 2) { return base - 2; }
+    return base;
+  }
+  decision_17: func(req: request, flags: list<s32>, values: map<string, s32>, keys: list<string>, key: string, name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let score: s32 = base_score(req) + string_gate_17(name, needle, prefix, suffix) + list_gate_17(flags) + map_gate_17(values, keys, key);
+    if (score > 217) { return score + 97; }
+    if (score > 117) { return score + 67; }
+    return score + 37;
+  }
+
+  string_gate_18: func(name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let pos: s32 = index_of(name, needle);
+    if (eq(trim(name), needle)) { return pos + 118; }
+    if (contains(replace(name, needle, prefix), prefix)) { return pos + 38; }
+    if (starts_with(concat(prefix, name), prefix)) { return pos + 28; }
+    if (ends_with(concat(name, suffix), suffix)) { return pos + 23; }
+    if (count_matches(slice(name, 0, 8), needle) > 0) { return pos + 8; }
+    if (is_empty(name)) { return 0; }
+    if (len(name) > 3) { return pos + 3; }
+    return pos;
+  }
+  list_gate_18: func(flags: list<s32>) -> s32 {
+    let total: s32 = sum_s32(flags) + get_or_list_s32(flags, 3, 8);
+    if (contains_s32(flags, 8)) { return total + first_s32(flags); }
+    if (any_positive_s32(flags)) { return total + max_s32(flags); }
+    if (all_positive_s32(flags)) { return total + min_s32(flags); }
+    if (count_positive_s32(flags) > 3) { return total + last_s32(flags); }
+    if (any_negative_s32(flags)) { return total - min_s32(flags); }
+    if (all_negative_s32(flags)) { return total - max_s32(flags); }
+    if (count_negative_s32(flags) > 3) { return total - last_s32(flags); }
+    return total;
+  }
+  map_gate_18: func(values: map<string, s32>, keys: list<string>, key: string) -> s32 {
+    let base: s32 = get_or_s32(values, key, 8) + sum_present_s32(values, keys);
+    if (has_s32(values, key)) { return base + 18; }
+    if (all_present_s32(values, keys)) { return base + 38; }
+    if (any_present_s32(values, keys)) { return base + 28; }
+    if (any_missing_s32(values, keys)) { return base - 8; }
+    if (all_missing_s32(values, keys)) { return base - 38; }
+    if (count_present_s32(values, keys) > 3) { return base + 3; }
+    if (count_missing_s32(values, keys) > 3) { return base - 3; }
+    return base;
+  }
+  decision_18: func(req: request, flags: list<s32>, values: map<string, s32>, keys: list<string>, key: string, name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let score: s32 = base_score(req) + string_gate_18(name, needle, prefix, suffix) + list_gate_18(flags) + map_gate_18(values, keys, key);
+    if (score > 218) { return score + 98; }
+    if (score > 118) { return score + 68; }
+    return score + 38;
+  }
+
+  string_gate_19: func(name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let pos: s32 = index_of(name, needle);
+    if (eq(trim(name), needle)) { return pos + 119; }
+    if (contains(replace(name, needle, prefix), prefix)) { return pos + 39; }
+    if (starts_with(concat(prefix, name), prefix)) { return pos + 29; }
+    if (ends_with(concat(name, suffix), suffix)) { return pos + 24; }
+    if (count_matches(slice(name, 0, 9), needle) > 0) { return pos + 9; }
+    if (is_empty(name)) { return 0; }
+    if (len(name) > 4) { return pos + 4; }
+    return pos;
+  }
+  list_gate_19: func(flags: list<s32>) -> s32 {
+    let total: s32 = sum_s32(flags) + get_or_list_s32(flags, 4, 9);
+    if (contains_s32(flags, 9)) { return total + first_s32(flags); }
+    if (any_positive_s32(flags)) { return total + max_s32(flags); }
+    if (all_positive_s32(flags)) { return total + min_s32(flags); }
+    if (count_positive_s32(flags) > 4) { return total + last_s32(flags); }
+    if (any_negative_s32(flags)) { return total - min_s32(flags); }
+    if (all_negative_s32(flags)) { return total - max_s32(flags); }
+    if (count_negative_s32(flags) > 4) { return total - last_s32(flags); }
+    return total;
+  }
+  map_gate_19: func(values: map<string, s32>, keys: list<string>, key: string) -> s32 {
+    let base: s32 = get_or_s32(values, key, 9) + sum_present_s32(values, keys);
+    if (has_s32(values, key)) { return base + 19; }
+    if (all_present_s32(values, keys)) { return base + 39; }
+    if (any_present_s32(values, keys)) { return base + 29; }
+    if (any_missing_s32(values, keys)) { return base - 9; }
+    if (all_missing_s32(values, keys)) { return base - 39; }
+    if (count_present_s32(values, keys) > 4) { return base + 4; }
+    if (count_missing_s32(values, keys) > 4) { return base - 4; }
+    return base;
+  }
+  decision_19: func(req: request, flags: list<s32>, values: map<string, s32>, keys: list<string>, key: string, name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let score: s32 = base_score(req) + string_gate_19(name, needle, prefix, suffix) + list_gate_19(flags) + map_gate_19(values, keys, key);
+    if (score > 219) { return score + 99; }
+    if (score > 119) { return score + 69; }
+    return score + 39;
+  }
+
+  string_gate_20: func(name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let pos: s32 = index_of(name, needle);
+    if (eq(trim(name), needle)) { return pos + 120; }
+    if (contains(replace(name, needle, prefix), prefix)) { return pos + 40; }
+    if (starts_with(concat(prefix, name), prefix)) { return pos + 30; }
+    if (ends_with(concat(name, suffix), suffix)) { return pos + 25; }
+    if (count_matches(slice(name, 0, 10), needle) > 0) { return pos + 10; }
+    if (is_empty(name)) { return 0; }
+    if (len(name) > 0) { return pos + 0; }
+    return pos;
+  }
+  list_gate_20: func(flags: list<s32>) -> s32 {
+    let total: s32 = sum_s32(flags) + get_or_list_s32(flags, 0, 10);
+    if (contains_s32(flags, 10)) { return total + first_s32(flags); }
+    if (any_positive_s32(flags)) { return total + max_s32(flags); }
+    if (all_positive_s32(flags)) { return total + min_s32(flags); }
+    if (count_positive_s32(flags) > 0) { return total + last_s32(flags); }
+    if (any_negative_s32(flags)) { return total - min_s32(flags); }
+    if (all_negative_s32(flags)) { return total - max_s32(flags); }
+    if (count_negative_s32(flags) > 0) { return total - last_s32(flags); }
+    return total;
+  }
+  map_gate_20: func(values: map<string, s32>, keys: list<string>, key: string) -> s32 {
+    let base: s32 = get_or_s32(values, key, 10) + sum_present_s32(values, keys);
+    if (has_s32(values, key)) { return base + 20; }
+    if (all_present_s32(values, keys)) { return base + 40; }
+    if (any_present_s32(values, keys)) { return base + 30; }
+    if (any_missing_s32(values, keys)) { return base - 10; }
+    if (all_missing_s32(values, keys)) { return base - 40; }
+    if (count_present_s32(values, keys) > 0) { return base + 0; }
+    if (count_missing_s32(values, keys) > 0) { return base - 0; }
+    return base;
+  }
+  decision_20: func(req: request, flags: list<s32>, values: map<string, s32>, keys: list<string>, key: string, name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let score: s32 = base_score(req) + string_gate_20(name, needle, prefix, suffix) + list_gate_20(flags) + map_gate_20(values, keys, key);
+    if (score > 220) { return score + 90; }
+    if (score > 120) { return score + 60; }
+    return score + 30;
+  }
+
+  string_gate_21: func(name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let pos: s32 = index_of(name, needle);
+    if (eq(trim(name), needle)) { return pos + 121; }
+    if (contains(replace(name, needle, prefix), prefix)) { return pos + 41; }
+    if (starts_with(concat(prefix, name), prefix)) { return pos + 31; }
+    if (ends_with(concat(name, suffix), suffix)) { return pos + 26; }
+    if (count_matches(slice(name, 0, 11), needle) > 0) { return pos + 11; }
+    if (is_empty(name)) { return 0; }
+    if (len(name) > 1) { return pos + 1; }
+    return pos;
+  }
+  list_gate_21: func(flags: list<s32>) -> s32 {
+    let total: s32 = sum_s32(flags) + get_or_list_s32(flags, 1, 11);
+    if (contains_s32(flags, 11)) { return total + first_s32(flags); }
+    if (any_positive_s32(flags)) { return total + max_s32(flags); }
+    if (all_positive_s32(flags)) { return total + min_s32(flags); }
+    if (count_positive_s32(flags) > 1) { return total + last_s32(flags); }
+    if (any_negative_s32(flags)) { return total - min_s32(flags); }
+    if (all_negative_s32(flags)) { return total - max_s32(flags); }
+    if (count_negative_s32(flags) > 1) { return total - last_s32(flags); }
+    return total;
+  }
+  map_gate_21: func(values: map<string, s32>, keys: list<string>, key: string) -> s32 {
+    let base: s32 = get_or_s32(values, key, 11) + sum_present_s32(values, keys);
+    if (has_s32(values, key)) { return base + 21; }
+    if (all_present_s32(values, keys)) { return base + 41; }
+    if (any_present_s32(values, keys)) { return base + 31; }
+    if (any_missing_s32(values, keys)) { return base - 11; }
+    if (all_missing_s32(values, keys)) { return base - 41; }
+    if (count_present_s32(values, keys) > 1) { return base + 1; }
+    if (count_missing_s32(values, keys) > 1) { return base - 1; }
+    return base;
+  }
+  decision_21: func(req: request, flags: list<s32>, values: map<string, s32>, keys: list<string>, key: string, name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let score: s32 = base_score(req) + string_gate_21(name, needle, prefix, suffix) + list_gate_21(flags) + map_gate_21(values, keys, key);
+    if (score > 221) { return score + 91; }
+    if (score > 121) { return score + 61; }
+    return score + 31;
+  }
+
+  string_gate_22: func(name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let pos: s32 = index_of(name, needle);
+    if (eq(trim(name), needle)) { return pos + 122; }
+    if (contains(replace(name, needle, prefix), prefix)) { return pos + 42; }
+    if (starts_with(concat(prefix, name), prefix)) { return pos + 32; }
+    if (ends_with(concat(name, suffix), suffix)) { return pos + 27; }
+    if (count_matches(slice(name, 0, 1), needle) > 0) { return pos + 1; }
+    if (is_empty(name)) { return 0; }
+    if (len(name) > 2) { return pos + 2; }
+    return pos;
+  }
+  list_gate_22: func(flags: list<s32>) -> s32 {
+    let total: s32 = sum_s32(flags) + get_or_list_s32(flags, 2, 1);
+    if (contains_s32(flags, 1)) { return total + first_s32(flags); }
+    if (any_positive_s32(flags)) { return total + max_s32(flags); }
+    if (all_positive_s32(flags)) { return total + min_s32(flags); }
+    if (count_positive_s32(flags) > 2) { return total + last_s32(flags); }
+    if (any_negative_s32(flags)) { return total - min_s32(flags); }
+    if (all_negative_s32(flags)) { return total - max_s32(flags); }
+    if (count_negative_s32(flags) > 2) { return total - last_s32(flags); }
+    return total;
+  }
+  map_gate_22: func(values: map<string, s32>, keys: list<string>, key: string) -> s32 {
+    let base: s32 = get_or_s32(values, key, 1) + sum_present_s32(values, keys);
+    if (has_s32(values, key)) { return base + 22; }
+    if (all_present_s32(values, keys)) { return base + 42; }
+    if (any_present_s32(values, keys)) { return base + 32; }
+    if (any_missing_s32(values, keys)) { return base - 1; }
+    if (all_missing_s32(values, keys)) { return base - 42; }
+    if (count_present_s32(values, keys) > 2) { return base + 2; }
+    if (count_missing_s32(values, keys) > 2) { return base - 2; }
+    return base;
+  }
+  decision_22: func(req: request, flags: list<s32>, values: map<string, s32>, keys: list<string>, key: string, name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let score: s32 = base_score(req) + string_gate_22(name, needle, prefix, suffix) + list_gate_22(flags) + map_gate_22(values, keys, key);
+    if (score > 222) { return score + 92; }
+    if (score > 122) { return score + 62; }
+    return score + 32;
+  }
+
+  string_gate_23: func(name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let pos: s32 = index_of(name, needle);
+    if (eq(trim(name), needle)) { return pos + 123; }
+    if (contains(replace(name, needle, prefix), prefix)) { return pos + 43; }
+    if (starts_with(concat(prefix, name), prefix)) { return pos + 33; }
+    if (ends_with(concat(name, suffix), suffix)) { return pos + 28; }
+    if (count_matches(slice(name, 0, 2), needle) > 0) { return pos + 2; }
+    if (is_empty(name)) { return 0; }
+    if (len(name) > 3) { return pos + 3; }
+    return pos;
+  }
+  list_gate_23: func(flags: list<s32>) -> s32 {
+    let total: s32 = sum_s32(flags) + get_or_list_s32(flags, 3, 2);
+    if (contains_s32(flags, 2)) { return total + first_s32(flags); }
+    if (any_positive_s32(flags)) { return total + max_s32(flags); }
+    if (all_positive_s32(flags)) { return total + min_s32(flags); }
+    if (count_positive_s32(flags) > 3) { return total + last_s32(flags); }
+    if (any_negative_s32(flags)) { return total - min_s32(flags); }
+    if (all_negative_s32(flags)) { return total - max_s32(flags); }
+    if (count_negative_s32(flags) > 3) { return total - last_s32(flags); }
+    return total;
+  }
+  map_gate_23: func(values: map<string, s32>, keys: list<string>, key: string) -> s32 {
+    let base: s32 = get_or_s32(values, key, 2) + sum_present_s32(values, keys);
+    if (has_s32(values, key)) { return base + 23; }
+    if (all_present_s32(values, keys)) { return base + 43; }
+    if (any_present_s32(values, keys)) { return base + 33; }
+    if (any_missing_s32(values, keys)) { return base - 2; }
+    if (all_missing_s32(values, keys)) { return base - 43; }
+    if (count_present_s32(values, keys) > 3) { return base + 3; }
+    if (count_missing_s32(values, keys) > 3) { return base - 3; }
+    return base;
+  }
+  decision_23: func(req: request, flags: list<s32>, values: map<string, s32>, keys: list<string>, key: string, name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let score: s32 = base_score(req) + string_gate_23(name, needle, prefix, suffix) + list_gate_23(flags) + map_gate_23(values, keys, key);
+    if (score > 223) { return score + 93; }
+    if (score > 123) { return score + 63; }
+    return score + 33;
+  }
+
+  string_gate_24: func(name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let pos: s32 = index_of(name, needle);
+    if (eq(trim(name), needle)) { return pos + 124; }
+    if (contains(replace(name, needle, prefix), prefix)) { return pos + 44; }
+    if (starts_with(concat(prefix, name), prefix)) { return pos + 34; }
+    if (ends_with(concat(name, suffix), suffix)) { return pos + 29; }
+    if (count_matches(slice(name, 0, 3), needle) > 0) { return pos + 3; }
+    if (is_empty(name)) { return 0; }
+    if (len(name) > 4) { return pos + 4; }
+    return pos;
+  }
+  list_gate_24: func(flags: list<s32>) -> s32 {
+    let total: s32 = sum_s32(flags) + get_or_list_s32(flags, 4, 3);
+    if (contains_s32(flags, 3)) { return total + first_s32(flags); }
+    if (any_positive_s32(flags)) { return total + max_s32(flags); }
+    if (all_positive_s32(flags)) { return total + min_s32(flags); }
+    if (count_positive_s32(flags) > 4) { return total + last_s32(flags); }
+    if (any_negative_s32(flags)) { return total - min_s32(flags); }
+    if (all_negative_s32(flags)) { return total - max_s32(flags); }
+    if (count_negative_s32(flags) > 4) { return total - last_s32(flags); }
+    return total;
+  }
+  map_gate_24: func(values: map<string, s32>, keys: list<string>, key: string) -> s32 {
+    let base: s32 = get_or_s32(values, key, 3) + sum_present_s32(values, keys);
+    if (has_s32(values, key)) { return base + 24; }
+    if (all_present_s32(values, keys)) { return base + 44; }
+    if (any_present_s32(values, keys)) { return base + 34; }
+    if (any_missing_s32(values, keys)) { return base - 3; }
+    if (all_missing_s32(values, keys)) { return base - 44; }
+    if (count_present_s32(values, keys) > 4) { return base + 4; }
+    if (count_missing_s32(values, keys) > 4) { return base - 4; }
+    return base;
+  }
+  decision_24: func(req: request, flags: list<s32>, values: map<string, s32>, keys: list<string>, key: string, name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let score: s32 = base_score(req) + string_gate_24(name, needle, prefix, suffix) + list_gate_24(flags) + map_gate_24(values, keys, key);
+    if (score > 224) { return score + 94; }
+    if (score > 124) { return score + 64; }
+    return score + 34;
+  }
+
+  string_gate_25: func(name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let pos: s32 = index_of(name, needle);
+    if (eq(trim(name), needle)) { return pos + 125; }
+    if (contains(replace(name, needle, prefix), prefix)) { return pos + 45; }
+    if (starts_with(concat(prefix, name), prefix)) { return pos + 35; }
+    if (ends_with(concat(name, suffix), suffix)) { return pos + 30; }
+    if (count_matches(slice(name, 0, 4), needle) > 0) { return pos + 4; }
+    if (is_empty(name)) { return 0; }
+    if (len(name) > 0) { return pos + 0; }
+    return pos;
+  }
+  list_gate_25: func(flags: list<s32>) -> s32 {
+    let total: s32 = sum_s32(flags) + get_or_list_s32(flags, 0, 4);
+    if (contains_s32(flags, 4)) { return total + first_s32(flags); }
+    if (any_positive_s32(flags)) { return total + max_s32(flags); }
+    if (all_positive_s32(flags)) { return total + min_s32(flags); }
+    if (count_positive_s32(flags) > 0) { return total + last_s32(flags); }
+    if (any_negative_s32(flags)) { return total - min_s32(flags); }
+    if (all_negative_s32(flags)) { return total - max_s32(flags); }
+    if (count_negative_s32(flags) > 0) { return total - last_s32(flags); }
+    return total;
+  }
+  map_gate_25: func(values: map<string, s32>, keys: list<string>, key: string) -> s32 {
+    let base: s32 = get_or_s32(values, key, 4) + sum_present_s32(values, keys);
+    if (has_s32(values, key)) { return base + 25; }
+    if (all_present_s32(values, keys)) { return base + 45; }
+    if (any_present_s32(values, keys)) { return base + 35; }
+    if (any_missing_s32(values, keys)) { return base - 4; }
+    if (all_missing_s32(values, keys)) { return base - 45; }
+    if (count_present_s32(values, keys) > 0) { return base + 0; }
+    if (count_missing_s32(values, keys) > 0) { return base - 0; }
+    return base;
+  }
+  decision_25: func(req: request, flags: list<s32>, values: map<string, s32>, keys: list<string>, key: string, name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let score: s32 = base_score(req) + string_gate_25(name, needle, prefix, suffix) + list_gate_25(flags) + map_gate_25(values, keys, key);
+    if (score > 225) { return score + 95; }
+    if (score > 125) { return score + 65; }
+    return score + 35;
+  }
+
+  string_gate_26: func(name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let pos: s32 = index_of(name, needle);
+    if (eq(trim(name), needle)) { return pos + 126; }
+    if (contains(replace(name, needle, prefix), prefix)) { return pos + 46; }
+    if (starts_with(concat(prefix, name), prefix)) { return pos + 36; }
+    if (ends_with(concat(name, suffix), suffix)) { return pos + 31; }
+    if (count_matches(slice(name, 0, 5), needle) > 0) { return pos + 5; }
+    if (is_empty(name)) { return 0; }
+    if (len(name) > 1) { return pos + 1; }
+    return pos;
+  }
+  list_gate_26: func(flags: list<s32>) -> s32 {
+    let total: s32 = sum_s32(flags) + get_or_list_s32(flags, 1, 5);
+    if (contains_s32(flags, 5)) { return total + first_s32(flags); }
+    if (any_positive_s32(flags)) { return total + max_s32(flags); }
+    if (all_positive_s32(flags)) { return total + min_s32(flags); }
+    if (count_positive_s32(flags) > 1) { return total + last_s32(flags); }
+    if (any_negative_s32(flags)) { return total - min_s32(flags); }
+    if (all_negative_s32(flags)) { return total - max_s32(flags); }
+    if (count_negative_s32(flags) > 1) { return total - last_s32(flags); }
+    return total;
+  }
+  map_gate_26: func(values: map<string, s32>, keys: list<string>, key: string) -> s32 {
+    let base: s32 = get_or_s32(values, key, 5) + sum_present_s32(values, keys);
+    if (has_s32(values, key)) { return base + 26; }
+    if (all_present_s32(values, keys)) { return base + 46; }
+    if (any_present_s32(values, keys)) { return base + 36; }
+    if (any_missing_s32(values, keys)) { return base - 5; }
+    if (all_missing_s32(values, keys)) { return base - 46; }
+    if (count_present_s32(values, keys) > 1) { return base + 1; }
+    if (count_missing_s32(values, keys) > 1) { return base - 1; }
+    return base;
+  }
+  decision_26: func(req: request, flags: list<s32>, values: map<string, s32>, keys: list<string>, key: string, name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let score: s32 = base_score(req) + string_gate_26(name, needle, prefix, suffix) + list_gate_26(flags) + map_gate_26(values, keys, key);
+    if (score > 226) { return score + 96; }
+    if (score > 126) { return score + 66; }
+    return score + 36;
+  }
+
+  string_gate_27: func(name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let pos: s32 = index_of(name, needle);
+    if (eq(trim(name), needle)) { return pos + 127; }
+    if (contains(replace(name, needle, prefix), prefix)) { return pos + 47; }
+    if (starts_with(concat(prefix, name), prefix)) { return pos + 37; }
+    if (ends_with(concat(name, suffix), suffix)) { return pos + 32; }
+    if (count_matches(slice(name, 0, 6), needle) > 0) { return pos + 6; }
+    if (is_empty(name)) { return 0; }
+    if (len(name) > 2) { return pos + 2; }
+    return pos;
+  }
+  list_gate_27: func(flags: list<s32>) -> s32 {
+    let total: s32 = sum_s32(flags) + get_or_list_s32(flags, 2, 6);
+    if (contains_s32(flags, 6)) { return total + first_s32(flags); }
+    if (any_positive_s32(flags)) { return total + max_s32(flags); }
+    if (all_positive_s32(flags)) { return total + min_s32(flags); }
+    if (count_positive_s32(flags) > 2) { return total + last_s32(flags); }
+    if (any_negative_s32(flags)) { return total - min_s32(flags); }
+    if (all_negative_s32(flags)) { return total - max_s32(flags); }
+    if (count_negative_s32(flags) > 2) { return total - last_s32(flags); }
+    return total;
+  }
+  map_gate_27: func(values: map<string, s32>, keys: list<string>, key: string) -> s32 {
+    let base: s32 = get_or_s32(values, key, 6) + sum_present_s32(values, keys);
+    if (has_s32(values, key)) { return base + 27; }
+    if (all_present_s32(values, keys)) { return base + 47; }
+    if (any_present_s32(values, keys)) { return base + 37; }
+    if (any_missing_s32(values, keys)) { return base - 6; }
+    if (all_missing_s32(values, keys)) { return base - 47; }
+    if (count_present_s32(values, keys) > 2) { return base + 2; }
+    if (count_missing_s32(values, keys) > 2) { return base - 2; }
+    return base;
+  }
+  decision_27: func(req: request, flags: list<s32>, values: map<string, s32>, keys: list<string>, key: string, name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let score: s32 = base_score(req) + string_gate_27(name, needle, prefix, suffix) + list_gate_27(flags) + map_gate_27(values, keys, key);
+    if (score > 227) { return score + 97; }
+    if (score > 127) { return score + 67; }
+    return score + 37;
+  }
+
+  string_gate_28: func(name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let pos: s32 = index_of(name, needle);
+    if (eq(trim(name), needle)) { return pos + 128; }
+    if (contains(replace(name, needle, prefix), prefix)) { return pos + 48; }
+    if (starts_with(concat(prefix, name), prefix)) { return pos + 38; }
+    if (ends_with(concat(name, suffix), suffix)) { return pos + 33; }
+    if (count_matches(slice(name, 0, 7), needle) > 0) { return pos + 7; }
+    if (is_empty(name)) { return 0; }
+    if (len(name) > 3) { return pos + 3; }
+    return pos;
+  }
+  list_gate_28: func(flags: list<s32>) -> s32 {
+    let total: s32 = sum_s32(flags) + get_or_list_s32(flags, 3, 7);
+    if (contains_s32(flags, 7)) { return total + first_s32(flags); }
+    if (any_positive_s32(flags)) { return total + max_s32(flags); }
+    if (all_positive_s32(flags)) { return total + min_s32(flags); }
+    if (count_positive_s32(flags) > 3) { return total + last_s32(flags); }
+    if (any_negative_s32(flags)) { return total - min_s32(flags); }
+    if (all_negative_s32(flags)) { return total - max_s32(flags); }
+    if (count_negative_s32(flags) > 3) { return total - last_s32(flags); }
+    return total;
+  }
+  map_gate_28: func(values: map<string, s32>, keys: list<string>, key: string) -> s32 {
+    let base: s32 = get_or_s32(values, key, 7) + sum_present_s32(values, keys);
+    if (has_s32(values, key)) { return base + 28; }
+    if (all_present_s32(values, keys)) { return base + 48; }
+    if (any_present_s32(values, keys)) { return base + 38; }
+    if (any_missing_s32(values, keys)) { return base - 7; }
+    if (all_missing_s32(values, keys)) { return base - 48; }
+    if (count_present_s32(values, keys) > 3) { return base + 3; }
+    if (count_missing_s32(values, keys) > 3) { return base - 3; }
+    return base;
+  }
+  decision_28: func(req: request, flags: list<s32>, values: map<string, s32>, keys: list<string>, key: string, name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let score: s32 = base_score(req) + string_gate_28(name, needle, prefix, suffix) + list_gate_28(flags) + map_gate_28(values, keys, key);
+    if (score > 228) { return score + 98; }
+    if (score > 128) { return score + 68; }
+    return score + 38;
+  }
+
+  string_gate_29: func(name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let pos: s32 = index_of(name, needle);
+    if (eq(trim(name), needle)) { return pos + 129; }
+    if (contains(replace(name, needle, prefix), prefix)) { return pos + 49; }
+    if (starts_with(concat(prefix, name), prefix)) { return pos + 39; }
+    if (ends_with(concat(name, suffix), suffix)) { return pos + 34; }
+    if (count_matches(slice(name, 0, 8), needle) > 0) { return pos + 8; }
+    if (is_empty(name)) { return 0; }
+    if (len(name) > 4) { return pos + 4; }
+    return pos;
+  }
+  list_gate_29: func(flags: list<s32>) -> s32 {
+    let total: s32 = sum_s32(flags) + get_or_list_s32(flags, 4, 8);
+    if (contains_s32(flags, 8)) { return total + first_s32(flags); }
+    if (any_positive_s32(flags)) { return total + max_s32(flags); }
+    if (all_positive_s32(flags)) { return total + min_s32(flags); }
+    if (count_positive_s32(flags) > 4) { return total + last_s32(flags); }
+    if (any_negative_s32(flags)) { return total - min_s32(flags); }
+    if (all_negative_s32(flags)) { return total - max_s32(flags); }
+    if (count_negative_s32(flags) > 4) { return total - last_s32(flags); }
+    return total;
+  }
+  map_gate_29: func(values: map<string, s32>, keys: list<string>, key: string) -> s32 {
+    let base: s32 = get_or_s32(values, key, 8) + sum_present_s32(values, keys);
+    if (has_s32(values, key)) { return base + 29; }
+    if (all_present_s32(values, keys)) { return base + 49; }
+    if (any_present_s32(values, keys)) { return base + 39; }
+    if (any_missing_s32(values, keys)) { return base - 8; }
+    if (all_missing_s32(values, keys)) { return base - 49; }
+    if (count_present_s32(values, keys) > 4) { return base + 4; }
+    if (count_missing_s32(values, keys) > 4) { return base - 4; }
+    return base;
+  }
+  decision_29: func(req: request, flags: list<s32>, values: map<string, s32>, keys: list<string>, key: string, name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let score: s32 = base_score(req) + string_gate_29(name, needle, prefix, suffix) + list_gate_29(flags) + map_gate_29(values, keys, key);
+    if (score > 229) { return score + 99; }
+    if (score > 129) { return score + 69; }
+    return score + 39;
+  }
+
+  string_gate_30: func(name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let pos: s32 = index_of(name, needle);
+    if (eq(trim(name), needle)) { return pos + 130; }
+    if (contains(replace(name, needle, prefix), prefix)) { return pos + 50; }
+    if (starts_with(concat(prefix, name), prefix)) { return pos + 40; }
+    if (ends_with(concat(name, suffix), suffix)) { return pos + 35; }
+    if (count_matches(slice(name, 0, 9), needle) > 0) { return pos + 9; }
+    if (is_empty(name)) { return 0; }
+    if (len(name) > 0) { return pos + 0; }
+    return pos;
+  }
+  list_gate_30: func(flags: list<s32>) -> s32 {
+    let total: s32 = sum_s32(flags) + get_or_list_s32(flags, 0, 9);
+    if (contains_s32(flags, 9)) { return total + first_s32(flags); }
+    if (any_positive_s32(flags)) { return total + max_s32(flags); }
+    if (all_positive_s32(flags)) { return total + min_s32(flags); }
+    if (count_positive_s32(flags) > 0) { return total + last_s32(flags); }
+    if (any_negative_s32(flags)) { return total - min_s32(flags); }
+    if (all_negative_s32(flags)) { return total - max_s32(flags); }
+    if (count_negative_s32(flags) > 0) { return total - last_s32(flags); }
+    return total;
+  }
+  map_gate_30: func(values: map<string, s32>, keys: list<string>, key: string) -> s32 {
+    let base: s32 = get_or_s32(values, key, 9) + sum_present_s32(values, keys);
+    if (has_s32(values, key)) { return base + 30; }
+    if (all_present_s32(values, keys)) { return base + 50; }
+    if (any_present_s32(values, keys)) { return base + 40; }
+    if (any_missing_s32(values, keys)) { return base - 9; }
+    if (all_missing_s32(values, keys)) { return base - 50; }
+    if (count_present_s32(values, keys) > 0) { return base + 0; }
+    if (count_missing_s32(values, keys) > 0) { return base - 0; }
+    return base;
+  }
+  decision_30: func(req: request, flags: list<s32>, values: map<string, s32>, keys: list<string>, key: string, name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let score: s32 = base_score(req) + string_gate_30(name, needle, prefix, suffix) + list_gate_30(flags) + map_gate_30(values, keys, key);
+    if (score > 230) { return score + 90; }
+    if (score > 130) { return score + 60; }
+    return score + 30;
+  }
+
+  string_gate_31: func(name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let pos: s32 = index_of(name, needle);
+    if (eq(trim(name), needle)) { return pos + 131; }
+    if (contains(replace(name, needle, prefix), prefix)) { return pos + 51; }
+    if (starts_with(concat(prefix, name), prefix)) { return pos + 41; }
+    if (ends_with(concat(name, suffix), suffix)) { return pos + 36; }
+    if (count_matches(slice(name, 0, 10), needle) > 0) { return pos + 10; }
+    if (is_empty(name)) { return 0; }
+    if (len(name) > 1) { return pos + 1; }
+    return pos;
+  }
+  list_gate_31: func(flags: list<s32>) -> s32 {
+    let total: s32 = sum_s32(flags) + get_or_list_s32(flags, 1, 10);
+    if (contains_s32(flags, 10)) { return total + first_s32(flags); }
+    if (any_positive_s32(flags)) { return total + max_s32(flags); }
+    if (all_positive_s32(flags)) { return total + min_s32(flags); }
+    if (count_positive_s32(flags) > 1) { return total + last_s32(flags); }
+    if (any_negative_s32(flags)) { return total - min_s32(flags); }
+    if (all_negative_s32(flags)) { return total - max_s32(flags); }
+    if (count_negative_s32(flags) > 1) { return total - last_s32(flags); }
+    return total;
+  }
+  map_gate_31: func(values: map<string, s32>, keys: list<string>, key: string) -> s32 {
+    let base: s32 = get_or_s32(values, key, 10) + sum_present_s32(values, keys);
+    if (has_s32(values, key)) { return base + 31; }
+    if (all_present_s32(values, keys)) { return base + 51; }
+    if (any_present_s32(values, keys)) { return base + 41; }
+    if (any_missing_s32(values, keys)) { return base - 10; }
+    if (all_missing_s32(values, keys)) { return base - 51; }
+    if (count_present_s32(values, keys) > 1) { return base + 1; }
+    if (count_missing_s32(values, keys) > 1) { return base - 1; }
+    return base;
+  }
+  decision_31: func(req: request, flags: list<s32>, values: map<string, s32>, keys: list<string>, key: string, name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let score: s32 = base_score(req) + string_gate_31(name, needle, prefix, suffix) + list_gate_31(flags) + map_gate_31(values, keys, key);
+    if (score > 231) { return score + 91; }
+    if (score > 131) { return score + 61; }
+    return score + 31;
+  }
+
+  string_gate_32: func(name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let pos: s32 = index_of(name, needle);
+    if (eq(trim(name), needle)) { return pos + 132; }
+    if (contains(replace(name, needle, prefix), prefix)) { return pos + 52; }
+    if (starts_with(concat(prefix, name), prefix)) { return pos + 42; }
+    if (ends_with(concat(name, suffix), suffix)) { return pos + 37; }
+    if (count_matches(slice(name, 0, 11), needle) > 0) { return pos + 11; }
+    if (is_empty(name)) { return 0; }
+    if (len(name) > 2) { return pos + 2; }
+    return pos;
+  }
+  list_gate_32: func(flags: list<s32>) -> s32 {
+    let total: s32 = sum_s32(flags) + get_or_list_s32(flags, 2, 11);
+    if (contains_s32(flags, 11)) { return total + first_s32(flags); }
+    if (any_positive_s32(flags)) { return total + max_s32(flags); }
+    if (all_positive_s32(flags)) { return total + min_s32(flags); }
+    if (count_positive_s32(flags) > 2) { return total + last_s32(flags); }
+    if (any_negative_s32(flags)) { return total - min_s32(flags); }
+    if (all_negative_s32(flags)) { return total - max_s32(flags); }
+    if (count_negative_s32(flags) > 2) { return total - last_s32(flags); }
+    return total;
+  }
+  map_gate_32: func(values: map<string, s32>, keys: list<string>, key: string) -> s32 {
+    let base: s32 = get_or_s32(values, key, 11) + sum_present_s32(values, keys);
+    if (has_s32(values, key)) { return base + 32; }
+    if (all_present_s32(values, keys)) { return base + 52; }
+    if (any_present_s32(values, keys)) { return base + 42; }
+    if (any_missing_s32(values, keys)) { return base - 11; }
+    if (all_missing_s32(values, keys)) { return base - 52; }
+    if (count_present_s32(values, keys) > 2) { return base + 2; }
+    if (count_missing_s32(values, keys) > 2) { return base - 2; }
+    return base;
+  }
+  decision_32: func(req: request, flags: list<s32>, values: map<string, s32>, keys: list<string>, key: string, name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let score: s32 = base_score(req) + string_gate_32(name, needle, prefix, suffix) + list_gate_32(flags) + map_gate_32(values, keys, key);
+    if (score > 232) { return score + 92; }
+    if (score > 132) { return score + 62; }
+    return score + 32;
+  }
+
+  string_gate_33: func(name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let pos: s32 = index_of(name, needle);
+    if (eq(trim(name), needle)) { return pos + 133; }
+    if (contains(replace(name, needle, prefix), prefix)) { return pos + 53; }
+    if (starts_with(concat(prefix, name), prefix)) { return pos + 43; }
+    if (ends_with(concat(name, suffix), suffix)) { return pos + 38; }
+    if (count_matches(slice(name, 0, 1), needle) > 0) { return pos + 1; }
+    if (is_empty(name)) { return 0; }
+    if (len(name) > 3) { return pos + 3; }
+    return pos;
+  }
+  list_gate_33: func(flags: list<s32>) -> s32 {
+    let total: s32 = sum_s32(flags) + get_or_list_s32(flags, 3, 1);
+    if (contains_s32(flags, 1)) { return total + first_s32(flags); }
+    if (any_positive_s32(flags)) { return total + max_s32(flags); }
+    if (all_positive_s32(flags)) { return total + min_s32(flags); }
+    if (count_positive_s32(flags) > 3) { return total + last_s32(flags); }
+    if (any_negative_s32(flags)) { return total - min_s32(flags); }
+    if (all_negative_s32(flags)) { return total - max_s32(flags); }
+    if (count_negative_s32(flags) > 3) { return total - last_s32(flags); }
+    return total;
+  }
+  map_gate_33: func(values: map<string, s32>, keys: list<string>, key: string) -> s32 {
+    let base: s32 = get_or_s32(values, key, 1) + sum_present_s32(values, keys);
+    if (has_s32(values, key)) { return base + 33; }
+    if (all_present_s32(values, keys)) { return base + 53; }
+    if (any_present_s32(values, keys)) { return base + 43; }
+    if (any_missing_s32(values, keys)) { return base - 1; }
+    if (all_missing_s32(values, keys)) { return base - 53; }
+    if (count_present_s32(values, keys) > 3) { return base + 3; }
+    if (count_missing_s32(values, keys) > 3) { return base - 3; }
+    return base;
+  }
+  decision_33: func(req: request, flags: list<s32>, values: map<string, s32>, keys: list<string>, key: string, name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let score: s32 = base_score(req) + string_gate_33(name, needle, prefix, suffix) + list_gate_33(flags) + map_gate_33(values, keys, key);
+    if (score > 233) { return score + 93; }
+    if (score > 133) { return score + 63; }
+    return score + 33;
+  }
+
+  string_gate_34: func(name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let pos: s32 = index_of(name, needle);
+    if (eq(trim(name), needle)) { return pos + 134; }
+    if (contains(replace(name, needle, prefix), prefix)) { return pos + 54; }
+    if (starts_with(concat(prefix, name), prefix)) { return pos + 44; }
+    if (ends_with(concat(name, suffix), suffix)) { return pos + 39; }
+    if (count_matches(slice(name, 0, 2), needle) > 0) { return pos + 2; }
+    if (is_empty(name)) { return 0; }
+    if (len(name) > 4) { return pos + 4; }
+    return pos;
+  }
+  list_gate_34: func(flags: list<s32>) -> s32 {
+    let total: s32 = sum_s32(flags) + get_or_list_s32(flags, 4, 2);
+    if (contains_s32(flags, 2)) { return total + first_s32(flags); }
+    if (any_positive_s32(flags)) { return total + max_s32(flags); }
+    if (all_positive_s32(flags)) { return total + min_s32(flags); }
+    if (count_positive_s32(flags) > 4) { return total + last_s32(flags); }
+    if (any_negative_s32(flags)) { return total - min_s32(flags); }
+    if (all_negative_s32(flags)) { return total - max_s32(flags); }
+    if (count_negative_s32(flags) > 4) { return total - last_s32(flags); }
+    return total;
+  }
+  map_gate_34: func(values: map<string, s32>, keys: list<string>, key: string) -> s32 {
+    let base: s32 = get_or_s32(values, key, 2) + sum_present_s32(values, keys);
+    if (has_s32(values, key)) { return base + 34; }
+    if (all_present_s32(values, keys)) { return base + 54; }
+    if (any_present_s32(values, keys)) { return base + 44; }
+    if (any_missing_s32(values, keys)) { return base - 2; }
+    if (all_missing_s32(values, keys)) { return base - 54; }
+    if (count_present_s32(values, keys) > 4) { return base + 4; }
+    if (count_missing_s32(values, keys) > 4) { return base - 4; }
+    return base;
+  }
+  decision_34: func(req: request, flags: list<s32>, values: map<string, s32>, keys: list<string>, key: string, name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let score: s32 = base_score(req) + string_gate_34(name, needle, prefix, suffix) + list_gate_34(flags) + map_gate_34(values, keys, key);
+    if (score > 234) { return score + 94; }
+    if (score > 134) { return score + 64; }
+    return score + 34;
+  }
+
+  string_gate_35: func(name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let pos: s32 = index_of(name, needle);
+    if (eq(trim(name), needle)) { return pos + 135; }
+    if (contains(replace(name, needle, prefix), prefix)) { return pos + 55; }
+    if (starts_with(concat(prefix, name), prefix)) { return pos + 45; }
+    if (ends_with(concat(name, suffix), suffix)) { return pos + 40; }
+    if (count_matches(slice(name, 0, 3), needle) > 0) { return pos + 3; }
+    if (is_empty(name)) { return 0; }
+    if (len(name) > 0) { return pos + 0; }
+    return pos;
+  }
+  list_gate_35: func(flags: list<s32>) -> s32 {
+    let total: s32 = sum_s32(flags) + get_or_list_s32(flags, 0, 3);
+    if (contains_s32(flags, 3)) { return total + first_s32(flags); }
+    if (any_positive_s32(flags)) { return total + max_s32(flags); }
+    if (all_positive_s32(flags)) { return total + min_s32(flags); }
+    if (count_positive_s32(flags) > 0) { return total + last_s32(flags); }
+    if (any_negative_s32(flags)) { return total - min_s32(flags); }
+    if (all_negative_s32(flags)) { return total - max_s32(flags); }
+    if (count_negative_s32(flags) > 0) { return total - last_s32(flags); }
+    return total;
+  }
+  map_gate_35: func(values: map<string, s32>, keys: list<string>, key: string) -> s32 {
+    let base: s32 = get_or_s32(values, key, 3) + sum_present_s32(values, keys);
+    if (has_s32(values, key)) { return base + 35; }
+    if (all_present_s32(values, keys)) { return base + 55; }
+    if (any_present_s32(values, keys)) { return base + 45; }
+    if (any_missing_s32(values, keys)) { return base - 3; }
+    if (all_missing_s32(values, keys)) { return base - 55; }
+    if (count_present_s32(values, keys) > 0) { return base + 0; }
+    if (count_missing_s32(values, keys) > 0) { return base - 0; }
+    return base;
+  }
+  decision_35: func(req: request, flags: list<s32>, values: map<string, s32>, keys: list<string>, key: string, name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let score: s32 = base_score(req) + string_gate_35(name, needle, prefix, suffix) + list_gate_35(flags) + map_gate_35(values, keys, key);
+    if (score > 235) { return score + 95; }
+    if (score > 135) { return score + 65; }
+    return score + 35;
+  }
+
+  string_gate_36: func(name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let pos: s32 = index_of(name, needle);
+    if (eq(trim(name), needle)) { return pos + 136; }
+    if (contains(replace(name, needle, prefix), prefix)) { return pos + 56; }
+    if (starts_with(concat(prefix, name), prefix)) { return pos + 46; }
+    if (ends_with(concat(name, suffix), suffix)) { return pos + 41; }
+    if (count_matches(slice(name, 0, 4), needle) > 0) { return pos + 4; }
+    if (is_empty(name)) { return 0; }
+    if (len(name) > 1) { return pos + 1; }
+    return pos;
+  }
+  list_gate_36: func(flags: list<s32>) -> s32 {
+    let total: s32 = sum_s32(flags) + get_or_list_s32(flags, 1, 4);
+    if (contains_s32(flags, 4)) { return total + first_s32(flags); }
+    if (any_positive_s32(flags)) { return total + max_s32(flags); }
+    if (all_positive_s32(flags)) { return total + min_s32(flags); }
+    if (count_positive_s32(flags) > 1) { return total + last_s32(flags); }
+    if (any_negative_s32(flags)) { return total - min_s32(flags); }
+    if (all_negative_s32(flags)) { return total - max_s32(flags); }
+    if (count_negative_s32(flags) > 1) { return total - last_s32(flags); }
+    return total;
+  }
+  map_gate_36: func(values: map<string, s32>, keys: list<string>, key: string) -> s32 {
+    let base: s32 = get_or_s32(values, key, 4) + sum_present_s32(values, keys);
+    if (has_s32(values, key)) { return base + 36; }
+    if (all_present_s32(values, keys)) { return base + 56; }
+    if (any_present_s32(values, keys)) { return base + 46; }
+    if (any_missing_s32(values, keys)) { return base - 4; }
+    if (all_missing_s32(values, keys)) { return base - 56; }
+    if (count_present_s32(values, keys) > 1) { return base + 1; }
+    if (count_missing_s32(values, keys) > 1) { return base - 1; }
+    return base;
+  }
+  decision_36: func(req: request, flags: list<s32>, values: map<string, s32>, keys: list<string>, key: string, name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let score: s32 = base_score(req) + string_gate_36(name, needle, prefix, suffix) + list_gate_36(flags) + map_gate_36(values, keys, key);
+    if (score > 236) { return score + 96; }
+    if (score > 136) { return score + 66; }
+    return score + 36;
+  }
+
+  string_gate_37: func(name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let pos: s32 = index_of(name, needle);
+    if (eq(trim(name), needle)) { return pos + 137; }
+    if (contains(replace(name, needle, prefix), prefix)) { return pos + 57; }
+    if (starts_with(concat(prefix, name), prefix)) { return pos + 47; }
+    if (ends_with(concat(name, suffix), suffix)) { return pos + 42; }
+    if (count_matches(slice(name, 0, 5), needle) > 0) { return pos + 5; }
+    if (is_empty(name)) { return 0; }
+    if (len(name) > 2) { return pos + 2; }
+    return pos;
+  }
+  list_gate_37: func(flags: list<s32>) -> s32 {
+    let total: s32 = sum_s32(flags) + get_or_list_s32(flags, 2, 5);
+    if (contains_s32(flags, 5)) { return total + first_s32(flags); }
+    if (any_positive_s32(flags)) { return total + max_s32(flags); }
+    if (all_positive_s32(flags)) { return total + min_s32(flags); }
+    if (count_positive_s32(flags) > 2) { return total + last_s32(flags); }
+    if (any_negative_s32(flags)) { return total - min_s32(flags); }
+    if (all_negative_s32(flags)) { return total - max_s32(flags); }
+    if (count_negative_s32(flags) > 2) { return total - last_s32(flags); }
+    return total;
+  }
+  map_gate_37: func(values: map<string, s32>, keys: list<string>, key: string) -> s32 {
+    let base: s32 = get_or_s32(values, key, 5) + sum_present_s32(values, keys);
+    if (has_s32(values, key)) { return base + 37; }
+    if (all_present_s32(values, keys)) { return base + 57; }
+    if (any_present_s32(values, keys)) { return base + 47; }
+    if (any_missing_s32(values, keys)) { return base - 5; }
+    if (all_missing_s32(values, keys)) { return base - 57; }
+    if (count_present_s32(values, keys) > 2) { return base + 2; }
+    if (count_missing_s32(values, keys) > 2) { return base - 2; }
+    return base;
+  }
+  decision_37: func(req: request, flags: list<s32>, values: map<string, s32>, keys: list<string>, key: string, name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let score: s32 = base_score(req) + string_gate_37(name, needle, prefix, suffix) + list_gate_37(flags) + map_gate_37(values, keys, key);
+    if (score > 237) { return score + 97; }
+    if (score > 137) { return score + 67; }
+    return score + 37;
+  }
+
+  string_gate_38: func(name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let pos: s32 = index_of(name, needle);
+    if (eq(trim(name), needle)) { return pos + 138; }
+    if (contains(replace(name, needle, prefix), prefix)) { return pos + 58; }
+    if (starts_with(concat(prefix, name), prefix)) { return pos + 48; }
+    if (ends_with(concat(name, suffix), suffix)) { return pos + 43; }
+    if (count_matches(slice(name, 0, 6), needle) > 0) { return pos + 6; }
+    if (is_empty(name)) { return 0; }
+    if (len(name) > 3) { return pos + 3; }
+    return pos;
+  }
+  list_gate_38: func(flags: list<s32>) -> s32 {
+    let total: s32 = sum_s32(flags) + get_or_list_s32(flags, 3, 6);
+    if (contains_s32(flags, 6)) { return total + first_s32(flags); }
+    if (any_positive_s32(flags)) { return total + max_s32(flags); }
+    if (all_positive_s32(flags)) { return total + min_s32(flags); }
+    if (count_positive_s32(flags) > 3) { return total + last_s32(flags); }
+    if (any_negative_s32(flags)) { return total - min_s32(flags); }
+    if (all_negative_s32(flags)) { return total - max_s32(flags); }
+    if (count_negative_s32(flags) > 3) { return total - last_s32(flags); }
+    return total;
+  }
+  map_gate_38: func(values: map<string, s32>, keys: list<string>, key: string) -> s32 {
+    let base: s32 = get_or_s32(values, key, 6) + sum_present_s32(values, keys);
+    if (has_s32(values, key)) { return base + 38; }
+    if (all_present_s32(values, keys)) { return base + 58; }
+    if (any_present_s32(values, keys)) { return base + 48; }
+    if (any_missing_s32(values, keys)) { return base - 6; }
+    if (all_missing_s32(values, keys)) { return base - 58; }
+    if (count_present_s32(values, keys) > 3) { return base + 3; }
+    if (count_missing_s32(values, keys) > 3) { return base - 3; }
+    return base;
+  }
+  decision_38: func(req: request, flags: list<s32>, values: map<string, s32>, keys: list<string>, key: string, name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let score: s32 = base_score(req) + string_gate_38(name, needle, prefix, suffix) + list_gate_38(flags) + map_gate_38(values, keys, key);
+    if (score > 238) { return score + 98; }
+    if (score > 138) { return score + 68; }
+    return score + 38;
+  }
+
+  string_gate_39: func(name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let pos: s32 = index_of(name, needle);
+    if (eq(trim(name), needle)) { return pos + 139; }
+    if (contains(replace(name, needle, prefix), prefix)) { return pos + 59; }
+    if (starts_with(concat(prefix, name), prefix)) { return pos + 49; }
+    if (ends_with(concat(name, suffix), suffix)) { return pos + 44; }
+    if (count_matches(slice(name, 0, 7), needle) > 0) { return pos + 7; }
+    if (is_empty(name)) { return 0; }
+    if (len(name) > 4) { return pos + 4; }
+    return pos;
+  }
+  list_gate_39: func(flags: list<s32>) -> s32 {
+    let total: s32 = sum_s32(flags) + get_or_list_s32(flags, 4, 7);
+    if (contains_s32(flags, 7)) { return total + first_s32(flags); }
+    if (any_positive_s32(flags)) { return total + max_s32(flags); }
+    if (all_positive_s32(flags)) { return total + min_s32(flags); }
+    if (count_positive_s32(flags) > 4) { return total + last_s32(flags); }
+    if (any_negative_s32(flags)) { return total - min_s32(flags); }
+    if (all_negative_s32(flags)) { return total - max_s32(flags); }
+    if (count_negative_s32(flags) > 4) { return total - last_s32(flags); }
+    return total;
+  }
+  map_gate_39: func(values: map<string, s32>, keys: list<string>, key: string) -> s32 {
+    let base: s32 = get_or_s32(values, key, 7) + sum_present_s32(values, keys);
+    if (has_s32(values, key)) { return base + 39; }
+    if (all_present_s32(values, keys)) { return base + 59; }
+    if (any_present_s32(values, keys)) { return base + 49; }
+    if (any_missing_s32(values, keys)) { return base - 7; }
+    if (all_missing_s32(values, keys)) { return base - 59; }
+    if (count_present_s32(values, keys) > 4) { return base + 4; }
+    if (count_missing_s32(values, keys) > 4) { return base - 4; }
+    return base;
+  }
+  decision_39: func(req: request, flags: list<s32>, values: map<string, s32>, keys: list<string>, key: string, name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let score: s32 = base_score(req) + string_gate_39(name, needle, prefix, suffix) + list_gate_39(flags) + map_gate_39(values, keys, key);
+    if (score > 239) { return score + 99; }
+    if (score > 139) { return score + 69; }
+    return score + 39;
+  }
+
+  string_gate_40: func(name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let pos: s32 = index_of(name, needle);
+    if (eq(trim(name), needle)) { return pos + 140; }
+    if (contains(replace(name, needle, prefix), prefix)) { return pos + 60; }
+    if (starts_with(concat(prefix, name), prefix)) { return pos + 50; }
+    if (ends_with(concat(name, suffix), suffix)) { return pos + 45; }
+    if (count_matches(slice(name, 0, 8), needle) > 0) { return pos + 8; }
+    if (is_empty(name)) { return 0; }
+    if (len(name) > 0) { return pos + 0; }
+    return pos;
+  }
+  list_gate_40: func(flags: list<s32>) -> s32 {
+    let total: s32 = sum_s32(flags) + get_or_list_s32(flags, 0, 8);
+    if (contains_s32(flags, 8)) { return total + first_s32(flags); }
+    if (any_positive_s32(flags)) { return total + max_s32(flags); }
+    if (all_positive_s32(flags)) { return total + min_s32(flags); }
+    if (count_positive_s32(flags) > 0) { return total + last_s32(flags); }
+    if (any_negative_s32(flags)) { return total - min_s32(flags); }
+    if (all_negative_s32(flags)) { return total - max_s32(flags); }
+    if (count_negative_s32(flags) > 0) { return total - last_s32(flags); }
+    return total;
+  }
+  map_gate_40: func(values: map<string, s32>, keys: list<string>, key: string) -> s32 {
+    let base: s32 = get_or_s32(values, key, 8) + sum_present_s32(values, keys);
+    if (has_s32(values, key)) { return base + 40; }
+    if (all_present_s32(values, keys)) { return base + 60; }
+    if (any_present_s32(values, keys)) { return base + 50; }
+    if (any_missing_s32(values, keys)) { return base - 8; }
+    if (all_missing_s32(values, keys)) { return base - 60; }
+    if (count_present_s32(values, keys) > 0) { return base + 0; }
+    if (count_missing_s32(values, keys) > 0) { return base - 0; }
+    return base;
+  }
+  decision_40: func(req: request, flags: list<s32>, values: map<string, s32>, keys: list<string>, key: string, name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let score: s32 = base_score(req) + string_gate_40(name, needle, prefix, suffix) + list_gate_40(flags) + map_gate_40(values, keys, key);
+    if (score > 240) { return score + 90; }
+    if (score > 140) { return score + 60; }
+    return score + 30;
+  }
+
+  string_gate_41: func(name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let pos: s32 = index_of(name, needle);
+    if (eq(trim(name), needle)) { return pos + 141; }
+    if (contains(replace(name, needle, prefix), prefix)) { return pos + 61; }
+    if (starts_with(concat(prefix, name), prefix)) { return pos + 51; }
+    if (ends_with(concat(name, suffix), suffix)) { return pos + 46; }
+    if (count_matches(slice(name, 0, 9), needle) > 0) { return pos + 9; }
+    if (is_empty(name)) { return 0; }
+    if (len(name) > 1) { return pos + 1; }
+    return pos;
+  }
+  list_gate_41: func(flags: list<s32>) -> s32 {
+    let total: s32 = sum_s32(flags) + get_or_list_s32(flags, 1, 9);
+    if (contains_s32(flags, 9)) { return total + first_s32(flags); }
+    if (any_positive_s32(flags)) { return total + max_s32(flags); }
+    if (all_positive_s32(flags)) { return total + min_s32(flags); }
+    if (count_positive_s32(flags) > 1) { return total + last_s32(flags); }
+    if (any_negative_s32(flags)) { return total - min_s32(flags); }
+    if (all_negative_s32(flags)) { return total - max_s32(flags); }
+    if (count_negative_s32(flags) > 1) { return total - last_s32(flags); }
+    return total;
+  }
+  map_gate_41: func(values: map<string, s32>, keys: list<string>, key: string) -> s32 {
+    let base: s32 = get_or_s32(values, key, 9) + sum_present_s32(values, keys);
+    if (has_s32(values, key)) { return base + 41; }
+    if (all_present_s32(values, keys)) { return base + 61; }
+    if (any_present_s32(values, keys)) { return base + 51; }
+    if (any_missing_s32(values, keys)) { return base - 9; }
+    if (all_missing_s32(values, keys)) { return base - 61; }
+    if (count_present_s32(values, keys) > 1) { return base + 1; }
+    if (count_missing_s32(values, keys) > 1) { return base - 1; }
+    return base;
+  }
+  decision_41: func(req: request, flags: list<s32>, values: map<string, s32>, keys: list<string>, key: string, name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let score: s32 = base_score(req) + string_gate_41(name, needle, prefix, suffix) + list_gate_41(flags) + map_gate_41(values, keys, key);
+    if (score > 241) { return score + 91; }
+    if (score > 141) { return score + 61; }
+    return score + 31;
+  }
+
+  string_gate_42: func(name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let pos: s32 = index_of(name, needle);
+    if (eq(trim(name), needle)) { return pos + 142; }
+    if (contains(replace(name, needle, prefix), prefix)) { return pos + 62; }
+    if (starts_with(concat(prefix, name), prefix)) { return pos + 52; }
+    if (ends_with(concat(name, suffix), suffix)) { return pos + 47; }
+    if (count_matches(slice(name, 0, 10), needle) > 0) { return pos + 10; }
+    if (is_empty(name)) { return 0; }
+    if (len(name) > 2) { return pos + 2; }
+    return pos;
+  }
+  list_gate_42: func(flags: list<s32>) -> s32 {
+    let total: s32 = sum_s32(flags) + get_or_list_s32(flags, 2, 10);
+    if (contains_s32(flags, 10)) { return total + first_s32(flags); }
+    if (any_positive_s32(flags)) { return total + max_s32(flags); }
+    if (all_positive_s32(flags)) { return total + min_s32(flags); }
+    if (count_positive_s32(flags) > 2) { return total + last_s32(flags); }
+    if (any_negative_s32(flags)) { return total - min_s32(flags); }
+    if (all_negative_s32(flags)) { return total - max_s32(flags); }
+    if (count_negative_s32(flags) > 2) { return total - last_s32(flags); }
+    return total;
+  }
+  map_gate_42: func(values: map<string, s32>, keys: list<string>, key: string) -> s32 {
+    let base: s32 = get_or_s32(values, key, 10) + sum_present_s32(values, keys);
+    if (has_s32(values, key)) { return base + 42; }
+    if (all_present_s32(values, keys)) { return base + 62; }
+    if (any_present_s32(values, keys)) { return base + 52; }
+    if (any_missing_s32(values, keys)) { return base - 10; }
+    if (all_missing_s32(values, keys)) { return base - 62; }
+    if (count_present_s32(values, keys) > 2) { return base + 2; }
+    if (count_missing_s32(values, keys) > 2) { return base - 2; }
+    return base;
+  }
+  decision_42: func(req: request, flags: list<s32>, values: map<string, s32>, keys: list<string>, key: string, name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let score: s32 = base_score(req) + string_gate_42(name, needle, prefix, suffix) + list_gate_42(flags) + map_gate_42(values, keys, key);
+    if (score > 242) { return score + 92; }
+    if (score > 142) { return score + 62; }
+    return score + 32;
+  }
+
+  string_gate_43: func(name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let pos: s32 = index_of(name, needle);
+    if (eq(trim(name), needle)) { return pos + 143; }
+    if (contains(replace(name, needle, prefix), prefix)) { return pos + 63; }
+    if (starts_with(concat(prefix, name), prefix)) { return pos + 53; }
+    if (ends_with(concat(name, suffix), suffix)) { return pos + 48; }
+    if (count_matches(slice(name, 0, 11), needle) > 0) { return pos + 11; }
+    if (is_empty(name)) { return 0; }
+    if (len(name) > 3) { return pos + 3; }
+    return pos;
+  }
+  list_gate_43: func(flags: list<s32>) -> s32 {
+    let total: s32 = sum_s32(flags) + get_or_list_s32(flags, 3, 11);
+    if (contains_s32(flags, 11)) { return total + first_s32(flags); }
+    if (any_positive_s32(flags)) { return total + max_s32(flags); }
+    if (all_positive_s32(flags)) { return total + min_s32(flags); }
+    if (count_positive_s32(flags) > 3) { return total + last_s32(flags); }
+    if (any_negative_s32(flags)) { return total - min_s32(flags); }
+    if (all_negative_s32(flags)) { return total - max_s32(flags); }
+    if (count_negative_s32(flags) > 3) { return total - last_s32(flags); }
+    return total;
+  }
+  map_gate_43: func(values: map<string, s32>, keys: list<string>, key: string) -> s32 {
+    let base: s32 = get_or_s32(values, key, 11) + sum_present_s32(values, keys);
+    if (has_s32(values, key)) { return base + 43; }
+    if (all_present_s32(values, keys)) { return base + 63; }
+    if (any_present_s32(values, keys)) { return base + 53; }
+    if (any_missing_s32(values, keys)) { return base - 11; }
+    if (all_missing_s32(values, keys)) { return base - 63; }
+    if (count_present_s32(values, keys) > 3) { return base + 3; }
+    if (count_missing_s32(values, keys) > 3) { return base - 3; }
+    return base;
+  }
+  decision_43: func(req: request, flags: list<s32>, values: map<string, s32>, keys: list<string>, key: string, name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let score: s32 = base_score(req) + string_gate_43(name, needle, prefix, suffix) + list_gate_43(flags) + map_gate_43(values, keys, key);
+    if (score > 243) { return score + 93; }
+    if (score > 143) { return score + 63; }
+    return score + 33;
+  }
+
+  string_gate_44: func(name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let pos: s32 = index_of(name, needle);
+    if (eq(trim(name), needle)) { return pos + 144; }
+    if (contains(replace(name, needle, prefix), prefix)) { return pos + 64; }
+    if (starts_with(concat(prefix, name), prefix)) { return pos + 54; }
+    if (ends_with(concat(name, suffix), suffix)) { return pos + 49; }
+    if (count_matches(slice(name, 0, 1), needle) > 0) { return pos + 1; }
+    if (is_empty(name)) { return 0; }
+    if (len(name) > 4) { return pos + 4; }
+    return pos;
+  }
+  list_gate_44: func(flags: list<s32>) -> s32 {
+    let total: s32 = sum_s32(flags) + get_or_list_s32(flags, 4, 1);
+    if (contains_s32(flags, 1)) { return total + first_s32(flags); }
+    if (any_positive_s32(flags)) { return total + max_s32(flags); }
+    if (all_positive_s32(flags)) { return total + min_s32(flags); }
+    if (count_positive_s32(flags) > 4) { return total + last_s32(flags); }
+    if (any_negative_s32(flags)) { return total - min_s32(flags); }
+    if (all_negative_s32(flags)) { return total - max_s32(flags); }
+    if (count_negative_s32(flags) > 4) { return total - last_s32(flags); }
+    return total;
+  }
+  map_gate_44: func(values: map<string, s32>, keys: list<string>, key: string) -> s32 {
+    let base: s32 = get_or_s32(values, key, 1) + sum_present_s32(values, keys);
+    if (has_s32(values, key)) { return base + 44; }
+    if (all_present_s32(values, keys)) { return base + 64; }
+    if (any_present_s32(values, keys)) { return base + 54; }
+    if (any_missing_s32(values, keys)) { return base - 1; }
+    if (all_missing_s32(values, keys)) { return base - 64; }
+    if (count_present_s32(values, keys) > 4) { return base + 4; }
+    if (count_missing_s32(values, keys) > 4) { return base - 4; }
+    return base;
+  }
+  decision_44: func(req: request, flags: list<s32>, values: map<string, s32>, keys: list<string>, key: string, name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let score: s32 = base_score(req) + string_gate_44(name, needle, prefix, suffix) + list_gate_44(flags) + map_gate_44(values, keys, key);
+    if (score > 244) { return score + 94; }
+    if (score > 144) { return score + 64; }
+    return score + 34;
+  }
+
+  string_gate_45: func(name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let pos: s32 = index_of(name, needle);
+    if (eq(trim(name), needle)) { return pos + 145; }
+    if (contains(replace(name, needle, prefix), prefix)) { return pos + 65; }
+    if (starts_with(concat(prefix, name), prefix)) { return pos + 55; }
+    if (ends_with(concat(name, suffix), suffix)) { return pos + 50; }
+    if (count_matches(slice(name, 0, 2), needle) > 0) { return pos + 2; }
+    if (is_empty(name)) { return 0; }
+    if (len(name) > 0) { return pos + 0; }
+    return pos;
+  }
+  list_gate_45: func(flags: list<s32>) -> s32 {
+    let total: s32 = sum_s32(flags) + get_or_list_s32(flags, 0, 2);
+    if (contains_s32(flags, 2)) { return total + first_s32(flags); }
+    if (any_positive_s32(flags)) { return total + max_s32(flags); }
+    if (all_positive_s32(flags)) { return total + min_s32(flags); }
+    if (count_positive_s32(flags) > 0) { return total + last_s32(flags); }
+    if (any_negative_s32(flags)) { return total - min_s32(flags); }
+    if (all_negative_s32(flags)) { return total - max_s32(flags); }
+    if (count_negative_s32(flags) > 0) { return total - last_s32(flags); }
+    return total;
+  }
+  map_gate_45: func(values: map<string, s32>, keys: list<string>, key: string) -> s32 {
+    let base: s32 = get_or_s32(values, key, 2) + sum_present_s32(values, keys);
+    if (has_s32(values, key)) { return base + 45; }
+    if (all_present_s32(values, keys)) { return base + 65; }
+    if (any_present_s32(values, keys)) { return base + 55; }
+    if (any_missing_s32(values, keys)) { return base - 2; }
+    if (all_missing_s32(values, keys)) { return base - 65; }
+    if (count_present_s32(values, keys) > 0) { return base + 0; }
+    if (count_missing_s32(values, keys) > 0) { return base - 0; }
+    return base;
+  }
+  decision_45: func(req: request, flags: list<s32>, values: map<string, s32>, keys: list<string>, key: string, name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let score: s32 = base_score(req) + string_gate_45(name, needle, prefix, suffix) + list_gate_45(flags) + map_gate_45(values, keys, key);
+    if (score > 245) { return score + 95; }
+    if (score > 145) { return score + 65; }
+    return score + 35;
+  }
+
+  string_gate_46: func(name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let pos: s32 = index_of(name, needle);
+    if (eq(trim(name), needle)) { return pos + 146; }
+    if (contains(replace(name, needle, prefix), prefix)) { return pos + 66; }
+    if (starts_with(concat(prefix, name), prefix)) { return pos + 56; }
+    if (ends_with(concat(name, suffix), suffix)) { return pos + 51; }
+    if (count_matches(slice(name, 0, 3), needle) > 0) { return pos + 3; }
+    if (is_empty(name)) { return 0; }
+    if (len(name) > 1) { return pos + 1; }
+    return pos;
+  }
+  list_gate_46: func(flags: list<s32>) -> s32 {
+    let total: s32 = sum_s32(flags) + get_or_list_s32(flags, 1, 3);
+    if (contains_s32(flags, 3)) { return total + first_s32(flags); }
+    if (any_positive_s32(flags)) { return total + max_s32(flags); }
+    if (all_positive_s32(flags)) { return total + min_s32(flags); }
+    if (count_positive_s32(flags) > 1) { return total + last_s32(flags); }
+    if (any_negative_s32(flags)) { return total - min_s32(flags); }
+    if (all_negative_s32(flags)) { return total - max_s32(flags); }
+    if (count_negative_s32(flags) > 1) { return total - last_s32(flags); }
+    return total;
+  }
+  map_gate_46: func(values: map<string, s32>, keys: list<string>, key: string) -> s32 {
+    let base: s32 = get_or_s32(values, key, 3) + sum_present_s32(values, keys);
+    if (has_s32(values, key)) { return base + 46; }
+    if (all_present_s32(values, keys)) { return base + 66; }
+    if (any_present_s32(values, keys)) { return base + 56; }
+    if (any_missing_s32(values, keys)) { return base - 3; }
+    if (all_missing_s32(values, keys)) { return base - 66; }
+    if (count_present_s32(values, keys) > 1) { return base + 1; }
+    if (count_missing_s32(values, keys) > 1) { return base - 1; }
+    return base;
+  }
+  decision_46: func(req: request, flags: list<s32>, values: map<string, s32>, keys: list<string>, key: string, name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let score: s32 = base_score(req) + string_gate_46(name, needle, prefix, suffix) + list_gate_46(flags) + map_gate_46(values, keys, key);
+    if (score > 246) { return score + 96; }
+    if (score > 146) { return score + 66; }
+    return score + 36;
+  }
+
+  string_gate_47: func(name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let pos: s32 = index_of(name, needle);
+    if (eq(trim(name), needle)) { return pos + 147; }
+    if (contains(replace(name, needle, prefix), prefix)) { return pos + 67; }
+    if (starts_with(concat(prefix, name), prefix)) { return pos + 57; }
+    if (ends_with(concat(name, suffix), suffix)) { return pos + 52; }
+    if (count_matches(slice(name, 0, 4), needle) > 0) { return pos + 4; }
+    if (is_empty(name)) { return 0; }
+    if (len(name) > 2) { return pos + 2; }
+    return pos;
+  }
+  list_gate_47: func(flags: list<s32>) -> s32 {
+    let total: s32 = sum_s32(flags) + get_or_list_s32(flags, 2, 4);
+    if (contains_s32(flags, 4)) { return total + first_s32(flags); }
+    if (any_positive_s32(flags)) { return total + max_s32(flags); }
+    if (all_positive_s32(flags)) { return total + min_s32(flags); }
+    if (count_positive_s32(flags) > 2) { return total + last_s32(flags); }
+    if (any_negative_s32(flags)) { return total - min_s32(flags); }
+    if (all_negative_s32(flags)) { return total - max_s32(flags); }
+    if (count_negative_s32(flags) > 2) { return total - last_s32(flags); }
+    return total;
+  }
+  map_gate_47: func(values: map<string, s32>, keys: list<string>, key: string) -> s32 {
+    let base: s32 = get_or_s32(values, key, 4) + sum_present_s32(values, keys);
+    if (has_s32(values, key)) { return base + 47; }
+    if (all_present_s32(values, keys)) { return base + 67; }
+    if (any_present_s32(values, keys)) { return base + 57; }
+    if (any_missing_s32(values, keys)) { return base - 4; }
+    if (all_missing_s32(values, keys)) { return base - 67; }
+    if (count_present_s32(values, keys) > 2) { return base + 2; }
+    if (count_missing_s32(values, keys) > 2) { return base - 2; }
+    return base;
+  }
+  decision_47: func(req: request, flags: list<s32>, values: map<string, s32>, keys: list<string>, key: string, name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let score: s32 = base_score(req) + string_gate_47(name, needle, prefix, suffix) + list_gate_47(flags) + map_gate_47(values, keys, key);
+    if (score > 247) { return score + 97; }
+    if (score > 147) { return score + 67; }
+    return score + 37;
+  }
+
+  aggregate: func(req: request, flags: list<s32>, values: map<string, s32>, keys: list<string>, key: string, name: string, needle: string, prefix: string, suffix: string) -> s32 {
+    let head: s32 = decision_0(req, flags, values, keys, key, name, needle, prefix, suffix) + decision_1(req, flags, values, keys, key, name, needle, prefix, suffix) + decision_2(req, flags, values, keys, key, name, needle, prefix, suffix) + decision_3(req, flags, values, keys, key, name, needle, prefix, suffix) + decision_4(req, flags, values, keys, key, name, needle, prefix, suffix) + decision_5(req, flags, values, keys, key, name, needle, prefix, suffix) + decision_6(req, flags, values, keys, key, name, needle, prefix, suffix) + decision_7(req, flags, values, keys, key, name, needle, prefix, suffix);
+    return head + decision_47(req, flags, values, keys, key, name, needle, prefix, suffix);
+  }
+}
+
+world app { import std_math; import std_string; import std_list; import std_map; export api; }

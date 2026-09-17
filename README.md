@@ -1,6 +1,10 @@
 # wasmc release channel
 
 [![Public verification](https://github.com/cbgroom/wasmcrelease/actions/workflows/source-free-consumer.yml/badge.svg?branch=main&event=push)](https://github.com/cbgroom/wasmcrelease/actions/workflows/source-free-consumer.yml)
+[![Native CLI performance](https://github.com/cbgroom/wasmcrelease/actions/workflows/native-cli-perf.yml/badge.svg?branch=main&event=push)](https://github.com/cbgroom/wasmcrelease/actions/workflows/native-cli-perf.yml)
+![run/Wasmi](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fcbgroom%2Fwasmcrelease%2Fperf-data%2Fbadges%2Frun.json)
+![native run](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fcbgroom%2Fwasmcrelease%2Fperf-data%2Fbadges%2Fnative.json)
+![build Wasm](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fcbgroom%2Fwasmcrelease%2Fperf-data%2Fbadges%2Fbuild.json)
 
 Source-free public packages for the private-source `wasmc` compiler.
 
@@ -64,11 +68,13 @@ passed all six native targets and fourteen JS/native pairs; scope and source
 are retained in [prototype evidence](admission/thin-host-v0.json).
 
 Post-v0.0.10 native packaging is in development: the public
-[Wasmi-only compiler SDK/CLI](sdk/wasmc-native-compiler/README.md) embeds the
-exact admitted compiler Wasm; Actions build only glue. Its six-target desktop
-matrix tests Linux/macOS/Windows x64/arm64, then downloads, verifies and reruns
-the same packages. This is not a new formal release, dual-engine CLI or mobile
-qualification. See the workflow summaries/artifacts for the exact tested source.
+[source-free native CLI](sdk/wasmc-native-compiler/README.md) consumes the exact
+admitted compiler Wasm and builds only open integration glue. `wasmc run` uses
+Wasmi for the shortest cold path; `wasmc build` emits portable Core Wasm;
+`wasmc build --target native` uses target-local Wasmtime AOT and emits a
+standalone executable. Its six-target desktop matrix tests Linux/macOS/Windows
+x64/arm64. This remains development tooling rather than a new formal release or
+mobile qualification. See the workflow summaries/artifacts for the exact source.
 [![Native compiler qualification](https://github.com/cbgroom/wasmcrelease/actions/workflows/native-compiler.yml/badge.svg?branch=main)](https://github.com/cbgroom/wasmcrelease/actions/workflows/native-compiler.yml)
 Qualified implementation: [six native builds + six downloaded-consumer jobs](https://github.com/cbgroom/wasmcrelease/actions/runs/34745887997),
 [complete consumer regression](https://github.com/cbgroom/wasmcrelease/actions/runs/34745902717)
@@ -76,6 +82,18 @@ and [LibSearch regression](https://github.com/cbgroom/wasmcrelease/actions/runs/
 The [retained receipt](admission/native-desktop-qualification.json) binds the
 exact implementation source and six package manifest digests. Main's live badge
 may be pending independently of these successful retained runs.
+
+Public performance uses the same five-source corpus previously frozen by the
+compiler performance baseline: `small_scalar`, `structured_variant`,
+`policy_small`, `policy_large`, and `std_mix_large`. The sources, expected Wasm
+digests and measurement protocol are checked into [`bench/`](bench/README.md).
+The [six-platform performance workflow](.github/workflows/native-cli-perf.yml)
+measures portable build, native cache miss/hit, and the executable oracle where
+available. GitHub-hosted timing numbers are comparative observations rather than
+absolute SLA claims; source identity, generated-Wasm identity, and behavior are
+hard gates. Latest/history JSON and badge endpoints are published on the
+[`perf-data`](https://github.com/cbgroom/wasmcrelease/tree/perf-data) branch after
+successful `main` runs.
 
 Post-v0.0.10 Agent guidance strengthening: start with
 [Library-first discovery](skills/wasmc-lib-discovery/SKILL.md) before implementing
