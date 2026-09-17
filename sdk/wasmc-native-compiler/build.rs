@@ -6,6 +6,21 @@ use wasmtime::{Config, Engine, OptLevel};
 const COMPILER_SHA256: &str = "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90";
 
 fn main() {
+    // Windows build-script processes have a much smaller default stack than
+    // the Unix runners. Cranelift AOT of the admitted compiler can overflow
+    // that stack before Rust can report an ordinary error. Keep the derivation
+    // in-process but run it on an explicitly bounded, larger worker stack so
+    // all six CI targets exercise the exact same code path.
+    std::thread::Builder::new()
+        .name("wasmc-compiler-aot".into())
+        .stack_size(16 * 1024 * 1024)
+        .spawn(build_compiler_aot)
+        .expect("spawn compiler AOT worker")
+        .join()
+        .expect("compiler AOT worker panicked");
+}
+
+fn build_compiler_aot() {
     let manifest = PathBuf::from(env::var_os("CARGO_MANIFEST_DIR").expect("manifest dir"));
     let target = env::var("TARGET").expect("Cargo TARGET");
     println!("cargo:rustc-env=WASMC_TARGET_TRIPLE={target}");
