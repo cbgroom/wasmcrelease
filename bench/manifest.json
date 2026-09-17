@@ -1,0 +1,55 @@
+{
+  "schema": "wasmc-public-benchmark-corpus/v1",
+  "authority": "public benchmark sources copied byte-for-byte from the accepted private compiler performance corpus",
+  "measurement_policy": "GitHub-hosted timings are comparative observations, not absolute SLA authority. Source identity and generated Wasm parity are hard gates.",
+  "samples": {
+    "build_wasm": 9,
+    "native_miss": 5,
+    "native_hit": 9,
+    "run_wasmi": 20,
+    "native_run": 20
+  },
+  "cases": [
+    {
+      "id": "small_scalar",
+      "path": "bench/corpus/small_scalar.wasmc",
+      "source_bytes": 126,
+      "source_sha256": "bbc6049a0404552aff61e2d07db9e3672c1079083dbad92904cc73d14a6cc069",
+      "wasm_bytes": 44,
+      "wasm_sha256": "29996fa74541742737704f64e48add2a5079ed8c57783cda4912046d5acb32c9",
+      "oracle": {"args": ["5", "6"], "stdout": "17"}
+    },
+    {
+      "id": "structured_variant",
+      "path": "bench/corpus/structured_variant.wasmc",
+      "source_bytes": 697,
+      "source_sha256": "b778d2cc39b8baa92274ed3bd55b45c046a986c52fc5a4d1c8749a9ad6acdd5d",
+      "wasm_bytes": 208,
+      "wasm_sha256": "d36db890efb5550ffe7510ef1c1522d8974473a90f636049d12543821016689a"
+    },
+    {
+      "id": "policy_small",
+      "path": "bench/corpus/policy_small.wasmc",
+      "source_bytes": 2562,
+      "source_sha256": "72b662c5a115fa8133fc1c695758c028d98434250b6fb4e8950eda7b55b2aabc",
+      "wasm_bytes": 733,
+      "wasm_sha256": "c7ddfc63b10f5611d87063dd166e3417f7c9b82d9c3abebbbde311b58403a9ba"
+    },
+    {
+      "id": "policy_large",
+      "path": "bench/corpus/policy_large.wasmc",
+      "source_bytes": 30995,
+      "source_sha256": "5b417c06b4a872341e702c05aaa8aa62a691b713ec5ffe1412b24781f8764ce3",
+      "wasm_bytes": 9454,
+      "wasm_sha256": "97272a3752fc5e4697eb5533b9fec8d64abf814145826175f542023938492172"
+    },
+    {
+      "id": "std_mix_large",
+      "path": "bench/corpus/std_mix_large.wasmc",
+      "source_bytes": 112300,
+      "source_sha256": "2988b03b159735b30150aafc19c1a67d046117e151709390fbe9a586ce104700",
+      "wasm_bytes": 31242,
+      "wasm_sha256": "62c03505822faef45ba787d933cf3f4ce49541524a1439efb73f9ad58861d489"
+    }
+  ]
+}

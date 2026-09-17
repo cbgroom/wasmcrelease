@@ -1,0 +1,122 @@
+name: Native CLI performance
+on:
+  push:
+    branches: [main, work/unified-native-cli-aot-v1]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  benchmark:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-24.04
+            target: x86_64-unknown-linux-gnu
+            platform: linux-x86_64
+          - os: ubuntu-24.04-arm
+            target: aarch64-unknown-linux-gnu
+            platform: linux-aarch64
+          - os: macos-15-intel
+            target: x86_64-apple-darwin
+            platform: macos-x86_64
+          - os: macos-14
+            target: aarch64-apple-darwin
+            platform: macos-aarch64
+          - os: windows-2025
+            target: x86_64-pc-windows-msvc
+            platform: windows-x86_64
+          - os: windows-11-arm
+            target: aarch64-pc-windows-msvc
+            platform: windows-aarch64
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: 26.5.1
+      - run: rustup toolchain install 1.96.0 --profile minimal
+      - name: Build public source-free CLI
+        env:
+          WASMC_AOT_TARGET: ${{ matrix.target }}
+        run: cargo +1.96.0 build --release --locked --manifest-path sdk/wasmc-native-compiler/Cargo.toml
+      - name: Run canonical performance corpus
+        run: node scripts/native-cli-perf.mjs "sdk/wasmc-native-compiler/target/release/wasmc${{ runner.os == 'Windows' && '.exe' || '' }}" "${{ matrix.platform }}" "${{ matrix.platform }}.json"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: perf-${{ matrix.platform }}
+          path: ${{ matrix.platform }}.json
+          if-no-files-found: error
+
+  aggregate:
+    needs: benchmark
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: 26.5.1
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5a8093
+        with:
+          pattern: perf-*
+          path: perf-results
+          merge-multiple: true
+      - name: Read previous public performance history
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git fetch origin perf-data:refs/remotes/origin/perf-data 2>/dev/null && git cat-file -e origin/perf-data:history.json 2>/dev/null; then
+            git show origin/perf-data:history.json > previous-history.json
+          fi
+      - name: Aggregate six-platform report
+        shell: bash
+        run: node scripts/aggregate-native-cli-perf.mjs perf-results perf-site previous-history.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: native-cli-performance-report
+          path: perf-site/
+          if-no-files-found: error
+
+  publish-data:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: aggregate
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5a8093
+        with:
+          name: native-cli-performance-report
+          path: perf-site
+      - name: Publish perf-data branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git fetch origin perf-data:refs/remotes/origin/perf-data 2>/dev/null || true
+          rm -rf /tmp/wasmc-perf-data
+          if git rev-parse --verify origin/perf-data >/dev/null 2>&1; then
+            git worktree add -B perf-data /tmp/wasmc-perf-data origin/perf-data
+          else
+            git worktree add --detach /tmp/wasmc-perf-data
+            cd /tmp/wasmc-perf-data
+            git checkout --orphan perf-data
+            git rm -rf . >/dev/null 2>&1 || true
+          fi
+          cd /tmp/wasmc-perf-data
+          find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          cp -R "$GITHUB_WORKSPACE/perf-site/." .
+          touch .nojekyll
+          git add -A
+          git commit -m "perf: publish ${GITHUB_SHA}" || exit 0
+          git push origin HEAD:perf-data

@@ -1,7 +1,7 @@
-name: Native Wasmi compiler glue
+name: Native WAsmC CLI
 on:
   push:
-    branches: [main, work/native-wasmi-compiler]
+    branches: [main, work/native-wasmi-compiler, work/unified-native-cli-aot-v1]
   pull_request:
   workflow_dispatch:
 permissions:
@@ -25,7 +25,7 @@ jobs:
           - os: windows-11-arm
             target: aarch64-pc-windows-msvc
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 20
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
@@ -38,7 +38,7 @@ jobs:
       - run: node scripts/native-package.mjs build native-package ${{ matrix.target }} ${{ github.sha }}
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: wasmc-wasmi-${{ matrix.target }}-${{ github.sha }}
+          name: wasmc-${{ matrix.target }}-${{ github.sha }}
           path: native-package/
           if-no-files-found: error
   downloaded-consumer:
@@ -60,7 +60,7 @@ jobs:
           - os: windows-11-arm
             target: aarch64-pc-windows-msvc
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
@@ -68,7 +68,7 @@ jobs:
           node-version: 26.5.1
       - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
         with:
-          name: wasmc-wasmi-${{ matrix.target }}-${{ github.sha }}
+          name: wasmc-${{ matrix.target }}-${{ github.sha }}
           path: downloaded/
       - run: node scripts/native-package.mjs verify downloaded ${{ matrix.target }} ${{ github.sha }}
       - run: node scripts/test-native-package.mjs downloaded ${{ matrix.target }} ${{ github.sha }}

@@ -1,0 +1,561 @@
+package local:policy_large;
+
+interface deps {
+  host_metric_0: func(tenant: s32, key: s32) -> s32;
+  host_metric_1: func(tenant: s32, key: s32) -> s32;
+  host_metric_2: func(tenant: s32, key: s32) -> s32;
+  host_metric_3: func(tenant: s32, key: s32) -> s32;
+  host_metric_4: func(tenant: s32, key: s32) -> s32;
+  host_metric_5: func(tenant: s32, key: s32) -> s32;
+  host_metric_6: func(tenant: s32, key: s32) -> s32;
+  host_metric_7: func(tenant: s32, key: s32) -> s32;
+}
+
+interface std_list {
+  sum_s32: func(xs: list<s32>) -> s32;
+  count_positive_s32: func(xs: list<s32>) -> u32;
+  get_or_list_s32: func(xs: list<s32>, index: u32, default: s32) -> s32;
+}
+
+interface std_map {
+  get_or_s32: func(values: map<string, s32>, key: string, default: s32) -> s32;
+  count_present_s32: func(values: map<string, s32>, keys: list<string>) -> u32;
+  sum_present_s32: func(values: map<string, s32>, keys: list<string>) -> s32;
+}
+
+interface api {
+  record request { tenant: s32, plan: s32, risk: s32, quota: s32 }
+  record response { decision: s32, route: s32, score: s32 }
+  enum decision { deny, allow, review }
+  base_score: func(req: request) -> s32 { return req.plan + req.risk + req.quota; }
+
+  policy_step_0: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_0(req.tenant, 1);
+    if (count_positive_s32(flags) > 0) { return local + get_or_list_s32(flags, 0, 1); }
+    return local - 1;
+  }
+  policy_step_1: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_1(req.tenant, 2);
+    if (count_positive_s32(flags) > 1) { return local + get_or_list_s32(flags, 1, 2); }
+    return local - 2;
+  }
+  policy_step_2: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_2(req.tenant, 3);
+    if (count_positive_s32(flags) > 2) { return local + get_or_list_s32(flags, 2, 3); }
+    return local - 3;
+  }
+  policy_step_3: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_3(req.tenant, 4);
+    if (count_positive_s32(flags) > 3) { return local + get_or_list_s32(flags, 3, 4); }
+    return local - 4;
+  }
+  policy_step_4: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_4(req.tenant, 5);
+    if (count_positive_s32(flags) > 4) { return local + get_or_list_s32(flags, 0, 5); }
+    return local - 5;
+  }
+  policy_step_5: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_5(req.tenant, 6);
+    if (count_positive_s32(flags) > 0) { return local + get_or_list_s32(flags, 1, 6); }
+    return local - 6;
+  }
+  policy_step_6: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_6(req.tenant, 7);
+    if (count_positive_s32(flags) > 1) { return local + get_or_list_s32(flags, 2, 7); }
+    return local - 7;
+  }
+  policy_step_7: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_7(req.tenant, 8);
+    if (count_positive_s32(flags) > 2) { return local + get_or_list_s32(flags, 3, 1); }
+    return local - 1;
+  }
+  policy_step_8: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_0(req.tenant, 9);
+    if (count_positive_s32(flags) > 3) { return local + get_or_list_s32(flags, 0, 2); }
+    return local - 2;
+  }
+  policy_step_9: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_1(req.tenant, 10);
+    if (count_positive_s32(flags) > 4) { return local + get_or_list_s32(flags, 1, 3); }
+    return local - 3;
+  }
+  policy_step_10: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_2(req.tenant, 11);
+    if (count_positive_s32(flags) > 0) { return local + get_or_list_s32(flags, 2, 4); }
+    return local - 4;
+  }
+  policy_step_11: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_3(req.tenant, 12);
+    if (count_positive_s32(flags) > 1) { return local + get_or_list_s32(flags, 3, 5); }
+    return local - 5;
+  }
+  policy_step_12: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_4(req.tenant, 13);
+    if (count_positive_s32(flags) > 2) { return local + get_or_list_s32(flags, 0, 6); }
+    return local - 6;
+  }
+  policy_step_13: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_5(req.tenant, 14);
+    if (count_positive_s32(flags) > 3) { return local + get_or_list_s32(flags, 1, 7); }
+    return local - 7;
+  }
+  policy_step_14: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_6(req.tenant, 15);
+    if (count_positive_s32(flags) > 4) { return local + get_or_list_s32(flags, 2, 1); }
+    return local - 1;
+  }
+  policy_step_15: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_7(req.tenant, 16);
+    if (count_positive_s32(flags) > 0) { return local + get_or_list_s32(flags, 3, 2); }
+    return local - 2;
+  }
+  policy_step_16: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_0(req.tenant, 17);
+    if (count_positive_s32(flags) > 1) { return local + get_or_list_s32(flags, 0, 3); }
+    return local - 3;
+  }
+  policy_step_17: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_1(req.tenant, 18);
+    if (count_positive_s32(flags) > 2) { return local + get_or_list_s32(flags, 1, 4); }
+    return local - 4;
+  }
+  policy_step_18: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_2(req.tenant, 19);
+    if (count_positive_s32(flags) > 3) { return local + get_or_list_s32(flags, 2, 5); }
+    return local - 5;
+  }
+  policy_step_19: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_3(req.tenant, 20);
+    if (count_positive_s32(flags) > 4) { return local + get_or_list_s32(flags, 3, 6); }
+    return local - 6;
+  }
+  policy_step_20: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_4(req.tenant, 21);
+    if (count_positive_s32(flags) > 0) { return local + get_or_list_s32(flags, 0, 7); }
+    return local - 7;
+  }
+  policy_step_21: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_5(req.tenant, 22);
+    if (count_positive_s32(flags) > 1) { return local + get_or_list_s32(flags, 1, 1); }
+    return local - 1;
+  }
+  policy_step_22: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_6(req.tenant, 23);
+    if (count_positive_s32(flags) > 2) { return local + get_or_list_s32(flags, 2, 2); }
+    return local - 2;
+  }
+  policy_step_23: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_7(req.tenant, 24);
+    if (count_positive_s32(flags) > 3) { return local + get_or_list_s32(flags, 3, 3); }
+    return local - 3;
+  }
+  policy_step_24: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_0(req.tenant, 25);
+    if (count_positive_s32(flags) > 4) { return local + get_or_list_s32(flags, 0, 4); }
+    return local - 4;
+  }
+  policy_step_25: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_1(req.tenant, 26);
+    if (count_positive_s32(flags) > 0) { return local + get_or_list_s32(flags, 1, 5); }
+    return local - 5;
+  }
+  policy_step_26: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_2(req.tenant, 27);
+    if (count_positive_s32(flags) > 1) { return local + get_or_list_s32(flags, 2, 6); }
+    return local - 6;
+  }
+  policy_step_27: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_3(req.tenant, 28);
+    if (count_positive_s32(flags) > 2) { return local + get_or_list_s32(flags, 3, 7); }
+    return local - 7;
+  }
+  policy_step_28: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_4(req.tenant, 29);
+    if (count_positive_s32(flags) > 3) { return local + get_or_list_s32(flags, 0, 1); }
+    return local - 1;
+  }
+  policy_step_29: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_5(req.tenant, 30);
+    if (count_positive_s32(flags) > 4) { return local + get_or_list_s32(flags, 1, 2); }
+    return local - 2;
+  }
+  policy_step_30: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_6(req.tenant, 31);
+    if (count_positive_s32(flags) > 0) { return local + get_or_list_s32(flags, 2, 3); }
+    return local - 3;
+  }
+  policy_step_31: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_7(req.tenant, 32);
+    if (count_positive_s32(flags) > 1) { return local + get_or_list_s32(flags, 3, 4); }
+    return local - 4;
+  }
+  policy_step_32: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_0(req.tenant, 33);
+    if (count_positive_s32(flags) > 2) { return local + get_or_list_s32(flags, 0, 5); }
+    return local - 5;
+  }
+  policy_step_33: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_1(req.tenant, 34);
+    if (count_positive_s32(flags) > 3) { return local + get_or_list_s32(flags, 1, 6); }
+    return local - 6;
+  }
+  policy_step_34: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_2(req.tenant, 35);
+    if (count_positive_s32(flags) > 4) { return local + get_or_list_s32(flags, 2, 7); }
+    return local - 7;
+  }
+  policy_step_35: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_3(req.tenant, 36);
+    if (count_positive_s32(flags) > 0) { return local + get_or_list_s32(flags, 3, 1); }
+    return local - 1;
+  }
+  policy_step_36: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_4(req.tenant, 37);
+    if (count_positive_s32(flags) > 1) { return local + get_or_list_s32(flags, 0, 2); }
+    return local - 2;
+  }
+  policy_step_37: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_5(req.tenant, 38);
+    if (count_positive_s32(flags) > 2) { return local + get_or_list_s32(flags, 1, 3); }
+    return local - 3;
+  }
+  policy_step_38: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_6(req.tenant, 39);
+    if (count_positive_s32(flags) > 3) { return local + get_or_list_s32(flags, 2, 4); }
+    return local - 4;
+  }
+  policy_step_39: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_7(req.tenant, 40);
+    if (count_positive_s32(flags) > 4) { return local + get_or_list_s32(flags, 3, 5); }
+    return local - 5;
+  }
+  policy_step_40: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_0(req.tenant, 41);
+    if (count_positive_s32(flags) > 0) { return local + get_or_list_s32(flags, 0, 6); }
+    return local - 6;
+  }
+  policy_step_41: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_1(req.tenant, 42);
+    if (count_positive_s32(flags) > 1) { return local + get_or_list_s32(flags, 1, 7); }
+    return local - 7;
+  }
+  policy_step_42: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_2(req.tenant, 43);
+    if (count_positive_s32(flags) > 2) { return local + get_or_list_s32(flags, 2, 1); }
+    return local - 1;
+  }
+  policy_step_43: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_3(req.tenant, 44);
+    if (count_positive_s32(flags) > 3) { return local + get_or_list_s32(flags, 3, 2); }
+    return local - 2;
+  }
+  policy_step_44: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_4(req.tenant, 45);
+    if (count_positive_s32(flags) > 4) { return local + get_or_list_s32(flags, 0, 3); }
+    return local - 3;
+  }
+  policy_step_45: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_5(req.tenant, 46);
+    if (count_positive_s32(flags) > 0) { return local + get_or_list_s32(flags, 1, 4); }
+    return local - 4;
+  }
+  policy_step_46: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_6(req.tenant, 47);
+    if (count_positive_s32(flags) > 1) { return local + get_or_list_s32(flags, 2, 5); }
+    return local - 5;
+  }
+  policy_step_47: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_7(req.tenant, 48);
+    if (count_positive_s32(flags) > 2) { return local + get_or_list_s32(flags, 3, 6); }
+    return local - 6;
+  }
+  policy_step_48: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_0(req.tenant, 49);
+    if (count_positive_s32(flags) > 3) { return local + get_or_list_s32(flags, 0, 7); }
+    return local - 7;
+  }
+  policy_step_49: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_1(req.tenant, 50);
+    if (count_positive_s32(flags) > 4) { return local + get_or_list_s32(flags, 1, 1); }
+    return local - 1;
+  }
+  policy_step_50: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_2(req.tenant, 51);
+    if (count_positive_s32(flags) > 0) { return local + get_or_list_s32(flags, 2, 2); }
+    return local - 2;
+  }
+  policy_step_51: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_3(req.tenant, 52);
+    if (count_positive_s32(flags) > 1) { return local + get_or_list_s32(flags, 3, 3); }
+    return local - 3;
+  }
+  policy_step_52: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_4(req.tenant, 53);
+    if (count_positive_s32(flags) > 2) { return local + get_or_list_s32(flags, 0, 4); }
+    return local - 4;
+  }
+  policy_step_53: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_5(req.tenant, 54);
+    if (count_positive_s32(flags) > 3) { return local + get_or_list_s32(flags, 1, 5); }
+    return local - 5;
+  }
+  policy_step_54: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_6(req.tenant, 55);
+    if (count_positive_s32(flags) > 4) { return local + get_or_list_s32(flags, 2, 6); }
+    return local - 6;
+  }
+  policy_step_55: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_7(req.tenant, 56);
+    if (count_positive_s32(flags) > 0) { return local + get_or_list_s32(flags, 3, 7); }
+    return local - 7;
+  }
+  policy_step_56: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_0(req.tenant, 57);
+    if (count_positive_s32(flags) > 1) { return local + get_or_list_s32(flags, 0, 1); }
+    return local - 1;
+  }
+  policy_step_57: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_1(req.tenant, 58);
+    if (count_positive_s32(flags) > 2) { return local + get_or_list_s32(flags, 1, 2); }
+    return local - 2;
+  }
+  policy_step_58: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_2(req.tenant, 59);
+    if (count_positive_s32(flags) > 3) { return local + get_or_list_s32(flags, 2, 3); }
+    return local - 3;
+  }
+  policy_step_59: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_3(req.tenant, 60);
+    if (count_positive_s32(flags) > 4) { return local + get_or_list_s32(flags, 3, 4); }
+    return local - 4;
+  }
+  policy_step_60: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_4(req.tenant, 61);
+    if (count_positive_s32(flags) > 0) { return local + get_or_list_s32(flags, 0, 5); }
+    return local - 5;
+  }
+  policy_step_61: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_5(req.tenant, 62);
+    if (count_positive_s32(flags) > 1) { return local + get_or_list_s32(flags, 1, 6); }
+    return local - 6;
+  }
+  policy_step_62: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_6(req.tenant, 63);
+    if (count_positive_s32(flags) > 2) { return local + get_or_list_s32(flags, 2, 7); }
+    return local - 7;
+  }
+  policy_step_63: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_7(req.tenant, 64);
+    if (count_positive_s32(flags) > 3) { return local + get_or_list_s32(flags, 3, 1); }
+    return local - 1;
+  }
+  policy_step_64: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_0(req.tenant, 65);
+    if (count_positive_s32(flags) > 4) { return local + get_or_list_s32(flags, 0, 2); }
+    return local - 2;
+  }
+  policy_step_65: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_1(req.tenant, 66);
+    if (count_positive_s32(flags) > 0) { return local + get_or_list_s32(flags, 1, 3); }
+    return local - 3;
+  }
+  policy_step_66: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_2(req.tenant, 67);
+    if (count_positive_s32(flags) > 1) { return local + get_or_list_s32(flags, 2, 4); }
+    return local - 4;
+  }
+  policy_step_67: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_3(req.tenant, 68);
+    if (count_positive_s32(flags) > 2) { return local + get_or_list_s32(flags, 3, 5); }
+    return local - 5;
+  }
+  policy_step_68: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_4(req.tenant, 69);
+    if (count_positive_s32(flags) > 3) { return local + get_or_list_s32(flags, 0, 6); }
+    return local - 6;
+  }
+  policy_step_69: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_5(req.tenant, 70);
+    if (count_positive_s32(flags) > 4) { return local + get_or_list_s32(flags, 1, 7); }
+    return local - 7;
+  }
+  policy_step_70: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_6(req.tenant, 71);
+    if (count_positive_s32(flags) > 0) { return local + get_or_list_s32(flags, 2, 1); }
+    return local - 1;
+  }
+  policy_step_71: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_7(req.tenant, 72);
+    if (count_positive_s32(flags) > 1) { return local + get_or_list_s32(flags, 3, 2); }
+    return local - 2;
+  }
+  policy_step_72: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_0(req.tenant, 73);
+    if (count_positive_s32(flags) > 2) { return local + get_or_list_s32(flags, 0, 3); }
+    return local - 3;
+  }
+  policy_step_73: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_1(req.tenant, 74);
+    if (count_positive_s32(flags) > 3) { return local + get_or_list_s32(flags, 1, 4); }
+    return local - 4;
+  }
+  policy_step_74: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_2(req.tenant, 75);
+    if (count_positive_s32(flags) > 4) { return local + get_or_list_s32(flags, 2, 5); }
+    return local - 5;
+  }
+  policy_step_75: func(req: request, flags: list<s32>) -> s32 {
+    let local: s32 = base_score(req) + host_metric_3(req.tenant, 76);
+    if (count_positive_s32(flags) > 0) { return local + get_or_list_s32(flags, 3, 6); }
+    return local - 6;
+  }
+  route_0: func(req: request, flags: list<s32>, values: map<string, s32>, key: string) -> response {
+    let score: s32 = policy_step_0(req, flags) + policy_step_1(req, flags) + get_or_s32(values, key, 0);
+    if (score > 80) { return { decision: 1, route: 0, score: score }; }
+    if (score > 40) { return { decision: 2, route: 0, score: score }; }
+    return { decision: 0, route: 0, score: score };
+  }
+  route_1: func(req: request, flags: list<s32>, values: map<string, s32>, key: string) -> response {
+    let score: s32 = policy_step_1(req, flags) + policy_step_4(req, flags) + get_or_s32(values, key, 1);
+    if (score > 81) { return { decision: 1, route: 1, score: score }; }
+    if (score > 41) { return { decision: 2, route: 1, score: score }; }
+    return { decision: 0, route: 1, score: score };
+  }
+  route_2: func(req: request, flags: list<s32>, values: map<string, s32>, key: string) -> response {
+    let score: s32 = policy_step_2(req, flags) + policy_step_7(req, flags) + get_or_s32(values, key, 2);
+    if (score > 82) { return { decision: 1, route: 2, score: score }; }
+    if (score > 42) { return { decision: 2, route: 2, score: score }; }
+    return { decision: 0, route: 2, score: score };
+  }
+  route_3: func(req: request, flags: list<s32>, values: map<string, s32>, key: string) -> response {
+    let score: s32 = policy_step_3(req, flags) + policy_step_10(req, flags) + get_or_s32(values, key, 3);
+    if (score > 83) { return { decision: 1, route: 3, score: score }; }
+    if (score > 43) { return { decision: 2, route: 3, score: score }; }
+    return { decision: 0, route: 3, score: score };
+  }
+  route_4: func(req: request, flags: list<s32>, values: map<string, s32>, key: string) -> response {
+    let score: s32 = policy_step_4(req, flags) + policy_step_13(req, flags) + get_or_s32(values, key, 4);
+    if (score > 84) { return { decision: 1, route: 4, score: score }; }
+    if (score > 44) { return { decision: 2, route: 4, score: score }; }
+    return { decision: 0, route: 4, score: score };
+  }
+  route_5: func(req: request, flags: list<s32>, values: map<string, s32>, key: string) -> response {
+    let score: s32 = policy_step_5(req, flags) + policy_step_16(req, flags) + get_or_s32(values, key, 5);
+    if (score > 85) { return { decision: 1, route: 5, score: score }; }
+    if (score > 45) { return { decision: 2, route: 5, score: score }; }
+    return { decision: 0, route: 5, score: score };
+  }
+  route_6: func(req: request, flags: list<s32>, values: map<string, s32>, key: string) -> response {
+    let score: s32 = policy_step_6(req, flags) + policy_step_19(req, flags) + get_or_s32(values, key, 6);
+    if (score > 86) { return { decision: 1, route: 6, score: score }; }
+    if (score > 46) { return { decision: 2, route: 6, score: score }; }
+    return { decision: 0, route: 6, score: score };
+  }
+  route_7: func(req: request, flags: list<s32>, values: map<string, s32>, key: string) -> response {
+    let score: s32 = policy_step_7(req, flags) + policy_step_22(req, flags) + get_or_s32(values, key, 7);
+    if (score > 87) { return { decision: 1, route: 7, score: score }; }
+    if (score > 47) { return { decision: 2, route: 7, score: score }; }
+    return { decision: 0, route: 7, score: score };
+  }
+  route_8: func(req: request, flags: list<s32>, values: map<string, s32>, key: string) -> response {
+    let score: s32 = policy_step_8(req, flags) + policy_step_25(req, flags) + get_or_s32(values, key, 8);
+    if (score > 88) { return { decision: 1, route: 8, score: score }; }
+    if (score > 48) { return { decision: 2, route: 8, score: score }; }
+    return { decision: 0, route: 8, score: score };
+  }
+  route_9: func(req: request, flags: list<s32>, values: map<string, s32>, key: string) -> response {
+    let score: s32 = policy_step_9(req, flags) + policy_step_28(req, flags) + get_or_s32(values, key, 9);
+    if (score > 89) { return { decision: 1, route: 9, score: score }; }
+    if (score > 49) { return { decision: 2, route: 9, score: score }; }
+    return { decision: 0, route: 9, score: score };
+  }
+  route_10: func(req: request, flags: list<s32>, values: map<string, s32>, key: string) -> response {
+    let score: s32 = policy_step_10(req, flags) + policy_step_31(req, flags) + get_or_s32(values, key, 10);
+    if (score > 90) { return { decision: 1, route: 10, score: score }; }
+    if (score > 50) { return { decision: 2, route: 10, score: score }; }
+    return { decision: 0, route: 10, score: score };
+  }
+  route_11: func(req: request, flags: list<s32>, values: map<string, s32>, key: string) -> response {
+    let score: s32 = policy_step_11(req, flags) + policy_step_34(req, flags) + get_or_s32(values, key, 11);
+    if (score > 91) { return { decision: 1, route: 11, score: score }; }
+    if (score > 51) { return { decision: 2, route: 11, score: score }; }
+    return { decision: 0, route: 11, score: score };
+  }
+  route_12: func(req: request, flags: list<s32>, values: map<string, s32>, key: string) -> response {
+    let score: s32 = policy_step_12(req, flags) + policy_step_37(req, flags) + get_or_s32(values, key, 12);
+    if (score > 92) { return { decision: 1, route: 12, score: score }; }
+    if (score > 52) { return { decision: 2, route: 12, score: score }; }
+    return { decision: 0, route: 12, score: score };
+  }
+  route_13: func(req: request, flags: list<s32>, values: map<string, s32>, key: string) -> response {
+    let score: s32 = policy_step_13(req, flags) + policy_step_40(req, flags) + get_or_s32(values, key, 13);
+    if (score > 93) { return { decision: 1, route: 13, score: score }; }
+    if (score > 53) { return { decision: 2, route: 13, score: score }; }
+    return { decision: 0, route: 13, score: score };
+  }
+  route_14: func(req: request, flags: list<s32>, values: map<string, s32>, key: string) -> response {
+    let score: s32 = policy_step_14(req, flags) + policy_step_43(req, flags) + get_or_s32(values, key, 14);
+    if (score > 94) { return { decision: 1, route: 14, score: score }; }
+    if (score > 54) { return { decision: 2, route: 14, score: score }; }
+    return { decision: 0, route: 14, score: score };
+  }
+  route_15: func(req: request, flags: list<s32>, values: map<string, s32>, key: string) -> response {
+    let score: s32 = policy_step_15(req, flags) + policy_step_46(req, flags) + get_or_s32(values, key, 15);
+    if (score > 95) { return { decision: 1, route: 15, score: score }; }
+    if (score > 55) { return { decision: 2, route: 15, score: score }; }
+    return { decision: 0, route: 15, score: score };
+  }
+  route_16: func(req: request, flags: list<s32>, values: map<string, s32>, key: string) -> response {
+    let score: s32 = policy_step_16(req, flags) + policy_step_49(req, flags) + get_or_s32(values, key, 16);
+    if (score > 96) { return { decision: 1, route: 16, score: score }; }
+    if (score > 56) { return { decision: 2, route: 16, score: score }; }
+    return { decision: 0, route: 16, score: score };
+  }
+  route_17: func(req: request, flags: list<s32>, values: map<string, s32>, key: string) -> response {
+    let score: s32 = policy_step_17(req, flags) + policy_step_52(req, flags) + get_or_s32(values, key, 17);
+    if (score > 97) { return { decision: 1, route: 17, score: score }; }
+    if (score > 57) { return { decision: 2, route: 17, score: score }; }
+    return { decision: 0, route: 17, score: score };
+  }
+  route_18: func(req: request, flags: list<s32>, values: map<string, s32>, key: string) -> response {
+    let score: s32 = policy_step_18(req, flags) + policy_step_55(req, flags) + get_or_s32(values, key, 18);
+    if (score > 98) { return { decision: 1, route: 18, score: score }; }
+    if (score > 58) { return { decision: 2, route: 18, score: score }; }
+    return { decision: 0, route: 18, score: score };
+  }
+  route_19: func(req: request, flags: list<s32>, values: map<string, s32>, key: string) -> response {
+    let score: s32 = policy_step_19(req, flags) + policy_step_58(req, flags) + get_or_s32(values, key, 19);
+    if (score > 99) { return { decision: 1, route: 19, score: score }; }
+    if (score > 59) { return { decision: 2, route: 19, score: score }; }
+    return { decision: 0, route: 19, score: score };
+  }
+  route_20: func(req: request, flags: list<s32>, values: map<string, s32>, key: string) -> response {
+    let score: s32 = policy_step_20(req, flags) + policy_step_61(req, flags) + get_or_s32(values, key, 20);
+    if (score > 100) { return { decision: 1, route: 20, score: score }; }
+    if (score > 60) { return { decision: 2, route: 20, score: score }; }
+    return { decision: 0, route: 20, score: score };
+  }
+  route_21: func(req: request, flags: list<s32>, values: map<string, s32>, key: string) -> response {
+    let score: s32 = policy_step_21(req, flags) + policy_step_64(req, flags) + get_or_s32(values, key, 21);
+    if (score > 101) { return { decision: 1, route: 21, score: score }; }
+    if (score > 61) { return { decision: 2, route: 21, score: score }; }
+    return { decision: 0, route: 21, score: score };
+  }
+  aggregate: func(req: request, flags: list<s32>, values: map<string, s32>, keys: list<string>, key: string) -> s32 {
+    let part_0: s32 = policy_step_0(req, flags) + policy_step_1(req, flags) + policy_step_2(req, flags) + policy_step_3(req, flags);
+    let part_1: s32 = policy_step_4(req, flags) + policy_step_5(req, flags) + policy_step_6(req, flags) + policy_step_7(req, flags);
+    let part_2: s32 = policy_step_8(req, flags) + policy_step_9(req, flags) + policy_step_10(req, flags) + policy_step_11(req, flags);
+    let part_3: s32 = policy_step_12(req, flags) + policy_step_13(req, flags) + policy_step_14(req, flags) + policy_step_15(req, flags);
+    let part_4: s32 = policy_step_16(req, flags) + policy_step_17(req, flags) + policy_step_18(req, flags) + policy_step_19(req, flags);
+    let part_5: s32 = policy_step_20(req, flags) + policy_step_21(req, flags) + policy_step_22(req, flags) + policy_step_23(req, flags);
+    let part_6: s32 = policy_step_24(req, flags) + policy_step_25(req, flags) + policy_step_26(req, flags) + policy_step_27(req, flags);
+    let part_7: s32 = policy_step_28(req, flags) + policy_step_29(req, flags) + policy_step_30(req, flags) + policy_step_31(req, flags);
+    let part_8: s32 = policy_step_32(req, flags) + policy_step_33(req, flags) + policy_step_34(req, flags) + policy_step_35(req, flags);
+    let part_9: s32 = policy_step_36(req, flags) + policy_step_37(req, flags) + policy_step_38(req, flags) + policy_step_39(req, flags);
+    let part_10: s32 = policy_step_40(req, flags) + policy_step_41(req, flags) + policy_step_42(req, flags) + policy_step_43(req, flags);
+    let host_part: s32 = get_or_s32(values, key, 0) + sum_s32(flags) + sum_present_s32(values, keys) + count_present_s32(values, keys);
+    return part_0 + part_1 + part_2 + part_3 + part_4 + part_5 + part_6 + part_7 + part_8 + part_9 + part_10 + host_part;
+  }
+}
+
+world app { import deps; import std_list; import std_map; export api; }
