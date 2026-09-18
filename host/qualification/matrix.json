@@ -1,0 +1,79 @@
+{
+  "schema": "wasmc.host-qualification-matrix/v1",
+  "dimensions": {
+    "platform": [
+      "linux-x86_64",
+      "linux-aarch64",
+      "macos-x86_64",
+      "macos-aarch64",
+      "windows-x86_64",
+      "windows-aarch64",
+      "android-aarch64",
+      "harmony-aarch64",
+      "ios-aarch64"
+    ],
+    "embedding": [
+      "native",
+      "node",
+      "deno",
+      "bun",
+      "browser/chromium",
+      "browser/firefox",
+      "browser/webkit"
+    ]
+  },
+  "rule": "platform-backed embeddings are qualified per physical platform \u00d7 embedding; browser engines may use embedding-only qualification because Browser is not a physical Host platform",
+  "current_evidence": [
+    {
+      "scope": "platform\u00d7embedding",
+      "platform": "linux-x86_64",
+      "embedding": "node",
+      "source": "host-e2e"
+    },
+    {
+      "scope": "platform\u00d7embedding",
+      "platform": "linux-aarch64",
+      "embedding": "node",
+      "source": "host-e2e"
+    },
+    {
+      "scope": "platform\u00d7embedding",
+      "platform": "linux-x86_64",
+      "embedding": "deno",
+      "source": "host-e2e"
+    },
+    {
+      "scope": "platform\u00d7embedding",
+      "platform": "linux-aarch64",
+      "embedding": "deno",
+      "source": "host-e2e"
+    },
+    {
+      "scope": "platform\u00d7embedding",
+      "platform": "linux-x86_64",
+      "embedding": "bun",
+      "source": "host-e2e"
+    },
+    {
+      "scope": "platform\u00d7embedding",
+      "platform": "linux-aarch64",
+      "embedding": "bun",
+      "source": "host-e2e"
+    },
+    {
+      "scope": "embedding-only",
+      "embedding": "browser/chromium",
+      "source": "host-e2e"
+    },
+    {
+      "scope": "embedding-only",
+      "embedding": "browser/firefox",
+      "source": "host-e2e"
+    },
+    {
+      "scope": "embedding-only",
+      "embedding": "browser/webkit",
+      "source": "host-e2e"
+    }
+  ]
+}

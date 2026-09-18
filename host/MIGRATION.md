@@ -11,7 +11,7 @@ The public Host has one canonical source tree. Legacy top-level Host layouts are
 | `host/udp/` | `host/drivers/udp/` |
 | `host/corelib-io/` | `host/core/io/` |
 | `host/lib-e2e/` | `host/tests/e2e/` |
-| `host/browser/` | `host/sdk/browser/` |
+| `host/browser/` | `host/embedding/browser/` |
 
 Rules:
 

@@ -91,7 +91,7 @@ node host/contract/v0/core-test.mjs host/contract/v0/rust/target/release/wasmc-h
 node host/contract/v0/core-test.mjs host/contract/v0/rust/target/release/wasmc-host-contract-reference --wasmtime
 ```
 
-Real browser probes in host/sdk/browser additionally execute this same digest-bound
+Real browser probes in host/embedding/browser additionally execute this same digest-bound
 Core guest alongside App/Lib/guard ownership tests. Cross-platform acceptance
 must read exact candidate runs in both Host workflows, not treat local proof
 or existing prototype acceptance as final immutable SDK qualification.

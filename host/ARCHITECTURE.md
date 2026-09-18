@@ -26,9 +26,9 @@ runtime
    ↓
 drivers
    ↓
-platform
-   ↓
-OS / device API
+provider selection
+   ├── platform  → OS / device API
+   └── embedding → Node / Deno / Bun / Browser environment API
 ```
 
 `core` and `runtime` should remain portable Rust/Wasm-oriented code.
@@ -42,3 +42,12 @@ Mobile targets primarily ship embeddable SDK packages.
 
 All packages contain the same contract identity and declare the capabilities
 actually implemented/qualified on that platform.
+
+## Orthogonal execution dimensions
+
+`platform/` and `embedding/` are orthogonal.
+
+- platform answers where native Host code runs: Linux/macOS/Windows/Android/Harmony/iOS.
+- embedding answers which execution environment carries or bridges Host providers: native/Node/Deno/Bun/Browser.
+
+Node, Deno, Bun and Browser are never platform adapters and never define guest-visible Host ABI variants. Provider selection remains an internal Host decision; Guest code sees only canonical Capability/Resource/Operation/Completion/Window semantics.

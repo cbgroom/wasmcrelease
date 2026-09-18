@@ -1,5 +1,5 @@
-# Host embedding SDKs
+# Host SDK packaging
 
-Application ecosystem packaging belongs here. JNI, ArkTS/NAPI, Objective-C/
-Swift bridges, AAR/HAR/XCFramework packaging and similar embedding glue must not
-leak into the core Host runtime contract.
+`sdk/` is for distribution and developer integration only: package manifests, language bindings, AAR/HAR/XCFramework/npm-style packaging and embedding glue.
+
+Runtime behavior belongs to `runtime/`, capability implementation to `drivers/`/`platform/`, and execution-environment behavior to `embedding/`.

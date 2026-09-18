@@ -7,7 +7,7 @@ identities. This is a computation/ownership probe, not browser raw TCP or
 filesystem support. Native TCP backends remain separate deployment features.
 
 ```sh
-node host/sdk/browser/server.mjs
+node host/embedding/browser/server.mjs
 # In a separate terminal, use its printed loopback URL:
 npm exec --yes --package=@playwright/cli@0.1.19 -- playwright-cli -s=wasmc-host open URL --browser chrome
 npm exec --yes --package=@playwright/cli@0.1.19 -- playwright-cli -s=wasmc-host --raw eval 'async () => await globalThis.receiptPromise'

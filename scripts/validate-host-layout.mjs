@@ -18,12 +18,34 @@ for (const platform of manifest.platforms) {
     failures.push(`missing platform root host/platform/${platform}`);
   }
 }
+for (const embedding of ["node", "deno", "bun", "browser"]) {
+  const p = path.join(root, "host", "embedding", embedding);
+  if (!fs.statSync(p, { throwIfNoEntry: false })?.isDirectory()) {
+    failures.push(`missing embedding root host/embedding/${embedding}`);
+  }
+}
+for (const forbidden of ["node", "deno", "bun", "browser"]) {
+  const p = path.join(root, "host", "platform", forbidden);
+  if (fs.existsSync(p)) failures.push(`execution environment must not be a platform: host/platform/${forbidden}`);
+}
 
 const forbiddenTopLevel = manifest.platforms
   .map((p) => path.join(root, "host", `${p}-host`))
   .filter((p) => fs.existsSync(p));
 for (const p of forbiddenTopLevel) {
   failures.push(`platform Host API fork is forbidden: ${path.relative(root, p)}`);
+}
+
+
+const qualification = JSON.parse(fs.readFileSync(path.join(root, "host", "qualification", "matrix.json"), "utf8"));
+for (const row of qualification.current_evidence ?? []) {
+  if (row.scope === "embedding-only" && !String(row.embedding).startsWith("browser/")) {
+    failures.push(`embedding-only qualification is reserved for browser engines: ${row.embedding}`);
+  }
+  if (row.scope === "platform×embedding" && (!row.platform || !row.embedding)) {
+    failures.push("platform×embedding qualification requires both dimensions");
+  }
+  if (row.platform === "browser") failures.push("Browser must not appear as a physical platform");
 }
 
 if (manifest.legacy_paths_retained !== false) {

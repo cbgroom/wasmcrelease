@@ -193,7 +193,7 @@ Owning runnable commands and limits:
 - host/drivers/tcp/BENCHMARK.md: checksummed pure compute; not network/durable TPS.
 - host/drivers/tcp/READ_STOP.md and WRITE_OUTCOMES.md: issued-I/O/partial-effect fences.
 - host/drivers/tcp/STOP_FAILURE.md and SUPERVISOR.md: retained ownership and bounded quota.
-- host/sdk/browser/README.md: actual Chrome/Firefox/WebKit probes, not phone emulation.
+- host/embedding/browser/README.md: actual Chrome/Firefox/WebKit probes, not phone emulation.
 
 Before commit: refresh-integrity.mjs, validate-maintainer.sh, actionlint,
 git diff --check; stage only own changes and verify remote recovery.

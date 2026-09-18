@@ -383,7 +383,7 @@ jobs:
           BROWSER: ${{ matrix.engine }}
           SOURCE: ${{ github.sha }}
         run: |
-          node host/sdk/browser/server.mjs > "$RUNNER_TEMP/wasmc-browser-url.txt" 2> "$RUNNER_TEMP/wasmc-browser-server.err" &
+          node host/embedding/browser/server.mjs > "$RUNNER_TEMP/wasmc-browser-url.txt" 2> "$RUNNER_TEMP/wasmc-browser-server.err" &
           server_pid=$!
           cd "$RUNNER_TEMP"
           trap 'npm exec --yes --package=@playwright/cli@0.1.19 -- playwright-cli -s=wasmc-host-ci close || true; kill "$server_pid" || true' EXIT
