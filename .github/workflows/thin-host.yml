@@ -23,26 +23,26 @@ jobs:
       - name: Restore locked kernel dependency compilation cache
         uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830
         with:
-          path: host/v0/rust/target
-          key: host-kernel-v1-${{ matrix.os }}-${{ runner.arch }}-rust1.96.0-${{ hashFiles('host/v0/rust/Cargo.lock', 'host/v0/rust/Cargo.toml') }}
+          path: host/contract/v0/rust/target
+          key: host-kernel-v1-${{ matrix.os }}-${{ runner.arch }}-rust1.96.0-${{ hashFiles('host/contract/v0/rust/Cargo.lock', 'host/contract/v0/rust/Cargo.toml') }}
       - name: Always rebuild owned kernel crate after cache restore
-        run: cargo +1.96.0 clean --locked --manifest-path host/v0/rust/Cargo.toml -p wasmc-host-contract-reference
-      - run: cargo +1.96.0 fmt --check --manifest-path host/v0/rust/Cargo.toml
-      - run: cargo +1.96.0 clippy --locked --manifest-path host/v0/rust/Cargo.toml --all-targets -- -D warnings
-      - run: cargo +1.96.0 build --release --locked --manifest-path host/v0/rust/Cargo.toml
+        run: cargo +1.96.0 clean --locked --manifest-path host/contract/v0/rust/Cargo.toml -p wasmc-host-contract-reference
+      - run: cargo +1.96.0 fmt --check --manifest-path host/contract/v0/rust/Cargo.toml
+      - run: cargo +1.96.0 clippy --locked --manifest-path host/contract/v0/rust/Cargo.toml --all-targets -- -D warnings
+      - run: cargo +1.96.0 build --release --locked --manifest-path host/contract/v0/rust/Cargo.toml
       - name: Kernel Wasmi-only dependency contract
         shell: bash
         run: |
-          cargo +1.96.0 tree --locked --manifest-path host/v0/rust/Cargo.toml > "$RUNNER_TEMP/wasmi-kernel-tree.txt"
+          cargo +1.96.0 tree --locked --manifest-path host/contract/v0/rust/Cargo.toml > "$RUNNER_TEMP/wasmi-kernel-tree.txt"
           if grep -E 'wasmtime|cranelift' "$RUNNER_TEMP/wasmi-kernel-tree.txt"; then exit 1; fi
       - name: Node / native Wasmi same-source tests
         shell: bash
         run: |
-          binary=host/v0/rust/target/release/wasmc-host-contract-reference
+          binary=host/contract/v0/rust/target/release/wasmc-host-contract-reference
           if [[ "$RUNNER_OS" == Windows ]]; then binary="$binary.exe"; fi
-          node host/v0/test.mjs "$binary"
-          node host/v0/core-test.mjs "$binary"
-          node host/v0/core-test.mjs "$binary" --negotiated
+          node host/contract/v0/test.mjs "$binary"
+          node host/contract/v0/core-test.mjs "$binary"
+          node host/contract/v0/core-test.mjs "$binary" --negotiated
       - if: runner.os != 'Windows'
         uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6
         with:
@@ -55,27 +55,27 @@ jobs:
         name: Bun / Deno native reference parity
         shell: bash
         run: |
-          binary=host/v0/rust/target/release/wasmc-host-contract-reference
-          bun host/v0/test.mjs "$binary"
-          bun host/v0/core-test.mjs "$binary"
-          bun host/v0/core-test.mjs "$binary" --negotiated
-          deno run --allow-env=NODE_V8_COVERAGE --allow-read=host/v0 --allow-run="$binary" host/v0/test.mjs "$binary"
-          deno run --allow-env=NODE_V8_COVERAGE --allow-read=current,host/v0,target/thin-host --allow-write=target/thin-host --allow-run="$binary" host/v0/core-test.mjs "$binary"
-          deno run --allow-env=NODE_V8_COVERAGE --allow-read=current,host/v0,target/thin-host --allow-write=target/thin-host --allow-run="$binary" host/v0/core-test.mjs "$binary" --negotiated
+          binary=host/contract/v0/rust/target/release/wasmc-host-contract-reference
+          bun host/contract/v0/test.mjs "$binary"
+          bun host/contract/v0/core-test.mjs "$binary"
+          bun host/contract/v0/core-test.mjs "$binary" --negotiated
+          deno run --allow-env=NODE_V8_COVERAGE --allow-read=host/contract/v0 --allow-run="$binary" host/contract/v0/test.mjs "$binary"
+          deno run --allow-env=NODE_V8_COVERAGE --allow-read=current,host/contract/v0,target/thin-host --allow-write=target/thin-host --allow-run="$binary" host/contract/v0/core-test.mjs "$binary"
+          deno run --allow-env=NODE_V8_COVERAGE --allow-read=current,host/contract/v0,target/thin-host --allow-write=target/thin-host --allow-run="$binary" host/contract/v0/core-test.mjs "$binary" --negotiated
       - name: Optional Wasmtime kernel Core binding
         shell: bash
         run: |
-          cargo +1.96.0 clippy --locked --manifest-path host/v0/rust/Cargo.toml --features wasmtime-engine --all-targets -- -D warnings
-          cargo +1.96.0 build --release --locked --manifest-path host/v0/rust/Cargo.toml --features wasmtime-engine
-          binary=host/v0/rust/target/release/wasmc-host-contract-reference
+          cargo +1.96.0 clippy --locked --manifest-path host/contract/v0/rust/Cargo.toml --features wasmtime-engine --all-targets -- -D warnings
+          cargo +1.96.0 build --release --locked --manifest-path host/contract/v0/rust/Cargo.toml --features wasmtime-engine
+          binary=host/contract/v0/rust/target/release/wasmc-host-contract-reference
           if [[ "$RUNNER_OS" == Windows ]]; then binary="$binary.exe"; fi
-          node host/v0/core-test.mjs "$binary" --wasmtime
-          node host/v0/core-test.mjs "$binary" --wasmtime --negotiated
+          node host/contract/v0/core-test.mjs "$binary" --wasmtime
+          node host/contract/v0/core-test.mjs "$binary" --wasmtime --negotiated
           if [[ "$RUNNER_OS" != Windows ]]; then
-            bun host/v0/core-test.mjs "$binary" --wasmtime
-            bun host/v0/core-test.mjs "$binary" --wasmtime --negotiated
-            deno run --allow-env=NODE_V8_COVERAGE --allow-read=current,host/v0,target/thin-host --allow-write=target/thin-host --allow-run="$binary" host/v0/core-test.mjs "$binary" --wasmtime
-            deno run --allow-env=NODE_V8_COVERAGE --allow-read=current,host/v0,target/thin-host --allow-write=target/thin-host --allow-run="$binary" host/v0/core-test.mjs "$binary" --wasmtime --negotiated
+            bun host/contract/v0/core-test.mjs "$binary" --wasmtime
+            bun host/contract/v0/core-test.mjs "$binary" --wasmtime --negotiated
+            deno run --allow-env=NODE_V8_COVERAGE --allow-read=current,host/contract/v0,target/thin-host --allow-write=target/thin-host --allow-run="$binary" host/contract/v0/core-test.mjs "$binary" --wasmtime
+            deno run --allow-env=NODE_V8_COVERAGE --allow-read=current,host/contract/v0,target/thin-host --allow-write=target/thin-host --allow-run="$binary" host/contract/v0/core-test.mjs "$binary" --wasmtime --negotiated
           fi
       - name: Exact-source scope
         shell: bash

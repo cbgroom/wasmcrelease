@@ -4,7 +4,7 @@ Mutable public Host/glue only. Default reference dependency graph is Wasmi2,
 without Wasmtime/WASI, system TLS or hidden JIT. Explicit optional Wasmtime is
 qualified separately on desktop runners, never enabled as mobile fallback.
 
-Rust1.96 locked default `host/lib-e2e/rust` all-target checks cover:
+Rust1.96 locked default `host/tests/e2e/rust` all-target checks cover:
 
 - aarch64-apple-ios
 - aarch64-apple-ios-sim
@@ -23,7 +23,7 @@ requirements are not made portable by compiling this Wasmi reference.
 
 ```sh
 rustup target add aarch64-apple-ios --toolchain 1.96.0
-cargo +1.96.0 check --locked --manifest-path host/lib-e2e/rust/Cargo.toml --target aarch64-apple-ios --all-targets
+cargo +1.96.0 check --locked --manifest-path host/tests/e2e/rust/Cargo.toml --target aarch64-apple-ios --all-targets
 ```
 
 Replace target with the other listed names. Local iOS/Android/OHOS checks passed;

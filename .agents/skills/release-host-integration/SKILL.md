@@ -71,7 +71,7 @@ acceleration. Browser restrictions must not cap Native, and missing capabilities
 must reject explicitly rather than silently simulate different effects.
 
 Public Host contract/glue may be maintained here; compiler and CoreLib producer
-authority is unchanged. Read [v0 profile](../../../host/v0/README.md) for exact
+authority is unchanged. Read [v0 profile](../../../host/contract/v0/README.md) for exact
 implemented/draft gaps. Prioritize real CLI/file I/O, TCP/UDP and resident service
 validation using existing mechanisms; do not call simulator success real I/O,
 typed WIT draft a physical adapter, or native build proof browser/mobile support.
@@ -96,7 +96,7 @@ publish cancelled bytes or replay an effect. Never force-release on timeout
 without safely terminating/quarantining the backend. Revocation must deny new
 grants/delivery while still permitting drain and cleanup. Qualify malformed,
 foreign/stale/duplicate completions and terminal-record quotas with independent
-state/resource oracles. Read [completion guard](../../../host/completion/README.md)
+state/resource oracles. Read [completion guard](../../../host/runtime/completion/README.md)
 when extending the public prototype; its single-registry process-local identity
 is not restart-safe or a completed typed Core ABI. Serialized trace success is
 not OS concurrency/fault proof. Simulator cancel guarantees remain narrower.

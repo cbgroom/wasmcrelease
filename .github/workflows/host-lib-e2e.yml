@@ -28,8 +28,8 @@ jobs:
           TARGET: ${{ matrix.target }}
           SOURCE: ${{ github.sha }}
         run: |
-          cargo +1.96.0 check --locked --manifest-path host/lib-e2e/rust/Cargo.toml --target "$TARGET" --all-targets
-          cargo +1.96.0 tree --locked --manifest-path host/lib-e2e/rust/Cargo.toml --target "$TARGET" --prefix none > "$RUNNER_TEMP/default-dependencies.txt"
+          cargo +1.96.0 check --locked --manifest-path host/tests/e2e/rust/Cargo.toml --target "$TARGET" --all-targets
+          cargo +1.96.0 tree --locked --manifest-path host/tests/e2e/rust/Cargo.toml --target "$TARGET" --prefix none > "$RUNNER_TEMP/default-dependencies.txt"
           node scripts/test-native-reference-dependencies.mjs
           sh scripts/check-native-reference-dependencies.sh "$RUNNER_TEMP/default-dependencies.txt"
           printf '%s\n' "Source $SOURCE; $TARGET Wasmi-only compile PASS; no link/sign/install/device/network-permission/runtime qualification" >> "$GITHUB_STEP_SUMMARY"
@@ -54,55 +54,55 @@ jobs:
       - name: Fast stream ownership and actual JS service proof
         shell: bash
         run: |
-          node host/udp/entrypoint-test.mjs
-          node host/tcp/resident-snapshot-test.mjs
-          bun host/tcp/resident-snapshot-test.mjs
-          deno run --allow-read=current,host/lib-e2e,libs/wasmc-owned-algorithms host/tcp/resident-snapshot-test.mjs
-          node host/tcp/stream-snapshot-test.mjs
-          bun host/tcp/stream-snapshot-test.mjs
-          deno run host/tcp/stream-snapshot-test.mjs
-          node host/tcp/buffer-budget-test.mjs
-          bun host/tcp/buffer-budget-test.mjs
-          deno run host/tcp/buffer-budget-test.mjs
-          node host/completion/snapshot-test.mjs
-          node host/tcp/write-snapshot-test.mjs
-          node host/tcp/guard-retirement-test.mjs
-          node host/tcp/quarantine-retirement-test.mjs
-          node host/tcp/guard-pool-test.mjs
-          node host/tcp/completion-quarantine-test.mjs --real-tcp
-          bun host/completion/snapshot-test.mjs
-          bun host/tcp/write-snapshot-test.mjs
-          bun host/tcp/guard-retirement-test.mjs
-          bun host/tcp/quarantine-retirement-test.mjs
-          bun host/tcp/guard-pool-test.mjs
-          bun host/tcp/completion-quarantine-test.mjs --real-tcp
-          deno run host/completion/snapshot-test.mjs
-          deno run host/tcp/write-snapshot-test.mjs
-          deno run host/tcp/guard-retirement-test.mjs
-          deno run host/tcp/quarantine-retirement-test.mjs
-          deno run host/tcp/guard-pool-test.mjs
-          deno run --allow-net=127.0.0.1 host/tcp/completion-quarantine-test.mjs --real-tcp
-          node host/file-io/write-snapshot-test.mjs
-          bun host/file-io/write-snapshot-test.mjs
-          deno run host/file-io/write-snapshot-test.mjs
-          node host/file-io/read-completion-test.mjs
-          bun host/file-io/read-completion-test.mjs
-          deno run host/file-io/read-completion-test.mjs
-          node host/corelib-io/snapshot-test.mjs
-          bun host/corelib-io/snapshot-test.mjs
-          deno run --allow-read=standard/corelib,current,host/corelib-io host/corelib-io/snapshot-test.mjs
-          node host/udp/test.mjs
-          node host/udp/fault-test.mjs
-          node host/udp/retirement-test.mjs
-          bun host/udp/test.mjs
-          bun host/udp/fault-test.mjs
-          bun host/udp/retirement-test.mjs
-          deno run --allow-net=127.0.0.1 --allow-read=current,host/lib-e2e,libs/wasmc-owned-algorithms host/udp/test.mjs
-          deno run --allow-net=127.0.0.1 host/udp/fault-test.mjs
-          deno run host/udp/retirement-test.mjs
-          node host/tcp/server-test.mjs --js-only
-          bun host/tcp/server-test.mjs --js-only --diagnose
-          deno run --allow-net=127.0.0.1 --allow-read=current,host/lib-e2e,libs/wasmc-owned-algorithms --allow-write=target/host-tcp-app host/tcp/server-test.mjs --js-only
+          node host/drivers/udp/entrypoint-test.mjs
+          node host/drivers/tcp/resident-snapshot-test.mjs
+          bun host/drivers/tcp/resident-snapshot-test.mjs
+          deno run --allow-read=current,host/tests/e2e,libs/wasmc-owned-algorithms host/drivers/tcp/resident-snapshot-test.mjs
+          node host/drivers/tcp/stream-snapshot-test.mjs
+          bun host/drivers/tcp/stream-snapshot-test.mjs
+          deno run host/drivers/tcp/stream-snapshot-test.mjs
+          node host/drivers/tcp/buffer-budget-test.mjs
+          bun host/drivers/tcp/buffer-budget-test.mjs
+          deno run host/drivers/tcp/buffer-budget-test.mjs
+          node host/runtime/completion/snapshot-test.mjs
+          node host/drivers/tcp/write-snapshot-test.mjs
+          node host/drivers/tcp/guard-retirement-test.mjs
+          node host/drivers/tcp/quarantine-retirement-test.mjs
+          node host/drivers/tcp/guard-pool-test.mjs
+          node host/drivers/tcp/completion-quarantine-test.mjs --real-tcp
+          bun host/runtime/completion/snapshot-test.mjs
+          bun host/drivers/tcp/write-snapshot-test.mjs
+          bun host/drivers/tcp/guard-retirement-test.mjs
+          bun host/drivers/tcp/quarantine-retirement-test.mjs
+          bun host/drivers/tcp/guard-pool-test.mjs
+          bun host/drivers/tcp/completion-quarantine-test.mjs --real-tcp
+          deno run host/runtime/completion/snapshot-test.mjs
+          deno run host/drivers/tcp/write-snapshot-test.mjs
+          deno run host/drivers/tcp/guard-retirement-test.mjs
+          deno run host/drivers/tcp/quarantine-retirement-test.mjs
+          deno run host/drivers/tcp/guard-pool-test.mjs
+          deno run --allow-net=127.0.0.1 host/drivers/tcp/completion-quarantine-test.mjs --real-tcp
+          node host/drivers/file/write-snapshot-test.mjs
+          bun host/drivers/file/write-snapshot-test.mjs
+          deno run host/drivers/file/write-snapshot-test.mjs
+          node host/drivers/file/read-completion-test.mjs
+          bun host/drivers/file/read-completion-test.mjs
+          deno run host/drivers/file/read-completion-test.mjs
+          node host/core/io/snapshot-test.mjs
+          bun host/core/io/snapshot-test.mjs
+          deno run --allow-read=standard/corelib,current,host/core/io host/core/io/snapshot-test.mjs
+          node host/drivers/udp/test.mjs
+          node host/drivers/udp/fault-test.mjs
+          node host/drivers/udp/retirement-test.mjs
+          bun host/drivers/udp/test.mjs
+          bun host/drivers/udp/fault-test.mjs
+          bun host/drivers/udp/retirement-test.mjs
+          deno run --allow-net=127.0.0.1 --allow-read=current,host/tests/e2e,libs/wasmc-owned-algorithms host/drivers/udp/test.mjs
+          deno run --allow-net=127.0.0.1 host/drivers/udp/fault-test.mjs
+          deno run host/drivers/udp/retirement-test.mjs
+          node host/drivers/tcp/server-test.mjs --js-only
+          bun host/drivers/tcp/server-test.mjs --js-only --diagnose
+          deno run --allow-net=127.0.0.1 --allow-read=current,host/tests/e2e,libs/wasmc-owned-algorithms --allow-write=target/host-tcp-app host/drivers/tcp/server-test.mjs --js-only
   composition:
     strategy:
       fail-fast: false
@@ -121,112 +121,112 @@ jobs:
         uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830
         with:
           path: |
-            host/lib-e2e/rust/target
-            host/completion/rust/target
-            host/file-io/rust/target
+            host/tests/e2e/rust/target
+            host/runtime/completion/rust/target
+            host/drivers/file/rust/target
           key: host-composition-v1-${{ matrix.os }}-${{ runner.arch }}-rust1.96.0-${{ hashFiles('host/**/Cargo.lock', 'host/**/Cargo.toml') }}
       - name: Always rebuild owned Host crates after cache restore
         shell: bash
         run: |
-          cargo +1.96.0 clean --locked --manifest-path host/lib-e2e/rust/Cargo.toml -p wasmc-lib-host-e2e -p wasmc-completion-guard -p wasmc-preopened-file-reference
-          cargo +1.96.0 clean --locked --manifest-path host/completion/rust/Cargo.toml -p wasmc-completion-guard
-          cargo +1.96.0 clean --locked --manifest-path host/file-io/rust/Cargo.toml -p wasmc-preopened-file-reference
+          cargo +1.96.0 clean --locked --manifest-path host/tests/e2e/rust/Cargo.toml -p wasmc-lib-host-e2e -p wasmc-completion-guard -p wasmc-preopened-file-reference
+          cargo +1.96.0 clean --locked --manifest-path host/runtime/completion/rust/Cargo.toml -p wasmc-completion-guard
+          cargo +1.96.0 clean --locked --manifest-path host/drivers/file/rust/Cargo.toml -p wasmc-preopened-file-reference
       - name: Compile reviewed Rust CoreLib conformance caller
         shell: bash
         run: |
           mkdir -p target/corelib-io
-          rustc +1.96.0 --edition=2024 --crate-type=cdylib --target=wasm32-unknown-unknown -O -D warnings -C panic=abort host/corelib-io/private-abi-guest.rs -o target/corelib-io/rust-guest.wasm
-      - run: cargo +1.96.0 fmt --check --manifest-path host/completion/rust/Cargo.toml
-      - run: cargo +1.96.0 clippy --locked --manifest-path host/completion/rust/Cargo.toml --all-targets -- -D warnings
-      - run: cargo +1.96.0 build --release --locked --manifest-path host/completion/rust/Cargo.toml
-      - run: cargo +1.96.0 test --release --locked --manifest-path host/completion/rust/Cargo.toml
-      - run: node host/completion/fault-test.mjs
-      - run: node host/completion/lifetime-test.mjs
-      - run: node host/tcp/stop-failure-test.mjs
-      - run: node host/tcp/driver-error-test.mjs
-      - run: node host/file-io/retirement-test.mjs
-      - run: node host/file-io/write-snapshot-test.mjs
-      - run: node host/file-io/read-completion-test.mjs
-      - run: node host/tcp/driver-retirement-test.mjs --real-tcp
-      - run: node host/tcp/stream-snapshot-test.mjs
-      - run: node host/tcp/buffer-budget-test.mjs
-      - run: node host/completion/snapshot-test.mjs
-      - run: node host/tcp/write-snapshot-test.mjs
-      - run: node host/tcp/guard-retirement-test.mjs
-      - run: node host/tcp/quarantine-retirement-test.mjs
-      - run: node host/tcp/guard-pool-test.mjs
-      - run: node host/tcp/completion-quarantine-test.mjs --real-tcp
-      - run: node host/corelib-io/snapshot-test.mjs
-      - run: node host/tcp/supervisor-test.mjs
-      - run: node host/udp/test.mjs
-      - run: node host/udp/fault-test.mjs
-      - run: node host/udp/retirement-test.mjs
-      - run: node host/udp/entrypoint-test.mjs --node-only
-      - run: node host/tcp/resident-snapshot-test.mjs
+          rustc +1.96.0 --edition=2024 --crate-type=cdylib --target=wasm32-unknown-unknown -O -D warnings -C panic=abort host/core/io/private-abi-guest.rs -o target/corelib-io/rust-guest.wasm
+      - run: cargo +1.96.0 fmt --check --manifest-path host/runtime/completion/rust/Cargo.toml
+      - run: cargo +1.96.0 clippy --locked --manifest-path host/runtime/completion/rust/Cargo.toml --all-targets -- -D warnings
+      - run: cargo +1.96.0 build --release --locked --manifest-path host/runtime/completion/rust/Cargo.toml
+      - run: cargo +1.96.0 test --release --locked --manifest-path host/runtime/completion/rust/Cargo.toml
+      - run: node host/runtime/completion/fault-test.mjs
+      - run: node host/runtime/completion/lifetime-test.mjs
+      - run: node host/drivers/tcp/stop-failure-test.mjs
+      - run: node host/drivers/tcp/driver-error-test.mjs
+      - run: node host/drivers/file/retirement-test.mjs
+      - run: node host/drivers/file/write-snapshot-test.mjs
+      - run: node host/drivers/file/read-completion-test.mjs
+      - run: node host/drivers/tcp/driver-retirement-test.mjs --real-tcp
+      - run: node host/drivers/tcp/stream-snapshot-test.mjs
+      - run: node host/drivers/tcp/buffer-budget-test.mjs
+      - run: node host/runtime/completion/snapshot-test.mjs
+      - run: node host/drivers/tcp/write-snapshot-test.mjs
+      - run: node host/drivers/tcp/guard-retirement-test.mjs
+      - run: node host/drivers/tcp/quarantine-retirement-test.mjs
+      - run: node host/drivers/tcp/guard-pool-test.mjs
+      - run: node host/drivers/tcp/completion-quarantine-test.mjs --real-tcp
+      - run: node host/core/io/snapshot-test.mjs
+      - run: node host/drivers/tcp/supervisor-test.mjs
+      - run: node host/drivers/udp/test.mjs
+      - run: node host/drivers/udp/fault-test.mjs
+      - run: node host/drivers/udp/retirement-test.mjs
+      - run: node host/drivers/udp/entrypoint-test.mjs --node-only
+      - run: node host/drivers/tcp/resident-snapshot-test.mjs
       - name: Independent process startup identity
         shell: bash
         run: |
-          binary=host/completion/rust/target/release/scoped-reference
+          binary=host/runtime/completion/rust/target/release/scoped-reference
           if [[ "$RUNNER_OS" == Windows ]]; then binary="$binary.exe"; fi
-          node host/completion/scoped-test.mjs "$binary"
-      - run: cargo +1.96.0 build --release --locked --manifest-path host/file-io/rust/Cargo.toml
+          node host/runtime/completion/scoped-test.mjs "$binary"
+      - run: cargo +1.96.0 build --release --locked --manifest-path host/drivers/file/rust/Cargo.toml
       - name: Existing real file adapter regression
         shell: bash
         run: |
-          binary=host/file-io/rust/target/release/wasmc-preopened-file-reference
+          binary=host/drivers/file/rust/target/release/wasmc-preopened-file-reference
           if [[ "$RUNNER_OS" == Windows ]]; then binary="$binary.exe"; fi
-          node host/file-io/test.mjs "$binary"
+          node host/drivers/file/test.mjs "$binary"
       - name: Session, cancellation and late completion parity
         shell: bash
         run: |
-          binary=host/completion/rust/target/release/wasmc-completion-guard
+          binary=host/runtime/completion/rust/target/release/wasmc-completion-guard
           if [[ "$RUNNER_OS" == Windows ]]; then binary="$binary.exe"; fi
-          node host/completion/test.mjs "$binary"
-      - run: cargo +1.96.0 fmt --check --manifest-path host/lib-e2e/rust/Cargo.toml
-      - run: cargo +1.96.0 clippy --locked --manifest-path host/lib-e2e/rust/Cargo.toml --all-targets -- -D warnings
-      - run: cargo +1.96.0 build --release --locked --manifest-path host/lib-e2e/rust/Cargo.toml
-      - run: cargo +1.96.0 test --release --locked --manifest-path host/lib-e2e/rust/Cargo.toml
+          node host/runtime/completion/test.mjs "$binary"
+      - run: cargo +1.96.0 fmt --check --manifest-path host/tests/e2e/rust/Cargo.toml
+      - run: cargo +1.96.0 clippy --locked --manifest-path host/tests/e2e/rust/Cargo.toml --all-targets -- -D warnings
+      - run: cargo +1.96.0 build --release --locked --manifest-path host/tests/e2e/rust/Cargo.toml
+      - run: cargo +1.96.0 test --release --locked --manifest-path host/tests/e2e/rust/Cargo.toml
       - name: Half-close reply with independent Native peer
         shell: bash
         run: |
-          peer=host/lib-e2e/rust/target/release/tcp-half-close-peer
+          peer=host/tests/e2e/rust/target/release/tcp-half-close-peer
           if [[ "$RUNNER_OS" == Windows ]]; then peer="$peer.exe"; fi
-          node host/tcp/half-close-test.mjs "$peer"
-          node host/tcp/half-close-test.mjs
+          node host/drivers/tcp/half-close-test.mjs "$peer"
+          node host/drivers/tcp/half-close-test.mjs
       - name: Wasmi-only dependency contract
         shell: bash
         run: |
-          cargo +1.96.0 tree --locked --manifest-path host/lib-e2e/rust/Cargo.toml > "$RUNNER_TEMP/wasmi-default-tree.txt"
+          cargo +1.96.0 tree --locked --manifest-path host/tests/e2e/rust/Cargo.toml > "$RUNNER_TEMP/wasmi-default-tree.txt"
           if grep -E 'wasmtime|cranelift' "$RUNNER_TEMP/wasmi-default-tree.txt"; then exit 1; fi
       - name: Preconnected TCP and frozen algorithm Lib
         shell: bash
         run: |
-          binary=host/lib-e2e/rust/target/release/tcp-reference
+          binary=host/tests/e2e/rust/target/release/tcp-reference
           if [[ "$RUNNER_OS" == Windows ]]; then binary="$binary.exe"; fi
-          node host/tcp/test.mjs "$binary"
-          stop=host/lib-e2e/rust/target/release/tcp-stop-reference
+          node host/drivers/tcp/test.mjs "$binary"
+          stop=host/tests/e2e/rust/target/release/tcp-stop-reference
           if [[ "$RUNNER_OS" == Windows ]]; then stop="$stop.exe"; fi
-          node host/tcp/fault-test.mjs "$stop"
-          server=host/lib-e2e/rust/target/release/tcp-server-reference
-          resident=host/lib-e2e/rust/target/release/resident-app-reference
+          node host/drivers/tcp/fault-test.mjs "$stop"
+          server=host/tests/e2e/rust/target/release/tcp-server-reference
+          resident=host/tests/e2e/rust/target/release/resident-app-reference
           if [[ "$RUNNER_OS" == Windows ]]; then server="$server.exe"; resident="$resident.exe"; fi
-          node host/tcp/server-test.mjs "$server" "$resident"
-          write=host/lib-e2e/rust/target/release/tcp-write-reference
+          node host/drivers/tcp/server-test.mjs "$server" "$resident"
+          write=host/tests/e2e/rust/target/release/tcp-write-reference
           if [[ "$RUNNER_OS" == Windows ]]; then write="$write.exe"; fi
-          node host/tcp/write-test.mjs "$write"
-          udp=host/lib-e2e/rust/target/release/udp-server-reference
+          node host/drivers/tcp/write-test.mjs "$write"
+          udp=host/tests/e2e/rust/target/release/udp-server-reference
           if [[ "$RUNNER_OS" == Windows ]]; then udp="$udp.exe"; fi
-          node host/udp/native-test.mjs "$udp"
+          node host/drivers/udp/native-test.mjs "$udp"
       - name: Same App and published Lib through real file Host
         shell: bash
         run: |
-          binary=host/lib-e2e/rust/target/release/wasmc-lib-host-e2e
+          binary=host/tests/e2e/rust/target/release/wasmc-lib-host-e2e
           if [[ "$RUNNER_OS" == Windows ]]; then binary="$binary.exe"; fi
-          node host/lib-e2e/test.mjs "$binary"
-          core=host/lib-e2e/rust/target/release/corelib-io-reference
+          node host/tests/e2e/test.mjs "$binary"
+          core=host/tests/e2e/rust/target/release/corelib-io-reference
           if [[ "$RUNNER_OS" == Windows ]]; then core="$core.exe"; fi
-          node host/corelib-io/test.mjs "$core"
-          node host/corelib-io/lifetime-test.mjs "$core"
+          node host/core/io/test.mjs "$core"
+          node host/core/io/lifetime-test.mjs "$core"
       - if: runner.os != 'Windows'
         uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6
         with:
@@ -239,122 +239,122 @@ jobs:
         name: Bun and restricted Deno composition
         shell: bash
         run: |
-          node host/udp/entrypoint-test.mjs
-          bun host/tcp/resident-snapshot-test.mjs
-          deno run --allow-read=current,host/lib-e2e,libs/wasmc-owned-algorithms host/tcp/resident-snapshot-test.mjs
-          binary=host/lib-e2e/rust/target/release/wasmc-lib-host-e2e
-          completion=host/completion/rust/target/release/wasmc-completion-guard
-          file=host/file-io/rust/target/release/wasmc-preopened-file-reference
-          scoped=host/completion/rust/target/release/scoped-reference
-          tcp=host/lib-e2e/rust/target/release/tcp-reference
-          stop=host/lib-e2e/rust/target/release/tcp-stop-reference
-          server=host/lib-e2e/rust/target/release/tcp-server-reference
-          resident=host/lib-e2e/rust/target/release/resident-app-reference
-          write=host/lib-e2e/rust/target/release/tcp-write-reference
-          peer=host/lib-e2e/rust/target/release/tcp-half-close-peer
-          bun host/tcp/half-close-test.mjs "$peer"
-          deno run --allow-net=127.0.0.1 --allow-env=NODE_V8_COVERAGE --allow-run="$peer" host/tcp/half-close-test.mjs "$peer"
-          deno run --allow-net=127.0.0.1 host/tcp/half-close-test.mjs
-          bun host/tcp/half-close-test.mjs --characterize-js-peer
-          core=host/lib-e2e/rust/target/release/corelib-io-reference
-          udp=host/lib-e2e/rust/target/release/udp-server-reference
-          bun host/udp/test.mjs
-          bun host/udp/fault-test.mjs
-          bun host/udp/retirement-test.mjs
-          deno run --allow-net=127.0.0.1 --allow-read=current,host/lib-e2e,libs/wasmc-owned-algorithms host/udp/test.mjs
-          deno run --allow-net=127.0.0.1 host/udp/fault-test.mjs
-          deno run host/udp/retirement-test.mjs
-          bun host/udp/native-test.mjs "$udp"
-          deno run --allow-net=127.0.0.1 --allow-read=current,host/lib-e2e,libs/wasmc-owned-algorithms --allow-write=target/host-udp --allow-env=NODE_V8_COVERAGE --allow-run="$udp" host/udp/native-test.mjs "$udp"
-          bun host/corelib-io/test.mjs "$core"
-          deno run --allow-read=current,host/corelib-io,standard/corelib,target/corelib-io --allow-write=target/corelib-io --allow-env=NODE_V8_COVERAGE --allow-run="$core" host/corelib-io/test.mjs "$core"
-          bun host/corelib-io/lifetime-test.mjs "$core"
-          deno run --allow-read=standard/corelib,target/corelib-io --allow-env=NODE_V8_COVERAGE --allow-run="$core" host/corelib-io/lifetime-test.mjs "$core"
-          bun host/tcp/write-test.mjs "$write"
-          bun host/tcp/stop-failure-test.mjs
-          deno run host/tcp/stop-failure-test.mjs
-          bun host/tcp/driver-error-test.mjs
-          deno run host/tcp/driver-error-test.mjs
-          bun host/file-io/retirement-test.mjs
-          deno run host/file-io/retirement-test.mjs
-          bun host/file-io/write-snapshot-test.mjs
-          deno run host/file-io/write-snapshot-test.mjs
-          bun host/file-io/read-completion-test.mjs
-          deno run host/file-io/read-completion-test.mjs
-          bun host/tcp/stream-snapshot-test.mjs
-          deno run host/tcp/stream-snapshot-test.mjs
-          bun host/tcp/buffer-budget-test.mjs
-          deno run host/tcp/buffer-budget-test.mjs
-          bun host/completion/snapshot-test.mjs
-          bun host/tcp/write-snapshot-test.mjs
-          bun host/tcp/guard-retirement-test.mjs
-          bun host/tcp/quarantine-retirement-test.mjs
-          bun host/tcp/guard-pool-test.mjs
-          bun host/tcp/completion-quarantine-test.mjs --real-tcp
-          deno run host/completion/snapshot-test.mjs
-          deno run host/tcp/write-snapshot-test.mjs
-          deno run host/tcp/guard-retirement-test.mjs
-          deno run host/tcp/quarantine-retirement-test.mjs
-          deno run host/tcp/guard-pool-test.mjs
-          deno run --allow-net=127.0.0.1 host/tcp/completion-quarantine-test.mjs --real-tcp
-          bun host/corelib-io/snapshot-test.mjs
-          deno run --allow-read=standard/corelib,current,host/corelib-io host/corelib-io/snapshot-test.mjs
-          bun host/tcp/driver-retirement-test.mjs --real-tcp
-          deno run --allow-net=127.0.0.1 host/tcp/driver-retirement-test.mjs --real-tcp
-          bun host/tcp/supervisor-test.mjs
-          deno run host/tcp/supervisor-test.mjs
-          deno run --allow-net=127.0.0.1 --allow-env=NODE_V8_COVERAGE --allow-run="$write" host/tcp/write-test.mjs "$write"
-          bun host/tcp/server-test.mjs "$server" "$resident"
+          node host/drivers/udp/entrypoint-test.mjs
+          bun host/drivers/tcp/resident-snapshot-test.mjs
+          deno run --allow-read=current,host/tests/e2e,libs/wasmc-owned-algorithms host/drivers/tcp/resident-snapshot-test.mjs
+          binary=host/tests/e2e/rust/target/release/wasmc-lib-host-e2e
+          completion=host/runtime/completion/rust/target/release/wasmc-completion-guard
+          file=host/drivers/file/rust/target/release/wasmc-preopened-file-reference
+          scoped=host/runtime/completion/rust/target/release/scoped-reference
+          tcp=host/tests/e2e/rust/target/release/tcp-reference
+          stop=host/tests/e2e/rust/target/release/tcp-stop-reference
+          server=host/tests/e2e/rust/target/release/tcp-server-reference
+          resident=host/tests/e2e/rust/target/release/resident-app-reference
+          write=host/tests/e2e/rust/target/release/tcp-write-reference
+          peer=host/tests/e2e/rust/target/release/tcp-half-close-peer
+          bun host/drivers/tcp/half-close-test.mjs "$peer"
+          deno run --allow-net=127.0.0.1 --allow-env=NODE_V8_COVERAGE --allow-run="$peer" host/drivers/tcp/half-close-test.mjs "$peer"
+          deno run --allow-net=127.0.0.1 host/drivers/tcp/half-close-test.mjs
+          bun host/drivers/tcp/half-close-test.mjs --characterize-js-peer
+          core=host/tests/e2e/rust/target/release/corelib-io-reference
+          udp=host/tests/e2e/rust/target/release/udp-server-reference
+          bun host/drivers/udp/test.mjs
+          bun host/drivers/udp/fault-test.mjs
+          bun host/drivers/udp/retirement-test.mjs
+          deno run --allow-net=127.0.0.1 --allow-read=current,host/tests/e2e,libs/wasmc-owned-algorithms host/drivers/udp/test.mjs
+          deno run --allow-net=127.0.0.1 host/drivers/udp/fault-test.mjs
+          deno run host/drivers/udp/retirement-test.mjs
+          bun host/drivers/udp/native-test.mjs "$udp"
+          deno run --allow-net=127.0.0.1 --allow-read=current,host/tests/e2e,libs/wasmc-owned-algorithms --allow-write=target/host-udp --allow-env=NODE_V8_COVERAGE --allow-run="$udp" host/drivers/udp/native-test.mjs "$udp"
+          bun host/core/io/test.mjs "$core"
+          deno run --allow-read=current,host/core/io,standard/corelib,target/corelib-io --allow-write=target/corelib-io --allow-env=NODE_V8_COVERAGE --allow-run="$core" host/core/io/test.mjs "$core"
+          bun host/core/io/lifetime-test.mjs "$core"
+          deno run --allow-read=standard/corelib,target/corelib-io --allow-env=NODE_V8_COVERAGE --allow-run="$core" host/core/io/lifetime-test.mjs "$core"
+          bun host/drivers/tcp/write-test.mjs "$write"
+          bun host/drivers/tcp/stop-failure-test.mjs
+          deno run host/drivers/tcp/stop-failure-test.mjs
+          bun host/drivers/tcp/driver-error-test.mjs
+          deno run host/drivers/tcp/driver-error-test.mjs
+          bun host/drivers/file/retirement-test.mjs
+          deno run host/drivers/file/retirement-test.mjs
+          bun host/drivers/file/write-snapshot-test.mjs
+          deno run host/drivers/file/write-snapshot-test.mjs
+          bun host/drivers/file/read-completion-test.mjs
+          deno run host/drivers/file/read-completion-test.mjs
+          bun host/drivers/tcp/stream-snapshot-test.mjs
+          deno run host/drivers/tcp/stream-snapshot-test.mjs
+          bun host/drivers/tcp/buffer-budget-test.mjs
+          deno run host/drivers/tcp/buffer-budget-test.mjs
+          bun host/runtime/completion/snapshot-test.mjs
+          bun host/drivers/tcp/write-snapshot-test.mjs
+          bun host/drivers/tcp/guard-retirement-test.mjs
+          bun host/drivers/tcp/quarantine-retirement-test.mjs
+          bun host/drivers/tcp/guard-pool-test.mjs
+          bun host/drivers/tcp/completion-quarantine-test.mjs --real-tcp
+          deno run host/runtime/completion/snapshot-test.mjs
+          deno run host/drivers/tcp/write-snapshot-test.mjs
+          deno run host/drivers/tcp/guard-retirement-test.mjs
+          deno run host/drivers/tcp/quarantine-retirement-test.mjs
+          deno run host/drivers/tcp/guard-pool-test.mjs
+          deno run --allow-net=127.0.0.1 host/drivers/tcp/completion-quarantine-test.mjs --real-tcp
+          bun host/core/io/snapshot-test.mjs
+          deno run --allow-read=standard/corelib,current,host/core/io host/core/io/snapshot-test.mjs
+          bun host/drivers/tcp/driver-retirement-test.mjs --real-tcp
+          deno run --allow-net=127.0.0.1 host/drivers/tcp/driver-retirement-test.mjs --real-tcp
+          bun host/drivers/tcp/supervisor-test.mjs
+          deno run host/drivers/tcp/supervisor-test.mjs
+          deno run --allow-net=127.0.0.1 --allow-env=NODE_V8_COVERAGE --allow-run="$write" host/drivers/tcp/write-test.mjs "$write"
+          bun host/drivers/tcp/server-test.mjs "$server" "$resident"
           mkdir -p target/host-tcp-app
-          deno run --allow-net=127.0.0.1 --allow-read=current,host/lib-e2e,libs/wasmc-owned-algorithms,target --allow-write=target/host-tcp-app --allow-env=NODE_V8_COVERAGE --allow-run="$server,$resident" host/tcp/server-test.mjs "$server" "$resident"
-          bun host/tcp/test.mjs "$tcp"
-          deno run --allow-net=127.0.0.1 --allow-read=libs/wasmc-owned-algorithms --allow-env=NODE_V8_COVERAGE --allow-run="$tcp" host/tcp/test.mjs "$tcp"
-          bun host/tcp/fault-test.mjs "$stop"
-          deno run --allow-net=127.0.0.1 --allow-env=NODE_V8_COVERAGE --allow-run="$stop" host/tcp/fault-test.mjs "$stop"
-          bun host/completion/scoped-test.mjs "$scoped"
-          deno run --allow-env=NODE_V8_COVERAGE --allow-run="$scoped,$(command -v deno)" host/completion/scoped-test.mjs "$scoped"
-          bun host/completion/lifetime-test.mjs
-          deno run host/completion/lifetime-test.mjs
-          bun host/completion/fault-test.mjs
-          deno run host/completion/fault-test.mjs
-          bun host/file-io/test.mjs "$file"
-          bun host/completion/test.mjs "$completion"
-          deno run --allow-env=NODE_V8_COVERAGE --allow-run="$completion" host/completion/test.mjs "$completion"
-          bun host/lib-e2e/test.mjs "$binary"
+          deno run --allow-net=127.0.0.1 --allow-read=current,host/tests/e2e,libs/wasmc-owned-algorithms,target --allow-write=target/host-tcp-app --allow-env=NODE_V8_COVERAGE --allow-run="$server,$resident" host/drivers/tcp/server-test.mjs "$server" "$resident"
+          bun host/drivers/tcp/test.mjs "$tcp"
+          deno run --allow-net=127.0.0.1 --allow-read=libs/wasmc-owned-algorithms --allow-env=NODE_V8_COVERAGE --allow-run="$tcp" host/drivers/tcp/test.mjs "$tcp"
+          bun host/drivers/tcp/fault-test.mjs "$stop"
+          deno run --allow-net=127.0.0.1 --allow-env=NODE_V8_COVERAGE --allow-run="$stop" host/drivers/tcp/fault-test.mjs "$stop"
+          bun host/runtime/completion/scoped-test.mjs "$scoped"
+          deno run --allow-env=NODE_V8_COVERAGE --allow-run="$scoped,$(command -v deno)" host/runtime/completion/scoped-test.mjs "$scoped"
+          bun host/runtime/completion/lifetime-test.mjs
+          deno run host/runtime/completion/lifetime-test.mjs
+          bun host/runtime/completion/fault-test.mjs
+          deno run host/runtime/completion/fault-test.mjs
+          bun host/drivers/file/test.mjs "$file"
+          bun host/runtime/completion/test.mjs "$completion"
+          deno run --allow-env=NODE_V8_COVERAGE --allow-run="$completion" host/runtime/completion/test.mjs "$completion"
+          bun host/tests/e2e/test.mjs "$binary"
           mkdir -p target/host-file-tmp
-          TMPDIR="$PWD/target/host-file-tmp" deno run --allow-read=target --allow-write=target --allow-env=TMPDIR,NODE_V8_COVERAGE --allow-run="$file" host/file-io/test.mjs "$file"
-          TMPDIR="$PWD/target/host-file-tmp" deno run --allow-read=current,libs/wasmc-owned-algorithms,host/completion,host/lib-e2e,target --allow-write=target --allow-env=TMPDIR,NODE_V8_COVERAGE --allow-run="$binary" host/lib-e2e/test.mjs "$binary"
+          TMPDIR="$PWD/target/host-file-tmp" deno run --allow-read=target --allow-write=target --allow-env=TMPDIR,NODE_V8_COVERAGE --allow-run="$file" host/drivers/file/test.mjs "$file"
+          TMPDIR="$PWD/target/host-file-tmp" deno run --allow-read=current,libs/wasmc-owned-algorithms,host/runtime/completion,host/tests/e2e,target --allow-write=target --allow-env=TMPDIR,NODE_V8_COVERAGE --allow-run="$binary" host/tests/e2e/test.mjs "$binary"
       - name: Optional Wasmtime profile qualification
         shell: bash
         run: |
-          cargo +1.96.0 clippy --locked --manifest-path host/lib-e2e/rust/Cargo.toml --features wasmtime-engine --all-targets -- -D warnings
-          cargo +1.96.0 test --release --locked --manifest-path host/lib-e2e/rust/Cargo.toml --features wasmtime-engine
-          cargo +1.96.0 build --release --locked --manifest-path host/lib-e2e/rust/Cargo.toml --features wasmtime-engine
-          server=host/lib-e2e/rust/target/release/tcp-server-reference
-          resident=host/lib-e2e/rust/target/release/resident-app-reference
+          cargo +1.96.0 clippy --locked --manifest-path host/tests/e2e/rust/Cargo.toml --features wasmtime-engine --all-targets -- -D warnings
+          cargo +1.96.0 test --release --locked --manifest-path host/tests/e2e/rust/Cargo.toml --features wasmtime-engine
+          cargo +1.96.0 build --release --locked --manifest-path host/tests/e2e/rust/Cargo.toml --features wasmtime-engine
+          server=host/tests/e2e/rust/target/release/tcp-server-reference
+          resident=host/tests/e2e/rust/target/release/resident-app-reference
           if [[ "$RUNNER_OS" == Windows ]]; then server="$server.exe"; resident="$resident.exe"; fi
-          node host/tcp/server-test.mjs "$server" "$resident" --wasmtime
-          core=host/lib-e2e/rust/target/release/corelib-io-reference
+          node host/drivers/tcp/server-test.mjs "$server" "$resident" --wasmtime
+          core=host/tests/e2e/rust/target/release/corelib-io-reference
           if [[ "$RUNNER_OS" == Windows ]]; then core="$core.exe"; fi
-          node host/corelib-io/test.mjs "$core" --wasmtime
-          node host/corelib-io/lifetime-test.mjs "$core" --wasmtime
-          udp=host/lib-e2e/rust/target/release/udp-server-reference
+          node host/core/io/test.mjs "$core" --wasmtime
+          node host/core/io/lifetime-test.mjs "$core" --wasmtime
+          udp=host/tests/e2e/rust/target/release/udp-server-reference
           if [[ "$RUNNER_OS" == Windows ]]; then udp="$udp.exe"; fi
-          node host/udp/native-test.mjs "$udp" --wasmtime
-          benchmark=host/lib-e2e/rust/target/release/resident-benchmark
+          node host/drivers/udp/native-test.mjs "$udp" --wasmtime
+          benchmark=host/tests/e2e/rust/target/release/resident-benchmark
           if [[ "$RUNNER_OS" == Windows ]]; then benchmark="$benchmark.exe"; fi
-          node host/tcp/benchmark.mjs "$benchmark" target/host-tcp-app/guest.wasm --wasmtime
+          node host/drivers/tcp/benchmark.mjs "$benchmark" target/host-tcp-app/guest.wasm --wasmtime
           if [[ "$RUNNER_OS" != Windows ]]; then
-            bun host/udp/native-test.mjs "$udp" --wasmtime
-            deno run --allow-net=127.0.0.1 --allow-read=current,host/lib-e2e,libs/wasmc-owned-algorithms --allow-write=target/host-udp --allow-env=NODE_V8_COVERAGE --allow-run="$udp" host/udp/native-test.mjs "$udp" --wasmtime
-            bun host/corelib-io/test.mjs "$core" --wasmtime
-            deno run --allow-read=current,host/corelib-io,standard/corelib,target/corelib-io --allow-write=target/corelib-io --allow-env=NODE_V8_COVERAGE --allow-run="$core" host/corelib-io/test.mjs "$core" --wasmtime
-            bun host/corelib-io/lifetime-test.mjs "$core" --wasmtime
-            deno run --allow-read=standard/corelib,target/corelib-io --allow-env=NODE_V8_COVERAGE --allow-run="$core" host/corelib-io/lifetime-test.mjs "$core" --wasmtime
-            bun host/tcp/server-test.mjs "$server" "$resident" --wasmtime
-            deno run --allow-net=127.0.0.1 --allow-read=current,host/lib-e2e,libs/wasmc-owned-algorithms,target --allow-write=target/host-tcp-app --allow-env=NODE_V8_COVERAGE --allow-run="$server,$resident" host/tcp/server-test.mjs "$server" "$resident" --wasmtime
-            bun host/tcp/benchmark.mjs "$benchmark" target/host-tcp-app/guest.wasm --wasmtime
-            deno run --allow-read=libs/wasmc-owned-algorithms,target/host-tcp-app --allow-env=NODE_V8_COVERAGE --allow-run="$benchmark" host/tcp/benchmark.mjs "$benchmark" target/host-tcp-app/guest.wasm --wasmtime
+            bun host/drivers/udp/native-test.mjs "$udp" --wasmtime
+            deno run --allow-net=127.0.0.1 --allow-read=current,host/tests/e2e,libs/wasmc-owned-algorithms --allow-write=target/host-udp --allow-env=NODE_V8_COVERAGE --allow-run="$udp" host/drivers/udp/native-test.mjs "$udp" --wasmtime
+            bun host/core/io/test.mjs "$core" --wasmtime
+            deno run --allow-read=current,host/core/io,standard/corelib,target/corelib-io --allow-write=target/corelib-io --allow-env=NODE_V8_COVERAGE --allow-run="$core" host/core/io/test.mjs "$core" --wasmtime
+            bun host/core/io/lifetime-test.mjs "$core" --wasmtime
+            deno run --allow-read=standard/corelib,target/corelib-io --allow-env=NODE_V8_COVERAGE --allow-run="$core" host/core/io/lifetime-test.mjs "$core" --wasmtime
+            bun host/drivers/tcp/server-test.mjs "$server" "$resident" --wasmtime
+            deno run --allow-net=127.0.0.1 --allow-read=current,host/tests/e2e,libs/wasmc-owned-algorithms,target --allow-write=target/host-tcp-app --allow-env=NODE_V8_COVERAGE --allow-run="$server,$resident" host/drivers/tcp/server-test.mjs "$server" "$resident" --wasmtime
+            bun host/drivers/tcp/benchmark.mjs "$benchmark" target/host-tcp-app/guest.wasm --wasmtime
+            deno run --allow-read=libs/wasmc-owned-algorithms,target/host-tcp-app --allow-env=NODE_V8_COVERAGE --allow-run="$benchmark" host/drivers/tcp/benchmark.mjs "$benchmark" target/host-tcp-app/guest.wasm --wasmtime
           fi
       - name: Public integrity
         if: runner.os == 'Linux'
@@ -383,7 +383,7 @@ jobs:
           BROWSER: ${{ matrix.engine }}
           SOURCE: ${{ github.sha }}
         run: |
-          node host/browser/server.mjs > "$RUNNER_TEMP/wasmc-browser-url.txt" 2> "$RUNNER_TEMP/wasmc-browser-server.err" &
+          node host/embedding/browser/server.mjs > "$RUNNER_TEMP/wasmc-browser-url.txt" 2> "$RUNNER_TEMP/wasmc-browser-server.err" &
           server_pid=$!
           cd "$RUNNER_TEMP"
           trap 'npm exec --yes --package=@playwright/cli@0.1.19 -- playwright-cli -s=wasmc-host-ci close || true; kill "$server_pid" || true' EXIT

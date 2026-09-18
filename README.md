@@ -19,11 +19,11 @@ passed107520paired calls; [exact receipts](admission/portable-std-v0/qualificati
 separate main admission from formal release. No private compiler source
 is compiled by this workflow; old Std1.4.0 and prod remain frozen.
 
-Development [preconnected TCP + Lib reference](host/tcp/README.md) exercises real
+Development [preconnected TCP + Lib reference](host/drivers/tcp/README.md) exercises real
 restricted loopback streams and frozen Wasm algorithm computation in JS/Wasmi.
 It is not a production network SDK, browser raw TCP, TLS or a new guest syscall.
 
-Experimental [startup binding identity](host/completion/SCOPED_IDENTITY.md) rejects
+Experimental [startup binding identity](host/runtime/completion/SCOPED_IDENTITY.md) rejects
 old full references even when fresh processes recycle local IDs. The reviewed
 Lib/Host driver now issues scoped references with JS WebCrypto or Native OS
 randomness, rejecting entropy errors and zero output without fallback. Local
@@ -31,13 +31,13 @@ Node/Bun/Deno tests pass; exact-candidate cross-platform acceptance remains
 pending. Freshness is not proved by accepting an injected nonzero identifier. Neither
 the Agent API nor generated App/Lib bytes change.
 
-Experimental [session/completion guard](host/completion/README.md) protects the
+Experimental [session/completion guard](host/runtime/completion/README.md) protects the
 Lib/Host chain's staged read: foreign/stale/duplicate completions reject;
 cancelled delivery retains the window pin until backend acknowledgement.
 Cancellation does not prove an external effect was undone. Process/restart
 identity and full typed guest async transport remain unqualified.
 
-Experimental [published Lib + real Host end-to-end chain](host/lib-e2e/README.md):
+Experimental [published Lib + real Host end-to-end chain](host/tests/e2e/README.md):
 real input file → bounded staging → WAsmC App → reviewed Rust algorithm Lib →
 real output file + explicit sync. The same App/Lib bytes run in JS and Wasmi;
 independent disk oracles cover readonly denial and trap-before-flush. This is
@@ -47,7 +47,7 @@ The initial [exact-source Actions run](https://github.com/cbgroom/wasmcrelease/a
 passed all six desktop targets and fourteen JS/native pairs, twelve cases each;
 [retained evidence](admission/host-lib-e2e.json) records the qualified boundary.
 
-Next experimental Host capability: [real preopened file I/O](host/file-io/README.md).
+Next experimental Host capability: [real preopened file I/O](host/drivers/file/README.md).
 Independent JS/Rust adapters reuse read/write/invoke-sync/release without guest
 paths or certificate-specific native calls. It is not a completed Core/WIT
 transport or browser filesystem adapter. The owning maintainer Skill now requires
@@ -57,7 +57,7 @@ Initial [six-platform exact-source run](https://github.com/cbgroom/wasmcrelease/
 passed all14JS/native pairs; [retained evidence](admission/host-preopened-file-v0.json)
 separates real file behavior from unqualified Core transport/browser/durability.
 
-Public experimental [Core Host v0 contract/reference](host/v0/README.md):
+Public experimental [Core Host v0 contract/reference](host/contract/v0/README.md):
 low-frequency evolving Native mechanisms, reusable CoreLib policy/protocols,
 JS/Native semantic parity without requiring identical acceleration. Seven
 bounded memory-simulator operations are implemented; twelve-operation draft,
