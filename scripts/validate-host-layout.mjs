@@ -64,6 +64,9 @@ for (const platform of manifest.platforms) {
     if (!providerStatuses.has(provider.status)) {
       failures.push(`invalid provider status ${provider.status} for ${platform}/${provider.capability}`);
     }
+    if (provider.status === "unqualified") {
+      failures.push(`legacy ambiguous provider status is forbidden: ${platform}/${provider.capability}`);
+    }
     if (provider.implementation) {
       const normalized = provider.implementation.replaceAll("\\", "/");
       if (normalized.includes("..")) {

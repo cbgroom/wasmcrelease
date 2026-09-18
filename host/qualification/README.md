@@ -1,19 +1,37 @@
 # Host qualification
 
-Public evidence distinguishes implementation from qualification.
+Public evidence distinguishes provider binding state from evidence grade.
 
-Recommended states:
+## Provider binding state
 
-- `implemented`
-- `simulated`
-- `qualified`
-- `production-qualified`
+The platform manifests under `host/platform/*/providers.json` are the support
+claim authority:
 
-Receipts should identify target, OS/device, contract identity, tested
-capabilities, exact commit, behavior matrix, and known limitations.
+- `unimplemented`: no canonical provider implementation is claimed;
+- `implemented`: canonical provider code exists, but platform qualification
+  is incomplete;
+- `qualified`: implementation, qualification workflow and architecture scope
+  are all present.
+
+Every platform declares every canonical capability explicitly. Missing entries
+are validation failures, not implicit unsupported states.
+
+## Evidence grade
+
+Evidence can independently be described as:
+
+- `simulated`: structural/simulated evidence only;
+- `qualified`: the declared qualification matrix passed;
+- `production-qualified`: stronger production/device evidence exists.
+
+Evidence grade must never upgrade a provider binding state by itself.
 
 ## Qualification dimensions
 
 Native and JS-runtime qualification is recorded as physical platform × embedding when both dimensions are meaningful. Browser engine qualification is embedding-only; Browser is not treated as an operating-system platform.
 
 See `matrix.json`.
+
+Run `node scripts/report-host-support.mjs --markdown` for the current
+platform × capability support matrix. The report is derived from provider
+manifests and is not a second source of authority.
