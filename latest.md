@@ -1,17 +1,17 @@
 # WAsmC public performance
 
-Commit: `9c1741ed73c13c2a0e0adb6e3cba31ce5cc6a628`  
-Measured: 2026-09-18T14:47:06.992Z  
+Commit: `94cc7643f4b67365093a075ef20a238b1cda35dc`  
+Measured: 2026-09-18T15:32:58.534Z  
 Platforms: 6  
 Canonical corpus: 5
 
 | Platform | CLI | build Wasm gmean p50 | native miss gmean p50 | native hit gmean p50 | run/Wasmi p50 | native run p50 |
 |---|---:|---:|---:|---:|---:|---:|
-| linux-aarch64 | 9.38 MiB | 14.711 ms | 46.434 ms | 26.168 ms | 11.564 ms | 4.023 ms |
-| linux-x86_64 | 11.11 MiB | 10.825 ms | 31.166 ms | 17.572 ms | 7.859 ms | 1.862 ms |
-| macos-aarch64 | 8.32 MiB | 25.532 ms | 76.225 ms | 46.594 ms | 21.385 ms | 5.214 ms |
-| macos-x86_64 | 10.21 MiB | 38.785 ms | 109.188 ms | 64.303 ms | 31.974 ms | 9.815 ms |
-| windows-aarch64 | 8.89 MiB | 24.898 ms | 54.218 ms | 34.520 ms | 17.975 ms | 16.170 ms |
-| windows-x86_64 | 10.13 MiB | 16.729 ms | 48.509 ms | 29.177 ms | 13.546 ms | 8.560 ms |
+| linux-aarch64 | 9.38 MiB | 15.304 ms | 47.850 ms | 27.530 ms | 12.092 ms | 4.303 ms |
+| linux-x86_64 | 11.11 MiB | 12.541 ms | 42.772 ms | 24.603 ms | 9.693 ms | 2.225 ms |
+| macos-aarch64 | 8.32 MiB | 19.834 ms | 50.866 ms | 31.587 ms | 15.086 ms | 3.173 ms |
+| macos-x86_64 | 10.21 MiB | 43.922 ms | 118.262 ms | 75.431 ms | 41.205 ms | 12.257 ms |
+| windows-aarch64 | 8.89 MiB | 28.172 ms | 57.969 ms | 37.752 ms | 20.389 ms | 18.328 ms |
+| windows-x86_64 | 10.13 MiB | 20.568 ms | 56.468 ms | 30.607 ms | 15.944 ms | 9.952 ms |
 
 Timings on GitHub-hosted runners are comparative observations, not absolute SLA claims. Corpus identity, generated Wasm identity, and behavior are hard gates.
