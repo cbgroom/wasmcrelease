@@ -46,7 +46,7 @@ jobs:
         run: cargo +1.96.0 build --release --locked --manifest-path sdk/wasmc-native-compiler/Cargo.toml
       - name: Run canonical performance corpus
         run: node scripts/native-cli-perf.mjs "sdk/wasmc-native-compiler/target/release/wasmc${{ runner.os == 'Windows' && '.exe' || '' }}" "${{ matrix.platform }}" "${{ matrix.platform }}.json"
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: perf-${{ matrix.platform }}
           path: ${{ matrix.platform }}.json
@@ -77,7 +77,7 @@ jobs:
       - name: Aggregate six-platform report
         shell: bash
         run: node scripts/aggregate-native-cli-perf.mjs perf-results perf-site previous-history.json
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: native-cli-performance-report
           path: perf-site/
