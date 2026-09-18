@@ -1,0 +1,103 @@
+{
+  "schema": "wasmc.host-architecture/v1",
+  "guest_authority": "host/contract",
+  "host_semantics": [
+    "Capability",
+    "Resource",
+    "Operation",
+    "Completion",
+    "Window"
+  ],
+  "layers": [
+    {
+      "name": "contract",
+      "root": "host/contract",
+      "responsibility": "guest-visible ABI and semantic authority"
+    },
+    {
+      "name": "core",
+      "root": "host/core",
+      "responsibility": "portable namespace, admission, lifecycle and policy"
+    },
+    {
+      "name": "runtime",
+      "root": "host/runtime",
+      "responsibility": "resource/operation/completion/window/provider execution"
+    },
+    {
+      "name": "drivers",
+      "root": "host/drivers",
+      "responsibility": "capability-oriented provider contracts and shared implementations"
+    },
+    {
+      "name": "platform",
+      "root": "host/platform",
+      "responsibility": "OS/device provider binding and genuinely OS-specific implementation"
+    },
+    {
+      "name": "embedding",
+      "root": "host/embedding",
+      "responsibility": "execution-environment providers and bridges"
+    },
+    {
+      "name": "sdk",
+      "root": "host/sdk",
+      "responsibility": "distribution and developer integration only"
+    },
+    {
+      "name": "qualification",
+      "root": "host/qualification",
+      "responsibility": "evidence and support claims"
+    }
+  ],
+  "orthogonal_dimensions": {
+    "platform": ["linux", "macos", "windows", "android", "harmony", "ios"],
+    "embedding": ["native", "node", "deno", "bun", "browser"]
+  },
+  "provider_statuses": [
+    "unimplemented",
+    "implemented",
+    "qualified"
+  ],
+  "provider_rules": {
+    "implementation_allowed_roots": [
+      "host/drivers",
+      "host/platform"
+    ],
+    "implementation_forbidden_roots": [
+      "host/contract",
+      "host/core",
+      "host/embedding",
+      "host/sdk",
+      "host/tests",
+      "host/examples",
+      "host/qualification"
+    ],
+    "unimplemented_must_not_claim_implementation": true,
+    "implemented_requires_implementation": true,
+    "qualified_requires_implementation_and_evidence": true
+  },
+  "path_model": {
+    "cold_path": [
+      "namespace discovery",
+      "capability admission",
+      "provider selection",
+      "platform/embedding selection"
+    ],
+    "hot_path": [
+      "opaque Resource",
+      "Operation",
+      "Completion",
+      "Window"
+    ],
+    "guest_must_not_observe": [
+      "native fd/HANDLE",
+      "native pointer/address",
+      "provider identity",
+      "platform identity",
+      "embedding identity",
+      "IP/port authority",
+      "backend token"
+    ]
+  }
+}

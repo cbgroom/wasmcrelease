@@ -51,3 +51,28 @@ actually implemented/qualified on that platform.
 - embedding answers which execution environment carries or bridges Host providers: native/Node/Deno/Bun/Browser.
 
 Node, Deno, Bun and Browser are never platform adapters and never define guest-visible Host ABI variants. Provider selection remains an internal Host decision; Guest code sees only canonical Capability/Resource/Operation/Completion/Window semantics.
+
+## Provider maturity
+
+Provider support is intentionally three-state:
+
+- `unimplemented`: no canonical provider implementation is claimed.
+- `implemented`: canonical provider code exists, but the platform support claim
+  is not yet backed by the required qualification evidence.
+- `qualified`: implementation, workflow evidence and architecture scope are
+  all present and validated.
+
+This avoids treating "code exists" as equivalent to "platform supported".
+
+The machine-readable architecture contract is `host/architecture.json`.
+Provider implementations may live only under `host/drivers/` (shared
+capability providers) or `host/platform/` (genuinely OS-specific providers).
+`embedding/`, `sdk/`, tests and qualification evidence are not provider
+implementation roots.
+
+## Cold path versus hot path
+
+Namespace discovery, capability admission and provider/platform/embedding
+selection are cold-path concerns. Once a Resource is resolved, hot-path
+execution uses opaque Resource/Operation/Completion/Window state only. Provider,
+platform and embedding identity must not leak into Guest-visible authority.

@@ -21,5 +21,12 @@ be marked `qualified` only when:
 3. the platform/architecture scope is explicit;
 4. the provider uses the canonical Host contract/runtime/driver semantics.
 
-Unqualified platforms remain explicit rather than inheriting support claims
-from another OS.
+Provider status is three-state:
+
+- `unimplemented`: no canonical implementation is claimed;
+- `implemented`: code exists but platform qualification is incomplete;
+- `qualified`: implementation plus qualification workflow and architecture
+  scope are present.
+
+Platforms never inherit support claims from another OS merely because shared
+code compiles there.
