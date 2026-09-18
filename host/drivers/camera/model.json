@@ -1,0 +1,51 @@
+{
+  "schema": "wasmc.host-camera-model/v1",
+  "capability": "camera",
+  "support_state_effect": "none",
+  "resource_semantics": {
+    "semantic_kind": "sensor",
+    "locality_independent": true,
+    "guest_visible_native_handle": false
+  },
+  "capture": {
+    "operation_per_frame": 1,
+    "completion_per_frame": 1,
+    "cancel": "request-only",
+    "drop": "supervision-only",
+    "per_plane_completion": false,
+    "completion_shape": {
+      "transferred": "aggregate-frame-bytes"
+    }
+  },
+  "planes": {
+    "minimum": 1,
+    "maximum": 16,
+    "descriptor": {
+      "window": "opaque-window",
+      "offset": "u64",
+      "length": "u64"
+    },
+    "native_pointer_visible": false,
+    "native_stride_pointer_visible": false
+  },
+  "platform_boundary": {
+    "acquisition": "platform-provider",
+    "permission": "platform-provider",
+    "native_buffer_binding": "platform-provider",
+    "frame_semantics": "shared-driver-model"
+  },
+  "fixtures": [
+    {
+      "name": "nv12-1080p-two-plane-structural",
+      "claim": "structural-only",
+      "plane_lengths": [2073600, 1036800],
+      "aggregate_bytes": 3110400
+    }
+  ],
+  "nonclaims": [
+    "not a real camera capture qualification",
+    "not a new Guest ABI or WIT surface",
+    "not a zero-copy performance claim",
+    "not a platform permission/acquisition implementation"
+  ]
+}
