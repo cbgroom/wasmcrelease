@@ -39,15 +39,37 @@
     },
     {
       "capability": "tcp",
-      "status": "implemented",
+      "status": "qualified",
       "binding": "shared-native-rust",
-      "implementation": "host/drivers/tcp/rust"
+      "implementation": "host/drivers/tcp/rust",
+      "qualification": {
+        "workflow": ".github/workflows/host-network.yml",
+        "jobs": [
+          "windows-2025",
+          "windows-11-arm"
+        ],
+        "architectures": [
+          "x86_64",
+          "aarch64"
+        ]
+      }
     },
     {
       "capability": "udp",
-      "status": "implemented",
+      "status": "qualified",
       "binding": "shared-native-rust",
-      "implementation": "host/drivers/udp/rust"
+      "implementation": "host/drivers/udp/rust",
+      "qualification": {
+        "workflow": ".github/workflows/host-network.yml",
+        "jobs": [
+          "windows-2025",
+          "windows-11-arm"
+        ],
+        "architectures": [
+          "x86_64",
+          "aarch64"
+        ]
+      }
     },
     {
       "capability": "clock",
