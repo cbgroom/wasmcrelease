@@ -1,0 +1,55 @@
+name: Public Host bounded memory
+
+on:
+  push:
+    branches: [main, work/host-platform-provider-bindings-v1]
+    paths:
+      - "host/drivers/memory/**"
+      - "host/platform/**"
+      - ".github/workflows/host-memory.yml"
+      - "scripts/validate-host-layout.mjs"
+  pull_request:
+    paths:
+      - "host/drivers/memory/**"
+      - "host/platform/**"
+      - ".github/workflows/host-memory.yml"
+      - "scripts/validate-host-layout.mjs"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  memory:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, ubuntu-24.04-arm, macos-14, macos-15-intel, windows-2025, windows-11-arm]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: 26.5.1
+      - run: rustup toolchain install 1.96.0 --profile minimal --component clippy,rustfmt
+      - run: cargo +1.96.0 fmt --check --manifest-path host/drivers/memory/rust/Cargo.toml
+      - run: cargo +1.96.0 clippy --locked --manifest-path host/drivers/memory/rust/Cargo.toml --all-targets -- -D warnings
+      - run: cargo +1.96.0 test --locked --manifest-path host/drivers/memory/rust/Cargo.toml
+      - run: cargo +1.96.0 build --release --locked --manifest-path host/drivers/memory/rust/Cargo.toml
+      - name: Real Host-owned memory lifecycle
+        shell: bash
+        run: |
+          binary=host/drivers/memory/rust/target/release/wasmc-bounded-memory-reference
+          if [[ "$RUNNER_OS" == Windows ]]; then binary="$binary.exe"; fi
+          node host/drivers/memory/test.mjs "$binary"
+      - run: node scripts/validate-host-layout.mjs
+
+  required:
+    if: always()
+    needs: memory
+    runs-on: ubuntu-24.04
+    steps:
+      - env:
+          RESULT: ${{ needs.memory.result }}
+        run: test "$RESULT" = success

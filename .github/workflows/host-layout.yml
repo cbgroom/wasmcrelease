@@ -26,3 +26,6 @@ jobs:
         with:
           node-version: 26.5.1
       - run: node scripts/validate-host-layout.mjs
+      - name: Platform capability support matrix
+        shell: bash
+        run: node scripts/report-host-support.mjs --markdown >> "$GITHUB_STEP_SUMMARY"
