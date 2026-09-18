@@ -76,3 +76,19 @@ Namespace discovery, capability admission and provider/platform/embedding
 selection are cold-path concerns. Once a Resource is resolved, hot-path
 execution uses opaque Resource/Operation/Completion/Window state only. Provider,
 platform and embedding identity must not leak into Guest-visible authority.
+
+## Resource semantic kind versus locality
+
+Resource semantics and backing locality are independent dimensions.
+
+- semantic capability answers what the Resource is: file/storage, memory, TCP,
+  UDP, camera, accelerator, and so on;
+- locality answers where/how its provider is reached: local or remote.
+
+Remote is therefore not a canonical capability. A remote file remains a file
+capability backed by a remote provider; remote memory remains memory. Route,
+session and remote-object identity stay Host-private provider state.
+
+This prevents parallel RemoteFile/RemoteMemory/RemoteCamera capability trees and
+keeps local and remote providers on the same Resource/Operation/Completion/Window
+contract.

@@ -26,6 +26,12 @@ if (JSON.stringify(architecture.orthogonal_dimensions?.platform) !== JSON.string
 if (JSON.stringify(architecture.orthogonal_dimensions?.embedding) !== JSON.stringify(manifest.embeddings)) {
   failures.push("architecture embedding dimension must match manifest.embeddings");
 }
+if (manifest.capabilities.includes("remote")) {
+  failures.push("remote must be modeled as locality/provider state, not a canonical capability");
+}
+if (JSON.stringify(architecture.resource_dimensions?.locality) !== JSON.stringify(["local", "remote"])) {
+  failures.push("resource locality dimension must be exactly local/remote");
+}
 const providerStatuses = new Set(architecture.provider_statuses ?? []);
 const allowedImplementationRoots = architecture.provider_rules?.implementation_allowed_roots ?? [];
 const forbiddenImplementationRoots = architecture.provider_rules?.implementation_forbidden_roots ?? [];

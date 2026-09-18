@@ -34,3 +34,7 @@ code compiles there.
 Every platform manifest must list every canonical capability exactly once.
 Absence is not a support state. New capabilities therefore force an explicit
 per-platform decision: unimplemented, implemented, or qualified.
+
+Remote is not a canonical capability and must not appear in platform manifests.
+Local versus remote is Host-private provider/backing locality; the semantic
+capability remains file, memory, TCP, UDP, camera, accelerator, and so on.

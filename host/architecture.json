@@ -54,6 +54,11 @@
     "platform": ["linux", "macos", "windows", "android", "harmony", "ios"],
     "embedding": ["native", "node", "deno", "bun", "browser"]
   },
+  "resource_dimensions": {
+    "semantic_capability_source": "host/manifest.json#capabilities",
+    "locality": ["local", "remote"],
+    "rule": "remote is a provider/backing locality, never a semantic capability"
+  },
   "provider_statuses": [
     "unimplemented",
     "implemented",

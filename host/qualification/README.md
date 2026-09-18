@@ -26,6 +26,10 @@ Evidence can independently be described as:
 
 Evidence grade must never upgrade a provider binding state by itself.
 
+Resource locality is a separate Host-private dimension. "Remote" is not a
+provider binding capability; remote providers are qualified against the same
+semantic capability as their local counterparts.
+
 ## Qualification dimensions
 
 Native and JS-runtime qualification is recorded as physical platform × embedding when both dimensions are meaningful. Browser engine qualification is embedding-only; Browser is not treated as an operating-system platform.
