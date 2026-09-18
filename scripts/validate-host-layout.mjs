@@ -17,6 +17,46 @@ for (const platform of manifest.platforms) {
   if (!fs.statSync(p, { throwIfNoEntry: false })?.isDirectory()) {
     failures.push(`missing platform root host/platform/${platform}`);
   }
+  const providersPath = path.join(p, "providers.json");
+  if (!fs.existsSync(providersPath)) {
+    failures.push(`missing platform provider binding host/platform/${platform}/providers.json`);
+    continue;
+  }
+  const providers = JSON.parse(fs.readFileSync(providersPath, "utf8"));
+  if (providers.schema !== "wasmc.host-platform-providers/v1") {
+    failures.push(`invalid platform provider schema: host/platform/${platform}/providers.json`);
+  }
+  if (providers.platform !== platform) {
+    failures.push(`platform provider identity mismatch: host/platform/${platform}/providers.json`);
+  }
+  const seenCapabilities = new Set();
+  for (const provider of providers.providers ?? []) {
+    if (!manifest.capabilities.includes(provider.capability)) {
+      failures.push(`unknown platform capability ${provider.capability} on ${platform}`);
+    }
+    if (seenCapabilities.has(provider.capability)) {
+      failures.push(`duplicate platform capability ${provider.capability} on ${platform}`);
+    }
+    seenCapabilities.add(provider.capability);
+    if (!["qualified", "unqualified"].includes(provider.status)) {
+      failures.push(`invalid provider status ${provider.status} for ${platform}/${provider.capability}`);
+    }
+    if (provider.status === "qualified") {
+      if (!provider.implementation) {
+        failures.push(`qualified provider lacks implementation: ${platform}/${provider.capability}`);
+      } else if (!fs.existsSync(path.join(root, provider.implementation))) {
+        failures.push(`qualified provider implementation missing: ${provider.implementation}`);
+      }
+      if (!provider.qualification?.workflow) {
+        failures.push(`qualified provider lacks workflow evidence: ${platform}/${provider.capability}`);
+      } else if (!fs.existsSync(path.join(root, provider.qualification.workflow))) {
+        failures.push(`qualified provider workflow missing: ${provider.qualification.workflow}`);
+      }
+      if (!(provider.qualification?.architectures?.length > 0)) {
+        failures.push(`qualified provider lacks architecture scope: ${platform}/${provider.capability}`);
+      }
+    }
+  }
 }
 for (const embedding of ["node", "deno", "bun", "browser"]) {
   const p = path.join(root, "host", "embedding", embedding);
@@ -67,6 +107,9 @@ console.log(JSON.stringify({
   schema: manifest.schema,
   canonical_roots: manifest.canonical_roots.length,
   platforms: manifest.platforms.length,
+  qualified_platform_providers: manifest.platforms
+    .flatMap((platform) => JSON.parse(fs.readFileSync(path.join(root, "host", "platform", platform, "providers.json"), "utf8")).providers ?? [])
+    .filter((provider) => provider.status === "qualified").length,
   capabilities: manifest.capabilities.length,
   legacy_paths_retained: manifest.legacy_paths_retained
 }));

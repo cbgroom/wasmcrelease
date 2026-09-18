@@ -1,0 +1,30 @@
+{
+  "schema": "wasmc.host-platform-providers/v1",
+  "platform": "windows",
+  "providers": [
+    {
+      "capability": "file",
+      "domain": "storage",
+      "status": "qualified",
+      "binding": "shared-native-rust",
+      "implementation": "host/drivers/file/rust",
+      "qualification": {
+        "workflow": ".github/workflows/host-file-io.yml",
+        "jobs": ["windows-2025", "windows-11-arm"],
+        "architectures": ["x86_64", "aarch64"]
+      }
+    },
+    {
+      "capability": "memory",
+      "status": "unqualified"
+    },
+    {
+      "capability": "tcp",
+      "status": "unqualified"
+    },
+    {
+      "capability": "udp",
+      "status": "unqualified"
+    }
+  ]
+}
