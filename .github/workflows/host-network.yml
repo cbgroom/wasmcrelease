@@ -1,0 +1,54 @@
+name: Public Host native network providers
+
+on:
+  push:
+    branches: [main, work/host-network-provider-promotion-v1]
+    paths:
+      - "host/drivers/tcp/rust/**"
+      - "host/drivers/udp/rust/**"
+      - "host/tests/e2e/rust/**"
+      - "host/platform/**"
+      - ".github/workflows/host-network.yml"
+      - "scripts/validate-host-layout.mjs"
+  pull_request:
+    paths:
+      - "host/drivers/tcp/rust/**"
+      - "host/drivers/udp/rust/**"
+      - "host/tests/e2e/rust/**"
+      - "host/platform/**"
+      - ".github/workflows/host-network.yml"
+      - "scripts/validate-host-layout.mjs"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  network:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, ubuntu-24.04-arm, macos-14, macos-15-intel, windows-2025, windows-11-arm]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - run: rustup toolchain install 1.96.0 --profile minimal --component clippy,rustfmt
+      - run: cargo +1.96.0 fmt --check --manifest-path host/drivers/tcp/rust/Cargo.toml
+      - run: cargo +1.96.0 clippy --locked --manifest-path host/drivers/tcp/rust/Cargo.toml --all-targets -- -D warnings
+      - run: cargo +1.96.0 test --locked --manifest-path host/drivers/tcp/rust/Cargo.toml
+      - run: cargo +1.96.0 fmt --check --manifest-path host/drivers/udp/rust/Cargo.toml
+      - run: cargo +1.96.0 clippy --locked --manifest-path host/drivers/udp/rust/Cargo.toml --all-targets -- -D warnings
+      - run: cargo +1.96.0 test --locked --manifest-path host/drivers/udp/rust/Cargo.toml
+      - name: E2E consumer compiles against canonical network providers
+        run: cargo +1.96.0 check --locked --manifest-path host/tests/e2e/rust/Cargo.toml
+      - run: node scripts/validate-host-layout.mjs
+
+  required:
+    if: always()
+    needs: network
+    runs-on: ubuntu-24.04
+    steps:
+      - env:
+          RESULT: ${{ needs.network.result }}
+        run: test "$RESULT" = success

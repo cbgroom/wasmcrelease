@@ -10,8 +10,14 @@
       "implementation": "host/drivers/file/rust",
       "qualification": {
         "workflow": ".github/workflows/host-file-io.yml",
-        "jobs": ["macos-14", "macos-15-intel"],
-        "architectures": ["aarch64", "x86_64"]
+        "jobs": [
+          "macos-14",
+          "macos-15-intel"
+        ],
+        "architectures": [
+          "aarch64",
+          "x86_64"
+        ]
       }
     },
     {
@@ -21,24 +27,77 @@
       "implementation": "host/drivers/memory/rust",
       "qualification": {
         "workflow": ".github/workflows/host-memory.yml",
-        "jobs": ["macos-14", "macos-15-intel"],
-        "architectures": ["aarch64", "x86_64"]
+        "jobs": [
+          "macos-14",
+          "macos-15-intel"
+        ],
+        "architectures": [
+          "aarch64",
+          "x86_64"
+        ]
       }
     },
     {
       "capability": "tcp",
-      "status": "unimplemented"
+      "status": "qualified",
+      "binding": "shared-native-rust",
+      "implementation": "host/drivers/tcp/rust",
+      "qualification": {
+        "workflow": ".github/workflows/host-network.yml",
+        "jobs": [
+          "macos-14",
+          "macos-15-intel"
+        ],
+        "architectures": [
+          "aarch64",
+          "x86_64"
+        ]
+      }
     },
     {
       "capability": "udp",
+      "status": "qualified",
+      "binding": "shared-native-rust",
+      "implementation": "host/drivers/udp/rust",
+      "qualification": {
+        "workflow": ".github/workflows/host-network.yml",
+        "jobs": [
+          "macos-14",
+          "macos-15-intel"
+        ],
+        "architectures": [
+          "aarch64",
+          "x86_64"
+        ]
+      }
+    },
+    {
+      "capability": "clock",
       "status": "unimplemented"
     },
-    { "capability": "clock", "status": "unimplemented" },
-    { "capability": "random", "status": "unimplemented" },
-    { "capability": "camera", "status": "unimplemented" },
-    { "capability": "audio", "status": "unimplemented" },
-    { "capability": "display", "status": "unimplemented" },
-    { "capability": "gpu", "status": "unimplemented" },
-    { "capability": "npu", "status": "unimplemented" }
+    {
+      "capability": "random",
+      "status": "unimplemented"
+    },
+    {
+      "capability": "camera",
+      "status": "unimplemented"
+    },
+    {
+      "capability": "audio",
+      "status": "unimplemented"
+    },
+    {
+      "capability": "display",
+      "status": "unimplemented"
+    },
+    {
+      "capability": "gpu",
+      "status": "unimplemented"
+    },
+    {
+      "capability": "npu",
+      "status": "unimplemented"
+    }
   ]
 }
