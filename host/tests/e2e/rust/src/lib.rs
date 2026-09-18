@@ -2,8 +2,8 @@ pub mod app_engine;
 pub mod listener;
 pub mod resident_app;
 pub mod resident_sum;
-pub mod tcp;
-pub mod udp;
+pub use wasmc_preauthorized_udp_reference as udp;
+pub use wasmc_preconnected_tcp_reference as tcp;
 #[cfg(feature = "wasmtime-engine")]
 pub mod wasmtime_app;
 

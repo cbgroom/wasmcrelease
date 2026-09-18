@@ -10,8 +10,14 @@
       "implementation": "host/drivers/file/rust",
       "qualification": {
         "workflow": ".github/workflows/host-file-io.yml",
-        "jobs": ["windows-2025", "windows-11-arm"],
-        "architectures": ["x86_64", "aarch64"]
+        "jobs": [
+          "windows-2025",
+          "windows-11-arm"
+        ],
+        "architectures": [
+          "x86_64",
+          "aarch64"
+        ]
       }
     },
     {
@@ -21,24 +27,55 @@
       "implementation": "host/drivers/memory/rust",
       "qualification": {
         "workflow": ".github/workflows/host-memory.yml",
-        "jobs": ["windows-2025", "windows-11-arm"],
-        "architectures": ["x86_64", "aarch64"]
+        "jobs": [
+          "windows-2025",
+          "windows-11-arm"
+        ],
+        "architectures": [
+          "x86_64",
+          "aarch64"
+        ]
       }
     },
     {
       "capability": "tcp",
-      "status": "unimplemented"
+      "status": "implemented",
+      "binding": "shared-native-rust",
+      "implementation": "host/drivers/tcp/rust"
     },
     {
       "capability": "udp",
+      "status": "implemented",
+      "binding": "shared-native-rust",
+      "implementation": "host/drivers/udp/rust"
+    },
+    {
+      "capability": "clock",
       "status": "unimplemented"
     },
-    { "capability": "clock", "status": "unimplemented" },
-    { "capability": "random", "status": "unimplemented" },
-    { "capability": "camera", "status": "unimplemented" },
-    { "capability": "audio", "status": "unimplemented" },
-    { "capability": "display", "status": "unimplemented" },
-    { "capability": "gpu", "status": "unimplemented" },
-    { "capability": "npu", "status": "unimplemented" }
+    {
+      "capability": "random",
+      "status": "unimplemented"
+    },
+    {
+      "capability": "camera",
+      "status": "unimplemented"
+    },
+    {
+      "capability": "audio",
+      "status": "unimplemented"
+    },
+    {
+      "capability": "display",
+      "status": "unimplemented"
+    },
+    {
+      "capability": "gpu",
+      "status": "unimplemented"
+    },
+    {
+      "capability": "npu",
+      "status": "unimplemented"
+    }
   ]
 }

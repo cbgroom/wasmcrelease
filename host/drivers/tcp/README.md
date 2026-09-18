@@ -63,3 +63,6 @@ untrusted thread, reset/revocation/cancellation, sustained resident server,
 UDP/HTTP/TLS or browser/mobile qualification is claimed. TLS belongs in a
 reviewed Lib over transport; this fixture provides no encryption. Local PASS
 and exact-source Actions acceptance are distinct, and old tags are unchanged.
+## Canonical Native Rust provider
+
+The canonical shared Native TCP provider implementation lives in `host/drivers/tcp/rust`. Linux, macOS and Windows platform manifests may bind to this one provider rather than copy OS-specific wrappers when `std::net` preserves the required semantics. The E2E Rust crate consumes this provider; it no longer owns a duplicate implementation. Provider qualification remains evidence-gated through `.github/workflows/host-network.yml`.

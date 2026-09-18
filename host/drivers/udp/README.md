@@ -58,3 +58,6 @@ belong to the test launcher, not the WAsmC Guest.
 Local macOS Node/Bun/Deno x Wasmi/Wasmtime parity and Linux ARM/Bun JS ownership
 proof passed. Exact cross-platform Actions/main acceptance remain separate.
 Do not count these as typed WIT transport/immutable SDK release closure.
+## Canonical Native Rust provider
+
+The canonical shared Native UDP provider implementation lives in `host/drivers/udp/rust`. Linux, macOS and Windows platform manifests may bind to this one provider rather than copy OS-specific wrappers when `std::net` preserves the required semantics. The E2E Rust crate consumes this provider; it no longer owns a duplicate implementation. Provider qualification remains evidence-gated through `.github/workflows/host-network.yml`.
