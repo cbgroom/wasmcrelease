@@ -29,7 +29,7 @@ jobs:
           WASMC_CI_LABEL: compatibility-${{ matrix.os }}-${{ matrix.node }}
         run: node scripts/ci-suite.mjs compatibility
       - if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: ci-compatibility-${{ matrix.os }}-${{ matrix.node }}
           path: target/ci/**
@@ -49,7 +49,7 @@ jobs:
           WASMC_CI_LABEL: integrity-ubuntu
         run: node scripts/ci-suite.mjs integrity
       - if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: ci-integrity
           path: target/ci/**
@@ -83,7 +83,7 @@ jobs:
           WASMC_CI_LABEL: runtime-${{ matrix.os }}-${{ matrix.runtime }}-${{ matrix.mirror }}
         run: node scripts/ci-suite.mjs runtime "${{ matrix.runtime }}" "${{ matrix.mirror }}"
       - if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: ci-runtime-${{ matrix.os }}-${{ matrix.runtime }}-${{ matrix.mirror }}
           path: target/ci/**
@@ -105,7 +105,7 @@ jobs:
           WASMC_CI_LABEL: security-full-history
         run: node scripts/ci-suite.mjs security
       - if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: ci-security
           path: target/ci/**
@@ -134,7 +134,7 @@ jobs:
           WASMC_CI_LABEL: rust-release-ubuntu
         run: node scripts/ci-suite.mjs rust
       - if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: ci-rust
           path: target/ci/**
@@ -163,7 +163,7 @@ jobs:
           WASMC_CI_NEEDS: ${{ toJSON(needs) }}
         run: node scripts/ci-summary.mjs
       - if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: verification-report
           path: target/ci-aggregate/**
