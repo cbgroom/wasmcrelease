@@ -1,0 +1,28 @@
+name: Host canonical layout
+
+on:
+  push:
+    branches: [main, work/host-canonical-layout-v1]
+    paths:
+      - "host/**"
+      - "scripts/validate-host-layout.mjs"
+      - ".github/workflows/host-layout.yml"
+  pull_request:
+    paths:
+      - "host/**"
+      - "scripts/validate-host-layout.mjs"
+      - ".github/workflows/host-layout.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: 26.5.1
+      - run: node scripts/validate-host-layout.mjs
