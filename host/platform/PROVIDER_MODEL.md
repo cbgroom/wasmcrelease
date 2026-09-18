@@ -30,3 +30,7 @@ Provider status is three-state:
 
 Platforms never inherit support claims from another OS merely because shared
 code compiles there.
+
+Every platform manifest must list every canonical capability exactly once.
+Absence is not a support state. New capabilities therefore force an explicit
+per-platform decision: unimplemented, implemented, or qualified.

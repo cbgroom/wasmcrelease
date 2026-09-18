@@ -98,6 +98,14 @@ for (const platform of manifest.platforms) {
       }
     }
   }
+  for (const capability of manifest.capabilities) {
+    if (!seenCapabilities.has(capability)) {
+      failures.push(`platform capability state must be explicit: ${platform}/${capability}`);
+    }
+  }
+  if (seenCapabilities.size !== manifest.capabilities.length) {
+    failures.push(`platform provider manifest must cover every canonical capability exactly once: ${platform}`);
+  }
 }
 for (const embedding of ["node", "deno", "bun", "browser"]) {
   const p = path.join(root, "host", "embedding", embedding);
