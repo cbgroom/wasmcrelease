@@ -16,7 +16,14 @@
     },
     {
       "capability": "memory",
-      "status": "unqualified"
+      "status": "qualified",
+      "binding": "shared-native-rust",
+      "implementation": "host/drivers/memory/rust",
+      "qualification": {
+        "workflow": ".github/workflows/host-memory.yml",
+        "jobs": ["ubuntu-24.04", "ubuntu-24.04-arm"],
+        "architectures": ["x86_64", "aarch64"]
+      }
     },
     {
       "capability": "tcp",

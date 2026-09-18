@@ -16,7 +16,14 @@
     },
     {
       "capability": "memory",
-      "status": "unqualified"
+      "status": "qualified",
+      "binding": "shared-native-rust",
+      "implementation": "host/drivers/memory/rust",
+      "qualification": {
+        "workflow": ".github/workflows/host-memory.yml",
+        "jobs": ["macos-14", "macos-15-intel"],
+        "architectures": ["aarch64", "x86_64"]
+      }
     },
     {
       "capability": "tcp",
