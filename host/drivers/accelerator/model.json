@@ -1,0 +1,55 @@
+{
+  "schema": "wasmc.host-accelerator-model/v1",
+  "typed_capabilities": ["gpu", "npu"],
+  "support_state_effect": "none",
+  "shared_substrate": true,
+  "resource_semantics": {
+    "internal_kind": "accelerator",
+    "guest_visible_native_handle": false,
+    "capability_identity_preserved": true
+  },
+  "submission": {
+    "operation_per_submission": 1,
+    "completion_per_submission": 1,
+    "cancel": "request-only",
+    "drop": "supervision-only",
+    "outcome_unknown": "terminal-no-replay",
+    "physical_retirement_requires": "authoritative-settlement",
+    "explicit_drain": true
+  },
+  "buffers": {
+    "minimum": 1,
+    "maximum": 16,
+    "descriptor": {
+      "window": "opaque-window",
+      "offset": "u64",
+      "length": "u64"
+    },
+    "native_pointer_visible": false,
+    "per_buffer_completion": false,
+    "completion_shape": {
+      "transferred": "aggregate-submission-bytes"
+    }
+  },
+  "platform_boundary": {
+    "device_discovery": "platform-provider",
+    "queue_context_acquisition": "platform-provider",
+    "native_buffer_binding": "platform-provider",
+    "submission_lifecycle": "shared-substrate",
+    "typed_operation_schema": "gpu-or-npu-capability"
+  },
+  "fixtures": [
+    {
+      "name": "command-plus-two-tensors-structural",
+      "claim": "structural-only",
+      "segment_lengths": [4096, 4194304, 4194304],
+      "aggregate_bytes": 8392704
+    }
+  ],
+  "nonclaims": [
+    "gpu and npu are not merged into one typed capability",
+    "not a real GPU or NPU execution qualification",
+    "not a vendor API or zero-copy performance claim",
+    "not a new Guest ABI or WIT surface"
+  ]
+}
