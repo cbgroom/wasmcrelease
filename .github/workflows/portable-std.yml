@@ -78,7 +78,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p target/portable-std
-          cargo +1.96.0 test --locked --manifest-path host/lib-e2e/rust/Cargo.toml --test portable_std --features wasmtime-engine -- --nocapture 2>&1 | tee target/portable-std/native.log
+          cargo +1.96.0 test --locked --manifest-path host/tests/e2e/rust/Cargo.toml --test portable_std --features wasmtime-engine -- --nocapture 2>&1 | tee target/portable-std/native.log
           printf 'Portable Std native paired tests passed at %s\n' "$GITHUB_SHA" >> "$GITHUB_STEP_SUMMARY"
       - if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02

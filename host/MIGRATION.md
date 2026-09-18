@@ -1,23 +1,23 @@
-# Host migration map
+# Host canonical tree
 
-The existing public Host tree is retained while the canonical layout is
-introduced. Migration is incremental and behavior-preserving.
+The public Host has one canonical source tree. Legacy top-level Host layouts are not supported.
 
-| Existing path | Canonical destination | Status |
-| --- | --- | --- |
-| `host/v0/` | `host/contract/` + examples/tests | compatibility authority retained |
-| `host/completion/` | `host/runtime/` + `host/core/lifecycle/` | planned |
-| `host/file-io/` | `host/drivers/file/` + `host/platform/*/file` | planned |
-| `host/tcp/` | `host/drivers/tcp/` + `host/platform/*/network` | planned |
-| `host/udp/` | `host/drivers/udp/` + `host/platform/*/network` | planned |
-| `host/corelib-io/` | `host/core/` + examples/tests | planned |
-| `host/lib-e2e/` | `host/examples/` + `host/tests/` | planned |
-| admission Host receipts | `host/qualification/` projection | planned |
+| Former path | Canonical path |
+| --- | --- |
+| `host/v0/` | `host/contract/v0/` |
+| `host/completion/` | `host/runtime/completion/` |
+| `host/file-io/` | `host/drivers/file/` |
+| `host/tcp/` | `host/drivers/tcp/` |
+| `host/udp/` | `host/drivers/udp/` |
+| `host/corelib-io/` | `host/core/io/` |
+| `host/lib-e2e/` | `host/tests/e2e/` |
+| `host/browser/` | `host/sdk/browser/` |
 
 Rules:
 
-1. no mass rename;
-2. old CI paths stay valid until the replacement path has equivalent evidence;
-3. no second Host ABI is created during migration;
-4. new platform-specific code lands under `host/platform/<platform>/`;
-5. new capability contracts land under `host/drivers/<capability>/`.
+1. new Host code lands only in the canonical tree;
+2. no compatibility aliases or duplicate Host APIs are kept;
+3. `contract/` is the single guest-visible ABI authority;
+4. platform-specific implementation belongs only under `platform/`;
+5. capability contracts belong under `drivers/`;
+6. historical admission/evidence may retain old path strings as historical facts.

@@ -1,0 +1,16 @@
+[package]
+name = "wasmc-lib-host-e2e"
+version = "0.0.1"
+edition = "2021"
+publish = false
+[workspace]
+[features]
+default = []
+wasmtime-engine = ["dep:wasmtime"]
+[dependencies]
+wasmtime = { version = "=47.0.4", optional = true, default-features = false, features = ["runtime", "cranelift"] }
+# Public execution consumes binary Core Wasm, never WAT text. Preserve runtime
+# validation, stable behavior, memory64 and dispatch; omit only text parsing.
+wasmi = { version = "=2.0.0", default-features = false, features = ["stable", "std", "validate", "memory64", "auto-dispatch"] }
+wasmc-preopened-file-reference = { path = "../../../drivers/file/rust" }
+wasmc-completion-guard = { path = "../../../runtime/completion/rust" }

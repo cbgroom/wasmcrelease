@@ -20,15 +20,15 @@ jobs:
         with:
           node-version: 26.5.1
       - run: rustup toolchain install 1.96.0 --profile minimal --component clippy,rustfmt
-      - run: cargo +1.96.0 fmt --check --manifest-path host/file-io/rust/Cargo.toml
-      - run: cargo +1.96.0 clippy --locked --manifest-path host/file-io/rust/Cargo.toml --all-targets -- -D warnings
-      - run: cargo +1.96.0 build --release --locked --manifest-path host/file-io/rust/Cargo.toml
+      - run: cargo +1.96.0 fmt --check --manifest-path host/drivers/file/rust/Cargo.toml
+      - run: cargo +1.96.0 clippy --locked --manifest-path host/drivers/file/rust/Cargo.toml --all-targets -- -D warnings
+      - run: cargo +1.96.0 build --release --locked --manifest-path host/drivers/file/rust/Cargo.toml
       - name: Real file permissions, bytes and lifecycle
         shell: bash
         run: |
-          binary=host/file-io/rust/target/release/wasmc-preopened-file-reference
+          binary=host/drivers/file/rust/target/release/wasmc-preopened-file-reference
           if [[ "$RUNNER_OS" == Windows ]]; then binary="$binary.exe"; fi
-          node host/file-io/test.mjs "$binary"
+          node host/drivers/file/test.mjs "$binary"
       - if: runner.os != 'Windows'
         uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6
         with:
@@ -41,10 +41,10 @@ jobs:
         name: Bun and restricted Deno real file parity
         shell: bash
         run: |
-          binary=host/file-io/rust/target/release/wasmc-preopened-file-reference
-          bun host/file-io/test.mjs "$binary"
+          binary=host/drivers/file/rust/target/release/wasmc-preopened-file-reference
+          bun host/drivers/file/test.mjs "$binary"
           mkdir -p target/host-file-tmp
-          TMPDIR="$PWD/target/host-file-tmp" deno run --allow-read=target/host-file-tmp --allow-write=target/host-file-tmp --allow-env=TMPDIR,NODE_V8_COVERAGE --allow-run="$binary" host/file-io/test.mjs "$binary"
+          TMPDIR="$PWD/target/host-file-tmp" deno run --allow-read=target/host-file-tmp --allow-write=target/host-file-tmp --allow-env=TMPDIR,NODE_V8_COVERAGE --allow-run="$binary" host/drivers/file/test.mjs "$binary"
       - name: Public contract consistency
         if: runner.os == 'Linux'
         run: ./scripts/validate-maintainer.sh

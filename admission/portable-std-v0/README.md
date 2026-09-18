@@ -19,8 +19,8 @@ node admission/portable-std-v0/test.mjs
 node admission/portable-std-v0/test-checkout.mjs
 bun admission/portable-std-v0/test.mjs
 deno run --allow-read --allow-env=GITHUB_SHA admission/portable-std-v0/test.mjs
-cargo test --locked --manifest-path host/lib-e2e/rust/Cargo.toml --test portable_std
-cargo test --locked --manifest-path host/lib-e2e/rust/Cargo.toml --test portable_std --features wasmtime-engine
+cargo test --locked --manifest-path host/tests/e2e/rust/Cargo.toml --test portable_std
+cargo test --locked --manifest-path host/tests/e2e/rust/Cargo.toml --test portable_std --features wasmtime-engine
 ```
 
 All files are identity-checked and complete Core modules validated **before**

@@ -1,0 +1,13 @@
+{
+  "schema": "wasmc-host-entrypoint-regression/v1",
+  "source": "b2c9b76b2a55d4585e7849974e634f3f1a3f6e24",
+  "composition_run": 34760097017,
+  "independently_read_failure_job": 103731305178,
+  "failure_step": "Run node host/drivers/udp/entrypoint-test.mjs",
+  "failure": "spawnSync bun ENOENT",
+  "cause": "three-engine subprocess test ran before conditional Bun/Deno installation",
+  "accepted": false,
+  "repair": "explicit node-only entrypoint profile before setup; required three-engine profile after setup on admitted Unix platforms",
+  "missing_runtime_is_silently_skipped": false,
+  "new_source_requires_full_qualification": true
+}

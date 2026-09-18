@@ -92,7 +92,7 @@ Kernel, Native internal owner, scoped lifetime and negotiation are accepted.
 Stream/CoreLib candidate passed both complete workflows and mandatory Linux fast.
 Early queued endpoint construction and persistent data ownership resolve the
 locally reproduced Bun/Linux header loss. Preserve historical failed evidence
-in host/tcp/linux-frame-regression.json. Removed readable experiment failed Deno.
+in host/drivers/tcp/linux-frame-regression.json. Removed readable experiment failed Deno.
 28 service pairs, 28 CoreLib file pairs and 28 lifetime pairs pass: each consumer
 100000 cycles, checksum14342320, warm CoreLib memory1310720bytes stable, earliest
 stale reference rejected. JS owners end empty; Native drops100000 per caller.
@@ -169,7 +169,7 @@ Fresh CSPRNG scoped guards use private binding-local integers; injected identity
 constructors and raw guards keep global exhaustion protection. JS/Native owner
 registries rotate identity only when exhausted AND completely empty. Local
 40000 guard and 40000 registry cycles pass, live quarantine blocks rotation,
-old epoch tickets remain invalid. See host/completion/LIFETIME.md; this is not
+old epoch tickets remain invalid. See host/runtime/completion/LIFETIME.md; this is not
 general async recovery/guest ABI or long-run RSS/network qualification.
 Mac ARM Bun Kernel CI empty sync-spawn stdout is corrected with event-driven
 spawn/pipe-drain/close, no replay. Changed source requires own qualification.
@@ -178,7 +178,7 @@ Bounded Core describe now exposes profile version/copy feature/limits without
 new Host imports. Negotiated guest performs preflight before allocation/invoke.
 Local six JS/Native engine pairs pass four lengths and seven denial cases;
 Native denies with zero non-describe calls/resources/effects. Typed WIT SDK and
-arbitrary-device description are not implied. Owning host/v0/NEGOTIATION.md.
+arbitrary-device description are not implied. Owning host/contract/v0/NEGOTIATION.md.
 
 ## 4. Plan and Validation
 
@@ -187,13 +187,13 @@ Run scripts/maintainer-orient.sh. Develop and verify locally, batch milestones;
 queued Actions does not block development or permit unqualified promotion.
 
 Build: cargo build --release --locked --features wasmtime-engine
---manifest-path host/lib-e2e/rust/Cargo.toml. Use one shell command line.
+--manifest-path host/tests/e2e/rust/Cargo.toml. Use one shell command line.
 Owning runnable commands and limits:
-- host/tcp/ENGINE_PROFILES.md: identical resident App/Lib on both Native engines.
-- host/tcp/BENCHMARK.md: checksummed pure compute; not network/durable TPS.
-- host/tcp/READ_STOP.md and WRITE_OUTCOMES.md: issued-I/O/partial-effect fences.
-- host/tcp/STOP_FAILURE.md and SUPERVISOR.md: retained ownership and bounded quota.
-- host/browser/README.md: actual Chrome/Firefox/WebKit probes, not phone emulation.
+- host/drivers/tcp/ENGINE_PROFILES.md: identical resident App/Lib on both Native engines.
+- host/drivers/tcp/BENCHMARK.md: checksummed pure compute; not network/durable TPS.
+- host/drivers/tcp/READ_STOP.md and WRITE_OUTCOMES.md: issued-I/O/partial-effect fences.
+- host/drivers/tcp/STOP_FAILURE.md and SUPERVISOR.md: retained ownership and bounded quota.
+- host/sdk/browser/README.md: actual Chrome/Firefox/WebKit probes, not phone emulation.
 
 Before commit: refresh-integrity.mjs, validate-maintainer.sh, actionlint,
 git diff --check; stage only own changes and verify remote recovery.
@@ -203,7 +203,7 @@ Cancel obsolete known-defective own runs only; never weaken required gates.
 
 ## 5. Current Action
 
-Full Host delivery denominator is five gates from host/v0/README.md, not
+Full Host delivery denominator is five gates from host/contract/v0/README.md, not
 all-standard-library coverage. Only gate1 is currently fully accepted:20%.
 Do not count locally completed slices as all-platform/full SDK completion.
 

@@ -26,8 +26,13 @@ for (const p of forbiddenTopLevel) {
   failures.push(`platform Host API fork is forbidden: ${path.relative(root, p)}`);
 }
 
-if (manifest.legacy_paths_retained !== true) {
-  failures.push("legacy_paths_retained must remain true during migration");
+if (manifest.legacy_paths_retained !== false) {
+  failures.push("legacy_paths_retained must be false for the canonical Host tree");
+}
+
+for (const legacy of ["v0", "completion", "file-io", "tcp", "udp", "corelib-io", "lib-e2e", "browser"]) {
+  const p = path.join(root, "host", legacy);
+  if (fs.existsSync(p)) failures.push(`legacy Host root is forbidden: host/${legacy}`);
 }
 
 if (failures.length) {

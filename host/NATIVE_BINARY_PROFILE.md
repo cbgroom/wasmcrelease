@@ -1,6 +1,6 @@
 # Binary-only default Native reference
 
-The public mutable `host/lib-e2e/rust` reference accepts binary Core Wasm.
+The public mutable `host/tests/e2e/rust` reference accepts binary Core Wasm.
 It does not offer WAT source compilation. The frozen compiler, CoreLib and
 Runtime SDK are untouched. Wasmi remains pinned to2.0.0; its explicit features
 retain stable/std/validate/memory64/auto-dispatch and omit only wat.
@@ -27,9 +27,9 @@ TLS/WAT dependencies; compile success is not device/network qualification.
 Reproduce from repository root:
 
 ```
-cargo build --release --locked --manifest-path host/lib-e2e/rust/Cargo.toml --bin udp-server-reference
-cargo tree --locked --manifest-path host/lib-e2e/rust/Cargo.toml --prefix none --format '{p}'
-cargo test --locked --manifest-path host/lib-e2e/rust/Cargo.toml --lib
+cargo build --release --locked --manifest-path host/tests/e2e/rust/Cargo.toml --bin udp-server-reference
+cargo tree --locked --manifest-path host/tests/e2e/rust/Cargo.toml --prefix none --format '{p}'
+cargo test --locked --manifest-path host/tests/e2e/rust/Cargo.toml --lib
 ```
 
 Resolve exact source using Git and containing workflow SHA; do not apply this

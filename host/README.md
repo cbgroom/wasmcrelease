@@ -12,10 +12,7 @@ The canonical architecture is:
 6. `sdk/` — application-ecosystem embedding packages.
 7. `examples/`, `tests/`, and `qualification/` — examples, reusable tests, and platform evidence.
 
-Existing directories such as `v0/`, `completion/`, `tcp/`, `udp/`,
-`file-io/`, and `lib-e2e/` are retained as compatibility/research roots.
-They will migrate incrementally according to `MIGRATION.md`; no compatibility
-path is removed by introducing this layout.
+The public Host uses only this canonical tree. Former experimental top-level layouts have been moved into these roots; no compatibility aliases are retained. Historical admission/evidence may still mention their original paths.
 
 The Host semantic model remains:
 

@@ -1,7 +1,7 @@
 # Next gate: typed Core transport, not another Host-only fixture
 
 This is an implementation review checklist, not an accepted ABI or SDK. The
-[five Host delivery gates](v0/README.md) still accept only gate1. Real file,
+[five Host delivery gates](contract/v0/README.md) still accept only gate1. Real file,
 TCP/UDP, browser and lifetime receipts qualify their stated slices, not gate2.
 
 ## What is missing
