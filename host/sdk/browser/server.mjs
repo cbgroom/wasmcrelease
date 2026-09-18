@@ -3,7 +3,7 @@ import {createServer} from 'node:http';
 import {readFile} from 'node:fs/promises';
 import {fileURLToPath} from 'node:url';
 import {compile} from '../../../current/wasmc.mjs';
-const root=new URL('../../',import.meta.url);
+const root=new URL('../../../',import.meta.url);
 const guest=await compile(await readFile(new URL('host/tests/e2e/guest.wasmc',root),'utf8'));
 const kernelGuest=await compile(await readFile(new URL('host/contract/v0/guest.wasmc',root),'utf8'));
 const files=new Set(['host/sdk/browser/index.html','host/sdk/browser/probe.mjs','host/contract/v0/reference.mjs','host/drivers/tcp/resident-app.mjs','host/drivers/tcp/read-window.mjs','host/drivers/tcp/write-window.mjs','host/drivers/tcp/stop-fence.mjs','host/drivers/tcp/supervisor.mjs','host/runtime/completion/scoped-guard.mjs','host/runtime/completion/guard.mjs','libs/wasmc-owned-algorithms/artifact.wasm']);

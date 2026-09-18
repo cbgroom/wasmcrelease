@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {compile} from '../../../current/wasmc.mjs';
 import {createResidentApp} from './resident-app.mjs';
-const root=new URL('../../',import.meta.url);
+const root=new URL('../../../',import.meta.url);
 const app=await createResidentApp(await readFile(new URL('libs/wasmc-owned-algorithms/artifact.wasm',root)),await compile(await readFile(new URL('host/tests/e2e/guest.wasmc',root),'utf8')));
 let controls=0;
 try {
