@@ -1,0 +1,13 @@
+[package]
+name = "wasmc-host-https-qualification"
+version = "0.0.1"
+edition = "2021"
+publish = false
+
+[dependencies]
+wasmtime = { version = "=47.0.4", default-features = false, features = ["runtime", "cranelift"] }
+rustls = { version = "=0.23.44", features = ["std", "custom-provider"], default-features = false }
+rustls-rustcrypto = { version = "=0.0.2-alpha", default-features = false, features = ["alloc"] }
+httparse = { version = "=1.10.1", default-features = false }
+
+[workspace]

@@ -1,0 +1,65 @@
+{
+  "schema": "wasmc-host-https-artifacts/v1",
+  "https_source_commit": "2a49108391326b083426bb5ca12e76b0b9268433",
+  "host_transport_baseline_commit": "b1af59699bd27a9d5e3c7d9b6e8951cc1be4302c",
+  "artifacts": [
+    {
+      "id": "tls-server-direct",
+      "path": "host/tests/https/artifacts/tls-server-direct.wasm",
+      "bytes": 608257,
+      "sha256": "2532f311dffce2b99ed2acffdc7f4c5a7b70683019cf1a3af41918223d6e7da4",
+      "role": "direct Core TLS server Lib; exactly one reviewed entropy import"
+    },
+    {
+      "id": "http1-server",
+      "path": "host/tests/https/artifacts/http1-server.wasm",
+      "bytes": 54719,
+      "sha256": "f5d528f7eb5290e128723e0b6fbf393915fe22a63501b37f97cda36062771ad6",
+      "role": "import-free HTTP/1 server Core Lib"
+    },
+    {
+      "id": "json",
+      "path": "host/tests/https/artifacts/json.wasm",
+      "bytes": 77196,
+      "sha256": "18f257896dcf0a95937a0d9652323d6e2b91fb01f430861eda23244344683320",
+      "role": "import-free JSON Core Lib"
+    },
+    {
+      "id": "compression",
+      "path": "host/tests/https/artifacts/compression.wasm",
+      "bytes": 93171,
+      "sha256": "57a085c396108f7eb2d56e99ca373cbdc5731125314e05fe68c93dce0431f589",
+      "role": "import-free compression Core Lib"
+    },
+    {
+      "id": "router-policy",
+      "path": "host/tests/https/artifacts/router-policy.wasm",
+      "bytes": 261,
+      "sha256": "9d86bc5e3a99537f2673ffc2e4e3053abf30dec1b7927c85729d434be64c2c3d",
+      "role": "Core Wasm routing policy"
+    }
+  ],
+  "fixtures": [
+    {
+      "id": "server-cert",
+      "path": "host/tests/https/fixtures/server-cert.der",
+      "sha256": "beea8f5f984ef26f3613e7508644a064a76f9f72f787297453bdab37af3050ab"
+    },
+    {
+      "id": "server-key",
+      "path": "host/tests/https/fixtures/server-key.pkcs8.der",
+      "sha256": "ae002057643328fb4290b0de0e4d05e123e62407c2c056e1d19fbcbe7435be61"
+    }
+  ],
+  "policy": {
+    "compiler_source_required": false,
+    "component_runtime": false,
+    "host_transport_role": "qualification-baseline",
+    "timing_authority": "observational"
+  },
+  "non_claims": [
+    "This fixture does not publish private compiler source.",
+    "The self-contained Host transport is a qualification baseline, not a canonical platform provider binding.",
+    "GitHub-hosted timing is comparative evidence, not an SLA."
+  ]
+}
