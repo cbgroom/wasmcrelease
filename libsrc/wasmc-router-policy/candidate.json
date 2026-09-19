@@ -1,0 +1,25 @@
+{
+  "schema": "wasmc.libsrc-candidate/v1",
+  "id": "wasmc-router-policy",
+  "version": "0.0.1-dev.1",
+  "wit": "lib.wit",
+  "source": [
+    "src/router-policy.wat"
+  ],
+  "host_import_budget": 0,
+  "oracle": {
+    "path": "host/tests/https/artifacts/router-policy.wasm",
+    "sha256": "9d86bc5e3a99537f2673ffc2e4e3053abf30dec1b7927c85729d434be64c2c3d"
+  },
+  "build": {
+    "command": "wasm-tools parse libsrc/wasmc-router-policy/src/router-policy.wat -o <output.wasm>",
+    "reproducibility": "source-to-core-wasm; byte identity with oracle is not required"
+  },
+  "gates": [
+    "zero-imports",
+    "behavior-equivalence",
+    "wit-reviewed",
+    "multi-engine-before-admission"
+  ],
+  "admitted": false
+}
