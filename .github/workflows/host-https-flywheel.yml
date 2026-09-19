@@ -71,16 +71,18 @@ jobs:
         run: node -e "require('fs').copyFileSync(process.argv[1],process.argv[2])" "host/tests/https/target/release/wasmc-host-transport-concurrency${{ runner.os == 'Windows' && '.exe' || '' }}" "host/tests/https/target/release/wasmc-host-concurrency-shared${{ runner.os == 'Windows' && '.exe' || '' }}"
       - name: Run paired HTTPS baseline vs shared-reactor A/B
         run: node scripts/host-https-ab.mjs "host/tests/https/target/release/wasmc-host-https-baseline${{ runner.os == 'Windows' && '.exe' || '' }}" "host/tests/https/target/release/wasmc-host-https-reactor${{ runner.os == 'Windows' && '.exe' || '' }}" "${{ matrix.platform }}" "${{ matrix.platform }}.json"
-      - name: Run c32 dedicated readiness vs shared-reactor A/B
+      - name: Run c32 reactor shard sweep
         env:
-          WASMC_HOST_REACTOR_SHARDS: "4"
-        run: node scripts/host-transport-concurrency-ab.mjs "host/tests/https/target/release/wasmc-host-concurrency-dedicated${{ runner.os == 'Windows' && '.exe' || '' }}" "host/tests/https/target/release/wasmc-host-concurrency-shared${{ runner.os == 'Windows' && '.exe' || '' }}" "${{ matrix.platform }}" "${{ matrix.platform }}-transport.json"
+          WASMC_HOST_SHARD_SWEEP: "1,2,4,8,16"
+          WASMC_HOST_SWEEP_PAIRS: "3"
+          WASMC_HOST_SWEEP_ITERATIONS: "1000"
+        run: node scripts/host-transport-shard-sweep.mjs "host/tests/https/target/release/wasmc-host-concurrency-dedicated${{ runner.os == 'Windows' && '.exe' || '' }}" "host/tests/https/target/release/wasmc-host-concurrency-shared${{ runner.os == 'Windows' && '.exe' || '' }}" "${{ matrix.platform }}" "${{ matrix.platform }}-shard-sweep.json"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: host-https-${{ matrix.platform }}
           path: |
             ${{ matrix.platform }}.json
-            ${{ matrix.platform }}-transport.json
+            ${{ matrix.platform }}-shard-sweep.json
           if-no-files-found: error
 
   aggregate:

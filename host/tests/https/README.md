@@ -82,11 +82,13 @@ magnitude or more. That evidence freezes one global reactor as a negative
 control rather than the target architecture.
 
 A local 1/2/4/8-shard sweep on the same c32 workload selected four reactor
-shards as the next candidate: all six pairs were positive at each shard count,
-with paired p50 throughput deltas of about +14.7%, +23.7%, +33.7% and +29.7%
-respectively. The GitHub c32 lane therefore evaluates four shards next. This is
-still a qualification hypothesis, not a production default or a Host ABI
-change.
+shards on m4mac: all six pairs were positive at each shard count, with paired
+p50 throughput deltas of about +14.7%, +23.7%, +33.7% and +29.7% respectively.
+The subsequent six-platform four-shard pass proved that no single fixed shard
+count is portable: Windows and macOS Intel improved, Linux was near parity, and
+macOS ARM regressed. The GitHub c32 lane therefore sweeps 1/2/4/8/16 shards per
+platform and records the best observed point as evidence only. This does not
+promote an automatic production policy or change the Host ABI.
 
 GitHub-hosted timings are **observational**. Functional and artifact-identity
 checks are hard gates; timing deltas become engineering evidence for the next
