@@ -122,6 +122,8 @@ for (let index = 0; index < 5; index++) {
     host_pending_peak: run.receipt.host_pending_peak,
     host_owner_wake_cycles: run.receipt.host_owner_wake_cycles,
     host_owner_threads_started: run.receipt.host_owner_threads_started,
+    host_reactor_poll_calls: run.receipt.host_reactor_poll_calls ?? 0,
+    host_reactor_readiness_events: run.receipt.host_reactor_readiness_events ?? 0,
     process_wall_ms: Number(run.wallMs.toFixed(3)),
   });
 }
@@ -174,6 +176,8 @@ const report = {
     host_pending_issued: qualification.receipt.host_pending_issued,
     host_owner_wake_cycles: qualification.receipt.host_owner_wake_cycles,
     host_owner_threads_started: qualification.receipt.host_owner_threads_started,
+    host_reactor_poll_calls: qualification.receipt.host_reactor_poll_calls ?? 0,
+    host_reactor_readiness_events: qualification.receipt.host_reactor_readiness_events ?? 0,
     host_read_operations: qualification.receipt.host_read_operations,
     host_write_operations: qualification.receipt.host_write_operations,
     host_read_bytes: qualification.receipt.host_read_bytes,
@@ -207,8 +211,14 @@ const report = {
       host_operations: qualification.receipt.host_operations,
       owner_wake_cycles_per_host_operation:
         Number((qualification.receipt.host_owner_wake_cycles / qualification.receipt.host_operations).toFixed(6)),
+      reactor_poll_calls: qualification.receipt.host_reactor_poll_calls ?? 0,
+      reactor_readiness_events: qualification.receipt.host_reactor_readiness_events ?? 0,
+      reactor_polls_per_host_operation:
+        Number((((qualification.receipt.host_reactor_poll_calls ?? 0) / qualification.receipt.host_operations)).toFixed(6)),
+      reactor_readiness_events_per_host_operation:
+        Number((((qualification.receipt.host_reactor_readiness_events ?? 0) / qualification.receipt.host_operations)).toFixed(6)),
       interpretation:
-        'Diagnostic only. A high wake/operation ratio can motivate Host scheduling profiling but does not by itself prove root cause.',
+        'Diagnostic only. owner_wake_cycles applies to the polling-owner baseline; reactor_poll_calls/readiness_events apply to the shared-reactor candidate. Do not compare unlike counters as if they were identical wake events.',
     },
     interpretation: 'Use with platform history and same-workload evidence; do not infer an SLA from one hosted runner.',
   },

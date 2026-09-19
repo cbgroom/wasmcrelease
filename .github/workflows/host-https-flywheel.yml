@@ -1,7 +1,7 @@
 name: Host HTTPS flywheel
 on:
   push:
-    branches: [main, work/host-https-flywheel-v1]
+    branches: [main]
   pull_request:
   workflow_dispatch:
 
@@ -43,16 +43,24 @@ jobs:
         with:
           path: host/tests/https/target
           key: host-https-v1-${{ matrix.os }}-${{ runner.arch }}-rust1.96.0-${{ hashFiles('host/tests/https/Cargo.lock', 'host/tests/https/Cargo.toml') }}
-      - name: Always rebuild owned HTTPS qualification binary
+      - name: Always rebuild owned HTTPS qualification binaries
         run: cargo +1.96.0 clean --locked --manifest-path host/tests/https/Cargo.toml -p wasmc-host-https-qualification
       - name: Format frozen qualification source
         run: cargo +1.96.0 fmt --check --manifest-path host/tests/https/Cargo.toml
-      - name: Lint qualification source
+      - name: Lint polling baseline
         run: cargo +1.96.0 clippy --release --locked --manifest-path host/tests/https/Cargo.toml --all-targets -- -D warnings -A dead_code -A clippy::manual_is_multiple_of -A clippy::type_complexity
-      - name: Build Host + Lib HTTPS qualification
+      - name: Lint shared-reactor candidate
+        run: cargo +1.96.0 clippy --release --locked --manifest-path host/tests/https/Cargo.toml --all-targets --features reactor-candidate -- -D warnings -A dead_code -A clippy::manual_is_multiple_of -A clippy::type_complexity
+      - name: Build polling baseline
         run: cargo +1.96.0 build --release --locked --manifest-path host/tests/https/Cargo.toml
-      - name: Run functional gate and performance evidence
-        run: node scripts/host-https-perf.mjs "host/tests/https/target/release/wasmc-host-https-qualification${{ runner.os == 'Windows' && '.exe' || '' }}" "${{ matrix.platform }}" "${{ matrix.platform }}.json"
+      - name: Preserve polling baseline binary
+        run: node -e "require('fs').copyFileSync(process.argv[1],process.argv[2])" "host/tests/https/target/release/wasmc-host-https-qualification${{ runner.os == 'Windows' && '.exe' || '' }}" "host/tests/https/target/release/wasmc-host-https-baseline${{ runner.os == 'Windows' && '.exe' || '' }}"
+      - name: Build shared-reactor candidate
+        run: cargo +1.96.0 build --release --locked --manifest-path host/tests/https/Cargo.toml --features reactor-candidate
+      - name: Preserve shared-reactor candidate binary
+        run: node -e "require('fs').copyFileSync(process.argv[1],process.argv[2])" "host/tests/https/target/release/wasmc-host-https-qualification${{ runner.os == 'Windows' && '.exe' || '' }}" "host/tests/https/target/release/wasmc-host-https-reactor${{ runner.os == 'Windows' && '.exe' || '' }}"
+      - name: Run paired HTTPS baseline vs shared-reactor A/B
+        run: node scripts/host-https-ab.mjs "host/tests/https/target/release/wasmc-host-https-baseline${{ runner.os == 'Windows' && '.exe' || '' }}" "host/tests/https/target/release/wasmc-host-https-reactor${{ runner.os == 'Windows' && '.exe' || '' }}" "${{ matrix.platform }}" "${{ matrix.platform }}.json"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: host-https-${{ matrix.platform }}
@@ -81,9 +89,9 @@ jobs:
           if git fetch origin host-https-perf-data:refs/remotes/origin/host-https-perf-data 2>/dev/null && git cat-file -e origin/host-https-perf-data:history.json 2>/dev/null; then
             git show origin/host-https-perf-data:history.json > previous-host-https-history.json
           fi
-      - name: Aggregate six-platform HTTPS evidence
+      - name: Aggregate six-platform paired HTTPS A/B evidence
         shell: bash
-        run: node scripts/aggregate-host-https-perf.mjs host-https-results host-https-site previous-host-https-history.json 6
+        run: node scripts/aggregate-host-https-ab.mjs host-https-results host-https-site previous-host-https-history.json 6
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: host-https-performance-report
@@ -104,7 +112,7 @@ jobs:
         with:
           name: host-https-performance-report
           path: host-https-site
-      - name: Publish independent HTTPS performance history
+      - name: Publish independent HTTPS A/B history
         shell: bash
         run: |
           set -euo pipefail
@@ -125,7 +133,7 @@ jobs:
           cp -R "$GITHUB_WORKSPACE/host-https-site/." .
           touch .nojekyll
           git add -A
-          git commit -m "perf(https): publish $GITHUB_SHA" || exit 0
+          git commit -m "perf(https-ab): publish $GITHUB_SHA" || exit 0
           git push origin HEAD:host-https-perf-data
 
   required:

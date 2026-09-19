@@ -4,10 +4,15 @@ version = "0.0.1"
 edition = "2021"
 publish = false
 
+[features]
+default = []
+reactor-candidate = ["dep:mio"]
+
 [dependencies]
 wasmtime = { version = "=47.0.4", default-features = false, features = ["runtime", "cranelift"] }
 rustls = { version = "=0.23.44", features = ["std", "custom-provider"], default-features = false }
 rustls-rustcrypto = { version = "=0.0.2-alpha", default-features = false, features = ["alloc"] }
 httparse = { version = "=1.10.1", default-features = false }
+mio = { version = "=1.2.3", optional = true, default-features = false, features = ["os-poll", "net"] }
 
 [workspace]

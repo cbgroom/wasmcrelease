@@ -1,4 +1,11 @@
+#[cfg(not(feature = "reactor-candidate"))]
+#[path = "host_transport_baseline.rs"]
 mod host_transport;
+#[cfg(feature = "reactor-candidate")]
+#[path = "host_transport_reactor.rs"]
+mod host_transport;
+#[cfg(feature = "reactor-candidate")]
+mod readiness_owner;
 
 use host_transport::{HostEndpoint, HostTransportError, HostWindow, Terminal};
 use rustls::{
@@ -647,6 +654,8 @@ struct Metrics {
     host_transport_backpressure_rejections: u64,
     host_transport_owner_wake_cycles: u64,
     host_transport_owner_threads_started: u64,
+    host_transport_reactor_poll_calls: u64,
+    host_transport_reactor_readiness_events: u64,
 }
 
 #[derive(Clone, Copy, Debug)]
@@ -806,6 +815,12 @@ impl Metrics {
         self.host_transport_owner_threads_started = self
             .host_transport_owner_threads_started
             .saturating_add(metrics.owner_threads_started);
+        self.host_transport_reactor_poll_calls = self
+            .host_transport_reactor_poll_calls
+            .saturating_add(metrics.reactor_poll_calls);
+        self.host_transport_reactor_readiness_events = self
+            .host_transport_reactor_readiness_events
+            .saturating_add(metrics.reactor_readiness_events);
     }
 
     fn record_operation(
@@ -1733,6 +1748,6 @@ fn main() -> Result<(), Box<dyn Error>> {
     {
         return Err("partial TLS commit not exercised".into());
     }
-    println!("{{\"accepted\":true,\"https\":true,\"keep_alive_requests\":{},\"keep_alive_duration_target_ms\":{},\"keep_alive_elapsed_ms\":{},\"recovery_requests\":1,\"malformed_requests\":1,\"elapsed_ns\":{},\"avg_ns_per_valid_request\":{},\"rps\":{},\"tls_commits\":{},\"tls_partial_commits\":{},\"ciphertext_in\":{},\"ciphertext_out\":{},\"entropy_calls\":{},\"gzip_threshold\":{},\"small_gzip_suppressed\":true,\"http_framing_lib\":true,\"wasmc_router\":true,\"json\":true,\"graceful_tls_close\":true,\"fuel_policy\":\"observe-only\",\"fuel_counter_single\":\"u64\",\"fuel_counter_total\":\"u128\",\"fuel_events\":{},\"fuel_last\":{},\"fuel_max\":{},\"fuel_total\":\"{}\",\"fuel_total_scientific\":\"{}\",\"app_fuel_events\":{},\"app_fuel_last\":{},\"app_fuel_max\":{},\"app_fuel_total\":\"{}\",\"app_fuel_total_scientific\":\"{}\",\"operation_profile_sample_every\":{},\"operation_profile\":{},\"host_transport\":\"endpoint-window-operation-wait-take-result\",\"host_operations\":{},\"host_waits\":{},\"host_claimed\":{},\"host_read_operations\":{},\"host_write_operations\":{},\"host_read_bytes\":{},\"host_write_bytes\":{},\"host_partial_writes\":{},\"host_eof_transfers\":{},\"host_pending_issued\":{},\"host_pending_peak\":{},\"host_cancellations\":{},\"host_timeouts\":{},\"host_backpressure_rejections\":{},\"host_owner_wake_cycles\":{},\"host_owner_threads_started\":{},\"checksum\":{}}}", completed_keepalive_requests, keepalive_duration.map(|v| v.as_millis() as u64).unwrap_or(0), keepalive_started.elapsed().as_millis(), elapsed.as_nanos(), elapsed.as_nanos()/(completed_keepalive_requests as u128+1), ((completed_keepalive_requests as f64+1.0)/elapsed.as_secs_f64()) as u64, rt.metrics.tls_commits, rt.metrics.tls_partial_commits, rt.metrics.tls_ciphertext_in, rt.metrics.tls_ciphertext_out, rt.store.data().entropy_calls, GZIP_THRESHOLD, rt.metrics.fuel_events, rt.metrics.fuel_last, rt.metrics.fuel_max, rt.metrics.fuel_total, scientific_u128(rt.metrics.fuel_total), rt.metrics.app_fuel_events, rt.metrics.app_fuel_last, rt.metrics.app_fuel_max, rt.metrics.app_fuel_total, scientific_u128(rt.metrics.app_fuel_total), rt.metrics.operation_sample_every, rt.metrics.operation_json(), rt.metrics.host_transport_operations, rt.metrics.host_transport_waits, rt.metrics.host_transport_claimed, rt.metrics.host_transport_read_operations, rt.metrics.host_transport_write_operations, rt.metrics.host_transport_read_bytes, rt.metrics.host_transport_write_bytes, rt.metrics.host_transport_partial_writes, rt.metrics.host_transport_eof_transfers, rt.metrics.host_transport_pending_issued, rt.metrics.host_transport_pending_peak, rt.metrics.host_transport_cancellations, rt.metrics.host_transport_timeouts, rt.metrics.host_transport_backpressure_rejections, rt.metrics.host_transport_owner_wake_cycles, rt.metrics.host_transport_owner_threads_started, checksum);
+    println!("{{\"accepted\":true,\"https\":true,\"keep_alive_requests\":{},\"keep_alive_duration_target_ms\":{},\"keep_alive_elapsed_ms\":{},\"recovery_requests\":1,\"malformed_requests\":1,\"elapsed_ns\":{},\"avg_ns_per_valid_request\":{},\"rps\":{},\"tls_commits\":{},\"tls_partial_commits\":{},\"ciphertext_in\":{},\"ciphertext_out\":{},\"entropy_calls\":{},\"gzip_threshold\":{},\"small_gzip_suppressed\":true,\"http_framing_lib\":true,\"wasmc_router\":true,\"json\":true,\"graceful_tls_close\":true,\"fuel_policy\":\"observe-only\",\"fuel_counter_single\":\"u64\",\"fuel_counter_total\":\"u128\",\"fuel_events\":{},\"fuel_last\":{},\"fuel_max\":{},\"fuel_total\":\"{}\",\"fuel_total_scientific\":\"{}\",\"app_fuel_events\":{},\"app_fuel_last\":{},\"app_fuel_max\":{},\"app_fuel_total\":\"{}\",\"app_fuel_total_scientific\":\"{}\",\"operation_profile_sample_every\":{},\"operation_profile\":{},\"host_transport\":\"endpoint-window-operation-wait-take-result\",\"host_operations\":{},\"host_waits\":{},\"host_claimed\":{},\"host_read_operations\":{},\"host_write_operations\":{},\"host_read_bytes\":{},\"host_write_bytes\":{},\"host_partial_writes\":{},\"host_eof_transfers\":{},\"host_pending_issued\":{},\"host_pending_peak\":{},\"host_cancellations\":{},\"host_timeouts\":{},\"host_backpressure_rejections\":{},\"host_owner_wake_cycles\":{},\"host_owner_threads_started\":{},\"host_reactor_poll_calls\":{},\"host_reactor_readiness_events\":{},\"checksum\":{}}}", completed_keepalive_requests, keepalive_duration.map(|v| v.as_millis() as u64).unwrap_or(0), keepalive_started.elapsed().as_millis(), elapsed.as_nanos(), elapsed.as_nanos()/(completed_keepalive_requests as u128+1), ((completed_keepalive_requests as f64+1.0)/elapsed.as_secs_f64()) as u64, rt.metrics.tls_commits, rt.metrics.tls_partial_commits, rt.metrics.tls_ciphertext_in, rt.metrics.tls_ciphertext_out, rt.store.data().entropy_calls, GZIP_THRESHOLD, rt.metrics.fuel_events, rt.metrics.fuel_last, rt.metrics.fuel_max, rt.metrics.fuel_total, scientific_u128(rt.metrics.fuel_total), rt.metrics.app_fuel_events, rt.metrics.app_fuel_last, rt.metrics.app_fuel_max, rt.metrics.app_fuel_total, scientific_u128(rt.metrics.app_fuel_total), rt.metrics.operation_sample_every, rt.metrics.operation_json(), rt.metrics.host_transport_operations, rt.metrics.host_transport_waits, rt.metrics.host_transport_claimed, rt.metrics.host_transport_read_operations, rt.metrics.host_transport_write_operations, rt.metrics.host_transport_read_bytes, rt.metrics.host_transport_write_bytes, rt.metrics.host_transport_partial_writes, rt.metrics.host_transport_eof_transfers, rt.metrics.host_transport_pending_issued, rt.metrics.host_transport_pending_peak, rt.metrics.host_transport_cancellations, rt.metrics.host_transport_timeouts, rt.metrics.host_transport_backpressure_rejections, rt.metrics.host_transport_owner_wake_cycles, rt.metrics.host_transport_owner_threads_started, rt.metrics.host_transport_reactor_poll_calls, rt.metrics.host_transport_reactor_readiness_events, checksum);
     Ok(())
 }

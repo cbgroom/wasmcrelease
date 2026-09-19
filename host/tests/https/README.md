@@ -15,14 +15,22 @@ resource retirement.
   `2a49108391326b083426bb5ca12e76b0b9268433`.
 - Self-contained Host transport qualification baseline:
   `b1af59699bd27a9d5e3c7d9b6e8951cc1be4302c`.
+- Accepted shared-reactor scheduling authority:
+  `5dd23b434caa34e402298fcfe0975a1c4af55773`.
+- The candidate vendors only Host-runtime readiness/reactor machinery and the
+  HTTPS transport adapter needed by this qualification. It does not publish the
+  private WAsmC compiler source.
 - Binary identities are frozen in `artifact-manifest.json`.
 - No private compiler source is required or published.
 - The Host transport in this directory is a test/qualification baseline. It is
   not a new Guest ABI and does not create a platform provider binding.
 
-The baseline deliberately predates the private readiness/shared-reactor
-optimization. That makes later Host implementations measurable candidates
-against the same workload without changing the frozen Host or Lib semantics.
+The baseline deliberately predates the readiness/shared-reactor optimization.
+The `reactor-candidate` Cargo feature swaps only the Host transport module:
+the same HTTPS main, Core Wasm artifacts, request sequence and lifecycle gates
+are compiled again against one process-level `mio` shared reactor. This keeps
+the A/B boundary narrow enough to attribute the mechanism without changing the
+Guest ABI, Lib identities, retry rules or physical socket custody.
 
 ## Hard functional gates
 
@@ -45,6 +53,12 @@ Any functional mismatch fails the Action.
 Performance samples run the same end-to-end executable with a bounded
 one-second keep-alive interval. Results include RPS, average request latency,
 Host lifecycle counters and sampled per-Lib operation wall/fuel data.
+
+The paired A/B runner alternates execution order across six pairs. It records
+the polling baseline and shared-reactor candidate in one report and requires
+semantic parity before accepting timing evidence. Polling-owner cycles and
+reactor poll/readiness counts are reported separately because they are not the
+same event type.
 
 GitHub-hosted timings are **observational**. Functional and artifact-identity
 checks are hard gates; timing deltas become engineering evidence for the next

@@ -115,6 +115,8 @@ pub struct HostTransportMetrics {
     pub backpressure_rejections: u64,
     pub owner_wake_cycles: u64,
     pub owner_threads_started: u64,
+    pub reactor_poll_calls: u64,
+    pub reactor_readiness_events: u64,
 }
 
 #[derive(Debug)]
