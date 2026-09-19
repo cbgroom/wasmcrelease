@@ -1,0 +1,166 @@
+name: Host HTTPS flywheel
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: host-https-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  benchmark:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-24.04
+            platform: linux-x86_64
+          - os: ubuntu-24.04-arm
+            platform: linux-aarch64
+          - os: macos-15-intel
+            platform: macos-x86_64
+          - os: macos-14
+            platform: macos-aarch64
+          - os: windows-2025
+            platform: windows-x86_64
+          - os: windows-11-arm
+            platform: windows-aarch64
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: 26.5.1
+      - run: rustup toolchain install 1.96.0 --profile minimal --component clippy,rustfmt
+      - name: Restore HTTPS dependency compilation cache
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830
+        with:
+          path: host/tests/https/target
+          key: host-https-v1-${{ matrix.os }}-${{ runner.arch }}-rust1.96.0-${{ hashFiles('host/tests/https/Cargo.lock', 'host/tests/https/Cargo.toml') }}
+      - name: Always rebuild owned HTTPS qualification binaries
+        run: cargo +1.96.0 clean --locked --manifest-path host/tests/https/Cargo.toml -p wasmc-host-https-qualification
+      - name: Format frozen qualification source
+        run: cargo +1.96.0 fmt --check --manifest-path host/tests/https/Cargo.toml
+      - name: Lint polling baseline
+        run: cargo +1.96.0 clippy --release --locked --manifest-path host/tests/https/Cargo.toml --all-targets -- -D warnings -A dead_code -A clippy::manual_is_multiple_of -A clippy::type_complexity
+      - name: Lint shared-reactor candidate
+        run: cargo +1.96.0 clippy --release --locked --manifest-path host/tests/https/Cargo.toml --all-targets --features reactor-candidate -- -D warnings -A dead_code -A clippy::manual_is_multiple_of -A clippy::type_complexity
+      - name: Lint dedicated readiness control
+        run: cargo +1.96.0 clippy --release --locked --manifest-path host/tests/https/Cargo.toml --all-targets --features readiness-dedicated -- -D warnings -A dead_code -A clippy::manual_is_multiple_of -A clippy::type_complexity
+      - name: Build polling baseline
+        run: cargo +1.96.0 build --release --locked --manifest-path host/tests/https/Cargo.toml
+      - name: Preserve polling baseline binary
+        run: node -e "require('fs').copyFileSync(process.argv[1],process.argv[2])" "host/tests/https/target/release/wasmc-host-https-qualification${{ runner.os == 'Windows' && '.exe' || '' }}" "host/tests/https/target/release/wasmc-host-https-baseline${{ runner.os == 'Windows' && '.exe' || '' }}"
+      - name: Build shared-reactor candidate
+        run: cargo +1.96.0 build --release --locked --manifest-path host/tests/https/Cargo.toml --features reactor-candidate
+      - name: Preserve shared-reactor candidate binary
+        run: node -e "require('fs').copyFileSync(process.argv[1],process.argv[2])" "host/tests/https/target/release/wasmc-host-https-qualification${{ runner.os == 'Windows' && '.exe' || '' }}" "host/tests/https/target/release/wasmc-host-https-reactor${{ runner.os == 'Windows' && '.exe' || '' }}"
+      - name: Build dedicated readiness concurrency control
+        run: cargo +1.96.0 build --release --locked --manifest-path host/tests/https/Cargo.toml --features readiness-dedicated --bin wasmc-host-transport-concurrency
+      - name: Preserve dedicated concurrency binary
+        run: node -e "require('fs').copyFileSync(process.argv[1],process.argv[2])" "host/tests/https/target/release/wasmc-host-transport-concurrency${{ runner.os == 'Windows' && '.exe' || '' }}" "host/tests/https/target/release/wasmc-host-concurrency-dedicated${{ runner.os == 'Windows' && '.exe' || '' }}"
+      - name: Build shared-reactor concurrency candidate
+        run: cargo +1.96.0 build --release --locked --manifest-path host/tests/https/Cargo.toml --features reactor-candidate --bin wasmc-host-transport-concurrency
+      - name: Preserve shared concurrency binary
+        run: node -e "require('fs').copyFileSync(process.argv[1],process.argv[2])" "host/tests/https/target/release/wasmc-host-transport-concurrency${{ runner.os == 'Windows' && '.exe' || '' }}" "host/tests/https/target/release/wasmc-host-concurrency-shared${{ runner.os == 'Windows' && '.exe' || '' }}"
+      - name: Run paired HTTPS baseline vs shared-reactor A/B
+        run: node scripts/host-https-ab.mjs "host/tests/https/target/release/wasmc-host-https-baseline${{ runner.os == 'Windows' && '.exe' || '' }}" "host/tests/https/target/release/wasmc-host-https-reactor${{ runner.os == 'Windows' && '.exe' || '' }}" "${{ matrix.platform }}" "${{ matrix.platform }}.json"
+      - name: Run c32 reactor shard sweep
+        env:
+          WASMC_HOST_SHARD_SWEEP: "1,2,4,8,16"
+          WASMC_HOST_SWEEP_PAIRS: "3"
+          WASMC_HOST_SWEEP_ITERATIONS: "1000"
+        run: node scripts/host-transport-shard-sweep.mjs "host/tests/https/target/release/wasmc-host-concurrency-dedicated${{ runner.os == 'Windows' && '.exe' || '' }}" "host/tests/https/target/release/wasmc-host-concurrency-shared${{ runner.os == 'Windows' && '.exe' || '' }}" "${{ matrix.platform }}" "${{ matrix.platform }}-shard-sweep.json"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: host-https-${{ matrix.platform }}
+          path: |
+            ${{ matrix.platform }}.json
+            ${{ matrix.platform }}-shard-sweep.json
+          if-no-files-found: error
+
+  aggregate:
+    needs: benchmark
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: 26.5.1
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        with:
+          pattern: host-https-*
+          path: host-https-results
+          merge-multiple: true
+      - name: Read previous HTTPS flywheel history
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git fetch origin host-https-perf-data:refs/remotes/origin/host-https-perf-data 2>/dev/null && git cat-file -e origin/host-https-perf-data:history.json 2>/dev/null; then
+            git show origin/host-https-perf-data:history.json > previous-host-https-history.json
+          fi
+      - name: Aggregate six-platform paired HTTPS A/B evidence
+        shell: bash
+        run: node scripts/aggregate-host-https-ab.mjs host-https-results host-https-site previous-host-https-history.json 6
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: host-https-performance-report
+          path: host-https-site/
+          if-no-files-found: error
+
+  publish-data:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: aggregate
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        with:
+          name: host-https-performance-report
+          path: host-https-site
+      - name: Publish independent HTTPS A/B history
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git fetch origin host-https-perf-data:refs/remotes/origin/host-https-perf-data 2>/dev/null || true
+          rm -rf /tmp/wasmc-host-https-perf-data
+          if git rev-parse --verify origin/host-https-perf-data >/dev/null 2>&1; then
+            git worktree add -B host-https-perf-data /tmp/wasmc-host-https-perf-data origin/host-https-perf-data
+          else
+            git worktree add --detach /tmp/wasmc-host-https-perf-data
+            cd /tmp/wasmc-host-https-perf-data
+            git checkout --orphan host-https-perf-data
+            git rm -rf . >/dev/null 2>&1 || true
+          fi
+          cd /tmp/wasmc-host-https-perf-data
+          find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          cp -R "$GITHUB_WORKSPACE/host-https-site/." .
+          touch .nojekyll
+          git add -A
+          git commit -m "perf(https-ab): publish $GITHUB_SHA" || exit 0
+          git push origin HEAD:host-https-perf-data
+
+  required:
+    if: always()
+    needs: [benchmark, aggregate]
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Require six-platform HTTPS flywheel
+        shell: bash
+        run: |
+          test "${{ needs.benchmark.result }}" = "success"
+          test "${{ needs.aggregate.result }}" = "success"
