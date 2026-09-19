@@ -1,6 +1,6 @@
 use crate::readiness_owner::{
     CoreHostReadyIoError, CoreHostSharedTcpEndpoint, CoreHostSharedTcpReadinessReactor,
-    CoreHostTcpReadinessOwner,
+    CoreHostTcpReadinessOwner, CoreHostWorkerPlacement,
 };
 use std::{
     collections::BTreeMap,
@@ -19,6 +19,13 @@ const SHARED_REACTOR_COMMAND_CAPACITY: usize = 4096;
 const DEFAULT_REACTOR_SHARDS: usize = 1;
 const MAX_REACTOR_SHARDS: usize = 64;
 static NEXT_REACTOR_SHARD: AtomicU64 = AtomicU64::new(0);
+
+fn reactor_affinity_enabled() -> bool {
+    matches!(
+        std::env::var("WASMC_HOST_REACTOR_AFFINITY").as_deref(),
+        Ok("1") | Ok("true") | Ok("on")
+    )
+}
 
 fn configured_reactor_shards() -> Result<usize, CoreHostReadyIoError> {
     let shards = std::env::var("WASMC_HOST_REACTOR_SHARDS")
@@ -41,9 +48,14 @@ fn shared_reactors(
     match REACTORS.get_or_init(|| {
         let shards = configured_reactor_shards()?;
         (0..shards)
-            .map(|_| {
-                CoreHostSharedTcpReadinessReactor::new(SHARED_REACTOR_COMMAND_CAPACITY)
-                    .map(Mutex::new)
+            .map(|shard| {
+                let placement =
+                    reactor_affinity_enabled().then(|| CoreHostWorkerPlacement::stable(shard));
+                CoreHostSharedTcpReadinessReactor::new_with_placement(
+                    SHARED_REACTOR_COMMAND_CAPACITY,
+                    placement,
+                )
+                .map(Mutex::new)
             })
             .collect()
     }) {
@@ -173,6 +185,8 @@ pub struct HostTransportMetrics {
     pub owner_threads_started: u64,
     pub reactor_poll_calls: u64,
     pub reactor_readiness_events: u64,
+    pub placement_requested: u64,
+    pub placement_applied: u64,
 }
 
 static NEXT_READY_ENDPOINT: AtomicU64 = AtomicU64::new(1);
@@ -453,6 +467,8 @@ impl HostEndpoint {
                                 .saturating_sub(self.reactor_readiness_start);
                             if self.counts_reactor_worker {
                                 metrics.owner_threads_started = shared.worker_threads;
+                                metrics.placement_requested = shared.placement_requested;
+                                metrics.placement_applied = shared.placement_applied;
                             }
                         }
                     }
@@ -461,6 +477,8 @@ impl HostEndpoint {
                         let mut poll_calls = 0u64;
                         let mut readiness_events = 0u64;
                         let mut worker_threads = 0u64;
+                        let mut placement_requested = 0u64;
+                        let mut placement_applied = 0u64;
                         for reactor in reactors {
                             if let Ok(reactor) = reactor.lock() {
                                 let shared = reactor.metrics();
@@ -469,6 +487,10 @@ impl HostEndpoint {
                                     readiness_events.saturating_add(shared.readiness_events);
                                 worker_threads =
                                     worker_threads.saturating_add(shared.worker_threads);
+                                placement_requested =
+                                    placement_requested.saturating_add(shared.placement_requested);
+                                placement_applied =
+                                    placement_applied.saturating_add(shared.placement_applied);
                             }
                         }
                         metrics.reactor_poll_calls =
@@ -477,6 +499,8 @@ impl HostEndpoint {
                             readiness_events.saturating_sub(self.reactor_readiness_start);
                         if self.counts_reactor_worker {
                             metrics.owner_threads_started = worker_threads;
+                            metrics.placement_requested = placement_requested;
+                            metrics.placement_applied = placement_applied;
                         }
                     }
                 }

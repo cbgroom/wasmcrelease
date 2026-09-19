@@ -511,6 +511,47 @@ pub struct CoreHostSharedReadyMetrics {
     pub endpoints_closed: u64,
     pub poll_calls: u64,
     pub readiness_events: u64,
+    pub placement_requested: u64,
+    pub placement_applied: u64,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct CoreHostWorkerPlacement {
+    pub ordinal: usize,
+}
+
+impl CoreHostWorkerPlacement {
+    pub const fn stable(ordinal: usize) -> Self {
+        Self { ordinal }
+    }
+}
+
+#[cfg(target_os = "linux")]
+fn apply_worker_placement(placement: CoreHostWorkerPlacement) -> bool {
+    use std::{mem, ptr};
+
+    unsafe {
+        let mut allowed: libc::cpu_set_t = mem::zeroed();
+        let size = mem::size_of::<libc::cpu_set_t>();
+        if libc::sched_getaffinity(0, size, &mut allowed) != 0 {
+            return false;
+        }
+        let cpus = (0..libc::CPU_SETSIZE as usize)
+            .filter(|cpu| libc::CPU_ISSET(*cpu, &allowed))
+            .collect::<Vec<_>>();
+        let Some(cpu) = cpus.get(placement.ordinal % cpus.len().max(1)).copied() else {
+            return false;
+        };
+        let mut target: libc::cpu_set_t = mem::zeroed();
+        libc::CPU_ZERO(&mut target);
+        libc::CPU_SET(cpu, &mut target);
+        libc::sched_setaffinity(0, size, ptr::addr_of!(target)) == 0
+    }
+}
+
+#[cfg(not(target_os = "linux"))]
+fn apply_worker_placement(_placement: CoreHostWorkerPlacement) -> bool {
+    false
 }
 
 #[derive(Clone)]
@@ -737,6 +778,13 @@ pub struct CoreHostSharedTcpEndpoint {
 
 impl CoreHostSharedTcpReadinessReactor {
     pub fn new(command_capacity: usize) -> Result<Self, CoreHostReadyIoError> {
+        Self::new_with_placement(command_capacity, None)
+    }
+
+    pub fn new_with_placement(
+        command_capacity: usize,
+        placement: Option<CoreHostWorkerPlacement>,
+    ) -> Result<Self, CoreHostReadyIoError> {
         if command_capacity == 0 || command_capacity > 65536 {
             return Err(CoreHostReadyIoError::InvalidLimit);
         }
@@ -747,6 +795,7 @@ impl CoreHostSharedTcpReadinessReactor {
         let state = Arc::new(Mutex::new(SharedReactorState {
             metrics: CoreHostSharedReadyMetrics {
                 worker_threads: 1,
+                placement_requested: u64::from(placement.is_some()),
                 ..CoreHostSharedReadyMetrics::default()
             },
             closed: false,
@@ -766,7 +815,14 @@ impl CoreHostSharedTcpReadinessReactor {
             activity,
         });
         let worker_inner = inner.clone();
-        let worker = thread::spawn(move || run_shared_reactor(poll, worker_inner));
+        let worker = thread::spawn(move || {
+            if let Some(placement) = placement {
+                if apply_worker_placement(placement) {
+                    worker_inner.state.lock().unwrap().metrics.placement_applied = 1;
+                }
+            }
+            run_shared_reactor(poll, worker_inner)
+        });
         Ok(Self {
             inner,
             worker: Some(worker),

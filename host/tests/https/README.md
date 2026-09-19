@@ -90,6 +90,16 @@ macOS ARM regressed. The GitHub c32 lane therefore sweeps 1/2/4/8/16 shards per
 platform and records the best observed point as evidence only. This does not
 promote an automatic production policy or change the Host ABI.
 
+The next placement canary keeps the measured shard count fixed and changes only
+worker placement. On Linux, each reactor worker can request stable hard CPU
+affinity: reactor ordinal N maps to CPU N within the process's actual allowed
+cpuset, not the machine-wide CPU numbering. Endpoints remain shard-sticky, so a
+connection's readiness state and socket I/O stay with the same reactor worker.
+This is Host-private placement machinery; Resource/Operation/Completion/Window
+ABI semantics are unchanged. The affinity A/B records both placement requests
+and successful applications so an unsupported or rejected pin cannot masquerade
+as a performance result.
+
 GitHub-hosted timings are **observational**. Functional and artifact-identity
 checks are hard gates; timing deltas become engineering evidence for the next
 iteration rather than an automatic pass/fail threshold.

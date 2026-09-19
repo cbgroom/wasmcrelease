@@ -77,12 +77,19 @@ jobs:
           WASMC_HOST_SWEEP_PAIRS: "3"
           WASMC_HOST_SWEEP_ITERATIONS: "1000"
         run: node scripts/host-transport-shard-sweep.mjs "host/tests/https/target/release/wasmc-host-concurrency-dedicated${{ runner.os == 'Windows' && '.exe' || '' }}" "host/tests/https/target/release/wasmc-host-concurrency-shared${{ runner.os == 'Windows' && '.exe' || '' }}" "${{ matrix.platform }}" "${{ matrix.platform }}-shard-sweep.json"
+      - name: Run Linux hard-affinity A/B at measured shard point
+        if: runner.os == 'Linux'
+        env:
+          WASMC_HOST_AFFINITY_PAIRS: "6"
+          WASMC_HOST_AFFINITY_ITERATIONS: "2000"
+        run: node scripts/host-transport-affinity-ab.mjs "host/tests/https/target/release/wasmc-host-concurrency-shared" "${{ matrix.platform }}" "${{ matrix.platform }}-shard-sweep.json" "${{ matrix.platform }}-affinity.json"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: host-https-${{ matrix.platform }}
           path: |
             ${{ matrix.platform }}.json
             ${{ matrix.platform }}-shard-sweep.json
+            ${{ matrix.platform }}-affinity.json
           if-no-files-found: error
 
   aggregate:

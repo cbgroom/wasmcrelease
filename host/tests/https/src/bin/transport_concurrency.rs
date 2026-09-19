@@ -169,6 +169,8 @@ fn main() -> Result<(), Box<dyn Error>> {
     let mut reactor_polls = 0u64;
     let mut reactor_events = 0u64;
     let mut pending_peak = 0u64;
+    let mut placement_requested = 0u64;
+    let mut placement_applied = 0u64;
     for host in hosts {
         let metrics = host
             .join()
@@ -182,6 +184,8 @@ fn main() -> Result<(), Box<dyn Error>> {
         reactor_polls = reactor_polls.max(metrics.reactor_poll_calls);
         reactor_events = reactor_events.max(metrics.reactor_readiness_events);
         pending_peak = pending_peak.max(metrics.pending_peak);
+        placement_requested = placement_requested.saturating_add(metrics.placement_requested);
+        placement_applied = placement_applied.saturating_add(metrics.placement_applied);
     }
 
     let elapsed = started.elapsed();
@@ -193,7 +197,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     }
 
     println!(
-        "{{\"accepted\":true,\"connections\":{},\"iterations\":{},\"frame_bytes\":{},\"elapsed_ns\":{},\"logical_transfers\":{},\"logical_transfers_per_sec\":{:.3},\"host_operations\":{},\"host_waits\":{},\"host_claimed\":{},\"host_pending_peak\":{},\"owner_threads_started\":{},\"owner_cycles\":{},\"reactor_poll_calls\":{},\"reactor_readiness_events\":{}}}",
+        "{{\"accepted\":true,\"connections\":{},\"iterations\":{},\"frame_bytes\":{},\"elapsed_ns\":{},\"logical_transfers\":{},\"logical_transfers_per_sec\":{:.3},\"host_operations\":{},\"host_waits\":{},\"host_claimed\":{},\"host_pending_peak\":{},\"owner_threads_started\":{},\"owner_cycles\":{},\"reactor_poll_calls\":{},\"reactor_readiness_events\":{},\"placement_requested\":{},\"placement_applied\":{}}}",
         connections,
         iterations,
         FRAME_BYTES,
@@ -208,6 +212,8 @@ fn main() -> Result<(), Box<dyn Error>> {
         owner_cycles,
         reactor_polls,
         reactor_events,
+        placement_requested,
+        placement_applied,
     );
     Ok(())
 }

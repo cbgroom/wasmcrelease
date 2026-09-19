@@ -17,6 +17,9 @@ rustls-rustcrypto = { version = "=0.0.2-alpha", default-features = false, featur
 httparse = { version = "=1.10.1", default-features = false }
 mio = { version = "=1.2.3", optional = true, default-features = false, features = ["os-poll", "net"] }
 
+[target.'cfg(target_os = "linux")'.dependencies]
+libc = "=0.2.189"
+
 [[bin]]
 name = "wasmc-host-transport-concurrency"
 path = "src/bin/transport_concurrency.rs"
