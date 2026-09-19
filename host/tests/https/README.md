@@ -60,6 +60,21 @@ semantic parity before accepting timing evidence. Polling-owner cycles and
 reactor poll/readiness counts are reported separately because they are not the
 same event type.
 
+The single-connection HTTPS lane is not used to claim the economic value of
+sharing one reactor across many endpoints. A second c32 real-TCP lifecycle
+canary compares two event-driven implementations from the same accepted
+readiness authority: one dedicated mio owner per connection versus one
+process-level shared reactor. Each connection repeatedly performs bounded
+Host Window -> Operation -> wait -> take-result write/read echo cycles, and
+the gate requires exact issue == wait == claim accounting plus payload
+parity. This isolates Host scheduling/thread economics without changing the
+HTTPS/Lib functional authority.
+
+The c32 lane reports dedicated-owner thread count, shared-reactor thread count,
+Host operations/s and paired throughput deltas. It is a Host scheduling canary,
+not an HTTPS or application throughput benchmark. Local CPU/operation evidence
+may be used diagnostically, but hosted timing remains observational.
+
 GitHub-hosted timings are **observational**. Functional and artifact-identity
 checks are hard gates; timing deltas become engineering evidence for the next
 iteration rather than an automatic pass/fail threshold.

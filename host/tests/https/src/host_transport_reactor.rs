@@ -303,15 +303,49 @@ impl HostEndpoint {
                 value.checked_add(1)
             })
             .map_err(|_| HostTransportError::Limit)?;
-        let mut reactor = shared_reactor()?
-            .lock()
-            .map_err(|_| HostTransportError::ExternalFailure)?;
-        let before = reactor.metrics();
-        let ready = ReadyBackend::Shared(
-            reactor
-                .attach(stream, max_pending)
-                .map_err(map_ready_error)?,
+        #[cfg(feature = "readiness-dedicated")]
+        let (
+            ready,
+            reactor_poll_start,
+            reactor_readiness_start,
+            counts_reactor_worker,
+            initial_metrics,
+        ) = (
+            ReadyBackend::Dedicated(
+                CoreHostTcpReadinessOwner::new(stream, max_pending).map_err(map_ready_error)?,
+            ),
+            0,
+            0,
+            false,
+            HostTransportMetrics {
+                owner_threads_started: 1,
+                ..HostTransportMetrics::default()
+            },
         );
+        #[cfg(feature = "reactor-candidate")]
+        let (
+            ready,
+            reactor_poll_start,
+            reactor_readiness_start,
+            counts_reactor_worker,
+            initial_metrics,
+        ) = {
+            let mut reactor = shared_reactor()?
+                .lock()
+                .map_err(|_| HostTransportError::ExternalFailure)?;
+            let before = reactor.metrics();
+            (
+                ReadyBackend::Shared(
+                    reactor
+                        .attach(stream, max_pending)
+                        .map_err(map_ready_error)?,
+                ),
+                before.poll_calls,
+                before.readiness_events,
+                before.endpoints_attached == 0,
+                HostTransportMetrics::default(),
+            )
+        };
         Ok(Self {
             owner,
             ready,
@@ -320,10 +354,10 @@ impl HostEndpoint {
             max_write_chunk,
             max_pending,
             pending: 0,
-            metrics: HostTransportMetrics::default(),
-            reactor_poll_start: before.poll_calls,
-            reactor_readiness_start: before.readiness_events,
-            counts_reactor_worker: before.endpoints_attached == 0,
+            metrics: initial_metrics,
+            reactor_poll_start,
+            reactor_readiness_start,
+            counts_reactor_worker,
         })
     }
 

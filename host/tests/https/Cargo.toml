@@ -6,7 +6,9 @@ publish = false
 
 [features]
 default = []
-reactor-candidate = ["dep:mio"]
+evented-transport = ["dep:mio"]
+readiness-dedicated = ["evented-transport"]
+reactor-candidate = ["evented-transport"]
 
 [dependencies]
 wasmtime = { version = "=47.0.4", default-features = false, features = ["runtime", "cranelift"] }
@@ -14,5 +16,10 @@ rustls = { version = "=0.23.44", features = ["std", "custom-provider"], default-
 rustls-rustcrypto = { version = "=0.0.2-alpha", default-features = false, features = ["alloc"] }
 httparse = { version = "=1.10.1", default-features = false }
 mio = { version = "=1.2.3", optional = true, default-features = false, features = ["os-poll", "net"] }
+
+[[bin]]
+name = "wasmc-host-transport-concurrency"
+path = "src/bin/transport_concurrency.rs"
+required-features = ["evented-transport"]
 
 [workspace]

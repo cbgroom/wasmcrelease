@@ -1,10 +1,13 @@
-#[cfg(not(feature = "reactor-candidate"))]
+#[cfg(all(feature = "readiness-dedicated", feature = "reactor-candidate"))]
+compile_error!("readiness-dedicated and reactor-candidate are mutually exclusive");
+
+#[cfg(not(any(feature = "readiness-dedicated", feature = "reactor-candidate")))]
 #[path = "host_transport_baseline.rs"]
 mod host_transport;
-#[cfg(feature = "reactor-candidate")]
+#[cfg(any(feature = "readiness-dedicated", feature = "reactor-candidate"))]
 #[path = "host_transport_reactor.rs"]
 mod host_transport;
-#[cfg(feature = "reactor-candidate")]
+#[cfg(any(feature = "readiness-dedicated", feature = "reactor-candidate"))]
 mod readiness_owner;
 
 use host_transport::{HostEndpoint, HostTransportError, HostWindow, Terminal};

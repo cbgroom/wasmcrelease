@@ -51,6 +51,8 @@ jobs:
         run: cargo +1.96.0 clippy --release --locked --manifest-path host/tests/https/Cargo.toml --all-targets -- -D warnings -A dead_code -A clippy::manual_is_multiple_of -A clippy::type_complexity
       - name: Lint shared-reactor candidate
         run: cargo +1.96.0 clippy --release --locked --manifest-path host/tests/https/Cargo.toml --all-targets --features reactor-candidate -- -D warnings -A dead_code -A clippy::manual_is_multiple_of -A clippy::type_complexity
+      - name: Lint dedicated readiness control
+        run: cargo +1.96.0 clippy --release --locked --manifest-path host/tests/https/Cargo.toml --all-targets --features readiness-dedicated -- -D warnings -A dead_code -A clippy::manual_is_multiple_of -A clippy::type_complexity
       - name: Build polling baseline
         run: cargo +1.96.0 build --release --locked --manifest-path host/tests/https/Cargo.toml
       - name: Preserve polling baseline binary
@@ -59,12 +61,24 @@ jobs:
         run: cargo +1.96.0 build --release --locked --manifest-path host/tests/https/Cargo.toml --features reactor-candidate
       - name: Preserve shared-reactor candidate binary
         run: node -e "require('fs').copyFileSync(process.argv[1],process.argv[2])" "host/tests/https/target/release/wasmc-host-https-qualification${{ runner.os == 'Windows' && '.exe' || '' }}" "host/tests/https/target/release/wasmc-host-https-reactor${{ runner.os == 'Windows' && '.exe' || '' }}"
+      - name: Build dedicated readiness concurrency control
+        run: cargo +1.96.0 build --release --locked --manifest-path host/tests/https/Cargo.toml --features readiness-dedicated --bin wasmc-host-transport-concurrency
+      - name: Preserve dedicated concurrency binary
+        run: node -e "require('fs').copyFileSync(process.argv[1],process.argv[2])" "host/tests/https/target/release/wasmc-host-transport-concurrency${{ runner.os == 'Windows' && '.exe' || '' }}" "host/tests/https/target/release/wasmc-host-concurrency-dedicated${{ runner.os == 'Windows' && '.exe' || '' }}"
+      - name: Build shared-reactor concurrency candidate
+        run: cargo +1.96.0 build --release --locked --manifest-path host/tests/https/Cargo.toml --features reactor-candidate --bin wasmc-host-transport-concurrency
+      - name: Preserve shared concurrency binary
+        run: node -e "require('fs').copyFileSync(process.argv[1],process.argv[2])" "host/tests/https/target/release/wasmc-host-transport-concurrency${{ runner.os == 'Windows' && '.exe' || '' }}" "host/tests/https/target/release/wasmc-host-concurrency-shared${{ runner.os == 'Windows' && '.exe' || '' }}"
       - name: Run paired HTTPS baseline vs shared-reactor A/B
         run: node scripts/host-https-ab.mjs "host/tests/https/target/release/wasmc-host-https-baseline${{ runner.os == 'Windows' && '.exe' || '' }}" "host/tests/https/target/release/wasmc-host-https-reactor${{ runner.os == 'Windows' && '.exe' || '' }}" "${{ matrix.platform }}" "${{ matrix.platform }}.json"
+      - name: Run c32 dedicated readiness vs shared-reactor A/B
+        run: node scripts/host-transport-concurrency-ab.mjs "host/tests/https/target/release/wasmc-host-concurrency-dedicated${{ runner.os == 'Windows' && '.exe' || '' }}" "host/tests/https/target/release/wasmc-host-concurrency-shared${{ runner.os == 'Windows' && '.exe' || '' }}" "${{ matrix.platform }}" "${{ matrix.platform }}-transport.json"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: host-https-${{ matrix.platform }}
-          path: ${{ matrix.platform }}.json
+          path: |
+            ${{ matrix.platform }}.json
+            ${{ matrix.platform }}-transport.json
           if-no-files-found: error
 
   aggregate:

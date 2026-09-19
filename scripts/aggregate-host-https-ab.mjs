@@ -9,19 +9,29 @@ const inputDir = resolve(inputArg);
 const outputDir = resolve(outputArg);
 const files = (await readdir(inputDir, { recursive: true })).filter(name => name.endsWith('.json'));
 const reports = [];
+const transportReports = [];
 for (const name of files) {
   const value = JSON.parse(await readFile(join(inputDir, name), 'utf8'));
   if (value.schema === 'wasmc-host-https-ab/v1') reports.push(value);
+  if (value.schema === 'wasmc-host-transport-concurrency-ab/v1') transportReports.push(value);
 }
 if (!reports.length) throw new Error('no HTTPS A/B reports');
 reports.sort((a, b) => a.platform.localeCompare(b.platform));
+transportReports.sort((a, b) => a.platform.localeCompare(b.platform));
 if (expectedArg && reports.length !== Number(expectedArg)) {
   throw new Error('expected ' + expectedArg + ' platform reports, got ' + reports.length);
 }
+if (expectedArg && transportReports.length !== Number(expectedArg)) {
+  throw new Error('expected ' + expectedArg + ' transport reports, got ' + transportReports.length);
+}
 const commit = reports[0].commit;
 if (reports.some(report => report.commit !== commit)) throw new Error('mixed HTTPS A/B commits');
+if (transportReports.some(report => report.commit !== commit)) throw new Error('mixed transport A/B commits');
 if (reports.some(report => report.qualification.semantic_parity !== true)) {
   throw new Error('semantic parity failed on at least one platform');
+}
+if (transportReports.some(report => report.semantic_parity !== true)) {
+  throw new Error('transport semantic parity failed on at least one platform');
 }
 
 let history = [];
@@ -35,9 +45,12 @@ if (previousArg) {
 }
 const previousEntry = [...history].reverse().find(entry => entry.commit !== commit);
 const previousByPlatform = new Map((previousEntry?.summary ?? []).map(row => [row.platform, row]));
+const transportByPlatform = new Map(transportReports.map(report => [report.platform, report]));
 
 const summary = reports.map(report => {
   const p = report.performance.summary;
+  const transport = transportByPlatform.get(report.platform);
+  if (!transport) throw new Error('missing transport A/B report for ' + report.platform);
   const current = {
     platform: report.platform,
     semantic_parity: report.qualification.semantic_parity,
@@ -62,6 +75,15 @@ const summary = reports.map(report => {
       report.qualification.baseline.dominant_guest_operation?.operation ?? null,
     candidate_dominant_guest_operation:
       report.qualification.candidate.dominant_guest_operation?.operation ?? null,
+    c32_dedicated_ops_p50: transport.performance.dedicated.operations_per_sec.p50,
+    c32_shared_ops_p50: transport.performance.shared.operations_per_sec.p50,
+    c32_paired_throughput_pct_p50: transport.performance.paired_delta.throughput_pct.p50,
+    c32_positive_pairs: transport.performance.paired_delta.positive_throughput_pairs,
+    c32_pairs: transport.workload.pairs,
+    c32_dedicated_threads: transport.topology.dedicated_owner_threads,
+    c32_shared_threads: transport.topology.shared_reactor_threads,
+    c32_dedicated_control_per_op: transport.performance.dedicated.control_events_per_operation.p50,
+    c32_shared_control_per_op: transport.performance.shared.control_events_per_operation.p50,
   };
   const previous = previousByPlatform.get(report.platform);
   if (previous) {
@@ -87,6 +109,7 @@ for (const row of summary) {
 const ratios = summary.map(row => row.paired_rps_ratio_p50);
 const minRatio = Math.min(...ratios);
 const maxRatio = Math.max(...ratios);
+const c32Deltas = summary.map(row => row.c32_paired_throughput_pct_p50);
 const observations = [
   {
     kind: 'cross_platform_semantic_parity',
@@ -107,6 +130,14 @@ const observations = [
     interpretation:
       'Guest operation samples help separate Guest compute from Host scheduling; they do not establish root cause by themselves.',
   },
+  {
+    kind: 'cross_platform_c32_host_scheduling',
+    min_p50_throughput_pct: Math.min(...c32Deltas),
+    max_p50_throughput_pct: Math.max(...c32Deltas),
+    all_platforms_semantic_parity: transportReports.every(report => report.semantic_parity),
+    interpretation:
+      '32-connection real-TCP Host lifecycle canary comparing event-driven dedicated owners with one shared reactor. This is Host scheduling evidence, not HTTPS product throughput.',
+  },
 ];
 
 const current = {
@@ -119,6 +150,7 @@ const current = {
   summary,
   observations,
   reports,
+  transport_reports: transportReports,
 };
 history = history.filter(entry => entry.commit !== commit);
 history.push({ commit, measured_at: current.measured_at, summary, observations });
@@ -126,17 +158,17 @@ history = history.slice(-100);
 const historyDoc = { schema: 'wasmc-host-https-ab-history/v1', entries: history };
 
 const table = [
-  '| Platform | Baseline RPS | Reactor RPS | Paired ratio | Latency delta | Baseline cycles/op | Reactor polls/op | Reactor events/op | Semantic parity |',
+  '| Platform | HTTPS polling RPS | HTTPS reactor RPS | HTTPS ratio | c32 dedicated ops/s | c32 shared ops/s | c32 delta | c32 threads | Semantic parity |',
   '|---|---:|---:|---:|---:|---:|---:|---:|---|',
   ...summary.map(row =>
     '| ' + row.platform +
     ' | ' + row.baseline_rps_p50.toFixed(3) +
     ' | ' + row.candidate_rps_p50.toFixed(3) +
     ' | ' + row.paired_rps_ratio_p50.toFixed(2) + 'x' +
-    ' | ' + row.paired_latency_pct_p50.toFixed(2) + '%' +
-    ' | ' + row.baseline_polling_cycles_per_op.toFixed(3) +
-    ' | ' + row.candidate_reactor_polls_per_op.toFixed(3) +
-    ' | ' + row.candidate_reactor_readiness_events_per_op.toFixed(3) +
+    ' | ' + row.c32_dedicated_ops_p50.toFixed(1) +
+    ' | ' + row.c32_shared_ops_p50.toFixed(1) +
+    ' | ' + row.c32_paired_throughput_pct_p50.toFixed(2) + '%' +
+    ' | ' + row.c32_dedicated_threads + '->' + row.c32_shared_threads +
     ' | ' + (row.semantic_parity ? 'PASS' : 'FAIL') + ' |'
   ),
 ].join('\n');
@@ -146,17 +178,17 @@ const markdown =
   'Measured: ' + current.measured_at + '  \n' +
   'Platforms: ' + reports.length + '\n\n' +
   table +
-  '\n\nThe baseline uses a 1 ms polling/retry owner. The candidate uses the accepted mio shared-reactor scheduling substrate. Functional and artifact checks are hard gates; paired hosted timings are observational mechanism evidence, not an SLA or production throughput multiplier.\n';
+  '\n\nHTTPS polling-vs-reactor remains a semantic/full-stack mechanism canary. The c32 transport lane compares event-driven dedicated mio owners with one shared reactor and is the primary reactor-scheduling evidence. Neither lane is a product SLA.\n';
 
 const htmlRows = summary.map(row =>
   '<tr><td>' + row.platform +
   '</td><td>' + row.baseline_rps_p50.toFixed(3) +
   '</td><td>' + row.candidate_rps_p50.toFixed(3) +
   '</td><td>' + row.paired_rps_ratio_p50.toFixed(2) + 'x' +
-  '</td><td>' + row.paired_latency_pct_p50.toFixed(2) + '%' +
-  '</td><td>' + row.baseline_polling_cycles_per_op.toFixed(3) +
-  '</td><td>' + row.candidate_reactor_polls_per_op.toFixed(3) +
-  '</td><td>' + row.candidate_reactor_readiness_events_per_op.toFixed(3) +
+  '</td><td>' + row.c32_dedicated_ops_p50.toFixed(1) +
+  '</td><td>' + row.c32_shared_ops_p50.toFixed(1) +
+  '</td><td>' + row.c32_paired_throughput_pct_p50.toFixed(2) + '%' +
+  '</td><td>' + row.c32_dedicated_threads + '->' + row.c32_shared_threads +
   '</td><td>' + (row.semantic_parity ? 'PASS' : 'FAIL') +
   '</td></tr>'
 ).join('');
@@ -165,7 +197,7 @@ const html =
   '<style>body{font-family:system-ui,sans-serif;max-width:1500px;margin:40px auto;padding:0 20px}table{border-collapse:collapse;width:100%}th,td{border:1px solid #ddd;padding:8px;text-align:right}th:first-child,td:first-child{text-align:left}code{background:#f4f4f4;padding:2px 4px}</style>' +
   '<h1>WAsmC Host HTTPS paired A/B flywheel</h1><p>Commit <code>' + commit + '</code> · ' + current.measured_at + '</p>' +
   '<p>Artifact/lifecycle/semantic parity are hard gates. Timings are observational mechanism evidence.</p>' +
-  '<table><thead><tr><th>Platform</th><th>Baseline RPS</th><th>Reactor RPS</th><th>Paired ratio</th><th>Latency delta</th><th>Baseline cycles/op</th><th>Reactor polls/op</th><th>Reactor events/op</th><th>Parity</th></tr></thead><tbody>' +
+  '<table><thead><tr><th>Platform</th><th>HTTPS polling RPS</th><th>HTTPS reactor RPS</th><th>HTTPS ratio</th><th>c32 dedicated ops/s</th><th>c32 shared ops/s</th><th>c32 delta</th><th>c32 threads</th><th>Parity</th></tr></thead><tbody>' +
   htmlRows +
   '</tbody></table><p><a href="latest.json">latest.json</a> · <a href="history.json">history.json</a> · <a href="latest.md">Markdown</a></p>';
 
