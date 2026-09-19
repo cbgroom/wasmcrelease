@@ -16,16 +16,38 @@ use std::{
 
 const DEFAULT_MAX_PENDING: usize = 64;
 const SHARED_REACTOR_COMMAND_CAPACITY: usize = 4096;
+const DEFAULT_REACTOR_SHARDS: usize = 1;
+const MAX_REACTOR_SHARDS: usize = 64;
+static NEXT_REACTOR_SHARD: AtomicU64 = AtomicU64::new(0);
 
-fn shared_reactor() -> Result<&'static Mutex<CoreHostSharedTcpReadinessReactor>, HostTransportError>
-{
-    static REACTOR: OnceLock<
-        Result<Mutex<CoreHostSharedTcpReadinessReactor>, CoreHostReadyIoError>,
+fn configured_reactor_shards() -> Result<usize, CoreHostReadyIoError> {
+    let shards = std::env::var("WASMC_HOST_REACTOR_SHARDS")
+        .ok()
+        .map(|value| value.parse::<usize>())
+        .transpose()
+        .map_err(|_| CoreHostReadyIoError::InvalidLimit)?
+        .unwrap_or(DEFAULT_REACTOR_SHARDS);
+    if shards == 0 || shards > MAX_REACTOR_SHARDS {
+        return Err(CoreHostReadyIoError::InvalidLimit);
+    }
+    Ok(shards)
+}
+
+fn shared_reactors(
+) -> Result<&'static [Mutex<CoreHostSharedTcpReadinessReactor>], HostTransportError> {
+    static REACTORS: OnceLock<
+        Result<Vec<Mutex<CoreHostSharedTcpReadinessReactor>>, CoreHostReadyIoError>,
     > = OnceLock::new();
-    match REACTOR.get_or_init(|| {
-        CoreHostSharedTcpReadinessReactor::new(SHARED_REACTOR_COMMAND_CAPACITY).map(Mutex::new)
+    match REACTORS.get_or_init(|| {
+        let shards = configured_reactor_shards()?;
+        (0..shards)
+            .map(|_| {
+                CoreHostSharedTcpReadinessReactor::new(SHARED_REACTOR_COMMAND_CAPACITY)
+                    .map(Mutex::new)
+            })
+            .collect()
     }) {
-        Ok(reactor) => Ok(reactor),
+        Ok(reactors) => Ok(reactors.as_slice()),
         Err(error) => Err(map_ready_error(*error)),
     }
 }
@@ -246,6 +268,7 @@ pub struct HostEndpoint {
     reactor_poll_start: u64,
     reactor_readiness_start: u64,
     counts_reactor_worker: bool,
+    reactor_shard: Option<usize>,
 }
 
 fn map_ready_error(error: CoreHostReadyIoError) -> HostTransportError {
@@ -310,6 +333,7 @@ impl HostEndpoint {
             reactor_readiness_start,
             counts_reactor_worker,
             initial_metrics,
+            reactor_shard,
         ) = (
             ReadyBackend::Dedicated(
                 CoreHostTcpReadinessOwner::new(stream, max_pending).map_err(map_ready_error)?,
@@ -321,6 +345,7 @@ impl HostEndpoint {
                 owner_threads_started: 1,
                 ..HostTransportMetrics::default()
             },
+            None,
         );
         #[cfg(feature = "reactor-candidate")]
         let (
@@ -329,8 +354,12 @@ impl HostEndpoint {
             reactor_readiness_start,
             counts_reactor_worker,
             initial_metrics,
+            reactor_shard,
         ) = {
-            let mut reactor = shared_reactor()?
+            let reactors = shared_reactors()?;
+            let shard =
+                (NEXT_REACTOR_SHARD.fetch_add(1, Ordering::Relaxed) as usize) % reactors.len();
+            let mut reactor = reactors[shard]
                 .lock()
                 .map_err(|_| HostTransportError::ExternalFailure)?;
             let before = reactor.metrics();
@@ -344,6 +373,7 @@ impl HostEndpoint {
                 before.readiness_events,
                 before.endpoints_attached == 0,
                 HostTransportMetrics::default(),
+                Some(shard),
             )
         };
         Ok(Self {
@@ -358,6 +388,7 @@ impl HostEndpoint {
             reactor_poll_start,
             reactor_readiness_start,
             counts_reactor_worker,
+            reactor_shard,
         })
     }
 
@@ -387,6 +418,7 @@ impl HostEndpoint {
             reactor_poll_start: 0,
             reactor_readiness_start: 0,
             counts_reactor_worker: false,
+            reactor_shard: None,
         })
     }
 
@@ -410,16 +442,41 @@ impl HostEndpoint {
                 metrics.owner_wake_cycles = ready.poll_calls;
             }
             ReadyBackend::Shared(_) => {
-                if let Ok(reactor) = shared_reactor() {
-                    if let Ok(reactor) = reactor.lock() {
-                        let shared = reactor.metrics();
+                if let Some(shard) = self.reactor_shard {
+                    if let Ok(reactors) = shared_reactors() {
+                        if let Ok(reactor) = reactors[shard].lock() {
+                            let shared = reactor.metrics();
+                            metrics.reactor_poll_calls =
+                                shared.poll_calls.saturating_sub(self.reactor_poll_start);
+                            metrics.reactor_readiness_events = shared
+                                .readiness_events
+                                .saturating_sub(self.reactor_readiness_start);
+                            if self.counts_reactor_worker {
+                                metrics.owner_threads_started = shared.worker_threads;
+                            }
+                        }
+                    }
+                } else {
+                    if let Ok(reactors) = shared_reactors() {
+                        let mut poll_calls = 0u64;
+                        let mut readiness_events = 0u64;
+                        let mut worker_threads = 0u64;
+                        for reactor in reactors {
+                            if let Ok(reactor) = reactor.lock() {
+                                let shared = reactor.metrics();
+                                poll_calls = poll_calls.saturating_add(shared.poll_calls);
+                                readiness_events =
+                                    readiness_events.saturating_add(shared.readiness_events);
+                                worker_threads =
+                                    worker_threads.saturating_add(shared.worker_threads);
+                            }
+                        }
                         metrics.reactor_poll_calls =
-                            shared.poll_calls.saturating_sub(self.reactor_poll_start);
-                        metrics.reactor_readiness_events = shared
-                            .readiness_events
-                            .saturating_sub(self.reactor_readiness_start);
+                            poll_calls.saturating_sub(self.reactor_poll_start);
+                        metrics.reactor_readiness_events =
+                            readiness_events.saturating_sub(self.reactor_readiness_start);
                         if self.counts_reactor_worker {
-                            metrics.owner_threads_started = shared.worker_threads;
+                            metrics.owner_threads_started = worker_threads;
                         }
                     }
                 }

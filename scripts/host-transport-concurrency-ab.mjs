@@ -25,9 +25,13 @@ const stats = values => ({
 const connections = Number(process.env.WASMC_HOST_AB_CONCURRENCY ?? 32);
 const iterations = Number(process.env.WASMC_HOST_AB_ITERATIONS ?? 2000);
 const pairs = Number(process.env.WASMC_HOST_AB_PAIRS ?? 6);
+const sharedThreads = Number(process.env.WASMC_HOST_REACTOR_SHARDS ?? 1);
 if (!Number.isInteger(connections) || connections < 2 || connections > 256) throw new Error('invalid concurrency');
 if (!Number.isInteger(iterations) || iterations < 1) throw new Error('invalid iterations');
 if (!Number.isInteger(pairs) || pairs < 2 || pairs > 20) throw new Error('invalid pairs');
+if (!Number.isInteger(sharedThreads) || sharedThreads < 1 || sharedThreads > 64) {
+  throw new Error('invalid reactor shard count');
+}
 
 function execute(binary, lane, runIterations = iterations) {
   const started = process.hrtime.bigint();
@@ -110,7 +114,7 @@ for (let pair = 0; pair < pairs; pair++) {
   });
 }
 assert.ok(dedicatedSamples.every(row => row.owner_threads_started === connections));
-assert.ok(sharedSamples.every(row => row.owner_threads_started === 1));
+assert.ok(sharedSamples.every(row => row.owner_threads_started === sharedThreads));
 
 const binaryInfo = async binary => {
   const bytes = await readFile(binary);
@@ -142,7 +146,7 @@ const report = {
   semantic_parity: true,
   topology: {
     dedicated_owner_threads: connections,
-    shared_reactor_threads: 1,
+    shared_reactor_threads: sharedThreads,
   },
   performance: {
     dedicated: {
@@ -173,7 +177,7 @@ console.log(JSON.stringify({
   semantic_parity: true,
   connections,
   dedicated_threads: connections,
-  shared_threads: 1,
+  shared_threads: sharedThreads,
   dedicated_ops_s_p50: report.performance.dedicated.operations_per_sec.p50,
   shared_ops_s_p50: report.performance.shared.operations_per_sec.p50,
   paired_throughput_pct_p50: report.performance.paired_delta.throughput_pct.p50,

@@ -72,6 +72,8 @@ jobs:
       - name: Run paired HTTPS baseline vs shared-reactor A/B
         run: node scripts/host-https-ab.mjs "host/tests/https/target/release/wasmc-host-https-baseline${{ runner.os == 'Windows' && '.exe' || '' }}" "host/tests/https/target/release/wasmc-host-https-reactor${{ runner.os == 'Windows' && '.exe' || '' }}" "${{ matrix.platform }}" "${{ matrix.platform }}.json"
       - name: Run c32 dedicated readiness vs shared-reactor A/B
+        env:
+          WASMC_HOST_REACTOR_SHARDS: "4"
         run: node scripts/host-transport-concurrency-ab.mjs "host/tests/https/target/release/wasmc-host-concurrency-dedicated${{ runner.os == 'Windows' && '.exe' || '' }}" "host/tests/https/target/release/wasmc-host-concurrency-shared${{ runner.os == 'Windows' && '.exe' || '' }}" "${{ matrix.platform }}" "${{ matrix.platform }}-transport.json"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:

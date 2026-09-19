@@ -75,6 +75,19 @@ Host operations/s and paired throughput deltas. It is a Host scheduling canary,
 not an HTTPS or application throughput benchmark. Local CPU/operation evidence
 may be used diagnostically, but hosted timing remains observational.
 
+The first six-platform c32 pass with one global reactor was negative on every
+hosted platform (-22% to -49% paired throughput versus event-driven dedicated
+owners), despite reducing control events per operation by roughly an order of
+magnitude or more. That evidence freezes one global reactor as a negative
+control rather than the target architecture.
+
+A local 1/2/4/8-shard sweep on the same c32 workload selected four reactor
+shards as the next candidate: all six pairs were positive at each shard count,
+with paired p50 throughput deltas of about +14.7%, +23.7%, +33.7% and +29.7%
+respectively. The GitHub c32 lane therefore evaluates four shards next. This is
+still a qualification hypothesis, not a production default or a Host ABI
+change.
+
 GitHub-hosted timings are **observational**. Functional and artifact-identity
 checks are hard gates; timing deltas become engineering evidence for the next
 iteration rather than an automatic pass/fail threshold.
