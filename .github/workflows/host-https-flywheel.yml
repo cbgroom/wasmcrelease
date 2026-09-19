@@ -48,7 +48,7 @@ jobs:
       - name: Format frozen qualification source
         run: cargo +1.96.0 fmt --check --manifest-path host/tests/https/Cargo.toml
       - name: Lint qualification source
-        run: cargo +1.96.0 clippy --locked --manifest-path host/tests/https/Cargo.toml --all-targets -- -D warnings -A dead_code -A clippy::manual_is_multiple_of -A clippy::type_complexity
+        run: cargo +1.96.0 clippy --release --locked --manifest-path host/tests/https/Cargo.toml --all-targets -- -D warnings -A dead_code -A clippy::manual_is_multiple_of -A clippy::type_complexity
       - name: Build Host + Lib HTTPS qualification
         run: cargo +1.96.0 build --release --locked --manifest-path host/tests/https/Cargo.toml
       - name: Run functional gate and performance evidence

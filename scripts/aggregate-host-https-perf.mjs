@@ -42,6 +42,9 @@ const summary = reports.map(report => {
     process_wall_ms_p50: report.performance.summary.process_wall_ms.p50,
     host_operations: report.qualification.host_operations,
     host_partial_writes: report.qualification.host_partial_writes,
+    host_owner_wake_cycles: report.qualification.host_owner_wake_cycles,
+    host_owner_wake_cycles_per_operation:
+      report.learning.host_lifecycle_diagnostic?.owner_wake_cycles_per_host_operation ?? null,
     dominant_guest_operation: report.learning.dominant_guest_operation?.operation ?? null,
   };
   const previous = previousByPlatform.get(report.platform);
@@ -94,14 +97,15 @@ history = history.slice(-100);
 const historyDoc = { schema: 'wasmc-host-https-performance-history/v1', entries: history };
 
 const table = [
-  '| Platform | HTTPS RPS p50 | avg ns/request p50 | process wall p50 | Host ops | forced partial writes | dominant sampled guest op | history RPS delta |',
-  '|---|---:|---:|---:|---:|---:|---|---:|',
+  '| Platform | HTTPS RPS p50 | avg ns/request p50 | process wall p50 | Host ops | owner wakes/op | forced partial writes | dominant sampled guest op | history RPS delta |',
+  '|---|---:|---:|---:|---:|---:|---:|---|---:|',
   ...summary.map(row =>
     '| ' + row.platform +
     ' | ' + row.rps_p50.toFixed(1) +
     ' | ' + row.avg_ns_per_valid_request_p50.toFixed(1) +
     ' | ' + row.process_wall_ms_p50.toFixed(1) + ' ms' +
     ' | ' + row.host_operations +
+    ' | ' + (row.host_owner_wake_cycles_per_operation === null ? '-' : row.host_owner_wake_cycles_per_operation.toFixed(3)) +
     ' | ' + row.host_partial_writes +
     ' | ' + (row.dominant_guest_operation ?? '-') +
     ' | ' + (row.history_delta ? row.history_delta.rps_pct.toFixed(2) + '%' : '-') + ' |'
@@ -121,6 +125,7 @@ const htmlRows = summary.map(row =>
   '</td><td>' + row.avg_ns_per_valid_request_p50.toFixed(1) +
   '</td><td>' + row.process_wall_ms_p50.toFixed(1) + ' ms' +
   '</td><td>' + row.host_operations +
+  '</td><td>' + (row.host_owner_wake_cycles_per_operation === null ? '-' : row.host_owner_wake_cycles_per_operation.toFixed(3)) +
   '</td><td>' + row.host_partial_writes +
   '</td><td>' + (row.dominant_guest_operation ?? '-') +
   '</td><td>' + (row.history_delta ? row.history_delta.rps_pct.toFixed(2) + '%' : '-') +
@@ -131,7 +136,7 @@ const html =
   '<style>body{font-family:system-ui,sans-serif;max-width:1400px;margin:40px auto;padding:0 20px}table{border-collapse:collapse;width:100%}th,td{border:1px solid #ddd;padding:8px;text-align:right}th:first-child,td:first-child{text-align:left}code{background:#f4f4f4;padding:2px 4px}</style>' +
   '<h1>WAsmC Host + Lib HTTPS flywheel</h1><p>Commit <code>' + commit + '</code> · ' + current.measured_at + '</p>' +
   '<p>Functional and artifact checks are hard gates; timings are observational.</p>' +
-  '<table><thead><tr><th>Platform</th><th>RPS p50</th><th>avg ns/request</th><th>process wall</th><th>Host ops</th><th>partial writes</th><th>dominant guest op</th><th>history RPS delta</th></tr></thead><tbody>' +
+  '<table><thead><tr><th>Platform</th><th>RPS p50</th><th>avg ns/request</th><th>process wall</th><th>Host ops</th><th>owner wakes/op</th><th>partial writes</th><th>dominant guest op</th><th>history RPS delta</th></tr></thead><tbody>' +
   htmlRows +
   '</tbody></table><p><a href="latest.json">latest.json</a> · <a href="history.json">history.json</a> · <a href="latest.md">Markdown</a></p>';
 

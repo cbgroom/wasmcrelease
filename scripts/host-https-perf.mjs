@@ -27,6 +27,10 @@ const stats = values => ({
   min: Number(Math.min(...values).toFixed(3)),
   max: Number(Math.max(...values).toFixed(3)),
 });
+const exactRps = receipt => {
+  const validRequests = Number(receipt.keep_alive_requests) + Number(receipt.recovery_requests);
+  return validRequests * 1e9 / Number(receipt.elapsed_ns);
+};
 
 for (const item of [...manifest.artifacts, ...manifest.fixtures]) {
   const bytes = await readFile(resolve(item.path));
@@ -107,12 +111,17 @@ for (let index = 0; index < 5; index++) {
   assertLifecycle(run);
   performanceRuns.push({
     index,
-    rps: run.receipt.rps,
+    rps: exactRps(run.receipt),
+    receipt_rps_integer: run.receipt.rps,
     elapsed_ns: Number(run.receipt.elapsed_ns),
     avg_ns_per_valid_request: Number(run.receipt.avg_ns_per_valid_request),
     keep_alive_requests: run.receipt.keep_alive_requests,
     host_operations: run.receipt.host_operations,
+    host_waits: run.receipt.host_waits,
+    host_claimed: run.receipt.host_claimed,
     host_pending_peak: run.receipt.host_pending_peak,
+    host_owner_wake_cycles: run.receipt.host_owner_wake_cycles,
+    host_owner_threads_started: run.receipt.host_owner_threads_started,
     process_wall_ms: Number(run.wallMs.toFixed(3)),
   });
 }
@@ -162,6 +171,16 @@ const report = {
     host_claimed: qualification.receipt.host_claimed,
     host_partial_writes: qualification.receipt.host_partial_writes,
     host_pending_peak: qualification.receipt.host_pending_peak,
+    host_pending_issued: qualification.receipt.host_pending_issued,
+    host_owner_wake_cycles: qualification.receipt.host_owner_wake_cycles,
+    host_owner_threads_started: qualification.receipt.host_owner_threads_started,
+    host_read_operations: qualification.receipt.host_read_operations,
+    host_write_operations: qualification.receipt.host_write_operations,
+    host_read_bytes: qualification.receipt.host_read_bytes,
+    host_write_bytes: qualification.receipt.host_write_bytes,
+    host_timeouts: qualification.receipt.host_timeouts,
+    host_cancellations: qualification.receipt.host_cancellations,
+    host_backpressure_rejections: qualification.receipt.host_backpressure_rejections,
     tls_commits: qualification.receipt.tls_commits,
     fuel_total: qualification.receipt.fuel_total,
     checksum: qualification.receipt.checksum,
@@ -183,6 +202,14 @@ const report = {
   learning: {
     top_guest_operations_by_sampled_wall_mean: topOperations,
     dominant_guest_operation: topOperations[0] ?? null,
+    host_lifecycle_diagnostic: {
+      owner_wake_cycles: qualification.receipt.host_owner_wake_cycles,
+      host_operations: qualification.receipt.host_operations,
+      owner_wake_cycles_per_host_operation:
+        Number((qualification.receipt.host_owner_wake_cycles / qualification.receipt.host_operations).toFixed(6)),
+      interpretation:
+        'Diagnostic only. A high wake/operation ratio can motivate Host scheduling profiling but does not by itself prove root cause.',
+    },
     interpretation: 'Use with platform history and same-workload evidence; do not infer an SLA from one hosted runner.',
   },
 };
