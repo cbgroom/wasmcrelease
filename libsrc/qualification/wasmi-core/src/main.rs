@@ -180,6 +180,7 @@ fn main() -> Result<()> {
     let expr_path = std::env::var("WASMC_LIBSRC_DATA_EXPR")?;
     let compute_path = std::env::var("WASMC_LIBSRC_DATA_COMPUTE")?;
     let relational_path = std::env::var("WASMC_LIBSRC_DATA_RELATIONAL")?;
+    let profile_path = std::env::var("WASMC_LIBSRC_DATA_PROFILE")?;
 
     router(&router_path)?;
     json(&json_path)?;
@@ -212,9 +213,13 @@ fn main() -> Result<()> {
         &relational_path,
         &["wasmc:data-relational/relational@0.0.1#group-aggregate"],
     )?;
+    structural(
+        &profile_path,
+        &["wasmc:data-profile/profile@0.0.1#describe"],
+    )?;
 
     println!(
-        "{{\"accepted\":true,\"engine\":\"wasmi-2.0.0\",\"candidates\":[\"wasmc-router-policy\",\"wasmc-json\",\"wasmc-compression\",\"wasmc-http1\",\"wasmc-data-core\",\"wasmc-csv\",\"wasmc-data-expr\",\"wasmc-data-compute\",\"wasmc-data-relational\"],\"representative_execution\":true,\"structural_data_qualification\":true,\"host_imports\":0}}"
+        "{{\"accepted\":true,\"engine\":\"wasmi-2.0.0\",\"candidates\":[\"wasmc-router-policy\",\"wasmc-json\",\"wasmc-compression\",\"wasmc-http1\",\"wasmc-data-core\",\"wasmc-csv\",\"wasmc-data-expr\",\"wasmc-data-compute\",\"wasmc-data-relational\",\"wasmc-data-profile\"],\"representative_execution\":true,\"structural_data_qualification\":true,\"host_imports\":0}}"
     );
     Ok(())
 }

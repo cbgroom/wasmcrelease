@@ -42,6 +42,10 @@ const libs = {
     manifest: 'libsrc/wasmc-data-relational/Cargo.toml',
     artifact: 'libsrc/wasmc-data-relational/target/wasm32-unknown-unknown/release/wasmc_data_relational_public.wasm',
   },
+  profile: {
+    manifest: 'libsrc/wasmc-data-profile/Cargo.toml',
+    artifact: 'libsrc/wasmc-data-profile/target/wasm32-unknown-unknown/release/wasmc_data_profile_public.wasm',
+  },
 };
 
 for (const lib of Object.values(libs)) {
@@ -89,6 +93,14 @@ try {
   assert.equal(filtered, expected);
   const filteredBatch = filtered.slice(3, -1);
 
+  const profiled = run('wasmtime', [
+    'run', '--invoke',
+    'describe(' + filteredBatch + ', [])',
+    libs.profile.component,
+  ]);
+  const expectedProfile = 'ok([{column: 0, name: "id", data-type: int64, summary: int64({non-null: 2, nulls: 0, min: some(2), max: some(3), mean: some(2.5)})}, {column: 1, name: "name", data-type: utf8, summary: utf8({non-null: 2, nulls: 0, min-length: some(1), max-length: some(1), mean-length: some(1)})}])';
+  assert.equal(profiled, expectedProfile);
+
   const validated = run('wasmtime', [
     'run', '--invoke',
     'validate(' + filteredBatch + ')',
@@ -114,11 +126,12 @@ try {
   console.log(JSON.stringify({
     accepted: true,
     schema: 'wasmc.data-pipeline/v1',
-    path: ['csv','data-core/types','data-expr','data-compute','data-relational','data-core/validate'],
+    path: ['csv','data-core/types','data-expr','data-compute','data-profile','data-relational','data-core/validate'],
     input_rows: 3,
     predicate: 'id > 1',
     output_rows: 2,
     output_ids: [2, 3],
+    profile_columns: 2,
     aggregate_rows: 1,
     aggregate: { count: 2, sum_id: 5, mean_id: 2.5 },
     core_imports: 0,

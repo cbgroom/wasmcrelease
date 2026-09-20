@@ -138,6 +138,18 @@ CSV
 
 Every Core artifact in this path has zero Host imports.
 
+### wasmc-data-profile
+
+The first statistics layer provides deterministic per-column profiling for
+boolean, int64, uint64, float64, UTF-8 and binary columns. It reports null and
+non-null counts; boolean value counts; numeric min/max/mean; and UTF-8 byte
+length or binary length min/max/mean. Empty selection profiles every column in
+schema order; explicit selection preserves caller order and rejects duplicates.
+
+Exact or approximate distinct counting is intentionally outside v0 so profiling
+cannot silently allocate unbounded cardinality state. The candidate is
+Arrow-backed and has zero Core imports.
+
 ## Build workspace vs final package
 
 `libsrc/` is an incubation/build workspace, not the final Lib package.
@@ -169,7 +181,7 @@ Do not build SQL first. Grow the shared middle layer in this order:
 2. CSV ingestion. **Started.** JSONL remains next format input.
 3. Expression IR and Arrow-backed compute kernels. **Started.**
 4. Relational operators: group/aggregate **started**; hash/join/window remain.
-5. Statistics and profiling **next**.
+5. Statistics and profiling **started** with deterministic column profiles.
 6. Arrow IPC and Parquet adapters.
 7. DataFrame/Agent facades.
 8. SQL parser/planner only as an optional late frontend.
