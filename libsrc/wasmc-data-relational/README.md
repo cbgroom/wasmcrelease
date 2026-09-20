@@ -1,8 +1,8 @@
 # wasmc-data-relational — public source candidate
 
 The first relational layer is intentionally narrow: exact-schema union-all,
-bounded typed equi-join and deterministic group aggregation over Data Core batch
-snapshots.
+bounded typed equi-join, bounded deterministic ranking windows and deterministic
+group aggregation over Data Core batch snapshots.
 
 v0 semantics:
 
@@ -15,6 +15,14 @@ v0 semantics:
 - every join requires a non-zero max-output-rows bound;
 - right output names use the caller-supplied prefix and collisions fail closed;
 - left join makes all right output fields nullable;
+- window-rank appends row-number, rank and dense-rank uint64 columns without
+  changing input row order or row count;
+- windows support zero or more partition columns and one or more typed order
+  columns with explicit ascending/descending and nulls-first/nulls-last;
+- equal order keys use original input order as the deterministic row-number
+  tie-break while rank and dense-rank retain tie semantics;
+- every window requires a non-zero max-rows bound;
+- duplicate window functions and inputs above max-rows fail closed;
 - zero or more grouping columns;
 - deterministic ascending lexicographic group order;
 - null group keys sort before non-null keys;

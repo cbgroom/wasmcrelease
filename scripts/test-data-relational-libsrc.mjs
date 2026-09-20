@@ -52,7 +52,73 @@ try {
   const joinLeft = '{rows: 5, fields: [{name: "id", data-type: int64, nullable: true}, {name: "label", data-type: utf8, nullable: false}], columns: [int64-column([some(2), some(1), some(2), none, some(9)]), utf8-column([some("l2a"), some("l1"), some("l2b"), some("ln"), some("l9")])]}';
   const joinRight = '{rows: 4, fields: [{name: "id", data-type: int64, nullable: true}, {name: "tag", data-type: utf8, nullable: false}], columns: [int64-column([some(2), some(2), some(1), none]), utf8-column([some("r2a"), some("r2b"), some("r1"), some("rn")])]}';
   const joinKeys = '[{left-column: 0, right-column: 0}]';
+  const windowBatch = '{rows: 5, fields: [{name: "g", data-type: utf8, nullable: false}, {name: "score", data-type: int64, nullable: true}], columns: [utf8-column([some("a"), some("a"), some("a"), some("b"), some("b")]), int64-column([some(20), some(10), some(10), some(9), none])]}';
   const cases = [
+    [
+      'window-partition-ranking',
+      'window-rank(' + windowBatch + ', [0], [{column: 1, descending: false, nulls-first: false}], [row-number("rn"), rank("rank"), dense-rank("dense_rank")], {max-rows: 5})',
+      'ok({rows: 5, fields: [{name: "g", data-type: utf8, nullable: false}, {name: "score", data-type: int64, nullable: true}, {name: "rn", data-type: uint64, nullable: false}, {name: "rank", data-type: uint64, nullable: false}, {name: "dense_rank", data-type: uint64, nullable: false}], columns: [utf8-column([some("a"), some("a"), some("a"), some("b"), some("b")]), int64-column([some(20), some(10), some(10), some(9), none]), uint64-column([some(3), some(1), some(2), some(1), some(2)]), uint64-column([some(3), some(1), some(1), some(1), some(2)]), uint64-column([some(2), some(1), some(1), some(1), some(2)])]})',
+    ],
+    [
+      'window-descending-null-first',
+      'window-rank({rows: 4, fields: [{name: "v", data-type: int64, nullable: true}], columns: [int64-column([some(2), none, some(2), some(1)])]}, [], [{column: 0, descending: true, nulls-first: true}], [row-number("rn"), rank("rank"), dense-rank("dense")], {max-rows: 4})',
+      'ok({rows: 4, fields: [{name: "v", data-type: int64, nullable: true}, {name: "rn", data-type: uint64, nullable: false}, {name: "rank", data-type: uint64, nullable: false}, {name: "dense", data-type: uint64, nullable: false}], columns: [int64-column([some(2), none, some(2), some(1)]), uint64-column([some(2), some(1), some(3), some(4)]), uint64-column([some(2), some(1), some(2), some(4)]), uint64-column([some(2), some(1), some(2), some(3)])]})',
+    ],
+    [
+      'window-composite-all-types',
+      'window-rank({rows: 2, fields: [{name: "b", data-type: boolean, nullable: false}, {name: "i", data-type: int64, nullable: false}, {name: "u", data-type: uint64, nullable: false}, {name: "f", data-type: float64, nullable: false}, {name: "s", data-type: utf8, nullable: false}, {name: "x", data-type: binary, nullable: false}], columns: [boolean-column([some(true), some(true)]), int64-column([some(-1), some(-1)]), uint64-column([some(2), some(2)]), float64-column([some(1.5), some(1.5)]), utf8-column([some("x"), some("x")]), binary-column([some([2]), some([1])])]}, [], [{column: 0, descending: false, nulls-first: false}, {column: 1, descending: false, nulls-first: false}, {column: 2, descending: false, nulls-first: false}, {column: 3, descending: false, nulls-first: false}, {column: 4, descending: false, nulls-first: false}, {column: 5, descending: false, nulls-first: false}], [row-number("rn")], {max-rows: 2})',
+      'ok({rows: 2, fields: [{name: "b", data-type: boolean, nullable: false}, {name: "i", data-type: int64, nullable: false}, {name: "u", data-type: uint64, nullable: false}, {name: "f", data-type: float64, nullable: false}, {name: "s", data-type: utf8, nullable: false}, {name: "x", data-type: binary, nullable: false}, {name: "rn", data-type: uint64, nullable: false}], columns: [boolean-column([some(true), some(true)]), int64-column([some(-1), some(-1)]), uint64-column([some(2), some(2)]), float64-column([some(1.5), some(1.5)]), utf8-column([some("x"), some("x")]), binary-column([some([2]), some([1])]), uint64-column([some(2), some(1)])]})',
+    ],
+    [
+      'window-empty-order',
+      'window-rank(' + windowBatch + ', [0], [], [row-number("rn")], {max-rows: 5})',
+      'err(empty-order)',
+    ],
+    [
+      'window-empty-functions',
+      'window-rank(' + windowBatch + ', [0], [{column: 1, descending: false, nulls-first: false}], [], {max-rows: 5})',
+      'err(empty-functions)',
+    ],
+    [
+      'window-duplicate-function',
+      'window-rank(' + windowBatch + ', [0], [{column: 1, descending: false, nulls-first: false}], [rank("rank_a"), rank("rank_b")], {max-rows: 5})',
+      'err(duplicate-function)',
+    ],
+    [
+      'window-duplicate-partition',
+      'window-rank(' + windowBatch + ', [0,0], [{column: 1, descending: false, nulls-first: false}], [row-number("rn")], {max-rows: 5})',
+      'err(duplicate-key)',
+    ],
+    [
+      'window-duplicate-order',
+      'window-rank(' + windowBatch + ', [0], [{column: 1, descending: false, nulls-first: false}, {column: 1, descending: true, nulls-first: true}], [row-number("rn")], {max-rows: 5})',
+      'err(duplicate-key)',
+    ],
+    [
+      'window-alias-conflict',
+      'window-rank(' + windowBatch + ', [0], [{column: 1, descending: false, nulls-first: false}], [row-number("g")], {max-rows: 5})',
+      'err(duplicate-output-name)',
+    ],
+    [
+      'window-empty-alias',
+      'window-rank(' + windowBatch + ', [0], [{column: 1, descending: false, nulls-first: false}], [row-number("")], {max-rows: 5})',
+      'err(empty-alias)',
+    ],
+    [
+      'window-invalid-limit',
+      'window-rank(' + windowBatch + ', [0], [{column: 1, descending: false, nulls-first: false}], [row-number("rn")], {max-rows: 0})',
+      'err(invalid-limit)',
+    ],
+    [
+      'window-row-limit',
+      'window-rank(' + windowBatch + ', [0], [{column: 1, descending: false, nulls-first: false}], [row-number("rn")], {max-rows: 4})',
+      'err(row-limit-exceeded)',
+    ],
+    [
+      'window-column-out-of-bounds',
+      'window-rank(' + windowBatch + ', [0], [{column: 9, descending: false, nulls-first: false}], [row-number("rn")], {max-rows: 5})',
+      'err(column-out-of-bounds)',
+    ],
     [
       'join-inner-stable',
       'equi-join(' + joinLeft + ', ' + joinRight + ', ' + joinKeys + ', {kind: inner, right-prefix: "r_", max-output-rows: 8})',
@@ -196,9 +262,10 @@ try {
     core_imports: 0,
     deterministic_group_order: true,
     aggregate_null_semantics: 'ignore-input-null; nullable-empty-result',
-    operations: ['union-all','equi-join','group-aggregate'],
+    operations: ['union-all','equi-join','window-rank','group-aggregate'],
     union_semantics: 'stable-input-order; exact-schema; no-coercion',
     join_semantics: 'bounded; typed; stable-left-then-right-order; null-keys-never-match',
+    window_semantics: 'bounded-no-row-expansion; output-aligned-input-order; stable-input-tie-break',
     aggregates: ['count-all','count','sum','min','max','mean'],
     cases: receipts.length,
     receipts,

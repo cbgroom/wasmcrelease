@@ -33,17 +33,37 @@ interface relational {
     max-output-rows: u32,
   }
 
+  record window-order {
+    column: u32,
+    descending: bool,
+    nulls-first: bool,
+  }
+
+  variant window-function {
+    row-number(string),
+    rank(string),
+    dense-rank(string),
+  }
+
+  record window-options {
+    max-rows: u32,
+  }
+
   enum relational-error {
     invalid-batch,
     empty-input,
     empty-keys,
+    empty-order,
+    empty-functions,
     schema-mismatch,
     key-type-mismatch,
     column-out-of-bounds,
     duplicate-key,
+    duplicate-function,
     empty-alias,
     duplicate-output-name,
     invalid-limit,
+    row-limit-exceeded,
     output-limit-exceeded,
     unsupported-type,
     overflow,
@@ -65,6 +85,14 @@ interface relational {
     right: batch-snapshot,
     keys: list<join-key>,
     options: join-options,
+  ) -> result<batch-snapshot, relational-error>;
+
+  window-rank: func(
+    value: batch-snapshot,
+    partition-by: list<u32>,
+    order-by: list<window-order>,
+    functions: list<window-function>,
+    options: window-options,
   ) -> result<batch-snapshot, relational-error>;
 }
 

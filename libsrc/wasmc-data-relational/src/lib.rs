@@ -6,6 +6,7 @@ wit_bindgen::generate!({
 
 use crate::exports::wasmc::data_relational::relational::{
     Aggregate, ColumnAggregate, Guest, JoinKey, JoinKind, JoinOptions, RelationalError,
+    WindowFunction, WindowOptions, WindowOrder,
 };
 use crate::wasmc::data_core::types::{
     BatchSnapshot, Column, DataType as WitDataType, Field as WitField,
@@ -18,6 +19,7 @@ use arrow_array::{
 };
 use arrow_select::take::take;
 use ordered_float::OrderedFloat;
+use std::cmp::Ordering;
 use std::collections::{BTreeMap, BTreeSet};
 use std::sync::Arc;
 
@@ -50,6 +52,19 @@ struct AggDesc {
     column: Option<usize>,
     alias: String,
     input_type: Option<WitDataType>,
+}
+
+#[derive(Clone, Copy, Debug)]
+enum WindowKind {
+    RowNumber,
+    Rank,
+    DenseRank,
+}
+
+#[derive(Clone, Debug)]
+struct WindowDesc {
+    kind: WindowKind,
+    alias: String,
 }
 
 enum AggValue {
@@ -191,6 +206,44 @@ fn push_join_pair(
     }
     pairs.push(pair);
     Ok(())
+}
+
+fn compare_window_cell(left: &Cell, right: &Cell, descending: bool, nulls_first: bool) -> Ordering {
+    match (left, right) {
+        (Cell::Null, Cell::Null) => Ordering::Equal,
+        (Cell::Null, _) => {
+            if nulls_first {
+                Ordering::Less
+            } else {
+                Ordering::Greater
+            }
+        }
+        (_, Cell::Null) => {
+            if nulls_first {
+                Ordering::Greater
+            } else {
+                Ordering::Less
+            }
+        }
+        _ => {
+            let ordering = left.cmp(right);
+            if descending {
+                ordering.reverse()
+            } else {
+                ordering
+            }
+        }
+    }
+}
+
+fn compare_window_keys(left: &[Cell], right: &[Cell], order_by: &[WindowOrder]) -> Ordering {
+    for ((left, right), order) in left.iter().zip(right).zip(order_by) {
+        let ordering = compare_window_cell(left, right, order.descending, order.nulls_first);
+        if !ordering.is_eq() {
+            return ordering;
+        }
+    }
+    Ordering::Equal
 }
 
 fn cell_at(column: &Column, index: usize) -> Cell {
@@ -427,6 +480,143 @@ fn aggregate_group(
 }
 
 impl Guest for DataRelational {
+    fn window_rank(
+        mut value: BatchSnapshot,
+        partition_by: Vec<u32>,
+        order_by: Vec<WindowOrder>,
+        functions: Vec<WindowFunction>,
+        options: WindowOptions,
+    ) -> Result<BatchSnapshot, RelationalError> {
+        validate_batch(&value)?;
+        if order_by.is_empty() {
+            return Err(RelationalError::EmptyOrder);
+        }
+        if functions.is_empty() {
+            return Err(RelationalError::EmptyFunctions);
+        }
+        if options.max_rows == 0 {
+            return Err(RelationalError::InvalidLimit);
+        }
+        if value.rows > options.max_rows {
+            return Err(RelationalError::RowLimitExceeded);
+        }
+
+        let mut seen_partition = BTreeSet::new();
+        let partition_indices = partition_by
+            .into_iter()
+            .map(|column| {
+                let index = column as usize;
+                if index >= value.fields.len() {
+                    return Err(RelationalError::ColumnOutOfBounds);
+                }
+                if !seen_partition.insert(index) {
+                    return Err(RelationalError::DuplicateKey);
+                }
+                Ok(index)
+            })
+            .collect::<Result<Vec<_>, _>>()?;
+
+        let mut seen_order = BTreeSet::new();
+        for order in &order_by {
+            let index = order.column as usize;
+            if index >= value.fields.len() {
+                return Err(RelationalError::ColumnOutOfBounds);
+            }
+            if !seen_order.insert(index) {
+                return Err(RelationalError::DuplicateKey);
+            }
+        }
+
+        let mut output_names = value
+            .fields
+            .iter()
+            .map(|field| field.name.clone())
+            .collect::<BTreeSet<_>>();
+        let mut descs = Vec::with_capacity(functions.len());
+        let mut seen_functions = BTreeSet::new();
+        for function in functions {
+            let (kind, alias) = match function {
+                WindowFunction::RowNumber(alias) => (WindowKind::RowNumber, alias),
+                WindowFunction::Rank(alias) => (WindowKind::Rank, alias),
+                WindowFunction::DenseRank(alias) => (WindowKind::DenseRank, alias),
+            };
+            let function_id = match kind {
+                WindowKind::RowNumber => 0_u8,
+                WindowKind::Rank => 1_u8,
+                WindowKind::DenseRank => 2_u8,
+            };
+            if !seen_functions.insert(function_id) {
+                return Err(RelationalError::DuplicateFunction);
+            }
+            if alias.is_empty() {
+                return Err(RelationalError::EmptyAlias);
+            }
+            if !output_names.insert(alias.clone()) {
+                return Err(RelationalError::DuplicateOutputName);
+            }
+            descs.push(WindowDesc { kind, alias });
+        }
+
+        let order_keys = (0..value.rows as usize)
+            .map(|row| {
+                order_by
+                    .iter()
+                    .map(|order| cell_at(&value.columns[order.column as usize], row))
+                    .collect::<Vec<_>>()
+            })
+            .collect::<Vec<_>>();
+        let mut partitions: BTreeMap<Vec<Cell>, Vec<usize>> = BTreeMap::new();
+        for row in 0..value.rows as usize {
+            let key = partition_indices
+                .iter()
+                .map(|index| cell_at(&value.columns[*index], row))
+                .collect::<Vec<_>>();
+            partitions.entry(key).or_default().push(row);
+        }
+
+        let mut outputs = vec![vec![0_u64; value.rows as usize]; descs.len()];
+        for rows in partitions.values_mut() {
+            rows.sort_by(|left, right| {
+                compare_window_keys(&order_keys[*left], &order_keys[*right], &order_by)
+                    .then_with(|| left.cmp(right))
+            });
+            let mut rank = 1_u64;
+            let mut dense_rank = 1_u64;
+            for (position, row) in rows.iter().enumerate() {
+                if position != 0
+                    && !compare_window_keys(
+                        &order_keys[rows[position - 1]],
+                        &order_keys[*row],
+                        &order_by,
+                    )
+                    .is_eq()
+                {
+                    rank = position as u64 + 1;
+                    dense_rank = dense_rank.checked_add(1).ok_or(RelationalError::Overflow)?;
+                }
+                for (output, desc) in outputs.iter_mut().zip(&descs) {
+                    output[*row] = match desc.kind {
+                        WindowKind::RowNumber => position as u64 + 1,
+                        WindowKind::Rank => rank,
+                        WindowKind::DenseRank => dense_rank,
+                    };
+                }
+            }
+        }
+
+        for (desc, output) in descs.into_iter().zip(outputs) {
+            value.fields.push(WitField {
+                name: desc.alias,
+                data_type: WitDataType::Uint64,
+                nullable: false,
+            });
+            value
+                .columns
+                .push(Column::Uint64Column(output.into_iter().map(Some).collect()));
+        }
+        Ok(value)
+    }
+
     fn equi_join(
         left: BatchSnapshot,
         right: BatchSnapshot,

@@ -215,6 +215,7 @@ fn main() -> Result<()> {
             "wasmc:data-relational/relational@0.0.1#group-aggregate",
             "wasmc:data-relational/relational@0.0.1#union-all",
             "wasmc:data-relational/relational@0.0.1#equi-join",
+            "wasmc:data-relational/relational@0.0.1#window-rank",
         ],
     )?;
     structural(
