@@ -46,6 +46,16 @@ impl BoundedMemory {
         Ok(self.live()?[range].to_vec())
     }
 
+    pub fn read_into(
+        &self,
+        offset: usize,
+        destination: &mut [u8],
+    ) -> Result<usize, MemoryError> {
+        let range = self.range(offset, destination.len())?;
+        destination.copy_from_slice(&self.live()?[range]);
+        Ok(destination.len())
+    }
+
     pub fn write(&mut self, offset: usize, input: &[u8]) -> Result<(), MemoryError> {
         let range = self.range(offset, input.len())?;
         self.live_mut()?[range].copy_from_slice(input);
@@ -68,6 +78,9 @@ mod tests {
         assert_eq!(memory.capacity(), 64);
         memory.write(7, b"wasmc").unwrap();
         assert_eq!(memory.read(7, 5).unwrap(), b"wasmc");
+        let mut destination = [0_u8; 5];
+        assert_eq!(memory.read_into(7, &mut destination), Ok(5));
+        assert_eq!(&destination, b"wasmc");
         assert_eq!(memory.read(64, 0).unwrap(), Vec::<u8>::new());
         assert_eq!(memory.write(63, b"ab"), Err(MemoryError::Bounds));
         assert_eq!(memory.read(63, 2), Err(MemoryError::Bounds));

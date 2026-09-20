@@ -1,0 +1,17 @@
+[package]
+name = "wasmc-host"
+version = "0.1.0"
+edition = "2021"
+description = "Public Rust embedding SDK for the generic WAsmC Host runtime"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/cbgroom/wasmcrelease"
+readme = "README.md"
+keywords = ["wasm", "runtime", "host", "embedding"]
+categories = ["wasm", "development-tools"]
+
+[workspace]
+
+[dependencies]
+wasmc-core-runtime = { path = "../wasmc-core-runtime" }
+wasmc-bounded-memory-reference = { path = "../../host/drivers/memory/rust" }
+wasmc-preopened-file-reference = { path = "../../host/drivers/file/rust" }

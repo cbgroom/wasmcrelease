@@ -120,7 +120,10 @@ Current release: `v0.0.11`, reusing compiler bytes built from exact private sour
 latest compiler facade; `dist/` and `package/` are frozen v0.0.4
 compatibility trees. The three pre-Data historical `libs/` packages remain
 byte-frozen; newly admitted source-free Lib packages are append-only. The Wasmi/Wasmtime
-Core Runtime SDK remains available in `sdk/wasmc-core-runtime`.
+Core Runtime SDK remains available in `sdk/wasmc-core-runtime`. Rust
+applications can use the public generic Host embedding facade in
+`sdk/wasmc-host`; its binding policies are Host-side convenience only and do
+not add guest-visible Host operations.
 
 Data Foundation v1 publishes seven zero-import, source-free packages for CSV,
 typed data, expressions, compute, relational operations, profiling and Arrow
@@ -183,6 +186,7 @@ authoring remain separate acceptance gates.
 - JavaScript, raw Wasm, and Wasmtime: [HOSTING.md](HOSTING.md)
 - Runtime/Registry bootstrap: [runtime/README.md](runtime/README.md)
 - Wasmi + Wasmtime Core Runtime SDK: [sdk/wasmc-core-runtime/README.md](sdk/wasmc-core-runtime/README.md)
+- Rust Generic Host SDK: [sdk/wasmc-host/README.md](sdk/wasmc-host/README.md)
 - Release history: [RELEASES.md](RELEASES.md)
 
 ## JavaScript context

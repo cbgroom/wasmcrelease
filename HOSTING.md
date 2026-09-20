@@ -52,4 +52,10 @@ cargo run --locked
 
 The demo compiles and executes scalar source, invokes a stateful resource Component, and binds the one explicit `clock-host.now` import. It is copyable reference code, not a published SDK. Reuse Engine/compiled modules where appropriate and create a fresh bounded Store for independent requests.
 
+For an existing Rust application that also needs the generic WAsmC Host
+resource registry and platform binding policy, use `sdk/wasmc-host`. It wraps
+the Core Runtime SDK and provides both one-call native profiles and explicit
+resource grants. Applications remain free to use `wasmc-core-runtime`
+directly when they want to own all Host policy themselves.
+
 Generated imports are authority requests. Reject unknown modules/functions/signatures; no release file grants ambient filesystem, network, clock, randomness, credentials, process, or device access.
