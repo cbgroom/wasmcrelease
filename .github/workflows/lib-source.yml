@@ -86,7 +86,9 @@ jobs:
       - name: Execute import-free candidates on Wasmi 2
         run: node scripts/test-libsrc-wasmi.mjs
       - name: Report Lib source admission readiness
-        run: node scripts/libsrc-readiness.mjs | tee libsrc-readiness.json
+        run: |
+          mkdir -p target
+          node scripts/libsrc-readiness.mjs | tee target/libsrc-readiness.json
       - name: Repository integrity
         run: |
           node scripts/validate-integrity.mjs
