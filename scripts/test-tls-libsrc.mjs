@@ -90,7 +90,7 @@ try {
   const testBinary = resolve(
     root,
     'libsrc/wasmc-tls-core/tests/host/target/release/wasmc-tls-core-host-test',
-  );
+  ) + (process.platform === 'win32' ? '.exe' : '');
   const output = run(testBinary, [], {
     timeout: 30000,
     env: {
