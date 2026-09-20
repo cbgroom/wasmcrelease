@@ -70,7 +70,9 @@ original source provenance.
   contract and representative request parsing, framing and response
   serialization equivalence. Resource boundary calibration and broader
   protocol coverage remain pending.
-- TLS core — one entropy dependency today; graduate protocol/state-machine logic
-  while keeping entropy/TCP/time authority thin and explicit.
+- TLS core — protocol/state-machine logic is now a public-source candidate with
+  exactly one semantic Host import, `entropy.fill`. Network transport stays
+  outside the Lib. The current server profile needs no Host clock; future
+  time-dependent TLS features must justify that capability separately.
 
 The cohort is incubation evidence, not an admitted package list.

@@ -63,17 +63,18 @@
     {
       "id": "wasmc-tls-core",
       "version": "0.0.1-dev.1",
-      "stage": "public-reimplementation-required",
+      "stage": "public-source-candidate",
       "semantic_kind": "tls-protocol",
       "host_import_budget": 1,
       "allowed_host_imports": [
-        "wasmc:tls-core/entropy#fill"
+        "wasmc:tls-core/entropy@0.0.1#fill"
       ],
       "oracle": {
         "path": "host/tests/https/artifacts/tls-server-direct.wasm",
         "sha256": "2532f311dffce2b99ed2acffdc7f4c5a7b70683019cf1a3af41918223d6e7da4"
       },
-      "next_gate": "clean-room-source-and-thin-host-contract"
+      "next_gate": "cross-platform-hosted-qualification-and-size-optimization",
+      "source_root": "libsrc/wasmc-tls-core"
     }
   ]
 }
