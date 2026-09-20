@@ -12,6 +12,7 @@ on:
       - "scripts/test-compression-libsrc.mjs"
       - "scripts/test-http1-libsrc.mjs"
       - "scripts/test-tls-libsrc.mjs"
+      - "scripts/test-libsrc-all.mjs"
       - ".github/workflows/lib-source.yml"
   push:
     branches: [main]
@@ -25,6 +26,7 @@ on:
       - "scripts/test-compression-libsrc.mjs"
       - "scripts/test-http1-libsrc.mjs"
       - "scripts/test-tls-libsrc.mjs"
+      - "scripts/test-libsrc-all.mjs"
       - ".github/workflows/lib-source.yml"
   workflow_dispatch:
 
@@ -74,16 +76,8 @@ jobs:
           fi
       - name: Validate public Lib source registry
         run: node scripts/validate-libsrc.mjs
-      - name: Qualify router graduation candidate
-        run: node scripts/test-router-policy.mjs
-      - name: Qualify JSON graduation candidate
-        run: node scripts/test-json-libsrc.mjs
-      - name: Qualify compression graduation candidate
-        run: node scripts/test-compression-libsrc.mjs
-      - name: Qualify HTTP/1 graduation candidate
-        run: node scripts/test-http1-libsrc.mjs
-      - name: Qualify TLS core graduation candidate
-        run: node scripts/test-tls-libsrc.mjs
+      - name: Qualify all registered public Lib source candidates
+        run: node scripts/test-libsrc-all.mjs
       - name: Repository integrity
         run: |
           node scripts/validate-integrity.mjs

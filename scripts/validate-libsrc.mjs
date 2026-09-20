@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { readFile, stat } from 'node:fs/promises';
-import { resolve } from 'node:path';
+import { dirname, relative, resolve } from 'node:path';
 
 const root = process.cwd();
 const registryPath = resolve(root, 'libsrc/registry.json');
@@ -40,6 +40,20 @@ for (const candidate of registry.candidates) {
     await readFile(resolve(sourceRoot, manifest.wit), 'utf8');
     assert.ok(Array.isArray(manifest.source) && manifest.source.length > 0);
     for (const source of manifest.source) await readFile(resolve(sourceRoot, source));
+    assert.equal(manifest.qualification?.runner, 'node');
+    assert.equal(typeof manifest.qualification?.script, 'string');
+    const qualificationPath = resolve(root, manifest.qualification.script);
+    const qualificationRel = relative(root, qualificationPath);
+    assert.ok(
+      qualificationRel &&
+        !qualificationRel.startsWith('..') &&
+        !qualificationRel.includes('/../') &&
+        !qualificationRel.includes('\\..\\'),
+      candidate.id + ': qualification script escapes repository',
+    );
+    assert.equal(dirname(qualificationRel), 'scripts');
+    assert.ok(qualificationRel.endsWith('.mjs'));
+    assert.ok((await stat(qualificationPath)).isFile());
   } else {
     assert.equal(typeof candidate.next_gate, 'string');
     assert.ok(candidate.next_gate.startsWith('clean-room-source'));
