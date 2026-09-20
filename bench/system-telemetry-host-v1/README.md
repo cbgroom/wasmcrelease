@@ -34,6 +34,8 @@ Interpretation:
   batch syscall; it is ordinary read into a larger existing Window.
 - the shell baseline is a local fork/exec/text-path comparison only, not a
   semantic equivalence claim.
+- on Linux, linux-proc-resident keeps /proc files open and reuses buffers to
+  qualify a faster native provider behind the exact same Host semantics.
 
 This experiment may justify provider/backend work or optimization of existing
 Window/Operation machinery. It does not authorize a new Host primitive.

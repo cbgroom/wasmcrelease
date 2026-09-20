@@ -1,4 +1,8 @@
 use std::collections::VecDeque;
+#[cfg(target_os = "linux")]
+use std::fs::File;
+#[cfg(target_os = "linux")]
+use std::io::{Read, Seek, SeekFrom};
 use std::process::Command;
 use std::sync::{
     atomic::{AtomicU64, Ordering},
@@ -65,6 +69,165 @@ struct SysinfoSampler {
     networks: Networks,
     epoch: Instant,
     sequence: u64,
+}
+
+#[cfg(target_os = "linux")]
+struct LinuxProcSampler {
+    stat: File,
+    meminfo: File,
+    netdev: File,
+    loadavg: File,
+    stat_buf: String,
+    mem_buf: String,
+    net_buf: String,
+    load_buf: String,
+    epoch: Instant,
+    sequence: u64,
+    last_cpu_total: u64,
+    last_cpu_idle: u64,
+    last_cpu_milli_pct: u32,
+}
+
+#[cfg(target_os = "linux")]
+impl LinuxProcSampler {
+    fn new() -> std::io::Result<Self> {
+        let mut sampler = Self {
+            stat: File::open("/proc/stat")?,
+            meminfo: File::open("/proc/meminfo")?,
+            netdev: File::open("/proc/net/dev")?,
+            loadavg: File::open("/proc/loadavg")?,
+            stat_buf: String::with_capacity(4096),
+            mem_buf: String::with_capacity(4096),
+            net_buf: String::with_capacity(8192),
+            load_buf: String::with_capacity(256),
+            epoch: Instant::now(),
+            sequence: 0,
+            last_cpu_total: 0,
+            last_cpu_idle: 0,
+            last_cpu_milli_pct: 0,
+        };
+        sampler.refresh_cpu_baseline()?;
+        Ok(sampler)
+    }
+
+    fn reread(file: &mut File, buffer: &mut String) -> std::io::Result<()> {
+        file.seek(SeekFrom::Start(0))?;
+        buffer.clear();
+        file.read_to_string(buffer)?;
+        Ok(())
+    }
+
+    fn cpu_counters(input: &str) -> Option<(u64, u64)> {
+        let line = input.lines().find(|line| line.starts_with("cpu "))?;
+        let fields = line
+            .split_whitespace()
+            .skip(1)
+            .take(8)
+            .map(str::parse::<u64>)
+            .collect::<Result<Vec<_>, _>>()
+            .ok()?;
+        if fields.len() < 4 {
+            return None;
+        }
+        let total = fields.iter().copied().sum::<u64>();
+        let idle = fields[3].saturating_add(fields.get(4).copied().unwrap_or(0));
+        Some((total, idle))
+    }
+
+    fn memory_bytes(input: &str) -> Option<(u64, u64, u64)> {
+        let mut total = None;
+        let mut available = None;
+        let mut swap_total = None;
+        let mut swap_free = None;
+        for line in input.lines() {
+            let mut fields = line.split_whitespace();
+            let key = fields.next()?;
+            let value = fields.next()?.parse::<u64>().ok()?.saturating_mul(1024);
+            match key {
+                "MemTotal:" => total = Some(value),
+                "MemAvailable:" => available = Some(value),
+                "SwapTotal:" => swap_total = Some(value),
+                "SwapFree:" => swap_free = Some(value),
+                _ => {}
+            }
+            if total.is_some() && available.is_some() && swap_total.is_some() && swap_free.is_some()
+            {
+                break;
+            }
+        }
+        Some((total?, available?, swap_total?.saturating_sub(swap_free?)))
+    }
+
+    fn network_totals(input: &str) -> Option<(u64, u64)> {
+        let mut rx = 0u64;
+        let mut tx = 0u64;
+        for line in input.lines().skip(2) {
+            let (name, counters) = line.split_once(':')?;
+            if name.trim() == "lo" {
+                continue;
+            }
+            let fields = counters.split_whitespace().collect::<Vec<_>>();
+            if fields.len() < 9 {
+                return None;
+            }
+            rx = rx.saturating_add(fields[0].parse::<u64>().ok()?);
+            tx = tx.saturating_add(fields[8].parse::<u64>().ok()?);
+        }
+        Some((rx, tx))
+    }
+
+    fn refresh_cpu_baseline(&mut self) -> std::io::Result<()> {
+        Self::reread(&mut self.stat, &mut self.stat_buf)?;
+        let (total, idle) = Self::cpu_counters(&self.stat_buf)
+            .ok_or_else(|| std::io::Error::other("invalid /proc/stat"))?;
+        self.last_cpu_total = total;
+        self.last_cpu_idle = idle;
+        Ok(())
+    }
+
+    fn sample(&mut self) -> std::io::Result<Frame> {
+        Self::reread(&mut self.stat, &mut self.stat_buf)?;
+        Self::reread(&mut self.meminfo, &mut self.mem_buf)?;
+        Self::reread(&mut self.netdev, &mut self.net_buf)?;
+        Self::reread(&mut self.loadavg, &mut self.load_buf)?;
+
+        let (cpu_total, cpu_idle) = Self::cpu_counters(&self.stat_buf)
+            .ok_or_else(|| std::io::Error::other("invalid /proc/stat"))?;
+        let total_delta = cpu_total.saturating_sub(self.last_cpu_total);
+        let idle_delta = cpu_idle.saturating_sub(self.last_cpu_idle);
+        if total_delta != 0 {
+            let busy_delta = total_delta.saturating_sub(idle_delta);
+            self.last_cpu_milli_pct =
+                ((busy_delta as u128 * 100_000u128) / total_delta as u128) as u32;
+        }
+        self.last_cpu_total = cpu_total;
+        self.last_cpu_idle = cpu_idle;
+
+        let (total_memory, available_memory, used_swap) = Self::memory_bytes(&self.mem_buf)
+            .ok_or_else(|| std::io::Error::other("invalid /proc/meminfo"))?;
+        let (network_rx_total, network_tx_total) = Self::network_totals(&self.net_buf)
+            .ok_or_else(|| std::io::Error::other("invalid /proc/net/dev"))?;
+        let load1_milli = self
+            .load_buf
+            .split_whitespace()
+            .next()
+            .and_then(|value| value.parse::<f64>().ok())
+            .map(|value| (value.max(0.0) * 1000.0).min(u32::MAX as f64) as u32)
+            .ok_or_else(|| std::io::Error::other("invalid /proc/loadavg"))?;
+
+        self.sequence = self.sequence.saturating_add(1);
+        Ok(Frame {
+            sequence: self.sequence,
+            monotonic_ns: self.epoch.elapsed().as_nanos().min(u64::MAX as u128) as u64,
+            total_memory,
+            available_memory,
+            used_swap,
+            network_rx_total,
+            network_tx_total,
+            cpu_milli_pct: self.last_cpu_milli_pct,
+            load1_milli,
+        })
+    }
 }
 
 impl SysinfoSampler {
@@ -404,6 +567,29 @@ fn spawn_sysinfo(ring: Arc<Ring>, hz: u64, duration: Duration) -> thread::JoinHa
     })
 }
 
+#[cfg(target_os = "linux")]
+fn spawn_linux_proc(ring: Arc<Ring>, hz: u64, duration: Duration) -> thread::JoinHandle<u64> {
+    thread::spawn(move || {
+        let mut sampler = LinuxProcSampler::new().expect("open /proc telemetry files");
+        let epoch = Instant::now();
+        let period = Duration::from_nanos(1_000_000_000u64 / hz.max(1));
+        let deadline = epoch + duration;
+        let mut next = epoch;
+        let mut produced = 0u64;
+        while Instant::now() < deadline {
+            let now = Instant::now();
+            if now < next {
+                thread::sleep(next - now);
+            }
+            ring.push(sampler.sample().expect("sample /proc telemetry"));
+            produced = produced.saturating_add(1);
+            next += period;
+        }
+        ring.close();
+        produced
+    })
+}
+
 fn bench_stream(kind: &str, hz: u64, batch: usize, millis: u64) {
     let duration = Duration::from_millis(millis);
     let ring = Arc::new(Ring::new(8192));
@@ -414,6 +600,8 @@ fn bench_stream(kind: &str, hz: u64, batch: usize, millis: u64) {
     let producer = match kind {
         "synthetic" => spawn_synthetic(ring.clone(), hz, duration),
         "sysinfo" => spawn_sysinfo(ring.clone(), hz, duration),
+        #[cfg(target_os = "linux")]
+        "linux-proc" => spawn_linux_proc(ring.clone(), hz, duration),
         _ => panic!("bad kind"),
     };
     let consumer_period = Duration::from_nanos(
@@ -525,6 +713,33 @@ fn bench_sampler(iterations: usize) {
     );
 }
 
+#[cfg(target_os = "linux")]
+fn bench_linux_proc_sampler(iterations: usize) {
+    let mut sampler = LinuxProcSampler::new().expect("open /proc telemetry files");
+    let started = Instant::now();
+    let mut encoded = [0u8; FRAME_BYTES];
+    let mut cpu_changes = 0u64;
+    let mut last_cpu = None;
+    for _ in 0..iterations {
+        let frame = sampler.sample().expect("sample /proc telemetry");
+        frame.encode_into(&mut encoded);
+        if last_cpu.is_some_and(|value| value != frame.cpu_milli_pct) {
+            cpu_changes += 1;
+        }
+        last_cpu = Some(frame.cpu_milli_pct);
+    }
+    let elapsed = started.elapsed();
+    println!(
+        "{{\"kind\":\"sampler-cost\",\"provider\":\"linux-proc-resident\",\"iterations\":{},\"elapsed_ms\":{:.3},\"ns_per_sample\":{:.1},\"samples_per_sec\":{:.1},\"frame_bytes\":{},\"cpu_value_changes\":{}}}",
+        iterations,
+        elapsed.as_secs_f64() * 1000.0,
+        elapsed.as_nanos() as f64 / iterations as f64,
+        iterations as f64 / elapsed.as_secs_f64(),
+        FRAME_BYTES,
+        cpu_changes,
+    );
+}
+
 fn bench_transport_micro(frames: usize, batch: usize) {
     let ring = Arc::new(Ring::new(frames.max(1)));
     let epoch = Instant::now();
@@ -613,6 +828,8 @@ fn cancellation_probe() {
 fn main() {
     cancellation_probe();
     bench_sampler(2_000);
+    #[cfg(target_os = "linux")]
+    bench_linux_proc_sampler(10_000);
     bench_shell(40);
     bench_transport_micro(100_000, 1);
     bench_transport_micro(100_000, 32);
@@ -623,5 +840,9 @@ fn main() {
     }
     for (hz, millis) in [(10, 1200), (100, 1200), (1000, 1200)] {
         bench_stream("sysinfo", hz, 32, millis);
+    }
+    #[cfg(target_os = "linux")]
+    for (hz, millis) in [(100, 1200), (1000, 1200)] {
+        bench_stream("linux-proc", hz, 32, millis);
     }
 }

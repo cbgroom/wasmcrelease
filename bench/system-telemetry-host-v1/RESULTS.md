@@ -31,34 +31,35 @@ a reason to add CPU/memory/network Host operations.
 
 Resident cross-platform sampler, sysinfo 0.39.6:
 
-- 2,000 snapshots in 989.875 ms.
-- 494,937 ns/sample, about 2,020 samples/s.
+- 2,000 snapshots in 1,032.641 ms.
+- 516,320 ns/sample, about 1,936.8 samples/s.
 - sysinfo reports a 200 ms minimum CPU-usage update interval, so a faster sample
   cadence does not imply fresher CPU utilization values.
 
 Shell comparison:
 
-- 40 runs of sh -> ps took 1,719.397 ms.
-- 42.985 ms/run, about 23.3 samples/s.
-- This is roughly 86.9x slower than the resident sysinfo sampling loop on this
+- 40 runs of sh -> ps took 1,761.704 ms.
+- 44.043 ms/run, about 22.7 samples/s.
+- This is roughly 85.3x slower than the resident sysinfo sampling loop on this
   host. It is a fork/exec/text-path comparison, not a semantic-equivalence
   claim.
 
 Existing-semantics stream:
 
 - synthetic 1 kHz, batch=1: 1199 produced / 1199 consumed, zero ring drop and
-  zero sequence gap.
-- synthetic 1 kHz, batch=32: 1199/1199, zero drop/gap, 0.031693
+  zero sequence gap in the first run; the exact-source rerun produced
+  1201/1201 with zero drop/gap.
+- synthetic 1 kHz, batch=32: 1200/1200, zero drop/gap, 0.031667
   read/wait calls per frame.
-- sysinfo requested at 1 kHz, batch=32: 1200/1200, zero drop/gap,
-  0.031667 calls per frame. CPU values remain subject to sysinfo's 200 ms
+- sysinfo requested at 1 kHz, batch=32: 1198/1198, zero drop/gap,
+  0.031720 calls per frame. CPU values remain subject to sysinfo's 200 ms
   CPU-usage update interval.
 
 In-memory transport isolation with 100,000 pre-produced frames:
 
-- batch=1: 16.14M frames/s.
-- batch=32: 93.08M frames/s, 0.031270 Host-semantic calls/frame.
-- batch=256: 93.07M frames/s, 0.003930 calls/frame.
+- batch=1: 10.24M frames/s.
+- batch=32: 100.04M frames/s, 0.031270 Host-semantic calls/frame.
+- batch=256: 129.97M frames/s, 0.003930 calls/frame.
 
 These numbers isolate experiment-local copy/ring/Window semantics; they are not
 the production physical Host transport benchmark.
@@ -95,22 +96,31 @@ Transport isolation:
 - synthetic 1 kHz, batch=32: 1201/1201, zero drop/gap, 0.031640
   calls/frame.
 - 100,000-frame microbenchmark:
-  - batch=1: 11.47M frames/s.
-  - batch=32: 59.69M frames/s.
-  - batch=256: 87.58M frames/s.
+  - batch=1: 18.04M frames/s.
+  - batch=32: 69.93M frames/s.
+  - batch=256: 101.83M frames/s.
 
 Provider limitation under load:
 
-- sysinfo sampler: 4.373 ms/sample, about 228.7 samples/s.
-- requested 1 kHz sysinfo stream produced 454 frames during the 1.2 s producer
+- sysinfo sampler: 2.666 ms/sample, about 375.0 samples/s.
+- requested 1 kHz sysinfo stream produced 412 frames during the 1.2 s producer
   window; every produced frame was consumed with zero ring drop and zero
   sequence gap.
-- shell ps path: 109.364 ms/run, about 9.1 runs/s.
+- shell ps path: 103.349 ms/run, about 9.7 runs/s.
 
-Therefore the Linux 1 kHz miss is upstream of the Host data plane. The next
-optimization target is the provider: selective fields, multi-rate sampling, and
-where justified a Linux-native /proc or kernel-backed fast path behind the same
-Host resource semantics.
+The same source now also contains a Linux-native resident provider that keeps
+/proc/stat, /proc/meminfo, /proc/net/dev and /proc/loadavg open, seeks them back
+to zero, and reuses buffers instead of spawning processes:
+
+- 10,000 samples in 1,524.295 ms.
+- 152.43 us/sample, about 6,560 samples/s under the same loaded host.
+- requested 1 kHz stream: 1201 produced / 1201 consumed in the 1.2 s producer
+  window, zero ring drop, zero sequence gap.
+- batch=32 remained 0.031640 Host-semantic calls/frame.
+
+This is the strongest result in the first qualification: the 1 kHz miss moved
+from the generic sysinfo provider to a native provider and disappeared without
+changing the Host contract or the guest-visible Host operation set.
 
 ## WAsmC policy execution
 
@@ -160,7 +170,8 @@ Keep Host API delta at zero.
 1. Add provider-side cadence groups: slow CPU/load identity, medium
    memory/process, faster network counters where the OS backend supports it.
 2. Add a Linux fast backend and compare it against sysinfo while preserving the
-   same 64-byte-or-batched provider contract.
+   same 64-byte-or-batched provider contract. The first /proc proof is now
+   complete; next remove avoidable parser allocations and define cadence groups.
 3. Feed batches into Data Foundation lag/frame aggregates rather than computing
    rates in Host.
 4. Close the existing generic WIT resource binding/lowering so WAsmC source can
