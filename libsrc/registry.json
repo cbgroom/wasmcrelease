@@ -110,6 +110,42 @@
         "type_dependency": "wasmc:data-core/types@0.0.1"
       },
       "next_gate": "csv-to-batch-and-wasmi-qualification"
+    },
+    {
+      "id": "wasmc-data-expr",
+      "version": "0.0.1-dev.1",
+      "stage": "public-source-candidate",
+      "semantic_kind": "data-expression-program",
+      "host_import_budget": 0,
+      "source_root": "libsrc/wasmc-data-expr",
+      "origin": {
+        "kind": "native-public",
+        "implementation_basis": [
+          "arrow-array@60.0.0",
+          "arrow-ord@60.0.0",
+          "arrow-arith@60.0.0"
+        ],
+        "type_dependency": "wasmc:data-core/types@0.0.1"
+      },
+      "next_gate": "wasmi-and-admission"
+    },
+    {
+      "id": "wasmc-data-compute",
+      "version": "0.0.1-dev.1",
+      "stage": "public-source-candidate",
+      "semantic_kind": "data-batch-compute",
+      "host_import_budget": 0,
+      "source_root": "libsrc/wasmc-data-compute",
+      "origin": {
+        "kind": "native-public",
+        "implementation_basis": [
+          "arrow-array@60.0.0",
+          "arrow-select@60.0.0",
+          "arrow-ord@60.0.0"
+        ],
+        "type_dependency": "wasmc:data-core/types@0.0.1"
+      },
+      "next_gate": "wasmi-and-admission"
     }
   ]
 }

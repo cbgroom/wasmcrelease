@@ -24,10 +24,10 @@
     "representative-behavior-equivalence",
     "http1-framing-equivalence",
     "resource-boundary-calibration",
-    "broader-status-header-coverage"
+    "broader-status-header-coverage",
+    "multi-engine-qualification"
   ],
   "pending_gates": [
-    "multi-engine-qualification",
     "admission-review"
   ],
   "admitted": false,
@@ -49,5 +49,13 @@
     "header_value_byte_cases": 256,
     "serialize_header_names_lowercase": true,
     "oracle_equivalent": true
+  },
+  "hosted_evidence": {
+    "wasmi_2": {
+      "run": 35499686100,
+      "job": "validate",
+      "step": "Execute import-free candidates on Wasmi 2",
+      "conclusion": "success"
+    }
   }
 }

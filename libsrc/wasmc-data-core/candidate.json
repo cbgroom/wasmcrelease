@@ -19,7 +19,11 @@
   },
   "build": {
     "command": "cargo +1.96.0 build --release --locked --target wasm32-unknown-unknown --manifest-path libsrc/wasmc-data-core/Cargo.toml",
-    "artifact": "libsrc/wasmc-data-core/target/wasm32-unknown-unknown/release/wasmc_data_core_public.wasm"
+    "artifact": "libsrc/wasmc-data-core/target/wasm32-unknown-unknown/release/wasmc_data_core_public.wasm",
+    "lane": "rust-wit-bindgen-component",
+    "backend": "cargo",
+    "final_package_source_free": true,
+    "embeds_third_party_source": false
   },
   "completed_gates": [
     "public-source",

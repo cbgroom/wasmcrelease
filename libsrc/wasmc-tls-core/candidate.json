@@ -31,10 +31,10 @@
     "bidirectional-plaintext",
     "graceful-close",
     "resource-drop",
-    "size-optimization"
+    "size-optimization",
+    "cross-platform-hosted-qualification"
   ],
   "pending_gates": [
-    "cross-platform-hosted-qualification",
     "admission-review"
   ],
   "admitted": false,
@@ -49,5 +49,20 @@
     "ratio_vs_oracle": 0.996,
     "source_level_profile_only": true,
     "wasm_opt_required": false
+  },
+  "hosted_evidence": {
+    "tls_portability": {
+      "run": 35499686100,
+      "platforms": [
+        "linux-x86_64",
+        "linux-aarch64",
+        "macos-x86_64",
+        "macos-aarch64",
+        "windows-x86_64",
+        "windows-aarch64"
+      ],
+      "passed": 6,
+      "conclusion": "success"
+    }
   }
 }

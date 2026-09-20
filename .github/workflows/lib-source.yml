@@ -16,6 +16,9 @@ on:
       - "scripts/test-libsrc-wasmi.mjs"
       - "scripts/test-data-core-libsrc.mjs"
       - "scripts/test-csv-libsrc.mjs"
+      - "scripts/test-data-expr-libsrc.mjs"
+      - "scripts/test-data-compute-libsrc.mjs"
+      - "scripts/test-data-pipeline.mjs"
       - "libsrc/qualification/**"
       - ".github/workflows/lib-source.yml"
   push:
@@ -34,6 +37,9 @@ on:
       - "scripts/test-libsrc-wasmi.mjs"
       - "scripts/test-data-core-libsrc.mjs"
       - "scripts/test-csv-libsrc.mjs"
+      - "scripts/test-data-expr-libsrc.mjs"
+      - "scripts/test-data-compute-libsrc.mjs"
+      - "scripts/test-data-pipeline.mjs"
       - "libsrc/qualification/**"
       - ".github/workflows/lib-source.yml"
   workflow_dispatch:
@@ -73,8 +79,10 @@ jobs:
             libsrc/wasmc-tls-core/tests/host/target
             libsrc/wasmc-data-core/target
             libsrc/wasmc-csv/target
+            libsrc/wasmc-data-expr/target
+            libsrc/wasmc-data-compute/target
             libsrc/qualification/wasmi-core/target
-          key: libsrc-build-v3-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('libsrc/wasmc-json/Cargo.lock', 'libsrc/wasmc-compression/Cargo.lock', 'libsrc/wasmc-http1/Cargo.lock', 'libsrc/wasmc-tls-core/Cargo.lock', 'libsrc/wasmc-tls-core/tests/host/Cargo.lock', 'libsrc/wasmc-data-core/Cargo.lock', 'libsrc/wasmc-csv/Cargo.lock', 'libsrc/qualification/wasmi-core/Cargo.lock') }}
+          key: libsrc-build-v5-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('libsrc/wasmc-json/Cargo.lock', 'libsrc/wasmc-compression/Cargo.lock', 'libsrc/wasmc-http1/Cargo.lock', 'libsrc/wasmc-tls-core/Cargo.lock', 'libsrc/wasmc-tls-core/tests/host/Cargo.lock', 'libsrc/wasmc-data-core/Cargo.lock', 'libsrc/wasmc-csv/Cargo.lock', 'libsrc/wasmc-data-expr/Cargo.lock', 'libsrc/wasmc-data-compute/Cargo.lock', 'libsrc/qualification/wasmi-core/Cargo.lock') }}
           restore-keys: |
             libsrc-v5-${{ runner.os }}-${{ runner.arch }}-
             libsrc-build-v2-${{ runner.os }}-${{ runner.arch }}-
@@ -93,7 +101,9 @@ jobs:
       - name: Execute import-free candidates on Wasmi 2
         run: node scripts/test-libsrc-wasmi.mjs
       - name: Report Lib source admission readiness
-        run: node scripts/libsrc-readiness.mjs | tee libsrc-readiness.json
+        run: |
+          mkdir -p target
+          node scripts/libsrc-readiness.mjs | tee target/libsrc-readiness.json
       - name: Repository integrity
         run: |
           node scripts/validate-integrity.mjs

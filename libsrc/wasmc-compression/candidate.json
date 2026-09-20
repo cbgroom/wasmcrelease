@@ -23,10 +23,10 @@
     "wit-contract-equivalence",
     "representative-behavior-equivalence",
     "deterministic-gzip-byte-equivalence",
-    "resource-boundary-calibration"
+    "resource-boundary-calibration",
+    "multi-engine-qualification"
   ],
   "pending_gates": [
-    "multi-engine-qualification",
     "admission-review"
   ],
   "admitted": false,
@@ -38,5 +38,13 @@
     "input_bytes": 1048576,
     "output_bytes": 4194304,
     "oracle_equivalent": true
+  },
+  "hosted_evidence": {
+    "wasmi_2": {
+      "run": 35499686100,
+      "job": "validate",
+      "step": "Execute import-free candidates on Wasmi 2",
+      "conclusion": "success"
+    }
   }
 }

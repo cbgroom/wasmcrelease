@@ -99,18 +99,61 @@ Implementation:
 The candidate has zero Core imports. Its only Component-level dependency is the
 type-only `wasmc:data-core/types@0.0.1` identity.
 
+### wasmc-data-expr
+
+The expression layer is a bounded, non-recursive indexed program rather than
+SQL text or a recursive AST. Current nodes cover column/literal, comparison,
+numeric arithmetic, boolean logic and is-null. The implementation uses
+Arrow-rs comparison/arithmetic/boolean kernels and has zero Core imports.
+
+### wasmc-data-compute
+
+The first batch-compute layer provides filter, project and lexicographical
+sort with optional limit. Filter accepts the same Data Core boolean column
+returned by `wasmc-data-expr`, so the portable composition path is:
+
+```text
+CSV -> BatchSnapshot -> Expr.evaluate -> BooleanColumn -> Compute.filter
+```
+
+All operations are Arrow-backed and have zero Core imports.
+
+## Build workspace vs final package
+
+`libsrc/` is an incubation/build workspace, not the final Lib package.
+Rust/Cargo may be used by the Rust-backed build lane, but Cargo is not the Lib
+format and third-party source trees are never package payload.
+
+An admitted Lib remains source-free:
+
+```text
+<lib>/
+  SKILL.md
+  lib.wit
+  lib.json
+  artifact.wasm
+  component.wasm
+  references/agent-delta.json
+```
+
+The admitted-package validator rejects extra source/Cargo files. Rebuild
+authority records exact dependency identity/version/source/checksum, builder
+and toolchain identity, build profile, WIT/mapping identity and final artifact
+digests. Third-party source is fetched by the build backend when required.
+
 ## Next layers
 
 Do not build SQL first. Grow the shared middle layer in this order:
 
-1. Data Core schema/batch semantics.
-2. CSV and JSONL ingestion.
-3. Expression IR and Arrow-backed compute kernels.
-4. Relational operators: filter/project/sort/hash/join/group/aggregate/window.
+1. Data Core schema/batch semantics. **Started.**
+2. CSV ingestion. **Started.** JSONL remains next format input.
+3. Expression IR and Arrow-backed compute kernels. **Started.**
+4. Relational operators: hash/join/group/aggregate/window.
 5. Statistics and profiling.
 6. Arrow IPC and Parquet adapters.
-7. SQL parser/planner and DataFrame/Agent facades.
-8. Time series, sketches, numerical/linalg extensions.
+7. DataFrame/Agent facades.
+8. SQL parser/planner only as an optional late frontend.
+9. Time series, sketches, numerical/linalg extensions.
 
 A new data Lib should first search for a mature Rust implementation. Reimplement
 an algorithm only when the existing crate cannot satisfy the portable wasm,

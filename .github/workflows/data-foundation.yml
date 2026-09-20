@@ -5,9 +5,14 @@ on:
     paths:
       - "libsrc/wasmc-data-core/**"
       - "libsrc/wasmc-csv/**"
+      - "libsrc/wasmc-data-expr/**"
+      - "libsrc/wasmc-data-compute/**"
       - "libsrc/qualification/data-rust-foundation/**"
       - "scripts/test-data-core-libsrc.mjs"
       - "scripts/test-csv-libsrc.mjs"
+      - "scripts/test-data-expr-libsrc.mjs"
+      - "scripts/test-data-compute-libsrc.mjs"
+      - "scripts/test-data-pipeline.mjs"
       - "scripts/test-data-rust-foundation.mjs"
       - "docs/DATA_ECOSYSTEM.md"
       - ".github/workflows/data-foundation.yml"
@@ -16,9 +21,14 @@ on:
     paths:
       - "libsrc/wasmc-data-core/**"
       - "libsrc/wasmc-csv/**"
+      - "libsrc/wasmc-data-expr/**"
+      - "libsrc/wasmc-data-compute/**"
       - "libsrc/qualification/data-rust-foundation/**"
       - "scripts/test-data-core-libsrc.mjs"
       - "scripts/test-csv-libsrc.mjs"
+      - "scripts/test-data-expr-libsrc.mjs"
+      - "scripts/test-data-compute-libsrc.mjs"
+      - "scripts/test-data-pipeline.mjs"
       - "scripts/test-data-rust-foundation.mjs"
       - "docs/DATA_ECOSYSTEM.md"
       - ".github/workflows/data-foundation.yml"
@@ -49,8 +59,10 @@ jobs:
             ~/.cargo/git
             libsrc/wasmc-data-core/target
             libsrc/wasmc-csv/target
+            libsrc/wasmc-data-expr/target
+            libsrc/wasmc-data-compute/target
             libsrc/qualification/data-rust-foundation/target
-          key: data-foundation-v1-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('libsrc/wasmc-data-core/Cargo.lock', 'libsrc/wasmc-csv/Cargo.lock', 'libsrc/qualification/data-rust-foundation/Cargo.lock') }}
+          key: data-foundation-v3-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('libsrc/wasmc-data-core/Cargo.lock', 'libsrc/wasmc-csv/Cargo.lock', 'libsrc/wasmc-data-expr/Cargo.lock', 'libsrc/wasmc-data-compute/Cargo.lock', 'libsrc/qualification/data-rust-foundation/Cargo.lock') }}
       - name: Install pinned wasm-tools
         shell: bash
         run: |
@@ -64,6 +76,12 @@ jobs:
         run: node scripts/test-data-core-libsrc.mjs | tee data-core.json
       - name: Qualify Arrow CSV to DataBatch
         run: node scripts/test-csv-libsrc.mjs | tee csv.json
+      - name: Qualify Arrow-backed expression program
+        run: node scripts/test-data-expr-libsrc.mjs | tee expr.json
+      - name: Qualify Arrow-backed batch compute
+        run: node scripts/test-data-compute-libsrc.mjs | tee compute.json
+      - name: Qualify CSV to Expr to Filter pipeline
+        run: node scripts/test-data-pipeline.mjs | tee pipeline.json
       - name: Validate public Lib source registry
         run: node scripts/validate-libsrc.mjs
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
@@ -75,5 +93,8 @@ jobs:
             data-rust-foundation.json
             data-core.json
             csv.json
+            expr.json
+            compute.json
+            pipeline.json
           if-no-files-found: warn
           retention-days: 14

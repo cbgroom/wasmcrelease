@@ -1,6 +1,6 @@
 {
   "schema": "wasmc.libsrc-candidate/v1",
-  "id": "wasmc-csv",
+  "id": "wasmc-data-compute",
   "version": "0.0.1-dev.1",
   "wit": "wit/world.wit",
   "source": [
@@ -13,25 +13,24 @@
   "origin": {
     "kind": "native-public",
     "implementation_basis": [
-      "arrow-csv@60.0.0",
       "arrow-array@60.0.0",
-      "arrow-schema@60.0.0"
+      "arrow-select@60.0.0",
+      "arrow-ord@60.0.0"
     ],
     "type_dependency": "wasmc:data-core/types@0.0.1"
   },
   "build": {
-    "command": "cargo +1.96.0 build --release --locked --target wasm32-unknown-unknown --manifest-path libsrc/wasmc-csv/Cargo.toml",
-    "artifact": "libsrc/wasmc-csv/target/wasm32-unknown-unknown/release/wasmc_csv_public.wasm",
     "lane": "rust-wit-bindgen-component",
     "backend": "cargo",
+    "command": "cargo +1.96.0 build --release --locked --target wasm32-unknown-unknown --manifest-path libsrc/wasmc-data-compute/Cargo.toml",
+    "artifact": "libsrc/wasmc-data-compute/target/wasm32-unknown-unknown/release/wasmc_data_compute_public.wasm",
     "final_package_source_free": true,
     "embeds_third_party_source": false
   },
   "completed_gates": [
     "public-source",
     "zero-core-imports",
-    "csv-to-batch-qualification",
-    "data-core-compatibility"
+    "batch-compute-qualification"
   ],
   "pending_gates": [
     "wasmi-qualification",
@@ -40,6 +39,6 @@
   "admitted": false,
   "qualification": {
     "runner": "node",
-    "script": "scripts/test-csv-libsrc.mjs"
+    "script": "scripts/test-data-compute-libsrc.mjs"
   }
 }
