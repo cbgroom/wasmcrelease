@@ -47,8 +47,13 @@ jobs:
           version: 47.0.4
       - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830
         with:
+          path: ~/.cargo/bin/wasm-tools
+          key: wasm-tools-1.255.0-${{ runner.os }}-${{ runner.arch }}
+          restore-keys: |
+            libsrc-v5-${{ runner.os }}-${{ runner.arch }}-
+      - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830
+        with:
           path: |
-            ~/.cargo/bin/wasm-tools
             ~/.cargo/registry
             ~/.cargo/git
             libsrc/wasmc-json/target
@@ -56,7 +61,10 @@ jobs:
             libsrc/wasmc-http1/target
             libsrc/wasmc-tls-core/target
             libsrc/wasmc-tls-core/tests/host/target
-          key: libsrc-v5-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('libsrc/wasmc-json/Cargo.lock', 'libsrc/wasmc-compression/Cargo.lock', 'libsrc/wasmc-http1/Cargo.lock', 'libsrc/wasmc-tls-core/Cargo.lock', 'libsrc/wasmc-tls-core/tests/host/Cargo.lock') }}
+          key: libsrc-build-v1-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('libsrc/wasmc-json/Cargo.lock', 'libsrc/wasmc-compression/Cargo.lock', 'libsrc/wasmc-http1/Cargo.lock', 'libsrc/wasmc-tls-core/Cargo.lock', 'libsrc/wasmc-tls-core/tests/host/Cargo.lock') }}
+          restore-keys: |
+            libsrc-v5-${{ runner.os }}-${{ runner.arch }}-
+            libsrc-build-v1-${{ runner.os }}-${{ runner.arch }}-
       - name: Install pinned wasm-tools
         shell: bash
         run: |
