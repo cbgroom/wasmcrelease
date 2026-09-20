@@ -21,7 +21,15 @@ function run(command, args, options = {}) {
   return result.stdout.trim();
 }
 
-for (const name of ['wasmc-json', 'wasmc-compression', 'wasmc-http1']) {
+for (const name of [
+  'wasmc-json',
+  'wasmc-compression',
+  'wasmc-http1',
+  'wasmc-data-core',
+  'wasmc-csv',
+  'wasmc-data-expr',
+  'wasmc-data-compute',
+]) {
   run('cargo', [
     '+1.96.0',
     'build',
@@ -63,18 +71,27 @@ try {
       WASMC_LIBSRC_JSON: resolve(root, 'libsrc/wasmc-json/target/wasm32-unknown-unknown/release/wasmc_json_public.wasm'),
       WASMC_LIBSRC_COMPRESSION: resolve(root, 'libsrc/wasmc-compression/target/wasm32-unknown-unknown/release/wasmc_compression_public.wasm'),
       WASMC_LIBSRC_HTTP1: resolve(root, 'libsrc/wasmc-http1/target/wasm32-unknown-unknown/release/wasmc_http1_public.wasm'),
+      WASMC_LIBSRC_DATA_CORE: resolve(root, 'libsrc/wasmc-data-core/target/wasm32-unknown-unknown/release/wasmc_data_core_public.wasm'),
+      WASMC_LIBSRC_CSV: resolve(root, 'libsrc/wasmc-csv/target/wasm32-unknown-unknown/release/wasmc_csv_public.wasm'),
+      WASMC_LIBSRC_DATA_EXPR: resolve(root, 'libsrc/wasmc-data-expr/target/wasm32-unknown-unknown/release/wasmc_data_expr_public.wasm'),
+      WASMC_LIBSRC_DATA_COMPUTE: resolve(root, 'libsrc/wasmc-data-compute/target/wasm32-unknown-unknown/release/wasmc_data_compute_public.wasm'),
     },
   });
   const receipt = JSON.parse(output.split(/\r?\n/).filter(Boolean).at(-1));
   assert.equal(receipt.accepted, true);
   assert.equal(receipt.engine, 'wasmi-2.0.0');
   assert.equal(receipt.representative_execution, true);
+  assert.equal(receipt.structural_data_qualification, true);
   assert.equal(receipt.host_imports, 0);
   assert.deepEqual(receipt.candidates, [
     'wasmc-router-policy',
     'wasmc-json',
     'wasmc-compression',
     'wasmc-http1',
+    'wasmc-data-core',
+    'wasmc-csv',
+    'wasmc-data-expr',
+    'wasmc-data-compute',
   ]);
   console.log(JSON.stringify({
     accepted: true,

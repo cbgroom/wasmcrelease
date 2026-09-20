@@ -152,19 +152,64 @@ fn http1(path: &str) -> Result<()> {
     Ok(())
 }
 
+fn structural(path: &str, exports: &[&str]) -> Result<()> {
+    let core = Core::open(path)?;
+    core.memory()?;
+    if core
+        .instance
+        .get_export(&core.store, "cabi_realloc")
+        .is_none()
+    {
+        bail!("canonical allocator export missing: {path}");
+    }
+    for export in exports {
+        if core.instance.get_export(&core.store, export).is_none() {
+            bail!("expected Core export missing in {path}: {export}");
+        }
+    }
+    Ok(())
+}
+
 fn main() -> Result<()> {
     let router_path = std::env::var("WASMC_LIBSRC_ROUTER")?;
     let json_path = std::env::var("WASMC_LIBSRC_JSON")?;
     let compression_path = std::env::var("WASMC_LIBSRC_COMPRESSION")?;
     let http1_path = std::env::var("WASMC_LIBSRC_HTTP1")?;
+    let data_core_path = std::env::var("WASMC_LIBSRC_DATA_CORE")?;
+    let csv_path = std::env::var("WASMC_LIBSRC_CSV")?;
+    let expr_path = std::env::var("WASMC_LIBSRC_DATA_EXPR")?;
+    let compute_path = std::env::var("WASMC_LIBSRC_DATA_COMPUTE")?;
 
     router(&router_path)?;
     json(&json_path)?;
     compression(&compression_path)?;
     http1(&http1_path)?;
+    structural(
+        &data_core_path,
+        &[
+            "wasmc:data-core/model@0.0.1#validate",
+            "wasmc:data-core/model@0.0.1#take",
+        ],
+    )?;
+    structural(&csv_path, &["wasmc:csv/parser@0.0.1#parse"])?;
+    structural(
+        &expr_path,
+        &[
+            "wasmc:data-expr/expr@0.0.1#validate",
+            "wasmc:data-expr/expr@0.0.1#evaluate",
+        ],
+    )?;
+    structural(
+        &compute_path,
+        &[
+            "wasmc:data-compute/compute@0.0.1#filter",
+            "wasmc:data-compute/compute@0.0.1#project",
+            "wasmc:data-compute/compute@0.0.1#sort",
+        ],
+    )?;
 
     println!(
-        "{{\"accepted\":true,\"engine\":\"wasmi-2.0.0\",\"candidates\":[\"wasmc-router-policy\",\"wasmc-json\",\"wasmc-compression\",\"wasmc-http1\"],\"representative_execution\":true,\"host_imports\":0}}"
+        "{{\"accepted\":true,\"engine\":\"wasmi-2.0.0\",\"candidates\":[\"wasmc-router-policy\",\"wasmc-json\",\"wasmc-compression\",\"wasmc-http1\",\"wasmc-data-core\",\"wasmc-csv\",\"wasmc-data-expr\",\"wasmc-data-compute\"],\"representative_execution\":true,\"structural_data_qualification\":true,\"host_imports\":0}}"
     );
     Ok(())
 }
