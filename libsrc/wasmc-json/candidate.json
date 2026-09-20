@@ -21,10 +21,10 @@
     "public-source",
     "zero-imports",
     "wit-contract-equivalence",
-    "representative-behavior-equivalence"
+    "representative-behavior-equivalence",
+    "resource-boundary-calibration"
   ],
   "pending_gates": [
-    "resource-boundary-calibration",
     "multi-engine-qualification",
     "admission-review"
   ],
@@ -32,5 +32,13 @@
   "qualification": {
     "runner": "node",
     "script": "scripts/test-json-libsrc.mjs"
+  },
+  "resource_boundaries": {
+    "input_bytes": 65536,
+    "output_bytes": 65536,
+    "max_pointers": 64,
+    "max_pointer_bytes": 1024,
+    "max_depth": 64,
+    "oracle_equivalent": true
   }
 }

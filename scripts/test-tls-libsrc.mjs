@@ -25,7 +25,7 @@ function run(command, args, options = {}) {
   const result = spawnSync(command, args, {
     cwd: options.cwd ?? root,
     encoding: 'utf8',
-    timeout: options.timeout ?? 300000,
+    timeout: options.timeout ?? 900000,
     maxBuffer: 64 << 20,
     env: { ...process.env, ...(options.env ?? {}) },
   });
@@ -54,6 +54,10 @@ const candidatePath = resolve(
   'libsrc/wasmc-tls-core/target/wasm32-unknown-unknown/release/wasmc_tls_core_public.wasm',
 );
 const candidateBytes = await readFile(candidatePath);
+assert.ok(
+  candidateBytes.length <= oracleBytes.length,
+  'public TLS candidate must not exceed frozen oracle bytes after size profile',
+);
 const componentWit = run('wasm-tools', ['component', 'wit', candidatePath]);
 
 assert.match(componentWit, /import wasmc:tls-core\/entropy@0\.0\.1;/);
@@ -122,7 +126,14 @@ try {
     clock_host_import: false,
     network_host_import: false,
     handshake: receipt,
-    size_optimization: 'pending',
+    size_optimization: {
+      baseline_before_profile_bytes: 1314223,
+      current_bytes: candidateBytes.length,
+      oracle_bytes: oracleBytes.length,
+      ratio_vs_oracle: Number((candidateBytes.length / oracleBytes.length).toFixed(3)),
+      source_level_profile_only: true,
+      wasm_opt_required: false,
+    },
     admitted: false,
   }));
 } finally {

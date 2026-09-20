@@ -22,10 +22,10 @@
     "zero-imports",
     "wit-contract-equivalence",
     "representative-behavior-equivalence",
-    "deterministic-gzip-byte-equivalence"
+    "deterministic-gzip-byte-equivalence",
+    "resource-boundary-calibration"
   ],
   "pending_gates": [
-    "resource-boundary-calibration",
     "multi-engine-qualification",
     "admission-review"
   ],
@@ -33,5 +33,10 @@
   "qualification": {
     "runner": "node",
     "script": "scripts/test-compression-libsrc.mjs"
+  },
+  "resource_boundaries": {
+    "input_bytes": 1048576,
+    "output_bytes": 4194304,
+    "oracle_equivalent": true
   }
 }

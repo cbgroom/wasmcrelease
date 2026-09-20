@@ -37,6 +37,21 @@ for (const candidate of registry.candidates) {
     assert.equal(manifest.id, candidate.id);
     assert.equal(manifest.host_import_budget, candidate.host_import_budget);
     assert.equal(manifest.admitted, false);
+    assert.ok(Array.isArray(manifest.completed_gates), candidate.id + ': missing completed_gates');
+    assert.ok(Array.isArray(manifest.pending_gates), candidate.id + ': missing pending_gates');
+    assert.ok(
+      manifest.completed_gates.every(gate => typeof gate === 'string' && gate.length > 0),
+      candidate.id + ': invalid completed gate',
+    );
+    assert.ok(
+      manifest.pending_gates.every(gate => typeof gate === 'string' && gate.length > 0),
+      candidate.id + ': invalid pending gate',
+    );
+    assert.equal(
+      new Set([...manifest.completed_gates, ...manifest.pending_gates]).size,
+      manifest.completed_gates.length + manifest.pending_gates.length,
+      candidate.id + ': duplicate or overlapping gate',
+    );
     await readFile(resolve(sourceRoot, manifest.wit), 'utf8');
     assert.ok(Array.isArray(manifest.source) && manifest.source.length > 0);
     for (const source of manifest.source) await readFile(resolve(sourceRoot, source));

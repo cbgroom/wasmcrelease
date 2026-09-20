@@ -90,19 +90,66 @@ try {
     receipts.push({ invocation, result: candidate });
   }
 
+  const quote = value => JSON.stringify(value);
+  const boundaryCases = [];
+  const exactInput = JSON.stringify('a'.repeat(65534));
+  const overInput = JSON.stringify('a'.repeat(65535));
+  boundaryCases.push(
+    ['input-65536', 'validate(' + quote(exactInput) + ')'],
+    ['input-65537', 'validate(' + quote(overInput) + ')'],
+  );
+  const pointer1024 = '/' + 'a'.repeat(1023);
+  const pointer1025 = '/' + 'a'.repeat(1024);
+  boundaryCases.push(
+    ['pointer-1024', 'select("{\\\"a\\\":1}", [' + quote(pointer1024) + '])'],
+    ['pointer-1025', 'select("{\\\"a\\\":1}", [' + quote(pointer1025) + '])'],
+  );
+  boundaryCases.push(
+    ['pointers-64', 'select("{\\\"a\\\":1}", [' + Array(64).fill('"/missing"').join(',') + '])'],
+    ['pointers-65', 'select("{\\\"a\\\":1}", [' + Array(65).fill('"/missing"').join(',') + '])'],
+  );
+  for (const depth of [64, 65]) {
+    const document = '['.repeat(depth) + '0' + ']'.repeat(depth);
+    boundaryCases.push(['depth-' + depth, 'validate(' + quote(document) + ')']);
+  }
+  const outputDocument = '{"x":' + JSON.stringify('z'.repeat(2000)) + '}';
+  boundaryCases.push(
+    ['output-under-65536', 'select(' + quote(outputDocument) + ', [' + Array(32).fill('"/x"').join(',') + '])'],
+    ['output-over-65536', 'select(' + quote(outputDocument) + ', [' + Array(33).fill('"/x"').join(',') + '])'],
+  );
+
+  const boundaryReceipts = [];
+  for (const [name, invocation] of boundaryCases) {
+    const oracle = run('wasmtime', ['run', '--invoke', invocation, oracleComponent], { timeout: 30000 });
+    const candidate = run('wasmtime', ['run', '--invoke', invocation, candidateComponent], { timeout: 30000 });
+    assert.equal(candidate, oracle, name);
+    boundaryReceipts.push({
+      name,
+      result: candidate.length > 120 ? candidate.slice(0, 120) + '…' : candidate,
+    });
+  }
+
   console.log(JSON.stringify({
     accepted: true,
     candidate: manifest.id,
     version: manifest.version,
-    cases: cases.length,
+    cases: cases.length + boundaryCases.length,
     host_imports: 0,
     wit_equivalent: true,
     oracle_sha256: manifest.oracle.sha256,
     candidate_sha256: createHash('sha256').update(candidateBytes).digest('hex'),
     candidate_bytes: candidateBytes.length,
     representative_behavior_equivalent: true,
-    resource_boundary_calibration: 'pending',
+    resource_boundary_calibration: {
+      input_bytes: 65536,
+      output_bytes: 65536,
+      pointers: 64,
+      pointer_bytes: 1024,
+      depth: 64,
+      equivalent: true,
+    },
     receipts,
+    boundary_receipts: boundaryReceipts,
   }));
 } finally {
   await rm(work, { recursive: true, force: true });

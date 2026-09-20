@@ -4,6 +4,7 @@ import { mkdtemp, readFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
+import zlib from 'node:zlib';
 
 const root = process.cwd();
 const candidateRoot = resolve(root, 'libsrc/wasmc-compression');
@@ -54,6 +55,35 @@ const oracleModule = new WebAssembly.Module(oracleBytes);
 assert.deepEqual(WebAssembly.Module.imports(candidateModule), []);
 assert.deepEqual(WebAssembly.Module.imports(oracleModule), []);
 
+const compressionErrors = [
+  'input-too-large',
+  'output-too-large',
+  'invalid-stream',
+  'internal-failure',
+];
+
+const rawCall = async (bytes, exportName, input) => {
+  const { instance } = await WebAssembly.instantiate(bytes, {});
+  const { memory, cabi_realloc: realloc } = instance.exports;
+  const ptr = input.length === 0 ? 0 : realloc(0, 0, 1, input.length);
+  if (input.length !== 0) {
+    new Uint8Array(memory.buffer, ptr, input.length).set(input);
+  }
+  const resultPtr = instance.exports[exportName](ptr, input.length);
+  const view = new DataView(memory.buffer);
+  const tag = view.getUint8(resultPtr);
+  if (tag === 1) {
+    return { error: compressionErrors[view.getUint8(resultPtr + 4)] };
+  }
+  assert.equal(tag, 0);
+  const outputPtr = view.getUint32(resultPtr + 4, true);
+  const outputLength = view.getUint32(resultPtr + 8, true);
+  return {
+    output_length: outputLength,
+    prefix: [...new Uint8Array(memory.buffer, outputPtr, Math.min(4, outputLength))],
+  };
+};
+
 const oracleWit = run('wasm-tools', ['component', 'wit', oraclePath]);
 const candidateWit = run('wasm-tools', ['component', 'wit', candidatePath]);
 assert.equal(candidateWit, oracleWit, 'candidate WIT differs from frozen oracle contract');
@@ -83,11 +113,33 @@ try {
     receipts.push({ invocation, result: candidate });
   }
 
+  const boundaryCases = [
+    ['input-1MiB', 'wasmc:compression/gzip@0.0.1#compress', Buffer.alloc(1 << 20, 1)],
+    ['input-1MiB+1', 'wasmc:compression/gzip@0.0.1#compress', Buffer.alloc((1 << 20) + 1, 1)],
+    [
+      'output-4MiB',
+      'wasmc:compression/gzip@0.0.1#decompress',
+      zlib.gzipSync(Buffer.alloc(4 << 20, 97), { level: 9, mtime: 0 }),
+    ],
+    [
+      'output-4MiB+1',
+      'wasmc:compression/gzip@0.0.1#decompress',
+      zlib.gzipSync(Buffer.alloc((4 << 20) + 1, 97), { level: 9, mtime: 0 }),
+    ],
+  ];
+  const boundaryReceipts = [];
+  for (const [name, exportName, input] of boundaryCases) {
+    const oracle = await rawCall(oracleBytes, exportName, input);
+    const candidate = await rawCall(candidateBytes, exportName, input);
+    assert.deepEqual(candidate, oracle, name);
+    boundaryReceipts.push({ name, result: candidate });
+  }
+
   console.log(JSON.stringify({
     accepted: true,
     candidate: manifest.id,
     version: manifest.version,
-    cases: cases.length,
+    cases: cases.length + boundaryCases.length,
     host_imports: 0,
     wit_equivalent: true,
     deterministic_gzip_byte_equivalent: true,
@@ -95,8 +147,13 @@ try {
     candidate_sha256: createHash('sha256').update(candidateBytes).digest('hex'),
     candidate_bytes: candidateBytes.length,
     representative_behavior_equivalent: true,
-    resource_boundary_calibration: 'pending',
+    resource_boundary_calibration: {
+      input_bytes: 1 << 20,
+      output_bytes: 4 << 20,
+      equivalent: true,
+    },
     receipts,
+    boundary_receipts: boundaryReceipts,
   }));
 } finally {
   await rm(work, { recursive: true, force: true });

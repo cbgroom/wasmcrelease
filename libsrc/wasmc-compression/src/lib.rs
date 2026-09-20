@@ -7,8 +7,8 @@ use crate::exports::wasmc::compression::gzip::{CompressionError, Guest};
 use flate2::{read::GzDecoder, write::GzEncoder, Compression};
 use std::io::{Read, Write};
 
-const MAX_INPUT_BYTES: usize = 16 << 20;
-const MAX_OUTPUT_BYTES: usize = 64 << 20;
+const MAX_INPUT_BYTES: usize = 1 << 20;
+const MAX_OUTPUT_BYTES: usize = 4 << 20;
 
 struct Gzip;
 

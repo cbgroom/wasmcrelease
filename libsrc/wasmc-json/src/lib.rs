@@ -6,10 +6,11 @@ wit_bindgen::generate!({
 use crate::exports::wasmc::json::document::{Guest, JsonError};
 use serde_json::Value;
 
-const MAX_INPUT_BYTES: usize = 1 << 20;
-const MAX_OUTPUT_BYTES: usize = 1 << 20;
-const MAX_POINTERS: usize = 1024;
-const MAX_POINTER_BYTES: usize = 4096;
+const MAX_INPUT_BYTES: usize = 64 * 1024;
+const MAX_OUTPUT_BYTES: usize = 64 * 1024;
+const MAX_POINTERS: usize = 64;
+const MAX_POINTER_BYTES: usize = 1024;
+const MAX_DEPTH: usize = 64;
 
 struct Json;
 
@@ -17,13 +18,29 @@ fn parse(input: &str) -> Result<Value, JsonError> {
     if input.len() > MAX_INPUT_BYTES {
         return Err(JsonError::InputTooLarge);
     }
-    serde_json::from_str(input).map_err(|error| {
+    let value: Value = serde_json::from_str(input).map_err(|error| {
         if error.to_string().contains("recursion limit exceeded") {
             JsonError::DepthLimit
         } else {
             JsonError::InvalidJson
         }
-    })
+    })?;
+    if value_depth(&value) > MAX_DEPTH {
+        return Err(JsonError::DepthLimit);
+    }
+    Ok(value)
+}
+
+fn value_depth(value: &Value) -> usize {
+    match value {
+        Value::Array(values) => {
+            1 + values.iter().map(value_depth).max().unwrap_or(0)
+        }
+        Value::Object(values) => {
+            1 + values.values().map(value_depth).max().unwrap_or(0)
+        }
+        _ => 0,
+    }
 }
 
 fn render(value: &Value) -> Result<String, JsonError> {

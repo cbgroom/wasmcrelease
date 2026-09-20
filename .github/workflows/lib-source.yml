@@ -13,6 +13,8 @@ on:
       - "scripts/test-http1-libsrc.mjs"
       - "scripts/test-tls-libsrc.mjs"
       - "scripts/test-libsrc-all.mjs"
+      - "scripts/test-libsrc-wasmi.mjs"
+      - "libsrc/qualification/**"
       - ".github/workflows/lib-source.yml"
   push:
     branches: [main]
@@ -27,6 +29,8 @@ on:
       - "scripts/test-http1-libsrc.mjs"
       - "scripts/test-tls-libsrc.mjs"
       - "scripts/test-libsrc-all.mjs"
+      - "scripts/test-libsrc-wasmi.mjs"
+      - "libsrc/qualification/**"
       - ".github/workflows/lib-source.yml"
   workflow_dispatch:
 
@@ -63,7 +67,8 @@ jobs:
             libsrc/wasmc-http1/target
             libsrc/wasmc-tls-core/target
             libsrc/wasmc-tls-core/tests/host/target
-          key: libsrc-build-v1-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('libsrc/wasmc-json/Cargo.lock', 'libsrc/wasmc-compression/Cargo.lock', 'libsrc/wasmc-http1/Cargo.lock', 'libsrc/wasmc-tls-core/Cargo.lock', 'libsrc/wasmc-tls-core/tests/host/Cargo.lock') }}
+            libsrc/qualification/wasmi-core/target
+          key: libsrc-build-v2-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('libsrc/wasmc-json/Cargo.lock', 'libsrc/wasmc-compression/Cargo.lock', 'libsrc/wasmc-http1/Cargo.lock', 'libsrc/wasmc-tls-core/Cargo.lock', 'libsrc/wasmc-tls-core/tests/host/Cargo.lock', 'libsrc/qualification/wasmi-core/Cargo.lock') }}
           restore-keys: |
             libsrc-v5-${{ runner.os }}-${{ runner.arch }}-
             libsrc-build-v1-${{ runner.os }}-${{ runner.arch }}-
@@ -78,6 +83,10 @@ jobs:
         run: node scripts/validate-libsrc.mjs
       - name: Qualify all registered public Lib source candidates
         run: node scripts/test-libsrc-all.mjs
+      - name: Execute import-free candidates on Wasmi 2
+        run: node scripts/test-libsrc-wasmi.mjs
+      - name: Report Lib source admission readiness
+        run: node scripts/libsrc-readiness.mjs | tee libsrc-readiness.json
       - name: Repository integrity
         run: |
           node scripts/validate-integrity.mjs

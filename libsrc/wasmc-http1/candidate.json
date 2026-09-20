@@ -22,11 +22,11 @@
     "zero-imports",
     "wit-contract-equivalence",
     "representative-behavior-equivalence",
-    "http1-framing-equivalence"
+    "http1-framing-equivalence",
+    "resource-boundary-calibration",
+    "broader-status-header-coverage"
   ],
   "pending_gates": [
-    "resource-boundary-calibration",
-    "broader-status-header-coverage",
     "multi-engine-qualification",
     "admission-review"
   ],
@@ -34,5 +34,20 @@
   "qualification": {
     "runner": "node",
     "script": "scripts/test-http1-libsrc.mjs"
+  },
+  "resource_boundaries": {
+    "input_bytes": 65536,
+    "body_bytes": 1048576,
+    "max_headers": 32,
+    "output_bytes": 65536,
+    "oracle_equivalent": true
+  },
+  "protocol_coverage": {
+    "status_codes_scanned": 1001,
+    "accepted_status_range": "100-999",
+    "header_name_cases": 136,
+    "header_value_byte_cases": 256,
+    "serialize_header_names_lowercase": true,
+    "oracle_equivalent": true
   }
 }

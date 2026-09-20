@@ -30,16 +30,24 @@
     "real-tls-handshake",
     "bidirectional-plaintext",
     "graceful-close",
-    "resource-drop"
+    "resource-drop",
+    "size-optimization"
   ],
   "pending_gates": [
     "cross-platform-hosted-qualification",
-    "size-optimization",
     "admission-review"
   ],
   "admitted": false,
   "qualification": {
     "runner": "node",
     "script": "scripts/test-tls-libsrc.mjs"
+  },
+  "size_profile": {
+    "baseline_before_profile_bytes": 1314223,
+    "current_bytes": 606120,
+    "oracle_bytes": 608257,
+    "ratio_vs_oracle": 0.996,
+    "source_level_profile_only": true,
+    "wasm_opt_required": false
   }
 }
