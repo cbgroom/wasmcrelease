@@ -38,7 +38,14 @@ cannot live in an import-free Lib or in a Lib over an existing capability.
 6. Run `node scripts/validate-libsrc.mjs`.
 7. For Host-graduated work, compare against the pinned behavior oracle without
    treating byte identity as the goal.
-8. Submit the source, tests, WIT, metadata and evidence together.
+8. For a new native-public Lib, record the mature implementation basis in
+   candidate metadata and qualify the public semantics directly; a historical
+   Host oracle is not required.
+9. Submit the source, tests, WIT, metadata and evidence together.
+
+For data-processing Libs, also read `docs/DATA_ECOSYSTEM.md`. Prefer mature
+Rust implementations behind a small stable WIT facade rather than copying
+third-party Rust types into the public ABI.
 
 Passing incubation does not publish a Lib. Admission into `libs/`, catalog
 selection and release promotion remain separate reviewed gates.

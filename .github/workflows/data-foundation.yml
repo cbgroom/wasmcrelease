@@ -1,0 +1,136 @@
+name: Data foundation qualification
+
+on:
+  pull_request:
+    paths:
+      - "libsrc/wasmc-data-core/**"
+      - "libsrc/wasmc-csv/**"
+      - "libsrc/wasmc-data-expr/**"
+      - "libsrc/wasmc-data-compute/**"
+      - "libsrc/wasmc-data-relational/**"
+      - "libsrc/wasmc-data-profile/**"
+      - "libsrc/wasmc-data-interchange/**"
+      - "libsrc/qualification/data-rust-foundation/**"
+      - "libsrc/registry.json"
+      - "scripts/test-data-core-libsrc.mjs"
+      - "scripts/test-csv-libsrc.mjs"
+      - "scripts/test-data-expr-libsrc.mjs"
+      - "scripts/test-data-compute-libsrc.mjs"
+      - "scripts/test-data-relational-libsrc.mjs"
+      - "scripts/test-data-profile-libsrc.mjs"
+      - "scripts/test-data-interchange-libsrc.mjs"
+      - "scripts/test-data-pipeline.mjs"
+      - "scripts/test-data-rust-foundation.mjs"
+      - "scripts/test-libsrc-wasmi.mjs"
+      - "scripts/review-data-admission.mjs"
+      - "docs/DATA_ECOSYSTEM.md"
+      - ".github/workflows/data-foundation.yml"
+  push:
+    branches: [main]
+    paths:
+      - "libsrc/wasmc-data-core/**"
+      - "libsrc/wasmc-csv/**"
+      - "libsrc/wasmc-data-expr/**"
+      - "libsrc/wasmc-data-compute/**"
+      - "libsrc/wasmc-data-relational/**"
+      - "libsrc/wasmc-data-profile/**"
+      - "libsrc/wasmc-data-interchange/**"
+      - "libsrc/qualification/data-rust-foundation/**"
+      - "libsrc/registry.json"
+      - "scripts/test-data-core-libsrc.mjs"
+      - "scripts/test-csv-libsrc.mjs"
+      - "scripts/test-data-expr-libsrc.mjs"
+      - "scripts/test-data-compute-libsrc.mjs"
+      - "scripts/test-data-relational-libsrc.mjs"
+      - "scripts/test-data-profile-libsrc.mjs"
+      - "scripts/test-data-interchange-libsrc.mjs"
+      - "scripts/test-data-pipeline.mjs"
+      - "scripts/test-data-rust-foundation.mjs"
+      - "scripts/test-libsrc-wasmi.mjs"
+      - "scripts/review-data-admission.mjs"
+      - "docs/DATA_ECOSYSTEM.md"
+      - ".github/workflows/data-foundation.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  qualify:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: 26.5.1
+      - uses: dtolnay/rust-toolchain@1.96.0
+        with:
+          targets: wasm32-unknown-unknown
+      - uses: bytecodealliance/actions/wasmtime/setup@9152e710e9f7182e4c29ad218e4f335a7b203613
+        with:
+          version: 47.0.4
+      - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830
+        with:
+          path: |
+            ~/.cargo/bin/wasm-tools
+            ~/.cargo/registry
+            ~/.cargo/git
+            libsrc/wasmc-data-core/target
+            libsrc/wasmc-csv/target
+            libsrc/wasmc-data-expr/target
+            libsrc/wasmc-data-compute/target
+            libsrc/wasmc-data-relational/target
+            libsrc/wasmc-data-profile/target
+            libsrc/wasmc-data-interchange/target
+            libsrc/qualification/data-rust-foundation/target
+          key: data-foundation-v6-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('libsrc/wasmc-data-core/Cargo.lock', 'libsrc/wasmc-csv/Cargo.lock', 'libsrc/wasmc-data-expr/Cargo.lock', 'libsrc/wasmc-data-compute/Cargo.lock', 'libsrc/wasmc-data-relational/Cargo.lock', 'libsrc/wasmc-data-profile/Cargo.lock', 'libsrc/wasmc-data-interchange/Cargo.lock', 'libsrc/qualification/data-rust-foundation/Cargo.lock') }}
+      - name: Install pinned wasm-tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! command -v wasm-tools >/dev/null || [ "$(wasm-tools --version)" != "wasm-tools 1.255.0" ]; then
+            cargo install wasm-tools --version 1.255.0 --locked
+          fi
+      - name: Qualify Rust data dependency foundation
+        run: node scripts/test-data-rust-foundation.mjs | tee data-rust-foundation.json
+      - name: Qualify Arrow-backed Data Core
+        run: node scripts/test-data-core-libsrc.mjs | tee data-core.json
+      - name: Qualify Arrow CSV to DataBatch
+        run: node scripts/test-csv-libsrc.mjs | tee csv.json
+      - name: Qualify Arrow-backed expression program
+        run: node scripts/test-data-expr-libsrc.mjs | tee expr.json
+      - name: Qualify Arrow-backed batch compute
+        run: node scripts/test-data-compute-libsrc.mjs | tee compute.json
+      - name: Qualify bounded window, join, union and group aggregate
+        run: node scripts/test-data-relational-libsrc.mjs | tee relational.json
+      - name: Qualify deterministic column profile
+        run: node scripts/test-data-profile-libsrc.mjs | tee profile.json
+      - name: Qualify bounded Arrow IPC and Parquet interchange
+        run: node scripts/test-data-interchange-libsrc.mjs | tee interchange.json
+      - name: Qualify CSV to Expr to Filter pipeline
+        run: node scripts/test-data-pipeline.mjs | tee pipeline.json
+      - name: Qualify Data candidates with Wasmi
+        run: node scripts/test-libsrc-wasmi.mjs | tee data-wasmi.json
+      - name: Validate public Lib source registry
+        run: node scripts/validate-libsrc.mjs
+      - name: Prove Data cohort is ready for human admission review
+        run: node scripts/review-data-admission.mjs | tee data-admission-review.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        continue-on-error: true
+        with:
+          name: data-foundation-evidence
+          path: |
+            data-rust-foundation.json
+            data-core.json
+            csv.json
+            expr.json
+            compute.json
+            relational.json
+            profile.json
+            interchange.json
+            pipeline.json
+            data-wasmi.json
+            data-admission-review.json
+          if-no-files-found: warn
+          retention-days: 14

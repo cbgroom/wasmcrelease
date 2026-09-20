@@ -23,6 +23,16 @@ async function verifyFile(libRoot, row, label, expectedFormat = null) {
   return bytes;
 }
 
+async function walkFiles(dir, prefix = '') {
+  const rows = [];
+  for (const entry of await readdir(dir, { withFileTypes: true })) {
+    const rel = prefix ? `${prefix}/${entry.name}` : entry.name;
+    if (entry.isDirectory()) rows.push(...await walkFiles(join(dir, entry.name), rel));
+    else if (entry.isFile()) rows.push(rel);
+  }
+  return rows;
+}
+
 const entries = (await readdir(libsRoot, { withFileTypes: true }))
   .filter((entry) => entry.isDirectory())
   .map((entry) => entry.name)
@@ -51,6 +61,21 @@ for (const name of entries) {
 
   await verifyFile(libRoot, manifest.agent?.skill, `${name}: Agent Skill`);
   await verifyFile(libRoot, manifest.agent?.delta, `${name}: Agent delta`);
+
+  const allowed = [
+    'lib.json',
+    manifest.wit.path,
+    manifest.artifact.path,
+    manifest.component.path,
+    manifest.agent.skill.path,
+    manifest.agent.delta.path,
+  ].sort();
+  const actual = (await walkFiles(libRoot)).sort();
+  if (JSON.stringify(actual) !== JSON.stringify(allowed)) {
+    throw new Error(
+      `${name}: admitted Lib package must be source-free and contain only the canonical package files; actual=${actual.join(',')}`,
+    );
+  }
   console.log(`PASS ${name}: core=${artifact.length} component=${component.length} imports=${WebAssembly.Module.imports(module).length} exports=${WebAssembly.Module.exports(module).length}`);
 }
 

@@ -19,7 +19,7 @@ export function suiteCases(family,runtime='node',mirror='github') {
   if(family==='integrity')return [
     item('library-first-teaching-and-routes','scripts/test-library-first.mjs'),
     item('release-channel-promotion-negatives','scripts/test-release-channel.mjs'),
-    item('release-product-identity','scripts/release-candidate.mjs',['verify','channels/candidates/0.0.10.json']),
+    item('release-product-identity','scripts/release-candidate.mjs',['verify','channels/candidates/0.0.11.json']),
     item('ci-reporting-failure-controls','scripts/test-ci-reporting.mjs'),
     {id:'maintainer-integrity-lib-agent-contracts',command:'bash',args:['scripts/validate-maintainer.sh']},
     item('agent-start-execution','examples/agent-start/run.mjs'),

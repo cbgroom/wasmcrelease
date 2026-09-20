@@ -75,6 +75,132 @@
       },
       "next_gate": "cross-platform-hosted-qualification-and-size-optimization",
       "source_root": "libsrc/wasmc-tls-core"
+    },
+    {
+      "id": "wasmc-data-core",
+      "version": "0.0.1",
+      "stage": "admitted",
+      "semantic_kind": "data-batch-core",
+      "host_import_budget": 0,
+      "source_root": "libsrc/wasmc-data-core",
+      "origin": {
+        "kind": "native-public",
+        "implementation_basis": [
+          "arrow-schema@60.0.0",
+          "arrow-array@60.0.0",
+          "arrow-select@60.0.0"
+        ]
+      },
+      "next_gate": null
+    },
+    {
+      "id": "wasmc-csv",
+      "version": "0.0.1",
+      "stage": "admitted",
+      "semantic_kind": "csv-to-data-batch",
+      "host_import_budget": 0,
+      "source_root": "libsrc/wasmc-csv",
+      "origin": {
+        "kind": "native-public",
+        "implementation_basis": [
+          "arrow-csv@60.0.0",
+          "arrow-array@60.0.0",
+          "arrow-schema@60.0.0"
+        ],
+        "type_dependency": "wasmc:data-core/types@0.0.1"
+      },
+      "next_gate": null
+    },
+    {
+      "id": "wasmc-data-expr",
+      "version": "0.0.1",
+      "stage": "admitted",
+      "semantic_kind": "data-expression-program",
+      "host_import_budget": 0,
+      "source_root": "libsrc/wasmc-data-expr",
+      "origin": {
+        "kind": "native-public",
+        "implementation_basis": [
+          "arrow-array@60.0.0",
+          "arrow-ord@60.0.0",
+          "arrow-arith@60.0.0"
+        ],
+        "type_dependency": "wasmc:data-core/types@0.0.1"
+      },
+      "next_gate": null
+    },
+    {
+      "id": "wasmc-data-compute",
+      "version": "0.0.1",
+      "stage": "admitted",
+      "semantic_kind": "data-batch-compute",
+      "host_import_budget": 0,
+      "source_root": "libsrc/wasmc-data-compute",
+      "origin": {
+        "kind": "native-public",
+        "implementation_basis": [
+          "arrow-array@60.0.0",
+          "arrow-select@60.0.0",
+          "arrow-ord@60.0.0"
+        ],
+        "type_dependency": "wasmc:data-core/types@0.0.1"
+      },
+      "next_gate": null
+    },
+    {
+      "id": "wasmc-data-relational",
+      "version": "0.0.1",
+      "stage": "admitted",
+      "semantic_kind": "bounded-window-join-union-and-richer-group-aggregate",
+      "host_import_budget": 0,
+      "source_root": "libsrc/wasmc-data-relational",
+      "origin": {
+        "kind": "native-public",
+        "implementation_basis": [
+          "arrow-array@60.0.0",
+          "arrow-select@60.0.0",
+          "arrow-arith@60.0.0",
+          "ordered-float@5.5.0"
+        ],
+        "type_dependency": "wasmc:data-core/types@0.0.1"
+      },
+      "next_gate": null
+    },
+    {
+      "id": "wasmc-data-profile",
+      "version": "0.0.1",
+      "stage": "admitted",
+      "semantic_kind": "deterministic-column-profile",
+      "host_import_budget": 0,
+      "source_root": "libsrc/wasmc-data-profile",
+      "origin": {
+        "kind": "native-public",
+        "implementation_basis": [
+          "arrow-array@60.0.0",
+          "arrow-arith@60.0.0"
+        ],
+        "type_dependency": "wasmc:data-core/types@0.0.1"
+      },
+      "next_gate": null
+    },
+    {
+      "id": "wasmc-data-interchange",
+      "version": "0.0.1",
+      "stage": "admitted",
+      "semantic_kind": "bounded-arrow-ipc-and-parquet-interchange",
+      "host_import_budget": 0,
+      "source_root": "libsrc/wasmc-data-interchange",
+      "origin": {
+        "kind": "native-public",
+        "implementation_basis": [
+          "arrow-ipc@60.0.0",
+          "arrow-array@60.0.0",
+          "arrow-schema@60.0.0",
+          "parquet@60.0.0"
+        ],
+        "type_dependency": "wasmc:data-core/types@0.0.1"
+      },
+      "next_gate": null
     }
   ]
 }

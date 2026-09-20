@@ -1,0 +1,29 @@
+package wasmc:data-compute@0.0.1;
+
+interface compute {
+  use wasmc:data-core/types@0.0.1.{column, batch-snapshot};
+
+  record sort-key {
+    column: u32,
+    descending: bool,
+    nulls-first: bool,
+  }
+
+  enum compute-error {
+    invalid-batch,
+    mask-type-mismatch,
+    mask-length-mismatch,
+    column-out-of-bounds,
+    duplicate-column,
+    empty-sort,
+    compute-failure,
+  }
+
+  filter: func(value: batch-snapshot, mask: column) -> result<batch-snapshot, compute-error>;
+  project: func(value: batch-snapshot, columns: list<u32>) -> result<batch-snapshot, compute-error>;
+  sort: func(value: batch-snapshot, keys: list<sort-key>, limit: option<u32>) -> result<batch-snapshot, compute-error>;
+}
+
+world data-compute {
+  export compute;
+}

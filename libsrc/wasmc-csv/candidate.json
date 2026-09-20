@@ -1,0 +1,49 @@
+{
+  "schema": "wasmc.libsrc-candidate/v1",
+  "id": "wasmc-csv",
+  "version": "0.0.1",
+  "wit": "wit/world.wit",
+  "source": [
+    "Cargo.toml",
+    "Cargo.lock",
+    "src/lib.rs",
+    "wit/deps/wasmc-data-core/world.wit"
+  ],
+  "host_import_budget": 0,
+  "origin": {
+    "kind": "native-public",
+    "implementation_basis": [
+      "arrow-csv@60.0.0",
+      "arrow-array@60.0.0",
+      "arrow-schema@60.0.0"
+    ],
+    "type_dependency": "wasmc:data-core/types@0.0.1"
+  },
+  "build": {
+    "command": "cargo +1.96.0 build --release --locked --target wasm32-unknown-unknown --manifest-path libsrc/wasmc-csv/Cargo.toml",
+    "artifact": "libsrc/wasmc-csv/target/wasm32-unknown-unknown/release/wasmc_csv_public.wasm",
+    "lane": "rust-wit-bindgen-component",
+    "backend": "cargo",
+    "final_package_source_free": true,
+    "embeds_third_party_source": false
+  },
+  "completed_gates": [
+    "public-source",
+    "zero-core-imports",
+    "csv-to-batch-qualification",
+    "data-core-compatibility",
+    "wasmi-qualification",
+    "admission-review"
+  ],
+  "pending_gates": [],
+  "admitted": true,
+  "qualification": {
+    "runner": "node",
+    "script": "scripts/test-csv-libsrc.mjs"
+  },
+  "admission": {
+    "date": "2026-09-20",
+    "package": "libs/wasmc-csv",
+    "source_authority": "ff6928b09194b4818b05117ec0ba6a71b998d224"
+  }
+}

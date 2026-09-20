@@ -1,0 +1,44 @@
+package wasmc:data-core@0.0.1;
+
+interface types {
+  enum data-type {
+    boolean,
+    int64,
+    uint64,
+    float64,
+    utf8,
+    binary,
+  }
+
+  record field {
+    name: string,
+    data-type: data-type,
+    nullable: bool,
+  }
+
+  variant column {
+    boolean-column(list<option<bool>>),
+    int64-column(list<option<s64>>),
+    uint64-column(list<option<u64>>),
+    float64-column(list<option<f64>>),
+    utf8-column(list<option<string>>),
+    binary-column(list<option<list<u8>>>),
+  }
+
+  record batch-snapshot {
+    rows: u32,
+    fields: list<field>,
+    columns: list<column>,
+  }
+
+  enum data-error {
+    column-count-mismatch,
+    row-count-mismatch,
+    type-mismatch,
+    nullability-violation,
+    empty-field-name,
+    duplicate-field-name,
+    index-out-of-bounds,
+    invalid-layout,
+  }
+}

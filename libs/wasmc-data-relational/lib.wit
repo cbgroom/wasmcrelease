@@ -1,0 +1,105 @@
+package wasmc:data-relational@0.0.1;
+
+interface relational {
+  use wasmc:data-core/types@0.0.1.{batch-snapshot};
+
+  record column-aggregate {
+    column: u32,
+    alias: string,
+  }
+
+  variant aggregate {
+    count-all(string),
+    count(column-aggregate),
+    sum(column-aggregate),
+    min(column-aggregate),
+    max(column-aggregate),
+    mean(column-aggregate),
+    first(column-aggregate),
+    last(column-aggregate),
+    variance-pop(column-aggregate),
+    stddev-pop(column-aggregate),
+  }
+
+  record join-key {
+    left-column: u32,
+    right-column: u32,
+  }
+
+  enum join-kind {
+    inner,
+    left,
+  }
+
+  record join-options {
+    kind: join-kind,
+    right-prefix: string,
+    max-output-rows: u32,
+  }
+
+  record window-order {
+    column: u32,
+    descending: bool,
+    nulls-first: bool,
+  }
+
+  variant window-function {
+    row-number(string),
+    rank(string),
+    dense-rank(string),
+  }
+
+  record window-options {
+    max-rows: u32,
+  }
+
+  enum relational-error {
+    invalid-batch,
+    empty-input,
+    empty-keys,
+    empty-order,
+    empty-functions,
+    schema-mismatch,
+    key-type-mismatch,
+    column-out-of-bounds,
+    duplicate-key,
+    duplicate-function,
+    empty-alias,
+    duplicate-output-name,
+    invalid-limit,
+    row-limit-exceeded,
+    output-limit-exceeded,
+    unsupported-type,
+    overflow,
+    compute-failure,
+  }
+
+  group-aggregate: func(
+    value: batch-snapshot,
+    keys: list<u32>,
+    aggregates: list<aggregate>,
+  ) -> result<batch-snapshot, relational-error>;
+
+  union-all: func(
+    values: list<batch-snapshot>,
+  ) -> result<batch-snapshot, relational-error>;
+
+  equi-join: func(
+    left: batch-snapshot,
+    right: batch-snapshot,
+    keys: list<join-key>,
+    options: join-options,
+  ) -> result<batch-snapshot, relational-error>;
+
+  window-rank: func(
+    value: batch-snapshot,
+    partition-by: list<u32>,
+    order-by: list<window-order>,
+    functions: list<window-function>,
+    options: window-options,
+  ) -> result<batch-snapshot, relational-error>;
+}
+
+world data-relational {
+  export relational;
+}

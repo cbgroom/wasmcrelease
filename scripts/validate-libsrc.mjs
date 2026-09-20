@@ -12,7 +12,7 @@ assert.equal(registry.policy?.admission_separate, true);
 assert.ok(Array.isArray(registry.candidates) && registry.candidates.length > 0);
 
 const ids = new Set();
-const allowedStages = new Set(['public-source-candidate', 'public-reimplementation-required']);
+const allowedStages = new Set(['public-source-candidate', 'admitted', 'public-reimplementation-required']);
 for (const candidate of registry.candidates) {
   assert.equal(typeof candidate.id, 'string');
   assert.ok(candidate.id.startsWith('wasmc-'), candidate.id);
@@ -20,15 +20,23 @@ for (const candidate of registry.candidates) {
   ids.add(candidate.id);
   assert.ok(allowedStages.has(candidate.stage), candidate.id + ': invalid stage');
   assert.ok(Number.isInteger(candidate.host_import_budget) && candidate.host_import_budget >= 0);
-  assert.equal(typeof candidate.oracle?.path, 'string');
-  assert.match(candidate.oracle?.sha256 ?? '', /^[0-9a-f]{64}$/);
+  const originKind = candidate.origin?.kind ?? (candidate.oracle ? 'host-graduated' : null);
+  assert.ok(
+    originKind === 'host-graduated' || originKind === 'native-public',
+    candidate.id + ': invalid or missing origin kind',
+  );
+  if (candidate.oracle) {
+    assert.equal(typeof candidate.oracle.path, 'string');
+    assert.match(candidate.oracle.sha256 ?? '', /^[0-9a-f]{64}$/);
+    const oraclePath = resolve(root, candidate.oracle.path);
+    const oracleBytes = await readFile(oraclePath);
+    const actual = createHash('sha256').update(oracleBytes).digest('hex');
+    assert.equal(actual, candidate.oracle.sha256, candidate.id + ': oracle digest drift');
+  } else {
+    assert.equal(originKind, 'native-public', candidate.id + ': oracle-free candidates must be native-public');
+  }
 
-  const oraclePath = resolve(root, candidate.oracle.path);
-  const oracleBytes = await readFile(oraclePath);
-  const actual = createHash('sha256').update(oracleBytes).digest('hex');
-  assert.equal(actual, candidate.oracle.sha256, candidate.id + ': oracle digest drift');
-
-  if (candidate.stage === 'public-source-candidate') {
+  if (candidate.stage === 'public-source-candidate' || candidate.stage === 'admitted') {
     assert.equal(typeof candidate.source_root, 'string');
     const sourceRoot = resolve(root, candidate.source_root);
     assert.ok((await stat(sourceRoot)).isDirectory());
@@ -36,7 +44,10 @@ for (const candidate of registry.candidates) {
     assert.equal(manifest.schema, 'wasmc.libsrc-candidate/v1');
     assert.equal(manifest.id, candidate.id);
     assert.equal(manifest.host_import_budget, candidate.host_import_budget);
-    assert.equal(manifest.admitted, false);
+    assert.equal(manifest.admitted, candidate.stage === 'admitted');
+    if (candidate.origin?.kind) {
+      assert.equal(manifest.origin?.kind, candidate.origin.kind, candidate.id + ': origin drift');
+    }
     assert.ok(Array.isArray(manifest.completed_gates), candidate.id + ': missing completed_gates');
     assert.ok(Array.isArray(manifest.pending_gates), candidate.id + ': missing pending_gates');
     assert.ok(
@@ -52,6 +63,15 @@ for (const candidate of registry.candidates) {
       manifest.completed_gates.length + manifest.pending_gates.length,
       candidate.id + ': duplicate or overlapping gate',
     );
+    if (candidate.stage === 'admitted') {
+      assert.match(candidate.version, /^\d+\.\d+\.\d+$/);
+      assert.equal(manifest.version, candidate.version);
+      assert.ok(manifest.completed_gates.includes('admission-review'));
+      assert.deepEqual(manifest.pending_gates, []);
+      assert.equal(candidate.next_gate, null);
+      assert.equal(typeof manifest.admission?.source_authority, 'string');
+      assert.match(manifest.admission.source_authority, /^[0-9a-f]{40}$/);
+    }
     await readFile(resolve(sourceRoot, manifest.wit), 'utf8');
     assert.ok(Array.isArray(manifest.source) && manifest.source.length > 0);
     for (const source of manifest.source) await readFile(resolve(sourceRoot, source));
@@ -87,6 +107,7 @@ console.log(JSON.stringify({
   schema: registry.schema,
   candidates: registry.candidates.length,
   public_source_candidates: registry.candidates.filter(c => c.stage === 'public-source-candidate').length,
+  admitted: registry.candidates.filter(c => c.stage === 'admitted').length,
   reimplementation_required: registry.candidates.filter(c => c.stage === 'public-reimplementation-required').length,
   host_thin: true,
 }));

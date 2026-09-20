@@ -117,8 +117,9 @@ not solve Wasmi/Node18 compatibility of the existing Std1.4.0.
 
 Current release: `v0.0.10`, reusing compiler bytes built from exact private source
 `e69abb73f667f3810b0c40937fd1a1e2d04d4255`. Use `current/` for the
-latest compiler facade; `dist/`, `package/`, and `libs/` are frozen v0.0.4
-compatibility trees, not current compiler entrances. The Wasmi/Wasmtime
+latest compiler facade; `dist/` and `package/` are frozen v0.0.4
+compatibility trees. The three pre-Data historical `libs/` packages remain
+byte-frozen; newly admitted source-free Lib packages are append-only. The Wasmi/Wasmtime
 Core Runtime SDK remains available in `sdk/wasmc-core-runtime`.
 
 This release covers bit operations, managed collection loops, stable minimal

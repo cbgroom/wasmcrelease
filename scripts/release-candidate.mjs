@@ -41,7 +41,7 @@ if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)) {
   const read=p=>readFileSync(resolve(root,p));
   if(command==='create') {
     if(!/^[0-9a-f]{40}$/.test(source))throw Error('exact Lib source required');
-    const paths=[...['current','standard','sdk','runtime'].flatMap(walk),'examples/lib-search/client.mjs','scripts/wasmc-lib.mjs','skills/wasmc-lib/SKILL.md'];
+    const paths=[...['current','standard','sdk','runtime','libs'].flatMap(walk),'examples/lib-search/client.mjs','scripts/wasmc-lib.mjs','skills/wasmc-lib/SKILL.md'];
     const rows=paths.sort().map(path=>{const b=read(path);return {path,bytes:b.length,sha256:hash(b)};});
     const candidate={schema:'wasmc.release-product-candidate/v1',version,compiler_source_authority:'e69abb73f667f3810b0c40937fd1a1e2d04d4255',lib_source_authority:source,product_files:rows,product_set_sha256:hash(JSON.stringify(rows))};
     validateCandidate(candidate,read);writeFileSync(path,JSON.stringify(candidate,null,2)+'\n',{flag:'wx'});
