@@ -20,6 +20,11 @@ Dev qualification at source `86b8777cc616fc4222561bde21e3c33ae6f47418`
 passed Data Foundation, public Lib source, Library-first guidance, all 12
 LibSearch jobs and all 22 source-free consumer jobs.
 
+The exact immutable dev tag `v0.0.11-dev.1` at
+`532c0e413104786a46e3b9cf0ebafb16de55626a` was then requalified: all 11
+tag-triggered LibSearch jobs and all 22 manually dispatched source-free
+consumer jobs passed. Those receipts authorize `v0.0.11-main.1`.
+
 ## Admitted Data Libs
 
 Each package is version `0.0.1`, has zero Core Wasm imports and contains only
