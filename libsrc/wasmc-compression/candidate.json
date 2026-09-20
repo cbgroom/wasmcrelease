@@ -1,0 +1,33 @@
+{
+  "schema": "wasmc.libsrc-candidate/v1",
+  "id": "wasmc-compression",
+  "version": "0.0.1-dev.1",
+  "wit": "wit/world.wit",
+  "source": [
+    "Cargo.toml",
+    "Cargo.lock",
+    "src/lib.rs"
+  ],
+  "host_import_budget": 0,
+  "oracle": {
+    "path": "host/tests/https/artifacts/compression.wasm",
+    "sha256": "57a085c396108f7eb2d56e99ca373cbdc5731125314e05fe68c93dce0431f589"
+  },
+  "build": {
+    "command": "cargo +1.96.0 build --release --locked --target wasm32-unknown-unknown --manifest-path libsrc/wasmc-compression/Cargo.toml",
+    "artifact": "libsrc/wasmc-compression/target/wasm32-unknown-unknown/release/wasmc_compression_public.wasm"
+  },
+  "completed_gates": [
+    "public-source",
+    "zero-imports",
+    "wit-contract-equivalence",
+    "representative-behavior-equivalence",
+    "deterministic-gzip-byte-equivalence"
+  ],
+  "pending_gates": [
+    "resource-boundary-calibration",
+    "multi-engine-qualification",
+    "admission-review"
+  ],
+  "admitted": false
+}

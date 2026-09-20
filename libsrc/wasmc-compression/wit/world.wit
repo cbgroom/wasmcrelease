@@ -1,0 +1,17 @@
+package wasmc:compression@0.0.1;
+
+interface gzip {
+  enum compression-error {
+    input-too-large,
+    output-too-large,
+    invalid-stream,
+    internal-failure,
+  }
+
+  compress: func(bytes: list<u8>) -> result<list<u8>, compression-error>;
+  decompress: func(bytes: list<u8>) -> result<list<u8>, compression-error>;
+}
+
+world compression {
+  export gzip;
+}

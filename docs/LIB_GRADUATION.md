@@ -62,7 +62,10 @@ original source provenance.
 - JSON document — import-free; public Rust source implemented with exact WIT
   contract and representative Component-level oracle equivalence. Resource
   boundary calibration and multi-engine admission remain pending.
-- gzip compression — import-free; public reimplementation required.
+- gzip compression — import-free; public Rust source implemented with exact WIT
+  contract, representative behavior equivalence and deterministic gzip byte
+  equivalence. Resource boundary calibration and multi-engine admission remain
+  pending.
 - HTTP/1 wire — import-free; public reimplementation required.
 - TLS core — one entropy dependency today; graduate protocol/state-machine logic
   while keeping entropy/TCP/time authority thin and explicit.

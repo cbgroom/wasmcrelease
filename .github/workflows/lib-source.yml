@@ -9,6 +9,7 @@ on:
       - "scripts/validate-libsrc.mjs"
       - "scripts/test-router-policy.mjs"
       - "scripts/test-json-libsrc.mjs"
+      - "scripts/test-compression-libsrc.mjs"
       - ".github/workflows/lib-source.yml"
   push:
     branches: [main]
@@ -19,6 +20,7 @@ on:
       - "scripts/validate-libsrc.mjs"
       - "scripts/test-router-policy.mjs"
       - "scripts/test-json-libsrc.mjs"
+      - "scripts/test-compression-libsrc.mjs"
       - ".github/workflows/lib-source.yml"
   workflow_dispatch:
 
@@ -46,7 +48,8 @@ jobs:
             ~/.cargo/registry
             ~/.cargo/git
             libsrc/wasmc-json/target
-          key: libsrc-v2-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('libsrc/wasmc-json/Cargo.lock') }}
+            libsrc/wasmc-compression/target
+          key: libsrc-v3-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('libsrc/wasmc-json/Cargo.lock', 'libsrc/wasmc-compression/Cargo.lock') }}
       - name: Install pinned wasm-tools
         shell: bash
         run: |
@@ -60,6 +63,8 @@ jobs:
         run: node scripts/test-router-policy.mjs
       - name: Qualify JSON graduation candidate
         run: node scripts/test-json-libsrc.mjs
+      - name: Qualify compression graduation candidate
+        run: node scripts/test-compression-libsrc.mjs
       - name: Repository integrity
         run: |
           node scripts/validate-integrity.mjs
