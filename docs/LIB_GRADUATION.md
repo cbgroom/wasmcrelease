@@ -57,8 +57,11 @@ original source provenance.
 
 ## First graduation cohort
 
-- router policy — import-free; first public-source graduation sample.
-- JSON document — import-free; public reimplementation required.
+- router policy — import-free; first public-source graduation sample; clean-room
+  source and behavior-equivalence gate implemented.
+- JSON document — import-free; public Rust source implemented with exact WIT
+  contract and representative Component-level oracle equivalence. Resource
+  boundary calibration and multi-engine admission remain pending.
 - gzip compression — import-free; public reimplementation required.
 - HTTP/1 wire — import-free; public reimplementation required.
 - TLS core — one entropy dependency today; graduate protocol/state-machine logic
