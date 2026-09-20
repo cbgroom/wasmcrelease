@@ -9,6 +9,7 @@ on:
       - "libsrc/wasmc-data-compute/**"
       - "libsrc/wasmc-data-relational/**"
       - "libsrc/wasmc-data-profile/**"
+      - "libsrc/wasmc-data-interchange/**"
       - "libsrc/qualification/data-rust-foundation/**"
       - "scripts/test-data-core-libsrc.mjs"
       - "scripts/test-csv-libsrc.mjs"
@@ -16,6 +17,7 @@ on:
       - "scripts/test-data-compute-libsrc.mjs"
       - "scripts/test-data-relational-libsrc.mjs"
       - "scripts/test-data-profile-libsrc.mjs"
+      - "scripts/test-data-interchange-libsrc.mjs"
       - "scripts/test-data-pipeline.mjs"
       - "scripts/test-data-rust-foundation.mjs"
       - "docs/DATA_ECOSYSTEM.md"
@@ -29,6 +31,7 @@ on:
       - "libsrc/wasmc-data-compute/**"
       - "libsrc/wasmc-data-relational/**"
       - "libsrc/wasmc-data-profile/**"
+      - "libsrc/wasmc-data-interchange/**"
       - "libsrc/qualification/data-rust-foundation/**"
       - "scripts/test-data-core-libsrc.mjs"
       - "scripts/test-csv-libsrc.mjs"
@@ -36,6 +39,7 @@ on:
       - "scripts/test-data-compute-libsrc.mjs"
       - "scripts/test-data-relational-libsrc.mjs"
       - "scripts/test-data-profile-libsrc.mjs"
+      - "scripts/test-data-interchange-libsrc.mjs"
       - "scripts/test-data-pipeline.mjs"
       - "scripts/test-data-rust-foundation.mjs"
       - "docs/DATA_ECOSYSTEM.md"
@@ -71,8 +75,9 @@ jobs:
             libsrc/wasmc-data-compute/target
             libsrc/wasmc-data-relational/target
             libsrc/wasmc-data-profile/target
+            libsrc/wasmc-data-interchange/target
             libsrc/qualification/data-rust-foundation/target
-          key: data-foundation-v5-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('libsrc/wasmc-data-core/Cargo.lock', 'libsrc/wasmc-csv/Cargo.lock', 'libsrc/wasmc-data-expr/Cargo.lock', 'libsrc/wasmc-data-compute/Cargo.lock', 'libsrc/wasmc-data-relational/Cargo.lock', 'libsrc/wasmc-data-profile/Cargo.lock', 'libsrc/qualification/data-rust-foundation/Cargo.lock') }}
+          key: data-foundation-v6-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('libsrc/wasmc-data-core/Cargo.lock', 'libsrc/wasmc-csv/Cargo.lock', 'libsrc/wasmc-data-expr/Cargo.lock', 'libsrc/wasmc-data-compute/Cargo.lock', 'libsrc/wasmc-data-relational/Cargo.lock', 'libsrc/wasmc-data-profile/Cargo.lock', 'libsrc/wasmc-data-interchange/Cargo.lock', 'libsrc/qualification/data-rust-foundation/Cargo.lock') }}
       - name: Install pinned wasm-tools
         shell: bash
         run: |
@@ -94,6 +99,8 @@ jobs:
         run: node scripts/test-data-relational-libsrc.mjs | tee relational.json
       - name: Qualify deterministic column profile
         run: node scripts/test-data-profile-libsrc.mjs | tee profile.json
+      - name: Qualify bounded Arrow IPC and Parquet interchange
+        run: node scripts/test-data-interchange-libsrc.mjs | tee interchange.json
       - name: Qualify CSV to Expr to Filter pipeline
         run: node scripts/test-data-pipeline.mjs | tee pipeline.json
       - name: Validate public Lib source registry
@@ -111,6 +118,7 @@ jobs:
             compute.json
             relational.json
             profile.json
+            interchange.json
             pipeline.json
           if-no-files-found: warn
           retention-days: 14

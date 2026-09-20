@@ -1,0 +1,27 @@
+[package]
+name = "wasmc-data-interchange-public"
+version = "0.0.1"
+edition = "2021"
+publish = false
+license-file = "../../LICENSE"
+description = "Portable WAsmC Arrow IPC and Parquet adapters"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+wit-bindgen = "=0.62.0"
+arrow-schema = "=60.0.0"
+arrow-array = "=60.0.0"
+arrow-ipc = "=60.0.0"
+bytes = "=1.12.1"
+parquet = { version = "=60.0.0", default-features = false, features = ["arrow"] }
+
+[workspace]
+
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = "symbols"

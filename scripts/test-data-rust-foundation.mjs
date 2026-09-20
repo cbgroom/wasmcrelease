@@ -40,6 +40,7 @@ const expected = new Map([
   ['arrow-csv', '60.0.0'],
   ['arrow-json', '60.0.0'],
   ['arrow-cast', '60.0.0'],
+  ['arrow-ipc', '60.0.0'],
   ['parquet', '60.0.0'],
 ]);
 const packages = [];

@@ -19,6 +19,7 @@ on:
       - "scripts/test-data-expr-libsrc.mjs"
       - "scripts/test-data-compute-libsrc.mjs"
       - "scripts/test-data-relational-libsrc.mjs"
+      - "scripts/test-data-interchange-libsrc.mjs"
       - "scripts/test-data-pipeline.mjs"
       - "libsrc/qualification/**"
       - ".github/workflows/lib-source.yml"
@@ -41,6 +42,7 @@ on:
       - "scripts/test-data-expr-libsrc.mjs"
       - "scripts/test-data-compute-libsrc.mjs"
       - "scripts/test-data-relational-libsrc.mjs"
+      - "scripts/test-data-interchange-libsrc.mjs"
       - "scripts/test-data-pipeline.mjs"
       - "libsrc/qualification/**"
       - ".github/workflows/lib-source.yml"
@@ -84,8 +86,9 @@ jobs:
             libsrc/wasmc-data-expr/target
             libsrc/wasmc-data-compute/target
             libsrc/wasmc-data-relational/target
+            libsrc/wasmc-data-interchange/target
             libsrc/qualification/wasmi-core/target
-          key: libsrc-build-v6-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('libsrc/wasmc-json/Cargo.lock', 'libsrc/wasmc-compression/Cargo.lock', 'libsrc/wasmc-http1/Cargo.lock', 'libsrc/wasmc-tls-core/Cargo.lock', 'libsrc/wasmc-tls-core/tests/host/Cargo.lock', 'libsrc/wasmc-data-core/Cargo.lock', 'libsrc/wasmc-csv/Cargo.lock', 'libsrc/wasmc-data-expr/Cargo.lock', 'libsrc/wasmc-data-compute/Cargo.lock', 'libsrc/wasmc-data-relational/Cargo.lock', 'libsrc/qualification/wasmi-core/Cargo.lock') }}
+          key: libsrc-build-v7-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('libsrc/wasmc-json/Cargo.lock', 'libsrc/wasmc-compression/Cargo.lock', 'libsrc/wasmc-http1/Cargo.lock', 'libsrc/wasmc-tls-core/Cargo.lock', 'libsrc/wasmc-tls-core/tests/host/Cargo.lock', 'libsrc/wasmc-data-core/Cargo.lock', 'libsrc/wasmc-csv/Cargo.lock', 'libsrc/wasmc-data-expr/Cargo.lock', 'libsrc/wasmc-data-compute/Cargo.lock', 'libsrc/wasmc-data-relational/Cargo.lock', 'libsrc/wasmc-data-interchange/Cargo.lock', 'libsrc/qualification/wasmi-core/Cargo.lock') }}
           restore-keys: |
             libsrc-v5-${{ runner.os }}-${{ runner.arch }}-
             libsrc-build-v2-${{ runner.os }}-${{ runner.arch }}-

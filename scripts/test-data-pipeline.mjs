@@ -46,6 +46,10 @@ const libs = {
     manifest: 'libsrc/wasmc-data-profile/Cargo.toml',
     artifact: 'libsrc/wasmc-data-profile/target/wasm32-unknown-unknown/release/wasmc_data_profile_public.wasm',
   },
+  interchange: {
+    manifest: 'libsrc/wasmc-data-interchange/Cargo.toml',
+    artifact: 'libsrc/wasmc-data-interchange/target/wasm32-unknown-unknown/release/wasmc_data_interchange_public.wasm',
+  },
 };
 
 for (const lib of Object.values(libs)) {
@@ -149,10 +153,39 @@ try {
   ]);
   assert.equal(aggregateValidated, 'ok(1)');
 
+  const encodeOptions = '{max-batches: 1, max-rows: 1, max-output-bytes: 1048576}';
+  const decodeOptions = '{max-input-bytes: 1048576, max-batches: 1, max-rows: 1, batch-rows: 1}';
+  const expectedInterchange = 'ok([' + aggregateBatch + '])';
+  const ipcEncoded = run('wasmtime', [
+    'run', '--invoke',
+    'ipc-file-encode([' + aggregateBatch + '], ' + encodeOptions + ')',
+    libs.interchange.component,
+  ]);
+  assert.ok(ipcEncoded.startsWith('ok([') && ipcEncoded.endsWith('])'));
+  const ipcDecoded = run('wasmtime', [
+    'run', '--invoke',
+    'ipc-file-decode(' + ipcEncoded.slice(3, -1) + ', ' + decodeOptions + ')',
+    libs.interchange.component,
+  ]);
+  assert.equal(ipcDecoded, expectedInterchange);
+
+  const parquetEncoded = run('wasmtime', [
+    'run', '--invoke',
+    'parquet-encode([' + aggregateBatch + '], ' + encodeOptions + ')',
+    libs.interchange.component,
+  ]);
+  assert.ok(parquetEncoded.startsWith('ok([') && parquetEncoded.endsWith('])'));
+  const parquetDecoded = run('wasmtime', [
+    'run', '--invoke',
+    'parquet-decode(' + parquetEncoded.slice(3, -1) + ', ' + decodeOptions + ')',
+    libs.interchange.component,
+  ]);
+  assert.equal(parquetDecoded, expectedInterchange);
+
   console.log(JSON.stringify({
     accepted: true,
     schema: 'wasmc.data-pipeline/v1',
-    path: ['csv','data-core/types','data-expr','data-compute','data-relational/union-all','data-relational/equi-join','data-relational/window-rank','data-profile','data-relational/group-aggregate','data-core/validate'],
+    path: ['csv','data-core/types','data-expr','data-compute','data-relational/union-all','data-relational/equi-join','data-relational/window-rank','data-profile','data-relational/group-aggregate','data-interchange/arrow-ipc-file','data-interchange/parquet','data-core/validate'],
     input_rows: 3,
     predicate: 'id > 1',
     output_rows: 2,
@@ -164,6 +197,8 @@ try {
     window_functions: ['row-number','rank','dense-rank'],
     aggregate_rows: 1,
     aggregate: { count: 2, sum_id: 5, mean_id: 2.5, first_id: 2, last_id: 3, variance_id: 0.25, stddev_id: 0.5 },
+    interchange_formats: ['arrow-ipc-file','parquet-uncompressed'],
+    interchange_roundtrips: 2,
     core_imports: 0,
     validated,
     aggregate_validated: aggregateValidated,

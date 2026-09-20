@@ -130,7 +130,9 @@ requires an explicit non-zero maximum output row count. Window rank appends
 row-number/rank/dense-rank columns, preserves input row order and row count,
 supports partitioned composite ordering with explicit null placement, and
 requires a non-zero maximum input row bound. Group aggregate supports
-zero or more group keys and count-all/count/sum/min/max/mean.
+zero or more group keys, count-all/count/sum/min/max/mean, ordered null-ignoring
+first/last across all six types, and numeric population variance/standard
+deviation using a one-pass Welford accumulator.
 Grouping order is deterministic lexicographic order with null keys first.
 Numeric aggregation is Arrow-backed; integer sum overflow fails closed.
 
@@ -162,6 +164,18 @@ schema order; explicit selection preserves caller order and rejects duplicates.
 Exact or approximate distinct counting is intentionally outside v0 so profiling
 cannot silently allocate unbounded cardinality state. The candidate is
 Arrow-backed and has zero Core imports.
+
+### wasmc-data-interchange
+
+The first interchange layer provides bounded Arrow IPC file and Parquet
+encode/decode over Data Core batch snapshots. IPC preserves batch boundaries.
+Parquet combines exact-schema inputs and decodes into caller-bounded batches.
+Both paths support all six Data Core types, require explicit input/output byte,
+batch and row limits, and have zero Host imports. Filesystem and network effects
+remain outside this Lib.
+The Wasmi structural gate and the real CSV-to-relational pipeline both cover
+this candidate; the latter round-trips the final aggregate through Arrow IPC
+file and uncompressed Parquet before Data Core validation.
 
 ## Build workspace vs final package
 
@@ -195,7 +209,7 @@ Do not build SQL first. Grow the shared middle layer in this order:
 3. Expression IR and Arrow-backed compute kernels. **Started.**
 4. Relational operators: group/aggregate **started**; hash/join/window remain.
 5. Statistics and profiling **started** with deterministic column profiles.
-6. Arrow IPC and Parquet adapters.
+6. Arrow IPC and Parquet adapters. **Started.**
 7. DataFrame/Agent facades.
 8. SQL parser/planner only as an optional late frontend.
 9. Time series, sketches, numerical/linalg extensions.

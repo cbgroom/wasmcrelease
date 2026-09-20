@@ -127,7 +127,7 @@
         ],
         "type_dependency": "wasmc:data-core/types@0.0.1"
       },
-      "next_gate": "wasmi-and-admission"
+      "next_gate": "admission-review"
     },
     {
       "id": "wasmc-data-compute",
@@ -164,7 +164,7 @@
         ],
         "type_dependency": "wasmc:data-core/types@0.0.1"
       },
-      "next_gate": "admission-review"
+      "next_gate": "wasmi-and-admission"
     },
     {
       "id": "wasmc-data-profile",
@@ -182,6 +182,25 @@
         "type_dependency": "wasmc:data-core/types@0.0.1"
       },
       "next_gate": "wasmi-and-admission"
+    },
+    {
+      "id": "wasmc-data-interchange",
+      "version": "0.0.1-dev.1",
+      "stage": "public-source-candidate",
+      "semantic_kind": "bounded-arrow-ipc-and-parquet-interchange",
+      "host_import_budget": 0,
+      "source_root": "libsrc/wasmc-data-interchange",
+      "origin": {
+        "kind": "native-public",
+        "implementation_basis": [
+          "arrow-ipc@60.0.0",
+          "arrow-array@60.0.0",
+          "arrow-schema@60.0.0",
+          "parquet@60.0.0"
+        ],
+        "type_dependency": "wasmc:data-core/types@0.0.1"
+      },
+      "next_gate": "admission-review"
     }
   ]
 }

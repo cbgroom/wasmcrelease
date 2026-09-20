@@ -31,6 +31,7 @@ for (const name of [
   'wasmc-data-compute',
   'wasmc-data-relational',
   'wasmc-data-profile',
+  'wasmc-data-interchange',
 ]) {
   run('cargo', [
     '+1.96.0',
@@ -79,6 +80,7 @@ try {
       WASMC_LIBSRC_DATA_COMPUTE: resolve(root, 'libsrc/wasmc-data-compute/target/wasm32-unknown-unknown/release/wasmc_data_compute_public.wasm'),
       WASMC_LIBSRC_DATA_RELATIONAL: resolve(root, 'libsrc/wasmc-data-relational/target/wasm32-unknown-unknown/release/wasmc_data_relational_public.wasm'),
       WASMC_LIBSRC_DATA_PROFILE: resolve(root, 'libsrc/wasmc-data-profile/target/wasm32-unknown-unknown/release/wasmc_data_profile_public.wasm'),
+      WASMC_LIBSRC_DATA_INTERCHANGE: resolve(root, 'libsrc/wasmc-data-interchange/target/wasm32-unknown-unknown/release/wasmc_data_interchange_public.wasm'),
     },
   });
   const receipt = JSON.parse(output.split(/\r?\n/).filter(Boolean).at(-1));
@@ -98,6 +100,7 @@ try {
     'wasmc-data-compute',
     'wasmc-data-relational',
     'wasmc-data-profile',
+    'wasmc-data-interchange',
   ]);
   console.log(JSON.stringify({
     accepted: true,
