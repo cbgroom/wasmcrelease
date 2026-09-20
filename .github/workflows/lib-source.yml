@@ -10,6 +10,7 @@ on:
       - "scripts/test-router-policy.mjs"
       - "scripts/test-json-libsrc.mjs"
       - "scripts/test-compression-libsrc.mjs"
+      - "scripts/test-http1-libsrc.mjs"
       - ".github/workflows/lib-source.yml"
   push:
     branches: [main]
@@ -21,6 +22,7 @@ on:
       - "scripts/test-router-policy.mjs"
       - "scripts/test-json-libsrc.mjs"
       - "scripts/test-compression-libsrc.mjs"
+      - "scripts/test-http1-libsrc.mjs"
       - ".github/workflows/lib-source.yml"
   workflow_dispatch:
 
@@ -49,7 +51,8 @@ jobs:
             ~/.cargo/git
             libsrc/wasmc-json/target
             libsrc/wasmc-compression/target
-          key: libsrc-v3-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('libsrc/wasmc-json/Cargo.lock', 'libsrc/wasmc-compression/Cargo.lock') }}
+            libsrc/wasmc-http1/target
+          key: libsrc-v4-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('libsrc/wasmc-json/Cargo.lock', 'libsrc/wasmc-compression/Cargo.lock', 'libsrc/wasmc-http1/Cargo.lock') }}
       - name: Install pinned wasm-tools
         shell: bash
         run: |
@@ -65,6 +68,8 @@ jobs:
         run: node scripts/test-json-libsrc.mjs
       - name: Qualify compression graduation candidate
         run: node scripts/test-compression-libsrc.mjs
+      - name: Qualify HTTP/1 graduation candidate
+        run: node scripts/test-http1-libsrc.mjs
       - name: Repository integrity
         run: |
           node scripts/validate-integrity.mjs

@@ -66,7 +66,10 @@ original source provenance.
   contract, representative behavior equivalence and deterministic gzip byte
   equivalence. Resource boundary calibration and multi-engine admission remain
   pending.
-- HTTP/1 wire — import-free; public reimplementation required.
+- HTTP/1 wire — import-free; public Rust source implemented with exact WIT
+  contract and representative request parsing, framing and response
+  serialization equivalence. Resource boundary calibration and broader
+  protocol coverage remain pending.
 - TLS core — one entropy dependency today; graduate protocol/state-machine logic
   while keeping entropy/TCP/time authority thin and explicit.
 

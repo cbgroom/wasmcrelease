@@ -1,0 +1,39 @@
+package wasmc:http1-server@0.0.1;
+
+interface wire {
+  enum http-error {
+    input-too-large,
+    too-many-headers,
+    invalid-syntax,
+    incomplete,
+    invalid-version,
+    invalid-status,
+    invalid-header-name,
+    invalid-header-value,
+    output-too-large,
+    invalid-content-length,
+    unsupported-framing,
+    body-too-large,
+  }
+
+  record header {
+    name: string,
+    value: list<u8>,
+  }
+
+  record request-head {
+    method: string,
+    target: string,
+    minor-version: u8,
+    headers: list<header>,
+    body-offset: u32,
+  }
+
+  parse-request: func(bytes: list<u8>) -> result<request-head, http-error>;
+  request-frame-length: func(bytes: list<u8>) -> result<option<u32>, http-error>;
+  serialize-response-head: func(minor-version: u8, status: u16, headers: list<header>) -> result<list<u8>, http-error>;
+}
+
+world http1-server {
+  export wire;
+}
