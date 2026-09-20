@@ -55,6 +55,11 @@ execution authority and previous failure receipts are retained. Next: verify
 main promotion, then integrate new version into a separately bound future
 catalog/search/release candidate without rewriting frozen prod inventories.
 
+The immutable Data Foundation product candidate is
+`channels/candidates/0.0.11.json` with product set
+`101a8a3783d52fc3d06e15731b20ec5fbe5a2bdbd7d9e964876f76ce44e33662`.
+All dev/main/prod promotion stages must preserve that digest set exactly.
+
 Compiler protection is explicit: source/internal implementation remains private;
 Wasmi/Wasmtime integration, Host adapters, CLI and conformance/build glue may be
 public. User authorizes private compiler edits, not disclosure. Public CI only
