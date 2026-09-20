@@ -118,6 +118,26 @@ CSV -> BatchSnapshot -> Expr.evaluate -> BooleanColumn -> Compute.filter
 
 All operations are Arrow-backed and have zero Core imports.
 
+### wasmc-data-relational
+
+The first relational primitive is deterministic `group-aggregate`, not SQL.
+It supports zero or more group keys and count-all/count/sum/min/max/mean.
+Grouping order is deterministic lexicographic order with null keys first.
+Numeric aggregation is Arrow-backed; integer sum overflow fails closed.
+
+The end-to-end qualified internal path is now:
+
+```text
+CSV
+  -> BatchSnapshot
+  -> Expr.evaluate
+  -> Compute.filter
+  -> Relational.group-aggregate
+  -> Data Core validate
+```
+
+Every Core artifact in this path has zero Host imports.
+
 ## Build workspace vs final package
 
 `libsrc/` is an incubation/build workspace, not the final Lib package.
@@ -148,8 +168,8 @@ Do not build SQL first. Grow the shared middle layer in this order:
 1. Data Core schema/batch semantics. **Started.**
 2. CSV ingestion. **Started.** JSONL remains next format input.
 3. Expression IR and Arrow-backed compute kernels. **Started.**
-4. Relational operators: hash/join/group/aggregate/window.
-5. Statistics and profiling.
+4. Relational operators: group/aggregate **started**; hash/join/window remain.
+5. Statistics and profiling **next**.
 6. Arrow IPC and Parquet adapters.
 7. DataFrame/Agent facades.
 8. SQL parser/planner only as an optional late frontend.

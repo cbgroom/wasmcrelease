@@ -1,0 +1,26 @@
+[package]
+name = "wasmc-data-relational-public"
+version = "0.0.1"
+edition = "2021"
+publish = false
+license-file = "../../LICENSE"
+description = "Deterministic WAsmC group aggregation backed by Arrow-rs"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+wit-bindgen = "=0.62.0"
+ordered-float = { version = "=5.5.0", default-features = false }
+arrow-array = "=60.0.0"
+arrow-select = "=60.0.0"
+arrow-arith = "=60.0.0"
+
+[workspace]
+
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = "symbols"

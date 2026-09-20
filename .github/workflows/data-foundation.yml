@@ -7,11 +7,13 @@ on:
       - "libsrc/wasmc-csv/**"
       - "libsrc/wasmc-data-expr/**"
       - "libsrc/wasmc-data-compute/**"
+      - "libsrc/wasmc-data-relational/**"
       - "libsrc/qualification/data-rust-foundation/**"
       - "scripts/test-data-core-libsrc.mjs"
       - "scripts/test-csv-libsrc.mjs"
       - "scripts/test-data-expr-libsrc.mjs"
       - "scripts/test-data-compute-libsrc.mjs"
+      - "scripts/test-data-relational-libsrc.mjs"
       - "scripts/test-data-pipeline.mjs"
       - "scripts/test-data-rust-foundation.mjs"
       - "docs/DATA_ECOSYSTEM.md"
@@ -23,11 +25,13 @@ on:
       - "libsrc/wasmc-csv/**"
       - "libsrc/wasmc-data-expr/**"
       - "libsrc/wasmc-data-compute/**"
+      - "libsrc/wasmc-data-relational/**"
       - "libsrc/qualification/data-rust-foundation/**"
       - "scripts/test-data-core-libsrc.mjs"
       - "scripts/test-csv-libsrc.mjs"
       - "scripts/test-data-expr-libsrc.mjs"
       - "scripts/test-data-compute-libsrc.mjs"
+      - "scripts/test-data-relational-libsrc.mjs"
       - "scripts/test-data-pipeline.mjs"
       - "scripts/test-data-rust-foundation.mjs"
       - "docs/DATA_ECOSYSTEM.md"
@@ -61,8 +65,9 @@ jobs:
             libsrc/wasmc-csv/target
             libsrc/wasmc-data-expr/target
             libsrc/wasmc-data-compute/target
+            libsrc/wasmc-data-relational/target
             libsrc/qualification/data-rust-foundation/target
-          key: data-foundation-v3-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('libsrc/wasmc-data-core/Cargo.lock', 'libsrc/wasmc-csv/Cargo.lock', 'libsrc/wasmc-data-expr/Cargo.lock', 'libsrc/wasmc-data-compute/Cargo.lock', 'libsrc/qualification/data-rust-foundation/Cargo.lock') }}
+          key: data-foundation-v4-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('libsrc/wasmc-data-core/Cargo.lock', 'libsrc/wasmc-csv/Cargo.lock', 'libsrc/wasmc-data-expr/Cargo.lock', 'libsrc/wasmc-data-compute/Cargo.lock', 'libsrc/wasmc-data-relational/Cargo.lock', 'libsrc/qualification/data-rust-foundation/Cargo.lock') }}
       - name: Install pinned wasm-tools
         shell: bash
         run: |
@@ -80,6 +85,8 @@ jobs:
         run: node scripts/test-data-expr-libsrc.mjs | tee expr.json
       - name: Qualify Arrow-backed batch compute
         run: node scripts/test-data-compute-libsrc.mjs | tee compute.json
+      - name: Qualify deterministic group aggregate
+        run: node scripts/test-data-relational-libsrc.mjs | tee relational.json
       - name: Qualify CSV to Expr to Filter pipeline
         run: node scripts/test-data-pipeline.mjs | tee pipeline.json
       - name: Validate public Lib source registry
@@ -95,6 +102,7 @@ jobs:
             csv.json
             expr.json
             compute.json
+            relational.json
             pipeline.json
           if-no-files-found: warn
           retention-days: 14

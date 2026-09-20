@@ -1,0 +1,40 @@
+package wasmc:data-relational@0.0.1;
+
+interface relational {
+  use wasmc:data-core/types@0.0.1.{batch-snapshot};
+
+  record column-aggregate {
+    column: u32,
+    alias: string,
+  }
+
+  variant aggregate {
+    count-all(string),
+    count(column-aggregate),
+    sum(column-aggregate),
+    min(column-aggregate),
+    max(column-aggregate),
+    mean(column-aggregate),
+  }
+
+  enum relational-error {
+    invalid-batch,
+    column-out-of-bounds,
+    duplicate-key,
+    empty-alias,
+    duplicate-output-name,
+    unsupported-type,
+    overflow,
+    compute-failure,
+  }
+
+  group-aggregate: func(
+    value: batch-snapshot,
+    keys: list<u32>,
+    aggregates: list<aggregate>,
+  ) -> result<batch-snapshot, relational-error>;
+}
+
+world data-relational {
+  export relational;
+}

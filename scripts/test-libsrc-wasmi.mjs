@@ -29,6 +29,7 @@ for (const name of [
   'wasmc-csv',
   'wasmc-data-expr',
   'wasmc-data-compute',
+  'wasmc-data-relational',
 ]) {
   run('cargo', [
     '+1.96.0',
@@ -75,6 +76,7 @@ try {
       WASMC_LIBSRC_CSV: resolve(root, 'libsrc/wasmc-csv/target/wasm32-unknown-unknown/release/wasmc_csv_public.wasm'),
       WASMC_LIBSRC_DATA_EXPR: resolve(root, 'libsrc/wasmc-data-expr/target/wasm32-unknown-unknown/release/wasmc_data_expr_public.wasm'),
       WASMC_LIBSRC_DATA_COMPUTE: resolve(root, 'libsrc/wasmc-data-compute/target/wasm32-unknown-unknown/release/wasmc_data_compute_public.wasm'),
+      WASMC_LIBSRC_DATA_RELATIONAL: resolve(root, 'libsrc/wasmc-data-relational/target/wasm32-unknown-unknown/release/wasmc_data_relational_public.wasm'),
     },
   });
   const receipt = JSON.parse(output.split(/\r?\n/).filter(Boolean).at(-1));
@@ -92,6 +94,7 @@ try {
     'wasmc-csv',
     'wasmc-data-expr',
     'wasmc-data-compute',
+    'wasmc-data-relational',
   ]);
   console.log(JSON.stringify({
     accepted: true,

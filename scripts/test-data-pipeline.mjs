@@ -38,6 +38,10 @@ const libs = {
     manifest: 'libsrc/wasmc-data-compute/Cargo.toml',
     artifact: 'libsrc/wasmc-data-compute/target/wasm32-unknown-unknown/release/wasmc_data_compute_public.wasm',
   },
+  relational: {
+    manifest: 'libsrc/wasmc-data-relational/Cargo.toml',
+    artifact: 'libsrc/wasmc-data-relational/target/wasm32-unknown-unknown/release/wasmc_data_relational_public.wasm',
+  },
 };
 
 for (const lib of Object.values(libs)) {
@@ -92,16 +96,34 @@ try {
   ]);
   assert.equal(validated, 'ok(2)');
 
+  const aggregated = run('wasmtime', [
+    'run', '--invoke',
+    'group-aggregate(' + filteredBatch + ', [], [count-all("rows"), sum({column: 0, alias: "sum_id"}), mean({column: 0, alias: "mean_id"})])',
+    libs.relational.component,
+  ]);
+  const expectedAggregate = 'ok({rows: 1, fields: [{name: "rows", data-type: uint64, nullable: false}, {name: "sum_id", data-type: int64, nullable: true}, {name: "mean_id", data-type: float64, nullable: true}], columns: [uint64-column([some(2)]), int64-column([some(5)]), float64-column([some(2.5)])]})';
+  assert.equal(aggregated, expectedAggregate);
+  const aggregateBatch = aggregated.slice(3, -1);
+  const aggregateValidated = run('wasmtime', [
+    'run', '--invoke',
+    'validate(' + aggregateBatch + ')',
+    libs.data.component,
+  ]);
+  assert.equal(aggregateValidated, 'ok(1)');
+
   console.log(JSON.stringify({
     accepted: true,
     schema: 'wasmc.data-pipeline/v1',
-    path: ['csv','data-core/types','data-expr','data-compute','data-core/validate'],
+    path: ['csv','data-core/types','data-expr','data-compute','data-relational','data-core/validate'],
     input_rows: 3,
     predicate: 'id > 1',
     output_rows: 2,
     output_ids: [2, 3],
+    aggregate_rows: 1,
+    aggregate: { count: 2, sum_id: 5, mean_id: 2.5 },
     core_imports: 0,
     validated,
+    aggregate_validated: aggregateValidated,
   }));
 } finally {
   await rm(work, { recursive: true, force: true });
