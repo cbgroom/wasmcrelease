@@ -56,7 +56,8 @@ console.log(instance.exports.run(5, 6)); // 17
 | async Libs, traits, open generics, automatic Rust API discovery | unsupported | do not invent a bridge |
 | signing, auto-update, ambient filesystem/network/device access | not provided | application/publisher authority |
 
-The v0.0.4 `dist/`, `package/`, and `libs/` compatibility trees remain
+The v0.0.4 `dist/` and `package/` compatibility trees and the three
+historical `libs/` packages remain
 byte-for-byte frozen. v0.0.10 reuses the qualified compiler facades and standard
 Lib1.4.0 with its matching CoreLib4.8 companion. Engine compatibility is
 artifact-specific: read [compatibility/README.md](compatibility/README.md)
@@ -71,7 +72,10 @@ before treating compiler success as standard-Lib or managed Host support.
 - `standard/wasmc-std/1.4.0/`: current WIT standard Lib and generated Rust bindings.
 - `standard/corelib/4.8.0/`: matching standard Lib CoreLib companion.
 - `standard/wasmc-lib-search/0.1.0/`: independently admitted embedded-index Lib. Start with [its executable guide](examples/lib-search/README.md); `node scripts/wasmc-lib.mjs search "base64"` executes this Lib. See [dev/main/prod status policy](docs/RELEASE_CHANNELS.md).
-- `libs/*/`: frozen historical qualification Libs, not the current standard Lib.
+- `libs/wasmc-host-clock/`, `libs/wasmc-owned-algorithms/`, and
+  `libs/wasmc-resource-counter/`: frozen historical qualification Libs.
+- Other `libs/*/`: append-only admitted source-free Lib packages; never edit an
+  existing released version in place.
 - `examples/rust-wasmtime/`: locked executable reference project, not an SDK.
 - `runtime/wasmc-runtime-v0/`: current `compiler.wasm` plus thin universal/Node/Bun/Deno Host adapters; no npm or external JS registry.
 - `runtime/registry-v0/`: repo-local resolver/channel/mirror metadata for `wasmc:runtime`.

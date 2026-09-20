@@ -53,12 +53,20 @@ const versions = new Map(index.versions.map((row) => [row.version, row]));
 if (!versions.has(index.latest)) throw new Error('latest missing from versions');
 
 if (release.compatibility?.byte_frozen) {
-  const dirtyCompat = await execFileAsync('git', ['status', '--porcelain', '--', 'dist', 'package', 'libs'], { cwd: root });
+  const dirtyCompat = await execFileAsync('git', ['status', '--porcelain', '--', 'dist', 'package'], { cwd: root });
   if (dirtyCompat.stdout.trim()) throw new Error(`frozen compatibility tree changed: ${dirtyCompat.stdout.trim()}`);
-  for (const name of ['dist', 'package', 'libs']) {
+  for (const name of ['dist', 'package']) {
     const expected = release.compatibility.git_trees?.[name];
     const actual = (await execFileAsync('git', ['rev-parse', `HEAD:${name}`], { cwd: root })).stdout.trim();
     if (!expected || actual !== expected) throw new Error(`frozen compatibility tree identity drifted: ${name}`);
+  }
+  for (const name of ['wasmc-host-clock', 'wasmc-owned-algorithms', 'wasmc-resource-counter']) {
+    const path = `libs/${name}`;
+    const dirty = await execFileAsync('git', ['status', '--porcelain', '--', path], { cwd: root });
+    if (dirty.stdout.trim()) throw new Error(`frozen historical Lib changed: ${dirty.stdout.trim()}`);
+    const expected = (await execFileAsync('git', ['rev-parse', `v0.0.10:${path}`], { cwd: root })).stdout.trim();
+    const actual = (await execFileAsync('git', ['rev-parse', `HEAD:${path}`], { cwd: root })).stdout.trim();
+    if (actual !== expected) throw new Error(`frozen historical Lib identity drifted: ${path}`);
   }
 }
 

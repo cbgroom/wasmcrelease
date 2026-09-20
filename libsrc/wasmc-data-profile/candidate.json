@@ -1,7 +1,7 @@
 {
   "schema": "wasmc.libsrc-candidate/v1",
   "id": "wasmc-data-profile",
-  "version": "0.0.1-dev.1",
+  "version": "0.0.1",
   "wit": "wit/world.wit",
   "source": [
     "Cargo.toml",
@@ -30,14 +30,18 @@
     "public-source",
     "zero-core-imports",
     "deterministic-column-profile-qualification",
-    "wasmi-qualification"
-  ],
-  "pending_gates": [
+    "wasmi-qualification",
     "admission-review"
   ],
-  "admitted": false,
+  "pending_gates": [],
+  "admitted": true,
   "qualification": {
     "runner": "node",
     "script": "scripts/test-data-profile-libsrc.mjs"
+  },
+  "admission": {
+    "date": "2026-09-20",
+    "package": "libs/wasmc-data-profile",
+    "source_authority": "ff6928b09194b4818b05117ec0ba6a71b998d224"
   }
 }

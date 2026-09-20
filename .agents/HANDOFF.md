@@ -1,5 +1,25 @@
 # WAsmC release maintainer handoff
 
+## 2026-09-20 Data Foundation v1 admission and release
+
+Seven Data Foundation Libs are admitted as immutable source-free `0.0.1`
+packages: Data Core, CSV, Expr, Compute, Relational, Data Profile and Data
+Interchange. Their exact implementation authority is
+`ff6928b09194b4818b05117ec0ba6a71b998d224`; every Core artifact has zero
+imports and each package contains only `SKILL.md`, `lib.wit`, `lib.json`,
+`artifact.wasm`, `component.wasm` and `references/agent-delta.json`.
+Human admission was explicitly approved on 2026-09-20. The product release
+target is `v0.0.11`, using immutable dev → main → prod promotion without
+moving any existing tag. Host ABI/lifecycle/no-replay remains frozen.
+
+The admitted v1 boundary includes deterministic group aggregate, union-all,
+bounded typed inner/left equi-join, deterministic ranking window,
+first/last, population variance/stddev, Data Profile, Arrow IPC file and
+uncompressed Parquet. Lag/lead, frame aggregates and distinct remain v1.1.
+SQL/DB remains deprioritized. Run `scripts/review-data-admission.mjs`,
+`scripts/validate-libs.mjs`, the Data Foundation workflow and the official
+maintainer validator before promotion.
+
 ## 0. Status
 
 Portable Std1.4.1 source-free candidate passed all18exact-source Actions cells.

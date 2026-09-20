@@ -1,7 +1,7 @@
 {
   "schema": "wasmc.libsrc-candidate/v1",
   "id": "wasmc-csv",
-  "version": "0.0.1-dev.1",
+  "version": "0.0.1",
   "wit": "wit/world.wit",
   "source": [
     "Cargo.toml",
@@ -32,14 +32,18 @@
     "zero-core-imports",
     "csv-to-batch-qualification",
     "data-core-compatibility",
-    "wasmi-qualification"
-  ],
-  "pending_gates": [
+    "wasmi-qualification",
     "admission-review"
   ],
-  "admitted": false,
+  "pending_gates": [],
+  "admitted": true,
   "qualification": {
     "runner": "node",
     "script": "scripts/test-csv-libsrc.mjs"
+  },
+  "admission": {
+    "date": "2026-09-20",
+    "package": "libs/wasmc-csv",
+    "source_authority": "ff6928b09194b4818b05117ec0ba6a71b998d224"
   }
 }

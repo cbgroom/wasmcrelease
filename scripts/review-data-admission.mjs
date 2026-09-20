@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
-import { access, readFile, stat } from 'node:fs/promises';
-import { isAbsolute, resolve } from 'node:path';
+import { readFile, readdir } from 'node:fs/promises';
+import { resolve } from 'node:path';
 
 const root = process.cwd();
 const candidateIds = [
@@ -13,22 +13,27 @@ const candidateIds = [
   'wasmc-data-profile',
   'wasmc-data-interchange',
 ];
-const forbiddenSourceSegment = /(^|\/)(target|vendor|cache|node_modules)(\/|$)/;
-
-const registry = JSON.parse(
-  await readFile(resolve(root, 'libsrc/registry.json'), 'utf8'),
-);
+const canonicalFiles = [
+  'SKILL.md',
+  'artifact.wasm',
+  'component.wasm',
+  'lib.json',
+  'lib.wit',
+  'references/agent-delta.json',
+];
+const sha = bytes => createHash('sha256').update(bytes).digest('hex');
+const registry = JSON.parse(await readFile(resolve(root, 'libsrc/registry.json'), 'utf8'));
 assert.equal(registry.schema, 'wasmc.libsrc-registry/v1');
 assert.equal(registry.policy.admission_separate, true);
 
-async function assertMissing(path, message) {
-  try {
-    await access(path);
-  } catch (error) {
-    if (error?.code === 'ENOENT') return;
-    throw error;
+async function files(directory, prefix = '') {
+  const rows = [];
+  for (const entry of await readdir(directory, { withFileTypes: true })) {
+    const relative = prefix ? prefix + '/' + entry.name : entry.name;
+    if (entry.isDirectory()) rows.push(...await files(resolve(directory, entry.name), relative));
+    else if (entry.isFile()) rows.push(relative);
   }
-  assert.fail(message);
+  return rows;
 }
 
 const rows = [];
@@ -36,74 +41,58 @@ for (const id of candidateIds) {
   const matches = registry.candidates.filter(candidate => candidate.id === id);
   assert.equal(matches.length, 1, id + ': expected exactly one registry entry');
   const entry = matches[0];
-  assert.equal(entry.stage, 'public-source-candidate', id + ': stage drift');
-  assert.equal(entry.host_import_budget, 0, id + ': host import budget drift');
-  assert.equal(entry.next_gate, 'admission-review', id + ': next gate drift');
+  assert.equal(entry.stage, 'admitted', id + ': admission is not closed');
+  assert.equal(entry.version, '0.0.1');
+  assert.equal(entry.host_import_budget, 0);
+  assert.equal(entry.next_gate, null);
 
-  const manifestPath = resolve(root, entry.source_root, 'candidate.json');
-  const manifest = JSON.parse(await readFile(manifestPath, 'utf8'));
-  assert.equal(manifest.id, id);
-  assert.equal(manifest.version, entry.version);
-  assert.equal(manifest.admitted, false, id + ': admission must remain human-controlled');
-  assert.ok(
-    manifest.completed_gates.includes('wasmi-qualification'),
-    id + ': Wasmi qualification is not recorded',
+  const candidate = JSON.parse(
+    await readFile(resolve(root, entry.source_root, 'candidate.json'), 'utf8'),
   );
-  assert.deepEqual(
-    manifest.pending_gates,
-    ['admission-review'],
-    id + ': automated qualification is incomplete or admission was pre-approved',
-  );
-  assert.equal(manifest.build?.final_package_source_free, true);
-  assert.equal(manifest.build?.embeds_third_party_source, false);
-  assert.ok(Array.isArray(manifest.source) && manifest.source.length > 0);
-  for (const source of manifest.source) {
-    assert.equal(typeof source, 'string', id + ': non-string source entry');
-    assert.equal(isAbsolute(source), false, id + ': absolute source entry');
-    assert.equal(
-      forbiddenSourceSegment.test(source),
-      false,
-      id + ': generated or vendored source entry: ' + source,
-    );
-  }
+  assert.equal(candidate.id, id);
+  assert.equal(candidate.version, entry.version);
+  assert.equal(candidate.admitted, true);
+  assert.ok(candidate.completed_gates.includes('wasmi-qualification'));
+  assert.ok(candidate.completed_gates.includes('admission-review'));
+  assert.deepEqual(candidate.pending_gates, []);
+  assert.match(candidate.admission?.source_authority ?? '', /^[0-9a-f]{40}$/);
+  assert.equal(candidate.build?.final_package_source_free, true);
+  assert.equal(candidate.build?.embeds_third_party_source, false);
 
-  await assertMissing(
-    resolve(root, 'libs', id),
-    id + ': immutable package exists before human admission review',
-  );
-
-  const artifactPath = resolve(root, manifest.build.artifact);
-  const artifact = await readFile(artifactPath);
-  assert.equal(WebAssembly.validate(artifact), true, id + ': invalid Core Wasm artifact');
-  const coreImports = WebAssembly.Module.imports(
-    new WebAssembly.Module(artifact),
-  ).length;
-  assert.equal(coreImports, 0, id + ': Core Wasm imports exceed zero budget');
-  const artifactStat = await stat(artifactPath);
-
+  const packageRoot = resolve(root, 'libs', id);
+  assert.deepEqual((await files(packageRoot)).sort(), canonicalFiles);
+  const lib = JSON.parse(await readFile(resolve(packageRoot, 'lib.json'), 'utf8'));
+  assert.equal(lib.schema, 'wasmc.lib/v0');
+  assert.equal(lib.id, id);
+  assert.equal(lib.version, '0.0.1');
+  assert.equal(lib.admission?.approved, true);
+  assert.equal(lib.admission?.source_authority, candidate.admission.source_authority);
+  const artifact = await readFile(resolve(packageRoot, lib.artifact.path));
+  assert.equal(WebAssembly.validate(artifact), true);
+  assert.equal(WebAssembly.Module.imports(new WebAssembly.Module(artifact)).length, 0);
+  assert.equal(artifact.length, lib.artifact.bytes);
+  assert.equal(sha(artifact), lib.artifact.sha256);
+  const component = await readFile(resolve(packageRoot, lib.component.path));
+  assert.equal(component.length, lib.component.bytes);
+  assert.equal(sha(component), lib.component.sha256);
   rows.push({
     id,
-    version: manifest.version,
-    artifact_bytes: artifactStat.size,
-    artifact_sha256: createHash('sha256').update(artifact).digest('hex'),
-    core_imports: coreImports,
-    pending_gates: manifest.pending_gates,
+    version: lib.version,
+    source_authority: lib.admission.source_authority,
+    artifact_bytes: artifact.length,
+    artifact_sha256: lib.artifact.sha256,
+    component_bytes: component.length,
+    component_sha256: lib.component.sha256,
+    core_imports: 0,
   });
 }
 
 console.log(JSON.stringify({
   accepted: true,
-  schema: 'wasmc.data-admission-review-readiness/v1',
+  schema: 'wasmc.data-admission-closure/v1',
   cohort: rows.length,
-  automated_gates_complete: true,
-  human_admission_required: true,
-  admitted: 0,
-  immutable_packages_created: 0,
-  non_claims: [
-    'hosted-checks-complete',
-    'admission-approved',
-    'immutable-package-created',
-    'catalog-published',
-  ],
+  admitted: rows.length,
+  immutable_packages_created: rows.length,
+  source_free: true,
   rows,
 }));
