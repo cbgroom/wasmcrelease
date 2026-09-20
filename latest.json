@@ -1,7 +1,7 @@
 {
   "schema": "wasmc-public-performance-summary/v1",
-  "commit": "0ba99c613a8497a78b8ef2a002273914f01f82e9",
-  "measured_at": "2026-09-20T16:25:55.125Z",
+  "commit": "e6be0ba4307d2d2e16ccf4a7675d61ce6f45f3ed",
+  "measured_at": "2026-09-20T16:42:52.013Z",
   "platform_count": 6,
   "corpus_count": 5,
   "policy": "GitHub-hosted timings are comparative observations. Source/Wasm identity and behavior are hard gates; timing regression is advisory until repeated history establishes a stable threshold.",
@@ -9,63 +9,63 @@
     {
       "platform": "linux-aarch64",
       "cli_bytes": 9835288,
-      "build_wasm_geomean_ms": 14.253,
-      "native_miss_geomean_ms": 44.526,
-      "native_hit_geomean_ms": 24.606,
-      "run_wasmi_p50_ms": 11.103,
-      "native_run_p50_ms": 3.779
+      "build_wasm_geomean_ms": 14.796,
+      "native_miss_geomean_ms": 45.951,
+      "native_hit_geomean_ms": 26.23,
+      "run_wasmi_p50_ms": 11.514,
+      "native_run_p50_ms": 3.942
     },
     {
       "platform": "linux-x86_64",
       "cli_bytes": 11654880,
-      "build_wasm_geomean_ms": 12.981,
-      "native_miss_geomean_ms": 38.548,
-      "native_hit_geomean_ms": 20.869,
-      "run_wasmi_p50_ms": 9.364,
-      "native_run_p50_ms": 2.375
+      "build_wasm_geomean_ms": 10.08,
+      "native_miss_geomean_ms": 30.124,
+      "native_hit_geomean_ms": 16.732,
+      "run_wasmi_p50_ms": 7.128,
+      "native_run_p50_ms": 1.807
     },
     {
       "platform": "macos-aarch64",
       "cli_bytes": 8724944,
-      "build_wasm_geomean_ms": 22.596,
-      "native_miss_geomean_ms": 62.483,
-      "native_hit_geomean_ms": 44.98,
-      "run_wasmi_p50_ms": 18.171,
-      "native_run_p50_ms": 3.399
+      "build_wasm_geomean_ms": 22.482,
+      "native_miss_geomean_ms": 60.536,
+      "native_hit_geomean_ms": 43.47,
+      "run_wasmi_p50_ms": 17.666,
+      "native_run_p50_ms": 3.783
     },
     {
       "platform": "macos-x86_64",
       "cli_bytes": 10710336,
-      "build_wasm_geomean_ms": 34.144,
-      "native_miss_geomean_ms": 98.068,
-      "native_hit_geomean_ms": 58.494,
-      "run_wasmi_p50_ms": 34.564,
-      "native_run_p50_ms": 8.449
+      "build_wasm_geomean_ms": 29.75,
+      "native_miss_geomean_ms": 73.12,
+      "native_hit_geomean_ms": 47.307,
+      "run_wasmi_p50_ms": 25.429,
+      "native_run_p50_ms": 6.63
     },
     {
       "platform": "windows-aarch64",
       "cli_bytes": 9323008,
-      "build_wasm_geomean_ms": 25.383,
-      "native_miss_geomean_ms": 54.612,
-      "native_hit_geomean_ms": 34.983,
-      "run_wasmi_p50_ms": 18.09,
-      "native_run_p50_ms": 16.745
+      "build_wasm_geomean_ms": 27.804,
+      "native_miss_geomean_ms": 57.547,
+      "native_hit_geomean_ms": 37.217,
+      "run_wasmi_p50_ms": 19.708,
+      "native_run_p50_ms": 18.518
     },
     {
       "platform": "windows-x86_64",
       "cli_bytes": 10624512,
-      "build_wasm_geomean_ms": 20.613,
-      "native_miss_geomean_ms": 58.418,
-      "native_hit_geomean_ms": 35.126,
-      "run_wasmi_p50_ms": 16.305,
-      "native_run_p50_ms": 10.264
+      "build_wasm_geomean_ms": 19.61,
+      "native_miss_geomean_ms": 52.716,
+      "native_hit_geomean_ms": 28.143,
+      "run_wasmi_p50_ms": 15.867,
+      "native_run_p50_ms": 9.562
     }
   ],
   "reports": [
     {
       "schema": "wasmc-native-cli-performance/v1",
-      "measured_at": "2026-09-20T16:14:14.217Z",
-      "commit": "0ba99c613a8497a78b8ef2a002273914f01f82e9",
+      "measured_at": "2026-09-20T16:28:22.094Z",
+      "commit": "e6be0ba4307d2d2e16ccf4a7675d61ce6f45f3ed",
       "platform": "linux-aarch64",
       "host": {
         "os": "linux",
@@ -86,38 +86,38 @@
           "wasm_sha256": "29996fa74541742737704f64e48add2a5079ed8c57783cda4912046d5acb32c9",
           "build_wasm": {
             "samples": 9,
-            "p50_ms": 11.347,
-            "p95_ms": 11.944,
-            "min_ms": 10.931,
-            "max_ms": 11.944
+            "p50_ms": 11.695,
+            "p95_ms": 12.796,
+            "min_ms": 11.339,
+            "max_ms": 12.796
           },
           "native_build_miss": {
             "samples": 5,
-            "p50_ms": 22.498,
-            "p95_ms": 22.869,
-            "min_ms": 21.756,
-            "max_ms": 22.869
+            "p50_ms": 22.773,
+            "p95_ms": 23.449,
+            "min_ms": 22.505,
+            "max_ms": 23.449
           },
           "native_build_hit": {
             "samples": 9,
-            "p50_ms": 20.913,
-            "p95_ms": 21.66,
-            "min_ms": 20.596,
-            "max_ms": 21.66
+            "p50_ms": 22.454,
+            "p95_ms": 23.124,
+            "min_ms": 22.003,
+            "max_ms": 23.124
           },
           "run_wasmi": {
             "samples": 20,
-            "p50_ms": 11.103,
-            "p95_ms": 11.487,
-            "min_ms": 10.71,
-            "max_ms": 11.543
+            "p50_ms": 11.514,
+            "p95_ms": 11.87,
+            "min_ms": 11.141,
+            "max_ms": 13.854
           },
           "native_run": {
             "samples": 20,
-            "p50_ms": 3.779,
-            "p95_ms": 4.003,
-            "min_ms": 3.691,
-            "max_ms": 4.093
+            "p50_ms": 3.942,
+            "p95_ms": 4.216,
+            "min_ms": 3.807,
+            "max_ms": 4.301
           },
           "native_executable": {
             "bytes": 10033276,
@@ -131,24 +131,24 @@
           "wasm_sha256": "d36db890efb5550ffe7510ef1c1522d8974473a90f636049d12543821016689a",
           "build_wasm": {
             "samples": 9,
-            "p50_ms": 11.686,
-            "p95_ms": 12.418,
-            "min_ms": 11.356,
-            "max_ms": 12.418
+            "p50_ms": 12.15,
+            "p95_ms": 12.55,
+            "min_ms": 11.832,
+            "max_ms": 12.55
           },
           "native_build_miss": {
             "samples": 5,
-            "p50_ms": 23.858,
-            "p95_ms": 24.509,
-            "min_ms": 23.536,
-            "max_ms": 24.509
+            "p50_ms": 25.809,
+            "p95_ms": 26.101,
+            "min_ms": 25.743,
+            "max_ms": 26.101
           },
           "native_build_hit": {
             "samples": 9,
-            "p50_ms": 21.4,
-            "p95_ms": 22.609,
-            "min_ms": 20.824,
-            "max_ms": 22.609
+            "p50_ms": 23.203,
+            "p95_ms": 24.61,
+            "min_ms": 22.614,
+            "max_ms": 24.61
           }
         },
         "policy_small": {
@@ -158,24 +158,24 @@
           "wasm_sha256": "c7ddfc63b10f5611d87063dd166e3417f7c9b82d9c3abebbbde311b58403a9ba",
           "build_wasm": {
             "samples": 9,
-            "p50_ms": 11.709,
-            "p95_ms": 12.056,
-            "min_ms": 11.536,
-            "max_ms": 12.056
+            "p50_ms": 12.315,
+            "p95_ms": 12.678,
+            "min_ms": 12.075,
+            "max_ms": 12.678
           },
           "native_build_miss": {
             "samples": 5,
-            "p50_ms": 26.644,
-            "p95_ms": 26.857,
-            "min_ms": 26.111,
-            "max_ms": 26.857
+            "p50_ms": 28.046,
+            "p95_ms": 28.378,
+            "min_ms": 27.703,
+            "max_ms": 28.378
           },
           "native_build_hit": {
             "samples": 9,
-            "p50_ms": 21.475,
-            "p95_ms": 21.86,
-            "min_ms": 21.084,
-            "max_ms": 21.86
+            "p50_ms": 23.411,
+            "p95_ms": 24.01,
+            "min_ms": 22.633,
+            "max_ms": 24.01
           }
         },
         "policy_large": {
@@ -185,24 +185,24 @@
           "wasm_sha256": "97272a3752fc5e4697eb5533b9fec8d64abf814145826175f542023938492172",
           "build_wasm": {
             "samples": 9,
-            "p50_ms": 15.293,
-            "p95_ms": 15.675,
-            "min_ms": 15.174,
-            "max_ms": 15.675
+            "p50_ms": 15.96,
+            "p95_ms": 16.123,
+            "min_ms": 15.821,
+            "max_ms": 16.123
           },
           "native_build_miss": {
             "samples": 5,
-            "p50_ms": 73.364,
-            "p95_ms": 73.787,
-            "min_ms": 72.183,
-            "max_ms": 73.787
+            "p50_ms": 74.249,
+            "p95_ms": 74.313,
+            "min_ms": 73.683,
+            "max_ms": 74.313
           },
           "native_build_hit": {
             "samples": 9,
-            "p50_ms": 25.457,
-            "p95_ms": 26.533,
-            "min_ms": 25.176,
-            "max_ms": 26.533
+            "p50_ms": 26.821,
+            "p95_ms": 27.05,
+            "min_ms": 26.245,
+            "max_ms": 27.05
           }
         },
         "std_mix_large": {
@@ -212,32 +212,32 @@
           "wasm_sha256": "62c03505822faef45ba787d933cf3f4ce49541524a1439efb73f9ad58861d489",
           "build_wasm": {
             "samples": 9,
-            "p50_ms": 24.773,
-            "p95_ms": 25.114,
-            "min_ms": 24.198,
-            "max_ms": 25.114
+            "p50_ms": 25.392,
+            "p95_ms": 25.516,
+            "min_ms": 25.1,
+            "max_ms": 25.516
           },
           "native_build_miss": {
             "samples": 5,
-            "p50_ms": 166.81,
-            "p95_ms": 167.362,
-            "min_ms": 165.805,
-            "max_ms": 167.362
+            "p50_ms": 167.38,
+            "p95_ms": 167.688,
+            "min_ms": 166.327,
+            "max_ms": 167.688
           },
           "native_build_hit": {
             "samples": 9,
-            "p50_ms": 36.867,
-            "p95_ms": 37.065,
-            "min_ms": 35.757,
-            "max_ms": 37.065
+            "p50_ms": 37.952,
+            "p95_ms": 38.714,
+            "min_ms": 37.28,
+            "max_ms": 38.714
           }
         }
       }
     },
     {
       "schema": "wasmc-native-cli-performance/v1",
-      "measured_at": "2026-09-20T16:16:24.528Z",
-      "commit": "0ba99c613a8497a78b8ef2a002273914f01f82e9",
+      "measured_at": "2026-09-20T16:33:06.829Z",
+      "commit": "e6be0ba4307d2d2e16ccf4a7675d61ce6f45f3ed",
       "platform": "linux-x86_64",
       "host": {
         "os": "linux",
@@ -258,42 +258,42 @@
           "wasm_sha256": "29996fa74541742737704f64e48add2a5079ed8c57783cda4912046d5acb32c9",
           "build_wasm": {
             "samples": 9,
-            "p50_ms": 9.598,
-            "p95_ms": 10.428,
-            "min_ms": 9.065,
-            "max_ms": 10.428
+            "p50_ms": 7.474,
+            "p95_ms": 8.156,
+            "min_ms": 7.018,
+            "max_ms": 8.156
           },
           "native_build_miss": {
             "samples": 5,
-            "p50_ms": 18.587,
-            "p95_ms": 18.968,
-            "min_ms": 16.641,
-            "max_ms": 18.968
+            "p50_ms": 14.847,
+            "p95_ms": 15.25,
+            "min_ms": 13.377,
+            "max_ms": 15.25
           },
           "native_build_hit": {
             "samples": 9,
-            "p50_ms": 16.494,
-            "p95_ms": 18.149,
-            "min_ms": 15.984,
-            "max_ms": 18.149
+            "p50_ms": 13.287,
+            "p95_ms": 14.16,
+            "min_ms": 12.722,
+            "max_ms": 14.16
           },
           "run_wasmi": {
             "samples": 20,
-            "p50_ms": 9.364,
-            "p95_ms": 10.214,
-            "min_ms": 8.976,
-            "max_ms": 10.233
+            "p50_ms": 7.128,
+            "p95_ms": 7.538,
+            "min_ms": 6.811,
+            "max_ms": 7.561
           },
           "native_run": {
             "samples": 20,
-            "p50_ms": 2.375,
-            "p95_ms": 2.522,
-            "min_ms": 2.294,
-            "max_ms": 2.63
+            "p50_ms": 1.807,
+            "p95_ms": 1.856,
+            "min_ms": 1.77,
+            "max_ms": 2.056
           },
           "native_executable": {
             "bytes": 11668548,
-            "sha256": "c782b803747461f368923ea1f254e5c42a4f8691ef9b33fc0f098325375069a5"
+            "sha256": "86768536970d84658acf0cdd54b6a1bc2c7caefb8f0b880fc5c7b2102efaa9a6"
           }
         },
         "structured_variant": {
@@ -303,24 +303,24 @@
           "wasm_sha256": "d36db890efb5550ffe7510ef1c1522d8974473a90f636049d12543821016689a",
           "build_wasm": {
             "samples": 9,
-            "p50_ms": 9.562,
-            "p95_ms": 10.282,
-            "min_ms": 9.09,
-            "max_ms": 10.282
+            "p50_ms": 7.438,
+            "p95_ms": 7.759,
+            "min_ms": 7.1,
+            "max_ms": 7.759
           },
           "native_build_miss": {
             "samples": 5,
-            "p50_ms": 21.197,
-            "p95_ms": 22.495,
-            "min_ms": 19.113,
-            "max_ms": 22.495
+            "p50_ms": 15.187,
+            "p95_ms": 16.738,
+            "min_ms": 15.045,
+            "max_ms": 16.738
           },
           "native_build_hit": {
             "samples": 9,
-            "p50_ms": 17.309,
-            "p95_ms": 20.134,
-            "min_ms": 16.747,
-            "max_ms": 20.134
+            "p50_ms": 13.998,
+            "p95_ms": 15.713,
+            "min_ms": 13.088,
+            "max_ms": 15.713
           }
         },
         "policy_small": {
@@ -330,24 +330,24 @@
           "wasm_sha256": "c7ddfc63b10f5611d87063dd166e3417f7c9b82d9c3abebbbde311b58403a9ba",
           "build_wasm": {
             "samples": 9,
-            "p50_ms": 9.668,
-            "p95_ms": 10.58,
-            "min_ms": 9.492,
-            "max_ms": 10.58
+            "p50_ms": 7.683,
+            "p95_ms": 8.4,
+            "min_ms": 7.431,
+            "max_ms": 8.4
           },
           "native_build_miss": {
             "samples": 5,
-            "p50_ms": 21.369,
-            "p95_ms": 22.901,
-            "min_ms": 21.336,
-            "max_ms": 22.901
+            "p50_ms": 17.026,
+            "p95_ms": 19.343,
+            "min_ms": 16.907,
+            "max_ms": 19.343
           },
           "native_build_hit": {
             "samples": 9,
-            "p50_ms": 17.279,
-            "p95_ms": 19.964,
-            "min_ms": 16.757,
-            "max_ms": 19.964
+            "p50_ms": 13.624,
+            "p95_ms": 15.561,
+            "min_ms": 13.13,
+            "max_ms": 15.561
           }
         },
         "policy_large": {
@@ -357,24 +357,24 @@
           "wasm_sha256": "97272a3752fc5e4697eb5533b9fec8d64abf814145826175f542023938492172",
           "build_wasm": {
             "samples": 9,
-            "p50_ms": 14.723,
-            "p95_ms": 16.994,
-            "min_ms": 14.365,
-            "max_ms": 16.994
+            "p50_ms": 11.519,
+            "p95_ms": 13.304,
+            "min_ms": 11.077,
+            "max_ms": 13.304
           },
           "native_build_miss": {
             "samples": 5,
-            "p50_ms": 64.935,
-            "p95_ms": 70.488,
-            "min_ms": 64.071,
-            "max_ms": 70.488
+            "p50_ms": 50.901,
+            "p95_ms": 53.438,
+            "min_ms": 50.212,
+            "max_ms": 53.438
           },
           "native_build_hit": {
             "samples": 9,
-            "p50_ms": 22.361,
-            "p95_ms": 25.813,
-            "min_ms": 21.887,
-            "max_ms": 25.813
+            "p50_ms": 17.779,
+            "p95_ms": 20.381,
+            "min_ms": 17.402,
+            "max_ms": 20.381
           }
         },
         "std_mix_large": {
@@ -384,32 +384,32 @@
           "wasm_sha256": "62c03505822faef45ba787d933cf3f4ce49541524a1439efb73f9ad58861d489",
           "build_wasm": {
             "samples": 9,
-            "p50_ms": 28.211,
-            "p95_ms": 33.855,
-            "min_ms": 26.224,
-            "max_ms": 33.855
+            "p50_ms": 21.155,
+            "p95_ms": 26.331,
+            "min_ms": 20.343,
+            "max_ms": 26.331
           },
           "native_build_miss": {
             "samples": 5,
-            "p50_ms": 155.693,
-            "p95_ms": 161.79,
-            "min_ms": 154.579,
-            "max_ms": 161.79
+            "p50_ms": 126.95,
+            "p95_ms": 127.328,
+            "min_ms": 119.659,
+            "max_ms": 127.328
           },
           "native_build_hit": {
             "samples": 9,
-            "p50_ms": 35.885,
-            "p95_ms": 43.893,
-            "min_ms": 35.287,
-            "max_ms": 43.893
+            "p50_ms": 29.109,
+            "p95_ms": 33.83,
+            "min_ms": 27.89,
+            "max_ms": 33.83
           }
         }
       }
     },
     {
       "schema": "wasmc-native-cli-performance/v1",
-      "measured_at": "2026-09-20T16:15:40.008Z",
-      "commit": "0ba99c613a8497a78b8ef2a002273914f01f82e9",
+      "measured_at": "2026-09-20T16:38:20.958Z",
+      "commit": "e6be0ba4307d2d2e16ccf4a7675d61ce6f45f3ed",
       "platform": "macos-aarch64",
       "host": {
         "os": "darwin",
@@ -430,38 +430,38 @@
           "wasm_sha256": "29996fa74541742737704f64e48add2a5079ed8c57783cda4912046d5acb32c9",
           "build_wasm": {
             "samples": 9,
-            "p50_ms": 17.313,
-            "p95_ms": 34.013,
-            "min_ms": 15.668,
-            "max_ms": 34.013
+            "p50_ms": 16.481,
+            "p95_ms": 30.068,
+            "min_ms": 14.893,
+            "max_ms": 30.068
           },
           "native_build_miss": {
             "samples": 5,
-            "p50_ms": 23.282,
-            "p95_ms": 24.755,
-            "min_ms": 23.143,
-            "max_ms": 24.755
+            "p50_ms": 35.628,
+            "p95_ms": 50.124,
+            "min_ms": 28.778,
+            "max_ms": 50.124
           },
           "native_build_hit": {
             "samples": 9,
-            "p50_ms": 24.906,
-            "p95_ms": 29.001,
-            "min_ms": 22.673,
-            "max_ms": 29.001
+            "p50_ms": 33.907,
+            "p95_ms": 50.227,
+            "min_ms": 27.567,
+            "max_ms": 50.227
           },
           "run_wasmi": {
             "samples": 20,
-            "p50_ms": 18.171,
-            "p95_ms": 25.251,
-            "min_ms": 14.672,
-            "max_ms": 27.132
+            "p50_ms": 17.666,
+            "p95_ms": 29.001,
+            "min_ms": 15.096,
+            "max_ms": 67.336
           },
           "native_run": {
             "samples": 20,
-            "p50_ms": 3.399,
-            "p95_ms": 7.411,
-            "min_ms": 2.997,
-            "max_ms": 8.608
+            "p50_ms": 3.783,
+            "p95_ms": 4.283,
+            "min_ms": 2.716,
+            "max_ms": 4.595
           },
           "native_executable": {
             "bytes": 8775476,
@@ -475,24 +475,24 @@
           "wasm_sha256": "d36db890efb5550ffe7510ef1c1522d8974473a90f636049d12543821016689a",
           "build_wasm": {
             "samples": 9,
-            "p50_ms": 17.003,
-            "p95_ms": 23.557,
-            "min_ms": 15.207,
-            "max_ms": 23.557
+            "p50_ms": 17.523,
+            "p95_ms": 18.374,
+            "min_ms": 16.782,
+            "max_ms": 18.374
           },
           "native_build_miss": {
             "samples": 5,
-            "p50_ms": 41.783,
-            "p95_ms": 48.766,
-            "min_ms": 31.168,
-            "max_ms": 48.766
+            "p50_ms": 27.861,
+            "p95_ms": 31.49,
+            "min_ms": 25.306,
+            "max_ms": 31.49
           },
           "native_build_hit": {
             "samples": 9,
-            "p50_ms": 37.54,
-            "p95_ms": 53.683,
-            "min_ms": 31.811,
-            "max_ms": 53.683
+            "p50_ms": 34.893,
+            "p95_ms": 42.425,
+            "min_ms": 27.753,
+            "max_ms": 42.425
           }
         },
         "policy_small": {
@@ -502,24 +502,24 @@
           "wasm_sha256": "c7ddfc63b10f5611d87063dd166e3417f7c9b82d9c3abebbbde311b58403a9ba",
           "build_wasm": {
             "samples": 9,
-            "p50_ms": 16.459,
-            "p95_ms": 26.144,
-            "min_ms": 16.02,
-            "max_ms": 26.144
+            "p50_ms": 19.69,
+            "p95_ms": 25.926,
+            "min_ms": 16.688,
+            "max_ms": 25.926
           },
           "native_build_miss": {
             "samples": 5,
-            "p50_ms": 48.955,
-            "p95_ms": 73.902,
-            "min_ms": 33.582,
-            "max_ms": 73.902
+            "p50_ms": 42.219,
+            "p95_ms": 43.455,
+            "min_ms": 35.907,
+            "max_ms": 43.455
           },
           "native_build_hit": {
             "samples": 9,
-            "p50_ms": 55.342,
-            "p95_ms": 62.427,
-            "min_ms": 45.015,
-            "max_ms": 62.427
+            "p50_ms": 37.775,
+            "p95_ms": 45.959,
+            "min_ms": 26.293,
+            "max_ms": 45.959
           }
         },
         "policy_large": {
@@ -529,24 +529,24 @@
           "wasm_sha256": "97272a3752fc5e4697eb5533b9fec8d64abf814145826175f542023938492172",
           "build_wasm": {
             "samples": 9,
-            "p50_ms": 27.553,
-            "p95_ms": 35.786,
-            "min_ms": 22.477,
-            "max_ms": 35.786
+            "p50_ms": 26.324,
+            "p95_ms": 44.165,
+            "min_ms": 22.712,
+            "max_ms": 44.165
           },
           "native_build_miss": {
             "samples": 5,
-            "p50_ms": 92.306,
-            "p95_ms": 124.968,
-            "min_ms": 70.299,
-            "max_ms": 124.968
+            "p50_ms": 93.598,
+            "p95_ms": 108.529,
+            "min_ms": 75.32,
+            "max_ms": 108.529
           },
           "native_build_hit": {
             "samples": 9,
-            "p50_ms": 51.537,
-            "p95_ms": 64.167,
-            "min_ms": 42.247,
-            "max_ms": 64.167
+            "p50_ms": 47.841,
+            "p95_ms": 62.057,
+            "min_ms": 42.433,
+            "max_ms": 62.057
           }
         },
         "std_mix_large": {
@@ -556,32 +556,32 @@
           "wasm_sha256": "62c03505822faef45ba787d933cf3f4ce49541524a1439efb73f9ad58861d489",
           "build_wasm": {
             "samples": 9,
-            "p50_ms": 44.125,
-            "p95_ms": 49.893,
-            "min_ms": 29.624,
-            "max_ms": 49.893
+            "p50_ms": 38.373,
+            "p95_ms": 46.434,
+            "min_ms": 35.882,
+            "max_ms": 46.434
           },
           "native_build_miss": {
             "samples": 5,
-            "p50_ms": 216.655,
-            "p95_ms": 225.898,
-            "min_ms": 195.965,
-            "max_ms": 225.898
+            "p50_ms": 207.25,
+            "p95_ms": 234.168,
+            "min_ms": 169.804,
+            "max_ms": 234.168
           },
           "native_build_hit": {
             "samples": 9,
-            "p50_ms": 69.046,
-            "p95_ms": 84.573,
-            "min_ms": 57.435,
-            "max_ms": 84.573
+            "p50_ms": 72.594,
+            "p95_ms": 94.666,
+            "min_ms": 54.969,
+            "max_ms": 94.666
           }
         }
       }
     },
     {
       "schema": "wasmc-native-cli-performance/v1",
-      "measured_at": "2026-09-20T16:22:29.467Z",
-      "commit": "0ba99c613a8497a78b8ef2a002273914f01f82e9",
+      "measured_at": "2026-09-20T16:41:45.096Z",
+      "commit": "e6be0ba4307d2d2e16ccf4a7675d61ce6f45f3ed",
       "platform": "macos-x86_64",
       "host": {
         "os": "darwin",
@@ -602,38 +602,38 @@
           "wasm_sha256": "29996fa74541742737704f64e48add2a5079ed8c57783cda4912046d5acb32c9",
           "build_wasm": {
             "samples": 9,
-            "p50_ms": 27.944,
-            "p95_ms": 37.801,
-            "min_ms": 25.296,
-            "max_ms": 37.801
+            "p50_ms": 25.126,
+            "p95_ms": 27.571,
+            "min_ms": 24.552,
+            "max_ms": 27.571
           },
           "native_build_miss": {
             "samples": 5,
-            "p50_ms": 79.847,
-            "p95_ms": 102.695,
-            "min_ms": 57.84,
-            "max_ms": 102.695
+            "p50_ms": 43.493,
+            "p95_ms": 99.717,
+            "min_ms": 42.952,
+            "max_ms": 99.717
           },
           "native_build_hit": {
             "samples": 9,
-            "p50_ms": 55.756,
-            "p95_ms": 75.009,
-            "min_ms": 50.205,
-            "max_ms": 75.009
+            "p50_ms": 42.473,
+            "p95_ms": 44.041,
+            "min_ms": 41.695,
+            "max_ms": 44.041
           },
           "run_wasmi": {
             "samples": 20,
-            "p50_ms": 34.564,
-            "p95_ms": 39.261,
-            "min_ms": 23.7,
-            "max_ms": 40.635
+            "p50_ms": 25.429,
+            "p95_ms": 25.678,
+            "min_ms": 25.164,
+            "max_ms": 25.81
           },
           "native_run": {
             "samples": 20,
-            "p50_ms": 8.449,
-            "p95_ms": 8.955,
-            "min_ms": 7.176,
-            "max_ms": 9.696
+            "p50_ms": 6.63,
+            "p95_ms": 6.834,
+            "min_ms": 6.156,
+            "max_ms": 6.887
           },
           "native_executable": {
             "bytes": 10724004,
@@ -647,24 +647,24 @@
           "wasm_sha256": "d36db890efb5550ffe7510ef1c1522d8974473a90f636049d12543821016689a",
           "build_wasm": {
             "samples": 9,
-            "p50_ms": 31.618,
-            "p95_ms": 88.828,
-            "min_ms": 23.736,
-            "max_ms": 88.828
+            "p50_ms": 26.073,
+            "p95_ms": 26.169,
+            "min_ms": 25.954,
+            "max_ms": 26.169
           },
           "native_build_miss": {
             "samples": 5,
-            "p50_ms": 80.766,
-            "p95_ms": 128.562,
-            "min_ms": 78.806,
-            "max_ms": 128.562
+            "p50_ms": 46.587,
+            "p95_ms": 47.258,
+            "min_ms": 46.447,
+            "max_ms": 47.258
           },
           "native_build_hit": {
             "samples": 9,
-            "p50_ms": 53.299,
-            "p95_ms": 68.695,
-            "min_ms": 46.085,
-            "max_ms": 68.695
+            "p50_ms": 43.54,
+            "p95_ms": 47.299,
+            "min_ms": 42.281,
+            "max_ms": 47.299
           }
         },
         "policy_small": {
@@ -674,24 +674,24 @@
           "wasm_sha256": "c7ddfc63b10f5611d87063dd166e3417f7c9b82d9c3abebbbde311b58403a9ba",
           "build_wasm": {
             "samples": 9,
-            "p50_ms": 31.35,
-            "p95_ms": 33.985,
-            "min_ms": 28.266,
-            "max_ms": 33.985
+            "p50_ms": 26.212,
+            "p95_ms": 27,
+            "min_ms": 26.016,
+            "max_ms": 27
           },
           "native_build_miss": {
             "samples": 5,
-            "p50_ms": 57.74,
-            "p95_ms": 60.32,
-            "min_ms": 56.432,
-            "max_ms": 60.32
+            "p50_ms": 48.766,
+            "p95_ms": 49.317,
+            "min_ms": 47.89,
+            "max_ms": 49.317
           },
           "native_build_hit": {
             "samples": 9,
-            "p50_ms": 50.055,
-            "p95_ms": 51.953,
-            "min_ms": 47.118,
-            "max_ms": 51.953
+            "p50_ms": 42.041,
+            "p95_ms": 42.943,
+            "min_ms": 41.524,
+            "max_ms": 42.943
           }
         },
         "policy_large": {
@@ -701,24 +701,24 @@
           "wasm_sha256": "97272a3752fc5e4697eb5533b9fec8d64abf814145826175f542023938492172",
           "build_wasm": {
             "samples": 9,
-            "p50_ms": 33.592,
-            "p95_ms": 37.599,
-            "min_ms": 31.249,
-            "max_ms": 37.599
+            "p50_ms": 31.045,
+            "p95_ms": 31.879,
+            "min_ms": 30.927,
+            "max_ms": 31.879
           },
           "native_build_miss": {
             "samples": 5,
-            "p50_ms": 110.659,
-            "p95_ms": 115.398,
-            "min_ms": 106.363,
-            "max_ms": 115.398
+            "p50_ms": 99.416,
+            "p95_ms": 103.777,
+            "min_ms": 97.788,
+            "max_ms": 103.777
           },
           "native_build_hit": {
             "samples": 9,
-            "p50_ms": 56.95,
-            "p95_ms": 61.87,
-            "min_ms": 51.078,
-            "max_ms": 61.87
+            "p50_ms": 48.066,
+            "p95_ms": 49.322,
+            "min_ms": 46.615,
+            "max_ms": 49.322
           }
         },
         "std_mix_large": {
@@ -728,32 +728,32 @@
           "wasm_sha256": "62c03505822faef45ba787d933cf3f4ce49541524a1439efb73f9ad58861d489",
           "build_wasm": {
             "samples": 9,
-            "p50_ms": 49.873,
-            "p95_ms": 52.534,
-            "min_ms": 46.636,
-            "max_ms": 52.534
+            "p50_ms": 43.712,
+            "p95_ms": 45.24,
+            "min_ms": 43.271,
+            "max_ms": 45.24
           },
           "native_build_miss": {
             "samples": 5,
-            "p50_ms": 220.135,
-            "p95_ms": 230.667,
-            "min_ms": 215.674,
-            "max_ms": 230.667
+            "p50_ms": 212.778,
+            "p95_ms": 269.636,
+            "min_ms": 204.729,
+            "max_ms": 269.636
           },
           "native_build_hit": {
             "samples": 9,
-            "p50_ms": 80.836,
-            "p95_ms": 899.431,
-            "min_ms": 64.877,
-            "max_ms": 899.431
+            "p50_ms": 63.401,
+            "p95_ms": 66.931,
+            "min_ms": 62.723,
+            "max_ms": 66.931
           }
         }
       }
     },
     {
       "schema": "wasmc-native-cli-performance/v1",
-      "measured_at": "2026-09-20T16:15:38.101Z",
-      "commit": "0ba99c613a8497a78b8ef2a002273914f01f82e9",
+      "measured_at": "2026-09-20T16:36:49.061Z",
+      "commit": "e6be0ba4307d2d2e16ccf4a7675d61ce6f45f3ed",
       "platform": "windows-aarch64",
       "host": {
         "os": "win32",
@@ -762,7 +762,7 @@
       },
       "cli": {
         "bytes": 9323008,
-        "sha256": "f115e41350124570f7839d769ff82fc4322cb61920abe790c44f1e154363e4c1"
+        "sha256": "7f3b356a12db1b63208a76885fe010a73a384b968aa6ee32736975010925a2b0"
       },
       "corpus_schema": "wasmc-public-benchmark-corpus/v1",
       "policy": "GitHub-hosted timings are comparative observations, not absolute SLA authority. Source identity and generated Wasm parity are hard gates.",
@@ -774,42 +774,42 @@
           "wasm_sha256": "29996fa74541742737704f64e48add2a5079ed8c57783cda4912046d5acb32c9",
           "build_wasm": {
             "samples": 9,
-            "p50_ms": 23.023,
-            "p95_ms": 39.371,
-            "min_ms": 22.285,
-            "max_ms": 39.371
+            "p50_ms": 24.687,
+            "p95_ms": 37.402,
+            "min_ms": 24.321,
+            "max_ms": 37.402
           },
           "native_build_miss": {
             "samples": 5,
-            "p50_ms": 36.165,
-            "p95_ms": 39.011,
-            "min_ms": 33.867,
-            "max_ms": 39.011
+            "p50_ms": 37.582,
+            "p95_ms": 37.957,
+            "min_ms": 36.137,
+            "max_ms": 37.957
           },
           "native_build_hit": {
             "samples": 9,
-            "p50_ms": 31.594,
-            "p95_ms": 34.312,
-            "min_ms": 31.207,
-            "max_ms": 34.312
+            "p50_ms": 32.853,
+            "p95_ms": 34.629,
+            "min_ms": 32.417,
+            "max_ms": 34.629
           },
           "run_wasmi": {
             "samples": 20,
-            "p50_ms": 18.09,
-            "p95_ms": 18.656,
-            "min_ms": 17.75,
-            "max_ms": 18.747
+            "p50_ms": 19.708,
+            "p95_ms": 20.259,
+            "min_ms": 19.059,
+            "max_ms": 20.28
           },
           "native_run": {
             "samples": 20,
-            "p50_ms": 16.745,
-            "p95_ms": 17.457,
-            "min_ms": 16.4,
-            "max_ms": 17.561
+            "p50_ms": 18.518,
+            "p95_ms": 18.908,
+            "min_ms": 17.833,
+            "max_ms": 19.149
           },
           "native_executable": {
             "bytes": 9521068,
-            "sha256": "5300ad4236b11533eaf96aa49351185bce7b6e36f67ff340c514c356f16d0228"
+            "sha256": "d256548032b31592fb76ff92805e847e414adc2b2b9fb19d0bb4ec7b5ce7a66a"
           }
         },
         "structured_variant": {
@@ -819,24 +819,24 @@
           "wasm_sha256": "d36db890efb5550ffe7510ef1c1522d8974473a90f636049d12543821016689a",
           "build_wasm": {
             "samples": 9,
-            "p50_ms": 22.255,
-            "p95_ms": 25.996,
-            "min_ms": 21.877,
-            "max_ms": 25.996
+            "p50_ms": 24.338,
+            "p95_ms": 29.534,
+            "min_ms": 23.893,
+            "max_ms": 29.534
           },
           "native_build_miss": {
             "samples": 5,
-            "p50_ms": 34.959,
-            "p95_ms": 39.757,
-            "min_ms": 34.781,
-            "max_ms": 39.757
+            "p50_ms": 37.852,
+            "p95_ms": 39.615,
+            "min_ms": 37.674,
+            "max_ms": 39.615
           },
           "native_build_hit": {
             "samples": 9,
-            "p50_ms": 31.449,
-            "p95_ms": 33.249,
-            "min_ms": 30.869,
-            "max_ms": 33.249
+            "p50_ms": 34.637,
+            "p95_ms": 36.195,
+            "min_ms": 33.259,
+            "max_ms": 36.195
           }
         },
         "policy_small": {
@@ -846,24 +846,24 @@
           "wasm_sha256": "c7ddfc63b10f5611d87063dd166e3417f7c9b82d9c3abebbbde311b58403a9ba",
           "build_wasm": {
             "samples": 9,
-            "p50_ms": 22.47,
-            "p95_ms": 54.544,
-            "min_ms": 22.142,
-            "max_ms": 54.544
+            "p50_ms": 25.069,
+            "p95_ms": 27.115,
+            "min_ms": 24.786,
+            "max_ms": 27.115
           },
           "native_build_miss": {
             "samples": 5,
-            "p50_ms": 37.603,
-            "p95_ms": 39.279,
-            "min_ms": 36.863,
-            "max_ms": 39.279
+            "p50_ms": 40.457,
+            "p95_ms": 42.733,
+            "min_ms": 40.136,
+            "max_ms": 42.733
           },
           "native_build_hit": {
             "samples": 9,
-            "p50_ms": 31.976,
-            "p95_ms": 32.869,
-            "min_ms": 31.57,
-            "max_ms": 32.869
+            "p50_ms": 34.856,
+            "p95_ms": 35.811,
+            "min_ms": 34.262,
+            "max_ms": 35.811
           }
         },
         "policy_large": {
@@ -873,24 +873,24 @@
           "wasm_sha256": "97272a3752fc5e4697eb5533b9fec8d64abf814145826175f542023938492172",
           "build_wasm": {
             "samples": 9,
-            "p50_ms": 26.11,
-            "p95_ms": 27.746,
-            "min_ms": 25.706,
-            "max_ms": 27.746
+            "p50_ms": 29.161,
+            "p95_ms": 30.94,
+            "min_ms": 28.407,
+            "max_ms": 30.94
           },
           "native_build_miss": {
             "samples": 5,
-            "p50_ms": 72.422,
-            "p95_ms": 74.242,
-            "min_ms": 71.635,
-            "max_ms": 74.242
+            "p50_ms": 75.765,
+            "p95_ms": 358.531,
+            "min_ms": 74.398,
+            "max_ms": 358.531
           },
           "native_build_hit": {
             "samples": 9,
-            "p50_ms": 35.862,
-            "p95_ms": 36.542,
-            "min_ms": 35.18,
-            "max_ms": 36.542
+            "p50_ms": 37.065,
+            "p95_ms": 45.545,
+            "min_ms": 36.042,
+            "max_ms": 45.545
           }
         },
         "std_mix_large": {
@@ -900,32 +900,32 @@
           "wasm_sha256": "62c03505822faef45ba787d933cf3f4ce49541524a1439efb73f9ad58861d489",
           "build_wasm": {
             "samples": 9,
-            "p50_ms": 35.049,
-            "p95_ms": 36.512,
-            "min_ms": 34.581,
-            "max_ms": 36.512
+            "p50_ms": 37.832,
+            "p95_ms": 40.096,
+            "min_ms": 37.603,
+            "max_ms": 40.096
           },
           "native_build_miss": {
             "samples": 5,
-            "p50_ms": 141.087,
-            "p95_ms": 143.938,
-            "min_ms": 139.921,
-            "max_ms": 143.938
+            "p50_ms": 144.734,
+            "p95_ms": 147.093,
+            "min_ms": 143.886,
+            "max_ms": 147.093
           },
           "native_build_hit": {
             "samples": 9,
-            "p50_ms": 45.988,
-            "p95_ms": 49.476,
-            "min_ms": 45.45,
-            "max_ms": 49.476
+            "p50_ms": 48.565,
+            "p95_ms": 49.137,
+            "min_ms": 47.59,
+            "max_ms": 49.137
           }
         }
       }
     },
     {
       "schema": "wasmc-native-cli-performance/v1",
-      "measured_at": "2026-09-20T16:22:32.512Z",
-      "commit": "0ba99c613a8497a78b8ef2a002273914f01f82e9",
+      "measured_at": "2026-09-20T16:31:09.359Z",
+      "commit": "e6be0ba4307d2d2e16ccf4a7675d61ce6f45f3ed",
       "platform": "windows-x86_64",
       "host": {
         "os": "win32",
@@ -934,7 +934,7 @@
       },
       "cli": {
         "bytes": 10624512,
-        "sha256": "719fd37b763e291d6de4cd5592c562143bf716d9b975bb406646eb9bbf85d98a"
+        "sha256": "e973d41c1d3ddfc0ec7c6c6c25ee37d9408b2fe0587baec342142aae62af2cb5"
       },
       "corpus_schema": "wasmc-public-benchmark-corpus/v1",
       "policy": "GitHub-hosted timings are comparative observations, not absolute SLA authority. Source identity and generated Wasm parity are hard gates.",
@@ -946,42 +946,42 @@
           "wasm_sha256": "29996fa74541742737704f64e48add2a5079ed8c57783cda4912046d5acb32c9",
           "build_wasm": {
             "samples": 9,
-            "p50_ms": 17.494,
-            "p95_ms": 25.8,
-            "min_ms": 16.651,
-            "max_ms": 25.8
+            "p50_ms": 16.115,
+            "p95_ms": 24.692,
+            "min_ms": 15.65,
+            "max_ms": 24.692
           },
           "native_build_miss": {
             "samples": 5,
-            "p50_ms": 33.754,
-            "p95_ms": 36.408,
-            "min_ms": 32.328,
-            "max_ms": 36.408
+            "p50_ms": 28.273,
+            "p95_ms": 114.762,
+            "min_ms": 27.838,
+            "max_ms": 114.762
           },
           "native_build_hit": {
             "samples": 9,
-            "p50_ms": 31.348,
-            "p95_ms": 392.337,
-            "min_ms": 30.098,
-            "max_ms": 392.337
+            "p50_ms": 24.374,
+            "p95_ms": 26.464,
+            "min_ms": 23.84,
+            "max_ms": 26.464
           },
           "run_wasmi": {
             "samples": 20,
-            "p50_ms": 16.305,
-            "p95_ms": 18.279,
-            "min_ms": 15.858,
-            "max_ms": 18.463
+            "p50_ms": 15.867,
+            "p95_ms": 20.469,
+            "min_ms": 15.38,
+            "max_ms": 21.691
           },
           "native_run": {
             "samples": 20,
-            "p50_ms": 10.264,
-            "p95_ms": 10.426,
-            "min_ms": 9.993,
-            "max_ms": 10.54
+            "p50_ms": 9.562,
+            "p95_ms": 11.228,
+            "min_ms": 9.398,
+            "max_ms": 12.727
           },
           "native_executable": {
             "bytes": 10638252,
-            "sha256": "7333b4c1c436e9f88412b759f9df818423fe0bdbf4bc60d6e9c1d8f5f9f894aa"
+            "sha256": "12f6a900497e68e01f11c3deec1e40580b4f88a1e6511dc7f78dd3f368717752"
           }
         },
         "structured_variant": {
@@ -991,24 +991,24 @@
           "wasm_sha256": "d36db890efb5550ffe7510ef1c1522d8974473a90f636049d12543821016689a",
           "build_wasm": {
             "samples": 9,
-            "p50_ms": 16.956,
-            "p95_ms": 395.018,
-            "min_ms": 16.425,
-            "max_ms": 395.018
+            "p50_ms": 16.053,
+            "p95_ms": 21.298,
+            "min_ms": 15.768,
+            "max_ms": 21.298
           },
           "native_build_miss": {
             "samples": 5,
-            "p50_ms": 36.087,
-            "p95_ms": 36.772,
-            "min_ms": 34.684,
-            "max_ms": 36.772
+            "p50_ms": 29.143,
+            "p95_ms": 31.143,
+            "min_ms": 28.626,
+            "max_ms": 31.143
           },
           "native_build_hit": {
             "samples": 9,
-            "p50_ms": 30.875,
-            "p95_ms": 32.59,
-            "min_ms": 30.708,
-            "max_ms": 32.59
+            "p50_ms": 24.406,
+            "p95_ms": 25.751,
+            "min_ms": 23.954,
+            "max_ms": 25.751
           }
         },
         "policy_small": {
@@ -1018,24 +1018,24 @@
           "wasm_sha256": "c7ddfc63b10f5611d87063dd166e3417f7c9b82d9c3abebbbde311b58403a9ba",
           "build_wasm": {
             "samples": 9,
-            "p50_ms": 16.77,
-            "p95_ms": 18.659,
-            "min_ms": 16.544,
-            "max_ms": 18.659
+            "p50_ms": 16.881,
+            "p95_ms": 18.299,
+            "min_ms": 16.345,
+            "max_ms": 18.299
           },
           "native_build_miss": {
             "samples": 5,
-            "p50_ms": 37.894,
-            "p95_ms": 68.431,
-            "min_ms": 36.613,
-            "max_ms": 68.431
+            "p50_ms": 32.156,
+            "p95_ms": 37.142,
+            "min_ms": 31.304,
+            "max_ms": 37.142
           },
           "native_build_hit": {
             "samples": 9,
-            "p50_ms": 31.403,
-            "p95_ms": 35.273,
-            "min_ms": 30.816,
-            "max_ms": 35.273
+            "p50_ms": 24.055,
+            "p95_ms": 25.067,
+            "min_ms": 23.77,
+            "max_ms": 25.067
           }
         },
         "policy_large": {
@@ -1045,24 +1045,24 @@
           "wasm_sha256": "97272a3752fc5e4697eb5533b9fec8d64abf814145826175f542023938492172",
           "build_wasm": {
             "samples": 9,
-            "p50_ms": 23.053,
-            "p95_ms": 24.099,
-            "min_ms": 22.447,
-            "max_ms": 24.099
+            "p50_ms": 20.784,
+            "p95_ms": 25.579,
+            "min_ms": 20.018,
+            "max_ms": 25.579
           },
           "native_build_miss": {
             "samples": 5,
-            "p50_ms": 81.202,
-            "p95_ms": 90.537,
-            "min_ms": 79.764,
-            "max_ms": 90.537
+            "p50_ms": 82.12,
+            "p95_ms": 88.771,
+            "min_ms": 80.953,
+            "max_ms": 88.771
           },
           "native_build_hit": {
             "samples": 9,
-            "p50_ms": 36.347,
-            "p95_ms": 37.133,
-            "min_ms": 35.666,
-            "max_ms": 37.133
+            "p50_ms": 29.695,
+            "p95_ms": 31.037,
+            "min_ms": 29.393,
+            "max_ms": 31.037
           }
         },
         "std_mix_large": {
@@ -1072,24 +1072,24 @@
           "wasm_sha256": "62c03505822faef45ba787d933cf3f4ce49541524a1439efb73f9ad58861d489",
           "build_wasm": {
             "samples": 9,
-            "p50_ms": 32.45,
-            "p95_ms": 35.036,
-            "min_ms": 31.633,
-            "max_ms": 35.036
+            "p50_ms": 31.95,
+            "p95_ms": 33.814,
+            "min_ms": 30.698,
+            "max_ms": 33.814
           },
           "native_build_miss": {
             "samples": 5,
-            "p50_ms": 181.525,
-            "p95_ms": 192.821,
-            "min_ms": 180.471,
-            "max_ms": 192.821
+            "p50_ms": 187.112,
+            "p95_ms": 196.089,
+            "min_ms": 185.026,
+            "max_ms": 196.089
           },
           "native_build_hit": {
             "samples": 9,
-            "p50_ms": 48.408,
-            "p95_ms": 50.377,
-            "min_ms": 47.451,
-            "max_ms": 50.377
+            "p50_ms": 41.548,
+            "p95_ms": 46.918,
+            "min_ms": 41.192,
+            "max_ms": 46.918
           }
         }
       }
