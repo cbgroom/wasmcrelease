@@ -46,7 +46,40 @@ try {
 
   const batch = '{rows: 5, fields: [{name: "g", data-type: utf8, nullable: true}, {name: "v", data-type: int64, nullable: true}], columns: [utf8-column([some("b"), some("a"), some("b"), none, some("a")]), int64-column([some(1), some(2), none, some(4), some(6)])]}';
   const aggs = '[count-all("rows"), count({column: 1, alias: "count_v"}), sum({column: 1, alias: "sum_v"}), min({column: 1, alias: "min_v"}), max({column: 1, alias: "max_v"}), mean({column: 1, alias: "mean_v"})]';
+  const unionLeft = '{rows: 2, fields: [{name: "id", data-type: int64, nullable: true}, {name: "name", data-type: utf8, nullable: false}], columns: [int64-column([some(1), none]), utf8-column([some("a"), some("b")])]}';
+  const unionRight = '{rows: 1, fields: [{name: "id", data-type: int64, nullable: true}, {name: "name", data-type: utf8, nullable: false}], columns: [int64-column([some(3)]), utf8-column([some("c")])]}';
+  const unionEmpty = '{rows: 0, fields: [{name: "id", data-type: int64, nullable: true}, {name: "name", data-type: utf8, nullable: false}], columns: [int64-column([]), utf8-column([])]}';
   const cases = [
+    [
+      'union-order',
+      'union-all([' + unionLeft + ', ' + unionRight + '])',
+      'ok({rows: 3, fields: [{name: "id", data-type: int64, nullable: true}, {name: "name", data-type: utf8, nullable: false}], columns: [int64-column([some(1), none, some(3)]), utf8-column([some("a"), some("b"), some("c")])]})',
+    ],
+    [
+      'union-all-types',
+      'union-all([{rows: 1, fields: [{name: "b", data-type: boolean, nullable: false}, {name: "i", data-type: int64, nullable: false}, {name: "u", data-type: uint64, nullable: false}, {name: "f", data-type: float64, nullable: false}, {name: "s", data-type: utf8, nullable: false}, {name: "x", data-type: binary, nullable: false}], columns: [boolean-column([some(true)]), int64-column([some(-1)]), uint64-column([some(1)]), float64-column([some(1.5)]), utf8-column([some("a")]), binary-column([some([1, 2])])]}, {rows: 1, fields: [{name: "b", data-type: boolean, nullable: false}, {name: "i", data-type: int64, nullable: false}, {name: "u", data-type: uint64, nullable: false}, {name: "f", data-type: float64, nullable: false}, {name: "s", data-type: utf8, nullable: false}, {name: "x", data-type: binary, nullable: false}], columns: [boolean-column([some(false)]), int64-column([some(2)]), uint64-column([some(3)]), float64-column([some(2.5)]), utf8-column([some("b")]), binary-column([some([3])])]}])',
+      'ok({rows: 2, fields: [{name: "b", data-type: boolean, nullable: false}, {name: "i", data-type: int64, nullable: false}, {name: "u", data-type: uint64, nullable: false}, {name: "f", data-type: float64, nullable: false}, {name: "s", data-type: utf8, nullable: false}, {name: "x", data-type: binary, nullable: false}], columns: [boolean-column([some(true), some(false)]), int64-column([some(-1), some(2)]), uint64-column([some(1), some(3)]), float64-column([some(1.5), some(2.5)]), utf8-column([some("a"), some("b")]), binary-column([some([1, 2]), some([3])])]})',
+    ],
+    [
+      'union-empty-batch',
+      'union-all([' + unionEmpty + ', ' + unionRight + ', ' + unionEmpty + '])',
+      'ok(' + unionRight + ')',
+    ],
+    [
+      'union-empty-input',
+      'union-all([])',
+      'err(empty-input)',
+    ],
+    [
+      'union-schema-mismatch',
+      'union-all([' + unionRight + ', {rows: 1, fields: [{name: "id", data-type: int64, nullable: false}, {name: "name", data-type: utf8, nullable: false}], columns: [int64-column([some(4)]), utf8-column([some("d")])]}])',
+      'err(schema-mismatch)',
+    ],
+    [
+      'union-invalid-batch',
+      'union-all([{rows: 1, fields: [{name: "id", data-type: int64, nullable: false}], columns: [int64-column([])]}])',
+      'err(invalid-batch)',
+    ],
     [
       'grouped',
       'group-aggregate(' + batch + ', [0], ' + aggs + ')',
@@ -105,7 +138,8 @@ try {
     core_imports: 0,
     deterministic_group_order: true,
     aggregate_null_semantics: 'ignore-input-null; nullable-empty-result',
-    operations: ['group-aggregate'],
+    operations: ['union-all','group-aggregate'],
+    union_semantics: 'stable-input-order; exact-schema; no-coercion',
     aggregates: ['count-all','count','sum','min','max','mean'],
     cases: receipts.length,
     receipts,

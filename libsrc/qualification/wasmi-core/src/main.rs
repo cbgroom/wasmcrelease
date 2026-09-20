@@ -211,7 +211,10 @@ fn main() -> Result<()> {
     )?;
     structural(
         &relational_path,
-        &["wasmc:data-relational/relational@0.0.1#group-aggregate"],
+        &[
+            "wasmc:data-relational/relational@0.0.1#group-aggregate",
+            "wasmc:data-relational/relational@0.0.1#union-all",
+        ],
     )?;
     structural(
         &profile_path,

@@ -141,6 +141,38 @@ fn validate_batch(value: &BatchSnapshot) -> Result<Vec<ArrayRef>, RelationalErro
     Ok(arrays)
 }
 
+fn same_schema(left: &[WitField], right: &[WitField]) -> bool {
+    left.len() == right.len()
+        && left.iter().zip(right).all(|(left, right)| {
+            left.name == right.name
+                && left.data_type == right.data_type
+                && left.nullable == right.nullable
+        })
+}
+
+fn append_column(target: &mut Column, source: Column) -> Result<(), RelationalError> {
+    match (target, source) {
+        (Column::BooleanColumn(target), Column::BooleanColumn(mut source)) => {
+            target.append(&mut source)
+        }
+        (Column::Int64Column(target), Column::Int64Column(mut source)) => {
+            target.append(&mut source)
+        }
+        (Column::Uint64Column(target), Column::Uint64Column(mut source)) => {
+            target.append(&mut source)
+        }
+        (Column::Float64Column(target), Column::Float64Column(mut source)) => {
+            target.append(&mut source)
+        }
+        (Column::Utf8Column(target), Column::Utf8Column(mut source)) => target.append(&mut source),
+        (Column::BinaryColumn(target), Column::BinaryColumn(mut source)) => {
+            target.append(&mut source)
+        }
+        _ => return Err(RelationalError::SchemaMismatch),
+    }
+    Ok(())
+}
+
 fn cell_at(column: &Column, index: usize) -> Cell {
     match column {
         Column::BooleanColumn(values) => values[index].map(Cell::Bool).unwrap_or(Cell::Null),
@@ -225,10 +257,7 @@ fn cells_to_column(data_type: WitDataType, cells: &[Cell]) -> Result<Column, Rel
     })
 }
 
-fn parse_aggregate(
-    aggregate: Aggregate,
-    fields: &[WitField],
-) -> Result<AggDesc, RelationalError> {
+fn parse_aggregate(aggregate: Aggregate, fields: &[WitField]) -> Result<AggDesc, RelationalError> {
     let (kind, column, alias) = match aggregate {
         Aggregate::CountAll(alias) => (AggKind::CountAll, None, alias),
         Aggregate::Count(ColumnAggregate { column, alias }) => {
@@ -260,12 +289,13 @@ fn parse_aggregate(
         ),
         None => None,
     };
-    if matches!(kind, AggKind::Sum | AggKind::Min | AggKind::Max | AggKind::Mean)
-        && !matches!(
-            input_type,
-            Some(WitDataType::Int64 | WitDataType::Uint64 | WitDataType::Float64)
-        )
-    {
+    if matches!(
+        kind,
+        AggKind::Sum | AggKind::Min | AggKind::Max | AggKind::Mean
+    ) && !matches!(
+        input_type,
+        Some(WitDataType::Int64 | WitDataType::Uint64 | WitDataType::Float64)
+    ) {
         return Err(RelationalError::UnsupportedType);
     }
 
@@ -377,6 +407,28 @@ fn aggregate_group(
 }
 
 impl Guest for DataRelational {
+    fn union_all(values: Vec<BatchSnapshot>) -> Result<BatchSnapshot, RelationalError> {
+        let mut values = values.into_iter();
+        let mut output = values.next().ok_or(RelationalError::EmptyInput)?;
+        validate_batch(&output)?;
+
+        for value in values {
+            validate_batch(&value)?;
+            if !same_schema(&output.fields, &value.fields) {
+                return Err(RelationalError::SchemaMismatch);
+            }
+            output.rows = output
+                .rows
+                .checked_add(value.rows)
+                .ok_or(RelationalError::Overflow)?;
+            for (target, source) in output.columns.iter_mut().zip(value.columns) {
+                append_column(target, source)?;
+            }
+        }
+
+        Ok(output)
+    }
+
     fn group_aggregate(
         value: BatchSnapshot,
         keys: Vec<u32>,
@@ -414,10 +466,7 @@ impl Guest for DataRelational {
 
         let mut groups: BTreeMap<Vec<Cell>, Vec<u32>> = BTreeMap::new();
         if key_indices.is_empty() {
-            groups.insert(
-                Vec::new(),
-                (0..value.rows).collect::<Vec<u32>>(),
-            );
+            groups.insert(Vec::new(), (0..value.rows).collect::<Vec<u32>>());
         } else {
             for row in 0..value.rows as usize {
                 let key = key_indices

@@ -19,6 +19,8 @@ interface relational {
 
   enum relational-error {
     invalid-batch,
+    empty-input,
+    schema-mismatch,
     column-out-of-bounds,
     duplicate-key,
     empty-alias,
@@ -32,6 +34,10 @@ interface relational {
     value: batch-snapshot,
     keys: list<u32>,
     aggregates: list<aggregate>,
+  ) -> result<batch-snapshot, relational-error>;
+
+  union-all: func(
+    values: list<batch-snapshot>,
   ) -> result<batch-snapshot, relational-error>;
 }
 

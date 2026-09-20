@@ -93,9 +93,17 @@ try {
   assert.equal(filtered, expected);
   const filteredBatch = filtered.slice(3, -1);
 
+  const unioned = run('wasmtime', [
+    'run', '--invoke',
+    'union-all([' + filteredBatch + ', {rows: 0, fields: [{name: "id", data-type: int64, nullable: false}, {name: "name", data-type: utf8, nullable: false}], columns: [int64-column([]), utf8-column([])]}])',
+    libs.relational.component,
+  ]);
+  assert.equal(unioned, expected);
+  const unionedBatch = unioned.slice(3, -1);
+
   const profiled = run('wasmtime', [
     'run', '--invoke',
-    'describe(' + filteredBatch + ', [])',
+    'describe(' + unionedBatch + ', [])',
     libs.profile.component,
   ]);
   const expectedProfile = 'ok([{column: 0, name: "id", data-type: int64, summary: int64({non-null: 2, nulls: 0, min: some(2), max: some(3), mean: some(2.5)})}, {column: 1, name: "name", data-type: utf8, summary: utf8({non-null: 2, nulls: 0, min-length: some(1), max-length: some(1), mean-length: some(1)})}])';
@@ -103,14 +111,14 @@ try {
 
   const validated = run('wasmtime', [
     'run', '--invoke',
-    'validate(' + filteredBatch + ')',
+    'validate(' + unionedBatch + ')',
     libs.data.component,
   ]);
   assert.equal(validated, 'ok(2)');
 
   const aggregated = run('wasmtime', [
     'run', '--invoke',
-    'group-aggregate(' + filteredBatch + ', [], [count-all("rows"), sum({column: 0, alias: "sum_id"}), mean({column: 0, alias: "mean_id"})])',
+    'group-aggregate(' + unionedBatch + ', [], [count-all("rows"), sum({column: 0, alias: "sum_id"}), mean({column: 0, alias: "mean_id"})])',
     libs.relational.component,
   ]);
   const expectedAggregate = 'ok({rows: 1, fields: [{name: "rows", data-type: uint64, nullable: false}, {name: "sum_id", data-type: int64, nullable: true}, {name: "mean_id", data-type: float64, nullable: true}], columns: [uint64-column([some(2)]), int64-column([some(5)]), float64-column([some(2.5)])]})';
@@ -126,12 +134,13 @@ try {
   console.log(JSON.stringify({
     accepted: true,
     schema: 'wasmc.data-pipeline/v1',
-    path: ['csv','data-core/types','data-expr','data-compute','data-profile','data-relational','data-core/validate'],
+    path: ['csv','data-core/types','data-expr','data-compute','data-relational/union-all','data-profile','data-relational/group-aggregate','data-core/validate'],
     input_rows: 3,
     predicate: 'id > 1',
     output_rows: 2,
     output_ids: [2, 3],
     profile_columns: 2,
+    union_inputs: 2,
     aggregate_rows: 1,
     aggregate: { count: 2, sum_id: 5, mean_id: 2.5 },
     core_imports: 0,
