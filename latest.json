@@ -1,0 +1,4263 @@
+{
+  "schema": "wasmc-host-https-ab-summary/v1",
+  "commit": "1648d18192a1bf2c9fcc317fd8b82075c5eabfcf",
+  "measured_at": "2026-09-20T17:07:40.880Z",
+  "platform_count": 6,
+  "policy": "Artifact identity and HTTPS lifecycle/semantic parity are hard gates. Paired GitHub-hosted timing is observational mechanism evidence, not an SLA.",
+  "summary": [
+    {
+      "platform": "linux-aarch64",
+      "semantic_parity": true,
+      "baseline_rps_p50": 1.812,
+      "candidate_rps_p50": 1.822,
+      "paired_rps_ratio_p50": 1.008,
+      "paired_rps_pct_p50": 0.779,
+      "baseline_avg_ns_p50": 550189691,
+      "candidate_avg_ns_p50": 545862619,
+      "paired_latency_pct_p50": -0.786,
+      "baseline_host_operations": 5159,
+      "candidate_host_operations": 5159,
+      "forced_partial_writes_baseline": 4620,
+      "forced_partial_writes_candidate": 4620,
+      "baseline_polling_cycles_per_op": 2.971894,
+      "candidate_reactor_polls_per_op": 1.051754,
+      "candidate_reactor_readiness_events_per_op": 1.05156,
+      "baseline_dominant_guest_operation": "tls.ingest",
+      "candidate_dominant_guest_operation": "tls.ingest",
+      "c32_best_shards": 16,
+      "c32_dedicated_ops_p50": 334586.744,
+      "c32_shared_ops_p50": 374732.291,
+      "c32_paired_throughput_pct_p50": 9.297,
+      "c32_positive_pairs": 3,
+      "c32_pairs": 3,
+      "c32_dedicated_threads": 32,
+      "c32_shared_threads": 16,
+      "c32_dedicated_control_per_op": 1.035,
+      "c32_shared_control_per_op": 0.044,
+      "c32_shard_results": [
+        {
+          "shards": 1,
+          "dedicated_ops_p50": 321196.994,
+          "sharded_ops_p50": 177991.492,
+          "paired_throughput_pct_p50": -44.585,
+          "positive_pairs": 0,
+          "pairs": 3,
+          "dedicated_threads": 32,
+          "sharded_threads": 1,
+          "dedicated_control_per_op": 1.049,
+          "sharded_control_per_op": 0.059
+        },
+        {
+          "shards": 2,
+          "dedicated_ops_p50": 316369.181,
+          "sharded_ops_p50": 267511.102,
+          "paired_throughput_pct_p50": -16.232,
+          "positive_pairs": 0,
+          "pairs": 3,
+          "dedicated_threads": 32,
+          "sharded_threads": 2,
+          "dedicated_control_per_op": 1.043,
+          "sharded_control_per_op": 0.075
+        },
+        {
+          "shards": 4,
+          "dedicated_ops_p50": 323274.483,
+          "sharded_ops_p50": 287163.077,
+          "paired_throughput_pct_p50": -6.765,
+          "positive_pairs": 1,
+          "pairs": 3,
+          "dedicated_threads": 32,
+          "sharded_threads": 4,
+          "dedicated_control_per_op": 1.04,
+          "sharded_control_per_op": 0.067
+        },
+        {
+          "shards": 8,
+          "dedicated_ops_p50": 328359.364,
+          "sharded_ops_p50": 332158.285,
+          "paired_throughput_pct_p50": 7.026,
+          "positive_pairs": 2,
+          "pairs": 3,
+          "dedicated_threads": 32,
+          "sharded_threads": 8,
+          "dedicated_control_per_op": 1.033,
+          "sharded_control_per_op": 0.062
+        },
+        {
+          "shards": 16,
+          "dedicated_ops_p50": 334586.744,
+          "sharded_ops_p50": 374732.291,
+          "paired_throughput_pct_p50": 9.297,
+          "positive_pairs": 3,
+          "pairs": 3,
+          "dedicated_threads": 32,
+          "sharded_threads": 16,
+          "dedicated_control_per_op": 1.035,
+          "sharded_control_per_op": 0.044
+        }
+      ]
+    },
+    {
+      "platform": "linux-x86_64",
+      "semantic_parity": true,
+      "baseline_rps_p50": 1.699,
+      "candidate_rps_p50": 1.709,
+      "paired_rps_ratio_p50": 1.002,
+      "paired_rps_pct_p50": 0.242,
+      "baseline_avg_ns_p50": 587139156,
+      "candidate_avg_ns_p50": 584541908,
+      "paired_latency_pct_p50": -0.442,
+      "baseline_host_operations": 5159,
+      "candidate_host_operations": 5159,
+      "forced_partial_writes_baseline": 4620,
+      "forced_partial_writes_candidate": 4620,
+      "baseline_polling_cycles_per_op": 2.966079,
+      "candidate_reactor_polls_per_op": 1.051754,
+      "candidate_reactor_readiness_events_per_op": 1.05156,
+      "baseline_dominant_guest_operation": "tls.ingest",
+      "candidate_dominant_guest_operation": "tls.ingest",
+      "c32_best_shards": 2,
+      "c32_dedicated_ops_p50": 172974.604,
+      "c32_shared_ops_p50": 199321.126,
+      "c32_paired_throughput_pct_p50": 17.788,
+      "c32_positive_pairs": 3,
+      "c32_pairs": 3,
+      "c32_dedicated_threads": 32,
+      "c32_shared_threads": 2,
+      "c32_dedicated_control_per_op": 1.052,
+      "c32_shared_control_per_op": 0.069,
+      "c32_shard_results": [
+        {
+          "shards": 1,
+          "dedicated_ops_p50": 169254.11,
+          "sharded_ops_p50": 124676.731,
+          "paired_throughput_pct_p50": -26.763,
+          "positive_pairs": 0,
+          "pairs": 3,
+          "dedicated_threads": 32,
+          "sharded_threads": 1,
+          "dedicated_control_per_op": 1.055,
+          "sharded_control_per_op": 0.063
+        },
+        {
+          "shards": 2,
+          "dedicated_ops_p50": 172974.604,
+          "sharded_ops_p50": 199321.126,
+          "paired_throughput_pct_p50": 17.788,
+          "positive_pairs": 3,
+          "pairs": 3,
+          "dedicated_threads": 32,
+          "sharded_threads": 2,
+          "dedicated_control_per_op": 1.052,
+          "sharded_control_per_op": 0.069
+        },
+        {
+          "shards": 4,
+          "dedicated_ops_p50": 170413.777,
+          "sharded_ops_p50": 182141.056,
+          "paired_throughput_pct_p50": 8.025,
+          "positive_pairs": 3,
+          "pairs": 3,
+          "dedicated_threads": 32,
+          "sharded_threads": 4,
+          "dedicated_control_per_op": 1.06,
+          "sharded_control_per_op": 0.06
+        },
+        {
+          "shards": 8,
+          "dedicated_ops_p50": 171108.436,
+          "sharded_ops_p50": 182154.13,
+          "paired_throughput_pct_p50": 6.455,
+          "positive_pairs": 3,
+          "pairs": 3,
+          "dedicated_threads": 32,
+          "sharded_threads": 8,
+          "dedicated_control_per_op": 1.075,
+          "sharded_control_per_op": 0.063
+        },
+        {
+          "shards": 16,
+          "dedicated_ops_p50": 171691.111,
+          "sharded_ops_p50": 188225.882,
+          "paired_throughput_pct_p50": 9.46,
+          "positive_pairs": 3,
+          "pairs": 3,
+          "dedicated_threads": 32,
+          "sharded_threads": 16,
+          "dedicated_control_per_op": 1.067,
+          "sharded_control_per_op": 0.051
+        }
+      ]
+    },
+    {
+      "platform": "macos-aarch64",
+      "semantic_parity": true,
+      "baseline_rps_p50": 1.722,
+      "candidate_rps_p50": 1.952,
+      "paired_rps_ratio_p50": 1.187,
+      "paired_rps_pct_p50": 18.732,
+      "baseline_avg_ns_p50": 563996083,
+      "candidate_avg_ns_p50": 5876933,
+      "paired_latency_pct_p50": -98.678,
+      "baseline_host_operations": 5156,
+      "candidate_host_operations": 5156,
+      "forced_partial_writes_baseline": 4620,
+      "forced_partial_writes_candidate": 4620,
+      "baseline_polling_cycles_per_op": 1.04519,
+      "candidate_reactor_polls_per_op": 1.032777,
+      "candidate_reactor_readiness_events_per_op": 1.032583,
+      "baseline_dominant_guest_operation": "tls.ingest",
+      "candidate_dominant_guest_operation": "tls.ingest",
+      "c32_best_shards": 4,
+      "c32_dedicated_ops_p50": 82247.041,
+      "c32_shared_ops_p50": 82162.79,
+      "c32_paired_throughput_pct_p50": -0.102,
+      "c32_positive_pairs": 1,
+      "c32_pairs": 3,
+      "c32_dedicated_threads": 32,
+      "c32_shared_threads": 4,
+      "c32_dedicated_control_per_op": 1.134,
+      "c32_shared_control_per_op": 0.046,
+      "c32_shard_results": [
+        {
+          "shards": 1,
+          "dedicated_ops_p50": 91675.243,
+          "sharded_ops_p50": 74002.776,
+          "paired_throughput_pct_p50": -19.277,
+          "positive_pairs": 0,
+          "pairs": 3,
+          "dedicated_threads": 32,
+          "sharded_threads": 1,
+          "dedicated_control_per_op": 1.156,
+          "sharded_control_per_op": 0.082
+        },
+        {
+          "shards": 2,
+          "dedicated_ops_p50": 106501.419,
+          "sharded_ops_p50": 103938.631,
+          "paired_throughput_pct_p50": -21.36,
+          "positive_pairs": 1,
+          "pairs": 3,
+          "dedicated_threads": 32,
+          "sharded_threads": 2,
+          "dedicated_control_per_op": 1.034,
+          "sharded_control_per_op": 0.061
+        },
+        {
+          "shards": 4,
+          "dedicated_ops_p50": 82247.041,
+          "sharded_ops_p50": 82162.79,
+          "paired_throughput_pct_p50": -0.102,
+          "positive_pairs": 1,
+          "pairs": 3,
+          "dedicated_threads": 32,
+          "sharded_threads": 4,
+          "dedicated_control_per_op": 1.134,
+          "sharded_control_per_op": 0.046
+        },
+        {
+          "shards": 8,
+          "dedicated_ops_p50": 100436.933,
+          "sharded_ops_p50": 87977.951,
+          "paired_throughput_pct_p50": -32.997,
+          "positive_pairs": 1,
+          "pairs": 3,
+          "dedicated_threads": 32,
+          "sharded_threads": 8,
+          "dedicated_control_per_op": 1.062,
+          "sharded_control_per_op": 0.045
+        },
+        {
+          "shards": 16,
+          "dedicated_ops_p50": 121427.935,
+          "sharded_ops_p50": 104608.487,
+          "paired_throughput_pct_p50": -15.711,
+          "positive_pairs": 0,
+          "pairs": 3,
+          "dedicated_threads": 32,
+          "sharded_threads": 16,
+          "dedicated_control_per_op": 1.049,
+          "sharded_control_per_op": 0.051
+        }
+      ]
+    },
+    {
+      "platform": "macos-x86_64",
+      "semantic_parity": true,
+      "baseline_rps_p50": 0.839,
+      "candidate_rps_p50": 0.826,
+      "paired_rps_ratio_p50": 0.946,
+      "paired_rps_pct_p50": -5.391,
+      "baseline_avg_ns_p50": 1145942832,
+      "candidate_avg_ns_p50": 1165233136,
+      "paired_latency_pct_p50": 0.813,
+      "baseline_host_operations": 5157,
+      "candidate_host_operations": 5156,
+      "forced_partial_writes_baseline": 4620,
+      "forced_partial_writes_candidate": 4620,
+      "baseline_polling_cycles_per_op": 1.035874,
+      "candidate_reactor_polls_per_op": 1.036462,
+      "candidate_reactor_readiness_events_per_op": 1.036268,
+      "baseline_dominant_guest_operation": "tls.ingest",
+      "candidate_dominant_guest_operation": "tls.ingest",
+      "c32_best_shards": 8,
+      "c32_dedicated_ops_p50": 29477.003,
+      "c32_shared_ops_p50": 42666.899,
+      "c32_paired_throughput_pct_p50": 44.746,
+      "c32_positive_pairs": 3,
+      "c32_pairs": 3,
+      "c32_dedicated_threads": 32,
+      "c32_shared_threads": 8,
+      "c32_dedicated_control_per_op": 1.053,
+      "c32_shared_control_per_op": 0.041,
+      "c32_shard_results": [
+        {
+          "shards": 1,
+          "dedicated_ops_p50": 30956.968,
+          "sharded_ops_p50": 15200.131,
+          "paired_throughput_pct_p50": -50.899,
+          "positive_pairs": 0,
+          "pairs": 3,
+          "dedicated_threads": 32,
+          "sharded_threads": 1,
+          "dedicated_control_per_op": 1.059,
+          "sharded_control_per_op": 0.072
+        },
+        {
+          "shards": 2,
+          "dedicated_ops_p50": 32341.41,
+          "sharded_ops_p50": 18600.72,
+          "paired_throughput_pct_p50": -41.673,
+          "positive_pairs": 0,
+          "pairs": 3,
+          "dedicated_threads": 32,
+          "sharded_threads": 2,
+          "dedicated_control_per_op": 1.043,
+          "sharded_control_per_op": 0.056
+        },
+        {
+          "shards": 4,
+          "dedicated_ops_p50": 33211.501,
+          "sharded_ops_p50": 25853.21,
+          "paired_throughput_pct_p50": -15.874,
+          "positive_pairs": 0,
+          "pairs": 3,
+          "dedicated_threads": 32,
+          "sharded_threads": 4,
+          "dedicated_control_per_op": 1.038,
+          "sharded_control_per_op": 0.051
+        },
+        {
+          "shards": 8,
+          "dedicated_ops_p50": 29477.003,
+          "sharded_ops_p50": 42666.899,
+          "paired_throughput_pct_p50": 44.746,
+          "positive_pairs": 3,
+          "pairs": 3,
+          "dedicated_threads": 32,
+          "sharded_threads": 8,
+          "dedicated_control_per_op": 1.053,
+          "sharded_control_per_op": 0.041
+        },
+        {
+          "shards": 16,
+          "dedicated_ops_p50": 31337.248,
+          "sharded_ops_p50": 31126.523,
+          "paired_throughput_pct_p50": -4.032,
+          "positive_pairs": 1,
+          "pairs": 3,
+          "dedicated_threads": 32,
+          "sharded_threads": 16,
+          "dedicated_control_per_op": 1.021,
+          "sharded_control_per_op": 0.048
+        }
+      ]
+    },
+    {
+      "platform": "windows-aarch64",
+      "semantic_parity": true,
+      "baseline_rps_p50": 1.735,
+      "candidate_rps_p50": 1.742,
+      "paired_rps_ratio_p50": 1.002,
+      "paired_rps_pct_p50": 0.242,
+      "baseline_avg_ns_p50": 575463700,
+      "candidate_avg_ns_p50": 571724050,
+      "paired_latency_pct_p50": -0.319,
+      "baseline_host_operations": 5156,
+      "candidate_host_operations": 5159,
+      "forced_partial_writes_baseline": 4620,
+      "forced_partial_writes_candidate": 4620,
+      "baseline_polling_cycles_per_op": 1.020753,
+      "candidate_reactor_polls_per_op": 1.007947,
+      "candidate_reactor_readiness_events_per_op": 1.007753,
+      "baseline_dominant_guest_operation": "tls.ingest",
+      "candidate_dominant_guest_operation": "tls.ingest",
+      "c32_best_shards": 8,
+      "c32_dedicated_ops_p50": 79749.984,
+      "c32_shared_ops_p50": 88334.114,
+      "c32_paired_throughput_pct_p50": 11.141,
+      "c32_positive_pairs": 3,
+      "c32_pairs": 3,
+      "c32_dedicated_threads": 32,
+      "c32_shared_threads": 8,
+      "c32_dedicated_control_per_op": 1.048,
+      "c32_shared_control_per_op": 0.053,
+      "c32_shard_results": [
+        {
+          "shards": 1,
+          "dedicated_ops_p50": 78945.992,
+          "sharded_ops_p50": 61457.845,
+          "paired_throughput_pct_p50": -22.152,
+          "positive_pairs": 0,
+          "pairs": 3,
+          "dedicated_threads": 32,
+          "sharded_threads": 1,
+          "dedicated_control_per_op": 1.048,
+          "sharded_control_per_op": 0.052
+        },
+        {
+          "shards": 2,
+          "dedicated_ops_p50": 79231.396,
+          "sharded_ops_p50": 74669.276,
+          "paired_throughput_pct_p50": -6.464,
+          "positive_pairs": 0,
+          "pairs": 3,
+          "dedicated_threads": 32,
+          "sharded_threads": 2,
+          "dedicated_control_per_op": 1.053,
+          "sharded_control_per_op": 0.044
+        },
+        {
+          "shards": 4,
+          "dedicated_ops_p50": 80924.983,
+          "sharded_ops_p50": 89140.029,
+          "paired_throughput_pct_p50": 10.153,
+          "positive_pairs": 3,
+          "pairs": 3,
+          "dedicated_threads": 32,
+          "sharded_threads": 4,
+          "dedicated_control_per_op": 1.054,
+          "sharded_control_per_op": 0.052
+        },
+        {
+          "shards": 8,
+          "dedicated_ops_p50": 79749.984,
+          "sharded_ops_p50": 88334.114,
+          "paired_throughput_pct_p50": 11.141,
+          "positive_pairs": 3,
+          "pairs": 3,
+          "dedicated_threads": 32,
+          "sharded_threads": 8,
+          "dedicated_control_per_op": 1.048,
+          "sharded_control_per_op": 0.053
+        },
+        {
+          "shards": 16,
+          "dedicated_ops_p50": 80618.962,
+          "sharded_ops_p50": 85546.47,
+          "paired_throughput_pct_p50": 6.112,
+          "positive_pairs": 3,
+          "pairs": 3,
+          "dedicated_threads": 32,
+          "sharded_threads": 16,
+          "dedicated_control_per_op": 1.057,
+          "sharded_control_per_op": 0.054
+        }
+      ]
+    },
+    {
+      "platform": "windows-x86_64",
+      "semantic_parity": true,
+      "baseline_rps_p50": 1.527,
+      "candidate_rps_p50": 1.539,
+      "paired_rps_ratio_p50": 0.979,
+      "paired_rps_pct_p50": -2.126,
+      "baseline_avg_ns_p50": 652757350,
+      "candidate_avg_ns_p50": 644850200,
+      "paired_latency_pct_p50": -1.211,
+      "baseline_host_operations": 5156,
+      "candidate_host_operations": 5159,
+      "forced_partial_writes_baseline": 4620,
+      "forced_partial_writes_candidate": 4620,
+      "baseline_polling_cycles_per_op": 1.001746,
+      "candidate_reactor_polls_per_op": 1.001745,
+      "candidate_reactor_readiness_events_per_op": 1.001551,
+      "baseline_dominant_guest_operation": "tls.ingest",
+      "candidate_dominant_guest_operation": "tls.ingest",
+      "c32_best_shards": 16,
+      "c32_dedicated_ops_p50": 108954.697,
+      "c32_shared_ops_p50": 129140.309,
+      "c32_paired_throughput_pct_p50": 16.485,
+      "c32_positive_pairs": 3,
+      "c32_pairs": 3,
+      "c32_dedicated_threads": 32,
+      "c32_shared_threads": 16,
+      "c32_dedicated_control_per_op": 1.013,
+      "c32_shared_control_per_op": 0.048,
+      "c32_shard_results": [
+        {
+          "shards": 1,
+          "dedicated_ops_p50": 81309.593,
+          "sharded_ops_p50": 59279.815,
+          "paired_throughput_pct_p50": -26.749,
+          "positive_pairs": 0,
+          "pairs": 3,
+          "dedicated_threads": 32,
+          "sharded_threads": 1,
+          "dedicated_control_per_op": 1.012,
+          "sharded_control_per_op": 0.05
+        },
+        {
+          "shards": 2,
+          "dedicated_ops_p50": 84349.047,
+          "sharded_ops_p50": 78650.398,
+          "paired_throughput_pct_p50": -6.715,
+          "positive_pairs": 0,
+          "pairs": 3,
+          "dedicated_threads": 32,
+          "sharded_threads": 2,
+          "dedicated_control_per_op": 1.012,
+          "sharded_control_per_op": 0.04
+        },
+        {
+          "shards": 4,
+          "dedicated_ops_p50": 104438.421,
+          "sharded_ops_p50": 114202.775,
+          "paired_throughput_pct_p50": 9.349,
+          "positive_pairs": 3,
+          "pairs": 3,
+          "dedicated_threads": 32,
+          "sharded_threads": 4,
+          "dedicated_control_per_op": 1.014,
+          "sharded_control_per_op": 0.045
+        },
+        {
+          "shards": 8,
+          "dedicated_ops_p50": 111799.962,
+          "sharded_ops_p50": 118709.575,
+          "paired_throughput_pct_p50": 4.811,
+          "positive_pairs": 3,
+          "pairs": 3,
+          "dedicated_threads": 32,
+          "sharded_threads": 8,
+          "dedicated_control_per_op": 1.014,
+          "sharded_control_per_op": 0.04
+        },
+        {
+          "shards": 16,
+          "dedicated_ops_p50": 108954.697,
+          "sharded_ops_p50": 129140.309,
+          "paired_throughput_pct_p50": 16.485,
+          "positive_pairs": 3,
+          "pairs": 3,
+          "dedicated_threads": 32,
+          "sharded_threads": 16,
+          "dedicated_control_per_op": 1.013,
+          "sharded_control_per_op": 0.048
+        }
+      ]
+    }
+  ],
+  "observations": [
+    {
+      "kind": "cross_platform_semantic_parity",
+      "passed": true,
+      "platforms": 6
+    },
+    {
+      "kind": "cross_platform_paired_ratio_range",
+      "min_p50_ratio": 0.946,
+      "max_p50_ratio": 1.187,
+      "interpretation": "Hosted single-connection qualification ratio; mechanism evidence against the polling baseline, not a production throughput multiplier."
+    },
+    {
+      "kind": "cross_platform_guest_operation_profile",
+      "baseline_counts": {
+        "tls.ingest": 6
+      },
+      "candidate_counts": {
+        "tls.ingest": 6
+      },
+      "interpretation": "Guest operation samples help separate Guest compute from Host scheduling; they do not establish root cause by themselves."
+    },
+    {
+      "kind": "cross_platform_c32_host_scheduling",
+      "min_p50_throughput_pct": -0.102,
+      "max_p50_throughput_pct": 44.746,
+      "best_shards_by_platform": {
+        "linux-aarch64": 16,
+        "linux-x86_64": 2,
+        "macos-aarch64": 4,
+        "macos-x86_64": 8,
+        "windows-aarch64": 8,
+        "windows-x86_64": 16
+      },
+      "all_platforms_semantic_parity": true,
+      "interpretation": "32-connection real-TCP Host lifecycle shard sweep comparing event-driven dedicated owners against 1/2/4/8/16 shared-reactor shards. This is Host scheduling evidence, not HTTPS product throughput."
+    }
+  ],
+  "reports": [
+    {
+      "schema": "wasmc-host-https-ab/v1",
+      "measured_at": "2026-09-20T16:59:09.073Z",
+      "commit": "1648d18192a1bf2c9fcc317fd8b82075c5eabfcf",
+      "platform": "linux-aarch64",
+      "host": {
+        "os": "linux",
+        "arch": "arm64",
+        "node": "v26.5.1"
+      },
+      "authority": {
+        "https_source_commit": "2a49108391326b083426bb5ca12e76b0b9268433",
+        "host_transport_baseline_commit": "b1af59699bd27a9d5e3c7d9b6e8951cc1be4302c",
+        "reactor_candidate_commit": "5dd23b434caa34e402298fcfe0975a1c4af55773",
+        "reactor_candidate_readiness_sha256": "4b4fa81ad4a05b1aae08917e2bb552744cab86c4404c6ff813982489492eba99",
+        "reactor_candidate_adapter_sha256": "836990bb645d3cbd975471358538952089bf8ad142c13dcc3bb855b66ab9e73b"
+      },
+      "artifact_manifest_sha256": "f90bd85ca56246b24e630e33be12fdcff52536d998ade808340bd75e782b7fd3",
+      "binaries": {
+        "baseline": {
+          "bytes": 13194288,
+          "sha256": "41443a3e05cb134371debab1092daa2e33b0c0608fd688dae62b8294abf5d2ab"
+        },
+        "candidate": {
+          "bytes": 13286192,
+          "sha256": "cfeb8c5c8bbf6fa6a03e9f871dd64ce3821309b78a407c2b469717424ccd1f3e"
+        }
+      },
+      "policy": {
+        "functional_and_identity_gates": "hard",
+        "semantic_parity_gates": [
+          "keep_alive_requests",
+          "recovery_requests",
+          "malformed_requests",
+          "checksum"
+        ],
+        "github_hosted_timing": "observational",
+        "performance_regression_gate": false,
+        "only_transport_implementation_changes": true
+      },
+      "qualification": {
+        "baseline": {
+          "host_operations": 5159,
+          "host_waits": 5159,
+          "host_claimed": 5159,
+          "host_partial_writes": 4620,
+          "host_pending_peak": 1,
+          "owner_wake_cycles": 15332,
+          "owner_threads_started": 3,
+          "reactor_poll_calls": 0,
+          "reactor_readiness_events": 0,
+          "checksum": 93106,
+          "fuel_total": "68880877",
+          "dominant_guest_operation": {
+            "component": "tls",
+            "operation": "tls.ingest",
+            "sampled_calls": 13,
+            "wall_ns_sample_mean": 299136,
+            "wall_ns_p95_upper": 2097151,
+            "fuel_sample_mean": "4017024"
+          },
+          "top_guest_operations": [
+            {
+              "component": "tls",
+              "operation": "tls.ingest",
+              "sampled_calls": 13,
+              "wall_ns_sample_mean": 299136,
+              "wall_ns_p95_upper": 2097151,
+              "fuel_sample_mean": "4017024"
+            },
+            {
+              "component": "json",
+              "operation": "json.compact",
+              "sampled_calls": 5,
+              "wall_ns_sample_mean": 15991,
+              "wall_ns_p95_upper": 65535,
+              "fuel_sample_mean": "8023"
+            },
+            {
+              "component": "tls",
+              "operation": "tls.write",
+              "sampled_calls": 6,
+              "wall_ns_sample_mean": 15247,
+              "wall_ns_p95_upper": 32767,
+              "fuel_sample_mean": "225489"
+            },
+            {
+              "component": "http",
+              "operation": "http.frame-length",
+              "sampled_calls": 13,
+              "wall_ns_sample_mean": 11730,
+              "wall_ns_p95_upper": 65535,
+              "fuel_sample_mean": "1908"
+            },
+            {
+              "component": "http",
+              "operation": "http.serialize-response",
+              "sampled_calls": 6,
+              "wall_ns_sample_mean": 7187,
+              "wall_ns_p95_upper": 16383,
+              "fuel_sample_mean": "5518"
+            }
+          ]
+        },
+        "candidate": {
+          "host_operations": 5159,
+          "host_waits": 5159,
+          "host_claimed": 5159,
+          "host_partial_writes": 4620,
+          "host_pending_peak": 1,
+          "owner_wake_cycles": 0,
+          "owner_threads_started": 1,
+          "reactor_poll_calls": 5426,
+          "reactor_readiness_events": 5425,
+          "checksum": 93106,
+          "fuel_total": "68881631",
+          "dominant_guest_operation": {
+            "component": "tls",
+            "operation": "tls.ingest",
+            "sampled_calls": 13,
+            "wall_ns_sample_mean": 292935,
+            "wall_ns_p95_upper": 2097151,
+            "fuel_sample_mean": "4017032"
+          },
+          "top_guest_operations": [
+            {
+              "component": "tls",
+              "operation": "tls.ingest",
+              "sampled_calls": 13,
+              "wall_ns_sample_mean": 292935,
+              "wall_ns_p95_upper": 2097151,
+              "fuel_sample_mean": "4017032"
+            },
+            {
+              "component": "json",
+              "operation": "json.compact",
+              "sampled_calls": 5,
+              "wall_ns_sample_mean": 13864,
+              "wall_ns_p95_upper": 65535,
+              "fuel_sample_mean": "8023"
+            },
+            {
+              "component": "tls",
+              "operation": "tls.write",
+              "sampled_calls": 6,
+              "wall_ns_sample_mean": 12375,
+              "wall_ns_p95_upper": 16383,
+              "fuel_sample_mean": "225570"
+            },
+            {
+              "component": "http",
+              "operation": "http.frame-length",
+              "sampled_calls": 13,
+              "wall_ns_sample_mean": 7587,
+              "wall_ns_p95_upper": 32767,
+              "fuel_sample_mean": "1908"
+            },
+            {
+              "component": "http",
+              "operation": "http.serialize-response",
+              "sampled_calls": 6,
+              "wall_ns_sample_mean": 6392,
+              "wall_ns_p95_upper": 16383,
+              "fuel_sample_mean": "5518"
+            }
+          ]
+        },
+        "semantic_parity": true
+      },
+      "scheduling_diagnostics": {
+        "baseline": {
+          "polling_owner_cycles_per_host_operation": 2.971894
+        },
+        "candidate": {
+          "reactor_polls_per_host_operation": 1.051754,
+          "reactor_readiness_events_per_host_operation": 1.05156
+        },
+        "interpretation": "Polling owner cycles and reactor poll calls are different counters. The mechanism comparison is scheduling strategy, not raw counter subtraction."
+      },
+      "performance": {
+        "pairs": 6,
+        "samples": {
+          "baseline": [
+            {
+              "pair": 0,
+              "order": 0,
+              "rps": 1.8095579699283186,
+              "elapsed_ns": 1105242293,
+              "avg_ns_per_valid_request": 552621146,
+              "keep_alive_requests": 1,
+              "host_operations": 25,
+              "host_waits": 25,
+              "host_claimed": 25,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 109,
+              "host_reactor_poll_calls": 0,
+              "host_reactor_readiness_events": 0,
+              "process_wall_ms": 1110.373
+            },
+            {
+              "pair": 1,
+              "order": 1,
+              "rps": 1.8175549566958353,
+              "elapsed_ns": 1100379382,
+              "avg_ns_per_valid_request": 550189691,
+              "keep_alive_requests": 1,
+              "host_operations": 25,
+              "host_waits": 25,
+              "host_claimed": 25,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 108,
+              "host_reactor_poll_calls": 0,
+              "host_reactor_readiness_events": 0,
+              "process_wall_ms": 1104.887
+            },
+            {
+              "pair": 2,
+              "order": 0,
+              "rps": 1.8083198140028784,
+              "elapsed_ns": 1105999052,
+              "avg_ns_per_valid_request": 552999526,
+              "keep_alive_requests": 1,
+              "host_operations": 25,
+              "host_waits": 25,
+              "host_claimed": 25,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 108,
+              "host_reactor_poll_calls": 0,
+              "host_reactor_readiness_events": 0,
+              "process_wall_ms": 1110.621
+            },
+            {
+              "pair": 3,
+              "order": 1,
+              "rps": 1.8182102632549275,
+              "elapsed_ns": 1099982791,
+              "avg_ns_per_valid_request": 549991395,
+              "keep_alive_requests": 1,
+              "host_operations": 25,
+              "host_waits": 25,
+              "host_claimed": 25,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 108,
+              "host_reactor_poll_calls": 0,
+              "host_reactor_readiness_events": 0,
+              "process_wall_ms": 1105.219
+            },
+            {
+              "pair": 4,
+              "order": 0,
+              "rps": 65.01483702222131,
+              "elapsed_ns": 1092058417,
+              "avg_ns_per_valid_request": 15381104,
+              "keep_alive_requests": 70,
+              "host_operations": 163,
+              "host_waits": 163,
+              "host_claimed": 163,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 245,
+              "host_reactor_poll_calls": 0,
+              "host_reactor_readiness_events": 0,
+              "process_wall_ms": 1096.936
+            },
+            {
+              "pair": 5,
+              "order": 1,
+              "rps": 1.8121356079571171,
+              "elapsed_ns": 1103670162,
+              "avg_ns_per_valid_request": 551835081,
+              "keep_alive_requests": 1,
+              "host_operations": 25,
+              "host_waits": 25,
+              "host_claimed": 25,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 108,
+              "host_reactor_poll_calls": 0,
+              "host_reactor_readiness_events": 0,
+              "process_wall_ms": 1108.339
+            }
+          ],
+          "candidate": [
+            {
+              "pair": 0,
+              "order": 1,
+              "rps": 87.14984522370962,
+              "elapsed_ns": 1090076520,
+              "avg_ns_per_valid_request": 11474489,
+              "keep_alive_requests": 94,
+              "host_operations": 213,
+              "host_waits": 213,
+              "host_claimed": 213,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 0,
+              "host_reactor_poll_calls": 223,
+              "host_reactor_readiness_events": 222,
+              "process_wall_ms": 1095.292
+            },
+            {
+              "pair": 1,
+              "order": 0,
+              "rps": 1.8319627781656176,
+              "elapsed_ns": 1091725238,
+              "avg_ns_per_valid_request": 545862619,
+              "keep_alive_requests": 1,
+              "host_operations": 27,
+              "host_waits": 27,
+              "host_claimed": 27,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 0,
+              "host_reactor_poll_calls": 35,
+              "host_reactor_readiness_events": 34,
+              "process_wall_ms": 1096.079
+            },
+            {
+              "pair": 2,
+              "order": 1,
+              "rps": 1.8223987793747927,
+              "elapsed_ns": 1097454642,
+              "avg_ns_per_valid_request": 548727321,
+              "keep_alive_requests": 1,
+              "host_operations": 27,
+              "host_waits": 27,
+              "host_claimed": 27,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 0,
+              "host_reactor_poll_calls": 36,
+              "host_reactor_readiness_events": 35,
+              "process_wall_ms": 1102.141
+            },
+            {
+              "pair": 3,
+              "order": 0,
+              "rps": 14.673998438273859,
+              "elapsed_ns": 1090364025,
+              "avg_ns_per_valid_request": 68147751,
+              "keep_alive_requests": 15,
+              "host_operations": 55,
+              "host_waits": 55,
+              "host_claimed": 55,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 0,
+              "host_reactor_poll_calls": 63,
+              "host_reactor_readiness_events": 62,
+              "process_wall_ms": 1094.655
+            },
+            {
+              "pair": 4,
+              "order": 1,
+              "rps": 1.8181166849779955,
+              "elapsed_ns": 1100039407,
+              "avg_ns_per_valid_request": 550019703,
+              "keep_alive_requests": 1,
+              "host_operations": 27,
+              "host_waits": 27,
+              "host_claimed": 27,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 0,
+              "host_reactor_poll_calls": 36,
+              "host_reactor_readiness_events": 35,
+              "process_wall_ms": 1104.627
+            },
+            {
+              "pair": 5,
+              "order": 0,
+              "rps": 1.8150020072651698,
+              "elapsed_ns": 1101927156,
+              "avg_ns_per_valid_request": 550963578,
+              "keep_alive_requests": 1,
+              "host_operations": 27,
+              "host_waits": 27,
+              "host_claimed": 27,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 0,
+              "host_reactor_poll_calls": 34,
+              "host_reactor_readiness_events": 33,
+              "process_wall_ms": 1107.237
+            }
+          ]
+        },
+        "summary": {
+          "baseline": {
+            "rps": {
+              "samples": 6,
+              "p50": 1.812,
+              "p95": 65.015,
+              "min": 1.808,
+              "max": 65.015
+            },
+            "avg_ns_per_valid_request": {
+              "samples": 6,
+              "p50": 550189691,
+              "p95": 552999526,
+              "min": 15381104,
+              "max": 552999526
+            },
+            "process_wall_ms": {
+              "samples": 6,
+              "p50": 1105.219,
+              "p95": 1110.621,
+              "min": 1096.936,
+              "max": 1110.621
+            }
+          },
+          "candidate": {
+            "rps": {
+              "samples": 6,
+              "p50": 1.822,
+              "p95": 87.15,
+              "min": 1.815,
+              "max": 87.15
+            },
+            "avg_ns_per_valid_request": {
+              "samples": 6,
+              "p50": 545862619,
+              "p95": 550963578,
+              "min": 11474489,
+              "max": 550963578
+            },
+            "process_wall_ms": {
+              "samples": 6,
+              "p50": 1096.079,
+              "p95": 1107.237,
+              "min": 1094.655,
+              "max": 1107.237
+            }
+          },
+          "paired_delta": {
+            "rps_ratio": {
+              "samples": 6,
+              "p50": 1.008,
+              "p95": 48.161,
+              "min": 0.028,
+              "max": 48.161
+            },
+            "rps_pct": {
+              "samples": 6,
+              "p50": 0.779,
+              "p95": 4716.085,
+              "min": -97.204,
+              "max": 4716.085
+            },
+            "avg_ns_per_valid_request_pct": {
+              "samples": 6,
+              "p50": -0.786,
+              "p95": 3475.944,
+              "min": -97.924,
+              "max": 3475.944
+            }
+          }
+        },
+        "pair_deltas": [
+          {
+            "pair": 0,
+            "order": "baseline-candidate",
+            "rps_ratio": 48.16084738482396,
+            "rps_pct": 4716.084738482396,
+            "avg_ns_per_valid_request_pct": -97.92362469604086
+          },
+          {
+            "pair": 1,
+            "order": "candidate-baseline",
+            "rps_ratio": 1.0079270348424427,
+            "rps_pct": 0.7927034842442726,
+            "avg_ns_per_valid_request_pct": -0.7864691161579729
+          },
+          {
+            "pair": 2,
+            "order": "baseline-candidate",
+            "rps_ratio": 1.007785661177239,
+            "rps_pct": 0.778566117723889,
+            "avg_ns_per_valid_request_pct": -0.7725512950982116
+          },
+          {
+            "pair": 3,
+            "order": "candidate-baseline",
+            "rps_ratio": 8.070572878631062,
+            "rps_pct": 707.0572878631061,
+            "avg_ns_per_valid_request_pct": -87.60930596014143
+          },
+          {
+            "pair": 4,
+            "order": "baseline-candidate",
+            "rps_ratio": 0.027964642660821933,
+            "rps_pct": -97.20353573391782,
+            "avg_ns_per_valid_request_pct": 3475.9442430140252
+          },
+          {
+            "pair": 5,
+            "order": "candidate-baseline",
+            "rps_ratio": 1.0015817796943376,
+            "rps_pct": 0.15817796943375928,
+            "avg_ns_per_valid_request_pct": -0.1579281618741435
+          }
+        ]
+      },
+      "interpretation": {
+        "accepted": true,
+        "mechanism": "The baseline uses a 1 ms polling/retry owner. The candidate uses one process-level mio shared reactor with command wake coalescing and activity coalescing from accepted private authority.",
+        "non_claims": [
+          "GitHub-hosted timing is not an SLA.",
+          "This single-connection HTTPS corpus is not the same as the private c32 throughput benchmark.",
+          "A large A/B delta does not by itself establish production service throughput.",
+          "No Host ABI, Lib artifact, TLS/HTTP/JSON/compression/router semantic, retry, or socket-custody rule is changed."
+        ]
+      }
+    },
+    {
+      "schema": "wasmc-host-https-ab/v1",
+      "measured_at": "2026-09-20T16:59:35.690Z",
+      "commit": "1648d18192a1bf2c9fcc317fd8b82075c5eabfcf",
+      "platform": "linux-x86_64",
+      "host": {
+        "os": "linux",
+        "arch": "x64",
+        "node": "v26.5.1"
+      },
+      "authority": {
+        "https_source_commit": "2a49108391326b083426bb5ca12e76b0b9268433",
+        "host_transport_baseline_commit": "b1af59699bd27a9d5e3c7d9b6e8951cc1be4302c",
+        "reactor_candidate_commit": "5dd23b434caa34e402298fcfe0975a1c4af55773",
+        "reactor_candidate_readiness_sha256": "4b4fa81ad4a05b1aae08917e2bb552744cab86c4404c6ff813982489492eba99",
+        "reactor_candidate_adapter_sha256": "836990bb645d3cbd975471358538952089bf8ad142c13dcc3bb855b66ab9e73b"
+      },
+      "artifact_manifest_sha256": "f90bd85ca56246b24e630e33be12fdcff52536d998ade808340bd75e782b7fd3",
+      "binaries": {
+        "baseline": {
+          "bytes": 16588392,
+          "sha256": "713795a204cef1a838c39e5514747c1ccd426b5b25f558ac53b98fe33dd43017"
+        },
+        "candidate": {
+          "bytes": 16703992,
+          "sha256": "e2133a75d436864a7f4d6fbbc09b53acfcb026adc17912537aa25094a74459b6"
+        }
+      },
+      "policy": {
+        "functional_and_identity_gates": "hard",
+        "semantic_parity_gates": [
+          "keep_alive_requests",
+          "recovery_requests",
+          "malformed_requests",
+          "checksum"
+        ],
+        "github_hosted_timing": "observational",
+        "performance_regression_gate": false,
+        "only_transport_implementation_changes": true
+      },
+      "qualification": {
+        "baseline": {
+          "host_operations": 5159,
+          "host_waits": 5159,
+          "host_claimed": 5159,
+          "host_partial_writes": 4620,
+          "host_pending_peak": 1,
+          "owner_wake_cycles": 15302,
+          "owner_threads_started": 3,
+          "reactor_poll_calls": 0,
+          "reactor_readiness_events": 0,
+          "checksum": 93106,
+          "fuel_total": "68885558",
+          "dominant_guest_operation": {
+            "component": "tls",
+            "operation": "tls.ingest",
+            "sampled_calls": 13,
+            "wall_ns_sample_mean": 299639,
+            "wall_ns_p95_upper": 2097151,
+            "fuel_sample_mean": "4017024"
+          },
+          "top_guest_operations": [
+            {
+              "component": "tls",
+              "operation": "tls.ingest",
+              "sampled_calls": 13,
+              "wall_ns_sample_mean": 299639,
+              "wall_ns_p95_upper": 2097151,
+              "fuel_sample_mean": "4017024"
+            },
+            {
+              "component": "json",
+              "operation": "json.compact",
+              "sampled_calls": 5,
+              "wall_ns_sample_mean": 19589,
+              "wall_ns_p95_upper": 65535,
+              "fuel_sample_mean": "8023"
+            },
+            {
+              "component": "tls",
+              "operation": "tls.write",
+              "sampled_calls": 6,
+              "wall_ns_sample_mean": 15267,
+              "wall_ns_p95_upper": 32767,
+              "fuel_sample_mean": "225572"
+            },
+            {
+              "component": "http",
+              "operation": "http.frame-length",
+              "sampled_calls": 13,
+              "wall_ns_sample_mean": 13117,
+              "wall_ns_p95_upper": 65535,
+              "fuel_sample_mean": "1908"
+            },
+            {
+              "component": "http",
+              "operation": "http.serialize-response",
+              "sampled_calls": 6,
+              "wall_ns_sample_mean": 8571,
+              "wall_ns_p95_upper": 16383,
+              "fuel_sample_mean": "5518"
+            }
+          ]
+        },
+        "candidate": {
+          "host_operations": 5159,
+          "host_waits": 5159,
+          "host_claimed": 5159,
+          "host_partial_writes": 4620,
+          "host_pending_peak": 1,
+          "owner_wake_cycles": 0,
+          "owner_threads_started": 1,
+          "reactor_poll_calls": 5426,
+          "reactor_readiness_events": 5425,
+          "checksum": 93106,
+          "fuel_total": "68881650",
+          "dominant_guest_operation": {
+            "component": "tls",
+            "operation": "tls.ingest",
+            "sampled_calls": 13,
+            "wall_ns_sample_mean": 298267,
+            "wall_ns_p95_upper": 2097151,
+            "fuel_sample_mean": "4017020"
+          },
+          "top_guest_operations": [
+            {
+              "component": "tls",
+              "operation": "tls.ingest",
+              "sampled_calls": 13,
+              "wall_ns_sample_mean": 298267,
+              "wall_ns_p95_upper": 2097151,
+              "fuel_sample_mean": "4017020"
+            },
+            {
+              "component": "json",
+              "operation": "json.compact",
+              "sampled_calls": 5,
+              "wall_ns_sample_mean": 16782,
+              "wall_ns_p95_upper": 65535,
+              "fuel_sample_mean": "8023"
+            },
+            {
+              "component": "tls",
+              "operation": "tls.write",
+              "sampled_calls": 6,
+              "wall_ns_sample_mean": 14678,
+              "wall_ns_p95_upper": 32767,
+              "fuel_sample_mean": "225565"
+            },
+            {
+              "component": "http",
+              "operation": "http.frame-length",
+              "sampled_calls": 13,
+              "wall_ns_sample_mean": 12987,
+              "wall_ns_p95_upper": 65535,
+              "fuel_sample_mean": "1908"
+            },
+            {
+              "component": "http",
+              "operation": "http.serialize-response",
+              "sampled_calls": 6,
+              "wall_ns_sample_mean": 7238,
+              "wall_ns_p95_upper": 16383,
+              "fuel_sample_mean": "5518"
+            }
+          ]
+        },
+        "semantic_parity": true
+      },
+      "scheduling_diagnostics": {
+        "baseline": {
+          "polling_owner_cycles_per_host_operation": 2.966079
+        },
+        "candidate": {
+          "reactor_polls_per_host_operation": 1.051754,
+          "reactor_readiness_events_per_host_operation": 1.05156
+        },
+        "interpretation": "Polling owner cycles and reactor poll calls are different counters. The mechanism comparison is scheduling strategy, not raw counter subtraction."
+      },
+      "performance": {
+        "pairs": 6,
+        "samples": {
+          "baseline": [
+            {
+              "pair": 0,
+              "order": 0,
+              "rps": 1.6875281854121642,
+              "elapsed_ns": 1185165390,
+              "avg_ns_per_valid_request": 592582695,
+              "keep_alive_requests": 1,
+              "host_operations": 26,
+              "host_waits": 26,
+              "host_claimed": 26,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 109,
+              "host_reactor_poll_calls": 0,
+              "host_reactor_readiness_events": 0,
+              "process_wall_ms": 1189.845
+            },
+            {
+              "pair": 1,
+              "order": 1,
+              "rps": 1.698565213216785,
+              "elapsed_ns": 1177464359,
+              "avg_ns_per_valid_request": 588732179,
+              "keep_alive_requests": 1,
+              "host_operations": 26,
+              "host_waits": 26,
+              "host_claimed": 26,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 109,
+              "host_reactor_poll_calls": 0,
+              "host_reactor_readiness_events": 0,
+              "process_wall_ms": 1181.875
+            },
+            {
+              "pair": 2,
+              "order": 0,
+              "rps": 1.6904222779994709,
+              "elapsed_ns": 1183136324,
+              "avg_ns_per_valid_request": 591568162,
+              "keep_alive_requests": 1,
+              "host_operations": 26,
+              "host_waits": 26,
+              "host_claimed": 26,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 109,
+              "host_reactor_poll_calls": 0,
+              "host_reactor_readiness_events": 0,
+              "process_wall_ms": 1187.838
+            },
+            {
+              "pair": 3,
+              "order": 1,
+              "rps": 1.7049998544441625,
+              "elapsed_ns": 1173020628,
+              "avg_ns_per_valid_request": 586510314,
+              "keep_alive_requests": 1,
+              "host_operations": 26,
+              "host_waits": 26,
+              "host_claimed": 26,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 109,
+              "host_reactor_poll_calls": 0,
+              "host_reactor_readiness_events": 0,
+              "process_wall_ms": 1177.176
+            },
+            {
+              "pair": 4,
+              "order": 0,
+              "rps": 1.7034928953222457,
+              "elapsed_ns": 1174058316,
+              "avg_ns_per_valid_request": 587029158,
+              "keep_alive_requests": 1,
+              "host_operations": 26,
+              "host_waits": 26,
+              "host_claimed": 26,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 108,
+              "host_reactor_poll_calls": 0,
+              "host_reactor_readiness_events": 0,
+              "process_wall_ms": 1178.705
+            },
+            {
+              "pair": 5,
+              "order": 1,
+              "rps": 1.7031737532422382,
+              "elapsed_ns": 1174278312,
+              "avg_ns_per_valid_request": 587139156,
+              "keep_alive_requests": 1,
+              "host_operations": 26,
+              "host_waits": 26,
+              "host_claimed": 26,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 108,
+              "host_reactor_poll_calls": 0,
+              "host_reactor_readiness_events": 0,
+              "process_wall_ms": 1178.882
+            }
+          ],
+          "candidate": [
+            {
+              "pair": 0,
+              "order": 1,
+              "rps": 1.68977568121376,
+              "elapsed_ns": 1183589054,
+              "avg_ns_per_valid_request": 591794527,
+              "keep_alive_requests": 1,
+              "host_operations": 27,
+              "host_waits": 27,
+              "host_claimed": 27,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 0,
+              "host_reactor_poll_calls": 37,
+              "host_reactor_readiness_events": 36,
+              "process_wall_ms": 1187.876
+            },
+            {
+              "pair": 1,
+              "order": 0,
+              "rps": 1.7190191543497053,
+              "elapsed_ns": 1163454168,
+              "avg_ns_per_valid_request": 581727084,
+              "keep_alive_requests": 1,
+              "host_operations": 27,
+              "host_waits": 27,
+              "host_claimed": 27,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 0,
+              "host_reactor_poll_calls": 39,
+              "host_reactor_readiness_events": 38,
+              "process_wall_ms": 1167.88
+            },
+            {
+              "pair": 2,
+              "order": 1,
+              "rps": 1.653681421321917,
+              "elapsed_ns": 1209422791,
+              "avg_ns_per_valid_request": 604711395,
+              "keep_alive_requests": 1,
+              "host_operations": 26,
+              "host_waits": 26,
+              "host_claimed": 26,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 0,
+              "host_reactor_poll_calls": 34,
+              "host_reactor_readiness_events": 33,
+              "process_wall_ms": 1214.12
+            },
+            {
+              "pair": 3,
+              "order": 0,
+              "rps": 1.7091342415792903,
+              "elapsed_ns": 1170183097,
+              "avg_ns_per_valid_request": 585091548,
+              "keep_alive_requests": 1,
+              "host_operations": 27,
+              "host_waits": 27,
+              "host_claimed": 27,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 0,
+              "host_reactor_poll_calls": 38,
+              "host_reactor_readiness_events": 37,
+              "process_wall_ms": 1174.749
+            },
+            {
+              "pair": 4,
+              "order": 1,
+              "rps": 1.7139441536184012,
+              "elapsed_ns": 1166899164,
+              "avg_ns_per_valid_request": 583449582,
+              "keep_alive_requests": 1,
+              "host_operations": 27,
+              "host_waits": 27,
+              "host_claimed": 27,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 0,
+              "host_reactor_poll_calls": 37,
+              "host_reactor_readiness_events": 36,
+              "process_wall_ms": 1171.995
+            },
+            {
+              "pair": 5,
+              "order": 0,
+              "rps": 1.710741326598998,
+              "elapsed_ns": 1169083817,
+              "avg_ns_per_valid_request": 584541908,
+              "keep_alive_requests": 1,
+              "host_operations": 27,
+              "host_waits": 27,
+              "host_claimed": 27,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 0,
+              "host_reactor_poll_calls": 36,
+              "host_reactor_readiness_events": 35,
+              "process_wall_ms": 1173.795
+            }
+          ]
+        },
+        "summary": {
+          "baseline": {
+            "rps": {
+              "samples": 6,
+              "p50": 1.699,
+              "p95": 1.705,
+              "min": 1.688,
+              "max": 1.705
+            },
+            "avg_ns_per_valid_request": {
+              "samples": 6,
+              "p50": 587139156,
+              "p95": 592582695,
+              "min": 586510314,
+              "max": 592582695
+            },
+            "process_wall_ms": {
+              "samples": 6,
+              "p50": 1178.882,
+              "p95": 1189.845,
+              "min": 1177.176,
+              "max": 1189.845
+            }
+          },
+          "candidate": {
+            "rps": {
+              "samples": 6,
+              "p50": 1.709,
+              "p95": 1.719,
+              "min": 1.654,
+              "max": 1.719
+            },
+            "avg_ns_per_valid_request": {
+              "samples": 6,
+              "p50": 584541908,
+              "p95": 604711395,
+              "min": 581727084,
+              "max": 604711395
+            },
+            "process_wall_ms": {
+              "samples": 6,
+              "p50": 1173.795,
+              "p95": 1214.12,
+              "min": 1167.88,
+              "max": 1214.12
+            }
+          },
+          "paired_delta": {
+            "rps_ratio": {
+              "samples": 6,
+              "p50": 1.002,
+              "p95": 1.012,
+              "min": 0.978,
+              "max": 1.012
+            },
+            "rps_pct": {
+              "samples": 6,
+              "p50": 0.242,
+              "p95": 1.204,
+              "min": -2.173,
+              "max": 1.204
+            },
+            "avg_ns_per_valid_request_pct": {
+              "samples": 6,
+              "p50": -0.442,
+              "p95": 2.222,
+              "min": -1.19,
+              "max": 2.222
+            }
+          }
+        },
+        "pair_deltas": [
+          {
+            "pair": 0,
+            "order": "baseline-candidate",
+            "rps_ratio": 1.001331827119111,
+            "rps_pct": 0.1331827119110951,
+            "avg_ns_per_valid_request_pct": -0.13300557148399061
+          },
+          {
+            "pair": 1,
+            "order": "candidate-baseline",
+            "rps_ratio": 1.0120418933425488,
+            "rps_pct": 1.2041893342548793,
+            "avg_ns_per_valid_request_pct": -1.189861069238407
+          },
+          {
+            "pair": 2,
+            "order": "baseline-candidate",
+            "rps_ratio": 0.9782652789449541,
+            "rps_pct": -2.1734721055045925,
+            "avg_ns_per_valid_request_pct": 2.221761386813781
+          },
+          {
+            "pair": 3,
+            "order": "candidate-baseline",
+            "rps_ratio": 1.0024248606968214,
+            "rps_pct": 0.24248606968213515,
+            "avg_ns_per_valid_request_pct": -0.24189958234903663
+          },
+          {
+            "pair": 4,
+            "order": "baseline-candidate",
+            "rps_ratio": 1.0061351933576328,
+            "rps_pct": 0.6135193357632795,
+            "avg_ns_per_valid_request_pct": -0.6097782284266051
+          },
+          {
+            "pair": 5,
+            "order": "candidate-baseline",
+            "rps_ratio": 1.004443218633656,
+            "rps_pct": 0.4443218633656043,
+            "avg_ns_per_valid_request_pct": -0.4423564624260856
+          }
+        ]
+      },
+      "interpretation": {
+        "accepted": true,
+        "mechanism": "The baseline uses a 1 ms polling/retry owner. The candidate uses one process-level mio shared reactor with command wake coalescing and activity coalescing from accepted private authority.",
+        "non_claims": [
+          "GitHub-hosted timing is not an SLA.",
+          "This single-connection HTTPS corpus is not the same as the private c32 throughput benchmark.",
+          "A large A/B delta does not by itself establish production service throughput.",
+          "No Host ABI, Lib artifact, TLS/HTTP/JSON/compression/router semantic, retry, or socket-custody rule is changed."
+        ]
+      }
+    },
+    {
+      "schema": "wasmc-host-https-ab/v1",
+      "measured_at": "2026-09-20T16:59:14.152Z",
+      "commit": "1648d18192a1bf2c9fcc317fd8b82075c5eabfcf",
+      "platform": "macos-aarch64",
+      "host": {
+        "os": "darwin",
+        "arch": "arm64",
+        "node": "v26.5.1"
+      },
+      "authority": {
+        "https_source_commit": "2a49108391326b083426bb5ca12e76b0b9268433",
+        "host_transport_baseline_commit": "b1af59699bd27a9d5e3c7d9b6e8951cc1be4302c",
+        "reactor_candidate_commit": "5dd23b434caa34e402298fcfe0975a1c4af55773",
+        "reactor_candidate_readiness_sha256": "4b4fa81ad4a05b1aae08917e2bb552744cab86c4404c6ff813982489492eba99",
+        "reactor_candidate_adapter_sha256": "836990bb645d3cbd975471358538952089bf8ad142c13dcc3bb855b66ab9e73b"
+      },
+      "artifact_manifest_sha256": "f90bd85ca56246b24e630e33be12fdcff52536d998ade808340bd75e782b7fd3",
+      "binaries": {
+        "baseline": {
+          "bytes": 11710368,
+          "sha256": "5c06f18277561f49cd27327f3fc6f8947925f3d6acabc0f3f72d552bbd767491"
+        },
+        "candidate": {
+          "bytes": 11798736,
+          "sha256": "4bd93e084d2ff95fba8b2efa887492983421ad2e08480996b87a7151c52eee17"
+        }
+      },
+      "policy": {
+        "functional_and_identity_gates": "hard",
+        "semantic_parity_gates": [
+          "keep_alive_requests",
+          "recovery_requests",
+          "malformed_requests",
+          "checksum"
+        ],
+        "github_hosted_timing": "observational",
+        "performance_regression_gate": false,
+        "only_transport_implementation_changes": true
+      },
+      "qualification": {
+        "baseline": {
+          "host_operations": 5156,
+          "host_waits": 5156,
+          "host_claimed": 5156,
+          "host_partial_writes": 4620,
+          "host_pending_peak": 1,
+          "owner_wake_cycles": 5389,
+          "owner_threads_started": 3,
+          "reactor_poll_calls": 0,
+          "reactor_readiness_events": 0,
+          "checksum": 93106,
+          "fuel_total": "68911335",
+          "dominant_guest_operation": {
+            "component": "tls",
+            "operation": "tls.ingest",
+            "sampled_calls": 10,
+            "wall_ns_sample_mean": 395020,
+            "wall_ns_p95_upper": 2097151,
+            "fuel_sample_mean": "5214132"
+          },
+          "top_guest_operations": [
+            {
+              "component": "tls",
+              "operation": "tls.ingest",
+              "sampled_calls": 10,
+              "wall_ns_sample_mean": 395020,
+              "wall_ns_p95_upper": 2097151,
+              "fuel_sample_mean": "5214132"
+            },
+            {
+              "component": "json",
+              "operation": "json.compact",
+              "sampled_calls": 5,
+              "wall_ns_sample_mean": 19892,
+              "wall_ns_p95_upper": 32767,
+              "fuel_sample_mean": "8023"
+            },
+            {
+              "component": "tls",
+              "operation": "tls.write",
+              "sampled_calls": 6,
+              "wall_ns_sample_mean": 16395,
+              "wall_ns_p95_upper": 32767,
+              "fuel_sample_mean": "225532"
+            },
+            {
+              "component": "http",
+              "operation": "http.frame-length",
+              "sampled_calls": 10,
+              "wall_ns_sample_mean": 14479,
+              "wall_ns_p95_upper": 65535,
+              "fuel_sample_mean": "2223"
+            },
+            {
+              "component": "http",
+              "operation": "http.serialize-response",
+              "sampled_calls": 6,
+              "wall_ns_sample_mean": 8638,
+              "wall_ns_p95_upper": 16383,
+              "fuel_sample_mean": "5518"
+            }
+          ]
+        },
+        "candidate": {
+          "host_operations": 5156,
+          "host_waits": 5156,
+          "host_claimed": 5156,
+          "host_partial_writes": 4620,
+          "host_pending_peak": 1,
+          "owner_wake_cycles": 0,
+          "owner_threads_started": 1,
+          "reactor_poll_calls": 5325,
+          "reactor_readiness_events": 5324,
+          "checksum": 93106,
+          "fuel_total": "68911336",
+          "dominant_guest_operation": {
+            "component": "tls",
+            "operation": "tls.ingest",
+            "sampled_calls": 10,
+            "wall_ns_sample_mean": 945070,
+            "wall_ns_p95_upper": 8388607,
+            "fuel_sample_mean": "5214291"
+          },
+          "top_guest_operations": [
+            {
+              "component": "tls",
+              "operation": "tls.ingest",
+              "sampled_calls": 10,
+              "wall_ns_sample_mean": 945070,
+              "wall_ns_p95_upper": 8388607,
+              "fuel_sample_mean": "5214291"
+            },
+            {
+              "component": "json",
+              "operation": "json.compact",
+              "sampled_calls": 5,
+              "wall_ns_sample_mean": 12766,
+              "wall_ns_p95_upper": 65535,
+              "fuel_sample_mean": "8023"
+            },
+            {
+              "component": "tls",
+              "operation": "tls.write",
+              "sampled_calls": 6,
+              "wall_ns_sample_mean": 10298,
+              "wall_ns_p95_upper": 16383,
+              "fuel_sample_mean": "225555"
+            },
+            {
+              "component": "http",
+              "operation": "http.frame-length",
+              "sampled_calls": 10,
+              "wall_ns_sample_mean": 7387,
+              "wall_ns_p95_upper": 65535,
+              "fuel_sample_mean": "2223"
+            },
+            {
+              "component": "http",
+              "operation": "http.serialize-response",
+              "sampled_calls": 6,
+              "wall_ns_sample_mean": 4430,
+              "wall_ns_p95_upper": 16383,
+              "fuel_sample_mean": "5518"
+            }
+          ]
+        },
+        "semantic_parity": true
+      },
+      "scheduling_diagnostics": {
+        "baseline": {
+          "polling_owner_cycles_per_host_operation": 1.04519
+        },
+        "candidate": {
+          "reactor_polls_per_host_operation": 1.032777,
+          "reactor_readiness_events_per_host_operation": 1.032583
+        },
+        "interpretation": "Polling owner cycles and reactor poll calls are different counters. The mechanism comparison is scheduling strategy, not raw counter subtraction."
+      },
+      "performance": {
+        "pairs": 6,
+        "samples": {
+          "baseline": [
+            {
+              "pair": 0,
+              "order": 0,
+              "rps": 1.7730619577963789,
+              "elapsed_ns": 1127992167,
+              "avg_ns_per_valid_request": 563996083,
+              "keep_alive_requests": 1,
+              "host_operations": 23,
+              "host_waits": 23,
+              "host_claimed": 23,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 31,
+              "host_reactor_poll_calls": 0,
+              "host_reactor_readiness_events": 0,
+              "process_wall_ms": 1138.239
+            },
+            {
+              "pair": 1,
+              "order": 1,
+              "rps": 1.8778857822920065,
+              "elapsed_ns": 1065027500,
+              "avg_ns_per_valid_request": 532513750,
+              "keep_alive_requests": 1,
+              "host_operations": 23,
+              "host_waits": 23,
+              "host_claimed": 23,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 30,
+              "host_reactor_poll_calls": 0,
+              "host_reactor_readiness_events": 0,
+              "process_wall_ms": 1071.477
+            },
+            {
+              "pair": 2,
+              "order": 0,
+              "rps": 1.7223136638255245,
+              "elapsed_ns": 1161228667,
+              "avg_ns_per_valid_request": 580614333,
+              "keep_alive_requests": 1,
+              "host_operations": 23,
+              "host_waits": 23,
+              "host_claimed": 23,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 30,
+              "host_reactor_poll_calls": 0,
+              "host_reactor_readiness_events": 0,
+              "process_wall_ms": 1167.992
+            },
+            {
+              "pair": 3,
+              "order": 1,
+              "rps": 5.720912208757704,
+              "elapsed_ns": 1048783792,
+              "avg_ns_per_valid_request": 174797298,
+              "keep_alive_requests": 5,
+              "host_operations": 31,
+              "host_waits": 31,
+              "host_claimed": 31,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 43,
+              "host_reactor_poll_calls": 0,
+              "host_reactor_readiness_events": 0,
+              "process_wall_ms": 1057.85
+            },
+            {
+              "pair": 4,
+              "order": 0,
+              "rps": 1.6622782520811723,
+              "elapsed_ns": 1203168000,
+              "avg_ns_per_valid_request": 601584000,
+              "keep_alive_requests": 1,
+              "host_operations": 23,
+              "host_waits": 23,
+              "host_claimed": 23,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 30,
+              "host_reactor_poll_calls": 0,
+              "host_reactor_readiness_events": 0,
+              "process_wall_ms": 1214.974
+            },
+            {
+              "pair": 5,
+              "order": 1,
+              "rps": 1.6439192207652584,
+              "elapsed_ns": 1216604791,
+              "avg_ns_per_valid_request": 608302395,
+              "keep_alive_requests": 1,
+              "host_operations": 23,
+              "host_waits": 23,
+              "host_claimed": 23,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 26,
+              "host_reactor_poll_calls": 0,
+              "host_reactor_readiness_events": 0,
+              "process_wall_ms": 1224.567
+            }
+          ],
+          "candidate": [
+            {
+              "pair": 0,
+              "order": 1,
+              "rps": 170.15676964622295,
+              "elapsed_ns": 1010832542,
+              "avg_ns_per_valid_request": 5876933,
+              "keep_alive_requests": 171,
+              "host_operations": 366,
+              "host_waits": 366,
+              "host_claimed": 366,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 0,
+              "host_reactor_poll_calls": 545,
+              "host_reactor_readiness_events": 544,
+              "process_wall_ms": 1020.426
+            },
+            {
+              "pair": 1,
+              "order": 0,
+              "rps": 1.8587863019895976,
+              "elapsed_ns": 1075970916,
+              "avg_ns_per_valid_request": 537985458,
+              "keep_alive_requests": 1,
+              "host_operations": 26,
+              "host_waits": 26,
+              "host_claimed": 26,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 0,
+              "host_reactor_poll_calls": 37,
+              "host_reactor_readiness_events": 36,
+              "process_wall_ms": 1086.352
+            },
+            {
+              "pair": 2,
+              "order": 1,
+              "rps": 1.9465268802646478,
+              "elapsed_ns": 1027471041,
+              "avg_ns_per_valid_request": 513735520,
+              "keep_alive_requests": 1,
+              "host_operations": 26,
+              "host_waits": 26,
+              "host_claimed": 26,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 0,
+              "host_reactor_poll_calls": 38,
+              "host_reactor_readiness_events": 37,
+              "process_wall_ms": 1040.097
+            },
+            {
+              "pair": 3,
+              "order": 0,
+              "rps": 432.64093086943666,
+              "elapsed_ns": 1012386875,
+              "avg_ns_per_valid_request": 2311385,
+              "keep_alive_requests": 437,
+              "host_operations": 898,
+              "host_waits": 898,
+              "host_claimed": 898,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 0,
+              "host_reactor_poll_calls": 1295,
+              "host_reactor_readiness_events": 1294,
+              "process_wall_ms": 1021.419
+            },
+            {
+              "pair": 4,
+              "order": 1,
+              "rps": 607.6644635929645,
+              "elapsed_ns": 1013717334,
+              "avg_ns_per_valid_request": 1645645,
+              "keep_alive_requests": 615,
+              "host_operations": 1254,
+              "host_waits": 1254,
+              "host_claimed": 1254,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 0,
+              "host_reactor_poll_calls": 1799,
+              "host_reactor_readiness_events": 1798,
+              "process_wall_ms": 1030.412
+            },
+            {
+              "pair": 5,
+              "order": 0,
+              "rps": 1.9518532303807268,
+              "elapsed_ns": 1024667208,
+              "avg_ns_per_valid_request": 512333604,
+              "keep_alive_requests": 1,
+              "host_operations": 26,
+              "host_waits": 26,
+              "host_claimed": 26,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 0,
+              "host_reactor_poll_calls": 37,
+              "host_reactor_readiness_events": 36,
+              "process_wall_ms": 1036.084
+            }
+          ]
+        },
+        "summary": {
+          "baseline": {
+            "rps": {
+              "samples": 6,
+              "p50": 1.722,
+              "p95": 5.721,
+              "min": 1.644,
+              "max": 5.721
+            },
+            "avg_ns_per_valid_request": {
+              "samples": 6,
+              "p50": 563996083,
+              "p95": 608302395,
+              "min": 174797298,
+              "max": 608302395
+            },
+            "process_wall_ms": {
+              "samples": 6,
+              "p50": 1138.239,
+              "p95": 1224.567,
+              "min": 1057.85,
+              "max": 1224.567
+            }
+          },
+          "candidate": {
+            "rps": {
+              "samples": 6,
+              "p50": 1.952,
+              "p95": 607.664,
+              "min": 1.859,
+              "max": 607.664
+            },
+            "avg_ns_per_valid_request": {
+              "samples": 6,
+              "p50": 5876933,
+              "p95": 537985458,
+              "min": 1645645,
+              "max": 537985458
+            },
+            "process_wall_ms": {
+              "samples": 6,
+              "p50": 1030.412,
+              "p95": 1086.352,
+              "min": 1020.426,
+              "max": 1086.352
+            }
+          },
+          "paired_delta": {
+            "rps_ratio": {
+              "samples": 6,
+              "p50": 1.187,
+              "p95": 365.561,
+              "min": 0.99,
+              "max": 365.561
+            },
+            "rps_pct": {
+              "samples": 6,
+              "p50": 18.732,
+              "p95": 36456.122,
+              "min": -1.017,
+              "max": 36456.122
+            },
+            "avg_ns_per_valid_request_pct": {
+              "samples": 6,
+              "p50": -98.678,
+              "p95": 1.028,
+              "min": -99.726,
+              "max": 1.028
+            }
+          }
+        },
+        "pair_deltas": [
+          {
+            "pair": 0,
+            "order": "baseline-candidate",
+            "rps_ratio": 95.96775166148143,
+            "rps_pct": 9496.775166148143,
+            "avg_ns_per_valid_request_pct": -98.95798336599441
+          },
+          {
+            "pair": 1,
+            "order": "candidate-baseline",
+            "rps_ratio": 0.989829264121113,
+            "rps_pct": -1.017073587888695,
+            "avg_ns_per_valid_request_pct": 1.0275242658053463
+          },
+          {
+            "pair": 2,
+            "order": "baseline-candidate",
+            "rps_ratio": 1.1301814072246927,
+            "rps_pct": 13.018140722469273,
+            "avg_ns_per_valid_request_pct": -11.518629354952559
+          },
+          {
+            "pair": 3,
+            "order": "candidate-baseline",
+            "rps_ratio": 75.6244660086096,
+            "rps_pct": 7462.44660086096,
+            "avg_ns_per_valid_request_pct": -98.6776769283928
+          },
+          {
+            "pair": 4,
+            "order": "baseline-candidate",
+            "rps_ratio": 365.56121866610994,
+            "rps_pct": 36456.12186661099,
+            "avg_ns_per_valid_request_pct": -99.72644801058539
+          },
+          {
+            "pair": 5,
+            "order": "candidate-baseline",
+            "rps_ratio": 1.1873169957050094,
+            "rps_pct": 18.731699570500936,
+            "avg_ns_per_valid_request_pct": -15.776494024818033
+          }
+        ]
+      },
+      "interpretation": {
+        "accepted": true,
+        "mechanism": "The baseline uses a 1 ms polling/retry owner. The candidate uses one process-level mio shared reactor with command wake coalescing and activity coalescing from accepted private authority.",
+        "non_claims": [
+          "GitHub-hosted timing is not an SLA.",
+          "This single-connection HTTPS corpus is not the same as the private c32 throughput benchmark.",
+          "A large A/B delta does not by itself establish production service throughput.",
+          "No Host ABI, Lib artifact, TLS/HTTP/JSON/compression/router semantic, retry, or socket-custody rule is changed."
+        ]
+      }
+    },
+    {
+      "schema": "wasmc-host-https-ab/v1",
+      "measured_at": "2026-09-20T17:05:48.407Z",
+      "commit": "1648d18192a1bf2c9fcc317fd8b82075c5eabfcf",
+      "platform": "macos-x86_64",
+      "host": {
+        "os": "darwin",
+        "arch": "x64",
+        "node": "v26.5.1"
+      },
+      "authority": {
+        "https_source_commit": "2a49108391326b083426bb5ca12e76b0b9268433",
+        "host_transport_baseline_commit": "b1af59699bd27a9d5e3c7d9b6e8951cc1be4302c",
+        "reactor_candidate_commit": "5dd23b434caa34e402298fcfe0975a1c4af55773",
+        "reactor_candidate_readiness_sha256": "4b4fa81ad4a05b1aae08917e2bb552744cab86c4404c6ff813982489492eba99",
+        "reactor_candidate_adapter_sha256": "836990bb645d3cbd975471358538952089bf8ad142c13dcc3bb855b66ab9e73b"
+      },
+      "artifact_manifest_sha256": "f90bd85ca56246b24e630e33be12fdcff52536d998ade808340bd75e782b7fd3",
+      "binaries": {
+        "baseline": {
+          "bytes": 14878904,
+          "sha256": "7dee3416d23b5a8bb94f19c0d5afd3a2b69bf441bfa617317b171f0acc0c1d59"
+        },
+        "candidate": {
+          "bytes": 14983184,
+          "sha256": "25e0649a13654fcb56b55566e6e341f9170fff8f8a9615d0c0a4afa8260f41e7"
+        }
+      },
+      "policy": {
+        "functional_and_identity_gates": "hard",
+        "semantic_parity_gates": [
+          "keep_alive_requests",
+          "recovery_requests",
+          "malformed_requests",
+          "checksum"
+        ],
+        "github_hosted_timing": "observational",
+        "performance_regression_gate": false,
+        "only_transport_implementation_changes": true
+      },
+      "qualification": {
+        "baseline": {
+          "host_operations": 5157,
+          "host_waits": 5157,
+          "host_claimed": 5157,
+          "host_partial_writes": 4620,
+          "host_pending_peak": 1,
+          "owner_wake_cycles": 5342,
+          "owner_threads_started": 3,
+          "reactor_poll_calls": 0,
+          "reactor_readiness_events": 0,
+          "checksum": 93106,
+          "fuel_total": "68861716",
+          "dominant_guest_operation": {
+            "component": "tls",
+            "operation": "tls.ingest",
+            "sampled_calls": 11,
+            "wall_ns_sample_mean": 606023,
+            "wall_ns_p95_upper": 4194303,
+            "fuel_sample_mean": "4740318"
+          },
+          "top_guest_operations": [
+            {
+              "component": "tls",
+              "operation": "tls.ingest",
+              "sampled_calls": 11,
+              "wall_ns_sample_mean": 606023,
+              "wall_ns_p95_upper": 4194303,
+              "fuel_sample_mean": "4740318"
+            },
+            {
+              "component": "json",
+              "operation": "json.compact",
+              "sampled_calls": 5,
+              "wall_ns_sample_mean": 28471,
+              "wall_ns_p95_upper": 131071,
+              "fuel_sample_mean": "8023"
+            },
+            {
+              "component": "tls",
+              "operation": "tls.write",
+              "sampled_calls": 6,
+              "wall_ns_sample_mean": 28186,
+              "wall_ns_p95_upper": 32767,
+              "fuel_sample_mean": "225475"
+            },
+            {
+              "component": "http",
+              "operation": "http.serialize-response",
+              "sampled_calls": 6,
+              "wall_ns_sample_mean": 16859,
+              "wall_ns_p95_upper": 32767,
+              "fuel_sample_mean": "5518"
+            },
+            {
+              "component": "http",
+              "operation": "http.frame-length",
+              "sampled_calls": 11,
+              "wall_ns_sample_mean": 15132,
+              "wall_ns_p95_upper": 65535,
+              "fuel_sample_mean": "2099"
+            }
+          ]
+        },
+        "candidate": {
+          "host_operations": 5156,
+          "host_waits": 5156,
+          "host_claimed": 5156,
+          "host_partial_writes": 4620,
+          "host_pending_peak": 1,
+          "owner_wake_cycles": 0,
+          "owner_threads_started": 1,
+          "reactor_poll_calls": 5344,
+          "reactor_readiness_events": 5343,
+          "checksum": 93106,
+          "fuel_total": "68911288",
+          "dominant_guest_operation": {
+            "component": "tls",
+            "operation": "tls.ingest",
+            "sampled_calls": 10,
+            "wall_ns_sample_mean": 683229,
+            "wall_ns_p95_upper": 4194303,
+            "fuel_sample_mean": "5214193"
+          },
+          "top_guest_operations": [
+            {
+              "component": "tls",
+              "operation": "tls.ingest",
+              "sampled_calls": 10,
+              "wall_ns_sample_mean": 683229,
+              "wall_ns_p95_upper": 4194303,
+              "fuel_sample_mean": "5214193"
+            },
+            {
+              "component": "json",
+              "operation": "json.compact",
+              "sampled_calls": 5,
+              "wall_ns_sample_mean": 26549,
+              "wall_ns_p95_upper": 131071,
+              "fuel_sample_mean": "8023"
+            },
+            {
+              "component": "tls",
+              "operation": "tls.write",
+              "sampled_calls": 6,
+              "wall_ns_sample_mean": 24396,
+              "wall_ns_p95_upper": 32767,
+              "fuel_sample_mean": "225524"
+            },
+            {
+              "component": "http",
+              "operation": "http.frame-length",
+              "sampled_calls": 10,
+              "wall_ns_sample_mean": 15606,
+              "wall_ns_p95_upper": 65535,
+              "fuel_sample_mean": "2223"
+            },
+            {
+              "component": "http",
+              "operation": "http.serialize-response",
+              "sampled_calls": 6,
+              "wall_ns_sample_mean": 13148,
+              "wall_ns_p95_upper": 32767,
+              "fuel_sample_mean": "5518"
+            }
+          ]
+        },
+        "semantic_parity": true
+      },
+      "scheduling_diagnostics": {
+        "baseline": {
+          "polling_owner_cycles_per_host_operation": 1.035874
+        },
+        "candidate": {
+          "reactor_polls_per_host_operation": 1.036462,
+          "reactor_readiness_events_per_host_operation": 1.036268
+        },
+        "interpretation": "Polling owner cycles and reactor poll calls are different counters. The mechanism comparison is scheduling strategy, not raw counter subtraction."
+      },
+      "performance": {
+        "pairs": 6,
+        "samples": {
+          "baseline": [
+            {
+              "pair": 0,
+              "order": 0,
+              "rps": 0.7980586380878592,
+              "elapsed_ns": 2506081514,
+              "avg_ns_per_valid_request": 1253040757,
+              "keep_alive_requests": 1,
+              "host_operations": 25,
+              "host_waits": 25,
+              "host_claimed": 25,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 33,
+              "host_reactor_poll_calls": 0,
+              "host_reactor_readiness_events": 0,
+              "process_wall_ms": 2521.838
+            },
+            {
+              "pair": 1,
+              "order": 1,
+              "rps": 0.8726438807202208,
+              "elapsed_ns": 2291885664,
+              "avg_ns_per_valid_request": 1145942832,
+              "keep_alive_requests": 1,
+              "host_operations": 26,
+              "host_waits": 26,
+              "host_claimed": 26,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 34,
+              "host_reactor_poll_calls": 0,
+              "host_reactor_readiness_events": 0,
+              "process_wall_ms": 2307.306
+            },
+            {
+              "pair": 2,
+              "order": 0,
+              "rps": 0.967646816738218,
+              "elapsed_ns": 2066869818,
+              "avg_ns_per_valid_request": 1033434909,
+              "keep_alive_requests": 1,
+              "host_operations": 26,
+              "host_waits": 26,
+              "host_claimed": 26,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 33,
+              "host_reactor_poll_calls": 0,
+              "host_reactor_readiness_events": 0,
+              "process_wall_ms": 2082.67
+            },
+            {
+              "pair": 3,
+              "order": 1,
+              "rps": 0.822807525551,
+              "elapsed_ns": 2430702124,
+              "avg_ns_per_valid_request": 1215351062,
+              "keep_alive_requests": 1,
+              "host_operations": 26,
+              "host_waits": 26,
+              "host_claimed": 26,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 32,
+              "host_reactor_poll_calls": 0,
+              "host_reactor_readiness_events": 0,
+              "process_wall_ms": 2447.273
+            },
+            {
+              "pair": 4,
+              "order": 0,
+              "rps": 0.8868061525128121,
+              "elapsed_ns": 2255284308,
+              "avg_ns_per_valid_request": 1127642154,
+              "keep_alive_requests": 1,
+              "host_operations": 24,
+              "host_waits": 24,
+              "host_claimed": 24,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 31,
+              "host_reactor_poll_calls": 0,
+              "host_reactor_readiness_events": 0,
+              "process_wall_ms": 2271.184
+            },
+            {
+              "pair": 5,
+              "order": 1,
+              "rps": 0.8388317594783203,
+              "elapsed_ns": 2384268332,
+              "avg_ns_per_valid_request": 1192134166,
+              "keep_alive_requests": 1,
+              "host_operations": 26,
+              "host_waits": 26,
+              "host_claimed": 26,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 34,
+              "host_reactor_poll_calls": 0,
+              "host_reactor_readiness_events": 0,
+              "process_wall_ms": 2401.253
+            }
+          ],
+          "candidate": [
+            {
+              "pair": 0,
+              "order": 1,
+              "rps": 0.7916222221254859,
+              "elapsed_ns": 2526457626,
+              "avg_ns_per_valid_request": 1263228813,
+              "keep_alive_requests": 1,
+              "host_operations": 26,
+              "host_waits": 26,
+              "host_claimed": 26,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 0,
+              "host_reactor_poll_calls": 36,
+              "host_reactor_readiness_events": 35,
+              "process_wall_ms": 2544.419
+            },
+            {
+              "pair": 1,
+              "order": 0,
+              "rps": 0.8255964433992115,
+              "elapsed_ns": 2422491056,
+              "avg_ns_per_valid_request": 1211245528,
+              "keep_alive_requests": 1,
+              "host_operations": 26,
+              "host_waits": 26,
+              "host_claimed": 26,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 0,
+              "host_reactor_poll_calls": 34,
+              "host_reactor_readiness_events": 33,
+              "process_wall_ms": 2439.492
+            },
+            {
+              "pair": 2,
+              "order": 1,
+              "rps": 0.8581973590562224,
+              "elapsed_ns": 2330466272,
+              "avg_ns_per_valid_request": 1165233136,
+              "keep_alive_requests": 1,
+              "host_operations": 26,
+              "host_waits": 26,
+              "host_claimed": 26,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 0,
+              "host_reactor_poll_calls": 34,
+              "host_reactor_readiness_events": 33,
+              "process_wall_ms": 2344.119
+            },
+            {
+              "pair": 3,
+              "order": 0,
+              "rps": 0.8726142994472776,
+              "elapsed_ns": 2291963358,
+              "avg_ns_per_valid_request": 1145981679,
+              "keep_alive_requests": 1,
+              "host_operations": 26,
+              "host_waits": 26,
+              "host_claimed": 26,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 0,
+              "host_reactor_poll_calls": 35,
+              "host_reactor_readiness_events": 34,
+              "process_wall_ms": 2306.987
+            },
+            {
+              "pair": 4,
+              "order": 1,
+              "rps": 1.0515764006208448,
+              "elapsed_ns": 1901906508,
+              "avg_ns_per_valid_request": 950953254,
+              "keep_alive_requests": 1,
+              "host_operations": 26,
+              "host_waits": 26,
+              "host_claimed": 26,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 0,
+              "host_reactor_poll_calls": 34,
+              "host_reactor_readiness_events": 33,
+              "process_wall_ms": 1918.368
+            },
+            {
+              "pair": 5,
+              "order": 0,
+              "rps": 0.7555501231165903,
+              "elapsed_ns": 2647077856,
+              "avg_ns_per_valid_request": 1323538928,
+              "keep_alive_requests": 1,
+              "host_operations": 26,
+              "host_waits": 26,
+              "host_claimed": 26,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 0,
+              "host_reactor_poll_calls": 35,
+              "host_reactor_readiness_events": 34,
+              "process_wall_ms": 2659.887
+            }
+          ]
+        },
+        "summary": {
+          "baseline": {
+            "rps": {
+              "samples": 6,
+              "p50": 0.839,
+              "p95": 0.968,
+              "min": 0.798,
+              "max": 0.968
+            },
+            "avg_ns_per_valid_request": {
+              "samples": 6,
+              "p50": 1145942832,
+              "p95": 1253040757,
+              "min": 1033434909,
+              "max": 1253040757
+            },
+            "process_wall_ms": {
+              "samples": 6,
+              "p50": 2307.306,
+              "p95": 2521.838,
+              "min": 2082.67,
+              "max": 2521.838
+            }
+          },
+          "candidate": {
+            "rps": {
+              "samples": 6,
+              "p50": 0.826,
+              "p95": 1.052,
+              "min": 0.756,
+              "max": 1.052
+            },
+            "avg_ns_per_valid_request": {
+              "samples": 6,
+              "p50": 1165233136,
+              "p95": 1323538928,
+              "min": 950953254,
+              "max": 1323538928
+            },
+            "process_wall_ms": {
+              "samples": 6,
+              "p50": 2344.119,
+              "p95": 2659.887,
+              "min": 1918.368,
+              "max": 2659.887
+            }
+          },
+          "paired_delta": {
+            "rps_ratio": {
+              "samples": 6,
+              "p50": 0.946,
+              "p95": 1.186,
+              "min": 0.887,
+              "max": 1.186
+            },
+            "rps_pct": {
+              "samples": 6,
+              "p50": -5.391,
+              "p95": 18.58,
+              "min": -11.311,
+              "max": 18.58
+            },
+            "avg_ns_per_valid_request_pct": {
+              "samples": 6,
+              "p50": 0.813,
+              "p95": 12.753,
+              "min": -15.669,
+              "max": 12.753
+            }
+          }
+        },
+        "pair_deltas": [
+          {
+            "pair": 0,
+            "order": "baseline-candidate",
+            "rps_ratio": 0.991934908470141,
+            "rps_pct": -0.8065091529859014,
+            "avg_ns_per_valid_request_pct": 0.8130666096122896
+          },
+          {
+            "pair": 1,
+            "order": "candidate-baseline",
+            "rps_ratio": 0.94608632643802,
+            "rps_pct": -5.391367356197996,
+            "avg_ns_per_valid_request_pct": 5.69859980589329
+          },
+          {
+            "pair": 2,
+            "order": "baseline-candidate",
+            "rps_ratio": 0.8868911096603076,
+            "rps_pct": -11.31088903396924,
+            "avg_ns_per_valid_request_pct": 12.753413480829101
+          },
+          {
+            "pair": 3,
+            "order": "candidate-baseline",
+            "rps_ratio": 1.060532715549635,
+            "rps_pct": 6.053271554963491,
+            "avg_ns_per_valid_request_pct": -5.707765037522961
+          },
+          {
+            "pair": 4,
+            "order": "baseline-candidate",
+            "rps_ratio": 1.1858018774916563,
+            "rps_pct": 18.58018774916563,
+            "avg_ns_per_valid_request_pct": -15.668880360072102
+          },
+          {
+            "pair": 5,
+            "order": "candidate-baseline",
+            "rps_ratio": 0.9007171158927937,
+            "rps_pct": -9.928288410720631,
+            "avg_ns_per_valid_request_pct": 11.022648771228983
+          }
+        ]
+      },
+      "interpretation": {
+        "accepted": true,
+        "mechanism": "The baseline uses a 1 ms polling/retry owner. The candidate uses one process-level mio shared reactor with command wake coalescing and activity coalescing from accepted private authority.",
+        "non_claims": [
+          "GitHub-hosted timing is not an SLA.",
+          "This single-connection HTTPS corpus is not the same as the private c32 throughput benchmark.",
+          "A large A/B delta does not by itself establish production service throughput.",
+          "No Host ABI, Lib artifact, TLS/HTTP/JSON/compression/router semantic, retry, or socket-custody rule is changed."
+        ]
+      }
+    },
+    {
+      "schema": "wasmc-host-https-ab/v1",
+      "measured_at": "2026-09-20T16:59:53.629Z",
+      "commit": "1648d18192a1bf2c9fcc317fd8b82075c5eabfcf",
+      "platform": "windows-aarch64",
+      "host": {
+        "os": "win32",
+        "arch": "arm64",
+        "node": "v26.5.1"
+      },
+      "authority": {
+        "https_source_commit": "2a49108391326b083426bb5ca12e76b0b9268433",
+        "host_transport_baseline_commit": "b1af59699bd27a9d5e3c7d9b6e8951cc1be4302c",
+        "reactor_candidate_commit": "5dd23b434caa34e402298fcfe0975a1c4af55773",
+        "reactor_candidate_readiness_sha256": "4b4fa81ad4a05b1aae08917e2bb552744cab86c4404c6ff813982489492eba99",
+        "reactor_candidate_adapter_sha256": "836990bb645d3cbd975471358538952089bf8ad142c13dcc3bb855b66ab9e73b"
+      },
+      "artifact_manifest_sha256": "f90bd85ca56246b24e630e33be12fdcff52536d998ade808340bd75e782b7fd3",
+      "binaries": {
+        "baseline": {
+          "bytes": 8573952,
+          "sha256": "0e649d3bf4bc85e239481a15975d2835be9720b8572622d8bedce3552fa4f88e"
+        },
+        "candidate": {
+          "bytes": 8680448,
+          "sha256": "8c343fcff9c691f5b0103e72813d7ab0ec797ece6919842429b48024f18544d4"
+        }
+      },
+      "policy": {
+        "functional_and_identity_gates": "hard",
+        "semantic_parity_gates": [
+          "keep_alive_requests",
+          "recovery_requests",
+          "malformed_requests",
+          "checksum"
+        ],
+        "github_hosted_timing": "observational",
+        "performance_regression_gate": false,
+        "only_transport_implementation_changes": true
+      },
+      "qualification": {
+        "baseline": {
+          "host_operations": 5156,
+          "host_waits": 5156,
+          "host_claimed": 5156,
+          "host_partial_writes": 4620,
+          "host_pending_peak": 1,
+          "owner_wake_cycles": 5263,
+          "owner_threads_started": 3,
+          "reactor_poll_calls": 0,
+          "reactor_readiness_events": 0,
+          "checksum": 93106,
+          "fuel_total": "68861716",
+          "dominant_guest_operation": {
+            "component": "tls",
+            "operation": "tls.ingest",
+            "sampled_calls": 10,
+            "wall_ns_sample_mean": 386400,
+            "wall_ns_p95_upper": 2097151,
+            "fuel_sample_mean": "5214201"
+          },
+          "top_guest_operations": [
+            {
+              "component": "tls",
+              "operation": "tls.ingest",
+              "sampled_calls": 10,
+              "wall_ns_sample_mean": 386400,
+              "wall_ns_p95_upper": 2097151,
+              "fuel_sample_mean": "5214201"
+            },
+            {
+              "component": "tls",
+              "operation": "tls.write",
+              "sampled_calls": 6,
+              "wall_ns_sample_mean": 13300,
+              "wall_ns_p95_upper": 16383,
+              "fuel_sample_mean": "225471"
+            },
+            {
+              "component": "json",
+              "operation": "json.compact",
+              "sampled_calls": 5,
+              "wall_ns_sample_mean": 12420,
+              "wall_ns_p95_upper": 32767,
+              "fuel_sample_mean": "8023"
+            },
+            {
+              "component": "http",
+              "operation": "http.frame-length",
+              "sampled_calls": 10,
+              "wall_ns_sample_mean": 8800,
+              "wall_ns_p95_upper": 32767,
+              "fuel_sample_mean": "2223"
+            },
+            {
+              "component": "http",
+              "operation": "http.serialize-response",
+              "sampled_calls": 6,
+              "wall_ns_sample_mean": 6750,
+              "wall_ns_p95_upper": 16383,
+              "fuel_sample_mean": "5518"
+            }
+          ]
+        },
+        "candidate": {
+          "host_operations": 5159,
+          "host_waits": 5159,
+          "host_claimed": 5159,
+          "host_partial_writes": 4620,
+          "host_pending_peak": 1,
+          "owner_wake_cycles": 0,
+          "owner_threads_started": 1,
+          "reactor_poll_calls": 5200,
+          "reactor_readiness_events": 5199,
+          "checksum": 93106,
+          "fuel_total": "68881631",
+          "dominant_guest_operation": {
+            "component": "tls",
+            "operation": "tls.ingest",
+            "sampled_calls": 13,
+            "wall_ns_sample_mean": 299300,
+            "wall_ns_p95_upper": 2097151,
+            "fuel_sample_mean": "4017039"
+          },
+          "top_guest_operations": [
+            {
+              "component": "tls",
+              "operation": "tls.ingest",
+              "sampled_calls": 13,
+              "wall_ns_sample_mean": 299300,
+              "wall_ns_p95_upper": 2097151,
+              "fuel_sample_mean": "4017039"
+            },
+            {
+              "component": "tls",
+              "operation": "tls.write",
+              "sampled_calls": 6,
+              "wall_ns_sample_mean": 12983,
+              "wall_ns_p95_upper": 16383,
+              "fuel_sample_mean": "225570"
+            },
+            {
+              "component": "json",
+              "operation": "json.compact",
+              "sampled_calls": 5,
+              "wall_ns_sample_mean": 12360,
+              "wall_ns_p95_upper": 32767,
+              "fuel_sample_mean": "8023"
+            },
+            {
+              "component": "http",
+              "operation": "http.frame-length",
+              "sampled_calls": 13,
+              "wall_ns_sample_mean": 7753,
+              "wall_ns_p95_upper": 32767,
+              "fuel_sample_mean": "1908"
+            },
+            {
+              "component": "http",
+              "operation": "http.serialize-response",
+              "sampled_calls": 6,
+              "wall_ns_sample_mean": 6700,
+              "wall_ns_p95_upper": 16383,
+              "fuel_sample_mean": "5518"
+            }
+          ]
+        },
+        "semantic_parity": true
+      },
+      "scheduling_diagnostics": {
+        "baseline": {
+          "polling_owner_cycles_per_host_operation": 1.020753
+        },
+        "candidate": {
+          "reactor_polls_per_host_operation": 1.007947,
+          "reactor_readiness_events_per_host_operation": 1.007753
+        },
+        "interpretation": "Polling owner cycles and reactor poll calls are different counters. The mechanism comparison is scheduling strategy, not raw counter subtraction."
+      },
+      "performance": {
+        "pairs": 6,
+        "samples": {
+          "baseline": [
+            {
+              "pair": 0,
+              "order": 0,
+              "rps": 1.752898307795796,
+              "elapsed_ns": 1140967500,
+              "avg_ns_per_valid_request": 570483750,
+              "keep_alive_requests": 1,
+              "host_operations": 26,
+              "host_waits": 26,
+              "host_claimed": 26,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 32,
+              "host_reactor_poll_calls": 0,
+              "host_reactor_readiness_events": 0,
+              "process_wall_ms": 1156.708
+            },
+            {
+              "pair": 1,
+              "order": 1,
+              "rps": 1.7460979730334376,
+              "elapsed_ns": 1145411100,
+              "avg_ns_per_valid_request": 572705550,
+              "keep_alive_requests": 1,
+              "host_operations": 26,
+              "host_waits": 26,
+              "host_claimed": 26,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 34,
+              "host_reactor_poll_calls": 0,
+              "host_reactor_readiness_events": 0,
+              "process_wall_ms": 1161.551
+            },
+            {
+              "pair": 2,
+              "order": 0,
+              "rps": 1.7345361763537621,
+              "elapsed_ns": 1153046000,
+              "avg_ns_per_valid_request": 576523000,
+              "keep_alive_requests": 1,
+              "host_operations": 26,
+              "host_waits": 26,
+              "host_claimed": 26,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 32,
+              "host_reactor_poll_calls": 0,
+              "host_reactor_readiness_events": 0,
+              "process_wall_ms": 1168.873
+            },
+            {
+              "pair": 3,
+              "order": 1,
+              "rps": 1.7377290696181185,
+              "elapsed_ns": 1150927400,
+              "avg_ns_per_valid_request": 575463700,
+              "keep_alive_requests": 1,
+              "host_operations": 26,
+              "host_waits": 26,
+              "host_claimed": 26,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 33,
+              "host_reactor_poll_calls": 0,
+              "host_reactor_readiness_events": 0,
+              "process_wall_ms": 1166.515
+            },
+            {
+              "pair": 4,
+              "order": 0,
+              "rps": 1.683132754402991,
+              "elapsed_ns": 1188260400,
+              "avg_ns_per_valid_request": 594130200,
+              "keep_alive_requests": 1,
+              "host_operations": 26,
+              "host_waits": 26,
+              "host_claimed": 26,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 34,
+              "host_reactor_poll_calls": 0,
+              "host_reactor_readiness_events": 0,
+              "process_wall_ms": 1204.622
+            },
+            {
+              "pair": 5,
+              "order": 1,
+              "rps": 1.7329683008904337,
+              "elapsed_ns": 1154089200,
+              "avg_ns_per_valid_request": 577044600,
+              "keep_alive_requests": 1,
+              "host_operations": 25,
+              "host_waits": 25,
+              "host_claimed": 25,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 32,
+              "host_reactor_poll_calls": 0,
+              "host_reactor_readiness_events": 0,
+              "process_wall_ms": 1170.561
+            }
+          ],
+          "candidate": [
+            {
+              "pair": 0,
+              "order": 1,
+              "rps": 1.7585025576980076,
+              "elapsed_ns": 1137331300,
+              "avg_ns_per_valid_request": 568665650,
+              "keep_alive_requests": 1,
+              "host_operations": 29,
+              "host_waits": 29,
+              "host_claimed": 29,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 0,
+              "host_reactor_poll_calls": 38,
+              "host_reactor_readiness_events": 37,
+              "process_wall_ms": 1154.067
+            },
+            {
+              "pair": 1,
+              "order": 0,
+              "rps": 1.7418735068878033,
+              "elapsed_ns": 1148189000,
+              "avg_ns_per_valid_request": 574094500,
+              "keep_alive_requests": 1,
+              "host_operations": 28,
+              "host_waits": 28,
+              "host_claimed": 28,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 0,
+              "host_reactor_poll_calls": 36,
+              "host_reactor_readiness_events": 35,
+              "process_wall_ms": 1164.698
+            },
+            {
+              "pair": 2,
+              "order": 1,
+              "rps": 1.7372717051252295,
+              "elapsed_ns": 1151230400,
+              "avg_ns_per_valid_request": 575615200,
+              "keep_alive_requests": 1,
+              "host_operations": 29,
+              "host_waits": 29,
+              "host_claimed": 29,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 0,
+              "host_reactor_poll_calls": 36,
+              "host_reactor_readiness_events": 35,
+              "process_wall_ms": 1167.181
+            },
+            {
+              "pair": 3,
+              "order": 0,
+              "rps": 1.7419369223737164,
+              "elapsed_ns": 1148147200,
+              "avg_ns_per_valid_request": 574073600,
+              "keep_alive_requests": 1,
+              "host_operations": 29,
+              "host_waits": 29,
+              "host_claimed": 29,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 0,
+              "host_reactor_poll_calls": 37,
+              "host_reactor_readiness_events": 36,
+              "process_wall_ms": 1166.355
+            },
+            {
+              "pair": 4,
+              "order": 1,
+              "rps": 1.756222295593287,
+              "elapsed_ns": 1138808000,
+              "avg_ns_per_valid_request": 569404000,
+              "keep_alive_requests": 1,
+              "host_operations": 29,
+              "host_waits": 29,
+              "host_claimed": 29,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 0,
+              "host_reactor_poll_calls": 36,
+              "host_reactor_readiness_events": 35,
+              "process_wall_ms": 1154.921
+            },
+            {
+              "pair": 5,
+              "order": 0,
+              "rps": 1.7490955645472672,
+              "elapsed_ns": 1143448100,
+              "avg_ns_per_valid_request": 571724050,
+              "keep_alive_requests": 1,
+              "host_operations": 28,
+              "host_waits": 28,
+              "host_claimed": 28,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 0,
+              "host_reactor_poll_calls": 35,
+              "host_reactor_readiness_events": 34,
+              "process_wall_ms": 1159.879
+            }
+          ]
+        },
+        "summary": {
+          "baseline": {
+            "rps": {
+              "samples": 6,
+              "p50": 1.735,
+              "p95": 1.753,
+              "min": 1.683,
+              "max": 1.753
+            },
+            "avg_ns_per_valid_request": {
+              "samples": 6,
+              "p50": 575463700,
+              "p95": 594130200,
+              "min": 570483750,
+              "max": 594130200
+            },
+            "process_wall_ms": {
+              "samples": 6,
+              "p50": 1166.515,
+              "p95": 1204.622,
+              "min": 1156.708,
+              "max": 1204.622
+            }
+          },
+          "candidate": {
+            "rps": {
+              "samples": 6,
+              "p50": 1.742,
+              "p95": 1.759,
+              "min": 1.737,
+              "max": 1.759
+            },
+            "avg_ns_per_valid_request": {
+              "samples": 6,
+              "p50": 571724050,
+              "p95": 575615200,
+              "min": 568665650,
+              "max": 575615200
+            },
+            "process_wall_ms": {
+              "samples": 6,
+              "p50": 1159.879,
+              "p95": 1167.181,
+              "min": 1154.067,
+              "max": 1167.181
+            }
+          },
+          "paired_delta": {
+            "rps_ratio": {
+              "samples": 6,
+              "p50": 1.002,
+              "p95": 1.043,
+              "min": 0.998,
+              "max": 1.043
+            },
+            "rps_pct": {
+              "samples": 6,
+              "p50": 0.242,
+              "p95": 4.342,
+              "min": -0.242,
+              "max": 4.342
+            },
+            "avg_ns_per_valid_request_pct": {
+              "samples": 6,
+              "p50": -0.319,
+              "p95": 0.243,
+              "min": -4.162,
+              "max": 0.243
+            }
+          }
+        },
+        "pair_deltas": [
+          {
+            "pair": 0,
+            "order": "baseline-candidate",
+            "rps_ratio": 1.0031971335001508,
+            "rps_pct": 0.31971335001508283,
+            "avg_ns_per_valid_request_pct": -0.3186944413403503
+          },
+          {
+            "pair": 1,
+            "order": "candidate-baseline",
+            "rps_ratio": 0.9975806247926081,
+            "rps_pct": -0.24193752073918828,
+            "avg_ns_per_valid_request_pct": 0.24252427796447318
+          },
+          {
+            "pair": 2,
+            "order": "baseline-candidate",
+            "rps_ratio": 1.0015770952539127,
+            "rps_pct": 0.1577095253912697,
+            "avg_ns_per_valid_request_pct": -0.1574611940893922
+          },
+          {
+            "pair": 3,
+            "order": "candidate-baseline",
+            "rps_ratio": 1.0024214665157916,
+            "rps_pct": 0.24214665157915594,
+            "avg_ns_per_valid_request_pct": -0.24156171796761994
+          },
+          {
+            "pair": 4,
+            "order": "baseline-candidate",
+            "rps_ratio": 1.0434247037252988,
+            "rps_pct": 4.342470372529883,
+            "avg_ns_per_valid_request_pct": -4.161747711191921
+          },
+          {
+            "pair": 5,
+            "order": "candidate-baseline",
+            "rps_ratio": 1.009306150405952,
+            "rps_pct": 0.9306150405951952,
+            "avg_ns_per_valid_request_pct": -0.9220344493302557
+          }
+        ]
+      },
+      "interpretation": {
+        "accepted": true,
+        "mechanism": "The baseline uses a 1 ms polling/retry owner. The candidate uses one process-level mio shared reactor with command wake coalescing and activity coalescing from accepted private authority.",
+        "non_claims": [
+          "GitHub-hosted timing is not an SLA.",
+          "This single-connection HTTPS corpus is not the same as the private c32 throughput benchmark.",
+          "A large A/B delta does not by itself establish production service throughput.",
+          "No Host ABI, Lib artifact, TLS/HTTP/JSON/compression/router semantic, retry, or socket-custody rule is changed."
+        ]
+      }
+    },
+    {
+      "schema": "wasmc-host-https-ab/v1",
+      "measured_at": "2026-09-20T16:59:40.307Z",
+      "commit": "1648d18192a1bf2c9fcc317fd8b82075c5eabfcf",
+      "platform": "windows-x86_64",
+      "host": {
+        "os": "win32",
+        "arch": "x64",
+        "node": "v26.5.1"
+      },
+      "authority": {
+        "https_source_commit": "2a49108391326b083426bb5ca12e76b0b9268433",
+        "host_transport_baseline_commit": "b1af59699bd27a9d5e3c7d9b6e8951cc1be4302c",
+        "reactor_candidate_commit": "5dd23b434caa34e402298fcfe0975a1c4af55773",
+        "reactor_candidate_readiness_sha256": "4b4fa81ad4a05b1aae08917e2bb552744cab86c4404c6ff813982489492eba99",
+        "reactor_candidate_adapter_sha256": "836990bb645d3cbd975471358538952089bf8ad142c13dcc3bb855b66ab9e73b"
+      },
+      "artifact_manifest_sha256": "f90bd85ca56246b24e630e33be12fdcff52536d998ade808340bd75e782b7fd3",
+      "binaries": {
+        "baseline": {
+          "bytes": 12713984,
+          "sha256": "e56fc21420f90e1bcdcd9c026ce6c630aa3c81e5df0ee34e6f46566dd4b35ce4"
+        },
+        "candidate": {
+          "bytes": 12839424,
+          "sha256": "89c87624f8337062936339fcf403691ff6a2c42a9d12a09e0dcf6c192ee64913"
+        }
+      },
+      "policy": {
+        "functional_and_identity_gates": "hard",
+        "semantic_parity_gates": [
+          "keep_alive_requests",
+          "recovery_requests",
+          "malformed_requests",
+          "checksum"
+        ],
+        "github_hosted_timing": "observational",
+        "performance_regression_gate": false,
+        "only_transport_implementation_changes": true
+      },
+      "qualification": {
+        "baseline": {
+          "host_operations": 5156,
+          "host_waits": 5156,
+          "host_claimed": 5156,
+          "host_partial_writes": 4620,
+          "host_pending_peak": 1,
+          "owner_wake_cycles": 5165,
+          "owner_threads_started": 3,
+          "reactor_poll_calls": 0,
+          "reactor_readiness_events": 0,
+          "checksum": 93106,
+          "fuel_total": "68861716",
+          "dominant_guest_operation": {
+            "component": "tls",
+            "operation": "tls.ingest",
+            "sampled_calls": 10,
+            "wall_ns_sample_mean": 510330,
+            "wall_ns_p95_upper": 4194303,
+            "fuel_sample_mean": "5214225"
+          },
+          "top_guest_operations": [
+            {
+              "component": "tls",
+              "operation": "tls.ingest",
+              "sampled_calls": 10,
+              "wall_ns_sample_mean": 510330,
+              "wall_ns_p95_upper": 4194303,
+              "fuel_sample_mean": "5214225"
+            },
+            {
+              "component": "tls",
+              "operation": "tls.write",
+              "sampled_calls": 6,
+              "wall_ns_sample_mean": 10666,
+              "wall_ns_p95_upper": 16383,
+              "fuel_sample_mean": "225471"
+            },
+            {
+              "component": "json",
+              "operation": "json.compact",
+              "sampled_calls": 5,
+              "wall_ns_sample_mean": 8260,
+              "wall_ns_p95_upper": 32767,
+              "fuel_sample_mean": "8023"
+            },
+            {
+              "component": "http",
+              "operation": "http.frame-length",
+              "sampled_calls": 10,
+              "wall_ns_sample_mean": 5480,
+              "wall_ns_p95_upper": 32767,
+              "fuel_sample_mean": "2223"
+            },
+            {
+              "component": "http",
+              "operation": "http.serialize-response",
+              "sampled_calls": 6,
+              "wall_ns_sample_mean": 4350,
+              "wall_ns_p95_upper": 8191,
+              "fuel_sample_mean": "5518"
+            }
+          ]
+        },
+        "candidate": {
+          "host_operations": 5159,
+          "host_waits": 5159,
+          "host_claimed": 5159,
+          "host_partial_writes": 4620,
+          "host_pending_peak": 1,
+          "owner_wake_cycles": 0,
+          "owner_threads_started": 1,
+          "reactor_poll_calls": 5168,
+          "reactor_readiness_events": 5167,
+          "checksum": 93106,
+          "fuel_total": "68894634",
+          "dominant_guest_operation": {
+            "component": "tls",
+            "operation": "tls.ingest",
+            "sampled_calls": 13,
+            "wall_ns_sample_mean": 295130,
+            "wall_ns_p95_upper": 2097151,
+            "fuel_sample_mean": "4016999"
+          },
+          "top_guest_operations": [
+            {
+              "component": "tls",
+              "operation": "tls.ingest",
+              "sampled_calls": 13,
+              "wall_ns_sample_mean": 295130,
+              "wall_ns_p95_upper": 2097151,
+              "fuel_sample_mean": "4016999"
+            },
+            {
+              "component": "tls",
+              "operation": "tls.write",
+              "sampled_calls": 6,
+              "wall_ns_sample_mean": 11083,
+              "wall_ns_p95_upper": 16383,
+              "fuel_sample_mean": "225489"
+            },
+            {
+              "component": "json",
+              "operation": "json.compact",
+              "sampled_calls": 5,
+              "wall_ns_sample_mean": 9980,
+              "wall_ns_p95_upper": 32767,
+              "fuel_sample_mean": "8023"
+            },
+            {
+              "component": "http",
+              "operation": "http.frame-length",
+              "sampled_calls": 13,
+              "wall_ns_sample_mean": 5561,
+              "wall_ns_p95_upper": 32767,
+              "fuel_sample_mean": "1908"
+            },
+            {
+              "component": "http",
+              "operation": "http.serialize-response",
+              "sampled_calls": 6,
+              "wall_ns_sample_mean": 4983,
+              "wall_ns_p95_upper": 8191,
+              "fuel_sample_mean": "5518"
+            }
+          ]
+        },
+        "semantic_parity": true
+      },
+      "scheduling_diagnostics": {
+        "baseline": {
+          "polling_owner_cycles_per_host_operation": 1.001746
+        },
+        "candidate": {
+          "reactor_polls_per_host_operation": 1.001745,
+          "reactor_readiness_events_per_host_operation": 1.001551
+        },
+        "interpretation": "Polling owner cycles and reactor poll calls are different counters. The mechanism comparison is scheduling strategy, not raw counter subtraction."
+      },
+      "performance": {
+        "pairs": 6,
+        "samples": {
+          "baseline": [
+            {
+              "pair": 0,
+              "order": 0,
+              "rps": 1.566084375614688,
+              "elapsed_ns": 1277070400,
+              "avg_ns_per_valid_request": 638535200,
+              "keep_alive_requests": 1,
+              "host_operations": 24,
+              "host_waits": 24,
+              "host_claimed": 24,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 30,
+              "host_reactor_poll_calls": 0,
+              "host_reactor_readiness_events": 0,
+              "process_wall_ms": 1289.561
+            },
+            {
+              "pair": 1,
+              "order": 1,
+              "rps": 1.5274767481761355,
+              "elapsed_ns": 1309348900,
+              "avg_ns_per_valid_request": 654674450,
+              "keep_alive_requests": 1,
+              "host_operations": 25,
+              "host_waits": 25,
+              "host_claimed": 25,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 31,
+              "host_reactor_poll_calls": 0,
+              "host_reactor_readiness_events": 0,
+              "process_wall_ms": 1320.946
+            },
+            {
+              "pair": 2,
+              "order": 0,
+              "rps": 1.5319628342752478,
+              "elapsed_ns": 1305514700,
+              "avg_ns_per_valid_request": 652757350,
+              "keep_alive_requests": 1,
+              "host_operations": 23,
+              "host_waits": 23,
+              "host_claimed": 23,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 29,
+              "host_reactor_poll_calls": 0,
+              "host_reactor_readiness_events": 0,
+              "process_wall_ms": 1316.553
+            },
+            {
+              "pair": 3,
+              "order": 1,
+              "rps": 1.4638686476517937,
+              "elapsed_ns": 1366242800,
+              "avg_ns_per_valid_request": 683121400,
+              "keep_alive_requests": 1,
+              "host_operations": 24,
+              "host_waits": 24,
+              "host_claimed": 24,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 30,
+              "host_reactor_poll_calls": 0,
+              "host_reactor_readiness_events": 0,
+              "process_wall_ms": 1377.656
+            },
+            {
+              "pair": 4,
+              "order": 0,
+              "rps": 1.5927081996122074,
+              "elapsed_ns": 1255722800,
+              "avg_ns_per_valid_request": 627861400,
+              "keep_alive_requests": 1,
+              "host_operations": 24,
+              "host_waits": 24,
+              "host_claimed": 24,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 30,
+              "host_reactor_poll_calls": 0,
+              "host_reactor_readiness_events": 0,
+              "process_wall_ms": 1266.912
+            },
+            {
+              "pair": 5,
+              "order": 1,
+              "rps": 1.5265377520800412,
+              "elapsed_ns": 1310154300,
+              "avg_ns_per_valid_request": 655077150,
+              "keep_alive_requests": 1,
+              "host_operations": 23,
+              "host_waits": 23,
+              "host_claimed": 23,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 29,
+              "host_reactor_poll_calls": 0,
+              "host_reactor_readiness_events": 0,
+              "process_wall_ms": 1322.579
+            }
+          ],
+          "candidate": [
+            {
+              "pair": 0,
+              "order": 1,
+              "rps": 1.4803457821284811,
+              "elapsed_ns": 1351035700,
+              "avg_ns_per_valid_request": 675517850,
+              "keep_alive_requests": 1,
+              "host_operations": 28,
+              "host_waits": 28,
+              "host_claimed": 28,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 0,
+              "host_reactor_poll_calls": 36,
+              "host_reactor_readiness_events": 35,
+              "process_wall_ms": 1362.273
+            },
+            {
+              "pair": 1,
+              "order": 0,
+              "rps": 1.4950033996377308,
+              "elapsed_ns": 1337789600,
+              "avg_ns_per_valid_request": 668894800,
+              "keep_alive_requests": 1,
+              "host_operations": 29,
+              "host_waits": 29,
+              "host_claimed": 29,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 0,
+              "host_reactor_poll_calls": 38,
+              "host_reactor_readiness_events": 37,
+              "process_wall_ms": 1350.574
+            },
+            {
+              "pair": 2,
+              "order": 1,
+              "rps": 1.5507477550600124,
+              "elapsed_ns": 1289700400,
+              "avg_ns_per_valid_request": 644850200,
+              "keep_alive_requests": 1,
+              "host_operations": 29,
+              "host_waits": 29,
+              "host_claimed": 29,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 0,
+              "host_reactor_poll_calls": 39,
+              "host_reactor_readiness_events": 38,
+              "process_wall_ms": 1300.559
+            },
+            {
+              "pair": 3,
+              "order": 0,
+              "rps": 1.5386193061180813,
+              "elapsed_ns": 1299866700,
+              "avg_ns_per_valid_request": 649933350,
+              "keep_alive_requests": 1,
+              "host_operations": 25,
+              "host_waits": 25,
+              "host_claimed": 25,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 0,
+              "host_reactor_poll_calls": 34,
+              "host_reactor_readiness_events": 33,
+              "process_wall_ms": 1311.758
+            },
+            {
+              "pair": 4,
+              "order": 1,
+              "rps": 1.555430930972853,
+              "elapsed_ns": 1285817300,
+              "avg_ns_per_valid_request": 642908650,
+              "keep_alive_requests": 1,
+              "host_operations": 28,
+              "host_waits": 28,
+              "host_claimed": 28,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 0,
+              "host_reactor_poll_calls": 36,
+              "host_reactor_readiness_events": 35,
+              "process_wall_ms": 1297.242
+            },
+            {
+              "pair": 5,
+              "order": 0,
+              "rps": 1.5619774697245812,
+              "elapsed_ns": 1280428200,
+              "avg_ns_per_valid_request": 640214100,
+              "keep_alive_requests": 1,
+              "host_operations": 26,
+              "host_waits": 26,
+              "host_claimed": 26,
+              "host_pending_peak": 1,
+              "host_owner_wake_cycles": 0,
+              "host_reactor_poll_calls": 35,
+              "host_reactor_readiness_events": 34,
+              "process_wall_ms": 1292.261
+            }
+          ]
+        },
+        "summary": {
+          "baseline": {
+            "rps": {
+              "samples": 6,
+              "p50": 1.527,
+              "p95": 1.593,
+              "min": 1.464,
+              "max": 1.593
+            },
+            "avg_ns_per_valid_request": {
+              "samples": 6,
+              "p50": 652757350,
+              "p95": 683121400,
+              "min": 627861400,
+              "max": 683121400
+            },
+            "process_wall_ms": {
+              "samples": 6,
+              "p50": 1316.553,
+              "p95": 1377.656,
+              "min": 1266.912,
+              "max": 1377.656
+            }
+          },
+          "candidate": {
+            "rps": {
+              "samples": 6,
+              "p50": 1.539,
+              "p95": 1.562,
+              "min": 1.48,
+              "max": 1.562
+            },
+            "avg_ns_per_valid_request": {
+              "samples": 6,
+              "p50": 644850200,
+              "p95": 675517850,
+              "min": 640214100,
+              "max": 675517850
+            },
+            "process_wall_ms": {
+              "samples": 6,
+              "p50": 1300.559,
+              "p95": 1362.273,
+              "min": 1292.261,
+              "max": 1362.273
+            }
+          },
+          "paired_delta": {
+            "rps_ratio": {
+              "samples": 6,
+              "p50": 0.979,
+              "p95": 1.051,
+              "min": 0.945,
+              "max": 1.051
+            },
+            "rps_pct": {
+              "samples": 6,
+              "p50": -2.126,
+              "p95": 5.106,
+              "min": -5.475,
+              "max": 5.106
+            },
+            "avg_ns_per_valid_request_pct": {
+              "samples": 6,
+              "p50": -1.211,
+              "p95": 5.792,
+              "min": -4.858,
+              "max": 5.792
+            }
+          }
+        },
+        "pair_deltas": [
+          {
+            "pair": 0,
+            "order": "baseline-candidate",
+            "rps_ratio": 0.9452528900605661,
+            "rps_pct": -5.474710993943388,
+            "avg_ns_per_valid_request_pct": 5.791795033382652
+          },
+          {
+            "pair": 1,
+            "order": "candidate-baseline",
+            "rps_ratio": 0.9787405284059616,
+            "rps_pct": -2.1259471594038404,
+            "avg_ns_per_valid_request_pct": 2.1721253975926613
+          },
+          {
+            "pair": 2,
+            "order": "baseline-candidate",
+            "rps_ratio": 1.012261995111423,
+            "rps_pct": 1.2261995111422896,
+            "avg_ns_per_valid_request_pct": -1.2113459925039538
+          },
+          {
+            "pair": 3,
+            "order": "candidate-baseline",
+            "rps_ratio": 1.0510637744624123,
+            "rps_pct": 5.106377446241228,
+            "avg_ns_per_valid_request_pct": -4.858294587170009
+          },
+          {
+            "pair": 4,
+            "order": "baseline-candidate",
+            "rps_ratio": 0.9765950419239188,
+            "rps_pct": -2.340495807608123,
+            "avg_ns_per_valid_request_pct": 2.3965878456614798
+          },
+          {
+            "pair": 5,
+            "order": "candidate-baseline",
+            "rps_ratio": 1.02321574923139,
+            "rps_pct": 2.3215749231390026,
+            "avg_ns_per_valid_request_pct": -2.2689006936053246
+          }
+        ]
+      },
+      "interpretation": {
+        "accepted": true,
+        "mechanism": "The baseline uses a 1 ms polling/retry owner. The candidate uses one process-level mio shared reactor with command wake coalescing and activity coalescing from accepted private authority.",
+        "non_claims": [
+          "GitHub-hosted timing is not an SLA.",
+          "This single-connection HTTPS corpus is not the same as the private c32 throughput benchmark.",
+          "A large A/B delta does not by itself establish production service throughput.",
+          "No Host ABI, Lib artifact, TLS/HTTP/JSON/compression/router semantic, retry, or socket-custody rule is changed."
+        ]
+      }
+    }
+  ],
+  "shard_sweeps": [
+    {
+      "schema": "wasmc-host-transport-shard-sweep/v1",
+      "measured_at": "2026-09-20T16:59:16.935Z",
+      "commit": "1648d18192a1bf2c9fcc317fd8b82075c5eabfcf",
+      "platform": "linux-aarch64",
+      "host": {
+        "os": "linux",
+        "arch": "arm64",
+        "node": "v26.5.1"
+      },
+      "workload": {
+        "connections": 32,
+        "iterations_per_connection": 1000,
+        "pairs_per_shard": 3,
+        "shard_candidates": [
+          1,
+          2,
+          4,
+          8,
+          16
+        ]
+      },
+      "policy": {
+        "semantic_lifecycle_gate": "hard",
+        "hosted_timing": "observational",
+        "selection": "highest paired p50 throughput delta; tie -> fewer shards",
+        "promotion": "evidence only; best shard count is not a production default"
+      },
+      "semantic_parity": true,
+      "results": [
+        {
+          "shards": 1,
+          "dedicated_ops_p50": 321196.994,
+          "sharded_ops_p50": 177991.492,
+          "paired_throughput_pct_p50": -44.585,
+          "positive_pairs": 0,
+          "pairs": 3,
+          "dedicated_threads": 32,
+          "sharded_threads": 1,
+          "dedicated_control_per_op": 1.049,
+          "sharded_control_per_op": 0.059
+        },
+        {
+          "shards": 2,
+          "dedicated_ops_p50": 316369.181,
+          "sharded_ops_p50": 267511.102,
+          "paired_throughput_pct_p50": -16.232,
+          "positive_pairs": 0,
+          "pairs": 3,
+          "dedicated_threads": 32,
+          "sharded_threads": 2,
+          "dedicated_control_per_op": 1.043,
+          "sharded_control_per_op": 0.075
+        },
+        {
+          "shards": 4,
+          "dedicated_ops_p50": 323274.483,
+          "sharded_ops_p50": 287163.077,
+          "paired_throughput_pct_p50": -6.765,
+          "positive_pairs": 1,
+          "pairs": 3,
+          "dedicated_threads": 32,
+          "sharded_threads": 4,
+          "dedicated_control_per_op": 1.04,
+          "sharded_control_per_op": 0.067
+        },
+        {
+          "shards": 8,
+          "dedicated_ops_p50": 328359.364,
+          "sharded_ops_p50": 332158.285,
+          "paired_throughput_pct_p50": 7.026,
+          "positive_pairs": 2,
+          "pairs": 3,
+          "dedicated_threads": 32,
+          "sharded_threads": 8,
+          "dedicated_control_per_op": 1.033,
+          "sharded_control_per_op": 0.062
+        },
+        {
+          "shards": 16,
+          "dedicated_ops_p50": 334586.744,
+          "sharded_ops_p50": 374732.291,
+          "paired_throughput_pct_p50": 9.297,
+          "positive_pairs": 3,
+          "pairs": 3,
+          "dedicated_threads": 32,
+          "sharded_threads": 16,
+          "dedicated_control_per_op": 1.035,
+          "sharded_control_per_op": 0.044
+        }
+      ],
+      "best": {
+        "shards": 16,
+        "dedicated_ops_p50": 334586.744,
+        "sharded_ops_p50": 374732.291,
+        "paired_throughput_pct_p50": 9.297,
+        "positive_pairs": 3,
+        "pairs": 3,
+        "dedicated_threads": 32,
+        "sharded_threads": 16,
+        "dedicated_control_per_op": 1.035,
+        "sharded_control_per_op": 0.044
+      }
+    },
+    {
+      "schema": "wasmc-host-transport-shard-sweep/v1",
+      "measured_at": "2026-09-20T16:59:49.362Z",
+      "commit": "1648d18192a1bf2c9fcc317fd8b82075c5eabfcf",
+      "platform": "linux-x86_64",
+      "host": {
+        "os": "linux",
+        "arch": "x64",
+        "node": "v26.5.1"
+      },
+      "workload": {
+        "connections": 32,
+        "iterations_per_connection": 1000,
+        "pairs_per_shard": 3,
+        "shard_candidates": [
+          1,
+          2,
+          4,
+          8,
+          16
+        ]
+      },
+      "policy": {
+        "semantic_lifecycle_gate": "hard",
+        "hosted_timing": "observational",
+        "selection": "highest paired p50 throughput delta; tie -> fewer shards",
+        "promotion": "evidence only; best shard count is not a production default"
+      },
+      "semantic_parity": true,
+      "results": [
+        {
+          "shards": 1,
+          "dedicated_ops_p50": 169254.11,
+          "sharded_ops_p50": 124676.731,
+          "paired_throughput_pct_p50": -26.763,
+          "positive_pairs": 0,
+          "pairs": 3,
+          "dedicated_threads": 32,
+          "sharded_threads": 1,
+          "dedicated_control_per_op": 1.055,
+          "sharded_control_per_op": 0.063
+        },
+        {
+          "shards": 2,
+          "dedicated_ops_p50": 172974.604,
+          "sharded_ops_p50": 199321.126,
+          "paired_throughput_pct_p50": 17.788,
+          "positive_pairs": 3,
+          "pairs": 3,
+          "dedicated_threads": 32,
+          "sharded_threads": 2,
+          "dedicated_control_per_op": 1.052,
+          "sharded_control_per_op": 0.069
+        },
+        {
+          "shards": 4,
+          "dedicated_ops_p50": 170413.777,
+          "sharded_ops_p50": 182141.056,
+          "paired_throughput_pct_p50": 8.025,
+          "positive_pairs": 3,
+          "pairs": 3,
+          "dedicated_threads": 32,
+          "sharded_threads": 4,
+          "dedicated_control_per_op": 1.06,
+          "sharded_control_per_op": 0.06
+        },
+        {
+          "shards": 8,
+          "dedicated_ops_p50": 171108.436,
+          "sharded_ops_p50": 182154.13,
+          "paired_throughput_pct_p50": 6.455,
+          "positive_pairs": 3,
+          "pairs": 3,
+          "dedicated_threads": 32,
+          "sharded_threads": 8,
+          "dedicated_control_per_op": 1.075,
+          "sharded_control_per_op": 0.063
+        },
+        {
+          "shards": 16,
+          "dedicated_ops_p50": 171691.111,
+          "sharded_ops_p50": 188225.882,
+          "paired_throughput_pct_p50": 9.46,
+          "positive_pairs": 3,
+          "pairs": 3,
+          "dedicated_threads": 32,
+          "sharded_threads": 16,
+          "dedicated_control_per_op": 1.067,
+          "sharded_control_per_op": 0.051
+        }
+      ],
+      "best": {
+        "shards": 2,
+        "dedicated_ops_p50": 172974.604,
+        "sharded_ops_p50": 199321.126,
+        "paired_throughput_pct_p50": 17.788,
+        "positive_pairs": 3,
+        "pairs": 3,
+        "dedicated_threads": 32,
+        "sharded_threads": 2,
+        "dedicated_control_per_op": 1.052,
+        "sharded_control_per_op": 0.069
+      }
+    },
+    {
+      "schema": "wasmc-host-transport-shard-sweep/v1",
+      "measured_at": "2026-09-20T16:59:39.142Z",
+      "commit": "1648d18192a1bf2c9fcc317fd8b82075c5eabfcf",
+      "platform": "macos-aarch64",
+      "host": {
+        "os": "darwin",
+        "arch": "arm64",
+        "node": "v26.5.1"
+      },
+      "workload": {
+        "connections": 32,
+        "iterations_per_connection": 1000,
+        "pairs_per_shard": 3,
+        "shard_candidates": [
+          1,
+          2,
+          4,
+          8,
+          16
+        ]
+      },
+      "policy": {
+        "semantic_lifecycle_gate": "hard",
+        "hosted_timing": "observational",
+        "selection": "highest paired p50 throughput delta; tie -> fewer shards",
+        "promotion": "evidence only; best shard count is not a production default"
+      },
+      "semantic_parity": true,
+      "results": [
+        {
+          "shards": 1,
+          "dedicated_ops_p50": 91675.243,
+          "sharded_ops_p50": 74002.776,
+          "paired_throughput_pct_p50": -19.277,
+          "positive_pairs": 0,
+          "pairs": 3,
+          "dedicated_threads": 32,
+          "sharded_threads": 1,
+          "dedicated_control_per_op": 1.156,
+          "sharded_control_per_op": 0.082
+        },
+        {
+          "shards": 2,
+          "dedicated_ops_p50": 106501.419,
+          "sharded_ops_p50": 103938.631,
+          "paired_throughput_pct_p50": -21.36,
+          "positive_pairs": 1,
+          "pairs": 3,
+          "dedicated_threads": 32,
+          "sharded_threads": 2,
+          "dedicated_control_per_op": 1.034,
+          "sharded_control_per_op": 0.061
+        },
+        {
+          "shards": 4,
+          "dedicated_ops_p50": 82247.041,
+          "sharded_ops_p50": 82162.79,
+          "paired_throughput_pct_p50": -0.102,
+          "positive_pairs": 1,
+          "pairs": 3,
+          "dedicated_threads": 32,
+          "sharded_threads": 4,
+          "dedicated_control_per_op": 1.134,
+          "sharded_control_per_op": 0.046
+        },
+        {
+          "shards": 8,
+          "dedicated_ops_p50": 100436.933,
+          "sharded_ops_p50": 87977.951,
+          "paired_throughput_pct_p50": -32.997,
+          "positive_pairs": 1,
+          "pairs": 3,
+          "dedicated_threads": 32,
+          "sharded_threads": 8,
+          "dedicated_control_per_op": 1.062,
+          "sharded_control_per_op": 0.045
+        },
+        {
+          "shards": 16,
+          "dedicated_ops_p50": 121427.935,
+          "sharded_ops_p50": 104608.487,
+          "paired_throughput_pct_p50": -15.711,
+          "positive_pairs": 0,
+          "pairs": 3,
+          "dedicated_threads": 32,
+          "sharded_threads": 16,
+          "dedicated_control_per_op": 1.049,
+          "sharded_control_per_op": 0.051
+        }
+      ],
+      "best": {
+        "shards": 4,
+        "dedicated_ops_p50": 82247.041,
+        "sharded_ops_p50": 82162.79,
+        "paired_throughput_pct_p50": -0.102,
+        "positive_pairs": 1,
+        "pairs": 3,
+        "dedicated_threads": 32,
+        "sharded_threads": 4,
+        "dedicated_control_per_op": 1.134,
+        "sharded_control_per_op": 0.046
+      }
+    },
+    {
+      "schema": "wasmc-host-transport-shard-sweep/v1",
+      "measured_at": "2026-09-20T17:07:15.671Z",
+      "commit": "1648d18192a1bf2c9fcc317fd8b82075c5eabfcf",
+      "platform": "macos-x86_64",
+      "host": {
+        "os": "darwin",
+        "arch": "x64",
+        "node": "v26.5.1"
+      },
+      "workload": {
+        "connections": 32,
+        "iterations_per_connection": 1000,
+        "pairs_per_shard": 3,
+        "shard_candidates": [
+          1,
+          2,
+          4,
+          8,
+          16
+        ]
+      },
+      "policy": {
+        "semantic_lifecycle_gate": "hard",
+        "hosted_timing": "observational",
+        "selection": "highest paired p50 throughput delta; tie -> fewer shards",
+        "promotion": "evidence only; best shard count is not a production default"
+      },
+      "semantic_parity": true,
+      "results": [
+        {
+          "shards": 1,
+          "dedicated_ops_p50": 30956.968,
+          "sharded_ops_p50": 15200.131,
+          "paired_throughput_pct_p50": -50.899,
+          "positive_pairs": 0,
+          "pairs": 3,
+          "dedicated_threads": 32,
+          "sharded_threads": 1,
+          "dedicated_control_per_op": 1.059,
+          "sharded_control_per_op": 0.072
+        },
+        {
+          "shards": 2,
+          "dedicated_ops_p50": 32341.41,
+          "sharded_ops_p50": 18600.72,
+          "paired_throughput_pct_p50": -41.673,
+          "positive_pairs": 0,
+          "pairs": 3,
+          "dedicated_threads": 32,
+          "sharded_threads": 2,
+          "dedicated_control_per_op": 1.043,
+          "sharded_control_per_op": 0.056
+        },
+        {
+          "shards": 4,
+          "dedicated_ops_p50": 33211.501,
+          "sharded_ops_p50": 25853.21,
+          "paired_throughput_pct_p50": -15.874,
+          "positive_pairs": 0,
+          "pairs": 3,
+          "dedicated_threads": 32,
+          "sharded_threads": 4,
+          "dedicated_control_per_op": 1.038,
+          "sharded_control_per_op": 0.051
+        },
+        {
+          "shards": 8,
+          "dedicated_ops_p50": 29477.003,
+          "sharded_ops_p50": 42666.899,
+          "paired_throughput_pct_p50": 44.746,
+          "positive_pairs": 3,
+          "pairs": 3,
+          "dedicated_threads": 32,
+          "sharded_threads": 8,
+          "dedicated_control_per_op": 1.053,
+          "sharded_control_per_op": 0.041
+        },
+        {
+          "shards": 16,
+          "dedicated_ops_p50": 31337.248,
+          "sharded_ops_p50": 31126.523,
+          "paired_throughput_pct_p50": -4.032,
+          "positive_pairs": 1,
+          "pairs": 3,
+          "dedicated_threads": 32,
+          "sharded_threads": 16,
+          "dedicated_control_per_op": 1.021,
+          "sharded_control_per_op": 0.048
+        }
+      ],
+      "best": {
+        "shards": 8,
+        "dedicated_ops_p50": 29477.003,
+        "sharded_ops_p50": 42666.899,
+        "paired_throughput_pct_p50": 44.746,
+        "positive_pairs": 3,
+        "pairs": 3,
+        "dedicated_threads": 32,
+        "sharded_threads": 8,
+        "dedicated_control_per_op": 1.053,
+        "sharded_control_per_op": 0.041
+      }
+    },
+    {
+      "schema": "wasmc-host-transport-shard-sweep/v1",
+      "measured_at": "2026-09-20T17:00:24.300Z",
+      "commit": "1648d18192a1bf2c9fcc317fd8b82075c5eabfcf",
+      "platform": "windows-aarch64",
+      "host": {
+        "os": "win32",
+        "arch": "arm64",
+        "node": "v26.5.1"
+      },
+      "workload": {
+        "connections": 32,
+        "iterations_per_connection": 1000,
+        "pairs_per_shard": 3,
+        "shard_candidates": [
+          1,
+          2,
+          4,
+          8,
+          16
+        ]
+      },
+      "policy": {
+        "semantic_lifecycle_gate": "hard",
+        "hosted_timing": "observational",
+        "selection": "highest paired p50 throughput delta; tie -> fewer shards",
+        "promotion": "evidence only; best shard count is not a production default"
+      },
+      "semantic_parity": true,
+      "results": [
+        {
+          "shards": 1,
+          "dedicated_ops_p50": 78945.992,
+          "sharded_ops_p50": 61457.845,
+          "paired_throughput_pct_p50": -22.152,
+          "positive_pairs": 0,
+          "pairs": 3,
+          "dedicated_threads": 32,
+          "sharded_threads": 1,
+          "dedicated_control_per_op": 1.048,
+          "sharded_control_per_op": 0.052
+        },
+        {
+          "shards": 2,
+          "dedicated_ops_p50": 79231.396,
+          "sharded_ops_p50": 74669.276,
+          "paired_throughput_pct_p50": -6.464,
+          "positive_pairs": 0,
+          "pairs": 3,
+          "dedicated_threads": 32,
+          "sharded_threads": 2,
+          "dedicated_control_per_op": 1.053,
+          "sharded_control_per_op": 0.044
+        },
+        {
+          "shards": 4,
+          "dedicated_ops_p50": 80924.983,
+          "sharded_ops_p50": 89140.029,
+          "paired_throughput_pct_p50": 10.153,
+          "positive_pairs": 3,
+          "pairs": 3,
+          "dedicated_threads": 32,
+          "sharded_threads": 4,
+          "dedicated_control_per_op": 1.054,
+          "sharded_control_per_op": 0.052
+        },
+        {
+          "shards": 8,
+          "dedicated_ops_p50": 79749.984,
+          "sharded_ops_p50": 88334.114,
+          "paired_throughput_pct_p50": 11.141,
+          "positive_pairs": 3,
+          "pairs": 3,
+          "dedicated_threads": 32,
+          "sharded_threads": 8,
+          "dedicated_control_per_op": 1.048,
+          "sharded_control_per_op": 0.053
+        },
+        {
+          "shards": 16,
+          "dedicated_ops_p50": 80618.962,
+          "sharded_ops_p50": 85546.47,
+          "paired_throughput_pct_p50": 6.112,
+          "positive_pairs": 3,
+          "pairs": 3,
+          "dedicated_threads": 32,
+          "sharded_threads": 16,
+          "dedicated_control_per_op": 1.057,
+          "sharded_control_per_op": 0.054
+        }
+      ],
+      "best": {
+        "shards": 8,
+        "dedicated_ops_p50": 79749.984,
+        "sharded_ops_p50": 88334.114,
+        "paired_throughput_pct_p50": 11.141,
+        "positive_pairs": 3,
+        "pairs": 3,
+        "dedicated_threads": 32,
+        "sharded_threads": 8,
+        "dedicated_control_per_op": 1.048,
+        "sharded_control_per_op": 0.053
+      }
+    },
+    {
+      "schema": "wasmc-host-transport-shard-sweep/v1",
+      "measured_at": "2026-09-20T17:00:05.882Z",
+      "commit": "1648d18192a1bf2c9fcc317fd8b82075c5eabfcf",
+      "platform": "windows-x86_64",
+      "host": {
+        "os": "win32",
+        "arch": "x64",
+        "node": "v26.5.1"
+      },
+      "workload": {
+        "connections": 32,
+        "iterations_per_connection": 1000,
+        "pairs_per_shard": 3,
+        "shard_candidates": [
+          1,
+          2,
+          4,
+          8,
+          16
+        ]
+      },
+      "policy": {
+        "semantic_lifecycle_gate": "hard",
+        "hosted_timing": "observational",
+        "selection": "highest paired p50 throughput delta; tie -> fewer shards",
+        "promotion": "evidence only; best shard count is not a production default"
+      },
+      "semantic_parity": true,
+      "results": [
+        {
+          "shards": 1,
+          "dedicated_ops_p50": 81309.593,
+          "sharded_ops_p50": 59279.815,
+          "paired_throughput_pct_p50": -26.749,
+          "positive_pairs": 0,
+          "pairs": 3,
+          "dedicated_threads": 32,
+          "sharded_threads": 1,
+          "dedicated_control_per_op": 1.012,
+          "sharded_control_per_op": 0.05
+        },
+        {
+          "shards": 2,
+          "dedicated_ops_p50": 84349.047,
+          "sharded_ops_p50": 78650.398,
+          "paired_throughput_pct_p50": -6.715,
+          "positive_pairs": 0,
+          "pairs": 3,
+          "dedicated_threads": 32,
+          "sharded_threads": 2,
+          "dedicated_control_per_op": 1.012,
+          "sharded_control_per_op": 0.04
+        },
+        {
+          "shards": 4,
+          "dedicated_ops_p50": 104438.421,
+          "sharded_ops_p50": 114202.775,
+          "paired_throughput_pct_p50": 9.349,
+          "positive_pairs": 3,
+          "pairs": 3,
+          "dedicated_threads": 32,
+          "sharded_threads": 4,
+          "dedicated_control_per_op": 1.014,
+          "sharded_control_per_op": 0.045
+        },
+        {
+          "shards": 8,
+          "dedicated_ops_p50": 111799.962,
+          "sharded_ops_p50": 118709.575,
+          "paired_throughput_pct_p50": 4.811,
+          "positive_pairs": 3,
+          "pairs": 3,
+          "dedicated_threads": 32,
+          "sharded_threads": 8,
+          "dedicated_control_per_op": 1.014,
+          "sharded_control_per_op": 0.04
+        },
+        {
+          "shards": 16,
+          "dedicated_ops_p50": 108954.697,
+          "sharded_ops_p50": 129140.309,
+          "paired_throughput_pct_p50": 16.485,
+          "positive_pairs": 3,
+          "pairs": 3,
+          "dedicated_threads": 32,
+          "sharded_threads": 16,
+          "dedicated_control_per_op": 1.013,
+          "sharded_control_per_op": 0.048
+        }
+      ],
+      "best": {
+        "shards": 16,
+        "dedicated_ops_p50": 108954.697,
+        "sharded_ops_p50": 129140.309,
+        "paired_throughput_pct_p50": 16.485,
+        "positive_pairs": 3,
+        "pairs": 3,
+        "dedicated_threads": 32,
+        "sharded_threads": 16,
+        "dedicated_control_per_op": 1.013,
+        "sharded_control_per_op": 0.048
+      }
+    }
+  ]
+}
