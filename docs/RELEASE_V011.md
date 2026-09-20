@@ -16,6 +16,10 @@ the existing compiler, CoreLib, Host ABI, lifecycle and no-replay contracts.
 The dev, main and prod tags must contain this same product set. Existing tags
 remain immutable and only suffix-free prod advances the latest pointer.
 
+Dev qualification at source `86b8777cc616fc4222561bde21e3c33ae6f47418`
+passed Data Foundation, public Lib source, Library-first guidance, all 12
+LibSearch jobs and all 22 source-free consumer jobs.
+
 ## Admitted Data Libs
 
 Each package is version `0.0.1`, has zero Core Wasm imports and contains only
