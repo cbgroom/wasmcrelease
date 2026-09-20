@@ -1,0 +1,53 @@
+{
+  "schema": "wasmc.libsrc-candidate/v1",
+  "id": "wasmc-http1",
+  "version": "0.0.1-dev.1",
+  "wit": "wit/world.wit",
+  "source": [
+    "Cargo.toml",
+    "Cargo.lock",
+    "src/lib.rs"
+  ],
+  "host_import_budget": 0,
+  "oracle": {
+    "path": "host/tests/https/artifacts/http1-server.wasm",
+    "sha256": "f5d528f7eb5290e128723e0b6fbf393915fe22a63501b37f97cda36062771ad6"
+  },
+  "build": {
+    "command": "cargo +1.96.0 build --release --locked --target wasm32-unknown-unknown --manifest-path libsrc/wasmc-http1/Cargo.toml",
+    "artifact": "libsrc/wasmc-http1/target/wasm32-unknown-unknown/release/wasmc_http1_public.wasm"
+  },
+  "completed_gates": [
+    "public-source",
+    "zero-imports",
+    "wit-contract-equivalence",
+    "representative-behavior-equivalence",
+    "http1-framing-equivalence",
+    "resource-boundary-calibration",
+    "broader-status-header-coverage"
+  ],
+  "pending_gates": [
+    "multi-engine-qualification",
+    "admission-review"
+  ],
+  "admitted": false,
+  "qualification": {
+    "runner": "node",
+    "script": "scripts/test-http1-libsrc.mjs"
+  },
+  "resource_boundaries": {
+    "input_bytes": 65536,
+    "body_bytes": 1048576,
+    "max_headers": 32,
+    "output_bytes": 65536,
+    "oracle_equivalent": true
+  },
+  "protocol_coverage": {
+    "status_codes_scanned": 1001,
+    "accepted_status_range": "100-999",
+    "header_name_cases": 136,
+    "header_value_byte_cases": 256,
+    "serialize_header_names_lowercase": true,
+    "oracle_equivalent": true
+  }
+}

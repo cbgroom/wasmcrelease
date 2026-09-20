@@ -1,0 +1,16 @@
+[package]
+name = "wasmc-compression-public"
+version = "0.0.1"
+edition = "2021"
+publish = false
+license-file = "../../LICENSE"
+description = "Public clean-room WAsmC gzip Lib candidate"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+wit-bindgen = "=0.62.0"
+flate2 = { version = "=1.1.2", default-features = false, features = ["rust_backend"] }
+
+[workspace]

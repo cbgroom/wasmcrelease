@@ -1,0 +1,13 @@
+[package]
+name = "wasmc-tls-core-host-test"
+version = "0.0.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+anyhow = "=1.0.104"
+wasmtime = { version = "=47.0.4", default-features = false, features = ["runtime", "cranelift", "component-model"] }
+rustls = { version = "=0.23.44", default-features = false, features = ["std", "custom-provider"] }
+rustls-rustcrypto = { version = "=0.0.2-alpha", default-features = false, features = ["std"] }
+
+[workspace]

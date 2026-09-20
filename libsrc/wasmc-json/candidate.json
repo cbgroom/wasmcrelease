@@ -1,0 +1,44 @@
+{
+  "schema": "wasmc.libsrc-candidate/v1",
+  "id": "wasmc-json",
+  "version": "0.0.1-dev.1",
+  "wit": "wit/world.wit",
+  "source": [
+    "Cargo.toml",
+    "Cargo.lock",
+    "src/lib.rs"
+  ],
+  "host_import_budget": 0,
+  "oracle": {
+    "path": "host/tests/https/artifacts/json.wasm",
+    "sha256": "18f257896dcf0a95937a0d9652323d6e2b91fb01f430861eda23244344683320"
+  },
+  "build": {
+    "command": "cargo +1.96.0 build --release --locked --target wasm32-unknown-unknown --manifest-path libsrc/wasmc-json/Cargo.toml",
+    "artifact": "libsrc/wasmc-json/target/wasm32-unknown-unknown/release/wasmc_json_public.wasm"
+  },
+  "completed_gates": [
+    "public-source",
+    "zero-imports",
+    "wit-contract-equivalence",
+    "representative-behavior-equivalence",
+    "resource-boundary-calibration"
+  ],
+  "pending_gates": [
+    "multi-engine-qualification",
+    "admission-review"
+  ],
+  "admitted": false,
+  "qualification": {
+    "runner": "node",
+    "script": "scripts/test-json-libsrc.mjs"
+  },
+  "resource_boundaries": {
+    "input_bytes": 65536,
+    "output_bytes": 65536,
+    "max_pointers": 64,
+    "max_pointer_bytes": 1024,
+    "max_depth": 64,
+    "oracle_equivalent": true
+  }
+}

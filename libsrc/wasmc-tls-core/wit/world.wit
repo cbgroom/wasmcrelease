@@ -1,0 +1,54 @@
+package wasmc:tls-core@0.0.1;
+
+interface entropy {
+  enum entropy-error {
+    unavailable,
+  }
+  fill: func(length: u32) -> result<list<u8>, entropy-error>;
+}
+
+interface tls {
+  enum connection-state {
+    handshaking,
+    ready,
+    closing,
+    peer-closed,
+    closed,
+    failed,
+  }
+
+  record progress {
+    state: connection-state,
+    pending-output: u32,
+    plaintext-available: u32,
+  }
+
+  enum tls-error {
+    invalid-config,
+    invalid-state,
+    input-too-large,
+    output-too-large,
+    crypto-failure,
+    entropy-failure,
+  }
+
+  resource session {
+    state: func() -> progress;
+    ingest: func(ciphertext: list<u8>) -> result<u32, tls-error>;
+    output: func(limit: u32) -> result<list<u8>, tls-error>;
+    commit-output: func(transferred: u32) -> result<_, tls-error>;
+    write: func(plaintext: list<u8>) -> result<u32, tls-error>;
+    read: func(limit: u32) -> result<list<u8>, tls-error>;
+    close: func() -> result<_, tls-error>;
+  }
+
+  create: func(
+    cert-chain: list<list<u8>>,
+    private-key: list<u8>,
+  ) -> result<own<session>, tls-error>;
+}
+
+world tls-core {
+  import entropy;
+  export tls;
+}
