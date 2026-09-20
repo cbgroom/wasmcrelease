@@ -3,9 +3,10 @@
 This source-free compiler repository publishes a standard Core Wasm compiler,
 Lib packages, a package-manager-free Runtime/Registry bootstrap, and the
 public `wasmc-core-runtime` Rust SDK. The current immutable release is
-`v0.0.10`; pin that tag or its full commit for reproducible use. This release
-includes compatibility admission, pinned resolve/install and the ordinary
-embedded-index LibSearch. See [release scope](docs/RELEASE_V010.md).
+`v0.0.11`; pin that tag or its full commit for reproducible use. This release
+adds seven source-free Data Foundation v1 Libs while preserving the compiler,
+Host ABI, lifecycle and no-replay contracts. See
+[release scope](docs/RELEASE_V011.md).
 
 ## Start here
 
@@ -18,8 +19,8 @@ For reusable algorithms, text, bytes or collections, begin with
 [the Library-first discovery Skill](skills/wasmc-lib-discovery/SKILL.md):
 search → read the target Skill/WIT → approve exact identity → resolve/install
 where supported → check engine/imports → verify behavior → write missing glue.
-This strengthened guidance is a post-v0.0.10 supplement: pin its full tooling
-commit and checksums separately; the immutable v0.0.10 tag is unchanged.
+This Library-first guidance is included in v0.0.11. Search is discovery, not
+selection authority; approve and pin exact package identities before use.
 
 Read [skills/wasmc-developer/SKILL.md](skills/wasmc-developer/SKILL.md) completely. It routes only the reference needed for Runtime bootstrap, source/WIT, Lib authoring, JavaScript, or Rust/Wasmtime. Reuse Rust and WIT priors and learn only the documented wasmc delta.
 
@@ -40,7 +41,7 @@ const instance = await WebAssembly.instantiate(inspected.module, {});
 console.log(instance.exports.run(5, 6)); // 17
 ```
 
-## v0.0.10 capability contract
+## v0.0.11 capability contract
 
 | Task | Status | Canonical path |
 |---|---|---|
@@ -48,6 +49,7 @@ console.log(instance.exports.run(5, 6)); // 17
 | Scalars, control flow, private functions, WIT values | shipped | [LANGUAGE.md](LANGUAGE.md) |
 | Managed String/List/Map/record applications | shipped through matching Lib | [LIB.md](LIB.md), `instantiateLib` |
 | Embedded Wasm package/API search; exact resolve and pinned install | shipped; search is not selection authority | [LibSearch](examples/lib-search/README.md), [catalog](catalog/README.md), [installation](catalog/INSTALL.md) |
+| CSV, typed data, expressions, compute, relational, profile, Arrow IPC/Parquet | shipped as seven source-free v1 Libs | [release scope](docs/RELEASE_V011.md), `libs/wasmc-data-*`, `libs/wasmc-csv` |
 | Public third-party Lib build/publish | not closed | do not infer availability from authoring documentation |
 | WIT resources, constructors, receiver methods | shipped Component profile | `libs/wasmc-resource-counter` |
 | Explicit synchronous scalar Host imports | shipped; exact allowlist | `libs/wasmc-host-clock` |
@@ -58,7 +60,7 @@ console.log(instance.exports.run(5, 6)); // 17
 
 The v0.0.4 `dist/` and `package/` compatibility trees and the three
 historical `libs/` packages remain
-byte-for-byte frozen. v0.0.10 reuses the qualified compiler facades and standard
+byte-for-byte frozen. v0.0.11 reuses the qualified compiler facades and standard
 Lib1.4.0 with its matching CoreLib4.8 companion. Engine compatibility is
 artifact-specific: read [compatibility/README.md](compatibility/README.md)
 before treating compiler success as standard-Lib or managed Host support.
@@ -83,7 +85,7 @@ before treating compiler success as standard-Lib or managed Host support.
 Inspect every generated import and bind only reviewed Host functions. Never expose private handles, plans, Store nonces, lifecycle helpers, or JSON invented as a WIT replacement.
 
 ```text
-https://cdn.jsdelivr.net/gh/cbgroom/wasmcrelease@v0.0.10/<PATH>
+https://cdn.jsdelivr.net/gh/cbgroom/wasmcrelease@v0.0.11/<PATH>
 ```
 
 Verify files against `SHA256SUMS`, `manifest.json`, and `release.json`. `main`, unversioned URLs, and `package-index.json.latest` are mutable discovery state.

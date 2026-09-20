@@ -25,6 +25,10 @@ The exact immutable dev tag `v0.0.11-dev.1` at
 tag-triggered LibSearch jobs and all 22 manually dispatched source-free
 consumer jobs passed. Those receipts authorize `v0.0.11-main.1`.
 
+Final prod identity is `v0.0.11` (no suffix), with the identical candidate
+product digest. Only prod advances `package-index.json.latest`; every earlier
+tag remains immutable.
+
 ## Admitted Data Libs
 
 Each package is version `0.0.1`, has zero Core Wasm imports and contains only

@@ -2,6 +2,23 @@
 
 Packages are built and admitted locally from clean synchronized private source, then pushed directly. GitHub Actions independently verifies the source-free public consumer paths, but cannot rebuild or admit canonical compiler/Lib bytes and is not a publication dependency.
 
+## v0.0.11
+
+Data Foundation v1 adds seven admitted source-free packages: Data Core, CSV,
+Expr, Compute, Relational, Data Profile and Data Interchange. Every Core
+artifact has zero imports. The exact pipeline covers CSV through typed
+validation, deterministic aggregation/join/union/ranking, profiling, Arrow IPC
+and uncompressed Parquet. Exact-tag LibSearch and full consumer gates passed;
+the compiler, Host ABI, lifecycle and no-replay contracts remain unchanged.
+Lag/lead, frame aggregates and distinct are deferred to v1.1; SQL/DB is not
+claimed. Product identity is retained in `channels/candidates/0.0.11.json`.
+
+## v0.0.10
+
+This release admitted the ordinary embedded-index LibSearch with exact package
+resolution and pinned installation. It reused the qualified compiler and
+standard Lib bytes. Complete scope is retained in `docs/RELEASE_V010.md`.
+
 ## v0.0.9
 
 Latest compiler source authority is recorded in admission/compiler-build-v009.json.

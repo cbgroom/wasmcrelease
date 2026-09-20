@@ -95,15 +95,15 @@ hard gates. Latest/history JSON and badge endpoints are published on the
 [`perf-data`](https://github.com/cbgroom/wasmcrelease/tree/perf-data) branch after
 successful `main` runs.
 
-Post-v0.0.10 Agent guidance strengthening: start with
+v0.0.11 Agent guidance starts with
 [Library-first discovery](skills/wasmc-lib-discovery/SKILL.md) before implementing
 reusable algorithms/data operations. It teaches real search hits, exact selection,
 installation and supported execution, with an executable documentation regression.
-Pin this supplemental tooling commit separately; v0.0.10 products/tags stay frozen.
+The guidance is integrity-bound in this release; earlier tags stay frozen.
 
-Current staged version: **v0.0.10**, with the [ordinary embedded-index search Lib](examples/lib-search/README.md).
+Current staged version: **v0.0.11 Data Foundation v1**.
 The [channel policy](docs/RELEASE_CHANNELS.md) defines immutable `-dev.N` →
-`-main.N` → suffix-free prod. The default prod is v0.0.10;
+`-main.N` → suffix-free prod. The default prod is v0.0.11;
 previous tags are immutable and prod0.0.x does not imply stable1.x.
 [![LibSearch equivalence](https://github.com/cbgroom/wasmcrelease/actions/workflows/lib-search.yml/badge.svg?branch=main)](https://github.com/cbgroom/wasmcrelease/actions/workflows/lib-search.yml)
 
@@ -115,12 +115,20 @@ a version or authorize installation. The new Lib has zero imports and a portable
 Core/Component value view. It is not a shared-memory/CoreLib fast ABI and does
 not solve Wasmi/Node18 compatibility of the existing Std1.4.0.
 
-Current release: `v0.0.10`, reusing compiler bytes built from exact private source
+Current release: `v0.0.11`, reusing compiler bytes built from exact private source
 `e69abb73f667f3810b0c40937fd1a1e2d04d4255`. Use `current/` for the
 latest compiler facade; `dist/` and `package/` are frozen v0.0.4
 compatibility trees. The three pre-Data historical `libs/` packages remain
 byte-frozen; newly admitted source-free Lib packages are append-only. The Wasmi/Wasmtime
 Core Runtime SDK remains available in `sdk/wasmc-core-runtime`.
+
+Data Foundation v1 publishes seven zero-import, source-free packages for CSV,
+typed data, expressions, compute, relational operations, profiling and Arrow
+IPC/uncompressed Parquet interchange. The qualified path is CSV → types → Expr
+→ Compute → Relational → Profile → interchange → validation. Relational v1
+includes union-all, bounded typed inner/left equi-join, deterministic ranking
+windows and group aggregation. Lag/lead, frame aggregates and distinct are v1.1;
+SQL/DB is outside this release. See [the exact scope](docs/RELEASE_V011.md).
 
 This release covers bit operations, managed collection loops, stable minimal
 String paths, and the 73-function `wasmc:std@1.4.0` source-free standard Lib.
@@ -142,10 +150,9 @@ exact commit, every matrix result, and case pass/fail counts. Download
 stdout/stderr logs, observed execution counts and tool versions, including failures.
 See [complete CI scope and reproduction](docs/CI_COVERAGE.md).
 
-Latest complete verified baseline: [21/21 suite cells, 132/132 flow checks,
-18/18 SDK tests](https://github.com/cbgroom/wasmcrelease/actions/runs/34742494080),
-plus [10/10 LibSearch JS cells, actual Wasmi and generated Rust SDK](https://github.com/cbgroom/wasmcrelease/actions/runs/34742493311).
-The exact tested source is `a8b8adb8a3b768f32a53f9bd12938465643925d9`;
+Latest exact-tag baseline: [22/22 source-free consumer jobs](https://github.com/cbgroom/wasmcrelease/actions/runs/35524038477)
+plus [11/11 LibSearch/Wasmi/Component jobs](https://github.com/cbgroom/wasmcrelease/actions/runs/35523982596).
+The exact tested source is `532c0e413104786a46e3b9cf0ebafb16de55626a`;
 see [retained stage receipt](channels/main.json).
 Later documentation receipts do not retarget that measurement; the badge above
 tracks their independent main runs, which may be pending.
@@ -194,10 +201,10 @@ import { compile, inspectWasm } from "@wasmc/compiler";
 
 These are explicit contexts, not fallback probes. Repository-local use does not require npm or another external JavaScript registry.
 
-Consumers must pin `v0.0.10` or its full commit and verify `SHA256SUMS`.
+Consumers must pin `v0.0.11` or its full commit and verify `SHA256SUMS`.
 `main` and latest metadata are mutable discovery conveniences.
 
-## v0.0.10 testing instructions
+## v0.0.11 testing instructions
 
 Supplemental public [Lib discovery and exact resolver](catalog/README.md)
 provides exact resolution over verified published package bytes. Search now
@@ -213,16 +220,15 @@ typed function references and tail calls. Original v0.0.9 does not contain the
 later preflight scripts; v0.0.10 now ships them with digest-bound metadata.
 Node18 is not covered by the release's passing full managed-Host matrix.
 
-Resolve the exact current immutable commit with `git rev-parse 'v0.0.10^{}'`.
-The previous v0.0.9 commit remains frozen at
-`0fec38d59872a7f1527dc94799da542e968f1f8a`; no tags or its artifacts are overwritten.
-This README and the [Release page](https://github.com/cbgroom/wasmcrelease/releases/tag/v0.0.10)
+Resolve the exact current immutable commit with `git rev-parse 'v0.0.11^{}'`.
+All previous tags remain frozen and are never overwritten.
+This README and the [Release page](https://github.com/cbgroom/wasmcrelease/releases/tag/v0.0.11)
 contain the complete handoff; no accompanying chat instructions are required.
 
 ### Download and verify
 
 ```bash
-git clone --depth 1 --branch v0.0.10 https://github.com/cbgroom/wasmcrelease.git
+git clone --depth 1 --branch v0.0.11 https://github.com/cbgroom/wasmcrelease.git
 cd wasmcrelease
 ```
 
@@ -230,8 +236,8 @@ Verify every file listed in `SHA256SUMS` before execution. On macOS use
 `shasum -a 256 -c SHA256SUMS`; on Linux use `sha256sum -c SHA256SUMS`.
 GitHub Raw and jsDelivr support the exact pinned release:
 
-- [Self-contained ESM compiler](https://cdn.jsdelivr.net/gh/cbgroom/wasmcrelease@v0.0.10/current/wasmc.mjs)
-- [Raw compiler Wasm](https://raw.githubusercontent.com/cbgroom/wasmcrelease/v0.0.10/current/wasmc_compiler.wasm)
+- [Self-contained ESM compiler](https://cdn.jsdelivr.net/gh/cbgroom/wasmcrelease@v0.0.11/current/wasmc.mjs)
+- [Raw compiler Wasm](https://raw.githubusercontent.com/cbgroom/wasmcrelease/v0.0.11/current/wasmc_compiler.wasm)
 
 Use `current/wasmc.mjs` for the self-contained ESM path or `current/index.mjs`
 for the sidecar package path. The latter needs its sibling compiler and Lib

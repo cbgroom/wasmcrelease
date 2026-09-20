@@ -2,6 +2,14 @@
 
 ## 2026-09-20 Data Foundation v1 admission and release
 
+Release state: prod promotion prepared from accepted exact-tag receipts.
+Immutable dev is `v0.0.11-dev.1` at
+`532c0e413104786a46e3b9cf0ebafb16de55626a`; immutable main is
+`v0.0.11-main.1` at `da06f944f161888fa5efd989193623f8d71e6e04`.
+The suffix-free `v0.0.11` tag must peel to this handoff's final prod commit,
+and remote readback must preserve product set
+`101a8a3783d52fc3d06e15731b20ec5fbe5a2bdbd7d9e964876f76ce44e33662`.
+
 Seven Data Foundation Libs are admitted as immutable source-free `0.0.1`
 packages: Data Core, CSV, Expr, Compute, Relational, Data Profile and Data
 Interchange. Their exact implementation authority is
@@ -156,7 +164,7 @@ not full performance/release acceptance. Full Host gate count remains1of5.
 
 Core/Lib performs algorithms and memory management; public Host owns authority,
 transport mechanics, limits and cancellation. Compiler/CoreLib binaries and
-frozen SDK remain unchanged. Verify channels/candidates/0.0.10.json frozen
+frozen SDK remain unchanged. Verify channels/candidates/0.0.11.json frozen
 product hashes before promotion. Do not rebuild frozen compiler/provider or
 rewrite immutable tags. Public mutable Host glue may evolve independently.
 
