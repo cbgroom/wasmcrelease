@@ -4,6 +4,7 @@ import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import {
   copyFileSync,
+  chmodSync,
   existsSync,
   mkdirSync,
   readFileSync,
@@ -62,6 +63,7 @@ for (const [id, witPackage, world, description] of cohort) {
   assert.equal(WebAssembly.validate(artifact), true, id + ': invalid core artifact');
   assert.equal(WebAssembly.Module.imports(new WebAssembly.Module(artifact)).length, 0, id + ': core imports');
   copyFileSync(artifactPath, resolve(packageRoot, 'artifact.wasm'));
+  chmodSync(resolve(packageRoot, 'artifact.wasm'), 0o644);
   execFileSync('wasm-tools', [
     'component',
     'new',
