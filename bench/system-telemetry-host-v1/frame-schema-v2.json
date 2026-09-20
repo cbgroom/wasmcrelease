@@ -1,5 +1,5 @@
 {
-  "schema": "wasmc-system-telemetry-frame/v1",
+  "schema": "wasmc-system-telemetry-frame/v2",
   "frame_bytes": 64,
   "byte_order": "little-endian",
   "fields": [
@@ -12,7 +12,7 @@
     {"name": "cpu_milli_pct", "offset": 48, "type": "u32", "unit": "0.001_percent"},
     {"name": "load1_milli", "offset": 52, "type": "u32", "unit": "0.001_load"},
     {"name": "freshness_mask", "offset": 56, "type": "u32", "unit": "bitset"},
-    {"name": "source", "offset": 60, "type": "u32", "unit": "enum"}
+    {"name": "flags", "offset": 60, "type": "u32", "unit": "bitset"}
   ],
   "freshness_bits": {
     "cpu": 1,
@@ -20,16 +20,18 @@
     "network": 4,
     "load": 8
   },
-  "source_ids": {
-    "synthetic": 0,
-    "sysinfo": 1,
-    "linux_proc": 2
+  "flags": {
+    "defined_mask": 0,
+    "reserved_for_future": true
   },
   "semantics": {
-    "sequence": "strictly increasing producer sequence; gaps make overwritten or missed samples observable",
-    "freshness_mask": "bit set only when the provider refreshed the corresponding OS source for this frame; an unset bit means the value is a carried-forward cache, not a new OS observation",
-    "total_memory": "cold/static provider metadata; intentionally excluded from every hot frame",
-    "provider_selection": "Host-private; source identifies evidence/backend semantics, not guest authority",
+    "sequence": "strictly increasing Lib-produced sequence; gaps make overwritten or missed samples observable",
+    "freshness_mask": "bit set only when the Lib refreshed the corresponding generic Host resource for this frame; an unset bit means the value is a carried-forward cache, not a new external observation",
+    "flags": "backend/platform/provider identity is deliberately absent; zero today and reserved for backend-independent frame semantics only",
+    "total_memory": "cold/static Lib metadata; intentionally excluded from every hot frame",
+    "host_dependency": "generic Resource/Window/Operation ABI only",
+    "telemetry_specific_host_api": false,
+    "telemetry_provider_abstraction": false,
     "host_api_delta": 0
   }
 }

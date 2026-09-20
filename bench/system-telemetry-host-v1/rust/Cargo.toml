@@ -8,3 +8,6 @@ publish = false
 
 [dependencies]
 sysinfo = { version = "=0.39.6", default-features = false, features = ["system", "network"] }
+
+[target.'cfg(target_os = "linux")'.dependencies]
+libc = "=0.2.189"

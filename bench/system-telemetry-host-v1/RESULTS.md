@@ -1,19 +1,24 @@
-# Zero-new-Host-API telemetry qualification
+# Telemetry Lib over frozen generic Host qualification
 
 ## Decision
 
-The first qualification does **not** justify a new Host API.
+The current qualification supports the stronger architecture:
 
-System telemetry can be modeled as provider/resource semantics behind the
-existing Host mechanisms: describe/open/read/wait/cancel/release/window. The
-high-frequency data path benefits materially from batching into an existing
-Window. No telemetry-specific syscall is required by the evidence below.
+**Host stays generic; telemetry expands as a Lib.**
 
-This is not a claim that the complete direct WAsmC resource binding is already
-published. The released source/compiler path still needs the generic WIT
-resource binding/lowering closed before ordinary WAsmC source can itself own an
-endpoint/window and directly pull telemetry. That is a generic binding gap, not
-a reason to add CPU/memory/network Host operations.
+The target Linux path is:
+
+trusted embedding preopens ordinary file resources -> generic namespace/open ->
+opaque endpoint + generic read/window -> TelemetryLib parser/cadence/frame.
+
+There is no telemetry-specific Host API, Host opcode, Host schema or
+TelemetryProvider abstraction in that path.
+
+The experiment-local GenericResourceHost mirrors the cold selector/open and hot
+opaque-resource read semantics required by the existing Host contract. It is
+not a new product Host layer. Exact source-generated WAsmC window/read
+integration remains owned by the separate generic Host I/O workstream; this
+benchmark does not claim that unfinished work as complete.
 
 ## Authority and invariant
 
@@ -22,15 +27,59 @@ a reason to add CPU/memory/network Host operations.
 - Development node: youdeMac-mini.local, Darwin arm64.
 - Linux cross-platform node: huawei-ThinkCentre-M920t, Linux x86_64.
 - host/contract/v0/host.wit was not modified.
-- Experiment selector system/telemetry is local test policy, not a published
-  namespace or Host syscall.
+- Host Core receives no telemetry-specific code.
+- Trusted Linux harness configuration registers ordinary preopened file
+  resources; the generic resource table does not parse their selector names.
 - Hot frame size: fixed 64 bytes; bounded ring; binary encoding; no JSON in the
   resident path.
-- The hot-frame schema is frozen in frame-schema-v1.json. Static/cold facts such
+- The current hot-frame schema is frame-schema-v2.json. Static/cold facts such
   as total physical memory do not consume every hot frame.
 - freshness_mask distinguishes a newly refreshed OS observation from a
   carried-forward cached value. A 1 kHz frame therefore does not imply that
   every field was physically sampled at 1 kHz.
+- Frame v2 removes backend/platform/provider identity entirely. The final 32
+  bits are generic reserved flags and are zero today.
+
+## Authoritative Lib-over-generic-resource result
+
+The current target architecture is qualified separately from the older
+telemetry-endpoint stress model. Exact experiment source SHA-256:
+5c434b32ef8cab1a00ae5b264dec8871909dbef13a754fe9e1eea00c17743a89.
+
+The trusted Linux harness preopens four ordinary files and registers them in a
+generic selector table. GenericResourceHost only implements cold open(selector)
+and hot read(endpoint, window); it has no CPU, memory, network, /proc or
+telemetry branching. LinuxTelemetryLib owns selector choice, parsing, cadence,
+freshness and Frame v2 construction.
+
+On the loaded Linux x86_64 node:
+
+- fast burst: 20,000 frames in 2,464.993 ms, about 8,113.6 frames/s.
+  The Lib performed 40,269 generic reads, 2.01345 reads/frame, with zero hot
+  heap allocations.
+- fast 1 kHz: 5,000 frames at 1,000.157 Hz, 19.006% sampler-thread CPU,
+  2.1046 generic reads/frame. CPU/network were fresh on all 5,000 frames,
+  memory 473 times and load 50 times. Zero hot allocations.
+- balanced 1 kHz: 5,000 frames at 1,000.187 Hz, 3.028% sampler-thread CPU,
+  0.2944 generic reads/frame. CPU/memory/network were refreshed 474 times each
+  and load 50 times. Zero hot allocations.
+- economy 1 kHz: 5,000 frames at 1,000.188 Hz, 1.496% sampler-thread CPU,
+  0.0604 generic reads/frame. CPU/memory/network were refreshed 99 times each
+  and load 5 times. Zero hot allocations.
+
+These profiles are Lib policy, not Host API variants. They demonstrate that a
+1 kHz application-facing frame clock does not require a 1 kHz syscall/read
+rate for every field.
+
+The experiment also tried a Linux positional pread implementation behind the
+same generic read semantic. It did not show a stable improvement: burst
+throughput fell to about 7,696.6 frames/s; fast CPU improved only slightly
+(19.006% -> 18.601%) while balanced/economy did not improve. The candidate is
+therefore rejected; the experiment keeps the simpler generic file semantics.
+
+Raw receipts:
+evidence/linux-generic-resource-lib.jsonl and
+evidence/linux-generic-resource-pread-rejected.jsonl.
 
 ## Bounded loss is observable
 
@@ -61,10 +110,8 @@ Shell comparison:
 - This remains more than an order of magnitude slower than resident collection
   and additionally pays fork/exec and text-formatting costs. It is a local
   comparison, not a semantic-equivalence claim.
-  host. It is a fork/exec/text-path comparison, not a semantic-equivalence
-  claim.
 
-Existing-semantics stream:
+Historical telemetry-endpoint stress control:
 
 - synthetic 1 kHz batch=32: 1201/1201, zero drop/gap and 0.031640
   read/wait calls per frame.
@@ -100,7 +147,7 @@ existing physical Endpoint/Window/Operation machinery has ample per-node
 headroom for a 1 kHz-class telemetry stream on this machine. It does not claim
 100,000 simultaneous gateway connections have been qualified.
 
-## Linux x86_64
+## Linux x86_64 historical controls
 
 The exact same Rust source and Cargo.lock were copied byte-for-byte to the
 Linux node. The machine was already heavily loaded during the run, so absolute
@@ -116,7 +163,7 @@ Transport isolation:
   - batch=32: 76.03M frames/s.
   - batch=256: 38.91M frames/s.
 
-Provider limitation under load is separated from frame cadence. A full-refresh
+OS collection cost under load is separated from frame cadence. A full-refresh
 sysinfo path remains too expensive to mean "every OS source is fresh every
 millisecond", so the portable fallback uses independent refresh cadences and
 marks freshness in-band rather than adding a Host API.
@@ -129,16 +176,15 @@ marks freshness in-band rather than adding a Host API.
   observations fresh.
 - shell ps remained about 9.7 runs/s.
 
-The same source now also contains a Linux-native resident provider that keeps
-/proc/stat, /proc/meminfo, /proc/net/dev and /proc/loadavg open, seeks them back
-to zero, and reuses buffers instead of spawning processes:
+The older direct Linux control keeps /proc files open, seeks them back to zero,
+and reuses buffers instead of spawning processes:
 
 - exact final full-refresh run: 10,000 samples at about 6,703 samples/s.
 - requested 1 kHz stream: 1201 produced / 1201 consumed in the 1.2 s producer
   window, zero ring drop, zero sequence gap.
 - batch=32 remained 0.031640 Host-semantic calls/frame.
 
-The Linux native cadence path additionally removes parser allocations after
+The older direct cadence path additionally removes parser allocations after
 warmup. The measured hot loop performs zero heap allocations per sample. CPU
 and network stay on the per-frame fast path; memory defaults to roughly 100 Hz
 and load to roughly 10 Hz.
@@ -200,7 +246,8 @@ Therefore this qualification proves:
 1. the existing Host semantic vocabulary is sufficient;
 2. the existing physical Endpoint/Window/Operation transport has enough
    per-node headroom;
-3. real OS collection can live in a provider without Host API growth;
+3. TelemetryLib can consume ordinary generic Host file resources without any
+   telemetry-specific Host API or provider abstraction;
 4. WAsmC can already execute the local policy layer cheaply;
 5. direct WAsmC-owned telemetry-resource pull is **not yet claimed**.
 
@@ -210,20 +257,18 @@ resource maintainer path and its existing-Host physical adapter. It must not be
 
 ## Next engineering slice
 
-Keep Host API delta at zero.
+Keep Host API delta at zero and expand the Lib ecosystem instead.
 
-1. Add provider-side cadence groups: slow CPU/load identity, medium
-   memory/process, faster network counters where the OS backend supports it.
-   The first CPU/memory/network/load cadence split and in-band freshness mask
-   are now implemented.
-2. Add a Linux fast backend and compare it against sysinfo while preserving the
-   same 64-byte-or-batched provider contract. The first /proc proof is now
-   complete; the measured cadence-aware hot path is allocation-free. Continue
-   only with evidence-driven backend refinements.
-3. Feed batches into Data Foundation lag/frame aggregates rather than computing
-   rates in Host.
-4. Close the existing generic WIT resource binding/lowering so WAsmC source can
-   directly drive open/read/wait/window without a telemetry-specific escape
-   hatch.
-5. Treat the 100,000-node gateway/fanout test as a separate scale
-   qualification; this document is a node-side and per-stream qualification.
+1. Incubate a wasmc-system-telemetry Lib candidate whose only external
+   dependency is the generic Host Resource/Window/Operation contract.
+2. Wait for the separately owned generic window/read/write H2 workstream to
+   become clean/qualified, then run this Lib through the real generated WAsmC
+   binding. Do not fork or special-case that workstream for telemetry.
+3. Feed Frame v2 into Data Foundation lag/frame aggregates; delta/rate/window
+   calculations stay outside Host.
+4. Qualify macOS and Windows by mapping the same Lib-level semantics onto
+   already admitted generic resources. If a platform exposes a genuine gap,
+   first ask whether a more general Resource primitive is missing; never start
+   from a telemetry-specific Host call.
+5. Treat 100,000-node gateway/fanout as a separate scale qualification. This
+   document is node-side/per-stream evidence only.

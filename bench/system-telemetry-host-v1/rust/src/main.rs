@@ -5,6 +5,8 @@ use std::collections::VecDeque;
 use std::fs::File;
 #[cfg(target_os = "linux")]
 use std::io::{Read, Seek, SeekFrom};
+#[cfg(target_os = "linux")]
+use std::mem::MaybeUninit;
 use std::process::Command;
 use std::sync::{
     atomic::{AtomicU64, Ordering},
@@ -21,13 +23,17 @@ const FRESH_MEMORY: u32 = 1 << 1;
 const FRESH_NETWORK: u32 = 1 << 2;
 const FRESH_LOAD: u32 = 1 << 3;
 const FRESH_ALL: u32 = FRESH_CPU | FRESH_MEMORY | FRESH_NETWORK | FRESH_LOAD;
-const SOURCE_SYNTHETIC: u32 = 0;
-const SOURCE_SYSINFO: u32 = 1;
-#[cfg(target_os = "linux")]
-const SOURCE_LINUX_PROC: u32 = 2;
 const MEMORY_CADENCE: Duration = Duration::from_millis(10);
 const FALLBACK_NETWORK_CADENCE: Duration = Duration::from_millis(10);
 const LOAD_CADENCE: Duration = Duration::from_millis(100);
+#[cfg(target_os = "linux")]
+const LINUX_BALANCED_CPU_CADENCE: Duration = Duration::from_millis(10);
+#[cfg(target_os = "linux")]
+const LINUX_BALANCED_NETWORK_CADENCE: Duration = Duration::from_millis(10);
+#[cfg(target_os = "linux")]
+const LINUX_ECONOMY_CADENCE: Duration = Duration::from_millis(50);
+#[cfg(target_os = "linux")]
+const LINUX_ECONOMY_LOAD_CADENCE: Duration = Duration::from_secs(1);
 
 #[cfg(target_os = "linux")]
 static ALLOCATIONS: AtomicU64 = AtomicU64::new(0);
@@ -71,7 +77,7 @@ struct Frame {
     cpu_milli_pct: u32,
     load1_milli: u32,
     freshness_mask: u32,
-    source: u32,
+    flags: u32,
 }
 
 impl Frame {
@@ -95,7 +101,7 @@ impl Frame {
         offset += 4;
         out[offset..offset + 4].copy_from_slice(&self.freshness_mask.to_le_bytes());
         offset += 4;
-        out[offset..offset + 4].copy_from_slice(&self.source.to_le_bytes());
+        out[offset..offset + 4].copy_from_slice(&self.flags.to_le_bytes());
     }
 
     fn synthetic(sequence: u64, epoch: Instant) -> Self {
@@ -109,7 +115,7 @@ impl Frame {
             cpu_milli_pct: (sequence % 100_000) as u32,
             load1_milli: (sequence % 8_000) as u32,
             freshness_mask: FRESH_ALL,
-            source: SOURCE_SYNTHETIC,
+            flags: 0,
         }
     }
 }
@@ -291,7 +297,7 @@ impl LinuxProcSampler {
             cpu_milli_pct: self.last_cpu_milli_pct,
             load1_milli,
             freshness_mask: FRESH_ALL,
-            source: SOURCE_LINUX_PROC,
+            flags: 0,
         })
     }
 
@@ -347,7 +353,244 @@ impl LinuxProcSampler {
             cpu_milli_pct: self.last_cpu_milli_pct,
             load1_milli: self.cached_load1_milli,
             freshness_mask,
-            source: SOURCE_LINUX_PROC,
+            flags: 0,
+        })
+    }
+}
+
+#[cfg(target_os = "linux")]
+#[derive(Clone, Copy)]
+struct GenericEndpoint(u32);
+
+#[cfg(target_os = "linux")]
+struct GenericFileGrant {
+    selector: &'static [u8],
+    file: File,
+}
+
+#[cfg(target_os = "linux")]
+struct GenericResourceHost {
+    grants: Vec<GenericFileGrant>,
+    open_calls: u64,
+    read_calls: u64,
+}
+
+#[cfg(target_os = "linux")]
+impl GenericResourceHost {
+    fn from_preopened(grants: Vec<GenericFileGrant>) -> Self {
+        Self {
+            grants,
+            open_calls: 0,
+            read_calls: 0,
+        }
+    }
+
+    fn open(&mut self, selector: &[u8]) -> Result<GenericEndpoint, i32> {
+        self.open_calls = self.open_calls.saturating_add(1);
+        self.grants
+            .iter()
+            .position(|grant| grant.selector == selector)
+            .and_then(|index| u32::try_from(index).ok())
+            .map(GenericEndpoint)
+            .ok_or(-1)
+    }
+
+    fn read(&mut self, endpoint: GenericEndpoint, window: &mut [u8]) -> Result<usize, i32> {
+        self.read_calls = self.read_calls.saturating_add(1);
+        let grant = self.grants.get_mut(endpoint.0 as usize).ok_or(-1)?;
+        grant.file.seek(SeekFrom::Start(0)).map_err(|_| -8)?;
+        grant.file.read(window).map_err(|_| -8)
+    }
+}
+
+#[cfg(target_os = "linux")]
+fn linux_generic_resource_host() -> std::io::Result<GenericResourceHost> {
+    Ok(GenericResourceHost::from_preopened(vec![
+        GenericFileGrant {
+            selector: b"os.proc.stat",
+            file: File::open("/proc/stat")?,
+        },
+        GenericFileGrant {
+            selector: b"os.proc.meminfo",
+            file: File::open("/proc/meminfo")?,
+        },
+        GenericFileGrant {
+            selector: b"os.proc.netdev",
+            file: File::open("/proc/net/dev")?,
+        },
+        GenericFileGrant {
+            selector: b"os.proc.loadavg",
+            file: File::open("/proc/loadavg")?,
+        },
+    ]))
+}
+
+#[cfg(target_os = "linux")]
+struct LinuxTelemetryLib {
+    host: GenericResourceHost,
+    stat: GenericEndpoint,
+    meminfo: GenericEndpoint,
+    netdev: GenericEndpoint,
+    loadavg: GenericEndpoint,
+    stat_buf: [u8; 4096],
+    mem_buf: [u8; 4096],
+    net_buf: [u8; 8192],
+    load_buf: [u8; 256],
+    epoch: Instant,
+    sequence: u64,
+    last_cpu_total: u64,
+    last_cpu_idle: u64,
+    last_cpu_milli_pct: u32,
+    last_cpu_refresh: Instant,
+    last_memory_refresh: Instant,
+    last_network_refresh: Instant,
+    last_load_refresh: Instant,
+    cached_available_memory: u64,
+    cached_used_swap: u64,
+    cached_network_rx_total: u64,
+    cached_network_tx_total: u64,
+    cached_load1_milli: u32,
+}
+
+#[cfg(target_os = "linux")]
+impl LinuxTelemetryLib {
+    fn new(mut host: GenericResourceHost) -> Result<Self, i32> {
+        let stat = host.open(b"os.proc.stat")?;
+        let meminfo = host.open(b"os.proc.meminfo")?;
+        let netdev = host.open(b"os.proc.netdev")?;
+        let loadavg = host.open(b"os.proc.loadavg")?;
+        let epoch = Instant::now();
+        let mut telemetry = Self {
+            host,
+            stat,
+            meminfo,
+            netdev,
+            loadavg,
+            stat_buf: [0; 4096],
+            mem_buf: [0; 4096],
+            net_buf: [0; 8192],
+            load_buf: [0; 256],
+            epoch,
+            sequence: 0,
+            last_cpu_total: 0,
+            last_cpu_idle: 0,
+            last_cpu_milli_pct: 0,
+            last_cpu_refresh: epoch,
+            last_memory_refresh: epoch,
+            last_network_refresh: epoch,
+            last_load_refresh: epoch,
+            cached_available_memory: 0,
+            cached_used_swap: 0,
+            cached_network_rx_total: 0,
+            cached_network_tx_total: 0,
+            cached_load1_milli: 0,
+        };
+        let (total, idle) = telemetry.read_cpu()?;
+        telemetry.last_cpu_total = total;
+        telemetry.last_cpu_idle = idle;
+        Ok(telemetry)
+    }
+
+    fn read_text<'a>(
+        host: &mut GenericResourceHost,
+        endpoint: GenericEndpoint,
+        buffer: &'a mut [u8],
+    ) -> Result<&'a str, i32> {
+        let count = host.read(endpoint, buffer)?;
+        std::str::from_utf8(&buffer[..count]).map_err(|_| -8)
+    }
+
+    fn read_cpu(&mut self) -> Result<(u64, u64), i32> {
+        let text = Self::read_text(&mut self.host, self.stat, &mut self.stat_buf)?;
+        LinuxProcSampler::cpu_counters(text).ok_or(-8)
+    }
+
+    fn read_memory(&mut self) -> Result<(u64, u64), i32> {
+        let text = Self::read_text(&mut self.host, self.meminfo, &mut self.mem_buf)?;
+        LinuxProcSampler::memory_values(text).ok_or(-8)
+    }
+
+    fn read_network(&mut self) -> Result<(u64, u64), i32> {
+        let text = Self::read_text(&mut self.host, self.netdev, &mut self.net_buf)?;
+        LinuxProcSampler::network_totals(text).ok_or(-8)
+    }
+
+    fn read_load(&mut self) -> Result<u32, i32> {
+        let text = Self::read_text(&mut self.host, self.loadavg, &mut self.load_buf)?;
+        text.split_whitespace()
+            .next()
+            .and_then(|value| value.parse::<f64>().ok())
+            .map(|value| (value.max(0.0) * 1000.0).min(u32::MAX as f64) as u32)
+            .ok_or(-8)
+    }
+
+    fn refresh_cpu(&mut self) -> Result<(), i32> {
+        let (cpu_total, cpu_idle) = self.read_cpu()?;
+        let total_delta = cpu_total.saturating_sub(self.last_cpu_total);
+        let idle_delta = cpu_idle.saturating_sub(self.last_cpu_idle);
+        if total_delta != 0 {
+            let busy_delta = total_delta.saturating_sub(idle_delta);
+            self.last_cpu_milli_pct =
+                ((busy_delta as u128 * 100_000u128) / total_delta as u128) as u32;
+        }
+        self.last_cpu_total = cpu_total;
+        self.last_cpu_idle = cpu_idle;
+        Ok(())
+    }
+
+    fn frame(&mut self, profile: &str) -> Result<Frame, i32> {
+        let now = Instant::now();
+        let (cpu_cadence, memory_cadence, network_cadence, load_cadence) = match profile {
+            "fast" => (Duration::ZERO, MEMORY_CADENCE, Duration::ZERO, LOAD_CADENCE),
+            "balanced" => (
+                LINUX_BALANCED_CPU_CADENCE,
+                MEMORY_CADENCE,
+                LINUX_BALANCED_NETWORK_CADENCE,
+                LOAD_CADENCE,
+            ),
+            "economy" => (
+                LINUX_ECONOMY_CADENCE,
+                LINUX_ECONOMY_CADENCE,
+                LINUX_ECONOMY_CADENCE,
+                LINUX_ECONOMY_LOAD_CADENCE,
+            ),
+            _ => return Err(-7),
+        };
+        let mut freshness_mask = 0u32;
+
+        if self.sequence == 0 || now.duration_since(self.last_cpu_refresh) >= cpu_cadence {
+            self.refresh_cpu()?;
+            self.last_cpu_refresh = now;
+            freshness_mask |= FRESH_CPU;
+        }
+        if self.sequence == 0 || now.duration_since(self.last_network_refresh) >= network_cadence {
+            (self.cached_network_rx_total, self.cached_network_tx_total) = self.read_network()?;
+            self.last_network_refresh = now;
+            freshness_mask |= FRESH_NETWORK;
+        }
+        if self.sequence == 0 || now.duration_since(self.last_memory_refresh) >= memory_cadence {
+            (self.cached_available_memory, self.cached_used_swap) = self.read_memory()?;
+            self.last_memory_refresh = now;
+            freshness_mask |= FRESH_MEMORY;
+        }
+        if self.sequence == 0 || now.duration_since(self.last_load_refresh) >= load_cadence {
+            self.cached_load1_milli = self.read_load()?;
+            self.last_load_refresh = now;
+            freshness_mask |= FRESH_LOAD;
+        }
+
+        self.sequence = self.sequence.saturating_add(1);
+        Ok(Frame {
+            sequence: self.sequence,
+            monotonic_ns: self.epoch.elapsed().as_nanos().min(u64::MAX as u128) as u64,
+            available_memory: self.cached_available_memory,
+            used_swap: self.cached_used_swap,
+            network_rx_total: self.cached_network_rx_total,
+            network_tx_total: self.cached_network_tx_total,
+            cpu_milli_pct: self.last_cpu_milli_pct,
+            load1_milli: self.cached_load1_milli,
+            freshness_mask,
+            flags: 0,
         })
     }
 }
@@ -414,7 +657,7 @@ impl SysinfoSampler {
                 as u32,
             load1_milli: (load.max(0.0) * 1000.0).min(u32::MAX as f64) as u32,
             freshness_mask: FRESH_ALL,
-            source: SOURCE_SYSINFO,
+            flags: 0,
         }
     }
 
@@ -469,7 +712,7 @@ impl SysinfoSampler {
                 as u32,
             load1_milli: self.cached_load1_milli,
             freshness_mask,
-            source: SOURCE_SYSINFO,
+            flags: 0,
         }
     }
 }
@@ -1079,6 +1322,133 @@ fn bench_linux_proc_cadenced_sampler(iterations: usize) {
 }
 
 #[cfg(target_os = "linux")]
+fn thread_cpu_time_ns() -> u64 {
+    let mut value = MaybeUninit::<libc::timespec>::uninit();
+    let status = unsafe { libc::clock_gettime(libc::CLOCK_THREAD_CPUTIME_ID, value.as_mut_ptr()) };
+    assert_eq!(status, 0);
+    let value = unsafe { value.assume_init() };
+    (value.tv_sec as u64)
+        .saturating_mul(1_000_000_000)
+        .saturating_add(value.tv_nsec as u64)
+}
+
+#[cfg(target_os = "linux")]
+fn bench_generic_resource_lib_burst(iterations: usize) {
+    let host = linux_generic_resource_host().expect("preopen generic /proc resources");
+    let mut telemetry = LinuxTelemetryLib::new(host).expect("open telemetry resources");
+    for _ in 0..128 {
+        telemetry.frame("fast").expect("warm telemetry lib");
+    }
+    ALLOCATIONS.store(0, Ordering::Relaxed);
+    ALLOCATED_BYTES.store(0, Ordering::Relaxed);
+    let reads_before = telemetry.host.read_calls;
+    let cpu_before = thread_cpu_time_ns();
+    let started = Instant::now();
+    let mut encoded = [0u8; FRAME_BYTES];
+    let mut checksum = 0u64;
+    for _ in 0..iterations {
+        let frame = telemetry
+            .frame("fast")
+            .expect("sample generic resource lib");
+        frame.encode_into(&mut encoded);
+        checksum = checksum.wrapping_add(frame.network_rx_total);
+    }
+    let elapsed = started.elapsed();
+    let cpu_ns = thread_cpu_time_ns().saturating_sub(cpu_before);
+    let reads = telemetry.host.read_calls.saturating_sub(reads_before);
+    let allocations = ALLOCATIONS.load(Ordering::Relaxed);
+    let allocated_bytes = ALLOCATED_BYTES.load(Ordering::Relaxed);
+    println!(
+        "{{\"kind\":\"generic-resource-lib-burst\",\"profile\":\"fast\",\"iterations\":{},\"elapsed_ms\":{:.3},\"thread_cpu_ms\":{:.3},\"samples_per_sec\":{:.1},\"host_reads\":{},\"host_reads_per_frame\":{:.6},\"allocations\":{},\"allocated_bytes\":{},\"allocations_per_frame\":{:.6},\"checksum\":{}}}",
+        iterations,
+        elapsed.as_secs_f64() * 1000.0,
+        cpu_ns as f64 / 1_000_000.0,
+        iterations as f64 / elapsed.as_secs_f64(),
+        reads,
+        reads as f64 / iterations as f64,
+        allocations,
+        allocated_bytes,
+        allocations as f64 / iterations as f64,
+        checksum,
+    );
+}
+
+#[cfg(target_os = "linux")]
+fn bench_generic_resource_lib_1khz(profile: &'static str, frames: u64) {
+    assert!(matches!(profile, "fast" | "balanced" | "economy"));
+    let host = linux_generic_resource_host().expect("preopen generic /proc resources");
+    let mut telemetry = LinuxTelemetryLib::new(host).expect("open telemetry resources");
+    let period = Duration::from_millis(1);
+    let started = Instant::now();
+    let cpu_started = thread_cpu_time_ns();
+    let reads_before = telemetry.host.read_calls;
+    ALLOCATIONS.store(0, Ordering::Relaxed);
+    ALLOCATED_BYTES.store(0, Ordering::Relaxed);
+    let mut next = started;
+    let mut max_late_ns = 0u64;
+    let mut deadline_misses = 0u64;
+    let mut periods_late = 0u64;
+    let mut fresh = [0u64; 4];
+    let mut encoded = [0u8; FRAME_BYTES];
+    let mut checksum = 0u64;
+    for _ in 0..frames {
+        let before = Instant::now();
+        if before < next {
+            thread::sleep(next - before);
+        }
+        let actual = Instant::now();
+        let late = actual.saturating_duration_since(next);
+        let late_ns = late.as_nanos().min(u64::MAX as u128) as u64;
+        max_late_ns = max_late_ns.max(late_ns);
+        if late >= period {
+            deadline_misses = deadline_misses.saturating_add(1);
+            periods_late = periods_late
+                .saturating_add((late.as_nanos() / period.as_nanos()).min(u64::MAX as u128) as u64);
+        }
+        let frame = telemetry
+            .frame(profile)
+            .expect("sample generic resource lib");
+        frame.encode_into(&mut encoded);
+        fresh[0] += u64::from(frame.freshness_mask & FRESH_CPU != 0);
+        fresh[1] += u64::from(frame.freshness_mask & FRESH_MEMORY != 0);
+        fresh[2] += u64::from(frame.freshness_mask & FRESH_NETWORK != 0);
+        fresh[3] += u64::from(frame.freshness_mask & FRESH_LOAD != 0);
+        checksum = checksum
+            .wrapping_add(frame.network_rx_total)
+            .wrapping_add(frame.cpu_milli_pct as u64);
+        next += period;
+    }
+    let elapsed = started.elapsed();
+    let cpu_ns = thread_cpu_time_ns().saturating_sub(cpu_started);
+    let reads = telemetry.host.read_calls.saturating_sub(reads_before);
+    let allocations = ALLOCATIONS.load(Ordering::Relaxed);
+    let allocated_bytes = ALLOCATED_BYTES.load(Ordering::Relaxed);
+    println!(
+        "{{\"kind\":\"generic-resource-lib-1khz\",\"profile\":\"{}\",\"frames\":{},\"elapsed_ms\":{:.3},\"effective_hz\":{:.3},\"thread_cpu_ms\":{:.3},\"thread_cpu_percent\":{:.3},\"host_open_calls\":{},\"host_reads\":{},\"host_reads_per_frame\":{:.6},\"fresh_cpu\":{},\"fresh_memory\":{},\"fresh_network\":{},\"fresh_load\":{},\"deadline_misses\":{},\"periods_late\":{},\"max_late_us\":{:.3},\"allocations\":{},\"allocated_bytes\":{},\"allocations_per_frame\":{:.6},\"checksum\":{}}}",
+        profile,
+        frames,
+        elapsed.as_secs_f64() * 1000.0,
+        frames as f64 / elapsed.as_secs_f64(),
+        cpu_ns as f64 / 1_000_000.0,
+        cpu_ns as f64 / elapsed.as_nanos() as f64 * 100.0,
+        telemetry.host.open_calls,
+        reads,
+        reads as f64 / frames as f64,
+        fresh[0],
+        fresh[1],
+        fresh[2],
+        fresh[3],
+        deadline_misses,
+        periods_late,
+        max_late_ns as f64 / 1000.0,
+        allocations,
+        allocated_bytes,
+        allocations as f64 / frames as f64,
+        checksum,
+    );
+}
+
+#[cfg(target_os = "linux")]
 fn bench_linux_proc_1khz_soak(frames: u64, batch: usize) {
     assert!(frames > 0);
     assert!(batch > 0);
@@ -1318,6 +1688,14 @@ fn overrun_probe() {
 }
 
 fn main() {
+    #[cfg(target_os = "linux")]
+    if std::env::args().any(|argument| argument == "--generic-resource-only") {
+        bench_generic_resource_lib_burst(20_000);
+        bench_generic_resource_lib_1khz("fast", 5_000);
+        bench_generic_resource_lib_1khz("balanced", 5_000);
+        bench_generic_resource_lib_1khz("economy", 5_000);
+        return;
+    }
     cancellation_probe();
     overrun_probe();
     bench_sampler(2_000);
@@ -1326,6 +1704,14 @@ fn main() {
     bench_linux_proc_sampler(10_000);
     #[cfg(target_os = "linux")]
     bench_linux_proc_cadenced_sampler(20_000);
+    #[cfg(target_os = "linux")]
+    bench_generic_resource_lib_burst(20_000);
+    #[cfg(target_os = "linux")]
+    bench_generic_resource_lib_1khz("fast", 5_000);
+    #[cfg(target_os = "linux")]
+    bench_generic_resource_lib_1khz("balanced", 5_000);
+    #[cfg(target_os = "linux")]
+    bench_generic_resource_lib_1khz("economy", 5_000);
     bench_shell(40);
     bench_transport_micro(100_000, 1);
     bench_transport_micro(100_000, 32);
