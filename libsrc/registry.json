@@ -75,6 +75,41 @@
       },
       "next_gate": "cross-platform-hosted-qualification-and-size-optimization",
       "source_root": "libsrc/wasmc-tls-core"
+    },
+    {
+      "id": "wasmc-data-core",
+      "version": "0.0.1-dev.1",
+      "stage": "public-source-candidate",
+      "semantic_kind": "data-batch-core",
+      "host_import_budget": 0,
+      "source_root": "libsrc/wasmc-data-core",
+      "origin": {
+        "kind": "native-public",
+        "implementation_basis": [
+          "arrow-schema@60.0.0",
+          "arrow-array@60.0.0",
+          "arrow-select@60.0.0"
+        ]
+      },
+      "next_gate": "behavior-and-wasmi-qualification"
+    },
+    {
+      "id": "wasmc-csv",
+      "version": "0.0.1-dev.1",
+      "stage": "public-source-candidate",
+      "semantic_kind": "csv-to-data-batch",
+      "host_import_budget": 0,
+      "source_root": "libsrc/wasmc-csv",
+      "origin": {
+        "kind": "native-public",
+        "implementation_basis": [
+          "arrow-csv@60.0.0",
+          "arrow-array@60.0.0",
+          "arrow-schema@60.0.0"
+        ],
+        "type_dependency": "wasmc:data-core/types@0.0.1"
+      },
+      "next_gate": "csv-to-batch-and-wasmi-qualification"
     }
   ]
 }

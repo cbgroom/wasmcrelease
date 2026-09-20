@@ -20,13 +20,21 @@ for (const candidate of registry.candidates) {
   ids.add(candidate.id);
   assert.ok(allowedStages.has(candidate.stage), candidate.id + ': invalid stage');
   assert.ok(Number.isInteger(candidate.host_import_budget) && candidate.host_import_budget >= 0);
-  assert.equal(typeof candidate.oracle?.path, 'string');
-  assert.match(candidate.oracle?.sha256 ?? '', /^[0-9a-f]{64}$/);
-
-  const oraclePath = resolve(root, candidate.oracle.path);
-  const oracleBytes = await readFile(oraclePath);
-  const actual = createHash('sha256').update(oracleBytes).digest('hex');
-  assert.equal(actual, candidate.oracle.sha256, candidate.id + ': oracle digest drift');
+  const originKind = candidate.origin?.kind ?? (candidate.oracle ? 'host-graduated' : null);
+  assert.ok(
+    originKind === 'host-graduated' || originKind === 'native-public',
+    candidate.id + ': invalid or missing origin kind',
+  );
+  if (candidate.oracle) {
+    assert.equal(typeof candidate.oracle.path, 'string');
+    assert.match(candidate.oracle.sha256 ?? '', /^[0-9a-f]{64}$/);
+    const oraclePath = resolve(root, candidate.oracle.path);
+    const oracleBytes = await readFile(oraclePath);
+    const actual = createHash('sha256').update(oracleBytes).digest('hex');
+    assert.equal(actual, candidate.oracle.sha256, candidate.id + ': oracle digest drift');
+  } else {
+    assert.equal(originKind, 'native-public', candidate.id + ': oracle-free candidates must be native-public');
+  }
 
   if (candidate.stage === 'public-source-candidate') {
     assert.equal(typeof candidate.source_root, 'string');
@@ -37,6 +45,9 @@ for (const candidate of registry.candidates) {
     assert.equal(manifest.id, candidate.id);
     assert.equal(manifest.host_import_budget, candidate.host_import_budget);
     assert.equal(manifest.admitted, false);
+    if (candidate.origin?.kind) {
+      assert.equal(manifest.origin?.kind, candidate.origin.kind, candidate.id + ': origin drift');
+    }
     assert.ok(Array.isArray(manifest.completed_gates), candidate.id + ': missing completed_gates');
     assert.ok(Array.isArray(manifest.pending_gates), candidate.id + ': missing pending_gates');
     assert.ok(

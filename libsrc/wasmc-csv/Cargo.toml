@@ -1,0 +1,25 @@
+[package]
+name = "wasmc-csv-public"
+version = "0.0.1"
+edition = "2021"
+publish = false
+license-file = "../../LICENSE"
+description = "Portable WAsmC CSV to DataBatch adapter backed by Arrow CSV"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+wit-bindgen = "=0.62.0"
+arrow-schema = "=60.0.0"
+arrow-array = "=60.0.0"
+arrow-csv = "=60.0.0"
+
+[workspace]
+
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = "symbols"

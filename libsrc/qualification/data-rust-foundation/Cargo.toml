@@ -1,0 +1,29 @@
+[package]
+name = "wasmc-data-rust-foundation"
+version = "0.0.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+serde = { version = "=1.0.229", default-features = false, features = ["derive", "alloc"] }
+serde_json = { version = "=1.0.151", default-features = false, features = ["alloc"] }
+csv-core = "=0.1.13"
+regex = "=1.13.1"
+lexical-core = { version = "=1.0.6", default-features = false, features = ["parse-integers", "parse-floats", "write-integers", "write-floats"] }
+hashbrown = "=0.17.1"
+indexmap = "=2.14.2"
+itertools = "=0.15.0"
+ordered-float = { version = "=5.5.0", default-features = false }
+rust_decimal = { version = "=1.43.0", default-features = false }
+ndarray = "=0.17.2"
+arrow-schema = "=60.0.0"
+arrow-array = "=60.0.0"
+arrow-select = "=60.0.0"
+arrow-ord = "=60.0.0"
+arrow-arith = "=60.0.0"
+arrow-csv = "=60.0.0"
+arrow-json = "=60.0.0"
+arrow-cast = "=60.0.0"
+parquet = { version = "=60.0.0", default-features = false, features = ["arrow"] }
+
+[workspace]

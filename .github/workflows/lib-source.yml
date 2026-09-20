@@ -14,6 +14,8 @@ on:
       - "scripts/test-tls-libsrc.mjs"
       - "scripts/test-libsrc-all.mjs"
       - "scripts/test-libsrc-wasmi.mjs"
+      - "scripts/test-data-core-libsrc.mjs"
+      - "scripts/test-csv-libsrc.mjs"
       - "libsrc/qualification/**"
       - ".github/workflows/lib-source.yml"
   push:
@@ -30,6 +32,8 @@ on:
       - "scripts/test-tls-libsrc.mjs"
       - "scripts/test-libsrc-all.mjs"
       - "scripts/test-libsrc-wasmi.mjs"
+      - "scripts/test-data-core-libsrc.mjs"
+      - "scripts/test-csv-libsrc.mjs"
       - "libsrc/qualification/**"
       - ".github/workflows/lib-source.yml"
   workflow_dispatch:
@@ -67,10 +71,13 @@ jobs:
             libsrc/wasmc-http1/target
             libsrc/wasmc-tls-core/target
             libsrc/wasmc-tls-core/tests/host/target
+            libsrc/wasmc-data-core/target
+            libsrc/wasmc-csv/target
             libsrc/qualification/wasmi-core/target
-          key: libsrc-build-v2-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('libsrc/wasmc-json/Cargo.lock', 'libsrc/wasmc-compression/Cargo.lock', 'libsrc/wasmc-http1/Cargo.lock', 'libsrc/wasmc-tls-core/Cargo.lock', 'libsrc/wasmc-tls-core/tests/host/Cargo.lock', 'libsrc/qualification/wasmi-core/Cargo.lock') }}
+          key: libsrc-build-v3-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('libsrc/wasmc-json/Cargo.lock', 'libsrc/wasmc-compression/Cargo.lock', 'libsrc/wasmc-http1/Cargo.lock', 'libsrc/wasmc-tls-core/Cargo.lock', 'libsrc/wasmc-tls-core/tests/host/Cargo.lock', 'libsrc/wasmc-data-core/Cargo.lock', 'libsrc/wasmc-csv/Cargo.lock', 'libsrc/qualification/wasmi-core/Cargo.lock') }}
           restore-keys: |
             libsrc-v5-${{ runner.os }}-${{ runner.arch }}-
+            libsrc-build-v2-${{ runner.os }}-${{ runner.arch }}-
             libsrc-build-v1-${{ runner.os }}-${{ runner.arch }}-
       - name: Install pinned wasm-tools
         shell: bash
