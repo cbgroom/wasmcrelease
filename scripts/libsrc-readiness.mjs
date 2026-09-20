@@ -27,6 +27,10 @@ for (const entry of registry.candidates) {
     pending_gates: pending,
     qualification_script: manifest.qualification?.script ?? null,
     admitted: manifest.admitted === true,
+    review_ready:
+      entry.stage === 'public-source-candidate' &&
+      pending.length === 1 &&
+      pending[0] === 'admission-review',
     admission_ready: entry.stage === 'public-source-candidate' && pending.length === 0,
   });
 }
@@ -38,6 +42,7 @@ const report = {
   candidates: rows.length,
   public_source_candidates: rows.filter(r => r.stage === 'public-source-candidate').length,
   admitted: rows.filter(r => r.admitted).length,
+  review_ready: rows.filter(r => r.review_ready).length,
   admission_ready: rows.filter(r => r.admission_ready).length,
   pending_gate_count: rows.reduce((n, r) => n + r.pending_gates.length, 0),
   rows,

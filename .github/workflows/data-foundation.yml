@@ -11,6 +11,7 @@ on:
       - "libsrc/wasmc-data-profile/**"
       - "libsrc/wasmc-data-interchange/**"
       - "libsrc/qualification/data-rust-foundation/**"
+      - "libsrc/registry.json"
       - "scripts/test-data-core-libsrc.mjs"
       - "scripts/test-csv-libsrc.mjs"
       - "scripts/test-data-expr-libsrc.mjs"
@@ -20,6 +21,8 @@ on:
       - "scripts/test-data-interchange-libsrc.mjs"
       - "scripts/test-data-pipeline.mjs"
       - "scripts/test-data-rust-foundation.mjs"
+      - "scripts/test-libsrc-wasmi.mjs"
+      - "scripts/review-data-admission.mjs"
       - "docs/DATA_ECOSYSTEM.md"
       - ".github/workflows/data-foundation.yml"
   push:
@@ -33,6 +36,7 @@ on:
       - "libsrc/wasmc-data-profile/**"
       - "libsrc/wasmc-data-interchange/**"
       - "libsrc/qualification/data-rust-foundation/**"
+      - "libsrc/registry.json"
       - "scripts/test-data-core-libsrc.mjs"
       - "scripts/test-csv-libsrc.mjs"
       - "scripts/test-data-expr-libsrc.mjs"
@@ -42,6 +46,8 @@ on:
       - "scripts/test-data-interchange-libsrc.mjs"
       - "scripts/test-data-pipeline.mjs"
       - "scripts/test-data-rust-foundation.mjs"
+      - "scripts/test-libsrc-wasmi.mjs"
+      - "scripts/review-data-admission.mjs"
       - "docs/DATA_ECOSYSTEM.md"
       - ".github/workflows/data-foundation.yml"
   workflow_dispatch:
@@ -103,8 +109,12 @@ jobs:
         run: node scripts/test-data-interchange-libsrc.mjs | tee interchange.json
       - name: Qualify CSV to Expr to Filter pipeline
         run: node scripts/test-data-pipeline.mjs | tee pipeline.json
+      - name: Qualify Data candidates with Wasmi
+        run: node scripts/test-libsrc-wasmi.mjs | tee data-wasmi.json
       - name: Validate public Lib source registry
         run: node scripts/validate-libsrc.mjs
+      - name: Prove Data cohort is ready for human admission review
+        run: node scripts/review-data-admission.mjs | tee data-admission-review.json
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         continue-on-error: true
@@ -120,5 +130,7 @@ jobs:
             profile.json
             interchange.json
             pipeline.json
+            data-wasmi.json
+            data-admission-review.json
           if-no-files-found: warn
           retention-days: 14

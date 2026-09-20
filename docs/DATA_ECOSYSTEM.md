@@ -148,6 +148,8 @@ CSV
   -> Relational.window-rank
   -> Profile.describe
   -> Relational.group-aggregate
+  -> Interchange.arrow-ipc-file round-trip
+  -> Interchange.parquet round-trip
   -> Data Core validate
 ```
 
@@ -200,6 +202,19 @@ authority records exact dependency identity/version/source/checksum, builder
 and toolchain identity, build profile, WIT/mapping identity and final artifact
 digests. Third-party source is fetched by the build backend when required.
 
+## Admission review boundary
+
+The seven Data Foundation v1 candidates have completed their automated local
+behavior, zero-import and Wasmi structural qualification gates. The
+`scripts/review-data-admission.mjs` receipt independently checks that every
+candidate remains in `libsrc/`, has zero Core imports, records only
+`admission-review` as pending, and has not created a premature immutable
+`libs/` package.
+
+A passing readiness receipt is not admission. Hosted checks and explicit human
+review remain required before any source-free package is created, cataloged or
+published.
+
 ## Next layers
 
 Do not build SQL first. Grow the shared middle layer in this order:
@@ -207,9 +222,9 @@ Do not build SQL first. Grow the shared middle layer in this order:
 1. Data Core schema/batch semantics. **Started.**
 2. CSV ingestion. **Started.** JSONL remains next format input.
 3. Expression IR and Arrow-backed compute kernels. **Started.**
-4. Relational operators: group/aggregate **started**; hash/join/window remain.
-5. Statistics and profiling **started** with deterministic column profiles.
-6. Arrow IPC and Parquet adapters. **Started.**
+4. Relational operators: bounded union/join/window/group aggregate **qualified for v1 review**.
+5. Statistics and profiling **qualified for v1 review** with deterministic column profiles.
+6. Arrow IPC and Parquet adapters. **Qualified for v1 review.**
 7. DataFrame/Agent facades.
 8. SQL parser/planner only as an optional late frontend.
 9. Time series, sketches, numerical/linalg extensions.
