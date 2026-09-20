@@ -1,13 +1,20 @@
 # wasmc-data-relational — public source candidate
 
-The first relational layer is intentionally narrow: exact-schema union-all and
-deterministic group aggregation over Data Core batch snapshots.
+The first relational layer is intentionally narrow: exact-schema union-all,
+bounded typed equi-join and deterministic group aggregation over Data Core batch
+snapshots.
 
 v0 semantics:
 
 - union-all preserves batch order and row order;
 - union-all requires at least one batch and exact field name/type/nullability;
 - union-all performs no implicit coercion and fails closed on row-count overflow;
+- equi-join supports inner and left joins with one or more exact-type keys;
+- join output is ordered by left row, then matching right row;
+- a null in any key position never matches, including null-to-null;
+- every join requires a non-zero max-output-rows bound;
+- right output names use the caller-supplied prefix and collisions fail closed;
+- left join makes all right output fields nullable;
 - zero or more grouping columns;
 - deterministic ascending lexicographic group order;
 - null group keys sort before non-null keys;

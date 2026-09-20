@@ -120,11 +120,13 @@ All operations are Arrow-backed and have zero Core imports.
 
 ### wasmc-data-relational
 
-The first relational primitives are exact-schema `union-all` and deterministic
-`group-aggregate`, not SQL. Union preserves input batch and row order, requires
-exact field name/type/nullability equality and performs no implicit coercion.
-Group aggregate supports zero or more group keys and
-count-all/count/sum/min/max/mean.
+The first relational primitives are exact-schema `union-all`, bounded typed
+`equi-join` and deterministic `group-aggregate`, not SQL. Union preserves
+input batch and row order, requires exact field name/type/nullability equality
+and performs no implicit coercion. Join supports inner/left composite exact-type
+keys, preserves left-row then right-row order, never matches null keys and
+requires an explicit non-zero maximum output row count. Group aggregate supports
+zero or more group keys and count-all/count/sum/min/max/mean.
 Grouping order is deterministic lexicographic order with null keys first.
 Numeric aggregation is Arrow-backed; integer sum overflow fails closed.
 
@@ -136,6 +138,7 @@ CSV
   -> Expr.evaluate
   -> Compute.filter
   -> Relational.union-all
+  -> Relational.equi-join
   -> Profile.describe
   -> Relational.group-aggregate
   -> Data Core validate

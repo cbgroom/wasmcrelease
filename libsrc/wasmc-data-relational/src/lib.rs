@@ -5,7 +5,7 @@ wit_bindgen::generate!({
 });
 
 use crate::exports::wasmc::data_relational::relational::{
-    Aggregate, ColumnAggregate, Guest, RelationalError,
+    Aggregate, ColumnAggregate, Guest, JoinKey, JoinKind, JoinOptions, RelationalError,
 };
 use crate::wasmc::data_core::types::{
     BatchSnapshot, Column, DataType as WitDataType, Field as WitField,
@@ -170,6 +170,26 @@ fn append_column(target: &mut Column, source: Column) -> Result<(), RelationalEr
         }
         _ => return Err(RelationalError::SchemaMismatch),
     }
+    Ok(())
+}
+
+fn row_key(columns: &[Column], indices: &[usize], row: usize) -> Option<Vec<Cell>> {
+    let key = indices
+        .iter()
+        .map(|index| cell_at(&columns[*index], row))
+        .collect::<Vec<_>>();
+    (!key.iter().any(|cell| matches!(cell, Cell::Null))).then_some(key)
+}
+
+fn push_join_pair(
+    pairs: &mut Vec<(u32, Option<u32>)>,
+    pair: (u32, Option<u32>),
+    max_output_rows: u32,
+) -> Result<(), RelationalError> {
+    if pairs.len() >= max_output_rows as usize {
+        return Err(RelationalError::OutputLimitExceeded);
+    }
+    pairs.push(pair);
     Ok(())
 }
 
@@ -407,6 +427,119 @@ fn aggregate_group(
 }
 
 impl Guest for DataRelational {
+    fn equi_join(
+        left: BatchSnapshot,
+        right: BatchSnapshot,
+        keys: Vec<JoinKey>,
+        options: JoinOptions,
+    ) -> Result<BatchSnapshot, RelationalError> {
+        validate_batch(&left)?;
+        validate_batch(&right)?;
+        if keys.is_empty() {
+            return Err(RelationalError::EmptyKeys);
+        }
+        if options.max_output_rows == 0 {
+            return Err(RelationalError::InvalidLimit);
+        }
+
+        let mut seen_left = BTreeSet::new();
+        let mut seen_right = BTreeSet::new();
+        let mut left_keys = Vec::with_capacity(keys.len());
+        let mut right_keys = Vec::with_capacity(keys.len());
+        for key in keys {
+            let left_index = key.left_column as usize;
+            let right_index = key.right_column as usize;
+            let left_field = left
+                .fields
+                .get(left_index)
+                .ok_or(RelationalError::ColumnOutOfBounds)?;
+            let right_field = right
+                .fields
+                .get(right_index)
+                .ok_or(RelationalError::ColumnOutOfBounds)?;
+            if !seen_left.insert(left_index) || !seen_right.insert(right_index) {
+                return Err(RelationalError::DuplicateKey);
+            }
+            if left_field.data_type != right_field.data_type {
+                return Err(RelationalError::KeyTypeMismatch);
+            }
+            left_keys.push(left_index);
+            right_keys.push(right_index);
+        }
+
+        let left_join = matches!(options.kind, JoinKind::Left);
+        let mut fields = left.fields.clone();
+        let mut output_names = fields
+            .iter()
+            .map(|field| field.name.clone())
+            .collect::<BTreeSet<_>>();
+        for field in &right.fields {
+            let name = format!("{}{}", options.right_prefix, field.name);
+            if !output_names.insert(name.clone()) {
+                return Err(RelationalError::DuplicateOutputName);
+            }
+            fields.push(WitField {
+                name,
+                data_type: field.data_type,
+                nullable: field.nullable || left_join,
+            });
+        }
+
+        let mut right_index: BTreeMap<Vec<Cell>, Vec<u32>> = BTreeMap::new();
+        for row in 0..right.rows as usize {
+            if let Some(key) = row_key(&right.columns, &right_keys, row) {
+                right_index.entry(key).or_default().push(row as u32);
+            }
+        }
+
+        let mut pairs = Vec::new();
+        for left_row in 0..left.rows as usize {
+            let matches =
+                row_key(&left.columns, &left_keys, left_row).and_then(|key| right_index.get(&key));
+            match matches {
+                Some(right_rows) => {
+                    for right_row in right_rows {
+                        push_join_pair(
+                            &mut pairs,
+                            (left_row as u32, Some(*right_row)),
+                            options.max_output_rows,
+                        )?;
+                    }
+                }
+                None if left_join => {
+                    push_join_pair(&mut pairs, (left_row as u32, None), options.max_output_rows)?
+                }
+                None => {}
+            }
+        }
+
+        let mut columns = Vec::with_capacity(fields.len());
+        for (column_index, field) in left.fields.iter().enumerate() {
+            let cells = pairs
+                .iter()
+                .map(|(left_row, _)| cell_at(&left.columns[column_index], *left_row as usize))
+                .collect::<Vec<_>>();
+            columns.push(cells_to_column(field.data_type, &cells)?);
+        }
+        for (column_index, field) in right.fields.iter().enumerate() {
+            let cells = pairs
+                .iter()
+                .map(|(_, right_row)| {
+                    right_row
+                        .map(|row| cell_at(&right.columns[column_index], row as usize))
+                        .unwrap_or(Cell::Null)
+                })
+                .collect::<Vec<_>>();
+            columns.push(cells_to_column(field.data_type, &cells)?);
+        }
+
+        Ok(BatchSnapshot {
+            rows: u32::try_from(pairs.len()).map_err(|_| RelationalError::Overflow)?,
+            fields,
+            columns,
+        })
+    }
+
     fn union_all(values: Vec<BatchSnapshot>) -> Result<BatchSnapshot, RelationalError> {
         let mut values = values.into_iter();
         let mut output = values.next().ok_or(RelationalError::EmptyInput)?;

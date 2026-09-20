@@ -17,14 +17,34 @@ interface relational {
     mean(column-aggregate),
   }
 
+  record join-key {
+    left-column: u32,
+    right-column: u32,
+  }
+
+  enum join-kind {
+    inner,
+    left,
+  }
+
+  record join-options {
+    kind: join-kind,
+    right-prefix: string,
+    max-output-rows: u32,
+  }
+
   enum relational-error {
     invalid-batch,
     empty-input,
+    empty-keys,
     schema-mismatch,
+    key-type-mismatch,
     column-out-of-bounds,
     duplicate-key,
     empty-alias,
     duplicate-output-name,
+    invalid-limit,
+    output-limit-exceeded,
     unsupported-type,
     overflow,
     compute-failure,
@@ -38,6 +58,13 @@ interface relational {
 
   union-all: func(
     values: list<batch-snapshot>,
+  ) -> result<batch-snapshot, relational-error>;
+
+  equi-join: func(
+    left: batch-snapshot,
+    right: batch-snapshot,
+    keys: list<join-key>,
+    options: join-options,
   ) -> result<batch-snapshot, relational-error>;
 }
 

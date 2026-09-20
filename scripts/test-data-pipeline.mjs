@@ -101,24 +101,33 @@ try {
   assert.equal(unioned, expected);
   const unionedBatch = unioned.slice(3, -1);
 
+  const joined = run('wasmtime', [
+    'run', '--invoke',
+    'equi-join(' + unionedBatch + ', {rows: 2, fields: [{name: "id", data-type: int64, nullable: false}, {name: "score", data-type: int64, nullable: false}], columns: [int64-column([some(2), some(3)]), int64-column([some(20), some(30)])]}, [{left-column: 0, right-column: 0}], {kind: inner, right-prefix: "lookup_", max-output-rows: 4})',
+    libs.relational.component,
+  ]);
+  const expectedJoin = 'ok({rows: 2, fields: [{name: "id", data-type: int64, nullable: false}, {name: "name", data-type: utf8, nullable: false}, {name: "lookup_id", data-type: int64, nullable: false}, {name: "lookup_score", data-type: int64, nullable: false}], columns: [int64-column([some(2), some(3)]), utf8-column([some("B"), some("C")]), int64-column([some(2), some(3)]), int64-column([some(20), some(30)])]})';
+  assert.equal(joined, expectedJoin);
+  const joinedBatch = joined.slice(3, -1);
+
   const profiled = run('wasmtime', [
     'run', '--invoke',
-    'describe(' + unionedBatch + ', [])',
+    'describe(' + joinedBatch + ', [0, 3])',
     libs.profile.component,
   ]);
-  const expectedProfile = 'ok([{column: 0, name: "id", data-type: int64, summary: int64({non-null: 2, nulls: 0, min: some(2), max: some(3), mean: some(2.5)})}, {column: 1, name: "name", data-type: utf8, summary: utf8({non-null: 2, nulls: 0, min-length: some(1), max-length: some(1), mean-length: some(1)})}])';
+  const expectedProfile = 'ok([{column: 0, name: "id", data-type: int64, summary: int64({non-null: 2, nulls: 0, min: some(2), max: some(3), mean: some(2.5)})}, {column: 3, name: "lookup_score", data-type: int64, summary: int64({non-null: 2, nulls: 0, min: some(20), max: some(30), mean: some(25)})}])';
   assert.equal(profiled, expectedProfile);
 
   const validated = run('wasmtime', [
     'run', '--invoke',
-    'validate(' + unionedBatch + ')',
+    'validate(' + joinedBatch + ')',
     libs.data.component,
   ]);
   assert.equal(validated, 'ok(2)');
 
   const aggregated = run('wasmtime', [
     'run', '--invoke',
-    'group-aggregate(' + unionedBatch + ', [], [count-all("rows"), sum({column: 0, alias: "sum_id"}), mean({column: 0, alias: "mean_id"})])',
+    'group-aggregate(' + joinedBatch + ', [], [count-all("rows"), sum({column: 0, alias: "sum_id"}), mean({column: 0, alias: "mean_id"})])',
     libs.relational.component,
   ]);
   const expectedAggregate = 'ok({rows: 1, fields: [{name: "rows", data-type: uint64, nullable: false}, {name: "sum_id", data-type: int64, nullable: true}, {name: "mean_id", data-type: float64, nullable: true}], columns: [uint64-column([some(2)]), int64-column([some(5)]), float64-column([some(2.5)])]})';
@@ -134,13 +143,15 @@ try {
   console.log(JSON.stringify({
     accepted: true,
     schema: 'wasmc.data-pipeline/v1',
-    path: ['csv','data-core/types','data-expr','data-compute','data-relational/union-all','data-profile','data-relational/group-aggregate','data-core/validate'],
+    path: ['csv','data-core/types','data-expr','data-compute','data-relational/union-all','data-relational/equi-join','data-profile','data-relational/group-aggregate','data-core/validate'],
     input_rows: 3,
     predicate: 'id > 1',
     output_rows: 2,
     output_ids: [2, 3],
     profile_columns: 2,
     union_inputs: 2,
+    join_kind: 'inner',
+    join_max_output_rows: 4,
     aggregate_rows: 1,
     aggregate: { count: 2, sum_id: 5, mean_id: 2.5 },
     core_imports: 0,

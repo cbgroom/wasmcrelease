@@ -90,7 +90,7 @@ jobs:
         run: node scripts/test-data-expr-libsrc.mjs | tee expr.json
       - name: Qualify Arrow-backed batch compute
         run: node scripts/test-data-compute-libsrc.mjs | tee compute.json
-      - name: Qualify deterministic relational union and group aggregate
+      - name: Qualify bounded typed join, union and group aggregate
         run: node scripts/test-data-relational-libsrc.mjs | tee relational.json
       - name: Qualify deterministic column profile
         run: node scripts/test-data-profile-libsrc.mjs | tee profile.json
