@@ -215,9 +215,19 @@ try {
       'ok({rows: 1, fields: [{name: "rows", data-type: uint64, nullable: false}, {name: "count_v", data-type: uint64, nullable: false}, {name: "sum_v", data-type: int64, nullable: true}, {name: "min_v", data-type: int64, nullable: true}, {name: "max_v", data-type: int64, nullable: true}, {name: "mean_v", data-type: float64, nullable: true}], columns: [uint64-column([some(5)]), uint64-column([some(4)]), int64-column([some(13)]), int64-column([some(1)]), int64-column([some(6)]), float64-column([some(3.25)])]})',
     ],
     [
+      'ordered-first-last-all-types',
+      'group-aggregate({rows: 3, fields: [{name: "b", data-type: boolean, nullable: true}, {name: "i", data-type: int64, nullable: true}, {name: "u", data-type: uint64, nullable: true}, {name: "f", data-type: float64, nullable: true}, {name: "s", data-type: utf8, nullable: true}, {name: "x", data-type: binary, nullable: true}], columns: [boolean-column([some(true), none, some(false)]), int64-column([some(-1), none, some(2)]), uint64-column([some(1), none, some(3)]), float64-column([some(1.5), none, some(2.5)]), utf8-column([some("a"), none, some("b")]), binary-column([some([1]), none, some([2])])]}, [], [first({column: 0, alias: "first_b"}), last({column: 0, alias: "last_b"}), first({column: 1, alias: "first_i"}), last({column: 1, alias: "last_i"}), first({column: 2, alias: "first_u"}), last({column: 2, alias: "last_u"}), first({column: 3, alias: "first_f"}), last({column: 3, alias: "last_f"}), first({column: 4, alias: "first_s"}), last({column: 4, alias: "last_s"}), first({column: 5, alias: "first_x"}), last({column: 5, alias: "last_x"})])',
+      'ok({rows: 1, fields: [{name: "first_b", data-type: boolean, nullable: true}, {name: "last_b", data-type: boolean, nullable: true}, {name: "first_i", data-type: int64, nullable: true}, {name: "last_i", data-type: int64, nullable: true}, {name: "first_u", data-type: uint64, nullable: true}, {name: "last_u", data-type: uint64, nullable: true}, {name: "first_f", data-type: float64, nullable: true}, {name: "last_f", data-type: float64, nullable: true}, {name: "first_s", data-type: utf8, nullable: true}, {name: "last_s", data-type: utf8, nullable: true}, {name: "first_x", data-type: binary, nullable: true}, {name: "last_x", data-type: binary, nullable: true}], columns: [boolean-column([some(true)]), boolean-column([some(false)]), int64-column([some(-1)]), int64-column([some(2)]), uint64-column([some(1)]), uint64-column([some(3)]), float64-column([some(1.5)]), float64-column([some(2.5)]), utf8-column([some("a")]), utf8-column([some("b")]), binary-column([some([1])]), binary-column([some([2])])]})',
+    ],
+    [
+      'population-statistics',
+      'group-aggregate({rows: 3, fields: [{name: "v", data-type: int64, nullable: false}], columns: [int64-column([some(1), some(2), some(3)])]}, [], [variance-pop({column: 0, alias: "variance"}), stddev-pop({column: 0, alias: "stddev"})])',
+      'ok({rows: 1, fields: [{name: "variance", data-type: float64, nullable: true}, {name: "stddev", data-type: float64, nullable: true}], columns: [float64-column([some(0.6666666666666666)]), float64-column([some(0.816496580927726)])]})',
+    ],
+    [
       'global-empty',
-      'group-aggregate({rows: 0, fields: [{name: "g", data-type: utf8, nullable: true}, {name: "v", data-type: int64, nullable: true}], columns: [utf8-column([]), int64-column([])]}, [], [count-all("rows"), sum({column: 1, alias: "sum_v"}), mean({column: 1, alias: "mean_v"})])',
-      'ok({rows: 1, fields: [{name: "rows", data-type: uint64, nullable: false}, {name: "sum_v", data-type: int64, nullable: true}, {name: "mean_v", data-type: float64, nullable: true}], columns: [uint64-column([some(0)]), int64-column([none]), float64-column([none])]})',
+      'group-aggregate({rows: 0, fields: [{name: "g", data-type: utf8, nullable: true}, {name: "v", data-type: int64, nullable: true}], columns: [utf8-column([]), int64-column([])]}, [], [count-all("rows"), sum({column: 1, alias: "sum_v"}), mean({column: 1, alias: "mean_v"}), first({column: 0, alias: "first_g"}), last({column: 0, alias: "last_g"}), variance-pop({column: 1, alias: "variance_v"}), stddev-pop({column: 1, alias: "stddev_v"})])',
+      'ok({rows: 1, fields: [{name: "rows", data-type: uint64, nullable: false}, {name: "sum_v", data-type: int64, nullable: true}, {name: "mean_v", data-type: float64, nullable: true}, {name: "first_g", data-type: utf8, nullable: true}, {name: "last_g", data-type: utf8, nullable: true}, {name: "variance_v", data-type: float64, nullable: true}, {name: "stddev_v", data-type: float64, nullable: true}], columns: [uint64-column([some(0)]), int64-column([none]), float64-column([none]), utf8-column([none]), utf8-column([none]), float64-column([none]), float64-column([none])]})',
     ],
     [
       'keyed-empty',
@@ -237,6 +247,11 @@ try {
     [
       'unsupported-sum',
       'group-aggregate(' + batch + ', [0], [sum({column: 0, alias: "sum_g"})])',
+      'err(unsupported-type)',
+    ],
+    [
+      'unsupported-variance',
+      'group-aggregate(' + batch + ', [0], [variance-pop({column: 0, alias: "variance_g"})])',
       'err(unsupported-type)',
     ],
     [
@@ -266,7 +281,7 @@ try {
     union_semantics: 'stable-input-order; exact-schema; no-coercion',
     join_semantics: 'bounded; typed; stable-left-then-right-order; null-keys-never-match',
     window_semantics: 'bounded-no-row-expansion; output-aligned-input-order; stable-input-tie-break',
-    aggregates: ['count-all','count','sum','min','max','mean'],
+    aggregates: ['count-all','count','sum','min','max','mean','first','last','variance-pop','stddev-pop'],
     cases: receipts.length,
     receipts,
   }));

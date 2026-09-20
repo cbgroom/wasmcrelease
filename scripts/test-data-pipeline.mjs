@@ -136,10 +136,10 @@ try {
 
   const aggregated = run('wasmtime', [
     'run', '--invoke',
-    'group-aggregate(' + windowedBatch + ', [], [count-all("rows"), sum({column: 0, alias: "sum_id"}), mean({column: 0, alias: "mean_id"})])',
+    'group-aggregate(' + windowedBatch + ', [], [count-all("rows"), sum({column: 0, alias: "sum_id"}), mean({column: 0, alias: "mean_id"}), first({column: 0, alias: "first_id"}), last({column: 0, alias: "last_id"}), variance-pop({column: 0, alias: "variance_id"}), stddev-pop({column: 0, alias: "stddev_id"})])',
     libs.relational.component,
   ]);
-  const expectedAggregate = 'ok({rows: 1, fields: [{name: "rows", data-type: uint64, nullable: false}, {name: "sum_id", data-type: int64, nullable: true}, {name: "mean_id", data-type: float64, nullable: true}], columns: [uint64-column([some(2)]), int64-column([some(5)]), float64-column([some(2.5)])]})';
+  const expectedAggregate = 'ok({rows: 1, fields: [{name: "rows", data-type: uint64, nullable: false}, {name: "sum_id", data-type: int64, nullable: true}, {name: "mean_id", data-type: float64, nullable: true}, {name: "first_id", data-type: int64, nullable: true}, {name: "last_id", data-type: int64, nullable: true}, {name: "variance_id", data-type: float64, nullable: true}, {name: "stddev_id", data-type: float64, nullable: true}], columns: [uint64-column([some(2)]), int64-column([some(5)]), float64-column([some(2.5)]), int64-column([some(2)]), int64-column([some(3)]), float64-column([some(0.25)]), float64-column([some(0.5)])]})';
   assert.equal(aggregated, expectedAggregate);
   const aggregateBatch = aggregated.slice(3, -1);
   const aggregateValidated = run('wasmtime', [
@@ -163,7 +163,7 @@ try {
     join_max_output_rows: 4,
     window_functions: ['row-number','rank','dense-rank'],
     aggregate_rows: 1,
-    aggregate: { count: 2, sum_id: 5, mean_id: 2.5 },
+    aggregate: { count: 2, sum_id: 5, mean_id: 2.5, first_id: 2, last_id: 3, variance_id: 0.25, stddev_id: 0.5 },
     core_imports: 0,
     validated,
     aggregate_validated: aggregateValidated,

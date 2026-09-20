@@ -44,6 +44,10 @@ enum AggKind {
     Min,
     Max,
     Mean,
+    First,
+    Last,
+    VariancePop,
+    StddevPop,
 }
 
 #[derive(Clone, Debug)]
@@ -71,6 +75,7 @@ enum AggValue {
     UInt64(Option<u64>),
     Int64(Option<i64>),
     Float64(Option<f64>),
+    Cell(Cell),
 }
 
 fn column_type(value: &Column) -> WitDataType {
@@ -348,6 +353,18 @@ fn parse_aggregate(aggregate: Aggregate, fields: &[WitField]) -> Result<AggDesc,
         Aggregate::Mean(ColumnAggregate { column, alias }) => {
             (AggKind::Mean, Some(column as usize), alias)
         }
+        Aggregate::First(ColumnAggregate { column, alias }) => {
+            (AggKind::First, Some(column as usize), alias)
+        }
+        Aggregate::Last(ColumnAggregate { column, alias }) => {
+            (AggKind::Last, Some(column as usize), alias)
+        }
+        Aggregate::VariancePop(ColumnAggregate { column, alias }) => {
+            (AggKind::VariancePop, Some(column as usize), alias)
+        }
+        Aggregate::StddevPop(ColumnAggregate { column, alias }) => {
+            (AggKind::StddevPop, Some(column as usize), alias)
+        }
     };
 
     if alias.is_empty() {
@@ -364,7 +381,12 @@ fn parse_aggregate(aggregate: Aggregate, fields: &[WitField]) -> Result<AggDesc,
     };
     if matches!(
         kind,
-        AggKind::Sum | AggKind::Min | AggKind::Max | AggKind::Mean
+        AggKind::Sum
+            | AggKind::Min
+            | AggKind::Max
+            | AggKind::Mean
+            | AggKind::VariancePop
+            | AggKind::StddevPop
     ) && !matches!(
         input_type,
         Some(WitDataType::Int64 | WitDataType::Uint64 | WitDataType::Float64)
@@ -385,9 +407,24 @@ fn selected(array: &ArrayRef, indices: &[u32]) -> Result<ArrayRef, RelationalErr
     take(array.as_ref(), &indices, None).map_err(|_| RelationalError::ComputeFailure)
 }
 
+fn population_variance(values: impl Iterator<Item = f64>) -> Option<f64> {
+    let mut count = 0_u64;
+    let mut mean = 0.0_f64;
+    let mut squared_deviations = 0.0_f64;
+    for value in values {
+        count += 1;
+        let delta = value - mean;
+        mean += delta / count as f64;
+        let adjusted_delta = value - mean;
+        squared_deviations += delta * adjusted_delta;
+    }
+    (count != 0).then_some(squared_deviations / count as f64)
+}
+
 fn aggregate_group(
     desc: &AggDesc,
     arrays: &[ArrayRef],
+    columns: &[Column],
     indices: &[u32],
 ) -> Result<AggValue, RelationalError> {
     if matches!(desc.kind, AggKind::CountAll) {
@@ -395,6 +432,18 @@ fn aggregate_group(
     }
 
     let column = desc.column.ok_or(RelationalError::ComputeFailure)?;
+    if matches!(desc.kind, AggKind::First | AggKind::Last) {
+        let rows: Box<dyn Iterator<Item = &u32>> = if matches!(desc.kind, AggKind::First) {
+            Box::new(indices.iter())
+        } else {
+            Box::new(indices.iter().rev())
+        };
+        let value = rows
+            .map(|row| cell_at(&columns[column], *row as usize))
+            .find(|cell| !matches!(cell, Cell::Null))
+            .unwrap_or(Cell::Null);
+        return Ok(AggValue::Cell(value));
+    }
     let array = selected(
         arrays
             .get(column)
@@ -427,6 +476,17 @@ fn aggregate_group(
                         _ => None,
                     }))
                 }
+                AggKind::VariancePop | AggKind::StddevPop => {
+                    let variance =
+                        population_variance(values.iter().flatten().map(|value| value as f64));
+                    Ok(AggValue::Float64(
+                        if matches!(desc.kind, AggKind::StddevPop) {
+                            variance.map(f64::sqrt)
+                        } else {
+                            variance
+                        },
+                    ))
+                }
                 _ => Err(RelationalError::ComputeFailure),
             }
         }
@@ -448,6 +508,17 @@ fn aggregate_group(
                         (Some(sum), count) if count != 0 => Some(sum as f64 / count as f64),
                         _ => None,
                     }))
+                }
+                AggKind::VariancePop | AggKind::StddevPop => {
+                    let variance =
+                        population_variance(values.iter().flatten().map(|value| value as f64));
+                    Ok(AggValue::Float64(
+                        if matches!(desc.kind, AggKind::StddevPop) {
+                            variance.map(f64::sqrt)
+                        } else {
+                            variance
+                        },
+                    ))
                 }
                 _ => Err(RelationalError::ComputeFailure),
             }
@@ -471,6 +542,16 @@ fn aggregate_group(
                         (Some(sum), count) if count != 0 => Some(sum / count as f64),
                         _ => None,
                     }))
+                }
+                AggKind::VariancePop | AggKind::StddevPop => {
+                    let variance = population_variance(values.iter().flatten());
+                    Ok(AggValue::Float64(
+                        if matches!(desc.kind, AggKind::StddevPop) {
+                            variance.map(f64::sqrt)
+                        } else {
+                            variance
+                        },
+                    ))
                 }
                 _ => Err(RelationalError::ComputeFailure),
             }
@@ -817,7 +898,7 @@ impl Guest for DataRelational {
         for desc in &descs {
             let results = groups
                 .values()
-                .map(|indices| aggregate_group(desc, &arrays, indices))
+                .map(|indices| aggregate_group(desc, &arrays, &value.columns, indices))
                 .collect::<Result<Vec<_>, _>>()?;
 
             let (field, column) = match desc.kind {
@@ -837,7 +918,7 @@ impl Guest for DataRelational {
                             .collect(),
                     ),
                 ),
-                AggKind::Mean => (
+                AggKind::Mean | AggKind::VariancePop | AggKind::StddevPop => (
                     WitField {
                         name: desc.alias.clone(),
                         data_type: WitDataType::Float64,
@@ -905,6 +986,24 @@ impl Guest for DataRelational {
                         ),
                         _ => return Err(RelationalError::UnsupportedType),
                     }
+                }
+                AggKind::First | AggKind::Last => {
+                    let data_type = desc.input_type.ok_or(RelationalError::ComputeFailure)?;
+                    let cells = results
+                        .into_iter()
+                        .map(|value| match value {
+                            AggValue::Cell(value) => Ok(value),
+                            _ => Err(RelationalError::ComputeFailure),
+                        })
+                        .collect::<Result<Vec<_>, _>>()?;
+                    (
+                        WitField {
+                            name: desc.alias.clone(),
+                            data_type,
+                            nullable: true,
+                        },
+                        cells_to_column(data_type, &cells)?,
+                    )
                 }
             };
             fields.push(field);
