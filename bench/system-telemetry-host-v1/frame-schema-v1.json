@@ -1,0 +1,35 @@
+{
+  "schema": "wasmc-system-telemetry-frame/v1",
+  "frame_bytes": 64,
+  "byte_order": "little-endian",
+  "fields": [
+    {"name": "sequence", "offset": 0, "type": "u64", "unit": "sample"},
+    {"name": "monotonic_ns", "offset": 8, "type": "u64", "unit": "ns"},
+    {"name": "available_memory", "offset": 16, "type": "u64", "unit": "bytes"},
+    {"name": "used_swap", "offset": 24, "type": "u64", "unit": "bytes"},
+    {"name": "network_rx_total", "offset": 32, "type": "u64", "unit": "bytes"},
+    {"name": "network_tx_total", "offset": 40, "type": "u64", "unit": "bytes"},
+    {"name": "cpu_milli_pct", "offset": 48, "type": "u32", "unit": "0.001_percent"},
+    {"name": "load1_milli", "offset": 52, "type": "u32", "unit": "0.001_load"},
+    {"name": "freshness_mask", "offset": 56, "type": "u32", "unit": "bitset"},
+    {"name": "source", "offset": 60, "type": "u32", "unit": "enum"}
+  ],
+  "freshness_bits": {
+    "cpu": 1,
+    "memory": 2,
+    "network": 4,
+    "load": 8
+  },
+  "source_ids": {
+    "synthetic": 0,
+    "sysinfo": 1,
+    "linux_proc": 2
+  },
+  "semantics": {
+    "sequence": "strictly increasing producer sequence; gaps make overwritten or missed samples observable",
+    "freshness_mask": "bit set only when the provider refreshed the corresponding OS source for this frame; an unset bit means the value is a carried-forward cache, not a new OS observation",
+    "total_memory": "cold/static provider metadata; intentionally excluded from every hot frame",
+    "provider_selection": "Host-private; source identifies evidence/backend semantics, not guest authority",
+    "host_api_delta": 0
+  }
+}

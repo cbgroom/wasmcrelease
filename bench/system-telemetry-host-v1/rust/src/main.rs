@@ -1,3 +1,5 @@
+#[cfg(target_os = "linux")]
+use std::alloc::{GlobalAlloc, Layout, System as StdSystemAllocator};
 use std::collections::VecDeque;
 #[cfg(target_os = "linux")]
 use std::fs::File;
@@ -14,18 +16,62 @@ use sysinfo::{CpuRefreshKind, MemoryRefreshKind, Networks, RefreshKind, System};
 
 const FRAME_BYTES: usize = 64;
 const SELECTOR: &[u8] = b"system/telemetry";
+const FRESH_CPU: u32 = 1 << 0;
+const FRESH_MEMORY: u32 = 1 << 1;
+const FRESH_NETWORK: u32 = 1 << 2;
+const FRESH_LOAD: u32 = 1 << 3;
+const FRESH_ALL: u32 = FRESH_CPU | FRESH_MEMORY | FRESH_NETWORK | FRESH_LOAD;
+const SOURCE_SYNTHETIC: u32 = 0;
+const SOURCE_SYSINFO: u32 = 1;
+#[cfg(target_os = "linux")]
+const SOURCE_LINUX_PROC: u32 = 2;
+const MEMORY_CADENCE: Duration = Duration::from_millis(10);
+const FALLBACK_NETWORK_CADENCE: Duration = Duration::from_millis(10);
+const LOAD_CADENCE: Duration = Duration::from_millis(100);
+
+#[cfg(target_os = "linux")]
+static ALLOCATIONS: AtomicU64 = AtomicU64::new(0);
+#[cfg(target_os = "linux")]
+static ALLOCATED_BYTES: AtomicU64 = AtomicU64::new(0);
+
+#[cfg(target_os = "linux")]
+struct CountingAllocator;
+
+#[cfg(target_os = "linux")]
+unsafe impl GlobalAlloc for CountingAllocator {
+    unsafe fn alloc(&self, layout: Layout) -> *mut u8 {
+        ALLOCATIONS.fetch_add(1, Ordering::Relaxed);
+        ALLOCATED_BYTES.fetch_add(layout.size() as u64, Ordering::Relaxed);
+        unsafe { StdSystemAllocator.alloc(layout) }
+    }
+
+    unsafe fn dealloc(&self, ptr: *mut u8, layout: Layout) {
+        unsafe { StdSystemAllocator.dealloc(ptr, layout) }
+    }
+
+    unsafe fn realloc(&self, ptr: *mut u8, layout: Layout, new_size: usize) -> *mut u8 {
+        ALLOCATIONS.fetch_add(1, Ordering::Relaxed);
+        ALLOCATED_BYTES.fetch_add(new_size as u64, Ordering::Relaxed);
+        unsafe { StdSystemAllocator.realloc(ptr, layout, new_size) }
+    }
+}
+
+#[cfg(target_os = "linux")]
+#[global_allocator]
+static GLOBAL_ALLOCATOR: CountingAllocator = CountingAllocator;
 
 #[derive(Clone, Copy, Debug)]
 struct Frame {
     sequence: u64,
     monotonic_ns: u64,
-    total_memory: u64,
     available_memory: u64,
     used_swap: u64,
     network_rx_total: u64,
     network_tx_total: u64,
     cpu_milli_pct: u32,
     load1_milli: u32,
+    freshness_mask: u32,
+    source: u32,
 }
 
 impl Frame {
@@ -35,7 +81,6 @@ impl Frame {
         for value in [
             self.sequence,
             self.monotonic_ns,
-            self.total_memory,
             self.available_memory,
             self.used_swap,
             self.network_rx_total,
@@ -47,19 +92,24 @@ impl Frame {
         out[offset..offset + 4].copy_from_slice(&self.cpu_milli_pct.to_le_bytes());
         offset += 4;
         out[offset..offset + 4].copy_from_slice(&self.load1_milli.to_le_bytes());
+        offset += 4;
+        out[offset..offset + 4].copy_from_slice(&self.freshness_mask.to_le_bytes());
+        offset += 4;
+        out[offset..offset + 4].copy_from_slice(&self.source.to_le_bytes());
     }
 
     fn synthetic(sequence: u64, epoch: Instant) -> Self {
         Self {
             sequence,
             monotonic_ns: epoch.elapsed().as_nanos().min(u64::MAX as u128) as u64,
-            total_memory: 64u64 << 30,
             available_memory: (32u64 << 30).saturating_sub(sequence & 0xffff),
             used_swap: sequence & 0x3fff,
             network_rx_total: sequence.saturating_mul(128),
             network_tx_total: sequence.saturating_mul(96),
             cpu_milli_pct: (sequence % 100_000) as u32,
             load1_milli: (sequence % 8_000) as u32,
+            freshness_mask: FRESH_ALL,
+            source: SOURCE_SYNTHETIC,
         }
     }
 }
@@ -69,6 +119,15 @@ struct SysinfoSampler {
     networks: Networks,
     epoch: Instant,
     sequence: u64,
+    last_cpu_refresh: Instant,
+    last_memory_refresh: Instant,
+    last_network_refresh: Instant,
+    last_load_refresh: Instant,
+    cached_available_memory: u64,
+    cached_used_swap: u64,
+    cached_network_rx_total: u64,
+    cached_network_tx_total: u64,
+    cached_load1_milli: u32,
 }
 
 #[cfg(target_os = "linux")]
@@ -86,6 +145,11 @@ struct LinuxProcSampler {
     last_cpu_total: u64,
     last_cpu_idle: u64,
     last_cpu_milli_pct: u32,
+    last_memory_refresh: Instant,
+    last_load_refresh: Instant,
+    cached_available_memory: u64,
+    cached_used_swap: u64,
+    cached_load1_milli: u32,
 }
 
 #[cfg(target_os = "linux")]
@@ -105,6 +169,11 @@ impl LinuxProcSampler {
             last_cpu_total: 0,
             last_cpu_idle: 0,
             last_cpu_milli_pct: 0,
+            last_memory_refresh: Instant::now(),
+            last_load_refresh: Instant::now(),
+            cached_available_memory: 0,
+            cached_used_swap: 0,
+            cached_load1_milli: 0,
         };
         sampler.refresh_cpu_baseline()?;
         Ok(sampler)
@@ -119,23 +188,24 @@ impl LinuxProcSampler {
 
     fn cpu_counters(input: &str) -> Option<(u64, u64)> {
         let line = input.lines().find(|line| line.starts_with("cpu "))?;
-        let fields = line
-            .split_whitespace()
-            .skip(1)
-            .take(8)
-            .map(str::parse::<u64>)
-            .collect::<Result<Vec<_>, _>>()
-            .ok()?;
-        if fields.len() < 4 {
+        let mut total = 0u64;
+        let mut idle = 0u64;
+        let mut seen = 0usize;
+        for (index, field) in line.split_whitespace().skip(1).take(8).enumerate() {
+            let value = field.parse::<u64>().ok()?;
+            total = total.saturating_add(value);
+            if index == 3 || index == 4 {
+                idle = idle.saturating_add(value);
+            }
+            seen += 1;
+        }
+        if seen < 4 {
             return None;
         }
-        let total = fields.iter().copied().sum::<u64>();
-        let idle = fields[3].saturating_add(fields.get(4).copied().unwrap_or(0));
         Some((total, idle))
     }
 
-    fn memory_bytes(input: &str) -> Option<(u64, u64, u64)> {
-        let mut total = None;
+    fn memory_values(input: &str) -> Option<(u64, u64)> {
         let mut available = None;
         let mut swap_total = None;
         let mut swap_free = None;
@@ -144,18 +214,16 @@ impl LinuxProcSampler {
             let key = fields.next()?;
             let value = fields.next()?.parse::<u64>().ok()?.saturating_mul(1024);
             match key {
-                "MemTotal:" => total = Some(value),
                 "MemAvailable:" => available = Some(value),
                 "SwapTotal:" => swap_total = Some(value),
                 "SwapFree:" => swap_free = Some(value),
                 _ => {}
             }
-            if total.is_some() && available.is_some() && swap_total.is_some() && swap_free.is_some()
-            {
+            if available.is_some() && swap_total.is_some() && swap_free.is_some() {
                 break;
             }
         }
-        Some((total?, available?, swap_total?.saturating_sub(swap_free?)))
+        Some((available?, swap_total?.saturating_sub(swap_free?)))
     }
 
     fn network_totals(input: &str) -> Option<(u64, u64)> {
@@ -166,12 +234,9 @@ impl LinuxProcSampler {
             if name.trim() == "lo" {
                 continue;
             }
-            let fields = counters.split_whitespace().collect::<Vec<_>>();
-            if fields.len() < 9 {
-                return None;
-            }
-            rx = rx.saturating_add(fields[0].parse::<u64>().ok()?);
-            tx = tx.saturating_add(fields[8].parse::<u64>().ok()?);
+            let mut fields = counters.split_whitespace();
+            rx = rx.saturating_add(fields.next()?.parse::<u64>().ok()?);
+            tx = tx.saturating_add(fields.nth(7)?.parse::<u64>().ok()?);
         }
         Some((rx, tx))
     }
@@ -203,7 +268,7 @@ impl LinuxProcSampler {
         self.last_cpu_total = cpu_total;
         self.last_cpu_idle = cpu_idle;
 
-        let (total_memory, available_memory, used_swap) = Self::memory_bytes(&self.mem_buf)
+        let (available_memory, used_swap) = Self::memory_values(&self.mem_buf)
             .ok_or_else(|| std::io::Error::other("invalid /proc/meminfo"))?;
         let (network_rx_total, network_tx_total) = Self::network_totals(&self.net_buf)
             .ok_or_else(|| std::io::Error::other("invalid /proc/net/dev"))?;
@@ -219,13 +284,70 @@ impl LinuxProcSampler {
         Ok(Frame {
             sequence: self.sequence,
             monotonic_ns: self.epoch.elapsed().as_nanos().min(u64::MAX as u128) as u64,
-            total_memory,
             available_memory,
             used_swap,
             network_rx_total,
             network_tx_total,
             cpu_milli_pct: self.last_cpu_milli_pct,
             load1_milli,
+            freshness_mask: FRESH_ALL,
+            source: SOURCE_LINUX_PROC,
+        })
+    }
+
+    fn sample_cadenced(&mut self) -> std::io::Result<Frame> {
+        let now = Instant::now();
+        Self::reread(&mut self.stat, &mut self.stat_buf)?;
+        Self::reread(&mut self.netdev, &mut self.net_buf)?;
+
+        let (cpu_total, cpu_idle) = Self::cpu_counters(&self.stat_buf)
+            .ok_or_else(|| std::io::Error::other("invalid /proc/stat"))?;
+        let total_delta = cpu_total.saturating_sub(self.last_cpu_total);
+        let idle_delta = cpu_idle.saturating_sub(self.last_cpu_idle);
+        if total_delta != 0 {
+            let busy_delta = total_delta.saturating_sub(idle_delta);
+            self.last_cpu_milli_pct =
+                ((busy_delta as u128 * 100_000u128) / total_delta as u128) as u32;
+        }
+        self.last_cpu_total = cpu_total;
+        self.last_cpu_idle = cpu_idle;
+        let (network_rx_total, network_tx_total) = Self::network_totals(&self.net_buf)
+            .ok_or_else(|| std::io::Error::other("invalid /proc/net/dev"))?;
+
+        let mut freshness_mask = FRESH_CPU | FRESH_NETWORK;
+        if self.sequence == 0 || now.duration_since(self.last_memory_refresh) >= MEMORY_CADENCE {
+            Self::reread(&mut self.meminfo, &mut self.mem_buf)?;
+            (self.cached_available_memory, self.cached_used_swap) =
+                Self::memory_values(&self.mem_buf)
+                    .ok_or_else(|| std::io::Error::other("invalid /proc/meminfo"))?;
+            self.last_memory_refresh = now;
+            freshness_mask |= FRESH_MEMORY;
+        }
+        if self.sequence == 0 || now.duration_since(self.last_load_refresh) >= LOAD_CADENCE {
+            Self::reread(&mut self.loadavg, &mut self.load_buf)?;
+            self.cached_load1_milli = self
+                .load_buf
+                .split_whitespace()
+                .next()
+                .and_then(|value| value.parse::<f64>().ok())
+                .map(|value| (value.max(0.0) * 1000.0).min(u32::MAX as f64) as u32)
+                .ok_or_else(|| std::io::Error::other("invalid /proc/loadavg"))?;
+            self.last_load_refresh = now;
+            freshness_mask |= FRESH_LOAD;
+        }
+
+        self.sequence = self.sequence.saturating_add(1);
+        Ok(Frame {
+            sequence: self.sequence,
+            monotonic_ns: self.epoch.elapsed().as_nanos().min(u64::MAX as u128) as u64,
+            available_memory: self.cached_available_memory,
+            used_swap: self.cached_used_swap,
+            network_rx_total,
+            network_tx_total,
+            cpu_milli_pct: self.last_cpu_milli_pct,
+            load1_milli: self.cached_load1_milli,
+            freshness_mask,
+            source: SOURCE_LINUX_PROC,
         })
     }
 }
@@ -240,11 +362,29 @@ impl SysinfoSampler {
         system.refresh_memory();
         system.refresh_cpu_usage();
         networks.refresh(false);
+        let epoch = Instant::now();
+        let (cached_network_rx_total, cached_network_tx_total) =
+            networks.iter().fold((0u64, 0u64), |(rx, tx), (_, data)| {
+                (
+                    rx.saturating_add(data.total_received()),
+                    tx.saturating_add(data.total_transmitted()),
+                )
+            });
         Self {
+            cached_available_memory: system.available_memory(),
+            cached_used_swap: system.used_swap(),
+            cached_network_rx_total,
+            cached_network_tx_total,
+            cached_load1_milli: (System::load_average().one.max(0.0) * 1000.0).min(u32::MAX as f64)
+                as u32,
             system,
             networks,
-            epoch: Instant::now(),
+            epoch,
             sequence: 0,
+            last_cpu_refresh: epoch,
+            last_memory_refresh: epoch,
+            last_network_refresh: epoch,
+            last_load_refresh: epoch,
         }
     }
 
@@ -266,7 +406,6 @@ impl SysinfoSampler {
         Frame {
             sequence: self.sequence,
             monotonic_ns: self.epoch.elapsed().as_nanos().min(u64::MAX as u128) as u64,
-            total_memory: self.system.total_memory(),
             available_memory: self.system.available_memory(),
             used_swap: self.system.used_swap(),
             network_rx_total,
@@ -274,6 +413,63 @@ impl SysinfoSampler {
             cpu_milli_pct: (self.system.global_cpu_usage().max(0.0) * 1000.0).min(u32::MAX as f32)
                 as u32,
             load1_milli: (load.max(0.0) * 1000.0).min(u32::MAX as f64) as u32,
+            freshness_mask: FRESH_ALL,
+            source: SOURCE_SYSINFO,
+        }
+    }
+
+    fn sample_cadenced(&mut self) -> Frame {
+        let now = Instant::now();
+        let mut freshness_mask = 0u32;
+        if self.sequence == 0
+            || now.duration_since(self.last_cpu_refresh) >= sysinfo::MINIMUM_CPU_UPDATE_INTERVAL
+        {
+            self.system.refresh_cpu_usage();
+            self.last_cpu_refresh = now;
+            freshness_mask |= FRESH_CPU;
+        }
+        if self.sequence == 0 || now.duration_since(self.last_memory_refresh) >= MEMORY_CADENCE {
+            self.system.refresh_memory();
+            self.cached_available_memory = self.system.available_memory();
+            self.cached_used_swap = self.system.used_swap();
+            self.last_memory_refresh = now;
+            freshness_mask |= FRESH_MEMORY;
+        }
+        if self.sequence == 0
+            || now.duration_since(self.last_network_refresh) >= FALLBACK_NETWORK_CADENCE
+        {
+            self.networks.refresh(false);
+            (self.cached_network_rx_total, self.cached_network_tx_total) = self
+                .networks
+                .iter()
+                .fold((0u64, 0u64), |(rx, tx), (_, data)| {
+                    (
+                        rx.saturating_add(data.total_received()),
+                        tx.saturating_add(data.total_transmitted()),
+                    )
+                });
+            self.last_network_refresh = now;
+            freshness_mask |= FRESH_NETWORK;
+        }
+        if self.sequence == 0 || now.duration_since(self.last_load_refresh) >= LOAD_CADENCE {
+            self.cached_load1_milli =
+                (System::load_average().one.max(0.0) * 1000.0).min(u32::MAX as f64) as u32;
+            self.last_load_refresh = now;
+            freshness_mask |= FRESH_LOAD;
+        }
+        self.sequence = self.sequence.saturating_add(1);
+        Frame {
+            sequence: self.sequence,
+            monotonic_ns: self.epoch.elapsed().as_nanos().min(u64::MAX as u128) as u64,
+            available_memory: self.cached_available_memory,
+            used_swap: self.cached_used_swap,
+            network_rx_total: self.cached_network_rx_total,
+            network_tx_total: self.cached_network_tx_total,
+            cpu_milli_pct: (self.system.global_cpu_usage().max(0.0) * 1000.0).min(u32::MAX as f32)
+                as u32,
+            load1_milli: self.cached_load1_milli,
+            freshness_mask,
+            source: SOURCE_SYSINFO,
         }
     }
 }
@@ -567,6 +763,28 @@ fn spawn_sysinfo(ring: Arc<Ring>, hz: u64, duration: Duration) -> thread::JoinHa
     })
 }
 
+fn spawn_sysinfo_cadenced(ring: Arc<Ring>, hz: u64, duration: Duration) -> thread::JoinHandle<u64> {
+    thread::spawn(move || {
+        let mut sampler = SysinfoSampler::new();
+        let epoch = Instant::now();
+        let period = Duration::from_nanos(1_000_000_000u64 / hz.max(1));
+        let deadline = epoch + duration;
+        let mut next = epoch;
+        let mut produced = 0u64;
+        while Instant::now() < deadline {
+            let now = Instant::now();
+            if now < next {
+                thread::sleep(next - now);
+            }
+            ring.push(sampler.sample_cadenced());
+            produced = produced.saturating_add(1);
+            next += period;
+        }
+        ring.close();
+        produced
+    })
+}
+
 #[cfg(target_os = "linux")]
 fn spawn_linux_proc(ring: Arc<Ring>, hz: u64, duration: Duration) -> thread::JoinHandle<u64> {
     thread::spawn(move || {
@@ -590,6 +808,37 @@ fn spawn_linux_proc(ring: Arc<Ring>, hz: u64, duration: Duration) -> thread::Joi
     })
 }
 
+#[cfg(target_os = "linux")]
+fn spawn_linux_proc_cadenced(
+    ring: Arc<Ring>,
+    hz: u64,
+    duration: Duration,
+) -> thread::JoinHandle<u64> {
+    thread::spawn(move || {
+        let mut sampler = LinuxProcSampler::new().expect("open /proc telemetry files");
+        let epoch = Instant::now();
+        let period = Duration::from_nanos(1_000_000_000u64 / hz.max(1));
+        let deadline = epoch + duration;
+        let mut next = epoch;
+        let mut produced = 0u64;
+        while Instant::now() < deadline {
+            let now = Instant::now();
+            if now < next {
+                thread::sleep(next - now);
+            }
+            ring.push(
+                sampler
+                    .sample_cadenced()
+                    .expect("sample cadenced /proc telemetry"),
+            );
+            produced = produced.saturating_add(1);
+            next += period;
+        }
+        ring.close();
+        produced
+    })
+}
+
 fn bench_stream(kind: &str, hz: u64, batch: usize, millis: u64) {
     let duration = Duration::from_millis(millis);
     let ring = Arc::new(Ring::new(8192));
@@ -600,8 +849,11 @@ fn bench_stream(kind: &str, hz: u64, batch: usize, millis: u64) {
     let producer = match kind {
         "synthetic" => spawn_synthetic(ring.clone(), hz, duration),
         "sysinfo" => spawn_sysinfo(ring.clone(), hz, duration),
+        "sysinfo-cadenced" => spawn_sysinfo_cadenced(ring.clone(), hz, duration),
         #[cfg(target_os = "linux")]
         "linux-proc" => spawn_linux_proc(ring.clone(), hz, duration),
+        #[cfg(target_os = "linux")]
+        "linux-proc-cadenced" => spawn_linux_proc_cadenced(ring.clone(), hz, duration),
         _ => panic!("bad kind"),
     };
     let consumer_period = Duration::from_nanos(
@@ -612,6 +864,10 @@ fn bench_stream(kind: &str, hz: u64, batch: usize, millis: u64) {
     let mut batches = 0u64;
     let mut sequence_gaps = 0u64;
     let mut last_sequence = 0u64;
+    let mut fresh_cpu = 0u64;
+    let mut fresh_memory = 0u64;
+    let mut fresh_network = 0u64;
+    let mut fresh_load = 0u64;
     loop {
         if batch > 1 {
             thread::sleep(consumer_period);
@@ -640,6 +896,13 @@ fn bench_stream(kind: &str, hz: u64, batch: usize, millis: u64) {
                     sequence_gaps = sequence_gaps.saturating_add(sequence - last_sequence - 1);
                 }
                 last_sequence = sequence;
+                let mut mask = [0u8; 4];
+                mask.copy_from_slice(&window.bytes[start + 56..start + 60]);
+                let mask = u32::from_le_bytes(mask);
+                fresh_cpu += u64::from(mask & FRESH_CPU != 0);
+                fresh_memory += u64::from(mask & FRESH_MEMORY != 0);
+                fresh_network += u64::from(mask & FRESH_NETWORK != 0);
+                fresh_load += u64::from(mask & FRESH_LOAD != 0);
             }
         }
         let (queued, _, closed) = ring.stats();
@@ -654,7 +917,7 @@ fn bench_stream(kind: &str, hz: u64, batch: usize, millis: u64) {
     host.release_endpoint(&mut endpoint).unwrap();
     let metrics = &host.metrics;
     println!(
-        "{{\"kind\":\"stream\",\"provider\":\"{}\",\"hz\":{},\"batch\":{},\"duration_ms\":{},\"elapsed_ms\":{:.3},\"produced\":{},\"consumed\":{},\"ring_dropped\":{},\"sequence_gaps\":{},\"batches\":{},\"frames_per_batch\":{:.3},\"read_calls\":{},\"wait_calls\":{},\"inline\":{},\"after_wait\":{},\"copied_bytes\":{},\"host_calls_per_frame\":{:.6}}}",
+        "{{\"kind\":\"stream\",\"provider\":\"{}\",\"hz\":{},\"batch\":{},\"duration_ms\":{},\"elapsed_ms\":{:.3},\"produced\":{},\"consumed\":{},\"ring_dropped\":{},\"sequence_gaps\":{},\"batches\":{},\"frames_per_batch\":{:.3},\"read_calls\":{},\"wait_calls\":{},\"inline\":{},\"after_wait\":{},\"copied_bytes\":{},\"host_calls_per_frame\":{:.6},\"fresh_cpu\":{},\"fresh_memory\":{},\"fresh_network\":{},\"fresh_load\":{}}}",
         kind,
         hz,
         batch,
@@ -682,6 +945,10 @@ fn bench_stream(kind: &str, hz: u64, batch: usize, millis: u64) {
                 + metrics.wait_calls.load(Ordering::Relaxed)) as f64
                 / consumed as f64
         },
+        fresh_cpu,
+        fresh_memory,
+        fresh_network,
+        fresh_load,
     );
 }
 
@@ -713,6 +980,34 @@ fn bench_sampler(iterations: usize) {
     );
 }
 
+fn bench_sysinfo_cadenced_sampler(iterations: usize) {
+    let mut sampler = SysinfoSampler::new();
+    let started = Instant::now();
+    let mut encoded = [0u8; FRAME_BYTES];
+    let mut fresh = [0u64; 4];
+    for _ in 0..iterations {
+        let frame = sampler.sample_cadenced();
+        frame.encode_into(&mut encoded);
+        fresh[0] += u64::from(frame.freshness_mask & FRESH_CPU != 0);
+        fresh[1] += u64::from(frame.freshness_mask & FRESH_MEMORY != 0);
+        fresh[2] += u64::from(frame.freshness_mask & FRESH_NETWORK != 0);
+        fresh[3] += u64::from(frame.freshness_mask & FRESH_LOAD != 0);
+    }
+    let elapsed = started.elapsed();
+    println!(
+        "{{\"kind\":\"sampler-cost\",\"provider\":\"sysinfo-0.39.6-cadenced\",\"iterations\":{},\"elapsed_ms\":{:.3},\"ns_per_sample\":{:.1},\"samples_per_sec\":{:.1},\"frame_bytes\":{},\"fresh_cpu\":{},\"fresh_memory\":{},\"fresh_network\":{},\"fresh_load\":{}}}",
+        iterations,
+        elapsed.as_secs_f64() * 1000.0,
+        elapsed.as_nanos() as f64 / iterations as f64,
+        iterations as f64 / elapsed.as_secs_f64(),
+        FRAME_BYTES,
+        fresh[0],
+        fresh[1],
+        fresh[2],
+        fresh[3],
+    );
+}
+
 #[cfg(target_os = "linux")]
 fn bench_linux_proc_sampler(iterations: usize) {
     let mut sampler = LinuxProcSampler::new().expect("open /proc telemetry files");
@@ -737,6 +1032,161 @@ fn bench_linux_proc_sampler(iterations: usize) {
         iterations as f64 / elapsed.as_secs_f64(),
         FRAME_BYTES,
         cpu_changes,
+    );
+}
+
+#[cfg(target_os = "linux")]
+fn bench_linux_proc_cadenced_sampler(iterations: usize) {
+    let mut sampler = LinuxProcSampler::new().expect("open /proc telemetry files");
+    for _ in 0..128 {
+        sampler
+            .sample_cadenced()
+            .expect("warm cadenced /proc telemetry");
+    }
+    ALLOCATIONS.store(0, Ordering::Relaxed);
+    ALLOCATED_BYTES.store(0, Ordering::Relaxed);
+    let started = Instant::now();
+    let mut encoded = [0u8; FRAME_BYTES];
+    let mut fresh = [0u64; 4];
+    for _ in 0..iterations {
+        let frame = sampler
+            .sample_cadenced()
+            .expect("sample cadenced /proc telemetry");
+        frame.encode_into(&mut encoded);
+        fresh[0] += u64::from(frame.freshness_mask & FRESH_CPU != 0);
+        fresh[1] += u64::from(frame.freshness_mask & FRESH_MEMORY != 0);
+        fresh[2] += u64::from(frame.freshness_mask & FRESH_NETWORK != 0);
+        fresh[3] += u64::from(frame.freshness_mask & FRESH_LOAD != 0);
+    }
+    let elapsed = started.elapsed();
+    let allocations = ALLOCATIONS.load(Ordering::Relaxed);
+    let allocated_bytes = ALLOCATED_BYTES.load(Ordering::Relaxed);
+    println!(
+        "{{\"kind\":\"sampler-cost\",\"provider\":\"linux-proc-cadenced\",\"iterations\":{},\"elapsed_ms\":{:.3},\"ns_per_sample\":{:.1},\"samples_per_sec\":{:.1},\"frame_bytes\":{},\"fresh_cpu\":{},\"fresh_memory\":{},\"fresh_network\":{},\"fresh_load\":{},\"allocations\":{},\"allocated_bytes\":{},\"allocations_per_sample\":{:.6}}}",
+        iterations,
+        elapsed.as_secs_f64() * 1000.0,
+        elapsed.as_nanos() as f64 / iterations as f64,
+        iterations as f64 / elapsed.as_secs_f64(),
+        FRAME_BYTES,
+        fresh[0],
+        fresh[1],
+        fresh[2],
+        fresh[3],
+        allocations,
+        allocated_bytes,
+        allocations as f64 / iterations as f64,
+    );
+}
+
+#[cfg(target_os = "linux")]
+fn bench_linux_proc_1khz_soak(frames: u64, batch: usize) {
+    assert!(frames > 0);
+    assert!(batch > 0);
+    let ring = Arc::new(Ring::new(8192));
+    let host = HostSession::new(ring.clone());
+    let endpoint = host.open(SELECTOR).unwrap();
+    let mut window = host.window_acquire(FRAME_BYTES * batch).unwrap();
+    let period = Duration::from_millis(1);
+    let producer_ring = ring.clone();
+    let producer = thread::spawn(move || {
+        let mut sampler = LinuxProcSampler::new().expect("open /proc telemetry files");
+        let started = Instant::now();
+        let mut next = started;
+        let mut max_late_ns = 0u64;
+        let mut deadline_misses = 0u64;
+        let mut periods_late = 0u64;
+        for _ in 0..frames {
+            let before = Instant::now();
+            if before < next {
+                thread::sleep(next - before);
+            }
+            let actual = Instant::now();
+            let late = actual.saturating_duration_since(next);
+            let late_ns = late.as_nanos().min(u64::MAX as u128) as u64;
+            max_late_ns = max_late_ns.max(late_ns);
+            if late >= period {
+                deadline_misses = deadline_misses.saturating_add(1);
+                periods_late = periods_late.saturating_add(
+                    (late.as_nanos() / period.as_nanos()).min(u64::MAX as u128) as u64,
+                );
+            }
+            producer_ring.push(
+                sampler
+                    .sample_cadenced()
+                    .expect("sample cadenced /proc telemetry"),
+            );
+            next += period;
+        }
+        producer_ring.close();
+        (
+            started.elapsed(),
+            max_late_ns,
+            deadline_misses,
+            periods_late,
+        )
+    });
+
+    let consumer_started = Instant::now();
+    let mut consumed = 0u64;
+    let mut sequence_gaps = 0u64;
+    let mut last_sequence = 0u64;
+    let mut batches = 0u64;
+    loop {
+        let count = match host.read(&endpoint, &mut window, batch).unwrap() {
+            Submission::Completed(count) => count,
+            Submission::Pending(mut op) => {
+                let result = host.wait(&endpoint, &mut op, &mut window, Duration::from_millis(100));
+                host.release_operation(&mut op).unwrap();
+                match result {
+                    Ok(count) => count,
+                    Err(-7) => 0,
+                    Err(error) => panic!("wait failed: {error}"),
+                }
+            }
+        };
+        if count > 0 {
+            batches = batches.saturating_add(1);
+            consumed = consumed.saturating_add(count as u64);
+            for index in 0..count {
+                let start = index * FRAME_BYTES;
+                let mut bytes = [0u8; 8];
+                bytes.copy_from_slice(&window.bytes[start..start + 8]);
+                let sequence = u64::from_le_bytes(bytes);
+                if last_sequence != 0 && sequence != last_sequence + 1 {
+                    sequence_gaps = sequence_gaps.saturating_add(sequence - last_sequence - 1);
+                }
+                last_sequence = sequence;
+            }
+        }
+        let (queued, _, closed) = ring.stats();
+        if closed && queued == 0 {
+            break;
+        }
+    }
+    let (producer_elapsed, max_late_ns, deadline_misses, periods_late) = producer.join().unwrap();
+    let consumer_elapsed = consumer_started.elapsed();
+    let (_, ring_dropped, _) = ring.stats();
+    assert_eq!(consumed, frames);
+    let metrics = &host.metrics;
+    println!(
+        "{{\"kind\":\"linux-proc-1khz-soak\",\"target_frames\":{},\"batch\":{},\"producer_elapsed_ms\":{:.3},\"consumer_elapsed_ms\":{:.3},\"effective_hz\":{:.3},\"consumed\":{},\"ring_dropped\":{},\"sequence_gaps\":{},\"deadline_misses\":{},\"periods_late\":{},\"max_late_us\":{:.3},\"batches\":{},\"read_calls\":{},\"wait_calls\":{},\"host_calls_per_frame\":{:.6}}}",
+        frames,
+        batch,
+        producer_elapsed.as_secs_f64() * 1000.0,
+        consumer_elapsed.as_secs_f64() * 1000.0,
+        frames as f64 / producer_elapsed.as_secs_f64(),
+        consumed,
+        ring_dropped,
+        sequence_gaps,
+        deadline_misses,
+        periods_late,
+        max_late_ns as f64 / 1000.0,
+        batches,
+        metrics.read_calls.load(Ordering::Relaxed),
+        metrics.wait_calls.load(Ordering::Relaxed),
+        (metrics.read_calls.load(Ordering::Relaxed)
+            + metrics.wait_calls.load(Ordering::Relaxed)) as f64
+            / consumed as f64,
     );
 }
 
@@ -825,11 +1275,57 @@ fn cancellation_probe() {
     );
 }
 
+fn overrun_probe() {
+    let ring = Arc::new(Ring::new(32));
+    let host = HostSession::new(ring.clone());
+    let endpoint = host.open(SELECTOR).unwrap();
+    let mut window = host.window_acquire(FRAME_BYTES * 8).unwrap();
+    let epoch = Instant::now();
+    for sequence in 1..=16 {
+        ring.push(Frame::synthetic(sequence, epoch));
+    }
+    let first_count = match host.read(&endpoint, &mut window, 8).unwrap() {
+        Submission::Completed(count) => count,
+        Submission::Pending(_) => panic!("prefilled ring unexpectedly pending"),
+    };
+    assert_eq!(first_count, 8);
+    let mut last_bytes = [0u8; 8];
+    let last_offset = (first_count - 1) * FRAME_BYTES;
+    last_bytes.copy_from_slice(&window.bytes[last_offset..last_offset + 8]);
+    let previous_sequence = u64::from_le_bytes(last_bytes);
+    assert_eq!(previous_sequence, 8);
+
+    for sequence in 17..=80 {
+        ring.push(Frame::synthetic(sequence, epoch));
+    }
+    let (_, ring_dropped, _) = ring.stats();
+    assert_eq!(ring_dropped, 40);
+    let second_count = match host.read(&endpoint, &mut window, 8).unwrap() {
+        Submission::Completed(count) => count,
+        Submission::Pending(_) => panic!("overrun ring unexpectedly pending"),
+    };
+    assert_eq!(second_count, 8);
+    let mut first_bytes = [0u8; 8];
+    first_bytes.copy_from_slice(&window.bytes[..8]);
+    let resumed_sequence = u64::from_le_bytes(first_bytes);
+    let sequence_gap = resumed_sequence - previous_sequence - 1;
+    assert_eq!(resumed_sequence, 49);
+    assert_eq!(sequence_gap, ring_dropped);
+    println!(
+        "{{\"kind\":\"overrun-probe\",\"ring_capacity\":32,\"previous_sequence\":{},\"resumed_sequence\":{},\"ring_dropped\":{},\"sequence_gap\":{},\"silent_loss\":false}}",
+        previous_sequence, resumed_sequence, ring_dropped, sequence_gap,
+    );
+}
+
 fn main() {
     cancellation_probe();
+    overrun_probe();
     bench_sampler(2_000);
+    bench_sysinfo_cadenced_sampler(10_000);
     #[cfg(target_os = "linux")]
     bench_linux_proc_sampler(10_000);
+    #[cfg(target_os = "linux")]
+    bench_linux_proc_cadenced_sampler(20_000);
     bench_shell(40);
     bench_transport_micro(100_000, 1);
     bench_transport_micro(100_000, 32);
@@ -841,8 +1337,13 @@ fn main() {
     for (hz, millis) in [(10, 1200), (100, 1200), (1000, 1200)] {
         bench_stream("sysinfo", hz, 32, millis);
     }
+    bench_stream("sysinfo-cadenced", 1000, 32, 1200);
     #[cfg(target_os = "linux")]
     for (hz, millis) in [(100, 1200), (1000, 1200)] {
         bench_stream("linux-proc", hz, 32, millis);
     }
+    #[cfg(target_os = "linux")]
+    bench_stream("linux-proc-cadenced", 1000, 32, 1200);
+    #[cfg(target_os = "linux")]
+    bench_linux_proc_1khz_soak(5_000, 32);
 }

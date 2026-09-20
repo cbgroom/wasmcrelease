@@ -10,6 +10,11 @@ Hard invariant:
   describe/open/read/wait/cancel/release/window-* mechanisms.
 - Hot data uses a fixed 64-byte binary frame and bounded ring. No JSON or shell
   parsing exists in the resident path.
+- frame-schema-v1.json freezes the 64-byte layout. Each frame includes a
+  freshness bitset so a 1 kHz frame cadence never pretends that every OS field
+  was physically re-sampled at 1 kHz.
+- sequence makes bounded-ring overwrite observable. Overload may discard old
+  frames, but it must never become silent data loss.
 - The benchmark separates provider cost from Host transport cost. Synthetic
   production isolates the Host data path; sysinfo 0.39.6 exercises a real
   cross-platform OS-information library.
@@ -19,7 +24,8 @@ provider policy, not a new Host syscall or accepted public namespace.
 
 Run on a development host:
 
-    cargo run --release --locked --manifest-path +      bench/system-telemetry-host-v1/rust/Cargo.toml
+    cargo run --release --locked --manifest-path \
+      bench/system-telemetry-host-v1/rust/Cargo.toml
 
 Interpretation:
 
@@ -36,6 +42,12 @@ Interpretation:
   semantic equivalence claim.
 - on Linux, linux-proc-resident keeps /proc files open and reuses buffers to
   qualify a faster native provider behind the exact same Host semantics.
+- portable sysinfo-cadenced produces a stable frame cadence while refreshing
+  expensive OS sources at bounded independent cadences. Linux-proc-cadenced
+  keeps CPU/network on the fast path while sampling memory and load less often.
+- a 5,000-frame Linux 1 kHz soak records scheduling lateness separately from
+  provider and Host transport loss. A missed 1 ms scheduling deadline is not
+  silently reclassified as a Host failure.
 
 This experiment may justify provider/backend work or optimization of existing
 Window/Operation machinery. It does not authorize a new Host primitive.
