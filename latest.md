@@ -1,16 +1,16 @@
 # WAsmC Host HTTPS paired A/B flywheel
 
-Commit: 923e8bc5ede22d8bc4e2859a04f3efb3e23bdc6d  
-Measured: 2026-09-21T18:53:31.439Z  
+Commit: 735cc7fea762ba76f96d443cf64e47a31f8a1cc6  
+Measured: 2026-09-21T19:16:15.928Z  
 Platforms: 6
 
 | Platform | HTTPS polling RPS | HTTPS reactor RPS | HTTPS ratio | c32 best shards | c32 dedicated ops/s | c32 sharded ops/s | c32 delta | c32 threads | Semantic parity |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---|
-| linux-aarch64 | 1.772 | 1.773 | 1.00x | 16 | 315526.6 | 369872.9 | 18.78% | 32->16 | PASS |
-| linux-x86_64 | 1.378 | 1.340 | 0.99x | 2 | 127832.6 | 143746.4 | 12.02% | 32->2 | PASS |
-| macos-aarch64 | 12.753 | 783.064 | 32.48x | 4 | 91688.6 | 79798.1 | -13.82% | 32->4 | PASS |
-| macos-x86_64 | 0.978 | 1.113 | 0.99x | 8 | 29528.6 | 40942.1 | 40.23% | 32->8 | PASS |
-| windows-aarch64 | 1.696 | 1.688 | 0.99x | 8 | 78957.0 | 86410.7 | 9.82% | 32->8 | PASS |
-| windows-x86_64 | 1.269 | 1.263 | 1.00x | 16 | 89469.2 | 105297.1 | 17.69% | 32->16 | PASS |
+| linux-aarch64 | 1.793 | 1.807 | 1.00x | 16 | 325006.8 | 376196.0 | 16.73% | 32->16 | PASS |
+| linux-x86_64 | 1.689 | 1.702 | 1.00x | 16 | 171129.7 | 191036.6 | 11.60% | 32->16 | PASS |
+| macos-aarch64 | 8.622 | 1144.408 | 48.02x | 2 | 139432.8 | 142449.6 | 2.16% | 32->2 | PASS |
+| macos-x86_64 | 1.359 | 1.411 | 1.03x | 4 | 43381.6 | 58368.5 | 45.10% | 32->4 | PASS |
+| windows-aarch64 | 1.781 | 1.776 | 1.00x | 4 | 85182.6 | 92380.7 | 10.32% | 32->4 | PASS |
+| windows-x86_64 | 1.336 | 1.333 | 1.00x | 16 | 86454.1 | 91984.9 | 6.22% | 32->16 | PASS |
 
 HTTPS polling-vs-reactor remains a semantic/full-stack mechanism canary. The c32 transport lane sweeps 1/2/4/8/16 shared-reactor shards against event-driven dedicated mio owners and reports the best observed hosted point per platform. Neither lane is a product SLA or a production-default selector.
