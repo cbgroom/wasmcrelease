@@ -356,9 +356,17 @@ jobs:
             bun host/drivers/tcp/benchmark.mjs "$benchmark" target/host-tcp-app/guest.wasm --wasmtime
             deno run --allow-read=libs/wasmc-owned-algorithms,target/host-tcp-app --allow-env=NODE_V8_COVERAGE --allow-run="$benchmark" host/drivers/tcp/benchmark.mjs "$benchmark" target/host-tcp-app/guest.wasm --wasmtime
           fi
-      - name: Public integrity
-        if: runner.os == 'Linux'
+      - name: Published release integrity
+        if: runner.os == 'Linux' && github.ref == 'refs/heads/main'
         run: ./scripts/validate-maintainer.sh
+      - name: Development release-surface integrity
+        if: runner.os == 'Linux' && github.ref != 'refs/heads/main'
+        shell: bash
+        run: |
+          node scripts/validate-release-surfaces.mjs
+          node scripts/test-performance-baseline.mjs
+          node scripts/test-release-channel.mjs
+          node scripts/release-candidate.mjs verify channels/candidates/0.0.11.json
       - name: Exact-source evidence scope
         shell: bash
         env:

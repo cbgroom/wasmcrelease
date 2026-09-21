@@ -47,6 +47,13 @@ Lib identity/Component behavior and Node/Bun/Deno lightweight embedding are
 covered by the source-free and Host/Lib workflows according to their explicit
 runtime support.
 
+Feature branches and pull requests validate the development release-surface
+model and candidate policy without rewriting the currently published immutable
+release manifest. On `main`, the Host composition workflow additionally runs
+the published-release integrity gate. A future release promotion refreshes
+integrity metadata only for the new immutable candidate; old tags remain
+unchanged.
+
 ## Performance baseline
 
 `native-cli-perf.yml` is the canonical public six-platform performance history.
