@@ -72,7 +72,10 @@ impl PreopenedFile {
         }
         let offset = usize::try_from(offset).map_err(|_| -5)?;
         let end = offset.checked_add(length).ok_or(-5)?;
-        if length > self.max_io_bytes || offset > self.max_extent_bytes || end > self.max_extent_bytes {
+        if length > self.max_io_bytes
+            || offset > self.max_extent_bytes
+            || end > self.max_extent_bytes
+        {
             return Err(-5);
         }
         Ok(())

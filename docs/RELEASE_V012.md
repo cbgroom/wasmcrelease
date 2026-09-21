@@ -9,7 +9,7 @@ bytes.
 
 - Product candidate: `channels/candidates/0.0.12.json`
 - Product set SHA-256:
-  `f27f7e4c121563bc5b78b3a9ea0ddd8b303bc3d6a0e01f130a22cdb4fd57e345`
+  `a5629a5630a4b5d247ef1d43c0f488d8d865a478939d15d0abc72c275e6be1ad`
 - Compiler source authority:
   `e69abb73f667f3810b0c40937fd1a1e2d04d4255`
 - Lib source authority:
