@@ -1,0 +1,949 @@
+{
+  "schema": "wasmc.release-product-candidate/v1",
+  "version": "0.0.12",
+  "compiler_source_authority": "e69abb73f667f3810b0c40937fd1a1e2d04d4255",
+  "lib_source_authority": "df8416ea68b3ee32cb0c3d7c18028b08d9c22a6e",
+  "product_files": [
+    {
+      "path": "AGENTS.md",
+      "bytes": 7060,
+      "sha256": "90a8e9c6bb046b85d61ddf2e163420d3280e63d85ef990d713c47b6083b1e299"
+    },
+    {
+      "path": "HOSTING.md",
+      "bytes": 3632,
+      "sha256": "7354a4dc7b48cad98d5c63a9a00b2ee6c6e9463413070b8012e8b6de31c6261a"
+    },
+    {
+      "path": "README.md",
+      "bytes": 24214,
+      "sha256": "751a70ff9a1d34faa6fa269711d644dee58bfd4c440e9e5fb443909355afa646"
+    },
+    {
+      "path": "bench/host-external-load.json",
+      "bytes": 1491,
+      "sha256": "cb8e94ad77946ccec2af4d4652cdc6fbd7baaadfe8a91494ec3c98a78df22d5d"
+    },
+    {
+      "path": "bench/manifest.json",
+      "bytes": 2348,
+      "sha256": "250586b83d724562c0ecac7ffd058fe4015b3961f900665193f21cf17740ce0d"
+    },
+    {
+      "path": "current/cli.mjs",
+      "bytes": 247,
+      "sha256": "68c9511464319520cc7b4b04ae3d12b7499ad2754476b75aeb93a04c065319fd"
+    },
+    {
+      "path": "current/index.mjs",
+      "bytes": 18957,
+      "sha256": "950b518b5f81ef59c8ea768cbb7689da2c7b456a62f05d597057984c29a33250"
+    },
+    {
+      "path": "current/lib_core.wasm",
+      "bytes": 34158,
+      "sha256": "86670b35fe4ff01f9ad4392b42ce8816e4679f680ab788599905edb1bbe6e749"
+    },
+    {
+      "path": "current/wasmc.global.js",
+      "bytes": 1865466,
+      "sha256": "e195adfafb64430fc6ce5c1480908137db7759b1e2d25c78c480953c61ceee3f"
+    },
+    {
+      "path": "current/wasmc.mjs",
+      "bytes": 1867305,
+      "sha256": "6f1cd2f94d66966ed0de6db462432ea82523ab02de0ad956f51be9f6944caffe"
+    },
+    {
+      "path": "current/wasmc_compiler.wasm",
+      "bytes": 1351666,
+      "sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90"
+    },
+    {
+      "path": "docs/ASMD.md",
+      "bytes": 9627,
+      "sha256": "3d4deebf4ca5e8e8d648d72c994c5400b009fea1264b649673bc125e051037d4"
+    },
+    {
+      "path": "docs/RELEASE_SURFACES.md",
+      "bytes": 6486,
+      "sha256": "0fe745b16a91edd59ec22fe4f65d5952d9b1cb90e42d2d727a2db5c1486db293"
+    },
+    {
+      "path": "examples/lib-search/client.mjs",
+      "bytes": 2745,
+      "sha256": "5ebf8faa33fc4ea4e091daa358542e557c49c5f8ef615247113cbc7b3c357409"
+    },
+    {
+      "path": "host/ARCHITECTURE.md",
+      "bytes": 4679,
+      "sha256": "664861e3a27ccea619b23ec9a6a9cf3f265277022a6ff048d2ed3d0a3bb1e3fc"
+    },
+    {
+      "path": "host/architecture.json",
+      "bytes": 3215,
+      "sha256": "b32c4ba751ef76d592b79ea6c8a338259adb28ffb8216508c95a90922ea7140a"
+    },
+    {
+      "path": "host/contract/README.md",
+      "bytes": 261,
+      "sha256": "2f199318c415feb04ac6899b9d7a11ec0cf7d759a39c06cd6c239caa9d61528c"
+    },
+    {
+      "path": "host/contract/v0/NEGOTIATION.md",
+      "bytes": 4330,
+      "sha256": "86e99d3c61694bf19e4fc00ecdc009ceedfdf4858255e6e81569f80193612bc3"
+    },
+    {
+      "path": "host/contract/v0/README.md",
+      "bytes": 6772,
+      "sha256": "79cf46c08d2fef5907522a054f27078f774e79a1fc9b128b407ba2cb541be175"
+    },
+    {
+      "path": "host/contract/v0/contract.json",
+      "bytes": 1251,
+      "sha256": "d2babfd2b9f9f42ba67be3f55a6f4d839996eea4ca46aab49b000ef2af10d04f"
+    },
+    {
+      "path": "host/contract/v0/core-test.mjs",
+      "bytes": 4001,
+      "sha256": "46afe4297407f87882fbf1c09134c977b06fcca7d561b33fbc7aa6144aeda875"
+    },
+    {
+      "path": "host/contract/v0/guest.wasmc",
+      "bytes": 749,
+      "sha256": "e56d9bb31cd1445114a4b6e981702510cdb47b1d09b331a08de50239308deed3"
+    },
+    {
+      "path": "host/contract/v0/host.wit",
+      "bytes": 1871,
+      "sha256": "89e6b73e3c235c75f1fb99d44c2420b89bfd5f60e656d8cac85197f56a6312d9"
+    },
+    {
+      "path": "host/contract/v0/negotiation-guest.wasmc",
+      "bytes": 1501,
+      "sha256": "9c88a33f74db903414a37577dd846cb024b71b5d296addacb163718f9e82e757"
+    },
+    {
+      "path": "host/contract/v0/reference.mjs",
+      "bytes": 2384,
+      "sha256": "9b13e7cad0aaaf2e84622e662a06cb146919d78b304a4aa18173a33208f11de6"
+    },
+    {
+      "path": "host/contract/v0/rust/Cargo.lock",
+      "bytes": 29140,
+      "sha256": "5fabd6dcf618c5ced3f2e72873d5378171aea66cb916e413bfe2507798700660"
+    },
+    {
+      "path": "host/contract/v0/rust/Cargo.toml",
+      "bytes": 454,
+      "sha256": "1c85fa8c4bba9679b0ba86af95c23f041f5c9b981818b912ec75533f62a160b2"
+    },
+    {
+      "path": "host/contract/v0/rust/src/main.rs",
+      "bytes": 9602,
+      "sha256": "56196e5c184f90593f671bd2b9f1692068a30cb4e4462b7f5b7807e7390089d3"
+    },
+    {
+      "path": "host/contract/v0/rust/src/wasmtime_profile.rs",
+      "bytes": 1663,
+      "sha256": "e53f102b0602e4df83e827f4e9505eb8a498add3ca1e1f4a07e67bee953b7d02"
+    },
+    {
+      "path": "host/contract/v0/test.mjs",
+      "bytes": 2406,
+      "sha256": "884060d28cc8ed687af87ea8c154bfd5d0e19a96fb24c5e8825756f95c4f3ad7"
+    },
+    {
+      "path": "host/drivers/file/rust/Cargo.lock",
+      "bytes": 2660,
+      "sha256": "4d269a5464151951feab052348ba955fb71bb78a2a6a1f789a547e75d6fa94a9"
+    },
+    {
+      "path": "host/drivers/file/rust/Cargo.toml",
+      "bytes": 175,
+      "sha256": "2717e5b1dcdd8c32d517e912c2a6c810db0642a38cdf0ca916d9228ba21e8c8e"
+    },
+    {
+      "path": "host/drivers/file/rust/src/lib.rs",
+      "bytes": 4960,
+      "sha256": "7c398e17340da8a56c48835befde6772a802f201efc69c6e9d0533f9deda0ac6"
+    },
+    {
+      "path": "host/drivers/file/rust/src/main.rs",
+      "bytes": 1854,
+      "sha256": "b145399cb483fedb73e049213cdba9f9de92f9f24e6a761cd8381b266177f695"
+    },
+    {
+      "path": "host/drivers/memory/rust/Cargo.lock",
+      "bytes": 174,
+      "sha256": "a6c63a3f736fcf587ba33c84b1bda0bfffd5447247ebff9a343219b3eb249afd"
+    },
+    {
+      "path": "host/drivers/memory/rust/Cargo.toml",
+      "bytes": 144,
+      "sha256": "d3e0215f94740354e47d600d0236c1e48e8a51a4c28d91e23c56f918f29c0839"
+    },
+    {
+      "path": "host/drivers/memory/rust/src/lib.rs",
+      "bytes": 2928,
+      "sha256": "95892b4ae6c9d6e251f18aa510fff2bc96b0616f10e812b3d9f9a3b4ea726971"
+    },
+    {
+      "path": "host/drivers/memory/rust/src/main.rs",
+      "bytes": 772,
+      "sha256": "1cbdc6cf26ef8558a82e17a24971845c48beba7709c6578b6b1df6a02be5f25a"
+    },
+    {
+      "path": "host/manifest.json",
+      "bytes": 751,
+      "sha256": "55cd6ed1712a696694ac172aa2d395c2a9c841eb74cddb5ebfd3a9524f80e5a1"
+    },
+    {
+      "path": "host/sdk/README.md",
+      "bytes": 532,
+      "sha256": "f40d75196c1223d656f2aeea07efc15f015000407186b73243e4da3435983c2f"
+    },
+    {
+      "path": "libs/wasmc-csv/SKILL.md",
+      "bytes": 448,
+      "sha256": "62fce572351ebb0c5a488fdf32356a5485272c201e834bc88a76d23ea5a0b68d"
+    },
+    {
+      "path": "libs/wasmc-csv/artifact.wasm",
+      "bytes": 444558,
+      "sha256": "517d3be7e9e50f44dedbfc5898a945933903d79ef8fdabef2b1b0195a510f0f6"
+    },
+    {
+      "path": "libs/wasmc-csv/component.wasm",
+      "bytes": 445951,
+      "sha256": "1bb31b561a4cd58898f1043bb1bd4e0fee833d25b1c67315041a83be497d5790"
+    },
+    {
+      "path": "libs/wasmc-csv/lib.json",
+      "bytes": 1667,
+      "sha256": "7ec9221c8499f13a6237e36f924020f7102118bbfdbb0e01550f75a1ba432f74"
+    },
+    {
+      "path": "libs/wasmc-csv/lib.wit",
+      "bytes": 476,
+      "sha256": "4de9ac3d48a6546de4c96b12034c739412c981e4af933a27fff9ba3ef247ddb1"
+    },
+    {
+      "path": "libs/wasmc-csv/references/agent-delta.json",
+      "bytes": 146,
+      "sha256": "2eea086680c0cd901c17c733c26451e3d5f57f97a3ce1fea166eec0f1b31c3d9"
+    },
+    {
+      "path": "libs/wasmc-data-compute/SKILL.md",
+      "bytes": 464,
+      "sha256": "c9c9945f92bfc9e7f5f88c024427c74a87e05af5a5a40d18dfebda1b59f02a8d"
+    },
+    {
+      "path": "libs/wasmc-data-compute/artifact.wasm",
+      "bytes": 1495779,
+      "sha256": "af47022f7e45543ff7c0e717ac5989dd8dc15a08ba52af76595ba20996cff7e5"
+    },
+    {
+      "path": "libs/wasmc-data-compute/component.wasm",
+      "bytes": 1497950,
+      "sha256": "791673fdd373ca954f69dae80b4927cd78bcdc44040b1951862cba59014b5ab3"
+    },
+    {
+      "path": "libs/wasmc-data-compute/lib.json",
+      "bytes": 1714,
+      "sha256": "a5c1a98d871acd57e904c99dadda20481e360a984ea58bfe8fb8300023fc7674"
+    },
+    {
+      "path": "libs/wasmc-data-compute/lib.wit",
+      "bytes": 744,
+      "sha256": "c9387078dd747332696ec40f97f65443ed685231b8d2266204568b4351b792d6"
+    },
+    {
+      "path": "libs/wasmc-data-compute/references/agent-delta.json",
+      "bytes": 367,
+      "sha256": "bd7179265ad474b3c70dbb2081b42019d0d915deb2ac071e53a1c21998dee20c"
+    },
+    {
+      "path": "libs/wasmc-data-core/SKILL.md",
+      "bytes": 471,
+      "sha256": "ad0fdbdfe5358621300b376178b1e03a28c553dae23147adbe49b8ff5f666049"
+    },
+    {
+      "path": "libs/wasmc-data-core/artifact.wasm",
+      "bytes": 869000,
+      "sha256": "3d622654abca4d0a71be9fa92da17a15a8d11b548677464f1f65ee3ee47b96f3"
+    },
+    {
+      "path": "libs/wasmc-data-core/component.wasm",
+      "bytes": 871165,
+      "sha256": "b7a73a2ece5d46e0babfed42fedc32d256cc48779e265dcc4ef7a9353493f745"
+    },
+    {
+      "path": "libs/wasmc-data-core/lib.json",
+      "bytes": 1697,
+      "sha256": "e20daaef93c0a4ab490225b21474e5b633952b27dce88f671c90a6e7d6c0f386"
+    },
+    {
+      "path": "libs/wasmc-data-core/lib.wit",
+      "bytes": 1085,
+      "sha256": "29c4e4b90690cfa6b1912859008bca535bf04802c68e887f2e29fae51fd5d8d2"
+    },
+    {
+      "path": "libs/wasmc-data-core/references/agent-delta.json",
+      "bytes": 281,
+      "sha256": "c6a82e75938e5c5c869722ffd4c364048e0dd90f34b9556f5ba72dd6ad8b60bf"
+    },
+    {
+      "path": "libs/wasmc-data-expr/SKILL.md",
+      "bytes": 458,
+      "sha256": "8a44191ee044d72df6e49216e8f810ac33358ab89726ae90530c7c7427f372a7"
+    },
+    {
+      "path": "libs/wasmc-data-expr/artifact.wasm",
+      "bytes": 1481802,
+      "sha256": "fc3148f21352f63bc8a2c3d40ad5e4b4396e10757bf8e34b28eeb24426eae44e"
+    },
+    {
+      "path": "libs/wasmc-data-expr/component.wasm",
+      "bytes": 1484336,
+      "sha256": "0c7f49eba2f0d68365ae82f7c0998545fb279354f025e73a01f7425aced2324f"
+    },
+    {
+      "path": "libs/wasmc-data-expr/lib.json",
+      "bytes": 1699,
+      "sha256": "e232ddcdb7d8c2a30afc70873b06137f7ad412bbf0bc4467af3a6f121e7ef80b"
+    },
+    {
+      "path": "libs/wasmc-data-expr/lib.wit",
+      "bytes": 1207,
+      "sha256": "16ae4a530a8472dc4f4fd847de98f226cb47f82cab95a00a36da485ac4436be3"
+    },
+    {
+      "path": "libs/wasmc-data-expr/references/agent-delta.json",
+      "bytes": 259,
+      "sha256": "e0e0530b31accc61cb02580e57207d59c6e99ebeef675261e2dacffd4700e16c"
+    },
+    {
+      "path": "libs/wasmc-data-interchange/SKILL.md",
+      "bytes": 481,
+      "sha256": "00d0573e11ed590eef6d0e1349d7fa1bc6d6320c29f58feaf8da6096ed212184"
+    },
+    {
+      "path": "libs/wasmc-data-interchange/artifact.wasm",
+      "bytes": 2987120,
+      "sha256": "144ba934011bd2b6cb3ebc5d3890f4ff69f8502881b2d44a8078128bcda80dff"
+    },
+    {
+      "path": "libs/wasmc-data-interchange/component.wasm",
+      "bytes": 2990150,
+      "sha256": "e32c2b1563c0a24b5dd6b65068b7823d31ad622a077460bf8e8d3d34c0d25e1b"
+    },
+    {
+      "path": "libs/wasmc-data-interchange/lib.json",
+      "bytes": 1734,
+      "sha256": "b7e9fea16ed90eb5a482fee168cde800d3636ccc9a950a249755a0d36cc3a879"
+    },
+    {
+      "path": "libs/wasmc-data-interchange/lib.wit",
+      "bytes": 1192,
+      "sha256": "ea01ce12b3021d796033c39ce49a3f4061ec1f0d4bd6588d5a2b69413373c2ba"
+    },
+    {
+      "path": "libs/wasmc-data-interchange/references/agent-delta.json",
+      "bytes": 561,
+      "sha256": "8c9777e07251ff5816aa81bf1700ed1589b7da1be334802d3c700b64a8c92463"
+    },
+    {
+      "path": "libs/wasmc-data-profile/SKILL.md",
+      "bytes": 459,
+      "sha256": "a09d117ff0de919f21785e14b6c40a9741ebbca5459e345eee0bafe9f17d8465"
+    },
+    {
+      "path": "libs/wasmc-data-profile/artifact.wasm",
+      "bytes": 72823,
+      "sha256": "51ee1bbce102e4a383596fdef9a773aec02697bc33d4c0468a669da2efd4b34e"
+    },
+    {
+      "path": "libs/wasmc-data-profile/component.wasm",
+      "bytes": 75262,
+      "sha256": "793996fba9af880c1b53d7e9476a83639700acb68aaaba5c5dec7237bba7ea18"
+    },
+    {
+      "path": "libs/wasmc-data-profile/lib.json",
+      "bytes": 1710,
+      "sha256": "fda5c4250b94fb1c2cac768156cf4742aa49eb8894d0c243bbff51d899070e77"
+    },
+    {
+      "path": "libs/wasmc-data-profile/lib.wit",
+      "bytes": 1384,
+      "sha256": "538e8a7415fdf4d24484cc5f4145f1a7d1d22f7bbdd103a7d7d28272b2fd68a8"
+    },
+    {
+      "path": "libs/wasmc-data-profile/references/agent-delta.json",
+      "bytes": 151,
+      "sha256": "6db8e63d138f12dee52a2abad1236930adb3fce33e9c2f16d756cbf2ac94c309"
+    },
+    {
+      "path": "libs/wasmc-data-relational/SKILL.md",
+      "bytes": 477,
+      "sha256": "678d848bf3fe3892448cb7c16090bdc456789c9cbee86f97b85d89e95c578fa1"
+    },
+    {
+      "path": "libs/wasmc-data-relational/artifact.wasm",
+      "bytes": 931056,
+      "sha256": "627176699ad4b9c2dc47ca78d520fe45ef1b2603fcc87d08eef3c0b2a1bf30a9"
+    },
+    {
+      "path": "libs/wasmc-data-relational/component.wasm",
+      "bytes": 935192,
+      "sha256": "8f348350402687b0deb0e76b5ee2cd209aaeec8cd5022076af4230192188d565"
+    },
+    {
+      "path": "libs/wasmc-data-relational/lib.json",
+      "bytes": 1727,
+      "sha256": "c9c0635a2521361fe93a92c9b400244b01a35f5df785ad5b04501c3c316b0564"
+    },
+    {
+      "path": "libs/wasmc-data-relational/lib.wit",
+      "bytes": 2071,
+      "sha256": "91cfcf156c64f62099599b6a9f304639ba9845650363fc8bcef5d6b26cf1c8ef"
+    },
+    {
+      "path": "libs/wasmc-data-relational/references/agent-delta.json",
+      "bytes": 535,
+      "sha256": "1e61c74653b8703d7c212017ef8682c5e690a3e6b18c7682749a38e53f08fb03"
+    },
+    {
+      "path": "libs/wasmc-host-clock/SKILL.md",
+      "bytes": 486,
+      "sha256": "1a394bd25cf1e025d7b5fe62c220e994cc9f51387b1d9ce46a75667369e90329"
+    },
+    {
+      "path": "libs/wasmc-host-clock/artifact.wasm",
+      "bytes": 20371,
+      "sha256": "cb6be53fcf77fa28864ee77c998a6bd8c3bee1004460b1e6df1cc84fdbc4bbfd"
+    },
+    {
+      "path": "libs/wasmc-host-clock/component.wasm",
+      "bytes": 21055,
+      "sha256": "d887d35a19d04f7ce6ad18c2c50f87332f43a0cb9d251b1613d40d887a06951e"
+    },
+    {
+      "path": "libs/wasmc-host-clock/lib.json",
+      "bytes": 1344,
+      "sha256": "ba45dfbba18796417a52e0e17bc376cfaa234d7c8e8d16542b6d842076909aed"
+    },
+    {
+      "path": "libs/wasmc-host-clock/lib.wit",
+      "bytes": 205,
+      "sha256": "c33f2e31c57bc64fed6c56b45e1abcf9d4768b336bdafa24fa5a46dc49644bab"
+    },
+    {
+      "path": "libs/wasmc-host-clock/references/agent-delta.json",
+      "bytes": 254,
+      "sha256": "c20d16927cb7df33256327d5e7a2d4bf1eb92a41bde417a77e54d14a1159ecc7"
+    },
+    {
+      "path": "libs/wasmc-owned-algorithms/SKILL.md",
+      "bytes": 488,
+      "sha256": "64ca6ad61a5cb52ae9070a23fca740d49e92319b8ffb0ebdb6b10c685e763bb6"
+    },
+    {
+      "path": "libs/wasmc-owned-algorithms/artifact.wasm",
+      "bytes": 25235,
+      "sha256": "44638f7cfa5a653f986e2237db4f26f1534539c8c0d0d1e7258c51a976df19e3"
+    },
+    {
+      "path": "libs/wasmc-owned-algorithms/component.wasm",
+      "bytes": 25583,
+      "sha256": "a534046129d2d41e15de98020f0387dec78ff2a68b674f8b96692ad20e4e3e10"
+    },
+    {
+      "path": "libs/wasmc-owned-algorithms/lib.json",
+      "bytes": 1369,
+      "sha256": "f4727d73f64b0775a43b86416cbfa0adf04747a529804d35b73362d094eb4082"
+    },
+    {
+      "path": "libs/wasmc-owned-algorithms/lib.wit",
+      "bytes": 376,
+      "sha256": "b7715f218bcaa15097ad1d217002dbffe61bc28016951c8dc41561ccc69d8f12"
+    },
+    {
+      "path": "libs/wasmc-owned-algorithms/references/agent-delta.json",
+      "bytes": 561,
+      "sha256": "c39d1352237a44a5a77789facfc9bb2eef6223dec78998a4f41a59b995247db7"
+    },
+    {
+      "path": "libs/wasmc-resource-counter/SKILL.md",
+      "bytes": 475,
+      "sha256": "e953c3514611ca4fead029f112ef773b89b22dcd368359fd2a48bb219a6893ae"
+    },
+    {
+      "path": "libs/wasmc-resource-counter/artifact.wasm",
+      "bytes": 21623,
+      "sha256": "1b9796138c5f7b28830478efe733ac56e6f5cb0121b608441e1be2e0a19bf3a9"
+    },
+    {
+      "path": "libs/wasmc-resource-counter/component.wasm",
+      "bytes": 23430,
+      "sha256": "26413726d17b5f65378c1f9a19194d8a0c841aa06526affd908504ffeab7c19e"
+    },
+    {
+      "path": "libs/wasmc-resource-counter/lib.json",
+      "bytes": 1368,
+      "sha256": "5cece4a02e886639cf2cfbddf5e0b1eb232a1a4fb9b652d2141e6dab0fa23ebb"
+    },
+    {
+      "path": "libs/wasmc-resource-counter/lib.wit",
+      "bytes": 225,
+      "sha256": "b695db79f230b71155045b0b825f75939b07c82c2236ee1dba25e0cfc33dd2a1"
+    },
+    {
+      "path": "libs/wasmc-resource-counter/references/agent-delta.json",
+      "bytes": 405,
+      "sha256": "44f72ce3bf08fc9c29ad902cd1814873b88547a0efd6d3fdf8346f42d96d3a9c"
+    },
+    {
+      "path": "release-surfaces.json",
+      "bytes": 6332,
+      "sha256": "05a51f152b1a3a96ee82666688b4a9238e2bedffdfee8e1b6a7b2a6eda82fa05"
+    },
+    {
+      "path": "runtime/AGENTS.md",
+      "bytes": 881,
+      "sha256": "4176616546ca871763ba088c42f0af14178941fd94317d81bfe7bef79cdfc6d9"
+    },
+    {
+      "path": "runtime/README.md",
+      "bytes": 1697,
+      "sha256": "e2ec4e02ebb93481e8b210d32e0104ca51bcbade0b7d3968f1ed308cd1e3cf8e"
+    },
+    {
+      "path": "runtime/registry-v0/channels/dev.json",
+      "bytes": 503,
+      "sha256": "b946308802cf9d899b12193fe15638e1194c6d42f9753962560ba6412aded17d"
+    },
+    {
+      "path": "runtime/registry-v0/mirrors/local.json",
+      "bytes": 494,
+      "sha256": "a4197749e996c0831a14e77d16e1c42833bcbb5ec8f1b7a652037aaf2f68f0a0"
+    },
+    {
+      "path": "runtime/registry-v0/packages/wasmc-runtime/0.1.0-runtime-v0.json",
+      "bytes": 1280,
+      "sha256": "f6a4e8926a948404c9ea9173cebaf6574db40d11e252ca8b5d0d10bcd7a61f6d"
+    },
+    {
+      "path": "runtime/registry-v0/registry.json",
+      "bytes": 355,
+      "sha256": "4998df76ee05d00114eedf55362f5a88d9fc47e8e578ba53a41805c6a53ad2b3"
+    },
+    {
+      "path": "runtime/wasmc-runtime-v0/README.md",
+      "bytes": 1192,
+      "sha256": "30bcec8bd9e26b100346a8d5d20a722e3d9e619f8d5cb99710e8beaaad9093ef"
+    },
+    {
+      "path": "runtime/wasmc-runtime-v0/VERSION",
+      "bytes": 17,
+      "sha256": "b10e46f75ee7c58896204f308750f3d2407d335d029053d5780212e23e06fb5b"
+    },
+    {
+      "path": "runtime/wasmc-runtime-v0/bootstrap.mjs",
+      "bytes": 1311,
+      "sha256": "f91bd85040e9b8e0075eade5aa782d4e0d66d984bc99048a4f6e58b939fc6717"
+    },
+    {
+      "path": "runtime/wasmc-runtime-v0/compiler.wasm",
+      "bytes": 1351666,
+      "sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90"
+    },
+    {
+      "path": "runtime/wasmc-runtime-v0/examples/add.wasmc",
+      "bytes": 134,
+      "sha256": "129b276fd0d708109d8c028706402857c453cdd2437236961c7199fc661d5781"
+    },
+    {
+      "path": "runtime/wasmc-runtime-v0/host/bun.mjs",
+      "bytes": 361,
+      "sha256": "3040514b15f8baa7ccf2428f53836a51fdb350cb9f377032a7d4362a771dc6d3"
+    },
+    {
+      "path": "runtime/wasmc-runtime-v0/host/common.mjs",
+      "bytes": 6488,
+      "sha256": "0335cc677a0a61925e25562942608e71e4aa2896301d6ebc1fc9c25480b5825d"
+    },
+    {
+      "path": "runtime/wasmc-runtime-v0/host/deno.mjs",
+      "bytes": 821,
+      "sha256": "08e4764ff360ba3877e3af4d21a6130166b08279307358881294060d887b9f3c"
+    },
+    {
+      "path": "runtime/wasmc-runtime-v0/host/node.mjs",
+      "bytes": 836,
+      "sha256": "c7f187f13ed6ae74b090bd65e6acf005efe4e43a60b9d1ff5d0d4310d7464e3a"
+    },
+    {
+      "path": "runtime/wasmc-runtime-v0/manifest.json",
+      "bytes": 3129,
+      "sha256": "b639927c1dda5e042c6ee8d47f891d956ae36b6d5d8301d2fc9ebec8eb28b7eb"
+    },
+    {
+      "path": "runtime/wasmc-runtime-v0/receipts/bun-self-test.json",
+      "bytes": 1124,
+      "sha256": "b70e38046284c23382ccdbbe7ada8f7a2312c0716366bc99cf6ae6265ce012d5"
+    },
+    {
+      "path": "runtime/wasmc-runtime-v0/receipts/compiler-wasm.json",
+      "bytes": 1161,
+      "sha256": "0468fe303c9149401dae1eb1faf3cf8b9f337b0d88d6f608c669732198d6cb54"
+    },
+    {
+      "path": "runtime/wasmc-runtime-v0/receipts/deno-self-test.json",
+      "bytes": 1170,
+      "sha256": "872a1813ae34f58b8a43e1107fc4ad7f422e9004bc9e23912567444c4fdffb9f"
+    },
+    {
+      "path": "runtime/wasmc-runtime-v0/receipts/node-compile.json",
+      "bytes": 173,
+      "sha256": "e4e324c59dbf8505c7dac4343bf02144c3a1cb37549a62b1f1fe10a6e61f3cd8"
+    },
+    {
+      "path": "runtime/wasmc-runtime-v0/receipts/node-self-test.json",
+      "bytes": 1127,
+      "sha256": "489002605e569d727dae853b95ab92abba0f4c8070f94e1a3a4b69caae1e72f2"
+    },
+    {
+      "path": "runtime/wasmc-runtime-v0/wit/host.wit",
+      "bytes": 568,
+      "sha256": "4418ee5d3985c74742c023ef13ba10ea991c4591beaf299c6daacbd2a2f695b0"
+    },
+    {
+      "path": "scripts/agent-guidance-contract.mjs",
+      "bytes": 4268,
+      "sha256": "8bf562750ff339b6baa6d293c8801cb76fd8dae9994db1a01a2a3ceaf22a9642"
+    },
+    {
+      "path": "scripts/test-agent-guidance.mjs",
+      "bytes": 1592,
+      "sha256": "e5725162c8b53b1a68e14bec7079020ec3fb971919520fb120eb8fb9e613974c"
+    },
+    {
+      "path": "scripts/validate-agent-docs.mjs",
+      "bytes": 4263,
+      "sha256": "a2cea4a9b2e47dd0d4f76286d8011f5f36b37c22a24f9874aaff86e680aa6028"
+    },
+    {
+      "path": "scripts/validate-sdk-agent-routes.mjs",
+      "bytes": 7760,
+      "sha256": "5734c8c2365ca37d4ca852b09f5b68fad0e994d00a41e91a9a7fe34e4e29ede9"
+    },
+    {
+      "path": "scripts/wasmc-lib.mjs",
+      "bytes": 3326,
+      "sha256": "35638258cb1ab8eb09aa0c157e921ea6548730ee54d20c75cb0c75840bf54788"
+    },
+    {
+      "path": "sdk/AGENTS.md",
+      "bytes": 1024,
+      "sha256": "a2e6f76f6f79896329fdf668b4d0a53bb70032942fed0f4a31efb50cc0634bc5"
+    },
+    {
+      "path": "sdk/wasmc-core-runtime/Cargo.toml",
+      "bytes": 823,
+      "sha256": "5011550593b94e50fece5c05e7b6b8cc53815f7e950c13f5d9ba34a9d56ba136"
+    },
+    {
+      "path": "sdk/wasmc-core-runtime/README.md",
+      "bytes": 4413,
+      "sha256": "40ba32b7b9e2b83e401bdcab757c743b99f0ea6c440c08fdffc223efe02e109d"
+    },
+    {
+      "path": "sdk/wasmc-core-runtime/SKILL.md",
+      "bytes": 2150,
+      "sha256": "785a22085d494f5fbc45f3eb7d48083508e17a0cdf2e62c4662a97c272aa25b8"
+    },
+    {
+      "path": "sdk/wasmc-core-runtime/src/host_import.rs",
+      "bytes": 15611,
+      "sha256": "6a852a20fa292af76b5dadf9e93fe6f77585d3f6e67a795f7d78777ed0c8e3bc"
+    },
+    {
+      "path": "sdk/wasmc-core-runtime/src/host_lane.rs",
+      "bytes": 25370,
+      "sha256": "405840272c9b963ccfbbfe760baa1ad9876c077297e2792c76454766e2c827d1"
+    },
+    {
+      "path": "sdk/wasmc-core-runtime/src/lib.rs",
+      "bytes": 3073,
+      "sha256": "51e5c87968bfe002b589324f7d810bfad9206fa1368de9c39e366a894acfca1e"
+    },
+    {
+      "path": "sdk/wasmc-core-runtime/src/limits.rs",
+      "bytes": 9611,
+      "sha256": "10dae05773cd74aa0e3c57281538cf520201abf2976d2b0d8228c76410d82392"
+    },
+    {
+      "path": "sdk/wasmc-core-runtime/src/module_inspection.rs",
+      "bytes": 3523,
+      "sha256": "06a8c277e9289e674670132524946e370c92ac64ff557bad6018cdf7e20314bf"
+    },
+    {
+      "path": "sdk/wasmc-core-runtime/src/promotion.rs",
+      "bytes": 46787,
+      "sha256": "09f337766fc6d3ffec7b5477c20b80f55cbb3cbb762558c40e758ac53331b941"
+    },
+    {
+      "path": "sdk/wasmc-core-runtime/src/scalar_host_lane.rs",
+      "bytes": 34744,
+      "sha256": "9357eaabb8235d520589ccce6c8c9e45c927cfb2a02094fd0700c5952d783702"
+    },
+    {
+      "path": "sdk/wasmc-core-runtime/src/sdk.rs",
+      "bytes": 7901,
+      "sha256": "2c9dcf0285c8b79d194f47be69b771539e7fd7d517db0be5bb90fe4429f57f5f"
+    },
+    {
+      "path": "sdk/wasmc-core-runtime/src/wasmi_runtime.rs",
+      "bytes": 7431,
+      "sha256": "c9836f9eacef8fcd0eada1f195d1dcc1bc8b99fdfc200497c813f0dc2dc96da7"
+    },
+    {
+      "path": "sdk/wasmc-core-runtime/src/wasmtime_speed_runtime.rs",
+      "bytes": 7158,
+      "sha256": "66c17d007503d96612798e6e2f027bf1e84414da543df73afcb71978d8b15fd2"
+    },
+    {
+      "path": "sdk/wasmc-core-runtime/tests/runtime_sdk.rs",
+      "bytes": 32022,
+      "sha256": "f9a9e9c1f38f0d77ec7e63eaecbfe189f52ed9143a9e53c0c7402214e357848a"
+    },
+    {
+      "path": "sdk/wasmc-host/Cargo.lock",
+      "bytes": 29462,
+      "sha256": "496844bbf86befd0df516363b73a20121315d4a0a5c769be1b7b2150b742a38f"
+    },
+    {
+      "path": "sdk/wasmc-host/Cargo.toml",
+      "bytes": 580,
+      "sha256": "15d9a37ce23a7ac280e32fb7bc374419088093cdea934c938afa5c1f1d623643"
+    },
+    {
+      "path": "sdk/wasmc-host/README.md",
+      "bytes": 3927,
+      "sha256": "0296aa947a221504064ab14b76fe38fa2f1c8aa5e5b139497d298852b959dd9c"
+    },
+    {
+      "path": "sdk/wasmc-host/SKILL.md",
+      "bytes": 2165,
+      "sha256": "ca344588dcc4791f6f35bdaa969718e9217eff21561122b2836ac7cb03648589"
+    },
+    {
+      "path": "sdk/wasmc-host/examples/native.rs",
+      "bytes": 874,
+      "sha256": "272d59239c78effcfc545859d9e156b59abdb03b7ab7705fedb1aa4a8a69a4cc"
+    },
+    {
+      "path": "sdk/wasmc-host/src/lib.rs",
+      "bytes": 22988,
+      "sha256": "5b136d1e15b7fd78ea35da782b87168b87fe6a680a24404c976b40cdd9fce89b"
+    },
+    {
+      "path": "sdk/wasmc-native-compiler/Cargo.lock",
+      "bytes": 28479,
+      "sha256": "fe9f61ffa03d049a8e2f49ba13eb8244b18361086733fdf8ced78d124a471ff7"
+    },
+    {
+      "path": "sdk/wasmc-native-compiler/Cargo.toml",
+      "bytes": 641,
+      "sha256": "916b90c81a7c60d5c2b8421eb04198f9188de1a66292e87115239ba02c2f78a4"
+    },
+    {
+      "path": "sdk/wasmc-native-compiler/README.md",
+      "bytes": 3609,
+      "sha256": "9c69b2d768f865fec8eb9c3cd1beadc203256873b7bcc497c8643ea9650892af"
+    },
+    {
+      "path": "sdk/wasmc-native-compiler/SKILL.md",
+      "bytes": 1769,
+      "sha256": "29080aae920bb490e5cd99226a9dffc40607fc22fe815736b60ddc0813e9502e"
+    },
+    {
+      "path": "sdk/wasmc-native-compiler/build.rs",
+      "bytes": 2522,
+      "sha256": "8406819c4d1ed51030ad12bd1adc8d385336caf941a75171ca00a8905412dceb"
+    },
+    {
+      "path": "sdk/wasmc-native-compiler/src/lib.rs",
+      "bytes": 7132,
+      "sha256": "bdad16caa5284e053bc6784b37ee902c92689b699e796ef8c90de2231a15a768"
+    },
+    {
+      "path": "sdk/wasmc-native-compiler/src/main.rs",
+      "bytes": 16292,
+      "sha256": "fcf44c525ab9a23b7079ee94d23e039ed122d528cc77cdccf6c78ffc218e34b8"
+    },
+    {
+      "path": "sdk/wasmc-native-compiler/tests/compiler.rs",
+      "bytes": 1176,
+      "sha256": "19b4e6737196288780c10bde773508f9dcf30a36d34186b0d04cc1718dddca32"
+    },
+    {
+      "path": "skills/wasmc-developer/SKILL.md",
+      "bytes": 2372,
+      "sha256": "7e174e41921144b747219c04453f08cb1ad5cece023ed53dd226629a9cf65ba8"
+    },
+    {
+      "path": "skills/wasmc-developer/agents/openai.yaml",
+      "bytes": 267,
+      "sha256": "e1096fe47654775b41272a6575ec846144e82321e3240e94d3d270d0b1cc2fe6"
+    },
+    {
+      "path": "skills/wasmc-developer/references/authoring-libs.md",
+      "bytes": 9668,
+      "sha256": "44b26d2af67e67bde9e3a576f0349bfed810c0e148e5b5bc08b4a4f833b001da"
+    },
+    {
+      "path": "skills/wasmc-developer/references/javascript.md",
+      "bytes": 2728,
+      "sha256": "47ab158d195b6beb4c5e827860b16983786869c19edac7ed68283040a11493c4"
+    },
+    {
+      "path": "skills/wasmc-developer/references/language-and-wit.md",
+      "bytes": 2945,
+      "sha256": "f0a7c1d4ce801d7863d4e0e4e94a2a14a22b3f767757dfb3f09d3a0edf394879"
+    },
+    {
+      "path": "skills/wasmc-developer/references/lib.md",
+      "bytes": 3475,
+      "sha256": "51024a2eed19627c6aa1a831844b25c335541984596cb178b61102ca226b6c0c"
+    },
+    {
+      "path": "skills/wasmc-developer/references/runtime.md",
+      "bytes": 1247,
+      "sha256": "488e8341be3e20adfba761a5de503f3a33b551581e45a3baaf6156afd0b2ddb2"
+    },
+    {
+      "path": "skills/wasmc-developer/references/rust-wasmtime.md",
+      "bytes": 2742,
+      "sha256": "ba990e9c38914a7f570c1644ec4f03f1c11026eae72a271f9adaecf8b6bbdbdd"
+    },
+    {
+      "path": "skills/wasmc-lib/SKILL.md",
+      "bytes": 1925,
+      "sha256": "16733ca221968f3cccf650573b659ddcc9fad607d8b57ac4a17d79bc96288b15"
+    },
+    {
+      "path": "skills/wasmc-sdk-discovery/SKILL.md",
+      "bytes": 4083,
+      "sha256": "3a34c8e47e31bc0a393a6b0512b1ae81fb2a0e6a1c0a35b2f04d8571b7faf8f0"
+    },
+    {
+      "path": "skills/wasmc-sdk-discovery/agents/openai.yaml",
+      "bytes": 366,
+      "sha256": "89a3d79316c6d1ffac671378d71bff89bd7ab7df4fbf5092c9981a75dce4839e"
+    },
+    {
+      "path": "standard/corelib/4.8.0/corelib.wasm",
+      "bytes": 245810,
+      "sha256": "f54a892aff9068e5c79464029423a2e8f753ddb44010af9ac34a5c9efce2069c"
+    },
+    {
+      "path": "standard/wasmc-lib-search/0.1.0/SKILL.md",
+      "bytes": 412,
+      "sha256": "7d00e9e8ceb438f7c54178841074c5f86ee3bbbeb732618b920bd7aeb2ec9dcb"
+    },
+    {
+      "path": "standard/wasmc-lib-search/0.1.0/artifact.wasm",
+      "bytes": 43871,
+      "sha256": "44944d542d818b8ad8a9794a555694b8e56ed4f147d4370b1ff975e26b204c80"
+    },
+    {
+      "path": "standard/wasmc-lib-search/0.1.0/bindings/rust/Cargo.toml",
+      "bytes": 272,
+      "sha256": "fce1c517e550c8fc2c98a7948b6c83c9b409480f03ca6b0376e33efb20bbc85b"
+    },
+    {
+      "path": "standard/wasmc-lib-search/0.1.0/bindings/rust/src/lib.rs",
+      "bytes": 659,
+      "sha256": "b1cca33b3a2018c2c9941c78cb54d30bd5899af01c208b42c959cc9d599bb782"
+    },
+    {
+      "path": "standard/wasmc-lib-search/0.1.0/component.wasm",
+      "bytes": 45637,
+      "sha256": "693af4baff0a16fb855271bf73b0bd7b3aeb26e9d7cf2b50ef68f6b9cb9e6de1"
+    },
+    {
+      "path": "standard/wasmc-lib-search/0.1.0/core-abi.json",
+      "bytes": 2454,
+      "sha256": "9fde836a0345b66ed264ce4ad3db091c586d0f0d354ec2267649fbf23b80d698"
+    },
+    {
+      "path": "standard/wasmc-lib-search/0.1.0/lib.json",
+      "bytes": 2580,
+      "sha256": "3247402f251eaa4ad0dc6b527ff904138be67c713461fc68f477d5ac87e59b99"
+    },
+    {
+      "path": "standard/wasmc-lib-search/0.1.0/lib.wit",
+      "bytes": 683,
+      "sha256": "99157bcd9680b98603cae09c5c5e587ad4a1c48768418abe48952fcac6074894"
+    },
+    {
+      "path": "standard/wasmc-lib-search/0.1.0/references/agent-delta.json",
+      "bytes": 640,
+      "sha256": "bfd7664799ba683bd59d07a5c317b4f53b3c4ea3b4fecd9d65a567addf13dd8f"
+    },
+    {
+      "path": "standard/wasmc-std/1.4.0/SKILL.md",
+      "bytes": 403,
+      "sha256": "355b8abd7f2d6fadbde9e8b75b29c28e987cc89dc384b5172fd364b211bfe079"
+    },
+    {
+      "path": "standard/wasmc-std/1.4.0/artifact.wasm",
+      "bytes": 44443,
+      "sha256": "f8a8ce447f776a47680e02e19ea3a69827edbbc46e01985803ce3d3df51178d7"
+    },
+    {
+      "path": "standard/wasmc-std/1.4.0/bindings/rust/Cargo.toml",
+      "bytes": 127,
+      "sha256": "361667c579d4750269e03b5b23e13128020768612a9735a0c4e1e204a379ea6f"
+    },
+    {
+      "path": "standard/wasmc-std/1.4.0/bindings/rust/src/lib.rs",
+      "bytes": 28360,
+      "sha256": "83e0bff3238b0cf90c9fe774a2a2b03e736081d7b717f73a042a8b0dc445490e"
+    },
+    {
+      "path": "standard/wasmc-std/1.4.0/component.wasm",
+      "bytes": 139462,
+      "sha256": "36f27edda9dd219d7ce86b5afb9a880023fa9ad31d7b5e4f6dd6a526c63d3fa2"
+    },
+    {
+      "path": "standard/wasmc-std/1.4.0/core-abi.json",
+      "bytes": 26407,
+      "sha256": "e76350f00a2a655a53e7137213c07a5ee6898c803eb9feb15f69c6495faae107"
+    },
+    {
+      "path": "standard/wasmc-std/1.4.0/lib.json",
+      "bytes": 3087,
+      "sha256": "0fe6425034fa1ffa1cdd0c8edd6d33c54b1bc2b7a7da2ca9f829dfd31687abe5"
+    },
+    {
+      "path": "standard/wasmc-std/1.4.0/lib.wit",
+      "bytes": 5704,
+      "sha256": "d565f00e91c36da68da3645ec5231dd11d1b25299a3ba5cbe3adbd9f5760d91d"
+    },
+    {
+      "path": "standard/wasmc-std/1.4.0/references/agent-delta.json",
+      "bytes": 314,
+      "sha256": "830b5046b0bdd7fb1c07360a0f3584117e00dab02060085f6c6661c139799721"
+    },
+    {
+      "path": "standard/wasmc-std/1.4.0/typed-resource-plan.json",
+      "bytes": 36177,
+      "sha256": "b83e1db2a815ea1ce7618ca402dd0bcf9aba1301270393b7452036531afe5664"
+    }
+  ],
+  "product_set_sha256": "f27f7e4c121563bc5b78b3a9ea0ddd8b303bc3d6a0e01f130a22cdb4fd57e345"
+}

@@ -5,9 +5,9 @@ immutable tags, and does not mean a new version has already been published.
 
 | Stage | Immutable identity example | Admission | Discovery |
 |---|---|---|---|
-| dev | `v0.0.11-dev.1` | exact-source build, integrity, focused behavior | dev only |
-| main | `v0.0.11-main.1` | same product digests, complete consumer CI and guidance | main candidate only |
-| prod | `v0.0.11` | same product digests, retained exact-candidate qualification and publisher promotion | release pointer |
+| dev | `v0.0.12-dev.1` | exact-source build, integrity, focused behavior | dev only |
+| main | `v0.0.12-main.1` | same product digests, complete consumer CI and guidance | main candidate only |
+| prod | `v0.0.12` | same product digests, retained exact-candidate qualification and publisher promotion | release pointer |
 
 `main` in a tag suffix is an acceptance stage, not the mutable Git branch `main`.
 `prod` has no suffix. For 0.0.x, prod still has `stable=false`; deployment stage
