@@ -59,6 +59,7 @@ async function startServer(lane,c){
   const child=spawn(command,args,{cwd:root,env,stdio:['ignore','pipe','pipe']});
   let stderr='';child.stderr.on('data',chunk=>stderr+=chunk);
   const rl=readline.createInterface({input:child.stdout,crlfDelay:Infinity});
+  const stdoutClosed=new Promise(resolve=>rl.once('close',resolve));
   const lines=[];
   const ready=await new Promise((resolve,reject)=>{
     const timer=setTimeout(()=>reject(Error(lane+' c'+c+' readiness timeout\n'+stderr)),60000);
@@ -73,13 +74,13 @@ async function startServer(lane,c){
     });
   });
   const prewarmMs=Number(process.hrtime.bigint()-started)/1e6;
-  return {child,rl,lines,stderr:()=>stderr,ready,prewarmMs};
+  return {child,rl,stdoutClosed,lines,stderr:()=>stderr,ready,prewarmMs};
 }
 async function finishServer(server,lane,c){
   const code=server.child.exitCode!==null
     ? server.child.exitCode
     : await new Promise(resolve=>server.child.once('exit',resolve));
-  server.rl.close();
+  await server.stdoutClosed;
   if(code!==0)throw Error(lane+' c'+c+' server exit '+code+'\n'+server.stderr());
   const parsed=server.lines.flatMap(line=>{try{return [JSON.parse(line)];}catch{return [];}});
   const result=[...parsed].reverse().find(value=>value.accepted===true);
