@@ -90,6 +90,63 @@ Guest -> canonical Host import -> wasmc-host native runtime
 Both paths implement the same Host contract. Node/Bun/Deno are embedding
 environments, not platform-specific guest ABIs.
 
+## Runtime execution and cache hierarchy
+
+Wasmi and Wasmtime/AOT are complementary lanes. The normal request path should
+not synchronously wait for the optimizing compiler merely because a faster
+steady-state backend may become available later.
+
+```text
+exact Wasm + Host policy identity
+             |
+             v
+      ready fast cache?
+        /          \
+      yes           no
+      |             |
+      v             v
+ Wasmtime/native   Wasmi immediate completion
+      |             |
+      |             +----> coalesced bounded background
+      |                    Wasmtime/AOT preparation
+      |                              |
+      +------------------------------+
+                    |
+                    v
+          future fresh invocation
+             selects ready cache
+```
+
+The public Core Runtime SDK already implements the in-process form through
+`PromotionRuntime`: synchronous Wasmi admission, a bounded asynchronous Wasmtime
+compile worker, exact artifact identity, explicit candidate publication,
+rollback and route selection at a fresh invocation boundary. The native
+compiler separately provides a persistent target-local `.cwasm` cache keyed by
+Wasm digest, Wasmtime version, target, CPU features and AOT profile. The
+integrated runtime composes these mechanisms; it must not turn a cache miss into
+a synchronous cold-start dependency.
+
+The useful cache layers are:
+
+1. **Wasmi prepared-module cache** — immediate completion/fallback for admitted
+   Core Wasm.
+2. **Wasmtime prepared-module cache** — in-process compiled Module/InstancePre
+   used after promotion.
+3. **Persistent native/AOT cache** — target-specific serialized compiled bytes,
+   never portable package identity.
+4. **Optional hot Store/Instance pool** — an implementation cache for workloads
+   whose capability and request-isolation rules allow reuse.
+
+The pool is therefore not a separate execution model. It is a hotter cache
+layer. It may reduce instantiation cost, but it must preserve request-local Host
+state, capability isolation and cleanup semantics.
+
+While a Wasmtime/AOT compile is queued or still running, later requests may
+continue using Wasmi. Once the exact candidate is complete and admitted, only
+future invocations switch route. An invocation already running on one backend is
+never moved mid-call; a trap or Host-side effect is never retried on the other
+backend.
+
 ## Contract freeze rule
 
 The desired steady state is a frozen Host contract and independently evolving
@@ -142,11 +199,13 @@ Performance is recorded where a stable workload exists. GitHub-hosted runner
 families are not assumed to have equal hardware, so no cross-platform absolute
 number is a release requirement.
 
-Each platform compares only against its own recent history. The canonical
-native CLI performance report computes a same-platform rolling median baseline
-and reports `current / baseline` ratios. A ratio above 1.0 means slower for
-latency metrics. The baseline is a regression signal, not a substitute for
-functional acceptance.
+Each platform compares only against its own recent history. Three complementary
+baselines are retained: compiler/runtime (`native-cli-perf`), raw Host real-TCP
+scheduling (`host-https-flywheel`), and external HTTPS service load
+(`host-external-load`). The external baseline uses pinned `oha` and records
+native control, WAsmC TLS/Host, and complete WAsmC service lanes at c1/c8/c32.
+RPS, p99 latency and runtime prewarm are observations; a baseline difference
+does not create an optimization requirement.
 
 Performance history records exact commit, platform identity, corpus identity
 and raw per-case samples. A platform with no prior history starts in bootstrap

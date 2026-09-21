@@ -22,7 +22,7 @@ coverage but are not claimed as standalone binary SDKs. `incubating` and
 | Host SDK | candidate | rust-host-sdk, source-free-consumer, host-lib-e2e | not yet a release gate |
 | Integrated Runtime / CLI | published | native-compiler, source-free-consumer | native-cli-perf |
 | Lightweight Embedding | qualified-reference | source-free-consumer, host-lib-e2e | runtime-specific observations |
-| Native Runtime Library / Platform SDK | incubating | thin-host, host-lib-e2e, host-network, host-file-io | host-https-flywheel observations |
+| Native Runtime Library / Platform SDK | incubating | thin-host, host-lib-e2e, host-network, host-file-io | host-https-flywheel + host-external-load |
 | Driver / Provider | qualified-reference | host-lib-e2e, host-network, host-file-io, host-memory | driver-specific |
 | Remote Provider | architecture | not yet a release product | none |
 
@@ -56,8 +56,18 @@ unchanged.
 
 ## Performance baseline
 
-`native-cli-perf.yml` is the canonical public six-platform performance history.
-It never compares one platform's absolute timing against another.
+Performance is intentionally split by layer:
+
+- `native-cli-perf.yml`: compile, native cache miss/hit, Wasmi run and native run;
+- `host-https-flywheel.yml`: raw real-TCP Host lifecycle/reactor scheduling;
+- `host-external-load.yml`: external-client service baseline using pinned
+  `oha 1.16.0` against real TLS sockets, with native control, WAsmC TLS/Host,
+  and complete WAsmC service lanes.
+
+The external load contract is machine-readable in
+`bench/host-external-load.json`: c1/c8/c32, 3-second windows, two samples,
+five required desktop platforms and legacy-optional Intel macOS coverage. These
+baselines never compare one platform's absolute timing against another.
 
 For each metric and platform, the aggregator looks at the most recent
 same-platform observations (bounded by `bench/manifest.json`), computes their
@@ -72,6 +82,11 @@ configured advisory ratio highlights regressions without turning normal
 GitHub-hosted runner variance into a false functional failure. A future metric
 may become a hard gate only after its own history demonstrates that a stable
 threshold is justified.
+
+Performance evidence is not an optimization mandate. The purpose of the
+baseline is to make later changes measurable. A slower observation may be
+accepted intentionally when functionality, compatibility, memory, portability
+or maintainability has higher priority.
 
 ## Promotion
 

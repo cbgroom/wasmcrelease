@@ -13,6 +13,31 @@ selected-backend failures without replay.
 The SDK owns engine mechanics only. Package, capability, application, routing,
 persistence, and deployment authority remain with the embedding Host.
 
+## Recommended execution route
+
+The intended runtime policy is **Wasmi now, Wasmtime/AOT when ready** rather
+than a synchronous either/or engine choice.
+
+1. Admit one exact Core Wasm + Host policy identity with Wasmi.
+2. Serve the current fresh invocation immediately through the Wasmi completion
+   path when no admitted faster cache entry exists.
+3. Coalesce a bounded background Wasmtime compile through
+   `request_promotion`. Queue/full/compiling states never stall the Wasmi route.
+4. Until compilation and Host admission are complete, later fresh invocations
+   keep using Wasmi.
+5. After an exact candidate is published, future invocations snapshot the
+   Wasmtime route. The invocation that was already executing is not migrated.
+6. Rollback atomically returns future calls to Wasmi; a selected-backend
+   failure is never replayed on the other backend.
+
+`PromotionRuntime` supplies the in-memory prepared-module/catalog layer. The
+outer Host/runtime may additionally consult the target-local AOT cache produced
+by `wasmc-native-compiler`. That persistent cache is keyed by exact Wasm bytes,
+Wasmtime version, target, CPU features and AOT profile. A safe Store/Instance
+pool can be layered above prepared modules as another hot cache, but pooling is
+not part of the guest ABI and must preserve request-local Host state and cleanup
+semantics.
+
 From a checked-out release root:
 
 ```toml

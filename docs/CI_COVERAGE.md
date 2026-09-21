@@ -95,6 +95,14 @@ metric, then publishes `current / baseline`. Functional and artifact-identity
 failures remain hard gates; the performance ratio is an advisory regression
 signal until a metric has enough stable history to justify a hard threshold.
 
+`host-external-load.yml` adds the service-level baseline. It uses pinned
+`oha 1.16.0` as an external HTTP/1.1 TLS client and records three lanes:
+native Rustls+HTTP, WAsmC TLS/Host with native HTTP, and complete WAsmC
+TLS/HTTP/router. The machine-readable policy in
+`bench/host-external-load.json` fixes c1/c8/c32, sample count, duration,
+expected status codes and same-platform advisory thresholds. This baseline is
+for observability; a performance delta alone is not a release failure.
+
 ## Reproduce and review
 
 ```bash

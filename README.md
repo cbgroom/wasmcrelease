@@ -94,6 +94,16 @@ Wasmi for the shortest cold path; `wasmc build` emits portable Core Wasm;
 standalone executable. Its six-target desktop matrix tests Linux/macOS/Windows
 x64/arm64. This remains development tooling rather than a new formal release or
 mobile qualification. See the workflow summaries/artifacts for the exact source.
+
+The runtime model composes those engines rather than choosing one permanently.
+For an exact admitted Wasm identity, a cold request may execute immediately on
+Wasmi while a bounded background worker prepares the Wasmtime/AOT path. Later
+fresh invocations continue on Wasmi until a matching compiled candidate/cache
+entry is complete and admitted; subsequent invocations may then route to the
+cached Wasmtime/native path. An in-flight call is never migrated or replayed.
+Persistent target-local AOT cache, in-process prepared-module cache and optional
+safe Store/Instance pools are cache layers of the same routing model, not new
+guest-visible APIs. See [ASMD](docs/ASMD.md#runtime-execution-and-cache-hierarchy).
 [![Native compiler qualification](https://github.com/cbgroom/wasmcrelease/actions/workflows/native-compiler.yml/badge.svg?branch=main)](https://github.com/cbgroom/wasmcrelease/actions/workflows/native-compiler.yml)
 Qualified implementation: [six native builds + six downloaded-consumer jobs](https://github.com/cbgroom/wasmcrelease/actions/runs/34745887997),
 [complete consumer regression](https://github.com/cbgroom/wasmcrelease/actions/runs/34745902717)
@@ -113,6 +123,15 @@ absolute SLA claims; source identity, generated-Wasm identity, and behavior are
 hard gates. Latest/history JSON and badge endpoints are published on the
 [`perf-data`](https://github.com/cbgroom/wasmcrelease/tree/perf-data) branch after
 successful `main` runs.
+
+Host performance uses two independent baselines: the existing raw real-TCP Host
+lifecycle/shard flywheel and an external-client HTTPS load baseline. The latter
+uses pinned `oha` against real loopback TLS sockets and separates native
+Rustls+HTTP, WAsmC TLS+Host with native HTTP, and the complete WAsmC
+TLS+HTTP/router path. Its contract is
+[`bench/host-external-load.json`](bench/host-external-load.json); timing
+regressions are same-platform advisory signals, while required-platform
+presence, external-client success and expected HTTP status remain hard gates.
 
 v0.0.11 Agent guidance starts with
 [Library-first discovery](skills/wasmc-lib-discovery/SKILL.md) before implementing

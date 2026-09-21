@@ -20,7 +20,7 @@ use std::{
     error::Error,
     io::{Read, Write},
     net::{TcpListener, TcpStream},
-    sync::Arc,
+    sync::{mpsc, Arc},
     thread,
     time::{Duration, Instant},
 };
@@ -971,6 +971,8 @@ struct ServerRuntime {
     cert: Vec<u8>,
     key: Vec<u8>,
     metrics: Metrics,
+    benchmark_request_count_modulo: Option<u32>,
+    benchmark_native_http: bool,
 }
 
 fn header<'a>(headers: &'a [Header], name: &str) -> Option<&'a [u8]> {
@@ -1054,6 +1056,15 @@ impl ServerRuntime {
             .map(|value| value.parse::<u64>())
             .transpose()?
             .unwrap_or(1024);
+        let benchmark_request_count_modulo =
+            std::env::var("WASMC_HTTPS_BENCH_REQUEST_COUNT_MODULO")
+                .ok()
+                .map(|value| value.parse::<u32>())
+                .transpose()?;
+        if benchmark_request_count_modulo == Some(0) {
+            return Err("WASMC_HTTPS_BENCH_REQUEST_COUNT_MODULO must be positive".into());
+        }
+        let benchmark_native_http = std::env::var_os("WASMC_HTTPS_BENCH_NATIVE_HTTP").is_some();
 
         Ok(Self {
             store,
@@ -1065,6 +1076,8 @@ impl ServerRuntime {
             cert,
             key,
             metrics: Metrics::with_operation_sampling(operation_sample_every),
+            benchmark_request_count_modulo,
+            benchmark_native_http,
         })
     }
 
@@ -1284,6 +1297,61 @@ impl ServerRuntime {
         Ok(())
     }
 
+    fn process_native_http_frames(
+        &mut self,
+        plain: &mut Vec<u8>,
+        owned: i32,
+        transport: &mut HostEndpoint,
+        request_count: &mut u32,
+    ) -> Result<bool, Box<dyn Error>> {
+        let mut progressed = false;
+        loop {
+            let mut headers = [httparse::EMPTY_HEADER; 32];
+            let mut request = httparse::Request::new(&mut headers);
+            let head = match request
+                .parse(plain)
+                .map_err(|error| format!("native benchmark HTTP parse {error:?}"))?
+            {
+                httparse::Status::Complete(head) => head,
+                httparse::Status::Partial => break,
+            };
+            let content_length = request
+                .headers
+                .iter()
+                .find(|header| header.name.eq_ignore_ascii_case("content-length"))
+                .map(|header| {
+                    std::str::from_utf8(header.value)
+                        .map_err(|error| error.to_string())?
+                        .parse::<usize>()
+                        .map_err(|error| error.to_string())
+                })
+                .transpose()
+                .map_err(|error| format!("native benchmark content-length {error}"))?
+                .unwrap_or(0);
+            let frame_length = head
+                .checked_add(content_length)
+                .ok_or("native benchmark HTTP frame overflow")?;
+            if plain.len() < frame_length {
+                break;
+            }
+            plain.drain(..frame_length);
+            *request_count = request_count.saturating_add(1);
+            self.metrics.requests = self.metrics.requests.saturating_add(1);
+            profiled_guest_call!(
+                self,
+                GuestOperation::TlsWrite,
+                self.tls.write(
+                    &mut self.store,
+                    owned,
+                    b"HTTP/1.1 204 No Content\r\ncontent-length: 0\r\n\r\n"
+                )
+            )?;
+            self.flush_tls(transport, owned)?;
+            progressed = true;
+        }
+        Ok(progressed)
+    }
+
     fn close_tls(
         &mut self,
         transport: &mut HostEndpoint,
@@ -1386,63 +1454,76 @@ impl ServerRuntime {
                     }
                     plain.extend_from_slice(&bytes);
                 }
-                loop {
-                    let frame = profiled_guest_call!(
-                        self,
-                        GuestOperation::HttpFrameLength,
-                        self.http.request_frame_length(&mut self.store, &plain)
+                if self.benchmark_native_http {
+                    self.process_native_http_frames(
+                        &mut plain,
+                        owned,
+                        &mut transport,
+                        &mut request_count,
                     )?;
-                    match frame {
-                        Ok(Some(n)) => {
-                            let event_fuel_before = self.store.get_fuel()?;
-                            let n = n as usize;
-                            let raw = plain[..n].to_vec();
-                            plain.drain(..n);
-                            match self.app_response(&raw, request_count) {
-                                Ok(response) => {
-                                    request_count += 1;
-                                    self.metrics.requests += 1;
-                                    profiled_guest_call!(
-                                        self,
-                                        GuestOperation::TlsWrite,
-                                        self.tls.write(&mut self.store, owned, &response)
-                                    )?;
-                                    self.flush_tls(&mut transport, owned)?;
-                                    let event_fuel_after = self.store.get_fuel()?;
-                                    self.metrics.record_event_fuel(
-                                        event_fuel_before.saturating_sub(event_fuel_after),
-                                    );
-                                    self.store.set_fuel(OBSERVE_ONLY_EVENT_FUEL)?;
-                                    self.metrics.finish_event_profile();
-                                    self.metrics.start_event_profile();
-                                }
-                                Err(_) => {
-                                    self.metrics.malformed += 1;
-                                    let response = self.build_bad_request_close()?;
-                                    profiled_guest_call!(
-                                        self,
-                                        GuestOperation::TlsWrite,
-                                        self.tls.write(&mut self.store, owned, &response)
-                                    )?;
-                                    self.flush_tls(&mut transport, owned)?;
-                                    self.close_tls(&mut transport, owned)?;
-                                    return Ok(());
+                } else {
+                    loop {
+                        let frame = profiled_guest_call!(
+                            self,
+                            GuestOperation::HttpFrameLength,
+                            self.http.request_frame_length(&mut self.store, &plain)
+                        )?;
+                        match frame {
+                            Ok(Some(n)) => {
+                                let event_fuel_before = self.store.get_fuel()?;
+                                let n = n as usize;
+                                let raw = plain[..n].to_vec();
+                                plain.drain(..n);
+                                let policy_request_count = self
+                                    .benchmark_request_count_modulo
+                                    .map(|modulo| request_count % modulo)
+                                    .unwrap_or(request_count);
+                                match self.app_response(&raw, policy_request_count) {
+                                    Ok(response) => {
+                                        request_count += 1;
+                                        self.metrics.requests += 1;
+                                        profiled_guest_call!(
+                                            self,
+                                            GuestOperation::TlsWrite,
+                                            self.tls.write(&mut self.store, owned, &response)
+                                        )?;
+                                        self.flush_tls(&mut transport, owned)?;
+                                        let event_fuel_after = self.store.get_fuel()?;
+                                        self.metrics.record_event_fuel(
+                                            event_fuel_before.saturating_sub(event_fuel_after),
+                                        );
+                                        self.store.set_fuel(OBSERVE_ONLY_EVENT_FUEL)?;
+                                        self.metrics.finish_event_profile();
+                                        self.metrics.start_event_profile();
+                                    }
+                                    Err(_) => {
+                                        self.metrics.malformed += 1;
+                                        let response = self.build_bad_request_close()?;
+                                        profiled_guest_call!(
+                                            self,
+                                            GuestOperation::TlsWrite,
+                                            self.tls.write(&mut self.store, owned, &response)
+                                        )?;
+                                        self.flush_tls(&mut transport, owned)?;
+                                        self.close_tls(&mut transport, owned)?;
+                                        return Ok(());
+                                    }
                                 }
                             }
-                        }
-                        Ok(None) => break,
-                        Err(3) => break,
-                        Err(_) => {
-                            self.metrics.malformed += 1;
-                            let response = self.build_bad_request_close()?;
-                            profiled_guest_call!(
-                                self,
-                                GuestOperation::TlsWrite,
-                                self.tls.write(&mut self.store, owned, &response)
-                            )?;
-                            self.flush_tls(&mut transport, owned)?;
-                            self.close_tls(&mut transport, owned)?;
-                            return Ok(());
+                            Ok(None) => break,
+                            Err(3) => break,
+                            Err(_) => {
+                                self.metrics.malformed += 1;
+                                let response = self.build_bad_request_close()?;
+                                profiled_guest_call!(
+                                    self,
+                                    GuestOperation::TlsWrite,
+                                    self.tls.write(&mut self.store, owned, &response)
+                                )?;
+                                self.flush_tls(&mut transport, owned)?;
+                                self.close_tls(&mut transport, owned)?;
+                                return Ok(());
+                            }
                         }
                     }
                 }
@@ -1621,6 +1702,117 @@ fn read_http_response<S: Read>(
     }
 }
 
+fn expected_benchmark_disconnect(error: &str) -> bool {
+    let lower = error.to_ascii_lowercase();
+    lower.contains("tcp eof without tls close_notify")
+        || lower.contains("connection reset")
+        || lower.contains("broken pipe")
+        || lower.contains("connection aborted")
+}
+
+fn run_external_benchmark_server(
+    tls: String,
+    http: String,
+    json: String,
+    compression: String,
+    policy: String,
+    cert: Vec<u8>,
+    key: Vec<u8>,
+) -> Result<(), Box<dyn Error>> {
+    let connections = std::env::var("WASMC_HTTPS_EXTERNAL_CONNECTIONS")
+        .ok()
+        .map(|value| value.parse::<usize>())
+        .transpose()?
+        .unwrap_or(1);
+    if connections == 0 || connections > 64 {
+        return Err("WASMC_HTTPS_EXTERNAL_CONNECTIONS must be in 1..=64".into());
+    }
+    let port = std::env::var("WASMC_HTTPS_EXTERNAL_PORT")
+        .ok()
+        .map(|value| value.parse::<u16>())
+        .transpose()?
+        .unwrap_or(0);
+    let listener = TcpListener::bind(("127.0.0.1", port))?;
+    let addr = listener.local_addr()?;
+    let (ready_tx, ready_rx) = mpsc::channel::<Result<(), String>>();
+    let mut workers = Vec::with_capacity(connections);
+    for ordinal in 0..connections {
+        let listener = listener.try_clone()?;
+        let tls = tls.clone();
+        let http = http.clone();
+        let json = json.clone();
+        let compression = compression.clone();
+        let policy = policy.clone();
+        let cert = cert.clone();
+        let key = key.clone();
+        let ready_tx = ready_tx.clone();
+        workers.push(thread::spawn(
+            move || -> Result<(u64, u64, u64, u64), String> {
+                let rt = ServerRuntime::new(&tls, &http, &json, &compression, &policy, cert, key)
+                    .map_err(|error| format!("connection {ordinal} runtime: {error:#}"));
+                match &rt {
+                    Ok(_) => {
+                        let _ = ready_tx.send(Ok(()));
+                    }
+                    Err(error) => {
+                        let _ = ready_tx.send(Err(error.clone()));
+                    }
+                }
+                let mut rt = rt?;
+                let (stream, _) = listener
+                    .accept()
+                    .map_err(|error| format!("connection {ordinal} accept: {error}"))?;
+                let result = rt.serve_tls_connection(stream);
+                if let Err(error) = result {
+                    let message = format!("{error:#}");
+                    if !expected_benchmark_disconnect(&message) {
+                        return Err(format!("connection {ordinal}: {message}"));
+                    }
+                }
+                Ok((
+                    rt.metrics.requests,
+                    rt.metrics.host_transport_operations,
+                    rt.metrics.host_transport_read_bytes,
+                    rt.metrics.host_transport_write_bytes,
+                ))
+            },
+        ));
+    }
+    drop(ready_tx);
+    for _ in 0..connections {
+        ready_rx
+            .recv()
+            .map_err(|_| "external benchmark runtime readiness channel closed")?
+            .map_err(|error| format!("external benchmark runtime init failed: {error}"))?;
+    }
+    println!(
+        "{{\"schema\":\"wasmc-https-external-server/v1\",\"ready\":true,\"addr\":\"{}\",\"connections\":{},\"runtime_prewarm\":true}}",
+        addr, connections
+    );
+    std::io::stdout().flush()?;
+    drop(listener);
+
+    let mut requests = 0u64;
+    let mut host_operations = 0u64;
+    let mut host_read_bytes = 0u64;
+    let mut host_write_bytes = 0u64;
+    for worker in workers {
+        let (worker_requests, worker_operations, worker_read_bytes, worker_write_bytes) = worker
+            .join()
+            .map_err(|_| "external benchmark worker panicked")?
+            .map_err(|error| format!("external benchmark worker failed: {error}"))?;
+        requests = requests.saturating_add(worker_requests);
+        host_operations = host_operations.saturating_add(worker_operations);
+        host_read_bytes = host_read_bytes.saturating_add(worker_read_bytes);
+        host_write_bytes = host_write_bytes.saturating_add(worker_write_bytes);
+    }
+    println!(
+        "{{\"schema\":\"wasmc-https-external-server-result/v1\",\"accepted\":true,\"connections\":{},\"requests\":{},\"host_operations\":{},\"host_read_bytes\":{},\"host_write_bytes\":{}}}",
+        connections, requests, host_operations, host_read_bytes, host_write_bytes
+    );
+    Ok(())
+}
+
 fn main() -> Result<(), Box<dyn Error>> {
     let mut a = std::env::args().skip(1);
     let tls = a.next().ok_or("tls")?;
@@ -1630,6 +1822,9 @@ fn main() -> Result<(), Box<dyn Error>> {
     let policy = a.next().ok_or("policy")?;
     let cert = std::fs::read(a.next().ok_or("cert")?)?;
     let key = std::fs::read(a.next().ok_or("key")?)?;
+    if std::env::var_os("WASMC_HTTPS_EXTERNAL_SERVER").is_some() {
+        return run_external_benchmark_server(tls, http, json, compression, policy, cert, key);
+    }
     let keepalive_requests = std::env::var("WASMC_HTTPS_KEEPALIVE_REQUESTS")
         .ok()
         .map(|value| value.parse::<usize>())

@@ -58,7 +58,9 @@ const ciTools = [
   'scripts/test-release-channel.mjs',
   'scripts/validate-release-surfaces.mjs',
   'scripts/test-performance-baseline.mjs',
-  'scripts/aggregate-native-cli-perf.mjs'
+  'scripts/aggregate-native-cli-perf.mjs',
+  'scripts/host-https-external-load.mjs',
+  'scripts/aggregate-host-external-load.mjs'
 ];
 ciTools.push('scripts/agent-guidance-contract.mjs', 'scripts/test-agent-guidance.mjs');
 ciTools.push('scripts/test-library-first.mjs');
@@ -71,6 +73,8 @@ const releaseSurfaceFiles = [
   'docs/RELEASE_SURFACES.md',
   'docs/RELEASE_CHANNELS.md',
   'release-surfaces.json',
+  'bench/manifest.json',
+  'bench/host-external-load.json',
   'host/ARCHITECTURE.md',
   'host/architecture.json',
   'host/manifest.json'

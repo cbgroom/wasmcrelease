@@ -115,7 +115,8 @@
         "host-file-io.yml"
       ],
       "performance_workflows": [
-        "host-https-flywheel.yml"
+        "host-https-flywheel.yml",
+        "host-external-load.yml"
       ]
     }
   ],
@@ -152,6 +153,25 @@
     "required_platform_count": 5,
     "optional_platforms": [
       "macos-x86_64"
+    ],
+    "baselines": [
+      {
+        "id": "native-cli",
+        "workflow": "native-cli-perf.yml",
+        "policy_source": "bench/manifest.json",
+        "comparison": "same-platform-only"
+      },
+      {
+        "id": "raw-host-transport",
+        "workflow": "host-https-flywheel.yml",
+        "comparison": "same-platform-only"
+      },
+      {
+        "id": "external-https-load",
+        "workflow": "host-external-load.yml",
+        "policy_source": "bench/host-external-load.json",
+        "comparison": "same-platform-only"
+      }
     ]
   }
 }

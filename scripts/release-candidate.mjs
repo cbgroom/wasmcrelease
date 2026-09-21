@@ -48,6 +48,7 @@ if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)) {
     const productFiles=[
       'README.md','HOSTING.md',
       'host/ARCHITECTURE.md','host/architecture.json','host/manifest.json',
+      'bench/manifest.json','bench/host-external-load.json',
       'docs/ASMD.md','docs/RELEASE_SURFACES.md','release-surfaces.json',
       'examples/lib-search/client.mjs','scripts/wasmc-lib.mjs','skills/wasmc-lib/SKILL.md'
     ];

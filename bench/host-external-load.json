@@ -1,0 +1,58 @@
+{
+  "schema": "wasmc-host-external-load-policy/v1",
+  "tool": {
+    "name": "oha",
+    "version": "1.16.0"
+  },
+  "duration": "3s",
+  "samples": 2,
+  "connections": [1, 8, 32],
+  "lanes": [
+    "native",
+    "wasmc-tls-native-http",
+    "wasmc-full"
+  ],
+  "workloads": {
+    "health": {
+      "path": "/health",
+      "method": "GET",
+      "expected_status": 204,
+      "connections": [1, 8, 32]
+    },
+    "root-json": {
+      "path": "/",
+      "method": "GET",
+      "expected_status": 200,
+      "connections": [1, 8],
+      "lane": "wasmc-full"
+    },
+    "post-json": {
+      "path": "/items",
+      "method": "POST",
+      "content_type": "application/json",
+      "body": "{ \"name\": \"x\" }",
+      "expected_status": 201,
+      "connections": [1, 8],
+      "lane": "wasmc-full"
+    }
+  },
+  "steady_state": {
+    "exclude_runtime_prewarm_from_load_window": true,
+    "benchmark_request_count_modulo": 100,
+    "reason": "preserve the real router while preventing the qualification rate-limit branch from dominating a steady-state throughput characterization"
+  },
+  "history": {
+    "comparison": "same-platform-only",
+    "window": 5,
+    "rps_regression_ratio": 0.8,
+    "p99_regression_ratio": 1.25,
+    "prewarm_regression_ratio": 1.25,
+    "hard_gate": false
+  },
+  "hard_gates": [
+    "required platform report present",
+    "external client success rate equals 1.0",
+    "only expected HTTP status is observed",
+    "artifact and benchmark identities are recorded"
+  ]
+}

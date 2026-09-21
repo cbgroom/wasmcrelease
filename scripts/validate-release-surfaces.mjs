@@ -81,12 +81,21 @@ assert(Number.isInteger(baseline.minimum_history)&&baseline.minimum_history>=1&&
 assert(Number.isFinite(baseline.advisory_regression_ratio)&&baseline.advisory_regression_ratio>1);
 assert.equal(baseline.hard_gate,false);
 
+const externalBaseline=JSON.parse(read('bench/host-external-load.json'));
+assert.equal(externalBaseline.schema,'wasmc-host-external-load-policy/v1');
+assert.equal(externalBaseline.tool.name,'oha');
+assert.equal(externalBaseline.tool.version,'1.16.0');
+assert.deepEqual(externalBaseline.connections,[1,8,32]);
+assert.equal(externalBaseline.history.comparison,'same-platform-only');
+assert.equal(externalBaseline.history.hard_gate,false);
+assert(model.performance.baselines.some(row=>row.workflow==='host-external-load.yml'&&row.policy_source==='bench/host-external-load.json'));
+
 const sixRunners=expectedPlatforms.map(row=>row[1]);
-for(const workflow of ['native-compiler.yml','native-cli-perf.yml','host-lib-e2e.yml','rust-host-sdk.yml']){
+for(const workflow of ['native-compiler.yml','native-cli-perf.yml','host-lib-e2e.yml','rust-host-sdk.yml','host-external-load.yml']){
   const text=read('.github/workflows/'+workflow);
   for(const runner of sixRunners)assert(text.includes(runner),workflow+': missing desktop runner '+runner);
 }
-const intelWorkflows=['host-file-io.yml','host-https-flywheel.yml','host-lib-e2e.yml','host-memory.yml','host-network.yml','lib-source.yml','native-cli-perf.yml','native-compiler.yml','rust-host-sdk.yml','thin-host.yml'];
+const intelWorkflows=['host-file-io.yml','host-https-flywheel.yml','host-external-load.yml','host-lib-e2e.yml','host-memory.yml','host-network.yml','lib-source.yml','native-cli-perf.yml','native-compiler.yml','rust-host-sdk.yml','thin-host.yml'];
 for(const workflow of intelWorkflows){
   const text=read('.github/workflows/'+workflow);
   assert(text.includes('macos-15-intel'),workflow+': legacy Intel runner missing');
