@@ -1,4 +1,4 @@
-# Hosting wasmc v0.0.8
+# Hosting WAsmC
 
 Choose the smallest standard layer that fits the caller.
 
@@ -14,7 +14,7 @@ node bootstrap.mjs compile --input examples/add.wasmc --output /tmp/add.wasm
 
 The same package shape has Bun and Deno adapters. Node and Deno are release-evidenced; Bun remains an adapter contract until a Bun-capable host is available for independent live validation. Verify `manifest.json` and `receipts/compiler-wasm.json` before activation. The repo-local resolver metadata is under `runtime/registry-v0`.
 
-The internal registry's `dev` label is package-local resolver metadata. The outer immutable `v0.0.5` Git tag is the public release identity.
+The internal registry's `dev` label is package-local resolver metadata. For production, the outer immutable Git tag or full commit from the pinned checkout is the public release identity; do not copy an older example tag into a newer checkout.
 
 ## JavaScript
 
@@ -35,7 +35,8 @@ The classic file exposes the same surface as `globalThis.Wasmc`. Browser fetch p
 For reusable Core-module mechanics, use the published dual-engine SDK:
 
 ```toml
-wasmc-core-runtime = { git = "https://github.com/cbgroom/wasmcrelease.git", tag = "v0.0.8" }
+# v0.0.11 example; use the immutable tag/full commit that contains the SDK you reviewed.
+wasmc-core-runtime = { git = "https://github.com/cbgroom/wasmcrelease.git", tag = "v0.0.11" }
 ```
 
 `CoreRuntimeSdk::inspect_core` validates and describes imports, exports, kinds,
@@ -51,5 +52,13 @@ cargo run --locked
 ```
 
 The demo compiles and executes scalar source, invokes a stateful resource Component, and binds the one explicit `clock-host.now` import. It is copyable reference code, not a published SDK. Reuse Engine/compiled modules where appropriate and create a fresh bounded Store for independent requests.
+
+For an existing Rust application that also needs the generic WAsmC Host
+resource registry and platform binding policy, use `sdk/wasmc-host` **only in a
+pinned checkout whose release surface admits it**. Immutable v0.0.11 does not
+contain that SDK; the current development checkout marks it candidate. It wraps
+the Core Runtime SDK and provides one-call native profiles plus explicit
+resource grants. Applications remain free to use `wasmc-core-runtime` directly
+when they want to own all Host policy themselves.
 
 Generated imports are authority requests. Reject unknown modules/functions/signatures; no release file grants ambient filesystem, network, clock, randomness, credentials, process, or device access.

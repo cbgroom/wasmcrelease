@@ -1,0 +1,245 @@
+{
+  "schema": "wasmc.release-surfaces/v1",
+  "contract": {
+    "authority": "host/contract",
+    "architecture": "host/ARCHITECTURE.md",
+    "machine_architecture": "host/architecture.json",
+    "freeze_policy": "docs/ASMD.md#contract-freeze-rule"
+  },
+  "desktop_platforms": [
+    {
+      "id": "linux-x86_64",
+      "runner": "ubuntu-24.04",
+      "release_required": true,
+      "support_class": "required"
+    },
+    {
+      "id": "linux-aarch64",
+      "runner": "ubuntu-24.04-arm",
+      "release_required": true,
+      "support_class": "required"
+    },
+    {
+      "id": "macos-x86_64",
+      "runner": "macos-15-intel",
+      "release_required": false,
+      "support_class": "legacy-optional"
+    },
+    {
+      "id": "macos-aarch64",
+      "runner": "macos-14",
+      "release_required": true,
+      "support_class": "required"
+    },
+    {
+      "id": "windows-x86_64",
+      "runner": "windows-2025",
+      "release_required": true,
+      "support_class": "required"
+    },
+    {
+      "id": "windows-aarch64",
+      "runner": "windows-11-arm",
+      "release_required": true,
+      "support_class": "required"
+    }
+  ],
+  "consumer_surfaces": [
+    {
+      "id": "lib-package",
+      "status": "published",
+      "roots": [
+        "libs"
+      ],
+      "functional_workflows": [
+        "source-free-consumer.yml",
+        "host-lib-e2e.yml"
+      ],
+      "performance_workflows": []
+    },
+    {
+      "id": "host-sdk",
+      "status": "candidate",
+      "roots": [
+        "sdk/wasmc-host",
+        "sdk/wasmc-core-runtime"
+      ],
+      "functional_workflows": [
+        "rust-host-sdk.yml",
+        "source-free-consumer.yml",
+        "host-lib-e2e.yml",
+        "sdk-agent-guidance.yml"
+      ],
+      "performance_workflows": []
+    },
+    {
+      "id": "integrated-runtime-cli",
+      "status": "published",
+      "roots": [
+        "runtime/wasmc-runtime-v0",
+        "sdk/wasmc-native-compiler"
+      ],
+      "functional_workflows": [
+        "native-compiler.yml",
+        "source-free-consumer.yml",
+        "sdk-agent-guidance.yml"
+      ],
+      "performance_workflows": [
+        "native-cli-perf.yml"
+      ]
+    },
+    {
+      "id": "lightweight-embedding",
+      "status": "qualified-reference",
+      "roots": [
+        "host/embedding/node",
+        "host/embedding/deno",
+        "host/embedding/bun",
+        "host/embedding/browser"
+      ],
+      "functional_workflows": [
+        "source-free-consumer.yml",
+        "host-lib-e2e.yml",
+        "sdk-agent-guidance.yml"
+      ],
+      "performance_workflows": []
+    },
+    {
+      "id": "native-runtime-library",
+      "status": "incubating",
+      "roots": [
+        "host/runtime",
+        "host/drivers"
+      ],
+      "functional_workflows": [
+        "thin-host.yml",
+        "host-lib-e2e.yml",
+        "host-network.yml",
+        "host-file-io.yml"
+      ],
+      "performance_workflows": [
+        "host-https-flywheel.yml",
+        "host-external-load.yml"
+      ]
+    }
+  ],
+  "extension_surfaces": [
+    {
+      "id": "driver-provider",
+      "status": "qualified-reference",
+      "roots": [
+        "host/drivers",
+        "host/platform"
+      ],
+      "functional_workflows": [
+        "host-lib-e2e.yml",
+        "host-network.yml",
+        "host-file-io.yml",
+        "host-memory.yml"
+      ]
+    },
+    {
+      "id": "remote-provider",
+      "status": "architecture",
+      "roots": [
+        "host/runtime/provider",
+        "host/qualification"
+      ],
+      "functional_workflows": []
+    }
+  ],
+  "performance": {
+    "canonical_workflow": "native-cli-perf.yml",
+    "comparison": "same-platform-only",
+    "cross_platform_absolute_gate": false,
+    "policy_source": "bench/manifest.json",
+    "required_platform_count": 5,
+    "optional_platforms": [
+      "macos-x86_64"
+    ],
+    "baselines": [
+      {
+        "id": "native-cli",
+        "workflow": "native-cli-perf.yml",
+        "policy_source": "bench/manifest.json",
+        "comparison": "same-platform-only"
+      },
+      {
+        "id": "raw-host-transport",
+        "workflow": "host-https-flywheel.yml",
+        "comparison": "same-platform-only"
+      },
+      {
+        "id": "external-https-load",
+        "workflow": "host-external-load.yml",
+        "policy_source": "bench/host-external-load.json",
+        "comparison": "same-platform-only"
+      }
+    ]
+  },
+  "agent_discovery": {
+    "entry_skill": "skills/wasmc-sdk-discovery/SKILL.md",
+    "sdk_entry": "sdk/AGENTS.md",
+    "component_skills": {
+      "core-runtime-sdk": "sdk/wasmc-core-runtime/SKILL.md",
+      "host-sdk": "sdk/wasmc-host/SKILL.md",
+      "native-cli": "sdk/wasmc-native-compiler/SKILL.md"
+    },
+    "rule": "select by task intent and exact release-surface status before generating integration code",
+    "components": {
+      "core-runtime-sdk": {
+        "root": "sdk/wasmc-core-runtime",
+        "skill": "sdk/wasmc-core-runtime/SKILL.md",
+        "release_status": "published",
+        "immutable_example": "v0.0.11"
+      },
+      "host-sdk": {
+        "root": "sdk/wasmc-host",
+        "skill": "sdk/wasmc-host/SKILL.md",
+        "release_status": "candidate",
+        "immutable_example": null
+      },
+      "native-cli": {
+        "root": "sdk/wasmc-native-compiler",
+        "skill": "sdk/wasmc-native-compiler/SKILL.md",
+        "release_status": "published",
+        "immutable_example": "v0.0.11",
+        "binary_packaging": "CI/development packages are not immutable release assets"
+      },
+      "lightweight-embedding": {
+        "root": "host/embedding",
+        "release_status": "qualified-reference"
+      },
+      "native-runtime-library": {
+        "root": "host/runtime",
+        "release_status": "incubating"
+      }
+    },
+    "intent_routes": [
+      {
+        "intent": "rust-core-execution",
+        "component": "core-runtime-sdk"
+      },
+      {
+        "intent": "rust-generic-host",
+        "component": "host-sdk"
+      },
+      {
+        "intent": "cli-run-build-native",
+        "component": "native-cli"
+      },
+      {
+        "intent": "js-lightweight-host",
+        "component": "lightweight-embedding"
+      },
+      {
+        "intent": "native-runtime-binary",
+        "component": "native-runtime-library"
+      },
+      {
+        "intent": "reusable-capability",
+        "component": "lib-discovery"
+      }
+    ]
+  }
+}

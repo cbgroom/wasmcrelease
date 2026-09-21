@@ -1,0 +1,162 @@
+name: Host external HTTPS load baseline
+
+on:
+  push:
+    paths:
+      - "host/tests/https/**"
+      - "scripts/host-https-external-load.mjs"
+      - "scripts/aggregate-host-external-load.mjs"
+      - "bench/host-external-load.json"
+      - "release-surfaces.json"
+      - ".github/workflows/host-external-load.yml"
+  pull_request:
+    paths:
+      - "host/tests/https/**"
+      - "scripts/host-https-external-load.mjs"
+      - "scripts/aggregate-host-external-load.mjs"
+      - "bench/host-external-load.json"
+      - "release-surfaces.json"
+      - ".github/workflows/host-external-load.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: host-external-load-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  benchmark:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-24.04
+            platform: linux-x86_64
+          - os: ubuntu-24.04-arm
+            platform: linux-aarch64
+          - os: macos-14
+            platform: macos-aarch64
+          - os: macos-15-intel
+            platform: macos-x86_64
+          - os: windows-2025
+            platform: windows-x86_64
+          - os: windows-11-arm
+            platform: windows-aarch64
+    runs-on: ${{ matrix.os }}
+    continue-on-error: ${{ matrix.os == 'macos-15-intel' }}
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: 26.5.1
+      - run: rustup toolchain install 1.96.0 --profile minimal
+      - name: Restore HTTPS build cache
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830
+        with:
+          path: |
+            host/tests/https/target
+            target/oha-tool
+          key: host-external-load-v1-${{ matrix.os }}-${{ runner.arch }}-rust1.96.0-${{ hashFiles('host/tests/https/Cargo.lock', 'host/tests/https/Cargo.toml', 'bench/host-external-load.json') }}
+      - name: Install pinned external load generator
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -x "target/oha-tool/bin/oha${{ runner.os == 'Windows' && '.exe' || '' }}" ]; then
+            cargo +1.96.0 install oha --version 1.16.0 --locked --root target/oha-tool
+          fi
+          "target/oha-tool/bin/oha${{ runner.os == 'Windows' && '.exe' || '' }}" --version
+      - name: Build external-load servers
+        run: cargo +1.96.0 build --release --locked --manifest-path host/tests/https/Cargo.toml --features reactor-candidate --bins
+      - name: Run external HTTPS baseline
+        env:
+          WASMC_OHA: ${{ github.workspace }}/target/oha-tool/bin/oha${{ runner.os == 'Windows' && '.exe' || '' }}
+          WASMC_PLATFORM_ID: ${{ matrix.platform }}
+        run: node scripts/host-https-external-load.mjs "${{ matrix.platform }}.json"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: host-external-load-${{ matrix.platform }}
+          path: ${{ matrix.platform }}.json
+          if-no-files-found: error
+
+  aggregate:
+    needs: benchmark
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: 26.5.1
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        with:
+          pattern: host-external-load-*
+          path: host-external-load-results
+          merge-multiple: true
+      - name: Read previous same-platform history
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git fetch origin host-external-load-data:refs/remotes/origin/host-external-load-data 2>/dev/null && git cat-file -e origin/host-external-load-data:history.json 2>/dev/null; then
+            git show origin/host-external-load-data:history.json > previous-host-external-load-history.json
+          fi
+      - name: Aggregate required-platform baseline
+        shell: bash
+        run: node scripts/aggregate-host-external-load.mjs host-external-load-results host-external-load-site previous-host-external-load-history.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: host-external-load-report
+          path: host-external-load-site/
+          if-no-files-found: error
+
+  publish-data:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: aggregate
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        with:
+          name: host-external-load-report
+          path: host-external-load-site
+      - name: Publish external-load history
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git fetch origin host-external-load-data:refs/remotes/origin/host-external-load-data 2>/dev/null || true
+          rm -rf /tmp/wasmc-host-external-load-data
+          if git rev-parse --verify origin/host-external-load-data >/dev/null 2>&1; then
+            git worktree add -B host-external-load-data /tmp/wasmc-host-external-load-data origin/host-external-load-data
+          else
+            git worktree add --detach /tmp/wasmc-host-external-load-data
+            cd /tmp/wasmc-host-external-load-data
+            git checkout --orphan host-external-load-data
+            git rm -rf . >/dev/null 2>&1 || true
+          fi
+          cd /tmp/wasmc-host-external-load-data
+          find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          cp -R "$GITHUB_WORKSPACE/host-external-load-site/." .
+          touch .nojekyll
+          git add -A
+          git commit -m "perf(host-external): publish $GITHUB_SHA" || exit 0
+          git push origin HEAD:host-external-load-data
+
+  required:
+    if: always()
+    needs: [benchmark, aggregate]
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Require functional baseline evidence
+        shell: bash
+        run: |
+          test "${{ needs.benchmark.result }}" = "success"
+          test "${{ needs.aggregate.result }}" = "success"

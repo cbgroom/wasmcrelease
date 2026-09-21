@@ -14,4 +14,10 @@ reject(s => s.agents = s.agents.replaceAll('standard/wasmc-std/1.4.0/', 'missing
 reject(s => s.skills = s.skills.filter(row => !row.path.includes('skills/wasmc-lib/')));
 reject(s => s.skills.push(s.skills[0]));
 reject(s => { const row = s.skills.find(row => row.path.includes('skills/wasmc-lib/')); row.text = row.text.replace('name: wasmc-lib', 'name: wasmc-lib\nparent_skill: "wasmc-lib"'); });
-console.log(JSON.stringify({ ...result, negative_tests: 7 }));
+reject(s => s.agents = s.agents.replace('skills/wasmc-sdk-discovery/SKILL.md', 'missing-sdk-discovery/SKILL.md'));
+reject(s => s.skills = s.skills.filter(row => row.path !== 'sdk/wasmc-host/SKILL.md'));
+reject(s => {
+  const row = s.skills.find(row => row.path === 'skills/wasmc-sdk-discovery/SKILL.md');
+  row.text = row.text.replace('sdk/wasmc-core-runtime/SKILL.md', 'sdk/missing-core-runtime/SKILL.md');
+});
+console.log(JSON.stringify({ ...result, negative_tests: 10 }));

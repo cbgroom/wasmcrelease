@@ -77,7 +77,7 @@ for(const file of ['rust.wasm','wasmc.wasm']){
   }
   consumers.push({file,calls});
 }
-const frozen=JSON.parse(repoRead('channels/candidates/0.0.10.json'));
+const frozen=JSON.parse(repoRead('channels/candidates/0.0.12.json'));
 for(const row of frozen.product_files){const b=repoRead(row.path);assert.equal(b.length,row.bytes);assert.equal(sha256(b),row.sha256);}
 const original=repoRead('standard/wasmc-std/1.4.0/artifact.wasm');
 const legacy=process.versions.node?.startsWith('18.')&&!globalThis.Bun&&!globalThis.Deno;

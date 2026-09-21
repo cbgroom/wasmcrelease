@@ -18,8 +18,11 @@ export function suiteCases(family,runtime='node',mirror='github') {
   ];
   if(family==='integrity')return [
     item('library-first-teaching-and-routes','scripts/test-library-first.mjs'),
+    item('sdk-agent-routing','scripts/validate-sdk-agent-routes.mjs'),
     item('release-channel-promotion-negatives','scripts/test-release-channel.mjs'),
-    item('release-product-identity','scripts/release-candidate.mjs',['verify','channels/candidates/0.0.11.json']),
+    item('release-product-identity','scripts/release-candidate.mjs',['verify','channels/candidates/0.0.12.json']),
+    item('release-surface-model','scripts/validate-release-surfaces.mjs'),
+    item('same-platform-performance-baseline','scripts/test-performance-baseline.mjs'),
     item('ci-reporting-failure-controls','scripts/test-ci-reporting.mjs'),
     {id:'maintainer-integrity-lib-agent-contracts',command:'bash',args:['scripts/validate-maintainer.sh']},
     item('agent-start-execution','examples/agent-start/run.mjs'),
@@ -43,6 +46,7 @@ export function suiteCases(family,runtime='node',mirror='github') {
     {id:'lib-package-contracts',command:'node',args:['scripts/validate-libs.mjs']},
     {id:'wasmtime-component-consumer-tests',command:'cargo',args:['test','--locked','--release'],cwd:join(root,'examples/rust-wasmtime'),timeoutMs:1200000},
     {id:'wasmi-wasmtime-runtime-sdk-tests',command:'cargo',args:['test','--locked','--release','-p','wasmc-core-runtime'],timeoutMs:1200000},
+    {id:'rust-generic-host-sdk-tests',command:'cargo',args:['test','--locked','--release','--manifest-path','sdk/wasmc-host/Cargo.toml'],timeoutMs:1200000},
     {id:'wasmtime-compiler-resource-host-execution',command:'cargo',args:['run','--locked','--release'],cwd:join(root,'examples/rust-wasmtime'),timeoutMs:300000}
   ];
   throw Error('unknown CI suite');

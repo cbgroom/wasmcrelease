@@ -39,6 +39,7 @@ jobs:
       matrix:
         os: [ubuntu-24.04, ubuntu-24.04-arm]
     runs-on: ${{ matrix.os }}
+    continue-on-error: ${{ matrix.os == 'macos-15-intel' }}
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
@@ -356,9 +357,21 @@ jobs:
             bun host/drivers/tcp/benchmark.mjs "$benchmark" target/host-tcp-app/guest.wasm --wasmtime
             deno run --allow-read=libs/wasmc-owned-algorithms,target/host-tcp-app --allow-env=NODE_V8_COVERAGE --allow-run="$benchmark" host/drivers/tcp/benchmark.mjs "$benchmark" target/host-tcp-app/guest.wasm --wasmtime
           fi
-      - name: Public integrity
-        if: runner.os == 'Linux'
+      - name: Published release integrity
+        if: runner.os == 'Linux' && github.ref == 'refs/heads/main'
         run: ./scripts/validate-maintainer.sh
+      - name: Development release-surface integrity
+        if: runner.os == 'Linux' && github.ref != 'refs/heads/main'
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/validate-release-surfaces.mjs
+          node scripts/test-performance-baseline.mjs
+          node scripts/test-release-channel.mjs
+          candidate=/tmp/wasmc-development-candidate.json
+          rm -f "$candidate"
+          node scripts/release-candidate.mjs create "$candidate" "$GITHUB_SHA" 0.0.0
+          node scripts/release-candidate.mjs verify "$candidate"
       - name: Exact-source evidence scope
         shell: bash
         env:

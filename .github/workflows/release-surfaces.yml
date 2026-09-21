@@ -1,0 +1,56 @@
+name: Release surface policy
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "README.md"
+      - "docs/ASMD.md"
+      - "docs/RELEASE_SURFACES.md"
+      - "docs/RELEASE_CHANNELS.md"
+      - "release-surfaces.json"
+      - "host/ARCHITECTURE.md"
+      - "host/architecture.json"
+      - "bench/manifest.json"
+      - "bench/host-external-load.json"
+      - "scripts/validate-release-surfaces.mjs"
+      - "scripts/test-performance-baseline.mjs"
+      - "scripts/aggregate-native-cli-perf.mjs"
+      - "scripts/host-https-external-load.mjs"
+      - "scripts/aggregate-host-external-load.mjs"
+      - ".github/workflows/*.yml"
+  pull_request:
+    paths:
+      - "README.md"
+      - "docs/ASMD.md"
+      - "docs/RELEASE_SURFACES.md"
+      - "docs/RELEASE_CHANNELS.md"
+      - "release-surfaces.json"
+      - "host/ARCHITECTURE.md"
+      - "host/architecture.json"
+      - "bench/manifest.json"
+      - "bench/host-external-load.json"
+      - "scripts/validate-release-surfaces.mjs"
+      - "scripts/test-performance-baseline.mjs"
+      - "scripts/aggregate-native-cli-perf.mjs"
+      - "scripts/host-https-external-load.mjs"
+      - "scripts/aggregate-host-external-load.mjs"
+      - ".github/workflows/*.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  policy:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: 26.5.1
+      - name: Validate release surfaces and workflow coverage
+        run: node scripts/validate-release-surfaces.mjs
+      - name: Validate same-platform performance baseline logic
+        run: node scripts/test-performance-baseline.mjs

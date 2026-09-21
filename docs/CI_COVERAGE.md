@@ -80,6 +80,29 @@ measurements, novel LLM generation, repair/tokens benchmark or production proof.
 No new browser, device, fleet, performance threshold, all-stdlib or third-party
 authoring completeness is claimed.
 
+## Release-surface and performance policy
+
+`release-surfaces.json` maps every public/candidate product surface to the
+workflows that qualify it. Native CLI/package, Host/Lib composition and Rust
+Host SDK coverage retain six desktop runner identities where available. Five are release-required; macOS x86-64 is legacy optional and may fail without blocking release. The exact classification is documented in
+`docs/RELEASE_SURFACES.md`. Lightweight runtime coverage remains explicit by
+runtime/platform combination rather than inferred from one passing engine.
+
+`native-cli-perf.yml` records the canonical six-platform public performance
+history. Performance comparison is same-platform only. The aggregate report
+uses recent history to compute a rolling median baseline for each platform and
+metric, then publishes `current / baseline`. Functional and artifact-identity
+failures remain hard gates; the performance ratio is an advisory regression
+signal until a metric has enough stable history to justify a hard threshold.
+
+`host-external-load.yml` adds the service-level baseline. It uses pinned
+`oha 1.16.0` as an external HTTP/1.1 TLS client and records three lanes:
+native Rustls+HTTP, WAsmC TLS/Host with native HTTP, and complete WAsmC
+TLS/HTTP/router. The machine-readable policy in
+`bench/host-external-load.json` fixes c1/c8/c32, sample count, duration,
+expected status codes and same-platform advisory thresholds. This baseline is
+for observability; a performance delta alone is not a release failure.
+
 ## Reproduce and review
 
 ```bash

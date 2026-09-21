@@ -43,6 +43,32 @@ Mobile targets primarily ship embeddable SDK packages.
 All packages contain the same contract identity and declare the capabilities
 actually implemented/qualified on that platform.
 
+## Public consumption and extension surfaces
+
+The Host contract is shared by multiple product surfaces. Packaging does not
+create a second guest ABI.
+
+Consumer surfaces:
+
+- Lib Package: reusable Core/Component functionality under `libs/`.
+- Host SDK: programmable embedding, currently `sdk/wasmc-host` plus the Core
+  Runtime SDK.
+- Integrated Runtime / CLI: compiler, runner, Host and registry as an
+  open-the-box product.
+- Lightweight Embedding: Node/Bun/Deno/Browser use the surrounding runtime as
+  the OS bridge.
+- Native Runtime Library / Platform SDK: native shared runtime and platform
+  packaging for the shortest high-performance data path.
+
+Extension surfaces:
+
+- Driver / Provider: adds physical capability behind generic Resources.
+- Remote Provider: changes backing locality without creating RemoteFile,
+  RemoteMemory or parallel guest capability families.
+
+The product-level map is `docs/ASMD.md` and the machine-readable release
+inventory is `release-surfaces.json`.
+
 ## Orthogonal execution dimensions
 
 `platform/` and `embedding/` are orthogonal.

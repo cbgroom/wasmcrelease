@@ -1,0 +1,48 @@
+name: Rust Host SDK
+
+on:
+  push:
+    paths:
+      - "sdk/wasmc-host/**"
+      - "sdk/wasmc-core-runtime/**"
+      - "host/drivers/file/rust/**"
+      - "host/drivers/memory/rust/**"
+      - ".github/workflows/rust-host-sdk.yml"
+  pull_request:
+    paths:
+      - "sdk/wasmc-host/**"
+      - "sdk/wasmc-core-runtime/**"
+      - "host/drivers/file/rust/**"
+      - "host/drivers/memory/rust/**"
+      - ".github/workflows/rust-host-sdk.yml"
+  workflow_dispatch:
+
+jobs:
+  rust-host-sdk:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, ubuntu-24.04-arm, macos-14, macos-15-intel, windows-2025, windows-11-arm]
+    runs-on: ${{ matrix.os }}
+    continue-on-error: ${{ matrix.os == 'macos-15-intel' }}
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - name: Install stable Rust
+        shell: bash
+        run: |
+          rustup toolchain install stable --profile minimal --no-self-update
+          rustup default stable
+          rustup component add rustfmt clippy
+          rustc --version
+          cargo --version
+      - name: Format
+        run: cargo fmt --manifest-path sdk/wasmc-host/Cargo.toml -- --check
+      - name: Clippy
+        run: cargo clippy --locked --manifest-path sdk/wasmc-host/Cargo.toml --all-targets -- -D warnings
+      - name: Test Rust Host SDK
+        run: cargo test --locked --manifest-path sdk/wasmc-host/Cargo.toml
+      - name: Test file driver
+        run: cargo test --locked --manifest-path host/drivers/file/rust/Cargo.toml
+      - name: Test memory driver
+        run: cargo test --locked --manifest-path host/drivers/memory/rust/Cargo.toml

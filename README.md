@@ -2,11 +2,36 @@
 
 [![Public verification](https://github.com/cbgroom/wasmcrelease/actions/workflows/source-free-consumer.yml/badge.svg?branch=main&event=push)](https://github.com/cbgroom/wasmcrelease/actions/workflows/source-free-consumer.yml)
 [![Native CLI performance](https://github.com/cbgroom/wasmcrelease/actions/workflows/native-cli-perf.yml/badge.svg?branch=main&event=push)](https://github.com/cbgroom/wasmcrelease/actions/workflows/native-cli-perf.yml)
+[![Release surface policy](https://github.com/cbgroom/wasmcrelease/actions/workflows/release-surfaces.yml/badge.svg?branch=main&event=push)](https://github.com/cbgroom/wasmcrelease/actions/workflows/release-surfaces.yml)
+[![Rust Host SDK](https://github.com/cbgroom/wasmcrelease/actions/workflows/rust-host-sdk.yml/badge.svg?branch=main&event=push)](https://github.com/cbgroom/wasmcrelease/actions/workflows/rust-host-sdk.yml)
 ![run/Wasmi](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fcbgroom%2Fwasmcrelease%2Fperf-data%2Fbadges%2Frun.json)
 ![native run](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fcbgroom%2Fwasmcrelease%2Fperf-data%2Fbadges%2Fnative.json)
 ![build Wasm](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fcbgroom%2Fwasmcrelease%2Fperf-data%2Fbadges%2Fbuild.json)
 
 Source-free public packages for the private-source `wasmc` compiler.
+
+## Product surfaces
+
+WAsmC has one Host contract and multiple ways to consume it:
+
+| Surface | Use it when |
+|---|---|
+| **Lib Package** | an App/runtime needs reusable WAsmC functionality |
+| **Host SDK** | an existing Rust process wants programmable Host/resource binding |
+| **Integrated Runtime / CLI** | users want compile/run/Host without assembling the stack |
+| **Lightweight Embedding** | Node/Bun/Deno/Browser should reuse their own runtime OS bridge |
+| **Native Runtime Library / Platform SDK** | system integration needs one unified, high-performance native data plane |
+
+Drivers/providers and remote providers extend physical capability behind that
+same contract rather than adding application-specific Host calls. See
+[ASMD](docs/ASMD.md), [Host architecture](host/ARCHITECTURE.md), and the
+[release surface policy](docs/RELEASE_SURFACES.md).
+
+Agents must not infer maturity from directory names. Start at
+[AGENTS.md](AGENTS.md), then use the
+[SDK discovery Skill](skills/wasmc-sdk-discovery/SKILL.md); the machine-readable
+release-surfaces.json records whether a surface is published, candidate,
+qualified-reference, incubating, or architecture-only.
 
 The [Portable Std1.4.1 qualification candidate](admission/portable-std-v0/README.md)
 regenerates the unchanged73-API Std contract for Wasmi2 and Node18, with matching
@@ -75,6 +100,16 @@ Wasmi for the shortest cold path; `wasmc build` emits portable Core Wasm;
 standalone executable. Its six-target desktop matrix tests Linux/macOS/Windows
 x64/arm64. This remains development tooling rather than a new formal release or
 mobile qualification. See the workflow summaries/artifacts for the exact source.
+
+The runtime model composes those engines rather than choosing one permanently.
+For an exact admitted Wasm identity, a cold request may execute immediately on
+Wasmi while a bounded background worker prepares the Wasmtime/AOT path. Later
+fresh invocations continue on Wasmi until a matching compiled candidate/cache
+entry is complete and admitted; subsequent invocations may then route to the
+cached Wasmtime/native path. An in-flight call is never migrated or replayed.
+Persistent target-local AOT cache, in-process prepared-module cache and optional
+safe Store/Instance pools are cache layers of the same routing model, not new
+guest-visible APIs. See [ASMD](docs/ASMD.md#runtime-execution-and-cache-hierarchy).
 [![Native compiler qualification](https://github.com/cbgroom/wasmcrelease/actions/workflows/native-compiler.yml/badge.svg?branch=main)](https://github.com/cbgroom/wasmcrelease/actions/workflows/native-compiler.yml)
 Qualified implementation: [six native builds + six downloaded-consumer jobs](https://github.com/cbgroom/wasmcrelease/actions/runs/34745887997),
 [complete consumer regression](https://github.com/cbgroom/wasmcrelease/actions/runs/34745902717)
@@ -94,6 +129,15 @@ absolute SLA claims; source identity, generated-Wasm identity, and behavior are
 hard gates. Latest/history JSON and badge endpoints are published on the
 [`perf-data`](https://github.com/cbgroom/wasmcrelease/tree/perf-data) branch after
 successful `main` runs.
+
+Host performance uses two independent baselines: the existing raw real-TCP Host
+lifecycle/shard flywheel and an external-client HTTPS load baseline. The latter
+uses pinned `oha` against real loopback TLS sockets and separates native
+Rustls+HTTP, WAsmC TLS+Host with native HTTP, and the complete WAsmC
+TLS+HTTP/router path. Its contract is
+[`bench/host-external-load.json`](bench/host-external-load.json); timing
+regressions are same-platform advisory signals, while required-platform
+presence, external-client success and expected HTTP status remain hard gates.
 
 v0.0.11 Agent guidance starts with
 [Library-first discovery](skills/wasmc-lib-discovery/SKILL.md) before implementing
@@ -120,7 +164,11 @@ Current release: `v0.0.11`, reusing compiler bytes built from exact private sour
 latest compiler facade; `dist/` and `package/` are frozen v0.0.4
 compatibility trees. The three pre-Data historical `libs/` packages remain
 byte-frozen; newly admitted source-free Lib packages are append-only. The Wasmi/Wasmtime
-Core Runtime SDK remains available in `sdk/wasmc-core-runtime`.
+Core Runtime SDK remains available in `sdk/wasmc-core-runtime`. The current
+development checkout also carries the candidate generic Host embedding facade
+in `sdk/wasmc-host`; it is **not** part of immutable v0.0.11. Its binding
+policies are Host-side convenience only and do not add guest-visible Host
+operations.
 
 Data Foundation v1 publishes seven zero-import, source-free packages for CSV,
 typed data, expressions, compute, relational operations, profiling and Arrow
@@ -178,11 +226,14 @@ compatibility passes. Browser/device/production/performance and third-party Lib
 authoring remain separate acceptance gates.
 
 - Agents and developers: [AGENTS.md](AGENTS.md)
+- SDK/runtime/CLI selection: [SDK discovery Skill](skills/wasmc-sdk-discovery/SKILL.md)
+- SDK-scoped Agent entrypoint: [sdk/AGENTS.md](sdk/AGENTS.md)
 - Language delta: [LANGUAGE.md](LANGUAGE.md)
 - Lib model and managed collections: [LIB.md](LIB.md)
 - JavaScript, raw Wasm, and Wasmtime: [HOSTING.md](HOSTING.md)
 - Runtime/Registry bootstrap: [runtime/README.md](runtime/README.md)
 - Wasmi + Wasmtime Core Runtime SDK: [sdk/wasmc-core-runtime/README.md](sdk/wasmc-core-runtime/README.md)
+- Rust Generic Host SDK: [sdk/wasmc-host/README.md](sdk/wasmc-host/README.md)
 - Release history: [RELEASES.md](RELEASES.md)
 
 ## JavaScript context

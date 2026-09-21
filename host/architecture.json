@@ -54,6 +54,20 @@
     "platform": ["linux", "macos", "windows", "android", "harmony", "ios"],
     "embedding": ["native", "node", "deno", "bun", "browser"]
   },
+  "distribution_surfaces": {
+    "consumer": [
+      "lib-package",
+      "host-sdk",
+      "integrated-runtime-cli",
+      "lightweight-embedding",
+      "native-runtime-library"
+    ],
+    "extension": [
+      "driver-provider",
+      "remote-provider"
+    ],
+    "rule": "all surfaces share one guest-visible Host contract; packaging and provider growth must not fork the ABI"
+  },
   "resource_dimensions": {
     "semantic_capability_source": "host/manifest.json#capabilities",
     "locality": ["local", "remote"],

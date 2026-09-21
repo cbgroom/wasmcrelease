@@ -41,6 +41,7 @@ const admissionFiles = (await walk('admission')).sort();
 const rootSkillFiles = (await walk('skills/wasmc-developer')).sort();
 rootSkillFiles.push(...await walk('skills/wasmc-lib'));
 rootSkillFiles.push(...await walk('skills/wasmc-lib-discovery'));
+rootSkillFiles.push(...await walk('skills/wasmc-sdk-discovery'));
 const sdkFiles = (await walk('sdk')).sort();
 const currentFiles = (await walk('current')).sort();
 const standardFiles = (await walk('standard')).sort();
@@ -50,11 +51,35 @@ const channelFiles = (await walk('channels')).sort();
 const compatibilityFiles = (await walk('compatibility')).sort();
 const catalogFiles = (await walk('catalog')).sort();
 const catalogTools = ['scripts/lib-catalog.mjs', 'scripts/wasmc-lib.mjs', 'scripts/refresh-lib-catalog.mjs', 'scripts/test-lib-catalog.mjs', 'scripts/lib-install.mjs', 'scripts/test-lib-install.mjs', 'scripts/validate-lib-install.mjs'];
-const ciTools = ['scripts/ci-suite.mjs','scripts/ci-summary.mjs','scripts/test-ci-reporting.mjs','scripts/release-candidate.mjs','scripts/test-release-channel.mjs'];
-ciTools.push('scripts/agent-guidance-contract.mjs', 'scripts/test-agent-guidance.mjs');
+const ciTools = [
+  'scripts/ci-suite.mjs',
+  'scripts/ci-summary.mjs',
+  'scripts/test-ci-reporting.mjs',
+  'scripts/release-candidate.mjs',
+  'scripts/test-release-channel.mjs',
+  'scripts/validate-release-surfaces.mjs',
+  'scripts/test-performance-baseline.mjs',
+  'scripts/aggregate-native-cli-perf.mjs',
+  'scripts/host-https-external-load.mjs',
+  'scripts/aggregate-host-external-load.mjs'
+];
+ciTools.push('scripts/agent-guidance-contract.mjs', 'scripts/test-agent-guidance.mjs', 'scripts/validate-sdk-agent-routes.mjs');
 ciTools.push('scripts/test-library-first.mjs');
 const compatibilityTools = ['scripts/core-compatibility.mjs', 'scripts/check-core-compatibility.mjs', 'scripts/test-core-compatibility.mjs'];
 const rustWorkspaceFiles = ['Cargo.toml', 'Cargo.lock'];
+const releaseSurfaceFiles = [
+  'README.md',
+  'HOSTING.md',
+  'docs/ASMD.md',
+  'docs/RELEASE_SURFACES.md',
+  'docs/RELEASE_CHANNELS.md',
+  'release-surfaces.json',
+  'bench/manifest.json',
+  'bench/host-external-load.json',
+  'host/ARCHITECTURE.md',
+  'host/architecture.json',
+  'host/manifest.json'
+];
 const existing = releaseJson.artifacts.map((row) => row.path);
 const releasePaths = [...new Set([
   ...existing,
@@ -73,6 +98,7 @@ const releasePaths = [...new Set([
   ...catalogTools,
   ...ciTools,
   ...rustWorkspaceFiles,
+  ...releaseSurfaceFiles,
 ])].sort();
 
 releaseJson.artifacts = await Promise.all(releasePaths.map(async (path) => {
