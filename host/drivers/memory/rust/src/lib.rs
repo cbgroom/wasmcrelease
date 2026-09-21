@@ -46,11 +46,7 @@ impl BoundedMemory {
         Ok(self.live()?[range].to_vec())
     }
 
-    pub fn read_into(
-        &self,
-        offset: usize,
-        destination: &mut [u8],
-    ) -> Result<usize, MemoryError> {
+    pub fn read_into(&self, offset: usize, destination: &mut [u8]) -> Result<usize, MemoryError> {
         let range = self.range(offset, destination.len())?;
         destination.copy_from_slice(&self.live()?[range]);
         Ok(destination.len())
