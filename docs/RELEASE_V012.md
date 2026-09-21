@@ -57,6 +57,8 @@ Performance differences are not release failures unless a metric is explicitly
 promoted to a hard gate. Functional correctness, identity, expected status and
 required-platform presence remain hard gates.
 
+Dev qualification at exact candidate commit `2f490a2939965c95cf86c63b4e3542adb85a534e` passed LibSearch, source-free consumer verification, SDK Agent guidance, Rust Host SDK, Host/Lib end-to-end, public Lib source qualification, and the external HTTPS baseline. Native CLI downloaded-consumer jobs were still queued at dev admission and are not claimed PASS here.
+
 ## Promotion
 
 The accepted sequence is `v0.0.12-dev.1` -> `v0.0.12-main.1` ->
