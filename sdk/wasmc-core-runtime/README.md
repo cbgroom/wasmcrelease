@@ -49,8 +49,8 @@ wasmc-core-runtime = { path = "sdk/wasmc-core-runtime" }
 From the public Git repository, pin the immutable release tag or full commit:
 
 ```toml
-# v0.0.11 example; for later releases use the exact immutable tag/full commit whose bytes you reviewed.
-wasmc-core-runtime = { git = "https://github.com/cbgroom/wasmcrelease.git", tag = "v0.0.11" }
+# v0.0.12 example; for later releases use the exact immutable tag/full commit whose bytes you reviewed.
+wasmc-core-runtime = { git = "https://github.com/cbgroom/wasmcrelease.git", tag = "v0.0.12" }
 ```
 
 `CoreRuntimeSdk::inspect_core` validates bytes through the Wasmi completion

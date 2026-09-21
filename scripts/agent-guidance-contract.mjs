@@ -31,12 +31,25 @@ export async function guidanceSnapshot(root) {
 
 export function validateGuidance({ agents, release, surfaces, skills }) {
   const fail = message => { throw Error(`agent.guidance_invalid: ${message}`); };
+  const stagedVersion = surfaces?.release_version ?? release.version;
+  const parseVersion = value => String(value).split('.').map(part => Number(part));
+  const stagedParts = parseVersion(stagedVersion);
+  const prodParts = parseVersion(release.version);
+  if (stagedParts.length !== 3 || prodParts.length !== 3 ||
+      stagedParts.some(part => !Number.isSafeInteger(part) || part < 0) ||
+      prodParts.some(part => !Number.isSafeInteger(part) || part < 0)) {
+    fail('release version syntax invalid');
+  }
+  const stagedOrdinal = stagedParts[0] * 1_000_000 + stagedParts[1] * 1_000 + stagedParts[2];
+  const prodOrdinal = prodParts[0] * 1_000_000 + prodParts[1] * 1_000 + prodParts[2];
+  if (stagedOrdinal < prodOrdinal) fail('staged product version regresses current prod');
+  const expectedTag = `v${stagedVersion}`;
   const declared = agents.match(/current immutable release is\s*`([^`]+)`/i)?.[1];
-  if (declared !== release.tag) fail('root release identity is stale or missing');
+  if (declared !== expectedTag) fail('root release identity is stale or missing');
   const headings = [...agents.matchAll(/^## (v[^\s]+) capability contract$/gm)].map(m => m[1]);
-  if (headings.length !== 1 || headings[0] !== release.tag) fail('capability contract identity differs');
+  if (headings.length !== 1 || headings[0] !== expectedTag) fail('capability contract identity differs');
   const cdn = [...agents.matchAll(/cdn\.jsdelivr\.net\/gh\/cbgroom\/wasmcrelease@(v[^/\s]+)\//g)].map(m => m[1]);
-  if (!cdn.length || cdn.some(tag => tag !== release.tag)) fail('root CDN release identity differs');
+  if (!cdn.length || cdn.some(tag => tag !== expectedTag)) fail('root CDN release identity differs');
   const standardSkills = skills.filter(row => row.path.startsWith('standard/') && row.path.endsWith('/SKILL.md'));
   if (!standardSkills.length || standardSkills.some(row => !agents.includes(row.path.slice(0, -8)))) fail('standard package discovery route missing');
   const names = new Map();
@@ -84,5 +97,5 @@ export function validateGuidance({ agents, release, surfaces, skills }) {
       }
     }
   }
-  return { accepted: true, release_tag: release.tag, public_skills: names.size, parent_edges: parents.size };
+  return { accepted: true, release_tag: expectedTag, prod_tag: release.tag, public_skills: names.size, parent_edges: parents.size };
 }

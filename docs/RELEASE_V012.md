@@ -1,7 +1,7 @@
 # WAsmC v0.0.12 SDK/Agent integration release
 
-v0.0.12 promotes the public Rust Host SDK candidate, SDK/Runtime/CLI Agent
-Skills, product-surface discovery, cross-platform SDK qualification, and layered
+v0.0.12 publishes the generic Rust Host SDK, SDK/Runtime/CLI Agent Skills,
+product-surface discovery, cross-platform SDK qualification, and layered
 performance baselines without changing the admitted compiler or Lib product
 bytes.
 
@@ -9,7 +9,7 @@ bytes.
 
 - Product candidate: `channels/candidates/0.0.12.json`
 - Product set SHA-256:
-  `51118c3a6b2e8aba10847395bb232ec77cb9be5fd8d76756996691dc1eb97fe9`
+  `6c5da874b9a3cce2beef0936fa761c45d5e33869db165a30e3e2984622b7bb6b`
 - Compiler source authority:
   `e69abb73f667f3810b0c40937fd1a1e2d04d4255`
 - Lib source authority:
@@ -57,10 +57,10 @@ Performance differences are not release failures unless a metric is explicitly
 promoted to a hard gate. Functional correctness, identity, expected status and
 required-platform presence remain hard gates.
 
-Dev qualification at exact candidate commit `2f490a2939965c95cf86c63b4e3542adb85a534e` passed LibSearch, source-free consumer verification, SDK Agent guidance, Rust Host SDK, Host/Lib end-to-end, public Lib source qualification, and the external HTTPS baseline. Native CLI downloaded-consumer jobs were still queued at dev admission and are not claimed PASS here.
+`v0.0.12-dev.1` remains an immutable superseded prerelease. It proved the candidate mechanics but still labeled the Host SDK as candidate; no main/prod promotion is authorized from that product set. The final release therefore reopens the product candidate and proceeds from `v0.0.12-dev.2`.
 
 ## Promotion
 
-The accepted sequence is `v0.0.12-dev.1` -> `v0.0.12-main.1` ->
+The final accepted sequence is `v0.0.12-dev.2` -> `v0.0.12-main.1` ->
 `v0.0.12`. Promotion reuses the exact candidate product digests and never
 rebuilds or moves an existing tag.

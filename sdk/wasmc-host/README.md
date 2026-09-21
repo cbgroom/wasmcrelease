@@ -87,21 +87,19 @@ artifact limits, compilation queue limits and runtime resource limits.
 
 ## Release consumption
 
-This SDK is a **candidate surface in the current development checkout** and is
-not part of immutable `v0.0.11`. Evaluate it only from an exact candidate commit.
-When it is admitted into a future immutable release, it will share that release
+This SDK is published as part of immutable **v0.0.12** and shares that release
 identity with the matching compiler/runtime artifacts.
 
-For a checked-out candidate or future release that actually contains this SDK:
+For a checked-out v0.0.12 or later release that contains this SDK:
 
     wasmc-host = { path = "sdk/wasmc-host" }
 
-For Git consumption today, pin the exact candidate full commit. After formal
-release, pin the immutable release tag or full commit that contains the SDK:
+For Git consumption, pin the immutable release tag or full commit that contains
+the SDK:
 
     wasmc-host = {
       git = "https://github.com/cbgroom/wasmcrelease.git",
-      rev = "<immutable-release-commit>"
+      tag = "v0.0.12"
     }
 
 Do not depend on mutable main for production.

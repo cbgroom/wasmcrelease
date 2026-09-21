@@ -11,6 +11,9 @@ generic Host resources and binding policy.
 
 ## Status first
 
+The v0.0.12 component map marks this SDK `published`. Production use still pins
+the exact immutable tag/full commit and verifies release integrity.
+
 This Skill existing in a mutable checkout does not prove the SDK belongs to the
 current immutable release. Read `release.json` and `release-surfaces.json`
 when present. If the surface is `candidate`, say so and pin the candidate

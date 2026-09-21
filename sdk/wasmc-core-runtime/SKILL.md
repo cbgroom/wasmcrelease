@@ -9,7 +9,7 @@ parent_skill: wasmc-sdk-discovery
 Use this when a Rust application wants WAsmC/Core Wasm **engine mechanics** but
 will own Host capability/admission policy itself.
 
-The current component map marks this SDK `published` and immutable v0.0.11
+The current component map marks this SDK `published` and immutable v0.0.12
 contains it. Still verify the exact pinned tag/full commit before use; a newer
 checkout may carry a different qualified revision.
 

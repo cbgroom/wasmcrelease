@@ -26,8 +26,8 @@ evidence that an older immutable tag shipped it.
 
 | Component | Current checkout status | Agent Skill | Important boundary |
 |---|---|---|---|
-| Core Runtime SDK | published; immutable v0.0.11 example | `sdk/wasmc-core-runtime/SKILL.md` | engine mechanics; Host/business admission remains embedding-owned |
-| Generic Host SDK | candidate | `sdk/wasmc-host/SKILL.md` | not part of immutable v0.0.11 |
+| Core Runtime SDK | published; immutable v0.0.12 | `sdk/wasmc-core-runtime/SKILL.md` | engine mechanics; Host/business admission remains embedding-owned |
+| Generic Host SDK | published; immutable v0.0.12 | `sdk/wasmc-host/SKILL.md` | generic Resource binding; no application-specific Host API |
 | Native CLI source surface | published | `sdk/wasmc-native-compiler/SKILL.md` | CI/development native packages are not immutable release assets |
 | Lightweight embedding | qualified-reference | SDK discovery routes to `host/embedding/*` | surrounding runtime is the physical OS bridge |
 | Native Runtime Library | incubating | no install Skill yet | do not invent a `.so/.dylib/.dll` package |
@@ -40,7 +40,7 @@ surface-specific workflows; this guidance workflow does not replace them.
 | Surface | Current status | Functional Actions | Performance |
 |---|---|---|---|
 | Lib Package | published | source-free-consumer, host-lib-e2e | workload-specific |
-| Host SDK | candidate | rust-host-sdk, source-free-consumer, host-lib-e2e | not yet a release gate |
+| Host SDK | published | rust-host-sdk, source-free-consumer, host-lib-e2e, sdk-agent-guidance | workload-specific observations |
 | Integrated Runtime / CLI | published | native-compiler, source-free-consumer | native-cli-perf |
 | Lightweight Embedding | qualified-reference | source-free-consumer, host-lib-e2e | runtime-specific observations |
 | Native Runtime Library / Platform SDK | incubating | thin-host, host-lib-e2e, host-network, host-file-io | host-https-flywheel + host-external-load |

@@ -10,6 +10,7 @@ const exists=path=>existsSync(resolve(root,path));
 
 const surfaces=JSON.parse(read('release-surfaces.json'));
 assert.equal(surfaces.schema,'wasmc.release-surfaces/v1');
+assert.match(surfaces.release_version??'',/^\d+\.\d+\.\d+$/);
 const discovery=surfaces.agent_discovery;
 assert(discovery,'release-surfaces.json missing agent_discovery');
 assert.equal(discovery.entry_skill,'skills/wasmc-sdk-discovery/SKILL.md');
@@ -83,6 +84,7 @@ assert(components,'agent_discovery.components missing');
 assert.equal(components['core-runtime-sdk']?.release_status,'published');
 assert.equal(components['core-runtime-sdk']?.skill,'sdk/wasmc-core-runtime/SKILL.md');
 assert.equal(components['host-sdk']?.release_status,hostSurface.status);
+assert.equal(components['host-sdk']?.immutable_example,'v'+surfaces.release_version);
 assert.equal(components['host-sdk']?.skill,'sdk/wasmc-host/SKILL.md');
 assert.equal(components['native-cli']?.release_status,'published');
 assert.equal(components['native-cli']?.skill,'sdk/wasmc-native-compiler/SKILL.md');
