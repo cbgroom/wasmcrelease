@@ -2,6 +2,19 @@
 
 Packages are built and admitted locally from clean synchronized private source, then pushed directly. GitHub Actions independently verifies the source-free public consumer paths, but cannot rebuild or admit canonical compiler/Lib bytes and is not a publication dependency.
 
+## v0.0.12
+
+SDK/Agent integration release. It publishes the generic Rust Host SDK,
+SDK/Runtime/CLI Agent discovery Skills, release-surface authority and
+cross-platform SDK qualification while preserving the admitted compiler and
+Lib bytes. The immutable product candidate contains 188 products with
+product-set SHA-256
+`6c5da874b9a3cce2beef0936fa761c45d5e33869db165a30e3e2984622b7bb6b`.
+The accepted sequence is `v0.0.12-dev.2` -> `v0.0.12-main.1` ->
+`v0.0.12`; only the suffix-free prod release advances
+`package-index.json.latest`. Native Runtime Library packaging remains
+incubating and is not claimed by this release.
+
 ## v0.0.11
 
 Data Foundation v1 adds seven admitted source-free packages: Data Core, CSV,
