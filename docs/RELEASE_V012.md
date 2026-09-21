@@ -59,6 +59,8 @@ required-platform presence remain hard gates.
 
 `v0.0.12-dev.1` remains an immutable superseded prerelease. It proved the candidate mechanics but still labeled the Host SDK as candidate; no main/prod promotion is authorized from that product set. The final release therefore reopens the product candidate and proceeds from `v0.0.12-dev.2`.
 
+Final dev admission at product candidate `cc340d9b3843a4918f80bd371fbed0ff0753188a` passed LibSearch, full source-free consumer verification, SDK Agent guidance, the five-required-platform Rust Host SDK matrix (with Intel macOS legacy optional), and release-surface policy. This evidence binds product set `6c5da874b9a3cce2beef0936fa761c45d5e33869db165a30e3e2984622b7bb6b` and authorizes `v0.0.12-dev.2`.
+
 ## Promotion
 
 The final accepted sequence is `v0.0.12-dev.2` -> `v0.0.12-main.1` ->
