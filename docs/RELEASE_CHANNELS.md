@@ -28,5 +28,15 @@ negative cases and complete source-bound reports. A probe or feature flag alone
 cannot qualify a production Lib. Performance is observational unless a measured
 contract explicitly promotes a threshold.
 
+Release surfaces are defined by `release-surfaces.json`. Published and candidate
+surfaces must have named functional workflows; architecture/incubating surfaces
+must not be promoted by documentation alone. Desktop native products use
+independent Linux/macOS/Windows x86-64/arm64 qualification cells where GitHub
+runner support exists.
+
+Performance baselines are platform-relative. A Linux x86-64 timing is compared
+only with Linux x86-64 history, Windows arm64 only with Windows arm64 history,
+and so on. Cross-platform absolute timing equality is never a promotion gate.
+
 Rollback changes only mutable discovery to a previously qualified prod identity;
 it never alters an immutable artifact/tag or makes prerelease bytes default.

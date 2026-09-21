@@ -1,0 +1,76 @@
+# Release surfaces and qualification
+
+The canonical machine-readable inventory is `release-surfaces.json`. This
+document explains how its surfaces enter a WAsmC release.
+
+## Release units
+
+Five consumer surfaces are recognized: Lib Package, Host SDK, Integrated
+Runtime/CLI, Lightweight Embedding and Native Runtime Library/Platform SDK.
+Driver/Provider and Remote Provider are extension surfaces behind the same Host
+contract.
+
+Not every surface must be at the same maturity. `published` and `candidate`
+surfaces participate in release identity and required qualification.
+`qualified-reference` surfaces are public integration references with executable
+coverage but are not claimed as standalone binary SDKs. `incubating` and
+`architecture` surfaces must not be promoted by documentation alone.
+
+| Surface | Current status | Functional Actions | Performance |
+|---|---|---|---|
+| Lib Package | published | source-free-consumer, host-lib-e2e | workload-specific |
+| Host SDK | candidate | rust-host-sdk, source-free-consumer, host-lib-e2e | not yet a release gate |
+| Integrated Runtime / CLI | published | native-compiler, source-free-consumer | native-cli-perf |
+| Lightweight Embedding | qualified-reference | source-free-consumer, host-lib-e2e | runtime-specific observations |
+| Native Runtime Library / Platform SDK | incubating | thin-host, host-lib-e2e, host-network, host-file-io | host-https-flywheel observations |
+| Driver / Provider | qualified-reference | host-lib-e2e, host-network, host-file-io, host-memory | driver-specific |
+| Remote Provider | architecture | not yet a release product | none |
+
+## Required functional evidence
+
+Every published/candidate surface names the workflows that qualify it. The
+combined desktop matrix is:
+
+| Platform ID | GitHub runner |
+|---|---|
+| linux-x86_64 | ubuntu-24.04 |
+| linux-aarch64 | ubuntu-24.04-arm |
+| macos-x86_64 | macos-15-intel |
+| macos-aarch64 | macos-14 |
+| windows-x86_64 | windows-2025 |
+| windows-aarch64 | windows-11-arm |
+
+Native Runtime/Host behavior uses the six-platform Host composition workflow.
+The Native CLI/package workflow builds and re-consumes packages on the same six
+platform identities. The Rust Host SDK workflow uses the same six runner cells.
+Lib identity/Component behavior and Node/Bun/Deno lightweight embedding are
+covered by the source-free and Host/Lib workflows according to their explicit
+runtime support.
+
+## Performance baseline
+
+`native-cli-perf.yml` is the canonical public six-platform performance history.
+It never compares one platform's absolute timing against another.
+
+For each metric and platform, the aggregator looks at the most recent
+same-platform observations (bounded by `bench/manifest.json`), computes their
+median and emits:
+
+```text
+relative_ratio = current_value / same_platform_baseline
+```
+
+For latency metrics lower is better. Missing history produces `bootstrap`. The
+configured advisory ratio highlights regressions without turning normal
+GitHub-hosted runner variance into a false functional failure. A future metric
+may become a hard gate only after its own history demonstrates that a stable
+threshold is justified.
+
+## Promotion
+
+The release promotion sequence remains `dev -> main -> prod`. New product bytes
+start a new dev candidate. Promotion reuses the exact product digests; it does
+not rebuild them. The next release candidate created by
+`scripts/release-candidate.mjs` includes the public Host contract/architecture,
+Rust Host SDK dependencies and these release-surface documents in addition to
+the existing compiler/runtime/Lib inventory.

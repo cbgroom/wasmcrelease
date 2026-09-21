@@ -2,6 +2,13 @@
   "schema": "wasmc-public-benchmark-corpus/v1",
   "authority": "public benchmark sources copied byte-for-byte from the accepted private compiler performance corpus",
   "measurement_policy": "GitHub-hosted timings are comparative observations, not absolute SLA authority. Source identity and generated Wasm parity are hard gates.",
+  "relative_baseline_policy": {
+    "comparison": "same-platform-only",
+    "history_window": 5,
+    "minimum_history": 1,
+    "advisory_regression_ratio": 1.25,
+    "hard_gate": false
+  },
   "samples": {
     "build_wasm": 9,
     "native_miss": 5,

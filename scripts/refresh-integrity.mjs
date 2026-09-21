@@ -50,11 +50,31 @@ const channelFiles = (await walk('channels')).sort();
 const compatibilityFiles = (await walk('compatibility')).sort();
 const catalogFiles = (await walk('catalog')).sort();
 const catalogTools = ['scripts/lib-catalog.mjs', 'scripts/wasmc-lib.mjs', 'scripts/refresh-lib-catalog.mjs', 'scripts/test-lib-catalog.mjs', 'scripts/lib-install.mjs', 'scripts/test-lib-install.mjs', 'scripts/validate-lib-install.mjs'];
-const ciTools = ['scripts/ci-suite.mjs','scripts/ci-summary.mjs','scripts/test-ci-reporting.mjs','scripts/release-candidate.mjs','scripts/test-release-channel.mjs'];
+const ciTools = [
+  'scripts/ci-suite.mjs',
+  'scripts/ci-summary.mjs',
+  'scripts/test-ci-reporting.mjs',
+  'scripts/release-candidate.mjs',
+  'scripts/test-release-channel.mjs',
+  'scripts/validate-release-surfaces.mjs',
+  'scripts/test-performance-baseline.mjs',
+  'scripts/aggregate-native-cli-perf.mjs'
+];
 ciTools.push('scripts/agent-guidance-contract.mjs', 'scripts/test-agent-guidance.mjs');
 ciTools.push('scripts/test-library-first.mjs');
 const compatibilityTools = ['scripts/core-compatibility.mjs', 'scripts/check-core-compatibility.mjs', 'scripts/test-core-compatibility.mjs'];
 const rustWorkspaceFiles = ['Cargo.toml', 'Cargo.lock'];
+const releaseSurfaceFiles = [
+  'README.md',
+  'HOSTING.md',
+  'docs/ASMD.md',
+  'docs/RELEASE_SURFACES.md',
+  'docs/RELEASE_CHANNELS.md',
+  'release-surfaces.json',
+  'host/ARCHITECTURE.md',
+  'host/architecture.json',
+  'host/manifest.json'
+];
 const existing = releaseJson.artifacts.map((row) => row.path);
 const releasePaths = [...new Set([
   ...existing,
@@ -73,6 +93,7 @@ const releasePaths = [...new Set([
   ...catalogTools,
   ...ciTools,
   ...rustWorkspaceFiles,
+  ...releaseSurfaceFiles,
 ])].sort();
 
 releaseJson.artifacts = await Promise.all(releasePaths.map(async (path) => {

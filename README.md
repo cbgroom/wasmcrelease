@@ -2,11 +2,30 @@
 
 [![Public verification](https://github.com/cbgroom/wasmcrelease/actions/workflows/source-free-consumer.yml/badge.svg?branch=main&event=push)](https://github.com/cbgroom/wasmcrelease/actions/workflows/source-free-consumer.yml)
 [![Native CLI performance](https://github.com/cbgroom/wasmcrelease/actions/workflows/native-cli-perf.yml/badge.svg?branch=main&event=push)](https://github.com/cbgroom/wasmcrelease/actions/workflows/native-cli-perf.yml)
+[![Release surface policy](https://github.com/cbgroom/wasmcrelease/actions/workflows/release-surfaces.yml/badge.svg?branch=main&event=push)](https://github.com/cbgroom/wasmcrelease/actions/workflows/release-surfaces.yml)
+[![Rust Host SDK](https://github.com/cbgroom/wasmcrelease/actions/workflows/rust-host-sdk.yml/badge.svg?branch=main&event=push)](https://github.com/cbgroom/wasmcrelease/actions/workflows/rust-host-sdk.yml)
 ![run/Wasmi](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fcbgroom%2Fwasmcrelease%2Fperf-data%2Fbadges%2Frun.json)
 ![native run](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fcbgroom%2Fwasmcrelease%2Fperf-data%2Fbadges%2Fnative.json)
 ![build Wasm](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fcbgroom%2Fwasmcrelease%2Fperf-data%2Fbadges%2Fbuild.json)
 
 Source-free public packages for the private-source `wasmc` compiler.
+
+## Product surfaces
+
+WAsmC has one Host contract and multiple ways to consume it:
+
+| Surface | Use it when |
+|---|---|
+| **Lib Package** | an App/runtime needs reusable WAsmC functionality |
+| **Host SDK** | an existing Rust process wants programmable Host/resource binding |
+| **Integrated Runtime / CLI** | users want compile/run/Host without assembling the stack |
+| **Lightweight Embedding** | Node/Bun/Deno/Browser should reuse their own runtime OS bridge |
+| **Native Runtime Library / Platform SDK** | system integration needs one unified, high-performance native data plane |
+
+Drivers/providers and remote providers extend physical capability behind that
+same contract rather than adding application-specific Host calls. See
+[ASMD](docs/ASMD.md), [Host architecture](host/ARCHITECTURE.md), and the
+[release surface policy](docs/RELEASE_SURFACES.md).
 
 The [Portable Std1.4.1 qualification candidate](admission/portable-std-v0/README.md)
 regenerates the unchanged73-API Std contract for Wasmi2 and Node18, with matching

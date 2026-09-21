@@ -80,6 +80,21 @@ measurements, novel LLM generation, repair/tokens benchmark or production proof.
 No new browser, device, fleet, performance threshold, all-stdlib or third-party
 authoring completeness is claimed.
 
+## Release-surface and performance policy
+
+`release-surfaces.json` maps every public/candidate product surface to the
+workflows that qualify it. Native CLI/package, Host/Lib composition and Rust
+Host SDK coverage use the six desktop runner identities documented in
+`docs/RELEASE_SURFACES.md`. Lightweight runtime coverage remains explicit by
+runtime/platform combination rather than inferred from one passing engine.
+
+`native-cli-perf.yml` records the canonical six-platform public performance
+history. Performance comparison is same-platform only. The aggregate report
+uses recent history to compute a rolling median baseline for each platform and
+metric, then publishes `current / baseline`. Functional and artifact-identity
+failures remain hard gates; the performance ratio is an advisory regression
+signal until a metric has enough stable history to justify a hard threshold.
+
 ## Reproduce and review
 
 ```bash
