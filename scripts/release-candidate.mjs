@@ -43,14 +43,21 @@ if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)) {
     if(!/^[0-9a-f]{40}$/.test(source))throw Error('exact Lib source required');
     const productDirectories=[
       'current','standard','sdk','runtime','libs',
+      'skills/wasmc-developer','skills/wasmc-sdk-discovery',
       'host/contract','host/sdk','host/drivers/file/rust','host/drivers/memory/rust'
     ];
     const productFiles=[
-      'README.md','HOSTING.md',
+      'AGENTS.md','README.md','HOSTING.md',
       'host/ARCHITECTURE.md','host/architecture.json','host/manifest.json',
       'bench/manifest.json','bench/host-external-load.json',
       'docs/ASMD.md','docs/RELEASE_SURFACES.md','release-surfaces.json',
-      'examples/lib-search/client.mjs','scripts/wasmc-lib.mjs','skills/wasmc-lib/SKILL.md'
+      'examples/lib-search/client.mjs',
+      'scripts/wasmc-lib.mjs',
+      'scripts/agent-guidance-contract.mjs',
+      'scripts/test-agent-guidance.mjs',
+      'scripts/validate-agent-docs.mjs',
+      'scripts/validate-sdk-agent-routes.mjs',
+      'skills/wasmc-lib/SKILL.md'
     ];
     const paths=[...productDirectories.flatMap(walk),...productFiles];
     const rows=paths.sort().map(path=>{const b=read(path);return {path,bytes:b.length,sha256:hash(b)};});

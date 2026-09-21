@@ -1,5 +1,7 @@
 # wasmc-host
 
+> **Agent entry:** read [SKILL.md](SKILL.md) before generating integration code. Verify the pinned checkout/release status first.
+
 Public Rust embedding SDK for the generic WAsmC Host.
 
 This crate is for existing Rust applications that want to embed WAsmC without
@@ -85,15 +87,17 @@ artifact limits, compilation queue limits and runtime resource limits.
 
 ## Release consumption
 
-The SDK is distributed in the same public wasmcrelease repository and immutable
-release identity as the compiler/runtime artifacts.
+This SDK is a **candidate surface in the current development checkout** and is
+not part of immutable `v0.0.11`. Evaluate it only from an exact candidate commit.
+When it is admitted into a future immutable release, it will share that release
+identity with the matching compiler/runtime artifacts.
 
-For a checked-out release:
+For a checked-out candidate or future release that actually contains this SDK:
 
     wasmc-host = { path = "sdk/wasmc-host" }
 
-For Git consumption, pin the same immutable wasmcrelease tag or full commit that
-contains the SDK:
+For Git consumption today, pin the exact candidate full commit. After formal
+release, pin the immutable release tag or full commit that contains the SDK:
 
     wasmc-host = {
       git = "https://github.com/cbgroom/wasmcrelease.git",

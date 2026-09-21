@@ -1,5 +1,7 @@
 # wasmc-core-runtime
 
+> **Agent entry:** read [SKILL.md](SKILL.md) before generating integration code. Verify the pinned checkout/release status first.
+
 Public release source authority: private wasmc commit
 `bddf8a371698ac7f1ced87b02952df5be5359dad`. The immutable outer release tag
 and this directory's bytes are the distributable identity; the private commit
@@ -47,7 +49,8 @@ wasmc-core-runtime = { path = "sdk/wasmc-core-runtime" }
 From the public Git repository, pin the immutable release tag or full commit:
 
 ```toml
-wasmc-core-runtime = { git = "https://github.com/cbgroom/wasmcrelease.git", tag = "v0.0.8" }
+# v0.0.11 example; for later releases use the exact immutable tag/full commit whose bytes you reviewed.
+wasmc-core-runtime = { git = "https://github.com/cbgroom/wasmcrelease.git", tag = "v0.0.11" }
 ```
 
 `CoreRuntimeSdk::inspect_core` validates bytes through the Wasmi completion

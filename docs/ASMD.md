@@ -45,6 +45,12 @@ program is packaged or embedded.
 The upper surfaces may evolve independently. They must not create parallel
 guest ABIs.
 
+For Agent consumption, release-surfaces.json is the machine-readable surface
+map for the current checkout. agent_discovery.entry_skill points to
+skills/wasmc-sdk-discovery/SKILL.md, and component Skills live beside the
+actual SDKs. Agents select by task intent and exact release status rather than
+by repository-directory existence.
+
 ## Five consumer surfaces
 
 | Surface | Purpose | Primary public roots |

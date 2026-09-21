@@ -27,6 +27,12 @@ same contract rather than adding application-specific Host calls. See
 [ASMD](docs/ASMD.md), [Host architecture](host/ARCHITECTURE.md), and the
 [release surface policy](docs/RELEASE_SURFACES.md).
 
+Agents must not infer maturity from directory names. Start at
+[AGENTS.md](AGENTS.md), then use the
+[SDK discovery Skill](skills/wasmc-sdk-discovery/SKILL.md); the machine-readable
+release-surfaces.json records whether a surface is published, candidate,
+qualified-reference, incubating, or architecture-only.
+
 The [Portable Std1.4.1 qualification candidate](admission/portable-std-v0/README.md)
 regenerates the unchanged73-API Std contract for Wasmi2 and Node18, with matching
 Rust/WAsmC consumers. It is **not released/default**. The
@@ -158,10 +164,11 @@ Current release: `v0.0.11`, reusing compiler bytes built from exact private sour
 latest compiler facade; `dist/` and `package/` are frozen v0.0.4
 compatibility trees. The three pre-Data historical `libs/` packages remain
 byte-frozen; newly admitted source-free Lib packages are append-only. The Wasmi/Wasmtime
-Core Runtime SDK remains available in `sdk/wasmc-core-runtime`. Rust
-applications can use the public generic Host embedding facade in
-`sdk/wasmc-host`; its binding policies are Host-side convenience only and do
-not add guest-visible Host operations.
+Core Runtime SDK remains available in `sdk/wasmc-core-runtime`. The current
+development checkout also carries the candidate generic Host embedding facade
+in `sdk/wasmc-host`; it is **not** part of immutable v0.0.11. Its binding
+policies are Host-side convenience only and do not add guest-visible Host
+operations.
 
 Data Foundation v1 publishes seven zero-import, source-free packages for CSV,
 typed data, expressions, compute, relational operations, profiling and Arrow
@@ -219,6 +226,8 @@ compatibility passes. Browser/device/production/performance and third-party Lib
 authoring remain separate acceptance gates.
 
 - Agents and developers: [AGENTS.md](AGENTS.md)
+- SDK/runtime/CLI selection: [SDK discovery Skill](skills/wasmc-sdk-discovery/SKILL.md)
+- SDK-scoped Agent entrypoint: [sdk/AGENTS.md](sdk/AGENTS.md)
 - Language delta: [LANGUAGE.md](LANGUAGE.md)
 - Lib model and managed collections: [LIB.md](LIB.md)
 - JavaScript, raw Wasm, and Wasmtime: [HOSTING.md](HOSTING.md)

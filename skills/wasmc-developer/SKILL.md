@@ -14,15 +14,18 @@ or an unreleased capability.
 2. Before implementing reusable algorithms or data operations, follow
    [Library-first discovery](../wasmc-lib-discovery/SKILL.md). Prefer an admitted
    Lib; write only missing glue/control logic. Search is discovery, not selection.
-3. For a package-manager-free compiler/runtime bootstrap read [runtime.md](references/runtime.md).
-4. For ordinary code read [language-and-wit.md](references/language-and-wit.md).
-5. For managed String/List/Map/record/resource code also read
+3. Before selecting an SDK, runtime, CLI, or embedding surface, follow
+   [SDK discovery](../wasmc-sdk-discovery/SKILL.md). Do not choose a component
+   merely because a directory exists on mutable main.
+4. For a package-manager-free compiler/runtime bootstrap read [runtime.md](references/runtime.md).
+5. For ordinary code read [language-and-wit.md](references/language-and-wit.md).
+6. For managed String/List/Map/record/resource code also read
    [lib.md](references/lib.md).
-6. To expose a reviewed Rust crate as a Lib, read
+7. To expose a reviewed Rust crate as a Lib, read
    [authoring-libs.md](references/authoring-libs.md).
-7. For execution read either [javascript.md](references/javascript.md) or
+8. For execution read either [javascript.md](references/javascript.md) or
    [rust-wasmtime.md](references/rust-wasmtime.md).
-8. Compile the smallest complete program, validate the Wasm, and inspect every
+9. Compile the smallest complete program, validate the Wasm, and inspect every
    import before adding Host bindings.
 
 ## Mental model

@@ -67,7 +67,8 @@
       "functional_workflows": [
         "rust-host-sdk.yml",
         "source-free-consumer.yml",
-        "host-lib-e2e.yml"
+        "host-lib-e2e.yml",
+        "sdk-agent-guidance.yml"
       ],
       "performance_workflows": []
     },
@@ -80,7 +81,8 @@
       ],
       "functional_workflows": [
         "native-compiler.yml",
-        "source-free-consumer.yml"
+        "source-free-consumer.yml",
+        "sdk-agent-guidance.yml"
       ],
       "performance_workflows": [
         "native-cli-perf.yml"
@@ -97,7 +99,8 @@
       ],
       "functional_workflows": [
         "source-free-consumer.yml",
-        "host-lib-e2e.yml"
+        "host-lib-e2e.yml",
+        "sdk-agent-guidance.yml"
       ],
       "performance_workflows": []
     },
@@ -173,5 +176,44 @@
         "comparison": "same-platform-only"
       }
     ]
+  },
+  "agent_discovery": {
+    "entry_skill": "skills/wasmc-sdk-discovery/SKILL.md",
+    "sdk_entry": "sdk/AGENTS.md",
+    "component_skills": {
+      "core-runtime-sdk": "sdk/wasmc-core-runtime/SKILL.md",
+      "host-sdk": "sdk/wasmc-host/SKILL.md",
+      "native-cli": "sdk/wasmc-native-compiler/SKILL.md"
+    },
+    "rule": "select by task intent and exact release-surface status before generating integration code",
+    "components": {
+      "core-runtime-sdk": {
+        "root": "sdk/wasmc-core-runtime",
+        "skill": "sdk/wasmc-core-runtime/SKILL.md",
+        "release_status": "published",
+        "immutable_example": "v0.0.11"
+      },
+      "host-sdk": {
+        "root": "sdk/wasmc-host",
+        "skill": "sdk/wasmc-host/SKILL.md",
+        "release_status": "candidate",
+        "immutable_example": null
+      },
+      "native-cli": {
+        "root": "sdk/wasmc-native-compiler",
+        "skill": "sdk/wasmc-native-compiler/SKILL.md",
+        "release_status": "published",
+        "immutable_example": "v0.0.11",
+        "binary_packaging": "CI/development packages are not immutable release assets"
+      },
+      "lightweight-embedding": {
+        "root": "host/embedding",
+        "release_status": "qualified-reference"
+      },
+      "native-runtime-library": {
+        "root": "host/runtime",
+        "release_status": "incubating"
+      }
+    }
   }
 }

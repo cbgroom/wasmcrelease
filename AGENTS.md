@@ -22,7 +22,16 @@ where supported → check engine/imports → verify behavior → write missing g
 This Library-first guidance is included in v0.0.11. Search is discovery, not
 selection authority; approve and pin exact package identities before use.
 
-Read [skills/wasmc-developer/SKILL.md](skills/wasmc-developer/SKILL.md) completely. It routes only the reference needed for Runtime bootstrap, source/WIT, Lib authoring, JavaScript, or Rust/Wasmtime. Reuse Rust and WIT priors and learn only the documented wasmc delta.
+For SDK/runtime/CLI/embedding integration, begin with
+[the SDK discovery Skill](skills/wasmc-sdk-discovery/SKILL.md). It routes by
+task intent to Core Runtime, generic Host embedding, native CLI, or lightweight
+Node/Bun/Deno integration and requires exact release-surface status before code
+generation. SDK discovery and Lib discovery are separate decisions.
+
+Read [skills/wasmc-developer/SKILL.md](skills/wasmc-developer/SKILL.md)
+completely. It routes only the reference needed for Runtime bootstrap,
+source/WIT, Lib authoring, JavaScript, Rust/Wasmtime, or the SDK selection
+Skill. Reuse Rust and WIT priors and learn only the documented wasmc delta.
 
 ```wasmc
 package local:add;
@@ -58,6 +67,12 @@ console.log(instance.exports.run(5, 6)); // 17
 | async Libs, traits, open generics, automatic Rust API discovery | unsupported | do not invent a bridge |
 | signing, auto-update, ambient filesystem/network/device access | not provided | application/publisher authority |
 
+If a mutable checkout also contains `release-surfaces.json`, treat it as the
+machine-readable status authority for **that checkout's** SDK/runtime surfaces.
+It does not retroactively add a candidate path such as `sdk/wasmc-host` to the
+immutable v0.0.11 product. Pin the exact candidate/full commit for evaluation
+and do not describe candidate/incubating surfaces as released assets.
+
 The v0.0.4 `dist/` and `package/` compatibility trees and the three
 historical `libs/` packages remain
 byte-for-byte frozen. v0.0.11 reuses the qualified compiler facades and standard
@@ -78,6 +93,14 @@ before treating compiler success as standard-Lib or managed Host support.
   `libs/wasmc-resource-counter/`: frozen historical qualification Libs.
 - Other `libs/*/`: append-only admitted source-free Lib packages; never edit an
   existing released version in place.
+- `sdk/wasmc-core-runtime/`: public dual-engine Rust execution SDK; read its
+  `SKILL.md` when present in the pinned checkout.
+- `sdk/wasmc-native-compiler/`: source-free run/build/native CLI integration;
+  read its `SKILL.md` and do not assume its `run` command performs Core
+  Runtime SDK promotion.
+- `sdk/wasmc-host/`: generic Rust Host embedding SDK **only when it exists and
+  is admitted by the pinned checkout's release surface**. Its presence on a
+  mutable candidate branch is not a v0.0.11 capability claim.
 - `examples/rust-wasmtime/`: locked executable reference project, not an SDK.
 - `runtime/wasmc-runtime-v0/`: current `compiler.wasm` plus thin universal/Node/Bun/Deno Host adapters; no npm or external JS registry.
 - `runtime/registry-v0/`: repo-local resolver/channel/mirror metadata for `wasmc:runtime`.

@@ -41,6 +41,7 @@ const admissionFiles = (await walk('admission')).sort();
 const rootSkillFiles = (await walk('skills/wasmc-developer')).sort();
 rootSkillFiles.push(...await walk('skills/wasmc-lib'));
 rootSkillFiles.push(...await walk('skills/wasmc-lib-discovery'));
+rootSkillFiles.push(...await walk('skills/wasmc-sdk-discovery'));
 const sdkFiles = (await walk('sdk')).sort();
 const currentFiles = (await walk('current')).sort();
 const standardFiles = (await walk('standard')).sort();
@@ -62,7 +63,7 @@ const ciTools = [
   'scripts/host-https-external-load.mjs',
   'scripts/aggregate-host-external-load.mjs'
 ];
-ciTools.push('scripts/agent-guidance-contract.mjs', 'scripts/test-agent-guidance.mjs');
+ciTools.push('scripts/agent-guidance-contract.mjs', 'scripts/test-agent-guidance.mjs', 'scripts/validate-sdk-agent-routes.mjs');
 ciTools.push('scripts/test-library-first.mjs');
 const compatibilityTools = ['scripts/core-compatibility.mjs', 'scripts/check-core-compatibility.mjs', 'scripts/test-core-compatibility.mjs'];
 const rustWorkspaceFiles = ['Cargo.toml', 'Cargo.lock'];

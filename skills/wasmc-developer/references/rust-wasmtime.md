@@ -24,25 +24,37 @@ then bind only those functions with `Linker::func_wrap`. Keep credentials,
 quotas, handles, cancellation, and audit state in `Store<AppState>`. A matching
 signature is not an authority grant.
 
-## wasmc convenience SDK
+## WAsmC Core Runtime SDK
 
-`WasmtimeHostSdk` verifies exact Core imports and current lib bundles. It
-offers two bounded lanes:
+For reusable dual-engine mechanics, use the actual public
+`sdk/wasmc-core-runtime` surface:
 
-- `prepare_module` plus `invoke` for a reviewed Core module and exact
-  `WasmtimeHostImport` descriptors;
-- `prepare_lib_bundle` plus `invoke_lib` for an exact current lib
-  product bundle.
+- `CoreRuntimeSdk::inspect_core` for exact imports/exports/signatures without
+  synchronously compiling Wasmtime;
+- `prepare_core` or the matching reviewed Host-import preparation function for
+  one exact artifact and policy fingerprint;
+- artifact invocation for the immediate Wasmi completion path;
+- `CoreRuntimeSdk::request_optimization` for bounded asynchronous Wasmtime
+  preparation;
+- `artifact.status()` / `wait_for_optimization` to observe compilation;
+- `artifact.publish(decision)` for explicit Host-admitted promotion;
+- `rollback_to_completion` for future-call fallback without replay.
 
-Each invocation creates a fresh bounded Store. Supply explicit
-`WasmtimeHostLimits` for memory, instances, tables, fuel, and epoch deadline.
-Treat import-policy, binding, bundle-identity, invocation, protocol, or cleanup
-errors as fail-closed outcomes and retire the Store.
+`CoreRuntimeSdkConfig::default()` starts with an **unbounded**
+`CoreRuntimeLimitProfile`. Production/untrusted embedding should construct a
+complete bounded profile for engine fuel, wall clock, linear memory, table
+elements, and concurrent Stores.
 
-The SDK does not authorize application capabilities, own framework state,
-select pooling/publication policy, or establish hostile multi-tenant safety.
-Use Wasmtime directly when the application needs a different Store topology.
+A completed Wasmtime compile is only a candidate. It does not automatically
+become the selected route; positive behavior/resource evidence remains
+Host-owned. An invocation already selected on one backend is never retried on
+the other after a trap or uncertain effect.
+
+When the Rust application also needs generic Resource registration and OS-aware
+binding policy, route through `sdk/wasmc-host` **if the pinned release surface
+admits it**. `WasmcHost::native`, `native_strict`, and
+`WasmcHost::builder` are the current public Host SDK entrypoints.
 
 Direct `wasmtime run` is useful for reviewed no-import development examples;
-production code should embed the Wasmtime API or the bounded SDK. Never share a
+production code should embed the Wasmtime API or the Core Runtime SDK. Never share a
 Store-local lib reference between Stores or threads.

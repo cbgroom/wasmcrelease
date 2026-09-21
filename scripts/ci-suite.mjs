@@ -18,6 +18,7 @@ export function suiteCases(family,runtime='node',mirror='github') {
   ];
   if(family==='integrity')return [
     item('library-first-teaching-and-routes','scripts/test-library-first.mjs'),
+    item('sdk-agent-routing','scripts/validate-sdk-agent-routes.mjs'),
     item('release-channel-promotion-negatives','scripts/test-release-channel.mjs'),
     item('release-product-identity','scripts/release-candidate.mjs',['verify','channels/candidates/0.0.11.json']),
     item('release-surface-model','scripts/validate-release-surfaces.mjs'),

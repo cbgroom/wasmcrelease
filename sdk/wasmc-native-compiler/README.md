@@ -1,5 +1,7 @@
 # Native WAsmC CLI integration glue (development)
 
+> **Agent entry:** read [SKILL.md](SKILL.md) before generating integration code. Verify the pinned checkout/release status first.
+
 This public source-free Rust CLI consumes the admitted `current/wasmc_compiler.wasm`; it contains no compiler source and never rebuilds compiler/CoreLib Wasm. During each platform build, `build.rs` verifies the admitted compiler digest and derives a target-local Wasmtime AOT image for the compiler. That `.cwasm` is a build derivative only; the checked-in Core Wasm remains the portable authority.
 
 The user model is deliberately small:

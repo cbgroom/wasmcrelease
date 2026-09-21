@@ -1,0 +1,64 @@
+name: SDK Agent guidance
+
+on:
+  push:
+    paths:
+      - "AGENTS.md"
+      - "HOSTING.md"
+      - "README.md"
+      - "release-surfaces.json"
+      - "skills/wasmc-developer/**"
+      - "skills/wasmc-sdk-discovery/**"
+      - "sdk/AGENTS.md"
+      - "sdk/wasmc-core-runtime/**"
+      - "sdk/wasmc-host/**"
+      - "sdk/wasmc-native-compiler/**"
+      - "scripts/agent-guidance-contract.mjs"
+      - "scripts/test-agent-guidance.mjs"
+      - "scripts/validate-sdk-agent-routes.mjs"
+      - ".github/workflows/sdk-agent-guidance.yml"
+  pull_request:
+    paths:
+      - "AGENTS.md"
+      - "HOSTING.md"
+      - "README.md"
+      - "release-surfaces.json"
+      - "skills/wasmc-developer/**"
+      - "skills/wasmc-sdk-discovery/**"
+      - "sdk/AGENTS.md"
+      - "sdk/wasmc-core-runtime/**"
+      - "sdk/wasmc-host/**"
+      - "sdk/wasmc-native-compiler/**"
+      - "scripts/agent-guidance-contract.mjs"
+      - "scripts/test-agent-guidance.mjs"
+      - "scripts/validate-sdk-agent-routes.mjs"
+      - ".github/workflows/sdk-agent-guidance.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  guidance:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: 26.5.1
+      - run: rustup toolchain install 1.96.0 --profile minimal
+      - name: Validate SDK discovery and public API routes
+        run: node scripts/validate-sdk-agent-routes.mjs
+      - name: Validate public Agent Skill graph
+        run: node scripts/test-agent-guidance.mjs
+      - name: Execute public Agent documentation journey
+        run: node scripts/validate-agent-docs.mjs
+      - name: Core Runtime SDK behavior
+        run: cargo +1.96.0 test --locked --manifest-path sdk/wasmc-core-runtime/Cargo.toml --test runtime_sdk
+      - name: Generic Host SDK behavior
+        run: cargo +1.96.0 test --locked --manifest-path sdk/wasmc-host/Cargo.toml
+      - name: Generic Host SDK example
+        run: cargo +1.96.0 run --locked --manifest-path sdk/wasmc-host/Cargo.toml --example native
+      - name: Native CLI compiles against documented surface
+        run: cargo +1.96.0 test --locked --manifest-path sdk/wasmc-native-compiler/Cargo.toml
