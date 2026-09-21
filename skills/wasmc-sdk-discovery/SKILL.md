@@ -47,6 +47,21 @@ which reusable algorithm/data Lib to load. Lib selection remains owned by
 - A candidate/incubating surface is not a production release asset. State the
   status and stop rather than fabricating an install command.
 
+## Typical requests
+
+- “I already have a Rust service and only need to execute reviewed Core Wasm
+  with limits.” → `wasmc-core-runtime`.
+- “My Rust service also needs files/memory/platform resources and I want WAsmC
+  to bind them.” → `wasmc-host`, but only if the pinned surface admits it.
+- “Compile this source, run the supported scalar App, or make a native
+  executable.” → native CLI.
+- “Keep my Node/Bun/Deno project lightweight; do not add the Rust native
+  runtime.” → lightweight embedding through that runtime's OS APIs.
+- “Give me the prebuilt WAsmC shared library.” → check native-runtime-library
+  status; if incubating, report unavailable rather than inventing a package.
+- “I need CSV/join/compression/algorithm capability.” → this is a Lib-discovery
+  task, not an SDK selection task.
+
 ## Completion evidence
 
 For the selected surface, report:

@@ -18,6 +18,7 @@ assert.equal(discovery.sdk_entry,'sdk/AGENTS.md');
 const requiredFiles=[
   'AGENTS.md',
   'skills/wasmc-sdk-discovery/SKILL.md',
+  'skills/wasmc-sdk-discovery/agents/openai.yaml',
   'sdk/AGENTS.md',
   'sdk/wasmc-core-runtime/SKILL.md',
   'sdk/wasmc-host/SKILL.md',
@@ -33,6 +34,7 @@ for(const file of requiredFiles)assert(exists(file),'missing SDK Agent route: '+
 
 const agents=read('AGENTS.md');
 const sdkDiscovery=read(discovery.entry_skill);
+const sdkDiscoveryMetadata=read('skills/wasmc-sdk-discovery/agents/openai.yaml');
 const developer=read('skills/wasmc-developer/SKILL.md');
 const rustGuide=read('skills/wasmc-developer/references/rust-wasmtime.md');
 const coreSkill=read('sdk/wasmc-core-runtime/SKILL.md');
@@ -45,6 +47,8 @@ const nativeCli=read('sdk/wasmc-native-compiler/src/main.rs');
 
 assert(agents.includes(discovery.entry_skill),'root AGENTS does not route SDK discovery');
 assert(developer.includes('../wasmc-sdk-discovery/SKILL.md'),'developer Skill does not route SDK discovery');
+assert(sdkDiscoveryMetadata.includes('display_name: "WAsmC SDK Discovery"'));
+assert(sdkDiscoveryMetadata.includes('Use $wasmc-sdk-discovery'));
 
 for(const [id,path] of Object.entries(discovery.component_skills)){
   assert(exists(path),'missing component Skill '+id+': '+path);
@@ -85,6 +89,14 @@ assert.equal(components['native-cli']?.skill,'sdk/wasmc-native-compiler/SKILL.md
 assert.match(components['native-cli']?.binary_packaging??'',/not immutable release assets/i);
 assert.equal(components['lightweight-embedding']?.release_status,'qualified-reference');
 assert.equal(components['native-runtime-library']?.release_status,'incubating');
+
+const intents=new Map((surfaces.agent_discovery?.intent_routes??[]).map(row=>[row.intent,row.component]));
+assert.equal(intents.get('rust-core-execution'),'core-runtime-sdk');
+assert.equal(intents.get('rust-generic-host'),'host-sdk');
+assert.equal(intents.get('cli-run-build-native'),'native-cli');
+assert.equal(intents.get('js-lightweight-host'),'lightweight-embedding');
+assert.equal(intents.get('native-runtime-binary'),'native-runtime-library');
+assert.equal(intents.get('reusable-capability'),'lib-discovery');
 
 for(const surfaceId of ['host-sdk','integrated-runtime-cli','lightweight-embedding']){
   const surface=surfaces.consumer_surfaces.find(row=>row.id===surfaceId);
