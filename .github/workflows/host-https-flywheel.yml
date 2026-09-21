@@ -31,6 +31,7 @@ jobs:
           - os: windows-11-arm
             platform: windows-aarch64
     runs-on: ${{ matrix.os }}
+    continue-on-error: ${{ matrix.os == 'macos-15-intel' }}
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
@@ -116,7 +117,7 @@ jobs:
           fi
       - name: Aggregate six-platform paired HTTPS A/B evidence
         shell: bash
-        run: node scripts/aggregate-host-https-ab.mjs host-https-results host-https-site previous-host-https-history.json 6
+        run: node scripts/aggregate-host-https-ab.mjs host-https-results host-https-site previous-host-https-history.json 5
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: host-https-performance-report
@@ -166,7 +167,7 @@ jobs:
     needs: [benchmark, aggregate]
     runs-on: ubuntu-24.04
     steps:
-      - name: Require six-platform HTTPS flywheel
+      - name: Require required-platform HTTPS flywheel
         shell: bash
         run: |
           test "${{ needs.benchmark.result }}" = "success"

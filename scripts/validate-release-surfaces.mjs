@@ -10,14 +10,21 @@ const model=JSON.parse(read('release-surfaces.json'));
 assert.equal(model.schema,'wasmc.release-surfaces/v1');
 
 const expectedPlatforms=[
-  ['linux-x86_64','ubuntu-24.04'],
-  ['linux-aarch64','ubuntu-24.04-arm'],
-  ['macos-x86_64','macos-15-intel'],
-  ['macos-aarch64','macos-14'],
-  ['windows-x86_64','windows-2025'],
-  ['windows-aarch64','windows-11-arm']
+  ['linux-x86_64','ubuntu-24.04',true,'required'],
+  ['linux-aarch64','ubuntu-24.04-arm',true,'required'],
+  ['macos-x86_64','macos-15-intel',false,'legacy-optional'],
+  ['macos-aarch64','macos-14',true,'required'],
+  ['windows-x86_64','windows-2025',true,'required'],
+  ['windows-aarch64','windows-11-arm',true,'required']
 ];
-assert.deepEqual(model.desktop_platforms.map(row=>[row.id,row.runner]),expectedPlatforms);
+assert.deepEqual(
+  model.desktop_platforms.map(row=>[row.id,row.runner,row.release_required,row.support_class]),
+  expectedPlatforms
+);
+const requiredPlatforms=expectedPlatforms.filter(row=>row[2]);
+const optionalPlatforms=expectedPlatforms.filter(row=>!row[2]);
+assert.equal(requiredPlatforms.length,5);
+assert.deepEqual(optionalPlatforms.map(row=>row[0]),['macos-x86_64']);
 
 const consumerIds=[
   'lib-package',
@@ -63,6 +70,8 @@ assert.equal(model.performance.canonical_workflow,'native-cli-perf.yml');
 assert.equal(model.performance.comparison,'same-platform-only');
 assert.equal(model.performance.cross_platform_absolute_gate,false);
 assert.equal(model.performance.policy_source,'bench/manifest.json');
+assert.equal(model.performance.required_platform_count,5);
+assert.deepEqual(model.performance.optional_platforms,['macos-x86_64']);
 
 const benchmark=JSON.parse(read(model.performance.policy_source));
 const baseline=benchmark.relative_baseline_policy;
@@ -77,6 +86,12 @@ for(const workflow of ['native-compiler.yml','native-cli-perf.yml','host-lib-e2e
   const text=read('.github/workflows/'+workflow);
   for(const runner of sixRunners)assert(text.includes(runner),workflow+': missing desktop runner '+runner);
 }
+const intelWorkflows=['host-file-io.yml','host-https-flywheel.yml','host-lib-e2e.yml','host-memory.yml','host-network.yml','lib-source.yml','native-cli-perf.yml','native-compiler.yml','rust-host-sdk.yml','thin-host.yml'];
+for(const workflow of intelWorkflows){
+  const text=read('.github/workflows/'+workflow);
+  assert(text.includes('macos-15-intel'),workflow+': legacy Intel runner missing');
+  assert(text.includes('continue-on-error:'),workflow+': legacy Intel runner must be non-blocking');
+}
 
 const architecture=JSON.parse(read('host/architecture.json'));
 assert.deepEqual(architecture.distribution_surfaces.consumer,consumerIds);
@@ -88,6 +103,8 @@ console.log(JSON.stringify({
   consumer_surfaces:consumerIds.length,
   extension_surfaces:extensionIds.length,
   desktop_platforms:expectedPlatforms.length,
+  required_desktop_platforms:requiredPlatforms.length,
+  optional_desktop_platforms:optionalPlatforms.map(row=>row[0]),
   validated_roots:roots,
   workflow_references:workflows,
   performance_comparison:model.performance.comparison,

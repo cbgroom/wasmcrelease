@@ -84,7 +84,7 @@ authoring completeness is claimed.
 
 `release-surfaces.json` maps every public/candidate product surface to the
 workflows that qualify it. Native CLI/package, Host/Lib composition and Rust
-Host SDK coverage use the six desktop runner identities documented in
+Host SDK coverage retain six desktop runner identities where available. Five are release-required; macOS x86-64 is legacy optional and may fail without blocking release. The exact classification is documented in
 `docs/RELEASE_SURFACES.md`. Lightweight runtime coverage remains explicit by
 runtime/platform combination rather than inferred from one passing engine.
 

@@ -30,9 +30,8 @@ contract explicitly promotes a threshold.
 
 Release surfaces are defined by `release-surfaces.json`. Published and candidate
 surfaces must have named functional workflows; architecture/incubating surfaces
-must not be promoted by documentation alone. Desktop native products use
-independent Linux/macOS/Windows x86-64/arm64 qualification cells where GitHub
-runner support exists.
+must not be promoted by documentation alone. Desktop native products retain
+Linux/macOS/Windows x86-64/arm64 qualification cells where GitHub runner support exists, but release gating requires five current targets; macOS x86-64 is legacy optional and must not block promotion.
 
 Performance baselines are platform-relative. A Linux x86-64 timing is compared
 only with Linux x86-64 history, Windows arm64 only with Windows arm64 history,

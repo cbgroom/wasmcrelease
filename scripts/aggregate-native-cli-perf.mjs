@@ -28,6 +28,12 @@ if (!reports.length) throw new Error('no performance reports found');
 reports.sort((a, b) => a.platform.localeCompare(b.platform));
 const commit = reports[0].commit;
 if (reports.some(report => report.commit !== commit)) throw new Error('mixed performance commits');
+const releaseSurfaces = JSON.parse(await readFile(resolve('release-surfaces.json'), 'utf8'));
+const requiredPlatforms = releaseSurfaces.desktop_platforms.filter(row => row.release_required).map(row => row.id);
+const observedPlatforms = new Set(reports.map(row => row.platform));
+for (const platform of requiredPlatforms) {
+  if (!observedPlatforms.has(platform)) throw new Error('missing required performance platform ' + platform);
+}
 
 const median = values => {
   const sorted = [...values].sort((a, b) => a - b);
@@ -103,6 +109,8 @@ const current = {
   commit,
   measured_at: new Date().toISOString(),
   platform_count: reports.length,
+  required_platform_count: requiredPlatforms.length,
+  optional_platforms_observed: reports.map(row=>row.platform).filter(platform=>!requiredPlatforms.includes(platform)),
   corpus_count: Object.keys(reports[0].cases).length,
   policy: 'GitHub-hosted timings are same-platform comparative observations. Source/Wasm identity and behavior are hard gates; timing ratios are advisory under the current policy.',
   relative_baseline_policy: baselinePolicy,

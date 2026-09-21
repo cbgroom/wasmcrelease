@@ -121,12 +121,12 @@ binary package merely because implementation code exists.
 
 ## Functional qualification
 
-Desktop native qualification uses six independent runner cells where the
-relevant GitHub-hosted runners exist:
+Desktop native qualification keeps six runner cells where available, with five release-required targets and one legacy optional target:
 
-- Linux x86-64 and arm64
-- macOS x86-64 and arm64
-- Windows x86-64 and arm64
+- Linux x86-64 and arm64: required
+- macOS arm64: required
+- Windows x86-64 and arm64: required
+- macOS x86-64: legacy optional; retain coverage and history when available, but do not block release
 
 Functionality is a hard gate. Artifact identity, Lib contracts, Host lifecycle,
 resource ownership, negative cases and downloaded-consumer behavior must not be

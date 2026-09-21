@@ -7,61 +7,140 @@
     "freeze_policy": "docs/ASMD.md#contract-freeze-rule"
   },
   "desktop_platforms": [
-    {"id": "linux-x86_64", "runner": "ubuntu-24.04"},
-    {"id": "linux-aarch64", "runner": "ubuntu-24.04-arm"},
-    {"id": "macos-x86_64", "runner": "macos-15-intel"},
-    {"id": "macos-aarch64", "runner": "macos-14"},
-    {"id": "windows-x86_64", "runner": "windows-2025"},
-    {"id": "windows-aarch64", "runner": "windows-11-arm"}
+    {
+      "id": "linux-x86_64",
+      "runner": "ubuntu-24.04",
+      "release_required": true,
+      "support_class": "required"
+    },
+    {
+      "id": "linux-aarch64",
+      "runner": "ubuntu-24.04-arm",
+      "release_required": true,
+      "support_class": "required"
+    },
+    {
+      "id": "macos-x86_64",
+      "runner": "macos-15-intel",
+      "release_required": false,
+      "support_class": "legacy-optional"
+    },
+    {
+      "id": "macos-aarch64",
+      "runner": "macos-14",
+      "release_required": true,
+      "support_class": "required"
+    },
+    {
+      "id": "windows-x86_64",
+      "runner": "windows-2025",
+      "release_required": true,
+      "support_class": "required"
+    },
+    {
+      "id": "windows-aarch64",
+      "runner": "windows-11-arm",
+      "release_required": true,
+      "support_class": "required"
+    }
   ],
   "consumer_surfaces": [
     {
       "id": "lib-package",
       "status": "published",
-      "roots": ["libs"],
-      "functional_workflows": ["source-free-consumer.yml", "host-lib-e2e.yml"],
+      "roots": [
+        "libs"
+      ],
+      "functional_workflows": [
+        "source-free-consumer.yml",
+        "host-lib-e2e.yml"
+      ],
       "performance_workflows": []
     },
     {
       "id": "host-sdk",
       "status": "candidate",
-      "roots": ["sdk/wasmc-host", "sdk/wasmc-core-runtime"],
-      "functional_workflows": ["rust-host-sdk.yml", "source-free-consumer.yml", "host-lib-e2e.yml"],
+      "roots": [
+        "sdk/wasmc-host",
+        "sdk/wasmc-core-runtime"
+      ],
+      "functional_workflows": [
+        "rust-host-sdk.yml",
+        "source-free-consumer.yml",
+        "host-lib-e2e.yml"
+      ],
       "performance_workflows": []
     },
     {
       "id": "integrated-runtime-cli",
       "status": "published",
-      "roots": ["runtime/wasmc-runtime-v0", "sdk/wasmc-native-compiler"],
-      "functional_workflows": ["native-compiler.yml", "source-free-consumer.yml"],
-      "performance_workflows": ["native-cli-perf.yml"]
+      "roots": [
+        "runtime/wasmc-runtime-v0",
+        "sdk/wasmc-native-compiler"
+      ],
+      "functional_workflows": [
+        "native-compiler.yml",
+        "source-free-consumer.yml"
+      ],
+      "performance_workflows": [
+        "native-cli-perf.yml"
+      ]
     },
     {
       "id": "lightweight-embedding",
       "status": "qualified-reference",
-      "roots": ["host/embedding/node", "host/embedding/deno", "host/embedding/bun", "host/embedding/browser"],
-      "functional_workflows": ["source-free-consumer.yml", "host-lib-e2e.yml"],
+      "roots": [
+        "host/embedding/node",
+        "host/embedding/deno",
+        "host/embedding/bun",
+        "host/embedding/browser"
+      ],
+      "functional_workflows": [
+        "source-free-consumer.yml",
+        "host-lib-e2e.yml"
+      ],
       "performance_workflows": []
     },
     {
       "id": "native-runtime-library",
       "status": "incubating",
-      "roots": ["host/runtime", "host/drivers"],
-      "functional_workflows": ["thin-host.yml", "host-lib-e2e.yml", "host-network.yml", "host-file-io.yml"],
-      "performance_workflows": ["host-https-flywheel.yml"]
+      "roots": [
+        "host/runtime",
+        "host/drivers"
+      ],
+      "functional_workflows": [
+        "thin-host.yml",
+        "host-lib-e2e.yml",
+        "host-network.yml",
+        "host-file-io.yml"
+      ],
+      "performance_workflows": [
+        "host-https-flywheel.yml"
+      ]
     }
   ],
   "extension_surfaces": [
     {
       "id": "driver-provider",
       "status": "qualified-reference",
-      "roots": ["host/drivers", "host/platform"],
-      "functional_workflows": ["host-lib-e2e.yml", "host-network.yml", "host-file-io.yml", "host-memory.yml"]
+      "roots": [
+        "host/drivers",
+        "host/platform"
+      ],
+      "functional_workflows": [
+        "host-lib-e2e.yml",
+        "host-network.yml",
+        "host-file-io.yml",
+        "host-memory.yml"
+      ]
     },
     {
       "id": "remote-provider",
       "status": "architecture",
-      "roots": ["host/runtime/provider", "host/qualification"],
+      "roots": [
+        "host/runtime/provider",
+        "host/qualification"
+      ],
       "functional_workflows": []
     }
   ],
@@ -69,6 +148,10 @@
     "canonical_workflow": "native-cli-perf.yml",
     "comparison": "same-platform-only",
     "cross_platform_absolute_gate": false,
-    "policy_source": "bench/manifest.json"
+    "policy_source": "bench/manifest.json",
+    "required_platform_count": 5,
+    "optional_platforms": [
+      "macos-x86_64"
+    ]
   }
 }

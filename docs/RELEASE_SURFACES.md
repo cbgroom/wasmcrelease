@@ -31,16 +31,16 @@ coverage but are not claimed as standalone binary SDKs. `incubating` and
 Every published/candidate surface names the workflows that qualify it. The
 combined desktop matrix is:
 
-| Platform ID | GitHub runner |
-|---|---|
-| linux-x86_64 | ubuntu-24.04 |
-| linux-aarch64 | ubuntu-24.04-arm |
-| macos-x86_64 | macos-15-intel |
-| macos-aarch64 | macos-14 |
-| windows-x86_64 | windows-2025 |
-| windows-aarch64 | windows-11-arm |
+| Platform ID | GitHub runner | Release gate |
+|---|---|---|
+| linux-x86_64 | ubuntu-24.04 | required |
+| linux-aarch64 | ubuntu-24.04-arm | required |
+| macos-x86_64 | macos-15-intel | legacy optional |
+| macos-aarch64 | macos-14 | required |
+| windows-x86_64 | windows-2025 | required |
+| windows-aarch64 | windows-11-arm | required |
 
-Native Runtime/Host behavior uses the six-platform Host composition workflow.
+Native Runtime/Host behavior keeps six-platform coverage when runners are available, but only five desktop targets are release-required. macOS x86-64 is legacy optional: it continues to run and contribute evidence when available, but its failure does not block release.
 The Native CLI/package workflow builds and re-consumes packages on the same six
 platform identities. The Rust Host SDK workflow uses the same six runner cells.
 Lib identity/Component behavior and Node/Bun/Deno lightweight embedding are

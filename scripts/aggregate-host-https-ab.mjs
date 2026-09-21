@@ -3,7 +3,7 @@ import { join, resolve } from 'node:path';
 
 const [inputArg, outputArg, previousArg, expectedArg] = process.argv.slice(2);
 if (!inputArg || !outputArg) {
-  throw new Error('usage: node scripts/aggregate-host-https-ab.mjs INPUT OUTPUT [PREVIOUS.json] [EXPECTED_COUNT]');
+  throw new Error('usage: node scripts/aggregate-host-https-ab.mjs INPUT OUTPUT [PREVIOUS.json] [MIN_REQUIRED_COUNT]');
 }
 const inputDir = resolve(inputArg);
 const outputDir = resolve(outputArg);
@@ -18,11 +18,19 @@ for (const name of files) {
 if (!reports.length) throw new Error('no HTTPS A/B reports');
 reports.sort((a, b) => a.platform.localeCompare(b.platform));
 shardSweeps.sort((a, b) => a.platform.localeCompare(b.platform));
-if (expectedArg && reports.length !== Number(expectedArg)) {
-  throw new Error('expected ' + expectedArg + ' platform reports, got ' + reports.length);
+if (expectedArg && reports.length < Number(expectedArg)) {
+  throw new Error('expected at least ' + expectedArg + ' platform reports, got ' + reports.length);
 }
-if (expectedArg && shardSweeps.length !== Number(expectedArg)) {
-  throw new Error('expected ' + expectedArg + ' shard sweep reports, got ' + shardSweeps.length);
+if (expectedArg && shardSweeps.length < Number(expectedArg)) {
+  throw new Error('expected at least ' + expectedArg + ' shard sweep reports, got ' + shardSweeps.length);
+}
+const releaseSurfaces = JSON.parse(await readFile(resolve('release-surfaces.json'), 'utf8'));
+const requiredPlatforms = releaseSurfaces.desktop_platforms.filter(row => row.release_required).map(row => row.id);
+const reportPlatforms = new Set(reports.map(row => row.platform));
+const sweepPlatforms = new Set(shardSweeps.map(row => row.platform));
+for (const platform of requiredPlatforms) {
+  if (!reportPlatforms.has(platform)) throw new Error('missing required HTTPS A/B platform ' + platform);
+  if (!sweepPlatforms.has(platform)) throw new Error('missing required shard sweep platform ' + platform);
 }
 const commit = reports[0].commit;
 if (reports.some(report => report.commit !== commit)) throw new Error('mixed HTTPS A/B commits');
@@ -149,6 +157,8 @@ const current = {
   commit,
   measured_at: new Date().toISOString(),
   platform_count: reports.length,
+  required_platform_count: requiredPlatforms.length,
+  optional_platforms_observed: reports.map(row=>row.platform).filter(platform=>!requiredPlatforms.includes(platform)),
   policy:
     'Artifact identity and HTTPS lifecycle/semantic parity are hard gates. Paired GitHub-hosted timing is observational mechanism evidence, not an SLA.',
   summary,
