@@ -1,17 +1,19 @@
 # WAsmC public performance
 
-Commit: `f81b598f11198e0d801ec21dd95d585ff495953b`  
-Measured: 2026-09-20T17:23:57.291Z  
-Platforms: 6  
+Commit: e0202c8b3c67a344c63856356ff751820e21deae
+Measured: 2026-09-21T08:54:42.590Z
+Platforms: 6
 Canonical corpus: 5
 
-| Platform | CLI | build Wasm gmean p50 | native miss gmean p50 | native hit gmean p50 | run/Wasmi p50 | native run p50 |
-|---|---:|---:|---:|---:|---:|---:|
-| linux-aarch64 | 9.38 MiB | 13.733 ms | 43.028 ms | 23.236 ms | 10.767 ms | 3.622 ms |
-| linux-x86_64 | 11.11 MiB | 11.679 ms | 40.771 ms | 23.352 ms | 9.811 ms | 2.136 ms |
-| macos-aarch64 | 8.32 MiB | 17.966 ms | 46.990 ms | 31.473 ms | 15.510 ms | 2.469 ms |
-| macos-x86_64 | 10.21 MiB | 48.161 ms | 121.866 ms | 79.468 ms | 43.553 ms | 12.593 ms |
-| windows-aarch64 | 8.89 MiB | 26.335 ms | 55.494 ms | 35.819 ms | 18.636 ms | 17.667 ms |
-| windows-x86_64 | 10.13 MiB | 21.309 ms | 62.045 ms | 36.784 ms | 16.535 ms | 10.296 ms |
+| Platform | Baseline | CLI | build Wasm gmean p50 | build/base | native miss gmean p50 | native hit gmean p50 | run/Wasmi p50 | run/base | native run p50 | native/base |
+|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| linux-aarch64 | within-baseline | 9.38 MiB | 13.634 ms | 0.96x | 42.393 ms | 23.900 ms | 10.524 ms | 0.95x | 3.723 ms | 0.99x |
+| linux-x86_64 | within-baseline | 11.11 MiB | 12.768 ms | 1.09x | 38.141 ms | 20.967 ms | 9.550 ms | 1.02x | 2.344 ms | 1.10x |
+| macos-aarch64 | advisory-regression | 8.32 MiB | 24.116 ms | 1.07x | 66.516 ms | 48.154 ms | 23.412 ms | 1.33x | 5.147 ms | 1.51x |
+| macos-x86_64 | within-baseline | 10.21 MiB | 41.930 ms | 1.06x | 113.087 ms | 72.043 ms | 41.808 ms | 1.21x | 9.034 ms | 0.89x |
+| windows-aarch64 | within-baseline | 8.89 MiB | 26.993 ms | 0.98x | 56.160 ms | 36.566 ms | 19.911 ms | 1.01x | 19.186 ms | 1.05x |
+| windows-x86_64 | within-baseline | 10.13 MiB | 16.188 ms | 0.79x | 40.874 ms | 24.658 ms | 13.310 ms | 0.82x | 7.599 ms | 0.76x |
 
-Timings on GitHub-hosted runners are comparative observations, not absolute SLA claims. Corpus identity, generated Wasm identity, and behavior are hard gates.
+GitHub-hosted timings are same-platform comparative observations, not absolute cross-platform SLA claims.
+Ratios are current / rolling same-platform median; >1.0 is slower for latency metrics.
+Corpus identity, generated Wasm identity, and behavior are hard gates. Performance regression state is advisory under the current policy.
