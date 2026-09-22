@@ -111,6 +111,8 @@ async function runCase(lane,c,workload){
   return {
     lane,workload:workload.id,connections:c,shards:lane==='native'?null:shardsFor(c),
     prewarm_ms:Number(server.prewarmMs.toFixed(3)),
+    shared_prepare_ms:lane==='native'?null:Number(server.ready.shared_prepare_ms??0),
+    worker_init_max_ms:lane==='native'?null:Number(server.ready.worker_init_max_ms??0),
     requests_per_sec:Number(load.summary.requestsPerSec),
     latency_ms:{
       p50:Number(load.metrics.latency_ms.p50),p95:Number(load.metrics.latency_ms.p95),
@@ -150,6 +152,8 @@ const summary=[...groups.entries()].map(([key,rows])=>{
     lane,workload,connections:Number(c),samples:rows.length,
     requests_per_sec:stats(rows.map(row=>row.requests_per_sec)),
     prewarm_ms:stats(rows.map(row=>row.prewarm_ms)),
+    shared_prepare_ms:lane==='native'?null:stats(rows.map(row=>row.shared_prepare_ms)),
+    worker_init_max_ms:lane==='native'?null:stats(rows.map(row=>row.worker_init_max_ms)),
     latency_p50_ms:stats(rows.map(row=>row.latency_ms.p50)),
     latency_p95_ms:stats(rows.map(row=>row.latency_ms.p95)),
     latency_p99_ms:stats(rows.map(row=>row.latency_ms.p99)),
@@ -174,4 +178,4 @@ const report={
 };
 const output=process.argv[2]??'host-external-load.json';
 writeFileSync(output,JSON.stringify(report,null,2)+'\n');
-console.log(JSON.stringify({accepted:true,platform:platformId,cases:cases.length,summary:summary.map(row=>({lane:row.lane,workload:row.workload,c:row.connections,rps_p50:row.requests_per_sec.p50,p99_ms_p50:row.latency_p99_ms.p50,prewarm_ms_p50:row.prewarm_ms.p50}))}));
+console.log(JSON.stringify({accepted:true,platform:platformId,cases:cases.length,summary:summary.map(row=>({lane:row.lane,workload:row.workload,c:row.connections,rps_p50:row.requests_per_sec.p50,p99_ms_p50:row.latency_p99_ms.p50,prewarm_ms_p50:row.prewarm_ms.p50,shared_prepare_ms_p50:row.shared_prepare_ms?.p50??null,worker_init_max_ms_p50:row.worker_init_max_ms?.p50??null}))}));

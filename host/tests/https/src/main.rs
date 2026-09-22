@@ -54,16 +54,14 @@ struct CoreHttpLib {
 }
 
 impl CoreHttpLib {
-    fn instantiate(
-        engine: &Engine,
+    fn instantiate_module(
         store: &mut Store<Host>,
-        path: &str,
+        module: &Module,
     ) -> Result<Self, Box<dyn Error>> {
-        let module = Module::from_file(engine, path)?;
         if module.imports().next().is_some() {
-            return Err(format!("HTTP Core Lib must be import-free: {path}").into());
+            return Err("HTTP Core Lib must be import-free".into());
         }
-        let instance = Instance::new(&mut *store, &module, &[])?;
+        let instance = Instance::new(&mut *store, module, &[])?;
         let memory = instance
             .get_memory(&mut *store, "memory")
             .ok_or("HTTP Core Lib has no exported memory")?;
@@ -256,16 +254,14 @@ impl CoreHttpLib {
 }
 
 impl CoreBytesResultLib {
-    fn instantiate(
-        engine: &Engine,
+    fn instantiate_module(
         store: &mut Store<Host>,
-        path: &str,
+        module: &Module,
     ) -> Result<Self, Box<dyn Error>> {
-        let module = Module::from_file(engine, path)?;
         if module.imports().next().is_some() {
-            return Err(format!("Core dynamic Lib must be import-free: {path}").into());
+            return Err("Core dynamic Lib must be import-free".into());
         }
-        let instance = Instance::new(&mut *store, &module, &[])?;
+        let instance = Instance::new(&mut *store, module, &[])?;
         let memory = instance
             .get_memory(&mut *store, "memory")
             .ok_or("Core dynamic Lib has no exported memory")?;
@@ -384,12 +380,11 @@ struct CoreTlsLib {
 }
 
 impl CoreTlsLib {
-    fn instantiate(
+    fn instantiate_module(
         engine: &Engine,
         store: &mut Store<Host>,
-        path: &str,
+        module: &Module,
     ) -> Result<Self, Box<dyn Error>> {
-        let module = Module::from_file(engine, path)?;
         let imports = module.imports().collect::<Vec<_>>();
         if imports.len() != 1
             || imports[0].module() != "wasmc:tls-core/entropy"
@@ -419,7 +414,7 @@ impl CoreTlsLib {
                 0
             },
         )?;
-        let instance = linker.instantiate(&mut *store, &module)?;
+        let instance = linker.instantiate(&mut *store, module)?;
         let memory = instance
             .get_memory(&mut *store, "memory")
             .ok_or("TLS Core Lib has no exported memory")?;
@@ -975,6 +970,91 @@ struct ServerRuntime {
     benchmark_native_http: bool,
 }
 
+struct PreparedServerRuntime {
+    engine: Engine,
+    tls: Module,
+    http: Module,
+    json: Module,
+    compression: Module,
+    policy: Module,
+}
+
+impl PreparedServerRuntime {
+    fn new(
+        tls_path: &str,
+        http_path: &str,
+        json_path: &str,
+        compression_path: &str,
+        policy_path: &str,
+    ) -> Result<Self, Box<dyn Error>> {
+        let mut cfg = Config::new();
+        cfg.consume_fuel(true);
+        let engine = Engine::new(&cfg)?;
+        let tls = Module::from_file(&engine, tls_path)?;
+        let http = Module::from_file(&engine, http_path)?;
+        let json = Module::from_file(&engine, json_path)?;
+        let compression = Module::from_file(&engine, compression_path)?;
+        let policy = Module::from_file(&engine, policy_path)?;
+        if policy.imports().next().is_some() {
+            return Err("router policy must be import-free".into());
+        }
+        Ok(Self {
+            engine,
+            tls,
+            http,
+            json,
+            compression,
+            policy,
+        })
+    }
+
+    fn instantiate(&self, cert: Vec<u8>, key: Vec<u8>) -> Result<ServerRuntime, Box<dyn Error>> {
+        let mut store = Store::new(
+            &self.engine,
+            Host {
+                seed: 0x1234_5678_9abc_def0,
+                ..Host::default()
+            },
+        );
+        store.set_fuel(OBSERVE_ONLY_EVENT_FUEL)?;
+
+        let tls = CoreTlsLib::instantiate_module(&self.engine, &mut store, &self.tls)?;
+        let http = CoreHttpLib::instantiate_module(&mut store, &self.http)?;
+        let json = CoreBytesResultLib::instantiate_module(&mut store, &self.json)?;
+        let compression = CoreBytesResultLib::instantiate_module(&mut store, &self.compression)?;
+        let instance = Instance::new(&mut store, &self.policy, &[])?;
+        let route = instance
+            .get_typed_func::<(i32, i32, i32, i32), (i32, i32, i32)>(&mut store, "route")?;
+        let operation_sample_every = std::env::var("WASMC_PROFILE_OPERATION_SAMPLE_EVERY")
+            .ok()
+            .map(|value| value.parse::<u64>())
+            .transpose()?
+            .unwrap_or(1024);
+        let benchmark_request_count_modulo =
+            std::env::var("WASMC_HTTPS_BENCH_REQUEST_COUNT_MODULO")
+                .ok()
+                .map(|value| value.parse::<u32>())
+                .transpose()?;
+        if benchmark_request_count_modulo == Some(0) {
+            return Err("WASMC_HTTPS_BENCH_REQUEST_COUNT_MODULO must be positive".into());
+        }
+        let benchmark_native_http = std::env::var_os("WASMC_HTTPS_BENCH_NATIVE_HTTP").is_some();
+        Ok(ServerRuntime {
+            store,
+            tls,
+            http,
+            json,
+            compression,
+            route,
+            cert,
+            key,
+            metrics: Metrics::with_operation_sampling(operation_sample_every),
+            benchmark_request_count_modulo,
+            benchmark_native_http,
+        })
+    }
+}
+
 fn header<'a>(headers: &'a [Header], name: &str) -> Option<&'a [u8]> {
     headers
         .iter()
@@ -1026,59 +1106,14 @@ impl ServerRuntime {
         cert: Vec<u8>,
         key: Vec<u8>,
     ) -> Result<Self, Box<dyn Error>> {
-        let mut cfg = Config::new();
-        cfg.consume_fuel(true);
-        let engine = Engine::new(&cfg)?;
-        let mut store = Store::new(
-            &engine,
-            Host {
-                seed: 0x1234_5678_9abc_def0,
-                ..Host::default()
-            },
-        );
-        // Fuel is observe-only by default. Resetting to u64::MAX gives every
-        // admitted execution event an effectively unbounded metering window
-        // while still allowing exact per-event consumption accounting.
-        store.set_fuel(OBSERVE_ONLY_EVENT_FUEL)?;
-
-        let tls = CoreTlsLib::instantiate(&engine, &mut store, tls_path)?;
-
-        let http = CoreHttpLib::instantiate(&engine, &mut store, http_path)?;
-        let json = CoreBytesResultLib::instantiate(&engine, &mut store, json_path)?;
-        let compression = CoreBytesResultLib::instantiate(&engine, &mut store, compression_path)?;
-
-        let module = Module::from_file(&engine, policy_path)?;
-        let instance = Instance::new(&mut store, &module, &[])?;
-        let route = instance
-            .get_typed_func::<(i32, i32, i32, i32), (i32, i32, i32)>(&mut store, "route")?;
-        let operation_sample_every = std::env::var("WASMC_PROFILE_OPERATION_SAMPLE_EVERY")
-            .ok()
-            .map(|value| value.parse::<u64>())
-            .transpose()?
-            .unwrap_or(1024);
-        let benchmark_request_count_modulo =
-            std::env::var("WASMC_HTTPS_BENCH_REQUEST_COUNT_MODULO")
-                .ok()
-                .map(|value| value.parse::<u32>())
-                .transpose()?;
-        if benchmark_request_count_modulo == Some(0) {
-            return Err("WASMC_HTTPS_BENCH_REQUEST_COUNT_MODULO must be positive".into());
-        }
-        let benchmark_native_http = std::env::var_os("WASMC_HTTPS_BENCH_NATIVE_HTTP").is_some();
-
-        Ok(Self {
-            store,
-            tls,
-            http,
-            json,
-            compression,
-            route,
-            cert,
-            key,
-            metrics: Metrics::with_operation_sampling(operation_sample_every),
-            benchmark_request_count_modulo,
-            benchmark_native_http,
-        })
+        PreparedServerRuntime::new(
+            tls_path,
+            http_path,
+            json_path,
+            compression_path,
+            policy_path,
+        )?
+        .instantiate(cert, key)
     }
 
     fn build_response(
@@ -1734,25 +1769,29 @@ fn run_external_benchmark_server(
         .unwrap_or(0);
     let listener = TcpListener::bind(("127.0.0.1", port))?;
     let addr = listener.local_addr()?;
-    let (ready_tx, ready_rx) = mpsc::channel::<Result<(), String>>();
+    let shared_prepare_started = Instant::now();
+    let prepared = Arc::new(
+        PreparedServerRuntime::new(&tls, &http, &json, &compression, &policy)
+            .map_err(|error| format!("shared runtime preparation: {error:#}"))?,
+    );
+    let shared_prepare_ms = shared_prepare_started.elapsed().as_secs_f64() * 1000.0;
+    let (ready_tx, ready_rx) = mpsc::channel::<Result<Duration, String>>();
     let mut workers = Vec::with_capacity(connections);
     for ordinal in 0..connections {
         let listener = listener.try_clone()?;
-        let tls = tls.clone();
-        let http = http.clone();
-        let json = json.clone();
-        let compression = compression.clone();
-        let policy = policy.clone();
+        let prepared = Arc::clone(&prepared);
         let cert = cert.clone();
         let key = key.clone();
         let ready_tx = ready_tx.clone();
         workers.push(thread::spawn(
             move || -> Result<(u64, u64, u64, u64), String> {
-                let rt = ServerRuntime::new(&tls, &http, &json, &compression, &policy, cert, key)
+                let worker_init_started = Instant::now();
+                let rt = prepared
+                    .instantiate(cert, key)
                     .map_err(|error| format!("connection {ordinal} runtime: {error:#}"));
                 match &rt {
                     Ok(_) => {
-                        let _ = ready_tx.send(Ok(()));
+                        let _ = ready_tx.send(Ok(worker_init_started.elapsed()));
                     }
                     Err(error) => {
                         let _ = ready_tx.send(Err(error.clone()));
@@ -1779,15 +1818,20 @@ fn run_external_benchmark_server(
         ));
     }
     drop(ready_tx);
+    let mut worker_init_max = Duration::ZERO;
     for _ in 0..connections {
-        ready_rx
+        let elapsed = ready_rx
             .recv()
             .map_err(|_| "external benchmark runtime readiness channel closed")?
             .map_err(|error| format!("external benchmark runtime init failed: {error}"))?;
+        worker_init_max = worker_init_max.max(elapsed);
     }
     println!(
-        "{{\"schema\":\"wasmc-https-external-server/v1\",\"ready\":true,\"addr\":\"{}\",\"connections\":{},\"runtime_prewarm\":true}}",
-        addr, connections
+        "{{\"schema\":\"wasmc-https-external-server/v1\",\"ready\":true,\"addr\":\"{}\",\"connections\":{},\"runtime_prewarm\":true,\"shared_prepare_ms\":{:.3},\"worker_init_max_ms\":{:.3}}}",
+        addr,
+        connections,
+        shared_prepare_ms,
+        worker_init_max.as_secs_f64() * 1000.0
     );
     std::io::stdout().flush()?;
     drop(listener);
