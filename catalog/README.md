@@ -1,5 +1,29 @@
 # Public Lib discovery and exact resolution
 
+## v0.0.12 catalog candidate
+
+The immutable v0.0.9 resolver catalog remains the compatibility default.
+This development branch adds a separate `catalog/libs-v012.json` snapshot
+bound to immutable release commit
+`735cc7fea762ba76f96d443cf64e47a31f8a1cc6`. It contains 12 published
+packages and has SHA-256
+`f2bbdb6c3cca31c16f7db96ca06ac94875c087e05c23c2aff979d46b90e463a3`.
+It is candidate tooling for a future release, not a mutation of v0.0.12.
+
+Example exact Data Foundation lock:
+
+```bash
+node scripts/wasmc-lib.mjs resolve wasmc-data-relational 0.0.1 \
+  --catalog v012 \
+  --catalog-sha256 f2bbdb6c3cca31c16f7db96ca06ac94875c087e05c23c2aff979d46b90e463a3 \
+  --wit-sha256 91cfcf156c64f62099599b6a9f304639ba9845650363fc8bcef5d6b26cf1c8ef \
+  --artifact-sha256 627176699ad4b9c2dc47ca78d520fe45ef1b2603fcc87d08eef3c0b2a1bf30a9
+```
+
+The resulting lock records release tag/commit and complete package file
+inventory. No semver winner, capability grant, engine admission, or Host binding
+is inferred.
+
 Search, exact resolution and installation ship in v0.0.10, not immutable
 v0.0.9. Pin the release or a full supplemental tooling commit and verify
 SHA256SUMS before execution. The resolver catalog retains its exact four-package

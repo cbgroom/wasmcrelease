@@ -1,12 +1,14 @@
 // Typed Node/Bun/Deno view. Canonical pointers and post-return remain private.
 import {createHash} from 'node:crypto';
-export function instantiateLibSearch(bytes,{artifact_sha256,index_sha256}) {
+export function instantiateLibSearch(bytes,{artifact_sha256,index_sha256,wit_package='wasmc:lib-search@0.1.0'}) {
   if(!/^[0-9a-f]{64}$/.test(artifact_sha256)||!/^[0-9a-f]{64}$/.test(index_sha256))throw Error('exact digests required');
+  const wit=/^wasmc:lib-search@(\d+\.\d+\.\d+)$/.exec(wit_package);
+  if(!wit)throw Error('exact LibSearch WIT package required');
   if(createHash('sha256').update(bytes).digest('hex')!==artifact_sha256)throw Error('Lib artifact digest mismatch');
   const module=new WebAssembly.Module(bytes);
   if(WebAssembly.Module.imports(module).length)throw Error('unexpected Lib authority');
   const api=new WebAssembly.Instance(module).exports;
-  const prefix='wasmc:lib-search/catalog@0.1.0#';
+  const prefix=`wasmc:lib-search/catalog@${wit[1]}#`;
   const u32=p=>new DataView(api.memory.buffer).getUint32(p,true);
   const string=p=>new TextDecoder('utf-8',{fatal:true}).decode(new Uint8Array(api.memory.buffer,u32(p),u32(p+4)));
   const hit=p=>Object.fromEntries(['identity','signature','skill_path','wit_path','artifact_path'].map((key,i)=>[key,string(p+i*8)]));

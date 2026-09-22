@@ -7,6 +7,20 @@ metadata:
 
 # Library-first discovery
 
+## Candidate branch status
+
+Immutable `v0.0.12` remains the released prod identity and its original
+LibSearch snapshot is unchanged. This development branch carries an **unreleased
+LibSearch 0.2.0 candidate** that remediates the business feedback gap by indexing
+the complete v0.0.12 published Lib set. Do not describe 0.2.0 as shipped until a
+later release admits it.
+
+The candidate search snapshot covers 13 packages including itself / 117
+package+API entries. Business regressions require `csv`, `wasmc-csv`,
+`equi-join`, `wasmc-data-relational`, `parquet`, `wasmc-host-clock`,
+`resource counter`, and `owned algorithms` to resolve to their exact package
+or API identities.
+
 This is supplemental guidance after immutable v0.0.10. Pin the tooling full
 commit and verify its SHA256SUMS; do not assume mutable main is release identity.
 Search, exact resolve and pinned install shipped in v0.0.10, despite older
@@ -43,12 +57,11 @@ See [search semantics and typed JS/Rust APIs](../../examples/lib-search/README.m
 1. Approve an exact package version and catalog/WIT/artifact digests from the
    pinned package metadata. A search hit or newest-looking version is not trust.
 2. Use [exact resolution](../../catalog/README.md) and
-   [no-clobber installation](../../catalog/INSTALL.md) for the four supported
-   catalog packages. These guides contain executable caller-pinned commands.
-   Search indexes five packages including itself; its own new search Root is
-   not in that older four-package installer catalog. Use its verified pinned
-   release root and [typed client](../../examples/lib-search/run.mjs) instead;
-   do not invent a resolver entry or a public build command.
+   [no-clobber installation](../../catalog/INSTALL.md). Legacy callers default
+   to the immutable v0.0.9 four-package catalog. This candidate additionally
+   supports an explicit `--catalog v012` authority containing 12 packages,
+   including Data Foundation. The caller still pins catalog/WIT/artifact
+   digests; search never becomes selection authority.
 3. Check [artifact compatibility](../../compatibility/README.md), matching
    CoreLib/provider identity and actual import authority. Installing bytes
    does not admit an engine or grant capabilities. Search runs on Wasmi/Node18;

@@ -1,0 +1,84 @@
+{
+  "agent": {
+    "delta": {
+      "path": "references/agent-delta.json",
+      "sha256": "bfd7664799ba683bd59d07a5c317b4f53b3c4ea3b4fecd9d65a567addf13dd8f"
+    },
+    "skill": {
+      "path": "SKILL.md",
+      "sha256": "c1d7e55c0e4003e3648f67f5089d3a7461b19776ff87c0286019fdf8d0f6de3e"
+    }
+  },
+  "artifact": {
+    "bytes": 51868,
+    "format": "core-wasm",
+    "path": "artifact.wasm",
+    "sha256": "3dc83d83709527c126620635ea0e8cd0a51b2fbfeef544818d8526406fe62a99"
+  },
+  "bindings": {
+    "rust_component": {
+      "artifact_sha256": "3dc83d83709527c126620635ea0e8cd0a51b2fbfeef544818d8526406fe62a99",
+      "cargo_toml": {
+        "path": "bindings/rust/Cargo.toml",
+        "sha256": "4ee6cbff9815f66096031ff3d9bead3f0909537e149e54fb813522ea7b97ba86"
+      },
+      "component_sha256": "0be046c52c1ae731d22f1e96e788b693d0e264dce9e78a9893260030618a71d0",
+      "crate": "wasmc-lib-search-component",
+      "functions": 3,
+      "path": "bindings/rust",
+      "runtime": "wasmtime-component",
+      "schema": "wasmc.lib-rust-component-sdk/v0",
+      "source": {
+        "path": "bindings/rust/src/lib.rs",
+        "sha256": "2903f8d2e2e8b659ea8e127a815664efa7212a10d662d43a59862194f2ba98f0"
+      },
+      "wit_sha256": "6424e2dcf35e059a6d21ebcceab3a7dadb16279d62f39a8e43a201d7a495be9e",
+      "world": "search-index"
+    }
+  },
+  "build": {
+    "inputs": [
+      {
+        "kind": "cargo-lock",
+        "path": "search-adapter/Cargo.lock",
+        "sha256": "c73d9655d0694e22bfe6fd3874a11107aeed67b879b5a7099b387d4c2b211e4a"
+      }
+    ],
+    "language": "rust",
+    "locked": true,
+    "offline": true,
+    "profile": "release",
+    "target": "wasm32-unknown-unknown"
+  },
+  "closure": {
+    "build_dependencies": "linked-into-artifact",
+    "public_exports": "root-wit-only",
+    "public_lib_dependencies": [],
+    "schema": "wasmc.lib-closure/v0"
+  },
+  "compatibility": {
+    "abi_epoch": 1,
+    "wasmc_min": "0.0.1"
+  },
+  "component": {
+    "bytes": 53634,
+    "format": "component-wasm",
+    "path": "component.wasm",
+    "sha256": "0be046c52c1ae731d22f1e96e788b693d0e264dce9e78a9893260030618a71d0"
+  },
+  "core_abi": {
+    "bytes": 2454,
+    "path": "core-abi.json",
+    "schema": "wasmc.lib-core-abi/v0",
+    "sha256": "463d96d3685a7d19316206c66172b924ead4fb56ad45d2466b0d047c7e5ca579"
+  },
+  "id": "wasmc-lib-search",
+  "schema": "wasmc.lib/v2",
+  "version": "0.2.0",
+  "wit": {
+    "package": "wasmc:lib-search@0.2.0",
+    "path": "lib.wit",
+    "sha256": "6424e2dcf35e059a6d21ebcceab3a7dadb16279d62f39a8e43a201d7a495be9e",
+    "world": "search-index"
+  }
+}

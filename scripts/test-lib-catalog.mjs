@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { readFileSync, mkdtempSync, symlinkSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
-import { sha256, repositoryRoot, searchCatalog, resolveCatalog, packageReader } from './lib-catalog.mjs';
+import { sha256, repositoryRoot, searchCatalog, resolveCatalog, packageReader, catalogAuthorities, parseCatalog } from './lib-catalog.mjs';
 const bytes=readFileSync(join(repositoryRoot,'catalog/libs-v009.json'));
 const catalog=JSON.parse(bytes);
 const request=row=>({id:row.id,version:row.version,catalog_sha256:sha256(bytes),wit_sha256:row.wit_sha256,artifact_sha256:row.artifact_sha256});
@@ -11,6 +11,25 @@ assert.equal(searchCatalog(bytes).length,1);
 assert.equal(searchCatalog(bytes,'',true).length,4);
 assert.equal(searchCatalog(bytes,'bytes')[0].id,'wasmc-std');
 assert.equal(searchCatalog(bytes,'nonexistent').length,0);
+const bytes012=readFileSync(join(repositoryRoot,'catalog/libs-v012.json'));
+const catalog012=parseCatalog(bytes012,catalogAuthorities.v012);
+assert.equal(catalog012.packages.length,12);
+for (const [query,id] of [
+  ['csv','wasmc-csv'],
+  ['equi-join','wasmc-data-relational'],
+  ['parquet','wasmc-data-interchange'],
+  ['data relational','wasmc-data-relational'],
+  ['host clock','wasmc-host-clock'],
+]) {
+  assert.equal(searchCatalog(bytes012,query,true,catalogAuthorities.v012).some(row=>row.id===id),true,query);
+}
+for (const id of ['wasmc-csv','wasmc-data-relational','wasmc-data-interchange']) {
+  const row012=catalog012.packages.find(row=>row.id===id);
+  const req012={id:row012.id,version:row012.version,catalog_sha256:sha256(bytes012),wit_sha256:row012.wit_sha256,artifact_sha256:row012.artifact_sha256};
+  const a=resolveCatalog(bytes012,req012,packageReader(),catalogAuthorities.v012);
+  const b=resolveCatalog(bytes012,req012,packageReader(),catalogAuthorities.v012);
+  assert.deepEqual(a,b);assert.equal(a.release_tag,'v0.0.12');assert.equal(a.authority_granted,false);
+}
 for (const row of catalog.packages) {
   const a=resolveCatalog(bytes,request(row)); const b=resolveCatalog(bytes,request(row));
   assert.deepEqual(a,b); assert.equal(a.authority_granted,false); assert.equal(a.verified,true);
@@ -32,4 +51,4 @@ rejected(()=>resolveCatalog(bytes,req,p=>p===row.companion.path?new Uint8Array(0
 const fixture=mkdtempSync(join(tmpdir(),'wasmc-catalog-'));
 try {symlinkSync(join(repositoryRoot,'README.md'),join(fixture,'escape'));rejected(()=>packageReader(fixture)('escape'),'catalog.path_escape');}
 finally {rmSync(fixture,{recursive:true});}
-console.log(JSON.stringify({accepted:true,packages:4,negative_tests:10,selection:'unique exact lock',network_access:false,artifact_changes:false}));
+console.log(JSON.stringify({accepted:true,legacy_packages:4,release_012_packages:12,feedback_queries:5,release_012_resolve_cases:3,negative_tests:10,selection:'unique exact lock',network_access:false,artifact_changes:false}));

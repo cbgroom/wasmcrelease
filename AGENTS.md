@@ -89,6 +89,7 @@ before treating compiler success as standard-Lib or managed Host support.
 - `standard/wasmc-std/1.4.0/`: current WIT standard Lib and generated Rust bindings.
 - `standard/corelib/4.8.0/`: matching standard Lib CoreLib companion.
 - `standard/wasmc-lib-search/0.1.0/`: independently admitted embedded-index Lib. Start with [its executable guide](examples/lib-search/README.md); `node scripts/wasmc-lib.mjs search "base64"` executes this Lib. See [dev/main/prod status policy](docs/RELEASE_CHANNELS.md).
+- `candidates/wasmc-lib-search/0.2.0/`: **unreleased development candidate on this branch**, built to cover the complete immutable v0.0.12 published Lib inventory. It is intentionally outside the public `standard/` Skill registry and must not be described as part of immutable v0.0.12; use it only with the candidate evidence and future release process.
 - `libs/wasmc-host-clock/`, `libs/wasmc-owned-algorithms/`, and
   `libs/wasmc-resource-counter/`: frozen historical qualification Libs.
 - Other `libs/*/`: append-only admitted source-free Lib packages; never edit an

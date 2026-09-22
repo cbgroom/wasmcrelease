@@ -1,5 +1,17 @@
 # Pinned download and no-clobber installation
 
+## Candidate v0.0.12 package installation
+
+Locks produced with `resolve ... --catalog v012` carry `release_tag=v0.0.12`.
+The install CLI uses that lock identity to select the matching pinned catalog;
+the caller does not pass a second catalog selector. Controlled no-network tests
+install `wasmc-csv@0.0.1` with all six catalog files length/digest-checked,
+then re-resolve the staged package before exclusive publication. The legacy
+v0.0.9 install path and its failure/concurrency controls remain unchanged.
+
+This is candidate tooling on the development branch; it does not retroactively
+add an installer capability to immutable v0.0.12.
+
 This tooling ships in v0.0.10, not immutable v0.0.9. Pin the release or a full
 supplemental tooling commit and verify SHA256SUMS first. Installation still uses
 the independently pinned four-package catalog snapshot, not search selection.

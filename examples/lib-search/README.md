@@ -1,5 +1,27 @@
 # Release Lib search
 
+## Unreleased 0.2.0 remediation candidate
+
+Immutable `v0.0.12` is not rewritten. This branch adds
+`wasmc:lib-search@0.2.0` as a **future-release candidate** built with the
+official `wasmc lib build` pipeline from the published v0.0.12 Lib inventory.
+Its embedded index contains 13 packages including itself and 117 entries:
+
+- index: 26,206 bytes,
+  `7f33c20e46499dd016f8656b075c78366a683686c070794d20dec152fbb8cbe5`
+- Core artifact: 51,868 bytes,
+  `3dc83d83709527c126620635ea0e8cd0a51b2fbfeef544818d8526406fe62a99`
+- Component: 53,634 bytes,
+  `0be046c52c1ae731d22f1e96e788b693d0e264dce9e78a9893260030618a71d0`
+
+Package rows accept explicit package ids and release-approved intent keywords;
+API rows remain API/signature-only so package intent does not flood precise API
+searches. The original business feedback query set is a required regression.
+Independent WAsmC-reference qualification currently covers 604 comparison
+cases plus 11,000 resident calls with stable memory pages.
+Machine-readable candidate evidence is
+[`admission/lib-search-v020-candidate.json`](../../admission/lib-search-v020-candidate.json).
+
 For the default Agent workflow and interpretation of package/API hits, start
 with [Library-first discovery](../../skills/wasmc-lib-discovery/SKILL.md).
 That strengthened Skill is a post-v0.0.10 guidance supplement; pin its full
@@ -21,7 +43,7 @@ After checking the pinned release's manifest and SHA256SUMS:
 
 ```sh
 node examples/lib-search/run.mjs
-node examples/lib-search/verify-api.mjs examples/lib-search/index.lsi standard/wasmc-lib-search/0.1.0 examples/lib-search/search-reference.wasmc current/wasmc.mjs
+node examples/lib-search/verify-api.mjs examples/lib-search/index-v012-v020.lsi candidates/wasmc-lib-search/0.2.0 examples/lib-search/search-reference.wasmc current/wasmc.mjs
 WASMC_SEARCH_LIB_ROOT="$PWD/standard/wasmc-lib-search/0.1.0" cargo test --locked --release --manifest-path examples/lib-search/rust/Cargo.toml
 WASMC_SEARCH_LIB_ROOT="$PWD/standard/wasmc-lib-search/0.1.0" cargo run --locked --release --manifest-path examples/lib-search/rust/Cargo.toml
 ```

@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import { mkdtemp, rm, readdir, mkdir, lstat } from 'node:fs/promises';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
-import { repositoryRoot, sha256, resolveCatalog, packageReader } from './lib-catalog.mjs';
+import { repositoryRoot, sha256, resolveCatalog, packageReader, catalogAuthorities } from './lib-catalog.mjs';
 import { installLib, artifactUrl } from './lib-install.mjs';
 const catalogBytes=readFileSync(join(repositoryRoot,'catalog/libs-v009.json'));
 const catalog=JSON.parse(catalogBytes),row=catalog.packages[0];
@@ -47,6 +47,18 @@ try{
   await assert.rejects(installLib(competing,async(url,opts)=>{if(!once){once=true;await mkdir(competing.destination);}return transport(url,opts);}),error=>error.code==='install.destination_exists');
   assert.ok((await lstat(competing.destination)).isDirectory());
   assert.deepEqual(await readdir(competing.destination),[]);
-  assert.equal((await readdir(fixture)).filter(name=>name.startsWith('.')).length,2,'only successful installs retain their backing directories');
-  console.log(JSON.stringify({accepted:true,files_verified:row.files.length+1,negative_tests:10,concurrent_single_winner:true,competing_directory_preserved:true,failed_stage_cleanup:true,network_access:false}));
+  const catalog012Bytes=readFileSync(join(repositoryRoot,'catalog/libs-v012.json'));
+  const catalog012=JSON.parse(catalog012Bytes),row012=catalog012.packages.find(item=>item.id==='wasmc-csv');
+  const lock012=resolveCatalog(catalog012Bytes,{id:row012.id,version:row012.version,catalog_sha256:sha256(catalog012Bytes),wit_sha256:row012.wit_sha256,artifact_sha256:row012.artifact_sha256},packageReader(),catalogAuthorities.v012);
+  const lock012Bytes=Buffer.from(JSON.stringify(lock012));
+  const destination012=join(fixture,'case-v012');
+  const base012=artifactUrl('github',catalog012.release_commit,'');
+  const result012=await installLib({catalogBytes:catalog012Bytes,catalogAuthority:catalogAuthorities.v012,lockBytes:lock012Bytes,lockSha256:sha256(lock012Bytes),destination:destination012,mirror:'github'},async(url,opts)=>{
+    assert.equal(opts.redirect,'manual');assert.ok(url.startsWith(base012));
+    return new Response(read(url.slice(base012.length).split('/').map(decodeURIComponent).join('/')));
+  });
+  assert.equal(result012.files_verified,row012.files.length);
+  assert.deepEqual(resolveCatalog(catalog012Bytes,lock012,packageReader(destination012),catalogAuthorities.v012),lock012);
+  assert.equal((await readdir(fixture)).filter(name=>name.startsWith('.')).length,3,'only successful installs retain their backing directories');
+  console.log(JSON.stringify({accepted:true,legacy_files_verified:row.files.length+1,release_012_install:{id:row012.id,files_verified:result012.files_verified},negative_tests:10,concurrent_single_winner:true,competing_directory_preserved:true,failed_stage_cleanup:true,network_access:false}));
 }finally{await rm(fixture,{recursive:true});}
