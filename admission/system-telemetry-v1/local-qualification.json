@@ -1,0 +1,130 @@
+{
+  "schema": "wasmc.telemetry-candidate-qualification/v1",
+  "source_authority": "c11ccf013cb23a7659cf5ae7a1ba916a60770dda",
+  "base_release_commit": "735cc7fea762ba76f96d443cf64e47a31f8a1cc6",
+  "historical_experiment": "8522ccd20498dc369c3aaf5e2bb604a55cf89c17",
+  "scope": "local Linux x86_64; not release admission",
+  "admitted": false,
+  "published": false,
+  "toolchain": {
+    "rustc": "1.97.1",
+    "wit_bindgen": "0.62.0",
+    "wit_component": "0.259.0",
+    "wasmtime": "49.0.0",
+    "node": "24.19.0"
+  },
+  "native_unit_tests": {
+    "passed": 27,
+    "failed": 0
+  },
+  "resource_io_tests": {
+    "passed": 3,
+    "failed": 0
+  },
+  "linux_live": {
+    "accepted": true,
+    "profile": "linux-native-balanced-local",
+    "frames": 100,
+    "resource_reads": 35,
+    "fd_before": 4,
+    "fd_after": 4,
+    "memory_bytes": 27975114752,
+    "network_rx_bytes": 5989734794,
+    "sampling_uses_shell": false,
+    "release_qualified": false
+  },
+  "source_free_component": {
+    "accepted": true,
+    "profile": "source-free-rust-component",
+    "rounds": 128,
+    "host_bindings": 0,
+    "negative_controls": [
+      "missing-input",
+      "clock-regressed",
+      "double-drop"
+    ],
+    "release_qualified": false
+  },
+  "reproducibility": {
+    "isolated_target_builds": 2,
+    "core_byte_identical": true,
+    "component_byte_identical": true
+  },
+  "candidate_package_check": {
+    "accepted": true,
+    "scope": "candidate-file-identities-and-exact-intrinsics",
+    "release_qualified": false
+  },
+  "source_inventory": [
+    {
+      "path": "libsrc/wasmc-system-telemetry/Cargo.lock",
+      "bytes": 8064,
+      "sha256": "263f975000ae0101d532e5935a42eb30efa58c7f2b633b530d608d5199cf0319"
+    },
+    {
+      "path": "libsrc/wasmc-system-telemetry/Cargo.toml",
+      "bytes": 484,
+      "sha256": "6f543e7088f14e8f43484404b46ede9211d156b65884d6373f5d6e2ab8bd7abf"
+    },
+    {
+      "path": "libsrc/wasmc-system-telemetry/README.md",
+      "bytes": 3566,
+      "sha256": "7fcb75d6937a95646ec81de03edd217f2132f6373f08562865aba3cb619706f2"
+    },
+    {
+      "path": "libsrc/wasmc-system-telemetry/candidate.json",
+      "bytes": 1154,
+      "sha256": "5229f995c21bd1fcb8eccef211465bd5dfb074ce4f4642f5561b68ab077cc04b"
+    },
+    {
+      "path": "libsrc/wasmc-system-telemetry/examples/linux.rs",
+      "bytes": 5486,
+      "sha256": "1a6bdcdf24bea8756881df40d91f4457b071eec111e7f5652fb05fb1efcbc2fb"
+    },
+    {
+      "path": "libsrc/wasmc-system-telemetry/src/component.rs",
+      "bytes": 2728,
+      "sha256": "0443bf04088a9804fd3da8b152e6f0b910d82d46d01a8f6effde72d5c299a883"
+    },
+    {
+      "path": "libsrc/wasmc-system-telemetry/src/lib.rs",
+      "bytes": 9250,
+      "sha256": "b9150abe7f3dc8fa641db18c66b2abffee972f0e52db0ae188c718dd4cbbe393"
+    },
+    {
+      "path": "libsrc/wasmc-system-telemetry/src/tests.rs",
+      "bytes": 5641,
+      "sha256": "20101d8ac615177622cfd2986819b0932d75a9206f96d6dac6d71d8a67d07a47"
+    },
+    {
+      "path": "libsrc/wasmc-system-telemetry/wit/world.wit",
+      "bytes": 892,
+      "sha256": "c69ccee42113324a2875c352373ddaacb085363480a5f01f32ff919215fd9fe3"
+    }
+  ],
+  "pending": [
+    "wasmc-source-consumer",
+    "generic-host-sdk-acquisition",
+    "cross-platform-engine-matrix",
+    "strict-production-package-and-discovery",
+    "immutable-promotion"
+  ],
+  "artifacts": {
+    "artifact.wasm": {
+      "bytes": 41850,
+      "sha256": "581d6d58c83db4484cb80b5a8492e62125e70600e57b2e26651717dfdd6cdaa1"
+    },
+    "component.wasm": {
+      "bytes": 44838,
+      "sha256": "1bdbb092414e9e12e0e86a1d10f24490ce10fc37c3656a2653e4e22e20d6d08e"
+    },
+    "lib.wit": {
+      "bytes": 892,
+      "sha256": "c69ccee42113324a2875c352373ddaacb085363480a5f01f32ff919215fd9fe3"
+    },
+    "lib.json": {
+      "bytes": 2281,
+      "sha256": "a9e7a226388b122fe35b0ea5b37250f3ffee2e4a3b34d1d9ef116745c76430e4"
+    }
+  }
+}

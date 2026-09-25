@@ -1,7 +1,7 @@
 // Local candidate staging only. Does not admit, release or move discovery.
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
-import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { chmodSync, copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { resolve, join } from 'node:path';
 
 const [source, corePath, componentPath, destination] = process.argv.slice(2);
@@ -20,6 +20,8 @@ assert.deepEqual(imports.map(x => [x.module,x.name,x.kind]).sort(), [
 mkdirSync(join(dest,'references'), {recursive:true});
 copyFileSync(corePath,join(dest,'artifact.wasm'));
 copyFileSync(componentPath,join(dest,'component.wasm'));
+chmodSync(join(dest,'artifact.wasm'),0o644);
+chmodSync(join(dest,'component.wasm'),0o644);
 copyFileSync('libsrc/wasmc-system-telemetry/wit/world.wit',join(dest,'lib.wit'));
 const delta = {schema:'wasmc.lib-agent-delta/v0',apis:[
   {api:'sampler',origin:2,support:0,implementation:1,ecosystem:'explicit Linux proc snapshots',

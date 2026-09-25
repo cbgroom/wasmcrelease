@@ -1,0 +1,21 @@
+{
+  "schema": "wasmc.lib-agent-delta/v0",
+  "apis": [
+    {
+      "api": "sampler",
+      "origin": 2,
+      "support": 0,
+      "implementation": 1,
+      "ecosystem": "explicit Linux proc snapshots",
+      "delta": "Caller supplies bounded complete snapshots and monotonic time. First/reset/no-progress CPU rate is absent. Errors commit no state. No ambient I/O or telemetry Host API."
+    },
+    {
+      "api": "encode-frame",
+      "origin": 2,
+      "support": 0,
+      "implementation": 1,
+      "ecosystem": "telemetry frame-v3",
+      "delta": "64-byte LE successor; flags bit0 means CPU unavailable. Not the old flags-zero v2 protocol."
+    }
+  ]
+}

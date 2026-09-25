@@ -1,0 +1,83 @@
+{
+  "schema": "wasmc.lib/v0",
+  "id": "wasmc-system-telemetry",
+  "version": "0.0.1",
+  "admission": {
+    "approved": false,
+    "source_authority": "c11ccf013cb23a7659cf5ae7a1ba916a60770dda",
+    "stage": "local-qualified-candidate"
+  },
+  "artifact": {
+    "path": "artifact.wasm",
+    "format": "core-wasm",
+    "bytes": 41850,
+    "sha256": "581d6d58c83db4484cb80b5a8492e62125e70600e57b2e26651717dfdd6cdaa1"
+  },
+  "component": {
+    "path": "component.wasm",
+    "format": "component-wasm",
+    "bytes": 44838,
+    "sha256": "1bdbb092414e9e12e0e86a1d10f24490ce10fc37c3656a2653e4e22e20d6d08e"
+  },
+  "wit": {
+    "package": "wasmc:system-telemetry@0.0.1",
+    "world": "system-telemetry",
+    "path": "lib.wit",
+    "sha256": "c69ccee42113324a2875c352373ddaacb085363480a5f01f32ff919215fd9fe3"
+  },
+  "agent": {
+    "skill": {
+      "path": "SKILL.md",
+      "sha256": "768b1f5591ffaa616969c68946cce66a5196a392e7460afbfab763f845adef69"
+    },
+    "delta": {
+      "path": "references/agent-delta.json",
+      "sha256": "260119e7c1f757686e844b1511b13e8456dcd2772a5458f7113c077c0d6649ce"
+    }
+  },
+  "build": {
+    "language": "rust",
+    "locked": true,
+    "offline": true,
+    "target": "wasm32-unknown-unknown",
+    "profile": "release",
+    "features": [
+      "component"
+    ],
+    "toolchain": "rustc 1.97.1",
+    "inputs": [
+      {
+        "kind": "cargo-lock",
+        "path": "libsrc/wasmc-system-telemetry/Cargo.lock",
+        "sha256": "263f975000ae0101d532e5935a42eb30efa58c7f2b633b530d608d5199cf0319"
+      }
+    ]
+  },
+  "qualification": {
+    "status": "partial",
+    "host_authorities": [],
+    "canonical_resource_intrinsics": [
+      {
+        "module": "[export]wasmc:system-telemetry/monitor@0.0.1",
+        "name": "[resource-drop]sampler",
+        "kind": "function"
+      },
+      {
+        "module": "[export]wasmc:system-telemetry/monitor@0.0.1",
+        "name": "[resource-new]sampler",
+        "kind": "function"
+      }
+    ],
+    "native_tests": 27,
+    "io_tests": 3,
+    "linux_live_frames": 100,
+    "rust_component_rounds": 128,
+    "pending": [
+      "wasmc-source-consumer",
+      "generic-host-sdk-acquisition",
+      "cross-platform-engine-matrix",
+      "strict-production-package-and-discovery",
+      "immutable-promotion"
+    ]
+  }
+}
