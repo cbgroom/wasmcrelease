@@ -1,0 +1,21 @@
+[package]
+name = "wasmc-telemetry-host-consumer"
+version = "0.0.1"
+edition = "2021"
+publish = false
+
+[[bin]]
+name = "telemetry-host-consumer"
+path = "../host_consumer.rs"
+
+[dependencies]
+wasmc-host = { path = "../../../sdk/wasmc-host" }
+# Match the published Host SDK's engine, enabling the standard Component view.
+wasmtime = { version = "=47.0.4", default-features = false, features = ["std", "runtime", "cranelift", "component-model"] }
+
+[workspace]
+
+[profile.release]
+opt-level = "z"
+codegen-units = 1
+panic = "abort"

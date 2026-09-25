@@ -1,22 +1,37 @@
-// Candidate byte/lifecycle-intrinsic checks; not a substitute for production
-// Lib verification or actual Component/consumer execution.
+// Exercise real reopen rejections, rather than merely compare two hashes.
 import assert from 'node:assert/strict';
-import { createHash } from 'node:crypto';
-import { readFileSync, readdirSync } from 'node:fs';
-import { join, resolve } from 'node:path';
-const root = resolve(process.argv[2] ?? 'admission/system-telemetry-v1/package');
-const sha = b => createHash('sha256').update(b).digest('hex');
-const manifest = JSON.parse(readFileSync(join(root,'lib.json'),'utf8'));
-assert.equal(manifest.admission.approved,false);
-assert.deepEqual(readdirSync(root).sort(),['SKILL.md','artifact.wasm','component.wasm','lib.json','lib.wit','references'].sort());
-for (const row of [manifest.artifact,manifest.component,manifest.wit,manifest.agent.skill,manifest.agent.delta]) {
-  const b=readFileSync(join(root,row.path));assert.equal(sha(b),row.sha256,row.path);
-  if(row.bytes!==undefined)assert.equal(b.length,row.bytes,row.path);
+import {cpSync,mkdtempSync,readFileSync,rmSync,writeFileSync,mkdirSync,symlinkSync} from 'node:fs';
+import {join,resolve,dirname} from 'node:path';
+import {tmpdir} from 'node:os';
+import {fileURLToPath} from 'node:url';
+import {verifyCandidate,sha} from './verify-telemetry-candidate.mjs';
+const repo=resolve(dirname(fileURLToPath(import.meta.url)),'..');
+const root=resolve(process.argv[2]??join(repo,'admission/system-telemetry-v1/package'));
+const expected=JSON.parse(readFileSync(join(repo,'admission/system-telemetry-v1/local-qualification.json'),'utf8')).artifacts;
+const result=verifyCandidate(root,expected);
+const scratch=mkdtempSync(join(tmpdir(),'wasmc-telemetry-reopen-'));
+const rejected=[];
+function negative(name,edit) {
+  const p=join(scratch,name);cpSync(root,p,{recursive:true});edit(p);
+  assert.throws(()=>verifyCandidate(p,expected),undefined,name+' must reject');rejected.push(name);
 }
-assert.deepEqual(readdirSync(join(root,'references')),['agent-delta.json']);
-const core=readFileSync(join(root,'artifact.wasm'));
-assert.deepEqual(WebAssembly.Module.imports(new WebAssembly.Module(core)),manifest.qualification.canonical_resource_intrinsics);
-const changed=Buffer.from(core);changed[changed.length-1]^=1;
-assert.notEqual(sha(changed),manifest.artifact.sha256,'tamper detection');
-assert.equal(manifest.qualification.status,'partial');
-console.log(JSON.stringify({accepted:true,scope:'candidate-file-identities-and-exact-intrinsics',release_qualified:false}));
+try {
+  for(const name of ['artifact.wasm','component.wasm','lib.wit','SKILL.md','references/agent-delta.json']) {
+    negative('tamper-'+name.replaceAll('/','-'),p=>{const f=join(p,name),b=readFileSync(f);b[b.length-1]^=1;writeFileSync(f,b);});
+  }
+  negative('self-rehashed-artifact',p=>{
+    const f=join(p,'artifact.wasm'),b=readFileSync(f);b[b.length-1]^=1;writeFileSync(f,b);
+    const m=JSON.parse(readFileSync(join(p,'lib.json'),'utf8'));m.artifact.sha256=sha(b);writeFileSync(join(p,'lib.json'),JSON.stringify(m));
+  });
+  negative('path-escape',p=>{const m=JSON.parse(readFileSync(join(p,'lib.json'),'utf8'));m.artifact.path='../outside.wasm';writeFileSync(join(p,'lib.json'),JSON.stringify(m));});
+  negative('unexpected-file',p=>writeFileSync(join(p,'extra.txt'),'unexpected'));
+  negative('unexpected-reference',p=>writeFileSync(join(p,'references','extra.txt'),'unexpected'));
+  negative('missing-file',p=>rmSync(join(p,'component.wasm')));
+  negative('directory-as-artifact',p=>{rmSync(join(p,'artifact.wasm'));mkdirSync(join(p,'artifact.wasm'));});
+  negative('linked-references',p=>{
+    const outside=join(scratch,'linked-target');cpSync(join(p,'references'),outside,{recursive:true});
+    rmSync(join(p,'references'),{recursive:true});
+    symlinkSync(outside,join(p,'references'),process.platform==='win32'?'junction':'dir');
+  });
+  console.log(JSON.stringify({...result,negative_controls:rejected,negative_count:rejected.length}));
+} finally {rmSync(scratch,{recursive:true,force:true});}

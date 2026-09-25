@@ -51,6 +51,16 @@ Hash equality proves byte identity, not behavior. A release needs both package
 integrity checks and executable JavaScript/Rust behavior evidence. Report
 browser, CDN, deployment, AOT, or compatibility scope only when actually run.
 
+Candidate reopen must pin the manifest itself and product files to independent
+expected identities from the selected trusted checkout/producer receipt. A
+package cannot authorize replacement bytes by rewriting its own manifest.
+Exercise actual verification failures on mutated package copies, including
+self-rehashed replacement, path/inventory drift and linked files/directories;
+a test that merely compares two hashes is not a reopen rejection test.
+Canonical resource-new/drop intrinsics are not OS Host authorities, but must
+still match an explicit exact import set. Source-free consumers may copy public
+SDK/driver glue and WIT, never Lib implementation or machine build caches.
+
 Use `./scripts/validate-maintainer.sh` for repository consistency, then run the
 host journeys selected by `release-host-integration`.
 

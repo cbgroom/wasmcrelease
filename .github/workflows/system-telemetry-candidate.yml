@@ -48,3 +48,39 @@ jobs:
         run: |
           echo 'This candidate workflow does not qualify WAsmC source consumption, Browser, Wasmi, production catalog or immutable release.'
           git rev-parse HEAD
+  source-free-host-sdk:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-2025, macos-15]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Pin consumer compiler
+        shell: bash
+        run: |
+          rustup toolchain install 1.97.1 --profile minimal
+          rustup default 1.97.1
+          rustc -Vv
+      - name: Public Host SDK, exact Component and bounded failure controls
+        shell: bash
+        run: |
+          mkdir -p target/telemetry-evidence
+          set -o pipefail
+          bash scripts/test-telemetry-host.sh 2>&1 | tee target/telemetry-evidence/host-sdk.log
+          git rev-parse HEAD | tee target/telemetry-evidence/source.txt
+      - name: Preserve source-bound receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: telemetry-host-sdk-${{ matrix.os }}
+          path: target/telemetry-evidence
+          if-no-files-found: error
+      - name: Scope boundary
+        shell: bash
+        run: |
+          echo 'Portable fixture controls on all three OSes; real OS telemetry acquisition on Linux only.'
+          echo 'Component engine is SDK-compatible Wasmtime47; this does not qualify WAsmC resource-method lowering or Wasmi execution.'

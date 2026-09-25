@@ -1,5 +1,40 @@
 # WAsmC release maintainer handoff
 
+## 2026-09-25 Host SDK integration and candidate reopen hardening
+
+The exact prior candidate `8d605fab00dbc243db5d97f7aaf6aabf4ecfab9a`
+completed Actions run 36147323962: all three Wasmtime49 source-free Component
+jobs passed (Ubuntu, Windows, macOS). Linux additionally passed real proc
+acquisition. This is not all-platform system collection or Wasmi evidence.
+The job/step receipt is `admission/system-telemetry-v1/component-ci-20260925.json`.
+
+The next bounded slice adds a source-free consumer of the existing public
+`wasmc-host` SDK plus the same telemetry Component. It uses only explicit
+read-only file grants and generic open/read/release. No SDK, compiler, CoreLib,
+Host ABI or telemetry product bytes are changed. Snapshot reads are complete
+and bounded, with one-byte EOF probing at capacity, invalid completion length
+rejection, and retained handles for explicit release.
+
+Local revision evidence before checkpoint: ten Host/Component tests passed,
+including real SDK handling of short reads, unauthorized selectors, stale
+handles, truncation, malicious read lengths, and transactional parse errors.
+The real Linux SDK/Component loop passed 128 frames and closed exactly four
+grants (FD9->5). This uses Wasmtime47 matching the public SDK; it is not a
+Wasmi execution or benchmark result. Use `scripts/test-telemetry-host.sh`.
+
+`scripts/test-telemetry-package.mjs` now invokes a reusable strict candidate
+verifier with an independent expected manifest/product identity. Twelve actual
+modified package copies reject, rather than only comparing a changed hash.
+Existing candidate bytes, candidate `approved=false`, main and v0.0.12 remain
+unchanged. Do not silently upgrade historical receipts or package metadata.
+
+Next: verify this new exact source's extended six-cell CI; finish the producer-
+owned mixed resource/value binding needed for ordinary WAsmC sampler methods.
+The public `compileLib(source, explicitPlan)` entry is not proof a matching
+plan exists for this new WIT resource. Never bypass it with public raw handles
+or a telemetry Host callback. Production schema/catalog/search, exact engine
+scope, private-producer admission and immutable promotion remain separate.
+
 ## 2026-09-25 Telemetry release candidate — NOT prod
 
 The user requested formal monitoring Lib publication. Work is isolated on
