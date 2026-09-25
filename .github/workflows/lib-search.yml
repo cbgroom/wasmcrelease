@@ -1,7 +1,7 @@
 name: LibSearch portable equivalence
 on:
   push:
-    branches: [main, release/lib-search-v010]
+    branches: [main, release/lib-search-v010, work/system-telemetry-release-v1]
     tags: ['v*']
   pull_request:
   workflow_dispatch:
@@ -41,7 +41,7 @@ jobs:
           if [[ "$RUNTIME" == bun ]]; then runner=(bun); fi
           if [[ "$RUNTIME" == deno ]]; then runner=(deno run --allow-read); fi
           node scripts/test-release-channel.mjs
-          node scripts/release-candidate.mjs verify channels/candidates/0.0.12.json
+          node scripts/release-candidate.mjs verify channels/candidates/0.0.13.json
           "${runner[@]}" examples/lib-search/verify-api.mjs examples/lib-search/index.lsi standard/wasmc-lib-search/0.1.0 examples/lib-search/search-reference.wasmc current/wasmc.mjs "$GITHUB_SHA" | tee target/lib-search/api.json
           "${runner[@]}" examples/lib-search/run.mjs | tee target/lib-search/client.json
           printf '%s\n' "Exact tested source: $GITHUB_SHA; runtime: $RUNTIME" >> "$GITHUB_STEP_SUMMARY"

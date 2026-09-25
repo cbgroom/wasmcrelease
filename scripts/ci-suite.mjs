@@ -20,7 +20,7 @@ export function suiteCases(family,runtime='node',mirror='github') {
     item('library-first-teaching-and-routes','scripts/test-library-first.mjs'),
     item('sdk-agent-routing','scripts/validate-sdk-agent-routes.mjs'),
     item('release-channel-promotion-negatives','scripts/test-release-channel.mjs'),
-    item('release-product-identity','scripts/release-candidate.mjs',['verify','channels/candidates/0.0.12.json']),
+    item('release-product-identity','scripts/release-candidate.mjs',['verify','channels/candidates/0.0.13.json']),
     item('release-surface-model','scripts/validate-release-surfaces.mjs'),
     item('same-platform-performance-baseline','scripts/test-performance-baseline.mjs'),
     item('ci-reporting-failure-controls','scripts/test-ci-reporting.mjs'),
