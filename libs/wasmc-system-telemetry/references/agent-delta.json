@@ -1,0 +1,21 @@
+{
+  "schema": "wasmc.lib-agent-delta/v0",
+  "apis": [
+    {
+      "api": "sampler",
+      "origin": 2,
+      "support": 0,
+      "implementation": 1,
+      "ecosystem": "bounded system telemetry over caller-supplied snapshots",
+      "delta": "Supported through Rust Component and public Host-SDK consumers. Caller supplies bounded complete snapshots and monotonic time. First/reset/no-progress CPU rate is absent; errors commit no state. Direct WAsmC source sampler-resource consumption is not qualified in v0.0.1."
+    },
+    {
+      "api": "encode-frame",
+      "origin": 2,
+      "support": 0,
+      "implementation": 1,
+      "ecosystem": "telemetry frame-v3",
+      "delta": "64-byte little-endian successor; flags bit0 means CPU unavailable. Not the old flags-zero frame-v2 protocol."
+    }
+  ]
+}

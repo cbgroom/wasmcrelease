@@ -1,0 +1,32 @@
+{
+  "schema": "wasmc.telemetry-cross-platform-qualification/v1",
+  "tested_commit": "c3b40091756e319e11f071a7c7cc403d3fc3803a",
+  "run_id": 36151207215,
+  "required_jobs": 6,
+  "successful_jobs": 6,
+  "jobs": [
+    {"id":108124648888,"surface":"host-sdk","runner":"windows-2025","conclusion":"success","real_system_acquisition":false},
+    {"id":108124648997,"surface":"component","runner":"windows-2025","conclusion":"success","real_system_acquisition":false},
+    {"id":108124649066,"surface":"host-sdk","runner":"ubuntu-24.04","conclusion":"success","real_system_acquisition":true},
+    {"id":108124649131,"surface":"component","runner":"ubuntu-24.04","conclusion":"success","real_system_acquisition":true},
+    {"id":108124649191,"surface":"host-sdk","runner":"macos-15","conclusion":"success","real_system_acquisition":false},
+    {"id":108124649333,"surface":"component","runner":"macos-15","conclusion":"success","real_system_acquisition":false}
+  ],
+  "host_sdk_portable_tests_each": 10,
+  "component_rounds_each": 128,
+  "package_reopen_negative_controls": 12,
+  "linux_host_sdk_live": {
+    "frames": 128,
+    "generic_reads": 82,
+    "released_grants": 4,
+    "sampling_uses_shell": false
+  },
+  "release_scope": "Component/Rust plus Host SDK; Linux real acquisition",
+  "non_claims": [
+    "direct WAsmC source sampler-resource consumption",
+    "Browser",
+    "Wasmi Component",
+    "real Windows acquisition",
+    "real macOS acquisition"
+  ]
+}

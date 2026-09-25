@@ -191,19 +191,19 @@
         "root": "sdk/wasmc-core-runtime",
         "skill": "sdk/wasmc-core-runtime/SKILL.md",
         "release_status": "published",
-        "immutable_example": "v0.0.12"
+        "immutable_example": "v0.0.13"
       },
       "host-sdk": {
         "root": "sdk/wasmc-host",
         "skill": "sdk/wasmc-host/SKILL.md",
         "release_status": "published",
-        "immutable_example": "v0.0.12"
+        "immutable_example": "v0.0.13"
       },
       "native-cli": {
         "root": "sdk/wasmc-native-compiler",
         "skill": "sdk/wasmc-native-compiler/SKILL.md",
         "release_status": "published",
-        "immutable_example": "v0.0.12",
+        "immutable_example": "v0.0.13",
         "binary_packaging": "CI/development packages are not immutable release assets"
       },
       "lightweight-embedding": {
@@ -242,5 +242,23 @@
       }
     ]
   },
-  "release_version": "0.0.12"
+  "package_profiles": {
+    "wasmc-system-telemetry@0.0.1": {
+      "status": "published",
+      "supported_surfaces": [
+        "source-free-rust-component",
+        "public-rust-host-sdk",
+        "linux-explicit-generic-resource-acquisition"
+      ],
+      "unsupported_surfaces": [
+        "wasmc-source-direct-resource-methods",
+        "browser",
+        "wasmi-component-execution",
+        "windows-real-system-acquisition",
+        "macos-real-system-acquisition"
+      ],
+      "functional_workflow": "system-telemetry-candidate.yml"
+    }
+  },
+  "release_version": "0.0.13"
 }

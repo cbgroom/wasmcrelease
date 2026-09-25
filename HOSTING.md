@@ -35,8 +35,8 @@ The classic file exposes the same surface as `globalThis.Wasmc`. Browser fetch p
 For reusable Core-module mechanics, use the published dual-engine SDK:
 
 ```toml
-# v0.0.12 example; use the immutable tag/full commit that contains the SDK you reviewed.
-wasmc-core-runtime = { git = "https://github.com/cbgroom/wasmcrelease.git", tag = "v0.0.12" }
+# v0.0.13 example; use the immutable tag/full commit that contains the SDK you reviewed.
+wasmc-core-runtime = { git = "https://github.com/cbgroom/wasmcrelease.git", tag = "v0.0.13" }
 ```
 
 `CoreRuntimeSdk::inspect_core` validates and describes imports, exports, kinds,
@@ -54,9 +54,14 @@ cargo run --locked
 The demo compiles and executes scalar source, invokes a stateful resource Component, and binds the one explicit `clock-host.now` import. It is copyable reference code, not a published SDK. Reuse Engine/compiled modules where appropriate and create a fresh bounded Store for independent requests.
 
 For an existing Rust application that also needs the generic WAsmC Host
-resource registry and platform binding policy, v0.0.12 publishes
+resource registry and platform binding policy, v0.0.13 publishes
 `sdk/wasmc-host`. It wraps the Core Runtime SDK and provides one-call native
 profiles plus explicit resource grants. Applications remain free to use
 `wasmc-core-runtime` directly when they want to own all Host policy themselves.
+
+v0.0.13 also publishes `libs/wasmc-system-telemetry`. The reference integration
+in `examples/system-telemetry` uses explicit generic Host-SDK grants, bounded
+snapshot reads, and the source-free Component. Linux has real-system acquisition
+evidence; Windows/macOS have portable Host-SDK/Component controls only.
 
 Generated imports are authority requests. Reject unknown modules/functions/signatures; no release file grants ambient filesystem, network, clock, randomness, credentials, process, or device access.

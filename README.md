@@ -139,15 +139,15 @@ TLS+HTTP/router path. Its contract is
 regressions are same-platform advisory signals, while required-platform
 presence, external-client success and expected HTTP status remain hard gates.
 
-v0.0.12 Agent guidance starts with
+v0.0.13 Agent guidance starts with
 [Library-first discovery](skills/wasmc-lib-discovery/SKILL.md) before implementing
 reusable algorithms/data operations. It teaches real search hits, exact selection,
 installation and supported execution, with an executable documentation regression.
 The guidance is integrity-bound in this release; earlier tags stay frozen.
 
-Current staged version: **v0.0.12 SDK/Agent integration**.
+Current staged version: **v0.0.13 system-telemetry Lib release**.
 The [channel policy](docs/RELEASE_CHANNELS.md) defines immutable `-dev.N` →
-`-main.N` → suffix-free prod. The default prod is v0.0.12;
+`-main.N` → suffix-free prod. The default prod is v0.0.13;
 previous tags are immutable and prod0.0.x does not imply stable1.x.
 [![LibSearch equivalence](https://github.com/cbgroom/wasmcrelease/actions/workflows/lib-search.yml/badge.svg?branch=main)](https://github.com/cbgroom/wasmcrelease/actions/workflows/lib-search.yml)
 
@@ -159,11 +159,11 @@ a version or authorize installation. The new Lib has zero imports and a portable
 Core/Component value view. It is not a shared-memory/CoreLib fast ABI and does
 not solve Wasmi/Node18 compatibility of the existing Std1.4.0.
 
-Current release: `v0.0.12`, reusing compiler bytes built from exact private source
+Current release: `v0.0.13`, reusing compiler bytes built from exact private source
 `e69abb73f667f3810b0c40937fd1a1e2d04d4255` and the admitted v0.0.11 Data
 Foundation Lib bytes. Use `current/` for the latest compiler facade; `dist/` and
 `package/` are frozen v0.0.4 compatibility trees. The public Wasmi/Wasmtime Core
-Runtime SDK is in `sdk/wasmc-core-runtime`; v0.0.12 also publishes the generic
+Runtime SDK is in `sdk/wasmc-core-runtime`; v0.0.13 also publishes the generic
 Rust Host embedding SDK in `sdk/wasmc-host`. Its binding policies are Host-side
 convenience only and do not add guest-visible Host operations.
 
@@ -173,7 +173,16 @@ IPC/uncompressed Parquet interchange. The qualified path is CSV → types → Ex
 → Compute → Relational → Profile → interchange → validation. Relational v1
 includes union-all, bounded typed inner/left equi-join, deterministic ranking
 windows and group aggregation. Lag/lead, frame aggregates and distinct are v1.1;
-SQL/DB is outside this release. See [the v0.0.11 Data scope](docs/RELEASE_V011.md) and [v0.0.12 release scope](docs/RELEASE_V012.md).
+SQL/DB is outside this release. See [the v0.0.11 Data scope](docs/RELEASE_V011.md),
+[v0.0.12 SDK scope](docs/RELEASE_V012.md), and
+[v0.0.13 telemetry scope](docs/RELEASE_V013.md).
+
+v0.0.13 additionally publishes `libs/wasmc-system-telemetry` v0.0.1.
+Its admitted execution surfaces are source-free Rust Component consumption and
+the public Rust Host SDK; real system acquisition is qualified on Linux through
+four explicit generic read-only resources. Direct WAsmC sampler-resource source,
+Browser, Wasmi Component execution, and real Windows/macOS system acquisition
+are not release claims.
 
 This release covers bit operations, managed collection loops, stable minimal
 String paths, and the 73-function `wasmc:std@1.4.0` source-free standard Lib.
@@ -249,10 +258,10 @@ import { compile, inspectWasm } from "@wasmc/compiler";
 
 These are explicit contexts, not fallback probes. Repository-local use does not require npm or another external JavaScript registry.
 
-Consumers must pin `v0.0.12` or its full commit and verify `SHA256SUMS`.
+Consumers must pin `v0.0.13` or its full commit and verify `SHA256SUMS`.
 `main` and latest metadata are mutable discovery conveniences.
 
-## v0.0.12 testing instructions
+## v0.0.13 testing instructions
 
 Supplemental public [Lib discovery and exact resolver](catalog/README.md)
 provides exact resolution over verified published package bytes. Search now
@@ -268,15 +277,15 @@ typed function references and tail calls. Original v0.0.9 does not contain the
 later preflight scripts; v0.0.10 now ships them with digest-bound metadata.
 Node18 is not covered by the release's passing full managed-Host matrix.
 
-Resolve the exact current immutable commit with `git rev-parse 'v0.0.12^{}'`.
+Resolve the exact current immutable commit with `git rev-parse 'v0.0.13^{}'`.
 All previous tags remain frozen and are never overwritten.
-This README and the [Release page](https://github.com/cbgroom/wasmcrelease/releases/tag/v0.0.12)
+This README and the [Release page](https://github.com/cbgroom/wasmcrelease/releases/tag/v0.0.13)
 contain the complete handoff; no accompanying chat instructions are required.
 
 ### Download and verify
 
 ```bash
-git clone --depth 1 --branch v0.0.12 https://github.com/cbgroom/wasmcrelease.git
+git clone --depth 1 --branch v0.0.13 https://github.com/cbgroom/wasmcrelease.git
 cd wasmcrelease
 ```
 
@@ -284,8 +293,8 @@ Verify every file listed in `SHA256SUMS` before execution. On macOS use
 `shasum -a 256 -c SHA256SUMS`; on Linux use `sha256sum -c SHA256SUMS`.
 GitHub Raw and jsDelivr support the exact pinned release:
 
-- [Self-contained ESM compiler](https://cdn.jsdelivr.net/gh/cbgroom/wasmcrelease@v0.0.12/current/wasmc.mjs)
-- [Raw compiler Wasm](https://raw.githubusercontent.com/cbgroom/wasmcrelease/v0.0.12/current/wasmc_compiler.wasm)
+- [Self-contained ESM compiler](https://cdn.jsdelivr.net/gh/cbgroom/wasmcrelease@v0.0.13/current/wasmc.mjs)
+- [Raw compiler Wasm](https://raw.githubusercontent.com/cbgroom/wasmcrelease/v0.0.13/current/wasmc_compiler.wasm)
 
 Use `current/wasmc.mjs` for the self-contained ESM path or `current/index.mjs`
 for the sidecar package path. The latter needs its sibling compiler and Lib

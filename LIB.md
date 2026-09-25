@@ -22,6 +22,10 @@ Standalone packages demonstrate the boundary:
 - `libs/wasmc-owned-algorithms`: strings, scalar lists, and flat records through reviewed pure Rust algorithms.
 - `libs/wasmc-resource-counter`: a stateful WIT resource with constructor, receiver methods, and drop lifecycle.
 - `libs/wasmc-host-clock`: a Component that requests exactly one Host function.
+- `libs/wasmc-system-telemetry`: bounded telemetry parsing/cadence with an
+  admitted source-free Component + public Host-SDK consumption surface. Real
+  acquisition is qualified on Linux; direct WAsmC sampler-resource source is
+  explicitly unsupported in v0.0.1.
 
 Each directory is a self-describing Skill rooted at `SKILL.md` and carries authoritative `lib.wit`, `lib.json`, fast-path `artifact.wasm`, and standard `component.wasm`. Read that Skill before use.
 

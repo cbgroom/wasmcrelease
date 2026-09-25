@@ -1,0 +1,22 @@
+package wasmc:system-telemetry@0.0.1;
+interface monitor {
+  enum profile { fast, balanced, economy }
+  enum telemetry-error { malformed-input, missing-input, input-too-large, overflow, clock-regressed }
+  record snapshots {
+    cpu: option<string>, memory: option<string>,
+    network: option<string>, load: option<string>,
+  }
+  record frame {
+    sequence: u64, monotonic-ns: u64,
+    available-memory: u64, used-swap: u64,
+    network-rx-total: u64, network-tx-total: u64,
+    cpu-milli-pct: option<u32>, load1-milli: u32, freshness-mask: u32,
+  }
+  resource sampler {
+    constructor(policy: profile);
+    refresh-mask: func(monotonic-ns: u64) -> result<u32, telemetry-error>;
+    sample: func(monotonic-ns: u64, input: snapshots) -> result<frame, telemetry-error>;
+  }
+  encode-frame: func(value: frame) -> result<list<u8>, telemetry-error>;
+}
+world system-telemetry { export monitor; }

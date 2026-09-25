@@ -1,6 +1,7 @@
-# System telemetry release candidate
+# System telemetry Lib source
 
-**Candidate, not an admitted or released WAsmC Lib.** Based on the public
+**Admitted for the v0.0.13 product candidate with a surface-scoped contract.**
+The immutable package is under `libs/wasmc-system-telemetry`. Based on the public
 generic-resource telemetry experiment at
 `8522ccd20498dc369c3aaf5e2bb604a55cf89c17`. Compiler, CoreLib and Host contracts
 are unchanged. Historical benchmark timings do not qualify this successor.
@@ -53,7 +54,9 @@ The example preopens exactly four read-only /proc resources and reuses buffers.
 No arbitrary guest-supplied path is accepted. Short reads are accumulated;
 capacity overflow rejects rather than parsing truncated data. Files close before
 FD readback. This is application glue, not a telemetry-specific Host primitive.
-Windows/macOS acquisition and generic Host SDK integration remain unqualified.
+The public `wasmc-host` SDK path is qualified with explicit generic grants.
+Portable Host-SDK snapshot/error controls passed on Linux, Windows and macOS;
+real system acquisition is qualified on Linux only.
 
 ```sh
 cargo test --manifest-path libsrc/wasmc-system-telemetry/Cargo.toml --locked --offline
@@ -62,6 +65,8 @@ cargo run --manifest-path libsrc/wasmc-system-telemetry/Cargo.toml --release --l
 ```
 
 This is a 100-frame smoke run, not a 1 kHz timing contract or deployed daemon.
-Published WAsmC resource-method consumption, exact package discovery and
-cross-platform/engine release gates remain pending. Refer to candidate evidence,
-not this README, for current exact-source qualification.
+Direct WAsmC source use of the sampler resource is **not** part of this package's
+supported surface: the current public FastABI route does not lift this resource
+method's rich `frame` result. Browser, Wasmi Component execution, and real
+Windows/macOS system acquisition are also not claimed. Component/Rust and public
+Host-SDK consumers are the admitted v0.0.1 surface.

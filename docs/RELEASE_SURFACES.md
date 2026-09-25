@@ -26,8 +26,8 @@ evidence that an older immutable tag shipped it.
 
 | Component | Current checkout status | Agent Skill | Important boundary |
 |---|---|---|---|
-| Core Runtime SDK | published; immutable v0.0.12 | `sdk/wasmc-core-runtime/SKILL.md` | engine mechanics; Host/business admission remains embedding-owned |
-| Generic Host SDK | published; immutable v0.0.12 | `sdk/wasmc-host/SKILL.md` | generic Resource binding; no application-specific Host API |
+| Core Runtime SDK | published; immutable v0.0.13 | `sdk/wasmc-core-runtime/SKILL.md` | reused from v0.0.12; engine mechanics; Host/business admission remains embedding-owned |
+| Generic Host SDK | published; immutable v0.0.13 | `sdk/wasmc-host/SKILL.md` | reused from v0.0.12; generic Resource binding; no application-specific Host API |
 | Native CLI source surface | published | `sdk/wasmc-native-compiler/SKILL.md` | CI/development native packages are not immutable release assets |
 | Lightweight embedding | qualified-reference | SDK discovery routes to `host/embedding/*` | surrounding runtime is the physical OS bridge |
 | Native Runtime Library | incubating | no install Skill yet | do not invent a `.so/.dylib/.dll` package |
@@ -46,6 +46,14 @@ surface-specific workflows; this guidance workflow does not replace them.
 | Native Runtime Library / Platform SDK | incubating | thin-host, host-lib-e2e, host-network, host-file-io | host-https-flywheel + host-external-load |
 | Driver / Provider | qualified-reference | host-lib-e2e, host-network, host-file-io, host-memory | driver-specific |
 | Remote Provider | architecture | not yet a release product | none |
+
+### System telemetry package profile
+
+`libs/wasmc-system-telemetry@0.0.1` is published with a narrower supported
+surface than the generic Lib category: Rust Component consumption and the
+public Rust Host SDK are admitted; Linux real acquisition uses explicit generic
+read-only resources. Direct WAsmC sampler-resource source, Browser, Wasmi
+Component execution, and real Windows/macOS acquisition are not claimed.
 
 ## Required functional evidence
 

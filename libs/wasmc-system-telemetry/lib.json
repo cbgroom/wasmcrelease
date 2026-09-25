@@ -1,0 +1,96 @@
+{
+  "agent": {
+    "delta": {
+      "path": "references/agent-delta.json",
+      "sha256": "bf18d4c02e796fee13f2f733c4bb6b7cd903f5864ac9a633da0c220d7b74804e"
+    },
+    "skill": {
+      "path": "SKILL.md",
+      "sha256": "e5aa0ea8f6409e96e043b5c760feffab535b25fd75414eca9024334a35b6d374"
+    }
+  },
+  "admission": {
+    "approved": true,
+    "date": "2026-09-25",
+    "source_authority": "c11ccf013cb23a7659cf5ae7a1ba916a60770dda",
+    "scope": "Component/Rust plus public Host SDK; Linux real acquisition"
+  },
+  "artifact": {
+    "bytes": 41850,
+    "format": "core-wasm",
+    "path": "artifact.wasm",
+    "sha256": "581d6d58c83db4484cb80b5a8492e62125e70600e57b2e26651717dfdd6cdaa1"
+  },
+  "build": {
+    "backend": "cargo",
+    "inputs": [
+      {
+        "kind": "cargo-lock",
+        "path": "libsrc/wasmc-system-telemetry/Cargo.lock",
+        "sha256": "263f975000ae0101d532e5935a42eb30efa58c7f2b633b530d608d5199cf0319"
+      }
+    ],
+    "language": "rust",
+    "locked": true,
+    "offline": true,
+    "profile": "release",
+    "target": "wasm32-unknown-unknown",
+    "toolchain": "rustc 1.97.1",
+    "features": [
+      "component"
+    ]
+  },
+  "compatibility": {
+    "abi_epoch": 1,
+    "wasmc_min": "0.0.12",
+    "wire": "frame-v3"
+  },
+  "component": {
+    "bytes": 44838,
+    "format": "component-wasm",
+    "path": "component.wasm",
+    "sha256": "1bdbb092414e9e12e0e86a1d10f24490ce10fc37c3656a2653e4e22e20d6d08e"
+  },
+  "id": "wasmc-system-telemetry",
+  "qualification": {
+    "status": "admitted-surface-scoped",
+    "behavior": "scripts/test-telemetry-source.mjs",
+    "component": "scripts/test-telemetry-component.sh",
+    "host_sdk": "scripts/test-telemetry-host.sh",
+    "core_imports": 2,
+    "host_authorities": [],
+    "canonical_resource_intrinsics": [
+      {
+        "module": "[export]wasmc:system-telemetry/monitor@0.0.1",
+        "name": "[resource-drop]sampler",
+        "kind": "function"
+      },
+      {
+        "module": "[export]wasmc:system-telemetry/monitor@0.0.1",
+        "name": "[resource-new]sampler",
+        "kind": "function"
+      }
+    ],
+    "supported_surfaces": [
+      "source-free-rust-component",
+      "public-rust-host-sdk",
+      "linux-explicit-generic-resource-acquisition"
+    ],
+    "unsupported_surfaces": [
+      "wasmc-source-direct-resource-methods",
+      "browser",
+      "wasmi-component-execution",
+      "windows-real-system-acquisition",
+      "macos-real-system-acquisition"
+    ],
+    "cross_platform_run": 36151207215
+  },
+  "schema": "wasmc.lib/v0",
+  "version": "0.0.1",
+  "wit": {
+    "package": "wasmc:system-telemetry@0.0.1",
+    "path": "lib.wit",
+    "sha256": "c69ccee42113324a2875c352373ddaacb085363480a5f01f32ff919215fd9fe3",
+    "world": "system-telemetry"
+  }
+}

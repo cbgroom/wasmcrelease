@@ -1,15 +1,43 @@
 {
   "schema": "wasmc.libsrc-candidate/v1",
   "id": "wasmc-system-telemetry",
-  "version": "0.0.1-dev.1",
+  "version": "0.0.1",
   "wit": "wit/world.wit",
   "source": ["Cargo.toml", "Cargo.lock", "src/lib.rs", "src/component.rs"],
   "host_import_budget": 0,
   "canonical_resource_intrinsics_are_not_host_authority": true,
   "origin": {"kind":"native-public","experiment_commit":"8522ccd20498dc369c3aaf5e2bb604a55cf89c17","historical_performance_inherited":false},
-  "completed_gates": ["native-unit-local", "complete-read-local", "linux-real-acquisition-local", "rust-component-source-free-local"],
-  "pending_gates": ["wasmc-source-consumer", "generic-host-sdk-acquisition", "cross-platform-engine-matrix", "strict-production-package-and-discovery", "immutable-promotion"],
-  "admitted": false,
+  "completed_gates": [
+    "native-unit-local",
+    "complete-read-local",
+    "linux-real-acquisition-local",
+    "rust-component-source-free-local",
+    "generic-host-sdk-acquisition",
+    "cross-platform-component-and-host-sdk",
+    "strict-package-reopen",
+    "surface-scope-review",
+    "admission-review"
+  ],
+  "pending_gates": [],
+  "admitted": true,
+  "admission": {
+    "date": "2026-09-25",
+    "package": "libs/wasmc-system-telemetry",
+    "source_authority": "c11ccf013cb23a7659cf5ae7a1ba916a60770dda",
+    "scope": "Component/Rust plus public Host SDK; Linux real acquisition"
+  },
+  "supported_surfaces": [
+    "source-free-rust-component",
+    "public-rust-host-sdk",
+    "linux-explicit-generic-resource-acquisition"
+  ],
+  "unsupported_surfaces": [
+    "wasmc-source-direct-resource-methods",
+    "browser",
+    "wasmi-component-execution",
+    "windows-real-system-acquisition",
+    "macos-real-system-acquisition"
+  ],
   "qualification": {"runner":"node","script":"scripts/test-telemetry-source.mjs"},
   "wire_schema": "frame-v3",
   "compatibility": {"previous_experiment_wire":"frame-v2","wire_identity_unchanged":false},
