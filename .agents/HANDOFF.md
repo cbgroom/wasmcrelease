@@ -30,6 +30,26 @@ and multi-platform CI, official Lib/discovery validation, and immutable
 dev->main->prod promotion. Until then keep `admitted=false`; do not add a prod
 Lib entry, move v0.0.12, or claim the user-requested formal release is complete.
 
+### Candidate publication checkpoint
+
+Producer source authority is `c11ccf013cb23a7659cf5ae7a1ba916a60770dda`.
+`admission/system-telemetry-v1` retains the complete candidate and local
+qualification receipt. Core: 41,850 bytes, digest
+`581d6d58c83db4484cb80b5a8492e62125e70600e57b2e26651717dfdd6cdaa1`.
+Component: 44,838 bytes, digest
+`1bdbb092414e9e12e0e86a1d10f24490ce10fc37c3656a2653e4e22e20d6d08e`.
+Two separate Cargo target builds produced identical bytes. The existing
+maintainer/integrity gate and candidate registry/identity checks passed locally;
+they do not admit this new Lib. Main and immutable v0.0.12 remain unchanged.
+
+GitHub integration `create_pull_request` returned 403 Resource not accessible
+by integration; no PR was created. The candidate branch is writable via the
+authorized Git remote. The same read-only qualification workflow is enabled on
+this exact candidate branch's pushes, without changing any test or prod gate.
+Check its actual results; configured CI is not a PASS. The public compiler does
+expose `wasmc_compile_lib` and `wasmc_plan_alloc`; this is a possible existing
+integration entry, not proof this new sampler world already compiles/executes.
+
 ## 2026-09-20 Data Foundation v1 admission and release
 
 Release state: prod promotion prepared from accepted exact-tag receipts.
