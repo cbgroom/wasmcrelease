@@ -1,0 +1,20 @@
+[package]
+name = "wasmc-telemetry-source-free-consumer"
+version = "0.0.1"
+edition = "2021"
+publish = false
+
+[[bin]]
+name = "telemetry-consumer"
+path = "../component_consumer.rs"
+
+[dependencies]
+wasmtime = { version = "=49.0.0", default-features = false, features = ["std", "runtime", "cranelift", "component-model"] }
+
+[workspace]
+
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"

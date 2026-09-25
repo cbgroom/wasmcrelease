@@ -1,0 +1,17 @@
+{
+  "schema": "wasmc.libsrc-candidate/v1",
+  "id": "wasmc-system-telemetry",
+  "version": "0.0.1-dev.1",
+  "wit": "wit/world.wit",
+  "source": ["Cargo.toml", "Cargo.lock", "src/lib.rs", "src/component.rs"],
+  "host_import_budget": 0,
+  "canonical_resource_intrinsics_are_not_host_authority": true,
+  "origin": {"kind":"native-public","experiment_commit":"8522ccd20498dc369c3aaf5e2bb604a55cf89c17","historical_performance_inherited":false},
+  "completed_gates": ["native-unit-local", "complete-read-local", "linux-real-acquisition-local", "rust-component-source-free-local"],
+  "pending_gates": ["wasmc-source-consumer", "generic-host-sdk-acquisition", "cross-platform-engine-matrix", "strict-production-package-and-discovery", "immutable-promotion"],
+  "admitted": false,
+  "qualification": {"runner":"node","script":"scripts/test-telemetry-source.mjs"},
+  "wire_schema": "frame-v3",
+  "compatibility": {"previous_experiment_wire":"frame-v2","wire_identity_unchanged":false},
+  "build": {"command":"cargo build --release --locked --offline --features component --target wasm32-unknown-unknown --manifest-path libsrc/wasmc-system-telemetry/Cargo.toml"}
+}

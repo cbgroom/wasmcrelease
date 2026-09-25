@@ -1,0 +1,26 @@
+[package]
+name = "wasmc-system-telemetry"
+version = "0.0.1"
+edition = "2021"
+publish = false
+license-file = "../../LICENSE"
+description = "Bounded telemetry state over caller-authorized resource snapshots"
+
+[lib]
+crate-type = ["rlib", "cdylib"]
+
+[features]
+default = []
+component = ["dep:wit-bindgen"]
+
+[dependencies]
+wit-bindgen = { version = "=0.62.0", optional = true }
+
+[workspace]
+
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = "symbols"

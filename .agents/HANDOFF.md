@@ -1,5 +1,35 @@
 # WAsmC release maintainer handoff
 
+## 2026-09-25 Telemetry release candidate — NOT prod
+
+The user requested formal monitoring Lib publication. Work is isolated on
+`work/system-telemetry-release-v1` from exact v0.0.12 source
+`735cc7fea762ba76f96d443cf64e47a31f8a1cc6`. The original monitoring experiment
+`8522ccd20498dc369c3aaf5e2bb604a55cf89c17` remains immutable history, not a
+ready-to-release Lib. No compiler, CoreLib, Host contract or prod pointer changed.
+
+The new public-source candidate is `libsrc/wasmc-system-telemetry`. It accepts
+explicit complete Linux-format snapshots and caller timestamps, with bounded
+parsing, refresh policy and transactional state. A source-free Rust Component
+caller executes the WIT resource API. The live Linux example preopens four
+read-only resources; it is not the published generic Host SDK binding.
+
+Local evidence: 27 native unit tests, 3 complete-read tests, 100 live frames
+with FD count 4->4, and 128 source-free Wasmtime49 Component rounds passed.
+The first caller build required matching panic=abort warm dependencies. This
+does not count as a clean Cargo or cross-platform qualification. Historical
+performance, zero-allocation transport and ring-loss claims are not inherited.
+
+CPU first/reset/no-progress is now absent, not measured zero; frame v3 flags
+bit0 records that distinction. Do not silently call this the old frame-v2 ABI.
+Raw Core contains Canonical resource-new/drop imports, not telemetry Host APIs.
+
+Next: finish real WAsmC resource-method consumption using the published generic
+mechanism, generic Host acquisition integration, exact source-free multi-engine
+and multi-platform CI, official Lib/discovery validation, and immutable
+dev->main->prod promotion. Until then keep `admitted=false`; do not add a prod
+Lib entry, move v0.0.12, or claim the user-requested formal release is complete.
+
 ## 2026-09-20 Data Foundation v1 admission and release
 
 Release state: prod promotion prepared from accepted exact-tag receipts.
