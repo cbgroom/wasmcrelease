@@ -1,0 +1,247 @@
+{
+  "schema": "wasmc.telemetry-host-integration-local/v1",
+  "tested_source_commit": "6415ad6f3231c6b97fe87e351d38315a1b488124",
+  "scope": "Linux x86_64 public Host SDK plus unchanged telemetry Component; not prod",
+  "source_worktree_clean_before_after": true,
+  "host_sdk_tests": {
+    "passed": 10,
+    "failed": 0,
+    "ignored": 0
+  },
+  "live": {
+    "accepted": true,
+    "profile": "linux-sdk-to-source-free-component",
+    "engine": "wasmtime-47.0.4",
+    "frames": 128,
+    "snapshots": 47,
+    "generic_read_calls": 94,
+    "refresh_counts": [
+      15,
+      15,
+      15,
+      2
+    ],
+    "fd_open": 9,
+    "fd_closed": 5,
+    "released_grants": 4,
+    "sampling_uses_shell": false,
+    "component_host_bindings": 0,
+    "release_qualified": false
+  },
+  "candidate_reopen": {
+    "accepted": true,
+    "scope": "candidate-pinned-identities-strict-reopen",
+    "release_qualified": false,
+    "negative_controls": [
+      "tamper-artifact.wasm",
+      "tamper-component.wasm",
+      "tamper-lib.wit",
+      "tamper-SKILL.md",
+      "tamper-references-agent-delta.json",
+      "self-rehashed-artifact",
+      "path-escape",
+      "unexpected-file",
+      "unexpected-reference",
+      "missing-file",
+      "directory-as-artifact",
+      "linked-references"
+    ],
+    "negative_count": 12
+  },
+  "toolchain": {
+    "rustc": "rustc 1.97.1 (8bab26f4f 2026-07-14)",
+    "wasmtime": "47.0.4",
+    "host_sdk": "wasmc-host 0.1.0"
+  },
+  "consumer_inputs": [
+    {
+      "path": "examples/system-telemetry/host-consumer/Cargo.lock",
+      "bytes": 32206,
+      "sha256": "d2eff6b5f4372aa958e0f962271432163a2a39d6f08926dee0657d18d090d312"
+    },
+    {
+      "path": "examples/system-telemetry/host-consumer/Cargo.toml",
+      "bytes": 522,
+      "sha256": "748b432c191b7abace836388c7f6febb343319f2c9c919ebe30f4741fbcd9fd1"
+    },
+    {
+      "path": "examples/system-telemetry/host_consumer.rs",
+      "bytes": 11732,
+      "sha256": "dccdc02c35ac71a69b4cc7de96014c30b1198c960edd60085ce7466e9d328288"
+    },
+    {
+      "path": "examples/system-telemetry/resource_snapshot.rs",
+      "bytes": 6557,
+      "sha256": "569076623b40c19be100e1db64281fa10d2b228219d8942172ed324441c588a7"
+    },
+    {
+      "path": "host/drivers/file/rust/Cargo.lock",
+      "bytes": 2660,
+      "sha256": "4d269a5464151951feab052348ba955fb71bb78a2a6a1f789a547e75d6fa94a9"
+    },
+    {
+      "path": "host/drivers/file/rust/Cargo.toml",
+      "bytes": 175,
+      "sha256": "2717e5b1dcdd8c32d517e912c2a6c810db0642a38cdf0ca916d9228ba21e8c8e"
+    },
+    {
+      "path": "host/drivers/file/rust/src/lib.rs",
+      "bytes": 4992,
+      "sha256": "cb0e5eecf94d075e908f91966e867109e50de4152812aa5f47b06ce2803870c0"
+    },
+    {
+      "path": "host/drivers/file/rust/src/main.rs",
+      "bytes": 1854,
+      "sha256": "b145399cb483fedb73e049213cdba9f9de92f9f24e6a761cd8381b266177f695"
+    },
+    {
+      "path": "host/drivers/memory/rust/Cargo.lock",
+      "bytes": 174,
+      "sha256": "a6c63a3f736fcf587ba33c84b1bda0bfffd5447247ebff9a343219b3eb249afd"
+    },
+    {
+      "path": "host/drivers/memory/rust/Cargo.toml",
+      "bytes": 144,
+      "sha256": "d3e0215f94740354e47d600d0236c1e48e8a51a4c28d91e23c56f918f29c0839"
+    },
+    {
+      "path": "host/drivers/memory/rust/src/lib.rs",
+      "bytes": 2897,
+      "sha256": "c528640c19f6a082ce635d70c6825101d653756d8a8033730dc09b72123d53ef"
+    },
+    {
+      "path": "host/drivers/memory/rust/src/main.rs",
+      "bytes": 772,
+      "sha256": "1cbdc6cf26ef8558a82e17a24971845c48beba7709c6578b6b1df6a02be5f25a"
+    },
+    {
+      "path": "scripts/test-telemetry-host.sh",
+      "bytes": 1884,
+      "sha256": "f9d322f9c0d33c2b6af5e2ffc74f83f9c9d4d64793199417e98de63cd238d3e0"
+    },
+    {
+      "path": "scripts/test-telemetry-package.mjs",
+      "bytes": 2535,
+      "sha256": "e2e685307ac0a53480e0b3a5875a0c7da1c59e4b5e218b6d45b953a13842bed3"
+    },
+    {
+      "path": "scripts/verify-telemetry-candidate.mjs",
+      "bytes": 3369,
+      "sha256": "273addec7facbd866b935c903bea75ba730deedf8cdfaf1aea92cdfa1a23eb5d"
+    },
+    {
+      "path": "sdk/wasmc-core-runtime/Cargo.toml",
+      "bytes": 823,
+      "sha256": "5011550593b94e50fece5c05e7b6b8cc53815f7e950c13f5d9ba34a9d56ba136"
+    },
+    {
+      "path": "sdk/wasmc-core-runtime/README.md",
+      "bytes": 4413,
+      "sha256": "352093bcfa62f7d258ed1330e5a8c342ea07fff3a0d5d4e73d56924ad134a073"
+    },
+    {
+      "path": "sdk/wasmc-core-runtime/SKILL.md",
+      "bytes": 2150,
+      "sha256": "939d9f6c48ead9fb748168b6f40a766fdd40c24d9de4e8224336e9c8bb523243"
+    },
+    {
+      "path": "sdk/wasmc-core-runtime/src/host_import.rs",
+      "bytes": 15611,
+      "sha256": "6a852a20fa292af76b5dadf9e93fe6f77585d3f6e67a795f7d78777ed0c8e3bc"
+    },
+    {
+      "path": "sdk/wasmc-core-runtime/src/host_lane.rs",
+      "bytes": 25370,
+      "sha256": "405840272c9b963ccfbbfe760baa1ad9876c077297e2792c76454766e2c827d1"
+    },
+    {
+      "path": "sdk/wasmc-core-runtime/src/lib.rs",
+      "bytes": 3073,
+      "sha256": "51e5c87968bfe002b589324f7d810bfad9206fa1368de9c39e366a894acfca1e"
+    },
+    {
+      "path": "sdk/wasmc-core-runtime/src/limits.rs",
+      "bytes": 9611,
+      "sha256": "10dae05773cd74aa0e3c57281538cf520201abf2976d2b0d8228c76410d82392"
+    },
+    {
+      "path": "sdk/wasmc-core-runtime/src/module_inspection.rs",
+      "bytes": 3523,
+      "sha256": "06a8c277e9289e674670132524946e370c92ac64ff557bad6018cdf7e20314bf"
+    },
+    {
+      "path": "sdk/wasmc-core-runtime/src/promotion.rs",
+      "bytes": 46787,
+      "sha256": "09f337766fc6d3ffec7b5477c20b80f55cbb3cbb762558c40e758ac53331b941"
+    },
+    {
+      "path": "sdk/wasmc-core-runtime/src/scalar_host_lane.rs",
+      "bytes": 34744,
+      "sha256": "9357eaabb8235d520589ccce6c8c9e45c927cfb2a02094fd0700c5952d783702"
+    },
+    {
+      "path": "sdk/wasmc-core-runtime/src/sdk.rs",
+      "bytes": 7901,
+      "sha256": "2c9dcf0285c8b79d194f47be69b771539e7fd7d517db0be5bb90fe4429f57f5f"
+    },
+    {
+      "path": "sdk/wasmc-core-runtime/src/wasmi_runtime.rs",
+      "bytes": 7431,
+      "sha256": "c9836f9eacef8fcd0eada1f195d1dcc1bc8b99fdfc200497c813f0dc2dc96da7"
+    },
+    {
+      "path": "sdk/wasmc-core-runtime/src/wasmtime_speed_runtime.rs",
+      "bytes": 7158,
+      "sha256": "66c17d007503d96612798e6e2f027bf1e84414da543df73afcb71978d8b15fd2"
+    },
+    {
+      "path": "sdk/wasmc-core-runtime/tests/runtime_sdk.rs",
+      "bytes": 32022,
+      "sha256": "f9a9e9c1f38f0d77ec7e63eaecbfe189f52ed9143a9e53c0c7402214e357848a"
+    },
+    {
+      "path": "sdk/wasmc-host/Cargo.lock",
+      "bytes": 29462,
+      "sha256": "496844bbf86befd0df516363b73a20121315d4a0a5c769be1b7b2150b742a38f"
+    },
+    {
+      "path": "sdk/wasmc-host/Cargo.toml",
+      "bytes": 580,
+      "sha256": "15d9a37ce23a7ac280e32fb7bc374419088093cdea934c938afa5c1f1d623643"
+    },
+    {
+      "path": "sdk/wasmc-host/README.md",
+      "bytes": 3669,
+      "sha256": "97181d65bc7313e6c12fb9e84585610c6f56169bfdac378aaac10b1f7b6c88e1"
+    },
+    {
+      "path": "sdk/wasmc-host/SKILL.md",
+      "bytes": 2314,
+      "sha256": "beaf03c82db0bce7a2f8990c11557dba0e9cc74d669deb306969613395d02a2e"
+    },
+    {
+      "path": "sdk/wasmc-host/examples/native.rs",
+      "bytes": 874,
+      "sha256": "272d59239c78effcfc545859d9e156b59abdb03b7ab7705fedb1aa4a8a69a4cc"
+    },
+    {
+      "path": "sdk/wasmc-host/src/lib.rs",
+      "bytes": 22988,
+      "sha256": "5b136d1e15b7fd78ea35da782b87168b87fe6a680a24404c976b40cdd9fce89b"
+    }
+  ],
+  "artifacts": {
+    "artifact.wasm": "581d6d58c83db4484cb80b5a8492e62125e70600e57b2e26651717dfdd6cdaa1",
+    "component.wasm": "1bdbb092414e9e12e0e86a1d10f24490ce10fc37c3656a2653e4e22e20d6d08e",
+    "lib.wit": "c69ccee42113324a2875c352373ddaacb085363480a5f01f32ff919215fd9fe3",
+    "lib.json": "a9e7a226388b122fe35b0ea5b37250f3ffee2e4a3b34d1d9ef116745c76430e4"
+  },
+  "test_log_sha256": "d5ed1f24c09fae50dc63b1c854bddd5a8fbc49217bc67cc2b8f49f3ca36ad686",
+  "release_qualified": false,
+  "pending": [
+    "wasmc-resource-methods-mixed-adapter",
+    "new-source-cross-platform-ci",
+    "production-discovery-and-admission",
+    "immutable-promotion"
+  ]
+}

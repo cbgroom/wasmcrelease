@@ -2,6 +2,19 @@
 
 ## 2026-09-25 Host SDK integration and candidate reopen hardening
 
+Exact local source qualification is now complete for
+`6415ad6f3231c6b97fe87e351d38315a1b488124`, with clean source before and after
+the isolated consumer rerun. See
+`admission/system-telemetry-v1/host-integration-local.json` and its retained
+`host-integration-local.log`. Ten tests pass (zero failed/ignored); the live
+128-frame run made 47 snapshot reads through 94 generic read calls, and four
+explicit file grants closed (FD9->5). Twelve actual candidate reopen rejection
+tests also passed. All consumer/SDK/driver input digests and unchanged monitor
+artifact digests are recorded. This metadata checkpoint does not change the
+tested executable sources or the candidate products. The extended six-cell
+workflow still needs its own exact-commit results; do not reuse the older
+three-cell PASS as qualification for this new consumer.
+
 The exact prior candidate `8d605fab00dbc243db5d97f7aaf6aabf4ecfab9a`
 completed Actions run 36147323962: all three Wasmtime49 source-free Component
 jobs passed (Ubuntu, Windows, macOS). Linux additionally passed real proc
