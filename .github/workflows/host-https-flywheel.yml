@@ -84,7 +84,7 @@ jobs:
           WASMC_HOST_AFFINITY_PAIRS: "6"
           WASMC_HOST_AFFINITY_ITERATIONS: "2000"
         run: node scripts/host-transport-affinity-ab.mjs "host/tests/https/target/release/wasmc-host-concurrency-shared" "${{ matrix.platform }}" "${{ matrix.platform }}-shard-sweep.json" "${{ matrix.platform }}-affinity.json"
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: host-https-${{ matrix.platform }}
           path: |
@@ -118,7 +118,7 @@ jobs:
       - name: Aggregate six-platform paired HTTPS A/B evidence
         shell: bash
         run: node scripts/aggregate-host-https-ab.mjs host-https-results host-https-site previous-host-https-history.json 5
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: host-https-performance-report
           path: host-https-site/

@@ -75,7 +75,7 @@ jobs:
           WASMC_OHA: ${{ github.workspace }}/target/oha-tool/bin/oha${{ runner.os == 'Windows' && '.exe' || '' }}
           WASMC_PLATFORM_ID: ${{ matrix.platform }}
         run: node scripts/host-https-external-load.mjs "${{ matrix.platform }}.json"
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: host-external-load-${{ matrix.platform }}
           path: ${{ matrix.platform }}.json
@@ -106,7 +106,7 @@ jobs:
       - name: Aggregate required-platform baseline
         shell: bash
         run: node scripts/aggregate-host-external-load.mjs host-external-load-results host-external-load-site previous-host-external-load-history.json
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: host-external-load-report
           path: host-external-load-site/
