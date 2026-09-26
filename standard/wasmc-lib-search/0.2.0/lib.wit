@@ -1,0 +1,19 @@
+package wasmc:lib-search@0.2.0;
+
+// Candidate v0.2.0: complete release-Lib discovery; publication requires normal release admission.
+interface catalog {
+  enum search-error { invalid-query, invalid-limit }
+  record snapshot-info { format-version: u32, entry-count: u32, index-sha256: string }
+  record query { text: string, include-historical: bool }
+  record hit {
+    identity: string,
+    signature: string,
+    skill-path: string,
+    wit-path: string,
+    artifact-path: string,
+  }
+  snapshot: func() -> snapshot-info;
+  search: func(query: query, offset: u32, limit: u32) -> result<list<hit>, search-error>;
+  lookup: func(identity: string) -> option<hit>;
+}
+world search-index { export catalog; }
