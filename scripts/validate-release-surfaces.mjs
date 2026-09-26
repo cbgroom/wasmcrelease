@@ -11,6 +11,7 @@ assert.equal(model.schema,'wasmc.release-surfaces/v1');
 
 const projection=model.agent_capability_projection;
 const producerDelta=model.producer_capability_delta;
+const ecosystem=model.lib_ecosystem_control_plane;
 const learning=model.agent_learning_protocol;
 const taskRoutes=model.agent_task_routes;
 const quickstart=model.agent_learning_quickstart;
@@ -66,6 +67,16 @@ assert.equal(producerDelta?.release?.v0_0_13_u64_ordinary_source,'unsupported');
 assert.match(producerDelta?.answer_rule??'',/producer master yes, immutable v0\.0\.13 release no/);
 assert.match(producerDelta?.adjacent_type_decisions?.u32??'',/already released/);
 assert.match(producerDelta?.adjacent_type_decisions?.char??'',/not implemented/);
+assert.equal(ecosystem?.schema,'wasmc.lib-ecosystem-control-plane/v1');
+assert.equal(ecosystem?.path,'lib-ecosystem-control-plane.json');
+assert(existsSync(resolve(root,ecosystem.path)),'Lib ecosystem control plane is missing');
+const ecosystemModel=JSON.parse(read(ecosystem.path));
+assert.equal(ecosystemModel.schema,ecosystem.schema);
+assert.equal(ecosystemModel.inventory.packages,13);
+assert.equal(ecosystemModel.inventory.released,13);
+assert.equal(ecosystemModel.inventory.discoverable,5);
+assert.equal(ecosystemModel.inventory.installable,4);
+assert.equal(ecosystemModel.inventory.inventory_is_unified,false);
 
 const expectedPlatforms=[
   ['linux-x86_64','ubuntu-24.04',true,'required'],
@@ -169,6 +180,7 @@ console.log(JSON.stringify({
   schema:model.schema,
   agent_capability_projection:projection.schema,
   producer_capability_delta:producerDelta.schema,
+  lib_ecosystem_control_plane:ecosystem.schema,
   consumer_surfaces:consumerIds.length,
   extension_surfaces:extensionIds.length,
   desktop_platforms:expectedPlatforms.length,

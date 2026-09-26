@@ -1,0 +1,1230 @@
+{
+  "schema": "wasmc.lib-ecosystem-control-plane/v1",
+  "authority": {
+    "immutable_product": "release.json -> channels/candidates/0.0.13.json",
+    "capability_projection": "release-surfaces.json#agent_capability_projection",
+    "producer_deltas": "release-surfaces.json#producer_capability_delta",
+    "discovery_snapshot": "standard/wasmc-lib-search/0.1.0 + examples/lib-search/index.lsi",
+    "resolver_install_catalog": "catalog/libs-v009.json",
+    "rule": "Package existence, qualification, admission, release, discovery, installation, engine compatibility and Host authority are independent claims."
+  },
+  "release": {
+    "version": "0.0.13",
+    "tag": "v0.0.13",
+    "source_commit": "e69abb73f667f3810b0c40937fd1a1e2d04d4255",
+    "staged_product_manifest": "channels/candidates/0.0.13.json",
+    "product_set_sha256": "e2a1bb7e3bf30092ddda1313a9c20dd37a36e820b076bd64e0ac6ecec6ec36d0"
+  },
+  "inventory": {
+    "packages": 13,
+    "qualified": 13,
+    "admitted": 13,
+    "released": 13,
+    "discoverable": 5,
+    "installable": 4,
+    "search_entries": 89,
+    "search_index_sha256": "c1ccd8f5086b3d3ae0643383f2d3e3e682358b4ccc4a99042233bd35fa73b534",
+    "install_catalog_release": "v0.0.9",
+    "install_catalog_packages": 4,
+    "inventory_is_unified": false
+  },
+  "type_position_authority": {
+    "schema": "wasmc.release-agent-capabilities/v1",
+    "product_release": "v0.0.13",
+    "guidance_scope": {
+      "status": "main-side-remediation",
+      "included_in_immutable_tag": false,
+      "product_bytes_changed": false,
+      "rule": "This projection describes the pinned v0.0.13 product from current main guidance. It is not evidence that the immutable v0.0.13 tag contains this later guidance file; the next formal release must package an exact projection."
+    },
+    "decision_rule": "A type or feature is usable only at the exact admitted position below. WIT vocabulary, local values, Core lanes, Component profiles, Host bindings and public results are separate claims.",
+    "alternative_rule": "Alternatives must preserve semantics. Numeric width or signedness, async behavior, identity, ordering, ownership and failure semantics may change only with explicit application proof; otherwise stop.",
+    "function_shape": {
+      "parameters": "zero or more heterogeneous typed parameters",
+      "result": "exactly one semantic value",
+      "multiple_logical_values": "one tuple<...> or named record",
+      "embedding_warning": "tuple and record may both flatten to multiple Core lanes; neither creates automatic JavaScript object lifting",
+      "canonical_example": "agent-quickstart.json#routes/ordinary-source-positive"
+    },
+    "type_decisions": {
+      "ordinary_source_scalars": {
+        "status": "released",
+        "spellings": [
+          "s8",
+          "u8",
+          "s16",
+          "u16",
+          "s32",
+          "u32",
+          "i64",
+          "f32",
+          "f64",
+          "bool"
+        ]
+      },
+      "u64_ordinary_source": {
+        "status": "unsupported",
+        "positions": [
+          "local",
+          "parameter",
+          "result",
+          "nested-source-payload"
+        ],
+        "stop": "WIT u64 or a physical i64 Core lane does not admit ordinary-source u64.",
+        "alternative": "Use an exact qualified adapter that admits u64. Use u32 or i64 only after application-owned bounds and signedness prove equivalence; otherwise stop."
+      },
+      "tuple_record": {
+        "status": "released-core-lane-source",
+        "positions": [
+          "ordinary-source",
+          "parameter",
+          "one-semantic-result"
+        ],
+        "limits": [
+          "no tuple or record destructuring",
+          "no automatic JavaScript object lifting",
+          "Component use requires its exact released profile"
+        ]
+      },
+      "option_result_variant_enum": {
+        "status": "released-core-lane-source",
+        "positions": [
+          "ordinary-source",
+          "parameter",
+          "one-semantic-result"
+        ],
+        "limits": [
+          "nested payload and Component support are profile-specific",
+          "match must use the documented exhaustive forms"
+        ]
+      },
+      "string_list_record_managed": {
+        "status": "released-through-matching-lib",
+        "positions": [
+          "compatible-App-Lib-Core-domain"
+        ],
+        "limits": [
+          "managed values do not cross the v0 high-level Host function boundary",
+          "public Component projection requires an exact released package/profile"
+        ]
+      },
+      "map": {
+        "status": "released-resident-local-through-matching-lib",
+        "positions": [
+          "compatible-App-Lib-Core-domain"
+        ],
+        "unsupported_positions": [
+          "direct-public-WIT-value-parameter",
+          "direct-public-WIT-value-result",
+          "v0-high-level-Host-function"
+        ],
+        "alternative": "Use an explicitly ordered list<Entry<K,V>> snapshot for copied public values or a declared resource for identity and mutation; never expose a private handle."
+      },
+      "host_import": {
+        "status": "released-bounded",
+        "positions": [
+          "explicit-synchronous-scalar-functions"
+        ],
+        "wit_scalars": [
+          "bool",
+          "s32",
+          "u32",
+          "s64",
+          "float32",
+          "float64"
+        ],
+        "unsupported": [
+          "managed-values",
+          "managed-references",
+          "async",
+          "ambient-authority"
+        ]
+      },
+      "rich_resource_method_result": {
+        "status": "package-profile-specific",
+        "stop": "Do not infer a generic direct WAsmC source binding from a released Component or Host SDK route.",
+        "known_negative": "package_profiles/wasmc-system-telemetry@0.0.1 excludes wasmc-source-direct-resource-methods"
+      }
+    },
+    "feature_decisions": {
+      "async_ordinary_source_or_lib": "unsupported",
+      "open_generics_traits_lifetimes_macros_cargo": "unsupported",
+      "for_range_iterators": "unsupported; use while",
+      "implicit_numeric_widening": "unsupported; only documented explicit casts",
+      "ambient_authority": "unsupported; declare and explicitly bind exact Host imports",
+      "raw_memory_handles_lifecycle": "unsupported; use typed values or declared resources",
+      "automatic_retry_after_effect": "unsupported",
+      "shared_instance_parallel_entry": "unsupported; use independently owned instances or an exact released concurrency profile"
+    },
+    "next_release_requirement": "Package this projection or a schema-compatible generated successor inside the immutable release and validate it against the shipped compiler, Lib, SDK and package profiles."
+  },
+  "producer_deltas": [
+    {
+      "schema": "wasmc.producer-release-delta/v1",
+      "producer": {
+        "repository": "yxsicd/wasmc",
+        "branch": "master",
+        "commit": "94328ed760f93bf24b595a71facdcc773d43b762",
+        "status": "verified-master-implementation",
+        "capability": "ordinary-source-u64",
+        "semantics": [
+          "full 0..=u64::MAX source range",
+          "unsigned comparison, division, remainder and right shift",
+          "WIT u64 identity",
+          "Host and Component full-width bit preservation",
+          "Core i64 physical lane with semantic signedness retained by the contract"
+        ],
+        "validation": {
+          "strict_mst": true,
+          "u64_semantic_tests": "5/5",
+          "component_full_range_round_trip": true,
+          "capability_matrix": "9 type rows and 8 feature limits",
+          "check_fast": true,
+          "remote_master_readback": "0/0"
+        }
+      },
+      "release": {
+        "current_immutable_product": "v0.0.13",
+        "states": {
+          "qualified": false,
+          "admitted": false,
+          "released": false,
+          "discoverable": false,
+          "installable": false
+        },
+        "reason": "No new source-free compiler artifact, candidate identity, admission receipt or immutable release contains the producer change.",
+        "v0_0_13_u64_ordinary_source": "unsupported"
+      },
+      "adjacent_type_decisions": {
+        "u32": "already released in v0.0.13; no repair was required",
+        "char": "not implemented on the cited producer commit and not released; do not substitute arbitrary u32"
+      },
+      "answer_rule": "When asked whether u64 is fixed or supported, lead with both authorities in one sentence: producer master yes, immutable v0.0.13 release no. Producer master support and immutable release support are different answers; do not collapse them."
+    }
+  ],
+  "packages": [
+    {
+      "id": "wasmc-csv",
+      "version": "0.0.1",
+      "identity": "wasmc:csv@0.0.1",
+      "root": "libs/wasmc-csv",
+      "metadata": {
+        "path": "libs/wasmc-csv/lib.json",
+        "sha256": "7ec9221c8499f13a6237e36f924020f7102118bbfdbb0e01550f75a1ba432f74",
+        "schema": "wasmc.lib/v0"
+      },
+      "wit": {
+        "package": "wasmc:csv@0.0.1",
+        "path": "lib.wit",
+        "sha256": "4de9ac3d48a6546de4c96b12034c739412c981e4af933a27fff9ba3ef247ddb1",
+        "world": "csv"
+      },
+      "artifact": {
+        "bytes": 444558,
+        "format": "core-wasm",
+        "path": "artifact.wasm",
+        "sha256": "517d3be7e9e50f44dedbfc5898a945933903d79ef8fdabef2b1b0195a510f0f6"
+      },
+      "component": {
+        "bytes": 445951,
+        "format": "component-wasm",
+        "path": "component.wasm",
+        "sha256": "1bb31b561a4cd58898f1043bb1bd4e0fee833d25b1c67315041a83be497d5790"
+      },
+      "core_imports": [],
+      "host_authorities": [],
+      "canonical_resource_intrinsics": [],
+      "engine_profile": {
+        "authority": "scripts/test-libsrc-wasmi.mjs",
+        "validation_profile": "package-qualification-defined",
+        "tested_local_engines": [],
+        "minimum_version_claimed": false,
+        "stop": null
+      },
+      "supported_surfaces": null,
+      "unsupported_surfaces": null,
+      "states": {
+        "qualified": true,
+        "admitted": true,
+        "released": true,
+        "discoverable": false,
+        "installable": false
+      },
+      "state_evidence": {
+        "qualification": "libs/wasmc-csv/lib.json#admission",
+        "admission": "libs/wasmc-csv/lib.json#admission",
+        "release": "release.json -> channels/candidates/0.0.13.json",
+        "discovery": null,
+        "installation": null
+      },
+      "stopping_conditions": [
+        "absent-from-pinned-search-snapshot",
+        "absent-from-pinned-resolver-install-catalog"
+      ]
+    },
+    {
+      "id": "wasmc-data-compute",
+      "version": "0.0.1",
+      "identity": "wasmc:data-compute@0.0.1",
+      "root": "libs/wasmc-data-compute",
+      "metadata": {
+        "path": "libs/wasmc-data-compute/lib.json",
+        "sha256": "a5c1a98d871acd57e904c99dadda20481e360a984ea58bfe8fb8300023fc7674",
+        "schema": "wasmc.lib/v0"
+      },
+      "wit": {
+        "package": "wasmc:data-compute@0.0.1",
+        "path": "lib.wit",
+        "sha256": "c9387078dd747332696ec40f97f65443ed685231b8d2266204568b4351b792d6",
+        "world": "data-compute"
+      },
+      "artifact": {
+        "bytes": 1495779,
+        "format": "core-wasm",
+        "path": "artifact.wasm",
+        "sha256": "af47022f7e45543ff7c0e717ac5989dd8dc15a08ba52af76595ba20996cff7e5"
+      },
+      "component": {
+        "bytes": 1497950,
+        "format": "component-wasm",
+        "path": "component.wasm",
+        "sha256": "791673fdd373ca954f69dae80b4927cd78bcdc44040b1951862cba59014b5ab3"
+      },
+      "core_imports": [],
+      "host_authorities": [],
+      "canonical_resource_intrinsics": [],
+      "engine_profile": {
+        "authority": "scripts/test-libsrc-wasmi.mjs",
+        "validation_profile": "package-qualification-defined",
+        "tested_local_engines": [],
+        "minimum_version_claimed": false,
+        "stop": null
+      },
+      "supported_surfaces": null,
+      "unsupported_surfaces": null,
+      "states": {
+        "qualified": true,
+        "admitted": true,
+        "released": true,
+        "discoverable": false,
+        "installable": false
+      },
+      "state_evidence": {
+        "qualification": "libs/wasmc-data-compute/lib.json#admission",
+        "admission": "libs/wasmc-data-compute/lib.json#admission",
+        "release": "release.json -> channels/candidates/0.0.13.json",
+        "discovery": null,
+        "installation": null
+      },
+      "stopping_conditions": [
+        "absent-from-pinned-search-snapshot",
+        "absent-from-pinned-resolver-install-catalog"
+      ]
+    },
+    {
+      "id": "wasmc-data-core",
+      "version": "0.0.1",
+      "identity": "wasmc:data-core@0.0.1",
+      "root": "libs/wasmc-data-core",
+      "metadata": {
+        "path": "libs/wasmc-data-core/lib.json",
+        "sha256": "e20daaef93c0a4ab490225b21474e5b633952b27dce88f671c90a6e7d6c0f386",
+        "schema": "wasmc.lib/v0"
+      },
+      "wit": {
+        "package": "wasmc:data-core@0.0.1",
+        "path": "lib.wit",
+        "sha256": "29c4e4b90690cfa6b1912859008bca535bf04802c68e887f2e29fae51fd5d8d2",
+        "world": "data-core"
+      },
+      "artifact": {
+        "bytes": 869000,
+        "format": "core-wasm",
+        "path": "artifact.wasm",
+        "sha256": "3d622654abca4d0a71be9fa92da17a15a8d11b548677464f1f65ee3ee47b96f3"
+      },
+      "component": {
+        "bytes": 871165,
+        "format": "component-wasm",
+        "path": "component.wasm",
+        "sha256": "b7a73a2ece5d46e0babfed42fedc32d256cc48779e265dcc4ef7a9353493f745"
+      },
+      "core_imports": [],
+      "host_authorities": [],
+      "canonical_resource_intrinsics": [],
+      "engine_profile": {
+        "authority": "scripts/test-libsrc-wasmi.mjs",
+        "validation_profile": "package-qualification-defined",
+        "tested_local_engines": [],
+        "minimum_version_claimed": false,
+        "stop": null
+      },
+      "supported_surfaces": null,
+      "unsupported_surfaces": null,
+      "states": {
+        "qualified": true,
+        "admitted": true,
+        "released": true,
+        "discoverable": false,
+        "installable": false
+      },
+      "state_evidence": {
+        "qualification": "libs/wasmc-data-core/lib.json#admission",
+        "admission": "libs/wasmc-data-core/lib.json#admission",
+        "release": "release.json -> channels/candidates/0.0.13.json",
+        "discovery": null,
+        "installation": null
+      },
+      "stopping_conditions": [
+        "absent-from-pinned-search-snapshot",
+        "absent-from-pinned-resolver-install-catalog"
+      ]
+    },
+    {
+      "id": "wasmc-data-expr",
+      "version": "0.0.1",
+      "identity": "wasmc:data-expr@0.0.1",
+      "root": "libs/wasmc-data-expr",
+      "metadata": {
+        "path": "libs/wasmc-data-expr/lib.json",
+        "sha256": "e232ddcdb7d8c2a30afc70873b06137f7ad412bbf0bc4467af3a6f121e7ef80b",
+        "schema": "wasmc.lib/v0"
+      },
+      "wit": {
+        "package": "wasmc:data-expr@0.0.1",
+        "path": "lib.wit",
+        "sha256": "16ae4a530a8472dc4f4fd847de98f226cb47f82cab95a00a36da485ac4436be3",
+        "world": "data-expr"
+      },
+      "artifact": {
+        "bytes": 1481802,
+        "format": "core-wasm",
+        "path": "artifact.wasm",
+        "sha256": "fc3148f21352f63bc8a2c3d40ad5e4b4396e10757bf8e34b28eeb24426eae44e"
+      },
+      "component": {
+        "bytes": 1484336,
+        "format": "component-wasm",
+        "path": "component.wasm",
+        "sha256": "0c7f49eba2f0d68365ae82f7c0998545fb279354f025e73a01f7425aced2324f"
+      },
+      "core_imports": [],
+      "host_authorities": [],
+      "canonical_resource_intrinsics": [],
+      "engine_profile": {
+        "authority": "scripts/test-libsrc-wasmi.mjs",
+        "validation_profile": "package-qualification-defined",
+        "tested_local_engines": [],
+        "minimum_version_claimed": false,
+        "stop": null
+      },
+      "supported_surfaces": null,
+      "unsupported_surfaces": null,
+      "states": {
+        "qualified": true,
+        "admitted": true,
+        "released": true,
+        "discoverable": false,
+        "installable": false
+      },
+      "state_evidence": {
+        "qualification": "libs/wasmc-data-expr/lib.json#admission",
+        "admission": "libs/wasmc-data-expr/lib.json#admission",
+        "release": "release.json -> channels/candidates/0.0.13.json",
+        "discovery": null,
+        "installation": null
+      },
+      "stopping_conditions": [
+        "absent-from-pinned-search-snapshot",
+        "absent-from-pinned-resolver-install-catalog"
+      ]
+    },
+    {
+      "id": "wasmc-data-interchange",
+      "version": "0.0.1",
+      "identity": "wasmc:data-interchange@0.0.1",
+      "root": "libs/wasmc-data-interchange",
+      "metadata": {
+        "path": "libs/wasmc-data-interchange/lib.json",
+        "sha256": "b7e9fea16ed90eb5a482fee168cde800d3636ccc9a950a249755a0d36cc3a879",
+        "schema": "wasmc.lib/v0"
+      },
+      "wit": {
+        "package": "wasmc:data-interchange@0.0.1",
+        "path": "lib.wit",
+        "sha256": "ea01ce12b3021d796033c39ce49a3f4061ec1f0d4bd6588d5a2b69413373c2ba",
+        "world": "data-interchange"
+      },
+      "artifact": {
+        "bytes": 2987120,
+        "format": "core-wasm",
+        "path": "artifact.wasm",
+        "sha256": "144ba934011bd2b6cb3ebc5d3890f4ff69f8502881b2d44a8078128bcda80dff"
+      },
+      "component": {
+        "bytes": 2990150,
+        "format": "component-wasm",
+        "path": "component.wasm",
+        "sha256": "e32c2b1563c0a24b5dd6b65068b7823d31ad622a077460bf8e8d3d34c0d25e1b"
+      },
+      "core_imports": [],
+      "host_authorities": [],
+      "canonical_resource_intrinsics": [],
+      "engine_profile": {
+        "authority": "scripts/test-libsrc-wasmi.mjs",
+        "validation_profile": "package-qualification-defined",
+        "tested_local_engines": [],
+        "minimum_version_claimed": false,
+        "stop": null
+      },
+      "supported_surfaces": null,
+      "unsupported_surfaces": null,
+      "states": {
+        "qualified": true,
+        "admitted": true,
+        "released": true,
+        "discoverable": false,
+        "installable": false
+      },
+      "state_evidence": {
+        "qualification": "libs/wasmc-data-interchange/lib.json#admission",
+        "admission": "libs/wasmc-data-interchange/lib.json#admission",
+        "release": "release.json -> channels/candidates/0.0.13.json",
+        "discovery": null,
+        "installation": null
+      },
+      "stopping_conditions": [
+        "absent-from-pinned-search-snapshot",
+        "absent-from-pinned-resolver-install-catalog"
+      ]
+    },
+    {
+      "id": "wasmc-data-profile",
+      "version": "0.0.1",
+      "identity": "wasmc:data-profile@0.0.1",
+      "root": "libs/wasmc-data-profile",
+      "metadata": {
+        "path": "libs/wasmc-data-profile/lib.json",
+        "sha256": "fda5c4250b94fb1c2cac768156cf4742aa49eb8894d0c243bbff51d899070e77",
+        "schema": "wasmc.lib/v0"
+      },
+      "wit": {
+        "package": "wasmc:data-profile@0.0.1",
+        "path": "lib.wit",
+        "sha256": "538e8a7415fdf4d24484cc5f4145f1a7d1d22f7bbdd103a7d7d28272b2fd68a8",
+        "world": "data-profile"
+      },
+      "artifact": {
+        "bytes": 72823,
+        "format": "core-wasm",
+        "path": "artifact.wasm",
+        "sha256": "51ee1bbce102e4a383596fdef9a773aec02697bc33d4c0468a669da2efd4b34e"
+      },
+      "component": {
+        "bytes": 75262,
+        "format": "component-wasm",
+        "path": "component.wasm",
+        "sha256": "793996fba9af880c1b53d7e9476a83639700acb68aaaba5c5dec7237bba7ea18"
+      },
+      "core_imports": [],
+      "host_authorities": [],
+      "canonical_resource_intrinsics": [],
+      "engine_profile": {
+        "authority": "scripts/test-libsrc-wasmi.mjs",
+        "validation_profile": "package-qualification-defined",
+        "tested_local_engines": [],
+        "minimum_version_claimed": false,
+        "stop": null
+      },
+      "supported_surfaces": null,
+      "unsupported_surfaces": null,
+      "states": {
+        "qualified": true,
+        "admitted": true,
+        "released": true,
+        "discoverable": false,
+        "installable": false
+      },
+      "state_evidence": {
+        "qualification": "libs/wasmc-data-profile/lib.json#admission",
+        "admission": "libs/wasmc-data-profile/lib.json#admission",
+        "release": "release.json -> channels/candidates/0.0.13.json",
+        "discovery": null,
+        "installation": null
+      },
+      "stopping_conditions": [
+        "absent-from-pinned-search-snapshot",
+        "absent-from-pinned-resolver-install-catalog"
+      ]
+    },
+    {
+      "id": "wasmc-data-relational",
+      "version": "0.0.1",
+      "identity": "wasmc:data-relational@0.0.1",
+      "root": "libs/wasmc-data-relational",
+      "metadata": {
+        "path": "libs/wasmc-data-relational/lib.json",
+        "sha256": "c9c0635a2521361fe93a92c9b400244b01a35f5df785ad5b04501c3c316b0564",
+        "schema": "wasmc.lib/v0"
+      },
+      "wit": {
+        "package": "wasmc:data-relational@0.0.1",
+        "path": "lib.wit",
+        "sha256": "91cfcf156c64f62099599b6a9f304639ba9845650363fc8bcef5d6b26cf1c8ef",
+        "world": "data-relational"
+      },
+      "artifact": {
+        "bytes": 931056,
+        "format": "core-wasm",
+        "path": "artifact.wasm",
+        "sha256": "627176699ad4b9c2dc47ca78d520fe45ef1b2603fcc87d08eef3c0b2a1bf30a9"
+      },
+      "component": {
+        "bytes": 935192,
+        "format": "component-wasm",
+        "path": "component.wasm",
+        "sha256": "8f348350402687b0deb0e76b5ee2cd209aaeec8cd5022076af4230192188d565"
+      },
+      "core_imports": [],
+      "host_authorities": [],
+      "canonical_resource_intrinsics": [],
+      "engine_profile": {
+        "authority": "scripts/test-libsrc-wasmi.mjs",
+        "validation_profile": "package-qualification-defined",
+        "tested_local_engines": [],
+        "minimum_version_claimed": false,
+        "stop": null
+      },
+      "supported_surfaces": null,
+      "unsupported_surfaces": null,
+      "states": {
+        "qualified": true,
+        "admitted": true,
+        "released": true,
+        "discoverable": false,
+        "installable": false
+      },
+      "state_evidence": {
+        "qualification": "libs/wasmc-data-relational/lib.json#admission",
+        "admission": "libs/wasmc-data-relational/lib.json#admission",
+        "release": "release.json -> channels/candidates/0.0.13.json",
+        "discovery": null,
+        "installation": null
+      },
+      "stopping_conditions": [
+        "absent-from-pinned-search-snapshot",
+        "absent-from-pinned-resolver-install-catalog"
+      ]
+    },
+    {
+      "id": "wasmc-host-clock",
+      "version": "0.0.1",
+      "identity": "wasmc:host-clock@0.0.1",
+      "root": "libs/wasmc-host-clock",
+      "metadata": {
+        "path": "libs/wasmc-host-clock/lib.json",
+        "sha256": "ba45dfbba18796417a52e0e17bc376cfaa234d7c8e8d16542b6d842076909aed",
+        "schema": "wasmc.lib/v0"
+      },
+      "wit": {
+        "package": "wasmc:host-clock@0.0.1",
+        "path": "lib.wit",
+        "sha256": "c33f2e31c57bc64fed6c56b45e1abcf9d4768b336bdafa24fa5a46dc49644bab",
+        "world": "host-clock"
+      },
+      "artifact": {
+        "bytes": 20371,
+        "format": "core-wasm",
+        "path": "artifact.wasm",
+        "sha256": "cb6be53fcf77fa28864ee77c998a6bd8c3bee1004460b1e6df1cc84fdbc4bbfd"
+      },
+      "component": {
+        "bytes": 21055,
+        "format": "component-wasm",
+        "path": "component.wasm",
+        "sha256": "d887d35a19d04f7ce6ad18c2c50f87332f43a0cb9d251b1613d40d887a06951e"
+      },
+      "core_imports": [
+        {
+          "module": "wasmc:host-clock/clock-host@0.0.1",
+          "name": "now",
+          "kind": "function"
+        }
+      ],
+      "host_authorities": [],
+      "canonical_resource_intrinsics": [],
+      "engine_profile": {
+        "authority": null,
+        "validation_profile": "not-machine-declared",
+        "tested_local_engines": [],
+        "minimum_version_claimed": false,
+        "stop": "No artifact-bound engine profile is declared; do not infer compatibility from another package."
+      },
+      "supported_surfaces": null,
+      "unsupported_surfaces": null,
+      "states": {
+        "qualified": true,
+        "admitted": true,
+        "released": true,
+        "discoverable": true,
+        "installable": true
+      },
+      "state_evidence": {
+        "qualification": "channels/candidates/0.0.13.json immutable product inclusion",
+        "admission": "channels/candidates/0.0.13.json immutable product inclusion",
+        "release": "release.json -> channels/candidates/0.0.13.json",
+        "discovery": "standard/wasmc-lib-search/0.1.0 + examples/lib-search/index.lsi",
+        "installation": "catalog/libs-v009.json"
+      },
+      "stopping_conditions": []
+    },
+    {
+      "id": "wasmc-owned-algorithms",
+      "version": "0.1.0",
+      "identity": "wasmc:owned-algorithms@0.1.0",
+      "root": "libs/wasmc-owned-algorithms",
+      "metadata": {
+        "path": "libs/wasmc-owned-algorithms/lib.json",
+        "sha256": "f4727d73f64b0775a43b86416cbfa0adf04747a529804d35b73362d094eb4082",
+        "schema": "wasmc.lib/v0"
+      },
+      "wit": {
+        "package": "wasmc:owned-algorithms@0.1.0",
+        "path": "lib.wit",
+        "sha256": "b7715f218bcaa15097ad1d217002dbffe61bc28016951c8dc41561ccc69d8f12",
+        "world": "owned-algorithms"
+      },
+      "artifact": {
+        "bytes": 25235,
+        "format": "core-wasm",
+        "path": "artifact.wasm",
+        "sha256": "44638f7cfa5a653f986e2237db4f26f1534539c8c0d0d1e7258c51a976df19e3"
+      },
+      "component": {
+        "bytes": 25583,
+        "format": "component-wasm",
+        "path": "component.wasm",
+        "sha256": "a534046129d2d41e15de98020f0387dec78ff2a68b674f8b96692ad20e4e3e10"
+      },
+      "core_imports": [],
+      "host_authorities": [],
+      "canonical_resource_intrinsics": [],
+      "engine_profile": {
+        "authority": null,
+        "validation_profile": "not-machine-declared",
+        "tested_local_engines": [],
+        "minimum_version_claimed": false,
+        "stop": "No artifact-bound engine profile is declared; do not infer compatibility from another package."
+      },
+      "supported_surfaces": null,
+      "unsupported_surfaces": null,
+      "states": {
+        "qualified": true,
+        "admitted": true,
+        "released": true,
+        "discoverable": true,
+        "installable": true
+      },
+      "state_evidence": {
+        "qualification": "channels/candidates/0.0.13.json immutable product inclusion",
+        "admission": "channels/candidates/0.0.13.json immutable product inclusion",
+        "release": "release.json -> channels/candidates/0.0.13.json",
+        "discovery": "standard/wasmc-lib-search/0.1.0 + examples/lib-search/index.lsi",
+        "installation": "catalog/libs-v009.json"
+      },
+      "stopping_conditions": []
+    },
+    {
+      "id": "wasmc-resource-counter",
+      "version": "0.0.1",
+      "identity": "wasmc:resource-counter@0.0.1",
+      "root": "libs/wasmc-resource-counter",
+      "metadata": {
+        "path": "libs/wasmc-resource-counter/lib.json",
+        "sha256": "5cece4a02e886639cf2cfbddf5e0b1eb232a1a4fb9b652d2141e6dab0fa23ebb",
+        "schema": "wasmc.lib/v0"
+      },
+      "wit": {
+        "package": "wasmc:resource-counter@0.0.1",
+        "path": "lib.wit",
+        "sha256": "b695db79f230b71155045b0b825f75939b07c82c2236ee1dba25e0cfc33dd2a1",
+        "world": "resource-counter"
+      },
+      "artifact": {
+        "bytes": 21623,
+        "format": "core-wasm",
+        "path": "artifact.wasm",
+        "sha256": "1b9796138c5f7b28830478efe733ac56e6f5cb0121b608441e1be2e0a19bf3a9"
+      },
+      "component": {
+        "bytes": 23430,
+        "format": "component-wasm",
+        "path": "component.wasm",
+        "sha256": "26413726d17b5f65378c1f9a19194d8a0c841aa06526affd908504ffeab7c19e"
+      },
+      "core_imports": [
+        {
+          "module": "[export]wasmc:resource-counter/counters@0.0.1",
+          "name": "[resource-new]counter",
+          "kind": "function"
+        },
+        {
+          "module": "[export]wasmc:resource-counter/counters@0.0.1",
+          "name": "[resource-drop]counter",
+          "kind": "function"
+        }
+      ],
+      "host_authorities": [],
+      "canonical_resource_intrinsics": [],
+      "engine_profile": {
+        "authority": null,
+        "validation_profile": "not-machine-declared",
+        "tested_local_engines": [],
+        "minimum_version_claimed": false,
+        "stop": "No artifact-bound engine profile is declared; do not infer compatibility from another package."
+      },
+      "supported_surfaces": null,
+      "unsupported_surfaces": null,
+      "states": {
+        "qualified": true,
+        "admitted": true,
+        "released": true,
+        "discoverable": true,
+        "installable": true
+      },
+      "state_evidence": {
+        "qualification": "channels/candidates/0.0.13.json immutable product inclusion",
+        "admission": "channels/candidates/0.0.13.json immutable product inclusion",
+        "release": "release.json -> channels/candidates/0.0.13.json",
+        "discovery": "standard/wasmc-lib-search/0.1.0 + examples/lib-search/index.lsi",
+        "installation": "catalog/libs-v009.json"
+      },
+      "stopping_conditions": []
+    },
+    {
+      "id": "wasmc-system-telemetry",
+      "version": "0.0.1",
+      "identity": "wasmc:system-telemetry@0.0.1",
+      "root": "libs/wasmc-system-telemetry",
+      "metadata": {
+        "path": "libs/wasmc-system-telemetry/lib.json",
+        "sha256": "6a8779fdf0e8bb74c8fbd50ea20296a738c94dbaa1b4a9f562236c5856735972",
+        "schema": "wasmc.lib/v0"
+      },
+      "wit": {
+        "package": "wasmc:system-telemetry@0.0.1",
+        "path": "lib.wit",
+        "sha256": "c69ccee42113324a2875c352373ddaacb085363480a5f01f32ff919215fd9fe3",
+        "world": "system-telemetry"
+      },
+      "artifact": {
+        "bytes": 41850,
+        "format": "core-wasm",
+        "path": "artifact.wasm",
+        "sha256": "581d6d58c83db4484cb80b5a8492e62125e70600e57b2e26651717dfdd6cdaa1"
+      },
+      "component": {
+        "bytes": 44838,
+        "format": "component-wasm",
+        "path": "component.wasm",
+        "sha256": "1bdbb092414e9e12e0e86a1d10f24490ce10fc37c3656a2653e4e22e20d6d08e"
+      },
+      "core_imports": [
+        {
+          "module": "[export]wasmc:system-telemetry/monitor@0.0.1",
+          "name": "[resource-drop]sampler",
+          "kind": "function"
+        },
+        {
+          "module": "[export]wasmc:system-telemetry/monitor@0.0.1",
+          "name": "[resource-new]sampler",
+          "kind": "function"
+        }
+      ],
+      "host_authorities": [],
+      "canonical_resource_intrinsics": [
+        {
+          "module": "[export]wasmc:system-telemetry/monitor@0.0.1",
+          "name": "[resource-drop]sampler",
+          "kind": "function"
+        },
+        {
+          "module": "[export]wasmc:system-telemetry/monitor@0.0.1",
+          "name": "[resource-new]sampler",
+          "kind": "function"
+        }
+      ],
+      "engine_profile": {
+        "authority": null,
+        "validation_profile": "not-machine-declared",
+        "tested_local_engines": [],
+        "minimum_version_claimed": false,
+        "stop": "No artifact-bound engine profile is declared; do not infer compatibility from another package."
+      },
+      "supported_surfaces": [
+        "source-free-rust-component",
+        "public-rust-host-sdk",
+        "linux-explicit-generic-resource-acquisition"
+      ],
+      "unsupported_surfaces": [
+        "wasmc-source-direct-resource-methods",
+        "browser",
+        "wasmi-component-execution",
+        "windows-real-system-acquisition",
+        "macos-real-system-acquisition"
+      ],
+      "states": {
+        "qualified": true,
+        "admitted": true,
+        "released": true,
+        "discoverable": false,
+        "installable": false
+      },
+      "state_evidence": {
+        "qualification": "libs/wasmc-system-telemetry/lib.json#admission",
+        "admission": "libs/wasmc-system-telemetry/lib.json#admission",
+        "release": "release.json -> channels/candidates/0.0.13.json",
+        "discovery": null,
+        "installation": null
+      },
+      "stopping_conditions": [
+        "absent-from-pinned-search-snapshot",
+        "absent-from-pinned-resolver-install-catalog"
+      ]
+    },
+    {
+      "id": "wasmc-lib-search",
+      "version": "0.1.0",
+      "identity": "wasmc:lib-search@0.1.0",
+      "root": "standard/wasmc-lib-search/0.1.0",
+      "metadata": {
+        "path": "standard/wasmc-lib-search/0.1.0/lib.json",
+        "sha256": "3247402f251eaa4ad0dc6b527ff904138be67c713461fc68f477d5ac87e59b99",
+        "schema": "wasmc.lib/v2"
+      },
+      "wit": {
+        "package": "wasmc:lib-search@0.1.0",
+        "path": "lib.wit",
+        "sha256": "99157bcd9680b98603cae09c5c5e587ad4a1c48768418abe48952fcac6074894",
+        "world": "search-index"
+      },
+      "artifact": {
+        "bytes": 43871,
+        "format": "core-wasm",
+        "path": "artifact.wasm",
+        "sha256": "44944d542d818b8ad8a9794a555694b8e56ed4f147d4370b1ff975e26b204c80"
+      },
+      "component": {
+        "bytes": 45637,
+        "format": "component-wasm",
+        "path": "component.wasm",
+        "sha256": "693af4baff0a16fb855271bf73b0bd7b3aeb26e9d7cf2b50ef68f6b9cb9e6de1"
+      },
+      "core_imports": [],
+      "host_authorities": [],
+      "canonical_resource_intrinsics": [],
+      "engine_profile": {
+        "authority": "compatibility/lib-search-core.json",
+        "validation_profile": "complete-module-with-function-references-and-tail-call-disabled",
+        "tested_local_engines": [
+          "Node18.19.1",
+          "Node26.5.1",
+          "Bun1.3.14",
+          "Deno2.9.4",
+          "Wasmi2.0.0",
+          "Wasmtime47.0.3 Component"
+        ],
+        "minimum_version_claimed": false
+      },
+      "supported_surfaces": null,
+      "unsupported_surfaces": null,
+      "states": {
+        "qualified": true,
+        "admitted": true,
+        "released": true,
+        "discoverable": true,
+        "installable": false
+      },
+      "state_evidence": {
+        "qualification": "channels/candidates/0.0.13.json immutable product inclusion",
+        "admission": "channels/candidates/0.0.13.json immutable product inclusion",
+        "release": "release.json -> channels/candidates/0.0.13.json",
+        "discovery": "standard/wasmc-lib-search/0.1.0 + examples/lib-search/index.lsi",
+        "installation": null
+      },
+      "stopping_conditions": [
+        "absent-from-pinned-resolver-install-catalog"
+      ]
+    },
+    {
+      "id": "wasmc-std",
+      "version": "1.4.0",
+      "identity": "wasmc:std@1.4.0",
+      "root": "standard/wasmc-std/1.4.0",
+      "metadata": {
+        "path": "standard/wasmc-std/1.4.0/lib.json",
+        "sha256": "0fe6425034fa1ffa1cdd0c8edd6d33c54b1bc2b7a7da2ca9f829dfd31687abe5",
+        "schema": "wasmc.lib/v2"
+      },
+      "wit": {
+        "package": "wasmc:std@1.4.0",
+        "path": "lib.wit",
+        "sha256": "d565f00e91c36da68da3645ec5231dd11d1b25299a3ba5cbe3adbd9f5760d91d",
+        "world": "standard-lib"
+      },
+      "artifact": {
+        "bytes": 44443,
+        "format": "core-wasm",
+        "path": "artifact.wasm",
+        "sha256": "f8a8ce447f776a47680e02e19ea3a69827edbbc46e01985803ce3d3df51178d7"
+      },
+      "component": {
+        "bytes": 139462,
+        "format": "component-wasm",
+        "path": "component.wasm",
+        "sha256": "36f27edda9dd219d7ce86b5afb9a880023fa9ad31d7b5e4f6dd6a526c63d3fa2"
+      },
+      "core_imports": [
+        {
+          "module": "wasmc:lib/wasmc.lib_managed_object_heap@4.8.0",
+          "name": "object_drop",
+          "kind": "function"
+        },
+        {
+          "module": "wasmc:lib/wasmc.lib_managed_object_heap@4.8.0",
+          "name": "borrow_drop",
+          "kind": "function"
+        },
+        {
+          "module": "wasmc:lib/wasmc.lib_managed_object_heap@4.8.0",
+          "name": "object_get_child_borrow",
+          "kind": "function"
+        },
+        {
+          "module": "wasmc:lib/wasmc.lib_managed_object_heap@4.8.0",
+          "name": "list_len",
+          "kind": "function"
+        },
+        {
+          "module": "wasmc:lib/wasmc.lib_managed_object_heap@4.8.0",
+          "name": "string_len",
+          "kind": "function"
+        },
+        {
+          "module": "wasmc:lib/wasmc.lib_managed_object_heap@4.8.0",
+          "name": "list_get_borrow",
+          "kind": "function"
+        },
+        {
+          "module": "wasmc:lib/wasmc.lib_managed_object_heap@4.8.0",
+          "name": "list_drop",
+          "kind": "function"
+        },
+        {
+          "module": "wasmc:lib/wasmc.lib_managed_object_heap@4.8.0",
+          "name": "bytes_push_u64_le",
+          "kind": "function"
+        },
+        {
+          "module": "wasmc:lib/wasmc.lib_managed_object_heap@4.8.0",
+          "name": "object_set_child_move",
+          "kind": "function"
+        },
+        {
+          "module": "wasmc:lib/wasmc.lib_managed_object_heap@4.8.0",
+          "name": "bytes_len",
+          "kind": "function"
+        },
+        {
+          "module": "wasmc:lib/wasmc.lib_managed_object_heap@4.8.0",
+          "name": "string_byte_at",
+          "kind": "function"
+        },
+        {
+          "module": "wasmc:lib/wasmc.lib_managed_object_heap@4.8.0",
+          "name": "bytes_byte_at",
+          "kind": "function"
+        },
+        {
+          "module": "wasmc:lib/wasmc.lib_managed_object_heap@4.8.0",
+          "name": "type_record_field",
+          "kind": "function"
+        },
+        {
+          "module": "wasmc:lib/wasmc.lib_managed_object_heap@4.8.0",
+          "name": "type_record_child",
+          "kind": "function"
+        },
+        {
+          "module": "wasmc:lib/wasmc.lib_managed_object_heap@4.8.0",
+          "name": "type_bytes",
+          "kind": "function"
+        },
+        {
+          "module": "wasmc:lib/wasmc.lib_managed_object_heap@4.8.0",
+          "name": "list_push_move",
+          "kind": "function"
+        },
+        {
+          "module": "wasmc:lib/wasmc.lib_managed_object_heap@4.8.0",
+          "name": "bytes_clear",
+          "kind": "function"
+        },
+        {
+          "module": "wasmc:lib/wasmc.lib_managed_object_heap@4.8.0",
+          "name": "object_set_scalar",
+          "kind": "function"
+        },
+        {
+          "module": "wasmc:lib/wasmc.lib_managed_object_heap@4.8.0",
+          "name": "type_record_finish",
+          "kind": "function"
+        },
+        {
+          "module": "wasmc:lib/wasmc.lib_managed_object_heap@4.8.0",
+          "name": "type_record_begin",
+          "kind": "function"
+        },
+        {
+          "module": "wasmc:lib/wasmc.lib_managed_object_heap@4.8.0",
+          "name": "list_new",
+          "kind": "function"
+        },
+        {
+          "module": "wasmc:lib/wasmc.lib_managed_object_heap@4.8.0",
+          "name": "object_new",
+          "kind": "function"
+        },
+        {
+          "module": "wasmc:lib/wasmc.lib_managed_object_heap@4.8.0",
+          "name": "type_string",
+          "kind": "function"
+        },
+        {
+          "module": "wasmc:lib/wasmc.lib_managed_object_heap@4.8.0",
+          "name": "object_get_scalar_bits",
+          "kind": "function"
+        },
+        {
+          "module": "wasmc:lib/wasmc.lib_managed_object_heap@4.8.0",
+          "name": "bytes_builder_finish",
+          "kind": "function"
+        },
+        {
+          "module": "wasmc:lib/wasmc.lib_managed_object_heap@4.8.0",
+          "name": "bytes_builder_new",
+          "kind": "function"
+        },
+        {
+          "module": "wasmc:lib/wasmc.lib_managed_object_heap@4.8.0",
+          "name": "string_clone",
+          "kind": "function"
+        },
+        {
+          "module": "wasmc:lib/wasmc.lib_managed_object_heap@4.8.0",
+          "name": "bytes_eq",
+          "kind": "function"
+        },
+        {
+          "module": "wasmc:lib/wasmc.lib_managed_object_heap@4.8.0",
+          "name": "list_get_mut_borrow",
+          "kind": "function"
+        },
+        {
+          "module": "wasmc:lib/wasmc.lib_managed_object_heap@4.8.0",
+          "name": "string_builder_finish",
+          "kind": "function"
+        },
+        {
+          "module": "wasmc:lib/wasmc.lib_managed_object_heap@4.8.0",
+          "name": "string_builder_push_u64_le",
+          "kind": "function"
+        },
+        {
+          "module": "wasmc:lib/wasmc.lib_managed_object_heap@4.8.0",
+          "name": "string_builder_new",
+          "kind": "function"
+        },
+        {
+          "module": "wasmc:lib/wasmc.lib_managed_object_heap@4.8.0",
+          "name": "object_get_scalar_status",
+          "kind": "function"
+        },
+        {
+          "module": "wasmc:lib/wasmc.lib_managed_object_heap@4.8.0",
+          "name": "string_eq",
+          "kind": "function"
+        },
+        {
+          "module": "wasmc:lib/wasmc.lib_managed_object_heap@4.8.0",
+          "name": "bytes_set",
+          "kind": "function"
+        },
+        {
+          "module": "wasmc:lib/wasmc.lib_managed_object_heap@4.8.0",
+          "name": "list_remove_move",
+          "kind": "function"
+        },
+        {
+          "module": "wasmc:lib/wasmc.lib_managed_object_heap@4.8.0",
+          "name": "list_clear",
+          "kind": "function"
+        },
+        {
+          "module": "wasmc:lib/wasmc.lib_managed_object_heap@4.8.0",
+          "name": "string_clear",
+          "kind": "function"
+        },
+        {
+          "module": "wasmc:lib/wasmc.lib_managed_object_heap@4.8.0",
+          "name": "string_push_string",
+          "kind": "function"
+        },
+        {
+          "module": "wasmc:lib/wasmc.lib_managed_object_heap@4.8.0",
+          "name": "list_reverse",
+          "kind": "function"
+        },
+        {
+          "module": "wasmc:lib/wasmc.lib_managed_object_heap@4.8.0",
+          "name": "list_pop_move",
+          "kind": "function"
+        }
+      ],
+      "host_authorities": [],
+      "canonical_resource_intrinsics": [],
+      "engine_profile": {
+        "authority": "compatibility/core-artifacts-v009.json",
+        "validation_profile": "wasm2,function-references,tail-call",
+        "additional_required_gates": [
+          "function-references",
+          "tail-call"
+        ],
+        "minimum_version_claimed": false
+      },
+      "supported_surfaces": null,
+      "unsupported_surfaces": null,
+      "states": {
+        "qualified": true,
+        "admitted": true,
+        "released": true,
+        "discoverable": true,
+        "installable": true
+      },
+      "state_evidence": {
+        "qualification": "channels/candidates/0.0.13.json immutable product inclusion",
+        "admission": "channels/candidates/0.0.13.json immutable product inclusion",
+        "release": "release.json -> channels/candidates/0.0.13.json",
+        "discovery": "standard/wasmc-lib-search/0.1.0 + examples/lib-search/index.lsi",
+        "installation": "catalog/libs-v009.json"
+      },
+      "stopping_conditions": []
+    }
+  ],
+  "ecosystem_stopping_conditions": [
+    "Public third-party build, admission and publication are not closed.",
+    "Search and resolver/install inventories are not yet the same as the immutable released package inventory.",
+    "Missing artifact-bound engine profiles must not be replaced by inferred version ranges.",
+    "A Component or Host-SDK surface does not imply ordinary WAsmC source binding support."
+  ]
+}

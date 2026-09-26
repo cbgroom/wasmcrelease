@@ -7,6 +7,13 @@ metadata:
 
 # Library-first discovery
 
+Before searching, read `../../lib-ecosystem-control-plane.json` for the exact
+package state. It is generated from the immutable product manifest, package
+metadata, actual Core imports, the pinned search snapshot and the resolver/
+install catalog. `released`, `discoverable` and `installable` are independent;
+if the selected row has a stopping condition, report it instead of probing
+guessed paths or inferring a missing transition.
+
 This is supplemental guidance after immutable v0.0.10. Pin the tooling full
 commit and verify its SHA256SUMS; do not assume mutable main is release identity.
 Search, exact resolve and pinned install shipped in v0.0.10, despite older

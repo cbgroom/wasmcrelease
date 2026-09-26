@@ -38,6 +38,10 @@ search → read the target Skill/WIT → approve exact identity → resolve/inst
 where supported → check engine/imports → verify behavior → write missing glue.
 This Library-first guidance remains included in v0.0.13. Search is discovery, not
 selection authority; approve and pin exact package identities before use.
+For current-main package status, read the generated
+`lib-ecosystem-control-plane.json` first. It exposes the actual 13 released,
+5 discoverable and 4 installable package states without treating those sets as
+equivalent, and records actual Core imports plus missing engine evidence.
 
 For SDK/runtime/CLI/embedding integration, begin with
 [the SDK discovery Skill](skills/wasmc-sdk-discovery/SKILL.md). It routes by

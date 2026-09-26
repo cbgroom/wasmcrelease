@@ -1,5 +1,32 @@
 # WAsmC release maintainer handoff
 
+## 2026-09-27 Lib ecosystem control-plane implementation
+
+The first ecosystem convergence slice is implemented. The deterministic
+`scripts/lib-ecosystem-control-plane.mjs` follows `release.json` to its exact
+staged product manifest, verifies each package's immutable product bytes, reads
+the executable LibSearch snapshot and resolver/install catalog, inspects actual
+Core imports, and emits `lib-ecosystem-control-plane.json`.
+
+The generated result makes the current mismatch explicit: 13 packages are
+qualified, admitted and released; only 5 are discoverable and 4 installable.
+The output also records artifact-bound engine evidence when present, refuses to
+infer minimum versions, preserves telemetry's surface restrictions, and gives
+per-package stopping conditions. Its check is wired into the integrity CI
+family and public Library-first guidance now reads it before search.
+
+An initial implementation incorrectly treated `release.json.artifacts` as the
+complete product set and therefore called eight released packages unreleased.
+The corrected generator follows the declared `staged_product_manifest` and
+validates package rows against that product set while allowing later mutable
+guidance files to differ from immutable v0.0.13. This is the exact authority
+distinction the control plane is intended to enforce.
+
+Next convergence slice: consume the already-isolated LibSearch completeness
+remediation, then generate one successor resolver/install inventory from the
+same released package rows. Do not rewrite the retained v0.0.9 catalog or
+v0.0.13 tag; add a new versioned inventory and keep old locks valid.
+
 ## 2026-09-27 Producer u64 to release authority delta
 
 WAsmC producer `master` now contains exact ordinary-source `u64` semantics at
