@@ -45,27 +45,31 @@ where supported → check engine/imports → verify behavior → write missing g
 This Library-first guidance remains included in v0.0.13. Search is discovery, not
 selection authority; approve and pin exact package identities before use.
 For current-main package status, read the generated
-`lib-ecosystem-control-plane.json` first. It exposes the actual 13 released,
-5 discoverable and 4 installable package states without treating those sets as
+`lib-ecosystem-control-plane.json` first. It exposes immutable v0.0.13 state
+separately from the admitted v0.0.14 product candidate without treating those sets as
 equivalent, and records actual Core imports plus missing engine evidence. The
 current-side v0.0.13 resolver/install remediation covers all 13 packages, but
 is not retroactively inside the immutable tag and does not make the old
-five-package LibSearch artifact complete. The qualified, unreleased LibSearch
-0.2.0 successor candidate covers all 13 roots plus itself (122 entries) and is
-listed separately in the control plane; never report it as admitted or shipped.
+five-package LibSearch artifact complete. LibSearch 0.2.0 covers all 13 roots
+plus itself (122 entries) and is admitted into the exact v0.0.14 future-product
+catalog and v2 candidate. Its package root is
+[`standard/wasmc-lib-search/0.2.0/`](standard/wasmc-lib-search/0.2.0/). It remains
+unreleased and is not the public default.
 Its current manifest binds integrated build tool `f6fc94432101250b8583834b51229bedb1cd8314`
 and exact Rust toolchain fingerprint
 `2e4e27cb0b3644dd0c90bb71f31de5b5c72cd47671373caab8b9146ac68bf8ca`.
 Byte identity remains scoped to that fingerprint because producer commit and
-Cargo.lock alone did not reproduce the historical receipt. The candidate's
-`catalog/libs-v013.json` reference is its 13-package producer input catalog: it
-does not contain 0.2.0 and is not an install or admission authority for it.
+Cargo.lock alone did not reproduce the historical receipt. The earlier
+`catalog/libs-v013.json` remains producer-input evidence; admission authority is
+`admission/lib-search-v020-v014-admission.json`, bound to
+`catalog/libs-v014.json` and `channels/candidates/0.0.14.json`.
 The machine gate at `catalog/lib-route-closure.json` independently derives the
 complete released package and exported WIT API inventory. Release catalog rows
 and LibSearch package/API routes must equal that inventory exactly; any omitted,
 extra or version-drifted binding rejects the release workflow.
-Its current `formal_release_ready=false` blocker is
-`active-lib-search-candidate-extra`; do not infer readiness from route coverage.
+The v0.0.14 closure is 14 package routes / 108 API routes with
+`candidate_extras=0`. The first missing authority is exact dev-stage
+qualification; admission alone cannot advance main or prod.
 
 For SDK/runtime/CLI/embedding integration, begin with
 [the SDK discovery Skill](skills/wasmc-sdk-discovery/SKILL.md). It routes by

@@ -1,12 +1,14 @@
 // Inventory comes from the exact frozen release product set. Search semantics
 // remain explicitly reviewed in catalog/discovery-intent-v1.json.
-import { readFileSync, writeFileSync } from 'node:fs';
+import { lstatSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { repositoryRoot, sha256, parseCatalog, catalogAuthorities } from './lib-catalog.mjs';
 const manifest = JSON.parse(readFileSync(join(repositoryRoot,'manifest.json')));
 const candidate013 = JSON.parse(readFileSync(join(repositoryRoot,'channels/candidates/0.0.13.json')));
 const intent = JSON.parse(readFileSync(join(repositoryRoot,'catalog/discovery-intent-v1.json')));
+const intent014 = JSON.parse(readFileSync(join(repositoryRoot,'catalog/discovery-intent-v014.json')));
 if (intent.schema !== 'wasmc.public-lib-discovery-intent/v1' || intent.release !== '0.0.13' || !Array.isArray(intent.entries)) throw Error('discovery intent rejected');
+if (intent014.schema !== 'wasmc.public-lib-discovery-intent/v1' || intent014.release !== '0.0.14' || !Array.isArray(intent014.entries)) throw Error('v0.0.14 discovery intent rejected');
 const approved009 = [
   ['standard/wasmc-std/1.4.0',false,['standard','string','bytes','list','map','encoding','base64','hex','iterator','typed-data']],
   ['libs/wasmc-owned-algorithms',true,['algorithms','component']],
@@ -27,6 +29,25 @@ const approved013=intent.entries.map(row=>{
   if(metadata.id!==row.id) throw Error('discovery intent identity drift');
   return [row.root,row.historical,row.keywords];
 });
+const collectFiles=root=>readdirSync(join(repositoryRoot,root)).sort().flatMap(name=>{
+  const path=`${root}/${name}`,stat=lstatSync(join(repositoryRoot,path));
+  if(stat.isSymbolicLink())throw Error('catalog product symlink rejected');
+  if(stat.isDirectory())return collectFiles(path);
+  const bytes=readFileSync(join(repositoryRoot,path));
+  return [{path,bytes:bytes.length,sha256:sha256(bytes)}];
+});
+const inventory014=[...candidate013.product_files,...collectFiles('standard/wasmc-lib-search/0.2.0')];
+const inventoryRoots014=[...new Set(inventory014.map(row=>row.path).flatMap(path=>{
+  const lib=path.match(/^(libs\/[^/]+)\/lib\.json$/),standard=path.match(/^(standard\/[^/]+\/[^/]+)\/lib\.json$/);
+  return lib?[lib[1]]:standard?[standard[1]]:[];
+}))].sort();
+if(JSON.stringify([...intent014.entries.map(row=>row.root)].sort())!==JSON.stringify(inventoryRoots014))throw Error('v0.0.14 discovery intent inventory drift');
+const approved014=intent014.entries.map(row=>{
+  if(typeof row.id!=='string'||typeof row.root!=='string'||typeof row.historical!=='boolean'||!Array.isArray(row.keywords)||!row.keywords.length||!Array.isArray(row.required_queries)||!row.required_queries.length)throw Error('v0.0.14 discovery intent row rejected');
+  const metadata=JSON.parse(readFileSync(join(repositoryRoot,row.root,'lib.json')));
+  if(metadata.id!==row.id)throw Error('v0.0.14 discovery intent identity drift');
+  return [row.root,row.historical,row.keywords];
+});
 function makeCatalog(authority, approved, inventory, searchTextProfile = null) {
   return {schema:'wasmc.public-lib-catalog/v1',release_tag:authority.release_tag,release_commit:authority.release_commit,...(searchTextProfile?{search_text_profile:searchTextProfile}:{}),packages:approved.map(([root,historical,keywords])=>{
   const metadata = JSON.parse(readFileSync(join(repositoryRoot,root,'lib.json')));
@@ -42,9 +63,10 @@ function makeCatalog(authority, approved, inventory, searchTextProfile = null) {
 for (const [name,authority,approved,inventory,profile] of [
   ['libs-v009.json',catalogAuthorities.v009,approved009,manifest.artifacts,null],
   ['libs-v013.json',catalogAuthorities.v013,approved013,candidate013.product_files,'package-intent-v1'],
+  ['libs-v014.json',catalogAuthorities.v014,approved014,inventory014,'package-intent-v1'],
 ]) {
   const bytes=JSON.stringify(makeCatalog(authority,approved,inventory,profile),null,2)+'\n';
   parseCatalog(bytes,authority);
   writeFileSync(join(repositoryRoot,'catalog',name),bytes);
 }
-console.log('PASS refreshed finite approved Lib discovery catalogs v0.0.9 + v0.0.13');
+console.log('PASS refreshed finite approved Lib discovery catalogs v0.0.9 + v0.0.13 + v0.0.14');

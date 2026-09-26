@@ -10,40 +10,38 @@
   "future_candidate": {
     "package_routes": 14,
     "api_routes": 108,
-    "candidate_extras": 1,
-    "formal_release_ready": false,
-    "blocking_conditions": [
-      "active-lib-search-candidate-extra"
-    ]
+    "candidate_extras": 0,
+    "formal_release_ready": true,
+    "blocking_conditions": []
   },
   "active_search": {
     "identity": "wasmc:lib-search@0.2.0",
     "states": {
       "qualified": true,
-      "admitted": false,
+      "admitted": true,
       "released": false,
       "discoverable": false,
       "installable": false
     },
     "api_routes": 3
   },
-  "first_missing_authority": "admission of wasmc:lib-search@0.2.0 into the exact future product and catalog",
+  "first_missing_authority": "dev-stage qualification of the exact v0.0.14 v2 product candidate",
   "valid_resolution_count": 1,
-  "only_valid_closure": "The only valid closure is to admit wasmc:lib-search@0.2.0 into the same future product inventory and exact catalog, regenerate the exact index, then create and verify a v2 candidate with candidate_extras=0. There is no alternative route-set repair; the active route must remain indexed.",
+  "only_valid_closure": "The admission and route closure are complete. Verify channels/candidates/0.0.14.json, then qualify that unchanged product for dev; do not advance main or prod without exact successful qualification.",
   "forbidden_shortcuts": [
-    "treat 14 package routes or 108 API routes as release readiness",
-    "remove the active LibSearch identity from its own index",
-    "use historical v0.0.13 candidate verification as the current readiness command",
-    "treat qualification, search or catalog coverage as admission"
+    "treat admission as release",
+    "advance main or prod before exact dev qualification",
+    "rebuild product bytes during promotion",
+    "rewrite immutable v0.0.13"
   ],
   "authorities": [
+    "admission/lib-search-v020-v014-admission.json",
     "catalog/lib-route-closure.json",
-    "lib-ecosystem-control-plane.json",
-    "scripts/release-candidate.mjs"
+    "channels/candidates/0.0.14.json"
   ],
   "check_commands": [
     "node scripts/lib-route-closure.mjs --check",
-    "node scripts/test-release-candidate-lib-routes.mjs"
+    "node scripts/release-candidate.mjs verify channels/candidates/0.0.14.json"
   ],
   "stop": "This record is sufficient for the matching readiness decision. Do not scan manifests, histories or implementation scripts unless one of its check commands fails."
 }

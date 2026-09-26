@@ -7,6 +7,7 @@ const [command, ...args] = process.argv.slice(2);
 const catalogs=Object.freeze({
   v009:{file:'catalog/libs-v009.json',authority:catalogAuthorities.v009},
   v013:{file:'catalog/libs-v013.json',authority:catalogAuthorities.v013},
+  v014:{file:'catalog/libs-v014.json',authority:catalogAuthorities.v014},
 });
 const catalogSelection=name=>{
   const selected=catalogs[name??'v009'];
@@ -16,7 +17,7 @@ const catalogSelection=name=>{
 try {
   let result;
   if (command === 'search') {
-    const lib=instantiateLibSearch(readFileSync(join(repositoryRoot,'standard/wasmc-lib-search/0.1.0/artifact.wasm')),{artifact_sha256:'44944d542d818b8ad8a9794a555694b8e56ed4f147d4370b1ff975e26b204c80',index_sha256:'c1ccd8f5086b3d3ae0643383f2d3e3e682358b4ccc4a99042233bd35fa73b534'});
+    const lib=instantiateLibSearch(readFileSync(join(repositoryRoot,'standard/wasmc-lib-search/0.2.0/artifact.wasm')),{artifact_sha256:'f525deed55a3a942d63c6780b18ac7dc5e496dcf4ce47baaa2da0cbf1795afb1',index_sha256:'613dacdcf58a225542aea99584a63fc282bcb08bfcc771f3f967482fadf31121',wit_package:'wasmc:lib-search@0.2.0'});
     const words=[];let historical=false,offset=0,limit=64;
     for(let i=0;i<args.length;i++) {
       const arg=args[i];
@@ -40,7 +41,7 @@ try {
     }
     const lockBytes=readFileSync(lockPath);
     let lock;try{lock=JSON.parse(lockBytes);}catch{throw Object.assign(new Error('install.lock_invalid'),{code:'install.lock_invalid'});}
-    const catalogName=lock?.release_tag==='v0.0.13'?'v013':lock?.release_tag==='v0.0.9'?'v009':null;
+    const catalogName=lock?.release_tag==='v0.0.14'?'v014':lock?.release_tag==='v0.0.13'?'v013':lock?.release_tag==='v0.0.9'?'v009':null;
     if(!catalogName)throw Object.assign(new Error('install.lock_invalid'),{code:'install.lock_invalid'});
     const selected=catalogSelection(catalogName);
     result=await installLib({catalogBytes:readFileSync(join(repositoryRoot,selected.file)),catalogAuthority:selected.authority,lockBytes,lockSha256:values['--lock-sha256'],destination,mirror:values['--mirror']});

@@ -14,6 +14,10 @@ reject(s => { if (s.surfaces) s.surfaces.release_version = '0.0.10'; });
 reject(s => s.agents = s.agents.replaceAll('standard/wasmc-std/1.4.0/', 'missing-standard/'));
 reject(s => s.skills = s.skills.filter(row => !row.path.includes('skills/wasmc-lib/')));
 reject(s => s.skills.push(s.skills[0]));
+reject(s => {
+  const current=s.skills.find(row=>row.path==='standard/wasmc-lib-search/0.2.0/SKILL.md');
+  current.path='standard/another-package/0.2.0/SKILL.md';
+});
 reject(s => { const row = s.skills.find(row => row.path.includes('skills/wasmc-lib/')); row.text = row.text.replace('name: wasmc-lib', 'name: wasmc-lib\nparent_skill: "wasmc-lib"'); });
 reject(s => s.agents = s.agents.replace('skills/wasmc-sdk-discovery/SKILL.md', 'missing-sdk-discovery/SKILL.md'));
 reject(s => s.skills = s.skills.filter(row => row.path !== 'sdk/wasmc-host/SKILL.md'));

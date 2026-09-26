@@ -1,23 +1,23 @@
 {
   "schema": "wasmc.lib-route-closure/v1",
   "authority_receipt": {
-    "path": "admission/lib-search-v020-v013-candidate.json",
-    "sha256": "3d3f103f63aa4a9ff28e877170bfe72d8fc59e3ac8d839d4228f3948de101e81"
+    "path": "admission/lib-search-v020-v014-admission.json",
+    "sha256": "70351b95a27c35ce5af1327667c6da1cb662fbfbb6ad517aaaf3b61e88fbe29f"
   },
   "release": {
-    "version": "0.0.13",
-    "tag": "v0.0.13",
-    "staged_product_manifest": "channels/candidates/0.0.13.json",
-    "product_set_sha256": "e2a1bb7e3bf30092ddda1313a9c20dd37a36e820b076bd64e0ac6ecec6ec36d0"
+    "version": "0.0.14",
+    "tag": "v0.0.14",
+    "staged_product_manifest": "channels/candidates/0.0.14.json",
+    "product_set_sha256": "0eb2d0addf9e0cfe9afb11502848bf0a09a55616c5024727ec98729103a138bc"
   },
   "catalog": {
-    "path": "catalog/libs-v013.json",
-    "sha256": "242da128b13168814112272f9a9bff6bc9991fbd2e01d1c09936b9802451f836",
-    "role": "producer-input-catalog",
-    "package_routes": 13
+    "path": "catalog/libs-v014.json",
+    "sha256": "8368ec8be4b13fadb5959d6495e70916894c476626caf8519b35599041251368",
+    "role": "future-product-catalog",
+    "package_routes": 14
   },
   "search_index": {
-    "path": "examples/lib-search/index-v013-v020.lsi",
+    "path": "examples/lib-search/index-v014-v020.lsi",
     "sha256": "613dacdcf58a225542aea99584a63fc282bcb08bfcc771f3f967482fadf31121",
     "active_identity": "wasmc:lib-search@0.2.0",
     "entries": 122,
@@ -98,6 +98,14 @@
       "api_routes_exact": true
     },
     {
+      "identity": "wasmc:lib-search@0.2.0",
+      "root": "standard/wasmc-lib-search/0.2.0",
+      "catalog_bound": true,
+      "package_route_bound": true,
+      "api_routes": 3,
+      "api_routes_exact": true
+    },
+    {
       "identity": "wasmc:owned-algorithms@0.1.0",
       "root": "libs/wasmc-owned-algorithms",
       "catalog_bound": true,
@@ -130,25 +138,14 @@
       "api_routes_exact": true
     }
   ],
-  "candidate_extras": [
-    {
-      "identity": "wasmc:lib-search@0.2.0",
-      "root": "candidates/wasmc-lib-search/0.2.0",
-      "package_route_bound": true,
-      "api_routes": 3,
-      "api_routes_exact": true,
-      "released": false
-    }
-  ],
-  "blocking_conditions": [
-    "active-lib-search-candidate-extra"
-  ],
+  "candidate_extras": [],
+  "blocking_conditions": [],
   "claims": {
     "release_catalog_exact": true,
     "release_package_routes_exact": true,
     "release_api_routes_exact": true,
     "api_parents_closed": true,
-    "formal_release_ready": false,
+    "formal_release_ready": true,
     "automatic_version_selection": false,
     "candidate_extra_grants_release": false
   }

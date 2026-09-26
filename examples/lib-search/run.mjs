@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import assert from 'node:assert/strict';
 import {instantiateLibSearch} from './client.mjs';
-const root=new URL('../../candidates/wasmc-lib-search/0.2.0/',import.meta.url);
+const root=new URL('../../standard/wasmc-lib-search/0.2.0/',import.meta.url);
 const manifest=JSON.parse(fs.readFileSync(new URL('lib.json',root)));
 const bytes=fs.readFileSync(new URL('artifact.wasm',root));
 const pin={artifact_sha256:manifest.artifact.sha256,index_sha256:'613dacdcf58a225542aea99584a63fc282bcb08bfcc771f3f967482fadf31121',wit_package:manifest.wit.package};
@@ -26,4 +26,4 @@ for(const [text,include_historical,identity] of feedback){
   const page=lib.search({text,include_historical},0,64);
   assert.ok(page.ok?.some(hit=>identity.test(hit.identity)),`feedback search missed: ${text}`);
 }
-console.log(JSON.stringify({accepted:true,status:'candidate-not-released',snapshot:lib.snapshot(),hits:results.ok,client_checks:7,feedback_queries:feedback.length}));
+console.log(JSON.stringify({accepted:true,status:'admitted-future-product-not-released',snapshot:lib.snapshot(),hits:results.ok,client_checks:7,feedback_queries:feedback.length}));

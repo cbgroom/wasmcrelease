@@ -78,16 +78,21 @@ if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)) {
     if(!/^[0-9a-f]{40}$/.test(source))throw Error('exact Lib source required');
     const productDirectories=[
       'current','standard','sdk','runtime','libs',
-      'skills/wasmc-developer','skills/wasmc-sdk-discovery',
+      'skills/wasmc-developer','skills/wasmc-lib-discovery','skills/wasmc-sdk-discovery',
       'host/contract','host/sdk','host/drivers/file/rust','host/drivers/memory/rust'
     ];
     const productFiles=[
       'AGENTS.md','README.md','HOSTING.md',
+      'agent-quickstart.json','release-lib-route-readiness.json',
+      'admission/lib-search-v020-v014-admission.json',
+      'catalog/libs-v014.json','catalog/discovery-intent-v014.json',
+      'examples/lib-search/index-v014-v020.lsi',
       'host/ARCHITECTURE.md','host/architecture.json','host/manifest.json',
       'bench/manifest.json','bench/host-external-load.json',
       'docs/ASMD.md','docs/RELEASE_SURFACES.md','release-surfaces.json',
       'examples/lib-search/client.mjs',
       'scripts/wasmc-lib.mjs',
+      'scripts/lib-catalog.mjs','scripts/lib-route-closure.mjs','scripts/release-candidate.mjs',
       'scripts/agent-guidance-contract.mjs',
       'scripts/test-agent-guidance.mjs',
       'scripts/validate-agent-docs.mjs',

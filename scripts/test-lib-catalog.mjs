@@ -31,6 +31,19 @@ for (const id of ['wasmc-csv','wasmc-data-relational','wasmc-data-interchange','
   const b=resolveCatalog(bytes013,req013,packageReader(),catalogAuthorities.v013);
   assert.deepEqual(a,b);assert.equal(a.release_tag,'v0.0.13');assert.equal(a.authority_granted,false);
 }
+const bytes014=readFileSync(join(repositoryRoot,'catalog/libs-v014.json'));
+const catalog014=parseCatalog(bytes014,catalogAuthorities.v014);
+assert.equal(catalog014.packages.length,14);
+const search020=catalog014.packages.find(row=>row.id==='wasmc-lib-search'&&row.version==='0.2.0');
+assert(search020);
+assert.equal(search020.root,'standard/wasmc-lib-search/0.2.0');
+assert.equal(search020.historical,false);
+assert.equal(catalog014.packages.find(row=>row.id==='wasmc-lib-search'&&row.version==='0.1.0').historical,true);
+assert.equal(searchCatalog(bytes014,'route',false,catalogAuthorities.v014)[0].version,'0.2.0');
+const lock020=resolveCatalog(bytes014,{id:search020.id,version:search020.version,catalog_sha256:sha256(bytes014),wit_sha256:search020.wit_sha256,artifact_sha256:search020.artifact_sha256},packageReader(),catalogAuthorities.v014);
+assert.equal(lock020.release_tag,'v0.0.14');
+assert.equal(lock020.root,'standard/wasmc-lib-search/0.2.0');
+assert.equal(lock020.authority_granted,false);
 for (const row of catalog.packages) {
   const a=resolveCatalog(bytes,request(row)); const b=resolveCatalog(bytes,request(row));
   assert.deepEqual(a,b); assert.equal(a.authority_granted,false); assert.equal(a.verified,true);
@@ -52,4 +65,4 @@ rejected(()=>resolveCatalog(bytes,req,p=>p===row.companion.path?new Uint8Array(0
 const fixture=mkdtempSync(join(tmpdir(),'wasmc-catalog-'));
 try {symlinkSync(join(repositoryRoot,'README.md'),join(fixture,'escape'));rejected(()=>packageReader(fixture)('escape'),'catalog.path_escape');}
 finally {rmSync(fixture,{recursive:true});}
-console.log(JSON.stringify({accepted:true,legacy_packages:4,release_013_packages:13,feedback_queries:6,release_013_resolve_cases:4,negative_tests:10,selection:'unique exact lock',network_access:false,artifact_changes:false}));
+console.log(JSON.stringify({accepted:true,legacy_packages:4,release_013_packages:13,future_014_packages:14,future_014_lib_search:'0.2.0',feedback_queries:6,release_013_resolve_cases:4,negative_tests:10,selection:'unique exact lock',network_access:false,artifact_changes:false}));

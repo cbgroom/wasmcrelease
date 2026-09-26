@@ -8,7 +8,7 @@ import { parseCatalog } from './lib-catalog.mjs';
 
 const root=fileURLToPath(new URL('../',import.meta.url));
 const outputPath='catalog/lib-route-closure.json';
-const defaultReceipt='admission/lib-search-v020-v013-candidate.json';
+const defaultReceipt='admission/lib-search-v020-v014-admission.json';
 const sha=bytes=>createHash('sha256').update(bytes).digest('hex');
 const read=path=>readFileSync(resolve(root,path));
 const json=path=>JSON.parse(read(path));
@@ -159,16 +159,21 @@ export function buildClosure(receiptPath=defaultReceipt,overrides={}){
 }
 
 function main(){
-  const [action,arg]=process.argv.slice(2);
+  const [action,arg,productPath]=process.argv.slice(2);
   if(!['--write','--check'].includes(action))throw Error('usage: lib-route-closure.mjs --write [ADMISSION_RECEIPT] | --check');
   if(action==='--write'){
-    const model=buildClosure(arg??defaultReceipt);
+    const overrides=productPath?{release:{version:'0.0.14',tag:'v0.0.14',staged_product_manifest:productPath},stagedProduct:json(productPath)}:{};
+    const model=buildClosure(arg??defaultReceipt,overrides);
     writeFileSync(resolve(root,outputPath),JSON.stringify(model,null,2)+'\n');
     console.log(JSON.stringify({accepted:true,action:'write',path:outputPath,release_packages:model.release_bindings.length,package_routes:model.search_index.package_routes,api_routes:model.search_index.api_routes,candidate_extras:model.candidate_extras.length}));
   }else{
-    const retained=json(outputPath),actual=buildClosure(retained.authority_receipt.path);
+    const retained=json(outputPath);
+    const stagedPath=retained.release.staged_product_manifest;
+    const overrides=stagedPath&&stagedPath!==releasePath()?{release:retained.release,stagedProduct:json(stagedPath)}:{};
+    const actual=buildClosure(retained.authority_receipt.path,overrides);
     assert.deepEqual(retained,actual,'retained Lib route closure drift');
     console.log(JSON.stringify({accepted:true,action:'check',path:outputPath,release_packages:actual.release_bindings.length,package_routes:actual.search_index.package_routes,api_routes:actual.search_index.api_routes,candidate_extras:actual.candidate_extras.length}));
   }
 }
+function releasePath(){return json('release.json').staged_product_manifest;}
 if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url))main();

@@ -81,8 +81,15 @@ export function validateGuidance({ agents, decisionModel, language, lib, release
   for (const skill of skills) {
     const frontmatter = skill.text.match(/^---\r?\n([\s\S]*?)\r?\n---/)?.[1];
     const name = frontmatter?.match(/^name:\s*["']?([^\s"']+)["']?\s*$/m)?.[1];
-    if (!name || names.has(name)) fail(`missing or ambiguous public Skill identity: ${skill.path}`);
-    names.set(name, skill);
+    if (!name) fail(`missing or ambiguous public Skill identity: ${skill.path}`);
+    const previous=names.get(name);
+    if(previous){
+      const versioned=path=>/^standard\/([^/]+)\/(\d+)\.(\d+)\.(\d+)\/SKILL\.md$/.exec(path);
+      const a=versioned(previous.path),b=versioned(skill.path);
+      if(!a||!b||a[1]!==b[1]||previous.path===skill.path)fail(`missing or ambiguous public Skill identity: ${skill.path}`);
+      const ordinal=row=>Number(row[2])*1_000_000+Number(row[3])*1_000+Number(row[4]);
+      if(ordinal(b)>ordinal(a))names.set(name,skill);
+    }else names.set(name, skill);
   }
   const parents = new Map();
   for (const [name, skill] of names) {

@@ -1,17 +1,15 @@
 # Release Lib search
 
-## Unreleased 0.2.0 v0.0.13-complete candidate
+## Admitted 0.2.0 v0.0.14 product candidate
 
-Immutable `v0.0.13` is unchanged. The candidate at
-`candidates/wasmc-lib-search/0.2.0` indexes all thirteen released package roots
-plus its own candidate identity: 14 packages / 122 package and API entries.
-Its exact input is `catalog/libs-v013.json`; it neither chooses a version nor
-grants Host authority.
+Immutable `v0.0.13` and the prod pointer are unchanged. The admitted product at
+`standard/wasmc-lib-search/0.2.0` indexes the thirteen prior package roots plus
+itself: 14 packages / 122 package and API entries. Its exact future-product
+catalog is `catalog/libs-v014.json`; it grants no Host or public-default authority.
 The independent release closure at `catalog/lib-route-closure.json` proves that
-all 13 staged-product package identities and all 105 exported release API routes
-are bound, while the candidate contributes only its own package route and three
-APIs. Future release changes fail unless catalog, package routes and API routes
-are regenerated together.
+all 14 v0.0.14 product package identities and all 108 exported API routes are
+bound with `candidate_extras=0`. Future changes fail unless catalog, package
+routes and API routes are regenerated together.
 
 - index: 27,749 bytes,
   `613dacdcf58a225542aea99584a63fc282bcb08bfcc771f3f967482fadf31121`
@@ -25,7 +23,7 @@ Component, and Wasmi 2.0 Core checks pass. The historical producer receipt has
 different Core/Component bytes under an earlier unrecorded Rust codegen
 environment. This is retained as an explicit reproducibility finding, not
 silently relabelled as a deterministic reproduction. See
-[`admission/lib-search-v020-v013-candidate.json`](../../admission/lib-search-v020-v013-candidate.json).
+[`admission/lib-search-v020-v014-admission.json`](../../admission/lib-search-v020-v014-admission.json).
 
 For the default Agent workflow and interpretation of package/API hits, start
 with [Library-first discovery](../../skills/wasmc-lib-discovery/SKILL.md).
@@ -48,7 +46,7 @@ After checking the pinned release's manifest and SHA256SUMS:
 
 ```sh
 node examples/lib-search/run.mjs
-node examples/lib-search/verify-api.mjs examples/lib-search/index-v013-v020.lsi candidates/wasmc-lib-search/0.2.0 examples/lib-search/search-reference.wasmc current/wasmc.mjs
+node examples/lib-search/verify-api.mjs examples/lib-search/index-v014-v020.lsi standard/wasmc-lib-search/0.2.0 examples/lib-search/search-reference.wasmc current/wasmc.mjs
 WASMC_SEARCH_LIB_ROOT="$PWD/standard/wasmc-lib-search/0.1.0" cargo test --locked --release --manifest-path examples/lib-search/rust/Cargo.toml
 WASMC_SEARCH_LIB_ROOT="$PWD/standard/wasmc-lib-search/0.1.0" cargo run --locked --release --manifest-path examples/lib-search/rust/Cargo.toml
 ```

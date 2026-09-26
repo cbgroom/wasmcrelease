@@ -20,11 +20,13 @@ const release = readJson('release.json');
 const surfaces = readJson('release-surfaces.json');
 const installCatalog = readJson('catalog/libs-v009.json');
 const currentSideCatalog = existsSync(join(root, 'catalog/libs-v013.json')) ? readJson('catalog/libs-v013.json') : null;
-const searchCandidateAdmission = readJson('admission/lib-search-v020-v013-candidate.json');
+const searchCandidateAdmission = readJson('admission/lib-search-v020-v014-admission.json');
 const compatibility = readJson('compatibility/core-artifacts-v009.json');
 const searchCompatibility = readJson('compatibility/lib-search-core.json');
 const retainedRouteClosure = readJson('catalog/lib-route-closure.json');
-assert.deepEqual(retainedRouteClosure, buildClosure(retainedRouteClosure.authority_receipt.path), 'Lib route closure is stale');
+const futureProduct = readJson(retainedRouteClosure.release.staged_product_manifest);
+assert.deepEqual(retainedRouteClosure, buildClosure(retainedRouteClosure.authority_receipt.path,{release:retainedRouteClosure.release,stagedProduct:futureProduct}), 'Lib route closure is stale');
+const currentReleaseRouteClosure=buildClosure('admission/lib-search-v020-v013-candidate.json');
 assert.equal(typeof release.staged_product_manifest, 'string', 'release.json must bind a staged product manifest');
 const stagedProduct = readJson(release.staged_product_manifest);
 assert.equal(stagedProduct.version, release.version, 'staged product version must match release.json');
@@ -141,15 +143,16 @@ const packages = packageRoots.map(packageRoot => {
 });
 
 const count = state => packages.filter(row => row.states[state]).length;
-const searchCandidateMetadata = readJson('candidates/wasmc-lib-search/0.2.0/lib.json');
+const searchCandidateMetadata = readJson('standard/wasmc-lib-search/0.2.0/lib.json');
 const searchCandidateCatalog = readJson(searchCandidateAdmission.catalog.path);
-assert.equal(searchCandidateAdmission.catalog.role, 'producer-input-catalog');
-assert.equal(searchCandidateAdmission.catalog.contains_candidate, false);
-assert.equal(searchCandidateAdmission.catalog.candidate_install_authority, false);
-assert.equal(searchCandidateCatalog.packages.some(row => row.wit_package === searchCandidateMetadata.wit.package), false);
-assert.equal(sha256File('candidates/wasmc-lib-search/0.2.0/artifact.wasm'), searchCandidateAdmission.artifact.core_sha256);
-assert.equal(sha256File('candidates/wasmc-lib-search/0.2.0/component.wasm'), searchCandidateAdmission.artifact.component_sha256);
-assert.equal(sha256File('candidates/wasmc-lib-search/0.2.0/lib.json'), searchCandidateAdmission.artifact.manifest_sha256);
+assert.equal(searchCandidateAdmission.catalog.role, 'future-product-catalog');
+assert.equal(searchCandidateAdmission.catalog.contains_candidate, true);
+assert.equal(searchCandidateAdmission.catalog.candidate_install_authority, true);
+assert.equal(searchCandidateAdmission.catalog.public_default_install_authority, false);
+assert.equal(searchCandidateCatalog.packages.some(row => row.wit_package === searchCandidateMetadata.wit.package), true);
+assert.equal(sha256File('standard/wasmc-lib-search/0.2.0/artifact.wasm'), searchCandidateAdmission.artifact.core_sha256);
+assert.equal(sha256File('standard/wasmc-lib-search/0.2.0/component.wasm'), searchCandidateAdmission.artifact.component_sha256);
+assert.equal(sha256File('standard/wasmc-lib-search/0.2.0/lib.json'), searchCandidateAdmission.artifact.manifest_sha256);
 assert.equal(sha256File(searchCandidateAdmission.index.path), searchCandidateAdmission.index.sha256);
 assert.deepEqual(searchCandidateMetadata.build.toolchain, Object.fromEntries(Object.entries(searchCandidateAdmission.toolchain).filter(([key]) => !['generated_wasmtime_binding','wasmtime_cli','wasmi_crate'].includes(key))));
 const searchCandidate = {
@@ -163,17 +166,11 @@ const searchCandidate = {
   toolchain: searchCandidateAdmission.toolchain,
   qualification: searchCandidateAdmission.qualification,
   reproducibility_boundary: searchCandidateAdmission.reproducibility_boundary,
-  states: {
-    qualified: true,
-    admitted: false,
-    released: false,
-    discoverable: false,
-    installable: false
-  },
+  states: searchCandidateAdmission.states,
   stopping_conditions: [
-    'future-release-admission-required',
-    'not-selection-authority',
-    'producer-input-catalog-is-not-candidate-install-authority',
+    'exact-dev-stage-qualification-required',
+    'not-public-default-selection-authority',
+    'candidate-install-authority-is-not-release-authority',
     'toolchain-scoped-byte-reproducibility'
   ]
 };
@@ -222,27 +219,26 @@ const model = {
   successor_candidates: [searchCandidate],
   ecosystem_stopping_conditions: [
     'Public third-party build, admission and publication are not closed.',
-    'The current-side resolver/install catalog covers all released packages and LibSearch 0.2.0 is locally qualified over all thirteen roots, but neither is inside immutable v0.0.13.',
+    'The v0.0.14 future-product catalog admits LibSearch 0.2.0 and closes all fourteen package routes, but neither the candidate nor its catalog is released or the public default.',
     'Byte-identical Rust-backed Lib reproduction is currently scoped to an exact toolchain environment; producer commit plus Cargo.lock alone did not reproduce the historical artifact hash.',
     'Missing artifact-bound engine profiles must not be replaced by inferred version ranges.',
     'A Component or Host-SDK surface does not imply ordinary WAsmC source binding support.'
   ]
 };
 const encoded = `${JSON.stringify(model, null, 2)}\n`;
-const activeSearchIdentity=searchCandidate.identity;
 const readinessModel = {
   schema:'wasmc.release-lib-route-readiness/v1',
   route:'release-lib-route-readiness',
   request:'can a new formal release candidate be created with every released Lib package and API route synchronized',
-  immutable_release:{tag:release.tag,released_packages:retainedRouteClosure.release_bindings.length,released_api_routes:retainedRouteClosure.release_bindings.reduce((total,row)=>total+row.api_routes,0)},
+  immutable_release:{tag:release.tag,released_packages:currentReleaseRouteClosure.release_bindings.length,released_api_routes:currentReleaseRouteClosure.release_bindings.reduce((total,row)=>total+row.api_routes,0)},
   future_candidate:{package_routes:retainedRouteClosure.search_index.package_routes,api_routes:retainedRouteClosure.search_index.api_routes,candidate_extras:retainedRouteClosure.candidate_extras.length,formal_release_ready:retainedRouteClosure.claims.formal_release_ready,blocking_conditions:retainedRouteClosure.blocking_conditions},
-  active_search:{identity:searchCandidate.identity,states:searchCandidate.states,api_routes:retainedRouteClosure.candidate_extras.find(row=>row.identity===searchCandidate.identity)?.api_routes??0},
-  first_missing_authority:`admission of ${activeSearchIdentity} into the exact future product and catalog`,
+  active_search:{identity:searchCandidate.identity,states:searchCandidate.states,api_routes:retainedRouteClosure.release_bindings.find(row=>row.identity===searchCandidate.identity)?.api_routes??0},
+  first_missing_authority:'dev-stage qualification of the exact v0.0.14 v2 product candidate',
   valid_resolution_count:1,
-  only_valid_closure:`The only valid closure is to admit ${activeSearchIdentity} into the same future product inventory and exact catalog, regenerate the exact index, then create and verify a v2 candidate with candidate_extras=0. There is no alternative route-set repair; the active route must remain indexed.`,
-  forbidden_shortcuts:['treat 14 package routes or 108 API routes as release readiness','remove the active LibSearch identity from its own index','use historical v0.0.13 candidate verification as the current readiness command','treat qualification, search or catalog coverage as admission'],
-  authorities:['catalog/lib-route-closure.json','lib-ecosystem-control-plane.json','scripts/release-candidate.mjs'],
-  check_commands:['node scripts/lib-route-closure.mjs --check','node scripts/test-release-candidate-lib-routes.mjs'],
+  only_valid_closure:'The admission and route closure are complete. Verify channels/candidates/0.0.14.json, then qualify that unchanged product for dev; do not advance main or prod without exact successful qualification.',
+  forbidden_shortcuts:['treat admission as release','advance main or prod before exact dev qualification','rebuild product bytes during promotion','rewrite immutable v0.0.13'],
+  authorities:['admission/lib-search-v020-v014-admission.json','catalog/lib-route-closure.json','channels/candidates/0.0.14.json'],
+  check_commands:['node scripts/lib-route-closure.mjs --check','node scripts/release-candidate.mjs verify channels/candidates/0.0.14.json'],
   stop:'This record is sufficient for the matching readiness decision. Do not scan manifests, histories or implementation scripts unless one of its check commands fails.'
 };
 const readinessEncoded = `${JSON.stringify(readinessModel, null, 2)}\n`;

@@ -1,5 +1,27 @@
 # WAsmC release maintainer handoff
 
+## 2026-09-27 v0.0.14 LibSearch admission and candidate
+
+LibSearch 0.2.0 exact qualified bytes were copied without rebuilding into
+`standard/wasmc-lib-search/0.2.0` at package checkpoint
+`e6bc230c29df89b7004935eb5895b7fc3a8bc3f1`. Core remains 53,412 bytes at
+`f525deed55a3a942d63c6780b18ac7dc5e496dcf4ce47baaa2da0cbf1795afb1`;
+Component remains 55,178 bytes at
+`db0e7838424522e23a4f6d0e84759ca6fb631cb3ace516ac6ce514ec39bf831d`.
+
+`catalog/libs-v014.json` binds fourteen exact package roots to that checkpoint.
+The admission receipt is `admission/lib-search-v020-v014-admission.json`. The
+generated v2 product candidate is `channels/candidates/0.0.14.json`: 213 product
+files, fourteen package routes, 108 API routes, `candidate_extras=0`, exact
+closure true. Read its product-set digest live after any regeneration.
+
+This closes qualification -> admission and candidate creation only. Immutable
+v0.0.13 and `channels/prod.json` remain unchanged. LibSearch 0.2.0 states are
+qualified=true, admitted=true, released=false, discoverable=false and
+installable=false. The next authority is exact dev-stage qualification of the
+unchanged v0.0.14 product; do not create main/prod stage metadata or move default
+discovery before that evidence exists.
+
 ## 2026-09-27 Pi Lib-route readiness flywheel
 
 Pi 0.87.1 was run on the same focused release-readiness question with the

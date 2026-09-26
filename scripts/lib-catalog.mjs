@@ -8,6 +8,7 @@ export const sha256 = bytes => createHash('sha256').update(bytes).digest('hex');
 export const catalogAuthorities = Object.freeze({
   v009: Object.freeze({release_tag:'v0.0.9',release_commit:'0fec38d59872a7f1527dc94799da542e968f1f8a'}),
   v013: Object.freeze({release_tag:'v0.0.13',release_commit:'b1d22d27bdc9727e607cf77a4af57b151df6832d'}),
+  v014: Object.freeze({release_tag:'v0.0.14',release_commit:'e6bc230c29df89b7004935eb5895b7fc3a8bc3f1'}),
 });
 const fail = code => { throw Object.assign(new Error(code), { code }); };
 const digest = value => typeof value === 'string' && /^[a-f0-9]{64}$/.test(value);

@@ -45,10 +45,10 @@ assert.deepEqual(quickstartModel.routes['release-state-separation'].required_out
 assert.deepEqual(Object.keys(taskRoutes).sort(),['host-authority','ordinary-source-pair','release-lib-route-readiness','release-orientation','released-base64','rule']);
 assert.equal(taskRoutes['release-orientation'].immutable_release,'v'+model.release_version);
 assert.equal(taskRoutes['release-orientation'].compiler.sha256,'93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90');
-assert.equal(taskRoutes['release-lib-route-readiness'].future_candidate.formal_release_ready,false);
+assert.equal(taskRoutes['release-lib-route-readiness'].future_candidate.formal_release_ready,true);
 assert.equal(taskRoutes['release-lib-route-readiness'].valid_resolution_count,1);
-assert.equal(taskRoutes['release-lib-route-readiness'].first_missing_authority,'admission of wasmc:lib-search@0.2.0 into the exact future product and catalog');
-assert.match(taskRoutes['release-lib-route-readiness'].answer_boundary,/Do not suggest deleting/);
+assert.equal(taskRoutes['release-lib-route-readiness'].first_missing_authority,'dev-stage qualification of the exact v0.0.14 v2 product candidate');
+assert.match(taskRoutes['release-lib-route-readiness'].answer_boundary,/Stop at dev-stage qualification/);
 assert.equal(taskRoutes['ordinary-source-pair'].oracle.core_sha256,'55f3c7e3d09b564b89b8268299a69569a33b856b46405cb4c4dd51634afec84e');
 assert.equal(taskRoutes['ordinary-source-pair'].run_command,'node examples/agent-quickstart/run-pair.mjs');
 assert.equal(taskRoutes['released-base64'].package,'wasmc:std@1.4.0');
@@ -87,22 +87,22 @@ const ecosystemModel=JSON.parse(read(ecosystem.path));
 assert.equal(ecosystemModel.schema,ecosystem.schema);
 assert.equal(ecosystemModel.inventory.packages,13);
 assert.equal(ecosystemModel.inventory.released,13);
-assert.equal(ecosystemModel.inventory.discoverable,5);
+assert.equal(ecosystemModel.inventory.discoverable,12);
 assert.equal(ecosystemModel.inventory.installable,4);
 assert.equal(ecosystemModel.inventory.current_side_installable,13);
 assert.equal(ecosystemModel.inventory.current_side_inventory_matches_release,true);
 assert.equal(ecosystemModel.inventory.inventory_is_unified,false);
 assert.deepEqual(ecosystemModel.route_closure,{
   authority:'catalog/lib-route-closure.json',
-  release_packages:13,
+  release_packages:14,
   package_routes:14,
   api_routes:108,
-  candidate_extras:1,
+  candidate_extras:0,
   release_catalog_exact:true,
   release_package_routes_exact:true,
   release_api_routes_exact:true,
-  formal_release_ready:false,
-  blocking_conditions:['active-lib-search-candidate-extra']
+  formal_release_ready:true,
+  blocking_conditions:[]
 });
 assert.equal(ecosystemModel.successor_candidates.length,1);
 const libSearchSuccessor=ecosystemModel.successor_candidates[0];
@@ -114,10 +114,11 @@ assert.equal(libSearchSuccessor.toolchain.rustc_version_verbose_sha256,'c8884d5d
 assert.equal(libSearchSuccessor.toolchain.cargo_version_verbose_sha256,'7325fa79f79f89eaceae5ee57920caf61b813ade023b1e50457ee0902b2d7222');
 assert.equal(libSearchSuccessor.toolchain.target,'wasm32-unknown-unknown');
 assert.equal(libSearchSuccessor.toolchain.encoded_rustflags,'-Cstrip=symbols');
-assert.equal(libSearchSuccessor.catalog.role,'producer-input-catalog');
-assert.equal(libSearchSuccessor.catalog.contains_candidate,false);
-assert.equal(libSearchSuccessor.catalog.candidate_install_authority,false);
-assert.deepEqual(libSearchSuccessor.states,{qualified:true,admitted:false,released:false,discoverable:false,installable:false});
+assert.equal(libSearchSuccessor.catalog.role,'future-product-catalog');
+assert.equal(libSearchSuccessor.catalog.contains_candidate,true);
+assert.equal(libSearchSuccessor.catalog.candidate_install_authority,true);
+assert.equal(libSearchSuccessor.catalog.public_default_install_authority,false);
+assert.deepEqual(libSearchSuccessor.states,{qualified:true,admitted:true,released:false,discoverable:false,installable:false});
 assert.equal(libSearchSuccessor.index.entries,122);
 assert.equal(libSearchSuccessor.qualification.wasmi_2_0_core,'PASS');
 assert.equal(libSearchSuccessor.reproducibility_boundary.historical_bytes_reproduced_with_current_toolchain,false);
