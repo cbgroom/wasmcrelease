@@ -2,6 +2,20 @@
 
 Packages are built and admitted locally from clean synchronized private source, then pushed directly. GitHub Actions independently verifies the source-free public consumer paths, but cannot rebuild or admit canonical compiler/Lib bytes and is not a publication dependency.
 
+## v0.0.13
+
+System Telemetry release. It adds the admitted source-free
+`wasmc-system-telemetry@0.0.1` Lib for Rust Component and public
+`wasmc-host` SDK consumers, including qualified real Linux acquisition
+through explicitly granted read-only proc resources. It reuses the v0.0.12
+compiler/runtime/SDK product bytes and does not add a telemetry-specific Host
+callback, raw-handle escape hatch, Browser support, Wasmi Component support, or
+real Windows/macOS acquisition. The frozen 194-file product set has SHA-256
+`e2a1bb7e3bf30092ddda1313a9c20dd37a36e820b076bd64e0ac6ecec6ec36d0`.
+The accepted sequence is `v0.0.13-dev.1` -> `v0.0.13-main.1` ->
+`v0.0.13`; only the suffix-free prod release advances
+`package-index.json.latest`.
+
 ## v0.0.12
 
 SDK/Agent integration release. It publishes the generic Rust Host SDK,

@@ -70,3 +70,11 @@ Telemetry run `36204926533` all completed successfully. The previously
 qualified SDK Agent guidance run `36190128332` remains applicable because
 the frozen product set did not change. These receipts authorize
 `v0.0.13-dev.1`; they do not advance public prod discovery.
+
+The immutable dev checkpoint is
+`v0.0.13-dev.1@1cbea1e23b33216c74da8a48407aa995a8eaf720`; the
+metadata-only main promotion is
+`v0.0.13-main.1@09bdf4805ff1f7bdc5a900f1c49505a2ecf0f637`.
+Both preserve the exact same 194-file product set. The suffix-free
+`v0.0.13` prod stage advances public discovery only after the main-to-prod
+transition, final integrity validation and publication credential scan pass.
