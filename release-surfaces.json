@@ -260,5 +260,45 @@
       "functional_workflow": "system-telemetry-candidate.yml"
     }
   },
+  "agent_status_queries": {
+    "prebuilt-native-runtime-library": {
+      "request": "prebuilt .so/.dylib/.dll WAsmC runtime",
+      "states": {
+        "qualified": false,
+        "admitted": false,
+        "released": false,
+        "discoverable": false,
+        "installable": false
+      },
+      "authority": "consumer_surfaces/native-runtime-library",
+      "stopping_condition": "native-runtime-library is incubating; reference source and CI/development artifacts do not qualify or publish a shared-library package",
+      "supported_alternative": "sdk/wasmc-native-compiler/SKILL.md"
+    },
+    "direct-wasmc-system-telemetry-resource": {
+      "request": "call the system telemetry sampler resource directly from WAsmC source",
+      "states": {
+        "qualified": false,
+        "admitted": false,
+        "released": false,
+        "discoverable": false,
+        "installable": false
+      },
+      "authority": "package_profiles/wasmc-system-telemetry@0.0.1",
+      "stopping_condition": "wasmc-source-direct-resource-methods is explicitly unsupported",
+      "related_released_product": {
+        "identity": "wasmc-system-telemetry@0.0.1",
+        "qualified": true,
+        "admitted": true,
+        "released": true,
+        "discoverable": false,
+        "installable": false,
+        "supported_routes": [
+          "source-free-rust-component",
+          "public-rust-host-sdk",
+          "linux-explicit-generic-resource-acquisition"
+        ]
+      }
+    }
+  },
   "release_version": "0.0.13"
 }

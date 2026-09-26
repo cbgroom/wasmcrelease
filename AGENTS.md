@@ -33,6 +33,27 @@ completely. It routes only the reference needed for Runtime bootstrap,
 source/WIT, Lib authoring, JavaScript, Rust/Wasmtime, or the SDK selection
 Skill. Reuse Rust and WIT priors and learn only the documented wasmc delta.
 
+## Decide status before generating code
+
+Use the [Agent decision model](docs/AGENT_DECISION_MODEL.md) before turning
+evidence into a capability claim. Qualification is evidence, not admission;
+admission is necessary but not sufficient for release; release does not imply
+catalog discovery or installation unless the pinned release publishes that
+route. A directory, source tree, test PASS, candidate receipt, mutable branch,
+or newest-looking version is never sufficient by itself.
+
+For every answer, report the five states separately when they differ:
+`qualified`, `admitted`, `released`, `discoverable`, and `installable`. Stop at
+the first missing authority instead of guessing the next transition. In an
+executable command, use the complete tag, commit, version and digest: never use
+an ellipsis or placeholder. Exact tested engine versions are observations, not
+minimum-version ranges such as `Node 22+`.
+
+For existence, release-status, discovery or installation questions, read
+`release-surfaces.json.agent_status_queries` first. If an exact request and its
+stopping condition are present, answer from that record; do not probe guessed
+package paths, catalogs, examples or implementation tests to reconfirm absence.
+
 ```wasmc
 package local:add;
 interface api {

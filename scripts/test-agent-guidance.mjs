@@ -21,4 +21,7 @@ reject(s => {
   const row = s.skills.find(row => row.path === 'skills/wasmc-sdk-discovery/SKILL.md');
   row.text = row.text.replace('sdk/wasmc-core-runtime/SKILL.md', 'sdk/missing-core-runtime/SKILL.md');
 });
-console.log(JSON.stringify({ ...result, negative_tests: 11 }));
+reject(s => s.agents = s.agents.replace('Qualification is evidence, not admission', 'Qualification completes admission'));
+reject(s => s.decisionModel = s.decisionModel.replace('`installable`', '`available`'));
+reject(s => s.decisionModel = s.decisionModel.replace('Exact tested versions are observations, not ranges', 'Tested versions imply compatible ranges'));
+console.log(JSON.stringify({ ...result, negative_tests: 14 }));

@@ -79,6 +79,22 @@ const nativeRuntime=surfaces.consumer_surfaces.find(row=>row.id==='native-runtim
 assert.equal(nativeRuntime?.status,'incubating');
 assert(sdkDiscovery.includes('never invent one from `host/runtime` source'));
 
+const statusQueries=surfaces.agent_status_queries;
+assert(statusQueries,'agent_status_queries missing');
+const nativeBinaryStatus=statusQueries['prebuilt-native-runtime-library'];
+assert.deepEqual(nativeBinaryStatus?.states,{
+  qualified:false,admitted:false,released:false,discoverable:false,installable:false
+});
+assert.match(nativeBinaryStatus?.stopping_condition??'',/incubating/);
+const directTelemetryStatus=statusQueries['direct-wasmc-system-telemetry-resource'];
+assert.deepEqual(directTelemetryStatus?.states,{
+  qualified:false,admitted:false,released:false,discoverable:false,installable:false
+});
+assert.equal(directTelemetryStatus?.related_released_product?.identity,'wasmc-system-telemetry@0.0.1');
+assert.equal(directTelemetryStatus?.related_released_product?.released,true);
+assert.equal(directTelemetryStatus?.related_released_product?.discoverable,false);
+assert.equal(directTelemetryStatus?.related_released_product?.installable,false);
+
 const components=surfaces.agent_discovery?.components;
 assert(components,'agent_discovery.components missing');
 assert.equal(components['core-runtime-sdk']?.release_status,'published');
@@ -146,6 +162,7 @@ console.log(JSON.stringify({
   host_sdk_status:hostSurface.status,
   native_runtime_status:nativeRuntime.status,
   component_skills:Object.keys(discovery.component_skills).length,
+  status_queries:Object.keys(statusQueries).length,
   stale_api_names_rejected:3,
   source_symbols_verified:10,
   routes:{

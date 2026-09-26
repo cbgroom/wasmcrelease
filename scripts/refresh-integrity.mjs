@@ -63,7 +63,13 @@ const ciTools = [
   'scripts/host-https-external-load.mjs',
   'scripts/aggregate-host-external-load.mjs'
 ];
-ciTools.push('scripts/agent-guidance-contract.mjs', 'scripts/test-agent-guidance.mjs', 'scripts/validate-sdk-agent-routes.mjs');
+ciTools.push(
+  'scripts/agent-guidance-contract.mjs',
+  'scripts/test-agent-guidance.mjs',
+  'scripts/validate-sdk-agent-routes.mjs',
+  'scripts/wasmc-live-agent-trace-evaluation-v1.mjs',
+  'scripts/test-live-agent-trace-evaluation-v1.mjs'
+);
 ciTools.push('scripts/test-library-first.mjs');
 const compatibilityTools = ['scripts/core-compatibility.mjs', 'scripts/check-core-compatibility.mjs', 'scripts/test-core-compatibility.mjs'];
 const rustWorkspaceFiles = ['Cargo.toml', 'Cargo.lock'];
@@ -73,6 +79,7 @@ const releaseSurfaceFiles = [
   'docs/ASMD.md',
   'docs/RELEASE_SURFACES.md',
   'docs/RELEASE_CHANNELS.md',
+  'docs/AGENT_DECISION_MODEL.md',
   'release-surfaces.json',
   'bench/manifest.json',
   'bench/host-external-load.json',

@@ -23,13 +23,14 @@ export async function guidanceSnapshot(root) {
   }
   return {
     agents: await readFile(join(root, 'AGENTS.md'), 'utf8'),
+    decisionModel: await readFile(join(root, 'docs/AGENT_DECISION_MODEL.md'), 'utf8'),
     release: JSON.parse(await readFile(join(root, 'release.json'), 'utf8')),
     surfaces,
     skills
   };
 }
 
-export function validateGuidance({ agents, release, surfaces, skills }) {
+export function validateGuidance({ agents, decisionModel, release, surfaces, skills }) {
   const fail = message => { throw Error(`agent.guidance_invalid: ${message}`); };
   const stagedVersion = surfaces?.release_version ?? release.version;
   const parseVersion = value => String(value).split('.').map(part => Number(part));
@@ -50,6 +51,18 @@ export function validateGuidance({ agents, release, surfaces, skills }) {
   if (headings.length !== 1 || headings[0] !== expectedTag) fail('capability contract identity differs');
   const cdn = [...agents.matchAll(/cdn\.jsdelivr\.net\/gh\/cbgroom\/wasmcrelease@(v[^/\s]+)\//g)].map(m => m[1]);
   if (!cdn.length || cdn.some(tag => tag !== expectedTag)) fail('root CDN release identity differs');
+  if (!agents.includes('docs/AGENT_DECISION_MODEL.md') ||
+      !agents.includes('Qualification is evidence, not admission') ||
+      !agents.includes('never use\nan ellipsis or placeholder')) {
+    fail('root decision-state or exact-identity guidance missing');
+  }
+  for (const state of ['qualified', 'admitted', 'released', 'discoverable', 'installable']) {
+    if (!decisionModel.includes(`\`${state}\``)) fail(`decision model missing state: ${state}`);
+  }
+  if (!decisionModel.includes('necessary, never sufficient') ||
+      !decisionModel.includes('Exact tested versions are observations, not ranges')) {
+    fail('decision transition or exact-version rule missing');
+  }
   const standardSkills = skills.filter(row => row.path.startsWith('standard/') && row.path.endsWith('/SKILL.md'));
   if (!standardSkills.length || standardSkills.some(row => !agents.includes(row.path.slice(0, -8)))) fail('standard package discovery route missing');
   const names = new Map();

@@ -27,8 +27,30 @@ which exact command proves the path, and what evidence to report.
 - Teach a complete copy-run-change loop before catalogs or architecture.
 - Every canonical source pattern must compile in the current public artifact or
   be explicitly marked non-executable. Prefer examples exercised by a runner.
+- Executable commands must contain complete identities. Never put truncated
+  digests, ellipses, placeholders or inferred version ranges in a copyable code
+  block. If the user must obtain a value dynamically, teach the exact command
+  that reads it from the pinned authority.
 - Error guidance should repair the smallest construct and must not invent Host
   authority or provider-private operations.
+
+## Decision and learning trace
+
+Teach `qualified`, `admitted`, `released`, `discoverable` and `installable` as
+separate states. A completed transition is necessary evidence for the next; it
+never completes the next transition automatically. Route public readers through
+`docs/AGENT_DECISION_MODEL.md` and require the first missing authority to be a
+stopping condition.
+
+Final-answer correctness is only one half of Fresh-Agent quality. For a live
+Agent journey retain a privacy-safe event trace containing tool names and
+arguments, result size/error state, model/provider identity, token counts,
+elapsed time and the final answer. Do not retain or publish hidden reasoning.
+Score wrong routes, zero-yield searches, repeated reads, oversized reads,
+failed tools, retries, conclusion changes and identity placeholders separately.
+Use `scripts/wasmc-live-agent-trace-evaluation-v1.mjs` for the Pi JSONL adapter.
+Deterministic artifact evaluation and live-model comprehension are distinct
+scores; neither may be presented as the other.
 
 ## Lib boundary
 

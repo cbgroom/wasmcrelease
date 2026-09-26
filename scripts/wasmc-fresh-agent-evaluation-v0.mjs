@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import {
   existsSync,
+  mkdirSync,
   mkdtempSync,
   readFileSync,
   readdirSync,
@@ -659,7 +660,11 @@ world app { export api; }`;
     next_priority: findings[0] ?? null
   };
   const output = `${JSON.stringify(report, null, 2)}\n`;
-  if (options.jsonOut) writeFileSync(absolute(options.jsonOut), output);
+  if (options.jsonOut) {
+    const outputPath = absolute(options.jsonOut);
+    mkdirSync(dirname(outputPath), { recursive: true });
+    writeFileSync(outputPath, output);
+  }
   process.stdout.write(output);
   if (!report.accepted) process.exitCode = 1;
 } finally {

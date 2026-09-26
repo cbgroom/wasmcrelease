@@ -1,5 +1,48 @@
 # WAsmC release maintainer handoff
 
+## 2026-09-26 Live-Agent learning flywheel side-remediation
+
+This workstream improves public release comprehension and evaluation only. It
+does not change WAsmC compiler, Runtime, SDK, Host, Lib or product bytes; it
+does not advance `v0.0.13`, admit a candidate, or take authority from the
+active Data Foundation v1.1 producer work.
+
+A fresh Pi journey against the Data Foundation candidate produced a correct
+high-level answer but needed 22 tool calls and 13 assistant turns in about 102
+seconds. It consumed 31,051 input, 2,420 output and 705 reasoning tokens, with
+269,504 cache-read tokens. There were no tool errors, exact duplicate calls or
+explicit retries, but the route still performed avoidable navigation and read
+a complete roughly 49 KiB release manifest. The final answer abbreviated an
+artifact digest, generalized exact Node evidence to `Node 22+`, and invented a
+future package directory. This shows why explicit retry count alone is not an
+adequate Agent-efficiency metric.
+
+The release guidance now separates `qualified`, `admitted`, `released`,
+`discoverable` and `installable`, defines a bounded lookup order, and forbids
+ellipsis identities and inferred engine ranges in executable guidance. The Pi
+JSONL adapter records only the privacy-safe event surface and separately scores
+tool/turn/result budgets, errors, zero-yield lookups, explicit retries,
+duplicates, repeated reads, final-answer presence and identity/version hygiene.
+Deterministic Fresh-Agent evidence remains distinct from live-model evidence.
+
+The same `llm-m4dd/glm-5.3-flash` status prompt was then rerun after adding two
+machine-readable negative status records to
+`release-surfaces.json.agent_status_queries`. It passed the `status-query`
+profile with four tool calls, three assistant turns, zero zero-yield results,
+zero errors/retries/duplicates/repeated reads and 9,573 result characters in
+15,870 ms. Tokens were 5,984 input, 785 output, 115 reasoning and 7,104 cache
+read. The final answer kept the requested direct surfaces separate from the
+related released telemetry product, used the complete package identity, and
+did not infer a version range. This is one live-model observation, not a
+deterministic cross-model guarantee.
+
+Producer feedback is research-only: machine-readable WIT binding support for
+rich resource results, artifact-bound engine requirements, generated manifests
+separating WIT/Core/Component/Host, stopping-condition diagnostics, and exact
+candidate-to-admission-to-release receipts. None of these capabilities is
+claimed implemented. Continue to use release prose for honest stopping
+conditions until producer-owned evidence exists.
+
 ## 2026-09-25 Host SDK integration and candidate reopen hardening
 
 Exact local source qualification is now complete for

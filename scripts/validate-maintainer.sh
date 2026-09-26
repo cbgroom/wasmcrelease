@@ -65,6 +65,7 @@ JS
 
 node scripts/validate-agent-docs.mjs
 node scripts/test-agent-guidance.mjs
+node scripts/test-live-agent-trace-evaluation-v1.mjs
 node scripts/validate-sdk-agent-routes.mjs
 
 echo "PASS maintainer structure, release integrity, and facade contract"
