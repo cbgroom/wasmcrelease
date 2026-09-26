@@ -34,3 +34,15 @@ dev-to-main transition then preserved the candidate commit and every product
 digest as `v0.0.14-main.1`. Neither prerelease publishes v0.0.14, advances
 public default discovery, or permits rebuilding any product byte. Prod remains
 v0.0.13 until its exact main-to-prod transition completes.
+
+## Prod hold and superseding candidate
+
+Final white-box review found that the frozen candidate itself contains
+stage-specific Agent guidance: several product files still name v0.0.13 as the
+current immutable release, and the quickstart tells Agents to stop at the dev
+qualification gate. Publishing those exact bytes as v0.0.14 would preserve
+hashes but teach a false lifecycle state. `scripts/validate-v014-prod-readiness.mjs`
+therefore keeps prod fail-closed. The required recovery is a lifecycle-neutral
+replacement product set, followed by `v0.0.14-dev.2` qualification and exact
+main/prod promotion. Existing dev.1 and main.1 remain immutable prerelease
+evidence and do not advance the public pointer.

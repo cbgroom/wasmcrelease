@@ -74,4 +74,4 @@ const old=spawnSync(process.execPath,['scripts/release-candidate.mjs','verify','
 assert.notEqual(old.status,0);
 assert.match(old.stderr+old.stdout,/product drift rejected/);
 
-console.log(JSON.stringify({accepted:true,schema:candidate.schema,version:candidate.version,products:candidate.product_files.length,product_set_sha256:candidate.product_set_sha256,release_packages:14,package_routes:14,api_routes:108,candidate_extras:0,qualification_routes_bound:true,lib_search_states:admission.states,dev_stage:dev.tag,main_stage:main.tag,current_prod:'v0.0.13',publishes:false,next:'metadata-only-prod-promotion'}));
+console.log(JSON.stringify({accepted:true,schema:candidate.schema,version:candidate.version,products:candidate.product_files.length,product_set_sha256:candidate.product_set_sha256,release_packages:14,package_routes:14,api_routes:108,candidate_extras:0,qualification_routes_bound:true,lib_search_states:admission.states,dev_stage:dev.tag,main_stage:main.tag,current_prod:'v0.0.13',publishes:false,prod_blocked:true,next:'lifecycle-neutral-superseding-dev2-candidate'}));

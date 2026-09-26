@@ -1,5 +1,17 @@
 # WAsmC release maintainer handoff
 
+## 2026-09-27 v0.0.14 prod hold
+
+Do not promote `v0.0.14-main.1` to prod. White-box product inspection found
+stage-stale guidance inside the frozen 213-file candidate: AGENTS, README,
+agent quickstart, route readiness, release surfaces and Lib discovery still
+identify v0.0.13 or dev qualification as the current lifecycle boundary.
+`scripts/validate-v014-prod-readiness.mjs` records this as
+`candidate-lifecycle-guidance-is-stage-stale` and confirms public prod remains
+v0.0.13. Required recovery: make product guidance lifecycle-neutral, freeze a
+new product set, qualify it as `v0.0.14-dev.2`, then repeat exact main/prod
+promotion. Never move or rewrite dev.1/main.1 tags.
+
 ## 2026-09-27 v0.0.14 main promotion
 
 `v0.0.14-main.1` is the exact metadata-only successor of

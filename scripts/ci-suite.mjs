@@ -29,6 +29,7 @@ export function suiteCases(family,runtime='node',mirror='github') {
     item('release-channel-promotion-negatives','scripts/test-release-channel.mjs'),
     item('release-candidate-lib-route-closure','scripts/test-release-candidate-lib-routes.mjs'),
     item('release-v014-candidate-admission','scripts/validate-v014-candidate.mjs'),
+    item('release-v014-prod-readiness','scripts/validate-v014-prod-readiness.mjs'),
     item('release-product-identity','scripts/release-candidate.mjs',['verify','channels/candidates/0.0.14.json']),
     item('release-surface-model','scripts/validate-release-surfaces.mjs'),
     item('same-platform-performance-baseline','scripts/test-performance-baseline.mjs'),
