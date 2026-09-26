@@ -1,7 +1,7 @@
 {
   "schema": "wasmc.libsrc-candidate/v1",
   "id": "wasmc-data-relational",
-  "version": "0.0.1",
+  "version": "0.0.2-dev.1",
   "wit": "wit/world.wit",
   "source": [
     "Cargo.toml",
@@ -30,20 +30,23 @@
   },
   "completed_gates": [
     "public-source",
-    "zero-core-imports",
-    "bounded-window-join-union-all-and-richer-group-aggregate-qualification",
-    "wasmi-qualification",
+    "v0.0.1-admitted-baseline-inherited",
+    "distinct-lag-lead-qualification",
+    "wasmi-v0.0.2-structural-qualification",
+    "broad-wasmi-version-aware-qualification",
+    "deterministic-core-component",
+    "legacy-data-pipeline-regression"
+  ],
+  "pending_gates": [
+    "rows-frame-aggregate-qualification",
     "admission-review"
   ],
-  "pending_gates": [],
-  "admitted": true,
+  "admitted": false,
   "qualification": {
     "runner": "node",
-    "script": "scripts/test-data-relational-libsrc.mjs"
-  },
-  "admission": {
-    "date": "2026-09-20",
-    "package": "libs/wasmc-data-relational",
-    "source_authority": "ff6928b09194b4818b05117ec0ba6a71b998d224"
+    "semantic_script": "scripts/test-data-relational-libsrc.mjs",
+    "wasmi_script": "scripts/test-data-relational-wasmi-v002.mjs",
+    "broad_wasmi_script": "scripts/test-libsrc-wasmi.mjs",
+    "receipt": "admission/data-foundation-v11/relational-v002-first-slice.json"
   }
 }

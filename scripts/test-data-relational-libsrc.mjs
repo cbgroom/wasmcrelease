@@ -36,7 +36,7 @@ assert.deepEqual(WebAssembly.Module.imports(module), []);
 
 const wit = run('wasm-tools', ['component', 'wit', artifact]);
 assert.match(wit, /import wasmc:data-core\/types@0\.0\.1;/);
-assert.match(wit, /export wasmc:data-relational\/relational@0\.0\.1;/);
+assert.match(wit, /export wasmc:data-relational\/relational@0\.0\.2;/);
 assert.doesNotMatch(wit, /import .*host/i);
 
 const work = await mkdtemp(join(tmpdir(), 'wasmc-data-relational-'));
@@ -53,6 +53,7 @@ try {
   const joinRight = '{rows: 4, fields: [{name: "id", data-type: int64, nullable: true}, {name: "tag", data-type: utf8, nullable: false}], columns: [int64-column([some(2), some(2), some(1), none]), utf8-column([some("r2a"), some("r2b"), some("r1"), some("rn")])]}';
   const joinKeys = '[{left-column: 0, right-column: 0}]';
   const windowBatch = '{rows: 5, fields: [{name: "g", data-type: utf8, nullable: false}, {name: "score", data-type: int64, nullable: true}], columns: [utf8-column([some("a"), some("a"), some("a"), some("b"), some("b")]), int64-column([some(20), some(10), some(10), some(9), none])]}';
+  const distinctBatch = '{rows: 5, fields: [{name: "k", data-type: int64, nullable: true}, {name: "v", data-type: utf8, nullable: false}], columns: [int64-column([some(1), some(1), none, none, some(1)]), utf8-column([some("a"), some("a"), some("n"), some("n"), some("b")])]}';
   const cases = [
     [
       'window-partition-ranking',
@@ -118,6 +119,81 @@ try {
       'window-column-out-of-bounds',
       'window-rank(' + windowBatch + ', [0], [{column: 9, descending: false, nulls-first: false}], [row-number("rn")], {max-rows: 5})',
       'err(column-out-of-bounds)',
+    ],
+    [
+      'distinct-whole-row-stable',
+      'distinct(' + distinctBatch + ', [], {max-rows: 5})',
+      'ok({rows: 3, fields: [{name: "k", data-type: int64, nullable: true}, {name: "v", data-type: utf8, nullable: false}], columns: [int64-column([some(1), none, some(1)]), utf8-column([some("a"), some("n"), some("b")])]})',
+    ],
+    [
+      'distinct-selected-key-null-equality',
+      'distinct(' + distinctBatch + ', [0], {max-rows: 5})',
+      'ok({rows: 2, fields: [{name: "k", data-type: int64, nullable: true}, {name: "v", data-type: utf8, nullable: false}], columns: [int64-column([some(1), none]), utf8-column([some("a"), some("n")])]})',
+    ],
+    [
+      'distinct-all-types',
+      'distinct({rows: 3, fields: [{name: "b", data-type: boolean, nullable: true}, {name: "i", data-type: int64, nullable: true}, {name: "u", data-type: uint64, nullable: true}, {name: "f", data-type: float64, nullable: true}, {name: "s", data-type: utf8, nullable: true}, {name: "x", data-type: binary, nullable: true}], columns: [boolean-column([some(true), some(true), none]), int64-column([some(-1), some(-1), some(-1)]), uint64-column([some(2), some(2), some(2)]), float64-column([some(1.5), some(1.5), some(1.5)]), utf8-column([some("x"), some("x"), some("x")]), binary-column([some([1, 2]), some([1, 2]), some([1, 2])])]}, [], {max-rows: 3})',
+      'ok({rows: 2, fields: [{name: "b", data-type: boolean, nullable: true}, {name: "i", data-type: int64, nullable: true}, {name: "u", data-type: uint64, nullable: true}, {name: "f", data-type: float64, nullable: true}, {name: "s", data-type: utf8, nullable: true}, {name: "x", data-type: binary, nullable: true}], columns: [boolean-column([some(true), none]), int64-column([some(-1), some(-1)]), uint64-column([some(2), some(2)]), float64-column([some(1.5), some(1.5)]), utf8-column([some("x"), some("x")]), binary-column([some([1, 2]), some([1, 2])])]})',
+    ],
+    [
+      'distinct-duplicate-key',
+      'distinct(' + distinctBatch + ', [0, 0], {max-rows: 5})',
+      'err(duplicate-key)',
+    ],
+    [
+      'distinct-column-out-of-bounds',
+      'distinct(' + distinctBatch + ', [9], {max-rows: 5})',
+      'err(column-out-of-bounds)',
+    ],
+    [
+      'distinct-invalid-limit',
+      'distinct(' + distinctBatch + ', [], {max-rows: 0})',
+      'err(invalid-limit)',
+    ],
+    [
+      'distinct-row-limit',
+      'distinct(' + distinctBatch + ', [], {max-rows: 4})',
+      'err(row-limit-exceeded)',
+    ],
+    [
+      'window-offset-partition-stable-ties',
+      'window-offset(' + windowBatch + ', [0], [{column: 1, descending: false, nulls-first: false}], [lag({column: 1, offset: 1, alias: "prev"}), lead({column: 1, offset: 1, alias: "next"}), lag({column: 1, offset: 0, alias: "current"})], {max-rows: 5})',
+      'ok({rows: 5, fields: [{name: "g", data-type: utf8, nullable: false}, {name: "score", data-type: int64, nullable: true}, {name: "prev", data-type: int64, nullable: true}, {name: "next", data-type: int64, nullable: true}, {name: "current", data-type: int64, nullable: true}], columns: [utf8-column([some("a"), some("a"), some("a"), some("b"), some("b")]), int64-column([some(20), some(10), some(10), some(9), none]), int64-column([some(10), none, some(10), none, some(9)]), int64-column([none, some(10), some(20), none, none]), int64-column([some(20), some(10), some(10), some(9), none])]})',
+    ],
+    [
+      'window-offset-all-value-types',
+      'window-offset({rows: 2, fields: [{name: "ord", data-type: int64, nullable: false}, {name: "b", data-type: boolean, nullable: false}, {name: "u", data-type: uint64, nullable: false}, {name: "f", data-type: float64, nullable: false}, {name: "s", data-type: utf8, nullable: false}, {name: "x", data-type: binary, nullable: false}], columns: [int64-column([some(1), some(2)]), boolean-column([some(true), some(false)]), uint64-column([some(3), some(4)]), float64-column([some(1.5), some(2.5)]), utf8-column([some("a"), some("b")]), binary-column([some([1]), some([2])])]}, [], [{column: 0, descending: false, nulls-first: false}], [lag({column: 1, offset: 1, alias: "lb"}), lag({column: 0, offset: 1, alias: "li"}), lag({column: 2, offset: 1, alias: "lu"}), lag({column: 3, offset: 1, alias: "lf"}), lag({column: 4, offset: 1, alias: "ls"}), lag({column: 5, offset: 1, alias: "lx"})], {max-rows: 2})',
+      'ok({rows: 2, fields: [{name: "ord", data-type: int64, nullable: false}, {name: "b", data-type: boolean, nullable: false}, {name: "u", data-type: uint64, nullable: false}, {name: "f", data-type: float64, nullable: false}, {name: "s", data-type: utf8, nullable: false}, {name: "x", data-type: binary, nullable: false}, {name: "lb", data-type: boolean, nullable: true}, {name: "li", data-type: int64, nullable: true}, {name: "lu", data-type: uint64, nullable: true}, {name: "lf", data-type: float64, nullable: true}, {name: "ls", data-type: utf8, nullable: true}, {name: "lx", data-type: binary, nullable: true}], columns: [int64-column([some(1), some(2)]), boolean-column([some(true), some(false)]), uint64-column([some(3), some(4)]), float64-column([some(1.5), some(2.5)]), utf8-column([some("a"), some("b")]), binary-column([some([1]), some([2])]), boolean-column([none, some(true)]), int64-column([none, some(1)]), uint64-column([none, some(3)]), float64-column([none, some(1.5)]), utf8-column([none, some("a")]), binary-column([none, some([1])])]})',
+    ],
+    [
+      'window-offset-empty-order',
+      'window-offset(' + windowBatch + ', [0], [], [lag({column: 1, offset: 1, alias: "prev"})], {max-rows: 5})',
+      'err(empty-order)',
+    ],
+    [
+      'window-offset-empty-functions',
+      'window-offset(' + windowBatch + ', [0], [{column: 1, descending: false, nulls-first: false}], [], {max-rows: 5})',
+      'err(empty-functions)',
+    ],
+    [
+      'window-offset-alias-conflict',
+      'window-offset(' + windowBatch + ', [0], [{column: 1, descending: false, nulls-first: false}], [lag({column: 1, offset: 1, alias: "g"})], {max-rows: 5})',
+      'err(duplicate-output-name)',
+    ],
+    [
+      'window-offset-empty-alias',
+      'window-offset(' + windowBatch + ', [0], [{column: 1, descending: false, nulls-first: false}], [lag({column: 1, offset: 1, alias: ""})], {max-rows: 5})',
+      'err(empty-alias)',
+    ],
+    [
+      'window-offset-value-column-out-of-bounds',
+      'window-offset(' + windowBatch + ', [0], [{column: 1, descending: false, nulls-first: false}], [lag({column: 9, offset: 1, alias: "prev"})], {max-rows: 5})',
+      'err(column-out-of-bounds)',
+    ],
+    [
+      'window-offset-invalid-limit',
+      'window-offset(' + windowBatch + ', [0], [{column: 1, descending: false, nulls-first: false}], [lag({column: 1, offset: 1, alias: "prev"})], {max-rows: 0})',
+      'err(invalid-limit)',
     ],
     [
       'join-inner-stable',
@@ -277,10 +353,12 @@ try {
     core_imports: 0,
     deterministic_group_order: true,
     aggregate_null_semantics: 'ignore-input-null; nullable-empty-result',
-    operations: ['union-all','equi-join','window-rank','group-aggregate'],
+    operations: ['union-all','equi-join','window-rank','distinct','window-offset','group-aggregate'],
     union_semantics: 'stable-input-order; exact-schema; no-coercion',
     join_semantics: 'bounded; typed; stable-left-then-right-order; null-keys-never-match',
     window_semantics: 'bounded-no-row-expansion; output-aligned-input-order; stable-input-tie-break',
+    distinct_semantics: 'stable-first-occurrence; empty-keys-means-whole-row; null-equals-null',
+    offset_window_semantics: 'same-partition-order-model; output-aligned-input-order; out-of-partition-null; offset-zero-current-row',
     aggregates: ['count-all','count','sum','min','max','mean','first','last','variance-pop','stddev-pop'],
     cases: receipts.length,
     receipts,

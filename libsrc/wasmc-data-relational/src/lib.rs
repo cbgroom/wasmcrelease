@@ -5,8 +5,9 @@ wit_bindgen::generate!({
 });
 
 use crate::exports::wasmc::data_relational::relational::{
-    Aggregate, ColumnAggregate, Guest, JoinKey, JoinKind, JoinOptions, RelationalError,
-    WindowFunction, WindowOptions, WindowOrder,
+    Aggregate, ColumnAggregate, DistinctOptions, Guest, JoinKey, JoinKind, JoinOptions,
+    OffsetWindow, OffsetWindowFunction, RelationalError, WindowFunction, WindowOptions,
+    WindowOrder,
 };
 use crate::wasmc::data_core::types::{
     BatchSnapshot, Column, DataType as WitDataType, Field as WitField,
@@ -69,6 +70,21 @@ enum WindowKind {
 struct WindowDesc {
     kind: WindowKind,
     alias: String,
+}
+
+#[derive(Clone, Copy, Debug)]
+enum OffsetWindowKind {
+    Lag,
+    Lead,
+}
+
+#[derive(Clone, Debug)]
+struct OffsetWindowDesc {
+    kind: OffsetWindowKind,
+    column: usize,
+    offset: usize,
+    alias: String,
+    data_type: WitDataType,
 }
 
 enum AggValue {
@@ -249,6 +265,70 @@ fn compare_window_keys(left: &[Cell], right: &[Cell], order_by: &[WindowOrder]) 
         }
     }
     Ordering::Equal
+}
+
+fn ordered_window_partitions(
+    value: &BatchSnapshot,
+    partition_by: &[u32],
+    order_by: &[WindowOrder],
+    max_rows: u32,
+) -> Result<Vec<Vec<usize>>, RelationalError> {
+    if max_rows == 0 {
+        return Err(RelationalError::InvalidLimit);
+    }
+    if value.rows > max_rows {
+        return Err(RelationalError::RowLimitExceeded);
+    }
+
+    let mut seen_partition = BTreeSet::new();
+    let partition_indices = partition_by
+        .iter()
+        .map(|column| {
+            let index = *column as usize;
+            if index >= value.fields.len() {
+                return Err(RelationalError::ColumnOutOfBounds);
+            }
+            if !seen_partition.insert(index) {
+                return Err(RelationalError::DuplicateKey);
+            }
+            Ok(index)
+        })
+        .collect::<Result<Vec<_>, _>>()?;
+
+    let mut seen_order = BTreeSet::new();
+    for order in order_by {
+        let index = order.column as usize;
+        if index >= value.fields.len() {
+            return Err(RelationalError::ColumnOutOfBounds);
+        }
+        if !seen_order.insert(index) {
+            return Err(RelationalError::DuplicateKey);
+        }
+    }
+
+    let order_keys = (0..value.rows as usize)
+        .map(|row| {
+            order_by
+                .iter()
+                .map(|order| cell_at(&value.columns[order.column as usize], row))
+                .collect::<Vec<_>>()
+        })
+        .collect::<Vec<_>>();
+    let mut partitions: BTreeMap<Vec<Cell>, Vec<usize>> = BTreeMap::new();
+    for row in 0..value.rows as usize {
+        let key = partition_indices
+            .iter()
+            .map(|index| cell_at(&value.columns[*index], row))
+            .collect::<Vec<_>>();
+        partitions.entry(key).or_default().push(row);
+    }
+    for rows in partitions.values_mut() {
+        rows.sort_by(|left, right| {
+            compare_window_keys(&order_keys[*left], &order_keys[*right], order_by)
+                .then_with(|| left.cmp(right))
+        });
+    }
+    Ok(partitions.into_values().collect())
 }
 
 fn cell_at(column: &Column, index: usize) -> Cell {
@@ -575,39 +655,6 @@ impl Guest for DataRelational {
         if functions.is_empty() {
             return Err(RelationalError::EmptyFunctions);
         }
-        if options.max_rows == 0 {
-            return Err(RelationalError::InvalidLimit);
-        }
-        if value.rows > options.max_rows {
-            return Err(RelationalError::RowLimitExceeded);
-        }
-
-        let mut seen_partition = BTreeSet::new();
-        let partition_indices = partition_by
-            .into_iter()
-            .map(|column| {
-                let index = column as usize;
-                if index >= value.fields.len() {
-                    return Err(RelationalError::ColumnOutOfBounds);
-                }
-                if !seen_partition.insert(index) {
-                    return Err(RelationalError::DuplicateKey);
-                }
-                Ok(index)
-            })
-            .collect::<Result<Vec<_>, _>>()?;
-
-        let mut seen_order = BTreeSet::new();
-        for order in &order_by {
-            let index = order.column as usize;
-            if index >= value.fields.len() {
-                return Err(RelationalError::ColumnOutOfBounds);
-            }
-            if !seen_order.insert(index) {
-                return Err(RelationalError::DuplicateKey);
-            }
-        }
-
         let mut output_names = value
             .fields
             .iter()
@@ -638,6 +685,10 @@ impl Guest for DataRelational {
             descs.push(WindowDesc { kind, alias });
         }
 
+        let partitions =
+            ordered_window_partitions(&value, &partition_by, &order_by, options.max_rows)?;
+
+        let mut outputs = vec![vec![0_u64; value.rows as usize]; descs.len()];
         let order_keys = (0..value.rows as usize)
             .map(|row| {
                 order_by
@@ -646,21 +697,7 @@ impl Guest for DataRelational {
                     .collect::<Vec<_>>()
             })
             .collect::<Vec<_>>();
-        let mut partitions: BTreeMap<Vec<Cell>, Vec<usize>> = BTreeMap::new();
-        for row in 0..value.rows as usize {
-            let key = partition_indices
-                .iter()
-                .map(|index| cell_at(&value.columns[*index], row))
-                .collect::<Vec<_>>();
-            partitions.entry(key).or_default().push(row);
-        }
-
-        let mut outputs = vec![vec![0_u64; value.rows as usize]; descs.len()];
-        for rows in partitions.values_mut() {
-            rows.sort_by(|left, right| {
-                compare_window_keys(&order_keys[*left], &order_keys[*right], &order_by)
-                    .then_with(|| left.cmp(right))
-            });
+        for rows in &partitions {
             let mut rank = 1_u64;
             let mut dense_rank = 1_u64;
             for (position, row) in rows.iter().enumerate() {
@@ -694,6 +731,155 @@ impl Guest for DataRelational {
             value
                 .columns
                 .push(Column::Uint64Column(output.into_iter().map(Some).collect()));
+        }
+        Ok(value)
+    }
+
+    fn distinct(
+        value: BatchSnapshot,
+        keys: Vec<u32>,
+        options: DistinctOptions,
+    ) -> Result<BatchSnapshot, RelationalError> {
+        validate_batch(&value)?;
+        if options.max_rows == 0 {
+            return Err(RelationalError::InvalidLimit);
+        }
+        if value.rows > options.max_rows {
+            return Err(RelationalError::RowLimitExceeded);
+        }
+
+        let key_indices = if keys.is_empty() {
+            (0..value.fields.len()).collect::<Vec<_>>()
+        } else {
+            let mut seen_keys = BTreeSet::new();
+            keys.into_iter()
+                .map(|column| {
+                    let index = column as usize;
+                    if index >= value.fields.len() {
+                        return Err(RelationalError::ColumnOutOfBounds);
+                    }
+                    if !seen_keys.insert(index) {
+                        return Err(RelationalError::DuplicateKey);
+                    }
+                    Ok(index)
+                })
+                .collect::<Result<Vec<_>, _>>()?
+        };
+
+        let mut seen = BTreeSet::new();
+        let mut selected_rows = Vec::new();
+        for row in 0..value.rows as usize {
+            let identity = key_indices
+                .iter()
+                .map(|index| cell_at(&value.columns[*index], row))
+                .collect::<Vec<_>>();
+            if seen.insert(identity) {
+                selected_rows.push(row);
+            }
+        }
+
+        let columns = value
+            .fields
+            .iter()
+            .enumerate()
+            .map(|(column_index, field)| {
+                let cells = selected_rows
+                    .iter()
+                    .map(|row| cell_at(&value.columns[column_index], *row))
+                    .collect::<Vec<_>>();
+                cells_to_column(field.data_type, &cells)
+            })
+            .collect::<Result<Vec<_>, _>>()?;
+
+        Ok(BatchSnapshot {
+            rows: u32::try_from(selected_rows.len()).map_err(|_| RelationalError::Overflow)?,
+            fields: value.fields,
+            columns,
+        })
+    }
+
+    fn window_offset(
+        mut value: BatchSnapshot,
+        partition_by: Vec<u32>,
+        order_by: Vec<WindowOrder>,
+        functions: Vec<OffsetWindowFunction>,
+        options: WindowOptions,
+    ) -> Result<BatchSnapshot, RelationalError> {
+        validate_batch(&value)?;
+        if order_by.is_empty() {
+            return Err(RelationalError::EmptyOrder);
+        }
+        if functions.is_empty() {
+            return Err(RelationalError::EmptyFunctions);
+        }
+
+        let mut output_names = value
+            .fields
+            .iter()
+            .map(|field| field.name.clone())
+            .collect::<BTreeSet<_>>();
+        let mut descs = Vec::with_capacity(functions.len());
+        for function in functions {
+            let (
+                kind,
+                OffsetWindow {
+                    column,
+                    offset,
+                    alias,
+                },
+            ) = match function {
+                OffsetWindowFunction::Lag(value) => (OffsetWindowKind::Lag, value),
+                OffsetWindowFunction::Lead(value) => (OffsetWindowKind::Lead, value),
+            };
+            if alias.is_empty() {
+                return Err(RelationalError::EmptyAlias);
+            }
+            if !output_names.insert(alias.clone()) {
+                return Err(RelationalError::DuplicateOutputName);
+            }
+            let column = column as usize;
+            let data_type = value
+                .fields
+                .get(column)
+                .ok_or(RelationalError::ColumnOutOfBounds)?
+                .data_type;
+            descs.push(OffsetWindowDesc {
+                kind,
+                column,
+                offset: offset as usize,
+                alias,
+                data_type,
+            });
+        }
+
+        let partitions =
+            ordered_window_partitions(&value, &partition_by, &order_by, options.max_rows)?;
+        let mut outputs = vec![vec![Cell::Null; value.rows as usize]; descs.len()];
+        for rows in &partitions {
+            for (position, row) in rows.iter().enumerate() {
+                for (output, desc) in outputs.iter_mut().zip(&descs) {
+                    let source_position = match desc.kind {
+                        OffsetWindowKind::Lag => position.checked_sub(desc.offset),
+                        OffsetWindowKind::Lead => position
+                            .checked_add(desc.offset)
+                            .filter(|position| *position < rows.len()),
+                    };
+                    if let Some(source_position) = source_position {
+                        output[*row] = cell_at(&value.columns[desc.column], rows[source_position]);
+                    }
+                }
+            }
+        }
+
+        for (desc, output) in descs.into_iter().zip(outputs) {
+            value.fields.push(WitField {
+                name: desc.alias,
+                data_type: desc.data_type,
+                nullable: true,
+            });
+            value
+                .columns
+                .push(cells_to_column(desc.data_type, &output)?);
         }
         Ok(value)
     }

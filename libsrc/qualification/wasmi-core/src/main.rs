@@ -189,6 +189,8 @@ fn main() -> Result<()> {
     let expr_path = std::env::var("WASMC_LIBSRC_DATA_EXPR")?;
     let compute_path = std::env::var("WASMC_LIBSRC_DATA_COMPUTE")?;
     let relational_path = std::env::var("WASMC_LIBSRC_DATA_RELATIONAL")?;
+    let relational_version = std::env::var("WASMC_LIBSRC_DATA_RELATIONAL_VERSION")
+        .unwrap_or_else(|_| "0.0.1".to_string());
     let profile_path = std::env::var("WASMC_LIBSRC_DATA_PROFILE")?;
     let interchange_path = std::env::var("WASMC_LIBSRC_DATA_INTERCHANGE")?;
 
@@ -219,15 +221,27 @@ fn main() -> Result<()> {
             "wasmc:data-compute/compute@0.0.1#sort",
         ],
     )?;
-    structural(
-        &relational_path,
-        &[
-            "wasmc:data-relational/relational@0.0.1#group-aggregate",
-            "wasmc:data-relational/relational@0.0.1#union-all",
-            "wasmc:data-relational/relational@0.0.1#equi-join",
-            "wasmc:data-relational/relational@0.0.1#window-rank",
-        ],
-    )?;
+    let relational_prefix = format!(
+        "wasmc:data-relational/relational@{}#",
+        relational_version
+    );
+    let mut relational_exports = vec![
+        format!("{relational_prefix}group-aggregate"),
+        format!("{relational_prefix}union-all"),
+        format!("{relational_prefix}equi-join"),
+        format!("{relational_prefix}window-rank"),
+    ];
+    if relational_version == "0.0.2" {
+        relational_exports.push(format!("{relational_prefix}distinct"));
+        relational_exports.push(format!("{relational_prefix}window-offset"));
+    } else if relational_version != "0.0.1" {
+        bail!("unsupported relational qualification version: {relational_version}");
+    }
+    let relational_export_refs = relational_exports
+        .iter()
+        .map(String::as_str)
+        .collect::<Vec<_>>();
+    structural(&relational_path, &relational_export_refs)?;
     structural(
         &profile_path,
         &["wasmc:data-profile/profile@0.0.1#describe"],
@@ -243,7 +257,8 @@ fn main() -> Result<()> {
     )?;
 
     println!(
-        "{{\"accepted\":true,\"engine\":\"wasmi-2.0.0\",\"candidates\":[\"wasmc-router-policy\",\"wasmc-json\",\"wasmc-compression\",\"wasmc-http1\",\"wasmc-data-core\",\"wasmc-csv\",\"wasmc-data-expr\",\"wasmc-data-compute\",\"wasmc-data-relational\",\"wasmc-data-profile\",\"wasmc-data-interchange\"],\"representative_execution\":true,\"structural_data_qualification\":true,\"host_imports\":0}}"
+        "{{\"accepted\":true,\"engine\":\"wasmi-2.0.0\",\"candidates\":[\"wasmc-router-policy\",\"wasmc-json\",\"wasmc-compression\",\"wasmc-http1\",\"wasmc-data-core\",\"wasmc-csv\",\"wasmc-data-expr\",\"wasmc-data-compute\",\"wasmc-data-relational\",\"wasmc-data-profile\",\"wasmc-data-interchange\"],\"relational_version\":\"{}\",\"representative_execution\":true,\"structural_data_qualification\":true,\"host_imports\":0}}",
+        relational_version
     );
     Ok(())
 }

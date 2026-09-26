@@ -1,5 +1,49 @@
 # WAsmC release maintainer handoff
 
+## 2026-09-26 Data Foundation v1.1 — relational 0.0.2 first slice QUALIFIED
+
+Workstream remains `work/WS-20260926-data-foundation-v11`. The first semantic
+slice is now qualified under the corrected final package identity
+`wasmc:data-relational@0.0.2` / candidate `0.0.2-dev.1`.
+
+Implemented scope:
+- bounded stable `distinct`, with empty keys meaning whole-row identity;
+- `lag` / `lead` through `window-offset`;
+- one shared deterministic partition/order model with `window-rank`;
+- all value types, null propagation, alias/duplicate/OOB/row-limit boundaries.
+
+Exact evidence:
+- Wasmtime semantic matrix: **56/56 PASS**;
+- Core: 947,248 bytes,
+  `c71405f013a3c5dc771e1227aae7f1232b44d2f2304aa9831e7277ffe3b42aaf`,
+  imports=0;
+- Component: 952,570 bytes,
+  `21f2c3b8499eabd2e048a9e08d590e0f622e6e3363b53021975cb79e90f006e1`;
+- independent second Core and Component builds are byte-identical;
+- candidate-specific Wasmi 2.0 gate PASS: final Core validates/instantiates,
+  six 0.0.2 relational exports exist including `distinct` and
+  `window-offset`;
+- repaired broad Wasmi qualification PASS with
+  `relational_version=0.0.2`, representative execution true, structural data
+  qualification true, host imports 0;
+- full legacy Data pipeline PASS across CSV -> Core -> Expr -> Compute ->
+  Relational -> Profile -> Arrow IPC/Parquet -> validate;
+- admitted `libs/wasmc-data-relational@0.0.1` remains byte-unchanged at
+  `627176699ad4b9c2dc47ca78d520fe45ef1b2603fcc87d08eef3c0b2a1bf30a9`.
+
+Important judgment: the earlier broad Wasmi harness hard-coded relational
+`@0.0.1`. That was test-infrastructure version drift, not evidence that the
+0.0.2 product failed. The generic harness now derives the exact relational
+version from WIT and requires the 0.0.2-only exports when appropriate.
+Wasmtime 56/56 remains semantic authority; Wasmi is structural engine evidence.
+
+Durable receipt:
+`admission/data-foundation-v11/relational-v002-first-slice.json`.
+
+Next gate is `rows-frame-aggregate-qualification`; admission remains pending.
+Do not publish or mutate the admitted v0.0.1 package while this additive
+candidate is still under qualification.
+
 ## 2026-09-26 Data Foundation v1.1 — STARTED
 
 Task state: started.

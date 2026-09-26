@@ -1,4 +1,4 @@
-package wasmc:data-relational@0.0.1;
+package wasmc:data-relational@0.0.2;
 
 interface relational {
   use wasmc:data-core/types@0.0.1.{batch-snapshot};
@@ -53,6 +53,21 @@ interface relational {
     max-rows: u32,
   }
 
+  record distinct-options {
+    max-rows: u32,
+  }
+
+  record offset-window {
+    column: u32,
+    offset: u32,
+    alias: string,
+  }
+
+  variant offset-window-function {
+    lag(offset-window),
+    lead(offset-window),
+  }
+
   enum relational-error {
     invalid-batch,
     empty-input,
@@ -96,6 +111,20 @@ interface relational {
     partition-by: list<u32>,
     order-by: list<window-order>,
     functions: list<window-function>,
+    options: window-options,
+  ) -> result<batch-snapshot, relational-error>;
+
+  distinct: func(
+    value: batch-snapshot,
+    keys: list<u32>,
+    options: distinct-options,
+  ) -> result<batch-snapshot, relational-error>;
+
+  window-offset: func(
+    value: batch-snapshot,
+    partition-by: list<u32>,
+    order-by: list<window-order>,
+    functions: list<offset-window-function>,
     options: window-options,
   ) -> result<batch-snapshot, relational-error>;
 }

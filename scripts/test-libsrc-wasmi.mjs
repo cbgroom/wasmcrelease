@@ -1,10 +1,19 @@
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import { mkdtemp, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 
 const root = process.cwd();
+const relationalWit = readFileSync(
+  resolve(root, 'libsrc/wasmc-data-relational/wit/world.wit'),
+  'utf8',
+);
+const relationalVersion = relationalWit.match(
+  /^package\s+wasmc:data-relational@(\d+\.\d+\.\d+);/m,
+)?.[1];
+if (!relationalVersion) throw new Error('relational WIT package version missing');
 
 function run(command, args, options = {}) {
   const result = spawnSync(command, args, {
@@ -79,6 +88,7 @@ try {
       WASMC_LIBSRC_DATA_EXPR: resolve(root, 'libsrc/wasmc-data-expr/target/wasm32-unknown-unknown/release/wasmc_data_expr_public.wasm'),
       WASMC_LIBSRC_DATA_COMPUTE: resolve(root, 'libsrc/wasmc-data-compute/target/wasm32-unknown-unknown/release/wasmc_data_compute_public.wasm'),
       WASMC_LIBSRC_DATA_RELATIONAL: resolve(root, 'libsrc/wasmc-data-relational/target/wasm32-unknown-unknown/release/wasmc_data_relational_public.wasm'),
+      WASMC_LIBSRC_DATA_RELATIONAL_VERSION: relationalVersion,
       WASMC_LIBSRC_DATA_PROFILE: resolve(root, 'libsrc/wasmc-data-profile/target/wasm32-unknown-unknown/release/wasmc_data_profile_public.wasm'),
       WASMC_LIBSRC_DATA_INTERCHANGE: resolve(root, 'libsrc/wasmc-data-interchange/target/wasm32-unknown-unknown/release/wasmc_data_interchange_public.wasm'),
     },
@@ -89,6 +99,7 @@ try {
   assert.equal(receipt.representative_execution, true);
   assert.equal(receipt.structural_data_qualification, true);
   assert.equal(receipt.host_imports, 0);
+  assert.equal(receipt.relational_version, relationalVersion);
   assert.deepEqual(receipt.candidates, [
     'wasmc-router-policy',
     'wasmc-json',
