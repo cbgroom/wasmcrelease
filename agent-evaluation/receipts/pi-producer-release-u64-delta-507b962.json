@@ -1,0 +1,68 @@
+{
+  "schema": "wasmc.pi-producer-release-delta-pair/v1",
+  "guidance_commit": "507b962c02c801d8a691a985f9e8da7f9ea9f597",
+  "producer_commit": "94328ed760f93bf24b595a71facdcc773d43b762",
+  "agent": {
+    "implementation": "pi",
+    "version": "0.87.1"
+  },
+  "prompt_scope": "ordinary-source u64 producer-master versus immutable-release authority split, five release states, u32 and char",
+  "models": [
+    {
+      "provider": "llm-m4dd",
+      "identity": "deepseek-v4.1-flash",
+      "accepted": true,
+      "wall_ms": 6960,
+      "tool_calls": 2,
+      "assistant_turns": 2,
+      "tool_result_characters": 6221,
+      "errors": 0,
+      "retries": 0,
+      "duplicate_calls": 0,
+      "repeated_reads": 0,
+      "zero_yield_results": 0,
+      "tokens": {"input":6607,"output":487,"reasoning":68,"cache_read":4480,"cache_write":0},
+      "final_answer_sha256": "48c3af4e1de9d0f85b9e3c75277b84004caa32188906d5542e19a291ccfd75ba"
+    },
+    {
+      "provider": "llm-m4dd",
+      "identity": "glm-5.3-flash",
+      "accepted": true,
+      "wall_ms": 8381,
+      "tool_calls": 1,
+      "assistant_turns": 2,
+      "tool_result_characters": 5752,
+      "errors": 0,
+      "retries": 0,
+      "duplicate_calls": 0,
+      "repeated_reads": 0,
+      "zero_yield_results": 0,
+      "tokens": {"input":8678,"output":310,"reasoning":38,"cache_read":1472,"cache_write":0},
+      "final_answer_sha256": "31aae30043234a00c338c8f79a469c94ec66da02d3956790527285e4189308c4"
+    }
+  ],
+  "semantic_checks": {
+    "exact_producer_commit": true,
+    "producer_implemented": true,
+    "immutable_release_named": true,
+    "opening_authority_split": true,
+    "release_u64_unsupported": true,
+    "five_false_states": true,
+    "u32_already_released": true,
+    "char_not_implemented": true,
+    "no_source_block": true
+  },
+  "white_box_iteration": {
+    "first_finding": "DeepSeek used an authority-ambiguous negative heading even though its body separated producer and release.",
+    "guidance_repair": "Require the first sentence to say producer master yes and immutable v0.0.13 release no.",
+    "evaluator_findings": [
+      "The initial negative matcher did not span line breaks.",
+      "The successor matcher omitted the equivalent phrase does not support."
+    ],
+    "evaluator_repair": "Normalize whitespace and admit equivalent explicit negative release phrases without weakening any required state or identity check."
+  },
+  "scope": "Focused two-model learning probe only; this is not a rerun or replacement of the six-case controlled-pair qualification.",
+  "raw_traces_retained": false,
+  "hidden_reasoning_retained": false,
+  "accepted": true
+}

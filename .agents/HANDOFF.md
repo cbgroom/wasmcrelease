@@ -16,11 +16,21 @@ admitted. `release-surfaces.json.producer_capability_delta` and the compact
 `u32` was already released and needed no repair; `char` remains unimplemented
 on the cited producer commit and arbitrary `u32` is not a valid substitute.
 
-Deterministic guidance checks pass. Next, freeze this guidance commit and run
-one fresh Pi prompt through both `llm-m4dd/deepseek-v4.1-flash` and
-`llm-m4dd/glm-5.3-flash`; independently verify that each answer distinguishes
-producer implementation from release availability without retries. Do not use
-model self-assessment as admission authority.
+The focused pair is now accepted on exact guidance commit
+`507b962c02c801d8a691a985f9e8da7f9ea9f597`. Pi 0.87.1 used both
+`llm-m4dd/deepseek-v4.1-flash` and `llm-m4dd/glm-5.3-flash`; both answers led
+with producer yes / immutable release no, preserved the exact producer commit,
+reported all five release states as false, kept u32 and char distinct, generated
+no source, and used one or two tool calls with two assistant turns and zero
+errors, retries, duplicate calls or repeated reads. The durable privacy-safe
+receipt is `agent-evaluation/receipts/pi-producer-release-u64-delta-507b962.json`.
+
+White-box iteration mattered: one initial DeepSeek heading was authority
+ambiguous, while two correct GLM answers exposed newline and phrase-coverage
+gaps in the evaluator. Guidance now requires an explicit opening authority
+split, and the evaluator normalizes whitespace plus accepts equivalent explicit
+release negatives without weakening identity or five-state checks. This is a
+focused pair probe, not a replacement for the frozen six-case qualification.
 
 ## 2026-09-26 Live-Agent learning flywheel side-remediation
 
