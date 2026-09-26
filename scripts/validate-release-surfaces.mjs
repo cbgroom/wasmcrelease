@@ -10,8 +10,15 @@ const model=JSON.parse(read('release-surfaces.json'));
 assert.equal(model.schema,'wasmc.release-surfaces/v1');
 
 const projection=model.agent_capability_projection;
+const learning=model.agent_learning_protocol;
 assert.equal(projection?.schema,'wasmc.release-agent-capabilities/v1');
 assert.equal(projection?.product_release,'v'+model.release_version);
+assert.equal(learning?.schema,'wasmc.fresh-agent-learning/v1');
+assert.equal(learning?.path,'agent-evaluation/fresh-agent-learning-v1.json');
+assert.equal(learning?.single_model_pass_is_portable_qualification,false);
+assert.equal(learning?.wall_clock_is_standalone_release_gate,false);
+assert(existsSync(resolve(root,learning.path)),'agent learning protocol is missing');
+assert.equal(JSON.parse(read(learning.path)).schema,learning.schema);
 assert.equal(projection?.guidance_scope?.included_in_immutable_tag,false);
 assert.equal(projection?.guidance_scope?.product_bytes_changed,false);
 assert.equal(projection?.function_shape?.result,'exactly one semantic value');

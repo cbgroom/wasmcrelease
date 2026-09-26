@@ -1,0 +1,110 @@
+{
+  "schema": "wasmc.fresh-agent-learning/v1",
+  "objective": "A previously unprimed Agent and model must learn the pinned public WAsmC release accurately and efficiently from public release material alone.",
+  "authority_scope": {
+    "allowed": [
+      "the pinned public wasmcrelease checkout",
+      "tools explicitly declared by the run receipt",
+      "the frozen case prompt"
+    ],
+    "forbidden": [
+      "private wasmc source or private handoffs",
+      "prior conversation or session state",
+      "maintainer hints added after the case starts",
+      "hidden model reasoning as evidence"
+    ],
+    "rule": "Every case starts in a fresh session. The case prompt, oracle and release commit are frozen before the first evaluated cohort run."
+  },
+  "evidence_levels": {
+    "observation": "one case on one Agent and model route; useful for diagnosis only",
+    "combination": "all required cases pass for one exact Agent version and model identity",
+    "portable_learning_qualification": "the complete cohort gate passes; this is the only level that supports a cross-Agent/model learnability claim"
+  },
+  "cases": [
+    {
+      "id": "release-orientation",
+      "class": "decision",
+      "critical": true,
+      "prompt": "Using only this pinned public checkout, identify the current immutable WAsmC release, the first public Agent entrypoint, and the exact authority you would verify before compiling. Do not use private implementation knowledge.",
+      "oracle": "Select the exact pinned release and public entrypoint without using mutable main as product authority or private implementation knowledge."
+    },
+    {
+      "id": "position-aware-capability-negative",
+      "class": "decision",
+      "critical": true,
+      "prompt": "Can the pinned release compile and publicly expose an async function that accepts u64 and returns map<string,u64> as an ordinary WAsmC value? Decide every position separately. If unsupported, give only semantics-preserving alternatives and do not generate source.",
+      "oracle": "Reject each unsupported source, public-value, async or Host position independently; provide only semantics-preserving alternatives and generate no invalid source."
+    },
+    {
+      "id": "ordinary-source-positive",
+      "class": "execution",
+      "critical": true,
+      "prompt": "Write the smallest supported WAsmC program whose exported function accepts s32 and bool parameters and returns both logical values as one semantic result. Compile it with the pinned public compiler, inspect imports, execute one call, and report exact evidence.",
+      "oracle": "Generate a supported multi-parameter, one-semantic-result program and independently compile, inspect and execute it against the pinned public compiler."
+    },
+    {
+      "id": "release-state-separation",
+      "class": "decision",
+      "critical": true,
+      "prompt": "For direct WAsmC source use of the system-telemetry sampler resource, report qualified, admitted, released, discoverable and installable separately. Stop at the first missing authority and distinguish related released routes.",
+      "oracle": "Keep qualified, admitted, released, discoverable and installable separate and stop at the first missing authority."
+    },
+    {
+      "id": "library-first-selection",
+      "class": "execution",
+      "critical": false,
+      "prompt": "Find a released reusable Base64 capability through the pinned public Library-first path. Show the exact selected package/API identity and the verification steps without treating search as approval.",
+      "oracle": "Search, inspect, approve an exact package identity, resolve or install only when published, then verify imports and behavior."
+    },
+    {
+      "id": "host-authority-boundary",
+      "class": "decision",
+      "critical": true,
+      "prompt": "Explain how to determine the Host authority required by a newly compiled WAsmC module. State what must be inspected and which ambient or private capabilities must not be invented.",
+      "oracle": "Inspect generated imports and reject ambient authority, raw private handles and undeclared Host capabilities."
+    }
+  ],
+  "cohort_gate": {
+    "minimum_agent_implementations": 2,
+    "minimum_model_identities": 3,
+    "minimum_combinations": 4,
+    "minimum_blind_holdout_combinations": 1,
+    "require_every_case_per_combination": true,
+    "require_all_critical_cases": true,
+    "minimum_overall_first_pass_rate": 0.95,
+    "structural_efficiency": {
+      "decision": {
+        "max_tool_calls": 8,
+        "max_assistant_turns": 6,
+        "max_tool_result_characters": 60000,
+        "max_error_results": 0,
+        "max_retries": 0,
+        "max_exact_duplicate_calls": 0,
+        "max_repeated_reads": 0,
+        "max_zero_yield_results": 1
+      },
+      "execution": {
+        "max_tool_calls": 16,
+        "max_assistant_turns": 10,
+        "max_tool_result_characters": 120000,
+        "max_error_results": 0,
+        "max_retries": 0,
+        "max_exact_duplicate_calls": 0,
+        "max_repeated_reads": 1,
+        "max_zero_yield_results": 2
+      }
+    },
+    "wall_clock_policy": "Record elapsed milliseconds and compare within the same route/environment, but do not use provider or network latency alone as a release truth gate."
+  },
+  "feedback_taxonomy": [
+    "release-guidance-gap",
+    "evaluator-oracle-gap",
+    "producer-capability-gap",
+    "tool-or-environment-failure",
+    "model-specific-behavior"
+  ],
+  "change_control": {
+    "rule": "A failed model suggestion is a hypothesis, never authority. Reproduce the failure, classify it, verify the proposed change against pinned artifacts, and rerun the frozen cohort plus deterministic release gates.",
+    "no_overfit": "Do not change a prompt, oracle or public contract only to make one named model pass. Create a new protocol version when the frozen case meaning changes."
+  }
+}

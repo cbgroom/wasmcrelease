@@ -42,6 +42,12 @@ catalog discovery or installation unless the pinned release publishes that
 route. A directory, source tree, test PASS, candidate receipt, mutable branch,
 or newest-looking version is never sufficient by itself.
 
+The improvement target is portable cold-start learning by a new Agent and a
+new model, not optimization for one maintainer session or favored route. Use
+the [Fresh-Agent learning flywheel](docs/FRESH_AGENT_LEARNING_FLYWHEEL.md) and
+its frozen machine protocol. One live-model PASS is diagnostic evidence only;
+only the cross-Agent/model cohort gate supports a portable-learnability claim.
+
 For every answer, report the five states separately when they differ:
 `qualified`, `admitted`, `released`, `discoverable`, and `installable`. Stop at
 the first missing authority instead of guessing the next transition. In an

@@ -7,6 +7,31 @@ does not change WAsmC compiler, Runtime, SDK, Host, Lib or product bytes; it
 does not advance `v0.0.13`, admit a candidate, or take authority from the
 active Data Foundation v1.1 producer work.
 
+The north star is now explicit: a new Agent implementation and a new model must
+accurately and efficiently learn WAsmC from a pinned public release with zero
+private or prior-session context. `agent-evaluation/fresh-agent-learning-v1.json`
+freezes six decision/execution cases and separates a one-run observation, one
+Agent/model combination, and portable-learning qualification. The last requires
+at least two Agent implementations, three model identities, four complete
+combinations, one blind holdout combination, every critical case correct on the
+first final answer, at least 95% overall first-pass accuracy, and bounded trace
+structure. Wall-clock time remains an observation rather than a standalone gate.
+
+Existing Pi and OpenCode receipts are seed observations; they do not yet satisfy
+the new cross-Agent/model cohort and must not be described as portable-learning
+qualification. The evaluator contract rejects single-model claims, critical
+errors and retry-driven passes.
+
+Protocol validation, its synthetic positive/negative cohort tests, the release
+surface validator, the maintainer validator and the deterministic Fresh-Agent
+regression pass. The integrity-suite entry for the new cross-model contract also
+passes. The overall integrity suite still rejects
+`channels/candidates/0.0.13.json` because this branch's existing main-side
+guidance differs from that immutable candidate's historical `AGENTS.md` and
+`release-surfaces.json`; do not rewrite the immutable candidate to make this
+side-remediation green. A future formal release must bind the protocol and
+current guidance into a new exact product identity.
+
 A fresh Pi journey against the Data Foundation candidate produced a correct
 high-level answer but needed 22 tool calls and 13 assistant turns in about 102
 seconds. It consumed 31,051 input, 2,420 output and 705 reasoning tokens, with
