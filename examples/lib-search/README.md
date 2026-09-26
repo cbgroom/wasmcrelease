@@ -47,8 +47,8 @@ After checking the pinned release's manifest and SHA256SUMS:
 ```sh
 node examples/lib-search/run.mjs
 node examples/lib-search/verify-api.mjs examples/lib-search/index-v014-v020.lsi standard/wasmc-lib-search/0.2.0 examples/lib-search/search-reference.wasmc current/wasmc.mjs
-WASMC_SEARCH_LIB_ROOT="$PWD/standard/wasmc-lib-search/0.1.0" cargo test --locked --release --manifest-path examples/lib-search/rust/Cargo.toml
-WASMC_SEARCH_LIB_ROOT="$PWD/standard/wasmc-lib-search/0.1.0" cargo run --locked --release --manifest-path examples/lib-search/rust/Cargo.toml
+WASMC_SEARCH_LIB_ROOT="$PWD/standard/wasmc-lib-search/0.2.0" cargo test --locked --release --manifest-path examples/lib-search/rust/Cargo.toml
+WASMC_SEARCH_LIB_ROOT="$PWD/standard/wasmc-lib-search/0.2.0" cargo run --locked --release --manifest-path examples/lib-search/rust/Cargo.toml
 ```
 
 Bun runs the same `.mjs`; Deno uses `deno run --allow-read`. The typed JS view

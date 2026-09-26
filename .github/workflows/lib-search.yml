@@ -41,10 +41,10 @@ jobs:
           if [[ "$RUNTIME" == bun ]]; then runner=(bun); fi
           if [[ "$RUNTIME" == deno ]]; then runner=(deno run --allow-read); fi
           node scripts/test-release-channel.mjs
-          node scripts/release-candidate.mjs verify channels/candidates/0.0.13.json
+          node scripts/release-candidate.mjs verify channels/candidates/0.0.14.json
           node scripts/lib-route-closure.mjs --check
           node scripts/test-lib-route-closure.mjs
-          "${runner[@]}" examples/lib-search/verify-api.mjs examples/lib-search/index.lsi standard/wasmc-lib-search/0.1.0 examples/lib-search/search-reference.wasmc current/wasmc.mjs "$GITHUB_SHA" | tee target/lib-search/api.json
+          "${runner[@]}" examples/lib-search/verify-api.mjs examples/lib-search/index-v014-v020.lsi standard/wasmc-lib-search/0.2.0 examples/lib-search/search-reference.wasmc current/wasmc.mjs "$GITHUB_SHA" | tee target/lib-search/api.json
           "${runner[@]}" examples/lib-search/run.mjs | tee target/lib-search/client.json
           printf '%s\n' "Exact tested source: $GITHUB_SHA; runtime: $RUNTIME" >> "$GITHUB_STEP_SUMMARY"
           cat target/lib-search/api.json >> "$GITHUB_STEP_SUMMARY"
@@ -59,7 +59,7 @@ jobs:
     timeout-minutes: 45
     env:
       CARGO_BUILD_JOBS: 2
-      WASMC_SEARCH_LIB_ROOT: ${{ github.workspace }}/standard/wasmc-lib-search/0.1.0
+      WASMC_SEARCH_LIB_ROOT: ${{ github.workspace }}/standard/wasmc-lib-search/0.2.0
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - name: Actual Wasmi Core and generated Rust Component SDK

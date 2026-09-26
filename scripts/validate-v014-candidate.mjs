@@ -14,6 +14,9 @@ const sha=bytes=>createHash('sha256').update(bytes).digest('hex');
 const release=json('release.json'),prod=json('channels/prod.json');
 const candidate=json('channels/candidates/0.0.14.json');
 const admission=json('admission/lib-search-v020-v014-admission.json');
+const libSearchWorkflow=read('.github/workflows/lib-search.yml').toString('utf8');
+const rustManifest=read('examples/lib-search/rust/Cargo.toml').toString('utf8');
+const rustWasmi=read('examples/lib-search/rust/tests/wasmi_portable.rs').toString('utf8');
 
 assert.equal(release.version,'0.0.13');
 assert.equal(release.stage,'prod');
@@ -31,6 +34,15 @@ assert.equal(admission.index.sha256,sha(read(admission.index.path)));
 assert.equal(admission.artifact.core_sha256,sha(read('standard/wasmc-lib-search/0.2.0/artifact.wasm')));
 assert.equal(admission.artifact.component_sha256,sha(read('standard/wasmc-lib-search/0.2.0/component.wasm')));
 assert.equal(admission.artifact.manifest_sha256,sha(read('standard/wasmc-lib-search/0.2.0/lib.json')));
+for(const exactRoute of [
+  'channels/candidates/0.0.14.json',
+  'examples/lib-search/index-v014-v020.lsi',
+  'standard/wasmc-lib-search/0.2.0'
+])assert.equal(libSearchWorkflow.includes(exactRoute),true,`LibSearch workflow route missing: ${exactRoute}`);
+assert.equal(rustManifest.includes('../../../standard/wasmc-lib-search/0.2.0/bindings/rust'),true);
+assert.equal(rustWasmi.includes('wasmc:lib-search/catalog@0.2.0#'),true);
+assert.equal(libSearchWorkflow.includes('channels/candidates/0.0.13.json'),false);
+assert.equal(libSearchWorkflow.includes('standard/wasmc-lib-search/0.1.0'),false);
 const catalog=parseCatalog(read(admission.catalog.path),catalogAuthorities.v014);
 assert.equal(catalog.packages.length,14);
 assert.equal(catalog.packages.some(row=>row.wit_package==='wasmc:lib-search@0.2.0'&&row.root==='standard/wasmc-lib-search/0.2.0'),true);
@@ -46,4 +58,4 @@ const old=spawnSync(process.execPath,['scripts/release-candidate.mjs','verify','
 assert.notEqual(old.status,0);
 assert.match(old.stderr+old.stdout,/product drift rejected/);
 
-console.log(JSON.stringify({accepted:true,schema:candidate.schema,version:candidate.version,products:candidate.product_files.length,product_set_sha256:candidate.product_set_sha256,release_packages:14,package_routes:14,api_routes:108,candidate_extras:0,lib_search_states:admission.states,current_prod:'v0.0.13',publishes:false,next:'exact-dev-stage-qualification'}));
+console.log(JSON.stringify({accepted:true,schema:candidate.schema,version:candidate.version,products:candidate.product_files.length,product_set_sha256:candidate.product_set_sha256,release_packages:14,package_routes:14,api_routes:108,candidate_extras:0,qualification_routes_bound:true,lib_search_states:admission.states,current_prod:'v0.0.13',publishes:false,next:'exact-dev-stage-qualification'}));
