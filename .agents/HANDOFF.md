@@ -83,6 +83,33 @@ range-hygiene signal also fired on a quoted bad example, showing that lexical
 hygiene checks still need evidence-aware context. Treat self-report and lexical
 scoring as complementary signals, never sole admission gates.
 
+### Position-aware capability projection
+
+Private producer workstream `WS-20260926-agent-capability-matrix-v1` checkpoint
+`138d542c` now records implementation truth by type/feature, source or boundary
+position, execution profile and release projection. This release workstream
+does not import its private experimental admissions. Instead,
+`release-surfaces.json.agent_capability_projection` resolves only public
+v0.0.13 behavior: ten ordinary-source scalars excluding `u64`, one semantic
+result with tuple/record logical aggregation, resident/local Map versus public
+snapshot/resource, scalar-only synchronous Host functions, exact rich-resource
+profiles, and the hard generics/async/authority/memory/retry boundaries.
+
+The projection is explicitly current-main side-remediation: it changes no
+product bytes and is not retroactively present inside immutable tag v0.0.13.
+The next formal release must package and validate this projection or a
+schema-compatible generated successor.
+
+Pi 0.87.1 on `llm-m4dd/deepseek-v4.1-flash` read this projection in two tool
+calls and three assistant turns: 13,246 result characters, zero errors,
+retries, duplicate calls, repeated reads or zero-yield results; elapsed model
+time 3,124 ms. The status-query evaluator accepted it. The final answer rejected
+ordinary-source `u64`, public `map<string,u64>` result and async independently,
+did not generate source, preserved numeric/identity/async semantics, and
+reported the main-guidance/non-tag scope. A positive record-result probe also
+compiled through public v0.0.13 to a 49-byte import-free Core module with
+`run(5,1)=[6,1]`.
+
 ## 2026-09-25 Host SDK integration and candidate reopen hardening
 
 Exact local source qualification is now complete for

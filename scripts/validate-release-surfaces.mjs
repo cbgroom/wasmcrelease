@@ -9,6 +9,23 @@ const read=path=>readFileSync(resolve(root,path),'utf8');
 const model=JSON.parse(read('release-surfaces.json'));
 assert.equal(model.schema,'wasmc.release-surfaces/v1');
 
+const projection=model.agent_capability_projection;
+assert.equal(projection?.schema,'wasmc.release-agent-capabilities/v1');
+assert.equal(projection?.product_release,'v'+model.release_version);
+assert.equal(projection?.guidance_scope?.included_in_immutable_tag,false);
+assert.equal(projection?.guidance_scope?.product_bytes_changed,false);
+assert.equal(projection?.function_shape?.result,'exactly one semantic value');
+assert.match(projection?.function_shape?.multiple_logical_values??'',/tuple/);
+assert.match(projection?.function_shape?.embedding_warning??'',/multiple Core lanes/);
+assert.deepEqual(projection?.type_decisions?.ordinary_source_scalars?.spellings,
+  ['s8','u8','s16','u16','s32','u32','i64','f32','f64','bool']);
+assert.equal(projection?.type_decisions?.u64_ordinary_source?.status,'unsupported');
+assert.match(projection?.type_decisions?.u64_ordinary_source?.alternative??'',/bounds and signedness/);
+assert(projection?.type_decisions?.map?.unsupported_positions?.includes('direct-public-WIT-value-result'));
+assert.match(projection?.type_decisions?.map?.alternative??'',/list<Entry<K,V>>/);
+assert.equal(projection?.feature_decisions?.async_ordinary_source_or_lib,'unsupported');
+assert.match(projection?.next_release_requirement??'',/immutable release/);
+
 const expectedPlatforms=[
   ['linux-x86_64','ubuntu-24.04',true,'required'],
   ['linux-aarch64','ubuntu-24.04-arm',true,'required'],
@@ -109,6 +126,7 @@ assert.deepEqual(architecture.distribution_surfaces.extension,extensionIds);
 console.log(JSON.stringify({
   accepted:true,
   schema:model.schema,
+  agent_capability_projection:projection.schema,
   consumer_surfaces:consumerIds.length,
   extension_surfaces:extensionIds.length,
   desktop_platforms:expectedPlatforms.length,

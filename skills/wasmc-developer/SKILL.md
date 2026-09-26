@@ -28,6 +28,13 @@ or an unreleased capability.
 9. Compile the smallest complete program, validate the Wasm, and inspect every
    import before adding Host bindings.
 
+For type and boundary decisions in this current checkout, read
+`release-surfaces.json.agent_capability_projection` before writing source. It
+separates ordinary source, local/App-Lib Core values, Host functions, Component
+values, resource methods and public results. The projection is a current-main
+guidance remediation bound to v0.0.13 behavior; it is not retroactively present
+inside the immutable v0.0.13 tag and changes no product bytes.
+
 ## Mental model
 
 - WIT owns public packages, interfaces, worlds, values, and resources.
@@ -46,3 +53,6 @@ application source.
 Use native `--json-errors` and its category, source range, and fix_hint. Do not
 repair by adding undeclared imports or weakening a Host allowlist. The packaged
 capability contract and actual compiler result outrank historical examples.
+Do not repair by silently changing width, signedness, async behavior, identity,
+ordering, ownership or failure semantics. If exact application constraints do
+not prove the documented alternative equivalent, stop.

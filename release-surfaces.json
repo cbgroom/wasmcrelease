@@ -260,6 +260,79 @@
       "functional_workflow": "system-telemetry-candidate.yml"
     }
   },
+  "agent_capability_projection": {
+    "schema": "wasmc.release-agent-capabilities/v1",
+    "product_release": "v0.0.13",
+    "guidance_scope": {
+      "status": "main-side-remediation",
+      "included_in_immutable_tag": false,
+      "product_bytes_changed": false,
+      "rule": "This projection describes the pinned v0.0.13 product from current main guidance. It is not evidence that the immutable v0.0.13 tag contains this later guidance file; the next formal release must package an exact projection."
+    },
+    "decision_rule": "A type or feature is usable only at the exact admitted position below. WIT vocabulary, local values, Core lanes, Component profiles, Host bindings and public results are separate claims.",
+    "alternative_rule": "Alternatives must preserve semantics. Numeric width or signedness, async behavior, identity, ordering, ownership and failure semantics may change only with explicit application proof; otherwise stop.",
+    "function_shape": {
+      "parameters": "zero or more heterogeneous typed parameters",
+      "result": "exactly one semantic value",
+      "multiple_logical_values": "one tuple<...> or named record",
+      "embedding_warning": "tuple and record may both flatten to multiple Core lanes; neither creates automatic JavaScript object lifting"
+    },
+    "type_decisions": {
+      "ordinary_source_scalars": {
+        "status": "released",
+        "spellings": ["s8", "u8", "s16", "u16", "s32", "u32", "i64", "f32", "f64", "bool"]
+      },
+      "u64_ordinary_source": {
+        "status": "unsupported",
+        "positions": ["local", "parameter", "result", "nested-source-payload"],
+        "stop": "WIT u64 or a physical i64 Core lane does not admit ordinary-source u64.",
+        "alternative": "Use an exact qualified adapter that admits u64. Use u32 or i64 only after application-owned bounds and signedness prove equivalence; otherwise stop."
+      },
+      "tuple_record": {
+        "status": "released-core-lane-source",
+        "positions": ["ordinary-source", "parameter", "one-semantic-result"],
+        "limits": ["no tuple or record destructuring", "no automatic JavaScript object lifting", "Component use requires its exact released profile"]
+      },
+      "option_result_variant_enum": {
+        "status": "released-core-lane-source",
+        "positions": ["ordinary-source", "parameter", "one-semantic-result"],
+        "limits": ["nested payload and Component support are profile-specific", "match must use the documented exhaustive forms"]
+      },
+      "string_list_record_managed": {
+        "status": "released-through-matching-lib",
+        "positions": ["compatible-App-Lib-Core-domain"],
+        "limits": ["managed values do not cross the v0 high-level Host function boundary", "public Component projection requires an exact released package/profile"]
+      },
+      "map": {
+        "status": "released-resident-local-through-matching-lib",
+        "positions": ["compatible-App-Lib-Core-domain"],
+        "unsupported_positions": ["direct-public-WIT-value-parameter", "direct-public-WIT-value-result", "v0-high-level-Host-function"],
+        "alternative": "Use an explicitly ordered list<Entry<K,V>> snapshot for copied public values or a declared resource for identity and mutation; never expose a private handle."
+      },
+      "host_import": {
+        "status": "released-bounded",
+        "positions": ["explicit-synchronous-scalar-functions"],
+        "wit_scalars": ["bool", "s32", "u32", "s64", "float32", "float64"],
+        "unsupported": ["managed-values", "managed-references", "async", "ambient-authority"]
+      },
+      "rich_resource_method_result": {
+        "status": "package-profile-specific",
+        "stop": "Do not infer a generic direct WAsmC source binding from a released Component or Host SDK route.",
+        "known_negative": "package_profiles/wasmc-system-telemetry@0.0.1 excludes wasmc-source-direct-resource-methods"
+      }
+    },
+    "feature_decisions": {
+      "async_ordinary_source_or_lib": "unsupported",
+      "open_generics_traits_lifetimes_macros_cargo": "unsupported",
+      "for_range_iterators": "unsupported; use while",
+      "implicit_numeric_widening": "unsupported; only documented explicit casts",
+      "ambient_authority": "unsupported; declare and explicitly bind exact Host imports",
+      "raw_memory_handles_lifecycle": "unsupported; use typed values or declared resources",
+      "automatic_retry_after_effect": "unsupported",
+      "shared_instance_parallel_entry": "unsupported; use independently owned instances or an exact released concurrency profile"
+    },
+    "next_release_requirement": "Package this projection or a schema-compatible generated successor inside the immutable release and validate it against the shipped compiler, Lib, SDK and package profiles."
+  },
   "agent_status_queries": {
     "prebuilt-native-runtime-library": {
       "request": "prebuilt .so/.dylib/.dll WAsmC runtime",

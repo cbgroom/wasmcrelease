@@ -23,18 +23,28 @@ engine or grant a Host capability.
 
 For a status question, stop as soon as a required authority is missing:
 
-1. Read `release-surfaces.json.agent_status_queries`. When it contains the exact
+1. Read `release-surfaces.json.agent_capability_projection` for language/type
+   questions and expand the requested signature into exact positions. This
+   current-main side-remediation is bound to v0.0.13 product behavior but is
+   explicitly not an asset contained in the immutable v0.0.13 tag.
+2. Read `release-surfaces.json.agent_status_queries`. When it contains the exact
    request, use its five states and stopping condition without probing guessed
    paths or broad catalogs.
-2. Read the already selected immutable tag or full commit from `release.json`.
-3. Use the remainder of `release-surfaces.json` for SDK/runtime surface status.
-4. Read the exact package `lib.json`, `SKILL.md` and WIT for the admitted public
+3. Read the already selected immutable tag or full commit from `release.json`.
+4. Use the remainder of `release-surfaces.json` for SDK/runtime surface status.
+5. Read the exact package `lib.json`, `SKILL.md` and WIT for the admitted public
    surface. Their content outranks a similarly named source or candidate tree.
-5. If the question names a candidate, read its explicit candidate metadata and
+6. If the question names a candidate, read its explicit candidate metadata and
    admission receipt. A test script or build directory is not state authority.
-6. Check the pinned catalog only when discovery or installation is requested
+7. Check the pinned catalog only when discovery or installation is requested
    and the status query has not already recorded a negative state.
-7. Report the first missing state and stop. Do not predict its completion.
+8. Report the first missing state and stop. Do not predict its completion.
+
+An alternative is valid only when it preserves requested semantics. Do not
+silently replace `u64` with `u32`/`i64`, async with sync, map identity with a
+snapshot, or a public Component value with private Core lanes. Tuple and named
+record are both one semantic result and may both flatten to multiple Core lanes;
+renaming the aggregate does not repair a consumer that lacks multi-value support.
 
 Do not scan all release history, read implementation tests, or infer a future
 directory layout when these authorities already answer the question.

@@ -81,6 +81,12 @@ assert(sdkDiscovery.includes('never invent one from `host/runtime` source'));
 
 const statusQueries=surfaces.agent_status_queries;
 assert(statusQueries,'agent_status_queries missing');
+const capabilityProjection=surfaces.agent_capability_projection;
+assert.equal(capabilityProjection?.product_release,'v'+surfaces.release_version);
+assert.equal(capabilityProjection?.guidance_scope?.included_in_immutable_tag,false);
+assert.equal(capabilityProjection?.type_decisions?.u64_ordinary_source?.status,'unsupported');
+assert(capabilityProjection?.type_decisions?.map?.unsupported_positions?.includes('direct-public-WIT-value-result'));
+assert.equal(capabilityProjection?.feature_decisions?.async_ordinary_source_or_lib,'unsupported');
 const nativeBinaryStatus=statusQueries['prebuilt-native-runtime-library'];
 assert.deepEqual(nativeBinaryStatus?.states,{
   qualified:false,admitted:false,released:false,discoverable:false,installable:false
@@ -163,6 +169,7 @@ console.log(JSON.stringify({
   native_runtime_status:nativeRuntime.status,
   component_skills:Object.keys(discovery.component_skills).length,
   status_queries:Object.keys(statusQueries).length,
+  capability_projection:capabilityProjection.schema,
   stale_api_names_rejected:3,
   source_symbols_verified:10,
   routes:{
