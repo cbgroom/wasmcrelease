@@ -59,3 +59,14 @@ The release follows the existing immutable `dev -> main -> prod` policy.
 All three stages must reference one v0.0.13 product candidate and preserve its
 product-set SHA-256 exactly. Only suffix-free prod advances the public latest
 pointer.
+
+Final dev admission uses frozen product candidate
+`455d88795e788abf04fb93adcf33519ef16e532b` and product-set SHA-256
+`e2a1bb7e3bf30092ddda1313a9c20dd37a36e820b076bd64e0ac6ecec6ec36d0`.
+After the integrity-only checkpoint
+`8317dba8552a2f06a0becf3a05f7d0ef031419dc`, LibSearch run
+`36204926436`, full source-free consumer run `36204926538`, and System
+Telemetry run `36204926533` all completed successfully. The previously
+qualified SDK Agent guidance run `36190128332` remains applicable because
+the frozen product set did not change. These receipts authorize
+`v0.0.13-dev.1`; they do not advance public prod discovery.
