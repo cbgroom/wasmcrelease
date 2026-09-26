@@ -41,7 +41,7 @@ function semanticOracle(answer) {
     immutable_release_named: answer.includes('v0.0.13'),
     opening_authority_split: /producer/i.test(opening) && /v0\.0\.13/i.test(opening) &&
       /(?:implement|support|yes|已实现)/i.test(opening) && /(?:unsupported|not contain|no|不支持|未包含)/i.test(opening),
-    release_u64_unsupported: /v0\.0\.13.{0,240}(?:unsupported|不支持|does not contain|not contained|未包含)|(?:unsupported|不支持|does not contain|not contained|未包含).{0,240}v0\.0\.13/i.test(normalized),
+    release_u64_unsupported: /v0\.0\.13.{0,240}(?:unsupported|not supported|does not support|不支持|does not contain|not contained|未包含)|(?:unsupported|not supported|does not support|不支持|does not contain|not contained|未包含).{0,240}v0\.0\.13/i.test(normalized),
     five_false_states: ['qualified', 'admitted', 'released', 'discoverable', 'installable'].every(state =>
       new RegExp(`${state}[^\\n]{0,24}(?:false|否|未)`, 'i').test(answer)
     ),
