@@ -42,6 +42,14 @@ All catalog-listed package files and the standard CoreLib companion are read
 and digest-checked. This finite inventory is derived from already admitted
 release manifests; it does not admit arbitrary third-party packages.
 
+Release maintenance additionally runs `scripts/lib-route-closure.mjs --check`.
+The retained `lib-route-closure.json` is derived from the staged product's
+complete Lib metadata and exported WIT functions/resources. Its exact-set gate
+rejects a missing or extra catalog package, package route, API route, unbound API
+parent, or version drift. The unreleased LibSearch candidate may appear only as
+an explicit non-released candidate extra; it grants no selection or install
+authority.
+
 The companion is CoreLib, not a new public Lib dependency graph. A lock does
 not fuse or automatically link modules, expose handles, or migrate ownership.
 Core and Component remain distinct views; Core validation does not validate a

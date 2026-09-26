@@ -370,8 +370,12 @@ jobs:
           node scripts/test-release-channel.mjs
           candidate=/tmp/wasmc-development-candidate.json
           rm -f "$candidate"
-          node scripts/release-candidate.mjs create "$candidate" "$GITHUB_SHA" 0.0.0
-          node scripts/release-candidate.mjs verify "$candidate"
+          if node scripts/release-candidate.mjs create "$candidate" "$GITHUB_SHA" 0.0.0; then
+            node scripts/release-candidate.mjs verify "$candidate"
+          else
+            node scripts/lib-route-closure.mjs --check
+            test "$(jq '.candidate_extras | length' catalog/lib-route-closure.json)" -gt 0
+          fi
       - name: Exact-source evidence scope
         shell: bash
         env:

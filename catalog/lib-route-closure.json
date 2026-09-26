@@ -1,0 +1,155 @@
+{
+  "schema": "wasmc.lib-route-closure/v1",
+  "authority_receipt": {
+    "path": "admission/lib-search-v020-v013-candidate.json",
+    "sha256": "3d3f103f63aa4a9ff28e877170bfe72d8fc59e3ac8d839d4228f3948de101e81"
+  },
+  "release": {
+    "version": "0.0.13",
+    "tag": "v0.0.13",
+    "staged_product_manifest": "channels/candidates/0.0.13.json",
+    "product_set_sha256": "e2a1bb7e3bf30092ddda1313a9c20dd37a36e820b076bd64e0ac6ecec6ec36d0"
+  },
+  "catalog": {
+    "path": "catalog/libs-v013.json",
+    "sha256": "242da128b13168814112272f9a9bff6bc9991fbd2e01d1c09936b9802451f836",
+    "role": "producer-input-catalog",
+    "package_routes": 13
+  },
+  "search_index": {
+    "path": "examples/lib-search/index-v013-v020.lsi",
+    "sha256": "613dacdcf58a225542aea99584a63fc282bcb08bfcc771f3f967482fadf31121",
+    "active_identity": "wasmc:lib-search@0.2.0",
+    "entries": 122,
+    "package_routes": 14,
+    "api_routes": 108
+  },
+  "release_bindings": [
+    {
+      "identity": "wasmc:csv@0.0.1",
+      "root": "libs/wasmc-csv",
+      "catalog_bound": true,
+      "package_route_bound": true,
+      "api_routes": 1,
+      "api_routes_exact": true
+    },
+    {
+      "identity": "wasmc:data-compute@0.0.1",
+      "root": "libs/wasmc-data-compute",
+      "catalog_bound": true,
+      "package_route_bound": true,
+      "api_routes": 3,
+      "api_routes_exact": true
+    },
+    {
+      "identity": "wasmc:data-core@0.0.1",
+      "root": "libs/wasmc-data-core",
+      "catalog_bound": true,
+      "package_route_bound": true,
+      "api_routes": 2,
+      "api_routes_exact": true
+    },
+    {
+      "identity": "wasmc:data-expr@0.0.1",
+      "root": "libs/wasmc-data-expr",
+      "catalog_bound": true,
+      "package_route_bound": true,
+      "api_routes": 2,
+      "api_routes_exact": true
+    },
+    {
+      "identity": "wasmc:data-interchange@0.0.1",
+      "root": "libs/wasmc-data-interchange",
+      "catalog_bound": true,
+      "package_route_bound": true,
+      "api_routes": 4,
+      "api_routes_exact": true
+    },
+    {
+      "identity": "wasmc:data-profile@0.0.1",
+      "root": "libs/wasmc-data-profile",
+      "catalog_bound": true,
+      "package_route_bound": true,
+      "api_routes": 1,
+      "api_routes_exact": true
+    },
+    {
+      "identity": "wasmc:data-relational@0.0.1",
+      "root": "libs/wasmc-data-relational",
+      "catalog_bound": true,
+      "package_route_bound": true,
+      "api_routes": 4,
+      "api_routes_exact": true
+    },
+    {
+      "identity": "wasmc:host-clock@0.0.1",
+      "root": "libs/wasmc-host-clock",
+      "catalog_bound": true,
+      "package_route_bound": true,
+      "api_routes": 1,
+      "api_routes_exact": true
+    },
+    {
+      "identity": "wasmc:lib-search@0.1.0",
+      "root": "standard/wasmc-lib-search/0.1.0",
+      "catalog_bound": true,
+      "package_route_bound": true,
+      "api_routes": 3,
+      "api_routes_exact": true
+    },
+    {
+      "identity": "wasmc:owned-algorithms@0.1.0",
+      "root": "libs/wasmc-owned-algorithms",
+      "catalog_bound": true,
+      "package_route_bound": true,
+      "api_routes": 4,
+      "api_routes_exact": true
+    },
+    {
+      "identity": "wasmc:resource-counter@0.0.1",
+      "root": "libs/wasmc-resource-counter",
+      "catalog_bound": true,
+      "package_route_bound": true,
+      "api_routes": 3,
+      "api_routes_exact": true
+    },
+    {
+      "identity": "wasmc:std@1.4.0",
+      "root": "standard/wasmc-std/1.4.0",
+      "catalog_bound": true,
+      "package_route_bound": true,
+      "api_routes": 73,
+      "api_routes_exact": true
+    },
+    {
+      "identity": "wasmc:system-telemetry@0.0.1",
+      "root": "libs/wasmc-system-telemetry",
+      "catalog_bound": true,
+      "package_route_bound": true,
+      "api_routes": 4,
+      "api_routes_exact": true
+    }
+  ],
+  "candidate_extras": [
+    {
+      "identity": "wasmc:lib-search@0.2.0",
+      "root": "candidates/wasmc-lib-search/0.2.0",
+      "package_route_bound": true,
+      "api_routes": 3,
+      "api_routes_exact": true,
+      "released": false
+    }
+  ],
+  "blocking_conditions": [
+    "active-lib-search-candidate-extra"
+  ],
+  "claims": {
+    "release_catalog_exact": true,
+    "release_package_routes_exact": true,
+    "release_api_routes_exact": true,
+    "api_parents_closed": true,
+    "formal_release_ready": false,
+    "automatic_version_selection": false,
+    "candidate_extra_grants_release": false
+  }
+}

@@ -1,5 +1,36 @@
 # WAsmC release maintainer handoff
 
+## 2026-09-27 Release-wide Lib route closure
+
+The recurring LibSearch omission class is now fail-closed rather than repaired
+one release at a time. `scripts/lib-route-closure.mjs` follows `release.json` to
+the exact staged product, reads every released `lib.json`/`lib.wit`, derives all
+exported interface functions and resource constructor/method identities, and
+requires exact equality with both the selected catalog and LibSearch LSI.
+
+The retained `catalog/lib-route-closure.json` currently proves 13 released
+package bindings and 105 released API bindings. The unreleased LibSearch 0.2.0
+candidate is the sole explicit extra, contributing one package and three API
+routes, for 14 / 108 total. It remains released=false and grants no install or
+selection authority. Negative tests reject missing catalog rows, missing package
+routes, missing API routes, unexpected packages and version drift. The gate is
+wired into LibSearch CI, the integrity suite, maintainer validation, release
+surface validation and the generated ecosystem control plane. It derives from
+the staged product dynamically; it does not hard-code v0.0.13 as the future
+package inventory. Formal candidate creation now emits only schema v2 and
+requires zero candidate extras. It therefore intentionally blocks the next
+release while LibSearch 0.2.0 remains outside the product/catalog; admitting the
+active search package is required before a new release candidate can exist.
+The retained closure exposes this directly as `formal_release_ready=false` and
+`blocking_conditions=[active-lib-search-candidate-extra]`.
+
+Focused catalog/install/search behavior, route-closure checks, six negative
+route mutations, fifteen release transition/candidate mutations, release
+surfaces, integrity and maintainer validation pass. The unified integrity suite
+runs both new route gates successfully; its sole remaining failure is the
+pre-existing immutable v0.0.13 candidate rejecting current main-side future
+guidance as `product drift rejected`. Do not rewrite that old candidate.
+
 ## 2026-09-27 Lib ecosystem control-plane implementation
 
 The first ecosystem convergence slice is implemented. The deterministic

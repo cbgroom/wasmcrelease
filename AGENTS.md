@@ -54,6 +54,12 @@ Byte identity remains scoped to that fingerprint because producer commit and
 Cargo.lock alone did not reproduce the historical receipt. The candidate's
 `catalog/libs-v013.json` reference is its 13-package producer input catalog: it
 does not contain 0.2.0 and is not an install or admission authority for it.
+The machine gate at `catalog/lib-route-closure.json` independently derives the
+complete released package and exported WIT API inventory. Release catalog rows
+and LibSearch package/API routes must equal that inventory exactly; any omitted,
+extra or version-drifted binding rejects the release workflow.
+Its current `formal_release_ready=false` blocker is
+`active-lib-search-candidate-extra`; do not infer readiness from route coverage.
 
 For SDK/runtime/CLI/embedding integration, begin with
 [the SDK discovery Skill](skills/wasmc-sdk-discovery/SKILL.md). It routes by

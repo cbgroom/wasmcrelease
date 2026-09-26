@@ -79,6 +79,18 @@ assert.equal(ecosystemModel.inventory.installable,4);
 assert.equal(ecosystemModel.inventory.current_side_installable,13);
 assert.equal(ecosystemModel.inventory.current_side_inventory_matches_release,true);
 assert.equal(ecosystemModel.inventory.inventory_is_unified,false);
+assert.deepEqual(ecosystemModel.route_closure,{
+  authority:'catalog/lib-route-closure.json',
+  release_packages:13,
+  package_routes:14,
+  api_routes:108,
+  candidate_extras:1,
+  release_catalog_exact:true,
+  release_package_routes_exact:true,
+  release_api_routes_exact:true,
+  formal_release_ready:false,
+  blocking_conditions:['active-lib-search-candidate-extra']
+});
 assert.equal(ecosystemModel.successor_candidates.length,1);
 const libSearchSuccessor=ecosystemModel.successor_candidates[0];
 assert.equal(libSearchSuccessor.identity,'wasmc:lib-search@0.2.0');

@@ -1,13 +1,22 @@
 // Offline product-identity gate. This does not publish, sign or grant authority.
+import assert from 'node:assert/strict';
 import {readFileSync,writeFileSync,readdirSync,lstatSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 import {resolve,relative} from 'node:path';
+import {buildClosure} from './lib-route-closure.mjs';
 const root=fileURLToPath(new URL('../',import.meta.url));
 const hash=b=>createHash('sha256').update(b).digest('hex');
 const safe=p=>typeof p==='string'&&p.split('/').every(x=>x&&x!=='.'&&x!=='..')&&!p.includes('\\')&&!p.startsWith('/');
+const legacyV1ProductSets=Object.freeze({
+  '0.0.10':'dd01d2fef9a4010e0bf4ed50f2fbf790a2771c92e4a4252bd6889441bc2059d8',
+  '0.0.11':'101a8a3783d52fc3d06e15731b20ec5fbe5a2bdbd7d9e964876f76ce44e33662',
+  '0.0.12':'6c5da874b9a3cce2beef0936fa761c45d5e33869db165a30e3e2984622b7bb6b',
+  '0.0.13':'e2a1bb7e3bf30092ddda1313a9c20dd37a36e820b076bd64e0ac6ecec6ec36d0'
+});
 export function validateCandidate(candidate,read) {
-  if(candidate.schema!=='wasmc.release-product-candidate/v1'||!/^\d+\.\d+\.\d+$/.test(candidate.version))throw Error('candidate schema/version rejected');
+  if(!['wasmc.release-product-candidate/v1','wasmc.release-product-candidate/v2'].includes(candidate.schema)||!/^\d+\.\d+\.\d+$/.test(candidate.version))throw Error('candidate schema/version rejected');
+  if(candidate.schema==='wasmc.release-product-candidate/v1'&&legacyV1ProductSets[candidate.version]!==candidate.product_set_sha256)throw Error('legacy v1 candidate identity rejected; new candidates require v2 Lib route closure');
   for(const key of ['compiler_source_authority','lib_source_authority'])if(!/^[0-9a-f]{40}$/.test(candidate[key]))throw Error('exact private source authority required');
   const rows=candidate.product_files;
   if(!Array.isArray(rows)||!rows.length||rows.length>10000)throw Error('product inventory rejected');
@@ -17,7 +26,33 @@ export function validateCandidate(candidate,read) {
     const bytes=read(row.path);if(bytes.length!==row.bytes||hash(bytes)!==row.sha256)throw Error('product drift rejected');previous=row.path;
   }
   if(candidate.product_set_sha256!==hash(JSON.stringify(rows)))throw Error('product set identity rejected');
+  if(candidate.schema==='wasmc.release-product-candidate/v2'){
+    const closure=candidate.lib_route_closure;
+    if(closure?.schema!=='wasmc.release-candidate-lib-route-closure/v1'||!safe(closure.authority_receipt?.path)||!/^[0-9a-f]{64}$/.test(closure.authority_receipt?.sha256??'')||!safe(closure.catalog?.path)||!/^[0-9a-f]{64}$/.test(closure.catalog?.sha256??'')||!safe(closure.search_index?.path)||!/^[0-9a-f]{64}$/.test(closure.search_index?.sha256??'')||!Number.isSafeInteger(closure.release_packages)||closure.release_packages<1||!Number.isSafeInteger(closure.package_routes)||closure.package_routes!==closure.release_packages||!Number.isSafeInteger(closure.api_routes)||closure.api_routes<1||closure.candidate_extras!==0||closure.exact!==true||closure.candidate_extra_grants_release!==false)throw Error('candidate Lib route closure rejected');
+  }
   return true;
+}
+
+function closureSummary(model){
+  return {
+    schema:'wasmc.release-candidate-lib-route-closure/v1',
+    authority_receipt:model.authority_receipt,
+    catalog:{path:model.catalog.path,sha256:model.catalog.sha256},
+    search_index:{path:model.search_index.path,sha256:model.search_index.sha256,active_identity:model.search_index.active_identity},
+    release_packages:model.release_bindings.length,
+    package_routes:model.search_index.package_routes,
+    api_routes:model.search_index.api_routes,
+    candidate_extras:model.candidate_extras.length,
+    exact:model.claims.release_catalog_exact&&model.claims.release_package_routes_exact&&model.claims.release_api_routes_exact&&model.claims.api_parents_closed,
+    candidate_extra_grants_release:false
+  };
+}
+
+function candidateClosure(candidate){
+  return closureSummary(buildClosure(undefined,{
+    release:{version:candidate.version,tag:`v${candidate.version}`,staged_product_manifest:null},
+    stagedProduct:candidate
+  }));
 }
 export function validateTransition(previous,next,candidate) {
   if(next.schema!=='wasmc.release-stage/v1'||next.version!==candidate.version||next.product_set_sha256!==candidate.product_set_sha256||!/^[0-9a-f]{40}$/.test(next.product_candidate_commit))throw Error('stage identity rejected');
@@ -61,10 +96,13 @@ if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)) {
     ];
     const paths=[...productDirectories.flatMap(walk),...productFiles];
     const rows=paths.sort().map(path=>{const b=read(path);return {path,bytes:b.length,sha256:hash(b)};});
-    const candidate={schema:'wasmc.release-product-candidate/v1',version,compiler_source_authority:'e69abb73f667f3810b0c40937fd1a1e2d04d4255',lib_source_authority:source,product_files:rows,product_set_sha256:hash(JSON.stringify(rows))};
+    const candidate={schema:'wasmc.release-product-candidate/v2',version,compiler_source_authority:'e69abb73f667f3810b0c40937fd1a1e2d04d4255',lib_source_authority:source,product_files:rows,product_set_sha256:hash(JSON.stringify(rows))};
+    candidate.lib_route_closure=candidateClosure(candidate);
+    if(candidate.lib_route_closure.candidate_extras!==0)throw Error('release candidate blocked: active LibSearch must be inside the product, catalog and exact route set');
     validateCandidate(candidate,read);writeFileSync(path,JSON.stringify(candidate,null,2)+'\n',{flag:'wx'});
   } else if(command==='verify') {
     const candidate=JSON.parse(readFileSync(path));validateCandidate(candidate,read);
+    if(candidate.schema==='wasmc.release-product-candidate/v2')assert.deepEqual(candidate.lib_route_closure,candidateClosure(candidate),'candidate Lib route closure drift');
     console.log(JSON.stringify({accepted:true,products:candidate.product_files.length,product_set_sha256:candidate.product_set_sha256}));
   } else throw Error('usage: release-candidate.mjs create FILE LIB_SOURCE VERSION | verify FILE');
 }

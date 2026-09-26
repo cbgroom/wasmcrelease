@@ -7,6 +7,11 @@ Immutable `v0.0.13` is unchanged. The candidate at
 plus its own candidate identity: 14 packages / 122 package and API entries.
 Its exact input is `catalog/libs-v013.json`; it neither chooses a version nor
 grants Host authority.
+The independent release closure at `catalog/lib-route-closure.json` proves that
+all 13 staged-product package identities and all 105 exported release API routes
+are bound, while the candidate contributes only its own package route and three
+APIs. Future release changes fail unless catalog, package routes and API routes
+are regenerated together.
 
 - index: 27,749 bytes,
   `613dacdcf58a225542aea99584a63fc282bcb08bfcc771f3f967482fadf31121`

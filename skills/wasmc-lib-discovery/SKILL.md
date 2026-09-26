@@ -14,6 +14,12 @@ install catalog. `released`, `discoverable` and `installable` are independent;
 if the selected row has a stopping condition, report it instead of probing
 guessed paths or inferring a missing transition.
 
+For release-maintenance completeness, `../../catalog/lib-route-closure.json`
+is the fail-closed route authority. It derives every released package and
+exported WIT API from the staged product and requires exact catalog, package
+route and API route equality. Do not accept a manually sampled query list or a
+package-level hit as proof that all APIs were synchronized.
+
 This branch also retains a qualified, unreleased LibSearch 0.2.0 candidate.
 Its v0.0.13-complete snapshot covers 14 identities including itself / 122
 package and API entries. Use it for candidate regression and future-release

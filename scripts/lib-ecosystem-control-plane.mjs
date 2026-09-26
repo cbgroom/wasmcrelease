@@ -5,6 +5,7 @@ import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from '
 import { join, relative } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
+import { buildClosure } from './lib-route-closure.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const outputPath = join(root, 'lib-ecosystem-control-plane.json');
@@ -21,6 +22,8 @@ const currentSideCatalog = existsSync(join(root, 'catalog/libs-v013.json')) ? re
 const searchCandidateAdmission = readJson('admission/lib-search-v020-v013-candidate.json');
 const compatibility = readJson('compatibility/core-artifacts-v009.json');
 const searchCompatibility = readJson('compatibility/lib-search-core.json');
+const retainedRouteClosure = readJson('catalog/lib-route-closure.json');
+assert.deepEqual(retainedRouteClosure, buildClosure(retainedRouteClosure.authority_receipt.path), 'Lib route closure is stale');
 assert.equal(typeof release.staged_product_manifest, 'string', 'release.json must bind a staged product manifest');
 const stagedProduct = readJson(release.staged_product_manifest);
 assert.equal(stagedProduct.version, release.version, 'staged product version must match release.json');
@@ -184,6 +187,18 @@ const model = {
     rule: 'Package existence, qualification, admission, release, discovery, installation, engine compatibility and Host authority are independent claims.'
   },
   release: { version: release.version, tag: release.tag, source_commit: release.source_commit, staged_product_manifest: release.staged_product_manifest, product_set_sha256: stagedProduct.product_set_sha256 },
+  route_closure: {
+    authority: 'catalog/lib-route-closure.json',
+    release_packages: retainedRouteClosure.release_bindings.length,
+    package_routes: retainedRouteClosure.search_index.package_routes,
+    api_routes: retainedRouteClosure.search_index.api_routes,
+    candidate_extras: retainedRouteClosure.candidate_extras.length,
+    release_catalog_exact: retainedRouteClosure.claims.release_catalog_exact,
+    release_package_routes_exact: retainedRouteClosure.claims.release_package_routes_exact,
+    release_api_routes_exact: retainedRouteClosure.claims.release_api_routes_exact,
+    formal_release_ready: retainedRouteClosure.claims.formal_release_ready,
+    blocking_conditions: retainedRouteClosure.blocking_conditions
+  },
   inventory: {
     packages: packages.length,
     qualified: count('qualified'),

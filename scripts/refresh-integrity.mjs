@@ -50,7 +50,7 @@ const libSearchFiles = (await walk('examples/lib-search')).sort();
 const channelFiles = (await walk('channels')).sort();
 const compatibilityFiles = (await walk('compatibility')).sort();
 const catalogFiles = (await walk('catalog')).sort();
-const catalogTools = ['scripts/lib-catalog.mjs', 'scripts/wasmc-lib.mjs', 'scripts/refresh-lib-catalog.mjs', 'scripts/test-lib-catalog.mjs', 'scripts/lib-install.mjs', 'scripts/test-lib-install.mjs', 'scripts/validate-lib-install.mjs'];
+const catalogTools = ['scripts/lib-catalog.mjs', 'scripts/wasmc-lib.mjs', 'scripts/refresh-lib-catalog.mjs', 'scripts/test-lib-catalog.mjs', 'scripts/lib-install.mjs', 'scripts/test-lib-install.mjs', 'scripts/validate-lib-install.mjs', 'scripts/lib-route-closure.mjs', 'scripts/test-lib-route-closure.mjs', 'scripts/test-release-candidate-lib-routes.mjs'];
 const ciTools = [
   'scripts/ci-suite.mjs',
   'scripts/ci-summary.mjs',
