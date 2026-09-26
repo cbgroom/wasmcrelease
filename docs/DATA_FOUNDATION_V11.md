@@ -1,6 +1,6 @@
 # Data Foundation v1.1 workstream
 
-Status: **STARTED / not released**.
+Status: **IMPLEMENTATION QUALIFIED / admission pending / not released**.
 
 This workstream extends the admitted Data Foundation v1 without changing its
 immutable `0.0.1` packages. The producer source is the public `libsrc/`
@@ -47,10 +47,32 @@ WIT and Cargo inputs are unchanged between these two revisions.
 
 ## Slice 2 — bounded ROWS frame aggregates
 
-After Slice 1 closes, add bounded row-frame aggregate semantics for
-`count/sum/min/max/avg` with rolling and cumulative use cases. Frame semantics
-must reuse the same partition/order model. No SQL grammar, DB/storage engine,
-spill-to-disk or hidden Host authority is introduced.
+Slice 2 adds `window-aggregate` with explicit start/end ROWS bounds:
+
+- start: unbounded, preceding(n), current-row or following(n);
+- end: preceding(n), current-row, following(n) or unbounded;
+- invalid start-after-end definitions fail closed;
+- partition-edge clipping may produce an empty frame;
+- count-all/count return zero for an empty frame, while sum/min/max/mean return
+  null;
+- count/sum/min/max/mean support rolling, cumulative, centered and full-partition
+  forms;
+- integer sum/mean accumulation fails with `overflow` instead of wrapping;
+- the existing partition/order/null/tie model is reused and output remains
+  aligned to original input rows.
+
+The qualified artifact remains a `0.0.2-dev.1` candidate: 77/77 Wasmtime
+semantic cases pass, Wasmi 2.0 validates and instantiates the exact retained
+Core, and two isolated Core/Component builds are byte-identical. Core is
+957,985 bytes with SHA-256
+`97a28721dffd9a3f77a8805110be2a5a57e12cdf9b66026e828de17a876ad4ac`
+and zero imports. Component is 964,342 bytes with SHA-256
+`3fe6dbea05308e1cc4d375264410eabaa3b6f8045d6a39ae32725e7a9f967e46`.
+The durable receipt is
+`admission/data-foundation-v11/relational-v002-rows-frame.json`.
+
+No SQL grammar, DB/storage engine, spill-to-disk or hidden Host authority is
+introduced. Admission review is still required before release promotion.
 
 ## Architecture
 

@@ -1,5 +1,45 @@
 # WAsmC release maintainer handoff
 
+## 2026-09-26 Data Foundation v1.1 — ROWS frame slice QUALIFIED
+
+Workstream remains `work/WS-20260926-data-foundation-v11`. The additive
+`wasmc:data-relational@0.0.2` / `0.0.2-dev.1` candidate now includes bounded
+ROWS frame aggregates without changing admitted v0.0.1 bytes.
+
+Implemented scope:
+- explicit start/end bounds with preceding/current/following and legal
+  unbounded endpoints;
+- rolling, cumulative, centered and full-partition frames;
+- `count-all`, `count`, `sum`, `min`, `max` and `mean`;
+- partition-edge clipping, empty-frame/null behavior, stable ties, original-row
+  alignment, overflow rejection and existing row limits;
+- invalid statically reversed frames fail closed with `invalid-frame`.
+
+Exact evidence:
+- Wasmtime semantic matrix: **77/77 PASS**;
+- Core: 957,985 bytes,
+  `97a28721dffd9a3f77a8805110be2a5a57e12cdf9b66026e828de17a876ad4ac`,
+  imports=0;
+- Component: 964,342 bytes,
+  `3fe6dbea05308e1cc4d375264410eabaa3b6f8045d6a39ae32725e7a9f967e46`;
+- two isolated Cargo target builds produced byte-identical Core and Component
+  artifacts;
+- candidate-specific Wasmi 2.0 PASS: exact Core validates/instantiates, seven
+  exports checked, including `distinct`, `window-offset` and
+  `window-aggregate`;
+- broad Wasmi PASS: 11 candidates, relational v0.0.2, representative execution
+  and structural Data qualification true, host imports 0;
+- legacy Data pipeline PASS across CSV -> Core -> Expr -> Compute -> Relational
+  -> Profile -> Arrow IPC/Parquet -> validate;
+- admitted `libs/wasmc-data-relational@0.0.1` remains byte-unchanged at
+  `627176699ad4b9c2dc47ca78d520fe45ef1b2603fcc87d08eef3c0b2a1bf30a9`.
+
+Durable receipt:
+`admission/data-foundation-v11/relational-v002-rows-frame.json`.
+
+Next gate is `admission-review`; the candidate remains `admitted=false` and is
+not released. Do not mutate the admitted v0.0.1 package or claim v0.0.2 release.
+
 ## 2026-09-26 Data Foundation v1.1 — relational 0.0.2 first slice QUALIFIED
 
 Workstream remains `work/WS-20260926-data-foundation-v11`. The first semantic

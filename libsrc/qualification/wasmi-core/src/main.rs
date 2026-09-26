@@ -234,6 +234,7 @@ fn main() -> Result<()> {
     if relational_version == "0.0.2" {
         relational_exports.push(format!("{relational_prefix}distinct"));
         relational_exports.push(format!("{relational_prefix}window-offset"));
+        relational_exports.push(format!("{relational_prefix}window-aggregate"));
     } else if relational_version != "0.0.1" {
         bail!("unsupported relational qualification version: {relational_version}");
     }

@@ -53,6 +53,25 @@ interface relational {
     max-rows: u32,
   }
 
+  variant rows-frame-start {
+    unbounded,
+    preceding(u32),
+    current-row,
+    following(u32),
+  }
+
+  variant rows-frame-end {
+    preceding(u32),
+    current-row,
+    following(u32),
+    unbounded,
+  }
+
+  record rows-frame {
+    start: rows-frame-start,
+    end: rows-frame-end,
+  }
+
   record distinct-options {
     max-rows: u32,
   }
@@ -85,6 +104,8 @@ interface relational {
     row-limit-exceeded,
     output-limit-exceeded,
     unsupported-type,
+    unsupported-function,
+    invalid-frame,
     overflow,
     compute-failure,
   }
@@ -125,6 +146,15 @@ interface relational {
     partition-by: list<u32>,
     order-by: list<window-order>,
     functions: list<offset-window-function>,
+    options: window-options,
+  ) -> result<batch-snapshot, relational-error>;
+
+  window-aggregate: func(
+    value: batch-snapshot,
+    partition-by: list<u32>,
+    order-by: list<window-order>,
+    frame: rows-frame,
+    aggregates: list<aggregate>,
     options: window-options,
   ) -> result<batch-snapshot, relational-error>;
 }

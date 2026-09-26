@@ -33,6 +33,7 @@ fn main() -> Result<()> {
         "wasmc:data-relational/relational@0.0.2#window-rank",
         "wasmc:data-relational/relational@0.0.2#distinct",
         "wasmc:data-relational/relational@0.0.2#window-offset",
+        "wasmc:data-relational/relational@0.0.2#window-aggregate",
     ];
     for export in exports {
         if instance.get_export(&store, export).is_none() {
@@ -49,7 +50,7 @@ fn main() -> Result<()> {
     }
 
     println!(
-        "{{\"accepted\":true,\"schema\":\"wasmc.data-relational-v002-wasmi/v1\",\"engine\":\"wasmi-2.0.0\",\"bytes\":{},\"imports\":0,\"instantiated\":true,\"exports_checked\":{},\"new_exports\":[\"distinct\",\"window-offset\"],\"semantic_scope\":\"structural-engine-qualification-only\"}}",
+        "{{\"accepted\":true,\"schema\":\"wasmc.data-relational-v002-wasmi/v1\",\"engine\":\"wasmi-2.0.0\",\"bytes\":{},\"imports\":0,\"instantiated\":true,\"exports_checked\":{},\"new_exports\":[\"distinct\",\"window-offset\",\"window-aggregate\"],\"semantic_scope\":\"structural-engine-qualification-only\"}}",
         bytes.len(),
         exports.len()
     );

@@ -6,8 +6,8 @@ wit_bindgen::generate!({
 
 use crate::exports::wasmc::data_relational::relational::{
     Aggregate, ColumnAggregate, DistinctOptions, Guest, JoinKey, JoinKind, JoinOptions,
-    OffsetWindow, OffsetWindowFunction, RelationalError, WindowFunction, WindowOptions,
-    WindowOrder,
+    OffsetWindow, OffsetWindowFunction, RelationalError, RowsFrame, RowsFrameEnd, RowsFrameStart,
+    WindowFunction, WindowOptions, WindowOrder,
 };
 use crate::wasmc::data_core::types::{
     BatchSnapshot, Column, DataType as WitDataType, Field as WitField,
@@ -640,6 +640,142 @@ fn aggregate_group(
     }
 }
 
+fn window_aggregate_output(
+    desc: &AggDesc,
+    results: Vec<AggValue>,
+) -> Result<(WitField, Column), RelationalError> {
+    Ok(match desc.kind {
+        AggKind::CountAll | AggKind::Count => (
+            WitField {
+                name: desc.alias.clone(),
+                data_type: WitDataType::Uint64,
+                nullable: false,
+            },
+            Column::Uint64Column(
+                results
+                    .into_iter()
+                    .map(|value| match value {
+                        AggValue::UInt64(value) => Ok(value),
+                        _ => Err(RelationalError::ComputeFailure),
+                    })
+                    .collect::<Result<Vec<_>, _>>()?,
+            ),
+        ),
+        AggKind::Mean => (
+            WitField {
+                name: desc.alias.clone(),
+                data_type: WitDataType::Float64,
+                nullable: true,
+            },
+            Column::Float64Column(
+                results
+                    .into_iter()
+                    .map(|value| match value {
+                        AggValue::Float64(value) => Ok(value),
+                        _ => Err(RelationalError::ComputeFailure),
+                    })
+                    .collect::<Result<Vec<_>, _>>()?,
+            ),
+        ),
+        AggKind::Sum | AggKind::Min | AggKind::Max => {
+            match desc.input_type.ok_or(RelationalError::ComputeFailure)? {
+                WitDataType::Int64 => (
+                    WitField {
+                        name: desc.alias.clone(),
+                        data_type: WitDataType::Int64,
+                        nullable: true,
+                    },
+                    Column::Int64Column(
+                        results
+                            .into_iter()
+                            .map(|value| match value {
+                                AggValue::Int64(value) => Ok(value),
+                                _ => Err(RelationalError::ComputeFailure),
+                            })
+                            .collect::<Result<Vec<_>, _>>()?,
+                    ),
+                ),
+                WitDataType::Uint64 => (
+                    WitField {
+                        name: desc.alias.clone(),
+                        data_type: WitDataType::Uint64,
+                        nullable: true,
+                    },
+                    Column::Uint64Column(
+                        results
+                            .into_iter()
+                            .map(|value| match value {
+                                AggValue::UInt64(value) => Ok(value),
+                                _ => Err(RelationalError::ComputeFailure),
+                            })
+                            .collect::<Result<Vec<_>, _>>()?,
+                    ),
+                ),
+                WitDataType::Float64 => (
+                    WitField {
+                        name: desc.alias.clone(),
+                        data_type: WitDataType::Float64,
+                        nullable: true,
+                    },
+                    Column::Float64Column(
+                        results
+                            .into_iter()
+                            .map(|value| match value {
+                                AggValue::Float64(value) => Ok(value),
+                                _ => Err(RelationalError::ComputeFailure),
+                            })
+                            .collect::<Result<Vec<_>, _>>()?,
+                    ),
+                ),
+                _ => return Err(RelationalError::UnsupportedType),
+            }
+        }
+        AggKind::First | AggKind::Last | AggKind::VariancePop | AggKind::StddevPop => {
+            return Err(RelationalError::UnsupportedFunction)
+        }
+    })
+}
+
+fn rows_frame_offsets(frame: &RowsFrame) -> Result<(Option<i64>, Option<i64>), RelationalError> {
+    let start = match frame.start {
+        RowsFrameStart::Unbounded => None,
+        RowsFrameStart::Preceding(value) => Some(-(i64::from(value))),
+        RowsFrameStart::CurrentRow => Some(0),
+        RowsFrameStart::Following(value) => Some(i64::from(value)),
+    };
+    let end = match frame.end {
+        RowsFrameEnd::Preceding(value) => Some(-(i64::from(value))),
+        RowsFrameEnd::CurrentRow => Some(0),
+        RowsFrameEnd::Following(value) => Some(i64::from(value)),
+        RowsFrameEnd::Unbounded => None,
+    };
+    if matches!((start, end), (Some(start), Some(end)) if start > end) {
+        return Err(RelationalError::InvalidFrame);
+    }
+    Ok((start, end))
+}
+
+fn rows_frame_range(
+    position: usize,
+    row_count: usize,
+    offsets: (Option<i64>, Option<i64>),
+) -> std::ops::Range<usize> {
+    let position = position as i64;
+    let row_count = row_count as i64;
+    let start = offsets
+        .0
+        .map(|offset| position.saturating_add(offset))
+        .unwrap_or(0)
+        .clamp(0, row_count);
+    let end_exclusive = offsets
+        .1
+        .map(|offset| position.saturating_add(offset).saturating_add(1))
+        .unwrap_or(row_count)
+        .clamp(0, row_count);
+    let start = start.min(end_exclusive) as usize;
+    start..end_exclusive as usize
+}
+
 impl Guest for DataRelational {
     fn window_rank(
         mut value: BatchSnapshot,
@@ -880,6 +1016,71 @@ impl Guest for DataRelational {
             value
                 .columns
                 .push(cells_to_column(desc.data_type, &output)?);
+        }
+        Ok(value)
+    }
+
+    fn window_aggregate(
+        mut value: BatchSnapshot,
+        partition_by: Vec<u32>,
+        order_by: Vec<WindowOrder>,
+        frame: RowsFrame,
+        aggregates: Vec<Aggregate>,
+        options: WindowOptions,
+    ) -> Result<BatchSnapshot, RelationalError> {
+        let arrays = validate_batch(&value)?;
+        if order_by.is_empty() {
+            return Err(RelationalError::EmptyOrder);
+        }
+        if aggregates.is_empty() {
+            return Err(RelationalError::EmptyFunctions);
+        }
+        let frame_offsets = rows_frame_offsets(&frame)?;
+
+        let mut output_names = value
+            .fields
+            .iter()
+            .map(|field| field.name.clone())
+            .collect::<BTreeSet<_>>();
+        let mut descs = Vec::with_capacity(aggregates.len());
+        for aggregate in aggregates {
+            let desc = parse_aggregate(aggregate, &value.fields)?;
+            if matches!(
+                desc.kind,
+                AggKind::First | AggKind::Last | AggKind::VariancePop | AggKind::StddevPop
+            ) {
+                return Err(RelationalError::UnsupportedFunction);
+            }
+            if !output_names.insert(desc.alias.clone()) {
+                return Err(RelationalError::DuplicateOutputName);
+            }
+            descs.push(desc);
+        }
+
+        let partitions =
+            ordered_window_partitions(&value, &partition_by, &order_by, options.max_rows)?;
+        for desc in &descs {
+            let mut by_input_row = (0..value.rows as usize)
+                .map(|_| None)
+                .collect::<Vec<Option<AggValue>>>();
+            for rows in &partitions {
+                for (position, input_row) in rows.iter().copied().enumerate() {
+                    let range = rows_frame_range(position, rows.len(), frame_offsets);
+                    let indices = rows[range]
+                        .iter()
+                        .map(|row| *row as u32)
+                        .collect::<Vec<_>>();
+                    by_input_row[input_row] =
+                        Some(aggregate_group(desc, &arrays, &value.columns, &indices)?);
+                }
+            }
+            let results = by_input_row
+                .into_iter()
+                .map(|result| result.ok_or(RelationalError::ComputeFailure))
+                .collect::<Result<Vec<_>, _>>()?;
+            let (field, column) = window_aggregate_output(desc, results)?;
+            value.fields.push(field);
+            value.columns.push(column);
         }
         Ok(value)
     }
