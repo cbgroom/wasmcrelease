@@ -22,10 +22,24 @@ validates package rows against that product set while allowing later mutable
 guidance files to differ from immutable v0.0.13. This is the exact authority
 distinction the control plane is intended to enforce.
 
-Next convergence slice: consume the already-isolated LibSearch completeness
-remediation, then generate one successor resolver/install inventory from the
-same released package rows. Do not rewrite the retained v0.0.9 catalog or
-v0.0.13 tag; add a new versioned inventory and keep old locks valid.
+The isolated Lib discovery completeness remediation is now consumed. The new
+`catalog/libs-v013.json` is generated from the exact 13-package product set and
+reviewed discovery intent; exact resolve and no-clobber mocked install tests
+pass for the successor catalog while retained v0.0.9 locks remain valid. The
+control plane now distinguishes immutable-tag installability (4) from the
+current-side successor catalog (13), so the remediation is usable without
+pretending it was retroactively shipped in v0.0.13.
+
+The focused pre-candidate validator was adapted to preserve the exact current
+main-side release/manifest/provenance identities at invocation rather than
+hard-coding their pre-flywheel hashes. Immutable candidate, prod, package-index
+and v0.0.9 catalog anchors remain hard-bound, and the old candidate still
+rejects the future catalog as product drift.
+
+Next convergence slice: rebuild LibSearch 0.2.0 from private producer authority
+against the exact 13-package catalog, produce Core/Component/Wasmi evidence,
+and add it only to a future candidate. Do not rewrite v0.0.13 or relabel the
+current five-package LibSearch 0.1.0 artifact.
 
 ## 2026-09-27 Producer u64 to release authority delta
 

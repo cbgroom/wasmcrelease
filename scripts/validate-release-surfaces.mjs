@@ -76,6 +76,8 @@ assert.equal(ecosystemModel.inventory.packages,13);
 assert.equal(ecosystemModel.inventory.released,13);
 assert.equal(ecosystemModel.inventory.discoverable,5);
 assert.equal(ecosystemModel.inventory.installable,4);
+assert.equal(ecosystemModel.inventory.current_side_installable,13);
+assert.equal(ecosystemModel.inventory.current_side_inventory_matches_release,true);
 assert.equal(ecosystemModel.inventory.inventory_is_unified,false);
 
 const expectedPlatforms=[

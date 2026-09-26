@@ -41,7 +41,10 @@ selection authority; approve and pin exact package identities before use.
 For current-main package status, read the generated
 `lib-ecosystem-control-plane.json` first. It exposes the actual 13 released,
 5 discoverable and 4 installable package states without treating those sets as
-equivalent, and records actual Core imports plus missing engine evidence.
+equivalent, and records actual Core imports plus missing engine evidence. The
+current-side v0.0.13 resolver/install remediation covers all 13 packages, but
+is not retroactively inside the immutable tag and does not make the old
+five-package LibSearch artifact complete.
 
 For SDK/runtime/CLI/embedding integration, begin with
 [the SDK discovery Skill](skills/wasmc-sdk-discovery/SKILL.md). It routes by

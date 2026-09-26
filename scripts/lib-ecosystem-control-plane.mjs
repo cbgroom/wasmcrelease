@@ -17,6 +17,7 @@ assert(args.size === 1 && (args.has('--write') || args.has('--check')), 'usage: 
 const release = readJson('release.json');
 const surfaces = readJson('release-surfaces.json');
 const installCatalog = readJson('catalog/libs-v009.json');
+const currentSideCatalog = existsSync(join(root, 'catalog/libs-v013.json')) ? readJson('catalog/libs-v013.json') : null;
 const compatibility = readJson('compatibility/core-artifacts-v009.json');
 const searchCompatibility = readJson('compatibility/lib-search-core.json');
 assert.equal(typeof release.staged_product_manifest, 'string', 'release.json must bind a staged product manifest');
@@ -34,6 +35,7 @@ assert.equal(searchRun.status, 0, searchRun.stderr);
 const search = JSON.parse(searchRun.stdout);
 const discoverable = new Set(search.hits.filter(row => !row.signature).map(row => row.identity));
 const installable = new Set(installCatalog.packages.map(row => `${row.wit_package}`));
+const currentSideInstallable = new Set((currentSideCatalog?.packages ?? []).map(row => `${row.wit_package}`));
 
 const libRoots = readdirSync(join(root, 'libs'), { withFileTypes: true })
   .filter(entry => entry.isDirectory() && existsSync(join(root, 'libs', entry.name, 'lib.json')))
@@ -86,6 +88,7 @@ const packages = packageRoots.map(packageRoot => {
   });
   const isDiscoverable = discoverable.has(identity);
   const isInstallable = installable.has(identity);
+  const isCurrentSideInstallable = currentSideInstallable.has(identity);
   const imports = actualImports(`${packageRoot}/${metadata.artifact.path}`);
   const approved = metadata.admission?.approved === true;
   const states = {
@@ -116,6 +119,11 @@ const packages = packageRoots.map(packageRoot => {
     supported_surfaces: profile?.supported_surfaces ?? metadata.qualification?.supported_surfaces ?? null,
     unsupported_surfaces: profile?.unsupported_surfaces ?? metadata.qualification?.unsupported_surfaces ?? null,
     states,
+    current_side_remediation: {
+      resolvable_installable: isCurrentSideInstallable,
+      authority: isCurrentSideInstallable ? 'catalog/libs-v013.json' : null,
+      included_in_immutable_tag: false
+    },
     state_evidence: {
       qualification: approved ? `${metadataPath}#admission` : isReleased ? `${release.staged_product_manifest} immutable product inclusion` : null,
       admission: approved ? `${metadataPath}#admission` : isReleased ? `${release.staged_product_manifest} immutable product inclusion` : null,
@@ -150,6 +158,9 @@ const model = {
     search_index_sha256: search.snapshot.index_sha256,
     install_catalog_release: installCatalog.release_tag,
     install_catalog_packages: installCatalog.packages.length,
+    current_side_install_catalog: currentSideCatalog?.release_tag ?? null,
+    current_side_installable: currentSideInstallable.size,
+    current_side_inventory_matches_release: currentSideInstallable.size === count('released'),
     inventory_is_unified: count('released') === count('discoverable') && count('discoverable') === count('installable')
   },
   type_position_authority: surfaces.agent_capability_projection,
@@ -157,7 +168,7 @@ const model = {
   packages,
   ecosystem_stopping_conditions: [
     'Public third-party build, admission and publication are not closed.',
-    'Search and resolver/install inventories are not yet the same as the immutable released package inventory.',
+    'The current-side resolver/install catalog covers all released packages, but it is not inside immutable v0.0.13 and the executable LibSearch snapshot still exposes only five packages.',
     'Missing artifact-bound engine profiles must not be replaced by inferred version ranges.',
     'A Component or Host-SDK surface does not imply ordinary WAsmC source binding support.'
   ]

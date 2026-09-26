@@ -26,6 +26,9 @@
     "search_index_sha256": "c1ccd8f5086b3d3ae0643383f2d3e3e682358b4ccc4a99042233bd35fa73b534",
     "install_catalog_release": "v0.0.9",
     "install_catalog_packages": 4,
+    "current_side_install_catalog": "v0.0.13",
+    "current_side_installable": 13,
+    "current_side_inventory_matches_release": true,
     "inventory_is_unified": false
   },
   "type_position_authority": {
@@ -250,6 +253,11 @@
         "discoverable": false,
         "installable": false
       },
+      "current_side_remediation": {
+        "resolvable_installable": true,
+        "authority": "catalog/libs-v013.json",
+        "included_in_immutable_tag": false
+      },
       "state_evidence": {
         "qualification": "libs/wasmc-csv/lib.json#admission",
         "admission": "libs/wasmc-csv/lib.json#admission",
@@ -308,6 +316,11 @@
         "released": true,
         "discoverable": false,
         "installable": false
+      },
+      "current_side_remediation": {
+        "resolvable_installable": true,
+        "authority": "catalog/libs-v013.json",
+        "included_in_immutable_tag": false
       },
       "state_evidence": {
         "qualification": "libs/wasmc-data-compute/lib.json#admission",
@@ -368,6 +381,11 @@
         "discoverable": false,
         "installable": false
       },
+      "current_side_remediation": {
+        "resolvable_installable": true,
+        "authority": "catalog/libs-v013.json",
+        "included_in_immutable_tag": false
+      },
       "state_evidence": {
         "qualification": "libs/wasmc-data-core/lib.json#admission",
         "admission": "libs/wasmc-data-core/lib.json#admission",
@@ -426,6 +444,11 @@
         "released": true,
         "discoverable": false,
         "installable": false
+      },
+      "current_side_remediation": {
+        "resolvable_installable": true,
+        "authority": "catalog/libs-v013.json",
+        "included_in_immutable_tag": false
       },
       "state_evidence": {
         "qualification": "libs/wasmc-data-expr/lib.json#admission",
@@ -486,6 +509,11 @@
         "discoverable": false,
         "installable": false
       },
+      "current_side_remediation": {
+        "resolvable_installable": true,
+        "authority": "catalog/libs-v013.json",
+        "included_in_immutable_tag": false
+      },
       "state_evidence": {
         "qualification": "libs/wasmc-data-interchange/lib.json#admission",
         "admission": "libs/wasmc-data-interchange/lib.json#admission",
@@ -545,6 +573,11 @@
         "discoverable": false,
         "installable": false
       },
+      "current_side_remediation": {
+        "resolvable_installable": true,
+        "authority": "catalog/libs-v013.json",
+        "included_in_immutable_tag": false
+      },
       "state_evidence": {
         "qualification": "libs/wasmc-data-profile/lib.json#admission",
         "admission": "libs/wasmc-data-profile/lib.json#admission",
@@ -603,6 +636,11 @@
         "released": true,
         "discoverable": false,
         "installable": false
+      },
+      "current_side_remediation": {
+        "resolvable_installable": true,
+        "authority": "catalog/libs-v013.json",
+        "included_in_immutable_tag": false
       },
       "state_evidence": {
         "qualification": "libs/wasmc-data-relational/lib.json#admission",
@@ -669,6 +707,11 @@
         "discoverable": true,
         "installable": true
       },
+      "current_side_remediation": {
+        "resolvable_installable": true,
+        "authority": "catalog/libs-v013.json",
+        "included_in_immutable_tag": false
+      },
       "state_evidence": {
         "qualification": "channels/candidates/0.0.13.json immutable product inclusion",
         "admission": "channels/candidates/0.0.13.json immutable product inclusion",
@@ -724,6 +767,11 @@
         "released": true,
         "discoverable": true,
         "installable": true
+      },
+      "current_side_remediation": {
+        "resolvable_installable": true,
+        "authority": "catalog/libs-v013.json",
+        "included_in_immutable_tag": false
       },
       "state_evidence": {
         "qualification": "channels/candidates/0.0.13.json immutable product inclusion",
@@ -791,6 +839,11 @@
         "released": true,
         "discoverable": true,
         "installable": true
+      },
+      "current_side_remediation": {
+        "resolvable_installable": true,
+        "authority": "catalog/libs-v013.json",
+        "included_in_immutable_tag": false
       },
       "state_evidence": {
         "qualification": "channels/candidates/0.0.13.json immutable product inclusion",
@@ -880,6 +933,11 @@
         "discoverable": false,
         "installable": false
       },
+      "current_side_remediation": {
+        "resolvable_installable": true,
+        "authority": "catalog/libs-v013.json",
+        "included_in_immutable_tag": false
+      },
       "state_evidence": {
         "qualification": "libs/wasmc-system-telemetry/lib.json#admission",
         "admission": "libs/wasmc-system-telemetry/lib.json#admission",
@@ -944,6 +1002,11 @@
         "released": true,
         "discoverable": true,
         "installable": false
+      },
+      "current_side_remediation": {
+        "resolvable_installable": true,
+        "authority": "catalog/libs-v013.json",
+        "included_in_immutable_tag": false
       },
       "state_evidence": {
         "qualification": "channels/candidates/0.0.13.json immutable product inclusion",
@@ -1211,6 +1274,11 @@
         "discoverable": true,
         "installable": true
       },
+      "current_side_remediation": {
+        "resolvable_installable": true,
+        "authority": "catalog/libs-v013.json",
+        "included_in_immutable_tag": false
+      },
       "state_evidence": {
         "qualification": "channels/candidates/0.0.13.json immutable product inclusion",
         "admission": "channels/candidates/0.0.13.json immutable product inclusion",
@@ -1223,7 +1291,7 @@
   ],
   "ecosystem_stopping_conditions": [
     "Public third-party build, admission and publication are not closed.",
-    "Search and resolver/install inventories are not yet the same as the immutable released package inventory.",
+    "The current-side resolver/install catalog covers all released packages, but it is not inside immutable v0.0.13 and the executable LibSearch snapshot still exposes only five packages.",
     "Missing artifact-bound engine profiles must not be replaced by inferred version ranges.",
     "A Component or Host-SDK surface does not imply ordinary WAsmC source binding support."
   ]
