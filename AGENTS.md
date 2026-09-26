@@ -21,7 +21,9 @@ implementation and the current immutable release are separate authorities:
 producer commit `94328ed760f93bf24b595a71facdcc773d43b762` implements and validates
 ordinary-source `u64`, while v0.0.13 still does not contain it. `u32` already
 shipped and needed no repair; `char` remains unimplemented on that producer
-commit and must not be replaced by arbitrary `u32`.
+commit and must not be replaced by arbitrary `u32`. Lead with both authorities
+in one sentence—producer master yes, immutable v0.0.13 release no—so “now” is
+not answered from an unstated authority.
 
 ## Start here
 

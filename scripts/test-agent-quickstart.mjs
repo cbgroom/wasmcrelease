@@ -36,6 +36,8 @@ assert.equal(base64.decoded_utf8, 'abc');
 const delta = quickstart.routes['producer-release-u64-delta'];
 assert.equal(delta.producer.commit, '94328ed760f93bf24b595a71facdcc773d43b762');
 assert.equal(delta.producer.implemented, true);
+assert.match(delta.answer_opening, /Producer master: yes/);
+assert.match(delta.answer_opening, /Immutable v0\.0\.13 release: no/);
 assert.deepEqual(delta.release.states, { qualified:false, admitted:false, released:false, discoverable:false, installable:false });
 assert.match(delta.char, /not implemented/);
 console.log(JSON.stringify({ accepted: true, schema: quickstart.schema, routes: 7, pair, base64 }));

@@ -63,6 +63,7 @@ assert.equal(producerDelta?.producer?.status,'verified-master-implementation');
 assert.equal(producerDelta?.producer?.validation?.strict_mst,true);
 assert.deepEqual(producerDelta?.release?.states,{qualified:false,admitted:false,released:false,discoverable:false,installable:false});
 assert.equal(producerDelta?.release?.v0_0_13_u64_ordinary_source,'unsupported');
+assert.match(producerDelta?.answer_rule??'',/producer master yes, immutable v0\.0\.13 release no/);
 assert.match(producerDelta?.adjacent_type_decisions?.u32??'',/already released/);
 assert.match(producerDelta?.adjacent_type_decisions?.char??'',/not implemented/);
 

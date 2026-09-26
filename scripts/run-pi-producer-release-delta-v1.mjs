@@ -10,7 +10,7 @@ import { evaluateTraceText } from './wasmc-live-agent-trace-evaluation-v1.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const protocol = JSON.parse(readFileSync(new URL('../agent-evaluation/fresh-agent-learning-v1.json', import.meta.url), 'utf8'));
-const prompt = 'Using only this pinned public checkout, answer whether ordinary-source u64 is fixed or supported now. Distinguish the exact producer master implementation from the current immutable release, report qualified/admitted/released/discoverable/installable for the release capability, and state the status of u32 and char. Do not generate source or infer a future release.';
+const prompt = 'Using only this pinned public checkout, answer whether ordinary-source u64 is fixed or supported now. Lead with one sentence that distinguishes the exact producer master implementation from the current immutable release, report qualified/admitted/released/discoverable/installable for the release capability, and state the status of u32 and char. Do not generate source or infer a future release.';
 
 function options(argv) {
   const out = { model: null, commit: null, output: null, timeoutMs: 180000 };
@@ -33,11 +33,15 @@ function options(argv) {
 }
 
 function semanticOracle(answer) {
+  const normalized = answer.replace(/\s+/g, ' ');
+  const opening = normalized.slice(0, 420);
   const checks = {
     exact_producer_commit: answer.includes('94328ed760f93bf24b595a71facdcc773d43b762'),
     producer_implemented: /producer[^\n]*(?:implement|support)|(?:implement|support)[^\n]*producer/i.test(answer),
     immutable_release_named: answer.includes('v0.0.13'),
-    release_u64_unsupported: /v0\.0\.13[^\n]*(?:unsupported|不支持|does not contain|未包含)|(?:unsupported|不支持|does not contain|未包含)[^\n]*v0\.0\.13/i.test(answer),
+    opening_authority_split: /producer/i.test(opening) && /v0\.0\.13/i.test(opening) &&
+      /(?:implement|support|yes|已实现)/i.test(opening) && /(?:unsupported|not contain|no|不支持|未包含)/i.test(opening),
+    release_u64_unsupported: /v0\.0\.13.{0,240}(?:unsupported|不支持|does not contain|not contained|未包含)|(?:unsupported|不支持|does not contain|not contained|未包含).{0,240}v0\.0\.13/i.test(normalized),
     five_false_states: ['qualified', 'admitted', 'released', 'discoverable', 'installable'].every(state =>
       new RegExp(`${state}[^\\n]{0,24}(?:false|否|未)`, 'i').test(answer)
     ),
