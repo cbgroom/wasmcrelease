@@ -46,6 +46,15 @@ snapshot, or a public Component value with private Core lanes. Tuple and named
 record are both one semantic result and may both flatten to multiple Core lanes;
 renaming the aggregate does not repair a consumer that lacks multi-value support.
 
+When a question uses “now”, “fixed” or “supported” without naming an authority,
+read `producer_capability_delta` (or its compact
+`producer-release-u64-delta` quickstart route) before answering. A verified
+producer-master implementation is not a release artifact. For ordinary-source
+`u64`, producer commit `94328ed760f93bf24b595a71facdcc773d43b762` is
+implemented and containing-commit qualified, while immutable v0.0.13 remains
+unsupported and has no corresponding installable candidate. Keep `u32` as the
+already-released type and `char` as a separate unimplemented semantic type.
+
 Do not scan all release history, read implementation tests, or infer a future
 directory layout when these authorities already answer the question.
 

@@ -14,6 +14,9 @@ route matches release orientation, the canonical aggregate-result example,
 released Base64, or Host-authority inspection, use that bounded record and stop
 once the request is answered. Do not expand into history, unrelated engine
 compatibility or implementation tests, and never abbreviate a reported digest.
+The `producer-release-u64-delta` route is authoritative for the narrow question
+whether `u64` is fixed “now”: it keeps verified producer master implementation
+separate from immutable release availability.
 
 ## Start
 

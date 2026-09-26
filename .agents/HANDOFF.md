@@ -1,5 +1,27 @@
 # WAsmC release maintainer handoff
 
+## 2026-09-27 Producer u64 to release authority delta
+
+WAsmC producer `master` now contains exact ordinary-source `u64` semantics at
+`94328ed760f93bf24b595a71facdcc773d43b762`. Strict MST, five focused u64
+semantic tests, Component full-range round trip, the 9-row/8-limit capability
+matrix, check-fast and remote 0/0 readback passed on the containing commit.
+
+This does **not** alter immutable wasmcrelease v0.0.13 or any compiler/Runtime/
+SDK/Host/Lib bytes. The release states for this new producer capability remain
+qualified=false, admitted=false, released=false, discoverable=false and
+installable=false until a new exact source-free compiler candidate is built and
+admitted. `release-surfaces.json.producer_capability_delta` and the compact
+`agent-quickstart.json#producer-release-u64-delta` route encode that boundary.
+`u32` was already released and needed no repair; `char` remains unimplemented
+on the cited producer commit and arbitrary `u32` is not a valid substitute.
+
+Deterministic guidance checks pass. Next, freeze this guidance commit and run
+one fresh Pi prompt through both `llm-m4dd/deepseek-v4.1-flash` and
+`llm-m4dd/glm-5.3-flash`; independently verify that each answer distinguishes
+producer implementation from release availability without retries. Do not use
+model self-assessment as admission authority.
+
 ## 2026-09-26 Live-Agent learning flywheel side-remediation
 
 This workstream improves public release comprehension and evaluation only. It

@@ -334,6 +334,48 @@
     },
     "next_release_requirement": "Package this projection or a schema-compatible generated successor inside the immutable release and validate it against the shipped compiler, Lib, SDK and package profiles."
   },
+  "producer_capability_delta": {
+    "schema": "wasmc.producer-release-delta/v1",
+    "producer": {
+      "repository": "yxsicd/wasmc",
+      "branch": "master",
+      "commit": "94328ed760f93bf24b595a71facdcc773d43b762",
+      "status": "verified-master-implementation",
+      "capability": "ordinary-source-u64",
+      "semantics": [
+        "full 0..=u64::MAX source range",
+        "unsigned comparison, division, remainder and right shift",
+        "WIT u64 identity",
+        "Host and Component full-width bit preservation",
+        "Core i64 physical lane with semantic signedness retained by the contract"
+      ],
+      "validation": {
+        "strict_mst": true,
+        "u64_semantic_tests": "5/5",
+        "component_full_range_round_trip": true,
+        "capability_matrix": "9 type rows and 8 feature limits",
+        "check_fast": true,
+        "remote_master_readback": "0/0"
+      }
+    },
+    "release": {
+      "current_immutable_product": "v0.0.13",
+      "states": {
+        "qualified": false,
+        "admitted": false,
+        "released": false,
+        "discoverable": false,
+        "installable": false
+      },
+      "reason": "No new source-free compiler artifact, candidate identity, admission receipt or immutable release contains the producer change.",
+      "v0_0_13_u64_ordinary_source": "unsupported"
+    },
+    "adjacent_type_decisions": {
+      "u32": "already released in v0.0.13; no repair was required",
+      "char": "not implemented on the cited producer commit and not released; do not substitute arbitrary u32"
+    },
+    "answer_rule": "When asked whether u64 is fixed or supported, state the requested authority. Producer master support and immutable release support are different answers; do not collapse them."
+  },
   "agent_learning_protocol": {
     "schema": "wasmc.fresh-agent-learning/v1",
     "path": "agent-evaluation/fresh-agent-learning-v1.json",

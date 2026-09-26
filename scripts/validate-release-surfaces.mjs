@@ -10,6 +10,7 @@ const model=JSON.parse(read('release-surfaces.json'));
 assert.equal(model.schema,'wasmc.release-surfaces/v1');
 
 const projection=model.agent_capability_projection;
+const producerDelta=model.producer_capability_delta;
 const learning=model.agent_learning_protocol;
 const taskRoutes=model.agent_task_routes;
 const quickstart=model.agent_learning_quickstart;
@@ -27,6 +28,7 @@ const quickstartModel=JSON.parse(read(quickstart.path));
 assert.equal(quickstartModel.schema,quickstart.schema);
 assert.equal(quickstartModel.routes['release-orientation'].compiler.sha256,taskRoutes['release-orientation'].compiler.sha256);
 assert.equal(quickstartModel.routes['ordinary-source-positive'].result.core_sha256,taskRoutes['ordinary-source-pair'].oracle.core_sha256);
+assert.equal(quickstartModel.routes['producer-release-u64-delta'].producer.commit,producerDelta.producer.commit);
 assert.equal(quickstartModel.routes['library-first-selection'].artifact_sha256,taskRoutes['released-base64'].approval.artifact_sha256);
 assert.deepEqual(quickstartModel.routes['library-first-selection'].states,taskRoutes['released-base64'].states);
 assert.deepEqual(quickstartModel.routes['release-state-separation'].required_output_states,['qualified','admitted','released','discoverable','installable']);
@@ -55,6 +57,14 @@ assert(projection?.type_decisions?.map?.unsupported_positions?.includes('direct-
 assert.match(projection?.type_decisions?.map?.alternative??'',/list<Entry<K,V>>/);
 assert.equal(projection?.feature_decisions?.async_ordinary_source_or_lib,'unsupported');
 assert.match(projection?.next_release_requirement??'',/immutable release/);
+assert.equal(producerDelta?.schema,'wasmc.producer-release-delta/v1');
+assert.equal(producerDelta?.producer?.commit,'94328ed760f93bf24b595a71facdcc773d43b762');
+assert.equal(producerDelta?.producer?.status,'verified-master-implementation');
+assert.equal(producerDelta?.producer?.validation?.strict_mst,true);
+assert.deepEqual(producerDelta?.release?.states,{qualified:false,admitted:false,released:false,discoverable:false,installable:false});
+assert.equal(producerDelta?.release?.v0_0_13_u64_ordinary_source,'unsupported');
+assert.match(producerDelta?.adjacent_type_decisions?.u32??'',/already released/);
+assert.match(producerDelta?.adjacent_type_decisions?.char??'',/not implemented/);
 
 const expectedPlatforms=[
   ['linux-x86_64','ubuntu-24.04',true,'required'],
@@ -157,6 +167,7 @@ console.log(JSON.stringify({
   accepted:true,
   schema:model.schema,
   agent_capability_projection:projection.schema,
+  producer_capability_delta:producerDelta.schema,
   consumer_surfaces:consumerIds.length,
   extension_surfaces:extensionIds.length,
   desktop_platforms:expectedPlatforms.length,

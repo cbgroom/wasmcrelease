@@ -10,6 +10,7 @@ assert.equal(quickstart.schema, 'wasmc.agent-quickstart/v1');
 assert.deepEqual(Object.keys(quickstart.routes), [
   'release-orientation',
   'position-aware-capability-negative',
+  'producer-release-u64-delta',
   'ordinary-source-positive',
   'release-state-separation',
   'library-first-selection',
@@ -32,4 +33,9 @@ const base64 = run('examples/base64/run.mjs');
 assert.equal(base64.artifact_sha256, quickstart.routes['library-first-selection'].artifact_sha256);
 assert.equal(base64.encoded_utf8, 'YWJj');
 assert.equal(base64.decoded_utf8, 'abc');
-console.log(JSON.stringify({ accepted: true, schema: quickstart.schema, routes: 6, pair, base64 }));
+const delta = quickstart.routes['producer-release-u64-delta'];
+assert.equal(delta.producer.commit, '94328ed760f93bf24b595a71facdcc773d43b762');
+assert.equal(delta.producer.implemented, true);
+assert.deepEqual(delta.release.states, { qualified:false, admitted:false, released:false, discoverable:false, installable:false });
+assert.match(delta.char, /not implemented/);
+console.log(JSON.stringify({ accepted: true, schema: quickstart.schema, routes: 7, pair, base64 }));

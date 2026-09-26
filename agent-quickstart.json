@@ -20,6 +20,15 @@
       "generate_source": false,
       "required_additional_reads": []
     },
+    "producer-release-u64-delta": {
+      "request": "is ordinary-source u64 fixed or supported now",
+      "producer": {"repository":"yxsicd/wasmc","branch":"master","commit":"94328ed760f93bf24b595a71facdcc773d43b762","implemented":true,"qualified_on_containing_commit":true},
+      "release": {"current":"v0.0.13","states":{"qualified":false,"admitted":false,"released":false,"discoverable":false,"installable":false},"ordinary_source_u64":"unsupported"},
+      "u32": "already released in v0.0.13; no repair was required",
+      "char": "not implemented on the cited producer commit and not released; arbitrary u32 is not a char substitute",
+      "stop": "Do not claim a new release, install command or artifact until wasmcrelease binds a new exact source-free compiler candidate and admission receipt.",
+      "required_additional_reads": []
+    },
     "ordinary-source-positive": {
       "source": "examples/agent-quickstart/pair.wasmc",
       "run": "node examples/agent-quickstart/run-pair.mjs",

@@ -15,6 +15,14 @@ matching route is sufficient for that task: run only its named oracle when one
 is provided, then stop. Do not reopen `release-surfaces.json`, scan history, or
 invent a larger example merely to reconfirm the same route.
 
+For “is `u64` fixed/supported now?”, use the
+`producer-release-u64-delta` quickstart route. The exact producer master
+implementation and the current immutable release are separate authorities:
+producer commit `94328ed760f93bf24b595a71facdcc773d43b762` implements and validates
+ordinary-source `u64`, while v0.0.13 still does not contain it. `u32` already
+shipped and needed no repair; `char` remains unimplemented on that producer
+commit and must not be replaced by arbitrary `u32`.
+
 ## Start here
 
 Compiler source and internal compilation implementations are private. Reviewed
