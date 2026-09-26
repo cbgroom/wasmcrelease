@@ -1,5 +1,53 @@
 # WAsmC release maintainer handoff
 
+## 2026-09-26 Data Foundation v1.1 — STARTED
+
+Task state: started.
+
+Own branch: `work/WS-20260926-data-foundation-v11`, based on released public
+`main@b1d22d27bdc9727e607cf77a4af57b151df6832d` (v0.0.13). The admitted Data
+Foundation v1 relational/compute implementation authority is
+`ff6928b09194b4818b05117ec0ba6a71b998d224`. Exact source-only comparison
+shows `Cargo.toml`, `Cargo.lock`, `src/` and `wit/` for
+`wasmc-data-relational` and `wasmc-data-compute` are byte-identical between
+that authority and this branch base; later differences are admission metadata
+only.
+
+The immutable admitted `libs/wasmc-data-relational@0.0.1` product is not
+edited. v1.1 starts as a new public-source candidate, planned
+`0.0.2-dev.1` with WIT package version `0.0.2`, and may become admitted
+`0.0.2` only after independent behavior, zero-import, Wasmi/Wasmtime,
+integrity and admission review evidence.
+
+First bounded implementation slice:
+
+1. stable distinct over whole rows or selected key columns;
+2. lag/lead on the existing partition/order model;
+3. preserve original input row alignment for window outputs;
+4. all six Data Core types, deterministic null/order behavior and explicit
+   non-zero row bounds;
+5. focused differential/negative tests before frame aggregates.
+
+Distinct keeps the first input occurrence and treats selected-key null values
+as ordinary equality values for deduplication. Lag/lead return a nullable value
+of the input column type; an offset outside the current partition yields null.
+Offset zero addresses the current ordered row. The existing
+`window-rank` partition/order/tie/null implementation is reused rather than
+inventing a second window ordering model.
+
+Second slice, only after the first is green: bounded ROWS frame aggregates
+(`count/sum/min/max/avg`, rolling and cumulative forms). Do not introduce SQL,
+database/storage authority, spill-to-disk, Host callbacks, or runtime imports
+between Data Libs. If aggregate kernels need sharing, prefer a build-time Rust
+shared module/crate compiled into import-free Lib artifacts; do not create a
+new public runtime dependency merely to deduplicate source.
+
+Acceptance for the first slice: existing relational qualification remains
+green, new distinct/lag/lead positive and rejection cases pass, generated Core
+Wasm has zero imports, old admitted `libs/wasmc-data-relational` bytes remain
+unchanged, and repository maintainer integrity passes. Commit and push this
+START checkpoint before implementation.
+
 ## 2026-09-25 Host SDK integration and candidate reopen hardening
 
 Exact local source qualification is now complete for
