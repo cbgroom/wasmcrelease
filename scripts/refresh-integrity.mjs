@@ -81,6 +81,7 @@ const releaseSurfaceFiles = [
   'docs/RELEASE_CHANNELS.md',
   'docs/AGENT_DECISION_MODEL.md',
   'release-surfaces.json',
+  'release-lib-route-readiness.json',
   'bench/manifest.json',
   'bench/host-external-load.json',
   'host/ARCHITECTURE.md',

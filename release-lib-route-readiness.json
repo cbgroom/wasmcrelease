@@ -1,0 +1,49 @@
+{
+  "schema": "wasmc.release-lib-route-readiness/v1",
+  "route": "release-lib-route-readiness",
+  "request": "can a new formal release candidate be created with every released Lib package and API route synchronized",
+  "immutable_release": {
+    "tag": "v0.0.13",
+    "released_packages": 13,
+    "released_api_routes": 105
+  },
+  "future_candidate": {
+    "package_routes": 14,
+    "api_routes": 108,
+    "candidate_extras": 1,
+    "formal_release_ready": false,
+    "blocking_conditions": [
+      "active-lib-search-candidate-extra"
+    ]
+  },
+  "active_search": {
+    "identity": "wasmc:lib-search@0.2.0",
+    "states": {
+      "qualified": true,
+      "admitted": false,
+      "released": false,
+      "discoverable": false,
+      "installable": false
+    },
+    "api_routes": 3
+  },
+  "first_missing_authority": "admission of wasmc:lib-search@0.2.0 into the exact future product and catalog",
+  "valid_resolution_count": 1,
+  "only_valid_closure": "The only valid closure is to admit wasmc:lib-search@0.2.0 into the same future product inventory and exact catalog, regenerate the exact index, then create and verify a v2 candidate with candidate_extras=0. There is no alternative route-set repair; the active route must remain indexed.",
+  "forbidden_shortcuts": [
+    "treat 14 package routes or 108 API routes as release readiness",
+    "remove the active LibSearch identity from its own index",
+    "use historical v0.0.13 candidate verification as the current readiness command",
+    "treat qualification, search or catalog coverage as admission"
+  ],
+  "authorities": [
+    "catalog/lib-route-closure.json",
+    "lib-ecosystem-control-plane.json",
+    "scripts/release-candidate.mjs"
+  ],
+  "check_commands": [
+    "node scripts/lib-route-closure.mjs --check",
+    "node scripts/test-release-candidate-lib-routes.mjs"
+  ],
+  "stop": "This record is sufficient for the matching readiness decision. Do not scan manifests, histories or implementation scripts unless one of its check commands fails."
+}

@@ -8,12 +8,18 @@ adds the admitted system-telemetry Lib for Component/Rust + public Host-SDK
 consumers while reusing the v0.0.12 compiler/runtime/SDK product bytes. See
 [release scope](docs/RELEASE_V013.md).
 
-For a cold-start orientation, capability decision, canonical aggregate example,
-telemetry state check, released Base64 selection, or Host-authority question,
+For a cold-start orientation, Lib route-release readiness, capability decision,
+canonical aggregate example, telemetry state check, released Base64 selection, or Host-authority question,
 read `agent-quickstart.json` once before opening broader documentation. A
 matching route is sufficient for that task: run only its named oracle when one
 is provided, then stop. Do not reopen `release-surfaces.json`, scan history, or
 invent a larger example merely to reconfirm the same route.
+
+For “can we create a new release with every Lib route synchronized?”, read only
+`release-lib-route-readiness.json` first. It is generated from the exact closure
+and ecosystem control plane and is sufficient unless one of its two check
+commands fails. Do not scan the large control plane, manifests or implementation
+scripts merely to reconfirm its counts or blocker.
 
 For “is `u64` fixed/supported now?”, use the
 `producer-release-u64-delta` quickstart route. The exact producer master

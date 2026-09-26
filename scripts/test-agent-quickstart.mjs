@@ -9,6 +9,7 @@ const quickstart = JSON.parse(readFileSync(new URL('../agent-quickstart.json', i
 assert.equal(quickstart.schema, 'wasmc.agent-quickstart/v1');
 assert.deepEqual(Object.keys(quickstart.routes), [
   'release-orientation',
+  'release-lib-route-readiness',
   'position-aware-capability-negative',
   'producer-release-u64-delta',
   'ordinary-source-positive',
@@ -40,4 +41,21 @@ assert.match(delta.answer_opening, /Producer master: yes/);
 assert.match(delta.answer_opening, /Immutable v0\.0\.13 release: no/);
 assert.deepEqual(delta.release.states, { qualified:false, admitted:false, released:false, discoverable:false, installable:false });
 assert.match(delta.char, /not implemented/);
-console.log(JSON.stringify({ accepted: true, schema: quickstart.schema, routes: 7, pair, base64 }));
+const routeReadiness=quickstart.routes['release-lib-route-readiness'];
+const routeReadinessAuthority=JSON.parse(readFileSync(new URL('../release-lib-route-readiness.json',import.meta.url),'utf8'));
+assert.equal(routeReadinessAuthority.schema,'wasmc.release-lib-route-readiness/v1');
+assert.equal(routeReadiness.authority_file,'release-lib-route-readiness.json');
+assert.deepEqual(routeReadiness.immutable_release,routeReadinessAuthority.immutable_release);
+assert.deepEqual(routeReadiness.future_candidate,routeReadinessAuthority.future_candidate);
+assert.deepEqual(routeReadiness.active_search,routeReadinessAuthority.active_search);
+assert.equal(routeReadiness.valid_resolution_count,routeReadinessAuthority.valid_resolution_count);
+assert.equal(routeReadiness.only_valid_closure,routeReadinessAuthority.only_valid_closure);
+assert.equal(routeReadiness.future_candidate.formal_release_ready,false);
+assert.equal(routeReadiness.future_candidate.candidate_extras,1);
+assert.deepEqual(routeReadiness.future_candidate.blocking_conditions,['active-lib-search-candidate-extra']);
+assert.equal(routeReadiness.active_search.states.admitted,false);
+assert.equal(routeReadiness.valid_resolution_count,1);
+assert.match(routeReadiness.only_valid_closure,/candidate_extras=0/);
+assert.match(routeReadiness.only_valid_closure,/no alternative route-set repair/);
+assert(routeReadiness.forbidden_shortcuts.some(row=>row.includes('remove the active LibSearch identity')));
+console.log(JSON.stringify({ accepted: true, schema: quickstart.schema, routes: 8, pair, base64, route_readiness:{formal_release_ready:false,blocker:'active-lib-search-candidate-extra'} }));

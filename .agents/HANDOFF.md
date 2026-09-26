@@ -1,5 +1,39 @@
 # WAsmC release maintainer handoff
 
+## 2026-09-27 Pi Lib-route readiness flywheel
+
+Pi 0.87.1 was run on the same focused release-readiness question with the
+cost-controlled `llm-m4dd/deepseek-v4.1-flash` and
+`llm-m4dd/glm-5.3-flash` routes. The baseline exposed a guidance problem rather
+than a product-count ambiguity: the facts were spread across large surfaces,
+so DeepSeek used 12 calls / 134,976 result characters and GLM used 10 calls /
+32,853 characters. GLM also proposed two invalid shortcuts: historical
+v0.0.13 candidate verification as a current readiness command, and removing
+the active LibSearch route instead of admitting it.
+
+The remediation adds generated `release-lib-route-readiness.json` as the
+bounded first authority for this exact decision. Its counts and blocker are
+derived from the release-wide closure and ecosystem control plane; quickstart
+and release-surface validators require exact agreement. It explicitly rejects
+14/108 as proof of readiness, active-route deletion, historical verification,
+and qualification/admission conflation. Drift fails
+`scripts/lib-ecosystem-control-plane.mjs --check`.
+
+An intermediate GLM answer still left an ambiguous “otherwise match” escape,
+so the final authority also binds `valid_resolution_count=1` and states that
+there is no alternative route-set repair. The unchanged question then passed
+semantically and structurally on both models. DeepSeek used four tool calls and
+GLM used two, both in three assistant turns, with 2,900 and 2,344 tool-result
+characters respectively; both had zero errors, retries,
+duplicate calls, repeated reads and zero-yield results. Both read the bounded
+authority first, ran exactly its two checks, preserved immutable v0.0.13 at
+13 packages / 105 API routes, reported future 14 / 108 plus one candidate
+extra, stopped at admission of `wasmc:lib-search@0.2.0`, and rejected both bad
+shortcuts. Exact metrics and final-answer digests are retained in
+`agent-evaluation/receipts/pi-lib-route-readiness-flywheel-dcf8aeb.json`.
+Raw traces and hidden reasoning are not retained. This is a focused diagnostic,
+not a rerun or replacement of the frozen six-case controlled-pair qualification.
+
 ## 2026-09-27 Release-wide Lib route closure
 
 The recurring LibSearch omission class is now fail-closed rather than repaired

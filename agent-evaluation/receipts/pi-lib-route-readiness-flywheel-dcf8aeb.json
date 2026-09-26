@@ -1,0 +1,137 @@
+{
+  "schema": "wasmc.pi-lib-route-readiness-flywheel/v1",
+  "base_commit": "dcf8aeb0e79f3467aae7ea60db11ad8bffa6403f",
+  "agent": {
+    "implementation": "pi",
+    "version": "0.87.1"
+  },
+  "prompt_sha256": "40ac24445c06712d6c96965b76bce9e3e91334ab89f4d0eb4f83603cdc9be5d7",
+  "models": [
+    {
+      "provider": "llm-m4dd",
+      "identity": "deepseek-v4.1-flash"
+    },
+    {
+      "provider": "llm-m4dd",
+      "identity": "glm-5.3-flash"
+    }
+  ],
+  "baseline": [
+    {
+      "identity": "deepseek-v4.1-flash",
+      "semantic_result": "PASS",
+      "tool_calls": 12,
+      "assistant_turns": 6,
+      "tool_result_characters": 134976,
+      "error_results": 0,
+      "retries": 0,
+      "exact_duplicate_calls": 0,
+      "repeated_reads": 0,
+      "zero_yield_results": 0,
+      "wall_ms": 18306,
+      "final_answer_sha256": "1dbe7f23ce0d582592247ac9c4e7756611947c4131d80aeeda76936732e294a1"
+    },
+    {
+      "identity": "glm-5.3-flash",
+      "semantic_result": "PASS_WITH_INVALID_REMEDIATION",
+      "tool_calls": 10,
+      "assistant_turns": 7,
+      "tool_result_characters": 32853,
+      "error_results": 0,
+      "retries": 0,
+      "exact_duplicate_calls": 0,
+      "repeated_reads": 1,
+      "zero_yield_results": 3,
+      "wall_ms": 43229,
+      "final_answer_sha256": "45e83f2d3f1192713154f33f023160e02496648e841282dcd1b4ca7506b76fa7"
+    }
+  ],
+  "first_guidance_round": [
+    {
+      "identity": "deepseek-v4.1-flash",
+      "semantic_result": "PASS",
+      "tool_calls": 13,
+      "assistant_turns": 8,
+      "tool_result_characters": 147719,
+      "error_results": 0,
+      "retries": 0,
+      "exact_duplicate_calls": 0,
+      "repeated_reads": 0,
+      "zero_yield_results": 0,
+      "wall_ms": 32989,
+      "final_answer_sha256": "13c0f330b58acabf931bf74a84b517f3f65d76781891a5467c002a24a9afc8a9"
+    },
+    {
+      "identity": "glm-5.3-flash",
+      "semantic_result": "PASS",
+      "tool_calls": 7,
+      "assistant_turns": 5,
+      "tool_result_characters": 68015,
+      "error_results": 0,
+      "retries": 0,
+      "exact_duplicate_calls": 0,
+      "repeated_reads": 0,
+      "zero_yield_results": 0,
+      "wall_ms": 19589,
+      "final_answer_sha256": "33c65f32ad93cd5119b8cee2b1ff73bff6556cb0908085eeb24e5f2bd94f6106"
+    }
+  ],
+  "final_round": [
+    {
+      "identity": "deepseek-v4.1-flash",
+      "semantic_result": "PASS",
+      "structural_result": "PASS",
+      "tool_calls": 4,
+      "assistant_turns": 3,
+      "tool_result_characters": 2900,
+      "error_results": 0,
+      "retries": 0,
+      "exact_duplicate_calls": 0,
+      "repeated_reads": 0,
+      "zero_yield_results": 0,
+      "wall_ms": 8896,
+      "final_answer_sha256": "f0d9be34a32d63f20083e4dbd17e8adb45819dc2954b1e93042eab12d4fd83ac"
+    },
+    {
+      "identity": "glm-5.3-flash",
+      "semantic_result": "PASS",
+      "structural_result": "PASS",
+      "tool_calls": 2,
+      "assistant_turns": 3,
+      "tool_result_characters": 2344,
+      "error_results": 0,
+      "retries": 0,
+      "exact_duplicate_calls": 0,
+      "repeated_reads": 0,
+      "zero_yield_results": 0,
+      "wall_ms": 11303,
+      "final_answer_sha256": "a9c82eba9d72204581a8b5d278389209a6e391934de046202288f4c7a81efd02"
+    }
+  ],
+  "white_box_findings": [
+    "The original facts were dispersed, causing both models to scan broad release surfaces instead of taking one bounded authority hop.",
+    "GLM initially treated historical v0.0.13 candidate verification as a current readiness command.",
+    "GLM initially proposed removing the active LibSearch route, which would hide rather than close the release-wide route set.",
+    "A quickstart-only route removed the invalid remediation but did not make both models structurally efficient because its supporting authority remained dispersed.",
+    "An intermediate GLM rerun still said the route set could otherwise match exactly, so the final authority now machine-binds valid_resolution_count=1 and denies every alternative route-set repair."
+  ],
+  "implemented_remediation": "Generate release-lib-route-readiness.json from the exact route closure and ecosystem control plane, make it the bounded first authority for this decision, expose only the two current checks, and fail validation when quickstart or release surfaces drift from it.",
+  "final_semantic_checks": {
+    "immutable_v0_0_13_separated": true,
+    "released_counts_13_and_105": true,
+    "future_counts_14_and_108": true,
+    "candidate_extras_1": true,
+    "formal_release_ready_false": true,
+    "blocker_exact": true,
+    "first_missing_authority_is_admission": true,
+    "qualification_not_admission": true,
+    "fourteen_108_not_readiness": true,
+    "active_route_deletion_rejected": true,
+    "historical_verify_rejected_as_current_readiness": true,
+    "authorities_and_current_commands_exact": true
+  },
+  "raw_traces_retained": false,
+  "hidden_reasoning_retained": false,
+  "scope": "Focused two-model diagnostic and remediation only; this does not rerun or replace the frozen six-case controlled-pair qualification.",
+  "accepted": true
+}

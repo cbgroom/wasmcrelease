@@ -9,6 +9,7 @@ import { buildClosure } from './lib-route-closure.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const outputPath = join(root, 'lib-ecosystem-control-plane.json');
+const readinessOutputPath = join(root, 'release-lib-route-readiness.json');
 const readJson = path => JSON.parse(readFileSync(join(root, path), 'utf8'));
 const digest = bytes => createHash('sha256').update(bytes).digest('hex');
 const sha256File = path => digest(readFileSync(join(root, path)));
@@ -228,12 +229,32 @@ const model = {
   ]
 };
 const encoded = `${JSON.stringify(model, null, 2)}\n`;
+const activeSearchIdentity=searchCandidate.identity;
+const readinessModel = {
+  schema:'wasmc.release-lib-route-readiness/v1',
+  route:'release-lib-route-readiness',
+  request:'can a new formal release candidate be created with every released Lib package and API route synchronized',
+  immutable_release:{tag:release.tag,released_packages:retainedRouteClosure.release_bindings.length,released_api_routes:retainedRouteClosure.release_bindings.reduce((total,row)=>total+row.api_routes,0)},
+  future_candidate:{package_routes:retainedRouteClosure.search_index.package_routes,api_routes:retainedRouteClosure.search_index.api_routes,candidate_extras:retainedRouteClosure.candidate_extras.length,formal_release_ready:retainedRouteClosure.claims.formal_release_ready,blocking_conditions:retainedRouteClosure.blocking_conditions},
+  active_search:{identity:searchCandidate.identity,states:searchCandidate.states,api_routes:retainedRouteClosure.candidate_extras.find(row=>row.identity===searchCandidate.identity)?.api_routes??0},
+  first_missing_authority:`admission of ${activeSearchIdentity} into the exact future product and catalog`,
+  valid_resolution_count:1,
+  only_valid_closure:`The only valid closure is to admit ${activeSearchIdentity} into the same future product inventory and exact catalog, regenerate the exact index, then create and verify a v2 candidate with candidate_extras=0. There is no alternative route-set repair; the active route must remain indexed.`,
+  forbidden_shortcuts:['treat 14 package routes or 108 API routes as release readiness','remove the active LibSearch identity from its own index','use historical v0.0.13 candidate verification as the current readiness command','treat qualification, search or catalog coverage as admission'],
+  authorities:['catalog/lib-route-closure.json','lib-ecosystem-control-plane.json','scripts/release-candidate.mjs'],
+  check_commands:['node scripts/lib-route-closure.mjs --check','node scripts/test-release-candidate-lib-routes.mjs'],
+  stop:'This record is sufficient for the matching readiness decision. Do not scan manifests, histories or implementation scripts unless one of its check commands fails.'
+};
+const readinessEncoded = `${JSON.stringify(readinessModel, null, 2)}\n`;
 
 if (args.has('--write')) {
   writeFileSync(outputPath, encoded);
+  writeFileSync(readinessOutputPath, readinessEncoded);
   console.log(JSON.stringify({ accepted:true, action:'write', path:relative(root, outputPath), inventory:model.inventory }));
 } else {
   assert(existsSync(outputPath), 'lib-ecosystem-control-plane.json is missing');
   assert.equal(readFileSync(outputPath, 'utf8'), encoded, 'lib ecosystem control plane is stale');
+  assert(existsSync(readinessOutputPath), 'release-lib-route-readiness.json is missing');
+  assert.equal(readFileSync(readinessOutputPath, 'utf8'), readinessEncoded, 'release Lib route readiness record is stale');
   console.log(JSON.stringify({ accepted:true, action:'check', path:relative(root, outputPath), inventory:model.inventory }));
 }
