@@ -17,6 +17,7 @@ const candidate=json('channels/candidates/0.0.14.json');
 const admission=json('admission/lib-search-v020-v014-admission.json');
 const qualification=json('admission/qualification-v014.json');
 const dev=json('channels/dev.json');
+const main=json('channels/main.json');
 const libSearchWorkflow=read('.github/workflows/lib-search.yml').toString('utf8');
 const rustManifest=read('examples/lib-search/rust/Cargo.toml').toString('utf8');
 const rustWasmi=read('examples/lib-search/rust/tests/wasmi_portable.rs').toString('utf8');
@@ -39,6 +40,8 @@ assert.equal(qualification.required.lib_search.head_sha,qualification.tested_sou
 assert.equal(qualification.required.full_consumer.head_sha,qualification.tested_source_commit);
 assert.equal(validateTransition(null,dev,candidate),true);
 assert.equal(dev.qualification.receipt,'admission/qualification-v014.json');
+assert.equal(validateTransition(dev,main,candidate),true);
+assert.equal(main.qualification.receipt,'admission/qualification-v014.json');
 assert.equal(admission.schema,'wasmc.lib-search-product-admission/v1');
 assert.deepEqual(admission.states,{qualified:true,admitted:true,released:false,discoverable:false,installable:false});
 assert.equal(admission.catalog.release_commit,'e6bc230c29df89b7004935eb5895b7fc3a8bc3f1');
@@ -71,4 +74,4 @@ const old=spawnSync(process.execPath,['scripts/release-candidate.mjs','verify','
 assert.notEqual(old.status,0);
 assert.match(old.stderr+old.stdout,/product drift rejected/);
 
-console.log(JSON.stringify({accepted:true,schema:candidate.schema,version:candidate.version,products:candidate.product_files.length,product_set_sha256:candidate.product_set_sha256,release_packages:14,package_routes:14,api_routes:108,candidate_extras:0,qualification_routes_bound:true,lib_search_states:admission.states,dev_stage:dev.tag,current_prod:'v0.0.13',publishes:false,next:'metadata-only-main-promotion'}));
+console.log(JSON.stringify({accepted:true,schema:candidate.schema,version:candidate.version,products:candidate.product_files.length,product_set_sha256:candidate.product_set_sha256,release_packages:14,package_routes:14,api_routes:108,candidate_extras:0,qualification_routes_bound:true,lib_search_states:admission.states,dev_stage:dev.tag,main_stage:main.tag,current_prod:'v0.0.13',publishes:false,next:'metadata-only-prod-promotion'}));

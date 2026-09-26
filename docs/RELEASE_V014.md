@@ -29,6 +29,8 @@ candidate identity.
 - Host external HTTPS run `36277334652`: success on all five required platforms
   and the legacy-optional Intel macOS platform.
 
-These receipts authorize only `v0.0.14-dev.1`. They do not publish v0.0.14,
-advance public default discovery, or permit rebuilding any product byte. Main
-and prod remain v0.0.13 until their exact metadata-only transitions complete.
+These receipts first authorized `v0.0.14-dev.1`. The exact metadata-only
+dev-to-main transition then preserved the candidate commit and every product
+digest as `v0.0.14-main.1`. Neither prerelease publishes v0.0.14, advances
+public default discovery, or permits rebuilding any product byte. Prod remains
+v0.0.13 until its exact main-to-prod transition completes.

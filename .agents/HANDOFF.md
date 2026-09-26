@@ -1,5 +1,15 @@
 # WAsmC release maintainer handoff
 
+## 2026-09-27 v0.0.14 main promotion
+
+`v0.0.14-main.1` is the exact metadata-only successor of
+`v0.0.14-dev.1`; candidate `f43dd8445717cc0dc38f41077ff239635b8e809d`
+and product set
+`0eb2d0addf9e0cfe9afb11502848bf0a09a55616c5024727ec98729103a138bc`
+are unchanged. `channels/main.json` retains the same successful qualification
+runs. Next is the exact main-to-prod transition; public prod/default discovery
+remains v0.0.13 until that transition and final integrity checks complete.
+
 ## 2026-09-27 v0.0.14 dev qualification
 
 Exact candidate `f43dd8445717cc0dc38f41077ff239635b8e809d` / product

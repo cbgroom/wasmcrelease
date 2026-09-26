@@ -1,7 +1,7 @@
 {
   "schema": "wasmc.release-qualification/v1",
   "version": "0.0.14",
-  "stage_authorized": "dev",
+  "stage_authorized": "main",
   "product_candidate": {
     "path": "channels/candidates/0.0.14.json",
     "commit": "f43dd8445717cc0dc38f41077ff239635b8e809d",
@@ -45,9 +45,8 @@
     "exact": true
   },
   "accepted": true,
-  "authorizes": ["v0.0.14-dev.1"],
+  "authorizes": ["v0.0.14-dev.1", "v0.0.14-main.1"],
   "does_not_authorize": [
-    "main promotion without an exact dev-to-main transition",
     "prod publication or public default discovery",
     "rebuilding or changing any candidate product byte"
   ]
