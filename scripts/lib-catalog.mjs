@@ -5,6 +5,10 @@ import { fileURLToPath } from 'node:url';
 
 export const repositoryRoot = fileURLToPath(new URL('../', import.meta.url));
 export const sha256 = bytes => createHash('sha256').update(bytes).digest('hex');
+export const catalogAuthorities = Object.freeze({
+  v009: Object.freeze({release_tag:'v0.0.9',release_commit:'0fec38d59872a7f1527dc94799da542e968f1f8a'}),
+  v013: Object.freeze({release_tag:'v0.0.13',release_commit:'b1d22d27bdc9727e607cf77a4af57b151df6832d'}),
+});
 const fail = code => { throw Object.assign(new Error(code), { code }); };
 const digest = value => typeof value === 'string' && /^[a-f0-9]{64}$/.test(value);
 export function safePath(path) {
@@ -20,10 +24,11 @@ export function packageReader(root = repositoryRoot) {
     return readFileSync(actual);
   };
 }
-export function parseCatalog(bytes) {
+export function parseCatalog(bytes, authority = catalogAuthorities.v009) {
   let catalog;
   try { catalog = JSON.parse(bytes); } catch { fail('catalog.invalid'); }
-  if (catalog?.schema !== 'wasmc.public-lib-catalog/v1' || catalog.release_tag !== 'v0.0.9' || catalog.release_commit !== '0fec38d59872a7f1527dc94799da542e968f1f8a' || !Array.isArray(catalog.packages) || !catalog.packages.length || catalog.packages.length > 64) fail('catalog.invalid');
+  if (!authority || catalog?.schema !== 'wasmc.public-lib-catalog/v1' || catalog.release_tag !== authority.release_tag || catalog.release_commit !== authority.release_commit || !Array.isArray(catalog.packages) || !catalog.packages.length || catalog.packages.length > 64) fail('catalog.invalid');
+  if (catalog.search_text_profile != null && catalog.search_text_profile !== 'package-intent-v1') fail('catalog.invalid');
   for (const row of catalog.packages) {
     if (typeof row.id !== 'string' || !row.id || !/^\d+\.\d+\.\d+$/.test(row.version) || typeof row.wit_package !== 'string' || !digest(row.wit_sha256) || !digest(row.artifact_sha256) || !Array.isArray(row.files) || !row.files.length || row.files.length > 256 || !Array.isArray(row.keywords) || !row.keywords.every(k => typeof k === 'string') || typeof row.historical !== 'boolean') fail('catalog.invalid');
     safePath(row.root);
@@ -39,17 +44,17 @@ export function parseCatalog(bytes) {
   }
   return catalog;
 }
-export function searchCatalog(bytes, query = '', includeHistorical = false) {
-  const catalog = parseCatalog(bytes);
+export function searchCatalog(bytes, query = '', includeHistorical = false, authority = catalogAuthorities.v009) {
+  const catalog = parseCatalog(bytes, authority);
   const words = query.toLowerCase().trim().split(/\s+/).filter(Boolean);
   return catalog.packages.filter(row => (includeHistorical || !row.historical) && words.every(word => [row.id, row.wit_package, ...row.keywords].join(' ').toLowerCase().includes(word)))
     .sort((a,b) => `${a.id}@${a.version}` < `${b.id}@${b.version}` ? -1 : `${a.id}@${a.version}` > `${b.id}@${b.version}` ? 1 : 0)
     .map(({files, ...row}) => row);
 }
-export function selectCatalog(bytes, request) {
+export function selectCatalog(bytes, request, authority = catalogAuthorities.v009) {
   if (!request || !digest(request.catalog_sha256) || sha256(bytes) !== request.catalog_sha256) fail('catalog.identity_mismatch');
   if (typeof request.id !== 'string' || typeof request.version !== 'string' || !digest(request.wit_sha256) || !digest(request.artifact_sha256)) fail('resolve.exact_lock_required');
-  const catalog = parseCatalog(bytes);
+  const catalog = parseCatalog(bytes, authority);
   const matches = catalog.packages.filter(row => row.id === request.id && row.version === request.version);
   if (!matches.length) fail('resolve.not_found');
   if (matches.length !== 1) fail('resolve.ambiguous');
@@ -57,8 +62,8 @@ export function selectCatalog(bytes, request) {
   if (row.wit_sha256 !== request.wit_sha256 || row.artifact_sha256 !== request.artifact_sha256) fail('resolve.identity_mismatch');
   return {catalog, row};
 }
-export function resolveCatalog(bytes, request, read = packageReader()) {
-  const {catalog, row} = selectCatalog(bytes, request);
+export function resolveCatalog(bytes, request, read = packageReader(), authority = catalogAuthorities.v009) {
+  const {catalog, row} = selectCatalog(bytes, request, authority);
   const contents = new Map();
   for (const file of row.files) {
     let data;
