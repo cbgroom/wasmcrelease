@@ -46,6 +46,18 @@ standard behavior oracle still passes 5,120 dual-consumer calls. This changes
 guidance only, not product bytes. Rerun both models from fresh sessions on the
 new exact commit before claiming improvement or controlled-pair qualification.
 
+An intermediate DeepSeek probe on `dba4444` confirmed the route concept but did
+not close the pair: release orientation fell from 16 tools/9 turns/93,641 ms to
+8 tools/6 turns/17,170 ms, while Base64 still expanded into an invented source
+probe and hit the 180-second cost stop. Exact evidence is
+`agent-evaluation/receipts/pi-deepseek-probe-dba4444.json`. The next refinement
+adds one compact `agent-quickstart.json`, a deterministic 49-byte aggregate
+example runner, a direct `abc -> YWJj -> abc` Base64 runner, the exact
+`WebAssembly.instantiate(Module)` usage, a negated-range evaluator fix, and a
+reproducible Pi runner using local Git clones plus a hard per-case timeout.
+These are guidance/evaluator/harness changes; no compiler, Runtime, SDK, Host or
+Lib product byte changes are claimed.
+
 Protocol validation, its synthetic positive/negative cohort tests, the release
 surface validator, the maintainer validator and the deterministic Fresh-Agent
 regression pass. The integrity-suite entry for the Pi two-model contract also

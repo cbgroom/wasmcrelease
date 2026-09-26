@@ -8,6 +8,13 @@ adds the admitted system-telemetry Lib for Component/Rust + public Host-SDK
 consumers while reusing the v0.0.12 compiler/runtime/SDK product bytes. See
 [release scope](docs/RELEASE_V013.md).
 
+For a cold-start orientation, capability decision, canonical aggregate example,
+telemetry state check, released Base64 selection, or Host-authority question,
+read `agent-quickstart.json` once before opening broader documentation. A
+matching route is sufficient for that task: run only its named oracle when one
+is provided, then stop. Do not reopen `release-surfaces.json`, scan history, or
+invent a larger example merely to reconfirm the same route.
+
 ## Start here
 
 Compiler source and internal compilation implementations are private. Reviewed
@@ -68,7 +75,8 @@ ownership or failure semantics to make a request compile.
 
 For release orientation, the canonical aggregate-result example, released
 Base64 selection, or Host-authority inspection, read
-`release-surfaces.json.agent_task_routes` first. A matching record is the
+`agent-quickstart.json` first. It is a validated compact projection of
+`release-surfaces.json.agent_task_routes`. A matching record is the
 bounded route: stop when it answers the task, omit unrelated identities, and
 never abbreviate a digest that you choose to report. Do not scan historical
 catalogs, broad manifests, compatibility matrices or implementation tests to

@@ -1,0 +1,9 @@
+package local:logical_pair;
+
+interface api {
+  run: func(value: s32, flag: bool) -> tuple<bool, bool> {
+    return tuple(value != 0, flag);
+  }
+}
+
+world app { export api; }

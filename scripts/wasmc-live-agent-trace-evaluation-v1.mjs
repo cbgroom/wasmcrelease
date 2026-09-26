@@ -138,7 +138,7 @@ export function evaluateTraceText(input, profileName = 'general') {
   }
   const claimedEngineRange = finalAnswer.split(/\r?\n/).some(line =>
     /\b(?:Node|Deno|Bun|Wasmi|Wasmtime)\s+v?\d+(?:\.\d+){0,2}\+/i.test(line) &&
-    !/\b(?:never|do not|don't|must not|avoid|forbid(?:den)?|reject(?:ed)?|unsupported|invalid)\b/i.test(line)
+    !/\b(?:not|never|do not|don't|must not|avoid|forbid(?:den)?|reject(?:ed)?|unsupported|invalid)\b/i.test(line)
   );
   if (claimedEngineRange) {
     report.hygiene_findings.push('inferred-engine-version-range');

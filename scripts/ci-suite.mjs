@@ -20,6 +20,7 @@ export function suiteCases(family,runtime='node',mirror='github') {
     item('library-first-teaching-and-routes','scripts/test-library-first.mjs'),
     item('live-agent-trace-evaluator','scripts/test-live-agent-trace-evaluation-v1.mjs'),
     item('fresh-pi-two-model-learning-contract','scripts/test-fresh-agent-learning-v1.mjs'),
+    item('agent-quickstart-execution','scripts/test-agent-quickstart.mjs'),
     item('sdk-agent-routing','scripts/validate-sdk-agent-routes.mjs'),
     item('release-channel-promotion-negatives','scripts/test-release-channel.mjs'),
     item('release-product-identity','scripts/release-candidate.mjs',['verify','channels/candidates/0.0.13.json']),

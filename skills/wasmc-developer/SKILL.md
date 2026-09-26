@@ -8,7 +8,8 @@ description: Design, write, compile, inspect, embed, and debug applications with
 Build against the released files beside this Skill. Never assume private source
 or an unreleased capability.
 
-Before broad discovery, check `release-surfaces.json.agent_task_routes`. When a
+Before broad discovery, check `agent-quickstart.json`. It is the validated
+compact projection of `release-surfaces.json.agent_task_routes`. When a
 route matches release orientation, the canonical aggregate-result example,
 released Base64, or Host-authority inspection, use that bounded record and stop
 once the request is answered. Do not expand into history, unrelated engine

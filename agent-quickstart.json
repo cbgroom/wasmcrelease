@@ -1,0 +1,56 @@
+{
+  "schema": "wasmc.agent-quickstart/v1",
+  "authority": "release-surfaces.json",
+  "rule": "Match one route, use its exact evidence, and stop. Do not inspect history, unrelated compatibility data, broad manifests or implementation tests. Never abbreviate an identity that you report.",
+  "routes": {
+    "release-orientation": {
+      "release": "v0.0.13",
+      "entrypoint": "AGENTS.md",
+      "compiler": {"path":"current/wasmc_compiler.wasm","bytes":1351666,"sha256":"93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90","imports":0},
+      "facade": {"path":"current/wasmc.mjs","sha256":"6f1cd2f94d66966ed0de6db462432ea82523ab02de0ad956f51be9f6944caffe"},
+      "verify_with": ["release.json", "manifest.json", "SHA256SUMS"],
+      "mutable_not_authority": ["main", "unversioned URLs", "package-index.json.latest"],
+      "required_additional_reads": []
+    },
+    "position-aware-capability-negative": {
+      "request": "async func(u64) -> map<string,u64> as an ordinary public WAsmC value",
+      "decision": "unsupported",
+      "independent_stops": ["async ordinary source unsupported", "u64 ordinary parameter and nested payload unsupported", "Map is resident/local only and unsupported as a direct public WIT value result"],
+      "alternatives": ["u32 or i64 only with application-owned bounds and signedness proof", "ordered list<Entry<K,V>> snapshot only when copied-value semantics are equivalent", "declared resource for identity and mutation", "otherwise stop"],
+      "generate_source": false,
+      "required_additional_reads": []
+    },
+    "ordinary-source-positive": {
+      "source": "examples/agent-quickstart/pair.wasmc",
+      "run": "node examples/agent-quickstart/run-pair.mjs",
+      "result": {"core_bytes":49,"core_sha256":"55f3c7e3d09b564b89b8268299a69569a33b856b46405cb4c4dd51634afec84e","imports":[],"call":"run(5, true)","value":[1,1]},
+      "embedding_warning": "The tuple is one semantic result; JavaScript observes two flattened Core lanes, not an automatically lifted object.",
+      "required_additional_reads": ["examples/agent-quickstart/pair.wasmc"]
+    },
+    "release-state-separation": {
+      "request": "direct WAsmC source use of wasmc-system-telemetry@0.0.1 sampler resource",
+      "states": {"qualified":false,"admitted":false,"released":false,"discoverable":false,"installable":false},
+      "stop": "qualified=false because wasmc-source-direct-resource-methods is explicitly unsupported",
+      "related_product": {"qualified":true,"admitted":true,"released":true,"discoverable":false,"installable":false,"routes":["source-free-rust-component","public-rust-host-sdk","linux-explicit-generic-resource-acquisition"]},
+      "required_additional_reads": []
+    },
+    "library-first-selection": {
+      "package": "wasmc:std@1.4.0",
+      "apis": ["wasmc:std@1.4.0/base64#try-encode-standard", "wasmc:std@1.4.0/base64#try-decode-standard"],
+      "search": "node scripts/wasmc-lib.mjs search base64 --limit 8",
+      "search_is_selection_authority": false,
+      "wit_sha256": "d565f00e91c36da68da3645ec5231dd11d1b25299a3ba5cbe3adbd9f5760d91d",
+      "artifact_sha256": "f8a8ce447f776a47680e02e19ea3a69827edbbc46e01985803ce3d3df51178d7",
+      "resolve": "node scripts/wasmc-lib.mjs resolve wasmc-std 1.4.0 --catalog-sha256 13fe84e7faf77467b45d97460e9cd9fa1ba7d17c17b0175fb16ce5d694c82d82 --wit-sha256 d565f00e91c36da68da3645ec5231dd11d1b25299a3ba5cbe3adbd9f5760d91d --artifact-sha256 f8a8ce447f776a47680e02e19ea3a69827edbbc46e01985803ce3d3df51178d7",
+      "behavior": "node examples/base64/run.mjs",
+      "required_additional_reads": []
+    },
+    "host-authority-boundary": {
+      "decision": "Inspect every generated import before instantiation and compare module, name, kind and signature with an application-owned exact allowlist.",
+      "javascript": "compile(source), inspectWasm(bytes), then WebAssembly.instantiate(inspected.module, approvedImports)",
+      "pure": "Require imports=[] and instantiate with {}.",
+      "forbidden": ["ambient filesystem/network/clock/randomness", "credentials/process/device access", "private handles/plans/Store nonces/lifecycle helpers", "JSON as WIT replacement"],
+      "required_additional_reads": []
+    }
+  }
+}

@@ -69,6 +69,14 @@ const negatedRangeReport = evaluateTraceText(negatedRange, 'status-query');
 assert.equal(negatedRangeReport.accepted, true);
 assert.deepEqual(negatedRangeReport.hygiene_findings, []);
 
+const plainNegation = [
+  line({ type: 'session', id: 'plain-negation', timestamp: 1 }),
+  assistant([{ type: 'text', text: 'Node 26.5.1 was observed; this is not a Node 26+ range claim.' }])
+].join('\n');
+const plainNegationReport = evaluateTraceText(plainNegation, 'status-query');
+assert.equal(plainNegationReport.accepted, true);
+assert.deepEqual(plainNegationReport.hygiene_findings, []);
+
 console.log(JSON.stringify({
   accepted: true,
   schema: goodReport.schema,

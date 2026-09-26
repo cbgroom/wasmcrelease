@@ -1,0 +1,24 @@
+{
+  "schema": "wasmc.fresh-agent-probe/v1",
+  "release_guidance_commit": "dba44441a032e7c2bb2cf0a5f4c0e075a6092363",
+  "pi_version": "0.87.1",
+  "model": {"provider":"llm-m4dd","identity":"deepseek-v4.1-flash"},
+  "fresh_session_per_case": true,
+  "raw_trace_retained": false,
+  "hidden_reasoning_retained": false,
+  "cases": [
+    {"id":"release-orientation","oracle_correct":true,"structural_pass":false,"tool_calls":8,"assistant_turns":6,"tool_result_characters":13577,"elapsed_ms":17170,"findings":["repeated-read-budget-exceeded"],"baseline":{"tool_calls":16,"assistant_turns":9,"elapsed_ms":93641}},
+    {"id":"position-aware-capability-negative","oracle_correct":true,"structural_pass":false,"tool_calls":3,"assistant_turns":3,"tool_result_characters":11407,"elapsed_ms":6796,"findings":["archive-checkout-lacked-git-metadata-causing-tool-error"]},
+    {"id":"ordinary-source-positive","oracle_correct":true,"structural_pass":false,"tool_calls":15,"assistant_turns":12,"tool_result_characters":32636,"elapsed_ms":63213,"findings":["first-execution-used-wrong-WebAssembly.instantiate-return-shape","tool-error","assistant-turn-budget-exceeded","evaluator-negation-false-positive"]},
+    {"id":"release-state-separation","oracle_correct":true,"structural_pass":false,"tool_calls":8,"assistant_turns":5,"tool_result_characters":17450,"elapsed_ms":12447,"findings":["repeated-read-budget-exceeded"]},
+    {"id":"library-first-selection","oracle_correct":false,"structural_pass":false,"tool_calls":44,"assistant_turns":30,"tool_result_characters":54729,"elapsed_ms":173537,"terminated_at_ms":180000,"findings":["four-tool-errors","invented-unreleased-test-source","missing-direct-Base64-behavior-runner","no-final-answer"]},
+    {"id":"host-authority-boundary","oracle_correct":true,"structural_pass":false,"tool_calls":12,"assistant_turns":7,"tool_result_characters":26631,"elapsed_ms":18391,"findings":["decision-budget-exceeded"]}
+  ],
+  "controlled_pair_accepted": false,
+  "conclusions": [
+    "The bounded route materially improved release orientation but a large shared JSON authority still encouraged repeated extraction reads.",
+    "Base64 needs a released direct behavior runner; a general standard-Lib oracle does not prevent the Agent from inventing a bespoke source probe.",
+    "The canonical aggregate route needs exact executable code showing that WebAssembly.instantiate(Module, imports) returns an Instance directly.",
+    "Archive-only evaluation creates a false tool failure when the Agent verifies the pinned commit; future runs must use an exact local Git clone and a hard timeout."
+  ]
+}

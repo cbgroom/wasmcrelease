@@ -275,7 +275,8 @@
       "parameters": "zero or more heterogeneous typed parameters",
       "result": "exactly one semantic value",
       "multiple_logical_values": "one tuple<...> or named record",
-      "embedding_warning": "tuple and record may both flatten to multiple Core lanes; neither creates automatic JavaScript object lifting"
+      "embedding_warning": "tuple and record may both flatten to multiple Core lanes; neither creates automatic JavaScript object lifting",
+      "canonical_example": "agent-quickstart.json#routes/ordinary-source-positive"
     },
     "type_decisions": {
       "ordinary_source_scalars": {
@@ -340,6 +341,11 @@
     "single_model_pass_is_controlled_pair_qualification": false,
     "wall_clock_is_standalone_release_gate": false
   },
+  "agent_learning_quickstart": {
+    "schema": "wasmc.agent-quickstart/v1",
+    "path": "agent-quickstart.json",
+    "rule": "Read once and stop when a matching route is sufficient."
+  },
   "agent_task_routes": {
     "rule": "When one route matches the request, read this record first and stop once its evidence answers the task. Do not scan release history, unrelated compatibility identities, implementation tests or broad manifests to reconfirm it. Report every identity in full or omit an identity that the answer does not need.",
     "release-orientation": {
@@ -381,6 +387,8 @@
         "call": "run(5, true)",
         "result": [1, 1]
       },
+      "source_path": "examples/agent-quickstart/pair.wasmc",
+      "run_command": "node examples/agent-quickstart/run-pair.mjs",
       "embedding_warning": "The tuple is one semantic result but JavaScript observes two flattened Core lanes, not an automatically lifted object."
     },
     "released-base64": {
@@ -401,7 +409,7 @@
         "artifact_sha256": "f8a8ce447f776a47680e02e19ea3a69827edbbc46e01985803ce3d3df51178d7"
       },
       "resolve_command": "node scripts/wasmc-lib.mjs resolve wasmc-std 1.4.0 --catalog-sha256 13fe84e7faf77467b45d97460e9cd9fa1ba7d17c17b0175fb16ce5d694c82d82 --wit-sha256 d565f00e91c36da68da3645ec5231dd11d1b25299a3ba5cbe3adbd9f5760d91d --artifact-sha256 f8a8ce447f776a47680e02e19ea3a69827edbbc46e01985803ce3d3df51178d7",
-      "behavior_command": "node examples/current/standard.mjs",
+      "behavior_command": "node examples/base64/run.mjs",
       "answer_boundary": "Do not investigate historical catalog snapshot identities, Core ABI indices or unrelated engine versions unless the user asks."
     },
     "host-authority": {
