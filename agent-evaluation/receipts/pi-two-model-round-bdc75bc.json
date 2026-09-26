@@ -1,0 +1,39 @@
+{
+  "schema": "wasmc.fresh-agent-round/v1",
+  "release_guidance_commit": "bdc75bcbf7977d9b449f1eeb9e80c71bab0d246b",
+  "pi_version": "0.87.1",
+  "runner": "scripts/run-pi-learning-model-v1.mjs",
+  "fresh_local_git_clone_per_case": true,
+  "timeout_ms": 180000,
+  "raw_trace_retained": false,
+  "hidden_reasoning_retained": false,
+  "models": [
+    {
+      "provider": "llm-m4dd",
+      "identity": "deepseek-v4.1-flash",
+      "cases": [
+        {"id":"release-orientation","structural_pass":true,"tool_calls":6,"assistant_turns":4,"tool_result_characters":58571,"wall_ms":19753,"oracle_pass":true},
+        {"id":"position-aware-capability-negative","structural_pass":true,"tool_calls":4,"assistant_turns":3,"tool_result_characters":7992,"wall_ms":17760,"oracle_pass":true},
+        {"id":"ordinary-source-positive","structural_pass":true,"tool_calls":6,"assistant_turns":5,"tool_result_characters":8705,"wall_ms":23249,"oracle_pass":true},
+        {"id":"release-state-separation","structural_pass":true,"tool_calls":3,"assistant_turns":2,"tool_result_characters":4934,"wall_ms":10091,"oracle_pass":false,"finding":"claimed five states but omitted installable from the requested direct-route table"},
+        {"id":"library-first-selection","structural_pass":true,"tool_calls":10,"assistant_turns":7,"tool_result_characters":21020,"wall_ms":38835,"oracle_pass":false,"finding":"reported installable as not established although the pinned release publishes an install route"},
+        {"id":"host-authority-boundary","structural_pass":true,"tool_calls":4,"assistant_turns":3,"tool_result_characters":19615,"wall_ms":15047,"oracle_pass":true}
+      ]
+    },
+    {
+      "provider": "llm-m4dd",
+      "identity": "glm-5.3-flash",
+      "cases": [
+        {"id":"release-orientation","structural_pass":true,"tool_calls":2,"assistant_turns":2,"tool_result_characters":4689,"wall_ms":11221,"oracle_pass":true},
+        {"id":"position-aware-capability-negative","structural_pass":false,"tool_calls":12,"assistant_turns":12,"tool_result_characters":14327,"wall_ms":67221,"oracle_pass":false,"finding":"ignored matching quickstart route, scanned historical catalog, and introduced unrelated v0.0.9 evidence"},
+        {"id":"ordinary-source-positive","structural_pass":true,"tool_calls":5,"assistant_turns":4,"tool_result_characters":6192,"wall_ms":21734,"oracle_pass":true},
+        {"id":"release-state-separation","structural_pass":true,"tool_calls":2,"assistant_turns":2,"tool_result_characters":7645,"wall_ms":14227,"oracle_pass":true},
+        {"id":"library-first-selection","structural_pass":true,"tool_calls":5,"assistant_turns":5,"tool_result_characters":11854,"wall_ms":43250,"oracle_pass":false,"finding":"described the resolver v0.0.9 snapshot as release authority instead of a delivery index retained by v0.0.13"},
+        {"id":"host-authority-boundary","structural_pass":true,"tool_calls":1,"assistant_turns":2,"tool_result_characters":4232,"wall_ms":17928,"oracle_pass":true}
+      ]
+    }
+  ],
+  "controlled_pair_accepted": false,
+  "improvement": "DeepSeek moved from one structural PASS in the baseline to six; GLM moved from two structural PASS plus one cost termination to five structural PASS with no timeout.",
+  "next_change": "Make quickstart precedence exclusive when matched; require all five telemetry states; encode Base64 installability and distinguish the current v0.0.13 product release from the resolver's retained v0.0.9 delivery snapshot."
+}

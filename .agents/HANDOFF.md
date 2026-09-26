@@ -58,6 +58,21 @@ reproducible Pi runner using local Git clones plus a hard per-case timeout.
 These are guidance/evaluator/harness changes; no compiler, Runtime, SDK, Host or
 Lib product byte changes are claimed.
 
+The first full dual-model run on `bdc75bc` materially improved structural
+efficiency: DeepSeek passed all six structural gates; GLM passed five, with no
+timeout. The pair is still not accepted. White-box review rejected two DeepSeek
+answers (missing `installable` in the direct telemetry five-state table and an
+incorrectly conservative Base64 installability statement) and two GLM answers
+(historical-catalog exploration in the capability-negative case, and treating
+the retained v0.0.9 resolver snapshot as current release authority). Exact
+metrics are in `agent-evaluation/receipts/pi-two-model-round-bdc75bc.json`.
+
+The next bounded correction makes quickstart precedence exclusive when a route
+matches, requires all five telemetry output states, records Base64 installability
+as true, and distinguishes current product release v0.0.13 from the resolver's
+retained v0.0.9 delivery index. Rerun the full pair on one exact successor
+commit; do not qualify from the `bdc75bc` observations.
+
 Protocol validation, its synthetic positive/negative cohort tests, the release
 surface validator, the maintainer validator and the deterministic Fresh-Agent
 regression pass. The integrity-suite entry for the Pi two-model contract also

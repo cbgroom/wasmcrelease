@@ -30,19 +30,24 @@
     "release-state-separation": {
       "request": "direct WAsmC source use of wasmc-system-telemetry@0.0.1 sampler resource",
       "states": {"qualified":false,"admitted":false,"released":false,"discoverable":false,"installable":false},
+      "required_output_states": ["qualified", "admitted", "released", "discoverable", "installable"],
       "stop": "qualified=false because wasmc-source-direct-resource-methods is explicitly unsupported",
       "related_product": {"qualified":true,"admitted":true,"released":true,"discoverable":false,"installable":false,"routes":["source-free-rust-component","public-rust-host-sdk","linux-explicit-generic-resource-acquisition"]},
       "required_additional_reads": []
     },
     "library-first-selection": {
+      "product_release": "v0.0.13",
       "package": "wasmc:std@1.4.0",
       "apis": ["wasmc:std@1.4.0/base64#try-encode-standard", "wasmc:std@1.4.0/base64#try-decode-standard"],
       "search": "node scripts/wasmc-lib.mjs search base64 --limit 8",
       "search_is_selection_authority": false,
       "wit_sha256": "d565f00e91c36da68da3645ec5231dd11d1b25299a3ba5cbe3adbd9f5760d91d",
       "artifact_sha256": "f8a8ce447f776a47680e02e19ea3a69827edbbc46e01985803ce3d3df51178d7",
+      "states": {"qualified":true,"admitted":true,"released":true,"discoverable":true,"installable":true},
+      "catalog_snapshot_boundary": "The resolver's v0.0.9 snapshot is a pinned delivery index retained by v0.0.13; it is not the current product release authority and need not be reported unless asked.",
       "resolve": "node scripts/wasmc-lib.mjs resolve wasmc-std 1.4.0 --catalog-sha256 13fe84e7faf77467b45d97460e9cd9fa1ba7d17c17b0175fb16ce5d694c82d82 --wit-sha256 d565f00e91c36da68da3645ec5231dd11d1b25299a3ba5cbe3adbd9f5760d91d --artifact-sha256 f8a8ce447f776a47680e02e19ea3a69827edbbc46e01985803ce3d3df51178d7",
       "behavior": "node examples/base64/run.mjs",
+      "install_reference": "catalog/INSTALL.md",
       "required_additional_reads": []
     },
     "host-authority-boundary": {

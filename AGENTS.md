@@ -62,11 +62,12 @@ executable command, use the complete tag, commit, version and digest: never use
 an ellipsis or placeholder. Exact tested engine versions are observations, not
 minimum-version ranges such as `Node 22+`.
 
-For existence, release-status, discovery or installation questions, read
+Only when `agent-quickstart.json` has no matching route: for existence,
+release-status, discovery or installation questions, read
 `release-surfaces.json.agent_status_queries` first. If an exact request and its
 stopping condition are present, answer from that record; do not probe guessed
 package paths, catalogs, examples or implementation tests to reconfirm absence.
-For language/type questions, first read
+Only when quickstart has no match: for language/type questions, first read
 `release-surfaces.json.agent_capability_projection` and decide every requested
 position separately. This current-main guidance is bound to v0.0.13 behavior
 but was not retroactively added to the immutable tag and changes no product
