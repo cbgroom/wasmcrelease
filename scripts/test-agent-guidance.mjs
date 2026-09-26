@@ -24,4 +24,7 @@ reject(s => {
 reject(s => s.agents = s.agents.replace('Qualification is evidence, not admission', 'Qualification completes admission'));
 reject(s => s.decisionModel = s.decisionModel.replace('`installable`', '`available`'));
 reject(s => s.decisionModel = s.decisionModel.replace('Exact tested versions are observations, not ranges', 'Tested versions imply compatible ranges'));
-console.log(JSON.stringify({ ...result, negative_tests: 14 }));
+reject(s => s.language = s.language.replace('`u64` is not an admitted ordinary-source scalar', '`u64` is supported'));
+reject(s => s.lib = s.lib.replace('resident/local value, not a direct public return', 'public return value'));
+reject(s => s.decisionModel = s.decisionModel.replace('retrospective is a source of hypotheses, not release authority', 'retrospective is release authority'));
+console.log(JSON.stringify({ ...result, negative_tests: 17 }));

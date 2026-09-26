@@ -24,13 +24,15 @@ export async function guidanceSnapshot(root) {
   return {
     agents: await readFile(join(root, 'AGENTS.md'), 'utf8'),
     decisionModel: await readFile(join(root, 'docs/AGENT_DECISION_MODEL.md'), 'utf8'),
+    language: await readFile(join(root, 'LANGUAGE.md'), 'utf8'),
+    lib: await readFile(join(root, 'LIB.md'), 'utf8'),
     release: JSON.parse(await readFile(join(root, 'release.json'), 'utf8')),
     surfaces,
     skills
   };
 }
 
-export function validateGuidance({ agents, decisionModel, release, surfaces, skills }) {
+export function validateGuidance({ agents, decisionModel, language, lib, release, surfaces, skills }) {
   const fail = message => { throw Error(`agent.guidance_invalid: ${message}`); };
   const stagedVersion = surfaces?.release_version ?? release.version;
   const parseVersion = value => String(value).split('.').map(part => Number(part));
@@ -62,6 +64,16 @@ export function validateGuidance({ agents, decisionModel, release, surfaces, ski
   if (!decisionModel.includes('necessary, never sufficient') ||
       !decisionModel.includes('Exact tested versions are observations, not ranges')) {
     fail('decision transition or exact-version rule missing');
+  }
+  if (!decisionModel.includes('retrospective is a source of hypotheses, not release authority')) {
+    fail('retrospective evidence boundary missing');
+  }
+  if (!language.includes('`u64` is not an admitted ordinary-source scalar')) {
+    fail('ordinary-source u64 boundary missing');
+  }
+  if (!lib.includes('resident/local value, not a direct public return') ||
+      !lib.includes('direct public\nMap is rejected')) {
+    fail('managed Map local/public boundary missing');
   }
   const standardSkills = skills.filter(row => row.path.startsWith('standard/') && row.path.endsWith('/SKILL.md'));
   if (!standardSkills.length || standardSkills.some(row => !agents.includes(row.path.slice(0, -8)))) fail('standard package discovery route missing');

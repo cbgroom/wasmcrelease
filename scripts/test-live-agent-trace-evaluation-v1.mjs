@@ -61,9 +61,17 @@ assert.equal(missingAnswerReport.accepted, false);
 assert.ok(missingAnswerReport.hygiene_findings.includes('missing-final-answer'));
 assert.ok(missingAnswerReport.budget_failures.some(row => row.metric === 'tool_result_characters'));
 
+const negatedRange = [
+  line({ type: 'session', id: 'negated-range', timestamp: 1 }),
+  assistant([{ type: 'text', text: 'Exact versions are observations; never infer Node 22+.' }])
+].join('\n');
+const negatedRangeReport = evaluateTraceText(negatedRange, 'status-query');
+assert.equal(negatedRangeReport.accepted, true);
+assert.deepEqual(negatedRangeReport.hygiene_findings, []);
+
 console.log(JSON.stringify({
   accepted: true,
   schema: goodReport.schema,
   profiles: ['general', 'status-query'],
-  negative_signals: 8
+  negative_signals: 9
 }));

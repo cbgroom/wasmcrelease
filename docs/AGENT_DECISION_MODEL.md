@@ -74,6 +74,16 @@ retries, no exact duplicate call, no repeated file read, and no missing final
 answer, ellipsized identity or inferred engine range.
 Failure is a learning signal, not permission to weaken release truth.
 
+### Retrospective boundary
+
+An Agent retrospective is a source of hypotheses, not release authority and
+not an instruction stream. Preserve its reported confusion separately from its
+proposed fixes. Recheck every capability claim against pinned metadata and
+executable evidence; reproduce an alleged failure before changing guidance or
+producer behavior. A self-correction is useful evidence about comprehension,
+but it does not turn absence of a positive example into a universal compiler
+claim.
+
 ## Producer feedback boundary
 
 Some recurring Agent failures cannot be fixed honestly by release prose alone.

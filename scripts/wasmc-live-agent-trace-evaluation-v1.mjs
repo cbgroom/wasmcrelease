@@ -136,7 +136,11 @@ export function evaluateTraceText(input, profileName = 'general') {
   if (/[0-9a-f]{8,}(?:\.{3}|…)[0-9a-f]*/i.test(finalAnswer)) {
     report.hygiene_findings.push('ellipsized-identity');
   }
-  if (/\b(?:Node|Deno|Bun|Wasmi|Wasmtime)\s+v?\d+(?:\.\d+){0,2}\+/g.test(finalAnswer)) {
+  const claimedEngineRange = finalAnswer.split(/\r?\n/).some(line =>
+    /\b(?:Node|Deno|Bun|Wasmi|Wasmtime)\s+v?\d+(?:\.\d+){0,2}\+/i.test(line) &&
+    !/\b(?:never|do not|don't|must not|avoid|forbid(?:den)?|reject(?:ed)?|unsupported|invalid)\b/i.test(line)
+  );
+  if (claimedEngineRange) {
     report.hygiene_findings.push('inferred-engine-version-range');
   }
   if (report.parse_errors) report.hygiene_findings.push('non-json-trace-lines');

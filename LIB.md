@@ -4,6 +4,11 @@
 
 For ordinary managed String/List/Map/record applications, write typed wasmc source and use `instantiateLib(source)`. The compiler derives the finite graph and selects the matching bundled Lib; Agents must not construct handles or activation plans.
 
+A managed `map<K,V>` is a resident/local value, not a direct public return
+shape. WIT has no native Map. When a public contract needs a copied snapshot,
+return an explicit `list<Entry<K,V>>` or use a declared resource; direct public
+Map is rejected rather than silently serialized.
+
 The established v0.0.4 facade bytes remain frozen in v0.0.7. Record-backed applications therefore retain their old default behavior. To use v0.0.7 finite **recordless** String/List/Map planning or the current aggregate-semantic lowering from a source-free repository checkout, bind the current Runtime compiler through the facade's existing compiler override:
 
 ```js

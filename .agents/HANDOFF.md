@@ -43,6 +43,29 @@ candidate-to-admission-to-release receipts. None of these capabilities is
 claimed implemented. Continue to use release prose for honest stopping
 conditions until producer-owned evidence exists.
 
+### Pi and OpenCode retrospective follow-up
+
+A read-only hard-limit exercise mixed traits/open generics/async, `for`/ranges,
+Rust-style match destructuring, direct telemetry sampling, a public Map return,
+and a prebuilt macOS dylib. Pi and explicitly selected
+`opencode-go/deepseek-v4.1-flash` both recognized the obvious syntax and release
+stops, but both initially overgeneralized resident Map support into public Map
+return support. OpenCode also proposed mirroring the telemetry frame as an
+ordinary record without first reconciling its `u64` fields with the public
+ordinary-source scalar set. A targeted self-audit retracted both claims after
+finding the explicit public-Map rejection and the executed `u64`/rich-result
+negative evidence. This confirms that retrospective text is a hypothesis
+source, not an authority or automatic change request.
+
+The public guides now state those two already-evidenced boundaries adjacent to
+their first-use concepts. The trace evaluator also no longer reports the
+literal phrase `never infer Node 22+` as a positive range claim. OpenCode
+1.18.15 currently lists `opencode-go/deepseek-v4.1-flash`, but the local default
+remains `openai/gpt-5.4-mini`; availability is not default-router selection.
+Requesting the `plan` subagent through `opencode run` fell back to the default
+primary Sisyphus Agent, so future read-only OpenCode harnesses must verify the
+effective Agent/permissions rather than trusting the requested subagent name.
+
 ## 2026-09-25 Host SDK integration and candidate reopen hardening
 
 Exact local source qualification is now complete for

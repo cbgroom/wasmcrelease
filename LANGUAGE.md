@@ -138,6 +138,9 @@ record tuple option result variant enum
 
 Use fixed-width names. `s32` is the normal signed integer; `u32` is suitable
 for non-negative sizes and indices. There is no target-dependent `usize`.
+`u64` is not an admitted ordinary-source scalar in this release. The presence
+of `u64` in a package WIT does not make that package shape writable in ordinary
+wasmc source; use only an explicitly qualified adapter or stop.
 
 Put named WIT-shaped declarations inside the interface that uses them:
 
