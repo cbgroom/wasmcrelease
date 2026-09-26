@@ -66,6 +66,23 @@ Requesting the `plan` subagent through `opencode run` fell back to the default
 primary Sisyphus Agent, so future read-only OpenCode harnesses must verify the
 effective Agent/permissions rather than trusting the requested subagent name.
 
+The direct OpenCode CLI exercise above is not Pi evidence. A follow-up added
+the already service-visible `deepseek-v4.1-flash` identity to Pi's local
+`llm-m4dd` model catalog and verified the effective response metadata as
+provider `llm-m4dd`, model `deepseek-v4.1-flash`. The standard status query
+passed through Pi with seven tool calls, six assistant turns, 23,766 result
+characters, zero errors/retries/duplicates/repeated reads/zero-yield results,
+and 14,445 ms elapsed. It reported complete telemetry artifact digests.
+
+The composite hard-limit/retrospective query used 23 tool calls, 12 turns,
+109,412 result characters and 43,949 ms. It correctly separated resident Map
+from public Map return, rejected ordinary-source `u64`, and observed all other
+requested stops, but still abbreviated three artifact digests. Its own
+retrospective did not identify that concrete final-answer error. A separate
+range-hygiene signal also fired on a quoted bad example, showing that lexical
+hygiene checks still need evidence-aware context. Treat self-report and lexical
+scoring as complementary signals, never sole admission gates.
+
 ## 2026-09-25 Host SDK integration and candidate reopen hardening
 
 Exact local source qualification is now complete for
