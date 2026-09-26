@@ -140,11 +140,14 @@ const count = state => packages.filter(row => row.states[state]).length;
 const searchCandidateMetadata = readJson('candidates/wasmc-lib-search/0.2.0/lib.json');
 assert.equal(sha256File('candidates/wasmc-lib-search/0.2.0/artifact.wasm'), searchCandidateAdmission.artifact.core_sha256);
 assert.equal(sha256File('candidates/wasmc-lib-search/0.2.0/component.wasm'), searchCandidateAdmission.artifact.component_sha256);
+assert.equal(sha256File('candidates/wasmc-lib-search/0.2.0/lib.json'), searchCandidateAdmission.artifact.manifest_sha256);
 assert.equal(sha256File(searchCandidateAdmission.index.path), searchCandidateAdmission.index.sha256);
+assert.deepEqual(searchCandidateMetadata.build.toolchain, Object.fromEntries(Object.entries(searchCandidateAdmission.toolchain).filter(([key]) => !['generated_wasmtime_binding','wasmtime_cli','wasmi_crate'].includes(key))));
 const searchCandidate = {
   identity: searchCandidateMetadata.wit.package,
   root: searchCandidateAdmission.candidate.public_root,
   producer_commit: searchCandidateAdmission.candidate.producer_commit,
+  build_tool_commit: searchCandidateAdmission.candidate.build_tool_commit,
   catalog: searchCandidateAdmission.catalog,
   index: searchCandidateAdmission.index,
   artifact: searchCandidateAdmission.artifact,

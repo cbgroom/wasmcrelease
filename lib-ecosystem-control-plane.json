@@ -1294,6 +1294,7 @@
       "identity": "wasmc:lib-search@0.2.0",
       "root": "candidates/wasmc-lib-search/0.2.0",
       "producer_commit": "03e093452fbc18c082df371627c15f439195ccb6",
+      "build_tool_commit": "f6fc94432101250b8583834b51229bedb1cd8314",
       "catalog": {
         "path": "catalog/libs-v013.json",
         "release_tag": "v0.0.13",
@@ -1315,13 +1316,21 @@
         "core_sha256": "f525deed55a3a942d63c6780b18ac7dc5e496dcf4ce47baaa2da0cbf1795afb1",
         "component_bytes": 55178,
         "component_sha256": "db0e7838424522e23a4f6d0e84759ca6fb631cb3ace516ac6ce514ec39bf831d",
+        "manifest_sha256": "ef63bdb8bb991903ef182999d1ccd22ddffca7bff66e1a0754a7a90a73b719a5",
         "required_core_imports": 0,
         "independent_second_build_byte_identical": true
       },
       "toolchain": {
-        "rustc": "1.96.0 (ac68faa20 2026-05-25)",
-        "cargo": "1.96.0 (30a34c682 2026-05-25)",
+        "schema": "wasmc.rust-toolchain-fingerprint/v1",
+        "sha256": "2e4e27cb0b3644dd0c90bb71f31de5b5c72cd47671373caab8b9146ac68bf8ca",
+        "rustc": "rustc 1.96.0 (ac68faa20 2026-05-25)",
+        "rustc_version_verbose_sha256": "c8884d5d5936b36facd062e0e669e6fefe9944611dfafa0f2b1ee56d96157cbe",
+        "cargo": "cargo 1.96.0 (30a34c682 2026-05-25)",
+        "cargo_version_verbose_sha256": "7325fa79f79f89eaceae5ee57920caf61b813ade023b1e50457ee0902b2d7222",
         "host": "aarch64-apple-darwin",
+        "target": "wasm32-unknown-unknown",
+        "encoded_rustflags": "-Cstrip=symbols",
+        "generated_wasmtime_binding": "49.0.0",
         "wasmtime_cli": "47.0.3 (5554cc1a6 2026-07-31)",
         "wasmi_crate": "2.0.0"
       },
@@ -1329,6 +1338,7 @@
         "node_core_feedback_regression": "PASS",
         "wasmtime_component_snapshot_and_search": "PASS",
         "wasmi_2_0_core": "PASS",
+        "generated_wasmtime_49_binding_check": "PASS",
         "snapshot_entries": 122,
         "telemetry_hits": 5
       },
@@ -1336,7 +1346,8 @@
         "historical_receipt_core_sha256": "11502566b5908be66b2deb81902e804cd17ad27fe6643a2249c9ded9a929c12e",
         "historical_receipt_component_sha256": "8bffc8f4c737403ddb109dfa740f0063f11ad36f6e62719921a81cb68b6e0aa5",
         "historical_bytes_reproduced_with_current_toolchain": false,
-        "finding": "Cargo.lock and producer commit alone do not pin the Rust codegen toolchain; byte identity is currently toolchain-scoped."
+        "current_manifest_binds_exact_toolchain": true,
+        "finding": "Cargo.lock and producer commit alone do not pin Rust codegen. The current candidate manifest now binds the exact integrated build-tool commit and normalized toolchain fingerprint; byte identity remains scoped to that fingerprint."
       },
       "states": {
         "qualified": true,

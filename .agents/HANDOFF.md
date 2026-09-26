@@ -50,16 +50,21 @@ evidence is `admission/lib-search-v020-v013-candidate.json`; the unified control
 plane records it as qualified but not admitted/released/discoverable/installable.
 
 The historical producer receipt did not byte-reproduce under Rust 1.96.0 even
-though the producer commit, index and Cargo.lock were exact. This proves the
-existing receipt only established within-environment determinism; Rust codegen
-toolchain identity is still missing from the hermetic build contract. Preserve
-both identities and treat toolchain pinning as the next release-infrastructure
-repair, not as permission to overwrite historical evidence.
+though the producer commit, index and Cargo.lock were exact. The repair is now
+integrated in wasmc master `f6fc94432101250b8583834b51229bedb1cd8314`.
+Two independently published candidate roots under exact fingerprint
+`2e4e27cb0b3644dd0c90bb71f31de5b5c72cd47671373caab8b9146ac68bf8ca`
+are byte-identical, and `lib.json` now binds the full normalized toolchain row
+at SHA-256 `ef63bdb8bb991903ef182999d1ccd22ddffca7bff66e1a0754a7a90a73b719a5`.
+Core and Component bytes remain unchanged; the regenerated Rust binding pins
+Wasmtime 49.0.0 and its generated crate passes an offline `cargo check`.
 
-Next convergence slice: add an executable toolchain-fingerprint gate to
-Rust-backed Lib build receipts/packages, then regenerate this candidate under
-that explicit contract. Do not rewrite v0.0.13, relabel LibSearch 0.1.0, or
-admit 0.2.0 without future-candidate review authority.
+Public candidate search/reference regression, generated Wasmtime 49 binding
+offline check, control-plane regeneration, release-surface validation and the
+complete maintainer integrity gate all pass. Qualification remains true while
+admitted/released/discoverable/installable remain false. The next slice is a
+separate future-candidate admission decision; do not rewrite v0.0.13 or relabel
+LibSearch 0.1.0.
 
 ## 2026-09-27 Producer u64 to release authority delta
 

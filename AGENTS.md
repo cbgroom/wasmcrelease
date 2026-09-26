@@ -47,9 +47,11 @@ is not retroactively inside the immutable tag and does not make the old
 five-package LibSearch artifact complete. The qualified, unreleased LibSearch
 0.2.0 successor candidate covers all 13 roots plus itself (122 entries) and is
 listed separately in the control plane; never report it as admitted or shipped.
-Its current byte identity is explicitly Rust-toolchain-scoped because the same
-producer commit and Cargo.lock did not reproduce the historical receipt under
-the current codegen toolchain.
+Its current manifest binds integrated build tool `f6fc94432101250b8583834b51229bedb1cd8314`
+and exact Rust toolchain fingerprint
+`2e4e27cb0b3644dd0c90bb71f31de5b5c72cd47671373caab8b9146ac68bf8ca`.
+Byte identity remains scoped to that fingerprint because producer commit and
+Cargo.lock alone did not reproduce the historical receipt.
 
 For SDK/runtime/CLI/embedding integration, begin with
 [the SDK discovery Skill](skills/wasmc-sdk-discovery/SKILL.md). It routes by

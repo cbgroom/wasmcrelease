@@ -80,11 +80,19 @@ assert.equal(ecosystemModel.inventory.current_side_installable,13);
 assert.equal(ecosystemModel.inventory.current_side_inventory_matches_release,true);
 assert.equal(ecosystemModel.inventory.inventory_is_unified,false);
 assert.equal(ecosystemModel.successor_candidates.length,1);
-assert.equal(ecosystemModel.successor_candidates[0].identity,'wasmc:lib-search@0.2.0');
-assert.deepEqual(ecosystemModel.successor_candidates[0].states,{qualified:true,admitted:false,released:false,discoverable:false,installable:false});
-assert.equal(ecosystemModel.successor_candidates[0].index.entries,122);
-assert.equal(ecosystemModel.successor_candidates[0].qualification.wasmi_2_0_core,'PASS');
-assert.equal(ecosystemModel.successor_candidates[0].reproducibility_boundary.historical_bytes_reproduced_with_current_toolchain,false);
+const libSearchSuccessor=ecosystemModel.successor_candidates[0];
+assert.equal(libSearchSuccessor.identity,'wasmc:lib-search@0.2.0');
+assert.equal(libSearchSuccessor.build_tool_commit,'f6fc94432101250b8583834b51229bedb1cd8314');
+assert.equal(libSearchSuccessor.artifact.manifest_sha256,'ef63bdb8bb991903ef182999d1ccd22ddffca7bff66e1a0754a7a90a73b719a5');
+assert.equal(libSearchSuccessor.toolchain.sha256,'2e4e27cb0b3644dd0c90bb71f31de5b5c72cd47671373caab8b9146ac68bf8ca');
+assert.equal(libSearchSuccessor.toolchain.rustc_version_verbose_sha256,'c8884d5d5936b36facd062e0e669e6fefe9944611dfafa0f2b1ee56d96157cbe');
+assert.equal(libSearchSuccessor.toolchain.cargo_version_verbose_sha256,'7325fa79f79f89eaceae5ee57920caf61b813ade023b1e50457ee0902b2d7222');
+assert.equal(libSearchSuccessor.toolchain.target,'wasm32-unknown-unknown');
+assert.equal(libSearchSuccessor.toolchain.encoded_rustflags,'-Cstrip=symbols');
+assert.deepEqual(libSearchSuccessor.states,{qualified:true,admitted:false,released:false,discoverable:false,installable:false});
+assert.equal(libSearchSuccessor.index.entries,122);
+assert.equal(libSearchSuccessor.qualification.wasmi_2_0_core,'PASS');
+assert.equal(libSearchSuccessor.reproducibility_boundary.historical_bytes_reproduced_with_current_toolchain,false);
 
 const expectedPlatforms=[
   ['linux-x86_64','ubuntu-24.04',true,'required'],
