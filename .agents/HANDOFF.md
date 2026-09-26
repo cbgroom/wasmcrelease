@@ -36,10 +36,30 @@ hard-coding their pre-flywheel hashes. Immutable candidate, prod, package-index
 and v0.0.9 catalog anchors remain hard-bound, and the old candidate still
 rejects the future catalog as product drift.
 
-Next convergence slice: rebuild LibSearch 0.2.0 from private producer authority
-against the exact 13-package catalog, produce Core/Component/Wasmi evidence,
-and add it only to a future candidate. Do not rewrite v0.0.13 or relabel the
-current five-package LibSearch 0.1.0 artifact.
+LibSearch 0.2.0 has now been rebuilt from private producer commit
+`03e093452fbc18c082df371627c15f439195ccb6` against the exact 13-package
+`catalog/libs-v013.json`. The resulting candidate indexes 14 package identities
+including itself / 122 entries. Current-toolchain independent builds are byte
+identical: Core 53,412 bytes at
+`f525deed55a3a942d63c6780b18ac7dc5e496dcf4ce47baaa2da0cbf1795afb1`;
+Component 55,178 bytes at
+`db0e7838424522e23a4f6d0e84759ca6fb631cb3ace516ac6ce514ec39bf831d`.
+Node Core/reference comparison (609 cases and 11,000 resident calls), Wasmtime
+47 Component invocation and Wasmi 2.0 Core execution pass. Exact candidate
+evidence is `admission/lib-search-v020-v013-candidate.json`; the unified control
+plane records it as qualified but not admitted/released/discoverable/installable.
+
+The historical producer receipt did not byte-reproduce under Rust 1.96.0 even
+though the producer commit, index and Cargo.lock were exact. This proves the
+existing receipt only established within-environment determinism; Rust codegen
+toolchain identity is still missing from the hermetic build contract. Preserve
+both identities and treat toolchain pinning as the next release-infrastructure
+repair, not as permission to overwrite historical evidence.
+
+Next convergence slice: add an executable toolchain-fingerprint gate to
+Rust-backed Lib build receipts/packages, then regenerate this candidate under
+that explicit contract. Do not rewrite v0.0.13, relabel LibSearch 0.1.0, or
+admit 0.2.0 without future-candidate review authority.
 
 ## 2026-09-27 Producer u64 to release authority delta
 

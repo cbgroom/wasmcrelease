@@ -44,7 +44,12 @@ For current-main package status, read the generated
 equivalent, and records actual Core imports plus missing engine evidence. The
 current-side v0.0.13 resolver/install remediation covers all 13 packages, but
 is not retroactively inside the immutable tag and does not make the old
-five-package LibSearch artifact complete.
+five-package LibSearch artifact complete. The qualified, unreleased LibSearch
+0.2.0 successor candidate covers all 13 roots plus itself (122 entries) and is
+listed separately in the control plane; never report it as admitted or shipped.
+Its current byte identity is explicitly Rust-toolchain-scoped because the same
+producer commit and Cargo.lock did not reproduce the historical receipt under
+the current codegen toolchain.
 
 For SDK/runtime/CLI/embedding integration, begin with
 [the SDK discovery Skill](skills/wasmc-sdk-discovery/SKILL.md). It routes by

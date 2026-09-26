@@ -14,6 +14,11 @@ install catalog. `released`, `discoverable` and `installable` are independent;
 if the selected row has a stopping condition, report it instead of probing
 guessed paths or inferring a missing transition.
 
+This branch also retains a qualified, unreleased LibSearch 0.2.0 candidate.
+Its v0.0.13-complete snapshot covers 14 identities including itself / 122
+package and API entries. Use it for candidate regression and future-release
+review only; the immutable v0.0.13 product still contains LibSearch 0.1.0.
+
 This is supplemental guidance after immutable v0.0.10. Pin the tooling full
 commit and verify its SHA256SUMS; do not assume mutable main is release identity.
 Search, exact resolve and pinned install shipped in v0.0.10, despite older
@@ -50,12 +55,10 @@ See [search semantics and typed JS/Rust APIs](../../examples/lib-search/README.m
 1. Approve an exact package version and catalog/WIT/artifact digests from the
    pinned package metadata. A search hit or newest-looking version is not trust.
 2. Use [exact resolution](../../catalog/README.md) and
-   [no-clobber installation](../../catalog/INSTALL.md) for the four supported
-   catalog packages. These guides contain executable caller-pinned commands.
-   Search indexes five packages including itself; its own new search Root is
-   not in that older four-package installer catalog. Use its verified pinned
-   release root and [typed client](../../examples/lib-search/run.mjs) instead;
-   do not invent a resolver entry or a public build command.
+   [no-clobber installation](../../catalog/INSTALL.md). Immutable-tag callers
+   retain the four-package v0.0.9 catalog; current-side tooling may explicitly
+   select the exact 13-package `catalog/libs-v013.json`. Neither catalog nor
+   search is automatic version-selection authority.
 3. Check [artifact compatibility](../../compatibility/README.md), matching
    CoreLib/provider identity and actual import authority. Installing bytes
    does not admit an engine or grant capabilities. Search runs on Wasmi/Node18;

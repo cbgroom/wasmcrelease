@@ -1,0 +1,61 @@
+{
+  "schema": "wasmc.lib-search-candidate-admission/v2",
+  "status": "qualified-candidate-not-released",
+  "candidate": {
+    "id": "wasmc-lib-search",
+    "version": "0.2.0",
+    "public_root": "candidates/wasmc-lib-search/0.2.0",
+    "producer_commit": "03e093452fbc18c082df371627c15f439195ccb6"
+  },
+  "catalog": {
+    "path": "catalog/libs-v013.json",
+    "release_tag": "v0.0.13",
+    "release_commit": "b1d22d27bdc9727e607cf77a4af57b151df6832d",
+    "sha256": "242da128b13168814112272f9a9bff6bc9991fbd2e01d1c09936b9802451f836",
+    "released_package_roots": 13
+  },
+  "index": {
+    "path": "examples/lib-search/index-v013-v020.lsi",
+    "bytes": 27749,
+    "packages_including_self": 14,
+    "entries": 122,
+    "sha256": "613dacdcf58a225542aea99584a63fc282bcb08bfcc771f3f967482fadf31121",
+    "deterministic_second_generation": true,
+    "runtime_network": false
+  },
+  "artifact": {
+    "core_bytes": 53412,
+    "core_sha256": "f525deed55a3a942d63c6780b18ac7dc5e496dcf4ce47baaa2da0cbf1795afb1",
+    "component_bytes": 55178,
+    "component_sha256": "db0e7838424522e23a4f6d0e84759ca6fb631cb3ace516ac6ce514ec39bf831d",
+    "required_core_imports": 0,
+    "independent_second_build_byte_identical": true
+  },
+  "toolchain": {
+    "rustc": "1.96.0 (ac68faa20 2026-05-25)",
+    "cargo": "1.96.0 (30a34c682 2026-05-25)",
+    "host": "aarch64-apple-darwin",
+    "wasmtime_cli": "47.0.3 (5554cc1a6 2026-07-31)",
+    "wasmi_crate": "2.0.0"
+  },
+  "qualification": {
+    "node_core_feedback_regression": "PASS",
+    "wasmtime_component_snapshot_and_search": "PASS",
+    "wasmi_2_0_core": "PASS",
+    "snapshot_entries": 122,
+    "telemetry_hits": 5
+  },
+  "reproducibility_boundary": {
+    "historical_receipt_core_sha256": "11502566b5908be66b2deb81902e804cd17ad27fe6643a2249c9ded9a929c12e",
+    "historical_receipt_component_sha256": "8bffc8f4c737403ddb109dfa740f0063f11ad36f6e62719921a81cb68b6e0aa5",
+    "historical_bytes_reproduced_with_current_toolchain": false,
+    "finding": "Cargo.lock and producer commit alone do not pin the Rust codegen toolchain; byte identity is currently toolchain-scoped."
+  },
+  "claims": {
+    "selection_authority": false,
+    "admission_authority": false,
+    "host_authority": false,
+    "released": false,
+    "replaces_v0_0_13_lib_search": false
+  }
+}

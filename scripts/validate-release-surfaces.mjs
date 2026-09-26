@@ -79,6 +79,12 @@ assert.equal(ecosystemModel.inventory.installable,4);
 assert.equal(ecosystemModel.inventory.current_side_installable,13);
 assert.equal(ecosystemModel.inventory.current_side_inventory_matches_release,true);
 assert.equal(ecosystemModel.inventory.inventory_is_unified,false);
+assert.equal(ecosystemModel.successor_candidates.length,1);
+assert.equal(ecosystemModel.successor_candidates[0].identity,'wasmc:lib-search@0.2.0');
+assert.deepEqual(ecosystemModel.successor_candidates[0].states,{qualified:true,admitted:false,released:false,discoverable:false,installable:false});
+assert.equal(ecosystemModel.successor_candidates[0].index.entries,122);
+assert.equal(ecosystemModel.successor_candidates[0].qualification.wasmi_2_0_core,'PASS');
+assert.equal(ecosystemModel.successor_candidates[0].reproducibility_boundary.historical_bytes_reproduced_with_current_toolchain,false);
 
 const expectedPlatforms=[
   ['linux-x86_64','ubuntu-24.04',true,'required'],

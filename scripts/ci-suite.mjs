@@ -18,6 +18,7 @@ export function suiteCases(family,runtime='node',mirror='github') {
   ];
   if(family==='integrity')return [
     item('library-first-teaching-and-routes','scripts/test-library-first.mjs'),
+    item('lib-search-v020-candidate-regression','examples/lib-search/run.mjs'),
     item('live-agent-trace-evaluator','scripts/test-live-agent-trace-evaluation-v1.mjs'),
     item('fresh-pi-two-model-learning-contract','scripts/test-fresh-agent-learning-v1.mjs'),
     item('agent-quickstart-execution','scripts/test-agent-quickstart.mjs'),

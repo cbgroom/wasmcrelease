@@ -1,5 +1,27 @@
 # Release Lib search
 
+## Unreleased 0.2.0 v0.0.13-complete candidate
+
+Immutable `v0.0.13` is unchanged. The candidate at
+`candidates/wasmc-lib-search/0.2.0` indexes all thirteen released package roots
+plus its own candidate identity: 14 packages / 122 package and API entries.
+Its exact input is `catalog/libs-v013.json`; it neither chooses a version nor
+grants Host authority.
+
+- index: 27,749 bytes,
+  `613dacdcf58a225542aea99584a63fc282bcb08bfcc771f3f967482fadf31121`
+- Core: 53,412 bytes,
+  `f525deed55a3a942d63c6780b18ac7dc5e496dcf4ce47baaa2da0cbf1795afb1`
+- Component: 55,178 bytes,
+  `db0e7838424522e23a4f6d0e84759ca6fb631cb3ace516ac6ce514ec39bf831d`
+
+Two current-toolchain builds are byte-identical; Node Core, Wasmtime 47
+Component, and Wasmi 2.0 Core checks pass. The historical producer receipt has
+different Core/Component bytes under an earlier unrecorded Rust codegen
+environment. This is retained as an explicit reproducibility finding, not
+silently relabelled as a deterministic reproduction. See
+[`admission/lib-search-v020-v013-candidate.json`](../../admission/lib-search-v020-v013-candidate.json).
+
 For the default Agent workflow and interpretation of package/API hits, start
 with [Library-first discovery](../../skills/wasmc-lib-discovery/SKILL.md).
 That strengthened Skill is a post-v0.0.10 guidance supplement; pin its full
@@ -21,7 +43,7 @@ After checking the pinned release's manifest and SHA256SUMS:
 
 ```sh
 node examples/lib-search/run.mjs
-node examples/lib-search/verify-api.mjs examples/lib-search/index.lsi standard/wasmc-lib-search/0.1.0 examples/lib-search/search-reference.wasmc current/wasmc.mjs
+node examples/lib-search/verify-api.mjs examples/lib-search/index-v013-v020.lsi candidates/wasmc-lib-search/0.2.0 examples/lib-search/search-reference.wasmc current/wasmc.mjs
 WASMC_SEARCH_LIB_ROOT="$PWD/standard/wasmc-lib-search/0.1.0" cargo test --locked --release --manifest-path examples/lib-search/rust/Cargo.toml
 WASMC_SEARCH_LIB_ROOT="$PWD/standard/wasmc-lib-search/0.1.0" cargo run --locked --release --manifest-path examples/lib-search/rust/Cargo.toml
 ```

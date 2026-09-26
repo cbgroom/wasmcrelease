@@ -18,6 +18,7 @@ const release = readJson('release.json');
 const surfaces = readJson('release-surfaces.json');
 const installCatalog = readJson('catalog/libs-v009.json');
 const currentSideCatalog = existsSync(join(root, 'catalog/libs-v013.json')) ? readJson('catalog/libs-v013.json') : null;
+const searchCandidateAdmission = readJson('admission/lib-search-v020-v013-candidate.json');
 const compatibility = readJson('compatibility/core-artifacts-v009.json');
 const searchCompatibility = readJson('compatibility/lib-search-core.json');
 assert.equal(typeof release.staged_product_manifest, 'string', 'release.json must bind a staged product manifest');
@@ -136,6 +137,33 @@ const packages = packageRoots.map(packageRoot => {
 });
 
 const count = state => packages.filter(row => row.states[state]).length;
+const searchCandidateMetadata = readJson('candidates/wasmc-lib-search/0.2.0/lib.json');
+assert.equal(sha256File('candidates/wasmc-lib-search/0.2.0/artifact.wasm'), searchCandidateAdmission.artifact.core_sha256);
+assert.equal(sha256File('candidates/wasmc-lib-search/0.2.0/component.wasm'), searchCandidateAdmission.artifact.component_sha256);
+assert.equal(sha256File(searchCandidateAdmission.index.path), searchCandidateAdmission.index.sha256);
+const searchCandidate = {
+  identity: searchCandidateMetadata.wit.package,
+  root: searchCandidateAdmission.candidate.public_root,
+  producer_commit: searchCandidateAdmission.candidate.producer_commit,
+  catalog: searchCandidateAdmission.catalog,
+  index: searchCandidateAdmission.index,
+  artifact: searchCandidateAdmission.artifact,
+  toolchain: searchCandidateAdmission.toolchain,
+  qualification: searchCandidateAdmission.qualification,
+  reproducibility_boundary: searchCandidateAdmission.reproducibility_boundary,
+  states: {
+    qualified: true,
+    admitted: false,
+    released: false,
+    discoverable: false,
+    installable: false
+  },
+  stopping_conditions: [
+    'future-release-admission-required',
+    'not-selection-authority',
+    'toolchain-scoped-byte-reproducibility'
+  ]
+};
 const model = {
   schema: 'wasmc.lib-ecosystem-control-plane/v1',
   authority: {
@@ -166,9 +194,11 @@ const model = {
   type_position_authority: surfaces.agent_capability_projection,
   producer_deltas: [surfaces.producer_capability_delta],
   packages,
+  successor_candidates: [searchCandidate],
   ecosystem_stopping_conditions: [
     'Public third-party build, admission and publication are not closed.',
-    'The current-side resolver/install catalog covers all released packages, but it is not inside immutable v0.0.13 and the executable LibSearch snapshot still exposes only five packages.',
+    'The current-side resolver/install catalog covers all released packages and LibSearch 0.2.0 is locally qualified over all thirteen roots, but neither is inside immutable v0.0.13.',
+    'Byte-identical Rust-backed Lib reproduction is currently scoped to an exact toolchain environment; producer commit plus Cargo.lock alone did not reproduce the historical artifact hash.',
     'Missing artifact-bound engine profiles must not be replaced by inferred version ranges.',
     'A Component or Host-SDK surface does not imply ordinary WAsmC source binding support.'
   ]
