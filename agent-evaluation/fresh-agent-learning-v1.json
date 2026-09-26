@@ -1,6 +1,6 @@
 {
   "schema": "wasmc.fresh-agent-learning/v1",
-  "objective": "A previously unprimed Agent and model must learn the pinned public WAsmC release accurately and efficiently from public release material alone.",
+  "objective": "A fresh Pi Agent must learn the pinned public WAsmC release accurately and efficiently with either of the two cost-controlled model routes from public release material alone.",
   "authority_scope": {
     "allowed": [
       "the pinned public wasmcrelease checkout",
@@ -16,9 +16,9 @@
     "rule": "Every case starts in a fresh session. The case prompt, oracle and release commit are frozen before the first evaluated cohort run."
   },
   "evidence_levels": {
-    "observation": "one case on one Agent and model route; useful for diagnosis only",
-    "combination": "all required cases pass for one exact Agent version and model identity",
-    "portable_learning_qualification": "the complete cohort gate passes; this is the only level that supports a cross-Agent/model learnability claim"
+    "observation": "one case on one Pi and model route; useful for diagnosis only",
+    "model_pass": "all required cases pass for one exact Pi version and model route",
+    "controlled_pair_qualification": "both required model routes pass the complete suite on the same Pi version and release commit"
   },
   "cases": [
     {
@@ -65,13 +65,16 @@
     }
   ],
   "cohort_gate": {
-    "minimum_agent_implementations": 2,
-    "minimum_model_identities": 3,
-    "minimum_combinations": 4,
-    "minimum_blind_holdout_combinations": 1,
-    "require_every_case_per_combination": true,
-    "require_all_critical_cases": true,
-    "minimum_overall_first_pass_rate": 0.95,
+    "agent_implementation": "pi",
+    "required_models": [
+      { "provider": "llm-m4dd", "identity": "deepseek-v4.1-flash" },
+      { "provider": "llm-m4dd", "identity": "glm-5.3-flash" }
+    ],
+    "required_combinations": 2,
+    "require_same_agent_version": true,
+    "require_same_release_commit": true,
+    "require_every_case_per_model": true,
+    "require_all_cases_first_pass": true,
     "structural_efficiency": {
       "decision": {
         "max_tool_calls": 8,
@@ -94,6 +97,7 @@
         "max_zero_yield_results": 2
       }
     },
+    "model_identity_note": "The provider and model fields bind the observed local route labels; they do not independently attest the upstream provider implementation.",
     "wall_clock_policy": "Record elapsed milliseconds and compare within the same route/environment, but do not use provider or network latency alone as a release truth gate."
   },
   "feedback_taxonomy": [

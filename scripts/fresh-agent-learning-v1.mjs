@@ -11,7 +11,7 @@ export function readProtocol(path = protocolPath) {
 
 export function validateProtocol(protocol) {
   assert.equal(protocol.schema, 'wasmc.fresh-agent-learning/v1');
-  assert.match(protocol.objective, /previously unprimed Agent and model/);
+  assert.match(protocol.objective, /fresh Pi Agent/);
   assert.ok(protocol.authority_scope.forbidden.includes('private wasmc source or private handoffs'));
   assert.ok(protocol.authority_scope.forbidden.includes('prior conversation or session state'));
   assert.equal(protocol.cases.length, 6);
@@ -20,13 +20,16 @@ export function validateProtocol(protocol) {
   assert.ok(protocol.cases.some(row => row.class === 'decision' && row.critical));
   assert.ok(protocol.cases.some(row => row.class === 'execution' && row.critical));
   const gate = protocol.cohort_gate;
-  assert.ok(gate.minimum_agent_implementations >= 2);
-  assert.ok(gate.minimum_model_identities >= 3);
-  assert.ok(gate.minimum_combinations >= 4);
-  assert.ok(gate.minimum_blind_holdout_combinations >= 1);
-  assert.equal(gate.require_every_case_per_combination, true);
-  assert.equal(gate.require_all_critical_cases, true);
-  assert.ok(gate.minimum_overall_first_pass_rate >= 0.95);
+  assert.equal(gate.agent_implementation, 'pi');
+  assert.deepEqual(gate.required_models, [
+    { provider: 'llm-m4dd', identity: 'deepseek-v4.1-flash' },
+    { provider: 'llm-m4dd', identity: 'glm-5.3-flash' }
+  ]);
+  assert.equal(gate.required_combinations, 2);
+  assert.equal(gate.require_same_agent_version, true);
+  assert.equal(gate.require_same_release_commit, true);
+  assert.equal(gate.require_every_case_per_model, true);
+  assert.equal(gate.require_all_cases_first_pass, true);
   for (const profile of ['decision', 'execution']) {
     assert.equal(gate.structural_efficiency[profile].max_error_results, 0);
     assert.equal(gate.structural_efficiency[profile].max_retries, 0);
@@ -50,7 +53,7 @@ export function evaluateCohort(protocol, receipts) {
     assert.ok(receipt.agent?.implementation && receipt.agent?.version);
     assert.ok(receipt.model?.provider && receipt.model?.identity);
     assert.ok(receipt.release_commit && receipt.session_is_fresh === true);
-    assert.ok(['blind-holdout', 'development'].includes(receipt.cohort_role));
+    assert.equal(receipt.agent.implementation, protocol.cohort_gate.agent_implementation);
     assert.ok(['deterministic', 'independent-review'].includes(receipt.oracle_evaluator));
     assert.match(receipt.evidence_sha256 ?? '', /^[0-9a-f]{64}$/);
   }
@@ -83,36 +86,34 @@ export function evaluateCohort(protocol, receipts) {
     return {
       key,
       complete,
-      blind_holdout: rows.every(row => row.cohort_role === 'blind-holdout'),
       passed: complete && evaluated.every(row => row.first_pass),
       cases: evaluated
     };
   });
 
   const allCases = combinationReports.flatMap(row => row.cases);
-  const agents = new Set(receipts.map(row => row.agent.implementation));
+  const agentVersions = new Set(receipts.map(row => row.agent.version));
+  const releaseCommits = new Set(receipts.map(row => row.release_commit));
   const models = new Set(receipts.map(row => `${row.model.provider}\u0000${row.model.identity}`));
-  const criticalPass = allCases.filter(row => row.critical).every(row => row.first_pass);
+  const requiredModels = new Set(protocol.cohort_gate.required_models.map(row => `${row.provider}\u0000${row.identity}`));
   const firstPassRate = allCases.length ? allCases.filter(row => row.first_pass).length / allCases.length : 0;
   const gate = protocol.cohort_gate;
   const checks = {
-    agent_implementations: agents.size >= gate.minimum_agent_implementations,
-    model_identities: models.size >= gate.minimum_model_identities,
-    combinations: combinationReports.length >= gate.minimum_combinations,
-    blind_holdout_combinations: combinationReports.filter(row => row.blind_holdout).length >= gate.minimum_blind_holdout_combinations,
-    complete_combinations: !gate.require_every_case_per_combination || combinationReports.every(row => row.complete),
-    critical_cases: !gate.require_all_critical_cases || criticalPass,
-    first_pass_rate: firstPassRate >= gate.minimum_overall_first_pass_rate
+    exact_model_pair: models.size === requiredModels.size && [...requiredModels].every(key => models.has(key)),
+    combinations: combinationReports.length === gate.required_combinations,
+    same_agent_version: !gate.require_same_agent_version || agentVersions.size === 1,
+    same_release_commit: !gate.require_same_release_commit || releaseCommits.size === 1,
+    complete_models: !gate.require_every_case_per_model || combinationReports.every(row => row.complete),
+    all_cases_first_pass: !gate.require_all_cases_first_pass || combinationReports.every(row => row.passed)
   };
   return {
     schema: 'wasmc.fresh-agent-cohort-evaluation/v1',
     accepted: Object.values(checks).every(Boolean),
     checks,
     counts: {
-      agent_implementations: agents.size,
+      agent_versions: agentVersions.size,
       model_identities: models.size,
       combinations: combinationReports.length,
-      blind_holdout_combinations: combinationReports.filter(row => row.blind_holdout).length,
       cases: allCases.length
     },
     first_pass_rate: firstPassRate,

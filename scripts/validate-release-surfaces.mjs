@@ -15,7 +15,7 @@ assert.equal(projection?.schema,'wasmc.release-agent-capabilities/v1');
 assert.equal(projection?.product_release,'v'+model.release_version);
 assert.equal(learning?.schema,'wasmc.fresh-agent-learning/v1');
 assert.equal(learning?.path,'agent-evaluation/fresh-agent-learning-v1.json');
-assert.equal(learning?.single_model_pass_is_portable_qualification,false);
+assert.equal(learning?.single_model_pass_is_controlled_pair_qualification,false);
 assert.equal(learning?.wall_clock_is_standalone_release_gate,false);
 assert(existsSync(resolve(root,learning.path)),'agent learning protocol is missing');
 assert.equal(JSON.parse(read(learning.path)).schema,learning.schema);

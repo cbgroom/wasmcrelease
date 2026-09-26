@@ -2,15 +2,17 @@
 
 ## Goal
 
-The flywheel optimizes the public WAsmC release for a new Agent and a new model,
-not for one maintainer session or one favored route. A previously unprimed
-consumer should use only a pinned public checkout to form the correct WAsmC
-mental model, choose a supported path, stop at unsupported boundaries, and
-produce independently verifiable output without avoidable retries.
+The flywheel optimizes the public WAsmC release for one affordable operational
+unit: a fresh Pi Agent using either `llm-m4dd/deepseek-v4.1-flash` or
+`llm-m4dd/glm-5.3-flash`. It does not try to prove universal behavior across a
+large Agent/model matrix. Pi should use only a pinned public checkout to form
+the correct WAsmC mental model, choose a supported path, stop at unsupported
+boundaries, and produce independently verifiable output without retries.
 
-One successful Pi, OpenCode, Codex or other model run is an observation. It can
-reveal a documentation, evaluator, producer, environment or model-specific
-problem, but it cannot establish portable learnability. The machine-readable
+One model run is an observation. The controlled pair is qualified only when
+both required Pi routes pass the same frozen suite on the same Pi version and
+release commit. The route labels bind observed local configuration; they do not
+independently attest an upstream provider implementation. The machine-readable
 protocol is `agent-evaluation/fresh-agent-learning-v1.json`.
 
 ## Loop
@@ -42,19 +44,15 @@ self-assessment is not an independent oracle.
 
 ## Admission levels
 
-- Observation: one case on one exact Agent/model route. Diagnostic only.
-- Combination: every required case passes for one exact Agent version and model
-  identity.
-- Portable-learning qualification: at least two Agent implementations, three
-  model identities, four complete combinations and one blind holdout
-  combination pass the cohort gate.
+- Observation: one case on one exact Pi/model route. Diagnostic only.
+- Model pass: every required case passes for one model route.
+- Controlled-pair qualification: both DeepSeek Flash 4.1 and GLM 5.3 Flash
+  pass every case on the same exact Pi version and release commit.
 
-Every critical case must pass on the first final answer. The overall first-pass
-rate must be at least 95%. Structural efficiency—tool calls, turns, result
+Every case must pass on the first final answer. Structural efficiency—tool calls, turns, result
 volume, failed tools, retries, duplicate calls and repeated reads—is a hard
 gate. Wall-clock latency is recorded and compared only within the same route
 and environment because provider/network time is not release truth.
 
-The cohort threshold is a minimum evidence boundary, not a claim that all
-future models will behave identically. A new Agent or model family remains a
-new observation until it passes the frozen suite.
+This is an operational qualification for the selected low-cost pair, not a
+claim that all future Agents or models will behave identically.

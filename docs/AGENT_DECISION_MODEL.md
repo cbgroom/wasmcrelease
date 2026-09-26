@@ -63,11 +63,12 @@ execution and Host integration may require different engine features.
 ## Live-Agent learning flywheel
 
 Deterministic release checks and live-model comprehension are separate evidence.
-The north star is cold-start transfer: a previously unprimed Agent and model
-must learn the pinned release from public material alone. Follow
+The north star is controlled cold-start transfer: a fresh Pi Agent must learn
+the pinned release from public material alone with either of the two declared
+cost-controlled model routes. Follow
 `docs/FRESH_AGENT_LEARNING_FLYWHEEL.md` and
-`agent-evaluation/fresh-agent-learning-v1.json`. A run from one Agent/model
-pair is an observation, not a cross-model qualification.
+`agent-evaluation/fresh-agent-learning-v1.json`. One model PASS is an
+observation; both routes must pass the frozen suite on the same Pi and release.
 
 For a live Agent journey retain only the privacy-safe event surface:
 

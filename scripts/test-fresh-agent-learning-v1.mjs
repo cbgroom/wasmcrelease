@@ -13,14 +13,13 @@ const traceFor = caseClass => ({
   zero_yield_results: 0
 });
 
-function receiptsFor(agent, model, cohortRole = 'development') {
+function receiptsFor(agent, model) {
   return protocol.cases.map(row => ({
     schema: 'wasmc.fresh-agent-run/v1',
     case_id: row.id,
     agent,
     model,
     release_commit: '0123456789abcdef0123456789abcdef01234567',
-    cohort_role: cohortRole,
     session_is_fresh: true,
     oracle_passed: true,
     first_final_correct: true,
@@ -32,33 +31,29 @@ function receiptsFor(agent, model, cohortRole = 'development') {
 }
 
 const oneModel = receiptsFor(
-  { implementation: 'agent-a', version: '1.0.0' },
-  { provider: 'provider-a', identity: 'model-a' }
+  { implementation: 'pi', version: '0.87.1' },
+  { provider: 'llm-m4dd', identity: 'deepseek-v4.1-flash' }
 );
 const oneModelReport = evaluateCohort(protocol, oneModel);
 assert.equal(oneModelReport.accepted, false);
-assert.equal(oneModelReport.checks.agent_implementations, false);
-assert.equal(oneModelReport.checks.model_identities, false);
+assert.equal(oneModelReport.checks.exact_model_pair, false);
 
 const cohort = [
   ...oneModel,
   ...receiptsFor(
-    { implementation: 'agent-a', version: '1.0.0' },
-    { provider: 'provider-b', identity: 'model-b' }
-  ),
-  ...receiptsFor(
-    { implementation: 'agent-b', version: '2.0.0' },
-    { provider: 'provider-a', identity: 'model-a' }
-  ),
-  ...receiptsFor(
-    { implementation: 'agent-b', version: '2.0.0' },
-    { provider: 'provider-c', identity: 'model-c' },
-    'blind-holdout'
+    { implementation: 'pi', version: '0.87.1' },
+    { provider: 'llm-m4dd', identity: 'glm-5.3-flash' }
   )
 ];
 const accepted = evaluateCohort(protocol, cohort);
 assert.equal(accepted.accepted, true);
 assert.equal(accepted.first_pass_rate, 1);
+
+const splitPiVersion = structuredClone(cohort);
+for (const row of splitPiVersion.slice(protocol.cases.length)) row.agent.version = '0.88.0';
+const splitPiRejected = evaluateCohort(protocol, splitPiVersion);
+assert.equal(splitPiRejected.accepted, false);
+assert.equal(splitPiRejected.checks.same_agent_version, false);
 
 const criticalFailure = structuredClone(cohort);
 const failed = criticalFailure.find(row => row.case_id === 'position-aware-capability-negative');
@@ -66,19 +61,21 @@ failed.oracle_passed = false;
 failed.first_final_correct = false;
 const rejected = evaluateCohort(protocol, criticalFailure);
 assert.equal(rejected.accepted, false);
-assert.equal(rejected.checks.critical_cases, false);
+assert.equal(rejected.checks.all_cases_first_pass, false);
 
 const retryFailure = structuredClone(cohort);
-for (const row of retryFailure.slice(0, protocol.cases.length)) row.trace.retries = 1;
+retryFailure[0].trace.retries = 1;
 const retryRejected = evaluateCohort(protocol, retryFailure);
 assert.equal(retryRejected.accepted, false);
-assert.equal(retryRejected.checks.first_pass_rate, false);
+assert.equal(retryRejected.checks.all_cases_first_pass, false);
 
 console.log(JSON.stringify({
   accepted: true,
   schema: protocol.schema,
   cases: protocol.cases.length,
   rejects_single_model_claim: true,
-  rejects_critical_error: true,
+  requires_exact_controlled_pair: true,
+  rejects_split_pi_version: true,
+  rejects_case_error: true,
   rejects_retry_over_budget: true
 }));

@@ -7,24 +7,24 @@ does not change WAsmC compiler, Runtime, SDK, Host, Lib or product bytes; it
 does not advance `v0.0.13`, admit a candidate, or take authority from the
 active Data Foundation v1.1 producer work.
 
-The north star is now explicit: a new Agent implementation and a new model must
-accurately and efficiently learn WAsmC from a pinned public release with zero
-private or prior-session context. `agent-evaluation/fresh-agent-learning-v1.json`
-freezes six decision/execution cases and separates a one-run observation, one
-Agent/model combination, and portable-learning qualification. The last requires
-at least two Agent implementations, three model identities, four complete
-combinations, one blind holdout combination, every critical case correct on the
-first final answer, at least 95% overall first-pass accuracy, and bounded trace
-structure. Wall-clock time remains an observation rather than a standalone gate.
+The north star is now explicit and intentionally small: a fresh Pi Agent must
+accurately and efficiently learn WAsmC from a pinned public release with either
+`llm-m4dd/deepseek-v4.1-flash` or `llm-m4dd/glm-5.3-flash`, with zero private or
+prior-session context. `agent-evaluation/fresh-agent-learning-v1.json` freezes
+six decision/execution cases. Controlled-pair qualification requires both model
+routes to pass every case on the first final answer, on the same Pi version and
+release commit, within bounded trace structure. Wall-clock time remains an
+observation rather than a standalone gate. Route labels bind local observed
+configuration; they do not independently attest the upstream implementation.
 
-Existing Pi and OpenCode receipts are seed observations; they do not yet satisfy
-the new cross-Agent/model cohort and must not be described as portable-learning
-qualification. The evaluator contract rejects single-model claims, critical
-errors and retry-driven passes.
+Existing individual Pi and OpenCode receipts are seed observations. OpenCode is
+no longer part of the qualification matrix, and a single Pi model PASS must not
+be described as controlled-pair qualification. The evaluator rejects a missing
+partner model, any case error, and retry-driven passes.
 
 Protocol validation, its synthetic positive/negative cohort tests, the release
 surface validator, the maintainer validator and the deterministic Fresh-Agent
-regression pass. The integrity-suite entry for the new cross-model contract also
+regression pass. The integrity-suite entry for the Pi two-model contract also
 passes. The overall integrity suite still rejects
 `channels/candidates/0.0.13.json` because this branch's existing main-side
 guidance differs from that immutable candidate's historical `AGENTS.md` and

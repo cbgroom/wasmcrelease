@@ -52,14 +52,14 @@ Use `scripts/wasmc-live-agent-trace-evaluation-v1.mjs` for the Pi JSONL adapter.
 Deterministic artifact evaluation and live-model comprehension are distinct
 scores; neither may be presented as the other.
 
-Optimize for portable cold-start learning, not one named model. Freeze prompts,
-oracles and the release commit before a cohort; start every case without prior
-session state, private repository knowledge or maintainer hints. A single
-Agent/model PASS is an observation only. Claim portable learnability only after
-`agent-evaluation/fresh-agent-learning-v1.json` passes across its minimum Agent,
-model, combination and blind-holdout cohort. Structural efficiency is a hard
-gate; wall-clock latency is contextual evidence because providers and networks
-vary. Do not tune an oracle merely to turn one model failure into a PASS.
+Optimize for controlled cold-start learning on the exact Pi plus two-model
+profile in `agent-evaluation/fresh-agent-learning-v1.json`. Freeze prompts,
+oracles and the release commit before a run; start every case without prior
+session state, private repository knowledge or maintainer hints. A single model
+PASS is an observation only; both declared routes must pass every case on the
+same Pi version and release commit. Structural efficiency is a hard gate;
+wall-clock latency is contextual evidence because providers and networks vary.
+Do not tune an oracle merely to turn one model failure into a PASS.
 
 ## Lib boundary
 
