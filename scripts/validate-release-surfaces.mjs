@@ -11,6 +11,7 @@ assert.equal(model.schema,'wasmc.release-surfaces/v1');
 
 const projection=model.agent_capability_projection;
 const learning=model.agent_learning_protocol;
+const taskRoutes=model.agent_task_routes;
 assert.equal(projection?.schema,'wasmc.release-agent-capabilities/v1');
 assert.equal(projection?.product_release,'v'+model.release_version);
 assert.equal(learning?.schema,'wasmc.fresh-agent-learning/v1');
@@ -19,6 +20,14 @@ assert.equal(learning?.single_model_pass_is_controlled_pair_qualification,false)
 assert.equal(learning?.wall_clock_is_standalone_release_gate,false);
 assert(existsSync(resolve(root,learning.path)),'agent learning protocol is missing');
 assert.equal(JSON.parse(read(learning.path)).schema,learning.schema);
+assert.deepEqual(Object.keys(taskRoutes).sort(),['host-authority','ordinary-source-pair','release-orientation','released-base64','rule']);
+assert.equal(taskRoutes['release-orientation'].immutable_release,'v'+model.release_version);
+assert.equal(taskRoutes['release-orientation'].compiler.sha256,'93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90');
+assert.equal(taskRoutes['ordinary-source-pair'].oracle.core_sha256,'55f3c7e3d09b564b89b8268299a69569a33b856b46405cb4c4dd51634afec84e');
+assert.equal(taskRoutes['released-base64'].package,'wasmc:std@1.4.0');
+assert.equal(taskRoutes['released-base64'].search_is_selection_authority,false);
+assert.match(taskRoutes['released-base64'].resolve_command,/13fe84e7faf77467b45d97460e9cd9fa1ba7d17c17b0175fb16ce5d694c82d82/);
+assert.match(taskRoutes['host-authority'].decision,/application-owned exact allowlist/);
 assert.equal(projection?.guidance_scope?.included_in_immutable_tag,false);
 assert.equal(projection?.guidance_scope?.product_bytes_changed,false);
 assert.equal(projection?.function_shape?.result,'exactly one semantic value');

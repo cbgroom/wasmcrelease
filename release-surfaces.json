@@ -340,6 +340,79 @@
     "single_model_pass_is_controlled_pair_qualification": false,
     "wall_clock_is_standalone_release_gate": false
   },
+  "agent_task_routes": {
+    "rule": "When one route matches the request, read this record first and stop once its evidence answers the task. Do not scan release history, unrelated compatibility identities, implementation tests or broad manifests to reconfirm it. Report every identity in full or omit an identity that the answer does not need.",
+    "release-orientation": {
+      "intent": "identify the immutable release, public Agent entrypoint and compiler authority",
+      "immutable_release": "v0.0.13",
+      "public_agent_entrypoint": "AGENTS.md",
+      "compiler": {
+        "path": "current/wasmc_compiler.wasm",
+        "bytes": 1351666,
+        "sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90",
+        "imports": 0
+      },
+      "facade": {
+        "path": "current/wasmc.mjs",
+        "sha256": "6f1cd2f94d66966ed0de6db462432ea82523ab02de0ad956f51be9f6944caffe"
+      },
+      "verify_with": ["release.json", "manifest.json", "SHA256SUMS"],
+      "mutable_not_product_authority": ["main", "unversioned URLs", "package-index.json.latest"],
+      "answer_boundary": "Do not mention unrelated historical artifact digests or shorten any digest."
+    },
+    "ordinary-source-pair": {
+      "intent": "compile and execute a supported multi-parameter function with one semantic aggregate result",
+      "source_lines": [
+        "package local:logical_pair;",
+        "",
+        "interface api {",
+        "  run: func(value: s32, flag: bool) -> tuple<bool, bool> {",
+        "    return tuple(value != 0, flag);",
+        "  }",
+        "}",
+        "",
+        "world app { export api; }"
+      ],
+      "oracle": {
+        "core_bytes": 49,
+        "core_sha256": "55f3c7e3d09b564b89b8268299a69569a33b856b46405cb4c4dd51634afec84e",
+        "imports": [],
+        "exports": [{"name": "run", "kind": "function"}],
+        "call": "run(5, true)",
+        "result": [1, 1]
+      },
+      "embedding_warning": "The tuple is one semantic result but JavaScript observes two flattened Core lanes, not an automatically lifted object."
+    },
+    "released-base64": {
+      "intent": "find and approve the released Base64 capability",
+      "package": "wasmc:std@1.4.0",
+      "root": "standard/wasmc-std/1.4.0",
+      "apis": [
+        "wasmc:std@1.4.0/base64#try-encode-standard",
+        "wasmc:std@1.4.0/base64#try-decode-standard"
+      ],
+      "search_command": "node scripts/wasmc-lib.mjs search base64 --limit 8",
+      "search_is_selection_authority": false,
+      "approval": {
+        "skill": "standard/wasmc-std/1.4.0/SKILL.md",
+        "wit": "standard/wasmc-std/1.4.0/lib.wit",
+        "wit_sha256": "d565f00e91c36da68da3645ec5231dd11d1b25299a3ba5cbe3adbd9f5760d91d",
+        "artifact": "standard/wasmc-std/1.4.0/artifact.wasm",
+        "artifact_sha256": "f8a8ce447f776a47680e02e19ea3a69827edbbc46e01985803ce3d3df51178d7"
+      },
+      "resolve_command": "node scripts/wasmc-lib.mjs resolve wasmc-std 1.4.0 --catalog-sha256 13fe84e7faf77467b45d97460e9cd9fa1ba7d17c17b0175fb16ce5d694c82d82 --wit-sha256 d565f00e91c36da68da3645ec5231dd11d1b25299a3ba5cbe3adbd9f5760d91d --artifact-sha256 f8a8ce447f776a47680e02e19ea3a69827edbbc46e01985803ce3d3df51178d7",
+      "behavior_command": "node examples/current/standard.mjs",
+      "answer_boundary": "Do not investigate historical catalog snapshot identities, Core ABI indices or unrelated engine versions unless the user asks."
+    },
+    "host-authority": {
+      "intent": "determine authority requested by newly compiled Core Wasm",
+      "decision": "Inspect every generated import before instantiation and compare module, name, kind and function signature with an application-owned exact allowlist.",
+      "javascript": "compile(source), inspectWasm(bytes), then WebAssembly.instantiate(inspected.module, approvedImports)",
+      "rust": "CoreRuntimeSdk::inspect_core or the selected engine's import iterator",
+      "pure_module_rule": "Require imports=[] and instantiate with {}.",
+      "forbidden_inference": ["ambient filesystem", "ambient network", "ambient clock or randomness", "credentials", "process or device access", "private handles or plans", "Store nonces", "lifecycle helpers", "JSON as a WIT replacement"]
+    }
+  },
   "agent_status_queries": {
     "prebuilt-native-runtime-library": {
       "request": "prebuilt .so/.dylib/.dll WAsmC runtime",

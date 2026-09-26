@@ -22,6 +22,30 @@ no longer part of the qualification matrix, and a single Pi model PASS must not
 be described as controlled-pair qualification. The evaluator rejects a missing
 partner model, any case error, and retry-driven passes.
 
+### First controlled-pair baseline and remediation
+
+The first frozen six-case baseline used Pi 0.87.1 at guidance commit
+`fe85689de36a67aa8fed84771e7649275ba86614`. Raw traces and hidden reasoning
+were not retained. DeepSeek Flash 4.1 was semantically correct on all six cases
+but met the strict structural gate only for release-state separation. GLM 5.3
+Flash met it for the capability-negative and Host-authority cases; its
+Library-first case produced no final answer and was terminated after more than
+240 seconds. Both models shortened an unnecessary digest in release orientation;
+DeepSeek also over-read and shortened identities in the Base64 journey. Exact
+privacy-safe metrics and classifications are retained in
+`agent-evaluation/receipts/pi-two-model-baseline-fe85689.json`.
+
+This is primarily a release-guidance gap: existing exact status-query records
+produced the shortest successful paths, while orientation, canonical aggregate
+execution, Base64 and Host authority lacked equivalent single-hop routes.
+`release-surfaces.json.agent_task_routes` now provides those four bounded,
+full-identity records and explicitly stops unrelated history, compatibility and
+implementation exploration. The Base64 resolve command reproduces lock digest
+`63806ae6ee83164fd955753091cbfe74dac689d29c29a5371eadfc07b0ca1953` and the
+standard behavior oracle still passes 5,120 dual-consumer calls. This changes
+guidance only, not product bytes. Rerun both models from fresh sessions on the
+new exact commit before claiming improvement or controlled-pair qualification.
+
 Protocol validation, its synthetic positive/negative cohort tests, the release
 surface validator, the maintainer validator and the deterministic Fresh-Agent
 regression pass. The integrity-suite entry for the Pi two-model contract also

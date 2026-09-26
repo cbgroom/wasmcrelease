@@ -66,6 +66,14 @@ but was not retroactively added to the immutable tag and changes no product
 bytes. Never silently narrow a numeric type or replace async, identity, ordering,
 ownership or failure semantics to make a request compile.
 
+For release orientation, the canonical aggregate-result example, released
+Base64 selection, or Host-authority inspection, read
+`release-surfaces.json.agent_task_routes` first. A matching record is the
+bounded route: stop when it answers the task, omit unrelated identities, and
+never abbreviate a digest that you choose to report. Do not scan historical
+catalogs, broad manifests, compatibility matrices or implementation tests to
+reconfirm a complete route.
+
 ```wasmc
 package local:add;
 interface api {

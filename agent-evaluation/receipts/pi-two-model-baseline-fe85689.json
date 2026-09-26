@@ -1,0 +1,43 @@
+{
+  "schema": "wasmc.fresh-agent-baseline/v1",
+  "release_guidance_commit": "fe85689de36a67aa8fed84771e7649275ba86614",
+  "pi_version": "0.87.1",
+  "fresh_session_per_case": true,
+  "private_context_used": false,
+  "raw_trace_retained": false,
+  "hidden_reasoning_retained": false,
+  "tools": ["read", "grep", "find", "ls", "bash"],
+  "models": [
+    {
+      "provider": "llm-m4dd",
+      "identity": "deepseek-v4.1-flash",
+      "cases": [
+        {"id":"release-orientation","oracle_correct":true,"structural_pass":false,"tool_calls":16,"assistant_turns":9,"tool_result_characters":68976,"elapsed_ms":93641,"findings":["ellipsized-identity","over-broad-evidence-read"]},
+        {"id":"position-aware-capability-negative","oracle_correct":true,"structural_pass":false,"tool_calls":13,"assistant_turns":7,"tool_result_characters":17704,"elapsed_ms":27378,"findings":["decision-budget-exceeded"]},
+        {"id":"ordinary-source-positive","oracle_correct":true,"structural_pass":false,"tool_calls":16,"assistant_turns":11,"tool_result_characters":26110,"elapsed_ms":100298,"findings":["assistant-turn-budget-exceeded"]},
+        {"id":"release-state-separation","oracle_correct":true,"structural_pass":true,"tool_calls":6,"assistant_turns":5,"tool_result_characters":21290,"elapsed_ms":9927,"findings":[]},
+        {"id":"library-first-selection","oracle_correct":true,"structural_pass":false,"tool_calls":37,"assistant_turns":17,"tool_result_characters":97411,"elapsed_ms":95122,"findings":["ellipsized-identity","tool-and-turn-budget-exceeded","over-broad-catalog-and-compatibility-read"]},
+        {"id":"host-authority-boundary","oracle_correct":true,"structural_pass":false,"tool_calls":21,"assistant_turns":12,"tool_result_characters":51183,"elapsed_ms":74379,"findings":["decision-budget-exceeded","over-broad-evidence-read"]}
+      ]
+    },
+    {
+      "provider": "llm-m4dd",
+      "identity": "glm-5.3-flash",
+      "cases": [
+        {"id":"release-orientation","oracle_correct":true,"structural_pass":false,"tool_calls":6,"assistant_turns":5,"tool_result_characters":8298,"elapsed_ms":18616,"findings":["ellipsized-unrelated-historical-identity"]},
+        {"id":"position-aware-capability-negative","oracle_correct":true,"structural_pass":true,"tool_calls":4,"assistant_turns":3,"tool_result_characters":6614,"elapsed_ms":7085,"findings":[]},
+        {"id":"ordinary-source-positive","oracle_correct":true,"structural_pass":false,"tool_calls":14,"assistant_turns":12,"tool_result_characters":53374,"elapsed_ms":53549,"findings":["assistant-turn-budget-exceeded"]},
+        {"id":"release-state-separation","oracle_correct":true,"structural_pass":false,"tool_calls":5,"assistant_turns":5,"tool_result_characters":11308,"elapsed_ms":14491,"findings":["repeated-read-budget-exceeded"]},
+        {"id":"library-first-selection","oracle_correct":false,"structural_pass":false,"terminated_by_cost_guard":true,"elapsed_ms_lower_bound":240000,"findings":["no-final-answer","cost-budget-exceeded"]},
+        {"id":"host-authority-boundary","oracle_correct":true,"structural_pass":true,"tool_calls":6,"assistant_turns":5,"tool_result_characters":9253,"elapsed_ms":13272,"findings":[]}
+      ]
+    }
+  ],
+  "controlled_pair_accepted": false,
+  "classification": {
+    "primary": "release-guidance-gap",
+    "evidence": "Both models were generally semantically accurate where they completed, while exact status-query records produced the shortest paths. Orientation and Base64 lacked equally bounded single-hop records; both models over-read and emitted unnecessary shortened identities.",
+    "secondary": ["model-specific-overexploration", "missing-hard-run-timeout"]
+  },
+  "authorized_next_change": "Add bounded exact task routes for release orientation, canonical aggregate execution, released Base64 selection and Host authority; retain the same semantic oracles and rerun both models from fresh sessions."
+}
