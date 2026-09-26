@@ -1,5 +1,18 @@
 # WAsmC release maintainer handoff
 
+## 2026-09-27 v0.0.14 dev qualification
+
+Exact candidate `f43dd8445717cc0dc38f41077ff239635b8e809d` / product
+set `0eb2d0addf9e0cfe9afb11502848bf0a09a55616c5024727ec98729103a138bc`
+is now qualified as `v0.0.14-dev.1`. Both required runs use source
+`7811eb769176d98d4c3f02fbd0a7beaa386ddf20`: LibSearch `36277853994` and
+full source-free consumer `36277855490`, both success. Supporting SDK Agent
+guidance `36277334732` and six-platform HTTPS `36277334652` also passed on the
+frozen candidate commit. The retained receipt is
+`admission/qualification-v014.json`; `channels/dev.json` is the stage
+authority. Candidate bytes remain unchanged. Next is a metadata-only exact
+dev-to-main transition; public prod/default discovery is still v0.0.13.
+
 ## 2026-09-27 v0.0.14 LibSearch admission and candidate
 
 LibSearch 0.2.0 exact qualified bytes were copied without rebuilding into
