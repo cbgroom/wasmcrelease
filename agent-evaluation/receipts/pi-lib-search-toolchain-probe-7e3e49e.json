@@ -1,0 +1,60 @@
+{
+  "schema": "wasmc.pi-lib-search-toolchain-probe/v1",
+  "release_guidance_commit": "7e3e49e5d2dd6419c86a1503266d072905903d21",
+  "agent": {
+    "implementation": "pi",
+    "version": "0.87.1"
+  },
+  "raw_trace_retained": false,
+  "hidden_reasoning_retained": false,
+  "models": [
+    {
+      "provider": "llm-m4dd",
+      "identity": "deepseek-v4.1-flash",
+      "semantic_result": "PASS",
+      "tool_calls": 13,
+      "assistant_turns": 9,
+      "tool_result_characters": 70688,
+      "error_results": 0,
+      "retries": 0,
+      "exact_duplicate_calls": 0,
+      "repeated_reads": 0,
+      "zero_yield_results": 1,
+      "wall_ms": 28858,
+      "final_answer_sha256": "3149476daf9c792ac4b0ac81585ae7dccff1e8e5bdb49f9ef2ea5f2991cfaedd"
+    },
+    {
+      "provider": "llm-m4dd",
+      "identity": "glm-5.3-flash",
+      "semantic_result": "PASS_WITH_CATALOG_ROLE_AMBIGUITY",
+      "tool_calls": 3,
+      "assistant_turns": 3,
+      "tool_result_characters": 55495,
+      "error_results": 0,
+      "retries": 0,
+      "exact_duplicate_calls": 0,
+      "repeated_reads": 0,
+      "zero_yield_results": 0,
+      "wall_ms": 17082,
+      "final_answer_sha256": "4ef7df9b9434adce2a75c66812433f6ffc2af0d815f6646a81fff03adb9488e4"
+    }
+  ],
+  "shared_correct_observations": {
+    "states": {
+      "qualified": true,
+      "admitted": false,
+      "released": false,
+      "discoverable": false,
+      "installable": false
+    },
+    "producer_commit_plus_cargo_lock_sufficient": false,
+    "build_tool_commit": "f6fc94432101250b8583834b51229bedb1cd8314",
+    "toolchain_sha256": "2e4e27cb0b3644dd0c90bb71f31de5b5c72cd47671373caab8b9146ac68bf8ca",
+    "target": "wasm32-unknown-unknown",
+    "encoded_rustflags": "-Cstrip=symbols",
+    "manifest_sha256": "ef63bdb8bb991903ef182999d1ccd22ddffca7bff66e1a0754a7a90a73b719a5"
+  },
+  "white_box_finding": "The control plane catalog field named the producer input catalog but did not explicitly deny candidate-install authority. GLM reached the correct installable=false state while using wording that could imply the v0.0.13 successor catalog covered the 0.2.0 candidate.",
+  "implemented_remediation": "Expose and validate catalog role=producer-input-catalog, contains_candidate=false and candidate_install_authority=false; retain the existing five-state denial.",
+  "scope": "Focused two-model diagnostic only; this does not replace or extend the frozen six-case controlled-pair qualification."
+}

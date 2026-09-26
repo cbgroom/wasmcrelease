@@ -66,6 +66,20 @@ admitted/released/discoverable/installable remain false. The next slice is a
 separate future-candidate admission decision; do not rewrite v0.0.13 or relabel
 LibSearch 0.1.0.
 
+A focused Pi 0.87.1 probe on commit `7e3e49e` then asked both controlled models
+to recover the five states and full reproducibility identity. Both returned the
+exact state row, build-tool commit, fingerprint, target, flags and manifest
+digest with no tool errors, retries or duplicate reads. GLM used 3 tool calls;
+DeepSeek used 13. White-box review did not blindly accept the answers: GLM's
+wording could be read as if `catalog/libs-v013.json` installed the 0.2.0
+candidate. It does not; it is the 13-package producer input catalog and contains
+only LibSearch 0.1.0. The admission receipt and control plane now expose
+`role=producer-input-catalog`, `contains_candidate=false` and
+`candidate_install_authority=false`, with executable assertions. Compact
+diagnostic evidence is retained at
+`agent-evaluation/receipts/pi-lib-search-toolchain-probe-7e3e49e.json`; it is
+not a replacement for the frozen six-case controlled-pair qualification.
+
 ## 2026-09-27 Producer u64 to release authority delta
 
 WAsmC producer `master` now contains exact ordinary-source `u64` semantics at

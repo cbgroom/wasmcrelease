@@ -89,6 +89,9 @@ assert.equal(libSearchSuccessor.toolchain.rustc_version_verbose_sha256,'c8884d5d
 assert.equal(libSearchSuccessor.toolchain.cargo_version_verbose_sha256,'7325fa79f79f89eaceae5ee57920caf61b813ade023b1e50457ee0902b2d7222');
 assert.equal(libSearchSuccessor.toolchain.target,'wasm32-unknown-unknown');
 assert.equal(libSearchSuccessor.toolchain.encoded_rustflags,'-Cstrip=symbols');
+assert.equal(libSearchSuccessor.catalog.role,'producer-input-catalog');
+assert.equal(libSearchSuccessor.catalog.contains_candidate,false);
+assert.equal(libSearchSuccessor.catalog.candidate_install_authority,false);
 assert.deepEqual(libSearchSuccessor.states,{qualified:true,admitted:false,released:false,discoverable:false,installable:false});
 assert.equal(libSearchSuccessor.index.entries,122);
 assert.equal(libSearchSuccessor.qualification.wasmi_2_0_core,'PASS');

@@ -138,6 +138,11 @@ const packages = packageRoots.map(packageRoot => {
 
 const count = state => packages.filter(row => row.states[state]).length;
 const searchCandidateMetadata = readJson('candidates/wasmc-lib-search/0.2.0/lib.json');
+const searchCandidateCatalog = readJson(searchCandidateAdmission.catalog.path);
+assert.equal(searchCandidateAdmission.catalog.role, 'producer-input-catalog');
+assert.equal(searchCandidateAdmission.catalog.contains_candidate, false);
+assert.equal(searchCandidateAdmission.catalog.candidate_install_authority, false);
+assert.equal(searchCandidateCatalog.packages.some(row => row.wit_package === searchCandidateMetadata.wit.package), false);
 assert.equal(sha256File('candidates/wasmc-lib-search/0.2.0/artifact.wasm'), searchCandidateAdmission.artifact.core_sha256);
 assert.equal(sha256File('candidates/wasmc-lib-search/0.2.0/component.wasm'), searchCandidateAdmission.artifact.component_sha256);
 assert.equal(sha256File('candidates/wasmc-lib-search/0.2.0/lib.json'), searchCandidateAdmission.artifact.manifest_sha256);
@@ -164,6 +169,7 @@ const searchCandidate = {
   stopping_conditions: [
     'future-release-admission-required',
     'not-selection-authority',
+    'producer-input-catalog-is-not-candidate-install-authority',
     'toolchain-scoped-byte-reproducibility'
   ]
 };

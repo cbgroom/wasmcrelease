@@ -51,7 +51,9 @@ Its current manifest binds integrated build tool `f6fc94432101250b8583834b51229b
 and exact Rust toolchain fingerprint
 `2e4e27cb0b3644dd0c90bb71f31de5b5c72cd47671373caab8b9146ac68bf8ca`.
 Byte identity remains scoped to that fingerprint because producer commit and
-Cargo.lock alone did not reproduce the historical receipt.
+Cargo.lock alone did not reproduce the historical receipt. The candidate's
+`catalog/libs-v013.json` reference is its 13-package producer input catalog: it
+does not contain 0.2.0 and is not an install or admission authority for it.
 
 For SDK/runtime/CLI/embedding integration, begin with
 [the SDK discovery Skill](skills/wasmc-sdk-discovery/SKILL.md). It routes by
