@@ -73,6 +73,19 @@ as true, and distinguishes current product release v0.0.13 from the resolver's
 retained v0.0.9 delivery index. Rerun the full pair on one exact successor
 commit; do not qualify from the `bdc75bc` observations.
 
+That rerun is now complete on exact guidance commit
+`bb9615a00d6a8c443b2612b4b23ded3a00f1e2c7`. Pi 0.87.1 with both
+`llm-m4dd/deepseek-v4.1-flash` and `llm-m4dd/glm-5.3-flash` passed all six
+frozen cases without timeout, structural retry/error/duplicate-read failures,
+or white-box semantic failures. Review covered exact identities, independent
+type-position decisions, real 49-byte import-free execution, complete five-state
+reporting, Base64 installability and snapshot identity, and exact Host allowlist
+behavior. The controlled pair is accepted by
+`agent-evaluation/receipts/pi-two-model-qualified-bb9615a.json`. Raw traces and
+hidden reasoning were not retained; the receipt preserves metrics and final
+answer digests. This qualification changes guidance and evaluation artifacts
+only, not compiler, Runtime, SDK, Host or Lib product bytes.
+
 Protocol validation, its synthetic positive/negative cohort tests, the release
 surface validator, the maintainer validator and the deterministic Fresh-Agent
 regression pass. The integrity-suite entry for the Pi two-model contract also

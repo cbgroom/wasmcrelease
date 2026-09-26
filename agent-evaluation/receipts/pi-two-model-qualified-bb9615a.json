@@ -1,0 +1,50 @@
+{
+  "schema": "wasmc.fresh-agent-qualification/v1",
+  "release_guidance_commit": "bb9615a00d6a8c443b2612b4b23ded3a00f1e2c7",
+  "pi_version": "0.87.1",
+  "runner": "scripts/run-pi-learning-model-v1.mjs",
+  "fresh_local_git_clone_per_case": true,
+  "timeout_ms": 180000,
+  "raw_trace_retained": false,
+  "hidden_reasoning_retained": false,
+  "models": [
+    {
+      "provider": "llm-m4dd",
+      "identity": "deepseek-v4.1-flash",
+      "structural_pass": true,
+      "white_box_pass": true,
+      "cases": [
+        {"id":"release-orientation","tool_calls":3,"assistant_turns":3,"tool_result_characters":5809,"wall_ms":14051,"final_answer_sha256":"a5a6f63c8dcc4b0a47d4fe32d8040a97336793e306c84cd062dd7b7effdee7a8"},
+        {"id":"position-aware-capability-negative","tool_calls":2,"assistant_turns":2,"tool_result_characters":5373,"wall_ms":8890,"final_answer_sha256":"7f3d067cc1e7f7fd0705ca0b4dd0148c16c95d289d2392dff3ad6536dd7853b3"},
+        {"id":"ordinary-source-positive","tool_calls":5,"assistant_turns":4,"tool_result_characters":15975,"wall_ms":18444,"final_answer_sha256":"aa2732f6280d21175f327b6b4944f484b3b38510b3b33f2122b5f3fe3c99cc7a"},
+        {"id":"release-state-separation","tool_calls":2,"assistant_turns":2,"tool_result_characters":5119,"wall_ms":7617,"final_answer_sha256":"1147030afc38b9618b294330bd7b045544453578e28ca71f55189800f03e586f"},
+        {"id":"library-first-selection","tool_calls":5,"assistant_turns":3,"tool_result_characters":9340,"wall_ms":17214,"final_answer_sha256":"f4bf623f5ba0567fd25b12aefc2b71396cf15fd5dfb4cc3fc8f681c35bc037fa"},
+        {"id":"host-authority-boundary","tool_calls":2,"assistant_turns":2,"tool_result_characters":8526,"wall_ms":8760,"final_answer_sha256":"f813c0106f2ea085fa711202110897d0e4d8cd5a54718993401f7364e13bb700"}
+      ]
+    },
+    {
+      "provider": "llm-m4dd",
+      "identity": "glm-5.3-flash",
+      "structural_pass": true,
+      "white_box_pass": true,
+      "cases": [
+        {"id":"release-orientation","tool_calls":1,"assistant_turns":2,"tool_result_characters":4730,"wall_ms":9089,"final_answer_sha256":"f2d77c7b3fa0f83a9a1de4ba37d189c0472465cc9387aee2b9c6ad1a4bb082dc"},
+        {"id":"position-aware-capability-negative","tool_calls":1,"assistant_turns":2,"tool_result_characters":4730,"wall_ms":16042,"final_answer_sha256":"4374ae94fc5e5af9afbf38312ff885d269764230630aa26576a30d2ce7910982"},
+        {"id":"ordinary-source-positive","tool_calls":4,"assistant_turns":4,"tool_result_characters":6233,"wall_ms":21359,"final_answer_sha256":"be3a839973305e6a6f8c05bece318da546285717c0a031ee8bb3e8a6822c2b63"},
+        {"id":"release-state-separation","tool_calls":1,"assistant_turns":2,"tool_result_characters":4730,"wall_ms":14873,"final_answer_sha256":"0c3961c6909c3f073e94631a0d8362104e00f22721fea2c36a50bfecb630cda3"},
+        {"id":"library-first-selection","tool_calls":5,"assistant_turns":5,"tool_result_characters":8891,"wall_ms":25163,"final_answer_sha256":"381b6259bc74a825ea806499db44dcbf50f0c6eb816b322d3d1f9d8cea8794e6"},
+        {"id":"host-authority-boundary","tool_calls":1,"assistant_turns":2,"tool_result_characters":4730,"wall_ms":14696,"final_answer_sha256":"aa3c5a775e113f36df7e26e3d825c632191f0783939672d711083465a5c3d05a"}
+      ]
+    }
+  ],
+  "white_box_oracles": [
+    "complete exact identities without ellipses",
+    "position-aware negative decisions without unsafe substitution",
+    "49-byte import-free ordinary-source execution returning [1,1]",
+    "all five lifecycle states reported separately",
+    "Base64 installability true and v0.0.9 retained delivery index not current release authority",
+    "exact Host allowlist with no invented ambient authority"
+  ],
+  "controlled_pair_accepted": true,
+  "product_bytes_changed": false
+}
