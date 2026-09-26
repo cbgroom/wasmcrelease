@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import { mkdtemp, rm, readdir, mkdir, lstat } from 'node:fs/promises';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
-import { repositoryRoot, sha256, resolveCatalog, packageReader } from './lib-catalog.mjs';
+import { repositoryRoot, sha256, resolveCatalog, packageReader, catalogAuthorities } from './lib-catalog.mjs';
 import { installLib, artifactUrl } from './lib-install.mjs';
 const catalogBytes=readFileSync(join(repositoryRoot,'catalog/libs-v009.json'));
 const catalog=JSON.parse(catalogBytes),row=catalog.packages[0];
@@ -50,3 +50,42 @@ try{
   assert.equal((await readdir(fixture)).filter(name=>name.startsWith('.')).length,2,'only successful installs retain their backing directories');
   console.log(JSON.stringify({accepted:true,files_verified:row.files.length+1,negative_tests:10,concurrent_single_winner:true,competing_directory_preserved:true,failed_stage_cleanup:true,network_access:false}));
 }finally{await rm(fixture,{recursive:true});}
+
+const catalog013Bytes=readFileSync(join(repositoryRoot,'catalog/libs-v013.json'));
+const catalog013=JSON.parse(catalog013Bytes);
+const telemetry=catalog013.packages.find(row=>row.id==='wasmc-system-telemetry');
+const lock013=resolveCatalog(catalog013Bytes,{
+  id:telemetry.id,
+  version:telemetry.version,
+  catalog_sha256:sha256(catalog013Bytes),
+  wit_sha256:telemetry.wit_sha256,
+  artifact_sha256:telemetry.artifact_sha256,
+},packageReader(),catalogAuthorities.v013);
+const lock013Bytes=Buffer.from(JSON.stringify(lock013));
+const fixture013=await mkdtemp(join(tmpdir(),'wasmc-install-v013-'));
+const destination013=join(fixture013,'telemetry');
+const read013=packageReader();
+const transport013=async(url,opts)=>{
+  assert.equal(opts.redirect,'manual');
+  const base=artifactUrl('github',catalog013.release_commit,'');
+  assert.ok(url.startsWith(base));
+  return new Response(read013(url.slice(base.length).split('/').map(decodeURIComponent).join('/')));
+};
+try{
+  const result=await installLib({
+    catalogBytes:catalog013Bytes,
+    catalogAuthority:catalogAuthorities.v013,
+    lockBytes:lock013Bytes,
+    lockSha256:sha256(lock013Bytes),
+    destination:destination013,
+    mirror:'github',
+  },transport013);
+  assert.equal(result.release_commit,catalog013.release_commit);
+  assert.equal(result.id,'wasmc-system-telemetry');
+  assert.equal(result.files_verified,telemetry.files.length);
+  assert.deepEqual(
+    resolveCatalog(catalog013Bytes,lock013,packageReader(destination013),catalogAuthorities.v013),
+    lock013,
+  );
+  console.log(JSON.stringify({accepted:true,release:'v0.0.13',id:result.id,files_verified:result.files_verified,mocked_transport:true}));
+}finally{await rm(fixture013,{recursive:true});}

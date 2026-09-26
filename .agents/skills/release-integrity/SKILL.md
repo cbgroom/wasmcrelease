@@ -71,3 +71,27 @@ outputs; verify every included file is intended and staged before admission.
 Review the resulting
 manifest and checksum diff; generated hash consistency does not authorize or
 validate the underlying change.
+
+### Pre-candidate workstream exception
+
+Do not apply that refresh rule mechanically to an early workstream branched
+from an already immutable prod release when the workstream intentionally changes
+files frozen by that prod candidate and no new release/product candidate identity
+has been allocated yet. Refreshing in that state rewrites the old version's
+`release.json`, `manifest.json`, and provenance inventory around future bytes,
+which can be internally hash-consistent while being semantically false.
+
+In this pre-candidate state:
+
+1. keep the immutable tag, prod pointer, old candidate manifest, and old release
+   identity files byte-unchanged;
+2. require focused workstream tests and explicitly prove that the old candidate
+   rejects the changed tree as product drift;
+3. label the branch as unreleased/future-version work;
+4. once the new product set and version are intentionally frozen, create the
+   new candidate identity, then refresh/stage global integrity metadata and run
+   the full release validators.
+
+An integrity script returning PASS after relabeling future bytes as an old
+release is not sufficient semantic evidence; version identity is part of the
+contract.

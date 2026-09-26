@@ -1,5 +1,45 @@
 # WAsmC release maintainer handoff
 
+## 2026-09-26 Lib discovery completeness — STARTED
+
+Own branch: work/WS-20260926-lib-discovery-completeness-v1, based on exact
+v0.0.13 prod b1d22d27bdc9727e607cf77a4af57b151df6832d.
+
+Observed defect is release/discovery drift, not a search-kernel limitation:
+v0.0.13 contains thirteen public Lib package roots, but the shipped resolver
+catalog remains the four-package v0.0.9 snapshot and LibSearch 0.1.0 remains a
+five-package / 89-entry snapshot. telemetry, csv, relational and parquet queries
+therefore miss released capabilities.
+
+The prior work/lib-discovery-v013@c2f2dea6 remediation proved the direction on
+v0.0.12, including LibSearch 0.2.0 and package-intent-v1, but was never merged
+or promoted. Its binary/index receipts are stale for v0.0.13 and are not reused.
+
+Current remediation derives the package-root inventory from the exact frozen
+0.0.13 product candidate and requires explicit reviewed discovery intent for
+every root. Missing or extra intent fails closed. The generated v0.0.13 catalog
+contains all thirteen roots while the old v0.0.9 catalog remains byte-identical.
+The next gate is rebuilding LibSearch 0.2.0 against this exact catalog and then
+running fresh Core/Component/Wasmi and search-completeness evidence. Do not move
+or republish v0.0.13 tags.
+
+Important identity checkpoint: the first mechanical
+`scripts/refresh-integrity.mjs` run was deliberately rejected as the branch
+authority because it rewrote v0.0.13 `release.json` / `manifest.json` /
+`provenance.json` to inventory future workstream bytes. The old 0.0.13
+candidate correctly rejects this changed tree as product drift. Those generated
+identity changes were reverted. Until a future additive product candidate is
+explicitly frozen, this branch uses focused discovery validation and preserves
+all v0.0.13 release identity files unchanged.
+
+The pre-candidate gate is
+`node scripts/validate-lib-discovery-workstream.mjs`. It hard-binds the old
+release/candidate/prod/v0.0.9 catalog identities, runs v0.0.13 discovery
+completeness plus catalog/install regressions, and requires the immutable
+v0.0.13 candidate verifier to fail specifically with `product drift rejected`.
+Do not wire this future-version workstream into the old release's official
+validator/CI family before a new candidate identity is intentionally created.
+
 ## 2026-09-25 Host SDK integration and candidate reopen hardening
 
 Exact local source qualification is now complete for

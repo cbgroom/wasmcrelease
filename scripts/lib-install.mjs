@@ -1,7 +1,7 @@
 import { lstat, realpath, mkdtemp, mkdir, open, symlink, rm } from 'node:fs/promises';
 import { resolve, dirname, basename, join } from 'node:path';
 import { isDeepStrictEqual } from 'node:util';
-import { sha256, selectCatalog, resolveCatalog, packageReader } from './lib-catalog.mjs';
+import { sha256, selectCatalog, resolveCatalog, packageReader, catalogAuthorities } from './lib-catalog.mjs';
 
 const fail = code => { throw Object.assign(new Error(code), {code}); };
 const mirrors = Object.freeze({github:'https://raw.githubusercontent.com/cbgroom/wasmcrelease/',jsdelivr:'https://cdn.jsdelivr.net/gh/cbgroom/wasmcrelease@'});
@@ -41,12 +41,12 @@ async function download(url, file, fetcher, totalSignal) {
   }
 }
 // Private fetch injection is only for controlled transport/fault tests.
-export async function installLib({catalogBytes,lockBytes,lockSha256,destination,mirror='github'},fetcher=globalThis.fetch) {
+export async function installLib({catalogBytes,catalogAuthority=catalogAuthorities.v009,lockBytes,lockSha256,destination,mirror='github'},fetcher=globalThis.fetch) {
   if (!(lockBytes instanceof Uint8Array) || lockBytes.byteLength>262144 || !/^[a-f0-9]{64}$/.test(lockSha256??'') || sha256(lockBytes)!==lockSha256)fail('install.lock_identity_mismatch');
   let lock;
   try {lock=JSON.parse(lockBytes);}catch{fail('install.lock_invalid');}
   if(lock?.schema!=='wasmc.public-lib-lock/v1')fail('install.lock_invalid');
-  const {catalog,row}=selectCatalog(catalogBytes,lock);
+  const {catalog,row}=selectCatalog(catalogBytes,lock,catalogAuthority);
   artifactUrl(mirror,catalog.release_commit,'');
   const files=[...row.files,...(row.companion?[row.companion]:[])];
   if(files.reduce((sum,f)=>sum+f.bytes,0)>134217728)fail('install.budget_exceeded');
@@ -64,7 +64,7 @@ export async function installLib({catalogBytes,lockBytes,lockSha256,destination,
       const handle=await open(path,'wx',0o644);
       try{await handle.writeFile(data);await handle.sync();}finally{await handle.close();}
     }
-    const verified=resolveCatalog(catalogBytes,lock,packageReader(stage));
+    const verified=resolveCatalog(catalogBytes,lock,packageReader(stage),catalogAuthority);
     if(!isDeepStrictEqual(verified,lock))fail('install.lock_metadata_drift');
     const receipt={schema:'wasmc.public-lib-install/v1',lock_sha256:lockSha256,release_commit:catalog.release_commit,id:row.id,version:row.version,files_verified:files.length,mirror,publication:'exclusive-directory-symlink',authority_granted:false};
     const handle=await open(join(stage,'install-receipt.json'),'wx',0o644);

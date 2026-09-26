@@ -1,11 +1,19 @@
 import { readFileSync } from 'node:fs';
-import { repositoryRoot, resolveCatalog } from './lib-catalog.mjs';
+import { repositoryRoot, resolveCatalog, catalogAuthorities } from './lib-catalog.mjs';
 import { join } from 'node:path';
 import { installLib } from './lib-install.mjs';
 import {instantiateLibSearch} from '../examples/lib-search/client.mjs';
 const [command, ...args] = process.argv.slice(2);
+const catalogs=Object.freeze({
+  v009:{file:'catalog/libs-v009.json',authority:catalogAuthorities.v009},
+  v013:{file:'catalog/libs-v013.json',authority:catalogAuthorities.v013},
+});
+const catalogSelection=name=>{
+  const selected=catalogs[name??'v009'];
+  if(!selected)throw Object.assign(new Error('catalog.unknown_authority'),{code:'catalog.unknown_authority'});
+  return selected;
+};
 try {
-  const bytes = command==='search'?null:readFileSync(join(repositoryRoot, 'catalog/libs-v009.json'));
   let result;
   if (command === 'search') {
     const lib=instantiateLibSearch(readFileSync(join(repositoryRoot,'standard/wasmc-lib-search/0.1.0/artifact.wasm')),{artifact_sha256:'44944d542d818b8ad8a9794a555694b8e56ed4f147d4370b1ff975e26b204c80',index_sha256:'c1ccd8f5086b3d3ae0643383f2d3e3e682358b4ccc4a99042233bd35fa73b534'});
@@ -30,17 +38,24 @@ try {
       if(!allowed.has(flags[i])||Object.hasOwn(values,flags[i]))throw Object.assign(new Error('cli.arguments_invalid'),{code:'cli.arguments_invalid'});
       values[flags[i]]=flags[i+1];
     }
-    result=await installLib({catalogBytes:bytes,lockBytes:readFileSync(lockPath),lockSha256:values['--lock-sha256'],destination,mirror:values['--mirror']});
+    const lockBytes=readFileSync(lockPath);
+    let lock;try{lock=JSON.parse(lockBytes);}catch{throw Object.assign(new Error('install.lock_invalid'),{code:'install.lock_invalid'});}
+    const catalogName=lock?.release_tag==='v0.0.13'?'v013':lock?.release_tag==='v0.0.9'?'v009':null;
+    if(!catalogName)throw Object.assign(new Error('install.lock_invalid'),{code:'install.lock_invalid'});
+    const selected=catalogSelection(catalogName);
+    result=await installLib({catalogBytes:readFileSync(join(repositoryRoot,selected.file)),catalogAuthority:selected.authority,lockBytes,lockSha256:values['--lock-sha256'],destination,mirror:values['--mirror']});
   } else if (command === 'resolve') {
     const [id, version, ...flags] = args;
-    const allowed = new Set(['--catalog-sha256','--wit-sha256','--artifact-sha256']);
+    const allowed = new Set(['--catalog','--catalog-sha256','--wit-sha256','--artifact-sha256']);
     const values = {};
-    if (flags.length !== 6) throw Object.assign(new Error('resolve.exact_lock_required'), {code:'resolve.exact_lock_required'});
+    if (flags.length !== 6 && flags.length !== 8) throw Object.assign(new Error('resolve.exact_lock_required'), {code:'resolve.exact_lock_required'});
     for (let i=0;i<flags.length;i+=2) {
       if (!allowed.has(flags[i]) || Object.hasOwn(values,flags[i])) throw Object.assign(new Error('cli.arguments_invalid'),{code:'cli.arguments_invalid'});
       values[flags[i]] = flags[i+1];
     }
-    result = resolveCatalog(bytes,{id,version,catalog_sha256:values['--catalog-sha256'],wit_sha256:values['--wit-sha256'],artifact_sha256:values['--artifact-sha256']});
+    const selected=catalogSelection(values['--catalog']);
+    const bytes=readFileSync(join(repositoryRoot,selected.file));
+    result = resolveCatalog(bytes,{id,version,catalog_sha256:values['--catalog-sha256'],wit_sha256:values['--wit-sha256'],artifact_sha256:values['--artifact-sha256']},undefined,selected.authority);
   } else throw Object.assign(new Error('cli.command_unsupported'),{code:'cli.command_unsupported'});
   console.log(JSON.stringify(result,null,2));
 } catch (error) {
