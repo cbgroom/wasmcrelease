@@ -1,0 +1,25 @@
+{
+  "schema": "wasmc.system-profile-request/v1",
+  "id": "ios-background-audio-v1",
+  "target": {
+    "os": "ios", "architecture": "aarch64", "environment": "simulator", "embedding": "native"
+  },
+  "boundary": "wasmc.lib-defined-host-boundary/v1",
+  "host": {
+    "contract": "wasmc.lib-defined-host-boundary/v1",
+    "executor": "host/tests/ios-app-capability/Host/FixedHost.swift",
+    "required_domain_apis": 0
+  },
+  "required_lifecycle": "qualified",
+  "requirements": ["wasmc:system-background-audio@0.0.1"],
+  "candidates": ["libsrc/wasmc-system-ios-background-audio/candidate.json"],
+  "pins": {},
+  "acceptance": {
+    "background_clock_progress": true,
+    "all_background_samples_playing": true,
+    "physical_output": false,
+    "lock_screen": false,
+    "route_change": false,
+    "interruption": false
+  }
+}

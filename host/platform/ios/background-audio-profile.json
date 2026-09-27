@@ -1,0 +1,63 @@
+{
+  "schema": "wasmc.library-os-profile/v2",
+  "id": "ios-background-audio-v1",
+  "target": {
+    "os": "ios",
+    "architecture": "aarch64",
+    "environment": "simulator",
+    "embedding": "native"
+  },
+  "host": {
+    "contract": "wasmc.lib-defined-host-boundary/v1",
+    "executor": "host/tests/ios-app-capability/Host/FixedHost.swift",
+    "required_domain_apis": 0
+  },
+  "required_lifecycle": "qualified",
+  "requirements": [
+    "wasmc:system-background-audio@0.0.1"
+  ],
+  "bindings": [
+    {
+      "api": "wasmc:system-background-audio@0.0.1",
+      "provider": "wasmc:system-ios-background-audio@0.0.1-dev.1",
+      "candidate": "libsrc/wasmc-system-ios-background-audio/candidate.json",
+      "wit": "libsrc/wasmc-system-ios-background-audio/lib.wit",
+      "descriptor": "libsrc/wasmc-system-ios-background-audio/platform/ios/binding.json",
+      "boundary": "wasmc.lib-defined-host-boundary/v1",
+      "artifact": {
+        "format": "embedded-source",
+        "language": "swift",
+        "linkage": "static-app",
+        "sources": [
+          "libsrc/wasmc-system-ios-background-audio/platform/ios/Sources/BackgroundAudioProvider.swift"
+        ],
+        "frameworks": [
+          "AVFoundation",
+          "Foundation",
+          "UIKit"
+        ]
+      },
+      "target": {
+        "os": "ios",
+        "architecture": "aarch64",
+        "environment": "simulator",
+        "embedding": "native"
+      },
+      "lifecycle": {
+        "qualified": true,
+        "admitted": false,
+        "released": false,
+        "discoverable": false,
+        "installable": false
+      }
+    }
+  ],
+  "acceptance": {
+    "background_clock_progress": true,
+    "all_background_samples_playing": true,
+    "physical_output": false,
+    "lock_screen": false,
+    "route_change": false,
+    "interruption": false
+  }
+}
