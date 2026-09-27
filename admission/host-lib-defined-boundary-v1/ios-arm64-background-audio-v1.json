@@ -1,0 +1,47 @@
+{
+  "schema": "wasmc.host-lib-defined-boundary-ios-background-audio-qualification/v1",
+  "implementation_commit": "0d22f460d3ded2686204c7b870da4230c8f99542",
+  "source": {
+    "docs/IOS_LIB_CAPABILITY_SPECTRUM.md": "60bed637dc6a75395b15a44bb3e96f666936089b9aa29fd2a86394bf56238586",
+    "host/platform/ios/background-audio-profile.json": "beab972a7460c41545867f9d0ea538a73d493cd3fddb5f319b978e0dcb91da68",
+    "host/platform/ios/background-audio-request.json": "4c7a1b685732895caf9116bd746d84798003223ba6b52f92de75a155c5c433fa",
+    "libsrc/wasmc-system-ios-background-audio/README.md": "0c40ce1fd784b765d92a8656c316927de990efed35aefa703d3ad125f4380e8f",
+    "libsrc/wasmc-system-ios-background-audio/candidate.json": "ef794d1bf51ec3a35f67e6f57bc024085b9637bc47645c3b9a764d309aca9f05",
+    "libsrc/wasmc-system-ios-background-audio/lib.wit": "332d6e7405666f2ee06e08d6bb886a7aa51ccd197a8d677551a0481a40f57ebf",
+    "libsrc/wasmc-system-ios-background-audio/platform/ios/binding.json": "175c44a5ea6a137ccb065e4333792ca85ce4df3d30ed13b69a4ea1ae186fd0da",
+    "libsrc/wasmc-system-ios-background-audio/platform/ios/Sources/BackgroundAudioProvider.swift": "33ceb2c6d813fb685bf7532e121ca1e714c2cccc973b68addbd4d20b8df33e31",
+    "libsrc/wasmc-system-ios-background-audio/examples/ios-app/App/AppDelegate.swift": "94a1dc4f6b81b3755a59ef3465505e20acb31bb625d12bd7cef4b5a16fbe9e03",
+    "libsrc/wasmc-system-ios-background-audio/examples/ios-app/App/BackgroundAudioViewController.swift": "292df69ea762352996885a489ba2859fe18676bdb199655fa1428562f4fbea9d",
+    "libsrc/wasmc-system-ios-background-audio/examples/ios-app/UITests/BackgroundAudioUITests.swift": "ae7ee3d8749fda6db14060eff3086104fcde6ee8b5fb3103adfe092fec7bae6a",
+    "scripts/test-ios-background-audio.mjs": "2fdcceeb35113a27fb51db172eda104a5e2957770af1d177220e13195222210a",
+    "scripts/validate-ios-background-audio.mjs": "29b17665e08880b89f9c7b83c217670ae0f32f608ede423448b97b8dbe425aab"
+  },
+  "target": {
+    "os": "ios", "architecture": "aarch64", "environment": "simulator", "embedding": "native",
+    "runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-5",
+    "device": "iPhone 17 Pro",
+    "udid": "33F7591E-A76B-4C95-9EDA-FA0E66C7F23A"
+  },
+  "evidence": {
+    "status": "PASS",
+    "api": "wasmc:system-background-audio@0.0.1",
+    "provider": "wasmc:system-ios-background-audio@0.0.1-dev.1",
+    "fixed_host_domain_apis": 0,
+    "fixed_host_sha256": "f0d465ba7f23698d6365453b02fad2f4a0803171f970631751fc90a00a86d96f",
+    "session_category": "playback",
+    "background_samples": 14,
+    "background_position_delta_ms": 3228,
+    "all_background_samples_playing": true,
+    "start_error": "",
+    "physical_output_qualified": false,
+    "lock_screen_qualified": false,
+    "route_change_qualified": false,
+    "interruption_qualified": false,
+    "physical_device": false
+  },
+  "qualified": true,
+  "admitted": false,
+  "released": false,
+  "discoverable": false,
+  "installable": false
+}

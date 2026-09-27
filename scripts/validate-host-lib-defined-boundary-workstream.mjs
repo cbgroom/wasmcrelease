@@ -530,6 +530,34 @@ assert.equal(iosDeferredWorkRejectionV1.evidence.error_code, 1);
 assert.equal(iosDeferredWorkRejectionV1.evidence.pending_count, 0);
 assert.equal(iosDeferredWorkRejectionV1.evidence.system_delivery_qualified, false);
 
+const iosBackgroundAudioV1Receipt = JSON.parse(fs.readFileSync(
+  "admission/host-lib-defined-boundary-v1/ios-arm64-background-audio-v1.json", "utf8",
+));
+assert.equal(iosBackgroundAudioV1Receipt.schema,
+  "wasmc.host-lib-defined-boundary-ios-background-audio-qualification/v1");
+assert.equal(iosBackgroundAudioV1Receipt.qualified, true);
+assert.equal(iosBackgroundAudioV1Receipt.admitted, false);
+assert.equal(iosBackgroundAudioV1Receipt.released, false);
+assert.equal(iosBackgroundAudioV1Receipt.discoverable, false);
+assert.equal(iosBackgroundAudioV1Receipt.installable, false);
+execFileSync("git", ["cat-file", "-e", `${iosBackgroundAudioV1Receipt.implementation_commit}^{commit}`]);
+execFileSync("git", ["merge-base", "--is-ancestor", iosBackgroundAudioV1Receipt.implementation_commit, "HEAD"]);
+for (const [relative, expected] of Object.entries(iosBackgroundAudioV1Receipt.source)) {
+  assert.equal(digestAt(iosBackgroundAudioV1Receipt.implementation_commit, relative), expected,
+    `${relative}: retained iOS background-audio v1 source drift`);
+}
+assert.equal(iosBackgroundAudioV1Receipt.evidence.status, "PASS");
+assert.equal(iosBackgroundAudioV1Receipt.evidence.fixed_host_domain_apis, 0);
+assert.equal(iosBackgroundAudioV1Receipt.evidence.fixed_host_sha256,
+  iosBackgroundTransferV2Receipt.evidence.fixed_host_sha256);
+assert.ok(iosBackgroundAudioV1Receipt.evidence.background_samples >= 5);
+assert.ok(iosBackgroundAudioV1Receipt.evidence.background_position_delta_ms >= 1500);
+assert.equal(iosBackgroundAudioV1Receipt.evidence.all_background_samples_playing, true);
+assert.equal(iosBackgroundAudioV1Receipt.evidence.physical_output_qualified, false);
+assert.equal(iosBackgroundAudioV1Receipt.evidence.lock_screen_qualified, false);
+assert.equal(iosBackgroundAudioV1Receipt.evidence.route_change_qualified, false);
+assert.equal(iosBackgroundAudioV1Receipt.evidence.interruption_qualified, false);
+
 const frozenIdentityFiles = [
   "release.json",
   "channels/prod.json",
@@ -1320,6 +1348,7 @@ console.log(JSON.stringify({
   retained_ios_arm64_background_transfer_v1_qualification: iosBackgroundTransferV1Receipt.implementation_commit,
   retained_ios_arm64_background_transfer_v2_qualification: iosBackgroundTransferV2Receipt.implementation_commit,
   retained_ios_arm64_deferred_work_simulator_rejection_v1: iosDeferredWorkRejectionV1.implementation_commit,
+  retained_ios_arm64_background_audio_v1_qualification: iosBackgroundAudioV1Receipt.implementation_commit,
   old_candidate_rejects_product_drift: true,
   lifecycle: "architecture-workstream-not-admitted-not-released",
 }));
