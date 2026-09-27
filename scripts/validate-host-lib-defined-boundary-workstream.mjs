@@ -172,6 +172,32 @@ assert.equal(linuxX86MappedReceipt.evidence.mapping_bounds_rejection, true);
 assert.equal(linuxX86MappedReceipt.evidence.generation_checked_stale_mapping_rejection, true);
 assert.ok(linuxX86MappedReceipt.evidence.performance.mapping_mib_per_second >= linuxX86MappedReceipt.evidence.performance.minimum_mib_per_second);
 
+const linuxEpollReceipt = JSON.parse(fs.readFileSync("admission/host-lib-defined-boundary-v1/linux-aarch64-epoll-v4.json", "utf8"));
+assert.equal(linuxEpollReceipt.schema, "wasmc.host-lib-defined-boundary-linux-qualification/v4");
+assert.equal(linuxEpollReceipt.status, "linux-aarch64-epoll-device-readiness-qualified-not-admitted-not-released");
+assert.equal(linuxEpollReceipt.admitted, false);
+assert.equal(linuxEpollReceipt.released, false);
+execFileSync("git", ["cat-file", "-e", `${linuxEpollReceipt.implementation_commit}^{commit}`]);
+execFileSync("git", ["merge-base", "--is-ancestor", linuxEpollReceipt.implementation_commit, "HEAD"]);
+for (const [relative, expected] of Object.entries(linuxEpollReceipt.source)) {
+  assert.equal(
+    digestAt(linuxEpollReceipt.implementation_commit, relative),
+    expected,
+    `${relative}: retained epoll Linux qualification source drift`,
+  );
+}
+assert.equal(linuxEpollReceipt.evidence.status, "PASS");
+assert.equal(linuxEpollReceipt.evidence.fixed_executor_domain_apis, 0);
+assert.equal(linuxEpollReceipt.evidence.real_epoll_device_event, true);
+assert.equal(linuxEpollReceipt.evidence.epoll_endpoint, "/dev/ptmx");
+assert.equal(linuxEpollReceipt.evidence.epoll_add_wait_read_delete, true);
+assert.equal(linuxEpollReceipt.evidence.generation_checked_stale_event_set_rejection, true);
+assert.equal(linuxEpollReceipt.evidence.fixed_executor_unchanged_from_v3, true);
+assert.ok(linuxEpollReceipt.evidence.performance.read_mib_per_second >= linuxEpollReceipt.evidence.performance.minimum_mib_per_second);
+assert.ok(linuxEpollReceipt.evidence.performance.write_mib_per_second >= linuxEpollReceipt.evidence.performance.minimum_mib_per_second);
+assert.ok(linuxEpollReceipt.evidence.performance.mapping_mib_per_second >= linuxEpollReceipt.evidence.performance.minimum_mib_per_second);
+assert.ok(linuxEpollReceipt.evidence.performance.persistent_speedup >= linuxEpollReceipt.evidence.performance.minimum_speedup);
+
 const oldCandidate = spawnSync(
   process.execPath,
   ["scripts/release-candidate.mjs", "verify", "channels/candidates/0.0.15.json"],
@@ -192,6 +218,7 @@ console.log(JSON.stringify({
   retained_linux_x86_64_persistent_qualification: linuxX86PersistentReceipt.qualified_commit,
   retained_linux_aarch64_mapped_qualification: linuxMappedReceipt.implementation_commit,
   retained_linux_x86_64_mapped_qualification: linuxX86MappedReceipt.qualified_commit,
+  retained_linux_aarch64_epoll_qualification: linuxEpollReceipt.implementation_commit,
   old_candidate_rejects_product_drift: true,
   lifecycle: "architecture-workstream-not-admitted-not-released",
 }));

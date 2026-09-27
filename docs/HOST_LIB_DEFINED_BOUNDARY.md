@@ -208,3 +208,7 @@ The mapped-device Linux x86_64 receipt is
 `admission/host-lib-defined-boundary-v1/linux-x86_64-mapped-v3.json`, bound to
 successful workflow run `36300032417` at commit
 `12f0ca7bd49f2317fc28f2d0eb6e566b04fdc4eb`.
+
+The epoll-readiness Linux aarch64 receipt is
+`admission/host-lib-defined-boundary-v1/linux-aarch64-epoll-v4.json`, bound to
+implementation commit `d83fc6a823f4dfa6be9e013a4938394eb5ce055d`.

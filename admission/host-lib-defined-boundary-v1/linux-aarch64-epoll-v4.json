@@ -1,0 +1,68 @@
+{
+  "schema": "wasmc.host-lib-defined-boundary-linux-qualification/v4",
+  "status": "linux-aarch64-epoll-device-readiness-qualified-not-admitted-not-released",
+  "date": "2026-09-27",
+  "implementation_commit": "d83fc6a823f4dfa6be9e013a4938394eb5ce055d",
+  "system_lib_identity": "wasmc:system-linux-endpoint@0.0.1-dev.1",
+  "source": {
+    "host/runtime/lib-boundary/native-linux/Cargo.lock": "5c1fceda2528f2294cc116da2a600a8d6c08b41b86f7b4331f7e7408dfb47c59",
+    "host/runtime/lib-boundary/native-linux/Cargo.toml": "51f247df82e66bc6636f8efb5d1bfa987c845a80185a831dc6dd9261caf10f3d",
+    "host/runtime/lib-boundary/native-linux/src/main.rs": "66b93a6e7c3e70a8315528f7d2917ea9ed39199f2dd9ef3acee43b027f8447bb",
+    "libsrc/wasmc-system-linux-endpoint/lib.wit": "9ac1e629bc4d84b3b3fd00102ca0860213b289384123f07b604f20861eb215bb",
+    "libsrc/wasmc-system-linux-endpoint/native-adapter.c": "3c02604e39921acb06d36d220736dc9ad3307d029fc33d7bb09df943d0324b2b",
+    "libsrc/wasmc-system-linux-endpoint/native-boundary.template.json": "fe49d5222f507f83a221209a625545223f69c31fa61b3e76fe3183e0b2e01dce",
+    "scripts/test-linux-lib-defined-boundary.mjs": "f5e7f2d1651b34b6cb55a90f2cf8df25321db43d8729a3e9c675f7d9903acdab"
+  },
+  "environment": {
+    "container_image": "mcpgit-validation:rust-1.96-node26-warm",
+    "container_image_id": "sha256:45ec80b38695ef42a711a49cfeabf98e9cd3d5fd4221fd5d2f9b7f28d8ecb6a6",
+    "os": "linux",
+    "architecture": "aarch64",
+    "kernel": "6.8.0-117-generic",
+    "node": "v26.5.1",
+    "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)"
+  },
+  "outputs": {
+    "executor_sha256": "8a12196c6c5e34fd86fc4ed13798dc7b81c17da2ce710ed8a9477642fb4f6329",
+    "adapter_sha256": "50681dfb6ed7f980c7d2866fddc56c6ddc188cd3079ce4a0db50e6c9fe21523f",
+    "adapter_export": "wasmc_boundary_v1_invoke"
+  },
+  "evidence": {
+    "script": "scripts/test-linux-lib-defined-boundary.mjs",
+    "status": "PASS",
+    "fixed_executor_domain_apis": 0,
+    "adapter_device_path_literals": 0,
+    "real_epoll_device_event": true,
+    "epoll_endpoint": "/dev/ptmx",
+    "pty_slave_endpoint": "/dev/pts/N",
+    "epoll_add_wait_read_delete": true,
+    "generation_checked_stale_event_set_rejection": true,
+    "fixed_executor_unchanged_from_v3": true,
+    "mapped_device_window_regression": true,
+    "performance": {
+      "read_mib_per_second": 170.01,
+      "write_mib_per_second": 345.15,
+      "mapping_operations": 256,
+      "mapping_bytes": 16777216,
+      "mapping_mib_per_second": 485.17,
+      "persistent_speedup": 32.05,
+      "minimum_mib_per_second": 25,
+      "minimum_speedup": 5,
+      "scope": "same-machine diagnostic; epoll wait is synchronous in the persistent session"
+    },
+    "adapter_identity_rejection": true
+  },
+  "remaining_gates": [
+    "linux-x86_64-epoll-device-readiness-qualification",
+    "descriptor-schema-review",
+    "Wasm-WIT-lowering",
+    "native-asynchronous-lifecycle-and-cancellation",
+    "io-uring-completion",
+    "guest-shared-window-zero-copy",
+    "admission-review",
+    "catalog-and-LibSearch",
+    "immutable-release"
+  ],
+  "admitted": false,
+  "released": false
+}
