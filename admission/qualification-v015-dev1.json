@@ -1,0 +1,66 @@
+{
+  "schema": "wasmc.release-qualification/v1",
+  "version": "0.0.15",
+  "stage_authorized": "main",
+  "product_candidate": {
+    "path": "channels/candidates/0.0.15.json",
+    "commit": "41fe6073f524d8e8aa7bc0f0d2b6df4592187236",
+    "product_set_sha256": "9167aafc39eedf54d75e9bd336a4fffabe53b72e8204058e800d35fd0d5fb2f3",
+    "products": 213
+  },
+  "tested_source_commit": "41fe6073f524d8e8aa7bc0f0d2b6df4592187236",
+  "required": {
+    "lib_search": {
+      "result": "success",
+      "run": "https://github.com/cbgroom/wasmcrelease/actions/runs/36292783763",
+      "head_sha": "41fe6073f524d8e8aa7bc0f0d2b6df4592187236",
+      "coverage": "10 JavaScript runtime/platform cells, Wasmi 2 Core, Wasmtime generated Component SDK"
+    },
+    "full_consumer": {
+      "result": "success",
+      "run": "https://github.com/cbgroom/wasmcrelease/actions/runs/36292783780",
+      "head_sha": "41fe6073f524d8e8aa7bc0f0d2b6df4592187236",
+      "coverage": "compatibility, integrity, Agent guidance, source-free runtime and mirror journeys, security history, Rust Wasmi/Wasmtime/Component Libs, required aggregate"
+    }
+  },
+  "supporting": {
+    "sdk_agent_guidance": {
+      "result": "success",
+      "run": "https://github.com/cbgroom/wasmcrelease/actions/runs/36293025955",
+      "head_sha": "41fe6073f524d8e8aa7bc0f0d2b6df4592187236"
+    },
+    "host_external_https": {
+      "result": "success",
+      "run": "https://github.com/cbgroom/wasmcrelease/actions/runs/36292783761",
+      "head_sha": "41fe6073f524d8e8aa7bc0f0d2b6df4592187236",
+      "required_platforms": 5,
+      "legacy_optional_platforms": 1
+    }
+  },
+  "fresh_agent_pre_release": {
+    "required_for_prod": true,
+    "protocol": "wasmc.fresh-agent-learning/v1",
+    "agent": "pi@0.87.1",
+    "models": [
+      "llm-m4dd/deepseek-v4.1-flash",
+      "llm-m4dd/glm-5.3-flash"
+    ],
+    "receipt_policy": "bind the final unpushed prod rehearsal commit and tree; commit the privacy-safe receipt only after the immutable prod tag"
+  },
+  "lib_route_closure": {
+    "release_packages": 14,
+    "package_routes": 14,
+    "api_routes": 108,
+    "candidate_extras": 0,
+    "exact": true
+  },
+  "accepted": true,
+  "authorizes": [
+    "v0.0.15-dev.1",
+    "v0.0.15-main.1"
+  ],
+  "does_not_authorize": [
+    "prod publication before a passing Pi receipt bound to the exact final prod rehearsal commit and tree",
+    "rebuilding or changing any candidate product byte"
+  ]
+}
