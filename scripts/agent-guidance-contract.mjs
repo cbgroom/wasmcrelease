@@ -51,7 +51,7 @@ export function validateGuidance({ agents, decisionModel, language, lib, release
   if (declared !== expectedTag) fail('root product identity is stale or missing');
   const headings = [...agents.matchAll(/^## (v[^\s]+) product capability contract$/gm)].map(m => m[1]);
   if (headings.length !== 1 || headings[0] !== expectedTag) fail('capability contract identity differs');
-  if (!agents.includes('Read `release.json`') || !agents.includes('`channels/prod.json`') ||
+  if (!agents.includes('agent-release-orientation.json') || !agents.includes('full artifact inventory') ||
       !agents.includes('product presence is not lifecycle authority') ||
       !agents.includes('Construct CDN URLs only after reading the exact tag from `release.json`')) {
     fail('root product/lifecycle authority boundary missing');

@@ -2,6 +2,15 @@
 
 Packages are built and admitted locally from clean synchronized private source, then pushed directly. GitHub Actions independently verifies the source-free public consumer paths, but cannot rebuild or admit canonical compiler/Lib bytes and is not a publication dependency.
 
+## v0.0.15
+
+Agent-learning and release-control update using unchanged v0.0.14 compiler and
+Lib bytes. Adds a compact validated release-orientation authority, routes
+Base64 selection through the exact carried-forward v0.0.14 catalog, validates
+reported identities and digests, and requires a two-model Pi rehearsal on the
+exact unpushed prod tree before publication. See
+[`docs/RELEASE_V015.md`](docs/RELEASE_V015.md).
+
 ## v0.0.14
 
 LibSearch route-complete and Agent-learning release. It publishes

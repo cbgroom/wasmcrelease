@@ -1,9 +1,9 @@
 {
   "schema": "wasmc.release-lib-route-readiness/v1",
   "route": "release-lib-route-readiness",
-  "request": "does this v0.0.14 product set bind every included Lib package and API route, and where is its lifecycle stage decided",
+  "request": "does this v0.0.15 product set bind every included Lib package and API route, and where is its lifecycle stage decided",
   "product": {
-    "version": "0.0.14",
+    "version": "0.0.15",
     "package_routes": 14,
     "api_routes": 108,
     "candidate_extras": 0,
@@ -27,7 +27,7 @@
     "rule": "Never infer released, discoverable or installable from this frozen product projection."
   },
   "valid_resolution_count": 1,
-  "only_valid_closure": "Verify the exact v0.0.14 candidate and route closure, then read the channel authorities for lifecycle state. Every promotion must preserve the same product digest set.",
+  "only_valid_closure": "Verify the exact v0.0.15 candidate and route closure, then read the channel authorities for lifecycle state. Every promotion must preserve the same product digest set.",
   "forbidden_shortcuts": [
     "treat admission as release",
     "infer lifecycle state from product presence or an admission snapshot",
@@ -37,13 +37,13 @@
   "authorities": [
     "admission/lib-search-v020-v014-admission.json",
     "catalog/lib-route-closure.json",
-    "channels/candidates/0.0.14.json",
+    "channels/candidates/0.0.15.json",
     "release.json",
     "channels/prod.json"
   ],
   "check_commands": [
     "node scripts/lib-route-closure.mjs --check",
-    "node scripts/release-candidate.mjs verify channels/candidates/0.0.14.json"
+    "node scripts/release-candidate.mjs verify channels/candidates/0.0.15.json"
   ],
   "stop": "This record is sufficient for the matching readiness decision. Do not scan manifests, histories or implementation scripts unless one of its check commands fails."
 }

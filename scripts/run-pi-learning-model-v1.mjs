@@ -6,6 +6,7 @@ import { tmpdir } from 'node:os';
 import { dirname, isAbsolute, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { evaluateTraceText } from './wasmc-live-agent-trace-evaluation-v1.mjs';
+import { answerContract } from './fresh-agent-learning-v1.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const protocol = JSON.parse(readFileSync(new URL('../agent-evaluation/fresh-agent-learning-v1.json', import.meta.url), 'utf8'));
@@ -30,7 +31,7 @@ function options(argv) {
   return out;
 }
 
-function structural(report, limits) {
+function structural(report, limits, contract) {
   const observed = {
     tool_calls: report.tool_calls.length,
     assistant_turns: report.assistant_turns,
@@ -44,7 +45,8 @@ function structural(report, limits) {
   const failures = Object.entries(limits)
     .filter(([key, limit]) => observed[key.replace(/^max_/, '')] > limit)
     .map(([key, limit]) => ({ metric: key.replace(/^max_/, ''), observed: observed[key.replace(/^max_/, '')], limit }));
-  return { accepted: failures.length === 0 && report.hygiene_findings.length === 0, observed, limits, failures };
+  const answer = answerContract(report, contract);
+  return { accepted: failures.length === 0 && report.hygiene_findings.length === 0 && answer.accepted, observed, limits, failures, answer_contract: answer };
 }
 
 const input = options(process.argv.slice(2));
@@ -99,7 +101,7 @@ for (const caseDefinition of protocol.cases) {
         stderr_characters: (result.stderr ?? '').length,
         stderr_sha256: createHash('sha256').update(result.stderr ?? '').digest('hex')
       },
-      structural: structural(report, limits),
+      structural: structural(report, limits, caseDefinition.answer_contract),
       trace: report
     });
   } finally {

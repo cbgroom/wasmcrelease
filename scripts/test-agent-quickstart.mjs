@@ -20,6 +20,10 @@ assert.deepEqual(Object.keys(quickstart.routes), [
 const hash = path => createHash('sha256').update(readFileSync(new URL(`../${path}`, import.meta.url))).digest('hex');
 assert.equal(hash('current/wasmc_compiler.wasm'), quickstart.routes['release-orientation'].compiler.sha256);
 assert.equal(hash('standard/wasmc-std/1.4.0/artifact.wasm'), quickstart.routes['library-first-selection'].artifact_sha256);
+assert.equal(hash('catalog/libs-v014.json'), quickstart.routes['library-first-selection'].catalog_sha256);
+assert.equal(quickstart.routes['library-first-selection'].catalog_path,'catalog/libs-v014.json');
+assert.equal(quickstart.routes['library-first-selection'].catalog_snapshot_carried_forward,true);
+assert.match(quickstart.routes['library-first-selection'].resolve,/--catalog v014/);
 const run = script => {
   const result = spawnSync(process.execPath, [script], { cwd: root, encoding: 'utf8' });
   assert.equal(result.status, 0, result.stderr);
@@ -38,8 +42,8 @@ const delta = quickstart.routes['producer-release-u64-delta'];
 assert.equal(delta.producer.commit, '94328ed760f93bf24b595a71facdcc773d43b762');
 assert.equal(delta.producer.implemented, true);
 assert.match(delta.answer_opening, /Producer master: yes/);
-assert.match(delta.answer_opening, /v0\.0\.14 product compiler: no/);
-assert.equal(delta.release_product.version,'v0.0.14');
+assert.match(delta.answer_opening, /v0\.0\.15 product compiler: no/);
+assert.equal(delta.release_product.version,'v0.0.15');
 assert.equal(delta.release_product.lifecycle_authority,'release.json');
 assert.match(delta.char, /not implemented/);
 const routeReadiness=quickstart.routes['release-lib-route-readiness'];

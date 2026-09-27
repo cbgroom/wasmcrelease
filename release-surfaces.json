@@ -191,19 +191,19 @@
         "root": "sdk/wasmc-core-runtime",
         "skill": "sdk/wasmc-core-runtime/SKILL.md",
         "release_status": "published",
-        "immutable_example": "v0.0.14"
+        "immutable_example": "v0.0.15"
       },
       "host-sdk": {
         "root": "sdk/wasmc-host",
         "skill": "sdk/wasmc-host/SKILL.md",
         "release_status": "published",
-        "immutable_example": "v0.0.14"
+        "immutable_example": "v0.0.15"
       },
       "native-cli": {
         "root": "sdk/wasmc-native-compiler",
         "skill": "sdk/wasmc-native-compiler/SKILL.md",
         "release_status": "published",
-        "immutable_example": "v0.0.14",
+        "immutable_example": "v0.0.15",
         "binary_packaging": "CI/development packages are not immutable release assets"
       },
       "lightweight-embedding": {
@@ -262,12 +262,12 @@
   },
   "agent_capability_projection": {
     "schema": "wasmc.release-agent-capabilities/v1",
-    "product_release": "v0.0.14",
+    "product_release": "v0.0.15",
     "guidance_scope": {
-      "status": "included-in-v0.0.14-product",
+      "status": "included-in-v0.0.15-product",
       "included_in_product": true,
       "lifecycle_authority": "release.json and channels/prod.json",
-      "rule": "This frozen projection describes v0.0.14 product capability only. It does not prove the product is the current released, discoverable or installable lifecycle stage."
+      "rule": "This frozen projection describes v0.0.15 product capability only. It does not prove the product is the current released, discoverable or installable lifecycle stage."
     },
     "decision_rule": "A type or feature is usable only at the exact admitted position below. WIT vocabulary, local values, Core lanes, Component profiles, Host bindings and public results are separate claims.",
     "alternative_rule": "Alternatives must preserve semantics. Numeric width or signedness, async behavior, identity, ordering, ownership and failure semantics may change only with explicit application proof; otherwise stop.",
@@ -359,16 +359,16 @@
       }
     },
     "release": {
-      "product": "v0.0.14",
+      "product": "v0.0.15",
       "lifecycle_authority": "release.json",
       "reason": "No new source-free compiler artifact, candidate identity, admission receipt or immutable release contains the producer change.",
-      "v0_0_14_u64_ordinary_source": "unsupported"
+      "v0_0_15_u64_ordinary_source": "unsupported"
     },
     "adjacent_type_decisions": {
-      "u32": "included in the v0.0.14 product compiler; no repair was required",
+      "u32": "included in the v0.0.15 product compiler; no repair was required",
       "char": "not implemented on the cited producer commit and not released; do not substitute arbitrary u32"
     },
-    "answer_rule": "When asked whether u64 is fixed or supported, lead with both authorities: producer master yes, the v0.0.14 product compiler no; read release.json for the current published lifecycle stage."
+    "answer_rule": "When asked whether u64 is fixed or supported, lead with both authorities: producer master yes, the v0.0.15 product compiler no; read release.json for the current published lifecycle stage."
   },
   "lib_ecosystem_control_plane": {
     "schema": "wasmc.lib-ecosystem-control-plane/v1",
@@ -392,7 +392,7 @@
     "rule": "When one route matches the request, read this record first and stop once its evidence answers the task. Do not scan release history, unrelated compatibility identities, implementation tests or broad manifests to reconfirm it. Report every identity in full or omit an identity that the answer does not need.",
     "release-orientation": {
       "intent": "identify the immutable release, public Agent entrypoint and compiler authority",
-      "product_version": "v0.0.14",
+      "product_version": "v0.0.15",
       "public_agent_entrypoint": "AGENTS.md",
       "compiler": {
         "path": "current/wasmc_compiler.wasm",
@@ -404,21 +404,22 @@
         "path": "current/wasmc.mjs",
         "sha256": "6f1cd2f94d66966ed0de6db462432ea82523ab02de0ad956f51be9f6944caffe"
       },
-      "verify_with": ["release.json", "manifest.json", "SHA256SUMS"],
+      "compact_authority": "agent-release-orientation.json",
+      "verify_with": ["agent-release-orientation.json"],
       "mutable_not_product_authority": ["main", "unversioned URLs", "package-index.json.latest"],
       "answer_boundary": "Do not mention unrelated historical artifact digests or shorten any digest."
     },
     "release-lib-route-readiness": {
       "authority_file": "release-lib-route-readiness.json",
       "intent": "decide whether every released Lib package and exported API route is synchronized for a new formal release candidate",
-      "product": {"version":"0.0.14","package_routes":14,"api_routes":108,"candidate_extras":0,"formal_release_ready":true,"blocking_conditions":[]},
+      "product": {"version":"0.0.15","package_routes":14,"api_routes":108,"candidate_extras":0,"formal_release_ready":true,"blocking_conditions":[]},
       "active_search": {"identity":"wasmc:lib-search@0.2.0","states":{"qualified":true,"admitted":true,"included_in_product":true,"qualified_before_freeze":true,"admitted_before_freeze":true},"api_routes":3},
       "lifecycle_authority": {"current_release":"release.json","stages":"channels/dev.json, channels/main.json, channels/prod.json","rule":"Never infer released, discoverable or installable from this frozen product projection."},
       "valid_resolution_count": 1,
-      "only_valid_closure": "Verify the exact v0.0.14 candidate and route closure, then read the channel authorities for lifecycle state. Every promotion must preserve the same product digest set.",
+      "only_valid_closure": "Verify the exact v0.0.15 candidate and route closure, then read the channel authorities for lifecycle state. Every promotion must preserve the same product digest set.",
       "forbidden_shortcuts": ["treat admission as release", "infer lifecycle state from product presence or an admission snapshot", "rebuild product bytes during promotion", "rewrite any immutable release or prerelease tag"],
-      "authorities": ["admission/lib-search-v020-v014-admission.json", "catalog/lib-route-closure.json", "channels/candidates/0.0.14.json", "release.json", "channels/prod.json"],
-      "check_commands": ["node scripts/lib-route-closure.mjs --check", "node scripts/release-candidate.mjs verify channels/candidates/0.0.14.json"],
+      "authorities": ["admission/lib-search-v020-v014-admission.json", "catalog/lib-route-closure.json", "channels/candidates/0.0.15.json", "release.json", "channels/prod.json"],
+      "check_commands": ["node scripts/lib-route-closure.mjs --check", "node scripts/release-candidate.mjs verify channels/candidates/0.0.15.json"],
       "answer_boundary": "Stop after reporting the product closure and the exact lifecycle state read from release.json/channels; never infer a transition."
     },
     "ordinary-source-pair": {
@@ -448,7 +449,7 @@
     },
     "released-base64": {
       "intent": "find and approve the released Base64 capability",
-      "product_release": "v0.0.14",
+      "product_release": "v0.0.15",
       "package": "wasmc:std@1.4.0",
       "root": "standard/wasmc-std/1.4.0",
       "apis": [
@@ -464,9 +465,10 @@
         "artifact": "standard/wasmc-std/1.4.0/artifact.wasm",
         "artifact_sha256": "f8a8ce447f776a47680e02e19ea3a69827edbbc46e01985803ce3d3df51178d7"
       },
-      "resolve_command": "node scripts/wasmc-lib.mjs resolve wasmc-std 1.4.0 --catalog-sha256 13fe84e7faf77467b45d97460e9cd9fa1ba7d17c17b0175fb16ce5d694c82d82 --wit-sha256 d565f00e91c36da68da3645ec5231dd11d1b25299a3ba5cbe3adbd9f5760d91d --artifact-sha256 f8a8ce447f776a47680e02e19ea3a69827edbbc46e01985803ce3d3df51178d7",
+      "catalog": {"release_snapshot":"v0.0.14","path":"catalog/libs-v014.json","sha256":"8368ec8be4b13fadb5959d6495e70916894c476626caf8519b35599041251368","carried_forward":true},
+      "resolve_command": "node scripts/wasmc-lib.mjs resolve wasmc-std 1.4.0 --catalog v014 --catalog-sha256 8368ec8be4b13fadb5959d6495e70916894c476626caf8519b35599041251368 --wit-sha256 d565f00e91c36da68da3645ec5231dd11d1b25299a3ba5cbe3adbd9f5760d91d --artifact-sha256 f8a8ce447f776a47680e02e19ea3a69827edbbc46e01985803ce3d3df51178d7",
       "states": {"qualified": true, "admitted": true, "released": true, "discoverable": true, "installable": true},
-      "catalog_snapshot_boundary": "The resolver's v0.0.9 snapshot is a pinned historical delivery index retained by this product; it is not lifecycle authority and need not be reported unless asked.",
+      "catalog_snapshot_boundary": "The exact v0.0.14 package catalog is carried forward unchanged; package selection authority and current release lifecycle authority remain separate.",
       "behavior_command": "node examples/base64/run.mjs",
       "install_reference": "catalog/INSTALL.md",
       "answer_boundary": "Do not investigate historical catalog snapshot identities, Core ABI indices or unrelated engine versions unless the user asks."
@@ -510,8 +512,8 @@
         "qualified": true,
         "admitted": true,
         "released": true,
-        "discoverable": false,
-        "installable": false,
+        "discoverable": true,
+        "installable": true,
         "supported_routes": [
           "source-free-rust-component",
           "public-rust-host-sdk",
@@ -520,5 +522,5 @@
       }
     }
   },
-  "release_version": "0.0.14"
+  "release_version": "0.0.15"
 }

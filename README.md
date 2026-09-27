@@ -10,7 +10,7 @@
 
 Source-free public packages for the private-source `wasmc` compiler.
 
-This README is frozen inside the v0.0.14 product set. Product version and
+This README is frozen inside the v0.0.15 product set. Product version and
 lifecycle stage are separate: read `release.json` and `channels/prod.json` for
 the current released tag. Hardcoded v0.0.13 references retained below describe
 historical feature provenance; they are not current-release authority.
@@ -144,13 +144,13 @@ TLS+HTTP/router path. Its contract is
 regressions are same-platform advisory signals, while required-platform
 presence, external-client success and expected HTTP status remain hard gates.
 
-The v0.0.14 product Agent guidance starts with
+The v0.0.15 product Agent guidance starts with
 [Library-first discovery](skills/wasmc-lib-discovery/SKILL.md) before implementing
 reusable algorithms/data operations. It teaches real search hits, exact selection,
 installation and supported execution, with an executable documentation regression.
 The guidance is integrity-bound in this release; earlier tags stay frozen.
 
-Frozen product version: **v0.0.14 LibSearch route-complete product**.
+Frozen product version: **v0.0.15 Agent-learning and LibSearch route-complete product**.
 The [channel policy](docs/RELEASE_CHANNELS.md) defines immutable `-dev.N` →
 `-main.N` → suffix-free prod. Read `release.json` for the default prod;
 previous tags are immutable and prod0.0.x does not imply stable1.x.
@@ -159,12 +159,13 @@ previous tags are immutable and prod0.0.x does not imply stable1.x.
 Search now runs inside the Lib's Wasm, with no runtime catalog/config input:
 `node scripts/wasmc-lib.mjs search "base64 decode"`. It returns v2 typed `hits`
 (packages and APIs), rather than the older v1 package-only JSON. Exact resolve/
-install still use their separately pinned v0.0.9 catalog; search does not select
-a version or authorize installation. The new Lib has zero imports and a portable
+install use the exact carried-forward v0.0.14 catalog with explicit catalog,
+WIT and artifact digests; search does not select a version or authorize
+installation. The Lib has zero imports and a portable
 Core/Component value view. It is not a shared-memory/CoreLib fast ABI and does
 not solve Wasmi/Node18 compatibility of the existing Std1.4.0.
 
-The v0.0.14 product reuses compiler bytes built from exact private source
+The v0.0.15 product reuses compiler bytes built from exact private source
 `e69abb73f667f3810b0c40937fd1a1e2d04d4255` and the admitted v0.0.11 Data
 Foundation Lib bytes. Use `current/` for the latest compiler facade; `dist/` and
 `package/` are frozen v0.0.4 compatibility trees. The public Wasmi/Wasmtime Core

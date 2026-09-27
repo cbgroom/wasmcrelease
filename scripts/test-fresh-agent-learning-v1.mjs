@@ -1,7 +1,15 @@
 import assert from 'node:assert/strict';
-import { evaluateCohort, readProtocol, validateProtocol } from './fresh-agent-learning-v1.mjs';
+import { answerContract, evaluateCohort, readProtocol, validateProtocol } from './fresh-agent-learning-v1.mjs';
 
 const protocol = validateProtocol(readProtocol());
+const exactAnswer = answerContract({final_answer:{text:'wasmc:std@1.4.0 d565f00e91c36da68da3645ec5231dd11d1b25299a3ba5cbe3adbd9f5760d91d'}},{
+  required_literals:['wasmc:std@1.4.0'],
+  allowed_sha256:['d565f00e91c36da68da3645ec5231dd11d1b25299a3ba5cbe3adbd9f5760d91d'],
+  allowed_identity_tokens:['wasmc:std@1.4.0']
+});
+assert.equal(exactAnswer.accepted,true);
+assert.equal(answerContract({final_answer:{text:'wamsc-system-telemetry@0.0.1'}},{allowed_identity_tokens:['wasmc-system-telemetry@0.0.1']}).accepted,false);
+assert.equal(answerContract({final_answer:{text:'d565f00e91c36da68da68da3645ec5231dd11d1b25299a3ba5cbe3adbd9f5760d91d'}},{allowed_sha256:['d565f00e91c36da68da3645ec5231dd11d1b25299a3ba5cbe3adbd9f5760d91d']}).accepted,false);
 const traceFor = caseClass => ({
   tool_calls: caseClass === 'decision' ? 2 : 5,
   assistant_turns: caseClass === 'decision' ? 2 : 4,

@@ -20,7 +20,7 @@ exported WIT API from the staged product and requires exact catalog, package
 route and API route equality. Do not accept a manually sampled query list or a
 package-level hit as proof that all APIs were synchronized.
 
-The v0.0.14 product includes LibSearch 0.2.0. Its snapshot covers 14 identities
+The v0.0.15 product includes LibSearch 0.2.0. Its snapshot covers 14 identities
 including itself / 122 package and API entries. Product inclusion and admission
 do not establish the current released/default lifecycle stage; read
 `release.json` and `channels/prod.json`. Historical v0.0.13 contains 0.1.0.

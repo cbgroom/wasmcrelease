@@ -26,7 +26,12 @@
       "class": "decision",
       "critical": true,
       "prompt": "Using only this pinned public checkout, identify the current immutable WAsmC release, the first public Agent entrypoint, and the exact authority you would verify before compiling. Do not use private implementation knowledge.",
-      "oracle": "Select the exact pinned release and public entrypoint without using mutable main as product authority or private implementation knowledge."
+      "oracle": "Select the exact pinned release and public entrypoint without using mutable main as product authority or private implementation knowledge.",
+      "answer_contract": {
+        "required_literals": ["AGENTS.md", "agent-release-orientation.json", "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90"],
+        "allowed_sha256": ["93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90", "6f1cd2f94d66966ed0de6db462432ea82523ab02de0ad956f51be9f6944caffe"],
+        "allowed_identity_tokens": []
+      }
     },
     {
       "id": "position-aware-capability-negative",
@@ -47,14 +52,23 @@
       "class": "decision",
       "critical": true,
       "prompt": "For direct WAsmC source use of the system-telemetry sampler resource, report qualified, admitted, released, discoverable and installable separately. Stop at the first missing authority and distinguish related released routes.",
-      "oracle": "Keep qualified, admitted, released, discoverable and installable separate and stop at the first missing authority."
+      "oracle": "Keep qualified, admitted, released, discoverable and installable separate and stop at the first missing authority.",
+      "answer_contract": {
+        "required_literals": ["wasmc-system-telemetry@0.0.1", "qualified", "admitted", "released", "discoverable", "installable"],
+        "allowed_identity_tokens": ["wasmc-system-telemetry@0.0.1", "wasmc:system-telemetry@0.0.1", "wasmc-source-direct-resource-methods"]
+      }
     },
     {
       "id": "library-first-selection",
       "class": "execution",
       "critical": false,
       "prompt": "Find a released reusable Base64 capability through the pinned public Library-first path. Show the exact selected package/API identity and the verification steps without treating search as approval.",
-      "oracle": "Search, inspect, approve an exact package identity, resolve or install only when published, then verify imports and behavior."
+      "oracle": "Search, inspect, approve an exact package identity, resolve or install only when published, then verify imports and behavior.",
+      "answer_contract": {
+        "required_literals": ["wasmc:std@1.4.0", "d565f00e91c36da68da3645ec5231dd11d1b25299a3ba5cbe3adbd9f5760d91d", "f8a8ce447f776a47680e02e19ea3a69827edbbc46e01985803ce3d3df51178d7"],
+        "allowed_sha256": ["8368ec8be4b13fadb5959d6495e70916894c476626caf8519b35599041251368", "d565f00e91c36da68da3645ec5231dd11d1b25299a3ba5cbe3adbd9f5760d91d", "f8a8ce447f776a47680e02e19ea3a69827edbbc46e01985803ce3d3df51178d7"],
+        "allowed_identity_tokens": ["wasmc:std@1.4.0", "wasmc-std", "wasmc-lib.mjs"]
+      }
     },
     {
       "id": "host-authority-boundary",

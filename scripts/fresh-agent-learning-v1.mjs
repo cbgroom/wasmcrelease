@@ -19,6 +19,12 @@ export function validateProtocol(protocol) {
   assert.ok(protocol.cases.every(row => typeof row.prompt === 'string' && row.prompt.length > 40));
   assert.ok(protocol.cases.some(row => row.class === 'decision' && row.critical));
   assert.ok(protocol.cases.some(row => row.class === 'execution' && row.critical));
+  for (const row of protocol.cases.filter(row => row.answer_contract)) {
+    assert.ok(Array.isArray(row.answer_contract.required_literals));
+    assert.ok(row.answer_contract.required_literals.every(value => typeof value === 'string' && value.length > 0));
+    if (row.answer_contract.allowed_sha256) assert.ok(row.answer_contract.allowed_sha256.every(value => /^[0-9a-f]{64}$/.test(value)));
+    if (row.answer_contract.allowed_identity_tokens) assert.ok(row.answer_contract.allowed_identity_tokens.every(value => typeof value === 'string' && value.length > 0));
+  }
   const gate = protocol.cohort_gate;
   assert.equal(gate.agent_implementation, 'pi');
   assert.deepEqual(gate.required_models, [
@@ -38,6 +44,28 @@ export function validateProtocol(protocol) {
   assert.match(gate.wall_clock_policy, /do not use provider or network latency alone/);
   assert.match(protocol.change_control.no_overfit, /one named model/);
   return protocol;
+}
+
+export function answerContract(report, contract = {}) {
+  const answer = report.final_answer?.text ?? '';
+  const failures = [];
+  for (const literal of contract.required_literals ?? []) {
+    if (!answer.includes(literal)) failures.push({ metric: 'required_literal', expected: literal });
+  }
+  const digests = [...answer.matchAll(/\b[0-9a-f]{32,}\b/gi)].map(row => row[0].toLowerCase());
+  if (contract.allowed_sha256) {
+    const allowed = new Set(contract.allowed_sha256);
+    for (const digest of digests) {
+      if (digest.length !== 64) failures.push({ metric: 'invalid_sha256_length', observed: digest });
+      else if (!allowed.has(digest)) failures.push({ metric: 'unknown_sha256', observed: digest });
+    }
+  }
+  const identities = [...answer.matchAll(/\b(?:wasmc|wamsc)(?::|-)[a-z0-9][a-z0-9.-]*(?:@\d+\.\d+\.\d+)?\b/gi)].map(row => row[0]);
+  if (contract.allowed_identity_tokens) {
+    const allowed = new Set(contract.allowed_identity_tokens);
+    for (const identity of identities) if (!allowed.has(identity)) failures.push({ metric: 'unknown_identity', observed: identity });
+  }
+  return { accepted: failures.length === 0, observed: { digests, identities }, failures };
 }
 
 function withinEfficiency(observed, limits) {

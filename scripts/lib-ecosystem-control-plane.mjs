@@ -17,9 +17,10 @@ const args = new Set(process.argv.slice(2));
 assert(args.size === 1 && (args.has('--write') || args.has('--check')), 'usage: lib-ecosystem-control-plane.mjs --write|--check');
 
 const release = readJson('release.json');
+const routeCompleteRelease = ['0.0.14', '0.0.15'].includes(release.version);
 const surfaces = readJson('release-surfaces.json');
-const productionCatalogPath = release.version === '0.0.14' ? 'catalog/libs-v014.json' : 'catalog/libs-v009.json';
-const currentSideCatalogPath = release.version === '0.0.14' ? 'catalog/libs-v014.json' : 'catalog/libs-v013.json';
+const productionCatalogPath = routeCompleteRelease ? 'catalog/libs-v014.json' : 'catalog/libs-v009.json';
+const currentSideCatalogPath = routeCompleteRelease ? 'catalog/libs-v014.json' : 'catalog/libs-v013.json';
 const installCatalog = readJson(productionCatalogPath);
 const currentSideCatalog = existsSync(join(root, currentSideCatalogPath)) ? readJson(currentSideCatalogPath) : null;
 const searchCandidateAdmission = readJson('admission/lib-search-v020-v014-admission.json');
@@ -43,7 +44,7 @@ const searchPage = offset => {
   assert.equal(run.status, 0, run.stderr);
   return JSON.parse(run.stdout);
 };
-const searchPages = release.version === '0.0.14' ? [searchPage(0), searchPage(64)] : [searchPage(0)];
+const searchPages = routeCompleteRelease ? [searchPage(0), searchPage(64)] : [searchPage(0)];
 const search = {...searchPages[0],hits:searchPages.flatMap(page=>page.hits)};
 const discoverable = new Set(search.hits.filter(row => !row.signature).map(row => row.identity));
 const installable = new Set(installCatalog.packages.map(row => `${row.wit_package}`));
@@ -131,13 +132,13 @@ const packages = packageRoots.map(packageRoot => {
     current_side_remediation: {
       resolvable_installable: isCurrentSideInstallable,
       authority: isCurrentSideInstallable ? currentSideCatalogPath : null,
-      included_in_immutable_tag: release.version === '0.0.14' && isReleased
+      included_in_immutable_tag: routeCompleteRelease && isReleased
     },
     state_evidence: {
       qualification: approved ? `${metadataPath}#admission` : isReleased ? `${release.staged_product_manifest} immutable product inclusion` : null,
       admission: approved ? `${metadataPath}#admission` : isReleased ? `${release.staged_product_manifest} immutable product inclusion` : null,
       release: isReleased ? `release.json -> ${release.staged_product_manifest}` : null,
-      discovery: isDiscoverable ? (release.version === '0.0.14' ? 'standard/wasmc-lib-search/0.2.0 + examples/lib-search/index-v014-v020.lsi' : 'standard/wasmc-lib-search/0.1.0 + examples/lib-search/index.lsi') : null,
+      discovery: isDiscoverable ? (routeCompleteRelease ? 'standard/wasmc-lib-search/0.2.0 + examples/lib-search/index-v014-v020.lsi' : 'standard/wasmc-lib-search/0.1.0 + examples/lib-search/index.lsi') : null,
       installation: isInstallable ? productionCatalogPath : null
     },
     stopping_conditions: stoppingConditions
@@ -182,7 +183,7 @@ const model = {
     immutable_product: `release.json -> ${release.staged_product_manifest}`,
     capability_projection: 'release-surfaces.json#agent_capability_projection',
     producer_deltas: 'release-surfaces.json#producer_capability_delta',
-    discovery_snapshot: release.version === '0.0.14' ? 'standard/wasmc-lib-search/0.2.0 + examples/lib-search/index-v014-v020.lsi' : 'standard/wasmc-lib-search/0.1.0 + examples/lib-search/index.lsi',
+    discovery_snapshot: routeCompleteRelease ? 'standard/wasmc-lib-search/0.2.0 + examples/lib-search/index-v014-v020.lsi' : 'standard/wasmc-lib-search/0.1.0 + examples/lib-search/index.lsi',
     resolver_install_catalog: productionCatalogPath,
     rule: 'Package existence, qualification, admission, release, discovery, installation, engine compatibility and Host authority are independent claims.'
   },
@@ -218,10 +219,10 @@ const model = {
   type_position_authority: surfaces.agent_capability_projection,
   producer_deltas: [surfaces.producer_capability_delta],
   packages,
-  successor_candidates: release.version === '0.0.14' ? [] : [searchCandidate],
+  successor_candidates: routeCompleteRelease ? [] : [searchCandidate],
   ecosystem_stopping_conditions: [
     'Public third-party build, admission and publication are not closed.',
-    ...(release.version === '0.0.14' ? [] : ['The v0.0.14 future-product catalog admits LibSearch 0.2.0 and closes all fourteen package routes, but neither the candidate nor its catalog is released or the public default.']),
+    ...(routeCompleteRelease ? [] : ['The v0.0.14 future-product catalog admits LibSearch 0.2.0 and closes all fourteen package routes, but neither the candidate nor its catalog is released or the public default.']),
     'Byte-identical Rust-backed Lib reproduction is currently scoped to an exact toolchain environment; producer commit plus Cargo.lock alone did not reproduce the historical artifact hash.',
     'Missing artifact-bound engine profiles must not be replaced by inferred version ranges.',
     'A Component or Host-SDK surface does not imply ordinary WAsmC source binding support.'
@@ -231,15 +232,15 @@ const encoded = `${JSON.stringify(model, null, 2)}\n`;
 const readinessModel = {
   schema:'wasmc.release-lib-route-readiness/v1',
   route:'release-lib-route-readiness',
-  request:'does this v0.0.14 product set bind every included Lib package and API route, and where is its lifecycle stage decided',
-  product:{version:'0.0.14',package_routes:retainedRouteClosure.search_index.package_routes,api_routes:retainedRouteClosure.search_index.api_routes,candidate_extras:retainedRouteClosure.candidate_extras.length,formal_release_ready:retainedRouteClosure.claims.formal_release_ready,blocking_conditions:retainedRouteClosure.blocking_conditions},
+  request:`does this v${release.version} product set bind every included Lib package and API route, and where is its lifecycle stage decided`,
+  product:{version:release.version,package_routes:retainedRouteClosure.search_index.package_routes,api_routes:retainedRouteClosure.search_index.api_routes,candidate_extras:retainedRouteClosure.candidate_extras.length,formal_release_ready:retainedRouteClosure.claims.formal_release_ready,blocking_conditions:retainedRouteClosure.blocking_conditions},
   active_search:{identity:searchCandidate.identity,states:{qualified:true,admitted:true,included_in_product:true,qualified_before_freeze:true,admitted_before_freeze:true},api_routes:retainedRouteClosure.release_bindings.find(row=>row.identity===searchCandidate.identity)?.api_routes??0},
   lifecycle_authority:{current_release:'release.json',stages:'channels/dev.json, channels/main.json, channels/prod.json',rule:'Never infer released, discoverable or installable from this frozen product projection.'},
   valid_resolution_count:1,
-  only_valid_closure:'Verify the exact v0.0.14 candidate and route closure, then read the channel authorities for lifecycle state. Every promotion must preserve the same product digest set.',
+  only_valid_closure:`Verify the exact v${release.version} candidate and route closure, then read the channel authorities for lifecycle state. Every promotion must preserve the same product digest set.`,
   forbidden_shortcuts:['treat admission as release','infer lifecycle state from product presence or an admission snapshot','rebuild product bytes during promotion','rewrite any immutable release or prerelease tag'],
-  authorities:['admission/lib-search-v020-v014-admission.json','catalog/lib-route-closure.json','channels/candidates/0.0.14.json','release.json','channels/prod.json'],
-  check_commands:['node scripts/lib-route-closure.mjs --check','node scripts/release-candidate.mjs verify channels/candidates/0.0.14.json'],
+  authorities:['admission/lib-search-v020-v014-admission.json','catalog/lib-route-closure.json',release.staged_product_manifest,'release.json','channels/prod.json'],
+  check_commands:['node scripts/lib-route-closure.mjs --check',`node scripts/release-candidate.mjs verify ${release.staged_product_manifest}`],
   stop:'This record is sufficient for the matching readiness decision. Do not scan manifests, histories or implementation scripts unless one of its check commands fails.'
 };
 const readinessEncoded = `${JSON.stringify(readinessModel, null, 2)}\n`;

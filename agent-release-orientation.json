@@ -1,0 +1,46 @@
+{
+  "schema": "wasmc.agent-release-orientation/v1",
+  "scope": "Complete compact authority for release orientation; do not read the full release artifact inventory unless a listed verification fails.",
+  "release": {
+    "version": "0.0.14",
+    "tag": "v0.0.14",
+    "stage": "prod",
+    "stable": false,
+    "release_commit": "e69abb73f667f3810b0c40937fd1a1e2d04d4255",
+    "product_candidate_commit": "6cb3aafea5334ac27648af0e9ccd684fe721ccb5",
+    "product_manifest": "channels/candidates/0.0.14.json",
+    "product_set_sha256": "a09cd071eb293e636bf8b858b0a56570bfdd8a53373544eca68fda8ea825d4d2"
+  },
+  "public_agent_entrypoint": "AGENTS.md",
+  "compiler": {
+    "path": "current/wasmc_compiler.wasm",
+    "bytes": 1351666,
+    "sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90",
+    "imports": 0
+  },
+  "facade": {
+    "path": "current/wasmc.mjs",
+    "sha256": "6f1cd2f94d66966ed0de6db462432ea82523ab02de0ad956f51be9f6944caffe"
+  },
+  "library_catalog": {
+    "release_snapshot": "v0.0.14",
+    "path": "catalog/libs-v014.json",
+    "sha256": "8368ec8be4b13fadb5959d6495e70916894c476626caf8519b35599041251368",
+    "carried_forward": true
+  },
+  "exact_authorities": [
+    "agent-release-orientation.json",
+    "release.json",
+    "channels/prod.json",
+    "channels/candidates/0.0.14.json",
+    "manifest.json",
+    "SHA256SUMS"
+  ],
+  "verify": "node scripts/agent-release-orientation.mjs --check",
+  "mutable_not_authority": [
+    "main",
+    "unversioned URLs",
+    "package-index.json.latest"
+  ],
+  "stop": "For release orientation, report these exact identities after the check passes and stop. Do not scan the full manifest, catalogs, history or implementation tests."
+}

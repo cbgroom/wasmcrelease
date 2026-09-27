@@ -29,6 +29,7 @@ const quickstartModel=JSON.parse(read(quickstart.path));
 const routeReadinessModel=JSON.parse(read('release-lib-route-readiness.json'));
 assert.equal(quickstartModel.schema,quickstart.schema);
 assert.equal(quickstartModel.routes['release-orientation'].compiler.sha256,taskRoutes['release-orientation'].compiler.sha256);
+assert.equal(quickstartModel.routes['release-orientation'].verify_with[0],taskRoutes['release-orientation'].compact_authority);
 assert.deepEqual(quickstartModel.routes['release-lib-route-readiness'].product,taskRoutes['release-lib-route-readiness'].product);
 assert.deepEqual(quickstartModel.routes['release-lib-route-readiness'].active_search,taskRoutes['release-lib-route-readiness'].active_search);
 assert.equal(quickstartModel.routes['release-lib-route-readiness'].only_valid_closure,taskRoutes['release-lib-route-readiness'].only_valid_closure);
@@ -56,7 +57,9 @@ assert.equal(taskRoutes['released-base64'].product_release,'v'+model.release_ver
 assert.equal(taskRoutes['released-base64'].states.installable,true);
 assert.equal(taskRoutes['released-base64'].search_is_selection_authority,false);
 assert.equal(taskRoutes['released-base64'].behavior_command,'node examples/base64/run.mjs');
-assert.match(taskRoutes['released-base64'].resolve_command,/13fe84e7faf77467b45d97460e9cd9fa1ba7d17c17b0175fb16ce5d694c82d82/);
+assert.equal(taskRoutes['released-base64'].catalog.path,'catalog/libs-v014.json');
+assert.equal(taskRoutes['released-base64'].catalog.sha256,'8368ec8be4b13fadb5959d6495e70916894c476626caf8519b35599041251368');
+assert.match(taskRoutes['released-base64'].resolve_command,/--catalog v014/);
 assert.match(taskRoutes['host-authority'].decision,/application-owned exact allowlist/);
 assert.equal(projection?.guidance_scope?.included_in_product,true);
 assert.equal(projection?.guidance_scope?.lifecycle_authority,'release.json and channels/prod.json');
@@ -76,8 +79,8 @@ assert.equal(producerDelta?.producer?.commit,'94328ed760f93bf24b595a71facdcc773d
 assert.equal(producerDelta?.producer?.status,'verified-master-implementation');
 assert.equal(producerDelta?.producer?.validation?.strict_mst,true);
 assert.equal(producerDelta?.release?.lifecycle_authority,'release.json');
-assert.equal(producerDelta?.release?.v0_0_14_u64_ordinary_source,'unsupported');
-assert.match(producerDelta?.answer_rule??'',/producer master yes, the v0\.0\.14 product compiler no/);
+assert.equal(producerDelta?.release?.v0_0_15_u64_ordinary_source,'unsupported');
+assert.match(producerDelta?.answer_rule??'',/producer master yes, the v0\.0\.15 product compiler no/);
 assert.match(producerDelta?.adjacent_type_decisions?.u32??'',/included/);
 assert.match(producerDelta?.adjacent_type_decisions?.char??'',/not implemented/);
 assert.equal(ecosystem?.schema,'wasmc.lib-ecosystem-control-plane/v1');
@@ -85,14 +88,14 @@ assert.equal(ecosystem?.path,'lib-ecosystem-control-plane.json');
 assert(existsSync(resolve(root,ecosystem.path)),'Lib ecosystem control plane is missing');
 const ecosystemModel=JSON.parse(read(ecosystem.path));
 assert.equal(ecosystemModel.schema,ecosystem.schema);
-const prod014=ecosystemModel.release.version==='0.0.14';
-assert.equal(ecosystemModel.inventory.packages,prod014?14:13);
-assert.equal(ecosystemModel.inventory.released,prod014?14:13);
-assert.equal(ecosystemModel.inventory.discoverable,prod014?14:12);
-assert.equal(ecosystemModel.inventory.installable,prod014?14:4);
-assert.equal(ecosystemModel.inventory.current_side_installable,prod014?14:13);
+const routeCompleteRelease=['0.0.14','0.0.15'].includes(ecosystemModel.release.version);
+assert.equal(ecosystemModel.inventory.packages,routeCompleteRelease?14:13);
+assert.equal(ecosystemModel.inventory.released,routeCompleteRelease?14:13);
+assert.equal(ecosystemModel.inventory.discoverable,routeCompleteRelease?14:12);
+assert.equal(ecosystemModel.inventory.installable,routeCompleteRelease?14:4);
+assert.equal(ecosystemModel.inventory.current_side_installable,routeCompleteRelease?14:13);
 assert.equal(ecosystemModel.inventory.current_side_inventory_matches_release,true);
-assert.equal(ecosystemModel.inventory.inventory_is_unified,prod014);
+assert.equal(ecosystemModel.inventory.inventory_is_unified,routeCompleteRelease);
 assert.deepEqual(ecosystemModel.route_closure,{
   authority:'catalog/lib-route-closure.json',
   release_packages:14,
@@ -105,8 +108,8 @@ assert.deepEqual(ecosystemModel.route_closure,{
   formal_release_ready:true,
   blocking_conditions:[]
 });
-assert.equal(ecosystemModel.successor_candidates.length,prod014?0:1);
-if(!prod014){
+assert.equal(ecosystemModel.successor_candidates.length,routeCompleteRelease?0:1);
+if(!routeCompleteRelease){
   const libSearchSuccessor=ecosystemModel.successor_candidates[0];
   assert.equal(libSearchSuccessor.identity,'wasmc:lib-search@0.2.0');
   assert.equal(libSearchSuccessor.build_tool_commit,'f6fc94432101250b8583834b51229bedb1cd8314');
