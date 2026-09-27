@@ -422,6 +422,34 @@ for (const state of Object.values(linuxDeviceIoReceipt.evidence.device_backed_ga
 }
 assert.ok(linuxDeviceIoReceipt.evidence.performance_regression.vector_write_mib_per_second >= linuxDeviceIoReceipt.evidence.performance_regression.minimum_mib_per_second);
 
+const linuxX86DeviceIoReceipt = JSON.parse(fs.readFileSync("admission/host-lib-defined-boundary-v1/linux-x86_64-device-io-v7.json", "utf8"));
+assert.equal(linuxX86DeviceIoReceipt.schema, "wasmc.host-lib-defined-boundary-linux-qualification/v7");
+assert.equal(linuxX86DeviceIoReceipt.status, "linux-x86_64-ioctl-call-shapes-and-vectored-write-ci-qualified-not-admitted-not-released");
+assert.equal(linuxX86DeviceIoReceipt.workflow.run_id, 36302980800);
+assert.equal(linuxX86DeviceIoReceipt.workflow.conclusion, "success");
+assert.equal(linuxX86DeviceIoReceipt.admitted, false);
+assert.equal(linuxX86DeviceIoReceipt.released, false);
+for (const revision of [linuxX86DeviceIoReceipt.implementation_commit, linuxX86DeviceIoReceipt.qualified_commit]) {
+  execFileSync("git", ["cat-file", "-e", `${revision}^{commit}`]);
+  execFileSync("git", ["merge-base", "--is-ancestor", revision, "HEAD"]);
+}
+for (const [relative, expected] of Object.entries(linuxX86DeviceIoReceipt.source)) {
+  assert.equal(
+    digestAt(linuxX86DeviceIoReceipt.implementation_commit, relative),
+    expected,
+    `${relative}: retained x86_64 device-I/O Linux qualification source drift`,
+  );
+}
+assert.equal(linuxX86DeviceIoReceipt.evidence.status, "PASS");
+assert.equal(linuxX86DeviceIoReceipt.evidence.fixed_executor_domain_apis, 0);
+assert.deepEqual(linuxX86DeviceIoReceipt.evidence.ioctl_call_shapes, linuxDeviceIoReceipt.evidence.ioctl_call_shapes);
+assert.equal(linuxX86DeviceIoReceipt.evidence.single_syscall_vectored_write, true);
+assert.equal(linuxX86DeviceIoReceipt.evidence.vectored_write_segments, 64);
+assert.equal(linuxX86DeviceIoReceipt.evidence.malformed_vectored_write_rejection, true);
+assert.equal(linuxX86DeviceIoReceipt.evidence.generation_checked_stale_vectored_write_rejection, true);
+assert.equal(linuxX86DeviceIoReceipt.evidence.fixed_executor_unchanged_from_v2_v3_v4_v5_v6, true);
+assert.ok(linuxX86DeviceIoReceipt.evidence.performance_regression.vector_write_mib_per_second >= linuxX86DeviceIoReceipt.evidence.performance_regression.minimum_mib_per_second);
+
 const oldCandidate = spawnSync(
   process.execPath,
   ["scripts/release-candidate.mjs", "verify", "channels/candidates/0.0.15.json"],
@@ -451,6 +479,7 @@ console.log(JSON.stringify({
   retained_linux_aarch64_async_readiness_remediated_qualification: linuxAsyncRemediatedReceipt.implementation_commit,
   retained_linux_x86_64_async_readiness_qualification: linuxX86AsyncReceipt.qualified_commit,
   retained_linux_aarch64_device_io_qualification: linuxDeviceIoReceipt.implementation_commit,
+  retained_linux_x86_64_device_io_qualification: linuxX86DeviceIoReceipt.qualified_commit,
   old_candidate_rejects_product_drift: true,
   lifecycle: "architecture-workstream-not-admitted-not-released",
 }));

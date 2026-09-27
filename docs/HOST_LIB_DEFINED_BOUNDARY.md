@@ -1,6 +1,6 @@
 # Lib-defined Host boundary workstream
 
-Status: **ioctl call-shape and vectored-write Linux aarch64 qualified; x86_64 pending / not admitted / not released**.
+Status: **ioctl call-shape and vectored-write Linux aarch64/x86_64 qualified / not admitted / not released**.
 
 This workstream replaces domain growth in the Rust Host with a fixed,
 domain-neutral execution boundary. It does not modify the immutable v0.0.15
@@ -208,8 +208,8 @@ rejection and zero remaining resources/operations/windows.
 
 The mapped-window, epoll-readiness, kernel-splice and asynchronous-readiness
 successors are qualified on local Linux aarch64 and independent GitHub Ubuntu
-x86_64. The ioctl call-shape and vectored-write successor is currently qualified
-only on local Linux aarch64; x86_64 remains pending. WIT is parsed by pinned
+x86_64. The ioctl call-shape and vectored-write successor is also qualified on
+local Linux aarch64 and independent GitHub Ubuntu x86_64. WIT is parsed by pinned
 `wasm-tools` before native qualification. Wasm lowering, the Host Completion bridge and
 late-delivery drain, `io_uring`, direct guest-window zero-copy, non-Linux
 evidence, admission, catalog publication and immutable release remain pending.
@@ -289,3 +289,8 @@ The ioctl call-shape and vectored-write Linux aarch64 receipt is
 to implementation commit
 `b9c5c52668131765f8a3539b96f8241320462b27`. It explicitly retains real uinput,
 UHID, hidraw and USB Gadget device-backed qualification as pending.
+
+The ioctl call-shape and vectored-write Linux x86_64 receipt is
+`admission/host-lib-defined-boundary-v1/linux-x86_64-device-io-v7.json`, bound
+to successful workflow run `36302980800` at commit
+`6e171c3bd1f85e510618d7f23ef4ec4c3303ddb5`.

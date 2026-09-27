@@ -1,0 +1,80 @@
+{
+  "schema": "wasmc.host-lib-defined-boundary-linux-qualification/v7",
+  "status": "linux-x86_64-ioctl-call-shapes-and-vectored-write-ci-qualified-not-admitted-not-released",
+  "date": "2026-09-27",
+  "implementation_commit": "b9c5c52668131765f8a3539b96f8241320462b27",
+  "qualified_commit": "6e171c3bd1f85e510618d7f23ef4ec4c3303ddb5",
+  "system_lib_identity": "wasmc:system-linux-endpoint@0.0.1-dev.1",
+  "source": {
+    ".github/workflows/host-layout.yml": "4cf2ed92876409f8464e91b0f5bad0c0aa50e4c6d9e2ee0c78fc425f72bd19ae",
+    "host/runtime/lib-boundary/native-linux/Cargo.lock": "5c1fceda2528f2294cc116da2a600a8d6c08b41b86f7b4331f7e7408dfb47c59",
+    "host/runtime/lib-boundary/native-linux/Cargo.toml": "51f247df82e66bc6636f8efb5d1bfa987c845a80185a831dc6dd9261caf10f3d",
+    "host/runtime/lib-boundary/native-linux/src/main.rs": "66b93a6e7c3e70a8315528f7d2917ea9ed39199f2dd9ef3acee43b027f8447bb",
+    "libsrc/wasmc-system-linux-endpoint/lib.wit": "2b0f2916cff705b97a90ab4ad6f053342d54fc89f9574bf0139a9ecdd35e9cd4",
+    "libsrc/wasmc-system-linux-endpoint/native-adapter.c": "582c217d08451f50758ceb8e213ddc1966b717d96468fc873bebfaccaca88232",
+    "libsrc/wasmc-system-linux-endpoint/native-boundary.template.json": "fe49d5222f507f83a221209a625545223f69c31fa61b3e76fe3183e0b2e01dce",
+    "scripts/test-linux-lib-defined-boundary.mjs": "2fa291ba3b7c63d813f44b369ec8e1c651dd62b438790145dc8f9adf872fbadc"
+  },
+  "workflow": {
+    "name": "Host canonical layout",
+    "run_id": 36302980800,
+    "run_url": "https://github.com/cbgroom/wasmcrelease/actions/runs/36302980800",
+    "conclusion": "success"
+  },
+  "environment": {
+    "os": "linux",
+    "architecture": "x86_64",
+    "kernel": "6.17.0-1022-azure",
+    "rustc": "rustc 1.96.0 (ac68faa20 2026-05-25)",
+    "wasm_tools": "wasm-tools 1.255.0"
+  },
+  "outputs": {
+    "executor_sha256": "7465b5b150cef9d977185bec86fc84fd0e424ae0039720c2e0677196153becbc",
+    "adapter_sha256": "d026289044e29acb8d2e26d5003d2b9c5da7287c7fc8322a4ac536d1ecaf0b8b",
+    "adapter_export": "wasmc_boundary_v1_invoke"
+  },
+  "evidence": {
+    "script": "scripts/test-linux-lib-defined-boundary.mjs",
+    "status": "PASS",
+    "wit_parsed": true,
+    "fixed_executor_domain_apis": 0,
+    "adapter_device_path_literals": 0,
+    "ioctl_call_shapes": ["none", "value", "buffer"],
+    "real_ioctl_none": "FIOCLEX",
+    "real_ioctl_value": "TCSBRK",
+    "real_ioctl_buffer": ["TIOCGPTN", "TIOCSPTLCK"],
+    "single_syscall_vectored_write": true,
+    "vectored_write_segments": 64,
+    "malformed_vectored_write_rejection": true,
+    "generation_checked_stale_vectored_write_rejection": true,
+    "fixed_executor_unchanged_from_v2_v3_v4_v5_v6": true,
+    "performance_regression": {
+      "read_mib_per_second": 564.37,
+      "write_mib_per_second": 621.99,
+      "vector_write_mib_per_second": 848.78,
+      "mapping_mib_per_second": 594.87,
+      "splice_mib_per_second": 449.64,
+      "persistent_speedup": 48.62,
+      "minimum_mib_per_second": 25,
+      "minimum_speedup": 5,
+      "scope": "GitHub-hosted-runner diagnostic; not a portable throughput promise"
+    },
+    "adapter_identity_rejection": true
+  },
+  "remaining_gates": [
+    "real-uinput-device-qualification",
+    "real-uhid-device-qualification",
+    "uhid-vectored-read",
+    "real-usb-hid-gadget-qualification",
+    "descriptor-schema-review",
+    "Wasm-WIT-lowering",
+    "host-completion-bridge-and-late-delivery-drain",
+    "io-uring-completion",
+    "guest-shared-window-zero-copy",
+    "admission-review",
+    "catalog-and-LibSearch",
+    "immutable-release"
+  ],
+  "admitted": false,
+  "released": false
+}
