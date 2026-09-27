@@ -12,6 +12,8 @@ export function readProtocol(path = protocolPath) {
 export function validateProtocol(protocol) {
   assert.equal(protocol.schema, 'wasmc.fresh-agent-learning/v1');
   assert.match(protocol.objective, /fresh Pi Agent/);
+  assert.match(protocol.session_preamble, /First read AGENTS\.md/);
+  assert.match(protocol.session_preamble, /required_additional_reads/);
   assert.ok(protocol.authority_scope.forbidden.includes('private wasmc source or private handoffs'));
   assert.ok(protocol.authority_scope.forbidden.includes('prior conversation or session state'));
   assert.equal(protocol.cases.length, 6);

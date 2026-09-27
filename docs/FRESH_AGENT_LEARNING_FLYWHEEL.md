@@ -24,7 +24,10 @@ protocol is `agent-evaluation/fresh-agent-learning-v1.json`.
    and evidence-backed oracles. An earlier guidance or product checkpoint is
    not a release qualification.
 2. Run every case in a fresh session with no private repository, prior chat,
-   memory, maintainer hint or hidden-reasoning dependency.
+   memory, maintainer hint or hidden-reasoning dependency. The frozen public
+   session preamble requires the Agent to start at `AGENTS.md` and use an exact
+   `agent-quickstart.json` route when one matches; this mirrors the repository
+   onboarding contract rather than injecting private task knowledge.
 3. Retain privacy-safe traces and independently verify decisions and generated
    artifacts.
 4. Classify failures before changing anything. Model retrospectives generate

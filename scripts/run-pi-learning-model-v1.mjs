@@ -80,7 +80,7 @@ for (const caseDefinition of protocol.cases) {
       '--no-prompt-templates',
       '--no-extensions',
       '--approve',
-      '-p', caseDefinition.prompt
+      '-p', `${protocol.session_preamble}\n\nTask: ${caseDefinition.prompt}`
     ], {
       cwd: checkout,
       encoding: 'utf8',
