@@ -1,0 +1,31 @@
+{
+  "schema": "wasmc.host-lib-defined-boundary-linux-rejection/v1",
+  "status": "linux-x86_64-async-readiness-compile-rejected",
+  "date": "2026-09-27",
+  "qualified_commit": "41626d72e389eab264b468050b34e68b6e9a5b14",
+  "implementation_commit": "4669122072beba1f4c7901e92d1b39629dc4fd75",
+  "environment": {
+    "provider": "GitHub Actions",
+    "runner": "ubuntu-24.04",
+    "architecture": "x86_64"
+  },
+  "workflow": {
+    "name": "Host Lib-defined boundary",
+    "run_id": 36301745708,
+    "job_id": 108570532381,
+    "url": "https://github.com/cbgroom/wasmcrelease/actions/runs/36301745708",
+    "conclusion": "failure"
+  },
+  "rejection": {
+    "stage": "native-adapter-compile",
+    "compiler_policy": "-Wall -Wextra -Werror",
+    "diagnostic": "ignoring return value of write declared with attribute warn_unused_result",
+    "source": "libsrc/wasmc-system-linux-endpoint/native-adapter.c",
+    "line_at_rejected_commit": 704,
+    "cause": "destructor cancellation signaling discarded the write return value",
+    "remediation": "consume the result and retain a non-EAGAIN errno in the operation status"
+  },
+  "qualified": false,
+  "admitted": false,
+  "released": false
+}

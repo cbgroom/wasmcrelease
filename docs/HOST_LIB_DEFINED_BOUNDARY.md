@@ -251,3 +251,9 @@ The asynchronous-readiness Linux aarch64 receipt is
 `admission/host-lib-defined-boundary-v1/linux-aarch64-async-readiness-v6.json`,
 bound to implementation commit
 `4669122072beba1f4c7901e92d1b39629dc4fd75`.
+
+The first x86_64 asynchronous-readiness attempt was rejected during strict C
+compilation because the Ubuntu libc declaration required the destructor's
+`write` result to be consumed. The retained rejection receipt is
+`admission/host-lib-defined-boundary-v1/linux-x86_64-async-readiness-v6-compile-rejection.json`
+for workflow run `36301745708`; it is not qualification evidence.

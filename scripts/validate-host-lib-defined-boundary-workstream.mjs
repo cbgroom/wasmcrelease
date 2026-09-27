@@ -322,6 +322,17 @@ assert.ok(linuxAsyncReceipt.evidence.performance_regression.mapping_mib_per_seco
 assert.ok(linuxAsyncReceipt.evidence.performance_regression.splice_mib_per_second >= linuxAsyncReceipt.evidence.performance_regression.minimum_mib_per_second);
 assert.ok(linuxAsyncReceipt.evidence.performance_regression.persistent_speedup >= linuxAsyncReceipt.evidence.performance_regression.minimum_speedup);
 
+const linuxX86AsyncRejection = JSON.parse(fs.readFileSync("admission/host-lib-defined-boundary-v1/linux-x86_64-async-readiness-v6-compile-rejection.json", "utf8"));
+assert.equal(linuxX86AsyncRejection.schema, "wasmc.host-lib-defined-boundary-linux-rejection/v1");
+assert.equal(linuxX86AsyncRejection.status, "linux-x86_64-async-readiness-compile-rejected");
+assert.equal(linuxX86AsyncRejection.workflow.run_id, 36301745708);
+assert.equal(linuxX86AsyncRejection.workflow.conclusion, "failure");
+assert.equal(linuxX86AsyncRejection.rejection.stage, "native-adapter-compile");
+assert.match(linuxX86AsyncRejection.rejection.diagnostic, /warn_unused_result/);
+assert.equal(linuxX86AsyncRejection.qualified, false);
+assert.equal(linuxX86AsyncRejection.admitted, false);
+assert.equal(linuxX86AsyncRejection.released, false);
+
 const oldCandidate = spawnSync(
   process.execPath,
   ["scripts/release-candidate.mjs", "verify", "channels/candidates/0.0.15.json"],
@@ -347,6 +358,7 @@ console.log(JSON.stringify({
   retained_linux_aarch64_splice_qualification: linuxSpliceReceipt.implementation_commit,
   retained_linux_x86_64_splice_qualification: linuxX86SpliceReceipt.qualified_commit,
   retained_linux_aarch64_async_readiness_qualification: linuxAsyncReceipt.implementation_commit,
+  retained_linux_x86_64_async_readiness_rejection: linuxX86AsyncRejection.qualified_commit,
   old_candidate_rejects_product_drift: true,
   lifecycle: "architecture-workstream-not-admitted-not-released",
 }));

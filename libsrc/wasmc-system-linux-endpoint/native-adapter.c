@@ -701,7 +701,8 @@ static void close_retained_handles(void) {
     const pthread_t thread = slot->thread;
     if (active && slot->state == READINESS_PENDING && slot->cancel_descriptor >= 0) {
       const uint64_t signal = 1;
-      (void)write(slot->cancel_descriptor, &signal, sizeof(signal));
+      const ssize_t signal_result = write(slot->cancel_descriptor, &signal, sizeof(signal));
+      if (signal_result < 0 && errno != EAGAIN) slot->status = -errno;
     }
     pthread_mutex_unlock(&readiness_mutex);
     if (active && thread_started) (void)pthread_join(thread, NULL);
