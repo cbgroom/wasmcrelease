@@ -31,11 +31,11 @@ final class SurfaceDemoViewController: UIViewController {
         view.addSubview(subtitleLabel)
 
         let definitions: [(String, String, String, UIColor, Bool)] = [
-            ("task-1", "检索资料", "web", UIColor(red: 0.25, green: 0.35, blue: 0.88, alpha: 1), false),
+            ("task-1", "检索资料", "native", UIColor(red: 0.25, green: 0.35, blue: 0.88, alpha: 1), false),
             ("task-2", "整理数据", "native", UIColor(red: 0.08, green: 0.57, blue: 0.56, alpha: 1), false),
-            ("task-3", "确认发布", "web", UIColor(red: 0.80, green: 0.32, blue: 0.36, alpha: 1), true),
+            ("task-3", "确认发布", "native", UIColor(red: 0.80, green: 0.32, blue: 0.36, alpha: 1), true),
             ("task-4", "生成摘要", "native", UIColor(red: 0.52, green: 0.30, blue: 0.80, alpha: 1), false),
-            ("task-5", "检查结果", "web", UIColor(red: 0.88, green: 0.52, blue: 0.12, alpha: 1), false),
+            ("task-5", "检查结果", "native", UIColor(red: 0.88, green: 0.52, blue: 0.12, alpha: 1), false),
         ]
 
         cards = definitions.map { definition in

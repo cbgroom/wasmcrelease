@@ -19,4 +19,6 @@ WASMC_IOS_SIMULATOR_UDID=<uuid> node scripts/test-ios-app-surface-control.mjs
 ```
 
 This test does not qualify physical-device behavior, arbitrary custom controls,
-cross-origin Web frames, WIT-to-Wasm lowering, admission or release.
+WKWebView-backed surfaces, cross-origin Web frames, WIT-to-Wasm lowering,
+admission or release. All five retained v1 surfaces are UIKit views; the WIT
+keeps `web` as a future exact binding kind without claiming it was exercised.

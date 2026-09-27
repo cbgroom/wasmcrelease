@@ -51,6 +51,7 @@ assert.equal(report.background_surfaces_progressed_during_handoff, true);
 assert.equal(report.agent_resumed_after_handoff, true);
 assert.equal(report.same_surface_instance_preserved, true);
 assert.equal(report.surface_snapshots.length, 5);
+assert.ok(report.surface_snapshots.every((surface) => surface.kind === "native"));
 assert.equal(report.provider_evidence[0].identity, "wasmc:system-ios-app-surface-control@0.0.1-dev.1");
 
 const screenshotPath = path.join(root, "target", "ios-app-surface-control.png");
