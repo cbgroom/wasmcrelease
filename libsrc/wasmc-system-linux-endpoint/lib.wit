@@ -1,6 +1,11 @@
 package wasmc:system-linux-endpoint@0.0.1;
 
 interface endpoints {
+  record ready-event {
+    events: u32,
+    data: u64,
+  }
+
   read-endpoint: func(path: string, maximum-bytes: u32) -> result<list<u8>, s32>;
   write-endpoint: func(path: string, payload: list<u8>) -> result<u64, s32>;
 
@@ -18,7 +23,13 @@ interface endpoints {
     map: func(offset: u64, length: u64, linux-protection: u32, linux-map-flags: u32) -> result<mapping, s32>;
   }
 
+  resource event-set {
+    control: func(linux-operation: s32, target: borrow<endpoint>, events: u32, data: u64) -> result<_, s32>;
+    wait: func(maximum-events: u32, timeout-milliseconds: s32) -> result<list<ready-event>, s32>;
+  }
+
   open-endpoint: func(path: string, linux-open-flags: u32) -> result<endpoint, s32>;
+  create-event-set: func() -> result<event-set, s32>;
 }
 
 world system-linux-endpoint {

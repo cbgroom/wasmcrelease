@@ -140,6 +140,37 @@ const encodeUnmap = (token) => {
   return bytes;
 };
 
+const encodeEpollCreate = () => Buffer.from([14]);
+
+const encodeEpollControl = (eventSet, operation, endpoint, events, data) => {
+  const bytes = Buffer.alloc(33);
+  bytes.writeUInt8(15, 0);
+  bytes.writeBigUInt64LE(eventSet, 1);
+  bytes.writeInt32LE(operation, 9);
+  bytes.writeBigUInt64LE(endpoint, 13);
+  bytes.writeUInt32LE(events, 21);
+  bytes.writeBigUInt64LE(data, 25);
+  return bytes;
+};
+
+const encodeEpollWait = (eventSet, maximumEvents, timeoutMilliseconds) => {
+  const bytes = Buffer.alloc(17);
+  bytes.writeUInt8(16, 0);
+  bytes.writeBigUInt64LE(eventSet, 1);
+  bytes.writeUInt32LE(maximumEvents, 9);
+  bytes.writeInt32LE(timeoutMilliseconds, 13);
+  return bytes;
+};
+
+const decodeEpollEvents = (bytes) => {
+  const count = bytes.readUInt32LE(0);
+  assert.equal(bytes.length, 4 + count * 12);
+  return Array.from({ length: count }, (_, index) => ({
+    events: bytes.readUInt32LE(4 + index * 12),
+    data: bytes.readBigUInt64LE(8 + index * 12),
+  }));
+};
+
 const invoke = (name, input) => {
   const inputPath = path.join(target, `${name}.input.bin`);
   const outputPath = path.join(target, `${name}.output.bin`);
@@ -253,11 +284,29 @@ const writeMibPerSecond = writeBytes / (1024 * 1024) / (writeElapsedNs / 1e9);
 assert.ok(writeMibPerSecond >= 25, `persistent /dev write throughput too low: ${writeMibPerSecond.toFixed(2)} MiB/s`);
 await expectOk(session.request(encodeClose(nullToken)));
 
-const ptmxToken = (await expectOk(session.request(encodePath(3, "/dev/ptmx", 2 | 256)))).readBigUInt64LE();
+const ptmxToken = (await expectOk(session.request(encodePath(3, "/dev/ptmx", 2 | 256 | 2048)))).readBigUInt64LE();
 const ptmx = await expectOk(session.request(encodeIoctl(ptmxToken, 0x80045430n, Buffer.alloc(4), 4)));
 assert.equal(ptmx.length, 8);
 assert.equal(ptmx.readInt32LE(0), 0);
-assert.ok(ptmx.readUInt32LE(4) >= 0);
+const pseudoTerminalNumber = ptmx.readUInt32LE(4);
+const unlocked = await expectOk(session.request(encodeIoctl(ptmxToken, 0x40045431n, Buffer.alloc(4), 0)));
+assert.equal(unlocked.readInt32LE(0), 0);
+const slaveToken = (await expectOk(session.request(encodePath(3, `/dev/pts/${pseudoTerminalNumber}`, 2 | 256 | 2048)))).readBigUInt64LE();
+const eventSetToken = (await expectOk(session.request(encodeEpollCreate()))).readBigUInt64LE();
+const eventData = 0x1122334455667788n;
+await expectOk(session.request(encodeEpollControl(eventSetToken, 1, ptmxToken, 1, eventData)));
+const eventPayload = Buffer.from("epoll-device-ready\n");
+await expectOk(session.request(encodeWrite(slaveToken, eventPayload)));
+const readyEvents = decodeEpollEvents(await expectOk(session.request(encodeEpollWait(eventSetToken, 8, 1000))));
+assert.ok(readyEvents.some((event) => (event.events & 1) === 1 && event.data === eventData));
+const masterBytes = await expectOk(session.request(encodeRead(ptmxToken, 4096)));
+assert.ok(masterBytes.includes(Buffer.from("epoll-device-ready")));
+await expectOk(session.request(encodeEpollControl(eventSetToken, 2, ptmxToken, 0, 0n)));
+assert.deepEqual(decodeEpollEvents(await expectOk(session.request(encodeEpollWait(eventSetToken, 8, 0)))), []);
+await expectOk(session.request(encodeClose(eventSetToken)));
+const staleEventSet = await session.request(encodeEpollWait(eventSetToken, 1, 0));
+assert.equal(staleEventSet.status, -9);
+await expectOk(session.request(encodeClose(slaveToken)));
 await expectOk(session.request(encodeClose(ptmxToken)));
 
 const mappedZeroToken = (await expectOk(session.request(encodePath(3, "/dev/zero", 2)))).readBigUInt64LE();
@@ -304,7 +353,7 @@ assert.ok(persistentSpeedup >= 5, `persistent session speedup too low: ${persist
 const exports = command("nm", ["-D", "--defined-only", adapter]);
 assert.match(exports, /\bwasmc_boundary_v1_invoke\b/);
 const rustText = fs.readFileSync(rustSource, "utf8");
-for (const forbidden of ["/dev/", "/proc/", "/sys/", "O_RDONLY", "O_WRONLY", "ioctl", "pollfd", "mmap", "msync", "read-endpoint", "write-endpoint"]) {
+for (const forbidden of ["/dev/", "/proc/", "/sys/", "O_RDONLY", "O_WRONLY", "ioctl", "pollfd", "epoll", "mmap", "msync", "read-endpoint", "write-endpoint"]) {
   assert.equal(rustText.includes(forbidden), false, `domain or Linux endpoint semantics leaked into fixed executor: ${forbidden}`);
 }
 const adapterText = fs.readFileSync(adapterSource, "utf8");
@@ -325,7 +374,7 @@ assert.match(`${rejected.stdout}\n${rejected.stderr}`, /adapter identity mismatc
 
 console.log(JSON.stringify({
   accepted: true,
-  schema: "wasmc.linux-lib-defined-boundary-qualification/v3",
+  schema: "wasmc.linux-lib-defined-boundary-qualification/v4",
   platform: process.platform,
   architecture: process.arch,
   kernel: os.release(),
@@ -339,6 +388,9 @@ console.log(JSON.stringify({
   generation_checked_stale_handle_rejection: true,
   real_ioctl: "TIOCGPTN",
   real_poll: true,
+  real_epoll_device_event: true,
+  epoll_endpoint: "/dev/ptmx",
+  generation_checked_stale_event_set_rejection: true,
   mapped_device_window: true,
   generation_checked_stale_mapping_rejection: true,
   performance: {

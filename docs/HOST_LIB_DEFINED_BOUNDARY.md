@@ -1,6 +1,6 @@
 # Lib-defined Host boundary workstream
 
-Status: **mapped-device Linux aarch64/x86_64 qualified / not admitted / not released**.
+Status: **epoll device-readiness Linux aarch64 locally qualified; x86_64 refresh pending / not admitted / not released**.
 
 This workstream replaces domain growth in the Rust Host with a fixed,
 domain-neutral execution boundary. It does not modify the immutable v0.0.15
@@ -113,6 +113,16 @@ fixed Rust executor. It is not yet end-to-end zero-copy: the current byte ABI
 still copies between the native mapping and the executor window. A direct
 guest/shared-window profile remains a separate gate.
 
+The next Lib-owned mechanism is a generation-checked `epoll` event set. The
+local Linux aarch64 qualification opens a real PTY master through `/dev/ptmx`,
+unlocks and opens its `/dev/pts/N` slave, registers the master, writes through
+the slave, waits for and reads the readiness event, removes the registration,
+and rejects a stale event-set token after close. The fixed Rust executor remains
+byte-identical and contains no `epoll` or PTY semantics. This is evidence for
+Lib-defined readiness aggregation only: the call currently waits synchronously
+inside the persistent executor session and does not yet prove asynchronous
+completion delivery, cancellation, late-completion draining or `io_uring`.
+
 ## Library OS consequence
 
 The intended result is a Library OS profile assembled above the fixed Host:
@@ -161,10 +171,12 @@ contains no domain API and is byte-identical for all three. The test additionall
 proves pinned-window release rejection, completion claim-once, adapter digest
 rejection and zero remaining resources/operations/windows.
 
-The mapped-window successor is now qualified on local Linux aarch64 and
-independent GitHub Ubuntu x86_64. Wasm/WIT lowering, native asynchronous
-lifecycle/cancellation, direct guest-window zero-copy, non-Linux evidence,
-admission, catalog publication and immutable release remain pending.
+The mapped-window predecessor is qualified on local Linux aarch64 and
+independent GitHub Ubuntu x86_64. The epoll-readiness successor is locally
+qualified on Linux aarch64; its independent x86_64 refresh is pending. Wasm/WIT
+lowering, native asynchronous lifecycle/cancellation, `io_uring`, direct
+guest-window zero-copy, non-Linux evidence, admission, catalog publication and
+immutable release remain pending.
 
 The exact local receipt is
 `admission/host-lib-defined-boundary-v1/local-qualification.json`, bound to

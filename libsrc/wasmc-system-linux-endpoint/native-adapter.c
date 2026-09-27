@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/epoll.h>
 #include <sys/ioctl.h>
 #include <sys/mman.h>
 #include <unistd.h>
@@ -358,6 +359,63 @@ static int32_t invoke_unmap(const uint8_t *input, size_t input_len) {
   return 0;
 }
 
+static int32_t invoke_epoll_create(
+    size_t input_len,
+    uint8_t *output, size_t output_capacity, size_t *output_len) {
+  if (input_len != 1 || output_capacity < 8) return -EINVAL;
+  int descriptor = epoll_create1(EPOLL_CLOEXEC);
+  if (descriptor < 0) return -errno;
+  uint64_t token = 0;
+  int32_t status = register_handle(descriptor, &token);
+  if (status != 0) { close(descriptor); return status; }
+  write_u64(output, token);
+  *output_len = 8;
+  return 0;
+}
+
+static int32_t invoke_epoll_control(const uint8_t *input, size_t input_len) {
+  if (input_len != 33) return -EINVAL;
+  int epoll_descriptor = -1;
+  int endpoint_descriptor = -1;
+  int32_t status = resolve_handle(read_u64(input + 1), NULL, &epoll_descriptor);
+  if (status != 0) return status;
+  status = resolve_handle(read_u64(input + 13), NULL, &endpoint_descriptor);
+  if (status != 0) return status;
+  const int operation = (int32_t)read_u32(input + 9);
+  struct epoll_event event = { .events = read_u32(input + 21), .data.u64 = read_u64(input + 25) };
+  return epoll_ctl(
+      epoll_descriptor,
+      operation,
+      endpoint_descriptor,
+      operation == EPOLL_CTL_DEL ? NULL : &event) == 0 ? 0 : -errno;
+}
+
+static int32_t invoke_epoll_wait(
+    const uint8_t *input, size_t input_len,
+    uint8_t *output, size_t output_capacity, size_t *output_len) {
+  if (input_len != 17) return -EINVAL;
+  int epoll_descriptor = -1;
+  int32_t status = resolve_handle(read_u64(input + 1), NULL, &epoll_descriptor);
+  if (status != 0) return status;
+  const uint32_t maximum = read_u32(input + 9);
+  const int32_t timeout = (int32_t)read_u32(input + 13);
+  if (output_capacity < 4 || maximum == 0 || maximum > 4096 || maximum > (output_capacity - 4) / 12) return -EINVAL;
+  struct epoll_event *events = calloc(maximum, sizeof(*events));
+  if (!events) return -ENOMEM;
+  const int count = epoll_wait(epoll_descriptor, events, (int)maximum, timeout);
+  if (count < 0) status = -errno;
+  else {
+    write_u32(output, (uint32_t)count);
+    for (int index = 0; index < count; index += 1) {
+      write_u32(output + 4 + (size_t)index * 12, events[index].events);
+      write_u64(output + 8 + (size_t)index * 12, events[index].data.u64);
+    }
+    *output_len = 4 + (size_t)count * 12;
+  }
+  free(events);
+  return status;
+}
+
 __attribute__((visibility("default")))
 int32_t wasmc_boundary_v1_invoke(
     const uint8_t *input,
@@ -381,6 +439,9 @@ int32_t wasmc_boundary_v1_invoke(
     case 11: return invoke_mapping_write(input, input_len, output, output_capacity, output_len);
     case 12: return invoke_mapping_sync(input, input_len);
     case 13: return invoke_unmap(input, input_len);
+    case 14: return invoke_epoll_create(input_len, output, output_capacity, output_len);
+    case 15: return invoke_epoll_control(input, input_len);
+    case 16: return invoke_epoll_wait(input, input_len, output, output_capacity, output_len);
     default: return -ENOTSUP;
   }
 }

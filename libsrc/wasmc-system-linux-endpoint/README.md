@@ -23,5 +23,13 @@ mapping and lifetime in the Lib, but the current byte ABI still copies between
 the mapped region and the executor window. Direct guest/shared-window zero-copy
 and native async completion remain separate future gates.
 
+The Lib also owns a generation-checked `epoll` event-set resource. Qualification
+opens a real PTY master through `/dev/ptmx`, unlocks and opens its `/dev/pts/N`
+slave, registers the master, writes through the slave, observes and reads the
+master readiness event, removes it, and rejects the event-set token after close.
+No `epoll` or PTY branch exists in the fixed Rust executor. This proves
+Lib-defined readiness aggregation; it is still a synchronous wait in the
+persistent session, not native asynchronous completion or cancellation.
+
 Run `node scripts/test-linux-lib-defined-boundary.mjs` on Linux. This prototype is not
 admitted, cataloged or released.
