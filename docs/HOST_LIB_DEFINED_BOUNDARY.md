@@ -246,3 +246,8 @@ The kernel-splice Linux x86_64 receipt is
 `admission/host-lib-defined-boundary-v1/linux-x86_64-splice-v5.json`, bound to
 successful workflow run `36301089197` at commit
 `fbae9337787c7c7c3c0c9e51bd1ed22cdb5235d5`.
+
+The asynchronous-readiness Linux aarch64 receipt is
+`admission/host-lib-defined-boundary-v1/linux-aarch64-async-readiness-v6.json`,
+bound to implementation commit
+`4669122072beba1f4c7901e92d1b39629dc4fd75`.

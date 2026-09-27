@@ -288,6 +288,40 @@ assert.ok(linuxX86SpliceReceipt.evidence.performance.mapping_mib_per_second >= l
 assert.ok(linuxX86SpliceReceipt.evidence.performance.splice_mib_per_second >= linuxX86SpliceReceipt.evidence.performance.minimum_mib_per_second);
 assert.ok(linuxX86SpliceReceipt.evidence.performance.persistent_speedup >= linuxX86SpliceReceipt.evidence.performance.minimum_speedup);
 
+const linuxAsyncReceipt = JSON.parse(fs.readFileSync("admission/host-lib-defined-boundary-v1/linux-aarch64-async-readiness-v6.json", "utf8"));
+assert.equal(linuxAsyncReceipt.schema, "wasmc.host-lib-defined-boundary-linux-qualification/v6");
+assert.equal(linuxAsyncReceipt.status, "linux-aarch64-asynchronous-readiness-lifecycle-qualified-not-admitted-not-released");
+assert.equal(linuxAsyncReceipt.admitted, false);
+assert.equal(linuxAsyncReceipt.released, false);
+execFileSync("git", ["cat-file", "-e", `${linuxAsyncReceipt.implementation_commit}^{commit}`]);
+execFileSync("git", ["merge-base", "--is-ancestor", linuxAsyncReceipt.implementation_commit, "HEAD"]);
+for (const [relative, expected] of Object.entries(linuxAsyncReceipt.source)) {
+  assert.equal(
+    digestAt(linuxAsyncReceipt.implementation_commit, relative),
+    expected,
+    `${relative}: retained async-readiness Linux qualification source drift`,
+  );
+}
+assert.equal(linuxAsyncReceipt.evidence.status, "PASS");
+assert.equal(linuxAsyncReceipt.evidence.wit_parsed, true);
+assert.equal(linuxAsyncReceipt.evidence.fixed_executor_domain_apis, 0);
+assert.equal(linuxAsyncReceipt.evidence.asynchronous_readiness_lifecycle, true);
+assert.equal(linuxAsyncReceipt.evidence.ready, true);
+assert.equal(linuxAsyncReceipt.evidence.cancelled, true);
+assert.equal(linuxAsyncReceipt.evidence.timed_out, true);
+assert.equal(linuxAsyncReceipt.evidence.cancelled_late_readiness_suppressed, true);
+assert.equal(linuxAsyncReceipt.evidence.pending_release_rejection, true);
+assert.equal(linuxAsyncReceipt.evidence.repeated_terminal_cancel_rejection, true);
+assert.equal(linuxAsyncReceipt.evidence.retained_endpoint_lifetime, true);
+assert.equal(linuxAsyncReceipt.evidence.concurrent_operations, 64);
+assert.equal(linuxAsyncReceipt.evidence.generation_checked_stale_operation_rejection, true);
+assert.equal(linuxAsyncReceipt.evidence.fixed_executor_unchanged_from_v2_v3_v4_v5, true);
+assert.ok(linuxAsyncReceipt.evidence.performance_regression.read_mib_per_second >= linuxAsyncReceipt.evidence.performance_regression.minimum_mib_per_second);
+assert.ok(linuxAsyncReceipt.evidence.performance_regression.write_mib_per_second >= linuxAsyncReceipt.evidence.performance_regression.minimum_mib_per_second);
+assert.ok(linuxAsyncReceipt.evidence.performance_regression.mapping_mib_per_second >= linuxAsyncReceipt.evidence.performance_regression.minimum_mib_per_second);
+assert.ok(linuxAsyncReceipt.evidence.performance_regression.splice_mib_per_second >= linuxAsyncReceipt.evidence.performance_regression.minimum_mib_per_second);
+assert.ok(linuxAsyncReceipt.evidence.performance_regression.persistent_speedup >= linuxAsyncReceipt.evidence.performance_regression.minimum_speedup);
+
 const oldCandidate = spawnSync(
   process.execPath,
   ["scripts/release-candidate.mjs", "verify", "channels/candidates/0.0.15.json"],
@@ -312,6 +346,7 @@ console.log(JSON.stringify({
   retained_linux_x86_64_epoll_qualification: linuxX86EpollReceipt.qualified_commit,
   retained_linux_aarch64_splice_qualification: linuxSpliceReceipt.implementation_commit,
   retained_linux_x86_64_splice_qualification: linuxX86SpliceReceipt.qualified_commit,
+  retained_linux_aarch64_async_readiness_qualification: linuxAsyncReceipt.implementation_commit,
   old_candidate_rejects_product_drift: true,
   lifecycle: "architecture-workstream-not-admitted-not-released",
 }));
