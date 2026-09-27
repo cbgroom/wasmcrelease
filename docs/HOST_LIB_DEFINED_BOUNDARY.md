@@ -171,3 +171,7 @@ The exact Linux x86_64 receipt is
 `admission/host-lib-defined-boundary-v1/linux-x86_64-qualification.json`, bound
 to successful workflow run `36298739381` at commit
 `66af77c3996f2d8fba5d87667870c79ce3fedc6e`.
+
+The persistent-session Linux aarch64 receipt is
+`admission/host-lib-defined-boundary-v1/linux-aarch64-persistent-v2.json`, bound
+to implementation commit `a9226aae8c15285765c942f1eed02ba2b38c5363`.

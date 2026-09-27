@@ -88,6 +88,29 @@ assert.equal(linuxX86Receipt.evidence.adapter_device_path_literals, 0);
 assert.deepEqual(linuxX86Receipt.evidence.real_linux_endpoints, linuxReceipt.evidence.real_linux_endpoints);
 assert.equal(linuxX86Receipt.evidence.adapter_identity_rejection, true);
 
+const linuxPersistentReceipt = JSON.parse(fs.readFileSync("admission/host-lib-defined-boundary-v1/linux-aarch64-persistent-v2.json", "utf8"));
+assert.equal(linuxPersistentReceipt.schema, "wasmc.host-lib-defined-boundary-linux-qualification/v2");
+assert.equal(linuxPersistentReceipt.status, "linux-aarch64-persistent-session-qualified-not-admitted-not-released");
+assert.equal(linuxPersistentReceipt.admitted, false);
+assert.equal(linuxPersistentReceipt.released, false);
+execFileSync("git", ["cat-file", "-e", `${linuxPersistentReceipt.implementation_commit}^{commit}`]);
+execFileSync("git", ["merge-base", "--is-ancestor", linuxPersistentReceipt.implementation_commit, "HEAD"]);
+for (const [relative, expected] of Object.entries(linuxPersistentReceipt.source)) {
+  assert.equal(
+    digestAt(linuxPersistentReceipt.implementation_commit, relative),
+    expected,
+    `${relative}: retained persistent Linux qualification source drift`,
+  );
+}
+assert.equal(linuxPersistentReceipt.evidence.status, "PASS");
+assert.equal(linuxPersistentReceipt.evidence.persistent_fd_resources, true);
+assert.equal(linuxPersistentReceipt.evidence.generation_checked_stale_handle_rejection, true);
+assert.equal(linuxPersistentReceipt.evidence.real_ioctl, "TIOCGPTN");
+assert.equal(linuxPersistentReceipt.evidence.real_poll, true);
+assert.ok(linuxPersistentReceipt.evidence.performance.read_mib_per_second >= linuxPersistentReceipt.evidence.performance.minimum_mib_per_second);
+assert.ok(linuxPersistentReceipt.evidence.performance.write_mib_per_second >= linuxPersistentReceipt.evidence.performance.minimum_mib_per_second);
+assert.ok(linuxPersistentReceipt.evidence.performance.persistent_speedup >= linuxPersistentReceipt.evidence.performance.minimum_speedup);
+
 const oldCandidate = spawnSync(
   process.execPath,
   ["scripts/release-candidate.mjs", "verify", "channels/candidates/0.0.15.json"],
@@ -104,6 +127,7 @@ console.log(JSON.stringify({
   retained_local_qualification: receipt.implementation_commit,
   retained_linux_aarch64_qualification: linuxReceipt.implementation_commit,
   retained_linux_x86_64_qualification: linuxX86Receipt.qualified_commit,
+  retained_linux_aarch64_persistent_qualification: linuxPersistentReceipt.implementation_commit,
   old_candidate_rejects_product_drift: true,
   lifecycle: "architecture-workstream-not-admitted-not-released",
 }));
