@@ -638,6 +638,43 @@ assert.equal(androidV2Receipt.evidence.adapter_sibling_confinement, true);
 assert.equal(androidV2Receipt.evidence.wasm_lowering, false);
 assert.equal(androidV2Receipt.evidence.physical_device_qualification, false);
 
+const androidV3Receipt = JSON.parse(fs.readFileSync("admission/host-lib-defined-boundary-v1/android-arm64-agent-computer-v3.json", "utf8"));
+assert.equal(androidV3Receipt.schema, "wasmc.host-lib-defined-boundary-android-qualification/v3");
+assert.equal(androidV3Receipt.status, "android-16-arm64-emulator-direct-uinput-touchscreen-and-session-lifecycle-qualified-not-admitted-not-released");
+assert.equal(androidV3Receipt.environment.architecture, "arm64-v8a");
+assert.equal(androidV3Receipt.environment.android_api, 36);
+assert.equal(androidV3Receipt.admitted, false);
+assert.equal(androidV3Receipt.released, false);
+execFileSync("git", ["cat-file", "-e", `${androidV3Receipt.implementation_commit}^{commit}`]);
+execFileSync("git", ["merge-base", "--is-ancestor", androidV3Receipt.implementation_commit, "HEAD"]);
+for (const [relative, expected] of Object.entries(androidV3Receipt.source)) {
+  assert.equal(
+    digestAt(androidV3Receipt.implementation_commit, relative),
+    expected,
+    `${relative}: retained Android v3 qualification source drift`,
+  );
+}
+assert.equal(androidV3Receipt.evidence.status, "PASS");
+assert.equal(androidV3Receipt.evidence.fixed_executor_domain_apis, 0);
+assert.equal(androidV3Receipt.evidence.host_source_changes_after_v1, 0);
+assert.equal(androidV3Receipt.outputs.executor_sha256, androidV2Receipt.outputs.executor_sha256);
+assert.equal(androidV3Receipt.outputs.executor_matches_v1_and_v2, true);
+assert.equal(androidV3Receipt.evidence.direct_uinput_device, "/dev/uinput");
+assert.equal(androidV3Receipt.evidence.touchscreen_kernel_events_per_tap, 14);
+assert.equal(androidV3Receipt.evidence.performance_gate, false);
+assert.equal(androidV3Receipt.evidence.full_control_chain, "uinput-touch-uinput-keyboard-uinput-touch");
+assert.equal(androidV3Receipt.evidence.semantic_text_postcondition, "display");
+assert.deepEqual(androidV3Receipt.evidence.semantic_result_postconditions, ["Font size", "Display size"]);
+assert.equal(androidV3Receipt.evidence.keyboard_generation_checked_stale_resource_rejection, true);
+assert.equal(androidV3Receipt.evidence.touchscreen_generation_checked_stale_resource_rejection, true);
+assert.equal(androidV3Receipt.evidence.session_eof_cleanup, true);
+assert.equal(androidV3Receipt.evidence.parallel_session_isolation, true);
+assert.equal(androidV3Receipt.evidence.resource_authority, "Android EventHub active-device state");
+assert.equal(androidV3Receipt.evidence.input_reader_snapshot_not_used_as_resource_authority, true);
+assert.equal(androidV3Receipt.evidence.emulator_boot_is_bounded, true);
+assert.equal(androidV3Receipt.evidence.wasm_lowering, false);
+assert.equal(androidV3Receipt.evidence.physical_device_qualification, false);
+
 const oldCandidate = spawnSync(
   process.execPath,
   ["scripts/release-candidate.mjs", "verify", "channels/candidates/0.0.15.json"],
@@ -675,6 +712,7 @@ console.log(JSON.stringify({
   retained_linux_x86_64_uinput_qualification: linuxX86UinputReceipt.qualified_commit,
   retained_android_arm64_agent_computer_qualification: androidReceipt.implementation_commit,
   retained_android_arm64_agent_computer_v2_qualification: androidV2Receipt.implementation_commit,
+  retained_android_arm64_agent_computer_v3_qualification: androidV3Receipt.implementation_commit,
   old_candidate_rejects_product_drift: true,
   lifecycle: "architecture-workstream-not-admitted-not-released",
 }));
