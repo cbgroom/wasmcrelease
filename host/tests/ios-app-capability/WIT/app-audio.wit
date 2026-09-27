@@ -1,0 +1,13 @@
+package wasmc:system-app-audio@0.0.1;
+
+interface audio {
+  record stream-format {
+    sample-rate: u32,
+    channels: u16,
+  }
+  render: func(format: stream-format, frames: list<f32>) -> result<list<f32>, s32>;
+}
+
+world system-app-audio {
+  export audio;
+}

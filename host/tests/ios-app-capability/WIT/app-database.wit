@@ -1,0 +1,11 @@
+package wasmc:system-app-database@0.0.1;
+
+interface database {
+  open: func(path: string) -> result<u64, s32>;
+  execute: func(database: u64, statement: string, parameters: list<string>) -> result<list<list<string>>, s32>;
+  close: func(database: u64) -> result<_, s32>;
+}
+
+world system-app-database {
+  export database;
+}

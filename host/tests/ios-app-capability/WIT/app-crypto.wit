@@ -1,0 +1,12 @@
+package wasmc:system-app-crypto@0.0.1;
+
+interface crypto {
+  secure-random: func(length: u32) -> result<list<u8>, s32>;
+  digest-sha256: func(value: list<u8>) -> list<u8>;
+  seal: func(key: list<u8>, value: list<u8>) -> result<list<u8>, s32>;
+  open: func(key: list<u8>, value: list<u8>) -> result<list<u8>, s32>;
+}
+
+world system-app-crypto {
+  export crypto;
+}

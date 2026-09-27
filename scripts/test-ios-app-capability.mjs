@@ -57,7 +57,7 @@ assert.deepEqual(report.host_negative_controls, {
   invalid_descriptor_rejected: true,
   output_limit_rejected: true,
 });
-assert.equal(report.provider_count, 6);
+assert.equal(report.provider_count, 11);
 assert.deepEqual(report.target, {
   architecture: "aarch64", embedding: "native", environment: "simulator", os: "ios",
 });
@@ -75,6 +75,16 @@ assert.equal(results["wasmc:system-ios-app-display@0.0.1-dev.1"].window_capture,
 assert.ok(results["wasmc:system-ios-app-display@0.0.1-dev.1"].png_bytes > 0);
 assert.equal(results["wasmc:system-ios-app-metal@0.0.1-dev.1"].metal_available, true);
 assert.equal(results["wasmc:system-ios-app-metal@0.0.1-dev.1"].gpu_copy_roundtrip, true);
+assert.equal(results["wasmc:system-ios-app-database@0.0.1-dev.1"].roundtrip, true);
+assert.equal(results["wasmc:system-ios-app-database@0.0.1-dev.1"].prepared_statement, true);
+assert.equal(results["wasmc:system-ios-app-crypto@0.0.1-dev.1"].aes_gcm_roundtrip, true);
+assert.equal(results["wasmc:system-ios-app-crypto@0.0.1-dev.1"].p256_sign_verify, true);
+assert.equal(results["wasmc:system-ios-app-audio@0.0.1-dev.1"].offline_render_success, true);
+assert.equal(results["wasmc:system-ios-app-audio@0.0.1-dev.1"].non_silent_output, true);
+assert.equal(results["wasmc:system-ios-app-web@0.0.1-dev.1"].html_loaded, true);
+assert.equal(results["wasmc:system-ios-app-web@0.0.1-dev.1"].javascript_executed, true);
+assert.equal(results["wasmc:system-ios-app-device-observation@0.0.1-dev.1"].permission_requested, false);
+assert.equal(results["wasmc:system-ios-app-device-observation@0.0.1-dev.1"].simulator_observation_only, true);
 
 const screenshotPath = path.join(root, "target", "ios-app-capability.png");
 simctl(["io", udid, "screenshot", screenshotPath]);

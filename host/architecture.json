@@ -243,7 +243,7 @@
       ]
     },
     "ios_app_native": {
-      "status": "ios-26.5-arm64-simulator-app-internal-qualified-not-admitted-not-released",
+      "status": "ios-26.5-arm64-simulator-app-internal-v2-qualified-not-admitted-not-released",
       "executor": "host/tests/ios-app-capability/Host/FixedHost.swift",
       "profile": "host/tests/ios-app-capability/Profile/EmbeddedProfile.swift",
       "system_libs": [
@@ -252,10 +252,15 @@
         "wasmc:system-ios-app-network@0.0.1-dev.1",
         "wasmc:system-ios-app-ui@0.0.1-dev.1",
         "wasmc:system-ios-app-display@0.0.1-dev.1",
-        "wasmc:system-ios-app-metal@0.0.1-dev.1"
+        "wasmc:system-ios-app-metal@0.0.1-dev.1",
+        "wasmc:system-ios-app-database@0.0.1-dev.1",
+        "wasmc:system-ios-app-crypto@0.0.1-dev.1",
+        "wasmc:system-ios-app-audio@0.0.1-dev.1",
+        "wasmc:system-ios-app-web@0.0.1-dev.1",
+        "wasmc:system-ios-app-device-observation@0.0.1-dev.1"
       ],
       "evidence": "scripts/test-ios-app-capability.mjs",
-      "convergence": "one fixed domain-neutral embedded Swift Host executes six statically linked Lib providers selected by the app profile; platform frameworks remain provider implementation details",
+      "convergence": "one byte-identical fixed domain-neutral embedded Swift Host executes eleven statically linked Lib providers selected by the app profile; platform frameworks remain provider implementation details",
       "scope": [
         "real-sandbox-atomic-storage-and-fsync",
         "real-secure-random-user-defaults-keychain-and-clocks",
@@ -263,6 +268,11 @@
         "real-uikit-semantic-query-and-action-postcondition",
         "real-window-png-capture",
         "real-metal-command-buffer-copy",
+        "real-sqlite-wal-transaction-and-prepared-statement",
+        "real-aes-gcm-p256-and-sha256",
+        "real-offline-audio-rendering",
+        "real-webkit-dom-and-javascript",
+        "permission-free-protected-capability-observation",
         "xcode-simulator-ad-hoc-signing",
         "zero-domain-apis-in-fixed-embedded-host"
       ],
@@ -270,7 +280,7 @@
         "wit-to-wasm-lowering",
         "dynamic-component-loading",
         "physical-device-qualification",
-        "camera-audio-location-motion-notification-and-background-lifecycle",
+        "camera-microphone-location-motion-notification-and-background-lifecycle",
         "admission",
         "release"
       ]

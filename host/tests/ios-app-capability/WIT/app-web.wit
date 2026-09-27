@@ -1,0 +1,9 @@
+package wasmc:system-app-web@0.0.1;
+
+interface web {
+  evaluate-document: func(html: string, script: string) -> result<string, s32>;
+}
+
+world system-app-web {
+  export web;
+}

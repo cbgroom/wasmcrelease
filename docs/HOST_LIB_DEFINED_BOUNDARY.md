@@ -374,18 +374,28 @@ Wasm lowering, admission and release remain pending.
 
 The next iOS slice embeds a second fixed, domain-neutral Host in a normal iOS
 application rather than driving the Simulator from macOS. The app profile
-registers six statically linked Lib providers without adding domain methods to
+registers eleven statically linked Lib providers without adding domain methods to
 the Host: sandbox storage, secure state, TCP/UDP loopback, UIKit semantic UI,
-window capture and Metal acceleration. Exact WIT package identities remain in
-the profile; Apple frameworks occur only in provider implementations.
+window capture, Metal acceleration, SQLite, cryptography, offline audio,
+embedded WebKit and protected-capability observation. Exact WIT package
+identities remain in the profile; Apple frameworks occur only in provider
+implementations.
 
 On the iOS 26.5 ARM64 iPhone 17 Pro Simulator, one run proves an atomic
 Application Support round trip plus `fsync`, secure random, `UserDefaults`, a
 signed-app Keychain add/read/delete round trip, wall and monotonic clocks, real
 POSIX TCP and UDP loopback, foreground semantic UI query and action with a
 state postcondition, a 1206×2622 outer screenshot plus in-app PNG capture, and
-a completed Metal command-buffer copy. The Host reports six exact provider
-identities and still has zero domain APIs.
+a completed Metal command-buffer copy, a WAL/transaction/prepared-statement
+SQLite round trip, AES-GCM and P-256 round trips, non-silent offline audio
+rendering, and local DOM/JavaScript execution. The Host reports eleven exact
+provider identities and still has zero domain APIs. Its source SHA-256 remains
+`f0d465ba7f23698d6365453b02fad2f4a0803171f970631751fc90a00a86d96f`,
+identical to the six-provider qualification.
+
+Camera, microphone, motion, location, notification and background-refresh
+states are observed without requesting permission. Simulator absence is a
+target observation, not a Host failure or a claim of physical-device support.
 
 The Keychain check intentionally uses Xcode's Simulator ad-hoc app signing.
 Disabling code signing produced a real missing-application-identity failure and

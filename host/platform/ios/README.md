@@ -17,10 +17,12 @@ extension authority and is not updated for this Lib-defined slice.
 
 `host/tests/ios-app-capability` is the separate `ios/aarch64/simulator/native`
 profile. It embeds one fixed, domain-neutral Swift Host in an ordinary iOS app
-and selects six statically linked providers from `EmbeddedProfile.swift`.
+and selects eleven statically linked providers from `EmbeddedProfile.swift`.
 Storage, state, POSIX loopback networking, UIKit semantics, window capture and
-Metal are provider code; the Host only validates registrations, byte limits and
-result identity.
+Metal, SQLite, CryptoKit, offline audio, WebKit and protected-capability
+observation are provider code; the Host only validates registrations, byte
+limits and result identity. The fixed Host source digest remains identical to
+the earlier six-provider qualification.
 
 Run the macOS qualification against one already booted simulator:
 

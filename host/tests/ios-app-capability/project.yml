@@ -22,4 +22,4 @@ targets:
       base:
         PRODUCT_NAME: WAsmCIOSAppCapability
         SWIFT_OBJC_BRIDGING_HEADER: $(SRCROOT)/../../host/tests/ios-app-capability/Providers/NetworkAdapter.h
-        OTHER_LDFLAGS: ["-framework", "Metal", "-framework", "Security"]
+        OTHER_LDFLAGS: ["-framework", "Metal", "-framework", "Security", "-lsqlite3"]

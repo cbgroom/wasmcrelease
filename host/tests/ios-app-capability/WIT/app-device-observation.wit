@@ -1,0 +1,13 @@
+package wasmc:system-app-device-observation@0.0.1;
+
+interface device-observation {
+  record capability-state {
+    available: bool,
+    authorization: string,
+  }
+  observe: func(name: string) -> result<capability-state, s32>;
+}
+
+world system-app-device-observation {
+  export device-observation;
+}
