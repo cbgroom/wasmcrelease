@@ -80,7 +80,7 @@ enum EmbeddedProfile {
             invoke: DeviceObservationProvider.invoke
         ),
         .init(
-            identity: "wasmc:system-ios-app-authorization@0.0.1-dev.1",
+            identity: "wasmc:system-ios-app-authorization@0.0.1-dev.2",
             witPackage: "wasmc:system-app-authorization@0.0.1",
             maxInputBytes: 0,
             maxOutputBytes: 32_768,

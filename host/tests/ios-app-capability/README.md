@@ -20,8 +20,8 @@ The current simulator slice exercises twelve provider families:
 - local WKWebView HTML/DOM/JavaScript execution;
 - permission-free observation of camera, microphone, motion, location,
   notification and background-refresh availability/authorization;
-- centralized zero-prompt authorization discovery, request planning and a
-  persistent one-attempt ledger.
+- centralized zero-prompt authorization discovery, repeatable request planning,
+  in-flight deduplication and persistent attempt history.
 
 The protected-capability provider never requests permission. `available=false`
 on Simulator is retained as a platform observation, not reported as a Host or
@@ -30,10 +30,12 @@ belong to explicit physical-device and lifecycle qualifications.
 
 Authorization is a Lib concern, not a Host API. The authorization provider
 classifies thirteen existing capabilities as permission-free and observes ten
-protected permission categories without prompting. Its planner requests only a
-`not-determined` and never-attempted category; denied decisions route to
-Settings, while restricted or unavailable categories fail closed. A persistent
-attempt ledger prevents application-driven repeat prompts. One application
+protected permission categories without prompting. Its planner requests a
+needed `not-determined` category whenever no request is currently in flight;
+an earlier unsuccessful attempt never permanently closes the request path.
+Denied decisions route to Settings and that recovery route can be offered again,
+while restricted or unavailable categories fail closed. Persistent attempt
+history is evidence rather than a gate. One application
 rationale screen can explain a batch, but iOS still owns separate system prompts
 for separate permission categories and those prompts cannot be coalesced.
 

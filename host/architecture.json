@@ -243,7 +243,7 @@
       ]
     },
     "ios_app_native": {
-      "status": "ios-26.5-arm64-simulator-app-internal-v3-qualified-not-admitted-not-released",
+      "status": "ios-26.5-arm64-simulator-app-internal-v4-qualification-pending-not-admitted-not-released",
       "executor": "host/tests/ios-app-capability/Host/FixedHost.swift",
       "profile": "host/tests/ios-app-capability/Profile/EmbeddedProfile.swift",
       "system_libs": [
@@ -258,7 +258,7 @@
         "wasmc:system-ios-app-audio@0.0.1-dev.1",
         "wasmc:system-ios-app-web@0.0.1-dev.1",
         "wasmc:system-ios-app-device-observation@0.0.1-dev.1",
-        "wasmc:system-ios-app-authorization@0.0.1-dev.1"
+        "wasmc:system-ios-app-authorization@0.0.1-dev.2"
       ],
       "evidence": "scripts/test-ios-app-capability.mjs",
       "convergence": "one byte-identical fixed domain-neutral embedded Swift Host executes twelve statically linked Lib providers selected by the app profile; authorization status, request planning and attempt history remain Lib semantics",
@@ -275,7 +275,7 @@
         "real-webkit-dom-and-javascript",
         "permission-free-protected-capability-observation",
         "zero-prompt-authorization-discovery",
-        "one-attempt-per-permission-policy-and-persistent-ledger",
+        "repeatable-demand-authorization-with-in-flight-deduplication-and-persistent-history",
         "xcode-simulator-ad-hoc-signing",
         "zero-domain-apis-in-fixed-embedded-host"
       ],

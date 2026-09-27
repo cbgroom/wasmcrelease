@@ -25,10 +25,11 @@ limits and result identity. The fixed Host source digest remains identical to
 the earlier six-provider qualification.
 
 The twelfth provider is the authorization broker. Discovery never prompts. It
-centralizes exact permission states, request planning and the persistent
-attempt ledger so individual domain Libs do not independently nag the user.
-The policy permits a request only for `not-determined` plus never-attempted;
-denied routes to Settings and unavailable/restricted fails closed. iOS system
+centralizes exact permission states, request planning, in-flight deduplication
+and persistent attempt history so individual domain Libs do not independently
+nag the user. The policy permits a needed `not-determined` request again after
+an unsuccessful attempt, once no request is in flight. Denied routes to a
+reofferable Settings recovery path and unavailable/restricted fails closed. iOS system
 prompts remain separate per permission category.
 
 Run the macOS qualification against one already booted simulator:

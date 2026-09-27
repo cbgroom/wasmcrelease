@@ -15,7 +15,7 @@ const expected = new Map([
   ["wasmc:system-ios-app-audio@0.0.1-dev.1", "wasmc:system-app-audio@0.0.1"],
   ["wasmc:system-ios-app-web@0.0.1-dev.1", "wasmc:system-app-web@0.0.1"],
   ["wasmc:system-ios-app-device-observation@0.0.1-dev.1", "wasmc:system-app-device-observation@0.0.1"],
-  ["wasmc:system-ios-app-authorization@0.0.1-dev.1", "wasmc:system-app-authorization@0.0.1"],
+  ["wasmc:system-ios-app-authorization@0.0.1-dev.2", "wasmc:system-app-authorization@0.0.1"],
 ]);
 const host = fs.readFileSync("host/tests/ios-app-capability/Host/FixedHost.swift", "utf8");
 const profile = fs.readFileSync("host/tests/ios-app-capability/Profile/EmbeddedProfile.swift", "utf8");

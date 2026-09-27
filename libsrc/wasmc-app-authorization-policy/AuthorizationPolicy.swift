@@ -13,7 +13,8 @@ public enum WAsmCAuthorizationState: String {
 
 public enum WAsmCAuthorizationPlan: String {
     case noRequest = "no-request"
-    case requestOnce = "request-once"
+    case request = "request"
+    case waitForInFlightRequest = "wait-for-in-flight-request"
     case openSettings = "open-settings"
     case failClosed = "fail-closed"
 }
@@ -21,13 +22,13 @@ public enum WAsmCAuthorizationPlan: String {
 public enum WAsmCAuthorizationPolicy {
     public static func plan(
         state: WAsmCAuthorizationState,
-        attempted: Bool
+        requestInFlight: Bool
     ) -> WAsmCAuthorizationPlan {
         switch state {
         case .notRequired, .authorized, .limited, .provisional, .ephemeral:
             return .noRequest
         case .notDetermined:
-            return attempted ? .openSettings : .requestOnce
+            return requestInFlight ? .waitForInFlightRequest : .request
         case .denied:
             return .openSettings
         case .restricted, .unavailable, .unknown:

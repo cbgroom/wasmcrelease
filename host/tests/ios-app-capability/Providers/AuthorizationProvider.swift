@@ -23,18 +23,19 @@ private enum AuthorizationState: String {
 
 private enum AuthorizationPlan: String {
     case noRequest = "no-request"
-    case requestOnce = "request-once"
+    case request = "request"
+    case waitForInFlightRequest = "wait-for-in-flight-request"
     case openSettings = "open-settings"
     case failClosed = "fail-closed"
 }
 
 private enum AuthorizationPolicy {
-    static func plan(state: AuthorizationState, attempted: Bool) -> AuthorizationPlan {
+    static func plan(state: AuthorizationState, requestInFlight: Bool) -> AuthorizationPlan {
         switch state {
         case .notRequired, .authorized, .limited, .provisional, .ephemeral:
             return .noRequest
         case .notDetermined:
-            return attempted ? .openSettings : .requestOnce
+            return requestInFlight ? .waitForInFlightRequest : .request
         case .denied:
             return .openSettings
         case .restricted, .unavailable, .unknown:
@@ -45,18 +46,21 @@ private enum AuthorizationPolicy {
 
 private struct AuthorizationAttemptLedger {
     private let defaults: UserDefaults
-    private let prefix = "wasmc.authorization.attempted."
+    private let prefix = "wasmc.authorization.attempt-count."
 
     init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
     }
 
-    func hasAttempted(_ capability: String) -> Bool {
-        defaults.bool(forKey: prefix + capability)
+    func attemptCount(_ capability: String) -> Int {
+        defaults.integer(forKey: prefix + capability)
     }
 
-    func recordAttempt(_ capability: String) {
-        defaults.set(true, forKey: prefix + capability)
+    @discardableResult
+    func recordAttempt(_ capability: String) -> Int {
+        let next = attemptCount(capability) + 1
+        defaults.set(next, forKey: prefix + capability)
+        return next
     }
 
     func clearProbe(_ capability: String) {
@@ -175,28 +179,30 @@ enum AuthorizationProvider {
             "offline-audio", "local-webkit",
         ]
         let decisions = observedStates.map { name, state in
-            let attempted = ledger.hasAttempted(name)
+            let attemptCount = ledger.attemptCount(name)
             return [
                 "capability": name,
                 "state": state.rawValue,
-                "attempted": attempted,
-                "plan": AuthorizationPolicy.plan(state: state, attempted: attempted).rawValue,
+                "attempt_count": attemptCount,
+                "request_in_flight": false,
+                "plan": AuthorizationPolicy.plan(state: state, requestInFlight: false).rawValue,
             ] as [String: Any]
         }
         let policyTests = [
-            AuthorizationPolicy.plan(state: .notRequired, attempted: false) == .noRequest,
-            AuthorizationPolicy.plan(state: .authorized, attempted: false) == .noRequest,
-            AuthorizationPolicy.plan(state: .notDetermined, attempted: false) == .requestOnce,
-            AuthorizationPolicy.plan(state: .notDetermined, attempted: true) == .openSettings,
-            AuthorizationPolicy.plan(state: .denied, attempted: true) == .openSettings,
-            AuthorizationPolicy.plan(state: .restricted, attempted: false) == .failClosed,
-            AuthorizationPolicy.plan(state: .unavailable, attempted: false) == .failClosed,
+            AuthorizationPolicy.plan(state: .notRequired, requestInFlight: false) == .noRequest,
+            AuthorizationPolicy.plan(state: .authorized, requestInFlight: false) == .noRequest,
+            AuthorizationPolicy.plan(state: .notDetermined, requestInFlight: false) == .request,
+            AuthorizationPolicy.plan(state: .notDetermined, requestInFlight: true) == .waitForInFlightRequest,
+            AuthorizationPolicy.plan(state: .notDetermined, requestInFlight: false) == .request,
+            AuthorizationPolicy.plan(state: .denied, requestInFlight: false) == .openSettings,
+            AuthorizationPolicy.plan(state: .restricted, requestInFlight: false) == .failClosed,
+            AuthorizationPolicy.plan(state: .unavailable, requestInFlight: false) == .failClosed,
         ].allSatisfy { $0 }
         let probeCapability = "qualification-probe"
         ledger.clearProbe(probeCapability)
-        let absentBeforeRecord = !ledger.hasAttempted(probeCapability)
-        ledger.recordAttempt(probeCapability)
-        let presentAfterRecord = ledger.hasAttempted(probeCapability)
+        let absentBeforeRecord = ledger.attemptCount(probeCapability) == 0
+        let firstCount = ledger.recordAttempt(probeCapability)
+        let secondCount = ledger.recordAttempt(probeCapability)
         ledger.clearProbe(probeCapability)
         return try ProviderSupport.encode([
             "discovery_prompt_count": 0,
@@ -204,12 +210,14 @@ enum AuthorizationProvider {
             "permission_free_count": permissionFree.count,
             "authorization_decisions": decisions,
             "one_app_rationale_session": true,
-            "request_only_when_not_determined_and_unattempted": true,
-            "denied_does_not_reprompt": true,
+            "request_when_not_determined_even_after_prior_failure": true,
+            "repeat_request_after_unsuccessful_attempt": true,
+            "in_flight_request_deduplicated": true,
+            "denied_routes_to_settings_and_can_be_reoffered": true,
             "restricted_and_unavailable_fail_closed": true,
             "os_prompts_cannot_be_coalesced_across_permission_categories": true,
             "policy_state_machine_tests": policyTests,
-            "persistent_attempt_ledger_roundtrip": absentBeforeRecord && presentAfterRecord,
+            "persistent_attempt_history_roundtrip": absentBeforeRecord && firstCount == 1 && secondCount == 2,
         ])
     }
 }

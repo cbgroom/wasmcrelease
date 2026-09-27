@@ -400,10 +400,12 @@ target observation, not a Host failure or a claim of physical-device support.
 
 Authorization discovery, planning and attempt history are also Lib semantics.
 The authorization provider identifies thirteen permission-free App capabilities
-and preflights ten protected categories with zero prompts. It requests only a
-`not-determined` category that has never been attempted, persists that attempt,
-never automatically re-prompts a denial, and fails closed for restricted or
-unavailable capabilities. A caller may present one rationale screen for a batch,
+and preflights ten protected categories with zero prompts. It requests a needed
+`not-determined` category whenever no request for it is currently in flight;
+prior unsuccessful attempts remain history and do not permanently suppress a
+later request. A denied iOS category routes to a reofferable Settings recovery
+path because iOS itself will not show that system prompt again. Restricted or
+unavailable capabilities fail closed. A caller may present one rationale screen for a batch,
 but iOS does not permit unrelated system permission prompts to be combined.
 The qualification tests the planner state machine and persistent ledger without
 causing a system prompt; real prompt/result callbacks remain a physical-device
@@ -433,6 +435,13 @@ to implementation commit `d509336ee2d2bc87d9ea0509ff202541648c750d`.
 It adds the unadmitted `wasmc-app-authorization-policy@0.0.1-dev.1` public-source
 candidate and a matching iOS status adapter while retaining the same fixed Host
 digest. No system permission prompt was produced by qualification.
+
+The corrected repeatable-demand successor is
+`wasmc-app-authorization-policy@0.0.1-dev.2`. It removes the v3 one-attempt
+suppression rule: persistent attempt history is diagnostic evidence only,
+in-flight requests are deduplicated, and a later demand can request again when
+the observed state remains `not-determined`. Its v4 receipt is pending exact
+local qualification.
 
 The mapped-window, epoll-readiness, kernel-splice and asynchronous-readiness
 successors are qualified on local Linux aarch64 and independent GitHub Ubuntu

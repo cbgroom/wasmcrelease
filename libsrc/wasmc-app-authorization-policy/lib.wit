@@ -27,19 +27,22 @@ interface authorization {
   }
   enum plan {
     no-request,
-    request-once,
+    request,
+    wait-for-in-flight-request,
     open-settings,
     fail-closed,
   }
   record decision {
     capability: capability,
     state: state,
-    attempted: bool,
+    attempt-count: u32,
+    request-in-flight: bool,
     plan: plan,
   }
   snapshot: func() -> list<decision>;
   plan-request: func(capabilities: list<capability>) -> list<decision>;
-  record-attempt: func(capability: capability) -> result<_, s32>;
+  begin-request: func(capability: capability) -> result<u32, s32>;
+  complete-request: func(capability: capability, request-id: u32, observed-state: state) -> result<_, s32>;
 }
 
 world system-app-authorization {
