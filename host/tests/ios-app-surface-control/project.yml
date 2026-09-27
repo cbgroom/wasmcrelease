@@ -16,6 +16,22 @@ targets:
     platform: iOS
     info:
       path: ${WASMC_IOS_SURFACE_INFO_PLIST}
+      properties:
+        CFBundleShortVersionString: "0.0.2"
+        CFBundleVersion: "2"
+        LSRequiresIPhoneOS: true
+        UIApplicationSupportsIndirectInputEvents: true
+        UIBackgroundModes: [audio]
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        UISupportedInterfaceOrientations~ipad:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationPortraitUpsideDown
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
     sources:
       - path: App
         excludes: [Info.plist]
