@@ -197,9 +197,11 @@ records `https_transport_migrated=false`.
 The first Linux aarch64 same-runner migration qualification preserved the
 256-request forced-partial-write corpus (`5159` issue/wait/claim operations,
 `4620` partial writes, checksum `93106`) and measured paired RPS p50 `2.044x`
-the old transport. This is local architecture evidence, not admission or a
-cross-platform release claim. Linux x86_64 CI, an independent retained receipt,
-descriptor review and admission remain open.
+the old transport. Independent Linux x86_64 CI run `36316303486` retained the
+same lifecycle counts and checksum, measured old/new RPS p50
+`2335.639/3510.297`, and passed the `0.90` policy at `1.573x`. These are
+qualification results, not admission or a production-default switch;
+descriptor review, Wasm lowering and admission remain open.
 
 ## Library OS consequence
 

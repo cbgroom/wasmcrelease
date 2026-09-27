@@ -506,6 +506,33 @@ assert.equal(linuxX86SocketReceipt.evidence.concurrent_connections, linuxSocketR
 assert.equal(linuxX86SocketReceipt.evidence.https_transport_migrated, false);
 assert.ok(linuxX86SocketReceipt.evidence.performance.mib_per_second >= linuxX86SocketReceipt.evidence.performance.minimum_mib_per_second);
 
+const httpsSocketMigrationReceipt = JSON.parse(fs.readFileSync("admission/host-lib-defined-boundary-v1/linux-x86_64-https-socket-migration-v1.json", "utf8"));
+assert.equal(httpsSocketMigrationReceipt.schema, "wasmc.host-lib-defined-boundary-https-socket-migration/v1");
+assert.equal(httpsSocketMigrationReceipt.status, "linux-x86_64-https-lib-socket-qualified-not-admitted-not-released");
+assert.equal(httpsSocketMigrationReceipt.workflow.run_id, 36316303486);
+assert.equal(httpsSocketMigrationReceipt.workflow.conclusion, "success");
+assert.equal(httpsSocketMigrationReceipt.admitted, false);
+assert.equal(httpsSocketMigrationReceipt.released, false);
+execFileSync("git", ["cat-file", "-e", `${httpsSocketMigrationReceipt.qualified_commit}^{commit}`]);
+execFileSync("git", ["merge-base", "--is-ancestor", httpsSocketMigrationReceipt.qualified_commit, "HEAD"]);
+for (const [relative, expected] of Object.entries(httpsSocketMigrationReceipt.source)) {
+  assert.equal(
+    digestAt(httpsSocketMigrationReceipt.qualified_commit, relative),
+    expected,
+    `${relative}: retained HTTPS socket migration source drift`,
+  );
+}
+assert.equal(httpsSocketMigrationReceipt.evidence.status, "PASS");
+assert.equal(httpsSocketMigrationReceipt.evidence.execution, "in-process-exact-adapter");
+assert.equal(httpsSocketMigrationReceipt.evidence.semantic_parity, true);
+assert.equal(httpsSocketMigrationReceipt.evidence.host_operations, httpsSocketMigrationReceipt.evidence.host_waits);
+assert.equal(httpsSocketMigrationReceipt.evidence.host_operations, httpsSocketMigrationReceipt.evidence.host_claimed);
+assert.ok(httpsSocketMigrationReceipt.evidence.host_partial_writes > 0);
+assert.ok(
+  httpsSocketMigrationReceipt.evidence.performance.paired_rps_ratio_p50 >=
+    httpsSocketMigrationReceipt.evidence.performance.minimum_paired_rps_ratio_p50,
+);
+
 const oldCandidate = spawnSync(
   process.execPath,
   ["scripts/release-candidate.mjs", "verify", "channels/candidates/0.0.15.json"],
@@ -538,6 +565,7 @@ console.log(JSON.stringify({
   retained_linux_x86_64_device_io_qualification: linuxX86DeviceIoReceipt.qualified_commit,
   retained_linux_aarch64_socket_qualification: linuxSocketReceipt.implementation_commit,
   retained_linux_x86_64_socket_qualification: linuxX86SocketReceipt.qualified_commit,
+  retained_linux_x86_64_https_socket_migration: httpsSocketMigrationReceipt.qualified_commit,
   old_candidate_rejects_product_drift: true,
   lifecycle: "architecture-workstream-not-admitted-not-released",
 }));

@@ -1,0 +1,47 @@
+{
+  "schema": "wasmc.host-lib-defined-boundary-https-socket-migration/v1",
+  "status": "linux-x86_64-https-lib-socket-qualified-not-admitted-not-released",
+  "qualified_commit": "2e0787b063d1efb4519990b762e91d4f0166c2b6",
+  "workflow": {
+    "run_id": 36316303486,
+    "url": "https://github.com/cbgroom/wasmcrelease/actions/runs/36316303486",
+    "conclusion": "success",
+    "artifact": "host-lib-socket-https-migration-2e0787b063d1efb4519990b762e91d4f0166c2b6"
+  },
+  "source": {
+    "host/runtime/lib-boundary/native-linux-operation/src/main.rs": "f8fc9c8c2c1a54925078a8babe293b58893f04c798959f6b7d0df0cebe592d02",
+    "host/tests/https/src/host_transport_lib_boundary.rs": "c623831bed821c88dd207786dbf63f7bd7b20955a994c8c613b2c1aefcdf026e",
+    "host/tests/https/src/main.rs": "fb327b94bcdbd7aaa895ae3b88bcf45ee9e57d4fcca195bcfb88c5e907953345",
+    "libsrc/wasmc-system-linux-socket/native-adapter.c": "02f05d38b781b1d876409fd8a07962002306d0aad7382803f41b5e15afd4b78a",
+    "scripts/host-https-ab.mjs": "70a5b33d531a492340c745dc0f8ea7925970c15cfe3a5edff718710ccb55613f",
+    "scripts/test-linux-operation-bridge.mjs": "ba4a44967a4a07fe9250bb2fe0a35104c9b6c3c667c0ce24b8932f02e4f50989",
+    ".github/workflows/host-layout.yml": "8bd8807018619368298a79d0fe68c742f0ae364cc258ceb957477c48ce2e95db"
+  },
+  "identity": {
+    "default_executor_sha256": "8a12196c6c5e34fd86fc4ed13798dc7b81c17da2ce710ed8a9477642fb4f6329",
+    "successor_executor_sha256": "1d481a267855bec5ea4302cab5f4e00efe292dfe023774a9cca882a38f6d5eb9",
+    "descriptor_sha256": "e17854e138f4487c93613ee5f29c635c93b61c06572a1e6b7f689491d87a5fa3",
+    "adapter_sha256": "aeebfedf01afe6e6d1f88224d7936a1950caa6e718bd6cf7881864720eda1e35",
+    "baseline_binary_sha256": "255756759c70f5437be33827c1345550671dde1ceff2b1741bf182e0a537fb42",
+    "candidate_binary_sha256": "922168f8791147192b997e4cc5e81cb3ceee4dadf3adfeab30ab3137412d7395"
+  },
+  "evidence": {
+    "status": "PASS",
+    "execution": "in-process-exact-adapter",
+    "semantic_parity": true,
+    "host_operations": 5159,
+    "host_waits": 5159,
+    "host_claimed": 5159,
+    "host_partial_writes": 4620,
+    "checksum": 93106,
+    "performance": {
+      "samples": 6,
+      "baseline_rps_p50": 2335.639,
+      "candidate_rps_p50": 3510.297,
+      "paired_rps_ratio_p50": 1.573,
+      "minimum_paired_rps_ratio_p50": 0.9
+    }
+  },
+  "admitted": false,
+  "released": false
+}
