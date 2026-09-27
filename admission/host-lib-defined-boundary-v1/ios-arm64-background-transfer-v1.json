@@ -1,0 +1,47 @@
+{
+  "schema": "wasmc.host-lib-defined-boundary-ios-background-transfer-qualification/v1",
+  "implementation_commit": "71c8e4f09d1c50dd8c0a6c158d1d2a2e038385ad",
+  "source": {
+    "docs/IOS_LIB_CAPABILITY_SPECTRUM.md": "e310c3d9867aa8c31f609bcf6f909828a31a794907f1807de5346ecdd243c85c",
+    "host/platform/ios/background-transfer-profile.json": "6e7a56331445f1ee0da813a1cdacc6593f1d8f1d6c3310a728becc5f9575b043",
+    "host/platform/ios/background-transfer-request.json": "4f5532343f48333f8603897b9bfa6e886ff7b061add569b303cd8419cef0f870",
+    "libsrc/wasmc-system-ios-background-transfer/candidate.json": "3466cf45d6fed4376d837f50aff314acb49516b9d4c06f3662690684fa6eaf9b",
+    "libsrc/wasmc-system-ios-background-transfer/lib.wit": "bcd3f97b5b446e4383649eab9fb7c8b3b8623f788f824ecdf985701b72ef498c",
+    "libsrc/wasmc-system-ios-background-transfer/platform/ios/binding.json": "57b8c11cb974467c0cd4e02899641e7a5ec5dfdf2738a14e26d0e84973d00554",
+    "libsrc/wasmc-system-ios-background-transfer/platform/ios/Sources/BackgroundTransferProvider.swift": "75209e1678472d7cc130edd6c069e92c1ec103722d9fcd35315e6f509230a166",
+    "libsrc/wasmc-system-ios-background-transfer/examples/ios-app/App/AppDelegate.swift": "904f0a805174cd11f0d3ee489b09553d2e8f921a3d03ae9c69826f8da0b8d1fe",
+    "libsrc/wasmc-system-ios-background-transfer/examples/ios-app/App/BackgroundTransferViewController.swift": "0646c3a02111fc2d3741fcc1963f68d507df85f2d81623fa1d3ad3922134223f",
+    "libsrc/wasmc-system-ios-background-transfer/examples/ios-app/UITests/BackgroundTransferUITests.swift": "97e9c2c4e39659a2a9f109e7500c873405da1feeace07944ef67c142e95bda44",
+    "scripts/fixtures/ios-background-transfer-server.mjs": "8be063196f35dcfb36dfabc439fc293f331e89e03a0b540f6df4b58cd5a3d7e5",
+    "scripts/test-ios-background-transfer.mjs": "80144316a546b6868078e24e24f804985ea6be6d2277ebe85af06622a671baff",
+    "scripts/validate-ios-background-transfer.mjs": "e023cf7f7f726b850356bfeb99b9ad2b2830731742142702348c3ad4a926ab56"
+  },
+  "target": {
+    "os": "ios", "architecture": "aarch64", "environment": "simulator", "embedding": "native",
+    "runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-5",
+    "device": "iPhone 17 Pro",
+    "udid": "33F7591E-A76B-4C95-9EDA-FA0E66C7F23A"
+  },
+  "evidence": {
+    "status": "PASS",
+    "api": "wasmc:system-background-transfer@0.0.1",
+    "provider": "wasmc:system-ios-background-transfer@0.0.1-dev.1",
+    "fixed_host_domain_apis": 0,
+    "fixed_host_sha256": "f0d465ba7f23698d6365453b02fad2f4a0803171f970631751fc90a00a86d96f",
+    "transport": "URLSessionConfiguration.background",
+    "bytes": 8388608,
+    "completion_phase": "background",
+    "sha256": "bdf23837181f5808331800c1ae2b4f7d7a839536b10d58491471c50dde23833a",
+    "durable_result_sha256": "bdf23837181f5808331800c1ae2b4f7d7a839536b10d58491471c50dde23833a",
+    "event_count": 4,
+    "process_relaunch_delivery_qualified": false,
+    "physical_device": false,
+    "wit_to_wasm_lowering": false,
+    "dynamic_component_loading": false
+  },
+  "qualified": true,
+  "admitted": false,
+  "released": false,
+  "discoverable": false,
+  "installable": false
+}

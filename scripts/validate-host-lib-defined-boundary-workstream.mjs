@@ -446,6 +446,57 @@ assert.equal(iosLifecycleV1Receipt.evidence.bgtaskscheduler_delivery_qualified, 
 assert.equal(iosLifecycleV1Receipt.evidence.background_urlsession_delivery_qualified, false);
 assert.equal(iosLifecycleV1Receipt.evidence.physical_device, false);
 
+const iosBackgroundTransferV1Receipt = JSON.parse(fs.readFileSync(
+  "admission/host-lib-defined-boundary-v1/ios-arm64-background-transfer-v1.json", "utf8",
+));
+assert.equal(iosBackgroundTransferV1Receipt.schema,
+  "wasmc.host-lib-defined-boundary-ios-background-transfer-qualification/v1");
+assert.equal(iosBackgroundTransferV1Receipt.qualified, true);
+assert.equal(iosBackgroundTransferV1Receipt.admitted, false);
+assert.equal(iosBackgroundTransferV1Receipt.released, false);
+assert.equal(iosBackgroundTransferV1Receipt.discoverable, false);
+assert.equal(iosBackgroundTransferV1Receipt.installable, false);
+execFileSync("git", ["cat-file", "-e", `${iosBackgroundTransferV1Receipt.implementation_commit}^{commit}`]);
+execFileSync("git", ["merge-base", "--is-ancestor", iosBackgroundTransferV1Receipt.implementation_commit, "HEAD"]);
+for (const [relative, expected] of Object.entries(iosBackgroundTransferV1Receipt.source)) {
+  assert.equal(digestAt(iosBackgroundTransferV1Receipt.implementation_commit, relative), expected,
+    `${relative}: retained iOS background-transfer v1 source drift`);
+}
+assert.equal(iosBackgroundTransferV1Receipt.evidence.status, "PASS");
+assert.equal(iosBackgroundTransferV1Receipt.evidence.fixed_host_domain_apis, 0);
+assert.equal(iosBackgroundTransferV1Receipt.evidence.fixed_host_sha256,
+  iosLifecycleV1Receipt.evidence.fixed_host_sha256);
+assert.equal(iosBackgroundTransferV1Receipt.evidence.bytes, 8 * 1024 * 1024);
+assert.equal(iosBackgroundTransferV1Receipt.evidence.completion_phase, "background");
+assert.equal(iosBackgroundTransferV1Receipt.evidence.sha256,
+  iosBackgroundTransferV1Receipt.evidence.durable_result_sha256);
+assert.equal(iosBackgroundTransferV1Receipt.evidence.process_relaunch_delivery_qualified, false);
+assert.equal(iosBackgroundTransferV1Receipt.evidence.physical_device, false);
+
+const iosDeferredWorkRejectionV1 = JSON.parse(fs.readFileSync(
+  "admission/host-lib-defined-boundary-v1/ios-arm64-deferred-work-simulator-rejection-v1.json", "utf8",
+));
+assert.equal(iosDeferredWorkRejectionV1.schema,
+  "wasmc.host-lib-defined-boundary-ios-deferred-work-rejection/v1");
+assert.equal(iosDeferredWorkRejectionV1.qualified, false);
+assert.equal(iosDeferredWorkRejectionV1.admitted, false);
+assert.equal(iosDeferredWorkRejectionV1.released, false);
+assert.equal(iosDeferredWorkRejectionV1.discoverable, false);
+assert.equal(iosDeferredWorkRejectionV1.installable, false);
+execFileSync("git", ["cat-file", "-e", `${iosDeferredWorkRejectionV1.implementation_commit}^{commit}`]);
+execFileSync("git", ["merge-base", "--is-ancestor", iosDeferredWorkRejectionV1.implementation_commit, "HEAD"]);
+for (const [relative, expected] of Object.entries(iosDeferredWorkRejectionV1.source)) {
+  assert.equal(digestAt(iosDeferredWorkRejectionV1.implementation_commit, relative), expected,
+    `${relative}: retained iOS deferred-work rejection source drift`);
+}
+assert.equal(iosDeferredWorkRejectionV1.evidence.status, "REJECTED_UNAVAILABLE");
+assert.equal(iosDeferredWorkRejectionV1.evidence.registration_accepted, true);
+assert.equal(iosDeferredWorkRejectionV1.evidence.submission_accepted, false);
+assert.equal(iosDeferredWorkRejectionV1.evidence.error_domain, "BGTaskSchedulerErrorDomain");
+assert.equal(iosDeferredWorkRejectionV1.evidence.error_code, 1);
+assert.equal(iosDeferredWorkRejectionV1.evidence.pending_count, 0);
+assert.equal(iosDeferredWorkRejectionV1.evidence.system_delivery_qualified, false);
+
 const frozenIdentityFiles = [
   "release.json",
   "channels/prod.json",
@@ -1233,6 +1284,8 @@ console.log(JSON.stringify({
   retained_ios_arm64_app_surface_control_v4_qualification: iosSurfaceV4Receipt.implementation_commit,
   retained_ios_arm64_app_surface_control_v5_qualification: iosSurfaceV5Receipt.implementation_commit,
   retained_ios_arm64_app_lifecycle_v1_qualification: iosLifecycleV1Receipt.implementation_commit,
+  retained_ios_arm64_background_transfer_v1_qualification: iosBackgroundTransferV1Receipt.implementation_commit,
+  retained_ios_arm64_deferred_work_simulator_rejection_v1: iosDeferredWorkRejectionV1.implementation_commit,
   old_candidate_rejects_product_drift: true,
   lifecycle: "architecture-workstream-not-admitted-not-released",
 }));
