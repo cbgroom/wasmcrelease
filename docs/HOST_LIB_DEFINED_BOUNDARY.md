@@ -342,6 +342,15 @@ The direct-touchscreen and session-lifecycle successor receipt is
 Its observed keyboard batch latency is also diagnostic only. The fixed Android
 Host digest remains unchanged; no touchscreen or resource API was added to it.
 
+The exact-target profile-resolution successor receipt is
+`admission/host-lib-defined-boundary-v1/android-arm64-agent-computer-v4.json`,
+bound to implementation commit `82d266a9bae16f7eff21e9d73ca5a338807f04d8`.
+It retains the complete Android control/lifecycle chain while proving exact
+profile regeneration, target and lifecycle rejection, ambiguity rejection and
+exact-pin recovery. It also closes a Lib-owned UI snapshot publication race
+with a bounded wait. Resolver, readiness and provider metadata changes require
+zero fixed-Host source or binary changes.
+
 The mapped-window, epoll-readiness, kernel-splice and asynchronous-readiness
 successors are qualified on local Linux aarch64 and independent GitHub Ubuntu
 x86_64. The ioctl call-shape and vectored-write successor is also qualified on

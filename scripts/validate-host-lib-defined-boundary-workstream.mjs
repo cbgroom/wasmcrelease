@@ -675,6 +675,48 @@ assert.equal(androidV3Receipt.evidence.emulator_boot_is_bounded, true);
 assert.equal(androidV3Receipt.evidence.wasm_lowering, false);
 assert.equal(androidV3Receipt.evidence.physical_device_qualification, false);
 
+const androidV4Receipt = JSON.parse(fs.readFileSync("admission/host-lib-defined-boundary-v1/android-arm64-agent-computer-v4.json", "utf8"));
+assert.equal(androidV4Receipt.schema, "wasmc.host-lib-defined-boundary-android-qualification/v4");
+assert.equal(androidV4Receipt.status, "android-16-arm64-emulator-exact-profile-resolution-and-agent-computer-qualified-not-admitted-not-released");
+assert.equal(androidV4Receipt.admitted, false);
+assert.equal(androidV4Receipt.released, false);
+assert.equal(androidV4Receipt.discoverable, false);
+assert.equal(androidV4Receipt.installable, false);
+execFileSync("git", ["cat-file", "-e", `${androidV4Receipt.implementation_commit}^{commit}`]);
+execFileSync("git", ["merge-base", "--is-ancestor", androidV4Receipt.implementation_commit, "HEAD"]);
+for (const [relative, expected] of Object.entries(androidV4Receipt.source)) {
+  assert.equal(
+    digestAt(androidV4Receipt.implementation_commit, relative),
+    expected,
+    `${relative}: retained Android v4 qualification source drift`,
+  );
+}
+assert.equal(androidV4Receipt.outputs.executor_sha256, androidV3Receipt.outputs.executor_sha256);
+assert.equal(androidV4Receipt.outputs.executor_matches_v1_through_v3, true);
+assert.equal(androidV4Receipt.evidence.status, "PASS");
+assert.equal(androidV4Receipt.evidence.profile_schema, "wasmc.library-os-profile/v2");
+assert.deepEqual(androidV4Receipt.evidence.profile_target, {
+  os: "android", architecture: "aarch64", environment: "emulator", embedding: "native",
+});
+assert.equal(androidV4Receipt.evidence.exact_profile_regeneration, true);
+assert.equal(androidV4Receipt.evidence.resolved_bindings, 4);
+assert.equal(androidV4Receipt.evidence.provider_name_inference, false);
+assert.equal(androidV4Receipt.evidence.unique_match_required, true);
+assert.equal(androidV4Receipt.evidence.ambiguous_provider_rejection, true);
+assert.equal(androidV4Receipt.evidence.ambiguity_exact_pin, true);
+assert.equal(androidV4Receipt.evidence.lifecycle_fail_closed, true);
+assert.equal(androidV4Receipt.evidence.missing_target_rejections.length, 5);
+assert.equal(androidV4Receipt.evidence.wit_package_identity_checked, true);
+assert.equal(androidV4Receipt.evidence.descriptor_identity_checked, true);
+assert.equal(androidV4Receipt.evidence.fixed_executor_domain_apis, 0);
+assert.equal(androidV4Receipt.evidence.bounded_ui_snapshot_publication, true);
+assert.equal(androidV4Receipt.evidence.full_control_chain, "uinput-touch-uinput-keyboard-uinput-touch");
+assert.equal(androidV4Receipt.evidence.session_eof_cleanup, true);
+assert.equal(androidV4Receipt.evidence.parallel_session_isolation, true);
+assert.equal(androidV4Receipt.evidence.performance_gate, false);
+assert.equal(androidV4Receipt.evidence.wasm_lowering, false);
+assert.equal(androidV4Receipt.evidence.physical_device_qualification, false);
+
 const oldCandidate = spawnSync(
   process.execPath,
   ["scripts/release-candidate.mjs", "verify", "channels/candidates/0.0.15.json"],
@@ -713,6 +755,7 @@ console.log(JSON.stringify({
   retained_android_arm64_agent_computer_qualification: androidReceipt.implementation_commit,
   retained_android_arm64_agent_computer_v2_qualification: androidV2Receipt.implementation_commit,
   retained_android_arm64_agent_computer_v3_qualification: androidV3Receipt.implementation_commit,
+  retained_android_arm64_agent_computer_v4_qualification: androidV4Receipt.implementation_commit,
   old_candidate_rejects_product_drift: true,
   lifecycle: "architecture-workstream-not-admitted-not-released",
 }));
