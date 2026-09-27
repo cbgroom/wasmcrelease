@@ -33,6 +33,9 @@ assert.equal(receipt.released, false);
 execFileSync("git", ["cat-file", "-e", `${receipt.implementation_commit}^{commit}`]);
 execFileSync("git", ["merge-base", "--is-ancestor", receipt.implementation_commit, "HEAD"]);
 const digest = (relative) => createHash("sha256").update(fs.readFileSync(relative)).digest("hex");
+const digestAt = (revision, relative) => createHash("sha256")
+  .update(execFileSync("git", ["show", `${revision}:${relative}`]))
+  .digest("hex");
 assert.equal(digest(receipt.executor.path), receipt.executor.sha256);
 for (const lib of receipt.system_libs) {
   assert.equal(digest(`${lib.root}/lib.wit`), lib.wit_sha256);
@@ -51,7 +54,11 @@ assert.equal(linuxReceipt.released, false);
 execFileSync("git", ["cat-file", "-e", `${linuxReceipt.implementation_commit}^{commit}`]);
 execFileSync("git", ["merge-base", "--is-ancestor", linuxReceipt.implementation_commit, "HEAD"]);
 for (const [relative, expected] of Object.entries(linuxReceipt.source)) {
-  assert.equal(digest(relative), expected, `${relative}: Linux qualification source drift`);
+  assert.equal(
+    digestAt(linuxReceipt.implementation_commit, relative),
+    expected,
+    `${relative}: retained Linux qualification source drift`,
+  );
 }
 assert.equal(linuxReceipt.evidence.status, "PASS");
 assert.equal(linuxReceipt.evidence.fixed_executor_domain_apis, 0);

@@ -1,6 +1,6 @@
 # Lib-defined Host boundary workstream
 
-Status: **local Node plus Linux aarch64/x86_64 native prototype qualified / not admitted / not released**.
+Status: **persistent Linux aarch64 native session locally qualified / x86_64 refresh pending / not admitted / not released**.
 
 This workstream replaces domain growth in the Rust Host with a fixed,
 domain-neutral execution boundary. It does not modify the immutable v0.0.15
@@ -82,8 +82,9 @@ branches. It verifies the exact Lib adapter identity, loads it, and invokes one
 bounded byte ABI. The Linux platform Lib owns a generic VFS/file-descriptor
 adapter and supplies endpoint paths as Lib data.
 
-That one adapter is now exercised on local Linux aarch64 and independent CI
-Linux x86_64 against `/dev/zero`,
+The one-shot adapter was exercised on local Linux aarch64 and independent CI
+Linux x86_64. Its persistent-resource successor is currently exercised on local
+Linux aarch64 against `/dev/zero`,
 `/dev/null`, `/proc/self/stat` and `/sys/devices/system/cpu/online`. This proves
 that devfs, procfs and sysfs can converge through Linux's existing abstraction
 without one Rust Host API per device. Sockets and ioctl-based device protocols
@@ -93,6 +94,16 @@ belongs to a higher Lib, not to the fixed executor.
 Exact shared-object SHA-256 verification is package integrity, not a capability
 grant or device allowlist. The full-host profile intentionally introduces no
 per-domain permission API.
+
+The persistent executor loads and verifies the adapter once, reuses one bounded
+output window, and exchanges framed operations/completions. The Lib—not the
+executor—owns generation-checked FD tokens, read/write, `poll`, raw `ioctl` and
+cleanup on unload. Local aarch64 qualification performs a real `TIOCGPTN` ioctl
+on `/dev/ptmx`, rejects a stale token after close, and measures pipelined
+`/dev/zero` reads plus `/dev/null` writes. The retained threshold is 25 MiB/s in
+each direction and at least 5x lower per-operation cost than cold process/load/
+open execution; exact observations belong in the versioned receipt rather than
+being advertised as a portable hardware guarantee.
 
 ## Library OS consequence
 
@@ -142,10 +153,11 @@ contains no domain API and is byte-identical for all three. The test additionall
 proves pinned-window release rejection, completion claim-once, adapter digest
 rejection and zero remaining resources/operations/windows.
 
-The native Linux evidence now covers local aarch64 and independent GitHub
-Ubuntu x86_64. Wasm/WIT lowering, native asynchronous lifecycle/cancellation,
-non-Linux platform evidence, admission, catalog publication and immutable
-release remain pending.
+The earlier one-shot Linux evidence covers local aarch64 and independent GitHub
+Ubuntu x86_64. The new persistent/session implementation is locally qualified
+on aarch64 and still requires fresh x86_64 evidence. Wasm/WIT lowering, native
+asynchronous lifecycle/cancellation, mapped windows, non-Linux evidence,
+admission, catalog publication and immutable release remain pending.
 
 The exact local receipt is
 `admission/host-lib-defined-boundary-v1/local-qualification.json`, bound to

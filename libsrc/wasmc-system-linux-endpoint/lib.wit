@@ -3,6 +3,15 @@ package wasmc:system-linux-endpoint@0.0.1;
 interface endpoints {
   read-endpoint: func(path: string, maximum-bytes: u32) -> result<list<u8>, s32>;
   write-endpoint: func(path: string, payload: list<u8>) -> result<u64, s32>;
+
+  resource endpoint {
+    read: func(maximum-bytes: u32) -> result<list<u8>, s32>;
+    write: func(payload: list<u8>) -> result<u64, s32>;
+    control: func(request: u64, argument: list<u8>, maximum-result-bytes: u32) -> result<tuple<s32, list<u8>>, s32>;
+    poll: func(events: u16, timeout-milliseconds: s32) -> result<u16, s32>;
+  }
+
+  open-endpoint: func(path: string, linux-open-flags: u32) -> result<endpoint, s32>;
 }
 
 world system-linux-endpoint {

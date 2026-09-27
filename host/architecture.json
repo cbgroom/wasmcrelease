@@ -134,7 +134,7 @@
       "one-byte-identical-executor"
     ],
     "linux_native": {
-      "status": "linux-aarch64-local-and-x86_64-ci-qualified-not-admitted-not-released",
+      "status": "persistent-session-linux-aarch64-local-qualified-x86_64-refresh-pending-not-admitted-not-released",
       "executor": "host/runtime/lib-boundary/native-linux",
       "system_lib": "libsrc/wasmc-system-linux-endpoint",
       "evidence": "scripts/test-linux-lib-defined-boundary.mjs",
@@ -145,7 +145,11 @@
         "real-/proc/self/stat-read",
         "real-/sys/devices/system/cpu/online-read",
         "exact-shared-object-identity",
-        "fixed-byte-ABI"
+        "fixed-byte-ABI",
+        "persistent-generation-checked-fd",
+        "real-poll",
+        "real-TIOCGPTN-ioctl",
+        "warm-session-performance-gate"
       ]
     }
   }

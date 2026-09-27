@@ -29,6 +29,11 @@
     "device_names_in_fixed_host": false,
     "integrity_is_not_permission": "exact adapter identity verification does not create a per-domain grant or allowlist"
   },
+  "native_performance": {
+    "fixed_host_mechanisms": ["persistent-adapter-session", "reused-bounded-output-window", "framed-operation-completion"],
+    "lib_owned_mechanisms": ["persistent-native-handle", "generation-checked-handle", "read", "write", "poll", "control"],
+    "rule": "performance may add domain-neutral batching, windows and completion machinery but device protocol and handle semantics remain in the exact Lib"
+  },
   "host_forbidden_domain_apis": [
     "file",
     "filesystem",
