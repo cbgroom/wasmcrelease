@@ -427,6 +427,13 @@ to implementation commit `f3bfb7d54ada5735c72774f5293ad29fdeab50a7`.
 It preserves the exact fixed Host digest from the six-provider predecessor;
 only the Lib provider set and profile grew.
 
+The prompt-minimizing authorization successor receipt is
+`admission/host-lib-defined-boundary-v1/ios-arm64-app-capability-v3.json`, bound
+to implementation commit `d509336ee2d2bc87d9ea0509ff202541648c750d`.
+It adds the unadmitted `wasmc-app-authorization-policy@0.0.1-dev.1` public-source
+candidate and a matching iOS status adapter while retaining the same fixed Host
+digest. No system permission prompt was produced by qualification.
+
 The mapped-window, epoll-readiness, kernel-splice and asynchronous-readiness
 successors are qualified on local Linux aarch64 and independent GitHub Ubuntu
 x86_64. The ioctl call-shape and vectored-write successor is also qualified on
