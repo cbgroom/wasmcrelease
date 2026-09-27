@@ -12,9 +12,11 @@ on:
       - "docs/HOST_LIB_DEFINED_BOUNDARY.md"
       - "libsrc/wasmc-system-*-prototype/**"
       - "libsrc/wasmc-system-linux-endpoint/**"
+      - "libsrc/wasmc-system-linux-socket/**"
       - "libsrc/registry.json"
       - "scripts/test-lib-defined-boundary-runtime.mjs"
       - "scripts/test-linux-lib-defined-boundary.mjs"
+      - "scripts/test-linux-socket-lib-defined-boundary.mjs"
       - ".github/workflows/host-layout.yml"
   pull_request:
     paths:
@@ -26,9 +28,11 @@ on:
       - "docs/HOST_LIB_DEFINED_BOUNDARY.md"
       - "libsrc/wasmc-system-*-prototype/**"
       - "libsrc/wasmc-system-linux-endpoint/**"
+      - "libsrc/wasmc-system-linux-socket/**"
       - "libsrc/registry.json"
       - "scripts/test-lib-defined-boundary-runtime.mjs"
       - "scripts/test-linux-lib-defined-boundary.mjs"
+      - "scripts/test-linux-socket-lib-defined-boundary.mjs"
       - ".github/workflows/host-layout.yml"
   workflow_dispatch:
 
@@ -64,6 +68,7 @@ jobs:
       - run: node scripts/validate-host-camera-model.mjs
       - run: node scripts/test-lib-defined-boundary-runtime.mjs
       - run: node scripts/test-linux-lib-defined-boundary.mjs
+      - run: node scripts/test-linux-socket-lib-defined-boundary.mjs
       - run: node scripts/validate-host-lib-defined-boundary-workstream.mjs
       - name: Retained v0.0.15 domain evidence
         shell: bash

@@ -158,6 +158,16 @@ current qualification environment exposes no `/dev/uinput`, `/dev/uhid`,
 UHID create/input/output/report lifecycle, UHID vectored reads and USB Gadget
 UDC binding remain explicit device-backed gates.
 
+The next platform Lib is `wasmc-system-linux-socket`. It owns Linux IPv4 TCP
+socket creation, bind/listen, connect/accept, stream transfer, readiness poll,
+endpoint identity and half-close while reusing the byte-identical fixed native
+executor. Local Linux aarch64 qualification proves a real loopback transport,
+64 concurrent retained connections, stale-token and wrong-resource-kind
+rejection, and a bounded throughput floor. This is the first physical transport
+slice for migrating the retained HTTPS workload; HTTPS still uses its older
+qualification transport until the TLS/HTTP graph is explicitly switched and
+requalified.
+
 ## Library OS consequence
 
 The intended result is a Library OS profile assembled above the fixed Host:

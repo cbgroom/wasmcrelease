@@ -137,6 +137,7 @@
       "status": "ioctl-call-shapes-and-vectored-write-linux-aarch64-and-x86_64-qualified-not-admitted-not-released",
       "executor": "host/runtime/lib-boundary/native-linux",
       "system_lib": "libsrc/wasmc-system-linux-endpoint",
+      "additional_system_libs": ["libsrc/wasmc-system-linux-socket"],
       "evidence": "scripts/test-linux-lib-defined-boundary.mjs",
       "convergence": "one Lib-owned VFS/file-descriptor adapter reaches devfs, procfs and sysfs without device names or domain APIs in the fixed Rust executor",
       "scope": [
@@ -153,6 +154,8 @@
         "real-scalar-value-TCSBRK-ioctl",
         "single-syscall-vectored-write",
         "generation-checked-stale-vectored-write-rejection",
+        "real-loopback-ipv4-tcp-through-independent-socket-lib",
+        "generation-checked-socket-stream-and-listener-resources",
         "warm-session-performance-gate",
         "generation-checked-mapped-device-window",
         "mapping-bounds-and-stale-token-rejection",

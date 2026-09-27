@@ -1,0 +1,13 @@
+{
+  "schema": "wasmc.libsrc-candidate/v1",
+  "id": "wasmc-system-linux-socket",
+  "version": "0.0.1-dev.1",
+  "wit": "lib.wit",
+  "source": ["README.md", "lib.wit", "native-boundary.template.json", "native-adapter.c"],
+  "host_import_budget": 0,
+  "origin": { "kind": "native-public" },
+  "completed_gates": ["public-source", "fixed-native-executor", "linux-aarch64-real-loopback-tcp-v1"],
+  "pending_gates": ["linux-x86_64-real-loopback-tcp-v1", "https-transport-migration", "descriptor-schema-review", "wasm-lowering", "host-completion-bridge-and-late-delivery-drain", "admission-review"],
+  "admitted": false,
+  "qualification": { "runner": "node", "script": "scripts/test-linux-socket-lib-defined-boundary.mjs" }
+}
