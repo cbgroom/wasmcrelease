@@ -14,6 +14,7 @@ const focused = [
   "scripts/validate-android-agent-computer.mjs",
   "scripts/validate-ios-simulator-observation.mjs",
   "scripts/validate-ios-app-capability.mjs",
+  "scripts/validate-ios-app-surface-control.mjs",
 ];
 for (const script of focused) run(script);
 const digest = (relative) => createHash("sha256").update(fs.readFileSync(relative)).digest("hex");

@@ -1,0 +1,34 @@
+name: WAsmCIOSSurfaceControl
+options:
+  deploymentTarget:
+    iOS: "18.0"
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    PRODUCT_BUNDLE_IDENTIFIER: io.wasmc.surface-control-lab
+    GENERATE_INFOPLIST_FILE: YES
+    INFOPLIST_KEY_UIApplicationSceneManifest_Generation: NO
+    INFOPLIST_KEY_UILaunchScreen_Generation: YES
+    INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents: YES
+targets:
+  WAsmCIOSSurfaceControl:
+    type: application
+    platform: iOS
+    sources:
+      - path: App
+      - path: Lib
+      - path: ../ios-app-capability/Host/FixedHost.swift
+    settings:
+      base:
+        PRODUCT_NAME: WAsmCIOSSurfaceControl
+  WAsmCIOSSurfaceControlUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: UITests
+    dependencies:
+      - target: WAsmCIOSSurfaceControl
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: io.wasmc.surface-control-lab.uitests
+        TEST_TARGET_NAME: WAsmCIOSSurfaceControl

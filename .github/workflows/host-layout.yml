@@ -31,6 +31,8 @@ on:
       - "scripts/validate-ios-app-capability.mjs"
       - "scripts/test-ios-app-authorization-flow.mjs"
       - "scripts/test-ios-app-capability.mjs"
+      - "scripts/validate-ios-app-surface-control.mjs"
+      - "scripts/test-ios-app-surface-control.mjs"
       - "scripts/host-https-ab.mjs"
       - ".github/workflows/host-layout.yml"
   pull_request:
@@ -62,6 +64,8 @@ on:
       - "scripts/validate-ios-app-capability.mjs"
       - "scripts/test-ios-app-authorization-flow.mjs"
       - "scripts/test-ios-app-capability.mjs"
+      - "scripts/validate-ios-app-surface-control.mjs"
+      - "scripts/test-ios-app-surface-control.mjs"
       - "scripts/host-https-ab.mjs"
       - ".github/workflows/host-layout.yml"
   workflow_dispatch:
@@ -104,6 +108,7 @@ jobs:
       - run: node scripts/test-platform-profile-resolver.mjs
       - run: node scripts/validate-ios-simulator-observation.mjs
       - run: node scripts/validate-ios-app-capability.mjs
+      - run: node scripts/validate-ios-app-surface-control.mjs
       - name: Qualify Lib-defined socket HTTPS migration
         shell: bash
         run: |

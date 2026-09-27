@@ -1,0 +1,47 @@
+package wasmc:system-app-surface-control@0.0.1;
+
+interface surface-control {
+  enum surface-kind {
+    native,
+    web,
+  }
+
+  enum owner {
+    agent,
+    needs-human,
+    user,
+  }
+
+  record surface-info {
+    id: string,
+    kind: surface-kind,
+    owner: owner,
+    generation: u64,
+    width: u32,
+    height: u32,
+  }
+
+  record frame {
+    surface-id: string,
+    generation: u64,
+    png: list<u8>,
+  }
+
+  record receipt {
+    accepted: bool,
+    surface-id: string,
+    generation: u64,
+    visible-change: bool,
+  }
+
+  list-surfaces: func() -> list<surface-info>;
+  capture: func(surface-id: string) -> result<frame, s32>;
+  activate: func(surface-id: string, generation: u64, x: u32, y: u32) -> result<receipt, s32>;
+  input-text: func(surface-id: string, generation: u64, x: u32, y: u32, value: string) -> result<receipt, s32>;
+  scroll: func(surface-id: string, generation: u64, delta-x: s32, delta-y: s32) -> result<receipt, s32>;
+  handoff: func(surface-id: string, next-owner: owner) -> result<receipt, s32>;
+}
+
+world system-app-surface-control {
+  export surface-control;
+}
