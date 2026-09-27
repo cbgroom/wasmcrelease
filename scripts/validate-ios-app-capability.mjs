@@ -77,6 +77,16 @@ assert.match(contactsProvider, /unifiedContact\(withIdentifier:/);
 assert.match(contactsProvider, /remove\.delete/);
 assert.match(fs.readFileSync("host/tests/ios-app-capability/project.yml", "utf8"),
   /INFOPLIST_KEY_NSContactsUsageDescription/);
+const authorizationUITest = fs.readFileSync(
+  "host/tests/ios-app-capability/UITests/AuthorizationFlowUITests.swift", "utf8",
+);
+assert.match(authorizationUITest, /Continue.*继续/);
+assert.match(authorizationUITest, /Share All.*共享所有/);
+assert.match(authorizationUITest, /Don.t Allow.*不允许/);
+assert.match(fs.readFileSync("scripts/test-ios-app-authorization-flow.mjs", "utf8"),
+  /ios-app-authorization-flow-qualification\/v1/);
+execFileSync(process.execPath, ["--check", "scripts/test-ios-app-authorization-flow.mjs"],
+  { stdio: "ignore" });
 
 console.log(JSON.stringify({
   accepted: true,

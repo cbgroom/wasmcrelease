@@ -454,6 +454,15 @@ byte-identical and contains no Contacts API. The retained v5 receipt is
 `admission/host-lib-defined-boundary-v1/ios-arm64-app-capability-v5.json`, bound
 to implementation commit `607a55fc3288cf81ebbdc65962f243eaaae6dfc0`.
 
+The successor iOS prompt-flow qualification uses fresh exact App identities and
+XCUITest to drive the real localized Contacts system UI. The allow path crosses
+Continue and Share All, records one attempt, observes `authorized`, and performs
+the Contacts roundtrip. The deny path records one attempt, observes `denied`,
+plans `open-settings`, and proves the Contacts Lib does not access data. It also
+delays capability execution until the App has returned to active after the
+authorization callback. The fixed Host is unchanged. Its v6 receipt is pending
+exact source-bound qualification.
+
 The mapped-window, epoll-readiness, kernel-splice and asynchronous-readiness
 successors are qualified on local Linux aarch64 and independent GitHub Ubuntu
 x86_64. The ioctl call-shape and vectored-write successor is also qualified on

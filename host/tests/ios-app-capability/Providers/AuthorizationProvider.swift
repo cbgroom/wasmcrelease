@@ -69,6 +69,18 @@ private struct AuthorizationAttemptLedger {
 }
 
 enum AuthorizationProvider {
+    static func requestContactsIfNeeded(completion: @escaping () -> Void) {
+        guard CNContactStore.authorizationStatus(for: .contacts) == .notDetermined else {
+            completion()
+            return
+        }
+        let ledger = AuthorizationAttemptLedger()
+        ledger.recordAttempt("contacts")
+        CNContactStore().requestAccess(for: .contacts) { _, _ in
+            DispatchQueue.main.async(execute: completion)
+        }
+    }
+
     private static func avState(_ status: AVAuthorizationStatus) -> AuthorizationState {
         switch status {
         case .authorized: return .authorized

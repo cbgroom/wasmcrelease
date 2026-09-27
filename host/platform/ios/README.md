@@ -36,6 +36,9 @@ The thirteenth provider is an independent Contacts Lib. With Simulator Contacts
 authorization granted it creates, fetches and deletes a temporary contact and
 confirms cleanup. With authorization reset it does not attempt access. The
 authorization broker and Contacts domain API remain separate Lib concerns.
+The XCUITest qualification additionally drives the real localized system prompt
+for both Share All and denial, then binds the callback result to actual Contacts
+use or fail-closed behavior.
 
 Run the macOS qualification against one already booted simulator:
 

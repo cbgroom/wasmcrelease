@@ -13,3 +13,7 @@ The iOS Simulator qualification grants Contacts through `simctl privacy`, then
 executes the real Contacts framework roundtrip. That is simulator evidence, not
 a physical-device or production-data claim. WIT-to-Wasm lowering, admission and
 release remain pending.
+
+A stronger XCUITest path also exercises the real localized Contacts prompt. An
+allow callback performs the create/fetch/delete roundtrip; a deny callback
+records `open-settings` and performs no Contacts access.

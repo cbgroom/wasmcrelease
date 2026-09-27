@@ -23,3 +23,7 @@ App, so each later demand reoffers the Settings recovery path instead.
 
 Physical-device prompt callbacks, settings-return reconciliation, Component
 lowering, admission and release remain pending.
+
+The iOS Simulator binding now qualifies real Contacts request callbacks for both
+allow and deny. This closes the simulator callback gate only: physical-device
+prompt behavior and returning from Settings remain pending.

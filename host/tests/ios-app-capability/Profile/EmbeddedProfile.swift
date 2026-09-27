@@ -94,4 +94,13 @@ enum EmbeddedProfile {
             invoke: ContactsProvider.invoke
         ),
     ]
+
+    static var authorizationFlowRegistrations: [ProviderRegistration] {
+        let identities = Set([
+            "wasmc:system-ios-app-ui@0.0.1-dev.1",
+            "wasmc:system-ios-app-authorization@0.0.1-dev.2",
+            "wasmc:system-ios-app-contacts@0.0.1-dev.1",
+        ])
+        return registrations.filter { identities.contains($0.identity) }
+    }
 }

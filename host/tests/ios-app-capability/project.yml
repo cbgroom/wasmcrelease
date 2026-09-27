@@ -5,7 +5,8 @@ options:
 settings:
   base:
     SWIFT_VERSION: "5.0"
-    PRODUCT_BUNDLE_IDENTIFIER: io.wasmc.app-capability-lab
+    WASMC_APP_BUNDLE_IDENTIFIER: io.wasmc.app-capability-lab
+    PRODUCT_BUNDLE_IDENTIFIER: $(WASMC_APP_BUNDLE_IDENTIFIER)
     GENERATE_INFOPLIST_FILE: YES
     INFOPLIST_KEY_UIApplicationSceneManifest_Generation: NO
     INFOPLIST_KEY_UILaunchScreen_Generation: YES
@@ -29,3 +30,14 @@ targets:
         SWIFT_OBJC_BRIDGING_HEADER: $(SRCROOT)/../../host/tests/ios-app-capability/Providers/NetworkAdapter.h
         OTHER_LDFLAGS: ["-framework", "Metal", "-framework", "Security", "-lsqlite3"]
         INFOPLIST_KEY_NSContactsUsageDescription: WAsmC qualification verifies authorized Contacts access.
+  WAsmCIOSAppCapabilityUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: UITests
+    dependencies:
+      - target: WAsmCIOSAppCapability
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: io.wasmc.app-capability-lab.uitests
+        TEST_TARGET_NAME: WAsmCIOSAppCapability

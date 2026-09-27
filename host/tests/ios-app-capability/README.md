@@ -53,6 +53,12 @@ Lib must then observe `authorized` and the independent Contacts Lib must perform
 the real create/fetch/delete roundtrip. `observe-only` resets Contacts and proves
 that the Contacts Lib does not attempt use while the state is `not-determined`.
 
+`scripts/test-ios-app-authorization-flow.mjs` goes further and drives the real
+iOS 26 Contacts prompt with XCUITest. It handles the localized first-stage
+Continue prompt and second-stage Share All choice, plus the denial choice. Each
+scenario uses a reset App identity, waits for the callback-bound report and
+asserts attempt count, resulting policy and Contacts use independently.
+
 `scripts/validate-ios-app-capability.mjs` is the portable source/WIT gate.
 `scripts/test-ios-app-capability.mjs` is the macOS gate and requires
 `WASMC_IOS_SIMULATOR_UDID` to name one booted iOS Simulator. The dynamic gate

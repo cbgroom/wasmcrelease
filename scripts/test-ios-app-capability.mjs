@@ -51,7 +51,7 @@ if (authorizationScenario === "contacts-granted") {
 const launch = simctl(["launch", "--terminate-running-process", udid, bundle]).trim();
 const container = simctl(["get_app_container", udid, bundle, "data"]).trim();
 const reportPath = path.join(container, "Documents", "wasmc-ios-app-capability.json");
-for (let attempt = 0; attempt < 40 && !fs.existsSync(reportPath); attempt += 1) {
+for (let attempt = 0; attempt < 600 && !fs.existsSync(reportPath); attempt += 1) {
   Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 100);
 }
 assert.ok(fs.existsSync(reportPath), "embedded app did not publish its capability report");
