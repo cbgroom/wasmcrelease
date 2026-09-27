@@ -1,6 +1,6 @@
 # Lib-defined Host boundary workstream
 
-Status: **kernel splice device-path Linux aarch64 locally qualified; x86_64 refresh pending / not admitted / not released**.
+Status: **kernel splice device-path Linux aarch64/x86_64 qualified / not admitted / not released**.
 
 This workstream replaces domain growth in the Rust Host with a fixed,
 domain-neutral execution boundary. It does not modify the immutable v0.0.15
@@ -179,12 +179,12 @@ contains no domain API and is byte-identical for all three. The test additionall
 proves pinned-window release rejection, completion claim-once, adapter digest
 rejection and zero remaining resources/operations/windows.
 
-The mapped-window and epoll-readiness predecessors are qualified on local Linux
-aarch64 and independent GitHub Ubuntu x86_64. The kernel-splice successor is
-locally qualified on aarch64; its independent x86_64 refresh remains pending.
-Wasm/WIT lowering, native asynchronous lifecycle/cancellation, `io_uring`,
-direct guest-window zero-copy, non-Linux evidence, admission, catalog
-publication and immutable release remain pending.
+The mapped-window, epoll-readiness and kernel-splice successors are qualified on
+local Linux aarch64 and independent GitHub Ubuntu x86_64. WIT is now parsed by
+pinned `wasm-tools` before native qualification. Wasm lowering, native
+asynchronous lifecycle/cancellation, `io_uring`, direct guest-window zero-copy,
+non-Linux evidence, admission, catalog publication and immutable release remain
+pending.
 
 The exact local receipt is
 `admission/host-lib-defined-boundary-v1/local-qualification.json`, bound to
@@ -229,3 +229,8 @@ successful workflow run `36300559026` at commit
 The kernel-splice Linux aarch64 receipt is
 `admission/host-lib-defined-boundary-v1/linux-aarch64-splice-v5.json`, bound to
 implementation commit `5bd57e308a7d727ff4bab3238b566473d1688efe`.
+
+The kernel-splice Linux x86_64 receipt is
+`admission/host-lib-defined-boundary-v1/linux-x86_64-splice-v5.json`, bound to
+successful workflow run `36301089197` at commit
+`fbae9337787c7c7c3c0c9e51bd1ed22cdb5235d5`.
