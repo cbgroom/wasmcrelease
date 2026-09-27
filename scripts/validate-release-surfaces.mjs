@@ -43,6 +43,7 @@ assert.equal(quickstartModel.routes['producer-release-u64-delta'].producer.commi
 assert.equal(quickstartModel.routes['library-first-selection'].artifact_sha256,taskRoutes['released-base64'].approval.artifact_sha256);
 assert.deepEqual(quickstartModel.routes['library-first-selection'].states,taskRoutes['released-base64'].states);
 assert.deepEqual(quickstartModel.routes['library-first-selection'].exact_report,taskRoutes['released-base64'].exact_report);
+assert.equal(quickstartModel.routes['library-first-selection'].final_answer_policy,taskRoutes['released-base64'].final_answer_policy);
 assert.deepEqual(quickstartModel.routes['release-state-separation'].required_output_states,['qualified','admitted','released','discoverable','installable']);
 assert.deepEqual(quickstartModel.routes['release-state-separation'].exact_report,model.agent_status_queries['direct-wasmc-system-telemetry-resource'].exact_report);
 assert.deepEqual(Object.keys(taskRoutes).sort(),['host-authority','ordinary-source-pair','release-lib-route-readiness','release-orientation','released-base64','rule']);

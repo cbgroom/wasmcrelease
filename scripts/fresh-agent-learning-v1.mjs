@@ -61,7 +61,8 @@ export function answerContract(report, contract = {}) {
       else if (!allowed.has(digest)) failures.push({ metric: 'unknown_sha256', observed: digest });
     }
   }
-  const identities = [...answer.matchAll(/\b(?:wasmc|wamsc)(?::|-)[a-z0-9][a-z0-9.-]*(?:@\d+\.\d+\.\d+)?\b/gi)].map(row => row[0]);
+  // Machine identities are lowercase. Do not classify prose such as "WAsmC-source" as a package token.
+  const identities = [...answer.matchAll(/\b(?:wasmc|wamsc)(?::|-)[a-z0-9][a-z0-9.-]*(?:@\d+\.\d+\.\d+)?\b/g)].map(row => row[0]);
   if (contract.allowed_identity_tokens) {
     const allowed = new Set(contract.allowed_identity_tokens);
     for (const identity of identities) if (!allowed.has(identity)) failures.push({ metric: 'unknown_identity', observed: identity });
