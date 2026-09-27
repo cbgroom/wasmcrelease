@@ -1,6 +1,6 @@
 # Lib-defined Host boundary workstream
 
-Status: **kernel splice device-path Linux aarch64/x86_64 qualified / not admitted / not released**.
+Status: **asynchronous readiness Linux aarch64 locally qualified; x86_64 refresh pending / not admitted / not released**.
 
 This workstream replaces domain growth in the Rust Host with a fixed,
 domain-neutral execution boundary. It does not modify the immutable v0.0.15
@@ -131,6 +131,17 @@ rate is recorded only in the exact receipt. This is kernel endpoint-to-endpoint
 zero-copy evidence; it does not close the separate guest/shared-window
 zero-copy gate because commands and completions still cross the byte ABI.
 
+The next Lib-owned resource is an asynchronous readiness operation. It duplicates
+the endpoint FD so backend work cannot outlive its native ownership, runs the
+wait outside the executor call, and exposes pending, ready, cancelled,
+timed-out and failed terminal states. Local qualification proves real PTY
+readiness, deterministic cancellation and timeout, pending-release rejection,
+terminal re-cancel rejection, cancellation-priority over late readiness,
+64 concurrent operations, stale-token rejection and safe cancellation after
+the original endpoint token is closed. The current one-worker-per-operation
+implementation is a lifecycle baseline, not a throughput design. It does not
+yet prove the Host Completion bridge, late-delivery drain or `io_uring`.
+
 ## Library OS consequence
 
 The intended result is a Library OS profile assembled above the fixed Host:
@@ -179,12 +190,13 @@ contains no domain API and is byte-identical for all three. The test additionall
 proves pinned-window release rejection, completion claim-once, adapter digest
 rejection and zero remaining resources/operations/windows.
 
-The mapped-window, epoll-readiness and kernel-splice successors are qualified on
-local Linux aarch64 and independent GitHub Ubuntu x86_64. WIT is now parsed by
-pinned `wasm-tools` before native qualification. Wasm lowering, native
-asynchronous lifecycle/cancellation, `io_uring`, direct guest-window zero-copy,
-non-Linux evidence, admission, catalog publication and immutable release remain
-pending.
+The mapped-window, epoll-readiness and kernel-splice predecessors are qualified
+on local Linux aarch64 and independent GitHub Ubuntu x86_64. The asynchronous
+readiness lifecycle successor is locally qualified on aarch64; its independent
+x86_64 refresh remains pending. WIT is parsed by pinned `wasm-tools` before
+native qualification. Wasm lowering, the Host Completion bridge and
+late-delivery drain, `io_uring`, direct guest-window zero-copy, non-Linux
+evidence, admission, catalog publication and immutable release remain pending.
 
 The exact local receipt is
 `admission/host-lib-defined-boundary-v1/local-qualification.json`, bound to

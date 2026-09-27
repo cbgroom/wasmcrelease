@@ -26,7 +26,7 @@ const rustArgs = (args) => rustToolchain ? [rustToolchain, ...args] : args;
 
 fs.rmSync(target, { recursive: true, force: true });
 fs.mkdirSync(target, { recursive: true });
-command("cc", ["-shared", "-fPIC", "-O2", "-Wall", "-Wextra", "-Werror", adapterSource, "-o", adapter]);
+command("cc", ["-shared", "-fPIC", "-O2", "-Wall", "-Wextra", "-Werror", "-pthread", adapterSource, "-o", adapter]);
 command("wasm-tools", ["component", "wit", path.join(sourceRoot, "lib.wit")]);
 command("cargo", rustArgs(["fmt", "--check", "--manifest-path", manifest]));
 command("cargo", rustArgs(["clippy", "--locked", "--manifest-path", manifest, "--all-targets", "--", "-D", "warnings"]));
@@ -189,6 +189,40 @@ const encodeSplice = (source, target, maximum, flags) => {
   return bytes;
 };
 
+const encodeReadinessStart = (endpoint, events, timeoutMilliseconds) => {
+  const bytes = Buffer.alloc(15);
+  bytes.writeUInt8(19, 0);
+  bytes.writeBigUInt64LE(endpoint, 1);
+  bytes.writeUInt16LE(events, 9);
+  bytes.writeInt32LE(timeoutMilliseconds, 11);
+  return bytes;
+};
+
+const encodeReadinessToken = (operation, token) => {
+  const bytes = Buffer.alloc(9);
+  bytes.writeUInt8(operation, 0);
+  bytes.writeBigUInt64LE(token, 1);
+  return bytes;
+};
+
+const decodeReadiness = (bytes) => {
+  assert.equal(bytes.length, 7);
+  return {
+    state: bytes.readUInt8(0),
+    status: bytes.readInt32LE(1),
+    events: bytes.readUInt16LE(5),
+  };
+};
+
+const waitForReadiness = async (session, token) => {
+  for (let attempt = 0; attempt < 500; attempt += 1) {
+    const state = decodeReadiness(await expectOk(session.request(encodeReadinessToken(20, token))));
+    if (state.state !== 0) return state;
+    await new Promise((resolve) => setTimeout(resolve, 2));
+  }
+  assert.fail("readiness operation did not reach a terminal state");
+};
+
 const invoke = (name, input) => {
   const inputPath = path.join(target, `${name}.input.bin`);
   const outputPath = path.join(target, `${name}.output.bin`);
@@ -324,8 +358,79 @@ assert.deepEqual(decodeEpollEvents(await expectOk(session.request(encodeEpollWai
 await expectOk(session.request(encodeClose(eventSetToken)));
 const staleEventSet = await session.request(encodeEpollWait(eventSetToken, 1, 0));
 assert.equal(staleEventSet.status, -9);
+
+const cancelledReadinessToken = (await expectOk(session.request(
+  encodeReadinessStart(ptmxToken, 1, 5000),
+))).readBigUInt64LE();
+const pendingRelease = await session.request(encodeReadinessToken(22, cancelledReadinessToken));
+assert.equal(pendingRelease.status, -16);
+await expectOk(session.request(encodeReadinessToken(21, cancelledReadinessToken)));
+const lateAfterCancelPayload = Buffer.from("late-after-cancel\n");
+await expectOk(session.request(encodeWrite(slaveToken, lateAfterCancelPayload)));
+assert.deepEqual(await waitForReadiness(session, cancelledReadinessToken), { state: 2, status: 0, events: 0 });
+const lateAfterCancelBytes = await expectOk(session.request(encodeRead(ptmxToken, 4096)));
+assert.ok(lateAfterCancelBytes.includes(Buffer.from("late-after-cancel")));
+const repeatedCancel = await session.request(encodeReadinessToken(21, cancelledReadinessToken));
+assert.equal(repeatedCancel.status, -114);
+await expectOk(session.request(encodeReadinessToken(22, cancelledReadinessToken)));
+const staleReadiness = await session.request(encodeReadinessToken(20, cancelledReadinessToken));
+assert.equal(staleReadiness.status, -9);
+
+const timedOutReadinessToken = (await expectOk(session.request(
+  encodeReadinessStart(ptmxToken, 1, 20),
+))).readBigUInt64LE();
+assert.deepEqual(await waitForReadiness(session, timedOutReadinessToken), { state: 3, status: 0, events: 0 });
+await expectOk(session.request(encodeReadinessToken(22, timedOutReadinessToken)));
+
+const readyReadinessToken = (await expectOk(session.request(
+  encodeReadinessStart(ptmxToken, 1, 1000),
+))).readBigUInt64LE();
+const asyncEventPayload = Buffer.from("async-device-ready\n");
+await expectOk(session.request(encodeWrite(slaveToken, asyncEventPayload)));
+const asynchronousReady = await waitForReadiness(session, readyReadinessToken);
+assert.equal(asynchronousReady.state, 1);
+assert.equal(asynchronousReady.status, 0);
+assert.equal(asynchronousReady.events & 1, 1);
+const asynchronousMasterBytes = await expectOk(session.request(encodeRead(ptmxToken, 4096)));
+assert.ok(asynchronousMasterBytes.includes(Buffer.from("async-device-ready")));
+await expectOk(session.request(encodeReadinessToken(22, readyReadinessToken)));
 await expectOk(session.request(encodeClose(slaveToken)));
 await expectOk(session.request(encodeClose(ptmxToken)));
+
+const retainedPipeTokens = await expectOk(session.request(encodePipeCreate(0)));
+const retainedPipeReadToken = retainedPipeTokens.readBigUInt64LE(0);
+const retainedPipeWriteToken = retainedPipeTokens.readBigUInt64LE(8);
+const retainedReadinessToken = (await expectOk(session.request(
+  encodeReadinessStart(retainedPipeReadToken, 1, 5000),
+))).readBigUInt64LE();
+await expectOk(session.request(encodeClose(retainedPipeReadToken)));
+await expectOk(session.request(encodeReadinessToken(21, retainedReadinessToken)));
+assert.deepEqual(await waitForReadiness(session, retainedReadinessToken), { state: 2, status: 0, events: 0 });
+await expectOk(session.request(encodeReadinessToken(22, retainedReadinessToken)));
+await expectOk(session.request(encodeClose(retainedPipeWriteToken)));
+
+const concurrentReadinessCount = 64;
+const concurrentPipeTokens = await expectOk(session.request(encodePipeCreate(0)));
+const concurrentPipeReadToken = concurrentPipeTokens.readBigUInt64LE(0);
+const concurrentPipeWriteToken = concurrentPipeTokens.readBigUInt64LE(8);
+const concurrentReadinessTokens = [];
+for (let index = 0; index < concurrentReadinessCount; index += 1) {
+  concurrentReadinessTokens.push((await expectOk(session.request(
+    encodeReadinessStart(concurrentPipeReadToken, 1, 5000),
+  ))).readBigUInt64LE());
+}
+await Promise.all(concurrentReadinessTokens.map(
+  (token) => expectOk(session.request(encodeReadinessToken(21, token))),
+));
+const concurrentTerminalStates = await Promise.all(concurrentReadinessTokens.map(
+  (token) => waitForReadiness(session, token),
+));
+for (const state of concurrentTerminalStates) assert.deepEqual(state, { state: 2, status: 0, events: 0 });
+await Promise.all(concurrentReadinessTokens.map(
+  (token) => expectOk(session.request(encodeReadinessToken(22, token))),
+));
+await expectOk(session.request(encodeClose(concurrentPipeReadToken)));
+await expectOk(session.request(encodeClose(concurrentPipeWriteToken)));
 
 const spliceZeroToken = (await expectOk(session.request(encodePath(3, "/dev/zero", 0)))).readBigUInt64LE();
 const spliceNullToken = (await expectOk(session.request(encodePath(3, "/dev/null", 1)))).readBigUInt64LE();
@@ -404,7 +509,7 @@ assert.ok(persistentSpeedup >= 5, `persistent session speedup too low: ${persist
 const exports = command("nm", ["-D", "--defined-only", adapter]);
 assert.match(exports, /\bwasmc_boundary_v1_invoke\b/);
 const rustText = fs.readFileSync(rustSource, "utf8");
-for (const forbidden of ["/dev/", "/proc/", "/sys/", "O_RDONLY", "O_WRONLY", "ioctl", "pollfd", "epoll", "pipe2", "splice", "mmap", "msync", "read-endpoint", "write-endpoint"]) {
+for (const forbidden of ["/dev/", "/proc/", "/sys/", "O_RDONLY", "O_WRONLY", "ioctl", "pollfd", "epoll", "eventfd", "pthread", "pipe2", "splice", "mmap", "msync", "read-endpoint", "write-endpoint"]) {
   assert.equal(rustText.includes(forbidden), false, `domain or Linux endpoint semantics leaked into fixed executor: ${forbidden}`);
 }
 const adapterText = fs.readFileSync(adapterSource, "utf8");
@@ -425,7 +530,7 @@ assert.match(`${rejected.stdout}\n${rejected.stderr}`, /adapter identity mismatc
 
 console.log(JSON.stringify({
   accepted: true,
-  schema: "wasmc.linux-lib-defined-boundary-qualification/v5",
+  schema: "wasmc.linux-lib-defined-boundary-qualification/v6",
   platform: process.platform,
   architecture: process.arch,
   kernel: os.release(),
@@ -443,6 +548,16 @@ console.log(JSON.stringify({
   real_epoll_device_event: true,
   epoll_endpoint: "/dev/ptmx",
   generation_checked_stale_event_set_rejection: true,
+  asynchronous_readiness_lifecycle: true,
+  asynchronous_readiness_ready: true,
+  asynchronous_readiness_cancelled: true,
+  cancelled_late_readiness_suppressed: true,
+  asynchronous_readiness_timed_out: true,
+  pending_readiness_release_rejection: true,
+  repeated_terminal_cancel_rejection: true,
+  retained_endpoint_lifetime_during_readiness: true,
+  concurrent_readiness_operations: concurrentReadinessCount,
+  generation_checked_stale_readiness_rejection: true,
   kernel_splice_device_path: true,
   splice_path: "/dev/zero -> pipe -> /dev/null",
   generation_checked_stale_pipe_rejection: true,

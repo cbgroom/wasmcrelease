@@ -11,6 +11,14 @@ interface endpoints {
     write-end: endpoint,
   }
 
+  variant readiness-state {
+    pending,
+    ready(u16),
+    cancelled,
+    timed-out,
+    failed(s32),
+  }
+
   read-endpoint: func(path: string, maximum-bytes: u32) -> result<list<u8>, s32>;
   write-endpoint: func(path: string, payload: list<u8>) -> result<u64, s32>;
 
@@ -27,6 +35,12 @@ interface endpoints {
     poll: func(events: u16, timeout-milliseconds: s32) -> result<u16, s32>;
     map-region: func(offset: u64, length: u64, linux-protection: u32, linux-map-flags: u32) -> result<mapping, s32>;
     splice-to: func(target: borrow<endpoint>, maximum-bytes: u64, linux-splice-flags: u32) -> result<u64, s32>;
+    start-readiness: func(events: u16, timeout-milliseconds: s32) -> result<readiness-operation, s32>;
+  }
+
+  resource readiness-operation {
+    status: func() -> result<readiness-state, s32>;
+    cancel: func() -> result<_, s32>;
   }
 
   resource event-set {

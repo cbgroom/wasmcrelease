@@ -3,10 +3,12 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <poll.h>
+#include <pthread.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/epoll.h>
+#include <sys/eventfd.h>
 #include <sys/ioctl.h>
 #include <sys/mman.h>
 #include <unistd.h>
@@ -14,6 +16,13 @@
 #define MAX_HANDLES 1024
 #define MAX_MAPPINGS 1024
 #define MAX_MAPPING_BYTES (UINT64_C(256) * 1024 * 1024)
+#define MAX_READINESS_OPERATIONS 1024
+
+#define READINESS_PENDING 0
+#define READINESS_READY 1
+#define READINESS_CANCELLED 2
+#define READINESS_TIMED_OUT 3
+#define READINESS_FAILED 4
 
 struct handle_slot {
   int descriptor;
@@ -31,6 +40,23 @@ struct mapping_slot {
 };
 
 static struct mapping_slot mappings[MAX_MAPPINGS];
+
+struct readiness_slot {
+  pthread_t thread;
+  int target_descriptor;
+  int cancel_descriptor;
+  int32_t timeout_milliseconds;
+  int32_t status;
+  uint32_t generation;
+  uint16_t events;
+  uint16_t returned_events;
+  uint8_t active;
+  uint8_t state;
+  uint8_t thread_started;
+};
+
+static struct readiness_slot readiness_operations[MAX_READINESS_OPERATIONS];
+static pthread_mutex_t readiness_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 static uint16_t read_u16(const uint8_t *bytes) {
   return (uint16_t)bytes[0] | ((uint16_t)bytes[1] << 8);
@@ -467,6 +493,168 @@ static int32_t invoke_splice(
   return 0;
 }
 
+static void *run_readiness_operation(void *argument) {
+  struct readiness_slot *slot = argument;
+  struct pollfd descriptors[2] = {
+    {.fd = slot->target_descriptor, .events = (short)slot->events, .revents = 0},
+    {.fd = slot->cancel_descriptor, .events = POLLIN, .revents = 0},
+  };
+  const int result = poll(descriptors, 2, slot->timeout_milliseconds);
+  const int saved_errno = errno;
+  pthread_mutex_lock(&readiness_mutex);
+  if (result < 0) {
+    slot->state = READINESS_FAILED;
+    slot->status = -saved_errno;
+  } else if ((descriptors[1].revents & POLLIN) != 0) {
+    slot->state = READINESS_CANCELLED;
+    slot->status = 0;
+  } else if (result == 0) {
+    slot->state = READINESS_TIMED_OUT;
+    slot->status = 0;
+  } else {
+    slot->state = READINESS_READY;
+    slot->status = 0;
+    slot->returned_events = (uint16_t)descriptors[0].revents;
+  }
+  close(slot->target_descriptor);
+  close(slot->cancel_descriptor);
+  slot->target_descriptor = -1;
+  slot->cancel_descriptor = -1;
+  pthread_mutex_unlock(&readiness_mutex);
+  return NULL;
+}
+
+static int32_t resolve_readiness_operation(uint64_t token, uint32_t *index) {
+  const uint32_t encoded_index = (uint32_t)token;
+  const uint32_t generation = (uint32_t)(token >> 32);
+  if (encoded_index == 0 || encoded_index > MAX_READINESS_OPERATIONS || generation == 0) return -EBADF;
+  const uint32_t slot = encoded_index - 1;
+  if (!readiness_operations[slot].active || readiness_operations[slot].generation != generation) return -EBADF;
+  *index = slot;
+  return 0;
+}
+
+static int32_t invoke_readiness_start(
+    const uint8_t *input, size_t input_len,
+    uint8_t *output, size_t output_capacity, size_t *output_len) {
+  if (input_len != 15 || output_capacity < 8) return -EINVAL;
+  int descriptor = -1;
+  int32_t status = resolve_handle(read_u64(input + 1), NULL, &descriptor);
+  if (status != 0) return status;
+  const int retained_descriptor = fcntl(descriptor, F_DUPFD_CLOEXEC, 0);
+  if (retained_descriptor < 0) return -errno;
+  const int cancel_descriptor = eventfd(0, EFD_CLOEXEC | EFD_NONBLOCK);
+  if (cancel_descriptor < 0) {
+    status = -errno;
+    close(retained_descriptor);
+    return status;
+  }
+  pthread_mutex_lock(&readiness_mutex);
+  uint32_t index = MAX_READINESS_OPERATIONS;
+  for (uint32_t candidate = 0; candidate < MAX_READINESS_OPERATIONS; candidate += 1) {
+    if (!readiness_operations[candidate].active) {
+      index = candidate;
+      break;
+    }
+  }
+  if (index == MAX_READINESS_OPERATIONS) {
+    pthread_mutex_unlock(&readiness_mutex);
+    close(retained_descriptor);
+    close(cancel_descriptor);
+    return -EMFILE;
+  }
+  struct readiness_slot *slot = &readiness_operations[index];
+  slot->generation += 1;
+  if (slot->generation == 0) slot->generation = 1;
+  slot->target_descriptor = retained_descriptor;
+  slot->cancel_descriptor = cancel_descriptor;
+  slot->timeout_milliseconds = (int32_t)read_u32(input + 11);
+  slot->status = 0;
+  slot->events = read_u16(input + 9);
+  slot->returned_events = 0;
+  slot->active = 1;
+  slot->state = READINESS_PENDING;
+  slot->thread_started = 0;
+  const int thread_status = pthread_create(&slot->thread, NULL, run_readiness_operation, slot);
+  if (thread_status != 0) {
+    slot->active = 0;
+    slot->target_descriptor = -1;
+    slot->cancel_descriptor = -1;
+    pthread_mutex_unlock(&readiness_mutex);
+    close(retained_descriptor);
+    close(cancel_descriptor);
+    return -thread_status;
+  }
+  slot->thread_started = 1;
+  const uint64_t token = ((uint64_t)slot->generation << 32) | ((uint64_t)index + 1);
+  pthread_mutex_unlock(&readiness_mutex);
+  write_u64(output, token);
+  *output_len = 8;
+  return 0;
+}
+
+static int32_t invoke_readiness_status(
+    const uint8_t *input, size_t input_len,
+    uint8_t *output, size_t output_capacity, size_t *output_len) {
+  if (input_len != 9 || output_capacity < 7) return -EINVAL;
+  pthread_mutex_lock(&readiness_mutex);
+  uint32_t index = 0;
+  const int32_t status = resolve_readiness_operation(read_u64(input + 1), &index);
+  if (status != 0) {
+    pthread_mutex_unlock(&readiness_mutex);
+    return status;
+  }
+  const struct readiness_slot *slot = &readiness_operations[index];
+  output[0] = slot->state;
+  write_u32(output + 1, (uint32_t)slot->status);
+  write_u16(output + 5, slot->returned_events);
+  *output_len = 7;
+  pthread_mutex_unlock(&readiness_mutex);
+  return 0;
+}
+
+static int32_t invoke_readiness_cancel(const uint8_t *input, size_t input_len) {
+  if (input_len != 9) return -EINVAL;
+  pthread_mutex_lock(&readiness_mutex);
+  uint32_t index = 0;
+  int32_t status = resolve_readiness_operation(read_u64(input + 1), &index);
+  if (status != 0) {
+    pthread_mutex_unlock(&readiness_mutex);
+    return status;
+  }
+  struct readiness_slot *slot = &readiness_operations[index];
+  if (slot->state != READINESS_PENDING) status = -EALREADY;
+  else {
+    const uint64_t signal = 1;
+    if (write(slot->cancel_descriptor, &signal, sizeof(signal)) != (ssize_t)sizeof(signal)) status = -errno;
+  }
+  pthread_mutex_unlock(&readiness_mutex);
+  return status;
+}
+
+static int32_t invoke_readiness_release(const uint8_t *input, size_t input_len) {
+  if (input_len != 9) return -EINVAL;
+  pthread_mutex_lock(&readiness_mutex);
+  uint32_t index = 0;
+  int32_t status = resolve_readiness_operation(read_u64(input + 1), &index);
+  if (status != 0) {
+    pthread_mutex_unlock(&readiness_mutex);
+    return status;
+  }
+  struct readiness_slot *slot = &readiness_operations[index];
+  if (slot->state == READINESS_PENDING) {
+    pthread_mutex_unlock(&readiness_mutex);
+    return -EBUSY;
+  }
+  const pthread_t thread = slot->thread;
+  const uint8_t thread_started = slot->thread_started;
+  slot->active = 0;
+  slot->thread_started = 0;
+  pthread_mutex_unlock(&readiness_mutex);
+  if (thread_started && pthread_join(thread, NULL) != 0) return -EIO;
+  return 0;
+}
+
 __attribute__((visibility("default")))
 int32_t wasmc_boundary_v1_invoke(
     const uint8_t *input,
@@ -495,12 +683,33 @@ int32_t wasmc_boundary_v1_invoke(
     case 16: return invoke_epoll_wait(input, input_len, output, output_capacity, output_len);
     case 17: return invoke_pipe_create(input, input_len, output, output_capacity, output_len);
     case 18: return invoke_splice(input, input_len, output, output_capacity, output_len);
+    case 19: return invoke_readiness_start(input, input_len, output, output_capacity, output_len);
+    case 20: return invoke_readiness_status(input, input_len, output, output_capacity, output_len);
+    case 21: return invoke_readiness_cancel(input, input_len);
+    case 22: return invoke_readiness_release(input, input_len);
     default: return -ENOTSUP;
   }
 }
 
 __attribute__((destructor))
 static void close_retained_handles(void) {
+  for (size_t index = 0; index < MAX_READINESS_OPERATIONS; index += 1) {
+    pthread_mutex_lock(&readiness_mutex);
+    struct readiness_slot *slot = &readiness_operations[index];
+    const uint8_t active = slot->active;
+    const uint8_t thread_started = slot->thread_started;
+    const pthread_t thread = slot->thread;
+    if (active && slot->state == READINESS_PENDING && slot->cancel_descriptor >= 0) {
+      const uint64_t signal = 1;
+      (void)write(slot->cancel_descriptor, &signal, sizeof(signal));
+    }
+    pthread_mutex_unlock(&readiness_mutex);
+    if (active && thread_started) (void)pthread_join(thread, NULL);
+    pthread_mutex_lock(&readiness_mutex);
+    slot->active = 0;
+    slot->thread_started = 0;
+    pthread_mutex_unlock(&readiness_mutex);
+  }
   for (size_t index = 0; index < MAX_MAPPINGS; index += 1) {
     if (mappings[index].active) munmap(mappings[index].address, mappings[index].length);
     mappings[index].active = 0;

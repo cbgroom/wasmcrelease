@@ -37,5 +37,16 @@ endpoints and Linux `splice`. Qualification moves bytes through the real path
 fixed Rust executor window, then rejects a stale pipe token. This is a genuine
 kernel splice path, but it is not yet direct guest/shared-window zero-copy.
 
+The Lib now has a generation-checked asynchronous readiness operation. It
+retains a duplicated endpoint descriptor, performs native readiness work outside
+the executor call, and exposes pending, ready, cancelled, timed-out and failed
+states. Qualification proves real PTY readiness, cancellation, timeout,
+premature-release rejection, terminal re-cancel rejection, stale-operation
+rejection, cancellation-priority over late readiness, 64 concurrent operations
+and safe cancellation after the originating endpoint token is closed.
+The current prototype uses one native worker per operation as a lifecycle
+baseline. It is not the future high-throughput `io_uring` backend and is not yet
+bridged into the Host's generic Completion/late-delivery model.
+
 Run `node scripts/test-linux-lib-defined-boundary.mjs` on Linux. This prototype is not
 admitted, cataloged or released.
