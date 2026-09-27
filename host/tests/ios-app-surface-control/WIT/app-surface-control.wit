@@ -1,4 +1,4 @@
-package wasmc:system-app-surface-control@0.0.1;
+package wasmc:system-app-surface-control@0.0.2;
 
 interface surface-control {
   enum surface-kind {
@@ -10,6 +10,11 @@ interface surface-control {
     agent,
     needs-human,
     user,
+  }
+
+  enum presentation {
+    inline,
+    picture-in-picture,
   }
 
   record surface-info {
@@ -40,6 +45,7 @@ interface surface-control {
   input-text: func(surface-id: string, generation: u64, x: u32, y: u32, value: string) -> result<receipt, s32>;
   scroll: func(surface-id: string, generation: u64, delta-x: s32, delta-y: s32) -> result<receipt, s32>;
   handoff: func(surface-id: string, next-owner: owner) -> result<receipt, s32>;
+  request-presentation: func(surface-id: string, generation: u64, next: presentation) -> result<receipt, s32>;
 }
 
 world system-app-surface-control {

@@ -14,8 +14,11 @@ targets:
   WAsmCIOSSurfaceControl:
     type: application
     platform: iOS
+    info:
+      path: ${WASMC_IOS_SURFACE_INFO_PLIST}
     sources:
       - path: App
+        excludes: [Info.plist]
       - path: Lib
       - path: ../ios-app-capability/Host/FixedHost.swift
     settings:

@@ -3,9 +3,25 @@ import XCTest
 final class SurfaceControlUITests: XCTestCase {
     func testHumanHandoffWhileOtherSurfacesContinue() {
         let app = XCUIApplication()
+        app.launchArguments = ["--wasmc-auto-stop-pip"]
         app.launch()
 
         XCTAssertTrue(app.staticTexts["surface-demo-title"].waitForExistence(timeout: 10))
+        let pip = app.buttons["surface-pip-toggle"]
+        XCTAssertTrue(pip.waitForExistence(timeout: 10))
+        let ready = NSPredicate(format: "label == %@", "系统悬浮观察窗已就绪")
+        expectation(for: ready, evaluatedWith: app.staticTexts["surface-pip-state"])
+        waitForExpectations(timeout: 10)
+        pip.tap()
+        sleep(3)
+        let pipScreenshot = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        pipScreenshot.name = "pip-active"
+        pipScreenshot.lifetime = .keepAlways
+        add(pipScreenshot)
+        let stopped = NSPredicate(format: "label == %@", "PiP已停止")
+        expectation(for: stopped, evaluatedWith: app.staticTexts["surface-pip-state"])
+        waitForExpectations(timeout: 10)
+
         let collapse = app.buttons["surface-shelf-collapse"]
         XCTAssertTrue(collapse.waitForExistence(timeout: 5))
         collapse.tap()

@@ -75,7 +75,7 @@ final class SurfaceControlProvider {
             "physical_input_injection": false,
             "capabilities": [
                 "snapshot", "virtual-activate", "confirmed-handoff",
-                "compact-expand", "edge-dock",
+                "compact-expand", "edge-dock", "picture-in-picture-projection",
             ],
         ], options: [.sortedKeys])
     }

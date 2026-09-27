@@ -9,8 +9,8 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
     ) -> Bool {
         let registration = ProviderRegistration(
-            identity: "wasmc:system-ios-app-surface-control@0.0.1-dev.1",
-            witPackage: "wasmc:system-app-surface-control@0.0.1",
+            identity: "wasmc:system-ios-app-surface-control@0.0.2-dev.1",
+            witPackage: "wasmc:system-app-surface-control@0.0.2",
             maxInputBytes: 0,
             maxOutputBytes: 2048,
             invoke: SurfaceControlProvider.descriptorProbe
