@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { readFile, stat, writeFile } from 'node:fs/promises';
-import { resolve } from 'node:path';
+import { dirname, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 
 const [baselineArg, candidateArg, platformId, outputArg] = process.argv.slice(2);
@@ -10,6 +10,7 @@ if (!baselineArg || !candidateArg || !platformId || !outputArg) {
 }
 
 const root = process.cwd();
+const migrationProfile = process.env.WASMC_HTTPS_AB_PROFILE === 'lib-defined-socket-migration';
 const baselineBinary = resolve(baselineArg);
 const candidateBinary = resolve(candidateArg);
 const fixtureRoot = resolve('host/tests/https');
@@ -186,9 +187,26 @@ const baselineTop = topOperations(baselineQualification.receipt);
 const candidateTop = topOperations(candidateQualification.receipt);
 const bq = baselineQualification.receipt;
 const cq = candidateQualification.receipt;
+let libDefinedSocketAuthority = null;
+if (migrationProfile) {
+  const descriptorPath = resolve(process.env.WASMC_LIB_SOCKET_DESCRIPTOR ?? '');
+  const descriptorBytes = await readFile(descriptorPath);
+  const descriptor = JSON.parse(descriptorBytes);
+  const adapterPath = resolve(dirname(descriptorPath), descriptor.adapter.path);
+  const executorPath = resolve(process.env.WASMC_LIB_BOUNDARY_EXECUTOR ?? '');
+  const adapterBytes = await readFile(adapterPath);
+  const executorBytes = await readFile(executorPath);
+  assert.equal(sha256(adapterBytes), descriptor.adapter.sha256, 'exact adapter identity');
+  libDefinedSocketAuthority = {
+    execution: process.env.WASMC_LIB_BOUNDARY_IN_PROCESS ? 'in-process-exact-adapter' : 'operation-session',
+    descriptor: { path: descriptorPath, sha256: sha256(descriptorBytes) },
+    adapter: { path: adapterPath, sha256: sha256(adapterBytes) },
+    successor_executor: { path: executorPath, sha256: sha256(executorBytes) },
+  };
+}
 
 const report = {
-  schema: 'wasmc-host-https-ab/v1',
+  schema: migrationProfile ? 'wasmc-host-https-lib-socket-ab/v1' : 'wasmc-host-https-ab/v1',
   measured_at: new Date().toISOString(),
   commit: process.env.GITHUB_SHA ?? null,
   platform: platformId,
@@ -199,6 +217,7 @@ const report = {
     reactor_candidate_commit: manifest.reactor_candidate_commit ?? null,
     reactor_candidate_readiness_sha256: manifest.reactor_candidate_readiness_sha256 ?? null,
     reactor_candidate_adapter_sha256: manifest.reactor_candidate_adapter_sha256 ?? null,
+    lib_defined_socket: libDefinedSocketAuthority,
   },
   artifact_manifest_sha256: sha256(manifestBytes),
   binaries: {
@@ -209,7 +228,8 @@ const report = {
     functional_and_identity_gates: 'hard',
     semantic_parity_gates: ['keep_alive_requests', 'recovery_requests', 'malformed_requests', 'checksum'],
     github_hosted_timing: 'observational',
-    performance_regression_gate: false,
+    performance_regression_gate: migrationProfile,
+    minimum_paired_rps_ratio_p50: migrationProfile ? 0.90 : null,
     only_transport_implementation_changes: true,
   },
   qualification: {
@@ -257,7 +277,9 @@ const report = {
         Number(((cq.host_reactor_readiness_events ?? 0) / cq.host_operations).toFixed(6)),
     },
     interpretation:
-      'Polling owner cycles and reactor poll calls are different counters. The mechanism comparison is scheduling strategy, not raw counter subtraction.',
+      migrationProfile
+        ? 'The baseline polling-owner counters and the Lib-defined candidate immediate-completion counters are different mechanisms and are not subtracted.'
+        : 'Polling owner cycles and reactor poll calls are different counters. The mechanism comparison is scheduling strategy, not raw counter subtraction.',
   },
   performance: {
     pairs,
@@ -284,7 +306,9 @@ const report = {
   interpretation: {
     accepted: true,
     mechanism:
-      'The baseline uses a 1 ms polling/retry owner. The candidate uses one process-level mio shared reactor with command wake coalescing and activity coalescing from accepted private authority.',
+      migrationProfile
+        ? 'The baseline uses Rust-owned sockets and polling owners. The candidate executes the exact dynamically loaded socket Lib in process through the generic descriptor boundary; the Host contains no socket operation implementation.'
+        : 'The baseline uses a 1 ms polling/retry owner. The candidate uses one process-level mio shared reactor with command wake coalescing and activity coalescing from accepted private authority.',
     non_claims: [
       'GitHub-hosted timing is not an SLA.',
       'This single-connection HTTPS corpus is not the same as the private c32 throughput benchmark.',
@@ -294,6 +318,13 @@ const report = {
   },
 };
 await writeFile(resolve(outputArg), JSON.stringify(report, null, 2) + '\n');
+if (migrationProfile) {
+  assert.ok(
+    report.performance.summary.paired_delta.rps_ratio.p50 >=
+      report.policy.minimum_paired_rps_ratio_p50,
+    'Lib-defined socket HTTPS migration performance gate',
+  );
+}
 console.log(JSON.stringify({
   accepted: true,
   platform: platformId,
@@ -303,6 +334,6 @@ console.log(JSON.stringify({
   paired_rps_pct_p50: report.performance.summary.paired_delta.rps_pct.p50,
   baseline_owner_cycles_per_op:
     report.scheduling_diagnostics.baseline.polling_owner_cycles_per_host_operation,
-  candidate_reactor_polls_per_op:
+  candidate_executor_polls_per_op:
     report.scheduling_diagnostics.candidate.reactor_polls_per_host_operation,
 }));

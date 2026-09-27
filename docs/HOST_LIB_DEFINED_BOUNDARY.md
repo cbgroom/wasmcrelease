@@ -165,8 +165,10 @@ executor. Retained Linux aarch64 and x86_64 qualifications prove a real
 loopback transport, 64 concurrent retained connections, stale-token and
 wrong-resource-kind rejection, and a bounded throughput floor. This is the
 first physical transport slice for migrating the retained HTTPS workload;
-HTTPS still uses its older qualification transport until the TLS/HTTP graph is
-explicitly switched and requalified.
+The retained HTTPS workload now has a Linux migration candidate that switches
+the same TLS/HTTP/Wasm graph to this exact socket adapter. The production
+default remains unchanged until both required Linux architectures and the
+independent release qualification are retained.
 
 The legacy HTTPS qualification has no hard RPS floor. Its hard gates are
 artifact identity, request/recovery behavior, forced partial writes and exact
@@ -181,10 +183,23 @@ floor rejects a catastrophically broken physical adapter; it is not an HTTPS
 SLA and cannot be compared directly with HTTPS RPS. Before the HTTPS migration
 gate can close, the old and new transports must run the same TLS/HTTP/Wasm
 request graph in a paired same-runner A/B, preserve all hard lifecycle gates,
-and explicitly adopt a performance-parity policy. The raw transport A/B in
+and explicitly adopt a performance-parity policy. The migration profile in
+`scripts/host-https-ab.mjs` is the hard pre-release gate: semantic and lifecycle
+parity plus paired RPS p50 of at least `0.90` against the Rust-owned transport.
+It dynamically loads the exact adapter in the HTTPS process through the generic
+descriptor boundary, because the separately qualified operation-session
+process is a lifecycle/isolation mechanism and its pipe IPC is not the intended
+data plane. The raw transport A/B in
 `scripts/host-socket-migration-ab.mjs` isolates physical-boundary cost with the
 same one-connection, 64 KiB bidirectional echo workload, but deliberately
 records `https_transport_migrated=false`.
+
+The first Linux aarch64 same-runner migration qualification preserved the
+256-request forced-partial-write corpus (`5159` issue/wait/claim operations,
+`4620` partial writes, checksum `93106`) and measured paired RPS p50 `2.044x`
+the old transport. This is local architecture evidence, not admission or a
+cross-platform release claim. Linux x86_64 CI, an independent retained receipt,
+descriptor review and admission remain open.
 
 ## Library OS consequence
 

@@ -1,15 +1,28 @@
-#[cfg(all(feature = "readiness-dedicated", feature = "reactor-candidate"))]
-compile_error!("readiness-dedicated and reactor-candidate are mutually exclusive");
+#[cfg(any(
+    all(feature = "readiness-dedicated", feature = "reactor-candidate"),
+    all(feature = "lib-defined-socket", feature = "readiness-dedicated"),
+    all(feature = "lib-defined-socket", feature = "reactor-candidate")
+))]
+compile_error!("Host transport features are mutually exclusive");
 
-#[cfg(not(any(feature = "readiness-dedicated", feature = "reactor-candidate")))]
+#[cfg(not(any(
+    feature = "readiness-dedicated",
+    feature = "reactor-candidate",
+    feature = "lib-defined-socket"
+)))]
 #[path = "host_transport_baseline.rs"]
 mod host_transport;
 #[cfg(any(feature = "readiness-dedicated", feature = "reactor-candidate"))]
 #[path = "host_transport_reactor.rs"]
 mod host_transport;
+#[cfg(feature = "lib-defined-socket")]
+#[path = "host_transport_lib_boundary.rs"]
+mod host_transport;
 #[cfg(any(feature = "readiness-dedicated", feature = "reactor-candidate"))]
 mod readiness_owner;
 
+#[cfg(feature = "lib-defined-socket")]
+use host_transport::LibSocketListener;
 use host_transport::{HostEndpoint, HostTransportError, HostWindow, Terminal};
 use rustls::{
     pki_types::{CertificateDer, ServerName, UnixTime},
@@ -19,11 +32,13 @@ use rustls::{
 use std::{
     error::Error,
     io::{Read, Write},
-    net::{TcpListener, TcpStream},
-    sync::{mpsc, Arc},
+    net::TcpStream,
+    sync::Arc,
     thread,
     time::{Duration, Instant},
 };
+#[cfg(not(feature = "lib-defined-socket"))]
+use std::{net::TcpListener, sync::mpsc};
 use wasmtime::{Caller, Config, Engine, Instance, Linker, Memory, Module, Store, TypedFunc};
 
 struct CoreBytesResultLib {
@@ -1379,6 +1394,7 @@ impl ServerRuntime {
         Ok((transfer, window.copy_out()))
     }
 
+    #[cfg(not(feature = "lib-defined-socket"))]
     fn serve_tls_connection(&mut self, stream: TcpStream) -> Result<(), Box<dyn Error>> {
         let max_write_chunk = std::env::var("WASMC_HOST_TRANSPORT_MAX_WRITE")
             .ok()
@@ -1710,6 +1726,7 @@ fn expected_benchmark_disconnect(error: &str) -> bool {
         || lower.contains("connection aborted")
 }
 
+#[cfg(not(feature = "lib-defined-socket"))]
 fn run_external_benchmark_server(
     tls: String,
     http: String,
@@ -1823,6 +1840,11 @@ fn main() -> Result<(), Box<dyn Error>> {
     let cert = std::fs::read(a.next().ok_or("cert")?)?;
     let key = std::fs::read(a.next().ok_or("key")?)?;
     if std::env::var_os("WASMC_HTTPS_EXTERNAL_SERVER").is_some() {
+        #[cfg(feature = "lib-defined-socket")]
+        return Err(
+            "external load server is not yet qualified for the Lib-defined socket candidate".into(),
+        );
+        #[cfg(not(feature = "lib-defined-socket"))]
         return run_external_benchmark_server(tls, http, json, compression, policy, cert, key);
     }
     let keepalive_requests = std::env::var("WASMC_HTTPS_KEEPALIVE_REQUESTS")
@@ -1842,18 +1864,35 @@ fn main() -> Result<(), Box<dyn Error>> {
         return Err("WASMC_HTTPS_KEEPALIVE_DURATION_MS must be positive".into());
     }
 
+    #[cfg(not(feature = "lib-defined-socket"))]
     let listener = TcpListener::bind("127.0.0.1:0")?;
+    #[cfg(not(feature = "lib-defined-socket"))]
     let addr = listener.local_addr()?;
+    #[cfg(feature = "lib-defined-socket")]
+    let listener = LibSocketListener::bind_loopback(0)?;
+    #[cfg(feature = "lib-defined-socket")]
+    let addr = listener.local_addr();
     let cert_server = cert.clone();
     let server = thread::spawn(move || -> Result<ServerRuntime, String> {
         let mut rt =
             ServerRuntime::new(&tls, &http, &json, &compression, &policy, cert_server, key)
                 .map_err(|e| e.to_string())?;
         for _ in 0..3 {
-            let (stream, _) = listener.accept().map_err(|e| e.to_string())?;
-            if let Err(e) = rt.serve_tls_connection(stream) {
-                eprintln!("server-connection-error={e}");
-                return Err(e.to_string());
+            #[cfg(not(feature = "lib-defined-socket"))]
+            {
+                let (stream, _) = listener.accept().map_err(|e| e.to_string())?;
+                if let Err(e) = rt.serve_tls_connection(stream) {
+                    eprintln!("server-connection-error={e}");
+                    return Err(e.to_string());
+                }
+            }
+            #[cfg(feature = "lib-defined-socket")]
+            {
+                let endpoint = listener.accept().map_err(|e| e.to_string())?;
+                if let Err(e) = rt.serve_tls_host_endpoint(endpoint) {
+                    eprintln!("server-connection-error={e}");
+                    return Err(e.to_string());
+                }
             }
         }
         Ok(rt)
