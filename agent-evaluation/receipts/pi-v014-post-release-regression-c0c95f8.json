@@ -1,0 +1,100 @@
+{
+  "schema": "wasmc.pi-post-release-regression/v1",
+  "release": {
+    "version": "0.0.14",
+    "tag": "v0.0.14",
+    "tag_commit": "c0c95f8c62c2d413a6dd28f9c46203409dc15b13",
+    "candidate_commit": "6cb3aafea5334ac27648af0e9ccd684fe721ccb5",
+    "product_set_sha256": "a09cd071eb293e636bf8b858b0a56570bfdd8a53373544eca68fda8ea825d4d2"
+  },
+  "protocol": "agent-evaluation/fresh-agent-learning-v1.json",
+  "runner": "scripts/run-pi-learning-model-v1.mjs",
+  "pi_version": "0.87.1",
+  "fresh_local_git_clone_per_case": true,
+  "no_session": true,
+  "skills_templates_extensions_disabled": true,
+  "raw_trace_retained": false,
+  "hidden_reasoning_retained": false,
+  "models": [
+    {
+      "provider": "llm-m4dd",
+      "identity": "deepseek-v4.1-flash",
+      "route_identity_is_upstream_attestation": false,
+      "structural_pass": false,
+      "white_box_pass": false,
+      "totals": {
+        "wall_ms": 109211,
+        "tool_calls": 27,
+        "assistant_turns": 19,
+        "tool_result_characters": 268622,
+        "error_results": 0,
+        "retries": 0,
+        "exact_duplicate_calls": 0,
+        "repeated_reads": 0,
+        "zero_yield_results": 0,
+        "tokens": {"input":146734,"output":9735,"reasoning":4271}
+      },
+      "cases": [
+        {"id":"release-orientation","structural_pass":false,"tool_calls":6,"assistant_turns":4,"tool_result_characters":62493,"wall_ms":22657,"failure":"tool_result_characters 62493 > 60000","semantic_review":"pass","final_answer_sha256":"992c3aedd0a969ca393d6bbc77e57ae30e2a91111a2df62923dcbf001546af7c"},
+        {"id":"position-aware-capability-negative","structural_pass":true,"tool_calls":2,"assistant_turns":2,"tool_result_characters":58820,"wall_ms":14746,"semantic_review":"pass","final_answer_sha256":"a5de8862955b0b929db793a479c6c682522589a8cdbc3f837c07b478ecd00bae"},
+        {"id":"ordinary-source-positive","structural_pass":true,"tool_calls":9,"assistant_turns":6,"tool_result_characters":65209,"wall_ms":31460,"semantic_review":"pass; compiled and executed the 49-byte import-free result","final_answer_sha256":"5b16cef2023707b19a2767338afdfa7db27db698945cbce42d1c9e848a66256b"},
+        {"id":"release-state-separation","structural_pass":true,"tool_calls":2,"assistant_turns":2,"tool_result_characters":8142,"wall_ms":10460,"semantic_review":"fail; correct primary identity followed by package-name typo wamsc-system-telemetry","final_answer_sha256":"fb765bcf066b05bc214ada5908d7f4047af747b83d23681720b326a321f25d29"},
+        {"id":"library-first-selection","structural_pass":true,"tool_calls":6,"assistant_turns":3,"tool_result_characters":64186,"wall_ms":20257,"semantic_review":"pass; exact retained v0.0.9 route was executable but is not current release authority","final_answer_sha256":"0b3b28f48142bd8ce1ac30a31e4c8007e57850b28bee066a9368fefbae83c9ce"},
+        {"id":"host-authority-boundary","structural_pass":true,"tool_calls":2,"assistant_turns":2,"tool_result_characters":9772,"wall_ms":9631,"semantic_review":"pass","final_answer_sha256":"1dd562b6592a5a17c21acd20e4de32e867723954c7bf9c2c9eab20c7879e7881"}
+      ]
+    },
+    {
+      "provider": "llm-m4dd",
+      "identity": "glm-5.3-flash",
+      "route_identity_is_upstream_attestation": false,
+      "structural_pass": false,
+      "white_box_pass": false,
+      "totals": {
+        "wall_ms": 155498,
+        "tool_calls": 20,
+        "assistant_turns": 16,
+        "tool_result_characters": 263241,
+        "error_results": 0,
+        "retries": 0,
+        "exact_duplicate_calls": 0,
+        "repeated_reads": 0,
+        "zero_yield_results": 0,
+        "tokens": {"input":139083,"output":4571,"reasoning":816}
+      },
+      "cases": [
+        {"id":"release-orientation","structural_pass":false,"tool_calls":3,"assistant_turns":2,"tool_result_characters":60032,"wall_ms":20556,"failure":"tool_result_characters 60032 > 60000","semantic_review":"pass","final_answer_sha256":"674272c5fcf7c274e3e2f54eaee519f5b6ccd8476df33c0ff18b25c30f4b467b"},
+        {"id":"position-aware-capability-negative","structural_pass":true,"tool_calls":2,"assistant_turns":2,"tool_result_characters":58820,"wall_ms":22285,"semantic_review":"pass","final_answer_sha256":"1d87db553c82c8c134de7f2b6552ee56882cf60cc483cf519443f94284ace7c4"},
+        {"id":"ordinary-source-positive","structural_pass":true,"tool_calls":5,"assistant_turns":4,"tool_result_characters":9576,"wall_ms":24078,"semantic_review":"pass","final_answer_sha256":"eb2fcc8be4d6e83dca2a2fb2a2a16bcbf53ce66bfe49178e96f34e23c1ec9591"},
+        {"id":"release-state-separation","structural_pass":true,"tool_calls":2,"assistant_turns":2,"tool_result_characters":58820,"wall_ms":16129,"semantic_review":"pass","final_answer_sha256":"3a81b305c071897fedcc50826037d297add54cb4fd64dfcf25bcb7c927ab1b5e"},
+        {"id":"library-first-selection","structural_pass":false,"tool_calls":6,"assistant_turns":4,"tool_result_characters":67511,"wall_ms":47446,"failure":"ellipsized identity","semantic_review":"fail; WIT sha256 was corrupted and final verification command used ellipses","final_answer_sha256":"f6de013ab101c19e0fb641f4471f4dc2792099b74c3992ec89e1b69e8f8db21a"},
+        {"id":"host-authority-boundary","structural_pass":true,"tool_calls":2,"assistant_turns":2,"tool_result_characters":8482,"wall_ms":25004,"semantic_review":"pass","final_answer_sha256":"cccf2fd1249b440952c09c5d962721dfebda97edcc674e4907f535a9b6172761"}
+      ]
+    }
+  ],
+  "independent_current_catalog_verification": {
+    "command": "node scripts/wasmc-lib.mjs resolve wasmc-std 1.4.0 --catalog v014 --catalog-sha256 8368ec8be4b13fadb5959d6495e70916894c476626caf8519b35599041251368 --wit-sha256 d565f00e91c36da68da3645ec5231dd11d1b25299a3ba5cbe3adbd9f5760d91d --artifact-sha256 f8a8ce447f776a47680e02e19ea3a69827edbbc46e01985803ce3d3df51178d7",
+    "passed": true,
+    "release_tag": "v0.0.14"
+  },
+  "findings": [
+    {
+      "classification": "release-guidance-gap",
+      "finding": "release-orientation caused both models to read release.json, channels/prod.json and agent-quickstart.json; the public material exceeded the 60000-character decision budget before wrappers",
+      "evidence": {"release_json_bytes":54173,"prod_channel_bytes":1212,"agent_quickstart_bytes":7607,"combined_bytes":62992},
+      "next_action": "publish a compact authoritative lifecycle/orientation record or move duplicated inventory out of release.json; do not loosen the evaluator merely to pass"
+    },
+    {
+      "classification": "release-guidance-gap",
+      "finding": "the Base64 quickstart command resolves the valid retained v0.0.9 catalog instead of the current v0.0.14 catalog",
+      "next_action": "make the next release quickstart use the exact v0.0.14 catalog route while retaining explicit historical labels where needed"
+    },
+    {
+      "classification": "evaluator-oracle-gap",
+      "finding": "lexical hygiene catches ellipses but not a complete-looking corrupted digest or package-name typo",
+      "next_action": "compare reported package identities and digests field-by-field with the selected route authority"
+    }
+  ],
+  "controlled_pair_accepted": false,
+  "release_mutated": false,
+  "disposition": "v0.0.14 remains immutable; feed findings into the next release flywheel"
+}

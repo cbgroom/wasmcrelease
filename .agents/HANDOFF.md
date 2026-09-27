@@ -836,3 +836,29 @@ Complete previous handoff preserved verbatim under
 .agents/history/host-handoff-before-consolidation.md and in Git.
 Its claims are chronological checkpoints, not current acceptance authority.
 Use live Git and the current admission files to resolve source/integration truth.
+
+## 9. v0.0.14 Post-release Pi Regression (2026-09-27)
+
+The immutable `v0.0.14` tag at `c0c95f8c62c2d413a6dd28f9c46203409dc15b13`
+was regressed with Pi `0.87.1`, one fresh detached clone and session per case,
+and both controlled routes: `llm-m4dd/deepseek-v4.1-flash` and
+`llm-m4dd/glm-5.3-flash`. Route labels identify the observed local routes; they
+do not independently attest upstream implementations. Raw conversations and
+hidden reasoning were not retained.
+
+Controlled-pair qualification is **false**. DeepSeek structurally passed 5/6
+cases but exceeded the 60,000-character orientation budget and later misspelled
+the exact telemetry package identity. GLM structurally passed 4/6, exceeded the
+same orientation budget, and corrupted/ellipsized an exact WIT digest in the
+Library-first case. Neither route had a timeout, tool error, retry, duplicate
+call, repeated read, or zero-yield result, so these are guidance/oracle defects
+rather than transient tool failures.
+
+Next-release flywheel work is bounded to three changes: provide a compact
+authoritative orientation/lifecycle record instead of forcing agents through
+more than 60 KB of overlapping material; make the public Base64 quickstart use
+the current `v014` catalog route instead of the valid but retained `v009`
+example; and add field-by-field oracle checks for reported package identities
+and digests. Do not modify the immutable v0.0.14 tag or weaken the evaluator.
+The privacy-safe exact receipt is
+`agent-evaluation/receipts/pi-v014-post-release-regression-c0c95f8.json`.
