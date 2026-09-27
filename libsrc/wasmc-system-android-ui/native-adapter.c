@@ -31,8 +31,14 @@ static int32_t run_quiet(char *const arguments[]) {
 }
 
 static int32_t read_file(uint8_t *output, size_t output_capacity, size_t *output_len) {
-  int descriptor = open(snapshot_path, O_RDONLY | O_CLOEXEC);
-  if (descriptor < 0) return -errno;
+  int descriptor = -1;
+  for (size_t attempt = 0; attempt < 50; attempt += 1) {
+    descriptor = open(snapshot_path, O_RDONLY | O_CLOEXEC);
+    if (descriptor >= 0) break;
+    if (errno != ENOENT) return -errno;
+    usleep(100000);
+  }
+  if (descriptor < 0) return -ENOENT;
   size_t total = 0;
   for (;;) {
     if (total == output_capacity) {

@@ -8,12 +8,18 @@ const readJson = (relative) => JSON.parse(fs.readFileSync(path.join(root, relati
 const profile = readJson("host/platform/android/agent-computer-profile.json");
 const architecture = readJson("host/architecture.json");
 
-assert.equal(profile.schema, "wasmc.library-os-profile/v1");
-assert.equal(profile.target, "android-arm64");
+assert.equal(profile.schema, "wasmc.library-os-profile/v2");
+assert.deepEqual(profile.target, {
+  os: "android",
+  architecture: "aarch64",
+  environment: "emulator",
+  embedding: "native",
+});
 assert.equal(profile.host.contract, "wasmc.lib-defined-host-boundary/v1");
 assert.equal(profile.host.executor, "host/runtime/lib-boundary/native-android");
 assert.equal(profile.host.required_domain_apis, 0);
-assert.deepEqual(profile.standard_apis, [
+assert.equal(profile.required_lifecycle, "qualified");
+assert.deepEqual(profile.requirements, [
   "wasmc:system-display@0.0.1",
   "wasmc:system-ui@0.0.1",
   "wasmc:system-input@0.0.1",
@@ -70,13 +76,24 @@ for (const [name, id, platformMechanism] of specs) {
   });
 }
 
-assert.deepEqual(profile.bindings, specs.map(([name]) => `wasmc:system-android-${name}@0.0.1-dev.1`));
+assert.deepEqual(profile.bindings.map((binding) => binding.api), profile.requirements);
+assert.deepEqual(
+  profile.bindings.map((binding) => binding.provider),
+  specs.map(([name]) => `wasmc:system-android-${name}@0.0.1-dev.1`),
+);
+for (const binding of profile.bindings) {
+  assert.deepEqual(binding.target, profile.target);
+  assert.equal(binding.boundary, profile.host.contract);
+  assert.equal(binding.lifecycle.qualified, true);
+  assert.equal(binding.lifecycle.admitted, false);
+  assert.equal(binding.lifecycle.released, false);
+}
 console.log(JSON.stringify({
   accepted: true,
   schema: profile.schema,
   target: profile.target,
   fixed_host_domain_apis: profile.host.required_domain_apis,
-  standard_apis: profile.standard_apis.length,
+  standard_apis: profile.requirements.length,
   android_bindings: profile.bindings.length,
   admitted: false,
   released: false,

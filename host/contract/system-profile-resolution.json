@@ -1,0 +1,25 @@
+{
+  "schema": "wasmc.system-profile-resolution-contract/v1",
+  "status": "architecture-workstream-not-released",
+  "request_schema": "wasmc.system-profile-request/v1",
+  "profile_schema": "wasmc.library-os-profile/v2",
+  "candidate_schema": "wasmc.libsrc-candidate/v1",
+  "target_fields": ["os", "architecture", "environment", "embedding"],
+  "lifecycle_fields": ["qualified", "admitted", "released", "discoverable", "installable"],
+  "selection_authority": "explicit candidate set plus Lib-owned system_binding metadata",
+  "semantic_authority": "exact WIT package identity",
+  "physical_authority": "exact native boundary descriptor identity",
+  "rules": {
+    "provider_name_inference": false,
+    "cross_platform_fallback": false,
+    "highest_version_wins": false,
+    "unique_match_required": true,
+    "ambiguity_requires_exact_pin": true,
+    "host_domain_api_growth": false
+  },
+  "release": {
+    "included_in_v0_0_15": false,
+    "admitted": false,
+    "released": false
+  }
+}

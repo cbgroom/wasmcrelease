@@ -1,23 +1,125 @@
 {
-  "schema": "wasmc.library-os-profile/v1",
-  "id": "android-agent-computer-v1",
-  "target": "android-arm64",
+  "schema": "wasmc.library-os-profile/v2",
+  "id": "android-agent-computer-v2",
+  "target": {
+    "os": "android",
+    "architecture": "aarch64",
+    "environment": "emulator",
+    "embedding": "native"
+  },
   "host": {
     "contract": "wasmc.lib-defined-host-boundary/v1",
     "executor": "host/runtime/lib-boundary/native-android",
     "required_domain_apis": 0
   },
-  "standard_apis": [
+  "required_lifecycle": "qualified",
+  "requirements": [
     "wasmc:system-display@0.0.1",
     "wasmc:system-ui@0.0.1",
     "wasmc:system-input@0.0.1",
     "wasmc:system-virtual-input@0.0.1"
   ],
   "bindings": [
-    "wasmc:system-android-display@0.0.1-dev.1",
-    "wasmc:system-android-ui@0.0.1-dev.1",
-    "wasmc:system-android-input@0.0.1-dev.1",
-    "wasmc:system-android-uinput@0.0.1-dev.1"
+    {
+      "api": "wasmc:system-display@0.0.1",
+      "provider": "wasmc:system-android-display@0.0.1-dev.1",
+      "candidate": "libsrc/wasmc-system-android-display/candidate.json",
+      "wit": "libsrc/wasmc-system-android-display/lib.wit",
+      "descriptor": "libsrc/wasmc-system-android-display/native-boundary.template.json",
+      "boundary": "wasmc.lib-defined-host-boundary/v1",
+      "artifact": {
+        "format": "native-adapter",
+        "path": "libwasmc_system_android_display.so"
+      },
+      "target": {
+        "os": "android",
+        "architecture": "aarch64",
+        "environment": "emulator",
+        "embedding": "native"
+      },
+      "lifecycle": {
+        "qualified": true,
+        "admitted": false,
+        "released": false,
+        "discoverable": false,
+        "installable": false
+      }
+    },
+    {
+      "api": "wasmc:system-ui@0.0.1",
+      "provider": "wasmc:system-android-ui@0.0.1-dev.1",
+      "candidate": "libsrc/wasmc-system-android-ui/candidate.json",
+      "wit": "libsrc/wasmc-system-android-ui/lib.wit",
+      "descriptor": "libsrc/wasmc-system-android-ui/native-boundary.template.json",
+      "boundary": "wasmc.lib-defined-host-boundary/v1",
+      "artifact": {
+        "format": "native-adapter",
+        "path": "libwasmc_system_android_ui.so"
+      },
+      "target": {
+        "os": "android",
+        "architecture": "aarch64",
+        "environment": "emulator",
+        "embedding": "native"
+      },
+      "lifecycle": {
+        "qualified": true,
+        "admitted": false,
+        "released": false,
+        "discoverable": false,
+        "installable": false
+      }
+    },
+    {
+      "api": "wasmc:system-input@0.0.1",
+      "provider": "wasmc:system-android-input@0.0.1-dev.1",
+      "candidate": "libsrc/wasmc-system-android-input/candidate.json",
+      "wit": "libsrc/wasmc-system-android-input/lib.wit",
+      "descriptor": "libsrc/wasmc-system-android-input/native-boundary.template.json",
+      "boundary": "wasmc.lib-defined-host-boundary/v1",
+      "artifact": {
+        "format": "native-adapter",
+        "path": "libwasmc_system_android_input.so"
+      },
+      "target": {
+        "os": "android",
+        "architecture": "aarch64",
+        "environment": "emulator",
+        "embedding": "native"
+      },
+      "lifecycle": {
+        "qualified": true,
+        "admitted": false,
+        "released": false,
+        "discoverable": false,
+        "installable": false
+      }
+    },
+    {
+      "api": "wasmc:system-virtual-input@0.0.1",
+      "provider": "wasmc:system-android-uinput@0.0.1-dev.1",
+      "candidate": "libsrc/wasmc-system-android-uinput/candidate.json",
+      "wit": "libsrc/wasmc-system-android-uinput/lib.wit",
+      "descriptor": "libsrc/wasmc-system-android-uinput/native-boundary.template.json",
+      "boundary": "wasmc.lib-defined-host-boundary/v1",
+      "artifact": {
+        "format": "native-adapter",
+        "path": "libwasmc_system_android_uinput.so"
+      },
+      "target": {
+        "os": "android",
+        "architecture": "aarch64",
+        "environment": "emulator",
+        "embedding": "native"
+      },
+      "lifecycle": {
+        "qualified": true,
+        "admitted": false,
+        "released": false,
+        "discoverable": false,
+        "installable": false
+      }
+    }
   ],
   "acceptance": "query-ui-then-control-then-confirm-with-ui-and-frame"
 }

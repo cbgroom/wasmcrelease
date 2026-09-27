@@ -17,6 +17,21 @@ Consequently:
 - platform selection is expressed by the exact Lib graph and descriptor;
 - local and remote implementations are Lib choices above one fixed boundary.
 
+## Exact target resolution
+
+Every selectable system Lib candidate owns a `system_binding` record declaring
+the platform-neutral API it implements, the fixed boundary version, its native
+descriptor, exact target tuples and five independent lifecycle states. The
+target tuple is `{os, architecture, environment, embedding}`; in particular,
+iOS device and iOS simulator are different targets.
+
+The package set is an explicit input to `profile-resolver.mjs`, so it does not
+recreate a global Host capability registry. Resolution is metadata-based and
+never parses provider names. For each requested API it requires one exact
+target, boundary and lifecycle match. Missing matches reject instead of falling
+back across platforms. Multiple matches reject unless the request supplies the
+exact provider identity as a pin.
+
 ## Retained v0.0.15 evidence
 
 Existing rows keep their historical three-state meaning:

@@ -5,6 +5,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { resolveSystemProfileRequest } from "../host/platform/profile-resolver.mjs";
 
 assert.equal(process.platform, "darwin", "Android emulator qualification currently requires the macOS SDK host");
 
@@ -22,6 +23,7 @@ const hostManifest = path.join(root, "host/runtime/lib-boundary/native-android/C
 const hostSource = path.join(root, "host/runtime/lib-boundary/native-android/src/main.rs");
 const hostBinary = path.join(cargoTarget, "aarch64-linux-android/release/wasmc-lib-boundary-native-android");
 const profilePath = path.join(root, "host/platform/android/agent-computer-profile.json");
+const profileRequestPath = path.join(root, "host/platform/android/agent-computer-request.json");
 const remoteRoot = "/data/local/tmp/wasmc-agent-computer-v1";
 const remoteHost = `${remoteRoot}/wasmc-lib-boundary-native-android`;
 const avd = process.env.WASMC_ANDROID_AVD ?? "medium_phone";
@@ -179,6 +181,7 @@ const encodeTouchscreenDestroy = (token) => {
 let launched = false;
 let emulatorProcess;
 let callIndex = 0;
+let systemUiAnrRecoveries = 0;
 const hostIdentities = new Set();
 
 try {
@@ -245,10 +248,12 @@ try {
   }
 
   const profile = JSON.parse(fs.readFileSync(profilePath, "utf8"));
-  assert.equal(profile.schema, "wasmc.library-os-profile/v1");
+  const profileRequest = JSON.parse(fs.readFileSync(profileRequestPath, "utf8"));
+  assert.deepEqual(profile, resolveSystemProfileRequest(root, profileRequest));
+  assert.equal(profile.schema, "wasmc.library-os-profile/v2");
   assert.equal(profile.host.contract, "wasmc.lib-defined-host-boundary/v1");
   assert.equal(profile.host.required_domain_apis, 0);
-  assert.deepEqual(profile.standard_apis, [
+  assert.deepEqual(profile.requirements, [
     "wasmc:system-display@0.0.1",
     "wasmc:system-ui@0.0.1",
     "wasmc:system-input@0.0.1",
@@ -365,19 +370,35 @@ try {
       `input device state did not converge: ${name}\n${context}\n${processes}`);
   };
 
+  const openSettingsHome = async (outputPrefix) => {
+    adbCommand(["shell", "am", "force-stop", "com.google.android.settings.intelligence"]);
+    adbCommand(["shell", "am", "force-stop", "com.android.settings"]);
+    for (let attempt = 0; attempt < 12; attempt += 1) {
+      adbCommand(["shell", "am", "start", "-W", "-a", "android.settings.SETTINGS"]);
+      await wait(1000);
+      const snapshot = invoke("ui", Buffer.from([1]), `${outputPrefix}-${attempt}.xml`).toString("utf8");
+      if (snapshot.includes('resource-id="com.android.settings:id/search_bar_title"')) return snapshot;
+      if (snapshot.includes('text="System UI isn&apos;t responding"') ||
+          snapshot.includes('text="System UI isn\'t responding"')) {
+        const waitButton = boundsFor(snapshot, (tag) =>
+          tag.includes('resource-id="android:id/aerr_wait"') && tag.includes('text="Wait"'));
+        adbCommand(["shell", "input", "tap", String(waitButton.x), String(waitButton.y)]);
+        systemUiAnrRecoveries += 1;
+        await wait(2000);
+      }
+    }
+    throw new Error("Android Settings semantic home did not become ready");
+  };
+
   adbCommand(["shell", "wm", "dismiss-keyguard"]);
   adbCommand(["shell", "input", "keyevent", "KEYCODE_WAKEUP"]);
-  adbCommand(["shell", "am", "force-stop", "com.google.android.settings.intelligence"]);
-  adbCommand(["shell", "am", "force-stop", "com.android.settings"]);
-  adbCommand(["shell", "am", "start", "-W", "-a", "android.settings.SETTINGS"]);
-  await wait(1500);
+  let xml = await openSettingsHome("before-ready");
 
   const beforeFrame = invoke("display", Buffer.from([1]), "before.png");
   const dimensions = pngDimensions(beforeFrame);
   assert.deepEqual(dimensions, { width: 1080, height: 2400 });
   const beforeFrameSha256 = hash(beforeFrame);
 
-  let xml = invoke("ui", Buffer.from([1]), "before.xml").toString("utf8");
   const search = boundsFor(xml, (tag) => tag.includes('resource-id="com.android.settings:id/search_bar_title"'));
   invoke("input", encodeTap(search.x, search.y));
 
@@ -422,11 +443,7 @@ try {
   const resultFrameSha256 = hash(resultFrame);
   assert.notEqual(resultFrameSha256, typedFrameSha256);
 
-  adbCommand(["shell", "am", "force-stop", "com.google.android.settings.intelligence"]);
-  adbCommand(["shell", "am", "force-stop", "com.android.settings"]);
-  adbCommand(["shell", "am", "start", "-W", "-a", "android.settings.SETTINGS"]);
-  await wait(1500);
-  xml = invoke("ui", Buffer.from([1]), "uinput-before.xml").toString("utf8");
+  xml = await openSettingsHome("uinput-before-ready");
   const uinputSearch = boundsFor(xml, (tag) => tag.includes('resource-id="com.android.settings:id/search_bar_title"'));
   const keyboardKeys = [32, 23, 31, 25, 38, 30, 21];
   const keyEvents = keyboardKeys.flatMap((code) => [[code, 1], [code, 0]]);
@@ -605,7 +622,7 @@ try {
 
   const report = {
     accepted: true,
-    schema: "wasmc.android-agent-computer-qualification/v3",
+    schema: "wasmc.android-agent-computer-qualification/v4",
     avd,
     android_release: adbCommand(["shell", "getprop", "ro.build.version.release"]).trim(),
     android_api: Number(adbCommand(["shell", "getprop", "ro.build.version.sdk"]).trim()),
@@ -614,12 +631,23 @@ try {
     fixed_android_host_sha256: executorSha256,
     host_source_changes_after_baseline_required: 0,
     host_domain_apis: 0,
-    standard_apis: profile.standard_apis,
-    binding_identities: profile.bindings,
+    profile: {
+      schema: profile.schema,
+      id: profile.id,
+      target: profile.target,
+      required_lifecycle: profile.required_lifecycle,
+      exact_regeneration: true,
+      provider_name_inference: false,
+    },
+    standard_apis: profile.requirements,
+    binding_identities: profile.bindings.map((binding) => binding.provider),
     adapter_sha256: adapterSha256,
     real_frame: { ...dimensions, before_sha256: beforeFrameSha256, typed_sha256: typedFrameSha256, result_sha256: resultFrameSha256 },
     semantic_ui_query: true,
     focus_precondition_observed: true,
+    settings_semantic_home_ready: true,
+    system_ui_anr_recoveries: systemUiAnrRecoveries,
+    bounded_ui_snapshot_publication: true,
     exact_text_postcondition: "display",
     foreground_postcondition: "com.android.settings/.SubSettings",
     result_semantics: ["Font size", "Display size"],

@@ -7,6 +7,7 @@ const readJson = (relative) => JSON.parse(fs.readFileSync(path.join(root, relati
 const manifest = readJson("host/manifest.json");
 const architecture = readJson("host/architecture.json");
 const boundary = readJson(manifest.boundary_contract);
+const platformResolution = readJson(manifest.platform_binding_contract);
 const failures = [];
 
 const expectedMechanisms = [
@@ -31,6 +32,8 @@ if (architecture.guest_authority !== "exact-lib-package-wit") failures.push("exa
 if (manifest.schema !== "wasmc.host-layout/v2") failures.push("invalid Host layout schema");
 if (manifest.domain_semantic_authority !== "exact-lib-package-wit") failures.push("manifest must route domain semantics to Lib WIT");
 if (manifest.domain_physical_binding_authority !== "exact-lib-package-native-boundary-descriptor") failures.push("manifest must route physical bindings to exact Lib descriptors");
+if (manifest.platform_binding_selection_authority !== "exact-target-profile-resolved-from-lib-owned-metadata") failures.push("manifest must route platform selection to exact Lib metadata");
+if (manifest.platform_name_inference !== false) failures.push("platform support must not be inferred from provider names");
 if (!Array.isArray(manifest.host_domain_capabilities) || manifest.host_domain_capabilities.length !== 0) failures.push("Host canonical domain capability inventory must be empty");
 if (Object.hasOwn(manifest, "capabilities")) failures.push("legacy manifest.capabilities authority is forbidden");
 if (manifest.legacy_domain_qualification?.future_extension_authority !== false) failures.push("legacy provider matrices must not be future extension authority");
@@ -43,6 +46,12 @@ if (boundary.full_host_profile?.per_domain_grant_api !== false || boundary.full_
 if (boundary.semantic_authority?.public_types !== "exact Lib package WIT") failures.push("boundary public types must be Lib-owned");
 if (boundary.semantic_authority?.physical_binding !== "exact Lib package native boundary descriptor") failures.push("boundary physical binding must be Lib-owned");
 if (boundary.release?.included_in_v0_0_15 !== false || boundary.release?.admitted !== false || boundary.release?.released !== false) failures.push("unreleased boundary lifecycle is overstated");
+if (platformResolution.schema !== "wasmc.system-profile-resolution-contract/v1") failures.push("invalid system profile resolution contract");
+if (JSON.stringify(platformResolution.target_fields) !== JSON.stringify(["os", "architecture", "environment", "embedding"])) failures.push("system profile target fields drifted");
+if (platformResolution.rules?.provider_name_inference !== false || platformResolution.rules?.cross_platform_fallback !== false) failures.push("system profile resolution must not guess or fall back across platforms");
+if (platformResolution.rules?.unique_match_required !== true || platformResolution.rules?.ambiguity_requires_exact_pin !== true) failures.push("system profile resolution must require one exact provider");
+if (platformResolution.rules?.host_domain_api_growth !== false) failures.push("system profile resolution must not grow Host APIs");
+if (platformResolution.release?.admitted !== false || platformResolution.release?.released !== false) failures.push("system profile resolution lifecycle is overstated");
 
 const forbiddenMechanismFragments = boundary.host_forbidden_domain_apis ?? [];
 for (const mechanism of boundary.mechanisms ?? []) {
@@ -54,6 +63,9 @@ if (architecture.boundary_rules?.rust_or_javascript_domain_api_growth !== false)
 if (architecture.boundary_rules?.descriptor_owned_by_exact_lib !== true) failures.push("native descriptors must be exact-Lib owned");
 if (architecture.boundary_rules?.host_binary_unchanged_for_new_domain !== true) failures.push("new-domain Host identity must remain unchanged");
 if ((architecture.domain_model?.host_inventory ?? ["missing"]).length !== 0) failures.push("architecture Host domain inventory must be empty");
+if (architecture.platform_resolution?.resolver !== "host/platform/profile-resolver.mjs") failures.push("platform resolver path is missing");
+if (architecture.platform_resolution?.provider_name_inference !== false) failures.push("architecture must forbid provider-name inference");
+if (architecture.platform_resolution?.host_domain_api_growth !== false) failures.push("profile resolution must not grow Host domain APIs");
 const prototype = architecture.prototype;
 if (prototype?.status !== "local-node-qualified-not-admitted-not-released") failures.push("prototype lifecycle is missing or overstated");
 if (!fs.existsSync(path.join(root, prototype?.executor ?? "missing"))) failures.push("fixed boundary executor missing");
@@ -145,6 +157,7 @@ console.log(JSON.stringify({
   schema: manifest.schema,
   architecture: architecture.schema,
   boundary: boundary.schema,
+  platform_resolution: platformResolution.schema,
   host_domain_capabilities: manifest.host_domain_capabilities.length,
   boundary_mechanisms: boundary.mechanisms.length,
   retained_v0_0_15_domains: retainedV015Domains.length,

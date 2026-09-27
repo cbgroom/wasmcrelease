@@ -22,6 +22,7 @@ on:
       - "scripts/test-linux-operation-bridge.mjs"
       - "scripts/test-linux-uinput-lib-defined-boundary.mjs"
       - "scripts/validate-android-agent-computer.mjs"
+      - "scripts/test-platform-profile-resolver.mjs"
       - "scripts/test-android-agent-computer.mjs"
       - "scripts/host-https-ab.mjs"
       - ".github/workflows/host-layout.yml"
@@ -45,6 +46,7 @@ on:
       - "scripts/test-linux-operation-bridge.mjs"
       - "scripts/test-linux-uinput-lib-defined-boundary.mjs"
       - "scripts/validate-android-agent-computer.mjs"
+      - "scripts/test-platform-profile-resolver.mjs"
       - "scripts/test-android-agent-computer.mjs"
       - "scripts/host-https-ab.mjs"
       - ".github/workflows/host-layout.yml"
@@ -85,6 +87,7 @@ jobs:
       - run: node scripts/test-linux-socket-lib-defined-boundary.mjs
       - run: node scripts/test-linux-operation-bridge.mjs
       - run: node scripts/validate-android-agent-computer.mjs
+      - run: node scripts/test-platform-profile-resolver.mjs
       - name: Qualify Lib-defined socket HTTPS migration
         shell: bash
         run: |

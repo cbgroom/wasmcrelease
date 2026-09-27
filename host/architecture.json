@@ -105,6 +105,16 @@
     ],
     "rule": "domain and locality are Lib-defined semantics; neither creates a Rust Host API family"
   },
+  "platform_resolution": {
+    "resolver": "host/platform/profile-resolver.mjs",
+    "request_schema": "wasmc.system-profile-request/v1",
+    "profile_schema": "wasmc.library-os-profile/v2",
+    "authority": "exact Lib candidate system_binding metadata plus exact native descriptor identity",
+    "target_fields": ["os", "architecture", "environment", "embedding"],
+    "selection": "unique exact match or fail closed; ambiguity requires an exact provider pin",
+    "provider_name_inference": false,
+    "host_domain_api_growth": false
+  },
   "boundary_rules": {
     "contract": "host/contract/lib-defined-boundary.json",
     "rust_or_javascript_domain_api_growth": false,
@@ -169,7 +179,7 @@
       ]
     },
     "android_native": {
-      "status": "android-16-arm64-emulator-agent-computer-and-direct-uinput-qualified-not-admitted-not-released",
+      "status": "android-16-arm64-emulator-agent-computer-direct-uinput-and-profile-resolution-qualified-not-admitted-not-released",
       "executor": "host/runtime/lib-boundary/native-android",
       "profile": "host/platform/android/agent-computer-profile.json",
       "system_libs": [
@@ -179,7 +189,7 @@
         "libsrc/wasmc-system-android-uinput"
       ],
       "evidence": "scripts/test-android-agent-computer.mjs",
-      "convergence": "one fixed target Host executes Lib-owned display, semantic UI and input bindings behind platform-neutral WIT APIs",
+      "convergence": "one fixed target Host executes an exact-target profile resolved from Lib-owned display, semantic UI and input binding metadata behind platform-neutral WIT APIs",
       "scope": [
         "real-1080x2400-frame-capture",
         "real-semantic-ui-hierarchy",
@@ -191,6 +201,11 @@
         "real-/dev/uinput-virtual-keyboard",
         "persistent-session-status-recovery",
         "generation-checked-keyboard-resource",
+        "real-/dev/uinput-direct-touchscreen",
+        "session-eof-device-cleanup",
+        "parallel-session-isolation",
+        "exact-target-provider-resolution",
+        "missing-and-ambiguous-provider-rejection",
         "input-output-export-and-sibling-boundary-rejection"
       ],
       "pending": [

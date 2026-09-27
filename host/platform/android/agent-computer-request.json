@@ -1,0 +1,31 @@
+{
+  "schema": "wasmc.system-profile-request/v1",
+  "id": "android-agent-computer-v2",
+  "target": {
+    "os": "android",
+    "architecture": "aarch64",
+    "environment": "emulator",
+    "embedding": "native"
+  },
+  "boundary": "wasmc.lib-defined-host-boundary/v1",
+  "host": {
+    "contract": "wasmc.lib-defined-host-boundary/v1",
+    "executor": "host/runtime/lib-boundary/native-android",
+    "required_domain_apis": 0
+  },
+  "required_lifecycle": "qualified",
+  "requirements": [
+    "wasmc:system-display@0.0.1",
+    "wasmc:system-ui@0.0.1",
+    "wasmc:system-input@0.0.1",
+    "wasmc:system-virtual-input@0.0.1"
+  ],
+  "candidates": [
+    "libsrc/wasmc-system-android-display/candidate.json",
+    "libsrc/wasmc-system-android-ui/candidate.json",
+    "libsrc/wasmc-system-android-input/candidate.json",
+    "libsrc/wasmc-system-android-uinput/candidate.json"
+  ],
+  "pins": {},
+  "acceptance": "query-ui-then-control-then-confirm-with-ui-and-frame"
+}

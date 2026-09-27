@@ -270,6 +270,21 @@ Four candidate bindings expose platform-neutral APIs:
 - `wasmc:system-virtual-input@0.0.1` through
   `wasmc-system-android-uinput`.
 
+The binding profile is no longer maintained as two positional API/provider
+arrays. `agent-computer-request.json` names the exact candidate set and target;
+`host/platform/profile-resolver.mjs` reads Lib-owned `system_binding` metadata
+and emits explicit API-to-provider rows in the v2 profile. Selection matches
+OS, architecture, device/simulator environment, embedding, boundary and
+lifecycle. Missing or ambiguous providers fail closed, provider names carry no
+selection authority, and an ambiguity requires an exact provider pin. The
+resolver is deployment control plane and adds no domain API to the fixed Host.
+
+Current qualification deliberately resolves only Android ARM64 emulator.
+Android physical device, macOS, Windows, iOS device and iOS simulator all reject
+until their own exact qualified Lib providers are supplied. Future platforms
+reuse the same WIT API identities where semantics match, while provider and
+profile versions remain independent.
+
 The Android 16/API 36 ARM64 emulator qualification runs all three adapters
 through one Host identity. It captures a 1080×2400 frame, queries the semantic
 Settings hierarchy, waits until the search editor is authoritatively focused,
