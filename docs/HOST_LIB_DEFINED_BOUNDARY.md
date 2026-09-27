@@ -532,6 +532,17 @@ bound to implementation commit `7833a89047d48077d04a9679f032cfb92f32b866`.
 Physical-device pixel visibility, iPhone PiP support, WKWebView/DOM, lowering,
 admission and release remain pending.
 
+The v4 successor moves the unchanged WIT and Swift provider bytes out of the
+qualification App into the canonical public-source package
+`libsrc/wasmc-system-ios-app-surface-control`. Its Lib-owned iOS binding declares
+an `embedded-source` artifact, and the common exact-target resolver generates
+the retained `ios/aarch64/simulator/native` profile while still resolving the
+existing Android/Linux dynamic adapters. A complete iPad Simulator rerun
+retains the v3 PiP, parallel progress and human-handoff behavior with the same
+fixed Host digest. The retained v4 receipt is
+`admission/host-lib-defined-boundary-v1/ios-arm64-app-surface-control-v4.json`,
+bound to implementation commit `e8955fe74e9830b728465372f8eef1329c5b449e`.
+
 The mapped-window, epoll-readiness, kernel-splice and asynchronous-readiness
 successors are qualified on local Linux aarch64 and independent GitHub Ubuntu
 x86_64. The ioctl call-shape and vectored-write successor is also qualified on
