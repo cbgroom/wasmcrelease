@@ -1,0 +1,79 @@
+{
+  "schema": "wasmc.host-lib-defined-boundary-android-qualification/v1",
+  "status": "android-16-arm64-emulator-agent-computer-qualified-not-admitted-not-released",
+  "date": "2026-09-27",
+  "implementation_commit": "3613413debd75fa2a19e785a4240908ba2ff6566",
+  "source": {
+    ".github/workflows/host-layout.yml": "5fdbd2c4642d103a4981004ede2c432ee2d5274818576776afc9e53c3aef5ed0",
+    "host/runtime/lib-boundary/native-android/Cargo.lock": "6731633ea34dceefa0ccfbf389915f02601b29b37869d06e847f2810f87987d3",
+    "host/runtime/lib-boundary/native-android/Cargo.toml": "7f89226dce22292ad71145d6a078853eb429c5cf2e56364017dc116e44d549ea",
+    "host/runtime/lib-boundary/native-android/src/main.rs": "95d05ca1224837f79d35055846ead1c7303c8998dfa720cfc33258a7b878972f",
+    "host/platform/android/agent-computer-profile.json": "b0f0350f451666dfcbb0fd68d5fdcac5c26c255f00b07db872d7bb993455323a",
+    "libsrc/wasmc-system-android-display/lib.wit": "45e1d31b607185ffda7784c4a809cc54d5288a4771fdf444066440fde554aa77",
+    "libsrc/wasmc-system-android-display/native-adapter.c": "79a54600b82d13fc0972a1311df0f010e3f610964f7555ce19b2bf7cd55c14b3",
+    "libsrc/wasmc-system-android-display/native-boundary.template.json": "7687fa3c625a5d9202b94208d0110aea759f36fab91ebef805c1d52e3b1adafa",
+    "libsrc/wasmc-system-android-ui/lib.wit": "78d4d39f71ac1df5c09579a00928e605d04770b8e4377e2314c558220a849844",
+    "libsrc/wasmc-system-android-ui/native-adapter.c": "ec6b09e5b51fee7c803c4aea889a79afcbd785876f96bc639fc1b86a51297b75",
+    "libsrc/wasmc-system-android-ui/native-boundary.template.json": "d0f307898a33556e3c3d1facee2d56949f38df39689885bc1da172e810a6aebe",
+    "libsrc/wasmc-system-android-input/lib.wit": "d740fac34d41c45bbdde18c5ebdf742409a9c424fc1199075d864ae5be457e8b",
+    "libsrc/wasmc-system-android-input/native-adapter.c": "de03f5854645c1ea1afde8a8da3e52cb95eca0ece44822734167f3a028549c88",
+    "libsrc/wasmc-system-android-input/native-boundary.template.json": "e58237e85ebb865303423021c0c120f2bec8a69685c90ae55bcfb97f95a6aeb6",
+    "scripts/test-android-agent-computer.mjs": "5f238477b6b0b5db355f138d9c52d895b27bc0be02e8f803633ff63981a121f2",
+    "scripts/validate-android-agent-computer.mjs": "74cbda0161d2157d4f7172d687295749c170eef5143bf5682cb071a2129f3ef6"
+  },
+  "environment": {
+    "provider": "local Android Emulator",
+    "avd": "medium_phone",
+    "android_release": "16",
+    "android_api": 36,
+    "architecture": "arm64-v8a",
+    "kernel": "6.6.66-android15-8-gb66429556fb8-ab13070261-4k",
+    "ndk": "28.2.13676358",
+    "rustc": "rustc 1.96.0 (ac68faa20 2026-05-25)",
+    "wasm_tools": "wasm-tools 1.255.0"
+  },
+  "outputs": {
+    "executor_sha256": "8f6c9ccc8839910f40f647d2ff0628cecfd861798b6a02c46ea2f8c1126d0a8d",
+    "adapter_sha256": {
+      "display": "7c48ae3810338b8bd1f5b554b930cac0f4327abe4b425e0167036821068bf753",
+      "ui": "2ad14e0053c53e7ed547e8c806ae019e19d3ea367803230454a97103946bb78a",
+      "input": "bb0030408561e7cb978a4c128659bc908e153025217638a6e334ab115d6999bd"
+    },
+    "adapter_export": "wasmc_boundary_v1_invoke"
+  },
+  "evidence": {
+    "script": "scripts/test-android-agent-computer.mjs",
+    "status": "PASS",
+    "fixed_executor_domain_apis": 0,
+    "standard_apis": [
+      "wasmc:system-display@0.0.1",
+      "wasmc:system-ui@0.0.1",
+      "wasmc:system-input@0.0.1"
+    ],
+    "binding_identities": [
+      "wasmc:system-android-display@0.0.1-dev.1",
+      "wasmc:system-android-ui@0.0.1-dev.1",
+      "wasmc:system-android-input@0.0.1-dev.1"
+    ],
+    "real_frame": {
+      "width": 1080,
+      "height": 2400,
+      "before_sha256": "ab3423642efc91484decc9a31eabb9403b1aad88d5275b385930b2b51cf12e7e",
+      "typed_sha256": "2c4f3768bd06dddeb609efb1d72fa5d3c62509b9e9c14f4880ff1f9a389a19f8",
+      "result_sha256": "1b055262e2cf41326846976494dcaadce258fa4dd0033352e4397aa3a4c0945b"
+    },
+    "semantic_ui_query": true,
+    "focus_precondition_observed": true,
+    "exact_text_postcondition": "display",
+    "foreground_postcondition": "com.android.settings/.SubSettings",
+    "result_semantics": ["Font size", "Display size"],
+    "malformed_operation_rejection": true,
+    "adapter_identity_rejection": true,
+    "host_source_changes_after_baseline_required": 0,
+    "wasm_lowering": false,
+    "direct_android_uinput": false,
+    "physical_device_qualification": false
+  },
+  "admitted": false,
+  "released": false
+}

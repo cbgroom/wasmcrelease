@@ -286,6 +286,11 @@ than WFC-lowered Wasm components. Direct Android `/dev/uinput`, physical-device
 qualification, descriptor review, admission, catalog publication and release
 remain pending.
 
+The exact local Android receipt is
+`admission/host-lib-defined-boundary-v1/android-arm64-agent-computer-v1.json`,
+bound to implementation commit
+`3613413debd75fa2a19e785a4240908ba2ff6566`.
+
 The mapped-window, epoll-readiness, kernel-splice and asynchronous-readiness
 successors are qualified on local Linux aarch64 and independent GitHub Ubuntu
 x86_64. The ioctl call-shape and vectored-write successor is also qualified on
