@@ -27,7 +27,7 @@ const retainedProfile = JSON.parse(fs.readFileSync(
   "host/platform/ios/background-transfer-profile.json", "utf8",
 ));
 assert.equal(candidate.system_binding.implements, "wasmc:system-background-transfer@0.0.1");
-assert.equal(binding.identity, "wasmc:system-ios-background-transfer@0.0.1-dev.1");
+assert.equal(binding.identity, "wasmc:system-ios-background-transfer@0.0.1-dev.2");
 assert.equal(binding.limits.process_relaunch_delivery_qualified, false);
 assert.deepEqual(resolvedProfile, retainedProfile);
 assert.equal(retainedProfile.host.required_domain_apis, 0);
@@ -35,6 +35,8 @@ assert.match(provider, /URLSessionConfiguration\.background/);
 assert.match(provider, /sessionSendsLaunchEvents = true/);
 assert.match(provider, /didFinishDownloadingTo/);
 assert.match(provider, /data\.write\(to: resultURL, options: \.atomic\)/);
+assert.match(provider, /task\.cancel\(\)/);
+assert.match(provider, /NSURLErrorCancelled/);
 assert.match(uiTest, /XCUIDevice\.shared\.press\(\.home\)/);
 assert.doesNotMatch(provider, /BGTaskScheduler/);
 assert.equal(fs.existsSync("host/tests/ios-background-transfer"), false);

@@ -7,6 +7,7 @@ final class BackgroundTransferProvider: NSObject, URLSessionDownloadDelegate {
     private let queue = DispatchQueue(label: "io.wasmc.background-transfer-journal")
     private let journalURL: URL
     private let resultURL: URL
+    private let launchID = UUID().uuidString.lowercased()
     private var sequence: UInt64 = 0
     private var backgroundCompletionHandler: (() -> Void)?
     private lazy var session: URLSession = {
@@ -33,7 +34,7 @@ final class BackgroundTransferProvider: NSObject, URLSessionDownloadDelegate {
         precondition(input.isEmpty)
         return try JSONSerialization.data(withJSONObject: [
             "api": "wasmc:system-background-transfer@0.0.1",
-            "provider": "wasmc:system-ios-background-transfer@0.0.1-dev.1",
+            "provider": "wasmc:system-ios-background-transfer@0.0.1-dev.2",
             "transport": "URLSessionConfiguration.background",
             "durable_result": true,
             "process_relaunch_delivery_qualified": false,
@@ -46,6 +47,10 @@ final class BackgroundTransferProvider: NSObject, URLSessionDownloadDelegate {
             try? FileManager.default.removeItem(at: resultURL)
             sequence = 0
         }
+    }
+
+    func recordAppLaunch() {
+        record("app-launched", taskID: 0, values: ["launch_id": launchID])
     }
 
     @discardableResult
@@ -62,25 +67,51 @@ final class BackgroundTransferProvider: NSObject, URLSessionDownloadDelegate {
         record("background-session-reconnected", taskID: 0)
     }
 
+    func cancelAll() {
+        session.getAllTasks { [weak self] tasks in
+            guard let self else { return }
+            for task in tasks {
+                self.record("cancel-issued", taskID: task.taskIdentifier)
+                task.cancel()
+            }
+        }
+    }
+
     func report() -> [String: Any] {
         let retained = events()
         let completion = retained.last { ($0["name"] as? String) == "download-completed" }
+        let launches = Set(retained.compactMap { $0["launch_id"] as? String })
+        let reconnect = retained.last { ($0["name"] as? String) == "background-session-reconnected" }
+        let cancellationIssued = retained.contains { ($0["name"] as? String) == "cancel-issued" }
+        let cancellationTerminal = retained.last {
+            ($0["name"] as? String) == "task-terminal-failure" &&
+                ($0["error_domain"] as? String) == NSURLErrorDomain &&
+                ($0["error_code"] as? NSNumber)?.intValue == NSURLErrorCancelled
+        }
         let bytes = (completion?["bytes"] as? NSNumber)?.intValue ?? 0
         let digest = completion?["sha256"] as? String ?? ""
         let completionPhase = completion?["phase"] as? String ?? ""
         let data = try? Data(contentsOf: resultURL)
         let retainedDigest = data.map(Self.sha256) ?? ""
+        let processRelaunchDelivery = launches.count >= 2 &&
+            (reconnect?["phase"] as? String) == "background" && completionPhase == "background"
         return [
             "schema": "wasmc.ios-background-transfer-qualification/v1",
             "accepted": bytes > 0 && !digest.isEmpty && digest == retainedDigest && completionPhase == "background",
             "event_count": retained.count,
+            "launch_count": launches.count,
             "download_completed": completion != nil,
             "completion_phase": completionPhase,
             "bytes": bytes,
             "sha256": digest,
             "durable_result_present": data != nil,
             "durable_result_sha256": retainedDigest,
-            "process_relaunch_delivery_qualified": false,
+            "background_session_reconnected": reconnect != nil,
+            "reconnect_phase": reconnect?["phase"] as? String ?? "",
+            "process_relaunch_delivery_qualified": processRelaunchDelivery,
+            "cancellation_issued": cancellationIssued,
+            "cancellation_terminal_observed": cancellationTerminal != nil,
+            "cancellation_qualified": cancellationIssued && cancellationTerminal != nil && completion == nil && data == nil,
             "physical_device": false,
             "events": retained,
             "admitted": false,
@@ -112,9 +143,17 @@ final class BackgroundTransferProvider: NSObject, URLSessionDownloadDelegate {
         task: URLSessionTask,
         didCompleteWithError error: Error?
     ) {
+        var values: [String: Any] = [:]
+        if let error {
+            let native = error as NSError
+            values = [
+                "error": String(describing: error),
+                "error_domain": native.domain,
+                "error_code": native.code,
+            ]
+        }
         record(error == nil ? "task-terminal-success" : "task-terminal-failure",
-               taskID: task.taskIdentifier,
-               values: error.map { ["error": String(describing: $0)] } ?? [:])
+               taskID: task.taskIdentifier, values: values)
     }
 
     func urlSessionDidFinishEvents(forBackgroundURLSession session: URLSession) {

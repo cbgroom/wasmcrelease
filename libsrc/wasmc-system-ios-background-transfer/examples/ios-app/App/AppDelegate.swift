@@ -10,8 +10,9 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
     ) -> Bool {
         if ProcessInfo.processInfo.arguments.contains("--wasmc-reset-transfer") { provider.reset() }
+        provider.recordAppLaunch()
         let registration = ProviderRegistration(
-            identity: "wasmc:system-ios-background-transfer@0.0.1-dev.1",
+            identity: "wasmc:system-ios-background-transfer@0.0.1-dev.2",
             witPackage: "wasmc:system-background-transfer@0.0.1",
             maxInputBytes: 0,
             maxOutputBytes: 2048,

@@ -6,6 +6,7 @@ final class BackgroundTransferViewController: UIViewController {
     private let titleLabel = UILabel()
     private let statusLabel = UILabel()
     private let startButton = UIButton(type: .system)
+    private let cancelButton = UIButton(type: .system)
 
     init(provider: BackgroundTransferProvider, providerEvidence: [[String: Any]]) {
         self.provider = provider
@@ -31,7 +32,10 @@ final class BackgroundTransferViewController: UIViewController {
         startButton.layer.cornerRadius = 16
         startButton.accessibilityIdentifier = "background-transfer-start"
         startButton.addAction(UIAction { [weak self] _ in self?.start() }, for: .touchUpInside)
-        [titleLabel, statusLabel, startButton].forEach(view.addSubview)
+        cancelButton.setTitle("取消后台下载", for: .normal)
+        cancelButton.accessibilityIdentifier = "background-transfer-cancel"
+        cancelButton.addAction(UIAction { [weak self] _ in self?.provider.cancelAll() }, for: .touchUpInside)
+        [titleLabel, statusLabel, startButton, cancelButton].forEach(view.addSubview)
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(refresh),
@@ -46,7 +50,8 @@ final class BackgroundTransferViewController: UIViewController {
         let width = view.bounds.width - 40
         titleLabel.frame = CGRect(x: 20, y: view.safeAreaInsets.top + 36, width: width, height: 36)
         startButton.frame = CGRect(x: 20, y: titleLabel.frame.maxY + 28, width: width, height: 54)
-        statusLabel.frame = CGRect(x: 20, y: startButton.frame.maxY + 24, width: width, height: 140)
+        cancelButton.frame = CGRect(x: 20, y: startButton.frame.maxY + 12, width: width, height: 44)
+        statusLabel.frame = CGRect(x: 20, y: cancelButton.frame.maxY + 24, width: width, height: 140)
     }
 
     private func start() {
@@ -60,9 +65,17 @@ final class BackgroundTransferViewController: UIViewController {
         var report = provider.report()
         report["provider_evidence"] = providerEvidence
         Self.writeReport(report)
-        if report["accepted"] as? Bool == true {
-            statusLabel.text = "background-transfer:accepted\nbytes=\(report["bytes"] ?? 0)"
-            statusLabel.accessibilityIdentifier = "background-transfer-complete"
+        if report["cancellation_qualified"] as? Bool == true {
+            statusLabel.text = "background-transfer-cancel:accepted"
+            statusLabel.accessibilityIdentifier = "background-transfer-cancel-complete"
+        } else if report["accepted"] as? Bool == true {
+            if report["process_relaunch_delivery_qualified"] as? Bool == true {
+                statusLabel.text = "background-transfer-relaunch:accepted\nbytes=\(report["bytes"] ?? 0)"
+                statusLabel.accessibilityIdentifier = "background-transfer-relaunch-complete"
+            } else {
+                statusLabel.text = "background-transfer:accepted\nbytes=\(report["bytes"] ?? 0)"
+                statusLabel.accessibilityIdentifier = "background-transfer-complete"
+            }
         } else {
             statusLabel.text = "等待后台传输"
             statusLabel.accessibilityIdentifier = "background-transfer-pending"
