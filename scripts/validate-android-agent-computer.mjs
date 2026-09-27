@@ -17,14 +17,14 @@ assert.deepEqual(profile.standard_apis, [
   "wasmc:system-display@0.0.1",
   "wasmc:system-ui@0.0.1",
   "wasmc:system-input@0.0.1",
+  "wasmc:system-virtual-input@0.0.1",
 ]);
 
 const native = architecture.prototype?.android_native;
 assert.equal(native?.profile, "host/platform/android/agent-computer-profile.json");
 assert.equal(native?.executor, profile.host.executor);
-assert.equal(native?.system_libs?.length, 3);
+assert.equal(native?.system_libs?.length, 4);
 assert.ok(native?.status?.endsWith("not-admitted-not-released"));
-assert.ok(native?.pending?.includes("direct-android-uinput"));
 assert.ok(native?.pending?.includes("wit-to-wasm-lowering"));
 
 const hostSource = fs.readFileSync(path.join(root, profile.host.executor, "src/main.rs"), "utf8");
@@ -32,6 +32,8 @@ for (const forbidden of [
   "/system/bin/screencap",
   "/system/bin/uiautomator",
   "/system/bin/input",
+  "/dev/uinput",
+  "UI_DEV_CREATE",
   "SurfaceFlinger",
   "keyevent",
 ]) {
@@ -44,6 +46,7 @@ const specs = [
   ["display", "wasmc-system-android-display", "/system/bin/screencap"],
   ["ui", "wasmc-system-android-ui", "/system/bin/uiautomator"],
   ["input", "wasmc-system-android-input", "/system/bin/input"],
+  ["uinput", "wasmc-system-android-uinput", "/dev/uinput"],
 ];
 for (const [name, id, platformMechanism] of specs) {
   const relative = `libsrc/${id}`;

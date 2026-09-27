@@ -1,0 +1,19 @@
+package wasmc:system-virtual-input@0.0.1;
+
+interface virtual-input {
+  record key-event {
+    code: u16,
+    value: s32,
+  }
+
+  resource keyboard {
+    emit-key: func(code: u16, value: s32) -> result<u64, s32>;
+    emit-keys: func(events: list<key-event>) -> result<u64, s32>;
+  }
+
+  create-keyboard: func(name: string, keys: list<u16>) -> result<keyboard, s32>;
+}
+
+world system-virtual-input {
+  export virtual-input;
+}

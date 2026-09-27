@@ -262,11 +262,13 @@ Android now has a target-specific fixed Host at
 mean domain-specific: the executable verifies and invokes exact Lib-owned
 descriptors but contains no display, UI, input, Android command or service API.
 
-Three candidate bindings expose platform-neutral APIs:
+Four candidate bindings expose platform-neutral APIs:
 
 - `wasmc:system-display@0.0.1` through `wasmc-system-android-display`;
 - `wasmc:system-ui@0.0.1` through `wasmc-system-android-ui`;
 - `wasmc:system-input@0.0.1` through `wasmc-system-android-input`.
+- `wasmc:system-virtual-input@0.0.1` through
+  `wasmc-system-android-uinput`.
 
 The Android 16/API 36 ARM64 emulator qualification runs all three adapters
 through one Host identity. It captures a 1080×2400 frame, queries the semantic
@@ -280,11 +282,20 @@ live input connection was ready produced only a suffix. Command completion is
 therefore never treated as proof of UI effect; query-before-control and
 UI/frame postconditions are part of the profile contract.
 
-This closes the emulator-level query/control/confirmation slice, not the whole
-product lifecycle. The adapters are still native descriptor candidates rather
-than WFC-lowered Wasm components. Direct Android `/dev/uinput`, physical-device
-qualification, descriptor review, admission, catalog publication and release
-remain pending.
+The v2 qualification adds direct `/dev/uinput` without changing the Host
+source or binary. A persistent Host session creates a virtual keyboard, accepts
+a malformed operation as an ordinary negative status and continues, emits a
+14-state key batch as 28 kernel events, destroys the device, rejects the stale
+generation, and successfully recreates it. The semantic UI receives the exact
+text `display`. Separate negative controls reject input and output limit
+violations, a missing adapter export, and an adapter outside the descriptor's
+exact sibling directory.
+
+This closes the emulator-level query/control/confirmation and direct-UInput
+mechanism slices, not the whole product lifecycle. The adapters are still
+native descriptor candidates rather than WFC-lowered Wasm components.
+Physical-device qualification, descriptor review, admission, catalog
+publication and release remain pending.
 
 The exact local Android receipt is
 `admission/host-lib-defined-boundary-v1/android-arm64-agent-computer-v1.json`,

@@ -10,5 +10,10 @@ qualification performs query → control → UI/frame confirmation through that
 single Host binary. The retained `providers.json` remains v0.0.15 migration
 evidence and is intentionally not updated by this successor workstream.
 
-This profile is not admitted or released. WIT-to-Wasm lowering, direct Android
-`/dev/uinput`, and physical-device qualification remain open.
+The profile also includes a platform-neutral virtual-input API backed by a
+Lib-owned direct `/dev/uinput` adapter. Emulator qualification covers a real
+virtual keyboard, persistent session recovery, generation-checked resource
+reuse, and semantic UI confirmation without changing the Host binary.
+
+This profile is not admitted or released. WIT-to-Wasm lowering and
+physical-device qualification remain open.

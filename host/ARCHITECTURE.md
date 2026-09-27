@@ -101,12 +101,17 @@ portable WIT APIs and Lib composition remain uniform; only the Lib-owned
 physical binding and target Host implementation vary.
 
 The first Android profile proves this separation on an Android 16 ARM64
-emulator. One fixed target Host loads three independent Lib adapters for
-standard display, semantic UI and input APIs. It queries Settings, waits for an
+emulator. One fixed target Host loads four independent Lib adapters for
+standard display, semantic UI, command input and virtual-input APIs. It queries Settings, waits for an
 authoritative focused input node, controls the UI, then confirms the effect in
 both semantic UI and distinct real frames. The Host itself has zero domain APIs.
-This is emulator evidence only; direct Android `/dev/uinput`, WIT-to-Wasm
-lowering, physical-device qualification, admission and release remain pending.
+The virtual-input Lib additionally creates a real Android `/dev/uinput`
+keyboard through a persistent Host session, emits one event batch, rejects a
+stale generation after destruction, and recreates the resource without any
+Host source or binary change. The same qualification rejects descriptor input
+and output overruns, missing exports, and non-sibling adapters. This is emulator
+evidence only; WIT-to-Wasm lowering, physical-device qualification, admission
+and release remain pending.
 
 ## Runtime execution and cache hierarchy
 
