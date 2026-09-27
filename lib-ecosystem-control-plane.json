@@ -1,7 +1,7 @@
 {
   "schema": "wasmc.lib-ecosystem-control-plane/v1",
   "authority": {
-    "immutable_product": "release.json -> channels/candidates/0.0.14.json",
+    "immutable_product": "release.json -> channels/candidates/0.0.15.json",
     "capability_projection": "release-surfaces.json#agent_capability_projection",
     "producer_deltas": "release-surfaces.json#producer_capability_delta",
     "discovery_snapshot": "standard/wasmc-lib-search/0.2.0 + examples/lib-search/index-v014-v020.lsi",
@@ -9,11 +9,11 @@
     "rule": "Package existence, qualification, admission, release, discovery, installation, engine compatibility and Host authority are independent claims."
   },
   "release": {
-    "version": "0.0.14",
-    "tag": "v0.0.14",
+    "version": "0.0.15",
+    "tag": "v0.0.15",
     "source_commit": "e69abb73f667f3810b0c40937fd1a1e2d04d4255",
-    "staged_product_manifest": "channels/candidates/0.0.14.json",
-    "product_set_sha256": "a09cd071eb293e636bf8b858b0a56570bfdd8a53373544eca68fda8ea825d4d2"
+    "staged_product_manifest": "channels/candidates/0.0.15.json",
+    "product_set_sha256": "8bdc6f445aade28b66f7180ae9355a48d7a68efacf0f4b9b99db28a023c1b6f6"
   },
   "route_closure": {
     "authority": "catalog/lib-route-closure.json",
@@ -45,12 +45,12 @@
   },
   "type_position_authority": {
     "schema": "wasmc.release-agent-capabilities/v1",
-    "product_release": "v0.0.14",
+    "product_release": "v0.0.15",
     "guidance_scope": {
-      "status": "included-in-v0.0.14-product",
+      "status": "included-in-v0.0.15-product",
       "included_in_product": true,
       "lifecycle_authority": "release.json and channels/prod.json",
-      "rule": "This frozen projection describes v0.0.14 product capability only. It does not prove the product is the current released, discoverable or installable lifecycle stage."
+      "rule": "This frozen projection describes v0.0.15 product capability only. It does not prove the product is the current released, discoverable or installable lifecycle stage."
     },
     "decision_rule": "A type or feature is usable only at the exact admitted position below. WIT vocabulary, local values, Core lanes, Component profiles, Host bindings and public results are separate claims.",
     "alternative_rule": "Alternatives must preserve semantics. Numeric width or signedness, async behavior, identity, ordering, ownership and failure semantics may change only with explicit application proof; otherwise stop.",
@@ -199,16 +199,16 @@
         }
       },
       "release": {
-        "product": "v0.0.14",
+        "product": "v0.0.15",
         "lifecycle_authority": "release.json",
         "reason": "No new source-free compiler artifact, candidate identity, admission receipt or immutable release contains the producer change.",
-        "v0_0_14_u64_ordinary_source": "unsupported"
+        "v0_0_15_u64_ordinary_source": "unsupported"
       },
       "adjacent_type_decisions": {
-        "u32": "included in the v0.0.14 product compiler; no repair was required",
+        "u32": "included in the v0.0.15 product compiler; no repair was required",
         "char": "not implemented on the cited producer commit and not released; do not substitute arbitrary u32"
       },
-      "answer_rule": "When asked whether u64 is fixed or supported, lead with both authorities: producer master yes, the v0.0.14 product compiler no; read release.json for the current published lifecycle stage."
+      "answer_rule": "When asked whether u64 is fixed or supported, lead with both authorities: producer master yes, the v0.0.15 product compiler no; read release.json for the current published lifecycle stage."
     }
   ],
   "packages": [
@@ -267,7 +267,7 @@
       "state_evidence": {
         "qualification": "libs/wasmc-csv/lib.json#admission",
         "admission": "libs/wasmc-csv/lib.json#admission",
-        "release": "release.json -> channels/candidates/0.0.14.json",
+        "release": "release.json -> channels/candidates/0.0.15.json",
         "discovery": "standard/wasmc-lib-search/0.2.0 + examples/lib-search/index-v014-v020.lsi",
         "installation": "catalog/libs-v014.json"
       },
@@ -328,7 +328,7 @@
       "state_evidence": {
         "qualification": "libs/wasmc-data-compute/lib.json#admission",
         "admission": "libs/wasmc-data-compute/lib.json#admission",
-        "release": "release.json -> channels/candidates/0.0.14.json",
+        "release": "release.json -> channels/candidates/0.0.15.json",
         "discovery": "standard/wasmc-lib-search/0.2.0 + examples/lib-search/index-v014-v020.lsi",
         "installation": "catalog/libs-v014.json"
       },
@@ -389,7 +389,7 @@
       "state_evidence": {
         "qualification": "libs/wasmc-data-core/lib.json#admission",
         "admission": "libs/wasmc-data-core/lib.json#admission",
-        "release": "release.json -> channels/candidates/0.0.14.json",
+        "release": "release.json -> channels/candidates/0.0.15.json",
         "discovery": "standard/wasmc-lib-search/0.2.0 + examples/lib-search/index-v014-v020.lsi",
         "installation": "catalog/libs-v014.json"
       },
@@ -450,7 +450,7 @@
       "state_evidence": {
         "qualification": "libs/wasmc-data-expr/lib.json#admission",
         "admission": "libs/wasmc-data-expr/lib.json#admission",
-        "release": "release.json -> channels/candidates/0.0.14.json",
+        "release": "release.json -> channels/candidates/0.0.15.json",
         "discovery": "standard/wasmc-lib-search/0.2.0 + examples/lib-search/index-v014-v020.lsi",
         "installation": "catalog/libs-v014.json"
       },
@@ -511,7 +511,7 @@
       "state_evidence": {
         "qualification": "libs/wasmc-data-interchange/lib.json#admission",
         "admission": "libs/wasmc-data-interchange/lib.json#admission",
-        "release": "release.json -> channels/candidates/0.0.14.json",
+        "release": "release.json -> channels/candidates/0.0.15.json",
         "discovery": "standard/wasmc-lib-search/0.2.0 + examples/lib-search/index-v014-v020.lsi",
         "installation": "catalog/libs-v014.json"
       },
@@ -572,7 +572,7 @@
       "state_evidence": {
         "qualification": "libs/wasmc-data-profile/lib.json#admission",
         "admission": "libs/wasmc-data-profile/lib.json#admission",
-        "release": "release.json -> channels/candidates/0.0.14.json",
+        "release": "release.json -> channels/candidates/0.0.15.json",
         "discovery": "standard/wasmc-lib-search/0.2.0 + examples/lib-search/index-v014-v020.lsi",
         "installation": "catalog/libs-v014.json"
       },
@@ -633,7 +633,7 @@
       "state_evidence": {
         "qualification": "libs/wasmc-data-relational/lib.json#admission",
         "admission": "libs/wasmc-data-relational/lib.json#admission",
-        "release": "release.json -> channels/candidates/0.0.14.json",
+        "release": "release.json -> channels/candidates/0.0.15.json",
         "discovery": "standard/wasmc-lib-search/0.2.0 + examples/lib-search/index-v014-v020.lsi",
         "installation": "catalog/libs-v014.json"
       },
@@ -698,9 +698,9 @@
         "included_in_immutable_tag": true
       },
       "state_evidence": {
-        "qualification": "channels/candidates/0.0.14.json immutable product inclusion",
-        "admission": "channels/candidates/0.0.14.json immutable product inclusion",
-        "release": "release.json -> channels/candidates/0.0.14.json",
+        "qualification": "channels/candidates/0.0.15.json immutable product inclusion",
+        "admission": "channels/candidates/0.0.15.json immutable product inclusion",
+        "release": "release.json -> channels/candidates/0.0.15.json",
         "discovery": "standard/wasmc-lib-search/0.2.0 + examples/lib-search/index-v014-v020.lsi",
         "installation": "catalog/libs-v014.json"
       },
@@ -759,9 +759,9 @@
         "included_in_immutable_tag": true
       },
       "state_evidence": {
-        "qualification": "channels/candidates/0.0.14.json immutable product inclusion",
-        "admission": "channels/candidates/0.0.14.json immutable product inclusion",
-        "release": "release.json -> channels/candidates/0.0.14.json",
+        "qualification": "channels/candidates/0.0.15.json immutable product inclusion",
+        "admission": "channels/candidates/0.0.15.json immutable product inclusion",
+        "release": "release.json -> channels/candidates/0.0.15.json",
         "discovery": "standard/wasmc-lib-search/0.2.0 + examples/lib-search/index-v014-v020.lsi",
         "installation": "catalog/libs-v014.json"
       },
@@ -831,9 +831,9 @@
         "included_in_immutable_tag": true
       },
       "state_evidence": {
-        "qualification": "channels/candidates/0.0.14.json immutable product inclusion",
-        "admission": "channels/candidates/0.0.14.json immutable product inclusion",
-        "release": "release.json -> channels/candidates/0.0.14.json",
+        "qualification": "channels/candidates/0.0.15.json immutable product inclusion",
+        "admission": "channels/candidates/0.0.15.json immutable product inclusion",
+        "release": "release.json -> channels/candidates/0.0.15.json",
         "discovery": "standard/wasmc-lib-search/0.2.0 + examples/lib-search/index-v014-v020.lsi",
         "installation": "catalog/libs-v014.json"
       },
@@ -926,7 +926,7 @@
       "state_evidence": {
         "qualification": "libs/wasmc-system-telemetry/lib.json#admission",
         "admission": "libs/wasmc-system-telemetry/lib.json#admission",
-        "release": "release.json -> channels/candidates/0.0.14.json",
+        "release": "release.json -> channels/candidates/0.0.15.json",
         "discovery": "standard/wasmc-lib-search/0.2.0 + examples/lib-search/index-v014-v020.lsi",
         "installation": "catalog/libs-v014.json"
       },
@@ -991,9 +991,9 @@
         "included_in_immutable_tag": true
       },
       "state_evidence": {
-        "qualification": "channels/candidates/0.0.14.json immutable product inclusion",
-        "admission": "channels/candidates/0.0.14.json immutable product inclusion",
-        "release": "release.json -> channels/candidates/0.0.14.json",
+        "qualification": "channels/candidates/0.0.15.json immutable product inclusion",
+        "admission": "channels/candidates/0.0.15.json immutable product inclusion",
+        "release": "release.json -> channels/candidates/0.0.15.json",
         "discovery": "standard/wasmc-lib-search/0.2.0 + examples/lib-search/index-v014-v020.lsi",
         "installation": "catalog/libs-v014.json"
       },
@@ -1052,9 +1052,9 @@
         "included_in_immutable_tag": true
       },
       "state_evidence": {
-        "qualification": "channels/candidates/0.0.14.json immutable product inclusion",
-        "admission": "channels/candidates/0.0.14.json immutable product inclusion",
-        "release": "release.json -> channels/candidates/0.0.14.json",
+        "qualification": "channels/candidates/0.0.15.json immutable product inclusion",
+        "admission": "channels/candidates/0.0.15.json immutable product inclusion",
+        "release": "release.json -> channels/candidates/0.0.15.json",
         "discovery": "standard/wasmc-lib-search/0.2.0 + examples/lib-search/index-v014-v020.lsi",
         "installation": "catalog/libs-v014.json"
       },
@@ -1321,9 +1321,9 @@
         "included_in_immutable_tag": true
       },
       "state_evidence": {
-        "qualification": "channels/candidates/0.0.14.json immutable product inclusion",
-        "admission": "channels/candidates/0.0.14.json immutable product inclusion",
-        "release": "release.json -> channels/candidates/0.0.14.json",
+        "qualification": "channels/candidates/0.0.15.json immutable product inclusion",
+        "admission": "channels/candidates/0.0.15.json immutable product inclusion",
+        "release": "release.json -> channels/candidates/0.0.15.json",
         "discovery": "standard/wasmc-lib-search/0.2.0 + examples/lib-search/index-v014-v020.lsi",
         "installation": "catalog/libs-v014.json"
       },
