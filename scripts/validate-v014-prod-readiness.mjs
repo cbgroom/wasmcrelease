@@ -4,6 +4,7 @@ import { readFileSync } from 'node:fs';
 const json=path=>JSON.parse(readFileSync(path,'utf8'));
 const text=path=>readFileSync(path,'utf8');
 const candidate=json('channels/candidates/0.0.14.json');
+const dev=json('channels/dev.json');
 const main=json('channels/main.json');
 const prod=json('channels/prod.json');
 const quickstart=json('agent-quickstart.json');
@@ -35,6 +36,11 @@ for(const [path,patterns] of Object.entries({
   const body=text(path);
   for(const pattern of patterns)assert.equal(pattern.test(body),false,`stage-stale guidance remains in ${path}: ${pattern}`);
 }
+assert.equal(dev.tag,'v0.0.14-dev.2');
+assert.equal(dev.product_candidate_commit,'6cb3aafea5334ac27648af0e9ccd684fe721ccb5');
+assert.equal(dev.product_set_sha256,candidate.product_set_sha256);
+assert.equal(dev.qualification.accepted,true);
+assert.equal(dev.qualification.receipt,'admission/qualification-v014-dev2.json');
 assert.equal(main.tag,'v0.0.14-main.1');
 assert.equal(main.product_set_sha256,'0eb2d0addf9e0cfe9afb11502848bf0a09a55616c5024727ec98729103a138bc');
 assert.equal(prod.tag,'v0.0.13');
@@ -46,6 +52,7 @@ console.log(JSON.stringify({
   candidate:'0.0.14',
   superseded_main:main.tag,
   current_prod:prod.tag,
-  blocker:'exact-dev2-and-main2-qualification-required',
-  required_recovery:'qualify this exact product set as v0.0.14-dev.2, then promote the same bytes to v0.0.14-main.2'
+  dev:dev.tag,
+  blocker:'exact-main2-promotion-required',
+  required_recovery:'promote the dev.2 product candidate commit and product set unchanged to v0.0.14-main.2'
 }));

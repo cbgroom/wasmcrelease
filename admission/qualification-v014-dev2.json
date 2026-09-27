@@ -1,0 +1,53 @@
+{
+  "schema": "wasmc.release-qualification/v1",
+  "version": "0.0.14",
+  "stage_authorized": "main",
+  "product_candidate": {
+    "path": "channels/candidates/0.0.14.json",
+    "commit": "6cb3aafea5334ac27648af0e9ccd684fe721ccb5",
+    "product_set_sha256": "a09cd071eb293e636bf8b858b0a56570bfdd8a53373544eca68fda8ea825d4d2",
+    "products": 213
+  },
+  "tested_source_commit": "6cb3aafea5334ac27648af0e9ccd684fe721ccb5",
+  "required": {
+    "lib_search": {
+      "result": "success",
+      "run": "https://github.com/cbgroom/wasmcrelease/actions/runs/36285470123",
+      "head_sha": "6cb3aafea5334ac27648af0e9ccd684fe721ccb5",
+      "coverage": "10 JavaScript runtime/platform cells, Wasmi 2 Core, Wasmtime 49 generated Component SDK, required aggregate"
+    },
+    "full_consumer": {
+      "result": "success",
+      "run": "https://github.com/cbgroom/wasmcrelease/actions/runs/36285471830",
+      "head_sha": "6cb3aafea5334ac27648af0e9ccd684fe721ccb5",
+      "coverage": "compatibility, integrity, Agent guidance, source-free runtime/mirror journeys, security history, Rust Wasmi/Wasmtime/Component Libs, required aggregate"
+    }
+  },
+  "supporting": {
+    "sdk_agent_guidance": {
+      "result": "success",
+      "run": "https://github.com/cbgroom/wasmcrelease/actions/runs/36285458201",
+      "head_sha": "6cb3aafea5334ac27648af0e9ccd684fe721ccb5"
+    },
+    "host_external_https": {
+      "result": "success",
+      "run": "https://github.com/cbgroom/wasmcrelease/actions/runs/36285458207",
+      "head_sha": "6cb3aafea5334ac27648af0e9ccd684fe721ccb5",
+      "required_platforms": 5,
+      "legacy_optional_platforms": 1
+    }
+  },
+  "lib_route_closure": {
+    "release_packages": 14,
+    "package_routes": 14,
+    "api_routes": 108,
+    "candidate_extras": 0,
+    "exact": true
+  },
+  "accepted": true,
+  "authorizes": ["v0.0.14-dev.2", "v0.0.14-main.2"],
+  "does_not_authorize": [
+    "prod publication or public default discovery before the exact main.2 promotion",
+    "rebuilding or changing any candidate product byte"
+  ]
+}
