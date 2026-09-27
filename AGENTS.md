@@ -6,13 +6,14 @@ public `wasmc-core-runtime` Rust SDK. This file is frozen inside the v0.0.15
 product set; product presence is not lifecycle authority. Read `release.json`
 only through the validated compact `agent-release-orientation.json` route for
 cold-start orientation; run its named check and open the full artifact inventory
-only if validation fails. Then pin its immutable tag or full commit.
+in `manifest.json` only if validation fails. Then pin its immutable tag or full
+commit. Compact `release.json` is lifecycle authority, not the artifact list.
 
 For a cold-start orientation, Lib route-release readiness, capability decision,
 canonical aggregate example, telemetry state check, released Base64 selection, or Host-authority question,
 read `agent-quickstart.json` once before opening broader documentation. For
 release orientation it points to the 2 KB `agent-release-orientation.json`; do
-not read the roughly 54 KB full release inventory on the successful path. A
+not read the full `manifest.json` artifact inventory on the successful path. A
 matching route is sufficient for that task: run only its named oracle when one
 is provided, then stop. Do not reopen `release-surfaces.json`, scan history, or
 invent a larger example merely to reconfirm the same route.

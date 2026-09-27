@@ -51,10 +51,13 @@ export function validateGuidance({ agents, decisionModel, language, lib, release
   if (declared !== expectedTag) fail('root product identity is stale or missing');
   const headings = [...agents.matchAll(/^## (v[^\s]+) product capability contract$/gm)].map(m => m[1]);
   if (headings.length !== 1 || headings[0] !== expectedTag) fail('capability contract identity differs');
-  if (!agents.includes('agent-release-orientation.json') || !agents.includes('full artifact inventory') ||
+  if (!agents.includes('agent-release-orientation.json') || !agents.includes('full artifact inventory\nin `manifest.json`') ||
       !agents.includes('product presence is not lifecycle authority') ||
       !agents.includes('Construct CDN URLs only after reading the exact tag from `release.json`')) {
     fail('root product/lifecycle authority boundary missing');
+  }
+  if (agents.includes('release.json inventory') || agents.includes('roughly 54 KB')) {
+    fail('root guidance retains the historical v1 release inventory model');
   }
   if (!agents.includes('docs/AGENT_DECISION_MODEL.md') ||
       !agents.includes('Qualification is evidence, not admission') ||

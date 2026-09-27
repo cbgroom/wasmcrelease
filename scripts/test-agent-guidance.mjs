@@ -10,6 +10,8 @@ const tag=`v${snapshot.surfaces?.release_version ?? snapshot.release.version}`;
 reject(s => s.agents = s.agents.replace(`frozen inside the ${tag}\nproduct set`, 'frozen inside the v0.0.0\nproduct set'));
 reject(s => s.agents = s.agents.replace(`## ${tag} product capability`, '## v0.0.0 product capability'));
 reject(s => s.agents = s.agents.replace('product presence is not lifecycle authority', 'product presence establishes release authority'));
+reject(s => s.agents = s.agents.replace('full artifact inventory\nin `manifest.json`', 'full release.json inventory'));
+reject(s => s.agents = s.agents.replace('full `manifest.json` artifact inventory', 'roughly 54 KB full release inventory'));
 reject(s => { if (s.surfaces) s.surfaces.release_version = '0.0.10'; });
 reject(s => s.agents = s.agents.replaceAll('standard/wasmc-std/1.4.0/', 'missing-standard/'));
 reject(s => s.skills = s.skills.filter(row => !row.path.includes('skills/wasmc-lib/')));
@@ -31,4 +33,4 @@ reject(s => s.decisionModel = s.decisionModel.replace('Exact tested versions are
 reject(s => s.language = s.language.replace('`u64` is not an admitted ordinary-source scalar', '`u64` is supported'));
 reject(s => s.lib = s.lib.replace('resident/local value, not a direct public return', 'public return value'));
 reject(s => s.decisionModel = s.decisionModel.replace('retrospective is a source of hypotheses, not release authority', 'retrospective is release authority'));
-console.log(JSON.stringify({ ...result, negative_tests: 17 }));
+console.log(JSON.stringify({ ...result, negative_tests: 19 }));

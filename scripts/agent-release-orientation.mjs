@@ -25,7 +25,7 @@ assert.equal(base64.product_release, release.tag);
 
 const model = {
   schema: 'wasmc.agent-release-orientation/v1',
-  scope: 'Complete compact authority for release orientation; do not read the full release artifact inventory unless a listed verification fails.',
+  scope: 'Complete compact authority for release orientation; do not read the full artifact inventory in manifest.json unless a listed verification fails. Compact release.json is lifecycle authority, not the artifact list.',
   release: {
     version: release.version,
     tag: release.tag,
