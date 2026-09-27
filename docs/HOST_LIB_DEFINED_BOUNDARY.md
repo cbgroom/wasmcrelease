@@ -450,8 +450,9 @@ authorization Lib observes `authorized`, then the independent
 `wasmc-system-ios-app-contacts@0.0.1-dev.1` Lib creates, fetches and deletes a
 temporary contact and confirms cleanup. A separate reset run proves that the
 Contacts Lib does not attempt access in `not-determined`. The fixed Host remains
-byte-identical and contains no Contacts API. Its v5 receipt is pending exact
-source-bound qualification.
+byte-identical and contains no Contacts API. The retained v5 receipt is
+`admission/host-lib-defined-boundary-v1/ios-arm64-app-capability-v5.json`, bound
+to implementation commit `607a55fc3288cf81ebbdc65962f243eaaae6dfc0`.
 
 The mapped-window, epoll-readiness, kernel-splice and asynchronous-readiness
 successors are qualified on local Linux aarch64 and independent GitHub Ubuntu
