@@ -7,6 +7,9 @@ import path from "node:path";
 if (process.platform !== "darwin") throw new Error("iOS app capability qualification requires macOS");
 const root = process.cwd();
 const udid = process.env.WASMC_IOS_SIMULATOR_UDID;
+const authorizationScenario = process.env.WASMC_IOS_AUTHORIZATION_SCENARIO ?? "observe-only";
+assert.ok(["observe-only", "contacts-granted"].includes(authorizationScenario),
+  `unsupported WASMC_IOS_AUTHORIZATION_SCENARIO=${authorizationScenario}`);
 if (!/^[0-9A-Fa-f-]{36}$/.test(udid ?? "")) {
   throw new Error("set WASMC_IOS_SIMULATOR_UDID to one exact booted simulator UUID");
 }
@@ -41,6 +44,10 @@ const bundle = "io.wasmc.app-capability-lab";
 spawnSync("/usr/bin/xcrun", ["simctl", "terminate", udid, bundle]);
 spawnSync("/usr/bin/xcrun", ["simctl", "uninstall", udid, bundle]);
 simctl(["install", udid, app]);
+simctl(["privacy", udid, "reset", "contacts", bundle]);
+if (authorizationScenario === "contacts-granted") {
+  simctl(["privacy", udid, "grant", "contacts", bundle]);
+}
 const launch = simctl(["launch", "--terminate-running-process", udid, bundle]).trim();
 const container = simctl(["get_app_container", udid, bundle, "data"]).trim();
 const reportPath = path.join(container, "Documents", "wasmc-ios-app-capability.json");
@@ -57,7 +64,7 @@ assert.deepEqual(report.host_negative_controls, {
   invalid_descriptor_rejected: true,
   output_limit_rejected: true,
 });
-assert.equal(report.provider_count, 12);
+assert.equal(report.provider_count, 13);
 assert.deepEqual(report.target, {
   architecture: "aarch64", embedding: "native", environment: "simulator", os: "ios",
 });
@@ -98,6 +105,19 @@ assert.equal(authorization.restricted_and_unavailable_fail_closed, true);
 assert.equal(authorization.os_prompts_cannot_be_coalesced_across_permission_categories, true);
 assert.equal(authorization.policy_state_machine_tests, true);
 assert.equal(authorization.persistent_attempt_history_roundtrip, true);
+const contacts = results["wasmc:system-ios-app-contacts@0.0.1-dev.1"];
+if (authorizationScenario === "contacts-granted") {
+  assert.equal(contacts.authorization, "authorized");
+  assert.equal(contacts.use_attempted, true);
+  assert.equal(contacts.created, true);
+  assert.equal(contacts.fetched, true);
+  assert.equal(contacts.deleted, true);
+  assert.equal(contacts.create_fetch_delete_roundtrip, true);
+  assert.equal(contacts.cleanup_confirmed, true);
+} else {
+  assert.equal(contacts.use_attempted, false);
+  assert.equal(contacts.create_fetch_delete_roundtrip, false);
+}
 
 const screenshotPath = path.join(root, "target", "ios-app-capability.png");
 simctl(["io", udid, "screenshot", screenshotPath]);
@@ -107,6 +127,7 @@ const sha256 = (bytes) => createHash("sha256").update(bytes).digest("hex");
 console.log(JSON.stringify({
   ...report,
   simulator: { udid, name: simulator.name, runtime: simulator.runtime, state: simulator.state },
+  authorization_scenario: authorizationScenario,
   launch,
   screenshot: {
     path: path.relative(root, screenshotPath), bytes: screenshot.length,

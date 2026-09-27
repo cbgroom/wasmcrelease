@@ -18,8 +18,14 @@ targets:
       - path: Host
       - path: Profile
       - path: Providers
+      - path: ../../../libsrc/wasmc-system-ios-app-contacts
+        excludes:
+          - README.md
+          - lib.wit
+          - candidate.json
     settings:
       base:
         PRODUCT_NAME: WAsmCIOSAppCapability
         SWIFT_OBJC_BRIDGING_HEADER: $(SRCROOT)/../../host/tests/ios-app-capability/Providers/NetworkAdapter.h
         OTHER_LDFLAGS: ["-framework", "Metal", "-framework", "Security", "-lsqlite3"]
+        INFOPLIST_KEY_NSContactsUsageDescription: WAsmC qualification verifies authorized Contacts access.

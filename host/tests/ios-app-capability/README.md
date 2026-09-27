@@ -6,7 +6,7 @@ invokes opaque byte providers. `Profile/EmbeddedProfile.swift` is the only
 deployment control plane that selects domain providers. Apple frameworks and
 system calls are confined to `Providers/`.
 
-The current simulator slice exercises twelve provider families:
+The current simulator slice exercises thirteen provider families:
 
 - atomic sandbox storage, file synchronization and readback;
 - secure random, preferences, Keychain and clocks;
@@ -22,6 +22,8 @@ The current simulator slice exercises twelve provider families:
   notification and background-refresh availability/authorization;
 - centralized zero-prompt authorization discovery, repeatable request planning,
   in-flight deduplication and persistent attempt history.
+- authorized Contacts create/fetch/delete with cleanup, plus a separate
+  not-determined fail-closed control.
 
 The protected-capability provider never requests permission. `available=false`
 on Simulator is retained as a platform observation, not reported as a Host or
@@ -43,7 +45,13 @@ The WIT files define the intended public semantics. The current Swift provider
 functions are native qualification adapters, not WIT-lowered Wasm components.
 They are statically registered to prove that App capability growth changes the
 Lib/profile side without adding domain APIs to the Host. The validator pins the
-fixed Host SHA-256 while the profile grows from six to twelve providers.
+fixed Host SHA-256 while the profile grows from six to thirteen providers.
+
+Set `WASMC_IOS_AUTHORIZATION_SCENARIO=contacts-granted` to have the harness use
+Simulator privacy control to grant Contacts before launch. The authorization
+Lib must then observe `authorized` and the independent Contacts Lib must perform
+the real create/fetch/delete roundtrip. `observe-only` resets Contacts and proves
+that the Contacts Lib does not attempt use while the state is `not-determined`.
 
 `scripts/validate-ios-app-capability.mjs` is the portable source/WIT gate.
 `scripts/test-ios-app-capability.mjs` is the macOS gate and requires

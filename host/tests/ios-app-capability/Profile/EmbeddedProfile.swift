@@ -86,5 +86,12 @@ enum EmbeddedProfile {
             maxOutputBytes: 32_768,
             invoke: AuthorizationProvider.invoke
         ),
+        .init(
+            identity: "wasmc:system-ios-app-contacts@0.0.1-dev.1",
+            witPackage: "wasmc:system-app-contacts@0.0.1",
+            maxInputBytes: 0,
+            maxOutputBytes: 4_096,
+            invoke: ContactsProvider.invoke
+        ),
     ]
 }

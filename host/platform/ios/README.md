@@ -32,6 +32,11 @@ an unsuccessful attempt, once no request is in flight. Denied routes to a
 reofferable Settings recovery path and unavailable/restricted fails closed. iOS system
 prompts remain separate per permission category.
 
+The thirteenth provider is an independent Contacts Lib. With Simulator Contacts
+authorization granted it creates, fetches and deletes a temporary contact and
+confirms cleanup. With authorization reset it does not attempt access. The
+authorization broker and Contacts domain API remain separate Lib concerns.
+
 Run the macOS qualification against one already booted simulator:
 
 ```sh

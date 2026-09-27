@@ -16,6 +16,7 @@ const expected = new Map([
   ["wasmc:system-ios-app-web@0.0.1-dev.1", "wasmc:system-app-web@0.0.1"],
   ["wasmc:system-ios-app-device-observation@0.0.1-dev.1", "wasmc:system-app-device-observation@0.0.1"],
   ["wasmc:system-ios-app-authorization@0.0.1-dev.2", "wasmc:system-app-authorization@0.0.1"],
+  ["wasmc:system-ios-app-contacts@0.0.1-dev.1", "wasmc:system-app-contacts@0.0.1"],
 ]);
 const host = fs.readFileSync("host/tests/ios-app-capability/Host/FixedHost.swift", "utf8");
 const profile = fs.readFileSync("host/tests/ios-app-capability/Profile/EmbeddedProfile.swift", "utf8");
@@ -50,6 +51,7 @@ const witFiles = [
   "host/tests/ios-app-capability/WIT/app-web.wit",
   "host/tests/ios-app-capability/WIT/app-device-observation.wit",
   "libsrc/wasmc-app-authorization-policy/lib.wit",
+  "libsrc/wasmc-system-ios-app-contacts/lib.wit",
   "libsrc/wasmc-system-android-ui/lib.wit",
   "libsrc/wasmc-system-ios-simulator-display/lib.wit",
 ];
@@ -61,6 +63,20 @@ assert.deepEqual(
   fs.readFileSync("libsrc/wasmc-app-authorization-policy/lib.wit"),
   "embedded iOS authorization WIT must match the public policy candidate",
 );
+assert.deepEqual(
+  fs.readFileSync("host/tests/ios-app-capability/WIT/app-contacts.wit"),
+  fs.readFileSync("libsrc/wasmc-system-ios-app-contacts/lib.wit"),
+  "embedded iOS Contacts WIT must match the public Contacts candidate",
+);
+const contactsProvider = fs.readFileSync(
+  "libsrc/wasmc-system-ios-app-contacts/ContactsProvider.swift", "utf8",
+);
+assert.match(contactsProvider, /CNContactStore\.authorizationStatus/);
+assert.match(contactsProvider, /create\.add/);
+assert.match(contactsProvider, /unifiedContact\(withIdentifier:/);
+assert.match(contactsProvider, /remove\.delete/);
+assert.match(fs.readFileSync("host/tests/ios-app-capability/project.yml", "utf8"),
+  /INFOPLIST_KEY_NSContactsUsageDescription/);
 
 console.log(JSON.stringify({
   accepted: true,

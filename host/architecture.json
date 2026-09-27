@@ -243,7 +243,7 @@
       ]
     },
     "ios_app_native": {
-      "status": "ios-26.5-arm64-simulator-app-internal-v4-qualified-not-admitted-not-released",
+      "status": "ios-26.5-arm64-simulator-app-internal-v5-qualification-pending-not-admitted-not-released",
       "executor": "host/tests/ios-app-capability/Host/FixedHost.swift",
       "profile": "host/tests/ios-app-capability/Profile/EmbeddedProfile.swift",
       "system_libs": [
@@ -258,10 +258,11 @@
         "wasmc:system-ios-app-audio@0.0.1-dev.1",
         "wasmc:system-ios-app-web@0.0.1-dev.1",
         "wasmc:system-ios-app-device-observation@0.0.1-dev.1",
-        "wasmc:system-ios-app-authorization@0.0.1-dev.2"
+        "wasmc:system-ios-app-authorization@0.0.1-dev.2",
+        "wasmc:system-ios-app-contacts@0.0.1-dev.1"
       ],
       "evidence": "scripts/test-ios-app-capability.mjs",
-      "convergence": "one byte-identical fixed domain-neutral embedded Swift Host executes twelve statically linked Lib providers selected by the app profile; authorization status, request planning and attempt history remain Lib semantics",
+      "convergence": "one byte-identical fixed domain-neutral embedded Swift Host executes thirteen statically linked Lib providers selected by the app profile; authorization policy and authorized Contacts use remain separate Lib semantics",
       "scope": [
         "real-sandbox-atomic-storage-and-fsync",
         "real-secure-random-user-defaults-keychain-and-clocks",
@@ -276,6 +277,8 @@
         "permission-free-protected-capability-observation",
         "zero-prompt-authorization-discovery",
         "repeatable-demand-authorization-with-in-flight-deduplication-and-persistent-history",
+        "simulator-authorized-contacts-create-fetch-delete-and-cleanup",
+        "contacts-not-determined-use-not-attempted-control",
         "xcode-simulator-ad-hoc-signing",
         "zero-domain-apis-in-fixed-embedded-host"
       ],

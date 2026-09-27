@@ -444,6 +444,15 @@ the observed state remains `not-determined`. The retained v4 receipt is
 `admission/host-lib-defined-boundary-v1/ios-arm64-app-capability-v4.json`, bound
 to implementation commit `dc0d0e36e2772aeec585829c5bd5da9f16c9eb66`.
 
+The next simulator slice separates authorization policy from protected-domain
+use. Simulator privacy control grants Contacts to the exact App identity; the
+authorization Lib observes `authorized`, then the independent
+`wasmc-system-ios-app-contacts@0.0.1-dev.1` Lib creates, fetches and deletes a
+temporary contact and confirms cleanup. A separate reset run proves that the
+Contacts Lib does not attempt access in `not-determined`. The fixed Host remains
+byte-identical and contains no Contacts API. Its v5 receipt is pending exact
+source-bound qualification.
+
 The mapped-window, epoll-readiness, kernel-splice and asynchronous-readiness
 successors are qualified on local Linux aarch64 and independent GitHub Ubuntu
 x86_64. The ioctl call-shape and vectored-write successor is also qualified on
