@@ -6,11 +6,11 @@ logic accumulates.
 ## Architecture
 
 ```text
-irreducible external effect
+fixed domain-neutral Host boundary
         ↓
-Host Capability / Resource / Operation / Completion / Window
-        ↓  thin binding
-portable Lib
+platform system Lib + native descriptor
+        ↓
+portable system Lib
         ↓
 higher-level Libs
         ↓
@@ -24,9 +24,10 @@ know about Host/provider/platform identity.
 
 For every Host-backed workload, classify each responsibility:
 
-1. **Irreducible effect** — requires OS/device/remote authority; stays Host.
-2. **Thin adaptation** — converts the effect into a portable resource/byte/event
-   shape; keep minimal and capability-scoped.
+1. **Irreducible mechanism** — fixed target/resource/window/operation/completion
+   machinery stays Host-side.
+2. **Physical binding** — a platform system Lib owns the native descriptor and
+   converts physical calls into typed Lib semantics.
 3. **Portable semantics** — protocol, parser, codec, transformation, policy,
    state machine or algorithm; graduate to a Lib.
 4. **Application policy** — remains App-specific unless reusable enough to be a
@@ -47,8 +48,8 @@ real Host workload
   → admission as exact Lib version
   → catalog + LibSearch
   → Agent/library-first use
-  → missing capability feedback
-  → next Lib or justified Host primitive
+  → missing mechanism feedback
+  → next Lib or independently justified boundary revision
 ```
 
 Existing frozen qualification artifacts may be used as behavior oracles. They

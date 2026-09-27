@@ -1,40 +1,41 @@
-# Platform provider bindings
+# Legacy provider evidence and future boundary execution
 
-Platform directories bind canonical Host capability drivers to operating-system
-execution environments. They do not create platform-specific Guest APIs.
+The platform `providers.json` files describe retained v0.0.15 domain evidence.
+They are frozen migration inputs, not the capability model of the next Host.
 
-Provider code is shared whenever a stable language/runtime abstraction already
-captures the required OS behavior. For example, the public storage provider
-uses the same Rust `std::fs::File` implementation on Linux, macOS and Windows;
-duplicating three wrappers would add maintenance cost without adding platform
-semantics.
+## Future rule
 
-OS-specific code belongs under `platform/<os>/` only when the capability
-actually needs OS-specific acquisition, lifecycle or native APIs. Memory
-mapping/shared-memory, camera, display, GPU and NPU are typical examples.
+New domains are exact Lib packages. WIT owns their public semantics and the
+matching Lib owns a platform native boundary descriptor. The fixed Host
+platform layer executes descriptors without acquiring the domain API.
 
-Each `providers.json` is qualification metadata, not authority. A provider may
-be marked `qualified` only when:
+Consequently:
 
-1. its implementation path exists in this repository;
-2. its qualification workflow exists;
-3. the platform/architecture scope is explicit;
-4. the provider uses the canonical Host contract/runtime/driver semantics.
+- there is no canonical Host domain list;
+- a new domain must not add a provider row;
+- a new domain must not add Rust/JavaScript Host methods;
+- platform selection is expressed by the exact Lib graph and descriptor;
+- local and remote implementations are Lib choices above one fixed boundary.
 
-Provider status is three-state:
+## Retained v0.0.15 evidence
 
-- `unimplemented`: no canonical implementation is claimed;
-- `implemented`: code exists but platform qualification is incomplete;
-- `qualified`: implementation plus qualification workflow and architecture
-  scope are present.
+Existing rows keep their historical three-state meaning:
 
-Platforms never inherit support claims from another OS merely because shared
-code compiles there.
+- `unimplemented`: no retained v0 provider implementation was claimed;
+- `implemented`: retained provider code existed without complete evidence;
+- `qualified`: retained provider code and its declared workflow existed.
 
-Every platform manifest must list every canonical capability exactly once.
-Absence is not a support state. New capabilities therefore force an explicit
-per-platform decision: unimplemented, implemented, or qualified.
+These rows may be corrected only to repair historical evidence. They must not
+grow to represent a new feature. Qualification of the target architecture is
+instead expressed as:
 
-Remote is not a canonical capability and must not appear in platform manifests.
-Local versus remote is Host-private provider/backing locality; the semantic
-capability remains file, memory, TCP, UDP, camera, accelerator, and so on.
+```text
+exact Lib identity
++ exact WIT identity
++ exact native descriptor identity
++ exact unchanged Host identity
++ cross-engine behavior and lifecycle evidence
+```
+
+The decisive migration test is adding file, process and network behavior with
+one byte-identical Host binary and no new Host domain APIs.

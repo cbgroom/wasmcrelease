@@ -1,120 +1,117 @@
 # Host architecture
 
+Status: **Lib-defined boundary workstream / not admitted / not released**.
+The immutable v0.0.15 product retains its earlier Host artifacts. The target
+architecture and migration plan are defined in
+[`docs/HOST_LIB_DEFINED_BOUNDARY.md`](../docs/HOST_LIB_DEFINED_BOUNDARY.md).
+
 ## Authority boundary
 
-`contract/` is the only guest-facing ABI authority. Platform implementations
-must implement that contract rather than fork it.
+Exact Lib package WIT owns every public domain API. The matching Lib package
+owns the physical native boundary descriptor. The Host contract owns only the
+domain-neutral execution mechanisms required to carry that descriptor.
 
-The following semantics are cross-platform invariants:
+The Rust and JavaScript Host must not acquire file, process, network, service,
+protocol, database, device or accelerator APIs when a domain is added. Those
+semantics belong to Libs. Existing domain drivers and provider matrices are
+v0.0.15 migration evidence, not future extension authority.
 
+The fixed cross-platform invariants are mechanical:
+
+- opaque target and resource identity;
+- bounded owned windows;
+- operation submission and completion;
 - timeout is observation only and is not cancellation;
 - cancellation is a request, not proof that an external effect was undone;
-- ambiguous admission or lost authoritative result is `OutcomeUnknown`;
+- ambiguous admission or a lost authoritative result is `OutcomeUnknown`;
 - results are claimed exactly once;
-- Resource identity is distinct from transport/address identity;
-- guest code never receives file descriptors, native pointers, IP/port authority,
-  backend tokens, or device addresses.
+- late completions drain without publishing cancelled output;
+- native pointers and physical handles remain inside the boundary executor.
 
 ## Layering
 
 ```text
-contract
-   ↓
-core
-   ↓
-runtime
-   ↓
-drivers
-   ↓
-provider selection
-   ├── platform  → OS / device API
-   └── embedding → Node / Deno / Bun / Browser environment API
+WFC / application
+        |
+        v
+portable system and application Libs
+        |
+        v
+platform system Libs + Lib-owned native descriptors
+        |
+        v
+fixed Host contract / core / runtime
+        |
+        +----------------------+
+        |                      |
+        v                      v
+native boundary executor   embedding boundary executor
+        |                      |
+        +-----------+----------+
+                    v
+          OS / native library / service / device
 ```
 
-`core` and `runtime` should remain portable Rust/Wasm-oriented code.
-`platform` is the only place where AVFoundation, V4L2, Win32, Android NDK,
-Harmony native APIs, Metal, NPU APIs, and similar platform specifics belong.
+`core` and `runtime` implement Resource, Window, Operation and Completion
+mechanics. `platform` and `embedding` execute the same domain-neutral physical
+boundary. They do not define domain APIs.
+
+## Full-host profile
+
+A full-host WFC is trusted with the host as a whole. This profile does not add
+per-domain grant or allowlist APIs. Resource identity remains necessary for
+physical lifetime and completion ownership; it is not a catalog of Host-defined
+capabilities.
+
+The WFC and its exact Lib graph may construct a Library OS: VFS, process model,
+network stack, service manager, scheduler, device model and reconciliation loop
+all evolve above the unchanged Host binary.
+
+## Domain growth rule
+
+A new domain normally changes only exact Lib packages:
+
+1. WIT defines the public typed semantics.
+2. A platform system Lib defines the native boundary descriptor.
+3. Portable Libs construct higher semantics above it.
+4. Catalog and LibSearch publish the exact graph.
+5. Existing Host bytes execute the new graph unchanged.
+
+A Host mechanism may evolve only after executable evidence from multiple
+independent domains proves that the existing boundary cannot express the needed
+physical operation. Business-specific operations and platform convenience do
+not satisfy that test.
+
+## Native and lightweight execution
+
+Native and embedding paths implement one boundary:
+
+```text
+Lib graph -> fixed boundary -> native executor -> OS
+Lib graph -> fixed boundary -> Node/Bun/Deno/Browser executor -> environment
+```
+
+The surrounding environment may impose different physical availability, but it
+does not create a parallel Guest ABI or move domain semantics into Host code.
+
+## Runtime execution and cache hierarchy
+
+Wasmi and Wasmtime/AOT remain complementary execution lanes. Prepared modules,
+persistent AOT bytes and optional Store/Instance pools are caches keyed by exact
+artifact plus boundary identity; they are not new domain APIs. An invocation is
+never migrated or replayed after an external effect.
+
+## Migration evidence
+
+Existing `host/drivers/*` implementations and
+`host/platform/*/providers.json` files remain retained evidence for behavior,
+lifecycle and cross-platform oracles. They must not gain new domain rows. File,
+process and network are the first migration proof: all three must be supplied by
+Lib packages while the Host binary and boundary contract remain byte-identical.
 
 ## Packaging
 
-Desktop targets may ship a runtime library/executable bundle.
-Mobile targets primarily ship embeddable SDK packages.
-
-All packages contain the same contract identity and declare the capabilities
-actually implemented/qualified on that platform.
-
-## Public consumption and extension surfaces
-
-The Host contract is shared by multiple product surfaces. Packaging does not
-create a second guest ABI.
-
-Consumer surfaces:
-
-- Lib Package: reusable Core/Component functionality under `libs/`.
-- Host SDK: programmable embedding, currently `sdk/wasmc-host` plus the Core
-  Runtime SDK.
-- Integrated Runtime / CLI: compiler, runner, Host and registry as an
-  open-the-box product.
-- Lightweight Embedding: Node/Bun/Deno/Browser use the surrounding runtime as
-  the OS bridge.
-- Native Runtime Library / Platform SDK: native shared runtime and platform
-  packaging for the shortest high-performance data path.
-
-Extension surfaces:
-
-- Driver / Provider: adds physical capability behind generic Resources.
-- Remote Provider: changes backing locality without creating RemoteFile,
-  RemoteMemory or parallel guest capability families.
-
-The product-level map is `docs/ASMD.md` and the machine-readable release
-inventory is `release-surfaces.json`.
-
-## Orthogonal execution dimensions
-
-`platform/` and `embedding/` are orthogonal.
-
-- platform answers where native Host code runs: Linux/macOS/Windows/Android/Harmony/iOS.
-- embedding answers which execution environment carries or bridges Host providers: native/Node/Deno/Bun/Browser.
-
-Node, Deno, Bun and Browser are never platform adapters and never define guest-visible Host ABI variants. Provider selection remains an internal Host decision; Guest code sees only canonical Capability/Resource/Operation/Completion/Window semantics.
-
-## Provider maturity
-
-Provider support is intentionally three-state:
-
-- `unimplemented`: no canonical provider implementation is claimed.
-- `implemented`: canonical provider code exists, but the platform support claim
-  is not yet backed by the required qualification evidence.
-- `qualified`: implementation, workflow evidence and architecture scope are
-  all present and validated.
-
-This avoids treating "code exists" as equivalent to "platform supported".
-
-The machine-readable architecture contract is `host/architecture.json`.
-Provider implementations may live only under `host/drivers/` (shared
-capability providers) or `host/platform/` (genuinely OS-specific providers).
-`embedding/`, `sdk/`, tests and qualification evidence are not provider
-implementation roots.
-
-## Cold path versus hot path
-
-Namespace discovery, capability admission and provider/platform/embedding
-selection are cold-path concerns. Once a Resource is resolved, hot-path
-execution uses opaque Resource/Operation/Completion/Window state only. Provider,
-platform and embedding identity must not leak into Guest-visible authority.
-
-## Resource semantic kind versus locality
-
-Resource semantics and backing locality are independent dimensions.
-
-- semantic capability answers what the Resource is: file/storage, memory, TCP,
-  UDP, camera, accelerator, and so on;
-- locality answers where/how its provider is reached: local or remote.
-
-Remote is therefore not a canonical capability. A remote file remains a file
-capability backed by a remote provider; remote memory remains memory. Route,
-session and remote-object identity stay Host-private provider state.
-
-This prevents parallel RemoteFile/RemoteMemory/RemoteCamera capability trees and
-keeps local and remote providers on the same Resource/Operation/Completion/Window
-contract.
+Desktop and mobile packaging may differ, but every package carries the same
+boundary identity. Domain availability comes from the installed Lib graph, not
+from a compiled Host capability list. A branch, directory or retained fixture
+does not prove admission or release.

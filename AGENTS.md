@@ -75,6 +75,14 @@ The v0.0.15 closure is 14 package routes / 108 API routes with
 `candidate_extras=0`. Admission alone never proves a later lifecycle stage;
 read the exact channel authorities instead.
 
+For future Host architecture work, read
+[`docs/HOST_LIB_DEFINED_BOUNDARY.md`](docs/HOST_LIB_DEFINED_BOUNDARY.md).
+The v0.0.15 file/network drivers remain migration evidence; they are not the
+extension model. Do not add a Rust/JavaScript Host API or platform provider row
+for a new system domain. Public domain semantics and their physical native
+descriptors belong to exact Lib packages above one fixed boundary. This
+workstream is not admitted or released by v0.0.15.
+
 For SDK/runtime/CLI/embedding integration, begin with
 [the SDK discovery Skill](skills/wasmc-sdk-discovery/SKILL.md). It routes by
 task intent to Core Runtime, generic Host embedding, native CLI, or lightweight

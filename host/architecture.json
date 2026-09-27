@@ -1,43 +1,52 @@
 {
-  "schema": "wasmc.host-architecture/v1",
-  "guest_authority": "host/contract",
+  "schema": "wasmc.host-architecture/v2",
+  "status": "architecture-workstream-not-released",
+  "guest_authority": "exact-lib-package-wit",
+  "physical_boundary_authority": "host/contract/lib-defined-boundary.json",
   "host_semantics": [
-    "Capability",
+    "ExternalTarget",
     "Resource",
+    "Window",
     "Operation",
-    "Completion",
-    "Window"
+    "Completion"
+  ],
+  "invariants": [
+    "the Host contains no canonical domain capability inventory",
+    "new domains extend exact Lib packages instead of Rust or JavaScript Host APIs",
+    "WIT owns public domain semantics and the matching Lib owns its physical descriptor",
+    "the Host interprets mechanism, ownership and physical execution but not domain meaning",
+    "the full-host profile adds no per-domain grant or allowlist API"
   ],
   "layers": [
     {
       "name": "contract",
       "root": "host/contract",
-      "responsibility": "guest-visible ABI and semantic authority"
+      "responsibility": "domain-neutral boundary mechanism and retained v0 migration contracts"
     },
     {
       "name": "core",
       "root": "host/core",
-      "responsibility": "portable namespace, admission, lifecycle and policy"
+      "responsibility": "portable resource, operation, completion and window invariants"
     },
     {
       "name": "runtime",
       "root": "host/runtime",
-      "responsibility": "resource/operation/completion/window/provider execution"
+      "responsibility": "fixed execution, ownership, scheduling and native descriptor machinery"
     },
     {
       "name": "drivers",
       "root": "host/drivers",
-      "responsibility": "capability-oriented provider contracts and shared implementations"
+      "responsibility": "retained v0.0.15 domain qualification fixtures pending migration to Lib packages"
     },
     {
       "name": "platform",
       "root": "host/platform",
-      "responsibility": "OS/device provider binding and genuinely OS-specific implementation"
+      "responsibility": "retained platform qualification plus future domain-neutral native boundary executor"
     },
     {
       "name": "embedding",
       "root": "host/embedding",
-      "responsibility": "execution-environment providers and bridges"
+      "responsibility": "execution-environment implementation of the same domain-neutral boundary"
     },
     {
       "name": "sdk",
@@ -47,12 +56,25 @@
     {
       "name": "qualification",
       "root": "host/qualification",
-      "responsibility": "evidence and support claims"
+      "responsibility": "boundary invariance, unchanged-Host domain growth and lifecycle evidence"
     }
   ],
   "orthogonal_dimensions": {
-    "platform": ["linux", "macos", "windows", "android", "harmony", "ios"],
-    "embedding": ["native", "node", "deno", "bun", "browser"]
+    "platform": [
+      "linux",
+      "macos",
+      "windows",
+      "android",
+      "harmony",
+      "ios"
+    ],
+    "embedding": [
+      "native",
+      "node",
+      "deno",
+      "bun",
+      "browser"
+    ]
   },
   "distribution_surfaces": {
     "consumer": [
@@ -66,57 +88,33 @@
       "driver-provider",
       "remote-provider"
     ],
-    "rule": "all surfaces share one guest-visible Host contract; packaging and provider growth must not fork the ABI"
+    "target_extension": [
+      "system-lib",
+      "native-boundary-descriptor"
+    ],
+    "extension_status": "the extension array preserves v0.0.15 release-surface compatibility; target_extension is the unreleased successor",
+    "rule": "future domain growth occurs through exact Lib packages; packaging must not fork the fixed boundary"
   },
-  "resource_dimensions": {
-    "semantic_capability_source": "host/manifest.json#capabilities",
-    "locality": ["local", "remote"],
-    "rule": "remote is a provider/backing locality, never a semantic capability"
+  "domain_model": {
+    "semantic_authority": "exact Lib package WIT",
+    "physical_binding_authority": "matching exact Lib package native boundary descriptor",
+    "host_inventory": [],
+    "locality": [
+      "local",
+      "remote"
+    ],
+    "rule": "domain and locality are Lib-defined semantics; neither creates a Rust Host API family"
   },
-  "provider_statuses": [
-    "unimplemented",
-    "implemented",
-    "qualified"
-  ],
-  "provider_rules": {
-    "implementation_allowed_roots": [
-      "host/drivers",
-      "host/platform"
-    ],
-    "implementation_forbidden_roots": [
-      "host/contract",
-      "host/core",
-      "host/embedding",
-      "host/sdk",
-      "host/tests",
-      "host/examples",
-      "host/qualification"
-    ],
-    "unimplemented_must_not_claim_implementation": true,
-    "implemented_requires_implementation": true,
-    "qualified_requires_implementation_and_evidence": true
+  "boundary_rules": {
+    "contract": "host/contract/lib-defined-boundary.json",
+    "rust_or_javascript_domain_api_growth": false,
+    "descriptor_owned_by_exact_lib": true,
+    "host_binary_unchanged_for_new_domain": true,
+    "irreducible_mechanism_exception": "requires evidence across multiple independent Lib domains and a new architecture version"
   },
-  "path_model": {
-    "cold_path": [
-      "namespace discovery",
-      "capability admission",
-      "provider selection",
-      "platform/embedding selection"
-    ],
-    "hot_path": [
-      "opaque Resource",
-      "Operation",
-      "Completion",
-      "Window"
-    ],
-    "guest_must_not_observe": [
-      "native fd/HANDLE",
-      "native pointer/address",
-      "provider identity",
-      "platform identity",
-      "embedding identity",
-      "IP/port authority",
-      "backend token"
-    ]
+  "migration": {
+    "legacy_provider_manifests": "host/platform/*/providers.json",
+    "legacy_provider_status": "v0.0.15-migration-evidence-only",
+    "target": "file, process and network behavior supplied by Lib packages with one byte-identical Host binary"
   }
 }

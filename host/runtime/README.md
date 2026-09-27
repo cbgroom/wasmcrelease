@@ -6,7 +6,8 @@ Portable execution machinery belongs here:
 - Operation table
 - Completion lifecycle
 - Window ownership
-- capability admission
-- driver dispatch
+- Lib-defined native descriptor execution
+- platform/embedding boundary dispatch
 
-OS- or vendor-specific APIs do not belong here.
+Domain, OS and vendor APIs do not belong here. New domains must not add runtime
+methods; they add exact Lib WIT plus matching physical descriptors.

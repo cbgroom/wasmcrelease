@@ -5,6 +5,11 @@ remains `host/ARCHITECTURE.md` and the machine-readable Host architecture remain
 `host/architecture.json`. The release-surface inventory is
 `release-surfaces.json`.
 
+The current main workstream changes the future Host extension model without
+changing the immutable v0.0.15 release: all public system domains and physical
+bindings move to exact Lib packages above one fixed, domain-neutral boundary.
+See `docs/HOST_LIB_DEFINED_BOUNDARY.md`.
+
 ## One contract, multiple consumption surfaces
 
 WAsmC deliberately separates the guest-visible Host contract from the way a
@@ -29,17 +34,20 @@ program is packaged or embedded.
                       +----------+----------+
                                  |
                                  v
-                         Frozen Host contract
-                         Resource / Operation
-                        Completion / Window
+                    Portable system Libs
+             VFS / process / network / devices
                                  |
-                    +------------+-------------+
-                    |                          |
-                    v                          v
-              Driver / Provider          Remote Provider
-                    |                          |
-                    v                          v
-                   OS                    remote OS/device
+                                 v
+                  Platform system Libs + exact
+                     native boundary descriptors
+                                 |
+                                 v
+                       Fixed Host boundary
+                Target / Resource / Window /
+                     Operation / Completion
+                                 |
+                                 v
+                    OS / service / device
 ```
 
 The upper surfaces may evolve independently. They must not create parallel
@@ -65,16 +73,14 @@ Libs are runtime-neutral artifacts. Rust can load the same Core/Component Libs
 through Wasmi/Wasmtime that Node/Bun/Deno load through their WebAssembly
 engines.
 
-## Two Host extension surfaces
+## Two Lib extension surfaces
 
-Driver/Provider packages extend physical capability behind the frozen contract.
-A new file, TCP, camera, accelerator or device provider is not a reason to add a
-new guest-visible Host method.
+System Lib packages define file, process, network, service and device semantics.
+Their matching native boundary descriptors define platform-specific physical
+calls. A new domain must not add a Rust/JavaScript Host method or provider row.
 
-Remote Provider is a locality choice, not a new semantic capability. A remote
-file remains a file Resource and a remote accelerator remains the same
-accelerator Resource kind. Routing and remote object identity remain Host
-private.
+Local and remote implementations are Lib graph choices above the same boundary,
+not Host capability families.
 
 ## Native and lightweight execution
 
@@ -82,15 +88,14 @@ Lightweight embedding intentionally uses the surrounding runtime as the OS
 bridge:
 
 ```text
-Guest -> canonical Host import -> JS embedding driver
-      -> Node/Bun/Deno native runtime -> OS
+Guest -> system Lib -> fixed boundary -> embedding executor
+      -> Node/Bun/Deno/Browser environment -> OS
 ```
 
 The native high-performance path removes that extra data-plane runtime:
 
 ```text
-Guest -> canonical Host import -> wasmc-host native runtime
-      -> shared reactor/native driver -> OS
+Guest -> system Lib -> fixed boundary -> native executor -> OS
 ```
 
 Both paths implement the same Host contract. Node/Bun/Deno are embedding
@@ -155,20 +160,21 @@ backend.
 
 ## Contract freeze rule
 
-The desired steady state is a frozen Host contract and independently evolving
-runtime implementations. Runtime releases may optimize reactor design,
-scheduling, batching, zero-copy, caches, provider selection and platform code
-without recompiling a Guest.
+The desired steady state is a frozen, domain-neutral Host boundary with
+independently evolving Lib graphs and runtime implementations. Runtime releases
+may optimize reactor design, scheduling, batching, zero-copy and caches without
+acquiring domain semantics.
 
 A new guest-visible primitive is considered only when all of the following are
 demonstrated with executable evidence:
 
-1. existing Resource/open/read/write/invoke/wait/window semantics cannot express
-   the requirement;
-2. a Lib cannot express it by composing existing Resources;
-3. the requirement is an irreducible external authority or physical mechanism;
-4. the primitive is generic across multiple capability domains rather than a
-   feature-specific shortcut.
+1. an exact Lib plus native descriptor cannot express the required physical
+   operation through existing target/resource/window/operation/completion
+   mechanisms;
+2. at least two independent Lib domains demonstrate the same missing mechanism;
+3. the change does not move a domain operation into a universal opcode;
+4. a new architecture version and unchanged-domain regression prove the new
+   boundary.
 
 ## Release identity
 

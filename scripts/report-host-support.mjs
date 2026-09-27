@@ -3,63 +3,46 @@ import path from "node:path";
 
 const root = process.cwd();
 const manifest = JSON.parse(fs.readFileSync(path.join(root, "host", "manifest.json"), "utf8"));
-
-const rows = [];
-for (const platform of manifest.platforms) {
-  const providers = JSON.parse(
-    fs.readFileSync(path.join(root, "host", "platform", platform, "providers.json"), "utf8"),
-  );
-  const byCapability = new Map((providers.providers ?? []).map((provider) => [provider.capability, provider]));
-  rows.push({
-    platform,
-    capabilities: Object.fromEntries(
-      manifest.capabilities.map((capability) => {
-        const provider = byCapability.get(capability);
-        return [
-          capability,
-          {
-            status: provider?.status ?? "missing",
-            binding: provider?.binding ?? null,
-            implementation: provider?.implementation ?? null,
-          },
-        ];
-      }),
-    ),
-  });
-}
-
+const platformRows = manifest.platforms.map((platform) => ({
+  platform,
+  providers: JSON.parse(fs.readFileSync(path.join(root, "host", "platform", platform, "providers.json"), "utf8")).providers ?? [],
+}));
+const domains = platformRows[0]?.providers.map((provider) => provider.capability) ?? [];
+const rows = platformRows.map(({ platform, providers }) => ({
+  platform,
+  domains: Object.fromEntries(providers.map((provider) => [provider.capability, {
+    status: provider.status,
+    binding: provider.binding ?? null,
+    implementation: provider.implementation ?? null,
+  }])),
+}));
+const count = (status) => rows.reduce(
+  (sum, row) => sum + Object.values(row.domains).filter((entry) => entry.status === status).length,
+  0,
+);
 const summary = {
-  schema: "wasmc.host-support-report/v1",
+  schema: "wasmc.host-legacy-domain-evidence-report/v2",
+  authority: "v0.0.15-migration-evidence-only",
+  future_extension_authority: false,
+  host_domain_capabilities: manifest.host_domain_capabilities.length,
   platforms: manifest.platforms.length,
-  capabilities: manifest.capabilities.length,
-  cells: manifest.platforms.length * manifest.capabilities.length,
-  qualified: rows.reduce(
-    (sum, row) => sum + Object.values(row.capabilities).filter((item) => item.status === "qualified").length,
-    0,
-  ),
-  implemented: rows.reduce(
-    (sum, row) => sum + Object.values(row.capabilities).filter((item) => item.status === "implemented").length,
-    0,
-  ),
-  unimplemented: rows.reduce(
-    (sum, row) => sum + Object.values(row.capabilities).filter((item) => item.status === "unimplemented").length,
-    0,
-  ),
+  retained_domains: domains.length,
+  retained_cells: manifest.platforms.length * domains.length,
+  qualified: count("qualified"),
+  implemented: count("implemented"),
+  unimplemented: count("unimplemented"),
 };
 
 if (process.argv.includes("--markdown")) {
-  const header = ["Platform", ...manifest.capabilities];
+  const header = ["Platform", ...domains];
   const lines = [
+    "Retained v0.0.15 migration evidence only; future domains are exact Lib packages and do not add Host rows.",
+    "",
     `| ${header.join(" | ")} |`,
     `| ${header.map(() => "---").join(" | ")} |`,
-    ...rows.map((row) =>
-      `| ${[
-        row.platform,
-        ...manifest.capabilities.map((capability) => row.capabilities[capability].status),
-      ].join(" | ")} |`,
-    ),
+    ...rows.map((row) => `| ${[row.platform, ...domains.map((domain) => row.domains[domain].status)].join(" | ")} |`),
     "",
-    `Qualified: ${summary.qualified}; implemented-not-qualified: ${summary.implemented}; unimplemented: ${summary.unimplemented}; total cells: ${summary.cells}.`,
+    `Host canonical domain capabilities: 0. Retained qualified: ${summary.qualified}; implemented-not-qualified: ${summary.implemented}; unimplemented: ${summary.unimplemented}.`,
   ];
   console.log(lines.join("\n"));
 } else {

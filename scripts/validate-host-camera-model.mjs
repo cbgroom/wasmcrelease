@@ -6,7 +6,8 @@ const manifest = JSON.parse(fs.readFileSync("host/manifest.json", "utf8"));
 
 assert.equal(model.schema, "wasmc.host-camera-model/v1");
 assert.equal(model.capability, "camera");
-assert.ok(manifest.capabilities.includes("camera"));
+assert.deepEqual(manifest.host_domain_capabilities, []);
+assert.equal(manifest.legacy_domain_qualification.future_extension_authority, false);
 assert.equal(model.support_state_effect, "none");
 assert.equal(model.resource_semantics.locality_independent, true);
 assert.equal(model.resource_semantics.guest_visible_native_handle, false);
@@ -41,7 +42,8 @@ for (const platform of manifest.platforms) {
 
 console.log(JSON.stringify({
   accepted: true,
-  capability: "camera",
+  retained_domain_fixture: "camera",
+  future_extension_authority: false,
   shared_semantics_only: true,
   platforms_unchanged: manifest.platforms.length,
   structural_fixtures: model.fixtures.length,

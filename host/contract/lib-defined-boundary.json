@@ -1,0 +1,47 @@
+{
+  "schema": "wasmc.lib-defined-host-boundary/v1",
+  "status": "architecture-workstream-not-released",
+  "product_rule": "new system domains are added by exact Lib packages without Rust or JavaScript Host API growth",
+  "full_host_profile": {
+    "trust_scope": "entire-host",
+    "per_domain_grant_api": false,
+    "per_domain_allowlist_api": false
+  },
+  "mechanisms": [
+    "external-target",
+    "opaque-resource",
+    "bounded-window",
+    "operation",
+    "completion",
+    "wait",
+    "cancel",
+    "release",
+    "lib-defined-native-descriptor"
+  ],
+  "semantic_authority": {
+    "public_types": "exact Lib package WIT",
+    "physical_binding": "exact Lib package native boundary descriptor",
+    "host_interpretation": "mechanism and physical execution only"
+  },
+  "host_forbidden_domain_apis": [
+    "file",
+    "filesystem",
+    "process",
+    "tcp",
+    "udp",
+    "http",
+    "tls",
+    "camera",
+    "audio",
+    "display",
+    "gpu",
+    "npu",
+    "database"
+  ],
+  "extension_test": "a new domain must be expressible by adding or replacing Lib packages while the Host binary and boundary contract remain byte-identical",
+  "release": {
+    "included_in_v0_0_15": false,
+    "admitted": false,
+    "released": false
+  }
+}

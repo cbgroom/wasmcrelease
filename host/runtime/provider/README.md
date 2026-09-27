@@ -1,12 +1,15 @@
-# Host provider selection
+# Retained provider selection
 
-Provider selection is an internal runtime mechanism between canonical drivers and a concrete platform or embedding implementation.
+This directory retains v0.0.15 provider-selection evidence while the target
+architecture moves domain selection into exact Lib graphs.
 
 A provider may be backed by:
 
 - a native platform adapter (`platform/*`), or
 - an execution environment (`embedding/*`).
 
-Provider identity is never guest-visible. The guest receives only opaque Resources admitted through the canonical Host contract.
+In the successor boundary, the Host selects only a domain-neutral physical
+executor. WIT and the matching Lib-owned descriptor define the domain.
 
-Hot-path dispatch remains Resource + Operation oriented; platform/embedding discovery and provider selection are cold-path concerns.
+Hot-path dispatch remains Resource + Window + Operation + Completion oriented.
+Adding a domain-specific provider here is forbidden.

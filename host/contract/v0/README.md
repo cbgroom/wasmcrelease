@@ -1,6 +1,9 @@
-# Core Host v0 — public design and executable reference
+# Core Host v0 — retained public design and executable reference
 
 Experimental standardization prototype, not stable ABI or production I/O SDK.
+It is retained v0.0.15 migration evidence, not the target extension model. New
+domains must use the Lib-defined boundary workstream instead of adding an
+operation or provider here.
 No dependency on WASI0.3 or Component execution. Core Wasm is the execution
 boundary; WIT remains the intended typed semantic authority above transport.
 The public source covers only integration/Host mechanics, not compiler internals.
@@ -96,10 +99,10 @@ Core guest alongside App/Lib/guard ownership tests. Cross-platform acceptance
 must read exact candidate runs in both Host workflows, not treat local proof
 or existing prototype acceptance as final immutable SDK qualification.
 
-Next: review draft semantic WIT and define negotiated Core transport; one session-bound
-resource model; browser/Wasmtime parity; real restricted backend with deadlines,
-revocation and late-completion fault tests. Only then consider shared-window
-and batch acceleration. Internal String/List/Map allocation stays in CoreLib.
+The successor work is `host/contract/lib-defined-boundary.json`: domain WIT and
+physical descriptors move into exact Lib packages while this profile supplies
+behavior and lifecycle migration oracles. Internal String/List/Map allocation
+stays in Libs.
 
 Delivery gates (not all-stdlib progress): (1) bounded cross-language prototype;
 (2) reviewed typed transport/ownership/session identity; (3) browser/Wasmtime

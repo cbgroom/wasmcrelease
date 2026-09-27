@@ -1,41 +1,24 @@
-# Host qualification
+# Host boundary qualification
 
-Public evidence distinguishes provider binding state from evidence grade.
+Target qualification proves that domain growth occurs through Lib packages
+while the Host remains unchanged.
 
-## Provider binding state
+Required evidence for a system Lib includes:
 
-The platform manifests under `host/platform/*/providers.json` are the support
-claim authority:
+- exact Lib/WIT/native-descriptor identity;
+- exact Host and boundary identity;
+- unchanged Host bytes across independent domain additions;
+- real behavior and independent external-state oracles;
+- Resource/Window/Operation/Completion ownership and cleanup;
+- cancellation, late completion and ambiguous-outcome behavior where relevant;
+- Wasmi/Wasmtime and native/embedding scope actually exercised;
+- explicit untested platform and physical-layout scope.
 
-- `unimplemented`: no canonical provider implementation is claimed;
-- `implemented`: canonical provider code exists, but platform qualification
-  is incomplete;
-- `qualified`: implementation, qualification workflow and architecture scope
-  are all present.
+The existing platform `providers.json` files are retained v0.0.15 migration
+evidence. Their `unimplemented`, `implemented` and `qualified` states remain
+historically meaningful but are no longer the future support authority. They
+must not gain new domain rows.
 
-Every platform declares every canonical capability explicitly. Missing entries
-are validation failures, not implicit unsupported states.
-
-## Evidence grade
-
-Evidence can independently be described as:
-
-- `simulated`: structural/simulated evidence only;
-- `qualified`: the declared qualification matrix passed;
-- `production-qualified`: stronger production/device evidence exists.
-
-Evidence grade must never upgrade a provider binding state by itself.
-
-Resource locality is a separate Host-private dimension. "Remote" is not a
-provider binding capability; remote providers are qualified against the same
-semantic capability as their local counterparts.
-
-## Qualification dimensions
-
-Native and JS-runtime qualification is recorded as physical platform × embedding when both dimensions are meaningful. Browser engine qualification is embedding-only; Browser is not treated as an operating-system platform.
-
-See `matrix.json`.
-
-Run `node scripts/report-host-support.mjs --markdown` for the current
-platform × capability support matrix. The report is derived from provider
-manifests and is not a second source of authority.
+`matrix.json` continues to distinguish physical platform × embedding from
+browser engine-only evidence. Future reports must identify Lib and descriptor
+identities rather than presenting a Host capability matrix.

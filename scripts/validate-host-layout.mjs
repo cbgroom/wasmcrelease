@@ -2,157 +2,119 @@ import fs from "node:fs";
 import path from "node:path";
 
 const root = process.cwd();
-const manifestPath = path.join(root, "host", "manifest.json");
-const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
-const architecturePath = path.join(root, "host", "architecture.json");
-const architecture = JSON.parse(fs.readFileSync(architecturePath, "utf8"));
-
+const readJson = (relative) => JSON.parse(fs.readFileSync(path.join(root, relative), "utf8"));
+const manifest = readJson("host/manifest.json");
+const architecture = readJson("host/architecture.json");
+const boundary = readJson(manifest.boundary_contract);
 const failures = [];
-if (architecture.schema !== "wasmc.host-architecture/v1") {
-  failures.push("invalid host/architecture.json schema");
+
+const expectedMechanisms = [
+  "external-target",
+  "opaque-resource",
+  "bounded-window",
+  "operation",
+  "completion",
+  "wait",
+  "cancel",
+  "release",
+  "lib-defined-native-descriptor",
+];
+const retainedV015Domains = [
+  "file", "memory", "tcp", "udp", "clock", "random",
+  "camera", "audio", "display", "gpu", "npu",
+];
+
+if (architecture.schema !== "wasmc.host-architecture/v2") failures.push("invalid host architecture schema");
+if (architecture.status !== "architecture-workstream-not-released") failures.push("Host v2 must remain explicitly unreleased");
+if (architecture.guest_authority !== "exact-lib-package-wit") failures.push("exact Lib WIT must own public domain semantics");
+if (manifest.schema !== "wasmc.host-layout/v2") failures.push("invalid Host layout schema");
+if (manifest.domain_semantic_authority !== "exact-lib-package-wit") failures.push("manifest must route domain semantics to Lib WIT");
+if (manifest.domain_physical_binding_authority !== "exact-lib-package-native-boundary-descriptor") failures.push("manifest must route physical bindings to exact Lib descriptors");
+if (!Array.isArray(manifest.host_domain_capabilities) || manifest.host_domain_capabilities.length !== 0) failures.push("Host canonical domain capability inventory must be empty");
+if (Object.hasOwn(manifest, "capabilities")) failures.push("legacy manifest.capabilities authority is forbidden");
+if (manifest.legacy_domain_qualification?.future_extension_authority !== false) failures.push("legacy provider matrices must not be future extension authority");
+if (manifest.legacy_domain_qualification?.new_domain_rows_allowed !== false) failures.push("legacy provider matrices must reject new domain rows");
+
+if (boundary.schema !== "wasmc.lib-defined-host-boundary/v1") failures.push("invalid Lib-defined boundary schema");
+if (boundary.status !== "architecture-workstream-not-released") failures.push("boundary must remain explicitly unreleased");
+if (JSON.stringify(boundary.mechanisms) !== JSON.stringify(expectedMechanisms)) failures.push("boundary mechanism set drifted");
+if (boundary.full_host_profile?.per_domain_grant_api !== false || boundary.full_host_profile?.per_domain_allowlist_api !== false) failures.push("full-host boundary must not add per-domain grant/allowlist APIs");
+if (boundary.semantic_authority?.public_types !== "exact Lib package WIT") failures.push("boundary public types must be Lib-owned");
+if (boundary.semantic_authority?.physical_binding !== "exact Lib package native boundary descriptor") failures.push("boundary physical binding must be Lib-owned");
+if (boundary.release?.included_in_v0_0_15 !== false || boundary.release?.admitted !== false || boundary.release?.released !== false) failures.push("unreleased boundary lifecycle is overstated");
+
+const forbiddenMechanismFragments = boundary.host_forbidden_domain_apis ?? [];
+for (const mechanism of boundary.mechanisms ?? []) {
+  for (const domain of forbiddenMechanismFragments) {
+    if (mechanism.includes(domain)) failures.push(`domain leaked into fixed boundary mechanism: ${mechanism}`);
+  }
 }
-if (architecture.guest_authority !== "host/contract") {
-  failures.push("contract must remain the only Guest ABI authority");
-}
+if (architecture.boundary_rules?.rust_or_javascript_domain_api_growth !== false) failures.push("domain API growth must be forbidden");
+if (architecture.boundary_rules?.descriptor_owned_by_exact_lib !== true) failures.push("native descriptors must be exact-Lib owned");
+if (architecture.boundary_rules?.host_binary_unchanged_for_new_domain !== true) failures.push("new-domain Host identity must remain unchanged");
+if ((architecture.domain_model?.host_inventory ?? ["missing"]).length !== 0) failures.push("architecture Host domain inventory must be empty");
+
 const architectureRoots = new Set((architecture.layers ?? []).map((layer) => layer.root));
 for (const dir of ["contract", "core", "runtime", "drivers", "platform", "embedding", "sdk", "qualification"]) {
-  if (!architectureRoots.has(`host/${dir}`)) {
-    failures.push(`architecture layer missing: host/${dir}`);
-  }
+  if (!architectureRoots.has(`host/${dir}`)) failures.push(`architecture layer missing: host/${dir}`);
 }
-if (JSON.stringify(architecture.orthogonal_dimensions?.platform) !== JSON.stringify(manifest.platforms)) {
-  failures.push("architecture platform dimension must match manifest.platforms");
-}
-if (JSON.stringify(architecture.orthogonal_dimensions?.embedding) !== JSON.stringify(manifest.embeddings)) {
-  failures.push("architecture embedding dimension must match manifest.embeddings");
-}
-if (manifest.capabilities.includes("remote")) {
-  failures.push("remote must be modeled as locality/provider state, not a canonical capability");
-}
-if (JSON.stringify(architecture.resource_dimensions?.locality) !== JSON.stringify(["local", "remote"])) {
-  failures.push("resource locality dimension must be exactly local/remote");
-}
-const providerStatuses = new Set(architecture.provider_statuses ?? []);
-const allowedImplementationRoots = architecture.provider_rules?.implementation_allowed_roots ?? [];
-const forbiddenImplementationRoots = architecture.provider_rules?.implementation_forbidden_roots ?? [];
+if (JSON.stringify(architecture.orthogonal_dimensions?.platform) !== JSON.stringify(manifest.platforms)) failures.push("architecture platform dimension must match manifest.platforms");
+if (JSON.stringify(architecture.orthogonal_dimensions?.embedding) !== JSON.stringify(manifest.embeddings)) failures.push("architecture embedding dimension must match manifest.embeddings");
+if (JSON.stringify(architecture.domain_model?.locality) !== JSON.stringify(["local", "remote"])) failures.push("domain locality dimension must remain local/remote");
+
 for (const dir of manifest.canonical_roots) {
-  const p = path.join(root, "host", dir);
-  if (!fs.statSync(p, { throwIfNoEntry: false })?.isDirectory()) {
-    failures.push(`missing canonical root host/${dir}`);
-  }
+  const candidate = path.join(root, "host", dir);
+  if (!fs.statSync(candidate, { throwIfNoEntry: false })?.isDirectory()) failures.push(`missing canonical root host/${dir}`);
 }
+
+const providerStatuses = new Set(["unimplemented", "implemented", "qualified"]);
+let qualifiedLegacy = 0;
+let implementedLegacy = 0;
 for (const platform of manifest.platforms) {
-  const p = path.join(root, "host", "platform", platform);
-  if (!fs.statSync(p, { throwIfNoEntry: false })?.isDirectory()) {
-    failures.push(`missing platform root host/platform/${platform}`);
-  }
-  const providersPath = path.join(p, "providers.json");
+  const platformRoot = path.join(root, "host", "platform", platform);
+  if (!fs.statSync(platformRoot, { throwIfNoEntry: false })?.isDirectory()) failures.push(`missing platform root host/platform/${platform}`);
+  const providersPath = path.join(platformRoot, "providers.json");
   if (!fs.existsSync(providersPath)) {
-    failures.push(`missing platform provider binding host/platform/${platform}/providers.json`);
+    failures.push(`missing retained provider evidence host/platform/${platform}/providers.json`);
     continue;
   }
   const providers = JSON.parse(fs.readFileSync(providersPath, "utf8"));
-  if (providers.schema !== "wasmc.host-platform-providers/v1") {
-    failures.push(`invalid platform provider schema: host/platform/${platform}/providers.json`);
-  }
-  if (providers.platform !== platform) {
-    failures.push(`platform provider identity mismatch: host/platform/${platform}/providers.json`);
-  }
-  const seenCapabilities = new Set();
+  if (providers.schema !== "wasmc.host-platform-providers/v1") failures.push(`invalid retained provider schema on ${platform}`);
+  if (providers.platform !== platform) failures.push(`retained provider platform mismatch on ${platform}`);
+  const domainRows = (providers.providers ?? []).map((provider) => provider.capability);
+  if (JSON.stringify(domainRows) !== JSON.stringify(retainedV015Domains)) failures.push(`retained v0.0.15 domain rows changed on ${platform}`);
   for (const provider of providers.providers ?? []) {
-    if (!manifest.capabilities.includes(provider.capability)) {
-      failures.push(`unknown platform capability ${provider.capability} on ${platform}`);
-    }
-    if (seenCapabilities.has(provider.capability)) {
-      failures.push(`duplicate platform capability ${provider.capability} on ${platform}`);
-    }
-    seenCapabilities.add(provider.capability);
-    if (!providerStatuses.has(provider.status)) {
-      failures.push(`invalid provider status ${provider.status} for ${platform}/${provider.capability}`);
-    }
-    if (provider.status === "unqualified") {
-      failures.push(`legacy ambiguous provider status is forbidden: ${platform}/${provider.capability}`);
-    }
-    if (provider.implementation) {
-      const normalized = provider.implementation.replaceAll("\\", "/");
-      if (normalized.includes("..")) {
-        failures.push(`provider implementation may not escape Host tree: ${provider.implementation}`);
-      }
-      if (!allowedImplementationRoots.some((prefix) => normalized === prefix || normalized.startsWith(`${prefix}/`))) {
-        failures.push(`provider implementation outside allowed roots: ${provider.implementation}`);
-      }
-      if (forbiddenImplementationRoots.some((prefix) => normalized === prefix || normalized.startsWith(`${prefix}/`))) {
-        failures.push(`provider implementation uses forbidden root: ${provider.implementation}`);
-      }
-    }
-    if (provider.status === "unimplemented" && (provider.implementation || provider.qualification || provider.binding)) {
-      failures.push(`unimplemented provider must not claim binding/evidence: ${platform}/${provider.capability}`);
-    }
-    if (provider.status === "implemented" && !provider.implementation) {
-      failures.push(`implemented provider lacks implementation: ${platform}/${provider.capability}`);
+    if (!providerStatuses.has(provider.status)) failures.push(`invalid retained provider status ${provider.status} on ${platform}/${provider.capability}`);
+    if (provider.status === "unimplemented" && (provider.implementation || provider.qualification || provider.binding)) failures.push(`unimplemented retained provider claims implementation on ${platform}/${provider.capability}`);
+    if (provider.status === "implemented") {
+      implementedLegacy += 1;
+      if (!provider.implementation) failures.push(`implemented retained provider lacks implementation on ${platform}/${provider.capability}`);
     }
     if (provider.status === "qualified") {
-      if (!provider.implementation) {
-        failures.push(`qualified provider lacks implementation: ${platform}/${provider.capability}`);
-      } else if (!fs.existsSync(path.join(root, provider.implementation))) {
-        failures.push(`qualified provider implementation missing: ${provider.implementation}`);
-      }
-      if (!provider.qualification?.workflow) {
-        failures.push(`qualified provider lacks workflow evidence: ${platform}/${provider.capability}`);
-      } else if (!fs.existsSync(path.join(root, provider.qualification.workflow))) {
-        failures.push(`qualified provider workflow missing: ${provider.qualification.workflow}`);
-      }
-      if (!(provider.qualification?.architectures?.length > 0)) {
-        failures.push(`qualified provider lacks architecture scope: ${platform}/${provider.capability}`);
-      }
+      qualifiedLegacy += 1;
+      if (!provider.implementation || !fs.existsSync(path.join(root, provider.implementation))) failures.push(`qualified retained provider implementation missing on ${platform}/${provider.capability}`);
+      if (!provider.qualification?.workflow || !fs.existsSync(path.join(root, provider.qualification.workflow))) failures.push(`qualified retained provider workflow missing on ${platform}/${provider.capability}`);
+      if (!(provider.qualification?.architectures?.length > 0)) failures.push(`qualified retained provider architecture scope missing on ${platform}/${provider.capability}`);
     }
-  }
-  for (const capability of manifest.capabilities) {
-    if (!seenCapabilities.has(capability)) {
-      failures.push(`platform capability state must be explicit: ${platform}/${capability}`);
-    }
-  }
-  if (seenCapabilities.size !== manifest.capabilities.length) {
-    failures.push(`platform provider manifest must cover every canonical capability exactly once: ${platform}`);
   }
 }
+
 for (const embedding of ["node", "deno", "bun", "browser"]) {
-  const p = path.join(root, "host", "embedding", embedding);
-  if (!fs.statSync(p, { throwIfNoEntry: false })?.isDirectory()) {
-    failures.push(`missing embedding root host/embedding/${embedding}`);
-  }
-}
-for (const forbidden of ["node", "deno", "bun", "browser"]) {
-  const p = path.join(root, "host", "platform", forbidden);
-  if (fs.existsSync(p)) failures.push(`execution environment must not be a platform: host/platform/${forbidden}`);
+  const candidate = path.join(root, "host", "embedding", embedding);
+  if (!fs.statSync(candidate, { throwIfNoEntry: false })?.isDirectory()) failures.push(`missing embedding root host/embedding/${embedding}`);
+  if (fs.existsSync(path.join(root, "host", "platform", embedding))) failures.push(`execution environment must not be a platform: ${embedding}`);
 }
 
-const forbiddenTopLevel = manifest.platforms
-  .map((p) => path.join(root, "host", `${p}-host`))
-  .filter((p) => fs.existsSync(p));
-for (const p of forbiddenTopLevel) {
-  failures.push(`platform Host API fork is forbidden: ${path.relative(root, p)}`);
-}
-
-
-const qualification = JSON.parse(fs.readFileSync(path.join(root, "host", "qualification", "matrix.json"), "utf8"));
+const qualification = readJson("host/qualification/matrix.json");
 for (const row of qualification.current_evidence ?? []) {
-  if (row.scope === "embedding-only" && !String(row.embedding).startsWith("browser/")) {
-    failures.push(`embedding-only qualification is reserved for browser engines: ${row.embedding}`);
-  }
-  if (row.scope === "platform×embedding" && (!row.platform || !row.embedding)) {
-    failures.push("platform×embedding qualification requires both dimensions");
-  }
+  if (row.scope === "embedding-only" && !String(row.embedding).startsWith("browser/")) failures.push(`embedding-only qualification is reserved for browser engines: ${row.embedding}`);
+  if (row.scope === "platform×embedding" && (!row.platform || !row.embedding)) failures.push("platform×embedding qualification requires both dimensions");
   if (row.platform === "browser") failures.push("Browser must not appear as a physical platform");
 }
 
-if (manifest.legacy_paths_retained !== false) {
-  failures.push("legacy_paths_retained must be false for the canonical Host tree");
-}
-
+if (manifest.legacy_paths_retained !== false) failures.push("legacy_paths_retained must be false");
 for (const legacy of ["v0", "completion", "file-io", "tcp", "udp", "corelib-io", "lib-e2e", "browser"]) {
-  const p = path.join(root, "host", legacy);
-  if (fs.existsSync(p)) failures.push(`legacy Host root is forbidden: host/${legacy}`);
+  if (fs.existsSync(path.join(root, "host", legacy))) failures.push(`legacy Host root is forbidden: host/${legacy}`);
 }
 
 if (failures.length) {
@@ -163,14 +125,12 @@ if (failures.length) {
 console.log(JSON.stringify({
   accepted: true,
   schema: manifest.schema,
-  canonical_roots: manifest.canonical_roots.length,
-  platforms: manifest.platforms.length,
-  qualified_platform_providers: manifest.platforms
-    .flatMap((platform) => JSON.parse(fs.readFileSync(path.join(root, "host", "platform", platform, "providers.json"), "utf8")).providers ?? [])
-    .filter((provider) => provider.status === "qualified").length,
-  implemented_unqualified_platform_providers: manifest.platforms
-    .flatMap((platform) => JSON.parse(fs.readFileSync(path.join(root, "host", "platform", platform, "providers.json"), "utf8")).providers ?? [])
-    .filter((provider) => provider.status === "implemented").length,
-  capabilities: manifest.capabilities.length,
-  legacy_paths_retained: manifest.legacy_paths_retained
+  architecture: architecture.schema,
+  boundary: boundary.schema,
+  host_domain_capabilities: manifest.host_domain_capabilities.length,
+  boundary_mechanisms: boundary.mechanisms.length,
+  retained_v0_0_15_domains: retainedV015Domains.length,
+  retained_qualified_provider_cells: qualifiedLegacy,
+  retained_implemented_provider_cells: implementedLegacy,
+  new_domain_extension: "exact-lib-package-only",
 }));

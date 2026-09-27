@@ -1,0 +1,108 @@
+# Lib-defined Host boundary workstream
+
+Status: **architecture workstream / not admitted / not released**.
+
+This workstream replaces domain growth in the Rust Host with a fixed,
+domain-neutral execution boundary. It does not modify the immutable v0.0.15
+product identity. Existing file, memory and network drivers remain retained
+qualification and migration evidence; they are not the authority for the next
+Host architecture.
+
+## Product rule
+
+The Host must not gain a new Rust/JavaScript API, driver family or platform
+matrix row merely because a new system domain is required. File systems,
+processes, sockets, services, clocks, entropy, cameras, accelerators and future
+domains are Lib semantics.
+
+The fixed Host owns only mechanisms:
+
+- Core/Component execution;
+- opaque external targets and resources;
+- owned bounded windows;
+- operation submission and completion;
+- wait, cancellation, late-completion drain and release;
+- execution of a Lib-supplied native boundary descriptor.
+
+The Host does not interpret the domain meaning of a descriptor, operation
+payload or result. A full-host controller is trusted with the host as a whole;
+this profile does not insert per-domain grant or allowlist APIs between a Lib
+and the fixed boundary.
+
+## Target architecture
+
+```text
+WFC / application
+        |
+        v
+portable system Libs
+  VFS / process / network / services / devices / scheduler
+        |
+        v
+platform system Libs
+  POSIX / Darwin / Win32 / platform ABI descriptors
+        |
+        v
+fixed Lib-defined native boundary
+  target / resource / window / operation / completion
+        |
+        v
+host OS, native library, system service or device endpoint
+```
+
+Adding a new domain normally adds or updates Lib packages only. If adding the
+domain requires a Rust Host edit, the boundary is incomplete unless the change
+is proven to be a new irreducible mechanism shared by multiple domains.
+
+## Lib-defined native boundary descriptor
+
+A descriptor is data owned and versioned by a Lib. It identifies a native
+target and describes the physical call shape required to exchange bounded
+windows and scalar metadata with it. The exact descriptor language remains an
+open design item; it must eventually cover:
+
+- target lookup without a domain-specific Host method;
+- calling convention and scalar/layout information;
+- input, output and in/out windows;
+- opaque native-handle lifetime;
+- synchronous and asynchronous completion;
+- callback or event conversion into Completion records;
+- platform-specific implementation selection;
+- deterministic rejection of unsupported physical shapes.
+
+The descriptor is not a JSON replacement for WIT. WIT remains the public typed
+semantic contract of the Lib. The descriptor is the lower physical binding
+owned by that same exact Lib package.
+
+## Library OS consequence
+
+The intended result is a Library OS profile assembled above the fixed Host:
+
+```text
+fixed executor + fixed native boundary
+  + platform system Libs
+  + portable OS Libs
+  + application Libs
+  + WFC controller
+```
+
+VFS, process models, networking, protocols, service management, device models,
+state reconciliation and higher policy can evolve independently of the Host
+binary and can use the ordinary Lib lifecycle: build, qualify, admit, catalog,
+discover, install and release.
+
+## Migration
+
+1. Freeze the domain-neutral boundary model and its negative checks.
+2. Define the first descriptor profile without file/process/network names.
+3. Re-express one retained real-file chain as platform and portable Libs while
+   keeping the Host binary unchanged.
+4. Repeat with process and network behavior without adding Host APIs.
+5. Compose those Libs into the first Library OS profile and execute a WFC
+   controller against a real host.
+6. Only after behavior, lifecycle and cross-engine qualification, admit the
+   boundary and Lib packages into a future immutable product.
+
+The first decisive acceptance test is three-domain growth with one unchanged
+Host binary: file behavior, process behavior and network behavior must be added
+or replaced solely through exact Lib packages.

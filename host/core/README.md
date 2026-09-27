@@ -1,5 +1,6 @@
 # Portable Host core
 
-Platform-independent policy/protocol logic belongs here: namespace resolution,
-lifecycle policy, framing, remote protocol logic, and other code that does not
-need direct OS/device APIs.
+Only platform-independent boundary mechanism belongs here: opaque identity,
+window ownership, operation/completion lifecycle and deterministic cleanup.
+Namespace, protocol, framing, platform normalization and remote semantics belong
+to exact Lib packages.

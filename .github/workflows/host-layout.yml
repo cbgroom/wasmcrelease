@@ -1,4 +1,4 @@
-name: Host canonical layout
+name: Host Lib-defined boundary
 
 on:
   push:
@@ -6,11 +6,17 @@ on:
     paths:
       - "host/**"
       - "scripts/validate-host-layout.mjs"
+      - "scripts/test-host-lib-defined-boundary.mjs"
+      - "scripts/validate-host-lib-defined-boundary-workstream.mjs"
+      - "docs/HOST_LIB_DEFINED_BOUNDARY.md"
       - ".github/workflows/host-layout.yml"
   pull_request:
     paths:
       - "host/**"
       - "scripts/validate-host-layout.mjs"
+      - "scripts/test-host-lib-defined-boundary.mjs"
+      - "scripts/validate-host-lib-defined-boundary-workstream.mjs"
+      - "docs/HOST_LIB_DEFINED_BOUNDARY.md"
       - ".github/workflows/host-layout.yml"
   workflow_dispatch:
 
@@ -26,7 +32,9 @@ jobs:
         with:
           node-version: 26.5.1
       - run: node scripts/validate-host-layout.mjs
+      - run: node scripts/test-host-lib-defined-boundary.mjs
       - run: node scripts/validate-host-camera-model.mjs
-      - name: Platform capability support matrix
+      - run: node scripts/validate-host-lib-defined-boundary-workstream.mjs
+      - name: Retained v0.0.15 domain evidence
         shell: bash
         run: node scripts/report-host-support.mjs --markdown >> "$GITHUB_STEP_SUMMARY"

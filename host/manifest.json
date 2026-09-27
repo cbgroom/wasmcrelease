@@ -1,6 +1,6 @@
 {
-  "schema": "wasmc.host-layout/v1",
-  "host_semantics": "Capability->Resource->Operation->Completion->Window",
+  "schema": "wasmc.host-layout/v2",
+  "host_semantics": "ExternalTarget->Resource->Window->Operation->Completion",
   "canonical_roots": [
     "contract",
     "core",
@@ -13,6 +13,17 @@
     "tests",
     "qualification"
   ],
+  "boundary_contract": "host/contract/lib-defined-boundary.json",
+  "domain_semantic_authority": "exact-lib-package-wit",
+  "domain_physical_binding_authority": "exact-lib-package-native-boundary-descriptor",
+  "host_domain_capabilities": [],
+  "legacy_domain_qualification": {
+    "status": "v0.0.15-migration-evidence-only",
+    "manifests": "host/platform/*/providers.json",
+    "new_domain_rows_allowed": false,
+    "guest_abi_authority": false,
+    "future_extension_authority": false
+  },
   "platforms": [
     "linux",
     "macos",
@@ -20,19 +31,6 @@
     "android",
     "harmony",
     "ios"
-  ],
-  "capabilities": [
-    "file",
-    "memory",
-    "tcp",
-    "udp",
-    "clock",
-    "random",
-    "camera",
-    "audio",
-    "display",
-    "gpu",
-    "npu"
   ],
   "legacy_paths_retained": false,
   "embeddings": [

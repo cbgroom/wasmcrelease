@@ -1,11 +1,10 @@
-# Platform adapters
+# Platform boundary executors
 
-This is the only canonical home for OS/device-specific Host implementation.
+The target platform layer executes the fixed, domain-neutral native boundary.
+Public file, process, network, protocol and device semantics belong to Lib WIT;
+their physical mappings belong to the matching Lib descriptors.
 
-Each platform implements the same capability model. Missing features are
-reported as unavailable capabilities/resources; they do not create new
-guest-visible Host APIs.
-
-Platform binding manifests are stored in `providers.json`. Shared provider
-code is preferred when a stable native abstraction already supplies equivalent
-semantics across operating systems. See `PROVIDER_MODEL.md`.
+The existing `providers.json` files retain v0.0.15 qualification evidence only.
+They are not a canonical capability inventory and must not gain new domain
+rows. See `PROVIDER_MODEL.md` and
+[`docs/HOST_LIB_DEFINED_BOUNDARY.md`](../../docs/HOST_LIB_DEFINED_BOUNDARY.md).
