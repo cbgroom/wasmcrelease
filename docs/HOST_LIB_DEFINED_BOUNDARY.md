@@ -283,3 +283,9 @@ The remediated asynchronous-readiness Linux x86_64 receipt is
 `admission/host-lib-defined-boundary-v1/linux-x86_64-async-readiness-v6.json`,
 bound to successful workflow run `36301909558` at commit
 `db21881717edb3dec755c6d201954ad22c72396b`.
+
+The ioctl call-shape and vectored-write Linux aarch64 receipt is
+`admission/host-lib-defined-boundary-v1/linux-aarch64-device-io-v7.json`, bound
+to implementation commit
+`b9c5c52668131765f8a3539b96f8241320462b27`. It explicitly retains real uinput,
+UHID, hidraw and USB Gadget device-backed qualification as pending.
