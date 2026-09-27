@@ -99,8 +99,8 @@ assert.deepEqual(directTelemetryStatus?.states,{
 });
 assert.equal(directTelemetryStatus?.related_released_product?.identity,'wasmc-system-telemetry@0.0.1');
 assert.equal(directTelemetryStatus?.related_released_product?.released,true);
-assert.equal(directTelemetryStatus?.related_released_product?.discoverable,false);
-assert.equal(directTelemetryStatus?.related_released_product?.installable,false);
+assert.equal(directTelemetryStatus?.related_released_product?.discoverable,true);
+assert.equal(directTelemetryStatus?.related_released_product?.installable,true);
 
 const components=surfaces.agent_discovery?.components;
 assert(components,'agent_discovery.components missing');

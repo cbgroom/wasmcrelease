@@ -39,6 +39,20 @@ export function suiteCases(family,runtime='node',mirror='github') {
     item('agent-start-execution','examples/agent-start/run.mjs'),
     item('deterministic-fresh-agent-regression','scripts/wasmc-fresh-agent-evaluation-v0.mjs',['--release-root','.', '--json-out','target/ci/fresh-agent.json'])
   ];
+  if(family==='candidate')return [
+    item('v015-product-identity','scripts/release-candidate.mjs',['verify','channels/candidates/0.0.15.json']),
+    item('library-first-teaching-and-routes','scripts/test-library-first.mjs'),
+    item('live-agent-trace-evaluator','scripts/test-live-agent-trace-evaluation-v1.mjs'),
+    item('fresh-pi-two-model-cohort-contract','scripts/test-fresh-agent-learning-v1.mjs'),
+    item('pi-pre-release-candidate-binding-contract','scripts/test-pi-pre-release-gate-v1.mjs'),
+    item('agent-quickstart-execution','scripts/test-agent-quickstart.mjs'),
+    item('candidate-release-surface-model','scripts/validate-release-surfaces.mjs'),
+    item('candidate-agent-guidance','scripts/test-agent-guidance.mjs'),
+    item('sdk-agent-routing','scripts/validate-sdk-agent-routes.mjs'),
+    item('lib-route-release-closure-negatives','scripts/test-lib-route-closure.mjs'),
+    item('release-channel-promotion-negatives','scripts/test-release-channel.mjs'),
+    item('agent-start-execution','examples/agent-start/run.mjs')
+  ];
   if(family==='runtime')return [
     {id:'source-free-archive-deployment',command:'bash',args:['scripts/validate-source-free-runtime.sh',runtime]},
     item('core-full-artifact-admission','scripts/check-core-compatibility.mjs'),
