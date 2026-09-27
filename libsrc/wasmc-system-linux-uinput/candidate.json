@@ -1,0 +1,13 @@
+{
+  "schema": "wasmc.libsrc-candidate/v1",
+  "id": "wasmc-system-linux-uinput",
+  "version": "0.0.1-dev.1",
+  "wit": "lib.wit",
+  "source": ["README.md", "lib.wit", "native-boundary.template.json", "native-adapter.c", "wfc-profile.json"],
+  "host_import_budget": 0,
+  "origin": { "kind": "native-public" },
+  "completed_gates": ["public-source", "wit-parsed", "fixed-native-executor-unchanged", "linux-aarch64-real-uinput-device-v1", "real-evdev-key-roundtrip-v1", "generation-checked-stale-keyboard-v1", "batched-uinput-events-v1"],
+  "pending_gates": ["independent-linux-x86_64-real-uinput-device-v1", "descriptor-schema-review", "wasm-lowering", "admission-review"],
+  "admitted": false,
+  "qualification": { "runner": "node", "script": "scripts/test-linux-uinput-lib-defined-boundary.mjs" }
+}
