@@ -533,6 +533,43 @@ assert.ok(
     httpsSocketMigrationReceipt.evidence.performance.minimum_paired_rps_ratio_p50,
 );
 
+const linuxUinputReceipt = JSON.parse(fs.readFileSync("admission/host-lib-defined-boundary-v1/linux-aarch64-uinput-v1.json", "utf8"));
+const linuxX86UinputReceipt = JSON.parse(fs.readFileSync("admission/host-lib-defined-boundary-v1/linux-x86_64-uinput-v1.json", "utf8"));
+for (const [receipt, architecture] of [[linuxUinputReceipt, "aarch64"], [linuxX86UinputReceipt, "x86_64"]]) {
+  assert.equal(receipt.schema, "wasmc.host-lib-defined-boundary-uinput-qualification/v1");
+  assert.equal(receipt.system_lib_identity, "wasmc:system-linux-uinput@0.0.1-dev.1");
+  assert.equal(receipt.environment.architecture, architecture);
+  assert.equal(receipt.admitted, false);
+  assert.equal(receipt.released, false);
+  execFileSync("git", ["cat-file", "-e", `${receipt.implementation_commit}^{commit}`]);
+  execFileSync("git", ["merge-base", "--is-ancestor", receipt.implementation_commit, "HEAD"]);
+  for (const [relative, expected] of Object.entries(receipt.source)) {
+    assert.equal(
+      digestAt(receipt.implementation_commit, relative),
+      expected,
+      `${relative}: retained ${architecture} UInput qualification source drift`,
+    );
+  }
+  assert.equal(receipt.evidence.status, "PASS");
+  assert.equal(receipt.evidence.real_uinput_device_created, true);
+  assert.equal(receipt.evidence.real_key_down_observed, true);
+  assert.equal(receipt.evidence.real_key_up_observed, true);
+  assert.equal(receipt.evidence.host_source_changes_required, 0);
+  assert.equal(receipt.evidence.fixed_executor_uinput_apis, 0);
+  assert.equal(receipt.evidence.fixed_executor_matches_device_io_v7, true);
+  assert.equal(receipt.evidence.exact_adapter_identity, true);
+  assert.equal(receipt.evidence.generation_checked_stale_keyboard_rejection, true);
+  assert.equal(receipt.evidence.malformed_profile_rejection, true);
+  assert.equal(receipt.evidence.adapter_identity_rejection, true);
+  assert.equal(receipt.evidence.batch.one_kernel_write_per_batch, true);
+  assert.ok(receipt.evidence.batch.key_events_per_second >= receipt.evidence.batch.minimum_key_events_per_second);
+}
+assert.equal(linuxUinputReceipt.outputs.executor_sha256, linuxDeviceIoReceipt.outputs.executor_sha256);
+assert.equal(linuxX86UinputReceipt.outputs.executor_sha256, linuxX86DeviceIoReceipt.outputs.executor_sha256);
+assert.equal(linuxX86UinputReceipt.workflow.run_id, 36318024206);
+assert.equal(linuxX86UinputReceipt.workflow.conclusion, "success");
+assert.equal(linuxX86UinputReceipt.qualified_commit, linuxX86UinputReceipt.implementation_commit);
+
 const oldCandidate = spawnSync(
   process.execPath,
   ["scripts/release-candidate.mjs", "verify", "channels/candidates/0.0.15.json"],
@@ -566,6 +603,8 @@ console.log(JSON.stringify({
   retained_linux_aarch64_socket_qualification: linuxSocketReceipt.implementation_commit,
   retained_linux_x86_64_socket_qualification: linuxX86SocketReceipt.qualified_commit,
   retained_linux_x86_64_https_socket_migration: httpsSocketMigrationReceipt.qualified_commit,
+  retained_linux_aarch64_uinput_qualification: linuxUinputReceipt.implementation_commit,
+  retained_linux_x86_64_uinput_qualification: linuxX86UinputReceipt.qualified_commit,
   old_candidate_rejects_product_drift: true,
   lifecycle: "architecture-workstream-not-admitted-not-released",
 }));

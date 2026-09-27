@@ -151,12 +151,15 @@ rejects a stale endpoint token and retains the existing performance floor. The
 fixed Rust executor remains byte-identical and contains none of these Linux
 operations or device semantics.
 
-These generic mechanisms are sufficient physical building blocks for a higher
-uinput or UHID Lib, but do not themselves qualify virtual input devices. The
-current qualification environment exposes no `/dev/uinput`, `/dev/uhid`,
-`/dev/hidrawN` or `/dev/hidgN`. Real uinput device creation/event injection,
-UHID create/input/output/report lifecycle, UHID vectored reads and USB Gadget
-UDC binding remain explicit device-backed gates.
+Those generic mechanisms are now consumed by a separate
+`wasmc-system-linux-uinput` Lib without changing the fixed Host source or API.
+Retained Linux aarch64 and x86_64 qualifications create a real kernel virtual
+keyboard, observe key-down, key-up and synchronization records through its real
+evdev node, reject stale generation-checked keyboard tokens, and exercise 200
+batches containing 3,200 logical key events with one kernel write per batch.
+The measured rates are same-machine diagnostics, not portable throughput
+promises. UHID create/input/output/report lifecycle, UHID vectored reads and USB
+Gadget UDC binding remain explicit device-backed gates.
 
 The next platform Lib is `wasmc-system-linux-socket`. It owns Linux IPv4 TCP
 socket creation, bind/listen, connect/accept, stream transfer, readiness poll,
@@ -339,6 +342,16 @@ The ioctl call-shape and vectored-write Linux x86_64 receipt is
 `admission/host-lib-defined-boundary-v1/linux-x86_64-device-io-v7.json`, bound
 to successful workflow run `36302980800` at commit
 `6e171c3bd1f85e510618d7f23ef4ec4c3303ddb5`.
+
+The separate Lib-defined UInput Linux aarch64 receipt is
+`admission/host-lib-defined-boundary-v1/linux-aarch64-uinput-v1.json`, bound to
+implementation commit `e5fc048c707edc361aad825bcc51cc2ce1fee377`.
+The matching independent Linux x86_64 receipt is
+`admission/host-lib-defined-boundary-v1/linux-x86_64-uinput-v1.json`, bound to
+successful workflow run `36318024206` at the same commit. Together they close
+the real-uinput device gate without adding a UInput API or semantic branch to
+the fixed Host. They do not admit or release the Lib, and do not close WIT-to-
+Wasm lowering.
 
 The Lib-owned TCP socket Linux aarch64 receipt is
 `admission/host-lib-defined-boundary-v1/linux-aarch64-socket-v1.json`, bound to

@@ -1,0 +1,65 @@
+{
+  "schema": "wasmc.host-lib-defined-boundary-uinput-qualification/v1",
+  "status": "linux-x86_64-real-uinput-ci-qualified-not-admitted-not-released",
+  "date": "2026-09-27",
+  "implementation_commit": "e5fc048c707edc361aad825bcc51cc2ce1fee377",
+  "qualified_commit": "e5fc048c707edc361aad825bcc51cc2ce1fee377",
+  "system_lib_identity": "wasmc:system-linux-uinput@0.0.1-dev.1",
+  "workflow": {
+    "run_id": 36318024206,
+    "url": "https://github.com/cbgroom/wasmcrelease/actions/runs/36318024206",
+    "conclusion": "success",
+    "artifact": "host-uinput-e5fc048c707edc361aad825bcc51cc2ce1fee377"
+  },
+  "source": {
+    ".github/workflows/host-uinput.yml": "3ebd57549253630afa7b0ee3a019c8fa6cf5566dedc54713e2e7a9dedb6aa2e0",
+    "host/runtime/lib-boundary/native-linux/Cargo.lock": "5c1fceda2528f2294cc116da2a600a8d6c08b41b86f7b4331f7e7408dfb47c59",
+    "host/runtime/lib-boundary/native-linux/Cargo.toml": "51f247df82e66bc6636f8efb5d1bfa987c845a80185a831dc6dd9261caf10f3d",
+    "host/runtime/lib-boundary/native-linux/src/main.rs": "66b93a6e7c3e70a8315528f7d2917ea9ed39199f2dd9ef3acee43b027f8447bb",
+    "libsrc/wasmc-system-linux-uinput/lib.wit": "6e118a6b0bd2affffcde9e89c2e771795cc9f109944d0bd0e03112f6bfe02fab",
+    "libsrc/wasmc-system-linux-uinput/native-adapter.c": "1bf3f5b28d3811d3eb0c30d76173394cc669066e46e1e1bc0bc4880b97a7ed76",
+    "libsrc/wasmc-system-linux-uinput/native-boundary.template.json": "84a6a371de519f42542d020ebe3b4d1532a77520e457853d12128a08881eb502",
+    "libsrc/wasmc-system-linux-uinput/wfc-profile.json": "c3b757e0196775ad8b3e4631c89f7e54521ce6818b41562798bfbab9184ee660",
+    "scripts/test-linux-uinput-lib-defined-boundary.mjs": "10615a0aaa5ee034b34ef60ee2b9ca220253c94b42b23825db7570ddd1fde9dd"
+  },
+  "environment": {
+    "runner": "ubuntu-24.04",
+    "os": "linux",
+    "architecture": "x86_64",
+    "kernel": "6.17.0-1022-azure",
+    "node": "v26.5.1",
+    "rustc": "rustc 1.96.0 (ac68faa20 2026-05-25)",
+    "wasm_tools": "wasm-tools 1.255.0"
+  },
+  "outputs": {
+    "executor_sha256": "7465b5b150cef9d977185bec86fc84fd0e424ae0039720c2e0677196153becbc",
+    "adapter_sha256": "823ee13a9c17340e6770ccc8f04f2cfda6a1444726057c8f5333e45c43f98ff8",
+    "adapter_export": "wasmc_boundary_v1_invoke"
+  },
+  "evidence": {
+    "status": "PASS",
+    "real_uinput_device_created": true,
+    "real_evdev_node": "event2",
+    "real_key_down_observed": true,
+    "real_key_up_observed": true,
+    "synchronization_events_observed": 2,
+    "host_source_changes_required": 0,
+    "fixed_executor_uinput_apis": 0,
+    "fixed_executor_matches_device_io_v7": true,
+    "exact_adapter_identity": true,
+    "generation_checked_stale_keyboard_rejection": true,
+    "malformed_profile_rejection": true,
+    "adapter_identity_rejection": true,
+    "batch": {
+      "batches": 200,
+      "key_events": 3200,
+      "key_events_per_second": 38282.12,
+      "minimum_key_events_per_second": 1000,
+      "one_kernel_write_per_batch": true,
+      "scope": "same-machine diagnostic; not a portable throughput promise"
+    }
+  },
+  "remaining_gates": ["descriptor-schema-review", "Wasm-WIT-lowering", "admission-review", "catalog-and-LibSearch", "immutable-release"],
+  "admitted": false,
+  "released": false
+}
