@@ -558,6 +558,29 @@ assert.equal(iosBackgroundAudioV1Receipt.evidence.lock_screen_qualified, false);
 assert.equal(iosBackgroundAudioV1Receipt.evidence.route_change_qualified, false);
 assert.equal(iosBackgroundAudioV1Receipt.evidence.interruption_qualified, false);
 
+const iosQualificationPolicyV1Receipt = JSON.parse(fs.readFileSync(
+  "admission/host-lib-defined-boundary-v1/ios-simulator-first-qualification-policy-v1.json", "utf8",
+));
+assert.equal(iosQualificationPolicyV1Receipt.schema,
+  "wasmc.host-lib-defined-boundary-ios-qualification-policy/v1");
+assert.equal(iosQualificationPolicyV1Receipt.qualified, true);
+assert.equal(iosQualificationPolicyV1Receipt.admitted, false);
+assert.equal(iosQualificationPolicyV1Receipt.released, false);
+execFileSync("git", ["cat-file", "-e", `${iosQualificationPolicyV1Receipt.implementation_commit}^{commit}`]);
+execFileSync("git", ["merge-base", "--is-ancestor", iosQualificationPolicyV1Receipt.implementation_commit, "HEAD"]);
+for (const [relative, expected] of Object.entries(iosQualificationPolicyV1Receipt.source)) {
+  assert.equal(digestAt(iosQualificationPolicyV1Receipt.implementation_commit, relative), expected,
+    `${relative}: retained iOS Simulator-first policy source drift`);
+}
+assert.equal(iosQualificationPolicyV1Receipt.evidence.status, "PASS");
+assert.deepEqual(iosQualificationPolicyV1Receipt.evidence.primary_target, {
+  os: "ios", architecture: "aarch64", environment: "simulator", embedding: "native",
+});
+assert.equal(iosQualificationPolicyV1Receipt.evidence.release_eligibility_requires_physical_device, false);
+assert.equal(iosQualificationPolicyV1Receipt.evidence.admission_eligibility_requires_physical_device, false);
+assert.equal(iosQualificationPolicyV1Receipt.evidence.fixed_host_api_change, false);
+execFileSync(process.execPath, ["scripts/validate-ios-qualification-policy.mjs"], { stdio: "ignore" });
+
 const frozenIdentityFiles = [
   "release.json",
   "channels/prod.json",
@@ -1349,6 +1372,7 @@ console.log(JSON.stringify({
   retained_ios_arm64_background_transfer_v2_qualification: iosBackgroundTransferV2Receipt.implementation_commit,
   retained_ios_arm64_deferred_work_simulator_rejection_v1: iosDeferredWorkRejectionV1.implementation_commit,
   retained_ios_arm64_background_audio_v1_qualification: iosBackgroundAudioV1Receipt.implementation_commit,
+  retained_ios_simulator_first_qualification_policy_v1: iosQualificationPolicyV1Receipt.implementation_commit,
   old_candidate_rejects_product_drift: true,
   lifecycle: "architecture-workstream-not-admitted-not-released",
 }));
