@@ -19,6 +19,7 @@ rewritten as a physical-device claim. The machine policy is retained at
 | Process recovery | a second launch ID recovered the first process journal | explicit termination/relaunch; not jetsam |
 | Background transfer | 8 MiB background URLSession download, background callback, atomic result, exact SHA-256 and cancellation with no late result | Simulator localhost; automatic process-relaunch delivery not observed |
 | Background audio | playback session remains playing for 14 background samples and advances 3.283 seconds | Simulator clock mechanics; physical output, lock screen and interruptions pending |
+| Local notifications | real authorization prompt, system delivery while App is backgrounded, exact identifier/title/body/payload, notification-tap return | local scheduling only; APNs, silent push and notification extensions pending |
 | App-owned surfaces | five UIKit surfaces, dock, confirmed human takeover | application scope only |
 | Picture in Picture | iPad Simulator start/stop/restore and frame submission | live pixel visibility and physical device pending |
 | Authorization | Contacts allow/deny plus authorized CRUD cleanup | other protected domains are observation/planning only |
@@ -50,7 +51,7 @@ iOS baseline, admission or release:
 4. background URLSession process-relaunch delivery, upload and resume data;
 5. real-device audible background audio, lock screen, interruption and route-change behavior;
 6. PiP after the App has backgrounded or the device has locked;
-7. significant-location/region delivery, notifications and silent push;
+7. significant-location/region delivery, remote notifications and silent push;
 8. network freeze/resume and durable SQLite/file recovery across kill;
 9. WKWebView throttling, suspension and multi-WebView restoration;
 10. memory pressure, thermal pressure, watchdog and jetsam recovery.
