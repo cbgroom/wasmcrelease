@@ -1,6 +1,6 @@
 # Lib-defined Host boundary workstream
 
-Status: **asynchronous readiness Linux aarch64 locally qualified; x86_64 refresh pending / not admitted / not released**.
+Status: **asynchronous readiness Linux aarch64/x86_64 qualified / not admitted / not released**.
 
 This workstream replaces domain growth in the Rust Host with a fixed,
 domain-neutral execution boundary. It does not modify the immutable v0.0.15
@@ -190,11 +190,10 @@ contains no domain API and is byte-identical for all three. The test additionall
 proves pinned-window release rejection, completion claim-once, adapter digest
 rejection and zero remaining resources/operations/windows.
 
-The mapped-window, epoll-readiness and kernel-splice predecessors are qualified
-on local Linux aarch64 and independent GitHub Ubuntu x86_64. The asynchronous
-readiness lifecycle successor is locally qualified on aarch64; its independent
-x86_64 refresh remains pending. WIT is parsed by pinned `wasm-tools` before
-native qualification. Wasm lowering, the Host Completion bridge and
+The mapped-window, epoll-readiness, kernel-splice and asynchronous-readiness
+successors are qualified on local Linux aarch64 and independent GitHub Ubuntu
+x86_64. WIT is parsed by pinned `wasm-tools` before native qualification. Wasm
+lowering, the Host Completion bridge and
 late-delivery drain, `io_uring`, direct guest-window zero-copy, non-Linux
 evidence, admission, catalog publication and immutable release remain pending.
 
@@ -262,3 +261,8 @@ The remediated asynchronous-readiness Linux aarch64 receipt is
 `admission/host-lib-defined-boundary-v1/linux-aarch64-async-readiness-v6-r2.json`,
 bound to implementation commit
 `785d276de16eb47371862cc79674bcbd6e5ce27b`.
+
+The remediated asynchronous-readiness Linux x86_64 receipt is
+`admission/host-lib-defined-boundary-v1/linux-x86_64-async-readiness-v6.json`,
+bound to successful workflow run `36301909558` at commit
+`db21881717edb3dec755c6d201954ad22c72396b`.

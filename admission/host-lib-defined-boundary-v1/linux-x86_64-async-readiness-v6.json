@@ -1,0 +1,85 @@
+{
+  "schema": "wasmc.host-lib-defined-boundary-linux-qualification/v6",
+  "status": "linux-x86_64-asynchronous-readiness-remediated-ci-qualified-not-admitted-not-released",
+  "date": "2026-09-27",
+  "qualified_commit": "db21881717edb3dec755c6d201954ad22c72396b",
+  "implementation_commit": "785d276de16eb47371862cc79674bcbd6e5ce27b",
+  "remediates_rejection_run": 36301745708,
+  "system_lib_identity": "wasmc:system-linux-endpoint@0.0.1-dev.1",
+  "source": {
+    ".github/workflows/host-layout.yml": "4cf2ed92876409f8464e91b0f5bad0c0aa50e4c6d9e2ee0c78fc425f72bd19ae",
+    "host/runtime/lib-boundary/native-linux/Cargo.lock": "5c1fceda2528f2294cc116da2a600a8d6c08b41b86f7b4331f7e7408dfb47c59",
+    "host/runtime/lib-boundary/native-linux/Cargo.toml": "51f247df82e66bc6636f8efb5d1bfa987c845a80185a831dc6dd9261caf10f3d",
+    "host/runtime/lib-boundary/native-linux/src/main.rs": "66b93a6e7c3e70a8315528f7d2917ea9ed39199f2dd9ef3acee43b027f8447bb",
+    "libsrc/wasmc-system-linux-endpoint/lib.wit": "1f57b49ae6a89b4e9967c8270ef4a66487c80207f3a07e42a5ecf25914527840",
+    "libsrc/wasmc-system-linux-endpoint/native-adapter.c": "4b4398e464b852e49681c878a95ad3e0d33ee6a752ccd9198c718e29178371ca",
+    "libsrc/wasmc-system-linux-endpoint/native-boundary.template.json": "fe49d5222f507f83a221209a625545223f69c31fa61b3e76fe3183e0b2e01dce",
+    "scripts/test-linux-lib-defined-boundary.mjs": "85b72772bf2e11ab202aa0ed4daa422f3b9abcf4d57e498e3f59039f8205cec3"
+  },
+  "environment": {
+    "provider": "GitHub Actions",
+    "runner": "ubuntu-24.04",
+    "os": "linux",
+    "architecture": "x86_64",
+    "kernel": "6.17.0-1022-azure",
+    "rustc": "rustc 1.96.0 (ac68faa20 2026-05-25)",
+    "wasm_tools": "wasm-tools 1.255.0"
+  },
+  "workflow": {
+    "name": "Host Lib-defined boundary",
+    "run_id": 36301909558,
+    "job_id": 108570976442,
+    "url": "https://github.com/cbgroom/wasmcrelease/actions/runs/36301909558",
+    "conclusion": "success"
+  },
+  "outputs": {
+    "executor_sha256": "7465b5b150cef9d977185bec86fc84fd0e424ae0039720c2e0677196153becbc",
+    "adapter_sha256": "0034ad45012984a80417b3f20ebeeff995ea4e3956b1d32823a0062991074775",
+    "adapter_export": "wasmc_boundary_v1_invoke"
+  },
+  "evidence": {
+    "script": "scripts/test-linux-lib-defined-boundary.mjs",
+    "status": "PASS",
+    "wit_parsed": true,
+    "fixed_executor_domain_apis": 0,
+    "adapter_device_path_literals": 0,
+    "strict_compile_remediation": true,
+    "asynchronous_readiness_lifecycle": true,
+    "real_readiness_endpoint": "/dev/ptmx",
+    "ready": true,
+    "cancelled": true,
+    "timed_out": true,
+    "cancelled_late_readiness_suppressed": true,
+    "pending_release_rejection": true,
+    "repeated_terminal_cancel_rejection": true,
+    "retained_endpoint_lifetime": true,
+    "concurrent_operations": 64,
+    "generation_checked_stale_operation_rejection": true,
+    "fixed_executor_unchanged_from_v2_v3_v4_v5": true,
+    "performance_regression": {
+      "read_mib_per_second": 693.3,
+      "write_mib_per_second": 755.41,
+      "mapping_mib_per_second": 609.36,
+      "splice_mib_per_second": 1021.54,
+      "persistent_speedup": 49.34,
+      "minimum_mib_per_second": 25,
+      "minimum_speedup": 5,
+      "scope": "same-runner diagnostic; async readiness uses one worker per operation as a lifecycle baseline"
+    },
+    "adapter_identity_rejection": true,
+    "frozen_v0_0_15_identity_files": 3,
+    "old_candidate_rejects_product_drift": true
+  },
+  "remaining_gates": [
+    "descriptor-schema-review",
+    "Wasm-WIT-lowering",
+    "host-completion-bridge-and-late-delivery-drain",
+    "io-uring-completion",
+    "guest-shared-window-zero-copy",
+    "admission-review",
+    "catalog-and-LibSearch",
+    "immutable-release"
+  ],
+  "admitted": false,
+  "released": false
+}
