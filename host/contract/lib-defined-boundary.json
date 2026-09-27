@@ -23,6 +23,12 @@
     "physical_binding": "exact Lib package native boundary descriptor",
     "host_interpretation": "mechanism and physical execution only"
   },
+  "platform_convergence": {
+    "linux": "prefer Linux VFS, file descriptors, sockets, procfs and sysfs as the first physical abstraction before adding device-specific adapters",
+    "device_selection_owned_by_lib": true,
+    "device_names_in_fixed_host": false,
+    "integrity_is_not_permission": "exact adapter identity verification does not create a per-domain grant or allowlist"
+  },
   "host_forbidden_domain_apis": [
     "file",
     "filesystem",

@@ -1,6 +1,6 @@
 # Lib-defined Host boundary workstream
 
-Status: **local Node prototype qualified / not admitted / not released**.
+Status: **local Node plus Linux aarch64 native prototype qualified / not admitted / not released**.
 
 This workstream replaces domain growth in the Rust Host with a fixed,
 domain-neutral execution boundary. It does not modify the immutable v0.0.15
@@ -74,6 +74,25 @@ The descriptor is not a JSON replacement for WIT. WIT remains the public typed
 semantic contract of the Lib. The descriptor is the lower physical binding
 owned by that same exact Lib package.
 
+## Linux convergence through its native abstractions
+
+Linux is the first native convergence target. The fixed Rust executor does not
+contain `/dev` names, filesystem methods, process methods or device-specific
+branches. It verifies the exact Lib adapter identity, loads it, and invokes one
+bounded byte ABI. The Linux platform Lib owns a generic VFS/file-descriptor
+adapter and supplies endpoint paths as Lib data.
+
+That one adapter is now exercised on Linux aarch64 against `/dev/zero`,
+`/dev/null`, `/proc/self/stat` and `/sys/devices/system/cpu/online`. This proves
+that devfs, procfs and sysfs can converge through Linux's existing abstraction
+without one Rust Host API per device. Sockets and ioctl-based device protocols
+remain future Lib-level adapter profiles; a device-specific ABI or state model
+belongs to a higher Lib, not to the fixed executor.
+
+Exact shared-object SHA-256 verification is package integrity, not a capability
+grant or device allowlist. The full-host profile intentionally introduces no
+per-domain permission API.
+
 ## Library OS consequence
 
 The intended result is a Library OS profile assembled above the fixed Host:
@@ -122,9 +141,10 @@ contains no domain API and is byte-identical for all three. The test additionall
 proves pinned-window release rejection, completion claim-once, adapter digest
 rejection and zero remaining resources/operations/windows.
 
-This is Node-local evidence only. Native Rust descriptor execution, Wasm/WIT
-lowering, cancellation race qualification, cross-platform evidence, admission,
-catalog publication and immutable release remain pending.
+The native Linux evidence is currently one local aarch64 environment. Linux
+x86_64 CI, Wasm/WIT lowering, native asynchronous lifecycle/cancellation,
+cross-platform evidence, admission, catalog publication and immutable release
+remain pending.
 
 The exact local receipt is
 `admission/host-lib-defined-boundary-v1/local-qualification.json`, bound to

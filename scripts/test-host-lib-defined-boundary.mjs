@@ -46,6 +46,11 @@ for (const [expected, mutate] of mutations) {
 assert.equal(architecture.boundary_rules.host_binary_unchanged_for_new_domain, true);
 assert.equal(architecture.domain_model.semantic_authority, "exact Lib package WIT");
 assert.equal(architecture.domain_model.physical_binding_authority, "matching exact Lib package native boundary descriptor");
+assert.equal(boundary.platform_convergence.device_selection_owned_by_lib, true);
+assert.equal(boundary.platform_convergence.device_names_in_fixed_host, false);
+assert.match(boundary.platform_convergence.linux, /VFS.*file descriptors.*procfs.*sysfs/);
+assert.equal(architecture.prototype.linux_native.executor, "host/runtime/lib-boundary/native-linux");
+assert.equal(architecture.prototype.linux_native.system_lib, "libsrc/wasmc-system-linux-endpoint");
 
 console.log(JSON.stringify({
   accepted: true,
@@ -53,4 +58,5 @@ console.log(JSON.stringify({
   positive_controls: 1,
   rejection_controls: mutations.length,
   host_domain_capabilities: 0,
+  linux_device_names_in_fixed_host: 0,
 }));

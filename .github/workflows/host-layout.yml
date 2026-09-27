@@ -2,7 +2,7 @@ name: Host Lib-defined boundary
 
 on:
   push:
-    branches: [main, work/host-canonical-layout-v1]
+    branches: [main, work/host-canonical-layout-v1, work/host-lib-defined-boundary-v1]
     paths:
       - "host/**"
       - "admission/host-lib-defined-boundary-v1/**"
@@ -11,8 +11,10 @@ on:
       - "scripts/validate-host-lib-defined-boundary-workstream.mjs"
       - "docs/HOST_LIB_DEFINED_BOUNDARY.md"
       - "libsrc/wasmc-system-*-prototype/**"
+      - "libsrc/wasmc-system-linux-endpoint/**"
       - "libsrc/registry.json"
       - "scripts/test-lib-defined-boundary-runtime.mjs"
+      - "scripts/test-linux-lib-defined-boundary.mjs"
       - ".github/workflows/host-layout.yml"
   pull_request:
     paths:
@@ -23,8 +25,10 @@ on:
       - "scripts/validate-host-lib-defined-boundary-workstream.mjs"
       - "docs/HOST_LIB_DEFINED_BOUNDARY.md"
       - "libsrc/wasmc-system-*-prototype/**"
+      - "libsrc/wasmc-system-linux-endpoint/**"
       - "libsrc/registry.json"
       - "scripts/test-lib-defined-boundary-runtime.mjs"
+      - "scripts/test-linux-lib-defined-boundary.mjs"
       - ".github/workflows/host-layout.yml"
   workflow_dispatch:
 
@@ -39,10 +43,12 @@ jobs:
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
           node-version: 26.5.1
+      - uses: dtolnay/rust-toolchain@1.96.0
       - run: node scripts/validate-host-layout.mjs
       - run: node scripts/test-host-lib-defined-boundary.mjs
       - run: node scripts/validate-host-camera-model.mjs
       - run: node scripts/test-lib-defined-boundary-runtime.mjs
+      - run: node scripts/test-linux-lib-defined-boundary.mjs
       - run: node scripts/validate-host-lib-defined-boundary-workstream.mjs
       - name: Retained v0.0.15 domain evidence
         shell: bash

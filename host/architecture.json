@@ -132,6 +132,21 @@
       "real-child-process",
       "real-loopback-network",
       "one-byte-identical-executor"
-    ]
+    ],
+    "linux_native": {
+      "status": "linux-aarch64-local-qualified-not-admitted-not-released",
+      "executor": "host/runtime/lib-boundary/native-linux",
+      "system_lib": "libsrc/wasmc-system-linux-endpoint",
+      "evidence": "scripts/test-linux-lib-defined-boundary.mjs",
+      "convergence": "one Lib-owned VFS/file-descriptor adapter reaches devfs, procfs and sysfs without device names or domain APIs in the fixed Rust executor",
+      "scope": [
+        "real-/dev/zero-read",
+        "real-/dev/null-write",
+        "real-/proc/self/stat-read",
+        "real-/sys/devices/system/cpu/online-read",
+        "exact-shared-object-identity",
+        "fixed-byte-ABI"
+      ]
+    }
   }
 }
