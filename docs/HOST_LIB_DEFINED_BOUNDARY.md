@@ -490,6 +490,21 @@ bound to implementation commit `d5620d1e83b36a4181a4f114d1c047f1d78be418`.
 This remains a UIKit-only simulator qualification; WKWebView/DOM, physical
 device, lowering, admission and release remain pending.
 
+The v3 successor adds a Lib-owned system Picture in Picture projection for one
+focused task without changing the fixed Host. On an iPad Pro 13-inch (M4)
+simulator running iOS 26.5, XCUITest user-started PiP, observed the real start,
+stop and restore callbacks, enqueued 269 live sample-buffer frames, and proved
+that Agent tasks continued while PiP was active. The background media mode is
+declared in the App profile and the public WIT gains only a generic
+`request-presentation` operation. The retained active-PiP screenshot contains
+the system window, but its capture-sensitive sample-buffer region is black, so
+the qualification deliberately covers PiP lifecycle and concurrency rather
+than visible PiP pixels. The retained v3 receipt is
+`admission/host-lib-defined-boundary-v1/ios-arm64-app-surface-control-v3.json`,
+bound to implementation commit `7833a89047d48077d04a9679f032cfb92f32b866`.
+Physical-device pixel visibility, iPhone PiP support, WKWebView/DOM, lowering,
+admission and release remain pending.
+
 The mapped-window, epoll-readiness, kernel-splice and asynchronous-readiness
 successors are qualified on local Linux aarch64 and independent GitHub Ubuntu
 x86_64. The ioctl call-shape and vectored-write successor is also qualified on
