@@ -3,6 +3,13 @@
 This is the evidence boundary for the current Lib-defined iOS workstream. It
 does not alter the fixed Host API and does not describe admission or release.
 
+The normative target is `ios/aarch64/simulator/native`. Admission and release
+eligibility do **not** require a physical device. Physical-device receipts are
+optional additional observations only; their absence cannot block the iOS Lib
+baseline. Exact Simulator evidence remains Simulator-scoped and is never
+rewritten as a physical-device claim. The machine policy is retained at
+`host/platform/ios/qualification-policy.json`.
+
 ## Qualified on the exact iOS Simulator
 
 | Capability | Exact evidence | Boundary |
@@ -31,7 +38,10 @@ does not alter the fixed Host API and does not describe admission or release.
 These observations must never be converted into a claim that the OS delivered
 background work.
 
-## Missing system-background evidence
+## Non-blocking optional and external observations
+
+These items may improve platform coverage but do not block the Simulator-first
+iOS baseline, admission or release:
 
 1. physical-device suspension and resumption;
 2. finite-task expiration and cancellation under OS pressure;
@@ -47,6 +57,7 @@ background work.
 
 ## Lifecycle status
 
-The lifecycle provider and the earlier iOS providers are qualification
-candidates. They are not admitted, released, discoverable or installable. WIT
-to Wasm lowering and dynamic Component loading remain separate open gates.
+The qualified providers and the earlier iOS providers remain candidates. They
+are not admitted, released, discoverable or installable. WIT-to-Wasm lowering,
+dynamic Component loading and admission review remain product gates; physical
+device availability does not.

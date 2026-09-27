@@ -1,0 +1,57 @@
+{
+  "schema": "wasmc.ios-qualification-policy/v1",
+  "primary_target": {
+    "os": "ios",
+    "architecture": "aarch64",
+    "environment": "simulator",
+    "embedding": "native"
+  },
+  "release_eligibility_requires_physical_device": false,
+  "admission_eligibility_requires_physical_device": false,
+  "qualification_rule": "An exact Simulator receipt may qualify only the observed API and lifecycle semantics. Physical-device equivalence is never implied and is not a blocking gate.",
+  "required_baseline_capabilities": [
+    "app-lifecycle",
+    "finite-background-work",
+    "background-transfer",
+    "background-transfer-cancellation",
+    "background-audio-clock",
+    "app-owned-surface-control",
+    "authorization-planning",
+    "sandbox-storage",
+    "database",
+    "crypto",
+    "local-network",
+    "local-web"
+  ],
+  "optional_platform_capabilities": [
+    "bgtaskscheduler-delivery",
+    "background-transfer-automatic-process-relaunch",
+    "audible-physical-output",
+    "lock-screen-media-controls",
+    "audio-route-change-and-interruption",
+    "picture-in-picture-physical-pixels",
+    "physical-sensor-delivery"
+  ],
+  "non_blocking_candidate_pending_gates": [
+    "physical-device-audible-output",
+    "physical-device-background-download",
+    "physical-device-picture-in-picture-pixel-visibility",
+    "physical-device-qualification",
+    "physical-device-refresh-submit-inspect-cancel",
+    "physical-device-suspension-resumption"
+  ],
+  "unsupported_optional_routes": [
+    {
+      "api": "wasmc:system-deferred-work@0.0.1",
+      "target": "ios/aarch64/simulator/native",
+      "reason": "BGTaskScheduler registration succeeds but request submission returns BGTaskSchedulerErrorDomain Code=1",
+      "blocks_baseline": false
+    }
+  ],
+  "physical_device_receipts": {
+    "accepted_as_optional_additional_evidence": true,
+    "required_for_claiming_simulator_behavior": false,
+    "required_for_admission": false,
+    "required_for_release": false
+  }
+}
