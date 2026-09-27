@@ -66,13 +66,20 @@ function connectedEmulators() {
 }
 
 async function waitForBoot() {
-  adbCommand(["wait-for-device"]);
-  for (let attempt = 0; attempt < 120; attempt += 1) {
-    const booted = adbCommand(["shell", "getprop", "sys.boot_completed"]).trim();
-    if (booted === "1") return;
+  for (let attempt = 0; attempt < 180; attempt += 1) {
+    if (emulatorProcess?.exitCode !== null && emulatorProcess?.exitCode !== undefined) {
+      throw new Error(`Android emulator exited before boot with status ${emulatorProcess.exitCode}`);
+    }
+    const state = spawnSync(adb, ["get-state"], { cwd: root, encoding: "utf8", timeout: 5000 });
+    if (state.status === 0 && state.stdout.trim() === "device") {
+      const boot = spawnSync(adb, ["shell", "getprop", "sys.boot_completed"], {
+        cwd: root, encoding: "utf8", timeout: 5000,
+      });
+      if (boot.status === 0 && boot.stdout.trim() === "1") return;
+    }
     await wait(1000);
   }
-  throw new Error("Android emulator did not finish booting");
+  throw new Error("Android emulator did not finish booting within 180 seconds");
 }
 
 function descriptorFor(domain, adapterSha256) {
@@ -141,6 +148,30 @@ const encodeKeyboardBatch = (token, events) => {
 const encodeKeyboardDestroy = (token) => {
   const bytes = Buffer.alloc(9);
   bytes.writeUInt8(3, 0);
+  bytes.writeBigUInt64LE(token, 1);
+  return bytes;
+};
+const encodeTouchscreenCreate = (name, width, height) => {
+  const nameBytes = Buffer.from(name);
+  const bytes = Buffer.alloc(11 + nameBytes.length);
+  bytes.writeUInt8(5, 0);
+  bytes.writeUInt16LE(nameBytes.length, 1);
+  bytes.writeUInt32LE(width, 3);
+  bytes.writeUInt32LE(height, 7);
+  nameBytes.copy(bytes, 11);
+  return bytes;
+};
+const encodeTouchscreenTap = (token, x, y) => {
+  const bytes = Buffer.alloc(17);
+  bytes.writeUInt8(6, 0);
+  bytes.writeBigUInt64LE(token, 1);
+  bytes.writeUInt32LE(x, 9);
+  bytes.writeUInt32LE(y, 13);
+  return bytes;
+};
+const encodeTouchscreenDestroy = (token) => {
+  const bytes = Buffer.alloc(9);
+  bytes.writeUInt8(7, 0);
   bytes.writeBigUInt64LE(token, 1);
   return bytes;
 };
@@ -314,6 +345,25 @@ try {
     });
     return { call, close };
   };
+  const activeInputDevicesContain = (name) => {
+    const snapshot = adbCommand(["shell", "dumpsys", "input"]);
+    const eventHub = snapshot.slice(0, snapshot.indexOf("  Unattached video devices:"));
+    return eventHub.includes(`: ${name}\n`);
+  };
+  const waitForInputDevice = async (name, expected) => {
+    for (let attempt = 0; attempt < 150; attempt += 1) {
+      if (activeInputDevicesContain(name) === expected) return;
+      await wait(100);
+    }
+    const snapshot = adbCommand(["shell", "dumpsys", "input"]);
+    const lines = snapshot.split("\n");
+    const index = lines.findIndex((line) => line.includes(name));
+    const context = index < 0 ? "name absent" : lines.slice(Math.max(0, index - 4), index + 12).join("\n");
+    const processes = adbCommand(["shell", "ps", "-A"])
+      .split("\n").filter((line) => line.includes("wasmc-lib-boundary")).join("\n");
+    assert.equal(activeInputDevicesContain(name), expected,
+      `input device state did not converge: ${name}\n${context}\n${processes}`);
+  };
 
   adbCommand(["shell", "wm", "dismiss-keyguard"]);
   adbCommand(["shell", "input", "keyevent", "KEYCODE_WAKEUP"]);
@@ -378,7 +428,27 @@ try {
   await wait(1500);
   xml = invoke("ui", Buffer.from([1]), "uinput-before.xml").toString("utf8");
   const uinputSearch = boundsFor(xml, (tag) => tag.includes('resource-id="com.android.settings:id/search_bar_title"'));
-  invoke("input", encodeTap(uinputSearch.x, uinputSearch.y));
+  const keyboardKeys = [32, 23, 31, 25, 38, 30, 21];
+  const keyEvents = keyboardKeys.flatMap((code) => [[code, 1], [code, 0]]);
+  const uinputSession = openSession("uinput");
+  const malformedSessionOperation = await uinputSession.call(Buffer.from([255]));
+  assert.equal(malformedSessionOperation.status, -22);
+  const createdTouchscreen = await uinputSession.call(encodeTouchscreenCreate(
+    "wasmc-android-touchscreen", dimensions.width, dimensions.height,
+  ));
+  assert.equal(createdTouchscreen.status, 0);
+  const firstTouchscreen = createdTouchscreen.output.readBigUInt64LE();
+  const created = await uinputSession.call(encodeKeyboardCreate("wasmc-android-keyboard", keyboardKeys));
+  assert.equal(created.status, 0);
+  assert.equal(created.output.length, 8);
+  const firstKeyboard = created.output.readBigUInt64LE();
+  await waitForInputDevice("wasmc-android-touchscreen", true);
+  await waitForInputDevice("wasmc-android-keyboard", true);
+  const searchTap = await uinputSession.call(encodeTouchscreenTap(
+    firstTouchscreen, uinputSearch.x, uinputSearch.y,
+  ));
+  assert.equal(searchTap.status, 0);
+  assert.equal(searchTap.output.readBigUInt64LE(), 14n);
   focused = false;
   for (let attempt = 0; attempt < 20; attempt += 1) {
     await wait(250);
@@ -388,16 +458,6 @@ try {
   }
   assert.equal(focused, true, "direct UInput requires an authoritative focused target");
 
-  const keyboardKeys = [32, 23, 31, 25, 38, 30, 21];
-  const keyEvents = keyboardKeys.flatMap((code) => [[code, 1], [code, 0]]);
-  const uinputSession = openSession("uinput");
-  const malformedSessionOperation = await uinputSession.call(Buffer.from([255]));
-  assert.equal(malformedSessionOperation.status, -22);
-  const created = await uinputSession.call(encodeKeyboardCreate("wasmc-android-keyboard", keyboardKeys));
-  assert.equal(created.status, 0);
-  assert.equal(created.output.length, 8);
-  const firstKeyboard = created.output.readBigUInt64LE();
-  await wait(1000);
   const batchStarted = performance.now();
   const emitted = await uinputSession.call(encodeKeyboardBatch(firstKeyboard, keyEvents));
   const batchMilliseconds = performance.now() - batchStarted;
@@ -411,6 +471,25 @@ try {
     if (uinputText && xml.includes('text="Display size"')) break;
   }
   assert.equal(uinputText, true, "direct /dev/uinput events did not reach the semantic UI target");
+  const uinputDisplaySize = boundsFor(
+    xml,
+    (tag) => tag.includes('text="Display size"') && tag.includes('resource-id="android:id/title"'),
+  );
+  const resultTap = await uinputSession.call(encodeTouchscreenTap(
+    firstTouchscreen, uinputDisplaySize.x, uinputDisplaySize.y,
+  ));
+  assert.equal(resultTap.status, 0);
+  let uinputForeground = "";
+  let uinputResultXml = "";
+  for (let attempt = 0; attempt < 20; attempt += 1) {
+    await wait(250);
+    uinputForeground = invoke("ui", Buffer.from([2]), `uinput-foreground-${attempt}.txt`).toString("utf8");
+    uinputResultXml = invoke("ui", Buffer.from([1]), `uinput-result-${attempt}.xml`).toString("utf8");
+    if (/com\.android\.settings\/(?:com\.android\.settings)?\.SubSettings/.test(uinputForeground) &&
+        uinputResultXml.includes('text="Font size"') && uinputResultXml.includes('text="Display size"')) break;
+  }
+  assert.match(uinputForeground, /com\.android\.settings\/(?:com\.android\.settings)?\.SubSettings/);
+  assert.match(uinputResultXml, /text="Font size"/);
   const destroyed = await uinputSession.call(encodeKeyboardDestroy(firstKeyboard));
   assert.equal(destroyed.status, 0);
   const stale = await uinputSession.call(encodeKeyboardBatch(firstKeyboard, [[32, 1], [32, 0]]));
@@ -420,10 +499,49 @@ try {
   const secondKeyboard = recreated.output.readBigUInt64LE();
   assert.notEqual(secondKeyboard, firstKeyboard);
   assert.equal((await uinputSession.call(encodeKeyboardDestroy(secondKeyboard))).status, 0);
+  assert.equal((await uinputSession.call(encodeTouchscreenDestroy(firstTouchscreen))).status, 0);
+  const staleTouch = await uinputSession.call(encodeTouchscreenTap(
+    firstTouchscreen, uinputSearch.x, uinputSearch.y,
+  ));
+  assert.equal(staleTouch.status, -9);
+  const recreatedTouchscreen = await uinputSession.call(encodeTouchscreenCreate(
+    "wasmc-android-touchscreen", dimensions.width, dimensions.height,
+  ));
+  assert.equal(recreatedTouchscreen.status, 0);
+  const secondTouchscreen = recreatedTouchscreen.output.readBigUInt64LE();
+  assert.notEqual(secondTouchscreen, firstTouchscreen);
+  assert.equal((await uinputSession.call(encodeTouchscreenDestroy(secondTouchscreen))).status, 0);
   await uinputSession.close();
-  const uinputFrame = invoke("display", Buffer.from([1]), "uinput-typed.png");
+  await waitForInputDevice("wasmc-android-touchscreen", false);
+  await waitForInputDevice("wasmc-android-keyboard", false);
+  const uinputFrame = invoke("display", Buffer.from([1]), "uinput-result.png");
   const uinputFrameSha256 = hash(uinputFrame);
   assert.notEqual(uinputFrameSha256, beforeFrameSha256);
+
+  const cleanupSession = openSession("uinput");
+  const cleanupCreated = await cleanupSession.call(encodeKeyboardCreate(
+    "wasmc-eof-cleanup", keyboardKeys,
+  ));
+  assert.equal(cleanupCreated.status, 0);
+  await waitForInputDevice("wasmc-eof-cleanup", true);
+  await cleanupSession.close();
+  await waitForInputDevice("wasmc-eof-cleanup", false);
+
+  const isolatedA = openSession("uinput");
+  const isolatedB = openSession("uinput");
+  const isolatedACreated = await isolatedA.call(encodeKeyboardCreate("wasmc-isolated-a", keyboardKeys));
+  const isolatedBCreated = await isolatedB.call(encodeKeyboardCreate("wasmc-isolated-b", keyboardKeys));
+  assert.equal(isolatedACreated.status, 0);
+  assert.equal(isolatedBCreated.status, 0);
+  await waitForInputDevice("wasmc-isolated-a", true);
+  await waitForInputDevice("wasmc-isolated-b", true);
+  await isolatedA.close();
+  await waitForInputDevice("wasmc-isolated-a", false);
+  assert.equal(activeInputDevicesContain("wasmc-isolated-b"), true);
+  const isolatedBToken = isolatedBCreated.output.readBigUInt64LE();
+  assert.equal((await isolatedB.call(encodeKeyboardDestroy(isolatedBToken))).status, 0);
+  await isolatedB.close();
+  await waitForInputDevice("wasmc-isolated-b", false);
 
   assert.equal(hostIdentities.size, 1, "all domains must execute through one fixed Android Host binary");
   const malformedInput = path.join(target, "malformed.bin");
@@ -487,7 +605,7 @@ try {
 
   const report = {
     accepted: true,
-    schema: "wasmc.android-agent-computer-qualification/v2",
+    schema: "wasmc.android-agent-computer-qualification/v3",
     avd,
     android_release: adbCommand(["shell", "getprop", "ro.build.version.release"]).trim(),
     android_api: Number(adbCommand(["shell", "getprop", "ro.build.version.sdk"]).trim()),
@@ -516,6 +634,16 @@ try {
       frame_sha256: uinputFrameSha256,
       generation_checked_stale_resource_rejection: true,
       resource_recreation: true,
+      direct_touchscreen: true,
+      touchscreen_kernel_events_per_tap: Number(resultTap.output.readBigUInt64LE()),
+      touchscreen_generation_checked_stale_resource_rejection: true,
+      touchscreen_resource_recreation: true,
+      full_control_chain: "uinput-touch-uinput-keyboard-uinput-touch",
+      foreground_postcondition: "com.android.settings/.SubSettings",
+      result_semantics: ["Font size", "Display size"],
+      session_eof_cleanup: true,
+      parallel_session_isolation: true,
+      performance_gate: false,
     },
     malformed_operation_rejection: true,
     adapter_identity_rejection: true,

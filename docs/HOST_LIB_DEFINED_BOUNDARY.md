@@ -291,6 +291,20 @@ text `display`. Separate negative controls reject input and output limit
 violations, a missing adapter export, and an adapter outside the descriptor's
 exact sibling directory.
 
+The v3 qualification extends that same platform-neutral virtual-input Lib with
+a direct touchscreen resource. One persistent session now executes the full
+control chain—UInput touch of the semantically queried search box, UInput
+keyboard entry of `display`, and UInput touch of the semantically queried
+Display size result—then confirms the foreground Activity, semantic result and
+changed frame. Generation checks cover both keyboard and touchscreen.
+
+Session EOF is also a lifecycle boundary: the adapter destructor removes an
+undestroyed virtual device. Two concurrent Host sessions prove process-local
+resource isolation by closing one device while the other remains active. The
+authoritative removal check uses Android EventHub's active-device section;
+`Input Reader State` may retain an older asynchronous snapshot after kernel
+removal and is not used as resource authority.
+
 This closes the emulator-level query/control/confirmation and direct-UInput
 mechanism slices, not the whole product lifecycle. The adapters are still
 native descriptor candidates rather than WFC-lowered Wasm components.
@@ -307,6 +321,11 @@ The direct-UInput and deeper Host-mechanism successor receipt is
 bound to implementation commit
 `aae36dfc69f0eb05a359737e30000cf793de002e`. Its single observed batch latency
 is diagnostic only and is explicitly not a performance gate.
+
+The direct-touchscreen and session-lifecycle successor receipt is
+`admission/host-lib-defined-boundary-v1/android-arm64-agent-computer-v3.json`.
+Its observed keyboard batch latency is also diagnostic only. The fixed Android
+Host digest remains unchanged; no touchscreen or resource API was added to it.
 
 The mapped-window, epoll-readiness, kernel-splice and asynchronous-readiness
 successors are qualified on local Linux aarch64 and independent GitHub Ubuntu

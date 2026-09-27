@@ -12,8 +12,9 @@ evidence and is intentionally not updated by this successor workstream.
 
 The profile also includes a platform-neutral virtual-input API backed by a
 Lib-owned direct `/dev/uinput` adapter. Emulator qualification covers a real
-virtual keyboard, persistent session recovery, generation-checked resource
-reuse, and semantic UI confirmation without changing the Host binary.
+virtual keyboard and touchscreen, persistent session recovery,
+generation-checked resource reuse, session-EOF cleanup, concurrent-session
+isolation, and semantic UI/frame confirmation without changing the Host binary.
 
 This profile is not admitted or released. WIT-to-Wasm lowering and
 physical-device qualification remain open.

@@ -2,9 +2,10 @@
 
 Unreleased Android physical binding for the platform-neutral
 `wasmc:system-virtual-input@0.0.1` WIT API. The adapter creates a Linux input
-device through Android's `/dev/uinput`, retains its descriptor behind a
-generation-checked resource token, emits key batches with one kernel write and
-destroys the device explicitly.
+keyboard and direct touchscreen through Android's `/dev/uinput`, retains their
+descriptors behind generation-checked resource tokens, emits each key batch or
+tap with one kernel write and destroys devices explicitly. The same adapter
+process also destroys every retained device when its Host session reaches EOF.
 
 The fixed Android Host knows none of the device name, ioctl, event, key or
 resource semantics. Persistent Host sessions only transport bounded framed

@@ -11,7 +11,12 @@ interface virtual-input {
     emit-keys: func(events: list<key-event>) -> result<u64, s32>;
   }
 
+  resource touchscreen {
+    tap: func(x: u32, y: u32) -> result<u64, s32>;
+  }
+
   create-keyboard: func(name: string, keys: list<u16>) -> result<keyboard, s32>;
+  create-touchscreen: func(name: string, width: u32, height: u32) -> result<touchscreen, s32>;
 }
 
 world system-virtual-input {

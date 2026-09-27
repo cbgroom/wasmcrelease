@@ -106,9 +106,11 @@ standard display, semantic UI, command input and virtual-input APIs. It queries 
 authoritative focused input node, controls the UI, then confirms the effect in
 both semantic UI and distinct real frames. The Host itself has zero domain APIs.
 The virtual-input Lib additionally creates a real Android `/dev/uinput`
-keyboard through a persistent Host session, emits one event batch, rejects a
-stale generation after destruction, and recreates the resource without any
-Host source or binary change. The same qualification rejects descriptor input
+keyboard and direct touchscreen through a persistent Host session. It performs
+semantic query -> touch -> keyboard -> touch -> UI/frame confirmation, rejects
+stale generations after destruction, and recreates both resource types without
+any Host source or binary change. Session EOF cleanup and two-process resource
+isolation are also qualified. The same qualification rejects descriptor input
 and output overruns, missing exports, and non-sibling adapters. This is emulator
 evidence only; WIT-to-Wasm lowering, physical-device qualification, admission
 and release remain pending.
