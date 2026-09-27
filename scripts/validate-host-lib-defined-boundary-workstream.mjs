@@ -173,6 +173,45 @@ assert.equal(iosAppV5Receipt.evidence.contacts_reset_control_use_attempted, fals
 assert.equal(iosAppV5Receipt.evidence.real_user_prompt_flow, false);
 assert.equal(iosAppV5Receipt.evidence.wasm_lowering, false);
 
+const iosAppV6Receipt = JSON.parse(fs.readFileSync(
+  "admission/host-lib-defined-boundary-v1/ios-arm64-app-capability-v6.json", "utf8",
+));
+assert.equal(iosAppV6Receipt.schema, "wasmc.host-lib-defined-boundary-ios-app-qualification/v6");
+assert.equal(iosAppV6Receipt.status, "ios-26.5-arm64-simulator-app-internal-v6-qualified-not-admitted-not-released");
+assert.equal(iosAppV6Receipt.qualified, true);
+assert.equal(iosAppV6Receipt.admitted, false);
+assert.equal(iosAppV6Receipt.released, false);
+assert.equal(iosAppV6Receipt.discoverable, false);
+assert.equal(iosAppV6Receipt.installable, false);
+execFileSync("git", ["cat-file", "-e", `${iosAppV6Receipt.implementation_commit}^{commit}`]);
+execFileSync("git", ["merge-base", "--is-ancestor", iosAppV6Receipt.implementation_commit, "HEAD"]);
+for (const [relative, expected] of Object.entries(iosAppV6Receipt.source)) {
+  assert.equal(digestAt(iosAppV6Receipt.implementation_commit, relative), expected,
+    `${relative}: retained iOS app v6 qualification source drift`);
+}
+assert.equal(iosAppV6Receipt.evidence.status, "PASS");
+assert.equal(iosAppV6Receipt.evidence.fixed_host_domain_apis, 0);
+assert.equal(iosAppV6Receipt.evidence.fixed_host_byte_identical_to_v1_v2_v3_v4_and_v5, true);
+assert.equal(iosAppV6Receipt.evidence.fixed_host_sha256, iosAppReceipt.source[
+  "host/tests/ios-app-capability/Host/FixedHost.swift"
+]);
+assert.equal(iosAppV6Receipt.evidence.full_profile_statically_registered_lib_providers, 13);
+assert.equal(iosAppV6Receipt.evidence.authorization_flow_profile_lib_providers, 3);
+assert.equal(iosAppV6Receipt.evidence.real_localized_system_prompt_driven_by_xcuitest, true);
+assert.equal(iosAppV6Receipt.evidence.allow_request_attempt_count, 1);
+assert.equal(iosAppV6Receipt.evidence.allow_resulting_state, "authorized");
+assert.equal(iosAppV6Receipt.evidence.allow_resulting_plan, "no-request");
+assert.equal(iosAppV6Receipt.evidence.allow_contacts_create_fetch_delete_roundtrip, true);
+assert.equal(iosAppV6Receipt.evidence.deny_request_attempt_count, 1);
+assert.equal(iosAppV6Receipt.evidence.deny_resulting_state, "denied");
+assert.equal(iosAppV6Receipt.evidence.deny_resulting_plan, "open-settings");
+assert.equal(iosAppV6Receipt.evidence.deny_contacts_use_attempted, false);
+assert.equal(iosAppV6Receipt.evidence.post_authorization_active_state_resumption, true);
+assert.equal(iosAppV6Receipt.evidence.webkit_nonpersistent_data_store, true);
+assert.equal(iosAppV6Receipt.evidence.settings_return_reconciliation, false);
+assert.equal(iosAppV6Receipt.evidence.physical_device_qualification, false);
+assert.equal(iosAppV6Receipt.evidence.wasm_lowering, false);
+
 const frozenIdentityFiles = [
   "release.json",
   "channels/prod.json",
@@ -953,6 +992,7 @@ console.log(JSON.stringify({
   retained_ios_arm64_app_capability_v3_qualification: iosAppV3Receipt.implementation_commit,
   retained_ios_arm64_app_capability_v4_qualification: iosAppV4Receipt.implementation_commit,
   retained_ios_arm64_app_capability_v5_qualification: iosAppV5Receipt.implementation_commit,
+  retained_ios_arm64_app_capability_v6_qualification: iosAppV6Receipt.implementation_commit,
   old_candidate_rejects_product_drift: true,
   lifecycle: "architecture-workstream-not-admitted-not-released",
 }));

@@ -460,8 +460,9 @@ Continue and Share All, records one attempt, observes `authorized`, and performs
 the Contacts roundtrip. The deny path records one attempt, observes `denied`,
 plans `open-settings`, and proves the Contacts Lib does not access data. It also
 delays capability execution until the App has returned to active after the
-authorization callback. The fixed Host is unchanged. Its v6 receipt is pending
-exact source-bound qualification.
+authorization callback. The fixed Host is unchanged. The retained v6 receipt is
+`admission/host-lib-defined-boundary-v1/ios-arm64-app-capability-v6.json`, bound
+to implementation commit `9b87e28d250e5a51dce72a3f486d0502c6ddf278`.
 
 The mapped-window, epoll-readiness, kernel-splice and asynchronous-readiness
 successors are qualified on local Linux aarch64 and independent GitHub Ubuntu
