@@ -73,7 +73,10 @@ final class SurfaceControlProvider {
         try JSONSerialization.data(withJSONObject: [
             "surface_count": 5,
             "physical_input_injection": false,
-            "capabilities": ["snapshot", "virtual-activate", "handoff", "compact-expand"],
+            "capabilities": [
+                "snapshot", "virtual-activate", "confirmed-handoff",
+                "compact-expand", "edge-dock",
+            ],
         ], options: [.sortedKeys])
     }
 }

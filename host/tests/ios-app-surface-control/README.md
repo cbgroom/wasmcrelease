@@ -7,6 +7,11 @@ surface requests human intervention, expands without recreating its View,
 accepts user input, contracts to its original position and resumes Agent work;
 the other four surfaces continue progressing during the handoff.
 
+The v2 interaction keeps Agent-owned cards inert, requires a read-only preview
+followed by an explicit Confirm Takeover action before ownership changes, and
+can collapse the whole task shelf into one edge dock. Agent work continues while
+the shelf is docked, so idle tasks do not occupy the user's working area.
+
 The WIT file is the proposed small public capability shape. The Swift code is a
 native prototype adapter and is not an admitted or released Lib. The UI test
 uses XCUITest only to represent the real human handoff; Agent actions never use

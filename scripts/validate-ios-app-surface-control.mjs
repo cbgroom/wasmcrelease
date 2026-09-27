@@ -29,6 +29,8 @@ assert.match(provider, /sendActions\(for: \.primaryActionTriggered\)/);
 assert.match(controller, /background_surfaces_progressed_during_handoff/);
 assert.match(controller, /blocked_agent_actions_during_handoff/);
 assert.match(controller, /same_surface_instance_preserved/);
+assert.match(controller, /takeover_confirmation_required/);
+assert.match(controller, /surfaces_progressed_while_docked/);
 assert.equal((controller.match(/\("task-[1-5]"/g) ?? []).length, 5);
 execFileSync(process.execPath, ["--check", "scripts/test-ios-app-surface-control.mjs"]);
 

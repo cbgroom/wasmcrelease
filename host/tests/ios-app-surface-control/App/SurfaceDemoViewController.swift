@@ -4,6 +4,8 @@ final class SurfaceDemoViewController: UIViewController {
     let provider = SurfaceControlProvider()
     private let titleLabel = UILabel()
     private let subtitleLabel = UILabel()
+    private let collapseButton = UIButton(type: .system)
+    private let taskDock = UIButton(type: .system)
     private var timer: Timer?
     private var cards: [TaskSurfaceCard] = []
     private var compactFrames: [String: CGRect] = [:]
@@ -12,6 +14,10 @@ final class SurfaceDemoViewController: UIViewController {
     private var humanCountAtHandoff = 0
     private var humanText = ""
     private var tick = 0
+    private var dockCounts: [String: Int] = [:]
+    private var dockCycleCompleted = false
+    private var surfacesProgressedWhileDocked = false
+    private var takeoverConfirmationShown = false
 
     var onQualificationComplete: (([String: Any]) -> Void)?
 
@@ -27,8 +33,28 @@ final class SurfaceDemoViewController: UIViewController {
         subtitleLabel.textColor = UIColor.white.withAlphaComponent(0.62)
         subtitleLabel.font = .systemFont(ofSize: 13, weight: .medium)
 
+        collapseButton.setTitle("收起", for: .normal)
+        collapseButton.setTitleColor(.white, for: .normal)
+        collapseButton.backgroundColor = UIColor.white.withAlphaComponent(0.12)
+        collapseButton.layer.cornerRadius = 14
+        collapseButton.accessibilityIdentifier = "surface-shelf-collapse"
+        collapseButton.addAction(UIAction { [weak self] _ in self?.collapseToDock() }, for: .touchUpInside)
+
+        taskDock.setTitle("5 个任务 · 1 待接管", for: .normal)
+        taskDock.setTitleColor(.white, for: .normal)
+        taskDock.backgroundColor = UIColor(red: 0.24, green: 0.27, blue: 0.38, alpha: 0.96)
+        taskDock.layer.cornerRadius = 24
+        taskDock.layer.shadowColor = UIColor.black.cgColor
+        taskDock.layer.shadowOpacity = 0.28
+        taskDock.layer.shadowRadius = 12
+        taskDock.accessibilityIdentifier = "surface-shelf-dock"
+        taskDock.isHidden = true
+        taskDock.addAction(UIAction { [weak self] _ in self?.restoreFromDock() }, for: .touchUpInside)
+
         view.addSubview(titleLabel)
         view.addSubview(subtitleLabel)
+        view.addSubview(collapseButton)
+        view.addSubview(taskDock)
 
         let definitions: [(String, String, String, UIColor, Bool)] = [
             ("task-1", "检索资料", "native", UIColor(red: 0.25, green: 0.35, blue: 0.88, alpha: 1), false),
@@ -46,9 +72,17 @@ final class SurfaceDemoViewController: UIViewController {
                 color: definition.3,
                 needsHuman: definition.4
             )
-            card.onExpand = { [weak self, weak card] in
+            card.onRequestTakeover = { [weak self, weak card] in
                 guard let self, let card else { return }
-                self.beginHumanHandoff(card)
+                self.presentTakeoverPreview(card)
+            }
+            card.onConfirmTakeover = { [weak self, weak card] in
+                guard let self, let card else { return }
+                self.confirmHumanHandoff(card)
+            }
+            card.onCancelTakeover = { [weak self, weak card] in
+                guard let self, let card else { return }
+                self.dismissPresentedCard(card)
             }
             card.onComplete = { [weak self, weak card] text in
                 guard let self, let card else { return }
@@ -66,8 +100,10 @@ final class SurfaceDemoViewController: UIViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        titleLabel.frame = CGRect(x: 20, y: view.safeAreaInsets.top + 10, width: view.bounds.width - 40, height: 34)
+        titleLabel.frame = CGRect(x: 20, y: view.safeAreaInsets.top + 10, width: view.bounds.width - 105, height: 34)
         subtitleLabel.frame = CGRect(x: 20, y: titleLabel.frame.maxY + 2, width: view.bounds.width - 40, height: 22)
+        collapseButton.frame = CGRect(x: view.bounds.width - 78, y: view.safeAreaInsets.top + 10, width: 62, height: 30)
+        taskDock.frame = CGRect(x: view.bounds.width - 188, y: view.safeAreaInsets.top + 66, width: 172, height: 48)
 
         let gap: CGFloat = 12
         let side: CGFloat = 16
@@ -107,22 +143,70 @@ final class SurfaceDemoViewController: UIViewController {
         _ = provider.virtualActivate(surfaceID: card.surfaceID)
     }
 
-    private func beginHumanHandoff(_ card: TaskSurfaceCard) {
+    private func collapseToDock() {
         guard expandedCard == nil else { return }
-        backgroundCountsAtHandoff = Dictionary(uniqueKeysWithValues: cards
-            .filter { $0 !== card }
+        dockCounts = Dictionary(uniqueKeysWithValues: cards
+            .filter { $0.owner == .agent }
             .map { ($0.surfaceID, $0.agentActions) })
-        humanCountAtHandoff = card.agentActions
-        card.setOwner(.user)
-        card.setExpanded(true)
+        UIView.animate(withDuration: 0.25) {
+            self.cards.forEach { $0.alpha = 0 }
+        } completion: { _ in
+            self.cards.forEach { $0.isHidden = true }
+            self.collapseButton.isHidden = true
+            self.taskDock.alpha = 0
+            self.taskDock.isHidden = false
+            UIView.animate(withDuration: 0.2) { self.taskDock.alpha = 1 }
+        }
+    }
+
+    private func restoreFromDock() {
+        surfacesProgressedWhileDocked = cards.filter { $0.owner == .agent }.allSatisfy {
+            $0.agentActions > (dockCounts[$0.surfaceID] ?? -1)
+        }
+        dockCycleCompleted = true
+        taskDock.isHidden = true
+        collapseButton.isHidden = false
+        cards.forEach { card in card.isHidden = false; card.alpha = 0 }
+        UIView.animate(withDuration: 0.25) { self.cards.forEach { $0.alpha = 1 } }
+    }
+
+    private func presentTakeoverPreview(_ card: TaskSurfaceCard) {
+        guard expandedCard == nil else { return }
+        takeoverConfirmationShown = true
+        card.setTakeoverPreview(true)
         expandedCard = card
+        collapseButton.isHidden = true
         view.bringSubviewToFront(card)
         UIView.animate(withDuration: 0.42, delay: 0, usingSpringWithDamping: 0.84,
                        initialSpringVelocity: 0.35) {
             card.frame = self.expandedFrame()
             card.layer.cornerRadius = 30
-        } completion: { _ in
+        }
+    }
+
+    private func confirmHumanHandoff(_ card: TaskSurfaceCard) {
+        guard expandedCard === card, card.owner == .needsHuman else { return }
+        backgroundCountsAtHandoff = Dictionary(uniqueKeysWithValues: cards
+            .filter { $0 !== card }
+            .map { ($0.surfaceID, $0.agentActions) })
+        humanCountAtHandoff = card.agentActions
+        card.setOwner(.user)
+        card.setHumanMode(true)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             card.humanInput.becomeFirstResponder()
+        }
+    }
+
+    private func dismissPresentedCard(_ card: TaskSurfaceCard) {
+        guard expandedCard === card else { return }
+        let target = compactFrames[card.surfaceID] ?? card.frame
+        UIView.animate(withDuration: 0.3) {
+            card.frame = target
+            card.layer.cornerRadius = 22
+        } completion: { _ in
+            card.setTakeoverPreview(false)
+            self.expandedCard = nil
+            self.collapseButton.isHidden = false
         }
     }
 
@@ -136,8 +220,9 @@ final class SurfaceDemoViewController: UIViewController {
             card.frame = target
             card.layer.cornerRadius = 22
         } completion: { _ in
-            card.setExpanded(false)
+            card.setHumanMode(false)
             self.expandedCard = nil
+            self.collapseButton.isHidden = false
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
                 self.finishQualification(humanCard: card)
             }
@@ -149,8 +234,10 @@ final class SurfaceDemoViewController: UIViewController {
             $0.agentActions > (backgroundCountsAtHandoff[$0.surfaceID] ?? -1)
         }
         let report: [String: Any] = [
-            "schema": "wasmc.ios-app-surface-control-qualification/v1",
-            "accepted": backgroundProgress && humanCard.agentActions > humanCountAtHandoff && !humanText.isEmpty,
+            "schema": "wasmc.ios-app-surface-control-qualification/v2",
+            "accepted": backgroundProgress && humanCard.agentActions > humanCountAtHandoff &&
+                !humanText.isEmpty && dockCycleCompleted && surfacesProgressedWhileDocked &&
+                takeoverConfirmationShown,
             "fixed_host_domain_apis": 0,
             "surface_count": cards.count,
             "agent_uses_physical_input": provider.agentUsesPhysicalInput,
@@ -161,6 +248,10 @@ final class SurfaceDemoViewController: UIViewController {
             "background_surfaces_progressed_during_handoff": backgroundProgress,
             "agent_resumed_after_handoff": humanCard.agentActions > humanCountAtHandoff,
             "same_surface_instance_preserved": cards.contains { $0 === humanCard },
+            "agent_surfaces_locked_against_direct_user_activation": true,
+            "takeover_confirmation_required": takeoverConfirmationShown,
+            "dock_cycle_completed": dockCycleCompleted,
+            "surfaces_progressed_while_docked": surfacesProgressedWhileDocked,
             "surface_snapshots": provider.snapshot(),
             "physical_device": false,
             "admitted": false,

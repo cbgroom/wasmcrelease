@@ -5,6 +5,8 @@ final class TaskSurfaceCard: UIView {
     let kind: String
     let agentActionButton = UIButton(type: .system)
     let expandButton = UIButton(type: .system)
+    let confirmTakeoverButton = UIButton(type: .system)
+    let cancelTakeoverButton = UIButton(type: .system)
     let humanInput = UITextField()
     let completeButton = UIButton(type: .system)
 
@@ -13,12 +15,15 @@ final class TaskSurfaceCard: UIView {
     private let countLabel = UILabel()
     private let progress = UIProgressView(progressViewStyle: .default)
     private let cursor = UIView()
+    private let confirmationLabel = UILabel()
 
     private(set) var owner: SurfaceOwner = .agent
     private(set) var generation: UInt64 = 1
     private(set) var agentActions = 0
 
-    var onExpand: (() -> Void)?
+    var onRequestTakeover: (() -> Void)?
+    var onConfirmTakeover: (() -> Void)?
+    var onCancelTakeover: (() -> Void)?
     var onComplete: ((String) -> Void)?
 
     init(id: String, title: String, kind: String, color: UIColor, needsHuman: Bool) {
@@ -63,14 +68,42 @@ final class TaskSurfaceCard: UIView {
             self?.applyAgentAction()
         }, for: .primaryActionTriggered)
 
-        expandButton.setTitle(needsHuman ? "需要人工介入" : "Agent 自动执行", for: .normal)
+        expandButton.setTitle(needsHuman ? "查看接管" : "Agent 已锁定", for: .normal)
         expandButton.setTitleColor(.white, for: .normal)
         expandButton.titleLabel?.font = .systemFont(ofSize: 12, weight: .semibold)
         expandButton.backgroundColor = UIColor.white.withAlphaComponent(needsHuman ? 0.24 : 0.12)
         expandButton.layer.cornerRadius = 10
         expandButton.isUserInteractionEnabled = needsHuman
         expandButton.accessibilityIdentifier = "surface-\(id)-expand"
-        expandButton.addAction(UIAction { [weak self] _ in self?.onExpand?() }, for: .touchUpInside)
+        expandButton.addAction(UIAction { [weak self] _ in self?.onRequestTakeover?() }, for: .touchUpInside)
+
+        confirmationLabel.text = "此任务正在等待人工判断。确认后 Agent 才会暂停该窗口。"
+        confirmationLabel.textColor = .white
+        confirmationLabel.font = .systemFont(ofSize: 15, weight: .medium)
+        confirmationLabel.numberOfLines = 0
+        confirmationLabel.textAlignment = .center
+        confirmationLabel.isHidden = true
+
+        confirmTakeoverButton.setTitle("确认接管", for: .normal)
+        confirmTakeoverButton.setTitleColor(.black, for: .normal)
+        confirmTakeoverButton.backgroundColor = .white
+        confirmTakeoverButton.layer.cornerRadius = 13
+        confirmTakeoverButton.titleLabel?.font = .systemFont(ofSize: 15, weight: .bold)
+        confirmTakeoverButton.accessibilityIdentifier = "surface-\(id)-confirm-takeover"
+        confirmTakeoverButton.isHidden = true
+        confirmTakeoverButton.addAction(UIAction { [weak self] _ in
+            self?.onConfirmTakeover?()
+        }, for: .touchUpInside)
+
+        cancelTakeoverButton.setTitle("取消", for: .normal)
+        cancelTakeoverButton.setTitleColor(.white, for: .normal)
+        cancelTakeoverButton.backgroundColor = UIColor.white.withAlphaComponent(0.16)
+        cancelTakeoverButton.layer.cornerRadius = 13
+        cancelTakeoverButton.accessibilityIdentifier = "surface-\(id)-cancel-takeover"
+        cancelTakeoverButton.isHidden = true
+        cancelTakeoverButton.addAction(UIAction { [weak self] _ in
+            self?.onCancelTakeover?()
+        }, for: .touchUpInside)
 
         humanInput.placeholder = "输入确认内容"
         humanInput.backgroundColor = UIColor.white.withAlphaComponent(0.94)
@@ -94,7 +127,9 @@ final class TaskSurfaceCard: UIView {
         }, for: .touchUpInside)
 
         for child in [titleLabel, ownerLabel, countLabel, progress, cursor,
-                      agentActionButton, expandButton, humanInput, completeButton] {
+                      agentActionButton, expandButton, confirmationLabel,
+                      confirmTakeoverButton, cancelTakeoverButton,
+                      humanInput, completeButton] {
             child.translatesAutoresizingMaskIntoConstraints = false
             addSubview(child)
         }
@@ -117,6 +152,17 @@ final class TaskSurfaceCard: UIView {
             expandButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -13),
             expandButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -12),
             expandButton.heightAnchor.constraint(equalToConstant: 28),
+            confirmationLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 28),
+            confirmationLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -28),
+            confirmationLabel.topAnchor.constraint(equalTo: topAnchor, constant: 145),
+            confirmTakeoverButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 24),
+            confirmTakeoverButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -24),
+            confirmTakeoverButton.topAnchor.constraint(equalTo: confirmationLabel.bottomAnchor, constant: 20),
+            confirmTakeoverButton.heightAnchor.constraint(equalToConstant: 48),
+            cancelTakeoverButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 24),
+            cancelTakeoverButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -24),
+            cancelTakeoverButton.topAnchor.constraint(equalTo: confirmTakeoverButton.bottomAnchor, constant: 10),
+            cancelTakeoverButton.heightAnchor.constraint(equalToConstant: 42),
             humanInput.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 24),
             humanInput.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -24),
             humanInput.topAnchor.constraint(equalTo: topAnchor, constant: 150),
@@ -152,13 +198,29 @@ final class TaskSurfaceCard: UIView {
         updateLabels()
     }
 
-    func setExpanded(_ expanded: Bool) {
-        humanInput.isHidden = !expanded
-        completeButton.isHidden = !expanded
-        expandButton.isHidden = expanded
-        titleLabel.font = .systemFont(ofSize: expanded ? 28 : 17, weight: .bold)
-        countLabel.font = .monospacedDigitSystemFont(ofSize: expanded ? 44 : 26, weight: .bold)
-        accessibilityIdentifier = expanded ? "surface-\(surfaceID)-expanded" : "surface-\(surfaceID)"
+    func setTakeoverPreview(_ presented: Bool) {
+        confirmationLabel.isHidden = !presented
+        confirmTakeoverButton.isHidden = !presented
+        cancelTakeoverButton.isHidden = !presented
+        humanInput.isHidden = true
+        completeButton.isHidden = true
+        setPresented(presented)
+    }
+
+    func setHumanMode(_ presented: Bool) {
+        confirmationLabel.isHidden = true
+        confirmTakeoverButton.isHidden = true
+        cancelTakeoverButton.isHidden = true
+        humanInput.isHidden = !presented
+        completeButton.isHidden = !presented
+        setPresented(presented)
+    }
+
+    private func setPresented(_ presented: Bool) {
+        expandButton.isHidden = presented
+        titleLabel.font = .systemFont(ofSize: presented ? 28 : 17, weight: .bold)
+        countLabel.font = .monospacedDigitSystemFont(ofSize: presented ? 44 : 26, weight: .bold)
+        accessibilityIdentifier = presented ? "surface-\(surfaceID)-expanded" : "surface-\(surfaceID)"
     }
 
     private func updateLabels() {
