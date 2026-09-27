@@ -1,0 +1,63 @@
+{
+  "schema": "wasmc.host-lib-defined-boundary-local-qualification/v1",
+  "status": "local-node-qualified-not-admitted-not-released",
+  "date": "2026-09-27",
+  "implementation_commit": "46f88f0fb1040b43cda1a9dbafeefe420b73647a",
+  "base_commit": "e6d50dece1ec0723ced1291ec6d98c6705314876",
+  "executor": {
+    "path": "host/runtime/lib-boundary/reference.mjs",
+    "sha256": "e133672195a9641e8c813f6b07e040c5817249a055f44ebeadd9c29404cf03ef",
+    "domain_api_count": 0
+  },
+  "system_libs": [
+    {
+      "identity": "wasmc:system-file-prototype@0.0.1-dev.1",
+      "root": "libsrc/wasmc-system-file-prototype",
+      "wit_sha256": "c3560a222711036dadf4c466d267c0687de0d1ed9e771b9f8583cc251ded2458",
+      "descriptor_sha256": "251066248405b6754f9343954b4e7f87e8d88f60d3fc4ef33691983bd2b142ed",
+      "adapter_sha256": "def205e9304dbbb528d0ba6c2d8a13eae4a93dc3ffc5b8972dc4514f330e0d15",
+      "behavior": "real-local-file-read"
+    },
+    {
+      "identity": "wasmc:system-process-prototype@0.0.1-dev.1",
+      "root": "libsrc/wasmc-system-process-prototype",
+      "wit_sha256": "e00c9d5fe42f09a91824912bb19dd4672fefd550a803921149186d4f35e6a53c",
+      "descriptor_sha256": "926473ffd1bab0933beff12799c1c7980d895188022557697391eb9c20f63331",
+      "adapter_sha256": "3964cd62b9fecc664450ff953a951d54c853a9d9b9087cb27decda514bad5f8f",
+      "behavior": "real-child-process"
+    },
+    {
+      "identity": "wasmc:system-network-prototype@0.0.1-dev.1",
+      "root": "libsrc/wasmc-system-network-prototype",
+      "wit_sha256": "f84af66bc777029e554c761eb59daa7706a7c90d0d12e6c3e8a6df6274e6c3fc",
+      "descriptor_sha256": "1a6d9d1ee76dbd2ad6f9b31d0b5abbf6583ce8eeb9b70b9c0fdd085c55a8d926",
+      "adapter_sha256": "e1861dd9770253f1d293ef7cf60f0e38484a89743c15cd2dd18ba72802521a14",
+      "behavior": "real-loopback-network"
+    }
+  ],
+  "evidence": {
+    "script": "scripts/test-lib-defined-boundary-runtime.mjs",
+    "status": "PASS",
+    "unchanged_executor_domains": 3,
+    "completion_claim_once": true,
+    "pinned_window_release_rejected": true,
+    "cancelled_late_delivery_suppressed": true,
+    "adapter_identity_rejection": true,
+    "final_counts": { "resources": 0, "windows": 0, "operations": 0 }
+  },
+  "integrity": {
+    "frozen_v0_0_15_identity_files": 3,
+    "old_candidate_rejects_product_drift": true
+  },
+  "remaining_gates": [
+    "descriptor-schema-review",
+    "Wasm-WIT-lowering",
+    "native-Rust-boundary-executor",
+    "cross-platform-qualification",
+    "admission-review",
+    "catalog-and-LibSearch",
+    "immutable-release"
+  ],
+  "admitted": false,
+  "released": false
+}

@@ -125,3 +125,7 @@ rejection and zero remaining resources/operations/windows.
 This is Node-local evidence only. Native Rust descriptor execution, Wasm/WIT
 lowering, cancellation race qualification, cross-platform evidence, admission,
 catalog publication and immutable release remain pending.
+
+The exact local receipt is
+`admission/host-lib-defined-boundary-v1/local-qualification.json`, bound to
+implementation commit `46f88f0fb1040b43cda1a9dbafeefe420b73647a`.
