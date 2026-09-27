@@ -601,6 +601,43 @@ assert.equal(androidReceipt.evidence.direct_android_uinput, false);
 assert.equal(androidReceipt.evidence.physical_device_qualification, false);
 assert.equal(new Set(Object.values(androidReceipt.evidence.real_frame)).size, 5);
 
+const androidV2Receipt = JSON.parse(fs.readFileSync("admission/host-lib-defined-boundary-v1/android-arm64-agent-computer-v2.json", "utf8"));
+assert.equal(androidV2Receipt.schema, "wasmc.host-lib-defined-boundary-android-qualification/v2");
+assert.equal(androidV2Receipt.status, "android-16-arm64-emulator-direct-uinput-and-host-boundary-qualified-not-admitted-not-released");
+assert.equal(androidV2Receipt.environment.architecture, "arm64-v8a");
+assert.equal(androidV2Receipt.environment.android_api, 36);
+assert.equal(androidV2Receipt.admitted, false);
+assert.equal(androidV2Receipt.released, false);
+execFileSync("git", ["cat-file", "-e", `${androidV2Receipt.implementation_commit}^{commit}`]);
+execFileSync("git", ["merge-base", "--is-ancestor", androidV2Receipt.implementation_commit, "HEAD"]);
+for (const [relative, expected] of Object.entries(androidV2Receipt.source)) {
+  assert.equal(
+    digestAt(androidV2Receipt.implementation_commit, relative),
+    expected,
+    `${relative}: retained Android v2 qualification source drift`,
+  );
+}
+assert.equal(androidV2Receipt.evidence.status, "PASS");
+assert.equal(androidV2Receipt.evidence.fixed_executor_domain_apis, 0);
+assert.equal(androidV2Receipt.evidence.host_source_changes_after_v1, 0);
+assert.equal(androidV2Receipt.outputs.executor_sha256, androidReceipt.outputs.executor_sha256);
+assert.equal(androidV2Receipt.outputs.executor_matches_v1, true);
+assert.equal(androidV2Receipt.evidence.direct_uinput_device, "/dev/uinput");
+assert.equal(androidV2Receipt.evidence.persistent_session, true);
+assert.equal(androidV2Receipt.evidence.malformed_status_recovery, true);
+assert.equal(androidV2Receipt.evidence.batch_input_events, 14);
+assert.equal(androidV2Receipt.evidence.kernel_events, 28);
+assert.equal(androidV2Receipt.evidence.performance_gate, false);
+assert.equal(androidV2Receipt.evidence.semantic_text_postcondition, "display");
+assert.equal(androidV2Receipt.evidence.generation_checked_stale_resource_rejection, true);
+assert.equal(androidV2Receipt.evidence.resource_recreation, true);
+assert.equal(androidV2Receipt.evidence.input_limit_rejection, true);
+assert.equal(androidV2Receipt.evidence.output_limit_rejection, true);
+assert.equal(androidV2Receipt.evidence.missing_export_rejection, true);
+assert.equal(androidV2Receipt.evidence.adapter_sibling_confinement, true);
+assert.equal(androidV2Receipt.evidence.wasm_lowering, false);
+assert.equal(androidV2Receipt.evidence.physical_device_qualification, false);
+
 const oldCandidate = spawnSync(
   process.execPath,
   ["scripts/release-candidate.mjs", "verify", "channels/candidates/0.0.15.json"],
@@ -637,6 +674,7 @@ console.log(JSON.stringify({
   retained_linux_aarch64_uinput_qualification: linuxUinputReceipt.implementation_commit,
   retained_linux_x86_64_uinput_qualification: linuxX86UinputReceipt.qualified_commit,
   retained_android_arm64_agent_computer_qualification: androidReceipt.implementation_commit,
+  retained_android_arm64_agent_computer_v2_qualification: androidV2Receipt.implementation_commit,
   old_candidate_rejects_product_drift: true,
   lifecycle: "architecture-workstream-not-admitted-not-released",
 }));
