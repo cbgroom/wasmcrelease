@@ -41,18 +41,21 @@ assert.equal(dev.product_candidate_commit,'6cb3aafea5334ac27648af0e9ccd684fe721c
 assert.equal(dev.product_set_sha256,candidate.product_set_sha256);
 assert.equal(dev.qualification.accepted,true);
 assert.equal(dev.qualification.receipt,'admission/qualification-v014-dev2.json');
-assert.equal(main.tag,'v0.0.14-main.1');
-assert.equal(main.product_set_sha256,'0eb2d0addf9e0cfe9afb11502848bf0a09a55616c5024727ec98729103a138bc');
+assert.equal(main.tag,'v0.0.14-main.2');
+assert.equal(main.product_candidate_commit,dev.product_candidate_commit);
+assert.equal(main.product_set_sha256,candidate.product_set_sha256);
+assert.equal(main.qualification.accepted,true);
+assert.equal(main.qualification.receipt,'admission/qualification-v014-dev2.json');
 assert.equal(prod.tag,'v0.0.13');
 
 console.log(JSON.stringify({
   accepted:true,
   product_ready:true,
-  prod_ready:false,
+  prod_ready:true,
   candidate:'0.0.14',
-  superseded_main:main.tag,
+  main:main.tag,
   current_prod:prod.tag,
   dev:dev.tag,
-  blocker:'exact-main2-promotion-required',
-  required_recovery:'promote the dev.2 product candidate commit and product set unchanged to v0.0.14-main.2'
+  blocker:null,
+  next:'publish the exact main.2 candidate bytes as v0.0.14 prod'
 }));
