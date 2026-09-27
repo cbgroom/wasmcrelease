@@ -46,7 +46,7 @@ jobs:
           node-version: '26.5.1'
       - name: Exact v0.0.15 candidate and deterministic Agent journeys
         env:
-          WASMC_CI_LABEL: candidate-v015-ubuntu
+          WASMC_CI_LABEL: integrity-ubuntu
         run: node scripts/ci-suite.mjs candidate
       - if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02

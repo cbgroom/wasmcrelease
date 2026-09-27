@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { mkdtempSync, rmSync } from 'node:fs';
+import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { runCase, suiteCases, structuredObservation, renderSuite } from './ci-suite.mjs';
@@ -30,6 +30,9 @@ try {
   assert.equal(aggregateReports(suites.slice(1),needs,source).accepted,false);
   assert.equal(aggregateReports([...suites,suites[0]],needs,source).accepted,false);
   assert.equal(aggregateReports(suites,{...needs,'security-history':{result:'skipped'}},source).accepted,false);
+  const workflow=readFileSync(new URL('../.github/workflows/source-free-consumer.yml',import.meta.url),'utf8');
+  assert.match(workflow,/WASMC_CI_LABEL: integrity-ubuntu/,'workflow receipt label must match aggregate inventory');
+  assert.doesNotMatch(workflow,/WASMC_CI_LABEL: candidate-v015-ubuntu/,'candidate suite must not rename the aggregate receipt cell');
   for(const change of [s=>s.source_commit='b'.repeat(40),s=>s.runtime_version='v1.0.0',s=>s.tests=[],s=>s.tests[0].accepted=false,s=>s.schema='wrong']) {
     const altered=structuredClone(suites);change(altered[0]);assert.equal(aggregateReports(altered,needs,source).accepted,false);
   }
