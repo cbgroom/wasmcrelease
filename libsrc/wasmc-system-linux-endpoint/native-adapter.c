@@ -11,12 +11,14 @@
 #include <sys/eventfd.h>
 #include <sys/ioctl.h>
 #include <sys/mman.h>
+#include <sys/uio.h>
 #include <unistd.h>
 
 #define MAX_HANDLES 1024
 #define MAX_MAPPINGS 1024
 #define MAX_MAPPING_BYTES (UINT64_C(256) * 1024 * 1024)
 #define MAX_READINESS_OPERATIONS 1024
+#define MAX_WRITE_VECTORS 1024
 
 #define READINESS_PENDING 0
 #define READINESS_READY 1
@@ -267,7 +269,7 @@ static int32_t invoke_close(const uint8_t *input, size_t input_len) {
   return close(descriptor) == 0 ? 0 : -errno;
 }
 
-static int32_t invoke_ioctl(
+static int32_t invoke_ioctl_buffer(
     const uint8_t *input, size_t input_len,
     uint8_t *output, size_t output_capacity, size_t *output_len) {
   if (input_len < 25) return -EINVAL;
@@ -291,6 +293,84 @@ static int32_t invoke_ioctl(
   }
   free(buffer);
   return status;
+}
+
+static int32_t invoke_ioctl_none(
+    const uint8_t *input, size_t input_len,
+    uint8_t *output, size_t output_capacity, size_t *output_len) {
+  if (input_len != 17 || output_capacity < 4) return -EINVAL;
+  int descriptor = -1;
+  int32_t status = resolve_handle(read_u64(input + 1), NULL, &descriptor);
+  if (status != 0) return status;
+  const int result = ioctl(descriptor, (unsigned long)read_u64(input + 9));
+  if (result < 0) return -errno;
+  write_u32(output, (uint32_t)result);
+  *output_len = 4;
+  return 0;
+}
+
+static int32_t invoke_ioctl_value(
+    const uint8_t *input, size_t input_len,
+    uint8_t *output, size_t output_capacity, size_t *output_len) {
+  if (input_len != 25 || output_capacity < 4) return -EINVAL;
+  int descriptor = -1;
+  int32_t status = resolve_handle(read_u64(input + 1), NULL, &descriptor);
+  if (status != 0) return status;
+  const int result = ioctl(
+      descriptor,
+      (unsigned long)read_u64(input + 9),
+      (unsigned long)read_u64(input + 17));
+  if (result < 0) return -errno;
+  write_u32(output, (uint32_t)result);
+  *output_len = 4;
+  return 0;
+}
+
+static int32_t invoke_write_vectors(
+    const uint8_t *input, size_t input_len,
+    uint8_t *output, size_t output_capacity, size_t *output_len) {
+  if (input_len < 13 || output_capacity < 8) return -EINVAL;
+  const uint32_t vector_count = read_u32(input + 9);
+  if (vector_count == 0 || vector_count > MAX_WRITE_VECTORS) return -EINVAL;
+  const long native_iov_max = sysconf(_SC_IOV_MAX);
+  if (native_iov_max <= 0 || (uint64_t)vector_count > (uint64_t)native_iov_max) return -EINVAL;
+
+  int descriptor = -1;
+  int32_t status = resolve_handle(read_u64(input + 1), NULL, &descriptor);
+  if (status != 0) return status;
+
+  struct iovec *vectors = calloc(vector_count, sizeof(*vectors));
+  if (!vectors) return -ENOMEM;
+  size_t cursor = 13;
+  for (uint32_t index = 0; index < vector_count; index += 1) {
+    if (cursor > input_len || input_len - cursor < 4) {
+      free(vectors);
+      return -EINVAL;
+    }
+    const uint32_t length = read_u32(input + cursor);
+    cursor += 4;
+    if ((size_t)length > input_len - cursor) {
+      free(vectors);
+      return -EINVAL;
+    }
+    vectors[index].iov_base = (void *)(input + cursor);
+    vectors[index].iov_len = length;
+    cursor += length;
+  }
+  if (cursor != input_len) {
+    free(vectors);
+    return -EINVAL;
+  }
+
+  ssize_t count;
+  do {
+    count = writev(descriptor, vectors, (int)vector_count);
+  } while (count < 0 && errno == EINTR);
+  free(vectors);
+  if (count < 0) return -errno;
+  write_u64(output, (uint64_t)count);
+  *output_len = 8;
+  return 0;
 }
 
 static int32_t invoke_poll(
@@ -671,7 +751,7 @@ int32_t wasmc_boundary_v1_invoke(
     case 4: return invoke_read_handle(input, input_len, output, output_capacity, output_len);
     case 5: return invoke_write_handle(input, input_len, output, output_capacity, output_len);
     case 6: return invoke_close(input, input_len);
-    case 7: return invoke_ioctl(input, input_len, output, output_capacity, output_len);
+    case 7: return invoke_ioctl_buffer(input, input_len, output, output_capacity, output_len);
     case 8: return invoke_poll(input, input_len, output, output_capacity, output_len);
     case 9: return invoke_map(input, input_len, output, output_capacity, output_len);
     case 10: return invoke_mapping_read(input, input_len, output, output_capacity, output_len);
@@ -687,6 +767,9 @@ int32_t wasmc_boundary_v1_invoke(
     case 20: return invoke_readiness_status(input, input_len, output, output_capacity, output_len);
     case 21: return invoke_readiness_cancel(input, input_len);
     case 22: return invoke_readiness_release(input, input_len);
+    case 23: return invoke_ioctl_none(input, input_len, output, output_capacity, output_len);
+    case 24: return invoke_ioctl_value(input, input_len, output, output_capacity, output_len);
+    case 25: return invoke_write_vectors(input, input_len, output, output_capacity, output_len);
     default: return -ENOTSUP;
   }
 }

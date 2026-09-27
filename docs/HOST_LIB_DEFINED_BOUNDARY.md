@@ -1,6 +1,6 @@
 # Lib-defined Host boundary workstream
 
-Status: **asynchronous readiness Linux aarch64/x86_64 qualified / not admitted / not released**.
+Status: **ioctl call-shape and vectored-write Linux aarch64 qualified; x86_64 pending / not admitted / not released**.
 
 This workstream replaces domain growth in the Rust Host with a fixed,
 domain-neutral execution boundary. It does not modify the immutable v0.0.15
@@ -142,6 +142,22 @@ the original endpoint token is closed. The current one-worker-per-operation
 implementation is a lifecycle baseline, not a throughput design. It does not
 yet prove the Host Completion bridge, late-delivery drain or `io_uring`.
 
+The Linux Lib now separates the three physical ioctl argument shapes instead of
+pretending every request takes a pointer buffer: no argument, scalar value and
+pointer buffer. Local Linux aarch64 qualification executes real `FIOCLEX`,
+`TCSBRK`, `TIOCGPTN` and `TIOCSPTLCK` calls on a PTY. It also sends 64 payload
+segments in one `writev`, verifies their concatenated bytes through a real pipe,
+rejects a stale endpoint token and retains the existing performance floor. The
+fixed Rust executor remains byte-identical and contains none of these Linux
+operations or device semantics.
+
+These generic mechanisms are sufficient physical building blocks for a higher
+uinput or UHID Lib, but do not themselves qualify virtual input devices. The
+current qualification environment exposes no `/dev/uinput`, `/dev/uhid`,
+`/dev/hidrawN` or `/dev/hidgN`. Real uinput device creation/event injection,
+UHID create/input/output/report lifecycle, UHID vectored reads and USB Gadget
+UDC binding remain explicit device-backed gates.
+
 ## Library OS consequence
 
 The intended result is a Library OS profile assembled above the fixed Host:
@@ -192,8 +208,9 @@ rejection and zero remaining resources/operations/windows.
 
 The mapped-window, epoll-readiness, kernel-splice and asynchronous-readiness
 successors are qualified on local Linux aarch64 and independent GitHub Ubuntu
-x86_64. WIT is parsed by pinned `wasm-tools` before native qualification. Wasm
-lowering, the Host Completion bridge and
+x86_64. The ioctl call-shape and vectored-write successor is currently qualified
+only on local Linux aarch64; x86_64 remains pending. WIT is parsed by pinned
+`wasm-tools` before native qualification. Wasm lowering, the Host Completion bridge and
 late-delivery drain, `io_uring`, direct guest-window zero-copy, non-Linux
 evidence, admission, catalog publication and immutable release remain pending.
 

@@ -31,7 +31,10 @@ interface endpoints {
   resource endpoint {
     read: func(maximum-bytes: u32) -> result<list<u8>, s32>;
     write: func(payload: list<u8>) -> result<u64, s32>;
-    control: func(request: u64, argument: list<u8>, maximum-result-bytes: u32) -> result<tuple<s32, list<u8>>, s32>;
+    control-buffer: func(request: u64, argument: list<u8>, maximum-result-bytes: u32) -> result<tuple<s32, list<u8>>, s32>;
+    control-none: func(request: u64) -> result<s32, s32>;
+    control-value: func(request: u64, value: u64) -> result<s32, s32>;
+    write-vectors: func(payloads: list<list<u8>>) -> result<u64, s32>;
     poll: func(events: u16, timeout-milliseconds: s32) -> result<u16, s32>;
     map-region: func(offset: u64, length: u64, linux-protection: u32, linux-map-flags: u32) -> result<mapping, s32>;
     splice-to: func(target: borrow<endpoint>, maximum-bytes: u64, linux-splice-flags: u32) -> result<u64, s32>;

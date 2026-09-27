@@ -31,7 +31,7 @@
   },
   "native_performance": {
     "fixed_host_mechanisms": ["persistent-adapter-session", "reused-bounded-output-window", "framed-operation-completion"],
-    "lib_owned_mechanisms": ["persistent-native-handle", "generation-checked-handle", "mapped-native-region", "epoll-event-set", "asynchronous-readiness-operation", "kernel-splice-pipeline", "read", "write", "poll", "control"],
+    "lib_owned_mechanisms": ["persistent-native-handle", "generation-checked-handle", "mapped-native-region", "epoll-event-set", "asynchronous-readiness-operation", "kernel-splice-pipeline", "read", "write", "write-vectors", "poll", "control-none", "control-value", "control-buffer"],
     "rule": "performance may add domain-neutral batching, windows and completion machinery but device protocol and handle semantics remain in the exact Lib"
   },
   "host_forbidden_domain_apis": [

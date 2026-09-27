@@ -87,6 +87,39 @@ const encodeIoctl = (token, request, argument, resultCapacity) => {
   return bytes;
 };
 
+const encodeIoctlNone = (token, request) => {
+  const bytes = Buffer.alloc(17);
+  bytes.writeUInt8(23, 0);
+  bytes.writeBigUInt64LE(token, 1);
+  bytes.writeBigUInt64LE(request, 9);
+  return bytes;
+};
+
+const encodeIoctlValue = (token, request, value) => {
+  const bytes = Buffer.alloc(25);
+  bytes.writeUInt8(24, 0);
+  bytes.writeBigUInt64LE(token, 1);
+  bytes.writeBigUInt64LE(request, 9);
+  bytes.writeBigUInt64LE(BigInt(value), 17);
+  return bytes;
+};
+
+const encodeWriteVectors = (token, payloads) => {
+  const totalPayloadBytes = payloads.reduce((total, payload) => total + payload.length, 0);
+  const bytes = Buffer.alloc(13 + payloads.length * 4 + totalPayloadBytes);
+  bytes.writeUInt8(25, 0);
+  bytes.writeBigUInt64LE(token, 1);
+  bytes.writeUInt32LE(payloads.length, 9);
+  let cursor = 13;
+  for (const payload of payloads) {
+    bytes.writeUInt32LE(payload.length, cursor);
+    cursor += 4;
+    payload.copy(bytes, cursor);
+    cursor += payload.length;
+  }
+  return bytes;
+};
+
 const encodePoll = (token, events, timeoutMilliseconds) => {
   const bytes = Buffer.alloc(15);
   bytes.writeUInt8(8, 0);
@@ -334,6 +367,23 @@ for (const result of writes) {
 }
 const writeMibPerSecond = writeBytes / (1024 * 1024) / (writeElapsedNs / 1e9);
 assert.ok(writeMibPerSecond >= 25, `persistent /dev write throughput too low: ${writeMibPerSecond.toFixed(2)} MiB/s`);
+
+const vectorPayloads = Array.from({ length: 64 }, (_, index) => Buffer.alloc(1024, index));
+const vectorBytesPerOperation = vectorPayloads.reduce((total, payload) => total + payload.length, 0);
+const vectorWriteOperations = 256;
+const vectorWriteStarted = process.hrtime.bigint();
+const vectorWrites = await Promise.all(Array.from(
+  { length: vectorWriteOperations },
+  () => session.request(encodeWriteVectors(nullToken, vectorPayloads)),
+));
+const vectorWriteElapsedNs = Number(process.hrtime.bigint() - vectorWriteStarted);
+for (const result of vectorWrites) {
+  assert.equal(result.status, 0);
+  assert.equal(Number(result.output.readBigUInt64LE()), vectorBytesPerOperation);
+}
+const vectorWriteBytes = vectorWriteOperations * vectorBytesPerOperation;
+const vectorWriteMibPerSecond = vectorWriteBytes / (1024 * 1024) / (vectorWriteElapsedNs / 1e9);
+assert.ok(vectorWriteMibPerSecond >= 25, `vectored /dev write throughput too low: ${vectorWriteMibPerSecond.toFixed(2)} MiB/s`);
 await expectOk(session.request(encodeClose(nullToken)));
 
 const ptmxToken = (await expectOk(session.request(encodePath(3, "/dev/ptmx", 2 | 256 | 2048)))).readBigUInt64LE();
@@ -344,6 +394,10 @@ const pseudoTerminalNumber = ptmx.readUInt32LE(4);
 const unlocked = await expectOk(session.request(encodeIoctl(ptmxToken, 0x40045431n, Buffer.alloc(4), 0)));
 assert.equal(unlocked.readInt32LE(0), 0);
 const slaveToken = (await expectOk(session.request(encodePath(3, `/dev/pts/${pseudoTerminalNumber}`, 2 | 256 | 2048)))).readBigUInt64LE();
+const noArgumentControl = await expectOk(session.request(encodeIoctlNone(ptmxToken, 0x5451n)));
+assert.equal(noArgumentControl.readInt32LE(0), 0);
+const scalarValueControl = await expectOk(session.request(encodeIoctlValue(ptmxToken, 0x5409n, 0n)));
+assert.equal(scalarValueControl.readInt32LE(0), 0);
 const eventSetToken = (await expectOk(session.request(encodeEpollCreate()))).readBigUInt64LE();
 const eventData = 0x1122334455667788n;
 await expectOk(session.request(encodeEpollControl(eventSetToken, 1, ptmxToken, 1, eventData)));
@@ -400,6 +454,20 @@ await expectOk(session.request(encodeClose(ptmxToken)));
 const retainedPipeTokens = await expectOk(session.request(encodePipeCreate(0)));
 const retainedPipeReadToken = retainedPipeTokens.readBigUInt64LE(0);
 const retainedPipeWriteToken = retainedPipeTokens.readBigUInt64LE(8);
+const vectoredSegments = [Buffer.from("uhid-event-one"), Buffer.from("uhid-event-two")];
+const vectoredWritten = await expectOk(session.request(encodeWriteVectors(retainedPipeWriteToken, vectoredSegments)));
+assert.equal(Number(vectoredWritten.readBigUInt64LE()), Buffer.concat(vectoredSegments).length);
+const vectoredRead = await expectOk(session.request(encodeRead(retainedPipeReadToken, 4096)));
+assert.deepEqual(vectoredRead, Buffer.concat(vectoredSegments));
+const emptyVectoredWrite = await session.request(encodeWriteVectors(retainedPipeWriteToken, []));
+assert.equal(emptyVectoredWrite.status, -22);
+const excessiveVectors = Buffer.alloc(13);
+excessiveVectors.writeUInt8(25, 0);
+excessiveVectors.writeBigUInt64LE(retainedPipeWriteToken, 1);
+excessiveVectors.writeUInt32LE(1025, 9);
+assert.equal((await session.request(excessiveVectors)).status, -22);
+const truncatedVector = encodeWriteVectors(retainedPipeWriteToken, [Buffer.from("truncated")]).subarray(0, -1);
+assert.equal((await session.request(truncatedVector)).status, -22);
 const retainedReadinessToken = (await expectOk(session.request(
   encodeReadinessStart(retainedPipeReadToken, 1, 5000),
 ))).readBigUInt64LE();
@@ -408,6 +476,8 @@ await expectOk(session.request(encodeReadinessToken(21, retainedReadinessToken))
 assert.deepEqual(await waitForReadiness(session, retainedReadinessToken), { state: 2, status: 0, events: 0 });
 await expectOk(session.request(encodeReadinessToken(22, retainedReadinessToken)));
 await expectOk(session.request(encodeClose(retainedPipeWriteToken)));
+const staleVectoredWrite = await session.request(encodeWriteVectors(retainedPipeWriteToken, [Buffer.from("stale")]));
+assert.equal(staleVectoredWrite.status, -9);
 
 const concurrentReadinessCount = 64;
 const concurrentPipeTokens = await expectOk(session.request(encodePipeCreate(0)));
@@ -530,7 +600,7 @@ assert.match(`${rejected.stdout}\n${rejected.stderr}`, /adapter identity mismatc
 
 console.log(JSON.stringify({
   accepted: true,
-  schema: "wasmc.linux-lib-defined-boundary-qualification/v6",
+  schema: "wasmc.linux-lib-defined-boundary-qualification/v7",
   platform: process.platform,
   architecture: process.arch,
   kernel: os.release(),
@@ -543,7 +613,14 @@ console.log(JSON.stringify({
   adapter_device_path_literals: 0,
   persistent_fd_resources: true,
   generation_checked_stale_handle_rejection: true,
-  real_ioctl: "TIOCGPTN",
+  real_ioctl_buffer: "TIOCGPTN/TIOCSPTLCK",
+  real_ioctl_none: "FIOCLEX",
+  real_ioctl_value: "TCSBRK",
+  ioctl_call_shapes: ["none", "value", "buffer"],
+  vectored_write: true,
+  vectored_write_segments: vectorPayloads.length,
+  malformed_vectored_write_rejection: true,
+  generation_checked_stale_vectored_write_rejection: true,
   real_poll: true,
   real_epoll_device_event: true,
   epoll_endpoint: "/dev/ptmx",
@@ -570,6 +647,10 @@ console.log(JSON.stringify({
     write_operations: writeOperations,
     write_bytes: writeBytes,
     write_mib_per_second: Number(writeMibPerSecond.toFixed(2)),
+    vector_write_operations: vectorWriteOperations,
+    vector_write_segments_per_operation: vectorPayloads.length,
+    vector_write_bytes: vectorWriteBytes,
+    vector_write_mib_per_second: Number(vectorWriteMibPerSecond.toFixed(2)),
     warm_ns_per_operation: Math.round(warmNsPerOperation),
     cold_ns_per_operation: Math.round(coldNsPerOperation),
     persistent_speedup: Number(persistentSpeedup.toFixed(2)),

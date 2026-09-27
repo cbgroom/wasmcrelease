@@ -6,9 +6,10 @@ devices.
 
 The physical adapter exposes both one-shot bounded read/write and persistent,
 generation-checked endpoint resources. A persistent endpoint supports read,
-write, `poll` and a raw Linux `ioctl` transport. Device-specific request numbers,
-buffer layouts and higher semantics belong in additional Lib layers; the fixed
-Native executor only validates and invokes the Lib-owned shared object.
+write, `poll` and explicit Linux `ioctl` transports for no-argument, scalar-value
+and pointer-buffer calls. Device-specific request numbers, buffer layouts and
+higher semantics belong in additional Lib layers; the fixed Native executor only
+validates and invokes the Lib-owned shared object.
 
 The same exact adapter is exercised against `/dev/zero`, `/dev/null`,
 `/dev/ptmx`, `/proc/self/stat` and `/sys/devices/system/cpu/online`. The
@@ -47,6 +48,15 @@ and safe cancellation after the originating endpoint token is closed.
 The current prototype uses one native worker per operation as a lifecycle
 baseline. It is not the future high-throughput `io_uring` backend and is not yet
 bridged into the Host's generic Completion/late-delivery model.
+
+The endpoint also exposes a single-syscall vectored write. Qualification executes
+real no-argument `FIOCLEX`, scalar-value `TCSBRK`, pointer-buffer `TIOCGPTN` and
+`TIOCSPTLCK` calls on a PTY, then sends 64 payload segments with one `writev`.
+This closes the generic call shapes required by Linux uinput and UHID without
+putting either device protocol in the fixed executor. Real `/dev/uinput` and
+`/dev/uhid` device creation, UHID vectored reads and USB Gadget `/dev/hidgN`
+remain separate device-backed qualification gates; they are not implied by the
+generic PTY and pipe evidence.
 
 Run `node scripts/test-linux-lib-defined-boundary.mjs` on Linux. This prototype is not
 admitted, cataloged or released.

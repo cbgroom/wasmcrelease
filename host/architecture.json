@@ -134,7 +134,7 @@
       "one-byte-identical-executor"
     ],
     "linux_native": {
-      "status": "asynchronous-readiness-linux-aarch64-local-and-x86_64-ci-qualified-not-admitted-not-released",
+      "status": "ioctl-call-shapes-and-vectored-write-linux-aarch64-qualified-x86_64-pending-not-admitted-not-released",
       "executor": "host/runtime/lib-boundary/native-linux",
       "system_lib": "libsrc/wasmc-system-linux-endpoint",
       "evidence": "scripts/test-linux-lib-defined-boundary.mjs",
@@ -148,7 +148,11 @@
         "fixed-byte-ABI",
         "persistent-generation-checked-fd",
         "real-poll",
-        "real-TIOCGPTN-ioctl",
+        "real-pointer-buffer-TIOCGPTN-and-TIOCSPTLCK-ioctl",
+        "real-no-argument-FIOCLEX-ioctl",
+        "real-scalar-value-TCSBRK-ioctl",
+        "single-syscall-vectored-write",
+        "generation-checked-stale-vectored-write-rejection",
         "warm-session-performance-gate",
         "generation-checked-mapped-device-window",
         "mapping-bounds-and-stale-token-rejection",
