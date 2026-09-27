@@ -1,6 +1,6 @@
 # Lib-defined Host boundary workstream
 
-Status: **mapped-device Linux aarch64 locally qualified / x86_64 refresh pending / not admitted / not released**.
+Status: **mapped-device Linux aarch64/x86_64 qualified / not admitted / not released**.
 
 This workstream replaces domain growth in the Rust Host with a fixed,
 domain-neutral execution boundary. It does not modify the immutable v0.0.15
@@ -161,12 +161,10 @@ contains no domain API and is byte-identical for all three. The test additionall
 proves pinned-window release rejection, completion claim-once, adapter digest
 rejection and zero remaining resources/operations/windows.
 
-The persistent/session v2 implementation remains qualified on local Linux
-aarch64 and independent GitHub Ubuntu x86_64. The mapped-window successor is
-locally qualified on aarch64 and requires fresh x86_64 evidence. Wasm/WIT
-lowering, native asynchronous lifecycle/cancellation, direct guest-window
-zero-copy, non-Linux evidence, admission, catalog publication and immutable
-release remain pending.
+The mapped-window successor is now qualified on local Linux aarch64 and
+independent GitHub Ubuntu x86_64. Wasm/WIT lowering, native asynchronous
+lifecycle/cancellation, direct guest-window zero-copy, non-Linux evidence,
+admission, catalog publication and immutable release remain pending.
 
 The exact local receipt is
 `admission/host-lib-defined-boundary-v1/local-qualification.json`, bound to
@@ -193,3 +191,8 @@ to successful workflow run `36299428864` at commit
 The mapped-device Linux aarch64 receipt is
 `admission/host-lib-defined-boundary-v1/linux-aarch64-mapped-v3.json`, bound to
 implementation commit `a0f382ab609e9df2fdda5124f4dd5e832c2fee3d`.
+
+The mapped-device Linux x86_64 receipt is
+`admission/host-lib-defined-boundary-v1/linux-x86_64-mapped-v3.json`, bound to
+successful workflow run `36300032417` at commit
+`12f0ca7bd49f2317fc28f2d0eb6e566b04fdc4eb`.

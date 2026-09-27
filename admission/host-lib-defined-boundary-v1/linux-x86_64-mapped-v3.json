@@ -1,0 +1,65 @@
+{
+  "schema": "wasmc.host-lib-defined-boundary-linux-qualification/v3",
+  "status": "linux-x86_64-mapped-device-window-ci-qualified-not-admitted-not-released",
+  "date": "2026-09-27",
+  "qualified_commit": "12f0ca7bd49f2317fc28f2d0eb6e566b04fdc4eb",
+  "implementation_commit": "a0f382ab609e9df2fdda5124f4dd5e832c2fee3d",
+  "system_lib_identity": "wasmc:system-linux-endpoint@0.0.1-dev.1",
+  "environment": {
+    "provider": "GitHub Actions",
+    "runner": "ubuntu-24.04",
+    "os": "linux",
+    "architecture": "x86_64",
+    "kernel": "6.17.0-1022-azure",
+    "rustc": "rustc 1.96.0 (ac68faa20 2026-05-25)"
+  },
+  "workflow": {
+    "name": "Host Lib-defined boundary",
+    "run_id": 36300032417,
+    "job_id": 108565864884,
+    "url": "https://github.com/cbgroom/wasmcrelease/actions/runs/36300032417",
+    "conclusion": "success"
+  },
+  "outputs": {
+    "executor_sha256": "7465b5b150cef9d977185bec86fc84fd0e424ae0039720c2e0677196153becbc",
+    "adapter_sha256": "ceb45729dcba1f817dea4b81c4ade759fd5d92b8e165ffda3f619a66da5ebe9e",
+    "adapter_export": "wasmc_boundary_v1_invoke"
+  },
+  "evidence": {
+    "script": "scripts/test-linux-lib-defined-boundary.mjs",
+    "status": "PASS",
+    "fixed_executor_domain_apis": 0,
+    "adapter_device_path_literals": 0,
+    "mapped_device_window": true,
+    "mapping_endpoint": "/dev/zero",
+    "mapping_write_read_match": true,
+    "mapping_sync": true,
+    "mapping_bounds_rejection": true,
+    "generation_checked_stale_mapping_rejection": true,
+    "performance": {
+      "read_mib_per_second": 522.7,
+      "write_mib_per_second": 649.78,
+      "mapping_operations": 256,
+      "mapping_bytes": 16777216,
+      "mapping_mib_per_second": 903.96,
+      "persistent_speedup": 46.27,
+      "minimum_mib_per_second": 25,
+      "minimum_speedup": 5,
+      "scope": "same-runner diagnostic; byte ABI still copies mapping data"
+    },
+    "adapter_identity_rejection": true,
+    "frozen_v0_0_15_identity_files": 3,
+    "old_candidate_rejects_product_drift": true
+  },
+  "remaining_gates": [
+    "descriptor-schema-review",
+    "Wasm-WIT-lowering",
+    "native-asynchronous-lifecycle",
+    "guest-shared-window-zero-copy",
+    "admission-review",
+    "catalog-and-LibSearch",
+    "immutable-release"
+  ],
+  "admitted": false,
+  "released": false
+}

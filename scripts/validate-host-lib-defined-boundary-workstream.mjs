@@ -153,6 +153,25 @@ assert.equal(linuxMappedReceipt.evidence.mapping_bounds_rejection, true);
 assert.equal(linuxMappedReceipt.evidence.generation_checked_stale_mapping_rejection, true);
 assert.ok(linuxMappedReceipt.evidence.performance.mapping_mib_per_second >= linuxMappedReceipt.evidence.performance.minimum_mib_per_second);
 
+const linuxX86MappedReceipt = JSON.parse(fs.readFileSync("admission/host-lib-defined-boundary-v1/linux-x86_64-mapped-v3.json", "utf8"));
+assert.equal(linuxX86MappedReceipt.schema, "wasmc.host-lib-defined-boundary-linux-qualification/v3");
+assert.equal(linuxX86MappedReceipt.status, "linux-x86_64-mapped-device-window-ci-qualified-not-admitted-not-released");
+assert.equal(linuxX86MappedReceipt.workflow.run_id, 36300032417);
+assert.equal(linuxX86MappedReceipt.workflow.conclusion, "success");
+assert.equal(linuxX86MappedReceipt.admitted, false);
+assert.equal(linuxX86MappedReceipt.released, false);
+for (const revision of [linuxX86MappedReceipt.implementation_commit, linuxX86MappedReceipt.qualified_commit]) {
+  execFileSync("git", ["cat-file", "-e", `${revision}^{commit}`]);
+  execFileSync("git", ["merge-base", "--is-ancestor", revision, "HEAD"]);
+}
+assert.equal(linuxX86MappedReceipt.evidence.status, "PASS");
+assert.equal(linuxX86MappedReceipt.evidence.mapped_device_window, true);
+assert.equal(linuxX86MappedReceipt.evidence.mapping_write_read_match, true);
+assert.equal(linuxX86MappedReceipt.evidence.mapping_sync, true);
+assert.equal(linuxX86MappedReceipt.evidence.mapping_bounds_rejection, true);
+assert.equal(linuxX86MappedReceipt.evidence.generation_checked_stale_mapping_rejection, true);
+assert.ok(linuxX86MappedReceipt.evidence.performance.mapping_mib_per_second >= linuxX86MappedReceipt.evidence.performance.minimum_mib_per_second);
+
 const oldCandidate = spawnSync(
   process.execPath,
   ["scripts/release-candidate.mjs", "verify", "channels/candidates/0.0.15.json"],
@@ -172,6 +191,7 @@ console.log(JSON.stringify({
   retained_linux_aarch64_persistent_qualification: linuxPersistentReceipt.implementation_commit,
   retained_linux_x86_64_persistent_qualification: linuxX86PersistentReceipt.qualified_commit,
   retained_linux_aarch64_mapped_qualification: linuxMappedReceipt.implementation_commit,
+  retained_linux_x86_64_mapped_qualification: linuxX86MappedReceipt.qualified_commit,
   old_candidate_rejects_product_drift: true,
   lifecycle: "architecture-workstream-not-admitted-not-released",
 }));
