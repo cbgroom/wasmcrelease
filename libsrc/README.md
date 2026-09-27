@@ -8,12 +8,13 @@ version is immutable and digest-bound.
 
 ## Design law
 
-**Host-thin, Lib-rich.**
+**Host fixed and domain-neutral; Libs define the system.**
 
-Keep only irreducible effects in Host providers. Move portable parsing,
-protocols, codecs, compression, routing, transforms and policy into import-free
-Core Wasm Libs whenever possible. When a Lib needs Host authority, bind it at
-the thinnest layer and do not propagate provider/platform identity upward.
+The Host owns only target/resource/window/operation/completion mechanics. Exact
+Lib WIT owns domain semantics and the matching exact Lib package owns its native
+boundary descriptor. File systems, processes, networks, services and devices
+must grow through Libs rather than Rust/JavaScript Host API families. Portable
+parsing, protocols, codecs, routing, transforms and policy remain higher Libs.
 
 See `docs/LIB_GRADUATION.md` and `CONTRIBUTING.md`.
 
@@ -24,6 +25,10 @@ Candidates may be either Host-graduated (with a pinned behavior oracle) or
 native-public (new public Libs qualified directly from their reviewed
 semantics). Data-processing contributors should also read
 `docs/DATA_ECOSYSTEM.md`.
+
+System Lib prototypes may additionally carry `native-boundary.json` and a
+digest-bound platform adapter. These are physical binding source owned by the
+Lib, not admitted artifacts or permission to extend the Host API.
 
 Each source package may carry its own Cargo workspace boundary so it can be
 built and reviewed independently from the release repository's maintenance

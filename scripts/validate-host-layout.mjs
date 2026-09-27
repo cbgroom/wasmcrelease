@@ -1,4 +1,5 @@
 import fs from "node:fs";
+import { createHash } from "node:crypto";
 import path from "node:path";
 
 const root = process.cwd();
@@ -53,6 +54,23 @@ if (architecture.boundary_rules?.rust_or_javascript_domain_api_growth !== false)
 if (architecture.boundary_rules?.descriptor_owned_by_exact_lib !== true) failures.push("native descriptors must be exact-Lib owned");
 if (architecture.boundary_rules?.host_binary_unchanged_for_new_domain !== true) failures.push("new-domain Host identity must remain unchanged");
 if ((architecture.domain_model?.host_inventory ?? ["missing"]).length !== 0) failures.push("architecture Host domain inventory must be empty");
+const prototype = architecture.prototype;
+if (prototype?.status !== "local-node-qualified-not-admitted-not-released") failures.push("prototype lifecycle is missing or overstated");
+if (!fs.existsSync(path.join(root, prototype?.executor ?? "missing"))) failures.push("fixed boundary executor missing");
+else {
+  const executorHash = createHash("sha256").update(fs.readFileSync(path.join(root, prototype.executor))).digest("hex");
+  if (executorHash !== prototype.executor_sha256) failures.push("fixed boundary executor identity drifted");
+}
+if (JSON.stringify(prototype?.system_libs) !== JSON.stringify([
+  "libsrc/wasmc-system-file-prototype",
+  "libsrc/wasmc-system-process-prototype",
+  "libsrc/wasmc-system-network-prototype",
+])) failures.push("prototype system Lib graph drifted");
+for (const libRoot of prototype?.system_libs ?? []) {
+  for (const required of ["candidate.json", "lib.wit", "native-boundary.json", "native-adapter.mjs"]) {
+    if (!fs.existsSync(path.join(root, libRoot, required))) failures.push(`prototype system Lib file missing: ${libRoot}/${required}`);
+  }
+}
 
 const architectureRoots = new Set((architecture.layers ?? []).map((layer) => layer.root));
 for (const dir of ["contract", "core", "runtime", "drivers", "platform", "embedding", "sdk", "qualification"]) {
@@ -133,4 +151,6 @@ console.log(JSON.stringify({
   retained_qualified_provider_cells: qualifiedLegacy,
   retained_implemented_provider_cells: implementedLegacy,
   new_domain_extension: "exact-lib-package-only",
+  prototype_executor_sha256: prototype.executor_sha256,
+  prototype_system_libs: prototype.system_libs.length,
 }));

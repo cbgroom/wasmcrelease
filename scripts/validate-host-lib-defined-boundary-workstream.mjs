@@ -8,6 +8,8 @@ const focused = [
   "scripts/test-host-lib-defined-boundary.mjs",
   "scripts/validate-host-camera-model.mjs",
   "scripts/validate-release-surfaces.mjs",
+  "scripts/test-lib-defined-boundary-runtime.mjs",
+  "scripts/validate-libsrc.mjs",
 ];
 for (const script of focused) run(script);
 

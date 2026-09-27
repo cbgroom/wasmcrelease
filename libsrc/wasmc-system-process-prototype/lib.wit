@@ -1,0 +1,14 @@
+package wasmc:system-process-prototype@0.0.1;
+
+record process-request {
+  executable: string,
+  arguments: list<string>,
+}
+
+interface processes {
+  run: func(request: process-request) -> result<list<u8>, string>;
+}
+
+world system-process-prototype {
+  export processes;
+}

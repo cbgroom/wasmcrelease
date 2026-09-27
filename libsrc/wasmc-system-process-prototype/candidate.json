@@ -1,0 +1,13 @@
+{
+  "schema": "wasmc.libsrc-candidate/v1",
+  "id": "wasmc-system-process-prototype",
+  "version": "0.0.1-dev.1",
+  "wit": "lib.wit",
+  "source": ["README.md", "lib.wit", "native-boundary.json", "native-adapter.mjs"],
+  "host_import_budget": 0,
+  "origin": { "kind": "native-public" },
+  "completed_gates": ["public-source", "exact-native-adapter-identity", "real-child-process", "unchanged-host-executor"],
+  "pending_gates": ["descriptor-schema-review", "wasm-lowering", "cross-platform-qualification", "admission-review"],
+  "admitted": false,
+  "qualification": { "runner": "node", "script": "scripts/test-lib-defined-boundary-runtime.mjs" }
+}

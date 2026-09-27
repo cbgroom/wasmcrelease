@@ -1,6 +1,6 @@
 # Lib-defined Host boundary workstream
 
-Status: **architecture workstream / not admitted / not released**.
+Status: **local Node prototype qualified / not admitted / not released**.
 
 This workstream replaces domain growth in the Rust Host with a fixed,
 domain-neutral execution boundary. It does not modify the immutable v0.0.15
@@ -106,3 +106,22 @@ discover, install and release.
 The first decisive acceptance test is three-domain growth with one unchanged
 Host binary: file behavior, process behavior and network behavior must be added
 or replaced solely through exact Lib packages.
+
+## First executable proof
+
+The local Node reference now passes that first structural/runtime proof with one
+fixed executor at SHA-256
+`e133672195a9641e8c813f6b07e040c5817249a055f44ebeadd9c29404cf03ef`:
+
+- `wasmc-system-file-prototype` performs a real local file read;
+- `wasmc-system-process-prototype` executes a real child process;
+- `wasmc-system-network-prototype` performs a real loopback exchange.
+
+Each Lib owns its WIT, descriptor and digest-bound adapter. The Host executor
+contains no domain API and is byte-identical for all three. The test additionally
+proves pinned-window release rejection, completion claim-once, adapter digest
+rejection and zero remaining resources/operations/windows.
+
+This is Node-local evidence only. Native Rust descriptor execution, Wasm/WIT
+lowering, cancellation race qualification, cross-platform evidence, admission,
+catalog publication and immutable release remain pending.

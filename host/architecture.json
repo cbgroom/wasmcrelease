@@ -116,5 +116,22 @@
     "legacy_provider_manifests": "host/platform/*/providers.json",
     "legacy_provider_status": "v0.0.15-migration-evidence-only",
     "target": "file, process and network behavior supplied by Lib packages with one byte-identical Host binary"
+  },
+  "prototype": {
+    "status": "local-node-qualified-not-admitted-not-released",
+    "executor": "host/runtime/lib-boundary/reference.mjs",
+    "executor_sha256": "e133672195a9641e8c813f6b07e040c5817249a055f44ebeadd9c29404cf03ef",
+    "system_libs": [
+      "libsrc/wasmc-system-file-prototype",
+      "libsrc/wasmc-system-process-prototype",
+      "libsrc/wasmc-system-network-prototype"
+    ],
+    "evidence": "scripts/test-lib-defined-boundary-runtime.mjs",
+    "scope": [
+      "real-local-file-read",
+      "real-child-process",
+      "real-loopback-network",
+      "one-byte-identical-executor"
+    ]
   }
 }
