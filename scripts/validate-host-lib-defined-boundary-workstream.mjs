@@ -43,6 +43,27 @@ assert.equal(receipt.evidence.status, "PASS");
 assert.equal(receipt.evidence.unchanged_executor_domains, 3);
 assert.deepEqual(receipt.evidence.final_counts, { resources: 0, windows: 0, operations: 0 });
 
+const linuxReceipt = JSON.parse(fs.readFileSync("admission/host-lib-defined-boundary-v1/linux-aarch64-qualification.json", "utf8"));
+assert.equal(linuxReceipt.schema, "wasmc.host-lib-defined-boundary-linux-qualification/v1");
+assert.equal(linuxReceipt.status, "linux-aarch64-local-qualified-not-admitted-not-released");
+assert.equal(linuxReceipt.admitted, false);
+assert.equal(linuxReceipt.released, false);
+execFileSync("git", ["cat-file", "-e", `${linuxReceipt.implementation_commit}^{commit}`]);
+execFileSync("git", ["merge-base", "--is-ancestor", linuxReceipt.implementation_commit, "HEAD"]);
+for (const [relative, expected] of Object.entries(linuxReceipt.source)) {
+  assert.equal(digest(relative), expected, `${relative}: Linux qualification source drift`);
+}
+assert.equal(linuxReceipt.evidence.status, "PASS");
+assert.equal(linuxReceipt.evidence.fixed_executor_domain_apis, 0);
+assert.equal(linuxReceipt.evidence.adapter_device_path_literals, 0);
+assert.deepEqual(linuxReceipt.evidence.real_linux_endpoints, {
+  dev_zero: true,
+  dev_null: true,
+  proc_self_stat: true,
+  sys_cpu_online: true,
+});
+assert.equal(linuxReceipt.evidence.adapter_identity_rejection, true);
+
 const oldCandidate = spawnSync(
   process.execPath,
   ["scripts/release-candidate.mjs", "verify", "channels/candidates/0.0.15.json"],
@@ -57,6 +78,7 @@ console.log(JSON.stringify({
   focused_checks: focused.length,
   frozen_identity_files: frozenIdentityFiles.length,
   retained_local_qualification: receipt.implementation_commit,
+  retained_linux_aarch64_qualification: linuxReceipt.implementation_commit,
   old_candidate_rejects_product_drift: true,
   lifecycle: "architecture-workstream-not-admitted-not-released",
 }));

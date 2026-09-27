@@ -1,0 +1,57 @@
+{
+  "schema": "wasmc.host-lib-defined-boundary-linux-qualification/v1",
+  "status": "linux-aarch64-local-qualified-not-admitted-not-released",
+  "date": "2026-09-27",
+  "implementation_commit": "2b2e51cd30dac57a341ac3c709eab070bb534549",
+  "system_lib_identity": "wasmc:system-linux-endpoint@0.0.1-dev.1",
+  "source": {
+    "host/runtime/lib-boundary/native-linux/Cargo.lock": "5c1fceda2528f2294cc116da2a600a8d6c08b41b86f7b4331f7e7408dfb47c59",
+    "host/runtime/lib-boundary/native-linux/Cargo.toml": "51f247df82e66bc6636f8efb5d1bfa987c845a80185a831dc6dd9261caf10f3d",
+    "host/runtime/lib-boundary/native-linux/src/main.rs": "3ebf18e2a393d0bd343f52e9f7f3737a90496f551d56b900cf2440c72c9307b9",
+    "libsrc/wasmc-system-linux-endpoint/lib.wit": "f8aeea38381ed1dbba83cb03248c3bbcdc730c7ba6a2990664d646f49b09c3fd",
+    "libsrc/wasmc-system-linux-endpoint/native-adapter.c": "eb0757a6ccb1c4244e37b03c3ec19029f9ab8815a774db6baef077172fb4813d",
+    "libsrc/wasmc-system-linux-endpoint/native-boundary.template.json": "fe49d5222f507f83a221209a625545223f69c31fa61b3e76fe3183e0b2e01dce",
+    "scripts/test-linux-lib-defined-boundary.mjs": "9b24eb092843804bd8ff9c4f1a85fdb0ed37f3a178b457d013af86e019d27861"
+  },
+  "environment": {
+    "container_image": "mcpgit-validation:rust-1.96-node26-warm",
+    "container_image_id": "sha256:45ec80b38695ef42a711a49cfeabf98e9cd3d5fd4221fd5d2f9b7f28d8ecb6a6",
+    "os": "linux",
+    "architecture": "aarch64",
+    "kernel": "6.8.0-117-generic",
+    "node": "v26.5.1",
+    "cargo": "cargo 1.96.1 (356927216 2026-06-26)",
+    "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+    "cc": "Debian 12.2.0-14+deb12u1",
+    "binutils": "GNU Binutils 2.40"
+  },
+  "outputs": {
+    "executor_sha256": "3654b565e0a98044a6385f4360edd2433d304502acccb194c556577e5564f3b2",
+    "adapter_sha256": "2a5b0c0fae998e0256f9c3679f6ff1be30d2bf409f35876683b3c78411b53cc2",
+    "adapter_export": "wasmc_boundary_v1_invoke"
+  },
+  "evidence": {
+    "script": "scripts/test-linux-lib-defined-boundary.mjs",
+    "status": "PASS",
+    "fixed_executor_domain_apis": 0,
+    "adapter_device_path_literals": 0,
+    "real_linux_endpoints": {
+      "dev_zero": true,
+      "dev_null": true,
+      "proc_self_stat": true,
+      "sys_cpu_online": true
+    },
+    "adapter_identity_rejection": true
+  },
+  "remaining_gates": [
+    "linux-x86_64-independent-qualification",
+    "descriptor-schema-review",
+    "Wasm-WIT-lowering",
+    "native-asynchronous-lifecycle",
+    "admission-review",
+    "catalog-and-LibSearch",
+    "immutable-release"
+  ],
+  "admitted": false,
+  "released": false
+}

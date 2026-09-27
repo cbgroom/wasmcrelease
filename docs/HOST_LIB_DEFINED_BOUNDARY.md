@@ -149,3 +149,7 @@ remain pending.
 The exact local receipt is
 `admission/host-lib-defined-boundary-v1/local-qualification.json`, bound to
 implementation commit `46f88f0fb1040b43cda1a9dbafeefe420b73647a`.
+
+The exact Linux aarch64 receipt is
+`admission/host-lib-defined-boundary-v1/linux-aarch64-qualification.json`, bound
+to implementation commit `2b2e51cd30dac57a341ac3c709eab070bb534549`.
