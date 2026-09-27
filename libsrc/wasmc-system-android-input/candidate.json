@@ -1,0 +1,13 @@
+{
+  "schema": "wasmc.libsrc-candidate/v1",
+  "id": "wasmc-system-android-input",
+  "version": "0.0.1-dev.1",
+  "wit": "lib.wit",
+  "source": ["README.md", "lib.wit", "native-boundary.template.json", "native-adapter.c"],
+  "host_import_budget": 0,
+  "origin": { "kind": "native-public" },
+  "completed_gates": ["public-source", "wit-parsed", "fixed-android-host", "android-emulator-ui-effect-v1", "query-before-control-v1", "ui-and-frame-postcondition-v1"],
+  "pending_gates": ["direct-android-uinput", "descriptor-schema-review", "wasm-lowering", "physical-device-qualification", "admission-review"],
+  "admitted": false,
+  "qualification": { "runner": "node", "script": "scripts/test-android-agent-computer.mjs" }
+}

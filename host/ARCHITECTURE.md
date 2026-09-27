@@ -94,6 +94,20 @@ Lib graph -> fixed boundary -> Node/Bun/Deno/Browser executor -> environment
 The surrounding environment may impose different physical availability, but it
 does not create a parallel Guest ABI or move domain semantics into Host code.
 
+Each physical target may ship its own fixed implementation of that boundary.
+“Fixed Host” therefore means byte-stable within a target and boundary version,
+not one native executable shared by Linux, Android, macOS and Windows. The
+portable WIT APIs and Lib composition remain uniform; only the Lib-owned
+physical binding and target Host implementation vary.
+
+The first Android profile proves this separation on an Android 16 ARM64
+emulator. One fixed target Host loads three independent Lib adapters for
+standard display, semantic UI and input APIs. It queries Settings, waits for an
+authoritative focused input node, controls the UI, then confirms the effect in
+both semantic UI and distinct real frames. The Host itself has zero domain APIs.
+This is emulator evidence only; direct Android `/dev/uinput`, WIT-to-Wasm
+lowering, physical-device qualification, admission and release remain pending.
+
 ## Runtime execution and cache hierarchy
 
 Wasmi and Wasmtime/AOT remain complementary execution lanes. Prepared modules,

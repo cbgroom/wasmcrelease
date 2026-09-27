@@ -254,6 +254,38 @@ contains no domain API and is byte-identical for all three. The test additionall
 proves pinned-window release rejection, completion claim-once, adapter digest
 rejection and zero remaining resources/operations/windows.
 
+## Android target profile
+
+Android now has a target-specific fixed Host at
+`host/runtime/lib-boundary/native-android` and a Library OS profile at
+`host/platform/android/agent-computer-profile.json`. Target-specific does not
+mean domain-specific: the executable verifies and invokes exact Lib-owned
+descriptors but contains no display, UI, input, Android command or service API.
+
+Three candidate bindings expose platform-neutral APIs:
+
+- `wasmc:system-display@0.0.1` through `wasmc-system-android-display`;
+- `wasmc:system-ui@0.0.1` through `wasmc-system-android-ui`;
+- `wasmc:system-input@0.0.1` through `wasmc-system-android-input`.
+
+The Android 16/API 36 ARM64 emulator qualification runs all three adapters
+through one Host identity. It captures a 1080×2400 frame, queries the semantic
+Settings hierarchy, waits until the search editor is authoritatively focused,
+types `display`, verifies the exact text and search result, opens Display size,
+and confirms both foreground/UI semantics and a changed frame. It also rejects
+a malformed input operation and a descriptor with the wrong adapter digest.
+
+The focus gate is intentional: a preliminary direct command issued before the
+live input connection was ready produced only a suffix. Command completion is
+therefore never treated as proof of UI effect; query-before-control and
+UI/frame postconditions are part of the profile contract.
+
+This closes the emulator-level query/control/confirmation slice, not the whole
+product lifecycle. The adapters are still native descriptor candidates rather
+than WFC-lowered Wasm components. Direct Android `/dev/uinput`, physical-device
+qualification, descriptor review, admission, catalog publication and release
+remain pending.
+
 The mapped-window, epoll-readiness, kernel-splice and asynchronous-readiness
 successors are qualified on local Linux aarch64 and independent GitHub Ubuntu
 x86_64. The ioctl call-shape and vectored-write successor is also qualified on

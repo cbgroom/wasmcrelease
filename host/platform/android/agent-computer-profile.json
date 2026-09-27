@@ -1,0 +1,21 @@
+{
+  "schema": "wasmc.library-os-profile/v1",
+  "id": "android-agent-computer-v1",
+  "target": "android-arm64",
+  "host": {
+    "contract": "wasmc.lib-defined-host-boundary/v1",
+    "executor": "host/runtime/lib-boundary/native-android",
+    "required_domain_apis": 0
+  },
+  "standard_apis": [
+    "wasmc:system-display@0.0.1",
+    "wasmc:system-ui@0.0.1",
+    "wasmc:system-input@0.0.1"
+  ],
+  "bindings": [
+    "wasmc:system-android-display@0.0.1-dev.1",
+    "wasmc:system-android-ui@0.0.1-dev.1",
+    "wasmc:system-android-input@0.0.1-dev.1"
+  ],
+  "acceptance": "query-ui-then-control-then-confirm-with-ui-and-frame"
+}

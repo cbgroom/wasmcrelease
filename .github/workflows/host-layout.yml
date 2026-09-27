@@ -14,12 +14,15 @@ on:
       - "libsrc/wasmc-system-linux-endpoint/**"
       - "libsrc/wasmc-system-linux-uinput/**"
       - "libsrc/wasmc-system-linux-socket/**"
+      - "libsrc/wasmc-system-android-*/**"
       - "libsrc/registry.json"
       - "scripts/test-lib-defined-boundary-runtime.mjs"
       - "scripts/test-linux-lib-defined-boundary.mjs"
       - "scripts/test-linux-socket-lib-defined-boundary.mjs"
       - "scripts/test-linux-operation-bridge.mjs"
       - "scripts/test-linux-uinput-lib-defined-boundary.mjs"
+      - "scripts/validate-android-agent-computer.mjs"
+      - "scripts/test-android-agent-computer.mjs"
       - "scripts/host-https-ab.mjs"
       - ".github/workflows/host-layout.yml"
   pull_request:
@@ -34,12 +37,15 @@ on:
       - "libsrc/wasmc-system-linux-endpoint/**"
       - "libsrc/wasmc-system-linux-uinput/**"
       - "libsrc/wasmc-system-linux-socket/**"
+      - "libsrc/wasmc-system-android-*/**"
       - "libsrc/registry.json"
       - "scripts/test-lib-defined-boundary-runtime.mjs"
       - "scripts/test-linux-lib-defined-boundary.mjs"
       - "scripts/test-linux-socket-lib-defined-boundary.mjs"
       - "scripts/test-linux-operation-bridge.mjs"
       - "scripts/test-linux-uinput-lib-defined-boundary.mjs"
+      - "scripts/validate-android-agent-computer.mjs"
+      - "scripts/test-android-agent-computer.mjs"
       - "scripts/host-https-ab.mjs"
       - ".github/workflows/host-layout.yml"
   workflow_dispatch:
@@ -78,6 +84,7 @@ jobs:
       - run: node scripts/test-linux-lib-defined-boundary.mjs
       - run: node scripts/test-linux-socket-lib-defined-boundary.mjs
       - run: node scripts/test-linux-operation-bridge.mjs
+      - run: node scripts/validate-android-agent-computer.mjs
       - name: Qualify Lib-defined socket HTTPS migration
         shell: bash
         run: |

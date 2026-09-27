@@ -1,0 +1,80 @@
+import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
+import fs from "node:fs";
+import path from "node:path";
+
+const root = process.cwd();
+const readJson = (relative) => JSON.parse(fs.readFileSync(path.join(root, relative), "utf8"));
+const profile = readJson("host/platform/android/agent-computer-profile.json");
+const architecture = readJson("host/architecture.json");
+
+assert.equal(profile.schema, "wasmc.library-os-profile/v1");
+assert.equal(profile.target, "android-arm64");
+assert.equal(profile.host.contract, "wasmc.lib-defined-host-boundary/v1");
+assert.equal(profile.host.executor, "host/runtime/lib-boundary/native-android");
+assert.equal(profile.host.required_domain_apis, 0);
+assert.deepEqual(profile.standard_apis, [
+  "wasmc:system-display@0.0.1",
+  "wasmc:system-ui@0.0.1",
+  "wasmc:system-input@0.0.1",
+]);
+
+const native = architecture.prototype?.android_native;
+assert.equal(native?.profile, "host/platform/android/agent-computer-profile.json");
+assert.equal(native?.executor, profile.host.executor);
+assert.equal(native?.system_libs?.length, 3);
+assert.ok(native?.status?.endsWith("not-admitted-not-released"));
+assert.ok(native?.pending?.includes("direct-android-uinput"));
+assert.ok(native?.pending?.includes("wit-to-wasm-lowering"));
+
+const hostSource = fs.readFileSync(path.join(root, profile.host.executor, "src/main.rs"), "utf8");
+for (const forbidden of [
+  "/system/bin/screencap",
+  "/system/bin/uiautomator",
+  "/system/bin/input",
+  "SurfaceFlinger",
+  "keyevent",
+]) {
+  assert.equal(hostSource.includes(forbidden), false, `domain semantics leaked into Android Host: ${forbidden}`);
+}
+assert.match(hostSource, /wasmc\.native-boundary-descriptor\/v1/);
+assert.match(hostSource, /adapter identity mismatch/);
+
+const specs = [
+  ["display", "wasmc-system-android-display", "/system/bin/screencap"],
+  ["ui", "wasmc-system-android-ui", "/system/bin/uiautomator"],
+  ["input", "wasmc-system-android-input", "/system/bin/input"],
+];
+for (const [name, id, platformMechanism] of specs) {
+  const relative = `libsrc/${id}`;
+  const candidate = readJson(`${relative}/candidate.json`);
+  const descriptor = readJson(`${relative}/native-boundary.template.json`);
+  assert.equal(candidate.schema, "wasmc.libsrc-candidate/v1");
+  assert.equal(candidate.id, id);
+  assert.equal(candidate.admitted, false);
+  assert.ok(candidate.completed_gates.includes("fixed-android-host"));
+  assert.ok(candidate.pending_gates.includes("wasm-lowering"));
+  assert.ok(candidate.pending_gates.includes("physical-device-qualification"));
+  assert.equal(descriptor.schema, "wasmc.native-boundary-descriptor/v1");
+  assert.equal(descriptor.identity, `wasmc:system-android-${name}@0.0.1-dev.1`);
+  assert.equal(descriptor.adapter.sha256, "BUILD_OUTPUT_SHA256");
+  assert.equal(descriptor.lifecycle, "prototype-not-admitted-not-released");
+  const adapter = fs.readFileSync(path.join(root, relative, "native-adapter.c"), "utf8");
+  assert.ok(adapter.includes(platformMechanism), `${id}: missing Lib-owned platform binding`);
+  execFileSync("wasm-tools", ["component", "wit", path.join(relative, "lib.wit")], {
+    cwd: root,
+    stdio: "ignore",
+  });
+}
+
+assert.deepEqual(profile.bindings, specs.map(([name]) => `wasmc:system-android-${name}@0.0.1-dev.1`));
+console.log(JSON.stringify({
+  accepted: true,
+  schema: profile.schema,
+  target: profile.target,
+  fixed_host_domain_apis: profile.host.required_domain_apis,
+  standard_apis: profile.standard_apis.length,
+  android_bindings: profile.bindings.length,
+  admitted: false,
+  released: false,
+}));

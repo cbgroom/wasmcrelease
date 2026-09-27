@@ -167,6 +167,34 @@
         "readiness-cancel-timeout-release-lifecycle",
         "retained-endpoint-lifetime-during-readiness"
       ]
+    },
+    "android_native": {
+      "status": "android-16-arm64-emulator-agent-computer-qualified-not-admitted-not-released",
+      "executor": "host/runtime/lib-boundary/native-android",
+      "profile": "host/platform/android/agent-computer-profile.json",
+      "system_libs": [
+        "libsrc/wasmc-system-android-display",
+        "libsrc/wasmc-system-android-ui",
+        "libsrc/wasmc-system-android-input"
+      ],
+      "evidence": "scripts/test-android-agent-computer.mjs",
+      "convergence": "one fixed target Host executes Lib-owned display, semantic UI and input bindings behind platform-neutral WIT APIs",
+      "scope": [
+        "real-1080x2400-frame-capture",
+        "real-semantic-ui-hierarchy",
+        "authoritative-focus-precondition",
+        "real-tap-and-text-control",
+        "ui-and-frame-postconditions",
+        "exact-shared-object-identity",
+        "malformed-operation-rejection"
+      ],
+      "pending": [
+        "direct-android-uinput",
+        "wit-to-wasm-lowering",
+        "physical-device-qualification",
+        "admission",
+        "release"
+      ]
     }
   }
 }
