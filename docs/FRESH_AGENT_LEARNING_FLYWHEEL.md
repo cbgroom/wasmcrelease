@@ -17,7 +17,12 @@ protocol is `agent-evaluation/fresh-agent-learning-v1.json`.
 
 ## Loop
 
-1. Freeze the release commit, prompts and evidence-backed oracles.
+1. Finish every public product, guidance and lifecycle byte; create the candidate
+   inventory; assemble the final prod state in an isolated local worktree; and
+   commit that release rehearsal without pushing or tagging it. Freeze this
+   exact rehearsal commit and tree, the underlying product candidate, prompts
+   and evidence-backed oracles. An earlier guidance or product checkpoint is
+   not a release qualification.
 2. Run every case in a fresh session with no private repository, prior chat,
    memory, maintainer hint or hidden-reasoning dependency.
 3. Retain privacy-safe traces and independently verify decisions and generated
@@ -27,7 +32,46 @@ protocol is `agent-evaluation/fresh-agent-learning-v1.json`.
 5. Repair the smallest correct layer: public guidance, evaluator, producer, or
    tool/environment. Do not relax an oracle to reward a plausible answer.
 6. Rerun deterministic release gates and the whole frozen cohort. Version the
-  protocol when a case or oracle changes.
+   protocol when a case or oracle changes.
+
+## Mandatory pre-release gate
+
+Run the live controlled pair locally after the final prod release rehearsal
+commit exists and before publishing its tag:
+
+```sh
+node scripts/pi-pre-release-gate-v1.mjs run \
+  --commit <exact-local-prod-rehearsal-commit> \
+  --candidate channels/candidates/<version>.json
+```
+
+The runner first requires `release.json` in that commit to describe the final
+suffix-free prod state. It checks every candidate product byte, records both
+the rehearsal commit and tree plus the underlying product-candidate identity,
+then runs all six cases for both required models concurrently. Every case uses
+a fresh detached clone and a fresh Pi session. A clean linked worktree is
+sufficient; publication is neither required nor authorized.
+
+The live run is structural evidence only. Independently review each first final
+answer against the frozen oracle, create a privacy-safe
+`wasmc.pi-pre-release-qualification/v1` receipt, and verify the binding:
+
+```sh
+node scripts/pi-pre-release-gate-v1.mjs verify \
+  --commit <exact-local-prod-rehearsal-commit> \
+  --candidate channels/candidates/<version>.json \
+  --receipt agent-evaluation/receipts/<receipt>.json
+```
+
+The verifier fails closed unless the receipt binds the same release rehearsal
+commit and tree, underlying candidate commit and product-set digest, contains
+the exact two-model cohort, and records a structural plus independent white-box
+first-pass result for every case. Only after PASS may that exact rehearsal
+commit be tagged and pushed. Any later change to product, lifecycle or public
+guidance bytes creates a different tree and requires a complete rerun. Store
+the receipt after tagging so it does not create a self-referential release
+tree. A CI contract test exercises this verifier but is not a live Pi run and
+must never be reported as one.
 
 Aggregate an array of `wasmc.fresh-agent-run/v1` receipts with:
 

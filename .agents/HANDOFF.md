@@ -862,3 +862,18 @@ example; and add field-by-field oracle checks for reported package identities
 and digests. Do not modify the immutable v0.0.14 tag or weaken the evaluator.
 The privacy-safe exact receipt is
 `agent-evaluation/receipts/pi-v014-post-release-regression-c0c95f8.json`.
+
+The release-order defect is now explicit. The earlier controlled-pair PASS was
+bound to guidance commit `bb9615a`, while the final product candidate was
+`6cb3aaf` and the prod release tree was `c0c95f8`; promotion did not require a
+fresh live-pair receipt for that final tree. The former CI label also described
+a synthetic cohort-contract test as though it were a live Pi run.
+
+Future releases must assemble the final prod commit locally in an isolated
+worktree and run `scripts/pi-pre-release-gate-v1.mjs` before tagging or pushing.
+The gate validates every candidate product byte at that commit, verifies the
+final prod lifecycle view, runs the two Pi routes concurrently in fresh clones,
+and rejects any receipt not bound to the exact rehearsal commit/tree, candidate
+commit and product-set digest or lacking structural and independent white-box
+first-pass acceptance. The deterministic CI case is renamed and separated from
+this live gate. The receipt is added after the tag to avoid self-reference.

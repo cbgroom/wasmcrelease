@@ -50,3 +50,22 @@ and so on. Cross-platform absolute timing equality is never a promotion gate.
 
 Rollback changes only mutable discovery to a previously qualified prod identity;
 it never alters an immutable artifact/tag or makes prerelease bytes default.
+
+## Final local release rehearsal
+
+The main-to-prod transition must be assembled as an unpushed commit in an
+isolated linked worktree before the suffix-free tag exists. That commit must
+already contain the exact final `release.json`, prod channel, public Agent
+entrypoints, manifests and checksums. Run
+`scripts/pi-pre-release-gate-v1.mjs run` against this local commit and the exact
+two-model Pi cohort, perform the independent white-box review, then run the
+same script in `verify` mode with the privacy-safe receipt. An earlier guidance,
+candidate, dev or main commit is not a substitute because it does not represent
+the final public lifecycle view.
+
+Only a passing receipt bound to the rehearsal commit, tree, underlying product
+candidate and product-set digest authorizes tagging and pushing that exact
+commit. The receipt is committed after the immutable tag so it cannot change
+the tree it attests. Any edit between rehearsal and tagging invalidates the
+authorization and requires the complete pair to run again. Deterministic CI
+tests exercise the gate implementation; they are not live-model evidence.
