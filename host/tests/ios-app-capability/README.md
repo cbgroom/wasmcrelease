@@ -6,7 +6,7 @@ invokes opaque byte providers. `Profile/EmbeddedProfile.swift` is the only
 deployment control plane that selects domain providers. Apple frameworks and
 system calls are confined to `Providers/`.
 
-The current simulator slice exercises eleven provider families:
+The current simulator slice exercises twelve provider families:
 
 - atomic sandbox storage, file synchronization and readback;
 - secure random, preferences, Keychain and clocks;
@@ -19,18 +19,29 @@ The current simulator slice exercises eleven provider families:
 - permission-free offline audio rendering;
 - local WKWebView HTML/DOM/JavaScript execution;
 - permission-free observation of camera, microphone, motion, location,
-  notification and background-refresh availability/authorization.
+  notification and background-refresh availability/authorization;
+- centralized zero-prompt authorization discovery, request planning and a
+  persistent one-attempt ledger.
 
 The protected-capability provider never requests permission. `available=false`
 on Simulator is retained as a platform observation, not reported as a Host or
 Lib failure. Permission prompts, actual sensor samples and background delivery
 belong to explicit physical-device and lifecycle qualifications.
 
+Authorization is a Lib concern, not a Host API. The authorization provider
+classifies thirteen existing capabilities as permission-free and observes ten
+protected permission categories without prompting. Its planner requests only a
+`not-determined` and never-attempted category; denied decisions route to
+Settings, while restricted or unavailable categories fail closed. A persistent
+attempt ledger prevents application-driven repeat prompts. One application
+rationale screen can explain a batch, but iOS still owns separate system prompts
+for separate permission categories and those prompts cannot be coalesced.
+
 The WIT files define the intended public semantics. The current Swift provider
 functions are native qualification adapters, not WIT-lowered Wasm components.
 They are statically registered to prove that App capability growth changes the
 Lib/profile side without adding domain APIs to the Host. The validator pins the
-fixed Host SHA-256 while the profile grows from six to eleven providers.
+fixed Host SHA-256 while the profile grows from six to twelve providers.
 
 `scripts/validate-ios-app-capability.mjs` is the portable source/WIT gate.
 `scripts/test-ios-app-capability.mjs` is the macOS gate and requires

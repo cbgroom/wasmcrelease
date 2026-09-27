@@ -1,0 +1,13 @@
+{
+  "schema": "wasmc.libsrc-candidate/v1",
+  "id": "wasmc-app-authorization-policy",
+  "version": "0.0.1-dev.1",
+  "wit": "lib.wit",
+  "source": ["README.md", "lib.wit", "AuthorizationPolicy.swift"],
+  "host_import_budget": 0,
+  "origin": { "kind": "native-public" },
+  "completed_gates": ["public-source", "wit-parsed", "zero-prompt-discovery-v1", "one-attempt-planner-v1", "persistent-attempt-ledger-v1"],
+  "pending_gates": ["physical-device-prompt-callbacks", "settings-return-reconciliation", "component-lowering", "admission-review"],
+  "admitted": false,
+  "qualification": { "runner": "node", "script": "scripts/test-ios-app-capability.mjs" }
+}

@@ -15,6 +15,7 @@ const expected = new Map([
   ["wasmc:system-ios-app-audio@0.0.1-dev.1", "wasmc:system-app-audio@0.0.1"],
   ["wasmc:system-ios-app-web@0.0.1-dev.1", "wasmc:system-app-web@0.0.1"],
   ["wasmc:system-ios-app-device-observation@0.0.1-dev.1", "wasmc:system-app-device-observation@0.0.1"],
+  ["wasmc:system-ios-app-authorization@0.0.1-dev.1", "wasmc:system-app-authorization@0.0.1"],
 ]);
 const host = fs.readFileSync("host/tests/ios-app-capability/Host/FixedHost.swift", "utf8");
 const profile = fs.readFileSync("host/tests/ios-app-capability/Profile/EmbeddedProfile.swift", "utf8");
@@ -48,12 +49,18 @@ const witFiles = [
   "host/tests/ios-app-capability/WIT/app-audio.wit",
   "host/tests/ios-app-capability/WIT/app-web.wit",
   "host/tests/ios-app-capability/WIT/app-device-observation.wit",
+  "libsrc/wasmc-app-authorization-policy/lib.wit",
   "libsrc/wasmc-system-android-ui/lib.wit",
   "libsrc/wasmc-system-ios-simulator-display/lib.wit",
 ];
 for (const wit of witFiles) {
   execFileSync("wasm-tools", ["component", "wit", wit], { stdio: "ignore" });
 }
+assert.deepEqual(
+  fs.readFileSync("host/tests/ios-app-capability/WIT/app-authorization.wit"),
+  fs.readFileSync("libsrc/wasmc-app-authorization-policy/lib.wit"),
+  "embedded iOS authorization WIT must match the public policy candidate",
+);
 
 console.log(JSON.stringify({
   accepted: true,

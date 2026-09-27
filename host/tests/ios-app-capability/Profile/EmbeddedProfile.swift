@@ -79,5 +79,12 @@ enum EmbeddedProfile {
             maxOutputBytes: 16_384,
             invoke: DeviceObservationProvider.invoke
         ),
+        .init(
+            identity: "wasmc:system-ios-app-authorization@0.0.1-dev.1",
+            witPackage: "wasmc:system-app-authorization@0.0.1",
+            maxInputBytes: 0,
+            maxOutputBytes: 32_768,
+            invoke: AuthorizationProvider.invoke
+        ),
     ]
 }

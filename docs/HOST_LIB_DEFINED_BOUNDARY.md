@@ -374,7 +374,7 @@ Wasm lowering, admission and release remain pending.
 
 The next iOS slice embeds a second fixed, domain-neutral Host in a normal iOS
 application rather than driving the Simulator from macOS. The app profile
-registers eleven statically linked Lib providers without adding domain methods to
+registers twelve statically linked Lib providers without adding domain methods to
 the Host: sandbox storage, secure state, TCP/UDP loopback, UIKit semantic UI,
 window capture, Metal acceleration, SQLite, cryptography, offline audio,
 embedded WebKit and protected-capability observation. Exact WIT package
@@ -389,13 +389,25 @@ state postcondition, a 1206×2622 outer screenshot plus in-app PNG capture, and
 a completed Metal command-buffer copy, a WAL/transaction/prepared-statement
 SQLite round trip, AES-GCM and P-256 round trips, non-silent offline audio
 rendering, and local DOM/JavaScript execution. The Host reports eleven exact
-provider identities and still has zero domain APIs. Its source SHA-256 remains
+provider identities plus a centralized authorization provider and still has
+zero domain APIs. Its source SHA-256 remains
 `f0d465ba7f23698d6365453b02fad2f4a0803171f970631751fc90a00a86d96f`,
 identical to the six-provider qualification.
 
 Camera, microphone, motion, location, notification and background-refresh
 states are observed without requesting permission. Simulator absence is a
 target observation, not a Host failure or a claim of physical-device support.
+
+Authorization discovery, planning and attempt history are also Lib semantics.
+The authorization provider identifies thirteen permission-free App capabilities
+and preflights ten protected categories with zero prompts. It requests only a
+`not-determined` category that has never been attempted, persists that attempt,
+never automatically re-prompts a denial, and fails closed for restricted or
+unavailable capabilities. A caller may present one rationale screen for a batch,
+but iOS does not permit unrelated system permission prompts to be combined.
+The qualification tests the planner state machine and persistent ledger without
+causing a system prompt; real prompt/result callbacks remain a physical-device
+qualification.
 
 The Keychain check intentionally uses Xcode's Simulator ad-hoc app signing.
 Disabling code signing produced a real missing-application-identity failure and

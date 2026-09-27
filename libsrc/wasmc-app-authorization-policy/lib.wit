@@ -1,0 +1,47 @@
+package wasmc:system-app-authorization@0.0.1;
+
+interface authorization {
+  enum capability {
+    camera,
+    microphone,
+    location-when-in-use,
+    motion,
+    notifications,
+    photos-read-write,
+    contacts,
+    calendar,
+    reminders,
+    speech-recognition,
+  }
+  enum state {
+    not-required,
+    unavailable,
+    not-determined,
+    denied,
+    restricted,
+    authorized,
+    limited,
+    provisional,
+    ephemeral,
+    unknown,
+  }
+  enum plan {
+    no-request,
+    request-once,
+    open-settings,
+    fail-closed,
+  }
+  record decision {
+    capability: capability,
+    state: state,
+    attempted: bool,
+    plan: plan,
+  }
+  snapshot: func() -> list<decision>;
+  plan-request: func(capabilities: list<capability>) -> list<decision>;
+  record-attempt: func(capability: capability) -> result<_, s32>;
+}
+
+world system-app-authorization {
+  export authorization;
+}

@@ -57,7 +57,7 @@ assert.deepEqual(report.host_negative_controls, {
   invalid_descriptor_rejected: true,
   output_limit_rejected: true,
 });
-assert.equal(report.provider_count, 11);
+assert.equal(report.provider_count, 12);
 assert.deepEqual(report.target, {
   architecture: "aarch64", embedding: "native", environment: "simulator", os: "ios",
 });
@@ -85,6 +85,17 @@ assert.equal(results["wasmc:system-ios-app-web@0.0.1-dev.1"].html_loaded, true);
 assert.equal(results["wasmc:system-ios-app-web@0.0.1-dev.1"].javascript_executed, true);
 assert.equal(results["wasmc:system-ios-app-device-observation@0.0.1-dev.1"].permission_requested, false);
 assert.equal(results["wasmc:system-ios-app-device-observation@0.0.1-dev.1"].simulator_observation_only, true);
+const authorization = results["wasmc:system-ios-app-authorization@0.0.1-dev.1"];
+assert.equal(authorization.discovery_prompt_count, 0);
+assert.equal(authorization.permission_free_count, 13);
+assert.equal(authorization.authorization_decisions.length, 10);
+assert.equal(authorization.one_app_rationale_session, true);
+assert.equal(authorization.request_only_when_not_determined_and_unattempted, true);
+assert.equal(authorization.denied_does_not_reprompt, true);
+assert.equal(authorization.restricted_and_unavailable_fail_closed, true);
+assert.equal(authorization.os_prompts_cannot_be_coalesced_across_permission_categories, true);
+assert.equal(authorization.policy_state_machine_tests, true);
+assert.equal(authorization.persistent_attempt_ledger_roundtrip, true);
 
 const screenshotPath = path.join(root, "target", "ios-app-capability.png");
 simctl(["io", udid, "screenshot", screenshotPath]);
