@@ -545,6 +545,15 @@ fixed Host digest. The retained v4 receipt is
 `admission/host-lib-defined-boundary-v1/ios-arm64-app-surface-control-v4.json`,
 bound to implementation commit `e8955fe74e9830b728465372f8eef1329c5b449e`.
 
+The v5 successor moves the runnable XcodeGen application and its UI tests from
+`host/tests` into the same Lib package under `examples/ios-app/`. The example
+references the Lib-owned `platform/ios` provider in place and shares the fixed
+embedded Host; it does not copy either one. Generic Simulator compilation and a
+complete iPad PiP/handoff rerun pass from the package-local example. The
+retained v5 receipt is
+`admission/host-lib-defined-boundary-v1/ios-arm64-app-surface-control-v5.json`,
+bound to implementation commit `a1aeac34e32dce2d1247661e0ebd91ea941bfb36`.
+
 The mapped-window, epoll-readiness, kernel-splice and asynchronous-readiness
 successors are qualified on local Linux aarch64 and independent GitHub Ubuntu
 x86_64. The ioctl call-shape and vectored-write successor is also qualified on
