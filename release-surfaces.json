@@ -467,7 +467,7 @@
       },
       "catalog": {"release_snapshot":"v0.0.14","path":"catalog/libs-v014.json","sha256":"8368ec8be4b13fadb5959d6495e70916894c476626caf8519b35599041251368","carried_forward":true},
       "exact_report": {
-        "instruction": "Copy these fields byte-for-byte into the final answer. Never reconstruct or extend a digest. If a draft differs, discard it and output only these exact_report values.",
+        "instruction": "Copy these fields byte-for-byte into the final answer. Never reconstruct, extend or abbreviate an identity anywhere. After this block, refer to field names instead of restating or shortening values. If a draft differs, discard it and output only these exact_report values.",
         "package": "wasmc:std@1.4.0",
         "apis": ["wasmc:std@1.4.0/base64#try-encode-standard", "wasmc:std@1.4.0/base64#try-decode-standard"],
         "catalog_sha256": "8368ec8be4b13fadb5959d6495e70916894c476626caf8519b35599041251368",
@@ -508,6 +508,11 @@
     },
     "direct-wasmc-system-telemetry-resource": {
       "request": "call the system telemetry sampler resource directly from WAsmC source",
+      "exact_report": {
+        "instruction": "Copy identity and stop_reason byte-for-byte. Never reconstruct, shorten or respell them; later refer to the field names only.",
+        "identity": "wasmc-system-telemetry@0.0.1",
+        "stop_reason": "wasmc-source-direct-resource-methods"
+      },
       "states": {
         "qualified": false,
         "admitted": false,

@@ -1,7 +1,7 @@
 {
   "schema": "wasmc.agent-quickstart/v1",
   "authority": "release-surfaces.json",
-  "rule": "Match one route, use its exact evidence, and stop. Do not inspect history, unrelated compatibility data, broad manifests or implementation tests. Never abbreviate an identity that you report.",
+  "rule": "Match one route, use its exact evidence, and stop. Do not inspect history, unrelated compatibility data, broad manifests or implementation tests. Never abbreviate an identity that you report. After copying an exact_report value, refer to its field name instead of restating or shortening it.",
   "routes": {
     "release-orientation": {
       "product_version": "v0.0.15",
@@ -54,6 +54,11 @@
     "release-state-separation": {
       "request": "direct WAsmC source use of wasmc-system-telemetry@0.0.1 sampler resource",
       "states": {"qualified":false,"admitted":false,"released":false,"discoverable":false,"installable":false},
+      "exact_report": {
+        "instruction": "Copy identity and stop_reason byte-for-byte. Never reconstruct, shorten or respell them; later refer to the field names only.",
+        "identity": "wasmc-system-telemetry@0.0.1",
+        "stop_reason": "wasmc-source-direct-resource-methods"
+      },
       "required_output_states": ["qualified", "admitted", "released", "discoverable", "installable"],
       "stop": "qualified=false because wasmc-source-direct-resource-methods is explicitly unsupported",
       "related_product": {"qualified":true,"admitted":true,"released":true,"discoverable":true,"installable":true,"routes":["source-free-rust-component","public-rust-host-sdk","linux-explicit-generic-resource-acquisition"]},
@@ -74,7 +79,7 @@
       "states": {"qualified":true,"admitted":true,"released":true,"discoverable":true,"installable":true},
       "catalog_snapshot_boundary": "The exact v0.0.14 catalog is carried forward because package bytes are unchanged; it is package selection authority, while the current release lifecycle remains separate.",
       "exact_report": {
-        "instruction": "Copy these fields byte-for-byte into the final answer. Never reconstruct or extend a digest. If a draft differs, discard it and output only these exact_report values.",
+        "instruction": "Copy these fields byte-for-byte into the final answer. Never reconstruct, extend or abbreviate an identity anywhere. After this block, refer to field names instead of restating or shortening values. If a draft differs, discard it and output only these exact_report values.",
         "package": "wasmc:std@1.4.0",
         "apis": ["wasmc:std@1.4.0/base64#try-encode-standard", "wasmc:std@1.4.0/base64#try-decode-standard"],
         "catalog_sha256": "8368ec8be4b13fadb5959d6495e70916894c476626caf8519b35599041251368",
