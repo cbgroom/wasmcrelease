@@ -1,6 +1,6 @@
 # Lib-defined Host boundary workstream
 
-Status: **epoll device-readiness Linux aarch64 locally qualified; x86_64 refresh pending / not admitted / not released**.
+Status: **epoll device-readiness Linux aarch64/x86_64 qualified / not admitted / not released**.
 
 This workstream replaces domain growth in the Rust Host with a fixed,
 domain-neutral execution boundary. It does not modify the immutable v0.0.15
@@ -171,10 +171,9 @@ contains no domain API and is byte-identical for all three. The test additionall
 proves pinned-window release rejection, completion claim-once, adapter digest
 rejection and zero remaining resources/operations/windows.
 
-The mapped-window predecessor is qualified on local Linux aarch64 and
-independent GitHub Ubuntu x86_64. The epoll-readiness successor is locally
-qualified on Linux aarch64; its independent x86_64 refresh is pending. Wasm/WIT
-lowering, native asynchronous lifecycle/cancellation, `io_uring`, direct
+The mapped-window predecessor and epoll-readiness successor are qualified on
+local Linux aarch64 and independent GitHub Ubuntu x86_64. Wasm/WIT lowering,
+native asynchronous lifecycle/cancellation, `io_uring`, direct
 guest-window zero-copy, non-Linux evidence, admission, catalog publication and
 immutable release remain pending.
 
@@ -212,3 +211,8 @@ successful workflow run `36300032417` at commit
 The epoll-readiness Linux aarch64 receipt is
 `admission/host-lib-defined-boundary-v1/linux-aarch64-epoll-v4.json`, bound to
 implementation commit `d83fc6a823f4dfa6be9e013a4938394eb5ce055d`.
+
+The epoll-readiness Linux x86_64 receipt is
+`admission/host-lib-defined-boundary-v1/linux-x86_64-epoll-v4.json`, bound to
+successful workflow run `36300559026` at commit
+`0bcc62a417a973fd2c7dc751632c2a25741a0635`.

@@ -198,6 +198,36 @@ assert.ok(linuxEpollReceipt.evidence.performance.write_mib_per_second >= linuxEp
 assert.ok(linuxEpollReceipt.evidence.performance.mapping_mib_per_second >= linuxEpollReceipt.evidence.performance.minimum_mib_per_second);
 assert.ok(linuxEpollReceipt.evidence.performance.persistent_speedup >= linuxEpollReceipt.evidence.performance.minimum_speedup);
 
+const linuxX86EpollReceipt = JSON.parse(fs.readFileSync("admission/host-lib-defined-boundary-v1/linux-x86_64-epoll-v4.json", "utf8"));
+assert.equal(linuxX86EpollReceipt.schema, "wasmc.host-lib-defined-boundary-linux-qualification/v4");
+assert.equal(linuxX86EpollReceipt.status, "linux-x86_64-epoll-device-readiness-ci-qualified-not-admitted-not-released");
+assert.equal(linuxX86EpollReceipt.workflow.run_id, 36300559026);
+assert.equal(linuxX86EpollReceipt.workflow.conclusion, "success");
+assert.equal(linuxX86EpollReceipt.admitted, false);
+assert.equal(linuxX86EpollReceipt.released, false);
+for (const revision of [linuxX86EpollReceipt.implementation_commit, linuxX86EpollReceipt.qualified_commit]) {
+  execFileSync("git", ["cat-file", "-e", `${revision}^{commit}`]);
+  execFileSync("git", ["merge-base", "--is-ancestor", revision, "HEAD"]);
+}
+for (const [relative, expected] of Object.entries(linuxX86EpollReceipt.source)) {
+  assert.equal(
+    digestAt(linuxX86EpollReceipt.implementation_commit, relative),
+    expected,
+    `${relative}: retained x86_64 epoll Linux qualification source drift`,
+  );
+}
+assert.equal(linuxX86EpollReceipt.evidence.status, "PASS");
+assert.equal(linuxX86EpollReceipt.evidence.fixed_executor_domain_apis, 0);
+assert.equal(linuxX86EpollReceipt.evidence.real_epoll_device_event, true);
+assert.equal(linuxX86EpollReceipt.evidence.epoll_endpoint, linuxEpollReceipt.evidence.epoll_endpoint);
+assert.equal(linuxX86EpollReceipt.evidence.epoll_add_wait_read_delete, true);
+assert.equal(linuxX86EpollReceipt.evidence.generation_checked_stale_event_set_rejection, true);
+assert.equal(linuxX86EpollReceipt.evidence.fixed_executor_unchanged_from_v3, true);
+assert.ok(linuxX86EpollReceipt.evidence.performance.read_mib_per_second >= linuxX86EpollReceipt.evidence.performance.minimum_mib_per_second);
+assert.ok(linuxX86EpollReceipt.evidence.performance.write_mib_per_second >= linuxX86EpollReceipt.evidence.performance.minimum_mib_per_second);
+assert.ok(linuxX86EpollReceipt.evidence.performance.mapping_mib_per_second >= linuxX86EpollReceipt.evidence.performance.minimum_mib_per_second);
+assert.ok(linuxX86EpollReceipt.evidence.performance.persistent_speedup >= linuxX86EpollReceipt.evidence.performance.minimum_speedup);
+
 const oldCandidate = spawnSync(
   process.execPath,
   ["scripts/release-candidate.mjs", "verify", "channels/candidates/0.0.15.json"],
@@ -219,6 +249,7 @@ console.log(JSON.stringify({
   retained_linux_aarch64_mapped_qualification: linuxMappedReceipt.implementation_commit,
   retained_linux_x86_64_mapped_qualification: linuxX86MappedReceipt.qualified_commit,
   retained_linux_aarch64_epoll_qualification: linuxEpollReceipt.implementation_commit,
+  retained_linux_x86_64_epoll_qualification: linuxX86EpollReceipt.qualified_commit,
   old_candidate_rejects_product_drift: true,
   lifecycle: "architecture-workstream-not-admitted-not-released",
 }));
