@@ -1,0 +1,54 @@
+{
+  "schema": "wasmc.libsrc-candidate/v1",
+  "id": "wasmc-system-ios-app-lifecycle",
+  "version": "0.0.1-dev.1",
+  "wit": "lib.wit",
+  "source": [
+    "README.md",
+    "lib.wit",
+    "platform/ios/binding.json",
+    "platform/ios/Sources/AppLifecycleProvider.swift",
+    "examples/ios-app/README.md",
+    "examples/ios-app/project.yml",
+    "examples/ios-app/App/AppDelegate.swift",
+    "examples/ios-app/App/LifecycleViewController.swift",
+    "examples/ios-app/UITests/AppLifecycleUITests.swift"
+  ],
+  "host_import_budget": 0,
+  "origin": { "kind": "native-public" },
+  "system_binding": {
+    "implements": "wasmc:system-app-lifecycle@0.0.1",
+    "boundary": "wasmc.lib-defined-host-boundary/v1",
+    "descriptor": "platform/ios/binding.json",
+    "artifact_format": "embedded-source",
+    "targets": [
+      { "os": "ios", "architecture": "aarch64", "environment": "simulator", "embedding": "native" }
+    ],
+    "lifecycle": {
+      "qualified": true,
+      "admitted": false,
+      "released": false,
+      "discoverable": false,
+      "installable": false
+    }
+  },
+  "completed_gates": [
+    "public-source",
+    "wit-parsed",
+    "fixed-embedded-host-unchanged",
+    "ios-simulator-home-background-cycle",
+    "ios-simulator-finite-background-work",
+    "ios-simulator-cold-relaunch-journal-recovery"
+  ],
+  "pending_gates": [
+    "physical-device-suspension-resumption",
+    "background-task-expiration",
+    "bgtaskscheduler-delivery",
+    "background-urlsession-delivery",
+    "wit-to-wasm-lowering",
+    "dynamic-component-loading",
+    "admission-review"
+  ],
+  "admitted": false,
+  "qualification": { "runner": "node", "script": "scripts/test-ios-app-lifecycle.mjs" }
+}
