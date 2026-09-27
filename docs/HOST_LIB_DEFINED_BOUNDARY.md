@@ -1,6 +1,6 @@
 # Lib-defined Host boundary workstream
 
-Status: **persistent Linux aarch64 native session locally qualified / x86_64 refresh pending / not admitted / not released**.
+Status: **persistent Linux aarch64/x86_64 native session qualified / not admitted / not released**.
 
 This workstream replaces domain growth in the Rust Host with a fixed,
 domain-neutral execution boundary. It does not modify the immutable v0.0.15
@@ -153,11 +153,10 @@ contains no domain API and is byte-identical for all three. The test additionall
 proves pinned-window release rejection, completion claim-once, adapter digest
 rejection and zero remaining resources/operations/windows.
 
-The earlier one-shot Linux evidence covers local aarch64 and independent GitHub
-Ubuntu x86_64. The new persistent/session implementation is locally qualified
-on aarch64 and still requires fresh x86_64 evidence. Wasm/WIT lowering, native
-asynchronous lifecycle/cancellation, mapped windows, non-Linux evidence,
-admission, catalog publication and immutable release remain pending.
+The persistent/session implementation is now qualified on local Linux aarch64
+and independent GitHub Ubuntu x86_64. Wasm/WIT lowering, native asynchronous
+lifecycle/cancellation, mapped windows, non-Linux evidence, admission, catalog
+publication and immutable release remain pending.
 
 The exact local receipt is
 `admission/host-lib-defined-boundary-v1/local-qualification.json`, bound to
@@ -175,3 +174,8 @@ to successful workflow run `36298739381` at commit
 The persistent-session Linux aarch64 receipt is
 `admission/host-lib-defined-boundary-v1/linux-aarch64-persistent-v2.json`, bound
 to implementation commit `a9226aae8c15285765c942f1eed02ba2b38c5363`.
+
+The persistent-session Linux x86_64 receipt is
+`admission/host-lib-defined-boundary-v1/linux-x86_64-persistent-v2.json`, bound
+to successful workflow run `36299428864` at commit
+`cd6fddb9f17ab62a651164472e6ae6f238b30cca`.

@@ -1,0 +1,73 @@
+{
+  "schema": "wasmc.host-lib-defined-boundary-linux-qualification/v2",
+  "status": "linux-x86_64-persistent-session-ci-qualified-not-admitted-not-released",
+  "date": "2026-09-27",
+  "qualified_commit": "cd6fddb9f17ab62a651164472e6ae6f238b30cca",
+  "implementation_commit": "a9226aae8c15285765c942f1eed02ba2b38c5363",
+  "system_lib_identity": "wasmc:system-linux-endpoint@0.0.1-dev.1",
+  "environment": {
+    "provider": "GitHub Actions",
+    "runner": "ubuntu-24.04",
+    "os": "linux",
+    "architecture": "x86_64",
+    "kernel": "6.17.0-1022-azure",
+    "rustc": "rustc 1.96.0 (ac68faa20 2026-05-25)"
+  },
+  "workflow": {
+    "name": "Host Lib-defined boundary",
+    "run_id": 36299428864,
+    "job_id": 108564210402,
+    "url": "https://github.com/cbgroom/wasmcrelease/actions/runs/36299428864",
+    "conclusion": "success"
+  },
+  "outputs": {
+    "executor_sha256": "7465b5b150cef9d977185bec86fc84fd0e424ae0039720c2e0677196153becbc",
+    "adapter_sha256": "5e870ab99ce7f7ba9ae5822f55c485a3b13c5153cc2c36025513f05053c2d830",
+    "adapter_export": "wasmc_boundary_v1_invoke"
+  },
+  "evidence": {
+    "script": "scripts/test-linux-lib-defined-boundary.mjs",
+    "status": "PASS",
+    "fixed_executor_domain_apis": 0,
+    "adapter_device_path_literals": 0,
+    "persistent_fd_resources": true,
+    "generation_checked_stale_handle_rejection": true,
+    "real_ioctl": "TIOCGPTN",
+    "real_poll": true,
+    "real_linux_endpoints": {
+      "dev_zero": true,
+      "dev_null": true,
+      "dev_ptmx": true,
+      "proc_self_stat": true,
+      "sys_cpu_online": true
+    },
+    "performance": {
+      "read_operations": 512,
+      "read_bytes": 33554432,
+      "read_mib_per_second": 952.01,
+      "write_operations": 256,
+      "write_bytes": 16777216,
+      "write_mib_per_second": 1212.43,
+      "warm_ns_per_operation": 65650,
+      "cold_ns_per_operation": 3885985,
+      "persistent_speedup": 59.19,
+      "minimum_mib_per_second": 25,
+      "minimum_speedup": 5,
+      "scope": "same-runner diagnostic; not a portable hardware guarantee"
+    },
+    "adapter_identity_rejection": true,
+    "frozen_v0_0_15_identity_files": 3,
+    "old_candidate_rejects_product_drift": true
+  },
+  "remaining_gates": [
+    "descriptor-schema-review",
+    "Wasm-WIT-lowering",
+    "native-asynchronous-lifecycle",
+    "mapped-window-profile",
+    "admission-review",
+    "catalog-and-LibSearch",
+    "immutable-release"
+  ],
+  "admitted": false,
+  "released": false
+}
