@@ -44,6 +44,8 @@ jobs:
         with:
           node-version: 26.5.1
       - uses: dtolnay/rust-toolchain@1.96.0
+        with:
+          components: rustfmt, clippy
       - run: node scripts/validate-host-layout.mjs
       - run: node scripts/test-host-lib-defined-boundary.mjs
       - run: node scripts/validate-host-camera-model.mjs
