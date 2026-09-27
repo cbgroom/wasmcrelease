@@ -1,0 +1,29 @@
+{
+  "schema": "wasmc.system-lib-package-layout/v1",
+  "status": "architecture-workstream-not-released",
+  "package_root": "libsrc/<provider-package>",
+  "layers": {
+    "semantic": "lib.wit",
+    "metadata": "candidate.json",
+    "platform_binding": "platform/<os>/binding.json",
+    "adapter_source": "platform/<os>/Sources/",
+    "target_request": "host/platform/<os>/*-request.json",
+    "resolved_profile": "host/platform/<os>/*-profile.json",
+    "qualification": "admission/host-lib-defined-boundary-v1/*.json"
+  },
+  "rules": {
+    "wit_is_platform_neutral": true,
+    "provider_identity_is_platform_specific": true,
+    "adapter_source_is_lib_owned": true,
+    "test_app_owns_no_provider_source": true,
+    "target_selection_uses_metadata_not_names": true,
+    "one_provider_may_declare_only_equivalent_targets": true,
+    "different_platform_implementations_use_distinct_provider_packages": true,
+    "host_domain_api_growth": false,
+    "lifecycle_is_explicit": true
+  },
+  "artifact_formats": {
+    "native-adapter": "digest-bound dynamic library loaded by a fixed native executor",
+    "embedded-source": "reviewed source statically linked into a fixed embedded Host application"
+  }
+}

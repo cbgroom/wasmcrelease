@@ -29,6 +29,21 @@ assert.deepEqual(expectedProfile.bindings.map((binding) => binding.api), expecte
 assert.equal(expectedProfile.bindings.every((binding) => binding.lifecycle.qualified), true);
 assert.equal(expectedProfile.bindings.every((binding) => !binding.lifecycle.admitted), true);
 
+const iosRequestPath = "host/platform/ios/app-surface-control-request.json";
+const iosProfilePath = "host/platform/ios/app-surface-control-profile.json";
+const iosRequest = JSON.parse(fs.readFileSync(path.join(root, iosRequestPath), "utf8"));
+const iosExpectedProfile = JSON.parse(fs.readFileSync(path.join(root, iosProfilePath), "utf8"));
+const iosProfile = resolveSystemProfileRequest(root, iosRequest);
+assert.deepEqual(iosProfile, iosExpectedProfile);
+assert.equal(iosProfile.host.required_domain_apis, 0);
+assert.equal(iosProfile.bindings[0].artifact.format, "embedded-source");
+assert.equal(iosProfile.bindings[0].artifact.sources.length, 2);
+assert.equal(iosProfile.bindings[0].artifact.frameworks.includes("AVKit"), true);
+expectCode("provider.none", () => resolveSystemProfile({
+  ...iosRequest,
+  target: { os: "macos", architecture: "aarch64", environment: "device", embedding: "native" },
+}, [loadSystemLibCandidate(root, iosRequest.candidates[0])]));
+
 const cli = spawnSync(process.execPath, [
   "host/platform/profile-resolver.mjs", "resolve", requestPath,
 ], { cwd: root, encoding: "utf8" });
@@ -106,6 +121,7 @@ console.log(JSON.stringify({
   schema: expectedProfile.schema,
   target: expectedProfile.target,
   resolved_bindings: expectedProfile.bindings.length,
+  embedded_source_bindings: iosProfile.bindings.length,
   provider_name_inference: false,
   ambiguous_provider_rejection: true,
   missing_platform_rejections: 5,

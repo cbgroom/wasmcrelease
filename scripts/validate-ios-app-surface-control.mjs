@@ -8,25 +8,49 @@ const fixedHostDigest = createHash("sha256").update(fs.readFileSync(fixedHost)).
 assert.equal(fixedHostDigest, "f0d465ba7f23698d6365453b02fad2f4a0803171f970631751fc90a00a86d96f");
 
 const root = "host/tests/ios-app-surface-control";
+const libRoot = "libsrc/wasmc-system-ios-app-surface-control";
 const required = [
   "project.yml",
   "App/Info.plist",
-  "WIT/app-surface-control.wit",
-  "Lib/SurfaceControlProvider.swift",
-  "Lib/PiPSurfaceProvider.swift",
   "App/TaskSurfaceCard.swift",
   "App/SurfaceDemoViewController.swift",
   "App/AppDelegate.swift",
   "UITests/SurfaceControlUITests.swift",
 ];
 for (const relative of required) assert.ok(fs.statSync(`${root}/${relative}`).size > 0, relative);
+for (const relative of [
+  "candidate.json",
+  "lib.wit",
+  "platform/ios/binding.json",
+  "platform/ios/Sources/SurfaceControlProvider.swift",
+  "platform/ios/Sources/PiPSurfaceProvider.swift",
+]) assert.ok(fs.statSync(`${libRoot}/${relative}`).size > 0, relative);
 
-execFileSync("wasm-tools", ["component", "wit", `${root}/WIT/app-surface-control.wit`], {
+execFileSync("wasm-tools", ["component", "wit", `${libRoot}/lib.wit`], {
   stdio: "ignore",
 });
-const provider = fs.readFileSync(`${root}/Lib/SurfaceControlProvider.swift`, "utf8");
+const provider = fs.readFileSync(`${libRoot}/platform/ios/Sources/SurfaceControlProvider.swift`, "utf8");
 const controller = fs.readFileSync(`${root}/App/SurfaceDemoViewController.swift`, "utf8");
-const pipProvider = fs.readFileSync(`${root}/Lib/PiPSurfaceProvider.swift`, "utf8");
+const pipProvider = fs.readFileSync(`${libRoot}/platform/ios/Sources/PiPSurfaceProvider.swift`, "utf8");
+const candidate = JSON.parse(fs.readFileSync(`${libRoot}/candidate.json`, "utf8"));
+const binding = JSON.parse(fs.readFileSync(`${libRoot}/platform/ios/binding.json`, "utf8"));
+const resolvedProfile = JSON.parse(execFileSync(process.execPath, [
+  "host/platform/profile-resolver.mjs", "resolve",
+  "host/platform/ios/app-surface-control-request.json",
+], { encoding: "utf8" }));
+const retainedProfile = JSON.parse(fs.readFileSync(
+  "host/platform/ios/app-surface-control-profile.json", "utf8",
+));
+assert.deepEqual(resolvedProfile, retainedProfile);
+assert.equal(candidate.system_binding.implements, "wasmc:system-app-surface-control@0.0.2");
+assert.equal(candidate.system_binding.artifact_format, "embedded-source");
+assert.equal(binding.schema, "wasmc.platform-binding-descriptor/v1");
+assert.equal(binding.identity, "wasmc:system-ios-app-surface-control@0.0.2-dev.1");
+assert.equal(binding.artifact.format, "embedded-source");
+assert.equal(retainedProfile.host.required_domain_apis, 0);
+assert.equal(fs.existsSync(`${root}/Lib/SurfaceControlProvider.swift`), false);
+assert.equal(fs.existsSync(`${root}/Lib/PiPSurfaceProvider.swift`), false);
+assert.equal(fs.existsSync(`${root}/WIT/app-surface-control.wit`), false);
 assert.doesNotMatch(provider, /sendEvent|XCTest|XCUIApplication/);
 assert.match(provider, /sendActions\(for: \.primaryActionTriggered\)/);
 assert.match(controller, /background_surfaces_progressed_during_handoff/);

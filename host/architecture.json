@@ -3,6 +3,7 @@
   "status": "architecture-workstream-not-released",
   "guest_authority": "exact-lib-package-wit",
   "physical_boundary_authority": "host/contract/lib-defined-boundary.json",
+  "system_lib_package_contract": "host/contract/system-lib-package.json",
   "host_semantics": [
     "ExternalTarget",
     "Resource",
@@ -110,7 +111,7 @@
     "resolver": "host/platform/profile-resolver.mjs",
     "request_schema": "wasmc.system-profile-request/v1",
     "profile_schema": "wasmc.library-os-profile/v2",
-    "authority": "exact Lib candidate system_binding metadata plus exact native descriptor identity",
+    "authority": "exact Lib candidate system_binding metadata plus exact native or embedded platform descriptor identity",
     "target_fields": ["os", "architecture", "environment", "embedding"],
     "selection": "unique exact match or fail closed; ambiguity requires an exact provider pin",
     "provider_name_inference": false,
@@ -296,8 +297,8 @@
     "ios_app_surface_control": {
       "status": "ios-26.5-arm64-ipad-simulator-pip-lifecycle-v3-qualified-not-admitted-not-released",
       "executor": "host/tests/ios-app-capability/Host/FixedHost.swift",
-      "profile": "host/tests/ios-app-surface-control/project.yml",
-      "system_libs": ["wasmc:system-ios-app-surface-control@0.0.2-dev.1"],
+      "profile": "host/platform/ios/app-surface-control-profile.json",
+      "system_libs": ["libsrc/wasmc-system-ios-app-surface-control"],
       "evidence": "admission/host-lib-defined-boundary-v1/ios-arm64-app-surface-control-v3.json",
       "convergence": "the v2 five-surface lock, dock and confirmed handoff model now projects one focused task through a user-started Lib-owned iPad system PiP lifecycle while Agent work continues; retained capture proves the system window but not its capture-sensitive video pixels",
       "scope": [

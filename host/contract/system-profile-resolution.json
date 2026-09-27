@@ -4,11 +4,16 @@
   "request_schema": "wasmc.system-profile-request/v1",
   "profile_schema": "wasmc.library-os-profile/v2",
   "candidate_schema": "wasmc.libsrc-candidate/v1",
+  "descriptor_schemas": [
+    "wasmc.native-boundary-descriptor/v1",
+    "wasmc.platform-binding-descriptor/v1"
+  ],
+  "artifact_formats": ["native-adapter", "embedded-source"],
   "target_fields": ["os", "architecture", "environment", "embedding"],
   "lifecycle_fields": ["qualified", "admitted", "released", "discoverable", "installable"],
   "selection_authority": "explicit candidate set plus Lib-owned system_binding metadata",
   "semantic_authority": "exact WIT package identity",
-  "physical_authority": "exact native boundary descriptor identity",
+  "physical_authority": "exact Lib-owned native or embedded platform binding descriptor identity",
   "rules": {
     "provider_name_inference": false,
     "cross_platform_fallback": false,

@@ -1,0 +1,26 @@
+{
+  "schema": "wasmc.system-profile-request/v1",
+  "id": "ios-app-surface-control-v1",
+  "target": {
+    "os": "ios",
+    "architecture": "aarch64",
+    "environment": "simulator",
+    "embedding": "native"
+  },
+  "boundary": "wasmc.lib-defined-host-boundary/v1",
+  "host": {
+    "contract": "wasmc.lib-defined-host-boundary/v1",
+    "executor": "host/tests/ios-app-capability/Host/FixedHost.swift",
+    "required_domain_apis": 0
+  },
+  "required_lifecycle": "qualified",
+  "requirements": ["wasmc:system-app-surface-control@0.0.2"],
+  "candidates": ["libsrc/wasmc-system-ios-app-surface-control/candidate.json"],
+  "pins": {},
+  "acceptance": {
+    "five_parallel_surfaces": true,
+    "confirmed_human_handoff": true,
+    "user_started_picture_in_picture": true,
+    "physical_device": false
+  }
+}

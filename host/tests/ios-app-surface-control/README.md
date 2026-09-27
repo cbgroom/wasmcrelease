@@ -19,8 +19,11 @@ confirmed handoff state machine. The fixed Host remains unchanged. The
 laboratory qualifies platform mechanics only; production use must still carry
 genuine media/task-observation semantics acceptable for its distribution path.
 
-The WIT file is the proposed small public capability shape. The Swift code is a
-native prototype adapter and is not an admitted or released Lib. The UI test
+The platform-neutral WIT, candidate metadata and Apple-specific Swift adapter
+now live together in `libsrc/wasmc-system-ios-app-surface-control`; this test
+directory is only a qualification application. The exact target profile is
+resolved at `host/platform/ios/app-surface-control-profile.json`. The provider
+is not an admitted or released Lib. The UI test
 uses XCUITest only to represent the real human handoff; Agent actions never use
 XCUITest or `UIApplication.sendEvent`.
 

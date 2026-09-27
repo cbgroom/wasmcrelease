@@ -8,6 +8,7 @@ const manifest = readJson("host/manifest.json");
 const architecture = readJson("host/architecture.json");
 const boundary = readJson(manifest.boundary_contract);
 const platformResolution = readJson(manifest.platform_binding_contract);
+const systemLibPackage = readJson(manifest.system_lib_package_contract);
 const failures = [];
 
 const expectedMechanisms = [
@@ -52,6 +53,16 @@ if (platformResolution.rules?.provider_name_inference !== false || platformResol
 if (platformResolution.rules?.unique_match_required !== true || platformResolution.rules?.ambiguity_requires_exact_pin !== true) failures.push("system profile resolution must require one exact provider");
 if (platformResolution.rules?.host_domain_api_growth !== false) failures.push("system profile resolution must not grow Host APIs");
 if (platformResolution.release?.admitted !== false || platformResolution.release?.released !== false) failures.push("system profile resolution lifecycle is overstated");
+if (systemLibPackage.schema !== "wasmc.system-lib-package-layout/v1") failures.push("invalid System Lib package layout contract");
+if (systemLibPackage.layers?.semantic !== "lib.wit") failures.push("System Lib semantics must have one canonical WIT entrypoint");
+if (systemLibPackage.layers?.platform_binding !== "platform/<os>/binding.json") failures.push("System Lib platform binding layout drifted");
+if (systemLibPackage.rules?.wit_is_platform_neutral !== true) failures.push("System Lib WIT must remain platform neutral");
+if (systemLibPackage.rules?.test_app_owns_no_provider_source !== true) failures.push("qualification Apps must not own provider source");
+if (systemLibPackage.rules?.host_domain_api_growth !== false) failures.push("System Lib layout must not grow Host APIs");
+if (!Object.hasOwn(systemLibPackage.artifact_formats ?? {}, "native-adapter") ||
+    !Object.hasOwn(systemLibPackage.artifact_formats ?? {}, "embedded-source")) {
+  failures.push("System Lib layout must cover dynamic and embedded platform adapters");
+}
 
 const forbiddenMechanismFragments = boundary.host_forbidden_domain_apis ?? [];
 for (const mechanism of boundary.mechanisms ?? []) {
@@ -158,6 +169,7 @@ console.log(JSON.stringify({
   architecture: architecture.schema,
   boundary: boundary.schema,
   platform_resolution: platformResolution.schema,
+  system_lib_package: systemLibPackage.schema,
   host_domain_capabilities: manifest.host_domain_capabilities.length,
   boundary_mechanisms: boundary.mechanisms.length,
   retained_v0_0_15_domains: retainedV015Domains.length,

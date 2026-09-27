@@ -50,3 +50,14 @@ This proves real App-sandbox execution in the simulator. It does not yet prove
 Wasm component loading, a physical iPhone, background execution, or protected
 camera/audio/location/motion/notification APIs. The simulator supervisor and
 native app profiles are distinct and must not be substituted for one another.
+
+## Structured app surface-control profile
+
+The app surface-control provider is packaged at
+`libsrc/wasmc-system-ios-app-surface-control`. Its public WIT is kept above the
+`platform/ios` binding, while Swift sources and required Apple frameworks are
+declared by the Lib-owned embedded-source descriptor. The generated
+`app-surface-control-profile.json` selects it for the exact
+`ios/aarch64/simulator/native` tuple. Other platforms must supply independent
+providers for the same WIT API; they do not add branches to the fixed Host or
+reuse iOS source by package-name inference.

@@ -1,0 +1,26 @@
+{
+  "schema": "wasmc.platform-binding-descriptor/v1",
+  "identity": "wasmc:system-ios-app-surface-control@0.0.2-dev.1",
+  "wit": "lib.wit",
+  "target": {
+    "os": "ios",
+    "architecture": "aarch64",
+    "environment": "simulator",
+    "embedding": "native"
+  },
+  "artifact": {
+    "format": "embedded-source",
+    "language": "swift",
+    "linkage": "static-app",
+    "sources": [
+      "platform/ios/Sources/SurfaceControlProvider.swift",
+      "platform/ios/Sources/PiPSurfaceProvider.swift"
+    ],
+    "frameworks": ["AVFoundation", "AVKit", "CoreMedia", "CoreVideo", "UIKit"]
+  },
+  "limits": {
+    "max_surfaces": 5,
+    "physical_input_injection": false
+  },
+  "lifecycle": "qualified-not-admitted-not-released"
+}

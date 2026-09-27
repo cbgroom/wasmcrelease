@@ -54,6 +54,33 @@ Adding a new domain normally adds or updates Lib packages only. If adding the
 domain requires a Rust Host edit, the boundary is incomplete unless the change
 is proven to be a new irreducible mechanism shared by multiple domains.
 
+## Cross-platform System Lib package shape
+
+Platform count must not turn test harnesses into package roots or the fixed
+Host into a platform switch. New System Lib providers therefore use one
+canonical source layout:
+
+```text
+libsrc/<provider-package>/
+  candidate.json                 exact identity, targets and lifecycle
+  lib.wit                        platform-neutral public semantics
+  platform/<os>/binding.json     Lib-owned physical binding description
+  platform/<os>/Sources/         reviewed OS-specific implementation
+
+host/platform/<os>/
+  <profile>-request.json         required APIs and exact target tuple
+  <profile>-profile.json         deterministically resolved bindings
+```
+
+The common resolver supports both digest-bound `native-adapter` artifacts and
+mobile/App `embedded-source` artifacts. The latter are statically linked, but
+remain Lib source selected through the same exact target and lifecycle rules;
+they do not become Host source. A qualification App consumes a provider package
+and owns only test/application composition. Different platform implementations
+use distinct provider identities and packages, while reusing the same WIT
+identity only when their observable semantics genuinely match. Missing and
+ambiguous platform bindings fail closed.
+
 ## Lib-defined native boundary descriptor
 
 A descriptor is data owned and versioned by a Lib. It identifies a native

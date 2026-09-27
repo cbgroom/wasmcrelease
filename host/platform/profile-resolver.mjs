@@ -5,7 +5,8 @@ import { fileURLToPath } from "node:url";
 const PROFILE_SCHEMA = "wasmc.library-os-profile/v2";
 const REQUEST_SCHEMA = "wasmc.system-profile-request/v1";
 const CANDIDATE_SCHEMA = "wasmc.libsrc-candidate/v1";
-const DESCRIPTOR_SCHEMA = "wasmc.native-boundary-descriptor/v1";
+const NATIVE_DESCRIPTOR_SCHEMA = "wasmc.native-boundary-descriptor/v1";
+const PLATFORM_DESCRIPTOR_SCHEMA = "wasmc.platform-binding-descriptor/v1";
 const TARGET_FIELDS = ["os", "architecture", "environment", "embedding"];
 const LIFECYCLE_STAGES = ["qualified", "admitted", "released", "discoverable", "installable"];
 
@@ -94,17 +95,50 @@ export function loadSystemLibCandidate(root, candidatePath) {
   }
   const descriptorAbsolute = safeRelativePath(candidateRoot, binding.descriptor, "descriptor path");
   const descriptor = JSON.parse(fs.readFileSync(descriptorAbsolute, "utf8"));
-  if (descriptor.schema !== DESCRIPTOR_SCHEMA) {
+  if (![NATIVE_DESCRIPTOR_SCHEMA, PLATFORM_DESCRIPTOR_SCHEMA].includes(descriptor.schema)) {
     fail("descriptor.invalid", `${candidatePath} has an unsupported descriptor schema`);
   }
   if (descriptor.wit !== candidate.wit) {
     fail("descriptor.wit_mismatch", `${candidatePath} candidate and descriptor WIT paths differ`);
   }
-  if (!isObject(descriptor.adapter) || path.basename(descriptor.adapter.path) !== descriptor.adapter.path) {
-    fail("descriptor.adapter_invalid", `${candidatePath} adapter must be an exact sibling filename`);
+  let artifact;
+  if (descriptor.schema === NATIVE_DESCRIPTOR_SCHEMA) {
+    if (!isObject(descriptor.adapter) || path.basename(descriptor.adapter.path) !== descriptor.adapter.path) {
+      fail("descriptor.adapter_invalid", `${candidatePath} adapter must be an exact sibling filename`);
+    }
+    artifact = { format: "native-adapter", path: descriptor.adapter.path };
+  } else {
+    validateTarget(descriptor.target, `${candidatePath} descriptor`);
+    if (!binding.targets.some((target) => sameTarget(target, descriptor.target))) {
+      fail("descriptor.target_mismatch", `${candidatePath} descriptor target is not declared by the candidate`);
+    }
+    if (!isObject(descriptor.artifact) || descriptor.artifact.format !== "embedded-source") {
+      fail("descriptor.artifact_invalid", `${candidatePath} platform descriptor must declare embedded-source`);
+    }
+    if (!Array.isArray(descriptor.artifact.sources) || descriptor.artifact.sources.length === 0) {
+      fail("descriptor.artifact_invalid", `${candidatePath} embedded-source must list source files`);
+    }
+    const sources = descriptor.artifact.sources.map((source, index) => {
+      const absolute = safeRelativePath(candidateRoot, source, `embedded source[${index}]`);
+      if (!fs.statSync(absolute).isFile()) {
+        fail("descriptor.artifact_invalid", `${candidatePath} embedded source is not a file`, { source });
+      }
+      return path.relative(root, absolute);
+    });
+    if (!Array.isArray(descriptor.artifact.frameworks) ||
+        descriptor.artifact.frameworks.some((framework) => typeof framework !== "string" || !framework)) {
+      fail("descriptor.artifact_invalid", `${candidatePath} embedded-source frameworks must be strings`);
+    }
+    artifact = {
+      format: descriptor.artifact.format,
+      language: descriptor.artifact.language,
+      linkage: descriptor.artifact.linkage,
+      sources,
+      frameworks: descriptor.artifact.frameworks,
+    };
   }
-  if (binding.artifact_format !== "native-adapter") {
-    fail("package.artifact_invalid", `${candidatePath} must declare native-adapter format`);
+  if (binding.artifact_format !== artifact.format) {
+    fail("package.artifact_invalid", `${candidatePath} candidate and descriptor artifact formats differ`);
   }
 
   return {
@@ -114,10 +148,7 @@ export function loadSystemLibCandidate(root, candidatePath) {
     wit: path.relative(root, witAbsolute),
     descriptor: path.relative(root, descriptorAbsolute),
     boundary: binding.boundary,
-    artifact: {
-      format: binding.artifact_format,
-      path: descriptor.adapter.path,
-    },
+    artifact,
     targets: binding.targets,
     lifecycle: binding.lifecycle,
   };
