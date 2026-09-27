@@ -1,13 +1,9 @@
 {
   "schema": "wasmc.release-lib-route-readiness/v1",
   "route": "release-lib-route-readiness",
-  "request": "can a new formal release candidate be created with every released Lib package and API route synchronized",
-  "immutable_release": {
-    "tag": "v0.0.13",
-    "released_packages": 13,
-    "released_api_routes": 105
-  },
-  "future_candidate": {
+  "request": "does this v0.0.14 product set bind every included Lib package and API route, and where is its lifecycle stage decided",
+  "product": {
+    "version": "0.0.14",
     "package_routes": 14,
     "api_routes": 108,
     "candidate_extras": 0,
@@ -19,25 +15,31 @@
     "states": {
       "qualified": true,
       "admitted": true,
-      "released": false,
-      "discoverable": false,
-      "installable": false
+      "included_in_product": true,
+      "qualified_before_freeze": true,
+      "admitted_before_freeze": true
     },
     "api_routes": 3
   },
-  "first_missing_authority": "dev-stage qualification of the exact v0.0.14 v2 product candidate",
+  "lifecycle_authority": {
+    "current_release": "release.json",
+    "stages": "channels/dev.json, channels/main.json, channels/prod.json",
+    "rule": "Never infer released, discoverable or installable from this frozen product projection."
+  },
   "valid_resolution_count": 1,
-  "only_valid_closure": "The admission and route closure are complete. Verify channels/candidates/0.0.14.json, then qualify that unchanged product for dev; do not advance main or prod without exact successful qualification.",
+  "only_valid_closure": "Verify the exact v0.0.14 candidate and route closure, then read the channel authorities for lifecycle state. Every promotion must preserve the same product digest set.",
   "forbidden_shortcuts": [
     "treat admission as release",
-    "advance main or prod before exact dev qualification",
+    "infer lifecycle state from product presence or an admission snapshot",
     "rebuild product bytes during promotion",
-    "rewrite immutable v0.0.13"
+    "rewrite any immutable release or prerelease tag"
   ],
   "authorities": [
     "admission/lib-search-v020-v014-admission.json",
     "catalog/lib-route-closure.json",
-    "channels/candidates/0.0.14.json"
+    "channels/candidates/0.0.14.json",
+    "release.json",
+    "channels/prod.json"
   ],
   "check_commands": [
     "node scripts/lib-route-closure.mjs --check",

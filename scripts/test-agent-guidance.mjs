@@ -7,9 +7,9 @@ const reject = mutate => {
   assert.throws(() => validateGuidance(candidate), /agent.guidance_invalid/);
 };
 const tag=`v${snapshot.surfaces?.release_version ?? snapshot.release.version}`;
-reject(s => s.agents = s.agents.replace(`release is\n\`${tag}\``, 'release is\n`v0.0.0`'));
-reject(s => s.agents = s.agents.replace(`## ${tag} capability`, '## v0.0.0 capability'));
-reject(s => s.agents = s.agents.replace(`@${tag}/`, '@v0.0.0/'));
+reject(s => s.agents = s.agents.replace(`frozen inside the ${tag}\nproduct set`, 'frozen inside the v0.0.0\nproduct set'));
+reject(s => s.agents = s.agents.replace(`## ${tag} product capability`, '## v0.0.0 product capability'));
+reject(s => s.agents = s.agents.replace('product presence is not lifecycle authority', 'product presence establishes release authority'));
 reject(s => { if (s.surfaces) s.surfaces.release_version = '0.0.10'; });
 reject(s => s.agents = s.agents.replaceAll('standard/wasmc-std/1.4.0/', 'missing-standard/'));
 reject(s => s.skills = s.skills.filter(row => !row.path.includes('skills/wasmc-lib/')));

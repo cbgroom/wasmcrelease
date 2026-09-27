@@ -47,12 +47,15 @@ export function validateGuidance({ agents, decisionModel, language, lib, release
   const prodOrdinal = prodParts[0] * 1_000_000 + prodParts[1] * 1_000 + prodParts[2];
   if (stagedOrdinal < prodOrdinal) fail('staged product version regresses current prod');
   const expectedTag = `v${stagedVersion}`;
-  const declared = agents.match(/current immutable release is\s*`([^`]+)`/i)?.[1];
-  if (declared !== expectedTag) fail('root release identity is stale or missing');
-  const headings = [...agents.matchAll(/^## (v[^\s]+) capability contract$/gm)].map(m => m[1]);
+  const declared = agents.match(/frozen inside the (v\d+\.\d+\.\d+)\s+product set/i)?.[1];
+  if (declared !== expectedTag) fail('root product identity is stale or missing');
+  const headings = [...agents.matchAll(/^## (v[^\s]+) product capability contract$/gm)].map(m => m[1]);
   if (headings.length !== 1 || headings[0] !== expectedTag) fail('capability contract identity differs');
-  const cdn = [...agents.matchAll(/cdn\.jsdelivr\.net\/gh\/cbgroom\/wasmcrelease@(v[^/\s]+)\//g)].map(m => m[1]);
-  if (!cdn.length || cdn.some(tag => tag !== expectedTag)) fail('root CDN release identity differs');
+  if (!agents.includes('Read `release.json`') || !agents.includes('`channels/prod.json`') ||
+      !agents.includes('product presence is not lifecycle authority') ||
+      !agents.includes('Construct CDN URLs only after reading the exact tag from `release.json`')) {
+    fail('root product/lifecycle authority boundary missing');
+  }
   if (!agents.includes('docs/AGENT_DECISION_MODEL.md') ||
       !agents.includes('Qualification is evidence, not admission') ||
       !agents.includes('never use\nan ellipsis or placeholder')) {

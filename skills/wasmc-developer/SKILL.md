@@ -8,6 +8,9 @@ description: Design, write, compile, inspect, embed, and debug applications with
 Build against the released files beside this Skill. Never assume private source
 or an unreleased capability.
 
+This Skill is frozen in the v0.0.14 product set. Product capability is described
+here; lifecycle state comes only from `release.json` and `channels/prod.json`.
+
 Before broad discovery, check `agent-quickstart.json`. It is the validated
 compact projection of `release-surfaces.json.agent_task_routes`. When a
 route matches release orientation, the canonical aggregate-result example,
@@ -42,8 +45,8 @@ For type and boundary decisions in this current checkout, read
 `release-surfaces.json.agent_capability_projection` before writing source. It
 separates ordinary source, local/App-Lib Core values, Host functions, Component
 values, resource methods and public results. The projection is a current-main
-guidance remediation bound to v0.0.13 behavior; it is not retroactively present
-inside the immutable v0.0.13 tag and changes no product bytes.
+projection included in the v0.0.14 product; its presence does not by itself
+prove the product is the current released lifecycle stage.
 
 ## Mental model
 

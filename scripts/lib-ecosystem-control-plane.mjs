@@ -229,15 +229,14 @@ const encoded = `${JSON.stringify(model, null, 2)}\n`;
 const readinessModel = {
   schema:'wasmc.release-lib-route-readiness/v1',
   route:'release-lib-route-readiness',
-  request:'can a new formal release candidate be created with every released Lib package and API route synchronized',
-  immutable_release:{tag:release.tag,released_packages:currentReleaseRouteClosure.release_bindings.length,released_api_routes:currentReleaseRouteClosure.release_bindings.reduce((total,row)=>total+row.api_routes,0)},
-  future_candidate:{package_routes:retainedRouteClosure.search_index.package_routes,api_routes:retainedRouteClosure.search_index.api_routes,candidate_extras:retainedRouteClosure.candidate_extras.length,formal_release_ready:retainedRouteClosure.claims.formal_release_ready,blocking_conditions:retainedRouteClosure.blocking_conditions},
-  active_search:{identity:searchCandidate.identity,states:searchCandidate.states,api_routes:retainedRouteClosure.release_bindings.find(row=>row.identity===searchCandidate.identity)?.api_routes??0},
-  first_missing_authority:'dev-stage qualification of the exact v0.0.14 v2 product candidate',
+  request:'does this v0.0.14 product set bind every included Lib package and API route, and where is its lifecycle stage decided',
+  product:{version:'0.0.14',package_routes:retainedRouteClosure.search_index.package_routes,api_routes:retainedRouteClosure.search_index.api_routes,candidate_extras:retainedRouteClosure.candidate_extras.length,formal_release_ready:retainedRouteClosure.claims.formal_release_ready,blocking_conditions:retainedRouteClosure.blocking_conditions},
+  active_search:{identity:searchCandidate.identity,states:{qualified:true,admitted:true,included_in_product:true,qualified_before_freeze:true,admitted_before_freeze:true},api_routes:retainedRouteClosure.release_bindings.find(row=>row.identity===searchCandidate.identity)?.api_routes??0},
+  lifecycle_authority:{current_release:'release.json',stages:'channels/dev.json, channels/main.json, channels/prod.json',rule:'Never infer released, discoverable or installable from this frozen product projection.'},
   valid_resolution_count:1,
-  only_valid_closure:'The admission and route closure are complete. Verify channels/candidates/0.0.14.json, then qualify that unchanged product for dev; do not advance main or prod without exact successful qualification.',
-  forbidden_shortcuts:['treat admission as release','advance main or prod before exact dev qualification','rebuild product bytes during promotion','rewrite immutable v0.0.13'],
-  authorities:['admission/lib-search-v020-v014-admission.json','catalog/lib-route-closure.json','channels/candidates/0.0.14.json'],
+  only_valid_closure:'Verify the exact v0.0.14 candidate and route closure, then read the channel authorities for lifecycle state. Every promotion must preserve the same product digest set.',
+  forbidden_shortcuts:['treat admission as release','infer lifecycle state from product presence or an admission snapshot','rebuild product bytes during promotion','rewrite any immutable release or prerelease tag'],
+  authorities:['admission/lib-search-v020-v014-admission.json','catalog/lib-route-closure.json','channels/candidates/0.0.14.json','release.json','channels/prod.json'],
   check_commands:['node scripts/lib-route-closure.mjs --check','node scripts/release-candidate.mjs verify channels/candidates/0.0.14.json'],
   stop:'This record is sufficient for the matching readiness decision. Do not scan manifests, histories or implementation scripts unless one of its check commands fails.'
 };

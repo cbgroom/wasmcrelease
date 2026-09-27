@@ -20,10 +20,10 @@ exported WIT API from the staged product and requires exact catalog, package
 route and API route equality. Do not accept a manually sampled query list or a
 package-level hit as proof that all APIs were synchronized.
 
-This branch also retains an admitted, unreleased LibSearch 0.2.0 v0.0.14
-product candidate. Its snapshot covers 14 identities including itself / 122
-package and API entries. Admission does not grant public-default discovery,
-installation or release authority; immutable v0.0.13 still contains 0.1.0.
+The v0.0.14 product includes LibSearch 0.2.0. Its snapshot covers 14 identities
+including itself / 122 package and API entries. Product inclusion and admission
+do not establish the current released/default lifecycle stage; read
+`release.json` and `channels/prod.json`. Historical v0.0.13 contains 0.1.0.
 
 This is supplemental guidance after immutable v0.0.10. Pin the tooling full
 commit and verify its SHA256SUMS; do not assume mutable main is release identity.

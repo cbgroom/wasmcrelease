@@ -45,12 +45,12 @@
   },
   "type_position_authority": {
     "schema": "wasmc.release-agent-capabilities/v1",
-    "product_release": "v0.0.13",
+    "product_release": "v0.0.14",
     "guidance_scope": {
-      "status": "main-side-remediation",
-      "included_in_immutable_tag": false,
-      "product_bytes_changed": false,
-      "rule": "This projection describes the pinned v0.0.13 product from current main guidance. It is not evidence that the immutable v0.0.13 tag contains this later guidance file; the next formal release must package an exact projection."
+      "status": "included-in-v0.0.14-product",
+      "included_in_product": true,
+      "lifecycle_authority": "release.json and channels/prod.json",
+      "rule": "This frozen projection describes v0.0.14 product capability only. It does not prove the product is the current released, discoverable or installable lifecycle stage."
     },
     "decision_rule": "A type or feature is usable only at the exact admitted position below. WIT vocabulary, local values, Core lanes, Component profiles, Host bindings and public results are separate claims.",
     "alternative_rule": "Alternatives must preserve semantics. Numeric width or signedness, async behavior, identity, ordering, ownership and failure semantics may change only with explicit application proof; otherwise stop.",
@@ -199,22 +199,16 @@
         }
       },
       "release": {
-        "current_immutable_product": "v0.0.13",
-        "states": {
-          "qualified": false,
-          "admitted": false,
-          "released": false,
-          "discoverable": false,
-          "installable": false
-        },
+        "product": "v0.0.14",
+        "lifecycle_authority": "release.json",
         "reason": "No new source-free compiler artifact, candidate identity, admission receipt or immutable release contains the producer change.",
-        "v0_0_13_u64_ordinary_source": "unsupported"
+        "v0_0_14_u64_ordinary_source": "unsupported"
       },
       "adjacent_type_decisions": {
-        "u32": "already released in v0.0.13; no repair was required",
+        "u32": "included in the v0.0.14 product compiler; no repair was required",
         "char": "not implemented on the cited producer commit and not released; do not substitute arbitrary u32"
       },
-      "answer_rule": "When asked whether u64 is fixed or supported, lead with both authorities in one sentence: producer master yes, immutable v0.0.13 release no. Producer master support and immutable release support are different answers; do not collapse them."
+      "answer_rule": "When asked whether u64 is fixed or supported, lead with both authorities: producer master yes, the v0.0.14 product compiler no; read release.json for the current published lifecycle stage."
     }
   ],
   "packages": [

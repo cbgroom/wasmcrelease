@@ -1,5 +1,9 @@
 # Release surfaces and qualification
 
+This document is frozen inside the v0.0.14 product set. Surface capability and
+lifecycle stage are separate; `release.json` and `channels/prod.json` are the
+authorities for the current immutable release.
+
 The canonical machine-readable inventory is `release-surfaces.json`. This
 document explains how its surfaces enter a WAsmC release.
 
@@ -26,8 +30,8 @@ evidence that an older immutable tag shipped it.
 
 | Component | Current checkout status | Agent Skill | Important boundary |
 |---|---|---|---|
-| Core Runtime SDK | published; immutable v0.0.13 | `sdk/wasmc-core-runtime/SKILL.md` | reused from v0.0.12; engine mechanics; Host/business admission remains embedding-owned |
-| Generic Host SDK | published; immutable v0.0.13 | `sdk/wasmc-host/SKILL.md` | reused from v0.0.12; generic Resource binding; no application-specific Host API |
+| Core Runtime SDK | included in v0.0.14 product | `sdk/wasmc-core-runtime/SKILL.md` | reused from v0.0.12; engine mechanics; Host/business admission remains embedding-owned |
+| Generic Host SDK | included in v0.0.14 product | `sdk/wasmc-host/SKILL.md` | reused from v0.0.12; generic Resource binding; no application-specific Host API |
 | Native CLI source surface | published | `sdk/wasmc-native-compiler/SKILL.md` | CI/development native packages are not immutable release assets |
 | Lightweight embedding | qualified-reference | SDK discovery routes to `host/embedding/*` | surrounding runtime is the physical OS bridge |
 | Native Runtime Library | incubating | no install Skill yet | do not invent a `.so/.dylib/.dll` package |

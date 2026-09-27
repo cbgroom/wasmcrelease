@@ -10,6 +10,11 @@
 
 Source-free public packages for the private-source `wasmc` compiler.
 
+This README is frozen inside the v0.0.14 product set. Product version and
+lifecycle stage are separate: read `release.json` and `channels/prod.json` for
+the current released tag. Hardcoded v0.0.13 references retained below describe
+historical feature provenance; they are not current-release authority.
+
 ## Product surfaces
 
 WAsmC has one Host contract and multiple ways to consume it:
@@ -139,15 +144,15 @@ TLS+HTTP/router path. Its contract is
 regressions are same-platform advisory signals, while required-platform
 presence, external-client success and expected HTTP status remain hard gates.
 
-v0.0.13 Agent guidance starts with
+The v0.0.14 product Agent guidance starts with
 [Library-first discovery](skills/wasmc-lib-discovery/SKILL.md) before implementing
 reusable algorithms/data operations. It teaches real search hits, exact selection,
 installation and supported execution, with an executable documentation regression.
 The guidance is integrity-bound in this release; earlier tags stay frozen.
 
-Current staged version: **v0.0.13 system-telemetry Lib release**.
+Frozen product version: **v0.0.14 LibSearch route-complete product**.
 The [channel policy](docs/RELEASE_CHANNELS.md) defines immutable `-dev.N` →
-`-main.N` → suffix-free prod. The default prod is v0.0.13;
+`-main.N` → suffix-free prod. Read `release.json` for the default prod;
 previous tags are immutable and prod0.0.x does not imply stable1.x.
 [![LibSearch equivalence](https://github.com/cbgroom/wasmcrelease/actions/workflows/lib-search.yml/badge.svg?branch=main)](https://github.com/cbgroom/wasmcrelease/actions/workflows/lib-search.yml)
 
@@ -159,11 +164,11 @@ a version or authorize installation. The new Lib has zero imports and a portable
 Core/Component value view. It is not a shared-memory/CoreLib fast ABI and does
 not solve Wasmi/Node18 compatibility of the existing Std1.4.0.
 
-Current release: `v0.0.13`, reusing compiler bytes built from exact private source
+The v0.0.14 product reuses compiler bytes built from exact private source
 `e69abb73f667f3810b0c40937fd1a1e2d04d4255` and the admitted v0.0.11 Data
 Foundation Lib bytes. Use `current/` for the latest compiler facade; `dist/` and
 `package/` are frozen v0.0.4 compatibility trees. The public Wasmi/Wasmtime Core
-Runtime SDK is in `sdk/wasmc-core-runtime`; v0.0.13 also publishes the generic
+Runtime SDK is in `sdk/wasmc-core-runtime`; the product also includes the generic
 Rust Host embedding SDK in `sdk/wasmc-host`. Its binding policies are Host-side
 convenience only and do not add guest-visible Host operations.
 
@@ -258,10 +263,10 @@ import { compile, inspectWasm } from "@wasmc/compiler";
 
 These are explicit contexts, not fallback probes. Repository-local use does not require npm or another external JavaScript registry.
 
-Consumers must pin `v0.0.13` or its full commit and verify `SHA256SUMS`.
+Consumers must pin the exact tag reported by `release.json` or its full commit and verify `SHA256SUMS`.
 `main` and latest metadata are mutable discovery conveniences.
 
-## v0.0.13 testing instructions
+## Pinned-release testing instructions
 
 Supplemental public [Lib discovery and exact resolver](catalog/README.md)
 provides exact resolution over verified published package bytes. Search now
@@ -277,15 +282,17 @@ typed function references and tail calls. Original v0.0.9 does not contain the
 later preflight scripts; v0.0.10 now ships them with digest-bound metadata.
 Node18 is not covered by the release's passing full managed-Host matrix.
 
-Resolve the exact current immutable commit with `git rev-parse 'v0.0.13^{}'`.
+Resolve the exact current immutable tag with `jq -r .tag release.json`, then
+resolve its commit with `git rev-parse "$(jq -r .tag release.json)^{}"`.
 All previous tags remain frozen and are never overwritten.
-This README and the [Release page](https://github.com/cbgroom/wasmcrelease/releases/tag/v0.0.13)
+This README and the GitHub Release page matching `release.json.tag`
 contain the complete handoff; no accompanying chat instructions are required.
 
 ### Download and verify
 
 ```bash
-git clone --depth 1 --branch v0.0.13 https://github.com/cbgroom/wasmcrelease.git
+release_tag=$(curl -fsSL https://raw.githubusercontent.com/cbgroom/wasmcrelease/main/release.json | node -pe 'JSON.parse(require("fs").readFileSync(0,"utf8")).tag')
+git clone --depth 1 --branch "$release_tag" https://github.com/cbgroom/wasmcrelease.git
 cd wasmcrelease
 ```
 
@@ -293,8 +300,8 @@ Verify every file listed in `SHA256SUMS` before execution. On macOS use
 `shasum -a 256 -c SHA256SUMS`; on Linux use `sha256sum -c SHA256SUMS`.
 GitHub Raw and jsDelivr support the exact pinned release:
 
-- [Self-contained ESM compiler](https://cdn.jsdelivr.net/gh/cbgroom/wasmcrelease@v0.0.13/current/wasmc.mjs)
-- [Raw compiler Wasm](https://raw.githubusercontent.com/cbgroom/wasmcrelease/v0.0.13/current/wasmc_compiler.wasm)
+Use the exact `release.json.tag` in GitHub Raw or jsDelivr URLs; do not replace
+it with `main`, an unversioned URL, or `package-index.json.latest` after pinning.
 
 Use `current/wasmc.mjs` for the self-contained ESM path or `current/index.mjs`
 for the sidecar package path. The latter needs its sibling compiler and Lib
