@@ -257,3 +257,8 @@ compilation because the Ubuntu libc declaration required the destructor's
 `write` result to be consumed. The retained rejection receipt is
 `admission/host-lib-defined-boundary-v1/linux-x86_64-async-readiness-v6-compile-rejection.json`
 for workflow run `36301745708`; it is not qualification evidence.
+
+The remediated asynchronous-readiness Linux aarch64 receipt is
+`admission/host-lib-defined-boundary-v1/linux-aarch64-async-readiness-v6-r2.json`,
+bound to implementation commit
+`785d276de16eb47371862cc79674bcbd6e5ce27b`.
