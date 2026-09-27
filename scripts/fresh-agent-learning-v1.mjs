@@ -54,6 +54,9 @@ export function answerContract(report, contract = {}) {
   for (const literal of contract.required_literals ?? []) {
     if (!answer.includes(literal)) failures.push({ metric: 'required_literal', expected: literal });
   }
+  for (const literal of contract.forbidden_literals ?? []) {
+    if (answer.includes(literal)) failures.push({ metric: 'forbidden_literal', observed: literal });
+  }
   const digests = [...answer.matchAll(/\b[0-9a-f]{40,}\b/gi)].map(row => row[0].toLowerCase());
   if (contract.allowed_sha256) {
     const allowed = new Set(contract.allowed_sha256);

@@ -8,6 +8,7 @@ const exactAnswer = answerContract({final_answer:{text:'wasmc:std@1.4.0 d565f00e
   allowed_identity_tokens:['wasmc:std@1.4.0']
 });
 assert.equal(exactAnswer.accepted,true);
+assert.equal(answerContract({final_answer:{text:'open the roughly 54 KB release.json inventory'}},{forbidden_literals:['release.json inventory','roughly 54 KB']}).accepted,false);
 assert.equal(answerContract({final_answer:{text:'candidate ac35f039f28e2f5715b2cea7d2ac3fa5bebf103c d565f00e91c36da68da3645ec5231dd11d1b25299a3ba5cbe3adbd9f5760d91d'}},{allowed_sha256:['d565f00e91c36da68da3645ec5231dd11d1b25299a3ba5cbe3adbd9f5760d91d']}).accepted,true);
 assert.equal(answerContract({final_answer:{text:'wamsc-system-telemetry@0.0.1'}},{allowed_identity_tokens:['wasmc-system-telemetry@0.0.1']}).accepted,false);
 assert.equal(answerContract({final_answer:{text:'wasc-system-telemetry@0.0.1'}},{allowed_identity_tokens:['wasmc-system-telemetry@0.0.1']}).accepted,false);
