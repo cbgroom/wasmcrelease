@@ -225,3 +225,7 @@ The epoll-readiness Linux x86_64 receipt is
 `admission/host-lib-defined-boundary-v1/linux-x86_64-epoll-v4.json`, bound to
 successful workflow run `36300559026` at commit
 `0bcc62a417a973fd2c7dc751632c2a25741a0635`.
+
+The kernel-splice Linux aarch64 receipt is
+`admission/host-lib-defined-boundary-v1/linux-aarch64-splice-v5.json`, bound to
+implementation commit `5bd57e308a7d727ff4bab3238b566473d1688efe`.

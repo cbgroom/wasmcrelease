@@ -1,0 +1,71 @@
+{
+  "schema": "wasmc.host-lib-defined-boundary-linux-qualification/v5",
+  "status": "linux-aarch64-kernel-splice-device-path-qualified-not-admitted-not-released",
+  "date": "2026-09-27",
+  "implementation_commit": "5bd57e308a7d727ff4bab3238b566473d1688efe",
+  "system_lib_identity": "wasmc:system-linux-endpoint@0.0.1-dev.1",
+  "source": {
+    ".github/workflows/host-layout.yml": "4cf2ed92876409f8464e91b0f5bad0c0aa50e4c6d9e2ee0c78fc425f72bd19ae",
+    "host/runtime/lib-boundary/native-linux/Cargo.lock": "5c1fceda2528f2294cc116da2a600a8d6c08b41b86f7b4331f7e7408dfb47c59",
+    "host/runtime/lib-boundary/native-linux/Cargo.toml": "51f247df82e66bc6636f8efb5d1bfa987c845a80185a831dc6dd9261caf10f3d",
+    "host/runtime/lib-boundary/native-linux/src/main.rs": "66b93a6e7c3e70a8315528f7d2917ea9ed39199f2dd9ef3acee43b027f8447bb",
+    "libsrc/wasmc-system-linux-endpoint/lib.wit": "a0e97358bdf24c4793be1446dce772ac872ce03db47ef3a3c13a5a04b964afda",
+    "libsrc/wasmc-system-linux-endpoint/native-adapter.c": "17d6859baf55e1995e76d5b114befb8bf7d310947536ab03fd62a174a9f72dae",
+    "libsrc/wasmc-system-linux-endpoint/native-boundary.template.json": "fe49d5222f507f83a221209a625545223f69c31fa61b3e76fe3183e0b2e01dce",
+    "scripts/test-linux-lib-defined-boundary.mjs": "8858cd4d16bc2c59cda5b82f39c80c9ab91966534a2182fa141e13dbbe7d4bd7"
+  },
+  "environment": {
+    "container_image": "mcpgit-validation:rust-1.96-node26-warm",
+    "container_image_id": "sha256:45ec80b38695ef42a711a49cfeabf98e9cd3d5fd4221fd5d2f9b7f28d8ecb6a6",
+    "os": "linux",
+    "architecture": "aarch64",
+    "kernel": "6.8.0-117-generic",
+    "node": "v26.5.1",
+    "rustc": "rustc 1.96.1 (31fca3adb 2026-06-26)",
+    "wasm_tools": "wasm-tools 1.255.0"
+  },
+  "outputs": {
+    "executor_sha256": "8a12196c6c5e34fd86fc4ed13798dc7b81c17da2ce710ed8a9477642fb4f6329",
+    "adapter_sha256": "e6f77a1a8ca70c11036a14e2078f964b1897d11e5af787c5fdffada4b352d953",
+    "adapter_export": "wasmc_boundary_v1_invoke"
+  },
+  "evidence": {
+    "script": "scripts/test-linux-lib-defined-boundary.mjs",
+    "status": "PASS",
+    "wit_parsed": true,
+    "fixed_executor_domain_apis": 0,
+    "adapter_device_path_literals": 0,
+    "kernel_splice_device_path": true,
+    "splice_path": "/dev/zero -> pipe -> /dev/null",
+    "payload_enters_executor_window": false,
+    "generation_checked_stale_pipe_rejection": true,
+    "fixed_executor_unchanged_from_v2_v3_v4": true,
+    "epoll_and_mapped_device_regression": true,
+    "performance": {
+      "read_mib_per_second": 1187.84,
+      "write_mib_per_second": 1678.33,
+      "mapping_mib_per_second": 1521.12,
+      "splice_operations": 512,
+      "splice_bytes": 16777216,
+      "splice_mib_per_second": 955.7,
+      "persistent_speedup": 292.21,
+      "minimum_mib_per_second": 25,
+      "minimum_speedup": 5,
+      "scope": "same-machine diagnostic; kernel endpoint path excludes payload from executor but is not guest shared-window zero-copy"
+    },
+    "adapter_identity_rejection": true
+  },
+  "remaining_gates": [
+    "linux-x86_64-kernel-splice-device-path-qualification",
+    "descriptor-schema-review",
+    "Wasm-WIT-lowering",
+    "native-asynchronous-lifecycle-and-cancellation",
+    "io-uring-completion",
+    "guest-shared-window-zero-copy",
+    "admission-review",
+    "catalog-and-LibSearch",
+    "immutable-release"
+  ],
+  "admitted": false,
+  "released": false
+}
