@@ -26,7 +26,8 @@ assert.equal(quickstart.routes['library-first-selection'].catalog_snapshot_carri
 assert.equal(quickstart.routes['library-first-selection'].exact_report.companion_sha256,'f54a892aff9068e5c79464029423a2e8f753ddb44010af9ac34a5c9efce2069c');
 assert.equal(quickstart.routes['library-first-selection'].exact_report.import_module,'wasmc:lib/wasmc.std@1.4.0');
 assert.match(quickstart.routes['library-first-selection'].exact_report.instruction,/byte-for-byte/);
-assert.match(quickstart.routes['library-first-selection'].final_answer_policy,/Do not quote command arguments/);
+assert.match(quickstart.routes['library-first-selection'].final_answer_policy,/Do not reproduce command arguments/);
+assert.match(quickstart.routes['library-first-selection'].final_answer_policy,/catalog_sha256/);
 assert.match(quickstart.routes['library-first-selection'].resolve,/--catalog v014/);
 const run = script => {
   const result = spawnSync(process.execPath, [script], { cwd: root, encoding: 'utf8' });
