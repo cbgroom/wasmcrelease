@@ -1,4 +1,4 @@
-# iOS App surface-control laboratory
+# iOS App surface-control example
 
 This isolated simulator laboratory demonstrates five application-owned surfaces
 without changing the fixed Host. Agent progress is produced by in-App semantic
@@ -21,7 +21,7 @@ genuine media/task-observation semantics acceptable for its distribution path.
 
 The platform-neutral WIT, candidate metadata and Apple-specific Swift adapter
 now live together in `libsrc/wasmc-system-ios-app-surface-control`; this test
-directory is only a qualification application. The exact target profile is
+directory is a runnable example and qualification application. The exact target profile is
 resolved at `host/platform/ios/app-surface-control-profile.json`. The provider
 is not an admitted or released Lib. The UI test
 uses XCUITest only to represent the real human handoff; Agent actions never use

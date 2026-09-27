@@ -19,15 +19,16 @@ run("node", ["scripts/validate-ios-app-surface-control.mjs"]);
 const projectDir = "target/ios-app-surface-control-project";
 const derivedDir = "target/ios-app-surface-control-derived";
 const bundle = "io.wasmc.surface-control-lab";
+const exampleRoot = "libsrc/wasmc-system-ios-app-surface-control/examples/ios-app";
 fs.mkdirSync(projectDir, { recursive: true });
 run("xcodegen", [
-  "generate", "--spec", "host/tests/ios-app-surface-control/project.yml",
-  "--project", projectDir, "--project-root", "host/tests/ios-app-surface-control",
+  "generate", "--spec", `${exampleRoot}/project.yml`,
+  "--project", projectDir, "--project-root", exampleRoot,
 ], {
   env: {
     ...process.env,
     WASMC_IOS_SURFACE_INFO_PLIST: path.join(
-      root, "host/tests/ios-app-surface-control/App/Info.plist",
+      root, exampleRoot, "App/Info.plist",
     ),
   },
 });

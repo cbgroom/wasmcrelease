@@ -61,3 +61,8 @@ declared by the Lib-owned embedded-source descriptor. The generated
 `ios/aarch64/simulator/native` tuple. Other platforms must supply independent
 providers for the same WIT API; they do not add branches to the fixed Host or
 reuse iOS source by package-name inference.
+
+The runnable application is shipped with the candidate source at
+`libsrc/wasmc-system-ios-app-surface-control/examples/ios-app`. Host tests do
+not own or duplicate this example; repository qualification invokes it in
+place through `scripts/test-ios-app-surface-control.mjs`.

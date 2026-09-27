@@ -66,13 +66,15 @@ libsrc/<provider-package>/
   lib.wit                        platform-neutral public semantics
   platform/<os>/binding.json     Lib-owned physical binding description
   platform/<os>/Sources/         reviewed OS-specific implementation
+  examples/<example>/            runnable usage and qualification composition
 
 host/platform/<os>/
   <profile>-request.json         required APIs and exact target tuple
   <profile>-profile.json         deterministically resolved bindings
 ```
 
-The common resolver supports both digest-bound `native-adapter` artifacts and
+Runnable demos live with the Lib rather than under Host tests, so copying an
+example never implies a new Host capability. The common resolver supports both digest-bound `native-adapter` artifacts and
 mobile/App `embedded-source` artifacts. The latter are statically linked, but
 remain Lib source selected through the same exact target and lifecycle rules;
 they do not become Host source. A qualification App consumes a provider package

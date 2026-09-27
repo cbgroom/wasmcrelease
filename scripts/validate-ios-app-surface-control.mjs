@@ -7,8 +7,8 @@ const fixedHost = "host/tests/ios-app-capability/Host/FixedHost.swift";
 const fixedHostDigest = createHash("sha256").update(fs.readFileSync(fixedHost)).digest("hex");
 assert.equal(fixedHostDigest, "f0d465ba7f23698d6365453b02fad2f4a0803171f970631751fc90a00a86d96f");
 
-const root = "host/tests/ios-app-surface-control";
 const libRoot = "libsrc/wasmc-system-ios-app-surface-control";
+const exampleRoot = `${libRoot}/examples/ios-app`;
 const required = [
   "project.yml",
   "App/Info.plist",
@@ -17,7 +17,7 @@ const required = [
   "App/AppDelegate.swift",
   "UITests/SurfaceControlUITests.swift",
 ];
-for (const relative of required) assert.ok(fs.statSync(`${root}/${relative}`).size > 0, relative);
+for (const relative of required) assert.ok(fs.statSync(`${exampleRoot}/${relative}`).size > 0, relative);
 for (const relative of [
   "candidate.json",
   "lib.wit",
@@ -30,7 +30,7 @@ execFileSync("wasm-tools", ["component", "wit", `${libRoot}/lib.wit`], {
   stdio: "ignore",
 });
 const provider = fs.readFileSync(`${libRoot}/platform/ios/Sources/SurfaceControlProvider.swift`, "utf8");
-const controller = fs.readFileSync(`${root}/App/SurfaceDemoViewController.swift`, "utf8");
+const controller = fs.readFileSync(`${exampleRoot}/App/SurfaceDemoViewController.swift`, "utf8");
 const pipProvider = fs.readFileSync(`${libRoot}/platform/ios/Sources/PiPSurfaceProvider.swift`, "utf8");
 const candidate = JSON.parse(fs.readFileSync(`${libRoot}/candidate.json`, "utf8"));
 const binding = JSON.parse(fs.readFileSync(`${libRoot}/platform/ios/binding.json`, "utf8"));
@@ -48,9 +48,8 @@ assert.equal(binding.schema, "wasmc.platform-binding-descriptor/v1");
 assert.equal(binding.identity, "wasmc:system-ios-app-surface-control@0.0.2-dev.1");
 assert.equal(binding.artifact.format, "embedded-source");
 assert.equal(retainedProfile.host.required_domain_apis, 0);
-assert.equal(fs.existsSync(`${root}/Lib/SurfaceControlProvider.swift`), false);
-assert.equal(fs.existsSync(`${root}/Lib/PiPSurfaceProvider.swift`), false);
-assert.equal(fs.existsSync(`${root}/WIT/app-surface-control.wit`), false);
+assert.equal(fs.existsSync("host/tests/ios-app-surface-control/App/AppDelegate.swift"), false);
+assert.equal(fs.existsSync("host/tests/ios-app-surface-control/project.yml"), false);
 assert.doesNotMatch(provider, /sendEvent|XCTest|XCUIApplication/);
 assert.match(provider, /sendActions\(for: \.primaryActionTriggered\)/);
 assert.match(controller, /background_surfaces_progressed_during_handoff/);
@@ -69,6 +68,7 @@ execFileSync(process.execPath, ["--check", "scripts/test-ios-app-surface-control
 console.log(JSON.stringify({
   accepted: true,
   schema: "wasmc.ios-app-surface-control-static-validation/v1",
+  example_root: exampleRoot,
   fixed_host_domain_apis: 0,
   fixed_host_sha256: fixedHostDigest,
   surfaces: 5,

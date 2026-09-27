@@ -58,6 +58,7 @@ if (systemLibPackage.layers?.semantic !== "lib.wit") failures.push("System Lib s
 if (systemLibPackage.layers?.platform_binding !== "platform/<os>/binding.json") failures.push("System Lib platform binding layout drifted");
 if (systemLibPackage.rules?.wit_is_platform_neutral !== true) failures.push("System Lib WIT must remain platform neutral");
 if (systemLibPackage.rules?.test_app_owns_no_provider_source !== true) failures.push("qualification Apps must not own provider source");
+if (systemLibPackage.rules?.runnable_examples_are_lib_owned !== true) failures.push("runnable Lib examples must stay with their package");
 if (systemLibPackage.rules?.host_domain_api_growth !== false) failures.push("System Lib layout must not grow Host APIs");
 if (!Object.hasOwn(systemLibPackage.artifact_formats ?? {}, "native-adapter") ||
     !Object.hasOwn(systemLibPackage.artifact_formats ?? {}, "embedded-source")) {

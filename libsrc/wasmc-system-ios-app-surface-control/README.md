@@ -13,6 +13,11 @@ should use a distinct provider package with the same WIT identity when the
 semantics match, its own `platform/<os>/binding.json`, and an independently
 qualified target tuple.
 
+`examples/ios-app/` is the runnable XcodeGen application demonstrating five
+parallel surfaces, confirmed human handoff, edge docking and system Picture in
+Picture. It consumes this package's `platform/ios` provider directly; it is not
+a second owner or copy of the provider implementation.
+
 The retained iPad Simulator qualification covers five application-owned UIKit
 surfaces, semantic Agent activation, confirmed human handoff, edge docking and
 user-started system Picture in Picture lifecycle. It does not qualify physical

@@ -34,8 +34,8 @@ New cross-platform System Lib providers use the canonical layout described by
 `host/contract/system-lib-package.json`: platform-neutral semantics in
 `lib.wit`, package lifecycle and target metadata in `candidate.json`, and all
 OS-specific binding metadata/source below `platform/<os>/`. A qualification App
-or harness consumes that package; it must not become the owner of provider
-source. Dynamic native adapters and statically linked mobile providers use the
+or harness belongs under that package's `examples/`; it must not become a
+second owner of provider source. Dynamic native adapters and statically linked mobile providers use the
 same target resolver through the `native-adapter` and `embedded-source`
 artifact formats respectively.
 
