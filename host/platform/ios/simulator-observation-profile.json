@@ -1,0 +1,52 @@
+{
+  "schema": "wasmc.library-os-profile/v2",
+  "id": "ios-simulator-observation-v1",
+  "target": {
+    "os": "ios",
+    "architecture": "aarch64",
+    "environment": "simulator",
+    "embedding": "supervisor"
+  },
+  "host": {
+    "executor": "host/runtime/lib-boundary/native-apple-simulator",
+    "required_domain_apis": 0
+  },
+  "required_lifecycle": "qualified",
+  "requirements": [
+    "wasmc:system-display@0.0.1"
+  ],
+  "bindings": [
+    {
+      "api": "wasmc:system-display@0.0.1",
+      "provider": "wasmc:system-ios-simulator-display@0.0.1-dev.1",
+      "candidate": "libsrc/wasmc-system-ios-simulator-display/candidate.json",
+      "wit": "libsrc/wasmc-system-ios-simulator-display/lib.wit",
+      "descriptor": "libsrc/wasmc-system-ios-simulator-display/native-boundary.template.json",
+      "boundary": "wasmc.lib-defined-host-boundary/v1",
+      "artifact": {
+        "format": "native-adapter",
+        "path": "libwasmc_system_ios_simulator_display.dylib"
+      },
+      "target": {
+        "os": "ios",
+        "architecture": "aarch64",
+        "environment": "simulator",
+        "embedding": "supervisor"
+      },
+      "lifecycle": {
+        "qualified": true,
+        "admitted": false,
+        "released": false,
+        "discoverable": false,
+        "installable": false
+      }
+    }
+  ],
+  "acceptance": {
+    "real_frame": true,
+    "semantic_frame_postcondition": true,
+    "provider_name_inference": false,
+    "ios_embedded_host": false,
+    "physical_device": false
+  }
+}

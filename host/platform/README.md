@@ -16,6 +16,10 @@ resolver only sees candidate paths explicitly supplied by a profile request.
 Adding macOS, Windows or iOS therefore adds Lib candidates and target requests,
 not Host APIs or rows in the retained legacy provider matrices.
 
+`embedding` distinguishes code executing inside a target from a development
+supervisor controlling that target. The iOS Simulator display slice uses
+`supervisor`; it must not be treated as an iOS app or physical-device binding.
+
 The existing `providers.json` files retain v0.0.15 qualification evidence only.
 They are not a canonical capability inventory and must not gain new domain
 rows. See `PROVIDER_MODEL.md` and

@@ -279,9 +279,11 @@ lifecycle. Missing or ambiguous providers fail closed, provider names carry no
 selection authority, and an ambiguity requires an exact provider pin. The
 resolver is deployment control plane and adds no domain API to the fixed Host.
 
-Current qualification deliberately resolves only Android ARM64 emulator.
-Android physical device, macOS, Windows, iOS device and iOS simulator all reject
-until their own exact qualified Lib providers are supplied. Future platforms
+Android qualification resolves the complete four-API agent-computer profile on
+an ARM64 emulator. Android physical device, macOS, Windows and iOS device still
+reject until their own exact qualified Lib providers are supplied. The separate
+iOS Simulator supervisor profile resolves only `wasmc:system-display@0.0.1`;
+requests for semantic UI, input or virtual input still reject. Future platforms
 reuse the same WIT API identities where semantics match, while provider and
 profile versions remain independent.
 
@@ -350,6 +352,23 @@ profile regeneration, target and lifecycle rejection, ambiguity rejection and
 exact-pin recovery. It also closes a Lib-owned UI snapshot publication race
 with a bounded wait. Resolver, readiness and provider metadata changes require
 zero fixed-Host source or binary changes.
+
+## iOS Simulator observation profile
+
+The first iOS slice uses Xcode 27.0 with an iOS 26.5 ARM64 iPhone 17 Pro
+Simulator. A fixed macOS supervisor Host verifies and loads the exact
+`wasmc-system-ios-simulator-display` descriptor and adapter. The adapter owns
+the platform-specific `simctl io screenshot` operation; the Host contains no
+display or iOS command API. A real 1206×2622 Settings frame and an independent
+appearance-change frame postcondition qualify the display binding.
+
+The target tuple explicitly uses `embedding=supervisor`. This evidence does not
+qualify execution inside an iOS application or on a physical iPhone. Public
+`simctl` provides no Android-UInput-equivalent system input injection or full
+semantic UI tree. The full four-API agent-computer request therefore fails
+closed instead of substituting development automation for an iOS-native
+capability. Embedded Host, UI query, input, virtual input, physical-device,
+Wasm lowering, admission and release remain pending.
 
 The mapped-window, epoll-readiness, kernel-splice and asynchronous-readiness
 successors are qualified on local Linux aarch64 and independent GitHub Ubuntu

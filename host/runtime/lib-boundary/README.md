@@ -13,3 +13,9 @@ Run `node scripts/test-lib-defined-boundary-runtime.mjs` for three real-domain
 probes using one byte-identical executor. The proof is local Node behavior only;
 it is not admission, a native Rust implementation, Component lowering or a
 cross-platform release.
+
+`native-apple-simulator` is the fixed macOS-side executor for Simulator
+supervisor profiles. It performs the same descriptor schema, exact sibling,
+adapter digest, export and input/output limit checks without knowing any iOS or
+display operation. The exact Lib adapter owns `simctl` interaction. Supervisor
+qualification is distinct from an executor embedded inside an iOS application.

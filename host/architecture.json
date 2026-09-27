@@ -73,7 +73,8 @@
       "node",
       "deno",
       "bun",
-      "browser"
+      "browser",
+      "supervisor"
     ]
   },
   "distribution_surfaces": {
@@ -211,6 +212,32 @@
       "pending": [
         "wit-to-wasm-lowering",
         "physical-device-qualification",
+        "admission",
+        "release"
+      ]
+    },
+    "ios_simulator_supervisor": {
+      "status": "ios-26.5-arm64-simulator-display-qualified-not-admitted-not-released",
+      "executor": "host/runtime/lib-boundary/native-apple-simulator",
+      "profile": "host/platform/ios/simulator-observation-profile.json",
+      "system_libs": ["libsrc/wasmc-system-ios-simulator-display"],
+      "evidence": "scripts/test-ios-simulator-observation.mjs",
+      "convergence": "one fixed domain-neutral macOS supervisor executes an exact iOS Simulator display Lib while unavailable UI and input APIs fail closed",
+      "scope": [
+        "real-1206x2622-frame-capture",
+        "appearance-change-frame-postcondition",
+        "exact-shared-object-identity",
+        "input-limit-rejection",
+        "exact-target-provider-resolution",
+        "full-agent-profile-rejection"
+      ],
+      "pending": [
+        "ios-embedded-host",
+        "semantic-ui-query",
+        "input-control",
+        "virtual-input",
+        "physical-device-qualification",
+        "wit-to-wasm-lowering",
         "admission",
         "release"
       ]

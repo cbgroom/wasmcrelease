@@ -15,6 +15,7 @@ on:
       - "libsrc/wasmc-system-linux-uinput/**"
       - "libsrc/wasmc-system-linux-socket/**"
       - "libsrc/wasmc-system-android-*/**"
+      - "libsrc/wasmc-system-ios-simulator-*/**"
       - "libsrc/registry.json"
       - "scripts/test-lib-defined-boundary-runtime.mjs"
       - "scripts/test-linux-lib-defined-boundary.mjs"
@@ -24,6 +25,8 @@ on:
       - "scripts/validate-android-agent-computer.mjs"
       - "scripts/test-platform-profile-resolver.mjs"
       - "scripts/test-android-agent-computer.mjs"
+      - "scripts/validate-ios-simulator-observation.mjs"
+      - "scripts/test-ios-simulator-observation.mjs"
       - "scripts/host-https-ab.mjs"
       - ".github/workflows/host-layout.yml"
   pull_request:
@@ -39,6 +42,7 @@ on:
       - "libsrc/wasmc-system-linux-uinput/**"
       - "libsrc/wasmc-system-linux-socket/**"
       - "libsrc/wasmc-system-android-*/**"
+      - "libsrc/wasmc-system-ios-simulator-*/**"
       - "libsrc/registry.json"
       - "scripts/test-lib-defined-boundary-runtime.mjs"
       - "scripts/test-linux-lib-defined-boundary.mjs"
@@ -48,6 +52,8 @@ on:
       - "scripts/validate-android-agent-computer.mjs"
       - "scripts/test-platform-profile-resolver.mjs"
       - "scripts/test-android-agent-computer.mjs"
+      - "scripts/validate-ios-simulator-observation.mjs"
+      - "scripts/test-ios-simulator-observation.mjs"
       - "scripts/host-https-ab.mjs"
       - ".github/workflows/host-layout.yml"
   workflow_dispatch:
@@ -88,6 +94,7 @@ jobs:
       - run: node scripts/test-linux-operation-bridge.mjs
       - run: node scripts/validate-android-agent-computer.mjs
       - run: node scripts/test-platform-profile-resolver.mjs
+      - run: node scripts/validate-ios-simulator-observation.mjs
       - name: Qualify Lib-defined socket HTTPS migration
         shell: bash
         run: |

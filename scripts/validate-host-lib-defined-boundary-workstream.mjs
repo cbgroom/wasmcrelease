@@ -12,6 +12,7 @@ const focused = [
   "scripts/test-lib-defined-boundary-runtime.mjs",
   "scripts/validate-libsrc.mjs",
   "scripts/validate-android-agent-computer.mjs",
+  "scripts/validate-ios-simulator-observation.mjs",
 ];
 for (const script of focused) run(script);
 
