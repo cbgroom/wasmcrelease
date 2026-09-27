@@ -52,10 +52,11 @@ export function answerContract(report, contract = {}) {
   for (const literal of contract.required_literals ?? []) {
     if (!answer.includes(literal)) failures.push({ metric: 'required_literal', expected: literal });
   }
-  const digests = [...answer.matchAll(/\b[0-9a-f]{32,}\b/gi)].map(row => row[0].toLowerCase());
+  const digests = [...answer.matchAll(/\b[0-9a-f]{40,}\b/gi)].map(row => row[0].toLowerCase());
   if (contract.allowed_sha256) {
     const allowed = new Set(contract.allowed_sha256);
     for (const digest of digests) {
+      if (digest.length === 40) continue; // Exact Git SHA-1 identities are not SHA-256 claims.
       if (digest.length !== 64) failures.push({ metric: 'invalid_sha256_length', observed: digest });
       else if (!allowed.has(digest)) failures.push({ metric: 'unknown_sha256', observed: digest });
     }

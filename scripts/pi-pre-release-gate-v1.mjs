@@ -35,7 +35,7 @@ export function validateCandidateTree(candidate, commit, readAtCommit) {
 }
 
 export function validateReleaseRehearsal(candidate, release, commit, tree) {
-  assert.equal(release.schema, 'wasmc-public-release/v1');
+  assert.ok(['wasmc-public-release/v1', 'wasmc-public-release/v2'].includes(release.schema));
   assert.equal(release.version, candidate.version);
   assert.equal(release.stage, 'prod');
   assert.equal(release.tag, `v${candidate.version}`);

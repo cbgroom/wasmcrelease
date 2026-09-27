@@ -466,12 +466,22 @@
         "artifact_sha256": "f8a8ce447f776a47680e02e19ea3a69827edbbc46e01985803ce3d3df51178d7"
       },
       "catalog": {"release_snapshot":"v0.0.14","path":"catalog/libs-v014.json","sha256":"8368ec8be4b13fadb5959d6495e70916894c476626caf8519b35599041251368","carried_forward":true},
+      "exact_report": {
+        "instruction": "Copy these fields byte-for-byte into the final answer. Never reconstruct or extend a digest. If a draft differs, discard it and output only these exact_report values.",
+        "package": "wasmc:std@1.4.0",
+        "apis": ["wasmc:std@1.4.0/base64#try-encode-standard", "wasmc:std@1.4.0/base64#try-decode-standard"],
+        "catalog_sha256": "8368ec8be4b13fadb5959d6495e70916894c476626caf8519b35599041251368",
+        "wit_sha256": "d565f00e91c36da68da3645ec5231dd11d1b25299a3ba5cbe3adbd9f5760d91d",
+        "artifact_sha256": "f8a8ce447f776a47680e02e19ea3a69827edbbc46e01985803ce3d3df51178d7",
+        "companion_sha256": "f54a892aff9068e5c79464029423a2e8f753ddb44010af9ac34a5c9efce2069c",
+        "import_module": "wasmc:lib/wasmc.std@1.4.0"
+      },
       "resolve_command": "node scripts/wasmc-lib.mjs resolve wasmc-std 1.4.0 --catalog v014 --catalog-sha256 8368ec8be4b13fadb5959d6495e70916894c476626caf8519b35599041251368 --wit-sha256 d565f00e91c36da68da3645ec5231dd11d1b25299a3ba5cbe3adbd9f5760d91d --artifact-sha256 f8a8ce447f776a47680e02e19ea3a69827edbbc46e01985803ce3d3df51178d7",
       "states": {"qualified": true, "admitted": true, "released": true, "discoverable": true, "installable": true},
       "catalog_snapshot_boundary": "The exact v0.0.14 package catalog is carried forward unchanged; package selection authority and current release lifecycle authority remain separate.",
       "behavior_command": "node examples/base64/run.mjs",
       "install_reference": "catalog/INSTALL.md",
-      "answer_boundary": "Do not investigate historical catalog snapshot identities, Core ABI indices or unrelated engine versions unless the user asks."
+      "answer_boundary": "Copy exact_report fields byte-for-byte; never reconstruct a digest. Do not investigate historical catalog snapshot identities, Core ABI indices or unrelated engine versions unless the user asks."
     },
     "host-authority": {
       "intent": "determine authority requested by newly compiled Core Wasm",

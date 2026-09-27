@@ -73,6 +73,16 @@
       "catalog_snapshot_carried_forward": true,
       "states": {"qualified":true,"admitted":true,"released":true,"discoverable":true,"installable":true},
       "catalog_snapshot_boundary": "The exact v0.0.14 catalog is carried forward because package bytes are unchanged; it is package selection authority, while the current release lifecycle remains separate.",
+      "exact_report": {
+        "instruction": "Copy these fields byte-for-byte into the final answer. Never reconstruct or extend a digest. If a draft differs, discard it and output only these exact_report values.",
+        "package": "wasmc:std@1.4.0",
+        "apis": ["wasmc:std@1.4.0/base64#try-encode-standard", "wasmc:std@1.4.0/base64#try-decode-standard"],
+        "catalog_sha256": "8368ec8be4b13fadb5959d6495e70916894c476626caf8519b35599041251368",
+        "wit_sha256": "d565f00e91c36da68da3645ec5231dd11d1b25299a3ba5cbe3adbd9f5760d91d",
+        "artifact_sha256": "f8a8ce447f776a47680e02e19ea3a69827edbbc46e01985803ce3d3df51178d7",
+        "companion_sha256": "f54a892aff9068e5c79464029423a2e8f753ddb44010af9ac34a5c9efce2069c",
+        "import_module": "wasmc:lib/wasmc.std@1.4.0"
+      },
       "resolve": "node scripts/wasmc-lib.mjs resolve wasmc-std 1.4.0 --catalog v014 --catalog-sha256 8368ec8be4b13fadb5959d6495e70916894c476626caf8519b35599041251368 --wit-sha256 d565f00e91c36da68da3645ec5231dd11d1b25299a3ba5cbe3adbd9f5760d91d --artifact-sha256 f8a8ce447f776a47680e02e19ea3a69827edbbc46e01985803ce3d3df51178d7",
       "behavior": "node examples/base64/run.mjs",
       "install_reference": "catalog/INSTALL.md",

@@ -42,6 +42,7 @@ assert.equal(quickstartModel.routes['ordinary-source-positive'].result.core_sha2
 assert.equal(quickstartModel.routes['producer-release-u64-delta'].producer.commit,producerDelta.producer.commit);
 assert.equal(quickstartModel.routes['library-first-selection'].artifact_sha256,taskRoutes['released-base64'].approval.artifact_sha256);
 assert.deepEqual(quickstartModel.routes['library-first-selection'].states,taskRoutes['released-base64'].states);
+assert.deepEqual(quickstartModel.routes['library-first-selection'].exact_report,taskRoutes['released-base64'].exact_report);
 assert.deepEqual(quickstartModel.routes['release-state-separation'].required_output_states,['qualified','admitted','released','discoverable','installable']);
 assert.deepEqual(Object.keys(taskRoutes).sort(),['host-authority','ordinary-source-pair','release-lib-route-readiness','release-orientation','released-base64','rule']);
 assert.equal(taskRoutes['release-orientation'].product_version,'v'+model.release_version);
@@ -60,6 +61,8 @@ assert.equal(taskRoutes['released-base64'].behavior_command,'node examples/base6
 assert.equal(taskRoutes['released-base64'].catalog.path,'catalog/libs-v014.json');
 assert.equal(taskRoutes['released-base64'].catalog.sha256,'8368ec8be4b13fadb5959d6495e70916894c476626caf8519b35599041251368');
 assert.match(taskRoutes['released-base64'].resolve_command,/--catalog v014/);
+assert.equal(taskRoutes['released-base64'].exact_report.import_module,'wasmc:lib/wasmc.std@1.4.0');
+assert.match(taskRoutes['released-base64'].exact_report.instruction,/byte-for-byte/);
 assert.match(taskRoutes['host-authority'].decision,/application-owned exact allowlist/);
 assert.equal(projection?.guidance_scope?.included_in_product,true);
 assert.equal(projection?.guidance_scope?.lifecycle_authority,'release.json and channels/prod.json');

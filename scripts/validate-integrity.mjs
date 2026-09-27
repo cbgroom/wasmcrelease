@@ -36,9 +36,23 @@ for (const row of manifest.artifacts) {
   if (mode !== row.mode) throw new Error(`manifest mode mismatch: ${row.path}`);
   if (mode !== expectedMode(row.path)) throw new Error(`artifact mode violates release policy: ${row.path}`);
 }
-for (const row of release.artifacts) {
-  const bytes = await readFile(join(root, row.path));
-  if (bytes.length !== row.bytes || sha(bytes) !== row.sha256) throw new Error(`release identity mismatch: ${row.path}`);
+if (release.schema === 'wasmc-public-release/v1') {
+  for (const row of release.artifacts) {
+    const bytes = await readFile(join(root, row.path));
+    if (bytes.length !== row.bytes || sha(bytes) !== row.sha256) throw new Error(`release identity mismatch: ${row.path}`);
+  }
+} else if (release.schema === 'wasmc-public-release/v2') {
+  if (
+    release.artifacts !== undefined ||
+    release.artifact_inventory?.path !== 'manifest.json' ||
+    release.artifact_inventory?.integrity !== 'SHA256SUMS' ||
+    !Number.isSafeInteger(release.artifact_inventory?.artifacts) ||
+    release.artifact_inventory.artifacts < 1
+  ) throw new Error('compact release artifact inventory rejected');
+  const releaseInventory = manifest.artifacts.filter((row) => !['AGENTS.md', 'LANGUAGE.md', 'LIB.md'].includes(row.path));
+  if (release.artifact_inventory.artifacts !== releaseInventory.length) throw new Error('compact release artifact count mismatch');
+} else {
+  throw new Error('unsupported release schema');
 }
 const checksumLines = (await readFile(join(root, 'SHA256SUMS'), 'utf8')).trimEnd().split('\n');
 const checksumPaths = [];

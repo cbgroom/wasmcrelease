@@ -13,7 +13,7 @@ const candidate = readJson(release.staged_product_manifest);
 const route = quickstart.routes['release-orientation'];
 const base64 = quickstart.routes['library-first-selection'];
 
-assert.equal(release.schema, 'wasmc-public-release/v1');
+assert.ok(['wasmc-public-release/v1', 'wasmc-public-release/v2'].includes(release.schema));
 assert.equal(release.stage, 'prod');
 assert.equal(prod.stage, 'prod');
 assert.equal(prod.version, release.version);

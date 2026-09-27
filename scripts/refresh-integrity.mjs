@@ -88,7 +88,11 @@ const releaseSurfaceFiles = [
   'host/architecture.json',
   'host/manifest.json'
 ];
-const existing = releaseJson.artifacts.map((row) => row.path);
+const compactRelease = releaseJson.schema === 'wasmc-public-release/v2';
+if (!compactRelease && releaseJson.schema !== 'wasmc-public-release/v1') throw new Error('unsupported release schema');
+const existing = compactRelease
+  ? manifest.artifacts.map((row) => row.path).filter((path) => !['AGENTS.md', 'LANGUAGE.md', 'LIB.md'].includes(path))
+  : releaseJson.artifacts.map((row) => row.path);
 const releasePaths = [...new Set([
   ...existing,
   ...admissionFiles,
@@ -109,10 +113,19 @@ const releasePaths = [...new Set([
   ...releaseSurfaceFiles,
 ])].sort();
 
-releaseJson.artifacts = await Promise.all(releasePaths.map(async (path) => {
-  const bytes = await readFile(join(root, path));
-  return { path, bytes: bytes.length, sha256: sha(bytes) };
-}));
+if (compactRelease) {
+  delete releaseJson.artifacts;
+  releaseJson.artifact_inventory = {
+    path: 'manifest.json',
+    integrity: 'SHA256SUMS',
+    artifacts: releasePaths.length
+  };
+} else {
+  releaseJson.artifacts = await Promise.all(releasePaths.map(async (path) => {
+    const bytes = await readFile(join(root, path));
+    return { path, bytes: bytes.length, sha256: sha(bytes) };
+  }));
+}
 await writeFile(releasePath, `${JSON.stringify(releaseJson, null, 2)}\n`);
 
 const publicDocs = ['AGENTS.md', 'LANGUAGE.md', 'HOSTING.md', 'LIB.md'];

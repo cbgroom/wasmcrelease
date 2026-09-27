@@ -16,6 +16,18 @@ The release closes three defects found by the v0.0.14 post-release Pi cohort:
   unknown WAsmC identity tokens in cases with exact answer contracts, in
   addition to independent white-box review.
 
+The release also changes `release.json` to the compact
+`wasmc-public-release/v2` control-plane schema. The full artifact inventory
+remains authoritative in `manifest.json` and `SHA256SUMS`; it is no longer
+duplicated into the first release-orientation document. Integrity refresh and
+validation continue to accept historical v1 releases while enforcing the
+compact v2 inventory pointer and count for v0.0.15.
+
+The pre-release flywheel explicitly distinguishes 40-character Git commit
+identities from 64-character SHA-256 values, and the Base64 route exposes an
+`exact_report` block that must be copied byte-for-byte. This prevents both
+false rejection of exact Git evidence and model-created digest corruption.
+
 ## Pre-release qualification
 
 The final suffix-free prod state must first exist as an unpushed local rehearsal

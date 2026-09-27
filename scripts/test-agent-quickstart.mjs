@@ -23,6 +23,9 @@ assert.equal(hash('standard/wasmc-std/1.4.0/artifact.wasm'), quickstart.routes['
 assert.equal(hash('catalog/libs-v014.json'), quickstart.routes['library-first-selection'].catalog_sha256);
 assert.equal(quickstart.routes['library-first-selection'].catalog_path,'catalog/libs-v014.json');
 assert.equal(quickstart.routes['library-first-selection'].catalog_snapshot_carried_forward,true);
+assert.equal(quickstart.routes['library-first-selection'].exact_report.companion_sha256,'f54a892aff9068e5c79464029423a2e8f753ddb44010af9ac34a5c9efce2069c');
+assert.equal(quickstart.routes['library-first-selection'].exact_report.import_module,'wasmc:lib/wasmc.std@1.4.0');
+assert.match(quickstart.routes['library-first-selection'].exact_report.instruction,/byte-for-byte/);
 assert.match(quickstart.routes['library-first-selection'].resolve,/--catalog v014/);
 const run = script => {
   const result = spawnSync(process.execPath, [script], { cwd: root, encoding: 'utf8' });
