@@ -10,6 +10,7 @@ does not alter the fixed Host API and does not describe admission or release.
 | App lifecycle | launch, active, resign-active, Home background, foreground return | UIKit callback order; not suspension |
 | Finite background work | six journalled work ticks and completion before foreground | `beginBackgroundTask`; not later system scheduling |
 | Process recovery | a second launch ID recovered the first process journal | explicit termination/relaunch; not jetsam |
+| Background transfer | 8 MiB background URLSession download, background callback, atomic result and exact SHA-256 | Simulator localhost; process-relaunch delivery pending |
 | App-owned surfaces | five UIKit surfaces, dock, confirmed human takeover | application scope only |
 | Picture in Picture | iPad Simulator start/stop/restore and frame submission | live pixel visibility and physical device pending |
 | Authorization | Contacts allow/deny plus authorized CRUD cleanup | other protected domains are observation/planning only |
@@ -22,6 +23,9 @@ does not alter the fixed Host API and does not describe admission or release.
 - audio background-mode declaration and playback-session configuration;
 - camera, microphone, motion, location and notification availability;
 - PiP support discovery on each simulator model.
+- BGTaskScheduler handler registration succeeds on the exact Simulator, but
+  refresh submission is rejected with `BGTaskSchedulerErrorDomain Code=1`;
+  the deferred-work candidate therefore remains unqualified.
 
 These observations must never be converted into a claim that the OS delivered
 background work.
@@ -30,8 +34,9 @@ background work.
 
 1. physical-device suspension and resumption;
 2. finite-task expiration and cancellation under OS pressure;
-3. BGTaskScheduler refresh/processing delivery, expiration and relaunch;
-4. background URLSession completion and process relaunch;
+3. physical-device BGTaskScheduler submission plus refresh/processing delivery,
+   expiration and relaunch;
+4. background URLSession process-relaunch delivery, upload and resume data;
 5. real background audio interruption and route-change behavior;
 6. PiP after the App has backgrounded or the device has locked;
 7. significant-location/region delivery, notifications and silent push;

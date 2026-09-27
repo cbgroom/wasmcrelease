@@ -1,0 +1,49 @@
+name: WAsmCIOSDeferredWork
+options:
+  deploymentTarget:
+    iOS: "18.0"
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    PRODUCT_BUNDLE_IDENTIFIER: io.wasmc.deferred-work-lab
+    GENERATE_INFOPLIST_FILE: YES
+    INFOPLIST_KEY_UIApplicationSceneManifest_Generation: NO
+    INFOPLIST_KEY_UILaunchScreen_Generation: YES
+targets:
+  WAsmCIOSDeferredWork:
+    type: application
+    platform: iOS
+    info:
+      path: ${WASMC_IOS_DEFERRED_WORK_INFO_PLIST}
+      properties:
+        CFBundleShortVersionString: "0.0.1"
+        CFBundleVersion: "1"
+        LSRequiresIPhoneOS: true
+        BGTaskSchedulerPermittedIdentifiers:
+          - io.wasmc.deferred-work.refresh
+        UIBackgroundModes:
+          - fetch
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+    sources:
+      - path: App
+        excludes: [Info.plist]
+      - path: ../../platform/ios/Sources
+      - path: ../../../../host/tests/ios-app-capability/Host/FixedHost.swift
+    settings:
+      base:
+        PRODUCT_NAME: WAsmCIOSDeferredWork
+  WAsmCIOSDeferredWorkUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: UITests
+    dependencies:
+      - target: WAsmCIOSDeferredWork
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: io.wasmc.deferred-work-lab.uitests
+        TEST_TARGET_NAME: WAsmCIOSDeferredWork

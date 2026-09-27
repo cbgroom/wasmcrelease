@@ -1,0 +1,54 @@
+{
+  "schema": "wasmc.libsrc-candidate/v1",
+  "id": "wasmc-system-ios-background-transfer",
+  "version": "0.0.1-dev.1",
+  "wit": "lib.wit",
+  "source": [
+    "README.md",
+    "lib.wit",
+    "platform/ios/binding.json",
+    "platform/ios/Sources/BackgroundTransferProvider.swift",
+    "examples/ios-app/README.md",
+    "examples/ios-app/project.yml",
+    "examples/ios-app/App/AppDelegate.swift",
+    "examples/ios-app/App/BackgroundTransferViewController.swift",
+    "examples/ios-app/App/Info.plist",
+    "examples/ios-app/UITests/BackgroundTransferUITests.swift"
+  ],
+  "host_import_budget": 0,
+  "origin": { "kind": "native-public" },
+  "system_binding": {
+    "implements": "wasmc:system-background-transfer@0.0.1",
+    "boundary": "wasmc.lib-defined-host-boundary/v1",
+    "descriptor": "platform/ios/binding.json",
+    "artifact_format": "embedded-source",
+    "targets": [
+      { "os": "ios", "architecture": "aarch64", "environment": "simulator", "embedding": "native" }
+    ],
+    "lifecycle": {
+      "qualified": true,
+      "admitted": false,
+      "released": false,
+      "discoverable": false,
+      "installable": false
+    }
+  },
+  "completed_gates": [
+    "public-source",
+    "wit-parsed",
+    "fixed-embedded-host-unchanged",
+    "ios-simulator-background-download",
+    "ios-simulator-background-result-durability"
+  ],
+  "pending_gates": [
+    "physical-device-background-download",
+    "process-relaunch-urlsession-events",
+    "upload-and-resume-data",
+    "cancellation-lifecycle",
+    "wit-to-wasm-lowering",
+    "dynamic-component-loading",
+    "admission-review"
+  ],
+  "admitted": false,
+  "qualification": { "runner": "node", "script": "scripts/test-ios-background-transfer.mjs" }
+}

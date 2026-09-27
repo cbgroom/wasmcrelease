@@ -1,0 +1,24 @@
+{
+  "schema": "wasmc.platform-binding-descriptor/v1",
+  "identity": "wasmc:system-ios-background-transfer@0.0.1-dev.1",
+  "wit": "lib.wit",
+  "target": {
+    "os": "ios",
+    "architecture": "aarch64",
+    "environment": "simulator",
+    "embedding": "native"
+  },
+  "artifact": {
+    "format": "embedded-source",
+    "language": "swift",
+    "linkage": "static-app",
+    "sources": ["platform/ios/Sources/BackgroundTransferProvider.swift"],
+    "frameworks": ["CryptoKit", "Foundation", "UIKit"]
+  },
+  "limits": {
+    "background_download": true,
+    "background_upload": false,
+    "process_relaunch_delivery_qualified": false
+  },
+  "lifecycle": "qualified-not-admitted-not-released"
+}
