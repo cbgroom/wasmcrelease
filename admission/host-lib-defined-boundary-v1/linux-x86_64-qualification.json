@@ -1,0 +1,53 @@
+{
+  "schema": "wasmc.host-lib-defined-boundary-linux-qualification/v1",
+  "status": "linux-x86_64-ci-qualified-not-admitted-not-released",
+  "date": "2026-09-27",
+  "qualified_commit": "66af77c3996f2d8fba5d87667870c79ce3fedc6e",
+  "implementation_commit": "2b2e51cd30dac57a341ac3c709eab070bb534549",
+  "system_lib_identity": "wasmc:system-linux-endpoint@0.0.1-dev.1",
+  "environment": {
+    "provider": "GitHub Actions",
+    "runner": "ubuntu-24.04",
+    "os": "linux",
+    "architecture": "x86_64",
+    "kernel": "6.17.0-1022-azure",
+    "rustc": "rustc 1.96.0 (ac68faa20 2026-05-25)"
+  },
+  "workflow": {
+    "name": "Host Lib-defined boundary",
+    "run_id": 36298739381,
+    "job_id": 108562320530,
+    "url": "https://github.com/cbgroom/wasmcrelease/actions/runs/36298739381",
+    "conclusion": "success"
+  },
+  "outputs": {
+    "executor_sha256": "975e5099fdbefcdf53d770108a7d5a7a583cb270d295d50ddf37e36e893da34a",
+    "adapter_sha256": "db79fd19620540823cd4edba02edf67bfb9e2308ffcf10be0004035ca13797f5",
+    "adapter_export": "wasmc_boundary_v1_invoke"
+  },
+  "evidence": {
+    "script": "scripts/test-linux-lib-defined-boundary.mjs",
+    "status": "PASS",
+    "fixed_executor_domain_apis": 0,
+    "adapter_device_path_literals": 0,
+    "real_linux_endpoints": {
+      "dev_zero": true,
+      "dev_null": true,
+      "proc_self_stat": true,
+      "sys_cpu_online": true
+    },
+    "adapter_identity_rejection": true,
+    "frozen_v0_0_15_identity_files": 3,
+    "old_candidate_rejects_product_drift": true
+  },
+  "remaining_gates": [
+    "descriptor-schema-review",
+    "Wasm-WIT-lowering",
+    "native-asynchronous-lifecycle",
+    "admission-review",
+    "catalog-and-LibSearch",
+    "immutable-release"
+  ],
+  "admitted": false,
+  "released": false
+}

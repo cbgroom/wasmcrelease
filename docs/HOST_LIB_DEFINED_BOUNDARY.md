@@ -1,6 +1,6 @@
 # Lib-defined Host boundary workstream
 
-Status: **local Node plus Linux aarch64 native prototype qualified / not admitted / not released**.
+Status: **local Node plus Linux aarch64/x86_64 native prototype qualified / not admitted / not released**.
 
 This workstream replaces domain growth in the Rust Host with a fixed,
 domain-neutral execution boundary. It does not modify the immutable v0.0.15
@@ -82,7 +82,8 @@ branches. It verifies the exact Lib adapter identity, loads it, and invokes one
 bounded byte ABI. The Linux platform Lib owns a generic VFS/file-descriptor
 adapter and supplies endpoint paths as Lib data.
 
-That one adapter is now exercised on Linux aarch64 against `/dev/zero`,
+That one adapter is now exercised on local Linux aarch64 and independent CI
+Linux x86_64 against `/dev/zero`,
 `/dev/null`, `/proc/self/stat` and `/sys/devices/system/cpu/online`. This proves
 that devfs, procfs and sysfs can converge through Linux's existing abstraction
 without one Rust Host API per device. Sockets and ioctl-based device protocols
@@ -141,10 +142,10 @@ contains no domain API and is byte-identical for all three. The test additionall
 proves pinned-window release rejection, completion claim-once, adapter digest
 rejection and zero remaining resources/operations/windows.
 
-The native Linux evidence is currently one local aarch64 environment. Linux
-x86_64 CI, Wasm/WIT lowering, native asynchronous lifecycle/cancellation,
-cross-platform evidence, admission, catalog publication and immutable release
-remain pending.
+The native Linux evidence now covers local aarch64 and independent GitHub
+Ubuntu x86_64. Wasm/WIT lowering, native asynchronous lifecycle/cancellation,
+non-Linux platform evidence, admission, catalog publication and immutable
+release remain pending.
 
 The exact local receipt is
 `admission/host-lib-defined-boundary-v1/local-qualification.json`, bound to
@@ -153,3 +154,8 @@ implementation commit `46f88f0fb1040b43cda1a9dbafeefe420b73647a`.
 The exact Linux aarch64 receipt is
 `admission/host-lib-defined-boundary-v1/linux-aarch64-qualification.json`, bound
 to implementation commit `2b2e51cd30dac57a341ac3c709eab070bb534549`.
+
+The exact Linux x86_64 receipt is
+`admission/host-lib-defined-boundary-v1/linux-x86_64-qualification.json`, bound
+to successful workflow run `36298739381` at commit
+`66af77c3996f2d8fba5d87667870c79ce3fedc6e`.
