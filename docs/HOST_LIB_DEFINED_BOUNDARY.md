@@ -477,6 +477,19 @@ bound to implementation commit `c7d4dd7d9be63aa39ebe0b7f6e0dea661264cd53`.
 This v1 evidence covers UIKit surfaces only; real WKWebView surfaces, DOM/frame
 query, physical devices, lowering, admission and release remain pending.
 
+The v2 successor hardens the handoff interaction without changing the fixed
+Host. Agent-owned task surfaces reject direct user activation, all five surfaces
+can collapse into one edge-dock entry while their Agent work continues, and the
+waiting surface first opens a read-only preview. Human ownership is transferred
+only after a separate explicit confirmation; only then are human input controls
+enabled. During that ownership interval nine Agent actions were rejected with
+zero committed mutations, while the other surfaces continued. The retained v2
+receipt is
+`admission/host-lib-defined-boundary-v1/ios-arm64-app-surface-control-v2.json`,
+bound to implementation commit `d5620d1e83b36a4181a4f114d1c047f1d78be418`.
+This remains a UIKit-only simulator qualification; WKWebView/DOM, physical
+device, lowering, admission and release remain pending.
+
 The mapped-window, epoll-readiness, kernel-splice and asynchronous-readiness
 successors are qualified on local Linux aarch64 and independent GitHub Ubuntu
 x86_64. The ioctl call-shape and vectored-write successor is also qualified on

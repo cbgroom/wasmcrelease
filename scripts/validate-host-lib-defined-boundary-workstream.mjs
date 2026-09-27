@@ -251,6 +251,50 @@ assert.equal(iosSurfaceReceipt.evidence.dom_or_frame_qualification, false);
 assert.equal(iosSurfaceReceipt.evidence.physical_device_qualification, false);
 assert.equal(iosSurfaceReceipt.evidence.wasm_lowering, false);
 
+const iosSurfaceV2Receipt = JSON.parse(fs.readFileSync(
+  "admission/host-lib-defined-boundary-v1/ios-arm64-app-surface-control-v2.json", "utf8",
+));
+assert.equal(iosSurfaceV2Receipt.schema,
+  "wasmc.host-lib-defined-boundary-ios-app-surface-control-qualification/v2");
+assert.equal(iosSurfaceV2Receipt.status,
+  "ios-26.5-arm64-simulator-app-surface-control-v2-qualified-not-admitted-not-released");
+assert.equal(iosSurfaceV2Receipt.predecessor,
+  "admission/host-lib-defined-boundary-v1/ios-arm64-app-surface-control-v1.json");
+assert.equal(iosSurfaceV2Receipt.qualified, true);
+assert.equal(iosSurfaceV2Receipt.admitted, false);
+assert.equal(iosSurfaceV2Receipt.released, false);
+assert.equal(iosSurfaceV2Receipt.discoverable, false);
+assert.equal(iosSurfaceV2Receipt.installable, false);
+execFileSync("git", ["cat-file", "-e", `${iosSurfaceV2Receipt.implementation_commit}^{commit}`]);
+execFileSync("git", ["merge-base", "--is-ancestor", iosSurfaceV2Receipt.implementation_commit, "HEAD"]);
+for (const [relative, expected] of Object.entries(iosSurfaceV2Receipt.source)) {
+  assert.equal(digestAt(iosSurfaceV2Receipt.implementation_commit, relative), expected,
+    `${relative}: retained iOS surface-control v2 qualification source drift`);
+}
+assert.equal(iosSurfaceV2Receipt.evidence.status, "PASS");
+assert.equal(iosSurfaceV2Receipt.evidence.fixed_host_domain_apis, 0);
+assert.equal(iosSurfaceV2Receipt.evidence.fixed_host_sha256, iosAppReceipt.source[
+  "host/tests/ios-app-capability/Host/FixedHost.swift"
+]);
+assert.equal(iosSurfaceV2Receipt.evidence.surface_count, 5);
+assert.equal(iosSurfaceV2Receipt.evidence.qualified_surface_kind, "native");
+assert.equal(iosSurfaceV2Receipt.evidence.all_qualified_surfaces_are_uikit_views, true);
+assert.equal(iosSurfaceV2Receipt.evidence.agent_physical_input_injection, false);
+assert.equal(iosSurfaceV2Receipt.evidence.agent_surfaces_locked_against_direct_user_activation, true);
+assert.equal(iosSurfaceV2Receipt.evidence.edge_dock_cycle_completed, true);
+assert.equal(iosSurfaceV2Receipt.evidence.surfaces_progressed_while_docked, true);
+assert.equal(iosSurfaceV2Receipt.evidence.takeover_confirmation_required, true);
+assert.equal(iosSurfaceV2Receipt.evidence.real_human_input_via_xcuitest, true);
+assert.ok(iosSurfaceV2Receipt.evidence.blocked_agent_actions_during_handoff > 0);
+assert.equal(iosSurfaceV2Receipt.evidence.agent_mutations_committed_to_human_owned_surface, 0);
+assert.equal(iosSurfaceV2Receipt.evidence.background_surfaces_progressed_during_handoff, true);
+assert.equal(iosSurfaceV2Receipt.evidence.same_surface_instance_preserved_across_expand_contract, true);
+assert.equal(iosSurfaceV2Receipt.evidence.agent_resumed_after_handoff, true);
+assert.equal(iosSurfaceV2Receipt.evidence.wkwebview_surface_qualification, false);
+assert.equal(iosSurfaceV2Receipt.evidence.dom_or_frame_qualification, false);
+assert.equal(iosSurfaceV2Receipt.evidence.physical_device_qualification, false);
+assert.equal(iosSurfaceV2Receipt.evidence.wasm_lowering, false);
+
 const frozenIdentityFiles = [
   "release.json",
   "channels/prod.json",
@@ -1033,6 +1077,7 @@ console.log(JSON.stringify({
   retained_ios_arm64_app_capability_v5_qualification: iosAppV5Receipt.implementation_commit,
   retained_ios_arm64_app_capability_v6_qualification: iosAppV6Receipt.implementation_commit,
   retained_ios_arm64_app_surface_control_v1_qualification: iosSurfaceReceipt.implementation_commit,
+  retained_ios_arm64_app_surface_control_v2_qualification: iosSurfaceV2Receipt.implementation_commit,
   old_candidate_rejects_product_drift: true,
   lifecycle: "architecture-workstream-not-admitted-not-released",
 }));

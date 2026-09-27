@@ -294,16 +294,19 @@
       ]
     },
     "ios_app_surface_control": {
-      "status": "ios-26.5-arm64-simulator-app-surface-control-v1-qualified-not-admitted-not-released",
+      "status": "ios-26.5-arm64-simulator-app-surface-control-v2-qualified-not-admitted-not-released",
       "executor": "host/tests/ios-app-capability/Host/FixedHost.swift",
       "profile": "host/tests/ios-app-surface-control/project.yml",
       "system_libs": ["wasmc:system-ios-app-surface-control@0.0.1-dev.1"],
-      "evidence": "admission/host-lib-defined-boundary-v1/ios-arm64-app-surface-control-v1.json",
-      "convergence": "five stable UIKit task surfaces use in-App semantic activation without physical input; one surface expands for human handoff while the other four continue and the same surface instance later resumes Agent work",
+      "evidence": "admission/host-lib-defined-boundary-v1/ios-arm64-app-surface-control-v2.json",
+      "convergence": "five stable UIKit task surfaces reject accidental user activation while Agent-owned, continue Agent progress while collapsed into one edge dock, and require preview plus explicit confirmation before one same-instance surface transfers to human ownership and later resumes Agent work",
       "scope": [
         "five-application-owned-uikit-surfaces",
         "structured-surface-snapshots",
         "no-agent-physical-input-injection",
+        "agent-owned-surface-direct-user-activation-lock",
+        "edge-dock-collapse-and-restore-with-background-progress",
+        "preview-then-explicit-confirmation-before-human-ownership",
         "parallel-background-surface-progress",
         "single-surface-human-handoff",
         "agent-mutation-rejection-during-human-ownership",
