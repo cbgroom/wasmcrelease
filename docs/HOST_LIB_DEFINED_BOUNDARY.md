@@ -189,3 +189,7 @@ The persistent-session Linux x86_64 receipt is
 `admission/host-lib-defined-boundary-v1/linux-x86_64-persistent-v2.json`, bound
 to successful workflow run `36299428864` at commit
 `cd6fddb9f17ab62a651164472e6ae6f238b30cca`.
+
+The mapped-device Linux aarch64 receipt is
+`admission/host-lib-defined-boundary-v1/linux-aarch64-mapped-v3.json`, bound to
+implementation commit `a0f382ab609e9df2fdda5124f4dd5e832c2fee3d`.

@@ -131,6 +131,28 @@ assert.ok(linuxX86PersistentReceipt.evidence.performance.read_mib_per_second >= 
 assert.ok(linuxX86PersistentReceipt.evidence.performance.write_mib_per_second >= linuxX86PersistentReceipt.evidence.performance.minimum_mib_per_second);
 assert.ok(linuxX86PersistentReceipt.evidence.performance.persistent_speedup >= linuxX86PersistentReceipt.evidence.performance.minimum_speedup);
 
+const linuxMappedReceipt = JSON.parse(fs.readFileSync("admission/host-lib-defined-boundary-v1/linux-aarch64-mapped-v3.json", "utf8"));
+assert.equal(linuxMappedReceipt.schema, "wasmc.host-lib-defined-boundary-linux-qualification/v3");
+assert.equal(linuxMappedReceipt.status, "linux-aarch64-mapped-device-window-qualified-not-admitted-not-released");
+assert.equal(linuxMappedReceipt.admitted, false);
+assert.equal(linuxMappedReceipt.released, false);
+execFileSync("git", ["cat-file", "-e", `${linuxMappedReceipt.implementation_commit}^{commit}`]);
+execFileSync("git", ["merge-base", "--is-ancestor", linuxMappedReceipt.implementation_commit, "HEAD"]);
+for (const [relative, expected] of Object.entries(linuxMappedReceipt.source)) {
+  assert.equal(
+    digestAt(linuxMappedReceipt.implementation_commit, relative),
+    expected,
+    `${relative}: retained mapped Linux qualification source drift`,
+  );
+}
+assert.equal(linuxMappedReceipt.evidence.status, "PASS");
+assert.equal(linuxMappedReceipt.evidence.mapped_device_window, true);
+assert.equal(linuxMappedReceipt.evidence.mapping_write_read_match, true);
+assert.equal(linuxMappedReceipt.evidence.mapping_sync, true);
+assert.equal(linuxMappedReceipt.evidence.mapping_bounds_rejection, true);
+assert.equal(linuxMappedReceipt.evidence.generation_checked_stale_mapping_rejection, true);
+assert.ok(linuxMappedReceipt.evidence.performance.mapping_mib_per_second >= linuxMappedReceipt.evidence.performance.minimum_mib_per_second);
+
 const oldCandidate = spawnSync(
   process.execPath,
   ["scripts/release-candidate.mjs", "verify", "channels/candidates/0.0.15.json"],
@@ -149,6 +171,7 @@ console.log(JSON.stringify({
   retained_linux_x86_64_qualification: linuxX86Receipt.qualified_commit,
   retained_linux_aarch64_persistent_qualification: linuxPersistentReceipt.implementation_commit,
   retained_linux_x86_64_persistent_qualification: linuxX86PersistentReceipt.qualified_commit,
+  retained_linux_aarch64_mapped_qualification: linuxMappedReceipt.implementation_commit,
   old_candidate_rejects_product_drift: true,
   lifecycle: "architecture-workstream-not-admitted-not-released",
 }));
