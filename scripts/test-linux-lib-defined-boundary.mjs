@@ -95,6 +95,51 @@ const encodePoll = (token, events, timeoutMilliseconds) => {
   return bytes;
 };
 
+const encodeMap = (token, offset, length, protection, flags) => {
+  const bytes = Buffer.alloc(33);
+  bytes.writeUInt8(9, 0);
+  bytes.writeBigUInt64LE(token, 1);
+  bytes.writeBigUInt64LE(BigInt(offset), 9);
+  bytes.writeBigUInt64LE(BigInt(length), 17);
+  bytes.writeUInt32LE(protection, 25);
+  bytes.writeUInt32LE(flags, 29);
+  return bytes;
+};
+
+const encodeMappingRead = (token, offset, maximum) => {
+  const bytes = Buffer.alloc(21);
+  bytes.writeUInt8(10, 0);
+  bytes.writeBigUInt64LE(token, 1);
+  bytes.writeBigUInt64LE(BigInt(offset), 9);
+  bytes.writeUInt32LE(maximum, 17);
+  return bytes;
+};
+
+const encodeMappingWrite = (token, offset, payload) => {
+  const bytes = Buffer.alloc(21 + payload.length);
+  bytes.writeUInt8(11, 0);
+  bytes.writeBigUInt64LE(token, 1);
+  bytes.writeBigUInt64LE(BigInt(offset), 9);
+  bytes.writeUInt32LE(payload.length, 17);
+  payload.copy(bytes, 21);
+  return bytes;
+};
+
+const encodeMappingSync = (token, flags) => {
+  const bytes = Buffer.alloc(13);
+  bytes.writeUInt8(12, 0);
+  bytes.writeBigUInt64LE(token, 1);
+  bytes.writeUInt32LE(flags, 9);
+  return bytes;
+};
+
+const encodeUnmap = (token) => {
+  const bytes = Buffer.alloc(9);
+  bytes.writeUInt8(13, 0);
+  bytes.writeBigUInt64LE(token, 1);
+  return bytes;
+};
+
 const invoke = (name, input) => {
   const inputPath = path.join(target, `${name}.input.bin`);
   const outputPath = path.join(target, `${name}.output.bin`);
@@ -214,6 +259,37 @@ assert.equal(ptmx.length, 8);
 assert.equal(ptmx.readInt32LE(0), 0);
 assert.ok(ptmx.readUInt32LE(4) >= 0);
 await expectOk(session.request(encodeClose(ptmxToken)));
+
+const mappedZeroToken = (await expectOk(session.request(encodePath(3, "/dev/zero", 2)))).readBigUInt64LE();
+const mappingToken = (await expectOk(session.request(encodeMap(mappedZeroToken, 0, 1048576, 3, 2)))).readBigUInt64LE();
+const mappedPattern = Buffer.alloc(65536);
+for (let index = 0; index < mappedPattern.length; index += 1) mappedPattern[index] = index & 0xff;
+const mappedWritten = await expectOk(session.request(encodeMappingWrite(mappingToken, 4096, mappedPattern)));
+assert.equal(Number(mappedWritten.readBigUInt64LE()), mappedPattern.length);
+const mappedRead = await expectOk(session.request(encodeMappingRead(mappingToken, 4096, mappedPattern.length)));
+assert.deepEqual(mappedRead, mappedPattern);
+await expectOk(session.request(encodeMappingSync(mappingToken, 4)));
+const mappingOutOfBounds = await session.request(encodeMappingRead(mappingToken, 1048576 - 8, 16));
+assert.equal(mappingOutOfBounds.status, -22);
+
+const mappingOperations = 256;
+const mappingBytes = mappingOperations * mappedPattern.length;
+const mappingStarted = process.hrtime.bigint();
+const mappingReads = await Promise.all(Array.from(
+  { length: mappingOperations },
+  () => session.request(encodeMappingRead(mappingToken, 4096, mappedPattern.length)),
+));
+const mappingElapsedNs = Number(process.hrtime.bigint() - mappingStarted);
+for (const result of mappingReads) {
+  assert.equal(result.status, 0);
+  assert.equal(result.output.length, mappedPattern.length);
+}
+const mappingMibPerSecond = mappingBytes / (1024 * 1024) / (mappingElapsedNs / 1e9);
+assert.ok(mappingMibPerSecond >= 25, `mapped window throughput too low: ${mappingMibPerSecond.toFixed(2)} MiB/s`);
+await expectOk(session.request(encodeUnmap(mappingToken)));
+const staleMapping = await session.request(encodeMappingRead(mappingToken, 0, 1));
+assert.equal(staleMapping.status, -9);
+await expectOk(session.request(encodeClose(mappedZeroToken)));
 await session.close();
 
 const coldOperations = 12;
@@ -228,7 +304,7 @@ assert.ok(persistentSpeedup >= 5, `persistent session speedup too low: ${persist
 const exports = command("nm", ["-D", "--defined-only", adapter]);
 assert.match(exports, /\bwasmc_boundary_v1_invoke\b/);
 const rustText = fs.readFileSync(rustSource, "utf8");
-for (const forbidden of ["/dev/", "/proc/", "/sys/", "O_RDONLY", "O_WRONLY", "ioctl", "pollfd", "read-endpoint", "write-endpoint"]) {
+for (const forbidden of ["/dev/", "/proc/", "/sys/", "O_RDONLY", "O_WRONLY", "ioctl", "pollfd", "mmap", "msync", "read-endpoint", "write-endpoint"]) {
   assert.equal(rustText.includes(forbidden), false, `domain or Linux endpoint semantics leaked into fixed executor: ${forbidden}`);
 }
 const adapterText = fs.readFileSync(adapterSource, "utf8");
@@ -249,7 +325,7 @@ assert.match(`${rejected.stdout}\n${rejected.stderr}`, /adapter identity mismatc
 
 console.log(JSON.stringify({
   accepted: true,
-  schema: "wasmc.linux-lib-defined-boundary-qualification/v2",
+  schema: "wasmc.linux-lib-defined-boundary-qualification/v3",
   platform: process.platform,
   architecture: process.arch,
   kernel: os.release(),
@@ -263,6 +339,8 @@ console.log(JSON.stringify({
   generation_checked_stale_handle_rejection: true,
   real_ioctl: "TIOCGPTN",
   real_poll: true,
+  mapped_device_window: true,
+  generation_checked_stale_mapping_rejection: true,
   performance: {
     read_operations: readOperations,
     read_bytes: readBytes,
@@ -273,6 +351,9 @@ console.log(JSON.stringify({
     warm_ns_per_operation: Math.round(warmNsPerOperation),
     cold_ns_per_operation: Math.round(coldNsPerOperation),
     persistent_speedup: Number(persistentSpeedup.toFixed(2)),
+    mapping_operations: mappingOperations,
+    mapping_bytes: mappingBytes,
+    mapping_mib_per_second: Number(mappingMibPerSecond.toFixed(2)),
     minimum_mib_per_second: 25,
     minimum_speedup: 5,
   },

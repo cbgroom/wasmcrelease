@@ -1,6 +1,6 @@
 # Lib-defined Host boundary workstream
 
-Status: **persistent Linux aarch64/x86_64 native session qualified / not admitted / not released**.
+Status: **mapped-device Linux aarch64 locally qualified / x86_64 refresh pending / not admitted / not released**.
 
 This workstream replaces domain growth in the Rust Host with a fixed,
 domain-neutral execution boundary. It does not modify the immutable v0.0.15
@@ -105,6 +105,14 @@ each direction and at least 5x lower per-operation cost than cold process/load/
 open execution; exact observations belong in the versioned receipt rather than
 being advertised as a portable hardware guarantee.
 
+The Lib now also owns generation-checked `mmap` regions. Qualification maps a
+real `/dev/zero` endpoint, writes and reads a bounded region, executes `msync`,
+rejects an out-of-bounds request, unmaps it, and rejects the stale mapping token.
+This proves device mapping without adding `mmap` or device semantics to the
+fixed Rust executor. It is not yet end-to-end zero-copy: the current byte ABI
+still copies between the native mapping and the executor window. A direct
+guest/shared-window profile remains a separate gate.
+
 ## Library OS consequence
 
 The intended result is a Library OS profile assembled above the fixed Host:
@@ -153,10 +161,12 @@ contains no domain API and is byte-identical for all three. The test additionall
 proves pinned-window release rejection, completion claim-once, adapter digest
 rejection and zero remaining resources/operations/windows.
 
-The persistent/session implementation is now qualified on local Linux aarch64
-and independent GitHub Ubuntu x86_64. Wasm/WIT lowering, native asynchronous
-lifecycle/cancellation, mapped windows, non-Linux evidence, admission, catalog
-publication and immutable release remain pending.
+The persistent/session v2 implementation remains qualified on local Linux
+aarch64 and independent GitHub Ubuntu x86_64. The mapped-window successor is
+locally qualified on aarch64 and requires fresh x86_64 evidence. Wasm/WIT
+lowering, native asynchronous lifecycle/cancellation, direct guest-window
+zero-copy, non-Linux evidence, admission, catalog publication and immutable
+release remain pending.
 
 The exact local receipt is
 `admission/host-lib-defined-boundary-v1/local-qualification.json`, bound to

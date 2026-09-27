@@ -5,9 +5,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/ioctl.h>
+#include <sys/mman.h>
 #include <unistd.h>
 
 #define MAX_HANDLES 1024
+#define MAX_MAPPINGS 1024
+#define MAX_MAPPING_BYTES (UINT64_C(256) * 1024 * 1024)
 
 struct handle_slot {
   int descriptor;
@@ -16,6 +19,15 @@ struct handle_slot {
 };
 
 static struct handle_slot handles[MAX_HANDLES];
+
+struct mapping_slot {
+  void *address;
+  size_t length;
+  uint32_t generation;
+  uint8_t active;
+};
+
+static struct mapping_slot mappings[MAX_MAPPINGS];
 
 static uint16_t read_u16(const uint8_t *bytes) {
   return (uint16_t)bytes[0] | ((uint16_t)bytes[1] << 8);
@@ -78,6 +90,33 @@ static int32_t resolve_handle(uint64_t token, uint32_t *index, int *descriptor) 
   if (!handles[slot].active || handles[slot].generation != generation) return -EBADF;
   if (index) *index = slot;
   *descriptor = handles[slot].descriptor;
+  return 0;
+}
+
+static int32_t register_mapping(void *address, size_t length, uint64_t *token) {
+  for (uint32_t index = 0; index < MAX_MAPPINGS; index += 1) {
+    if (!mappings[index].active) {
+      mappings[index].generation += 1;
+      if (mappings[index].generation == 0) mappings[index].generation = 1;
+      mappings[index].address = address;
+      mappings[index].length = length;
+      mappings[index].active = 1;
+      *token = ((uint64_t)mappings[index].generation << 32) | ((uint64_t)index + 1);
+      return 0;
+    }
+  }
+  return -EMFILE;
+}
+
+static int32_t resolve_mapping(uint64_t token, uint32_t *index, void **address, size_t *length) {
+  const uint32_t encoded_index = (uint32_t)token;
+  const uint32_t generation = (uint32_t)(token >> 32);
+  if (encoded_index == 0 || encoded_index > MAX_MAPPINGS || generation == 0) return -EBADF;
+  const uint32_t slot = encoded_index - 1;
+  if (!mappings[slot].active || mappings[slot].generation != generation) return -EBADF;
+  if (index) *index = slot;
+  *address = mappings[slot].address;
+  *length = mappings[slot].length;
   return 0;
 }
 
@@ -240,6 +279,85 @@ static int32_t invoke_poll(
   return 0;
 }
 
+static int32_t invoke_map(
+    const uint8_t *input, size_t input_len,
+    uint8_t *output, size_t output_capacity, size_t *output_len) {
+  if (input_len != 33 || output_capacity < 8) return -EINVAL;
+  int descriptor = -1;
+  int32_t status = resolve_handle(read_u64(input + 1), NULL, &descriptor);
+  if (status != 0) return status;
+  const uint64_t offset = read_u64(input + 9);
+  const uint64_t length = read_u64(input + 17);
+  const uint32_t protection = read_u32(input + 25);
+  const uint32_t flags = read_u32(input + 29);
+  const size_t native_length = (size_t)length;
+  if (length == 0 || length > MAX_MAPPING_BYTES || (uint64_t)native_length != length || offset > INT64_MAX) return -EINVAL;
+  void *address = mmap(NULL, native_length, (int)protection, (int)flags, descriptor, (off_t)offset);
+  if (address == MAP_FAILED) return -errno;
+  uint64_t token = 0;
+  status = register_mapping(address, native_length, &token);
+  if (status != 0) { munmap(address, native_length); return status; }
+  write_u64(output, token);
+  *output_len = 8;
+  return 0;
+}
+
+static int32_t invoke_mapping_read(
+    const uint8_t *input, size_t input_len,
+    uint8_t *output, size_t output_capacity, size_t *output_len) {
+  if (input_len != 21) return -EINVAL;
+  void *address = NULL;
+  size_t mapping_len = 0;
+  int32_t status = resolve_mapping(read_u64(input + 1), NULL, &address, &mapping_len);
+  if (status != 0) return status;
+  const uint64_t offset = read_u64(input + 9);
+  const uint32_t length = read_u32(input + 17);
+  if (offset > mapping_len || length > mapping_len - (size_t)offset || length > output_capacity) return -EINVAL;
+  memcpy(output, (const uint8_t *)address + (size_t)offset, length);
+  *output_len = length;
+  return 0;
+}
+
+static int32_t invoke_mapping_write(
+    const uint8_t *input, size_t input_len,
+    uint8_t *output, size_t output_capacity, size_t *output_len) {
+  if (input_len < 21 || output_capacity < 8) return -EINVAL;
+  void *address = NULL;
+  size_t mapping_len = 0;
+  int32_t status = resolve_mapping(read_u64(input + 1), NULL, &address, &mapping_len);
+  if (status != 0) return status;
+  const uint64_t offset = read_u64(input + 9);
+  const uint32_t length = read_u32(input + 17);
+  if (input_len != 21 + (size_t)length || offset > mapping_len || length > mapping_len - (size_t)offset) return -EINVAL;
+  memcpy((uint8_t *)address + (size_t)offset, input + 21, length);
+  write_u64(output, length);
+  *output_len = 8;
+  return 0;
+}
+
+static int32_t invoke_mapping_sync(const uint8_t *input, size_t input_len) {
+  if (input_len != 13) return -EINVAL;
+  void *address = NULL;
+  size_t mapping_len = 0;
+  int32_t status = resolve_mapping(read_u64(input + 1), NULL, &address, &mapping_len);
+  if (status != 0) return status;
+  return msync(address, mapping_len, (int)read_u32(input + 9)) == 0 ? 0 : -errno;
+}
+
+static int32_t invoke_unmap(const uint8_t *input, size_t input_len) {
+  if (input_len != 9) return -EINVAL;
+  uint32_t index = 0;
+  void *address = NULL;
+  size_t mapping_len = 0;
+  int32_t status = resolve_mapping(read_u64(input + 1), &index, &address, &mapping_len);
+  if (status != 0) return status;
+  if (munmap(address, mapping_len) != 0) return -errno;
+  mappings[index].active = 0;
+  mappings[index].address = NULL;
+  mappings[index].length = 0;
+  return 0;
+}
+
 __attribute__((visibility("default")))
 int32_t wasmc_boundary_v1_invoke(
     const uint8_t *input,
@@ -258,12 +376,23 @@ int32_t wasmc_boundary_v1_invoke(
     case 6: return invoke_close(input, input_len);
     case 7: return invoke_ioctl(input, input_len, output, output_capacity, output_len);
     case 8: return invoke_poll(input, input_len, output, output_capacity, output_len);
+    case 9: return invoke_map(input, input_len, output, output_capacity, output_len);
+    case 10: return invoke_mapping_read(input, input_len, output, output_capacity, output_len);
+    case 11: return invoke_mapping_write(input, input_len, output, output_capacity, output_len);
+    case 12: return invoke_mapping_sync(input, input_len);
+    case 13: return invoke_unmap(input, input_len);
     default: return -ENOTSUP;
   }
 }
 
 __attribute__((destructor))
 static void close_retained_handles(void) {
+  for (size_t index = 0; index < MAX_MAPPINGS; index += 1) {
+    if (mappings[index].active) munmap(mappings[index].address, mappings[index].length);
+    mappings[index].active = 0;
+    mappings[index].address = NULL;
+    mappings[index].length = 0;
+  }
   for (size_t index = 0; index < MAX_HANDLES; index += 1) {
     if (handles[index].active) close(handles[index].descriptor);
     handles[index].active = 0;
