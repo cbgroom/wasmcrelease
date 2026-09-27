@@ -558,6 +558,47 @@ assert.equal(iosBackgroundAudioV1Receipt.evidence.lock_screen_qualified, false);
 assert.equal(iosBackgroundAudioV1Receipt.evidence.route_change_qualified, false);
 assert.equal(iosBackgroundAudioV1Receipt.evidence.interruption_qualified, false);
 
+const iosLocalNotificationV1Receipt = JSON.parse(fs.readFileSync(
+  "admission/host-lib-defined-boundary-v1/ios-arm64-local-notification-v1.json", "utf8",
+));
+assert.equal(iosLocalNotificationV1Receipt.schema,
+  "wasmc.host-lib-defined-boundary-ios-local-notification-qualification/v1");
+assert.equal(iosLocalNotificationV1Receipt.qualified, true);
+assert.equal(iosLocalNotificationV1Receipt.admitted, false);
+assert.equal(iosLocalNotificationV1Receipt.released, false);
+assert.equal(iosLocalNotificationV1Receipt.discoverable, false);
+assert.equal(iosLocalNotificationV1Receipt.installable, false);
+execFileSync("git", ["cat-file", "-e", `${iosLocalNotificationV1Receipt.implementation_commit}^{commit}`]);
+execFileSync("git", ["merge-base", "--is-ancestor", iosLocalNotificationV1Receipt.implementation_commit, "HEAD"]);
+for (const [relative, expected] of Object.entries(iosLocalNotificationV1Receipt.source)) {
+  assert.equal(digestAt(iosLocalNotificationV1Receipt.implementation_commit, relative), expected,
+    `${relative}: retained iOS local-notification v1 source drift`);
+}
+assert.equal(iosLocalNotificationV1Receipt.evidence.status, "PASS");
+assert.equal(iosLocalNotificationV1Receipt.evidence.fixed_host_domain_apis, 0);
+assert.equal(iosLocalNotificationV1Receipt.evidence.fixed_host_sha256,
+  iosBackgroundAudioV1Receipt.evidence.fixed_host_sha256);
+assert.equal(iosLocalNotificationV1Receipt.evidence.system_authorization_prompt, true);
+assert.equal(iosLocalNotificationV1Receipt.evidence.authorization, "authorized");
+assert.equal(iosLocalNotificationV1Receipt.evidence.authorization_request_attempts, 1);
+assert.equal(iosLocalNotificationV1Receipt.evidence.scheduled, true);
+assert.equal(iosLocalNotificationV1Receipt.evidence.system_banner_observed, true);
+assert.equal(iosLocalNotificationV1Receipt.evidence.delivered, true);
+assert.equal(iosLocalNotificationV1Receipt.evidence.exact_identifier, true);
+assert.equal(iosLocalNotificationV1Receipt.evidence.exact_title, true);
+assert.equal(iosLocalNotificationV1Receipt.evidence.exact_body, true);
+assert.equal(iosLocalNotificationV1Receipt.evidence.exact_payload, true);
+assert.ok(iosLocalNotificationV1Receipt.evidence.background_unix_ms
+  < iosLocalNotificationV1Receipt.evidence.delivery_unix_ms);
+assert.ok(iosLocalNotificationV1Receipt.evidence.delivery_unix_ms
+  < iosLocalNotificationV1Receipt.evidence.foreground_return_unix_ms);
+assert.equal(iosLocalNotificationV1Receipt.evidence.delivery_between_background_boundaries, true);
+assert.equal(iosLocalNotificationV1Receipt.evidence.remote_push_qualified, false);
+assert.equal(iosLocalNotificationV1Receipt.evidence.silent_push_qualified, false);
+assert.equal(iosLocalNotificationV1Receipt.evidence.notification_extension_qualified, false);
+assert.equal(iosLocalNotificationV1Receipt.evidence.physical_device, false);
+execFileSync(process.execPath, ["scripts/validate-ios-local-notification.mjs"], { stdio: "ignore" });
+
 const iosQualificationPolicyV1Receipt = JSON.parse(fs.readFileSync(
   "admission/host-lib-defined-boundary-v1/ios-simulator-first-qualification-policy-v1.json", "utf8",
 ));
@@ -1372,6 +1413,7 @@ console.log(JSON.stringify({
   retained_ios_arm64_background_transfer_v2_qualification: iosBackgroundTransferV2Receipt.implementation_commit,
   retained_ios_arm64_deferred_work_simulator_rejection_v1: iosDeferredWorkRejectionV1.implementation_commit,
   retained_ios_arm64_background_audio_v1_qualification: iosBackgroundAudioV1Receipt.implementation_commit,
+  retained_ios_arm64_local_notification_v1_qualification: iosLocalNotificationV1Receipt.implementation_commit,
   retained_ios_simulator_first_qualification_policy_v1: iosQualificationPolicyV1Receipt.implementation_commit,
   old_candidate_rejects_product_drift: true,
   lifecycle: "architecture-workstream-not-admitted-not-released",
