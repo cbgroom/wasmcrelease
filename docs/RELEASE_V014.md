@@ -1,9 +1,9 @@
 # WAsmC v0.0.14 LibSearch route-complete release
 
 v0.0.14 adds the admitted `wasmc-lib-search@0.2.0` package and its exact
-future-product catalog. The frozen v2 candidate contains 213 files with product
+release catalog. The final frozen v2 candidate contains 213 files with product
 set SHA-256
-`0eb2d0addf9e0cfe9afb11502848bf0a09a55616c5024727ec98729103a138bc`.
+`a09cd071eb293e636bf8b858b0a56570bfdd8a53373544eca68fda8ea825d4d2`.
 
 The release closure binds all 14 package routes and 108 exported WIT API routes
 with `candidate_extras=0`. LibSearch 0.2.0 has an import-free 53,412-byte Core
@@ -11,38 +11,36 @@ artifact and a 55,178-byte Component artifact. Its 27,749-byte index contains
 122 package/API entries. Historical LibSearch 0.1.0 remains in the catalog as a
 historical exact version; it is not selected as the active route.
 
-## Dev qualification
+## Final qualification and promotion
 
 The product candidate is frozen at
-`f43dd8445717cc0dc38f41077ff239635b8e809d`. Qualification source
-`7811eb769176d98d4c3f02fbd0a7beaa386ddf20` fixed and then exercised the
-versioned LibSearch workflow, Rust binding, Core export prefix and full current
-candidate identity.
+`6cb3aafea5334ac27648af0e9ccd684fe721ccb5`. The same commit is the tested
+source for the versioned LibSearch workflow, Rust binding, Core export prefix,
+Agent guidance and complete source-free consumer identity.
 
-- LibSearch portable equivalence run `36277853994`: success across ten
+- LibSearch portable equivalence run `36285470123`: success across ten
   JavaScript runtime/platform cells, Wasmi 2 Core, Wasmtime 49 generated
   Component SDK and its required aggregate.
-- Full source-free consumer run `36277855490`: success across compatibility,
+- Full source-free consumer run `36285471830`: success across compatibility,
   integrity, Agent guidance, both mirrors, Node/Bun/Deno journeys, security
   history and release-profile Rust/Wasmi/Wasmtime/Component Libs.
-- SDK Agent guidance run `36277334732`: success on the frozen candidate commit.
-- Host external HTTPS run `36277334652`: success on all five required platforms
+- SDK Agent guidance run `36285458201`: success on the frozen candidate commit.
+- Host external HTTPS run `36285458207`: success on all five required platforms
   and the legacy-optional Intel macOS platform.
 
-These receipts first authorized `v0.0.14-dev.1`. The exact metadata-only
-dev-to-main transition then preserved the candidate commit and every product
-digest as `v0.0.14-main.1`. Neither prerelease publishes v0.0.14, advances
-public default discovery, or permits rebuilding any product byte. Prod remains
-v0.0.13 until its exact main-to-prod transition completes.
+These receipts authorized `v0.0.14-dev.2`. The metadata-only transitions to
+`v0.0.14-main.2` and `v0.0.14` preserve the candidate commit and every product
+digest. Only the suffix-free prod tag advances public discovery.
 
-## Prod hold and superseding candidate
+## Superseded prereleases
 
-Final white-box review found that the frozen candidate itself contains
+White-box review of the first frozen candidate found that it contained
 stage-specific Agent guidance: several product files still name v0.0.13 as the
 current immutable release, and the quickstart tells Agents to stop at the dev
 qualification gate. Publishing those exact bytes as v0.0.14 would preserve
 hashes but teach a false lifecycle state. `scripts/validate-v014-prod-readiness.mjs`
 therefore keeps prod fail-closed. The required recovery is a lifecycle-neutral
-replacement product set, followed by `v0.0.14-dev.2` qualification and exact
-main/prod promotion. Existing dev.1 and main.1 remain immutable prerelease
-evidence and do not advance the public pointer.
+replacement lifecycle-neutral product set. Existing dev.1 and main.1 remain
+immutable prerelease evidence and do not advance the public pointer. The
+replacement completed dev.2, main.2 and prod without changing its product
+digest set.

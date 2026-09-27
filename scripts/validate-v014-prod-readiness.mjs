@@ -11,7 +11,11 @@ const quickstart=json('agent-quickstart.json');
 const readiness=json('release-lib-route-readiness.json');
 const surfaces=json('release-surfaces.json');
 const admission=json('admission/lib-search-v020-v014-admission.json');
+const ecosystem=json('lib-ecosystem-control-plane.json');
+const packageIndex=json('package-index.json');
 const agents=text('AGENTS.md');
+const ecosystemGenerator=text('scripts/lib-ecosystem-control-plane.mjs');
+const surfaceValidator=text('scripts/validate-release-surfaces.mjs');
 
 assert.equal(candidate.product_set_sha256,'a09cd071eb293e636bf8b858b0a56570bfdd8a53373544eca68fda8ea825d4d2');
 assert.match(agents,/product presence is not lifecycle authority/i);
@@ -28,6 +32,11 @@ assert.equal(surfaces.agent_capability_projection.guidance_scope.included_in_pro
 assert.equal(surfaces.agent_capability_projection.guidance_scope.lifecycle_authority,'release.json and channels/prod.json');
 assert.equal(admission.state_scope,'admission-checkpoint-only');
 assert.deepEqual(admission.current_lifecycle_authority,['release.json','channels/prod.json']);
+assert.match(ecosystemGenerator,/release\.version === '0\.0\.14'/);
+assert.match(ecosystemGenerator,/catalog\/libs-v014\.json/);
+assert.match(ecosystemGenerator,/successor_candidates: release\.version === '0\.0\.14' \? \[\] : \[searchCandidate\]/);
+assert.match(surfaceValidator,/const prod014=ecosystemModel\.release\.version==='0\.0\.14'/);
+assert.match(surfaceValidator,/released LibSearch 0\.2 route missing/);
 for(const [path,patterns] of Object.entries({
   'agent-quickstart.json':[/"release": "v0\.0\.13"/,/"first_missing_authority"/],
   'release-lib-route-readiness.json':[/"tag": "v0\.0\.13"/,/"first_missing_authority"/],
@@ -46,7 +55,15 @@ assert.equal(main.product_candidate_commit,dev.product_candidate_commit);
 assert.equal(main.product_set_sha256,candidate.product_set_sha256);
 assert.equal(main.qualification.accepted,true);
 assert.equal(main.qualification.receipt,'admission/qualification-v014-dev2.json');
-assert.equal(prod.tag,'v0.0.13');
+assert.equal(prod.tag,'v0.0.14');
+assert.equal(prod.product_candidate_commit,main.product_candidate_commit);
+assert.equal(prod.product_set_sha256,candidate.product_set_sha256);
+assert.equal(prod.qualification.receipt,'admission/qualification-v014-dev2.json');
+assert.equal(packageIndex.latest,'0.0.14');
+assert.deepEqual({packages:ecosystem.inventory.packages,released:ecosystem.inventory.released,discoverable:ecosystem.inventory.discoverable,installable:ecosystem.inventory.installable},{packages:14,released:14,discoverable:14,installable:14});
+assert.equal(ecosystem.inventory.inventory_is_unified,true);
+assert.equal(ecosystem.successor_candidates.length,0);
+assert.deepEqual(ecosystem.packages.find(row=>row.identity==='wasmc:lib-search@0.2.0')?.states,{qualified:true,admitted:true,released:true,discoverable:true,installable:true});
 
 console.log(JSON.stringify({
   accepted:true,
@@ -57,5 +74,6 @@ console.log(JSON.stringify({
   current_prod:prod.tag,
   dev:dev.tag,
   blocker:null,
-  next:'publish the exact main.2 candidate bytes as v0.0.14 prod'
+  published:true,
+  next:null
 }));

@@ -85,13 +85,14 @@ assert.equal(ecosystem?.path,'lib-ecosystem-control-plane.json');
 assert(existsSync(resolve(root,ecosystem.path)),'Lib ecosystem control plane is missing');
 const ecosystemModel=JSON.parse(read(ecosystem.path));
 assert.equal(ecosystemModel.schema,ecosystem.schema);
-assert.equal(ecosystemModel.inventory.packages,13);
-assert.equal(ecosystemModel.inventory.released,13);
-assert.equal(ecosystemModel.inventory.discoverable,12);
-assert.equal(ecosystemModel.inventory.installable,4);
-assert.equal(ecosystemModel.inventory.current_side_installable,13);
+const prod014=ecosystemModel.release.version==='0.0.14';
+assert.equal(ecosystemModel.inventory.packages,prod014?14:13);
+assert.equal(ecosystemModel.inventory.released,prod014?14:13);
+assert.equal(ecosystemModel.inventory.discoverable,prod014?14:12);
+assert.equal(ecosystemModel.inventory.installable,prod014?14:4);
+assert.equal(ecosystemModel.inventory.current_side_installable,prod014?14:13);
 assert.equal(ecosystemModel.inventory.current_side_inventory_matches_release,true);
-assert.equal(ecosystemModel.inventory.inventory_is_unified,false);
+assert.equal(ecosystemModel.inventory.inventory_is_unified,prod014);
 assert.deepEqual(ecosystemModel.route_closure,{
   authority:'catalog/lib-route-closure.json',
   release_packages:14,
@@ -104,24 +105,31 @@ assert.deepEqual(ecosystemModel.route_closure,{
   formal_release_ready:true,
   blocking_conditions:[]
 });
-assert.equal(ecosystemModel.successor_candidates.length,1);
-const libSearchSuccessor=ecosystemModel.successor_candidates[0];
-assert.equal(libSearchSuccessor.identity,'wasmc:lib-search@0.2.0');
-assert.equal(libSearchSuccessor.build_tool_commit,'f6fc94432101250b8583834b51229bedb1cd8314');
-assert.equal(libSearchSuccessor.artifact.manifest_sha256,'ef63bdb8bb991903ef182999d1ccd22ddffca7bff66e1a0754a7a90a73b719a5');
-assert.equal(libSearchSuccessor.toolchain.sha256,'2e4e27cb0b3644dd0c90bb71f31de5b5c72cd47671373caab8b9146ac68bf8ca');
-assert.equal(libSearchSuccessor.toolchain.rustc_version_verbose_sha256,'c8884d5d5936b36facd062e0e669e6fefe9944611dfafa0f2b1ee56d96157cbe');
-assert.equal(libSearchSuccessor.toolchain.cargo_version_verbose_sha256,'7325fa79f79f89eaceae5ee57920caf61b813ade023b1e50457ee0902b2d7222');
-assert.equal(libSearchSuccessor.toolchain.target,'wasm32-unknown-unknown');
-assert.equal(libSearchSuccessor.toolchain.encoded_rustflags,'-Cstrip=symbols');
-assert.equal(libSearchSuccessor.catalog.role,'future-product-catalog');
-assert.equal(libSearchSuccessor.catalog.contains_candidate,true);
-assert.equal(libSearchSuccessor.catalog.candidate_install_authority,true);
-assert.equal(libSearchSuccessor.catalog.public_default_install_authority,false);
-assert.deepEqual(libSearchSuccessor.states,{qualified:true,admitted:true,released:false,discoverable:false,installable:false});
-assert.equal(libSearchSuccessor.index.entries,122);
-assert.equal(libSearchSuccessor.qualification.wasmi_2_0_core,'PASS');
-assert.equal(libSearchSuccessor.reproducibility_boundary.historical_bytes_reproduced_with_current_toolchain,false);
+assert.equal(ecosystemModel.successor_candidates.length,prod014?0:1);
+if(!prod014){
+  const libSearchSuccessor=ecosystemModel.successor_candidates[0];
+  assert.equal(libSearchSuccessor.identity,'wasmc:lib-search@0.2.0');
+  assert.equal(libSearchSuccessor.build_tool_commit,'f6fc94432101250b8583834b51229bedb1cd8314');
+  assert.equal(libSearchSuccessor.artifact.manifest_sha256,'ef63bdb8bb991903ef182999d1ccd22ddffca7bff66e1a0754a7a90a73b719a5');
+  assert.equal(libSearchSuccessor.toolchain.sha256,'2e4e27cb0b3644dd0c90bb71f31de5b5c72cd47671373caab8b9146ac68bf8ca');
+  assert.equal(libSearchSuccessor.toolchain.rustc_version_verbose_sha256,'c8884d5d5936b36facd062e0e669e6fefe9944611dfafa0f2b1ee56d96157cbe');
+  assert.equal(libSearchSuccessor.toolchain.cargo_version_verbose_sha256,'7325fa79f79f89eaceae5ee57920caf61b813ade023b1e50457ee0902b2d7222');
+  assert.equal(libSearchSuccessor.toolchain.target,'wasm32-unknown-unknown');
+  assert.equal(libSearchSuccessor.toolchain.encoded_rustflags,'-Cstrip=symbols');
+  assert.equal(libSearchSuccessor.catalog.role,'future-product-catalog');
+  assert.equal(libSearchSuccessor.catalog.contains_candidate,true);
+  assert.equal(libSearchSuccessor.catalog.candidate_install_authority,true);
+  assert.equal(libSearchSuccessor.catalog.public_default_install_authority,false);
+  assert.deepEqual(libSearchSuccessor.states,{qualified:true,admitted:true,released:false,discoverable:false,installable:false});
+  assert.equal(libSearchSuccessor.index.entries,122);
+  assert.equal(libSearchSuccessor.qualification.wasmi_2_0_core,'PASS');
+  assert.equal(libSearchSuccessor.reproducibility_boundary.historical_bytes_reproduced_with_current_toolchain,false);
+}else{
+  const releasedSearch=ecosystemModel.packages.find(row=>row.identity==='wasmc:lib-search@0.2.0');
+  assert(releasedSearch,'released LibSearch 0.2 route missing');
+  assert.deepEqual(releasedSearch.states,{qualified:true,admitted:true,released:true,discoverable:true,installable:true});
+  assert.equal(releasedSearch.current_side_remediation.included_in_immutable_tag,true);
+}
 
 const expectedPlatforms=[
   ['linux-x86_64','ubuntu-24.04',true,'required'],

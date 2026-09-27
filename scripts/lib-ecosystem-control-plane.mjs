@@ -18,40 +18,42 @@ assert(args.size === 1 && (args.has('--write') || args.has('--check')), 'usage: 
 
 const release = readJson('release.json');
 const surfaces = readJson('release-surfaces.json');
-const installCatalog = readJson('catalog/libs-v009.json');
-const currentSideCatalog = existsSync(join(root, 'catalog/libs-v013.json')) ? readJson('catalog/libs-v013.json') : null;
+const productionCatalogPath = release.version === '0.0.14' ? 'catalog/libs-v014.json' : 'catalog/libs-v009.json';
+const currentSideCatalogPath = release.version === '0.0.14' ? 'catalog/libs-v014.json' : 'catalog/libs-v013.json';
+const installCatalog = readJson(productionCatalogPath);
+const currentSideCatalog = existsSync(join(root, currentSideCatalogPath)) ? readJson(currentSideCatalogPath) : null;
 const searchCandidateAdmission = readJson('admission/lib-search-v020-v014-admission.json');
 const compatibility = readJson('compatibility/core-artifacts-v009.json');
 const searchCompatibility = readJson('compatibility/lib-search-core.json');
 const retainedRouteClosure = readJson('catalog/lib-route-closure.json');
 const futureProduct = readJson(retainedRouteClosure.release.staged_product_manifest);
 assert.deepEqual(retainedRouteClosure, buildClosure(retainedRouteClosure.authority_receipt.path,{release:retainedRouteClosure.release,stagedProduct:futureProduct}), 'Lib route closure is stale');
-const currentReleaseRouteClosure=buildClosure('admission/lib-search-v020-v013-candidate.json');
 assert.equal(typeof release.staged_product_manifest, 'string', 'release.json must bind a staged product manifest');
 const stagedProduct = readJson(release.staged_product_manifest);
 assert.equal(stagedProduct.version, release.version, 'staged product version must match release.json');
 assert(Array.isArray(stagedProduct.product_files), 'staged product manifest lacks product_files');
 const releaseFiles = new Map(stagedProduct.product_files.map(row => [row.path, row]));
 
-const searchRun = spawnSync(process.execPath, ['scripts/wasmc-lib.mjs', 'search', '', '--historical', '--limit', '64'], {
-  cwd: root,
-  encoding: 'utf8',
-  maxBuffer: 16 * 1024 * 1024
-});
-assert.equal(searchRun.status, 0, searchRun.stderr);
-const search = JSON.parse(searchRun.stdout);
+const searchPage = offset => {
+  const run = spawnSync(process.execPath, ['scripts/wasmc-lib.mjs', 'search', '', '--historical', '--offset', String(offset), '--limit', '64'], {
+    cwd: root,
+    encoding: 'utf8',
+    maxBuffer: 16 * 1024 * 1024
+  });
+  assert.equal(run.status, 0, run.stderr);
+  return JSON.parse(run.stdout);
+};
+const searchPages = release.version === '0.0.14' ? [searchPage(0), searchPage(64)] : [searchPage(0)];
+const search = {...searchPages[0],hits:searchPages.flatMap(page=>page.hits)};
 const discoverable = new Set(search.hits.filter(row => !row.signature).map(row => row.identity));
 const installable = new Set(installCatalog.packages.map(row => `${row.wit_package}`));
 const currentSideInstallable = new Set((currentSideCatalog?.packages ?? []).map(row => `${row.wit_package}`));
 
-const libRoots = readdirSync(join(root, 'libs'), { withFileTypes: true })
-  .filter(entry => entry.isDirectory() && existsSync(join(root, 'libs', entry.name, 'lib.json')))
-  .map(entry => `libs/${entry.name}`);
-const packageRoots = [
-  'standard/wasmc-std/1.4.0',
-  'standard/wasmc-lib-search/0.1.0',
-  ...libRoots
-].sort();
+const packageRoots = stagedProduct.product_files
+  .map(row => row.path)
+  .filter(path => /^(?:libs\/[^/]+|standard\/[^/]+\/[^/]+)\/lib\.json$/.test(path))
+  .map(path => path.slice(0, -9))
+  .sort();
 
 function actualImports(path) {
   const module = new WebAssembly.Module(readFileSync(join(root, path)));
@@ -128,15 +130,15 @@ const packages = packageRoots.map(packageRoot => {
     states,
     current_side_remediation: {
       resolvable_installable: isCurrentSideInstallable,
-      authority: isCurrentSideInstallable ? 'catalog/libs-v013.json' : null,
-      included_in_immutable_tag: false
+      authority: isCurrentSideInstallable ? currentSideCatalogPath : null,
+      included_in_immutable_tag: release.version === '0.0.14' && isReleased
     },
     state_evidence: {
       qualification: approved ? `${metadataPath}#admission` : isReleased ? `${release.staged_product_manifest} immutable product inclusion` : null,
       admission: approved ? `${metadataPath}#admission` : isReleased ? `${release.staged_product_manifest} immutable product inclusion` : null,
       release: isReleased ? `release.json -> ${release.staged_product_manifest}` : null,
-      discovery: isDiscoverable ? 'standard/wasmc-lib-search/0.1.0 + examples/lib-search/index.lsi' : null,
-      installation: isInstallable ? 'catalog/libs-v009.json' : null
+      discovery: isDiscoverable ? (release.version === '0.0.14' ? 'standard/wasmc-lib-search/0.2.0 + examples/lib-search/index-v014-v020.lsi' : 'standard/wasmc-lib-search/0.1.0 + examples/lib-search/index.lsi') : null,
+      installation: isInstallable ? productionCatalogPath : null
     },
     stopping_conditions: stoppingConditions
   };
@@ -180,8 +182,8 @@ const model = {
     immutable_product: `release.json -> ${release.staged_product_manifest}`,
     capability_projection: 'release-surfaces.json#agent_capability_projection',
     producer_deltas: 'release-surfaces.json#producer_capability_delta',
-    discovery_snapshot: 'standard/wasmc-lib-search/0.1.0 + examples/lib-search/index.lsi',
-    resolver_install_catalog: 'catalog/libs-v009.json',
+    discovery_snapshot: release.version === '0.0.14' ? 'standard/wasmc-lib-search/0.2.0 + examples/lib-search/index-v014-v020.lsi' : 'standard/wasmc-lib-search/0.1.0 + examples/lib-search/index.lsi',
+    resolver_install_catalog: productionCatalogPath,
     rule: 'Package existence, qualification, admission, release, discovery, installation, engine compatibility and Host authority are independent claims.'
   },
   release: { version: release.version, tag: release.tag, source_commit: release.source_commit, staged_product_manifest: release.staged_product_manifest, product_set_sha256: stagedProduct.product_set_sha256 },
@@ -216,10 +218,10 @@ const model = {
   type_position_authority: surfaces.agent_capability_projection,
   producer_deltas: [surfaces.producer_capability_delta],
   packages,
-  successor_candidates: [searchCandidate],
+  successor_candidates: release.version === '0.0.14' ? [] : [searchCandidate],
   ecosystem_stopping_conditions: [
     'Public third-party build, admission and publication are not closed.',
-    'The v0.0.14 future-product catalog admits LibSearch 0.2.0 and closes all fourteen package routes, but neither the candidate nor its catalog is released or the public default.',
+    ...(release.version === '0.0.14' ? [] : ['The v0.0.14 future-product catalog admits LibSearch 0.2.0 and closes all fourteen package routes, but neither the candidate nor its catalog is released or the public default.']),
     'Byte-identical Rust-backed Lib reproduction is currently scoped to an exact toolchain environment; producer commit plus Cargo.lock alone did not reproduce the historical artifact hash.',
     'Missing artifact-bound engine profiles must not be replaced by inferred version ranges.',
     'A Component or Host-SDK surface does not imply ordinary WAsmC source binding support.'

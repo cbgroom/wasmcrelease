@@ -2,6 +2,18 @@
 
 Packages are built and admitted locally from clean synchronized private source, then pushed directly. GitHub Actions independently verifies the source-free public consumer paths, but cannot rebuild or admit canonical compiler/Lib bytes and is not a publication dependency.
 
+## v0.0.14
+
+LibSearch route-complete and Agent-learning release. It publishes
+`wasmc-lib-search@0.2.0`, a 14-package catalog and all 108 exported WIT API
+routes with `candidate_extras=0`. It also makes the frozen Agent guidance
+lifecycle-neutral and preserves explicit position-aware limits: the v0.0.14
+compiler supports ordinary-source `u32` but not ordinary-source `u64`, while
+producer-master support is a separate claim. The final 213-file product set has
+SHA-256 `a09cd071eb293e636bf8b858b0a56570bfdd8a53373544eca68fda8ea825d4d2`.
+The accepted sequence is `v0.0.14-dev.2` -> `v0.0.14-main.2` -> `v0.0.14`;
+the earlier dev.1/main.1 pair remains immutable, superseded evidence.
+
 ## v0.0.13
 
 System Telemetry release. It adds the admitted source-free
