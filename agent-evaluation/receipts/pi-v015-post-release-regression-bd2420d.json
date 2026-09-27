@@ -1,0 +1,61 @@
+{
+  "schema": "wasmc.pi-post-release-regression/v1",
+  "release": {
+    "version": "0.0.15",
+    "tag": "v0.0.15",
+    "tag_commit": "bd2420d47360d85e21b8646a9ef7596f25df587d",
+    "tag_tree": "c53097f82ee28a39656fb9da102ca39f938dbee9",
+    "candidate_commit": "2dad913b1e3ab1cb5b2150bd84111740c313eb3d",
+    "product_set_sha256": "8bdc6f445aade28b66f7180ae9355a48d7a68efacf0f4b9b99db28a023c1b6f6"
+  },
+  "protocol": "agent-evaluation/fresh-agent-learning-v1.json",
+  "runner": "scripts/run-pi-learning-model-v1.mjs",
+  "pi_version": "0.87.1",
+  "fresh_local_git_clone_per_case": true,
+  "no_session": true,
+  "skills_templates_extensions_disabled": true,
+  "raw_trace_retained": false,
+  "hidden_reasoning_retained": false,
+  "models": [
+    {
+      "provider": "llm-m4dd",
+      "identity": "deepseek-v4.1-flash",
+      "structural_pass": true,
+      "white_box_pass": true,
+      "totals": {"wall_ms":77714,"tool_calls":19,"assistant_turns":16,"tool_result_characters":149240,"error_results":0,"retries":0,"exact_duplicate_calls":0,"repeated_reads":0,"zero_yield_results":0,"tokens":{"input":74169,"output":6092,"reasoning":2873}},
+      "cases": [
+        {"id":"release-orientation","structural_pass":true,"semantic_review":"pass","final_answer_sha256":"942dd711e3169df91b1096c85bffdd735fcc1d03ab2fc1a676d91b0a0e804160"},
+        {"id":"position-aware-capability-negative","structural_pass":true,"semantic_review":"pass","final_answer_sha256":"62a2a4b13b5dcb7cd8c1fe00dd99ec227ab7b19b9ff5552007ac6e6a00807532"},
+        {"id":"ordinary-source-positive","structural_pass":true,"semantic_review":"pass","final_answer_sha256":"08e9b887e4a75918f90dccf3eb446bbb7e00b56f23ad35fee2a33a8a9740aea2"},
+        {"id":"release-state-separation","structural_pass":true,"semantic_review":"pass","final_answer_sha256":"55e1d018b04b999553acbe132b5065ca7fb28c64337b11280b5b8359833ce94c"},
+        {"id":"library-first-selection","structural_pass":true,"semantic_review":"pass","final_answer_sha256":"d7093a35bb87c8aa06dd32a8fac17cc71a686464bcd7b4fc66afbcf9a61257d0"},
+        {"id":"host-authority-boundary","structural_pass":true,"semantic_review":"pass","final_answer_sha256":"03788df7a1fbe926521b4b462190acbd9569f29c1c5664627a7fea64c46bd0bc"}
+      ]
+    },
+    {
+      "provider": "llm-m4dd",
+      "identity": "glm-5.3-flash",
+      "structural_pass": true,
+      "white_box_pass": true,
+      "totals": {"wall_ms":167859,"tool_calls":15,"assistant_turns":18,"tool_result_characters":79306,"error_results":0,"retries":0,"exact_duplicate_calls":0,"repeated_reads":0,"zero_yield_results":0,"tokens":{"input":53672,"output":3443,"reasoning":828}},
+      "cases": [
+        {"id":"release-orientation","structural_pass":true,"semantic_review":"pass","final_answer_sha256":"702ccd9a04ea9389c11ad7b5c371cabc1f944dce5f12899225ded77a455b4b22"},
+        {"id":"position-aware-capability-negative","structural_pass":true,"semantic_review":"pass","final_answer_sha256":"57535b645952f9b139cf7ecf7380929adc112897791622133c6f720a8f279005"},
+        {"id":"ordinary-source-positive","structural_pass":true,"semantic_review":"pass","final_answer_sha256":"bef7eb49f7b484dd98f53e04586b1527f942037a22516cbeddf619db1916a53e"},
+        {"id":"release-state-separation","structural_pass":true,"semantic_review":"pass","final_answer_sha256":"eecd758df2cae20a221a7efc3013bc04d9d9f31aef94e13ab1fc98c87bbbe155"},
+        {"id":"library-first-selection","structural_pass":true,"semantic_review":"pass","final_answer_sha256":"5bc60ac430b803a512edc4f5f43fffee1c5638d2076f3e5cb2d85f31cf981f50"},
+        {"id":"host-authority-boundary","structural_pass":true,"semantic_review":"pass","final_answer_sha256":"2a8cdf1740ee62bfead3686d79db93ae9791f11f33e25a41c0a68ccfe67d79d5"}
+      ]
+    }
+  ],
+  "public_distribution": {
+    "remote_tag_commit": "bd2420d47360d85e21b8646a9ef7596f25df587d",
+    "release_json_sha256": "59e55f9bd72d3f2f8893228d6c12b25a32a32a3b4bce097b1449d0fd45e6dd28",
+    "compiler_sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90",
+    "raw_github_byte_identical": true,
+    "jsdelivr_byte_identical": true
+  },
+  "controlled_pair_accepted": true,
+  "release_mutated": false,
+  "disposition": "v0.0.15 post-release regression passed; no new release-guidance finding"
+}
