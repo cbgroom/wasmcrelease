@@ -25,7 +25,7 @@ try {
     for(const node of ['18.19.1','22.0.0','26.5.1'])add(`compatibility-${os}-${node}`,'compatibility','node','github',platform,'v'+node);
     for(const runtime of ['node','bun','deno'])for(const mirror of ['github','jsdelivr'])add(`runtime-${os}-${runtime}-${mirror}`,'runtime',runtime,mirror,platform,{node:'v26.5.1',bun:'1.3.14',deno:'deno 2.9.4'}[runtime]);
   }
-  for(const [label,family] of [['integrity-ubuntu','integrity'],['security-full-history','security'],['rust-release-ubuntu','rust']])add(label,family,'node','github','linux','v26.5.1');
+  for(const [label,family] of [['integrity-ubuntu','candidate'],['security-full-history','security'],['rust-release-ubuntu','rust']])add(label,family,'node','github','linux','v26.5.1');
   assert.equal(aggregateReports(suites,needs,source).accepted,true);
   assert.equal(aggregateReports(suites.slice(1),needs,source).accepted,false);
   assert.equal(aggregateReports([...suites,suites[0]],needs,source).accepted,false);

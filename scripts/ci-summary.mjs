@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { suiteCases } from './ci-suite.mjs';
 export function aggregateReports(suites,needs,source) {
-  const expected={compatibility:6,runtime:12,integrity:1,security:1,rust:1};
+  const expected={compatibility:6,runtime:12,candidate:1,security:1,rust:1};
   const errors=[];
   const cells=new Map();
   for(const os of ['ubuntu-24.04','macos-15']) {
@@ -11,7 +11,7 @@ export function aggregateReports(suites,needs,source) {
     for(const node of ['18.19.1','22.0.0','26.5.1'])cells.set(`compatibility-${os}-${node}`,{family:'compatibility',runtime:'node',mirror:'github',platform,version:'v'+node});
     for(const runtime of ['node','bun','deno'])for(const mirror of ['github','jsdelivr'])cells.set(`runtime-${os}-${runtime}-${mirror}`,{family:'runtime',runtime,mirror,platform,version:{node:'v26.5.1',bun:'1.3.14',deno:'deno 2.9.4'}[runtime]});
   }
-  for(const [label,family] of [['integrity-ubuntu','integrity'],['security-full-history','security'],['rust-release-ubuntu','rust']])cells.set(label,{family,runtime:'node',mirror:'github',platform:'linux',version:'v26.5.1'});
+  for(const [label,family] of [['integrity-ubuntu','candidate'],['security-full-history','security'],['rust-release-ubuntu','rust']])cells.set(label,{family,runtime:'node',mirror:'github',platform:'linux',version:'v26.5.1'});
   const jobIds=['core-compatibility','runtime-consumer','integrity-and-javascript','security-history','rust-wasmtime-and-libs'];
   if(Object.keys(needs).length!==5||jobIds.some(id=>needs[id]?.result!=='success'))errors.push('Required job families did not all succeed');
   if(!/^[a-f0-9]{40}$/.test(source??''))errors.push('Invalid exact source commit');
