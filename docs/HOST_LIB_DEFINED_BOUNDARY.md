@@ -464,6 +464,19 @@ authorization callback. The fixed Host is unchanged. The retained v6 receipt is
 `admission/host-lib-defined-boundary-v1/ios-arm64-app-capability-v6.json`, bound
 to implementation commit `9b87e28d250e5a51dce72a3f486d0502c6ddf278`.
 
+The separate iOS surface-control laboratory qualifies the minimal multimodal
+control shape without injecting physical input. Five stable UIKit surfaces
+continue independent Agent progress; one requests human intervention, expands
+without replacing its View instance, accepts real XCUITest user input, contracts
+and resumes Agent work. Eight Agent attempts aimed at the human-owned surface
+were rejected with zero committed mutations, while every background surface
+continued progressing. The fixed Host remains byte-identical. The retained
+receipt is
+`admission/host-lib-defined-boundary-v1/ios-arm64-app-surface-control-v1.json`,
+bound to implementation commit `c7d4dd7d9be63aa39ebe0b7f6e0dea661264cd53`.
+This v1 evidence covers UIKit surfaces only; real WKWebView surfaces, DOM/frame
+query, physical devices, lowering, admission and release remain pending.
+
 The mapped-window, epoll-readiness, kernel-splice and asynchronous-readiness
 successors are qualified on local Linux aarch64 and independent GitHub Ubuntu
 x86_64. The ioctl call-shape and vectored-write successor is also qualified on

@@ -292,6 +292,35 @@
         "admission",
         "release"
       ]
+    },
+    "ios_app_surface_control": {
+      "status": "ios-26.5-arm64-simulator-app-surface-control-v1-qualified-not-admitted-not-released",
+      "executor": "host/tests/ios-app-capability/Host/FixedHost.swift",
+      "profile": "host/tests/ios-app-surface-control/project.yml",
+      "system_libs": ["wasmc:system-ios-app-surface-control@0.0.1-dev.1"],
+      "evidence": "admission/host-lib-defined-boundary-v1/ios-arm64-app-surface-control-v1.json",
+      "convergence": "five stable UIKit task surfaces use in-App semantic activation without physical input; one surface expands for human handoff while the other four continue and the same surface instance later resumes Agent work",
+      "scope": [
+        "five-application-owned-uikit-surfaces",
+        "structured-surface-snapshots",
+        "no-agent-physical-input-injection",
+        "parallel-background-surface-progress",
+        "single-surface-human-handoff",
+        "agent-mutation-rejection-during-human-ownership",
+        "same-instance-expand-and-contract",
+        "post-handoff-agent-resumption",
+        "zero-domain-apis-in-fixed-embedded-host"
+      ],
+      "pending": [
+        "real-wkwebview-surfaces",
+        "dom-and-frame-query",
+        "arbitrary-custom-control-binding",
+        "physical-device-qualification",
+        "wit-to-wasm-lowering",
+        "dynamic-component-loading",
+        "admission",
+        "release"
+      ]
     }
   }
 }
