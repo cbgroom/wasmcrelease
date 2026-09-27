@@ -1,3 +1,5 @@
+#define _GNU_SOURCE
+
 #include <errno.h>
 #include <fcntl.h>
 #include <poll.h>
@@ -416,6 +418,55 @@ static int32_t invoke_epoll_wait(
   return status;
 }
 
+static int32_t invoke_pipe_create(
+    const uint8_t *input, size_t input_len,
+    uint8_t *output, size_t output_capacity, size_t *output_len) {
+  if (input_len != 5 || output_capacity < 16) return -EINVAL;
+  int descriptors[2] = {-1, -1};
+  if (pipe2(descriptors, (int)read_u32(input + 1) | O_CLOEXEC) != 0) return -errno;
+  uint64_t read_token = 0;
+  uint64_t write_token = 0;
+  int32_t status = register_handle(descriptors[0], &read_token);
+  if (status != 0) {
+    close(descriptors[0]);
+    close(descriptors[1]);
+    return status;
+  }
+  status = register_handle(descriptors[1], &write_token);
+  if (status != 0) {
+    const uint32_t read_index = (uint32_t)read_token - 1;
+    handles[read_index].active = 0;
+    handles[read_index].descriptor = -1;
+    close(descriptors[0]);
+    close(descriptors[1]);
+    return status;
+  }
+  write_u64(output, read_token);
+  write_u64(output + 8, write_token);
+  *output_len = 16;
+  return 0;
+}
+
+static int32_t invoke_splice(
+    const uint8_t *input, size_t input_len,
+    uint8_t *output, size_t output_capacity, size_t *output_len) {
+  if (input_len != 29 || output_capacity < 8) return -EINVAL;
+  int source = -1;
+  int target = -1;
+  int32_t status = resolve_handle(read_u64(input + 1), NULL, &source);
+  if (status != 0) return status;
+  status = resolve_handle(read_u64(input + 9), NULL, &target);
+  if (status != 0) return status;
+  const uint64_t maximum = read_u64(input + 17);
+  const size_t native_maximum = (size_t)maximum;
+  if ((uint64_t)native_maximum != maximum || maximum > INT64_MAX) return -EINVAL;
+  const ssize_t count = splice(source, NULL, target, NULL, native_maximum, read_u32(input + 25));
+  if (count < 0) return -errno;
+  write_u64(output, (uint64_t)count);
+  *output_len = 8;
+  return 0;
+}
+
 __attribute__((visibility("default")))
 int32_t wasmc_boundary_v1_invoke(
     const uint8_t *input,
@@ -442,6 +493,8 @@ int32_t wasmc_boundary_v1_invoke(
     case 14: return invoke_epoll_create(input_len, output, output_capacity, output_len);
     case 15: return invoke_epoll_control(input, input_len);
     case 16: return invoke_epoll_wait(input, input_len, output, output_capacity, output_len);
+    case 17: return invoke_pipe_create(input, input_len, output, output_capacity, output_len);
+    case 18: return invoke_splice(input, input_len, output, output_capacity, output_len);
     default: return -ENOTSUP;
   }
 }

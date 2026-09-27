@@ -1,6 +1,6 @@
 # Lib-defined Host boundary workstream
 
-Status: **epoll device-readiness Linux aarch64/x86_64 qualified / not admitted / not released**.
+Status: **kernel splice device-path Linux aarch64 locally qualified; x86_64 refresh pending / not admitted / not released**.
 
 This workstream replaces domain growth in the Rust Host with a fixed,
 domain-neutral execution boundary. It does not modify the immutable v0.0.15
@@ -123,6 +123,14 @@ Lib-defined readiness aggregation only: the call currently waits synchronously
 inside the persistent executor session and does not yet prove asynchronous
 completion delivery, cancellation, late-completion draining or `io_uring`.
 
+The Lib now also owns `pipe2` endpoints and Linux `splice`. The local aarch64
+qualification transfers 16 MiB through the real kernel path
+`/dev/zero -> pipe -> /dev/null`, keeps payload bytes out of the fixed Rust
+executor window, and rejects a stale pipe token after close. The observed local
+rate is recorded only in the exact receipt. This is kernel endpoint-to-endpoint
+zero-copy evidence; it does not close the separate guest/shared-window
+zero-copy gate because commands and completions still cross the byte ABI.
+
 ## Library OS consequence
 
 The intended result is a Library OS profile assembled above the fixed Host:
@@ -171,11 +179,12 @@ contains no domain API and is byte-identical for all three. The test additionall
 proves pinned-window release rejection, completion claim-once, adapter digest
 rejection and zero remaining resources/operations/windows.
 
-The mapped-window predecessor and epoll-readiness successor are qualified on
-local Linux aarch64 and independent GitHub Ubuntu x86_64. Wasm/WIT lowering,
-native asynchronous lifecycle/cancellation, `io_uring`, direct
-guest-window zero-copy, non-Linux evidence, admission, catalog publication and
-immutable release remain pending.
+The mapped-window and epoll-readiness predecessors are qualified on local Linux
+aarch64 and independent GitHub Ubuntu x86_64. The kernel-splice successor is
+locally qualified on aarch64; its independent x86_64 refresh remains pending.
+Wasm/WIT lowering, native asynchronous lifecycle/cancellation, `io_uring`,
+direct guest-window zero-copy, non-Linux evidence, admission, catalog
+publication and immutable release remain pending.
 
 The exact local receipt is
 `admission/host-lib-defined-boundary-v1/local-qualification.json`, bound to

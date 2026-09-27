@@ -27,6 +27,7 @@ const rustArgs = (args) => rustToolchain ? [rustToolchain, ...args] : args;
 fs.rmSync(target, { recursive: true, force: true });
 fs.mkdirSync(target, { recursive: true });
 command("cc", ["-shared", "-fPIC", "-O2", "-Wall", "-Wextra", "-Werror", adapterSource, "-o", adapter]);
+command("wasm-tools", ["component", "wit", path.join(sourceRoot, "lib.wit")]);
 command("cargo", rustArgs(["fmt", "--check", "--manifest-path", manifest]));
 command("cargo", rustArgs(["clippy", "--locked", "--manifest-path", manifest, "--all-targets", "--", "-D", "warnings"]));
 command("cargo", rustArgs(["build", "--release", "--locked", "--manifest-path", manifest]), {
@@ -171,6 +172,23 @@ const decodeEpollEvents = (bytes) => {
   }));
 };
 
+const encodePipeCreate = (flags) => {
+  const bytes = Buffer.alloc(5);
+  bytes.writeUInt8(17, 0);
+  bytes.writeUInt32LE(flags, 1);
+  return bytes;
+};
+
+const encodeSplice = (source, target, maximum, flags) => {
+  const bytes = Buffer.alloc(29);
+  bytes.writeUInt8(18, 0);
+  bytes.writeBigUInt64LE(source, 1);
+  bytes.writeBigUInt64LE(target, 9);
+  bytes.writeBigUInt64LE(BigInt(maximum), 17);
+  bytes.writeUInt32LE(flags, 25);
+  return bytes;
+};
+
 const invoke = (name, input) => {
   const inputPath = path.join(target, `${name}.input.bin`);
   const outputPath = path.join(target, `${name}.output.bin`);
@@ -309,6 +327,39 @@ assert.equal(staleEventSet.status, -9);
 await expectOk(session.request(encodeClose(slaveToken)));
 await expectOk(session.request(encodeClose(ptmxToken)));
 
+const spliceZeroToken = (await expectOk(session.request(encodePath(3, "/dev/zero", 0)))).readBigUInt64LE();
+const spliceNullToken = (await expectOk(session.request(encodePath(3, "/dev/null", 1)))).readBigUInt64LE();
+const pipeTokens = await expectOk(session.request(encodePipeCreate(0)));
+assert.equal(pipeTokens.length, 16);
+const pipeReadToken = pipeTokens.readBigUInt64LE(0);
+const pipeWriteToken = pipeTokens.readBigUInt64LE(8);
+const spliceTargetBytes = 16 * 1024 * 1024;
+let spliceBytes = 0;
+let spliceOperations = 0;
+const spliceStarted = process.hrtime.bigint();
+while (spliceBytes < spliceTargetBytes) {
+  const maximum = Math.min(65536, spliceTargetBytes - spliceBytes);
+  const filled = Number((await expectOk(session.request(
+    encodeSplice(spliceZeroToken, pipeWriteToken, maximum, 0),
+  ))).readBigUInt64LE());
+  assert.ok(filled > 0 && filled <= maximum);
+  const drained = Number((await expectOk(session.request(
+    encodeSplice(pipeReadToken, spliceNullToken, filled, 0),
+  ))).readBigUInt64LE());
+  assert.equal(drained, filled);
+  spliceBytes += drained;
+  spliceOperations += 2;
+}
+const spliceElapsedNs = Number(process.hrtime.bigint() - spliceStarted);
+const spliceMibPerSecond = spliceBytes / (1024 * 1024) / (spliceElapsedNs / 1e9);
+assert.ok(spliceMibPerSecond >= 25, `kernel splice throughput too low: ${spliceMibPerSecond.toFixed(2)} MiB/s`);
+await expectOk(session.request(encodeClose(pipeReadToken)));
+const stalePipe = await session.request(encodeSplice(pipeReadToken, spliceNullToken, 1, 0));
+assert.equal(stalePipe.status, -9);
+await expectOk(session.request(encodeClose(pipeWriteToken)));
+await expectOk(session.request(encodeClose(spliceZeroToken)));
+await expectOk(session.request(encodeClose(spliceNullToken)));
+
 const mappedZeroToken = (await expectOk(session.request(encodePath(3, "/dev/zero", 2)))).readBigUInt64LE();
 const mappingToken = (await expectOk(session.request(encodeMap(mappedZeroToken, 0, 1048576, 3, 2)))).readBigUInt64LE();
 const mappedPattern = Buffer.alloc(65536);
@@ -353,7 +404,7 @@ assert.ok(persistentSpeedup >= 5, `persistent session speedup too low: ${persist
 const exports = command("nm", ["-D", "--defined-only", adapter]);
 assert.match(exports, /\bwasmc_boundary_v1_invoke\b/);
 const rustText = fs.readFileSync(rustSource, "utf8");
-for (const forbidden of ["/dev/", "/proc/", "/sys/", "O_RDONLY", "O_WRONLY", "ioctl", "pollfd", "epoll", "mmap", "msync", "read-endpoint", "write-endpoint"]) {
+for (const forbidden of ["/dev/", "/proc/", "/sys/", "O_RDONLY", "O_WRONLY", "ioctl", "pollfd", "epoll", "pipe2", "splice", "mmap", "msync", "read-endpoint", "write-endpoint"]) {
   assert.equal(rustText.includes(forbidden), false, `domain or Linux endpoint semantics leaked into fixed executor: ${forbidden}`);
 }
 const adapterText = fs.readFileSync(adapterSource, "utf8");
@@ -374,7 +425,7 @@ assert.match(`${rejected.stdout}\n${rejected.stderr}`, /adapter identity mismatc
 
 console.log(JSON.stringify({
   accepted: true,
-  schema: "wasmc.linux-lib-defined-boundary-qualification/v4",
+  schema: "wasmc.linux-lib-defined-boundary-qualification/v5",
   platform: process.platform,
   architecture: process.arch,
   kernel: os.release(),
@@ -382,6 +433,7 @@ console.log(JSON.stringify({
   executor_sha256: hash(read(executor)),
   adapter_sha256: adapterSha256,
   exported_symbols: ["wasmc_boundary_v1_invoke"],
+  wit_parsed: true,
   fixed_executor_domain_apis: 0,
   adapter_device_path_literals: 0,
   persistent_fd_resources: true,
@@ -391,6 +443,9 @@ console.log(JSON.stringify({
   real_epoll_device_event: true,
   epoll_endpoint: "/dev/ptmx",
   generation_checked_stale_event_set_rejection: true,
+  kernel_splice_device_path: true,
+  splice_path: "/dev/zero -> pipe -> /dev/null",
+  generation_checked_stale_pipe_rejection: true,
   mapped_device_window: true,
   generation_checked_stale_mapping_rejection: true,
   performance: {
@@ -406,6 +461,9 @@ console.log(JSON.stringify({
     mapping_operations: mappingOperations,
     mapping_bytes: mappingBytes,
     mapping_mib_per_second: Number(mappingMibPerSecond.toFixed(2)),
+    splice_operations: spliceOperations,
+    splice_bytes: spliceBytes,
+    splice_mib_per_second: Number(spliceMibPerSecond.toFixed(2)),
     minimum_mib_per_second: 25,
     minimum_speedup: 5,
   },

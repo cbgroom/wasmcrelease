@@ -6,6 +6,11 @@ interface endpoints {
     data: u64,
   }
 
+  record endpoint-pair {
+    read-end: endpoint,
+    write-end: endpoint,
+  }
+
   read-endpoint: func(path: string, maximum-bytes: u32) -> result<list<u8>, s32>;
   write-endpoint: func(path: string, payload: list<u8>) -> result<u64, s32>;
 
@@ -20,7 +25,8 @@ interface endpoints {
     write: func(payload: list<u8>) -> result<u64, s32>;
     control: func(request: u64, argument: list<u8>, maximum-result-bytes: u32) -> result<tuple<s32, list<u8>>, s32>;
     poll: func(events: u16, timeout-milliseconds: s32) -> result<u16, s32>;
-    map: func(offset: u64, length: u64, linux-protection: u32, linux-map-flags: u32) -> result<mapping, s32>;
+    map-region: func(offset: u64, length: u64, linux-protection: u32, linux-map-flags: u32) -> result<mapping, s32>;
+    splice-to: func(target: borrow<endpoint>, maximum-bytes: u64, linux-splice-flags: u32) -> result<u64, s32>;
   }
 
   resource event-set {
@@ -29,6 +35,7 @@ interface endpoints {
   }
 
   open-endpoint: func(path: string, linux-open-flags: u32) -> result<endpoint, s32>;
+  create-pipe: func(linux-pipe-flags: u32) -> result<endpoint-pair, s32>;
   create-event-set: func() -> result<event-set, s32>;
 }
 

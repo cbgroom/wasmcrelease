@@ -31,5 +31,11 @@ No `epoll` or PTY branch exists in the fixed Rust executor. This proves
 Lib-defined readiness aggregation; it is still a synchronous wait in the
 persistent session, not native asynchronous completion or cancellation.
 
+For device-to-device data movement, the Lib owns generation-checked `pipe2`
+endpoints and Linux `splice`. Qualification moves bytes through the real path
+`/dev/zero -> pipe -> /dev/null` without carrying payload bytes through the
+fixed Rust executor window, then rejects a stale pipe token. This is a genuine
+kernel splice path, but it is not yet direct guest/shared-window zero-copy.
+
 Run `node scripts/test-linux-lib-defined-boundary.mjs` on Linux. This prototype is not
 admitted, cataloged or released.
