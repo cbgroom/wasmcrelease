@@ -406,8 +406,14 @@ misreported as foreground capability.
 This is a native capability laboratory, not an admitted Lib release. Its Swift
 providers are statically linked and directly invoked; WIT-to-Wasm lowering and
 dynamic Component loading are still open. Physical-device execution and
-protected or lifecycle-sensitive camera, audio, location, motion,
+protected or lifecycle-sensitive camera, microphone capture, location, motion,
 notifications and background work also remain explicit gates.
+
+The retained eleven-provider successor receipt is
+`admission/host-lib-defined-boundary-v1/ios-arm64-app-capability-v2.json`, bound
+to implementation commit `f3bfb7d54ada5735c72774f5293ad29fdeab50a7`.
+It preserves the exact fixed Host digest from the six-provider predecessor;
+only the Lib provider set and profile grew.
 
 The mapped-window, epoll-readiness, kernel-splice and asynchronous-readiness
 successors are qualified on local Linux aarch64 and independent GitHub Ubuntu

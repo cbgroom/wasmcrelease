@@ -49,6 +49,35 @@ assert.equal(iosAppReceipt.evidence.metal_command_buffer_copy, true);
 assert.equal(iosAppReceipt.evidence.physical_device_qualification, false);
 assert.equal(iosAppReceipt.evidence.wasm_lowering, false);
 
+const iosAppV2Receipt = JSON.parse(fs.readFileSync(
+  "admission/host-lib-defined-boundary-v1/ios-arm64-app-capability-v2.json", "utf8",
+));
+assert.equal(iosAppV2Receipt.schema, "wasmc.host-lib-defined-boundary-ios-app-qualification/v2");
+assert.equal(iosAppV2Receipt.status, "ios-26.5-arm64-simulator-app-internal-v2-qualified-not-admitted-not-released");
+assert.equal(iosAppV2Receipt.qualified, true);
+assert.equal(iosAppV2Receipt.admitted, false);
+assert.equal(iosAppV2Receipt.released, false);
+execFileSync("git", ["cat-file", "-e", `${iosAppV2Receipt.implementation_commit}^{commit}`]);
+execFileSync("git", ["merge-base", "--is-ancestor", iosAppV2Receipt.implementation_commit, "HEAD"]);
+for (const [relative, expected] of Object.entries(iosAppV2Receipt.source)) {
+  assert.equal(digestAt(iosAppV2Receipt.implementation_commit, relative), expected,
+    `${relative}: retained iOS app v2 qualification source drift`);
+}
+assert.equal(iosAppV2Receipt.evidence.status, "PASS");
+assert.equal(iosAppV2Receipt.evidence.fixed_host_domain_apis, 0);
+assert.equal(iosAppV2Receipt.evidence.fixed_host_byte_identical_to_v1, true);
+assert.equal(iosAppV2Receipt.evidence.fixed_host_sha256, iosAppReceipt.source[
+  "host/tests/ios-app-capability/Host/FixedHost.swift"
+]);
+assert.equal(iosAppV2Receipt.evidence.statically_registered_lib_providers, 11);
+assert.equal(iosAppV2Receipt.evidence.sqlite_wal_transaction_prepared_roundtrip, true);
+assert.equal(iosAppV2Receipt.evidence.aes_gcm_roundtrip, true);
+assert.equal(iosAppV2Receipt.evidence.offline_audio_render.non_silent, true);
+assert.equal(iosAppV2Receipt.evidence.webkit_html_dom_javascript, true);
+assert.equal(iosAppV2Receipt.evidence.protected_capabilities_permission_requested, false);
+assert.equal(iosAppV2Receipt.evidence.physical_device_qualification, false);
+assert.equal(iosAppV2Receipt.evidence.wasm_lowering, false);
+
 const frozenIdentityFiles = [
   "release.json",
   "channels/prod.json",
@@ -825,6 +854,7 @@ console.log(JSON.stringify({
   retained_android_arm64_agent_computer_v4_qualification: androidV4Receipt.implementation_commit,
   retained_ios_arm64_simulator_observation_qualification: iosSimulatorReceipt.implementation_commit,
   retained_ios_arm64_app_capability_qualification: iosAppReceipt.implementation_commit,
+  retained_ios_arm64_app_capability_v2_qualification: iosAppV2Receipt.implementation_commit,
   old_candidate_rejects_product_drift: true,
   lifecycle: "architecture-workstream-not-admitted-not-released",
 }));
