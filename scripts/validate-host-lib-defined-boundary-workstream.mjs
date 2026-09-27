@@ -473,6 +473,39 @@ assert.equal(iosBackgroundTransferV1Receipt.evidence.sha256,
 assert.equal(iosBackgroundTransferV1Receipt.evidence.process_relaunch_delivery_qualified, false);
 assert.equal(iosBackgroundTransferV1Receipt.evidence.physical_device, false);
 
+const iosBackgroundTransferV2Receipt = JSON.parse(fs.readFileSync(
+  "admission/host-lib-defined-boundary-v1/ios-arm64-background-transfer-v2.json", "utf8",
+));
+assert.equal(iosBackgroundTransferV2Receipt.schema,
+  "wasmc.host-lib-defined-boundary-ios-background-transfer-qualification/v2");
+assert.equal(iosBackgroundTransferV2Receipt.predecessor,
+  "admission/host-lib-defined-boundary-v1/ios-arm64-background-transfer-v1.json");
+assert.equal(iosBackgroundTransferV2Receipt.qualified, true);
+assert.equal(iosBackgroundTransferV2Receipt.admitted, false);
+assert.equal(iosBackgroundTransferV2Receipt.released, false);
+assert.equal(iosBackgroundTransferV2Receipt.discoverable, false);
+assert.equal(iosBackgroundTransferV2Receipt.installable, false);
+execFileSync("git", ["cat-file", "-e", `${iosBackgroundTransferV2Receipt.implementation_commit}^{commit}`]);
+execFileSync("git", ["merge-base", "--is-ancestor", iosBackgroundTransferV2Receipt.implementation_commit, "HEAD"]);
+for (const [relative, expected] of Object.entries(iosBackgroundTransferV2Receipt.source)) {
+  assert.equal(digestAt(iosBackgroundTransferV2Receipt.implementation_commit, relative), expected,
+    `${relative}: retained iOS background-transfer v2 source drift`);
+}
+assert.equal(iosBackgroundTransferV2Receipt.evidence.status, "PASS");
+assert.equal(iosBackgroundTransferV2Receipt.evidence.fixed_host_domain_apis, 0);
+assert.equal(iosBackgroundTransferV2Receipt.evidence.fixed_host_sha256,
+  iosBackgroundTransferV1Receipt.evidence.fixed_host_sha256);
+assert.equal(iosBackgroundTransferV2Receipt.evidence.background_download_bytes, 8 * 1024 * 1024);
+assert.equal(iosBackgroundTransferV2Receipt.evidence.download_sha256,
+  iosBackgroundTransferV2Receipt.evidence.durable_result_sha256);
+assert.equal(iosBackgroundTransferV2Receipt.evidence.cancellation_terminal_domain, "NSURLErrorDomain");
+assert.equal(iosBackgroundTransferV2Receipt.evidence.cancellation_terminal_code, -999);
+assert.equal(iosBackgroundTransferV2Receipt.evidence.cancelled_result_published, false);
+assert.equal(iosBackgroundTransferV2Receipt.evidence.cancelled_durable_result_present, false);
+assert.equal(iosBackgroundTransferV2Receipt.evidence.automatic_background_relaunch_observed, false);
+assert.equal(iosBackgroundTransferV2Receipt.evidence.background_session_reconnected, false);
+assert.equal(iosBackgroundTransferV2Receipt.evidence.process_relaunch_delivery_qualified, false);
+
 const iosDeferredWorkRejectionV1 = JSON.parse(fs.readFileSync(
   "admission/host-lib-defined-boundary-v1/ios-arm64-deferred-work-simulator-rejection-v1.json", "utf8",
 ));
@@ -1285,6 +1318,7 @@ console.log(JSON.stringify({
   retained_ios_arm64_app_surface_control_v5_qualification: iosSurfaceV5Receipt.implementation_commit,
   retained_ios_arm64_app_lifecycle_v1_qualification: iosLifecycleV1Receipt.implementation_commit,
   retained_ios_arm64_background_transfer_v1_qualification: iosBackgroundTransferV1Receipt.implementation_commit,
+  retained_ios_arm64_background_transfer_v2_qualification: iosBackgroundTransferV2Receipt.implementation_commit,
   retained_ios_arm64_deferred_work_simulator_rejection_v1: iosDeferredWorkRejectionV1.implementation_commit,
   old_candidate_rejects_product_drift: true,
   lifecycle: "architecture-workstream-not-admitted-not-released",
