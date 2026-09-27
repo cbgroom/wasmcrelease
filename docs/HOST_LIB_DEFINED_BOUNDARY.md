@@ -440,8 +440,9 @@ The corrected repeatable-demand successor is
 `wasmc-app-authorization-policy@0.0.1-dev.2`. It removes the v3 one-attempt
 suppression rule: persistent attempt history is diagnostic evidence only,
 in-flight requests are deduplicated, and a later demand can request again when
-the observed state remains `not-determined`. Its v4 receipt is pending exact
-local qualification.
+the observed state remains `not-determined`. The retained v4 receipt is
+`admission/host-lib-defined-boundary-v1/ios-arm64-app-capability-v4.json`, bound
+to implementation commit `dc0d0e36e2772aeec585829c5bd5da9f16c9eb66`.
 
 The mapped-window, epoll-readiness, kernel-splice and asynchronous-readiness
 successors are qualified on local Linux aarch64 and independent GitHub Ubuntu

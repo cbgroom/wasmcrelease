@@ -108,6 +108,39 @@ assert.equal(iosAppV3Receipt.evidence.os_prompts_coalesced_across_categories, fa
 assert.equal(iosAppV3Receipt.evidence.physical_device_prompt_callbacks, false);
 assert.equal(iosAppV3Receipt.evidence.wasm_lowering, false);
 
+const iosAppV4Receipt = JSON.parse(fs.readFileSync(
+  "admission/host-lib-defined-boundary-v1/ios-arm64-app-capability-v4.json", "utf8",
+));
+assert.equal(iosAppV4Receipt.schema, "wasmc.host-lib-defined-boundary-ios-app-qualification/v4");
+assert.equal(iosAppV4Receipt.status, "ios-26.5-arm64-simulator-app-internal-v4-qualified-not-admitted-not-released");
+assert.equal(iosAppV4Receipt.qualified, true);
+assert.equal(iosAppV4Receipt.admitted, false);
+assert.equal(iosAppV4Receipt.released, false);
+assert.equal(iosAppV4Receipt.discoverable, false);
+assert.equal(iosAppV4Receipt.installable, false);
+execFileSync("git", ["cat-file", "-e", `${iosAppV4Receipt.implementation_commit}^{commit}`]);
+execFileSync("git", ["merge-base", "--is-ancestor", iosAppV4Receipt.implementation_commit, "HEAD"]);
+for (const [relative, expected] of Object.entries(iosAppV4Receipt.source)) {
+  assert.equal(digestAt(iosAppV4Receipt.implementation_commit, relative), expected,
+    `${relative}: retained iOS app v4 qualification source drift`);
+}
+assert.equal(iosAppV4Receipt.evidence.status, "PASS");
+assert.equal(iosAppV4Receipt.evidence.fixed_host_domain_apis, 0);
+assert.equal(iosAppV4Receipt.evidence.fixed_host_byte_identical_to_v1_v2_and_v3, true);
+assert.equal(iosAppV4Receipt.evidence.fixed_host_sha256, iosAppReceipt.source[
+  "host/tests/ios-app-capability/Host/FixedHost.swift"
+]);
+assert.equal(iosAppV4Receipt.evidence.statically_registered_lib_providers, 12);
+assert.equal(iosAppV4Receipt.evidence.authorization_policy_candidate,
+  "wasmc-app-authorization-policy@0.0.1-dev.2");
+assert.equal(iosAppV4Receipt.evidence.discovery_prompt_count, 0);
+assert.equal(iosAppV4Receipt.evidence.repeat_request_after_unsuccessful_attempt, true);
+assert.equal(iosAppV4Receipt.evidence.in_flight_request_deduplicated, true);
+assert.equal(iosAppV4Receipt.evidence.denied_routes_to_settings_and_can_be_reoffered, true);
+assert.equal(iosAppV4Receipt.evidence.persistent_attempt_history_roundtrip, true);
+assert.equal(iosAppV4Receipt.evidence.physical_device_prompt_callbacks, false);
+assert.equal(iosAppV4Receipt.evidence.wasm_lowering, false);
+
 const frozenIdentityFiles = [
   "release.json",
   "channels/prod.json",
@@ -886,6 +919,7 @@ console.log(JSON.stringify({
   retained_ios_arm64_app_capability_qualification: iosAppReceipt.implementation_commit,
   retained_ios_arm64_app_capability_v2_qualification: iosAppV2Receipt.implementation_commit,
   retained_ios_arm64_app_capability_v3_qualification: iosAppV3Receipt.implementation_commit,
+  retained_ios_arm64_app_capability_v4_qualification: iosAppV4Receipt.implementation_commit,
   old_candidate_rejects_product_drift: true,
   lifecycle: "architecture-workstream-not-admitted-not-released",
 }));
