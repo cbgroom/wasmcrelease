@@ -18,8 +18,6 @@ use std::{
     time::{Duration, Instant},
 };
 
-const FRAME_BYTES: usize = 64;
-
 fn write_all_host(
     endpoint: &mut HostEndpoint,
     bytes: &[u8],
@@ -71,9 +69,10 @@ fn peer_echo(
     mut stream: TcpStream,
     barrier: Arc<Barrier>,
     iterations: usize,
+    frame_bytes: usize,
 ) -> Result<(), Box<dyn Error + Send + Sync>> {
     barrier.wait();
-    let mut frame = [0u8; FRAME_BYTES];
+    let mut frame = vec![0u8; frame_bytes];
     for _ in 0..iterations {
         stream.read_exact(&mut frame)?;
         stream.write_all(&frame)?;
@@ -87,9 +86,10 @@ fn host_lane(
     barrier: Arc<Barrier>,
     connection: usize,
     iterations: usize,
+    frame_bytes: usize,
 ) -> Result<HostTransportMetrics, Box<dyn Error + Send + Sync>> {
     barrier.wait();
-    let mut frame = [0u8; FRAME_BYTES];
+    let mut frame = vec![0u8; frame_bytes];
     for iteration in 0..iterations {
         frame[0..8].copy_from_slice(&(connection as u64).to_le_bytes());
         frame[8..16].copy_from_slice(&(iteration as u64).to_le_bytes());
@@ -97,7 +97,7 @@ fn host_lane(
             *byte = (connection ^ iteration ^ index) as u8;
         }
         write_all_host(&mut endpoint, &frame)?;
-        let echoed = read_exact_host(&mut endpoint, FRAME_BYTES)?;
+        let echoed = read_exact_host(&mut endpoint, frame_bytes)?;
         if echoed != frame {
             return Err("echo payload mismatch".into());
         }
@@ -118,7 +118,16 @@ fn main() -> Result<(), Box<dyn Error>> {
         .map(|value| value.parse::<usize>())
         .transpose()?
         .unwrap_or(1000);
-    if connections == 0 || connections > 256 || iterations == 0 {
+    let frame_bytes = std::env::var("WASMC_HOST_FRAME_BYTES")
+        .ok()
+        .map(|value| value.parse::<usize>())
+        .transpose()?
+        .unwrap_or(64);
+    if connections == 0
+        || connections > 256
+        || iterations == 0
+        || !(16..=1_048_576).contains(&frame_bytes)
+    {
         return Err("invalid concurrency workload bounds".into());
     }
 
@@ -143,12 +152,12 @@ fn main() -> Result<(), Box<dyn Error>> {
 
         let peer_barrier = barrier.clone();
         peers.push(thread::spawn(move || {
-            peer_echo(peer_stream, peer_barrier, iterations)
+            peer_echo(peer_stream, peer_barrier, iterations, frame_bytes)
         }));
 
         let host_barrier = barrier.clone();
         hosts.push(thread::spawn(move || {
-            host_lane(endpoint, host_barrier, connection, iterations)
+            host_lane(endpoint, host_barrier, connection, iterations, frame_bytes)
         }));
     }
 
@@ -200,7 +209,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         "{{\"accepted\":true,\"connections\":{},\"iterations\":{},\"frame_bytes\":{},\"elapsed_ns\":{},\"logical_transfers\":{},\"logical_transfers_per_sec\":{:.3},\"host_operations\":{},\"host_waits\":{},\"host_claimed\":{},\"host_pending_peak\":{},\"owner_threads_started\":{},\"owner_cycles\":{},\"reactor_poll_calls\":{},\"reactor_readiness_events\":{},\"placement_requested\":{},\"placement_applied\":{}}}",
         connections,
         iterations,
-        FRAME_BYTES,
+        frame_bytes,
         elapsed.as_nanos(),
         logical_transfers,
         logical_transfers as f64 / elapsed.as_secs_f64(),

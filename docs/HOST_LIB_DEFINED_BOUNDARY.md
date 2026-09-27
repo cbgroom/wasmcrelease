@@ -168,6 +168,24 @@ first physical transport slice for migrating the retained HTTPS workload;
 HTTPS still uses its older qualification transport until the TLS/HTTP graph is
 explicitly switched and requalified.
 
+The legacy HTTPS qualification has no hard RPS floor. Its hard gates are
+artifact identity, request/recovery behavior, forced partial writes and exact
+operation/wait/claim plus byte/lifecycle accounting; its GitHub-hosted timing
+is explicitly observational (`performance_regression_gate=false`). Its Rust
+qualification Host contains performance-sensitive transport policy: the
+polling owner, `mio` readiness owners/shared reactors, shard selection, optional
+CPU affinity, Host windows and operation scheduling.
+
+The Lib-owned socket qualification currently has a 25 MiB/s smoke floor. That
+floor rejects a catastrophically broken physical adapter; it is not an HTTPS
+SLA and cannot be compared directly with HTTPS RPS. Before the HTTPS migration
+gate can close, the old and new transports must run the same TLS/HTTP/Wasm
+request graph in a paired same-runner A/B, preserve all hard lifecycle gates,
+and explicitly adopt a performance-parity policy. The raw transport A/B in
+`scripts/host-socket-migration-ab.mjs` isolates physical-boundary cost with the
+same one-connection, 64 KiB bidirectional echo workload, but deliberately
+records `https_transport_migrated=false`.
+
 ## Library OS consequence
 
 The intended result is a Library OS profile assembled above the fixed Host:
