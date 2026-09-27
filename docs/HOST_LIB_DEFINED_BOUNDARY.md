@@ -304,3 +304,8 @@ The ioctl call-shape and vectored-write Linux x86_64 receipt is
 `admission/host-lib-defined-boundary-v1/linux-x86_64-device-io-v7.json`, bound
 to successful workflow run `36302980800` at commit
 `6e171c3bd1f85e510618d7f23ef4ec4c3303ddb5`.
+
+The Lib-owned TCP socket Linux aarch64 receipt is
+`admission/host-lib-defined-boundary-v1/linux-aarch64-socket-v1.json`, bound to
+implementation commit `882167596f2e5791d1461f7d5a2f78e56d1382b5`.
+It explicitly records `https_transport_migrated=false`.
