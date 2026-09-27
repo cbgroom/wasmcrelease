@@ -718,6 +718,43 @@ assert.equal(androidV4Receipt.evidence.performance_gate, false);
 assert.equal(androidV4Receipt.evidence.wasm_lowering, false);
 assert.equal(androidV4Receipt.evidence.physical_device_qualification, false);
 
+const iosSimulatorReceipt = JSON.parse(fs.readFileSync("admission/host-lib-defined-boundary-v1/ios-arm64-simulator-observation-v1.json", "utf8"));
+assert.equal(iosSimulatorReceipt.schema, "wasmc.host-lib-defined-boundary-ios-simulator-qualification/v1");
+assert.equal(iosSimulatorReceipt.status, "ios-26.5-arm64-simulator-display-supervisor-qualified-not-admitted-not-released");
+assert.equal(iosSimulatorReceipt.qualified, true);
+assert.equal(iosSimulatorReceipt.admitted, false);
+assert.equal(iosSimulatorReceipt.released, false);
+assert.equal(iosSimulatorReceipt.discoverable, false);
+assert.equal(iosSimulatorReceipt.installable, false);
+execFileSync("git", ["cat-file", "-e", `${iosSimulatorReceipt.implementation_commit}^{commit}`]);
+execFileSync("git", ["merge-base", "--is-ancestor", iosSimulatorReceipt.implementation_commit, "HEAD"]);
+for (const [relative, expected] of Object.entries(iosSimulatorReceipt.source)) {
+  assert.equal(
+    digestAt(iosSimulatorReceipt.implementation_commit, relative),
+    expected,
+    `${relative}: retained iOS Simulator qualification source drift`,
+  );
+}
+assert.equal(iosSimulatorReceipt.evidence.status, "PASS");
+assert.deepEqual(iosSimulatorReceipt.evidence.profile_target, {
+  os: "ios", architecture: "aarch64", environment: "simulator", embedding: "supervisor",
+});
+assert.equal(iosSimulatorReceipt.evidence.exact_profile_regeneration, true);
+assert.equal(iosSimulatorReceipt.evidence.resolved_bindings, 1);
+assert.equal(iosSimulatorReceipt.evidence.fixed_executor_domain_apis, 0);
+assert.equal(iosSimulatorReceipt.evidence.real_settings_frame, true);
+assert.equal(iosSimulatorReceipt.evidence.appearance_change_frame_postcondition, true);
+assert.equal(iosSimulatorReceipt.evidence.adapter_identity_rejection, true);
+assert.equal(iosSimulatorReceipt.evidence.input_limit_rejection, true);
+assert.equal(iosSimulatorReceipt.evidence.missing_agent_capabilities_fail_closed.length, 3);
+assert.equal(iosSimulatorReceipt.evidence.full_agent_profile, "provider.none");
+assert.equal(iosSimulatorReceipt.evidence.physical_device_profile, "provider.none");
+assert.equal(iosSimulatorReceipt.evidence.performance_gate, false);
+assert.equal(iosSimulatorReceipt.evidence.independent_second_build_determinism, false);
+assert.equal(iosSimulatorReceipt.evidence.ios_embedded_host, false);
+assert.equal(iosSimulatorReceipt.evidence.physical_device_qualification, false);
+assert.equal(iosSimulatorReceipt.evidence.wasm_lowering, false);
+
 const oldCandidate = spawnSync(
   process.execPath,
   ["scripts/release-candidate.mjs", "verify", "channels/candidates/0.0.15.json"],
@@ -757,6 +794,7 @@ console.log(JSON.stringify({
   retained_android_arm64_agent_computer_v2_qualification: androidV2Receipt.implementation_commit,
   retained_android_arm64_agent_computer_v3_qualification: androidV3Receipt.implementation_commit,
   retained_android_arm64_agent_computer_v4_qualification: androidV4Receipt.implementation_commit,
+  retained_ios_arm64_simulator_observation_qualification: iosSimulatorReceipt.implementation_commit,
   old_candidate_rejects_product_drift: true,
   lifecycle: "architecture-workstream-not-admitted-not-released",
 }));
