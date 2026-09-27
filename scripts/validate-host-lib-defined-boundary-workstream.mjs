@@ -476,6 +476,36 @@ assert.equal(linuxSocketReceipt.evidence.concurrent_connections, 64);
 assert.equal(linuxSocketReceipt.evidence.https_transport_migrated, false);
 assert.ok(linuxSocketReceipt.evidence.performance.mib_per_second >= linuxSocketReceipt.evidence.performance.minimum_mib_per_second);
 
+const linuxX86SocketReceipt = JSON.parse(fs.readFileSync("admission/host-lib-defined-boundary-v1/linux-x86_64-socket-v1.json", "utf8"));
+assert.equal(linuxX86SocketReceipt.schema, "wasmc.host-lib-defined-boundary-linux-socket-qualification/v1");
+assert.equal(linuxX86SocketReceipt.status, "linux-x86_64-lib-owned-tcp-socket-ci-qualified-not-admitted-not-released");
+assert.equal(linuxX86SocketReceipt.workflow.run_id, 36304676571);
+assert.equal(linuxX86SocketReceipt.workflow.conclusion, "success");
+assert.equal(linuxX86SocketReceipt.admitted, false);
+assert.equal(linuxX86SocketReceipt.released, false);
+for (const revision of [linuxX86SocketReceipt.implementation_commit, linuxX86SocketReceipt.qualified_commit]) {
+  execFileSync("git", ["cat-file", "-e", `${revision}^{commit}`]);
+  execFileSync("git", ["merge-base", "--is-ancestor", revision, "HEAD"]);
+}
+for (const [relative, expected] of Object.entries(linuxX86SocketReceipt.source)) {
+  assert.equal(
+    digestAt(linuxX86SocketReceipt.implementation_commit, relative),
+    expected,
+    `${relative}: retained x86_64 Linux socket qualification source drift`,
+  );
+}
+assert.equal(linuxX86SocketReceipt.evidence.status, "PASS");
+assert.equal(linuxX86SocketReceipt.evidence.fixed_executor_network_apis, 0);
+assert.equal(linuxX86SocketReceipt.evidence.fixed_executor_matches_endpoint_v7, true);
+assert.equal(linuxX86SocketReceipt.evidence.real_loopback_tcp, true);
+assert.equal(linuxX86SocketReceipt.evidence.bind_ephemeral_listen_connect_accept, true);
+assert.equal(linuxX86SocketReceipt.evidence.bidirectional_stream, true);
+assert.equal(linuxX86SocketReceipt.evidence.readiness_poll, true);
+assert.equal(linuxX86SocketReceipt.evidence.write_half_close, true);
+assert.equal(linuxX86SocketReceipt.evidence.concurrent_connections, linuxSocketReceipt.evidence.concurrent_connections);
+assert.equal(linuxX86SocketReceipt.evidence.https_transport_migrated, false);
+assert.ok(linuxX86SocketReceipt.evidence.performance.mib_per_second >= linuxX86SocketReceipt.evidence.performance.minimum_mib_per_second);
+
 const oldCandidate = spawnSync(
   process.execPath,
   ["scripts/release-candidate.mjs", "verify", "channels/candidates/0.0.15.json"],
@@ -507,6 +537,7 @@ console.log(JSON.stringify({
   retained_linux_aarch64_device_io_qualification: linuxDeviceIoReceipt.implementation_commit,
   retained_linux_x86_64_device_io_qualification: linuxX86DeviceIoReceipt.qualified_commit,
   retained_linux_aarch64_socket_qualification: linuxSocketReceipt.implementation_commit,
+  retained_linux_x86_64_socket_qualification: linuxX86SocketReceipt.qualified_commit,
   old_candidate_rejects_product_drift: true,
   lifecycle: "architecture-workstream-not-admitted-not-released",
 }));

@@ -1,0 +1,74 @@
+{
+  "schema": "wasmc.host-lib-defined-boundary-linux-socket-qualification/v1",
+  "status": "linux-x86_64-lib-owned-tcp-socket-ci-qualified-not-admitted-not-released",
+  "date": "2026-09-27",
+  "implementation_commit": "882167596f2e5791d1461f7d5a2f78e56d1382b5",
+  "qualified_commit": "545cfc3b358cd5dcc4cd881fc832676c63ae7e59",
+  "system_lib_identity": "wasmc:system-linux-socket@0.0.1-dev.1",
+  "workflow": {
+    "run_id": 36304676571,
+    "url": "https://github.com/cbgroom/wasmcrelease/actions/runs/36304676571",
+    "conclusion": "success"
+  },
+  "source": {
+    ".github/workflows/host-layout.yml": "3c82af4d91c4e6cde9b4eedae5813e6e7fa80f749599f2684136eefc37b23161",
+    "host/runtime/lib-boundary/native-linux/Cargo.lock": "5c1fceda2528f2294cc116da2a600a8d6c08b41b86f7b4331f7e7408dfb47c59",
+    "host/runtime/lib-boundary/native-linux/Cargo.toml": "51f247df82e66bc6636f8efb5d1bfa987c845a80185a831dc6dd9261caf10f3d",
+    "host/runtime/lib-boundary/native-linux/src/main.rs": "66b93a6e7c3e70a8315528f7d2917ea9ed39199f2dd9ef3acee43b027f8447bb",
+    "libsrc/wasmc-system-linux-socket/lib.wit": "a428f19a4f6ff0297aa0dba400b01ab2a55d1725f82d248f0a41fd23c059d4b8",
+    "libsrc/wasmc-system-linux-socket/native-adapter.c": "02f05d38b781b1d876409fd8a07962002306d0aad7382803f41b5e15afd4b78a",
+    "libsrc/wasmc-system-linux-socket/native-boundary.template.json": "828c9886015baa01cc6a008e724abc12e14933da02c14171b6edc6fb65b5a112",
+    "scripts/test-linux-socket-lib-defined-boundary.mjs": "9800a7329609d5ba875a4261a07257d4fe1ab9c8ed82a76be67bddfd28a20ffd"
+  },
+  "environment": {
+    "os": "linux",
+    "architecture": "x86_64",
+    "kernel": "6.17.0-1022-azure",
+    "node": "v26.5.1",
+    "rustc": "rustc 1.96.0 (ac68faa20 2026-05-25)",
+    "wasm_tools": "wasm-tools 1.255.0"
+  },
+  "outputs": {
+    "executor_sha256": "7465b5b150cef9d977185bec86fc84fd0e424ae0039720c2e0677196153becbc",
+    "adapter_sha256": "aeebfedf01afe6e6d1f88224d7936a1950caa6e718bd6cf7881864720eda1e35",
+    "adapter_export": "wasmc_boundary_v1_invoke"
+  },
+  "evidence": {
+    "script": "scripts/test-linux-socket-lib-defined-boundary.mjs",
+    "status": "PASS",
+    "wit_parsed": true,
+    "fixed_executor_network_apis": 0,
+    "fixed_executor_matches_endpoint_v7": true,
+    "adapter_endpoint_literals": 0,
+    "real_loopback_tcp": true,
+    "bind_ephemeral_listen_connect_accept": true,
+    "bidirectional_stream": true,
+    "readiness_poll": true,
+    "write_half_close": true,
+    "endpoint_identity": true,
+    "wrong_resource_kind_rejection": true,
+    "generation_checked_stale_stream_rejection": true,
+    "generation_checked_stale_listener_rejection": true,
+    "concurrent_connections": 64,
+    "performance": {
+      "operations": 128,
+      "bytes": 8388608,
+      "mib_per_second": 118.5,
+      "minimum_mib_per_second": 25,
+      "scope": "GitHub-hosted runner diagnostic; not a portable throughput promise"
+    },
+    "adapter_identity_rejection": true,
+    "https_transport_migrated": false
+  },
+  "remaining_gates": [
+    "https-transport-migration",
+    "descriptor-schema-review",
+    "Wasm-WIT-lowering",
+    "host-completion-bridge-and-late-delivery-drain",
+    "admission-review",
+    "catalog-and-LibSearch",
+    "immutable-release"
+  ],
+  "admitted": false,
+  "released": false
+}

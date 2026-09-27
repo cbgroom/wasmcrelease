@@ -161,12 +161,12 @@ UDC binding remain explicit device-backed gates.
 The next platform Lib is `wasmc-system-linux-socket`. It owns Linux IPv4 TCP
 socket creation, bind/listen, connect/accept, stream transfer, readiness poll,
 endpoint identity and half-close while reusing the byte-identical fixed native
-executor. Local Linux aarch64 qualification proves a real loopback transport,
-64 concurrent retained connections, stale-token and wrong-resource-kind
-rejection, and a bounded throughput floor. This is the first physical transport
-slice for migrating the retained HTTPS workload; HTTPS still uses its older
-qualification transport until the TLS/HTTP graph is explicitly switched and
-requalified.
+executor. Retained Linux aarch64 and x86_64 qualifications prove a real
+loopback transport, 64 concurrent retained connections, stale-token and
+wrong-resource-kind rejection, and a bounded throughput floor. This is the
+first physical transport slice for migrating the retained HTTPS workload;
+HTTPS still uses its older qualification transport until the TLS/HTTP graph is
+explicitly switched and requalified.
 
 ## Library OS consequence
 
@@ -309,3 +309,10 @@ The Lib-owned TCP socket Linux aarch64 receipt is
 `admission/host-lib-defined-boundary-v1/linux-aarch64-socket-v1.json`, bound to
 implementation commit `882167596f2e5791d1461f7d5a2f78e56d1382b5`.
 It explicitly records `https_transport_migrated=false`.
+
+The matching Linux x86_64 receipt is
+`admission/host-lib-defined-boundary-v1/linux-x86_64-socket-v1.json`, bound to
+successful workflow run `36304676571` at commit
+`545cfc3b358cd5dcc4cd881fc832676c63ae7e59`. It independently records
+`https_transport_migrated=false`; together these receipts close only the
+cross-architecture physical TCP slice, not the HTTPS migration gate.
