@@ -1,0 +1,10 @@
+package wasmc:system-app-network@0.0.1;
+
+interface network {
+  tcp-exchange: func(host: string, port: u16, request: list<u8>) -> result<list<u8>, s32>;
+  udp-exchange: func(host: string, port: u16, datagram: list<u8>) -> result<list<u8>, s32>;
+}
+
+world system-app-network {
+  export network;
+}

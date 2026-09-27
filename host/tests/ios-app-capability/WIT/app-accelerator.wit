@@ -1,0 +1,9 @@
+package wasmc:system-app-accelerator@0.0.1;
+
+interface accelerator {
+  copy: func(value: list<u8>) -> result<list<u8>, s32>;
+}
+
+world system-app-accelerator {
+  export accelerator;
+}

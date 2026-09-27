@@ -1,0 +1,15 @@
+package wasmc:system-app-state@0.0.1;
+
+interface state {
+  secure-random: func(length: u32) -> result<list<u8>, s32>;
+  preference-read: func(key: string) -> result<option<list<u8>>, s32>;
+  preference-write: func(key: string, value: list<u8>) -> result<_, s32>;
+  secret-read: func(service: string, account: string) -> result<option<list<u8>>, s32>;
+  secret-write: func(service: string, account: string, value: list<u8>) -> result<_, s32>;
+  wall-clock-nanoseconds: func() -> u64;
+  monotonic-clock-nanoseconds: func() -> u64;
+}
+
+world system-app-state {
+  export state;
+}

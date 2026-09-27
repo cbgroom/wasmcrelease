@@ -13,6 +13,7 @@ const focused = [
   "scripts/validate-libsrc.mjs",
   "scripts/validate-android-agent-computer.mjs",
   "scripts/validate-ios-simulator-observation.mjs",
+  "scripts/validate-ios-app-capability.mjs",
 ];
 for (const script of focused) run(script);
 

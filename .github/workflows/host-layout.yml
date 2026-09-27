@@ -27,6 +27,8 @@ on:
       - "scripts/test-android-agent-computer.mjs"
       - "scripts/validate-ios-simulator-observation.mjs"
       - "scripts/test-ios-simulator-observation.mjs"
+      - "scripts/validate-ios-app-capability.mjs"
+      - "scripts/test-ios-app-capability.mjs"
       - "scripts/host-https-ab.mjs"
       - ".github/workflows/host-layout.yml"
   pull_request:
@@ -54,6 +56,8 @@ on:
       - "scripts/test-android-agent-computer.mjs"
       - "scripts/validate-ios-simulator-observation.mjs"
       - "scripts/test-ios-simulator-observation.mjs"
+      - "scripts/validate-ios-app-capability.mjs"
+      - "scripts/test-ios-app-capability.mjs"
       - "scripts/host-https-ab.mjs"
       - ".github/workflows/host-layout.yml"
   workflow_dispatch:
@@ -95,6 +99,7 @@ jobs:
       - run: node scripts/validate-android-agent-computer.mjs
       - run: node scripts/test-platform-profile-resolver.mjs
       - run: node scripts/validate-ios-simulator-observation.mjs
+      - run: node scripts/validate-ios-app-capability.mjs
       - name: Qualify Lib-defined socket HTTPS migration
         shell: bash
         run: |

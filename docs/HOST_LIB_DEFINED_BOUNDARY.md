@@ -370,6 +370,35 @@ closed instead of substituting development automation for an iOS-native
 capability. Embedded Host, UI query, input, virtual input, physical-device,
 Wasm lowering, admission and release remain pending.
 
+## iOS native app-internal profile
+
+The next iOS slice embeds a second fixed, domain-neutral Host in a normal iOS
+application rather than driving the Simulator from macOS. The app profile
+registers six statically linked Lib providers without adding domain methods to
+the Host: sandbox storage, secure state, TCP/UDP loopback, UIKit semantic UI,
+window capture and Metal acceleration. Exact WIT package identities remain in
+the profile; Apple frameworks occur only in provider implementations.
+
+On the iOS 26.5 ARM64 iPhone 17 Pro Simulator, one run proves an atomic
+Application Support round trip plus `fsync`, secure random, `UserDefaults`, a
+signed-app Keychain add/read/delete round trip, wall and monotonic clocks, real
+POSIX TCP and UDP loopback, foreground semantic UI query and action with a
+state postcondition, a 1206×2622 outer screenshot plus in-app PNG capture, and
+a completed Metal command-buffer copy. The Host reports six exact provider
+identities and still has zero domain APIs.
+
+The Keychain check intentionally uses Xcode's Simulator ad-hoc app signing.
+Disabling code signing produced a real missing-application-identity failure and
+is not an acceptable qualification configuration. The probe also runs only
+after `applicationDidBecomeActive`, so an inactive launch callback cannot be
+misreported as foreground capability.
+
+This is a native capability laboratory, not an admitted Lib release. Its Swift
+providers are statically linked and directly invoked; WIT-to-Wasm lowering and
+dynamic Component loading are still open. Physical-device execution and
+protected or lifecycle-sensitive camera, audio, location, motion,
+notifications and background work also remain explicit gates.
+
 The mapped-window, epoll-readiness, kernel-splice and asynchronous-readiness
 successors are qualified on local Linux aarch64 and independent GitHub Ubuntu
 x86_64. The ioctl call-shape and vectored-write successor is also qualified on

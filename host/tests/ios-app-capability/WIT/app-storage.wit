@@ -1,0 +1,11 @@
+package wasmc:system-app-storage@0.0.1;
+
+interface storage {
+  write-atomic: func(path: string, value: list<u8>) -> result<_, s32>;
+  read: func(path: string) -> result<list<u8>, s32>;
+  sync: func(path: string) -> result<_, s32>;
+}
+
+world system-app-storage {
+  export storage;
+}
