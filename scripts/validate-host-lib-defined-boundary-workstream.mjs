@@ -16,6 +16,38 @@ const focused = [
   "scripts/validate-ios-app-capability.mjs",
 ];
 for (const script of focused) run(script);
+const digest = (relative) => createHash("sha256").update(fs.readFileSync(relative)).digest("hex");
+const digestAt = (revision, relative) => createHash("sha256")
+  .update(execFileSync("git", ["show", `${revision}:${relative}`]))
+  .digest("hex");
+
+const iosAppReceipt = JSON.parse(fs.readFileSync(
+  "admission/host-lib-defined-boundary-v1/ios-arm64-app-capability-v1.json", "utf8",
+));
+assert.equal(iosAppReceipt.schema, "wasmc.host-lib-defined-boundary-ios-app-qualification/v1");
+assert.equal(iosAppReceipt.status, "ios-26.5-arm64-simulator-app-internal-qualified-not-admitted-not-released");
+assert.equal(iosAppReceipt.qualified, true);
+assert.equal(iosAppReceipt.admitted, false);
+assert.equal(iosAppReceipt.released, false);
+execFileSync("git", ["cat-file", "-e", `${iosAppReceipt.implementation_commit}^{commit}`]);
+execFileSync("git", ["merge-base", "--is-ancestor", iosAppReceipt.implementation_commit, "HEAD"]);
+for (const [relative, expected] of Object.entries(iosAppReceipt.source)) {
+  assert.equal(digestAt(iosAppReceipt.implementation_commit, relative), expected,
+    `${relative}: retained iOS app qualification source drift`);
+}
+assert.equal(iosAppReceipt.evidence.status, "PASS");
+assert.equal(iosAppReceipt.evidence.fixed_host_domain_apis, 0);
+assert.equal(iosAppReceipt.evidence.statically_registered_lib_providers, 6);
+assert.deepEqual(iosAppReceipt.evidence.host_negative_controls, {
+  duplicate_identity_rejected: true,
+  invalid_descriptor_rejected: true,
+  output_limit_rejected: true,
+});
+assert.equal(iosAppReceipt.evidence.keychain_add_read_delete, true);
+assert.equal(iosAppReceipt.evidence.foreground_semantic_ui, true);
+assert.equal(iosAppReceipt.evidence.metal_command_buffer_copy, true);
+assert.equal(iosAppReceipt.evidence.physical_device_qualification, false);
+assert.equal(iosAppReceipt.evidence.wasm_lowering, false);
 
 const frozenIdentityFiles = [
   "release.json",
@@ -35,10 +67,6 @@ assert.equal(receipt.admitted, false);
 assert.equal(receipt.released, false);
 execFileSync("git", ["cat-file", "-e", `${receipt.implementation_commit}^{commit}`]);
 execFileSync("git", ["merge-base", "--is-ancestor", receipt.implementation_commit, "HEAD"]);
-const digest = (relative) => createHash("sha256").update(fs.readFileSync(relative)).digest("hex");
-const digestAt = (revision, relative) => createHash("sha256")
-  .update(execFileSync("git", ["show", `${revision}:${relative}`]))
-  .digest("hex");
 assert.equal(digest(receipt.executor.path), receipt.executor.sha256);
 for (const lib of receipt.system_libs) {
   assert.equal(digest(`${lib.root}/lib.wit`), lib.wit_sha256);
@@ -796,6 +824,7 @@ console.log(JSON.stringify({
   retained_android_arm64_agent_computer_v3_qualification: androidV3Receipt.implementation_commit,
   retained_android_arm64_agent_computer_v4_qualification: androidV4Receipt.implementation_commit,
   retained_ios_arm64_simulator_observation_qualification: iosSimulatorReceipt.implementation_commit,
+  retained_ios_arm64_app_capability_qualification: iosAppReceipt.implementation_commit,
   old_candidate_rejects_product_drift: true,
   lifecycle: "architecture-workstream-not-admitted-not-released",
 }));
