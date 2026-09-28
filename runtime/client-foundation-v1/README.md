@@ -44,7 +44,9 @@ proves factory rescue.
 
 This is local prototype evidence, not admission or release. The gateway and
 providers are fixtures, the TLS identity is repository-local, and mobile or
-physical-device behavior is not qualified. A process crash in the narrow
-interval after graph commit but before the command receipt is persisted is not
-yet transactionally closed; that durable command/graph transaction is a
-required successor before production admission.
+physical-device behavior is not qualified. Graph commands now persist their
+inflight identity before execution and persist the graph outcome with the
+active route; restart reconstructs the receipt before reconnecting. General
+exactly-once behavior for an arbitrary provider invocation with external side
+effects is not claimed: those providers still require their own idempotency
+identity or transaction protocol before production admission.

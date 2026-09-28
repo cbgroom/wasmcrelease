@@ -61,6 +61,21 @@ try {
   await foundation.close();
   assert.deepEqual(foundation.boundary.counts(), { resources: 0, windows: 0, operations: 0 });
 
+  const statePath = path.join(stateRoot, "state.json");
+  const committedBeforeReceipt = JSON.parse(await readFile(statePath, "utf8"));
+  committedBeforeReceipt.inflight_command = {
+    message_id: "m5",
+    sequence: 5,
+    operation: "graph.apply",
+    payload: { expected_graph_revision: 1, artifact_sha256: state.active.artifact_sha256 },
+  };
+  committedBeforeReceipt.inflight_result = {
+    outcome: "committed",
+    active: state.active,
+    graph_revision: 2,
+  };
+  await writeFile(statePath, `${JSON.stringify(committedBeforeReceipt, null, 2)}\n`);
+
   const recovered = new ClientFoundation({
     stateRoot,
     factoryRoot,
@@ -71,10 +86,12 @@ try {
   const coldResponse = await recovered.invoke("cold-recovery");
   assert.equal(coldResponse.value, "dynamic:cold-recovery");
   assert.equal(recovered.snapshot().graph_revision, 2);
+  assert.equal(recovered.snapshot().last_server_sequence, 5);
+  assert.equal(recovered.snapshot().receipts.m5.outcome, "committed");
+  assert.equal(recovered.snapshot().inflight_command, null);
   await recovered.close();
   assert.deepEqual(recovered.boundary.counts(), { resources: 0, windows: 0, operations: 0 });
 
-  const statePath = path.join(stateRoot, "state.json");
   const interrupted = JSON.parse(await readFile(statePath, "utf8"));
   interrupted.phase = "active-probation";
   interrupted.last_known_good = interrupted.active;
@@ -131,6 +148,7 @@ try {
     duplicate_command_replayed: evidence.replayed_receipts,
     broken_candidate_rollbacks: state.rollback_count,
     cold_recovery: coldResponse.value,
+    graph_commit_before_receipt_recovery: recovered.snapshot().receipts.m5.outcome,
     probation_crash_recovery: rollbackResponse.value,
     missing_slot_factory_rescue: factoryResponse.value,
     boundary_counts_after_close: factoryRescued.boundary.counts(),

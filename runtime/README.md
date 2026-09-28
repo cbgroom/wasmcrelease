@@ -28,4 +28,5 @@ Verify the package `manifest.json`, `receipts/compiler-wasm.json`, Host receipts
 
 The unreleased higher-layer control/update experiment lives in
 `client-foundation-v1/`. It is a local prototype above the fixed Host and is not
-part of the public Runtime package described here.
+part of the public Runtime package described here. Its persistent server-side
+counterpart is the equally unreleased `client-foundation-gateway-v1/`.

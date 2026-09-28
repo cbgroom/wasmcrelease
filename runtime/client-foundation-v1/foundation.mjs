@@ -91,6 +91,8 @@ export class ClientFoundation {
         receipts: {},
         rollback_count: 0,
         probation_previous_revision: null,
+        inflight_command: null,
+        inflight_result: null,
       };
       await this.#persist("initialized");
     }
@@ -103,6 +105,21 @@ export class ClientFoundation {
       this.state.probation_previous_revision = null;
       this.state.rollback_count += 1;
       await this.#persist("startup-rollback");
+    }
+    if (this.state.inflight_command && this.state.inflight_result) {
+      const command = this.state.inflight_command;
+      const receipt = {
+        message_id: command.message_id,
+        sequence: command.sequence,
+        operation: command.operation,
+        replayed: false,
+        ...this.state.inflight_result,
+      };
+      this.state.last_server_sequence = command.sequence;
+      this.state.receipts[command.message_id] = receipt;
+      this.state.inflight_command = null;
+      this.state.inflight_result = null;
+      await this.#persist("command-recovered", { message_id: command.message_id, outcome: receipt.outcome });
     }
     try {
       this.activeResource = await this.#installProbed(this.#rootFor(this.state.active));
@@ -191,6 +208,20 @@ export class ClientFoundation {
       return { ...cached, replayed: true };
     }
     if (message.sequence !== this.state.last_server_sequence + 1) throw new Error("control sequence gap");
+    if (this.state.inflight_command) {
+      if (this.state.inflight_command.message_id !== message.message_id || this.state.inflight_command.sequence !== message.sequence) {
+        throw new Error("different command while durable command is inflight");
+      }
+    } else {
+      this.state.inflight_command = {
+        message_id: message.message_id,
+        sequence: message.sequence,
+        operation: message.operation,
+        payload: message.payload ?? {},
+      };
+      this.state.inflight_result = null;
+      await this.#persist("command-started", { message_id: message.message_id, operation: message.operation });
+    }
     let result;
     if (message.operation === "inventory.report") {
       result = { outcome: "reported", active: this.state.active, graph_revision: this.state.graph_revision };
@@ -210,6 +241,8 @@ export class ClientFoundation {
     };
     this.state.last_server_sequence = message.sequence;
     this.state.receipts[message.message_id] = receipt;
+    this.state.inflight_command = null;
+    this.state.inflight_result = null;
     await this.#persist("command-completed", { message_id: message.message_id, outcome: receipt.outcome });
     return receipt;
   }
@@ -265,8 +298,9 @@ export class ClientFoundation {
       this.state.probation_previous_revision = null;
       this.state.last_known_good = candidate;
       this.boundary.releaseResource(oldResource);
+      this.state.inflight_result = { outcome: "committed", active: candidate, graph_revision: this.state.graph_revision };
       await this.#persist("graph-committed", { slot: inactive, identity: bundle.identity });
-      return { outcome: "committed", active: candidate, graph_revision: this.state.graph_revision };
+      return this.state.inflight_result;
     } catch (error) {
       if (this.activeResource === candidateResource) {
         this.activeResource = oldResource;
@@ -276,10 +310,11 @@ export class ClientFoundation {
         this.state.probation_previous_revision = null;
         this.state.last_known_good = oldActive;
         this.state.rollback_count += 1;
+        this.state.inflight_result = { outcome: "rolled-back", active: oldActive, graph_revision: oldRevision, error: error.message };
         await this.#persist("graph-rolled-back", { failed_identity: bundle.identity, error: error.message });
       }
       this.boundary.releaseResource(candidateResource);
-      return { outcome: "rolled-back", active: oldActive, graph_revision: oldRevision, error: error.message };
+      return this.state.inflight_result ?? { outcome: "rolled-back", active: oldActive, graph_revision: oldRevision, error: error.message };
     }
   }
 

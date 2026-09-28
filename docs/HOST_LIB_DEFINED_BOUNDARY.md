@@ -748,5 +748,15 @@ candidate that fails its post-switch health check. The duplicate is served from
 the durable receipt, the broken candidate rolls back to the last-known-good
 slot, and a cold process recovers that committed provider. See
 `runtime/client-foundation-v1/README.md` for the exact lifecycle and remaining
-transactional crash-window non-claim. This prototype is not admitted or
+general external-effect exactly-once non-claim. This prototype is not admitted or
 released.
+
+`runtime/client-foundation-gateway-v1` is the matching persistent GW prototype.
+It stores exact bundles by SHA-256, allocates an ordered command sequence per
+client, retains receipts across process restart, and redelivers an unreceipted
+command with the same identity. Its local qualification restarts the entire GW
+on the same persisted state while the Client reconnects, then completes a new
+invoke through the restored dynamic graph. The GW remains a higher-layer
+service: it introduces no fixed Host or minimal CLI API. Multi-process storage,
+retention/compaction, deployment identity and public network qualification are
+still pending; it is not admitted or released.
