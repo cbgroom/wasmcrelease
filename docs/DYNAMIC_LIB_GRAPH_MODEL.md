@@ -70,6 +70,7 @@ Safe v1 reuse requires all of the following:
 - the same stable node ID;
 - the same verified Lib identity and package SHA-256;
 - the same configuration SHA-256;
+- the same exact port-contract-set SHA-256;
 - the same state policy and state-schema identity.
 
 Same code does not imply the same instance. Two node IDs may need independent
@@ -135,9 +136,13 @@ The current executable prototype covers stable node IDs, exact Lib/package
 identity, revision fencing, serialized updates, candidate invisibility, atomic
 publication, generation capture, drain, rollback and final resource cleanup. It
 now binds a canonical graph digest and canonical JSON configuration digest,
-uses the complete reuse key, and checks each serial edge against the exact
-whole-WIT SHA-256 verified from its package. The whole-file contract is safe but
-intentionally stricter than port-granular WIT type compatibility.
+uses the complete reuse key, and supports both the original serial route and a
+general acyclic graph. The DAG scheduler validates closure, rejects cycles,
+computes deterministic topological levels and runs independent nodes in a level
+concurrently. Its per-port type identities are derived from `wasm-tools
+component wit --json`, bound to the exact WIT SHA-256, stored in a port manifest
+that is part of the exact package hash, and rechecked against the installed
+package. A caller-provided port hash therefore cannot override package truth.
 
 The serial-stateless Client/Gateway path now persists the exact desired graph,
 content-addressed bundle locators, revision and command result. Restart verifies
@@ -146,7 +151,8 @@ available. Cache corruption leaves the immutable control loop connected; an
 exact subsequent command redownloads and republishes the graph. This closes
 restart reconstruction only for the current serial-stateless profile.
 
-General DAG scheduling, port-granular WIT contract identities, stateful
-replacement and durable retired-generation cleanup remain open gates. Until
-those close, Gateway support must be labeled serial-stateless prototype rather
-than general dynamic Lib composition.
+General DAG scheduling and port-granular WIT contract identity are locally
+qualified in the engine. Gateway distribution and restart reconstruction of a
+general DAG, stateful replacement, and durable retired-generation cleanup
+remain open gates. Until those close, Gateway support must still be labeled
+serial-stateless prototype rather than general dynamic Lib composition.

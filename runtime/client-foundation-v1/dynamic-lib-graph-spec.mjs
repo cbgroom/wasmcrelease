@@ -58,7 +58,10 @@ export function identifyDynamicLibPackageFiles(entries) {
   if (typeof descriptor.wit !== "string" || typeof descriptor.adapter?.path !== "string") {
     throw new Error("incomplete dynamic Lib package identity");
   }
-  const selected = ["native-boundary.json", descriptor.wit, descriptor.adapter.path];
+  if (descriptor.graph_ports !== undefined && typeof descriptor.graph_ports !== "string") {
+    throw new Error("invalid dynamic Lib WIT port manifest path");
+  }
+  const selected = ["native-boundary.json", descriptor.wit, descriptor.adapter.path, ...(descriptor.graph_ports ? [descriptor.graph_ports] : [])];
   if (new Set(selected).size !== selected.length || selected.some((name) => !files.has(name))) {
     throw new Error("incomplete dynamic Lib package files");
   }
@@ -72,8 +75,104 @@ export function identifyDynamicLibPackageFiles(entries) {
     identity: descriptor.identity,
     artifact_sha256: packageDigest.digest("hex"),
     wit_contract_sha256: digest(files.get(descriptor.wit)),
+    graph_ports: descriptor.graph_ports ? JSON.parse(files.get(descriptor.graph_ports).toString("utf8")) : null,
     descriptor,
   };
+}
+
+const assertPortMap = (value, label) => {
+  if (!value || typeof value !== "object" || Array.isArray(value)) throw new Error(`invalid dynamic Lib ${label} ports`);
+  for (const [name, identity] of Object.entries(value)) {
+    if (!NODE_ID.test(name) || !SHA256.test(identity)) throw new Error(`invalid dynamic Lib ${label} port contract`);
+  }
+};
+
+export function describeDynamicLibDag({ blocks, edges, entrypoint }) {
+  if (!Array.isArray(blocks) || blocks.length === 0 || !Array.isArray(edges) || !entrypoint) throw new Error("incomplete dynamic Lib DAG");
+  const declarations = new Map();
+  for (const block of blocks) {
+    if (!block || !NODE_ID.test(block.name) || declarations.has(block.name) || typeof block.root !== "string" || typeof block.identity !== "string" || block.identity.length === 0) {
+      throw new Error("invalid dynamic Lib block declaration");
+    }
+    for (const [field, value] of [["artifact", block.artifact_sha256], ["configuration", block.configuration_sha256], ["WIT contract", block.wit_contract_sha256], ["port contract set", block.port_contracts_sha256]]) {
+      if (!SHA256.test(value)) throw new Error(`invalid dynamic Lib ${field} identity: ${block.name}`);
+    }
+    if (block.state_policy !== "stateless" || block.state_schema_identity !== null) throw new Error(`unsupported dynamic Lib state policy: ${block.name}`);
+    if (canonicalJsonSha256(block.configuration) !== block.configuration_sha256) throw new Error(`dynamic Lib configuration identity mismatch: ${block.name}`);
+    assertPortMap(block.port_contracts?.inputs, "input");
+    assertPortMap(block.port_contracts?.outputs, "output");
+    if (canonicalJsonSha256(block.port_contracts) !== block.port_contracts_sha256) throw new Error(`dynamic Lib port contract identity mismatch: ${block.name}`);
+    declarations.set(block.name, block);
+  }
+  const inputKey = ({ node, port }) => `${node}:${port}`;
+  const incoming = new Map();
+  const outgoing = new Map([...declarations.keys()].map((name) => [name, []]));
+  const indegree = new Map([...declarations.keys()].map((name) => [name, 0]));
+  const normalizedEdges = edges.map((edge) => {
+    const from = declarations.get(edge?.from?.node);
+    const to = declarations.get(edge?.to?.node);
+    const fromContract = from?.port_contracts.outputs?.[edge?.from?.port];
+    const toContract = to?.port_contracts.inputs?.[edge?.to?.port];
+    if (!from || !to || !fromContract || !toContract) throw new Error("dynamic Lib DAG edge references an unknown node or port");
+    if (fromContract !== toContract) throw new Error(`dynamic Lib WIT port contract mismatch: ${from.name}.${edge.from.port}->${to.name}.${edge.to.port}`);
+    const key = inputKey(edge.to);
+    if (incoming.has(key)) throw new Error(`dynamic Lib DAG input has multiple producers: ${key}`);
+    incoming.set(key, edge.from);
+    outgoing.get(from.name).push(to.name);
+    indegree.set(to.name, indegree.get(to.name) + 1);
+    return { from: { node: from.name, port: edge.from.port }, to: { node: to.name, port: edge.to.port }, wit_contract_sha256: fromContract };
+  });
+  const inputNode = declarations.get(entrypoint.input?.node);
+  const outputNode = declarations.get(entrypoint.output?.node);
+  const inputContract = inputNode?.port_contracts.inputs?.[entrypoint.input?.port];
+  const outputContract = outputNode?.port_contracts.outputs?.[entrypoint.output?.port];
+  if (!inputContract || !outputContract) throw new Error("dynamic Lib DAG entrypoint references an unknown node or port");
+  const entryKey = inputKey(entrypoint.input);
+  if (incoming.has(entryKey)) throw new Error("dynamic Lib DAG entrypoint input also has an edge producer");
+  incoming.set(entryKey, { entrypoint: "invoke" });
+  for (const [name, block] of declarations) {
+    for (const port of Object.keys(block.port_contracts.inputs)) {
+      if (!incoming.has(`${name}:${port}`)) throw new Error(`dynamic Lib DAG input has no producer: ${name}:${port}`);
+    }
+  }
+  const queue = [...indegree].filter(([, degree]) => degree === 0).map(([name]) => name).sort();
+  const order = [];
+  const levels = [];
+  while (queue.length > 0) {
+    const level = queue.splice(0).sort();
+    levels.push(level);
+    for (const name of level) {
+      order.push(name);
+      for (const target of outgoing.get(name)) {
+        indegree.set(target, indegree.get(target) - 1);
+        if (indegree.get(target) === 0) queue.push(target);
+      }
+    }
+  }
+  if (order.length !== declarations.size) throw new Error("dynamic Lib DAG contains a cycle");
+  const reachable = new Set([inputNode.name]);
+  for (const name of order) if (reachable.has(name)) for (const target of outgoing.get(name)) reachable.add(target);
+  if (reachable.size !== declarations.size || !reachable.has(outputNode.name)) throw new Error("dynamic Lib DAG contains a disconnected node");
+  const reverse = new Map([...declarations.keys()].map((name) => [name, []]));
+  for (const edge of normalizedEdges) reverse.get(edge.to.node).push(edge.from.node);
+  const contributing = new Set([outputNode.name]);
+  for (const name of [...order].reverse()) if (contributing.has(name)) for (const source of reverse.get(name)) contributing.add(source);
+  if (contributing.size !== declarations.size) throw new Error("dynamic Lib DAG contains a node that does not contribute to output");
+
+  const spec = {
+    schema: "wasmc.dynamic-lib-graph-spec/v1",
+    shape: "general-dag",
+    nodes: [...declarations.values()].map((block) => ({
+      node_id: block.name, lib_identity: block.identity, package_sha256: block.artifact_sha256,
+      configuration_sha256: block.configuration_sha256, state_policy: block.state_policy,
+      state_schema_identity: block.state_schema_identity, wit_contract_sha256: block.wit_contract_sha256,
+      port_contracts_sha256: block.port_contracts_sha256,
+    })).sort((left, right) => left.node_id.localeCompare(right.node_id)),
+    edges: normalizedEdges.sort((left, right) => canonicalJson(left).localeCompare(canonicalJson(right))),
+    entrypoints: { invoke: { input: { ...entrypoint.input, wit_contract_sha256: inputContract }, output: { ...entrypoint.output, wit_contract_sha256: outputContract } } },
+    policy: { execution: "topological-level-parallel", failure: "fail-fast" },
+  };
+  return { spec, graph_digest: canonicalJsonSha256(spec), order, levels };
 }
 
 export function describeSerialLibGraph({ blocks, pipeline }) {

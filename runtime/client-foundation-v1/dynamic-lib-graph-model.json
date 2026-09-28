@@ -19,6 +19,7 @@
     "lib_identity",
     "package_sha256",
     "configuration_sha256",
+    "port_contracts_sha256",
     "state_policy",
     "state_schema_identity"
   ],
@@ -48,11 +49,11 @@
     "close-reclaims-all-runtime-resources"
   ],
   "current_implementation_profile": {
-    "graph_shape": "serial-pipeline",
+    "graph_shape": "serial-pipeline-and-general-dag-local-engine",
     "state_policy": "stateless",
     "graph_identity": "canonical-json-sha256",
     "configuration": "canonical-json-sha256",
-    "wit_contract_identity": "exact-whole-wit-sha256",
+    "wit_contract_identity": "wasm-tools-derived-port-type-sha256-bound-to-exact-wit",
     "qualified_invariants": [
       "single-active-generation",
       "monotonic-active-revision",
@@ -66,8 +67,7 @@
       "close-reclaims-all-runtime-resources"
     ],
     "open_gates": [
-      "general-dag-scheduler",
-      "port-granular-wit-contract-identity",
+      "gateway-general-dag-distribution-and-restart",
       "stateful-replacement",
       "durable-retired-generation-cleanup"
     ]

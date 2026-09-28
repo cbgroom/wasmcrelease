@@ -1,6 +1,7 @@
 import { readFile, realpath } from "node:fs/promises";
 import path from "node:path";
-import { canonicalJson, describeSerialLibGraph, identifyDynamicLibPackageFiles } from "./dynamic-lib-graph-spec.mjs";
+import { canonicalJson, canonicalJsonSha256, describeDynamicLibDag, describeSerialLibGraph, identifyDynamicLibPackageFiles } from "./dynamic-lib-graph-spec.mjs";
+import { validateWitPortManifest } from "./wit-port-contracts.mjs";
 
 const encoder = new TextEncoder();
 const decoder = new TextDecoder("utf-8", { fatal: true });
@@ -24,9 +25,12 @@ export async function inspectDynamicLibPackage(packageRoot) {
     ["native-boundary.json", descriptorPath, descriptorBytes],
     [descriptor.wit, witPath, witBytes],
     [descriptor.adapter.path, await realpath(path.resolve(root, descriptor.adapter.path))],
+    ...(descriptor.graph_ports ? [[descriptor.graph_ports, await realpath(path.resolve(root, descriptor.graph_ports))]] : []),
   ];
   if (files.some(([, file]) => !within(root, file))) throw new Error("dynamic Lib package file escapes exact root");
-  return identifyDynamicLibPackageFiles(await Promise.all(files.map(async ([name, file, knownBytes]) => ({ path: name, bytes: knownBytes ?? await readFile(file) }))));
+  const exact = identifyDynamicLibPackageFiles(await Promise.all(files.map(async ([name, file, knownBytes]) => ({ path: name, bytes: knownBytes ?? await readFile(file) }))));
+  if (exact.graph_ports) validateWitPortManifest(exact.graph_ports, witBytes);
+  return exact;
 }
 
 export class DynamicLibGraph {
@@ -34,7 +38,7 @@ export class DynamicLibGraph {
     if (!boundary) throw new Error("DynamicLibGraph requires the fixed Host boundary");
     if (!Number.isSafeInteger(initialRevision) || initialRevision < 0) throw new Error("invalid dynamic Lib graph initial revision");
     this.boundary = boundary;
-    this.active = { revision: initialRevision, graphDigest: null, blocks: new Map(), pipeline: [], inflight: 0, drainWaiters: [] };
+    this.active = { revision: initialRevision, graphDigest: null, blocks: new Map(), shape: "serial-dag", pipeline: [], edges: [], entrypoint: null, levels: [], inflight: 0, drainWaiters: [] };
     this.closed = false;
     this.updateInProgress = false;
   }
@@ -44,6 +48,9 @@ export class DynamicLibGraph {
       revision: this.active.revision,
       graph_digest: this.active.graphDigest,
       pipeline: [...this.active.pipeline],
+      shape: this.active.shape,
+      edges: structuredClone(this.active.edges),
+      entrypoint: structuredClone(this.active.entrypoint),
       blocks: Object.fromEntries([...this.active.blocks].map(([name, block]) => [name, {
         identity: block.identity,
         artifact_sha256: block.artifactSha,
@@ -51,19 +58,21 @@ export class DynamicLibGraph {
         wit_contract_sha256: block.witContractSha,
         state_policy: block.statePolicy,
         state_schema_identity: block.stateSchemaIdentity,
+        port_contracts_sha256: block.portContractsSha ?? null,
       }])),
     };
   }
 
-  async apply({ expected_revision, graph_digest, blocks, pipeline }) {
+  async apply({ expected_revision, graph_digest, blocks, pipeline, edges, entrypoint }) {
     if (this.closed) throw new Error("dynamic Lib graph closed");
     if (this.updateInProgress) throw new Error("dynamic Lib graph update already in progress");
     if (expected_revision !== this.active.revision) throw new Error("dynamic Lib graph revision fence mismatch");
-    const described = describeSerialLibGraph({ blocks, pipeline });
+    const dag = Array.isArray(edges) || entrypoint !== undefined;
+    const described = dag ? describeDynamicLibDag({ blocks, edges, entrypoint }) : describeSerialLibGraph({ blocks, pipeline });
     if (graph_digest !== described.graph_digest) throw new Error("dynamic Lib graph digest mismatch");
     const desired = new Map(blocks.map((block) => [block.name, block]));
     if (graph_digest === this.active.graphDigest) {
-      return { outcome: "unchanged", revision: this.active.revision, graph_digest, installed: 0, reused: desired.size, released: 0, pipeline: [...pipeline] };
+      return { outcome: "unchanged", revision: this.active.revision, graph_digest, installed: 0, reused: desired.size, released: 0, pipeline: pipeline ? [...pipeline] : [], shape: dag ? "general-dag" : "serial-dag" };
     }
 
     const old = this.active;
@@ -76,7 +85,7 @@ export class DynamicLibGraph {
       for (const [name, declaration] of desired) {
         const current = old.blocks.get(name);
         if (current?.artifactSha === declaration.artifact_sha256 && current.configurationSha === declaration.configuration_sha256) {
-          if (current.identity !== declaration.identity || current.witContractSha !== declaration.wit_contract_sha256 || current.statePolicy !== declaration.state_policy || current.stateSchemaIdentity !== declaration.state_schema_identity) {
+          if (current.identity !== declaration.identity || current.witContractSha !== declaration.wit_contract_sha256 || current.statePolicy !== declaration.state_policy || current.stateSchemaIdentity !== declaration.state_schema_identity || (dag && current.portContractsSha !== declaration.port_contracts_sha256)) {
             throw new Error(`dynamic Lib identity conflicts with retained instance: ${name}`);
           }
           candidateBlocks.set(name, current);
@@ -87,6 +96,13 @@ export class DynamicLibGraph {
         if (exact.identity !== declaration.identity) throw new Error(`dynamic Lib descriptor identity mismatch: ${name}`);
         if (exact.artifact_sha256 !== declaration.artifact_sha256) throw new Error(`dynamic Lib package identity mismatch: ${name}`);
         if (exact.wit_contract_sha256 !== declaration.wit_contract_sha256) throw new Error(`dynamic Lib WIT contract identity mismatch: ${name}`);
+        if (dag) {
+          if (!exact.graph_ports) throw new Error(`dynamic Lib package has no WIT port manifest: ${name}`);
+          const declaredPorts = { inputs: exact.graph_ports.inputs, outputs: exact.graph_ports.outputs };
+          if (canonicalJsonSha256(declaredPorts) !== declaration.port_contracts_sha256 || canonicalJson(declaredPorts) !== canonicalJson(declaration.port_contracts)) {
+            throw new Error(`dynamic Lib package port contracts mismatch: ${name}`);
+          }
+        }
         const resource = await this.boundary.install(declaration.root);
         const record = {
           resource,
@@ -97,6 +113,8 @@ export class DynamicLibGraph {
           witContractSha: declaration.wit_contract_sha256,
           statePolicy: declaration.state_policy,
           stateSchemaIdentity: declaration.state_schema_identity,
+          portContracts: dag ? structuredClone(declaration.port_contracts) : null,
+          portContractsSha: dag ? declaration.port_contracts_sha256 : null,
         };
         installed.push(record);
         candidateBlocks.set(name, record);
@@ -107,7 +125,11 @@ export class DynamicLibGraph {
         revision: old.revision + 1,
         graphDigest: graph_digest,
         blocks: candidateBlocks,
-        pipeline: [...pipeline],
+        shape: dag ? "general-dag" : "serial-dag",
+        pipeline: pipeline ? [...pipeline] : [],
+        edges: dag ? structuredClone(edges) : [],
+        entrypoint: dag ? structuredClone(entrypoint) : null,
+        levels: dag ? described.levels.map((level) => [...level]) : [],
         inflight: 0,
         drainWaiters: [],
       };
@@ -123,7 +145,7 @@ export class DynamicLibGraph {
           released += 1;
         }
       }
-      return { outcome: "committed", revision: candidate.revision, graph_digest, installed: installed.length, reused, released, pipeline: [...pipeline] };
+      return { outcome: "committed", revision: candidate.revision, graph_digest, installed: installed.length, reused, released, pipeline: pipeline ? [...pipeline] : [], shape: candidate.shape };
     } catch (error) {
       if (published) {
         return { outcome: "committed", revision: this.active.revision, graph_digest: this.active.graphDigest, installed: installed.length, reused, released: 0, cleanup_error: error.message, pipeline: [...this.active.pipeline] };
@@ -141,6 +163,7 @@ export class DynamicLibGraph {
     const generation = this.active;
     generation.inflight += 1;
     try {
+      if (generation.shape === "general-dag") return { revision: generation.revision, value: await this.#invokeDag(generation, value) };
       let current = value;
       for (const name of generation.pipeline) {
         const block = generation.blocks.get(name);
@@ -155,6 +178,41 @@ export class DynamicLibGraph {
         for (const resolve of generation.drainWaiters.splice(0)) resolve();
       }
     }
+  }
+
+  async #invokeDag(generation, value) {
+    const inputs = new Map();
+    const key = ({ node, port }) => `${node}:${port}`;
+    inputs.set(key(generation.entrypoint.input), value);
+    const outgoing = new Map();
+    for (const edge of generation.edges) {
+      const source = key(edge.from);
+      const list = outgoing.get(source) ?? [];
+      list.push(edge.to);
+      outgoing.set(source, list);
+    }
+    const produced = new Map();
+    for (const level of generation.levels) {
+      await Promise.all(level.map(async (name) => {
+        const block = generation.blocks.get(name);
+        const nodeInputs = Object.fromEntries(Object.keys(block.portContracts.inputs).map((port) => {
+          const input = key({ node: name, port });
+          if (!inputs.has(input)) throw new Error(`dynamic Lib DAG input unavailable: ${input}`);
+          return [port, inputs.get(input)];
+        }));
+        const response = await this.#call(block.resource, { operation: "invoke-ports", inputs: nodeInputs, configuration: block.configuration });
+        if (response.accepted !== true || !response.outputs || typeof response.outputs !== "object") throw new Error(`dynamic Lib block rejected DAG invocation: ${name}`);
+        for (const port of Object.keys(block.portContracts.outputs)) {
+          if (!Object.hasOwn(response.outputs, port)) throw new Error(`dynamic Lib block omitted DAG output: ${name}:${port}`);
+          const output = key({ node: name, port });
+          produced.set(output, response.outputs[port]);
+          for (const target of outgoing.get(output) ?? []) inputs.set(key(target), response.outputs[port]);
+        }
+      }));
+    }
+    const output = key(generation.entrypoint.output);
+    if (!produced.has(output)) throw new Error(`dynamic Lib DAG output unavailable: ${output}`);
+    return produced.get(output);
   }
 
   async close() {

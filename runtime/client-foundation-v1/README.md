@@ -78,7 +78,15 @@ package and Lib identities, canonical JSON configuration hashes, stateless
 policy and exact whole-WIT hashes. Configuration is copied from its canonical
 form before publication, so caller mutation cannot change active behavior
 without a new graph identity. The whole-WIT rule is safe but deliberately more
-restrictive than future port-granular WIT compatibility.
+restrictive than port-granular WIT compatibility.
+
+The same engine also has a locally qualified general-DAG profile. Exact package
+manifests bind named input/output ports to type identities derived from
+`wasm-tools component wit --json`; the manifest is bound to the exact WIT hash
+and included in the package hash. The scheduler rejects cycles, missing or
+multiply-produced inputs, disconnected nodes and incompatible edge types. It
+runs each topological level concurrently and preserves the same immutable
+generation, replacement, drain and rollback rules.
 
 Updates are revision-fenced and serialized. A failed candidate leaves the old
 generation active and releases every newly installed resource. A cleanup error
@@ -89,16 +97,18 @@ Run its local qualification with:
 
 ```sh
 node scripts/test-dynamic-lib-graph-v1.mjs
+node scripts/test-dynamic-lib-dag-v1.mjs
 ```
 
-The test proves two-block composition, one-block replacement with unchanged
+The first test proves two-block composition, one-block replacement with unchanged
 block reuse, old/new generation overlap, route-only reorder with zero installs,
 canonical graph and configuration identity, rejection of false identity and
 package hashes, whole-graph rollback on failed health, and zero retained Host
-resources/windows/operations after close. This engine is local prototype
-evidence. It is not yet a general DAG scheduler, durable Client Foundation
-state format or Gateway `graph.apply` command, and it is not admitted or
-released.
+resources/windows/operations after close. The DAG test proves a diamond graph,
+parallel branches, exact port-manifest verification, one-branch replacement
+with three reused nodes and negative closure/type controls. This engine is
+local prototype evidence. General DAG distribution/restart is not yet wired to
+the Gateway, and the work is not admitted or released.
 
 ## Dynamic Client/Gateway loop
 
