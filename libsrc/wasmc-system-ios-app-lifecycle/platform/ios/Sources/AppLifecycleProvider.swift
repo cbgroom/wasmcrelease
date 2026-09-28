@@ -75,8 +75,15 @@ final class AppLifecycleProvider {
             guard let self else { return }
             let tickMilliseconds: UInt32 = durationMilliseconds >= 8_000 ? 1_000 : 100
             let ticks = max(1, durationMilliseconds / tickMilliseconds)
+            let started = DispatchTime.now().uptimeNanoseconds
             for _ in 0..<ticks {
-                usleep(tickMilliseconds * 1_000)
+                let elapsedMilliseconds = UInt32(min(
+                    UInt64(UInt32.max),
+                    (DispatchTime.now().uptimeNanoseconds - started) / 1_000_000
+                ))
+                if elapsedMilliseconds >= durationMilliseconds { break }
+                let remainingMilliseconds = durationMilliseconds - elapsedMilliseconds
+                usleep(min(tickMilliseconds, remainingMilliseconds) * 1_000)
                 let cancelled = self.journalQueue.sync { self.workCancellation[workID] ?? true }
                 if cancelled {
                     self.record("finite-work-cancelled", phase: .background, workID: workID)

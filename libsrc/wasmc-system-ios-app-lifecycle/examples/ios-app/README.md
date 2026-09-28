@@ -14,3 +14,6 @@ matches a physical device.
 `testEightSecondFiniteBackgroundWindow` is a fast possibility probe: it keeps a
 finite task alive for eight seconds, records remaining-time samples, and returns
 before any expiration wait.
+The matrix test methods cover 15, 30 and 60 seconds independently so a first
+observed expiration can stop the run without spending the whole budget on one
+long case.

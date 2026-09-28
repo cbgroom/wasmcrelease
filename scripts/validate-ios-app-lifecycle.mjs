@@ -20,6 +20,7 @@ for (const relative of [
   "examples/ios-app/UITests/AppLifecycleUITests.swift",
 ]) assert.ok(fs.statSync(`${libRoot}/${relative}`).size > 0, relative);
 assert.ok(fs.statSync("scripts/test-ios-finite-background-window.mjs").size > 0);
+assert.ok(fs.statSync("scripts/probe-ios-finite-background-window-matrix.mjs").size > 0);
 
 execFileSync("wasm-tools", ["component", "wit", `${libRoot}/lib.wit`], { stdio: "ignore" });
 const provider = fs.readFileSync(`${libRoot}/platform/ios/Sources/AppLifecycleProvider.swift`, "utf8");

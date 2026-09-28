@@ -21,6 +21,9 @@ value. It proves that this bounded
 cleanup completed on the exact Simulator; it deliberately does not wait for
 expiration and does not claim a maximum background duration. A Simulator
 unbounded sentinel is recorded as unavailable rather than presented as time.
+The bounded matrix additionally probes 15, 30 and 60 seconds, stopping after
+the 60-second point. All three are evidence for the exact Simulator under
+XCUITest only; a PASS establishes a lower bound, never a platform maximum.
 
 The public WIT is reusable across platforms. This candidate contains only the
 iOS physical binding; another OS must supply a distinct exact provider and

@@ -11,9 +11,12 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
     ) -> Bool {
         let arguments = ProcessInfo.processInfo.arguments
+        let explicitDuration = arguments.first { $0.hasPrefix("--wasmc-finite-window-ms=") }
+            .flatMap { UInt32($0.split(separator: "=").last ?? "") }
         provider = AppLifecycleProvider(
             resetJournal: arguments.contains("--wasmc-reset-lifecycle-journal"),
-            finiteWorkDurationMilliseconds: arguments.contains("--wasmc-finite-window-probe") ? 8_000 : 600
+            finiteWorkDurationMilliseconds: explicitDuration
+                ?? (arguments.contains("--wasmc-finite-window-probe") ? 8_000 : 600)
         )
         provider.didFinishLaunching()
         let registration = ProviderRegistration(
