@@ -810,6 +810,55 @@ assert.equal(iosWebSocketV3Receipt.evidence.suspension_receive_qualified, false)
 assert.equal(iosWebSocketV3Receipt.evidence.process_relaunch_reconnect_qualified, false);
 assert.equal(iosWebSocketV3Receipt.evidence.physical_device, false);
 
+const iosWebSocketV4Receipt = JSON.parse(fs.readFileSync(
+  "admission/host-lib-defined-boundary-v1/ios-arm64-websocket-v4.json", "utf8",
+));
+assert.equal(iosWebSocketV4Receipt.schema,
+  "wasmc.host-lib-defined-boundary-ios-websocket-qualification/v4");
+assert.equal(iosWebSocketV4Receipt.supersedes,
+  "admission/host-lib-defined-boundary-v1/ios-arm64-websocket-v3.json");
+assert.equal(iosWebSocketV4Receipt.qualified, true);
+assert.equal(iosWebSocketV4Receipt.admitted, false);
+assert.equal(iosWebSocketV4Receipt.released, false);
+assert.equal(iosWebSocketV4Receipt.discoverable, false);
+assert.equal(iosWebSocketV4Receipt.installable, false);
+execFileSync("git", ["cat-file", "-e", `${iosWebSocketV4Receipt.implementation_commit}^{commit}`]);
+execFileSync("git", ["merge-base", "--is-ancestor", iosWebSocketV4Receipt.implementation_commit, "HEAD"]);
+for (const [relative, expected] of Object.entries(iosWebSocketV4Receipt.source)) {
+  assert.equal(digestAt(iosWebSocketV4Receipt.implementation_commit, relative), expected,
+    `${relative}: retained iOS WebSocket v4 source drift`);
+}
+assert.equal(iosWebSocketV4Receipt.evidence.status, "PASS");
+assert.equal(iosWebSocketV4Receipt.evidence.provider,
+  "wasmc:system-ios-websocket@0.0.1-dev.4");
+assert.equal(iosWebSocketV4Receipt.evidence.fixed_host_domain_apis, 0);
+assert.equal(iosWebSocketV4Receipt.evidence.fixed_host_sha256,
+  iosWebSocketV3Receipt.evidence.fixed_host_sha256);
+assert.equal(iosWebSocketV4Receipt.evidence.transport, "URLSessionWebSocketTask");
+assert.equal(iosWebSocketV4Receipt.evidence.certificate_pin_match, true);
+assert.deepEqual(iosWebSocketV4Receipt.evidence.durable_outbox, {
+  format: "json-atomic-two-message-ordered-ack-drain",
+  seed_and_drain_process_ids_distinct: true,
+  loaded_count: 2,
+  ack_order: ["ack-durable-1", "ack-durable-2"],
+  remaining_count: 0,
+  retained_file_messages: [],
+  drained: true,
+});
+assert.equal(iosWebSocketV4Receipt.evidence.process_relaunch_reconnect_qualified, true);
+assert.equal(iosWebSocketV4Receipt.evidence.service_restart_reconnect_regression, true);
+assert.equal(iosWebSocketV4Receipt.evidence.bounded_retry_exhaustion_regression, true);
+assert.equal(iosWebSocketV4Receipt.evidence.plain_ws_regression, true);
+assert.equal(iosWebSocketV4Receipt.evidence.pinned_wss_regression, true);
+assert.equal(iosWebSocketV4Receipt.evidence.wrong_pin_rejection_regression, true);
+assert.equal(iosWebSocketV4Receipt.evidence.public_ca_wss_qualified, false);
+assert.equal(iosWebSocketV4Receipt.evidence.internet_route_qualified, false);
+assert.equal(iosWebSocketV4Receipt.evidence.network_transition_reconnect_qualified, false);
+assert.equal(iosWebSocketV4Receipt.evidence.suspension_receive_qualified, false);
+assert.equal(iosWebSocketV4Receipt.evidence.general_queue_capacity_qualified, false);
+assert.equal(iosWebSocketV4Receipt.evidence.crash_between_send_and_ack_deduplication_qualified, false);
+assert.equal(iosWebSocketV4Receipt.evidence.physical_device, false);
+
 const iosNetworkPathV1Receipt = JSON.parse(fs.readFileSync(
   "admission/host-lib-defined-boundary-v1/ios-arm64-network-path-v1.json", "utf8",
 ));
@@ -1665,6 +1714,7 @@ console.log(JSON.stringify({
   retained_ios_arm64_websocket_v1_qualification: iosWebSocketV1Receipt.implementation_commit,
   retained_ios_arm64_websocket_v2_qualification: iosWebSocketV2Receipt.implementation_commit,
   retained_ios_arm64_websocket_v3_qualification: iosWebSocketV3Receipt.implementation_commit,
+  retained_ios_arm64_websocket_v4_qualification: iosWebSocketV4Receipt.implementation_commit,
   retained_ios_arm64_network_path_v1_qualification: iosNetworkPathV1Receipt.implementation_commit,
   retained_ios_simulator_first_qualification_policy_v1: iosQualificationPolicyV1Receipt.implementation_commit,
   old_candidate_rejects_product_drift: true,
