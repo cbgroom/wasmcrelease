@@ -89,6 +89,40 @@ State policies are:
   bounded snapshot, target restore, and a declared exact migration Lib when
   schemas differ.
 
+### Stateful replacement quick authority
+
+Start here for the complete implemented state contract; do not reconstruct it
+from Gateway metadata or test output.
+
+| Surface | Role | Required behavior |
+|---|---|---|
+| exact package descriptor | authority | optional `state`; omission means `stateless`; `sticky` and `snapshot-v1` require a 64-hex schema identity |
+| desired graph node | identity-bearing duplicate | policy and schema must exactly match the package and are covered by `graph_digest` |
+| Gateway artifact metadata | derived transport check | derived from package bytes; a command that disagrees is rejected before enqueue |
+| Client cache/install | independent transport check | package bytes are re-derived after download, on cache read and on restart reconstruction |
+
+The implemented `snapshot-v1` envelope is canonical base64 of at most
+1,048,576 decoded bytes plus its exact SHA-256 and schema identity. The source
+and target schema identities must be equal. Replacement order is: install,
+probe and health-check candidate; block new graph invocations; drain the old
+generation; snapshot source; validate the complete envelope; restore target;
+health-check the complete candidate; publish; durably record publication and
+retired ownership; release the barrier; drain and release the retired
+generation. The barrier is graph-wide. Restore or validation failure occurs
+before publication, releases the candidate, retains the old generation and
+releases waiting invocations onto it.
+
+`sticky` permits only exact-instance reuse. Automatic replacement and removal
+are rejected. Stateful removal has no disposition protocol in this slice.
+Cross-schema replacement has no migration-Lib interface in this slice and is
+rejected; the error names the required future authority rather than an
+available operation.
+
+The fixed minimal CLI is `current/cli.mjs`; the Gateway has a separate,
+higher-layer CLI. Neither CLI nor the Host API participates in state transfer.
+`snapshot-v1` and `restore-v1` are opaque Lib operations over the existing
+resource/window/operation/completion boundary.
+
 The implemented same-schema `snapshot-v1` path binds policy and schema identity
 inside the exact package descriptor rather than trusting a graph caller. It
 installs and probes the candidate first, blocks new invocations, drains calls
@@ -173,6 +207,15 @@ handling are qualified locally and through the Client/Gateway path.
 Cross-schema migration through an exact migration Lib and durable checkpoint
 restoration of active state after a full Client restart remain open gates. The
 whole path remains a prototype and is not admitted or released.
+
+The focused local stateful qualification covers same-schema transfer,
+graph-wide invocation fencing, restore rollback, sticky reuse/rejection,
+package/declaration mismatch, policy transition, stateful removal without a
+disposition, non-canonical base64, digest mismatch and the 1 MiB snapshot
+bound. The integrated Client/Gateway qualification covers same-schema transfer
+through distribution plus rejection of a forged Gateway state declaration.
+It does not restart a Client while mutable state is active; that absence is the
+`stateful-active-checkpoint-restart` open gate, not passing evidence.
 
 The process-owner fence does not claim exactly-once behavior or cleanup of
 external effects that a Lib initiated outside the Host process. Such effects

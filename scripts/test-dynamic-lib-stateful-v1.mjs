@@ -16,7 +16,12 @@ world graph-block { export block; }
 const schemaV1 = sha256(Buffer.from("wasmc:test-counter-state/v1"));
 const schemaV2 = sha256(Buffer.from("wasmc:test-counter-state/v2"));
 
-async function makeProvider(directory, marker, statePolicy, stateSchemaIdentity, { brokenRestore = false, restoreDelayMs = 0 } = {}) {
+async function makeProvider(directory, marker, statePolicy, stateSchemaIdentity, {
+  brokenRestore = false,
+  restoreDelayMs = 0,
+  snapshotFault = null,
+  maxOutputBytes = 65536,
+} = {}) {
   const root = path.join(temporaryRoot, directory);
   await mkdir(root, { recursive: true });
   const identity = `wasmc:dynamic-stateful-${directory}@0.0.1-dev.1`;
@@ -27,6 +32,7 @@ const decoder = new TextDecoder("utf-8", { fatal: true });
 let count = 0;
 const brokenRestore = ${brokenRestore};
 const restoreDelayMs = ${restoreDelayMs};
+const snapshotFault = ${JSON.stringify(snapshotFault)};
 const sha256 = (bytes) => createHash("sha256").update(bytes).digest("hex");
 export async function invoke(input) {
   const request = JSON.parse(decoder.decode(input));
@@ -37,8 +43,10 @@ export async function invoke(input) {
     return encoder.encode(JSON.stringify({ accepted: true, value: ${JSON.stringify(marker)} + ":" + count }));
   }
   if (request.operation === "snapshot-v1") {
-    const bytes = Buffer.from(JSON.stringify({ count }));
-    return encoder.encode(JSON.stringify({ accepted: true, state_schema_identity: ${JSON.stringify(stateSchemaIdentity)}, state_base64: bytes.toString("base64"), state_sha256: sha256(bytes) }));
+    const bytes = snapshotFault === "oversize" ? Buffer.alloc(1024 * 1024 + 1) : Buffer.from(JSON.stringify({ count }));
+    const stateBase64 = snapshotFault === "noncanonical-base64" ? bytes.toString("base64") + "=" : bytes.toString("base64");
+    const stateSha256 = snapshotFault === "digest-mismatch" ? "0".repeat(64) : sha256(bytes);
+    return encoder.encode(JSON.stringify({ accepted: true, state_schema_identity: ${JSON.stringify(stateSchemaIdentity)}, state_base64: stateBase64, state_sha256: stateSha256 }));
   }
   if (request.operation === "restore-v1") {
     if (restoreDelayMs > 0) await new Promise((resolve) => setTimeout(resolve, restoreDelayMs));
@@ -54,7 +62,7 @@ export async function invoke(input) {
     schema: "wasmc.native-boundary-descriptor/v1", identity, wit: "lib.wit",
     state: { policy: statePolicy, schema_identity: stateSchemaIdentity },
     adapter: { path: "native-adapter.mjs", sha256: sha256(adapter), export: "invoke" },
-    limits: { max_input_bytes: 65536, max_output_bytes: 65536 }, lifecycle: "prototype-not-admitted-not-released",
+    limits: { max_input_bytes: 65536, max_output_bytes: maxOutputBytes }, lifecycle: "prototype-not-admitted-not-released",
   };
   await writeFile(path.join(root, "lib.wit"), wit);
   await writeFile(path.join(root, "native-adapter.mjs"), adapter);
@@ -82,6 +90,7 @@ const boundary = new LibDefinedBoundary();
 const graph = new DynamicLibGraph({ boundary });
 const stickyBoundary = new LibDefinedBoundary();
 const stickyGraph = new DynamicLibGraph({ boundary: stickyBoundary });
+const negativeGraphs = [];
 try {
   const v1 = await makeProvider("snapshot-v1", "V1", "snapshot-v1", schemaV1);
   const v2 = await makeProvider("snapshot-v2", "V2", "snapshot-v1", schemaV1);
@@ -123,6 +132,38 @@ try {
   assert.match(stickyReplacement.error, /cannot be replaced automatically/);
   assert.deepEqual(await stickyGraph.invoke("inc"), { revision: 1, value: "STICKY1:1" });
 
+  const stateless = await makeProvider("stateless", "STATELESS", "stateless", null);
+  const policyTransition = await graph.apply(request(2, [stateless]));
+  assert.equal(policyTransition.outcome, "rolled-back");
+  assert.match(policyTransition.error, /state policy transition is unsupported/);
+  const stickyRemoval = await stickyGraph.apply(request(1, [{ ...stateless, name: "replacement" }]));
+  assert.equal(stickyRemoval.outcome, "rolled-back");
+  assert.match(stickyRemoval.error, /stateful node removal requires an explicit state disposition/);
+
+  const mismatchedBoundary = new LibDefinedBoundary();
+  const mismatchedGraph = new DynamicLibGraph({ boundary: mismatchedBoundary });
+  negativeGraphs.push(mismatchedGraph);
+  const mismatchedDeclaration = { ...v1, state_policy: "sticky" };
+  const packageMismatch = await mismatchedGraph.apply(request(0, [mismatchedDeclaration]));
+  assert.equal(packageMismatch.outcome, "rolled-back");
+  assert.match(packageMismatch.error, /package state contract mismatch/);
+  await mismatchedGraph.close();
+  assert.deepEqual(mismatchedBoundary.counts(), { resources: 0, windows: 0, operations: 0 });
+
+  for (const [fault, maxOutputBytes] of [["noncanonical-base64", 65536], ["digest-mismatch", 65536], ["oversize", 2 * 1024 * 1024]]) {
+    const faultBoundary = new LibDefinedBoundary();
+    const faultGraph = new DynamicLibGraph({ boundary: faultBoundary });
+    negativeGraphs.push(faultGraph);
+    const source = await makeProvider(`snapshot-${fault}`, `FAULT-${fault}`, "snapshot-v1", schemaV1, { snapshotFault: fault, maxOutputBytes });
+    const target = await makeProvider(`snapshot-${fault}-target`, `TARGET-${fault}`, "snapshot-v1", schemaV1, { maxOutputBytes });
+    assert.equal((await faultGraph.apply(request(0, [source]))).outcome, "committed");
+    const rejected = await faultGraph.apply(request(1, [target]));
+    assert.equal(rejected.outcome, "rolled-back");
+    assert.match(rejected.error, /snapshot identity mismatch/);
+    await faultGraph.close();
+    assert.deepEqual(faultBoundary.counts(), { resources: 0, windows: 0, operations: 0 });
+  }
+
   await graph.close();
   await stickyGraph.close();
   assert.deepEqual(boundary.counts(), { resources: 0, windows: 0, operations: 0 });
@@ -132,11 +173,14 @@ try {
     snapshot_same_schema_replacement: "V1:3->V2:4", old_invocation_drained_before_snapshot: true,
     new_invocation_blocked_until_publish: true, failed_restore_rolled_back: true, invocation_barrier_released_after_rollback: true,
     cross_schema_requires_migration_lib: true, sticky_unchanged_reused: true, sticky_automatic_replacement_rejected: true,
+    package_state_contract_mismatch_rejected: true, state_policy_transition_rejected: true, stateful_removal_without_disposition_rejected: true,
+    noncanonical_snapshot_rejected: true, snapshot_digest_mismatch_rejected: true, oversized_snapshot_rejected: true,
     external_effect_exactly_once_claimed: false, fixed_host_api_changed: false, minimal_cli_changed: false,
     boundary_counts_after_close: boundary.counts(), sticky_boundary_counts_after_close: stickyBoundary.counts(),
   }));
 } finally {
   await graph.close().catch(() => {});
   await stickyGraph.close().catch(() => {});
+  for (const negativeGraph of negativeGraphs) await negativeGraph.close().catch(() => {});
   await rm(temporaryRoot, { recursive: true, force: true });
 }

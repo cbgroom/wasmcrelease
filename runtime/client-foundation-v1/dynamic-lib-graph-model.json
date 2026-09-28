@@ -14,6 +14,26 @@
     "sticky",
     "snapshot-v1"
   ],
+  "state_contract": {
+    "authority": "exact-package-descriptor",
+    "graph_declaration": "exact-match-and-graph-digest-bound",
+    "gateway_metadata": "derived-from-package-and-verified-before-enqueue",
+    "client_verification": "after-download-on-cache-read-and-on-restart",
+    "snapshot_encoding": "canonical-base64",
+    "max_snapshot_bytes": 1048576,
+    "migration_barrier_scope": "whole-graph",
+    "same_schema_order": [
+      "install-probe-health-candidate",
+      "block-new-invocations",
+      "drain-old-generation",
+      "snapshot-and-verify-source",
+      "restore-target",
+      "health-candidate",
+      "publish-and-persist-retired-owner",
+      "release-invocation-barrier",
+      "drain-and-release-retired-generation"
+    ]
+  },
   "reuse_key": [
     "node_id",
     "lib_identity",

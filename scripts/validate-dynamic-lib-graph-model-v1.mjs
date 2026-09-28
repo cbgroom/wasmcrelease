@@ -52,6 +52,24 @@ for (const required of [
 for (const qualified of model.current_implementation_profile.qualified_invariants) {
   assert.ok(invariants.has(qualified), `qualified invariant is absent from model: ${qualified}`);
 }
+assert.equal(model.state_contract.authority, "exact-package-descriptor");
+assert.equal(model.state_contract.graph_declaration, "exact-match-and-graph-digest-bound");
+assert.equal(model.state_contract.gateway_metadata, "derived-from-package-and-verified-before-enqueue");
+assert.equal(model.state_contract.client_verification, "after-download-on-cache-read-and-on-restart");
+assert.equal(model.state_contract.snapshot_encoding, "canonical-base64");
+assert.equal(model.state_contract.max_snapshot_bytes, 1048576);
+assert.equal(model.state_contract.migration_barrier_scope, "whole-graph");
+assert.deepEqual(model.state_contract.same_schema_order, [
+  "install-probe-health-candidate",
+  "block-new-invocations",
+  "drain-old-generation",
+  "snapshot-and-verify-source",
+  "restore-target",
+  "health-candidate",
+  "publish-and-persist-retired-owner",
+  "release-invocation-barrier",
+  "drain-and-release-retired-generation",
+]);
 assert.equal(model.current_implementation_profile.graph_shape, "serial-pipeline-and-general-dag-client-gateway");
 assert.equal(model.current_implementation_profile.state_policy, "stateless-sticky-and-same-schema-snapshot-v1");
 assert.equal(model.current_implementation_profile.graph_identity, "canonical-json-sha256");
@@ -68,6 +86,8 @@ for (const phrase of [
   "A candidate is never observable",
   "Same code does not imply the same instance",
   "Unknown or incomplete state policy fails closed",
+  "Start here for the complete implemented state contract",
+  "The barrier is graph-wide",
 ]) assert.ok(normalizedDocument.includes(phrase), `model document missing rule: ${phrase}`);
 
 console.log(JSON.stringify({

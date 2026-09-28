@@ -57,7 +57,10 @@ The normative prototype model is
 [`docs/DYNAMIC_LIB_GRAPH_MODEL.md`](../../docs/DYNAMIC_LIB_GRAPH_MODEL.md), with
 the machine-readable state model in `dynamic-lib-graph-model.json`. The model,
 not the current serial implementation, is the input to future Gateway and
-durability work.
+durability work. For stateful replacement, read its **Stateful replacement
+quick authority** section before inspecting implementation or tests; it is the
+single index for package authority, transport checks, the 1 MiB envelope,
+ordering, Host/CLI boundaries and explicit open gates.
 
 `dynamic-lib-graph.mjs` exercises the next layer of mutability without adding
 another Host operation. One generation owns a named set of Lib resources and
@@ -140,7 +143,8 @@ node scripts/test-dynamic-client-foundation-gateway-v1.mjs
 ```
 
 This closes restart reconstruction for both serial routes and general
-stateless DAGs. It does not provide state migration, external-effect
+stateless DAGs. It does not provide cross-schema state migration, restoration
+of active mutable state after a full Client restart, external-effect
 exactly-once semantics, cache retention policy or release admission.
 
 Publication and retirement are separate durable events. Before an active graph
@@ -164,4 +168,8 @@ node scripts/test-dynamic-lib-stateful-v1.mjs
 ```
 
 Cross-schema migration and recovery of the active mutable state after a full
-Client restart are not yet implemented.
+Client restart are not yet implemented. The focused stateful test also rejects
+package/declaration mismatch, policy transitions, removal without a state
+disposition, non-canonical base64, digest mismatch and snapshots larger than
+1 MiB. The integrated test proves the distributed same-schema path and rejects
+a forged Gateway declaration; it does not claim the two open gates above.
