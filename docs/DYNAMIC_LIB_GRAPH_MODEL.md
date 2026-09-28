@@ -8,7 +8,8 @@ failure-boundary question, read
 named checks when execution is required, and stop. Open this full model or the
 implementation only when a named check fails or the user explicitly requests
 an implementation-line audit. A request to cite its named executable evidence
-does not require reopening every evidence file.
+does not require reopening every evidence file. A general review, ordering
+explanation or retrospective is also not an implementation-line audit.
 
 This model is the authority for the next Client Foundation/Gateway slice. The
 existing implementation is evidence, not a substitute for this model. Gateway

@@ -1,6 +1,16 @@
 {
   "schema": "wasmc.dynamic-client-checkpoint-orientation/v1",
   "rule": "This machine-validated record is the bounded answer route. Cite its named evidence without opening those files. Open implementation or tests only when a named check fails or the user explicitly requests implementation-line audit.",
+  "request_classification": {
+    "bounded_status_or_review": [
+      "explain ordering or authority",
+      "cite named source and executable evidence",
+      "summarize limitations or model confusion",
+      "review checkpoint and restart behavior"
+    ],
+    "implementation_line_audit_requires": "an explicit request to inspect exact source lines or diagnose a named failed check",
+    "rule": "A review, evidence citation, exact-ordering explanation, or retrospective is not by itself an implementation-line audit. For those requests, answer from this record and stop."
+  },
   "request": "Does active snapshot-v1 state survive a full Client restart, including a crash after persistence and before Gateway receipt delivery?",
   "answer": "Yes for an exact active snapshot-v1 graph with a valid checkpoint; this is not general exactly-once execution.",
   "lifecycle": {
@@ -26,6 +36,13 @@
     "Gateway persists receipt before dispatching the next sequence"
   ],
   "crash_after_joint_write_before_receipt": "Restart restores and health-checks the checkpoint, recovers the durable result, and answers redelivery without invoking the Lib again.",
+  "crash_fault_receipt": {
+    "fixture_exit_code": 87,
+    "message_id": "dg-22",
+    "persisted_response": "SV2:2",
+    "post_restart_get": "SV2:2",
+    "meaning": "the persisted result was returned and the increment was not replayed"
+  },
   "gateway_visibility": {
     "summary": [
       "schema",

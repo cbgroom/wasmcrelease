@@ -1,5 +1,9 @@
 # Client Foundation Gateway v1 prototype
 
+For active checkpoint/restart status, receipt ordering and failure boundaries,
+read `../client-foundation-v1/agent-checkpoint-orientation.json` and stop at
+that bounded route unless a named check fails or source-line audit is explicit.
+
 This is the persistent control and artifact counterpart to
 `runtime/client-foundation-v1`. It is a higher-layer service and does not add a
 Host API or change the minimal compiler CLI.

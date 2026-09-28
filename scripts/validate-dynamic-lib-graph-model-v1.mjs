@@ -13,9 +13,18 @@ assert.equal(model.host_boundary, "resource-window-operation-completion-cancel-r
 assert.equal(model.graph_shape, "dag");
 assert.equal(orientation.schema, "wasmc.dynamic-client-checkpoint-orientation/v1");
 assert.match(orientation.rule, /bounded answer route/);
+assert.match(orientation.request_classification.rule, /not by itself an implementation-line audit/);
+assert.match(orientation.request_classification.implementation_line_audit_requires, /exact source lines/);
 assert.equal(orientation.lifecycle.qualified, true);
 for (const state of ["admitted", "released", "discoverable", "installable"]) assert.equal(orientation.lifecycle[state], false);
 assert.match(orientation.answer, /not general exactly-once/);
+assert.deepEqual(orientation.crash_fault_receipt, {
+  fixture_exit_code: 87,
+  message_id: "dg-22",
+  persisted_response: "SV2:2",
+  post_restart_get: "SV2:2",
+  meaning: "the persisted result was returned and the increment was not replayed",
+});
 assert.equal(orientation.gateway_invoke_order[4], "Client persists checkpoint and command result in one state-file replacement");
 assert.equal(orientation.failure_policy.missing_or_corrupt, "runtime unavailable while control remains connected");
 assert.equal(orientation.failure_policy.partial_multi_block_restore, "graph poisoned until close and reconstruction");
