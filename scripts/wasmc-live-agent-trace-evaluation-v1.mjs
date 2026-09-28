@@ -133,6 +133,16 @@ export function evaluateTraceText(input, profileName = 'general') {
     .filter(call => call.name === 'read' && typeof call.arguments.path === 'string')
     .map(call => call.arguments.path);
   report.repeated_reads = countBy(reads);
+  const deniedReadSentences = finalAnswer.split(/(?<=[.!?])\s+|\r?\n/).filter(sentence => /\b(?:did not|didn't|never)\s+(?:open|read)\b/i.test(sentence));
+  const contradictedReadScopes = [
+    { scope: 'migration-route', claim: /\bmigration route\b/i, observed: value => /agent-client-gateway-state-migration\.json$/.test(value) },
+    { scope: 'restart-authority', claim: /\bauthority file\b/i, observed: value => /agent-checkpoint-orientation\.json$/.test(value) },
+    { scope: 'implementation', claim: /\bimplementation\b/i, observed: value => /\/(?:dynamic-foundation|dynamic-lib-graph|gateway)\.mjs$/.test(value) },
+    { scope: 'tests', claim: /\btests?\b/i, observed: value => /\/scripts\/test-[^/]+\.mjs$/.test(value) },
+  ];
+  for (const { scope, claim, observed } of contradictedReadScopes) {
+    if (deniedReadSentences.some(sentence => claim.test(sentence)) && reads.some(observed)) report.hygiene_findings.push(`contradicted-read-scope-claim:${scope}`);
+  }
   if (/[0-9a-f]{8,}(?:\.{3}|…)[0-9a-f]*/i.test(finalAnswer)) {
     report.hygiene_findings.push('ellipsized-identity');
   }

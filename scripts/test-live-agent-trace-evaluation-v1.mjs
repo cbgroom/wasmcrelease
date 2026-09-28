@@ -77,9 +77,19 @@ const plainNegationReport = evaluateTraceText(plainNegation, 'status-query');
 assert.equal(plainNegationReport.accepted, true);
 assert.deepEqual(plainNegationReport.hygiene_findings, []);
 
+const contradictedReadScope = [
+  line({ type: 'session', id: 'contradicted-read-scope', timestamp: 1 }),
+  assistant([{ type: 'toolCall', name: 'read', arguments: { path: 'agent-client-gateway-state-migration.json' } }]),
+  toolResult('{"schema":"migration"}'),
+  assistant([{ type: 'text', text: 'I did not open the model, implementation, tests, or the migration route.' }])
+].join('\n');
+const contradictedReadScopeReport = evaluateTraceText(contradictedReadScope, 'status-query');
+assert.equal(contradictedReadScopeReport.accepted, false);
+assert.deepEqual(contradictedReadScopeReport.hygiene_findings, ['contradicted-read-scope-claim:migration-route']);
+
 console.log(JSON.stringify({
   accepted: true,
   schema: goodReport.schema,
   profiles: ['general', 'status-query'],
-  negative_signals: 9
+  negative_signals: 10
 }));
