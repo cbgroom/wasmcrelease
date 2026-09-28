@@ -73,8 +73,16 @@ assert.deepEqual(restartProjection.state_model_open_gates, orientation.open_gate
 assert.deepEqual(restartProjection.checks, orientation.verify);
 assert.equal(restartProjection.sticky.proved, orientation.qualified_observations.sticky_explicit_reset_client_restart);
 assert.match(restartProjection.sticky.identity, /canonical graph digest/);
+assert.match(restartProjection.sticky.authority, /desired graph owns restart disposition/);
+assert.equal(restartProjection.sticky_ordering.length, 6);
+assert.match(restartProjection.request_classification.rule, /no other read/);
+assert.deepEqual(restartProjection.required_additional_reads, []);
+assert.equal(restartProjection.white_box_binding_receipt.engine_operation, "reset-state-v1");
 assert.match(restartProjection.host_boundary, /fixed Host API and minimal CLI are unchanged/);
-assert.match(restartProjection.rule, /Do not read release orientation/);
+assert.equal(restartProjection.protected_surface.proof_command, orientation.protected_surface.proof_command);
+assert.match(restartProjection.final_answer_policy, /Do not open the authority file/);
+assert.match(restartProjection.stop, /No additional read/);
+assert.match(restartProjection.rule, /Do not read quickstart/);
 
 const phases = new Set(model.manager_phases);
 assert.equal(phases.size, model.manager_phases.length);

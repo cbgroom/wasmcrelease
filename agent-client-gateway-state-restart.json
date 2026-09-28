@@ -2,7 +2,18 @@
   "schema": "wasmc.dynamic-client-state-restart-projection/v1",
   "request": "How does active sticky or snapshot-v1 state behave across a full dynamic Client restart?",
   "authority_file": "runtime/client-foundation-v1/agent-checkpoint-orientation.json",
+  "authority_file_role": "citation target only; this projection contains every field required for a status, ordering, evidence or retrospective answer",
   "answer": "snapshot-v1 restores an exact checkpoint; sticky requires an identity-bound fail-closed or reset-on-restart disposition, and reset completes before runtime availability.",
+  "request_classification": {
+    "bounded_status_or_review": [
+      "explain sticky restart authority, graph identity, ordering or failure",
+      "compare fail-closed and reset-on-restart",
+      "report lifecycle, open gates, evidence or nonclaims",
+      "summarize documentation confusion"
+    ],
+    "implementation_line_audit_requires": "an explicit request for exact source lines or diagnosis of a named failed check",
+    "rule": "Exact means complete identity binding, not source-line inspection. The bounded requests above require no other read."
+  },
   "lifecycle": {
     "qualified": true,
     "admitted": false,
@@ -12,11 +23,25 @@
     "scope": "prototype-local-qualification"
   },
   "sticky": {
+    "authority": "the package owns sticky policy and schema identity; the desired graph owns restart disposition as deployment authority",
     "identity": "state_restart_disposition is part of the canonical graph digest",
     "fail_closed": "Client keeps the runtime unavailable while the control connection remains usable",
     "reset_on_restart": "Client invokes reset-state-v1, validates the exact state schema, health-checks the graph, then reports runtime availability",
     "missing_or_unknown": "rejected before enqueue or apply",
     "proved": "STICKY:1->STICKY:0"
+  },
+  "sticky_ordering": [
+    "Gateway validates package state identity and exact restart disposition before enqueue",
+    "Client re-verifies package bytes and reconstructs the exact graph",
+    "fail-closed stops with runtime unavailable, or reset-on-restart opens the graph-wide barrier",
+    "Client invokes reset-state-v1 and validates the exact state schema response",
+    "Client health-checks the complete graph",
+    "Client reports runtime availability only after reset and health succeed"
+  ],
+  "failure": {
+    "missing_or_unknown_disposition": "rejected before enqueue or apply",
+    "fail_closed": "runtime unavailable while control remains connected",
+    "reset_rejection_or_health_failure": "runtime unavailable while control remains connected"
   },
   "snapshot_v1": {
     "identity": "wasmc.dynamic-lib-state-checkpoint/v1 binds graph revision, graph digest, block schema and state digests",
@@ -27,6 +52,7 @@
   "not_claimed": [
     "general exactly-once execution",
     "external-effect rollback or cleanup",
+    "crash-before-joint-write result recovery",
     "sticky state preservation when reset-on-restart is selected",
     "release admission"
   ],
@@ -36,5 +62,30 @@
     "node scripts/test-dynamic-client-foundation-gateway-v1.mjs",
     "node scripts/test-client-foundation-v1.mjs"
   ],
-  "rule": "This root projection is sufficient for a state-restart status review. Cite the authority file and named checks, then stop. Do not read release orientation, release.json, release-surfaces.json, manifests, implementation or tests merely to reconfirm it."
+  "white_box_binding_receipt": {
+    "graph_field": "state_restart_disposition",
+    "engine_operation": "reset-state-v1",
+    "focused_oracle": "sticky_explicit_reset_restart=STICKY-RESET:0",
+    "integrated_oracle": "sticky_explicit_reset_client_restart=STICKY:1->STICKY:0",
+    "validator": "scripts/validate-dynamic-lib-graph-model-v1.mjs binds this projection to source and test anchors"
+  },
+  "protected_surface": {
+    "fixed_host_api_changed": false,
+    "minimal_cli_changed": false,
+    "proof_command": "git diff --name-only bed1e4d236bb78a992355321deca8968a6400a0d HEAD -- host current runtime/client-foundation-gateway-v1/cli.mjs",
+    "expected_output": ""
+  },
+  "evidence": {
+    "model": "docs/DYNAMIC_LIB_GRAPH_MODEL.md",
+    "engine": "runtime/client-foundation-v1/dynamic-lib-graph.mjs",
+    "client": "runtime/client-foundation-v1/dynamic-foundation.mjs",
+    "gateway": "runtime/client-foundation-gateway-v1/gateway.mjs",
+    "focused_test": "scripts/test-dynamic-lib-stateful-v1.mjs",
+    "integrated_test": "scripts/test-dynamic-client-foundation-gateway-v1.mjs",
+    "host_cli_guard": "scripts/test-client-foundation-v1.mjs"
+  },
+  "required_additional_reads": [],
+  "final_answer_policy": "Answer from this projection, cite its authority, evidence and checks, and stop. Do not open the authority file, model, README, migration route, implementation, tests or command paths unless a named check fails or the user explicitly requests exact source-line inspection.",
+  "stop": "This projection contains the complete sticky restart claim, identity, ordering, failure, lifecycle, open-gate state, evidence pointers and retrospective boundaries. No additional read or file-existence check is required.",
+  "rule": "This root projection is sufficient for a state-restart status review. Cite the authority file and named checks without opening them, then stop. Do not read quickstart, release orientation, release.json, release-surfaces.json, manifests, adjacent state routes, implementation or tests merely to reconfirm it."
 }
