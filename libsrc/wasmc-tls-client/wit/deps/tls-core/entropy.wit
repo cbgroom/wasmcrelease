@@ -1,0 +1,8 @@
+package wasmc:tls-core@0.0.1;
+
+interface entropy {
+  enum entropy-error {
+    unavailable,
+  }
+  fill: func(length: u32) -> result<list<u8>, entropy-error>;
+}

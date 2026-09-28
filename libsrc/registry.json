@@ -83,7 +83,7 @@
       "origin": {
         "kind": "native-public"
       },
-      "next_gate": "client-tls-composition"
+      "next_gate": "linux-system-socket-end-to-end-https"
     },
     {
       "id": "wasmc-tls-core",
@@ -100,6 +100,21 @@
       },
       "next_gate": "cross-platform-hosted-qualification-and-size-optimization",
       "source_root": "libsrc/wasmc-tls-core"
+    },
+    {
+      "id": "wasmc-tls-client",
+      "version": "0.0.1-dev.1",
+      "stage": "public-source-candidate",
+      "semantic_kind": "tls-client-protocol",
+      "host_import_budget": 1,
+      "allowed_host_imports": [
+        "wasmc:tls-core/entropy@0.0.1#fill"
+      ],
+      "source_root": "libsrc/wasmc-tls-client",
+      "origin": {
+        "kind": "native-public"
+      },
+      "next_gate": "wasmi-2-and-linux-socket-end-to-end-https"
     },
     {
       "id": "wasmc-data-core",

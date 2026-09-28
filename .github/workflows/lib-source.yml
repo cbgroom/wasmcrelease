@@ -82,6 +82,8 @@ jobs:
             libsrc/wasmc-http1-client/target
             libsrc/wasmc-tls-core/target
             libsrc/wasmc-tls-core/tests/host/target
+            libsrc/wasmc-tls-client/target
+            libsrc/wasmc-tls-client/tests/host/target
             libsrc/wasmc-data-core/target
             libsrc/wasmc-csv/target
             libsrc/wasmc-data-expr/target
@@ -89,7 +91,7 @@ jobs:
             libsrc/wasmc-data-relational/target
             libsrc/wasmc-data-interchange/target
             libsrc/qualification/wasmi-core/target
-          key: libsrc-build-v8-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('libsrc/wasmc-json/Cargo.lock', 'libsrc/wasmc-compression/Cargo.lock', 'libsrc/wasmc-http1/Cargo.lock', 'libsrc/wasmc-http1-client/Cargo.lock', 'libsrc/wasmc-tls-core/Cargo.lock', 'libsrc/wasmc-tls-core/tests/host/Cargo.lock', 'libsrc/wasmc-data-core/Cargo.lock', 'libsrc/wasmc-csv/Cargo.lock', 'libsrc/wasmc-data-expr/Cargo.lock', 'libsrc/wasmc-data-compute/Cargo.lock', 'libsrc/wasmc-data-relational/Cargo.lock', 'libsrc/wasmc-data-interchange/Cargo.lock', 'libsrc/qualification/wasmi-core/Cargo.lock') }}
+          key: libsrc-build-v9-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('libsrc/wasmc-json/Cargo.lock', 'libsrc/wasmc-compression/Cargo.lock', 'libsrc/wasmc-http1/Cargo.lock', 'libsrc/wasmc-http1-client/Cargo.lock', 'libsrc/wasmc-tls-core/Cargo.lock', 'libsrc/wasmc-tls-core/tests/host/Cargo.lock', 'libsrc/wasmc-tls-client/Cargo.lock', 'libsrc/wasmc-tls-client/tests/host/Cargo.lock', 'libsrc/wasmc-data-core/Cargo.lock', 'libsrc/wasmc-csv/Cargo.lock', 'libsrc/wasmc-data-expr/Cargo.lock', 'libsrc/wasmc-data-compute/Cargo.lock', 'libsrc/wasmc-data-relational/Cargo.lock', 'libsrc/wasmc-data-interchange/Cargo.lock', 'libsrc/qualification/wasmi-core/Cargo.lock') }}
           restore-keys: |
             libsrc-v5-${{ runner.os }}-${{ runner.arch }}-
             libsrc-build-v2-${{ runner.os }}-${{ runner.arch }}-

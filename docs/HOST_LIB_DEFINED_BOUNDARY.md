@@ -244,6 +244,18 @@ candidate remains server-profiled, so client TLS, public-root verification and
 an end-to-end composition with each platform transport remain explicit gates.
 No Host API or Host platform row was added for this protocol.
 
+The matching `wasmc:tls-client@0.0.1` candidate now reuses the server TLS
+candidate's pinned rustls/RustCrypto stack, entropy identity, bounded
+unbuffered session protocol and partial-output lifecycle. Its constructor takes
+the server name, DER trust roots, trusted Unix time and ALPN as explicit Lib
+data, so the fixed Host gained no clock, certificate-store, network, socket,
+TLS or HTTPS API. Qualification composes an HTTP request produced by
+`wasmc:http1-client`, performs a real TLS 1.3 exchange over an OS loopback TCP
+stream, decrypts the response and feeds the exact plaintext back through the
+HTTP response decoder. Wrong-hostname verification is a retained negative
+control. Public-CA roots and the exact Linux System socket provider remain
+separate gates; this candidate is not admitted or released.
+
 ## Library OS consequence
 
 The intended result is a Library OS profile assembled above the fixed Host:

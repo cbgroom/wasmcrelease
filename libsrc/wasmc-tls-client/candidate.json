@@ -1,0 +1,78 @@
+{
+  "schema": "wasmc.libsrc-candidate/v1",
+  "id": "wasmc-tls-client",
+  "version": "0.0.1-dev.1",
+  "wit": "wit/world.wit",
+  "source": [
+    "Cargo.toml",
+    "Cargo.lock",
+    "src/lib.rs",
+    "tests/host/Cargo.toml",
+    "tests/host/Cargo.lock",
+    "tests/host/src/main.rs",
+    "wit/deps/tls-core/entropy.wit"
+  ],
+  "origin": {
+    "kind": "native-public",
+    "implementation_basis": [
+      "wasmc-tls-core@0.0.1-dev.1",
+      "rustls@0.23.44",
+      "rustls-rustcrypto@0.0.2-alpha"
+    ]
+  },
+  "host_import_budget": 1,
+  "allowed_host_imports": [
+    "wasmc:tls-core/entropy@0.0.1#fill"
+  ],
+  "build": {
+    "command": "cargo +1.96.0 build --release --locked --target wasm32-unknown-unknown --manifest-path libsrc/wasmc-tls-client/Cargo.toml",
+    "artifact": "libsrc/wasmc-tls-client/target/wasm32-unknown-unknown/release/wasmc_tls_client_public.wasm"
+  },
+  "completed_gates": [
+    "public-source",
+    "server-state-machine-shape-reuse",
+    "existing-entropy-import-reuse",
+    "no-host-clock-network-or-socket-import",
+    "explicit-trust-root-time-sni-and-alpn",
+    "real-tls13-client-handshake",
+    "hostname-verification-negative-control",
+    "http1-client-request-over-tls",
+    "http1-client-response-decode-after-tls",
+    "real-os-loopback-https-client",
+    "bidirectional-plaintext",
+    "graceful-close",
+    "resource-drop",
+    "wasmtime-47.0.4-qualification",
+    "independent-byte-identical-second-build"
+  ],
+  "pending_gates": [
+    "wasmi-2-qualification",
+    "public-ca-root-bundle-qualification",
+    "linux-system-socket-end-to-end-https",
+    "ios-platform-https-composition",
+    "android-platform-https-composition",
+    "cross-platform-hosted-qualification",
+    "admission-review"
+  ],
+  "admitted": false,
+  "qualification": {
+    "runner": "node",
+    "script": "scripts/test-tls-client-libsrc.mjs"
+  },
+  "resource_boundaries": {
+    "ciphertext_bytes": 1048576,
+    "plaintext_bytes": 1048576,
+    "write_bytes": 16384,
+    "root_certificates": 64,
+    "root_certificate_bytes": 262144,
+    "alpn_protocols": 16,
+    "alpn_bytes": 255
+  },
+  "artifact_observation": {
+    "bytes": 679244,
+    "sha256": "01ffbb2db77ee2fa6f90d5f2f25b2972d206ec8b5baa9ed8c27041014e77b752",
+    "toolchain": "rustc 1.96.0",
+    "target": "wasm32-unknown-unknown",
+    "independent_second_build_byte_identical": true
+  }
+}
