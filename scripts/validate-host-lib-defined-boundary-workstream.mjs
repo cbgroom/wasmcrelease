@@ -446,6 +446,38 @@ assert.equal(iosLifecycleV1Receipt.evidence.bgtaskscheduler_delivery_qualified, 
 assert.equal(iosLifecycleV1Receipt.evidence.background_urlsession_delivery_qualified, false);
 assert.equal(iosLifecycleV1Receipt.evidence.physical_device, false);
 
+const iosFiniteBackgroundWindowV1Receipt = JSON.parse(fs.readFileSync(
+  "admission/host-lib-defined-boundary-v1/ios-arm64-finite-background-window-v1.json", "utf8",
+));
+assert.equal(iosFiniteBackgroundWindowV1Receipt.schema,
+  "wasmc.host-lib-defined-boundary-ios-finite-background-window-qualification/v1");
+assert.equal(iosFiniteBackgroundWindowV1Receipt.qualified, true);
+assert.equal(iosFiniteBackgroundWindowV1Receipt.admitted, false);
+assert.equal(iosFiniteBackgroundWindowV1Receipt.released, false);
+assert.equal(iosFiniteBackgroundWindowV1Receipt.discoverable, false);
+assert.equal(iosFiniteBackgroundWindowV1Receipt.installable, false);
+execFileSync("git", ["cat-file", "-e", `${iosFiniteBackgroundWindowV1Receipt.implementation_commit}^{commit}`]);
+execFileSync("git", ["merge-base", "--is-ancestor", iosFiniteBackgroundWindowV1Receipt.implementation_commit, "HEAD"]);
+for (const [relative, expected] of Object.entries(iosFiniteBackgroundWindowV1Receipt.source)) {
+  assert.equal(digestAt(iosFiniteBackgroundWindowV1Receipt.implementation_commit, relative), expected,
+    `${relative}: retained iOS finite-background-window source drift`);
+}
+assert.equal(iosFiniteBackgroundWindowV1Receipt.evidence.status, "PASS");
+assert.equal(iosFiniteBackgroundWindowV1Receipt.evidence.fixed_host_domain_apis, 0);
+assert.equal(iosFiniteBackgroundWindowV1Receipt.evidence.fixed_host_sha256,
+  iosLifecycleV1Receipt.evidence.fixed_host_sha256);
+assert.equal(iosFiniteBackgroundWindowV1Receipt.evidence.requested_ms, 8000);
+assert.ok(iosFiniteBackgroundWindowV1Receipt.evidence.elapsed_ms >= 7500);
+assert.ok(iosFiniteBackgroundWindowV1Receipt.evidence.elapsed_ms < 15000);
+assert.equal(iosFiniteBackgroundWindowV1Receipt.evidence.background_ticks, 8);
+assert.equal(iosFiniteBackgroundWindowV1Receipt.evidence.completed_before_foreground, true);
+assert.equal(iosFiniteBackgroundWindowV1Receipt.evidence.background_time_remaining_available, false);
+assert.equal(iosFiniteBackgroundWindowV1Receipt.evidence.background_time_remaining_sample_count, 0);
+assert.equal(iosFiniteBackgroundWindowV1Receipt.evidence.expiration_observed, false);
+assert.equal(iosFiniteBackgroundWindowV1Receipt.evidence.maximum_duration_qualified, false);
+assert.equal(iosFiniteBackgroundWindowV1Receipt.evidence.physical_device, false);
+execFileSync(process.execPath, ["scripts/validate-ios-app-lifecycle.mjs"], { stdio: "ignore" });
+
 const iosBackgroundTransferV1Receipt = JSON.parse(fs.readFileSync(
   "admission/host-lib-defined-boundary-v1/ios-arm64-background-transfer-v1.json", "utf8",
 ));
@@ -1409,6 +1441,8 @@ console.log(JSON.stringify({
   retained_ios_arm64_app_surface_control_v4_qualification: iosSurfaceV4Receipt.implementation_commit,
   retained_ios_arm64_app_surface_control_v5_qualification: iosSurfaceV5Receipt.implementation_commit,
   retained_ios_arm64_app_lifecycle_v1_qualification: iosLifecycleV1Receipt.implementation_commit,
+  retained_ios_arm64_finite_background_window_v1_qualification:
+    iosFiniteBackgroundWindowV1Receipt.implementation_commit,
   retained_ios_arm64_background_transfer_v1_qualification: iosBackgroundTransferV1Receipt.implementation_commit,
   retained_ios_arm64_background_transfer_v2_qualification: iosBackgroundTransferV2Receipt.implementation_commit,
   retained_ios_arm64_deferred_work_simulator_rejection_v1: iosDeferredWorkRejectionV1.implementation_commit,
