@@ -247,7 +247,7 @@ that the exact provider does not implement.
 
 The exact Linux x86_64, macOS aarch64 and Windows x86_64 targets are qualified
 by the same independent CI corpus at source revision
-`95f049bda9edb2ade24160112344e811b2ab13da`. Other desktop architectures remain
+`84c08ea06ebc3907181a502e7ce19b2c0a3675b0`. Other desktop architectures remain
 unqualified and are absent from the qualified target inventory.
 
 Mobile targets are not inferred from desktop success. Android requires a

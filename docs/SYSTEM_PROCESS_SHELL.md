@@ -60,5 +60,5 @@ fixed Host executor identity. Windows additionally exercises Windows
 PowerShell. `.github/workflows/system-process-shell-candidate.yml` runs the same
 test on Linux, macOS and Windows; a local PASS must not be promoted to
 cross-platform qualification before those exact jobs succeed. The retained
-qualification basis is GitHub Actions run `36393510415` at source revision
-`95f049bda9edb2ade24160112344e811b2ab13da`.
+qualification basis is GitHub Actions run `36393703012` at source revision
+`84c08ea06ebc3907181a502e7ce19b2c0a3675b0`.
