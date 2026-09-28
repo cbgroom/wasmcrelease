@@ -110,6 +110,7 @@ export class ClientFoundationGateway {
         this.state = { schema: STATE_SCHEMA, artifacts: {}, clients: {} };
         await this.#persist();
       }
+      await this.#verifyDurableState();
       this.server = https.createServer({ key: this.tlsKey, cert: this.tlsCert }, (request, response) => {
         this.#handleHttp(request, response).catch((error) => jsonResponse(response, 400, { accepted: false, error: error.message }));
       });
@@ -222,6 +223,19 @@ export class ClientFoundationGateway {
         }
         const existing = client.commands.find((command) => command.message_id === input.message_id);
         jsonResponse(response, 200, { accepted: true, duplicate: true, command: existing ?? { ...indexed, message_id: input.message_id, status: "archived" } });
+        return;
+      }
+      const archived = await this.#findArchivedCommand(clientId, client, input.message_id);
+      if (archived) {
+        const archivedFingerprint = sha256(Buffer.from(canonicalJson({ operation: archived.operation, payload: archived.request_payload ?? {} })));
+        if (archivedFingerprint !== fingerprint) {
+          return jsonResponse(response, 409, { accepted: false, error: "message identity conflict" });
+        }
+        jsonResponse(response, 200, {
+          accepted: true,
+          duplicate: true,
+          command: { message_id: archived.message_id, sequence: archived.sequence, operation: archived.operation, status: "archived" },
+        });
         return;
       }
       const payload = structuredClone(requestPayload);
@@ -398,8 +412,73 @@ export class ClientFoundationGateway {
       if (error.code !== "EEXIST" || sha256(await readFile(archivePath)) !== digest) throw error;
     }
     client.commands.splice(0, eligible.length);
+    for (const command of eligible) delete client.message_index[command.message_id];
     client.compacted_through_sequence = through;
     client.archives.push({ from_sequence: from, through_sequence: through, commands: eligible.length, sha256: digest, path: `${clientId}/${filename}` });
+  }
+
+  async #findArchivedCommand(clientId, client, messageId) {
+    for (const archive of [...client.archives].reverse()) {
+      const bytes = await readFile(this.#archivePath(clientId, archive));
+      if (sha256(bytes) !== archive.sha256) throw new Error("archive identity mismatch");
+      for (const line of bytes.toString("utf8").trim().split("\n")) {
+        const command = JSON.parse(line);
+        if (command.message_id === messageId) return command;
+      }
+    }
+    return null;
+  }
+
+  async #verifyDurableState() {
+    if (!this.state.artifacts || typeof this.state.artifacts !== "object" || !this.state.clients || typeof this.state.clients !== "object") {
+      throw new Error("invalid gateway state shape");
+    }
+    for (const [digest, metadata] of Object.entries(this.state.artifacts)) {
+      if (!/^[a-f0-9]{64}$/.test(digest) || metadata.sha256 !== digest) throw new Error("invalid artifact metadata identity");
+      const bytes = await readFile(path.join(this.artifactRoot, `${digest}.json`));
+      if (bytes.length !== metadata.bytes || sha256(bytes) !== digest) throw new Error("stored artifact identity mismatch");
+      const bundle = validateBundle(bytes);
+      if (bundle.identity !== metadata.identity) throw new Error("stored artifact provider identity mismatch");
+    }
+    let migrated = false;
+    for (const [clientId, rawClient] of Object.entries(this.state.clients)) {
+      if (!validClientId(clientId) || !rawClient || typeof rawClient !== "object") throw new Error("invalid persisted client identity");
+      const client = this.#client(clientId);
+      let expectedFrom = 1;
+      for (const archive of client.archives) {
+        const bytes = await readFile(this.#archivePath(clientId, archive));
+        if (!/^[a-f0-9]{64}$/.test(archive.sha256) || sha256(bytes) !== archive.sha256) throw new Error("archive identity mismatch");
+        const lines = bytes.toString("utf8").trim().split("\n").filter(Boolean).map((line) => JSON.parse(line));
+        if (lines.length !== archive.commands || archive.from_sequence !== expectedFrom || lines[0]?.sequence !== archive.from_sequence || lines.at(-1)?.sequence !== archive.through_sequence) {
+          throw new Error("archive sequence metadata mismatch");
+        }
+        for (let index = 0; index < lines.length; index += 1) {
+          if (lines[index].sequence !== archive.from_sequence + index || !lines[index].receipt) throw new Error("invalid archived command sequence");
+        }
+        expectedFrom = archive.through_sequence + 1;
+      }
+      const compacted = expectedFrom - 1;
+      if (client.compacted_through_sequence !== compacted) throw new Error("compacted sequence watermark mismatch");
+      for (let index = 0; index < client.commands.length; index += 1) {
+        if (client.commands[index].sequence !== expectedFrom + index) throw new Error("active command sequence gap");
+      }
+      const nextExpected = expectedFrom + client.commands.length;
+      if (client.next_sequence !== nextExpected) throw new Error("next command sequence mismatch");
+      for (const [messageId, indexed] of Object.entries(client.message_index)) {
+        if (indexed.sequence <= compacted) {
+          delete client.message_index[messageId];
+          migrated = true;
+        }
+      }
+    }
+    if (migrated) await this.#persist();
+  }
+
+  #archivePath(clientId, archive) {
+    if (typeof archive.path !== "string" || archive.path !== `${clientId}/${path.basename(archive.path)}`) {
+      throw new Error("invalid archive path");
+    }
+    return path.join(this.archiveRoot, archive.path);
   }
 
   async #acquireLock() {

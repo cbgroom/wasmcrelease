@@ -768,3 +768,11 @@ message index keeps an archived command identity idempotent. This closes local
 single-writer corruption and unbounded hot-command growth; it does not claim
 clustered consensus, archive deletion policy, bounded message-index growth or
 public deployment qualification.
+
+The following local slice removes archived identities from the hot message
+index and resolves duplicates by verifying and searching exact archive
+segments. Startup now validates all retained artifact and archive bytes, safe
+paths, sizes, hashes and command sequence watermarks before listening. Separate
+archive-corruption and artifact-corruption controls both fail closed, release
+the writer lock, and permit restart only after the exact bytes are restored.
+Archive metadata growth and lookup acceleration remain pending.

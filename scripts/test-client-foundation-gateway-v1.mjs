@@ -210,12 +210,33 @@ try {
   assert.deepEqual(foundation.boundary.counts(), { resources: 0, windows: 0, operations: 0 });
   const diskState = JSON.parse(await readFile(path.join(gatewayRoot, "state.json"), "utf8"));
   assert.equal(diskState.clients["client-a"].commands.length, 3);
+  assert.equal(Object.keys(diskState.clients["client-a"].message_index).length, 3);
   assert.equal(diskState.clients["client-a"].commands.every((command) => command.receipt), true);
   assert.equal(diskState.clients["client-a"].archives.length, 1);
   const archiveMetadata = diskState.clients["client-a"].archives[0];
-  const archiveBytes = await readFile(path.join(gatewayRoot, "archives", archiveMetadata.path));
+  const archivePath = path.join(gatewayRoot, "archives", archiveMetadata.path);
+  const archiveBytes = await readFile(archivePath);
   assert.equal(sha256(archiveBytes), archiveMetadata.sha256);
   assert.equal(archiveBytes.toString("utf8").trim().split("\n").length, 2);
+  const artifactPath = path.join(gatewayRoot, "artifacts", `${artifact.value.sha256}.json`);
+  const artifactBytes = await readFile(artifactPath);
+  await gateway.close();
+
+  await writeFile(archivePath, Buffer.concat([archiveBytes, Buffer.from("corrupt") ]));
+  const archiveRejected = new ClientFoundationGateway(gatewayOptions);
+  await assert.rejects(() => archiveRejected.start(), /archive identity mismatch/);
+  await archiveRejected.close();
+  await writeFile(archivePath, archiveBytes);
+
+  await writeFile(artifactPath, Buffer.concat([artifactBytes, Buffer.from("corrupt") ]));
+  const artifactRejected = new ClientFoundationGateway(gatewayOptions);
+  await assert.rejects(() => artifactRejected.start(), /stored artifact identity mismatch/);
+  await artifactRejected.close();
+  await writeFile(artifactPath, artifactBytes);
+
+  gateway = new ClientFoundationGateway(gatewayOptions);
+  await gateway.start();
+  await gateway.close();
   console.log(JSON.stringify({
     accepted: true,
     schema: "wasmc.client-foundation-gateway-local-qualification/v1",
@@ -233,6 +254,10 @@ try {
     stale_connection_evicted: true,
     compacted_through_sequence: diskState.clients["client-a"].compacted_through_sequence,
     archive_sha256: archiveMetadata.sha256,
+    bounded_message_index: Object.keys(diskState.clients["client-a"].message_index).length,
+    archive_corruption_rejected: true,
+    artifact_corruption_rejected: true,
+    repaired_state_restart: true,
     gateway_restart_reconnect: true,
     post_restart_invoke: finalState.commands[2].receipt.response.value,
     fixed_host_api_changed: false,

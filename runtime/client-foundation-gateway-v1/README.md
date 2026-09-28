@@ -18,7 +18,10 @@ The gateway provides:
 - an exclusive data-root writer lock with stale-owner recovery;
 - WSS ping/pong liveness and stale-connection eviction;
 - bounded hot command state with immutable, SHA-256-bound JSONL archive
-  segments, while a compact message index preserves enqueue idempotency.
+  segments; only active commands remain in the hot message index, while an
+  exact archive lookup preserves old enqueue idempotency;
+- fail-closed startup verification of every artifact and archive identity,
+  byte count, path and command sequence watermark.
 
 The gateway persists a command before delivery and persists its receipt before
 dispatching the next sequence. If the gateway loses a receipt after the client
@@ -49,7 +52,8 @@ node scripts/test-client-foundation-gateway-v1.mjs
 
 This prototype intentionally contains no user/account authorization layer. It
 is a single-writer service: the lock prevents corruption but is not a clustered
-consensus protocol. Archive deletion/retention policy, message-index pruning,
-fleet scheduling, public deployment and external load qualification remain
-deployment-layer work. The current evidence is one local Node process with an
-exact repository-local TLS fixture, not admission or release.
+consensus protocol. Archive deletion/retention policy, archive metadata
+compaction, indexed lookup acceleration, fleet scheduling, public deployment
+and external load qualification remain deployment-layer work. The current
+evidence is one local Node process with an exact repository-local TLS fixture,
+not admission or release.
