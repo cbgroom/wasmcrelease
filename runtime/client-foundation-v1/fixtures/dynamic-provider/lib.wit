@@ -1,0 +1,18 @@
+package wasmc:client-foundation-block@0.0.1;
+
+interface block {
+  record request {
+    operation: string,
+    payload: list<u8>,
+  }
+  record response {
+    provider: string,
+    accepted: bool,
+    payload: list<u8>,
+  }
+  invoke: func(request: request) -> result<response, string>;
+}
+
+world client-foundation-block {
+  export block;
+}

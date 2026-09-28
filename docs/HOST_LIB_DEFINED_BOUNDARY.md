@@ -732,3 +732,21 @@ successful workflow run `36304676571` at commit
 `545cfc3b358cd5dcc4cd881fc832676c63ae7e59`. It independently records
 `https_transport_migrated=false`; together these receipts close only the
 cross-architecture physical TCP slice, not the HTTPS migration gate.
+
+## Higher-layer Client Foundation prototype
+
+`runtime/client-foundation-v1` demonstrates the mutable client foundation
+above this fixed boundary. It retains an immutable factory provider, downloads
+exact dynamic provider bundles over HTTPS, receives sequenced graph commands
+over WSS, and switches between retained A/B slots. Candidate probe, health and
+invoke operations all traverse `LibDefinedBoundary`; neither the minimal CLI
+nor the fixed Host gains a graph, network, update, device or rollback API.
+
+The local qualification deliberately disconnects WSS after a successful graph
+commit, replays the same command identity after reconnect, and then activates a
+candidate that fails its post-switch health check. The duplicate is served from
+the durable receipt, the broken candidate rolls back to the last-known-good
+slot, and a cold process recovers that committed provider. See
+`runtime/client-foundation-v1/README.md` for the exact lifecycle and remaining
+transactional crash-window non-claim. This prototype is not admitted or
+released.

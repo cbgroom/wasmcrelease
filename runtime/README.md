@@ -25,3 +25,7 @@ sha256  5e82679bd75b2da65d3f3c59069a98b72aaf64be18060797e2575ecc95495119
 The v0.0.4 `dist/`, `package/`, and `libs/` compatibility trees remain byte-frozen. When a source needs the v0.0.7 compiler capability while using the established facade, pass this Runtime compiler through the documented `compilerWasmBytes` option rather than replacing compatibility bytes.
 
 Verify the package `manifest.json`, `receipts/compiler-wasm.json`, Host receipts, and repository `SHA256SUMS` before use.
+
+The unreleased higher-layer control/update experiment lives in
+`client-foundation-v1/`. It is a local prototype above the fixed Host and is not
+part of the public Runtime package described here.
