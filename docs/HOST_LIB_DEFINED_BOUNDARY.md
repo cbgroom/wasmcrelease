@@ -260,8 +260,10 @@ all 158 system roots as Lib data and completes a certificate-validated public
 HTTPS request; this exposed and repaired the original 64-root synthetic bound,
 which is now 256. Linux/Windows root providers and the exact Linux System socket
 provider remain separate gates; the Linux aarch64 exact-provider composition is
-qualified locally, while Linux x86_64 still requires independent evidence. This
-candidate is not admitted or released.
+qualified locally and in hosted CI, and the Linux x86_64 hosted exact-provider
+composition is also qualified. Both hosted lanes execute canonical artifact
+SHA-256 `22eec3a0a72e1d8bc3e6120149a1f6196cc354601137e9e857f08b03d9bb4ba4`.
+This candidate is not admitted or released.
 
 Hosted portability uses one canonical Linux-built TLS client artifact. The
 canonical job builds it twice in separate target directories and rejects any
@@ -271,6 +273,13 @@ the release identity because stable Rust embeds absolute Cargo/toolchain panic
 locations, which differ across build hosts. This closes the earlier false
 assumption that independently compiling the same Wasm target on every host
 must itself yield one hash.
+
+That exact canonical artifact has passed the hosted TLS client qualification
+on Linux, macOS and Windows for x86_64 and aarch64. Both Linux architectures
+also passed the exact System socket Lib composition, and both macOS
+architectures passed public-CA HTTPS with 154 runner system roots. This closes
+the cross-platform hosted and Linux x86_64 socket gates, but not platform root
+providers for Linux/Windows, mobile composition or admission.
 
 ## Library OS consequence
 

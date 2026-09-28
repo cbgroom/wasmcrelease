@@ -32,11 +32,19 @@ paths, so source rebuild hashes can differ between build hosts even though the
 Wasm target and behavior are the same. `artifact_observation` is consequently
 a same-environment observation, not a claim of cross-host build identity.
 
-On Linux aarch64, a separate composition drives the same TLS Core through the
+On Linux aarch64 and x86_64, separate hosted compositions drive the same exact
+canonical TLS Core through the
 digest-bound `wasmc:system-linux-socket@0.0.1-dev.1` adapter and unchanged fixed
-executor for every handshake and HTTP byte. Linux x86_64 remains an independent
-architecture gate. Linux/Windows platform root providers plus iOS and Android
-compositions also remain pending.
+executor for every handshake and HTTP byte. The canonical artifact is 679,279
+bytes with SHA-256
+`22eec3a0a72e1d8bc3e6120149a1f6196cc354601137e9e857f08b03d9bb4ba4`.
+Linux/Windows platform root providers plus iOS and Android compositions remain
+pending.
+
+The exact canonical artifact has now passed hosted execution on Linux,
+macOS and Windows for both x86_64 and aarch64. The macOS lanes additionally
+loaded 154 runner system roots and completed public-CA HTTPS without a Host API
+change; both Linux lanes completed the exact socket-Lib composition.
 
 Current lifecycle: qualified public-source candidate; not admitted, released,
 production-discoverable or installable.

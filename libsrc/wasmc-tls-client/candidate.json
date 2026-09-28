@@ -43,19 +43,19 @@
     "public-ca-https-certificate-chain-validation",
     "root-certificate-boundary-256-accepted-257-rejected",
     "linux-aarch64-exact-system-socket-end-to-end-https",
+    "linux-x86_64-exact-system-socket-end-to-end-https",
     "bidirectional-plaintext",
     "graceful-close",
     "resource-drop",
     "wasmtime-47.0.4-qualification",
     "wasmi-2.0.0-representative-core-execution",
-    "independent-byte-identical-second-build"
+    "independent-byte-identical-second-build",
+    "cross-platform-hosted-qualification"
   ],
   "pending_gates": [
     "linux-windows-platform-root-provider-qualification",
-    "linux-x86_64-exact-system-socket-end-to-end-https",
     "ios-platform-https-composition",
     "android-platform-https-composition",
-    "cross-platform-hosted-qualification",
     "admission-review"
   ],
   "admitted": false,
@@ -74,12 +74,13 @@
     "alpn_bytes": 255
   },
   "artifact_observation": {
-    "bytes": 679245,
-    "sha256": "0460110fece2021a8c9206b35f38d365f4f6fdfa4746a7adf2f356b4417f7438",
+    "bytes": 679279,
+    "sha256": "22eec3a0a72e1d8bc3e6120149a1f6196cc354601137e9e857f08b03d9bb4ba4",
     "toolchain": "rustc 1.96.0",
     "target": "wasm32-unknown-unknown",
     "independent_second_build_byte_identical": true,
-    "scope": "same-source-root-and-build-environment",
+    "build_platform": "linux-x64",
+    "scope": "canonical-linux-x64-build-environment",
     "note": "Cross-host source rebuild bytes may differ because stable Rust panic locations retain toolchain and Cargo source paths. Hosted qualification executes one exact canonical artifact on every platform."
   }
 }
