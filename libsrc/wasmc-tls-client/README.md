@@ -23,6 +23,15 @@ qualification passes all 158 SystemRootCertificates as ordinary Lib data and
 performs a certificate-validated public HTTPS request. The root boundary is
 therefore 256 certificates rather than the earlier synthetic limit of 64.
 
+The canonical-build qualification builds twice in independent target
+directories and requires byte identity before publishing one exact artifact to
+the hosted matrix. Every macOS, Linux and Windows job executes that same file;
+the matrix does not substitute a platform-local rebuild. This distinction is
+intentional: stable Rust retains absolute Cargo and toolchain panic-location
+paths, so source rebuild hashes can differ between build hosts even though the
+Wasm target and behavior are the same. `artifact_observation` is consequently
+a same-environment observation, not a claim of cross-host build identity.
+
 On Linux aarch64, a separate composition drives the same TLS Core through the
 digest-bound `wasmc:system-linux-socket@0.0.1-dev.1` adapter and unchanged fixed
 executor for every handshake and HTTP byte. Linux x86_64 remains an independent

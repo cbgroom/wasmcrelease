@@ -24,25 +24,30 @@ const run = (command, args, options = {}) => {
   return result.stdout.trim();
 };
 
-run('cargo', [
-  '+1.96.0', 'build', '--release', '--locked', '--target', 'wasm32-unknown-unknown',
-  '--manifest-path', 'libsrc/wasmc-tls-client/Cargo.toml',
-]);
+const providedCandidate = process.env.WASMC_TLS_CLIENT_ARTIFACT?.trim();
+if (!providedCandidate) {
+  run('cargo', [
+    '+1.96.0', 'build', '--release', '--locked', '--target', 'wasm32-unknown-unknown',
+    '--manifest-path', 'libsrc/wasmc-tls-client/Cargo.toml',
+  ]);
+}
 run('cargo', [
   '+1.96.0', 'build', '--release', '--locked', '--target', 'wasm32-unknown-unknown',
   '--manifest-path', 'libsrc/wasmc-http1-client/Cargo.toml',
 ]);
 
-const candidatePath = resolve(
-  candidateRoot,
-  'target/wasm32-unknown-unknown/release/wasmc_tls_client_public.wasm',
-);
+const candidatePath = providedCandidate
+  ? resolve(root, providedCandidate)
+  : resolve(candidateRoot, 'target/wasm32-unknown-unknown/release/wasmc_tls_client_public.wasm');
 const bytes = await readFile(candidatePath);
-assert.equal(bytes.length, manifest.artifact_observation.bytes);
-assert.equal(
-  createHash('sha256').update(bytes).digest('hex'),
-  manifest.artifact_observation.sha256,
-);
+const candidateSha256 = createHash('sha256').update(bytes).digest('hex');
+const artifactObservationMatches =
+  bytes.length === manifest.artifact_observation.bytes &&
+  candidateSha256 === manifest.artifact_observation.sha256;
+if (process.env.WASMC_TLS_CLIENT_ENFORCE_OBSERVATION === '1') {
+  assert.equal(bytes.length, manifest.artifact_observation.bytes);
+  assert.equal(candidateSha256, manifest.artifact_observation.sha256);
+}
 const wit = run('wasm-tools', ['component', 'wit', candidatePath]);
 assert.match(wit, /import wasmc:tls-core\/entropy@0\.0\.1/);
 assert.match(wit, /export wasmc:tls-client\/tls@0\.0\.1/);
@@ -147,7 +152,9 @@ try {
     candidate: manifest.id,
     version: manifest.version,
     candidate_bytes: bytes.length,
-    candidate_sha256: createHash('sha256').update(bytes).digest('hex'),
+    candidate_sha256: candidateSha256,
+    artifact_source: providedCandidate ? 'provided-canonical-artifact' : 'local-source-build',
+    artifact_observation_matches: artifactObservationMatches,
     semantic_host_imports: manifest.allowed_host_imports,
     host_clock_import: false,
     host_network_import: false,

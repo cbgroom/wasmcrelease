@@ -263,6 +263,15 @@ provider remain separate gates; the Linux aarch64 exact-provider composition is
 qualified locally, while Linux x86_64 still requires independent evidence. This
 candidate is not admitted or released.
 
+Hosted portability uses one canonical Linux-built TLS client artifact. The
+canonical job builds it twice in separate target directories and rejects any
+byte difference; all six platform jobs then download and execute that exact
+file. Platform-local source rebuild bytes are recorded but are not treated as
+the release identity because stable Rust embeds absolute Cargo/toolchain panic
+locations, which differ across build hosts. This closes the earlier false
+assumption that independently compiling the same Wasm target on every host
+must itself yield one hash.
+
 ## Library OS consequence
 
 The intended result is a Library OS profile assembled above the fixed Host:

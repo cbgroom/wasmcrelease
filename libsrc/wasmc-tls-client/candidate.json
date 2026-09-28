@@ -61,7 +61,8 @@
   "admitted": false,
   "qualification": {
     "runner": "node",
-    "script": "scripts/test-tls-client-libsrc.mjs"
+    "script": "scripts/test-tls-client-libsrc.mjs",
+    "canonical_build_script": "scripts/build-tls-client-canonical.mjs"
   },
   "resource_boundaries": {
     "ciphertext_bytes": 1048576,
@@ -77,6 +78,8 @@
     "sha256": "0460110fece2021a8c9206b35f38d365f4f6fdfa4746a7adf2f356b4417f7438",
     "toolchain": "rustc 1.96.0",
     "target": "wasm32-unknown-unknown",
-    "independent_second_build_byte_identical": true
+    "independent_second_build_byte_identical": true,
+    "scope": "same-source-root-and-build-environment",
+    "note": "Cross-host source rebuild bytes may differ because stable Rust panic locations retain toolchain and Cargo source paths. Hosted qualification executes one exact canonical artifact on every platform."
   }
 }

@@ -15,6 +15,7 @@ on:
       - "scripts/test-tls-client-libsrc.mjs"
       - "scripts/test-tls-client-macos-public-ca.mjs"
       - "scripts/test-tls-client-linux-socket.mjs"
+      - "scripts/build-tls-client-canonical.mjs"
       - "scripts/test-libsrc-all.mjs"
       - "scripts/test-libsrc-wasmi.mjs"
       - "scripts/test-data-core-libsrc.mjs"
@@ -41,6 +42,7 @@ on:
       - "scripts/test-tls-client-libsrc.mjs"
       - "scripts/test-tls-client-macos-public-ca.mjs"
       - "scripts/test-tls-client-linux-socket.mjs"
+      - "scripts/build-tls-client-canonical.mjs"
       - "scripts/test-libsrc-all.mjs"
       - "scripts/test-libsrc-wasmi.mjs"
       - "scripts/test-data-core-libsrc.mjs"
@@ -124,8 +126,35 @@ jobs:
           node scripts/validate-integrity.mjs
           ./scripts/validate-maintainer.sh
 
+  tls-client-canonical:
+    name: Build exact TLS client artifact twice
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: 26.5.1
+      - uses: dtolnay/rust-toolchain@1.96.0
+        with:
+          targets: wasm32-unknown-unknown
+      - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+          key: tls-client-canonical-v1-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('libsrc/wasmc-tls-client/Cargo.lock') }}
+      - name: Build independent byte-identical TLS client artifacts
+        run: node scripts/build-tls-client-canonical.mjs
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: tls-client-canonical
+          path: target/tls-client-canonical
+          if-no-files-found: error
+          retention-days: 14
+
   tls-portability:
     name: TLS portability (${{ matrix.platform }})
+    needs: tls-client-canonical
     strategy:
       fail-fast: false
       matrix:
@@ -152,6 +181,10 @@ jobs:
       - uses: dtolnay/rust-toolchain@1.96.0
         with:
           targets: wasm32-unknown-unknown
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        with:
+          name: tls-client-canonical
+          path: target/tls-client-canonical
       - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830
         with:
           path: |
@@ -176,14 +209,20 @@ jobs:
       - name: Qualify public TLS client on ${{ matrix.platform }}
         shell: bash
         run: node scripts/test-tls-client-libsrc.mjs | tee "tls-client-${{ matrix.platform }}.json"
+        env:
+          WASMC_TLS_CLIENT_ARTIFACT: target/tls-client-canonical/wasmc_tls_client_public.wasm
       - name: Qualify macOS system roots against public HTTPS
         if: runner.os == 'macOS'
         shell: bash
         run: node scripts/test-tls-client-macos-public-ca.mjs | tee "tls-client-public-ca-${{ matrix.platform }}.json"
+        env:
+          WASMC_TLS_CLIENT_ARTIFACT: target/tls-client-canonical/wasmc_tls_client_public.wasm
       - name: Qualify TLS client through the exact Linux socket Lib
         if: runner.os == 'Linux'
         shell: bash
         run: node scripts/test-tls-client-linux-socket.mjs | tee "tls-client-linux-socket-${{ matrix.platform }}.json"
+        env:
+          WASMC_TLS_CLIENT_ARTIFACT: target/tls-client-canonical/wasmc_tls_client_public.wasm
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         continue-on-error: true

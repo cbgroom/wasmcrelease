@@ -16,10 +16,12 @@ const descriptor = path.join(target, 'native-boundary.json');
 const executorTarget = path.join(target, 'executor');
 const executor = path.join(executorTarget, 'release/wasmc-lib-boundary-native-linux');
 const executorManifest = path.join(root, 'host/runtime/lib-boundary/native-linux/Cargo.toml');
-const candidate = path.join(
-  root,
-  'libsrc/wasmc-tls-client/target/wasm32-unknown-unknown/release/wasmc_tls_client_public.wasm',
-);
+const candidate = process.env.WASMC_TLS_CLIENT_ARTIFACT?.trim()
+  ? path.resolve(root, process.env.WASMC_TLS_CLIENT_ARTIFACT)
+  : path.join(
+      root,
+      'libsrc/wasmc-tls-client/target/wasm32-unknown-unknown/release/wasmc_tls_client_public.wasm',
+    );
 const certDer = path.join(root, 'host/tests/https/fixtures/server-cert.der');
 const keyDer = path.join(root, 'host/tests/https/fixtures/server-key.pkcs8.der');
 const certPem = path.join(target, 'server-cert.pem');
