@@ -415,6 +415,55 @@ assert.ok(iosSurfaceV5Receipt.evidence.blocked_agent_actions_during_handoff > 0)
 assert.equal(iosSurfaceV5Receipt.evidence.agent_mutations_committed_to_human_owned_surface, 0);
 assert.equal(iosSurfaceV5Receipt.evidence.physical_device_pip_qualification, false);
 
+const iosSurfaceV6Receipt = JSON.parse(fs.readFileSync(
+  "admission/host-lib-defined-boundary-v1/ios-arm64-app-surface-control-v6.json", "utf8",
+));
+assert.equal(iosSurfaceV6Receipt.schema,
+  "wasmc.host-lib-defined-boundary-ios-app-surface-control-qualification/v6");
+assert.equal(iosSurfaceV6Receipt.predecessor,
+  "admission/host-lib-defined-boundary-v1/ios-arm64-app-surface-control-v5.json");
+assert.equal(iosSurfaceV6Receipt.qualified, true);
+assert.equal(iosSurfaceV6Receipt.admitted, false);
+assert.equal(iosSurfaceV6Receipt.released, false);
+assert.equal(iosSurfaceV6Receipt.discoverable, false);
+assert.equal(iosSurfaceV6Receipt.installable, false);
+execFileSync("git", ["cat-file", "-e", `${iosSurfaceV6Receipt.implementation_commit}^{commit}`]);
+execFileSync("git", ["merge-base", "--is-ancestor", iosSurfaceV6Receipt.implementation_commit, "HEAD"]);
+for (const [relative, expected] of Object.entries(iosSurfaceV6Receipt.source)) {
+  assert.equal(digestAt(iosSurfaceV6Receipt.implementation_commit, relative), expected,
+    `${relative}: retained real WKWebView isolation v6 source drift`);
+}
+assert.equal(iosSurfaceV6Receipt.evidence.status, "PASS");
+assert.equal(iosSurfaceV6Receipt.evidence.fixed_host_domain_apis, 0);
+assert.equal(iosSurfaceV6Receipt.evidence.fixed_host_sha256,
+  iosSurfaceV5Receipt.evidence.fixed_host_sha256);
+assert.equal(iosSurfaceV6Receipt.evidence.host_source_changes_required, 0);
+assert.equal(iosSurfaceV6Receipt.evidence.real_wkwebview_surfaces, true);
+assert.equal(iosSurfaceV6Receipt.evidence.surface_count, 2);
+assert.equal(iosSurfaceV6Receipt.evidence.semantic_dom_snapshot, true);
+assert.deepEqual(iosSurfaceV6Receipt.evidence.stable_element_ids,
+  ["count", "increment", "note"]);
+assert.equal(iosSurfaceV6Receipt.evidence.generation_checked_action, true);
+assert.equal(iosSurfaceV6Receipt.evidence.element_id_json_encoded_before_javascript, true);
+assert.equal(iosSurfaceV6Receipt.evidence.agent_uses_physical_input, false);
+assert.equal(iosSurfaceV6Receipt.evidence.user_input_overlapped_agent_action, true);
+assert.ok(iosSurfaceV6Receipt.evidence.user_input_first_unix_ms
+  <= iosSurfaceV6Receipt.evidence.agent_action_completed_unix_ms);
+assert.ok(iosSurfaceV6Receipt.evidence.agent_action_completed_unix_ms
+  <= iosSurfaceV6Receipt.evidence.user_input_last_unix_ms);
+assert.equal(iosSurfaceV6Receipt.evidence.agent_surface_count_after, "1");
+assert.equal(iosSurfaceV6Receipt.evidence.user_surface_count_after, "0");
+assert.equal(iosSurfaceV6Receipt.evidence.user_text_after, "human-owned");
+assert.equal(iosSurfaceV6Receipt.evidence.agent_generation_after, 1);
+assert.equal(iosSurfaceV6Receipt.evidence.user_generation_after, 0);
+assert.equal(iosSurfaceV6Receipt.evidence.existing_five_surface_regression_passed, true);
+assert.equal(iosSurfaceV6Receipt.evidence.existing_pip_regression_environment_pinned_to_predecessor_ipad, true);
+assert.equal(iosSurfaceV6Receipt.evidence.pip_started, true);
+assert.equal(iosSurfaceV6Receipt.evidence.pip_stopped, true);
+assert.equal(iosSurfaceV6Receipt.evidence.physical_device_qualification, false);
+assert.equal(iosSurfaceV6Receipt.evidence.wasm_lowering, false);
+assert.equal(iosSurfaceV6Receipt.evidence.dynamic_component_loading, false);
+
 const iosLifecycleV1Receipt = JSON.parse(fs.readFileSync(
   "admission/host-lib-defined-boundary-v1/ios-arm64-app-lifecycle-v1.json", "utf8",
 ));
@@ -1756,6 +1805,7 @@ console.log(JSON.stringify({
   retained_ios_arm64_app_surface_control_v3_qualification: iosSurfaceV3Receipt.implementation_commit,
   retained_ios_arm64_app_surface_control_v4_qualification: iosSurfaceV4Receipt.implementation_commit,
   retained_ios_arm64_app_surface_control_v5_qualification: iosSurfaceV5Receipt.implementation_commit,
+  retained_ios_arm64_app_surface_control_v6_qualification: iosSurfaceV6Receipt.implementation_commit,
   retained_ios_arm64_app_lifecycle_v1_qualification: iosLifecycleV1Receipt.implementation_commit,
   retained_ios_arm64_finite_background_window_v1_qualification:
     iosFiniteBackgroundWindowV1Receipt.implementation_commit,
