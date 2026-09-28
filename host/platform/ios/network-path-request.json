@@ -1,0 +1,23 @@
+{
+  "schema": "wasmc.system-profile-request/v1",
+  "id": "ios-network-path-v1",
+  "target": {
+    "os": "ios", "architecture": "aarch64", "environment": "simulator", "embedding": "native"
+  },
+  "boundary": "wasmc.lib-defined-host-boundary/v1",
+  "host": {
+    "contract": "wasmc.lib-defined-host-boundary/v1",
+    "executor": "host/tests/ios-app-capability/Host/FixedHost.swift",
+    "required_domain_apis": 0
+  },
+  "required_lifecycle": "qualified",
+  "requirements": ["wasmc:system-network-path@0.0.1"],
+  "candidates": ["libsrc/wasmc-system-ios-network-path/candidate.json"],
+  "pins": {},
+  "acceptance": {
+    "live_path_snapshot": true,
+    "path_mutation": false,
+    "path_transition": false,
+    "server_reachability": false
+  }
+}
