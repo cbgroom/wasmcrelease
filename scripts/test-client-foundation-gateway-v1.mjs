@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { createHash, randomBytes } from "node:crypto";
 import { once } from "node:events";
 import { readFileSync } from "node:fs";
-import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import https from "node:https";
 import tls from "node:tls";
 import os from "node:os";
@@ -103,6 +103,7 @@ const gatewayOptions = {
   tlsKey: key,
   tlsCert: cert,
   maxCompletedCommandsPerClient: 2,
+  maxArchiveSegmentsPerClient: 2,
   heartbeatIntervalMs: 20,
   heartbeatTimeoutMs: 120,
 };
@@ -179,7 +180,9 @@ try {
   assert.equal(finalState.next_sequence, 4);
   assert.equal(finalState.commands.filter((command) => command.message_id === "gw-m1").length, 1);
 
-  for (const [messageId, value] of [["gw-m4", "compact-four"], ["gw-m5", "compact-five"]]) {
+  for (let sequence = 4; sequence <= 13; sequence += 1) {
+    const messageId = `gw-m${sequence}`;
+    const value = `compact-${sequence}`;
     const queued = await api(origin, "POST", "/v1/clients/client-a/commands", {
       message_id: messageId,
       operation: "invoke",
@@ -188,8 +191,8 @@ try {
     assert.equal(queued.status, 201);
     await waitFor(origin, (state) => state.commands.some((command) => command.message_id === messageId && command.receipt));
   }
-  const compactedState = await waitFor(origin, (state) => state.archives.length === 1 && state.compacted_through_sequence === 2);
-  assert.deepEqual(compactedState.commands.map((command) => command.sequence), [3, 4, 5]);
+  const compactedState = await waitFor(origin, (state) => state.archives.length === 3 && state.compacted_through_sequence === 10);
+  assert.deepEqual(compactedState.commands.map((command) => command.sequence), [11, 12, 13]);
   const archivedDuplicate = await api(origin, "POST", "/v1/clients/client-a/commands", inventoryInput);
   assert.equal(archivedDuplicate.status, 200);
   assert.equal(archivedDuplicate.value.duplicate, true);
@@ -212,12 +215,15 @@ try {
   assert.equal(diskState.clients["client-a"].commands.length, 3);
   assert.equal(Object.keys(diskState.clients["client-a"].message_index).length, 3);
   assert.equal(diskState.clients["client-a"].commands.every((command) => command.receipt), true);
-  assert.equal(diskState.clients["client-a"].archives.length, 1);
+  assert.equal(diskState.clients["client-a"].archives.length, 3);
   const archiveMetadata = diskState.clients["client-a"].archives[0];
   const archivePath = path.join(gatewayRoot, "archives", archiveMetadata.path);
   const archiveBytes = await readFile(archivePath);
   assert.equal(sha256(archiveBytes), archiveMetadata.sha256);
-  assert.equal(archiveBytes.toString("utf8").trim().split("\n").length, 2);
+  assert.equal(archiveBytes.toString("utf8").trim().split("\n").length, archiveMetadata.commands);
+  assert.equal(archiveMetadata.from_sequence, 1);
+  assert.equal(archiveMetadata.through_sequence, 6);
+  assert.equal((await readdir(path.dirname(archivePath))).filter((name) => name.endsWith(".jsonl")).length, 3);
   const artifactPath = path.join(gatewayRoot, "artifacts", `${artifact.value.sha256}.json`);
   const artifactBytes = await readFile(artifactPath);
   await gateway.close();
@@ -234,8 +240,11 @@ try {
   await artifactRejected.close();
   await writeFile(artifactPath, artifactBytes);
 
+  const orphanPath = path.join(path.dirname(archivePath), "orphan.jsonl");
+  await writeFile(orphanPath, "orphan\n");
   gateway = new ClientFoundationGateway(gatewayOptions);
   await gateway.start();
+  await assert.rejects(() => readFile(orphanPath), (error) => error.code === "ENOENT");
   await gateway.close();
   console.log(JSON.stringify({
     accepted: true,
@@ -244,7 +253,7 @@ try {
     artifacts_persistent: Object.keys(diskState.artifacts).length,
     clients_persistent: Object.keys(diskState.clients).length,
     active_commands_persistent: diskState.clients["client-a"].commands.length,
-    command_sequences: [1, 2, ...diskState.clients["client-a"].commands.map((command) => command.sequence)],
+    command_sequences: Array.from({ length: 13 }, (_, index) => index + 1),
     duplicate_enqueue_idempotent: true,
     archived_duplicate_idempotent: true,
     canonical_payload_identity: true,
@@ -253,11 +262,14 @@ try {
     heartbeat_pongs: heartbeatState.connection.pongs,
     stale_connection_evicted: true,
     compacted_through_sequence: diskState.clients["client-a"].compacted_through_sequence,
+    bounded_archive_metadata: diskState.clients["client-a"].archives.length,
+    merged_archive_range: [archiveMetadata.from_sequence, archiveMetadata.through_sequence],
     archive_sha256: archiveMetadata.sha256,
     bounded_message_index: Object.keys(diskState.clients["client-a"].message_index).length,
     archive_corruption_rejected: true,
     artifact_corruption_rejected: true,
     repaired_state_restart: true,
+    orphan_archive_collected: true,
     gateway_restart_reconnect: true,
     post_restart_invoke: finalState.commands[2].receipt.response.value,
     fixed_host_api_changed: false,

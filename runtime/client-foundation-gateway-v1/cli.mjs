@@ -21,6 +21,7 @@ const gateway = new ClientFoundationGateway({
   port: Number(process.env.WASMC_GATEWAY_PORT ?? 8443),
   advertiseOrigin: process.env.WASMC_GATEWAY_ADVERTISE_ORIGIN ?? null,
   maxCompletedCommandsPerClient: positiveInteger("WASMC_GATEWAY_MAX_COMPLETED_COMMANDS", 128),
+  maxArchiveSegmentsPerClient: positiveInteger("WASMC_GATEWAY_MAX_ARCHIVE_SEGMENTS", 16),
   heartbeatIntervalMs: positiveInteger("WASMC_GATEWAY_HEARTBEAT_INTERVAL_MS", 30000),
   heartbeatTimeoutMs: positiveInteger("WASMC_GATEWAY_HEARTBEAT_TIMEOUT_MS", 90000),
 });

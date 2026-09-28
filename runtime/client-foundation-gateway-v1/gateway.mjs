@@ -1,6 +1,6 @@
 import { createHash, randomUUID } from "node:crypto";
 import { readFileSync } from "node:fs";
-import { mkdir, open, readFile, rename, unlink, writeFile } from "node:fs/promises";
+import { mkdir, open, readFile, readdir, rename, unlink, writeFile } from "node:fs/promises";
 import https from "node:https";
 import path from "node:path";
 import { encodeFrame, FrameDecoder } from "../client-foundation-v1/websocket-wire.mjs";
@@ -68,11 +68,13 @@ export class ClientFoundationGateway {
     port = 0,
     advertiseOrigin = null,
     maxCompletedCommandsPerClient = 128,
+    maxArchiveSegmentsPerClient = 16,
     heartbeatIntervalMs = 30000,
     heartbeatTimeoutMs = 90000,
   } = {}) {
     if (!dataRoot || !tlsKey || !tlsCert) throw new Error("incomplete Client Foundation Gateway configuration");
     if (!Number.isSafeInteger(maxCompletedCommandsPerClient) || maxCompletedCommandsPerClient < 1) throw new Error("invalid completed-command retention");
+    if (!Number.isSafeInteger(maxArchiveSegmentsPerClient) || maxArchiveSegmentsPerClient < 2) throw new Error("invalid archive segment retention");
     if (!Number.isSafeInteger(heartbeatIntervalMs) || heartbeatIntervalMs < 1 || !Number.isSafeInteger(heartbeatTimeoutMs) || heartbeatTimeoutMs <= heartbeatIntervalMs) {
       throw new Error("heartbeat timeout must exceed its positive interval");
     }
@@ -87,6 +89,7 @@ export class ClientFoundationGateway {
     this.port = port;
     this.advertiseOrigin = advertiseOrigin;
     this.maxCompletedCommandsPerClient = maxCompletedCommandsPerClient;
+    this.maxArchiveSegmentsPerClient = maxArchiveSegmentsPerClient;
     this.heartbeatIntervalMs = heartbeatIntervalMs;
     this.heartbeatTimeoutMs = heartbeatTimeoutMs;
     this.state = null;
@@ -111,6 +114,7 @@ export class ClientFoundationGateway {
         await this.#persist();
       }
       await this.#verifyDurableState();
+      await this.#collectArchiveGarbage();
       this.server = https.createServer({ key: this.tlsKey, cert: this.tlsCert }, (request, response) => {
         this.#handleHttp(request, response).catch((error) => jsonResponse(response, 400, { accepted: false, error: error.message }));
       });
@@ -350,6 +354,7 @@ export class ClientFoundationGateway {
     command.status = "completed";
     await this.#compact(clientId, client);
     await this.#persist();
+    await this.#collectArchiveGarbage();
     await this.#dispatch(clientId);
   }
 
@@ -415,6 +420,59 @@ export class ClientFoundationGateway {
     for (const command of eligible) delete client.message_index[command.message_id];
     client.compacted_through_sequence = through;
     client.archives.push({ from_sequence: from, through_sequence: through, commands: eligible.length, sha256: digest, path: `${clientId}/${filename}` });
+    if (client.archives.length > this.maxArchiveSegmentsPerClient * 2) {
+      await this.#mergeArchiveSegments(clientId, client);
+    }
+  }
+
+  async #mergeArchiveSegments(clientId, client) {
+    const mergeCount = this.maxArchiveSegmentsPerClient + 1;
+    const segments = client.archives.slice(0, mergeCount);
+    const chunks = [];
+    for (const segment of segments) {
+      const bytes = await readFile(this.#archivePath(clientId, segment));
+      if (sha256(bytes) !== segment.sha256) throw new Error("archive identity mismatch before merge");
+      chunks.push(bytes);
+    }
+    const bytes = Buffer.concat(chunks);
+    const digest = sha256(bytes);
+    const from = segments[0].from_sequence;
+    const through = segments.at(-1).through_sequence;
+    const commands = segments.reduce((sum, segment) => sum + segment.commands, 0);
+    const directory = path.join(this.archiveRoot, clientId);
+    const filename = `${from}-${through}-${digest}.jsonl`;
+    const mergedPath = path.join(directory, filename);
+    try {
+      await writeFile(mergedPath, bytes, { flag: "wx" });
+    } catch (error) {
+      if (error.code !== "EEXIST" || sha256(await readFile(mergedPath)) !== digest) throw error;
+    }
+    client.archives.splice(0, mergeCount, {
+      from_sequence: from,
+      through_sequence: through,
+      commands,
+      sha256: digest,
+      path: `${clientId}/${filename}`,
+    });
+  }
+
+  async #collectArchiveGarbage() {
+    const referenced = new Set();
+    for (const [clientId, client] of Object.entries(this.state.clients)) {
+      for (const archive of this.#client(clientId).archives) referenced.add(archive.path);
+    }
+    let directories = [];
+    try { directories = await readdir(this.archiveRoot, { withFileTypes: true }); } catch (error) { if (error.code !== "ENOENT") throw error; }
+    for (const directory of directories) {
+      if (!directory.isDirectory() || !validClientId(directory.name)) continue;
+      const files = await readdir(path.join(this.archiveRoot, directory.name), { withFileTypes: true });
+      for (const file of files) {
+        const relative = `${directory.name}/${file.name}`;
+        if (file.isFile() && file.name.endsWith(".jsonl") && !referenced.has(relative)) {
+          await unlink(path.join(this.archiveRoot, relative));
+        }
+      }
+    }
   }
 
   async #findArchivedCommand(clientId, client, messageId) {

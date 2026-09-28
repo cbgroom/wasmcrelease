@@ -775,4 +775,16 @@ segments. Startup now validates all retained artifact and archive bytes, safe
 paths, sizes, hashes and command sequence watermarks before listening. Separate
 archive-corruption and artifact-corruption controls both fail closed, release
 the writer lock, and permit restart only after the exact bytes are restored.
-Archive metadata growth and lookup acceleration remain pending.
+At that checkpoint, archive metadata growth and lookup acceleration remained
+pending.
+
+Archive metadata is subsequently bounded by merging older verified segments
+into a larger content-addressed pack once the configured segment threshold is
+crossed. The order is new-pack write, atomic state commit, then orphan cleanup;
+therefore a crash before commit retains the old referenced segments, while a
+crash after commit leaves only reclaimable unreferenced files. A 13-command
+local qualification compacts through sequence 10, merges the first three small
+segments into one `1..6` pack, retains three metadata rows and three hot
+commands, resolves old command identities, and removes an injected orphan on
+restart. Archive deletion policy and indexed lookup acceleration remain
+pending.
