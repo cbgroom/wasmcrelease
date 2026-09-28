@@ -25,10 +25,12 @@ assert.deepEqual(orientation.crash_fault_receipt, {
   post_restart_get: "SV2:2",
   meaning: "the persisted result was returned and the increment was not replayed",
 });
+assert.equal(orientation.cross_schema_migration.implemented, true);
+assert.match(orientation.cross_schema_migration.binding, /source schema and target schema/);
 assert.equal(orientation.gateway_invoke_order[4], "Client persists checkpoint and command result in one state-file replacement");
 assert.equal(orientation.failure_policy.missing_or_corrupt, "runtime unavailable while control remains connected");
 assert.equal(orientation.failure_policy.partial_multi_block_restore, "graph poisoned until close and reconstruction");
-assert.deepEqual(orientation.open_gates, ["cross-schema-state-migration-lib", "sticky-active-restart-disposition"]);
+assert.deepEqual(orientation.open_gates, ["sticky-active-restart-disposition"]);
 assert.equal(orientation.protected_surface.proof_command, "git diff --name-only bed1e4d236bb78a992355321deca8968a6400a0d HEAD -- host current runtime/client-foundation-gateway-v1/cli.mjs");
 assert.equal(orientation.protected_surface.expected_output, "");
 assert.deepEqual(orientation.required_additional_reads, []);
@@ -74,6 +76,8 @@ for (const required of [
   "invoke-result-and-state-checkpoint-persist-together",
   "checkpoint-restored-before-runtime-available",
   "partial-checkpoint-restore-poisons-graph",
+  "cross-schema-migration-requires-exact-plan-and-package",
+  "migration-resource-is-ephemeral",
   "close-reclaims-all-runtime-resources",
 ]) assert.ok(invariants.has(required), `missing invariant: ${required}`);
 
@@ -97,6 +101,14 @@ assert.deepEqual(model.state_contract.active_checkpoint, {
   restart: "restore-before-runtime-available",
   missing_or_corrupt: "runtime-unavailable-control-remains-connected",
   partial_restore_failure: "graph-poisoned-until-close-and-reconstruction",
+});
+assert.deepEqual(model.state_contract.cross_schema_migration, {
+  plan_schema: "wasmc.dynamic-lib-state-migration-plan/v1",
+  identity: "canonical-json-sha256-over-node-package-wit-configuration-and-schema-pair",
+  package_contract: "exact-state-migration-descriptor-with-snapshot-v1-protocol",
+  lifetime: "ephemeral-transition-resource-released-before-publication",
+  ordering: "drain-snapshot-migrate-validate-restore-health-publish",
+  failure: "candidate-rollback-old-generation-remains-active",
 });
 assert.deepEqual(model.state_contract.same_schema_order, [
   "install-probe-health-candidate",
@@ -130,6 +142,8 @@ const orientationEvidence = Object.fromEntries(await Promise.all(Object.entries(
 assert.match(orientationEvidence.client, /active-state-checkpointed/);
 assert.match(orientationEvidence.client, /inflight_result/);
 assert.match(orientationEvidence.graph, /restoreFailed = true/);
+assert.match(orientationEvidence.graph, /migrate-state-v1/);
+assert.match(orientationEvidence.package_spec, /dynamic-lib-state-migration-plan\/v1/);
 assert.match(orientationEvidence.gateway, /invalid client state checkpoint summary/);
 assert.match(orientationEvidence.focused_test, /partial_checkpoint_restore_poisoned_until_close: true/);
 for (const claim of [
@@ -146,6 +160,9 @@ assert.deepEqual(orientation.qualified_observations, {
   gateway_observed_checkpoint_identity: true,
   missing_or_corrupt_checkpoint_failed_closed: true,
   partial_checkpoint_restore_poisoned_until_close: true,
+  cross_schema_gateway_migration: "SV2:2->SV3:2",
+  cross_schema_restart: "SV3:2",
+  forged_migration_contract_rejected_at_gateway: true,
   external_effect_exactly_once_claimed: false,
   fixed_host_api_changed: false,
   minimal_cli_changed: false,
@@ -158,13 +175,13 @@ assert.deepEqual(model.white_box_evidence.commands, [
 assert.equal(model.white_box_evidence.protected_change_scope_base, "bed1e4d236bb78a992355321deca8968a6400a0d");
 assert.equal(model.white_box_evidence.protected_change_scope_command, "git diff --name-only bed1e4d236bb78a992355321deca8968a6400a0d HEAD -- host current runtime/client-foundation-gateway-v1/cli.mjs");
 assert.equal(model.current_implementation_profile.graph_shape, "serial-pipeline-and-general-dag-client-gateway");
-assert.equal(model.current_implementation_profile.state_policy, "stateless-sticky-and-same-schema-snapshot-v1");
+assert.equal(model.current_implementation_profile.state_policy, "stateless-sticky-and-snapshot-v1-with-exact-cross-schema-migration");
 assert.equal(model.current_implementation_profile.graph_identity, "canonical-json-sha256");
 assert.equal(model.current_implementation_profile.configuration, "canonical-json-sha256");
 assert.equal(model.current_implementation_profile.wit_contract_identity, "wasm-tools-derived-port-type-sha256-bound-to-exact-wit");
 assert.equal(model.current_implementation_profile.retired_cleanup, "durable-publication-ledger-and-process-owner-fence");
 assert.equal(model.current_implementation_profile.stateful_restart, "snapshot-v1-active-checkpoint-with-invoke-result-binding");
-for (const gate of ["cross-schema-state-migration-lib", "sticky-active-restart-disposition"]) {
+for (const gate of ["sticky-active-restart-disposition"]) {
   assert.ok(model.current_implementation_profile.open_gates.includes(gate), `missing open gate: ${gate}`);
 }
 

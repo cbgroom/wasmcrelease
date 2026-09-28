@@ -151,7 +151,8 @@ node scripts/test-dynamic-client-foundation-gateway-v1.mjs
 
 This closes restart reconstruction for both serial routes and general
 stateless DAGs. Active `snapshot-v1` state is also checkpointed and restored;
-cross-schema state migration, `sticky` restart disposition, external-effect
+cross-schema replacement uses an exact content-addressed migration Lib and
+independently hashed migration plan. `sticky` restart disposition, external-effect
 exactly-once semantics, cache retention policy and release admission remain
 outside this slice.
 
@@ -186,10 +187,14 @@ control path remains available. A partial multi-block restore poisons that
 graph instance until close and reconstruction. This narrows durability to Client-owned
 snapshot state; it does not make arbitrary external effects exactly once.
 
-Cross-schema migration and restart disposition for `sticky` active state are
-not yet implemented. The focused stateful test also rejects
+Cross-schema migration is an ephemeral transition resource rather than a stable
+graph node. Its plan binds the node, package, WIT, configuration and both schema
+identities. The Client drains, snapshots, migrates, validates, restores and
+health-checks before publication; failure rolls back the candidate and retains
+the old generation. Restart disposition for `sticky` active state is not yet
+implemented. The focused stateful test also rejects
 package/declaration mismatch, policy transitions, removal without a state
 disposition, non-canonical base64, digest mismatch and snapshots larger than
-1 MiB. The integrated test proves the distributed same-schema and active-state
-restart paths and rejects a forged Gateway declaration; it does not claim the
-two open gates above.
+1 MiB. The integrated test proves distributed same- and cross-schema paths,
+post-migration restart and active-state restart, and rejects forged Gateway
+state and migration declarations.

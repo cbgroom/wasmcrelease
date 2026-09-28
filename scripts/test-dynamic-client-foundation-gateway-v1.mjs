@@ -9,7 +9,7 @@ import os from "node:os";
 import path from "node:path";
 import { promisify } from "node:util";
 import { DynamicGraphClientFoundation } from "../runtime/client-foundation-v1/dynamic-foundation.mjs";
-import { canonicalJsonSha256, describeDynamicLibDag, describeSerialLibGraph } from "../runtime/client-foundation-v1/dynamic-lib-graph-spec.mjs";
+import { canonicalJsonSha256, describeDynamicLibDag, describeSerialLibGraph, describeStateMigrations } from "../runtime/client-foundation-v1/dynamic-lib-graph-spec.mjs";
 import { deriveWitPortContracts } from "../runtime/client-foundation-v1/wit-port-contracts.mjs";
 import { ClientFoundationGateway } from "../runtime/client-foundation-gateway-v1/gateway.mjs";
 
@@ -106,13 +106,14 @@ export async function invoke(input) {
   }));
 }
 
-async function makeStatefulBundle(name, marker, stateSchemaIdentity) {
+async function makeStatefulBundle(name, marker, stateSchemaIdentity, stateField = "count") {
   const identity = `wasmc:dynamic-client-stateful-${name}@0.0.1-dev.1`;
   const adapter = Buffer.from(`
 import { createHash } from "node:crypto";
 const encoder = new TextEncoder();
 const decoder = new TextDecoder("utf-8", { fatal: true });
 let count = 0;
+const stateField = ${JSON.stringify(stateField)};
 const sha256 = (bytes) => createHash("sha256").update(bytes).digest("hex");
 export async function invoke(input) {
   const request = JSON.parse(decoder.decode(input));
@@ -122,13 +123,13 @@ export async function invoke(input) {
     return encoder.encode(JSON.stringify({ accepted: true, value: ${JSON.stringify(marker)} + ":" + count }));
   }
   if (request.operation === "snapshot-v1") {
-    const bytes = Buffer.from(JSON.stringify({ count }));
+    const bytes = Buffer.from(JSON.stringify({ [stateField]: count }));
     return encoder.encode(JSON.stringify({ accepted: true, state_schema_identity: ${JSON.stringify(stateSchemaIdentity)}, state_base64: bytes.toString("base64"), state_sha256: sha256(bytes) }));
   }
   if (request.operation === "restore-v1") {
     const bytes = Buffer.from(request.state_base64, "base64");
     if (sha256(bytes) !== request.state_sha256) throw new Error("stateful restore identity mismatch");
-    count = JSON.parse(bytes.toString("utf8")).count;
+    count = JSON.parse(bytes.toString("utf8"))[stateField];
     return encoder.encode(JSON.stringify({ accepted: true, state_schema_identity: request.state_schema_identity, state_sha256: request.state_sha256 }));
   }
   throw new Error("unsupported stateful operation");
@@ -144,6 +145,37 @@ export async function invoke(input) {
   ];
   return Buffer.from(JSON.stringify({
     schema: "wasmc.client-foundation-bundle/v1", identity, api: "wasmc:dynamic-graph-block@0.0.1",
+    files: files.map((file) => ({ path: file.path, sha256: sha256(file.bytes), base64: file.bytes.toString("base64") })),
+  }));
+}
+
+async function makeMigrationBundle(name, fromSchemaIdentity, toSchemaIdentity) {
+  const identity = `wasmc:dynamic-client-migration-${name}@0.0.1-dev.1`;
+  const adapter = Buffer.from(`
+import { createHash } from "node:crypto";
+const encoder = new TextEncoder();
+const decoder = new TextDecoder("utf-8", { fatal: true });
+const sha256 = (bytes) => createHash("sha256").update(bytes).digest("hex");
+export async function invoke(input) {
+  const request = JSON.parse(decoder.decode(input));
+  if (request.operation === "probe" || request.operation === "health") return encoder.encode(JSON.stringify({ accepted: true }));
+  if (request.operation !== "migrate-state-v1") throw new Error("unsupported migration operation");
+  if (request.from_schema_identity !== ${JSON.stringify(fromSchemaIdentity)} || request.to_schema_identity !== ${JSON.stringify(toSchemaIdentity)}) throw new Error("migration schema mismatch");
+  const source = JSON.parse(Buffer.from(request.state_base64, "base64").toString("utf8"));
+  const bytes = Buffer.from(JSON.stringify({ value: source.count }));
+  return encoder.encode(JSON.stringify({ accepted: true, state_schema_identity: ${JSON.stringify(toSchemaIdentity)}, state_base64: bytes.toString("base64"), state_sha256: sha256(bytes) }));
+}`);
+  const descriptor = Buffer.from(`${JSON.stringify({
+    schema: "wasmc.native-boundary-descriptor/v1", identity, wit: "lib.wit",
+    state_migration: { protocol: "snapshot-v1", from_schema_identity: fromSchemaIdentity, to_schema_identity: toSchemaIdentity },
+    adapter: { path: "native-adapter.mjs", sha256: sha256(adapter), export: "invoke" },
+    limits: { max_input_bytes: 65536, max_output_bytes: 65536 }, lifecycle: "prototype-not-admitted-not-released",
+  }, null, 2)}\n`);
+  const files = [
+    { path: "lib.wit", bytes: wit }, { path: "native-boundary.json", bytes: descriptor }, { path: "native-adapter.mjs", bytes: adapter },
+  ];
+  return Buffer.from(JSON.stringify({
+    schema: "wasmc.client-foundation-bundle/v1", identity, api: "wasmc:dynamic-state-migration@0.0.1",
     files: files.map((file) => ({ path: file.path, sha256: sha256(file.bytes), base64: file.bytes.toString("base64") })),
   }));
 }
@@ -190,11 +222,13 @@ const block = (name, artifact, configuration = {}) => ({
   state_schema_identity: null,
 });
 
-const graphPayload = (expectedRevision, blocks, pipeline) => ({
+const graphPayload = (expectedRevision, blocks, pipeline, migrations = []) => ({
   expected_graph_revision: expectedRevision,
   blocks,
   pipeline,
   graph_digest: describeSerialLibGraph({ blocks: blocks.map((entry) => ({ ...entry, root: "content-addressed-remote" })), pipeline }).graph_digest,
+  migrations,
+  migration_plan_sha256: migrations.length > 0 ? describeStateMigrations({ migrations: migrations.map((entry) => ({ ...entry, root: "content-addressed-remote" })) }).migration_plan_sha256 : null,
 });
 const dagBlock = (name, artifact) => ({
   name, bundle_sha256: artifact.sha256, identity: artifact.identity, artifact_sha256: artifact.package_sha256,
@@ -206,6 +240,11 @@ const statefulBlock = (artifact) => ({
   name: "counter", bundle_sha256: artifact.sha256, identity: artifact.identity, artifact_sha256: artifact.package_sha256,
   wit_contract_sha256: artifact.wit_contract_sha256, configuration: {}, configuration_sha256: canonicalJsonSha256({}),
   state_policy: artifact.state_policy, state_schema_identity: artifact.state_schema_identity,
+});
+const stateMigration = (artifact, fromSchemaIdentity, toSchemaIdentity) => ({
+  node: "counter", bundle_sha256: artifact.sha256, identity: artifact.identity, artifact_sha256: artifact.package_sha256,
+  wit_contract_sha256: artifact.wit_contract_sha256, configuration: {}, configuration_sha256: canonicalJsonSha256({}),
+  from_schema_identity: fromSchemaIdentity, to_schema_identity: toSchemaIdentity,
 });
 
 const gatewayRoot = path.join(temporaryRoot, "gateway");
@@ -263,6 +302,7 @@ try {
   assert.equal(forgedUpload.status, 400);
   assert.match(forgedUpload.value.error, /port manifest identity mismatch/);
   const stateSchemaIdentity = sha256(Buffer.from("wasmc:dynamic-client-counter-state/v1"));
+  const stateSchemaIdentityV2 = sha256(Buffer.from("wasmc:dynamic-client-counter-state/v2"));
   const uploadedStateful = {};
   for (const [name, marker] of [["counter-v1", "SV1"], ["counter-v2", "SV2"]]) {
     const response = await api(origin, "POST", "/v1/artifacts", await makeStatefulBundle(name, marker, stateSchemaIdentity));
@@ -271,11 +311,23 @@ try {
     assert.equal(response.value.state_schema_identity, stateSchemaIdentity);
     uploadedStateful[name] = response.value;
   }
+  const statefulV3Upload = await api(origin, "POST", "/v1/artifacts", await makeStatefulBundle("counter-v3", "SV3", stateSchemaIdentityV2, "value"));
+  assert.equal(statefulV3Upload.status, 201);
+  uploadedStateful["counter-v3"] = statefulV3Upload.value;
+  const migrationUpload = await api(origin, "POST", "/v1/artifacts", await makeMigrationBundle("counter-v1-to-v2", stateSchemaIdentity, stateSchemaIdentityV2));
+  assert.equal(migrationUpload.status, 201);
+  assert.deepEqual(migrationUpload.value.state_migration, { protocol: "snapshot-v1", from_schema_identity: stateSchemaIdentity, to_schema_identity: stateSchemaIdentityV2 });
+  const uploadedMigration = migrationUpload.value;
   const forgedStateBlock = { ...statefulBlock(uploadedStateful["counter-v1"]), state_policy: "sticky" };
   const forgedStatePayload = graphPayload(0, [forgedStateBlock], ["counter"]);
   const forgedStateCommand = await api(origin, "POST", "/v1/clients/dynamic-client/commands", { message_id: "bad-state-contract", operation: "lib-graph.apply", payload: forgedStatePayload });
   assert.equal(forgedStateCommand.status, 400);
   assert.match(forgedStateCommand.value.error, /bundle state declaration mismatch/);
+  const forgedMigration = stateMigration(uploadedMigration, stateSchemaIdentityV2, stateSchemaIdentity);
+  const forgedMigrationPayload = graphPayload(0, [statefulBlock(uploadedStateful["counter-v3"])], ["counter"], [forgedMigration]);
+  const forgedMigrationCommand = await api(origin, "POST", "/v1/clients/dynamic-client/commands", { message_id: "bad-migration-contract", operation: "lib-graph.apply", payload: forgedMigrationPayload });
+  assert.equal(forgedMigrationCommand.status, 400);
+  assert.match(forgedMigrationCommand.value.error, /migration bundle contract mismatch/);
 
   const a1 = block("a", uploaded.a1);
   const a2 = block("a", uploaded.a2, { suffix: "C" });
@@ -357,7 +409,7 @@ try {
   state = await waitFor(origin, (value) => value.commands[9]?.receipt);
   assert.equal(state.commands[9].receipt.response.value, "B1(A2C(after-cache-repair))");
 
-  const duplicate = await api(origin, "POST", "/v1/clients/dynamic-client/commands", { message_id: "dg-9", operation: "lib-graph.apply", payload: { pipeline: ["a", "b"], blocks: [a2, b1], graph_digest: repairGraph.graph_digest, expected_graph_revision: 2 } });
+  const duplicate = await api(origin, "POST", "/v1/clients/dynamic-client/commands", { message_id: "dg-9", operation: "lib-graph.apply", payload: repairGraph });
   assert.equal(duplicate.status, 200);
   assert.equal(duplicate.value.duplicate, true);
 
@@ -479,18 +531,34 @@ try {
   state = await waitFor(origin, (value) => value.commands[22]?.receipt);
   assert.equal(state.commands[22].receipt.response.value, "SV2:2");
 
+  const statefulV3 = statefulBlock(uploadedStateful["counter-v3"]);
+  const migrationV1ToV2 = stateMigration(uploadedMigration, stateSchemaIdentity, stateSchemaIdentityV2);
+  const crossSchemaReplacement = graphPayload(7, [statefulV3], ["counter"], [migrationV1ToV2]);
+  await api(origin, "POST", "/v1/clients/dynamic-client/commands", { message_id: "dg-24", operation: "lib-graph.apply", payload: crossSchemaReplacement });
+  state = await waitFor(origin, (value) => value.commands[23]?.receipt);
+  assert.deepEqual({ outcome: state.commands[23].receipt.outcome, migrated: state.commands[23].receipt.migrated, migration_libs: state.commands[23].receipt.migration_libs }, { outcome: "committed", migrated: 1, migration_libs: 1 });
+  await api(origin, "POST", "/v1/clients/dynamic-client/commands", { message_id: "dg-25", operation: "invoke", payload: { value: "get" } });
+  state = await waitFor(origin, (value) => value.commands[24]?.receipt);
+  assert.equal(state.commands[24].receipt.response.value, "SV3:2");
+  await stopClient();
+  await startClient(address);
+  await waitFor(origin, (value) => value.last_hello?.runtime_available === true && value.last_hello?.graph_revision === 8);
+  await api(origin, "POST", "/v1/clients/dynamic-client/commands", { message_id: "dg-26", operation: "invoke", payload: { value: "get" } });
+  state = await waitFor(origin, (value) => value.commands[25]?.receipt);
+  assert.equal(state.commands[25].receipt.response.value, "SV3:2");
+
   trace("client:final-close");
   await stopClient();
   assert.deepEqual(client.boundary.counts(), { resources: 0, windows: 0, operations: 0 });
   const diskState = JSON.parse(await readFile(path.join(clientRoot, "dynamic-state.json"), "utf8"));
-  assert.equal(diskState.graph_revision, 7);
-  assert.equal(diskState.active_graph.graph_digest, statefulReplacement.graph_digest);
+  assert.equal(diskState.graph_revision, 8);
+  assert.equal(diskState.active_graph.graph_digest, crossSchemaReplacement.graph_digest);
   assert.equal(diskState.active_graph.shape, "serial-dag");
   assert.equal(diskState.retired_generations.length, 0);
   assert.equal(diskState.retired_cleanup_receipts.some((receipt) => receipt.outcome === "process-owner-fenced-on-restart"), true);
-  assert.equal(diskState.last_server_sequence, 23);
-  assert.equal(Object.keys(diskState.receipts).length, 23);
-  assert.equal(diskState.active_state_checkpoint.checkpoint_sha256, checkpointCrashDiskState.active_state_checkpoint.checkpoint_sha256);
+  assert.equal(diskState.last_server_sequence, 26);
+  assert.equal(Object.keys(diskState.receipts).length, 26);
+  assert.equal(diskState.active_state_checkpoint.graph_digest, crossSchemaReplacement.graph_digest);
 
   for (const fault of ["missing", "digest-mismatch"]) {
     const faultRoot = path.join(temporaryRoot, `checkpoint-${fault}`);
@@ -503,7 +571,7 @@ try {
     const faultClient = new DynamicGraphClientFoundation({ stateRoot: faultRoot, gatewayUrl: `${address.wss_base}/v1/clients/dynamic-client/control`, ca: cert });
     const faultController = new AbortController();
     const faultRunning = faultClient.run(faultController.signal);
-    await waitFor(origin, (value) => value.connected === true && value.last_hello?.runtime_available === false && value.last_hello?.graph_revision === 7);
+    await waitFor(origin, (value) => value.connected === true && value.last_hello?.runtime_available === false && value.last_hello?.graph_revision === 8);
     assert.equal(faultClient.snapshot().runtime_available, false);
     faultController.abort();
     await faultClient.close();
@@ -515,7 +583,7 @@ try {
     accepted: true,
     schema: "wasmc.dynamic-client-gateway-local-qualification/v1",
     lifecycle: "prototype-local-qualified-not-admitted-not-released",
-    persistent_artifacts: Object.keys(uploaded).length + Object.keys(uploadedDag).length + Object.keys(uploadedStateful).length,
+    persistent_artifacts: Object.keys(uploaded).length + Object.keys(uploadedDag).length + Object.keys(uploadedStateful).length + 1,
     first_composition: "B1(A1(x))",
     one_node_replacement: "B1(A2C(x))",
     gateway_restart_reconnect: "B1(A2C(after-gateway-restart))",
@@ -529,11 +597,14 @@ try {
     durable_retired_generation_cleanup: "process-owner-fenced-on-restart",
     stateful_same_schema_gateway_replacement: "SV1:1->SV2:1",
     stateful_active_checkpoint_restart: "SV2:2",
+    stateful_cross_schema_gateway_migration: "SV2:2->SV3:2",
+    stateful_cross_schema_restart: "SV3:2",
     invoke_checkpoint_crash_recovered_without_replay: true,
     gateway_observed_checkpoint_identity: true,
     missing_or_corrupt_checkpoint_failed_closed: true,
     forged_port_manifest_rejected_at_gateway: true,
     forged_state_contract_rejected_at_gateway: true,
+    forged_migration_contract_rejected_at_gateway: true,
     durable_graph_revision: diskState.graph_revision,
     durable_receipts: Object.keys(diskState.receipts).length,
     canonical_duplicate_idempotent: true,

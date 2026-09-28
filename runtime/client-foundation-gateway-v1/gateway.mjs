@@ -4,7 +4,7 @@ import { mkdir, open, readFile, readdir, rename, unlink, writeFile } from "node:
 import https from "node:https";
 import path from "node:path";
 import { encodeFrame, FrameDecoder } from "../client-foundation-v1/websocket-wire.mjs";
-import { canonicalJson, canonicalJsonSha256, describeDynamicLibDag, describeSerialLibGraph, identifyDynamicLibPackageFiles } from "../client-foundation-v1/dynamic-lib-graph-spec.mjs";
+import { canonicalJson, canonicalJsonSha256, describeDynamicLibDag, describeSerialLibGraph, describeStateMigrations, identifyDynamicLibPackageFiles } from "../client-foundation-v1/dynamic-lib-graph-spec.mjs";
 import { validateWitPortManifest } from "../client-foundation-v1/wit-port-contracts.mjs";
 
 const STATE_SCHEMA = "wasmc.client-foundation-gateway-state/v1";
@@ -197,6 +197,7 @@ export class ClientFoundationGateway {
         port_contracts_sha256: validated.exact.graph_ports ? canonicalJsonSha256({ inputs: validated.exact.graph_ports.inputs, outputs: validated.exact.graph_ports.outputs }) : null,
         state_policy: validated.exact.descriptor.state?.policy ?? "stateless",
         state_schema_identity: validated.exact.descriptor.state?.schema_identity ?? null,
+        state_migration: validated.exact.descriptor.state_migration ?? null,
       };
       await this.#persist();
       jsonResponse(response, 201, { accepted: true, ...this.state.artifacts[digest], url: `${this.advertiseOrigin}/v1/artifacts/${digest}` });
@@ -297,7 +298,17 @@ export class ClientFoundationGateway {
           ? describeDynamicLibDag({ blocks: graphBlocks, edges: payload.edges, entrypoint: payload.entrypoint })
           : describeSerialLibGraph({ blocks: graphBlocks, pipeline: payload.pipeline });
         if (described.graph_digest !== payload.graph_digest) throw new Error("dynamic Lib graph command digest mismatch");
+        const graphMigrations = (payload.migrations ?? []).map((migration) => {
+          const metadata = this.state.artifacts[migration.bundle_sha256];
+          if (!metadata) throw new Error(`unknown dynamic Lib state migration bundle: ${migration.node}`);
+          if (metadata.identity !== migration.identity || metadata.package_sha256 !== migration.artifact_sha256 || metadata.wit_contract_sha256 !== migration.wit_contract_sha256) throw new Error(`dynamic Lib state migration bundle declaration mismatch: ${migration.node}`);
+          if (metadata.state_migration?.protocol !== "snapshot-v1" || metadata.state_migration.from_schema_identity !== migration.from_schema_identity || metadata.state_migration.to_schema_identity !== migration.to_schema_identity) throw new Error(`dynamic Lib state migration bundle contract mismatch: ${migration.node}`);
+          return { ...migration, root: "gateway-verified-content-addressed-locator" };
+        });
+        const describedMigrations = graphMigrations.length > 0 ? describeStateMigrations({ migrations: graphMigrations }) : null;
+        if ((describedMigrations?.migration_plan_sha256 ?? null) !== (payload.migration_plan_sha256 ?? null)) throw new Error("dynamic Lib state migration plan digest mismatch");
         payload.blocks = payload.blocks.map((block) => ({ ...block, artifact_url: `${this.advertiseOrigin}/v1/artifacts/${block.bundle_sha256}` }));
+        payload.migrations = (payload.migrations ?? []).map((migration) => ({ ...migration, artifact_url: `${this.advertiseOrigin}/v1/artifacts/${migration.bundle_sha256}` }));
       }
       const command = {
         message_id: input.message_id,
@@ -594,17 +605,20 @@ export class ClientFoundationGateway {
       const portContractsSha = portContracts ? canonicalJsonSha256(portContracts) : null;
       const statePolicy = validated.exact.descriptor.state?.policy ?? "stateless";
       const stateSchemaIdentity = validated.exact.descriptor.state?.schema_identity ?? null;
+      const stateMigration = validated.exact.descriptor.state_migration ?? null;
       if (metadata.port_contracts && canonicalJson(metadata.port_contracts) !== canonicalJson(portContracts)) throw new Error("stored port contracts mismatch");
       if (metadata.port_contracts_sha256 && metadata.port_contracts_sha256 !== portContractsSha) throw new Error("stored port contract identity mismatch");
       if (metadata.state_policy !== undefined && metadata.state_policy !== statePolicy) throw new Error("stored state policy mismatch");
       if (metadata.state_schema_identity !== undefined && metadata.state_schema_identity !== stateSchemaIdentity) throw new Error("stored state schema identity mismatch");
-      if (!metadata.package_sha256 || !metadata.wit_contract_sha256 || (portContracts && !metadata.port_contracts_sha256) || metadata.state_policy === undefined) {
+      if (metadata.state_migration !== undefined && canonicalJson(metadata.state_migration) !== canonicalJson(stateMigration)) throw new Error("stored state migration contract mismatch");
+      if (!metadata.package_sha256 || !metadata.wit_contract_sha256 || (portContracts && !metadata.port_contracts_sha256) || metadata.state_policy === undefined || metadata.state_migration === undefined) {
         metadata.package_sha256 = validated.exact.artifact_sha256;
         metadata.wit_contract_sha256 = validated.exact.wit_contract_sha256;
         metadata.port_contracts = portContracts;
         metadata.port_contracts_sha256 = portContractsSha;
         metadata.state_policy = statePolicy;
         metadata.state_schema_identity = stateSchemaIdentity;
+        metadata.state_migration = stateMigration;
         migrated = true;
       }
     }

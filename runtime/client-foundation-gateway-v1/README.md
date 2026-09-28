@@ -41,7 +41,10 @@ The gateway provides:
 - durable Client hello observation of the exact active-state checkpoint
   identity without transferring checkpoint bytes to the Gateway. For a
   `snapshot-v1` invocation, the Client binds checkpoint and command result in
-  one local write before sending the Gateway receipt.
+  one local write before sending the Gateway receipt;
+- exact cross-schema migration-plan validation and distribution. Migration Libs
+  are content addressed, schema-pair bound and ephemeral; they do not become
+  stable graph nodes or expand the Host API.
 
 The gateway persists a command before delivery and persists its receipt before
 dispatching the next sequence. If the gateway loses a receipt after the client

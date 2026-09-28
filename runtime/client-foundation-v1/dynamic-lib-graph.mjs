@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { readFile, realpath } from "node:fs/promises";
 import path from "node:path";
-import { canonicalJson, canonicalJsonSha256, describeDynamicLibDag, describeSerialLibGraph, identifyDynamicLibPackageFiles } from "./dynamic-lib-graph-spec.mjs";
+import { canonicalJson, canonicalJsonSha256, describeDynamicLibDag, describeSerialLibGraph, describeStateMigrations, identifyDynamicLibPackageFiles } from "./dynamic-lib-graph-spec.mjs";
 import { validateWitPortManifest } from "./wit-port-contracts.mjs";
 
 const encoder = new TextEncoder();
@@ -74,7 +74,7 @@ export class DynamicLibGraph {
     };
   }
 
-  async apply({ expected_revision, graph_digest, blocks, pipeline, edges, entrypoint, onPublished, onRetired }) {
+  async apply({ expected_revision, graph_digest, blocks, pipeline, edges, entrypoint, migrations = [], migration_plan_sha256 = null, onPublished, onRetired }) {
     if (this.closed) throw new Error("dynamic Lib graph closed");
     if (this.restoreFailed) throw new Error("dynamic Lib graph restore failed; close and reconstruct the graph");
     if (this.updateInProgress) throw new Error("dynamic Lib graph update already in progress");
@@ -84,15 +84,21 @@ export class DynamicLibGraph {
     const dag = Array.isArray(edges) || entrypoint !== undefined;
     const described = dag ? describeDynamicLibDag({ blocks, edges, entrypoint }) : describeSerialLibGraph({ blocks, pipeline });
     if (graph_digest !== described.graph_digest) throw new Error("dynamic Lib graph digest mismatch");
+    const describedMigrations = migrations.length > 0 ? describeStateMigrations({ migrations }) : null;
+    if ((describedMigrations?.migration_plan_sha256 ?? null) !== migration_plan_sha256) throw new Error("dynamic Lib state migration plan identity mismatch");
+    const migrationDeclarations = new Map(migrations.map((migration) => [migration.node, migration]));
     const desired = new Map(blocks.map((block) => [block.name, block]));
     if (graph_digest === this.active.graphDigest) {
+      if (migrations.length > 0) throw new Error("dynamic Lib state migration plan is invalid for an unchanged graph");
       return { outcome: "unchanged", revision: this.active.revision, graph_digest, installed: 0, reused: desired.size, released: 0, pipeline: pipeline ? [...pipeline] : [], shape: dag ? "general-dag" : "serial-dag" };
     }
 
     const old = this.active;
     const candidateBlocks = new Map();
     const installed = [];
+    const migrationResources = [];
     const snapshotMigrations = [];
+    const usedMigrationNodes = new Set();
     let reused = 0;
     let published = false;
     let releaseInvocationBarrier = null;
@@ -114,9 +120,7 @@ export class DynamicLibGraph {
         if (current) {
           if (current.statePolicy === "sticky" || declaration.state_policy === "sticky") throw new Error(`sticky dynamic Lib node cannot be replaced automatically: ${name}`);
           if (current.statePolicy !== declaration.state_policy) throw new Error(`dynamic Lib state policy transition is unsupported: ${name}`);
-          if (current.statePolicy === "snapshot-v1" && current.stateSchemaIdentity !== declaration.state_schema_identity) {
-            throw new Error(`dynamic Lib snapshot schema migration requires an exact migration Lib: ${name}`);
-          }
+          if (current.statePolicy === "snapshot-v1" && current.stateSchemaIdentity !== declaration.state_schema_identity && !migrationDeclarations.has(name)) throw new Error(`dynamic Lib snapshot schema migration requires an exact migration Lib: ${name}`);
         }
         const exact = await inspectDynamicLibPackage(declaration.root);
         if (exact.identity !== declaration.identity) throw new Error(`dynamic Lib descriptor identity mismatch: ${name}`);
@@ -150,8 +154,26 @@ export class DynamicLibGraph {
         candidateBlocks.set(name, record);
         await this.#call(resource, { operation: "probe", configuration: record.configuration });
         await this.#call(resource, { operation: "health", configuration: record.configuration });
-        if (current?.statePolicy === "snapshot-v1") snapshotMigrations.push({ name, source: current, target: record });
+        if (current?.statePolicy === "snapshot-v1") {
+          let migration = null;
+          if (current.stateSchemaIdentity !== record.stateSchemaIdentity) {
+            const declaration = migrationDeclarations.get(name);
+            if (declaration.from_schema_identity !== current.stateSchemaIdentity || declaration.to_schema_identity !== record.stateSchemaIdentity) throw new Error(`dynamic Lib state migration schema binding mismatch: ${name}`);
+            const exactMigration = await inspectDynamicLibPackage(declaration.root);
+            const contract = exactMigration.descriptor.state_migration;
+            if (exactMigration.identity !== declaration.identity || exactMigration.artifact_sha256 !== declaration.artifact_sha256 || exactMigration.wit_contract_sha256 !== declaration.wit_contract_sha256) throw new Error(`dynamic Lib state migration package identity mismatch: ${name}`);
+            if (contract?.protocol !== "snapshot-v1" || contract.from_schema_identity !== declaration.from_schema_identity || contract.to_schema_identity !== declaration.to_schema_identity) throw new Error(`dynamic Lib state migration package contract mismatch: ${name}`);
+            const resource = await this.boundary.install(declaration.root);
+            migration = { resource, configuration: JSON.parse(canonicalJson(declaration.configuration)), fromSchemaIdentity: declaration.from_schema_identity, toSchemaIdentity: declaration.to_schema_identity };
+            migrationResources.push(migration);
+            usedMigrationNodes.add(name);
+            await this.#call(resource, { operation: "probe", configuration: migration.configuration });
+            await this.#call(resource, { operation: "health", configuration: migration.configuration });
+          }
+          snapshotMigrations.push({ name, source: current, target: record, migration });
+        }
       }
+      if (usedMigrationNodes.size !== migrationDeclarations.size) throw new Error("dynamic Lib state migration plan contains an unused declaration");
       const candidate = {
         revision: old.revision + 1,
         graphDigest: graph_digest,
@@ -169,6 +191,7 @@ export class DynamicLibGraph {
         await this.#drain(old);
         for (const migration of snapshotMigrations) await this.#migrateSnapshot(migration);
       }
+      for (const migration of migrationResources.splice(0)) this.boundary.releaseResource(migration.resource);
       for (const block of candidate.blocks.values()) await this.#call(block.resource, { operation: "health", configuration: block.configuration });
       const stateCheckpoint = await this.#captureGenerationCheckpoint(candidate);
       this.active = candidate;
@@ -183,12 +206,13 @@ export class DynamicLibGraph {
       releaseInvocationBarrier?.();
       releaseInvocationBarrier = null;
       const released = retired ? await this.#cleanupRetired(retired) : 0;
-      return { outcome: "committed", revision: candidate.revision, graph_digest, installed: installed.length, reused, released, migrated: snapshotMigrations.length, pipeline: pipeline ? [...pipeline] : [], shape: candidate.shape };
+      return { outcome: "committed", revision: candidate.revision, graph_digest, installed: installed.length, reused, released, migrated: snapshotMigrations.length, migration_libs: usedMigrationNodes.size, pipeline: pipeline ? [...pipeline] : [], shape: candidate.shape };
     } catch (error) {
       if (published) {
         return { outcome: "committed", revision: this.active.revision, graph_digest: this.active.graphDigest, installed: installed.length, reused, released: 0, cleanup_error: error.message, pipeline: [...this.active.pipeline] };
       }
       this.active = old;
+      for (const migration of migrationResources) this.boundary.releaseResource(migration.resource);
       for (const block of installed) this.boundary.releaseResource(block.resource);
       return { outcome: "rolled-back", revision: old.revision, graph_digest: old.graphDigest, installed: installed.length, reused, released: installed.length, error: error.message, pipeline: [...old.pipeline] };
     } finally {
@@ -333,13 +357,24 @@ export class DynamicLibGraph {
     };
   }
 
-  async #migrateSnapshot({ name, source, target }) {
+  async #migrateSnapshot({ name, source, target, migration }) {
     const snapshot = await this.#call(source.resource, {
       operation: "snapshot-v1",
       state_schema_identity: source.stateSchemaIdentity,
       configuration: source.configuration,
     });
-    const envelope = this.#validateSnapshotEnvelope(name, source.stateSchemaIdentity, snapshot);
+    let envelope = this.#validateSnapshotEnvelope(name, source.stateSchemaIdentity, snapshot);
+    if (migration) {
+      const migrated = await this.#call(migration.resource, {
+        operation: "migrate-state-v1",
+        from_schema_identity: migration.fromSchemaIdentity,
+        to_schema_identity: migration.toSchemaIdentity,
+        state_base64: envelope.state_base64,
+        state_sha256: envelope.state_sha256,
+        configuration: migration.configuration,
+      });
+      envelope = this.#validateSnapshotEnvelope(name, target.stateSchemaIdentity, migrated);
+    }
     await this.#restoreSnapshotEnvelope(name, target, envelope);
   }
 

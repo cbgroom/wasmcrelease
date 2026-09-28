@@ -104,27 +104,31 @@ from Gateway metadata or test output.
 
 | Surface | Role | Required behavior |
 |---|---|---|
-| exact package descriptor | authority | optional `state`; omission means `stateless`; `sticky` and `snapshot-v1` require a 64-hex schema identity |
+| exact package descriptor | authority | optional `state`; omission means `stateless`; `sticky` and `snapshot-v1` require a 64-hex schema identity; migration packages declare an exact `snapshot-v1` source/target schema pair |
 | desired graph node | identity-bearing duplicate | policy and schema must exactly match the package and are covered by `graph_digest` |
 | Gateway artifact metadata | derived transport check | derived from package bytes; a command that disagrees is rejected before enqueue |
 | Client cache/install | independent transport check | package bytes are re-derived after download, on cache read and on restart reconstruction |
 
 The implemented `snapshot-v1` envelope is canonical base64 of at most
-1,048,576 decoded bytes plus its exact SHA-256 and schema identity. The source
-and target schema identities must be equal. Replacement order is: install,
-probe and health-check candidate; block new graph invocations; drain the old
-generation; snapshot source; validate the complete envelope; restore target;
-health-check the complete candidate; publish; durably record publication and
-retired ownership; release the barrier; drain and release the retired
-generation. The barrier is graph-wide. Restore or validation failure occurs
-before publication, releases the candidate, retains the old generation and
+1,048,576 decoded bytes plus its exact SHA-256 and schema identity. Equal-schema
+replacement restores it directly. Cross-schema replacement requires a separate
+`wasmc.dynamic-lib-state-migration-plan/v1` digest binding node, exact migration
+package, WIT, configuration and source/target schema identities. Replacement
+order is: install, probe and health-check candidate and migration Lib; block new
+graph invocations; drain the old generation; snapshot source; validate the
+complete envelope; migrate and validate the target-schema envelope; restore
+target; release the ephemeral migration resource; health-check the complete
+candidate; publish; durably record publication and retired ownership; release
+the barrier; drain and release the retired generation. The barrier is
+graph-wide. Migration, restore or validation failure occurs before publication,
+releases candidate and migration resources, retains the old generation and
 releases waiting invocations onto it.
 
 `sticky` permits only exact-instance reuse. Automatic replacement and removal
 are rejected. Stateful removal has no disposition protocol in this slice.
-Cross-schema replacement has no migration-Lib interface in this slice and is
-rejected; the error names the required future authority rather than an
-available operation.
+Cross-schema replacement without an exact plan and exact migration package is
+rejected. A migration Lib is a transition dependency, never a stable graph
+node, and does not extend the Host API.
 
 The fixed minimal CLI is `current/cli.mjs`; the Gateway has a separate,
 higher-layer CLI. Neither CLI nor the Host API participates in state transfer.
@@ -266,18 +270,19 @@ receipt. Same-schema `snapshot-v1` replacement and fail-closed `sticky`
 handling are qualified locally and through the Client/Gateway path.
 Active `snapshot-v1` checkpoint restoration is now qualified across a full
 Client restart, including a crash after joint checkpoint/result persistence and
-before receipt delivery. Cross-schema migration through an exact migration Lib
-and a restart disposition for `sticky` state remain open gates. The whole path
+before receipt delivery. Cross-schema migration through an exact ephemeral Lib
+is qualified locally and through Gateway distribution, including restart on the
+target schema. A restart disposition for `sticky` state remains open. The whole path
 remains a prototype and is not admitted or released.
 
-The focused local stateful qualification covers same-schema transfer,
+The focused local stateful qualification covers same- and cross-schema transfer,
 graph-wide invocation fencing, restore rollback, sticky reuse/rejection,
 package/declaration mismatch, policy transition, stateful removal without a
 disposition, non-canonical base64, digest mismatch and the 1 MiB snapshot
-bound. The integrated Client/Gateway qualification covers same-schema transfer
-through distribution, active-state restart, checkpoint identity in the Gateway
+bound. The integrated Client/Gateway qualification covers same- and cross-schema
+transfer through distribution, target-schema restart, active-state restart, checkpoint identity in the Gateway
 hello, missing/corrupt checkpoint fail-closed behavior, invoke crash recovery
-without replay, and rejection of a forged Gateway state declaration.
+without replay, and rejection of forged Gateway state and migration declarations.
 
 The process-owner fence does not claim exactly-once behavior or cleanup of
 external effects that a Lib initiated outside the Host process. Such effects

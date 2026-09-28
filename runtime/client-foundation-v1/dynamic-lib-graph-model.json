@@ -33,6 +33,14 @@
       "missing_or_corrupt": "runtime-unavailable-control-remains-connected",
       "partial_restore_failure": "graph-poisoned-until-close-and-reconstruction"
     },
+    "cross_schema_migration": {
+      "plan_schema": "wasmc.dynamic-lib-state-migration-plan/v1",
+      "identity": "canonical-json-sha256-over-node-package-wit-configuration-and-schema-pair",
+      "package_contract": "exact-state-migration-descriptor-with-snapshot-v1-protocol",
+      "lifetime": "ephemeral-transition-resource-released-before-publication",
+      "ordering": "drain-snapshot-migrate-validate-restore-health-publish",
+      "failure": "candidate-rollback-old-generation-remains-active"
+    },
     "same_schema_order": [
       "install-probe-health-candidate",
       "block-new-invocations",
@@ -104,11 +112,13 @@
     "invoke-result-and-state-checkpoint-persist-together",
     "checkpoint-restored-before-runtime-available",
     "partial-checkpoint-restore-poisons-graph",
+    "cross-schema-migration-requires-exact-plan-and-package",
+    "migration-resource-is-ephemeral",
     "close-reclaims-all-runtime-resources"
   ],
   "current_implementation_profile": {
     "graph_shape": "serial-pipeline-and-general-dag-client-gateway",
-    "state_policy": "stateless-sticky-and-same-schema-snapshot-v1",
+    "state_policy": "stateless-sticky-and-snapshot-v1-with-exact-cross-schema-migration",
     "graph_identity": "canonical-json-sha256",
     "configuration": "canonical-json-sha256",
     "wit_contract_identity": "wasm-tools-derived-port-type-sha256-bound-to-exact-wit",
@@ -131,11 +141,10 @@
       "invoke-result-and-state-checkpoint-persist-together",
       "checkpoint-restored-before-runtime-available",
       "partial-checkpoint-restore-poisons-graph",
+      "cross-schema-migration-requires-exact-plan-and-package",
+      "migration-resource-is-ephemeral",
       "close-reclaims-all-runtime-resources"
     ],
-    "open_gates": [
-      "cross-schema-state-migration-lib",
-      "sticky-active-restart-disposition"
-    ]
+    "open_gates": ["sticky-active-restart-disposition"]
   }
 }

@@ -66,10 +66,14 @@
     "decoded_bytes_per_block": 1048576,
     "persisted_checkpoint_bytes": 8388608
   },
-  "open_gates": [
-    "cross-schema-state-migration-lib",
-    "sticky-active-restart-disposition"
-  ],
+  "cross_schema_migration": {
+    "implemented": true,
+    "plan_identity": "wasmc.dynamic-lib-state-migration-plan/v1 canonical JSON SHA-256",
+    "binding": "node plus exact migration package, WIT, configuration, source schema and target schema",
+    "failure": "candidate rollback; old generation remains active",
+    "resource_lifetime": "ephemeral and released before publication"
+  },
+  "open_gates": ["sticky-active-restart-disposition"],
   "not_claimed": [
     "general exactly-once execution",
     "external-effect rollback or cleanup",
@@ -86,6 +90,7 @@
     "normative_model": "docs/DYNAMIC_LIB_GRAPH_MODEL.md",
     "client": "runtime/client-foundation-v1/dynamic-foundation.mjs",
     "graph": "runtime/client-foundation-v1/dynamic-lib-graph.mjs",
+    "package_spec": "runtime/client-foundation-v1/dynamic-lib-graph-spec.mjs",
     "gateway": "runtime/client-foundation-gateway-v1/gateway.mjs",
     "focused_test": "scripts/test-dynamic-lib-stateful-v1.mjs",
     "integrated_test": "scripts/test-dynamic-client-foundation-gateway-v1.mjs",
@@ -98,6 +103,9 @@
     "gateway_observed_checkpoint_identity": true,
     "missing_or_corrupt_checkpoint_failed_closed": true,
     "partial_checkpoint_restore_poisoned_until_close": true,
+    "cross_schema_gateway_migration": "SV2:2->SV3:2",
+    "cross_schema_restart": "SV3:2",
+    "forged_migration_contract_rejected_at_gateway": true,
     "external_effect_exactly_once_claimed": false,
     "fixed_host_api_changed": false,
     "minimal_cli_changed": false

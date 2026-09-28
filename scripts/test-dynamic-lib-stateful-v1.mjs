@@ -5,7 +5,7 @@ import os from "node:os";
 import path from "node:path";
 import { LibDefinedBoundary } from "../host/runtime/lib-boundary/reference.mjs";
 import { DynamicLibGraph, inspectDynamicLibPackage } from "../runtime/client-foundation-v1/dynamic-lib-graph.mjs";
-import { canonicalJsonSha256, describeSerialLibGraph } from "../runtime/client-foundation-v1/dynamic-lib-graph-spec.mjs";
+import { canonicalJsonSha256, describeSerialLibGraph, describeStateMigrations } from "../runtime/client-foundation-v1/dynamic-lib-graph-spec.mjs";
 
 const sha256 = (bytes) => createHash("sha256").update(bytes).digest("hex");
 const temporaryRoot = await mkdtemp(path.join(os.tmpdir(), "wasmc-dynamic-lib-stateful-"));
@@ -18,6 +18,7 @@ const schemaV2 = sha256(Buffer.from("wasmc:test-counter-state/v2"));
 
 async function makeProvider(directory, marker, statePolicy, stateSchemaIdentity, {
   name = "counter",
+  stateField = "count",
   brokenRestore = false,
   restoreDelayMs = 0,
   snapshotFault = null,
@@ -34,6 +35,7 @@ let count = 0;
 const brokenRestore = ${brokenRestore};
 const restoreDelayMs = ${restoreDelayMs};
 const snapshotFault = ${JSON.stringify(snapshotFault)};
+const stateField = ${JSON.stringify(stateField)};
 const sha256 = (bytes) => createHash("sha256").update(bytes).digest("hex");
 export async function invoke(input) {
   const request = JSON.parse(decoder.decode(input));
@@ -44,7 +46,7 @@ export async function invoke(input) {
     return encoder.encode(JSON.stringify({ accepted: true, value: ${JSON.stringify(marker)} + ":" + count }));
   }
   if (request.operation === "snapshot-v1") {
-    const bytes = snapshotFault === "oversize" ? Buffer.alloc(1024 * 1024 + 1) : Buffer.from(JSON.stringify({ count }));
+    const bytes = snapshotFault === "oversize" ? Buffer.alloc(1024 * 1024 + 1) : Buffer.from(JSON.stringify({ [stateField]: count }));
     const stateBase64 = snapshotFault === "noncanonical-base64" ? bytes.toString("base64") + "=" : bytes.toString("base64");
     const stateSha256 = snapshotFault === "digest-mismatch" ? "0".repeat(64) : sha256(bytes);
     return encoder.encode(JSON.stringify({ accepted: true, state_schema_identity: ${JSON.stringify(stateSchemaIdentity)}, state_base64: stateBase64, state_sha256: stateSha256 }));
@@ -54,7 +56,7 @@ export async function invoke(input) {
     if (brokenRestore) return encoder.encode(JSON.stringify({ accepted: false, state_schema_identity: request.state_schema_identity, state_sha256: request.state_sha256 }));
     const bytes = Buffer.from(request.state_base64, "base64");
     if (sha256(bytes) !== request.state_sha256) throw new Error("restore identity mismatch");
-    count = JSON.parse(bytes.toString("utf8")).count;
+    count = JSON.parse(bytes.toString("utf8"))[stateField];
     return encoder.encode(JSON.stringify({ accepted: true, state_schema_identity: request.state_schema_identity, state_sha256: request.state_sha256 }));
   }
   throw new Error("unsupported stateful operation");
@@ -75,9 +77,51 @@ export async function invoke(input) {
   };
 }
 
-const request = (expectedRevision, blocks) => ({
+async function makeMigrationProvider(directory, fromSchemaIdentity, toSchemaIdentity, { outputFault = null } = {}) {
+  const root = path.join(temporaryRoot, directory);
+  await mkdir(root, { recursive: true });
+  const identity = `wasmc:dynamic-state-migration-${directory}@0.0.1-dev.1`;
+  const adapter = Buffer.from(`
+import { createHash } from "node:crypto";
+const encoder = new TextEncoder();
+const decoder = new TextDecoder("utf-8", { fatal: true });
+const outputFault = ${JSON.stringify(outputFault)};
+const sha256 = (bytes) => createHash("sha256").update(bytes).digest("hex");
+export async function invoke(input) {
+  const request = JSON.parse(decoder.decode(input));
+  if (request.operation === "probe" || request.operation === "health") return encoder.encode(JSON.stringify({ accepted: true }));
+  if (request.operation !== "migrate-state-v1") throw new Error("unsupported migration operation");
+  if (request.from_schema_identity !== ${JSON.stringify(fromSchemaIdentity)} || request.to_schema_identity !== ${JSON.stringify(toSchemaIdentity)}) throw new Error("migration schema mismatch");
+  const source = JSON.parse(Buffer.from(request.state_base64, "base64").toString("utf8"));
+  const bytes = Buffer.from(JSON.stringify({ value: source.count }));
+  return encoder.encode(JSON.stringify({
+    accepted: true,
+    state_schema_identity: outputFault === "schema" ? ${JSON.stringify(fromSchemaIdentity)} : ${JSON.stringify(toSchemaIdentity)},
+    state_base64: bytes.toString("base64"),
+    state_sha256: outputFault === "digest" ? "0".repeat(64) : sha256(bytes),
+  }));
+}`);
+  const descriptor = {
+    schema: "wasmc.native-boundary-descriptor/v1", identity, wit: "lib.wit",
+    state_migration: { protocol: "snapshot-v1", from_schema_identity: fromSchemaIdentity, to_schema_identity: toSchemaIdentity },
+    adapter: { path: "native-adapter.mjs", sha256: sha256(adapter), export: "invoke" },
+    limits: { max_input_bytes: 65536, max_output_bytes: 65536 }, lifecycle: "prototype-not-admitted-not-released",
+  };
+  await writeFile(path.join(root, "lib.wit"), wit);
+  await writeFile(path.join(root, "native-adapter.mjs"), adapter);
+  await writeFile(path.join(root, "native-boundary.json"), `${JSON.stringify(descriptor, null, 2)}\n`);
+  const exact = await inspectDynamicLibPackage(root);
+  return {
+    node: "counter", root, identity, artifact_sha256: exact.artifact_sha256, wit_contract_sha256: exact.wit_contract_sha256,
+    configuration: {}, configuration_sha256: canonicalJsonSha256({}), from_schema_identity: fromSchemaIdentity, to_schema_identity: toSchemaIdentity,
+  };
+}
+
+const request = (expectedRevision, blocks, migrations = []) => ({
   expected_revision: expectedRevision, blocks, pipeline: blocks.map((block) => block.name),
   graph_digest: describeSerialLibGraph({ blocks, pipeline: blocks.map((block) => block.name) }).graph_digest,
+  migrations,
+  migration_plan_sha256: migrations.length > 0 ? describeStateMigrations({ migrations }).migration_plan_sha256 : null,
 });
 const waitFor = async (predicate, label) => {
   const deadline = Date.now() + 1000;
@@ -123,6 +167,29 @@ try {
   assert.equal(mismatched.outcome, "rolled-back");
   assert.match(mismatched.error, /exact migration Lib/);
   assert.deepEqual(await graph.invoke("get"), { revision: 2, value: "V2:5" });
+
+  const crossBoundary = new LibDefinedBoundary();
+  const crossGraph = new DynamicLibGraph({ boundary: crossBoundary });
+  negativeGraphs.push(crossGraph);
+  const crossSource = await makeProvider("cross-source-v1", "CROSS1", "snapshot-v1", schemaV1);
+  const crossTarget = await makeProvider("cross-target-v2", "CROSS2", "snapshot-v1", schemaV2, { stateField: "value" });
+  const crossMigration = await makeMigrationProvider("v1-to-v2", schemaV1, schemaV2);
+  const brokenCrossMigration = await makeMigrationProvider("v1-to-v2-broken", schemaV1, schemaV2, { outputFault: "digest" });
+  assert.equal((await crossGraph.apply(request(0, [crossSource]))).outcome, "committed");
+  assert.deepEqual(await crossGraph.invoke("inc"), { revision: 1, value: "CROSS1:1" });
+  assert.deepEqual(await crossGraph.invoke("inc"), { revision: 1, value: "CROSS1:2" });
+  const absentCrossMigration = await crossGraph.apply(request(1, [crossTarget]));
+  assert.equal(absentCrossMigration.outcome, "rolled-back");
+  assert.match(absentCrossMigration.error, /requires an exact migration Lib/);
+  const brokenCrossResult = await crossGraph.apply(request(1, [crossTarget], [brokenCrossMigration]));
+  assert.equal(brokenCrossResult.outcome, "rolled-back");
+  assert.match(brokenCrossResult.error, /snapshot identity mismatch/);
+  assert.deepEqual(await crossGraph.invoke("get"), { revision: 1, value: "CROSS1:2" });
+  const crossResult = await crossGraph.apply(request(1, [crossTarget], [crossMigration]));
+  assert.deepEqual({ outcome: crossResult.outcome, migrated: crossResult.migrated, migration_libs: crossResult.migration_libs }, { outcome: "committed", migrated: 1, migration_libs: 1 });
+  assert.deepEqual(await crossGraph.invoke("get"), { revision: 2, value: "CROSS2:2" });
+  await crossGraph.close();
+  assert.deepEqual(crossBoundary.counts(), { resources: 0, windows: 0, operations: 0 });
 
   const checkpointOldInvocation = graph.invoke("slow-inc");
   const checkpointCapture = graph.captureStateCheckpoint();
@@ -208,7 +275,8 @@ try {
     accepted: true, schema: "wasmc.dynamic-lib-stateful-local-qualification/v1", lifecycle: "prototype-local-qualified-not-admitted-not-released",
     snapshot_same_schema_replacement: "V1:3->V2:4", old_invocation_drained_before_snapshot: true,
     new_invocation_blocked_until_publish: true, failed_restore_rolled_back: true, invocation_barrier_released_after_rollback: true,
-    cross_schema_requires_migration_lib: true, sticky_unchanged_reused: true, sticky_automatic_replacement_rejected: true,
+    cross_schema_exact_migration_lib: "CROSS1:2->CROSS2:2", cross_schema_missing_migration_rejected: true, cross_schema_broken_migration_rolled_back: true,
+    sticky_unchanged_reused: true, sticky_automatic_replacement_rejected: true,
     package_state_contract_mismatch_rejected: true, state_policy_transition_rejected: true, stateful_removal_without_disposition_rejected: true,
     noncanonical_snapshot_rejected: true, snapshot_digest_mismatch_rejected: true, oversized_snapshot_rejected: true,
     active_checkpoint_restored: "V2:6", checkpoint_barrier_queued_new_invocation: "V2:7", corrupt_checkpoint_rejected: true,

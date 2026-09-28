@@ -72,6 +72,13 @@ export function identifyDynamicLibPackageFiles(entries) {
       throw new Error("unsupported dynamic Lib package state policy");
     }
   }
+  if (descriptor.state_migration !== undefined) {
+    const migration = descriptor.state_migration;
+    if (migration?.protocol !== "snapshot-v1" || !SHA256.test(migration.from_schema_identity) || !SHA256.test(migration.to_schema_identity) || migration.from_schema_identity === migration.to_schema_identity) {
+      throw new Error("invalid dynamic Lib package state migration contract");
+    }
+    if (descriptor.state !== undefined) throw new Error("dynamic Lib package cannot be both stateful and a state migration");
+  }
   const selected = ["native-boundary.json", descriptor.wit, descriptor.adapter.path, ...(descriptor.graph_ports ? [descriptor.graph_ports] : [])];
   if (new Set(selected).size !== selected.length || selected.some((name) => !files.has(name))) {
     throw new Error("incomplete dynamic Lib package files");
@@ -109,6 +116,38 @@ const assertStatePolicy = (block) => {
   }
   throw new Error(`unsupported dynamic Lib state policy: ${block.name}`);
 };
+
+export function describeStateMigrations({ migrations }) {
+  if (!Array.isArray(migrations) || migrations.length === 0) throw new Error("dynamic Lib state migration plan must not be empty");
+  const nodes = new Set();
+  const entries = migrations.map((migration) => {
+    if (!migration || !NODE_ID.test(migration.node) || nodes.has(migration.node) || typeof migration.root !== "string" || typeof migration.identity !== "string" || migration.identity.length === 0) {
+      throw new Error("invalid dynamic Lib state migration declaration");
+    }
+    nodes.add(migration.node);
+    for (const [field, value] of [
+      ["artifact", migration.artifact_sha256],
+      ["configuration", migration.configuration_sha256],
+      ["WIT contract", migration.wit_contract_sha256],
+      ["source schema", migration.from_schema_identity],
+      ["target schema", migration.to_schema_identity],
+    ]) if (!SHA256.test(value)) throw new Error(`invalid dynamic Lib state migration ${field} identity: ${migration.node}`);
+    if (migration.from_schema_identity === migration.to_schema_identity) throw new Error(`dynamic Lib state migration schemas must differ: ${migration.node}`);
+    if (canonicalJsonSha256(migration.configuration) !== migration.configuration_sha256) throw new Error(`dynamic Lib state migration configuration identity mismatch: ${migration.node}`);
+    return {
+      node_id: migration.node,
+      lib_identity: migration.identity,
+      package_sha256: migration.artifact_sha256,
+      configuration_sha256: migration.configuration_sha256,
+      wit_contract_sha256: migration.wit_contract_sha256,
+      protocol: "snapshot-v1",
+      from_schema_identity: migration.from_schema_identity,
+      to_schema_identity: migration.to_schema_identity,
+    };
+  }).sort((left, right) => left.node_id.localeCompare(right.node_id));
+  const spec = { schema: "wasmc.dynamic-lib-state-migration-plan/v1", migrations: entries };
+  return { spec, migration_plan_sha256: canonicalJsonSha256(spec) };
+}
 
 export function describeDynamicLibDag({ blocks, edges, entrypoint }) {
   if (!Array.isArray(blocks) || blocks.length === 0 || !Array.isArray(edges) || !entrypoint) throw new Error("incomplete dynamic Lib DAG");

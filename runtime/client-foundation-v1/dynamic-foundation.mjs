@@ -6,7 +6,7 @@ import path from "node:path";
 import { LibDefinedBoundary } from "../../host/runtime/lib-boundary/reference.mjs";
 import { connectWss } from "./wss-transport.mjs";
 import { DynamicLibGraph } from "./dynamic-lib-graph.mjs";
-import { canonicalJson, canonicalJsonSha256, describeDynamicLibDag, describeSerialLibGraph, identifyDynamicLibPackageFiles } from "./dynamic-lib-graph-spec.mjs";
+import { canonicalJson, canonicalJsonSha256, describeDynamicLibDag, describeSerialLibGraph, describeStateMigrations, identifyDynamicLibPackageFiles } from "./dynamic-lib-graph-spec.mjs";
 import { validateWitPortManifest } from "./wit-port-contracts.mjs";
 
 const STATE_SCHEMA = "wasmc.dynamic-client-foundation-state/v1";
@@ -248,10 +248,17 @@ export class DynamicGraphClientFoundation {
       const root = await this.#ensureBundle(declaration);
       blocks.push({ ...declaration, root, artifact_url: undefined, bundle_sha256: undefined });
     }
+    const migrations = [];
+    for (const declaration of payload.migrations ?? []) {
+      const root = await this.#ensureBundle(declaration);
+      migrations.push({ ...declaration, root, artifact_url: undefined, bundle_sha256: undefined });
+    }
     const described = dag
       ? describeDynamicLibDag({ blocks, edges: payload.edges, entrypoint: payload.entrypoint })
       : describeSerialLibGraph({ blocks, pipeline: payload.pipeline });
     if (described.graph_digest !== payload.graph_digest) throw new Error("dynamic graph command identity mismatch");
+    const describedMigrations = migrations.length > 0 ? describeStateMigrations({ migrations }) : null;
+    if ((describedMigrations?.migration_plan_sha256 ?? null) !== (payload.migration_plan_sha256 ?? null)) throw new Error("dynamic graph state migration command identity mismatch");
     const active = {
       graph_digest: payload.graph_digest,
       shape: dag ? "general-dag" : "serial-dag",
@@ -267,6 +274,7 @@ export class DynamicGraphClientFoundation {
     const result = await this.graph.apply({
       expected_revision: payload.expected_graph_revision, graph_digest: payload.graph_digest, blocks,
       pipeline: payload.pipeline, edges: payload.edges, entrypoint: payload.entrypoint,
+      migrations, migration_plan_sha256: payload.migration_plan_sha256 ?? null,
       onPublished: async ({ active: published, retired, state_checkpoint: stateCheckpoint }) => {
         this.state.graph_revision = published.revision;
         this.state.active_graph = active;
@@ -385,6 +393,13 @@ export class DynamicGraphClientFoundation {
     if (exact.identity !== declaration.identity) throw new Error(`dynamic Lib transport identity mismatch: ${declaration.name}`);
     if (exact.artifact_sha256 !== declaration.artifact_sha256) throw new Error(`dynamic Lib transported package mismatch: ${declaration.name}`);
     if (exact.wit_contract_sha256 !== declaration.wit_contract_sha256) throw new Error(`dynamic Lib transported WIT mismatch: ${declaration.name}`);
+    if (Object.hasOwn(declaration, "from_schema_identity")) {
+      const migration = exact.descriptor.state_migration;
+      if (migration?.protocol !== "snapshot-v1" || migration.from_schema_identity !== declaration.from_schema_identity || migration.to_schema_identity !== declaration.to_schema_identity) {
+        throw new Error(`dynamic Lib transported state migration contract mismatch: ${declaration.node}`);
+      }
+      return;
+    }
     const exactState = exact.descriptor.state ?? { policy: "stateless", schema_identity: null };
     if (exactState.policy !== declaration.state_policy || exactState.schema_identity !== declaration.state_schema_identity) {
       throw new Error(`dynamic Lib transported state contract mismatch: ${declaration.name}`);
