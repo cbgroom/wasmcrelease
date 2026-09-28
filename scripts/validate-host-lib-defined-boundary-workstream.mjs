@@ -700,6 +700,39 @@ assert.equal(iosWebSocketV1Receipt.evidence.process_relaunch_reconnect_qualified
 assert.equal(iosWebSocketV1Receipt.evidence.physical_device, false);
 execFileSync(process.execPath, ["scripts/validate-ios-websocket.mjs"], { stdio: "ignore" });
 
+const iosNetworkPathV1Receipt = JSON.parse(fs.readFileSync(
+  "admission/host-lib-defined-boundary-v1/ios-arm64-network-path-v1.json", "utf8",
+));
+assert.equal(iosNetworkPathV1Receipt.schema,
+  "wasmc.host-lib-defined-boundary-ios-network-path-qualification/v1");
+assert.equal(iosNetworkPathV1Receipt.qualified, true);
+assert.equal(iosNetworkPathV1Receipt.admitted, false);
+assert.equal(iosNetworkPathV1Receipt.released, false);
+assert.equal(iosNetworkPathV1Receipt.discoverable, false);
+assert.equal(iosNetworkPathV1Receipt.installable, false);
+execFileSync("git", ["cat-file", "-e", `${iosNetworkPathV1Receipt.implementation_commit}^{commit}`]);
+execFileSync("git", ["merge-base", "--is-ancestor", iosNetworkPathV1Receipt.implementation_commit, "HEAD"]);
+for (const [relative, expected] of Object.entries(iosNetworkPathV1Receipt.source)) {
+  assert.equal(digestAt(iosNetworkPathV1Receipt.implementation_commit, relative), expected,
+    `${relative}: retained iOS network-path v1 source drift`);
+}
+assert.equal(iosNetworkPathV1Receipt.evidence.status, "PASS");
+assert.equal(iosNetworkPathV1Receipt.evidence.fixed_host_domain_apis, 0);
+assert.equal(iosNetworkPathV1Receipt.evidence.fixed_host_sha256,
+  iosWebSocketV1Receipt.evidence.fixed_host_sha256);
+assert.equal(iosNetworkPathV1Receipt.evidence.path_status, "satisfied");
+assert.deepEqual(iosNetworkPathV1Receipt.evidence.interfaces, ["wifi"]);
+assert.equal(iosNetworkPathV1Receipt.evidence.expensive, false);
+assert.equal(iosNetworkPathV1Receipt.evidence.constrained, false);
+assert.equal(iosNetworkPathV1Receipt.evidence.supports_ipv4, false);
+assert.equal(iosNetworkPathV1Receipt.evidence.supports_ipv6, false);
+assert.equal(iosNetworkPathV1Receipt.evidence.supports_dns, false);
+assert.equal(iosNetworkPathV1Receipt.evidence.generation, 1);
+assert.equal(iosNetworkPathV1Receipt.evidence.transition_qualified, false);
+assert.equal(iosNetworkPathV1Receipt.evidence.server_reachability_qualified, false);
+assert.equal(iosNetworkPathV1Receipt.evidence.physical_device, false);
+execFileSync(process.execPath, ["scripts/validate-ios-network-path.mjs"], { stdio: "ignore" });
+
 const iosQualificationPolicyV1Receipt = JSON.parse(fs.readFileSync(
   "admission/host-lib-defined-boundary-v1/ios-simulator-first-qualification-policy-v1.json", "utf8",
 ));
@@ -1520,6 +1553,7 @@ console.log(JSON.stringify({
   retained_ios_arm64_background_audio_v1_qualification: iosBackgroundAudioV1Receipt.implementation_commit,
   retained_ios_arm64_local_notification_v1_qualification: iosLocalNotificationV1Receipt.implementation_commit,
   retained_ios_arm64_websocket_v1_qualification: iosWebSocketV1Receipt.implementation_commit,
+  retained_ios_arm64_network_path_v1_qualification: iosNetworkPathV1Receipt.implementation_commit,
   retained_ios_simulator_first_qualification_policy_v1: iosQualificationPolicyV1Receipt.implementation_commit,
   old_candidate_rejects_product_drift: true,
   lifecycle: "architecture-workstream-not-admitted-not-released",
