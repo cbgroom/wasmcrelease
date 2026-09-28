@@ -42,6 +42,8 @@ assert.match(migrationOrientation.rule, /bounded answer route/);
 assert.match(migrationOrientation.request_classification.rule, /not source-line inspection/);
 assert.equal(migrationOrientation.lifecycle.qualified, true);
 for (const state of ["admitted", "released", "discoverable", "installable"]) assert.equal(migrationOrientation.lifecycle[state], false);
+assert.match(migrationOrientation.lifecycle_authority.stopping_rule, /Do not search release\.json/);
+assert.match(migrationOrientation.adjacent_route_boundary, /not required/);
 assert.equal(migrationOrientation.authority.plan_schema, "wasmc.dynamic-lib-state-migration-plan/v1");
 assert.match(migrationOrientation.stable_graph, /ephemeral transition dependency/);
 assert.deepEqual(migrationOrientation.open_gates, ["sticky-active-restart-disposition"]);
