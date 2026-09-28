@@ -95,6 +95,7 @@ export class ClientFoundationGateway {
     this.state = null;
     this.server = null;
     this.connections = new Map();
+    this.receiptWaiters = new Map();
     this.persistChain = Promise.resolve();
     this.lockToken = null;
   }
@@ -151,6 +152,11 @@ export class ClientFoundationGateway {
       connection.socket.destroy();
     }
     this.connections.clear();
+    for (const waiters of this.receiptWaiters.values()) for (const waiter of waiters) {
+      clearTimeout(waiter.timer);
+      waiter.resolve(null);
+    }
+    this.receiptWaiters.clear();
     this.server.closeAllConnections();
     const server = this.server;
     this.server = null;
@@ -207,6 +213,16 @@ export class ClientFoundationGateway {
         connection: connection ? { last_pong_at: connection.lastPongAt, pongs: connection.pongs } : null,
         ...client,
       });
+      return;
+    }
+    const receiptMatch = url.pathname.match(/^\/v1\/clients\/([^/]+)\/commands\/([^/]+)$/);
+    if (request.method === "GET" && receiptMatch) {
+      const clientId = decodeURIComponent(receiptMatch[1]);
+      const messageId = decodeURIComponent(receiptMatch[2]);
+      if (!validClientId(clientId) || !messageId || messageId.length > 256) throw new Error("invalid command identity");
+      const waitMs = Math.min(30000, Math.max(0, Number(url.searchParams.get("wait_ms") ?? 0)));
+      const command = await this.#waitForCommand(clientId, messageId, waitMs);
+      jsonResponse(response, command?.receipt ? 200 : 202, { accepted: true, command });
       return;
     }
     const commandMatch = url.pathname.match(/^\/v1\/clients\/([^/]+)\/commands$/);
@@ -355,6 +371,7 @@ export class ClientFoundationGateway {
     await this.#compact(clientId, client);
     await this.#persist();
     await this.#collectArchiveGarbage();
+    this.#notifyReceipt(clientId, command);
     await this.#dispatch(clientId);
   }
 
@@ -485,6 +502,34 @@ export class ClientFoundationGateway {
       }
     }
     return null;
+  }
+
+  async #waitForCommand(clientId, messageId, waitMs) {
+    const client = this.#client(clientId);
+    const active = client.commands.find((command) => command.message_id === messageId);
+    if (active?.receipt || waitMs === 0) return active ?? this.#findArchivedCommand(clientId, client, messageId);
+    const archived = active ? null : await this.#findArchivedCommand(clientId, client, messageId);
+    if (archived) return archived;
+    return new Promise((resolve) => {
+      const key = `${clientId}\0${messageId}`;
+      const waiter = { resolve, timer: null };
+      waiter.timer = setTimeout(() => {
+        const list = this.receiptWaiters.get(key) ?? [];
+        this.receiptWaiters.set(key, list.filter((candidate) => candidate !== waiter));
+        resolve(active ?? null);
+      }, waitMs);
+      this.receiptWaiters.set(key, [...(this.receiptWaiters.get(key) ?? []), waiter]);
+    });
+  }
+
+  #notifyReceipt(clientId, command) {
+    const key = `${clientId}\0${command.message_id}`;
+    const waiters = this.receiptWaiters.get(key) ?? [];
+    this.receiptWaiters.delete(key);
+    for (const waiter of waiters) {
+      clearTimeout(waiter.timer);
+      waiter.resolve(command);
+    }
   }
 
   async #verifyDurableState() {

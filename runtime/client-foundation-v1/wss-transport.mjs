@@ -51,11 +51,18 @@ export async function connectWss(address, { ca, maxPayload = 1024 * 1024 } = {})
   const connection = new EventEmitter();
   const decoder = new FrameDecoder({ expectMasked: false, maxPayload });
   let closed = false;
+  let closing = false;
   const processChunk = (chunk) => {
     try {
       for (const frame of decoder.push(chunk)) {
         if (frame.opcode === 0x1) connection.emit("message", JSON.parse(frame.payload.toString("utf8")));
-        else if (frame.opcode === 0x8) socket.end(encodeFrame(frame.payload, { mask: true, opcode: 0x8 }));
+        else if (frame.opcode === 0x8) {
+          if (closing) socket.destroy();
+          else {
+            closing = true;
+            socket.end(encodeFrame(frame.payload, { mask: true, opcode: 0x8 }));
+          }
+        }
         else if (frame.opcode === 0x9) socket.write(encodeFrame(frame.payload, { mask: true, opcode: 0xa }));
         else if (frame.opcode !== 0xa) throw new Error(`unsupported WebSocket opcode ${frame.opcode}`);
       }
@@ -75,7 +82,10 @@ export async function connectWss(address, { ca, maxPayload = 1024 * 1024 } = {})
     socket.write(encodeFrame(JSON.stringify(value), { mask: true }));
   };
   connection.close = () => {
-    if (!closed) socket.end(encodeFrame(Buffer.alloc(0), { mask: true, opcode: 0x8 }));
+    if (!closed && !closing) {
+      closing = true;
+      socket.write(encodeFrame(Buffer.alloc(0), { mask: true, opcode: 0x8 }));
+    }
   };
   if (remainder.length > 0) queueMicrotask(() => processChunk(remainder));
   return connection;

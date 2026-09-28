@@ -12,6 +12,9 @@ The gateway provides:
   `GET /v1/artifacts/<sha256>` for exact Client Foundation bundles;
 - `POST /v1/clients/<client-id>/commands` for idempotent command enqueue by
   `message_id`;
+- `GET /v1/clients/<client-id>/commands/<message-id>?wait_ms=...` for one
+  bounded long-poll receipt wait without repeatedly transferring all client
+  state;
 - `GET /v1/clients/<client-id>` for durable hello, command and receipt state;
 - atomic JSON state plus content-addressed artifact files that survive gateway
   restart;
@@ -53,6 +56,16 @@ Run the local restart qualification:
 ```sh
 node scripts/test-client-foundation-gateway-v1.mjs
 ```
+
+Run the local connection and durable command baseline separately:
+
+```sh
+node scripts/benchmark-client-foundation-connection-v1.mjs
+```
+
+The benchmark is a machine-local diagnostic. It reports fresh TLS/WSS upgrade
+latency and receipt-observed durable command latency for empty, 1 KiB and
+32 KiB logical payloads; it is not a public-network or multi-client result.
 
 This prototype intentionally contains no user/account authorization layer. It
 is a single-writer service: the lock prevents corruption but is not a clustered

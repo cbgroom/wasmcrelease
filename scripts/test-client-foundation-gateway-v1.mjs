@@ -206,6 +206,12 @@ try {
   assert.equal(reorderedGraphDuplicate.status, 200);
   assert.equal(reorderedGraphDuplicate.value.command.status, "archived");
   assert.equal(reorderedGraphDuplicate.value.command.sequence, 2);
+  const activeReceiptLookup = await api(origin, "GET", "/v1/clients/client-a/commands/gw-m13?wait_ms=100");
+  assert.equal(activeReceiptLookup.status, 200);
+  assert.equal(activeReceiptLookup.value.command.receipt.response.value, "dynamic:compact-13");
+  const archivedReceiptLookup = await api(origin, "GET", "/v1/clients/client-a/commands/gw-m1?wait_ms=100");
+  assert.equal(archivedReceiptLookup.status, 200);
+  assert.equal(archivedReceiptLookup.value.command.sequence, 1);
 
   controller.abort();
   await running;
@@ -257,6 +263,7 @@ try {
     duplicate_enqueue_idempotent: true,
     archived_duplicate_idempotent: true,
     canonical_payload_identity: true,
+    bounded_receipt_wait: true,
     single_writer_lock: true,
     stale_lock_recovery: true,
     heartbeat_pongs: heartbeatState.connection.pongs,
