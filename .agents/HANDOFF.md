@@ -1,5 +1,30 @@
 # WAsmC release maintainer handoff
 
+## 2026-09-29 MCPGit Resident Memory source-free candidate
+
+`mcpgit-resident-memory@0.1.0` is retained as a locally qualified, source-free
+third-party Lib candidate under `admission/mcpgit-resident-memory-v1/package`.
+Its artifact source is pushed MCPGit commit
+`17ee87a552b430cecf17b0821a9a242603bea0c1`; the clean synchronized producer
+checkpoint that corrects the resource-intrinsic evidence is
+`0628cfd3bac520844d4bdce886b414b3f3decb7a`. Its WAsmC package-builder
+authority is clean, pushed commit
+`566eff42d0f4e4680c5ddd60c6584a9d8ff8e9f4`.
+
+The package contains public WIT, Skill/metadata, Core/Component Wasm and
+generated consumer bindings only. It contains no MCPGit provider implementation
+source, Cargo lock or build cache. The Core fast path imports exactly four
+Canonical resource new/drop intrinsics and no OS Host authority; the Component
+needs no Host binding. Wasmtime 47.0.4 dynamic Component execution proves Store open, budget, immutable snapshots, stat,
+range read, expected-parent publication, range patch, old-snapshot isolation,
+stale-parent rejection and resource drop.
+
+Current lifecycle states are deliberately exact: qualified=true;
+admitted/released/discoverable/installable=false. Do not add the package to the
+default catalog, LibSearch snapshot or immutable v0.0.15 product. Next create a
+formal admission receipt and future-version product candidate from these exact
+bytes after the required cross-platform/source-free consumer gates pass.
+
 ## 2026-09-27 v0.0.14 prod hold
 
 Do not promote `v0.0.14-main.1` to prod. White-box product inspection found
