@@ -9,5 +9,10 @@
   "completed_gates": ["public-source", "wit-parsed", "fixed-native-executor-unchanged", "linux-aarch64-real-uinput-device-v1", "linux-x86_64-real-uinput-device-v1", "cross-architecture-linux-uinput-v1", "real-evdev-key-roundtrip-v1", "generation-checked-stale-keyboard-v1", "batched-uinput-events-v1"],
   "pending_gates": ["descriptor-schema-review", "wasm-lowering", "admission-review"],
   "admitted": false,
-  "qualification": { "runner": "node", "script": "scripts/test-linux-uinput-lib-defined-boundary.mjs", "hosts": ["linux"] }
+  "qualification": {
+    "runner": "node",
+    "script": "scripts/test-linux-uinput-lib-defined-boundary.mjs",
+    "hosts": ["linux"],
+    "requires": ["real-linux-uinput"]
+  }
 }

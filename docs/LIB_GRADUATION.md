@@ -77,3 +77,15 @@ original source provenance.
   time-dependent TLS features must justify that capability separately.
 
 The cohort is incubation evidence, not an admitted package list.
+
+## Qualification environments
+
+`qualification.hosts` selects the operating systems on which a candidate can
+run. Hardware or privileged-kernel qualifications must additionally declare
+`qualification.requires`; host identity alone is not proof that the required
+device is usable. The aggregate runner records such candidates as explicitly
+skipped unless the caller opts into the named environment. For
+`real-linux-uinput`, set `WASMC_REAL_LINUX_UINPUT=1` only in an environment that
+can create a real uinput device and observe its evdev output. A retained real
+device receipt remains evidence; an ordinary CI skip is neither PASS nor a
+replacement for that receipt.

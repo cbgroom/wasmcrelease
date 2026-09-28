@@ -35,6 +35,21 @@ for (const candidate of registry.candidates) {
     });
     continue;
   }
+  const requirements = manifest.qualification.requires ?? [];
+  const missingRequirements = requirements.filter(requirement => {
+    if (requirement === 'real-linux-uinput') {
+      return process.env.WASMC_REAL_LINUX_UINPUT !== '1';
+    }
+    return true;
+  });
+  if (missingRequirements.length > 0) {
+    skipped.push({
+      id: candidate.id,
+      reason: 'missing-qualification-requirement',
+      required: missingRequirements,
+    });
+    continue;
+  }
   const script = manifest.qualification.script;
   let receipt = qualificationByScript.get(script);
   if (receipt === undefined) {

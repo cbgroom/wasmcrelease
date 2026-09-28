@@ -88,6 +88,17 @@ for (const candidate of registry.candidates) {
         candidate.id + ': unknown qualification host',
       );
     }
+    if (manifest.qualification.requires !== undefined) {
+      assert.ok(
+        Array.isArray(manifest.qualification.requires) && manifest.qualification.requires.length > 0,
+        candidate.id + ': invalid qualification requirements',
+      );
+      const allowedRequirements = new Set(['real-linux-uinput']);
+      assert.ok(
+        manifest.qualification.requires.every(requirement => allowedRequirements.has(requirement)),
+        candidate.id + ': unknown qualification requirement',
+      );
+    }
     const qualificationPath = resolve(root, manifest.qualification.script);
     const qualificationRel = relative(root, qualificationPath);
     assert.ok(
