@@ -6,6 +6,9 @@ the broader model or implementation only for an explicit implementation-line
 audit or a failed named check. Its validator binds the compact claims to source
 and test anchors, so citing named evidence does not require rereading it.
 
+For cross-schema migration authority, ordering, rollback and lifecycle status,
+use `agent-state-migration-orientation.json` as the separate bounded route.
+
 This directory is a higher-layer, persistent client foundation built above the
 fixed Lib-defined Host boundary. It does not change `current/cli.mjs`, add a
 domain API to the Host, or load a provider around the Host. Every provider

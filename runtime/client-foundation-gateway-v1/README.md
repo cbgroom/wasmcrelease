@@ -3,6 +3,9 @@
 For active checkpoint/restart status, receipt ordering and failure boundaries,
 read `../client-foundation-v1/agent-checkpoint-orientation.json` and stop at
 that bounded route unless a named check fails or source-line audit is explicit.
+For cross-schema migration, use
+`../client-foundation-v1/agent-state-migration-orientation.json` under the same
+stopping rule.
 
 This is the persistent control and artifact counterpart to
 `runtime/client-foundation-v1`. It is a higher-layer service and does not add a

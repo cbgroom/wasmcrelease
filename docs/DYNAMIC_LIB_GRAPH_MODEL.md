@@ -2,6 +2,11 @@
 
 Status: prototype model; qualified locally only; not admitted or released.
 
+For a cross-schema state-migration status, authority, ordering or rollback
+question, read
+`runtime/client-foundation-v1/agent-state-migration-orientation.json` and stop
+unless a named check fails or exact source-line inspection is explicit.
+
 For an active-state restart, Gateway receipt-ordering, checkpoint visibility or
 failure-boundary question, read
 `runtime/client-foundation-v1/agent-checkpoint-orientation.json`, run only its

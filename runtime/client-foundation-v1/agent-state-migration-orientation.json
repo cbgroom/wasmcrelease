@@ -1,0 +1,67 @@
+{
+  "schema": "wasmc.dynamic-client-state-migration-orientation/v1",
+  "request": "Is cross-schema snapshot-v1 state migration implemented in the dynamic Client/Gateway prototype?",
+  "rule": "This machine-validated record is the bounded answer route. Cite named evidence without opening it. A status review, ordering explanation, evidence citation or retrospective is not an implementation-line audit.",
+  "answer": "Yes. Cross-schema snapshot-v1 replacement is locally qualified through exact migration Lib distribution; it remains prototype-only and is not released.",
+  "lifecycle": {
+    "qualified": true,
+    "admitted": false,
+    "released": false,
+    "discoverable": false,
+    "installable": false,
+    "scope": "prototype-local-qualification"
+  },
+  "authority": {
+    "source_and_target": "exact state schema identities from the old and candidate package descriptors",
+    "migration_package": "exact content-addressed package descriptor state_migration contract",
+    "plan_schema": "wasmc.dynamic-lib-state-migration-plan/v1",
+    "plan_identity": "canonical JSON SHA-256 over node, migration package, WIT, configuration and source/target schema identities",
+    "gateway": "derive artifact metadata and reject package or schema-pair disagreement before enqueue",
+    "client": "re-derive package and migration contract after download, cache read and execution"
+  },
+  "ordering": [
+    "install, probe and health-check candidate and migration Lib",
+    "open graph-wide invocation barrier and drain the old generation",
+    "snapshot and validate source-schema state",
+    "invoke migrate-state-v1 and validate the target-schema envelope",
+    "restore the candidate and release the ephemeral migration resource",
+    "health-check and publish the complete candidate",
+    "drain and release the retired generation"
+  ],
+  "rollback": "Any migration, envelope, restore or pre-publication health failure releases candidate and migration resources, retains the old generation, and releases waiting invocations onto it.",
+  "stable_graph": "The migration Lib is an ephemeral transition dependency. It is not a stable DAG node, is not persisted in active_graph, and is not needed for target-schema restart.",
+  "host_boundary": "migrate-state-v1 is an opaque Lib operation over the existing resource/window/operation/completion boundary; fixed Host API and minimal CLI are unchanged.",
+  "qualified_observations": {
+    "local_cross_schema": "CROSS1:2->CROSS2:2",
+    "missing_migration_rejected": true,
+    "broken_migration_rolled_back": true,
+    "gateway_cross_schema": "SV2:2->SV3:2",
+    "target_schema_restart": "SV3:2",
+    "forged_gateway_migration_contract_rejected": true,
+    "boundary_resources_after_close": 0
+  },
+  "open_gates": ["sticky-active-restart-disposition"],
+  "not_claimed": [
+    "general exactly-once execution",
+    "external-effect rollback or cleanup",
+    "release admission"
+  ],
+  "evidence": {
+    "model": "docs/DYNAMIC_LIB_GRAPH_MODEL.md",
+    "package_and_plan": "runtime/client-foundation-v1/dynamic-lib-graph-spec.mjs",
+    "engine": "runtime/client-foundation-v1/dynamic-lib-graph.mjs",
+    "client": "runtime/client-foundation-v1/dynamic-foundation.mjs",
+    "gateway": "runtime/client-foundation-gateway-v1/gateway.mjs",
+    "focused_test": "scripts/test-dynamic-lib-stateful-v1.mjs",
+    "integrated_test": "scripts/test-dynamic-client-foundation-gateway-v1.mjs",
+    "host_cli_guard": "scripts/test-client-foundation-v1.mjs"
+  },
+  "verify": [
+    "node scripts/validate-dynamic-lib-graph-model-v1.mjs",
+    "node scripts/test-dynamic-lib-stateful-v1.mjs",
+    "node scripts/test-dynamic-client-foundation-gateway-v1.mjs",
+    "node scripts/test-client-foundation-v1.mjs"
+  ],
+  "required_additional_reads": [],
+  "final_answer_policy": "Answer from this record, cite its evidence and checks, and stop unless a named check fails or the user explicitly requests exact source-line inspection."
+}

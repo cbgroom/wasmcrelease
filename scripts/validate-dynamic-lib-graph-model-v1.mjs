@@ -4,6 +4,7 @@ import { readFile } from "node:fs/promises";
 
 const model = JSON.parse(await readFile(new URL("../runtime/client-foundation-v1/dynamic-lib-graph-model.json", import.meta.url), "utf8"));
 const orientation = JSON.parse(await readFile(new URL("../runtime/client-foundation-v1/agent-checkpoint-orientation.json", import.meta.url), "utf8"));
+const migrationOrientation = JSON.parse(await readFile(new URL("../runtime/client-foundation-v1/agent-state-migration-orientation.json", import.meta.url), "utf8"));
 const document = await readFile(new URL("../docs/DYNAMIC_LIB_GRAPH_MODEL.md", import.meta.url), "utf8");
 const normalizedDocument = document.replace(/\s+/g, " ");
 
@@ -36,6 +37,14 @@ assert.equal(orientation.protected_surface.expected_output, "");
 assert.deepEqual(orientation.required_additional_reads, []);
 assert.match(orientation.final_answer_policy, /Do not reopen/);
 assert.match(orientation.stop, /sufficient/);
+assert.equal(migrationOrientation.schema, "wasmc.dynamic-client-state-migration-orientation/v1");
+assert.match(migrationOrientation.rule, /bounded answer route/);
+assert.equal(migrationOrientation.lifecycle.qualified, true);
+for (const state of ["admitted", "released", "discoverable", "installable"]) assert.equal(migrationOrientation.lifecycle[state], false);
+assert.equal(migrationOrientation.authority.plan_schema, "wasmc.dynamic-lib-state-migration-plan/v1");
+assert.match(migrationOrientation.stable_graph, /ephemeral transition dependency/);
+assert.deepEqual(migrationOrientation.open_gates, ["sticky-active-restart-disposition"]);
+assert.deepEqual(migrationOrientation.required_additional_reads, []);
 
 const phases = new Set(model.manager_phases);
 assert.equal(phases.size, model.manager_phases.length);
@@ -123,6 +132,7 @@ assert.deepEqual(model.state_contract.same_schema_order, [
 ]);
 const evidencePaths = [
   "agent_orientation",
+  "migration_agent_orientation",
   "normative_model",
   "engine",
   "package_spec",
@@ -139,6 +149,7 @@ for (const relative of evidencePaths) {
   await readFile(new URL(`../${relative}`, import.meta.url));
 }
 const orientationEvidence = Object.fromEntries(await Promise.all(Object.entries(orientation.evidence).map(async ([key, relative]) => [key, await readFile(new URL(`../${relative}`, import.meta.url), "utf8")])));
+const migrationEvidence = Object.fromEntries(await Promise.all(Object.entries(migrationOrientation.evidence).map(async ([key, relative]) => [key, await readFile(new URL(`../${relative}`, import.meta.url), "utf8")])));
 assert.match(orientationEvidence.client, /active-state-checkpointed/);
 assert.match(orientationEvidence.client, /inflight_result/);
 assert.match(orientationEvidence.graph, /restoreFailed = true/);
@@ -154,6 +165,13 @@ for (const claim of [
 ]) assert.match(orientationEvidence.integrated_test, new RegExp(`${claim}:`));
 assert.match(orientationEvidence.crash_fixture, /process\.exit\(87\)/);
 assert.match(orientationEvidence.host_cli_guard, /fixed Host or minimal CLI changed/);
+assert.match(migrationEvidence.package_and_plan, /dynamic-lib-state-migration-plan\/v1/);
+assert.match(migrationEvidence.engine, /migrate-state-v1/);
+assert.match(migrationEvidence.client, /describeStateMigrations/);
+assert.match(migrationEvidence.gateway, /migration bundle contract mismatch/);
+assert.match(migrationEvidence.focused_test, /cross_schema_broken_migration_rolled_back: true/);
+assert.match(migrationEvidence.integrated_test, /stateful_cross_schema_gateway_migration: "SV2:2->SV3:2"/);
+assert.match(migrationEvidence.integrated_test, /stateful_cross_schema_restart: "SV3:2"/);
 assert.deepEqual(orientation.qualified_observations, {
   active_checkpoint_restored: "SV2:2",
   invoke_checkpoint_crash_recovered_without_replay: true,
