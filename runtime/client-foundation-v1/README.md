@@ -99,3 +99,35 @@ resources/windows/operations after close. This engine is local prototype
 evidence. It is not yet a general DAG scheduler, durable Client Foundation
 state format or Gateway `graph.apply` command, and it is not admitted or
 released.
+
+## Dynamic Client/Gateway loop
+
+`dynamic-foundation.mjs` connects the serial-stateless graph engine to the
+persistent Gateway with the `lib-graph.apply` command. The Gateway resolves
+every content-addressed bundle and rejects any mismatch among bundle, package,
+Lib, WIT and canonical graph identities before enqueue. The Client downloads
+over HTTPS, verifies again, stores exact bundles in a content-addressed cache,
+and persists the active graph, revision and command outcome before returning a
+receipt.
+
+On restart, the Client independently verifies cached bytes and reconstructs the
+same graph. If cache corruption prevents reconstruction, the control WSS loop
+still connects with `runtime_available=false`; a later exact graph command
+redownloads the damaged bundle and repairs runtime availability. Invalid
+commands produce durable rejected receipts instead of trapping the ordered
+stream forever.
+
+The WSS connector observes cancellation before and during TLS/upgrade, and the
+Gateway stops accepting upgrades before draining existing connections. This
+closes the reconnect/shutdown race where a stop signal could be missed while a
+new handshake was in flight.
+
+Run the integrated qualification with:
+
+```sh
+node scripts/test-dynamic-client-foundation-gateway-v1.mjs
+```
+
+This closes restart reconstruction only for the serial-stateless profile. It
+does not provide general DAG execution, state migration, external-effect
+exactly-once semantics, cache retention policy or release admission.

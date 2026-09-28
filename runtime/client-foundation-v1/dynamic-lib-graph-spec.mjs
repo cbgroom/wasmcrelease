@@ -46,6 +46,36 @@ export function canonicalJson(value) {
 
 export const canonicalJsonSha256 = (value) => digest(Buffer.from(canonicalJson(value)));
 
+export function identifyDynamicLibPackageFiles(entries) {
+  const files = new Map(entries.map(({ path, bytes }) => [path, Buffer.from(bytes)]));
+  if (files.size !== entries.length) throw new Error("duplicate dynamic Lib package file");
+  const descriptorBytes = files.get("native-boundary.json");
+  if (!descriptorBytes) throw new Error("missing dynamic Lib descriptor");
+  const descriptor = JSON.parse(descriptorBytes.toString("utf8"));
+  if (descriptor.schema !== "wasmc.native-boundary-descriptor/v1" || typeof descriptor.identity !== "string" || descriptor.identity.length === 0) {
+    throw new Error("invalid dynamic Lib descriptor identity");
+  }
+  if (typeof descriptor.wit !== "string" || typeof descriptor.adapter?.path !== "string") {
+    throw new Error("incomplete dynamic Lib package identity");
+  }
+  const selected = ["native-boundary.json", descriptor.wit, descriptor.adapter.path];
+  if (new Set(selected).size !== selected.length || selected.some((name) => !files.has(name))) {
+    throw new Error("incomplete dynamic Lib package files");
+  }
+  const packageDigest = createHash("sha256");
+  for (const name of selected.sort()) {
+    const bytes = files.get(name);
+    packageDigest.update(`${Buffer.byteLength(name)}:${name}:${bytes.length}:`);
+    packageDigest.update(bytes);
+  }
+  return {
+    identity: descriptor.identity,
+    artifact_sha256: packageDigest.digest("hex"),
+    wit_contract_sha256: digest(files.get(descriptor.wit)),
+    descriptor,
+  };
+}
+
 export function describeSerialLibGraph({ blocks, pipeline }) {
   if (!Array.isArray(blocks) || !Array.isArray(pipeline) || blocks.length === 0 || pipeline.length === 0) {
     throw new Error("incomplete dynamic Lib graph");

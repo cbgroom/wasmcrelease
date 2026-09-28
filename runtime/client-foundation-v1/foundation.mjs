@@ -169,7 +169,11 @@ export class ClientFoundation {
   }
 
   async #runConnection(signal) {
-    const connection = await connectWss(this.gatewayUrl, { ca: this.ca });
+    const connection = await connectWss(this.gatewayUrl, { ca: this.ca, signal });
+    if (signal?.aborted) {
+      connection.close();
+      return;
+    }
     this.connection = connection;
     connection.sendJson({
       type: "hello",

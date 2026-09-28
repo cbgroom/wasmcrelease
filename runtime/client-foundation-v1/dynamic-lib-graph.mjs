@@ -1,7 +1,6 @@
-import { createHash } from "node:crypto";
 import { readFile, realpath } from "node:fs/promises";
 import path from "node:path";
-import { canonicalJson, describeSerialLibGraph } from "./dynamic-lib-graph-spec.mjs";
+import { canonicalJson, describeSerialLibGraph, identifyDynamicLibPackageFiles } from "./dynamic-lib-graph-spec.mjs";
 
 const encoder = new TextEncoder();
 const decoder = new TextDecoder("utf-8", { fatal: true });
@@ -27,20 +26,15 @@ export async function inspectDynamicLibPackage(packageRoot) {
     [descriptor.adapter.path, await realpath(path.resolve(root, descriptor.adapter.path))],
   ];
   if (files.some(([, file]) => !within(root, file))) throw new Error("dynamic Lib package file escapes exact root");
-  const digest = createHash("sha256");
-  for (const [name, file, knownBytes] of files.sort(([left], [right]) => left.localeCompare(right))) {
-    const bytes = knownBytes ?? await readFile(file);
-    digest.update(`${Buffer.byteLength(name)}:${name}:${bytes.length}:`);
-    digest.update(bytes);
-  }
-  return { identity: descriptor.identity, artifact_sha256: digest.digest("hex"), wit_contract_sha256: createHash("sha256").update(witBytes).digest("hex") };
+  return identifyDynamicLibPackageFiles(await Promise.all(files.map(async ([name, file, knownBytes]) => ({ path: name, bytes: knownBytes ?? await readFile(file) }))));
 }
 
 export class DynamicLibGraph {
-  constructor({ boundary }) {
+  constructor({ boundary, initialRevision = 0 }) {
     if (!boundary) throw new Error("DynamicLibGraph requires the fixed Host boundary");
+    if (!Number.isSafeInteger(initialRevision) || initialRevision < 0) throw new Error("invalid dynamic Lib graph initial revision");
     this.boundary = boundary;
-    this.active = { revision: 0, graphDigest: null, blocks: new Map(), pipeline: [], inflight: 0, drainWaiters: [] };
+    this.active = { revision: initialRevision, graphDigest: null, blocks: new Map(), pipeline: [], inflight: 0, drainWaiters: [] };
     this.closed = false;
     this.updateInProgress = false;
   }

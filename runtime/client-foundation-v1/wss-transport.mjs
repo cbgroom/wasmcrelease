@@ -5,7 +5,8 @@ import { encodeFrame, FrameDecoder } from "./websocket-wire.mjs";
 
 const ACCEPT_GUID = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
 
-export async function connectWss(address, { ca, maxPayload = 1024 * 1024 } = {}) {
+export async function connectWss(address, { ca, maxPayload = 1024 * 1024, signal } = {}) {
+  if (signal?.aborted) throw new Error("WebSocket connection aborted");
   const url = new URL(address);
   if (url.protocol !== "wss:") throw new Error("Client Foundation control URL must use wss");
   const port = Number(url.port || 443);
@@ -16,6 +17,9 @@ export async function connectWss(address, { ca, maxPayload = 1024 * 1024 } = {})
     ca,
     rejectUnauthorized: true,
   });
+  const abortConnection = () => socket.destroy(new Error("WebSocket connection aborted"));
+  signal?.addEventListener("abort", abortConnection, { once: true });
+  socket.once("close", () => signal?.removeEventListener("abort", abortConnection));
   await once(socket, "secureConnect");
   const key = randomBytes(16).toString("base64");
   const host = url.port ? `${url.hostname}:${url.port}` : url.hostname;
@@ -87,6 +91,7 @@ export async function connectWss(address, { ca, maxPayload = 1024 * 1024 } = {})
       socket.write(encodeFrame(Buffer.alloc(0), { mask: true, opcode: 0x8 }));
     }
   };
+  if (signal?.aborted) socket.destroy(new Error("WebSocket connection aborted"));
   if (remainder.length > 0) queueMicrotask(() => processChunk(remainder));
   return connection;
 }

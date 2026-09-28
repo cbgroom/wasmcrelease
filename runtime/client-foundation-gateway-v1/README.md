@@ -20,6 +20,8 @@ The gateway provides:
   restart;
 - an exclusive data-root writer lock with stale-owner recovery;
 - WSS ping/pong liveness and stale-connection eviction;
+- shutdown admission fencing: the listener stops accepting upgrades before
+  existing control sockets drain, preventing reconnects from extending close;
 - bounded hot command state with immutable, SHA-256-bound JSONL archive
   segments; only active commands remain in the hot message index, while an
   exact archive lookup preserves old enqueue idempotency;
@@ -28,6 +30,9 @@ The gateway provides:
 - bounded archive metadata: older small segments are merged into a larger
   content-addressed pack, and unreferenced crash leftovers are collected only
   after durable state verification.
+- `lib-graph.apply` validation and URL resolution for canonical
+  serial-stateless multi-Lib graphs. Each node must match a stored bundle's
+  exact Lib, package and WIT identities before the command is durably queued.
 
 The gateway persists a command before delivery and persists its receipt before
 dispatching the next sequence. If the gateway loses a receipt after the client
@@ -62,6 +67,12 @@ Run the local connection and durable command baseline separately:
 ```sh
 node scripts/benchmark-client-foundation-connection-v1.mjs
 node scripts/benchmark-client-foundation-content-v1.mjs
+```
+
+Run the dynamic graph Client/Gateway restart and repair qualification with:
+
+```sh
+node scripts/test-dynamic-client-foundation-gateway-v1.mjs
 ```
 
 The benchmark is a machine-local diagnostic. It reports fresh TLS/WSS upgrade

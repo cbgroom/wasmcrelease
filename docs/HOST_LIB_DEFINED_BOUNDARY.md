@@ -806,3 +806,12 @@ therefore reinstall only the affected node; mutation after publication cannot
 alter the canonical configuration snapshot. General DAG scheduling and
 port-granular WIT compatibility remain open rather than being inferred from
 this stricter serial qualification.
+
+The serial-stateless graph is now connected through a durable Client/Gateway
+loop. The Gateway binds each command to stored bundle, package, Lib, WIT and
+graph identities; the Client independently verifies and caches those bundles,
+persists graph revision and command outcome, and reconstructs the active graph
+after restart. A corrupt Client cache marks runtime unavailable without taking
+down the control channel, and an exact later command redownloads the bundle and
+repairs the graph. This adds no Host or minimal CLI operation. General DAGs,
+stateful migration and durable retired-generation cleanup remain open.

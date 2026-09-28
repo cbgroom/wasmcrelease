@@ -4,6 +4,7 @@ import { mkdir, open, readFile, readdir, rename, unlink, writeFile } from "node:
 import https from "node:https";
 import path from "node:path";
 import { encodeFrame, FrameDecoder } from "../client-foundation-v1/websocket-wire.mjs";
+import { canonicalJson, describeSerialLibGraph, identifyDynamicLibPackageFiles } from "../client-foundation-v1/dynamic-lib-graph-spec.mjs";
 
 const STATE_SCHEMA = "wasmc.client-foundation-gateway-state/v1";
 const BUNDLE_SCHEMA = "wasmc.client-foundation-bundle/v1";
@@ -12,11 +13,6 @@ const ACCEPT_GUID = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
 const MAX_JSON_BYTES = 2 * 1024 * 1024;
 const ALLOWED_BUNDLE_FILES = new Set(["lib.wit", "native-boundary.json", "native-adapter.mjs"]);
 const sha256 = (bytes) => createHash("sha256").update(bytes).digest("hex");
-const canonicalJson = (value) => {
-  if (value === null || typeof value !== "object") return JSON.stringify(value);
-  if (Array.isArray(value)) return `[${value.map(canonicalJson).join(",")}]`;
-  return `{${Object.keys(value).sort().map((key) => `${JSON.stringify(key)}:${canonicalJson(value[key])}`).join(",")}}`;
-};
 
 const validClientId = (value) => typeof value === "string" && /^[A-Za-z0-9._-]{1,128}$/.test(value);
 const jsonResponse = (response, status, value) => {
@@ -42,6 +38,7 @@ function validateBundle(bytes) {
     throw new Error("invalid Client Foundation bundle");
   }
   const seen = new Set();
+  const entries = [];
   for (const file of bundle.files) {
     if (!ALLOWED_BUNDLE_FILES.has(file.path) || seen.has(file.path) || typeof file.sha256 !== "string" || typeof file.base64 !== "string") {
       throw new Error("invalid bundle file declaration");
@@ -49,14 +46,12 @@ function validateBundle(bytes) {
     const decoded = Buffer.from(file.base64, "base64");
     if (sha256(decoded) !== file.sha256) throw new Error(`bundle file identity mismatch: ${file.path}`);
     seen.add(file.path);
+    entries.push({ path: file.path, bytes: decoded });
   }
   if (![...ALLOWED_BUNDLE_FILES].every((name) => seen.has(name))) throw new Error("incomplete Client Foundation bundle");
-  const descriptorFile = bundle.files.find((file) => file.path === "native-boundary.json");
-  const descriptor = JSON.parse(Buffer.from(descriptorFile.base64, "base64").toString("utf8"));
-  if (descriptor.schema !== "wasmc.native-boundary-descriptor/v1" || descriptor.identity !== bundle.identity) {
-    throw new Error("bundle descriptor identity mismatch");
-  }
-  return bundle;
+  const exact = identifyDynamicLibPackageFiles(entries);
+  if (exact.identity !== bundle.identity) throw new Error("bundle descriptor identity mismatch");
+  return { bundle, exact };
 }
 
 export class ClientFoundationGateway {
@@ -98,10 +93,12 @@ export class ClientFoundationGateway {
     this.receiptWaiters = new Map();
     this.persistChain = Promise.resolve();
     this.lockToken = null;
+    this.closing = false;
   }
 
   async start() {
     if (this.server) throw new Error("gateway already started");
+    this.closing = false;
     await mkdir(this.artifactRoot, { recursive: true });
     await mkdir(this.archiveRoot, { recursive: true });
     await this.#acquireLock();
@@ -147,6 +144,10 @@ export class ClientFoundationGateway {
       await this.#releaseLock();
       return;
     }
+    this.closing = true;
+    const server = this.server;
+    this.server = null;
+    const closed = new Promise((resolve, reject) => server.close((error) => error ? reject(error) : resolve()));
     for (const connection of this.connections.values()) {
       clearInterval(connection.heartbeatTimer);
       connection.socket.destroy();
@@ -157,14 +158,13 @@ export class ClientFoundationGateway {
       waiter.resolve(null);
     }
     this.receiptWaiters.clear();
-    this.server.closeAllConnections();
-    const server = this.server;
-    this.server = null;
+    server.closeAllConnections();
     try {
-      await new Promise((resolve, reject) => server.close((error) => error ? reject(error) : resolve()));
+      await closed;
       await this.persistChain;
     } finally {
       await this.#releaseLock();
+      this.closing = false;
     }
   }
 
@@ -176,7 +176,7 @@ export class ClientFoundationGateway {
     }
     if (request.method === "POST" && url.pathname === "/v1/artifacts") {
       const bytes = await readBody(request);
-      const bundle = validateBundle(bytes);
+      const validated = validateBundle(bytes);
       const digest = sha256(bytes);
       const artifactPath = path.join(this.artifactRoot, `${digest}.json`);
       try {
@@ -184,7 +184,13 @@ export class ClientFoundationGateway {
       } catch (error) {
         if (error.code !== "EEXIST" || sha256(await readFile(artifactPath)) !== digest) throw error;
       }
-      this.state.artifacts[digest] = { sha256: digest, bytes: bytes.length, identity: bundle.identity };
+      this.state.artifacts[digest] = {
+        sha256: digest,
+        bytes: bytes.length,
+        identity: validated.exact.identity,
+        package_sha256: validated.exact.artifact_sha256,
+        wit_contract_sha256: validated.exact.wit_contract_sha256,
+      };
       await this.#persist();
       jsonResponse(response, 201, { accepted: true, ...this.state.artifacts[digest], url: `${this.advertiseOrigin}/v1/artifacts/${digest}` });
       return;
@@ -263,6 +269,20 @@ export class ClientFoundationGateway {
         if (!this.state.artifacts[payload.artifact_sha256]) throw new Error("unknown graph artifact");
         payload.artifact_url = `${this.advertiseOrigin}/v1/artifacts/${payload.artifact_sha256}`;
       }
+      if (input.operation === "lib-graph.apply") {
+        if (!Array.isArray(payload.blocks) || !Array.isArray(payload.pipeline) || typeof payload.graph_digest !== "string") throw new Error("incomplete dynamic Lib graph command");
+        const graphBlocks = payload.blocks.map((block) => {
+          const metadata = this.state.artifacts[block.bundle_sha256];
+          if (!metadata) throw new Error(`unknown dynamic Lib bundle: ${block.name}`);
+          if (metadata.identity !== block.identity || metadata.package_sha256 !== block.artifact_sha256 || metadata.wit_contract_sha256 !== block.wit_contract_sha256) {
+            throw new Error(`dynamic Lib bundle declaration mismatch: ${block.name}`);
+          }
+          return { ...block, root: "gateway-verified-content-addressed-locator" };
+        });
+        const described = describeSerialLibGraph({ blocks: graphBlocks, pipeline: payload.pipeline });
+        if (described.graph_digest !== payload.graph_digest) throw new Error("dynamic Lib graph command digest mismatch");
+        payload.blocks = payload.blocks.map((block) => ({ ...block, artifact_url: `${this.advertiseOrigin}/v1/artifacts/${block.bundle_sha256}` }));
+      }
       const command = {
         message_id: input.message_id,
         sequence: client.next_sequence,
@@ -285,6 +305,7 @@ export class ClientFoundationGateway {
 
   #handleUpgrade(request, socket) {
     try {
+      if (this.closing || !this.server) throw new Error("gateway closing");
       const url = new URL(request.url, this.advertiseOrigin ?? "https://localhost");
       const match = url.pathname.match(/^\/v1\/clients\/([^/]+)\/control$/);
       const clientId = match ? decodeURIComponent(match[1]) : null;
@@ -536,14 +557,21 @@ export class ClientFoundationGateway {
     if (!this.state.artifacts || typeof this.state.artifacts !== "object" || !this.state.clients || typeof this.state.clients !== "object") {
       throw new Error("invalid gateway state shape");
     }
+    let migrated = false;
     for (const [digest, metadata] of Object.entries(this.state.artifacts)) {
       if (!/^[a-f0-9]{64}$/.test(digest) || metadata.sha256 !== digest) throw new Error("invalid artifact metadata identity");
       const bytes = await readFile(path.join(this.artifactRoot, `${digest}.json`));
       if (bytes.length !== metadata.bytes || sha256(bytes) !== digest) throw new Error("stored artifact identity mismatch");
-      const bundle = validateBundle(bytes);
-      if (bundle.identity !== metadata.identity) throw new Error("stored artifact provider identity mismatch");
+      const validated = validateBundle(bytes);
+      if (validated.exact.identity !== metadata.identity) throw new Error("stored artifact provider identity mismatch");
+      if (metadata.package_sha256 && metadata.package_sha256 !== validated.exact.artifact_sha256) throw new Error("stored package identity mismatch");
+      if (metadata.wit_contract_sha256 && metadata.wit_contract_sha256 !== validated.exact.wit_contract_sha256) throw new Error("stored WIT contract identity mismatch");
+      if (!metadata.package_sha256 || !metadata.wit_contract_sha256) {
+        metadata.package_sha256 = validated.exact.artifact_sha256;
+        metadata.wit_contract_sha256 = validated.exact.wit_contract_sha256;
+        migrated = true;
+      }
     }
-    let migrated = false;
     for (const [clientId, rawClient] of Object.entries(this.state.clients)) {
       if (!validClientId(clientId) || !rawClient || typeof rawClient !== "object") throw new Error("invalid persisted client identity");
       const client = this.#client(clientId);

@@ -139,7 +139,14 @@ uses the complete reuse key, and checks each serial edge against the exact
 whole-WIT SHA-256 verified from its package. The whole-file contract is safe but
 intentionally stricter than port-granular WIT type compatibility.
 
+The serial-stateless Client/Gateway path now persists the exact desired graph,
+content-addressed bundle locators, revision and command result. Restart verifies
+every cached bundle and reconstructs the same runtime graph before reporting it
+available. Cache corruption leaves the immutable control loop connected; an
+exact subsequent command redownloads and republishes the graph. This closes
+restart reconstruction only for the current serial-stateless profile.
+
 General DAG scheduling, port-granular WIT contract identities, stateful
-replacement, durable retired-generation cleanup and restart reconstruction
-remain open gates. Until those close, Gateway support must be labeled
-serial-stateless prototype rather than general dynamic Lib composition.
+replacement and durable retired-generation cleanup remain open gates. Until
+those close, Gateway support must be labeled serial-stateless prototype rather
+than general dynamic Lib composition.
