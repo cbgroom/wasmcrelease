@@ -754,6 +754,62 @@ assert.equal(iosWebSocketV2Receipt.evidence.suspension_receive_qualified, false)
 assert.equal(iosWebSocketV2Receipt.evidence.process_relaunch_reconnect_qualified, false);
 assert.equal(iosWebSocketV2Receipt.evidence.physical_device, false);
 
+const iosWebSocketV3Receipt = JSON.parse(fs.readFileSync(
+  "admission/host-lib-defined-boundary-v1/ios-arm64-websocket-v3.json", "utf8",
+));
+assert.equal(iosWebSocketV3Receipt.schema,
+  "wasmc.host-lib-defined-boundary-ios-websocket-qualification/v3");
+assert.equal(iosWebSocketV3Receipt.supersedes,
+  "admission/host-lib-defined-boundary-v1/ios-arm64-websocket-v2.json");
+assert.equal(iosWebSocketV3Receipt.qualified, true);
+assert.equal(iosWebSocketV3Receipt.admitted, false);
+assert.equal(iosWebSocketV3Receipt.released, false);
+assert.equal(iosWebSocketV3Receipt.discoverable, false);
+assert.equal(iosWebSocketV3Receipt.installable, false);
+execFileSync("git", ["cat-file", "-e", `${iosWebSocketV3Receipt.implementation_commit}^{commit}`]);
+execFileSync("git", ["merge-base", "--is-ancestor", iosWebSocketV3Receipt.implementation_commit, "HEAD"]);
+for (const [relative, expected] of Object.entries(iosWebSocketV3Receipt.source)) {
+  assert.equal(digestAt(iosWebSocketV3Receipt.implementation_commit, relative), expected,
+    `${relative}: retained iOS WebSocket v3 source drift`);
+}
+assert.equal(iosWebSocketV3Receipt.evidence.status, "PASS");
+assert.equal(iosWebSocketV3Receipt.evidence.provider,
+  "wasmc:system-ios-websocket@0.0.1-dev.3");
+assert.equal(iosWebSocketV3Receipt.evidence.fixed_host_domain_apis, 0);
+assert.equal(iosWebSocketV3Receipt.evidence.fixed_host_sha256,
+  iosWebSocketV2Receipt.evidence.fixed_host_sha256);
+assert.equal(iosWebSocketV3Receipt.evidence.transport, "URLSessionWebSocketTask");
+assert.equal(iosWebSocketV3Receipt.evidence.certificate_pin_match, true);
+assert.deepEqual(iosWebSocketV3Receipt.evidence.service_restart, {
+  accepted: true,
+  connection_generation: 2,
+  reconnect_attempts: 2,
+  reconnect_exhausted: false,
+  recovery_prime_receive: true,
+  service_interruption_observed: true,
+  outbox_enqueued: true,
+  outbox_delivered: true,
+  recovery_reply: "server-after-restart",
+});
+assert.deepEqual(iosWebSocketV3Receipt.evidence.bounded_retry_negative_control, {
+  accepted: false,
+  connection_generation: 1,
+  reconnect_attempts: 8,
+  reconnect_exhausted: true,
+  outbox_enqueued: true,
+  outbox_delivered: false,
+});
+assert.equal(iosWebSocketV3Receipt.evidence.reconnect_policy, "350ms-fixed-max-8");
+assert.equal(iosWebSocketV3Receipt.evidence.outbox_scope,
+  "process-memory-single-message-fixture");
+assert.equal(iosWebSocketV3Receipt.evidence.service_restart_reconnect_qualified, true);
+assert.equal(iosWebSocketV3Receipt.evidence.public_ca_wss_qualified, false);
+assert.equal(iosWebSocketV3Receipt.evidence.internet_route_qualified, false);
+assert.equal(iosWebSocketV3Receipt.evidence.network_transition_reconnect_qualified, false);
+assert.equal(iosWebSocketV3Receipt.evidence.suspension_receive_qualified, false);
+assert.equal(iosWebSocketV3Receipt.evidence.process_relaunch_reconnect_qualified, false);
+assert.equal(iosWebSocketV3Receipt.evidence.physical_device, false);
+
 const iosNetworkPathV1Receipt = JSON.parse(fs.readFileSync(
   "admission/host-lib-defined-boundary-v1/ios-arm64-network-path-v1.json", "utf8",
 ));
@@ -1608,6 +1664,7 @@ console.log(JSON.stringify({
   retained_ios_arm64_local_notification_v1_qualification: iosLocalNotificationV1Receipt.implementation_commit,
   retained_ios_arm64_websocket_v1_qualification: iosWebSocketV1Receipt.implementation_commit,
   retained_ios_arm64_websocket_v2_qualification: iosWebSocketV2Receipt.implementation_commit,
+  retained_ios_arm64_websocket_v3_qualification: iosWebSocketV3Receipt.implementation_commit,
   retained_ios_arm64_network_path_v1_qualification: iosNetworkPathV1Receipt.implementation_commit,
   retained_ios_simulator_first_qualification_policy_v1: iosQualificationPolicyV1Receipt.implementation_commit,
   old_candidate_rejects_product_drift: true,
