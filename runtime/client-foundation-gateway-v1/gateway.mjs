@@ -1,6 +1,6 @@
-import { createHash } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import { readFileSync } from "node:fs";
-import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
+import { mkdir, open, readFile, rename, unlink, writeFile } from "node:fs/promises";
 import https from "node:https";
 import path from "node:path";
 import { encodeFrame, FrameDecoder } from "../client-foundation-v1/websocket-wire.mjs";
@@ -12,6 +12,11 @@ const ACCEPT_GUID = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
 const MAX_JSON_BYTES = 2 * 1024 * 1024;
 const ALLOWED_BUNDLE_FILES = new Set(["lib.wit", "native-boundary.json", "native-adapter.mjs"]);
 const sha256 = (bytes) => createHash("sha256").update(bytes).digest("hex");
+const canonicalJson = (value) => {
+  if (value === null || typeof value !== "object") return JSON.stringify(value);
+  if (Array.isArray(value)) return `[${value.map(canonicalJson).join(",")}]`;
+  return `{${Object.keys(value).sort().map((key) => `${JSON.stringify(key)}:${canonicalJson(value[key])}`).join(",")}}`;
+};
 
 const validClientId = (value) => typeof value === "string" && /^[A-Za-z0-9._-]{1,128}$/.test(value);
 const jsonResponse = (response, status, value) => {
@@ -55,43 +60,70 @@ function validateBundle(bytes) {
 }
 
 export class ClientFoundationGateway {
-  constructor({ dataRoot, tlsKey, tlsCert, host = "127.0.0.1", port = 0, advertiseOrigin = null } = {}) {
+  constructor({
+    dataRoot,
+    tlsKey,
+    tlsCert,
+    host = "127.0.0.1",
+    port = 0,
+    advertiseOrigin = null,
+    maxCompletedCommandsPerClient = 128,
+    heartbeatIntervalMs = 30000,
+    heartbeatTimeoutMs = 90000,
+  } = {}) {
     if (!dataRoot || !tlsKey || !tlsCert) throw new Error("incomplete Client Foundation Gateway configuration");
+    if (!Number.isSafeInteger(maxCompletedCommandsPerClient) || maxCompletedCommandsPerClient < 1) throw new Error("invalid completed-command retention");
+    if (!Number.isSafeInteger(heartbeatIntervalMs) || heartbeatIntervalMs < 1 || !Number.isSafeInteger(heartbeatTimeoutMs) || heartbeatTimeoutMs <= heartbeatIntervalMs) {
+      throw new Error("heartbeat timeout must exceed its positive interval");
+    }
     this.dataRoot = path.resolve(dataRoot);
     this.statePath = path.join(this.dataRoot, "state.json");
     this.artifactRoot = path.join(this.dataRoot, "artifacts");
+    this.archiveRoot = path.join(this.dataRoot, "archives");
+    this.lockPath = path.join(this.dataRoot, ".gateway.lock");
     this.tlsKey = tlsKey;
     this.tlsCert = tlsCert;
     this.host = host;
     this.port = port;
     this.advertiseOrigin = advertiseOrigin;
+    this.maxCompletedCommandsPerClient = maxCompletedCommandsPerClient;
+    this.heartbeatIntervalMs = heartbeatIntervalMs;
+    this.heartbeatTimeoutMs = heartbeatTimeoutMs;
     this.state = null;
     this.server = null;
     this.connections = new Map();
     this.persistChain = Promise.resolve();
+    this.lockToken = null;
   }
 
   async start() {
     if (this.server) throw new Error("gateway already started");
     await mkdir(this.artifactRoot, { recursive: true });
+    await mkdir(this.archiveRoot, { recursive: true });
+    await this.#acquireLock();
     try {
-      this.state = JSON.parse(await readFile(this.statePath, "utf8"));
-      if (this.state.schema !== STATE_SCHEMA) throw new Error("unsupported gateway state");
+      try {
+        this.state = JSON.parse(await readFile(this.statePath, "utf8"));
+        if (this.state.schema !== STATE_SCHEMA) throw new Error("unsupported gateway state");
+      } catch (error) {
+        if (error.code !== "ENOENT") throw error;
+        this.state = { schema: STATE_SCHEMA, artifacts: {}, clients: {} };
+        await this.#persist();
+      }
+      this.server = https.createServer({ key: this.tlsKey, cert: this.tlsCert }, (request, response) => {
+        this.#handleHttp(request, response).catch((error) => jsonResponse(response, 400, { accepted: false, error: error.message }));
+      });
+      this.server.on("upgrade", (request, socket) => this.#handleUpgrade(request, socket));
+      await new Promise((resolve, reject) => {
+        this.server.once("error", reject);
+        this.server.listen(this.port, this.host, resolve);
+      });
+      if (!this.advertiseOrigin) this.advertiseOrigin = `https://localhost:${this.server.address().port}`;
+      return this.address();
     } catch (error) {
-      if (error.code !== "ENOENT") throw error;
-      this.state = { schema: STATE_SCHEMA, artifacts: {}, clients: {} };
-      await this.#persist();
+      await this.#releaseLock();
+      throw error;
     }
-    this.server = https.createServer({ key: this.tlsKey, cert: this.tlsCert }, (request, response) => {
-      this.#handleHttp(request, response).catch((error) => jsonResponse(response, 400, { accepted: false, error: error.message }));
-    });
-    this.server.on("upgrade", (request, socket) => this.#handleUpgrade(request, socket));
-    await new Promise((resolve, reject) => {
-      this.server.once("error", reject);
-      this.server.listen(this.port, this.host, resolve);
-    });
-    if (!this.advertiseOrigin) this.advertiseOrigin = `https://localhost:${this.server.address().port}`;
-    return this.address();
   }
 
   address() {
@@ -105,14 +137,24 @@ export class ClientFoundationGateway {
   }
 
   async close() {
-    if (!this.server) return;
-    for (const connection of this.connections.values()) connection.socket.destroy();
+    if (!this.server) {
+      await this.#releaseLock();
+      return;
+    }
+    for (const connection of this.connections.values()) {
+      clearInterval(connection.heartbeatTimer);
+      connection.socket.destroy();
+    }
     this.connections.clear();
     this.server.closeAllConnections();
     const server = this.server;
     this.server = null;
-    await new Promise((resolve, reject) => server.close((error) => error ? reject(error) : resolve()));
-    await this.persistChain;
+    try {
+      await new Promise((resolve, reject) => server.close((error) => error ? reject(error) : resolve()));
+      await this.persistChain;
+    } finally {
+      await this.#releaseLock();
+    }
   }
 
   async #handleHttp(request, response) {
@@ -152,7 +194,14 @@ export class ClientFoundationGateway {
       const clientId = decodeURIComponent(clientMatch[1]);
       if (!validClientId(clientId)) throw new Error("invalid client identity");
       const client = this.#client(clientId);
-      jsonResponse(response, 200, { accepted: true, client_id: clientId, connected: this.connections.has(clientId), ...client });
+      const connection = this.connections.get(clientId);
+      jsonResponse(response, 200, {
+        accepted: true,
+        client_id: clientId,
+        connected: Boolean(connection),
+        connection: connection ? { last_pong_at: connection.lastPongAt, pongs: connection.pongs } : null,
+        ...client,
+      });
       return;
     }
     const commandMatch = url.pathname.match(/^\/v1\/clients\/([^/]+)\/commands$/);
@@ -164,15 +213,18 @@ export class ClientFoundationGateway {
         throw new Error("command requires message_id and operation");
       }
       const client = this.#client(clientId);
-      const existing = client.commands.find((command) => command.message_id === input.message_id);
-      if (existing) {
-        if (existing.operation !== input.operation || JSON.stringify(existing.request_payload) !== JSON.stringify(input.payload ?? {})) {
+      const requestPayload = structuredClone(input.payload ?? {});
+      const fingerprint = sha256(Buffer.from(canonicalJson({ operation: input.operation, payload: requestPayload })));
+      const indexed = client.message_index[input.message_id];
+      if (indexed) {
+        if (indexed.fingerprint !== fingerprint) {
           return jsonResponse(response, 409, { accepted: false, error: "message identity conflict" });
         }
-        jsonResponse(response, 200, { accepted: true, duplicate: true, command: existing });
+        const existing = client.commands.find((command) => command.message_id === input.message_id);
+        jsonResponse(response, 200, { accepted: true, duplicate: true, command: existing ?? { ...indexed, message_id: input.message_id, status: "archived" } });
         return;
       }
-      const payload = structuredClone(input.payload ?? {});
+      const payload = structuredClone(requestPayload);
       if (input.operation === "graph.apply" && typeof payload.artifact_sha256 === "string") {
         if (!this.state.artifacts[payload.artifact_sha256]) throw new Error("unknown graph artifact");
         payload.artifact_url = `${this.advertiseOrigin}/v1/artifacts/${payload.artifact_sha256}`;
@@ -181,13 +233,14 @@ export class ClientFoundationGateway {
         message_id: input.message_id,
         sequence: client.next_sequence,
         operation: input.operation,
-        request_payload: structuredClone(input.payload ?? {}),
+        request_payload: requestPayload,
         payload,
         status: "queued",
         receipt: null,
       };
       client.next_sequence += 1;
       client.commands.push(command);
+      client.message_index[input.message_id] = { sequence: command.sequence, operation: command.operation, fingerprint };
       await this.#persist();
       await this.#dispatch(clientId);
       jsonResponse(response, 201, { accepted: true, duplicate: false, command });
@@ -207,11 +260,31 @@ export class ClientFoundationGateway {
       const accept = createHash("sha1").update(key + ACCEPT_GUID).digest("base64");
       socket.write(["HTTP/1.1 101 Switching Protocols", "Upgrade: websocket", "Connection: Upgrade", `Sec-WebSocket-Accept: ${accept}`, "", ""].join("\r\n"));
       this.connections.get(clientId)?.socket.destroy();
-      const connection = { socket, decoder: new FrameDecoder({ expectMasked: true }), hello: false, chain: Promise.resolve() };
+      const connection = {
+        socket,
+        decoder: new FrameDecoder({ expectMasked: true }),
+        hello: false,
+        chain: Promise.resolve(),
+        lastPongAt: Date.now(),
+        pongs: 0,
+        heartbeatTimer: null,
+      };
+      connection.heartbeatTimer = setInterval(() => {
+        if (Date.now() - connection.lastPongAt > this.heartbeatTimeoutMs) {
+          connection.socket.destroy();
+          return;
+        }
+        if (!connection.socket.destroyed) connection.socket.write(encodeFrame(String(Date.now()), { opcode: 0x9 }));
+      }, this.heartbeatIntervalMs);
+      connection.heartbeatTimer.unref?.();
       this.connections.set(clientId, connection);
       socket.on("data", (chunk) => this.#handleFrames(clientId, connection, chunk));
-      socket.on("close", () => { if (this.connections.get(clientId) === connection) this.connections.delete(clientId); });
-      socket.on("error", () => { if (this.connections.get(clientId) === connection) this.connections.delete(clientId); });
+      const cleanup = () => {
+        clearInterval(connection.heartbeatTimer);
+        if (this.connections.get(clientId) === connection) this.connections.delete(clientId);
+      };
+      socket.on("close", cleanup);
+      socket.on("error", cleanup);
     } catch {
       socket.destroy();
     }
@@ -223,6 +296,11 @@ export class ClientFoundationGateway {
         if (frame.opcode === 0x8) return connection.socket.end(encodeFrame(frame.payload, { opcode: 0x8 }));
         if (frame.opcode === 0x9) {
           connection.socket.write(encodeFrame(frame.payload, { opcode: 0xa }));
+          continue;
+        }
+        if (frame.opcode === 0xa) {
+          connection.lastPongAt = Date.now();
+          connection.pongs += 1;
           continue;
         }
         if (frame.opcode !== 0x1) throw new Error("unsupported WebSocket client frame");
@@ -253,9 +331,10 @@ export class ClientFoundationGateway {
     }
     const command = client.commands.find((candidate) => candidate.message_id === message.message_id);
     if (!command || command.sequence !== message.sequence) throw new Error("receipt command identity mismatch");
-    if (command.receipt && JSON.stringify(command.receipt) !== JSON.stringify(message)) throw new Error("receipt replay mismatch");
+    if (command.receipt && canonicalJson(command.receipt) !== canonicalJson(message)) throw new Error("receipt replay mismatch");
     command.receipt = message;
     command.status = "completed";
+    await this.#compact(clientId, client);
     await this.#persist();
     await this.#dispatch(clientId);
   }
@@ -278,8 +357,86 @@ export class ClientFoundationGateway {
   }
 
   #client(clientId) {
-    this.state.clients[clientId] ??= { next_sequence: 1, last_hello: null, commands: [] };
-    return this.state.clients[clientId];
+    this.state.clients[clientId] ??= {
+      next_sequence: 1,
+      last_hello: null,
+      commands: [],
+      message_index: {},
+      archives: [],
+      compacted_through_sequence: 0,
+    };
+    const client = this.state.clients[clientId];
+    client.message_index ??= {};
+    client.archives ??= [];
+    client.compacted_through_sequence ??= 0;
+    for (const command of client.commands) {
+      client.message_index[command.message_id] ??= {
+        sequence: command.sequence,
+        operation: command.operation,
+        fingerprint: sha256(Buffer.from(canonicalJson({ operation: command.operation, payload: command.request_payload ?? {} }))),
+      };
+    }
+    return client;
+  }
+
+  async #compact(clientId, client) {
+    const limit = this.maxCompletedCommandsPerClient;
+    if (!Number.isSafeInteger(limit) || limit < 1 || client.commands.length <= limit * 2) return;
+    const eligible = client.commands.slice(0, limit);
+    if (eligible.some((command) => !command.receipt)) return;
+    const bytes = Buffer.from(`${eligible.map((command) => JSON.stringify(command)).join("\n")}\n`);
+    const digest = sha256(bytes);
+    const from = eligible[0].sequence;
+    const through = eligible.at(-1).sequence;
+    const directory = path.join(this.archiveRoot, clientId);
+    await mkdir(directory, { recursive: true });
+    const filename = `${from}-${through}-${digest}.jsonl`;
+    const archivePath = path.join(directory, filename);
+    try {
+      await writeFile(archivePath, bytes, { flag: "wx" });
+    } catch (error) {
+      if (error.code !== "EEXIST" || sha256(await readFile(archivePath)) !== digest) throw error;
+    }
+    client.commands.splice(0, eligible.length);
+    client.compacted_through_sequence = through;
+    client.archives.push({ from_sequence: from, through_sequence: through, commands: eligible.length, sha256: digest, path: `${clientId}/${filename}` });
+  }
+
+  async #acquireLock() {
+    const token = randomUUID();
+    const record = `${JSON.stringify({ token, pid: process.pid, started_at: new Date().toISOString() })}\n`;
+    for (let attempt = 0; attempt < 2; attempt += 1) {
+      try {
+        const handle = await open(this.lockPath, "wx", 0o600);
+        await handle.writeFile(record);
+        await handle.close();
+        this.lockToken = token;
+        return;
+      } catch (error) {
+        if (error.code !== "EEXIST") throw error;
+        let owner;
+        try { owner = JSON.parse(await readFile(this.lockPath, "utf8")); } catch { owner = null; }
+        let alive = false;
+        if (Number.isSafeInteger(owner?.pid) && owner.pid > 0) {
+          try { process.kill(owner.pid, 0); alive = true; } catch (probeError) { alive = probeError.code === "EPERM"; }
+        }
+        if (alive) throw new Error(`gateway state is already locked by pid ${owner.pid}`);
+        await unlink(this.lockPath).catch((unlinkError) => { if (unlinkError.code !== "ENOENT") throw unlinkError; });
+      }
+    }
+    throw new Error("unable to acquire gateway state lock");
+  }
+
+  async #releaseLock() {
+    if (!this.lockToken) return;
+    try {
+      const owner = JSON.parse(await readFile(this.lockPath, "utf8"));
+      if (owner.token === this.lockToken) await unlink(this.lockPath);
+    } catch (error) {
+      if (error.code !== "ENOENT") throw error;
+    } finally {
+      this.lockToken = null;
+    }
   }
 
   async #persist() {

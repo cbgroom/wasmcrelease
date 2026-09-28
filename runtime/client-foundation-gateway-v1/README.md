@@ -14,7 +14,11 @@ The gateway provides:
   `message_id`;
 - `GET /v1/clients/<client-id>` for durable hello, command and receipt state;
 - atomic JSON state plus content-addressed artifact files that survive gateway
-  restart.
+  restart;
+- an exclusive data-root writer lock with stale-owner recovery;
+- WSS ping/pong liveness and stale-connection eviction;
+- bounded hot command state with immutable, SHA-256-bound JSONL archive
+  segments, while a compact message index preserves enqueue idempotency.
 
 The gateway persists a command before delivery and persists its receipt before
 dispatching the next sequence. If the gateway loses a receipt after the client
@@ -32,15 +36,20 @@ WASMC_GATEWAY_PORT=8443 \
 node runtime/client-foundation-gateway-v1/cli.mjs
 ```
 
+`WASMC_GATEWAY_MAX_COMPLETED_COMMANDS`,
+`WASMC_GATEWAY_HEARTBEAT_INTERVAL_MS`, and
+`WASMC_GATEWAY_HEARTBEAT_TIMEOUT_MS` tune hot-state compaction and liveness.
+The timeout should be larger than the heartbeat interval.
+
 Run the local restart qualification:
 
 ```sh
 node scripts/test-client-foundation-gateway-v1.mjs
 ```
 
-This prototype intentionally contains no user/account authorization layer. TLS
-termination, trusted-client enrollment, multi-process storage coordination,
-bounded retention/compaction, fleet scheduling, public deployment and external
-load qualification remain deployment-layer work. The current evidence is one
-local Node process with an exact repository-local TLS fixture, not admission or
-release.
+This prototype intentionally contains no user/account authorization layer. It
+is a single-writer service: the lock prevents corruption but is not a clustered
+consensus protocol. Archive deletion/retention policy, message-index pruning,
+fleet scheduling, public deployment and external load qualification remain
+deployment-layer work. The current evidence is one local Node process with an
+exact repository-local TLS fixture, not admission or release.

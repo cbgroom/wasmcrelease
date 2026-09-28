@@ -1,12 +1,15 @@
 import assert from "node:assert/strict";
-import { createHash } from "node:crypto";
+import { createHash, randomBytes } from "node:crypto";
+import { once } from "node:events";
 import { readFileSync } from "node:fs";
-import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import https from "node:https";
+import tls from "node:tls";
 import os from "node:os";
 import path from "node:path";
 import { ClientFoundation } from "../runtime/client-foundation-v1/foundation.mjs";
 import { ClientFoundationGateway } from "../runtime/client-foundation-gateway-v1/gateway.mjs";
+import { encodeFrame } from "../runtime/client-foundation-v1/websocket-wire.mjs";
 
 const root = process.cwd();
 const cert = readFileSync(path.join(root, "scripts/fixtures/ios-wss-cert.pem"));
@@ -52,26 +55,67 @@ async function api(origin, method, pathname, body = null) {
   });
 }
 
-async function waitFor(origin, predicate, timeoutMs = 5000) {
+async function waitFor(origin, predicate, timeoutMs = 5000, clientId = "client-a") {
   const deadline = Date.now() + timeoutMs;
   while (Date.now() < deadline) {
-    const result = await api(origin, "GET", "/v1/clients/client-a");
+    const result = await api(origin, "GET", `/v1/clients/${clientId}`);
     if (predicate(result.value)) return result.value;
     await wait(25);
   }
   throw new Error("gateway state wait timed out");
 }
 
+async function connectSilentClient(port) {
+  const socket = tls.connect({ host: "localhost", port, servername: "localhost", ca: cert, rejectUnauthorized: true });
+  await once(socket, "secureConnect");
+  const websocketKey = randomBytes(16).toString("base64");
+  socket.write([
+    "GET /v1/clients/silent-client/control HTTP/1.1",
+    `Host: localhost:${port}`,
+    "Upgrade: websocket",
+    "Connection: Upgrade",
+    `Sec-WebSocket-Key: ${websocketKey}`,
+    "Sec-WebSocket-Version: 13",
+    "",
+    "",
+  ].join("\r\n"));
+  let response = Buffer.alloc(0);
+  while (!response.includes("\r\n\r\n")) {
+    const [chunk] = await once(socket, "data");
+    response = Buffer.concat([response, chunk]);
+  }
+  assert.match(response.toString("latin1"), /^HTTP\/1\.1 101\b/);
+  socket.write(encodeFrame(JSON.stringify({
+    type: "hello",
+    schema: "wasmc.client-foundation-control/v1",
+    last_server_sequence: 0,
+    graph_revision: 1,
+    active: { kind: "factory" },
+  }), { mask: true }));
+  return socket;
+}
+
 const temporaryRoot = await mkdtemp(path.join(os.tmpdir(), "wasmc-foundation-gateway-"));
 const gatewayRoot = path.join(temporaryRoot, "gateway");
 const clientRoot = path.join(temporaryRoot, "client");
-let gateway = new ClientFoundationGateway({ dataRoot: gatewayRoot, tlsKey: key, tlsCert: cert });
+const gatewayOptions = {
+  dataRoot: gatewayRoot,
+  tlsKey: key,
+  tlsCert: cert,
+  maxCompletedCommandsPerClient: 2,
+  heartbeatIntervalMs: 20,
+  heartbeatTimeoutMs: 120,
+};
+let gateway = new ClientFoundationGateway(gatewayOptions);
 let foundation;
 const controller = new AbortController();
 
 try {
   const firstAddress = await gateway.start();
   const origin = firstAddress.origin;
+  const contender = new ClientFoundationGateway(gatewayOptions);
+  await assert.rejects(() => contender.start(), /already locked/);
+  await contender.close();
   assert.equal((await api(origin, "GET", "/healthz")).status, 200);
   const artifact = await api(origin, "POST", "/v1/artifacts", makeBundle("runtime/client-foundation-v1/fixtures/dynamic-provider"));
   assert.equal(artifact.status, 201);
@@ -106,13 +150,18 @@ try {
   const firstState = await waitFor(origin, (state) => state.commands.length === 2 && state.commands.every((command) => command.receipt));
   assert.equal(firstState.commands[1].receipt.outcome, "committed");
   assert.equal(foundation.snapshot().active.identity, "wasmc:client-foundation-dynamic@0.0.1-dev.1");
+  const heartbeatState = await waitFor(origin, (state) => state.connection?.pongs >= 1);
+  assert.ok(heartbeatState.connection.last_pong_at > 0);
+  const silentSocket = await connectSilentClient(firstAddress.port);
+  await waitFor(origin, (state) => state.connected === true, 1000, "silent-client");
+  await waitFor(origin, (state) => state.connected === false, 2000, "silent-client");
+  silentSocket.destroy();
 
   const fixedPort = firstAddress.port;
   await gateway.close();
+  await writeFile(path.join(gatewayRoot, ".gateway.lock"), `${JSON.stringify({ token: "stale", pid: 2147483647 })}\n`);
   gateway = new ClientFoundationGateway({
-    dataRoot: gatewayRoot,
-    tlsKey: key,
-    tlsCert: cert,
+    ...gatewayOptions,
     port: fixedPort,
     advertiseOrigin: origin,
   });
@@ -130,6 +179,31 @@ try {
   assert.equal(finalState.next_sequence, 4);
   assert.equal(finalState.commands.filter((command) => command.message_id === "gw-m1").length, 1);
 
+  for (const [messageId, value] of [["gw-m4", "compact-four"], ["gw-m5", "compact-five"]]) {
+    const queued = await api(origin, "POST", "/v1/clients/client-a/commands", {
+      message_id: messageId,
+      operation: "invoke",
+      payload: { value },
+    });
+    assert.equal(queued.status, 201);
+    await waitFor(origin, (state) => state.commands.some((command) => command.message_id === messageId && command.receipt));
+  }
+  const compactedState = await waitFor(origin, (state) => state.archives.length === 1 && state.compacted_through_sequence === 2);
+  assert.deepEqual(compactedState.commands.map((command) => command.sequence), [3, 4, 5]);
+  const archivedDuplicate = await api(origin, "POST", "/v1/clients/client-a/commands", inventoryInput);
+  assert.equal(archivedDuplicate.status, 200);
+  assert.equal(archivedDuplicate.value.duplicate, true);
+  assert.equal(archivedDuplicate.value.command.status, "archived");
+  assert.equal(archivedDuplicate.value.command.sequence, 1);
+  const reorderedGraphDuplicate = await api(origin, "POST", "/v1/clients/client-a/commands", {
+    message_id: "gw-m2",
+    operation: "graph.apply",
+    payload: { artifact_sha256: artifact.value.sha256, expected_graph_revision: 1 },
+  });
+  assert.equal(reorderedGraphDuplicate.status, 200);
+  assert.equal(reorderedGraphDuplicate.value.command.status, "archived");
+  assert.equal(reorderedGraphDuplicate.value.command.sequence, 2);
+
   controller.abort();
   await running;
   await foundation.close();
@@ -137,15 +211,28 @@ try {
   const diskState = JSON.parse(await readFile(path.join(gatewayRoot, "state.json"), "utf8"));
   assert.equal(diskState.clients["client-a"].commands.length, 3);
   assert.equal(diskState.clients["client-a"].commands.every((command) => command.receipt), true);
+  assert.equal(diskState.clients["client-a"].archives.length, 1);
+  const archiveMetadata = diskState.clients["client-a"].archives[0];
+  const archiveBytes = await readFile(path.join(gatewayRoot, "archives", archiveMetadata.path));
+  assert.equal(sha256(archiveBytes), archiveMetadata.sha256);
+  assert.equal(archiveBytes.toString("utf8").trim().split("\n").length, 2);
   console.log(JSON.stringify({
     accepted: true,
     schema: "wasmc.client-foundation-gateway-local-qualification/v1",
     lifecycle: "prototype-local-qualified-not-admitted-not-released",
     artifacts_persistent: Object.keys(diskState.artifacts).length,
     clients_persistent: Object.keys(diskState.clients).length,
-    commands_persistent: diskState.clients["client-a"].commands.length,
-    command_sequences: diskState.clients["client-a"].commands.map((command) => command.sequence),
+    active_commands_persistent: diskState.clients["client-a"].commands.length,
+    command_sequences: [1, 2, ...diskState.clients["client-a"].commands.map((command) => command.sequence)],
     duplicate_enqueue_idempotent: true,
+    archived_duplicate_idempotent: true,
+    canonical_payload_identity: true,
+    single_writer_lock: true,
+    stale_lock_recovery: true,
+    heartbeat_pongs: heartbeatState.connection.pongs,
+    stale_connection_evicted: true,
+    compacted_through_sequence: diskState.clients["client-a"].compacted_through_sequence,
+    archive_sha256: archiveMetadata.sha256,
     gateway_restart_reconnect: true,
     post_restart_invoke: finalState.commands[2].receipt.response.value,
     fixed_host_api_changed: false,

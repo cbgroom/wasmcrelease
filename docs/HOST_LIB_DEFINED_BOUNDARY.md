@@ -757,6 +757,14 @@ client, retains receipts across process restart, and redelivers an unreceipted
 command with the same identity. Its local qualification restarts the entire GW
 on the same persisted state while the Client reconnects, then completes a new
 invoke through the restored dynamic graph. The GW remains a higher-layer
-service: it introduces no fixed Host or minimal CLI API. Multi-process storage,
-retention/compaction, deployment identity and public network qualification are
-still pending; it is not admitted or released.
+service: it introduces no fixed Host or minimal CLI API. Clustered storage,
+archive lifecycle policy, deployment identity and public network qualification
+are still pending; it is not admitted or released.
+
+The next local GW slice adds an exclusive data-root writer lock with stale-lock
+recovery, WSS ping/pong eviction, canonical command fingerprints, and bounded
+hot command state backed by SHA-256-bound JSONL archive segments. The compact
+message index keeps an archived command identity idempotent. This closes local
+single-writer corruption and unbounded hot-command growth; it does not claim
+clustered consensus, archive deletion policy, bounded message-index growth or
+public deployment qualification.
