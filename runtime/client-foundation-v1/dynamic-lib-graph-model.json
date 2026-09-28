@@ -41,6 +41,13 @@
       "ordering": "drain-snapshot-migrate-validate-restore-health-publish",
       "failure": "candidate-rollback-old-generation-remains-active"
     },
+    "sticky_restart": {
+      "graph_identity": "exact-fail-closed-or-reset-on-restart-disposition",
+      "default": "no-implicit-disposition-accepted",
+      "reset_operation": "reset-state-v1-over-fixed-host-boundary",
+      "ordering": "reset-validate-health-before-runtime-available",
+      "failure": "runtime-unavailable-control-remains-connected"
+    },
     "same_schema_order": [
       "install-probe-health-candidate",
       "block-new-invocations",
@@ -81,7 +88,8 @@
     "configuration_sha256",
     "port_contracts_sha256",
     "state_policy",
-    "state_schema_identity"
+    "state_schema_identity",
+    "state_restart_disposition"
   ],
   "linearization_points": {
     "invoke": "capture-and-increment-active-generation",
@@ -115,16 +123,18 @@
     "partial-checkpoint-restore-poisons-graph",
     "cross-schema-migration-requires-exact-plan-and-package",
     "migration-resource-is-ephemeral",
+    "sticky-restart-requires-identity-bound-disposition",
+    "sticky-reset-completes-before-runtime-available",
     "close-reclaims-all-runtime-resources"
   ],
   "current_implementation_profile": {
     "graph_shape": "serial-pipeline-and-general-dag-client-gateway",
-    "state_policy": "stateless-sticky-and-snapshot-v1-with-exact-cross-schema-migration",
+    "state_policy": "stateless-sticky-explicit-restart-disposition-and-snapshot-v1-with-exact-cross-schema-migration",
     "graph_identity": "canonical-json-sha256",
     "configuration": "canonical-json-sha256",
     "wit_contract_identity": "wasm-tools-derived-port-type-sha256-bound-to-exact-wit",
     "retired_cleanup": "durable-publication-ledger-and-process-owner-fence",
-    "stateful_restart": "snapshot-v1-active-checkpoint-with-invoke-result-binding",
+    "stateful_restart": "snapshot-v1-checkpoint-restore-and-sticky-explicit-reset-or-fail-closed",
     "qualified_invariants": [
       "single-active-generation",
       "monotonic-active-revision",
@@ -144,8 +154,10 @@
       "partial-checkpoint-restore-poisons-graph",
       "cross-schema-migration-requires-exact-plan-and-package",
       "migration-resource-is-ephemeral",
+      "sticky-restart-requires-identity-bound-disposition",
+      "sticky-reset-completes-before-runtime-available",
       "close-reclaims-all-runtime-resources"
     ],
-    "open_gates": ["sticky-active-restart-disposition"]
+    "open_gates": []
   }
 }

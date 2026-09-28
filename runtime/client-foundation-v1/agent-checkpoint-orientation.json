@@ -60,7 +60,7 @@
   "failure_policy": {
     "missing_or_corrupt": "runtime unavailable while control remains connected",
     "partial_multi_block_restore": "graph poisoned until close and reconstruction",
-    "sticky_restart": "fail closed because no snapshot or disposition contract exists"
+    "sticky_restart": "an exact graph-bound fail-closed or reset-on-restart disposition is required; reset invokes and validates reset-state-v1 before runtime availability"
   },
   "limits": {
     "decoded_bytes_per_block": 1048576,
@@ -73,7 +73,7 @@
     "failure": "candidate rollback; old generation remains active",
     "resource_lifetime": "ephemeral and released before publication"
   },
-  "open_gates": ["sticky-active-restart-disposition"],
+  "open_gates": [],
   "not_claimed": [
     "general exactly-once execution",
     "external-effect rollback or cleanup",
@@ -106,6 +106,7 @@
     "cross_schema_gateway_migration": "SV2:2->SV3:2",
     "cross_schema_restart": "SV3:2",
     "forged_migration_contract_rejected_at_gateway": true,
+    "sticky_explicit_reset_client_restart": "STICKY:1->STICKY:0",
     "external_effect_exactly_once_claimed": false,
     "fixed_host_api_changed": false,
     "minimal_cli_changed": false

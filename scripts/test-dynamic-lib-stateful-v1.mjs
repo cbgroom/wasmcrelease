@@ -23,6 +23,7 @@ async function makeProvider(directory, marker, statePolicy, stateSchemaIdentity,
   restoreDelayMs = 0,
   snapshotFault = null,
   maxOutputBytes = 65536,
+  restartDisposition = "fail-closed",
 } = {}) {
   const root = path.join(temporaryRoot, directory);
   await mkdir(root, { recursive: true });
@@ -44,6 +45,10 @@ export async function invoke(input) {
     if (request.value === "slow-inc") await new Promise((resolve) => setTimeout(resolve, 60));
     if (request.value === "inc" || request.value === "slow-inc") count += 1;
     return encoder.encode(JSON.stringify({ accepted: true, value: ${JSON.stringify(marker)} + ":" + count }));
+  }
+  if (request.operation === "reset-state-v1") {
+    count = 0;
+    return encoder.encode(JSON.stringify({ accepted: true, state_schema_identity: ${JSON.stringify(stateSchemaIdentity)} }));
   }
   if (request.operation === "snapshot-v1") {
     const bytes = snapshotFault === "oversize" ? Buffer.alloc(1024 * 1024 + 1) : Buffer.from(JSON.stringify({ [stateField]: count }));
@@ -74,6 +79,7 @@ export async function invoke(input) {
   return {
     name, root, identity, artifact_sha256: exact.artifact_sha256, wit_contract_sha256: exact.wit_contract_sha256,
     configuration: {}, configuration_sha256: canonicalJsonSha256({}), state_policy: statePolicy, state_schema_identity: stateSchemaIdentity,
+    state_restart_disposition: statePolicy === "sticky" ? restartDisposition : null,
   };
 }
 
@@ -230,12 +236,30 @@ try {
 
   const sticky1 = await makeProvider("sticky-v1", "STICKY1", "sticky", schemaV1);
   const sticky2 = await makeProvider("sticky-v2", "STICKY2", "sticky", schemaV1);
+  assert.throws(() => request(0, [{ ...sticky1, state_restart_disposition: null }]), /requires an exact restart disposition/);
+  assert.throws(() => request(0, [{ ...v1, state_restart_disposition: "reset-on-restart" }]), /snapshot dynamic Lib cannot declare a restart disposition/);
   assert.equal((await stickyGraph.apply(request(0, [sticky1]))).outcome, "committed");
   assert.equal((await stickyGraph.apply(request(1, [sticky1]))).outcome, "unchanged");
   const stickyReplacement = await stickyGraph.apply(request(1, [sticky2]));
   assert.equal(stickyReplacement.outcome, "rolled-back");
   assert.match(stickyReplacement.error, /cannot be replaced automatically/);
   assert.deepEqual(await stickyGraph.invoke("inc"), { revision: 1, value: "STICKY1:1" });
+  await assert.rejects(stickyGraph.restoreStateCheckpoint(null), /restart disposition is fail-closed/);
+
+  const stickyResetBoundary = new LibDefinedBoundary();
+  const stickyResetGraph = new DynamicLibGraph({ boundary: stickyResetBoundary });
+  negativeGraphs.push(stickyResetGraph);
+  const stickyReset = await makeProvider("sticky-reset", "STICKY-RESET", "sticky", schemaV1, { restartDisposition: "reset-on-restart" });
+  assert.equal((await stickyResetGraph.apply(request(0, [stickyReset]))).outcome, "committed");
+  assert.deepEqual(await stickyResetGraph.invoke("inc"), { revision: 1, value: "STICKY-RESET:1" });
+  await stickyResetGraph.close();
+  const stickyRestartGraph = new DynamicLibGraph({ boundary: stickyResetBoundary });
+  negativeGraphs.push(stickyRestartGraph);
+  assert.equal((await stickyRestartGraph.apply(request(0, [stickyReset]))).outcome, "committed");
+  assert.deepEqual(await stickyRestartGraph.restoreStateCheckpoint(null), { restored: 0, reset: 1, reset_nodes: ["counter"], checkpoint_sha256: null });
+  assert.deepEqual(await stickyRestartGraph.invoke("get"), { revision: 1, value: "STICKY-RESET:0" });
+  await stickyRestartGraph.close();
+  assert.deepEqual(stickyResetBoundary.counts(), { resources: 0, windows: 0, operations: 0 });
 
   const stateless = await makeProvider("stateless", "STATELESS", "stateless", null);
   const policyTransition = await graph.apply(request(2, [stateless]));
@@ -248,7 +272,7 @@ try {
   const mismatchedBoundary = new LibDefinedBoundary();
   const mismatchedGraph = new DynamicLibGraph({ boundary: mismatchedBoundary });
   negativeGraphs.push(mismatchedGraph);
-  const mismatchedDeclaration = { ...v1, state_policy: "sticky" };
+  const mismatchedDeclaration = { ...v1, state_policy: "sticky", state_restart_disposition: "fail-closed" };
   const packageMismatch = await mismatchedGraph.apply(request(0, [mismatchedDeclaration]));
   assert.equal(packageMismatch.outcome, "rolled-back");
   assert.match(packageMismatch.error, /package state contract mismatch/);
@@ -276,7 +300,9 @@ try {
     snapshot_same_schema_replacement: "V1:3->V2:4", old_invocation_drained_before_snapshot: true,
     new_invocation_blocked_until_publish: true, failed_restore_rolled_back: true, invocation_barrier_released_after_rollback: true,
     cross_schema_exact_migration_lib: "CROSS1:2->CROSS2:2", cross_schema_missing_migration_rejected: true, cross_schema_broken_migration_rolled_back: true,
-    sticky_unchanged_reused: true, sticky_automatic_replacement_rejected: true,
+    sticky_unchanged_reused: true, sticky_automatic_replacement_rejected: true, sticky_missing_disposition_rejected: true,
+    snapshot_extraneous_disposition_rejected: true, sticky_fail_closed_restart_rejected: true,
+    sticky_explicit_reset_restart: "STICKY-RESET:0",
     package_state_contract_mismatch_rejected: true, state_policy_transition_rejected: true, stateful_removal_without_disposition_rejected: true,
     noncanonical_snapshot_rejected: true, snapshot_digest_mismatch_rejected: true, oversized_snapshot_rejected: true,
     active_checkpoint_restored: "V2:6", checkpoint_barrier_queued_new_invocation: "V2:7", corrupt_checkpoint_rejected: true,

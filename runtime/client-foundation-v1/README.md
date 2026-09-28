@@ -155,7 +155,9 @@ node scripts/test-dynamic-client-foundation-gateway-v1.mjs
 This closes restart reconstruction for both serial routes and general
 stateless DAGs. Active `snapshot-v1` state is also checkpointed and restored;
 cross-schema replacement uses an exact content-addressed migration Lib and
-independently hashed migration plan. `sticky` restart disposition, external-effect
+independently hashed migration plan. `sticky` restart is graph-identity-bound as
+either `fail-closed` or `reset-on-restart`; the latter completes and validates
+the Lib's `reset-state-v1` operation before availability. External-effect
 exactly-once semantics, cache retention policy and release admission remain
 outside this slice.
 
@@ -194,8 +196,10 @@ Cross-schema migration is an ephemeral transition resource rather than a stable
 graph node. Its plan binds the node, package, WIT, configuration and both schema
 identities. The Client drains, snapshots, migrates, validates, restores and
 health-checks before publication; failure rolls back the candidate and retains
-the old generation. Restart disposition for `sticky` active state is not yet
-implemented. The focused stateful test also rejects
+the old generation. A sticky node requires an exact `fail-closed` or
+`reset-on-restart` disposition in graph identity; reset uses the existing Host
+boundary and a schema-validated Lib operation before runtime availability. The
+focused stateful test also rejects
 package/declaration mismatch, policy transitions, removal without a state
 disposition, non-canonical base64, digest mismatch and snapshots larger than
 1 MiB. The integrated test proves distributed same- and cross-schema paths,

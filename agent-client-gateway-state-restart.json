@@ -1,0 +1,40 @@
+{
+  "schema": "wasmc.dynamic-client-state-restart-projection/v1",
+  "request": "How does active sticky or snapshot-v1 state behave across a full dynamic Client restart?",
+  "authority_file": "runtime/client-foundation-v1/agent-checkpoint-orientation.json",
+  "answer": "snapshot-v1 restores an exact checkpoint; sticky requires an identity-bound fail-closed or reset-on-restart disposition, and reset completes before runtime availability.",
+  "lifecycle": {
+    "qualified": true,
+    "admitted": false,
+    "released": false,
+    "discoverable": false,
+    "installable": false,
+    "scope": "prototype-local-qualification"
+  },
+  "sticky": {
+    "identity": "state_restart_disposition is part of the canonical graph digest",
+    "fail_closed": "Client keeps the runtime unavailable while the control connection remains usable",
+    "reset_on_restart": "Client invokes reset-state-v1, validates the exact state schema, health-checks the graph, then reports runtime availability",
+    "missing_or_unknown": "rejected before enqueue or apply",
+    "proved": "STICKY:1->STICKY:0"
+  },
+  "snapshot_v1": {
+    "identity": "wasmc.dynamic-lib-state-checkpoint/v1 binds graph revision, graph digest, block schema and state digests",
+    "proved": "SV2:2 survives full Client restart and receipt recovery without replay; post-migration SV3:2 survives on the target schema"
+  },
+  "host_boundary": "reset-state-v1, snapshot-v1 and restore-v1 are opaque Lib operations over the unchanged resource/window/operation/completion boundary; fixed Host API and minimal CLI are unchanged.",
+  "state_model_open_gates": [],
+  "not_claimed": [
+    "general exactly-once execution",
+    "external-effect rollback or cleanup",
+    "sticky state preservation when reset-on-restart is selected",
+    "release admission"
+  ],
+  "checks": [
+    "node scripts/validate-dynamic-lib-graph-model-v1.mjs",
+    "node scripts/test-dynamic-lib-stateful-v1.mjs",
+    "node scripts/test-dynamic-client-foundation-gateway-v1.mjs",
+    "node scripts/test-client-foundation-v1.mjs"
+  ],
+  "rule": "This root projection is sufficient for a state-restart status review. Cite the authority file and named checks, then stop. Do not read release orientation, release.json, release-surfaces.json, manifests, implementation or tests merely to reconfirm it."
+}

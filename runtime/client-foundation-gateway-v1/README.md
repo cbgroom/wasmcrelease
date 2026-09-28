@@ -47,7 +47,11 @@ The gateway provides:
   one local write before sending the Gateway receipt;
 - exact cross-schema migration-plan validation and distribution. Migration Libs
   are content addressed, schema-pair bound and ephemeral; they do not become
-  stable graph nodes or expand the Host API.
+  stable graph nodes or expand the Host API;
+- graph-identity-bound sticky restart disposition. `fail-closed` preserves the
+  unavailable runtime boundary, while `reset-on-restart` requires the Client to
+  complete the Lib's schema-validated `reset-state-v1` operation before hello
+  reports runtime availability.
 
 The gateway persists a command before delivery and persists its receipt before
 dispatching the next sequence. If the gateway loses a receipt after the client

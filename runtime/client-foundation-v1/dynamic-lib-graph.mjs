@@ -69,6 +69,7 @@ export class DynamicLibGraph {
         wit_contract_sha256: block.witContractSha,
         state_policy: block.statePolicy,
         state_schema_identity: block.stateSchemaIdentity,
+        state_restart_disposition: block.stateRestartDisposition,
         port_contracts_sha256: block.portContractsSha ?? null,
       }])),
     };
@@ -110,7 +111,7 @@ export class DynamicLibGraph {
       for (const [name, declaration] of desired) {
         const current = old.blocks.get(name);
         if (current?.artifactSha === declaration.artifact_sha256 && current.configurationSha === declaration.configuration_sha256) {
-          if (current.identity !== declaration.identity || current.witContractSha !== declaration.wit_contract_sha256 || current.statePolicy !== declaration.state_policy || current.stateSchemaIdentity !== declaration.state_schema_identity || (dag && current.portContractsSha !== declaration.port_contracts_sha256)) {
+          if (current.identity !== declaration.identity || current.witContractSha !== declaration.wit_contract_sha256 || current.statePolicy !== declaration.state_policy || current.stateSchemaIdentity !== declaration.state_schema_identity || current.stateRestartDisposition !== (declaration.state_restart_disposition ?? null) || (dag && current.portContractsSha !== declaration.port_contracts_sha256)) {
             throw new Error(`dynamic Lib identity conflicts with retained instance: ${name}`);
           }
           candidateBlocks.set(name, current);
@@ -147,6 +148,7 @@ export class DynamicLibGraph {
           witContractSha: declaration.wit_contract_sha256,
           statePolicy: declaration.state_policy,
           stateSchemaIdentity: declaration.state_schema_identity,
+          stateRestartDisposition: declaration.state_restart_disposition ?? null,
           portContracts: exactPorts ? structuredClone(exactPorts) : null,
           portContractsSha: exactPorts ? canonicalJsonSha256(exactPorts) : null,
         };
@@ -272,20 +274,22 @@ export class DynamicLibGraph {
     if (this.checkpointInProgress) throw new Error("dynamic Lib graph checkpoint already in progress");
     if (this.retired.size > 0) throw new Error("dynamic Lib graph retired cleanup pending");
     const snapshotBlocks = [...this.active.blocks.entries()].filter(([, block]) => block.statePolicy === "snapshot-v1").sort(([left], [right]) => left.localeCompare(right));
-    if ([...this.active.blocks.values()].some((block) => block.statePolicy === "sticky")) throw new Error("sticky dynamic Lib active state cannot be restored after restart");
+    const stickyBlocks = [...this.active.blocks.entries()].filter(([, block]) => block.statePolicy === "sticky").sort(([left], [right]) => left.localeCompare(right));
+    const blockedSticky = stickyBlocks.filter(([, block]) => block.stateRestartDisposition !== "reset-on-restart").map(([name]) => name);
+    if (blockedSticky.length > 0) throw new Error(`sticky dynamic Lib active state restart disposition is fail-closed: ${blockedSticky.join(",")}`);
     if (snapshotBlocks.length === 0) {
       if (checkpoint !== null && checkpoint !== undefined) throw new Error("unexpected dynamic Lib state checkpoint for stateless graph");
-      return { restored: 0, checkpoint_sha256: null };
-    }
-    this.#validateCheckpointIdentity(checkpoint, snapshotBlocks);
+      if (stickyBlocks.length === 0) return { restored: 0, checkpoint_sha256: null };
+    } else this.#validateCheckpointIdentity(checkpoint, snapshotBlocks);
     this.checkpointInProgress = true;
     const releaseInvocationBarrier = this.#beginInvocationBarrier();
     try {
       await this.#drain(this.active);
-      const checkpointByName = new Map(checkpoint.blocks.map((block) => [block.name, block]));
+      for (const [name, target] of stickyBlocks) await this.#resetStickyState(name, target);
+      const checkpointByName = new Map((checkpoint?.blocks ?? []).map((block) => [block.name, block]));
       for (const [name, target] of snapshotBlocks) await this.#restoreSnapshotEnvelope(name, target, checkpointByName.get(name));
       for (const block of this.active.blocks.values()) await this.#call(block.resource, { operation: "health", configuration: block.configuration });
-      return { restored: snapshotBlocks.length, checkpoint_sha256: checkpoint.checkpoint_sha256 };
+      return { restored: snapshotBlocks.length, ...(stickyBlocks.length > 0 ? { reset: stickyBlocks.length, reset_nodes: stickyBlocks.map(([name]) => name) } : {}), checkpoint_sha256: checkpoint?.checkpoint_sha256 ?? null };
     } catch (error) {
       this.restoreFailed = true;
       throw error;
@@ -293,6 +297,15 @@ export class DynamicLibGraph {
       releaseInvocationBarrier();
       this.checkpointInProgress = false;
     }
+  }
+
+  async #resetStickyState(name, target) {
+    const response = await this.#call(target.resource, {
+      operation: "reset-state-v1",
+      state_schema_identity: target.stateSchemaIdentity,
+      configuration: target.configuration,
+    });
+    if (response.accepted !== true || response.state_schema_identity !== target.stateSchemaIdentity) throw new Error(`sticky dynamic Lib reset rejected: ${name}`);
   }
 
   async #invokeDag(generation, value) {

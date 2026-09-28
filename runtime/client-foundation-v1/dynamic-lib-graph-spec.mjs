@@ -106,12 +106,20 @@ const assertPortMap = (value, label) => {
 };
 
 const assertStatePolicy = (block) => {
+  const restartDisposition = block.state_restart_disposition ?? null;
   if (block.state_policy === "stateless") {
     if (block.state_schema_identity !== null) throw new Error(`invalid stateless dynamic Lib state schema: ${block.name}`);
+    if (restartDisposition !== null) throw new Error(`stateless dynamic Lib cannot declare a restart disposition: ${block.name}`);
     return;
   }
-  if (block.state_policy === "sticky" || block.state_policy === "snapshot-v1") {
+  if (block.state_policy === "sticky") {
     if (!SHA256.test(block.state_schema_identity)) throw new Error(`invalid dynamic Lib state schema identity: ${block.name}`);
+    if (restartDisposition !== "fail-closed" && restartDisposition !== "reset-on-restart") throw new Error(`sticky dynamic Lib requires an exact restart disposition: ${block.name}`);
+    return;
+  }
+  if (block.state_policy === "snapshot-v1") {
+    if (!SHA256.test(block.state_schema_identity)) throw new Error(`invalid dynamic Lib state schema identity: ${block.name}`);
+    if (restartDisposition !== null) throw new Error(`snapshot dynamic Lib cannot declare a restart disposition: ${block.name}`);
     return;
   }
   throw new Error(`unsupported dynamic Lib state policy: ${block.name}`);
@@ -227,7 +235,8 @@ export function describeDynamicLibDag({ blocks, edges, entrypoint }) {
     nodes: [...declarations.values()].map((block) => ({
       node_id: block.name, lib_identity: block.identity, package_sha256: block.artifact_sha256,
       configuration_sha256: block.configuration_sha256, state_policy: block.state_policy,
-      state_schema_identity: block.state_schema_identity, wit_contract_sha256: block.wit_contract_sha256,
+      state_schema_identity: block.state_schema_identity, state_restart_disposition: block.state_restart_disposition ?? null,
+      wit_contract_sha256: block.wit_contract_sha256,
       port_contracts_sha256: block.port_contracts_sha256,
     })).sort((left, right) => left.node_id.localeCompare(right.node_id)),
     edges: normalizedEdges.sort((left, right) => canonicalJson(left).localeCompare(canonicalJson(right))),
@@ -284,6 +293,7 @@ export function describeSerialLibGraph({ blocks, pipeline }) {
       configuration_sha256: block.configuration_sha256,
       state_policy: block.state_policy,
       state_schema_identity: block.state_schema_identity,
+      state_restart_disposition: block.state_restart_disposition ?? null,
       input_wit_contract_sha256: block.wit_contract_sha256,
       output_wit_contract_sha256: block.wit_contract_sha256,
     })).sort((left, right) => left.node_id.localeCompare(right.node_id)),

@@ -6,6 +6,7 @@ const model = JSON.parse(await readFile(new URL("../runtime/client-foundation-v1
 const orientation = JSON.parse(await readFile(new URL("../runtime/client-foundation-v1/agent-checkpoint-orientation.json", import.meta.url), "utf8"));
 const migrationOrientation = JSON.parse(await readFile(new URL("../runtime/client-foundation-v1/agent-state-migration-orientation.json", import.meta.url), "utf8"));
 const migrationProjection = JSON.parse(await readFile(new URL("../agent-client-gateway-state-migration.json", import.meta.url), "utf8"));
+const restartProjection = JSON.parse(await readFile(new URL("../agent-client-gateway-state-restart.json", import.meta.url), "utf8"));
 const document = await readFile(new URL("../docs/DYNAMIC_LIB_GRAPH_MODEL.md", import.meta.url), "utf8");
 const normalizedDocument = document.replace(/\s+/g, " ");
 
@@ -32,7 +33,7 @@ assert.match(orientation.cross_schema_migration.binding, /source schema and targ
 assert.equal(orientation.gateway_invoke_order[4], "Client persists checkpoint and command result in one state-file replacement");
 assert.equal(orientation.failure_policy.missing_or_corrupt, "runtime unavailable while control remains connected");
 assert.equal(orientation.failure_policy.partial_multi_block_restore, "graph poisoned until close and reconstruction");
-assert.deepEqual(orientation.open_gates, ["sticky-active-restart-disposition"]);
+assert.deepEqual(orientation.open_gates, []);
 assert.equal(orientation.protected_surface.proof_command, "git diff --name-only bed1e4d236bb78a992355321deca8968a6400a0d HEAD -- host current runtime/client-foundation-gateway-v1/cli.mjs");
 assert.equal(orientation.protected_surface.expected_output, "");
 assert.deepEqual(orientation.required_additional_reads, []);
@@ -58,13 +59,22 @@ assert.match(migrationOrientation.lifecycle_authority.stopping_rule, /Do not sea
 assert.match(migrationOrientation.adjacent_route_boundary, /not required/);
 assert.equal(migrationOrientation.authority.plan_schema, "wasmc.dynamic-lib-state-migration-plan/v1");
 assert.match(migrationOrientation.stable_graph, /ephemeral transition dependency/);
-assert.deepEqual(migrationOrientation.open_gates, ["sticky-active-restart-disposition"]);
+assert.deepEqual(migrationOrientation.open_gates, []);
 assert.deepEqual(migrationOrientation.required_additional_reads, []);
 assert.equal(migrationOrientation.white_box_binding_receipt.plan_derivation_symbol, "describeStateMigrations");
 assert.equal(migrationOrientation.white_box_binding_receipt.engine_operation, "migrate-state-v1");
 assert.match(migrationOrientation.white_box_binding_receipt.integrated_oracle, /SV2:2->SV3:2/);
 assert.match(migrationOrientation.final_answer_policy, /Do not open the model/);
 assert.match(migrationOrientation.stop, /No additional read is required/);
+assert.equal(restartProjection.schema, "wasmc.dynamic-client-state-restart-projection/v1");
+assert.equal(restartProjection.authority_file, "runtime/client-foundation-v1/agent-checkpoint-orientation.json");
+assert.deepEqual(restartProjection.lifecycle, orientation.lifecycle);
+assert.deepEqual(restartProjection.state_model_open_gates, orientation.open_gates);
+assert.deepEqual(restartProjection.checks, orientation.verify);
+assert.equal(restartProjection.sticky.proved, orientation.qualified_observations.sticky_explicit_reset_client_restart);
+assert.match(restartProjection.sticky.identity, /canonical graph digest/);
+assert.match(restartProjection.host_boundary, /fixed Host API and minimal CLI are unchanged/);
+assert.match(restartProjection.rule, /Do not read release orientation/);
 
 const phases = new Set(model.manager_phases);
 assert.equal(phases.size, model.manager_phases.length);
@@ -107,6 +117,8 @@ for (const required of [
   "partial-checkpoint-restore-poisons-graph",
   "cross-schema-migration-requires-exact-plan-and-package",
   "migration-resource-is-ephemeral",
+  "sticky-restart-requires-identity-bound-disposition",
+  "sticky-reset-completes-before-runtime-available",
   "close-reclaims-all-runtime-resources",
 ]) assert.ok(invariants.has(required), `missing invariant: ${required}`);
 
@@ -138,6 +150,13 @@ assert.deepEqual(model.state_contract.cross_schema_migration, {
   lifetime: "ephemeral-transition-resource-released-before-publication",
   ordering: "drain-snapshot-migrate-validate-restore-health-publish",
   failure: "candidate-rollback-old-generation-remains-active",
+});
+assert.deepEqual(model.state_contract.sticky_restart, {
+  graph_identity: "exact-fail-closed-or-reset-on-restart-disposition",
+  default: "no-implicit-disposition-accepted",
+  reset_operation: "reset-state-v1-over-fixed-host-boundary",
+  ordering: "reset-validate-health-before-runtime-available",
+  failure: "runtime-unavailable-control-remains-connected",
 });
 assert.deepEqual(model.state_contract.same_schema_order, [
   "install-probe-health-candidate",
@@ -174,14 +193,17 @@ assert.match(orientationEvidence.client, /active-state-checkpointed/);
 assert.match(orientationEvidence.client, /inflight_result/);
 assert.match(orientationEvidence.graph, /restoreFailed = true/);
 assert.match(orientationEvidence.graph, /migrate-state-v1/);
+assert.match(orientationEvidence.graph, /reset-state-v1/);
 assert.match(orientationEvidence.package_spec, /dynamic-lib-state-migration-plan\/v1/);
 assert.match(orientationEvidence.gateway, /invalid client state checkpoint summary/);
 assert.match(orientationEvidence.focused_test, /partial_checkpoint_restore_poisoned_until_close: true/);
+assert.match(orientationEvidence.focused_test, /sticky_explicit_reset_restart: "STICKY-RESET:0"/);
 for (const claim of [
   "stateful_active_checkpoint_restart",
   "invoke_checkpoint_crash_recovered_without_replay",
   "gateway_observed_checkpoint_identity",
   "missing_or_corrupt_checkpoint_failed_closed",
+  "sticky_explicit_reset_client_restart",
 ]) assert.match(orientationEvidence.integrated_test, new RegExp(`${claim}:`));
 assert.match(orientationEvidence.crash_fixture, /process\.exit\(87\)/);
 assert.match(orientationEvidence.host_cli_guard, /fixed Host or minimal CLI changed/);
@@ -201,6 +223,7 @@ assert.deepEqual(orientation.qualified_observations, {
   cross_schema_gateway_migration: "SV2:2->SV3:2",
   cross_schema_restart: "SV3:2",
   forged_migration_contract_rejected_at_gateway: true,
+  sticky_explicit_reset_client_restart: "STICKY:1->STICKY:0",
   external_effect_exactly_once_claimed: false,
   fixed_host_api_changed: false,
   minimal_cli_changed: false,
@@ -213,15 +236,13 @@ assert.deepEqual(model.white_box_evidence.commands, [
 assert.equal(model.white_box_evidence.protected_change_scope_base, "bed1e4d236bb78a992355321deca8968a6400a0d");
 assert.equal(model.white_box_evidence.protected_change_scope_command, "git diff --name-only bed1e4d236bb78a992355321deca8968a6400a0d HEAD -- host current runtime/client-foundation-gateway-v1/cli.mjs");
 assert.equal(model.current_implementation_profile.graph_shape, "serial-pipeline-and-general-dag-client-gateway");
-assert.equal(model.current_implementation_profile.state_policy, "stateless-sticky-and-snapshot-v1-with-exact-cross-schema-migration");
+assert.equal(model.current_implementation_profile.state_policy, "stateless-sticky-explicit-restart-disposition-and-snapshot-v1-with-exact-cross-schema-migration");
 assert.equal(model.current_implementation_profile.graph_identity, "canonical-json-sha256");
 assert.equal(model.current_implementation_profile.configuration, "canonical-json-sha256");
 assert.equal(model.current_implementation_profile.wit_contract_identity, "wasm-tools-derived-port-type-sha256-bound-to-exact-wit");
 assert.equal(model.current_implementation_profile.retired_cleanup, "durable-publication-ledger-and-process-owner-fence");
-assert.equal(model.current_implementation_profile.stateful_restart, "snapshot-v1-active-checkpoint-with-invoke-result-binding");
-for (const gate of ["sticky-active-restart-disposition"]) {
-  assert.ok(model.current_implementation_profile.open_gates.includes(gate), `missing open gate: ${gate}`);
-}
+assert.equal(model.current_implementation_profile.stateful_restart, "snapshot-v1-checkpoint-restore-and-sticky-explicit-reset-or-fail-closed");
+assert.deepEqual(model.current_implementation_profile.open_gates, []);
 
 for (const phrase of [
   "The Host remains fixed",
@@ -234,6 +255,7 @@ for (const phrase of [
   "checkpoint and command result are written in one Client state transaction",
   "Missing, stale or corrupt checkpoint identity leaves runtime unavailable",
   "the graph is marked restore-failed",
+  "restart behavior is explicit and identity-bound",
   "use this bounded evidence index instead of searching the repository",
 ]) assert.ok(normalizedDocument.includes(phrase), `model document missing rule: ${phrase}`);
 

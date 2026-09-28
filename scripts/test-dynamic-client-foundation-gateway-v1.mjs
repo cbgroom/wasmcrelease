@@ -106,7 +106,7 @@ export async function invoke(input) {
   }));
 }
 
-async function makeStatefulBundle(name, marker, stateSchemaIdentity, stateField = "count") {
+async function makeStatefulBundle(name, marker, stateSchemaIdentity, stateField = "count", statePolicy = "snapshot-v1") {
   const identity = `wasmc:dynamic-client-stateful-${name}@0.0.1-dev.1`;
   const adapter = Buffer.from(`
 import { createHash } from "node:crypto";
@@ -122,6 +122,10 @@ export async function invoke(input) {
     if (request.value === "inc") count += 1;
     return encoder.encode(JSON.stringify({ accepted: true, value: ${JSON.stringify(marker)} + ":" + count }));
   }
+  if (request.operation === "reset-state-v1") {
+    count = 0;
+    return encoder.encode(JSON.stringify({ accepted: true, state_schema_identity: ${JSON.stringify(stateSchemaIdentity)} }));
+  }
   if (request.operation === "snapshot-v1") {
     const bytes = Buffer.from(JSON.stringify({ [stateField]: count }));
     return encoder.encode(JSON.stringify({ accepted: true, state_schema_identity: ${JSON.stringify(stateSchemaIdentity)}, state_base64: bytes.toString("base64"), state_sha256: sha256(bytes) }));
@@ -136,7 +140,7 @@ export async function invoke(input) {
 }`);
   const descriptor = Buffer.from(`${JSON.stringify({
     schema: "wasmc.native-boundary-descriptor/v1", identity, wit: "lib.wit",
-    state: { policy: "snapshot-v1", schema_identity: stateSchemaIdentity },
+    state: { policy: statePolicy, schema_identity: stateSchemaIdentity },
     adapter: { path: "native-adapter.mjs", sha256: sha256(adapter), export: "invoke" },
     limits: { max_input_bytes: 65536, max_output_bytes: 65536 }, lifecycle: "prototype-not-admitted-not-released",
   }, null, 2)}\n`);
@@ -200,10 +204,10 @@ async function api(origin, method, pathname, body = null) {
   });
 }
 
-async function waitFor(origin, predicate, timeoutMs = 5000) {
+async function waitFor(origin, predicate, timeoutMs = 5000, clientId = "dynamic-client") {
   const deadline = Date.now() + timeoutMs;
   while (Date.now() < deadline) {
-    const result = await api(origin, "GET", "/v1/clients/dynamic-client");
+    const result = await api(origin, "GET", `/v1/clients/${clientId}`);
     if (predicate(result.value)) return result.value;
     await new Promise((resolve) => setTimeout(resolve, 10));
   }
@@ -236,10 +240,11 @@ const dagBlock = (name, artifact) => ({
   state_policy: "stateless", state_schema_identity: null, port_contracts: artifact.port_contracts,
   port_contracts_sha256: artifact.port_contracts_sha256,
 });
-const statefulBlock = (artifact) => ({
+const statefulBlock = (artifact, restartDisposition = null) => ({
   name: "counter", bundle_sha256: artifact.sha256, identity: artifact.identity, artifact_sha256: artifact.package_sha256,
   wit_contract_sha256: artifact.wit_contract_sha256, configuration: {}, configuration_sha256: canonicalJsonSha256({}),
   state_policy: artifact.state_policy, state_schema_identity: artifact.state_schema_identity,
+  state_restart_disposition: restartDisposition,
 });
 const stateMigration = (artifact, fromSchemaIdentity, toSchemaIdentity) => ({
   node: "counter", bundle_sha256: artifact.sha256, identity: artifact.identity, artifact_sha256: artifact.package_sha256,
@@ -318,7 +323,18 @@ try {
   assert.equal(migrationUpload.status, 201);
   assert.deepEqual(migrationUpload.value.state_migration, { protocol: "snapshot-v1", from_schema_identity: stateSchemaIdentity, to_schema_identity: stateSchemaIdentityV2 });
   const uploadedMigration = migrationUpload.value;
-  const forgedStateBlock = { ...statefulBlock(uploadedStateful["counter-v1"]), state_policy: "sticky" };
+  const stickyUpload = await api(origin, "POST", "/v1/artifacts", await makeStatefulBundle("sticky-counter", "STICKY", stateSchemaIdentity, "count", "sticky"));
+  assert.equal(stickyUpload.status, 201);
+  assert.equal(stickyUpload.value.state_policy, "sticky");
+  const uploadedSticky = stickyUpload.value;
+  const invalidStickyBlock = { ...statefulBlock(uploadedSticky, "unknown"), name: "sticky-counter" };
+  const invalidStickyCommand = await api(origin, "POST", "/v1/clients/sticky-client/commands", {
+    message_id: "bad-sticky-disposition", operation: "lib-graph.apply",
+    payload: { expected_graph_revision: 0, blocks: [invalidStickyBlock], pipeline: ["sticky-counter"], graph_digest: "0".repeat(64) },
+  });
+  assert.equal(invalidStickyCommand.status, 400);
+  assert.match(invalidStickyCommand.value.error, /requires an exact restart disposition/);
+  const forgedStateBlock = { ...statefulBlock(uploadedStateful["counter-v1"]), state_policy: "sticky", state_restart_disposition: "fail-closed" };
   const forgedStatePayload = graphPayload(0, [forgedStateBlock], ["counter"]);
   const forgedStateCommand = await api(origin, "POST", "/v1/clients/dynamic-client/commands", { message_id: "bad-state-contract", operation: "lib-graph.apply", payload: forgedStatePayload });
   assert.equal(forgedStateCommand.status, 400);
@@ -579,11 +595,52 @@ try {
     assert.deepEqual(faultClient.boundary.counts(), { resources: 0, windows: 0, operations: 0 });
   }
 
+  const stickyClientRoot = path.join(temporaryRoot, "sticky-client");
+  let stickyClient;
+  let stickyController;
+  let stickyRunning;
+  const startStickyClient = async () => {
+    stickyController = new AbortController();
+    stickyClient = new DynamicGraphClientFoundation({ stateRoot: stickyClientRoot, gatewayUrl: `${address.wss_base}/v1/clients/sticky-client/control`, ca: cert, reconnectDelayMs: 10 });
+    stickyRunning = stickyClient.run(stickyController.signal);
+    await waitFor(origin, (value) => value.connected === true, 5000, "sticky-client");
+  };
+  const stopStickyClient = async () => {
+    stickyController.abort();
+    await stickyClient.close();
+    await stickyRunning;
+  };
+  try {
+    await startStickyClient();
+    const stickyBlock = { ...statefulBlock(uploadedSticky, "reset-on-restart"), name: "sticky-counter" };
+    const stickyGraph = graphPayload(0, [stickyBlock], ["sticky-counter"]);
+    await api(origin, "POST", "/v1/clients/sticky-client/commands", { message_id: "sticky-1", operation: "lib-graph.apply", payload: stickyGraph });
+    let stickyState = await waitFor(origin, (value) => value.commands[0]?.receipt, 5000, "sticky-client");
+    assert.equal(stickyState.commands[0].receipt.outcome, "committed");
+    await api(origin, "POST", "/v1/clients/sticky-client/commands", { message_id: "sticky-2", operation: "invoke", payload: { value: "inc" } });
+    stickyState = await waitFor(origin, (value) => value.commands[1]?.receipt, 5000, "sticky-client");
+    assert.equal(stickyState.commands[1].receipt.response.value, "STICKY:1");
+    await stopStickyClient();
+    await startStickyClient();
+    await waitFor(origin, (value) => value.last_hello?.runtime_available === true && value.last_hello?.graph_revision === 1, 5000, "sticky-client");
+    await api(origin, "POST", "/v1/clients/sticky-client/commands", { message_id: "sticky-3", operation: "invoke", payload: { value: "get" } });
+    stickyState = await waitFor(origin, (value) => value.commands[2]?.receipt, 5000, "sticky-client");
+    assert.equal(stickyState.commands[2].receipt.response.value, "STICKY:0");
+    const stickyJournal = await readFile(path.join(stickyClientRoot, "dynamic-journal.jsonl"), "utf8");
+    assert.match(stickyJournal, /"sticky_blocks_reset":1/);
+    await stopStickyClient();
+    assert.deepEqual(stickyClient.boundary.counts(), { resources: 0, windows: 0, operations: 0 });
+  } finally {
+    stickyController?.abort();
+    await stickyClient?.close().catch(() => {});
+    await stickyRunning?.catch(() => {});
+  }
+
   console.log(JSON.stringify({
     accepted: true,
     schema: "wasmc.dynamic-client-gateway-local-qualification/v1",
     lifecycle: "prototype-local-qualified-not-admitted-not-released",
-    persistent_artifacts: Object.keys(uploaded).length + Object.keys(uploadedDag).length + Object.keys(uploadedStateful).length + 1,
+    persistent_artifacts: Object.keys(uploaded).length + Object.keys(uploadedDag).length + Object.keys(uploadedStateful).length + 2,
     first_composition: "B1(A1(x))",
     one_node_replacement: "B1(A2C(x))",
     gateway_restart_reconnect: "B1(A2C(after-gateway-restart))",
@@ -599,12 +656,14 @@ try {
     stateful_active_checkpoint_restart: "SV2:2",
     stateful_cross_schema_gateway_migration: "SV2:2->SV3:2",
     stateful_cross_schema_restart: "SV3:2",
+    sticky_explicit_reset_client_restart: "STICKY:1->STICKY:0",
     invoke_checkpoint_crash_recovered_without_replay: true,
     gateway_observed_checkpoint_identity: true,
     missing_or_corrupt_checkpoint_failed_closed: true,
     forged_port_manifest_rejected_at_gateway: true,
     forged_state_contract_rejected_at_gateway: true,
     forged_migration_contract_rejected_at_gateway: true,
+    invalid_sticky_disposition_rejected_at_gateway: true,
     durable_graph_revision: diskState.graph_revision,
     durable_receipts: Object.keys(diskState.receipts).length,
     canonical_duplicate_idempotent: true,

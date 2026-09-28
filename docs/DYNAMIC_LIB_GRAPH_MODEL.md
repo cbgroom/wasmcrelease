@@ -84,7 +84,7 @@ Safe v1 reuse requires all of the following:
 - the same verified Lib identity and package SHA-256;
 - the same configuration SHA-256;
 - the same exact port-contract-set SHA-256;
-- the same state policy and state-schema identity.
+- the same state policy, state-schema identity and restart disposition.
 
 Same code does not imply the same instance. Two node IDs may need independent
 mutable state. Sharing one Host resource across node IDs requires a future
@@ -97,7 +97,8 @@ entrypoint closure and resource policy before publication.
 State policies are:
 
 - `stateless`: replacement needs no state transfer.
-- `sticky`: automatic live replacement is rejected.
+- `sticky`: automatic live replacement is rejected; the graph binds either
+  `fail-closed` or `reset-on-restart` for Client restart.
 - `snapshot-v1`: replacement requires exact source state-schema identity,
   bounded snapshot, target restore, and a declared exact migration Lib when
   schemas differ.
@@ -110,7 +111,7 @@ from Gateway metadata or test output.
 | Surface | Role | Required behavior |
 |---|---|---|
 | exact package descriptor | authority | optional `state`; omission means `stateless`; `sticky` and `snapshot-v1` require a 64-hex schema identity; migration packages declare an exact `snapshot-v1` source/target schema pair |
-| desired graph node | identity-bearing duplicate | policy and schema must exactly match the package and are covered by `graph_digest` |
+| desired graph node | identity-bearing duplicate | policy and schema exactly match the package; restart disposition is deployment authority; all three are covered by `graph_digest` |
 | Gateway artifact metadata | derived transport check | derived from package bytes; a command that disagrees is rejected before enqueue |
 | Client cache/install | independent transport check | package bytes are re-derived after download, on cache read and on restart reconstruction |
 
@@ -130,14 +131,19 @@ releases candidate and migration resources, retains the old generation and
 releases waiting invocations onto it.
 
 `sticky` permits only exact-instance reuse. Automatic replacement and removal
-are rejected. Stateful removal has no disposition protocol in this slice.
+are rejected. Stateful removal has no disposition protocol in this slice. Its
+restart behavior is explicit and identity-bound: `fail-closed` keeps the
+runtime unavailable, while `reset-on-restart` invokes `reset-state-v1`, verifies
+the exact state-schema response, health-checks the reconstructed graph, and only
+then reports runtime availability. A missing or unknown disposition is rejected
+before enqueue/apply; reset rejection also fails closed.
 Cross-schema replacement without an exact plan and exact migration package is
 rejected. A migration Lib is a transition dependency, never a stable graph
 node, and does not extend the Host API.
 
 The fixed minimal CLI is `current/cli.mjs`; the Gateway has a separate,
 higher-layer CLI. Neither CLI nor the Host API participates in state transfer.
-`snapshot-v1` and `restore-v1` are opaque Lib operations over the existing
+`snapshot-v1`, `restore-v1`, and `reset-state-v1` are opaque Lib operations over the existing
 resource/window/operation/completion boundary.
 
 For active `snapshot-v1` state, the Client persists a
@@ -155,12 +161,12 @@ multi-block restore fails after an earlier block has accepted state, the graph
 is marked restore-failed: invoke, update and checkpoint operations remain
 disabled until the graph is closed and reconstructed.
 
-This closes restart restoration for active `snapshot-v1` state, not general
+This closes restart handling for active `snapshot-v1` and `sticky` state, not general
 exactly-once execution. A crash before that joint write may leave an external
 effect with no durable result, and a direct caller may lose the response after
 the write. External effects still require the Lib's idempotency or transaction
-contract. `sticky` active state remains fail-closed on restart because it has no
-snapshot/disposition contract.
+contract. `sticky` reset is explicit state loss, not restoration and not an
+exactly-once guarantee.
 
 For a white-box review, use this bounded evidence index instead of searching
 the repository:
@@ -193,13 +199,15 @@ Gateway CLI were not changed. Use the exact path list; never infer a path from
 the abbreviated directory display produced by `git show --stat`.
 
 The implemented same-schema `snapshot-v1` path binds policy and schema identity
-inside the exact package descriptor rather than trusting a graph caller. It
+to the package and binds restart disposition in graph identity. It
 installs and probes the candidate first, blocks new invocations, drains calls
 already captured by the old generation, snapshots the quiescent source,
 restores the candidate, health-checks it, and then publishes. Restore failure
 releases the candidate, keeps the old generation active, and opens the
 invocation barrier onto the old generation. `sticky` may be reused unchanged
-but cannot be replaced or removed automatically.
+but cannot be replaced or removed automatically. On Client reconstruction it
+either fails closed or completes the identity-bound reset operation before
+health and availability.
 
 Unknown or incomplete state policy fails closed. Draining in-flight operations
 does not migrate hidden state and does not make external side effects exactly
@@ -271,13 +279,15 @@ cleanup are locally qualified. Publication now persists the new active graph,
 the in-flight command result and a retired-generation record before drain.
 Normal drain records resource release; a process crash is recovered by fencing
 the prior process-owned Host resource namespace and retaining a bounded cleanup
-receipt. Same-schema `snapshot-v1` replacement and fail-closed `sticky`
-handling are qualified locally and through the Client/Gateway path.
+receipt. Same-schema `snapshot-v1` replacement and identity-bound `sticky`
+fail-closed/reset handling are qualified locally and through the Client/Gateway
+path.
 Active `snapshot-v1` checkpoint restoration is now qualified across a full
 Client restart, including a crash after joint checkpoint/result persistence and
 before receipt delivery. Cross-schema migration through an exact ephemeral Lib
 is qualified locally and through Gateway distribution, including restart on the
-target schema. A restart disposition for `sticky` state remains open. The whole path
+target schema. Sticky reset is explicit state loss, completes before runtime
+availability, and does not imply external-effect rollback. The whole path
 remains a prototype and is not admitted or released.
 
 The focused local stateful qualification covers same- and cross-schema transfer,

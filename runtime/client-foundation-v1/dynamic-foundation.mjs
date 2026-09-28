@@ -324,7 +324,7 @@ export class DynamicGraphClientFoundation {
       const restoredState = await restoringGraph.restoreStateCheckpoint(this.state.active_state_checkpoint);
       this.graph = restoringGraph;
       this.runtimeAvailable = true;
-      await this.#journal("lib-graph-restored", { graph_digest: active.graph_digest, graph_revision: result.revision, state_blocks_restored: restoredState.restored, state_checkpoint_sha256: restoredState.checkpoint_sha256 });
+      await this.#journal("lib-graph-restored", { graph_digest: active.graph_digest, graph_revision: result.revision, state_blocks_restored: restoredState.restored, sticky_blocks_reset: restoredState.reset, sticky_reset_nodes: restoredState.reset_nodes, state_checkpoint_sha256: restoredState.checkpoint_sha256 });
     } catch (error) {
       await restoringGraph?.close().catch(() => {});
       this.graph = new DynamicLibGraph({ boundary: this.boundary, initialRevision: this.state.graph_revision });
