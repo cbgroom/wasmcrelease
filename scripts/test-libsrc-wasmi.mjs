@@ -26,6 +26,7 @@ for (const name of [
   'wasmc-compression',
   'wasmc-http1',
   'wasmc-http1-client',
+  'wasmc-tls-client',
   'wasmc-data-core',
   'wasmc-csv',
   'wasmc-data-expr',
@@ -76,6 +77,8 @@ try {
       WASMC_LIBSRC_COMPRESSION: resolve(root, 'libsrc/wasmc-compression/target/wasm32-unknown-unknown/release/wasmc_compression_public.wasm'),
       WASMC_LIBSRC_HTTP1: resolve(root, 'libsrc/wasmc-http1/target/wasm32-unknown-unknown/release/wasmc_http1_public.wasm'),
       WASMC_LIBSRC_HTTP1_CLIENT: resolve(root, 'libsrc/wasmc-http1-client/target/wasm32-unknown-unknown/release/wasmc_http1_client_public.wasm'),
+      WASMC_LIBSRC_TLS_CLIENT: resolve(root, 'libsrc/wasmc-tls-client/target/wasm32-unknown-unknown/release/wasmc_tls_client_public.wasm'),
+      WASMC_LIBSRC_TLS_CERTIFICATE: resolve(root, 'host/tests/https/fixtures/server-cert.der'),
       WASMC_LIBSRC_DATA_CORE: resolve(root, 'libsrc/wasmc-data-core/target/wasm32-unknown-unknown/release/wasmc_data_core_public.wasm'),
       WASMC_LIBSRC_CSV: resolve(root, 'libsrc/wasmc-csv/target/wasm32-unknown-unknown/release/wasmc_csv_public.wasm'),
       WASMC_LIBSRC_DATA_EXPR: resolve(root, 'libsrc/wasmc-data-expr/target/wasm32-unknown-unknown/release/wasmc_data_expr_public.wasm'),
@@ -90,13 +93,18 @@ try {
   assert.equal(receipt.engine, 'wasmi-2.0.0');
   assert.equal(receipt.representative_execution, true);
   assert.equal(receipt.structural_data_qualification, true);
-  assert.equal(receipt.host_imports, 0);
+  assert.equal(receipt.pure_host_imports, 0);
+  assert.deepEqual(receipt.tls_client_semantic_host_imports, [
+    'wasmc:tls-core/entropy@0.0.1#fill',
+  ]);
+  assert.ok(receipt.tls_client_entropy_calls > 0);
   assert.deepEqual(receipt.candidates, [
     'wasmc-router-policy',
     'wasmc-json',
     'wasmc-compression',
     'wasmc-http1',
     'wasmc-http1-client',
+    'wasmc-tls-client',
     'wasmc-data-core',
     'wasmc-csv',
     'wasmc-data-expr',

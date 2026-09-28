@@ -12,6 +12,8 @@ on:
       - "scripts/test-compression-libsrc.mjs"
       - "scripts/test-http1-libsrc.mjs"
       - "scripts/test-tls-libsrc.mjs"
+      - "scripts/test-tls-client-libsrc.mjs"
+      - "scripts/test-tls-client-macos-public-ca.mjs"
       - "scripts/test-libsrc-all.mjs"
       - "scripts/test-libsrc-wasmi.mjs"
       - "scripts/test-data-core-libsrc.mjs"
@@ -35,6 +37,8 @@ on:
       - "scripts/test-compression-libsrc.mjs"
       - "scripts/test-http1-libsrc.mjs"
       - "scripts/test-tls-libsrc.mjs"
+      - "scripts/test-tls-client-libsrc.mjs"
+      - "scripts/test-tls-client-macos-public-ca.mjs"
       - "scripts/test-libsrc-all.mjs"
       - "scripts/test-libsrc-wasmi.mjs"
       - "scripts/test-data-core-libsrc.mjs"
@@ -91,7 +95,7 @@ jobs:
             libsrc/wasmc-data-relational/target
             libsrc/wasmc-data-interchange/target
             libsrc/qualification/wasmi-core/target
-          key: libsrc-build-v9-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('libsrc/wasmc-json/Cargo.lock', 'libsrc/wasmc-compression/Cargo.lock', 'libsrc/wasmc-http1/Cargo.lock', 'libsrc/wasmc-http1-client/Cargo.lock', 'libsrc/wasmc-tls-core/Cargo.lock', 'libsrc/wasmc-tls-core/tests/host/Cargo.lock', 'libsrc/wasmc-tls-client/Cargo.lock', 'libsrc/wasmc-tls-client/tests/host/Cargo.lock', 'libsrc/wasmc-data-core/Cargo.lock', 'libsrc/wasmc-csv/Cargo.lock', 'libsrc/wasmc-data-expr/Cargo.lock', 'libsrc/wasmc-data-compute/Cargo.lock', 'libsrc/wasmc-data-relational/Cargo.lock', 'libsrc/wasmc-data-interchange/Cargo.lock', 'libsrc/qualification/wasmi-core/Cargo.lock') }}
+          key: libsrc-build-v10-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('libsrc/wasmc-json/Cargo.lock', 'libsrc/wasmc-compression/Cargo.lock', 'libsrc/wasmc-http1/Cargo.lock', 'libsrc/wasmc-http1-client/Cargo.lock', 'libsrc/wasmc-tls-core/Cargo.lock', 'libsrc/wasmc-tls-core/tests/host/Cargo.lock', 'libsrc/wasmc-tls-client/Cargo.lock', 'libsrc/wasmc-tls-client/tests/host/Cargo.lock', 'libsrc/wasmc-data-core/Cargo.lock', 'libsrc/wasmc-csv/Cargo.lock', 'libsrc/wasmc-data-expr/Cargo.lock', 'libsrc/wasmc-data-compute/Cargo.lock', 'libsrc/wasmc-data-relational/Cargo.lock', 'libsrc/wasmc-data-interchange/Cargo.lock', 'libsrc/qualification/wasmi-core/Cargo.lock') }}
           restore-keys: |
             libsrc-v5-${{ runner.os }}-${{ runner.arch }}-
             libsrc-build-v2-${{ runner.os }}-${{ runner.arch }}-
@@ -107,7 +111,7 @@ jobs:
         run: node scripts/validate-libsrc.mjs
       - name: Qualify all registered public Lib source candidates
         run: node scripts/test-libsrc-all.mjs
-      - name: Execute import-free candidates on Wasmi 2
+      - name: Execute pure and exact-import candidates on Wasmi 2
         run: node scripts/test-libsrc-wasmi.mjs
       - name: Report Lib source admission readiness
         run: |
@@ -154,7 +158,9 @@ jobs:
             ~/.cargo/git
             libsrc/wasmc-tls-core/target
             libsrc/wasmc-tls-core/tests/host/target
-          key: tls-libsrc-v1-${{ matrix.platform }}-${{ hashFiles('libsrc/wasmc-tls-core/Cargo.lock', 'libsrc/wasmc-tls-core/tests/host/Cargo.lock') }}
+            libsrc/wasmc-tls-client/target
+            libsrc/wasmc-tls-client/tests/host/target
+          key: tls-libsrc-v2-${{ matrix.platform }}-${{ hashFiles('libsrc/wasmc-tls-core/Cargo.lock', 'libsrc/wasmc-tls-core/tests/host/Cargo.lock', 'libsrc/wasmc-tls-client/Cargo.lock', 'libsrc/wasmc-tls-client/tests/host/Cargo.lock') }}
       - name: Install pinned wasm-tools
         shell: bash
         run: |
@@ -165,11 +171,21 @@ jobs:
       - name: Qualify public TLS core on ${{ matrix.platform }}
         shell: bash
         run: node scripts/test-tls-libsrc.mjs | tee "tls-${{ matrix.platform }}.json"
+      - name: Qualify public TLS client on ${{ matrix.platform }}
+        shell: bash
+        run: node scripts/test-tls-client-libsrc.mjs | tee "tls-client-${{ matrix.platform }}.json"
+      - name: Qualify macOS system roots against public HTTPS
+        if: runner.os == 'macOS'
+        shell: bash
+        run: node scripts/test-tls-client-macos-public-ca.mjs | tee "tls-client-public-ca-${{ matrix.platform }}.json"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         continue-on-error: true
         with:
           name: tls-libsrc-${{ matrix.platform }}
-          path: tls-${{ matrix.platform }}.json
+          path: |
+            tls-${{ matrix.platform }}.json
+            tls-client-${{ matrix.platform }}.json
+            tls-client-public-ca-${{ matrix.platform }}.json
           if-no-files-found: warn
           retention-days: 14

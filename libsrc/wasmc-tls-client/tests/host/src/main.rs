@@ -258,6 +258,30 @@ fn main() -> Result<()> {
         bail!("wrong server name was not rejected");
     }
 
+    let maximum_roots = vec![cert.clone(); 256];
+    let maximum_roots_session =
+        tls_result(tls.call_create(&mut store, "example.com", &maximum_roots, FIXED_TIME, &alpn))?;
+    maximum_roots_session
+        .resource_drop(&mut store)
+        .map_err(|error| anyhow!("{error:?}"))?;
+    let excessive_roots = vec![cert.clone(); 257];
+    match wt(tls.call_create(
+        &mut store,
+        "example.com",
+        &excessive_roots,
+        FIXED_TIME,
+        &alpn,
+    ))? {
+        Err(exports::wasmc::tls_client::tls::TlsError::InvalidConfig) => {}
+        Ok(session) => {
+            session
+                .resource_drop(&mut store)
+                .map_err(|error| anyhow!("{error:?}"))?;
+            bail!("TLS client accepted 257 root certificates");
+        }
+        Err(error) => bail!("unexpected excessive-roots error: {error:?}"),
+    }
+
     // Exercise the same component through a real OS TCP stream. This proves a
     // transport composition without putting socket semantics into the TLS Lib.
     let listener = TcpListener::bind(("127.0.0.1", 0))?;
@@ -367,8 +391,143 @@ fn main() -> Result<()> {
         .join()
         .map_err(|_| anyhow!("loopback HTTPS server thread panicked"))??;
 
+    let mut public_ca_https = false;
+    let mut public_ca_roots = 0usize;
+    let mut public_ca_response_bytes = 0usize;
+    if let Ok(bundle_path) = std::env::var("WASMC_TLS_PUBLIC_CA_BUNDLE") {
+        let bundle = std::fs::read(&bundle_path)
+            .with_context(|| format!("read public CA bundle {bundle_path}"))?;
+        let mut cursor = Cursor::new(bundle);
+        let public_roots = rustls_pemfile::certs(&mut cursor)
+            .collect::<std::result::Result<Vec<_>, _>>()
+            .context("parse public CA bundle")?;
+        public_ca_roots = public_roots.len();
+        if public_ca_roots == 0 {
+            bail!("public CA bundle contained no certificates");
+        }
+        let public_host = std::env::var("WASMC_TLS_PUBLIC_HOST")?;
+        let public_port = std::env::var("WASMC_TLS_PUBLIC_PORT")
+            .unwrap_or_else(|_| "443".to_owned())
+            .parse::<u16>()
+            .context("parse public HTTPS port")?;
+        let public_time = std::env::var("WASMC_TLS_PUBLIC_UNIX_TIME")?
+            .parse::<u64>()
+            .context("parse public HTTPS Unix time")?;
+        let public_roots = public_roots
+            .into_iter()
+            .map(|cert| cert.as_ref().to_vec())
+            .collect::<Vec<_>>();
+        let public_session = tls_result(tls.call_create(
+            &mut store,
+            &public_host,
+            &public_roots,
+            public_time,
+            &alpn,
+        ))?;
+        let mut public_socket = TcpStream::connect((public_host.as_str(), public_port))?;
+        public_socket.set_read_timeout(Some(Duration::from_secs(8)))?;
+        public_socket.set_write_timeout(Some(Duration::from_secs(8)))?;
+        let mut public_ready = false;
+        for _ in 0..64 {
+            loop {
+                let output =
+                    tls_result(session_api.call_output(&mut store, public_session, 64 * 1024))?;
+                if output.is_empty() {
+                    break;
+                }
+                public_socket.write_all(&output)?;
+                public_socket.flush()?;
+                tls_result(session_api.call_commit_output(
+                    &mut store,
+                    public_session,
+                    output.len() as u32,
+                ))?;
+            }
+            let state = wt(session_api.call_state(&mut store, public_session))?;
+            if matches!(
+                state.state,
+                exports::wasmc::tls_client::tls::ConnectionState::Ready
+            ) && state.pending_output == 0
+            {
+                public_ready = true;
+                break;
+            }
+            let mut incoming = vec![0; 64 * 1024];
+            let count = public_socket.read(&mut incoming)?;
+            if count == 0 {
+                bail!("public HTTPS peer closed during TLS handshake");
+            }
+            tls_result(session_api.call_ingest(&mut store, public_session, &incoming[..count]))?;
+        }
+        if !public_ready {
+            bail!("public HTTPS TLS client did not reach ready state");
+        }
+        let public_request =
+            format!("GET / HTTP/1.1\r\nHost: {public_host}\r\nConnection: close\r\n\r\n");
+        let accepted = tls_result(session_api.call_write(
+            &mut store,
+            public_session,
+            public_request.as_bytes(),
+        ))?;
+        if accepted as usize != public_request.len() {
+            bail!("public HTTPS request was only partially accepted");
+        }
+        loop {
+            let output =
+                tls_result(session_api.call_output(&mut store, public_session, 64 * 1024))?;
+            if output.is_empty() {
+                break;
+            }
+            public_socket.write_all(&output)?;
+            public_socket.flush()?;
+            tls_result(session_api.call_commit_output(
+                &mut store,
+                public_session,
+                output.len() as u32,
+            ))?;
+        }
+        let mut public_plaintext = Vec::new();
+        for _ in 0..64 {
+            let chunk = tls_result(session_api.call_read(&mut store, public_session, 64 * 1024))?;
+            public_plaintext.extend_from_slice(&chunk);
+            if public_plaintext
+                .windows(4)
+                .any(|window| window == b"\r\n\r\n")
+            {
+                break;
+            }
+            let mut incoming = vec![0; 64 * 1024];
+            let count = public_socket.read(&mut incoming)?;
+            if count == 0 {
+                break;
+            }
+            match wt(session_api.call_ingest(&mut store, public_session, &incoming[..count]))? {
+                Ok(_) => {}
+                Err(exports::wasmc::tls_client::tls::TlsError::CryptoFailure)
+                    if !public_plaintext.is_empty() =>
+                {
+                    break;
+                }
+                Err(error) => bail!("public HTTPS ingest failed: {error:?}"),
+            }
+        }
+        if !public_plaintext.starts_with(b"HTTP/1.1 ")
+            && !public_plaintext.starts_with(b"HTTP/1.0 ")
+        {
+            bail!(
+                "public HTTPS response did not contain an HTTP status line: {}",
+                String::from_utf8_lossy(&public_plaintext)
+            );
+        }
+        public_ca_response_bytes = public_plaintext.len();
+        public_ca_https = true;
+        public_session
+            .resource_drop(&mut store)
+            .map_err(|error| anyhow!("{error:?}"))?;
+    }
+
     println!(
-        "{{\"accepted\":true,\"handshake_rounds\":{},\"client_ciphertext\":{},\"server_ciphertext\":{},\"entropy_calls\":{},\"http_request_bytes\":{},\"http_response_bytes\":{},\"alpn\":\"http/1.1\",\"hostname_rejected\":true,\"close_notify_bytes\":{},\"loopback_https\":true,\"loopback_tls_bytes\":{},\"host_imports\":[\"wasmc:tls-core/entropy@0.0.1#fill\"]}}",
+        "{{\"accepted\":true,\"handshake_rounds\":{},\"client_ciphertext\":{},\"server_ciphertext\":{},\"entropy_calls\":{},\"http_request_bytes\":{},\"http_response_bytes\":{},\"alpn\":\"http/1.1\",\"hostname_rejected\":true,\"root_boundary\":{{\"accepted\":256,\"rejected\":257}},\"close_notify_bytes\":{},\"loopback_https\":true,\"loopback_tls_bytes\":{},\"public_ca_https\":{},\"public_ca_roots\":{},\"public_ca_response_bytes\":{},\"host_imports\":[\"wasmc:tls-core/entropy@0.0.1#fill\"]}}",
         handshake_rounds,
         client_ciphertext,
         server_ciphertext,
@@ -377,6 +536,9 @@ fn main() -> Result<()> {
         RESPONSE.len(),
         close_notify_bytes,
         loopback_tls_bytes,
+        public_ca_https,
+        public_ca_roots,
+        public_ca_response_bytes,
     );
     Ok(())
 }

@@ -128,6 +128,7 @@ try {
   assert.ok(receipt.http_response_bytes > 0);
   assert.equal(receipt.alpn, 'http/1.1');
   assert.equal(receipt.hostname_rejected, true);
+  assert.deepEqual(receipt.root_boundary, { accepted: 256, rejected: 257 });
   assert.ok(receipt.close_notify_bytes > 0);
   assert.equal(receipt.loopback_https, true);
   assert.ok(receipt.loopback_tls_bytes > 0);

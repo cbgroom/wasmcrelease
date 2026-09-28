@@ -253,8 +253,13 @@ TLS or HTTPS API. Qualification composes an HTTP request produced by
 `wasmc:http1-client`, performs a real TLS 1.3 exchange over an OS loopback TCP
 stream, decrypts the response and feeds the exact plaintext back through the
 HTTP response decoder. Wrong-hostname verification is a retained negative
-control. Public-CA roots and the exact Linux System socket provider remain
-separate gates; this candidate is not admitted or released.
+control. Wasmi 2.0.0 executes the Core candidate with only the exact entropy
+import plus the Component resource intrinsics, including ClientHello output,
+partial-output commit and resource destruction. A macOS qualification supplies
+all 158 system roots as Lib data and completes a certificate-validated public
+HTTPS request; this exposed and repaired the original 64-root synthetic bound,
+which is now 256. Linux/Windows root providers and the exact Linux System socket
+provider remain separate gates; this candidate is not admitted or released.
 
 ## Library OS consequence
 

@@ -1,5 +1,13 @@
 use anyhow::{bail, Context, Result};
-use wasmi::{Engine, Instance, Linker, Memory, Module, Store};
+use wasmi::{Caller, Engine, Instance, Linker, Memory, Module, Store};
+
+const TLS_ENTROPY_MODULE: &str = "wasmc:tls-core/entropy@0.0.1";
+const TLS_RESOURCE_MODULE: &str = "[export]wasmc:tls-client/tls@0.0.1";
+
+struct TlsHost {
+    random: u64,
+    entropy_calls: u64,
+}
 
 struct Core {
     store: Store<()>,
@@ -228,6 +236,221 @@ fn http1_client(path: &str) -> Result<()> {
     Ok(())
 }
 
+fn tls_client(path: &str, certificate_path: &str) -> Result<u64> {
+    let engine = Engine::default();
+    let bytes = std::fs::read(path).with_context(|| format!("read {path}"))?;
+    let module = Module::new(&engine, &bytes[..]).with_context(|| format!("compile {path}"))?;
+    let imports = module
+        .imports()
+        .map(|import| (import.module().to_owned(), import.name().to_owned()))
+        .collect::<Vec<_>>();
+    let expected = vec![
+        (TLS_ENTROPY_MODULE.to_owned(), "fill".to_owned()),
+        (
+            TLS_RESOURCE_MODULE.to_owned(),
+            "[resource-new]session".to_owned(),
+        ),
+        (
+            TLS_RESOURCE_MODULE.to_owned(),
+            "[resource-drop]session".to_owned(),
+        ),
+    ];
+    if imports != expected {
+        bail!("TLS client Core import mismatch: {imports:?}");
+    }
+
+    let mut linker = Linker::<TlsHost>::new(&engine);
+    linker.func_wrap(
+        TLS_ENTROPY_MODULE,
+        "fill",
+        |mut caller: Caller<'_, TlsHost>,
+         length: i32,
+         result_ptr: i32|
+         -> std::result::Result<(), wasmi::Error> {
+            let length = usize::try_from(length)
+                .map_err(|_| wasmi::Error::new("negative entropy length"))?;
+            let result_ptr = usize::try_from(result_ptr)
+                .map_err(|_| wasmi::Error::new("negative entropy result pointer"))?;
+            let memory = caller
+                .get_export("memory")
+                .and_then(|item| item.into_memory())
+                .ok_or_else(|| wasmi::Error::new("TLS client memory export missing"))?;
+            let realloc = caller
+                .get_export("cabi_realloc")
+                .and_then(|item| item.into_func())
+                .ok_or_else(|| wasmi::Error::new("TLS client allocator export missing"))?
+                .typed::<(i32, i32, i32, i32), i32>(&caller)?;
+            let scratch = realloc
+                .call(&mut caller, (0, 0, 1, length as i32))
+                .map_err(|error| wasmi::Error::new(format!("allocate entropy result: {error}")))?
+                as usize;
+            let mut output = Vec::with_capacity(length);
+            {
+                let state = caller.data_mut();
+                state.entropy_calls += 1;
+                for _ in 0..length {
+                    state.random ^= state.random << 13;
+                    state.random ^= state.random >> 7;
+                    state.random ^= state.random << 17;
+                    output.push((state.random >> 24) as u8);
+                }
+            }
+            memory
+                .write(&mut caller, scratch, &output)
+                .map_err(|error| wasmi::Error::new(format!("write entropy: {error}")))?;
+            let mut result = [0u8; 12];
+            result[4..8].copy_from_slice(&(scratch as u32).to_le_bytes());
+            result[8..12].copy_from_slice(&(length as u32).to_le_bytes());
+            memory
+                .write(&mut caller, result_ptr, &result)
+                .map_err(|error| wasmi::Error::new(format!("write entropy result: {error}")))?;
+            Ok(())
+        },
+    )?;
+    linker.func_wrap(
+        TLS_RESOURCE_MODULE,
+        "[resource-new]session",
+        |representation: i32| -> i32 { representation },
+    )?;
+    linker.func_wrap(
+        TLS_RESOURCE_MODULE,
+        "[resource-drop]session",
+        |_representation: i32| {},
+    )?;
+
+    let mut store = Store::new(
+        &engine,
+        TlsHost {
+            random: 0x9e37_79b9_d1ce_beef,
+            entropy_calls: 0,
+        },
+    );
+    let instance = linker
+        .instantiate_and_start(&mut store, &module)
+        .with_context(|| format!("instantiate {path}"))?;
+    let memory = instance
+        .get_memory(&store, "memory")
+        .ok_or_else(|| anyhow::anyhow!("TLS client memory export missing"))?;
+    let alloc = instance.get_typed_func::<(i32, i32, i32, i32), i32>(&store, "cabi_realloc")?;
+    let alloc_bytes = |store: &mut Store<TlsHost>, bytes: &[u8], align: i32| -> Result<i32> {
+        if bytes.is_empty() {
+            return Ok(0);
+        }
+        let ptr = alloc.call(&mut *store, (0, 0, align, bytes.len() as i32))?;
+        memory.write(&mut *store, ptr as usize, bytes)?;
+        Ok(ptr)
+    };
+
+    let server_name = b"example.com";
+    let server_name_ptr = alloc_bytes(&mut store, server_name, 1)?;
+    let certificate = std::fs::read(certificate_path)
+        .with_context(|| format!("read TLS certificate {certificate_path}"))?;
+    let certificate_ptr = alloc_bytes(&mut store, &certificate, 1)?;
+    let mut roots = [0u8; 8];
+    roots[0..4].copy_from_slice(&(certificate_ptr as u32).to_le_bytes());
+    roots[4..8].copy_from_slice(&(certificate.len() as u32).to_le_bytes());
+    let roots_ptr = alloc_bytes(&mut store, &roots, 4)?;
+    let alpn = b"http/1.1";
+    let alpn_ptr = alloc_bytes(&mut store, alpn, 1)?;
+    let mut alpns = [0u8; 8];
+    alpns[0..4].copy_from_slice(&(alpn_ptr as u32).to_le_bytes());
+    alpns[4..8].copy_from_slice(&(alpn.len() as u32).to_le_bytes());
+    let alpns_ptr = alloc_bytes(&mut store, &alpns, 4)?;
+
+    let create = instance.get_typed_func::<(i32, i32, i32, i32, i64, i32, i32), i32>(
+        &store,
+        "wasmc:tls-client/tls@0.0.1#create",
+    )?;
+    let result_ptr = create
+        .call(
+            &mut store,
+            (
+                server_name_ptr,
+                server_name.len() as i32,
+                roots_ptr,
+                1,
+                1_700_000_000,
+                alpns_ptr,
+                1,
+            ),
+        )
+        .context("Wasmi TLS client create call")?;
+    let mut create_result = [0u8; 8];
+    memory.read(&store, result_ptr as usize, &mut create_result)?;
+    if create_result[0] != 0 {
+        bail!("Wasmi TLS client create failed: {create_result:?}");
+    }
+    let session = i32::from_le_bytes(create_result[4..8].try_into().unwrap());
+
+    let state = instance
+        .get_typed_func::<i32, i32>(&store, "wasmc:tls-client/tls@0.0.1#[method]session.state")?;
+    let state_ptr = state
+        .call(&mut store, session)
+        .context("Wasmi TLS client state call")?;
+    let mut progress = [0u8; 12];
+    memory.read(&store, state_ptr as usize, &mut progress)?;
+    if progress[0] != 0 {
+        bail!("Wasmi TLS client did not begin handshaking: {progress:?}");
+    }
+    let pending = u32::from_le_bytes(progress[4..8].try_into().unwrap());
+    if pending == 0 {
+        bail!("Wasmi TLS client produced no initial handshake bytes");
+    }
+
+    let output = instance.get_typed_func::<(i32, i32), i32>(
+        &store,
+        "wasmc:tls-client/tls@0.0.1#[method]session.output",
+    )?;
+    let output_result_ptr = output
+        .call(&mut store, (session, pending as i32))
+        .context("Wasmi TLS client output call")?;
+    let mut output_result = [0u8; 12];
+    memory.read(&store, output_result_ptr as usize, &mut output_result)?;
+    if output_result[0] != 0 {
+        bail!("Wasmi TLS client output failed: {output_result:?}");
+    }
+    let ciphertext_ptr = u32::from_le_bytes(output_result[4..8].try_into().unwrap());
+    let ciphertext_len = u32::from_le_bytes(output_result[8..12].try_into().unwrap());
+    if ciphertext_len == 0 || ciphertext_len != pending {
+        bail!("Wasmi TLS initial flight mismatch: pending={pending} output={ciphertext_len}");
+    }
+    let mut ciphertext = vec![0; ciphertext_len as usize];
+    memory.read(&store, ciphertext_ptr as usize, &mut ciphertext)?;
+    if ciphertext.first() != Some(&22) {
+        bail!("Wasmi TLS initial record is not a handshake record");
+    }
+    let post_output = instance.get_typed_func::<i32, ()>(
+        &store,
+        "cabi_post_wasmc:tls-client/tls@0.0.1#[method]session.output",
+    )?;
+    post_output
+        .call(&mut store, output_result_ptr)
+        .context("Wasmi TLS client post-output call")?;
+
+    let commit = instance.get_typed_func::<(i32, i32), i32>(
+        &store,
+        "wasmc:tls-client/tls@0.0.1#[method]session.commit-output",
+    )?;
+    let commit_result_ptr = commit
+        .call(&mut store, (session, ciphertext_len as i32))
+        .context("Wasmi TLS client commit-output call")?;
+    let mut commit_result = [0u8; 8];
+    memory.read(&store, commit_result_ptr as usize, &mut commit_result)?;
+    if commit_result[0] != 0 {
+        bail!("Wasmi TLS client commit-output failed: {commit_result:?}");
+    }
+
+    let destructor =
+        instance.get_typed_func::<i32, ()>(&store, "wasmc:tls-client/tls@0.0.1#[dtor]session")?;
+    destructor
+        .call(&mut store, session)
+        .context("Wasmi TLS client destructor call")?;
+    if store.data().entropy_calls == 0 {
+        bail!("Wasmi TLS client did not invoke the approved entropy import");
+    }
+    Ok(store.data().entropy_calls)
+}
+
 fn structural(path: &str, exports: &[&str]) -> Result<()> {
     let core = Core::open(path)?;
     core.memory()?;
@@ -252,6 +475,8 @@ fn main() -> Result<()> {
     let compression_path = std::env::var("WASMC_LIBSRC_COMPRESSION")?;
     let http1_path = std::env::var("WASMC_LIBSRC_HTTP1")?;
     let http1_client_path = std::env::var("WASMC_LIBSRC_HTTP1_CLIENT")?;
+    let tls_client_path = std::env::var("WASMC_LIBSRC_TLS_CLIENT")?;
+    let tls_certificate_path = std::env::var("WASMC_LIBSRC_TLS_CERTIFICATE")?;
     let data_core_path = std::env::var("WASMC_LIBSRC_DATA_CORE")?;
     let csv_path = std::env::var("WASMC_LIBSRC_CSV")?;
     let expr_path = std::env::var("WASMC_LIBSRC_DATA_EXPR")?;
@@ -265,6 +490,7 @@ fn main() -> Result<()> {
     compression(&compression_path)?;
     http1(&http1_path)?;
     http1_client(&http1_client_path)?;
+    let tls_entropy_calls = tls_client(&tls_client_path, &tls_certificate_path)?;
     structural(
         &data_core_path,
         &[
@@ -312,7 +538,7 @@ fn main() -> Result<()> {
     )?;
 
     println!(
-        "{{\"accepted\":true,\"engine\":\"wasmi-2.0.0\",\"candidates\":[\"wasmc-router-policy\",\"wasmc-json\",\"wasmc-compression\",\"wasmc-http1\",\"wasmc-http1-client\",\"wasmc-data-core\",\"wasmc-csv\",\"wasmc-data-expr\",\"wasmc-data-compute\",\"wasmc-data-relational\",\"wasmc-data-profile\",\"wasmc-data-interchange\"],\"representative_execution\":true,\"structural_data_qualification\":true,\"host_imports\":0}}"
+        "{{\"accepted\":true,\"engine\":\"wasmi-2.0.0\",\"candidates\":[\"wasmc-router-policy\",\"wasmc-json\",\"wasmc-compression\",\"wasmc-http1\",\"wasmc-http1-client\",\"wasmc-tls-client\",\"wasmc-data-core\",\"wasmc-csv\",\"wasmc-data-expr\",\"wasmc-data-compute\",\"wasmc-data-relational\",\"wasmc-data-profile\",\"wasmc-data-interchange\"],\"representative_execution\":true,\"structural_data_qualification\":true,\"pure_host_imports\":0,\"tls_client_semantic_host_imports\":[\"wasmc:tls-core/entropy@0.0.1#fill\"],\"tls_client_entropy_calls\":{tls_entropy_calls}}}"
     );
     Ok(())
 }
