@@ -257,6 +257,7 @@ assert.match(`${rejected.stdout}\n${rejected.stderr}`, /adapter identity mismatc
 console.log(JSON.stringify({
   accepted: true,
   schema: "wasmc.linux-socket-lib-defined-boundary-qualification/v1",
+  candidate: "wasmc-system-linux-socket",
   platform: process.platform,
   architecture: process.arch,
   kernel: os.release(),

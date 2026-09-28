@@ -262,6 +262,7 @@ assert.match(`${rejected.stdout}\n${rejected.stderr}`, /adapter identity mismatc
 const report = {
   accepted: true,
   schema: "wasmc.linux-uinput-lib-defined-boundary-qualification/v1",
+  candidate: "wasmc-system-linux-uinput",
   platform: process.platform,
   architecture: process.arch,
   kernel: os.release(),
