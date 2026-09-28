@@ -1760,6 +1760,54 @@ assert.equal(androidV4Receipt.evidence.performance_gate, false);
 assert.equal(androidV4Receipt.evidence.wasm_lowering, false);
 assert.equal(androidV4Receipt.evidence.physical_device_qualification, false);
 
+const androidSystemAgentLabV1Receipt = JSON.parse(fs.readFileSync(
+  "admission/host-lib-defined-boundary-v1/android-arm64-system-agent-lab-v1.json", "utf8",
+));
+assert.equal(androidSystemAgentLabV1Receipt.schema,
+  "wasmc.host-lib-defined-boundary-android-system-agent-lab-qualification/v1");
+assert.equal(androidSystemAgentLabV1Receipt.predecessor,
+  "admission/host-lib-defined-boundary-v1/android-arm64-agent-computer-v4.json");
+assert.equal(androidSystemAgentLabV1Receipt.qualified, true);
+assert.equal(androidSystemAgentLabV1Receipt.admitted, false);
+assert.equal(androidSystemAgentLabV1Receipt.released, false);
+assert.equal(androidSystemAgentLabV1Receipt.discoverable, false);
+assert.equal(androidSystemAgentLabV1Receipt.installable, false);
+execFileSync("git", ["cat-file", "-e",
+  `${androidSystemAgentLabV1Receipt.implementation_commit}^{commit}`]);
+execFileSync("git", ["merge-base", "--is-ancestor",
+  androidSystemAgentLabV1Receipt.implementation_commit, "HEAD"]);
+for (const [relative, expected] of Object.entries(androidSystemAgentLabV1Receipt.source)) {
+  assert.equal(digestAt(androidSystemAgentLabV1Receipt.implementation_commit, relative), expected,
+    `${relative}: retained Android System Agent Lab v1 source drift`);
+}
+assert.equal(androidSystemAgentLabV1Receipt.evidence.status, "PASS");
+assert.equal(androidSystemAgentLabV1Receipt.evidence.shared_cross_platform_composition_engine, true);
+assert.equal(androidSystemAgentLabV1Receipt.evidence.focused_lib_qualifications_reused_without_copy, true);
+assert.equal(androidSystemAgentLabV1Receipt.evidence.provider_count, 4);
+assert.deepEqual(androidSystemAgentLabV1Receipt.evidence.provider_identities,
+  [
+    "wasmc:system-android-display@0.0.1-dev.1",
+    "wasmc:system-android-ui@0.0.1-dev.1",
+    "wasmc:system-android-input@0.0.1-dev.1",
+    "wasmc:system-android-uinput@0.0.1-dev.1",
+  ]);
+assert.equal(androidSystemAgentLabV1Receipt.evidence.exact_profile_regeneration, true);
+assert.equal(androidSystemAgentLabV1Receipt.evidence.duplicate_provider_rejected, true);
+assert.equal(androidSystemAgentLabV1Receipt.evidence.plist_conflict_rejected, true);
+assert.equal(androidSystemAgentLabV1Receipt.evidence.exclusive_resource_conflict_rejected, true);
+assert.equal(androidSystemAgentLabV1Receipt.evidence.fixed_host_domain_apis, 0);
+assert.equal(androidSystemAgentLabV1Receipt.evidence.real_frame.width, 1080);
+assert.equal(androidSystemAgentLabV1Receipt.evidence.real_frame.height, 2400);
+assert.equal(androidSystemAgentLabV1Receipt.evidence.semantic_ui_query, true);
+assert.equal(androidSystemAgentLabV1Receipt.evidence.direct_uinput_keyboard, true);
+assert.equal(androidSystemAgentLabV1Receipt.evidence.direct_uinput_touchscreen, true);
+assert.equal(androidSystemAgentLabV1Receipt.evidence.generation_checked_stale_resource_rejection, true);
+assert.equal(androidSystemAgentLabV1Receipt.evidence.session_eof_cleanup, true);
+assert.equal(androidSystemAgentLabV1Receipt.evidence.parallel_session_isolation, true);
+assert.equal(androidSystemAgentLabV1Receipt.evidence.physical_device_qualification, false);
+assert.equal(androidSystemAgentLabV1Receipt.evidence.wasm_lowering, false);
+assert.equal(androidSystemAgentLabV1Receipt.evidence.dynamic_component_loading, false);
+
 const iosSimulatorReceipt = JSON.parse(fs.readFileSync("admission/host-lib-defined-boundary-v1/ios-arm64-simulator-observation-v1.json", "utf8"));
 assert.equal(iosSimulatorReceipt.schema, "wasmc.host-lib-defined-boundary-ios-simulator-qualification/v1");
 assert.equal(iosSimulatorReceipt.status, "ios-26.5-arm64-simulator-display-supervisor-qualified-not-admitted-not-released");
@@ -1836,6 +1884,7 @@ console.log(JSON.stringify({
   retained_android_arm64_agent_computer_v2_qualification: androidV2Receipt.implementation_commit,
   retained_android_arm64_agent_computer_v3_qualification: androidV3Receipt.implementation_commit,
   retained_android_arm64_agent_computer_v4_qualification: androidV4Receipt.implementation_commit,
+  retained_android_arm64_system_agent_lab_v1_qualification: androidSystemAgentLabV1Receipt.implementation_commit,
   retained_ios_arm64_simulator_observation_qualification: iosSimulatorReceipt.implementation_commit,
   retained_ios_arm64_app_capability_qualification: iosAppReceipt.implementation_commit,
   retained_ios_arm64_app_capability_v2_qualification: iosAppV2Receipt.implementation_commit,
