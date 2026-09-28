@@ -96,10 +96,10 @@ export class DynamicLibGraph {
         if (exact.identity !== declaration.identity) throw new Error(`dynamic Lib descriptor identity mismatch: ${name}`);
         if (exact.artifact_sha256 !== declaration.artifact_sha256) throw new Error(`dynamic Lib package identity mismatch: ${name}`);
         if (exact.wit_contract_sha256 !== declaration.wit_contract_sha256) throw new Error(`dynamic Lib WIT contract identity mismatch: ${name}`);
+        const exactPorts = exact.graph_ports ? { inputs: exact.graph_ports.inputs, outputs: exact.graph_ports.outputs } : null;
         if (dag) {
-          if (!exact.graph_ports) throw new Error(`dynamic Lib package has no WIT port manifest: ${name}`);
-          const declaredPorts = { inputs: exact.graph_ports.inputs, outputs: exact.graph_ports.outputs };
-          if (canonicalJsonSha256(declaredPorts) !== declaration.port_contracts_sha256 || canonicalJson(declaredPorts) !== canonicalJson(declaration.port_contracts)) {
+          if (!exactPorts) throw new Error(`dynamic Lib package has no WIT port manifest: ${name}`);
+          if (canonicalJsonSha256(exactPorts) !== declaration.port_contracts_sha256 || canonicalJson(exactPorts) !== canonicalJson(declaration.port_contracts)) {
             throw new Error(`dynamic Lib package port contracts mismatch: ${name}`);
           }
         }
@@ -113,8 +113,8 @@ export class DynamicLibGraph {
           witContractSha: declaration.wit_contract_sha256,
           statePolicy: declaration.state_policy,
           stateSchemaIdentity: declaration.state_schema_identity,
-          portContracts: dag ? structuredClone(declaration.port_contracts) : null,
-          portContractsSha: dag ? declaration.port_contracts_sha256 : null,
+          portContracts: exactPorts ? structuredClone(exactPorts) : null,
+          portContractsSha: exactPorts ? canonicalJsonSha256(exactPorts) : null,
         };
         installed.push(record);
         candidateBlocks.set(name, record);

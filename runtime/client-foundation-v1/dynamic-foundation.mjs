@@ -6,13 +6,15 @@ import path from "node:path";
 import { LibDefinedBoundary } from "../../host/runtime/lib-boundary/reference.mjs";
 import { connectWss } from "./wss-transport.mjs";
 import { DynamicLibGraph } from "./dynamic-lib-graph.mjs";
-import { describeSerialLibGraph, identifyDynamicLibPackageFiles } from "./dynamic-lib-graph-spec.mjs";
+import { canonicalJson, canonicalJsonSha256, describeDynamicLibDag, describeSerialLibGraph, identifyDynamicLibPackageFiles } from "./dynamic-lib-graph-spec.mjs";
+import { validateWitPortManifest } from "./wit-port-contracts.mjs";
 
 const STATE_SCHEMA = "wasmc.dynamic-client-foundation-state/v1";
 const BUNDLE_SCHEMA = "wasmc.client-foundation-bundle/v1";
 const CONTROL_SCHEMA = "wasmc.client-foundation-control/v1";
 const MAX_ARTIFACT_BYTES = 2 * 1024 * 1024;
-const ALLOWED_FILES = new Set(["lib.wit", "native-boundary.json", "native-adapter.mjs"]);
+const REQUIRED_FILES = new Set(["lib.wit", "native-boundary.json", "native-adapter.mjs"]);
+const ALLOWED_FILES = new Set([...REQUIRED_FILES, "graph-ports.json"]);
 const sha256 = (bytes) => createHash("sha256").update(bytes).digest("hex");
 
 const delay = (milliseconds, signal) => new Promise((resolve) => {
@@ -58,8 +60,9 @@ function decodeBundle(bytes) {
     seen.add(file.path);
     entries.push({ path: file.path, bytes: decoded });
   }
-  if ([...ALLOWED_FILES].some((name) => !seen.has(name))) throw new Error("incomplete dynamic Lib bundle");
+  if ([...REQUIRED_FILES].some((name) => !seen.has(name))) throw new Error("incomplete dynamic Lib bundle");
   const exact = identifyDynamicLibPackageFiles(entries);
+  if (exact.graph_ports) validateWitPortManifest(exact.graph_ports, entries.find((entry) => entry.path === exact.descriptor.wit).bytes);
   if (exact.identity !== bundle.identity) throw new Error("dynamic Lib bundle descriptor identity mismatch");
   return { bundle, entries, exact };
 }
@@ -215,19 +218,25 @@ export class DynamicGraphClientFoundation {
 
   async #applyGraph(payload) {
     if (payload.expected_graph_revision !== this.state.graph_revision) throw new Error("dynamic graph revision fence mismatch");
-    if (!Array.isArray(payload.blocks) || !Array.isArray(payload.pipeline) || typeof payload.graph_digest !== "string") throw new Error("incomplete dynamic graph command");
+    const dag = Array.isArray(payload.edges) || payload.entrypoint !== undefined;
+    if (!Array.isArray(payload.blocks) || (!dag && !Array.isArray(payload.pipeline)) || typeof payload.graph_digest !== "string") throw new Error("incomplete dynamic graph command");
     const blocks = [];
     for (const declaration of payload.blocks) {
       const root = await this.#ensureBundle(declaration);
       blocks.push({ ...declaration, root, artifact_url: undefined, bundle_sha256: undefined });
     }
-    const described = describeSerialLibGraph({ blocks, pipeline: payload.pipeline });
+    const described = dag
+      ? describeDynamicLibDag({ blocks, edges: payload.edges, entrypoint: payload.entrypoint })
+      : describeSerialLibGraph({ blocks, pipeline: payload.pipeline });
     if (described.graph_digest !== payload.graph_digest) throw new Error("dynamic graph command identity mismatch");
-    const result = await this.graph.apply({ expected_revision: payload.expected_graph_revision, graph_digest: payload.graph_digest, blocks, pipeline: payload.pipeline });
+    const result = await this.graph.apply({ expected_revision: payload.expected_graph_revision, graph_digest: payload.graph_digest, blocks, pipeline: payload.pipeline, edges: payload.edges, entrypoint: payload.entrypoint });
     if (result.outcome === "committed" || result.outcome === "unchanged") {
       const active = {
         graph_digest: payload.graph_digest,
-        pipeline: [...payload.pipeline],
+        shape: dag ? "general-dag" : "serial-dag",
+        pipeline: payload.pipeline ? [...payload.pipeline] : [],
+        edges: dag ? structuredClone(payload.edges) : [],
+        entrypoint: dag ? structuredClone(payload.entrypoint) : null,
         blocks: payload.blocks.map((block) => {
           const stored = structuredClone(block);
           delete stored.artifact_url;
@@ -246,7 +255,8 @@ export class DynamicGraphClientFoundation {
 
   async #restoreActiveGraph() {
     const active = this.state.active_graph;
-    if (!active || typeof active.graph_digest !== "string" || !Array.isArray(active.blocks) || !Array.isArray(active.pipeline) || this.state.graph_revision < 1) {
+    const dag = active?.shape === "general-dag";
+    if (!active || typeof active.graph_digest !== "string" || !Array.isArray(active.blocks) || (!dag && !Array.isArray(active.pipeline)) || (dag && (!Array.isArray(active.edges) || !active.entrypoint)) || this.state.graph_revision < 1) {
       throw new Error("invalid persisted active dynamic graph");
     }
     const blocks = [];
@@ -254,7 +264,7 @@ export class DynamicGraphClientFoundation {
     try {
       for (const declaration of active.blocks) blocks.push({ ...declaration, root: await this.#verifyCachedBundle(declaration) });
       restoringGraph = new DynamicLibGraph({ boundary: this.boundary, initialRevision: this.state.graph_revision - 1 });
-      const result = await restoringGraph.apply({ expected_revision: this.state.graph_revision - 1, graph_digest: active.graph_digest, blocks, pipeline: active.pipeline });
+      const result = await restoringGraph.apply({ expected_revision: this.state.graph_revision - 1, graph_digest: active.graph_digest, blocks, pipeline: active.pipeline, edges: dag ? active.edges : undefined, entrypoint: dag ? active.entrypoint : undefined });
       if (result.outcome !== "committed" || result.revision !== this.state.graph_revision) throw new Error(result.error ?? "dynamic graph restore did not commit");
       this.graph = restoringGraph;
       this.runtimeAvailable = true;
@@ -307,6 +317,12 @@ export class DynamicGraphClientFoundation {
     if (exact.identity !== declaration.identity) throw new Error(`dynamic Lib transport identity mismatch: ${declaration.name}`);
     if (exact.artifact_sha256 !== declaration.artifact_sha256) throw new Error(`dynamic Lib transported package mismatch: ${declaration.name}`);
     if (exact.wit_contract_sha256 !== declaration.wit_contract_sha256) throw new Error(`dynamic Lib transported WIT mismatch: ${declaration.name}`);
+    if (declaration.port_contracts_sha256) {
+      const exactPorts = exact.graph_ports ? { inputs: exact.graph_ports.inputs, outputs: exact.graph_ports.outputs } : null;
+      if (!exactPorts || canonicalJsonSha256(exactPorts) !== declaration.port_contracts_sha256 || canonicalJson(exactPorts) !== canonicalJson(declaration.port_contracts)) {
+        throw new Error(`dynamic Lib transported port contracts mismatch: ${declaration.name}`);
+      }
+    }
   }
 
   async #persist(event, details = {}) {

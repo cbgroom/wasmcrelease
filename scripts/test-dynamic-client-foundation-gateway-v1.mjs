@@ -1,21 +1,36 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
+import { execFile } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import https from "node:https";
 import os from "node:os";
 import path from "node:path";
+import { promisify } from "node:util";
 import { DynamicGraphClientFoundation } from "../runtime/client-foundation-v1/dynamic-foundation.mjs";
-import { canonicalJsonSha256, describeSerialLibGraph } from "../runtime/client-foundation-v1/dynamic-lib-graph-spec.mjs";
+import { canonicalJsonSha256, describeDynamicLibDag, describeSerialLibGraph } from "../runtime/client-foundation-v1/dynamic-lib-graph-spec.mjs";
+import { deriveWitPortContracts } from "../runtime/client-foundation-v1/wit-port-contracts.mjs";
 import { ClientFoundationGateway } from "../runtime/client-foundation-gateway-v1/gateway.mjs";
 
 const root = process.cwd();
 const cert = readFileSync(path.join(root, "scripts/fixtures/ios-wss-cert.pem"));
 const key = readFileSync(path.join(root, "scripts/fixtures/ios-wss-key.pem"));
 const sha256 = (bytes) => createHash("sha256").update(bytes).digest("hex");
+const run = promisify(execFile);
 const temporaryRoot = await mkdtemp(path.join(os.tmpdir(), "wasmc-dynamic-client-gateway-"));
 const wit = Buffer.from("package wasmc:dynamic-graph-block@0.0.1;\ninterface block { invoke: func(payload: list<u8>) -> result<list<u8>, string>; }\nworld graph-block { export block; }\n");
 const trace = (stage) => { if (process.env.WASMC_TEST_TRACE === "1") process.stderr.write(`${stage}\n`); };
+const dagWit = Buffer.from(`package wasmc:dynamic-client-dag@0.0.1;
+interface blocks {
+  source: func(payload: string) -> string;
+  unary: func(payload: string) -> string;
+  join: func(left: string, right: string) -> string;
+}
+world graph-block { export blocks; }
+`);
+const dagWitPath = path.join(temporaryRoot, "dag.wit");
+await writeFile(dagWitPath, dagWit);
+const dagWitDocument = JSON.parse((await run("wasm-tools", ["component", "wit", dagWitPath, "--json"])).stdout);
 
 async function makeBundle(name, marker, { broken = false } = {}) {
   const identity = `wasmc:dynamic-client-${name}@0.0.1-dev.1`;
@@ -34,6 +49,7 @@ export async function invoke(input) {
   if (request.operation === "invoke") return encoder.encode(JSON.stringify({ accepted: true, provider: ${JSON.stringify(identity)}, value: ${JSON.stringify(marker)} + (request.configuration?.suffix ?? "") + "(" + request.value + ")" }));
   throw new Error("unsupported dynamic Client fixture operation");
 }
+
 `);
   const descriptor = Buffer.from(`${JSON.stringify({
     schema: "wasmc.native-boundary-descriptor/v1",
@@ -52,6 +68,38 @@ export async function invoke(input) {
     schema: "wasmc.client-foundation-bundle/v1",
     identity,
     api: "wasmc:dynamic-graph-block@0.0.1",
+    files: files.map((file) => ({ path: file.path, sha256: sha256(file.bytes), base64: file.bytes.toString("base64") })),
+  }));
+}
+
+async function makeDagBundle(name, marker, fn, delayMs = 0) {
+  const identity = `wasmc:dynamic-client-dag-${name}@0.0.1-dev.1`;
+  const manifest = deriveWitPortContracts(dagWitDocument, {
+    world: "graph-block", interface: "blocks", function: fn, wit_sha256: sha256(dagWit),
+  });
+  const adapter = Buffer.from(`
+const encoder = new TextEncoder();
+const decoder = new TextDecoder("utf-8", { fatal: true });
+export async function invoke(input) {
+  const request = JSON.parse(decoder.decode(input));
+  if (request.operation === "probe" || request.operation === "health") return encoder.encode(JSON.stringify({ accepted: true }));
+  if (request.operation !== "invoke-ports") throw new Error("unsupported DAG operation");
+  if (${delayMs} > 0) await new Promise((resolve) => setTimeout(resolve, ${delayMs}));
+  const value = ${fn === "join" ? '"J(" + request.inputs.left + "," + request.inputs.right + ")"' : `${JSON.stringify(marker)} + "(" + request.inputs.payload + ")"`};
+  return encoder.encode(JSON.stringify({ accepted: true, outputs: { result: value } }));
+}`);
+  const descriptor = Buffer.from(`${JSON.stringify({
+    schema: "wasmc.native-boundary-descriptor/v1", identity, wit: "lib.wit", graph_ports: "graph-ports.json",
+    adapter: { path: "native-adapter.mjs", sha256: sha256(adapter), export: "invoke" },
+    limits: { max_input_bytes: 65536, max_output_bytes: 65536 }, lifecycle: "prototype-not-admitted-not-released",
+  }, null, 2)}\n`);
+  const manifestBytes = Buffer.from(`${JSON.stringify(manifest, null, 2)}\n`);
+  const files = [
+    { path: "lib.wit", bytes: dagWit }, { path: "native-boundary.json", bytes: descriptor },
+    { path: "native-adapter.mjs", bytes: adapter }, { path: "graph-ports.json", bytes: manifestBytes },
+  ];
+  return Buffer.from(JSON.stringify({
+    schema: "wasmc.client-foundation-bundle/v1", identity, api: "wasmc:dynamic-client-dag@0.0.1",
     files: files.map((file) => ({ path: file.path, sha256: sha256(file.bytes), base64: file.bytes.toString("base64") })),
   }));
 }
@@ -104,6 +152,12 @@ const graphPayload = (expectedRevision, blocks, pipeline) => ({
   pipeline,
   graph_digest: describeSerialLibGraph({ blocks: blocks.map((entry) => ({ ...entry, root: "content-addressed-remote" })), pipeline }).graph_digest,
 });
+const dagBlock = (name, artifact) => ({
+  name, bundle_sha256: artifact.sha256, identity: artifact.identity, artifact_sha256: artifact.package_sha256,
+  wit_contract_sha256: artifact.wit_contract_sha256, configuration: {}, configuration_sha256: canonicalJsonSha256({}),
+  state_policy: "stateless", state_schema_identity: null, port_contracts: artifact.port_contracts,
+  port_contracts_sha256: artifact.port_contracts_sha256,
+});
 
 const gatewayRoot = path.join(temporaryRoot, "gateway");
 const clientRoot = path.join(temporaryRoot, "client");
@@ -142,6 +196,23 @@ try {
     assert.match(response.value.wit_contract_sha256, /^[a-f0-9]{64}$/);
     uploaded[name] = response.value;
   }
+  const uploadedDag = {};
+  for (const [name, marker, fn, delayMs] of [["source", "S", "source", 0], ["left", "L", "unary", 40], ["right", "R", "unary", 40], ["join", "unused", "join", 0]]) {
+    const response = await api(origin, "POST", "/v1/artifacts", await makeDagBundle(name, marker, fn, delayMs));
+    assert.equal(response.status, 201);
+    assert.match(response.value.port_contracts_sha256, /^[a-f0-9]{64}$/);
+    uploadedDag[name] = response.value;
+  }
+  const forgedManifestBundle = JSON.parse((await makeDagBundle("forged", "F", "unary")).toString("utf8"));
+  const forgedManifestFile = forgedManifestBundle.files.find((file) => file.path === "graph-ports.json");
+  const forgedManifest = JSON.parse(Buffer.from(forgedManifestFile.base64, "base64").toString("utf8"));
+  forgedManifest.outputs.result = "0".repeat(64);
+  const forgedManifestBytes = Buffer.from(`${JSON.stringify(forgedManifest, null, 2)}\n`);
+  forgedManifestFile.base64 = forgedManifestBytes.toString("base64");
+  forgedManifestFile.sha256 = sha256(forgedManifestBytes);
+  const forgedUpload = await api(origin, "POST", "/v1/artifacts", Buffer.from(JSON.stringify(forgedManifestBundle)));
+  assert.equal(forgedUpload.status, 400);
+  assert.match(forgedUpload.value.error, /port manifest identity mismatch/);
 
   const a1 = block("a", uploaded.a1);
   const a2 = block("a", uploaded.a2, { suffix: "C" });
@@ -234,20 +305,48 @@ try {
   state = await waitFor(origin, (value) => value.commands[11]?.receipt);
   assert.equal(state.commands[11].receipt.outcome, "reported");
 
+  const dagBlocks = [dagBlock("source", uploadedDag.source), dagBlock("left", uploadedDag.left), dagBlock("right", uploadedDag.right), dagBlock("join", uploadedDag.join)];
+  const dagEdges = [
+    { from: { node: "source", port: "result" }, to: { node: "left", port: "payload" } },
+    { from: { node: "source", port: "result" }, to: { node: "right", port: "payload" } },
+    { from: { node: "left", port: "result" }, to: { node: "join", port: "left" } },
+    { from: { node: "right", port: "result" }, to: { node: "join", port: "right" } },
+  ];
+  const dagEntrypoint = { input: { node: "source", port: "payload" }, output: { node: "join", port: "result" } };
+  const dagPayload = {
+    expected_graph_revision: 3, blocks: dagBlocks, edges: dagEdges, entrypoint: dagEntrypoint,
+    graph_digest: describeDynamicLibDag({ blocks: dagBlocks.map((entry) => ({ ...entry, root: "content-addressed-remote" })), edges: dagEdges, entrypoint: dagEntrypoint }).graph_digest,
+  };
+  await api(origin, "POST", "/v1/clients/dynamic-client/commands", { message_id: "dg-13", operation: "lib-graph.apply", payload: dagPayload });
+  state = await waitFor(origin, (value) => value.commands[12]?.receipt);
+  assert.deepEqual({ outcome: state.commands[12].receipt.outcome, shape: state.commands[12].receipt.shape }, { outcome: "committed", shape: "general-dag" });
+  await api(origin, "POST", "/v1/clients/dynamic-client/commands", { message_id: "dg-14", operation: "invoke", payload: { value: "remote" } });
+  state = await waitFor(origin, (value) => value.commands[13]?.receipt);
+  assert.equal(state.commands[13].receipt.response.value, "J(L(S(remote)),R(S(remote)))");
+
+  trace("client:dag-restart-close");
+  await stopClient();
+  await startClient(address);
+  await waitFor(origin, (value) => value.last_hello?.runtime_available === true && value.last_hello?.graph_revision === 4);
+  await api(origin, "POST", "/v1/clients/dynamic-client/commands", { message_id: "dg-15", operation: "invoke", payload: { value: "dag-restart" } });
+  state = await waitFor(origin, (value) => value.commands[14]?.receipt);
+  assert.equal(state.commands[14].receipt.response.value, "J(L(S(dag-restart)),R(S(dag-restart)))");
+
   trace("client:final-close");
   await stopClient();
   assert.deepEqual(client.boundary.counts(), { resources: 0, windows: 0, operations: 0 });
   const diskState = JSON.parse(await readFile(path.join(clientRoot, "dynamic-state.json"), "utf8"));
-  assert.equal(diskState.graph_revision, 3);
-  assert.equal(diskState.active_graph.graph_digest, repairGraph.graph_digest);
-  assert.equal(diskState.last_server_sequence, 12);
-  assert.equal(Object.keys(diskState.receipts).length, 12);
+  assert.equal(diskState.graph_revision, 4);
+  assert.equal(diskState.active_graph.graph_digest, dagPayload.graph_digest);
+  assert.equal(diskState.active_graph.shape, "general-dag");
+  assert.equal(diskState.last_server_sequence, 15);
+  assert.equal(Object.keys(diskState.receipts).length, 15);
 
   console.log(JSON.stringify({
     accepted: true,
     schema: "wasmc.dynamic-client-gateway-local-qualification/v1",
     lifecycle: "prototype-local-qualified-not-admitted-not-released",
-    persistent_artifacts: Object.keys(uploaded).length,
+    persistent_artifacts: Object.keys(uploaded).length + Object.keys(uploadedDag).length,
     first_composition: "B1(A1(x))",
     one_node_replacement: "B1(A2C(x))",
     gateway_restart_reconnect: "B1(A2C(after-gateway-restart))",
@@ -255,6 +354,9 @@ try {
     broken_candidate_rolled_back: true,
     corrupt_cache_runtime_unavailable_but_control_connected: true,
     exact_cache_redownload_repair: "B1(A2C(after-cache-repair))",
+    general_dag_gateway_apply: "J(L(S(remote)),R(S(remote)))",
+    general_dag_client_restart: "J(L(S(dag-restart)),R(S(dag-restart)))",
+    forged_port_manifest_rejected_at_gateway: true,
     durable_graph_revision: diskState.graph_revision,
     durable_receipts: Object.keys(diskState.receipts).length,
     canonical_duplicate_idempotent: true,

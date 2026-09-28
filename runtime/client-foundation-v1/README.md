@@ -107,12 +107,13 @@ package hashes, whole-graph rollback on failed health, and zero retained Host
 resources/windows/operations after close. The DAG test proves a diamond graph,
 parallel branches, exact port-manifest verification, one-branch replacement
 with three reused nodes and negative closure/type controls. This engine is
-local prototype evidence. General DAG distribution/restart is not yet wired to
-the Gateway, and the work is not admitted or released.
+local prototype evidence. The Client/Gateway qualification also distributes
+that graph over WSS/HTTPS, persists it, and reconstructs it after a Client
+restart. The work is not admitted or released.
 
 ## Dynamic Client/Gateway loop
 
-`dynamic-foundation.mjs` connects the serial-stateless graph engine to the
+`dynamic-foundation.mjs` connects the stateless serial/general-DAG graph engine to the
 persistent Gateway with the `lib-graph.apply` command. The Gateway resolves
 every content-addressed bundle and rejects any mismatch among bundle, package,
 Lib, WIT and canonical graph identities before enqueue. The Client downloads
@@ -138,6 +139,6 @@ Run the integrated qualification with:
 node scripts/test-dynamic-client-foundation-gateway-v1.mjs
 ```
 
-This closes restart reconstruction only for the serial-stateless profile. It
-does not provide general DAG execution, state migration, external-effect
+This closes restart reconstruction for both serial routes and general
+stateless DAGs. It does not provide state migration, external-effect
 exactly-once semantics, cache retention policy or release admission.

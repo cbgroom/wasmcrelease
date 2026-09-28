@@ -4,14 +4,16 @@ import { mkdir, open, readFile, readdir, rename, unlink, writeFile } from "node:
 import https from "node:https";
 import path from "node:path";
 import { encodeFrame, FrameDecoder } from "../client-foundation-v1/websocket-wire.mjs";
-import { canonicalJson, describeSerialLibGraph, identifyDynamicLibPackageFiles } from "../client-foundation-v1/dynamic-lib-graph-spec.mjs";
+import { canonicalJson, canonicalJsonSha256, describeDynamicLibDag, describeSerialLibGraph, identifyDynamicLibPackageFiles } from "../client-foundation-v1/dynamic-lib-graph-spec.mjs";
+import { validateWitPortManifest } from "../client-foundation-v1/wit-port-contracts.mjs";
 
 const STATE_SCHEMA = "wasmc.client-foundation-gateway-state/v1";
 const BUNDLE_SCHEMA = "wasmc.client-foundation-bundle/v1";
 const CONTROL_SCHEMA = "wasmc.client-foundation-control/v1";
 const ACCEPT_GUID = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
 const MAX_JSON_BYTES = 2 * 1024 * 1024;
-const ALLOWED_BUNDLE_FILES = new Set(["lib.wit", "native-boundary.json", "native-adapter.mjs"]);
+const REQUIRED_BUNDLE_FILES = new Set(["lib.wit", "native-boundary.json", "native-adapter.mjs"]);
+const ALLOWED_BUNDLE_FILES = new Set([...REQUIRED_BUNDLE_FILES, "graph-ports.json"]);
 const sha256 = (bytes) => createHash("sha256").update(bytes).digest("hex");
 
 const validClientId = (value) => typeof value === "string" && /^[A-Za-z0-9._-]{1,128}$/.test(value);
@@ -48,8 +50,9 @@ function validateBundle(bytes) {
     seen.add(file.path);
     entries.push({ path: file.path, bytes: decoded });
   }
-  if (![...ALLOWED_BUNDLE_FILES].every((name) => seen.has(name))) throw new Error("incomplete Client Foundation bundle");
+  if (![...REQUIRED_BUNDLE_FILES].every((name) => seen.has(name))) throw new Error("incomplete Client Foundation bundle");
   const exact = identifyDynamicLibPackageFiles(entries);
+  if (exact.graph_ports) validateWitPortManifest(exact.graph_ports, entries.find((entry) => entry.path === exact.descriptor.wit).bytes);
   if (exact.identity !== bundle.identity) throw new Error("bundle descriptor identity mismatch");
   return { bundle, exact };
 }
@@ -190,6 +193,8 @@ export class ClientFoundationGateway {
         identity: validated.exact.identity,
         package_sha256: validated.exact.artifact_sha256,
         wit_contract_sha256: validated.exact.wit_contract_sha256,
+        port_contracts: validated.exact.graph_ports ? { inputs: validated.exact.graph_ports.inputs, outputs: validated.exact.graph_ports.outputs } : null,
+        port_contracts_sha256: validated.exact.graph_ports ? canonicalJsonSha256({ inputs: validated.exact.graph_ports.inputs, outputs: validated.exact.graph_ports.outputs }) : null,
       };
       await this.#persist();
       jsonResponse(response, 201, { accepted: true, ...this.state.artifacts[digest], url: `${this.advertiseOrigin}/v1/artifacts/${digest}` });
@@ -270,16 +275,22 @@ export class ClientFoundationGateway {
         payload.artifact_url = `${this.advertiseOrigin}/v1/artifacts/${payload.artifact_sha256}`;
       }
       if (input.operation === "lib-graph.apply") {
-        if (!Array.isArray(payload.blocks) || !Array.isArray(payload.pipeline) || typeof payload.graph_digest !== "string") throw new Error("incomplete dynamic Lib graph command");
+        const dag = Array.isArray(payload.edges) || payload.entrypoint !== undefined;
+        if (!Array.isArray(payload.blocks) || (!dag && !Array.isArray(payload.pipeline)) || typeof payload.graph_digest !== "string") throw new Error("incomplete dynamic Lib graph command");
         const graphBlocks = payload.blocks.map((block) => {
           const metadata = this.state.artifacts[block.bundle_sha256];
           if (!metadata) throw new Error(`unknown dynamic Lib bundle: ${block.name}`);
           if (metadata.identity !== block.identity || metadata.package_sha256 !== block.artifact_sha256 || metadata.wit_contract_sha256 !== block.wit_contract_sha256) {
             throw new Error(`dynamic Lib bundle declaration mismatch: ${block.name}`);
           }
+          if (dag && (canonicalJson(metadata.port_contracts) !== canonicalJson(block.port_contracts) || metadata.port_contracts_sha256 !== block.port_contracts_sha256)) {
+            throw new Error(`dynamic Lib bundle port declaration mismatch: ${block.name}`);
+          }
           return { ...block, root: "gateway-verified-content-addressed-locator" };
         });
-        const described = describeSerialLibGraph({ blocks: graphBlocks, pipeline: payload.pipeline });
+        const described = dag
+          ? describeDynamicLibDag({ blocks: graphBlocks, edges: payload.edges, entrypoint: payload.entrypoint })
+          : describeSerialLibGraph({ blocks: graphBlocks, pipeline: payload.pipeline });
         if (described.graph_digest !== payload.graph_digest) throw new Error("dynamic Lib graph command digest mismatch");
         payload.blocks = payload.blocks.map((block) => ({ ...block, artifact_url: `${this.advertiseOrigin}/v1/artifacts/${block.bundle_sha256}` }));
       }
@@ -566,9 +577,15 @@ export class ClientFoundationGateway {
       if (validated.exact.identity !== metadata.identity) throw new Error("stored artifact provider identity mismatch");
       if (metadata.package_sha256 && metadata.package_sha256 !== validated.exact.artifact_sha256) throw new Error("stored package identity mismatch");
       if (metadata.wit_contract_sha256 && metadata.wit_contract_sha256 !== validated.exact.wit_contract_sha256) throw new Error("stored WIT contract identity mismatch");
-      if (!metadata.package_sha256 || !metadata.wit_contract_sha256) {
+      const portContracts = validated.exact.graph_ports ? { inputs: validated.exact.graph_ports.inputs, outputs: validated.exact.graph_ports.outputs } : null;
+      const portContractsSha = portContracts ? canonicalJsonSha256(portContracts) : null;
+      if (metadata.port_contracts && canonicalJson(metadata.port_contracts) !== canonicalJson(portContracts)) throw new Error("stored port contracts mismatch");
+      if (metadata.port_contracts_sha256 && metadata.port_contracts_sha256 !== portContractsSha) throw new Error("stored port contract identity mismatch");
+      if (!metadata.package_sha256 || !metadata.wit_contract_sha256 || (portContracts && !metadata.port_contracts_sha256)) {
         metadata.package_sha256 = validated.exact.artifact_sha256;
         metadata.wit_contract_sha256 = validated.exact.wit_contract_sha256;
+        metadata.port_contracts = portContracts;
+        metadata.port_contracts_sha256 = portContractsSha;
         migrated = true;
       }
     }

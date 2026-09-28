@@ -49,12 +49,12 @@ for (const required of [
 for (const qualified of model.current_implementation_profile.qualified_invariants) {
   assert.ok(invariants.has(qualified), `qualified invariant is absent from model: ${qualified}`);
 }
-assert.equal(model.current_implementation_profile.graph_shape, "serial-pipeline-and-general-dag-local-engine");
+assert.equal(model.current_implementation_profile.graph_shape, "serial-pipeline-and-general-dag-client-gateway");
 assert.equal(model.current_implementation_profile.state_policy, "stateless");
 assert.equal(model.current_implementation_profile.graph_identity, "canonical-json-sha256");
 assert.equal(model.current_implementation_profile.configuration, "canonical-json-sha256");
 assert.equal(model.current_implementation_profile.wit_contract_identity, "wasm-tools-derived-port-type-sha256-bound-to-exact-wit");
-for (const gate of ["gateway-general-dag-distribution-and-restart", "stateful-replacement", "durable-retired-generation-cleanup"]) {
+for (const gate of ["stateful-replacement", "durable-retired-generation-cleanup"]) {
   assert.ok(model.current_implementation_profile.open_gates.includes(gate), `missing open gate: ${gate}`);
 }
 

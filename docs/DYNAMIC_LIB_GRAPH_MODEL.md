@@ -144,15 +144,16 @@ component wit --json`, bound to the exact WIT SHA-256, stored in a port manifest
 that is part of the exact package hash, and rechecked against the installed
 package. A caller-provided port hash therefore cannot override package truth.
 
-The serial-stateless Client/Gateway path now persists the exact desired graph,
+The stateless Client/Gateway path now persists the exact desired graph,
 content-addressed bundle locators, revision and command result. Restart verifies
 every cached bundle and reconstructs the same runtime graph before reporting it
 available. Cache corruption leaves the immutable control loop connected; an
 exact subsequent command redownloads and republishes the graph. This closes
-restart reconstruction only for the current serial-stateless profile.
+restart reconstruction for both serial routes and general DAGs. The Gateway
+verifies package-bound port contracts before enqueue; the Client verifies them
+again after HTTPS download and after every cache read.
 
-General DAG scheduling and port-granular WIT contract identity are locally
-qualified in the engine. Gateway distribution and restart reconstruction of a
-general DAG, stateful replacement, and durable retired-generation cleanup
-remain open gates. Until those close, Gateway support must still be labeled
-serial-stateless prototype rather than general dynamic Lib composition.
+General DAG scheduling, port-granular WIT contract identity, Gateway
+distribution and Client restart reconstruction are locally qualified. Stateful
+replacement and durable retired-generation cleanup remain open gates. The
+whole path remains a stateless prototype and is not admitted or released.
