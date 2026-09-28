@@ -39,12 +39,18 @@ assert.match(orientation.final_answer_policy, /Do not reopen/);
 assert.match(orientation.stop, /sufficient/);
 assert.equal(migrationOrientation.schema, "wasmc.dynamic-client-state-migration-orientation/v1");
 assert.match(migrationOrientation.rule, /bounded answer route/);
+assert.match(migrationOrientation.request_classification.rule, /not source-line inspection/);
 assert.equal(migrationOrientation.lifecycle.qualified, true);
 for (const state of ["admitted", "released", "discoverable", "installable"]) assert.equal(migrationOrientation.lifecycle[state], false);
 assert.equal(migrationOrientation.authority.plan_schema, "wasmc.dynamic-lib-state-migration-plan/v1");
 assert.match(migrationOrientation.stable_graph, /ephemeral transition dependency/);
 assert.deepEqual(migrationOrientation.open_gates, ["sticky-active-restart-disposition"]);
 assert.deepEqual(migrationOrientation.required_additional_reads, []);
+assert.equal(migrationOrientation.white_box_binding_receipt.plan_derivation_symbol, "describeStateMigrations");
+assert.equal(migrationOrientation.white_box_binding_receipt.engine_operation, "migrate-state-v1");
+assert.match(migrationOrientation.white_box_binding_receipt.integrated_oracle, /SV2:2->SV3:2/);
+assert.match(migrationOrientation.final_answer_policy, /Do not open the model/);
+assert.match(migrationOrientation.stop, /No additional read is required/);
 
 const phases = new Set(model.manager_phases);
 assert.equal(phases.size, model.manager_phases.length);
