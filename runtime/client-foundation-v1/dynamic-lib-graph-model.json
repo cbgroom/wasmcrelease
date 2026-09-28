@@ -34,6 +34,22 @@
       "drain-and-release-retired-generation"
     ]
   },
+  "white_box_evidence": {
+    "normative_model": "docs/DYNAMIC_LIB_GRAPH_MODEL.md",
+    "engine": "runtime/client-foundation-v1/dynamic-lib-graph.mjs",
+    "package_spec": "runtime/client-foundation-v1/dynamic-lib-graph-spec.mjs",
+    "client_durability": "runtime/client-foundation-v1/dynamic-foundation.mjs",
+    "gateway_binding": "runtime/client-foundation-gateway-v1/gateway.mjs",
+    "focused_qualification": "scripts/test-dynamic-lib-stateful-v1.mjs",
+    "integrated_qualification": "scripts/test-dynamic-client-foundation-gateway-v1.mjs",
+    "publication_crash_fixture": "scripts/fixtures/dynamic-client-publication-crash-runner.mjs",
+    "host_cli_runtime_guard": "scripts/test-client-foundation-v1.mjs",
+    "commands": [
+      "node scripts/test-dynamic-lib-stateful-v1.mjs",
+      "node scripts/validate-dynamic-lib-graph-model-v1.mjs",
+      "node scripts/test-dynamic-client-foundation-gateway-v1.mjs"
+    ]
+  },
   "reuse_key": [
     "node_id",
     "lib_identity",

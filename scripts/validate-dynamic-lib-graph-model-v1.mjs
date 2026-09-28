@@ -70,6 +70,18 @@ assert.deepEqual(model.state_contract.same_schema_order, [
   "release-invocation-barrier",
   "drain-and-release-retired-generation",
 ]);
+const evidencePaths = Object.entries(model.white_box_evidence)
+  .filter(([key]) => key !== "commands")
+  .map(([, value]) => value);
+for (const relative of evidencePaths) {
+  assert.equal(typeof relative, "string");
+  await readFile(new URL(`../${relative}`, import.meta.url));
+}
+assert.deepEqual(model.white_box_evidence.commands, [
+  "node scripts/test-dynamic-lib-stateful-v1.mjs",
+  "node scripts/validate-dynamic-lib-graph-model-v1.mjs",
+  "node scripts/test-dynamic-client-foundation-gateway-v1.mjs",
+]);
 assert.equal(model.current_implementation_profile.graph_shape, "serial-pipeline-and-general-dag-client-gateway");
 assert.equal(model.current_implementation_profile.state_policy, "stateless-sticky-and-same-schema-snapshot-v1");
 assert.equal(model.current_implementation_profile.graph_identity, "canonical-json-sha256");
@@ -88,6 +100,7 @@ for (const phrase of [
   "Unknown or incomplete state policy fails closed",
   "Start here for the complete implemented state contract",
   "The barrier is graph-wide",
+  "use this bounded evidence index instead of searching the repository",
 ]) assert.ok(normalizedDocument.includes(phrase), `model document missing rule: ${phrase}`);
 
 console.log(JSON.stringify({

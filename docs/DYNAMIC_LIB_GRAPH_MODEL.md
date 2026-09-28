@@ -123,6 +123,27 @@ higher-layer CLI. Neither CLI nor the Host API participates in state transfer.
 `snapshot-v1` and `restore-v1` are opaque Lib operations over the existing
 resource/window/operation/completion boundary.
 
+For a white-box review, use this bounded evidence index instead of searching
+the repository:
+
+| Question | Exact evidence |
+|---|---|
+| engine ordering, rollback and barrier | `runtime/client-foundation-v1/dynamic-lib-graph.mjs` |
+| package descriptor validation and graph identity | `runtime/client-foundation-v1/dynamic-lib-graph-spec.mjs` |
+| Client download/cache/restart checks and retired ledger | `runtime/client-foundation-v1/dynamic-foundation.mjs` |
+| Gateway upload and pre-enqueue binding | `runtime/client-foundation-gateway-v1/gateway.mjs` |
+| focused policy, concurrency and envelope negatives | `scripts/test-dynamic-lib-stateful-v1.mjs` |
+| distributed state binding and publication crash | `scripts/test-dynamic-client-foundation-gateway-v1.mjs` |
+| crash injection process | `scripts/fixtures/dynamic-client-publication-crash-runner.mjs` |
+| runtime guard for fixed Host/minimal CLI bytes | `scripts/test-client-foundation-v1.mjs` |
+
+Run exactly the focused test, this model's validator and the integrated test
+with their documented `node ...` commands. They need no external shell timeout
+wrapper. The `fixed_host_api_changed` and `minimal_cli_changed` fields printed
+by dynamic tests are report labels; protected-path byte comparison is performed
+by `scripts/test-client-foundation-v1.mjs`, while change-set scope is established
+from the pinned Git commit.
+
 The implemented same-schema `snapshot-v1` path binds policy and schema identity
 inside the exact package descriptor rather than trusting a graph caller. It
 installs and probes the candidate first, blocks new invocations, drains calls

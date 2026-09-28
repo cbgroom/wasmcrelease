@@ -60,7 +60,8 @@ not the current serial implementation, is the input to future Gateway and
 durability work. For stateful replacement, read its **Stateful replacement
 quick authority** section before inspecting implementation or tests; it is the
 single index for package authority, transport checks, the 1 MiB envelope,
-ordering, Host/CLI boundaries and explicit open gates.
+ordering, Host/CLI boundaries, exact white-box evidence paths and explicit open
+gates. Do not search for alternate Gateway or crash-runner paths.
 
 `dynamic-lib-graph.mjs` exercises the next layer of mutability without adding
 another Host operation. One generation owns a named set of Lib resources and
