@@ -23,8 +23,11 @@ qualification passes all 158 SystemRootCertificates as ordinary Lib data and
 performs a certificate-validated public HTTPS request. The root boundary is
 therefore 256 certificates rather than the earlier synthetic limit of 64.
 
-The exact Linux System socket provider, Linux/Windows platform root providers,
-iOS and Android compositions remain pending.
+On Linux aarch64, a separate composition drives the same TLS Core through the
+digest-bound `wasmc:system-linux-socket@0.0.1-dev.1` adapter and unchanged fixed
+executor for every handshake and HTTP byte. Linux x86_64 remains an independent
+architecture gate. Linux/Windows platform root providers plus iOS and Android
+compositions also remain pending.
 
 Current lifecycle: qualified public-source candidate; not admitted, released,
 production-discoverable or installable.

@@ -259,7 +259,9 @@ partial-output commit and resource destruction. A macOS qualification supplies
 all 158 system roots as Lib data and completes a certificate-validated public
 HTTPS request; this exposed and repaired the original 64-root synthetic bound,
 which is now 256. Linux/Windows root providers and the exact Linux System socket
-provider remain separate gates; this candidate is not admitted or released.
+provider remain separate gates; the Linux aarch64 exact-provider composition is
+qualified locally, while Linux x86_64 still requires independent evidence. This
+candidate is not admitted or released.
 
 ## Library OS consequence
 
