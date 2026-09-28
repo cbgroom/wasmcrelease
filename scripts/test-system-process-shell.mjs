@@ -73,7 +73,7 @@ try {
   assert.equal(fromBase64(nonzero.stderr_base64), "nonzero-err");
 
   const defaultShellScript = process.platform === "win32"
-    ? "@echo off & <nul set /p =shell-out & <nul set /p =shell-err 1>&2 & exit /b 11"
+    ? "@echo off&<nul set /p \"=shell-out\"&<nul set /p \"=shell-err\" 1>&2&exit /b 11"
     : "printf shell-out; printf shell-err >&2; exit 11";
   const shell = await invoke({
     operation: "shell-run",
