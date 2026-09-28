@@ -1,5 +1,9 @@
 # Client Foundation v1 prototype
 
+For active `snapshot-v1` restart durability and Gateway receipt ordering, start
+with `agent-checkpoint-orientation.json`. It is the compact bounded route; open
+the broader model or implementation only for audit or a failed named check.
+
 This directory is a higher-layer, persistent client foundation built above the
 fixed Lib-defined Host boundary. It does not change `current/cli.mjs`, add a
 domain API to the Host, or load a provider around the Host. Every provider

@@ -1,0 +1,84 @@
+{
+  "schema": "wasmc.dynamic-client-checkpoint-orientation/v1",
+  "request": "Does active snapshot-v1 state survive a full Client restart, including a crash after persistence and before Gateway receipt delivery?",
+  "answer": "Yes for an exact active snapshot-v1 graph with a valid checkpoint; this is not general exactly-once execution.",
+  "lifecycle": {
+    "qualified": true,
+    "admitted": false,
+    "released": false,
+    "discoverable": false,
+    "installable": false,
+    "scope": "prototype-local-qualification"
+  },
+  "authority_order": [
+    "exact package descriptor owns state policy and schema identity",
+    "Gateway validates derived package-bound metadata before enqueue",
+    "Client independently verifies package and checkpoint identity before runtime availability"
+  ],
+  "gateway_invoke_order": [
+    "Gateway durably queues command before delivery",
+    "Client persists inflight command before invocation",
+    "Client invokes the active graph",
+    "Client captures state behind the graph-wide barrier",
+    "Client persists checkpoint and command result in one state-file replacement",
+    "Client sends receipt",
+    "Gateway persists receipt before dispatching the next sequence"
+  ],
+  "crash_after_joint_write_before_receipt": "Restart restores and health-checks the checkpoint, recovers the durable result, and answers redelivery without invoking the Lib again.",
+  "gateway_visibility": {
+    "summary": [
+      "schema",
+      "graph_revision",
+      "graph_digest",
+      "checkpoint_sha256",
+      "state_blocks"
+    ],
+    "client_local_only": [
+      "per-block state_schema_identity",
+      "per-block state_base64",
+      "per-block state_sha256"
+    ]
+  },
+  "failure_policy": {
+    "missing_or_corrupt": "runtime unavailable while control remains connected",
+    "partial_multi_block_restore": "graph poisoned until close and reconstruction",
+    "sticky_restart": "fail closed because no snapshot or disposition contract exists"
+  },
+  "limits": {
+    "decoded_bytes_per_block": 1048576,
+    "persisted_checkpoint_bytes": 8388608
+  },
+  "open_gates": [
+    "cross-schema-state-migration-lib",
+    "sticky-active-restart-disposition"
+  ],
+  "not_claimed": [
+    "general exactly-once execution",
+    "external-effect rollback or cleanup",
+    "crash-before-joint-write result recovery",
+    "release admission"
+  ],
+  "protected_surface": {
+    "fixed_host_api_changed": false,
+    "minimal_cli_changed": false,
+    "proof_command": "git diff --name-only bed1e4d236bb78a992355321deca8968a6400a0d HEAD -- host current runtime/client-foundation-gateway-v1/cli.mjs",
+    "expected_output": ""
+  },
+  "evidence": {
+    "normative_model": "docs/DYNAMIC_LIB_GRAPH_MODEL.md",
+    "client": "runtime/client-foundation-v1/dynamic-foundation.mjs",
+    "graph": "runtime/client-foundation-v1/dynamic-lib-graph.mjs",
+    "gateway": "runtime/client-foundation-gateway-v1/gateway.mjs",
+    "focused_test": "scripts/test-dynamic-lib-stateful-v1.mjs",
+    "integrated_test": "scripts/test-dynamic-client-foundation-gateway-v1.mjs",
+    "crash_fixture": "scripts/fixtures/dynamic-client-state-checkpoint-crash-runner.mjs",
+    "host_cli_guard": "scripts/test-client-foundation-v1.mjs"
+  },
+  "verify": [
+    "node scripts/validate-dynamic-lib-graph-model-v1.mjs",
+    "node scripts/test-dynamic-lib-stateful-v1.mjs",
+    "node scripts/test-dynamic-client-foundation-gateway-v1.mjs",
+    "node scripts/test-client-foundation-v1.mjs"
+  ],
+  "stop": "This record is sufficient for checkpoint/restart status. Open implementation only to audit behavior or diagnose a failed named check."
+}

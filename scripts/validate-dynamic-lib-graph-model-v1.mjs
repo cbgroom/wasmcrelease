@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 
 const model = JSON.parse(await readFile(new URL("../runtime/client-foundation-v1/dynamic-lib-graph-model.json", import.meta.url), "utf8"));
+const orientation = JSON.parse(await readFile(new URL("../runtime/client-foundation-v1/agent-checkpoint-orientation.json", import.meta.url), "utf8"));
 const document = await readFile(new URL("../docs/DYNAMIC_LIB_GRAPH_MODEL.md", import.meta.url), "utf8");
 const normalizedDocument = document.replace(/\s+/g, " ");
 
@@ -10,6 +11,17 @@ assert.equal(model.schema, "wasmc.dynamic-lib-graph-model/v1");
 assert.equal(model.lifecycle, "prototype-model-not-admitted-not-released");
 assert.equal(model.host_boundary, "resource-window-operation-completion-cancel-release");
 assert.equal(model.graph_shape, "dag");
+assert.equal(orientation.schema, "wasmc.dynamic-client-checkpoint-orientation/v1");
+assert.equal(orientation.lifecycle.qualified, true);
+for (const state of ["admitted", "released", "discoverable", "installable"]) assert.equal(orientation.lifecycle[state], false);
+assert.match(orientation.answer, /not general exactly-once/);
+assert.equal(orientation.gateway_invoke_order[4], "Client persists checkpoint and command result in one state-file replacement");
+assert.equal(orientation.failure_policy.missing_or_corrupt, "runtime unavailable while control remains connected");
+assert.equal(orientation.failure_policy.partial_multi_block_restore, "graph poisoned until close and reconstruction");
+assert.deepEqual(orientation.open_gates, ["cross-schema-state-migration-lib", "sticky-active-restart-disposition"]);
+assert.equal(orientation.protected_surface.proof_command, "git diff --name-only bed1e4d236bb78a992355321deca8968a6400a0d HEAD -- host current runtime/client-foundation-gateway-v1/cli.mjs");
+assert.equal(orientation.protected_surface.expected_output, "");
+assert.match(orientation.stop, /sufficient/);
 
 const phases = new Set(model.manager_phases);
 assert.equal(phases.size, model.manager_phases.length);
@@ -86,6 +98,7 @@ assert.deepEqual(model.state_contract.same_schema_order, [
   "drain-and-release-retired-generation",
 ]);
 const evidencePaths = [
+  "agent_orientation",
   "normative_model",
   "engine",
   "package_spec",
@@ -101,6 +114,7 @@ for (const relative of evidencePaths) {
   assert.equal(typeof relative, "string");
   await readFile(new URL(`../${relative}`, import.meta.url));
 }
+for (const relative of Object.values(orientation.evidence)) await readFile(new URL(`../${relative}`, import.meta.url));
 assert.deepEqual(model.white_box_evidence.commands, [
   "node scripts/test-dynamic-lib-stateful-v1.mjs",
   "node scripts/validate-dynamic-lib-graph-model-v1.mjs",

@@ -2,10 +2,15 @@
 
 Status: prototype model; qualified locally only; not admitted or released.
 
+For an active-state restart, Gateway receipt-ordering, checkpoint visibility or
+failure-boundary question, read
+`runtime/client-foundation-v1/agent-checkpoint-orientation.json`, run only its
+named checks when execution is required, and stop. Open this full model or the
+implementation only for audit or diagnosis after a named check fails.
+
 This model is the authority for the next Client Foundation/Gateway slice. The
-existing `dynamic-lib-graph.mjs` is an executable experiment against the serial,
-stateless subset. Gateway commands and durable state must not be designed from
-that implementation alone.
+existing implementation is evidence, not a substitute for this model. Gateway
+commands and durable state must not be designed from implementation alone.
 
 ## 1. Boundary
 
