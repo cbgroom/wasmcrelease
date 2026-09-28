@@ -72,6 +72,14 @@ an ordered pipeline. Applying a new generation:
 5. lets old in-flight calls drain on their captured generation, then releases
    only resources no longer reachable from the new generation.
 
+The serial graph specification has a canonical SHA-256 identity independent of
+node declaration order and local package paths. It binds pipeline order, exact
+package and Lib identities, canonical JSON configuration hashes, stateless
+policy and exact whole-WIT hashes. Configuration is copied from its canonical
+form before publication, so caller mutation cannot change active behavior
+without a new graph identity. The whole-WIT rule is safe but deliberately more
+restrictive than future port-granular WIT compatibility.
+
 Updates are revision-fenced and serialized. A failed candidate leaves the old
 generation active and releases every newly installed resource. A cleanup error
 after publication cannot roll the route back to resources that may already
@@ -85,8 +93,9 @@ node scripts/test-dynamic-lib-graph-v1.mjs
 
 The test proves two-block composition, one-block replacement with unchanged
 block reuse, old/new generation overlap, route-only reorder with zero installs,
-rejection of false identity and package hashes, whole-graph rollback on failed
-health, and zero retained Host resources/windows/operations after close. This
-engine is local prototype evidence. It is not yet a durable Client Foundation
-state format or a Gateway `graph.apply` command, and it is not admitted or
+canonical graph and configuration identity, rejection of false identity and
+package hashes, whole-graph rollback on failed health, and zero retained Host
+resources/windows/operations after close. This engine is local prototype
+evidence. It is not yet a general DAG scheduler, durable Client Foundation
+state format or Gateway `graph.apply` command, and it is not admitted or
 released.

@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 import { readFile, realpath } from "node:fs/promises";
 import path from "node:path";
+import { canonicalJson, describeSerialLibGraph } from "./dynamic-lib-graph-spec.mjs";
 
 const encoder = new TextEncoder();
 const decoder = new TextDecoder("utf-8", { fatal: true });
@@ -18,9 +19,11 @@ export async function inspectDynamicLibPackage(packageRoot) {
   if (typeof descriptor.wit !== "string" || typeof descriptor.adapter?.path !== "string") {
     throw new Error("incomplete dynamic Lib package identity");
   }
+  const witPath = await realpath(path.resolve(root, descriptor.wit));
+  const witBytes = await readFile(witPath);
   const files = [
     ["native-boundary.json", descriptorPath, descriptorBytes],
-    [descriptor.wit, await realpath(path.resolve(root, descriptor.wit))],
+    [descriptor.wit, witPath, witBytes],
     [descriptor.adapter.path, await realpath(path.resolve(root, descriptor.adapter.path))],
   ];
   if (files.some(([, file]) => !within(root, file))) throw new Error("dynamic Lib package file escapes exact root");
@@ -30,14 +33,14 @@ export async function inspectDynamicLibPackage(packageRoot) {
     digest.update(`${Buffer.byteLength(name)}:${name}:${bytes.length}:`);
     digest.update(bytes);
   }
-  return { identity: descriptor.identity, artifact_sha256: digest.digest("hex") };
+  return { identity: descriptor.identity, artifact_sha256: digest.digest("hex"), wit_contract_sha256: createHash("sha256").update(witBytes).digest("hex") };
 }
 
 export class DynamicLibGraph {
   constructor({ boundary }) {
     if (!boundary) throw new Error("DynamicLibGraph requires the fixed Host boundary");
     this.boundary = boundary;
-    this.active = { revision: 0, blocks: new Map(), pipeline: [], inflight: 0, drainWaiters: [] };
+    this.active = { revision: 0, graphDigest: null, blocks: new Map(), pipeline: [], inflight: 0, drainWaiters: [] };
     this.closed = false;
     this.updateInProgress = false;
   }
@@ -45,24 +48,29 @@ export class DynamicLibGraph {
   snapshot() {
     return {
       revision: this.active.revision,
+      graph_digest: this.active.graphDigest,
       pipeline: [...this.active.pipeline],
-      blocks: Object.fromEntries([...this.active.blocks].map(([name, block]) => [name, { identity: block.identity, artifact_sha256: block.artifactSha }])),
+      blocks: Object.fromEntries([...this.active.blocks].map(([name, block]) => [name, {
+        identity: block.identity,
+        artifact_sha256: block.artifactSha,
+        configuration_sha256: block.configurationSha,
+        wit_contract_sha256: block.witContractSha,
+        state_policy: block.statePolicy,
+        state_schema_identity: block.stateSchemaIdentity,
+      }])),
     };
   }
 
-  async apply({ expected_revision, blocks, pipeline }) {
+  async apply({ expected_revision, graph_digest, blocks, pipeline }) {
     if (this.closed) throw new Error("dynamic Lib graph closed");
     if (this.updateInProgress) throw new Error("dynamic Lib graph update already in progress");
     if (expected_revision !== this.active.revision) throw new Error("dynamic Lib graph revision fence mismatch");
-    if (!Array.isArray(blocks) || !Array.isArray(pipeline) || blocks.length === 0 || pipeline.length === 0) throw new Error("incomplete dynamic Lib graph");
-    const desired = new Map();
-    for (const block of blocks) {
-      if (!/^[a-z][a-z0-9-]{0,63}$/.test(block.name) || desired.has(block.name) || typeof block.root !== "string" || typeof block.identity !== "string" || !/^[a-f0-9]{64}$/.test(block.artifact_sha256)) {
-        throw new Error("invalid dynamic Lib block declaration");
-      }
-      desired.set(block.name, block);
+    const described = describeSerialLibGraph({ blocks, pipeline });
+    if (graph_digest !== described.graph_digest) throw new Error("dynamic Lib graph digest mismatch");
+    const desired = new Map(blocks.map((block) => [block.name, block]));
+    if (graph_digest === this.active.graphDigest) {
+      return { outcome: "unchanged", revision: this.active.revision, graph_digest, installed: 0, reused: desired.size, released: 0, pipeline: [...pipeline] };
     }
-    if (pipeline.some((name) => !desired.has(name))) throw new Error("dynamic Lib pipeline references an absent block");
 
     const old = this.active;
     const candidateBlocks = new Map();
@@ -73,8 +81,10 @@ export class DynamicLibGraph {
     try {
       for (const [name, declaration] of desired) {
         const current = old.blocks.get(name);
-        if (current?.artifactSha === declaration.artifact_sha256) {
-          if (current.identity !== declaration.identity) throw new Error(`dynamic Lib identity conflicts with retained artifact: ${name}`);
+        if (current?.artifactSha === declaration.artifact_sha256 && current.configurationSha === declaration.configuration_sha256) {
+          if (current.identity !== declaration.identity || current.witContractSha !== declaration.wit_contract_sha256 || current.statePolicy !== declaration.state_policy || current.stateSchemaIdentity !== declaration.state_schema_identity) {
+            throw new Error(`dynamic Lib identity conflicts with retained instance: ${name}`);
+          }
           candidateBlocks.set(name, current);
           reused += 1;
           continue;
@@ -82,21 +92,32 @@ export class DynamicLibGraph {
         const exact = await inspectDynamicLibPackage(declaration.root);
         if (exact.identity !== declaration.identity) throw new Error(`dynamic Lib descriptor identity mismatch: ${name}`);
         if (exact.artifact_sha256 !== declaration.artifact_sha256) throw new Error(`dynamic Lib package identity mismatch: ${name}`);
+        if (exact.wit_contract_sha256 !== declaration.wit_contract_sha256) throw new Error(`dynamic Lib WIT contract identity mismatch: ${name}`);
         const resource = await this.boundary.install(declaration.root);
-        const record = { resource, artifactSha: declaration.artifact_sha256, identity: declaration.identity };
+        const record = {
+          resource,
+          artifactSha: declaration.artifact_sha256,
+          identity: declaration.identity,
+          configuration: JSON.parse(canonicalJson(declaration.configuration)),
+          configurationSha: declaration.configuration_sha256,
+          witContractSha: declaration.wit_contract_sha256,
+          statePolicy: declaration.state_policy,
+          stateSchemaIdentity: declaration.state_schema_identity,
+        };
         installed.push(record);
         candidateBlocks.set(name, record);
-        await this.#call(resource, { operation: "probe" });
-        await this.#call(resource, { operation: "health" });
+        await this.#call(resource, { operation: "probe", configuration: record.configuration });
+        await this.#call(resource, { operation: "health", configuration: record.configuration });
       }
       const candidate = {
         revision: old.revision + 1,
+        graphDigest: graph_digest,
         blocks: candidateBlocks,
         pipeline: [...pipeline],
         inflight: 0,
         drainWaiters: [],
       };
-      for (const block of candidate.blocks.values()) await this.#call(block.resource, { operation: "health" });
+      for (const block of candidate.blocks.values()) await this.#call(block.resource, { operation: "health", configuration: block.configuration });
       this.active = candidate;
       published = true;
       await this.#drain(old);
@@ -108,14 +129,14 @@ export class DynamicLibGraph {
           released += 1;
         }
       }
-      return { outcome: "committed", revision: candidate.revision, installed: installed.length, reused, released, pipeline: [...pipeline] };
+      return { outcome: "committed", revision: candidate.revision, graph_digest, installed: installed.length, reused, released, pipeline: [...pipeline] };
     } catch (error) {
       if (published) {
-        return { outcome: "committed", revision: this.active.revision, installed: installed.length, reused, released: 0, cleanup_error: error.message, pipeline: [...this.active.pipeline] };
+        return { outcome: "committed", revision: this.active.revision, graph_digest: this.active.graphDigest, installed: installed.length, reused, released: 0, cleanup_error: error.message, pipeline: [...this.active.pipeline] };
       }
       this.active = old;
       for (const block of installed) this.boundary.releaseResource(block.resource);
-      return { outcome: "rolled-back", revision: old.revision, installed: installed.length, reused, released: installed.length, error: error.message, pipeline: [...old.pipeline] };
+      return { outcome: "rolled-back", revision: old.revision, graph_digest: old.graphDigest, installed: installed.length, reused, released: installed.length, error: error.message, pipeline: [...old.pipeline] };
     } finally {
       this.updateInProgress = false;
     }
@@ -128,7 +149,8 @@ export class DynamicLibGraph {
     try {
       let current = value;
       for (const name of generation.pipeline) {
-        const response = await this.#call(generation.blocks.get(name).resource, { operation: "invoke", value: current });
+        const block = generation.blocks.get(name);
+        const response = await this.#call(block.resource, { operation: "invoke", value: current, configuration: block.configuration });
         if (response.accepted !== true) throw new Error(`dynamic Lib block rejected invocation: ${name}`);
         current = response.value;
       }

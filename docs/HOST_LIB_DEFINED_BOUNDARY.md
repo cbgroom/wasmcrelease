@@ -797,3 +797,12 @@ and a broken candidate releases its new resources without changing the active
 route. False package and Lib identities are rejected before installation. The
 fixed Host lifecycle and minimal CLI remain unchanged. This is not yet wired
 to durable Client/Gateway graph commands and remains prototype-only evidence.
+
+The model-driven serial subset now also binds a canonical graph digest,
+canonical JSON configuration identity and exact verified whole-WIT contract
+hashes. Local package paths are excluded from graph identity, while pipeline
+order and every behavior-bearing identity are included. Configuration changes
+therefore reinstall only the affected node; mutation after publication cannot
+alter the canonical configuration snapshot. General DAG scheduling and
+port-granular WIT compatibility remain open rather than being inferred from
+this stricter serial qualification.

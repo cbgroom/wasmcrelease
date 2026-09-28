@@ -50,7 +50,9 @@
   "current_implementation_profile": {
     "graph_shape": "serial-pipeline",
     "state_policy": "stateless",
-    "configuration": "absent",
+    "graph_identity": "canonical-json-sha256",
+    "configuration": "canonical-json-sha256",
+    "wit_contract_identity": "exact-whole-wit-sha256",
     "qualified_invariants": [
       "single-active-generation",
       "monotonic-active-revision",
@@ -59,13 +61,13 @@
       "referenced-resource-not-released",
       "prepublish-failure-preserves-active",
       "postpublish-cleanup-never-rolls-back",
+      "reuse-requires-full-instance-identity",
+      "exact-wit-port-compatibility",
       "close-reclaims-all-runtime-resources"
     ],
     "open_gates": [
-      "canonical-graph-digest",
-      "configuration-identity",
       "general-dag-scheduler",
-      "exact-wit-port-compatibility",
+      "port-granular-wit-contract-identity",
       "stateful-replacement",
       "durable-retired-generation-cleanup",
       "restart-reconstruction"

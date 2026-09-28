@@ -51,7 +51,10 @@ for (const qualified of model.current_implementation_profile.qualified_invariant
 }
 assert.equal(model.current_implementation_profile.graph_shape, "serial-pipeline");
 assert.equal(model.current_implementation_profile.state_policy, "stateless");
-for (const gate of ["canonical-graph-digest", "configuration-identity", "general-dag-scheduler", "exact-wit-port-compatibility", "stateful-replacement", "restart-reconstruction"]) {
+assert.equal(model.current_implementation_profile.graph_identity, "canonical-json-sha256");
+assert.equal(model.current_implementation_profile.configuration, "canonical-json-sha256");
+assert.equal(model.current_implementation_profile.wit_contract_identity, "exact-whole-wit-sha256");
+for (const gate of ["general-dag-scheduler", "port-granular-wit-contract-identity", "stateful-replacement", "restart-reconstruction"]) {
   assert.ok(model.current_implementation_profile.open_gates.includes(gate), `missing open gate: ${gate}`);
 }
 

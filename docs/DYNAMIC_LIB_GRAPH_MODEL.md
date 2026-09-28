@@ -133,12 +133,13 @@ resource ownership with the first update.
 
 The current executable prototype covers stable node IDs, exact Lib/package
 identity, revision fencing, serialized updates, candidate invisibility, atomic
-publication, generation capture, drain, rollback and final resource cleanup.
-Its pipeline is the serial stateless subset and has no configuration object.
+publication, generation capture, drain, rollback and final resource cleanup. It
+now binds a canonical graph digest and canonical JSON configuration digest,
+uses the complete reuse key, and checks each serial edge against the exact
+whole-WIT SHA-256 verified from its package. The whole-file contract is safe but
+intentionally stricter than port-granular WIT type compatibility.
 
-Before Gateway integration, the implementation must add canonical graph
-digests and explicit configuration hashes. General DAG scheduling, WIT port
-compatibility, stateful replacement, durable retired-generation cleanup and
-restart reconstruction remain open gates. Until those close, Gateway support
-must be labeled serial-stateless prototype rather than general dynamic Lib
-composition.
+General DAG scheduling, port-granular WIT contract identities, stateful
+replacement, durable retired-generation cleanup and restart reconstruction
+remain open gates. Until those close, Gateway support must be labeled
+serial-stateless prototype rather than general dynamic Lib composition.
