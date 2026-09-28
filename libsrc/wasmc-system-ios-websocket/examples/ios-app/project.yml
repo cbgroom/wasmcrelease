@@ -1,0 +1,44 @@
+name: WAsmCIOSWebSocket
+options:
+  deploymentTarget:
+    iOS: "18.0"
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    PRODUCT_BUNDLE_IDENTIFIER: io.wasmc.websocket-lab
+    GENERATE_INFOPLIST_FILE: YES
+    INFOPLIST_KEY_UIApplicationSceneManifest_Generation: NO
+    INFOPLIST_KEY_UILaunchScreen_Generation: YES
+targets:
+  WAsmCIOSWebSocket:
+    type: application
+    platform: iOS
+    info:
+      path: ${WASMC_IOS_WEBSOCKET_INFO_PLIST}
+      properties:
+        CFBundleShortVersionString: "0.0.1"
+        CFBundleVersion: "1"
+        LSRequiresIPhoneOS: true
+        UILaunchScreen: {}
+        NSAppTransportSecurity:
+          NSAllowsLocalNetworking: true
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+    sources:
+      - path: App
+        excludes: [Info.plist]
+      - path: ../../platform/ios/Sources
+      - path: ../../../../host/tests/ios-app-capability/Host/FixedHost.swift
+    settings:
+      base:
+        PRODUCT_NAME: WAsmCIOSWebSocket
+  WAsmCIOSWebSocketUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: UITests
+    dependencies:
+      - target: WAsmCIOSWebSocket
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: io.wasmc.websocket-lab.uitests
+        TEST_TARGET_NAME: WAsmCIOSWebSocket

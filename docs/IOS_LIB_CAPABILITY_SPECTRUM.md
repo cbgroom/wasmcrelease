@@ -24,7 +24,7 @@ rewritten as a physical-device claim. The machine policy is retained at
 | Picture in Picture | iPad Simulator start/stop/restore and frame submission | live pixel visibility and physical device pending |
 | Authorization | Contacts allow/deny plus authorized CRUD cleanup | other protected domains are observation/planning only |
 | App data and compute | storage, preferences, Keychain, SQLite, crypto, Metal, offline audio | active App execution |
-| App networking and Web | POSIX loopback TCP/UDP and local WKWebView DOM/JS | no background transport continuity |
+| App networking and Web | POSIX loopback TCP/UDP, local WKWebView DOM/JS, plus exact WebSocket text messages sent and received in foreground and a finite background-task window | loopback only; no WSS, Internet route, suspension continuity or relaunch reconnect yet |
 
 ## Observed or configured, not qualified as execution
 

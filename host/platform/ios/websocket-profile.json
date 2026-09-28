@@ -1,0 +1,61 @@
+{
+  "schema": "wasmc.library-os-profile/v2",
+  "id": "ios-websocket-v1",
+  "target": {
+    "os": "ios",
+    "architecture": "aarch64",
+    "environment": "simulator",
+    "embedding": "native"
+  },
+  "host": {
+    "contract": "wasmc.lib-defined-host-boundary/v1",
+    "executor": "host/tests/ios-app-capability/Host/FixedHost.swift",
+    "required_domain_apis": 0
+  },
+  "required_lifecycle": "qualified",
+  "requirements": [
+    "wasmc:system-websocket@0.0.1"
+  ],
+  "bindings": [
+    {
+      "api": "wasmc:system-websocket@0.0.1",
+      "provider": "wasmc:system-ios-websocket@0.0.1-dev.1",
+      "candidate": "libsrc/wasmc-system-ios-websocket/candidate.json",
+      "wit": "libsrc/wasmc-system-ios-websocket/lib.wit",
+      "descriptor": "libsrc/wasmc-system-ios-websocket/platform/ios/binding.json",
+      "boundary": "wasmc.lib-defined-host-boundary/v1",
+      "artifact": {
+        "format": "embedded-source",
+        "language": "swift",
+        "linkage": "static-app",
+        "sources": [
+          "libsrc/wasmc-system-ios-websocket/platform/ios/Sources/WebSocketProvider.swift"
+        ],
+        "frameworks": [
+          "Foundation",
+          "UIKit"
+        ]
+      },
+      "target": {
+        "os": "ios",
+        "architecture": "aarch64",
+        "environment": "simulator",
+        "embedding": "native"
+      },
+      "lifecycle": {
+        "qualified": true,
+        "admitted": false,
+        "released": false,
+        "discoverable": false,
+        "installable": false
+      }
+    }
+  ],
+  "acceptance": {
+    "foreground_text_duplex": true,
+    "finite_background_text_duplex": true,
+    "wss": false,
+    "internet_route": false,
+    "suspension_receive": false
+  }
+}
