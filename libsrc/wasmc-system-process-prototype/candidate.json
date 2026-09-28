@@ -13,14 +13,11 @@
     "artifact_format": "native-adapter",
     "targets": [
       { "os": "linux", "architecture": "x86_64", "environment": "native", "embedding": "node" },
-      { "os": "linux", "architecture": "aarch64", "environment": "native", "embedding": "node" },
-      { "os": "macos", "architecture": "x86_64", "environment": "native", "embedding": "node" },
       { "os": "macos", "architecture": "aarch64", "environment": "native", "embedding": "node" },
-      { "os": "windows", "architecture": "x86_64", "environment": "native", "embedding": "node" },
-      { "os": "windows", "architecture": "aarch64", "environment": "native", "embedding": "node" }
+      { "os": "windows", "architecture": "x86_64", "environment": "native", "embedding": "node" }
     ],
     "lifecycle": {
-      "qualified": false,
+      "qualified": true,
       "admitted": false,
       "released": false,
       "discoverable": false,
@@ -33,13 +30,15 @@
     "exact-native-adapter-identity-v2",
     "real-child-process-v2",
     "real-macos-posix-shell-v2",
+    "linux-x86_64-node-process-posix-shell-ci-v2",
+    "macos-aarch64-node-process-posix-shell-ci-v2",
+    "windows-x86_64-node-process-cmd-powershell-ci-v2",
+    "desktop-three-os-exact-target-qualification-v2",
     "bounded-stdio-cwd-environment-timeout-v2",
     "unchanged-host-executor-v2"
   ],
   "pending_gates": [
-    "linux-node-process-shell-qualification-v2",
-    "windows-node-process-cmd-powershell-qualification-v2",
-    "desktop-architecture-parity-v2",
+    "additional-desktop-architecture-parity-v2",
     "android-app-uid-native-provider",
     "wasm-lowering",
     "admission-review"

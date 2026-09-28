@@ -1,7 +1,7 @@
 # System process and shell channels
 
-Status: **macOS aarch64 locally qualified; Linux x86_64 and Windows x86_64 CI
-qualification pending; not admitted; not released**.
+Status: **Linux x86_64, macOS aarch64 and Windows x86_64 qualified; not
+admitted; not released**.
 
 ## Boundary rule
 
@@ -27,9 +27,9 @@ The full-host profile deliberately adds no per-domain grant or allowlist API.
 
 | Target | Channel | Current evidence | Exact boundary |
 |---|---|---|---|
-| Linux desktop | executable + argv; `/bin/sh -c` | implementation complete; independent x86_64 CI pending | Node Lib adapter |
-| macOS desktop | executable + argv; `/bin/sh -c` | local aarch64 real execution PASS | Node Lib adapter |
-| Windows desktop | executable + argv; `%ComSpec% /d /s /c`; Windows PowerShell `-NoProfile` | implementation complete; independent x86_64 CI pending | Node Lib adapter |
+| Linux desktop | executable + argv; `/bin/sh -c` | independent x86_64 CI PASS | Node Lib adapter |
+| macOS desktop | executable + argv; `/bin/sh -c` | independent aarch64 CI PASS | Node Lib adapter |
+| Windows desktop | executable + argv; `%ComSpec% /d /s /c`; Windows PowerShell `-NoProfile` | independent x86_64 CI PASS | Node Lib adapter |
 | Android App | executable + argv; optionally `/system/bin/sh -c` inside the App sandbox | not implemented or qualified | future Android native Lib adapter, exercised as the App UID |
 | iOS/iPadOS App | no general OS child-process or shell channel | platform limitation | only a separately named in-process command/runtime Lib is possible |
 | Browser | no OS child-process or shell channel | platform limitation | only worker/Wasm/in-process command Libs are possible |
@@ -59,4 +59,6 @@ combined-output bounds, fail-closed foreign-shell selection and the unchanged
 fixed Host executor identity. Windows additionally exercises Windows
 PowerShell. `.github/workflows/system-process-shell-candidate.yml` runs the same
 test on Linux, macOS and Windows; a local PASS must not be promoted to
-cross-platform qualification before those exact jobs succeed.
+cross-platform qualification before those exact jobs succeed. The retained
+qualification basis is GitHub Actions run `36393510415` at source revision
+`95f049bda9edb2ade24160112344e811b2ab13da`.

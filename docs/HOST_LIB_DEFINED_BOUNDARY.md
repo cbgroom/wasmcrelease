@@ -245,6 +245,11 @@ shell branch. The Node provider maps Linux/macOS to `/bin/sh`, Windows to
 `cmd.exe` or Windows PowerShell, and fails closed when a caller selects a shell
 that the exact provider does not implement.
 
+The exact Linux x86_64, macOS aarch64 and Windows x86_64 targets are qualified
+by the same independent CI corpus at source revision
+`95f049bda9edb2ade24160112344e811b2ab13da`. Other desktop architectures remain
+unqualified and are absent from the qualified target inventory.
+
 Mobile targets are not inferred from desktop success. Android requires a
 separate native provider qualified inside the App UID/SELinux sandbox; adb
 shell execution is not substitute evidence. Sandboxed iOS Apps have no general

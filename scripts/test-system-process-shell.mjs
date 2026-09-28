@@ -13,6 +13,7 @@ const encoder = new TextEncoder();
 const decoder = new TextDecoder();
 const sha256 = (bytes) => createHash("sha256").update(bytes).digest("hex");
 const fromBase64 = (value) => Buffer.from(value, "base64").toString("utf8");
+const candidate = JSON.parse(await readFile(path.join(packageRoot, "candidate.json"), "utf8"));
 
 const boundary = new LibDefinedBoundary();
 const resource = await boundary.install(packageRoot);
@@ -128,7 +129,7 @@ try {
     accepted: true,
     schema: "wasmc.system-process-shell-qualification/v2",
     candidate: "wasmc-system-process-prototype",
-    version: "0.0.1-dev.2",
+    version: candidate.version,
     platform: process.platform,
     architecture: process.arch,
     provider: "wasmc:system-process-node@0.0.1-dev.2",
@@ -142,8 +143,8 @@ try {
     unsupported_shell_fail_closed: true,
     fixed_executor_sha256: sha256(await readFile(executorPath)),
     host_api_growth: false,
-    qualified: false,
-    admitted: false,
+    qualified: candidate.system_binding.lifecycle.qualified,
+    admitted: candidate.system_binding.lifecycle.admitted,
     released: false,
   }));
 } finally {
