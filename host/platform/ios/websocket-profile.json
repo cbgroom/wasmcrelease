@@ -19,7 +19,7 @@
   "bindings": [
     {
       "api": "wasmc:system-websocket@0.0.1",
-      "provider": "wasmc:system-ios-websocket@0.0.1-dev.3",
+      "provider": "wasmc:system-ios-websocket@0.0.1-dev.4",
       "candidate": "libsrc/wasmc-system-ios-websocket/candidate.json",
       "wit": "libsrc/wasmc-system-ios-websocket/lib.wit",
       "descriptor": "libsrc/wasmc-system-ios-websocket/platform/ios/binding.json",
@@ -60,6 +60,8 @@
     "service_restart_reconnect": true,
     "reconnect_policy": "350ms-fixed-max-8",
     "outbox_scope": "process-memory-single-message-fixture",
+    "durable_outbox": "json-atomic-two-message-ordered-ack-drain",
+    "process_relaunch_reconnect": true,
     "public_ca_wss": false,
     "internet_route": false,
     "suspension_receive": false

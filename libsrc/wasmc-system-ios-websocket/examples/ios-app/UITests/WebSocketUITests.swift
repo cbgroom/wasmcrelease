@@ -1,6 +1,22 @@
 import XCTest
 
 final class WebSocketUITests: XCTestCase {
+    func testPinnedWSSDurableOutboxDrainsInOrderAfterProcessRelaunch() {
+        let app = XCUIApplication()
+        app.launchArguments = ["--wasmc-wss-durable-seed"]
+        app.launch()
+        XCTAssertTrue(app.staticTexts["websocket-title"].waitForExistence(timeout: 10))
+        app.buttons["websocket-connect"].tap()
+        XCTAssertTrue(app.staticTexts["websocket-durable-seeded"].waitForExistence(timeout: 10))
+        app.terminate()
+
+        app.launchArguments = ["--wasmc-wss", "--wasmc-wss-durable-drain"]
+        app.launch()
+        XCTAssertTrue(app.staticTexts["websocket-title"].waitForExistence(timeout: 10))
+        app.buttons["websocket-connect"].tap()
+        XCTAssertTrue(app.staticTexts["websocket-durable-drained"].waitForExistence(timeout: 15))
+    }
+
     func testPinnedWSSServiceRestartReconnectAndOutboxDelivery() {
         let app = XCUIApplication()
         app.launchArguments = ["--wasmc-wss", "--wasmc-wss-recovery"]

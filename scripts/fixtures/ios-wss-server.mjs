@@ -78,6 +78,8 @@ function startServer() {
         }
       }
       if (decoded.text === "client-after-restart") socket.write(frame("server-after-restart"));
+      if (decoded.text === "client-durable-1") socket.write(frame("ack-durable-1"));
+      if (decoded.text === "client-durable-2") socket.write(frame("ack-durable-2"));
     }
   });
   socket.on("close", () => sockets.delete(socket));

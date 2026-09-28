@@ -4,6 +4,11 @@ import Security
 import UIKit
 
 final class WebSocketProvider: NSObject, URLSessionWebSocketDelegate {
+    private struct DurableOutbox: Codable {
+        let seedProcessID: String
+        var messages: [String]
+    }
+
     static let didChange = Notification.Name("wasmc.websocket.did-change")
     private let queue = DispatchQueue(label: "io.wasmc.websocket.state")
     private var session: URLSession!
@@ -12,6 +17,11 @@ final class WebSocketProvider: NSObject, URLSessionWebSocketDelegate {
     private let secureMode = ProcessInfo.processInfo.arguments.contains("--wasmc-wss")
     private let rejectFixturePin = ProcessInfo.processInfo.arguments.contains("--wasmc-wss-wrong-pin")
     private let recoveryMode = ProcessInfo.processInfo.arguments.contains("--wasmc-wss-recovery")
+    private let durableSeedMode = ProcessInfo.processInfo.arguments.contains("--wasmc-wss-durable-seed")
+    private let durableDrainMode = ProcessInfo.processInfo.arguments.contains("--wasmc-wss-durable-drain")
+    private let processID = UUID().uuidString
+    private var durableSeedProcessID = ""
+    private var durableMessages: [String] = []
     private var reconnectScheduled = false
     private var interruptionRecorded = false
     private let maxReconnectAttempts = 8
@@ -36,6 +46,13 @@ final class WebSocketProvider: NSObject, URLSessionWebSocketDelegate {
         "outbox_enqueued": false,
         "outbox_delivered": false,
         "recovery_reply": "",
+        "durable_outbox_seeded": false,
+        "durable_seed_process_id": "",
+        "durable_drain_process_id": "",
+        "durable_loaded_count": 0,
+        "durable_ack_order": [String](),
+        "durable_remaining_count": 0,
+        "durable_outbox_drained": false,
         "error": "",
     ]
 
@@ -48,16 +65,23 @@ final class WebSocketProvider: NSObject, URLSessionWebSocketDelegate {
         precondition(input.isEmpty)
         return try JSONSerialization.data(withJSONObject: [
             "api": "wasmc:system-websocket@0.0.1",
-            "provider": "wasmc:system-ios-websocket@0.0.1-dev.3",
+            "provider": "wasmc:system-ios-websocket@0.0.1-dev.4",
             "transport": "URLSessionWebSocketTask",
             "background_scope": "finite-background-task-only",
             "local_pinned_wss": true,
             "service_restart_reconnect": true,
             "reconnect_policy": "350ms-fixed-max-8",
+            "durable_outbox": "json-atomic-ordered-ack-drain",
         ], options: [.sortedKeys])
     }
 
     func connect() {
+        if durableSeedMode {
+            seedDurableOutbox()
+            publish()
+            return
+        }
+        if durableDrainMode { loadDurableOutbox() }
         openSocket()
     }
 
@@ -118,7 +142,15 @@ final class WebSocketProvider: NSObject, URLSessionWebSocketDelegate {
             && (snapshot["outbox_delivered"] as? Bool) == true
             && (snapshot["recovery_reply"] as? String) == "server-after-restart"
             && (snapshot["certificate_pin_match"] as? Bool) == true
-        let accepted = recoveryMode ? recoveryAccepted : duplexAccepted
+        let durableAccepted = (snapshot["connected"] as? Bool) == true
+            && (snapshot["durable_loaded_count"] as? Int) == 2
+            && (snapshot["durable_ack_order"] as? [String]) == ["ack-durable-1", "ack-durable-2"]
+            && (snapshot["durable_remaining_count"] as? Int) == 0
+            && (snapshot["durable_outbox_drained"] as? Bool) == true
+            && (snapshot["durable_seed_process_id"] as? String)?.isEmpty == false
+            && (snapshot["durable_seed_process_id"] as? String) != processID
+            && (snapshot["certificate_pin_match"] as? Bool) == true
+        let accepted = durableDrainMode ? durableAccepted : (recoveryMode ? recoveryAccepted : duplexAccepted)
         snapshot["schema"] = "wasmc.ios-websocket-qualification/v1"
         snapshot["accepted"] = accepted
         snapshot["secure_mode"] = secureMode
@@ -130,7 +162,7 @@ final class WebSocketProvider: NSObject, URLSessionWebSocketDelegate {
         snapshot["internet_route_qualified"] = false
         snapshot["network_transition_reconnect_qualified"] = false
         snapshot["suspension_receive_qualified"] = false
-        snapshot["process_relaunch_reconnect_qualified"] = false
+        snapshot["process_relaunch_reconnect_qualified"] = durableDrainMode && durableAccepted
         snapshot["physical_device"] = false
         snapshot["admitted"] = false
         snapshot["released"] = false
@@ -150,7 +182,9 @@ final class WebSocketProvider: NSObject, URLSessionWebSocketDelegate {
             return next
         }
         publish()
-        if recoveryMode {
+        if durableDrainMode {
+            sendNextDurable(using: webSocketTask)
+        } else if recoveryMode {
             if generation == 1 {
                 send("client-recovery-prime", using: webSocketTask, stateKey: nil)
             } else {
@@ -222,6 +256,9 @@ final class WebSocketProvider: NSObject, URLSessionWebSocketDelegate {
                         self.state["recovery_reply"] = message
                     }
                 }
+                if self.durableDrainMode && message.hasPrefix("ack-durable-") {
+                    self.handleDurableAcknowledgement(message, using: activeTask)
+                }
                 self.publish()
                 self.receiveNext(activeTask)
             case .success(.data):
@@ -292,6 +329,91 @@ final class WebSocketProvider: NSObject, URLSessionWebSocketDelegate {
                 }
                 self.openSocket()
             }
+        }
+    }
+
+    private var durableOutboxURL: URL {
+        FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
+            .appendingPathComponent("wasmc-websocket-outbox.json")
+    }
+
+    private func seedDurableOutbox() {
+        let messages = ["client-durable-1", "client-durable-2"]
+        do {
+            try persistDurableOutbox(seedProcessID: processID, messages: messages)
+            queue.sync {
+                durableSeedProcessID = processID
+                durableMessages = messages
+                state["durable_outbox_seeded"] = true
+                state["durable_seed_process_id"] = processID
+                state["durable_remaining_count"] = messages.count
+                state["error"] = ""
+            }
+        } catch {
+            queue.sync { state["error"] = "durable-outbox-seed-failed:\(error)" }
+        }
+    }
+
+    private func loadDurableOutbox() {
+        do {
+            let data = try Data(contentsOf: durableOutboxURL)
+            let outbox = try JSONDecoder().decode(DurableOutbox.self, from: data)
+            queue.sync {
+                durableSeedProcessID = outbox.seedProcessID
+                durableMessages = outbox.messages
+                state["durable_seed_process_id"] = outbox.seedProcessID
+                state["durable_drain_process_id"] = processID
+                state["durable_loaded_count"] = outbox.messages.count
+                state["durable_remaining_count"] = outbox.messages.count
+                state["error"] = ""
+            }
+        } catch {
+            queue.sync { state["error"] = "durable-outbox-load-failed:\(error)" }
+        }
+    }
+
+    private func persistDurableOutbox(seedProcessID: String, messages: [String]) throws {
+        let directory = durableOutboxURL.deletingLastPathComponent()
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        let data = try JSONEncoder().encode(DurableOutbox(seedProcessID: seedProcessID, messages: messages))
+        try data.write(to: durableOutboxURL, options: .atomic)
+    }
+
+    private func sendNextDurable(using activeTask: URLSessionWebSocketTask) {
+        guard let message = queue.sync(execute: { durableMessages.first }) else { return }
+        send(message, using: activeTask, stateKey: nil)
+    }
+
+    private func handleDurableAcknowledgement(
+        _ acknowledgement: String,
+        using activeTask: URLSessionWebSocketTask
+    ) {
+        let retained = queue.sync { () -> (String, [String])? in
+            guard let first = durableMessages.first,
+                  Self.durableAcknowledgement(for: first) == acknowledgement else { return nil }
+            durableMessages.removeFirst()
+            var order = state["durable_ack_order"] as? [String] ?? []
+            order.append(acknowledgement)
+            state["durable_ack_order"] = order
+            state["durable_remaining_count"] = durableMessages.count
+            state["durable_outbox_drained"] = durableMessages.isEmpty
+            return (durableSeedProcessID, durableMessages)
+        }
+        guard let retained else { return }
+        do {
+            try persistDurableOutbox(seedProcessID: retained.0, messages: retained.1)
+        } catch {
+            queue.sync { state["error"] = "durable-outbox-ack-persist-failed:\(error)" }
+            return
+        }
+        if !retained.1.isEmpty { sendNextDurable(using: activeTask) }
+    }
+
+    private static func durableAcknowledgement(for message: String) -> String? {
+        switch message {
+        case "client-durable-1": return "ack-durable-1"
+        case "client-durable-2": return "ack-durable-2"
+        default: return nil
         }
     }
 

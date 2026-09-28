@@ -21,6 +21,8 @@
     "service_restart_reconnect": true,
     "reconnect_policy": "350ms-fixed-max-8",
     "outbox_scope": "process-memory-single-message-fixture",
+    "durable_outbox": "json-atomic-two-message-ordered-ack-drain",
+    "process_relaunch_reconnect": true,
     "public_ca_wss": false,
     "internet_route": false,
     "suspension_receive": false

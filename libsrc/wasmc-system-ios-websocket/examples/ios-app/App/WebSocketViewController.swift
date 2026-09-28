@@ -45,7 +45,13 @@ final class WebSocketViewController: UIViewController {
         var report = provider.report()
         report["provider_evidence"] = providerEvidence
         Self.writeReport(report)
-        if report["service_restart_reconnect_qualified"] as? Bool == true {
+        if report["process_relaunch_reconnect_qualified"] as? Bool == true {
+            statusLabel.text = "websocket-durable-relaunch-drain:accepted"
+            statusLabel.accessibilityIdentifier = "websocket-durable-drained"
+        } else if report["durable_outbox_seeded"] as? Bool == true {
+            statusLabel.text = "websocket-durable-outbox:seeded"
+            statusLabel.accessibilityIdentifier = "websocket-durable-seeded"
+        } else if report["service_restart_reconnect_qualified"] as? Bool == true {
             statusLabel.text = "websocket-service-restart-recovery:accepted"
             statusLabel.accessibilityIdentifier = "websocket-recovery-complete"
         } else if report["reconnect_exhausted"] as? Bool == true {

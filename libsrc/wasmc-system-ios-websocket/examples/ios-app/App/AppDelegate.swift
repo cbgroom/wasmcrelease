@@ -10,7 +10,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
     ) -> Bool {
         let registration = ProviderRegistration(
-            identity: "wasmc:system-ios-websocket@0.0.1-dev.3",
+            identity: "wasmc:system-ios-websocket@0.0.1-dev.4",
             witPackage: "wasmc:system-websocket@0.0.1",
             maxInputBytes: 0,
             maxOutputBytes: 2048,
