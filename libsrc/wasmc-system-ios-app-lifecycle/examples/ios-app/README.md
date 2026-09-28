@@ -10,3 +10,7 @@ The result is evidence for UIKit lifecycle callbacks and finite background work
 on the exact simulator runtime only. It is not evidence that the simulator
 suspended the process, that iOS later scheduled new work, or that the behavior
 matches a physical device.
+
+`testEightSecondFiniteBackgroundWindow` is a fast possibility probe: it keeps a
+finite task alive for eight seconds, records remaining-time samples, and returns
+before any expiration wait.

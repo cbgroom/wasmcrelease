@@ -10,8 +10,10 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
     ) -> Bool {
+        let arguments = ProcessInfo.processInfo.arguments
         provider = AppLifecycleProvider(
-            resetJournal: ProcessInfo.processInfo.arguments.contains("--wasmc-reset-lifecycle-journal")
+            resetJournal: arguments.contains("--wasmc-reset-lifecycle-journal"),
+            finiteWorkDurationMilliseconds: arguments.contains("--wasmc-finite-window-probe") ? 8_000 : 600
         )
         provider.didFinishLaunching()
         let registration = ProviderRegistration(

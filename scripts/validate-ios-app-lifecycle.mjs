@@ -19,6 +19,7 @@ for (const relative of [
   "examples/ios-app/App/LifecycleViewController.swift",
   "examples/ios-app/UITests/AppLifecycleUITests.swift",
 ]) assert.ok(fs.statSync(`${libRoot}/${relative}`).size > 0, relative);
+assert.ok(fs.statSync("scripts/test-ios-finite-background-window.mjs").size > 0);
 
 execFileSync("wasm-tools", ["component", "wit", `${libRoot}/lib.wit`], { stdio: "ignore" });
 const provider = fs.readFileSync(`${libRoot}/platform/ios/Sources/AppLifecycleProvider.swift`, "utf8");
@@ -45,6 +46,7 @@ assert.equal(retainedProfile.host.required_domain_apis, 0);
 assert.match(provider, /beginBackgroundTask/);
 assert.match(provider, /did-enter-background/);
 assert.match(provider, /finite-work-completed/);
+assert.match(provider, /backgroundTimeRemaining/);
 assert.match(provider, /handle\.synchronize\(\)/);
 assert.match(app, /applicationDidEnterBackground/);
 assert.match(app, /applicationWillEnterForeground/);

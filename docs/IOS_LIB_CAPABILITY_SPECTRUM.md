@@ -15,7 +15,7 @@ rewritten as a physical-device claim. The machine policy is retained at
 | Capability | Exact evidence | Boundary |
 |---|---|---|
 | App lifecycle | launch, active, resign-active, Home background, foreground return | UIKit callback order; not suspension |
-| Finite background work | six journalled work ticks and completion before foreground | `beginBackgroundTask`; not later system scheduling |
+| Finite background work | six-tick baseline plus an 8.760-second cleanup probe with eight background ticks and completion before foreground | `beginBackgroundTask`; Simulator remaining-time countdown unavailable; not a maximum-duration or later-scheduling claim |
 | Process recovery | a second launch ID recovered the first process journal | explicit termination/relaunch; not jetsam |
 | Background transfer | 8 MiB background URLSession download, background callback, atomic result, exact SHA-256 and cancellation with no late result | Simulator localhost; automatic process-relaunch delivery not observed |
 | Background audio | playback session remains playing for 14 background samples and advances 3.283 seconds | Simulator clock mechanics; physical output, lock screen and interruptions pending |

@@ -11,8 +11,10 @@ final class AppLifecycleProvider {
     private var nextWorkID: UInt64 = 1
     private var workCancellation: [UInt64: Bool] = [:]
     private var backgroundTasks: [UInt64: UIBackgroundTaskIdentifier] = [:]
+    private let finiteWorkDurationMilliseconds: UInt32
 
-    init(resetJournal: Bool = false) {
+    init(resetJournal: Bool = false, finiteWorkDurationMilliseconds: UInt32 = 600) {
+        self.finiteWorkDurationMilliseconds = finiteWorkDurationMilliseconds
         let support = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
         try? FileManager.default.createDirectory(at: support, withIntermediateDirectories: true)
         journalURL = support.appendingPathComponent("wasmc-ios-app-lifecycle.jsonl")
@@ -36,7 +38,11 @@ final class AppLifecycleProvider {
 
     func didEnterBackground(_ application: UIApplication) {
         record("did-enter-background", phase: .background)
-        beginFiniteWork(application: application, label: "home-cycle", durationMilliseconds: 600)
+        beginFiniteWork(
+            application: application,
+            label: "home-cycle",
+            durationMilliseconds: finiteWorkDurationMilliseconds
+        )
     }
 
     func willEnterForeground() { record("will-enter-foreground", phase: .inactive) }
@@ -58,11 +64,16 @@ final class AppLifecycleProvider {
             self.finish(workID: workID, application: application, task: task)
         }
         journalQueue.sync { backgroundTasks[workID] = task }
-        record("finite-work-began", phase: .background, workID: workID)
+        record(
+            "finite-work-began",
+            phase: .background,
+            workID: workID,
+            backgroundTimeRemaining: Self.boundedBackgroundTimeRemaining(application)
+        )
 
         workQueue.async { [weak self] in
             guard let self else { return }
-            let tickMilliseconds: UInt32 = 100
+            let tickMilliseconds: UInt32 = durationMilliseconds >= 8_000 ? 1_000 : 100
             let ticks = max(1, durationMilliseconds / tickMilliseconds)
             for _ in 0..<ticks {
                 usleep(tickMilliseconds * 1_000)
@@ -72,9 +83,19 @@ final class AppLifecycleProvider {
                     self.finish(workID: workID, application: application, task: task)
                     return
                 }
-                self.record("finite-work-tick", phase: .background, workID: workID)
+                self.record(
+                    "finite-work-tick",
+                    phase: .background,
+                    workID: workID,
+                    backgroundTimeRemaining: Self.boundedBackgroundTimeRemaining(application)
+                )
             }
-            self.record("finite-work-completed", phase: .background, workID: workID)
+            self.record(
+                "finite-work-completed",
+                phase: .background,
+                workID: workID,
+                backgroundTimeRemaining: Self.boundedBackgroundTimeRemaining(application)
+            )
             self.finish(workID: workID, application: application, task: task)
         }
         return workID
@@ -108,6 +129,20 @@ final class AppLifecycleProvider {
         let completedBeforeForeground = backgroundWindow.contains {
             ($0["name"] as? String) == "finite-work-completed"
         }
+        let workEvents = backgroundWindow.filter {
+            ["finite-work-began", "finite-work-tick", "finite-work-completed"]
+                .contains($0["name"] as? String ?? "")
+        }
+        let remainingSamples = workEvents.compactMap {
+            ($0["background_time_remaining_ms"] as? NSNumber)?.uint64Value
+        }
+        let beganMonotonic = workEvents.first(where: { ($0["name"] as? String) == "finite-work-began" })
+            .flatMap { ($0["monotonic_ns"] as? NSNumber)?.uint64Value }
+        let completedMonotonic = workEvents.last(where: { ($0["name"] as? String) == "finite-work-completed" })
+            .flatMap { ($0["monotonic_ns"] as? NSNumber)?.uint64Value }
+        let elapsedMilliseconds = beganMonotonic.flatMap { began in
+            completedMonotonic.map { completed in (completed - began) / 1_000_000 }
+        } ?? 0
         return [
             "schema": "wasmc.ios-app-lifecycle-qualification/v1",
             "accepted": backgroundCycle && workCompleted && completedBeforeForeground && backgroundTicks > 0,
@@ -119,6 +154,12 @@ final class AppLifecycleProvider {
             "finite_work_completed": workCompleted,
             "finite_work_completed_before_foreground": completedBeforeForeground,
             "finite_work_background_ticks": backgroundTicks,
+            "finite_work_requested_ms": finiteWorkDurationMilliseconds,
+            "finite_work_elapsed_ms": elapsedMilliseconds,
+            "background_time_remaining_sample_count": remainingSamples.count,
+            "background_time_remaining_available": !remainingSamples.isEmpty,
+            "background_time_remaining_first_ms": remainingSamples.first ?? 0,
+            "background_time_remaining_last_ms": remainingSamples.last ?? 0,
             "cold_relaunch_journal_recovered": launches.count >= 2,
             "simulator_suspension_qualified": false,
             "background_task_expiration_qualified": names.contains("finite-work-expired"),
@@ -145,7 +186,12 @@ final class AppLifecycleProvider {
         }
     }
 
-    private func record(_ name: String, phase: UIApplication.State, workID: UInt64? = nil) {
+    private func record(
+        _ name: String,
+        phase: UIApplication.State,
+        workID: UInt64? = nil,
+        backgroundTimeRemaining: TimeInterval? = nil
+    ) {
         journalQueue.sync {
             sequence += 1
             var event: [String: Any] = [
@@ -158,6 +204,9 @@ final class AppLifecycleProvider {
                 "protected_data_available": UIApplication.shared.isProtectedDataAvailable,
             ]
             if let workID { event["work_id"] = workID }
+            if let backgroundTimeRemaining {
+                event["background_time_remaining_ms"] = UInt64(backgroundTimeRemaining * 1_000)
+            }
             guard let data = try? JSONSerialization.data(withJSONObject: event, options: [.sortedKeys]) else { return }
             if !FileManager.default.fileExists(atPath: journalURL.path) {
                 FileManager.default.createFile(atPath: journalURL.path, contents: nil)
@@ -177,6 +226,11 @@ final class AppLifecycleProvider {
     }
 
     private func currentPhase() -> UIApplication.State { UIApplication.shared.applicationState }
+
+    private static func boundedBackgroundTimeRemaining(_ application: UIApplication) -> TimeInterval? {
+        let value = application.backgroundTimeRemaining
+        return value.isFinite && value >= 0 && value < 1_000_000 ? value : nil
+    }
 
     private static func phaseName(_ phase: UIApplication.State) -> String {
         switch phase {

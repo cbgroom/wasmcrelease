@@ -15,6 +15,13 @@ qualify suspension, jetsam, watchdog termination, background-task expiration,
 BGTaskScheduler delivery, background URLSession delivery, lock-screen behavior,
 or any physical-device property.
 
+The short-window probe requests eight seconds of finite cleanup work and records
+`UIApplication.backgroundTimeRemaining` when the runtime exposes a bounded
+value. It proves that this bounded
+cleanup completed on the exact Simulator; it deliberately does not wait for
+expiration and does not claim a maximum background duration. A Simulator
+unbounded sentinel is recorded as unavailable rather than presented as time.
+
 The public WIT is reusable across platforms. This candidate contains only the
 iOS physical binding; another OS must supply a distinct exact provider and
 descriptor rather than introducing a platform switch in the Host.
