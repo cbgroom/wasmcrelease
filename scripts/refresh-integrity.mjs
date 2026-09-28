@@ -31,6 +31,7 @@ const indexPath = join(root, 'package-index.json');
 const releaseJson = JSON.parse(await readFile(releasePath, 'utf8'));
 const manifest = JSON.parse(await readFile(manifestPath, 'utf8'));
 const index = JSON.parse(await readFile(indexPath, 'utf8'));
+const preserveReleasedInventory = process.argv.includes('--preserve-released-inventory');
 const versionRow = index.versions.find((row) => row.version === releaseJson.version);
 if (index.latest !== releaseJson.version || !versionRow || versionRow.tag !== releaseJson.tag) {
   throw new Error('package-index latest/version row must equal release version before integrity refresh');
@@ -93,7 +94,7 @@ if (!compactRelease && releaseJson.schema !== 'wasmc-public-release/v1') throw n
 const existing = compactRelease
   ? manifest.artifacts.map((row) => row.path).filter((path) => !['AGENTS.md', 'LANGUAGE.md', 'LIB.md'].includes(path))
   : releaseJson.artifacts.map((row) => row.path);
-const releasePaths = [...new Set([
+const discoveredReleasePaths = [...new Set([
   ...existing,
   ...admissionFiles,
   ...runtimeFiles,
@@ -112,21 +113,26 @@ const releasePaths = [...new Set([
   ...rustWorkspaceFiles,
   ...releaseSurfaceFiles,
 ])].sort();
+const releasePaths = preserveReleasedInventory
+  ? [...new Set(existing)].sort()
+  : discoveredReleasePaths;
 
-if (compactRelease) {
+if (!preserveReleasedInventory && compactRelease) {
   delete releaseJson.artifacts;
   releaseJson.artifact_inventory = {
     path: 'manifest.json',
     integrity: 'SHA256SUMS',
     artifacts: releasePaths.length
   };
-} else {
+} else if (!preserveReleasedInventory) {
   releaseJson.artifacts = await Promise.all(releasePaths.map(async (path) => {
     const bytes = await readFile(join(root, path));
     return { path, bytes: bytes.length, sha256: sha(bytes) };
   }));
 }
-await writeFile(releasePath, `${JSON.stringify(releaseJson, null, 2)}\n`);
+if (!preserveReleasedInventory) {
+  await writeFile(releasePath, `${JSON.stringify(releaseJson, null, 2)}\n`);
+}
 
 const publicDocs = ['AGENTS.md', 'LANGUAGE.md', 'HOSTING.md', 'LIB.md'];
 const manifestPaths = [...new Set([...publicDocs, ...releasePaths])];
@@ -193,4 +199,4 @@ const allFiles = (await walk()).filter((path) => path !== 'SHA256SUMS').sort();
 const sums = [];
 for (const path of allFiles) sums.push(`${await fileSha(path)}  ${path}`);
 await writeFile(join(root, 'SHA256SUMS'), `${sums.join('\n')}\n`);
-console.log(`PASS refreshed ${releaseJson.tag}: release=${releasePaths.length} manifest=${manifestPaths.length} checksums=${allFiles.length}`);
+console.log(`PASS refreshed ${releaseJson.tag}: release=${releasePaths.length} manifest=${manifestPaths.length} checksums=${allFiles.length} preserve_released_inventory=${preserveReleasedInventory}`);

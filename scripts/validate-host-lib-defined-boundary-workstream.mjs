@@ -1845,6 +1845,32 @@ assert.equal(iosSimulatorReceipt.evidence.ios_embedded_host, false);
 assert.equal(iosSimulatorReceipt.evidence.physical_device_qualification, false);
 assert.equal(iosSimulatorReceipt.evidence.wasm_lowering, false);
 
+const tlsClientCrossPlatformReceipt = JSON.parse(fs.readFileSync(
+  "admission/host-lib-defined-boundary-v1/tls-client-cross-platform-v1.json", "utf8",
+));
+assert.equal(tlsClientCrossPlatformReceipt.schema,
+  "wasmc.tls-client-cross-platform-qualification/v1");
+assert.equal(tlsClientCrossPlatformReceipt.workflow.conclusion, "success");
+assert.equal(tlsClientCrossPlatformReceipt.workflow.run_id, 36390201030);
+assert.equal(tlsClientCrossPlatformReceipt.canonical_core_artifact.sha256,
+  "22eec3a0a72e1d8bc3e6120149a1f6196cc354601137e9e857f08b03d9bb4ba4");
+assert.equal(tlsClientCrossPlatformReceipt.canonical_core_artifact.bytes, 679279);
+assert.equal(tlsClientCrossPlatformReceipt.canonical_core_artifact.independent_second_build_byte_identical, true);
+assert.equal(tlsClientCrossPlatformReceipt.evidence.same_exact_artifact_on_six_platforms, true);
+assert.equal(tlsClientCrossPlatformReceipt.evidence.platforms.length, 6);
+assert.equal(tlsClientCrossPlatformReceipt.evidence.linux_socket_composition.linux_x86_64, "success");
+assert.equal(tlsClientCrossPlatformReceipt.evidence.linux_socket_composition.linux_aarch64, "success");
+assert.equal(tlsClientCrossPlatformReceipt.evidence.macos_public_ca_https.macos_x86_64, "success");
+assert.equal(tlsClientCrossPlatformReceipt.evidence.macos_public_ca_https.macos_aarch64, "success");
+assert.equal(tlsClientCrossPlatformReceipt.evidence.macos_public_ca_https.fixed_host_api_changes, 0);
+assert.equal(tlsClientCrossPlatformReceipt.qualified, true);
+assert.equal(tlsClientCrossPlatformReceipt.admitted, false);
+assert.equal(tlsClientCrossPlatformReceipt.released, false);
+assert.equal(tlsClientCrossPlatformReceipt.discoverable, false);
+assert.equal(tlsClientCrossPlatformReceipt.installable, false);
+execFileSync("git", ["cat-file", "-e", `${tlsClientCrossPlatformReceipt.qualified_commit}^{commit}`]);
+execFileSync("git", ["merge-base", "--is-ancestor", tlsClientCrossPlatformReceipt.qualified_commit, "HEAD"]);
+
 const oldCandidate = spawnSync(
   process.execPath,
   ["scripts/release-candidate.mjs", "verify", "channels/candidates/0.0.15.json"],
@@ -1916,6 +1942,7 @@ console.log(JSON.stringify({
   retained_ios_arm64_websocket_v5_qualification: iosWebSocketV5Receipt.implementation_commit,
   retained_ios_arm64_network_path_v1_qualification: iosNetworkPathV1Receipt.implementation_commit,
   retained_ios_simulator_first_qualification_policy_v1: iosQualificationPolicyV1Receipt.implementation_commit,
+  retained_tls_client_cross_platform_v1_qualification: tlsClientCrossPlatformReceipt.qualified_commit,
   old_candidate_rejects_product_drift: true,
   lifecycle: "architecture-workstream-not-admitted-not-released",
 }));

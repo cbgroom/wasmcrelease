@@ -1,0 +1,85 @@
+{
+  "schema": "wasmc.tls-client-cross-platform-qualification/v1",
+  "status": "qualified-not-admitted-not-released-not-discoverable-not-installable",
+  "date": "2026-09-28",
+  "qualified_commit": "ce669f5b736f510a24d3aeb9dd7495900f25a7c9",
+  "candidate": "wasmc-tls-client",
+  "candidate_version": "0.0.1-dev.1",
+  "workflow": {
+    "run_id": 36390201030,
+    "url": "https://github.com/cbgroom/wasmcrelease/actions/runs/36390201030",
+    "conclusion": "success",
+    "jobs": {
+      "validate": "success",
+      "canonical_independent_builds": "success",
+      "linux_x86_64": "success",
+      "linux_aarch64": "success",
+      "macos_x86_64": "success",
+      "macos_aarch64": "success",
+      "windows_x86_64": "success",
+      "windows_aarch64": "success"
+    }
+  },
+  "canonical_core_artifact": {
+    "toolchain": "rustc 1.96.0",
+    "target": "wasm32-unknown-unknown",
+    "build_platform": "linux-x64",
+    "bytes": 679279,
+    "sha256": "22eec3a0a72e1d8bc3e6120149a1f6196cc354601137e9e857f08b03d9bb4ba4",
+    "independent_second_build_byte_identical": true,
+    "imports": [
+      "wasmc:tls-core/entropy@0.0.1#fill"
+    ],
+    "host_clock_import": false,
+    "host_network_import": false,
+    "host_socket_import": false
+  },
+  "evidence": {
+    "same_exact_artifact_on_six_platforms": true,
+    "platforms": [
+      "linux-x86_64",
+      "linux-aarch64",
+      "macos-x86_64",
+      "macos-aarch64",
+      "windows-x86_64",
+      "windows-aarch64"
+    ],
+    "artifact_observation_matches": true,
+    "loopback_https": true,
+    "http1_client_composed": true,
+    "http1_response_decoded": true,
+    "hostname_rejection": true,
+    "root_boundary": {
+      "accepted": 256,
+      "rejected": 257
+    },
+    "engines": {
+      "wasmi_2_0_0": "success",
+      "wasmtime_47_0_4": "success"
+    },
+    "linux_socket_composition": {
+      "linux_x86_64": "success",
+      "linux_aarch64": "success",
+      "fixed_host_domain_apis": 0,
+      "http_request_bytes": 43,
+      "http_response_bytes": 40
+    },
+    "macos_public_ca_https": {
+      "macos_x86_64": "success",
+      "macos_aarch64": "success",
+      "system_root_certificates": 154,
+      "fixed_host_api_changes": 0
+    }
+  },
+  "remaining_gates": [
+    "linux-windows-platform-root-provider-qualification",
+    "ios-platform-https-composition",
+    "android-platform-https-composition",
+    "admission-review"
+  ],
+  "qualified": true,
+  "admitted": false,
+  "released": false,
+  "discoverable": false,
+  "installable": false
+}
