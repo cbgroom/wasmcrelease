@@ -136,7 +136,7 @@ try {
   await assert.rejects(graph.apply({ ...request(4, [a2Configured, b1], ["b", "a"]), graph_digest: "0".repeat(64) }), /graph digest mismatch/);
   await assert.rejects(async () => graph.apply(request(4, [{ ...a2Configured, configuration_sha256: "0".repeat(64) }, b1], ["b", "a"])), /configuration identity mismatch/);
   await assert.rejects(async () => graph.apply(request(4, [{ ...a2Configured, wit_contract_sha256: "0".repeat(64) }, b1], ["a", "b"])), /WIT port contract mismatch/);
-  await assert.rejects(async () => graph.apply(request(4, [{ ...a2Configured, state_policy: "sticky" }, b1], ["b", "a"])), /unsupported dynamic Lib state policy/);
+  await assert.rejects(async () => graph.apply(request(4, [{ ...a2Configured, state_policy: "unknown-state-policy" }, b1], ["b", "a"])), /unsupported dynamic Lib state policy/);
 
   const falseIdentity = await graph.apply(request(4, [{ ...a2Configured, identity: "wasmc:false-identity@0.0.1" }, b1], ["a", "b"]));
   assert.equal(falseIdentity.outcome, "rolled-back");

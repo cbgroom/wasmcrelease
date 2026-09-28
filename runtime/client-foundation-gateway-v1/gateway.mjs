@@ -195,6 +195,8 @@ export class ClientFoundationGateway {
         wit_contract_sha256: validated.exact.wit_contract_sha256,
         port_contracts: validated.exact.graph_ports ? { inputs: validated.exact.graph_ports.inputs, outputs: validated.exact.graph_ports.outputs } : null,
         port_contracts_sha256: validated.exact.graph_ports ? canonicalJsonSha256({ inputs: validated.exact.graph_ports.inputs, outputs: validated.exact.graph_ports.outputs }) : null,
+        state_policy: validated.exact.descriptor.state?.policy ?? "stateless",
+        state_schema_identity: validated.exact.descriptor.state?.schema_identity ?? null,
       };
       await this.#persist();
       jsonResponse(response, 201, { accepted: true, ...this.state.artifacts[digest], url: `${this.advertiseOrigin}/v1/artifacts/${digest}` });
@@ -282,6 +284,9 @@ export class ClientFoundationGateway {
           if (!metadata) throw new Error(`unknown dynamic Lib bundle: ${block.name}`);
           if (metadata.identity !== block.identity || metadata.package_sha256 !== block.artifact_sha256 || metadata.wit_contract_sha256 !== block.wit_contract_sha256) {
             throw new Error(`dynamic Lib bundle declaration mismatch: ${block.name}`);
+          }
+          if (metadata.state_policy !== block.state_policy || metadata.state_schema_identity !== block.state_schema_identity) {
+            throw new Error(`dynamic Lib bundle state declaration mismatch: ${block.name}`);
           }
           if (dag && (canonicalJson(metadata.port_contracts) !== canonicalJson(block.port_contracts) || metadata.port_contracts_sha256 !== block.port_contracts_sha256)) {
             throw new Error(`dynamic Lib bundle port declaration mismatch: ${block.name}`);
@@ -579,13 +584,19 @@ export class ClientFoundationGateway {
       if (metadata.wit_contract_sha256 && metadata.wit_contract_sha256 !== validated.exact.wit_contract_sha256) throw new Error("stored WIT contract identity mismatch");
       const portContracts = validated.exact.graph_ports ? { inputs: validated.exact.graph_ports.inputs, outputs: validated.exact.graph_ports.outputs } : null;
       const portContractsSha = portContracts ? canonicalJsonSha256(portContracts) : null;
+      const statePolicy = validated.exact.descriptor.state?.policy ?? "stateless";
+      const stateSchemaIdentity = validated.exact.descriptor.state?.schema_identity ?? null;
       if (metadata.port_contracts && canonicalJson(metadata.port_contracts) !== canonicalJson(portContracts)) throw new Error("stored port contracts mismatch");
       if (metadata.port_contracts_sha256 && metadata.port_contracts_sha256 !== portContractsSha) throw new Error("stored port contract identity mismatch");
-      if (!metadata.package_sha256 || !metadata.wit_contract_sha256 || (portContracts && !metadata.port_contracts_sha256)) {
+      if (metadata.state_policy !== undefined && metadata.state_policy !== statePolicy) throw new Error("stored state policy mismatch");
+      if (metadata.state_schema_identity !== undefined && metadata.state_schema_identity !== stateSchemaIdentity) throw new Error("stored state schema identity mismatch");
+      if (!metadata.package_sha256 || !metadata.wit_contract_sha256 || (portContracts && !metadata.port_contracts_sha256) || metadata.state_policy === undefined) {
         metadata.package_sha256 = validated.exact.artifact_sha256;
         metadata.wit_contract_sha256 = validated.exact.wit_contract_sha256;
         metadata.port_contracts = portContracts;
         metadata.port_contracts_sha256 = portContractsSha;
+        metadata.state_policy = statePolicy;
+        metadata.state_schema_identity = stateSchemaIdentity;
         migrated = true;
       }
     }

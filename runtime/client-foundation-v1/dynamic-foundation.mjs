@@ -367,6 +367,10 @@ export class DynamicGraphClientFoundation {
     if (exact.identity !== declaration.identity) throw new Error(`dynamic Lib transport identity mismatch: ${declaration.name}`);
     if (exact.artifact_sha256 !== declaration.artifact_sha256) throw new Error(`dynamic Lib transported package mismatch: ${declaration.name}`);
     if (exact.wit_contract_sha256 !== declaration.wit_contract_sha256) throw new Error(`dynamic Lib transported WIT mismatch: ${declaration.name}`);
+    const exactState = exact.descriptor.state ?? { policy: "stateless", schema_identity: null };
+    if (exactState.policy !== declaration.state_policy || exactState.schema_identity !== declaration.state_schema_identity) {
+      throw new Error(`dynamic Lib transported state contract mismatch: ${declaration.name}`);
+    }
     if (declaration.port_contracts_sha256) {
       const exactPorts = exact.graph_ports ? { inputs: exact.graph_ports.inputs, outputs: exact.graph_ports.outputs } : null;
       if (!exactPorts || canonicalJsonSha256(exactPorts) !== declaration.port_contracts_sha256 || canonicalJson(exactPorts) !== canonicalJson(declaration.port_contracts)) {

@@ -89,6 +89,15 @@ State policies are:
   bounded snapshot, target restore, and a declared exact migration Lib when
   schemas differ.
 
+The implemented same-schema `snapshot-v1` path binds policy and schema identity
+inside the exact package descriptor rather than trusting a graph caller. It
+installs and probes the candidate first, blocks new invocations, drains calls
+already captured by the old generation, snapshots the quiescent source,
+restores the candidate, health-checks it, and then publishes. Restore failure
+releases the candidate, keeps the old generation active, and opens the
+invocation barrier onto the old generation. `sticky` may be reused unchanged
+but cannot be replaced or removed automatically.
+
 Unknown or incomplete state policy fails closed. Draining in-flight operations
 does not migrate hidden state and does not make external side effects exactly
 once.
@@ -159,8 +168,11 @@ cleanup are locally qualified. Publication now persists the new active graph,
 the in-flight command result and a retired-generation record before drain.
 Normal drain records resource release; a process crash is recovered by fencing
 the prior process-owned Host resource namespace and retaining a bounded cleanup
-receipt. Stateful replacement remains the only model gate. The whole path
-remains a stateless prototype and is not admitted or released.
+receipt. Same-schema `snapshot-v1` replacement and fail-closed `sticky`
+handling are qualified locally and through the Client/Gateway path.
+Cross-schema migration through an exact migration Lib and durable checkpoint
+restoration of active state after a full Client restart remain open gates. The
+whole path remains a prototype and is not admitted or released.
 
 The process-owner fence does not claim exactly-once behavior or cleanup of
 external effects that a Lib initiated outside the Host process. Such effects

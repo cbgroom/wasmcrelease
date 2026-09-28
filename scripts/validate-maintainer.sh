@@ -63,6 +63,7 @@ node scripts/test-wss-cancellation-v1.mjs
 node scripts/validate-dynamic-lib-graph-model-v1.mjs
 node scripts/test-dynamic-lib-graph-v1.mjs
 node scripts/test-dynamic-lib-dag-v1.mjs
+node scripts/test-dynamic-lib-stateful-v1.mjs
 node scripts/test-dynamic-client-foundation-gateway-v1.mjs
 
 node --input-type=module <<'JS'

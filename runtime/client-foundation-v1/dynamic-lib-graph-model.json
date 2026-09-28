@@ -46,11 +46,14 @@
     "postpublish-cleanup-never-rolls-back",
     "reuse-requires-full-instance-identity",
     "exact-wit-port-compatibility",
+    "package-bound-state-contract",
+    "snapshot-after-old-generation-drain",
+    "new-invocations-wait-for-stateful-publish-or-rollback",
     "close-reclaims-all-runtime-resources"
   ],
   "current_implementation_profile": {
     "graph_shape": "serial-pipeline-and-general-dag-client-gateway",
-    "state_policy": "stateless",
+    "state_policy": "stateless-sticky-and-same-schema-snapshot-v1",
     "graph_identity": "canonical-json-sha256",
     "configuration": "canonical-json-sha256",
     "wit_contract_identity": "wasm-tools-derived-port-type-sha256-bound-to-exact-wit",
@@ -65,10 +68,14 @@
       "postpublish-cleanup-never-rolls-back",
       "reuse-requires-full-instance-identity",
       "exact-wit-port-compatibility",
+      "package-bound-state-contract",
+      "snapshot-after-old-generation-drain",
+      "new-invocations-wait-for-stateful-publish-or-rollback",
       "close-reclaims-all-runtime-resources"
     ],
     "open_gates": [
-      "stateful-replacement"
+      "cross-schema-state-migration-lib",
+      "stateful-active-checkpoint-restart"
     ]
   }
 }

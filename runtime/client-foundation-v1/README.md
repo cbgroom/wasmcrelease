@@ -150,3 +150,18 @@ resource release. If the process exits in between, restart fences the previous
 process-owned Host namespace, records a bounded recovery receipt and restores
 the already-published graph. This does not reconcile external side effects
 owned by a Lib.
+
+State policy is also package truth. A `sticky` node is reusable only while its
+exact instance identity is unchanged; automatic replacement or removal is
+rejected. A same-schema `snapshot-v1` replacement quiesces new invocations,
+drains old invocations, verifies a bounded content-addressed snapshot, restores
+the candidate and publishes only after health succeeds. A failed restore rolls
+back and releases the waiting invocations onto the old generation. Run this
+qualification with:
+
+```sh
+node scripts/test-dynamic-lib-stateful-v1.mjs
+```
+
+Cross-schema migration and recovery of the active mutable state after a full
+Client restart are not yet implemented.

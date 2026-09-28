@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { readFile, realpath } from "node:fs/promises";
 import path from "node:path";
 import { canonicalJson, canonicalJsonSha256, describeDynamicLibDag, describeSerialLibGraph, identifyDynamicLibPackageFiles } from "./dynamic-lib-graph-spec.mjs";
@@ -5,6 +6,8 @@ import { validateWitPortManifest } from "./wit-port-contracts.mjs";
 
 const encoder = new TextEncoder();
 const decoder = new TextDecoder("utf-8", { fatal: true });
+const MAX_SNAPSHOT_BYTES = 1024 * 1024;
+const sha256 = (bytes) => createHash("sha256").update(bytes).digest("hex");
 
 const within = (root, candidate) => candidate === root || candidate.startsWith(`${root}${path.sep}`);
 
@@ -42,6 +45,7 @@ export class DynamicLibGraph {
     this.retired = new Set();
     this.closed = false;
     this.updateInProgress = false;
+    this.invocationBarrier = null;
   }
 
   snapshot() {
@@ -52,6 +56,7 @@ export class DynamicLibGraph {
       shape: this.active.shape,
       edges: structuredClone(this.active.edges),
       entrypoint: structuredClone(this.active.entrypoint),
+      invocation_barrier_active: this.invocationBarrier !== null,
       retired: [...this.retired].map(({ generation }) => ({ revision: generation.revision, graph_digest: generation.graphDigest, inflight: generation.inflight })),
       blocks: Object.fromEntries([...this.active.blocks].map(([name, block]) => [name, {
         identity: block.identity,
@@ -81,10 +86,15 @@ export class DynamicLibGraph {
     const old = this.active;
     const candidateBlocks = new Map();
     const installed = [];
+    const snapshotMigrations = [];
     let reused = 0;
     let published = false;
+    let releaseInvocationBarrier = null;
     this.updateInProgress = true;
     try {
+      for (const [name, current] of old.blocks) {
+        if (!desired.has(name) && current.statePolicy !== "stateless") throw new Error(`dynamic Lib stateful node removal requires an explicit state disposition: ${name}`);
+      }
       for (const [name, declaration] of desired) {
         const current = old.blocks.get(name);
         if (current?.artifactSha === declaration.artifact_sha256 && current.configurationSha === declaration.configuration_sha256) {
@@ -95,10 +105,21 @@ export class DynamicLibGraph {
           reused += 1;
           continue;
         }
+        if (current) {
+          if (current.statePolicy === "sticky" || declaration.state_policy === "sticky") throw new Error(`sticky dynamic Lib node cannot be replaced automatically: ${name}`);
+          if (current.statePolicy !== declaration.state_policy) throw new Error(`dynamic Lib state policy transition is unsupported: ${name}`);
+          if (current.statePolicy === "snapshot-v1" && current.stateSchemaIdentity !== declaration.state_schema_identity) {
+            throw new Error(`dynamic Lib snapshot schema migration requires an exact migration Lib: ${name}`);
+          }
+        }
         const exact = await inspectDynamicLibPackage(declaration.root);
         if (exact.identity !== declaration.identity) throw new Error(`dynamic Lib descriptor identity mismatch: ${name}`);
         if (exact.artifact_sha256 !== declaration.artifact_sha256) throw new Error(`dynamic Lib package identity mismatch: ${name}`);
         if (exact.wit_contract_sha256 !== declaration.wit_contract_sha256) throw new Error(`dynamic Lib WIT contract identity mismatch: ${name}`);
+        const exactState = exact.descriptor.state ?? { policy: "stateless", schema_identity: null };
+        if (exactState.policy !== declaration.state_policy || exactState.schema_identity !== declaration.state_schema_identity) {
+          throw new Error(`dynamic Lib package state contract mismatch: ${name}`);
+        }
         const exactPorts = exact.graph_ports ? { inputs: exact.graph_ports.inputs, outputs: exact.graph_ports.outputs } : null;
         if (dag) {
           if (!exactPorts) throw new Error(`dynamic Lib package has no WIT port manifest: ${name}`);
@@ -123,6 +144,7 @@ export class DynamicLibGraph {
         candidateBlocks.set(name, record);
         await this.#call(resource, { operation: "probe", configuration: record.configuration });
         await this.#call(resource, { operation: "health", configuration: record.configuration });
+        if (current?.statePolicy === "snapshot-v1") snapshotMigrations.push({ name, source: current, target: record });
       }
       const candidate = {
         revision: old.revision + 1,
@@ -136,6 +158,11 @@ export class DynamicLibGraph {
         inflight: 0,
         drainWaiters: [],
       };
+      if (snapshotMigrations.length > 0) {
+        releaseInvocationBarrier = this.#beginInvocationBarrier();
+        await this.#drain(old);
+        for (const migration of snapshotMigrations) await this.#migrateSnapshot(migration);
+      }
       for (const block of candidate.blocks.values()) await this.#call(block.resource, { operation: "health", configuration: block.configuration });
       this.active = candidate;
       published = true;
@@ -145,8 +172,10 @@ export class DynamicLibGraph {
         active: { revision: candidate.revision, graph_digest: candidate.graphDigest },
         retired: retired ? { revision: old.revision, graph_digest: old.graphDigest } : null,
       });
+      releaseInvocationBarrier?.();
+      releaseInvocationBarrier = null;
       const released = retired ? await this.#cleanupRetired(retired) : 0;
-      return { outcome: "committed", revision: candidate.revision, graph_digest, installed: installed.length, reused, released, pipeline: pipeline ? [...pipeline] : [], shape: candidate.shape };
+      return { outcome: "committed", revision: candidate.revision, graph_digest, installed: installed.length, reused, released, migrated: snapshotMigrations.length, pipeline: pipeline ? [...pipeline] : [], shape: candidate.shape };
     } catch (error) {
       if (published) {
         return { outcome: "committed", revision: this.active.revision, graph_digest: this.active.graphDigest, installed: installed.length, reused, released: 0, cleanup_error: error.message, pipeline: [...this.active.pipeline] };
@@ -155,12 +184,14 @@ export class DynamicLibGraph {
       for (const block of installed) this.boundary.releaseResource(block.resource);
       return { outcome: "rolled-back", revision: old.revision, graph_digest: old.graphDigest, installed: installed.length, reused, released: installed.length, error: error.message, pipeline: [...old.pipeline] };
     } finally {
+      releaseInvocationBarrier?.();
       this.updateInProgress = false;
     }
   }
 
   async invoke(value) {
     if (this.closed) throw new Error("dynamic Lib graph closed");
+    while (this.invocationBarrier) await this.invocationBarrier.promise;
     const generation = this.active;
     generation.inflight += 1;
     try {
@@ -229,6 +260,42 @@ export class DynamicLibGraph {
   async #drain(generation) {
     if (generation.inflight === 0) return;
     await new Promise((resolve) => generation.drainWaiters.push(resolve));
+  }
+
+  #beginInvocationBarrier() {
+    if (this.invocationBarrier) throw new Error("dynamic Lib invocation barrier already active");
+    let resolve;
+    const barrier = { promise: new Promise((done) => { resolve = done; }) };
+    this.invocationBarrier = barrier;
+    return () => {
+      if (this.invocationBarrier === barrier) this.invocationBarrier = null;
+      resolve();
+    };
+  }
+
+  async #migrateSnapshot({ name, source, target }) {
+    const snapshot = await this.#call(source.resource, {
+      operation: "snapshot-v1",
+      state_schema_identity: source.stateSchemaIdentity,
+      configuration: source.configuration,
+    });
+    if (snapshot.accepted !== true || snapshot.state_schema_identity !== source.stateSchemaIdentity || typeof snapshot.state_base64 !== "string" || typeof snapshot.state_sha256 !== "string") {
+      throw new Error(`dynamic Lib snapshot rejected or malformed: ${name}`);
+    }
+    const bytes = Buffer.from(snapshot.state_base64, "base64");
+    if (bytes.length > MAX_SNAPSHOT_BYTES || bytes.toString("base64") !== snapshot.state_base64 || sha256(bytes) !== snapshot.state_sha256) {
+      throw new Error(`dynamic Lib snapshot identity mismatch: ${name}`);
+    }
+    const restored = await this.#call(target.resource, {
+      operation: "restore-v1",
+      state_schema_identity: target.stateSchemaIdentity,
+      state_base64: snapshot.state_base64,
+      state_sha256: snapshot.state_sha256,
+      configuration: target.configuration,
+    });
+    if (restored.accepted !== true || restored.state_schema_identity !== target.stateSchemaIdentity || restored.state_sha256 !== snapshot.state_sha256) {
+      throw new Error(`dynamic Lib snapshot restore rejected: ${name}`);
+    }
   }
 
   async #cleanupRetired(retired) {

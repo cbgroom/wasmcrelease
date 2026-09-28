@@ -61,6 +61,17 @@ export function identifyDynamicLibPackageFiles(entries) {
   if (descriptor.graph_ports !== undefined && typeof descriptor.graph_ports !== "string") {
     throw new Error("invalid dynamic Lib WIT port manifest path");
   }
+  if (descriptor.state !== undefined) {
+    const policy = descriptor.state?.policy;
+    const schemaIdentity = descriptor.state?.schema_identity;
+    if (policy === "stateless") {
+      if (schemaIdentity !== null) throw new Error("invalid dynamic Lib stateless package contract");
+    } else if (policy === "sticky" || policy === "snapshot-v1") {
+      if (!SHA256.test(schemaIdentity)) throw new Error("invalid dynamic Lib package state schema identity");
+    } else {
+      throw new Error("unsupported dynamic Lib package state policy");
+    }
+  }
   const selected = ["native-boundary.json", descriptor.wit, descriptor.adapter.path, ...(descriptor.graph_ports ? [descriptor.graph_ports] : [])];
   if (new Set(selected).size !== selected.length || selected.some((name) => !files.has(name))) {
     throw new Error("incomplete dynamic Lib package files");
@@ -87,6 +98,18 @@ const assertPortMap = (value, label) => {
   }
 };
 
+const assertStatePolicy = (block) => {
+  if (block.state_policy === "stateless") {
+    if (block.state_schema_identity !== null) throw new Error(`invalid stateless dynamic Lib state schema: ${block.name}`);
+    return;
+  }
+  if (block.state_policy === "sticky" || block.state_policy === "snapshot-v1") {
+    if (!SHA256.test(block.state_schema_identity)) throw new Error(`invalid dynamic Lib state schema identity: ${block.name}`);
+    return;
+  }
+  throw new Error(`unsupported dynamic Lib state policy: ${block.name}`);
+};
+
 export function describeDynamicLibDag({ blocks, edges, entrypoint }) {
   if (!Array.isArray(blocks) || blocks.length === 0 || !Array.isArray(edges) || !entrypoint) throw new Error("incomplete dynamic Lib DAG");
   const declarations = new Map();
@@ -97,7 +120,7 @@ export function describeDynamicLibDag({ blocks, edges, entrypoint }) {
     for (const [field, value] of [["artifact", block.artifact_sha256], ["configuration", block.configuration_sha256], ["WIT contract", block.wit_contract_sha256], ["port contract set", block.port_contracts_sha256]]) {
       if (!SHA256.test(value)) throw new Error(`invalid dynamic Lib ${field} identity: ${block.name}`);
     }
-    if (block.state_policy !== "stateless" || block.state_schema_identity !== null) throw new Error(`unsupported dynamic Lib state policy: ${block.name}`);
+    assertStatePolicy(block);
     if (canonicalJsonSha256(block.configuration) !== block.configuration_sha256) throw new Error(`dynamic Lib configuration identity mismatch: ${block.name}`);
     assertPortMap(block.port_contracts?.inputs, "input");
     assertPortMap(block.port_contracts?.outputs, "output");
@@ -187,9 +210,7 @@ export function describeSerialLibGraph({ blocks, pipeline }) {
     for (const [field, value] of [["artifact", block.artifact_sha256], ["configuration", block.configuration_sha256], ["WIT contract", block.wit_contract_sha256]]) {
       if (!SHA256.test(value)) throw new Error(`invalid dynamic Lib ${field} identity: ${block.name}`);
     }
-    if (block.state_policy !== "stateless" || block.state_schema_identity !== null) {
-      throw new Error(`unsupported dynamic Lib state policy: ${block.name}`);
-    }
+    assertStatePolicy(block);
     const computedConfiguration = canonicalJsonSha256(block.configuration);
     if (computedConfiguration !== block.configuration_sha256) throw new Error(`dynamic Lib configuration identity mismatch: ${block.name}`);
     declarations.set(block.name, block);

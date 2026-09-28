@@ -43,6 +43,9 @@ for (const required of [
   "postpublish-cleanup-never-rolls-back",
   "reuse-requires-full-instance-identity",
   "exact-wit-port-compatibility",
+  "package-bound-state-contract",
+  "snapshot-after-old-generation-drain",
+  "new-invocations-wait-for-stateful-publish-or-rollback",
   "close-reclaims-all-runtime-resources",
 ]) assert.ok(invariants.has(required), `missing invariant: ${required}`);
 
@@ -50,12 +53,12 @@ for (const qualified of model.current_implementation_profile.qualified_invariant
   assert.ok(invariants.has(qualified), `qualified invariant is absent from model: ${qualified}`);
 }
 assert.equal(model.current_implementation_profile.graph_shape, "serial-pipeline-and-general-dag-client-gateway");
-assert.equal(model.current_implementation_profile.state_policy, "stateless");
+assert.equal(model.current_implementation_profile.state_policy, "stateless-sticky-and-same-schema-snapshot-v1");
 assert.equal(model.current_implementation_profile.graph_identity, "canonical-json-sha256");
 assert.equal(model.current_implementation_profile.configuration, "canonical-json-sha256");
 assert.equal(model.current_implementation_profile.wit_contract_identity, "wasm-tools-derived-port-type-sha256-bound-to-exact-wit");
 assert.equal(model.current_implementation_profile.retired_cleanup, "durable-publication-ledger-and-process-owner-fence");
-for (const gate of ["stateful-replacement"]) {
+for (const gate of ["cross-schema-state-migration-lib", "stateful-active-checkpoint-restart"]) {
   assert.ok(model.current_implementation_profile.open_gates.includes(gate), `missing open gate: ${gate}`);
 }
 

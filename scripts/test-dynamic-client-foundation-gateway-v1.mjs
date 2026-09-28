@@ -106,6 +106,48 @@ export async function invoke(input) {
   }));
 }
 
+async function makeStatefulBundle(name, marker, stateSchemaIdentity) {
+  const identity = `wasmc:dynamic-client-stateful-${name}@0.0.1-dev.1`;
+  const adapter = Buffer.from(`
+import { createHash } from "node:crypto";
+const encoder = new TextEncoder();
+const decoder = new TextDecoder("utf-8", { fatal: true });
+let count = 0;
+const sha256 = (bytes) => createHash("sha256").update(bytes).digest("hex");
+export async function invoke(input) {
+  const request = JSON.parse(decoder.decode(input));
+  if (request.operation === "probe" || request.operation === "health") return encoder.encode(JSON.stringify({ accepted: true }));
+  if (request.operation === "invoke") {
+    if (request.value === "inc") count += 1;
+    return encoder.encode(JSON.stringify({ accepted: true, value: ${JSON.stringify(marker)} + ":" + count }));
+  }
+  if (request.operation === "snapshot-v1") {
+    const bytes = Buffer.from(JSON.stringify({ count }));
+    return encoder.encode(JSON.stringify({ accepted: true, state_schema_identity: ${JSON.stringify(stateSchemaIdentity)}, state_base64: bytes.toString("base64"), state_sha256: sha256(bytes) }));
+  }
+  if (request.operation === "restore-v1") {
+    const bytes = Buffer.from(request.state_base64, "base64");
+    if (sha256(bytes) !== request.state_sha256) throw new Error("stateful restore identity mismatch");
+    count = JSON.parse(bytes.toString("utf8")).count;
+    return encoder.encode(JSON.stringify({ accepted: true, state_schema_identity: request.state_schema_identity, state_sha256: request.state_sha256 }));
+  }
+  throw new Error("unsupported stateful operation");
+}`);
+  const descriptor = Buffer.from(`${JSON.stringify({
+    schema: "wasmc.native-boundary-descriptor/v1", identity, wit: "lib.wit",
+    state: { policy: "snapshot-v1", schema_identity: stateSchemaIdentity },
+    adapter: { path: "native-adapter.mjs", sha256: sha256(adapter), export: "invoke" },
+    limits: { max_input_bytes: 65536, max_output_bytes: 65536 }, lifecycle: "prototype-not-admitted-not-released",
+  }, null, 2)}\n`);
+  const files = [
+    { path: "lib.wit", bytes: wit }, { path: "native-boundary.json", bytes: descriptor }, { path: "native-adapter.mjs", bytes: adapter },
+  ];
+  return Buffer.from(JSON.stringify({
+    schema: "wasmc.client-foundation-bundle/v1", identity, api: "wasmc:dynamic-graph-block@0.0.1",
+    files: files.map((file) => ({ path: file.path, sha256: sha256(file.bytes), base64: file.bytes.toString("base64") })),
+  }));
+}
+
 async function api(origin, method, pathname, body = null) {
   const target = new URL(pathname, origin);
   const bytes = body === null ? null : Buffer.isBuffer(body) ? body : Buffer.from(JSON.stringify(body));
@@ -159,6 +201,11 @@ const dagBlock = (name, artifact) => ({
   wit_contract_sha256: artifact.wit_contract_sha256, configuration: {}, configuration_sha256: canonicalJsonSha256({}),
   state_policy: "stateless", state_schema_identity: null, port_contracts: artifact.port_contracts,
   port_contracts_sha256: artifact.port_contracts_sha256,
+});
+const statefulBlock = (artifact) => ({
+  name: "counter", bundle_sha256: artifact.sha256, identity: artifact.identity, artifact_sha256: artifact.package_sha256,
+  wit_contract_sha256: artifact.wit_contract_sha256, configuration: {}, configuration_sha256: canonicalJsonSha256({}),
+  state_policy: artifact.state_policy, state_schema_identity: artifact.state_schema_identity,
 });
 
 const gatewayRoot = path.join(temporaryRoot, "gateway");
@@ -215,6 +262,20 @@ try {
   const forgedUpload = await api(origin, "POST", "/v1/artifacts", Buffer.from(JSON.stringify(forgedManifestBundle)));
   assert.equal(forgedUpload.status, 400);
   assert.match(forgedUpload.value.error, /port manifest identity mismatch/);
+  const stateSchemaIdentity = sha256(Buffer.from("wasmc:dynamic-client-counter-state/v1"));
+  const uploadedStateful = {};
+  for (const [name, marker] of [["counter-v1", "SV1"], ["counter-v2", "SV2"]]) {
+    const response = await api(origin, "POST", "/v1/artifacts", await makeStatefulBundle(name, marker, stateSchemaIdentity));
+    assert.equal(response.status, 201);
+    assert.equal(response.value.state_policy, "snapshot-v1");
+    assert.equal(response.value.state_schema_identity, stateSchemaIdentity);
+    uploadedStateful[name] = response.value;
+  }
+  const forgedStateBlock = { ...statefulBlock(uploadedStateful["counter-v1"]), state_policy: "sticky" };
+  const forgedStatePayload = graphPayload(0, [forgedStateBlock], ["counter"]);
+  const forgedStateCommand = await api(origin, "POST", "/v1/clients/dynamic-client/commands", { message_id: "bad-state-contract", operation: "lib-graph.apply", payload: forgedStatePayload });
+  assert.equal(forgedStateCommand.status, 400);
+  assert.match(forgedStateCommand.value.error, /bundle state declaration mismatch/);
 
   const a1 = block("a", uploaded.a1);
   const a2 = block("a", uploaded.a2, { suffix: "C" });
@@ -367,23 +428,41 @@ try {
   state = await waitFor(origin, (value) => value.commands[16]?.receipt);
   assert.equal(state.commands[16].receipt.response.value, "J(L2(S(after-publication-crash)),R(S(after-publication-crash)))");
 
+  const statefulV1 = statefulBlock(uploadedStateful["counter-v1"]);
+  const statefulV2 = statefulBlock(uploadedStateful["counter-v2"]);
+  const statefulFirst = graphPayload(5, [statefulV1], ["counter"]);
+  await api(origin, "POST", "/v1/clients/dynamic-client/commands", { message_id: "dg-18", operation: "lib-graph.apply", payload: statefulFirst });
+  state = await waitFor(origin, (value) => value.commands[17]?.receipt);
+  assert.equal(state.commands[17].receipt.outcome, "committed");
+  await api(origin, "POST", "/v1/clients/dynamic-client/commands", { message_id: "dg-19", operation: "invoke", payload: { value: "inc" } });
+  state = await waitFor(origin, (value) => value.commands[18]?.receipt);
+  assert.equal(state.commands[18].receipt.response.value, "SV1:1");
+
+  const statefulReplacement = graphPayload(6, [statefulV2], ["counter"]);
+  await api(origin, "POST", "/v1/clients/dynamic-client/commands", { message_id: "dg-20", operation: "lib-graph.apply", payload: statefulReplacement });
+  state = await waitFor(origin, (value) => value.commands[19]?.receipt);
+  assert.deepEqual({ outcome: state.commands[19].receipt.outcome, migrated: state.commands[19].receipt.migrated }, { outcome: "committed", migrated: 1 });
+  await api(origin, "POST", "/v1/clients/dynamic-client/commands", { message_id: "dg-21", operation: "invoke", payload: { value: "get" } });
+  state = await waitFor(origin, (value) => value.commands[20]?.receipt);
+  assert.equal(state.commands[20].receipt.response.value, "SV2:1");
+
   trace("client:final-close");
   await stopClient();
   assert.deepEqual(client.boundary.counts(), { resources: 0, windows: 0, operations: 0 });
   const diskState = JSON.parse(await readFile(path.join(clientRoot, "dynamic-state.json"), "utf8"));
-  assert.equal(diskState.graph_revision, 5);
-  assert.equal(diskState.active_graph.graph_digest, crashDagPayload.graph_digest);
-  assert.equal(diskState.active_graph.shape, "general-dag");
+  assert.equal(diskState.graph_revision, 7);
+  assert.equal(diskState.active_graph.graph_digest, statefulReplacement.graph_digest);
+  assert.equal(diskState.active_graph.shape, "serial-dag");
   assert.equal(diskState.retired_generations.length, 0);
-  assert.equal(diskState.retired_cleanup_receipts.at(-1).outcome, "process-owner-fenced-on-restart");
-  assert.equal(diskState.last_server_sequence, 17);
-  assert.equal(Object.keys(diskState.receipts).length, 17);
+  assert.equal(diskState.retired_cleanup_receipts.some((receipt) => receipt.outcome === "process-owner-fenced-on-restart"), true);
+  assert.equal(diskState.last_server_sequence, 21);
+  assert.equal(Object.keys(diskState.receipts).length, 21);
 
   console.log(JSON.stringify({
     accepted: true,
     schema: "wasmc.dynamic-client-gateway-local-qualification/v1",
     lifecycle: "prototype-local-qualified-not-admitted-not-released",
-    persistent_artifacts: Object.keys(uploaded).length + Object.keys(uploadedDag).length,
+    persistent_artifacts: Object.keys(uploaded).length + Object.keys(uploadedDag).length + Object.keys(uploadedStateful).length,
     first_composition: "B1(A1(x))",
     one_node_replacement: "B1(A2C(x))",
     gateway_restart_reconnect: "B1(A2C(after-gateway-restart))",
@@ -395,7 +474,9 @@ try {
     general_dag_client_restart: "J(L(S(dag-restart)),R(S(dag-restart)))",
     publication_crash_recovery: "J(L2(S(after-publication-crash)),R(S(after-publication-crash)))",
     durable_retired_generation_cleanup: "process-owner-fenced-on-restart",
+    stateful_same_schema_gateway_replacement: "SV1:1->SV2:1",
     forged_port_manifest_rejected_at_gateway: true,
+    forged_state_contract_rejected_at_gateway: true,
     durable_graph_revision: diskState.graph_revision,
     durable_receipts: Object.keys(diskState.receipts).length,
     canonical_duplicate_idempotent: true,
