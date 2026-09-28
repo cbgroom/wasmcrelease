@@ -623,6 +623,12 @@ try {
   const report = {
     accepted: true,
     schema: "wasmc.android-agent-computer-qualification/v4",
+    candidates: [
+      "wasmc-system-android-display",
+      "wasmc-system-android-ui",
+      "wasmc-system-android-input",
+      "wasmc-system-android-uinput",
+    ],
     avd,
     android_release: adbCommand(["shell", "getprop", "ro.build.version.release"]).trim(),
     android_api: Number(adbCommand(["shell", "getprop", "ro.build.version.sdk"]).trim()),

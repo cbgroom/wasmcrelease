@@ -100,6 +100,7 @@ const screenshot = fs.readFileSync(screenshotPath);
 const sha256 = createHash("sha256").update(screenshot).digest("hex");
 console.log(JSON.stringify({
   ...report,
+  candidate: "wasmc-system-ios-app-surface-control",
   simulator_udid: udid,
   screenshot: {
     path: path.relative(root, screenshotPath),

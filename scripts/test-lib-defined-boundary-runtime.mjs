@@ -125,6 +125,11 @@ try {
   console.log(JSON.stringify({
     accepted: true,
     schema: "wasmc.lib-defined-boundary-runtime/v1",
+    candidates: [
+      "wasmc-system-file-prototype",
+      "wasmc-system-process-prototype",
+      "wasmc-system-network-prototype",
+    ],
     executor_sha256: executorSha256,
     unchanged_executor_domains: 3,
     real_file: true,

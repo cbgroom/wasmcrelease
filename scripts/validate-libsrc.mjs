@@ -77,6 +77,17 @@ for (const candidate of registry.candidates) {
     for (const source of manifest.source) await readFile(resolve(sourceRoot, source));
     assert.equal(manifest.qualification?.runner, 'node');
     assert.equal(typeof manifest.qualification?.script, 'string');
+    if (manifest.qualification.hosts !== undefined) {
+      assert.ok(
+        Array.isArray(manifest.qualification.hosts) && manifest.qualification.hosts.length > 0,
+        candidate.id + ': invalid qualification hosts',
+      );
+      const allowedHosts = new Set(['aix', 'darwin', 'freebsd', 'linux', 'openbsd', 'sunos', 'win32']);
+      assert.ok(
+        manifest.qualification.hosts.every(host => allowedHosts.has(host)),
+        candidate.id + ': unknown qualification host',
+      );
+    }
     const qualificationPath = resolve(root, manifest.qualification.script);
     const qualificationRel = relative(root, qualificationPath);
     assert.ok(

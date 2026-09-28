@@ -235,6 +235,15 @@ same lifecycle counts and checksum, measured old/new RPS p50
 qualification results, not admission or a production-default switch;
 descriptor review, Wasm lowering and admission remain open.
 
+The first portable client-protocol slice is now
+`wasmc:http1-client@0.0.1`. Its import-free Core Wasm serializes bounded
+HTTP/1.1 requests and incrementally decodes content-length, chunked, bodyless
+and close-delimited responses while rejecting ambiguous framing. This closes
+the HTTP wire-semantic gap only. It does not claim HTTPS: the existing TLS Core
+candidate remains server-profiled, so client TLS, public-root verification and
+an end-to-end composition with each platform transport remain explicit gates.
+No Host API or Host platform row was added for this protocol.
+
 ## Library OS consequence
 
 The intended result is a Library OS profile assembled above the fixed Host:

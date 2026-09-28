@@ -126,6 +126,10 @@ assert.ok(screenshot.subarray(0, 8).equals(Buffer.from([137, 80, 78, 71, 13, 10,
 const sha256 = (bytes) => createHash("sha256").update(bytes).digest("hex");
 console.log(JSON.stringify({
   ...report,
+  candidates: [
+    "wasmc-app-authorization-policy",
+    "wasmc-system-ios-app-contacts",
+  ],
   simulator: { udid, name: simulator.name, runtime: simulator.runtime, state: simulator.state },
   authorization_scenario: authorizationScenario,
   launch,

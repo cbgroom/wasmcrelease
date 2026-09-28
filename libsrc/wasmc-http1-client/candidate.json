@@ -1,0 +1,48 @@
+{
+  "schema": "wasmc.libsrc-candidate/v1",
+  "id": "wasmc-http1-client",
+  "version": "0.0.1-dev.1",
+  "wit": "wit/world.wit",
+  "source": [
+    "Cargo.toml",
+    "Cargo.lock",
+    "src/lib.rs"
+  ],
+  "origin": {
+    "kind": "native-public"
+  },
+  "host_import_budget": 0,
+  "build": {
+    "command": "cargo +1.96.0 build --release --locked --target wasm32-unknown-unknown --manifest-path libsrc/wasmc-http1-client/Cargo.toml",
+    "artifact": "libsrc/wasmc-http1-client/target/wasm32-unknown-unknown/release/wasmc_http1_client_public.wasm"
+  },
+  "completed_gates": [
+    "public-source",
+    "zero-imports",
+    "bounded-request-serialization",
+    "incremental-response-decoding",
+    "content-length-framing",
+    "chunked-framing-and-trailers",
+    "close-delimited-framing",
+    "ambiguous-framing-rejection",
+    "wasmi-2.0.0-representative-execution"
+  ],
+  "pending_gates": [
+    "client-tls-composition",
+    "linux-end-to-end-https",
+    "ios-end-to-end-https",
+    "android-end-to-end-https",
+    "admission-review"
+  ],
+  "admitted": false,
+  "qualification": {
+    "runner": "node",
+    "script": "scripts/test-http1-client-libsrc.mjs"
+  },
+  "resource_boundaries": {
+    "head_bytes": 65536,
+    "body_bytes": 1048576,
+    "max_headers": 32,
+    "wire_bytes": 1118208
+  }
+}

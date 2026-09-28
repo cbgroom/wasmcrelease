@@ -48,6 +48,21 @@ impl Core {
         Ok(ptr)
     }
 
+    fn alloc_zeroed(&mut self, len: usize, align: i32) -> Result<i32> {
+        let alloc = self
+            .instance
+            .get_typed_func::<(i32, i32, i32, i32), i32>(&self.store, "cabi_realloc")?;
+        let ptr = alloc.call(&mut self.store, (0, 0, align, len as i32))?;
+        self.memory()?
+            .write(&mut self.store, ptr as usize, &vec![0; len])?;
+        Ok(ptr)
+    }
+
+    fn write(&mut self, ptr: i32, bytes: &[u8]) -> Result<()> {
+        self.memory()?.write(&mut self.store, ptr as usize, bytes)?;
+        Ok(())
+    }
+
     fn read(&self, ptr: u32, len: u32) -> Result<Vec<u8>> {
         let mut bytes = vec![0; len as usize];
         if len != 0 {
@@ -161,6 +176,58 @@ fn http1(path: &str) -> Result<()> {
     Ok(())
 }
 
+fn http1_client(path: &str) -> Result<()> {
+    let mut core = Core::open(path)?;
+    let method = b"GET";
+    let target = b"/health";
+    let header_name = b"host";
+    let header_value = b"example.test";
+    let method_ptr = core.alloc_bytes(method)?;
+    let target_ptr = core.alloc_bytes(target)?;
+    let name_ptr = core.alloc_bytes(header_name)?;
+    let value_ptr = core.alloc_bytes(header_value)?;
+    let headers_ptr = core.alloc_zeroed(16, 4)?;
+    let mut header = [0u8; 16];
+    header[0..4].copy_from_slice(&(name_ptr as u32).to_le_bytes());
+    header[4..8].copy_from_slice(&(header_name.len() as u32).to_le_bytes());
+    header[8..12].copy_from_slice(&(value_ptr as u32).to_le_bytes());
+    header[12..16].copy_from_slice(&(header_value.len() as u32).to_le_bytes());
+    core.write(headers_ptr, &header)?;
+
+    let serialize = core
+        .instance
+        .get_typed_func::<(i32, i32, i32, i32, i32, i32, i32, i32), i32>(
+            &core.store,
+            "wasmc:http1-client/wire@0.0.1#serialize-request",
+        )?;
+    let result = serialize.call(
+        &mut core.store,
+        (
+            method_ptr,
+            method.len() as i32,
+            target_ptr,
+            target.len() as i32,
+            headers_ptr,
+            1,
+            0,
+            0,
+        ),
+    )?;
+    let output = core.read_result_bytes(result)?;
+    if output != b"GET /health HTTP/1.1\r\nhost: example.test\r\n\r\n" {
+        bail!(
+            "HTTP client serialization mismatch: {}",
+            String::from_utf8_lossy(&output)
+        );
+    }
+    let post = core.instance.get_typed_func::<i32, ()>(
+        &core.store,
+        "cabi_post_wasmc:http1-client/wire@0.0.1#serialize-request",
+    )?;
+    post.call(&mut core.store, result)?;
+    Ok(())
+}
+
 fn structural(path: &str, exports: &[&str]) -> Result<()> {
     let core = Core::open(path)?;
     core.memory()?;
@@ -184,6 +251,7 @@ fn main() -> Result<()> {
     let json_path = std::env::var("WASMC_LIBSRC_JSON")?;
     let compression_path = std::env::var("WASMC_LIBSRC_COMPRESSION")?;
     let http1_path = std::env::var("WASMC_LIBSRC_HTTP1")?;
+    let http1_client_path = std::env::var("WASMC_LIBSRC_HTTP1_CLIENT")?;
     let data_core_path = std::env::var("WASMC_LIBSRC_DATA_CORE")?;
     let csv_path = std::env::var("WASMC_LIBSRC_CSV")?;
     let expr_path = std::env::var("WASMC_LIBSRC_DATA_EXPR")?;
@@ -196,6 +264,7 @@ fn main() -> Result<()> {
     json(&json_path)?;
     compression(&compression_path)?;
     http1(&http1_path)?;
+    http1_client(&http1_client_path)?;
     structural(
         &data_core_path,
         &[
@@ -243,7 +312,7 @@ fn main() -> Result<()> {
     )?;
 
     println!(
-        "{{\"accepted\":true,\"engine\":\"wasmi-2.0.0\",\"candidates\":[\"wasmc-router-policy\",\"wasmc-json\",\"wasmc-compression\",\"wasmc-http1\",\"wasmc-data-core\",\"wasmc-csv\",\"wasmc-data-expr\",\"wasmc-data-compute\",\"wasmc-data-relational\",\"wasmc-data-profile\",\"wasmc-data-interchange\"],\"representative_execution\":true,\"structural_data_qualification\":true,\"host_imports\":0}}"
+        "{{\"accepted\":true,\"engine\":\"wasmi-2.0.0\",\"candidates\":[\"wasmc-router-policy\",\"wasmc-json\",\"wasmc-compression\",\"wasmc-http1\",\"wasmc-http1-client\",\"wasmc-data-core\",\"wasmc-csv\",\"wasmc-data-expr\",\"wasmc-data-compute\",\"wasmc-data-relational\",\"wasmc-data-profile\",\"wasmc-data-interchange\"],\"representative_execution\":true,\"structural_data_qualification\":true,\"host_imports\":0}}"
     );
     Ok(())
 }
