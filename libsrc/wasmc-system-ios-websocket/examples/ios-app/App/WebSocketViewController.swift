@@ -48,6 +48,9 @@ final class WebSocketViewController: UIViewController {
         if report["accepted"] as? Bool == true {
             statusLabel.text = "websocket-background-duplex:accepted"
             statusLabel.accessibilityIdentifier = "websocket-complete"
+        } else if (report["error"] as? String) == "certificate-pin-mismatch" {
+            statusLabel.text = "websocket-certificate-pin:rejected"
+            statusLabel.accessibilityIdentifier = "websocket-pin-rejected"
         } else if report["foreground_receive"] as? Bool == true {
             statusLabel.text = "websocket-foreground-duplex:ready"
             statusLabel.accessibilityIdentifier = "websocket-foreground-ready"

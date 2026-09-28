@@ -21,11 +21,15 @@ const resolvedProfile = JSON.parse(execFileSync(process.execPath, ["host/platfor
   "host/platform/ios/websocket-request.json"], { encoding: "utf8" }));
 const retainedProfile = JSON.parse(fs.readFileSync("host/platform/ios/websocket-profile.json", "utf8"));
 assert.equal(candidate.system_binding.implements, "wasmc:system-websocket@0.0.1");
-assert.equal(binding.identity, "wasmc:system-ios-websocket@0.0.1-dev.1");
+assert.equal(binding.identity, "wasmc:system-ios-websocket@0.0.1-dev.2");
 assert.deepEqual(resolvedProfile, retainedProfile);
 assert.equal(retainedProfile.host.required_domain_apis, 0);
 assert.match(provider, /URLSessionWebSocketTask/);
 assert.match(provider, /beginBackgroundTask/);
+assert.match(provider, /certificate-pin-mismatch/);
+assert.match(provider, /SHA256\.hash/);
+assert.equal(binding.limits.local_pinned_wss_qualified, true);
+assert.equal(binding.limits.public_ca_wss_qualified, false);
 assert.equal(binding.limits.suspension_receive_qualified, false);
 console.log(JSON.stringify({ accepted: true, schema: "wasmc.ios-websocket-static-validation/v1",
   fixed_host_domain_apis: 0, fixed_host_sha256: digest,

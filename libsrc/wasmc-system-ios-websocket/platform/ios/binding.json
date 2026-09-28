@@ -1,6 +1,6 @@
 {
   "schema": "wasmc.platform-binding-descriptor/v1",
-  "identity": "wasmc:system-ios-websocket@0.0.1-dev.1",
+  "identity": "wasmc:system-ios-websocket@0.0.1-dev.2",
   "wit": "lib.wit",
   "target": {
     "os": "ios", "architecture": "aarch64", "environment": "simulator", "embedding": "native"
@@ -10,12 +10,13 @@
     "language": "swift",
     "linkage": "static-app",
     "sources": ["platform/ios/Sources/WebSocketProvider.swift"],
-    "frameworks": ["Foundation", "UIKit"]
+    "frameworks": ["CryptoKit", "Foundation", "Security", "UIKit"]
   },
   "limits": {
     "text_frames": true,
     "binary_frames": false,
-    "wss_qualified": false,
+    "local_pinned_wss_qualified": true,
+    "public_ca_wss_qualified": false,
     "background_scope": "finite-background-task-only",
     "suspension_receive_qualified": false
   },

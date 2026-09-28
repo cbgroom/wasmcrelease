@@ -1,7 +1,7 @@
 {
   "schema": "wasmc.libsrc-candidate/v1",
   "id": "wasmc-system-ios-websocket",
-  "version": "0.0.1-dev.1",
+  "version": "0.0.1-dev.2",
   "wit": "lib.wit",
   "source": [
     "README.md", "lib.wit", "platform/ios/binding.json",
@@ -34,10 +34,11 @@
     "wit-parsed",
     "fixed-embedded-host-unchanged",
     "ios-simulator-foreground-duplex",
-    "ios-simulator-finite-background-duplex"
+    "ios-simulator-finite-background-duplex",
+    "ios-simulator-local-pinned-wss-duplex"
   ],
   "pending_gates": [
-    "wss-tls",
+    "public-ca-wss",
     "network-transition-reconnect",
     "suspension-receive",
     "process-relaunch-reconnect",

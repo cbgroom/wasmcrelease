@@ -1,4 +1,6 @@
+import CryptoKit
 import Foundation
+import Security
 import UIKit
 
 final class WebSocketProvider: NSObject, URLSessionWebSocketDelegate {
@@ -7,6 +9,9 @@ final class WebSocketProvider: NSObject, URLSessionWebSocketDelegate {
     private var session: URLSession!
     private var task: URLSessionWebSocketTask?
     private var backgroundTask = UIBackgroundTaskIdentifier.invalid
+    private let secureMode = ProcessInfo.processInfo.arguments.contains("--wasmc-wss")
+    private let rejectFixturePin = ProcessInfo.processInfo.arguments.contains("--wasmc-wss-wrong-pin")
+    private static let fixtureCertificateSHA256 = "f115cf8cfd0c513ba2301bfe8b45c0de198de875ba24db0a79fc85362e611572"
     private var state: [String: Any] = [
         "connected": false,
         "foreground_send": false,
@@ -16,6 +21,9 @@ final class WebSocketProvider: NSObject, URLSessionWebSocketDelegate {
         "foreground_reply": "",
         "background_reply": "",
         "background_receive_phase": "",
+        "tls_server_trust_challenge": false,
+        "certificate_pin_match": false,
+        "certificate_sha256": "",
         "error": "",
     ]
 
@@ -28,14 +36,18 @@ final class WebSocketProvider: NSObject, URLSessionWebSocketDelegate {
         precondition(input.isEmpty)
         return try JSONSerialization.data(withJSONObject: [
             "api": "wasmc:system-websocket@0.0.1",
-            "provider": "wasmc:system-ios-websocket@0.0.1-dev.1",
+            "provider": "wasmc:system-ios-websocket@0.0.1-dev.2",
             "transport": "URLSessionWebSocketTask",
             "background_scope": "finite-background-task-only",
+            "local_pinned_wss": true,
         ], options: [.sortedKeys])
     }
 
     func connect() {
-        guard let url = URL(string: "ws://127.0.0.1:18766/wasmc") else { return }
+        let endpoint = secureMode
+            ? "wss://127.0.0.1:18767/wasmc"
+            : "ws://127.0.0.1:18766/wasmc"
+        guard let url = URL(string: endpoint) else { return }
         let task = session.webSocketTask(with: url)
         self.task = task
         task.resume()
@@ -44,7 +56,9 @@ final class WebSocketProvider: NSObject, URLSessionWebSocketDelegate {
             guard let self else { return }
             self.queue.sync {
                 self.state["foreground_send"] = error == nil
-                if let error { self.state["error"] = String(describing: error) }
+                if let error, self.state["error"] as? String != "certificate-pin-mismatch" {
+                    self.state["error"] = String(describing: error)
+                }
             }
             self.publish()
         }
@@ -63,7 +77,9 @@ final class WebSocketProvider: NSObject, URLSessionWebSocketDelegate {
                 guard let self else { return }
                 self.queue.sync {
                     self.state["background_send"] = error == nil
-                    if let error { self.state["error"] = String(describing: error) }
+                    if let error, self.state["error"] as? String != "certificate-pin-mismatch" {
+                        self.state["error"] = String(describing: error)
+                    }
                 }
                 self.publish()
             }
@@ -85,9 +101,14 @@ final class WebSocketProvider: NSObject, URLSessionWebSocketDelegate {
             && (snapshot["foreground_reply"] as? String) == "server-foreground"
             && (snapshot["background_reply"] as? String) == "server-background"
             && (snapshot["background_receive_phase"] as? String) == "background"
+            && (!secureMode || (snapshot["certificate_pin_match"] as? Bool) == true)
         snapshot["schema"] = "wasmc.ios-websocket-qualification/v1"
         snapshot["accepted"] = accepted
-        snapshot["wss_qualified"] = false
+        snapshot["secure_mode"] = secureMode
+        snapshot["local_pinned_wss_qualified"] = secureMode
+            && (snapshot["certificate_pin_match"] as? Bool) == true
+            && accepted
+        snapshot["public_ca_wss_qualified"] = false
         snapshot["internet_route_qualified"] = false
         snapshot["suspension_receive_qualified"] = false
         snapshot["process_relaunch_reconnect_qualified"] = false
@@ -104,6 +125,37 @@ final class WebSocketProvider: NSObject, URLSessionWebSocketDelegate {
     ) {
         queue.sync { state["connected"] = true }
         publish()
+    }
+
+    func urlSession(
+        _ session: URLSession,
+        didReceive challenge: URLAuthenticationChallenge,
+        completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void
+    ) {
+        guard secureMode,
+              challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust,
+              let trust = challenge.protectionSpace.serverTrust,
+              let certificateChain = SecTrustCopyCertificateChain(trust) as? [SecCertificate],
+              let certificate = certificateChain.first else {
+            completionHandler(.performDefaultHandling, nil)
+            return
+        }
+        let data = SecCertificateCopyData(certificate) as Data
+        let digest = SHA256.hash(data: data).map { String(format: "%02x", $0) }.joined()
+        let expected = rejectFixturePin ? String(repeating: "0", count: 64) : Self.fixtureCertificateSHA256
+        let matched = digest == expected
+        queue.sync {
+            state["tls_server_trust_challenge"] = true
+            state["certificate_sha256"] = digest
+            state["certificate_pin_match"] = matched
+            if !matched { state["error"] = "certificate-pin-mismatch" }
+        }
+        publish()
+        if matched {
+            completionHandler(.useCredential, URLCredential(trust: trust))
+        } else {
+            completionHandler(.cancelAuthenticationChallenge, nil)
+        }
     }
 
     private func receiveNext() {
@@ -127,7 +179,11 @@ final class WebSocketProvider: NSObject, URLSessionWebSocketDelegate {
             case .success(.data):
                 self.receiveNext()
             case .failure(let error):
-                self.queue.sync { self.state["error"] = String(describing: error) }
+                self.queue.sync {
+                    if self.state["error"] as? String != "certificate-pin-mismatch" {
+                        self.state["error"] = String(describing: error)
+                    }
+                }
                 self.publish()
             @unknown default:
                 break
