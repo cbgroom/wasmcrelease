@@ -59,6 +59,7 @@ node scripts/test-lib-route-closure.mjs
 node scripts/test-release-candidate-lib-routes.mjs
 node scripts/test-client-foundation-v1.mjs
 node scripts/test-client-foundation-gateway-v1.mjs
+node scripts/test-dynamic-lib-graph-v1.mjs
 
 node --input-type=module <<'JS'
 const facade = await import('./current/wasmc.mjs');

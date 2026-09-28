@@ -50,3 +50,37 @@ active route; restart reconstructs the receipt before reconnecting. General
 exactly-once behavior for an arbitrary provider invocation with external side
 effects is not claimed: those providers still require their own idempotency
 identity or transaction protocol before production admission.
+
+## Dynamic multi-Lib graph qualification
+
+`dynamic-lib-graph.mjs` exercises the next layer of mutability without adding
+another Host operation. One generation owns a named set of Lib resources and
+an ordered pipeline. Applying a new generation:
+
+1. independently recomputes the exact package identity over the descriptor,
+   WIT and adapter bytes;
+2. reuses a block only when its verified artifact and declared Lib identity
+   match the active block;
+3. installs, probes and health-checks only changed blocks;
+4. health-checks the complete candidate graph before one atomic publication;
+5. lets old in-flight calls drain on their captured generation, then releases
+   only resources no longer reachable from the new generation.
+
+Updates are revision-fenced and serialized. A failed candidate leaves the old
+generation active and releases every newly installed resource. A cleanup error
+after publication cannot roll the route back to resources that may already
+have been released.
+
+Run its local qualification with:
+
+```sh
+node scripts/test-dynamic-lib-graph-v1.mjs
+```
+
+The test proves two-block composition, one-block replacement with unchanged
+block reuse, old/new generation overlap, route-only reorder with zero installs,
+rejection of false identity and package hashes, whole-graph rollback on failed
+health, and zero retained Host resources/windows/operations after close. This
+engine is local prototype evidence. It is not yet a durable Client Foundation
+state format or a Gateway `graph.apply` command, and it is not admitted or
+released.

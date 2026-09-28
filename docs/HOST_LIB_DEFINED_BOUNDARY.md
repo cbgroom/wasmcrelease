@@ -788,3 +788,12 @@ segments into one `1..6` pack, retains three metadata rows and three hot
 commands, resolves old command identities, and removes an injected orphan on
 restart. Archive deletion policy and indexed lookup acceleration remain
 pending.
+
+The local dynamic multi-Lib graph qualification extends the same higher layer
+from a single active provider to a named, ordered composition. Unchanged exact
+packages are reused, replacements are installed and health-checked before an
+atomic generation publication, old calls drain on their captured generation,
+and a broken candidate releases its new resources without changing the active
+route. False package and Lib identities are rejected before installation. The
+fixed Host lifecycle and minimal CLI remain unchanged. This is not yet wired
+to durable Client/Gateway graph commands and remains prototype-only evidence.
