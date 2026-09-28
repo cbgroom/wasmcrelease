@@ -99,12 +99,10 @@ assert.equal(new TextDecoder().decode(request), 'GET /health HTTP/1.1\r\nhost: e
 const work = await mkdtemp(join(tmpdir(), 'wasmc-tls-client-'));
 try {
   const componentPath = join(work, 'tls-client.component.wasm');
-  const httpComponentPath = join(work, 'http-client.component.wasm');
   const requestPath = join(work, 'request.bin');
   const responsePath = join(work, 'response.bin');
   await writeFile(requestPath, request);
   run('wasm-tools', ['component', 'new', candidatePath, '-o', componentPath]);
-  run('wasm-tools', ['component', 'new', httpPath, '-o', httpComponentPath]);
   run('cargo', [
     '+1.96.0', 'build', '--release', '--locked',
     '--manifest-path', 'libsrc/wasmc-tls-client/tests/host/Cargo.toml',
@@ -139,13 +137,23 @@ try {
   assert.ok(receipt.loopback_tls_bytes > 0);
   assert.deepEqual(receipt.host_imports, ['wasmc:tls-core/entropy@0.0.1#fill']);
   const response = await readFile(responsePath);
-  const decoded = run('wasmtime', [
-    'run', '--invoke',
-    `decode-response([${[...response].join(',')}], "GET", true)`,
-    httpComponentPath,
-  ], { timeout: 30000 });
-  assert.match(decoded, /status: 200/);
-  assert.match(decoded, /body: \[111, 107\]/);
+  const responsePtr = alloc(response);
+  const decodeMethod = encoder.encode('GET');
+  const decodeMethodPtr = alloc(decodeMethod);
+  const decodedPtr = http.exports['wasmc:http1-client/wire@0.0.1#decode-response'](
+    responsePtr, response.length, decodeMethodPtr, decodeMethod.length, 1,
+  );
+  const decodedView = new DataView(http.exports.memory.buffer);
+  assert.equal(decodedView.getUint8(decodedPtr), 0, 'HTTP response decoder returned an error');
+  assert.equal(decodedView.getUint8(decodedPtr + 4), 1, 'HTTP response decoder returned incomplete');
+  assert.equal(decodedView.getUint16(decodedPtr + 10, true), 200);
+  const bodyPtr = decodedView.getUint32(decodedPtr + 20, true);
+  const bodyLength = decodedView.getUint32(decodedPtr + 24, true);
+  assert.deepEqual(
+    [...new Uint8Array(http.exports.memory.buffer, bodyPtr, bodyLength)],
+    [111, 107],
+  );
+  http.exports['cabi_post_wasmc:http1-client/wire@0.0.1#decode-response'](decodedPtr);
 
   console.log(JSON.stringify({
     accepted: true,

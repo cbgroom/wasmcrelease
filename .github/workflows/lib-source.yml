@@ -70,6 +70,7 @@ jobs:
       - uses: dtolnay/rust-toolchain@1.96.0
         with:
           targets: wasm32-unknown-unknown
+          components: rustfmt
       - uses: bytecodealliance/actions/wasmtime/setup@9152e710e9f7182e4c29ad218e4f335a7b203613
         with:
           version: 47.0.4
