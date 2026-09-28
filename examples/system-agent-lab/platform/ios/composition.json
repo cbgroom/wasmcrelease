@@ -1,0 +1,60 @@
+{
+  "schema": "wasmc.system-agent-lab-composition/v1",
+  "id": "ios-system-agent-lab-v1",
+  "target": {
+    "os": "ios",
+    "architecture": "aarch64",
+    "environment": "simulator",
+    "embedding": "native"
+  },
+  "host": {
+    "contract": "wasmc.lib-defined-host-boundary/v1",
+    "source": "host/tests/ios-app-capability/Host/FixedHost.swift",
+    "required_domain_apis": 0
+  },
+  "scenarios": [
+    {
+      "id": "web-surface",
+      "candidate": "libsrc/wasmc-system-ios-app-surface-control/candidate.json",
+      "provider": "wasmc:system-ios-app-surface-control@0.0.3-dev.1",
+      "api": "wasmc:system-app-surface-control@0.0.3",
+      "sources": [
+        "libsrc/wasmc-system-ios-app-surface-control/platform/ios/Sources/WebViewSurfaceProvider.swift"
+      ],
+      "frameworks": ["WebKit"],
+      "app_requirements": {
+        "background_modes": [],
+        "plist": {},
+        "exclusive_resources": []
+      }
+    },
+    {
+      "id": "network-path",
+      "candidate": "libsrc/wasmc-system-ios-network-path/candidate.json",
+      "provider": "wasmc:system-ios-network-path@0.0.1-dev.1",
+      "api": "wasmc:system-network-path@0.0.1",
+      "sources": [
+        "libsrc/wasmc-system-ios-network-path/platform/ios/Sources/NetworkPathProvider.swift"
+      ],
+      "frameworks": ["Foundation", "Network"],
+      "app_requirements": {
+        "background_modes": [],
+        "plist": {},
+        "exclusive_resources": []
+      }
+    }
+  ],
+  "expected_merge": {
+    "frameworks": ["Foundation", "Network", "WebKit"],
+    "background_modes": [],
+    "plist": {},
+    "exclusive_resources": []
+  },
+  "lifecycle": {
+    "qualified": true,
+    "admitted": false,
+    "released": false,
+    "discoverable": false,
+    "installable": false
+  }
+}

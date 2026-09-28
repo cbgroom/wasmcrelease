@@ -39,6 +39,13 @@ second owner of provider source. Dynamic native adapters and statically linked m
 same target resolver through the `native-adapter` and `embedded-source`
 artifact formats respectively.
 
+Examples use two levels: each Lib retains a focused package-owned qualification
+example, while `examples/system-agent-lab/platform/<os>/` provides one shared
+platform App shell for exact multi-Lib compositions. The integration manifest
+merges additive requirements and rejects identity, App-configuration and
+exclusive-resource conflicts before project generation. See
+`docs/EXAMPLE_COMPOSITION_ARCHITECTURE.md`.
+
 Each source package may carry its own Cargo workspace boundary so it can be
 built and reviewed independently from the release repository's maintenance
 workspace. Public-source CI rebuilds candidates from locked dependencies rather
