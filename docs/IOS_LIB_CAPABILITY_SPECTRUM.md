@@ -20,7 +20,7 @@ rewritten as a physical-device claim. The machine policy is retained at
 | Background transfer | 8 MiB background URLSession download, background callback, atomic result, exact SHA-256 and cancellation with no late result | Simulator localhost; automatic process-relaunch delivery not observed |
 | Background audio | playback session remains playing for 14 background samples and advances 3.283 seconds | Simulator clock mechanics; physical output, lock screen and interruptions pending |
 | Local notifications | real authorization prompt, system delivery while App is backgrounded, exact identifier/title/body/payload, notification-tap return | local scheduling only; APNs, silent push and notification extensions pending |
-| App-owned surfaces | five UIKit surfaces, dock, confirmed human takeover | application scope only |
+| App-owned surfaces | five UIKit surfaces, dock, confirmed human takeover, plus two real WKWebViews with stable DOM snapshots and isolated virtual activation during user text input | application scope only; arbitrary remote pages and cross-App control not claimed |
 | Picture in Picture | iPad Simulator start/stop/restore and frame submission | live pixel visibility and physical device pending |
 | Authorization | Contacts allow/deny plus authorized CRUD cleanup | other protected domains are observation/planning only |
 | App data and compute | storage, preferences, Keychain, SQLite, crypto, Metal, offline audio | active App execution |

@@ -1,6 +1,6 @@
 {
   "schema": "wasmc.platform-binding-descriptor/v1",
-  "identity": "wasmc:system-ios-app-surface-control@0.0.2-dev.1",
+  "identity": "wasmc:system-ios-app-surface-control@0.0.3-dev.1",
   "wit": "lib.wit",
   "target": {
     "os": "ios",
@@ -14,13 +14,17 @@
     "linkage": "static-app",
     "sources": [
       "platform/ios/Sources/SurfaceControlProvider.swift",
-      "platform/ios/Sources/PiPSurfaceProvider.swift"
+      "platform/ios/Sources/PiPSurfaceProvider.swift",
+      "platform/ios/Sources/WebViewSurfaceProvider.swift"
     ],
-    "frameworks": ["AVFoundation", "AVKit", "CoreMedia", "CoreVideo", "UIKit"]
+    "frameworks": ["AVFoundation", "AVKit", "CoreMedia", "CoreVideo", "UIKit", "WebKit"]
   },
   "limits": {
     "max_surfaces": 5,
-    "physical_input_injection": false
+    "physical_input_injection": false,
+    "real_wkwebview_surfaces": true,
+    "semantic_dom_snapshot": true,
+    "virtual_dom_action": true
   },
   "lifecycle": "qualified-not-admitted-not-released"
 }

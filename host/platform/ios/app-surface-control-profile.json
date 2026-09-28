@@ -13,11 +13,11 @@
     "required_domain_apis": 0
   },
   "required_lifecycle": "qualified",
-  "requirements": ["wasmc:system-app-surface-control@0.0.2"],
+  "requirements": ["wasmc:system-app-surface-control@0.0.3"],
   "bindings": [
     {
-      "api": "wasmc:system-app-surface-control@0.0.2",
-      "provider": "wasmc:system-ios-app-surface-control@0.0.2-dev.1",
+      "api": "wasmc:system-app-surface-control@0.0.3",
+      "provider": "wasmc:system-ios-app-surface-control@0.0.3-dev.1",
       "candidate": "libsrc/wasmc-system-ios-app-surface-control/candidate.json",
       "wit": "libsrc/wasmc-system-ios-app-surface-control/lib.wit",
       "descriptor": "libsrc/wasmc-system-ios-app-surface-control/platform/ios/binding.json",
@@ -28,9 +28,10 @@
         "linkage": "static-app",
         "sources": [
           "libsrc/wasmc-system-ios-app-surface-control/platform/ios/Sources/SurfaceControlProvider.swift",
-          "libsrc/wasmc-system-ios-app-surface-control/platform/ios/Sources/PiPSurfaceProvider.swift"
+          "libsrc/wasmc-system-ios-app-surface-control/platform/ios/Sources/PiPSurfaceProvider.swift",
+          "libsrc/wasmc-system-ios-app-surface-control/platform/ios/Sources/WebViewSurfaceProvider.swift"
         ],
-        "frameworks": ["AVFoundation", "AVKit", "CoreMedia", "CoreVideo", "UIKit"]
+        "frameworks": ["AVFoundation", "AVKit", "CoreMedia", "CoreVideo", "UIKit", "WebKit"]
       },
       "target": {
         "os": "ios",
@@ -51,6 +52,7 @@
     "five_parallel_surfaces": true,
     "confirmed_human_handoff": true,
     "user_started_picture_in_picture": true,
+    "real_wkwebview_semantic_action_isolation": true,
     "physical_device": false
   }
 }

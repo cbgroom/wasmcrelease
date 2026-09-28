@@ -37,8 +37,15 @@ const iosProfile = resolveSystemProfileRequest(root, iosRequest);
 assert.deepEqual(iosProfile, iosExpectedProfile);
 assert.equal(iosProfile.host.required_domain_apis, 0);
 assert.equal(iosProfile.bindings[0].artifact.format, "embedded-source");
-assert.equal(iosProfile.bindings[0].artifact.sources.length, 2);
+assert.deepEqual(iosProfile.bindings[0].artifact.sources, [
+  "libsrc/wasmc-system-ios-app-surface-control/platform/ios/Sources/SurfaceControlProvider.swift",
+  "libsrc/wasmc-system-ios-app-surface-control/platform/ios/Sources/PiPSurfaceProvider.swift",
+  "libsrc/wasmc-system-ios-app-surface-control/platform/ios/Sources/WebViewSurfaceProvider.swift",
+]);
+assert.equal(new Set(iosProfile.bindings[0].artifact.sources).size,
+  iosProfile.bindings[0].artifact.sources.length);
 assert.equal(iosProfile.bindings[0].artifact.frameworks.includes("AVKit"), true);
+assert.equal(iosProfile.bindings[0].artifact.frameworks.includes("WebKit"), true);
 expectCode("provider.none", () => resolveSystemProfile({
   ...iosRequest,
   target: { os: "macos", architecture: "aarch64", environment: "device", embedding: "native" },

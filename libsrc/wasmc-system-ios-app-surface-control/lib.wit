@@ -1,4 +1,4 @@
-package wasmc:system-app-surface-control@0.0.2;
+package wasmc:system-app-surface-control@0.0.3;
 
 interface surface-control {
   enum surface-kind {
@@ -39,6 +39,24 @@ interface surface-control {
     visible-change: bool,
   }
 
+  record semantic-node {
+    id: string,
+    role: string,
+    text: string,
+    disabled: bool,
+    x: u32,
+    y: u32,
+    width: u32,
+    height: u32,
+  }
+
+  record semantic-snapshot {
+    surface-id: string,
+    generation: u64,
+    focused-element-id: string,
+    nodes: list<semantic-node>,
+  }
+
   list-surfaces: func() -> list<surface-info>;
   capture: func(surface-id: string) -> result<frame, s32>;
   activate: func(surface-id: string, generation: u64, x: u32, y: u32) -> result<receipt, s32>;
@@ -46,6 +64,8 @@ interface surface-control {
   scroll: func(surface-id: string, generation: u64, delta-x: s32, delta-y: s32) -> result<receipt, s32>;
   handoff: func(surface-id: string, next-owner: owner) -> result<receipt, s32>;
   request-presentation: func(surface-id: string, generation: u64, next: presentation) -> result<receipt, s32>;
+  observe-semantics: func(surface-id: string) -> result<semantic-snapshot, s32>;
+  activate-element: func(surface-id: string, generation: u64, element-id: string) -> result<receipt, s32>;
 }
 
 world system-app-surface-control {

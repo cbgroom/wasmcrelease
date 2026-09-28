@@ -90,7 +90,7 @@ assert.equal(report.pip_visual_pixels_capture_qualified, false);
 assert.ok(report.pip_frames_enqueued > 0);
 assert.equal(report.surface_snapshots.length, 5);
 assert.ok(report.surface_snapshots.every((surface) => surface.kind === "native"));
-assert.equal(report.provider_evidence[0].identity, "wasmc:system-ios-app-surface-control@0.0.2-dev.1");
+assert.equal(report.provider_evidence[0].identity, "wasmc:system-ios-app-surface-control@0.0.3-dev.1");
 
 const screenshotPath = path.join(root, "target", "ios-app-surface-control.png");
 simctl(["launch", "--terminate-running-process", udid, bundle]);
