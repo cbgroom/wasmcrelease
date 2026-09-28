@@ -53,6 +53,12 @@ identity or transaction protocol before production admission.
 
 ## Dynamic multi-Lib graph qualification
 
+The normative prototype model is
+[`docs/DYNAMIC_LIB_GRAPH_MODEL.md`](../../docs/DYNAMIC_LIB_GRAPH_MODEL.md), with
+the machine-readable state model in `dynamic-lib-graph-model.json`. The model,
+not the current serial implementation, is the input to future Gateway and
+durability work.
+
 `dynamic-lib-graph.mjs` exercises the next layer of mutability without adding
 another Host operation. One generation owns a named set of Lib resources and
 an ordered pipeline. Applying a new generation:

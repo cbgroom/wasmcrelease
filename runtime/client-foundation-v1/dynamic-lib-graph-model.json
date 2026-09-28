@@ -1,0 +1,74 @@
+{
+  "schema": "wasmc.dynamic-lib-graph-model/v1",
+  "lifecycle": "prototype-model-not-admitted-not-released",
+  "host_boundary": "resource-window-operation-completion-cancel-release",
+  "graph_shape": "dag",
+  "manager_phases": [
+    "stable",
+    "preparing",
+    "draining",
+    "closed"
+  ],
+  "state_policies": [
+    "stateless",
+    "sticky",
+    "snapshot-v1"
+  ],
+  "reuse_key": [
+    "node_id",
+    "lib_identity",
+    "package_sha256",
+    "configuration_sha256",
+    "state_policy",
+    "state_schema_identity"
+  ],
+  "linearization_points": {
+    "invoke": "capture-and-increment-active-generation",
+    "publish": "qualified-candidate-becomes-active"
+  },
+  "transitions": [
+    { "event": "apply-request", "from": "stable", "to": "preparing" },
+    { "event": "prepare-failed", "from": "preparing", "to": "stable" },
+    { "event": "publish", "from": "preparing", "to": "draining" },
+    { "event": "drain-complete", "from": "draining", "to": "stable" },
+    { "event": "cleanup-failed", "from": "draining", "to": "draining" },
+    { "event": "close", "from": "stable", "to": "closed" },
+    { "event": "close-after-drain", "from": "draining", "to": "closed" }
+  ],
+  "invariants": [
+    "single-active-generation",
+    "monotonic-active-revision",
+    "candidate-not-observable",
+    "invoke-captures-one-generation",
+    "referenced-resource-not-released",
+    "prepublish-failure-preserves-active",
+    "postpublish-cleanup-never-rolls-back",
+    "reuse-requires-full-instance-identity",
+    "exact-wit-port-compatibility",
+    "close-reclaims-all-runtime-resources"
+  ],
+  "current_implementation_profile": {
+    "graph_shape": "serial-pipeline",
+    "state_policy": "stateless",
+    "configuration": "absent",
+    "qualified_invariants": [
+      "single-active-generation",
+      "monotonic-active-revision",
+      "candidate-not-observable",
+      "invoke-captures-one-generation",
+      "referenced-resource-not-released",
+      "prepublish-failure-preserves-active",
+      "postpublish-cleanup-never-rolls-back",
+      "close-reclaims-all-runtime-resources"
+    ],
+    "open_gates": [
+      "canonical-graph-digest",
+      "configuration-identity",
+      "general-dag-scheduler",
+      "exact-wit-port-compatibility",
+      "stateful-replacement",
+      "durable-retired-generation-cleanup",
+      "restart-reconstruction"
+    ]
+  }
+}
