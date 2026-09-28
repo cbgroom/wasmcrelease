@@ -1,0 +1,34 @@
+{
+  "schema": "wasmc.dynamic-client-state-migration-projection/v1",
+  "request": "Is cross-schema snapshot-v1 state migration implemented in the dynamic Client/Gateway prototype?",
+  "authority_file": "runtime/client-foundation-v1/agent-state-migration-orientation.json",
+  "answer": "Yes. Exact cross-schema migration Lib distribution, rollback and target-schema restart are locally qualified; the prototype is not admitted or released.",
+  "lifecycle": {
+    "qualified": true,
+    "admitted": false,
+    "released": false,
+    "discoverable": false,
+    "installable": false,
+    "scope": "prototype-local-qualification"
+  },
+  "identity": "wasmc.dynamic-lib-state-migration-plan/v1 canonical JSON SHA-256 binds node, exact migration package, WIT, configuration and source/target schema identities",
+  "ordering": "install/probe/health; graph-wide barrier and drain; snapshot/validate; migrate/validate; restore; release ephemeral migration resource; health/publish; retire old generation",
+  "rollback": "Any pre-publication migration failure releases candidate and migration resources and retains the old generation.",
+  "stable_graph": "Migration Lib is an ephemeral transition dependency, not a stable DAG node and not persisted in active_graph.",
+  "host_boundary": "No fixed Host API or minimal CLI change.",
+  "proved": {
+    "local": "CROSS1:2->CROSS2:2",
+    "gateway": "SV2:2->SV3:2",
+    "restart": "SV3:2",
+    "forged_contract_rejected": true
+  },
+  "open_gates": ["sticky-active-restart-disposition"],
+  "not_claimed": ["general exactly-once execution", "external-effect rollback or cleanup", "release admission"],
+  "checks": [
+    "node scripts/validate-dynamic-lib-graph-model-v1.mjs",
+    "node scripts/test-dynamic-lib-stateful-v1.mjs",
+    "node scripts/test-dynamic-client-foundation-gateway-v1.mjs",
+    "node scripts/test-client-foundation-v1.mjs"
+  ],
+  "rule": "This root projection is sufficient for a status review. Cite the authority file and named checks, then stop. Do not read release orientation, release.json, release-surfaces.json, manifests, implementation or tests merely to reconfirm it."
+}
