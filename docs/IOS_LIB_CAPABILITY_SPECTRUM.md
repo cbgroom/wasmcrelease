@@ -24,7 +24,7 @@ rewritten as a physical-device claim. The machine policy is retained at
 | Picture in Picture | iPad Simulator start/stop/restore and frame submission | live pixel visibility and physical device pending |
 | Authorization | Contacts allow/deny plus authorized CRUD cleanup | other protected domains are observation/planning only |
 | App data and compute | storage, preferences, Keychain, SQLite, crypto, Metal, offline audio | active App execution |
-| App networking and Web | POSIX loopback TCP/UDP, local WKWebView DOM/JS, exact WS text duplex, plus DER-SHA256-pinned local WSS duplex in foreground and a finite background-task window | loopback fixture only; no public-CA WSS, Internet route, suspension continuity or relaunch reconnect yet |
+| App networking and Web | POSIX loopback TCP/UDP, local WKWebView DOM/JS, exact WS text duplex, DER-SHA256-pinned local WSS duplex, plus one service-restart reconnect with exact process-memory outbox delivery | loopback fixture only; no public-CA WSS, Internet route, OS network transition, durable queue, suspension continuity or process-relaunch reconnect yet |
 | Network path | live `NWPathMonitor` snapshot reports satisfied Wi-Fi, non-expensive and non-constrained | one snapshot only; Simulator reports IPv4/IPv6/DNS flags false; no transition or server-reachability claim |
 
 ## Observed or configured, not qualified as execution

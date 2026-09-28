@@ -45,7 +45,13 @@ final class WebSocketViewController: UIViewController {
         var report = provider.report()
         report["provider_evidence"] = providerEvidence
         Self.writeReport(report)
-        if report["accepted"] as? Bool == true {
+        if report["service_restart_reconnect_qualified"] as? Bool == true {
+            statusLabel.text = "websocket-service-restart-recovery:accepted"
+            statusLabel.accessibilityIdentifier = "websocket-recovery-complete"
+        } else if report["reconnect_exhausted"] as? Bool == true {
+            statusLabel.text = "websocket-reconnect:exhausted"
+            statusLabel.accessibilityIdentifier = "websocket-reconnect-exhausted"
+        } else if report["accepted"] as? Bool == true {
             statusLabel.text = "websocket-background-duplex:accepted"
             statusLabel.accessibilityIdentifier = "websocket-complete"
         } else if (report["error"] as? String) == "certificate-pin-mismatch" {

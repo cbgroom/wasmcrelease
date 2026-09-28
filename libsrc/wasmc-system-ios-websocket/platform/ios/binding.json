@@ -1,6 +1,6 @@
 {
   "schema": "wasmc.platform-binding-descriptor/v1",
-  "identity": "wasmc:system-ios-websocket@0.0.1-dev.2",
+  "identity": "wasmc:system-ios-websocket@0.0.1-dev.3",
   "wit": "lib.wit",
   "target": {
     "os": "ios", "architecture": "aarch64", "environment": "simulator", "embedding": "native"
@@ -16,6 +16,9 @@
     "text_frames": true,
     "binary_frames": false,
     "local_pinned_wss_qualified": true,
+    "service_restart_reconnect_qualified": true,
+    "reconnect_policy": "350ms-fixed-max-8",
+    "outbox_scope": "process-memory-single-message-fixture",
     "public_ca_wss_qualified": false,
     "background_scope": "finite-background-task-only",
     "suspension_receive_qualified": false

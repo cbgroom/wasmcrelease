@@ -44,7 +44,7 @@ try {
   assert.equal(report.background_reply, "server-background");
   assert.equal(report.background_receive_phase, "background");
   assert.equal(report.suspension_receive_qualified, false);
-  assert.equal(report.provider_evidence[0].identity, "wasmc:system-ios-websocket@0.0.1-dev.2");
+  assert.equal(report.provider_evidence[0].identity, "wasmc:system-ios-websocket@0.0.1-dev.3");
   console.log(JSON.stringify({ ...report, simulator_udid: udid }));
 } finally {
   server.kill("SIGTERM");

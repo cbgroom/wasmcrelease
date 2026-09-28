@@ -3,7 +3,12 @@ import fs from "node:fs";
 import tls from "node:tls";
 
 const port = Number(process.argv[2] ?? 18767);
+const restartOnce = process.argv.includes("--restart-once");
+const neverRestart = process.argv.includes("--never-restart");
 const sockets = new Set();
+let server;
+let restartTriggered = false;
+let stopping = false;
 const options = {
   cert: fs.readFileSync("scripts/fixtures/ios-wss-cert.pem"),
   key: fs.readFileSync("scripts/fixtures/ios-wss-key.pem"),
@@ -30,7 +35,8 @@ function decode(buffer) {
   return { opcode: buffer[0] & 0x0f, text: payload.toString("utf8"), bytes: header + length };
 }
 
-const server = tls.createServer(options, (socket) => {
+function startServer() {
+  server = tls.createServer(options, (socket) => {
   sockets.add(socket);
   let upgraded = false;
   let retained = Buffer.alloc(0);
@@ -56,13 +62,33 @@ const server = tls.createServer(options, (socket) => {
       if (decoded.opcode !== 0x1) continue;
       if (decoded.text === "client-foreground") socket.write(frame("server-foreground"));
       if (decoded.text === "client-background") socket.write(frame("server-background"));
+      if (decoded.text === "client-recovery-prime") {
+        socket.write(frame("server-recovery-prime"));
+        if (restartOnce && !restartTriggered) {
+          restartTriggered = true;
+          setTimeout(() => {
+            for (const active of sockets) active.destroy();
+            server.close(() => {
+              if (neverRestart) return process.stdout.write("STOPPED\n");
+              setTimeout(() => {
+                if (!stopping) startServer();
+              }, 700);
+            });
+          }, 100);
+        }
+      }
+      if (decoded.text === "client-after-restart") socket.write(frame("server-after-restart"));
     }
   });
   socket.on("close", () => sockets.delete(socket));
-});
+  });
 
-server.listen(port, "127.0.0.1", () => process.stdout.write("READY\n"));
+  server.listen(port, "127.0.0.1", () => process.stdout.write(restartTriggered ? "RESTARTED\n" : "READY\n"));
+}
+
+startServer();
 process.on("SIGTERM", () => {
+  stopping = true;
   for (const socket of sockets) socket.destroy();
   server.close(() => process.exit(0));
 });
