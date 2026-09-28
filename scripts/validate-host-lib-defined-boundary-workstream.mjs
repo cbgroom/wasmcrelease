@@ -465,6 +465,47 @@ assert.equal(iosSurfaceV6Receipt.evidence.physical_device_qualification, false);
 assert.equal(iosSurfaceV6Receipt.evidence.wasm_lowering, false);
 assert.equal(iosSurfaceV6Receipt.evidence.dynamic_component_loading, false);
 
+const iosSystemAgentLabV1Receipt = JSON.parse(fs.readFileSync(
+  "admission/host-lib-defined-boundary-v1/ios-arm64-system-agent-lab-v1.json", "utf8",
+));
+assert.equal(iosSystemAgentLabV1Receipt.schema,
+  "wasmc.host-lib-defined-boundary-ios-system-agent-lab-qualification/v1");
+assert.equal(iosSystemAgentLabV1Receipt.qualified, true);
+assert.equal(iosSystemAgentLabV1Receipt.admitted, false);
+assert.equal(iosSystemAgentLabV1Receipt.released, false);
+assert.equal(iosSystemAgentLabV1Receipt.discoverable, false);
+assert.equal(iosSystemAgentLabV1Receipt.installable, false);
+execFileSync("git", ["cat-file", "-e", `${iosSystemAgentLabV1Receipt.implementation_commit}^{commit}`]);
+execFileSync("git", ["merge-base", "--is-ancestor",
+  iosSystemAgentLabV1Receipt.implementation_commit, "HEAD"]);
+for (const [relative, expected] of Object.entries(iosSystemAgentLabV1Receipt.source)) {
+  assert.equal(digestAt(iosSystemAgentLabV1Receipt.implementation_commit, relative), expected,
+    `${relative}: retained iOS System Agent Lab v1 source drift`);
+}
+assert.equal(iosSystemAgentLabV1Receipt.evidence.status, "PASS");
+assert.equal(iosSystemAgentLabV1Receipt.evidence.focused_lib_examples_preserved, true);
+assert.equal(iosSystemAgentLabV1Receipt.evidence.shared_platform_shell, true);
+assert.equal(iosSystemAgentLabV1Receipt.evidence.provider_source_copied_into_shell, false);
+assert.equal(iosSystemAgentLabV1Receipt.evidence.manifest_selected_exact_candidates, true);
+assert.equal(iosSystemAgentLabV1Receipt.evidence.provider_count, 2);
+assert.deepEqual(iosSystemAgentLabV1Receipt.evidence.merged_frameworks,
+  ["Foundation", "Network", "WebKit"]);
+assert.equal(iosSystemAgentLabV1Receipt.evidence.duplicate_provider_rejected, true);
+assert.equal(iosSystemAgentLabV1Receipt.evidence.plist_conflict_rejected, true);
+assert.equal(iosSystemAgentLabV1Receipt.evidence.exclusive_resource_conflict_rejected, true);
+assert.equal(iosSystemAgentLabV1Receipt.evidence.generic_ios_simulator_build, true);
+assert.equal(iosSystemAgentLabV1Receipt.evidence.fixed_host_domain_apis, 0);
+assert.equal(iosSystemAgentLabV1Receipt.evidence.fixed_host_sha256,
+  iosSurfaceV6Receipt.evidence.fixed_host_sha256);
+assert.equal(iosSystemAgentLabV1Receipt.evidence.web_semantic_action, true);
+assert.equal(iosSystemAgentLabV1Receipt.evidence.web_generation, 1);
+assert.equal(iosSystemAgentLabV1Receipt.evidence.web_count, "1");
+assert.equal(iosSystemAgentLabV1Receipt.evidence.network_status, "satisfied");
+assert.ok(iosSystemAgentLabV1Receipt.evidence.network_generation >= 1);
+assert.equal(iosSystemAgentLabV1Receipt.evidence.physical_device_qualification, false);
+assert.equal(iosSystemAgentLabV1Receipt.evidence.wasm_lowering, false);
+assert.equal(iosSystemAgentLabV1Receipt.evidence.dynamic_component_loading, false);
+
 const iosLifecycleV1Receipt = JSON.parse(fs.readFileSync(
   "admission/host-lib-defined-boundary-v1/ios-arm64-app-lifecycle-v1.json", "utf8",
 ));
@@ -1807,6 +1848,7 @@ console.log(JSON.stringify({
   retained_ios_arm64_app_surface_control_v4_qualification: iosSurfaceV4Receipt.implementation_commit,
   retained_ios_arm64_app_surface_control_v5_qualification: iosSurfaceV5Receipt.implementation_commit,
   retained_ios_arm64_app_surface_control_v6_qualification: iosSurfaceV6Receipt.implementation_commit,
+  retained_ios_arm64_system_agent_lab_v1_qualification: iosSystemAgentLabV1Receipt.implementation_commit,
   retained_ios_arm64_app_lifecycle_v1_qualification: iosLifecycleV1Receipt.implementation_commit,
   retained_ios_arm64_finite_background_window_v1_qualification:
     iosFiniteBackgroundWindowV1Receipt.implementation_commit,

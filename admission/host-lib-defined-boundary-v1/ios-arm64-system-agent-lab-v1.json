@@ -1,0 +1,74 @@
+{
+  "schema": "wasmc.host-lib-defined-boundary-ios-system-agent-lab-qualification/v1",
+  "status": "ios-26.5-arm64-ipad-simulator-two-lib-composition-v1-qualified-not-admitted-not-released",
+  "date": "2026-09-28",
+  "implementation_commit": "b23c6201cce372cfbed371133c9f4bd204ab4243",
+  "source": {
+    "docs/EXAMPLE_COMPOSITION_ARCHITECTURE.md": "90d1a29288e69ad4699beb934db9b6d2b132084cba98ac679a8c678994e64eb5",
+    "libsrc/README.md": "80e94fec0867792f2730eb8504d1b98930a1c314e0d65fbca477ffbc277c216b",
+    "examples/system-agent-lab/README.md": "7fe4316ad7e60e7dfed5e45d217e4d08e8a1da952b755a76e7967bf4cf5a1268",
+    "examples/system-agent-lab/platform/ios/composition.json": "f74d14efe692dee6a5103109e80f4506d40727ca6e2818035980dcbaccac2d0d",
+    "examples/system-agent-lab/platform/ios/project.yml": "c8f8e8177902b427869c103f8ef9b50448661f30e598f06c6ad8a554c82da31b",
+    "examples/system-agent-lab/platform/ios/App/AppDelegate.swift": "20db4246e33ad9fafb9055f7fc81b4c3c03ff5452b1c22657b66e40ae7f030ef",
+    "examples/system-agent-lab/platform/ios/App/AgentLabViewController.swift": "0d9feaf68d3d8877eabd8c39331a6ab16e4daf1772f3adcf6bcd11e1f298c9b5",
+    "examples/system-agent-lab/platform/ios/App/Info.plist": "e1e5b21cbbbcb42fcdac77e2c5c3fd057ec6d6968b8a22645d48ed0dac3b355c",
+    "examples/system-agent-lab/platform/ios/UITests/SystemAgentLabUITests.swift": "4cab6a2f4ef2930562bc0dd9cd9330b6e73e18f448219d1873e3c048848061e6",
+    "libsrc/wasmc-system-ios-app-surface-control/candidate.json": "1332a6e609fe2eda9c9b411991032bcd189846e78ade6753d150e193b7cd9554",
+    "libsrc/wasmc-system-ios-app-surface-control/platform/ios/binding.json": "02d1872546e801149cde5e838ce53b60a5a69e486a2529a0a51c0c91efd80954",
+    "libsrc/wasmc-system-ios-app-surface-control/platform/ios/Sources/WebViewSurfaceProvider.swift": "099f618969a1d6ae4e0688cc95f42fe184e0c538b7c663167ce1eab7c67b2c71",
+    "libsrc/wasmc-system-ios-network-path/candidate.json": "070ce401595b37ca5b5a05b1c1e4c1c18deefbd0efd4aa60c7776091364a4f16",
+    "libsrc/wasmc-system-ios-network-path/platform/ios/binding.json": "0a9e0335bbc2c4e37eadfad5443e4b37b15dc49f614cdeb49d290f631d0183e7",
+    "libsrc/wasmc-system-ios-network-path/platform/ios/Sources/NetworkPathProvider.swift": "264f476ad477488ad63f8144e4dce9af75d664f83ad6e4bb23a00b3f2ba49817",
+    "host/tests/ios-app-capability/Host/FixedHost.swift": "f0d465ba7f23698d6365453b02fad2f4a0803171f970631751fc90a00a86d96f",
+    "scripts/validate-system-agent-lab.mjs": "af3cf3a4c194e9f122b01d268938e4b60fdf29591a71d54e4328a50cff45180d",
+    "scripts/test-ios-system-agent-lab.mjs": "901ad4c69a7078739454be79925cd3ee0b5b32c670b3043a17d63f8d7a229c2b"
+  },
+  "environment": {
+    "host": "macOS 26.6.2 build 25G83",
+    "xcode": "Xcode 27.0 build 27A266a",
+    "simulator_name": "WAsmC PiP iPad Lab",
+    "simulator_model": "iPad Pro 13-inch (M4)",
+    "simulator_udid": "6164D245-822A-4F9C-9B70-327FB306DE06",
+    "ios_runtime": "26.5 build 23F77",
+    "architecture": "aarch64"
+  },
+  "outputs": {
+    "app_executable_bytes": 72992,
+    "app_executable_sha256": "f0eb184db8d77b7d2f37978b65eed08ae347acc74ab75c444f650152edd4ae26"
+  },
+  "evidence": {
+    "status": "PASS",
+    "qualification_scope": "shared-ios-shell-exact-two-lib-composition-and-conflict-rejection",
+    "composition": "ios-system-agent-lab-v1",
+    "focused_lib_examples_preserved": true,
+    "shared_platform_shell": true,
+    "provider_source_copied_into_shell": false,
+    "manifest_selected_exact_candidates": true,
+    "provider_count": 2,
+    "provider_identities": [
+      "wasmc:system-ios-app-surface-control@0.0.3-dev.1",
+      "wasmc:system-ios-network-path@0.0.1-dev.1"
+    ],
+    "merged_frameworks": ["Foundation", "Network", "WebKit"],
+    "duplicate_provider_rejected": true,
+    "plist_conflict_rejected": true,
+    "exclusive_resource_conflict_rejected": true,
+    "generic_ios_simulator_build": true,
+    "fixed_host_domain_apis": 0,
+    "fixed_host_sha256": "f0d465ba7f23698d6365453b02fad2f4a0803171f970631751fc90a00a86d96f",
+    "web_semantic_action": true,
+    "web_generation": 1,
+    "web_count": "1",
+    "network_status": "satisfied",
+    "network_generation": 1,
+    "physical_device_qualification": false,
+    "wasm_lowering": false,
+    "dynamic_component_loading": false
+  },
+  "qualified": true,
+  "admitted": false,
+  "released": false,
+  "discoverable": false,
+  "installable": false
+}
+
