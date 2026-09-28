@@ -54,7 +54,8 @@ assert.equal(model.current_implementation_profile.state_policy, "stateless");
 assert.equal(model.current_implementation_profile.graph_identity, "canonical-json-sha256");
 assert.equal(model.current_implementation_profile.configuration, "canonical-json-sha256");
 assert.equal(model.current_implementation_profile.wit_contract_identity, "wasm-tools-derived-port-type-sha256-bound-to-exact-wit");
-for (const gate of ["stateful-replacement", "durable-retired-generation-cleanup"]) {
+assert.equal(model.current_implementation_profile.retired_cleanup, "durable-publication-ledger-and-process-owner-fence");
+for (const gate of ["stateful-replacement"]) {
   assert.ok(model.current_implementation_profile.open_gates.includes(gate), `missing open gate: ${gate}`);
 }
 

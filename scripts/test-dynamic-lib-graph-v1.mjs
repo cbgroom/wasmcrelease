@@ -157,6 +157,21 @@ try {
 
   await graph.close();
   assert.deepEqual(boundary.counts(), { resources: 0, windows: 0, operations: 0 });
+
+  const cleanupBoundary = new LibDefinedBoundary();
+  const cleanupGraph = new DynamicLibGraph({ boundary: cleanupBoundary });
+  const cleanupFirst = request(0, [a1, b1], ["a", "b"]);
+  assert.equal((await cleanupGraph.apply(cleanupFirst)).outcome, "committed");
+  const cleanupFailure = await cleanupGraph.apply({
+    ...request(1, [a2, b1], ["a", "b"]),
+    onPublished: async () => { throw new Error("intentional durable publication barrier failure"); },
+  });
+  assert.equal(cleanupFailure.outcome, "committed");
+  assert.match(cleanupFailure.cleanup_error, /publication barrier failure/);
+  assert.equal(cleanupGraph.snapshot().retired.length, 1);
+  await assert.rejects(cleanupGraph.apply(request(2, [a2, b1], ["a", "b"])), /retired cleanup pending/);
+  await cleanupGraph.close();
+  assert.deepEqual(cleanupBoundary.counts(), { resources: 0, windows: 0, operations: 0 });
   console.log(JSON.stringify({
     accepted: true,
     schema: "wasmc.dynamic-lib-graph-local-qualification/v1",
@@ -184,6 +199,8 @@ try {
     unsupported_state_policy_rejected: true,
     broken_replacement_rolled_back: true,
     broken_candidate_never_visible: true,
+    postpublication_cleanup_failure_retained: true,
+    later_update_blocked_until_cleanup: true,
     false_identity_rejected: true,
     false_artifact_rejected: true,
     final_revision: 4,

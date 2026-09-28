@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { execFile } from "node:child_process";
+import { execFile, spawn } from "node:child_process";
+import { once } from "node:events";
 import { readFileSync } from "node:fs";
 import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import https from "node:https";
@@ -13,7 +14,8 @@ import { deriveWitPortContracts } from "../runtime/client-foundation-v1/wit-port
 import { ClientFoundationGateway } from "../runtime/client-foundation-gateway-v1/gateway.mjs";
 
 const root = process.cwd();
-const cert = readFileSync(path.join(root, "scripts/fixtures/ios-wss-cert.pem"));
+const certPath = path.join(root, "scripts/fixtures/ios-wss-cert.pem");
+const cert = readFileSync(certPath);
 const key = readFileSync(path.join(root, "scripts/fixtures/ios-wss-key.pem"));
 const sha256 = (bytes) => createHash("sha256").update(bytes).digest("hex");
 const run = promisify(execFile);
@@ -197,7 +199,7 @@ try {
     uploaded[name] = response.value;
   }
   const uploadedDag = {};
-  for (const [name, marker, fn, delayMs] of [["source", "S", "source", 0], ["left", "L", "unary", 40], ["right", "R", "unary", 40], ["join", "unused", "join", 0]]) {
+  for (const [name, marker, fn, delayMs] of [["source", "S", "source", 0], ["left", "L", "unary", 40], ["left2", "L2", "unary", 40], ["right", "R", "unary", 40], ["join", "unused", "join", 0]]) {
     const response = await api(origin, "POST", "/v1/artifacts", await makeDagBundle(name, marker, fn, delayMs));
     assert.equal(response.status, 201);
     assert.match(response.value.port_contracts_sha256, /^[a-f0-9]{64}$/);
@@ -332,15 +334,50 @@ try {
   state = await waitFor(origin, (value) => value.commands[14]?.receipt);
   assert.equal(state.commands[14].receipt.response.value, "J(L(S(dag-restart)),R(S(dag-restart)))");
 
+  trace("client:publication-crash-stop-normal");
+  await stopClient();
+  const crashStderr = [];
+  const crashClient = spawn(process.execPath, [
+    path.join(root, "scripts/fixtures/dynamic-client-publication-crash-runner.mjs"),
+    clientRoot,
+    `${address.wss_base}/v1/clients/dynamic-client/control`,
+    certPath,
+    "5",
+  ], { stdio: ["ignore", "ignore", "pipe"] });
+  crashClient.stderr.on("data", (chunk) => crashStderr.push(chunk));
+  await waitFor(origin, (value) => value.connected === true && value.last_hello?.graph_revision === 4);
+  const crashDagBlocks = [dagBlock("source", uploadedDag.source), dagBlock("left", uploadedDag.left2), dagBlock("right", uploadedDag.right), dagBlock("join", uploadedDag.join)];
+  const crashDagPayload = {
+    expected_graph_revision: 4, blocks: crashDagBlocks, edges: dagEdges, entrypoint: dagEntrypoint,
+    graph_digest: describeDynamicLibDag({ blocks: crashDagBlocks.map((entry) => ({ ...entry, root: "content-addressed-remote" })), edges: dagEdges, entrypoint: dagEntrypoint }).graph_digest,
+  };
+  await api(origin, "POST", "/v1/clients/dynamic-client/commands", { message_id: "dg-16", operation: "lib-graph.apply", payload: crashDagPayload });
+  const [crashCode] = await once(crashClient, "exit");
+  assert.equal(crashCode, 86, Buffer.concat(crashStderr).toString("utf8"));
+  const crashedDiskState = JSON.parse(await readFile(path.join(clientRoot, "dynamic-state.json"), "utf8"));
+  assert.equal(crashedDiskState.graph_revision, 5);
+  assert.equal(crashedDiskState.retired_generations.length, 1);
+  assert.equal(crashedDiskState.inflight_result.cleanup_pending, true);
+
+  await startClient(address);
+  state = await waitFor(origin, (value) => value.commands[15]?.receipt && value.last_hello?.runtime_available === true && value.last_hello?.graph_revision === 5);
+  assert.equal(state.commands[15].receipt.outcome, "committed");
+  assert.equal(state.commands[15].receipt.cleanup_pending, true);
+  await api(origin, "POST", "/v1/clients/dynamic-client/commands", { message_id: "dg-17", operation: "invoke", payload: { value: "after-publication-crash" } });
+  state = await waitFor(origin, (value) => value.commands[16]?.receipt);
+  assert.equal(state.commands[16].receipt.response.value, "J(L2(S(after-publication-crash)),R(S(after-publication-crash)))");
+
   trace("client:final-close");
   await stopClient();
   assert.deepEqual(client.boundary.counts(), { resources: 0, windows: 0, operations: 0 });
   const diskState = JSON.parse(await readFile(path.join(clientRoot, "dynamic-state.json"), "utf8"));
-  assert.equal(diskState.graph_revision, 4);
-  assert.equal(diskState.active_graph.graph_digest, dagPayload.graph_digest);
+  assert.equal(diskState.graph_revision, 5);
+  assert.equal(diskState.active_graph.graph_digest, crashDagPayload.graph_digest);
   assert.equal(diskState.active_graph.shape, "general-dag");
-  assert.equal(diskState.last_server_sequence, 15);
-  assert.equal(Object.keys(diskState.receipts).length, 15);
+  assert.equal(diskState.retired_generations.length, 0);
+  assert.equal(diskState.retired_cleanup_receipts.at(-1).outcome, "process-owner-fenced-on-restart");
+  assert.equal(diskState.last_server_sequence, 17);
+  assert.equal(Object.keys(diskState.receipts).length, 17);
 
   console.log(JSON.stringify({
     accepted: true,
@@ -356,6 +393,8 @@ try {
     exact_cache_redownload_repair: "B1(A2C(after-cache-repair))",
     general_dag_gateway_apply: "J(L(S(remote)),R(S(remote)))",
     general_dag_client_restart: "J(L(S(dag-restart)),R(S(dag-restart)))",
+    publication_crash_recovery: "J(L2(S(after-publication-crash)),R(S(after-publication-crash)))",
+    durable_retired_generation_cleanup: "process-owner-fenced-on-restart",
     forged_port_manifest_rejected_at_gateway: true,
     durable_graph_revision: diskState.graph_revision,
     durable_receipts: Object.keys(diskState.receipts).length,

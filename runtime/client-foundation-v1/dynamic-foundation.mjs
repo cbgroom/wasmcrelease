@@ -1,4 +1,4 @@
-import { createHash } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import https from "node:https";
 import { once } from "node:events";
 import { appendFile, mkdir, readFile, rename, rm, writeFile } from "node:fs/promises";
@@ -13,6 +13,7 @@ const STATE_SCHEMA = "wasmc.dynamic-client-foundation-state/v1";
 const BUNDLE_SCHEMA = "wasmc.client-foundation-bundle/v1";
 const CONTROL_SCHEMA = "wasmc.client-foundation-control/v1";
 const MAX_ARTIFACT_BYTES = 2 * 1024 * 1024;
+const MAX_RETIRED_CLEANUP_RECEIPTS = 128;
 const REQUIRED_FILES = new Set(["lib.wit", "native-boundary.json", "native-adapter.mjs"]);
 const ALLOWED_FILES = new Set([...REQUIRED_FILES, "graph-ports.json"]);
 const sha256 = (bytes) => createHash("sha256").update(bytes).digest("hex");
@@ -68,13 +69,15 @@ function decodeBundle(bytes) {
 }
 
 export class DynamicGraphClientFoundation {
-  constructor({ stateRoot, gatewayUrl, ca, reconnectDelayMs = 50, boundary } = {}) {
+  constructor({ stateRoot, gatewayUrl, ca, reconnectDelayMs = 50, boundary, afterPublicationPersist } = {}) {
     if (!stateRoot || !gatewayUrl || !ca) throw new Error("incomplete Dynamic Graph Client configuration");
     this.stateRoot = path.resolve(stateRoot);
     this.gatewayUrl = gatewayUrl;
     this.ca = ca;
     this.reconnectDelayMs = reconnectDelayMs;
     this.boundary = boundary ?? new LibDefinedBoundary();
+    this.instanceId = randomUUID();
+    this.afterPublicationPersist = afterPublicationPersist;
     this.statePath = path.join(this.stateRoot, "dynamic-state.json");
     this.journalPath = path.join(this.stateRoot, "dynamic-journal.jsonl");
     this.artifactRoot = path.join(this.stateRoot, "lib-artifacts");
@@ -101,9 +104,14 @@ export class DynamicGraphClientFoundation {
         receipts: {},
         inflight_command: null,
         inflight_result: null,
+        retired_generations: [],
+        retired_cleanup_receipts: [],
       };
       await this.#persist("initialized");
     }
+    this.state.retired_generations ??= [];
+    this.state.retired_cleanup_receipts ??= [];
+    await this.#recoverRetiredGenerations();
     if (!Number.isSafeInteger(this.state.graph_revision) || this.state.graph_revision < 0) throw new Error("invalid persisted graph revision");
     if (this.state.inflight_command && this.state.inflight_result) {
       const command = this.state.inflight_command;
@@ -229,20 +237,42 @@ export class DynamicGraphClientFoundation {
       ? describeDynamicLibDag({ blocks, edges: payload.edges, entrypoint: payload.entrypoint })
       : describeSerialLibGraph({ blocks, pipeline: payload.pipeline });
     if (described.graph_digest !== payload.graph_digest) throw new Error("dynamic graph command identity mismatch");
-    const result = await this.graph.apply({ expected_revision: payload.expected_graph_revision, graph_digest: payload.graph_digest, blocks, pipeline: payload.pipeline, edges: payload.edges, entrypoint: payload.entrypoint });
+    const active = {
+      graph_digest: payload.graph_digest,
+      shape: dag ? "general-dag" : "serial-dag",
+      pipeline: payload.pipeline ? [...payload.pipeline] : [],
+      edges: dag ? structuredClone(payload.edges) : [],
+      entrypoint: dag ? structuredClone(payload.entrypoint) : null,
+      blocks: payload.blocks.map((block) => {
+        const stored = structuredClone(block);
+        delete stored.artifact_url;
+        return stored;
+      }),
+    };
+    const result = await this.graph.apply({
+      expected_revision: payload.expected_graph_revision, graph_digest: payload.graph_digest, blocks,
+      pipeline: payload.pipeline, edges: payload.edges, entrypoint: payload.entrypoint,
+      onPublished: async ({ active: published, retired }) => {
+        this.state.graph_revision = published.revision;
+        this.state.active_graph = active;
+        this.runtimeAvailable = true;
+        if (retired) this.state.retired_generations.push({ ...retired, owner_instance_id: this.instanceId, status: "pending" });
+        this.state.inflight_result = { outcome: "committed", revision: published.revision, graph_digest: published.graph_digest, shape: active.shape, cleanup_pending: Boolean(retired), active_graph: active };
+        await this.#persist("lib-graph-published", { graph_digest: published.graph_digest, graph_revision: published.revision, retired_revision: retired?.revision ?? null });
+        await this.afterPublicationPersist?.({ revision: published.revision, graph_digest: published.graph_digest, retired });
+      },
+      onRetired: async (retired) => {
+        this.state.retired_generations = this.state.retired_generations.filter((entry) => !(entry.owner_instance_id === this.instanceId && entry.revision === retired.revision));
+        this.state.retired_cleanup_receipts.push({ ...retired, owner_instance_id: this.instanceId, outcome: "released-after-drain" });
+        if (this.state.retired_cleanup_receipts.length > MAX_RETIRED_CLEANUP_RECEIPTS) this.state.retired_cleanup_receipts.splice(0, this.state.retired_cleanup_receipts.length - MAX_RETIRED_CLEANUP_RECEIPTS);
+        if (this.state.inflight_result?.outcome === "committed") {
+          this.state.inflight_result.cleanup_pending = false;
+          this.state.inflight_result.retired_released = retired.released;
+        }
+        await this.#persist("retired-generation-released", retired);
+      },
+    });
     if (result.outcome === "committed" || result.outcome === "unchanged") {
-      const active = {
-        graph_digest: payload.graph_digest,
-        shape: dag ? "general-dag" : "serial-dag",
-        pipeline: payload.pipeline ? [...payload.pipeline] : [],
-        edges: dag ? structuredClone(payload.edges) : [],
-        entrypoint: dag ? structuredClone(payload.entrypoint) : null,
-        blocks: payload.blocks.map((block) => {
-          const stored = structuredClone(block);
-          delete stored.artifact_url;
-          return stored;
-        }),
-      };
       this.state.graph_revision = result.revision;
       this.state.active_graph = active;
       this.runtimeAvailable = true;
@@ -275,6 +305,26 @@ export class DynamicGraphClientFoundation {
       this.runtimeAvailable = false;
       await this.#journal("lib-graph-unavailable", { graph_digest: active.graph_digest, error: error.message });
     }
+  }
+
+  async #recoverRetiredGenerations() {
+    if (!Array.isArray(this.state.retired_generations) || !Array.isArray(this.state.retired_cleanup_receipts)) throw new Error("invalid retired generation state");
+    if (this.state.retired_generations.length === 0) return;
+    for (const retired of this.state.retired_generations) {
+      if (!Number.isSafeInteger(retired.revision) || retired.revision < 1 || typeof retired.graph_digest !== "string" || typeof retired.owner_instance_id !== "string") {
+        throw new Error("invalid persisted retired generation");
+      }
+      this.state.retired_cleanup_receipts.push({
+        revision: retired.revision,
+        graph_digest: retired.graph_digest,
+        owner_instance_id: retired.owner_instance_id,
+        recovered_by_instance_id: this.instanceId,
+        outcome: "process-owner-fenced-on-restart",
+      });
+    }
+    if (this.state.retired_cleanup_receipts.length > MAX_RETIRED_CLEANUP_RECEIPTS) this.state.retired_cleanup_receipts.splice(0, this.state.retired_cleanup_receipts.length - MAX_RETIRED_CLEANUP_RECEIPTS);
+    this.state.retired_generations = [];
+    await this.#persist("retired-generations-recovered", { outcome: "process-owner-fenced-on-restart" });
   }
 
   async #ensureBundle(declaration) {

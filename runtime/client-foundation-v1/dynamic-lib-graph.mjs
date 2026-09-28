@@ -39,6 +39,7 @@ export class DynamicLibGraph {
     if (!Number.isSafeInteger(initialRevision) || initialRevision < 0) throw new Error("invalid dynamic Lib graph initial revision");
     this.boundary = boundary;
     this.active = { revision: initialRevision, graphDigest: null, blocks: new Map(), shape: "serial-dag", pipeline: [], edges: [], entrypoint: null, levels: [], inflight: 0, drainWaiters: [] };
+    this.retired = new Set();
     this.closed = false;
     this.updateInProgress = false;
   }
@@ -51,6 +52,7 @@ export class DynamicLibGraph {
       shape: this.active.shape,
       edges: structuredClone(this.active.edges),
       entrypoint: structuredClone(this.active.entrypoint),
+      retired: [...this.retired].map(({ generation }) => ({ revision: generation.revision, graph_digest: generation.graphDigest, inflight: generation.inflight })),
       blocks: Object.fromEntries([...this.active.blocks].map(([name, block]) => [name, {
         identity: block.identity,
         artifact_sha256: block.artifactSha,
@@ -63,9 +65,10 @@ export class DynamicLibGraph {
     };
   }
 
-  async apply({ expected_revision, graph_digest, blocks, pipeline, edges, entrypoint }) {
+  async apply({ expected_revision, graph_digest, blocks, pipeline, edges, entrypoint, onPublished, onRetired }) {
     if (this.closed) throw new Error("dynamic Lib graph closed");
     if (this.updateInProgress) throw new Error("dynamic Lib graph update already in progress");
+    if (this.retired.size > 0) throw new Error("dynamic Lib graph retired cleanup pending");
     if (expected_revision !== this.active.revision) throw new Error("dynamic Lib graph revision fence mismatch");
     const dag = Array.isArray(edges) || entrypoint !== undefined;
     const described = dag ? describeDynamicLibDag({ blocks, edges, entrypoint }) : describeSerialLibGraph({ blocks, pipeline });
@@ -136,15 +139,13 @@ export class DynamicLibGraph {
       for (const block of candidate.blocks.values()) await this.#call(block.resource, { operation: "health", configuration: block.configuration });
       this.active = candidate;
       published = true;
-      await this.#drain(old);
-      const retainedResources = new Set([...candidate.blocks.values()].map((block) => block.resource));
-      let released = 0;
-      for (const block of new Set(old.blocks.values())) {
-        if (!retainedResources.has(block.resource)) {
-          this.boundary.releaseResource(block.resource);
-          released += 1;
-        }
-      }
+      const retired = old.graphDigest === null ? null : { generation: old, retainedResources: new Set([...candidate.blocks.values()].map((block) => block.resource)), onRetired };
+      if (retired) this.retired.add(retired);
+      await onPublished?.({
+        active: { revision: candidate.revision, graph_digest: candidate.graphDigest },
+        retired: retired ? { revision: old.revision, graph_digest: old.graphDigest } : null,
+      });
+      const released = retired ? await this.#cleanupRetired(retired) : 0;
       return { outcome: "committed", revision: candidate.revision, graph_digest, installed: installed.length, reused, released, pipeline: pipeline ? [...pipeline] : [], shape: candidate.shape };
     } catch (error) {
       if (published) {
@@ -220,6 +221,7 @@ export class DynamicLibGraph {
     if (this.updateInProgress) throw new Error("cannot close dynamic Lib graph during an update");
     this.closed = true;
     await this.#drain(this.active);
+    for (const retired of [...this.retired]) await this.#cleanupRetired(retired);
     for (const block of new Set(this.active.blocks.values())) this.boundary.releaseResource(block.resource);
     this.active.blocks.clear();
   }
@@ -227,6 +229,20 @@ export class DynamicLibGraph {
   async #drain(generation) {
     if (generation.inflight === 0) return;
     await new Promise((resolve) => generation.drainWaiters.push(resolve));
+  }
+
+  async #cleanupRetired(retired) {
+    await this.#drain(retired.generation);
+    let released = 0;
+    for (const block of new Set(retired.generation.blocks.values())) {
+      if (!retired.retainedResources.has(block.resource)) {
+        this.boundary.releaseResource(block.resource);
+        released += 1;
+      }
+    }
+    this.retired.delete(retired);
+    await retired.onRetired?.({ revision: retired.generation.revision, graph_digest: retired.generation.graphDigest, released });
+    return released;
   }
 
   async #call(resource, request) {

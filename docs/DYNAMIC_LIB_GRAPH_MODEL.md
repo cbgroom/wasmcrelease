@@ -154,6 +154,15 @@ verifies package-bound port contracts before enqueue; the Client verifies them
 again after HTTPS download and after every cache read.
 
 General DAG scheduling, port-granular WIT contract identity, Gateway
-distribution and Client restart reconstruction are locally qualified. Stateful
-replacement and durable retired-generation cleanup remain open gates. The
-whole path remains a stateless prototype and is not admitted or released.
+distribution, Client restart reconstruction and durable retired-generation
+cleanup are locally qualified. Publication now persists the new active graph,
+the in-flight command result and a retired-generation record before drain.
+Normal drain records resource release; a process crash is recovered by fencing
+the prior process-owned Host resource namespace and retaining a bounded cleanup
+receipt. Stateful replacement remains the only model gate. The whole path
+remains a stateless prototype and is not admitted or released.
+
+The process-owner fence does not claim exactly-once behavior or cleanup of
+external effects that a Lib initiated outside the Host process. Such effects
+remain governed by that Lib's idempotency, transaction or reconciliation
+contract.

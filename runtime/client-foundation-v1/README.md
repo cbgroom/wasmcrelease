@@ -142,3 +142,11 @@ node scripts/test-dynamic-client-foundation-gateway-v1.mjs
 This closes restart reconstruction for both serial routes and general
 stateless DAGs. It does not provide state migration, external-effect
 exactly-once semantics, cache retention policy or release admission.
+
+Publication and retirement are separate durable events. Before an active graph
+becomes recoverable, the Client persists its revision, command result and the
+prior generation's cleanup record. Normal drain removes that record after Host
+resource release. If the process exits in between, restart fences the previous
+process-owned Host namespace, records a bounded recovery receipt and restores
+the already-published graph. This does not reconcile external side effects
+owned by a Lib.
