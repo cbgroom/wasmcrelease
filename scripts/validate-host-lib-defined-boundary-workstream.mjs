@@ -664,6 +664,42 @@ assert.equal(iosLocalNotificationV1Receipt.evidence.notification_extension_quali
 assert.equal(iosLocalNotificationV1Receipt.evidence.physical_device, false);
 execFileSync(process.execPath, ["scripts/validate-ios-local-notification.mjs"], { stdio: "ignore" });
 
+const iosWebSocketV1Receipt = JSON.parse(fs.readFileSync(
+  "admission/host-lib-defined-boundary-v1/ios-arm64-websocket-v1.json", "utf8",
+));
+assert.equal(iosWebSocketV1Receipt.schema,
+  "wasmc.host-lib-defined-boundary-ios-websocket-qualification/v1");
+assert.equal(iosWebSocketV1Receipt.qualified, true);
+assert.equal(iosWebSocketV1Receipt.admitted, false);
+assert.equal(iosWebSocketV1Receipt.released, false);
+assert.equal(iosWebSocketV1Receipt.discoverable, false);
+assert.equal(iosWebSocketV1Receipt.installable, false);
+execFileSync("git", ["cat-file", "-e", `${iosWebSocketV1Receipt.implementation_commit}^{commit}`]);
+execFileSync("git", ["merge-base", "--is-ancestor", iosWebSocketV1Receipt.implementation_commit, "HEAD"]);
+for (const [relative, expected] of Object.entries(iosWebSocketV1Receipt.source)) {
+  assert.equal(digestAt(iosWebSocketV1Receipt.implementation_commit, relative), expected,
+    `${relative}: retained iOS WebSocket v1 source drift`);
+}
+assert.equal(iosWebSocketV1Receipt.evidence.status, "PASS");
+assert.equal(iosWebSocketV1Receipt.evidence.fixed_host_domain_apis, 0);
+assert.equal(iosWebSocketV1Receipt.evidence.fixed_host_sha256,
+  iosLocalNotificationV1Receipt.evidence.fixed_host_sha256);
+assert.equal(iosWebSocketV1Receipt.evidence.transport, "URLSessionWebSocketTask");
+assert.equal(iosWebSocketV1Receipt.evidence.foreground_send, true);
+assert.equal(iosWebSocketV1Receipt.evidence.foreground_receive, true);
+assert.equal(iosWebSocketV1Receipt.evidence.foreground_reply, "server-foreground");
+assert.equal(iosWebSocketV1Receipt.evidence.background_send, true);
+assert.equal(iosWebSocketV1Receipt.evidence.background_receive, true);
+assert.equal(iosWebSocketV1Receipt.evidence.background_reply, "server-background");
+assert.equal(iosWebSocketV1Receipt.evidence.background_receive_phase, "background");
+assert.equal(iosWebSocketV1Receipt.evidence.background_scope, "finite-background-task-only");
+assert.equal(iosWebSocketV1Receipt.evidence.wss_qualified, false);
+assert.equal(iosWebSocketV1Receipt.evidence.internet_route_qualified, false);
+assert.equal(iosWebSocketV1Receipt.evidence.suspension_receive_qualified, false);
+assert.equal(iosWebSocketV1Receipt.evidence.process_relaunch_reconnect_qualified, false);
+assert.equal(iosWebSocketV1Receipt.evidence.physical_device, false);
+execFileSync(process.execPath, ["scripts/validate-ios-websocket.mjs"], { stdio: "ignore" });
+
 const iosQualificationPolicyV1Receipt = JSON.parse(fs.readFileSync(
   "admission/host-lib-defined-boundary-v1/ios-simulator-first-qualification-policy-v1.json", "utf8",
 ));
@@ -1483,6 +1519,7 @@ console.log(JSON.stringify({
   retained_ios_arm64_deferred_work_simulator_rejection_v1: iosDeferredWorkRejectionV1.implementation_commit,
   retained_ios_arm64_background_audio_v1_qualification: iosBackgroundAudioV1Receipt.implementation_commit,
   retained_ios_arm64_local_notification_v1_qualification: iosLocalNotificationV1Receipt.implementation_commit,
+  retained_ios_arm64_websocket_v1_qualification: iosWebSocketV1Receipt.implementation_commit,
   retained_ios_simulator_first_qualification_policy_v1: iosQualificationPolicyV1Receipt.implementation_commit,
   old_candidate_rejects_product_drift: true,
   lifecycle: "architecture-workstream-not-admitted-not-released",
