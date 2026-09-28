@@ -16,6 +16,7 @@ const focused = [
   "scripts/validate-ios-app-capability.mjs",
   "scripts/validate-ios-app-surface-control.mjs",
   "scripts/validate-system-agent-lab.mjs",
+  "scripts/validate-android-system-agent-lab.mjs",
   "scripts/test-platform-profile-resolver.mjs",
 ];
 for (const script of focused) run(script);

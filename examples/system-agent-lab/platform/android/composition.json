@@ -1,0 +1,72 @@
+{
+  "schema": "wasmc.system-agent-lab-composition/v1",
+  "id": "android-system-agent-lab-v1",
+  "target": {
+    "os": "android",
+    "architecture": "aarch64",
+    "environment": "emulator",
+    "embedding": "native"
+  },
+  "host": {
+    "contract": "wasmc.lib-defined-host-boundary/v1",
+    "source": "host/runtime/lib-boundary/native-android/src/main.rs",
+    "profile": "host/platform/android/agent-computer-profile.json",
+    "required_domain_apis": 0
+  },
+  "scenarios": [
+    {
+      "id": "display",
+      "candidate": "libsrc/wasmc-system-android-display/candidate.json",
+      "provider": "wasmc:system-android-display@0.0.1-dev.1",
+      "api": "wasmc:system-display@0.0.1",
+      "sources": ["libsrc/wasmc-system-android-display/native-adapter.c"],
+      "frameworks": [],
+      "artifact": "libwasmc_system_android_display.so",
+      "app_requirements": {"background_modes": [], "plist": {}, "exclusive_resources": []}
+    },
+    {
+      "id": "semantic-ui",
+      "candidate": "libsrc/wasmc-system-android-ui/candidate.json",
+      "provider": "wasmc:system-android-ui@0.0.1-dev.1",
+      "api": "wasmc:system-ui@0.0.1",
+      "sources": ["libsrc/wasmc-system-android-ui/native-adapter.c"],
+      "frameworks": [],
+      "artifact": "libwasmc_system_android_ui.so",
+      "app_requirements": {"background_modes": [], "plist": {}, "exclusive_resources": []}
+    },
+    {
+      "id": "shell-input",
+      "candidate": "libsrc/wasmc-system-android-input/candidate.json",
+      "provider": "wasmc:system-android-input@0.0.1-dev.1",
+      "api": "wasmc:system-input@0.0.1",
+      "sources": ["libsrc/wasmc-system-android-input/native-adapter.c"],
+      "frameworks": [],
+      "artifact": "libwasmc_system_android_input.so",
+      "app_requirements": {"background_modes": [], "plist": {}, "exclusive_resources": []}
+    },
+    {
+      "id": "virtual-input",
+      "candidate": "libsrc/wasmc-system-android-uinput/candidate.json",
+      "provider": "wasmc:system-android-uinput@0.0.1-dev.1",
+      "api": "wasmc:system-virtual-input@0.0.1",
+      "sources": ["libsrc/wasmc-system-android-uinput/native-adapter.c"],
+      "frameworks": [],
+      "artifact": "libwasmc_system_android_uinput.so",
+      "app_requirements": {"background_modes": [], "plist": {}, "exclusive_resources": ["android-uinput-session"]}
+    }
+  ],
+  "expected_merge": {
+    "frameworks": [],
+    "background_modes": [],
+    "plist": {},
+    "exclusive_resources": ["android-uinput-session"]
+  },
+  "lifecycle": {
+    "qualified": true,
+    "admitted": false,
+    "released": false,
+    "discoverable": false,
+    "installable": false
+  }
+}
+

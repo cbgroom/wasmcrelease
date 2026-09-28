@@ -22,9 +22,16 @@ platform. A composition manifest selects exact qualified Lib candidates and
 combines their provider sources, frameworks and App requirements. The shell is
 application composition, not a new provider and not Host authority.
 
-The first iOS lab composes real WKWebView semantic control with live network
-path observation. Both providers are registered once through the unchanged
-fixed Host, run concurrently, and retain independent identities and state.
+The iOS lab composes real WKWebView semantic control with live network path
+observation. Both providers are registered once through the unchanged fixed
+Host, run concurrently, and retain independent identities and state. The
+Android lab composes display, semantic UI, shell input and direct uinput through
+the exact resolved Library OS profile and reuses its Emulator qualification
+instead of copying a second harness.
+
+Both platforms use `scripts/system-agent-lab-composition.mjs` for identity,
+target, lifecycle, App configuration and exclusive-resource conflict rules.
+Platform validators add only physical-artifact checks that cannot be shared.
 
 ## Conflict rules
 
@@ -58,4 +65,3 @@ Provider packages never import the integration lab. The integration lab may
 depend on many providers, but each dependency is exact and machine-validated.
 When a reusable UI or test helper has stable semantics of its own, graduate it
 to a separate helper package instead of copying it between Lib examples.
-
