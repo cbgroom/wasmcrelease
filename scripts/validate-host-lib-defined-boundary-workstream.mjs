@@ -700,6 +700,60 @@ assert.equal(iosWebSocketV1Receipt.evidence.process_relaunch_reconnect_qualified
 assert.equal(iosWebSocketV1Receipt.evidence.physical_device, false);
 execFileSync(process.execPath, ["scripts/validate-ios-websocket.mjs"], { stdio: "ignore" });
 
+const iosWebSocketV2Receipt = JSON.parse(fs.readFileSync(
+  "admission/host-lib-defined-boundary-v1/ios-arm64-websocket-v2.json", "utf8",
+));
+assert.equal(iosWebSocketV2Receipt.schema,
+  "wasmc.host-lib-defined-boundary-ios-websocket-qualification/v2");
+assert.equal(iosWebSocketV2Receipt.supersedes,
+  "admission/host-lib-defined-boundary-v1/ios-arm64-websocket-v1.json");
+assert.equal(iosWebSocketV2Receipt.qualified, true);
+assert.equal(iosWebSocketV2Receipt.admitted, false);
+assert.equal(iosWebSocketV2Receipt.released, false);
+assert.equal(iosWebSocketV2Receipt.discoverable, false);
+assert.equal(iosWebSocketV2Receipt.installable, false);
+execFileSync("git", ["cat-file", "-e", `${iosWebSocketV2Receipt.implementation_commit}^{commit}`]);
+execFileSync("git", ["merge-base", "--is-ancestor", iosWebSocketV2Receipt.implementation_commit, "HEAD"]);
+for (const [relative, expected] of Object.entries(iosWebSocketV2Receipt.source)) {
+  assert.equal(digestAt(iosWebSocketV2Receipt.implementation_commit, relative), expected,
+    `${relative}: retained iOS WebSocket v2 source drift`);
+}
+assert.equal(iosWebSocketV2Receipt.evidence.status, "PASS");
+assert.equal(iosWebSocketV2Receipt.evidence.provider,
+  "wasmc:system-ios-websocket@0.0.1-dev.2");
+assert.equal(iosWebSocketV2Receipt.evidence.fixed_host_domain_apis, 0);
+assert.equal(iosWebSocketV2Receipt.evidence.fixed_host_sha256,
+  iosWebSocketV1Receipt.evidence.fixed_host_sha256);
+assert.equal(iosWebSocketV2Receipt.evidence.transport, "URLSessionWebSocketTask");
+assert.equal(iosWebSocketV2Receipt.evidence.tls_fixture_scope,
+  "repository-local-self-signed-test-only");
+assert.equal(iosWebSocketV2Receipt.evidence.tls_server_trust_challenge, true);
+assert.equal(iosWebSocketV2Receipt.evidence.certificate_sha256,
+  "f115cf8cfd0c513ba2301bfe8b45c0de198de875ba24db0a79fc85362e611572");
+assert.equal(iosWebSocketV2Receipt.evidence.certificate_pin_match, true);
+assert.equal(iosWebSocketV2Receipt.evidence.foreground_send, true);
+assert.equal(iosWebSocketV2Receipt.evidence.foreground_receive, true);
+assert.equal(iosWebSocketV2Receipt.evidence.foreground_reply, "server-foreground");
+assert.equal(iosWebSocketV2Receipt.evidence.background_send, true);
+assert.equal(iosWebSocketV2Receipt.evidence.background_receive, true);
+assert.equal(iosWebSocketV2Receipt.evidence.background_reply, "server-background");
+assert.equal(iosWebSocketV2Receipt.evidence.background_receive_phase, "background");
+assert.equal(iosWebSocketV2Receipt.evidence.background_scope, "finite-background-task-only");
+assert.deepEqual(iosWebSocketV2Receipt.evidence.negative_pin_control, {
+  accepted: false,
+  tls_server_trust_challenge: true,
+  certificate_pin_match: false,
+  error: "certificate-pin-mismatch",
+  connected: false,
+});
+assert.equal(iosWebSocketV2Receipt.evidence.local_pinned_wss_qualified, true);
+assert.equal(iosWebSocketV2Receipt.evidence.public_ca_wss_qualified, false);
+assert.equal(iosWebSocketV2Receipt.evidence.internet_route_qualified, false);
+assert.equal(iosWebSocketV2Receipt.evidence.network_transition_reconnect_qualified, false);
+assert.equal(iosWebSocketV2Receipt.evidence.suspension_receive_qualified, false);
+assert.equal(iosWebSocketV2Receipt.evidence.process_relaunch_reconnect_qualified, false);
+assert.equal(iosWebSocketV2Receipt.evidence.physical_device, false);
+
 const iosNetworkPathV1Receipt = JSON.parse(fs.readFileSync(
   "admission/host-lib-defined-boundary-v1/ios-arm64-network-path-v1.json", "utf8",
 ));
@@ -1553,6 +1607,7 @@ console.log(JSON.stringify({
   retained_ios_arm64_background_audio_v1_qualification: iosBackgroundAudioV1Receipt.implementation_commit,
   retained_ios_arm64_local_notification_v1_qualification: iosLocalNotificationV1Receipt.implementation_commit,
   retained_ios_arm64_websocket_v1_qualification: iosWebSocketV1Receipt.implementation_commit,
+  retained_ios_arm64_websocket_v2_qualification: iosWebSocketV2Receipt.implementation_commit,
   retained_ios_arm64_network_path_v1_qualification: iosNetworkPathV1Receipt.implementation_commit,
   retained_ios_simulator_first_qualification_policy_v1: iosQualificationPolicyV1Receipt.implementation_commit,
   old_candidate_rejects_product_drift: true,
