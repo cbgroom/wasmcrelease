@@ -12,6 +12,7 @@ assert.equal(model.lifecycle, "prototype-model-not-admitted-not-released");
 assert.equal(model.host_boundary, "resource-window-operation-completion-cancel-release");
 assert.equal(model.graph_shape, "dag");
 assert.equal(orientation.schema, "wasmc.dynamic-client-checkpoint-orientation/v1");
+assert.match(orientation.rule, /bounded answer route/);
 assert.equal(orientation.lifecycle.qualified, true);
 for (const state of ["admitted", "released", "discoverable", "installable"]) assert.equal(orientation.lifecycle[state], false);
 assert.match(orientation.answer, /not general exactly-once/);
@@ -21,6 +22,8 @@ assert.equal(orientation.failure_policy.partial_multi_block_restore, "graph pois
 assert.deepEqual(orientation.open_gates, ["cross-schema-state-migration-lib", "sticky-active-restart-disposition"]);
 assert.equal(orientation.protected_surface.proof_command, "git diff --name-only bed1e4d236bb78a992355321deca8968a6400a0d HEAD -- host current runtime/client-foundation-gateway-v1/cli.mjs");
 assert.equal(orientation.protected_surface.expected_output, "");
+assert.deepEqual(orientation.required_additional_reads, []);
+assert.match(orientation.final_answer_policy, /Do not reopen/);
 assert.match(orientation.stop, /sufficient/);
 
 const phases = new Set(model.manager_phases);
@@ -114,7 +117,30 @@ for (const relative of evidencePaths) {
   assert.equal(typeof relative, "string");
   await readFile(new URL(`../${relative}`, import.meta.url));
 }
-for (const relative of Object.values(orientation.evidence)) await readFile(new URL(`../${relative}`, import.meta.url));
+const orientationEvidence = Object.fromEntries(await Promise.all(Object.entries(orientation.evidence).map(async ([key, relative]) => [key, await readFile(new URL(`../${relative}`, import.meta.url), "utf8")])));
+assert.match(orientationEvidence.client, /active-state-checkpointed/);
+assert.match(orientationEvidence.client, /inflight_result/);
+assert.match(orientationEvidence.graph, /restoreFailed = true/);
+assert.match(orientationEvidence.gateway, /invalid client state checkpoint summary/);
+assert.match(orientationEvidence.focused_test, /partial_checkpoint_restore_poisoned_until_close: true/);
+for (const claim of [
+  "stateful_active_checkpoint_restart",
+  "invoke_checkpoint_crash_recovered_without_replay",
+  "gateway_observed_checkpoint_identity",
+  "missing_or_corrupt_checkpoint_failed_closed",
+]) assert.match(orientationEvidence.integrated_test, new RegExp(`${claim}:`));
+assert.match(orientationEvidence.crash_fixture, /process\.exit\(87\)/);
+assert.match(orientationEvidence.host_cli_guard, /fixed Host or minimal CLI changed/);
+assert.deepEqual(orientation.qualified_observations, {
+  active_checkpoint_restored: "SV2:2",
+  invoke_checkpoint_crash_recovered_without_replay: true,
+  gateway_observed_checkpoint_identity: true,
+  missing_or_corrupt_checkpoint_failed_closed: true,
+  partial_checkpoint_restore_poisoned_until_close: true,
+  external_effect_exactly_once_claimed: false,
+  fixed_host_api_changed: false,
+  minimal_cli_changed: false,
+});
 assert.deepEqual(model.white_box_evidence.commands, [
   "node scripts/test-dynamic-lib-stateful-v1.mjs",
   "node scripts/validate-dynamic-lib-graph-model-v1.mjs",

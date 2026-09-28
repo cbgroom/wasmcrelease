@@ -2,7 +2,9 @@
 
 For active `snapshot-v1` restart durability and Gateway receipt ordering, start
 with `agent-checkpoint-orientation.json`. It is the compact bounded route; open
-the broader model or implementation only for audit or a failed named check.
+the broader model or implementation only for an explicit implementation-line
+audit or a failed named check. Its validator binds the compact claims to source
+and test anchors, so citing named evidence does not require rereading it.
 
 This directory is a higher-layer, persistent client foundation built above the
 fixed Lib-defined Host boundary. It does not change `current/cli.mjs`, add a

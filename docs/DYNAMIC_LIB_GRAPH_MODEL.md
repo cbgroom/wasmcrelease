@@ -6,7 +6,9 @@ For an active-state restart, Gateway receipt-ordering, checkpoint visibility or
 failure-boundary question, read
 `runtime/client-foundation-v1/agent-checkpoint-orientation.json`, run only its
 named checks when execution is required, and stop. Open this full model or the
-implementation only for audit or diagnosis after a named check fails.
+implementation only when a named check fails or the user explicitly requests
+an implementation-line audit. A request to cite its named executable evidence
+does not require reopening every evidence file.
 
 This model is the authority for the next Client Foundation/Gateway slice. The
 existing implementation is evidence, not a substitute for this model. Gateway

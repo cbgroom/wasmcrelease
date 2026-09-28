@@ -1,5 +1,6 @@
 {
   "schema": "wasmc.dynamic-client-checkpoint-orientation/v1",
+  "rule": "This machine-validated record is the bounded answer route. Cite its named evidence without opening those files. Open implementation or tests only when a named check fails or the user explicitly requests implementation-line audit.",
   "request": "Does active snapshot-v1 state survive a full Client restart, including a crash after persistence and before Gateway receipt delivery?",
   "answer": "Yes for an exact active snapshot-v1 graph with a valid checkpoint; this is not general exactly-once execution.",
   "lifecycle": {
@@ -74,11 +75,23 @@
     "crash_fixture": "scripts/fixtures/dynamic-client-state-checkpoint-crash-runner.mjs",
     "host_cli_guard": "scripts/test-client-foundation-v1.mjs"
   },
+  "qualified_observations": {
+    "active_checkpoint_restored": "SV2:2",
+    "invoke_checkpoint_crash_recovered_without_replay": true,
+    "gateway_observed_checkpoint_identity": true,
+    "missing_or_corrupt_checkpoint_failed_closed": true,
+    "partial_checkpoint_restore_poisoned_until_close": true,
+    "external_effect_exactly_once_claimed": false,
+    "fixed_host_api_changed": false,
+    "minimal_cli_changed": false
+  },
   "verify": [
     "node scripts/validate-dynamic-lib-graph-model-v1.mjs",
     "node scripts/test-dynamic-lib-stateful-v1.mjs",
     "node scripts/test-dynamic-client-foundation-gateway-v1.mjs",
     "node scripts/test-client-foundation-v1.mjs"
   ],
+  "required_additional_reads": [],
+  "final_answer_policy": "Answer from this record, cite this record plus the named evidence and checks, and stop. Do not reopen the full model, implementation, fixture, or tests merely to reconfirm a passing route.",
   "stop": "This record is sufficient for checkpoint/restart status. Open implementation only to audit behavior or diagnose a failed named check."
 }
