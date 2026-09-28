@@ -83,3 +83,19 @@ qualification. A production `process-session` must add generation-checked
 session identity, bounded stream windows, exit/drain state, cancellation,
 timeout and explicit cleanup through the existing fixed boundary before its
 numbers can be compared as product evidence.
+
+On the local Apple M4/macOS 26.6.2 machine, five fresh benchmark processes at
+revision `15d3be8d3033d3cd7b84587147734ef7e29e0528` observed these medians:
+
+| Path | Median p50 | Scope |
+|---|---:|---|
+| Fixed boundary, no process | 0.004 ms | boundary overhead reference |
+| One-shot direct `/usr/bin/true` | 0.914 ms | current Lib implementation |
+| One-shot `/bin/sh -c :` | 2.275 ms | current Lib implementation |
+| Persistent `/bin/sh` sequential round trip | 0.024 ms | opportunity probe only |
+| Persistent `/bin/sh` pipeline | 89,775 commands/s | opportunity probe only |
+
+The median one-shot-shell/persistent-session latency ratio was 96.28x, with a
+five-run range of 92.58x to 120.75x. These are same-machine no-op diagnostics,
+not portable performance promises. They isolate process creation cost; they do
+not yet measure a lifecycle-complete persistent System Lib.

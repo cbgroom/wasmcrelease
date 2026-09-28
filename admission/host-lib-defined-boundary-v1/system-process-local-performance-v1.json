@@ -1,0 +1,53 @@
+{
+  "schema": "wasmc.system-process-local-performance-characterization/v1",
+  "source_revision": "15d3be8d3033d3cd7b84587147734ef7e29e0528",
+  "script": {
+    "path": "scripts/benchmark-system-process-local.mjs",
+    "sha256": "eb2d6106c1daf33431002d738d09b1a8b22e86f60b40d6c068b9683f37f6df52"
+  },
+  "machine": {
+    "platform": "darwin",
+    "architecture": "arm64",
+    "product": "Mac16,10",
+    "processor": "Apple M4",
+    "memory_bytes": 34359738368,
+    "os": "macOS 26.6.2",
+    "build": "25G83",
+    "node": "v26.5.1"
+  },
+  "method": {
+    "fresh_process_runs": 5,
+    "workload": "successful no-op command with observed completion",
+    "generic_boundary_samples_per_run": 500,
+    "one_shot_direct_samples_per_run": 80,
+    "one_shot_shell_samples_per_run": 80,
+    "persistent_sequential_samples_per_run": 1000,
+    "persistent_pipeline_operations_per_run": 5000
+  },
+  "five_run_summary": {
+    "generic_boundary_p50_ms": { "min": 0.004, "median": 0.004, "max": 0.004 },
+    "one_shot_direct_p50_ms": { "min": 0.906, "median": 0.914, "max": 1.104 },
+    "one_shot_shell_p50_ms": { "min": 2.172, "median": 2.275, "max": 2.435 },
+    "persistent_sequential_p50_ms": { "min": 0.018, "median": 0.024, "max": 0.024 },
+    "persistent_pipeline_operations_per_second": { "min": 86412.1, "median": 89775.2, "max": 91690.6 },
+    "one_shot_shell_to_persistent_p50_ratio": { "min": 92.58, "median": 96.28, "max": 120.75 }
+  },
+  "identity": {
+    "adapter_sha256": "79af42c23e49fe9615a4a3b3bd9a12b9f1a7d1e308560ee9c245ff561913206f",
+    "fixed_executor_sha256": "e133672195a9641e8c813f6b07e040c5817249a055f44ebeadd9c29404cf03ef"
+  },
+  "evidence_boundary": {
+    "current_one_shot_lib_measured": true,
+    "persistent_transport_in_lib_boundary": false,
+    "persistent_process_lifecycle_qualified": false,
+    "cross_platform_performance": false,
+    "portable_performance_promise": false,
+    "fixed_host_api_growth": false
+  },
+  "lifecycle": {
+    "characterization": true,
+    "qualification": false,
+    "admitted": false,
+    "released": false
+  }
+}
