@@ -24,7 +24,7 @@ rewritten as a physical-device claim. The machine policy is retained at
 | Picture in Picture | iPad Simulator start/stop/restore and frame submission | live pixel visibility and physical device pending |
 | Authorization | Contacts allow/deny plus authorized CRUD cleanup | other protected domains are observation/planning only |
 | App data and compute | storage, preferences, Keychain, SQLite, crypto, Metal, offline audio | active App execution |
-| App networking and Web | POSIX loopback TCP/UDP, local WKWebView DOM/JS, exact WS/WSS duplex, service-restart recovery, plus two-message atomic persistent outbox drained in order after App termination/relaunch | loopback fixture only; no public-CA WSS, Internet route, OS network transition, general queue/crash-consistency proof or suspension continuity yet |
+| App networking and Web | POSIX loopback TCP/UDP, local WKWebView DOM/JS, exact WS/WSS duplex, service-restart recovery, two-message persistent outbox relaunch drain, plus crash-before-ACK stable-ID replay with server effect count remaining one | loopback fixture only; no public-CA WSS, Internet route, OS network transition, general queue/compaction proof or suspension continuity yet |
 | Network path | live `NWPathMonitor` snapshot reports satisfied Wi-Fi, non-expensive and non-constrained | one snapshot only; Simulator reports IPv4/IPv6/DNS flags false; no transition or server-reachability claim |
 
 ## Observed or configured, not qualified as execution

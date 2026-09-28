@@ -45,7 +45,16 @@ final class WebSocketViewController: UIViewController {
         var report = provider.report()
         report["provider_evidence"] = providerEvidence
         Self.writeReport(report)
-        if report["process_relaunch_reconnect_qualified"] as? Bool == true {
+        if report["idempotent_effect_once_qualified"] as? Bool == true {
+            statusLabel.text = "websocket-idempotent-replay:accepted"
+            statusLabel.accessibilityIdentifier = "websocket-idempotent-drained"
+        } else if report["idempotent_crash_window_ready"] as? Bool == true {
+            statusLabel.text = "websocket-idempotent-crash-window:ready"
+            statusLabel.accessibilityIdentifier = "websocket-idempotent-crash-ready"
+        } else if report["idempotent_outbox_seeded"] as? Bool == true {
+            statusLabel.text = "websocket-idempotent-outbox:seeded"
+            statusLabel.accessibilityIdentifier = "websocket-idempotent-seeded"
+        } else if report["process_relaunch_reconnect_qualified"] as? Bool == true {
             statusLabel.text = "websocket-durable-relaunch-drain:accepted"
             statusLabel.accessibilityIdentifier = "websocket-durable-drained"
         } else if report["durable_outbox_seeded"] as? Bool == true {

@@ -65,7 +65,7 @@ try {
   }
   assert.equal(report.network_transition_reconnect_qualified, false);
   assert.equal(report.process_relaunch_reconnect_qualified, false);
-  assert.equal(report.provider_evidence[0].identity, "wasmc:system-ios-websocket@0.0.1-dev.4");
+  assert.equal(report.provider_evidence[0].identity, "wasmc:system-ios-websocket@0.0.1-dev.5");
   console.log(JSON.stringify({ ...report, simulator_udid: udid, exhaustion_mode: exhaustionMode }));
 } finally {
   server.kill("SIGTERM");

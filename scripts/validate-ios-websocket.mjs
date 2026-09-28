@@ -21,7 +21,7 @@ const resolvedProfile = JSON.parse(execFileSync(process.execPath, ["host/platfor
   "host/platform/ios/websocket-request.json"], { encoding: "utf8" }));
 const retainedProfile = JSON.parse(fs.readFileSync("host/platform/ios/websocket-profile.json", "utf8"));
 assert.equal(candidate.system_binding.implements, "wasmc:system-websocket@0.0.1");
-assert.equal(binding.identity, "wasmc:system-ios-websocket@0.0.1-dev.4");
+assert.equal(binding.identity, "wasmc:system-ios-websocket@0.0.1-dev.5");
 assert.deepEqual(resolvedProfile, retainedProfile);
 assert.equal(retainedProfile.host.required_domain_apis, 0);
 assert.match(provider, /URLSessionWebSocketTask/);
@@ -34,6 +34,9 @@ assert.equal(binding.limits.reconnect_policy, "350ms-fixed-max-8");
 assert.equal(binding.limits.outbox_scope, "process-memory-single-message-fixture");
 assert.equal(binding.limits.durable_outbox, "json-atomic-two-message-ordered-ack-drain");
 assert.equal(binding.limits.process_relaunch_reconnect_qualified, true);
+assert.equal(binding.limits.crash_before_ack_replay_qualified, true);
+assert.equal(binding.limits.idempotent_effect_once_qualified, true);
+assert.equal(binding.limits.idempotency_scope, "two-stable-message-ids-server-retained-fixture");
 assert.equal(binding.limits.public_ca_wss_qualified, false);
 assert.equal(binding.limits.suspension_receive_qualified, false);
 console.log(JSON.stringify({ accepted: true, schema: "wasmc.ios-websocket-static-validation/v1",

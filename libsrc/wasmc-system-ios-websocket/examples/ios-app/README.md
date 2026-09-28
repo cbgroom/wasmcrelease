@@ -9,3 +9,6 @@ delivers one process-memory outbox message after reconnect. It does not claim
 public-CA, Internet routing or OS network-transition coverage.
 The durable variant seeds two ordered messages, terminates the App, relaunches it,
 and verifies ordered acknowledgement plus an atomically retained empty outbox.
+The idempotent variant uses three App processes to force a crash after server
+application but before ACK persistence, then verifies stable-ID replay returns
+`duplicate:1` instead of applying the effect twice.

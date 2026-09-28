@@ -6,6 +6,7 @@ const port = Number(process.argv[2] ?? 18767);
 const restartOnce = process.argv.includes("--restart-once");
 const neverRestart = process.argv.includes("--never-restart");
 const sockets = new Set();
+const idempotentEffects = new Map();
 let server;
 let restartTriggered = false;
 let stopping = false;
@@ -80,6 +81,21 @@ function startServer() {
       if (decoded.text === "client-after-restart") socket.write(frame("server-after-restart"));
       if (decoded.text === "client-durable-1") socket.write(frame("ack-durable-1"));
       if (decoded.text === "client-durable-2") socket.write(frame("ack-durable-2"));
+      if (decoded.text.startsWith("idempotent|")) {
+        const [, id, , mode] = decoded.text.split("|");
+        const previous = idempotentEffects.get(id) ?? 0;
+        const outcome = previous === 0 ? "applied" : "duplicate";
+        const effectCount = previous === 0 ? 1 : previous;
+        if (previous === 0) idempotentEffects.set(id, effectCount);
+        if (mode === "crash-before-ack" && outcome === "applied") {
+          socket.write(frame(`receipt-before-ack|${id}|applied|${effectCount}`));
+          setTimeout(() => {
+            if (!socket.destroyed) socket.write(frame(`idempotent-ack|${id}|applied|${effectCount}`));
+          }, 3000);
+        } else {
+          socket.write(frame(`idempotent-ack|${id}|${outcome}|${effectCount}`));
+        }
+      }
     }
   });
   socket.on("close", () => sockets.delete(socket));

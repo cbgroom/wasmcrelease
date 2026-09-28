@@ -46,7 +46,7 @@ try {
   assert.equal(report.foreground_reply, "server-foreground");
   assert.equal(report.background_reply, "server-background");
   assert.equal(report.background_receive_phase, "background");
-  assert.equal(report.provider_evidence[0].identity, "wasmc:system-ios-websocket@0.0.1-dev.4");
+  assert.equal(report.provider_evidence[0].identity, "wasmc:system-ios-websocket@0.0.1-dev.5");
 
   spawnSync("/usr/bin/xcrun", ["simctl", "terminate", udid, bundle]);
   run("xcodebuild", ["-quiet", "-project", `${projectDir}/WAsmCIOSWebSocket.xcodeproj`,

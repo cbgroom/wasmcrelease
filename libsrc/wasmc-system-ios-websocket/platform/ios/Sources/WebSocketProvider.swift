@@ -9,6 +9,18 @@ final class WebSocketProvider: NSObject, URLSessionWebSocketDelegate {
         var messages: [String]
     }
 
+    private struct IdempotentMessage: Codable, Equatable {
+        let id: String
+        let payload: String
+    }
+
+    private struct IdempotentOutbox: Codable {
+        let seedProcessID: String
+        var crashProcessID: String?
+        var crashReceiptObserved: Bool
+        var messages: [IdempotentMessage]
+    }
+
     static let didChange = Notification.Name("wasmc.websocket.did-change")
     private let queue = DispatchQueue(label: "io.wasmc.websocket.state")
     private var session: URLSession!
@@ -19,9 +31,16 @@ final class WebSocketProvider: NSObject, URLSessionWebSocketDelegate {
     private let recoveryMode = ProcessInfo.processInfo.arguments.contains("--wasmc-wss-recovery")
     private let durableSeedMode = ProcessInfo.processInfo.arguments.contains("--wasmc-wss-durable-seed")
     private let durableDrainMode = ProcessInfo.processInfo.arguments.contains("--wasmc-wss-durable-drain")
+    private let idempotentSeedMode = ProcessInfo.processInfo.arguments.contains("--wasmc-wss-idempotent-seed")
+    private let idempotentCrashMode = ProcessInfo.processInfo.arguments.contains("--wasmc-wss-idempotent-crash")
+    private let idempotentDrainMode = ProcessInfo.processInfo.arguments.contains("--wasmc-wss-idempotent-drain")
     private let processID = UUID().uuidString
     private var durableSeedProcessID = ""
     private var durableMessages: [String] = []
+    private var idempotentSeedProcessID = ""
+    private var idempotentCrashProcessID = ""
+    private var idempotentMessages: [IdempotentMessage] = []
+    private var idempotentCrashReceiptObserved = false
     private var reconnectScheduled = false
     private var interruptionRecorded = false
     private let maxReconnectAttempts = 8
@@ -53,6 +72,17 @@ final class WebSocketProvider: NSObject, URLSessionWebSocketDelegate {
         "durable_ack_order": [String](),
         "durable_remaining_count": 0,
         "durable_outbox_drained": false,
+        "idempotent_outbox_seeded": false,
+        "idempotent_seed_process_id": "",
+        "idempotent_crash_process_id": "",
+        "idempotent_drain_process_id": "",
+        "idempotent_loaded_count": 0,
+        "idempotent_crash_window_ready": false,
+        "idempotent_crash_receipt_persisted": false,
+        "idempotent_first_effect_count": 0,
+        "idempotent_ack_outcomes": [String](),
+        "idempotent_remaining_count": 0,
+        "idempotent_outbox_drained": false,
         "error": "",
     ]
 
@@ -65,22 +95,29 @@ final class WebSocketProvider: NSObject, URLSessionWebSocketDelegate {
         precondition(input.isEmpty)
         return try JSONSerialization.data(withJSONObject: [
             "api": "wasmc:system-websocket@0.0.1",
-            "provider": "wasmc:system-ios-websocket@0.0.1-dev.4",
+            "provider": "wasmc:system-ios-websocket@0.0.1-dev.5",
             "transport": "URLSessionWebSocketTask",
             "background_scope": "finite-background-task-only",
             "local_pinned_wss": true,
             "service_restart_reconnect": true,
             "reconnect_policy": "350ms-fixed-max-8",
             "durable_outbox": "json-atomic-ordered-ack-drain",
+            "idempotency": "stable-message-id-server-effect-once",
         ], options: [.sortedKeys])
     }
 
     func connect() {
+        if idempotentSeedMode {
+            seedIdempotentOutbox()
+            publish()
+            return
+        }
         if durableSeedMode {
             seedDurableOutbox()
             publish()
             return
         }
+        if idempotentCrashMode || idempotentDrainMode { loadIdempotentOutbox() }
         if durableDrainMode { loadDurableOutbox() }
         openSocket()
     }
@@ -150,7 +187,22 @@ final class WebSocketProvider: NSObject, URLSessionWebSocketDelegate {
             && (snapshot["durable_seed_process_id"] as? String)?.isEmpty == false
             && (snapshot["durable_seed_process_id"] as? String) != processID
             && (snapshot["certificate_pin_match"] as? Bool) == true
-        let accepted = durableDrainMode ? durableAccepted : (recoveryMode ? recoveryAccepted : duplexAccepted)
+        let idempotentAccepted = (snapshot["connected"] as? Bool) == true
+            && (snapshot["idempotent_loaded_count"] as? Int) == 2
+            && (snapshot["idempotent_ack_outcomes"] as? [String])
+                == ["durable-1:duplicate:1", "durable-2:applied:1"]
+            && (snapshot["idempotent_remaining_count"] as? Int) == 0
+            && (snapshot["idempotent_outbox_drained"] as? Bool) == true
+            && (snapshot["idempotent_crash_receipt_persisted"] as? Bool) == true
+            && (snapshot["idempotent_seed_process_id"] as? String)?.isEmpty == false
+            && (snapshot["idempotent_crash_process_id"] as? String)?.isEmpty == false
+            && (snapshot["idempotent_seed_process_id"] as? String)
+                != (snapshot["idempotent_crash_process_id"] as? String)
+            && (snapshot["idempotent_seed_process_id"] as? String) != processID
+            && (snapshot["idempotent_crash_process_id"] as? String) != processID
+            && (snapshot["certificate_pin_match"] as? Bool) == true
+        let accepted = idempotentDrainMode ? idempotentAccepted
+            : (durableDrainMode ? durableAccepted : (recoveryMode ? recoveryAccepted : duplexAccepted))
         snapshot["schema"] = "wasmc.ios-websocket-qualification/v1"
         snapshot["accepted"] = accepted
         snapshot["secure_mode"] = secureMode
@@ -158,11 +210,14 @@ final class WebSocketProvider: NSObject, URLSessionWebSocketDelegate {
             && (snapshot["certificate_pin_match"] as? Bool) == true
             && accepted
         snapshot["service_restart_reconnect_qualified"] = recoveryMode && recoveryAccepted
+        snapshot["crash_before_ack_replay_qualified"] = idempotentDrainMode && idempotentAccepted
+        snapshot["idempotent_effect_once_qualified"] = idempotentDrainMode && idempotentAccepted
         snapshot["public_ca_wss_qualified"] = false
         snapshot["internet_route_qualified"] = false
         snapshot["network_transition_reconnect_qualified"] = false
         snapshot["suspension_receive_qualified"] = false
-        snapshot["process_relaunch_reconnect_qualified"] = durableDrainMode && durableAccepted
+        snapshot["process_relaunch_reconnect_qualified"] = (durableDrainMode && durableAccepted)
+            || (idempotentDrainMode && idempotentAccepted)
         snapshot["physical_device"] = false
         snapshot["admitted"] = false
         snapshot["released"] = false
@@ -182,7 +237,9 @@ final class WebSocketProvider: NSObject, URLSessionWebSocketDelegate {
             return next
         }
         publish()
-        if durableDrainMode {
+        if idempotentCrashMode || idempotentDrainMode {
+            sendNextIdempotent(using: webSocketTask)
+        } else if durableDrainMode {
             sendNextDurable(using: webSocketTask)
         } else if recoveryMode {
             if generation == 1 {
@@ -258,6 +315,12 @@ final class WebSocketProvider: NSObject, URLSessionWebSocketDelegate {
                 }
                 if self.durableDrainMode && message.hasPrefix("ack-durable-") {
                     self.handleDurableAcknowledgement(message, using: activeTask)
+                }
+                if self.idempotentCrashMode && message.hasPrefix("receipt-before-ack|") {
+                    self.handleIdempotentCrashReceipt(message)
+                }
+                if self.idempotentDrainMode && message.hasPrefix("idempotent-ack|") {
+                    self.handleIdempotentAcknowledgement(message, using: activeTask)
                 }
                 self.publish()
                 self.receiveNext(activeTask)
@@ -415,6 +478,150 @@ final class WebSocketProvider: NSObject, URLSessionWebSocketDelegate {
         case "client-durable-2": return "ack-durable-2"
         default: return nil
         }
+    }
+
+    private var idempotentOutboxURL: URL {
+        FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
+            .appendingPathComponent("wasmc-websocket-idempotent-outbox.json")
+    }
+
+    private func seedIdempotentOutbox() {
+        let messages = [
+            IdempotentMessage(id: "durable-1", payload: "effect-1"),
+            IdempotentMessage(id: "durable-2", payload: "effect-2"),
+        ]
+        do {
+            try persistIdempotentOutbox(
+                seedProcessID: processID,
+                crashProcessID: nil,
+                crashReceiptObserved: false,
+                messages: messages
+            )
+            queue.sync {
+                idempotentSeedProcessID = processID
+                idempotentMessages = messages
+                state["idempotent_outbox_seeded"] = true
+                state["idempotent_seed_process_id"] = processID
+                state["idempotent_remaining_count"] = messages.count
+                state["error"] = ""
+            }
+        } catch {
+            queue.sync { state["error"] = "idempotent-outbox-seed-failed:\(error)" }
+        }
+    }
+
+    private func loadIdempotentOutbox() {
+        do {
+            let data = try Data(contentsOf: idempotentOutboxURL)
+            var outbox = try JSONDecoder().decode(IdempotentOutbox.self, from: data)
+            if idempotentCrashMode {
+                outbox.crashProcessID = processID
+                try persistIdempotentOutbox(
+                    seedProcessID: outbox.seedProcessID,
+                    crashProcessID: processID,
+                    crashReceiptObserved: outbox.crashReceiptObserved,
+                    messages: outbox.messages
+                )
+            }
+            queue.sync {
+                idempotentSeedProcessID = outbox.seedProcessID
+                idempotentCrashProcessID = outbox.crashProcessID ?? ""
+                idempotentMessages = outbox.messages
+                idempotentCrashReceiptObserved = outbox.crashReceiptObserved
+                state["idempotent_seed_process_id"] = outbox.seedProcessID
+                state["idempotent_crash_process_id"] = outbox.crashProcessID ?? ""
+                state["idempotent_drain_process_id"] = idempotentDrainMode ? processID : ""
+                state["idempotent_loaded_count"] = outbox.messages.count
+                state["idempotent_crash_receipt_persisted"] = outbox.crashReceiptObserved
+                state["idempotent_remaining_count"] = outbox.messages.count
+                state["error"] = ""
+            }
+        } catch {
+            queue.sync { state["error"] = "idempotent-outbox-load-failed:\(error)" }
+        }
+    }
+
+    private func persistIdempotentOutbox(
+        seedProcessID: String,
+        crashProcessID: String?,
+        crashReceiptObserved: Bool,
+        messages: [IdempotentMessage]
+    ) throws {
+        let directory = idempotentOutboxURL.deletingLastPathComponent()
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        let outbox = IdempotentOutbox(
+            seedProcessID: seedProcessID,
+            crashProcessID: crashProcessID,
+            crashReceiptObserved: crashReceiptObserved,
+            messages: messages
+        )
+        try JSONEncoder().encode(outbox).write(to: idempotentOutboxURL, options: .atomic)
+    }
+
+    private func sendNextIdempotent(using activeTask: URLSessionWebSocketTask) {
+        guard let message = queue.sync(execute: { idempotentMessages.first }) else { return }
+        let mode = idempotentCrashMode ? "crash-before-ack" : "drain"
+        send("idempotent|\(message.id)|\(message.payload)|\(mode)", using: activeTask, stateKey: nil)
+    }
+
+    private func handleIdempotentCrashReceipt(_ receipt: String) {
+        let fields = receipt.split(separator: "|").map(String.init)
+        guard fields == ["receipt-before-ack", "durable-1", "applied", "1"] else { return }
+        let retained = queue.sync {
+            (idempotentSeedProcessID, idempotentCrashProcessID, idempotentMessages)
+        }
+        do {
+            try persistIdempotentOutbox(
+                seedProcessID: retained.0,
+                crashProcessID: retained.1,
+                crashReceiptObserved: true,
+                messages: retained.2
+            )
+            queue.sync {
+                idempotentCrashReceiptObserved = true
+                state["idempotent_crash_window_ready"] = true
+                state["idempotent_crash_receipt_persisted"] = true
+                state["idempotent_first_effect_count"] = 1
+            }
+        } catch {
+            queue.sync { state["error"] = "idempotent-crash-receipt-persist-failed:\(error)" }
+        }
+    }
+
+    private func handleIdempotentAcknowledgement(
+        _ acknowledgement: String,
+        using activeTask: URLSessionWebSocketTask
+    ) {
+        let fields = acknowledgement.split(separator: "|").map(String.init)
+        guard fields.count == 4, fields[0] == "idempotent-ack" else { return }
+        let retained = queue.sync { () -> (String, String, Bool, [IdempotentMessage])? in
+            guard let first = idempotentMessages.first, first.id == fields[1] else { return nil }
+            idempotentMessages.removeFirst()
+            var outcomes = state["idempotent_ack_outcomes"] as? [String] ?? []
+            outcomes.append("\(fields[1]):\(fields[2]):\(fields[3])")
+            state["idempotent_ack_outcomes"] = outcomes
+            state["idempotent_remaining_count"] = idempotentMessages.count
+            state["idempotent_outbox_drained"] = idempotentMessages.isEmpty
+            return (
+                idempotentSeedProcessID,
+                idempotentCrashProcessID,
+                idempotentCrashReceiptObserved,
+                idempotentMessages
+            )
+        }
+        guard let retained else { return }
+        do {
+            try persistIdempotentOutbox(
+                seedProcessID: retained.0,
+                crashProcessID: retained.1,
+                crashReceiptObserved: retained.2,
+                messages: retained.3
+            )
+        } catch {
+            queue.sync { state["error"] = "idempotent-outbox-ack-persist-failed:\(error)" }
+            return
+        }
+        if !retained.3.isEmpty { sendNextIdempotent(using: activeTask) }
     }
 
     private func finishBackgroundTask(_ application: UIApplication) {
