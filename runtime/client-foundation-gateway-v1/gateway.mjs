@@ -391,6 +391,14 @@ export class ClientFoundationGateway {
       if (message.schema !== CONTROL_SCHEMA || !Number.isSafeInteger(message.last_server_sequence) || !Number.isSafeInteger(message.graph_revision)) {
         throw new Error("invalid client hello");
       }
+      const checkpoint = message.state_checkpoint;
+      if (checkpoint !== null && checkpoint !== undefined && (
+        checkpoint.schema !== "wasmc.dynamic-lib-state-checkpoint/v1" ||
+        checkpoint.graph_revision !== message.graph_revision ||
+        checkpoint.graph_digest !== message.graph_digest ||
+        !/^[a-f0-9]{64}$/.test(checkpoint.checkpoint_sha256 ?? "") ||
+        !Number.isSafeInteger(checkpoint.state_blocks) || checkpoint.state_blocks < 1
+      )) throw new Error("invalid client state checkpoint summary");
       connection.hello = true;
       client.last_hello = message;
       await this.#persist();

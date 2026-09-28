@@ -46,6 +46,10 @@ for (const required of [
   "package-bound-state-contract",
   "snapshot-after-old-generation-drain",
   "new-invocations-wait-for-stateful-publish-or-rollback",
+  "active-checkpoint-bound-to-graph-identity",
+  "invoke-result-and-state-checkpoint-persist-together",
+  "checkpoint-restored-before-runtime-available",
+  "partial-checkpoint-restore-poisons-graph",
   "close-reclaims-all-runtime-resources",
 ]) assert.ok(invariants.has(required), `missing invariant: ${required}`);
 
@@ -59,6 +63,17 @@ assert.equal(model.state_contract.client_verification, "after-download-on-cache-
 assert.equal(model.state_contract.snapshot_encoding, "canonical-base64");
 assert.equal(model.state_contract.max_snapshot_bytes, 1048576);
 assert.equal(model.state_contract.migration_barrier_scope, "whole-graph");
+assert.deepEqual(model.state_contract.active_checkpoint, {
+  schema: "wasmc.dynamic-lib-state-checkpoint/v1",
+  per_block_max_decoded_bytes: 1048576,
+  client_persisted_max_bytes: 8388608,
+  identity: "canonical-json-sha256-bound-to-graph-revision-and-digest",
+  publication: "persisted-with-active-graph-before-barrier-release",
+  invoke: "checkpoint-and-command-result-persisted-together-before-receipt",
+  restart: "restore-before-runtime-available",
+  missing_or_corrupt: "runtime-unavailable-control-remains-connected",
+  partial_restore_failure: "graph-poisoned-until-close-and-reconstruction",
+});
 assert.deepEqual(model.state_contract.same_schema_order, [
   "install-probe-health-candidate",
   "block-new-invocations",
@@ -79,6 +94,7 @@ const evidencePaths = [
   "focused_qualification",
   "integrated_qualification",
   "publication_crash_fixture",
+  "checkpoint_crash_fixture",
   "host_cli_runtime_guard",
 ].map((key) => model.white_box_evidence[key]);
 for (const relative of evidencePaths) {
@@ -98,7 +114,8 @@ assert.equal(model.current_implementation_profile.graph_identity, "canonical-jso
 assert.equal(model.current_implementation_profile.configuration, "canonical-json-sha256");
 assert.equal(model.current_implementation_profile.wit_contract_identity, "wasm-tools-derived-port-type-sha256-bound-to-exact-wit");
 assert.equal(model.current_implementation_profile.retired_cleanup, "durable-publication-ledger-and-process-owner-fence");
-for (const gate of ["cross-schema-state-migration-lib", "stateful-active-checkpoint-restart"]) {
+assert.equal(model.current_implementation_profile.stateful_restart, "snapshot-v1-active-checkpoint-with-invoke-result-binding");
+for (const gate of ["cross-schema-state-migration-lib", "sticky-active-restart-disposition"]) {
   assert.ok(model.current_implementation_profile.open_gates.includes(gate), `missing open gate: ${gate}`);
 }
 
@@ -110,6 +127,9 @@ for (const phrase of [
   "Unknown or incomplete state policy fails closed",
   "Start here for the complete implemented state contract",
   "The barrier is graph-wide",
+  "checkpoint and command result are written in one Client state transaction",
+  "Missing, stale or corrupt checkpoint identity leaves runtime unavailable",
+  "the graph is marked restore-failed",
   "use this bounded evidence index instead of searching the repository",
 ]) assert.ok(normalizedDocument.includes(phrase), `model document missing rule: ${phrase}`);
 

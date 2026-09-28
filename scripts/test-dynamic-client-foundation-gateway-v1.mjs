@@ -3,7 +3,7 @@ import { createHash } from "node:crypto";
 import { execFile, spawn } from "node:child_process";
 import { once } from "node:events";
 import { readFileSync } from "node:fs";
-import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { cp, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import https from "node:https";
 import os from "node:os";
 import path from "node:path";
@@ -446,6 +446,39 @@ try {
   state = await waitFor(origin, (value) => value.commands[20]?.receipt);
   assert.equal(state.commands[20].receipt.response.value, "SV2:1");
 
+  const checkpointBeforeCrash = client.snapshot().active_state_checkpoint;
+  assert.equal(checkpointBeforeCrash.graph_revision, 7);
+  assert.equal(checkpointBeforeCrash.graph_digest, statefulReplacement.graph_digest);
+  assert.equal(checkpointBeforeCrash.blocks.length, 1);
+  assert.match(checkpointBeforeCrash.checkpoint_sha256, /^[a-f0-9]{64}$/);
+
+  trace("client:state-checkpoint-crash-stop-normal");
+  await stopClient();
+  const checkpointCrashStderr = [];
+  const checkpointCrashClient = spawn(process.execPath, [
+    path.join(root, "scripts/fixtures/dynamic-client-state-checkpoint-crash-runner.mjs"),
+    clientRoot,
+    `${address.wss_base}/v1/clients/dynamic-client/control`,
+    certPath,
+  ], { stdio: ["ignore", "ignore", "pipe"] });
+  checkpointCrashClient.stderr.on("data", (chunk) => checkpointCrashStderr.push(chunk));
+  await waitFor(origin, (value) => value.connected === true && value.last_hello?.runtime_available === true && value.last_hello?.state_checkpoint?.checkpoint_sha256 === checkpointBeforeCrash.checkpoint_sha256);
+  await api(origin, "POST", "/v1/clients/dynamic-client/commands", { message_id: "dg-22", operation: "invoke", payload: { value: "inc" } });
+  const [checkpointCrashCode] = await once(checkpointCrashClient, "exit");
+  assert.equal(checkpointCrashCode, 87, Buffer.concat(checkpointCrashStderr).toString("utf8"));
+  const checkpointCrashDiskState = JSON.parse(await readFile(path.join(clientRoot, "dynamic-state.json"), "utf8"));
+  assert.equal(checkpointCrashDiskState.inflight_command.message_id, "dg-22");
+  assert.equal(checkpointCrashDiskState.inflight_result.response.value, "SV2:2");
+  assert.notEqual(checkpointCrashDiskState.active_state_checkpoint.checkpoint_sha256, checkpointBeforeCrash.checkpoint_sha256);
+  assert.equal(checkpointCrashDiskState.active_state_checkpoint.blocks.length, 1);
+
+  await startClient(address);
+  state = await waitFor(origin, (value) => value.commands[21]?.receipt && value.last_hello?.runtime_available === true && value.last_hello?.state_checkpoint?.checkpoint_sha256 === checkpointCrashDiskState.active_state_checkpoint.checkpoint_sha256);
+  assert.equal(state.commands[21].receipt.response.value, "SV2:2");
+  await api(origin, "POST", "/v1/clients/dynamic-client/commands", { message_id: "dg-23", operation: "invoke", payload: { value: "get" } });
+  state = await waitFor(origin, (value) => value.commands[22]?.receipt);
+  assert.equal(state.commands[22].receipt.response.value, "SV2:2");
+
   trace("client:final-close");
   await stopClient();
   assert.deepEqual(client.boundary.counts(), { resources: 0, windows: 0, operations: 0 });
@@ -455,8 +488,28 @@ try {
   assert.equal(diskState.active_graph.shape, "serial-dag");
   assert.equal(diskState.retired_generations.length, 0);
   assert.equal(diskState.retired_cleanup_receipts.some((receipt) => receipt.outcome === "process-owner-fenced-on-restart"), true);
-  assert.equal(diskState.last_server_sequence, 21);
-  assert.equal(Object.keys(diskState.receipts).length, 21);
+  assert.equal(diskState.last_server_sequence, 23);
+  assert.equal(Object.keys(diskState.receipts).length, 23);
+  assert.equal(diskState.active_state_checkpoint.checkpoint_sha256, checkpointCrashDiskState.active_state_checkpoint.checkpoint_sha256);
+
+  for (const fault of ["missing", "digest-mismatch"]) {
+    const faultRoot = path.join(temporaryRoot, `checkpoint-${fault}`);
+    await cp(clientRoot, faultRoot, { recursive: true });
+    const faultStatePath = path.join(faultRoot, "dynamic-state.json");
+    const faultState = JSON.parse(await readFile(faultStatePath, "utf8"));
+    if (fault === "missing") faultState.active_state_checkpoint = null;
+    else faultState.active_state_checkpoint.checkpoint_sha256 = "0".repeat(64);
+    await writeFile(faultStatePath, `${JSON.stringify(faultState, null, 2)}\n`);
+    const faultClient = new DynamicGraphClientFoundation({ stateRoot: faultRoot, gatewayUrl: `${address.wss_base}/v1/clients/dynamic-client/control`, ca: cert });
+    const faultController = new AbortController();
+    const faultRunning = faultClient.run(faultController.signal);
+    await waitFor(origin, (value) => value.connected === true && value.last_hello?.runtime_available === false && value.last_hello?.graph_revision === 7);
+    assert.equal(faultClient.snapshot().runtime_available, false);
+    faultController.abort();
+    await faultClient.close();
+    await faultRunning;
+    assert.deepEqual(faultClient.boundary.counts(), { resources: 0, windows: 0, operations: 0 });
+  }
 
   console.log(JSON.stringify({
     accepted: true,
@@ -475,6 +528,10 @@ try {
     publication_crash_recovery: "J(L2(S(after-publication-crash)),R(S(after-publication-crash)))",
     durable_retired_generation_cleanup: "process-owner-fenced-on-restart",
     stateful_same_schema_gateway_replacement: "SV1:1->SV2:1",
+    stateful_active_checkpoint_restart: "SV2:2",
+    invoke_checkpoint_crash_recovered_without_replay: true,
+    gateway_observed_checkpoint_identity: true,
+    missing_or_corrupt_checkpoint_failed_closed: true,
     forged_port_manifest_rejected_at_gateway: true,
     forged_state_contract_rejected_at_gateway: true,
     durable_graph_revision: diskState.graph_revision,

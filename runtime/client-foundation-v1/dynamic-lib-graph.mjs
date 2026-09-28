@@ -7,6 +7,7 @@ import { validateWitPortManifest } from "./wit-port-contracts.mjs";
 const encoder = new TextEncoder();
 const decoder = new TextDecoder("utf-8", { fatal: true });
 const MAX_SNAPSHOT_BYTES = 1024 * 1024;
+const CHECKPOINT_SCHEMA = "wasmc.dynamic-lib-state-checkpoint/v1";
 const sha256 = (bytes) => createHash("sha256").update(bytes).digest("hex");
 
 const within = (root, candidate) => candidate === root || candidate.startsWith(`${root}${path.sep}`);
@@ -45,6 +46,8 @@ export class DynamicLibGraph {
     this.retired = new Set();
     this.closed = false;
     this.updateInProgress = false;
+    this.checkpointInProgress = false;
+    this.restoreFailed = false;
     this.invocationBarrier = null;
   }
 
@@ -57,6 +60,7 @@ export class DynamicLibGraph {
       edges: structuredClone(this.active.edges),
       entrypoint: structuredClone(this.active.entrypoint),
       invocation_barrier_active: this.invocationBarrier !== null,
+      restore_failed: this.restoreFailed,
       retired: [...this.retired].map(({ generation }) => ({ revision: generation.revision, graph_digest: generation.graphDigest, inflight: generation.inflight })),
       blocks: Object.fromEntries([...this.active.blocks].map(([name, block]) => [name, {
         identity: block.identity,
@@ -72,7 +76,9 @@ export class DynamicLibGraph {
 
   async apply({ expected_revision, graph_digest, blocks, pipeline, edges, entrypoint, onPublished, onRetired }) {
     if (this.closed) throw new Error("dynamic Lib graph closed");
+    if (this.restoreFailed) throw new Error("dynamic Lib graph restore failed; close and reconstruct the graph");
     if (this.updateInProgress) throw new Error("dynamic Lib graph update already in progress");
+    if (this.checkpointInProgress) throw new Error("dynamic Lib graph checkpoint already in progress");
     if (this.retired.size > 0) throw new Error("dynamic Lib graph retired cleanup pending");
     if (expected_revision !== this.active.revision) throw new Error("dynamic Lib graph revision fence mismatch");
     const dag = Array.isArray(edges) || entrypoint !== undefined;
@@ -164,6 +170,7 @@ export class DynamicLibGraph {
         for (const migration of snapshotMigrations) await this.#migrateSnapshot(migration);
       }
       for (const block of candidate.blocks.values()) await this.#call(block.resource, { operation: "health", configuration: block.configuration });
+      const stateCheckpoint = await this.#captureGenerationCheckpoint(candidate);
       this.active = candidate;
       published = true;
       const retired = old.graphDigest === null ? null : { generation: old, retainedResources: new Set([...candidate.blocks.values()].map((block) => block.resource)), onRetired };
@@ -171,6 +178,7 @@ export class DynamicLibGraph {
       await onPublished?.({
         active: { revision: candidate.revision, graph_digest: candidate.graphDigest },
         retired: retired ? { revision: old.revision, graph_digest: old.graphDigest } : null,
+        state_checkpoint: stateCheckpoint,
       });
       releaseInvocationBarrier?.();
       releaseInvocationBarrier = null;
@@ -191,6 +199,7 @@ export class DynamicLibGraph {
 
   async invoke(value) {
     if (this.closed) throw new Error("dynamic Lib graph closed");
+    if (this.restoreFailed) throw new Error("dynamic Lib graph restore failed; close and reconstruct the graph");
     while (this.invocationBarrier) await this.invocationBarrier.promise;
     const generation = this.active;
     generation.inflight += 1;
@@ -209,6 +218,56 @@ export class DynamicLibGraph {
       if (generation.inflight === 0) {
         for (const resolve of generation.drainWaiters.splice(0)) resolve();
       }
+    }
+  }
+
+  async captureStateCheckpoint({ onCaptured } = {}) {
+    if (this.closed) throw new Error("dynamic Lib graph closed");
+    if (this.restoreFailed) throw new Error("dynamic Lib graph restore failed; close and reconstruct the graph");
+    if (this.updateInProgress) throw new Error("dynamic Lib graph update already in progress");
+    if (this.checkpointInProgress) throw new Error("dynamic Lib graph checkpoint already in progress");
+    if (this.retired.size > 0) throw new Error("dynamic Lib graph retired cleanup pending");
+    this.checkpointInProgress = true;
+    const releaseInvocationBarrier = this.#beginInvocationBarrier();
+    try {
+      const generation = this.active;
+      await this.#drain(generation);
+      const checkpoint = await this.#captureGenerationCheckpoint(generation);
+      await onCaptured?.(checkpoint);
+      return checkpoint;
+    } finally {
+      releaseInvocationBarrier();
+      this.checkpointInProgress = false;
+    }
+  }
+
+  async restoreStateCheckpoint(checkpoint) {
+    if (this.closed) throw new Error("dynamic Lib graph closed");
+    if (this.restoreFailed) throw new Error("dynamic Lib graph restore failed; close and reconstruct the graph");
+    if (this.updateInProgress) throw new Error("dynamic Lib graph update already in progress");
+    if (this.checkpointInProgress) throw new Error("dynamic Lib graph checkpoint already in progress");
+    if (this.retired.size > 0) throw new Error("dynamic Lib graph retired cleanup pending");
+    const snapshotBlocks = [...this.active.blocks.entries()].filter(([, block]) => block.statePolicy === "snapshot-v1").sort(([left], [right]) => left.localeCompare(right));
+    if ([...this.active.blocks.values()].some((block) => block.statePolicy === "sticky")) throw new Error("sticky dynamic Lib active state cannot be restored after restart");
+    if (snapshotBlocks.length === 0) {
+      if (checkpoint !== null && checkpoint !== undefined) throw new Error("unexpected dynamic Lib state checkpoint for stateless graph");
+      return { restored: 0, checkpoint_sha256: null };
+    }
+    this.#validateCheckpointIdentity(checkpoint, snapshotBlocks);
+    this.checkpointInProgress = true;
+    const releaseInvocationBarrier = this.#beginInvocationBarrier();
+    try {
+      await this.#drain(this.active);
+      const checkpointByName = new Map(checkpoint.blocks.map((block) => [block.name, block]));
+      for (const [name, target] of snapshotBlocks) await this.#restoreSnapshotEnvelope(name, target, checkpointByName.get(name));
+      for (const block of this.active.blocks.values()) await this.#call(block.resource, { operation: "health", configuration: block.configuration });
+      return { restored: snapshotBlocks.length, checkpoint_sha256: checkpoint.checkpoint_sha256 };
+    } catch (error) {
+      this.restoreFailed = true;
+      throw error;
+    } finally {
+      releaseInvocationBarrier();
+      this.checkpointInProgress = false;
     }
   }
 
@@ -250,6 +309,7 @@ export class DynamicLibGraph {
   async close() {
     if (this.closed) return;
     if (this.updateInProgress) throw new Error("cannot close dynamic Lib graph during an update");
+    if (this.checkpointInProgress) throw new Error("cannot close dynamic Lib graph during a checkpoint");
     this.closed = true;
     await this.#drain(this.active);
     for (const retired of [...this.retired]) await this.#cleanupRetired(retired);
@@ -279,22 +339,78 @@ export class DynamicLibGraph {
       state_schema_identity: source.stateSchemaIdentity,
       configuration: source.configuration,
     });
-    if (snapshot.accepted !== true || snapshot.state_schema_identity !== source.stateSchemaIdentity || typeof snapshot.state_base64 !== "string" || typeof snapshot.state_sha256 !== "string") {
+    const envelope = this.#validateSnapshotEnvelope(name, source.stateSchemaIdentity, snapshot);
+    await this.#restoreSnapshotEnvelope(name, target, envelope);
+  }
+
+  async #captureGenerationCheckpoint(generation) {
+    const blocks = [];
+    for (const [name, block] of [...generation.blocks.entries()].sort(([left], [right]) => left.localeCompare(right))) {
+      if (block.statePolicy !== "snapshot-v1") continue;
+      const snapshot = await this.#call(block.resource, {
+        operation: "snapshot-v1",
+        state_schema_identity: block.stateSchemaIdentity,
+        configuration: block.configuration,
+      });
+      blocks.push({ name, ...this.#validateSnapshotEnvelope(name, block.stateSchemaIdentity, snapshot) });
+    }
+    if (blocks.length === 0) return null;
+    const payload = {
+      schema: CHECKPOINT_SCHEMA,
+      graph_revision: generation.revision,
+      graph_digest: generation.graphDigest,
+      blocks,
+    };
+    return { ...payload, checkpoint_sha256: sha256(Buffer.from(canonicalJson(payload))) };
+  }
+
+  #validateSnapshotEnvelope(name, stateSchemaIdentity, snapshot) {
+    if (snapshot?.accepted !== true || snapshot.state_schema_identity !== stateSchemaIdentity || typeof snapshot.state_base64 !== "string" || typeof snapshot.state_sha256 !== "string") {
       throw new Error(`dynamic Lib snapshot rejected or malformed: ${name}`);
     }
     const bytes = Buffer.from(snapshot.state_base64, "base64");
     if (bytes.length > MAX_SNAPSHOT_BYTES || bytes.toString("base64") !== snapshot.state_base64 || sha256(bytes) !== snapshot.state_sha256) {
       throw new Error(`dynamic Lib snapshot identity mismatch: ${name}`);
     }
+    return {
+      state_schema_identity: stateSchemaIdentity,
+      state_base64: snapshot.state_base64,
+      state_sha256: snapshot.state_sha256,
+    };
+  }
+
+  async #restoreSnapshotEnvelope(name, target, envelope) {
+    this.#validateSnapshotEnvelope(name, target.stateSchemaIdentity, { accepted: true, ...envelope });
     const restored = await this.#call(target.resource, {
       operation: "restore-v1",
       state_schema_identity: target.stateSchemaIdentity,
-      state_base64: snapshot.state_base64,
-      state_sha256: snapshot.state_sha256,
+      state_base64: envelope.state_base64,
+      state_sha256: envelope.state_sha256,
       configuration: target.configuration,
     });
-    if (restored.accepted !== true || restored.state_schema_identity !== target.stateSchemaIdentity || restored.state_sha256 !== snapshot.state_sha256) {
+    if (restored.accepted !== true || restored.state_schema_identity !== target.stateSchemaIdentity || restored.state_sha256 !== envelope.state_sha256) {
       throw new Error(`dynamic Lib snapshot restore rejected: ${name}`);
+    }
+  }
+
+  #validateCheckpointIdentity(checkpoint, snapshotBlocks) {
+    if (!checkpoint || checkpoint.schema !== CHECKPOINT_SCHEMA || checkpoint.graph_revision !== this.active.revision || checkpoint.graph_digest !== this.active.graphDigest || !Array.isArray(checkpoint.blocks) || !/^[a-f0-9]{64}$/.test(checkpoint.checkpoint_sha256 ?? "")) {
+      throw new Error("invalid dynamic Lib active state checkpoint identity");
+    }
+    if (canonicalJson(Object.keys(checkpoint).sort()) !== canonicalJson(["blocks", "checkpoint_sha256", "graph_digest", "graph_revision", "schema"])) {
+      throw new Error("invalid dynamic Lib active state checkpoint shape");
+    }
+    const payload = { schema: checkpoint.schema, graph_revision: checkpoint.graph_revision, graph_digest: checkpoint.graph_digest, blocks: checkpoint.blocks };
+    if (sha256(Buffer.from(canonicalJson(payload))) !== checkpoint.checkpoint_sha256) throw new Error("dynamic Lib active state checkpoint digest mismatch");
+    const expectedNames = snapshotBlocks.map(([name]) => name);
+    const observedNames = checkpoint.blocks.map((block) => block?.name);
+    if (new Set(observedNames).size !== observedNames.length || canonicalJson(observedNames) !== canonicalJson(expectedNames)) throw new Error("dynamic Lib active state checkpoint block mismatch");
+    for (let index = 0; index < snapshotBlocks.length; index += 1) {
+      const [name, target] = snapshotBlocks[index];
+      if (canonicalJson(Object.keys(checkpoint.blocks[index]).sort()) !== canonicalJson(["name", "state_base64", "state_schema_identity", "state_sha256"])) {
+        throw new Error(`invalid dynamic Lib active state checkpoint block shape: ${name}`);
+      }
+      this.#validateSnapshotEnvelope(name, target.stateSchemaIdentity, { accepted: true, ...checkpoint.blocks[index] });
     }
   }
 

@@ -13,6 +13,7 @@ const STATE_SCHEMA = "wasmc.dynamic-client-foundation-state/v1";
 const BUNDLE_SCHEMA = "wasmc.client-foundation-bundle/v1";
 const CONTROL_SCHEMA = "wasmc.client-foundation-control/v1";
 const MAX_ARTIFACT_BYTES = 2 * 1024 * 1024;
+const MAX_ACTIVE_STATE_CHECKPOINT_BYTES = 8 * 1024 * 1024;
 const MAX_RETIRED_CLEANUP_RECEIPTS = 128;
 const REQUIRED_FILES = new Set(["lib.wit", "native-boundary.json", "native-adapter.mjs"]);
 const ALLOWED_FILES = new Set([...REQUIRED_FILES, "graph-ports.json"]);
@@ -69,7 +70,7 @@ function decodeBundle(bytes) {
 }
 
 export class DynamicGraphClientFoundation {
-  constructor({ stateRoot, gatewayUrl, ca, reconnectDelayMs = 50, boundary, afterPublicationPersist } = {}) {
+  constructor({ stateRoot, gatewayUrl, ca, reconnectDelayMs = 50, boundary, afterPublicationPersist, afterStateCheckpointPersist } = {}) {
     if (!stateRoot || !gatewayUrl || !ca) throw new Error("incomplete Dynamic Graph Client configuration");
     this.stateRoot = path.resolve(stateRoot);
     this.gatewayUrl = gatewayUrl;
@@ -78,6 +79,7 @@ export class DynamicGraphClientFoundation {
     this.boundary = boundary ?? new LibDefinedBoundary();
     this.instanceId = randomUUID();
     this.afterPublicationPersist = afterPublicationPersist;
+    this.afterStateCheckpointPersist = afterStateCheckpointPersist;
     this.statePath = path.join(this.stateRoot, "dynamic-state.json");
     this.journalPath = path.join(this.stateRoot, "dynamic-journal.jsonl");
     this.artifactRoot = path.join(this.stateRoot, "lib-artifacts");
@@ -86,6 +88,7 @@ export class DynamicGraphClientFoundation {
     this.connection = null;
     this.initialized = false;
     this.runtimeAvailable = false;
+    this.checkpointChain = Promise.resolve();
   }
 
   async initialize() {
@@ -106,11 +109,13 @@ export class DynamicGraphClientFoundation {
         inflight_result: null,
         retired_generations: [],
         retired_cleanup_receipts: [],
+        active_state_checkpoint: null,
       };
       await this.#persist("initialized");
     }
     this.state.retired_generations ??= [];
     this.state.retired_cleanup_receipts ??= [];
+    this.state.active_state_checkpoint ??= null;
     await this.#recoverRetiredGenerations();
     if (!Number.isSafeInteger(this.state.graph_revision) || this.state.graph_revision < 0) throw new Error("invalid persisted graph revision");
     if (this.state.inflight_command && this.state.inflight_result) {
@@ -130,7 +135,9 @@ export class DynamicGraphClientFoundation {
   async invoke(value) {
     await this.initialize();
     if (!this.runtimeAvailable || !this.state.active_graph) throw new Error("dynamic Lib graph runtime unavailable");
-    return this.graph.invoke(value);
+    const response = await this.graph.invoke(value);
+    await this.#captureAndPersistActiveState();
+    return response;
   }
 
   async run(signal) {
@@ -145,6 +152,7 @@ export class DynamicGraphClientFoundation {
   async close() {
     this.connection?.close();
     this.connection = null;
+    await this.checkpointChain;
     if (this.graph) await this.graph.close();
     this.graph = null;
     this.runtimeAvailable = false;
@@ -170,6 +178,7 @@ export class DynamicGraphClientFoundation {
       graph_digest: this.state.active_graph?.graph_digest ?? null,
       runtime_available: this.runtimeAvailable,
       active: this.state.active_graph ? { graph_digest: this.state.active_graph.graph_digest } : null,
+      state_checkpoint: this.#checkpointSummary(),
     });
     let chain = Promise.resolve();
     connection.on("message", (message) => {
@@ -206,7 +215,13 @@ export class DynamicGraphClientFoundation {
     try {
       if (message.operation === "inventory.report") result = { outcome: "reported", graph_revision: this.state.graph_revision, active_graph: this.state.active_graph, runtime_available: this.runtimeAvailable };
       else if (message.operation === "lib-graph.apply") result = await this.#applyGraph(message.payload ?? {});
-      else if (message.operation === "invoke") result = { outcome: "completed", response: await this.invoke(message.payload?.value ?? "") };
+      else if (message.operation === "invoke") {
+        if (!this.runtimeAvailable || !this.state.active_graph) throw new Error("dynamic Lib graph runtime unavailable");
+        const response = await this.graph.invoke(message.payload?.value ?? "");
+        const commandResult = { outcome: "completed", response };
+        const checkpoint = await this.#captureAndPersistActiveState({ inflightResult: commandResult });
+        result = checkpoint ? this.state.inflight_result : commandResult;
+      }
       else throw new Error(`unsupported dynamic control operation ${JSON.stringify(message.operation)}`);
     } catch (error) {
       result = { outcome: "rejected", graph_revision: this.state.graph_revision, graph_digest: this.state.active_graph?.graph_digest ?? null, error: error.message };
@@ -252,13 +267,15 @@ export class DynamicGraphClientFoundation {
     const result = await this.graph.apply({
       expected_revision: payload.expected_graph_revision, graph_digest: payload.graph_digest, blocks,
       pipeline: payload.pipeline, edges: payload.edges, entrypoint: payload.entrypoint,
-      onPublished: async ({ active: published, retired }) => {
+      onPublished: async ({ active: published, retired, state_checkpoint: stateCheckpoint }) => {
         this.state.graph_revision = published.revision;
         this.state.active_graph = active;
+        this.#assertPersistableCheckpoint(stateCheckpoint, published);
+        this.state.active_state_checkpoint = stateCheckpoint;
         this.runtimeAvailable = true;
         if (retired) this.state.retired_generations.push({ ...retired, owner_instance_id: this.instanceId, status: "pending" });
         this.state.inflight_result = { outcome: "committed", revision: published.revision, graph_digest: published.graph_digest, shape: active.shape, cleanup_pending: Boolean(retired), active_graph: active };
-        await this.#persist("lib-graph-published", { graph_digest: published.graph_digest, graph_revision: published.revision, retired_revision: retired?.revision ?? null });
+        await this.#persist("lib-graph-published", { graph_digest: published.graph_digest, graph_revision: published.revision, retired_revision: retired?.revision ?? null, state_checkpoint_sha256: stateCheckpoint?.checkpoint_sha256 ?? null });
         await this.afterPublicationPersist?.({ revision: published.revision, graph_digest: published.graph_digest, retired });
       },
       onRetired: async (retired) => {
@@ -296,9 +313,10 @@ export class DynamicGraphClientFoundation {
       restoringGraph = new DynamicLibGraph({ boundary: this.boundary, initialRevision: this.state.graph_revision - 1 });
       const result = await restoringGraph.apply({ expected_revision: this.state.graph_revision - 1, graph_digest: active.graph_digest, blocks, pipeline: active.pipeline, edges: dag ? active.edges : undefined, entrypoint: dag ? active.entrypoint : undefined });
       if (result.outcome !== "committed" || result.revision !== this.state.graph_revision) throw new Error(result.error ?? "dynamic graph restore did not commit");
+      const restoredState = await restoringGraph.restoreStateCheckpoint(this.state.active_state_checkpoint);
       this.graph = restoringGraph;
       this.runtimeAvailable = true;
-      await this.#journal("lib-graph-restored", { graph_digest: active.graph_digest, graph_revision: result.revision });
+      await this.#journal("lib-graph-restored", { graph_digest: active.graph_digest, graph_revision: result.revision, state_blocks_restored: restoredState.restored, state_checkpoint_sha256: restoredState.checkpoint_sha256 });
     } catch (error) {
       await restoringGraph?.close().catch(() => {});
       this.graph = new DynamicLibGraph({ boundary: this.boundary, initialRevision: this.state.graph_revision });
@@ -377,6 +395,47 @@ export class DynamicGraphClientFoundation {
         throw new Error(`dynamic Lib transported port contracts mismatch: ${declaration.name}`);
       }
     }
+  }
+
+  async #captureAndPersistActiveState({ inflightResult = null } = {}) {
+    if (!this.state.active_graph?.blocks?.some((block) => block.state_policy === "snapshot-v1")) return null;
+    const operation = this.checkpointChain.then(() => this.graph.captureStateCheckpoint({
+      onCaptured: async (checkpoint) => {
+        this.#assertPersistableCheckpoint(checkpoint, { revision: this.state.graph_revision, graph_digest: this.state.active_graph.graph_digest });
+        this.state.active_state_checkpoint = checkpoint;
+        if (inflightResult) this.state.inflight_result = inflightResult;
+        await this.#persist("active-state-checkpointed", {
+          graph_revision: checkpoint.graph_revision,
+          graph_digest: checkpoint.graph_digest,
+          state_blocks: checkpoint.blocks.length,
+          state_checkpoint_sha256: checkpoint.checkpoint_sha256,
+          command_result_bound: Boolean(inflightResult),
+        });
+        await this.afterStateCheckpointPersist?.({ checkpoint, inflight_result: inflightResult });
+      },
+    }));
+    this.checkpointChain = operation.catch(() => {});
+    return operation;
+  }
+
+  #assertPersistableCheckpoint(checkpoint, active) {
+    if (checkpoint === null) return;
+    if (!checkpoint || checkpoint.graph_revision !== active.revision || checkpoint.graph_digest !== active.graph_digest || !/^[a-f0-9]{64}$/.test(checkpoint.checkpoint_sha256 ?? "")) {
+      throw new Error("dynamic Client active state checkpoint identity mismatch");
+    }
+    if (Buffer.byteLength(JSON.stringify(checkpoint)) > MAX_ACTIVE_STATE_CHECKPOINT_BYTES) throw new Error("dynamic Client active state checkpoint size limit");
+  }
+
+  #checkpointSummary() {
+    const checkpoint = this.state?.active_state_checkpoint;
+    if (!checkpoint) return null;
+    return {
+      schema: checkpoint.schema,
+      graph_revision: checkpoint.graph_revision,
+      graph_digest: checkpoint.graph_digest,
+      checkpoint_sha256: checkpoint.checkpoint_sha256,
+      state_blocks: checkpoint.blocks.length,
+    };
   }
 
   async #persist(event, details = {}) {

@@ -123,6 +123,28 @@ higher-layer CLI. Neither CLI nor the Host API participates in state transfer.
 `snapshot-v1` and `restore-v1` are opaque Lib operations over the existing
 resource/window/operation/completion boundary.
 
+For active `snapshot-v1` state, the Client persists a
+`wasmc.dynamic-lib-state-checkpoint/v1` record bound to the exact graph revision
+and digest. Each block keeps the 1 MiB decoded envelope limit and the complete
+persisted checkpoint is capped at 8 MiB. Publication persists the candidate's
+checkpoint with the active graph before releasing the invocation barrier.
+After a Gateway `invoke`, the updated checkpoint and command result are written
+in one Client state transaction before a receipt is sent. A crash after that
+write recovers the result without executing the invocation again; restart
+restores and health-checks checkpointed blocks before reporting
+`runtime_available=true`. Missing, stale or corrupt checkpoint identity leaves
+runtime unavailable while the control connection remains usable. If a
+multi-block restore fails after an earlier block has accepted state, the graph
+is marked restore-failed: invoke, update and checkpoint operations remain
+disabled until the graph is closed and reconstructed.
+
+This closes restart restoration for active `snapshot-v1` state, not general
+exactly-once execution. A crash before that joint write may leave an external
+effect with no durable result, and a direct caller may lose the response after
+the write. External effects still require the Lib's idempotency or transaction
+contract. `sticky` active state remains fail-closed on restart because it has no
+snapshot/disposition contract.
+
 For a white-box review, use this bounded evidence index instead of searching
 the repository:
 
@@ -135,6 +157,7 @@ the repository:
 | focused policy, concurrency and envelope negatives | `scripts/test-dynamic-lib-stateful-v1.mjs` |
 | distributed state binding and publication crash | `scripts/test-dynamic-client-foundation-gateway-v1.mjs` |
 | crash injection process | `scripts/fixtures/dynamic-client-publication-crash-runner.mjs` |
+| invoke-checkpoint crash injection | `scripts/fixtures/dynamic-client-state-checkpoint-crash-runner.mjs` |
 | runtime guard for fixed Host/minimal CLI bytes | `scripts/test-client-foundation-v1.mjs` |
 
 Run exactly the focused test, this model's validator and the integrated test
@@ -233,18 +256,20 @@ Normal drain records resource release; a process crash is recovered by fencing
 the prior process-owned Host resource namespace and retaining a bounded cleanup
 receipt. Same-schema `snapshot-v1` replacement and fail-closed `sticky`
 handling are qualified locally and through the Client/Gateway path.
-Cross-schema migration through an exact migration Lib and durable checkpoint
-restoration of active state after a full Client restart remain open gates. The
-whole path remains a prototype and is not admitted or released.
+Active `snapshot-v1` checkpoint restoration is now qualified across a full
+Client restart, including a crash after joint checkpoint/result persistence and
+before receipt delivery. Cross-schema migration through an exact migration Lib
+and a restart disposition for `sticky` state remain open gates. The whole path
+remains a prototype and is not admitted or released.
 
 The focused local stateful qualification covers same-schema transfer,
 graph-wide invocation fencing, restore rollback, sticky reuse/rejection,
 package/declaration mismatch, policy transition, stateful removal without a
 disposition, non-canonical base64, digest mismatch and the 1 MiB snapshot
 bound. The integrated Client/Gateway qualification covers same-schema transfer
-through distribution plus rejection of a forged Gateway state declaration.
-It does not restart a Client while mutable state is active; that absence is the
-`stateful-active-checkpoint-restart` open gate, not passing evidence.
+through distribution, active-state restart, checkpoint identity in the Gateway
+hello, missing/corrupt checkpoint fail-closed behavior, invoke crash recovery
+without replay, and rejection of a forged Gateway state declaration.
 
 The process-owner fence does not claim exactly-once behavior or cleanup of
 external effects that a Lib initiated outside the Host process. Such effects

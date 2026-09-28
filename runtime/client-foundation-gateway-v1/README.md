@@ -31,8 +31,13 @@ The gateway provides:
   content-addressed pack, and unreferenced crash leftovers are collected only
   after durable state verification.
 - `lib-graph.apply` validation and URL resolution for canonical
-  serial-stateless multi-Lib graphs. Each node must match a stored bundle's
-  exact Lib, package and WIT identities before the command is durably queued.
+  serial and DAG multi-Lib graphs. Each node must match a stored bundle's exact
+  Lib, package, WIT, port and state identities before the command is durably
+  queued;
+- durable Client hello observation of the exact active-state checkpoint
+  identity without transferring checkpoint bytes to the Gateway. For a
+  `snapshot-v1` invocation, the Client binds checkpoint and command result in
+  one local write before sending the Gateway receipt.
 
 The gateway persists a command before delivery and persists its receipt before
 dispatching the next sequence. If the gateway loses a receipt after the client
@@ -74,6 +79,12 @@ Run the dynamic graph Client/Gateway restart and repair qualification with:
 ```sh
 node scripts/test-dynamic-client-foundation-gateway-v1.mjs
 ```
+
+That qualification includes full Client restoration of active `snapshot-v1`
+state and an exit-after-checkpoint-before-receipt fault. Reconnect recovers the
+durable receipt without invoking the Lib again. The Gateway stores only the
+checkpoint summary from `hello`; Client-local checkpoint bytes remain Client
+state and are independently verified before runtime availability.
 
 The benchmark is a machine-local diagnostic. It reports fresh TLS/WSS upgrade
 latency and receipt-observed durable command latency for empty, 1 KiB and

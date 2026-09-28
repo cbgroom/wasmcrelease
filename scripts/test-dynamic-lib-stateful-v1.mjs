@@ -17,6 +17,7 @@ const schemaV1 = sha256(Buffer.from("wasmc:test-counter-state/v1"));
 const schemaV2 = sha256(Buffer.from("wasmc:test-counter-state/v2"));
 
 async function makeProvider(directory, marker, statePolicy, stateSchemaIdentity, {
+  name = "counter",
   brokenRestore = false,
   restoreDelayMs = 0,
   snapshotFault = null,
@@ -69,7 +70,7 @@ export async function invoke(input) {
   await writeFile(path.join(root, "native-boundary.json"), `${JSON.stringify(descriptor, null, 2)}\n`);
   const exact = await inspectDynamicLibPackage(root);
   return {
-    name: "counter", root, identity, artifact_sha256: exact.artifact_sha256, wit_contract_sha256: exact.wit_contract_sha256,
+    name, root, identity, artifact_sha256: exact.artifact_sha256, wit_contract_sha256: exact.wit_contract_sha256,
     configuration: {}, configuration_sha256: canonicalJsonSha256({}), state_policy: statePolicy, state_schema_identity: stateSchemaIdentity,
   };
 }
@@ -123,6 +124,43 @@ try {
   assert.match(mismatched.error, /exact migration Lib/);
   assert.deepEqual(await graph.invoke("get"), { revision: 2, value: "V2:5" });
 
+  const checkpointOldInvocation = graph.invoke("slow-inc");
+  const checkpointCapture = graph.captureStateCheckpoint();
+  await waitFor(() => graph.snapshot().invocation_barrier_active, "active checkpoint barrier");
+  const checkpointQueuedInvocation = graph.invoke("inc");
+  assert.deepEqual(await checkpointOldInvocation, { revision: 2, value: "V2:6" });
+  const activeCheckpoint = await checkpointCapture;
+  assert.deepEqual(await checkpointQueuedInvocation, { revision: 2, value: "V2:7" });
+  assert.equal(activeCheckpoint.graph_revision, 2);
+  assert.equal(activeCheckpoint.graph_digest, request(2, [v2]).graph_digest);
+  assert.equal(activeCheckpoint.blocks.length, 1);
+  assert.match(activeCheckpoint.checkpoint_sha256, /^[a-f0-9]{64}$/);
+  const restartBoundary = new LibDefinedBoundary();
+  const restartGraph = new DynamicLibGraph({ boundary: restartBoundary, initialRevision: 1 });
+  negativeGraphs.push(restartGraph);
+  assert.equal((await restartGraph.apply(request(1, [v2]))).outcome, "committed");
+  assert.deepEqual(await restartGraph.restoreStateCheckpoint(activeCheckpoint), { restored: 1, checkpoint_sha256: activeCheckpoint.checkpoint_sha256 });
+  assert.deepEqual(await restartGraph.invoke("get"), { revision: 2, value: "V2:6" });
+  await assert.rejects(restartGraph.restoreStateCheckpoint({ ...activeCheckpoint, checkpoint_sha256: "0".repeat(64) }), /checkpoint digest mismatch/);
+  await restartGraph.close();
+  assert.deepEqual(restartBoundary.counts(), { resources: 0, windows: 0, operations: 0 });
+
+  const partialRestoreBoundary = new LibDefinedBoundary();
+  const partialRestoreGraph = new DynamicLibGraph({ boundary: partialRestoreBoundary });
+  negativeGraphs.push(partialRestoreGraph);
+  const restoreFirst = await makeProvider("restore-first", "RESTORE-FIRST", "snapshot-v1", schemaV1, { name: "a-first" });
+  const restoreBroken = await makeProvider("restore-broken", "RESTORE-BROKEN", "snapshot-v1", schemaV1, { name: "b-broken", brokenRestore: true });
+  const partialRequest = request(0, [restoreFirst, restoreBroken]);
+  assert.equal((await partialRestoreGraph.apply(partialRequest)).outcome, "committed");
+  const partialCheckpoint = await partialRestoreGraph.captureStateCheckpoint();
+  await assert.rejects(partialRestoreGraph.restoreStateCheckpoint(partialCheckpoint), /snapshot restore rejected/);
+  assert.equal(partialRestoreGraph.snapshot().restore_failed, true);
+  await assert.rejects(partialRestoreGraph.invoke("get"), /restore failed; close and reconstruct/);
+  await assert.rejects(partialRestoreGraph.captureStateCheckpoint(), /restore failed; close and reconstruct/);
+  await assert.rejects(partialRestoreGraph.apply({ ...partialRequest, expected_revision: 1 }), /restore failed; close and reconstruct/);
+  await partialRestoreGraph.close();
+  assert.deepEqual(partialRestoreBoundary.counts(), { resources: 0, windows: 0, operations: 0 });
+
   const sticky1 = await makeProvider("sticky-v1", "STICKY1", "sticky", schemaV1);
   const sticky2 = await makeProvider("sticky-v2", "STICKY2", "sticky", schemaV1);
   assert.equal((await stickyGraph.apply(request(0, [sticky1]))).outcome, "committed");
@@ -155,9 +193,7 @@ try {
     const faultGraph = new DynamicLibGraph({ boundary: faultBoundary });
     negativeGraphs.push(faultGraph);
     const source = await makeProvider(`snapshot-${fault}`, `FAULT-${fault}`, "snapshot-v1", schemaV1, { snapshotFault: fault, maxOutputBytes });
-    const target = await makeProvider(`snapshot-${fault}-target`, `TARGET-${fault}`, "snapshot-v1", schemaV1, { maxOutputBytes });
-    assert.equal((await faultGraph.apply(request(0, [source]))).outcome, "committed");
-    const rejected = await faultGraph.apply(request(1, [target]));
+    const rejected = await faultGraph.apply(request(0, [source]));
     assert.equal(rejected.outcome, "rolled-back");
     assert.match(rejected.error, /snapshot identity mismatch/);
     await faultGraph.close();
@@ -175,6 +211,8 @@ try {
     cross_schema_requires_migration_lib: true, sticky_unchanged_reused: true, sticky_automatic_replacement_rejected: true,
     package_state_contract_mismatch_rejected: true, state_policy_transition_rejected: true, stateful_removal_without_disposition_rejected: true,
     noncanonical_snapshot_rejected: true, snapshot_digest_mismatch_rejected: true, oversized_snapshot_rejected: true,
+    active_checkpoint_restored: "V2:6", checkpoint_barrier_queued_new_invocation: "V2:7", corrupt_checkpoint_rejected: true,
+    partial_checkpoint_restore_poisoned_until_close: true,
     external_effect_exactly_once_claimed: false, fixed_host_api_changed: false, minimal_cli_changed: false,
     boundary_counts_after_close: boundary.counts(), sticky_boundary_counts_after_close: stickyBoundary.counts(),
   }));

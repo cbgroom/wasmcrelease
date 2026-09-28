@@ -22,6 +22,17 @@
     "snapshot_encoding": "canonical-base64",
     "max_snapshot_bytes": 1048576,
     "migration_barrier_scope": "whole-graph",
+    "active_checkpoint": {
+      "schema": "wasmc.dynamic-lib-state-checkpoint/v1",
+      "per_block_max_decoded_bytes": 1048576,
+      "client_persisted_max_bytes": 8388608,
+      "identity": "canonical-json-sha256-bound-to-graph-revision-and-digest",
+      "publication": "persisted-with-active-graph-before-barrier-release",
+      "invoke": "checkpoint-and-command-result-persisted-together-before-receipt",
+      "restart": "restore-before-runtime-available",
+      "missing_or_corrupt": "runtime-unavailable-control-remains-connected",
+      "partial_restore_failure": "graph-poisoned-until-close-and-reconstruction"
+    },
     "same_schema_order": [
       "install-probe-health-candidate",
       "block-new-invocations",
@@ -43,6 +54,7 @@
     "focused_qualification": "scripts/test-dynamic-lib-stateful-v1.mjs",
     "integrated_qualification": "scripts/test-dynamic-client-foundation-gateway-v1.mjs",
     "publication_crash_fixture": "scripts/fixtures/dynamic-client-publication-crash-runner.mjs",
+    "checkpoint_crash_fixture": "scripts/fixtures/dynamic-client-state-checkpoint-crash-runner.mjs",
     "host_cli_runtime_guard": "scripts/test-client-foundation-v1.mjs",
     "protected_change_scope_base": "bed1e4d236bb78a992355321deca8968a6400a0d",
     "protected_change_scope_command": "git diff --name-only bed1e4d236bb78a992355321deca8968a6400a0d HEAD -- host current runtime/client-foundation-gateway-v1/cli.mjs",
@@ -87,6 +99,10 @@
     "package-bound-state-contract",
     "snapshot-after-old-generation-drain",
     "new-invocations-wait-for-stateful-publish-or-rollback",
+    "active-checkpoint-bound-to-graph-identity",
+    "invoke-result-and-state-checkpoint-persist-together",
+    "checkpoint-restored-before-runtime-available",
+    "partial-checkpoint-restore-poisons-graph",
     "close-reclaims-all-runtime-resources"
   ],
   "current_implementation_profile": {
@@ -96,6 +112,7 @@
     "configuration": "canonical-json-sha256",
     "wit_contract_identity": "wasm-tools-derived-port-type-sha256-bound-to-exact-wit",
     "retired_cleanup": "durable-publication-ledger-and-process-owner-fence",
+    "stateful_restart": "snapshot-v1-active-checkpoint-with-invoke-result-binding",
     "qualified_invariants": [
       "single-active-generation",
       "monotonic-active-revision",
@@ -109,11 +126,15 @@
       "package-bound-state-contract",
       "snapshot-after-old-generation-drain",
       "new-invocations-wait-for-stateful-publish-or-rollback",
+      "active-checkpoint-bound-to-graph-identity",
+      "invoke-result-and-state-checkpoint-persist-together",
+      "checkpoint-restored-before-runtime-available",
+      "partial-checkpoint-restore-poisons-graph",
       "close-reclaims-all-runtime-resources"
     ],
     "open_gates": [
       "cross-schema-state-migration-lib",
-      "stateful-active-checkpoint-restart"
+      "sticky-active-restart-disposition"
     ]
   }
 }

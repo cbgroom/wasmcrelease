@@ -144,9 +144,10 @@ node scripts/test-dynamic-client-foundation-gateway-v1.mjs
 ```
 
 This closes restart reconstruction for both serial routes and general
-stateless DAGs. It does not provide cross-schema state migration, restoration
-of active mutable state after a full Client restart, external-effect
-exactly-once semantics, cache retention policy or release admission.
+stateless DAGs. Active `snapshot-v1` state is also checkpointed and restored;
+cross-schema state migration, `sticky` restart disposition, external-effect
+exactly-once semantics, cache retention policy and release admission remain
+outside this slice.
 
 Publication and retirement are separate durable events. Before an active graph
 becomes recoverable, the Client persists its revision, command result and the
@@ -168,9 +169,21 @@ qualification with:
 node scripts/test-dynamic-lib-stateful-v1.mjs
 ```
 
-Cross-schema migration and recovery of the active mutable state after a full
-Client restart are not yet implemented. The focused stateful test also rejects
+After every `snapshot-v1` invocation, the Client persists the content-addressed
+active checkpoint before returning. For a Gateway command, that checkpoint and
+the invocation result share one atomic state write before receipt delivery. A
+full Client restart restores the checkpoint before advertising runtime
+availability. The integrated qualification also crashes after this write and
+before receipt delivery, then proves receipt recovery and `SV2:2` state without
+replaying the increment. Missing or corrupt checkpoints fail closed while the
+control path remains available. A partial multi-block restore poisons that
+graph instance until close and reconstruction. This narrows durability to Client-owned
+snapshot state; it does not make arbitrary external effects exactly once.
+
+Cross-schema migration and restart disposition for `sticky` active state are
+not yet implemented. The focused stateful test also rejects
 package/declaration mismatch, policy transitions, removal without a state
 disposition, non-canonical base64, digest mismatch and snapshots larger than
-1 MiB. The integrated test proves the distributed same-schema path and rejects
-a forged Gateway declaration; it does not claim the two open gates above.
+1 MiB. The integrated test proves the distributed same-schema and active-state
+restart paths and rejects a forged Gateway declaration; it does not claim the
+two open gates above.
