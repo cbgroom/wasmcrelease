@@ -62,3 +62,24 @@ test on Linux, macOS and Windows; a local PASS must not be promoted to
 cross-platform qualification before those exact jobs succeed. The retained
 qualification basis is GitHub Actions run `36393703012` at source revision
 `84c08ea06ebc3907181a502e7ce19b2c0a3675b0`.
+
+## Local performance characterization
+
+Run the same-machine no-op comparison with:
+
+```sh
+node scripts/benchmark-system-process-local.mjs
+```
+
+The benchmark separates four costs: a no-process operation through the fixed
+boundary, one-shot direct executable launch, one-shot shell launch, and a
+persistent `/bin/sh` opportunity probe. Every timed command has an observed
+completion; the persistent probe emits and consumes one unique marker per
+command rather than counting unobserved writes.
+
+The persistent probe currently uses `node:child_process` directly. It proves
+the performance opportunity but is not yet a System Lib implementation or
+qualification. A production `process-session` must add generation-checked
+session identity, bounded stream windows, exit/drain state, cancellation,
+timeout and explicit cleanup through the existing fixed boundary before its
+numbers can be compared as product evidence.
