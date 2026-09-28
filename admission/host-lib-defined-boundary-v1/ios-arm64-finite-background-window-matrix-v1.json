@@ -1,0 +1,64 @@
+{
+  "schema": "wasmc.host-lib-defined-boundary-ios-finite-background-window-matrix-qualification/v1",
+  "implementation_commit": "483e586e7f5fc45eedb25be7195f30042cd99823",
+  "source": {
+    "docs/IOS_LIB_CAPABILITY_SPECTRUM.md": "9c4efd74fb3864978e4663b0a205469e69f20e7906126b6a686dcfbc2dfbd83f",
+    "libsrc/wasmc-system-ios-app-lifecycle/README.md": "af491181b869e188c8b2b6a241cc31d057c4ebc4f9c06c7e0127352c12c6aacb",
+    "libsrc/wasmc-system-ios-app-lifecycle/candidate.json": "fe9550b4a452716b31f96ef6972cf9aa41512c3a03790a6ae27f1e1fc0b880ca",
+    "libsrc/wasmc-system-ios-app-lifecycle/examples/ios-app/App/AppDelegate.swift": "273112d21d40aa8a6f5ff2f5a1c4cc065369f5dfada5ee10ae056987110dc200",
+    "libsrc/wasmc-system-ios-app-lifecycle/examples/ios-app/README.md": "b31a2308b3d43a92f166d1becdb702561a84ad8fea238448cb81f5e55b49ce4a",
+    "libsrc/wasmc-system-ios-app-lifecycle/examples/ios-app/UITests/AppLifecycleUITests.swift": "6df817098ea3545c7f88ba62b73dff8c52104f1a1d3cca06353827d2062fe8ab",
+    "libsrc/wasmc-system-ios-app-lifecycle/platform/ios/Sources/AppLifecycleProvider.swift": "7d99a0ae661c44990a7e32d18045951a2d57aa4cb5e579b2ffc7229950b4a13c",
+    "scripts/probe-ios-finite-background-window-matrix.mjs": "57ac9e2405350552140cd8568cdc1a8ff8ca275d80402cc16dd203dab68752d5",
+    "scripts/validate-ios-app-lifecycle.mjs": "fa49aa55694844819e01765e2981c884f1cd7a5217d464a39f49c0f47dbf24b0"
+  },
+  "target": {
+    "os": "ios", "architecture": "aarch64", "environment": "simulator", "embedding": "native",
+    "runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-5",
+    "device": "iPhone 17 Pro",
+    "udid": "33F7591E-A76B-4C95-9EDA-FA0E66C7F23A",
+    "execution_context": "xcuitest"
+  },
+  "evidence": {
+    "status": "PASS",
+    "api": "wasmc:system-app-lifecycle@0.0.1",
+    "provider": "wasmc:system-ios-app-lifecycle@0.0.1-dev.1",
+    "fixed_host_domain_apis": 0,
+    "fixed_host_sha256": "f0d465ba7f23698d6365453b02fad2f4a0803171f970631751fc90a00a86d96f",
+    "results": [
+      {
+        "requested_ms": 15000,
+        "elapsed_ms": 15184,
+        "background_ticks": 14,
+        "completed_before_foreground": true,
+        "expiration_observed": false,
+        "remaining_time_available": false
+      },
+      {
+        "requested_ms": 30000,
+        "elapsed_ms": 30151,
+        "background_ticks": 27,
+        "completed_before_foreground": true,
+        "expiration_observed": false,
+        "remaining_time_available": false
+      },
+      {
+        "requested_ms": 60000,
+        "elapsed_ms": 60151,
+        "background_ticks": 54,
+        "completed_before_foreground": true,
+        "expiration_observed": false,
+        "remaining_time_available": false
+      }
+    ],
+    "proven_lower_bound_ms": 60000,
+    "expiration_observed": false,
+    "maximum_duration_qualified": false,
+    "physical_device": false
+  },
+  "qualified": true,
+  "admitted": false,
+  "released": false,
+  "discoverable": false,
+  "installable": false
+}
