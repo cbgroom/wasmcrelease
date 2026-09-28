@@ -73,7 +73,7 @@ try {
   assert.equal(fromBase64(nonzero.stderr_base64), "nonzero-err");
 
   const defaultShellScript = process.platform === "win32"
-    ? "@echo off&<nul set /p \"=shell-out\"&<nul set /p \"=shell-err\" 1>&2&exit /b 11"
+    ? "@echo shell-out&@echo shell-err>&2&exit /b 11"
     : "printf shell-out; printf shell-err >&2; exit 11";
   const shell = await invoke({
     operation: "shell-run",
@@ -82,8 +82,8 @@ try {
   });
   assert.equal(shell.exit_code, 11);
   assert.equal(shell.shell, process.platform === "win32" ? "windows-cmd" : "posix-sh");
-  assert.equal(fromBase64(shell.stdout_base64), "shell-out");
-  assert.equal(fromBase64(shell.stderr_base64), "shell-err");
+  assert.equal(fromBase64(shell.stdout_base64), process.platform === "win32" ? "shell-out\r\n" : "shell-out");
+  assert.equal(fromBase64(shell.stderr_base64), process.platform === "win32" ? "shell-err\r\n" : "shell-err");
 
   let powershell = null;
   if (process.platform === "win32") {
