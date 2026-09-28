@@ -61,11 +61,15 @@ Run the local connection and durable command baseline separately:
 
 ```sh
 node scripts/benchmark-client-foundation-connection-v1.mjs
+node scripts/benchmark-client-foundation-content-v1.mjs
 ```
 
 The benchmark is a machine-local diagnostic. It reports fresh TLS/WSS upgrade
 latency and receipt-observed durable command latency for empty, 1 KiB and
 32 KiB logical payloads; it is not a public-network or multi-client result.
+The content benchmark separately reports HTTPS bundle publish, verified
+content-addressed GET, and the coordinated HTTPS-publish/WSS-activate/receipt
+path for approximately 4 KiB, 256 KiB and 1 MiB adapters.
 
 This prototype intentionally contains no user/account authorization layer. It
 is a single-writer service: the lock prevents corruption but is not a clustered
