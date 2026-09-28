@@ -142,7 +142,15 @@ with their documented `node ...` commands. They need no external shell timeout
 wrapper. The `fixed_host_api_changed` and `minimal_cli_changed` fields printed
 by dynamic tests are report labels; protected-path byte comparison is performed
 by `scripts/test-client-foundation-v1.mjs`, while change-set scope is established
-from the pinned Git commit.
+from the pinned Git commit. For this complete stateful slice, run exactly:
+
+```sh
+git diff --name-only bed1e4d236bb78a992355321deca8968a6400a0d HEAD -- host current runtime/client-foundation-gateway-v1/cli.mjs
+```
+
+No output is the expected proof that the Host, minimal CLI and higher-layer
+Gateway CLI were not changed. Use the exact path list; never infer a path from
+the abbreviated directory display produced by `git show --stat`.
 
 The implemented same-schema `snapshot-v1` path binds policy and schema identity
 inside the exact package descriptor rather than trusting a graph caller. It

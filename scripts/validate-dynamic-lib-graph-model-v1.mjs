@@ -70,9 +70,17 @@ assert.deepEqual(model.state_contract.same_schema_order, [
   "release-invocation-barrier",
   "drain-and-release-retired-generation",
 ]);
-const evidencePaths = Object.entries(model.white_box_evidence)
-  .filter(([key]) => key !== "commands")
-  .map(([, value]) => value);
+const evidencePaths = [
+  "normative_model",
+  "engine",
+  "package_spec",
+  "client_durability",
+  "gateway_binding",
+  "focused_qualification",
+  "integrated_qualification",
+  "publication_crash_fixture",
+  "host_cli_runtime_guard",
+].map((key) => model.white_box_evidence[key]);
 for (const relative of evidencePaths) {
   assert.equal(typeof relative, "string");
   await readFile(new URL(`../${relative}`, import.meta.url));
@@ -82,6 +90,8 @@ assert.deepEqual(model.white_box_evidence.commands, [
   "node scripts/validate-dynamic-lib-graph-model-v1.mjs",
   "node scripts/test-dynamic-client-foundation-gateway-v1.mjs",
 ]);
+assert.equal(model.white_box_evidence.protected_change_scope_base, "bed1e4d236bb78a992355321deca8968a6400a0d");
+assert.equal(model.white_box_evidence.protected_change_scope_command, "git diff --name-only bed1e4d236bb78a992355321deca8968a6400a0d HEAD -- host current runtime/client-foundation-gateway-v1/cli.mjs");
 assert.equal(model.current_implementation_profile.graph_shape, "serial-pipeline-and-general-dag-client-gateway");
 assert.equal(model.current_implementation_profile.state_policy, "stateless-sticky-and-same-schema-snapshot-v1");
 assert.equal(model.current_implementation_profile.graph_identity, "canonical-json-sha256");
