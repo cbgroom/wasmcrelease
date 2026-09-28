@@ -1851,7 +1851,7 @@ const tlsClientCrossPlatformReceipt = JSON.parse(fs.readFileSync(
 assert.equal(tlsClientCrossPlatformReceipt.schema,
   "wasmc.tls-client-cross-platform-qualification/v1");
 assert.equal(tlsClientCrossPlatformReceipt.workflow.conclusion, "success");
-assert.equal(tlsClientCrossPlatformReceipt.workflow.run_id, 36390201030);
+assert.equal(tlsClientCrossPlatformReceipt.workflow.run_id, 36391505040);
 assert.equal(tlsClientCrossPlatformReceipt.canonical_core_artifact.sha256,
   "22eec3a0a72e1d8bc3e6120149a1f6196cc354601137e9e857f08b03d9bb4ba4");
 assert.equal(tlsClientCrossPlatformReceipt.canonical_core_artifact.bytes, 679279);
