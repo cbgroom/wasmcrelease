@@ -14,22 +14,6 @@ const hash = (bytes) => createHash("sha256").update(bytes).digest("hex");
 const executorPath = path.join(root, "host/runtime/lib-boundary/reference.mjs");
 const executorSha256 = hash(await readFile(executorPath));
 
-const encodeStrings = (values) => {
-  const strings = values.map((value) => utf8.encode(value));
-  const size = 4 + strings.reduce((total, value) => total + 4 + value.length, 0);
-  const output = new Uint8Array(size);
-  const view = new DataView(output.buffer);
-  view.setUint32(0, strings.length, true);
-  let cursor = 4;
-  for (const value of strings) {
-    view.setUint32(cursor, value.length, true);
-    cursor += 4;
-    output.set(value, cursor);
-    cursor += value.length;
-  }
-  return output;
-};
-
 const encodeExchange = (host, port, payload) => {
   const hostBytes = utf8.encode(host);
   const body = utf8.encode(payload);
@@ -87,9 +71,15 @@ try {
 
   const processBytes = await execute(
     path.join(root, "libsrc/wasmc-system-process-prototype"),
-    encodeStrings([process.execPath, "-e", "process.stdout.write('process-ok')"]),
+    utf8.encode(JSON.stringify({
+      operation: "process-run",
+      executable: process.execPath,
+      arguments: ["-e", "process.stdout.write('process-ok')"],
+    })),
   );
-  assert.equal(text.decode(processBytes), "process-ok");
+  const processResult = JSON.parse(text.decode(processBytes));
+  assert.equal(Buffer.from(processResult.stdout_base64, "base64").toString(), "process-ok");
+  assert.equal(processResult.exit_code, 0);
 
   server = createServer((socket) => {
     const chunks = [];

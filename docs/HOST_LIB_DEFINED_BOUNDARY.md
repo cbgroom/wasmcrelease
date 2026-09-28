@@ -235,6 +235,23 @@ same lifecycle counts and checksum, measured old/new RPS p50
 qualification results, not admission or a production-default switch;
 descriptor review, Wasm lowering and admission remain open.
 
+## Process and shell channels
+
+The first process successor remains entirely Lib-defined. Its portable WIT
+separates literal `executable + argv` execution from explicit shell scripts,
+and returns bounded stdin/stdout/stderr, exit/termination, timeout and elapsed
+state. The fixed executor remains byte-identical and contains no process or
+shell branch. The Node provider maps Linux/macOS to `/bin/sh`, Windows to
+`cmd.exe` or Windows PowerShell, and fails closed when a caller selects a shell
+that the exact provider does not implement.
+
+Mobile targets are not inferred from desktop success. Android requires a
+separate native provider qualified inside the App UID/SELinux sandbox; adb
+shell execution is not substitute evidence. Sandboxed iOS Apps have no general
+OS child-process facility, so they can only expose a distinctly identified
+in-process command runtime. See `docs/SYSTEM_PROCESS_SHELL.md` for the exact
+platform evidence boundary and lifecycle.
+
 The first portable client-protocol slice is now
 `wasmc:http1-client@0.0.1`. Its import-free Core Wasm serializes bounded
 HTTP/1.1 requests and incrementally decodes content-length, chunked, bodyless

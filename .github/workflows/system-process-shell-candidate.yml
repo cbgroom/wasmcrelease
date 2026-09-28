@@ -1,0 +1,49 @@
+name: System process and shell candidate
+
+on:
+  pull_request:
+    paths:
+      - "libsrc/wasmc-system-process-prototype/**"
+      - "host/runtime/lib-boundary/reference.mjs"
+      - "scripts/test-system-process-shell.mjs"
+      - ".github/workflows/system-process-shell-candidate.yml"
+  push:
+    branches: [main, work/host-lib-defined-boundary-v1]
+    paths:
+      - "libsrc/wasmc-system-process-prototype/**"
+      - "host/runtime/lib-boundary/reference.mjs"
+      - "scripts/test-system-process-shell.mjs"
+      - ".github/workflows/system-process-shell-candidate.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  desktop-platform:
+    name: ${{ matrix.platform }} process and shell
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: ubuntu-24.04
+            platform: linux-x86_64
+          - runner: macos-14
+            platform: macos-aarch64
+          - runner: windows-2025
+            platform: windows-x86_64
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: 26.5.1
+      - name: Qualify direct process and native platform shells
+        run: node scripts/test-system-process-shell.mjs
+      - name: Prove the fixed Host executor contains no process or shell semantics
+        shell: bash
+        run: |
+          if grep -E 'node:child_process|process-spawn|shell-run|powershell|cmd\.exe|/bin/sh' host/runtime/lib-boundary/reference.mjs; then
+            exit 1
+          fi
