@@ -84,11 +84,14 @@ ciTools.push('scripts/test-library-first.mjs');
 const compatibilityTools = ['scripts/core-compatibility.mjs', 'scripts/check-core-compatibility.mjs', 'scripts/test-core-compatibility.mjs'];
 const rustWorkspaceFiles = ['Cargo.toml', 'Cargo.lock'];
 const releaseSurfaceFiles = [
+  'LICENSE',
   'README.md',
   'HOSTING.md',
+  'license-policy.json',
   'docs/ASMD.md',
   'docs/RELEASE_SURFACES.md',
   'docs/RELEASE_CHANNELS.md',
+  'docs/RELEASE_V020.md',
   'docs/AGENT_DECISION_MODEL.md',
   'release-surfaces.json',
   'release-lib-route-readiness.json',

@@ -1,0 +1,99 @@
+{
+  "schema": "wasmc.release-qualification/v1",
+  "version": "0.0.20",
+  "stage_authorized": "main",
+  "product_candidate": {
+    "path": "channels/candidates/0.0.20.json",
+    "commit": "3c188db52644917c58e791baee6ef45590a2f15f",
+    "product_set_sha256": "081f07a045c6ac58b8526c1e38c7e9f59e65663981cc7ed9b93825b4795bfc94",
+    "products": 309
+  },
+  "tested_source_commit": "8c450cb753152be8ccb5080a662e3888af2411ed",
+  "required": {
+    "lib_search": {
+      "result": "success",
+      "run": "https://github.com/cbgroom/wasmcrelease/actions/runs/36597877461",
+      "head_sha": "8c450cb753152be8ccb5080a662e3888af2411ed",
+      "coverage": "Node, Bun and Deno runtime/platform cells, Wasmi 2 Core, Wasmtime generated Component SDK"
+    },
+    "full_consumer": {
+      "result": "success",
+      "run": "https://github.com/cbgroom/wasmcrelease/actions/runs/36597877252",
+      "head_sha": "8c450cb753152be8ccb5080a662e3888af2411ed",
+      "coverage": "compatibility, integrity, Agent guidance, credential boundaries, source-free runtime and mirror journeys, Rust Wasmi/Wasmtime/Component Libs, required aggregate"
+    },
+    "dynamic_client_gateway": {
+      "result": "success",
+      "run": "https://github.com/cbgroom/wasmcrelease/actions/runs/36597877765",
+      "head_sha": "8c450cb753152be8ccb5080a662e3888af2411ed",
+      "coverage": "persistent WSS and HTTPS control plane, serial and general DAG replacement, rollback, restart, checkpoint, migration, sticky state and cancellation"
+    },
+    "data_foundation": {
+      "result": "success",
+      "run": "https://github.com/cbgroom/wasmcrelease/actions/runs/36604091467",
+      "head_sha": "8c450cb753152be8ccb5080a662e3888af2411ed",
+      "coverage": "Data Foundation cohort including wasmc:data-relational@0.0.2, Wasmi and Wasmtime"
+    }
+  },
+  "supporting": {
+    "release_surface": {
+      "result": "success",
+      "run": "https://github.com/cbgroom/wasmcrelease/actions/runs/36597877550",
+      "head_sha": "8c450cb753152be8ccb5080a662e3888af2411ed"
+    },
+    "sdk_agent_guidance": {
+      "result": "success",
+      "run": "https://github.com/cbgroom/wasmcrelease/actions/runs/36597877625",
+      "head_sha": "8c450cb753152be8ccb5080a662e3888af2411ed"
+    },
+    "rust_host_sdk": {
+      "result": "success",
+      "run": "https://github.com/cbgroom/wasmcrelease/actions/runs/36597877479",
+      "head_sha": "8c450cb753152be8ccb5080a662e3888af2411ed"
+    },
+    "host_external_https": {
+      "result": "required-success",
+      "run": "https://github.com/cbgroom/wasmcrelease/actions/runs/36597877200",
+      "head_sha": "8c450cb753152be8ccb5080a662e3888af2411ed",
+      "required_platforms": 5,
+      "required_platforms_success": 5,
+      "legacy_optional_platforms": 1,
+      "legacy_optional_status_at_qualification": "success"
+    },
+    "complete_pr_matrix": {
+      "result": "success",
+      "pull_request": "https://github.com/cbgroom/wasmcrelease/pull/21",
+      "head_sha": "8c450cb753152be8ccb5080a662e3888af2411ed",
+      "successful_checks": 143,
+      "conditional_skips": 3,
+      "failed_checks": 0
+    }
+  },
+  "fresh_agent_pre_release": {
+    "required_for_prod": true,
+    "protocol": "wasmc.fresh-agent-learning/v2",
+    "agent": "pi@0.87.1",
+    "models": [
+      "llm-m4dd/deepseek-v4.1-flash",
+      "llm-m4dd/glm-5.3-flash"
+    ],
+    "receipt_policy": "bind the final unpushed prod rehearsal commit and tree; commit the privacy-safe receipt only after the immutable prod tag"
+  },
+  "lib_route_closure": {
+    "release_packages": 22,
+    "package_routes": 22,
+    "api_routes": 140,
+    "candidate_extras": 0,
+    "exact": true
+  },
+  "accepted": true,
+  "authorizes": [
+    "v0.0.20-dev.1",
+    "v0.0.20-main.1"
+  ],
+  "does_not_authorize": [
+    "prod publication before a passing Pi receipt bound to the exact final prod rehearsal commit and tree",
+    "rebuilding or changing any candidate product byte",
+    "formal Lib admission for the incubating dynamic Client/Gateway surface"
+  ]
+}
