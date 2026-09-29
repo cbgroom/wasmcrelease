@@ -1,0 +1,83 @@
+{
+  "schema": "wasmc.pi-post-release-regression/v1",
+  "release": {
+    "version": "0.0.19",
+    "tag": "v0.0.19",
+    "tag_commit": "df00732c977fd116d34bfa375633a8f2d3a493e7",
+    "tag_tree": "337b6ec7698323d527a68b5de1dc84b9eeb85b2a",
+    "merged_main_commit": "de1971cd59b5790757c23f3b847993c00c4e60a9",
+    "merged_main_tree": "af412568deb9834953aff8b6e7012644ca9f1e32",
+    "candidate_commit": "7989d40e26da8652b906f1b066d0735e4a3a9526",
+    "product_set_sha256": "ecd319aab0a4c4b8ec0a1a01135a02a889acc805cd6056a945f445116d23f040"
+  },
+  "protocol": "agent-evaluation/fresh-agent-learning-v2.json",
+  "runner": "scripts/run-pi-learning-model-v1.mjs",
+  "pi_version": "0.87.1",
+  "fresh_local_git_clone_per_case": true,
+  "no_session": true,
+  "skills_templates_extensions_disabled": true,
+  "raw_trace_retained": false,
+  "hidden_reasoning_retained": false,
+  "review": {
+    "independent_from_model_self_assessment": true,
+    "method": "maintainer-white-box-oracle-review"
+  },
+  "initial_attempt": {
+    "controlled_pair_accepted": false,
+    "semantic_cases_passed": 12,
+    "structural_cases_passed": 11,
+    "tool_errors": 0,
+    "retries": 1,
+    "finding": "GLM emitted one provider willRetry event during host-authority-boundary; its final answer and answer contract were correct. DeepSeek passed all six cases."
+  },
+  "confirmation_attempt": {
+    "controlled_pair_accepted": true,
+    "semantic_cases_passed": 12,
+    "structural_cases_passed": 12,
+    "tool_errors": 0,
+    "retries": 0
+  },
+  "models": [
+    {
+      "provider": "llm-m4dd",
+      "identity": "deepseek-v4.1-flash",
+      "structural_pass": true,
+      "white_box_pass": true,
+      "totals": {"wall_ms":90347,"tool_calls":20,"assistant_turns":17,"tool_result_characters":176971,"error_results":0,"retries":0,"exact_duplicate_calls":0,"repeated_reads":0,"zero_yield_results":0,"tokens":{"input":83390,"output":8521,"reasoning":5238}},
+      "cases": [
+        {"id":"release-orientation","structural_pass":true,"semantic_review":"pass","final_answer_sha256":"3685ed5ca4a447b7e78d7b92ed8d858552ec326d13406002533b6d03a5a5b0ed"},
+        {"id":"position-aware-capability-negative","structural_pass":true,"semantic_review":"pass","final_answer_sha256":"b4b4dd1060f511ac9ea8efa4a4b003c4ccefc36b2e1b896504894821e8833f92"},
+        {"id":"ordinary-source-positive","structural_pass":true,"semantic_review":"pass","final_answer_sha256":"c8748340dcbe80ec23dc1f5c2fea78c4e892f3e3620641cc858f8c51e1d2c86b"},
+        {"id":"release-state-separation","structural_pass":true,"semantic_review":"pass","final_answer_sha256":"40b37079de36483cf650929c97461077faa9cd909da81a9bd257b4ea8787b559"},
+        {"id":"library-first-selection","structural_pass":true,"semantic_review":"pass","final_answer_sha256":"5c42c8a81508638e3cafb69b076a28d92e1d23d888b52aa17d482a56ebb73842"},
+        {"id":"host-authority-boundary","structural_pass":true,"semantic_review":"pass","final_answer_sha256":"571c29ff8751cdb4e4c3941aa4450d1c5ce3a2efee33d3409b179831a43ad69a"}
+      ]
+    },
+    {
+      "provider": "llm-m4dd",
+      "identity": "glm-5.3-flash",
+      "structural_pass": true,
+      "white_box_pass": true,
+      "totals": {"wall_ms":164979,"tool_calls":13,"assistant_turns":19,"tool_result_characters":80126,"error_results":0,"retries":0,"exact_duplicate_calls":0,"repeated_reads":0,"zero_yield_results":0,"tokens":{"input":58069,"output":4064,"reasoning":1071}},
+      "cases": [
+        {"id":"release-orientation","structural_pass":true,"semantic_review":"pass","final_answer_sha256":"e17cfc25d88513d292a0982332072889ab00f58e44944e42ee14d47874d35a6b"},
+        {"id":"position-aware-capability-negative","structural_pass":true,"semantic_review":"pass","final_answer_sha256":"772afa49c6ce8e54e812127957f20f7f04f92918e98eed690dedc7302600f03f"},
+        {"id":"ordinary-source-positive","structural_pass":true,"semantic_review":"pass","final_answer_sha256":"8ee53ca3a5ab11fbe212f967115fd1b7293852c1715599490aa52fd5f49fb1b9"},
+        {"id":"release-state-separation","structural_pass":true,"semantic_review":"pass","final_answer_sha256":"9f91d93c57f1918706fadb848f99ac5785c134ffbe7d4a3c898ac3ed3ce81938"},
+        {"id":"library-first-selection","structural_pass":true,"semantic_review":"pass","final_answer_sha256":"de1dc74c91b78762d6abea70cf3805d91f5f74dcdf79022be6c2b902ed770bea"},
+        {"id":"host-authority-boundary","structural_pass":true,"semantic_review":"pass","final_answer_sha256":"82954c4b65d029527153a102b5515367480180d30807125b8100442ef4374653"}
+      ]
+    }
+  ],
+  "public_distribution": {
+    "remote_tag_commit": "df00732c977fd116d34bfa375633a8f2d3a493e7",
+    "release_json_sha256": "20510f2204505216bcd271c93a5e7f64001706d2b3e89dccdeeb04afb9e5dd3c",
+    "compiler_sha256": "4e0b9779df3bf7b627d7d9fbfc43cfffd67bb053f87c69a9f832c5690b6888a2",
+    "raw_github_byte_identical": true,
+    "jsdelivr_release_identity_verified": true
+  },
+  "controlled_pair_accepted": true,
+  "release_mutated": false,
+  "finding": "All twelve semantic answers were correct on both attempts. The first cohort retained one GLM provider retry as a reliability signal; an unchanged confirmation cohort passed 12/12 with zero tool errors and zero retries.",
+  "disposition": "v0.0.19 remains immutable; retain both the initial retry signal and the strict passing confirmation without changing release claims."
+}
