@@ -2,8 +2,8 @@ import assert from 'node:assert/strict';
 import { buildClosure, parseLsi, parseWitRoutes, validateRouteSets } from './lib-route-closure.mjs';
 import { readFileSync } from 'node:fs';
 
-const candidate=JSON.parse(readFileSync('channels/candidates/0.0.18.json'));
-const model=buildClosure(undefined,{release:{version:'0.0.18',tag:'v0.0.18',staged_product_manifest:'channels/candidates/0.0.18.json'},stagedProduct:candidate});
+const candidate=JSON.parse(readFileSync('channels/candidates/0.0.19.json'));
+const model=buildClosure(undefined,{release:{version:'0.0.19',tag:'v0.0.19',staged_product_manifest:'channels/candidates/0.0.19.json'},stagedProduct:candidate});
 assert.equal(model.release_bindings.length,22);
 assert.equal(model.search_index.package_routes,22);
 assert.equal(model.search_index.api_routes,140);

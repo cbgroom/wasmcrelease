@@ -9,7 +9,7 @@ import { evaluateTraceText } from './wasmc-live-agent-trace-evaluation-v1.mjs';
 import { answerContract } from './fresh-agent-learning-v1.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
-const protocol = JSON.parse(readFileSync(new URL('../agent-evaluation/fresh-agent-learning-v1.json', import.meta.url), 'utf8'));
+const protocol = JSON.parse(readFileSync(new URL('../agent-evaluation/fresh-agent-learning-v2.json', import.meta.url), 'utf8'));
 
 function options(argv) {
   const out = { model: null, commit: null, output: null, timeoutMs: 180000 };

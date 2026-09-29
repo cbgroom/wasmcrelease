@@ -74,7 +74,7 @@ export function validateGuidance({ agents, decisionModel, language, lib, release
   if (!decisionModel.includes('retrospective is a source of hypotheses, not release authority')) {
     fail('retrospective evidence boundary missing');
   }
-  if (!language.includes('`u64` is not an admitted ordinary-source scalar')) {
+  if (!language.includes('`u64` is admitted in the v0.0.19 product')) {
     fail('ordinary-source u64 boundary missing');
   }
   if (!lib.includes('resident/local value, not a direct public return') ||

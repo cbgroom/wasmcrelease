@@ -132,15 +132,17 @@ Core import.
 The direct public compiler supports these Core-lane type families:
 
 ```text
-s8 u8 s16 u16 s32 u32 i64 f32 f64 bool
+s8 u8 s16 u16 s32 u32 i64 u64 f32 f64 bool
 record tuple option result variant enum
 ```
 
 Use fixed-width names. `s32` is the normal signed integer; `u32` is suitable
 for non-negative sizes and indices. There is no target-dependent `usize`.
-`u64` is not an admitted ordinary-source scalar in this release. The presence
-of `u64` in a package WIT does not make that package shape writable in ordinary
-wasmc source; use only an explicitly qualified adapter or stop.
+`u64` is admitted in the v0.0.19 product for ordinary locals, parameters,
+results, nested source payloads and explicit Host imports. It preserves the full
+`0..=18446744073709551615` range and unsigned comparison, division, remainder
+and right-shift semantics while using the Core `i64` physical lane. This does
+not add `char`, async execution, or a direct public Map value surface.
 
 Put named WIT-shaped declarations inside the interface that uses them:
 

@@ -1,6 +1,6 @@
 # Release Lib search
 
-## Admitted 0.4.0 v0.0.18 product candidate
+## Admitted 0.4.0 v0.0.19 product candidate carrying the v0.0.18 snapshot
 
 `standard/wasmc-lib-search/0.4.0` embeds the exact v0.0.18 route snapshot:
 22 package identities / 162 package and API entries. It adds discovery for the

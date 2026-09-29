@@ -1,0 +1,52 @@
+{
+  "schema": "wasmc.public-compiler-admission/v1",
+  "release_product": "0.0.19",
+  "accepted": true,
+  "producer": {
+    "repository": "yxsicd/wasmc",
+    "branch": "master",
+    "commit": "566eff42d0f4e4680c5ddd60c6584a9d8ff8e9f4",
+    "tree": "1625bbf407a46308296f3f18b9947cc0ad5c4b6c",
+    "implementation_commit": "94328ed760f93bf24b595a71facdcc773d43b762",
+    "clean": true,
+    "head_origin_master": [0, 0]
+  },
+  "compiler": {
+    "path": "current/wasmc_compiler.wasm",
+    "bytes": 1399677,
+    "sha256": "4e0b9779df3bf7b627d7d9fbfc43cfffd67bb053f87c69a9f832c5690b6888a2",
+    "target": "wasm32-unknown-unknown",
+    "imports": 0,
+    "adapter_abi": "wasmc-wasm-c-abi/v0"
+  },
+  "reproducibility": {
+    "independent_clean_target_builds": 2,
+    "byte_identical": true,
+    "build_1_sha256": "4e0b9779df3bf7b627d7d9fbfc43cfffd67bb053f87c69a9f832c5690b6888a2",
+    "build_2_sha256": "4e0b9779df3bf7b627d7d9fbfc43cfffd67bb053f87c69a9f832c5690b6888a2",
+    "path_remap": "/wasmc,/cargo,/rustup"
+  },
+  "qualification": {
+    "wasm_tools_validate": "PASS",
+    "node_thin_host_compile": "PASS",
+    "wasmtime_u64_execution": "PASS",
+    "embedded_current_facade_u64_execution": "PASS",
+    "runtime_package_strict_admission": "PASS",
+    "ordinary_source_positions": ["local", "parameter", "result", "nested-source-payload", "explicit-host-import"],
+    "unsigned_semantics": ["full-range-literal", "comparison", "division", "remainder", "right-shift", "wrapping-arithmetic"]
+  },
+  "toolchain": {
+    "rustc": "rustc 1.96.0 (ac68faa20 2026-05-25)",
+    "cargo": "cargo 1.96.0 (30a34c682 2026-05-25)",
+    "wasm_tools": "wasm-tools 1.255.0",
+    "node": "v26.5.1",
+    "bun": "1.3.14",
+    "deno": "2.9.4"
+  },
+  "independent_nonclaims": [
+    "async ordinary WAsmC source or Lib execution",
+    "direct public WIT Map values",
+    "char source type",
+    "published lifecycle stage before channel promotion"
+  ]
+}

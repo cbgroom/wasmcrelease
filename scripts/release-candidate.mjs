@@ -72,30 +72,37 @@ function walk(directory) {
   });
 }
 if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)) {
-  const [command,path,source,version]=process.argv.slice(2);
+  const [command,path,source,libSourceOrVersion,explicitVersion]=process.argv.slice(2);
   const read=p=>readFileSync(resolve(root,p));
   if(command==='create') {
-    if(!/^[0-9a-f]{40}$/.test(source))throw Error('exact Lib source required');
+    const compilerSource=explicitVersion===undefined?'e69abb73f667f3810b0c40937fd1a1e2d04d4255':source;
+    const libSource=explicitVersion===undefined?source:libSourceOrVersion;
+    const version=explicitVersion===undefined?libSourceOrVersion:explicitVersion;
+    if(!/^[0-9a-f]{40}$/.test(compilerSource))throw Error('exact compiler source required');
+    if(!/^[0-9a-f]{40}$/.test(libSource))throw Error('exact Lib source required');
     const productDirectories=[
       'current','standard','sdk','runtime','libs',
       'skills/wasmc-developer','skills/wasmc-lib-discovery','skills/wasmc-sdk-discovery',
       'host/contract','host/sdk','host/drivers/file/rust','host/drivers/memory/rust'
     ];
     const productFiles=[
-      'AGENTS.md','README.md','HOSTING.md',
+      'AGENTS.md','README.md','HOSTING.md','LANGUAGE.md',
       'agent-quickstart.json','release-lib-route-readiness.json',
+      ...(version==='0.0.19'?['agent-evaluation/fresh-agent-learning-v2.json']:[]),
       'admission/lib-search-v040-v018-admission.json',
+      ...(version==='0.0.19'?['admission/compiler-v019-u64-admission.json']:[]),
       'admission/data-foundation-v11/relational-v002-admission.json',
       'admission/mcpgit-resident-memory-v1/formal-admission.json',
       'catalog/libs-v018.json','catalog/discovery-intent-v018.json',
       'examples/lib-search/index-v018-v040.lsi',
       'host/ARCHITECTURE.md','host/architecture.json','host/manifest.json',
       'bench/manifest.json','bench/host-external-load.json',
-      'docs/ASMD.md','docs/RELEASE_SURFACES.md','docs/RELEASE_V018.md','release-surfaces.json',
+      'docs/ASMD.md','docs/AGENT_DECISION_MODEL.md','docs/FRESH_AGENT_LEARNING_FLYWHEEL.md','docs/RELEASE_SURFACES.md',version==='0.0.19'?'docs/RELEASE_V019.md':'docs/RELEASE_V018.md','release-surfaces.json',
       'examples/lib-search/client.mjs',
       'scripts/wasmc-lib.mjs',
       'scripts/lib-catalog.mjs','scripts/lib-route-closure.mjs','scripts/release-candidate.mjs',
       'scripts/agent-guidance-contract.mjs',
+      ...(version==='0.0.19'?['scripts/update-current-compiler.mjs']:[]),
       'scripts/test-agent-guidance.mjs',
       'scripts/validate-agent-docs.mjs',
       'scripts/validate-sdk-agent-routes.mjs',
@@ -103,7 +110,7 @@ if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)) {
     ];
     const paths=[...productDirectories.flatMap(walk),...productFiles];
     const rows=paths.sort().map(path=>{const b=read(path);return {path,bytes:b.length,sha256:hash(b)};});
-    const candidate={schema:'wasmc.release-product-candidate/v2',version,compiler_source_authority:'e69abb73f667f3810b0c40937fd1a1e2d04d4255',lib_source_authority:source,product_files:rows,product_set_sha256:hash(JSON.stringify(rows))};
+    const candidate={schema:'wasmc.release-product-candidate/v2',version,compiler_source_authority:compilerSource,lib_source_authority:libSource,product_files:rows,product_set_sha256:hash(JSON.stringify(rows))};
     candidate.lib_route_closure=candidateClosure(candidate);
     if(candidate.lib_route_closure.candidate_extras!==0)throw Error('release candidate blocked: active LibSearch must be inside the product, catalog and exact route set');
     validateCandidate(candidate,read);writeFileSync(path,JSON.stringify(candidate,null,2)+'\n',{flag:'wx'});
@@ -111,5 +118,5 @@ if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)) {
     const candidate=JSON.parse(readFileSync(path));validateCandidate(candidate,read);
     if(candidate.schema==='wasmc.release-product-candidate/v2')assert.deepEqual(candidate.lib_route_closure,candidateClosure(candidate),'candidate Lib route closure drift');
     console.log(JSON.stringify({accepted:true,products:candidate.product_files.length,product_set_sha256:candidate.product_set_sha256}));
-  } else throw Error('usage: release-candidate.mjs create FILE LIB_SOURCE VERSION | verify FILE');
+  } else throw Error('usage: release-candidate.mjs create FILE [COMPILER_SOURCE] LIB_SOURCE VERSION | verify FILE');
 }

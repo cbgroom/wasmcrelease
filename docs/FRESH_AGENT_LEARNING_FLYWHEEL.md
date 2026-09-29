@@ -13,7 +13,9 @@ One model run is an observation. The controlled pair is qualified only when
 both required Pi routes pass the same frozen suite on the same Pi version and
 release commit. The route labels bind observed local configuration; they do not
 independently attest an upstream provider implementation. The machine-readable
-protocol is `agent-evaluation/fresh-agent-learning-v1.json`.
+protocol is `agent-evaluation/fresh-agent-learning-v2.json`. The v1 protocol
+remains immutable evidence for earlier releases; v2 accepts ordinary-source
+`u64` while continuing to reject async source and direct public Map positions.
 
 ## Loop
 

@@ -48,12 +48,14 @@ renaming the aggregate does not repair a consumer that lacks multi-value support
 
 When a question uses “now”, “fixed” or “supported” without naming an authority,
 read `producer_capability_delta` (or its compact
-`producer-release-u64-delta` quickstart route) before answering. A verified
-producer-master implementation is not a release artifact. For ordinary-source
-`u64`, producer commit `94328ed760f93bf24b595a71facdcc773d43b762` is
-implemented and containing-commit qualified, while immutable v0.0.13 remains
-unsupported and has no corresponding installable candidate. Keep `u32` as the
-already-released type and `char` as a separate unimplemented semantic type.
+`producer-release-u64-delta` quickstart route) before answering. Producer,
+frozen product and published lifecycle are separate authorities. For
+ordinary-source `u64`, producer master
+`566eff42d0f4e4680c5ddd60c6584a9d8ff8e9f4` contains the implementation commit
+`94328ed760f93bf24b595a71facdcc773d43b762`, and the v0.0.19 product compiler is
+built from that containing authority. Keep `u32` as the previously released
+type and `char` as a separate unimplemented semantic type. Scalar support does
+not imply async or direct public Map support.
 
 Do not scan all release history, read implementation tests, or infer a future
 directory layout when these authorities already answer the question.
@@ -76,7 +78,7 @@ The north star is controlled cold-start transfer: a fresh Pi Agent must learn
 the pinned release from public material alone with either of the two declared
 cost-controlled model routes. Follow
 `docs/FRESH_AGENT_LEARNING_FLYWHEEL.md` and
-`agent-evaluation/fresh-agent-learning-v1.json`. One model PASS is an
+`agent-evaluation/fresh-agent-learning-v2.json`. One model PASS is an
 observation; both routes must pass the frozen suite on the same Pi and release.
 
 For a live Agent journey retain only the privacy-safe event surface:

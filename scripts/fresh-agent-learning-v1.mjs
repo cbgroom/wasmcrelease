@@ -3,14 +3,14 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-export const protocolPath = fileURLToPath(new URL('../agent-evaluation/fresh-agent-learning-v1.json', import.meta.url));
+export const protocolPath = fileURLToPath(new URL('../agent-evaluation/fresh-agent-learning-v2.json', import.meta.url));
 
 export function readProtocol(path = protocolPath) {
   return JSON.parse(readFileSync(path, 'utf8'));
 }
 
 export function validateProtocol(protocol) {
-  assert.equal(protocol.schema, 'wasmc.fresh-agent-learning/v1');
+  assert.equal(protocol.schema, 'wasmc.fresh-agent-learning/v2');
   assert.match(protocol.objective, /fresh Pi Agent/);
   assert.match(protocol.session_preamble, /First read AGENTS\.md/);
   assert.match(protocol.session_preamble, /required_additional_reads/);

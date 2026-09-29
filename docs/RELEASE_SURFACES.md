@@ -1,6 +1,6 @@
 # Release surfaces and qualification
 
-This document is frozen inside the v0.0.18 product set. Surface capability and
+This document is frozen inside the v0.0.19 product set. Surface capability and
 lifecycle stage are separate; `release.json` and `channels/prod.json` are the
 authorities for the current immutable release.
 
@@ -30,12 +30,12 @@ evidence that an older immutable tag shipped it.
 
 | Component | Current checkout status | Agent Skill | Important boundary |
 |---|---|---|---|
-| Core Runtime SDK | included in v0.0.18 product | `sdk/wasmc-core-runtime/SKILL.md` | reused from v0.0.12; engine mechanics; Host/business admission remains embedding-owned |
-| Generic Host SDK | included in v0.0.18 product | `sdk/wasmc-host/SKILL.md` | reused from v0.0.12; generic Resource binding; no application-specific Host API |
+| Core Runtime SDK | included in v0.0.19 product | `sdk/wasmc-core-runtime/SKILL.md` | reused from v0.0.12; engine mechanics; Host/business admission remains embedding-owned |
+| Generic Host SDK | included in v0.0.19 product | `sdk/wasmc-host/SKILL.md` | reused from v0.0.12; generic Resource binding; no application-specific Host API |
 | Native CLI source surface | published | `sdk/wasmc-native-compiler/SKILL.md` | CI/development native packages are not immutable release assets |
 | Lightweight embedding | qualified-reference | SDK discovery routes to `host/embedding/*` | surrounding runtime is the physical OS bridge |
 | Native Runtime Library | incubating | no install Skill yet | do not invent a `.so/.dylib/.dll` package |
-| Dynamic Client + Gateway | incubating in v0.0.18 product | `runtime/client-foundation-v1/release-surface.json` | higher-layer source surface; not a Lib-catalog package or production fleet service |
+| Dynamic Client + Gateway | incubating in v0.0.19 product | `runtime/client-foundation-v1/release-surface.json` | higher-layer source surface; not a Lib-catalog package or production fleet service |
 
 The `SDK Agent guidance` workflow verifies that these routes resolve to real
 public API names and executes the Core Runtime, Host SDK, and native CLI
