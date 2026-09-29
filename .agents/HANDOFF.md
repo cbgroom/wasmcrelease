@@ -4,7 +4,7 @@
 
 The v0.0.16 product candidate is frozen at
 `channels/candidates/0.0.16.json`: 242 exact product files, product-set digest
-`3f9711315eb0efe893c257a9cf6383f1fdd0a372656331562c5c9c1c3702498a`.
+`a91008bb2badb82f803ba0d45bc014db4f02703ec7d05a19b49599dd5d064502`.
 It carries forward the unchanged compiler and fourteen admitted Lib package
 roots / 108 API routes with `candidate_extras=0`.
 
@@ -30,8 +30,17 @@ certificate object, identical SPKI digest, self-issued `CN=localhost`, and SAN
 limited to `localhost` / `127.0.0.1`; it records `production_authority=false`.
 Raw-only mode still rejects it, and negative tests prove that even the same key
 under a changed blob identity is rejected. This remediation changes no frozen
-v0.0.16 product byte or product-set digest; remote qualification must use the
-containing evidence commit.
+v0.0.16 product byte; remote qualification must use the containing evidence
+commit.
+
+The first dynamic Client/Gateway remote run then exposed a close-versus-receipt
+race: a queued receipt send could emit an error after the close path had won
+and removed its listener. The Client now routes message-processing failure
+through an explicit promise in the connection race instead of re-emitting it
+on the closing connection. Ten consecutive full local distributed tests pass.
+Because this changes a product byte, the earlier candidate was invalidated and
+regenerated at the product-set digest above; no earlier remote success may be
+used to qualify it.
 
 ## 2026-09-27 v0.0.14 prod hold
 

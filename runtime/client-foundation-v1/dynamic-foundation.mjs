@@ -181,13 +181,16 @@ export class DynamicGraphClientFoundation {
       state_checkpoint: this.#checkpointSummary(),
     });
     let chain = Promise.resolve();
+    let reportProcessingError;
+    const processingError = new Promise((resolve) => { reportProcessingError = resolve; });
     connection.on("message", (message) => {
       chain = chain.then(async () => connection.sendJson({ type: "receipt", ...await this.#handleMessage(message) }))
-        .catch((error) => connection.emit("error", error));
+        .catch((error) => reportProcessingError(error));
     });
     const outcome = await Promise.race([
       once(connection, "close").then(() => null),
       once(connection, "error").then(([error]) => error),
+      processingError,
       signal ? once(signal, "abort").then(() => null) : new Promise(() => {}),
     ]);
     connection.close();
