@@ -6,12 +6,14 @@ cd "$repo_root"
 
 required=(
   AGENTS.md
+  LICENSE
   LANGUAGE.md
   LIB.md
   .agents/MAINTAINERS.md
   .agents/HANDOFF.md
   .agents/skills.registry.yaml
   manifest.json
+  license-policy.json
   package-index.json
   provenance.json
   SHA256SUMS
@@ -53,6 +55,7 @@ for heading in {0..8}; do
 done
 
 node scripts/validate-integrity.mjs
+node scripts/validate-license-policy.mjs
 node scripts/validate-libs.mjs
 node scripts/lib-route-closure.mjs --check
 node scripts/test-lib-route-closure.mjs

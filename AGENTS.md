@@ -9,6 +9,16 @@ cold-start orientation; run its named check and open the full artifact inventory
 in `manifest.json` only if validation fails. Then pin its immutable tag or full
 commit. Compact `release.json` is lifecycle authority, not the artifact list.
 
+## License boundary
+
+For permission or licensing questions, read `license-policy.json` and run its
+named check. Current `main` and revisions containing that policy are available
+for non-commercial research only; they are source-available, not open source.
+Commercial use, production use, paid services and commercial product or R&D use
+require a separate written license. An immutable earlier tag remains governed by
+the `LICENSE` contained in that exact tag. Do not claim that a current-main
+policy retroactively rewrites or revokes an earlier grant.
+
 For a cold-start orientation, Lib route-release readiness, capability decision,
 canonical aggregate example, telemetry state check, released Base64 selection, or Host-authority question,
 read `agent-quickstart.json` once before opening broader documentation. For

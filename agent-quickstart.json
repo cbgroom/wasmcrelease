@@ -3,6 +3,17 @@
   "authority": "release-surfaces.json",
   "rule": "Match one route, use its exact evidence, and stop. Do not inspect history, unrelated compatibility data, broad manifests or implementation tests. Never abbreviate an identity that you report. After copying an exact_report value, refer to its field name instead of restating or shortening it.",
   "routes": {
+    "license-policy": {
+      "authority_file": "license-policy.json",
+      "request": "may I use WAsmC for research or commercial purposes",
+      "decision": "Current main and revisions containing license-policy.json permit non-commercial research only; commercial and production use require a separate written license. This is source-available, not open source.",
+      "prior_tag_rule": "Read LICENSE from the exact immutable tag. The current-main policy does not rewrite or revoke an earlier grant.",
+      "check_command": "node scripts/validate-license-policy.mjs",
+      "required_additional_reads": [
+        "license-policy.json",
+        "LICENSE"
+      ]
+    },
     "release-orientation": {
       "product_version": "v0.0.19",
       "lifecycle_authority": "Read agent-release-orientation.json and run its check; open the full artifact inventory in manifest.json only if that compact authority fails validation. In the final answer, name agent-release-orientation.json literally as the compact authority. Compact release.json is lifecycle authority, not the artifact list.",
