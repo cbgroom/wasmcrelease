@@ -1,28 +1,28 @@
 {
   "schema": "wasmc.lib-route-closure/v1",
   "authority_receipt": {
-    "path": "admission/lib-search-v030-v017-admission.json",
-    "sha256": "b281c142691e99b52f37e19f8fea530f35ddcd31f586c751301b74a461268bea"
+    "path": "admission/lib-search-v040-v018-admission.json",
+    "sha256": "2bc6eb257a40371049884e8b497fd306cb037c2bef9a522e54c994039c6ccd4d"
   },
   "release": {
-    "version": "0.0.17",
-    "tag": "v0.0.17",
-    "staged_product_manifest": "channels/candidates/0.0.17.json",
-    "product_set_sha256": "82faff7326324bed95f4418f1ce089dcde05dca23d47ccaf25217737c631d1b4"
+    "version": "0.0.18",
+    "tag": "v0.0.18",
+    "staged_product_manifest": "channels/candidates/0.0.18.json",
+    "product_set_sha256": "0b9c88a88a21c5c08f2aa92377729aef4f7a791f0b47f8b64095cf037ecda56b"
   },
   "catalog": {
-    "path": "catalog/libs-v017.json",
-    "sha256": "4d662066138de7b9090553e037ef4600156ef67177ad75844b6b7a9411e7a3d8",
+    "path": "catalog/libs-v018.json",
+    "sha256": "3301afa24be49543c219745e1207b04ad6e2cf6a9a57bbe474f940fbc1f961d2",
     "role": "future-product-catalog",
-    "package_routes": 17
+    "package_routes": 22
   },
   "search_index": {
-    "path": "examples/lib-search/index-v017-v030.lsi",
-    "sha256": "ca6d684eb3100f4629c8ff4f65c7d0b4f6bcd49fc24768e798c9a71a6fbf3ce5",
-    "active_identity": "wasmc:lib-search@0.3.0",
-    "entries": 145,
-    "package_routes": 17,
-    "api_routes": 128
+    "path": "examples/lib-search/index-v018-v040.lsi",
+    "sha256": "8513e628605e8ec05d76729a46fd7dc4427d64a83276368568ae05a0b9070eab",
+    "active_identity": "wasmc:lib-search@0.4.0",
+    "entries": 162,
+    "package_routes": 22,
+    "api_routes": 140
   },
   "release_bindings": [
     {
@@ -31,6 +31,14 @@
       "catalog_bound": true,
       "package_route_bound": true,
       "api_routes": 10,
+      "api_routes_exact": true
+    },
+    {
+      "identity": "wasmc:compression@0.0.1",
+      "root": "libs/wasmc-compression",
+      "catalog_bound": true,
+      "package_route_bound": true,
+      "api_routes": 2,
       "api_routes_exact": true
     },
     {
@@ -106,6 +114,22 @@
       "api_routes_exact": true
     },
     {
+      "identity": "wasmc:http1-server@0.0.1",
+      "root": "libs/wasmc-http1",
+      "catalog_bound": true,
+      "package_route_bound": true,
+      "api_routes": 3,
+      "api_routes_exact": true
+    },
+    {
+      "identity": "wasmc:json@0.0.1",
+      "root": "libs/wasmc-json",
+      "catalog_bound": true,
+      "package_route_bound": true,
+      "api_routes": 3,
+      "api_routes_exact": true
+    },
+    {
       "identity": "wasmc:lib-search@0.1.0",
       "root": "standard/wasmc-lib-search/0.1.0",
       "catalog_bound": true,
@@ -130,6 +154,14 @@
       "api_routes_exact": true
     },
     {
+      "identity": "wasmc:lib-search@0.4.0",
+      "root": "standard/wasmc-lib-search/0.4.0",
+      "catalog_bound": true,
+      "package_route_bound": true,
+      "api_routes": 3,
+      "api_routes_exact": true
+    },
+    {
       "identity": "wasmc:owned-algorithms@0.1.0",
       "root": "libs/wasmc-owned-algorithms",
       "catalog_bound": true,
@@ -143,6 +175,14 @@
       "catalog_bound": true,
       "package_route_bound": true,
       "api_routes": 3,
+      "api_routes_exact": true
+    },
+    {
+      "identity": "wasmc:router-policy@0.0.1",
+      "root": "libs/wasmc-router-policy",
+      "catalog_bound": true,
+      "package_route_bound": true,
+      "api_routes": 1,
       "api_routes_exact": true
     },
     {

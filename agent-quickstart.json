@@ -4,7 +4,7 @@
   "rule": "Match one route, use its exact evidence, and stop. Do not inspect history, unrelated compatibility data, broad manifests or implementation tests. Never abbreviate an identity that you report. After copying an exact_report value, refer to its field name instead of restating or shortening it.",
   "routes": {
     "release-orientation": {
-      "product_version": "v0.0.17",
+      "product_version": "v0.0.18",
       "lifecycle_authority": "Read agent-release-orientation.json and run its check; open the full artifact inventory in manifest.json only if that compact authority fails validation. Compact release.json is lifecycle authority, not the artifact list.",
       "entrypoint": "AGENTS.md",
       "compiler": {"path":"current/wasmc_compiler.wasm","bytes":1351666,"sha256":"93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90","imports":0},
@@ -15,15 +15,15 @@
     },
     "release-lib-route-readiness": {
       "authority_file": "release-lib-route-readiness.json",
-      "request": "does this v0.0.17 product set bind every included Lib package and API route, and where is its lifecycle stage decided",
-      "product": {"version":"0.0.17","package_routes":17,"api_routes":128,"candidate_extras":0,"formal_release_ready":true,"blocking_conditions":[]},
-      "active_search": {"identity":"wasmc:lib-search@0.3.0","states":{"qualified":true,"admitted":true,"included_in_product":true,"qualified_before_freeze":true,"admitted_before_freeze":true},"api_routes":3},
+      "request": "does this v0.0.18 product set bind every included Lib package and API route, and where is its lifecycle stage decided",
+      "product": {"version":"0.0.18","package_routes":22,"api_routes":140,"candidate_extras":0,"formal_release_ready":true,"blocking_conditions":[]},
+      "active_search": {"identity":"wasmc:lib-search@0.4.0","states":{"qualified":true,"admitted":true,"included_in_product":true,"qualified_before_freeze":true,"admitted_before_freeze":true},"api_routes":3},
       "lifecycle_authority": {"current_release":"release.json","stages":"channels/dev.json, channels/main.json, channels/prod.json","rule":"Never infer released, discoverable or installable from this frozen product projection."},
       "valid_resolution_count": 1,
-      "only_valid_closure": "Verify the exact v0.0.17 candidate and route closure, then read the channel authorities for lifecycle state. Every promotion must preserve the same product digest set.",
+      "only_valid_closure": "Verify the exact v0.0.18 candidate and route closure, then read the channel authorities for lifecycle state. Every promotion must preserve the same product digest set.",
       "forbidden_shortcuts": ["treat admission as release", "infer lifecycle state from product presence or an admission snapshot", "rebuild product bytes during promotion", "rewrite any immutable release or prerelease tag"],
-      "authorities": ["admission/lib-search-v030-v017-admission.json", "catalog/lib-route-closure.json", "channels/candidates/0.0.17.json", "release.json", "channels/prod.json"],
-      "check_commands": ["node scripts/lib-route-closure.mjs --check", "node scripts/release-candidate.mjs verify channels/candidates/0.0.17.json"],
+      "authorities": ["admission/lib-search-v040-v018-admission.json", "catalog/lib-route-closure.json", "channels/candidates/0.0.18.json", "release.json", "channels/prod.json"],
+      "check_commands": ["node scripts/lib-route-closure.mjs --check", "node scripts/release-candidate.mjs verify channels/candidates/0.0.18.json"],
       "required_additional_reads": ["release-lib-route-readiness.json"]
     },
     "position-aware-capability-negative": {
@@ -36,10 +36,10 @@
     },
     "producer-release-u64-delta": {
       "request": "is ordinary-source u64 fixed or supported now",
-      "answer_opening": "Producer master: yes, implemented and qualified on the cited commit. The v0.0.17 product compiler: no, ordinary-source u64 remains unsupported; read release.json for the currently published lifecycle stage.",
+      "answer_opening": "Producer master: yes, implemented and qualified on the cited commit. The v0.0.18 product compiler: no, ordinary-source u64 remains unsupported; read release.json for the currently published lifecycle stage.",
       "producer": {"repository":"yxsicd/wasmc","branch":"master","commit":"94328ed760f93bf24b595a71facdcc773d43b762","implemented":true,"qualified_on_containing_commit":true},
-      "release_product": {"version":"v0.0.17","lifecycle_authority":"release.json","ordinary_source_u64":"unsupported"},
-      "u32": "included in the v0.0.17 product compiler; no repair was required",
+      "release_product": {"version":"v0.0.18","lifecycle_authority":"release.json","ordinary_source_u64":"unsupported"},
+      "u32": "included in the v0.0.18 product compiler; no repair was required",
       "char": "not implemented on the cited producer commit and not released; arbitrary u32 is not a char substitute",
       "stop": "Do not claim a new release, install command or artifact until wasmcrelease binds a new exact source-free compiler candidate and admission receipt.",
       "required_additional_reads": []
@@ -68,7 +68,7 @@
       "request": "is the dynamic Client/Gateway available in this product and is it a formal Lib",
       "authority": "runtime/client-foundation-v1/release-surface.json",
       "product": {
-        "version": "0.0.17",
+        "version": "0.0.18",
         "included": true,
         "surface_status": "incubating",
         "lifecycle_authority": "release.json"
@@ -86,31 +86,31 @@
       ]
     },
     "library-first-selection": {
-      "product_release": "v0.0.17",
+      "product_release": "v0.0.18",
       "package": "wasmc:std@1.4.0",
       "apis": ["wasmc:std@1.4.0/base64#try-encode-standard", "wasmc:std@1.4.0/base64#try-decode-standard"],
       "search": "node scripts/wasmc-lib.mjs search base64 --limit 8",
       "search_is_selection_authority": false,
       "wit_sha256": "d565f00e91c36da68da3645ec5231dd11d1b25299a3ba5cbe3adbd9f5760d91d",
       "artifact_sha256": "f8a8ce447f776a47680e02e19ea3a69827edbbc46e01985803ce3d3df51178d7",
-      "catalog_release_snapshot": "v0.0.17",
-      "catalog_path": "catalog/libs-v017.json",
-      "catalog_sha256": "4d662066138de7b9090553e037ef4600156ef67177ad75844b6b7a9411e7a3d8",
+      "catalog_release_snapshot": "v0.0.18",
+      "catalog_path": "catalog/libs-v018.json",
+      "catalog_sha256": "3301afa24be49543c219745e1207b04ad6e2cf6a9a57bbe474f940fbc1f961d2",
       "catalog_snapshot_carried_forward": false,
       "states": {"qualified":true,"admitted":true,"released":true,"discoverable":true,"installable":true},
-      "catalog_snapshot_boundary": "The exact v0.0.17 catalog is package selection authority, while the current release lifecycle remains separate.",
+      "catalog_snapshot_boundary": "The exact v0.0.18 catalog is package selection authority, while the current release lifecycle remains separate.",
       "exact_report": {
         "instruction": "Copy package and APIs byte-for-byte. Do not reproduce digest values in prose; cite the exact_report field names and the successful resolver instead. If you report any digest anyway, it must be the full exact value with no reconstruction, extension, abbreviation or ellipsis.",
         "package": "wasmc:std@1.4.0",
         "apis": ["wasmc:std@1.4.0/base64#try-encode-standard", "wasmc:std@1.4.0/base64#try-decode-standard"],
-        "catalog_sha256": "4d662066138de7b9090553e037ef4600156ef67177ad75844b6b7a9411e7a3d8",
+        "catalog_sha256": "3301afa24be49543c219745e1207b04ad6e2cf6a9a57bbe474f940fbc1f961d2",
         "wit_sha256": "d565f00e91c36da68da3645ec5231dd11d1b25299a3ba5cbe3adbd9f5760d91d",
         "artifact_sha256": "f8a8ce447f776a47680e02e19ea3a69827edbbc46e01985803ce3d3df51178d7",
         "companion_sha256": "f54a892aff9068e5c79464029423a2e8f753ddb44010af9ac34a5c9efce2069c",
         "import_module": "wasmc:lib/wasmc.std@1.4.0"
       },
       "final_answer_policy": "After verification, output package and both APIs exactly, then only these three statements: search discovered the candidate but was not authority; resolve verified catalog_sha256, wit_sha256, artifact_sha256, companion_sha256 and import_module; behavior passed. Do not reproduce command arguments, digest values, partial digests or any ellipsis character.",
-      "resolve": "node scripts/wasmc-lib.mjs resolve wasmc-std 1.4.0 --catalog v017 --catalog-sha256 4d662066138de7b9090553e037ef4600156ef67177ad75844b6b7a9411e7a3d8 --wit-sha256 d565f00e91c36da68da3645ec5231dd11d1b25299a3ba5cbe3adbd9f5760d91d --artifact-sha256 f8a8ce447f776a47680e02e19ea3a69827edbbc46e01985803ce3d3df51178d7",
+      "resolve": "node scripts/wasmc-lib.mjs resolve wasmc-std 1.4.0 --catalog v018 --catalog-sha256 3301afa24be49543c219745e1207b04ad6e2cf6a9a57bbe474f940fbc1f961d2 --wit-sha256 d565f00e91c36da68da3645ec5231dd11d1b25299a3ba5cbe3adbd9f5760d91d --artifact-sha256 f8a8ce447f776a47680e02e19ea3a69827edbbc46e01985803ce3d3df51178d7",
       "behavior": "node examples/base64/run.mjs",
       "install_reference": "catalog/INSTALL.md",
       "required_additional_reads": []

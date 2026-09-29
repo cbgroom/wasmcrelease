@@ -1,5 +1,24 @@
 # Release Lib search
 
+## Admitted 0.4.0 v0.0.18 product candidate
+
+`standard/wasmc-lib-search/0.4.0` embeds the exact v0.0.18 route snapshot:
+22 package identities / 162 package and API entries. It adds discovery for the
+router-policy, JSON, compression, and HTTP/1 portable protocol Libs while
+keeping 0.1.0 through 0.3.0 as historical identities.
+
+- index: 39,094 bytes,
+  `8513e628605e8ec05d76729a46fd7dc4427d64a83276368568ae05a0b9070eab`
+- Core: 64,752 bytes,
+  `3bfe9d15ee51832e884833b85ec09e3f803ef67b14f596ce6c168d9ffb1cf77f`
+- Component: 66,518 bytes,
+  `1d7019978645fa48c2da344010c8c9332f1f6ec159fef33e9c941a3aee29f2e9`
+
+Two exact-tool builds are byte-identical. Wasmi 2.0 Core and Wasmtime 47.0.3
+Component execution pass. The package has zero Core imports and grants no Host
+or version-selection authority. Its admission receipt is
+[`admission/lib-search-v040-v018-admission.json`](../../admission/lib-search-v040-v018-admission.json).
+
 ## Admitted 0.3.0 v0.0.17 product candidate
 
 `standard/wasmc-lib-search/0.3.0` embeds the exact v0.0.17 route snapshot:
@@ -65,9 +84,9 @@ After checking the pinned release's manifest and SHA256SUMS:
 
 ```sh
 node examples/lib-search/run.mjs
-node examples/lib-search/verify-api.mjs examples/lib-search/index-v017-v030.lsi standard/wasmc-lib-search/0.3.0 examples/lib-search/search-reference.wasmc current/wasmc.mjs
-WASMC_SEARCH_LIB_ROOT="$PWD/standard/wasmc-lib-search/0.3.0" cargo test --locked --release --manifest-path examples/lib-search/rust/Cargo.toml
-WASMC_SEARCH_LIB_ROOT="$PWD/standard/wasmc-lib-search/0.3.0" cargo run --locked --release --manifest-path examples/lib-search/rust/Cargo.toml
+node examples/lib-search/verify-api.mjs examples/lib-search/index-v018-v040.lsi standard/wasmc-lib-search/0.4.0 examples/lib-search/search-reference.wasmc current/wasmc.mjs
+WASMC_SEARCH_LIB_ROOT="$PWD/standard/wasmc-lib-search/0.4.0" cargo test --locked --release --manifest-path examples/lib-search/rust/Cargo.toml
+WASMC_SEARCH_LIB_ROOT="$PWD/standard/wasmc-lib-search/0.4.0" cargo run --locked --release --manifest-path examples/lib-search/rust/Cargo.toml
 ```
 
 Bun runs the same `.mjs`; Deno uses `deno run --allow-read`. The typed JS view

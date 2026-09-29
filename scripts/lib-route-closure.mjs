@@ -8,7 +8,7 @@ import { parseCatalog } from './lib-catalog.mjs';
 
 const root=fileURLToPath(new URL('../',import.meta.url));
 const outputPath='catalog/lib-route-closure.json';
-const defaultReceipt='admission/lib-search-v030-v017-admission.json';
+const defaultReceipt='admission/lib-search-v040-v018-admission.json';
 const sha=bytes=>createHash('sha256').update(bytes).digest('hex');
 const read=path=>readFileSync(resolve(root,path));
 const json=path=>JSON.parse(read(path));

@@ -20,8 +20,8 @@ exported WIT API from the staged product and requires exact catalog, package
 route and API route equality. Do not accept a manually sampled query list or a
 package-level hit as proof that all APIs were synchronized.
 
-The v0.0.17 product includes LibSearch 0.3.0. Its snapshot covers 17 identities
-including itself / 145 package and API entries. Product inclusion and admission
+The v0.0.18 product includes LibSearch 0.4.0. Its snapshot covers 22 identities
+including itself / 162 package and API entries. Product inclusion and admission
 do not establish the current released/default lifecycle stage; read
 `release.json` and `channels/prod.json`. Historical v0.0.13 contains 0.1.0.
 
@@ -63,7 +63,7 @@ See [search semantics and typed JS/Rust APIs](../../examples/lib-search/README.m
 2. Use [exact resolution](../../catalog/README.md) and
    [no-clobber installation](../../catalog/INSTALL.md). Immutable-tag callers
    retain the four-package v0.0.9 catalog; current-side tooling may explicitly
-   select the exact 13-package `catalog/libs-v013.json`. Neither catalog nor
+   select the exact 22-package `catalog/libs-v018.json`. Neither catalog nor
    search is automatic version-selection authority.
 3. Check [artifact compatibility](../../compatibility/README.md), matching
    CoreLib/provider identity and actual import authority. Installing bytes

@@ -8,7 +8,7 @@ description: Design, write, compile, inspect, embed, and debug applications with
 Build against the released files beside this Skill. Never assume private source
 or an unreleased capability.
 
-This Skill is frozen in the v0.0.17 product set. Product capability is described
+This Skill is frozen in the v0.0.18 product set. Product capability is described
 here; lifecycle state comes only from `release.json` and `channels/prod.json`.
 
 Before broad discovery, check `agent-quickstart.json`. It is the validated
@@ -45,7 +45,7 @@ For type and boundary decisions in this current checkout, read
 `release-surfaces.json.agent_capability_projection` before writing source. It
 separates ordinary source, local/App-Lib Core values, Host functions, Component
 values, resource methods and public results. The projection is a current-main
-projection included in the v0.0.17 product; its presence does not by itself
+projection included in the v0.0.18 product; its presence does not by itself
 prove the product is the current released lifecycle stage.
 
 ## Mental model
