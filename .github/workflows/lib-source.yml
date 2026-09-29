@@ -122,10 +122,14 @@ jobs:
         run: |
           mkdir -p target
           node scripts/libsrc-readiness.mjs | tee target/libsrc-readiness.json
-      - name: Repository integrity
+      - name: Published repository integrity
+        if: github.ref == 'refs/heads/main'
         run: |
           node scripts/validate-integrity.mjs
           ./scripts/validate-maintainer.sh
+      - name: Candidate repository integrity
+        if: github.ref != 'refs/heads/main'
+        run: node scripts/ci-suite.mjs candidate
 
   tls-client-canonical:
     name: Build exact TLS client artifact twice

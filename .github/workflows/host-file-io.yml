@@ -46,9 +46,12 @@ jobs:
           bun host/drivers/file/test.mjs "$binary"
           mkdir -p target/host-file-tmp
           TMPDIR="$PWD/target/host-file-tmp" deno run --allow-read=target/host-file-tmp --allow-write=target/host-file-tmp --allow-env=TMPDIR,NODE_V8_COVERAGE --allow-run="$binary" host/drivers/file/test.mjs "$binary"
-      - name: Public contract consistency
-        if: runner.os == 'Linux'
+      - name: Published public contract consistency
+        if: runner.os == 'Linux' && github.ref == 'refs/heads/main'
         run: ./scripts/validate-maintainer.sh
+      - name: Candidate public contract consistency
+        if: runner.os == 'Linux' && github.ref != 'refs/heads/main'
+        run: node scripts/ci-suite.mjs candidate
       - name: Exact-source scope
         shell: bash
         env:
