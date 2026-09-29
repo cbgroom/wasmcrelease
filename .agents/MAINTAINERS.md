@@ -23,6 +23,17 @@ are intentionally open standardization surfaces. Their owning judgment is
 `release-host-integration`; keep low-level additions justified and reusable.
 This permission does not authorize rebuilding private compiler/CoreLib products.
 
+## License boundary
+
+Read `license-policy.json` and run `node scripts/validate-license-policy.mjs`
+before making a permission claim. Material first added after v0.0.19 is
+available for non-commercial research only unless it has a different notice;
+commercial and production use require a separate written license. The exact
+v0.0.19 product and already published packages retain their accompanying
+licenses. Never rewrite its frozen product inventory or claim that an earlier
+grant was revoked. Before freezing a later candidate, bind every included
+package manifest to the intended license explicitly.
+
 Compiler edits may be authorized independently in the private producer, without
 authorizing any compiler-source disclosure. Wasmi/Wasmtime integration, Host
 adapters, CLI and conformance/build code can remain public and consume reviewed
