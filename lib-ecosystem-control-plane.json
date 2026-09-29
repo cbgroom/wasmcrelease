@@ -1,25 +1,25 @@
 {
   "schema": "wasmc.lib-ecosystem-control-plane/v1",
   "authority": {
-    "immutable_product": "release.json -> channels/candidates/0.0.17.json",
+    "immutable_product": "release.json -> channels/candidates/0.0.18.json",
     "capability_projection": "release-surfaces.json#agent_capability_projection",
     "producer_deltas": "release-surfaces.json#producer_capability_delta",
-    "discovery_snapshot": "standard/wasmc-lib-search/0.3.0 + examples/lib-search/index-v017-v030.lsi",
-    "resolver_install_catalog": "catalog/libs-v017.json",
+    "discovery_snapshot": "standard/wasmc-lib-search/0.4.0 + examples/lib-search/index-v018-v040.lsi",
+    "resolver_install_catalog": "catalog/libs-v018.json",
     "rule": "Package existence, qualification, admission, release, discovery, installation, engine compatibility and Host authority are independent claims."
   },
   "release": {
-    "version": "0.0.17",
-    "tag": "v0.0.17",
+    "version": "0.0.18",
+    "tag": "v0.0.18",
     "source_commit": "e69abb73f667f3810b0c40937fd1a1e2d04d4255",
-    "staged_product_manifest": "channels/candidates/0.0.17.json",
-    "product_set_sha256": "82faff7326324bed95f4418f1ce089dcde05dca23d47ccaf25217737c631d1b4"
+    "staged_product_manifest": "channels/candidates/0.0.18.json",
+    "product_set_sha256": "d451c04579a35cdb24ea7ae3e0197c8c80e691e4ac374a909ef7fa2481166d44"
   },
   "route_closure": {
     "authority": "catalog/lib-route-closure.json",
-    "release_packages": 17,
-    "package_routes": 17,
-    "api_routes": 128,
+    "release_packages": 22,
+    "package_routes": 22,
+    "api_routes": 140,
     "candidate_extras": 0,
     "release_catalog_exact": true,
     "release_package_routes_exact": true,
@@ -28,29 +28,29 @@
     "blocking_conditions": []
   },
   "inventory": {
-    "packages": 17,
-    "qualified": 17,
-    "admitted": 17,
-    "released": 17,
-    "discoverable": 17,
-    "installable": 17,
-    "search_entries": 145,
-    "search_index_sha256": "ca6d684eb3100f4629c8ff4f65c7d0b4f6bcd49fc24768e798c9a71a6fbf3ce5",
-    "install_catalog_release": "v0.0.17",
-    "install_catalog_packages": 17,
-    "current_side_install_catalog": "v0.0.17",
-    "current_side_installable": 17,
+    "packages": 22,
+    "qualified": 22,
+    "admitted": 22,
+    "released": 22,
+    "discoverable": 22,
+    "installable": 22,
+    "search_entries": 162,
+    "search_index_sha256": "8513e628605e8ec05d76729a46fd7dc4427d64a83276368568ae05a0b9070eab",
+    "install_catalog_release": "v0.0.18",
+    "install_catalog_packages": 22,
+    "current_side_install_catalog": "v0.0.18",
+    "current_side_installable": 22,
     "current_side_inventory_matches_release": true,
     "inventory_is_unified": true
   },
   "type_position_authority": {
     "schema": "wasmc.release-agent-capabilities/v1",
-    "product_release": "v0.0.17",
+    "product_release": "v0.0.18",
     "guidance_scope": {
-      "status": "included-in-v0.0.17-product",
+      "status": "included-in-v0.0.18-product",
       "included_in_product": true,
       "lifecycle_authority": "release.json and channels/prod.json",
-      "rule": "This frozen projection describes v0.0.17 product capability only. It does not prove the product is the current released, discoverable or installable lifecycle stage."
+      "rule": "This frozen projection describes v0.0.18 product capability only. It does not prove the product is the current released, discoverable or installable lifecycle stage."
     },
     "decision_rule": "A type or feature is usable only at the exact admitted position below. WIT vocabulary, local values, Core lanes, Component profiles, Host bindings and public results are separate claims.",
     "alternative_rule": "Alternatives must preserve semantics. Numeric width or signedness, async behavior, identity, ordering, ownership and failure semantics may change only with explicit application proof; otherwise stop.",
@@ -208,16 +208,16 @@
         }
       },
       "release": {
-        "product": "v0.0.17",
+        "product": "v0.0.18",
         "lifecycle_authority": "release.json",
         "reason": "No new source-free compiler artifact, candidate identity, admission receipt or immutable release contains the producer change.",
         "v0_0_16_u64_ordinary_source": "unsupported"
       },
       "adjacent_type_decisions": {
-        "u32": "included in the v0.0.17 product compiler; no repair was required",
+        "u32": "included in the v0.0.18 product compiler; no repair was required",
         "char": "not implemented on the cited producer commit and not released; do not substitute arbitrary u32"
       },
-      "answer_rule": "When asked whether u64 is fixed or supported, lead with both authorities: producer master yes, the v0.0.17 product compiler no; read release.json for the current published lifecycle stage."
+      "answer_rule": "When asked whether u64 is fixed or supported, lead with both authorities: producer master yes, the v0.0.18 product compiler no; read release.json for the current published lifecycle stage."
     }
   ],
   "packages": [
@@ -291,15 +291,76 @@
       },
       "current_side_remediation": {
         "resolvable_installable": true,
-        "authority": "catalog/libs-v017.json",
+        "authority": "catalog/libs-v018.json",
         "included_in_immutable_tag": true
       },
       "state_evidence": {
         "qualification": "libs/mcpgit-resident-memory/lib.json#admission",
         "admission": "libs/mcpgit-resident-memory/lib.json#admission",
-        "release": "release.json -> channels/candidates/0.0.17.json",
-        "discovery": "standard/wasmc-lib-search/0.3.0 + examples/lib-search/index-v017-v030.lsi",
-        "installation": "catalog/libs-v017.json"
+        "release": "release.json -> channels/candidates/0.0.18.json",
+        "discovery": "standard/wasmc-lib-search/0.4.0 + examples/lib-search/index-v018-v040.lsi",
+        "installation": "catalog/libs-v018.json"
+      },
+      "stopping_conditions": []
+    },
+    {
+      "id": "wasmc-compression",
+      "version": "0.0.1",
+      "identity": "wasmc:compression@0.0.1",
+      "root": "libs/wasmc-compression",
+      "metadata": {
+        "path": "libs/wasmc-compression/lib.json",
+        "sha256": "02d7abcb0889c13a3e4fc146e3d8cc66da50f261d1ff39295592bec75f48ff0d",
+        "schema": "wasmc.lib/v0"
+      },
+      "wit": {
+        "package": "wasmc:compression@0.0.1",
+        "path": "lib.wit",
+        "sha256": "299e5e3b51ebce56cae295c3e4687f3e72671b16f7be6b37f2417c290fa05697",
+        "world": "compression"
+      },
+      "artifact": {
+        "bytes": 120224,
+        "format": "core-wasm",
+        "path": "artifact.wasm",
+        "sha256": "1503ac6db4ac7a319fc628b9aa5c55071e02824519252839078e989457904f49"
+      },
+      "component": {
+        "bytes": 121195,
+        "format": "component-wasm",
+        "path": "component.wasm",
+        "sha256": "fdaed2969966567894105d410cf7da92c6fe3b8fcc95793000fbcb7edb41874d"
+      },
+      "core_imports": [],
+      "host_authorities": [],
+      "canonical_resource_intrinsics": [],
+      "engine_profile": {
+        "authority": "scripts/test-libsrc-wasmi.mjs",
+        "validation_profile": "package-qualification-defined",
+        "tested_local_engines": [],
+        "minimum_version_claimed": false,
+        "stop": null
+      },
+      "supported_surfaces": null,
+      "unsupported_surfaces": null,
+      "states": {
+        "qualified": true,
+        "admitted": true,
+        "released": true,
+        "discoverable": true,
+        "installable": true
+      },
+      "current_side_remediation": {
+        "resolvable_installable": true,
+        "authority": "catalog/libs-v018.json",
+        "included_in_immutable_tag": true
+      },
+      "state_evidence": {
+        "qualification": "libs/wasmc-compression/lib.json#admission",
+        "admission": "libs/wasmc-compression/lib.json#admission",
+        "release": "release.json -> channels/candidates/0.0.18.json",
+        "discovery": "standard/wasmc-lib-search/0.4.0 + examples/lib-search/index-v018-v040.lsi",
+        "installation": "catalog/libs-v018.json"
       },
       "stopping_conditions": []
     },
@@ -352,15 +413,15 @@
       },
       "current_side_remediation": {
         "resolvable_installable": true,
-        "authority": "catalog/libs-v017.json",
+        "authority": "catalog/libs-v018.json",
         "included_in_immutable_tag": true
       },
       "state_evidence": {
         "qualification": "libs/wasmc-csv/lib.json#admission",
         "admission": "libs/wasmc-csv/lib.json#admission",
-        "release": "release.json -> channels/candidates/0.0.17.json",
-        "discovery": "standard/wasmc-lib-search/0.3.0 + examples/lib-search/index-v017-v030.lsi",
-        "installation": "catalog/libs-v017.json"
+        "release": "release.json -> channels/candidates/0.0.18.json",
+        "discovery": "standard/wasmc-lib-search/0.4.0 + examples/lib-search/index-v018-v040.lsi",
+        "installation": "catalog/libs-v018.json"
       },
       "stopping_conditions": []
     },
@@ -413,15 +474,15 @@
       },
       "current_side_remediation": {
         "resolvable_installable": true,
-        "authority": "catalog/libs-v017.json",
+        "authority": "catalog/libs-v018.json",
         "included_in_immutable_tag": true
       },
       "state_evidence": {
         "qualification": "libs/wasmc-data-compute/lib.json#admission",
         "admission": "libs/wasmc-data-compute/lib.json#admission",
-        "release": "release.json -> channels/candidates/0.0.17.json",
-        "discovery": "standard/wasmc-lib-search/0.3.0 + examples/lib-search/index-v017-v030.lsi",
-        "installation": "catalog/libs-v017.json"
+        "release": "release.json -> channels/candidates/0.0.18.json",
+        "discovery": "standard/wasmc-lib-search/0.4.0 + examples/lib-search/index-v018-v040.lsi",
+        "installation": "catalog/libs-v018.json"
       },
       "stopping_conditions": []
     },
@@ -474,15 +535,15 @@
       },
       "current_side_remediation": {
         "resolvable_installable": true,
-        "authority": "catalog/libs-v017.json",
+        "authority": "catalog/libs-v018.json",
         "included_in_immutable_tag": true
       },
       "state_evidence": {
         "qualification": "libs/wasmc-data-core/lib.json#admission",
         "admission": "libs/wasmc-data-core/lib.json#admission",
-        "release": "release.json -> channels/candidates/0.0.17.json",
-        "discovery": "standard/wasmc-lib-search/0.3.0 + examples/lib-search/index-v017-v030.lsi",
-        "installation": "catalog/libs-v017.json"
+        "release": "release.json -> channels/candidates/0.0.18.json",
+        "discovery": "standard/wasmc-lib-search/0.4.0 + examples/lib-search/index-v018-v040.lsi",
+        "installation": "catalog/libs-v018.json"
       },
       "stopping_conditions": []
     },
@@ -535,15 +596,15 @@
       },
       "current_side_remediation": {
         "resolvable_installable": true,
-        "authority": "catalog/libs-v017.json",
+        "authority": "catalog/libs-v018.json",
         "included_in_immutable_tag": true
       },
       "state_evidence": {
         "qualification": "libs/wasmc-data-expr/lib.json#admission",
         "admission": "libs/wasmc-data-expr/lib.json#admission",
-        "release": "release.json -> channels/candidates/0.0.17.json",
-        "discovery": "standard/wasmc-lib-search/0.3.0 + examples/lib-search/index-v017-v030.lsi",
-        "installation": "catalog/libs-v017.json"
+        "release": "release.json -> channels/candidates/0.0.18.json",
+        "discovery": "standard/wasmc-lib-search/0.4.0 + examples/lib-search/index-v018-v040.lsi",
+        "installation": "catalog/libs-v018.json"
       },
       "stopping_conditions": []
     },
@@ -596,15 +657,15 @@
       },
       "current_side_remediation": {
         "resolvable_installable": true,
-        "authority": "catalog/libs-v017.json",
+        "authority": "catalog/libs-v018.json",
         "included_in_immutable_tag": true
       },
       "state_evidence": {
         "qualification": "libs/wasmc-data-interchange/lib.json#admission",
         "admission": "libs/wasmc-data-interchange/lib.json#admission",
-        "release": "release.json -> channels/candidates/0.0.17.json",
-        "discovery": "standard/wasmc-lib-search/0.3.0 + examples/lib-search/index-v017-v030.lsi",
-        "installation": "catalog/libs-v017.json"
+        "release": "release.json -> channels/candidates/0.0.18.json",
+        "discovery": "standard/wasmc-lib-search/0.4.0 + examples/lib-search/index-v018-v040.lsi",
+        "installation": "catalog/libs-v018.json"
       },
       "stopping_conditions": []
     },
@@ -657,15 +718,15 @@
       },
       "current_side_remediation": {
         "resolvable_installable": true,
-        "authority": "catalog/libs-v017.json",
+        "authority": "catalog/libs-v018.json",
         "included_in_immutable_tag": true
       },
       "state_evidence": {
         "qualification": "libs/wasmc-data-profile/lib.json#admission",
         "admission": "libs/wasmc-data-profile/lib.json#admission",
-        "release": "release.json -> channels/candidates/0.0.17.json",
-        "discovery": "standard/wasmc-lib-search/0.3.0 + examples/lib-search/index-v017-v030.lsi",
-        "installation": "catalog/libs-v017.json"
+        "release": "release.json -> channels/candidates/0.0.18.json",
+        "discovery": "standard/wasmc-lib-search/0.4.0 + examples/lib-search/index-v018-v040.lsi",
+        "installation": "catalog/libs-v018.json"
       },
       "stopping_conditions": []
     },
@@ -718,15 +779,15 @@
       },
       "current_side_remediation": {
         "resolvable_installable": true,
-        "authority": "catalog/libs-v017.json",
+        "authority": "catalog/libs-v018.json",
         "included_in_immutable_tag": true
       },
       "state_evidence": {
         "qualification": "libs/wasmc-data-relational/lib.json#admission",
         "admission": "libs/wasmc-data-relational/lib.json#admission",
-        "release": "release.json -> channels/candidates/0.0.17.json",
-        "discovery": "standard/wasmc-lib-search/0.3.0 + examples/lib-search/index-v017-v030.lsi",
-        "installation": "catalog/libs-v017.json"
+        "release": "release.json -> channels/candidates/0.0.18.json",
+        "discovery": "standard/wasmc-lib-search/0.4.0 + examples/lib-search/index-v018-v040.lsi",
+        "installation": "catalog/libs-v018.json"
       },
       "stopping_conditions": []
     },
@@ -779,15 +840,15 @@
       },
       "current_side_remediation": {
         "resolvable_installable": true,
-        "authority": "catalog/libs-v017.json",
+        "authority": "catalog/libs-v018.json",
         "included_in_immutable_tag": true
       },
       "state_evidence": {
         "qualification": "libs/wasmc-data-relational-v002/lib.json#admission",
         "admission": "libs/wasmc-data-relational-v002/lib.json#admission",
-        "release": "release.json -> channels/candidates/0.0.17.json",
-        "discovery": "standard/wasmc-lib-search/0.3.0 + examples/lib-search/index-v017-v030.lsi",
-        "installation": "catalog/libs-v017.json"
+        "release": "release.json -> channels/candidates/0.0.18.json",
+        "discovery": "standard/wasmc-lib-search/0.4.0 + examples/lib-search/index-v018-v040.lsi",
+        "installation": "catalog/libs-v018.json"
       },
       "stopping_conditions": []
     },
@@ -846,15 +907,137 @@
       },
       "current_side_remediation": {
         "resolvable_installable": true,
-        "authority": "catalog/libs-v017.json",
+        "authority": "catalog/libs-v018.json",
         "included_in_immutable_tag": true
       },
       "state_evidence": {
-        "qualification": "channels/candidates/0.0.17.json immutable product inclusion",
-        "admission": "channels/candidates/0.0.17.json immutable product inclusion",
-        "release": "release.json -> channels/candidates/0.0.17.json",
-        "discovery": "standard/wasmc-lib-search/0.3.0 + examples/lib-search/index-v017-v030.lsi",
-        "installation": "catalog/libs-v017.json"
+        "qualification": "channels/candidates/0.0.18.json immutable product inclusion",
+        "admission": "channels/candidates/0.0.18.json immutable product inclusion",
+        "release": "release.json -> channels/candidates/0.0.18.json",
+        "discovery": "standard/wasmc-lib-search/0.4.0 + examples/lib-search/index-v018-v040.lsi",
+        "installation": "catalog/libs-v018.json"
+      },
+      "stopping_conditions": []
+    },
+    {
+      "id": "wasmc-http1",
+      "version": "0.0.1",
+      "identity": "wasmc:http1-server@0.0.1",
+      "root": "libs/wasmc-http1",
+      "metadata": {
+        "path": "libs/wasmc-http1/lib.json",
+        "sha256": "46ae6146d396af5c259a4c7e36d1cbeff4828898e92385c7348a183f58f81b67",
+        "schema": "wasmc.lib/v0"
+      },
+      "wit": {
+        "package": "wasmc:http1-server@0.0.1",
+        "path": "lib.wit",
+        "sha256": "311e483f67b860702004e47e86234f96f4edc5e19f70875e1387a98a14f563cd",
+        "world": "http1-server"
+      },
+      "artifact": {
+        "bytes": 44142,
+        "format": "core-wasm",
+        "path": "artifact.wasm",
+        "sha256": "b2ba43df1530bfa994c1364c086f41b7d91d0315781804f1b98e32ac758af55c"
+      },
+      "component": {
+        "bytes": 46144,
+        "format": "component-wasm",
+        "path": "component.wasm",
+        "sha256": "47810979c27916357474c3b4ce776e648b69b8425262196b4c908f21a9c7b34c"
+      },
+      "core_imports": [],
+      "host_authorities": [],
+      "canonical_resource_intrinsics": [],
+      "engine_profile": {
+        "authority": "scripts/test-libsrc-wasmi.mjs",
+        "validation_profile": "package-qualification-defined",
+        "tested_local_engines": [],
+        "minimum_version_claimed": false,
+        "stop": null
+      },
+      "supported_surfaces": null,
+      "unsupported_surfaces": null,
+      "states": {
+        "qualified": true,
+        "admitted": true,
+        "released": true,
+        "discoverable": true,
+        "installable": true
+      },
+      "current_side_remediation": {
+        "resolvable_installable": true,
+        "authority": "catalog/libs-v018.json",
+        "included_in_immutable_tag": true
+      },
+      "state_evidence": {
+        "qualification": "libs/wasmc-http1/lib.json#admission",
+        "admission": "libs/wasmc-http1/lib.json#admission",
+        "release": "release.json -> channels/candidates/0.0.18.json",
+        "discovery": "standard/wasmc-lib-search/0.4.0 + examples/lib-search/index-v018-v040.lsi",
+        "installation": "catalog/libs-v018.json"
+      },
+      "stopping_conditions": []
+    },
+    {
+      "id": "wasmc-json",
+      "version": "0.0.1",
+      "identity": "wasmc:json@0.0.1",
+      "root": "libs/wasmc-json",
+      "metadata": {
+        "path": "libs/wasmc-json/lib.json",
+        "sha256": "06fcc0f232d38f5b107107df5f8534ccfd56e9e4dd2ffc96c641a461dfbdcdc8",
+        "schema": "wasmc.lib/v0"
+      },
+      "wit": {
+        "package": "wasmc:json@0.0.1",
+        "path": "lib.wit",
+        "sha256": "45ab5f4ede015f76f9d152a9255414fbe15c71054b07a0302b7f0b76672c4221",
+        "world": "json"
+      },
+      "artifact": {
+        "bytes": 112864,
+        "format": "core-wasm",
+        "path": "artifact.wasm",
+        "sha256": "2f9a4a93fce1d804dc33ddf341f62b25309529874c1c273d06e3d515f999647f"
+      },
+      "component": {
+        "bytes": 114136,
+        "format": "component-wasm",
+        "path": "component.wasm",
+        "sha256": "32cff349fd2e6d90c5132f668206576f28b02a73b543d64ee2bb06799ad8d54d"
+      },
+      "core_imports": [],
+      "host_authorities": [],
+      "canonical_resource_intrinsics": [],
+      "engine_profile": {
+        "authority": "scripts/test-libsrc-wasmi.mjs",
+        "validation_profile": "package-qualification-defined",
+        "tested_local_engines": [],
+        "minimum_version_claimed": false,
+        "stop": null
+      },
+      "supported_surfaces": null,
+      "unsupported_surfaces": null,
+      "states": {
+        "qualified": true,
+        "admitted": true,
+        "released": true,
+        "discoverable": true,
+        "installable": true
+      },
+      "current_side_remediation": {
+        "resolvable_installable": true,
+        "authority": "catalog/libs-v018.json",
+        "included_in_immutable_tag": true
+      },
+      "state_evidence": {
+        "qualification": "libs/wasmc-json/lib.json#admission",
+        "admission": "libs/wasmc-json/lib.json#admission",
+        "release": "release.json -> channels/candidates/0.0.18.json",
+        "discovery": "standard/wasmc-lib-search/0.4.0 + examples/lib-search/index-v018-v040.lsi",
+        "installation": "catalog/libs-v018.json"
       },
       "stopping_conditions": []
     },
@@ -907,15 +1090,15 @@
       },
       "current_side_remediation": {
         "resolvable_installable": true,
-        "authority": "catalog/libs-v017.json",
+        "authority": "catalog/libs-v018.json",
         "included_in_immutable_tag": true
       },
       "state_evidence": {
-        "qualification": "channels/candidates/0.0.17.json immutable product inclusion",
-        "admission": "channels/candidates/0.0.17.json immutable product inclusion",
-        "release": "release.json -> channels/candidates/0.0.17.json",
-        "discovery": "standard/wasmc-lib-search/0.3.0 + examples/lib-search/index-v017-v030.lsi",
-        "installation": "catalog/libs-v017.json"
+        "qualification": "channels/candidates/0.0.18.json immutable product inclusion",
+        "admission": "channels/candidates/0.0.18.json immutable product inclusion",
+        "release": "release.json -> channels/candidates/0.0.18.json",
+        "discovery": "standard/wasmc-lib-search/0.4.0 + examples/lib-search/index-v018-v040.lsi",
+        "installation": "catalog/libs-v018.json"
       },
       "stopping_conditions": []
     },
@@ -979,15 +1162,76 @@
       },
       "current_side_remediation": {
         "resolvable_installable": true,
-        "authority": "catalog/libs-v017.json",
+        "authority": "catalog/libs-v018.json",
         "included_in_immutable_tag": true
       },
       "state_evidence": {
-        "qualification": "channels/candidates/0.0.17.json immutable product inclusion",
-        "admission": "channels/candidates/0.0.17.json immutable product inclusion",
-        "release": "release.json -> channels/candidates/0.0.17.json",
-        "discovery": "standard/wasmc-lib-search/0.3.0 + examples/lib-search/index-v017-v030.lsi",
-        "installation": "catalog/libs-v017.json"
+        "qualification": "channels/candidates/0.0.18.json immutable product inclusion",
+        "admission": "channels/candidates/0.0.18.json immutable product inclusion",
+        "release": "release.json -> channels/candidates/0.0.18.json",
+        "discovery": "standard/wasmc-lib-search/0.4.0 + examples/lib-search/index-v018-v040.lsi",
+        "installation": "catalog/libs-v018.json"
+      },
+      "stopping_conditions": []
+    },
+    {
+      "id": "wasmc-router-policy",
+      "version": "0.0.1",
+      "identity": "wasmc:router-policy@0.0.1",
+      "root": "libs/wasmc-router-policy",
+      "metadata": {
+        "path": "libs/wasmc-router-policy/lib.json",
+        "sha256": "846ee7c797cf950534ce1d390b82c1f303d61a2624048b068888169fb91f3c1c",
+        "schema": "wasmc.lib/v0"
+      },
+      "wit": {
+        "package": "wasmc:router-policy@0.0.1",
+        "path": "lib.wit",
+        "sha256": "69d36e63480186252bd4a621e9ab34695bdb6707d6b833b3adfcc4360ceadd0d",
+        "world": "router-policy"
+      },
+      "artifact": {
+        "bytes": 432,
+        "format": "core-wasm",
+        "path": "artifact.wasm",
+        "sha256": "54ae7a1fbbb566fb2aa4311bf6c793575a4dc0102db77d3f705f4dd910288e9d"
+      },
+      "component": {
+        "bytes": 1226,
+        "format": "component-wasm",
+        "path": "component.wasm",
+        "sha256": "97e93a997ceb84d1188069120c7258b8702d5ac3db15a135f41f387e61458495"
+      },
+      "core_imports": [],
+      "host_authorities": [],
+      "canonical_resource_intrinsics": [],
+      "engine_profile": {
+        "authority": "scripts/test-libsrc-wasmi.mjs",
+        "validation_profile": "package-qualification-defined",
+        "tested_local_engines": [],
+        "minimum_version_claimed": false,
+        "stop": null
+      },
+      "supported_surfaces": null,
+      "unsupported_surfaces": null,
+      "states": {
+        "qualified": true,
+        "admitted": true,
+        "released": true,
+        "discoverable": true,
+        "installable": true
+      },
+      "current_side_remediation": {
+        "resolvable_installable": true,
+        "authority": "catalog/libs-v018.json",
+        "included_in_immutable_tag": true
+      },
+      "state_evidence": {
+        "qualification": "libs/wasmc-router-policy/lib.json#admission",
+        "admission": "libs/wasmc-router-policy/lib.json#admission",
+        "release": "release.json -> channels/candidates/0.0.18.json",
+        "discovery": "standard/wasmc-lib-search/0.4.0 + examples/lib-search/index-v018-v040.lsi",
+        "installation": "catalog/libs-v018.json"
       },
       "stopping_conditions": []
     },
@@ -1072,15 +1316,15 @@
       },
       "current_side_remediation": {
         "resolvable_installable": true,
-        "authority": "catalog/libs-v017.json",
+        "authority": "catalog/libs-v018.json",
         "included_in_immutable_tag": true
       },
       "state_evidence": {
         "qualification": "libs/wasmc-system-telemetry/lib.json#admission",
         "admission": "libs/wasmc-system-telemetry/lib.json#admission",
-        "release": "release.json -> channels/candidates/0.0.17.json",
-        "discovery": "standard/wasmc-lib-search/0.3.0 + examples/lib-search/index-v017-v030.lsi",
-        "installation": "catalog/libs-v017.json"
+        "release": "release.json -> channels/candidates/0.0.18.json",
+        "discovery": "standard/wasmc-lib-search/0.4.0 + examples/lib-search/index-v018-v040.lsi",
+        "installation": "catalog/libs-v018.json"
       },
       "stopping_conditions": []
     },
@@ -1139,15 +1383,15 @@
       },
       "current_side_remediation": {
         "resolvable_installable": true,
-        "authority": "catalog/libs-v017.json",
+        "authority": "catalog/libs-v018.json",
         "included_in_immutable_tag": true
       },
       "state_evidence": {
-        "qualification": "channels/candidates/0.0.17.json immutable product inclusion",
-        "admission": "channels/candidates/0.0.17.json immutable product inclusion",
-        "release": "release.json -> channels/candidates/0.0.17.json",
-        "discovery": "standard/wasmc-lib-search/0.3.0 + examples/lib-search/index-v017-v030.lsi",
-        "installation": "catalog/libs-v017.json"
+        "qualification": "channels/candidates/0.0.18.json immutable product inclusion",
+        "admission": "channels/candidates/0.0.18.json immutable product inclusion",
+        "release": "release.json -> channels/candidates/0.0.18.json",
+        "discovery": "standard/wasmc-lib-search/0.4.0 + examples/lib-search/index-v018-v040.lsi",
+        "installation": "catalog/libs-v018.json"
       },
       "stopping_conditions": []
     },
@@ -1200,15 +1444,15 @@
       },
       "current_side_remediation": {
         "resolvable_installable": true,
-        "authority": "catalog/libs-v017.json",
+        "authority": "catalog/libs-v018.json",
         "included_in_immutable_tag": true
       },
       "state_evidence": {
-        "qualification": "channels/candidates/0.0.17.json immutable product inclusion",
-        "admission": "channels/candidates/0.0.17.json immutable product inclusion",
-        "release": "release.json -> channels/candidates/0.0.17.json",
-        "discovery": "standard/wasmc-lib-search/0.3.0 + examples/lib-search/index-v017-v030.lsi",
-        "installation": "catalog/libs-v017.json"
+        "qualification": "channels/candidates/0.0.18.json immutable product inclusion",
+        "admission": "channels/candidates/0.0.18.json immutable product inclusion",
+        "release": "release.json -> channels/candidates/0.0.18.json",
+        "discovery": "standard/wasmc-lib-search/0.4.0 + examples/lib-search/index-v018-v040.lsi",
+        "installation": "catalog/libs-v018.json"
       },
       "stopping_conditions": []
     },
@@ -1261,15 +1505,76 @@
       },
       "current_side_remediation": {
         "resolvable_installable": true,
-        "authority": "catalog/libs-v017.json",
+        "authority": "catalog/libs-v018.json",
         "included_in_immutable_tag": true
       },
       "state_evidence": {
-        "qualification": "channels/candidates/0.0.17.json immutable product inclusion",
-        "admission": "channels/candidates/0.0.17.json immutable product inclusion",
-        "release": "release.json -> channels/candidates/0.0.17.json",
-        "discovery": "standard/wasmc-lib-search/0.3.0 + examples/lib-search/index-v017-v030.lsi",
-        "installation": "catalog/libs-v017.json"
+        "qualification": "channels/candidates/0.0.18.json immutable product inclusion",
+        "admission": "channels/candidates/0.0.18.json immutable product inclusion",
+        "release": "release.json -> channels/candidates/0.0.18.json",
+        "discovery": "standard/wasmc-lib-search/0.4.0 + examples/lib-search/index-v018-v040.lsi",
+        "installation": "catalog/libs-v018.json"
+      },
+      "stopping_conditions": []
+    },
+    {
+      "id": "wasmc-lib-search",
+      "version": "0.4.0",
+      "identity": "wasmc:lib-search@0.4.0",
+      "root": "standard/wasmc-lib-search/0.4.0",
+      "metadata": {
+        "path": "standard/wasmc-lib-search/0.4.0/lib.json",
+        "sha256": "6d8c3c661c0fecfb1f086a13e906aaefc9f7f60ba5289ad2f2a5560158f55767",
+        "schema": "wasmc.lib/v2"
+      },
+      "wit": {
+        "package": "wasmc:lib-search@0.4.0",
+        "path": "lib.wit",
+        "sha256": "9ced86629a79ca7a8b5d24be5d61b2b7b287525737086f3d9abb39f062d36ead",
+        "world": "search-index"
+      },
+      "artifact": {
+        "bytes": 64752,
+        "format": "core-wasm",
+        "path": "artifact.wasm",
+        "sha256": "3bfe9d15ee51832e884833b85ec09e3f803ef67b14f596ce6c168d9ffb1cf77f"
+      },
+      "component": {
+        "bytes": 66518,
+        "format": "component-wasm",
+        "path": "component.wasm",
+        "sha256": "1d7019978645fa48c2da344010c8c9332f1f6ec159fef33e9c941a3aee29f2e9"
+      },
+      "core_imports": [],
+      "host_authorities": [],
+      "canonical_resource_intrinsics": [],
+      "engine_profile": {
+        "authority": null,
+        "validation_profile": "not-machine-declared",
+        "tested_local_engines": [],
+        "minimum_version_claimed": false,
+        "stop": "No artifact-bound engine profile is declared; do not infer compatibility from another package."
+      },
+      "supported_surfaces": null,
+      "unsupported_surfaces": null,
+      "states": {
+        "qualified": true,
+        "admitted": true,
+        "released": true,
+        "discoverable": true,
+        "installable": true
+      },
+      "current_side_remediation": {
+        "resolvable_installable": true,
+        "authority": "catalog/libs-v018.json",
+        "included_in_immutable_tag": true
+      },
+      "state_evidence": {
+        "qualification": "channels/candidates/0.0.18.json immutable product inclusion",
+        "admission": "channels/candidates/0.0.18.json immutable product inclusion",
+        "release": "release.json -> channels/candidates/0.0.18.json",
+        "discovery": "standard/wasmc-lib-search/0.4.0 + examples/lib-search/index-v018-v040.lsi",
+        "installation": "catalog/libs-v018.json"
       },
       "stopping_conditions": []
     },
@@ -1530,15 +1835,15 @@
       },
       "current_side_remediation": {
         "resolvable_installable": true,
-        "authority": "catalog/libs-v017.json",
+        "authority": "catalog/libs-v018.json",
         "included_in_immutable_tag": true
       },
       "state_evidence": {
-        "qualification": "channels/candidates/0.0.17.json immutable product inclusion",
-        "admission": "channels/candidates/0.0.17.json immutable product inclusion",
-        "release": "release.json -> channels/candidates/0.0.17.json",
-        "discovery": "standard/wasmc-lib-search/0.3.0 + examples/lib-search/index-v017-v030.lsi",
-        "installation": "catalog/libs-v017.json"
+        "qualification": "channels/candidates/0.0.18.json immutable product inclusion",
+        "admission": "channels/candidates/0.0.18.json immutable product inclusion",
+        "release": "release.json -> channels/candidates/0.0.18.json",
+        "discovery": "standard/wasmc-lib-search/0.4.0 + examples/lib-search/index-v018-v040.lsi",
+        "installation": "catalog/libs-v018.json"
       },
       "stopping_conditions": []
     }
