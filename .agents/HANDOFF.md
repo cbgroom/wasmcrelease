@@ -88,6 +88,17 @@ after the tag. HTTPS run `36506812014` later completed successfully on all six
 platform jobs, including the non-blocking legacy Intel job. GitHub release:
 `https://github.com/cbgroom/wasmcrelease/releases/tag/v0.0.16`.
 
+The first post-release cohort is intentionally retained as a failure rather
+than rerun until green. Public raw GitHub and jsDelivr bytes match the tag for
+both `release.json` and the compiler. DeepSeek passed 6/6; GLM passed 5/6 with
+zero errors and retries, but in `release-state-separation` it wrote the field
+name `exact_report.stop_reason` instead of the required exact value
+`wasmc-source-direct-resource-methods`. Receipt:
+`agent-evaluation/receipts/pi-v016-post-release-regression-dca5498.json`.
+This does not mutate or invalidate the release, whose pre-release pair passed;
+it is the explicit next guidance-flywheel input. Do not hide it by sampling a
+replacement PASS without a guidance change and a new immutable candidate.
+
 ## 2026-09-27 v0.0.14 prod hold
 
 Do not promote `v0.0.14-main.1` to prod. White-box product inspection found

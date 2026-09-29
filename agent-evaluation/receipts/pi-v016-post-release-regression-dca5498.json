@@ -1,0 +1,62 @@
+{
+  "schema": "wasmc.pi-post-release-regression/v1",
+  "release": {
+    "version": "0.0.16",
+    "tag": "v0.0.16",
+    "tag_commit": "dca549848b518b0a528c1b9825c34737845ea248",
+    "tag_tree": "137febe9d80df3f2f6b954c601e1802776a1fcb6",
+    "candidate_commit": "d484c09fabcb5876da08ee7a07788bdfd1be0de6",
+    "product_set_sha256": "a91008bb2badb82f803ba0d45bc014db4f02703ec7d05a19b49599dd5d064502"
+  },
+  "protocol": "agent-evaluation/fresh-agent-learning-v1.json",
+  "runner": "scripts/run-pi-learning-model-v1.mjs",
+  "pi_version": "0.87.1",
+  "fresh_local_git_clone_per_case": true,
+  "no_session": true,
+  "skills_templates_extensions_disabled": true,
+  "raw_trace_retained": false,
+  "hidden_reasoning_retained": false,
+  "models": [
+    {
+      "provider": "llm-m4dd",
+      "identity": "deepseek-v4.1-flash",
+      "structural_pass": true,
+      "white_box_pass": true,
+      "totals": {"wall_ms":73276,"tool_calls":18,"assistant_turns":16,"tool_result_characters":103999,"error_results":0,"retries":0,"exact_duplicate_calls":0,"repeated_reads":0,"zero_yield_results":0,"tokens":{"input":64315,"output":6441,"reasoning":3182}},
+      "cases": [
+        {"id":"release-orientation","structural_pass":true,"semantic_review":"pass","final_answer_sha256":"8b7bfc5b81e8133c19bb726f257182f85083ee9babe0315acbf1a63fb6c0360c"},
+        {"id":"position-aware-capability-negative","structural_pass":true,"semantic_review":"pass","final_answer_sha256":"6bd7b67c7610d1dcb3f15d308bf2658a5a340ffceb08fa73ac1db26880c91bf3"},
+        {"id":"ordinary-source-positive","structural_pass":true,"semantic_review":"pass","final_answer_sha256":"729ec5f35238b329827ef70372327558a8170b2c0f4f76f99ff9e20062649599"},
+        {"id":"release-state-separation","structural_pass":true,"semantic_review":"pass","final_answer_sha256":"7360dc164a64dba472e851eaeb27739ab8938634eb1ddbe172eca468b1c85a3c"},
+        {"id":"library-first-selection","structural_pass":true,"semantic_review":"pass","final_answer_sha256":"34c883f4b51f5233d4bbb70c69f5cdb6f92b71c2d490d4d325353af3e3fae0e7"},
+        {"id":"host-authority-boundary","structural_pass":true,"semantic_review":"pass","final_answer_sha256":"95fb92569965e24053f45302ab53b8b9f0a5de1bd09f1ee20414c44ef3453204"}
+      ]
+    },
+    {
+      "provider": "llm-m4dd",
+      "identity": "glm-5.3-flash",
+      "structural_pass": false,
+      "white_box_pass": false,
+      "totals": {"wall_ms":151615,"tool_calls":15,"assistant_turns":17,"tool_result_characters":85541,"error_results":0,"retries":0,"exact_duplicate_calls":0,"repeated_reads":0,"zero_yield_results":0,"tokens":{"input":53274,"output":3240,"reasoning":507}},
+      "cases": [
+        {"id":"release-orientation","structural_pass":true,"semantic_review":"pass","final_answer_sha256":"f877792944550d037a25addd744aaf962ae8cdc4f911588b596a2a992b1d6c12"},
+        {"id":"position-aware-capability-negative","structural_pass":true,"semantic_review":"pass","final_answer_sha256":"ac4298aa5cbe74548b00ac476475c8be75cf7c87ec26914f34b45fa99c4cb078"},
+        {"id":"ordinary-source-positive","structural_pass":true,"semantic_review":"pass","final_answer_sha256":"549b2b39d2178af02548f87c0f11250096f76831e132ba1fe9fd1152882260f1"},
+        {"id":"release-state-separation","structural_pass":false,"semantic_review":"fail-exact-stop-reason-omitted","final_answer_sha256":"07698008e074551fcf462d371b4392b4bc9ed61a8259403eccd20a4731788bc4"},
+        {"id":"library-first-selection","structural_pass":true,"semantic_review":"pass","final_answer_sha256":"a79c4ef43f1d5eb545148f796b3587c8cb3b66549ad01fe3dbf278d24da5f2d6"},
+        {"id":"host-authority-boundary","structural_pass":true,"semantic_review":"pass","final_answer_sha256":"6e42ea46321399b377f97b646a92be945b8c479a75801dde387093f954f545cd"}
+      ]
+    }
+  ],
+  "public_distribution": {
+    "remote_tag_commit": "dca549848b518b0a528c1b9825c34737845ea248",
+    "release_json_sha256": "332bc78232bf227df193604896a825a0ea915afd7c3f92a53dc818707b94e6cc",
+    "compiler_sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90",
+    "raw_github_byte_identical": true,
+    "jsdelivr_byte_identical": true
+  },
+  "controlled_pair_accepted": false,
+  "release_mutated": false,
+  "finding": "GLM reported the correct five false states and stopping transition but named exact_report.stop_reason instead of copying wasmc-source-direct-resource-methods byte-for-byte.",
+  "disposition": "v0.0.16 remains immutable and valid under its passing pre-release gate; retain this first post-release cohort failure as the next guidance-flywheel input and do not rerun to manufacture a pass"
+}
