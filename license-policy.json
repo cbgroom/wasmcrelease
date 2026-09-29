@@ -1,6 +1,6 @@
 {
   "schema": "wasmc.license-policy/v1",
-  "applies_to": "current main and revisions containing this file",
+  "applies_to": "repository material first added after v0.0.19 unless that material carries a different license notice",
   "license": "WAsmC Research-Only Non-Commercial License 1.0",
   "license_file": "LICENSE",
   "source_available": true,
@@ -15,6 +15,13 @@
   "commercial_use": false,
   "production_use": false,
   "commercial_license": "separate written agreement required",
+  "frozen_product_exception": {
+    "version": "v0.0.19",
+    "license": "MIT",
+    "cargo_metadata": "MIT OR Apache-2.0",
+    "rule": "exact released product files and already published artifacts retain their accompanying licenses"
+  },
+  "future_release_rule": "before freezing a later product candidate, every included package manifest must explicitly bind the intended non-commercial license",
   "immutable_prior_tags": "governed by the LICENSE contained in each exact tag; this policy does not rewrite or revoke earlier grants",
   "check_command": "node scripts/validate-license-policy.mjs"
 }

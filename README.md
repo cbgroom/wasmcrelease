@@ -10,18 +10,6 @@
 
 Source-free public packages for the private-source `wasmc` compiler.
 
-## License
-
-The current `main` branch is source-available for **non-commercial research
-only** under the [WAsmC Research-Only Non-Commercial License 1.0](LICENSE).
-Commercial use, production use, paid services, and commercial product or R&D
-use require a separate written license. This is not an open-source license.
-
-Licensing is revision-specific. Immutable earlier tags retain the license text
-contained in those tags; changing `main` does not rewrite or revoke permissions
-already granted by an earlier release. Always read `LICENSE` from the exact tag
-or commit you use.
-
 This README is frozen inside the v0.0.19 product set. Product version and
 lifecycle stage are separate: read `release.json` and `channels/prod.json` for
 the current released tag. Hardcoded v0.0.13 references retained below describe
