@@ -20,9 +20,9 @@ try {
  assert.ok(!negative.stdout.includes(value));assert.ok(!negative.stderr.includes(value));
  const report=JSON.parse(negative.stdout);assert.equal(report.findings.length,1);assert.equal(report.skipped_blobs,0);
  const original=scan(root,true);assert.equal(original.status,1);
- const raw=JSON.parse(original.stdout);assert.equal(raw.raw_findings.length,3);assert.equal(raw.classified_false_positives.length,0);
+ const raw=JSON.parse(original.stdout);assert.equal(raw.raw_findings.length,5);assert.equal(raw.classified_false_positives.length,0);
  const approved=scan(root);assert.equal(approved.status,0);
- const admitted=JSON.parse(approved.stdout);assert.equal(admitted.raw_findings.length,3);assert.equal(admitted.classified_false_positives.length,3);assert.equal(admitted.findings.length,0);
+ const admitted=JSON.parse(approved.stdout);assert.equal(admitted.raw_findings.length,5);assert.equal(admitted.classified_false_positives.length,5);assert.equal(admitted.findings.length,0);
  const testKey=admitted.classified_false_positives.find(x=>x.detector==='private_key_pem');
  assert.equal(testKey.classification,'verified-repository-local-self-signed-test-fixture');
  assert.equal(testKey.scope,'localhost-and-127.0.0.1-only');assert.equal(testKey.production_authority,false);
