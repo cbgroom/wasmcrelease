@@ -10,6 +10,7 @@ export const catalogAuthorities = Object.freeze({
   v013: Object.freeze({release_tag:'v0.0.13',release_commit:'b1d22d27bdc9727e607cf77a4af57b151df6832d'}),
   v014: Object.freeze({release_tag:'v0.0.14',release_commit:'e6bc230c29df89b7004935eb5895b7fc3a8bc3f1'}),
   v017: Object.freeze({release_tag:'v0.0.17',release_commit:'aa1d4b8a610f5eb68642cac022475acb1ffe0bdf'}),
+  v018: Object.freeze({release_tag:'v0.0.18',release_commit:'90825e59175e329afb0ce6be370c660a247cf77d'}),
 });
 const fail = code => { throw Object.assign(new Error(code), { code }); };
 const digest = value => typeof value === 'string' && /^[a-f0-9]{64}$/.test(value);

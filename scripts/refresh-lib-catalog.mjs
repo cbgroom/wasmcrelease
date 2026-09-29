@@ -9,10 +9,12 @@ const intent = JSON.parse(readFileSync(join(repositoryRoot,'catalog/discovery-in
 const intent014 = JSON.parse(readFileSync(join(repositoryRoot,'catalog/discovery-intent-v014.json')));
 const intent017Input = JSON.parse(readFileSync(join(repositoryRoot,'catalog/discovery-intent-v017-input.json')));
 const intent017 = JSON.parse(readFileSync(join(repositoryRoot,'catalog/discovery-intent-v017.json')));
+const intent018Input = JSON.parse(readFileSync(join(repositoryRoot,'catalog/discovery-intent-v018-input.json')));
 if (intent.schema !== 'wasmc.public-lib-discovery-intent/v1' || intent.release !== '0.0.13' || !Array.isArray(intent.entries)) throw Error('discovery intent rejected');
 if (intent014.schema !== 'wasmc.public-lib-discovery-intent/v1' || intent014.release !== '0.0.14' || !Array.isArray(intent014.entries)) throw Error('v0.0.14 discovery intent rejected');
 if (intent017Input.schema !== 'wasmc.public-lib-discovery-intent/v1' || intent017Input.release !== '0.0.17-input' || !Array.isArray(intent017Input.entries)) throw Error('v0.0.17 input discovery intent rejected');
 if (intent017.schema !== 'wasmc.public-lib-discovery-intent/v1' || intent017.release !== '0.0.17' || !Array.isArray(intent017.entries)) throw Error('v0.0.17 discovery intent rejected');
+if (intent018Input.schema !== 'wasmc.public-lib-discovery-intent/v1' || intent018Input.release !== '0.0.18-input' || !Array.isArray(intent018Input.entries)) throw Error('v0.0.18 input discovery intent rejected');
 const approved009 = [
   ['standard/wasmc-std/1.4.0',false,['standard','string','bytes','list','map','encoding','base64','hex','iterator','typed-data']],
   ['libs/wasmc-owned-algorithms',true,['algorithms','component']],
@@ -66,6 +68,13 @@ const approved017=intent017.entries.map(row=>{
   return [row.root,row.historical,row.keywords];
 });
 const inventory017=approved017.flatMap(([root])=>collectFiles(root));
+const approved018Input=intent018Input.entries.map(row=>{
+  if(typeof row.id!=='string'||typeof row.root!=='string'||typeof row.historical!=='boolean'||!Array.isArray(row.keywords)||!row.keywords.length||!Array.isArray(row.required_queries)||!row.required_queries.length)throw Error('v0.0.18 input discovery intent row rejected');
+  const metadata=JSON.parse(readFileSync(join(repositoryRoot,row.root,'lib.json')));
+  if(metadata.id!==row.id)throw Error('v0.0.18 input discovery intent identity drift');
+  return [row.root,row.historical,row.keywords];
+});
+const inventory018Input=approved018Input.flatMap(([root])=>collectFiles(root));
 function makeCatalog(authority, approved, inventory, searchTextProfile = null) {
   return {schema:'wasmc.public-lib-catalog/v1',release_tag:authority.release_tag,release_commit:authority.release_commit,...(searchTextProfile?{search_text_profile:searchTextProfile}:{}),packages:approved.map(([root,historical,keywords])=>{
   const metadata = JSON.parse(readFileSync(join(repositoryRoot,root,'lib.json')));
@@ -84,9 +93,10 @@ for (const [name,authority,approved,inventory,profile] of [
   ['libs-v014.json',catalogAuthorities.v014,approved014,inventory014,'package-intent-v1'],
   ['libs-v017-input.json',catalogAuthorities.v017,approved017Input,inventory017Input,'package-intent-v1'],
   ['libs-v017.json',catalogAuthorities.v017,approved017,inventory017,'package-intent-v1'],
+  ['libs-v018-input.json',catalogAuthorities.v018,approved018Input,inventory018Input,'package-intent-v1'],
 ]) {
   const bytes=JSON.stringify(makeCatalog(authority,approved,inventory,profile),null,2)+'\n';
   parseCatalog(bytes,authority);
   writeFileSync(join(repositoryRoot,'catalog',name),bytes);
 }
-console.log('PASS refreshed finite approved Lib discovery catalogs v0.0.9 + v0.0.13 + v0.0.14 + v0.0.17 input');
+console.log('PASS refreshed finite approved Lib discovery catalogs through v0.0.18 input');

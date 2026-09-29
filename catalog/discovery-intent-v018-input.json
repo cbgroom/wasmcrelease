@@ -1,0 +1,27 @@
+{
+  "schema": "wasmc.public-lib-discovery-intent/v1",
+  "release": "0.0.18-input",
+  "entries": [
+    {"root":"standard/wasmc-std/1.4.0","id":"wasmc-std","historical":false,"keywords":["standard","string","bytes","list","map","encoding","base64","hex","iterator","typed-data"],"required_queries":["base64","string"]},
+    {"root":"libs/wasmc-data-core","id":"wasmc-data-core","historical":false,"keywords":["data","typed-batch","schema","column","validate","take"],"required_queries":["data core","typed-batch"]},
+    {"root":"libs/wasmc-csv","id":"wasmc-csv","historical":false,"keywords":["csv","parse","header","delimiter","typed-batch","tabular"],"required_queries":["csv"]},
+    {"root":"libs/wasmc-data-expr","id":"wasmc-data-expr","historical":false,"keywords":["data","expression","predicate","filter","literal","column","dag"],"required_queries":["data expression","predicate"]},
+    {"root":"libs/wasmc-data-compute","id":"wasmc-data-compute","historical":false,"keywords":["data","compute","filter","project","sort","typed-batch"],"required_queries":["data compute","sort"]},
+    {"root":"libs/wasmc-data-relational","id":"wasmc-data-relational","historical":true,"keywords":["data","relational","join","aggregate","window","rank","legacy"],"required_queries":["relational legacy"]},
+    {"root":"libs/wasmc-data-relational-v002","id":"wasmc-data-relational","historical":false,"keywords":["data","relational","join","equi-join","union","aggregate","window","rank","lag","lead","distinct","group"],"required_queries":["relational","distinct","window offset"]},
+    {"root":"libs/wasmc-data-profile","id":"wasmc-data-profile","historical":false,"keywords":["data","profile","statistics","describe","minimum","maximum","mean","null-count"],"required_queries":["data profile","statistics"]},
+    {"root":"libs/wasmc-data-interchange","id":"wasmc-data-interchange","historical":false,"keywords":["data","interchange","arrow","ipc","parquet","encode","decode"],"required_queries":["parquet","arrow"]},
+    {"root":"libs/wasmc-system-telemetry","id":"wasmc-system-telemetry","historical":false,"keywords":["system","telemetry","monitoring","metrics","cpu","memory","load","uptime","linux","proc","snapshot"],"required_queries":["telemetry","cpu","memory"]},
+    {"root":"libs/mcpgit-resident-memory","id":"mcpgit-resident-memory","historical":false,"keywords":["mcpgit","resident","memory","query","repository","git","oid","snapshot"],"required_queries":["mcpgit resident","memory query"]},
+    {"root":"libs/wasmc-router-policy","id":"wasmc-router-policy","historical":false,"keywords":["router","routing","policy","request","status","upstream"],"required_queries":["router policy","routing"]},
+    {"root":"libs/wasmc-json","id":"wasmc-json","historical":false,"keywords":["json","document","validate","compact","pointer","select"],"required_queries":["json","json pointer"]},
+    {"root":"libs/wasmc-compression","id":"wasmc-compression","historical":false,"keywords":["compression","gzip","compress","decompress","bytes"],"required_queries":["gzip","compression"]},
+    {"root":"libs/wasmc-http1","id":"wasmc-http1","historical":false,"keywords":["http","http1","server","wire","request","response","framing","header"],"required_queries":["http1","request framing"]},
+    {"root":"libs/wasmc-owned-algorithms","id":"wasmc-owned-algorithms","historical":true,"keywords":["algorithms","component"],"required_queries":["owned algorithms"]},
+    {"root":"libs/wasmc-resource-counter","id":"wasmc-resource-counter","historical":true,"keywords":["counter","resource","component","stateful"],"required_queries":["resource counter"]},
+    {"root":"libs/wasmc-host-clock","id":"wasmc-host-clock","historical":true,"keywords":["clock","time","host","now","component"],"required_queries":["host clock"]},
+    {"root":"standard/wasmc-lib-search/0.1.0","id":"wasmc-lib-search","historical":true,"keywords":["search","catalog","discovery","lookup","library","legacy"],"required_queries":["lib search legacy"]},
+    {"root":"standard/wasmc-lib-search/0.2.0","id":"wasmc-lib-search","historical":true,"keywords":["search","catalog","discovery","lookup","library","route","api","legacy"],"required_queries":["lib search legacy"]},
+    {"root":"standard/wasmc-lib-search/0.3.0","id":"wasmc-lib-search","historical":false,"keywords":["search","catalog","discovery","lookup","library","route","api","v017"],"required_queries":["lib search","discovery","mcpgit","distinct"]}
+  ]
+}
