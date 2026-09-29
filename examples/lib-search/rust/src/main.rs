@@ -27,10 +27,10 @@ fn main() {
     let api = Lib::instantiate(&mut store, &component, &Linker::new(&engine)).unwrap();
     let catalog = api.wasmc_lib_search_catalog();
     let snapshot = catalog.call_snapshot(&mut store).unwrap();
-    assert_eq!(snapshot.entry_count, 145);
+    assert_eq!(snapshot.entry_count, 162);
     assert_eq!(
         snapshot.index_sha256,
-        "ca6d684eb3100f4629c8ff4f65c7d0b4f6bcd49fc24768e798c9a71a6fbf3ce5"
+        "8513e628605e8ec05d76729a46fd7dc4427d64a83276368568ae05a0b9070eab"
     );
     for _ in 0..100 {
         let hits = catalog
