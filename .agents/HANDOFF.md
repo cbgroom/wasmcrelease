@@ -74,6 +74,20 @@ rebuild integrity metadata into a new unpushed rehearsal commit, and repeat the
 full two-model gate. Do not reinterpret the correct model answers as a PASS for
 the stale oracle.
 
+v0.0.16 is published. Immutable prod tag `v0.0.16` points to rehearsal commit
+`dca549848b518b0a528c1b9825c34737845ea248`, tree
+`137febe9d80df3f2f6b954c601e1802776a1fcb6`; candidate commit and product-set
+digest remain `d484c09fabcb5876da08ee7a07788bdfd1be0de6` and
+`a91008bb2badb82f803ba0d45bc014db4f02703ec7d05a19b49599dd5d064502`.
+Pi 0.87.1 with `llm-m4dd/deepseek-v4.1-flash` and
+`llm-m4dd/glm-5.3-flash` passed all twelve first answers after independent
+white-box review: zero tool errors and zero retries. Raw traces and hidden
+reasoning are not retained; the privacy-safe receipt is
+`agent-evaluation/receipts/pi-pre-release-v016.json` and is committed only
+after the tag. HTTPS run `36506812014` later completed successfully on all six
+platform jobs, including the non-blocking legacy Intel job. GitHub release:
+`https://github.com/cbgroom/wasmcrelease/releases/tag/v0.0.16`.
+
 ## 2026-09-27 v0.0.14 prod hold
 
 Do not promote `v0.0.14-main.1` to prod. White-box product inspection found
