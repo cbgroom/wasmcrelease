@@ -1,0 +1,39 @@
+{
+  "schema": "wasmc.release-qualification/v1",
+  "version": "0.0.18",
+  "stage_authorized": "main",
+  "product_candidate": {
+    "path": "channels/candidates/0.0.18.json",
+    "commit": "f6ec2b12dd44fc909cb67044a0e1bb69ddfddea3",
+    "product_set_sha256": "0b9c88a88a21c5c08f2aa92377729aef4f7a791f0b47f8b64095cf037ecda56b",
+    "products": 301
+  },
+  "tested_source_commit": "114bf3c9df35e734a8229652a3d3ad6af37f10c7",
+  "required": {
+    "lib_search": {"result":"success","run":"https://github.com/cbgroom/wasmcrelease/actions/runs/36542024343","head_sha":"114bf3c9df35e734a8229652a3d3ad6af37f10c7","coverage":"Node, Bun and Deno runtime/platform cells, Wasmi 2 Core, Wasmtime generated Component SDK"},
+    "full_consumer": {"result":"success","run":"https://github.com/cbgroom/wasmcrelease/actions/runs/36542034454","head_sha":"114bf3c9df35e734a8229652a3d3ad6af37f10c7","coverage":"compatibility, integrity, Agent guidance, credential boundaries, source-free runtime and mirror journeys, Rust Wasmi/Wasmtime/Component Libs, required aggregate"},
+    "dynamic_client_gateway": {"result":"success","run":"https://github.com/cbgroom/wasmcrelease/actions/runs/36542034523","head_sha":"114bf3c9df35e734a8229652a3d3ad6af37f10c7","coverage":"persistent WSS and HTTPS control plane, serial and general DAG replacement, rollback, restart, checkpoint, migration, sticky state and cancellation"},
+    "data_foundation": {"result":"success","run":"https://github.com/cbgroom/wasmcrelease/actions/runs/36542034591","head_sha":"114bf3c9df35e734a8229652a3d3ad6af37f10c7","coverage":"Data Foundation cohort including wasmc:data-relational@0.0.2, Wasmi and Wasmtime"}
+  },
+  "supporting": {
+    "release_surface": {"result":"success","run":"https://github.com/cbgroom/wasmcrelease/actions/runs/36542034709","head_sha":"114bf3c9df35e734a8229652a3d3ad6af37f10c7"},
+    "sdk_agent_guidance": {"result":"success","run":"https://github.com/cbgroom/wasmcrelease/actions/runs/36542024304","head_sha":"114bf3c9df35e734a8229652a3d3ad6af37f10c7"},
+    "rust_host_sdk": {"result":"success","run":"https://github.com/cbgroom/wasmcrelease/actions/runs/36542024301","head_sha":"114bf3c9df35e734a8229652a3d3ad6af37f10c7"},
+    "host_external_https": {"result":"required-success","run":"https://github.com/cbgroom/wasmcrelease/actions/runs/36542024404","head_sha":"114bf3c9df35e734a8229652a3d3ad6af37f10c7","required_platforms":5,"required_platforms_success":5,"legacy_optional_platforms":1,"legacy_optional_status_at_qualification":"success"}
+  },
+  "fresh_agent_pre_release": {
+    "required_for_prod": true,
+    "protocol": "wasmc.fresh-agent-learning/v1",
+    "agent": "pi@0.87.1",
+    "models": ["llm-m4dd/deepseek-v4.1-flash","llm-m4dd/glm-5.3-flash"],
+    "receipt_policy": "bind the final unpushed prod rehearsal commit and tree; commit the privacy-safe receipt only after the immutable prod tag"
+  },
+  "lib_route_closure": {"release_packages":22,"package_routes":22,"api_routes":140,"candidate_extras":0,"exact":true},
+  "accepted": true,
+  "authorizes": ["v0.0.18-dev.2","v0.0.18-main.1"],
+  "does_not_authorize": [
+    "prod publication before a passing Pi receipt bound to the exact final prod rehearsal commit and tree",
+    "rebuilding or changing any candidate product byte",
+    "formal Lib admission for the incubating dynamic Client/Gateway surface"
+  ]
+}
