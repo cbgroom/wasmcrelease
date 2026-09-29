@@ -1,5 +1,34 @@
 # WAsmC release maintainer handoff
 
+## 2026-09-29 v0.0.20 research-license candidate
+
+Branch `release/v0.0.20-research-license` starts from merged public main
+`63ca6c05515de93d6a8d9f8825807313ef882cf7`. The v0.0.20 v2 product candidate
+is frozen at `channels/candidates/0.0.20.json`: 309 exact product files,
+product-set digest
+`d160559aaf863d52d3d585139ed59aaf75da33ec2e6dd0b19eefdda3c6ca9d2a`.
+It closes 22 package routes and 140 exported API routes with
+`candidate_extras=0`.
+
+This is a license-boundary release, not a compiler or Lib behavior release. It
+reuses the exact v0.0.19 compiler bytes, SHA256
+`4e0b9779df3bf7b627d7d9fbfc43cfffd67bb053f87c69a9f832c5690b6888a2`,
+and all existing Lib artifact bytes. `LICENSE` and `license-policy.json` are now
+hash-bound product files. The six Cargo manifests actually included in the new
+candidate use `license-file` to bind that research-only, non-commercial license.
+The old TCP/UDP manifests are outside the candidate and retain their earlier
+metadata. Immutable v0.0.19 and already published packages remain under their
+accompanying licenses; this candidate does not claim retroactive revocation.
+
+Local candidate, route-closure, Agent/quickstart, release-surface, dynamic
+Client/Gateway model and Cargo packaging checks pass. The exact v0.0.19
+candidate rejects the changed tree as product drift, while the compiler digest
+remains byte-identical. v0.0.20 is not yet dev, main or prod. Do not refresh the
+v0.0.19 global release identity around these future bytes. Next commit and push
+this exact candidate, run the full required remote qualification set, retain an
+exact qualification receipt, and only then create the metadata-only
+`v0.0.20-dev.1` stage.
+
 ## 2026-09-29 v0.0.17 Lib admission checkpoint
 
 Branch `release/v0.0.17-lib-closure` starts from synchronized public v0.0.16

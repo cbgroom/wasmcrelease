@@ -138,7 +138,7 @@ record tuple option result variant enum
 
 Use fixed-width names. `s32` is the normal signed integer; `u32` is suitable
 for non-negative sizes and indices. There is no target-dependent `usize`.
-`u64` is admitted in the v0.0.19 product for ordinary locals, parameters,
+`u64` is admitted in the v0.0.20 product for ordinary locals, parameters,
 results, nested source payloads and explicit Host imports. It preserves the full
 `0..=18446744073709551615` range and unsigned comparison, division, remainder
 and right-shift semantics while using the Core `i64` physical lane. This does

@@ -8,6 +8,7 @@ const root = fileURLToPath(new URL('../', import.meta.url));
 const quickstart = JSON.parse(readFileSync(new URL('../agent-quickstart.json', import.meta.url), 'utf8'));
 assert.equal(quickstart.schema, 'wasmc.agent-quickstart/v1');
 assert.deepEqual(Object.keys(quickstart.routes), [
+  'license-policy',
   'release-orientation',
   'release-lib-route-readiness',
   'position-aware-capability-negative',
@@ -18,6 +19,9 @@ assert.deepEqual(Object.keys(quickstart.routes), [
   'library-first-selection',
   'host-authority-boundary'
 ]);
+assert.equal(quickstart.routes['license-policy'].authority_file,'license-policy.json');
+assert.equal(quickstart.routes['license-policy'].check_command,'node scripts/validate-license-policy.mjs');
+assert.match(quickstart.routes['license-policy'].decision,/non-commercial research only/);
 const hash = path => createHash('sha256').update(readFileSync(new URL(`../${path}`, import.meta.url))).digest('hex');
 assert.equal(hash('current/wasmc_compiler.wasm'), quickstart.routes['release-orientation'].compiler.sha256);
 assert.equal(hash('standard/wasmc-std/1.4.0/artifact.wasm'), quickstart.routes['library-first-selection'].artifact_sha256);
@@ -49,7 +53,7 @@ assert.equal(delta.producer.commit, '566eff42d0f4e4680c5ddd60c6584a9d8ff8e9f4');
 assert.equal(delta.producer.implementation_commit, '94328ed760f93bf24b595a71facdcc773d43b762');
 assert.equal(delta.producer.implemented, true);
 assert.match(delta.answer_opening, /both support ordinary-source u64/);
-assert.equal(delta.release_product.version,'v0.0.19');
+assert.equal(delta.release_product.version,'v0.0.20');
 assert.equal(delta.release_product.ordinary_source_u64,'supported');
 assert.equal(delta.release_product.lifecycle_authority,'release.json');
 assert.match(delta.char, /not implemented/);
@@ -76,4 +80,4 @@ assert.equal(routeReadiness.active_search.states.admitted,true);
 assert.equal(routeReadiness.valid_resolution_count,1);
 assert.match(routeReadiness.only_valid_closure,/read the channel authorities/);
 assert(routeReadiness.forbidden_shortcuts.some(row=>row.includes('treat admission as release')));
-console.log(JSON.stringify({ accepted: true, schema: quickstart.schema, routes: 8, pair, base64, route_readiness:{formal_release_ready:true,candidate_extras:0,lifecycle_authority:'release.json'} }));
+console.log(JSON.stringify({ accepted: true, schema: quickstart.schema, routes: Object.keys(quickstart.routes).length, pair, base64, route_readiness:{formal_release_ready:true,candidate_extras:0,lifecycle_authority:'release.json'} }));

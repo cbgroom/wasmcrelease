@@ -203,19 +203,19 @@
         "root": "sdk/wasmc-core-runtime",
         "skill": "sdk/wasmc-core-runtime/SKILL.md",
         "release_status": "published",
-        "immutable_example": "v0.0.19"
+        "immutable_example": "v0.0.20"
       },
       "host-sdk": {
         "root": "sdk/wasmc-host",
         "skill": "sdk/wasmc-host/SKILL.md",
         "release_status": "published",
-        "immutable_example": "v0.0.19"
+        "immutable_example": "v0.0.20"
       },
       "native-cli": {
         "root": "sdk/wasmc-native-compiler",
         "skill": "sdk/wasmc-native-compiler/SKILL.md",
         "release_status": "published",
-        "immutable_example": "v0.0.19",
+        "immutable_example": "v0.0.20",
         "binary_packaging": "CI/development packages are not immutable release assets"
       },
       "lightweight-embedding": {
@@ -283,12 +283,12 @@
   },
   "agent_capability_projection": {
     "schema": "wasmc.release-agent-capabilities/v1",
-    "product_release": "v0.0.19",
+    "product_release": "v0.0.20",
     "guidance_scope": {
-      "status": "included-in-v0.0.19-product",
+      "status": "included-in-v0.0.20-product",
       "included_in_product": true,
       "lifecycle_authority": "release.json and channels/prod.json",
-      "rule": "This frozen projection describes v0.0.19 product capability only. It does not prove the product is the current released, discoverable or installable lifecycle stage."
+      "rule": "This frozen projection describes v0.0.20 product capability only. It does not prove the product is the current released, discoverable or installable lifecycle stage."
     },
     "decision_rule": "A type or feature is usable only at the exact admitted position below. WIT vocabulary, local values, Core lanes, Component profiles, Host bindings and public results are separate claims.",
     "alternative_rule": "Alternatives must preserve semantics. Numeric width or signedness, async behavior, identity, ordering, ownership and failure semantics may change only with explicit application proof; otherwise stop.",
@@ -452,18 +452,18 @@
       "implementation_commit": "94328ed760f93bf24b595a71facdcc773d43b762"
     },
     "release": {
-      "product": "v0.0.19",
+      "product": "v0.0.20",
       "lifecycle_authority": "release.json",
       "compiler_source_authority": "566eff42d0f4e4680c5ddd60c6584a9d8ff8e9f4",
       "compiler_sha256": "4e0b9779df3bf7b627d7d9fbfc43cfffd67bb053f87c69a9f832c5690b6888a2",
       "ordinary_source_u64": "supported",
-      "reason": "The v0.0.19 source-free compiler candidate is built from the exact containing producer authority and independently reproduced byte-for-byte."
+      "reason": "The v0.0.20 product reuses the exact v0.0.19 source-free compiler bytes, originally built from the exact containing producer authority and independently reproduced byte-for-byte."
     },
     "adjacent_type_decisions": {
-      "u32": "included in the v0.0.19 product compiler; no repair was required",
+      "u32": "included in the v0.0.20 product compiler; no repair was required",
       "char": "not implemented on the cited producer authority and not released; do not substitute arbitrary u32"
     },
-    "answer_rule": "When asked whether u64 is fixed or supported, report that producer master and the v0.0.19 product compiler both support it, then read release.json for the current published lifecycle stage. Do not infer async, map or char support."
+    "answer_rule": "When asked whether u64 is fixed or supported, report that producer master and the v0.0.20 product compiler both support it, then read release.json for the current published lifecycle stage. Do not infer async, map or char support."
   },
   "lib_ecosystem_control_plane": {
     "schema": "wasmc.lib-ecosystem-control-plane/v1",
@@ -485,9 +485,22 @@
   },
   "agent_task_routes": {
     "rule": "When one route matches the request, read this record first and stop once its evidence answers the task. Do not scan release history, unrelated compatibility identities, implementation tests or broad manifests to reconfirm it. Report every identity in full or omit an identity that the answer does not need.",
+    "license-policy": {
+      "intent": "decide whether the v0.0.20 product permits research, production or commercial use",
+      "authority_file": "license-policy.json",
+      "license_file": "LICENSE",
+      "source_available": true,
+      "open_source": false,
+      "noncommercial_research": true,
+      "commercial_use": false,
+      "production_use": false,
+      "prior_tag_rule": "Read LICENSE from the exact immutable tag; v0.0.20 does not rewrite or revoke an earlier grant.",
+      "check_command": "node scripts/validate-license-policy.mjs",
+      "answer_boundary": "Report the exact revision boundary and stop; never describe this policy as open source or as a retroactive revocation."
+    },
     "release-orientation": {
       "intent": "identify the immutable release, public Agent entrypoint and compiler authority",
-      "product_version": "v0.0.19",
+      "product_version": "v0.0.20",
       "public_agent_entrypoint": "AGENTS.md",
       "compiler": {
         "path": "current/wasmc_compiler.wasm",
@@ -514,7 +527,7 @@
       "authority_file": "release-lib-route-readiness.json",
       "intent": "decide whether every released Lib package and exported API route is synchronized for a new formal release candidate",
       "product": {
-        "version": "0.0.19",
+        "version": "0.0.20",
         "package_routes": 22,
         "api_routes": 140,
         "candidate_extras": 0,
@@ -538,7 +551,7 @@
         "rule": "Never infer released, discoverable or installable from this frozen product projection."
       },
       "valid_resolution_count": 1,
-      "only_valid_closure": "Verify the exact v0.0.19 candidate and route closure, then read the channel authorities for lifecycle state. Every promotion must preserve the same product digest set.",
+      "only_valid_closure": "Verify the exact v0.0.20 candidate and route closure, then read the channel authorities for lifecycle state. Every promotion must preserve the same product digest set.",
       "forbidden_shortcuts": [
         "treat admission as release",
         "infer lifecycle state from product presence or an admission snapshot",
@@ -548,21 +561,21 @@
       "authorities": [
         "admission/lib-search-v040-v018-admission.json",
         "catalog/lib-route-closure.json",
-        "channels/candidates/0.0.19.json",
+        "channels/candidates/0.0.20.json",
         "release.json",
         "channels/prod.json"
       ],
       "check_commands": [
         "node scripts/lib-route-closure.mjs --check",
-        "node scripts/release-candidate.mjs verify channels/candidates/0.0.19.json"
+        "node scripts/release-candidate.mjs verify channels/candidates/0.0.20.json"
       ],
       "answer_boundary": "Stop after reporting the product closure and the exact lifecycle state read from release.json/channels; never infer a transition."
     },
     "dynamic-client-gateway": {
-      "intent": "determine the v0.0.19 Client/Gateway dynamic Lib surface, lifecycle and limits",
+      "intent": "determine the v0.0.20 Client/Gateway dynamic Lib surface, lifecycle and limits",
       "authority_file": "runtime/client-foundation-v1/release-surface.json",
       "status": "incubating",
-      "product_version": "0.0.19",
+      "product_version": "0.0.20",
       "formal_lib_package": false,
       "lifecycle_authority": "release.json",
       "verify_commands": [
@@ -607,7 +620,7 @@
     },
     "released-base64": {
       "intent": "find and approve the released Base64 capability",
-      "product_release": "v0.0.19",
+      "product_release": "v0.0.20",
       "package": "wasmc:std@1.4.0",
       "root": "standard/wasmc-std/1.4.0",
       "apis": [
@@ -651,7 +664,7 @@
         "discoverable": true,
         "installable": true
       },
-      "catalog_snapshot_boundary": "The exact v0.0.18 package catalog is carried forward as package selection authority for v0.0.19; current release lifecycle authority remains separate.",
+      "catalog_snapshot_boundary": "The exact v0.0.18 package catalog is carried forward as package selection authority for v0.0.20; current release lifecycle authority remains separate.",
       "behavior_command": "node examples/base64/run.mjs",
       "install_reference": "catalog/INSTALL.md",
       "answer_boundary": "Copy exact_report fields byte-for-byte; never reconstruct a digest. Do not investigate historical catalog snapshot identities, Core ABI indices or unrelated engine versions unless the user asks."
@@ -679,7 +692,7 @@
     "dynamic-client-gateway": {
       "request": "is the dynamic Client and Gateway released and is it a formal Lib",
       "product_inclusion": {
-        "version": "0.0.19",
+        "version": "0.0.20",
         "surface_status": "incubating",
         "lifecycle_authority": "release.json"
       },
@@ -735,5 +748,5 @@
       }
     }
   },
-  "release_version": "0.0.19"
+  "release_version": "0.0.20"
 }

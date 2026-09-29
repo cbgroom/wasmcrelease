@@ -28,7 +28,7 @@ Verify the package `manifest.json`, `receipts/compiler-wasm.json`, Host receipts
 
 The higher-layer control/update surface lives in `client-foundation-v1/`, with
 its persistent server-side counterpart in `client-foundation-gateway-v1/`.
-Both are included in the v0.0.19 product as one incubating runtime surface above
+Both are included in the v0.0.20 product as one incubating runtime surface above
 the fixed Host; they are not part of the older `wasmc-runtime-v0` package and are
 not formal Lib-catalog packages. Read `client-foundation-v1/release-surface.json`
 for the exact product boundary and `release.json` for the active lifecycle stage.

@@ -2,12 +2,21 @@
 
 This source-free compiler repository publishes a standard Core Wasm compiler,
 Lib packages, a package-manager-free Runtime/Registry bootstrap, and the
-public `wasmc-core-runtime` Rust SDK. This file is frozen inside the v0.0.19
+public `wasmc-core-runtime` Rust SDK. This file is frozen inside the v0.0.20
 product set; product presence is not lifecycle authority. Read `release.json`
 only through the validated compact `agent-release-orientation.json` route for
 cold-start orientation; run its named check and open the full artifact inventory
 in `manifest.json` only if validation fails. Then pin its immutable tag or full
 commit. Compact `release.json` is lifecycle authority, not the artifact list.
+
+## License boundary
+
+For permission or licensing questions, read `license-policy.json` and run its
+named check. The v0.0.20 product is available for non-commercial research only;
+it is source-available, not open source. Commercial use, production use, paid
+services and commercial product or R&D use require a separate written license.
+Immutable v0.0.19 and earlier artifacts remain governed by their accompanying
+licenses; never claim that v0.0.20 rewrites or revokes an earlier grant.
 
 For a cold-start orientation, Lib route-release readiness, capability decision,
 canonical aggregate example, telemetry state check, released Base64 selection, or Host-authority question,
@@ -28,10 +37,10 @@ For “is `u64` fixed/supported now?”, use the
 `producer-release-u64-delta` quickstart route. The exact producer master
 implementation, frozen product and published lifecycle are separate authorities.
 Producer master `566eff42d0f4e4680c5ddd60c6584a9d8ff8e9f4` contains the implementation
-from `94328ed760f93bf24b595a71facdcc773d43b762`; the v0.0.19 product compiler
+from `94328ed760f93bf24b595a71facdcc773d43b762`; the v0.0.20 product compiler
 is built from that containing authority and supports ordinary-source `u64`.
 `u32` already shipped and needed no repair; `char` remains unimplemented and
-must not be replaced by arbitrary `u32`. Report the v0.0.19 product capability,
+must not be replaced by arbitrary `u32`. Report the v0.0.20 product capability,
 then read `release.json` for lifecycle state. Do not infer async, public Map, or
 `char` support from the scalar result.
 
@@ -46,13 +55,13 @@ For reusable algorithms, text, bytes or collections, begin with
 [the Library-first discovery Skill](skills/wasmc-lib-discovery/SKILL.md):
 search → read the target Skill/WIT → approve exact identity → resolve/install
 where supported → check engine/imports → verify behavior → write missing glue.
-This Library-first guidance is included in the v0.0.19 product. Search is discovery, not
+This Library-first guidance is included in the v0.0.20 product. Search is discovery, not
 selection authority; approve and pin exact package identities before use.
 For current-main package status, read the generated
 `lib-ecosystem-control-plane.json` first. It records product inventory separately
 from lifecycle state, plus actual Core imports and missing engine evidence.
 LibSearch 0.4.0 covers all 21 prior roots plus itself (162 entries) and is
-included in the exact v0.0.19 product and v2 candidate. Package identities are
+included in the exact v0.0.20 product and v2 candidate. Package identities are
 selected from the exact carried-forward `v0.0.18` catalog snapshot. Its package root is
 [`standard/wasmc-lib-search/0.4.0/`](standard/wasmc-lib-search/0.4.0/). Determine
 whether it is released or the public default only from `release.json` and
@@ -69,18 +78,18 @@ The machine gate at `catalog/lib-route-closure.json` independently derives the
 complete released package and exported WIT API inventory. Release catalog rows
 and LibSearch package/API routes must equal that inventory exactly; any omitted,
 extra or version-drifted binding rejects the release workflow.
-The v0.0.19 closure is 22 package routes / 140 API routes with
+The v0.0.20 closure is 22 package routes / 140 API routes with
 `candidate_extras=0`. Admission alone never proves a later lifecycle stage;
 read the exact channel authorities instead.
 
 For future Host architecture work, read
 [`docs/HOST_LIB_DEFINED_BOUNDARY.md`](docs/HOST_LIB_DEFINED_BOUNDARY.md).
-The v0.0.19 file/network drivers remain migration evidence; they are not the
+The v0.0.20 file/network drivers remain migration evidence; they are not the
 extension model. Do not add a Rust/JavaScript Host API or platform provider row
 for a new system domain. Public domain semantics and their physical native
 descriptors belong to exact Lib packages above one fixed boundary.
 
-The v0.0.19 product also carries `runtime/client-foundation-v1` and
+The v0.0.20 product also carries `runtime/client-foundation-v1` and
 `runtime/client-foundation-gateway-v1` as one explicitly **incubating** runtime
 surface. It provides a persistent WSS control loop, HTTPS content-addressed Lib
 delivery, canonical serial/general-DAG composition, atomic generation replacement,
@@ -162,7 +171,7 @@ const instance = await WebAssembly.instantiate(inspected.module, {});
 console.log(instance.exports.run(5, 6)); // 17
 ```
 
-## v0.0.19 product capability contract
+## v0.0.20 product capability contract
 
 | Task | Status | Canonical path |
 |---|---|---|
@@ -171,7 +180,7 @@ console.log(instance.exports.run(5, 6)); // 17
 | Managed String/List/Map/record applications | shipped through matching Lib | [LIB.md](LIB.md), `instantiateLib` |
 | Embedded Wasm package/API search; exact resolve and pinned install | shipped; search is not selection authority | [LibSearch](examples/lib-search/README.md), [catalog](catalog/README.md), [installation](catalog/INSTALL.md) |
 | CSV, typed data, expressions, compute, relational, profile, Arrow IPC/Parquet | shipped as seven source-free v1 Libs | [release scope](docs/RELEASE_V011.md), `libs/wasmc-data-*`, `libs/wasmc-csv` |
-| Ordinary-source `u64` | shipped in the v0.0.19 compiler for local, parameter, result, nested payload and explicit Host-import positions | [v0.0.19 scope](docs/RELEASE_V019.md), [language](LANGUAGE.md) |
+| Ordinary-source `u64` | shipped in the v0.0.20 compiler for local, parameter, result, nested payload and explicit Host-import positions | [v0.0.20 scope](docs/RELEASE_V020.md), [language](LANGUAGE.md) |
 | Router policy, JSON, gzip compression, HTTP/1 framing | shipped as four import-free portable Libs | [v0.0.18 scope](docs/RELEASE_V018.md), `libs/wasmc-router-policy`, `libs/wasmc-json`, `libs/wasmc-compression`, `libs/wasmc-http1` |
 | Public third-party Lib build/publish | not closed | do not infer availability from authoring documentation |
 | WIT resources, constructors, receiver methods | shipped Component profile | `libs/wasmc-resource-counter` |
@@ -185,13 +194,13 @@ console.log(instance.exports.run(5, 6)); // 17
 | signing, auto-update, ambient filesystem/network/device access | not provided | application/publisher authority |
 
 `release-surfaces.json` is the machine-readable SDK/runtime surface authority
-for the pinned checkout. The v0.0.19 product includes `sdk/wasmc-host`; candidate or
+for the pinned checkout. The v0.0.20 product includes `sdk/wasmc-host`; candidate or
 incubating future surfaces must still be labeled honestly and must not be
 described as released assets.
 
 The v0.0.4 `dist/` and `package/` compatibility trees and the three
 historical `libs/` packages remain
-byte-for-byte frozen. v0.0.19 refreshes the current compiler facades from exact
+byte-for-byte frozen. v0.0.20 reuses the exact v0.0.19 current compiler facades from the admitted
 producer authority while reusing the standard
 Lib1.4.0 with its matching CoreLib4.8 companion. Engine compatibility is
 artifact-specific: read [compatibility/README.md](compatibility/README.md)
@@ -205,13 +214,13 @@ before treating compiler success as standard-Lib or managed Host support.
 - `current/index.mjs`: sidecar facade with sibling compiler and matching CoreLib.
 - `standard/wasmc-std/1.4.0/`: current WIT standard Lib and generated Rust bindings.
 - `standard/corelib/4.8.0/`: matching standard Lib CoreLib companion.
-- `standard/wasmc-lib-search/0.4.0/`: route-complete embedded-index Lib in the v0.0.19 product. Start with [its executable guide](examples/lib-search/README.md); `node scripts/wasmc-lib.mjs search "base64"` executes this Lib. See [dev/main/prod status policy](docs/RELEASE_CHANNELS.md).
+- `standard/wasmc-lib-search/0.4.0/`: route-complete embedded-index Lib in the v0.0.20 product. Start with [its executable guide](examples/lib-search/README.md); `node scripts/wasmc-lib.mjs search "base64"` executes this Lib. See [dev/main/prod status policy](docs/RELEASE_CHANNELS.md).
 - `standard/wasmc-lib-search/0.3.0/`: historical exact LibSearch package retained
-  for pinned v0.0.17 inspection; it is not the active v0.0.19 route.
+  for pinned v0.0.17 inspection; it is not the active v0.0.20 route.
 - `standard/wasmc-lib-search/0.2.0/`: historical exact LibSearch package retained
-  for pinned v0.0.14-v0.0.16 inspection; it is not the active v0.0.19 route.
+  for pinned v0.0.14-v0.0.16 inspection; it is not the active v0.0.20 route.
 - `standard/wasmc-lib-search/0.1.0/`: historical exact LibSearch package retained
-  for pinned-version inspection; it is not the active v0.0.19 search route.
+  for pinned-version inspection; it is not the active v0.0.20 search route.
 - `libs/wasmc-host-clock/`, `libs/wasmc-owned-algorithms/`, and
   `libs/wasmc-resource-counter/`: frozen historical qualification Libs.
 - Other `libs/*/`: append-only admitted source-free Lib packages; never edit an
