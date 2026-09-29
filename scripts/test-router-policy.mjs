@@ -19,6 +19,8 @@ assert.match(wit, /->\s*tuple<u32,\s*u32,\s*u32>/);
 
 const work = await mkdtemp(join(tmpdir(), 'wasmc-router-policy-'));
 const candidatePath = join(work, 'candidate.wasm');
+const embeddedPath = join(work, 'candidate.embedded.wasm');
+const componentPath = join(work, 'candidate.component.wasm');
 try {
   const build = spawnSync(
     process.env.WASM_TOOLS ?? 'wasm-tools',
@@ -28,6 +30,33 @@ try {
   if (build.error) throw build.error;
   if (build.status !== 0) throw new Error('wasm-tools parse failed: ' + build.stderr);
   const candidateBytes = await readFile(candidatePath);
+
+  for (const args of [
+    ['component', 'embed', join(candidateRoot, manifest.wit), candidatePath, '-o', embeddedPath],
+    ['component', 'new', embeddedPath, '-o', componentPath],
+  ]) {
+    const result = spawnSync(process.env.WASM_TOOLS ?? 'wasm-tools', args, {
+      encoding: 'utf8',
+      timeout: 120000,
+    });
+    if (result.error) throw result.error;
+    if (result.status !== 0) throw new Error('wasm-tools ' + args.join(' ') + ' failed: ' + result.stderr);
+  }
+
+  const componentCases = [
+    ['route(0, 0, 0, 0)', '(200, 0, 0)'],
+    ['route(0, 4, 0, 0)', '(301, 2, 1)'],
+    ['route(1, 2, 1, 0)', '(201, 1, 3)'],
+    ['route(0, 0, 0, 100)', '(429, 0, 0)'],
+  ];
+  for (const [invocation, expected] of componentCases) {
+    const result = spawnSync(process.env.WASMTIME ?? 'wasmtime', [
+      'run', '--invoke', invocation, componentPath,
+    ], { encoding: 'utf8', timeout: 30000 });
+    if (result.error) throw result.error;
+    if (result.status !== 0) throw new Error('wasmtime component invocation failed: ' + result.stderr);
+    assert.equal(result.stdout.trim(), expected, invocation);
+  }
 
   const candidateModule = new WebAssembly.Module(candidateBytes);
   const oracleModule = new WebAssembly.Module(oracleBytes);
@@ -59,6 +88,8 @@ try {
     candidate: manifest.id,
     version: manifest.version,
     cases,
+    component_cases: componentCases.length,
+    component_wit_executable: true,
     host_imports: 0,
     oracle_sha256: manifest.oracle.sha256,
     candidate_sha256: createHash('sha256').update(candidateBytes).digest('hex'),
