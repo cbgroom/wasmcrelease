@@ -1,0 +1,89 @@
+{
+  "schema": "wasmc.data-foundation-v11-rows-frame/v1",
+  "status": "qualified-not-admitted",
+  "candidate": {
+    "id": "wasmc-data-relational",
+    "version": "0.0.2-dev.1",
+    "wit_package": "wasmc:data-relational@0.0.2",
+    "scope": [
+      "distinct",
+      "lag",
+      "lead",
+      "rows-frame-count-all",
+      "rows-frame-count",
+      "rows-frame-sum",
+      "rows-frame-min",
+      "rows-frame-max",
+      "rows-frame-mean"
+    ]
+  },
+  "frame_semantics": {
+    "bounds": "explicit-start-end; preceding-current-following; legal-unbounded-endpoints",
+    "ordering": "shared-partition-order-null-model; stable-input-tie-break",
+    "alignment": "original-input-row-order",
+    "partition_edges": "clip-to-partition; may-produce-empty-frame",
+    "empty_frame": "count-all-and-count-zero; sum-min-max-mean-null",
+    "integer_overflow": "error-overflow",
+    "invalid_static_order": "error-invalid-frame"
+  },
+  "artifact": {
+    "core_bytes": 957985,
+    "core_sha256": "97a28721dffd9a3f77a8805110be2a5a57e12cdf9b66026e828de17a876ad4ac",
+    "core_imports": 0,
+    "component_bytes": 964342,
+    "component_sha256": "3fe6dbea05308e1cc4d375264410eabaa3b6f8045d6a39ae32725e7a9f967e46"
+  },
+  "evidence": {
+    "wasmtime_semantics": {
+      "script": "scripts/test-data-relational-libsrc.mjs",
+      "status": "PASS",
+      "cases": 77,
+      "passed": 77,
+      "role": "semantic authority for relational v0.0.2 including ROWS frames"
+    },
+    "wasmi_candidate_structural": {
+      "script": "scripts/test-data-relational-wasmi-v002.mjs",
+      "status": "PASS",
+      "engine": "wasmi-2.0.0",
+      "instantiated": true,
+      "exports_checked": 7,
+      "new_exports": [
+        "distinct",
+        "window-offset",
+        "window-aggregate"
+      ],
+      "artifact_sha256": "97a28721dffd9a3f77a8805110be2a5a57e12cdf9b66026e828de17a876ad4ac",
+      "role": "structural engine qualification of the exact retained Core"
+    },
+    "wasmi_broad": {
+      "script": "scripts/test-libsrc-wasmi.mjs",
+      "status": "PASS",
+      "engine": "wasmi-2.0.0",
+      "candidates": 11,
+      "relational_version": "0.0.2",
+      "representative_execution": true,
+      "structural_data_qualification": true,
+      "host_imports": 0
+    },
+    "determinism": {
+      "method": "two independent Cargo target directories followed by independent componentization",
+      "core_second_build_byte_identical": true,
+      "component_second_build_byte_identical": true
+    },
+    "legacy_data_pipeline": {
+      "script": "scripts/test-data-pipeline.mjs",
+      "status": "PASS",
+      "covers": "CSV -> Data Core -> Expr -> Compute -> Relational -> Profile -> Arrow IPC/Parquet -> validate"
+    },
+    "immutable_admitted_v0_0_1": {
+      "unchanged": true,
+      "artifact_sha256": "627176699ad4b9c2dc47ca78d520fe45ef1b2603fcc87d08eef3c0b2a1bf30a9"
+    }
+  },
+  "judgment": {
+    "evidence_split": "Wasmtime 77/77 is semantic authority. Wasmi proves no-JIT validation, instantiation and exact export compatibility; it does not replace semantic cases.",
+    "next_gate": "admission-review"
+  },
+  "admitted": false,
+  "released": false
+}

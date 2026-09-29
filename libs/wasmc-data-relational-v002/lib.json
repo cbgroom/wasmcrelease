@@ -1,0 +1,65 @@
+{
+  "agent": {
+    "delta": {
+      "path": "references/agent-delta.json",
+      "sha256": "ee8fc17a53acd52a4950be357e7c62a90a61fc973403b62f1ddd49624f17b860"
+    },
+    "skill": {
+      "path": "SKILL.md",
+      "sha256": "e60dffba41f450e3b4aa7a942b01e94a39484af784e806cc03df369963921205"
+    }
+  },
+  "admission": {
+    "approved": true,
+    "date": "2026-09-29",
+    "qualification": "admission/data-foundation-v11/relational-v002-rows-frame.json",
+    "source_authority": "cb959cdaa9601bc9ce6a5bd53b2a164bef37cf51"
+  },
+  "artifact": {
+    "bytes": 957985,
+    "format": "core-wasm",
+    "path": "artifact.wasm",
+    "sha256": "97a28721dffd9a3f77a8805110be2a5a57e12cdf9b66026e828de17a876ad4ac"
+  },
+  "build": {
+    "backend": "cargo",
+    "inputs": [
+      {
+        "kind": "cargo-lock",
+        "path": "libsrc/wasmc-data-relational/Cargo.lock",
+        "sha256": "ba7274acc5f84891d9dfa9a830a298ccd8968f20971995f45443e50c1d09ffa3"
+      }
+    ],
+    "language": "rust",
+    "locked": true,
+    "offline": false,
+    "profile": "release",
+    "target": "wasm32-unknown-unknown",
+    "toolchain": "rustc 1.96.0"
+  },
+  "compatibility": {
+    "abi_epoch": 1,
+    "wasmc_min": "0.0.1"
+  },
+  "component": {
+    "bytes": 964342,
+    "format": "component-wasm",
+    "path": "component.wasm",
+    "sha256": "3fe6dbea05308e1cc4d375264410eabaa3b6f8045d6a39ae32725e7a9f967e46"
+  },
+  "id": "wasmc-data-relational",
+  "qualification": {
+    "behavior": "scripts/test-data-relational-libsrc.mjs",
+    "core_imports": 0,
+    "semantic_cases": 77,
+    "wasmi": "scripts/test-data-relational-wasmi-v002.mjs"
+  },
+  "schema": "wasmc.lib/v0",
+  "version": "0.0.2",
+  "wit": {
+    "package": "wasmc:data-relational@0.0.2",
+    "path": "lib.wit",
+    "sha256": "df6148e83308691a33bb1685047f80220b1d9e8c6e1e4e9ee66b67141e96bf5d",
+    "world": "data-relational"
+  }
+}

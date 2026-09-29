@@ -1,0 +1,70 @@
+{
+  "schema": "wasmc.data-foundation-v11-first-slice/v1",
+  "status": "qualified-not-admitted",
+  "candidate": {
+    "id": "wasmc-data-relational",
+    "version": "0.0.2-dev.1",
+    "wit_package": "wasmc:data-relational@0.0.2",
+    "scope": [
+      "distinct",
+      "lag",
+      "lead"
+    ]
+  },
+  "artifact": {
+    "core_bytes": 947248,
+    "core_sha256": "c71405f013a3c5dc771e1227aae7f1232b44d2f2304aa9831e7277ffe3b42aaf",
+    "core_imports": 0,
+    "component_bytes": 952570,
+    "component_sha256": "21f2c3b8499eabd2e048a9e08d590e0f622e6e3363b53021975cb79e90f006e1"
+  },
+  "evidence": {
+    "wasmtime_semantics": {
+      "script": "scripts/test-data-relational-libsrc.mjs",
+      "status": "PASS",
+      "cases": 56,
+      "passed": 56,
+      "role": "semantic authority for distinct/lag/lead"
+    },
+    "wasmi_candidate_structural": {
+      "script": "scripts/test-data-relational-wasmi-v002.mjs",
+      "status": "PASS",
+      "engine": "wasmi-2.0.0",
+      "instantiated": true,
+      "exports_checked": 6,
+      "new_exports": [
+        "distinct",
+        "window-offset"
+      ],
+      "role": "structural engine qualification only"
+    },
+    "wasmi_broad": {
+      "script": "scripts/test-libsrc-wasmi.mjs",
+      "status": "PASS",
+      "engine": "wasmi-2.0.0",
+      "relational_version": "0.0.2",
+      "structural_data_qualification": true,
+      "host_imports": 0
+    },
+    "determinism": {
+      "core_second_build_byte_identical": true,
+      "component_second_build_byte_identical": true
+    },
+    "legacy_data_pipeline": {
+      "script": "scripts/test-data-pipeline.mjs",
+      "status": "PASS",
+      "covers": "CSV -> Data Core -> Expr -> Compute -> Relational -> Profile -> Arrow IPC/Parquet -> validate"
+    },
+    "immutable_admitted_v0_0_1": {
+      "unchanged": true,
+      "artifact_sha256": "627176699ad4b9c2dc47ca78d520fe45ef1b2603fcc87d08eef3c0b2a1bf30a9"
+    }
+  },
+  "judgment": {
+    "broad_wasmi_hardcode": "The prior generic gate hard-coded relational @0.0.1 exports. It was treated as stale test infrastructure, not a product failure, and repaired to derive the exact WIT version.",
+    "evidence_split": "Wasmtime 56/56 is semantic authority. Wasmi evidence proves no-JIT validation/instantiation/export compatibility and does not replace semantic cases.",
+    "next_gate": "rows-frame-aggregate-qualification"
+  },
+  "admitted": false,
+  "released": false
+}

@@ -36,7 +36,7 @@ assert.deepEqual(WebAssembly.Module.imports(module), []);
 
 const wit = run('wasm-tools', ['component', 'wit', artifact]);
 assert.match(wit, /import wasmc:data-core\/types@0\.0\.1;/);
-assert.match(wit, /export wasmc:data-relational\/relational@0\.0\.1;/);
+assert.match(wit, /export wasmc:data-relational\/relational@0\.0\.2;/);
 assert.doesNotMatch(wit, /import .*host/i);
 
 const work = await mkdtemp(join(tmpdir(), 'wasmc-data-relational-'));
@@ -53,6 +53,10 @@ try {
   const joinRight = '{rows: 4, fields: [{name: "id", data-type: int64, nullable: true}, {name: "tag", data-type: utf8, nullable: false}], columns: [int64-column([some(2), some(2), some(1), none]), utf8-column([some("r2a"), some("r2b"), some("r1"), some("rn")])]}';
   const joinKeys = '[{left-column: 0, right-column: 0}]';
   const windowBatch = '{rows: 5, fields: [{name: "g", data-type: utf8, nullable: false}, {name: "score", data-type: int64, nullable: true}], columns: [utf8-column([some("a"), some("a"), some("a"), some("b"), some("b")]), int64-column([some(20), some(10), some(10), some(9), none])]}';
+  const frameBatch = '{rows: 5, fields: [{name: "g", data-type: utf8, nullable: false}, {name: "ord", data-type: int64, nullable: false}, {name: "v", data-type: int64, nullable: true}], columns: [utf8-column([some("a"), some("a"), some("a"), some("b"), some("b")]), int64-column([some(2), some(1), some(3), some(1), some(2)]), int64-column([some(20), some(10), none, some(5), some(7)])]}';
+  const frameOrder = '[{column: 1, descending: false, nulls-first: false}]';
+  const frameAggregates = '[count-all("rows"), count({column: 2, alias: "count_v"}), sum({column: 2, alias: "sum_v"}), min({column: 2, alias: "min_v"}), max({column: 2, alias: "max_v"}), mean({column: 2, alias: "mean_v"})]';
+  const distinctBatch = '{rows: 5, fields: [{name: "k", data-type: int64, nullable: true}, {name: "v", data-type: utf8, nullable: false}], columns: [int64-column([some(1), some(1), none, none, some(1)]), utf8-column([some("a"), some("a"), some("n"), some("n"), some("b")])]}';
   const cases = [
     [
       'window-partition-ranking',
@@ -118,6 +122,186 @@ try {
       'window-column-out-of-bounds',
       'window-rank(' + windowBatch + ', [0], [{column: 9, descending: false, nulls-first: false}], [row-number("rn")], {max-rows: 5})',
       'err(column-out-of-bounds)',
+    ],
+    [
+      'distinct-whole-row-stable',
+      'distinct(' + distinctBatch + ', [], {max-rows: 5})',
+      'ok({rows: 3, fields: [{name: "k", data-type: int64, nullable: true}, {name: "v", data-type: utf8, nullable: false}], columns: [int64-column([some(1), none, some(1)]), utf8-column([some("a"), some("n"), some("b")])]})',
+    ],
+    [
+      'distinct-selected-key-null-equality',
+      'distinct(' + distinctBatch + ', [0], {max-rows: 5})',
+      'ok({rows: 2, fields: [{name: "k", data-type: int64, nullable: true}, {name: "v", data-type: utf8, nullable: false}], columns: [int64-column([some(1), none]), utf8-column([some("a"), some("n")])]})',
+    ],
+    [
+      'distinct-all-types',
+      'distinct({rows: 3, fields: [{name: "b", data-type: boolean, nullable: true}, {name: "i", data-type: int64, nullable: true}, {name: "u", data-type: uint64, nullable: true}, {name: "f", data-type: float64, nullable: true}, {name: "s", data-type: utf8, nullable: true}, {name: "x", data-type: binary, nullable: true}], columns: [boolean-column([some(true), some(true), none]), int64-column([some(-1), some(-1), some(-1)]), uint64-column([some(2), some(2), some(2)]), float64-column([some(1.5), some(1.5), some(1.5)]), utf8-column([some("x"), some("x"), some("x")]), binary-column([some([1, 2]), some([1, 2]), some([1, 2])])]}, [], {max-rows: 3})',
+      'ok({rows: 2, fields: [{name: "b", data-type: boolean, nullable: true}, {name: "i", data-type: int64, nullable: true}, {name: "u", data-type: uint64, nullable: true}, {name: "f", data-type: float64, nullable: true}, {name: "s", data-type: utf8, nullable: true}, {name: "x", data-type: binary, nullable: true}], columns: [boolean-column([some(true), none]), int64-column([some(-1), some(-1)]), uint64-column([some(2), some(2)]), float64-column([some(1.5), some(1.5)]), utf8-column([some("x"), some("x")]), binary-column([some([1, 2]), some([1, 2])])]})',
+    ],
+    [
+      'distinct-duplicate-key',
+      'distinct(' + distinctBatch + ', [0, 0], {max-rows: 5})',
+      'err(duplicate-key)',
+    ],
+    [
+      'distinct-column-out-of-bounds',
+      'distinct(' + distinctBatch + ', [9], {max-rows: 5})',
+      'err(column-out-of-bounds)',
+    ],
+    [
+      'distinct-invalid-limit',
+      'distinct(' + distinctBatch + ', [], {max-rows: 0})',
+      'err(invalid-limit)',
+    ],
+    [
+      'distinct-row-limit',
+      'distinct(' + distinctBatch + ', [], {max-rows: 4})',
+      'err(row-limit-exceeded)',
+    ],
+    [
+      'window-offset-partition-stable-ties',
+      'window-offset(' + windowBatch + ', [0], [{column: 1, descending: false, nulls-first: false}], [lag({column: 1, offset: 1, alias: "prev"}), lead({column: 1, offset: 1, alias: "next"}), lag({column: 1, offset: 0, alias: "current"})], {max-rows: 5})',
+      'ok({rows: 5, fields: [{name: "g", data-type: utf8, nullable: false}, {name: "score", data-type: int64, nullable: true}, {name: "prev", data-type: int64, nullable: true}, {name: "next", data-type: int64, nullable: true}, {name: "current", data-type: int64, nullable: true}], columns: [utf8-column([some("a"), some("a"), some("a"), some("b"), some("b")]), int64-column([some(20), some(10), some(10), some(9), none]), int64-column([some(10), none, some(10), none, some(9)]), int64-column([none, some(10), some(20), none, none]), int64-column([some(20), some(10), some(10), some(9), none])]})',
+    ],
+    [
+      'window-offset-all-value-types',
+      'window-offset({rows: 2, fields: [{name: "ord", data-type: int64, nullable: false}, {name: "b", data-type: boolean, nullable: false}, {name: "u", data-type: uint64, nullable: false}, {name: "f", data-type: float64, nullable: false}, {name: "s", data-type: utf8, nullable: false}, {name: "x", data-type: binary, nullable: false}], columns: [int64-column([some(1), some(2)]), boolean-column([some(true), some(false)]), uint64-column([some(3), some(4)]), float64-column([some(1.5), some(2.5)]), utf8-column([some("a"), some("b")]), binary-column([some([1]), some([2])])]}, [], [{column: 0, descending: false, nulls-first: false}], [lag({column: 1, offset: 1, alias: "lb"}), lag({column: 0, offset: 1, alias: "li"}), lag({column: 2, offset: 1, alias: "lu"}), lag({column: 3, offset: 1, alias: "lf"}), lag({column: 4, offset: 1, alias: "ls"}), lag({column: 5, offset: 1, alias: "lx"})], {max-rows: 2})',
+      'ok({rows: 2, fields: [{name: "ord", data-type: int64, nullable: false}, {name: "b", data-type: boolean, nullable: false}, {name: "u", data-type: uint64, nullable: false}, {name: "f", data-type: float64, nullable: false}, {name: "s", data-type: utf8, nullable: false}, {name: "x", data-type: binary, nullable: false}, {name: "lb", data-type: boolean, nullable: true}, {name: "li", data-type: int64, nullable: true}, {name: "lu", data-type: uint64, nullable: true}, {name: "lf", data-type: float64, nullable: true}, {name: "ls", data-type: utf8, nullable: true}, {name: "lx", data-type: binary, nullable: true}], columns: [int64-column([some(1), some(2)]), boolean-column([some(true), some(false)]), uint64-column([some(3), some(4)]), float64-column([some(1.5), some(2.5)]), utf8-column([some("a"), some("b")]), binary-column([some([1]), some([2])]), boolean-column([none, some(true)]), int64-column([none, some(1)]), uint64-column([none, some(3)]), float64-column([none, some(1.5)]), utf8-column([none, some("a")]), binary-column([none, some([1])])]})',
+    ],
+    [
+      'window-offset-empty-order',
+      'window-offset(' + windowBatch + ', [0], [], [lag({column: 1, offset: 1, alias: "prev"})], {max-rows: 5})',
+      'err(empty-order)',
+    ],
+    [
+      'window-offset-empty-functions',
+      'window-offset(' + windowBatch + ', [0], [{column: 1, descending: false, nulls-first: false}], [], {max-rows: 5})',
+      'err(empty-functions)',
+    ],
+    [
+      'window-offset-alias-conflict',
+      'window-offset(' + windowBatch + ', [0], [{column: 1, descending: false, nulls-first: false}], [lag({column: 1, offset: 1, alias: "g"})], {max-rows: 5})',
+      'err(duplicate-output-name)',
+    ],
+    [
+      'window-offset-empty-alias',
+      'window-offset(' + windowBatch + ', [0], [{column: 1, descending: false, nulls-first: false}], [lag({column: 1, offset: 1, alias: ""})], {max-rows: 5})',
+      'err(empty-alias)',
+    ],
+    [
+      'window-offset-value-column-out-of-bounds',
+      'window-offset(' + windowBatch + ', [0], [{column: 1, descending: false, nulls-first: false}], [lag({column: 9, offset: 1, alias: "prev"})], {max-rows: 5})',
+      'err(column-out-of-bounds)',
+    ],
+    [
+      'window-offset-invalid-limit',
+      'window-offset(' + windowBatch + ', [0], [{column: 1, descending: false, nulls-first: false}], [lag({column: 1, offset: 1, alias: "prev"})], {max-rows: 0})',
+      'err(invalid-limit)',
+    ],
+    [
+      'window-aggregate-trailing-partitioned-all-supported',
+      'window-aggregate(' + frameBatch + ', [0], ' + frameOrder + ', {start: preceding(1), end: current-row}, ' + frameAggregates + ', {max-rows: 5})',
+      'ok({rows: 5, fields: [{name: "g", data-type: utf8, nullable: false}, {name: "ord", data-type: int64, nullable: false}, {name: "v", data-type: int64, nullable: true}, {name: "rows", data-type: uint64, nullable: false}, {name: "count_v", data-type: uint64, nullable: false}, {name: "sum_v", data-type: int64, nullable: true}, {name: "min_v", data-type: int64, nullable: true}, {name: "max_v", data-type: int64, nullable: true}, {name: "mean_v", data-type: float64, nullable: true}], columns: [utf8-column([some("a"), some("a"), some("a"), some("b"), some("b")]), int64-column([some(2), some(1), some(3), some(1), some(2)]), int64-column([some(20), some(10), none, some(5), some(7)]), uint64-column([some(2), some(1), some(2), some(1), some(2)]), uint64-column([some(2), some(1), some(1), some(1), some(2)]), int64-column([some(30), some(10), some(20), some(5), some(12)]), int64-column([some(10), some(10), some(20), some(5), some(5)]), int64-column([some(20), some(10), some(20), some(5), some(7)]), float64-column([some(15), some(10), some(20), some(5), some(6)])]})',
+    ],
+    [
+      'window-aggregate-cumulative',
+      'window-aggregate(' + frameBatch + ', [0], ' + frameOrder + ', {start: unbounded, end: current-row}, [sum({column: 2, alias: "sum_cumulative"})], {max-rows: 5})',
+      'ok({rows: 5, fields: [{name: "g", data-type: utf8, nullable: false}, {name: "ord", data-type: int64, nullable: false}, {name: "v", data-type: int64, nullable: true}, {name: "sum_cumulative", data-type: int64, nullable: true}], columns: [utf8-column([some("a"), some("a"), some("a"), some("b"), some("b")]), int64-column([some(2), some(1), some(3), some(1), some(2)]), int64-column([some(20), some(10), none, some(5), some(7)]), int64-column([some(30), some(10), some(30), some(5), some(12)])]})',
+    ],
+    [
+      'window-aggregate-centered',
+      'window-aggregate(' + frameBatch + ', [0], ' + frameOrder + ', {start: preceding(1), end: following(1)}, [sum({column: 2, alias: "sum_centered"})], {max-rows: 5})',
+      'ok({rows: 5, fields: [{name: "g", data-type: utf8, nullable: false}, {name: "ord", data-type: int64, nullable: false}, {name: "v", data-type: int64, nullable: true}, {name: "sum_centered", data-type: int64, nullable: true}], columns: [utf8-column([some("a"), some("a"), some("a"), some("b"), some("b")]), int64-column([some(2), some(1), some(3), some(1), some(2)]), int64-column([some(20), some(10), none, some(5), some(7)]), int64-column([some(30), some(30), some(20), some(12), some(12)])]})',
+    ],
+    [
+      'window-aggregate-full-partition',
+      'window-aggregate(' + frameBatch + ', [0], ' + frameOrder + ', {start: unbounded, end: unbounded}, [mean({column: 2, alias: "mean_full"})], {max-rows: 5})',
+      'ok({rows: 5, fields: [{name: "g", data-type: utf8, nullable: false}, {name: "ord", data-type: int64, nullable: false}, {name: "v", data-type: int64, nullable: true}, {name: "mean_full", data-type: float64, nullable: true}], columns: [utf8-column([some("a"), some("a"), some("a"), some("b"), some("b")]), int64-column([some(2), some(1), some(3), some(1), some(2)]), int64-column([some(20), some(10), none, some(5), some(7)]), float64-column([some(15), some(15), some(15), some(6), some(6)])]})',
+    ],
+    [
+      'window-aggregate-current-row-null-semantics',
+      'window-aggregate(' + frameBatch + ', [0], ' + frameOrder + ', {start: current-row, end: current-row}, [count-all("rows_current"), count({column: 2, alias: "count_current"}), sum({column: 2, alias: "sum_current"})], {max-rows: 5})',
+      'ok({rows: 5, fields: [{name: "g", data-type: utf8, nullable: false}, {name: "ord", data-type: int64, nullable: false}, {name: "v", data-type: int64, nullable: true}, {name: "rows_current", data-type: uint64, nullable: false}, {name: "count_current", data-type: uint64, nullable: false}, {name: "sum_current", data-type: int64, nullable: true}], columns: [utf8-column([some("a"), some("a"), some("a"), some("b"), some("b")]), int64-column([some(2), some(1), some(3), some(1), some(2)]), int64-column([some(20), some(10), none, some(5), some(7)]), uint64-column([some(1), some(1), some(1), some(1), some(1)]), uint64-column([some(1), some(1), some(0), some(1), some(1)]), int64-column([some(20), some(10), none, some(5), some(7)])]})',
+    ],
+    [
+      'window-aggregate-stable-tie-order',
+      'window-aggregate({rows: 3, fields: [{name: "ord", data-type: int64, nullable: false}, {name: "v", data-type: int64, nullable: false}], columns: [int64-column([some(1), some(1), some(2)]), int64-column([some(10), some(20), some(30)])]}, [], [{column: 0, descending: false, nulls-first: false}], {start: preceding(1), end: current-row}, [sum({column: 1, alias: "rolling"})], {max-rows: 3})',
+      'ok({rows: 3, fields: [{name: "ord", data-type: int64, nullable: false}, {name: "v", data-type: int64, nullable: false}, {name: "rolling", data-type: int64, nullable: true}], columns: [int64-column([some(1), some(1), some(2)]), int64-column([some(10), some(20), some(30)]), int64-column([some(10), some(30), some(50)])]})',
+    ],
+    [
+      'window-aggregate-saturating-bounds',
+      'window-aggregate(' + frameBatch + ', [0], ' + frameOrder + ', {start: preceding(4294967295), end: following(4294967295)}, [sum({column: 2, alias: "sum_full"})], {max-rows: 5})',
+      'ok({rows: 5, fields: [{name: "g", data-type: utf8, nullable: false}, {name: "ord", data-type: int64, nullable: false}, {name: "v", data-type: int64, nullable: true}, {name: "sum_full", data-type: int64, nullable: true}], columns: [utf8-column([some("a"), some("a"), some("a"), some("b"), some("b")]), int64-column([some(2), some(1), some(3), some(1), some(2)]), int64-column([some(20), some(10), none, some(5), some(7)]), int64-column([some(30), some(30), some(30), some(12), some(12)])]})',
+    ],
+    [
+      'window-aggregate-empty-input',
+      'window-aggregate({rows: 0, fields: [{name: "ord", data-type: int64, nullable: false}, {name: "v", data-type: int64, nullable: true}], columns: [int64-column([]), int64-column([])]}, [], [{column: 0, descending: false, nulls-first: false}], {start: preceding(1), end: following(1)}, [sum({column: 1, alias: "sum_v"})], {max-rows: 1})',
+      'ok({rows: 0, fields: [{name: "ord", data-type: int64, nullable: false}, {name: "v", data-type: int64, nullable: true}, {name: "sum_v", data-type: int64, nullable: true}], columns: [int64-column([]), int64-column([]), int64-column([])]})',
+    ],
+    [
+      'window-aggregate-empty-frame',
+      'window-aggregate({rows: 1, fields: [{name: "ord", data-type: int64, nullable: false}, {name: "v", data-type: int64, nullable: false}], columns: [int64-column([some(1)]), int64-column([some(9)])]}, [], [{column: 0, descending: false, nulls-first: false}], {start: preceding(2), end: preceding(1)}, [count-all("rows"), count({column: 1, alias: "count_v"}), sum({column: 1, alias: "sum_v"}), mean({column: 1, alias: "mean_v"})], {max-rows: 1})',
+      'ok({rows: 1, fields: [{name: "ord", data-type: int64, nullable: false}, {name: "v", data-type: int64, nullable: false}, {name: "rows", data-type: uint64, nullable: false}, {name: "count_v", data-type: uint64, nullable: false}, {name: "sum_v", data-type: int64, nullable: true}, {name: "mean_v", data-type: float64, nullable: true}], columns: [int64-column([some(1)]), int64-column([some(9)]), uint64-column([some(0)]), uint64-column([some(0)]), int64-column([none]), float64-column([none])]})',
+    ],
+    [
+      'window-aggregate-invalid-frame',
+      'window-aggregate(' + frameBatch + ', [0], ' + frameOrder + ', {start: following(1), end: current-row}, [sum({column: 2, alias: "sum_v"})], {max-rows: 5})',
+      'err(invalid-frame)',
+    ],
+    [
+      'window-aggregate-empty-order',
+      'window-aggregate(' + frameBatch + ', [0], [], {start: preceding(1), end: current-row}, [sum({column: 2, alias: "sum_v"})], {max-rows: 5})',
+      'err(empty-order)',
+    ],
+    [
+      'window-aggregate-empty-aggregates',
+      'window-aggregate(' + frameBatch + ', [0], ' + frameOrder + ', {start: preceding(1), end: current-row}, [], {max-rows: 5})',
+      'err(empty-functions)',
+    ],
+    [
+      'window-aggregate-unsupported-first',
+      'window-aggregate(' + frameBatch + ', [0], ' + frameOrder + ', {start: preceding(1), end: current-row}, [first({column: 2, alias: "first_v"})], {max-rows: 5})',
+      'err(unsupported-function)',
+    ],
+    [
+      'window-aggregate-unsupported-statistics',
+      'window-aggregate(' + frameBatch + ', [0], ' + frameOrder + ', {start: preceding(1), end: current-row}, [variance-pop({column: 2, alias: "variance_v"})], {max-rows: 5})',
+      'err(unsupported-function)',
+    ],
+    [
+      'window-aggregate-alias-conflict',
+      'window-aggregate(' + frameBatch + ', [0], ' + frameOrder + ', {start: preceding(1), end: current-row}, [sum({column: 2, alias: "g"})], {max-rows: 5})',
+      'err(duplicate-output-name)',
+    ],
+    [
+      'window-aggregate-duplicate-alias',
+      'window-aggregate(' + frameBatch + ', [0], ' + frameOrder + ', {start: preceding(1), end: current-row}, [sum({column: 2, alias: "x"}), mean({column: 2, alias: "x"})], {max-rows: 5})',
+      'err(duplicate-output-name)',
+    ],
+    [
+      'window-aggregate-column-out-of-bounds',
+      'window-aggregate(' + frameBatch + ', [0], ' + frameOrder + ', {start: preceding(1), end: current-row}, [sum({column: 9, alias: "sum_v"})], {max-rows: 5})',
+      'err(column-out-of-bounds)',
+    ],
+    [
+      'window-aggregate-unsupported-type',
+      'window-aggregate(' + frameBatch + ', [0], ' + frameOrder + ', {start: preceding(1), end: current-row}, [sum({column: 0, alias: "sum_g"})], {max-rows: 5})',
+      'err(unsupported-type)',
+    ],
+    [
+      'window-aggregate-invalid-limit',
+      'window-aggregate(' + frameBatch + ', [0], ' + frameOrder + ', {start: preceding(1), end: current-row}, [sum({column: 2, alias: "sum_v"})], {max-rows: 0})',
+      'err(invalid-limit)',
+    ],
+    [
+      'window-aggregate-row-limit',
+      'window-aggregate(' + frameBatch + ', [0], ' + frameOrder + ', {start: preceding(1), end: current-row}, [sum({column: 2, alias: "sum_v"})], {max-rows: 4})',
+      'err(row-limit-exceeded)',
+    ],
+    [
+      'window-aggregate-overflow',
+      'window-aggregate({rows: 2, fields: [{name: "ord", data-type: int64, nullable: false}, {name: "v", data-type: int64, nullable: false}], columns: [int64-column([some(1), some(2)]), int64-column([some(9223372036854775807), some(1)])]}, [], [{column: 0, descending: false, nulls-first: false}], {start: unbounded, end: unbounded}, [sum({column: 1, alias: "sum_v"})], {max-rows: 2})',
+      'err(overflow)',
     ],
     [
       'join-inner-stable',
@@ -277,11 +461,15 @@ try {
     core_imports: 0,
     deterministic_group_order: true,
     aggregate_null_semantics: 'ignore-input-null; nullable-empty-result',
-    operations: ['union-all','equi-join','window-rank','group-aggregate'],
+    operations: ['union-all','equi-join','window-rank','distinct','window-offset','window-aggregate','group-aggregate'],
     union_semantics: 'stable-input-order; exact-schema; no-coercion',
     join_semantics: 'bounded; typed; stable-left-then-right-order; null-keys-never-match',
     window_semantics: 'bounded-no-row-expansion; output-aligned-input-order; stable-input-tie-break',
+    distinct_semantics: 'stable-first-occurrence; empty-keys-means-whole-row; null-equals-null',
+    offset_window_semantics: 'same-partition-order-model; output-aligned-input-order; out-of-partition-null; offset-zero-current-row',
+    rows_frame_semantics: 'explicit-start-end; bounded-or-unbounded; clipped-empty-frame; same-partition-order-model; output-aligned-input-order; stable-input-tie-break',
     aggregates: ['count-all','count','sum','min','max','mean','first','last','variance-pop','stddev-pop'],
+    window_aggregates: ['count-all','count','sum','min','max','mean'],
     cases: receipts.length,
     receipts,
   }));

@@ -1,5 +1,32 @@
 # WAsmC release maintainer handoff
 
+## 2026-09-29 v0.0.17 Lib admission checkpoint
+
+Branch `release/v0.0.17-lib-closure` starts from synchronized public v0.0.16
+post-release commit `0489215f024a75c70adb8bd961c26f31ddb3a0a3`.
+
+Two additive source-free Lib roots are now formally admitted but not yet
+released, discoverable or installable:
+
+- `wasmc:data-relational@0.0.2` at `libs/wasmc-data-relational-v002`, source
+  authority `cb959cdaa9601bc9ce6a5bd53b2a164bef37cf51`, exact Core
+  `97a28721dffd9a3f77a8805110be2a5a57e12cdf9b66026e828de17a876ad4ac`,
+  Component `3fe6dbea05308e1cc4d375264410eabaa3b6f8045d6a39ae32725e7a9f967e46`;
+- `mcpgit:resident-memory@0.1.0` at `libs/mcpgit-resident-memory`, source
+  authority `17ee87a552b430cecf17b0821a9a242603bea0c1`, exact Core
+  `1f749247cf65cc6f8555ae37117d2bd177f5cc39312522a5e901a9ce9264dd35`,
+  Component `32c356292b251ff7900a5d9a5a4693ec5f7a272cb8cf65dbbc8f628f4482a516`.
+
+Current admission evidence passes Data 77-case semantics, exact Wasmi 2.0
+structural execution, the combined 28-candidate registry, MCPGit strict reopen,
+and actual Wasmtime Component snapshot/CAS/range execution. The four MCPGit
+Core imports are canonical resource lifecycle intrinsics, not Host authority.
+
+Do not refresh v0.0.16 identity files around these future bytes. Next create a
+v0.0.17 catalog bound to this admission checkpoint, build and independently
+qualify a new LibSearch package for the complete route set, then freeze a new
+candidate. Existing package roots and immutable tags remain unchanged.
+
 ## 2026-09-29 v0.0.16 dynamic Client/Gateway candidate
 
 The v0.0.16 product candidate is frozen at

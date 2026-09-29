@@ -1,0 +1,99 @@
+{
+  "schema": "wasmc.third-party-lib-candidate-qualification/v1",
+  "id": "mcpgit-resident-memory",
+  "version": "0.1.0",
+  "date": "2026-09-29",
+  "source_authority": {
+    "repository": "yxsicd/MCPGit",
+    "artifact_source_commit": "17ee87a552b430cecf17b0821a9a242603bea0c1",
+    "current_checkpoint": "0628cfd3bac520844d4bdce886b414b3f3decb7a",
+    "branch": "work/WS-20260928-resident-wasmc-lib-v1",
+    "clean_and_remote_synchronized": true,
+    "implementation_source_publication_required": false
+  },
+  "builder_authority": {
+    "repository": "yxsicd/wasmc",
+    "commit": "566eff42d0f4e4680c5ddd60c6584a9d8ff8e9f4",
+    "branch": "master",
+    "clean_and_remote_synchronized": true,
+    "profile": "wit-bindgen-component",
+    "toolchain_fingerprint_sha256": "2e4e27cb0b3644dd0c90bb71f31de5b5c72cd47671373caab8b9146ac68bf8ca"
+  },
+  "base_release_commit": "e6d50dece1ec0723ced1291ec6d98c6705314876",
+  "scope": "local macOS arm64 source-free candidate qualification; not release admission",
+  "states": {
+    "qualified": true,
+    "admitted": false,
+    "released": false,
+    "discoverable": false,
+    "installable": false
+  },
+  "package": {
+    "schema": "wasmc.lib/v2",
+    "wit_package": "mcpgit:resident-memory@0.1.0",
+    "world": "resident-memory",
+    "provider_source": false,
+    "public_lib_dependencies": [],
+    "core_imports": [
+      "[export]mcpgit:resident-memory/memory@0.1.0#[resource-drop]store",
+      "[export]mcpgit:resident-memory/memory@0.1.0#[resource-drop]snapshot",
+      "[export]mcpgit:resident-memory/memory@0.1.0#[resource-new]store",
+      "[export]mcpgit:resident-memory/memory@0.1.0#[resource-new]snapshot"
+    ],
+    "host_authorities": [],
+    "canonical_resource_intrinsics": 4,
+    "files": 9,
+    "bytes": 1018947
+  },
+  "artifacts": {
+    "artifact.wasm": {
+      "bytes": 494482,
+      "sha256": "1f749247cf65cc6f8555ae37117d2bd177f5cc39312522a5e901a9ce9264dd35"
+    },
+    "component.wasm": {
+      "bytes": 503031,
+      "sha256": "32c356292b251ff7900a5d9a5a4693ec5f7a272cb8cf65dbbc8f628f4482a516"
+    },
+    "lib.json": {
+      "bytes": 3236,
+      "sha256": "5bc651e215104a1cb49b15de20b46f47c4d2d45ab18a01e3f982a3261392aea1"
+    },
+    "lib.wit": {
+      "bytes": 3325,
+      "sha256": "6f6efdd3af26232cde4cb35401a801cd736834e1ea8d3cc28f5cf784867687e0"
+    }
+  },
+  "behavior": {
+    "runtime": "Wasmtime 47.0.4 Component Model",
+    "test": "examples/rust-wasmtime/tests/mcpgit_resident_memory.rs",
+    "passed": 1,
+    "failed": 0,
+    "covered": [
+      "store open",
+      "explicit memory budget",
+      "immutable current snapshot",
+      "aggregate stat",
+      "ranged content read",
+      "expected-parent CAS publication",
+      "content range patch",
+      "old snapshot isolation",
+      "stale-parent rejection",
+      "resource drop"
+    ]
+  },
+  "reproducibility": {
+    "isolated_package_builds": 2,
+    "core_byte_identical": true,
+    "component_byte_identical": true,
+    "strict_package_reopen": true
+  },
+  "explicit_non_claims": [
+    "immutable WAsmC release inclusion",
+    "default catalog discovery or installation",
+    "Wasmi Component execution",
+    "browser Component execution",
+    "Gateway, filesystem, Git, HTTP or credential authority inside the Lib; the four Core imports are canonical resource lifecycle intrinsics only",
+    "MCPGit provider implementation source publication"
+  ],
+  "next_gate": "formal package admission and future release candidate inclusion"
+}
