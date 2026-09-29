@@ -42,8 +42,8 @@ if (entries.length === 0) throw new Error('no Lib packages found');
 for (const name of entries) {
   const libRoot = join(libsRoot, name);
   const manifest = JSON.parse(await readFile(join(libRoot, 'lib.json'), 'utf8'));
-  if (manifest.schema !== 'wasmc.lib/v0') throw new Error(`${name}: unsupported schema`);
-  if (manifest.id !== basename(libRoot)) throw new Error(`${name}: id does not match directory`);
+  if (!['wasmc.lib/v0', 'wasmc.lib/v2'].includes(manifest.schema)) throw new Error(`${name}: unsupported schema`);
+  if (manifest.id !== basename(libRoot) && !basename(libRoot).startsWith(`${manifest.id}-v`)) throw new Error(`${name}: id does not match directory`);
 
   const wit = await verifyFile(libRoot, manifest.wit, `${name}: WIT`);
   const witText = new TextDecoder().decode(wit);
@@ -62,6 +62,18 @@ for (const name of entries) {
   await verifyFile(libRoot, manifest.agent?.skill, `${name}: Agent Skill`);
   await verifyFile(libRoot, manifest.agent?.delta, `${name}: Agent delta`);
 
+  const v2Files = [];
+  if (manifest.schema === 'wasmc.lib/v2') {
+    await verifyFile(libRoot, manifest.core_abi, `${name}: Core ABI`);
+    await verifyFile(libRoot, manifest.bindings?.rust_component?.cargo_toml, `${name}: Rust binding manifest`);
+    await verifyFile(libRoot, manifest.bindings?.rust_component?.source, `${name}: Rust binding source`);
+    v2Files.push(
+      manifest.core_abi.path,
+      manifest.bindings.rust_component.cargo_toml.path,
+      manifest.bindings.rust_component.source.path,
+    );
+  }
+
   const allowed = [
     'lib.json',
     manifest.wit.path,
@@ -69,6 +81,7 @@ for (const name of entries) {
     manifest.component.path,
     manifest.agent.skill.path,
     manifest.agent.delta.path,
+    ...v2Files,
   ].sort();
   const actual = (await walkFiles(libRoot)).sort();
   if (JSON.stringify(actual) !== JSON.stringify(allowed)) {
