@@ -85,7 +85,7 @@ const capabilityProjection=surfaces.agent_capability_projection;
 assert.equal(capabilityProjection?.product_release,'v'+surfaces.release_version);
 assert.equal(capabilityProjection?.guidance_scope?.included_in_product,true);
 assert.equal(capabilityProjection?.guidance_scope?.lifecycle_authority,'release.json and channels/prod.json');
-assert.equal(capabilityProjection?.type_decisions?.u64_ordinary_source?.status,'unsupported');
+assert.equal(capabilityProjection?.type_decisions?.u64_ordinary_source?.status,'released');
 assert(capabilityProjection?.type_decisions?.map?.unsupported_positions?.includes('direct-public-WIT-value-result'));
 assert.equal(capabilityProjection?.feature_decisions?.async_ordinary_source_or_lib,'unsupported');
 const nativeBinaryStatus=statusQueries['prebuilt-native-runtime-library'];

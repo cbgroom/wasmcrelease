@@ -129,7 +129,7 @@ async function runModel(model, commit, output, timeoutMs) {
 
 async function main() {
   const { command, options } = parse(process.argv.slice(2));
-  const protocol = validateProtocol(JSON.parse(readFileSync(join(root, 'agent-evaluation/fresh-agent-learning-v1.json'), 'utf8')));
+  const protocol = validateProtocol(JSON.parse(readFileSync(join(root, 'agent-evaluation/fresh-agent-learning-v2.json'), 'utf8')));
   if (command === 'run') {
     const commit = options.commit;
     assert.ok(exactCommit(commit), '--commit must be an exact 40-character commit');

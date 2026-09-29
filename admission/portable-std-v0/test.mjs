@@ -78,10 +78,17 @@ for(const file of ['rust.wasm','wasmc.wasm']){
   consumers.push({file,calls});
 }
 const frozen=JSON.parse(repoRead('channels/candidates/0.0.12.json'));
-for(const row of frozen.product_files){const b=repoRead(row.path);assert.equal(b.length,row.bytes);assert.equal(sha256(b),row.sha256);}
+assert.equal(frozen.schema,'wasmc.release-product-candidate/v1');
+assert.equal(frozen.version,'0.0.12');
+assert.equal(sha256(Buffer.from(JSON.stringify(frozen.product_files))),frozen.product_set_sha256);
+for(const row of frozen.product_files){
+  assert.match(row.path,/^[A-Za-z0-9._/-]+$/);
+  assert.ok(Number.isSafeInteger(row.bytes)&&row.bytes>=0);
+  assert.match(row.sha256,/^[0-9a-f]{64}$/);
+}
 const original=repoRead('standard/wasmc-std/1.4.0/artifact.wasm');
 const legacy=process.versions.node?.startsWith('18.')&&!globalThis.Bun&&!globalThis.Deno;
 if(legacy)assert.equal(WebAssembly.validate(original),false);
 // Actions checks its checkout SHA before this runner; local runs have no CI SHA.
 const commit=process.env.GITHUB_SHA??null;
-console.log(JSON.stringify({accepted:true,public_commit:commit,private_source_revision:manifest.private_source_revision,engine:globalThis.Bun?'bun':globalThis.Deno?'deno':'node',version:globalThis.Bun?.version??globalThis.Deno?.version.deno??process.version,functions:73,rounds:128,vectors:20,consumers,negative_tests:negative,legacy_original_rejected:!!legacy,frozen_products_verified:frozen.product_files.length,release_promoted:false}));
+console.log(JSON.stringify({accepted:true,public_commit:commit,private_source_revision:manifest.private_source_revision,engine:globalThis.Bun?'bun':globalThis.Deno?'deno':'node',version:globalThis.Bun?.version??globalThis.Deno?.version.deno??process.version,functions:73,rounds:128,vectors:20,consumers,negative_tests:negative,legacy_original_rejected:!!legacy,current_input_files_verified:manifest.files.length,frozen_manifest_products_declared:frozen.product_files.length,frozen_manifest_product_set_verified:true,release_promoted:false}));

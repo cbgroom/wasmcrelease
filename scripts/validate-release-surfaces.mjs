@@ -17,8 +17,8 @@ const taskRoutes=model.agent_task_routes;
 const quickstart=model.agent_learning_quickstart;
 assert.equal(projection?.schema,'wasmc.release-agent-capabilities/v1');
 assert.equal(projection?.product_release,'v'+model.release_version);
-assert.equal(learning?.schema,'wasmc.fresh-agent-learning/v1');
-assert.equal(learning?.path,'agent-evaluation/fresh-agent-learning-v1.json');
+assert.equal(learning?.schema,'wasmc.fresh-agent-learning/v2');
+assert.equal(learning?.path,'agent-evaluation/fresh-agent-learning-v2.json');
 assert.equal(learning?.single_model_pass_is_controlled_pair_qualification,false);
 assert.equal(learning?.wall_clock_is_standalone_release_gate,false);
 assert(existsSync(resolve(root,learning.path)),'agent learning protocol is missing');
@@ -48,7 +48,8 @@ assert.deepEqual(quickstartModel.routes['release-state-separation'].required_out
 assert.deepEqual(quickstartModel.routes['release-state-separation'].exact_report,model.agent_status_queries['direct-wasmc-system-telemetry-resource'].exact_report);
 assert.deepEqual(Object.keys(taskRoutes).sort(),['dynamic-client-gateway','host-authority','ordinary-source-pair','release-lib-route-readiness','release-orientation','released-base64','rule']);
 assert.equal(taskRoutes['release-orientation'].product_version,'v'+model.release_version);
-assert.equal(taskRoutes['release-orientation'].compiler.sha256,'93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90');
+assert.equal(taskRoutes['release-orientation'].compiler.sha256,'4e0b9779df3bf7b627d7d9fbfc43cfffd67bb053f87c69a9f832c5690b6888a2');
+assert.match(taskRoutes['release-orientation'].answer_boundary,/agent-release-orientation\.json/);
 assert.equal(taskRoutes['release-lib-route-readiness'].product.formal_release_ready,true);
 assert.equal(taskRoutes['release-lib-route-readiness'].valid_resolution_count,1);
 assert.equal(taskRoutes['release-lib-route-readiness'].lifecycle_authority.current_release,'release.json');
@@ -76,20 +77,21 @@ assert.equal(projection?.function_shape?.result,'exactly one semantic value');
 assert.match(projection?.function_shape?.multiple_logical_values??'',/tuple/);
 assert.match(projection?.function_shape?.embedding_warning??'',/multiple Core lanes/);
 assert.deepEqual(projection?.type_decisions?.ordinary_source_scalars?.spellings,
-  ['s8','u8','s16','u16','s32','u32','i64','f32','f64','bool']);
-assert.equal(projection?.type_decisions?.u64_ordinary_source?.status,'unsupported');
-assert.match(projection?.type_decisions?.u64_ordinary_source?.alternative??'',/bounds and signedness/);
+  ['s8','u8','s16','u16','s32','u32','i64','u64','f32','f64','bool']);
+assert.equal(projection?.type_decisions?.u64_ordinary_source?.status,'released');
+assert(projection?.type_decisions?.u64_ordinary_source?.positions?.includes('nested-source-payload'));
 assert(projection?.type_decisions?.map?.unsupported_positions?.includes('direct-public-WIT-value-result'));
 assert.match(projection?.type_decisions?.map?.alternative??'',/list<Entry<K,V>>/);
 assert.equal(projection?.feature_decisions?.async_ordinary_source_or_lib,'unsupported');
 assert.match(projection?.next_release_requirement??'',/immutable release/);
 assert.equal(producerDelta?.schema,'wasmc.producer-release-delta/v1');
-assert.equal(producerDelta?.producer?.commit,'94328ed760f93bf24b595a71facdcc773d43b762');
-assert.equal(producerDelta?.producer?.status,'verified-master-implementation');
+assert.equal(producerDelta?.producer?.commit,'566eff42d0f4e4680c5ddd60c6584a9d8ff8e9f4');
+assert.equal(producerDelta?.producer?.implementation_commit,'94328ed760f93bf24b595a71facdcc773d43b762');
+assert.equal(producerDelta?.producer?.status,'verified-master-containing-implementation');
 assert.equal(producerDelta?.producer?.validation?.strict_mst,true);
 assert.equal(producerDelta?.release?.lifecycle_authority,'release.json');
-assert.equal(producerDelta?.release?.v0_0_16_u64_ordinary_source,'unsupported');
-assert.match(producerDelta?.answer_rule??'',/producer master yes, the v0\.0\.18 product compiler no/);
+assert.equal(producerDelta?.release?.ordinary_source_u64,'supported');
+assert.match(producerDelta?.answer_rule??'',/both support it/);
 assert.match(producerDelta?.adjacent_type_decisions?.u32??'',/included/);
 assert.match(producerDelta?.adjacent_type_decisions?.char??'',/not implemented/);
 assert.equal(ecosystem?.schema,'wasmc.lib-ecosystem-control-plane/v1');
@@ -97,20 +99,21 @@ assert.equal(ecosystem?.path,'lib-ecosystem-control-plane.json');
 assert(existsSync(resolve(root,ecosystem.path)),'Lib ecosystem control plane is missing');
 const ecosystemModel=JSON.parse(read(ecosystem.path));
 assert.equal(ecosystemModel.schema,ecosystem.schema);
-const routeCompleteRelease=['0.0.14','0.0.15','0.0.16','0.0.17','0.0.18'].includes(ecosystemModel.release.version);
-const expectedPackages=ecosystemModel.release.version==='0.0.18'?22:ecosystemModel.release.version==='0.0.17'?17:routeCompleteRelease?14:13;
+const routeCompleteRelease=['0.0.14','0.0.15','0.0.16','0.0.17','0.0.18','0.0.19'].includes(ecosystemModel.release.version);
+const v018CatalogRelease=['0.0.18','0.0.19'].includes(ecosystemModel.release.version);
+const expectedPackages=v018CatalogRelease?22:ecosystemModel.release.version==='0.0.17'?17:routeCompleteRelease?14:13;
 assert.equal(ecosystemModel.inventory.packages,expectedPackages);
 assert.equal(ecosystemModel.inventory.released,expectedPackages);
-assert.equal(ecosystemModel.inventory.discoverable,ecosystemModel.release.version==='0.0.18'?22:ecosystemModel.release.version==='0.0.17'?17:routeCompleteRelease?14:12);
-assert.equal(ecosystemModel.inventory.installable,ecosystemModel.release.version==='0.0.18'?22:ecosystemModel.release.version==='0.0.17'?17:routeCompleteRelease?14:4);
-assert.equal(ecosystemModel.inventory.current_side_installable,ecosystemModel.release.version==='0.0.18'?22:ecosystemModel.release.version==='0.0.17'?17:routeCompleteRelease?14:13);
+assert.equal(ecosystemModel.inventory.discoverable,v018CatalogRelease?22:ecosystemModel.release.version==='0.0.17'?17:routeCompleteRelease?14:12);
+assert.equal(ecosystemModel.inventory.installable,v018CatalogRelease?22:ecosystemModel.release.version==='0.0.17'?17:routeCompleteRelease?14:4);
+assert.equal(ecosystemModel.inventory.current_side_installable,v018CatalogRelease?22:ecosystemModel.release.version==='0.0.17'?17:routeCompleteRelease?14:13);
 assert.equal(ecosystemModel.inventory.current_side_inventory_matches_release,true);
 assert.equal(ecosystemModel.inventory.inventory_is_unified,routeCompleteRelease);
 assert.deepEqual(ecosystemModel.route_closure,{
   authority:'catalog/lib-route-closure.json',
   release_packages:expectedPackages,
   package_routes:expectedPackages,
-  api_routes:ecosystemModel.release.version==='0.0.18'?140:ecosystemModel.release.version==='0.0.17'?128:108,
+  api_routes:v018CatalogRelease?140:ecosystemModel.release.version==='0.0.17'?128:108,
   candidate_extras:0,
   release_catalog_exact:true,
   release_package_routes_exact:true,

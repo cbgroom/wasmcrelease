@@ -23,7 +23,7 @@ assert.equal(hash('current/wasmc_compiler.wasm'), quickstart.routes['release-ori
 assert.equal(hash('standard/wasmc-std/1.4.0/artifact.wasm'), quickstart.routes['library-first-selection'].artifact_sha256);
 assert.equal(hash('catalog/libs-v018.json'), quickstart.routes['library-first-selection'].catalog_sha256);
 assert.equal(quickstart.routes['library-first-selection'].catalog_path,'catalog/libs-v018.json');
-assert.equal(quickstart.routes['library-first-selection'].catalog_snapshot_carried_forward,false);
+assert.equal(quickstart.routes['library-first-selection'].catalog_snapshot_carried_forward,true);
 assert.equal(quickstart.routes['library-first-selection'].exact_report.companion_sha256,'f54a892aff9068e5c79464029423a2e8f753ddb44010af9ac34a5c9efce2069c');
 assert.equal(quickstart.routes['library-first-selection'].exact_report.import_module,'wasmc:lib/wasmc.std@1.4.0');
 assert.match(quickstart.routes['library-first-selection'].exact_report.instruction,/byte-for-byte/);
@@ -45,13 +45,15 @@ assert.equal(base64.artifact_sha256, quickstart.routes['library-first-selection'
 assert.equal(base64.encoded_utf8, 'YWJj');
 assert.equal(base64.decoded_utf8, 'abc');
 const delta = quickstart.routes['producer-release-u64-delta'];
-assert.equal(delta.producer.commit, '94328ed760f93bf24b595a71facdcc773d43b762');
+assert.equal(delta.producer.commit, '566eff42d0f4e4680c5ddd60c6584a9d8ff8e9f4');
+assert.equal(delta.producer.implementation_commit, '94328ed760f93bf24b595a71facdcc773d43b762');
 assert.equal(delta.producer.implemented, true);
-assert.match(delta.answer_opening, /Producer master: yes/);
-assert.match(delta.answer_opening, /v0\.0\.18 product compiler: no/);
-assert.equal(delta.release_product.version,'v0.0.18');
+assert.match(delta.answer_opening, /both support ordinary-source u64/);
+assert.equal(delta.release_product.version,'v0.0.19');
+assert.equal(delta.release_product.ordinary_source_u64,'supported');
 assert.equal(delta.release_product.lifecycle_authority,'release.json');
 assert.match(delta.char, /not implemented/);
+assert.match(quickstart.routes['release-orientation'].final_answer_policy,/agent-release-orientation\.json/);
 const telemetry=quickstart.routes['release-state-separation'];
 assert.equal(telemetry.exact_report.identity,'wasmc-system-telemetry@0.0.1');
 assert.equal(telemetry.exact_report.stop_reason,'wasmc-source-direct-resource-methods');

@@ -40,13 +40,18 @@ const terminal=new Promise((res,rej)=>{child.once('error',rej);child.once('close
 const iter=child.stdout[Symbol.asyncIterator]();let pending=Buffer.alloc(0);
 async function take(n){const parts=[];let left=n;while(left){if(!pending.length){const next=await iter.next();if(next.done)throw Error('truncated raw object');pending=next.value;}const k=Math.min(left,pending.length);parts.push(pending.subarray(0,k));pending=pending.subarray(k);left-=k;}return Buffer.concat(parts,n);}
 async function line(){let s='';for(let i=0;i<256;i++){const b=(await take(1))[0];if(b===10)return s;s+=String.fromCharCode(b);}throw Error('oversized object header');}
-const approvedObjects=new Set(['111e78b2bed5a9658cecb3660e547aee698b273b','1a12d7ae32eb35885f6f2cbf472d9f82f4252440']);
-const approvedCompiler='8f79429d5499380d93abbb980df6c16a99adc15fee8987068906af11aa757027';
+const approvedCompilerCarriers=new Map([
+ ['111e78b2bed5a9658cecb3660e547aee698b273b','8f79429d5499380d93abbb980df6c16a99adc15fee8987068906af11aa757027'],
+ ['1a12d7ae32eb35885f6f2cbf472d9f82f4252440','8f79429d5499380d93abbb980df6c16a99adc15fee8987068906af11aa757027'],
+ ['41cfc2fc022d0765cea60b4553af6b9130341d84','4e0b9779df3bf7b627d7d9fbfc43cfffd67bb053f87c69a9f832c5690b6888a2'],
+ ['e23905ec739997d53768aea30f6b32de9dcce175','4e0b9779df3bf7b627d7d9fbfc43cfffd67bb053f87c69a9f832c5690b6888a2'],
+]);
 const approvedLocalhostKeyObject='0b20b1e6ebbcaf67e8d5ce74cdb11984e66e8bbe';
 const approvedLocalhostCertObject='dc1c06887591f2761da5dbe98f564dbfb287df18';
 const approvedLocalhostPublicKey='f835f0f25c98ac29a00bd427819945bdc04d4dcb37adad253f53311507aa6516';
 function classifyCarrier(id,text,pattern){
- if(rawOnly||!approvedObjects.has(id))return null;
+ const approvedCompiler=approvedCompilerCarriers.get(id);
+ if(rawOnly||!approvedCompiler)return null;
  const blocks=[...text.matchAll(/function decodeEmbeddedCompiler\(\) \{\s*const binary = atob\("([A-Za-z0-9+/=]+)"\);/g)];
  if(blocks.length!==1)return null;
  const block=blocks[0],literal=block[1],start=block.index+block[0].indexOf(literal),end=start+literal.length;
@@ -56,7 +61,7 @@ function classifyCarrier(id,text,pattern){
  if(decoded.toString('base64')!==literal||createHash('sha256').update(decoded).digest('hex')!==approvedCompiler)return null;
  if(!WebAssembly.validate(decoded)||WebAssembly.Module.imports(new WebAssembly.Module(decoded)).length)return null;
  if(detectors.some(([,p])=>p.test(decoded.toString('latin1'))))return null;
- return {object:id,detector:'aws_access_key_id',raw_match_count:hits.length,classification:'verified-frozen-compiler-base64-false-positive',decoded_sha256:approvedCompiler,decoded_all_detectors_clear:true,authorization:'user explicit narrow remediation approval 2026-09-13'};
+ return {object:id,detector:'aws_access_key_id',raw_match_count:hits.length,classification:'verified-frozen-compiler-base64-false-positive',decoded_sha256:approvedCompiler,decoded_all_detectors_clear:true,authorization:approvedCompiler==='4e0b9779df3bf7b627d7d9fbfc43cfffd67bb053f87c69a9f832c5690b6888a2'?'v0.0.19 exact compiler carrier admission 2026-09-29':'user explicit narrow remediation approval 2026-09-13'};
 }
 function classifyLocalhostTestKey(id,raw){
  if(rawOnly||id!==approvedLocalhostKeyObject||!ids.includes(approvedLocalhostCertObject))return null;
@@ -94,5 +99,5 @@ try{
 }catch(e){child.kill();throw e;}
 if(!refs().equals(initial))throw Error('refs changed during scan');
 const sha=b=>createHash('sha256').update(b).digest('hex');
-console.log(JSON.stringify({schema:'wasmc.reachable-credential-scan/v1',detector_set:'high-confidence-credentials-v0',accepted:findings.length===0,raw_only:rawOnly,reachable_objects:ids.length,scanned_blobs:blobs.length,raw_bytes:bytes,skipped_blobs:0,scan_errors:0,refs_sha256:sha(initial),objects_sha256:sha(ids.join('\n')+'\n'),raw_findings:rawFindings,classified_false_positives:classifiedFalsePositives,findings,scope:'all raw bytes scanned; two exact frozen compiler carriers and one exact paired localhost-only self-signed test fixture classified by object and cryptographic identity; not exhaustive secret-free proof'}));
+console.log(JSON.stringify({schema:'wasmc.reachable-credential-scan/v1',detector_set:'high-confidence-credentials-v0',accepted:findings.length===0,raw_only:rawOnly,reachable_objects:ids.length,scanned_blobs:blobs.length,raw_bytes:bytes,skipped_blobs:0,scan_errors:0,refs_sha256:sha(initial),objects_sha256:sha(ids.join('\n')+'\n'),raw_findings:rawFindings,classified_false_positives:classifiedFalsePositives,findings,scope:'all raw bytes scanned; four exact frozen compiler carriers and one exact paired localhost-only self-signed test fixture classified by object and cryptographic identity; not exhaustive secret-free proof'}));
 if(findings.length)process.exitCode=1;

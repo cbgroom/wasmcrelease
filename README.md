@@ -10,7 +10,7 @@
 
 Source-free public packages for the private-source `wasmc` compiler.
 
-This README is frozen inside the v0.0.18 product set. Product version and
+This README is frozen inside the v0.0.19 product set. Product version and
 lifecycle stage are separate: read `release.json` and `channels/prod.json` for
 the current released tag. Hardcoded v0.0.13 references retained below describe
 historical feature provenance; they are not current-release authority.
@@ -144,19 +144,19 @@ TLS+HTTP/router path. Its contract is
 regressions are same-platform advisory signals, while required-platform
 presence, external-client success and expected HTTP status remain hard gates.
 
-The v0.0.18 product Agent guidance starts with
+The v0.0.19 product Agent guidance starts with
 [Library-first discovery](skills/wasmc-lib-discovery/SKILL.md) before implementing
 reusable algorithms/data operations. It teaches real search hits, exact selection,
 installation and supported execution, with an executable documentation regression.
 The guidance is integrity-bound in this release; earlier tags stay frozen.
 
-Frozen product version: **v0.0.18 portable-protocol and LibSearch route-complete product**.
+Frozen product version: **v0.0.19 ordinary-source u64 and Agent-orientation closure product**.
 The [channel policy](docs/RELEASE_CHANNELS.md) defines immutable `-dev.N` →
 `-main.N` → suffix-free prod. Read `release.json` for the default prod;
 previous tags are immutable and prod0.0.x does not imply stable1.x.
 [![LibSearch equivalence](https://github.com/cbgroom/wasmcrelease/actions/workflows/lib-search.yml/badge.svg?branch=main)](https://github.com/cbgroom/wasmcrelease/actions/workflows/lib-search.yml)
 
-v0.0.18 carries forward the Client Foundation and persistent Gateway as an incubating
+v0.0.19 carries forward the Client Foundation and persistent Gateway as an incubating
 runtime surface above the fixed Host. The released source tree includes exact
 WSS control, HTTPS content-addressed bundles, dynamic serial/general-DAG Lib
 composition, atomic replacement and rollback, Client/Gateway restart recovery,
@@ -167,20 +167,22 @@ Lib package or a production fleet service; use
 Search now runs inside the Lib's Wasm, with no runtime catalog/config input:
 `node scripts/wasmc-lib.mjs search "base64 decode"`. It returns v2 typed `hits`
 (packages and APIs), rather than the older v1 package-only JSON. Exact resolve/
-install use the exact v0.0.18 catalog with explicit catalog,
+install use the exact carried-forward v0.0.18 catalog with explicit catalog,
 WIT and artifact digests; search does not select a version or authorize
 installation. The Lib has zero imports and a portable
 Core/Component value view. It is not a shared-memory/CoreLib fast ABI and does
 not solve Wasmi/Node18 compatibility of the existing Std1.4.0.
 
-The v0.0.18 product carries forward `wasmc:data-relational@0.0.2` and
+The v0.0.19 product carries forward `wasmc:data-relational@0.0.2` and
 `mcpgit:resident-memory@0.1.0`, adds `wasmc:router-policy@0.0.1`,
 `wasmc:json@0.0.1`, `wasmc:compression@0.0.1`, and `wasmc:http1-server@0.0.1`, and
 publishes route-complete `wasmc:lib-search@0.4.0`; prior versions remain
 historical exact identities. The exact catalog closes 22 package routes and
 140 exported API routes; the embedded snapshot contains 162 total entries.
-It reuses compiler bytes built from exact private source
-`e69abb73f667f3810b0c40937fd1a1e2d04d4255` and the admitted v0.0.11 Data
+It publishes new compiler bytes built from exact private source
+`566eff42d0f4e4680c5ddd60c6584a9d8ff8e9f4`, adding ordinary-source `u64`
+without widening the independent async, public Map, or `char` boundaries, and
+reuses the admitted v0.0.11 Data
 Foundation Lib bytes. Use `current/` for the latest compiler facade; `dist/` and
 `package/` are frozen v0.0.4 compatibility trees. The public Wasmi/Wasmtime Core
 Runtime SDK is in `sdk/wasmc-core-runtime`; the product also includes the generic
@@ -348,8 +350,8 @@ Rust commands build the public consumer/SDK, not the private compiler.
 
 ### What is shipped and what passed
 
-The compiler is 1,351,666 bytes, has zero Host imports, and its SHA-256 is
-`93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90`.
+The compiler is 1,399,677 bytes, has zero Host imports, and its SHA-256 is
+`4e0b9779df3bf7b627d7d9fbfc43cfffd67bb053f87c69a9f832c5690b6888a2`.
 Each JS Host passed 30 frozen-corpus outputs across the public API/CLI carriers,
 23 reconstructed expression cases (including intentional rejections), and
 192 repeated managed-collection loop calls. Each also passed 5,120 paired
