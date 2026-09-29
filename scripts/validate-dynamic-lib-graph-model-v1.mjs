@@ -11,7 +11,7 @@ const document = await readFile(new URL("../docs/DYNAMIC_LIB_GRAPH_MODEL.md", im
 const normalizedDocument = document.replace(/\s+/g, " ");
 
 assert.equal(model.schema, "wasmc.dynamic-lib-graph-model/v1");
-assert.equal(model.lifecycle, "incubating-v0.0.16-product-model-not-lib-admitted");
+assert.equal(model.lifecycle, "incubating-v0.0.17-product-model-not-lib-admitted");
 assert.equal(model.host_boundary, "resource-window-operation-completion-cancel-release");
 assert.equal(model.graph_shape, "dag");
 assert.equal(orientation.schema, "wasmc.dynamic-client-checkpoint-orientation/v1");
@@ -21,7 +21,7 @@ assert.match(orientation.request_classification.implementation_line_audit_requir
 assert.equal(orientation.lifecycle.qualified, true);
 for (const state of ["admitted", "discoverable", "installable"]) assert.equal(orientation.lifecycle[state], false);
 assert.equal(orientation.lifecycle.product_included, true);
-assert.equal(orientation.lifecycle.product_version, "0.0.16");
+assert.equal(orientation.lifecycle.product_version, "0.0.17");
 assert.equal(orientation.lifecycle.release_stage_authority, "release.json");
 assert.match(orientation.answer, /not general exactly-once/);
 assert.deepEqual(orientation.crash_fault_receipt, {
@@ -59,7 +59,7 @@ assert.match(migrationOrientation.request_classification.rule, /not source-line 
 assert.equal(migrationOrientation.lifecycle.qualified, true);
 for (const state of ["admitted", "discoverable", "installable"]) assert.equal(migrationOrientation.lifecycle[state], false);
 assert.equal(migrationOrientation.lifecycle.product_included, true);
-assert.equal(migrationOrientation.lifecycle.product_version, "0.0.16");
+assert.equal(migrationOrientation.lifecycle.product_version, "0.0.17");
 assert.equal(migrationOrientation.lifecycle.release_stage_authority, "release.json");
 assert.match(migrationOrientation.lifecycle_authority.stopping_rule, /Report product inclusion separately from Lib admission/);
 assert.match(migrationOrientation.adjacent_route_boundary, /not required/);
