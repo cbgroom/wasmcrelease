@@ -1,0 +1,14 @@
+package wasmc:router-policy@0.0.1;
+
+interface policy {
+  route: func(
+    method: u32,
+    path: u32,
+    body-class: u32,
+    request-count: u32,
+  ) -> tuple<u32, u32, u32>;
+}
+
+world router-policy {
+  export policy;
+}

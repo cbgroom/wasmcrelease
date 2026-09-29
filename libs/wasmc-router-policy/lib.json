@@ -1,0 +1,63 @@
+{
+  "agent": {
+    "delta": {
+      "path": "references/agent-delta.json",
+      "sha256": "7c9ede6444bfec777740de2eb4033863839f1cf7743feef70b34f890248d05fb"
+    },
+    "skill": {
+      "path": "SKILL.md",
+      "sha256": "3dac9edff951eada580dd1526dedab64b69d5e968e87b7db68875022364839bb"
+    }
+  },
+  "admission": {
+    "approved": true,
+    "date": "2026-09-29",
+    "qualification": "admission/portable-libs-v018/qualification.json",
+    "source_authority": "a2a1fcd53bc39d34bc04d3893c6b5357ec3d066e"
+  },
+  "artifact": {
+    "bytes": 432,
+    "format": "core-wasm",
+    "path": "artifact.wasm",
+    "sha256": "54ae7a1fbbb566fb2aa4311bf6c793575a4dc0102db77d3f705f4dd910288e9d"
+  },
+  "build": {
+    "backend": "wasm-tools",
+    "inputs": [
+      {
+        "kind": "wat-source",
+        "path": "libsrc/wasmc-router-policy/src/router-policy.wat",
+        "sha256": "f07e4ee897095f6e771c15679663699a617ed5bc350595b69a71cf10d6cd22ca"
+      }
+    ],
+    "language": "wat",
+    "locked": true,
+    "toolchain": "wasm-tools 1.255.0"
+  },
+  "compatibility": {
+    "abi_epoch": 1,
+    "wasmc_min": "0.0.1"
+  },
+  "component": {
+    "bytes": 1226,
+    "format": "component-wasm",
+    "path": "component.wasm",
+    "sha256": "97e93a997ceb84d1188069120c7258b8702d5ac3db15a135f41f387e61458495"
+  },
+  "id": "wasmc-router-policy",
+  "qualification": {
+    "behavior": "scripts/test-router-policy.mjs",
+    "behavior_cases": 1152,
+    "core_imports": 0,
+    "deterministic_second_build": true,
+    "wasmi": "scripts/test-libsrc-wasmi.mjs"
+  },
+  "schema": "wasmc.lib/v0",
+  "version": "0.0.1",
+  "wit": {
+    "package": "wasmc:router-policy@0.0.1",
+    "path": "lib.wit",
+    "sha256": "69d36e63480186252bd4a621e9ab34695bdb6707d6b833b3adfcc4360ceadd0d",
+    "world": "router-policy"
+  }
+}

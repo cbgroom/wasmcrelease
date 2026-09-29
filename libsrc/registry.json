@@ -23,8 +23,8 @@
     },
     {
       "id": "wasmc-router-policy",
-      "version": "0.0.1-dev.1",
-      "stage": "public-source-candidate",
+      "version": "0.0.1",
+      "stage": "admitted",
       "semantic_kind": "routing-policy",
       "host_import_budget": 0,
       "source_root": "libsrc/wasmc-router-policy",
@@ -32,45 +32,45 @@
         "path": "host/tests/https/artifacts/router-policy.wasm",
         "sha256": "9d86bc5e3a99537f2673ffc2e4e3053abf30dec1b7927c85729d434be64c2c3d"
       },
-      "next_gate": "behavior-equivalence-and-wit-shape"
+      "next_gate": null
     },
     {
       "id": "wasmc-json",
-      "version": "0.0.1-dev.1",
-      "stage": "public-source-candidate",
+      "version": "0.0.1",
+      "stage": "admitted",
       "semantic_kind": "json-document",
       "host_import_budget": 0,
       "oracle": {
         "path": "host/tests/https/artifacts/json.wasm",
         "sha256": "18f257896dcf0a95937a0d9652323d6e2b91fb01f430861eda23244344683320"
       },
-      "next_gate": "resource-boundary-calibration-and-multi-engine",
+      "next_gate": null,
       "source_root": "libsrc/wasmc-json"
     },
     {
       "id": "wasmc-compression",
-      "version": "0.0.1-dev.1",
-      "stage": "public-source-candidate",
+      "version": "0.0.1",
+      "stage": "admitted",
       "semantic_kind": "gzip",
       "host_import_budget": 0,
       "oracle": {
         "path": "host/tests/https/artifacts/compression.wasm",
         "sha256": "57a085c396108f7eb2d56e99ca373cbdc5731125314e05fe68c93dce0431f589"
       },
-      "next_gate": "resource-boundary-calibration-and-multi-engine",
+      "next_gate": null,
       "source_root": "libsrc/wasmc-compression"
     },
     {
       "id": "wasmc-http1",
-      "version": "0.0.1-dev.1",
-      "stage": "public-source-candidate",
+      "version": "0.0.1",
+      "stage": "admitted",
       "semantic_kind": "http1-wire",
       "host_import_budget": 0,
       "oracle": {
         "path": "host/tests/https/artifacts/http1-server.wasm",
         "sha256": "f5d528f7eb5290e128723e0b6fbf393915fe22a63501b37f97cda36062771ad6"
       },
-      "next_gate": "resource-boundary-calibration-and-broader-protocol-coverage",
+      "next_gate": null,
       "source_root": "libsrc/wasmc-http1"
     },
     {
@@ -249,7 +249,9 @@
       "semantic_kind": "lib-defined-system-file",
       "host_import_budget": 0,
       "source_root": "libsrc/wasmc-system-file-prototype",
-      "origin": { "kind": "native-public" },
+      "origin": {
+        "kind": "native-public"
+      },
       "next_gate": "descriptor-schema-review-and-wasm-lowering"
     },
     {
@@ -259,7 +261,9 @@
       "semantic_kind": "lib-defined-system-process",
       "host_import_budget": 0,
       "source_root": "libsrc/wasmc-system-process-prototype",
-      "origin": { "kind": "native-public" },
+      "origin": {
+        "kind": "native-public"
+      },
       "next_gate": "additional-desktop-architecture-parity-and-android-app-uid-provider"
     },
     {
@@ -269,7 +273,9 @@
       "semantic_kind": "lib-defined-system-network",
       "host_import_budget": 0,
       "source_root": "libsrc/wasmc-system-network-prototype",
-      "origin": { "kind": "native-public" },
+      "origin": {
+        "kind": "native-public"
+      },
       "next_gate": "descriptor-schema-review-and-wasm-lowering"
     },
     {
@@ -279,7 +285,9 @@
       "semantic_kind": "linux-vfs-fd-endpoint-abstraction",
       "host_import_budget": 0,
       "source_root": "libsrc/wasmc-system-linux-endpoint",
-      "origin": { "kind": "native-public" },
+      "origin": {
+        "kind": "native-public"
+      },
       "next_gate": "cross-architecture-linux-and-wasm-lowering"
     },
     {
@@ -289,7 +297,9 @@
       "semantic_kind": "linux-uinput-virtual-input-device",
       "host_import_budget": 0,
       "source_root": "libsrc/wasmc-system-linux-uinput",
-      "origin": { "kind": "native-public" },
+      "origin": {
+        "kind": "native-public"
+      },
       "next_gate": "descriptor-schema-review-and-wasm-lowering"
     },
     {
@@ -299,7 +309,9 @@
       "semantic_kind": "linux-ipv4-tcp-socket-transport",
       "host_import_budget": 0,
       "source_root": "libsrc/wasmc-system-linux-socket",
-      "origin": { "kind": "native-public" },
+      "origin": {
+        "kind": "native-public"
+      },
       "next_gate": "cross-architecture-linux-and-https-transport-migration"
     },
     {
@@ -309,7 +321,9 @@
       "semantic_kind": "android-binding-for-standard-display",
       "host_import_budget": 0,
       "source_root": "libsrc/wasmc-system-android-display",
-      "origin": { "kind": "native-public" },
+      "origin": {
+        "kind": "native-public"
+      },
       "next_gate": "descriptor-schema-review-and-wasm-lowering"
     },
     {
@@ -319,7 +333,9 @@
       "semantic_kind": "android-binding-for-standard-semantic-ui",
       "host_import_budget": 0,
       "source_root": "libsrc/wasmc-system-android-ui",
-      "origin": { "kind": "native-public" },
+      "origin": {
+        "kind": "native-public"
+      },
       "next_gate": "descriptor-schema-review-and-wasm-lowering"
     },
     {
@@ -329,7 +345,9 @@
       "semantic_kind": "android-binding-for-standard-input-control",
       "host_import_budget": 0,
       "source_root": "libsrc/wasmc-system-android-input",
-      "origin": { "kind": "native-public" },
+      "origin": {
+        "kind": "native-public"
+      },
       "next_gate": "direct-android-uinput-and-wasm-lowering"
     },
     {
@@ -339,7 +357,9 @@
       "semantic_kind": "android-uinput-binding-for-standard-virtual-input",
       "host_import_budget": 0,
       "source_root": "libsrc/wasmc-system-android-uinput",
-      "origin": { "kind": "native-public" },
+      "origin": {
+        "kind": "native-public"
+      },
       "next_gate": "descriptor-schema-review-and-wasm-lowering"
     },
     {
@@ -349,7 +369,9 @@
       "semantic_kind": "cross-platform-app-authorization-policy",
       "host_import_budget": 0,
       "source_root": "libsrc/wasmc-app-authorization-policy",
-      "origin": { "kind": "native-public" },
+      "origin": {
+        "kind": "native-public"
+      },
       "next_gate": "physical-device-prompt-callbacks-and-component-lowering"
     },
     {
@@ -359,7 +381,9 @@
       "semantic_kind": "ios-app-authorized-contacts",
       "host_import_budget": 0,
       "source_root": "libsrc/wasmc-system-ios-app-contacts",
-      "origin": { "kind": "native-public" },
+      "origin": {
+        "kind": "native-public"
+      },
       "next_gate": "physical-device-qualification-and-component-lowering"
     },
     {
@@ -369,7 +393,9 @@
       "semantic_kind": "ios-binding-for-standard-app-surface-control",
       "host_import_budget": 0,
       "source_root": "libsrc/wasmc-system-ios-app-surface-control",
-      "origin": { "kind": "native-public" },
+      "origin": {
+        "kind": "native-public"
+      },
       "next_gate": "physical-device-pip-pixels-wasm-lowering-and-admission"
     }
   ]

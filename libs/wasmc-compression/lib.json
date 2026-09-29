@@ -1,0 +1,66 @@
+{
+  "agent": {
+    "delta": {
+      "path": "references/agent-delta.json",
+      "sha256": "33792111986f15a419dcd79c7db185d340de30c937ae678c4ad41061b0e7582b"
+    },
+    "skill": {
+      "path": "SKILL.md",
+      "sha256": "5f794a8587d4bfeef508c6e326b234539dd0f2b0f86cff056f7dcf299939085f"
+    }
+  },
+  "admission": {
+    "approved": true,
+    "date": "2026-09-29",
+    "qualification": "admission/portable-libs-v018/qualification.json",
+    "source_authority": "a2a1fcd53bc39d34bc04d3893c6b5357ec3d066e"
+  },
+  "artifact": {
+    "bytes": 120224,
+    "format": "core-wasm",
+    "path": "artifact.wasm",
+    "sha256": "1503ac6db4ac7a319fc628b9aa5c55071e02824519252839078e989457904f49"
+  },
+  "build": {
+    "backend": "cargo",
+    "inputs": [
+      {
+        "kind": "cargo-lock",
+        "path": "libsrc/wasmc-compression/Cargo.lock",
+        "sha256": "fa435d917499fea1fff4bfdf95af100281da9aa0f31eba181eff90029d3cf268"
+      }
+    ],
+    "language": "rust",
+    "locked": true,
+    "offline": false,
+    "profile": "release",
+    "target": "wasm32-unknown-unknown",
+    "toolchain": "rustc 1.96.0 (ac68faa20 2026-05-25)"
+  },
+  "compatibility": {
+    "abi_epoch": 1,
+    "wasmc_min": "0.0.1"
+  },
+  "component": {
+    "bytes": 121195,
+    "format": "component-wasm",
+    "path": "component.wasm",
+    "sha256": "fdaed2969966567894105d410cf7da92c6fe3b8fcc95793000fbcb7edb41874d"
+  },
+  "id": "wasmc-compression",
+  "qualification": {
+    "behavior": "scripts/test-compression-libsrc.mjs",
+    "behavior_cases": 11,
+    "core_imports": 0,
+    "deterministic_second_build": true,
+    "wasmi": "scripts/test-libsrc-wasmi.mjs"
+  },
+  "schema": "wasmc.lib/v0",
+  "version": "0.0.1",
+  "wit": {
+    "package": "wasmc:compression@0.0.1",
+    "path": "lib.wit",
+    "sha256": "299e5e3b51ebce56cae295c3e4687f3e72671b16f7be6b37f2417c290fa05697",
+    "world": "compression"
+  }
+}

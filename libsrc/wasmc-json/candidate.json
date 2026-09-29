@@ -1,7 +1,7 @@
 {
   "schema": "wasmc.libsrc-candidate/v1",
   "id": "wasmc-json",
-  "version": "0.0.1-dev.1",
+  "version": "0.0.1",
   "wit": "wit/world.wit",
   "source": [
     "Cargo.toml",
@@ -23,12 +23,11 @@
     "wit-contract-equivalence",
     "representative-behavior-equivalence",
     "resource-boundary-calibration",
-    "multi-engine-qualification"
-  ],
-  "pending_gates": [
+    "multi-engine-qualification",
     "admission-review"
   ],
-  "admitted": false,
+  "pending_gates": [],
+  "admitted": true,
   "qualification": {
     "runner": "node",
     "script": "scripts/test-json-libsrc.mjs"
@@ -48,5 +47,11 @@
       "step": "Execute import-free candidates on Wasmi 2",
       "conclusion": "success"
     }
+  },
+  "admission": {
+    "date": "2026-09-29",
+    "package": "libs/wasmc-json",
+    "qualification": "admission/portable-libs-v018/qualification.json",
+    "source_authority": "a2a1fcd53bc39d34bc04d3893c6b5357ec3d066e"
   }
 }

@@ -1,7 +1,7 @@
 {
   "schema": "wasmc.libsrc-candidate/v1",
   "id": "wasmc-router-policy",
-  "version": "0.0.1-dev.1",
+  "version": "0.0.1",
   "wit": "lib.wit",
   "source": [
     "src/router-policy.wat"
@@ -21,7 +21,7 @@
     "wit-reviewed",
     "multi-engine-before-admission"
   ],
-  "admitted": false,
+  "admitted": true,
   "qualification": {
     "runner": "node",
     "script": "scripts/test-router-policy.mjs"
@@ -31,11 +31,10 @@
     "zero-imports",
     "behavior-equivalence",
     "wit-reviewed",
-    "multi-engine-qualification"
-  ],
-  "pending_gates": [
+    "multi-engine-qualification",
     "admission-review"
   ],
+  "pending_gates": [],
   "hosted_evidence": {
     "wasmi_2": {
       "run": 35499686100,
@@ -43,5 +42,11 @@
       "step": "Execute import-free candidates on Wasmi 2",
       "conclusion": "success"
     }
+  },
+  "admission": {
+    "date": "2026-09-29",
+    "package": "libs/wasmc-router-policy",
+    "qualification": "admission/portable-libs-v018/qualification.json",
+    "source_authority": "a2a1fcd53bc39d34bc04d3893c6b5357ec3d066e"
   }
 }

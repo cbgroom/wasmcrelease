@@ -1,0 +1,511 @@
+{
+  "schema": "wasmc.portable-libs-v018-qualification/v1",
+  "date": "2026-09-29",
+  "source_authority": "a2a1fcd53bc39d34bc04d3893c6b5357ec3d066e",
+  "toolchain": {
+    "rustc": "rustc 1.96.0 (ac68faa20 2026-05-25)",
+    "cargo": "cargo 1.96.0 (30a34c682 2026-05-25)",
+    "wasm_tools": "wasm-tools 1.255.0",
+    "wasmtime": "wasmtime 47.0.3 (5554cc1a6 2026-07-31)",
+    "node": "v26.5.1",
+    "wasmi": "2.0.0"
+  },
+  "packages": [
+    {
+      "id": "wasmc-router-policy",
+      "behavior": {
+        "accepted": true,
+        "candidate": "wasmc-router-policy",
+        "version": "0.0.1-dev.1",
+        "cases": 1152,
+        "component_cases": 4,
+        "component_wit_executable": true,
+        "host_imports": 0,
+        "oracle_sha256": "9d86bc5e3a99537f2673ffc2e4e3053abf30dec1b7927c85729d434be64c2c3d",
+        "candidate_sha256": "54ae7a1fbbb566fb2aa4311bf6c793575a4dc0102db77d3f705f4dd910288e9d",
+        "byte_identity_required": false
+      },
+      "artifact": {
+        "bytes": 432,
+        "sha256": "54ae7a1fbbb566fb2aa4311bf6c793575a4dc0102db77d3f705f4dd910288e9d"
+      },
+      "component": {
+        "bytes": 1226,
+        "sha256": "97e93a997ceb84d1188069120c7258b8702d5ac3db15a135f41f387e61458495"
+      },
+      "independent_second_build_byte_identical": true
+    },
+    {
+      "id": "wasmc-json",
+      "behavior": {
+        "accepted": true,
+        "candidate": "wasmc-json",
+        "version": "0.0.1-dev.1",
+        "cases": 24,
+        "host_imports": 0,
+        "wit_equivalent": true,
+        "oracle_sha256": "18f257896dcf0a95937a0d9652323d6e2b91fb01f430861eda23244344683320",
+        "candidate_sha256": "2f9a4a93fce1d804dc33ddf341f62b25309529874c1c273d06e3d515f999647f",
+        "candidate_bytes": 112864,
+        "representative_behavior_equivalent": true,
+        "resource_boundary_calibration": {
+          "input_bytes": 65536,
+          "output_bytes": 65536,
+          "pointers": 64,
+          "pointer_bytes": 1024,
+          "depth": 64,
+          "equivalent": true
+        },
+        "receipts": [
+          {
+            "name": "compact-empty",
+            "result": {
+              "ok": true,
+              "value": "{}"
+            }
+          },
+          {
+            "name": "compact-object",
+            "result": {
+              "ok": true,
+              "value": "{\"a\":1}"
+            }
+          },
+          {
+            "name": "compact-whitespace",
+            "result": {
+              "ok": true,
+              "value": "{\"a\":[1,true,null],\"b\":2}"
+            }
+          },
+          {
+            "name": "compact-array",
+            "result": {
+              "ok": true,
+              "value": "[1,2,3]"
+            }
+          },
+          {
+            "name": "compact-string",
+            "result": {
+              "ok": true,
+              "value": "\"x\""
+            }
+          },
+          {
+            "name": "compact-invalid",
+            "result": {
+              "ok": false,
+              "error": "invalid-json"
+            }
+          },
+          {
+            "name": "validate-object",
+            "result": {
+              "ok": true,
+              "value": null
+            }
+          },
+          {
+            "name": "validate-null",
+            "result": {
+              "ok": true,
+              "value": null
+            }
+          },
+          {
+            "name": "validate-invalid",
+            "result": {
+              "ok": false,
+              "error": "invalid-json"
+            }
+          },
+          {
+            "name": "select-nested",
+            "result": {
+              "ok": true,
+              "value": [
+                "{\"b\":2}",
+                "2",
+                "20",
+                null
+              ]
+            }
+          },
+          {
+            "name": "select-escaped",
+            "result": {
+              "ok": true,
+              "value": [
+                "1",
+                "2",
+                null
+              ]
+            }
+          },
+          {
+            "name": "select-relative",
+            "result": {
+              "ok": false,
+              "error": "invalid-pointer"
+            }
+          },
+          {
+            "name": "select-bad-escape",
+            "result": {
+              "ok": false,
+              "error": "invalid-pointer"
+            }
+          },
+          {
+            "name": "select-array",
+            "result": {
+              "ok": true,
+              "value": [
+                "10",
+                "20",
+                null
+              ]
+            }
+          }
+        ],
+        "boundary_receipts": [
+          {
+            "name": "input-65536",
+            "result": "{\"ok\":true,\"value\":null}"
+          },
+          {
+            "name": "input-65537",
+            "result": "{\"ok\":false,\"error\":\"input-too-large\"}"
+          },
+          {
+            "name": "pointer-1024",
+            "result": "{\"ok\":true,\"value\":[null]}"
+          },
+          {
+            "name": "pointer-1025",
+            "result": "{\"ok\":false,\"error\":\"pointer-too-long\"}"
+          },
+          {
+            "name": "pointers-64",
+            "result": "{\"ok\":true,\"value\":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,…"
+          },
+          {
+            "name": "pointers-65",
+            "result": "{\"ok\":false,\"error\":\"too-many-pointers\"}"
+          },
+          {
+            "name": "depth-64",
+            "result": "{\"ok\":true,\"value\":null}"
+          },
+          {
+            "name": "depth-65",
+            "result": "{\"ok\":false,\"error\":\"depth-limit\"}"
+          },
+          {
+            "name": "output-under-65536",
+            "result": "{\"ok\":true,\"value\":[\"\\\"zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz…"
+          },
+          {
+            "name": "output-over-65536",
+            "result": "{\"ok\":false,\"error\":\"output-too-large\"}"
+          }
+        ]
+      },
+      "artifact": {
+        "bytes": 112864,
+        "sha256": "2f9a4a93fce1d804dc33ddf341f62b25309529874c1c273d06e3d515f999647f"
+      },
+      "component": {
+        "bytes": 114136,
+        "sha256": "32cff349fd2e6d90c5132f668206576f28b02a73b543d64ee2bb06799ad8d54d"
+      },
+      "independent_second_build_byte_identical": true
+    },
+    {
+      "id": "wasmc-compression",
+      "behavior": {
+        "accepted": true,
+        "candidate": "wasmc-compression",
+        "version": "0.0.1-dev.1",
+        "cases": 11,
+        "host_imports": 0,
+        "wit_equivalent": true,
+        "deterministic_gzip_byte_equivalent": true,
+        "oracle_sha256": "57a085c396108f7eb2d56e99ca373cbdc5731125314e05fe68c93dce0431f589",
+        "candidate_sha256": "1503ac6db4ac7a319fc628b9aa5c55071e02824519252839078e989457904f49",
+        "candidate_bytes": 120224,
+        "representative_behavior_equivalent": true,
+        "resource_boundary_calibration": {
+          "input_bytes": 1048576,
+          "output_bytes": 4194304,
+          "equivalent": true
+        },
+        "receipts": [
+          {
+            "invocation": "compress([])",
+            "result": "ok([31, 139, 8, 0, 0, 0, 0, 0, 0, 255, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0])"
+          },
+          {
+            "invocation": "compress([104,101,108,108,111])",
+            "result": "ok([31, 139, 8, 0, 0, 0, 0, 0, 0, 255, 203, 72, 205, 201, 201, 7, 0, 134, 166, 16, 54, 5, 0, 0, 0])"
+          },
+          {
+            "invocation": "compress([97,97,97,97,97,97,97,97,97,97])",
+            "result": "ok([31, 139, 8, 0, 0, 0, 0, 0, 0, 255, 75, 76, 132, 1, 0, 240, 205, 17, 76, 10, 0, 0, 0])"
+          },
+          {
+            "invocation": "compress([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15])",
+            "result": "ok([31, 139, 8, 0, 0, 0, 0, 0, 0, 255, 99, 96, 100, 98, 102, 97, 101, 99, 231, 224, 228, 226, 230, 225, 229, 227, 7, 0, 136, 226, 206, 206, 16, 0, 0, 0])"
+          },
+          {
+            "invocation": "decompress([31,139,8,0,0,0,0,0,0,255,3,0,0,0,0,0,0,0,0,0])",
+            "result": "ok([])"
+          },
+          {
+            "invocation": "decompress([31,139,8,0,0,0,0,0,0,255,203,72,205,201,201,7,0,134,166,16,54,5,0,0,0])",
+            "result": "ok([104, 101, 108, 108, 111])"
+          },
+          {
+            "invocation": "decompress([1,2,3])",
+            "result": "err(invalid-stream)"
+          }
+        ],
+        "boundary_receipts": [
+          {
+            "name": "input-1MiB",
+            "result": {
+              "output_length": 1051,
+              "prefix": [
+                31,
+                139,
+                8,
+                0
+              ]
+            }
+          },
+          {
+            "name": "input-1MiB+1",
+            "result": {
+              "error": "input-too-large"
+            }
+          },
+          {
+            "name": "output-4MiB",
+            "result": {
+              "output_length": 4194304,
+              "prefix": [
+                97,
+                97,
+                97,
+                97
+              ]
+            }
+          },
+          {
+            "name": "output-4MiB+1",
+            "result": {
+              "error": "output-too-large"
+            }
+          }
+        ]
+      },
+      "artifact": {
+        "bytes": 120224,
+        "sha256": "1503ac6db4ac7a319fc628b9aa5c55071e02824519252839078e989457904f49"
+      },
+      "component": {
+        "bytes": 121195,
+        "sha256": "fdaed2969966567894105d410cf7da92c6fe3b8fcc95793000fbcb7edb41874d"
+      },
+      "independent_second_build_byte_identical": true
+    },
+    {
+      "id": "wasmc-http1",
+      "behavior": {
+        "accepted": true,
+        "candidate": "wasmc-http1",
+        "version": "0.0.1-dev.1",
+        "cases": 1422,
+        "host_imports": 0,
+        "wit_equivalent": true,
+        "http1_framing_equivalent": true,
+        "oracle_sha256": "f5d528f7eb5290e128723e0b6fbf393915fe22a63501b37f97cda36062771ad6",
+        "candidate_sha256": "b2ba43df1530bfa994c1364c086f41b7d91d0315781804f1b98e32ac758af55c",
+        "candidate_bytes": 44142,
+        "representative_behavior_equivalent": true,
+        "resource_boundary_calibration": {
+          "input_bytes": 65536,
+          "body_bytes": 1048576,
+          "headers": 32,
+          "output_bytes": 65536,
+          "equivalent": true
+        },
+        "broader_status_header_coverage": {
+          "status_codes": 1001,
+          "header_name_cases": 136,
+          "header_value_cases": 256,
+          "equivalent": true
+        },
+        "receipts": [
+          {
+            "invocation": "parse-request([71,69,84,32,47,32,72,84,84,80,47,49,46,49,13,10,72,111,115,116,58,32,101,120,97,109,112,108,101,46,99,111,109,13,10,13,10])",
+            "result": "ok({method: \"GET\", target: \"/\", minor-version: 1, headers: [{name: \"Host\", value: [101, 120, 97, 109, 112, 108, 101, 46, 99, 111, 109]}], body-offset: 37})"
+          },
+          {
+            "invocation": "request-frame-length([71,69,84,32,47,32,72,84,84,80,47,49,46,49,13,10,72,111,115,116,58,32,101,120,97,109,112,108,101,46,99,111,109,13,10,13,10])",
+            "result": "ok(some(37))"
+          },
+          {
+            "invocation": "parse-request([80,79,83,84,32,47,105,116,101,109,115,32,72,84,84,80,47,49,46,49,13,10,72,111,115,116,58,32,120,13,10,67,111,110,116,101,110,116,45,76,101,110,103,116,104,58,32,53,13,10,13,10,104,101,108,108,111])",
+            "result": "ok({method: \"POST\", target: \"/items\", minor-version: 1, headers: [{name: \"Host\", value: [120]}, {name: \"Content-Length\", value: [53]}], body-offset: 52})"
+          },
+          {
+            "invocation": "request-frame-length([80,79,83,84,32,47,105,116,101,109,115,32,72,84,84,80,47,49,46,49,13,10,72,111,115,116,58,32,120,13,10,67,111,110,116,101,110,116,45,76,101,110,103,116,104,58,32,53,13,10,13,10,104,101,108,108,111])",
+            "result": "ok(some(57))"
+          },
+          {
+            "invocation": "parse-request([80,79,83,84,32,47,105,116,101,109,115,32,72,84,84,80,47,49,46,49,13,10,72,111,115,116,58,32,120,13,10,67,111,110,116,101,110,116,45,76,101,110,103,116,104,58,32,53,13,10,13,10,104,101,108])",
+            "result": "ok({method: \"POST\", target: \"/items\", minor-version: 1, headers: [{name: \"Host\", value: [120]}, {name: \"Content-Length\", value: [53]}], body-offset: 52})"
+          },
+          {
+            "invocation": "request-frame-length([80,79,83,84,32,47,105,116,101,109,115,32,72,84,84,80,47,49,46,49,13,10,72,111,115,116,58,32,120,13,10,67,111,110,116,101,110,116,45,76,101,110,103,116,104,58,32,53,13,10,13,10,104,101,108])",
+            "result": "ok(none)"
+          },
+          {
+            "invocation": "parse-request([80,79,83,84,32,47,105,116,101,109,115,32,72,84,84,80,47,49,46,49,13,10,67,111,110,116,101,110,116,45,76,101,110,103,116,104,58,32,120,13,10,13,10])",
+            "result": "ok({method: \"POST\", target: \"/items\", minor-version: 1, headers: [{name: \"Content-Length\", value: [120]}], body-offset: 43})"
+          },
+          {
+            "invocation": "request-frame-length([80,79,83,84,32,47,105,116,101,109,115,32,72,84,84,80,47,49,46,49,13,10,67,111,110,116,101,110,116,45,76,101,110,103,116,104,58,32,120,13,10,13,10])",
+            "result": "err(invalid-content-length)"
+          },
+          {
+            "invocation": "parse-request([80,79,83,84,32,47,105,116,101,109,115,32,72,84,84,80,47,49,46,49,13,10,84,114,97,110,115,102,101,114,45,69,110,99,111,100,105,110,103,58,32,99,104,117,110,107,101,100,13,10,13,10])",
+            "result": "ok({method: \"POST\", target: \"/items\", minor-version: 1, headers: [{name: \"Transfer-Encoding\", value: [99, 104, 117, 110, 107, 101, 100]}], body-offset: 52})"
+          },
+          {
+            "invocation": "request-frame-length([80,79,83,84,32,47,105,116,101,109,115,32,72,84,84,80,47,49,46,49,13,10,84,114,97,110,115,102,101,114,45,69,110,99,111,100,105,110,103,58,32,99,104,117,110,107,101,100,13,10,13,10])",
+            "result": "err(unsupported-framing)"
+          },
+          {
+            "invocation": "parse-request([71,69,84,32,47,32,72,84,84,80,47,49,46,48,13,10,13,10])",
+            "result": "ok({method: \"GET\", target: \"/\", minor-version: 0, headers: [], body-offset: 18})"
+          },
+          {
+            "invocation": "request-frame-length([71,69,84,32,47,32,72,84,84,80,47,49,46,48,13,10,13,10])",
+            "result": "ok(some(18))"
+          },
+          {
+            "invocation": "parse-request([66,65,68,13,10,13,10])",
+            "result": "err(invalid-syntax)"
+          },
+          {
+            "invocation": "request-frame-length([66,65,68,13,10,13,10])",
+            "result": "err(invalid-syntax)"
+          },
+          {
+            "invocation": "serialize-response-head(1, 200, [])",
+            "result": "ok([72, 84, 84, 80, 47, 49, 46, 49, 32, 50, 48, 48, 32, 79, 75, 13, 10, 13, 10])"
+          },
+          {
+            "invocation": "serialize-response-head(1, 201, [{name:\"content-type\",value:[97,112,112,108,105,99,97,116,105,111,110,47,106,115,111,110]}])",
+            "result": "ok([72, 84, 84, 80, 47, 49, 46, 49, 32, 50, 48, 49, 32, 67, 114, 101, 97, 116, 101, 100, 13, 10, 99, 111, 110, 116, 101, 110, 116, 45, 116, 121, 112, 101, 58, 32, 97, 112, 112, 108, 105, 99, 97, 116, 105, 111, 110, 47, 106, 115, 111, 110, 13, 10, 13, 10])"
+          },
+          {
+            "invocation": "serialize-response-head(0, 204, [])",
+            "result": "ok([72, 84, 84, 80, 47, 49, 46, 48, 32, 50, 48, 52, 32, 78, 111, 32, 67, 111, 110, 116, 101, 110, 116, 13, 10, 13, 10])"
+          },
+          {
+            "invocation": "serialize-response-head(2, 200, [])",
+            "result": "err(invalid-version)"
+          },
+          {
+            "invocation": "serialize-response-head(1, 99, [])",
+            "result": "err(invalid-status)"
+          }
+        ],
+        "boundary_receipts": [
+          {
+            "name": "request-headers-32",
+            "result": {
+              "ok": true
+            }
+          },
+          {
+            "name": "response-headers-32",
+            "result": {
+              "output_length": 297
+            }
+          },
+          {
+            "name": "request-headers-33",
+            "result": {
+              "error": "too-many-headers"
+            }
+          },
+          {
+            "name": "response-headers-33",
+            "result": "too-many-headers"
+          },
+          {
+            "name": "body-1048576",
+            "result": {
+              "frame_length": null
+            }
+          },
+          {
+            "name": "body-1048577",
+            "result": {
+              "error": "body-too-large"
+            }
+          },
+          {
+            "name": "input-65536",
+            "result": {
+              "frame_length": null
+            }
+          },
+          {
+            "name": "input-65537",
+            "result": {
+              "error": "input-too-large"
+            }
+          },
+          {
+            "name": "output-value-65512",
+            "result": {
+              "output_length": 65536
+            }
+          },
+          {
+            "name": "output-value-65520",
+            "result": "output-too-large"
+          }
+        ]
+      },
+      "artifact": {
+        "bytes": 44142,
+        "sha256": "b2ba43df1530bfa994c1364c086f41b7d91d0315781804f1b98e32ac758af55c"
+      },
+      "component": {
+        "bytes": 46144,
+        "sha256": "47810979c27916357474c3b4ce776e648b69b8425262196b4c908f21a9c7b34c"
+      },
+      "independent_second_build_byte_identical": true
+    }
+  ],
+  "wasmi": {
+    "accepted": true,
+    "engine": "wasmi-2.0.0",
+    "representative_execution": true,
+    "pure_host_imports": 0
+  },
+  "claims": {
+    "qualified": true,
+    "admitted": false,
+    "released": false,
+    "discoverable": false,
+    "installable": false
+  }
+}
