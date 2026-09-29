@@ -39,6 +39,7 @@ if (index.latest !== releaseJson.version || !versionRow || versionRow.tag !== re
 
 const runtimeFiles = (await walk('runtime')).sort();
 const admissionFiles = (await walk('admission')).sort();
+const agentEvaluationFiles = (await walk('agent-evaluation')).sort();
 const rootSkillFiles = (await walk('skills/wasmc-developer')).sort();
 rootSkillFiles.push(...await walk('skills/wasmc-lib'));
 rootSkillFiles.push(...await walk('skills/wasmc-lib-discovery'));
@@ -71,6 +72,14 @@ ciTools.push(
   'scripts/wasmc-live-agent-trace-evaluation-v1.mjs',
   'scripts/test-live-agent-trace-evaluation-v1.mjs'
 );
+ciTools.push(
+  'scripts/fresh-agent-learning-v1.mjs',
+  'scripts/pi-pre-release-gate-v1.mjs',
+  'scripts/run-pi-learning-model-v1.mjs',
+  'scripts/test-fresh-agent-learning-v1.mjs',
+  'scripts/test-pi-pre-release-gate-v1.mjs',
+  'scripts/update-current-compiler.mjs'
+);
 ciTools.push('scripts/test-library-first.mjs');
 const compatibilityTools = ['scripts/core-compatibility.mjs', 'scripts/check-core-compatibility.mjs', 'scripts/test-core-compatibility.mjs'];
 const rustWorkspaceFiles = ['Cargo.toml', 'Cargo.lock'];
@@ -97,6 +106,7 @@ const existing = compactRelease
 const discoveredReleasePaths = [...new Set([
   ...existing,
   ...admissionFiles,
+  ...agentEvaluationFiles,
   ...runtimeFiles,
   ...rootSkillFiles,
   ...sdkFiles,

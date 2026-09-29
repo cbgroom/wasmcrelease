@@ -124,7 +124,41 @@ if (
   throw new Error('runtime registry identity drifted');
 }
 
+const releaseRuntimeMatches =
+  release.runtime.compiler_bytes === compiler.length &&
+  release.runtime.compiler_sha256 === sha(compiler);
+let expectedHostCommit = releaseRuntimeMatches ? release.runtime.product_candidate_commit : null;
+let expectedHostArchive = releaseRuntimeMatches ? release.runtime.source_free_archive_sha256 : null;
+if (!releaseRuntimeMatches) {
+  const dev = await json('channels/dev.json');
+  const candidatePath = `channels/candidates/${dev.version}.json`;
+  const candidate = await json(candidatePath);
+  if (
+    dev.schema !== 'wasmc.release-stage/v1' ||
+    dev.stage !== 'dev' ||
+    dev.product_candidate_commit.length !== 40 ||
+    dev.product_set_sha256 !== candidate.product_set_sha256 ||
+    candidate.version !== dev.version
+  ) throw new Error('staged Runtime candidate authority drifted');
+  const candidateFiles = new Map(candidate.product_files.map((row) => [row.path, row]));
+  for (const path of [
+    'runtime/wasmc-runtime-v0/compiler.wasm',
+    'runtime/wasmc-runtime-v0/manifest.json',
+    'runtime/wasmc-runtime-v0/receipts/compiler-wasm.json',
+    'runtime/wasmc-runtime-v0/receipts/node-self-test.json',
+    'runtime/wasmc-runtime-v0/receipts/bun-self-test.json',
+    'runtime/wasmc-runtime-v0/receipts/deno-self-test.json'
+  ]) {
+    const row = candidateFiles.get(path);
+    const bytes = await readFile(join(root, path));
+    if (!row || row.bytes !== bytes.length || row.sha256 !== sha(bytes)) {
+      throw new Error(`staged Runtime candidate file drifted: ${path}`);
+    }
+  }
+}
+
 const hostArchives = new Set();
+const hostCommits = new Set();
 for (const name of ['node', 'bun', 'deno']) {
   const hostReceipt = await json(`runtime/wasmc-runtime-v0/receipts/${name}-self-test.json`);
   const execution = hostReceipt.execution;
@@ -132,11 +166,11 @@ for (const name of ['node', 'bun', 'deno']) {
     hostReceipt.schema !== 'wasmc.runtime-js-self-test/v0' ||
     hostReceipt.accepted !== true ||
     hostReceipt.runtime !== name ||
-    hostReceipt.candidate_commit !== release.runtime.product_candidate_commit ||
+    (expectedHostCommit !== null && hostReceipt.candidate_commit !== expectedHostCommit) ||
     hostReceipt.compiler_bytes !== compiler.length ||
     hostReceipt.compiler_sha256 !== sha(compiler) ||
     typeof hostReceipt.runtime_version !== 'string' || !hostReceipt.runtime_version ||
-    hostReceipt.source_free_package?.archive_sha256 !== release.runtime.source_free_archive_sha256 ||
+    (expectedHostArchive !== null && hostReceipt.source_free_package?.archive_sha256 !== expectedHostArchive) ||
     hostReceipt.source_free_package?.private_source_checked_out !== false ||
     typeof hostReceipt.host?.hostname !== 'string' || !hostReceipt.host.hostname ||
     typeof hostReceipt.host?.uname !== 'string' || !hostReceipt.host.uname ||
@@ -145,8 +179,10 @@ for (const name of ['node', 'bun', 'deno']) {
     execution?.instantiate !== true || execution?.oracle_export !== 'run' ||
     JSON.stringify(execution?.oracle_args) !== JSON.stringify([6, 18]) || execution?.oracle_result !== 42
   ) throw new Error(`strict Host receipt drifted: ${name}`);
+  hostCommits.add(hostReceipt.candidate_commit);
   hostArchives.add(hostReceipt.source_free_package.archive_sha256);
 }
+if (hostCommits.size !== 1) throw new Error('Host receipts do not bind one exact candidate commit');
 if (hostArchives.size !== 1) throw new Error('Host receipts do not bind one source-free Runtime archive');
 
-console.log('PASS release/manifest/checksum/runtime/Host evidence integrity and active Python=0');
+console.log(`PASS release/manifest/checksum/runtime/Host evidence integrity (${releaseRuntimeMatches ? 'prod' : 'staged-candidate'} authority) and active Python=0`);
