@@ -1,5 +1,28 @@
 # WAsmC release maintainer handoff
 
+## 2026-09-29 v0.0.16 dynamic Client/Gateway candidate
+
+The v0.0.16 product candidate is frozen at
+`channels/candidates/0.0.16.json`: 242 exact product files, product-set digest
+`3f9711315eb0efe893c257a9cf6383f1fdd0a372656331562c5c9c1c3702498a`.
+It carries forward the unchanged compiler and fourteen admitted Lib package
+roots / 108 API routes with `candidate_extras=0`.
+
+The new product surface is `dynamic-client-gateway`, rooted at
+`runtime/client-foundation-v1` and
+`runtime/client-foundation-gateway-v1`. It is explicitly `incubating` and is
+not a formal Lib: admitted, discoverable and installable all remain false for
+that higher-layer surface. The fixed Host API and minimal CLI are unchanged.
+The bounded authority is
+`runtime/client-foundation-v1/release-surface.json`.
+
+Local candidate, release-surface, quickstart, graph/DAG/stateful/restart,
+Gateway persistence and WSS cancellation checks pass. The next step is to
+commit and push this exact candidate, run the required remote qualification
+workflows on that commit, retain their exact successful run identities, and
+only then create the metadata-only dev stage. Do not regenerate the candidate
+or change any product file after qualification begins.
+
 ## 2026-09-27 v0.0.14 prod hold
 
 Do not promote `v0.0.14-main.1` to prod. White-box product inspection found

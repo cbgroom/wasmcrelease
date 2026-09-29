@@ -17,7 +17,7 @@ const args = new Set(process.argv.slice(2));
 assert(args.size === 1 && (args.has('--write') || args.has('--check')), 'usage: lib-ecosystem-control-plane.mjs --write|--check');
 
 const release = readJson('release.json');
-const routeCompleteRelease = ['0.0.14', '0.0.15'].includes(release.version);
+const routeCompleteRelease = ['0.0.14', '0.0.15', '0.0.16'].includes(release.version);
 const surfaces = readJson('release-surfaces.json');
 const productionCatalogPath = routeCompleteRelease ? 'catalog/libs-v014.json' : 'catalog/libs-v009.json';
 const currentSideCatalogPath = routeCompleteRelease ? 'catalog/libs-v014.json' : 'catalog/libs-v013.json';

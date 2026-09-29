@@ -1,4 +1,10 @@
-# Client Foundation v1 prototype
+# Client Foundation v1 — incubating v0.0.16 product surface
+
+`release-surface.json` is the bounded lifecycle authority for this directory.
+The exact files are included in the v0.0.16 product candidate, while
+`release.json` decides whether that candidate is currently dev, main or prod.
+This is product inclusion above the Host, not formal Lib admission, discovery
+or installation.
 
 For active `snapshot-v1` restart durability and Gateway receipt ordering, start
 with `agent-checkpoint-orientation.json`. It is the compact bounded route; open
@@ -51,7 +57,7 @@ minimal CLI and fixed Host executor remain byte-identical. A final destructive
 negative control removes the active slot from the temporary state tree and
 proves factory rescue.
 
-This is local prototype evidence, not admission or release. The gateway and
+This is bounded incubating-product evidence, not formal Lib admission. The
 providers are fixtures, the TLS identity is repository-local, and mobile or
 physical-device behavior is not qualified. Graph commands now persist their
 inflight identity before execution and persist the graph outcome with the
@@ -122,7 +128,8 @@ parallel branches, exact port-manifest verification, one-branch replacement
 with three reused nodes and negative closure/type controls. This engine is
 local prototype evidence. The Client/Gateway qualification also distributes
 that graph over WSS/HTTPS, persists it, and reconstructs it after a Client
-restart. The work is not admitted or released.
+restart. The surface is included in the v0.0.16 product, but it is not a
+catalog-discoverable or installable Lib package.
 
 ## Dynamic Client/Gateway loop
 

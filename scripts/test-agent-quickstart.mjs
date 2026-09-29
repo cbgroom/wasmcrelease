@@ -14,6 +14,7 @@ assert.deepEqual(Object.keys(quickstart.routes), [
   'producer-release-u64-delta',
   'ordinary-source-positive',
   'release-state-separation',
+  'dynamic-client-gateway',
   'library-first-selection',
   'host-authority-boundary'
 ]);
@@ -47,8 +48,8 @@ const delta = quickstart.routes['producer-release-u64-delta'];
 assert.equal(delta.producer.commit, '94328ed760f93bf24b595a71facdcc773d43b762');
 assert.equal(delta.producer.implemented, true);
 assert.match(delta.answer_opening, /Producer master: yes/);
-assert.match(delta.answer_opening, /v0\.0\.15 product compiler: no/);
-assert.equal(delta.release_product.version,'v0.0.15');
+assert.match(delta.answer_opening, /v0\.0\.16 product compiler: no/);
+assert.equal(delta.release_product.version,'v0.0.16');
 assert.equal(delta.release_product.lifecycle_authority,'release.json');
 assert.match(delta.char, /not implemented/);
 const telemetry=quickstart.routes['release-state-separation'];

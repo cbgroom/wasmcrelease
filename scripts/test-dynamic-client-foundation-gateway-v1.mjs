@@ -639,7 +639,7 @@ try {
   console.log(JSON.stringify({
     accepted: true,
     schema: "wasmc.dynamic-client-gateway-local-qualification/v1",
-    lifecycle: "prototype-local-qualified-not-admitted-not-released",
+    lifecycle: "incubating-product-surface-local-qualified-not-lib-admitted",
     persistent_artifacts: Object.keys(uploaded).length + Object.keys(uploadedDag).length + Object.keys(uploadedStateful).length + 2,
     first_composition: "B1(A1(x))",
     one_node_replacement: "B1(A2C(x))",

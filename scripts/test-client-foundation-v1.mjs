@@ -135,7 +135,7 @@ try {
   console.log(JSON.stringify({
     accepted: true,
     schema: "wasmc.client-foundation-local-qualification/v1",
-    lifecycle: "prototype-local-qualified-not-admitted-not-released",
+    lifecycle: "incubating-product-surface-local-qualified-not-lib-admitted",
     fixed_host_api_changed: false,
     minimal_cli_changed: false,
     wss_control: true,

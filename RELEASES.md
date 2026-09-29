@@ -2,6 +2,17 @@
 
 Packages are built and admitted locally from clean synchronized private source, then pushed directly. GitHub Actions independently verifies the source-free public consumer paths, but cannot rebuild or admit canonical compiler/Lib bytes and is not a publication dependency.
 
+## v0.0.16
+
+Dynamic Client/Gateway runtime-surface release. It carries the persistent WSS
+control plane, HTTPS content-addressed bundle delivery, canonical serial and
+general-DAG Lib composition, atomic replacement and rollback, restart recovery,
+bounded checkpoint restore and exact cross-schema migration above the unchanged
+Host API. The surface is explicitly incubating: no new formal Lib package is
+admitted, and production fleet operation or general external-effect exactly-once
+semantics are not claimed. Compiler and the 14-root Lib catalog remain unchanged.
+See [`docs/RELEASE_V016.md`](docs/RELEASE_V016.md).
+
 ## v0.0.15
 
 Agent-learning and release-control update using unchanged v0.0.14 compiler and

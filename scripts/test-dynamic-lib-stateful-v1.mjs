@@ -296,7 +296,7 @@ try {
   assert.deepEqual(boundary.counts(), { resources: 0, windows: 0, operations: 0 });
   assert.deepEqual(stickyBoundary.counts(), { resources: 0, windows: 0, operations: 0 });
   console.log(JSON.stringify({
-    accepted: true, schema: "wasmc.dynamic-lib-stateful-local-qualification/v1", lifecycle: "prototype-local-qualified-not-admitted-not-released",
+    accepted: true, schema: "wasmc.dynamic-lib-stateful-local-qualification/v1", lifecycle: "incubating-product-surface-local-qualified-not-lib-admitted",
     snapshot_same_schema_replacement: "V1:3->V2:4", old_invocation_drained_before_snapshot: true,
     new_invocation_blocked_until_publish: true, failed_restore_rolled_back: true, invocation_barrier_released_after_rollback: true,
     cross_schema_exact_migration_lib: "CROSS1:2->CROSS2:2", cross_schema_missing_migration_rejected: true, cross_schema_broken_migration_rolled_back: true,

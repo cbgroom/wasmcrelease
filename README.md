@@ -10,7 +10,7 @@
 
 Source-free public packages for the private-source `wasmc` compiler.
 
-This README is frozen inside the v0.0.15 product set. Product version and
+This README is frozen inside the v0.0.16 product set. Product version and
 lifecycle stage are separate: read `release.json` and `channels/prod.json` for
 the current released tag. Hardcoded v0.0.13 references retained below describe
 historical feature provenance; they are not current-release authority.
@@ -144,17 +144,25 @@ TLS+HTTP/router path. Its contract is
 regressions are same-platform advisory signals, while required-platform
 presence, external-client success and expected HTTP status remain hard gates.
 
-The v0.0.15 product Agent guidance starts with
+The v0.0.16 product Agent guidance starts with
 [Library-first discovery](skills/wasmc-lib-discovery/SKILL.md) before implementing
 reusable algorithms/data operations. It teaches real search hits, exact selection,
 installation and supported execution, with an executable documentation regression.
 The guidance is integrity-bound in this release; earlier tags stay frozen.
 
-Frozen product version: **v0.0.15 Agent-learning and LibSearch route-complete product**.
+Frozen product version: **v0.0.16 Agent-learning and LibSearch route-complete product**.
 The [channel policy](docs/RELEASE_CHANNELS.md) defines immutable `-dev.N` →
 `-main.N` → suffix-free prod. Read `release.json` for the default prod;
 previous tags are immutable and prod0.0.x does not imply stable1.x.
 [![LibSearch equivalence](https://github.com/cbgroom/wasmcrelease/actions/workflows/lib-search.yml/badge.svg?branch=main)](https://github.com/cbgroom/wasmcrelease/actions/workflows/lib-search.yml)
+
+v0.0.16 adds the Client Foundation and persistent Gateway as an incubating
+runtime surface above the fixed Host. The released source tree includes exact
+WSS control, HTTPS content-addressed bundles, dynamic serial/general-DAG Lib
+composition, atomic replacement and rollback, Client/Gateway restart recovery,
+bounded checkpoints and cross-schema state migration. It is not a newly admitted
+Lib package or a production fleet service; use
+`runtime/client-foundation-v1/release-surface.json` for the exact boundary.
 
 Search now runs inside the Lib's Wasm, with no runtime catalog/config input:
 `node scripts/wasmc-lib.mjs search "base64 decode"`. It returns v2 typed `hits`
@@ -165,7 +173,7 @@ installation. The Lib has zero imports and a portable
 Core/Component value view. It is not a shared-memory/CoreLib fast ABI and does
 not solve Wasmi/Node18 compatibility of the existing Std1.4.0.
 
-The v0.0.15 product reuses compiler bytes built from exact private source
+The v0.0.16 product reuses compiler bytes built from exact private source
 `e69abb73f667f3810b0c40937fd1a1e2d04d4255` and the admitted v0.0.11 Data
 Foundation Lib bytes. Use `current/` for the latest compiler facade; `dist/` and
 `package/` are frozen v0.0.4 compatibility trees. The public Wasmi/Wasmtime Core

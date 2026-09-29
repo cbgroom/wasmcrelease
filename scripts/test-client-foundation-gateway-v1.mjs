@@ -255,7 +255,7 @@ try {
   console.log(JSON.stringify({
     accepted: true,
     schema: "wasmc.client-foundation-gateway-local-qualification/v1",
-    lifecycle: "prototype-local-qualified-not-admitted-not-released",
+    lifecycle: "incubating-product-surface-local-qualified-not-lib-admitted",
     artifacts_persistent: Object.keys(diskState.artifacts).length,
     clients_persistent: Object.keys(diskState.clients).length,
     active_commands_persistent: diskState.clients["client-a"].commands.length,

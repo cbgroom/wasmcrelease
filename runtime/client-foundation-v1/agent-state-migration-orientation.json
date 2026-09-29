@@ -13,19 +13,22 @@
     "implementation_line_audit_requires": "an explicit request for exact source lines or diagnosis of a named failed check",
     "rule": "The word exact refers to complete identity binding, not source-line inspection. Answer the bounded requests above from this record and stop."
   },
-  "answer": "Yes. Cross-schema snapshot-v1 replacement is locally qualified through exact migration Lib distribution; it remains prototype-only and is not released.",
+  "answer": "Yes. Cross-schema snapshot-v1 replacement is qualified through exact migration Lib distribution and included in the v0.0.16 product as an incubating runtime surface; it is not a formal Lib package.",
   "lifecycle": {
     "qualified": true,
     "admitted": false,
-    "released": false,
     "discoverable": false,
     "installable": false,
-    "scope": "prototype-local-qualification"
+    "product_included": true,
+    "product_version": "0.0.16",
+    "surface_status": "incubating",
+    "release_stage_authority": "release.json",
+    "scope": "incubating-product-surface"
   },
   "lifecycle_authority": {
-    "prototype": "this record plus runtime/client-foundation-v1/dynamic-lib-graph-model.json and their validator",
-    "released_product": "release.json governs the frozen v0.0.15 product and intentionally does not include this prototype",
-    "stopping_rule": "Do not search release.json, release-surfaces.json, manifests or channels to reconfirm prototype absence; report the five states from this record."
+    "surface": "this record plus runtime/client-foundation-v1/release-surface.json and their validators",
+    "released_product": "release.json governs whether the exact v0.0.16 product candidate is currently dev, main or prod",
+    "stopping_rule": "Report product inclusion separately from Lib admission, discovery and installation; do not infer a formal package from the runtime surface."
   },
   "adjacent_route_boundary": "agent-checkpoint-orientation.json is not required for a migration status review; this record already carries the exactly-once nonclaim and target-schema restart result.",
   "authority": {
@@ -70,14 +73,14 @@
   "retrospective_boundaries": [
     "migration_plan_sha256 binds the transition while graph_digest continues to describe the stable target graph",
     "the migration Lib is downloaded and executed but is not retained in active_graph",
-    "qualified means prototype-local evidence and does not imply admitted or released",
+    "qualified product-surface evidence does not imply formal Lib admission, discovery or installation",
     "general exactly-once and external-effect rollback remain unclaimed"
   ],
   "open_gates": [],
   "not_claimed": [
     "general exactly-once execution",
     "external-effect rollback or cleanup",
-    "release admission"
+    "formal Lib admission"
   ],
   "evidence": {
     "model": "docs/DYNAMIC_LIB_GRAPH_MODEL.md",

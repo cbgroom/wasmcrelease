@@ -1,0 +1,55 @@
+{
+  "schema": "wasmc.client-gateway-release-surface/v1",
+  "product_version": "0.0.16",
+  "surface": "dynamic-client-gateway",
+  "status": "incubating",
+  "product_inclusion": {
+    "included": true,
+    "roots": [
+      "runtime/client-foundation-v1",
+      "runtime/client-foundation-gateway-v1"
+    ],
+    "lifecycle_authority": "release.json",
+    "candidate_authority": "channels/candidates/0.0.16.json"
+  },
+  "lib_lifecycle": {
+    "admitted": false,
+    "discoverable": false,
+    "installable": false,
+    "reason": "This is a higher-layer runtime surface, not a formal Lib package root."
+  },
+  "qualified_capabilities": [
+    "persistent-wss-control",
+    "https-content-addressed-bundle-delivery",
+    "canonical-serial-and-general-dag-composition",
+    "atomic-generation-replacement-and-rollback",
+    "gateway-and-client-restart-recovery",
+    "snapshot-v1-checkpoint-restore",
+    "exact-cross-schema-state-migration",
+    "sticky-fail-closed-or-explicit-reset-on-restart",
+    "immutable-factory-rescue"
+  ],
+  "fixed_boundaries": {
+    "host_api_changed": false,
+    "minimal_cli_changed": false
+  },
+  "not_claimed": [
+    "formal-lib-admission",
+    "general-external-effect-exactly-once",
+    "external-effect-rollback",
+    "clustered-gateway-consensus",
+    "fleet-scheduling",
+    "public-deployment",
+    "mobile-or-physical-device-qualification"
+  ],
+  "verify": [
+    "node scripts/validate-dynamic-lib-graph-model-v1.mjs",
+    "node scripts/test-client-foundation-v1.mjs",
+    "node scripts/test-client-foundation-gateway-v1.mjs",
+    "node scripts/test-dynamic-lib-graph-v1.mjs",
+    "node scripts/test-dynamic-lib-dag-v1.mjs",
+    "node scripts/test-dynamic-lib-stateful-v1.mjs",
+    "node scripts/test-dynamic-client-foundation-gateway-v1.mjs",
+    "node scripts/test-wss-cancellation-v1.mjs"
+  ]
+}

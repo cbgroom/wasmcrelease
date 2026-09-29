@@ -1,4 +1,4 @@
-# Client Foundation Gateway v1 prototype
+# Client Foundation Gateway v1 — incubating v0.0.16 product surface
 
 For active checkpoint/restart status, receipt ordering and failure boundaries,
 read `../client-foundation-v1/agent-checkpoint-orientation.json` and stop at
@@ -9,7 +9,9 @@ stopping rule.
 
 This is the persistent control and artifact counterpart to
 `runtime/client-foundation-v1`. It is a higher-layer service and does not add a
-Host API or change the minimal compiler CLI.
+Host API or change the minimal compiler CLI. Its exact source is carried by the
+v0.0.16 product under the lifecycle boundary in
+`../client-foundation-v1/release-surface.json`; it is not a formal Lib package.
 
 The gateway provides:
 
@@ -111,6 +113,6 @@ This prototype intentionally contains no user/account authorization layer. It
 is a single-writer service: the lock prevents corruption but is not a clustered
 consensus protocol. Archive deletion/retention policy, indexed lookup
 acceleration, fleet scheduling, public deployment and external load
-qualification remain deployment-layer work. The current evidence is one local
-Node process with an exact repository-local TLS fixture, not admission or
-release.
+qualification remain deployment-layer work. The retained local qualification
+uses one Node process with an exact repository-local TLS fixture. Product
+inclusion does not turn that evidence into a public deployment or Lib admission.

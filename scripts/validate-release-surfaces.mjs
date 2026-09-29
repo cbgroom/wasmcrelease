@@ -46,7 +46,7 @@ assert.deepEqual(quickstartModel.routes['library-first-selection'].exact_report,
 assert.equal(quickstartModel.routes['library-first-selection'].final_answer_policy,taskRoutes['released-base64'].final_answer_policy);
 assert.deepEqual(quickstartModel.routes['release-state-separation'].required_output_states,['qualified','admitted','released','discoverable','installable']);
 assert.deepEqual(quickstartModel.routes['release-state-separation'].exact_report,model.agent_status_queries['direct-wasmc-system-telemetry-resource'].exact_report);
-assert.deepEqual(Object.keys(taskRoutes).sort(),['host-authority','ordinary-source-pair','release-lib-route-readiness','release-orientation','released-base64','rule']);
+assert.deepEqual(Object.keys(taskRoutes).sort(),['dynamic-client-gateway','host-authority','ordinary-source-pair','release-lib-route-readiness','release-orientation','released-base64','rule']);
 assert.equal(taskRoutes['release-orientation'].product_version,'v'+model.release_version);
 assert.equal(taskRoutes['release-orientation'].compiler.sha256,'93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90');
 assert.equal(taskRoutes['release-lib-route-readiness'].product.formal_release_ready,true);
@@ -66,6 +66,10 @@ assert.match(taskRoutes['released-base64'].resolve_command,/--catalog v014/);
 assert.equal(taskRoutes['released-base64'].exact_report.import_module,'wasmc:lib/wasmc.std@1.4.0');
 assert.match(taskRoutes['released-base64'].exact_report.instruction,/byte-for-byte/);
 assert.match(taskRoutes['host-authority'].decision,/application-owned exact allowlist/);
+assert.equal(taskRoutes['dynamic-client-gateway'].authority_file,'runtime/client-foundation-v1/release-surface.json');
+assert.equal(taskRoutes['dynamic-client-gateway'].formal_lib_package,false);
+assert.equal(quickstartModel.routes['dynamic-client-gateway'].authority,taskRoutes['dynamic-client-gateway'].authority_file);
+assert.equal(quickstartModel.routes['dynamic-client-gateway'].product.surface_status,'incubating');
 assert.equal(projection?.guidance_scope?.included_in_product,true);
 assert.equal(projection?.guidance_scope?.lifecycle_authority,'release.json and channels/prod.json');
 assert.equal(projection?.function_shape?.result,'exactly one semantic value');
@@ -84,8 +88,8 @@ assert.equal(producerDelta?.producer?.commit,'94328ed760f93bf24b595a71facdcc773d
 assert.equal(producerDelta?.producer?.status,'verified-master-implementation');
 assert.equal(producerDelta?.producer?.validation?.strict_mst,true);
 assert.equal(producerDelta?.release?.lifecycle_authority,'release.json');
-assert.equal(producerDelta?.release?.v0_0_15_u64_ordinary_source,'unsupported');
-assert.match(producerDelta?.answer_rule??'',/producer master yes, the v0\.0\.15 product compiler no/);
+assert.equal(producerDelta?.release?.v0_0_16_u64_ordinary_source,'unsupported');
+assert.match(producerDelta?.answer_rule??'',/producer master yes, the v0\.0\.16 product compiler no/);
 assert.match(producerDelta?.adjacent_type_decisions?.u32??'',/included/);
 assert.match(producerDelta?.adjacent_type_decisions?.char??'',/not implemented/);
 assert.equal(ecosystem?.schema,'wasmc.lib-ecosystem-control-plane/v1');
@@ -93,7 +97,7 @@ assert.equal(ecosystem?.path,'lib-ecosystem-control-plane.json');
 assert(existsSync(resolve(root,ecosystem.path)),'Lib ecosystem control plane is missing');
 const ecosystemModel=JSON.parse(read(ecosystem.path));
 assert.equal(ecosystemModel.schema,ecosystem.schema);
-const routeCompleteRelease=['0.0.14','0.0.15'].includes(ecosystemModel.release.version);
+const routeCompleteRelease=['0.0.14','0.0.15','0.0.16'].includes(ecosystemModel.release.version);
 assert.equal(ecosystemModel.inventory.packages,routeCompleteRelease?14:13);
 assert.equal(ecosystemModel.inventory.released,routeCompleteRelease?14:13);
 assert.equal(ecosystemModel.inventory.discoverable,routeCompleteRelease?14:12);
@@ -161,7 +165,8 @@ const consumerIds=[
   'host-sdk',
   'integrated-runtime-cli',
   'lightweight-embedding',
-  'native-runtime-library'
+  'native-runtime-library',
+  'dynamic-client-gateway'
 ];
 const extensionIds=['driver-provider','remote-provider'];
 assert.deepEqual(model.consumer_surfaces.map(row=>row.id),consumerIds);

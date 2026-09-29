@@ -26,7 +26,9 @@ The v0.0.4 `dist/`, `package/`, and `libs/` compatibility trees remain byte-froz
 
 Verify the package `manifest.json`, `receipts/compiler-wasm.json`, Host receipts, and repository `SHA256SUMS` before use.
 
-The unreleased higher-layer control/update experiment lives in
-`client-foundation-v1/`. It is a local prototype above the fixed Host and is not
-part of the public Runtime package described here. Its persistent server-side
-counterpart is the equally unreleased `client-foundation-gateway-v1/`.
+The higher-layer control/update surface lives in `client-foundation-v1/`, with
+its persistent server-side counterpart in `client-foundation-gateway-v1/`.
+Both are included in the v0.0.16 product as one incubating runtime surface above
+the fixed Host; they are not part of the older `wasmc-runtime-v0` package and are
+not formal Lib-catalog packages. Read `client-foundation-v1/release-surface.json`
+for the exact product boundary and `release.json` for the active lifecycle stage.

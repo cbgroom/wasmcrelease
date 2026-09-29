@@ -6,10 +6,13 @@
   "lifecycle": {
     "qualified": true,
     "admitted": false,
-    "released": false,
     "discoverable": false,
     "installable": false,
-    "scope": "prototype-local-qualification"
+    "product_included": true,
+    "product_version": "0.0.16",
+    "surface_status": "incubating",
+    "release_stage_authority": "release.json",
+    "scope": "incubating-product-surface"
   },
   "identity": "wasmc.dynamic-lib-state-migration-plan/v1 canonical JSON SHA-256 binds node, exact migration package, WIT, configuration and source/target schema identities",
   "ordering": "install/probe/health; graph-wide barrier and drain; snapshot/validate; migrate/validate; restore; release ephemeral migration resource; health/publish; retire old generation",
@@ -23,7 +26,7 @@
     "forged_contract_rejected": true
   },
   "open_gates": [],
-  "not_claimed": ["general exactly-once execution", "external-effect rollback or cleanup", "release admission"],
+  "not_claimed": ["general exactly-once execution", "external-effect rollback or cleanup", "formal Lib admission"],
   "checks": [
     "node scripts/validate-dynamic-lib-graph-model-v1.mjs",
     "node scripts/test-dynamic-lib-stateful-v1.mjs",

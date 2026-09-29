@@ -175,7 +175,7 @@ try {
   console.log(JSON.stringify({
     accepted: true,
     schema: "wasmc.dynamic-lib-graph-local-qualification/v1",
-    lifecycle: "prototype-local-qualified-not-admitted-not-released",
+    lifecycle: "incubating-product-surface-local-qualified-not-lib-admitted",
     initial_composition: "B1(A1(x))",
     one_block_replacement: "B1(A2(x))",
     unchanged_block_reused: true,

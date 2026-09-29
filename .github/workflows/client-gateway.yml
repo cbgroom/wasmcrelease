@@ -1,0 +1,75 @@
+name: Dynamic Client Gateway
+
+on:
+  pull_request:
+    paths:
+      - "runtime/client-foundation-v1/**"
+      - "runtime/client-foundation-gateway-v1/**"
+      - "scripts/test-client-foundation-v1.mjs"
+      - "scripts/test-client-foundation-gateway-v1.mjs"
+      - "scripts/test-dynamic-lib-graph-v1.mjs"
+      - "scripts/test-dynamic-lib-dag-v1.mjs"
+      - "scripts/test-dynamic-lib-stateful-v1.mjs"
+      - "scripts/test-dynamic-client-foundation-gateway-v1.mjs"
+      - "scripts/test-wss-cancellation-v1.mjs"
+      - "scripts/validate-dynamic-lib-graph-model-v1.mjs"
+      - ".github/workflows/client-gateway.yml"
+  push:
+    branches: [main, release/v0.0.16-client-gateway]
+    paths:
+      - "runtime/client-foundation-v1/**"
+      - "runtime/client-foundation-gateway-v1/**"
+      - "scripts/test-client-foundation-v1.mjs"
+      - "scripts/test-client-foundation-gateway-v1.mjs"
+      - "scripts/test-dynamic-lib-graph-v1.mjs"
+      - "scripts/test-dynamic-lib-dag-v1.mjs"
+      - "scripts/test-dynamic-lib-stateful-v1.mjs"
+      - "scripts/test-dynamic-client-foundation-gateway-v1.mjs"
+      - "scripts/test-wss-cancellation-v1.mjs"
+      - "scripts/validate-dynamic-lib-graph-model-v1.mjs"
+      - ".github/workflows/client-gateway.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: client-gateway-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  qualify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: 26.5.1
+      - uses: dtolnay/rust-toolchain@1.96.0
+      - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830
+        with:
+          path: ~/.cargo/bin/wasm-tools
+          key: wasm-tools-1.255.0-${{ runner.os }}-${{ runner.arch }}
+      - name: Install pinned wasm-tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! command -v wasm-tools >/dev/null || [ "$(wasm-tools --version)" != "wasm-tools 1.255.0" ]; then
+            cargo install wasm-tools --version 1.255.0 --locked
+          fi
+      - name: Validate bounded release surface
+        run: node scripts/validate-dynamic-lib-graph-model-v1.mjs
+      - name: Qualify Client and persistent Gateway
+        run: |
+          node scripts/test-client-foundation-v1.mjs
+          node scripts/test-client-foundation-gateway-v1.mjs
+      - name: Qualify dynamic graph models
+        run: |
+          node scripts/test-dynamic-lib-graph-v1.mjs
+          node scripts/test-dynamic-lib-dag-v1.mjs
+          node scripts/test-dynamic-lib-stateful-v1.mjs
+      - name: Qualify distributed restart and cancellation
+        run: |
+          node scripts/test-dynamic-client-foundation-gateway-v1.mjs
+          node scripts/test-wss-cancellation-v1.mjs

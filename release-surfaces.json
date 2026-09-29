@@ -121,6 +121,18 @@
         "host-https-flywheel.yml",
         "host-external-load.yml"
       ]
+    },
+    {
+      "id": "dynamic-client-gateway",
+      "status": "incubating",
+      "roots": [
+        "runtime/client-foundation-v1",
+        "runtime/client-foundation-gateway-v1"
+      ],
+      "functional_workflows": [
+        "client-gateway.yml"
+      ],
+      "performance_workflows": []
     }
   ],
   "extension_surfaces": [
@@ -191,19 +203,19 @@
         "root": "sdk/wasmc-core-runtime",
         "skill": "sdk/wasmc-core-runtime/SKILL.md",
         "release_status": "published",
-        "immutable_example": "v0.0.15"
+        "immutable_example": "v0.0.16"
       },
       "host-sdk": {
         "root": "sdk/wasmc-host",
         "skill": "sdk/wasmc-host/SKILL.md",
         "release_status": "published",
-        "immutable_example": "v0.0.15"
+        "immutable_example": "v0.0.16"
       },
       "native-cli": {
         "root": "sdk/wasmc-native-compiler",
         "skill": "sdk/wasmc-native-compiler/SKILL.md",
         "release_status": "published",
-        "immutable_example": "v0.0.15",
+        "immutable_example": "v0.0.16",
         "binary_packaging": "CI/development packages are not immutable release assets"
       },
       "lightweight-embedding": {
@@ -213,6 +225,11 @@
       "native-runtime-library": {
         "root": "host/runtime",
         "release_status": "incubating"
+      },
+      "dynamic-client-gateway": {
+        "root": "runtime/client-foundation-v1",
+        "release_status": "incubating",
+        "authority": "runtime/client-foundation-v1/release-surface.json"
       }
     },
     "intent_routes": [
@@ -235,6 +252,10 @@
       {
         "intent": "native-runtime-binary",
         "component": "native-runtime-library"
+      },
+      {
+        "intent": "dynamic-client-gateway",
+        "component": "dynamic-client-gateway"
       },
       {
         "intent": "reusable-capability",
@@ -262,12 +283,12 @@
   },
   "agent_capability_projection": {
     "schema": "wasmc.release-agent-capabilities/v1",
-    "product_release": "v0.0.15",
+    "product_release": "v0.0.16",
     "guidance_scope": {
-      "status": "included-in-v0.0.15-product",
+      "status": "included-in-v0.0.16-product",
       "included_in_product": true,
       "lifecycle_authority": "release.json and channels/prod.json",
-      "rule": "This frozen projection describes v0.0.15 product capability only. It does not prove the product is the current released, discoverable or installable lifecycle stage."
+      "rule": "This frozen projection describes v0.0.16 product capability only. It does not prove the product is the current released, discoverable or installable lifecycle stage."
     },
     "decision_rule": "A type or feature is usable only at the exact admitted position below. WIT vocabulary, local values, Core lanes, Component profiles, Host bindings and public results are separate claims.",
     "alternative_rule": "Alternatives must preserve semantics. Numeric width or signedness, async behavior, identity, ordering, ownership and failure semantics may change only with explicit application proof; otherwise stop.",
@@ -332,6 +353,15 @@
       "automatic_retry_after_effect": "unsupported",
       "shared_instance_parallel_entry": "unsupported; use independently owned instances or an exact released concurrency profile"
     },
+    "runtime_surfaces": {
+      "dynamic_client_gateway": {
+        "status": "incubating-product-surface",
+        "authority": "runtime/client-foundation-v1/release-surface.json",
+        "host_api_changed": false,
+        "minimal_cli_changed": false,
+        "formal_lib_package": false
+      }
+    },
     "next_release_requirement": "Package this projection or a schema-compatible generated successor inside the immutable release and validate it against the shipped compiler, Lib, SDK and package profiles."
   },
   "producer_capability_delta": {
@@ -359,16 +389,16 @@
       }
     },
     "release": {
-      "product": "v0.0.15",
+      "product": "v0.0.16",
       "lifecycle_authority": "release.json",
       "reason": "No new source-free compiler artifact, candidate identity, admission receipt or immutable release contains the producer change.",
-      "v0_0_15_u64_ordinary_source": "unsupported"
+      "v0_0_16_u64_ordinary_source": "unsupported"
     },
     "adjacent_type_decisions": {
-      "u32": "included in the v0.0.15 product compiler; no repair was required",
+      "u32": "included in the v0.0.16 product compiler; no repair was required",
       "char": "not implemented on the cited producer commit and not released; do not substitute arbitrary u32"
     },
-    "answer_rule": "When asked whether u64 is fixed or supported, lead with both authorities: producer master yes, the v0.0.15 product compiler no; read release.json for the current published lifecycle stage."
+    "answer_rule": "When asked whether u64 is fixed or supported, lead with both authorities: producer master yes, the v0.0.16 product compiler no; read release.json for the current published lifecycle stage."
   },
   "lib_ecosystem_control_plane": {
     "schema": "wasmc.lib-ecosystem-control-plane/v1",
@@ -392,7 +422,7 @@
     "rule": "When one route matches the request, read this record first and stop once its evidence answers the task. Do not scan release history, unrelated compatibility identities, implementation tests or broad manifests to reconfirm it. Report every identity in full or omit an identity that the answer does not need.",
     "release-orientation": {
       "intent": "identify the immutable release, public Agent entrypoint and compiler authority",
-      "product_version": "v0.0.15",
+      "product_version": "v0.0.16",
       "public_agent_entrypoint": "AGENTS.md",
       "compiler": {
         "path": "current/wasmc_compiler.wasm",
@@ -412,15 +442,29 @@
     "release-lib-route-readiness": {
       "authority_file": "release-lib-route-readiness.json",
       "intent": "decide whether every released Lib package and exported API route is synchronized for a new formal release candidate",
-      "product": {"version":"0.0.15","package_routes":14,"api_routes":108,"candidate_extras":0,"formal_release_ready":true,"blocking_conditions":[]},
+      "product": {"version":"0.0.16","package_routes":14,"api_routes":108,"candidate_extras":0,"formal_release_ready":true,"blocking_conditions":[]},
       "active_search": {"identity":"wasmc:lib-search@0.2.0","states":{"qualified":true,"admitted":true,"included_in_product":true,"qualified_before_freeze":true,"admitted_before_freeze":true},"api_routes":3},
       "lifecycle_authority": {"current_release":"release.json","stages":"channels/dev.json, channels/main.json, channels/prod.json","rule":"Never infer released, discoverable or installable from this frozen product projection."},
       "valid_resolution_count": 1,
-      "only_valid_closure": "Verify the exact v0.0.15 candidate and route closure, then read the channel authorities for lifecycle state. Every promotion must preserve the same product digest set.",
+      "only_valid_closure": "Verify the exact v0.0.16 candidate and route closure, then read the channel authorities for lifecycle state. Every promotion must preserve the same product digest set.",
       "forbidden_shortcuts": ["treat admission as release", "infer lifecycle state from product presence or an admission snapshot", "rebuild product bytes during promotion", "rewrite any immutable release or prerelease tag"],
-      "authorities": ["admission/lib-search-v020-v014-admission.json", "catalog/lib-route-closure.json", "channels/candidates/0.0.15.json", "release.json", "channels/prod.json"],
-      "check_commands": ["node scripts/lib-route-closure.mjs --check", "node scripts/release-candidate.mjs verify channels/candidates/0.0.15.json"],
+      "authorities": ["admission/lib-search-v020-v014-admission.json", "catalog/lib-route-closure.json", "channels/candidates/0.0.16.json", "release.json", "channels/prod.json"],
+      "check_commands": ["node scripts/lib-route-closure.mjs --check", "node scripts/release-candidate.mjs verify channels/candidates/0.0.16.json"],
       "answer_boundary": "Stop after reporting the product closure and the exact lifecycle state read from release.json/channels; never infer a transition."
+    },
+    "dynamic-client-gateway": {
+      "intent": "determine the v0.0.16 Client/Gateway dynamic Lib surface, lifecycle and limits",
+      "authority_file": "runtime/client-foundation-v1/release-surface.json",
+      "status": "incubating",
+      "product_version": "0.0.16",
+      "formal_lib_package": false,
+      "lifecycle_authority": "release.json",
+      "verify_commands": [
+        "node scripts/validate-dynamic-lib-graph-model-v1.mjs",
+        "node scripts/test-dynamic-client-foundation-gateway-v1.mjs",
+        "node scripts/test-client-foundation-v1.mjs"
+      ],
+      "answer_boundary": "Report product inclusion separately from Lib admission and stop at the explicit nonclaims."
     },
     "ordinary-source-pair": {
       "intent": "compile and execute a supported multi-parameter function with one semantic aggregate result",
@@ -449,7 +493,7 @@
     },
     "released-base64": {
       "intent": "find and approve the released Base64 capability",
-      "product_release": "v0.0.15",
+      "product_release": "v0.0.16",
       "package": "wasmc:std@1.4.0",
       "root": "standard/wasmc-std/1.4.0",
       "apis": [
@@ -494,6 +538,21 @@
     }
   },
   "agent_status_queries": {
+    "dynamic-client-gateway": {
+      "request": "is the dynamic Client and Gateway released and is it a formal Lib",
+      "product_inclusion": {
+        "version": "0.0.16",
+        "surface_status": "incubating",
+        "lifecycle_authority": "release.json"
+      },
+      "lib_states": {
+        "admitted": false,
+        "discoverable": false,
+        "installable": false
+      },
+      "authority": "runtime/client-foundation-v1/release-surface.json",
+      "stopping_condition": "Product inclusion is a higher-layer runtime surface and does not create a Lib-catalog package or production fleet service."
+    },
     "prebuilt-native-runtime-library": {
       "request": "prebuilt .so/.dylib/.dll WAsmC runtime",
       "states": {
@@ -538,5 +597,5 @@
       }
     }
   },
-  "release_version": "0.0.15"
+  "release_version": "0.0.16"
 }

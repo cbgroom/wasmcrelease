@@ -89,7 +89,7 @@ if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)) {
       'examples/lib-search/index-v014-v020.lsi',
       'host/ARCHITECTURE.md','host/architecture.json','host/manifest.json',
       'bench/manifest.json','bench/host-external-load.json',
-      'docs/ASMD.md','docs/RELEASE_SURFACES.md','release-surfaces.json',
+      'docs/ASMD.md','docs/RELEASE_SURFACES.md','docs/RELEASE_V016.md','release-surfaces.json',
       'examples/lib-search/client.mjs',
       'scripts/wasmc-lib.mjs',
       'scripts/lib-catalog.mjs','scripts/lib-route-closure.mjs','scripts/release-candidate.mjs',

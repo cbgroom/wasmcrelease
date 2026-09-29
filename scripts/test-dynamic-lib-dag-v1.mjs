@@ -116,7 +116,7 @@ try {
   await graph.close();
   assert.deepEqual(boundary.counts(), { resources: 0, windows: 0, operations: 0 });
   console.log(JSON.stringify({
-    accepted: true, schema: "wasmc.dynamic-lib-dag-local-qualification/v1", lifecycle: "prototype-local-qualified-not-admitted-not-released",
+    accepted: true, schema: "wasmc.dynamic-lib-dag-local-qualification/v1", lifecycle: "incubating-product-surface-local-qualified-not-lib-admitted",
     topology: "diamond", topological_levels: described.levels, parallel_branch_elapsed_ms: Number(elapsed.toFixed(3)),
     output: "J(L(S(x)),R(S(x)))", one_branch_replacement: true, unchanged_blocks_reused: 3,
     canonical_node_and_edge_order: true, cycle_or_entry_conflict_rejected: true, missing_input_rejected: true,
