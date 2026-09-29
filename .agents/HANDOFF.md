@@ -52,6 +52,12 @@ at qualification time. The retained receipt is
 `admission/qualification-v016-dev1.json`. Candidate digest remains
 `a91008bb2badb82f803ba0d45bc014db4f02703ec7d05a19b49599dd5d064502`.
 
+`v0.0.16-dev.1` is immutable at `575fff2dfee8b561fd160d21e6a5c7c09916acb2`.
+The next metadata-only transition is `v0.0.16-main.1`; it must retain candidate
+commit `d484c09fabcb5876da08ee7a07788bdfd1be0de6`, the same product-set digest,
+and the same qualification receipt. Prod remains v0.0.15 until the final
+unpushed rehearsal and two-model Pi gate pass.
+
 ## 2026-09-27 v0.0.14 prod hold
 
 Do not promote `v0.0.14-main.1` to prod. White-box product inspection found
