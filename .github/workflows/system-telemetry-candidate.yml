@@ -74,7 +74,7 @@ jobs:
           git rev-parse HEAD | tee target/telemetry-evidence/source.txt
       - name: Preserve source-bound receipts
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: telemetry-host-sdk-${{ matrix.os }}
           path: target/telemetry-evidence

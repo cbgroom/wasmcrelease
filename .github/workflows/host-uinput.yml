@@ -64,7 +64,7 @@ jobs:
             RUSTUP_HOME="${RUSTUP_HOME:-$HOME/.rustup}" \
             WASMC_UINPUT_RECEIPT="$GITHUB_WORKSPACE/target/lib-defined-boundary-linux-uinput/report.json" \
             node scripts/test-linux-uinput-lib-defined-boundary.mjs
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         if: always()
         with:
           name: host-uinput-${{ github.sha }}
