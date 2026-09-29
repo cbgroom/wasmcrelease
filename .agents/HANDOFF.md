@@ -65,6 +65,15 @@ locally as the final rehearsal, run `scripts/pi-pre-release-gate-v1.mjs` with
 both required models, independently review and retain the privacy-safe receipt,
 and only then create/push `v0.0.16` and advance `main`.
 
+The first unpushed rehearsal `db3ba316ace59e4e41fc11493c81779a1d34f589`
+must not be published. Both models returned the correct v0.0.16 release
+orientation with zero tool errors/retries, but the structural oracle still
+required v0.0.15 and its prior product-set digest. Update only the release
+orientation literals/digest in `agent-evaluation/fresh-agent-learning-v1.json`,
+rebuild integrity metadata into a new unpushed rehearsal commit, and repeat the
+full two-model gate. Do not reinterpret the correct model answers as a PASS for
+the stale oracle.
+
 ## 2026-09-27 v0.0.14 prod hold
 
 Do not promote `v0.0.14-main.1` to prod. White-box product inspection found
