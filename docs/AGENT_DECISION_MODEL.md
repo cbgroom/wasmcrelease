@@ -52,7 +52,7 @@ read `producer_capability_delta` (or its compact
 frozen product and published lifecycle are separate authorities. For
 ordinary-source `u64`, producer master
 `566eff42d0f4e4680c5ddd60c6584a9d8ff8e9f4` contains the implementation commit
-`94328ed760f93bf24b595a71facdcc773d43b762`, and the v0.0.19 product compiler is
+`94328ed760f93bf24b595a71facdcc773d43b762`, and the v0.0.20 product compiler is
 built from that containing authority. Keep `u32` as the previously released
 type and `char` as a separate unimplemented semantic type. Scalar support does
 not imply async or direct public Map support.

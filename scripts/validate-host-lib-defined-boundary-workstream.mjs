@@ -1062,9 +1062,9 @@ assert.equal(iosQualificationPolicyV1Receipt.evidence.admission_eligibility_requ
 assert.equal(iosQualificationPolicyV1Receipt.evidence.fixed_host_api_change, false);
 execFileSync(process.execPath, ["scripts/validate-ios-qualification-policy.mjs"], { stdio: "ignore" });
 
+// Historical candidates are immutable. Current lifecycle authorities intentionally
+// advance through later releases and are validated by the release-surface/channel gates.
 const frozenIdentityFiles = [
-  "release.json",
-  "channels/prod.json",
   "channels/candidates/0.0.15.json",
 ];
 for (const relative of frozenIdentityFiles) {
@@ -1082,9 +1082,9 @@ execFileSync("git", ["cat-file", "-e", `${receipt.implementation_commit}^{commit
 execFileSync("git", ["merge-base", "--is-ancestor", receipt.implementation_commit, "HEAD"]);
 assert.equal(digest(receipt.executor.path), receipt.executor.sha256);
 for (const lib of receipt.system_libs) {
-  assert.equal(digest(`${lib.root}/lib.wit`), lib.wit_sha256);
-  assert.equal(digest(`${lib.root}/native-boundary.json`), lib.descriptor_sha256);
-  assert.equal(digest(`${lib.root}/native-adapter.mjs`), lib.adapter_sha256);
+  assert.equal(digestAt(receipt.implementation_commit, `${lib.root}/lib.wit`), lib.wit_sha256);
+  assert.equal(digestAt(receipt.implementation_commit, `${lib.root}/native-boundary.json`), lib.descriptor_sha256);
+  assert.equal(digestAt(receipt.implementation_commit, `${lib.root}/native-adapter.mjs`), lib.adapter_sha256);
 }
 assert.equal(receipt.evidence.status, "PASS");
 assert.equal(receipt.evidence.unchanged_executor_domains, 3);

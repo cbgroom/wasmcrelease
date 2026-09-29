@@ -1,4 +1,4 @@
-# Client Foundation Gateway v1 — incubating v0.0.19 product surface
+# Client Foundation Gateway v1 — incubating v0.0.20 product surface
 
 For active checkpoint/restart status, receipt ordering and failure boundaries,
 read `../client-foundation-v1/agent-checkpoint-orientation.json` and stop at
@@ -10,7 +10,7 @@ stopping rule.
 This is the persistent control and artifact counterpart to
 `runtime/client-foundation-v1`. It is a higher-layer service and does not add a
 Host API or change the minimal compiler CLI. Its exact source is carried by the
-v0.0.19 product under the lifecycle boundary in
+v0.0.20 product under the lifecycle boundary in
 `../client-foundation-v1/release-surface.json`; it is not a formal Lib package.
 
 The gateway provides:

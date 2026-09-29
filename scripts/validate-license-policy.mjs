@@ -47,15 +47,25 @@ const contributing = await read("CONTRIBUTING.md");
 assert.match(contributing, /External contributions are paused/);
 assert.match(contributing, /do not submit a pull request/);
 
+const nonCommercialCargoLicenseFiles = new Map([
+  ["host/contract/v0/rust/Cargo.toml", "../../../../LICENSE"],
+  ["host/drivers/file/rust/Cargo.toml", "../../../../LICENSE"],
+  ["host/drivers/memory/rust/Cargo.toml", "../../../../LICENSE"],
+  ["sdk/wasmc-core-runtime/Cargo.toml", "../../LICENSE"],
+  ["sdk/wasmc-host/Cargo.toml", "../../LICENSE"],
+  ["sdk/wasmc-native-compiler/Cargo.toml", "../../LICENSE"],
+]);
+
+for (const [relative, expected] of nonCommercialCargoLicenseFiles) {
+  const manifest = await read(relative);
+  assert.doesNotMatch(manifest, /^license\s*=/m, `${relative} grants an unexpected SPDX license`);
+  assert.ok(manifest.split("\n").includes(`license-file = "${expected}"`), `${relative} is not bound to the research-only license`);
+  await readFile(path.resolve(path.dirname(path.join(root, relative)), expected));
+}
+
 const frozenCargoManifests = new Set([
-  "host/contract/v0/rust/Cargo.toml",
-  "host/drivers/file/rust/Cargo.toml",
-  "host/drivers/memory/rust/Cargo.toml",
   "host/drivers/tcp/rust/Cargo.toml",
   "host/drivers/udp/rust/Cargo.toml",
-  "sdk/wasmc-core-runtime/Cargo.toml",
-  "sdk/wasmc-host/Cargo.toml",
-  "sdk/wasmc-native-compiler/Cargo.toml",
 ]);
 
 for (const relative of frozenCargoManifests) {
@@ -98,6 +108,7 @@ console.log(JSON.stringify({
   open_source: false,
   commercial_use: false,
   production_use: false,
+  noncommercial_cargo_manifests_bound: nonCommercialCargoLicenseFiles.size,
   frozen_cargo_manifests_preserved: frozenCargoManifests.size,
   immutable_prior_tags_preserved: true,
 }));

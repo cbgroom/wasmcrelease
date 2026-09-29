@@ -85,24 +85,27 @@ if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)) {
       'skills/wasmc-developer','skills/wasmc-lib-discovery','skills/wasmc-sdk-discovery',
       'host/contract','host/sdk','host/drivers/file/rust','host/drivers/memory/rust'
     ];
+    const carriesV019Compiler=['0.0.19','0.0.20'].includes(version);
+    const releaseDocument=version==='0.0.20'?'docs/RELEASE_V020.md':version==='0.0.19'?'docs/RELEASE_V019.md':'docs/RELEASE_V018.md';
     const productFiles=[
       'AGENTS.md','README.md','HOSTING.md','LANGUAGE.md',
       'agent-quickstart.json','release-lib-route-readiness.json',
-      ...(version==='0.0.19'?['agent-evaluation/fresh-agent-learning-v2.json']:[]),
+      ...(version==='0.0.20'?['LICENSE','license-policy.json']:[]),
+      ...(carriesV019Compiler?['agent-evaluation/fresh-agent-learning-v2.json']:[]),
       'admission/lib-search-v040-v018-admission.json',
-      ...(version==='0.0.19'?['admission/compiler-v019-u64-admission.json']:[]),
+      ...(carriesV019Compiler?['admission/compiler-v019-u64-admission.json']:[]),
       'admission/data-foundation-v11/relational-v002-admission.json',
       'admission/mcpgit-resident-memory-v1/formal-admission.json',
       'catalog/libs-v018.json','catalog/discovery-intent-v018.json',
       'examples/lib-search/index-v018-v040.lsi',
       'host/ARCHITECTURE.md','host/architecture.json','host/manifest.json',
       'bench/manifest.json','bench/host-external-load.json',
-      'docs/ASMD.md','docs/AGENT_DECISION_MODEL.md','docs/FRESH_AGENT_LEARNING_FLYWHEEL.md','docs/RELEASE_SURFACES.md',version==='0.0.19'?'docs/RELEASE_V019.md':'docs/RELEASE_V018.md','release-surfaces.json',
+      'docs/ASMD.md','docs/AGENT_DECISION_MODEL.md','docs/FRESH_AGENT_LEARNING_FLYWHEEL.md','docs/RELEASE_SURFACES.md',releaseDocument,'release-surfaces.json',
       'examples/lib-search/client.mjs',
       'scripts/wasmc-lib.mjs',
       'scripts/lib-catalog.mjs','scripts/lib-route-closure.mjs','scripts/release-candidate.mjs',
       'scripts/agent-guidance-contract.mjs',
-      ...(version==='0.0.19'?['scripts/update-current-compiler.mjs']:[]),
+      ...(carriesV019Compiler?['scripts/update-current-compiler.mjs']:[]),
       'scripts/test-agent-guidance.mjs',
       'scripts/validate-agent-docs.mjs',
       'scripts/validate-sdk-agent-routes.mjs',

@@ -3,8 +3,19 @@
   "authority": "release-surfaces.json",
   "rule": "Match one route, use its exact evidence, and stop. Do not inspect history, unrelated compatibility data, broad manifests or implementation tests. Never abbreviate an identity that you report. After copying an exact_report value, refer to its field name instead of restating or shortening it.",
   "routes": {
+    "license-policy": {
+      "authority_file": "license-policy.json",
+      "request": "may I use the v0.0.20 product for research or commercial purposes",
+      "decision": "The v0.0.20 product permits non-commercial research only; commercial and production use require a separate written license. It is source-available, not open source.",
+      "prior_tag_rule": "Read LICENSE from the exact immutable tag. The v0.0.20 policy does not rewrite or revoke an earlier grant.",
+      "check_command": "node scripts/validate-license-policy.mjs",
+      "required_additional_reads": [
+        "license-policy.json",
+        "LICENSE"
+      ]
+    },
     "release-orientation": {
-      "product_version": "v0.0.19",
+      "product_version": "v0.0.20",
       "lifecycle_authority": "Read agent-release-orientation.json and run its check; open the full artifact inventory in manifest.json only if that compact authority fails validation. In the final answer, name agent-release-orientation.json literally as the compact authority. Compact release.json is lifecycle authority, not the artifact list.",
       "entrypoint": "AGENTS.md",
       "compiler": {
@@ -30,9 +41,9 @@
     },
     "release-lib-route-readiness": {
       "authority_file": "release-lib-route-readiness.json",
-      "request": "does this v0.0.19 product set bind every included Lib package and API route, and where is its lifecycle stage decided",
+      "request": "does this v0.0.20 product set bind every included Lib package and API route, and where is its lifecycle stage decided",
       "product": {
-        "version": "0.0.19",
+        "version": "0.0.20",
         "package_routes": 22,
         "api_routes": 140,
         "candidate_extras": 0,
@@ -56,7 +67,7 @@
         "rule": "Never infer released, discoverable or installable from this frozen product projection."
       },
       "valid_resolution_count": 1,
-      "only_valid_closure": "Verify the exact v0.0.19 candidate and route closure, then read the channel authorities for lifecycle state. Every promotion must preserve the same product digest set.",
+      "only_valid_closure": "Verify the exact v0.0.20 candidate and route closure, then read the channel authorities for lifecycle state. Every promotion must preserve the same product digest set.",
       "forbidden_shortcuts": [
         "treat admission as release",
         "infer lifecycle state from product presence or an admission snapshot",
@@ -66,13 +77,13 @@
       "authorities": [
         "admission/lib-search-v040-v018-admission.json",
         "catalog/lib-route-closure.json",
-        "channels/candidates/0.0.19.json",
+        "channels/candidates/0.0.20.json",
         "release.json",
         "channels/prod.json"
       ],
       "check_commands": [
         "node scripts/lib-route-closure.mjs --check",
-        "node scripts/release-candidate.mjs verify channels/candidates/0.0.19.json"
+        "node scripts/release-candidate.mjs verify channels/candidates/0.0.20.json"
       ],
       "required_additional_reads": [
         "release-lib-route-readiness.json"
@@ -80,7 +91,7 @@
     },
     "position-aware-capability-negative": {
       "request": "async func(u64) -> map<string,u64> as an ordinary public WAsmC value",
-      "decision": "unsupported as a whole: u64 is supported in the v0.0.19 compiler, but async ordinary source and a direct public map result remain independently unsupported",
+      "decision": "unsupported as a whole: u64 is supported in the v0.0.20 compiler, but async ordinary source and a direct public map result remain independently unsupported",
       "independent_stops": [
         "async ordinary source unsupported",
         "Map is resident/local only and unsupported as a direct public WIT value result"
@@ -102,7 +113,7 @@
     },
     "producer-release-u64-delta": {
       "request": "is ordinary-source u64 fixed or supported now",
-      "answer_opening": "Producer master and the v0.0.19 product compiler both support ordinary-source u64; read release.json for the currently published lifecycle stage.",
+      "answer_opening": "Producer master and the v0.0.20 product compiler both support ordinary-source u64; read release.json for the currently published lifecycle stage.",
       "producer": {
         "repository": "yxsicd/wasmc",
         "branch": "master",
@@ -112,13 +123,13 @@
         "qualified_on_containing_commit": true
       },
       "release_product": {
-        "version": "v0.0.19",
+        "version": "v0.0.20",
         "lifecycle_authority": "release.json",
         "ordinary_source_u64": "supported"
       },
-      "u32": "included in the v0.0.19 product compiler; no repair was required",
+      "u32": "included in the v0.0.20 product compiler; no repair was required",
       "char": "not implemented on the cited producer authority and not released; arbitrary u32 is not a char substitute",
-      "stop": "Report u64 support only for the v0.0.19 product compiler. Do not infer async, map, char, lifecycle stage or installation from scalar support.",
+      "stop": "Report u64 support only for the v0.0.20 product compiler. Do not infer async, map, char, lifecycle stage or installation from scalar support.",
       "required_additional_reads": []
     },
     "ordinary-source-positive": {
@@ -179,7 +190,7 @@
       "request": "is the dynamic Client/Gateway available in this product and is it a formal Lib",
       "authority": "runtime/client-foundation-v1/release-surface.json",
       "product": {
-        "version": "0.0.19",
+        "version": "0.0.20",
         "included": true,
         "surface_status": "incubating",
         "lifecycle_authority": "release.json"
@@ -197,7 +208,7 @@
       ]
     },
     "library-first-selection": {
-      "product_release": "v0.0.19",
+      "product_release": "v0.0.20",
       "package": "wasmc:std@1.4.0",
       "apis": [
         "wasmc:std@1.4.0/base64#try-encode-standard",
@@ -218,7 +229,7 @@
         "discoverable": true,
         "installable": true
       },
-      "catalog_snapshot_boundary": "The exact v0.0.18 catalog is carried forward as package selection authority for the v0.0.19 product, while the current release lifecycle remains separate.",
+      "catalog_snapshot_boundary": "The exact v0.0.18 catalog is carried forward as package selection authority for the v0.0.20 product, while the current release lifecycle remains separate.",
       "exact_report": {
         "instruction": "Copy package and APIs byte-for-byte. Do not reproduce digest values in prose; cite the exact_report field names and the successful resolver instead. If you report any digest anyway, it must be the full exact value with no reconstruction, extension, abbreviation or ellipsis.",
         "package": "wasmc:std@1.4.0",

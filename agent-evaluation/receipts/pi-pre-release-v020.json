@@ -1,0 +1,50 @@
+{
+  "schema": "wasmc.pi-pre-release-qualification/v1",
+  "release": {
+    "version": "0.0.20",
+    "rehearsal_commit": "4674d65c2650e6cbdddc3a4d0f4510911ae97ea3",
+    "rehearsal_tree": "8d55a6b09c1935ab9a6cb48b00148a1f5be4b8e9",
+    "candidate_commit": "3c188db52644917c58e791baee6ef45590a2f15f",
+    "product_set_sha256": "081f07a045c6ac58b8526c1e38c7e9f59e65663981cc7ed9b93825b4795bfc94"
+  },
+  "protocol": "wasmc.fresh-agent-learning/v2",
+  "agent": {"implementation":"pi","version":"0.87.1"},
+  "fresh_local_git_clone_per_case": true,
+  "raw_trace_retained": false,
+  "hidden_reasoning_retained": false,
+  "review": {
+    "independent_from_model_self_assessment": true,
+    "method": "maintainer-white-box-oracle-review"
+  },
+  "models": [
+    {
+      "provider": "llm-m4dd",
+      "identity": "deepseek-v4.1-flash",
+      "structural_pass": true,
+      "white_box_pass": true,
+      "cases": [
+        {"id":"release-orientation","structural_pass":true,"oracle_passed":true,"first_final_correct":true,"final_answer_sha256":"673c7a595c99172f1b35f18cdda4d568b07dda9ed027742d1cfd929793e59847","error_results":0,"retries":0},
+        {"id":"position-aware-capability-negative","structural_pass":true,"oracle_passed":true,"first_final_correct":true,"final_answer_sha256":"a168d73757e18714628d6584bc76080e3aa68c61d4a345390e47b6990a0f6b74","error_results":0,"retries":0},
+        {"id":"ordinary-source-positive","structural_pass":true,"oracle_passed":true,"first_final_correct":true,"final_answer_sha256":"9f9b8785c69d15b1c873354fbaf045e0b45f74ce3732a7b63ef4ed10784a9e3d","error_results":0,"retries":0},
+        {"id":"release-state-separation","structural_pass":true,"oracle_passed":true,"first_final_correct":true,"final_answer_sha256":"f2f0597ab7b91c803e65720e2708c7fb33e2289e8d05e023a5e7d7873c4c385a","error_results":0,"retries":0},
+        {"id":"library-first-selection","structural_pass":true,"oracle_passed":true,"first_final_correct":true,"final_answer_sha256":"0c28d95ef046dec81383979b001db2147edeeb16b403c3ce6354d63455c94a92","error_results":0,"retries":0},
+        {"id":"host-authority-boundary","structural_pass":true,"oracle_passed":true,"first_final_correct":true,"final_answer_sha256":"34d7cec15e44e62c383475b08e670b99aca4a58059ad198a012ae9bb6dd4da39","error_results":0,"retries":0}
+      ]
+    },
+    {
+      "provider": "llm-m4dd",
+      "identity": "glm-5.3-flash",
+      "structural_pass": true,
+      "white_box_pass": true,
+      "cases": [
+        {"id":"release-orientation","structural_pass":true,"oracle_passed":true,"first_final_correct":true,"final_answer_sha256":"7eebdb4a1182915db021bbd0f588ba9626ec6b1e357b0c9c5a89254fe432d96d","error_results":0,"retries":0},
+        {"id":"position-aware-capability-negative","structural_pass":true,"oracle_passed":true,"first_final_correct":true,"final_answer_sha256":"1e085dcabd4e61dbc97966b52fe1a33ddff5b6434da39543104feee478b8c430","error_results":0,"retries":0},
+        {"id":"ordinary-source-positive","structural_pass":true,"oracle_passed":true,"first_final_correct":true,"final_answer_sha256":"c25cd3e7d14cda4ae9738dc43f3a1d75c32b842b9abf266ede05547b2c81dfd8","error_results":0,"retries":0},
+        {"id":"release-state-separation","structural_pass":true,"oracle_passed":true,"first_final_correct":true,"final_answer_sha256":"de2c616fd9d51296f3827ad5475d09cd801f9e6ffe87d24f256826e57862dd8d","error_results":0,"retries":0},
+        {"id":"library-first-selection","structural_pass":true,"oracle_passed":true,"first_final_correct":true,"final_answer_sha256":"f547a5aa8d33e6015587272d6926492885334d83c8b3f588df847f73d5f6beee","error_results":0,"retries":0},
+        {"id":"host-authority-boundary","structural_pass":true,"oracle_passed":true,"first_final_correct":true,"final_answer_sha256":"81759f4ddc74db7dbbc29e0a618559cdfcde22a63ce652f57e0628ce03d6490e","error_results":0,"retries":0}
+      ]
+    }
+  ],
+  "controlled_pair_accepted": true
+}
