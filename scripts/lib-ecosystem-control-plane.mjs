@@ -48,7 +48,13 @@ const searchPage = offset => {
   assert.equal(run.status, 0, run.stderr);
   return JSON.parse(run.stdout);
 };
-const searchPages = routeCompleteRelease ? [searchPage(0), searchPage(64)] : [searchPage(0)];
+const searchPages = [];
+for (let offset = 0; offset < 10000; offset += 64) {
+  const page = searchPage(offset);
+  searchPages.push(page);
+  if (page.hits.length < 64) break;
+}
+assert(searchPages.at(-1).hits.length < 64, 'LibSearch pagination did not terminate');
 const search = {...searchPages[0],hits:searchPages.flatMap(page=>page.hits)};
 const discoverable = new Set(search.hits.filter(row => !row.signature).map(row => row.identity));
 const installable = new Set(installCatalog.packages.map(row => `${row.wit_package}`));
