@@ -49,6 +49,18 @@ function structural(report, limits, contract) {
   return { accepted: failures.length === 0 && report.hygiene_findings.length === 0 && answer.accepted, observed, limits, failures, answer_contract: answer };
 }
 
+function authorityBoundContract(caseDefinition, checkout) {
+  const contract = structuredClone(caseDefinition.answer_contract ?? {});
+  if (caseDefinition.id !== 'release-orientation') return contract;
+  const authority = JSON.parse(readFileSync(join(checkout, 'agent-release-orientation.json'), 'utf8'));
+  assert.match(authority.release?.product_set_sha256 ?? '', /^[0-9a-f]{64}$/);
+  contract.allowed_sha256 = [...new Set([
+    ...(contract.allowed_sha256 ?? []),
+    authority.release.product_set_sha256
+  ])];
+  return contract;
+}
+
 const input = options(process.argv.slice(2));
 const piVersion = execFileSync('pi', ['--version'], { encoding: 'utf8' }).trim();
 const [provider, identity] = input.model.split('/', 2);
@@ -101,7 +113,7 @@ for (const caseDefinition of protocol.cases) {
         stderr_characters: (result.stderr ?? '').length,
         stderr_sha256: createHash('sha256').update(result.stderr ?? '').digest('hex')
       },
-      structural: structural(report, limits, caseDefinition.answer_contract),
+      structural: structural(report, limits, authorityBoundContract(caseDefinition, checkout)),
       trace: report
     });
   } finally {
