@@ -1,0 +1,62 @@
+{
+  "schema": "wasmc.pi-post-release-regression/v1",
+  "release": {
+    "version": "0.0.18",
+    "tag": "v0.0.18",
+    "tag_commit": "667f99986c4fec52aaa4ec43e693659fb8e12fc9",
+    "tag_tree": "3fa35d34e8954bdf20b04ba2fbd98b2692431bd0",
+    "candidate_commit": "13676801aa6595473601b6b15c71ca869f00b74b",
+    "product_set_sha256": "d451c04579a35cdb24ea7ae3e0197c8c80e691e4ac374a909ef7fa2481166d44"
+  },
+  "protocol": "agent-evaluation/fresh-agent-learning-v1.json",
+  "runner": "scripts/run-pi-learning-model-v1.mjs",
+  "pi_version": "0.87.1",
+  "fresh_local_git_clone_per_case": true,
+  "no_session": true,
+  "skills_templates_extensions_disabled": true,
+  "raw_trace_retained": false,
+  "hidden_reasoning_retained": false,
+  "models": [
+    {
+      "provider": "llm-m4dd",
+      "identity": "deepseek-v4.1-flash",
+      "structural_pass": true,
+      "white_box_pass": true,
+      "totals": {"wall_ms":85189,"tool_calls":18,"assistant_turns":17,"tool_result_characters":103301,"error_results":0,"retries":0,"exact_duplicate_calls":0,"repeated_reads":0,"zero_yield_results":0,"tokens":{"input":64692,"output":6489,"reasoning":3448}},
+      "cases": [
+        {"id":"release-orientation","structural_pass":true,"semantic_review":"pass","final_answer_sha256":"54ee31f3be890f3f4d55b3406decd8ef2d7f7921ef420f27c00753a71c8f8a7d"},
+        {"id":"position-aware-capability-negative","structural_pass":true,"semantic_review":"pass","final_answer_sha256":"d58edf5e7e1b838ee681527650ea009c484e70ee964aa2cc56b18f1e5ed8d287"},
+        {"id":"ordinary-source-positive","structural_pass":true,"semantic_review":"pass","final_answer_sha256":"08bc6ab7bb049e5c0f528874b90ec172f655e64be8211eb137ce9a1728f2200d"},
+        {"id":"release-state-separation","structural_pass":true,"semantic_review":"pass","final_answer_sha256":"9af7fe61e28af40323817bae83a9678862d6a67ddad983a87a71b7edb4561747"},
+        {"id":"library-first-selection","structural_pass":true,"semantic_review":"pass","final_answer_sha256":"f853732ed003072db25c1181160b6de02afff5684aeb3b0373902c8777633f52"},
+        {"id":"host-authority-boundary","structural_pass":true,"semantic_review":"pass","final_answer_sha256":"c3ba3982b063571866a533d0275933b2c205e96e34bbf80ad66cb2fb866497b9"}
+      ]
+    },
+    {
+      "provider": "llm-m4dd",
+      "identity": "glm-5.3-flash",
+      "structural_pass": false,
+      "white_box_pass": false,
+      "totals": {"wall_ms":143147,"tool_calls":15,"assistant_turns":18,"tool_result_characters":74979,"error_results":0,"retries":0,"exact_duplicate_calls":0,"repeated_reads":0,"zero_yield_results":0,"tokens":{"input":52193,"output":3306,"reasoning":684}},
+      "cases": [
+        {"id":"release-orientation","structural_pass":false,"semantic_review":"fail-compact-authority-literal-omitted","final_answer_sha256":"f6124a3fda9761b5f2bd5fff20a1371b57620c78b1f74637441d86534cfe7f73"},
+        {"id":"position-aware-capability-negative","structural_pass":true,"semantic_review":"pass","final_answer_sha256":"45f64a93cd1b686436dbc0905875e8f2554baed6f07d2616b9ee33602feb86cc"},
+        {"id":"ordinary-source-positive","structural_pass":true,"semantic_review":"pass","final_answer_sha256":"243d5c9b46b70e30538f5bb974b93be5c3f824f91a6847fe8d76c15878b9f3c5"},
+        {"id":"release-state-separation","structural_pass":true,"semantic_review":"pass","final_answer_sha256":"8be4f2b30a3d6b31b72cb5acbf78f87b173c6a4268abf37c77dc05f5268d4ab7"},
+        {"id":"library-first-selection","structural_pass":true,"semantic_review":"pass","final_answer_sha256":"3fba45951410e4cf6193d41f002dc32f4ac908b7b9f4e12eddff929f2a8871bb"},
+        {"id":"host-authority-boundary","structural_pass":true,"semantic_review":"pass","final_answer_sha256":"316d1507ebe7e1467b5f45a593ed0ac9eb86ad34cbe710719d15e774e66d2971"}
+      ]
+    }
+  ],
+  "public_distribution": {
+    "remote_tag_commit": "667f99986c4fec52aaa4ec43e693659fb8e12fc9",
+    "release_json_sha256": "353b1de78618ee3cf70c892b579dbdf7caafbc6863ef024aad12592c6229fdbc",
+    "compiler_sha256": "93d946c544975a6e7642ff1f5890e09d3bfb9924d0256ffcfebcf07485597c90",
+    "raw_github_byte_identical": true,
+    "jsdelivr_byte_identical": true
+  },
+  "controlled_pair_accepted": false,
+  "release_mutated": false,
+  "finding": "GLM read the compact authority and reported the correct release, entrypoint, candidate, product set and compiler identities, but omitted the exact agent-release-orientation.json literal from its final answer.",
+  "disposition": "v0.0.18 remains immutable and valid under its passing pre-release gate; retain this first post-release cohort failure as the next guidance-flywheel input and do not rerun to manufacture a pass"
+}
