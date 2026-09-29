@@ -58,6 +58,13 @@ commit `d484c09fabcb5876da08ee7a07788bdfd1be0de6`, the same product-set digest,
 and the same qualification receipt. Prod remains v0.0.15 until the final
 unpushed rehearsal and two-model Pi gate pass.
 
+`v0.0.16-main.1` is immutable at `3cd18a8004629fda062638c237df883315d10982`.
+The working tree now prepares the suffix-free prod metadata, default discovery
+and compact orientation for v0.0.16, but this state is not published. Commit it
+locally as the final rehearsal, run `scripts/pi-pre-release-gate-v1.mjs` with
+both required models, independently review and retain the privacy-safe receipt,
+and only then create/push `v0.0.16` and advance `main`.
+
 ## 2026-09-27 v0.0.14 prod hold
 
 Do not promote `v0.0.14-main.1` to prod. White-box product inspection found
