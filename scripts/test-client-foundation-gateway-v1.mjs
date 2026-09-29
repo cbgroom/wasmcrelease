@@ -65,6 +65,17 @@ async function waitFor(origin, predicate, timeoutMs = 5000, clientId = "client-a
   throw new Error("gateway state wait timed out");
 }
 
+async function waitForArchiveSet(directory, expectedPaths, timeoutMs = 5000) {
+  const expected = [...expectedPaths].map((entry) => path.basename(entry)).sort();
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    const actual = (await readdir(directory)).filter((name) => name.endsWith(".jsonl")).sort();
+    if (actual.length === expected.length && actual.every((name, index) => name === expected[index])) return actual;
+    await wait(25);
+  }
+  throw new Error("gateway archive garbage collection did not converge");
+}
+
 async function connectSilentClient(port) {
   const socket = tls.connect({ host: "localhost", port, servername: "localhost", ca: cert, rejectUnauthorized: true });
   await once(socket, "secureConnect");
@@ -229,7 +240,11 @@ try {
   assert.equal(archiveBytes.toString("utf8").trim().split("\n").length, archiveMetadata.commands);
   assert.equal(archiveMetadata.from_sequence, 1);
   assert.equal(archiveMetadata.through_sequence, 6);
-  assert.equal((await readdir(path.dirname(archivePath))).filter((name) => name.endsWith(".jsonl")).length, 3);
+  const retainedArchiveFiles = await waitForArchiveSet(
+    path.dirname(archivePath),
+    diskState.clients["client-a"].archives.map((archive) => archive.path),
+  );
+  assert.equal(retainedArchiveFiles.length, diskState.clients["client-a"].archives.length);
   const artifactPath = path.join(gatewayRoot, "artifacts", `${artifact.value.sha256}.json`);
   const artifactBytes = await readFile(artifactPath);
   await gateway.close();

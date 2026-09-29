@@ -62,11 +62,11 @@ node scripts/test-client-foundation-gateway-v1.mjs
 node scripts/test-wss-cancellation-v1.mjs
 node scripts/validate-dynamic-lib-graph-model-v1.mjs
 node scripts/test-dynamic-lib-graph-v1.mjs
-# The wasm-tools-derived DAG port-contract qualification is intentionally run
-# by client-gateway.yml, which pins and installs wasm-tools 1.255.0. Keep this
-# dependency out of the generic maintainer check used by unrelated Host jobs.
+# The wasm-tools-derived DAG port-contract qualifications are intentionally run
+# by client-gateway.yml, which pins and installs wasm-tools 1.255.0. Keep both
+# the direct DAG test and the distributed DAG/gateway test out of this generic
+# maintainer check used by unrelated Host jobs.
 node scripts/test-dynamic-lib-stateful-v1.mjs
-node scripts/test-dynamic-client-foundation-gateway-v1.mjs
 
 node --input-type=module <<'JS'
 const facade = await import('./current/wasmc.mjs');
