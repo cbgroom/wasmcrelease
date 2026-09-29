@@ -55,6 +55,8 @@ assert.match(delta.char, /not implemented/);
 const telemetry=quickstart.routes['release-state-separation'];
 assert.equal(telemetry.exact_report.identity,'wasmc-system-telemetry@0.0.1');
 assert.equal(telemetry.exact_report.stop_reason,'wasmc-source-direct-resource-methods');
+assert.match(telemetry.exact_report.instruction,/First copy exact_report\.identity and exact_report\.stop_reason byte-for-byte once/);
+assert.match(telemetry.exact_report.instruction,/Never output a field name as a substitute for its value/);
 assert.match(quickstart.rule,/refer to its field name/);
 const routeReadiness=quickstart.routes['release-lib-route-readiness'];
 const routeReadinessAuthority=JSON.parse(readFileSync(new URL('../release-lib-route-readiness.json',import.meta.url),'utf8'));
