@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { createHash } from 'node:crypto';
-import { copyFile, readFile, rename, stat, writeFile } from 'node:fs/promises';
+import { readFile, rename, stat, writeFile } from 'node:fs/promises';
 import { basename, dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -59,7 +59,7 @@ const global = replaceEmbeddedCompiler(await readFile(globalPath, 'utf8'), previ
 
 await atomicWrite(esmPath, esm, 0o755);
 await atomicWrite(globalPath, global, 0o644);
-await copyFile(candidatePath, currentCompilerPath);
+await atomicWrite(currentCompilerPath, candidate, 0o644);
 
 console.log(JSON.stringify({
   accepted: true,
