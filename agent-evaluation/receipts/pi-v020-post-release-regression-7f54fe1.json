@@ -1,0 +1,75 @@
+{
+  "schema": "wasmc.pi-post-release-regression/v1",
+  "release": {
+    "version": "0.0.20",
+    "tag": "v0.0.20",
+    "tag_commit": "4674d65c2650e6cbdddc3a4d0f4510911ae97ea3",
+    "tag_tree": "8d55a6b09c1935ab9a6cb48b00148a1f5be4b8e9",
+    "merged_main_commit": "7f54fe1a54f6a52de0887da88747f0c564fb4c73",
+    "merged_main_tree": "c01f74fdeca5d9f64bc324f7984227a6ff305b4d",
+    "candidate_commit": "3c188db52644917c58e791baee6ef45590a2f15f",
+    "product_set_sha256": "081f07a045c6ac58b8526c1e38c7e9f59e65663981cc7ed9b93825b4795bfc94"
+  },
+  "protocol": "agent-evaluation/fresh-agent-learning-v2.json",
+  "runner": "scripts/run-pi-learning-model-v1.mjs",
+  "pi_version": "0.87.1",
+  "fresh_local_git_clone_per_case": true,
+  "no_session": true,
+  "skills_templates_extensions_disabled": true,
+  "raw_trace_retained": false,
+  "hidden_reasoning_retained": false,
+  "review": {
+    "independent_from_model_self_assessment": true,
+    "method": "maintainer-white-box-oracle-review"
+  },
+  "initial_attempt": {
+    "controlled_pair_accepted": true,
+    "semantic_cases_passed": 12,
+    "structural_cases_passed": 12,
+    "tool_errors": 0,
+    "retries": 0
+  },
+  "models": [
+    {
+      "provider": "llm-m4dd",
+      "identity": "deepseek-v4.1-flash",
+      "structural_pass": true,
+      "white_box_pass": true,
+      "totals": {"wall_ms":94144,"tool_calls":21,"assistant_turns":17,"tool_result_characters":152354,"error_results":0,"retries":0,"exact_duplicate_calls":0,"repeated_reads":0,"zero_yield_results":0,"tokens":{"input":78628,"output":8758,"reasoning":5303}},
+      "cases": [
+        {"id":"release-orientation","structural_pass":true,"semantic_review":"pass","final_answer_sha256":"4349055a07dac2f518529ab32b3817a88fac795a3683def319c85643510993c0"},
+        {"id":"position-aware-capability-negative","structural_pass":true,"semantic_review":"pass","final_answer_sha256":"8c049a378c3b7dfc5c0df0148e3702457e0f7c07b3d9c8855da6473d3428c520"},
+        {"id":"ordinary-source-positive","structural_pass":true,"semantic_review":"pass","final_answer_sha256":"4804a0de6153539941a141d909f3897eb77f5b30a39a5ffaa975453da313654e"},
+        {"id":"release-state-separation","structural_pass":true,"semantic_review":"pass","final_answer_sha256":"fd683094a73f69ed23601083a9c1031a74166d980a530951dab5fb31fc17cedc"},
+        {"id":"library-first-selection","structural_pass":true,"semantic_review":"pass","final_answer_sha256":"d4765cedabef6360ab1949852666c168ab5648ffbf803b055053b87661e29585"},
+        {"id":"host-authority-boundary","structural_pass":true,"semantic_review":"pass","final_answer_sha256":"b4a7bb17f03be0cab9673b177e9c53ff9d18f939bb7fe33d65c2a3834947b03a"}
+      ]
+    },
+    {
+      "provider": "llm-m4dd",
+      "identity": "glm-5.3-flash",
+      "structural_pass": true,
+      "white_box_pass": true,
+      "totals": {"wall_ms":162990,"tool_calls":13,"assistant_turns":17,"tool_result_characters":83996,"error_results":0,"retries":0,"exact_duplicate_calls":0,"repeated_reads":0,"zero_yield_results":0,"tokens":{"input":60810,"output":3721,"reasoning":919}},
+      "cases": [
+        {"id":"release-orientation","structural_pass":true,"semantic_review":"pass","final_answer_sha256":"9c9f3d2536f48ef747518124250fedb5948e919d5e2fba94d14301bdc5803ed9"},
+        {"id":"position-aware-capability-negative","structural_pass":true,"semantic_review":"pass","final_answer_sha256":"b034c1def0d3c606599e54547b02cce57f11be50fabd0383cef0182a53db17b1"},
+        {"id":"ordinary-source-positive","structural_pass":true,"semantic_review":"pass","final_answer_sha256":"85b6e88f04af62ba839fa5825a84e99fe4ec096a8345e9df704d9bd26c516121"},
+        {"id":"release-state-separation","structural_pass":true,"semantic_review":"pass","final_answer_sha256":"42147e3f57753a226e1e60ba0438704269510f8aa815ec821f28ac1b00d46ba6"},
+        {"id":"library-first-selection","structural_pass":true,"semantic_review":"pass","final_answer_sha256":"b1eb97887b5cb6d151b8ac481a629c7bb3a8b5460660cc5e801848b36efb30fb"},
+        {"id":"host-authority-boundary","structural_pass":true,"semantic_review":"pass","final_answer_sha256":"e1d84f314ca28867177a92a124aaedefa2c6d424863aae97083cb7c04fe80309"}
+      ]
+    }
+  ],
+  "public_distribution": {
+    "remote_tag_commit": "4674d65c2650e6cbdddc3a4d0f4510911ae97ea3",
+    "release_json_sha256": "f15eeabbc903b22d5f7e2bb65d322d30897f50de01e820c0c93dd70dbc192337",
+    "compiler_sha256": "4e0b9779df3bf7b627d7d9fbfc43cfffd67bd053f87c69a9f832c5690b6888a2",
+    "raw_github_byte_identical": true,
+    "jsdelivr_release_identity_verified": true
+  },
+  "controlled_pair_accepted": true,
+  "release_mutated": false,
+  "finding": "Both cost-controlled Pi models passed all twelve post-release cases on their first fresh-session cohort with zero tool errors and zero retries; no new guidance defect was found.",
+  "disposition": "v0.0.20 remains immutable; retain this passing post-release regression without changing release claims."
+}
