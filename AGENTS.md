@@ -203,6 +203,8 @@ before treating compiler success as standard-Lib or managed Host support.
 - `standard/wasmc-std/1.4.0/`: current WIT standard Lib and generated Rust bindings.
 - `standard/corelib/4.8.0/`: matching standard Lib CoreLib companion.
 - `standard/wasmc-lib-search/0.3.0/`: route-complete embedded-index Lib in the v0.0.17 product. Start with [its executable guide](examples/lib-search/README.md); `node scripts/wasmc-lib.mjs search "base64"` executes this Lib. See [dev/main/prod status policy](docs/RELEASE_CHANNELS.md).
+- `standard/wasmc-lib-search/0.2.0/`: historical exact LibSearch package retained
+  for pinned v0.0.14-v0.0.16 inspection; it is not the active v0.0.17 route.
 - `standard/wasmc-lib-search/0.1.0/`: historical exact LibSearch package retained
   for pinned-version inspection; it is not the active v0.0.17 search route.
 - `libs/wasmc-host-clock/`, `libs/wasmc-owned-algorithms/`, and

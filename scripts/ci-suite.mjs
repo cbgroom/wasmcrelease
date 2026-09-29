@@ -40,7 +40,7 @@ export function suiteCases(family,runtime='node',mirror='github') {
     item('deterministic-fresh-agent-regression','scripts/wasmc-fresh-agent-evaluation-v0.mjs',['--release-root','.', '--json-out','target/ci/fresh-agent.json'])
   ];
   if(family==='candidate')return [
-    item('v016-product-identity','scripts/release-candidate.mjs',['verify','channels/candidates/0.0.16.json']),
+    item('v017-product-identity','scripts/release-candidate.mjs',['verify','channels/candidates/0.0.17.json']),
     item('library-first-teaching-and-routes','scripts/test-library-first.mjs'),
     item('live-agent-trace-evaluator','scripts/test-live-agent-trace-evaluation-v1.mjs'),
     item('fresh-pi-two-model-cohort-contract','scripts/test-fresh-agent-learning-v1.mjs'),
