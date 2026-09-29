@@ -42,6 +42,16 @@ Because this changes a product byte, the earlier candidate was invalidated and
 regenerated at the product-set digest above; no earlier remote success may be
 used to qualify it.
 
+Exact candidate/evidence commit `d484c09fabcb5876da08ee7a07788bdfd1be0de6`
+is qualified for `v0.0.16-dev.1`. Required runs succeeded: LibSearch
+`36506803303`, full source-free consumer `36506805611`, dynamic Client/Gateway
+`36506800809`, SDK Agent guidance `36506807693`, and release-surface policy
+`36506809800`. HTTPS run `36506812014` has all five required modern platforms
+successful; the non-blocking legacy `macos-15-intel` job was still compiling
+at qualification time. The retained receipt is
+`admission/qualification-v016-dev1.json`. Candidate digest remains
+`a91008bb2badb82f803ba0d45bc014db4f02703ec7d05a19b49599dd5d064502`.
+
 ## 2026-09-27 v0.0.14 prod hold
 
 Do not promote `v0.0.14-main.1` to prod. White-box product inspection found
