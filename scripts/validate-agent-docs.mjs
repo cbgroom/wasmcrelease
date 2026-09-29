@@ -49,6 +49,7 @@ interface api {
 }
 world app { export api; }`;
 const runtimeCompilerBytes = await readFile(new URL("../runtime/wasmc-runtime-v0/compiler.wasm", import.meta.url));
+const runtimeManifest = JSON.parse(await readFile(new URL("../runtime/wasmc-runtime-v0/manifest.json", import.meta.url)));
 const managedOptions = { compilerWasmBytes: runtimeCompilerBytes };
 const managedInstance = await facade.instantiateLib(managed, managedOptions);
 if (managedInstance.exports.count() !== 2) throw new Error("managed Lib behavior drifted");
@@ -70,7 +71,7 @@ if (recordlessInstance.exports.run() !== 2) throw new Error("recordless managed 
 const runtimeRoot = new URL("../runtime/wasmc-runtime-v0/", import.meta.url);
 const selfTest = await execFileAsync(process.execPath, [new URL("bootstrap.mjs", runtimeRoot).pathname, "self-test"]);
 const selfTestJson = JSON.parse(selfTest.stdout);
-if (!selfTestJson.accepted || selfTestJson.runtime !== "node" || selfTestJson.compiler_bytes !== release.runtime.compiler_bytes) {
+if (!selfTestJson.accepted || selfTestJson.runtime !== "node" || selfTestJson.compiler_bytes !== runtimeManifest.compiler.file.bytes) {
   throw new Error("runtime Node self-test drifted");
 }
 const temporary = await mkdtemp(join(tmpdir(), "wasmc-agent-docs-"));
