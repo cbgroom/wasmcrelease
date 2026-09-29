@@ -1,7 +1,7 @@
 // Mechanical raw Git-object transport; detector set matches the source authority's
 // high-confidence-credentials-v0 gate. Never print matches or match digests.
 import { execFileSync, spawn } from 'node:child_process';
-import { createHash } from 'node:crypto';
+import { createHash, createPrivateKey, createPublicKey, X509Certificate } from 'node:crypto';
 import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 const root=resolve(process.argv[2]??'.');
@@ -42,6 +42,9 @@ async function take(n){const parts=[];let left=n;while(left){if(!pending.length)
 async function line(){let s='';for(let i=0;i<256;i++){const b=(await take(1))[0];if(b===10)return s;s+=String.fromCharCode(b);}throw Error('oversized object header');}
 const approvedObjects=new Set(['111e78b2bed5a9658cecb3660e547aee698b273b','1a12d7ae32eb35885f6f2cbf472d9f82f4252440']);
 const approvedCompiler='8f79429d5499380d93abbb980df6c16a99adc15fee8987068906af11aa757027';
+const approvedLocalhostKeyObject='0b20b1e6ebbcaf67e8d5ce74cdb11984e66e8bbe';
+const approvedLocalhostCertObject='dc1c06887591f2761da5dbe98f564dbfb287df18';
+const approvedLocalhostPublicKey='f835f0f25c98ac29a00bd427819945bdc04d4dcb37adad253f53311507aa6516';
 function classifyCarrier(id,text,pattern){
  if(rawOnly||!approvedObjects.has(id))return null;
  const blocks=[...text.matchAll(/function decodeEmbeddedCompiler\(\) \{\s*const binary = atob\("([A-Za-z0-9+/=]+)"\);/g)];
@@ -55,6 +58,22 @@ function classifyCarrier(id,text,pattern){
  if(detectors.some(([,p])=>p.test(decoded.toString('latin1'))))return null;
  return {object:id,detector:'aws_access_key_id',raw_match_count:hits.length,classification:'verified-frozen-compiler-base64-false-positive',decoded_sha256:approvedCompiler,decoded_all_detectors_clear:true,authorization:'user explicit narrow remediation approval 2026-09-13'};
 }
+function classifyLocalhostTestKey(id,raw){
+ if(rawOnly||id!==approvedLocalhostKeyObject||!ids.includes(approvedLocalhostCertObject))return null;
+ try {
+  const certRaw=git(['cat-file','blob',approvedLocalhostCertObject]);
+  const cert=new X509Certificate(certRaw);
+  const key=createPrivateKey(raw);
+  const keyPublic=createPublicKey(key).export({type:'spki',format:'der'});
+  const certPublic=cert.publicKey.export({type:'spki',format:'der'});
+  const keyDigest=createHash('sha256').update(keyPublic).digest('hex');
+  const certDigest=createHash('sha256').update(certPublic).digest('hex');
+  if(keyDigest!==approvedLocalhostPublicKey||certDigest!==approvedLocalhostPublicKey)return null;
+  if(cert.subject!=='CN=localhost'||cert.issuer!=='CN=localhost')return null;
+  if(cert.subjectAltName!=='DNS:localhost, IP Address:127.0.0.1')return null;
+  return {object:id,detector:'private_key_pem',classification:'verified-repository-local-self-signed-test-fixture',paired_certificate_object:approvedLocalhostCertObject,public_key_sha256:approvedLocalhostPublicKey,scope:'localhost-and-127.0.0.1-only',production_authority:false};
+ } catch { return null; }
+}
 let bytes=0;const findings=[],rawFindings=[],classifiedFalsePositives=[];
 try{
  for(const row of blobs){
@@ -65,7 +84,9 @@ try{
   bytes+=raw.length;const text=raw.toString('latin1');
   for(const [detector,pattern]of detectors)if(pattern.test(text)){
    const finding={object:row.id,detector};rawFindings.push(finding);
-   const classified=detector==='aws_access_key_id'?classifyCarrier(row.id,text,pattern):null;
+   const classified=detector==='aws_access_key_id'
+    ?classifyCarrier(row.id,text,pattern)
+    :detector==='private_key_pem'?classifyLocalhostTestKey(row.id,raw):null;
    if(classified)classifiedFalsePositives.push(classified);else findings.push(finding);
   }
  }
@@ -73,5 +94,5 @@ try{
 }catch(e){child.kill();throw e;}
 if(!refs().equals(initial))throw Error('refs changed during scan');
 const sha=b=>createHash('sha256').update(b).digest('hex');
-console.log(JSON.stringify({schema:'wasmc.reachable-credential-scan/v1',detector_set:'high-confidence-credentials-v0',accepted:findings.length===0,raw_only:rawOnly,reachable_objects:ids.length,scanned_blobs:blobs.length,raw_bytes:bytes,skipped_blobs:0,scan_errors:0,refs_sha256:sha(initial),objects_sha256:sha(ids.join('\n')+'\n'),raw_findings:rawFindings,classified_false_positives:classifiedFalsePositives,findings,scope:'all raw bytes scanned; only two exact approved frozen carriers classified after digest/format/import/decoded-nine-detector proof; not exhaustive secret-free proof'}));
+console.log(JSON.stringify({schema:'wasmc.reachable-credential-scan/v1',detector_set:'high-confidence-credentials-v0',accepted:findings.length===0,raw_only:rawOnly,reachable_objects:ids.length,scanned_blobs:blobs.length,raw_bytes:bytes,skipped_blobs:0,scan_errors:0,refs_sha256:sha(initial),objects_sha256:sha(ids.join('\n')+'\n'),raw_findings:rawFindings,classified_false_positives:classifiedFalsePositives,findings,scope:'all raw bytes scanned; two exact frozen compiler carriers and one exact paired localhost-only self-signed test fixture classified by object and cryptographic identity; not exhaustive secret-free proof'}));
 if(findings.length)process.exitCode=1;

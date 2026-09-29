@@ -23,6 +23,16 @@ workflows on that commit, retain their exact successful run identities, and
 only then create the metadata-only dev stage. Do not regenerate the candidate
 or change any product file after qualification begins.
 
+The first full-history security run found the retained iOS localhost WSS test
+private key. It is now admitted only as one object-exact, cryptographically
+paired self-signed fixture: the scanner requires the fixed key object, fixed
+certificate object, identical SPKI digest, self-issued `CN=localhost`, and SAN
+limited to `localhost` / `127.0.0.1`; it records `production_authority=false`.
+Raw-only mode still rejects it, and negative tests prove that even the same key
+under a changed blob identity is rejected. This remediation changes no frozen
+v0.0.16 product byte or product-set digest; remote qualification must use the
+containing evidence commit.
+
 ## 2026-09-27 v0.0.14 prod hold
 
 Do not promote `v0.0.14-main.1` to prod. White-box product inspection found
