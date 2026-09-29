@@ -1,7 +1,7 @@
-# Client Foundation v1 — incubating v0.0.16 product surface
+# Client Foundation v1 — incubating v0.0.17 product surface
 
 `release-surface.json` is the bounded lifecycle authority for this directory.
-The exact files are included in the v0.0.16 product candidate, while
+The exact files are included in the v0.0.17 product candidate, while
 `release.json` decides whether that candidate is currently dev, main or prod.
 This is product inclusion above the Host, not formal Lib admission, discovery
 or installation.
@@ -128,7 +128,7 @@ parallel branches, exact port-manifest verification, one-branch replacement
 with three reused nodes and negative closure/type controls. This engine is
 local prototype evidence. The Client/Gateway qualification also distributes
 that graph over WSS/HTTPS, persists it, and reconstructs it after a Client
-restart. The surface is included in the v0.0.16 product, but it is not a
+restart. The surface is included in the v0.0.17 product, but it is not a
 catalog-discoverable or installable Lib package.
 
 ## Dynamic Client/Gateway loop

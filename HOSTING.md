@@ -2,7 +2,7 @@
 
 Choose the smallest standard layer that fits the caller.
 
-This file belongs to the v0.0.16 product set. Read the validated compact
+This file belongs to the v0.0.17 product set. Read the validated compact
 `agent-release-orientation.json` for the exact released tag; product presence
 alone does not establish lifecycle stage.
 
@@ -40,7 +40,7 @@ For reusable Core-module mechanics, use the published dual-engine SDK:
 
 ```toml
 # Use only after reading the exact immutable tag from the trusted release.json.
-wasmc-core-runtime = { git = "https://github.com/cbgroom/wasmcrelease.git", tag = "v0.0.16" }
+wasmc-core-runtime = { git = "https://github.com/cbgroom/wasmcrelease.git", tag = "v0.0.17" }
 ```
 
 `CoreRuntimeSdk::inspect_core` validates and describes imports, exports, kinds,
@@ -58,12 +58,12 @@ cargo run --locked
 The demo compiles and executes scalar source, invokes a stateful resource Component, and binds the one explicit `clock-host.now` import. It is copyable reference code, not a published SDK. Reuse Engine/compiled modules where appropriate and create a fresh bounded Store for independent requests.
 
 For an existing Rust application that also needs the generic WAsmC Host
-resource registry and platform binding policy, the v0.0.16 product includes
+resource registry and platform binding policy, the v0.0.17 product includes
 `sdk/wasmc-host`. It wraps the Core Runtime SDK and provides one-call native
 profiles plus explicit resource grants. Applications remain free to use
 `wasmc-core-runtime` directly when they want to own all Host policy themselves.
 
-The v0.0.16 product also includes `libs/wasmc-system-telemetry`. The reference integration
+The v0.0.17 product also includes `libs/wasmc-system-telemetry`. The reference integration
 in `examples/system-telemetry` uses explicit generic Host-SDK grants, bounded
 snapshot reads, and the source-free Component. Linux has real-system acquisition
 evidence; Windows/macOS have portable Host-SDK/Component controls only.

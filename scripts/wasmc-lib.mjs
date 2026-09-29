@@ -8,6 +8,7 @@ const catalogs=Object.freeze({
   v009:{file:'catalog/libs-v009.json',authority:catalogAuthorities.v009},
   v013:{file:'catalog/libs-v013.json',authority:catalogAuthorities.v013},
   v014:{file:'catalog/libs-v014.json',authority:catalogAuthorities.v014},
+  v017:{file:'catalog/libs-v017.json',authority:catalogAuthorities.v017},
 });
 const catalogSelection=name=>{
   const selected=catalogs[name??'v009'];
@@ -17,7 +18,7 @@ const catalogSelection=name=>{
 try {
   let result;
   if (command === 'search') {
-    const lib=instantiateLibSearch(readFileSync(join(repositoryRoot,'standard/wasmc-lib-search/0.2.0/artifact.wasm')),{artifact_sha256:'f525deed55a3a942d63c6780b18ac7dc5e496dcf4ce47baaa2da0cbf1795afb1',index_sha256:'613dacdcf58a225542aea99584a63fc282bcb08bfcc771f3f967482fadf31121',wit_package:'wasmc:lib-search@0.2.0'});
+    const lib=instantiateLibSearch(readFileSync(join(repositoryRoot,'standard/wasmc-lib-search/0.3.0/artifact.wasm')),{artifact_sha256:'1d41fd939d1cb2d65080346b2a3a251040a2739847cb9d0d0301c12c1655539b',index_sha256:'ca6d684eb3100f4629c8ff4f65c7d0b4f6bcd49fc24768e798c9a71a6fbf3ce5',wit_package:'wasmc:lib-search@0.3.0'});
     const words=[];let historical=false,offset=0,limit=64;
     for(let i=0;i<args.length;i++) {
       const arg=args[i];
@@ -41,7 +42,7 @@ try {
     }
     const lockBytes=readFileSync(lockPath);
     let lock;try{lock=JSON.parse(lockBytes);}catch{throw Object.assign(new Error('install.lock_invalid'),{code:'install.lock_invalid'});}
-    const catalogName=lock?.release_tag==='v0.0.14'?'v014':lock?.release_tag==='v0.0.13'?'v013':lock?.release_tag==='v0.0.9'?'v009':null;
+    const catalogName=lock?.release_tag==='v0.0.17'?'v017':lock?.release_tag==='v0.0.14'?'v014':lock?.release_tag==='v0.0.13'?'v013':lock?.release_tag==='v0.0.9'?'v009':null;
     if(!catalogName)throw Object.assign(new Error('install.lock_invalid'),{code:'install.lock_invalid'});
     const selected=catalogSelection(catalogName);
     result=await installLib({catalogBytes:readFileSync(join(repositoryRoot,selected.file)),catalogAuthority:selected.authority,lockBytes,lockSha256:values['--lock-sha256'],destination,mirror:values['--mirror']});

@@ -17,13 +17,17 @@ const args = new Set(process.argv.slice(2));
 assert(args.size === 1 && (args.has('--write') || args.has('--check')), 'usage: lib-ecosystem-control-plane.mjs --write|--check');
 
 const release = readJson('release.json');
-const routeCompleteRelease = ['0.0.14', '0.0.15', '0.0.16'].includes(release.version);
+const routeCompleteRelease = ['0.0.14', '0.0.15', '0.0.16', '0.0.17'].includes(release.version);
+const v017Release = release.version === '0.0.17';
 const surfaces = readJson('release-surfaces.json');
-const productionCatalogPath = routeCompleteRelease ? 'catalog/libs-v014.json' : 'catalog/libs-v009.json';
-const currentSideCatalogPath = routeCompleteRelease ? 'catalog/libs-v014.json' : 'catalog/libs-v013.json';
+const productionCatalogPath = v017Release ? 'catalog/libs-v017.json' : routeCompleteRelease ? 'catalog/libs-v014.json' : 'catalog/libs-v009.json';
+const currentSideCatalogPath = v017Release ? 'catalog/libs-v017.json' : routeCompleteRelease ? 'catalog/libs-v014.json' : 'catalog/libs-v013.json';
 const installCatalog = readJson(productionCatalogPath);
 const currentSideCatalog = existsSync(join(root, currentSideCatalogPath)) ? readJson(currentSideCatalogPath) : null;
-const searchCandidateAdmission = readJson('admission/lib-search-v020-v014-admission.json');
+const searchAdmissionPath = v017Release ? 'admission/lib-search-v030-v017-admission.json' : 'admission/lib-search-v020-v014-admission.json';
+const searchCandidateAdmission = readJson(searchAdmissionPath);
+const activeSearchRoot = searchCandidateAdmission.candidate.public_root;
+const activeSearchSnapshot = `${activeSearchRoot} + ${searchCandidateAdmission.index.path}`;
 const compatibility = readJson('compatibility/core-artifacts-v009.json');
 const searchCompatibility = readJson('compatibility/lib-search-core.json');
 const retainedRouteClosure = readJson('catalog/lib-route-closure.json');
@@ -138,7 +142,7 @@ const packages = packageRoots.map(packageRoot => {
       qualification: approved ? `${metadataPath}#admission` : isReleased ? `${release.staged_product_manifest} immutable product inclusion` : null,
       admission: approved ? `${metadataPath}#admission` : isReleased ? `${release.staged_product_manifest} immutable product inclusion` : null,
       release: isReleased ? `release.json -> ${release.staged_product_manifest}` : null,
-      discovery: isDiscoverable ? (routeCompleteRelease ? 'standard/wasmc-lib-search/0.2.0 + examples/lib-search/index-v014-v020.lsi' : 'standard/wasmc-lib-search/0.1.0 + examples/lib-search/index.lsi') : null,
+      discovery: isDiscoverable ? (routeCompleteRelease ? activeSearchSnapshot : 'standard/wasmc-lib-search/0.1.0 + examples/lib-search/index.lsi') : null,
       installation: isInstallable ? productionCatalogPath : null
     },
     stopping_conditions: stoppingConditions
@@ -146,16 +150,16 @@ const packages = packageRoots.map(packageRoot => {
 });
 
 const count = state => packages.filter(row => row.states[state]).length;
-const searchCandidateMetadata = readJson('standard/wasmc-lib-search/0.2.0/lib.json');
+const searchCandidateMetadata = readJson(`${activeSearchRoot}/lib.json`);
 const searchCandidateCatalog = readJson(searchCandidateAdmission.catalog.path);
 assert.equal(searchCandidateAdmission.catalog.role, 'future-product-catalog');
 assert.equal(searchCandidateAdmission.catalog.contains_candidate, true);
 assert.equal(searchCandidateAdmission.catalog.candidate_install_authority, true);
 assert.equal(searchCandidateAdmission.catalog.public_default_install_authority, false);
 assert.equal(searchCandidateCatalog.packages.some(row => row.wit_package === searchCandidateMetadata.wit.package), true);
-assert.equal(sha256File('standard/wasmc-lib-search/0.2.0/artifact.wasm'), searchCandidateAdmission.artifact.core_sha256);
-assert.equal(sha256File('standard/wasmc-lib-search/0.2.0/component.wasm'), searchCandidateAdmission.artifact.component_sha256);
-assert.equal(sha256File('standard/wasmc-lib-search/0.2.0/lib.json'), searchCandidateAdmission.artifact.manifest_sha256);
+assert.equal(sha256File(`${activeSearchRoot}/artifact.wasm`), searchCandidateAdmission.artifact.core_sha256);
+assert.equal(sha256File(`${activeSearchRoot}/component.wasm`), searchCandidateAdmission.artifact.component_sha256);
+assert.equal(sha256File(`${activeSearchRoot}/lib.json`), searchCandidateAdmission.artifact.manifest_sha256);
 assert.equal(sha256File(searchCandidateAdmission.index.path), searchCandidateAdmission.index.sha256);
 assert.deepEqual(searchCandidateMetadata.build.toolchain, Object.fromEntries(Object.entries(searchCandidateAdmission.toolchain).filter(([key]) => !['generated_wasmtime_binding','wasmtime_cli','wasmi_crate'].includes(key))));
 const searchCandidate = {
@@ -183,7 +187,7 @@ const model = {
     immutable_product: `release.json -> ${release.staged_product_manifest}`,
     capability_projection: 'release-surfaces.json#agent_capability_projection',
     producer_deltas: 'release-surfaces.json#producer_capability_delta',
-    discovery_snapshot: routeCompleteRelease ? 'standard/wasmc-lib-search/0.2.0 + examples/lib-search/index-v014-v020.lsi' : 'standard/wasmc-lib-search/0.1.0 + examples/lib-search/index.lsi',
+    discovery_snapshot: routeCompleteRelease ? activeSearchSnapshot : 'standard/wasmc-lib-search/0.1.0 + examples/lib-search/index.lsi',
     resolver_install_catalog: productionCatalogPath,
     rule: 'Package existence, qualification, admission, release, discovery, installation, engine compatibility and Host authority are independent claims.'
   },
@@ -239,7 +243,7 @@ const readinessModel = {
   valid_resolution_count:1,
   only_valid_closure:`Verify the exact v${release.version} candidate and route closure, then read the channel authorities for lifecycle state. Every promotion must preserve the same product digest set.`,
   forbidden_shortcuts:['treat admission as release','infer lifecycle state from product presence or an admission snapshot','rebuild product bytes during promotion','rewrite any immutable release or prerelease tag'],
-  authorities:['admission/lib-search-v020-v014-admission.json','catalog/lib-route-closure.json',release.staged_product_manifest,'release.json','channels/prod.json'],
+  authorities:[searchAdmissionPath,'catalog/lib-route-closure.json',release.staged_product_manifest,'release.json','channels/prod.json'],
   check_commands:['node scripts/lib-route-closure.mjs --check',`node scripts/release-candidate.mjs verify ${release.staged_product_manifest}`],
   stop:'This record is sufficient for the matching readiness decision. Do not scan manifests, histories or implementation scripts unless one of its check commands fails.'
 };

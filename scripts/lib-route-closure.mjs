@@ -8,7 +8,7 @@ import { parseCatalog } from './lib-catalog.mjs';
 
 const root=fileURLToPath(new URL('../',import.meta.url));
 const outputPath='catalog/lib-route-closure.json';
-const defaultReceipt='admission/lib-search-v020-v014-admission.json';
+const defaultReceipt='admission/lib-search-v030-v017-admission.json';
 const sha=bytes=>createHash('sha256').update(bytes).digest('hex');
 const read=path=>readFileSync(resolve(root,path));
 const json=path=>JSON.parse(read(path));
@@ -162,7 +162,8 @@ function main(){
   const [action,arg,productPath]=process.argv.slice(2);
   if(!['--write','--check'].includes(action))throw Error('usage: lib-route-closure.mjs --write [ADMISSION_RECEIPT] | --check');
   if(action==='--write'){
-    const overrides=productPath?{release:{version:'0.0.14',tag:'v0.0.14',staged_product_manifest:productPath},stagedProduct:json(productPath)}:{};
+    const product=productPath?json(productPath):null;
+    const overrides=product?{release:{version:product.version,tag:`v${product.version}`,staged_product_manifest:productPath},stagedProduct:product}:{};
     const model=buildClosure(arg??defaultReceipt,overrides);
     writeFileSync(resolve(root,outputPath),JSON.stringify(model,null,2)+'\n');
     console.log(JSON.stringify({accepted:true,action:'write',path:outputPath,release_packages:model.release_bindings.length,package_routes:model.search_index.package_routes,api_routes:model.search_index.api_routes,candidate_extras:model.candidate_extras.length}));

@@ -1,0 +1,80 @@
+{
+  "schema": "wasmc.lib-search-product-admission/v1",
+  "status": "admitted-future-product-not-released",
+  "candidate": {
+    "id": "wasmc-lib-search",
+    "version": "0.3.0",
+    "public_root": "standard/wasmc-lib-search/0.3.0",
+    "producer_commit": "dfe04f8ffb363fcb7dbc55482aad9b4b56bd8c3a",
+    "build_tool_commit": "f6fc94432101250b8583834b51229bedb1cd8314",
+    "build_tool_sha256": "74a3f1af360a91b20009e346cf6e37f4663d24949e0155f7e841bc964b1a52c6"
+  },
+  "catalog": {
+    "role": "future-product-catalog",
+    "path": "catalog/libs-v017.json",
+    "input_path": "catalog/libs-v017-input.json",
+    "input_sha256": "1f338f842446a82a55aa92bedbd3b26096b9b9ef14a2c2c08828cdb11a2fec5f",
+    "release_tag": "v0.0.17",
+    "release_commit": "aa1d4b8a610f5eb68642cac022475acb1ffe0bdf",
+    "sha256": "4d662066138de7b9090553e037ef4600156ef67177ad75844b6b7a9411e7a3d8",
+    "released_package_roots": 17,
+    "contains_candidate": true,
+    "candidate_install_authority": true,
+    "public_default_install_authority": false
+  },
+  "index": {
+    "path": "examples/lib-search/index-v017-v030.lsi",
+    "bytes": 35168,
+    "packages_including_self": 17,
+    "entries": 145,
+    "sha256": "ca6d684eb3100f4629c8ff4f65c7d0b4f6bcd49fc24768e798c9a71a6fbf3ce5",
+    "deterministic_second_generation": true,
+    "runtime_network": false
+  },
+  "artifact": {
+    "core_bytes": 60828,
+    "core_sha256": "1d41fd939d1cb2d65080346b2a3a251040a2739847cb9d0d0301c12c1655539b",
+    "component_bytes": 62594,
+    "component_sha256": "aa8adc704a5226914874b1ad49bf90835faa83098ff5c804c15efb1fd0e22fd0",
+    "manifest_sha256": "90d2f2017dd1fa71c71c69995fd7c9add00da49739dedbb283d1a1ee1bd652c1",
+    "required_core_imports": 0,
+    "independent_second_build_byte_identical": true
+  },
+  "toolchain": {
+    "schema": "wasmc.rust-toolchain-fingerprint/v1",
+    "sha256": "2e4e27cb0b3644dd0c90bb71f31de5b5c72cd47671373caab8b9146ac68bf8ca",
+    "rustc": "rustc 1.96.0 (ac68faa20 2026-05-25)",
+    "rustc_version_verbose_sha256": "c8884d5d5936d36facd062e0e669e6fefe9944611dfafa0f2b1ee56d96157cbe",
+    "cargo": "cargo 1.96.0 (30a34c682 2026-05-25)",
+    "cargo_version_verbose_sha256": "7325fa79f79f89eaceae5ee57920caf61b813ade023b1e50457ee0902b2d7222",
+    "host": "aarch64-apple-darwin",
+    "target": "wasm32-unknown-unknown",
+    "encoded_rustflags": "-Cstrip=symbols",
+    "generated_wasmtime_binding": "49.0.0",
+    "wasmi_crate": "2.0.0"
+  },
+  "qualification": {
+    "wasmtime_component_snapshot_and_search": "PASS",
+    "wasmi_2_0_core": "PASS",
+    "generated_wasmtime_49_binding_check": "PASS",
+    "release_route_closure": "PENDING_CANDIDATE_FREEZE",
+    "snapshot_entries": 145,
+    "data_relational_v002_visible": true,
+    "mcpgit_resident_memory_visible": true
+  },
+  "claims": {
+    "candidate_selection_authority": true,
+    "public_default_selection_authority": false,
+    "admission_authority": true,
+    "host_authority": false,
+    "released": false,
+    "replaces_v0_0_16_lib_search": false
+  },
+  "states": {
+    "qualified": true,
+    "admitted": true,
+    "released": false,
+    "discoverable": false,
+    "installable": false
+  }
+}

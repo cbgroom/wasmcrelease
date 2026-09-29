@@ -1,30 +1,38 @@
 {
   "schema": "wasmc.lib-route-closure/v1",
   "authority_receipt": {
-    "path": "admission/lib-search-v020-v014-admission.json",
-    "sha256": "cf163d8dc7dde1ac5182003fd6c2b4b33cceef56c3a3b3e5e50d37f98ae028d4"
+    "path": "admission/lib-search-v030-v017-admission.json",
+    "sha256": "0e2fffa0e55ea31c839325b98e4859aaaa81bcc50b65dff56da5b0d556117dd1"
   },
   "release": {
-    "version": "0.0.14",
-    "tag": "v0.0.14",
-    "staged_product_manifest": "channels/candidates/0.0.14.json",
-    "product_set_sha256": "a09cd071eb293e636bf8b858b0a56570bfdd8a53373544eca68fda8ea825d4d2"
+    "version": "0.0.17",
+    "tag": "v0.0.17",
+    "staged_product_manifest": "channels/candidates/0.0.17.json",
+    "product_set_sha256": "576060b22d210bf217b60a521a87d213734f51a1b1e701fc09495f18be2b99ee"
   },
   "catalog": {
-    "path": "catalog/libs-v014.json",
-    "sha256": "8368ec8be4b13fadb5959d6495e70916894c476626caf8519b35599041251368",
+    "path": "catalog/libs-v017.json",
+    "sha256": "4d662066138de7b9090553e037ef4600156ef67177ad75844b6b7a9411e7a3d8",
     "role": "future-product-catalog",
-    "package_routes": 14
+    "package_routes": 17
   },
   "search_index": {
-    "path": "examples/lib-search/index-v014-v020.lsi",
-    "sha256": "613dacdcf58a225542aea99584a63fc282bcb08bfcc771f3f967482fadf31121",
-    "active_identity": "wasmc:lib-search@0.2.0",
-    "entries": 122,
-    "package_routes": 14,
-    "api_routes": 108
+    "path": "examples/lib-search/index-v017-v030.lsi",
+    "sha256": "ca6d684eb3100f4629c8ff4f65c7d0b4f6bcd49fc24768e798c9a71a6fbf3ce5",
+    "active_identity": "wasmc:lib-search@0.3.0",
+    "entries": 145,
+    "package_routes": 17,
+    "api_routes": 128
   },
   "release_bindings": [
+    {
+      "identity": "mcpgit:resident-memory@0.1.0",
+      "root": "libs/mcpgit-resident-memory",
+      "catalog_bound": true,
+      "package_route_bound": true,
+      "api_routes": 10,
+      "api_routes_exact": true
+    },
     {
       "identity": "wasmc:csv@0.0.1",
       "root": "libs/wasmc-csv",
@@ -82,6 +90,14 @@
       "api_routes_exact": true
     },
     {
+      "identity": "wasmc:data-relational@0.0.2",
+      "root": "libs/wasmc-data-relational-v002",
+      "catalog_bound": true,
+      "package_route_bound": true,
+      "api_routes": 7,
+      "api_routes_exact": true
+    },
+    {
       "identity": "wasmc:host-clock@0.0.1",
       "root": "libs/wasmc-host-clock",
       "catalog_bound": true,
@@ -100,6 +116,14 @@
     {
       "identity": "wasmc:lib-search@0.2.0",
       "root": "standard/wasmc-lib-search/0.2.0",
+      "catalog_bound": true,
+      "package_route_bound": true,
+      "api_routes": 3,
+      "api_routes_exact": true
+    },
+    {
+      "identity": "wasmc:lib-search@0.3.0",
+      "root": "standard/wasmc-lib-search/0.3.0",
       "catalog_bound": true,
       "package_route_bound": true,
       "api_routes": 3,

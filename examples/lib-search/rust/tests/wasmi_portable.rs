@@ -12,7 +12,7 @@ fn formal_core_snapshot_search_and_post_return_execute_without_jit() {
     let instance = Linker::<()>::new(&engine)
         .instantiate_and_start(&mut store, &module)
         .unwrap();
-    let prefix = "wasmc:lib-search/catalog@0.2.0#";
+    let prefix = "wasmc:lib-search/catalog@0.3.0#";
     let memory = instance.get_memory(&store, "memory").unwrap();
     let snapshot = instance
         .get_typed_func::<(), i32>(&store, &format!("{prefix}snapshot"))
@@ -24,7 +24,7 @@ fn formal_core_snapshot_search_and_post_return_execute_without_jit() {
     let mut buf = [0; 8];
     memory.read(&store, ptr, &mut buf).unwrap();
     assert_eq!(u32::from_le_bytes(buf[..4].try_into().unwrap()), 1);
-    assert_eq!(u32::from_le_bytes(buf[4..].try_into().unwrap()), 122);
+    assert_eq!(u32::from_le_bytes(buf[4..].try_into().unwrap()), 145);
     post_snapshot.call(&mut store, ptr as i32).unwrap();
     let alloc = instance
         .get_typed_func::<(i32, i32, i32, i32), i32>(&store, "cabi_realloc")
