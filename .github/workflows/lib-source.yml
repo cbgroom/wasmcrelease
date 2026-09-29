@@ -150,7 +150,7 @@ jobs:
           key: tls-client-canonical-v1-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('libsrc/wasmc-tls-client/Cargo.lock') }}
       - name: Build independent byte-identical TLS client artifacts
         run: node scripts/build-tls-client-canonical.mjs
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: tls-client-canonical
           path: target/tls-client-canonical
@@ -228,7 +228,7 @@ jobs:
         run: node scripts/test-tls-client-linux-socket.mjs | tee "tls-client-linux-socket-${{ matrix.platform }}.json"
         env:
           WASMC_TLS_CLIENT_ARTIFACT: target/tls-client-canonical/wasmc_tls_client_public.wasm
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         if: always()
         continue-on-error: true
         with:

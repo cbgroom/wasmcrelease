@@ -49,7 +49,7 @@ jobs:
           "${runner[@]}" admission/portable-std-v0/test.mjs | tee target/portable-std/receipt.json
           cat target/portable-std/receipt.json >> "$GITHUB_STEP_SUMMARY"
       - if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: portable-std-${{ matrix.os }}-${{ matrix.runtime }}
           path: target/portable-std/*.json
@@ -81,7 +81,7 @@ jobs:
           cargo +1.96.0 test --locked --manifest-path host/tests/e2e/rust/Cargo.toml --test portable_std --features wasmtime-engine -- --nocapture 2>&1 | tee target/portable-std/native.log
           printf 'Portable Std native paired tests passed at %s\n' "$GITHUB_SHA" >> "$GITHUB_STEP_SUMMARY"
       - if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: portable-std-${{ matrix.os }}-native
           path: target/portable-std/native.log
