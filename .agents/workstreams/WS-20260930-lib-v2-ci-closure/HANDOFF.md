@@ -642,3 +642,40 @@ before invocation. Source cache/temporary adapters/toolchain obligations,
 ordinary App 1/5, default-build ownership, eight unrebuilt targets, new compiler,
 candidate and full dual-model Pi/release remain separate mandatory gates.
 Counts remain 10/18 built and 5/18 selected; full release_qualified=false.
+
+## 2026-10-01 whole staged-cohort guarded build closure
+
+Task state: in-progress. The real process portable-v2-source-witness-cohort-r9
+terminated successfully. Public input cf26b71c5b9d0d9b121bedfb6499016d42783d18,
+clean private producer 3b797a77d0afa25264a11362603b0d596d2e0ba7. HTTP1, Data
+Core, Host Clock, Owned Algorithms and Resource Counter each pass both guarded
+builds, strict reopen and complete package equality. Separate retained workspace
+recheck passes both workspaces for each package. Total 38 input files and 45
+delivery files. Existing staged roots, qualification bytes and old immutable
+release are unchanged. Receipt: admission/current-v2-next/cohort-build-input-witness.json.
+
+Public receipt validator pins the observed witness hashes and committed public
+input/producer authorities independently, checks both reports against existing
+qualification receipts, and walks actual complete delivery roots. It explicitly
+does not reexecute private source verification. Independent fixture has 27
+negative controls, including coordinated self-rehash and actual file/link faults.
+These new outer audit records are not yet recipient-envelope delivery evidence.
+
+Current registry-source diagnostic: 189 checksum-verified archives and 12,335
+extracted source files compared byte-for-byte, zero mismatches/extra files
+except exact .cargo-ok marker. This was a live read-only observation, not a
+build-time/cache-stability attestation; no gate is upgraded from that diagnostic.
+
+Next: implement and independently test reusable registry source verification,
+capture pre/post cache evidence around actual builds; retain external generated
+adapter evidence separately. Bind complete audit records into actual recipient
+delivery only with corresponding rejection tests. Resolve private preflight and
+ownership before compiler/default/WIT changes. No owner message was authorized
+or sent. Generic App, eight unrebuilt packages, full license audit, matching new
+compiler/candidate, exact dual-model Pi and formal release remain required.
+
+Local candidate suite 20/20 PASS after this slice; research-only license policy
+PASS and git diff --check PASS. CI routing check is named
+scripts/test-current-v2-ci-routing.mjs (the guessed test-ci-routing.mjs does not
+exist and its MODULE_NOT_FOUND invocation was not a product/route test result).
+No exact new hosted all-checks PASS or release promotion is claimed.

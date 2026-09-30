@@ -39,8 +39,36 @@ two witnesses match, and a separate post-build check reopened both workspaces.
 All nine package files match both each other and the existing staged HTTP1
 0.0.1 root byte-for-byte. No package or immutable release bytes were replaced.
 
-This closes the new retained-input stability gate for HTTP1 only. Four other
-staged roots still need guarded rebuilds. The receipt is an audit record outside
+This initial record closes the new retained-input stability gate for HTTP1 only.
+The subsequent full staged-cohort record below supersedes its pending cohort
+status. The receipt is an audit record outside
 the strict root, not a delivered-license-envelope update or release admission.
 Registry cache, external temporary adapters and full license obligations remain
 unattested. The original historical receipts are not retroactively certified.
+
+## Five-package guarded rebuild
+
+The whole staged cohort was rebuilt from clean public input
+cf26b71c5b9d0d9b121bedfb6499016d42783d18 and the same clean private producer.
+`admission/current-v2-next/cohort-build-input-witness.json` records both actual
+builds of HTTP1, Data Core, Host Clock, Owned Algorithms and Resource Counter.
+All 38 retained input files passed pre/post stability and independent witness
+equality; a separate post-build check reopened both workspaces per package.
+All 45 generated delivery files match the existing staged complete package
+roots. No binary, strict root, catalog or immutable release bytes changed.
+
+Run `node scripts/current-v2-retained-build-witness.mjs` for source-free receipt
+and complete-root verification; `node scripts/test-current-v2-retained-build-witness.mjs`
+exercises 27 rejection controls, including independently pinned observed source
+witnesses, coordinated self-rehash, actual file faults and linked roots/entries.
+This public check never claims to reexecute the private input check. These audit
+records are not yet carried by the licensed recipient envelope. The eight
+unrebuilt targets and all-package release/ordinary-App gates remain unchanged.
+
+A separate live read-only check found all 12,335 extracted source files in the
+189-crate conservative dependency inventory equal to checksum-verified cached
+archives, with no unexpected files except the exact Cargo `.cargo-ok` marker.
+This is diagnostic evidence at the observation time, not a captured pre/post
+build cache witness, historical certification or a reproducible CI audit gate.
+Registry-cache build stability, external temporary adapter contents and full
+target/toolchain license obligations remain pending.

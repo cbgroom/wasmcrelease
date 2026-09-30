@@ -1,5 +1,19 @@
 # WAsmC release maintainer handoff
 
+## 2026-10-01 guarded staged-cohort checkpoint
+
+All five staged roots have now passed guarded independent dual builds from
+clean public input cf26b71c5b9d0d9b121bedfb6499016d42783d18 and clean producer
+3b797a77d0afa25264a11362603b0d596d2e0ba7. Actual retained-input recheck PASS:
+38 input files; complete package equality with existing roots: 45 files PASS.
+Receipt: admission/current-v2-next/cohort-build-input-witness.json; repeatable
+source-free validator and 27 negative controls are in scripts. Public validation
+does not reexecute private builds; no historical certification is claimed.
+This supersedes the four-pending guarded-rebuild status below, not other gates.
+License envelope does not yet carry these outer audit records. Registry cache
+stability, external generated adapters and full obligations remain pending.
+18-package scope, ordinary App 1/5 and release_qualified=false are unchanged.
+
 ## 2026-10-01 guarded HTTP1 rebuild checkpoint
 
 Real HTTP1 dual rebuild under public input 22341148a11d4154b156e3d2bf98d77c7cf4bbbc
