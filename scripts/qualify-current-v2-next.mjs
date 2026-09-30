@@ -58,11 +58,14 @@ const appReceiptBytes=readFileSync(join(root,'admission/current-v2-next/ordinary
 const licensedDelivery=jsonRun('node',['scripts/test-current-v2-package-license.mjs','--sdk']);
 assert.equal(licensedDelivery.package_license_binding,true);
 assert.equal(licensedDelivery.source_free_licensed_sdk_execution,true);
+assert.equal(licensedDelivery.dependency_materials_carried,true);
+assert.equal(licensedDelivery.registry_crates,189);
 const licenseBindingsBytes=readFileSync(join(root,'admission/current-v2-next/package-license-bindings.json'));
 const receipt = {schema:'wasmc.current-v2-next-local-qualification/v1',accepted:true,
   oracle_sources:Object.fromEntries(['scripts/test-http1-libsrc.mjs','scripts/test-data-core-libsrc.mjs',
     'scripts/qualify-current-v2-next.mjs','scripts/current-v2-upstream-provenance.mjs','scripts/qualify-current-v2-source-free-sdk.mjs','scripts/test-current-v2-app.mjs',
-    'scripts/current-v2-package-license.mjs','scripts/test-current-v2-package-license.mjs','libsrc/qualification/wasmi-core/src/main.rs',
+    'scripts/current-v2-package-license.mjs','scripts/test-current-v2-package-license.mjs',
+    'scripts/current-v2-dependency-inventory.mjs','scripts/current-v2-toolchain-notices.mjs','libsrc/qualification/wasmi-core/src/main.rs',
     'libsrc/qualification/wasmi-core/Cargo.lock','libsrc/qualification/current-v2-consumer/src/main.rs',
     'libsrc/qualification/current-v2-consumer/Cargo.lock'].map(path=>[path,hash(readFileSync(join(root,path)))])),
   engine_tools:{wasmtime:run('wasmtime',['--version']),wasm_tools:run('wasm-tools',['--version'])},
@@ -75,7 +78,7 @@ const receipt = {schema:'wasmc.current-v2-next-local-qualification/v1',accepted:
   package_license_binding:{...licensedDelivery,manifest_sha256:hash(licenseBindingsBytes)},
   selected_current_catalog:false,ordinary_wasmc_app_qualified:false,release_qualified:false,
   pending:['current catalog admission and exact route/install closure','ordinary WAsmC App rich-value/resource Core transport for four staged packages; published compiler identity',
-    'complete transitive dependency/toolchain license audit and carry the bound license envelope before a new candidate',
+    'complete license-obligation/target-applicability review and admit the material-carrying license envelope with a new candidate',
     'remaining package rebuilds and qualification','exact new-candidate release and live Pi gates']};
 if(save) writeFileSync(join(root,'admission/current-v2-next/qualification.json'),JSON.stringify(receipt,null,2)+'\n');
 console.log(JSON.stringify({accepted:true,packages:identities.length,http1_cases:behavior.cases,

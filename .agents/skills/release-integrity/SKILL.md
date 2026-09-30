@@ -81,6 +81,14 @@ exactly as the producer fingerprint does. Retaining complete materials closes
 inventory only: obligation review and isolated distribution delivery remain
 separate gates, and upstream licenses are never rewritten by repository terms.
 
+The outer delivery must carry the audit inputs and complete notice materials,
+not merely refer to a successful check elsewhere in the repository. Validate
+deletion, mutation and self-rehashed replacement of dependency inventories,
+locks and toolchain documents in a fresh recipient tree. If a consumer lockfile
+is already carried, verify byte equality and reuse it; never overwrite it to
+make an SDK run pass. An expanded capsule still leaves obligation review and
+all-package release false until their independent gates close.
+
 Use `./scripts/validate-maintainer.sh` for repository consistency, then run the
 host journeys selected by `release-host-integration`.
 

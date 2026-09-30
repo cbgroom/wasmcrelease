@@ -472,3 +472,45 @@ license policy, routing/tag rejection and diff checks PASS. Owning release
 integrity Skill records exact input recovery and official component ownership;
 no producer implementation/strategy Skill was changed. Commit/push this
 milestone and keep full-audit/release acceptance false pending the next gates.
+
+## 2026-10-01 material-carrying licensed recipient closure
+
+Previous goal turn was progress: 5b1e02d pushed exact adapter lock recovery and
+official toolchain materials. Live current-v2 run 36786586753 completed SUCCESS
+at that exact commit. Runtime owner remains c169f471; no takeover or producer
+implementation edits occurred. Ordinary rich-value/resource App transport and
+remaining eight builds are still open.
+
+Expanded the outer licensed envelope to carry the actual conservative audit
+inputs and materials: six locks, 189-crate inventory (embedded exact notice
+texts), pinned toolchain receipt and two compressed copyright documents. Five
+strict nine-file roots and all compiler/provider bytes are unchanged. The new
+76-file capsule is reopened against trusted producer inventories and independently
+pinned material identities, not a recipient's self-authorized file index.
+
+Forty-nine JSON and actual-recipient controls reject missing/tampered audit
+material, self-rehashed inventory and outer manifest, linked toolchain document,
+false material counts/claims, missing license/notices, extra source and root
+inventory drift. Existing no-clobber and linked-parent rejection are preserved.
+HTTP1 executes 1422 exact delivered-artifact cases. Adding only public consumer
+Cargo.toml and main.rs yields 78 files; its Cargo.lock is already carried and
+must match rather than be overwritten. Locked/offline Wasmtime49 generated SDK
+execution passes five packages with unchanged complete before/after inventory.
+No private compiler/provider/upstream implementation is copied.
+
+Batch qualification now binds the widened envelope and its inventory/toolchain
+validators' source hashes. Development closure checks the carried-material
+facts (189 crates, six locks, two copyright documents, 78 consumer files).
+This closes scoped material delivery only. Both full_transitive_license_audit
+and release_qualified remain FALSE; per-root pending license work is explicit
+obligation/target-applicability review, not the now-closed input/material gaps.
+Global counts remain 10/18 built and 5/18 selectable; no old identity was
+refreshed or a new candidate allocated. Next: obligation review, generic
+ordinary App transport, eight builds and complete candidate route/Pi/release
+gates. Coordinate the runtime directory before the default-feature repair.
+
+Final local checks: material-carrying isolated SDK and 49 controls PASS;
+exact five-package qualification refreshed PASS; candidate development suite
+17/17 PASS; tag routing, research-license policy and whitespace checks PASS.
+Owning integrity Skill records carried-input validation and exact lock reuse.
+Checkpoint this unreleased slice; no old-version integrity refresh is permitted.

@@ -47,7 +47,11 @@ assert.equal(qualified.package_license_binding.manifest_sha256,sha256(licenseBin
 assert.equal(validatePackageLicenseBindings(JSON.parse(licenseBindingBytes)).packages,5);
 assert.equal(qualified.package_license_binding.package_license_binding,true);
 assert.equal(qualified.package_license_binding.source_free_licensed_sdk_execution,true);
-assert.equal(qualified.package_license_binding.isolated_sdk_files,69);
+assert.equal(qualified.package_license_binding.isolated_sdk_files,78);
+assert.equal(qualified.package_license_binding.dependency_materials_carried,true);
+assert.equal(qualified.package_license_binding.registry_crates,189);
+assert.equal(qualified.package_license_binding.lockfiles,6);
+assert.equal(qualified.package_license_binding.toolchain_documents,2);
 assert.equal(qualified.package_license_binding.full_transitive_license_audit,false);
 assert.equal(qualified.package_license_binding.release_qualified,false);
 assert.equal(qualified.source_free_sdk.accepted,true);

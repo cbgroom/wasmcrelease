@@ -6,10 +6,14 @@ import {createHash} from 'node:crypto';
 import {readFileSync,readdirSync,lstatSync,mkdirSync,writeFileSync,realpathSync,cpSync} from 'node:fs';
 import {join,resolve,dirname,isAbsolute} from 'node:path';
 import {fileURLToPath} from 'node:url';
+import {validateInventory} from './current-v2-dependency-inventory.mjs';
+import {validateToolchainNotices} from './current-v2-toolchain-notices.mjs';
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
 const path='admission/current-v2-next/package-license-bindings.json';
 const buildPaths=['admission/current-v2-next/build-receipts.json','admission/current-v2-data-core/build-receipts.json'];
 const reviewPath='admission/current-v2-next/upstream/review.json';
+const dependencyPath='admission/current-v2-next/dependency-inventory.json';
+const toolchainPath='admission/current-v2-next/toolchain-notices/receipt.json';
 const sha=bytes=>createHash('sha256').update(bytes).digest('hex');
 const read=(base,name)=>readFileSync(join(base,name));
 const json=name=>JSON.parse(read(root,name));
@@ -45,6 +49,14 @@ function expected(){
   const files={};
   const add=name=>{files[name]=file(root,name);};
   for(const name of ['LICENSE','license-policy.json',reviewPath,...buildPaths])add(name);
+  const dependency=json(dependencyPath),toolchain=json(toolchainPath);
+  const dependencyResult=validateInventory(dependency),toolchainResult=validateToolchainNotices(toolchain);
+  assert.equal(dependencyResult.notice_blockers.length,0);
+  assert.equal(dependency.archive_inventory_complete,true);assert.equal(dependency.notice_material_inventory_complete,true);
+  for(const name of [dependencyPath,toolchainPath,...dependency.inputs.map(x=>x.path),...toolchain.materials.map(x=>x.path)])add(name);
+  const materialEvidence={dependency_inventory:{path:dependencyPath,...files[dependencyPath],lockfiles:dependencyResult.lockfiles,registry_crates:dependencyResult.crates},
+    toolchain_notices:{path:toolchainPath,...files[toolchainPath],documents:toolchainResult.official_toolchain_notice_files},
+    dependency_materials_carried:true,scope:'Conservative exact locked inputs and notice materials for these five roots and their generated-SDK consumer. Inventory/delivery evidence only; license-obligation and target review remain pending.'};
   const packages=rows.map(row=>{
     const inventory=row.builds[0].inventory;
     assert.deepEqual(inventory,row.builds[1].inventory);
@@ -61,13 +73,13 @@ function expected(){
         scope:'New WAsmC-owned material in this exact staged root only; third-party and earlier grants are not restricted or replaced.',
         commercial_use:false,production_use:false,upstream_license_override:false,earlier_grants_revoked:false},
       primary_upstream_notices:upstream,
+      dependency_materials_carried:true,
       transitive_dependencies_audited:false,
-      pending:group?['complete transitive dependency/license audit','Rust toolchain notices review']:
-        ['complete dependency/license audit including canonical adapter build inputs','Rust toolchain notices review']};
+      pending:['license-obligation and target-applicability review']};
   });
   return {schema:'wasmc.current-v2-package-license-bindings/v1',package_license_binding:true,
     scope:'Outer distribution manifest; strict generated nine-file roots remain unchanged. A future candidate must carry this envelope or equivalent exact binding.',
-    policy:{path:'license-policy.json',...files['license-policy.json']},packages,files,
+    policy:{path:'license-policy.json',...files['license-policy.json']},packages,files,dependency_materials:materialEvidence,
     full_transitive_license_audit:false,immutable_prior_artifacts_relicensed:false,
     selected_current_catalog:false,ordinary_wasmc_app_qualified:false,release_qualified:false};
 }
@@ -87,6 +99,8 @@ export function validatePackageLicenseBindings(value,base=root,{isolated=false}=
   return {accepted:true,packages:trusted.packages.length,package_license_binding:true,
     carried_files:Object.keys(trusted.files).length+1,
     primary_notices:trusted.packages.reduce((n,x)=>n+x.primary_upstream_notices.reduce((m,y)=>m+y.notices.length,0),0),
+    dependency_materials_carried:true,registry_crates:trusted.dependency_materials.dependency_inventory.registry_crates,
+    lockfiles:trusted.dependency_materials.dependency_inventory.lockfiles,toolchain_documents:trusted.dependency_materials.toolchain_notices.documents,
     full_transitive_license_audit:false,release_qualified:false};
 }
 export function stageLicensedDelivery(destination){

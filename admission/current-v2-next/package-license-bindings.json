@@ -43,10 +43,10 @@
           ]
         }
       ],
+      "dependency_materials_carried": true,
       "transitive_dependencies_audited": false,
       "pending": [
-        "complete transitive dependency/license audit",
-        "Rust toolchain notices review"
+        "license-obligation and target-applicability review"
       ]
     },
     {
@@ -67,10 +67,10 @@
         "earlier_grants_revoked": false
       },
       "primary_upstream_notices": [],
+      "dependency_materials_carried": true,
       "transitive_dependencies_audited": false,
       "pending": [
-        "complete dependency/license audit including canonical adapter build inputs",
-        "Rust toolchain notices review"
+        "license-obligation and target-applicability review"
       ]
     },
     {
@@ -91,10 +91,10 @@
         "earlier_grants_revoked": false
       },
       "primary_upstream_notices": [],
+      "dependency_materials_carried": true,
       "transitive_dependencies_audited": false,
       "pending": [
-        "complete dependency/license audit including canonical adapter build inputs",
-        "Rust toolchain notices review"
+        "license-obligation and target-applicability review"
       ]
     },
     {
@@ -115,10 +115,10 @@
         "earlier_grants_revoked": false
       },
       "primary_upstream_notices": [],
+      "dependency_materials_carried": true,
       "transitive_dependencies_audited": false,
       "pending": [
-        "complete dependency/license audit including canonical adapter build inputs",
-        "Rust toolchain notices review"
+        "license-obligation and target-applicability review"
       ]
     },
     {
@@ -240,10 +240,10 @@
           ]
         }
       ],
+      "dependency_materials_carried": true,
       "transitive_dependencies_audited": false,
       "pending": [
-        "complete transitive dependency/license audit",
-        "Rust toolchain notices review"
+        "license-obligation and target-applicability review"
       ]
     }
   ],
@@ -267,6 +267,46 @@
     "admission/current-v2-data-core/build-receipts.json": {
       "bytes": 7309,
       "sha256": "58f29ca2b4e8ba0795c6e066ac2fad00b0128b28f8fc26b001a6a4b6e2d2b3f9"
+    },
+    "admission/current-v2-next/dependency-inventory.json": {
+      "bytes": 2874797,
+      "sha256": "3ec7dfae2e59ef24314dd41226a7c1e8c7fda1e1f4b294e5d8849cde18c40a75"
+    },
+    "admission/current-v2-next/toolchain-notices/receipt.json": {
+      "bytes": 3199,
+      "sha256": "8b2cefcbb6bdfde4e8199ab1c9262acf0a1fc9547e3fd4411186931a97812dc5"
+    },
+    "libsrc/wasmc-http1/Cargo.lock": {
+      "bytes": 8266,
+      "sha256": "47e955d3a82f59d595127983163c75eb6c2b9fdd72f89a647581eba1cafccd18"
+    },
+    "libsrc/wasmc-data-core/Cargo.lock": {
+      "bytes": 21926,
+      "sha256": "dae54a149a62b4f94f7baedc0addc6d523af2aa0df8a68000314cc031d9555ac"
+    },
+    "libsrc/qualification/current-v2-consumer/Cargo.lock": {
+      "bytes": 30873,
+      "sha256": "b7ed1318c31e1d511eca8ad59b64939028a60594e004e4a939f9f2240b887d88"
+    },
+    "admission/current-v2-next/dependency-inputs/host-clock.Cargo.lock": {
+      "bytes": 8255,
+      "sha256": "e0ab821c9bf9a50b631e1838c8bf3e760e0aa24f75fd50644b4b0d53fb71fb2a"
+    },
+    "admission/current-v2-next/dependency-inputs/resource-counter.Cargo.lock": {
+      "bytes": 8261,
+      "sha256": "db2a7cbdf4867f5a47b146e10f025a8cface55cd59987e592a00ef9d3af9cd87"
+    },
+    "admission/current-v2-next/dependency-inputs/owned-algorithms.Cargo.lock": {
+      "bytes": 258,
+      "sha256": "54226877604a195218a64fcc3a92bb321c36a8c3acc580108c05dbb32b980582"
+    },
+    "admission/current-v2-next/toolchain-notices/COPYRIGHT-library.html.gz": {
+      "bytes": 14830,
+      "sha256": "21dde0bf222fb29c952bf139bed07eebbc134683d50bdabe509255e2d13d1488"
+    },
+    "admission/current-v2-next/toolchain-notices/COPYRIGHT.html.gz": {
+      "bytes": 429924,
+      "sha256": "f2af1e8e437cba95c5efe850ed8f494d0bea171709afeadf2c0ccc156f0f0b59"
     },
     "admission/current-v2-next/packages/wasmc-http1/0.0.1/SKILL.md": {
       "bytes": 858,
@@ -508,6 +548,23 @@
       "bytes": 470,
       "sha256": "e5b198d7f809311723889814d99a92f808c69e89a847efa7a7b65270f5fdeae6"
     }
+  },
+  "dependency_materials": {
+    "dependency_inventory": {
+      "path": "admission/current-v2-next/dependency-inventory.json",
+      "bytes": 2874797,
+      "sha256": "3ec7dfae2e59ef24314dd41226a7c1e8c7fda1e1f4b294e5d8849cde18c40a75",
+      "lockfiles": 6,
+      "registry_crates": 189
+    },
+    "toolchain_notices": {
+      "path": "admission/current-v2-next/toolchain-notices/receipt.json",
+      "bytes": 3199,
+      "sha256": "8b2cefcbb6bdfde4e8199ab1c9262acf0a1fc9547e3fd4411186931a97812dc5",
+      "documents": 2
+    },
+    "dependency_materials_carried": true,
+    "scope": "Conservative exact locked inputs and notice materials for these five roots and their generated-SDK consumer. Inventory/delivery evidence only; license-obligation and target review remain pending."
   },
   "full_transitive_license_audit": false,
   "immutable_prior_artifacts_relicensed": false,

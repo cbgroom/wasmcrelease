@@ -54,9 +54,12 @@ including its terminal newline would describe a different fingerprint.
 Remaining requirements:
 
 - Review license choices, obligations and target-specific applicability.
-- Carry all applicable materials in the future licensed delivery and test its
-  isolated reopen, including deletion/tamper controls.
+- Admit the reviewed obligations with the exact future candidate and all
+  remaining package cohorts.
 
 Until these close, `full_transitive_license_audit=false` and
-`release_qualified=false`. The current five-root license envelope is unchanged;
-this inventory must not be described as already included in that envelope.
+`release_qualified=false`. The strict five generated roots remain unchanged.
+The staged 76-file licensed envelope now carries this inventory, all six input
+locks and both official toolchain documents. Isolated 78-file generated-SDK
+execution and deletion/tamper controls qualify that scoped material delivery;
+they do not close obligation review or all-package release admission.

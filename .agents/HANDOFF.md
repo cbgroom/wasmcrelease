@@ -51,6 +51,12 @@ compiler/library copyright documents are verified from the complete official
 obligation review and inclusion in final isolated delivery remain pending.
 Hosted source-incubation at c0191b2 now passes (run 36783742678); newer audit
 changes still require their own checkpoint and hosted qualification.
+The following slice expands licensed delivery from 66 to 76 files so these
+materials are actually carried, not only checked in the producer checkout.
+The 78-file isolated consumer reuses the exact carried lock and executes five
+generated SDKs. Forty-nine controls reject dropped/tampered/self-rehashed or
+linked recipient material. Full obligation/target review and release remain
+false; the five strict generated roots are unchanged.
 The all-package closure slice now stages five additional v2 roots with complete
 second-build equality and strict reopen: HTTP1, Host Clock, Owned Algorithms,
 Resource Counter and Data Core. Exact-artifact behavior and five generated SDK
