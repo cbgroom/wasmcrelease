@@ -44,6 +44,13 @@ development validation exposed a depth-one checkout missing the frozen baseline.
 Local shallow-failure/full-history-success reproduction passes; the workflow
 now carries full history and retains failed diagnostics. These are unreleased
 repairs, not package admission or a hosted PASS for the new milestone.
+The next audit slice recovers all three canonical adapter lockfiles, expanding
+the conservative inventory to six exact inputs and 189 registry crates. Rust
+compiler/library copyright documents are verified from the complete official
+1.96.0 rustc archive and match the installed five-package builder. License
+obligation review and inclusion in final isolated delivery remain pending.
+Hosted source-incubation at c0191b2 now passes (run 36783742678); newer audit
+changes still require their own checkpoint and hosted qualification.
 The all-package closure slice now stages five additional v2 roots with complete
 second-build equality and strict reopen: HTTP1, Host Clock, Owned Algorithms,
 Resource Counter and Data Core. Exact-artifact behavior and five generated SDK

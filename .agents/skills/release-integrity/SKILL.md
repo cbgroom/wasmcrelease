@@ -71,6 +71,16 @@ self-rehashed replacements, linked entries and false upstream relicense claims.
 An exact license binding is not a full dependency/toolchain license audit;
 record those missing obligations separately and keep release admission false.
 
+Audit actual build inputs, including generated adapter locks and generated-SDK
+engine dependencies, not just primary crates. A deleted temporary lock may be
+recovered only by equality with the delivered manifest's full input digest.
+Bind toolchain copyright materials to the exact builder fingerprint and a
+checksum-verified official distribution archive; consult installed component
+ownership rather than guessing the docs package. Trim verbose version output
+exactly as the producer fingerprint does. Retaining complete materials closes
+inventory only: obligation review and isolated distribution delivery remain
+separate gates, and upstream licenses are never rewritten by repository terms.
+
 Use `./scripts/validate-maintainer.sh` for repository consistency, then run the
 host journeys selected by `release-host-integration`.
 

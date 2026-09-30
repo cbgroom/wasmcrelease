@@ -1,12 +1,13 @@
 # Current-v2 dependency materials (unreleased)
 
 Run `node scripts/test-current-v2-dependency-inventory.mjs` to verify the
-conservative registry closure of the exact HTTP1, Data Core and generated-SDK
-consumer lockfiles. This includes all lockfile packages, not just dependencies
+conservative registry closure of the exact HTTP1, Data Core, HostClock,
+ResourceCounter, OwnedAlgorithms and generated-SDK consumer lockfiles.
+This includes all lockfile packages, not just dependencies
 reachable on the maintainer's platform. Target reachability is not inferred.
 
-The retained receipt binds 175 crate versions and archive checksums to those
-three lockfiles. All archives were checked against Cargo's locked checksum.
+The retained receipt binds 189 crate versions and archive checksums to those
+six lockfiles. All archives were checked against Cargo's locked checksum.
 License declarations and packaged notice texts were read from those archives,
 not from a registry search result. No upstream implementation source is copied.
 
@@ -27,11 +28,31 @@ notice identities without network access. Re-capture requires the checksum-
 verified local Cargo archives and pinned upstream public metadata; it does not
 rebuild any compiler or Lib.
 
+The three canonical adapter inputs now live in `dependency-inputs/` as Cargo
+lock metadata only. HostClock and ResourceCounter match both retained build
+passes byte-for-byte. OwnedAlgorithms' generated temporary lock was not
+retained: its exact two-local-package content is reconstructed and must match
+the full build-input SHA256 in the delivered manifest. It has zero registry
+dependencies. A merely equivalent lockfile is rejected. No private path,
+compiler dependency or adapter implementation is published.
+
+The receipt also binds `toolchain-notices/receipt.json`, covering the exact
+five package builder fingerprints. Run
+`node scripts/test-current-v2-toolchain-notices.mjs` for its independent
+verification. The complete official Rust 1.96.0 macOS-arm64 rustc archive was
+checksum-verified; its compiler/library copyright HTML is byte-identical to
+the installed builder. Both documents are carried as gzip files with pinned
+compressed and uncompressed identities (444,754 compressed bytes total).
+No Rust compiler executable or implementation is copied. These are copyright
+documents, not a claim that the build tools themselves are distributed.
+
+Do not obtain these files from the rust-docs archive: the installed component
+manifest assigns both to rustc. The first docs-only probe failed and was not
+accepted. Producer version-output fingerprints hash trimmed UTF-8 output;
+including its terminal newline would describe a different fingerprint.
+
 Remaining requirements:
 
-- Recover and audit all three canonical adapter build lockfiles, independently
-  bound to their delivered manifests.
-- Bind Rust standard-library/toolchain notices to the exact build toolchain.
 - Review license choices, obligations and target-specific applicability.
 - Carry all applicable materials in the future licensed delivery and test its
   isolated reopen, including deletion/tamper controls.

@@ -416,3 +416,59 @@ Local candidate suite 16/16 PASS; dependency controls 23/23 PASS; research
 license policy, routing/tag controls and whitespace checks PASS. The current
 milestone needs its own clean commit/push and hosted qualification. The runtime
 owner remains clean at c169f471; its default-feature constant gate is unchanged.
+
+## 2026-10-01 adapter inputs and official toolchain copyright closure
+
+Previous goal turn was progress: c0191b2 committed/pushed executable dependency
+material and shallow-history repairs. Live public source-incubation run
+36783742678 completed SUCCESS at that exact commit, confirming the checkout
+repair. Current-v2 job 110120054751 also SUCCESS. Neither proves the newer
+audit stage or all-package release.
+
+Recovered the three canonical adapter Cargo.lock inputs as metadata only.
+HostClock and ResourceCounter first/second retained build inputs are byte-equal
+and match each delivered manifest. OwnedAlgorithms' generated temporary lock
+was deleted by its producer; its exact two-local-package bytes are recovered
+by full manifest build-input SHA256 equality. Zero registry dependencies in
+that adapter; not merely a regenerated compatible lock. No private path or
+compiler/adapter source is copied. Selected private builder remains clean at
+3b797a77; no implementation files or other workstream claims were changed.
+
+Conservative closure now covers six exact lockfiles, 189 registry crates and
+189 verified archives, with zero missing notice materials. Twenty-eight JSON,
+parser and actual file controls reject dropped/tampered inputs, linked files/
+directories and invalid full-audit claims. New adapter inputs are outside the
+strict nine-file Lib roots.
+
+Two Rust 1.96.0 copyright HTML documents are now bound to all five exact
+package-builder fingerprints. The full official rustc archive matches pinned
+distribution SHA; both documents match the installed builder byte-for-byte.
+Compressed delivery is 444754 bytes; plain content and compressed bytes have
+independently pinned digests. Public replay is offline and copies no Rust/WAsmC
+compiler executable or implementation. Twenty-eight schema/claim/file controls
+reject dropped/changed/self-rehashed/linked documents, linked receipt, extra
+source, mutable distribution identity and false audit/release claims.
+
+Failures retained as lessons: direct versioned docs endpoints returned 404;
+the checksum-valid rust-docs archive does not contain these copyright lists.
+Installed component manifest assigns both to rustc, not docs. The first
+version-fingerprint probe also correctly rejected untrimmed terminal newline;
+matching producer semantics uses trimmed UTF-8 verbose version output.
+An initial direct rustc download timed out; the terminal handle was checked,
+then bounded capture succeeded without downgrading SHA verification.
+
+Dependency receipt now binds the toolchain material receipt. Still FALSE:
+full_transitive_license_audit and release_qualified. Remaining license work is
+explicit obligation/target review and carrying this complete scoped material
+set into the licensed distribution with isolated reopen/tamper controls.
+Existing 66-file envelope, package bytes, current catalog and frozen release
+identities are unchanged. Package counts remain 10/18 built, 5/18 selectable;
+generic App transport and eight remaining builds are still required.
+
+Local checks: candidate development suite 17/17 PASS; dependency controls
+28/28 and toolchain controls 28/28 PASS; exact five-package Core/Component/
+generated-SDK qualification and licensed source-free SDK replay PASS. Research
+license policy, routing/tag rejection and diff checks PASS. Owning release
+integrity Skill records exact input recovery and official component ownership;
+no producer implementation/strategy Skill was changed. Commit/push this
+milestone and keep full-audit/release acceptance false pending the next gates.
