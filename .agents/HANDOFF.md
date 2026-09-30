@@ -53,6 +53,20 @@ strict reopen, ten Component cases, 128 Wasmi rounds and 896 generated-SDK
 calls PASS. Current staging carries only those repaired bytes. Catalog and
 release admission still remain; the original failure is separately retained.
 Preserve the other workstream's uncommitted WIT dependency implementation.
+The next checkpoint adds exact Wasmi execution for all three recovered fixture
+roots: Owned Algorithms (1024 calls), Clock (256 calls plus missing/wrong Host
+binding rejection), and Counter (128 explicit-destructor lifecycles with a
+balanced embedding resource table). Counter's imported drop callback has not
+been executed in this Core probe; full canonical drop remains covered only by
+the generated Component SDK journey. Do not conflate those scopes.
+HTTP1 and Data Core primary-upstream review now binds seven exact registry
+archives to Cargo.lock, compares their Rust source bytes to official pinned
+Git commits, and retains fifteen upstream license/notice files. In particular,
+arrow-array 60.0.0 is Apache-2.0 AND MIT, unlike the other five Arrow crates.
+The offline gate rejects altered provenance, missing notices, file/directory
+links and false promotion claims. Full transitive license audit, explicit
+package license binding and ordinary App admission remain pending. No new
+package has been selected or released by this evidence-only checkpoint.
 Do not refresh v0.0.20 metadata around these future bytes; the old candidate
 must continue rejecting this tree as product drift.
 

@@ -515,11 +515,195 @@ fn structural(path: &str, exports: &[&str]) -> Result<()> {
     Ok(())
 }
 
+fn owned_current(path: &str) -> Result<()> {
+    // Each round is a fresh bounded instance. Only ABI glue uses physical lanes.
+    for _ in 0..128 {
+        let mut core = Core::open(path)?;
+        let count = core
+            .instance
+            .get_typed_func::<(i32, i32), i32>(&core.store, "count-true")?;
+        let sum = core
+            .instance
+            .get_typed_func::<(i32, i32), i64>(&core.store, "sum-s32")?;
+        let utf8 = core
+            .instance
+            .get_typed_func::<(i32, i32), i32>(&core.store, "utf8-score")?;
+        let request = core
+            .instance
+            .get_typed_func::<(i32, i32, i32, i32, i32), i64>(&core.store, "request-score")?;
+        let bits = core.alloc_bytes(&[1, 0, 1])?;
+        let values = core.alloc_zeroed(12, 4)?;
+        let raw: Vec<u8> = [i32::MAX, i32::MAX, -1]
+            .into_iter()
+            .flat_map(i32::to_le_bytes)
+            .collect();
+        core.write(values, &raw)?;
+        let text = core.alloc_bytes("A中".as_bytes())?;
+        let label = core.alloc_bytes(b"abc")?;
+        let small = core.alloc_zeroed(8, 4)?;
+        let raw: Vec<u8> = [4i32, 5].into_iter().flat_map(i32::to_le_bytes).collect();
+        core.write(small, &raw)?;
+        assert_eq!(count.call(&mut core.store, (bits, 3))?, 2);
+        assert_eq!(count.call(&mut core.store, (0, 0))?, 0);
+        assert_eq!(sum.call(&mut core.store, (values, 3))?, 4_294_967_293);
+        assert_eq!(sum.call(&mut core.store, (0, 0))?, 0);
+        assert_eq!(utf8.call(&mut core.store, (text, 4))?, 2004);
+        assert_eq!(utf8.call(&mut core.store, (0, 0))?, 0);
+        assert_eq!(
+            request.call(&mut core.store, (label, 3, small, 2, 1))?,
+            3109
+        );
+        assert_eq!(request.call(&mut core.store, (0, 0, 0, 0, 0))?, 0);
+    }
+    Ok(())
+}
+
+fn clock_current(path: &str) -> Result<()> {
+    let engine = Engine::default();
+    let module = Module::new(&engine, &std::fs::read(path)?[..])?;
+    let imports: Vec<_> = module.imports().collect();
+    assert_eq!(imports.len(), 1);
+    assert_eq!(imports[0].module(), "wasmc:host-clock/clock-host@0.0.1");
+    assert_eq!(imports[0].name(), "now");
+    let mut store = Store::new(&engine, (40i32, 0u32));
+    assert!(Linker::new(&engine)
+        .instantiate_and_start(&mut store, &module)
+        .is_err());
+    let mut wrong = Linker::new(&engine);
+    wrong.func_wrap("wasmc:host-clock/clock-host@0.0.1", "now", || -> i64 { 40 })?;
+    assert!(wrong.instantiate_and_start(&mut store, &module).is_err());
+    let mut linker = Linker::new(&engine);
+    linker.func_wrap(
+        "wasmc:host-clock/clock-host@0.0.1",
+        "now",
+        |mut caller: Caller<'_, (i32, u32)>| -> i32 {
+            let value = caller.data().0;
+            caller.data_mut().0 += 1;
+            caller.data_mut().1 += 1;
+            value
+        },
+    )?;
+    let instance = linker.instantiate_and_start(&mut store, &module)?;
+    let sampled =
+        instance.get_typed_func::<i32, i32>(&store, "wasmc:host-clock/clock-api@0.0.1#sampled")?;
+    for index in 0..128 {
+        assert_eq!(sampled.call(&mut store, 2)?, 42 + index * 2);
+        assert_eq!(sampled.call(&mut store, -1)?, 40 + index * 2);
+    }
+    assert_eq!(store.data().1, 256);
+    Ok(())
+}
+
+fn counter_current(path: &str) -> Result<()> {
+    use std::collections::BTreeMap;
+    let engine = Engine::default();
+    let module = Module::new(&engine, &std::fs::read(path)?[..])?;
+    let namespace = "[export]wasmc:resource-counter/counters@0.0.1";
+    let mut imports = module
+        .imports()
+        .map(|x| (x.module().to_owned(), x.name().to_owned()))
+        .collect::<Vec<_>>();
+    imports.sort();
+    assert_eq!(
+        imports,
+        vec![
+            (namespace.into(), "[resource-drop]counter".into()),
+            (namespace.into(), "[resource-new]counter".into())
+        ]
+    );
+    let mut store = Store::new(&engine, (0i32, BTreeMap::<i32, i32>::new(), 0u32));
+    assert!(Linker::new(&engine)
+        .instantiate_and_start(&mut store, &module)
+        .is_err());
+    let mut linker = Linker::new(&engine);
+    linker.func_wrap(
+        namespace,
+        "[resource-new]counter",
+        |mut caller: Caller<'_, (i32, BTreeMap<i32, i32>, u32)>, rep: i32| -> i32 {
+            caller.data_mut().0 += 1;
+            let handle = caller.data().0;
+            assert!(caller.data_mut().1.insert(handle, rep).is_none());
+            handle
+        },
+    )?;
+    let drop_func = wasmi::Func::wrap(
+        &mut store,
+        |mut caller: Caller<'_, (i32, BTreeMap<i32, i32>, u32)>,
+         handle: i32|
+         -> Result<(), wasmi::Error> {
+            let rep = caller
+                .data_mut()
+                .1
+                .remove(&handle)
+                .ok_or_else(|| wasmi::Error::new("stale resource"))?;
+            let dtor = caller
+                .get_export("wasmc:resource-counter/counters@0.0.1#[dtor]counter")
+                .and_then(|x| x.into_func())
+                .ok_or_else(|| wasmi::Error::new("missing destructor"))?
+                .typed::<i32, ()>(&caller)?;
+            dtor.call(&mut caller, rep)?;
+            caller.data_mut().2 += 1;
+            Ok(())
+        },
+    );
+    linker.define(namespace, "[resource-drop]counter", drop_func)?;
+    let instance = linker.instantiate_and_start(&mut store, &module)?;
+    let create = instance.get_typed_func::<i32, i32>(
+        &store,
+        "wasmc:resource-counter/counters@0.0.1#[constructor]counter",
+    )?;
+    let add = instance.get_typed_func::<(i32, i32), i32>(
+        &store,
+        "wasmc:resource-counter/counters@0.0.1#[method]counter.add",
+    )?;
+    let value = instance.get_typed_func::<i32, i32>(
+        &store,
+        "wasmc:resource-counter/counters@0.0.1#[method]counter.value",
+    )?;
+    // The embedding invokes the exact exported destructor after lowering drop;
+    // a host function called directly has no Wasm Caller instance exports.
+    let dtor = instance.get_typed_func::<i32, ()>(
+        &store,
+        "wasmc:resource-counter/counters@0.0.1#[dtor]counter",
+    )?;
+    for _ in 0..128 {
+        let handle = create.call(&mut store, 10)?;
+        let rep = store.data().1[&handle];
+        assert_eq!(add.call(&mut store, (rep, -3))?, 7);
+        assert_eq!(value.call(&mut store, rep)?, 7);
+        let removed = store.data_mut().1.remove(&handle).expect("owned resource");
+        dtor.call(&mut store, removed)?;
+        store.data_mut().2 += 1;
+        assert!(store.data().1.is_empty());
+        assert!(store.data_mut().1.remove(&handle).is_none());
+    }
+    assert_eq!(store.data().2, 128);
+    Ok(())
+}
+
 fn main() -> Result<()> {
     let args = std::env::args().skip(1).collect::<Vec<_>>();
     if !args.is_empty() {
-        if args.len() != 2 || !["--http1", "--data-core"].contains(&args[0].as_str()) {
-            bail!("usage: wasmc-libsrc-wasmi-qualification [--http1|--data-core EXACT_ARTIFACT]");
+        if args.len() != 2
+            || !["--http1", "--data-core", "--owned", "--clock", "--counter"]
+                .contains(&args[0].as_str())
+        {
+            bail!("usage: wasmc-libsrc-wasmi-qualification [--http1|--data-core|--owned|--clock|--counter EXACT_ARTIFACT]");
+        }
+        if args[0] == "--owned" {
+            owned_current(&args[1])?;
+            println!("{{\"accepted\":true,\"engine\":\"wasmi-2.0.0\",\"candidate\":\"wasmc-owned-algorithms\",\"rounds\":128,\"calls\":1024,\"host_imports\":0,\"scope\":\"all-four-owned-apis-with-empty-utf8-and-full-width-i32\"}}");
+            return Ok(());
+        }
+        if args[0] == "--clock" {
+            clock_current(&args[1])?;
+            println!("{{\"accepted\":true,\"engine\":\"wasmi-2.0.0\",\"candidate\":\"wasmc-host-clock\",\"rounds\":128,\"calls\":256,\"host_imports\":1,\"missing_host_rejected\":true,\"wrong_signature_rejected\":true,\"scope\":\"explicit-clock-binding-and-rejection\"}}");
+            return Ok(());
+        }
+        if args[0] == "--counter" {
+            counter_current(&args[1])?;
+            println!("{{\"accepted\":true,\"engine\":\"wasmi-2.0.0\",\"candidate\":\"wasmc-resource-counter\",\"rounds\":128,\"resource_lifecycles\":128,\"canonical_resource_imports\":2,\"missing_binding_rejected\":true,\"stale_representation_absent_from_embedding\":true,\"imported_drop_callback_executed\":false,\"scope\":\"constructor-add-value-explicit-destructor-and-balanced-embedding-table\"}}");
+            return Ok(());
         }
         if args[0] == "--data-core" {
             data_core_empty(&args[1])?;

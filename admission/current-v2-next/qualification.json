@@ -4,8 +4,9 @@
   "oracle_sources": {
     "scripts/test-http1-libsrc.mjs": "638f326291311de137ad29926ef9de50aec7a852e75b48fbf30d72d27c0a0d65",
     "scripts/test-data-core-libsrc.mjs": "05c00931260a6a9375936c74ed15534bfed0c1203bd7c93111a47ec4e5402f29",
-    "scripts/qualify-current-v2-next.mjs": "0144dd1b100d62ab8e4baabd9cb076ce78942f9ebf66eb6ad24212fd24b2d135",
-    "libsrc/qualification/wasmi-core/src/main.rs": "5690651f64e84f27eb4065ae284769fbba70b07e98f124771dcd5fe24584fc56",
+    "scripts/qualify-current-v2-next.mjs": "d4d4e5ccdd2bfacd565476daa86c3ac69b83ca3861712987598be7957ce8ac7c",
+    "scripts/current-v2-upstream-provenance.mjs": "880f057f961d0fc2a36fe0e2bc89bc4c0fc4e9f713728718d96bce22cd3df859",
+    "libsrc/qualification/wasmi-core/src/main.rs": "42ed5a7f900f241f2a3a286db6a396c734c64ce9f7da99b9e18aff21b522c06a",
     "libsrc/qualification/wasmi-core/Cargo.lock": "146c761a0910698dd231f8253d9016be8a7ea20f9343fc730be74c312e862a6c",
     "libsrc/qualification/current-v2-consumer/src/main.rs": "6af24268f98249dbf1fe7f5ca017cd3b42a25b39dac18fc6bb33fbdb38386193",
     "libsrc/qualification/current-v2-consumer/Cargo.lock": "b7ed1318c31e1d511eca8ad59b64939028a60594e004e4a939f9f2240b887d88"
@@ -324,6 +325,40 @@
     "host_imports": 0,
     "scope": "empty-batch-validate-take-invalid-index-and-cleanup"
   },
+  "fixture_wasmi": [
+    {
+      "accepted": true,
+      "engine": "wasmi-2.0.0",
+      "candidate": "wasmc-owned-algorithms",
+      "rounds": 128,
+      "calls": 1024,
+      "host_imports": 0,
+      "scope": "all-four-owned-apis-with-empty-utf8-and-full-width-i32"
+    },
+    {
+      "accepted": true,
+      "engine": "wasmi-2.0.0",
+      "candidate": "wasmc-host-clock",
+      "rounds": 128,
+      "calls": 256,
+      "host_imports": 1,
+      "missing_host_rejected": true,
+      "wrong_signature_rejected": true,
+      "scope": "explicit-clock-binding-and-rejection"
+    },
+    {
+      "accepted": true,
+      "engine": "wasmi-2.0.0",
+      "candidate": "wasmc-resource-counter",
+      "rounds": 128,
+      "resource_lifecycles": 128,
+      "canonical_resource_imports": 2,
+      "missing_binding_rejected": true,
+      "stale_representation_absent_from_embedding": true,
+      "imported_drop_callback_executed": false,
+      "scope": "constructor-add-value-explicit-destructor-and-balanced-embedding-table"
+    }
+  ],
   "generated_sdk": {
     "accepted": true,
     "engine": "wasmtime-49.0.0",
@@ -340,13 +375,21 @@
     "consumer": "generated-root-sdk-only",
     "ordinary_wasmc_app_qualified": false
   },
+  "upstream_review": {
+    "accepted": true,
+    "packages": 2,
+    "upstream_crates": 7,
+    "full_transitive_license_audit": false,
+    "release_qualified": false,
+    "receipt_sha256": "3edfc8f73ab246c8dd8c479ea3043b6cde9e000717e041fb621b8156d7310f3b"
+  },
   "selected_current_catalog": false,
   "ordinary_wasmc_app_qualified": false,
   "release_qualified": false,
   "pending": [
     "current catalog admission and exact route/install closure",
     "ordinary WAsmC App consumption",
-    "HTTP1 and Data Core upstream provenance review",
+    "complete transitive license audit and package license binding before a new candidate",
     "remaining package rebuilds and qualification",
     "exact new-candidate release and live Pi gates"
   ]

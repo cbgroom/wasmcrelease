@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
+import {validateUpstreamReceipt} from './current-v2-upstream-provenance.mjs';
 const sha256=bytes=>createHash('sha256').update(bytes).digest('hex');
 const read=p=>JSON.parse(readFileSync(p,'utf8'));
 const catalog=read('catalog/libs-current-v2.json');
@@ -25,6 +26,15 @@ assert.equal(qualified.accepted,true);
 assert.equal(qualified.release_qualified,false);
 assert.equal(qualified.ordinary_wasmc_app_qualified,false);
 assert.equal(qualified.packages.length,5);
+assert.equal(qualified.fixture_wasmi.length,3);
+assert.deepEqual(qualified.fixture_wasmi.map(x=>x.candidate).sort(),['wasmc-host-clock','wasmc-owned-algorithms','wasmc-resource-counter']);
+for(const receipt of qualified.fixture_wasmi){assert.equal(receipt.accepted,true);assert.equal(receipt.rounds,128);}
+for(const [path,digest] of Object.entries(qualified.oracle_sources))assert.equal(sha256(readFileSync(path)),digest,`qualification oracle drift: ${path}`);
+assert.equal(qualified.fixture_wasmi.find(x=>x.candidate==='wasmc-resource-counter').imported_drop_callback_executed,false);
+const upstream=readFileSync('admission/current-v2-next/upstream/review.json');
+assert.equal(qualified.upstream_review.receipt_sha256,sha256(upstream));
+assert.equal(validateUpstreamReceipt(JSON.parse(upstream)).upstream_crates,7);
+assert.equal(qualified.upstream_review.full_transitive_license_audit,false);
 assert.equal(new Set(ledger.migrated.map(x=>x.id)).size,ledger.migrated.length);
 assert.equal(new Set(ledger.backlog.map(x=>x.id)).size,ledger.backlog.length);
 for(const row of catalog.packages){

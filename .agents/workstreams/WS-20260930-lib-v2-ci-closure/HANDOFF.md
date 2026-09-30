@@ -179,3 +179,36 @@ Core and Component hashes plus both Agent views are checked by current closure;
 these checks do not admit staged roots into discovery. The thirteen total
 non-current roots remain excluded. No catalog authority or release pointer
 has advanced.
+
+## Exact Wasmi fixture and primary-upstream closure checkpoint
+
+All five staged packages now have exact Core Wasmi probes plus generated
+Wasmtime Component SDK execution. New Wasmi scope: Owned Algorithms 1024 calls
+over all four APIs (UTF-8, empty inputs and full-width i32 sums); Clock 256
+calls plus missing and wrong-signature import rejection; Counter 128 lifecycles
+with explicit destructor execution and balanced embedding resource table.
+Counter's imported resource-drop callback is bound but NOT executed by this
+Core probe. Stale representation absence is an embedding-table observation,
+not a claim that raw provider pointers are safe. Canonical Component drop and
+stale-handle rejection remain separately covered by the root SDK consumer.
+
+`scripts/current-v2-upstream-provenance.mjs` captures official exact Git tags,
+commit/archive hashes, seven Cargo.lock registry archive checksums and compares
+all packaged upstream src/*.rs bytes with those exact official commits. The
+review binds delivered Core/Component/lib.json, adapter source, Cargo.lock and
+the repository research license; it never edits nine-file package inventories.
+Fifteen upstream LICENSE/NOTICE files are retained, including arrow-array's
+Apache-2.0 AND MIT obligation. Supported/unsupported subsets and adapter-owned
+deltas are explicit. Offline reopen and eighteen mutation/link negative controls
+are wired into public CI. No upstream license is replaced by the adapter license.
+
+Review receipt: `admission/current-v2-next/upstream/review.json`.
+Full transitive license audit is FALSE; the seven reviewed crates are the
+primary semantic dependencies, not all build/runtime Cargo dependencies.
+Package license binding, ordinary App admission and current catalog/search/
+install closure remain pending. Protocol builds remain 10/18, selected roots
+5/18; eight roots are unrebuilt. The WIT-deps producer worktree still has its
+owner's ten uncommitted files at 3b797a77 and was not modified or adopted.
+Next use matching clean producer authority for ordinary App evidence; complete
+transitive/license admission before a future candidate. Do not promote these
+sidecar receipts to a release or relax any old-candidate drift rejection.

@@ -19,6 +19,11 @@ on:
       - "scripts/test-libsrc-all.mjs"
       - "scripts/test-libsrc-wasmi.mjs"
       - "scripts/test-data-core-libsrc.mjs"
+      - "scripts/qualify-current-v2-next.mjs"
+      - "scripts/current-v2-upstream-provenance.mjs"
+      - "scripts/test-current-v2-upstream-provenance.mjs"
+      - "admission/current-v2-next/**"
+      - "admission/current-v2-data-core/**"
       - "scripts/test-csv-libsrc.mjs"
       - "scripts/test-data-expr-libsrc.mjs"
       - "scripts/test-data-compute-libsrc.mjs"
@@ -46,6 +51,11 @@ on:
       - "scripts/test-libsrc-all.mjs"
       - "scripts/test-libsrc-wasmi.mjs"
       - "scripts/test-data-core-libsrc.mjs"
+      - "scripts/qualify-current-v2-next.mjs"
+      - "scripts/current-v2-upstream-provenance.mjs"
+      - "scripts/test-current-v2-upstream-provenance.mjs"
+      - "admission/current-v2-next/**"
+      - "admission/current-v2-data-core/**"
       - "scripts/test-csv-libsrc.mjs"
       - "scripts/test-data-expr-libsrc.mjs"
       - "scripts/test-data-compute-libsrc.mjs"
@@ -120,6 +130,7 @@ jobs:
         run: node scripts/test-libsrc-wasmi.mjs
       - name: Qualify exact next-v2 package bytes and generated Rust SDKs
         run: |
+          node scripts/test-current-v2-upstream-provenance.mjs
           cargo +1.96.0 fetch --locked --manifest-path libsrc/qualification/current-v2-consumer/Cargo.toml
           cargo +1.96.0 fetch --locked --manifest-path libsrc/qualification/wasmi-core/Cargo.toml
           node scripts/qualify-current-v2-next.mjs

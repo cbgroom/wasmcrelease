@@ -5,6 +5,7 @@ import { createHash } from 'node:crypto';
 import { readFileSync, readdirSync, lstatSync, writeFileSync } from 'node:fs';
 import { join, resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import {validateUpstreamReceipt} from './current-v2-upstream-provenance.mjs';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const save = process.argv.includes('--receipt');
 assert(process.argv.slice(2).every(arg=>arg==='--receipt'));
@@ -39,21 +40,29 @@ assert.equal(dataBehavior.candidate_sha256,dataCore.artifact.sha256);
 run('cargo',['+1.96.0','build','--release','--locked','--offline','--manifest-path','libsrc/qualification/wasmi-core/Cargo.toml']);
 const wasmi = jsonRun('libsrc/qualification/wasmi-core/target/release/wasmc-libsrc-wasmi-qualification',['--http1',join(http1.root,'artifact.wasm')]);
 const dataWasmi = jsonRun('libsrc/qualification/wasmi-core/target/release/wasmc-libsrc-wasmi-qualification',['--data-core',join(dataCore.root,'artifact.wasm')]);
+const fixtureWasmi = ['wasmc-owned-algorithms','wasmc-host-clock','wasmc-resource-counter'].map((id,index)=>{
+  const row=identities.find(x=>x.id===id);
+  return jsonRun('libsrc/qualification/wasmi-core/target/release/wasmc-libsrc-wasmi-qualification',
+    [['--owned','--clock','--counter'][index],join(row.root,'artifact.wasm')]);
+});
+const upstreamBytes=readFileSync(join(root,'admission/current-v2-next/upstream/review.json'));
+const upstreamReview=validateUpstreamReceipt(JSON.parse(upstreamBytes));
 const sdk = jsonRun('cargo',['+1.96.0','run','--locked','--offline','--quiet','--manifest-path','libsrc/qualification/current-v2-consumer/Cargo.toml','--','admission/current-v2-next/packages',dataCore.root]);
 assert.equal(sdk.packages,identities.length);
 const receipt = {schema:'wasmc.current-v2-next-local-qualification/v1',accepted:true,
   oracle_sources:Object.fromEntries(['scripts/test-http1-libsrc.mjs','scripts/test-data-core-libsrc.mjs',
-    'scripts/qualify-current-v2-next.mjs','libsrc/qualification/wasmi-core/src/main.rs',
+    'scripts/qualify-current-v2-next.mjs','scripts/current-v2-upstream-provenance.mjs','libsrc/qualification/wasmi-core/src/main.rs',
     'libsrc/qualification/wasmi-core/Cargo.lock','libsrc/qualification/current-v2-consumer/src/main.rs',
     'libsrc/qualification/current-v2-consumer/Cargo.lock'].map(path=>[path,hash(readFileSync(join(root,path)))])),
   engine_tools:{wasmtime:run('wasmtime',['--version']),wasm_tools:run('wasm-tools',['--version'])},
   build_receipts_sha256:hash(readFileSync(join(root,'admission/current-v2-next/build-receipts.json'))),
   data_build_receipts_sha256:hash(readFileSync(join(root,'admission/current-v2-data-core/build-receipts.json'))),
-  packages:identities,http1_behavior:behavior,http1_wasmi:wasmi,data_core_behavior:dataBehavior,data_core_wasmi:dataWasmi,generated_sdk:sdk,
+  packages:identities,http1_behavior:behavior,http1_wasmi:wasmi,data_core_behavior:dataBehavior,data_core_wasmi:dataWasmi,fixture_wasmi:fixtureWasmi,generated_sdk:sdk,
+  upstream_review:{...upstreamReview,receipt_sha256:hash(upstreamBytes)},
   selected_current_catalog:false,ordinary_wasmc_app_qualified:false,release_qualified:false,
   pending:['current catalog admission and exact route/install closure','ordinary WAsmC App consumption',
-    'HTTP1 and Data Core upstream provenance review',
+    'complete transitive license audit and package license binding before a new candidate',
     'remaining package rebuilds and qualification','exact new-candidate release and live Pi gates']};
 if(save) writeFileSync(join(root,'admission/current-v2-next/qualification.json'),JSON.stringify(receipt,null,2)+'\n');
 console.log(JSON.stringify({accepted:true,packages:identities.length,http1_cases:behavior.cases,
-  http1_wasmi_rounds:wasmi.rounds,sdk,release_qualified:false}));
+  http1_wasmi_rounds:wasmi.rounds,fixture_wasmi:fixtureWasmi,upstream_review:upstreamReview,sdk,release_qualified:false}));
