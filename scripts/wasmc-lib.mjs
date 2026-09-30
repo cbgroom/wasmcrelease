@@ -21,7 +21,7 @@ try {
   let result;
   if (command === '--help' || command === 'help') {
     if(args.length)throw Object.assign(new Error('cli.arguments_invalid'),{code:'cli.arguments_invalid'});
-    result={accepted:true,schema:'wasmc.public-lib-cli-help/v1',default_catalog:'current',current_development_route:'agent-current-lib-quickstart.json',selection_authority:false,commands:{search:{arguments:['query'],options:['--catalog','--historical','--offset','--limit'],example:'node scripts/wasmc-lib.mjs search "base64 decode" --limit 8'},resolve:{arguments:['id','version'],required_options:['--catalog-sha256','--wit-sha256','--artifact-sha256'],optional_options:['--catalog'],identity_source:'catalog/libs-current-v2.json'},install:{arguments:['lock-path','destination'],required_options:['--lock-sha256','--mirror'],mirrors:['github','jsdelivr'],no_clobber:true}},release_qualification:false};
+    result={accepted:true,schema:'wasmc.public-lib-cli-help/v1',default_catalog:'current',current_development_route:'agent-current-lib-quickstart.json',selection_authority:false,commands:{search:{arguments:['query'],options:['--catalog','--historical','--offset','--limit'],example:'node scripts/wasmc-lib.mjs search "base64 decode" --limit 8'},resolve:{arguments:['id','version'],required_options:['--catalog-sha256','--wit-sha256','--artifact-sha256'],optional_options:['--catalog'],identity_source:'catalog/libs-current-v2.json'},install:{arguments:['lock-path','destination'],required_options:['--lock-sha256','--mirror'],mirrors:['github','jsdelivr'],no_clobber:true,preserves_catalog_root:true}},release_qualification:false};
   } else if (command === 'search') {
     const words=[];let historical=false,offset=0,limit=64,catalogName='current';
     for(let i=0;i<args.length;i++) {

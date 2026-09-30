@@ -55,6 +55,15 @@ PASS. Optional Intel HTTPS performance reports WouldBlock; preserve that
 separate failure rather than weaken or relabel it. Revised live observation
 requires a new exact committed checkout; do not bind it to dirty bytes.
 
+Round2 at f1dc1fa: DeepSeek discovery observation PASS (11 tools, 44.6s).
+GLM has correct facts/digests with eight tools in 48.7s, but a prose prefix
+violates the exact JSON response contract, so strict observation remains FAIL.
+Neither route has tool/provider errors or retries. Both read the selected
+Skill/WIT. Independent review accepted the ambiguous excluded_examples naming
+and changed it to current_catalog_membership; feedback about AGENTS ordering
+was contradicted by the file and rejected. Retain pi-discovery-round2.json.
+
 Resume: review hosted CI on this branch/PR, then integrate serially. WIT
 dependency support and thirteen package rebuilds remain separate unfinished
-work. Pi live two-model runs and a new release have not been performed.
+work. Two live discovery rounds have been performed, but the full frozen
+release cohort and a new release have not been performed.

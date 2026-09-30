@@ -20,8 +20,9 @@ const selected=catalog.packages.find(row=>row.id===quick.base64_decode.id);
 for(const key of ['root','version','wit_sha256','artifact_sha256'])assert.equal(quick.base64_decode[key],selected[key]);
 assert.deepEqual(quick.base64_decode.required_additional_reads,[selected.root+'/SKILL.md',selected.root+'/lib.wit']);
 for(const path of quick.base64_decode.required_additional_reads)assert(read(path).length>0);
-for(const id of Object.keys(quick.excluded_examples)){
-  assert.equal(quick.excluded_examples[id],false);assert(!catalog.packages.some(row=>row.id===id));
+assert.equal(Object.hasOwn(quick,'excluded_examples'),false);
+for(const id of Object.keys(quick.current_catalog_membership)){
+  assert.equal(quick.current_catalog_membership[id],false);assert(!catalog.packages.some(row=>row.id===id));
 }
 const run=args=>JSON.parse(execFileSync(process.execPath,args,{encoding:'utf8'}));
 assert.equal(quick.help_command,'node scripts/wasmc-lib.mjs --help');
