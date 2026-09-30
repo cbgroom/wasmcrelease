@@ -60,8 +60,11 @@ false; the five strict generated roots are unchanged.
 A finite registry notice-choice review now covers the 189 identities and 17
 expressions, retaining all AND terms and both terms of ambiguous slash forms.
 Twenty-seven independent rejection controls and the 18-check local development
-suite pass. This review receipt is not yet carried in the 76-file envelope;
-build modifications, target/toolchain obligations and the remaining thirteen
+suite pass. This review receipt is now carried in a 77-file envelope; its
+79-file isolated SDK consumer passes all five packages and 56 rejection
+controls. Audit binding is acyclic: review -> inventory; envelope -> both.
+Two ordered recaptures are byte-identical. Build modifications,
+target/toolchain obligations and the remaining thirteen
 package audits are still pending. It is not full license/release qualification.
 Fresh private orientation remains rejected: maintainer-check status 24, with
 the standard-library skill at 510 lines. The runtime workstream remains clean

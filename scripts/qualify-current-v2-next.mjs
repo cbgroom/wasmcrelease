@@ -60,12 +60,16 @@ assert.equal(licensedDelivery.package_license_binding,true);
 assert.equal(licensedDelivery.source_free_licensed_sdk_execution,true);
 assert.equal(licensedDelivery.dependency_materials_carried,true);
 assert.equal(licensedDelivery.registry_crates,189);
+assert.equal(licensedDelivery.registry_notice_review_carried,true);
+const registryNoticeReview=jsonRun('node',['scripts/test-current-v2-registry-notice-review.mjs']);
+const registryReviewBytes=readFileSync(join(root,'admission/current-v2-next/registry-notice-review.json'));
 const licenseBindingsBytes=readFileSync(join(root,'admission/current-v2-next/package-license-bindings.json'));
 const receipt = {schema:'wasmc.current-v2-next-local-qualification/v1',accepted:true,
   oracle_sources:Object.fromEntries(['scripts/test-http1-libsrc.mjs','scripts/test-data-core-libsrc.mjs',
     'scripts/qualify-current-v2-next.mjs','scripts/current-v2-upstream-provenance.mjs','scripts/qualify-current-v2-source-free-sdk.mjs','scripts/test-current-v2-app.mjs',
     'scripts/current-v2-package-license.mjs','scripts/test-current-v2-package-license.mjs',
     'scripts/current-v2-dependency-inventory.mjs','scripts/current-v2-toolchain-notices.mjs','libsrc/qualification/wasmi-core/src/main.rs',
+    'scripts/current-v2-registry-notice-review.mjs','scripts/test-current-v2-registry-notice-review.mjs',
     'libsrc/qualification/wasmi-core/Cargo.lock','libsrc/qualification/current-v2-consumer/src/main.rs',
     'libsrc/qualification/current-v2-consumer/Cargo.lock'].map(path=>[path,hash(readFileSync(join(root,path)))])),
   engine_tools:{wasmtime:run('wasmtime',['--version']),wasm_tools:run('wasm-tools',['--version'])},
@@ -76,6 +80,7 @@ const receipt = {schema:'wasmc.current-v2-next-local-qualification/v1',accepted:
   source_free_sdk:sourceFreeSdk,
   ordinary_app_probe:{...ordinaryApp,receipt_sha256:hash(appReceiptBytes)},
   package_license_binding:{...licensedDelivery,manifest_sha256:hash(licenseBindingsBytes)},
+  registry_notice_review:{...registryNoticeReview,receipt_sha256:hash(registryReviewBytes)},
   selected_current_catalog:false,ordinary_wasmc_app_qualified:false,release_qualified:false,
   pending:['current catalog admission and exact route/install closure','ordinary WAsmC App rich-value/resource Core transport for four staged packages; published compiler identity',
     'complete license-obligation/target-applicability review and admit the material-carrying license envelope with a new candidate',

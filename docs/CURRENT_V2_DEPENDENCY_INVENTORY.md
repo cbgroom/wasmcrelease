@@ -59,8 +59,8 @@ Remaining requirements:
 
 Until these close, `full_transitive_license_audit=false` and
 `release_qualified=false`. The strict five generated roots remain unchanged.
-The staged 76-file licensed envelope now carries this inventory, all six input
-locks and both official toolchain documents. Isolated 78-file generated-SDK
+The staged 77-file licensed envelope now carries this inventory, all six input
+locks, the registry notice-choice review and both official toolchain documents. Isolated 79-file generated-SDK
 execution and deletion/tamper controls qualify that scoped material delivery;
 they do not close obligation review or all-package release admission.
 
@@ -81,7 +81,7 @@ encoding_rs retains MIT plus BSD-3-Clause; unicode-ident retains MIT plus
 Unicode-3.0. Historical slash expressions conservatively retain both licenses,
 without inventing an OR meaning. Apache-with-LLVM retains the exact exception
 text, but this plan relies on no exception-based omission of notice conditions.
-All original and supplemental notices remain in the existing delivered
+All original and supplemental notices remain in the delivered
 inventory, even when an OR choice needs fewer materials.
 
 The choices follow the declared expressions and retained source notices;
@@ -92,7 +92,9 @@ expressions fail closed. Deletion of an AND-term notice, a self-rehashed
 truncated Apache text, removal of the LLVM supplement, and false promotion
 claims are independent rejection controls.
 
-This new review receipt itself is not yet in the 76-file envelope. Pending:
-bind it into the future delivery; verify actual build-source modifications and
-patches; review target/toolchain obligations; audit the other thirteen target
+The review receipt is now bound and carried in the 77-file envelope. The
+review binds only inventory inputs; the outer delivery binds both. No cyclic
+parent-index digest or self-attested receipt-carriage flag enters the review.
+Pending: verify actual build-source modifications and patches; review
+target/toolchain obligations; audit the other thirteen target
 packages. `full_transitive_license_audit` and `release_qualified` remain false.

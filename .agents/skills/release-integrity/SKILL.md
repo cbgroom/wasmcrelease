@@ -97,6 +97,12 @@ audit, target applicability review, or legal approval. Require rejection of
 missing conjunctive notices and self-rehashed truncation, and bind the review
 itself into delivery before claiming that recipients receive it.
 
+Keep audit binding direction acyclic: a review binds its exact inputs, then
+the outer delivery binds inputs and review. Never hash the carrying envelope
+back into its child review or put delivery-success self-attestations there.
+Prove actual carried receipt deletion, mutation, links and coordinated
+self-rehash rejection against independent source/build identities.
+
 Use `./scripts/validate-maintainer.sh` for repository consistency, then run the
 host journeys selected by `release-host-integration`.
 

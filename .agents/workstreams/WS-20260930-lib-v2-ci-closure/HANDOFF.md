@@ -553,8 +553,42 @@ transport slice. In parallel, bind the registry review and verify actual
 build-source modifications and target/toolchain obligations. Keep the original
 18-package denominator and matching compiler / exact Pi pair / release gates.
 
-Final local checks: material-carrying isolated SDK and 49 controls PASS;
+Prior material-delivery local checks: material-carrying isolated SDK and 49 controls PASS;
 exact five-package qualification refreshed PASS; candidate development suite
 17/17 PASS; tag routing, research-license policy and whitespace checks PASS.
 Owning integrity Skill records carried-input validation and exact lock reuse.
 Checkpoint this unreleased slice; no old-version integrity refresh is permitted.
+
+## 2026-10-01 acyclic registry review delivery
+
+Task state: in-progress. This section supersedes the prior pending review
+carriage instruction. The original 18-package denominator is unchanged.
+
+The review now binds only exact inventory inputs, not its carrying envelope
+or its own delivery-success assertion. The envelope independently validates
+and carries that review: 77 exact files, with 79 in the SDK-only consumer.
+Two ordered review/envelope recaptures are byte-identical. Validating the
+review no longer recursively validates an index that will bind its own bytes.
+
+Actual isolated delivery rejects review deletion, mutation, symlinks and a
+self-rehashed review plus self-rehashed envelope that removes Arrow Array's
+AND term. Total recipient rejection controls: 56 PASS; registry review
+controls: 27 PASS. Exact delivered HTTP1 executes 1,422 cases. All five
+generated SDKs execute again with 128 rounds/package, including 896 six-type
+Data Core calls; the 79-file tree is unchanged before/after execution.
+
+Full five-package qualification is refreshed, binding both new review
+oracles and the review bytes separately. Wasmi/Component behavior, source-free
+SDK and current ordinary App checks pass within their existing scope; ordinary
+App is still only 1/5. Strict nine-file roots are unchanged. No private
+compiler build/source, Host API, old immutable release or catalog changed.
+Local candidate development suite 18/18 PASS, research-license policy PASS
+through scripts/validate-license-policy.mjs, and git diff --check PASS.
+No all-checks hosted PASS for this new slice is claimed.
+
+Next: verify actual registry/build-source modifications and patches, then
+target/toolchain obligations; include all remaining package cohorts. Resolve
+private preflight and claimed/dirty ownership before compiler, default build
+or WIT edits. No owner message has been authorized or sent. New candidate,
+matching compiler, all-package routes/install, exact dual-model Pi and release
+remain mandatory, not implied by these local material gates.

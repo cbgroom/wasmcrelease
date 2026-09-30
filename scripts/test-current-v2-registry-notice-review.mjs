@@ -9,7 +9,7 @@ const result=validateRegistryNoticeReview(receipt);let rejected=0;
 for(const change of [
   x=>x.full_transitive_license_audit=true,x=>x.release_qualified=true,
   x=>x.target_applicability_reviewed=true,x=>x.toolchain_obligations_reviewed=true,
-  x=>x.review_receipt_carried=true,x=>x.registry_crates=18,
+  x=>x.complete_original_notice_materials=false,x=>x.registry_crates=18,
   x=>x.crates.pop(),x=>x.references.MIT='https://example.invalid/license',
   x=>x.crates.find(c=>c.id.startsWith('arrow-array@')).selected_licenses=['MIT'],
   x=>x.crates.find(c=>c.id.startsWith('encoding_rs@')).selected_licenses=['MIT'],
@@ -18,7 +18,7 @@ for(const change of [
   x=>x.crates.find(c=>c.id.startsWith('r-efi@')).selected_licenses=['LGPL-2.1-or-later'],
   x=>x.crates[0].retained_notices.pop(),
   x=>x.dependency_inventory_sha256='0'.repeat(64),
-  x=>x.delivery_binding_sha256='0'.repeat(64),
+  x=>x.delivery_binding_sha256='0'.repeat(64), // Reject a circular/extra field.
 ]){const value=structuredClone(receipt);change(value);assert.throws(()=>validateRegistryNoticeReview(value));rejected++;}
 // These controls attack the review inputs, not just its result status fields.
 const crate=name=>inventory.crates.find(x=>x.name===name);

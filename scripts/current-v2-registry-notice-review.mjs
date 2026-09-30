@@ -6,10 +6,8 @@ import {readFileSync,writeFileSync} from 'node:fs';
 import {dirname,resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {validateInventory} from './current-v2-dependency-inventory.mjs';
-import {validatePackageLicenseBindings} from './current-v2-package-license.mjs';
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
 const inventoryPath='admission/current-v2-next/dependency-inventory.json';
-const bindingPath='admission/current-v2-next/package-license-bindings.json';
 const receiptPath='admission/current-v2-next/registry-notice-review.json';
 const sha=b=>createHash('sha256').update(b).digest('hex');
 const bytes=p=>readFileSync(resolve(root,p));
@@ -66,25 +64,23 @@ export function reviewRegistryNotices(inventory){
 function expected(){
   const inventoryBytes=bytes(inventoryPath),inventory=JSON.parse(inventoryBytes);
   validateInventory(inventory);
-  const bindingBytes=bytes(bindingPath),binding=JSON.parse(bindingBytes);
-  validatePackageLicenseBindings(binding);
-  assert(binding.files[inventoryPath],'reviewed complete notices are not carried');
-  assert.equal(binding.files[inventoryPath].sha256,sha(inventoryBytes));
+  // Input direction is acyclic: review -> inventory; delivery -> both.
+  // The review never binds the index that will subsequently carry its bytes.
   const crates=reviewRegistryNotices(inventory);
   return {schema:'wasmc.current-v2-registry-notice-review/v1',
     scope:'conservative-all-lockfile-registry-packages-for-five-staged-roots-and-SDK-consumer',
-    dependency_inventory_sha256:sha(inventoryBytes),delivery_binding_sha256:sha(bindingBytes),
+    dependency_inventory_sha256:sha(inventoryBytes),
     registry_crates:crates.length,declared_expressions:new Set(crates.map(x=>x.declared_expression)).size,
-    references,crates,selected_notice_texts_present:true,complete_original_notices_carried:true,
+    references,crates,selected_notice_texts_present:true,complete_original_notice_materials:true,
     obligations:{copyright_and_permission_texts:'all retained without rewriting',
       apache_NOTICE:'all captured NOTICE materials retained; no applicability exclusions',
       upstream_relicense:'not permitted by this review',
       upstream_modification:'not attested; verify build sources and any patches separately',
       trademark_and_endorsement:'no permission inferred',
       LLVM_exception:'retained; no exception waiver relied upon'},
-    review_receipt_carried:false,target_applicability_reviewed:false,toolchain_obligations_reviewed:false,
+    target_applicability_reviewed:false,toolchain_obligations_reviewed:false,
     full_transitive_license_audit:false,release_qualified:false,
-    pending:['bind-review-receipt-into-delivery','verify-build-source-modifications-and-patches',
+    pending:['verify-build-source-modifications-and-patches',
       'target-and-toolchain-obligation-review','remaining-thirteen-target-package-audits']};
 }
 export function validateRegistryNoticeReview(value){assert.deepEqual(value,expected(),'registry notice review drift');return {accepted:true,registry_crates:value.registry_crates,declared_expressions:value.declared_expressions,full_transitive_license_audit:false,release_qualified:false};}
