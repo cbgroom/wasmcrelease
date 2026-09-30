@@ -1,5 +1,5 @@
 import { readFileSync } from 'node:fs';
-import { repositoryRoot, resolveCatalog, catalogAuthorities } from './lib-catalog.mjs';
+import { repositoryRoot, resolveCatalog, searchCatalog, sha256, catalogAuthorities } from './lib-catalog.mjs';
 import { join } from 'node:path';
 import { installLib } from './lib-install.mjs';
 import {instantiateLibSearch} from '../examples/lib-search/client.mjs';
@@ -10,29 +10,31 @@ const catalogs=Object.freeze({
   v014:{file:'catalog/libs-v014.json',authority:catalogAuthorities.v014},
   v017:{file:'catalog/libs-v017.json',authority:catalogAuthorities.v017},
   v018:{file:'catalog/libs-v018.json',authority:catalogAuthorities.v018},
+  current:{file:'catalog/libs-current-v2.json',authority:catalogAuthorities.currentV2},
 });
 const catalogSelection=name=>{
-  const selected=catalogs[name??'v009'];
+  const selected=catalogs[name??'current'];
   if(!selected)throw Object.assign(new Error('catalog.unknown_authority'),{code:'catalog.unknown_authority'});
   return selected;
 };
 try {
   let result;
   if (command === 'search') {
-    const lib=instantiateLibSearch(readFileSync(join(repositoryRoot,'standard/wasmc-lib-search/0.4.0/artifact.wasm')),{artifact_sha256:'3bfe9d15ee51832e884833b85ec09e3f803ef67b14f596ce6c168d9ffb1cf77f',index_sha256:'8513e628605e8ec05d76729a46fd7dc4427d64a83276368568ae05a0b9070eab',wit_package:'wasmc:lib-search@0.4.0'});
-    const words=[];let historical=false,offset=0,limit=64;
+    const words=[];let historical=false,offset=0,limit=64,catalogName='current';
     for(let i=0;i<args.length;i++) {
       const arg=args[i];
       if(arg==='--historical')historical=true;
-      else if(arg==='--offset'||arg==='--limit') {
-        const value=args[++i];if(!/^(0|[1-9][0-9]*)$/.test(value??''))throw Object.assign(new Error('cli.arguments_invalid'),{code:'cli.arguments_invalid'});
-        if(arg==='--offset')offset=Number(value);else limit=Number(value);
+      else if(arg==='--offset'||arg==='--limit'||arg==='--catalog') {
+        const value=args[++i];
+        if(arg==='--catalog'){if(!value)throw Object.assign(new Error('cli.arguments_invalid'),{code:'cli.arguments_invalid'});catalogName=value;}
+        else {if(!/^(0|[1-9][0-9]*)$/.test(value??''))throw Object.assign(new Error('cli.arguments_invalid'),{code:'cli.arguments_invalid'});if(arg==='--offset')offset=Number(value);else limit=Number(value);}
       } else if(arg.startsWith('--'))throw Object.assign(new Error('cli.arguments_invalid'),{code:'cli.arguments_invalid'});
       else words.push(arg);
     }
-    const page=lib.search({text:words.join(' '),include_historical:historical},offset,limit);
-    if(page.error)throw Object.assign(new Error(page.error),{code:page.error});
-    result={schema:'wasmc.public-lib-search/v2',snapshot:lib.snapshot(),selection_authority:false,offset,limit,hits:page.ok};
+    const selected=catalogSelection(catalogName);
+    const bytes=readFileSync(join(repositoryRoot,selected.file));
+    const all=searchCatalog(bytes,words.join(' '),historical,selected.authority);
+    result={schema:'wasmc.public-lib-search/v2',snapshot:{catalog:selected.file,catalog_sha256:sha256(bytes),release_tag:selected.authority.release_tag,release_commit:selected.authority.release_commit},selection_authority:false,offset,limit,hits:all.slice(offset,offset+limit)};
   } else if (command === 'install') {
     const [lockPath,destination,...flags]=args;
     const values={};const allowed=new Set(['--lock-sha256','--mirror']);
@@ -43,7 +45,7 @@ try {
     }
     const lockBytes=readFileSync(lockPath);
     let lock;try{lock=JSON.parse(lockBytes);}catch{throw Object.assign(new Error('install.lock_invalid'),{code:'install.lock_invalid'});}
-    const catalogName=lock?.release_tag==='v0.0.18'?'v018':lock?.release_tag==='v0.0.17'?'v017':lock?.release_tag==='v0.0.14'?'v014':lock?.release_tag==='v0.0.13'?'v013':lock?.release_tag==='v0.0.9'?'v009':null;
+    const catalogName=lock?.release_tag==='current-v2-20260930'?'current':lock?.release_tag==='v0.0.18'?'v018':lock?.release_tag==='v0.0.17'?'v017':lock?.release_tag==='v0.0.14'?'v014':lock?.release_tag==='v0.0.13'?'v013':lock?.release_tag==='v0.0.9'?'v009':null;
     if(!catalogName)throw Object.assign(new Error('install.lock_invalid'),{code:'install.lock_invalid'});
     const selected=catalogSelection(catalogName);
     result=await installLib({catalogBytes:readFileSync(join(repositoryRoot,selected.file)),catalogAuthority:selected.authority,lockBytes,lockSha256:values['--lock-sha256'],destination,mirror:values['--mirror']});

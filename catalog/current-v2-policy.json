@@ -1,0 +1,15 @@
+{
+  "schema": "wasmc.current-lib-policy/v1",
+  "status": "active",
+  "catalog": "catalog/libs-current-v2.json",
+  "package_authority_commit": "1891e73858654278067da3e2062a2bdf3c8c7349",
+  "default_agent_view": "runtime",
+  "required_agent_views": [
+    "runtime",
+    "developer"
+  ],
+  "excluded_until_rebuilt": [
+    "wasmc-system-telemetry"
+  ],
+  "rule": "current discovery/resolve/install admits only packages accepted by the v2-only verifier; frozen release catalogs remain historical authorities."
+}
