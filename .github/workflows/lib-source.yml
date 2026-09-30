@@ -118,6 +118,11 @@ jobs:
         run: node scripts/test-libsrc-all.mjs
       - name: Execute pure and exact-import candidates on Wasmi 2
         run: node scripts/test-libsrc-wasmi.mjs
+      - name: Qualify exact next-v2 package bytes and generated Rust SDKs
+        run: |
+          cargo +1.96.0 fetch --locked --manifest-path libsrc/qualification/current-v2-consumer/Cargo.toml
+          cargo +1.96.0 fetch --locked --manifest-path libsrc/qualification/wasmi-core/Cargo.toml
+          node scripts/qualify-current-v2-next.mjs
       - name: Report Lib source admission readiness
         run: |
           mkdir -p target

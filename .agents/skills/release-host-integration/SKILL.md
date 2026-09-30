@@ -120,6 +120,16 @@ Check identity and engine support before instantiation; probe success never
 replaces full-module validation. Follow-up tooling must not pretend it was
 shipped inside an older immutable tag or alter strict Lib root inventories.
 
+When rebuilding historical Libs with current packaging, reuse the behavior
+oracle against the exact delivered Core and Component paths, without letting
+the oracle silently rebuild a different adapter. Compare executable Component
+WIT with executable Component WIT: source-world metadata may retain unused
+world declarations and is not the same representation. Preserve exact root WIT
+bytes and exported signatures independently. Generated root-SDK execution,
+Core-engine execution, ordinary WAsmC App use, catalog selection and release
+admission are separate gates. A recovered canonical WIT/source plus two identical
+complete package trees closes recovery/build, not all of those consumer gates.
+
 Validate the actual public files and record exact tag/commit, hashes, imports,
 Host policy, behavior result, and untested scope. A module that validates, a
 Lib that initializes, and a source program that links are distinct claims.

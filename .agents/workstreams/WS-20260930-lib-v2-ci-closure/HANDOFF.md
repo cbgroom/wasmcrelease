@@ -147,3 +147,35 @@ not admissible evidence for this fix. Rebuild twice from this source checkpoint
 in the clean private producer, then replace the uncommitted Data Core staging
 batch and run exact Component/SDK/Wasmi regressions. Keep old released roots
 unchanged. The regression stays strict rather than accepting invalid-layout.
+
+Final package-validation checkpoint supersedes the pending rebuild instruction
+above: repaired Data Core was rebuilt twice from exact public source
+3270e4c3d504e12a899464f115542a8efc578b06 through the clean private producer.
+Complete package trees match and strict reopen passes. New Core is 868,932 bytes,
+SHA256 255d4625fa7f3f8bbea534476e862475585acb59edf3cff19c7e01eff736d823;
+Component SHA256 43a459ec14187b333fd091cb6ad410669e7d65050c77829fe98f460c7f1ca63d.
+Ten Component cases PASS, including empty/zero-column selection and invalid
+indices. Wasmi 2.0.0 executes 384 empty-batch validation/take/error/cleanup calls
+across 128 rounds (representative scope, not Wasmi six-type conformance).
+Generated root-SDK consumers now cover all FIVE staged packages: Data Core 896
+calls across six types, nulls, full-width integers, row order and empty cases,
+plus all earlier HTTP1/owned/clock/counter checks. Ordinary WAsmC App is false.
+
+The failure/repair receipt is `admission/current-v2-next/empty-take-regression.json`.
+Old local staging was moved recoverably into ignored
+`target/current-v2-data-core-before-empty-take-fix`; old released roots are
+unchanged. Exact package-byte/SDK qualification is wired into Lib source CI,
+fetching only public engine dependencies before locked/offline consumption.
+No new hosted PASS is claimed. Local current development suite remains 12/12
+PASS and the six old release identity files remain unchanged. Do not refresh
+old release metadata. Next: upstream/license/App admission and a new exact
+catalog for these five roots, followed by the eight remaining rebuilds and
+full future-candidate Pi/release gates. Source recovery is now complete for the
+three fixtures even though the current catalog ledger still excludes them.
+
+Machine migration ledger now agrees with that evidence: source recovery pending
+0, qualification pending 5, unrebuilt 8, current selectable 5. Staged manifest,
+Core and Component hashes plus both Agent views are checked by current closure;
+these checks do not admit staged roots into discovery. The thirteen total
+non-current roots remain excluded. No catalog authority or release pointer
+has advanced.

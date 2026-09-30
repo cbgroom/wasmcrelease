@@ -38,7 +38,7 @@ missing and extra routes rejected. This is development closure only.
 Resume from `.agents/workstreams/WS-20260930-lib-v2-ci-closure/HANDOFF.md`.
 The all-package closure slice now stages five additional v2 roots with complete
 second-build equality and strict reopen: HTTP1, Host Clock, Owned Algorithms,
-Resource Counter and Data Core. Exact-artifact behavior and four generated SDK
+Resource Counter and Data Core. Exact-artifact behavior and five generated SDK
 consumers pass locally; source recovery for the three historical fixtures is
 complete. Protocol build progress is 10/18; selectable catalog remains 5/18.
 Read `admission/current-v2-next/qualification.json` and the branch handoff for
@@ -47,8 +47,11 @@ has not been admitted to current discovery or a new immutable release.
 The new Wasmi empty-batch probe exposed a Data Core defect reproduced on
 Wasmtime: `validate` accepts zero columns, but `take` lost explicit row count
 and returned invalid-layout. The public adapter now preserves selected-index
-length in Arrow RecordBatchOptions; three native regressions PASS. Rebuild and
-requalify Data Core against this committed source before admitting its bytes.
+length in Arrow RecordBatchOptions; three native regressions PASS. Data Core
+has now been rebuilt twice from 3270e4c3d504e12a899464f115542a8efc578b06;
+strict reopen, ten Component cases, 128 Wasmi rounds and 896 generated-SDK
+calls PASS. Current staging carries only those repaired bytes. Catalog and
+release admission still remain; the original failure is separately retained.
 Preserve the other workstream's uncommitted WIT dependency implementation.
 Do not refresh v0.0.20 metadata around these future bytes; the old candidate
 must continue rejecting this tree as product drift.

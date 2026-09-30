@@ -236,6 +236,52 @@ fn http1_client(path: &str) -> Result<()> {
     Ok(())
 }
 
+fn data_core_empty(path: &str) -> Result<()> {
+    // Canonical ABI signatures are pinned by the delivered core-abi.json.
+    // This is representative empty-batch execution, not six-type conformance.
+    let mut core = Core::open(path)?;
+    let validate = core
+        .instance
+        .get_typed_func::<(i32, i32, i32, i32, i32), i32>(
+            &core.store,
+            "wasmc:data-core/model@0.0.1#validate",
+        )?;
+    let take = core
+        .instance
+        .get_typed_func::<(i32, i32, i32, i32, i32, i32, i32), i32>(
+            &core.store,
+            "wasmc:data-core/model@0.0.1#take",
+        )?;
+    let post = core
+        .instance
+        .get_typed_func::<i32, ()>(&core.store, "cabi_post_wasmc:data-core/model@0.0.1#take")?;
+    for _ in 0..128 {
+        let ptr = validate.call(&mut core.store, (0, 0, 0, 0, 0))?;
+        let raw = core.read(ptr as u32, 8)?;
+        if raw[0] != 0 || raw[4..8] != [0, 0, 0, 0] {
+            bail!("empty Data Core validate mismatch");
+        }
+        let ptr = take.call(&mut core.store, (0, 0, 0, 0, 0, 0, 0))?;
+        let raw = core.read(ptr as u32, 24)?;
+        if raw[0] != 0
+            || raw[4..8] != [0, 0, 0, 0]
+            || raw[12..16] != [0, 0, 0, 0]
+            || raw[20..24] != [0, 0, 0, 0]
+        {
+            bail!("empty Data Core take mismatch: {raw:?}");
+        }
+        post.call(&mut core.store, ptr)?;
+        let index = core.alloc_bytes(&0u32.to_le_bytes())?;
+        let ptr = take.call(&mut core.store, (0, 0, 0, 0, 0, index, 1))?;
+        let raw = core.read(ptr as u32, 8)?;
+        if raw[0] != 1 || raw[4] != 6 {
+            bail!("Data Core invalid index did not reject");
+        }
+        post.call(&mut core.store, ptr)?;
+    }
+    Ok(())
+}
+
 fn tls_client(path: &str, certificate_path: &str) -> Result<u64> {
     let engine = Engine::default();
     let bytes = std::fs::read(path).with_context(|| format!("read {path}"))?;
@@ -470,6 +516,23 @@ fn structural(path: &str, exports: &[&str]) -> Result<()> {
 }
 
 fn main() -> Result<()> {
+    let args = std::env::args().skip(1).collect::<Vec<_>>();
+    if !args.is_empty() {
+        if args.len() != 2 || !["--http1", "--data-core"].contains(&args[0].as_str()) {
+            bail!("usage: wasmc-libsrc-wasmi-qualification [--http1|--data-core EXACT_ARTIFACT]");
+        }
+        if args[0] == "--data-core" {
+            data_core_empty(&args[1])?;
+            println!("{{\"accepted\":true,\"engine\":\"wasmi-2.0.0\",\"candidate\":\"wasmc-data-core\",\"rounds\":128,\"calls\":384,\"host_imports\":0,\"scope\":\"empty-batch-validate-take-invalid-index-and-cleanup\"}}");
+            return Ok(());
+        }
+        // Select one exact artifact without rebuilding unrelated adapters.
+        for _ in 0..128 {
+            http1(&args[1])?;
+        }
+        println!("{{\"accepted\":true,\"engine\":\"wasmi-2.0.0\",\"candidate\":\"wasmc-http1\",\"rounds\":128,\"host_imports\":0,\"scope\":\"representative-core-request-framing\"}}");
+        return Ok(());
+    }
     let router_path = std::env::var("WASMC_LIBSRC_ROUTER")?;
     let json_path = std::env::var("WASMC_LIBSRC_JSON")?;
     let compression_path = std::env::var("WASMC_LIBSRC_COMPRESSION")?;
@@ -516,10 +579,7 @@ fn main() -> Result<()> {
             "wasmc:data-compute/compute@0.0.1#sort",
         ],
     )?;
-    let relational_prefix = format!(
-        "wasmc:data-relational/relational@{}#",
-        relational_version
-    );
+    let relational_prefix = format!("wasmc:data-relational/relational@{}#", relational_version);
     let mut relational_exports = vec![
         format!("{relational_prefix}group-aggregate"),
         format!("{relational_prefix}union-all"),
