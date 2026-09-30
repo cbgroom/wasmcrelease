@@ -2,7 +2,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert/strict';
 import {execFileSync} from 'node:child_process';
-const root=path.resolve(import.meta.dirname,'..');
+import {fileURLToPath} from 'node:url';
+const root=path.resolve(fileURLToPath(new URL('../',import.meta.url)));
 const skill='skills/wasmc-lib-discovery/SKILL.md';
 const read=p=>fs.readFileSync(path.join(root,p),'utf8');
 function route(text,from,to) {

@@ -24,9 +24,23 @@ Release identity metadata remains byte-identical to pre-migration c49bfcd.
 Evidence: documented searches PASS; five current packages pass producer strict
 reopen using the clean 3b797a77 builder; five discovery queries, four excluded
 packages, 96 paged hits and three invalid pagination controls PASS. Current
-development suite 9/9 PASS; CI reporting and tag/branch routing controls PASS.
+development suite 11/11 PASS; CI reporting and tag/branch routing controls PASS.
 Default current API search previously returned no hit for base64 decode; it now
 returns the exact typed API. Old v0.0.20 candidate still rejects future bytes.
+
+Install evidence: all five catalog packages resolved, downloaded from their
+exact 4c25aafc GitHub commit, installed and reopened with exact digest locks.
+Five no-clobber and five tampered-download rejection controls PASS. Controlled
+offline installs are part of CI; the live GitHub run is separate network
+evidence, not an ordinary App runtime or jsDelivr qualification.
+
+Hosted CI on 3876c85 caught Node 18 incompatibility in the teaching test and
+the stale v0.0.20 ecosystem/current inventory mismatch. Fixed the portable
+path API and added explicit frozen-release-ecosystem validation: current
+catalog preflight is mandatory, current roots/workflows are checked, frozen
+ecosystem comes from exact c49bfcd, and a release tag cannot opt into this mode.
+Node 18.19.1 current preflight PASS; no release identity metadata was refreshed.
+PR: https://github.com/cbgroom/wasmcrelease/pull/23 (not merged).
 
 Resume: review hosted CI on this branch/PR, then integrate serially. WIT
 dependency support and thirteen package rebuilds remain separate unfinished

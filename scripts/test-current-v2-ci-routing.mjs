@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
+import {spawnSync} from 'node:child_process';
 import {suiteCases,usesCurrentDevelopment} from './ci-suite.mjs';
 assert.equal(usesCurrentDevelopment('branch'),true);
 assert.equal(usesCurrentDevelopment('tag'),false);
@@ -24,4 +25,10 @@ const search=readFileSync('.github/workflows/lib-search.yml','utf8');
 assert.match(search,/GITHUB_REF_TYPE.*tag/);
 assert.match(search,/scripts\/validate-current-development.mjs/);
 assert.match(search,/release-candidate.mjs verify channels\/candidates\/0.0.20.json/);
-console.log(JSON.stringify({accepted:true,development_route:true,tag_release_route:true,workflow_routes:3}));
+const surfaces=readFileSync('.github/workflows/release-surfaces.yml','utf8');
+assert.match(surfaces,/GITHUB_REF_TYPE.*tag/);
+assert.match(surfaces,/--frozen-release-ecosystem/);
+const tagAttempt=spawnSync(process.execPath,['scripts/validate-release-surfaces.mjs','--frozen-release-ecosystem'],{env:{...process.env,GITHUB_REF_TYPE:'tag'},encoding:'utf8'});
+assert.notEqual(tagAttempt.status,0);
+assert.match(tagAttempt.stderr,/never a release tag/);
+console.log(JSON.stringify({accepted:true,development_route:true,tag_release_route:true,tag_override_rejected:true,workflow_routes:4}));
