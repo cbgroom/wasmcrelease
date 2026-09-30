@@ -95,3 +95,14 @@ In this pre-candidate state:
 An integrity script returning PASS after relabeling future bytes as an old
 release is not sufficient semantic evidence; version identity is part of the
 contract.
+
+### Current development CI
+
+Choose the validation surface by immutable tag versus development checkout,
+not by the name `main`. Current-v2 development runs
+`scripts/validate-current-development.mjs`: verify every selected package
+against its catalog, exercise API discovery and its excluded-package controls,
+preserve release identity metadata against the pre-migration checkpoint, and
+require the old candidate's specific product-drift rejection. Release-tag CI
+continues strict release checks. Expected drift is never a release PASS; avoid
+creating a throwaway candidate or treating any verification failure as success.

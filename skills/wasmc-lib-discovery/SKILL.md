@@ -37,10 +37,14 @@ not an assumption of natural-language or Rust-symbol inference:
 
 ```sh
 node scripts/wasmc-lib.mjs search "base64 decode" --limit 8
-node scripts/wasmc-lib.mjs search "counter" --historical --limit 8
+node scripts/wasmc-lib.mjs search "counter" --catalog v018 --historical --limit 8
 ```
 
 The first query returns `wasmc:std@1.4.0/base64#try-decode-standard`.
+The default current-v2 catalog contains only rebuilt v2 packages. The second
+query explicitly selects the frozen historical catalog; it does not admit the
+counter to current-v2. API search executes the pinned LibSearch index, then
+filters identities and maps paths through the selected catalog before paging.
 Each `hit` contains `identity`, `signature`, `skill_path`, `wit_path` and
 `artifact_path`. Paths are relative to this pinned release root. Package hits
 have an empty signature; API hits include the WIT signature. Read the target

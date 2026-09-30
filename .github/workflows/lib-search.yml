@@ -21,6 +21,8 @@ jobs:
         runtime: [node18, node22, node26, bun, deno]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
           node-version: ${{ matrix.runtime == 'node18' && '18.19.1' || matrix.runtime == 'node22' && '22.0.0' || '26.5.1' }}
@@ -41,7 +43,11 @@ jobs:
           if [[ "$RUNTIME" == bun ]]; then runner=(bun); fi
           if [[ "$RUNTIME" == deno ]]; then runner=(deno run --allow-read); fi
           node scripts/test-release-channel.mjs
-          node scripts/release-candidate.mjs verify channels/candidates/0.0.20.json
+          if [[ "$GITHUB_REF_TYPE" == tag ]]; then
+            node scripts/release-candidate.mjs verify channels/candidates/0.0.20.json
+          else
+            node scripts/validate-current-development.mjs
+          fi
           node scripts/lib-route-closure.mjs --check
           node scripts/test-lib-route-closure.mjs
           "${runner[@]}" examples/lib-search/verify-api.mjs examples/lib-search/index-v018-v040.lsi standard/wasmc-lib-search/0.4.0 examples/lib-search/search-reference.wasmc current/wasmc.mjs "$GITHUB_SHA" | tee target/lib-search/api.json

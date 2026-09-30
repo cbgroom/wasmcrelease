@@ -17,6 +17,8 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
           node-version: 26.5.1
@@ -47,10 +49,10 @@ jobs:
           mkdir -p target/host-file-tmp
           TMPDIR="$PWD/target/host-file-tmp" deno run --allow-read=target/host-file-tmp --allow-write=target/host-file-tmp --allow-env=TMPDIR,NODE_V8_COVERAGE --allow-run="$binary" host/drivers/file/test.mjs "$binary"
       - name: Published public contract consistency
-        if: runner.os == 'Linux' && github.ref == 'refs/heads/main'
+        if: runner.os == 'Linux' && github.ref_type == 'tag'
         run: ./scripts/validate-maintainer.sh
       - name: Candidate public contract consistency
-        if: runner.os == 'Linux' && github.ref != 'refs/heads/main'
+        if: runner.os == 'Linux' && github.ref_type != 'tag'
         run: node scripts/ci-suite.mjs candidate
       - name: Exact-source scope
         shell: bash

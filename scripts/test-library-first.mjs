@@ -25,13 +25,13 @@ assert.equal(commands.length,2);
 let hits=0;
 for(const command of commands) {
   // Execute only the documented read-only search shape, never arbitrary shell.
-  const m=command.match(/^node scripts\/wasmc-lib\.mjs search "([a-z0-9 ]+)"( --historical)? --limit ([1-8])$/);
+  const m=command.match(/^node scripts\/wasmc-lib\.mjs search "([a-z0-9 ]+)"( --catalog v018)?( --historical)? --limit ([1-8])$/);
   assert.ok(m,'unsafe or unsupported teaching command');
-  const args=['scripts/wasmc-lib.mjs','search',m[1],...(m[2]?['--historical']:[]),'--limit',m[3]];
+  const args=['scripts/wasmc-lib.mjs','search',m[1],...(m[2]?['--catalog','v018']:[]),...(m[3]?['--historical']:[]),'--limit',m[4]];
   const result=JSON.parse(execFileSync(process.execPath,args,{cwd:root,timeout:10000,encoding:'utf8'}));
   assert.equal(result.schema,'wasmc.public-lib-search/v2');
   assert.equal(result.selection_authority,false);
-  assert.ok(result.hits.length>0&&result.hits.length<=Number(m[3]));
+  assert.ok(result.hits.length>0&&result.hits.length<=Number(m[4]));
   for(const hit of result.hits) {
     checkedPath(hit.skill_path);const wit=checkedPath(hit.wit_path);checkedPath(hit.artifact_path);
     if(hit.signature) {
