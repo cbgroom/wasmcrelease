@@ -1,0 +1,109 @@
+{
+  "schema": "wasmc.current-v2-ordinary-app-probe/v1",
+  "accepted": true,
+  "oracle_sha256": "4da8df3d36868585c7968d26b88e2bd4889549226ddd95889eba2b373aadb8e6",
+  "helper_sha256": "5454cb001c7528225af9e37d84340ca668d111758bbbf8c943f4c29bda043e25",
+  "producer": {
+    "commit": "3b797a77d0afa25264a11362603b0d596d2e0ba7",
+    "configuration": "--lib --features core-runtime-sdk",
+    "toolchain": "rustc 1.96.0 (ac68faa20 2026-05-25)\nbinary: rustc\ncommit-hash: ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96\ncommit-date: 2026-05-25\nhost: aarch64-apple-darwin\nrelease: 1.96.0\nLLVM version: 22.1.2",
+    "cargo_lock_sha256": "c9606d59604efb0366af44376d7d2677d759fb76ad9554e8e6aedfb1b3aa3d71",
+    "compiler_rlib_sha256": "69e648a437ee18b557a08547a3bf1dca4bb807f3d16bd6d80b5504b206ef6ef2"
+  },
+  "package_count": 5,
+  "ordinary_app_qualified_count": 1,
+  "blocked_count": 4,
+  "observations": [
+    {
+      "id": "wasmc-http1",
+      "version": "0.0.1",
+      "source": "package local:app; interface api { run: func(bytes: list<u8>) -> u32 { return wire::request_frame_length(bytes); } } world app { export api; }",
+      "source_sha256": "db8557913e20a7e828da85c7c4998f595de7f219f1e6a82c8a8fc055e49e1438",
+      "manifest_sha256": "b248b689c47ea330438ec5cb5d3dbf0480d150fd909d764746dd7f4e8ac78700",
+      "artifact_sha256": "e7615622fd807230ab6d8da08c064f23a66ee3b72f57ab0ddc8295c845d0a060",
+      "compiled": false,
+      "diagnostic": "runtime error: Lib namespace `wire` is present, but Core resolver v0 does not admit WIT parameter `bytes` of function `parse-request`; an explicitly proven Core binding/transport is required; no Component fallback was performed",
+      "ordinary_app_qualified": false,
+      "rejection_stage": "namespace Core transport admission, before source-body type checking",
+      "source_body_typechecked": false
+    },
+    {
+      "id": "wasmc-host-clock",
+      "version": "0.0.1",
+      "source": "package local:app; interface api { run: func(value: s32) -> s32 { return clock_api::sampled(value); } } world app { export api; }",
+      "source_sha256": "e6f5e2bde8a16c465b6f8c4b86c0d078b39a235f0f1ae4b34ed606cb9a1e1ec1",
+      "manifest_sha256": "ee4d9bc9fe24fd36f5587af1c6db007b05cb563f304d59b2bedec5cc309e838e",
+      "artifact_sha256": "03e6a2096932f0b93178ed935b26da36d3005120ab188037c715b7a2e8e924b4",
+      "compiled": true,
+      "diagnostic": "",
+      "ordinary_app_qualified": true,
+      "app_sha256": "b81202c3f0eb27af2a28486fdf3f6c01bf20dab563a7c7cfab30f7c414198e1a",
+      "app_bytes": 113,
+      "provider_imports": [
+        {
+          "module": "wasmc:host-clock/clock-host@0.0.1",
+          "name": "now",
+          "kind": "function"
+        }
+      ],
+      "app_imports": [
+        {
+          "module": "wasmc:host-clock@0.0.1",
+          "name": "wasmc:host-clock/clock-api@0.0.1#sampled",
+          "kind": "function"
+        }
+      ],
+      "engine": "Node v26.5.1 WebAssembly",
+      "rounds": 128,
+      "calls": 640,
+      "host_calls": 640,
+      "missing_host_rejected": true,
+      "non_function_host_rejected": true,
+      "missing_provider_rejected": true,
+      "host_failure_propagated": true
+    },
+    {
+      "id": "wasmc-owned-algorithms",
+      "version": "0.1.0",
+      "source": "package local:app; interface api { run: func(values: list<s32>) -> s64 { return algorithms::sum_s32(values); } } world app { export api; }",
+      "source_sha256": "2e312029d7d57b761861a80156398e812919522c7f6414a6a9f0d5678e55d01d",
+      "manifest_sha256": "ebcd425116e21853cccd75adca22d60e8f8a7f25b2a7e252dd39f2e9b088c7dd",
+      "artifact_sha256": "9b1a9ff2cebef7d8f19c2be48e2a17d8b2aa9c3dd33c4d1d8d2a6e91e4b6be75",
+      "compiled": false,
+      "diagnostic": "runtime error: Lib namespace `algorithms` is present, but Core resolver v0 does not admit WIT parameter `values` of function `count-true`; an explicitly proven Core binding/transport is required; no Component fallback was performed",
+      "ordinary_app_qualified": false,
+      "rejection_stage": "namespace Core transport admission, before source-body type checking",
+      "source_body_typechecked": false
+    },
+    {
+      "id": "wasmc-resource-counter",
+      "version": "0.0.1",
+      "source": "package local:app; interface api { run: func() -> s32 { return counters::value(); } } world app { export api; }",
+      "source_sha256": "f8dff8f1c91adf8711be4e96ba4b63feef042ff57a91d210344904a1aff45093",
+      "manifest_sha256": "3bbc32ae48037a38d58e97199c6cbde540c29763316ec2337c02501479a032a0",
+      "artifact_sha256": "7f794dae6e02664f2a9977b6926cd05ffb4998137e398422caa3e8de1370e345",
+      "compiled": false,
+      "diagnostic": "runtime error: Lib namespace `counters` is present, but Core resolver v0 does not admit non-freestanding or asynchronous function `[constructor]counter`; an explicitly proven Core binding/transport is required; no Component fallback was performed",
+      "ordinary_app_qualified": false,
+      "rejection_stage": "namespace Core transport admission, before source-body type checking",
+      "source_body_typechecked": false
+    },
+    {
+      "id": "wasmc-data-core",
+      "version": "0.0.1",
+      "source": "package local:app; interface api { run: func() -> u32 { return model::validate(0); } } world app { export api; }",
+      "source_sha256": "13dd880e0565b37689f07b482ead2c8ad2501d4540e5b4a7887da99a02691d8a",
+      "manifest_sha256": "d7fb0cb64e2097a0419383c09ccbf18ff9031d5f25c8fdbd4cfeff61317cfaaf",
+      "artifact_sha256": "255d4625fa7f3f8bbea534476e862475585acb59edf3cff19c7e01eff736d823",
+      "compiled": false,
+      "diagnostic": "runtime error: Lib namespace `model` is present, but Core resolver v0 does not admit WIT parameter `value` of function `validate`; an explicitly proven Core binding/transport is required; no Component fallback was performed",
+      "ordinary_app_qualified": false,
+      "rejection_stage": "namespace Core transport admission, before source-body type checking",
+      "source_body_typechecked": false
+    }
+  ],
+  "ordinary_wasmc_app_qualified": false,
+  "published_compiler_qualified": false,
+  "catalog_admitted": false,
+  "release_qualified": false
+}

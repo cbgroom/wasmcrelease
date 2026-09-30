@@ -8,6 +8,7 @@ const previous=process.env.GITHUB_REF_TYPE;
 try {
   process.env.GITHUB_REF_TYPE='branch';
   assert.equal(suiteCases('candidate')[0].id,'current-v2-development-and-frozen-release-boundary');
+  assert(suiteCases('candidate').some(row=>row.id==='current-v2-ordinary-app-replay'));
   process.env.GITHUB_REF_TYPE='tag';
   const cases=suiteCases('candidate');
   assert.equal(cases[0].id,'v020-product-identity');
@@ -28,6 +29,10 @@ assert.match(search,/release-candidate.mjs verify channels\/candidates\/0.0.20.j
 const surfaces=readFileSync('.github/workflows/release-surfaces.yml','utf8');
 assert.match(surfaces,/GITHUB_REF_TYPE.*tag/);
 assert.match(surfaces,/--frozen-release-ecosystem/);
+const hostBoundary=readFileSync('scripts/validate-host-lib-defined-boundary-workstream.mjs','utf8');
+assert.match(hostBoundary,/import \{ usesCurrentDevelopment \} from "\.\/ci-suite\.mjs"/);
+assert.match(hostBoundary,/script === "scripts\/validate-release-surfaces\.mjs" && usesCurrentDevelopment\(\)/);
+assert.match(hostBoundary,/\? \["--frozen-release-ecosystem"\] : \[\]/);
 const tagAttempt=spawnSync(process.execPath,['scripts/validate-release-surfaces.mjs','--frozen-release-ecosystem'],{env:{...process.env,GITHUB_REF_TYPE:'tag'},encoding:'utf8'});
 assert.notEqual(tagAttempt.status,0);
 assert.match(tagAttempt.stderr,/never a release tag/);

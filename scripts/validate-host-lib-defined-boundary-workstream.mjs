@@ -2,8 +2,12 @@ import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { execFileSync, spawnSync } from "node:child_process";
 import fs from "node:fs";
+import { usesCurrentDevelopment } from "./ci-suite.mjs";
 
-const run = (script) => execFileSync(process.execPath, [script], { encoding: "utf8" }).trim();
+const run = (script) => execFileSync(process.execPath, [script,
+  ...(script === "scripts/validate-release-surfaces.mjs" && usesCurrentDevelopment()
+    ? ["--frozen-release-ecosystem"] : []),
+], { encoding: "utf8" }).trim();
 const focused = [
   "scripts/validate-host-layout.mjs",
   "scripts/test-host-lib-defined-boundary.mjs",

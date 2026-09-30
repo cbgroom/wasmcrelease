@@ -48,6 +48,7 @@ export function suiteCases(family,runtime='node',mirror='github') {
   if(family==='candidate' && usesCurrentDevelopment())return [
     item('current-v2-development-and-frozen-release-boundary','scripts/validate-current-development.mjs',[],['--allow-read','--allow-run']),
     item('current-v2-install-and-reopen','scripts/test-current-v2-install.mjs',['--exercise'],fixturePermissions),
+    item('current-v2-ordinary-app-replay','scripts/test-current-v2-app.mjs'),
     item('frozen-release-surfaces-and-current-workflow-coverage','scripts/validate-release-surfaces.mjs',['--frozen-release-ecosystem'],['--allow-read','--allow-run','--allow-env']),
     item('live-agent-trace-evaluator','scripts/test-live-agent-trace-evaluation-v1.mjs'),
     item('current-discovery-live-observation-oracle-controls','scripts/test-pi-current-v2-discovery.mjs'),

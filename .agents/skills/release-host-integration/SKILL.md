@@ -130,6 +130,16 @@ Core-engine execution, ordinary WAsmC App use, catalog selection and release
 admission are separate gates. A recovered canonical WIT/source plus two identical
 complete package trees closes recovery/build, not all of those consumer gates.
 
+Probe ordinary App admission early against the matching clean compiler. A
+namespace may be rejected for its full WIT transport before source-body type
+checking; retain that stage and never present the failed snippet as validated
+source. Generated SDK execution cannot prove the missing direct Core transport.
+Public CI may replay the reviewed compiled App with exact source/provenance and
+provider hashes; matching private compilation stays in the private builder.
+Compare standard import descriptor fields (module/name/kind): an engine may
+add type metadata without changing the actual import identity. Retain genuine
+binding/error/lifecycle tests instead of weakening the exact import set.
+
 Validate the actual public files and record exact tag/commit, hashes, imports,
 Host policy, behavior result, and untested scope. A module that validates, a
 Lib that initializes, and a source program that links are distinct claims.

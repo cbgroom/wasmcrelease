@@ -251,3 +251,61 @@ Global package counts remain 10/18 built, 5/18 current-selectable, eight
 unrebuilt; staged qualification is not admission. Next: clean matching producer
 ordinary App evidence, complete transitive/license binding, current route/install
 admission and remaining package rebuilds. Preserve other owners' dirty WIT work.
+
+## 2026-10-01 ordinary App puncture and nested CI routing repair
+
+Matching clean producer 3b797a77 with the existing core-runtime-sdk feature
+profile now compiles an ordinary Host Clock App (113 bytes; SHA256
+b81202c3f0eb27af2a28486fdf3f6c01bf20dab563a7c7cfab30f7c414198e1a).
+The actual App calls the exact staged provider, which calls the explicitly bound
+Host clock; 640 calls / 128 rounds pass, including wrapping full-width inputs,
+missing Host/provider rejection, non-function binding rejection and original
+Host exception propagation. Public replay needs only delivered App/provider
+bytes, not private compiler or provider source. Node 26.5.1, Bun 1.3.14 and
+Deno 2.9.4 local replays pass. Bun initially failed the test's import descriptor
+comparison because it includes extra type metadata; compare the standard
+module/name/kind fields, not an engine-specific object inventory.
+
+Receipt: `admission/current-v2-next/ordinary-app.json`; retained App/source in
+`admission/current-v2-next/apps`. Maintainer-only probe rebuilds the matching
+compiler library in the private tree; public CI only replays the retained App.
+Fifteen independent mutation controls reject altered identities, erased blockers
+and false all-package/catalog/release claims. Exact batch qualification binds
+the receipt and executable public replay; it remains all-package App FALSE.
+
+HTTP1, Owned Algorithms and Data Core reject their complex WIT inputs; Resource
+Counter rejects constructor/method transport. All four actual rejections occur
+at namespace Core transport admission BEFORE source-body type checking. Their
+snippets are diagnostic triggers, not validated future App examples. Do not
+special-case these packages, leak raw handles or declare fake Host imports to
+conceal the missing generic binding/lifetime mechanism. Staged App gate is 1/5
+locally, not 5/5 and not released compiler qualification. Next producer slice
+must close generic rich-value/resource Core transport with exact WIT plans and
+independent ordinary-source/SDK parity, without altering Host API.
+
+An independent producer default-build failure is retained in
+`producer-build-blockers.json`: Wasmtime-only default Cargo build fails E0432/
+E0425 around EPOCH_TICK_NS; runtime-neutral build succeeds but lacks catalog
+resolver API. Existing dual-runtime profile passes. No producer implementation
+was modified; the default feature-gate repair remains required.
+
+Remote d517386 run 36777376287/job 110098577887 failed the Host boundary
+aggregate's nested release-surfaces call (3 != 22). It still used live current
+ecosystem against frozen release counts. The aggregate now selects the existing
+frozen-release-ecosystem check only for current development, including its full
+preflight and old-candidate rejection; tags retain strict release checks.
+Routing regression verifies the guarded nested call and rejects tag override.
+This is not a count rewrite or gate waiver. Hosted Intel HTTPS is still pending.
+
+Counts remain 10/18 built, 5/18 selectable, eight unrebuilt. Full transitive
+license audit, explicit package license binding, new catalog/search/install,
+matching published compiler and exact future-candidate Pi/release gates remain
+pending. The release-integrity and agent-doc Skills remain current; integration
+Skill now records early App admission and engine descriptor distinctions.
+
+Final local checks: exact five-package qualification and source-free SDK PASS;
+current candidate suite 13/13 PASS (including actual App replay); Host boundary
+aggregate PASS with all thirteen focused checks and old-candidate drift
+rejection. Routing/tag-override controls, fifteen App negative controls,
+research-license policy and diff whitespace checks PASS. Hosted checks must
+qualify the next committed checkpoint independently, not these dirty bytes.

@@ -84,6 +84,20 @@ HANDOFF and `admission/current-v2-next/https-startup-macos-aarch64.json`.
 Do not refresh v0.0.20 metadata around these future bytes; the old candidate
 must continue rejecting this tree as product drift.
 
+The next ordinary App puncture qualifies only Host Clock with clean matching
+producer 3b797a77: 113-byte App, 640 calls and Host failure/binding controls;
+public artifact-only replays pass Node/Bun/Deno. Four other staged roots reject
+generic complex-value/resource Core transport BEFORE source-body type checking.
+Read `admission/current-v2-next/ordinary-app.json`; SDK success is not App
+success. App scope is 1/5 local, not matching published compiler or release.
+Default producer Wasmtime-only build also fails its feature gate; existing
+dual-runtime profile passes, and no producer source was changed. Generic Core
+transport and default-profile repair are the next producer implementation slice.
+The Host-boundary aggregate's nested release-surfaces validation is now guarded
+by the existing current-development route; tags retain strict release checks.
+Remote failure run 36777376287 is retained in the branch HANDOFF. Counts remain
+10/18 built and 5/18 selectable; do not claim package promotion from this slice.
+
 ## 2026-09-29 v0.0.20 research-license candidate
 
 Branch `release/v0.0.20-research-license` starts from merged public main
