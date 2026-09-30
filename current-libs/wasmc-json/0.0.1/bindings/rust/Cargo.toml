@@ -1,0 +1,13 @@
+[package]
+name = "wasmc-json-component"
+version = "0.0.1"
+edition = "2024"
+publish = false
+
+[dependencies]
+wasmtime = { version = "=49.0.0", default-features = false, features = ["runtime", "cranelift", "component-model"] }
+
+[lib]
+crate-type = ["rlib"]
+
+[workspace]
