@@ -6,6 +6,8 @@ const policy=read('catalog/current-v2-policy.json');
 const ledger=read('catalog/current-v2-migration.json');
 assert.equal(policy.status,'active');
 assert.equal(policy.default_agent_view,'runtime');
+assert.equal(policy.producer_protocol_authority.commit,'3b797a77d0afa25264a11362603b0d596d2e0ba7');
+assert.equal(policy.producer_protocol_authority.manifest_schema,'wasmc.lib/v2');
 assert.deepEqual(policy.required_agent_views,['runtime','developer']);
 assert.equal(policy.current_package_count,catalog.packages.length);
 assert.equal(policy.rebuild_backlog_count,ledger.backlog.length);
