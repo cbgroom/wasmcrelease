@@ -12,7 +12,7 @@ assert.deepEqual(policy.required_agent_views,['runtime','developer']);
 assert.equal(policy.current_package_count,catalog.packages.length);
 assert.equal(policy.rebuild_backlog_count,ledger.backlog.length);
 assert.equal(ledger.counts.migrated,catalog.packages.length);
-assert.equal(ledger.counts.backlog,14);
+assert.equal(ledger.counts.backlog,13);
 assert.equal(ledger.counts.blocked_real_provider,1);
 assert.equal(ledger.counts.source_recovery_required,3);
 assert.equal(new Set(ledger.migrated.map(x=>x.id)).size,ledger.migrated.length);

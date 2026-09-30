@@ -4,8 +4,8 @@ import {join} from 'node:path';
 import {repositoryRoot, parseCatalog, searchCatalog, resolveCatalog, packageReader, catalogAuthorities, sha256} from './lib-catalog.mjs';
 const bytes=readFileSync(join(repositoryRoot,'catalog/libs-current-v2.json'));
 const catalog=parseCatalog(bytes,catalogAuthorities.currentV2);
-assert.equal(catalog.packages.length,4);
-assert.deepEqual(catalog.packages.map(x=>x.id).sort(),['mcpgit-resident-memory','wasmc-json','wasmc-lib-search','wasmc-std']);
+assert.equal(catalog.packages.length,5);
+assert.deepEqual(catalog.packages.map(x=>x.id).sort(),['mcpgit-resident-memory','wasmc-compression','wasmc-json','wasmc-lib-search','wasmc-std']);
 for(const row of catalog.packages){
   assert.match(row.root,/^current-libs\//);
   const manifest=JSON.parse(readFileSync(join(repositoryRoot,row.root,'lib.json')));

@@ -2,7 +2,7 @@
   "schema": "wasmc.current-v2-migration/v1",
   "status": "active",
   "current_catalog": "catalog/libs-current-v2.json",
-  "current_package_authority": "f479c7bc948be2266170ccf73efd291a16796939",
+  "current_package_authority": "4c25aafc02b8eaa1ba1c1ba85c5697e58e8d19a1",
   "migrated": [
     {
       "id": "wasmc-std",
@@ -27,17 +27,15 @@
       "version": "0.0.1",
       "root": "current-libs/wasmc-json/0.0.1",
       "status": "current-v2"
-    }
-  ],
-  "backlog": [
+    },
     {
       "id": "wasmc-compression",
       "version": "0.0.1",
-      "root": "libs/wasmc-compression",
-      "schema": "wasmc.lib/v0",
-      "status": "rebuild-required",
-      "next_gate": "rebuild from canonical source with current wasmc.lib/v2 tooling and verify"
-    },
+      "root": "current-libs/wasmc-compression/0.0.1",
+      "status": "current-v2"
+    }
+  ],
+  "backlog": [
     {
       "id": "wasmc-csv",
       "version": "0.0.1",
@@ -144,8 +142,8 @@
     }
   ],
   "counts": {
-    "migrated": 4,
-    "backlog": 14,
+    "migrated": 5,
+    "backlog": 13,
     "blocked_real_provider": 1,
     "source_recovery_required": 3
   },
