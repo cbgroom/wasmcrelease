@@ -22,7 +22,7 @@ const v018CatalogRelease = ['0.0.18', '0.0.19', '0.0.20'].includes(release.versi
 const v017Release = release.version === '0.0.17';
 const surfaces = readJson('release-surfaces.json');
 const productionCatalogPath = v018CatalogRelease ? 'catalog/libs-v018.json' : v017Release ? 'catalog/libs-v017.json' : routeCompleteRelease ? 'catalog/libs-v014.json' : 'catalog/libs-v009.json';
-const currentSideCatalogPath = v018CatalogRelease ? 'catalog/libs-v018.json' : v017Release ? 'catalog/libs-v017.json' : routeCompleteRelease ? 'catalog/libs-v014.json' : 'catalog/libs-v013.json';
+const currentSideCatalogPath = 'catalog/libs-current-v2.json';
 const installCatalog = readJson(productionCatalogPath);
 const currentSideCatalog = existsSync(join(root, currentSideCatalogPath)) ? readJson(currentSideCatalogPath) : null;
 const searchAdmissionPath = v018CatalogRelease ? 'admission/lib-search-v040-v018-admission.json' : v017Release ? 'admission/lib-search-v030-v017-admission.json' : 'admission/lib-search-v020-v014-admission.json';
@@ -40,8 +40,9 @@ assert.equal(stagedProduct.version, release.version, 'staged product version mus
 assert(Array.isArray(stagedProduct.product_files), 'staged product manifest lacks product_files');
 const releaseFiles = new Map(stagedProduct.product_files.map(row => [row.path, row]));
 
+const releaseSearchCatalogName = v018CatalogRelease ? 'v018' : v017Release ? 'v017' : routeCompleteRelease ? 'v014' : 'v009';
 const searchPage = offset => {
-  const run = spawnSync(process.execPath, ['scripts/wasmc-lib.mjs', 'search', '', '--historical', '--offset', String(offset), '--limit', '64'], {
+  const run = spawnSync(process.execPath, ['scripts/wasmc-lib.mjs', 'search', '', '--historical', '--catalog', releaseSearchCatalogName, '--offset', String(offset), '--limit', '64'], {
     cwd: root,
     encoding: 'utf8',
     maxBuffer: 16 * 1024 * 1024
@@ -57,7 +58,7 @@ for (let offset = 0; offset < 10000; offset += 64) {
 }
 assert(searchPages.at(-1).hits.length < 64, 'LibSearch pagination did not terminate');
 const search = {...searchPages[0],hits:searchPages.flatMap(page=>page.hits)};
-const discoverable = new Set(search.hits.filter(row => !row.signature).map(row => row.identity));
+const discoverable = new Set(search.hits.filter(row => !row.signature).map(row => row.identity ?? row.wit_package));
 const installable = new Set(installCatalog.packages.map(row => `${row.wit_package}`));
 const currentSideInstallable = new Set((currentSideCatalog?.packages ?? []).map(row => `${row.wit_package}`));
 

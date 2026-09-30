@@ -1,0 +1,159 @@
+{
+  "schema": "wasmc.current-v2-migration/v1",
+  "status": "active",
+  "current_catalog": "catalog/libs-current-v2.json",
+  "current_package_authority": "1891e73858654278067da3e2062a2bdf3c8c7349",
+  "migrated": [
+    {
+      "id": "wasmc-std",
+      "version": "1.4.0",
+      "root": "current-libs/wasmc-std/1.4.0",
+      "status": "current-v2"
+    },
+    {
+      "id": "wasmc-lib-search",
+      "version": "0.4.0",
+      "root": "current-libs/wasmc-lib-search/0.4.0",
+      "status": "current-v2"
+    },
+    {
+      "id": "mcpgit-resident-memory",
+      "version": "0.1.0",
+      "root": "current-libs/mcpgit-resident-memory/0.1.0",
+      "status": "current-v2"
+    }
+  ],
+  "backlog": [
+    {
+      "id": "wasmc-compression",
+      "version": "0.0.1",
+      "root": "libs/wasmc-compression",
+      "schema": "wasmc.lib/v0",
+      "status": "rebuild-required",
+      "next_gate": "rebuild from canonical source with current wasmc.lib/v2 tooling and verify"
+    },
+    {
+      "id": "wasmc-csv",
+      "version": "0.0.1",
+      "root": "libs/wasmc-csv",
+      "schema": "wasmc.lib/v0",
+      "status": "rebuild-required",
+      "next_gate": "rebuild from canonical source with current wasmc.lib/v2 tooling and verify"
+    },
+    {
+      "id": "wasmc-data-compute",
+      "version": "0.0.1",
+      "root": "libs/wasmc-data-compute",
+      "schema": "wasmc.lib/v0",
+      "status": "rebuild-required",
+      "next_gate": "rebuild from canonical source with current wasmc.lib/v2 tooling and verify"
+    },
+    {
+      "id": "wasmc-data-core",
+      "version": "0.0.1",
+      "root": "libs/wasmc-data-core",
+      "schema": "wasmc.lib/v0",
+      "status": "rebuild-required",
+      "next_gate": "rebuild from canonical source with current wasmc.lib/v2 tooling and verify"
+    },
+    {
+      "id": "wasmc-data-expr",
+      "version": "0.0.1",
+      "root": "libs/wasmc-data-expr",
+      "schema": "wasmc.lib/v0",
+      "status": "rebuild-required",
+      "next_gate": "rebuild from canonical source with current wasmc.lib/v2 tooling and verify"
+    },
+    {
+      "id": "wasmc-data-interchange",
+      "version": "0.0.1",
+      "root": "libs/wasmc-data-interchange",
+      "schema": "wasmc.lib/v0",
+      "status": "rebuild-required",
+      "next_gate": "rebuild from canonical source with current wasmc.lib/v2 tooling and verify"
+    },
+    {
+      "id": "wasmc-data-profile",
+      "version": "0.0.1",
+      "root": "libs/wasmc-data-profile",
+      "schema": "wasmc.lib/v0",
+      "status": "rebuild-required",
+      "next_gate": "rebuild from canonical source with current wasmc.lib/v2 tooling and verify"
+    },
+    {
+      "id": "wasmc-data-relational",
+      "version": "0.0.2",
+      "root": "libs/wasmc-data-relational-v002",
+      "schema": "wasmc.lib/v0",
+      "status": "rebuild-required",
+      "next_gate": "rebuild from canonical source with current wasmc.lib/v2 tooling and verify"
+    },
+    {
+      "id": "wasmc-host-clock",
+      "version": "0.0.1",
+      "root": "libs/wasmc-host-clock",
+      "schema": "wasmc.lib/v0",
+      "status": "rebuild-required",
+      "next_gate": "rebuild from canonical source with current wasmc.lib/v2 tooling and verify"
+    },
+    {
+      "id": "wasmc-http1",
+      "version": "0.0.1",
+      "root": "libs/wasmc-http1",
+      "schema": "wasmc.lib/v0",
+      "status": "rebuild-required",
+      "next_gate": "rebuild from canonical source with current wasmc.lib/v2 tooling and verify"
+    },
+    {
+      "id": "wasmc-json",
+      "version": "0.0.1",
+      "root": "libs/wasmc-json",
+      "schema": "wasmc.lib/v0",
+      "status": "rebuild-required",
+      "next_gate": "rebuild from canonical source with current wasmc.lib/v2 tooling and verify"
+    },
+    {
+      "id": "wasmc-owned-algorithms",
+      "version": "0.1.0",
+      "root": "libs/wasmc-owned-algorithms",
+      "schema": "wasmc.lib/v0",
+      "status": "rebuild-required",
+      "next_gate": "rebuild from canonical source with current wasmc.lib/v2 tooling and verify"
+    },
+    {
+      "id": "wasmc-resource-counter",
+      "version": "0.0.1",
+      "root": "libs/wasmc-resource-counter",
+      "schema": "wasmc.lib/v0",
+      "status": "rebuild-required",
+      "next_gate": "rebuild from canonical source with current wasmc.lib/v2 tooling and verify"
+    },
+    {
+      "id": "wasmc-router-policy",
+      "version": "0.0.1",
+      "root": "libs/wasmc-router-policy",
+      "schema": "wasmc.lib/v0",
+      "status": "rebuild-required",
+      "next_gate": "rebuild from canonical source with current wasmc.lib/v2 tooling and verify"
+    },
+    {
+      "id": "wasmc-system-telemetry",
+      "version": "0.0.1",
+      "root": "libs/wasmc-system-telemetry",
+      "schema": "wasmc.lib/v0",
+      "status": "blocked-real-provider",
+      "next_gate": "0.0.2 real provider + Wasmi + Wasmtime qualification + current-v2 rebuild"
+    }
+  ],
+  "counts": {
+    "migrated": 3,
+    "backlog": 15,
+    "blocked_real_provider": 1
+  },
+  "rules": [
+    "old release roots are immutable historical evidence",
+    "current selection never admits pre-dual-view manifests",
+    "no compatibility translator",
+    "stale packages are rebuilt from canonical source"
+  ]
+}
