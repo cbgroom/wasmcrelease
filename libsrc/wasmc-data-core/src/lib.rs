@@ -264,9 +264,42 @@ impl Guest for DataCore {
             .collect::<Result<Vec<_>, _>>()
             .map_err(|_| DataError::InvalidLayout)?;
         let schema = batch.schema();
-        let output = RecordBatch::try_new(schema, columns).map_err(|_| DataError::InvalidLayout)?;
+        // A zero-column batch still has a row count. Arrow cannot infer that
+        // count from columns; preserve the selected-index length explicitly.
+        let options = RecordBatchOptions::new().with_row_count(Some(indices.len()));
+        let output = RecordBatch::try_new_with_options(schema, columns, &options)
+            .map_err(|_| DataError::InvalidLayout)?;
         snapshot_from_batch(&output, &value.fields)
     }
 }
 
 export!(DataCore);
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn zero_columns(rows: u32) -> BatchSnapshot {
+        BatchSnapshot { rows, fields: vec![], columns: vec![] }
+    }
+
+    #[test]
+    fn empty_take_preserves_valid_empty_batch() {
+        let result = DataCore::take(zero_columns(0), vec![]).unwrap();
+        assert_eq!(result.rows, 0);
+        assert!(result.fields.is_empty() && result.columns.is_empty());
+    }
+
+    #[test]
+    fn zero_column_take_preserves_selection_length() {
+        let result = DataCore::take(zero_columns(3), vec![2, 0, 2, 1]).unwrap();
+        assert_eq!(result.rows, 4);
+        assert!(result.fields.is_empty() && result.columns.is_empty());
+    }
+
+    #[test]
+    fn zero_column_take_still_rejects_invalid_indices() {
+        assert!(matches!(DataCore::take(zero_columns(0), vec![0]), Err(DataError::IndexOutOfBounds)));
+        assert!(matches!(DataCore::take(zero_columns(3), vec![3]), Err(DataError::IndexOutOfBounds)));
+    }
+}
