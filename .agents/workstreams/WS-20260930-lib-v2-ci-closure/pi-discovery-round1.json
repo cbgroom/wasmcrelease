@@ -1,0 +1,16 @@
+{
+  "schema": "wasmc.pi-current-v2-diagnostic-summary/v1",
+  "scope": "one-development-discovery-case-not-release-qualification",
+  "checkout_commit": "5d080ee2d95b8b741568fb6b1cdd33c461b3217d",
+  "prompt_sha256": "a4195a9ccdbcf1b14646410558ae224d66a6d92414b9e3cf57cfcacb22e83e6e",
+  "pi_version": "0.87.1",
+  "accepted": false,
+  "raw_trace_retained": false,
+  "hidden_reasoning_retained": false,
+  "observations": [
+    {"model": "llm-m4dd/deepseek-v4.1-flash", "accepted": false, "tool_calls": 14, "wall_ms": 33930, "timed_out": false, "reported_tool_errors": 0, "provider_retries": 0, "failure": "wrong-selection_authority", "independent_classification": "evaluator-oracle-gap: the original prompt did not declare the field type; final text correctly separated search discovery from exact selection", "final_answer_sha256": "db12c1dcad63fd096a87b37c7cce5b8a3a3b0ac0d1b5ada8cfc3d6bf0567b5ed"},
+    {"model": "llm-m4dd/glm-5.3-flash", "accepted": false, "tool_calls": 18, "wall_ms": 120340, "timed_out": true, "reported_tool_errors": 0, "provider_retries": 0, "failure": "no-final-json-before-timeout", "independent_classification": "release-guidance-gap and model-specific-behavior: correct API found, then unnecessary manifest/engine/Core ABI investigation continued", "last_text_sha256": "1610b303b7d52c43d5cb104a82bb128705191bda36f1bb800891fac9b130defa"}
+  ],
+  "independent_reproductions": ["old CLI rejects --help as cli.command_unsupported", "frozen agent-quickstart selects the v018 catalog while default current search selects current-v2", "tool pipelines can mask failing child commands"],
+  "action": "repair the scoped public route and CLI help; introduce typed observation protocol v2; retain v1 failures and do not claim full release cohort qualification"
+}

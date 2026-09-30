@@ -1,5 +1,38 @@
 # WAsmC release maintainer handoff
 
+## 2026-09-30 current-v2 development closure (unreleased)
+
+This section supersedes the historical candidate status below for the current
+development workstream. Public prod remains immutable v0.0.20. Current Lib
+selection is separately bound to `catalog/current-v2-policy.json`: five v2
+packages, thirteen excluded pending migration gates. Producer protocol authority
+is 3b797a77d0afa25264a11362603b0d596d2e0ba7; package authority is
+4c25aafc02b8eaa1ba1c1ba85c5697e58e8d19a1. Neither implies a new release.
+
+PR #23 (`work/WS-20260930-lib-v2-ci-closure`) repairs API-level discovery,
+current-vs-frozen CI routing, Node 18 teaching compatibility, and fresh install
+reopen/no-clobber/tamper controls. The current consumer route is
+`agent-current-lib-quickstart.json`; old `agent-quickstart.json` describes the
+immutable v0.0.20 product, not current-v2 selection. CLI now has `--help`.
+
+Focused suite: 12/12 local PASS, including fresh-installed Std Core Base64
+behavior (six calls, nine buffers dropped). Five packages downloaded from
+their exact GitHub authority and reopened PASS. Node 18 development preflight
+PASS; Std behavior remains artifact/engine-specific. Ordinary App consumption,
+the thirteen migrations, and a new release are not closed.
+
+Pi discovery observations are diagnostic, not release pair qualification.
+The first round at 5d080ee exposed mixed quickstart routing, unsupported CLI
+help, excess ABI/engine investigation, and an underspecified evaluator field.
+Retain both failures; revised typed observation protocol is v2, not a rewrite
+of the frozen full release cohort. Live trace accounting now records child
+commands reporting failure even when a shell pipeline exits successfully.
+
+Resume from `.agents/workstreams/WS-20260930-lib-v2-ci-closure/HANDOFF.md`.
+Preserve the other workstream's uncommitted WIT dependency implementation.
+Do not refresh v0.0.20 metadata around these future bytes; the old candidate
+must continue rejecting this tree as product drift.
+
 ## 2026-09-29 v0.0.20 research-license candidate
 
 Branch `release/v0.0.20-research-license` starts from merged public main

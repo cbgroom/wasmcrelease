@@ -71,6 +71,7 @@ export function evaluateTraceText(input, profileName = 'general') {
     tool_results: 0,
     tool_result_characters: 0,
     error_results: 0,
+    reported_failure_results: 0,
     zero_yield_results: 0,
     retries: 0,
     tokens: { input: 0, output: 0, reasoning: 0, cache_read: 0, cache_write: 0 },
@@ -115,6 +116,12 @@ export function evaluateTraceText(input, profileName = 'general') {
       report.tool_results += 1;
       report.tool_result_characters += text.length;
       if (message.isError) report.error_results += 1;
+      // A successful shell pipeline can conceal a failing child command.
+      // Keep this separate from the tool's exit/error flag; callers decide
+      // whether a reported failure was an intentional rejection control.
+      if(text.split(/\r?\n/).some(line=>{
+        try{const value=JSON.parse(line);return value?.accepted===false&&typeof value?.code==='string';}catch{return false;}
+      }))report.reported_failure_results+=1;
       if (/^\s*(?:no matches?(?: found)?|no files?(?: found)?|\[\]|)\s*$/i.test(text)) {
         report.zero_yield_results += 1;
       }

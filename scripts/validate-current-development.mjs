@@ -4,7 +4,7 @@ import {readFileSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 const root=fileURLToPath(new URL('../',import.meta.url));
 const run=script=>execFileSync(process.execPath,[script],{cwd:root,stdio:['ignore','pipe','pipe'],encoding:'utf8'});
-for(const script of ['scripts/test-current-v2-catalog.mjs','scripts/test-current-v2-closure.mjs','scripts/test-current-v2-search.mjs','scripts/test-library-first.mjs'])run(script);
+for(const script of ['scripts/test-current-v2-catalog.mjs','scripts/test-current-v2-closure.mjs','scripts/test-current-v2-search.mjs','scripts/test-library-first.mjs','scripts/test-current-lib-quickstart.mjs'])run(script);
 const release=JSON.parse(readFileSync(new URL('../release.json',import.meta.url)));
 const releaseBaseline='c49bfcd5971fdd3780303b61378e5a1f2502a45d';
 // A development tree cannot reauthorize future bytes with the old manifest.

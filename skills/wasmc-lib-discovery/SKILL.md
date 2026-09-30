@@ -7,7 +7,15 @@ metadata:
 
 # Library-first discovery
 
-Before searching, read `../../lib-ecosystem-control-plane.json` for the exact
+For current-development discovery/selection, first read
+`../../agent-current-lib-quickstart.json` and run its named check. The default
+catalog is `../../catalog/libs-current-v2.json`; `lib.json` is each package's
+manifest filename. If the compact route answers the task, read the selected
+Skill/WIT and stop. Do not follow the immutable-product quickstart or preload
+engine/internal ABI details for a discovery-only question. CLI help is
+`node scripts/wasmc-lib.mjs --help`.
+
+For immutable-release questions, read `../../lib-ecosystem-control-plane.json` for the exact
 package state. It is generated from the immutable product manifest, package
 metadata, actual Core imports, the pinned search snapshot and the resolver/
 install catalog. `released`, `discoverable` and `installable` are independent;
@@ -67,7 +75,9 @@ See [search semantics and typed JS/Rust APIs](../../examples/lib-search/README.m
 2. Use [exact resolution](../../catalog/README.md) and
    [no-clobber installation](../../catalog/INSTALL.md). Immutable-tag callers
    retain the four-package v0.0.9 catalog; current-side tooling may explicitly
-   select the exact 22-package `catalog/libs-v018.json`. Neither catalog nor
+   select the exact 22-package `catalog/libs-v018.json` as historical evidence.
+   Current-development callers use `catalog/libs-current-v2.json` by default.
+   Neither catalog nor
    search is automatic version-selection authority.
 3. Check [artifact compatibility](../../compatibility/README.md), matching
    CoreLib/provider identity and actual import authority. Installing bytes
