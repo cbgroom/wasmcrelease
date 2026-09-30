@@ -21,4 +21,4 @@ assert.equal(searchCatalog(bytes,'standard',false,catalogAuthorities.currentV2)[
 assert.equal(searchCatalog(bytes,'lib search',false,catalogAuthorities.currentV2)[0].id,'wasmc-lib-search');
 assert.equal(searchCatalog(bytes,'mcpgit',false,catalogAuthorities.currentV2)[0].id,'mcpgit-resident-memory');
 assert.equal(searchCatalog(bytes,'telemetry',false,catalogAuthorities.currentV2).length,0);
-console.log(JSON.stringify({accepted:true,packages:3,telemetry_current:false,default_view:'runtime',views:['runtime','developer']}));
+console.log(JSON.stringify({accepted:true,packages:catalog.packages.length,telemetry_current:false,default_view:'runtime',views:['runtime','developer']}));

@@ -14,6 +14,7 @@ assert.equal(policy.rebuild_backlog_count,ledger.backlog.length);
 assert.equal(ledger.counts.migrated,catalog.packages.length);
 assert.equal(ledger.counts.backlog,14);
 assert.equal(ledger.counts.blocked_real_provider,1);
+assert.equal(ledger.counts.source_recovery_required,3);
 assert.equal(new Set(ledger.migrated.map(x=>x.id)).size,ledger.migrated.length);
 assert.equal(new Set(ledger.backlog.map(x=>x.id)).size,ledger.backlog.length);
 for(const row of catalog.packages){
@@ -27,7 +28,7 @@ for(const row of catalog.packages){
 for(const row of ledger.backlog){
   assert.equal(catalog.packages.some(x=>x.id===row.id),false,row.id);
   assert(policy.excluded_until_rebuilt.includes(row.id),row.id);
-  assert(['rebuild-required','blocked-real-provider'].includes(row.status),row.id);
+  assert(['rebuild-required','blocked-real-provider','source-recovery-required'].includes(row.status),row.id);
 }
 const telemetry=ledger.backlog.find(x=>x.id==='wasmc-system-telemetry');
 assert(telemetry); assert.equal(telemetry.status,'blocked-real-provider');
