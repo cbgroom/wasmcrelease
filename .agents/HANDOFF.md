@@ -1,5 +1,16 @@
 # WAsmC release maintainer handoff
 
+## 2026-10-01 guarded HTTP1 rebuild checkpoint
+
+Real HTTP1 dual rebuild under public input 22341148a11d4154b156e3d2bf98d77c7cf4bbbc
+and clean private producer 3b797a77d0afa25264a11362603b0d596d2e0ba7 passes.
+Both nine-file retained input witnesses are unchanged and equal; both complete
+nine-file packages equal the existing staged HTTP1 root. Source-free receipts:
+`admission/current-v2-next/http1-build-input-witness.json`. No package bytes,
+license envelope, catalog or immutable release changed. Candidate suite 19/19
+PASS at the build-input revision. Four staged roots still need guarded builds;
+all-package completion, generic App, ownership and license blockers remain.
+
 ## 2026-09-30 current-v2 development closure (unreleased)
 
 This section supersedes the historical candidate status below for the current

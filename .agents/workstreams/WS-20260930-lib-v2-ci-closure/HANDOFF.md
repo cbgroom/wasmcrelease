@@ -623,3 +623,22 @@ source ownership and full release blockers unchanged until their own evidence.
 The actual builder entrypoint also rejects a dirty public Git fixture before
 touching any private producer/output path. Metadata order uses UTF-8 bytes,
 not locale/ICU sorting. Both public script and Git input identity must be clean.
+
+## 2026-10-01 actual guarded HTTP1 dual rebuild
+
+Public input 22341148a11d4154b156e3d2bf98d77c7cf4bbbc, clean private producer
+3b797a77d0afa25264a11362603b0d596d2e0ba7. Private retained output is
+current-v2-builder2/target/portable-v2-source-witness-http1-r8. Two actual builds
+PASS, each with unchanged nine-file input witness; witnesses are equal.
+Separate recheck of both retained workspaces PASS. All nine generated delivery
+files equal both each other and the existing staged HTTP1 0.0.1 root, including
+manifest, SDK, Skill and agent delta, not just Core/Component. Source-free
+receipt: admission/current-v2-next/http1-build-input-witness.json. This outer
+audit record does not modify the strict root or delivered license envelope.
+
+Local candidate suite 19/19 PASS at 2234114. Next: guarded rebuild the remaining
+four staged roots in new private output directories; checkpoint public inputs
+before invocation. Source cache/temporary adapters/toolchain obligations,
+ordinary App 1/5, default-build ownership, eight unrebuilt targets, new compiler,
+candidate and full dual-model Pi/release remain separate mandatory gates.
+Counts remain 10/18 built and 5/18 selected; full release_qualified=false.
