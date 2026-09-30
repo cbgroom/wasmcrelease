@@ -28,6 +28,13 @@ Retain both failures; revised typed observation protocol is v2, not a rewrite
 of the frozen full release cohort. Live trace accounting now records child
 commands reporting failure even when a shell pipeline exits successfully.
 
+Round3 at a355b3aabc26154442bb57c8de763ba57d1f4460 passes the same one
+discovery task on both Pi 0.87.1 model routes with nine tools each, no errors
+or retries. Independent white-box review is retained in the workstream receipt;
+full frozen release cohort qualification is still false. Current search also
+checks every selected WIT export: five package routes / 91 API routes, with
+missing and extra routes rejected. This is development closure only.
+
 Resume from `.agents/workstreams/WS-20260930-lib-v2-ci-closure/HANDOFF.md`.
 Preserve the other workstream's uncommitted WIT dependency implementation.
 Do not refresh v0.0.20 metadata around these future bytes; the old candidate

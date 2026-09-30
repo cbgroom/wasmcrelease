@@ -63,7 +63,20 @@ Skill/WIT. Independent review accepted the ambiguous excluded_examples naming
 and changed it to current_catalog_membership; feedback about AGENTS ordering
 was contradicted by the file and rejected. Retain pi-discovery-round2.json.
 
+Round3 at exact a355b3aabc26154442bb57c8de763ba57d1f4460 uses the same typed
+v2 prompt/oracle as round2. Both routes PASS the one discovery case: nine tools
+each, zero tool/command failures and provider retries, 21.9s DeepSeek / 54.5s
+GLM. Both read selected Skill/WIT and run default search/current preflight;
+independent review checks facts and digests, not their self-assessment. Retain
+pi-discovery-round3.json. This does not qualify the full frozen release cohort
+or a later receipt/test commit.
+
+All current selected WIT exports now close against actual paged CLI results:
+five package routes plus 91 API routes, exact paths and no extras. Three
+missing/extra route controls reject. This reuses the released route-set oracle
+without promoting or rewriting the immutable release closure.
+
 Resume: review hosted CI on this branch/PR, then integrate serially. WIT
 dependency support and thirteen package rebuilds remain separate unfinished
-work. Two live discovery rounds have been performed, but the full frozen
+work. Three live discovery rounds have been performed, but the full frozen
 release cohort and a new release have not been performed.
