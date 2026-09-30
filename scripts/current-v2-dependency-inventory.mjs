@@ -1,0 +1,153 @@
+#!/usr/bin/env node
+// Conservative lockfile closure, not target reachability or legal approval.
+import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
+import {execFileSync} from 'node:child_process';
+import {readFileSync,writeFileSync,lstatSync,existsSync} from 'node:fs';
+import {dirname,join,resolve} from 'node:path';
+import {fileURLToPath} from 'node:url';
+const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
+const receiptPath='admission/current-v2-next/dependency-inventory.json';
+const sha=b=>createHash('sha256').update(b).digest('hex');
+const inputs=[
+  {id:'http1',path:'libsrc/wasmc-http1/Cargo.lock',manifest:'admission/current-v2-next/packages/wasmc-http1/0.0.1/lib.json'},
+  {id:'data-core',path:'libsrc/wasmc-data-core/Cargo.lock',manifest:'admission/current-v2-data-core/packages/wasmc-data-core/0.0.1/lib.json'},
+  {id:'generated-sdk-consumer',path:'libsrc/qualification/current-v2-consumer/Cargo.lock'},
+];
+export function registryRows(lock){
+  return lock.split('[[package]]').slice(1).map(block=>{
+    const field=name=>block.match(new RegExp(`^${name} = "([^"\\n]+)"`,'m'))?.[1];
+    return {name:field('name'),version:field('version'),source:field('source'),checksum:field('checksum')};
+  }).filter(x=>x.source).map(x=>{
+    assert.equal(x.source,'registry+https://github.com/rust-lang/crates.io-index','unreviewed registry/git source');
+    assert.match(x.name,/^[a-zA-Z0-9_-]+$/);assert.match(x.version,/^[0-9][a-zA-Z0-9.+-]*$/);
+    assert.match(x.checksum,/^[a-f0-9]{64}$/);return x;
+  }).sort((a,b)=>`${a.name}@${a.version}`.localeCompare(`${b.name}@${b.version}`));
+}
+function trustedInputs(base){
+  return inputs.map(input=>{
+    const bytes=readFileSync(join(base,input.path));
+    const row={id:input.id,path:input.path,sha256:sha(bytes),registry:registryRows(bytes.toString())};
+    if(input.manifest){
+      const manifest=JSON.parse(readFileSync(join(base,input.manifest)));
+      assert(manifest.build.inputs.some(x=>x.kind==='cargo-lock'&&x.sha256===row.sha256),'lock is not the built input');
+      row.manifest=input.manifest;row.manifest_sha256=sha(readFileSync(join(base,input.manifest)));
+    }
+    return row;
+  });
+}
+function union(rows){
+  const map=new Map();
+  for(const input of rows)for(const crate of input.registry){
+    const id=`${crate.name}@${crate.version}`;
+    if(map.has(id))assert.deepEqual(map.get(id),crate,'conflicting locked checksum');else map.set(id,crate);
+  }
+  return [...map.values()].sort((a,b)=>`${a.name}@${a.version}`.localeCompare(`${b.name}@${b.version}`));
+}
+function archiveMember(bytes,path){return execFileSync('tar',['-xOzf','-',path],{input:bytes,maxBuffer:16*1024*1024});}
+function inspectArchive(crate,cache){
+  const path=join(cache,`${crate.name}-${crate.version}.crate`);
+  if(!existsSync(path))return {...crate,archive_verified:false,license:null,notices:[],blockers:['archive-not-cached']};
+  assert(lstatSync(path).isFile()&&!lstatSync(path).isSymbolicLink(),'linked crate archive');
+  const bytes=readFileSync(path);assert.equal(sha(bytes),crate.checksum,'crate archive checksum mismatch');
+  const prefix=`${crate.name}-${crate.version}/`;
+  const files=execFileSync('tar',['-tzf','-'],{input:bytes,encoding:'utf8',maxBuffer:16*1024*1024}).trim().split('\n');
+  assert(files.every(x=>x.startsWith(prefix)&&!x.split('/').includes('..')),'unsafe archive member');
+  const cargo=archiveMember(bytes,prefix+'Cargo.toml').toString();
+  // Read only [package], never a dependency's license field.
+  const pkg=cargo.split(/^\[package\]\s*$/m)[1]?.split(/^\[/m)[0];assert(pkg,'missing package metadata');
+  const license=pkg.match(/^license\s*=\s*"([^"\n]+)"/m)?.[1]??null;
+  const licenseFile=pkg.match(/^license-file\s*=\s*"([^"\n]+)"/m)?.[1]??null;
+  const repository=pkg.match(/^repository\s*=\s*"([^"\n]+)"/m)?.[1]??null;
+  const vcs=files.includes(prefix+'.cargo_vcs_info.json')?JSON.parse(archiveMember(bytes,prefix+'.cargo_vcs_info.json')):null;
+  const paths=files.filter(x=>!x.endsWith('/')&&(/(^|\/)(LICENSE|LICENCE|COPYING|COPYRIGHT|NOTICE)([._-][^/]*)?$/i.test(x.slice(prefix.length))||x===prefix+licenseFile));
+  // r-efi packages its copyright and complete MIT grant in AUTHORS, not LICENSE.
+  if(crate.name==='r-efi'&&files.includes(prefix+'AUTHORS')){
+    const authors=archiveMember(bytes,prefix+'AUTHORS').toString();
+    assert(authors.includes('AUTHORS-MIT:')&&authors.includes('Permission is hereby granted')&&authors.includes('COPYRIGHT:'));
+    paths.push(prefix+'AUTHORS');
+  }
+  const notices=paths.map(path=>{const content=archiveMember(bytes,path).toString('utf8');return {path:path.slice(prefix.length),sha256:sha(Buffer.from(content)),content};});
+  const blockers=[];if(!license&&!licenseFile)blockers.push('missing-license-declaration');
+  if(!notices.length)blockers.push('missing-packaged-notice');
+  if(licenseFile&&!paths.includes(prefix+licenseFile))blockers.push('missing-declared-license-file');
+  return {...crate,archive_verified:true,license,license_file:licenseFile,repository,repository_commit:vcs?.git?.sha1??null,
+    repository_path:vcs?.path_in_vcs??null,original_cargo_sha256:files.includes(prefix+'Cargo.toml.orig')?sha(archiveMember(bytes,prefix+'Cargo.toml.orig')):null,
+    notices,supplemental_notices:[],blockers};
+}
+const supplementalCache=new Map();
+async function supplement(row){
+  // Exact Wasmtime registry archives identify their producing VCS commit.
+  // No main/latest fallback and no inferred generic Apache text (LLVM exception matters).
+  const official='https://github.com/bytecodealliance/wasmtime';
+  const knownMissingRepository=['cranelift-assembler-x64','cranelift-assembler-x64-meta','wasmtime-internal-core'];
+  if(!row.blockers.includes('missing-packaged-notice')||!(row.repository===official||row.repository?.startsWith(official+'/tree/main/')||(!row.repository&&knownMissingRepository.includes(row.name))))return row;
+  assert.match(row.repository_commit,/^[a-f0-9]{40}$/);
+  assert(row.repository_path&&!row.repository_path.split('/').includes('..'));
+  const cargoUrl=`https://raw.githubusercontent.com/bytecodealliance/wasmtime/${row.repository_commit}/${row.repository_path}/Cargo.toml`;
+  const cargoResponse=await fetch(cargoUrl,{signal:AbortSignal.timeout(30000)});assert.equal(cargoResponse.status,200);
+  assert.equal(sha(Buffer.from(await cargoResponse.arrayBuffer())),row.original_cargo_sha256,'crate/upstream repository mismatch');
+  row.repository_evidence={url:cargoUrl,sha256:row.original_cargo_sha256};
+  const url=`https://raw.githubusercontent.com/bytecodealliance/wasmtime/${row.repository_commit}/LICENSE`;
+  if(!supplementalCache.has(url)){
+    const response=await fetch(url,{signal:AbortSignal.timeout(30000)});assert.equal(response.status,200);
+    const content=await response.text();assert(content.includes('Apache License'));assert(content.includes('LLVM'));
+    supplementalCache.set(url,{url,sha256:sha(Buffer.from(content)),content});
+  }
+  row.supplemental_notices=[supplementalCache.get(url)];return row;
+}
+export function validateInventory(value,base=root){
+  assert.equal(value.schema,'wasmc.current-v2-dependency-inventory/v1');
+  assert.equal(value.scope,'conservative-all-lockfile-registry-packages');
+  assert.deepEqual(value.inputs,trustedInputs(base),'input inventory drift');
+  assert.equal(value.full_transitive_license_audit,false);assert.equal(value.release_qualified,false);
+  assert.deepEqual(value.pending_scopes,['three-canonical-adapter-lockfiles','Rust-stdlib-and-toolchain-notices','license-obligation-review-and-delivery']);
+  const expected=union(value.inputs);assert.equal(value.crates.length,expected.length);
+  for(let i=0;i<expected.length;i++){
+    const row=value.crates[i];for(const key of Object.keys(expected[i]))assert.equal(row[key],expected[i][key]);
+    assert.equal(typeof row.archive_verified,'boolean');assert(Array.isArray(row.notices));
+    assert(Array.isArray(row.blockers));
+    for(const notice of row.notices){
+      assert(!notice.path.startsWith('/')&&!notice.path.split('/').includes('..'));
+      assert.equal(sha(Buffer.from(notice.content)),notice.sha256,'notice drift');
+    }
+    if(row.archive_verified){
+      assert(Array.isArray(row.supplemental_notices));
+      for(const notice of row.supplemental_notices){
+        assert.match(row.repository_commit,/^[a-f0-9]{40}$/);
+        assert(row.repository_path&&!row.repository_path.split('/').includes('..'));
+        assert.deepEqual(row.repository_evidence,{url:`https://raw.githubusercontent.com/bytecodealliance/wasmtime/${row.repository_commit}/${row.repository_path}/Cargo.toml`,sha256:row.original_cargo_sha256});
+        assert.match(row.original_cargo_sha256,/^[a-f0-9]{64}$/);
+        assert.equal(notice.url,`https://raw.githubusercontent.com/bytecodealliance/wasmtime/${row.repository_commit}/LICENSE`);
+        assert.equal(sha(Buffer.from(notice.content)),notice.sha256);
+        assert(notice.content.includes('Apache License')&&notice.content.includes('LLVM'));
+      }
+      const blockers=[];
+      if(!row.license&&!row.license_file)blockers.push('missing-license-declaration');
+      if(!row.notices.length)blockers.push('missing-packaged-notice');
+      if(row.license_file&&!row.notices.some(x=>x.path===row.license_file))blockers.push('missing-declared-license-file');
+      assert.deepEqual(row.blockers,blockers);
+    }else {assert.equal(row.license,null);assert.deepEqual(row.notices,[]);assert.deepEqual(row.blockers,['archive-not-cached']);}
+  }
+  assert.equal(value.registry_inventory_complete,true);
+  assert.equal(value.archive_inventory_complete,value.crates.every(x=>x.archive_verified));
+  assert.equal(value.packaged_notice_inventory_complete,value.crates.every(x=>!x.blockers.length));
+  const outstanding=value.crates.filter(x=>x.blockers.some(b=>b!=='missing-packaged-notice')||(x.blockers.includes('missing-packaged-notice')&&!x.supplemental_notices?.length));
+  assert.equal(value.notice_material_inventory_complete,outstanding.length===0);
+  return {accepted:true,lockfiles:value.inputs.length,crates:value.crates.length,archives:value.crates.filter(x=>x.archive_verified).length,
+    supplemental_notices:value.crates.filter(x=>x.supplemental_notices?.length).length,
+    notice_blockers:outstanding.map(x=>({id:`${x.name}@${x.version}`,blockers:x.blockers})),full_transitive_license_audit:false,release_qualified:false};
+}
+if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)){
+  const args=process.argv.slice(2);
+  if(args[0]==='--capture'){
+    assert.equal(args.length,2);const rows=trustedInputs(root),crates=[];
+    for(const row of union(rows))crates.push(await supplement(inspectArchive(row,resolve(args[1]))));
+    const value={schema:'wasmc.current-v2-dependency-inventory/v1',scope:'conservative-all-lockfile-registry-packages',inputs:rows,crates,
+      registry_inventory_complete:true,archive_inventory_complete:crates.every(x=>x.archive_verified),packaged_notice_inventory_complete:crates.every(x=>!x.blockers.length),
+      notice_material_inventory_complete:crates.every(x=>!x.blockers.length||(x.blockers.length===1&&x.blockers[0]==='missing-packaged-notice'&&x.supplemental_notices.length>0)),
+      pending_scopes:['three-canonical-adapter-lockfiles','Rust-stdlib-and-toolchain-notices','license-obligation-review-and-delivery'],full_transitive_license_audit:false,release_qualified:false};
+    validateInventory(value);writeFileSync(join(root,receiptPath),JSON.stringify(value,null,2)+'\n');
+  }else assert.equal(args.length,0,'usage: current-v2-dependency-inventory.mjs [--capture REGISTRY_CACHE]');
+  console.log(JSON.stringify(validateInventory(JSON.parse(readFileSync(join(root,receiptPath))))));
+}

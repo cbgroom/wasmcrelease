@@ -29,6 +29,11 @@ assert.match(search,/release-candidate.mjs verify channels\/candidates\/0.0.20.j
 const surfaces=readFileSync('.github/workflows/release-surfaces.yml','utf8');
 assert.match(surfaces,/GITHUB_REF_TYPE.*tag/);
 assert.match(surfaces,/--frozen-release-ecosystem/);
+const libSource=readFileSync('.github/workflows/lib-source.yml','utf8');
+const validateJob=libSource.split(/^  validate:/m)[1].split(/^  tls-client-canonical:/m)[0];
+assert.match(validateJob,/uses: actions\/checkout@[^\n]+\n\s+with:\n(?:\s+#.*\n)*\s+fetch-depth: 0/);
+assert.match(validateJob,/name: Preserve validation diagnostics even on failure\n\s+if: always\(\)/);
+assert.match(validateJob,/path: target\/ci/);
 const hostBoundary=readFileSync('scripts/validate-host-lib-defined-boundary-workstream.mjs','utf8');
 assert.match(hostBoundary,/import \{ usesCurrentDevelopment \} from "\.\/ci-suite\.mjs"/);
 assert.match(hostBoundary,/script === "scripts\/validate-release-surfaces\.mjs" && usesCurrentDevelopment\(\)/);
@@ -36,4 +41,4 @@ assert.match(hostBoundary,/\? \["--frozen-release-ecosystem"\] : \[\]/);
 const tagAttempt=spawnSync(process.execPath,['scripts/validate-release-surfaces.mjs','--frozen-release-ecosystem'],{env:{...process.env,GITHUB_REF_TYPE:'tag'},encoding:'utf8'});
 assert.notEqual(tagAttempt.status,0);
 assert.match(tagAttempt.stderr,/never a release tag/);
-console.log(JSON.stringify({accepted:true,development_route:true,tag_release_route:true,tag_override_rejected:true,workflow_routes:4}));
+console.log(JSON.stringify({accepted:true,development_route:true,tag_release_route:true,tag_override_rejected:true,workflow_routes:5,lib_source_release_baseline_available:true,lib_source_failed_diagnostics_retained:true}));

@@ -116,3 +116,11 @@ preserve release identity metadata against the pre-migration checkpoint, and
 require the old candidate's specific product-drift rejection. Release-tag CI
 continues strict release checks. Expected drift is never a release PASS; avoid
 creating a throwaway candidate or treating any verification failure as success.
+
+Current-development validators read the pinned frozen release baseline from Git.
+Any workflow invoking them (directly or through nested surface validation) must
+provide that exact history, not only a depth-one checkout. Reproduce the shallow
+failure and the full-history success with `test-current-v2-history-baseline.mjs`;
+never substitute live metadata when the trusted baseline is unavailable.
+Always retain failed validation suite diagnostics as CI artifacts. A failure
+count without its underlying stderr is insufficient for white-box remediation.

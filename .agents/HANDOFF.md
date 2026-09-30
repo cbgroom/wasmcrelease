@@ -36,6 +36,14 @@ checks every selected WIT export: five package routes / 91 API routes, with
 missing and extra routes rejected. This is development closure only.
 
 Resume from `.agents/workstreams/WS-20260930-lib-v2-ci-closure/HANDOFF.md`.
+The 100-percent closure loop now retains an exact 175-crate dependency material
+inventory for three public lockfiles. Fourteen pinned upstream notices and
+r-efi AUTHORS close material omissions in that scope only; complete adapter/
+toolchain/license-obligation audit remains pending. Hosted source-incubation
+development validation exposed a depth-one checkout missing the frozen baseline.
+Local shallow-failure/full-history-success reproduction passes; the workflow
+now carries full history and retains failed diagnostics. These are unreleased
+repairs, not package admission or a hosted PASS for the new milestone.
 The all-package closure slice now stages five additional v2 roots with complete
 second-build equality and strict reopen: HTTP1, Host Clock, Owned Algorithms,
 Resource Counter and Data Core. Exact-artifact behavior and five generated SDK

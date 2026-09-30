@@ -366,3 +366,53 @@ roots, compiler/Lib bytes, current selection and frozen release identity files
 remain unchanged. Owning release-integrity Skill records the outer-envelope
 rule; other selected Skills retain their current boundaries. Push this coherent
 checkpoint and qualify its new hosted CI independently.
+
+## 2026-10-01 100-percent closure loop: dependency materials
+
+User requested an explicit loop toward 100-percent all-Lib closure. An active
+goal retains the full 18-package denominator and existing gates; no difficult
+package or missing authority was removed. Runtime default-feature repair still
+overlaps the exclusive fuel-observation claim. Coordination authorization was
+requested; no messages, claim takeover or producer edits occurred here.
+
+Implemented a checksum-bound conservative dependency inventory for HTTP1,
+Data Core and the five-generated-SDK consumer: three exact public Cargo.lock
+inputs, 175 registry crates, all 175 archives verified. The first capture found
+15 archives without conventional packaged notices. r-efi's AUTHORS contains
+the complete MIT grant/copyright material; the filename heuristic was repaired.
+Fourteen Wasmtime/Cranelift notices were recovered from exact archive-derived
+VCS commits. Original Cargo.toml bytes independently match that upstream commit
+before its root LICENSE (with LLVM exception) is accepted. No main/latest
+fallback, generic substitute license or implementation-source copy.
+
+The inventory records original packaged omissions separately from supplemental
+materials. There are now zero missing notice materials within these three
+lockfiles. Twenty-three mutation/parser controls reject dropped/changed input,
+crate/checksum/order drift, notice tamper, traversal, mutable upstream URL,
+changed VCS identity and false full-audit/release claims. Candidate CI replays
+the public receipt offline. See docs/CURRENT_V2_DEPENDENCY_INVENTORY.md.
+
+Complete audit remains FALSE: three canonical adapter lockfiles, Rust stdlib/
+toolchain materials, obligation/target review and carrying these materials in
+the future licensed delivery are pending. Existing 66-file envelope and all
+generated package bytes remain unchanged. Build/catalog counts remain 10/18
+and 5/18; this audit slice does not advance admission or immutable release.
+
+Hosted 242f607 source-incubation validate job 110111673720 failed two current
+development preflights (run 36781220859). It used checkout fetch-depth=1 and
+did not preserve failed suite logs. A fresh depth-one clone of exact 242f607
+reproduces missing c49bfcd release.json at git-show. The validator still
+requires that exact immutable baseline; no fallback or hash weakening was added.
+The validate job now checks out full history and always uploads target/ci
+diagnostics. Routing tests guard both requirements and existing tag rejection.
+This local shallow-clone reproduction is evidence, not a new hosted PASS.
+
+The executable history regression creates its own temporary Git fixture from
+the exact committed source, proves the specific shallow failure, fetches full
+history, then proves complete development preflight and old-candidate drift
+rejection without tracked changes. Local PASS at 242f607; no hosted claim.
+
+Local candidate suite 16/16 PASS; dependency controls 23/23 PASS; research
+license policy, routing/tag controls and whitespace checks PASS. The current
+milestone needs its own clean commit/push and hosted qualification. The runtime
+owner remains clean at c169f471; its default-feature constant gate is unchanged.

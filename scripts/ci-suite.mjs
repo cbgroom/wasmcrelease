@@ -50,6 +50,8 @@ export function suiteCases(family,runtime='node',mirror='github') {
     item('current-v2-install-and-reopen','scripts/test-current-v2-install.mjs',['--exercise'],fixturePermissions),
     item('current-v2-ordinary-app-replay','scripts/test-current-v2-app.mjs'),
     item('current-v2-package-license-binding','scripts/current-v2-package-license.mjs'),
+    item('current-v2-dependency-inventory','scripts/test-current-v2-dependency-inventory.mjs'),
+    item('current-v2-shallow-history-rejection','scripts/test-current-v2-history-baseline.mjs'),
     item('frozen-release-surfaces-and-current-workflow-coverage','scripts/validate-release-surfaces.mjs',['--frozen-release-ecosystem'],['--allow-read','--allow-run','--allow-env']),
     item('live-agent-trace-evaluator','scripts/test-live-agent-trace-evaluation-v1.mjs'),
     item('current-discovery-live-observation-oracle-controls','scripts/test-pi-current-v2-discovery.mjs'),
