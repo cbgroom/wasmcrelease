@@ -103,6 +103,14 @@ back into its child review or put delivery-success self-attestations there.
 Prove actual carried receipt deletion, mutation, links and coordinated
 self-rehash rejection against independent source/build identities.
 
+Lock equality does not attest to unchanged source. Capture all retained
+workspace/WIT/config/license inputs immediately before and after a build,
+reject changes and links, and compare independent build witnesses before
+staging. Exclude Cargo output only at a crate root, not arbitrary directories
+named target inside source. This witness does not attest to registry caches,
+external generated adapters, toolchain internals or historical builds that
+never captured it; those remain separate audit obligations.
+
 Use `./scripts/validate-maintainer.sh` for repository consistency, then run the
 host journeys selected by `release-host-integration`.
 

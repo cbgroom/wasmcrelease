@@ -592,3 +592,34 @@ private preflight and claimed/dirty ownership before compiler, default build
 or WIT edits. No owner message has been authorized or sent. New candidate,
 matching compiler, all-package routes/install, exact dual-model Pi and release
 remain mandatory, not implied by these local material gates.
+
+## 2026-10-01 producer workspace input guard
+
+Task state: in-progress. Inspection of the five exact staged manifests finds
+only Cargo.lock in build.inputs; retained workspace source remains available,
+but the original build receipts did not attest to source stability around
+execution. Do not promote a retrospective snapshot into historical proof.
+
+The portable build runner now captures a read-only workspace/WIT/config/license
+witness before and after real producer execution and rejects changed inputs.
+Two independent builds must have equal witnesses. New staging requires both
+witnesses and rechecks actual retained inputs before copying package bytes.
+Private implementation contents are never copied into public metadata.
+
+Independent fixture controls: 13 PASS across all eight input classes,
+deletion/addition, linked source and linked workspace. Source under src/target
+is retained; only crate-local Cargo output is excluded. This is a guard test,
+not a real rebuilt-package or registry-source audit. Existing five package
+roots and their prior qualification receipts are unchanged. Local development
+candidate suite 19/19 PASS before this checkpoint.
+
+Next: checkpoint this guard before using it (the build runner reads committed
+Git inputs), then run the guarded private producer on the staged cohort in new
+output directories and require exact complete-root equality plus actual
+pre/post-build witnesses. Free disk observed 108 GiB; do not cold-build the
+compiler or overwrite retained outputs. Continue registry source and external
+generated-adapter/toolchain audit separately. Keep all package counts, App,
+source ownership and full release blockers unchanged until their own evidence.
+The actual builder entrypoint also rejects a dirty public Git fixture before
+touching any private producer/output path. Metadata order uses UTF-8 bytes,
+not locale/ICU sorting. Both public script and Git input identity must be clean.

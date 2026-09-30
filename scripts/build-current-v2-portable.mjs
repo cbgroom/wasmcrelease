@@ -7,6 +7,7 @@ import { createHash } from 'node:crypto';
 import { mkdirSync, readFileSync, writeFileSync, readdirSync, statSync } from 'node:fs';
 import { resolve, join, dirname, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import {snapshotBuildInputs,verifyBuildInputsUnchanged} from './current-v2-build-input-snapshot.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const [producerArg, workArg, selectedId] = process.argv.slice(2);
@@ -21,6 +22,7 @@ const run = (cmd, args, cwd = root) => execFileSync(cmd, args, {
 }).trim();
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
 const authority = run('git', ['rev-parse', 'HEAD']);
+assert.equal(run('git',['status','--porcelain']),'','public input tree must be clean');
 const producerAuthority = run('git', ['rev-parse', 'HEAD'], producer);
 assert.equal(producerAuthority, '3b797a77d0afa25264a11362603b0d596d2e0ba7');
 assert.equal(run('git', ['status', '--porcelain'], producer), '', 'producer must be clean');
@@ -86,9 +88,12 @@ for (const id of selectedId ? [selectedId] : cohort) {
       spec.rust = { artifact_name: artifactName, crate_dir: 'adapter', profile: 'wit-bindgen-component' };
     }
     writeFileSync(join(workspace, 'lib.build.json'), JSON.stringify(spec, null, 2) + '\n');
+    const witnessOptions={siblingWit:Boolean(canonical)};
+    const sourceInputs=snapshotBuildInputs(workspace,witnessOptions);
     const report = JSON.parse(run(join(producer, 'target/debug/wasmc'), [
       'lib', 'build', '--workspace', workspace, '--publication', publication, join(workspace, 'lib.build.json'),
     ], producer));
+    verifyBuildInputsUnchanged(workspace,sourceInputs,witnessOptions);
     const packageRoot = join(publication, id);
     run(join(producer, 'target/debug/wasmc'), ['lib', 'verify', packageRoot], producer);
     const inventory = {};
@@ -98,9 +103,10 @@ for (const id of selectedId ? [selectedId] : cohort) {
       else { const bytes = readFileSync(path); inventory[relative(packageRoot, path)] = { bytes: bytes.length, sha256: hash(bytes) }; }
     }};
     walk(packageRoot);
-    builds.push({ report, inventory });
+    builds.push({ report, inventory, source_inputs:sourceInputs, build_inputs_unchanged:true });
   }
   assert.deepEqual(builds[1].inventory, builds[0].inventory, `${id}: complete package second-build drift`);
+  assert.deepEqual(builds[1].source_inputs,builds[0].source_inputs,`${id}: independent build input drift`);
   rows.push({ id, version: candidate.version, builds, strict_reopen: true,
     implementation_source_authority: canonical ? producerAuthority : authority,
     canonical_source_recovered: Boolean(canonical),

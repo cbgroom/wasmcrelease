@@ -5,6 +5,7 @@ import { createHash } from 'node:crypto';
 import { readFileSync, mkdirSync, copyFileSync, lstatSync, writeFileSync, existsSync } from 'node:fs';
 import { resolve, join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import {verifyBuildInputsUnchanged} from './current-v2-build-input-snapshot.mjs';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const dataCore = process.argv[2] === '--data-core';
 const inputs = process.argv.slice(dataCore ? 3 : 2).map(p => resolve(p));
@@ -24,6 +25,13 @@ for (const {work, row} of rows) {
   assert.equal(row.strict_reopen, true);
   assert.equal(row.complete_second_build_byte_identical, true);
   assert.deepEqual(row.builds[0].inventory, row.builds[1].inventory);
+  assert.deepEqual(row.builds[0].source_inputs,row.builds[1].source_inputs,'independent source-input witness drift');
+  for(const [index,pass]of ['first','second'].entries()){
+    const build=row.builds[index];
+    assert.equal(build.build_inputs_unchanged,true,'new staging requires a pre/post-build input witness');
+    verifyBuildInputsUnchanged(join(work,row.id,pass,'workspace'),build.source_inputs,
+      {siblingWit:Boolean(row.canonical_source_recovered)});
+  }
   for (const pass of ['first','second']) for (const [path, expected] of Object.entries(row.builds[0].inventory)) {
     assert(!path.startsWith('/') && !path.split('/').includes('..'));
     const input = join(work,row.id,pass,'package',row.id,path);

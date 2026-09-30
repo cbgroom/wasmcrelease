@@ -52,6 +52,7 @@ export function suiteCases(family,runtime='node',mirror='github') {
     item('current-v2-package-license-binding','scripts/current-v2-package-license.mjs'),
     item('current-v2-dependency-inventory','scripts/test-current-v2-dependency-inventory.mjs'),
     item('current-v2-registry-notice-review','scripts/test-current-v2-registry-notice-review.mjs'),
+    item('current-v2-build-input-witness','scripts/test-current-v2-build-input-snapshot.mjs'),
     item('current-v2-toolchain-notices','scripts/test-current-v2-toolchain-notices.mjs'),
     item('current-v2-shallow-history-rejection','scripts/test-current-v2-history-baseline.mjs'),
     item('frozen-release-surfaces-and-current-workflow-coverage','scripts/validate-release-surfaces.mjs',['--frozen-release-ecosystem'],['--allow-read','--allow-run','--allow-env']),

@@ -66,6 +66,11 @@ controls. Audit binding is acyclic: review -> inventory; envelope -> both.
 Two ordered recaptures are byte-identical. Build modifications,
 target/toolchain obligations and the remaining thirteen
 package audits are still pending. It is not full license/release qualification.
+A new source-input guard captures workspace/WIT/config/license hashes before
+and after producer execution, compares both builds and rechecks them during
+new staging. Thirteen independent controls and the 19-check local development
+suite pass. Existing staged receipts do not gain historical input proof from
+this guard; rebuild the cohort from the committed runner to qualify it.
 Fresh private orientation remains rejected: maintainer-check status 24, with
 the standard-library skill at 510 lines. The runtime workstream remains clean
 at c169f471 with an exclusive crates/wasmc_core_runtime claim, and the WIT
