@@ -509,6 +509,50 @@ refreshed or a new candidate allocated. Next: obligation review, generic
 ordinary App transport, eight builds and complete candidate route/Pi/release
 gates. Coordinate the runtime directory before the default-feature repair.
 
+## 2026-10-01 explicit registry notice-choice review
+
+Task state: in-progress. The previous material delivery checkpoint c0d7ca3 is
+pushed and clean, with post-commit 17/17 development checks PASS. This slice
+adds a finite explicit choice/evidence plan for all 189 registry identities and
+17 expressions, without claiming a general SPDX parser or legal approval.
+
+MIT alternatives are explicit; every AND term remains, including Arrow Array,
+encoding_rs BSD data and unicode-ident Unicode data. Slash forms retain both
+terms without inferring OR. LLVM exception text stays with the full Apache
+notice and no omission/waiver is relied upon. r-efi selects its declared MIT
+alternative with exact AUTHORS material. All original notices stay carried.
+
+Validation: 27 negative controls reject false full-audit/release claims,
+missing AND-term notices, removal of exact LLVM supplementation, self-rehashed
+Apache truncation and unreviewed expressions. Local candidate development
+suite 18/18 PASS; CI routing PASS. The five strict generated package roots and
+the 76-file envelope are unchanged. The new review receipt itself is not yet
+carried; bind it without creating a receipt/envelope hash cycle. Modification,
+target/toolchain review and all other package cohorts remain pending. No new
+hosted check or all-package audit PASS is claimed.
+
+Fresh private orientation: clean producer 3b797a77; global HANDOFF still names
+the integrated finite scalar-record transport. Public complex-value App probe
+remains 1/5, with four namespace rejections before body checking. The available
+wasmc-bootstrap is not on PATH; its absolute-path maintainer-check against the
+clean producer rejects with status 24. Exact inspection identifies the
+standard-library Skill at 510 lines (500-line gate), not a compiler pass.
+Do not restore the deleted orientation script referenced by stale loop text.
+
+The runtime branch is still clean/pushed c169f471, started/not-ready, and
+exclusively claims crates/wasmc_core_runtime; the owner thread is idle, which
+does not release that claim. Its latest user direction rejects third-party
+Wasmtime patching. No message was sent, no runtime code changed, and no engine
+patch is part of this task. The WIT-dependency worktree still has ten dirty
+paths and no registered task found; do not integrate those as clean authority.
+
+Next: obtain authorized ownership coordination for the default-feature repair
+and WIT work; repair the private maintainer preflight without deleting
+knowledge or weakening its limit; start a properly claimed generic App
+transport slice. In parallel, bind the registry review and verify actual
+build-source modifications and target/toolchain obligations. Keep the original
+18-package denominator and matching compiler / exact Pi pair / release gates.
+
 Final local checks: material-carrying isolated SDK and 49 controls PASS;
 exact five-package qualification refreshed PASS; candidate development suite
 17/17 PASS; tag routing, research-license policy and whitespace checks PASS.

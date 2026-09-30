@@ -89,6 +89,14 @@ is already carried, verify byte equality and reuse it; never overwrite it to
 make an SDK run pass. An expanded capsule still leaves obligation review and
 all-package release false until their independent gates close.
 
+Record finite, explicit license-expression choices separately from material
+inventory. Preserve every AND term and the original notices even when an OR
+branch is selected; never infer OR from an old slash expression. An exact
+notice evidence plan is not a license-text equivalence engine, modification
+audit, target applicability review, or legal approval. Require rejection of
+missing conjunctive notices and self-rehashed truncation, and bind the review
+itself into delivery before claiming that recipients receive it.
+
 Use `./scripts/validate-maintainer.sh` for repository consistency, then run the
 host journeys selected by `release-host-integration`.
 

@@ -63,3 +63,36 @@ The staged 76-file licensed envelope now carries this inventory, all six input
 locks and both official toolchain documents. Isolated 78-file generated-SDK
 execution and deletion/tamper controls qualify that scoped material delivery;
 they do not close obligation review or all-package release admission.
+
+## Explicit registry notice choices
+
+`registry-notice-review.json` records a finite technical choice/evidence plan
+for all 189 registry identities and 17 declared expressions in the retained
+closure. Validate it with:
+
+```sh
+node scripts/test-current-v2-registry-notice-review.mjs
+```
+
+An explicit OR selects MIT where it is declared, including the r-efi
+alternative; this does not select LGPL or rewrite its original AUTHORS file.
+AND retains every required term: Arrow Array retains Apache plus MIT;
+encoding_rs retains MIT plus BSD-3-Clause; unicode-ident retains MIT plus
+Unicode-3.0. Historical slash expressions conservatively retain both licenses,
+without inventing an OR meaning. Apache-with-LLVM retains the exact exception
+text, but this plan relies on no exception-based omission of notice conditions.
+All original and supplemental notices remain in the existing delivered
+inventory, even when an OR choice needs fewer materials.
+
+The choices follow the declared expressions and retained source notices;
+reference texts are the [SPDX license list](https://spdx.org/licenses/).
+The finite evidence checks are not a general license-text matcher, a legal
+opinion or a statement that every non-notice obligation is met. Unknown
+expressions fail closed. Deletion of an AND-term notice, a self-rehashed
+truncated Apache text, removal of the LLVM supplement, and false promotion
+claims are independent rejection controls.
+
+This new review receipt itself is not yet in the 76-file envelope. Pending:
+bind it into the future delivery; verify actual build-source modifications and
+patches; review target/toolchain obligations; audit the other thirteen target
+packages. `full_transitive_license_audit` and `release_qualified` remain false.

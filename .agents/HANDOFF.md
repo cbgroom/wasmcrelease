@@ -36,10 +36,10 @@ checks every selected WIT export: five package routes / 91 API routes, with
 missing and extra routes rejected. This is development closure only.
 
 Resume from `.agents/workstreams/WS-20260930-lib-v2-ci-closure/HANDOFF.md`.
-The 100-percent closure loop now retains an exact 175-crate dependency material
-inventory for three public lockfiles. Fourteen pinned upstream notices and
-r-efi AUTHORS close material omissions in that scope only; complete adapter/
-toolchain/license-obligation audit remains pending. Hosted source-incubation
+The 100-percent closure loop retains an exact 189-crate dependency material
+inventory for six build/consumer lockfiles. Fourteen pinned upstream notices and
+r-efi AUTHORS close registry material omissions in that scope only; complete
+license-obligation audit remains pending. Hosted source-incubation
 development validation exposed a depth-one checkout missing the frozen baseline.
 Local shallow-failure/full-history-success reproduction passes; the workflow
 now carries full history and retains failed diagnostics. These are unreleased
@@ -57,6 +57,17 @@ The 78-file isolated consumer reuses the exact carried lock and executes five
 generated SDKs. Forty-nine controls reject dropped/tampered/self-rehashed or
 linked recipient material. Full obligation/target review and release remain
 false; the five strict generated roots are unchanged.
+A finite registry notice-choice review now covers the 189 identities and 17
+expressions, retaining all AND terms and both terms of ambiguous slash forms.
+Twenty-seven independent rejection controls and the 18-check local development
+suite pass. This review receipt is not yet carried in the 76-file envelope;
+build modifications, target/toolchain obligations and the remaining thirteen
+package audits are still pending. It is not full license/release qualification.
+Fresh private orientation remains rejected: maintainer-check status 24, with
+the standard-library skill at 510 lines. The runtime workstream remains clean
+at c169f471 with an exclusive crates/wasmc_core_runtime claim, and the WIT
+worktree still has ten unrelated dirty paths. Resolve these gates/ownership
+before private implementation; do not ignore the audit or borrow dirty source.
 The all-package closure slice now stages five additional v2 roots with complete
 second-build equality and strict reopen: HTTP1, Host Clock, Owned Algorithms,
 Resource Counter and Data Core. Exact-artifact behavior and five generated SDK
