@@ -1,18 +1,18 @@
 # WAsmC public performance
 
-Commit: a7a9e63277a3d693b02a114901ddefaa0f62d333
-Measured: 2026-09-30T15:38:42.190Z
+Commit: 88064c74b1d651dab5758b9f6c750df1a107de15
+Measured: 2026-09-30T15:43:35.408Z
 Platforms: 6
 Canonical corpus: 5
 
 | Platform | Baseline | CLI | build Wasm gmean p50 | build/base | native miss gmean p50 | native hit gmean p50 | run/Wasmi p50 | run/base | native run p50 | native/base |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| linux-aarch64 | within-baseline | 9.57 MiB | 14.654 ms | 1.01x | 45.073 ms | 25.509 ms | 11.425 ms | 1.01x | 3.849 ms | 1.01x |
-| linux-x86_64 | within-baseline | 11.30 MiB | 13.345 ms | 1.08x | 43.382 ms | 24.950 ms | 9.270 ms | 1.04x | 2.276 ms | 1.04x |
-| macos-aarch64 | within-baseline | 8.48 MiB | 19.304 ms | 0.91x | 45.863 ms | 24.829 ms | 19.268 ms | 1.11x | 3.553 ms | 1.11x |
-| macos-x86_64 | advisory-regression | 10.39 MiB | 34.669 ms | 1.20x | 99.981 ms | 68.051 ms | 31.643 ms | 1.30x | 9.130 ms | 1.48x |
-| windows-aarch64 | within-baseline | 9.07 MiB | 28.891 ms | 1.06x | 59.130 ms | 39.042 ms | 21.203 ms | 1.06x | 19.814 ms | 1.09x |
-| windows-x86_64 | within-baseline | 10.32 MiB | 22.536 ms | 1.08x | 57.342 ms | 32.524 ms | 17.235 ms | 1.01x | 9.370 ms | 0.94x |
+| linux-aarch64 | within-baseline | 9.57 MiB | 13.731 ms | 0.94x | 42.878 ms | 23.501 ms | 10.821 ms | 0.95x | 3.537 ms | 0.92x |
+| linux-x86_64 | within-baseline | 11.30 MiB | 10.246 ms | 0.83x | 30.454 ms | 17.150 ms | 7.437 ms | 0.81x | 1.828 ms | 0.83x |
+| macos-aarch64 | within-baseline | 8.48 MiB | 16.037 ms | 0.83x | 35.151 ms | 21.133 ms | 13.827 ms | 0.80x | 2.385 ms | 0.74x |
+| macos-x86_64 | advisory-regression | 10.39 MiB | 38.706 ms | 1.24x | 107.492 ms | 69.809 ms | 41.567 ms | 1.45x | 12.682 ms | 1.62x |
+| windows-aarch64 | within-baseline | 9.07 MiB | 27.580 ms | 1.00x | 57.415 ms | 37.374 ms | 20.013 ms | 0.99x | 18.465 ms | 0.98x |
+| windows-x86_64 | within-baseline | 10.32 MiB | 20.020 ms | 0.96x | 56.805 ms | 29.939 ms | 15.868 ms | 0.92x | 9.478 ms | 0.98x |
 
 GitHub-hosted timings are same-platform comparative observations, not absolute cross-platform SLA claims.
 Ratios are current / rolling same-platform median; >1.0 is slower for latency metrics.
