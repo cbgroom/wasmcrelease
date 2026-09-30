@@ -1,5 +1,6 @@
 import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
+import {timingEpoch,compatibleHistory} from './host-https-timing.mjs';
 
 const [inputArg, outputArg, previousArg, expectedArg] = process.argv.slice(2);
 if (!inputArg || !outputArg) {
@@ -16,6 +17,7 @@ for (const name of files) {
   if (value.schema === 'wasmc-host-transport-shard-sweep/v1') shardSweeps.push(value);
 }
 if (!reports.length) throw new Error('no HTTPS A/B reports');
+if(new Set(reports.map(timingEpoch)).size!==1)throw Error('mixed HTTPS timing epochs');
 reports.sort((a, b) => a.platform.localeCompare(b.platform));
 shardSweeps.sort((a, b) => a.platform.localeCompare(b.platform));
 if (expectedArg && reports.length < Number(expectedArg)) {
@@ -61,6 +63,7 @@ const summary = reports.map(report => {
   if (!sweep) throw new Error('missing shard sweep report for ' + report.platform);
   const best = sweep.best;
   const current = {
+    timing_epoch: timingEpoch(report),
     platform: report.platform,
     semantic_parity: report.qualification.semantic_parity,
     baseline_rps_p50: p.baseline.rps.p50,
@@ -97,7 +100,7 @@ const summary = reports.map(report => {
     c32_shard_results: sweep.results,
   };
   const previous = previousByPlatform.get(report.platform);
-  if (previous) {
+  if (previous && compatibleHistory(current,previous)) {
     current.history_delta = {
       candidate_rps_pct:
         Number((((current.candidate_rps_p50 / previous.candidate_rps_p50) - 1) * 100).toFixed(2)),
@@ -105,6 +108,8 @@ const summary = reports.map(report => {
         Number((((current.paired_rps_ratio_p50 / previous.paired_rps_ratio_p50) - 1) * 100).toFixed(2)),
       baseline_commit: previousEntry.commit,
     };
+  } else if(previous){
+    current.history_baseline_rejected={commit:previousEntry.commit,reason:'different HTTPS timing epoch; no numeric improvement claim'};
   }
   return current;
 });

@@ -35,6 +35,14 @@ const upstream=readFileSync('admission/current-v2-next/upstream/review.json');
 assert.equal(qualified.upstream_review.receipt_sha256,sha256(upstream));
 assert.equal(validateUpstreamReceipt(JSON.parse(upstream)).upstream_crates,7);
 assert.equal(qualified.upstream_review.full_transitive_license_audit,false);
+assert.equal(qualified.source_free_sdk.accepted,true);
+assert.equal(qualified.source_free_sdk.source_free_sdk_execution,true);
+assert.equal(qualified.source_free_sdk.isolated_files,48);
+const isolated=read('admission/current-v2-next/source-free-sdk.json');
+assert.equal(isolated.accepted,true);assert.equal(isolated.provider_sources_present,false);
+assert.equal(isolated.oracle_sha256,sha256(readFileSync('scripts/qualify-current-v2-source-free-sdk.mjs')));
+assert.equal(Object.keys(isolated.isolated_files).length,48);
+for(const [path,row] of Object.entries(isolated.isolated_files))assert.equal(sha256(readFileSync(path)),row.sha256,`isolated consumer input drift: ${path}`);
 assert.equal(new Set(ledger.migrated.map(x=>x.id)).size,ledger.migrated.length);
 assert.equal(new Set(ledger.backlog.map(x=>x.id)).size,ledger.backlog.length);
 for(const row of catalog.packages){

@@ -49,9 +49,11 @@ const upstreamBytes=readFileSync(join(root,'admission/current-v2-next/upstream/r
 const upstreamReview=validateUpstreamReceipt(JSON.parse(upstreamBytes));
 const sdk = jsonRun('cargo',['+1.96.0','run','--locked','--offline','--quiet','--manifest-path','libsrc/qualification/current-v2-consumer/Cargo.toml','--','admission/current-v2-next/packages',dataCore.root]);
 assert.equal(sdk.packages,identities.length);
+const sourceFreeSdk=jsonRun('node',['scripts/qualify-current-v2-source-free-sdk.mjs']);
+assert.equal(sourceFreeSdk.source_free_sdk_execution,true);
 const receipt = {schema:'wasmc.current-v2-next-local-qualification/v1',accepted:true,
   oracle_sources:Object.fromEntries(['scripts/test-http1-libsrc.mjs','scripts/test-data-core-libsrc.mjs',
-    'scripts/qualify-current-v2-next.mjs','scripts/current-v2-upstream-provenance.mjs','libsrc/qualification/wasmi-core/src/main.rs',
+    'scripts/qualify-current-v2-next.mjs','scripts/current-v2-upstream-provenance.mjs','scripts/qualify-current-v2-source-free-sdk.mjs','libsrc/qualification/wasmi-core/src/main.rs',
     'libsrc/qualification/wasmi-core/Cargo.lock','libsrc/qualification/current-v2-consumer/src/main.rs',
     'libsrc/qualification/current-v2-consumer/Cargo.lock'].map(path=>[path,hash(readFileSync(join(root,path)))])),
   engine_tools:{wasmtime:run('wasmtime',['--version']),wasm_tools:run('wasm-tools',['--version'])},
@@ -59,6 +61,7 @@ const receipt = {schema:'wasmc.current-v2-next-local-qualification/v1',accepted:
   data_build_receipts_sha256:hash(readFileSync(join(root,'admission/current-v2-data-core/build-receipts.json'))),
   packages:identities,http1_behavior:behavior,http1_wasmi:wasmi,data_core_behavior:dataBehavior,data_core_wasmi:dataWasmi,fixture_wasmi:fixtureWasmi,generated_sdk:sdk,
   upstream_review:{...upstreamReview,receipt_sha256:hash(upstreamBytes)},
+  source_free_sdk:sourceFreeSdk,
   selected_current_catalog:false,ordinary_wasmc_app_qualified:false,release_qualified:false,
   pending:['current catalog admission and exact route/install closure','ordinary WAsmC App consumption',
     'complete transitive license audit and package license binding before a new candidate',

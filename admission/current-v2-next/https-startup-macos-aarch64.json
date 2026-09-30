@@ -1,0 +1,518 @@
+{
+  "schema": "wasmc-host-https-ab/v1",
+  "measured_at": "2026-09-30T21:02:06.243Z",
+  "commit": null,
+  "platform": "macos-aarch64",
+  "host": {
+    "os": "darwin",
+    "arch": "arm64",
+    "node": "v26.5.1"
+  },
+  "authority": {
+    "https_source_commit": "2a49108391326b083426bb5ca12e76b0b9268433",
+    "host_transport_baseline_commit": "b1af59699bd27a9d5e3c7d9b6e8951cc1be4302c",
+    "reactor_candidate_commit": "5dd23b434caa34e402298fcfe0975a1c4af55773",
+    "reactor_candidate_readiness_sha256": "4b4fa81ad4a05b1aae08917e2bb552744cab86c4404c6ff813982489492eba99",
+    "reactor_candidate_adapter_sha256": "836990bb645d3cbd975471358538952089bf8ad142c13dcc3bb855b66ab9e73b",
+    "lib_defined_socket": null
+  },
+  "artifact_manifest_sha256": "f90bd85ca56246b24e630e33be12fdcff52536d998ade808340bd75e782b7fd3",
+  "qualification_harness": {
+    "source_sha256": "7b826af7396ae6314ee52225e3103a825c6ea0c61098570bf4c44c14c7b318d1",
+    "startup_sha256": "c51a8244ce377212b1c4a28db6d94ea598bbf04be564bef9f52fc54ad87e039c",
+    "readiness": "initialized-runtime-before-client-connect",
+    "startup_timeout_ms": 30000,
+    "socket_io_timeout_ms": 5000,
+    "timed_interval": "after-runtime-readiness",
+    "prior_source_commits": "artifact authority above is the historical base, not the revised harness identity",
+    "failed_request_retry": false
+  },
+  "binaries": {
+    "baseline": {
+      "bytes": 11769744,
+      "sha256": "97eab52121dcd6dcb19d924738a7a9b42a25eb79266ecfb9c917516e79bd0be4"
+    },
+    "candidate": {
+      "bytes": 11856672,
+      "sha256": "a1184c4a85d1201779e6d8afaf166f5609947462ed56c1be812badc16c3dcfec"
+    }
+  },
+  "policy": {
+    "functional_and_identity_gates": "hard",
+    "semantic_parity_gates": [
+      "keep_alive_requests",
+      "recovery_requests",
+      "malformed_requests",
+      "checksum"
+    ],
+    "github_hosted_timing": "observational",
+    "performance_regression_gate": false,
+    "minimum_paired_rps_ratio_p50": null,
+    "only_transport_implementation_changes": true
+  },
+  "qualification": {
+    "baseline": {
+      "host_operations": 5156,
+      "host_waits": 5156,
+      "host_claimed": 5156,
+      "host_partial_writes": 4620,
+      "host_pending_peak": 1,
+      "owner_wake_cycles": 5417,
+      "owner_threads_started": 3,
+      "reactor_poll_calls": 0,
+      "reactor_readiness_events": 0,
+      "checksum": 93106,
+      "fuel_total": "68861653",
+      "dominant_guest_operation": {
+        "component": "tls",
+        "operation": "tls.ingest",
+        "sampled_calls": 10,
+        "wall_ns_sample_mean": 310920,
+        "wall_ns_p95_upper": 2097151,
+        "fuel_sample_mean": "5214210"
+      },
+      "top_guest_operations": [
+        {
+          "component": "tls",
+          "operation": "tls.ingest",
+          "sampled_calls": 10,
+          "wall_ns_sample_mean": 310920,
+          "wall_ns_p95_upper": 2097151,
+          "fuel_sample_mean": "5214210"
+        },
+        {
+          "component": "json",
+          "operation": "json.compact",
+          "sampled_calls": 5,
+          "wall_ns_sample_mean": 9366,
+          "wall_ns_p95_upper": 65535,
+          "fuel_sample_mean": "8023"
+        },
+        {
+          "component": "tls",
+          "operation": "tls.write",
+          "sampled_calls": 6,
+          "wall_ns_sample_mean": 6396,
+          "wall_ns_p95_upper": 16383,
+          "fuel_sample_mean": "225465"
+        },
+        {
+          "component": "http",
+          "operation": "http.frame-length",
+          "sampled_calls": 10,
+          "wall_ns_sample_mean": 3629,
+          "wall_ns_p95_upper": 32767,
+          "fuel_sample_mean": "2223"
+        },
+        {
+          "component": "http",
+          "operation": "http.serialize-response",
+          "sampled_calls": 6,
+          "wall_ns_sample_mean": 2868,
+          "wall_ns_p95_upper": 16383,
+          "fuel_sample_mean": "5518"
+        }
+      ]
+    },
+    "candidate": {
+      "host_operations": 5157,
+      "host_waits": 5157,
+      "host_claimed": 5157,
+      "host_partial_writes": 4620,
+      "host_pending_peak": 1,
+      "owner_wake_cycles": 0,
+      "owner_threads_started": 1,
+      "reactor_poll_calls": 5418,
+      "reactor_readiness_events": 5417,
+      "checksum": 93106,
+      "fuel_total": "68889181",
+      "dominant_guest_operation": {
+        "component": "tls",
+        "operation": "tls.ingest",
+        "sampled_calls": 11,
+        "wall_ns_sample_mean": 266647,
+        "wall_ns_p95_upper": 2097151,
+        "fuel_sample_mean": "4747113"
+      },
+      "top_guest_operations": [
+        {
+          "component": "tls",
+          "operation": "tls.ingest",
+          "sampled_calls": 11,
+          "wall_ns_sample_mean": 266647,
+          "wall_ns_p95_upper": 2097151,
+          "fuel_sample_mean": "4747113"
+        },
+        {
+          "component": "json",
+          "operation": "json.compact",
+          "sampled_calls": 5,
+          "wall_ns_sample_mean": 11191,
+          "wall_ns_p95_upper": 65535,
+          "fuel_sample_mean": "8023"
+        },
+        {
+          "component": "tls",
+          "operation": "tls.write",
+          "sampled_calls": 6,
+          "wall_ns_sample_mean": 5403,
+          "wall_ns_p95_upper": 8191,
+          "fuel_sample_mean": "225456"
+        },
+        {
+          "component": "http",
+          "operation": "http.frame-length",
+          "sampled_calls": 11,
+          "wall_ns_sample_mean": 4935,
+          "wall_ns_p95_upper": 32767,
+          "fuel_sample_mean": "2099"
+        },
+        {
+          "component": "http",
+          "operation": "http.serialize-response",
+          "sampled_calls": 6,
+          "wall_ns_sample_mean": 2999,
+          "wall_ns_p95_upper": 16383,
+          "fuel_sample_mean": "5518"
+        }
+      ]
+    },
+    "semantic_parity": true
+  },
+  "scheduling_diagnostics": {
+    "baseline": {
+      "polling_owner_cycles_per_host_operation": 1.050621
+    },
+    "candidate": {
+      "reactor_polls_per_host_operation": 1.050611,
+      "reactor_readiness_events_per_host_operation": 1.050417
+    },
+    "interpretation": "Polling owner cycles and reactor poll calls are different counters. The mechanism comparison is scheduling strategy, not raw counter subtraction."
+  },
+  "performance": {
+    "pairs": 6,
+    "samples": {
+      "baseline": [
+        {
+          "pair": 0,
+          "order": 0,
+          "rps": 653.0506426042874,
+          "elapsed_ns": 1018297750,
+          "avg_ns_per_valid_request": 1531274,
+          "keep_alive_requests": 664,
+          "host_operations": 1349,
+          "host_waits": 1349,
+          "host_claimed": 1349,
+          "host_pending_peak": 1,
+          "host_owner_wake_cycles": 2007,
+          "host_reactor_poll_calls": 0,
+          "host_reactor_readiness_events": 0,
+          "process_wall_ms": 1581.028
+        },
+        {
+          "pair": 1,
+          "order": 1,
+          "rps": 623.6041274870746,
+          "elapsed_ns": 1019877791,
+          "avg_ns_per_valid_request": 1603581,
+          "keep_alive_requests": 635,
+          "host_operations": 1291,
+          "host_waits": 1291,
+          "host_claimed": 1291,
+          "host_pending_peak": 1,
+          "host_owner_wake_cycles": 1920,
+          "host_reactor_poll_calls": 0,
+          "host_reactor_readiness_events": 0,
+          "process_wall_ms": 1558.593
+        },
+        {
+          "pair": 2,
+          "order": 0,
+          "rps": 667.3650728212984,
+          "elapsed_ns": 1026424708,
+          "avg_ns_per_valid_request": 1498430,
+          "keep_alive_requests": 684,
+          "host_operations": 1389,
+          "host_waits": 1389,
+          "host_claimed": 1389,
+          "host_pending_peak": 1,
+          "host_owner_wake_cycles": 2061,
+          "host_reactor_poll_calls": 0,
+          "host_reactor_readiness_events": 0,
+          "process_wall_ms": 1625.63
+        },
+        {
+          "pair": 3,
+          "order": 1,
+          "rps": 621.7446345979525,
+          "elapsed_ns": 1018102875,
+          "avg_ns_per_valid_request": 1608377,
+          "keep_alive_requests": 632,
+          "host_operations": 1285,
+          "host_waits": 1285,
+          "host_claimed": 1285,
+          "host_pending_peak": 1,
+          "host_owner_wake_cycles": 1920,
+          "host_reactor_poll_calls": 0,
+          "host_reactor_readiness_events": 0,
+          "process_wall_ms": 1567.525
+        },
+        {
+          "pair": 4,
+          "order": 0,
+          "rps": 669.7813964031016,
+          "elapsed_ns": 1015256625,
+          "avg_ns_per_valid_request": 1493024,
+          "keep_alive_requests": 679,
+          "host_operations": 1379,
+          "host_waits": 1379,
+          "host_claimed": 1379,
+          "host_pending_peak": 1,
+          "host_owner_wake_cycles": 2050,
+          "host_reactor_poll_calls": 0,
+          "host_reactor_readiness_events": 0,
+          "process_wall_ms": 1561.802
+        },
+        {
+          "pair": 5,
+          "order": 1,
+          "rps": 667.502057816656,
+          "elapsed_ns": 1014229083,
+          "avg_ns_per_valid_request": 1498122,
+          "keep_alive_requests": 676,
+          "host_operations": 1374,
+          "host_waits": 1374,
+          "host_claimed": 1374,
+          "host_pending_peak": 1,
+          "host_owner_wake_cycles": 2037,
+          "host_reactor_poll_calls": 0,
+          "host_reactor_readiness_events": 0,
+          "process_wall_ms": 1585.504
+        }
+      ],
+      "candidate": [
+        {
+          "pair": 0,
+          "order": 1,
+          "rps": 27661.775800409512,
+          "elapsed_ns": 1008214375,
+          "avg_ns_per_valid_request": 36150,
+          "keep_alive_requests": 27888,
+          "host_operations": 55801,
+          "host_waits": 55801,
+          "host_claimed": 55801,
+          "host_pending_peak": 1,
+          "host_owner_wake_cycles": 0,
+          "host_reactor_poll_calls": 82889,
+          "host_reactor_readiness_events": 82888,
+          "process_wall_ms": 1533.839
+        },
+        {
+          "pair": 1,
+          "order": 0,
+          "rps": 27250.47908978615,
+          "elapsed_ns": 1008202458,
+          "avg_ns_per_valid_request": 36696,
+          "keep_alive_requests": 27473,
+          "host_operations": 54971,
+          "host_waits": 54971,
+          "host_claimed": 54971,
+          "host_pending_peak": 1,
+          "host_owner_wake_cycles": 0,
+          "host_reactor_poll_calls": 81778,
+          "host_reactor_readiness_events": 81777,
+          "process_wall_ms": 1556.474
+        },
+        {
+          "pair": 2,
+          "order": 1,
+          "rps": 27650.631247742585,
+          "elapsed_ns": 1008114417,
+          "avg_ns_per_valid_request": 36165,
+          "keep_alive_requests": 27874,
+          "host_operations": 55772,
+          "host_waits": 55772,
+          "host_claimed": 55772,
+          "host_pending_peak": 1,
+          "host_owner_wake_cycles": 0,
+          "host_reactor_poll_calls": 82830,
+          "host_reactor_readiness_events": 82829,
+          "process_wall_ms": 1582.554
+        },
+        {
+          "pair": 3,
+          "order": 0,
+          "rps": 27488.030594061984,
+          "elapsed_ns": 1008038750,
+          "avg_ns_per_valid_request": 36379,
+          "keep_alive_requests": 27708,
+          "host_operations": 55440,
+          "host_waits": 55440,
+          "host_claimed": 55440,
+          "host_pending_peak": 1,
+          "host_owner_wake_cycles": 0,
+          "host_reactor_poll_calls": 82297,
+          "host_reactor_readiness_events": 82296,
+          "process_wall_ms": 1546.302
+        },
+        {
+          "pair": 4,
+          "order": 1,
+          "rps": 19882.77471544956,
+          "elapsed_ns": 1008108792,
+          "avg_ns_per_valid_request": 50294,
+          "keep_alive_requests": 20043,
+          "host_operations": 40111,
+          "host_waits": 40111,
+          "host_claimed": 40111,
+          "host_pending_peak": 1,
+          "host_owner_wake_cycles": 0,
+          "host_reactor_poll_calls": 58147,
+          "host_reactor_readiness_events": 58146,
+          "process_wall_ms": 1587.631
+        },
+        {
+          "pair": 5,
+          "order": 0,
+          "rps": 24901.666094601944,
+          "elapsed_ns": 1009008791,
+          "avg_ns_per_valid_request": 40157,
+          "keep_alive_requests": 25125,
+          "host_operations": 50275,
+          "host_waits": 50275,
+          "host_claimed": 50275,
+          "host_pending_peak": 1,
+          "host_owner_wake_cycles": 0,
+          "host_reactor_poll_calls": 73355,
+          "host_reactor_readiness_events": 73354,
+          "process_wall_ms": 1571.261
+        }
+      ]
+    },
+    "summary": {
+      "baseline": {
+        "rps": {
+          "samples": 6,
+          "p50": 653.051,
+          "p95": 669.781,
+          "min": 621.745,
+          "max": 669.781
+        },
+        "avg_ns_per_valid_request": {
+          "samples": 6,
+          "p50": 1498430,
+          "p95": 1608377,
+          "min": 1493024,
+          "max": 1608377
+        },
+        "process_wall_ms": {
+          "samples": 6,
+          "p50": 1567.525,
+          "p95": 1625.63,
+          "min": 1558.593,
+          "max": 1625.63
+        }
+      },
+      "candidate": {
+        "rps": {
+          "samples": 6,
+          "p50": 27250.479,
+          "p95": 27661.776,
+          "min": 19882.775,
+          "max": 27661.776
+        },
+        "avg_ns_per_valid_request": {
+          "samples": 6,
+          "p50": 36379,
+          "p95": 50294,
+          "min": 36150,
+          "max": 50294
+        },
+        "process_wall_ms": {
+          "samples": 6,
+          "p50": 1556.474,
+          "p95": 1587.631,
+          "min": 1533.839,
+          "max": 1587.631
+        }
+      },
+      "paired_delta": {
+        "rps_ratio": {
+          "samples": 6,
+          "p50": 41.433,
+          "p95": 44.211,
+          "min": 29.685,
+          "max": 44.211
+        },
+        "rps_pct": {
+          "samples": 6,
+          "p50": 4043.254,
+          "p95": 4321.113,
+          "min": 2868.547,
+          "max": 4321.113
+        },
+        "avg_ns_per_valid_request_pct": {
+          "samples": 6,
+          "p50": -97.639,
+          "p95": -96.631,
+          "min": -97.738,
+          "max": -96.631
+        }
+      }
+    },
+    "pair_deltas": [
+      {
+        "pair": 0,
+        "order": "baseline-candidate",
+        "rps_ratio": 42.35778053919016,
+        "rps_pct": 4135.778053919016,
+        "avg_ns_per_valid_request_pct": -97.63922067507187
+      },
+      {
+        "pair": 1,
+        "order": "candidate-baseline",
+        "rps_ratio": 43.6983622921113,
+        "rps_pct": 4269.83622921113,
+        "avg_ns_per_valid_request_pct": -97.71162167673477
+      },
+      {
+        "pair": 2,
+        "order": "baseline-candidate",
+        "rps_ratio": 41.432541758364756,
+        "rps_pct": 4043.2541758364755,
+        "avg_ns_per_valid_request_pct": -97.58647384262194
+      },
+      {
+        "pair": 3,
+        "order": "candidate-baseline",
+        "rps_ratio": 44.211126344237705,
+        "rps_pct": 4321.112634423771,
+        "avg_ns_per_valid_request_pct": -97.73815467393527
+      },
+      {
+        "pair": 4,
+        "order": "baseline-candidate",
+        "rps_ratio": 29.68546875476861,
+        "rps_pct": 2868.5468754768613,
+        "avg_ns_per_valid_request_pct": -96.63140043294682
+      },
+      {
+        "pair": 5,
+        "order": "candidate-baseline",
+        "rps_ratio": 37.30575179955734,
+        "rps_pct": 3630.5751799557343,
+        "avg_ns_per_valid_request_pct": -97.31951069405562
+      }
+    ]
+  },
+  "interpretation": {
+    "accepted": true,
+    "mechanism": "The baseline uses a 1 ms polling/retry owner. The candidate uses one process-level mio shared reactor with command wake coalescing and activity coalescing from accepted private authority.",
+    "non_claims": [
+      "GitHub-hosted timing is not an SLA.",
+      "This single-connection HTTPS corpus is not the same as the private c32 throughput benchmark.",
+      "A large A/B delta does not by itself establish production service throughput.",
+      "No Host ABI, Lib artifact, TLS/HTTP/JSON/compression/router semantic, retry, or socket-custody rule is changed."
+    ]
+  }
+}

@@ -4,8 +4,9 @@
   "oracle_sources": {
     "scripts/test-http1-libsrc.mjs": "638f326291311de137ad29926ef9de50aec7a852e75b48fbf30d72d27c0a0d65",
     "scripts/test-data-core-libsrc.mjs": "05c00931260a6a9375936c74ed15534bfed0c1203bd7c93111a47ec4e5402f29",
-    "scripts/qualify-current-v2-next.mjs": "d4d4e5ccdd2bfacd565476daa86c3ac69b83ca3861712987598be7957ce8ac7c",
+    "scripts/qualify-current-v2-next.mjs": "877e63da8ad475bd971059be97534f1ee1138533b542cfe78fcbc51010b238ef",
     "scripts/current-v2-upstream-provenance.mjs": "880f057f961d0fc2a36fe0e2bc89bc4c0fc4e9f713728718d96bce22cd3df859",
+    "scripts/qualify-current-v2-source-free-sdk.mjs": "c5240950bee247da7906468c509f075d69e928ac619d7028a958da2958535817",
     "libsrc/qualification/wasmi-core/src/main.rs": "42ed5a7f900f241f2a3a286db6a396c734c64ce9f7da99b9e18aff21b522c06a",
     "libsrc/qualification/wasmi-core/Cargo.lock": "146c761a0910698dd231f8253d9016be8a7ea20f9343fc730be74c312e862a6c",
     "libsrc/qualification/current-v2-consumer/src/main.rs": "6af24268f98249dbf1fe7f5ca017cd3b42a25b39dac18fc6bb33fbdb38386193",
@@ -382,6 +383,29 @@
     "full_transitive_license_audit": false,
     "release_qualified": false,
     "receipt_sha256": "3edfc8f73ab246c8dd8c479ea3043b6cde9e000717e041fb621b8156d7310f3b"
+  },
+  "source_free_sdk": {
+    "accepted": true,
+    "packages": 5,
+    "isolated_files": 48,
+    "source_free_sdk_execution": true,
+    "execution": {
+      "accepted": true,
+      "engine": "wasmtime-49.0.0",
+      "packages": 5,
+      "rounds_per_package": 128,
+      "http1_calls": 768,
+      "owned_calls": 1024,
+      "clock_calls": 256,
+      "counter_lifecycles": 129,
+      "data_core_calls": 896,
+      "data_core_types": 6,
+      "missing_host_rejected": true,
+      "stale_resource_rejected": true,
+      "consumer": "generated-root-sdk-only",
+      "ordinary_wasmc_app_qualified": false
+    },
+    "release_qualified": false
   },
   "selected_current_catalog": false,
   "ordinary_wasmc_app_qualified": false,

@@ -67,6 +67,20 @@ The offline gate rejects altered provenance, missing notices, file/directory
 links and false promotion claims. Full transitive license audit, explicit
 package license binding and ordinary App admission remain pending. No new
 package has been selected or released by this evidence-only checkpoint.
+The next local checkpoint closes source-free SDK consumption for the five
+staged roots: a fresh isolated 48-file tree contains only their exact generated
+roots and the public consumer, with no compiler/provider/upstream semantic
+implementation source. Locked/offline compilation and all five SDK executions
+PASS. Public engine Cargo dependencies remain the admitted consumer toolchain.
+The repeated optional Intel HTTPS CI failure remains retained, not waived:
+9f498ab run 36774756671/job 110089765924 failed with baseline WouldBlock.
+The shared HTTPS test harness now waits for runtime initialization before client
+connect, retains 5s socket deadlines and prohibits request replay. Four local
+TCP/error/readiness tests and complete six-pair ARM macOS HTTPS parity PASS.
+Historical throughput deltas reject mismatched timing epochs because startup
+compilation is now excluded from the request timing interval. New Intel CI
+confirmation and ordinary App/release admission are still pending. See branch
+HANDOFF and `admission/current-v2-next/https-startup-macos-aarch64.json`.
 Do not refresh v0.0.20 metadata around these future bytes; the old candidate
 must continue rejecting this tree as product drift.
 

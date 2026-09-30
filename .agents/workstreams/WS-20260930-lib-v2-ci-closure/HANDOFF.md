@@ -212,3 +212,42 @@ owner's ten uncommitted files at 3b797a77 and was not modified or adopted.
 Next use matching clean producer authority for ordinary App evidence; complete
 transitive/license admission before a future candidate. Do not promote these
 sidecar receipts to a release or relax any old-candidate drift rejection.
+
+## 2026-10-01 source-free SDK and HTTPS startup repair
+
+Five staged generated SDKs now compile and execute in a separate 48-file
+consumer tree: exact nine-file roots plus Cargo.toml/lock and consumer main.
+No compiler/provider/adapter/upstream semantic sources are copied; public engine
+registry sources and compatible Cargo build caches remain allowed. Exact roots
+match both independent build inventories; before/after consumer inputs match.
+Receipt: `admission/current-v2-next/source-free-sdk.json`; oracle is
+`scripts/qualify-current-v2-source-free-sdk.mjs`, wired into exact qualification
+and public CI. All five 128-round SDK journeys pass. Ordinary App remains false.
+
+Actual remote failure at 9f498ab: Host HTTPS flywheel run 36774756671,
+job 110089765924 (macos-15-intel) reports baseline exit 1 / OS code 35 WouldBlock.
+The prior trace has no phase marker, so exact Intel failure phase is not proven.
+Static harness inspection and a real TCP reproducer show a startup race:
+listener bind precedes ServerRuntime module compilation/instantiation, while the
+client connects immediately under a 5-second socket timeout. Readiness now
+waits for successful initialization with a separate bounded 30-second limit,
+preserves the original error, and keeps missing/panicked/failed initialization
+fail-closed. No request retry, Host API or Lib bytes changed. Four regression
+tests pass, including old-path timeout and new-path delivery with equal I/O
+deadlines. Baseline clippy passes under the existing CI warning policy.
+
+Real local ARM macOS HTTPS evidence: `https-startup-macos-aarch64.json` retains
+the complete two-lane 256-request forced-seven-byte-write qualification plus
+warmups and six alternating 1-second A/B pairs. All parity/lifecycle gates pass;
+report hashes bind revised main/startup sources and both binaries. Intel/other
+new-commit cross-platform results are pending, not inferred from ARM success.
+Startup is now outside the request timing interval, so aggregator rejects
+mixed epochs and omits historical numeric deltas against the older interval.
+Ten timing tests include actual aggregator fixtures; cloned synthetic platform
+rows are negative-test inputs only, never qualification. No throughput/SLA or
+production-default claim follows from hosted or local ratios.
+
+Global package counts remain 10/18 built, 5/18 current-selectable, eight
+unrebuilt; staged qualification is not admission. Next: clean matching producer
+ordinary App evidence, complete transitive/license binding, current route/install
+admission and remaining package rebuilds. Preserve other owners' dirty WIT work.
