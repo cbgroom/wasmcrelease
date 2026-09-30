@@ -98,6 +98,20 @@ by the existing current-development route; tags retain strict release checks.
 Remote failure run 36777376287 is retained in the branch HANDOFF. Counts remain
 10/18 built and 5/18 selectable; do not claim package promotion from this slice.
 
+Exact package license binding is now implemented for all five staged roots:
+`admission/current-v2-next/package-license-bindings.json` pins each manifest and
+complete generated inventory, research policy/LICENSE and fifteen primary
+upstream notices without changing strict nine-file roots or earlier grants.
+Fresh 66-file licensed delivery and 69-file public SDK consumer pass; thirty-five
+mutation/filesystem controls reject missing notices, links, self-rehashing and
+false promotion. Full dependency/toolchain license audit still remains FALSE,
+and a future candidate must carry this outer envelope. The current catalog and
+immutable release are unchanged. See docs/CURRENT_V2_LICENSED_DELIVERY.md.
+Hosted Host-boundary run 36779278808 at exact 7f45899 now SUCCESS; that does
+not qualify this new stage. Default-build repair currently overlaps another
+workstream's exclusive Core runtime claim (fuel-observation, c169f471); do not
+modify its source or infer master integration. Branch HANDOFF preserves scope.
+
 ## 2026-09-29 v0.0.20 research-license candidate
 
 Branch `release/v0.0.20-research-license` starts from merged public main

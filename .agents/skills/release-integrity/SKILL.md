@@ -61,6 +61,16 @@ Canonical resource-new/drop intrinsics are not OS Host authorities, but must
 still match an explicit exact import set. Source-free consumers may copy public
 SDK/driver glue and WIT, never Lib implementation or machine build caches.
 
+When a generated package schema has a strict inventory with no license field,
+do not edit its manifest or insert unbound license files into its root. Bind
+that exact manifest and every delivery file in an outer license distribution
+manifest. The future candidate must carry the envelope, research license,
+policy and reviewed third-party notices together. Validate a fresh isolated
+delivery against independently pinned build receipts; reject dropped notices,
+self-rehashed replacements, linked entries and false upstream relicense claims.
+An exact license binding is not a full dependency/toolchain license audit;
+record those missing obligations separately and keep release admission false.
+
 Use `./scripts/validate-maintainer.sh` for repository consistency, then run the
 host journeys selected by `release-host-integration`.
 

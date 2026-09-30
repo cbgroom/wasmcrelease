@@ -309,3 +309,60 @@ aggregate PASS with all thirteen focused checks and old-candidate drift
 rejection. Routing/tag-override controls, fifteen App negative controls,
 research-license policy and diff whitespace checks PASS. Hosted checks must
 qualify the next committed checkpoint independently, not these dirty bytes.
+
+## 2026-10-01 exact licensed distribution closure
+
+Current live ownership check found a newly active
+`WS-20261001-fuel-observation-v1` exclusive claim on the entire
+`crates/wasmc_core_runtime` directory. It initially had dirty implementation;
+during this turn its owner pushed c169f47189217d3b98f12e19be8ba6f866582862
+and the tree became clean. That revision still gates EPOCH_TICK_NS on Wasmi;
+it is not a fix or master integration. No source/claims were edited here.
+Do not overwrite or independently integrate this unfinished runtime work.
+The WIT-dependency producer implementation likewise remains separately owned.
+
+Safe non-overlapping work closed the exact license binding for the five staged
+roots. `scripts/current-v2-package-license.mjs` emits a distribution manifest
+binding each exact lib.json/Core/Component/generated SDK and all other root
+files to independent first/second producer inventories, plus research LICENSE,
+license-policy, primary review and fifteen notices. Strict nine-file package
+roots are byte-unchanged. Upstream terms and earlier grants are not overridden.
+`package-license-bindings.json` is outer metadata, not a generated-schema change.
+Future candidate MUST carry that envelope or equivalent exact binding; a bare
+root without the license envelope is not authorized by this gate.
+
+Fresh licensed distribution: 66 exact files, five roots. Thirty-five JSON and
+real-filesystem negative controls reject missing/tampered licenses and notices,
+linked files/directories, extra source, self-rehashed replacement, dropped root,
+clobber/reuse and false commercial/production/upstream/release claims.
+Actual HTTP1 oracle from the copied tree passes 1,422 cases. Adding only the
+three public consumer files gives 69 inputs; locked/offline generated SDK
+execution passes all five packages and leaves every input byte unchanged.
+No compiler/provider/upstream semantic implementation is copied. Engine Cargo
+registry and compatible caches remain public consumer toolchain inputs.
+
+Exact batch qualification, current closure and public Lib CI now require the
+binding/isolated-delivery oracle. Developer candidate suite gains its own
+license-binding case. Complete dependency/toolchain license audit remains
+FALSE, including three canonical adapter builds and generated-SDK engine deps;
+the seven primary crates are not a full dependency inventory. No new candidate
+or catalog admission is claimed. Read docs/CURRENT_V2_LICENSED_DELIVERY.md.
+
+Hosted evidence refreshed at exact 7f45899804b47c7960928606b11cebdcc1ad6d02:
+Host Lib-defined boundary run 36779278808 SUCCESS confirms the previous nested
+CI routing repair. Public Lib source incubation run 36779278979 and revised
+Intel HTTPS remain pending; no hosted claim applies to this newer dirty stage.
+Counts remain 10/18 built and 5/18 selectable; App locally qualifies 1/5 staged
+packages, not all five. Next: close remaining dependency/toolchain audit;
+coordinate runtime-directory ownership before default feature-gate repair;
+generic rich-value/resource Core transport, remaining eight builds, new
+catalog/search/install and exact future-candidate Pi/release gates.
+
+Final local validation: exact five-root Core/Component/SDK qualification PASS;
+licensed SDK isolation and 35 negative controls PASS; candidate suite 14/14
+PASS; license policy, tag/development routing and diff checks PASS. Only this
+workstream's release metadata/glue changed; all generated nine-file package
+roots, compiler/Lib bytes, current selection and frozen release identity files
+remain unchanged. Owning release-integrity Skill records the outer-envelope
+rule; other selected Skills retain their current boundaries. Push this coherent
+checkpoint and qualify its new hosted CI independently.
