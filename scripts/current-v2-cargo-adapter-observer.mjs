@@ -6,24 +6,27 @@ import {mkdirSync,readFileSync,writeFileSync,realpathSync,lstatSync,readdirSync}
 import {resolve,join,dirname,basename} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {snapshotGeneratedAdapter,verifyGeneratedAdapterUnchanged} from './current-v2-generated-adapter-snapshot.mjs';
+import {auditGeneratedManifest} from './current-v2-generated-manifest-profile.mjs';
 const modulePath=fileURLToPath(import.meta.url),sha=b=>createHash('sha256').update(b).digest('hex');
 const digest=path=>sha(readFileSync(path));
 const canonical=path=>{assert.equal(realpathSync(path),resolve(path),'linked observer scope');return resolve(path);};
 const quote=s=>"'"+s.replaceAll("'","'\\''")+"'";
-export function installCargoAdapterObserver(parent,workspace,realCargo){
+export function installCargoAdapterObserver(parent,workspace,realCargo,generatedContract=null){
   const base=canonical(parent),scope=canonical(workspace),cargo=resolve(realCargo);
   assert(lstatSync(base).isDirectory()&&lstatSync(scope).isDirectory());
   assert(scope.startsWith(base+'/'),'workspace outside this private invocation');
   assert(!cargo.startsWith(base+'/'),'delegate must not be this observer');
   assert(lstatSync(realpathSync(cargo)).isFile(),'Cargo delegate is not a file');
   const out=join(base,'cargo-observer');mkdirSync(out);
-  for(const name of ['current-v2-cargo-adapter-observer.mjs','current-v2-generated-adapter-snapshot.mjs'])
+  for(const name of ['current-v2-cargo-adapter-observer.mjs','current-v2-generated-adapter-snapshot.mjs','current-v2-generated-manifest-profile.mjs'])
     writeFileSync(join(out,name),readFileSync(join(dirname(modulePath),name)),{flag:'wx'});
   mkdirSync(join(out,'receipts'));
   const config={schema:'wasmc.cargo-adapter-observer-config/v1',workspace:scope,output:out,
     real_cargo:cargo,real_cargo_sha256:digest(cargo),node:process.execPath,node_sha256:digest(process.execPath),
     observer_sha256:digest(join(out,'current-v2-cargo-adapter-observer.mjs')),
-    snapshot_sha256:digest(join(out,'current-v2-generated-adapter-snapshot.mjs'))};
+    snapshot_sha256:digest(join(out,'current-v2-generated-adapter-snapshot.mjs')),
+    manifest_auditor_sha256:digest(join(out,'current-v2-generated-manifest-profile.mjs')),
+    generated_contract:generatedContract};
   const configPath=join(out,'config.json'),bytes=Buffer.from(JSON.stringify(config));
   writeFileSync(configPath,bytes,{flag:'wx'});
   writeFileSync(join(out,'cargo'),`#!/bin/sh\nexec ${quote(process.execPath)} ${quote(join(out,'current-v2-cargo-adapter-observer.mjs'))} "$@"\n`,{flag:'wx',mode:0o700});
@@ -62,13 +65,22 @@ function main(){
   assert.equal(resolve(modulePath),join(out,'current-v2-cargo-adapter-observer.mjs'));
   assert.equal(digest(modulePath),config.observer_sha256);
   assert.equal(digest(join(out,'current-v2-generated-adapter-snapshot.mjs')),config.snapshot_sha256);
+  assert.equal(digest(join(out,'current-v2-generated-manifest-profile.mjs')),config.manifest_auditor_sha256);
   assert.equal(process.execPath,config.node);assert.equal(digest(process.execPath),config.node_sha256);
   assert(!resolve(config.real_cargo).startsWith(out+'/'),'recursive Cargo delegate');
   assert.equal(digest(config.real_cargo),config.real_cargo_sha256,'Cargo delegate changed');
   const args=process.argv.slice(2),cwd=process.cwd(),mode=classifyObservedCargo(args,cwd,config);
   const before=mode.generated?snapshotGeneratedAdapter(config.workspace,cwd,{requireLock:mode.kind!=='lock'}):null;
+  const manifestProfile=mode.generated&&config.generated_contract
+    ?auditGeneratedManifest(readFileSync(join(cwd,'Cargo.toml')),config.workspace,config.generated_contract):null;
+  if(manifestProfile)assert.equal(manifestProfile.raw_sha256,before.files['Cargo.toml'].sha256);
   const result=spawnSync(config.real_cargo,args,{cwd,env:process.env,stdio:'inherit',timeout:600000});
   const after=mode.generated?snapshotGeneratedAdapter(config.workspace,cwd):null;
+  if(manifestProfile){
+    const afterProfile=auditGeneratedManifest(readFileSync(join(cwd,'Cargo.toml')),config.workspace,config.generated_contract);
+    assert.deepEqual(afterProfile,manifestProfile,'generated manifest changed during Cargo');
+    assert.equal(afterProfile.raw_sha256,after.files['Cargo.toml'].sha256);
+  }
   if(mode.generated&&mode.kind==='build')verifyGeneratedAdapterUnchanged(config.workspace,cwd,before);
   if(mode.generated&&mode.kind==='lock'){
     const previous={...before.files},next={...after.files};delete previous['Cargo.lock'];delete next['Cargo.lock'];
@@ -80,8 +92,9 @@ function main(){
     adapter:mode.generated?basename(cwd):null,before,after,
     exit_code:result.status,signal:result.signal??null,delegate_sha256:config.real_cargo_sha256,
     observer_sha256:config.observer_sha256,snapshot_sha256:config.snapshot_sha256,
+    manifest_auditor_sha256:config.manifest_auditor_sha256,manifest_profile:manifestProfile,
     real_build_observed:mode.generated&&mode.kind==='build'&&result.status===0,
-    manifest_independently_qualified:false,full_transitive_license_audit:false,release_qualified:false}),{flag:'wx'});
+    manifest_independently_qualified:Boolean(manifestProfile),full_transitive_license_audit:false,release_qualified:false}),{flag:'wx'});
   if(result.error)throw result.error;
   process.exit(result.status??1);
 }

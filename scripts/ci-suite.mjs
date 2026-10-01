@@ -54,6 +54,7 @@ export function suiteCases(family,runtime='node',mirror='github') {
     item('current-v2-registry-notice-review','scripts/test-current-v2-registry-notice-review.mjs'),
     item('current-v2-build-input-witness','scripts/test-current-v2-build-input-snapshot.mjs'),
     item('current-v2-generated-adapter-input-witness','scripts/test-current-v2-generated-adapter-snapshot.mjs',[],fixturePermissions),
+    item('current-v2-generated-manifest-profile','scripts/test-current-v2-generated-manifest-profile.mjs',[],fixturePermissions),
     item('current-v2-retained-build-witness','scripts/test-current-v2-retained-build-witness.mjs'),
     item('current-v2-registry-source-witness','scripts/test-current-v2-registry-source-witness.mjs'),
     item('current-v2-toolchain-notices','scripts/test-current-v2-toolchain-notices.mjs'),

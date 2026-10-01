@@ -45,7 +45,21 @@ try{
   assert.equal(failed.status,7);assert(readCargoAdapterObservations(observer.output).some(row=>row.exit_code===7&&!row.real_build_observed));
   writeFileSync(join(observer.output,'config.json'),Buffer.concat([readFileSync(join(observer.output,'config.json')),Buffer.from(' ')]));
   const badConfig=invoke(['-Vv'],temp);assert.notEqual(badConfig.status,0);assert.match(badConfig.stderr,/observer config changed/);rejected++;
-  assert.equal(rejected,10);
+  const pass2=join(temp,'profile-pass'),workspace2=join(pass2,'workspace'),adapter2=join(workspace2,'.wasmc-rust-adapter-456-0');
+  mkdirSync(join(adapter2,'src'),{recursive:true});mkdirSync(join(workspace2,'upstream'));
+  const manifest=`[package]\nname = "wasmc-lib-adapter"\nversion = "1.2.3"\nedition = "2024"\n[lib]\ncrate-type = ["cdylib"]\n[dependencies]\nalgo = { package = "fixture-package", path = "${join(workspace2,'upstream')}" }\n[profile.release]\npanic = "abort"\n[workspace]\n`;
+  writeFileSync(join(adapter2,'Cargo.toml'),manifest);writeFileSync(join(adapter2,'mapping.json'),'{}\n');writeFileSync(join(adapter2,'src/lib.rs'),'source\n');
+  const observer2=installCargoAdapterObserver(pass2,workspace2,delegate,{version:'1.2.3',dependency_alias:'algo',dependency_package:'fixture-package',upstream_crate_dir:'upstream'});
+  const invoke2=args=>spawnSync(join(observer2.output,'cargo'),args,{cwd:adapter2,env:{...process.env,...observer2.env},encoding:'utf8'});
+  const locked2=invoke2(['generate-lockfile','--offline']);assert.equal(locked2.status,0,locked2.stderr);
+  const built2=invoke2(build);assert.equal(built2.status,0,built2.stderr);
+  const profiled=readCargoAdapterObservations(observer2.output);assert.equal(profiled.length,2);
+  assert(profiled.every(row=>row.manifest_independently_qualified&&row.manifest_profile.expected_contract_checked));
+  for(const bad of [manifest.replace('panic = "abort"','panic = "unwind"'),manifest+'[features]\nextra=[]\n']){
+    writeFileSync(join(adapter2,'Cargo.toml'),bad);const result=invoke2(build);assert.notEqual(result.status,0);rejected++;
+    assert.equal(readCargoAdapterObservations(observer2.output).length,2,'invalid manifest must reject before delegation');
+  }
+  assert.equal(rejected,12);
   console.log(JSON.stringify({accepted:true,negative_controls:rejected,fixture_delegation_exercised:true,
     generated_lock_and_build_observed:true,failed_delegate_retained:true,real_producer_build_observed:false,release_qualified:false}));
 }finally{rmSync(temp,{recursive:true,force:true});}

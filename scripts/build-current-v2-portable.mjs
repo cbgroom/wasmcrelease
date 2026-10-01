@@ -94,7 +94,9 @@ for (const id of selectedId ? [selectedId] : cohort) {
       spec.rust = { artifact_name: artifactName, crate_dir: 'adapter', profile: 'wit-bindgen-component' };
     }
     writeFileSync(join(workspace, 'lib.build.json'), JSON.stringify(spec, null, 2) + '\n');
-    const observer=observerTools?.installCargoAdapterObserver(dirname(workspace),workspace,resolve(realCargoArg));
+    const generatedContract=spec.rust.profile==='wit-bindgen-component'?null:{version:spec.skill.version,
+      dependency_alias:spec.rust.dependency_alias,dependency_package:spec.rust.dependency_package,upstream_crate_dir:spec.rust.crate_dir};
+    const observer=observerTools?.installCargoAdapterObserver(dirname(workspace),workspace,resolve(realCargoArg),generatedContract);
     const witnessOptions={siblingWit:Boolean(canonical)};
     const sourceInputs=snapshotBuildInputs(workspace,witnessOptions);
     const registrySources=cacheAudit?.captureCargoRegistry(dependencyInventory,resolve(cargoHomeArg),workspace);
@@ -118,6 +120,8 @@ for (const id of selectedId ? [selectedId] : cohort) {
         assert.equal(locks.length,1,'missing generated lock observation');
         assert.equal(locks[0].adapter,generated[0].adapter,'lock/build adapter mismatch');
         assert.deepEqual(locks[0].after.files,generated[0].before.files,'generated inputs changed between lock and build');
+        assert(generated[0].manifest_independently_qualified&&locks[0].manifest_independently_qualified,'missing generated manifest qualification');
+        assert.deepEqual(locks[0].manifest_profile,generated[0].manifest_profile,'manifest profile drift between lock and build');
         const manifest=JSON.parse(readFileSync(join(packageRoot,'lib.json')));
         const lockInputs=manifest.build.inputs.filter(row=>row.kind==='cargo-lock');
         assert.equal(lockInputs.length,1);
@@ -125,7 +129,7 @@ for (const id of selectedId ? [selectedId] : cohort) {
           mapping_sha256:report.mapping_sha256,cargo_lock_sha256:lockInputs[0].sha256});
       }
       cargoObserver={observations,generated_adapter_expected:expectedMapped,generated_adapter_builds:generated.length,
-        producer_digest_binding:binding,manifest_independently_qualified:false,
+        producer_digest_binding:binding,manifest_independently_qualified:expectedMapped,
         independent_generated_manifest_comparison:false,full_transitive_license_audit:false,release_qualified:false};
     }
     run(join(producer, 'target/debug/wasmc'), ['lib', 'verify', packageRoot], producer);
@@ -143,6 +147,12 @@ for (const id of selectedId ? [selectedId] : cohort) {
   assert.deepEqual(builds[1].inventory, builds[0].inventory, `${id}: complete package second-build drift`);
   assert.deepEqual(builds[1].source_inputs,builds[0].source_inputs,`${id}: independent build input drift`);
   if(cacheAudit)assert.deepEqual(builds[1].registry_sources,builds[0].registry_sources,`${id}: independent registry source/routing drift`);
+  if(observerTools&&builds[0].cargo_observer.generated_adapter_expected){
+    const profiles=builds.map(b=>b.cargo_observer.observations.find(o=>o.kind==='build'&&o.generated).manifest_profile);
+    assert.deepEqual(profiles[1].model,profiles[0].model,`${id}: independent generated manifest semantic drift`);
+    assert.equal(profiles[1].path_scrubbed_sha256,profiles[0].path_scrubbed_sha256,`${id}: independent generated manifest non-path byte drift`);
+    for(const b of builds)b.cargo_observer.independent_generated_manifest_comparison=true;
+  }
   rows.push({ id, version: candidate.version, builds, strict_reopen: true,
     implementation_source_authority: canonical ? producerAuthority : authority,
     canonical_source_recovered: Boolean(canonical),

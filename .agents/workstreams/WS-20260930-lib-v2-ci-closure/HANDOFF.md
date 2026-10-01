@@ -918,3 +918,18 @@ Local repaired candidate suite candidate-cargo-observer-fixed is 22/22 PASS at
 c0ac1e3, with ten separate Cargo-observer controls PASS. Source ownership and
 private MST blockers remain untouched; all-package counts still 10/18 built,
 5/18 selected, ordinary App 1/5. No live model pair or new release is claimed.
+
+## 2026-10-01 generated manifest qualification ready for new real execution
+
+Added complete finite manifest profile audit from independently selected build
+specification, with exact local dependency binding and realpath checks. No
+unknown/duplicate Cargo fields/sections, feature/patch/build-script additions or
+dependency substitution is allowed. Only one verified path literal is scrubbed;
+the independent comparison retains all other bytes, not just parsed semantics.
+Observer hashes the selected auditor and verifies profile before/after Cargo;
+runner requires profile and semantic/non-path byte equality across passes.
+Twenty-four profile negatives and twelve delegate controls PASS, including
+pre-delegation manifest rejection. Development CI adds this fixture. Existing
+r13 record is unchanged and cannot inherit this new gate retroactively. Next
+run the new gate in an independent OwnedAlgorithms dual build; all obligations,
+source-owner/MST blockers and all 18-package release scope remain unchanged.

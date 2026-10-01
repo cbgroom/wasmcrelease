@@ -211,3 +211,23 @@ generated Cargo.toml digests differ. Absolute dependency paths are expected in
 the producer's manifest template, but the snapshot alone does not prove that
 paths are the only difference. Manifest qualification and independent normalized
 comparison remain false, as do licensed-recipient delivery, full audit and release.
+
+## Complete generated manifest profile gate
+
+The observer can now check the complete finite generated Cargo profile against
+the independently selected build specification before delegation and afterward.
+Only package identity/version/edition, cdylib, one expected local dependency,
+abort profile and isolated workspace are accepted. Unknown/duplicate fields,
+sections, dependencies, build scripts or escaped/unsupported syntax reject;
+this is explicitly not a general TOML parser. Dependency path must equal the
+selected real workspace crate, not merely any path below that workspace.
+
+It computes both semantic identity and a byte-preserving path-scrubbed digest:
+exactly one validated dependency path literal is replaced with its stable
+workspace-relative identity. Every other byte, including formatting, remains
+covered. Independent builds must match both semantic model and path-scrubbed
+bytes. The old r13 observation remains unqualified by this newer gate.
+`node scripts/test-current-v2-generated-manifest-profile.mjs` has 24 fault
+controls; the scoped Cargo observer fixture now has 12 and rejects invalid
+manifest profiles before delegation. Real execution of the new gate remains
+separate from these fixtures and must retain a new source-bound receipt.
