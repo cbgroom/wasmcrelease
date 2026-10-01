@@ -72,3 +72,32 @@ This is diagnostic evidence at the observation time, not a captured pre/post
 build cache witness, historical certification or a reproducible CI audit gate.
 Registry-cache build stability, external temporary adapter contents and full
 target/toolchain license obligations remain pending.
+
+## Registry source guard
+
+`current-v2-registry-source-witness.mjs` now verifies all conservative locked
+crate archives against their locked SHA256 and compares every extracted file
+against the verified archive. Missing, changed, added or linked source files,
+extra directories, unsupported archive entry types and unsafe paths reject.
+Only the exact generated Cargo `.cargo-ok` marker is excluded from source-tree
+identity; no implementation content is emitted. The reviewed archive subset is
+regular files and GNU longname headers, not a general tar extraction library.
+
+Independent fixture: `node scripts/test-current-v2-registry-source-witness.mjs`.
+34 rejection controls include cache/archive faults and source/registry/patch,
+path and environment overrides. The actual current cache contains 189 matching
+crates / 12,335 matching files; this snapshot alone remains nonhistorical.
+
+The portable build runner accepts an explicit fourth `CARGO_HOME` argument
+after PACKAGE_ID. It passes that exact home to the private producer, records
+the registry witness and inherited Cargo config digests before execution, and
+compares them after each build and across independent builds. Configs that
+redirect source/registry/path/patch resolution or registry environment overrides
+reject. Only the observed crates.io directory layout is supported by this audit;
+different layouts need explicit reviewed support rather than a silent fallback.
+Cargo configs must match the exact reviewed non-routing config digest, not a
+partial TOML interpretation; quoted/dotted routing keys also reject. Additional
+configuration profiles require review. A config-free path is supported.
+Omitting that fourth argument does not attest to registry sources. Temporary
+generated adapter contents, wrappers/toolchain execution and full license
+obligations remain separate unclosed gates. No old build is retroactively PASS.

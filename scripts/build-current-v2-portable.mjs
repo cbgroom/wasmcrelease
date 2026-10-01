@@ -10,15 +10,15 @@ import { fileURLToPath } from 'node:url';
 import {snapshotBuildInputs,verifyBuildInputsUnchanged} from './current-v2-build-input-snapshot.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const [producerArg, workArg, selectedId] = process.argv.slice(2);
-assert.ok(producerArg && workArg, 'usage: build-current-v2-portable.mjs PRIVATE_PRODUCER PRIVATE_EMPTY_OUTPUT');
+const [producerArg, workArg, selectedId, cargoHomeArg] = process.argv.slice(2);
+assert.ok(producerArg && workArg, 'usage: build-current-v2-portable.mjs PRIVATE_PRODUCER PRIVATE_EMPTY_OUTPUT [PACKAGE_ID [CARGO_HOME]]');
 const producer = resolve(producerArg);
 const work = resolve(workArg);
 assert.ok(work.startsWith(producer + '/'), 'output must be inside the selected private producer');
 assert.ok(!work.startsWith(root + '/'), 'no private build in public checkout');
 const run = (cmd, args, cwd = root) => execFileSync(cmd, args, {
   cwd, encoding: 'utf8', maxBuffer: 64 << 20, timeout: 600000,
-  env: { ...process.env, RUSTUP_TOOLCHAIN: '1.96.0' },
+  env: { ...process.env, RUSTUP_TOOLCHAIN: '1.96.0', ...(cargoHomeArg?{CARGO_HOME:resolve(cargoHomeArg)}:{}) },
 }).trim();
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
 const authority = run('git', ['rev-parse', 'HEAD']);
@@ -28,6 +28,9 @@ assert.equal(producerAuthority, '3b797a77d0afa25264a11362603b0d596d2e0ba7');
 assert.equal(run('git', ['status', '--porcelain'], producer), '', 'producer must be clean');
 const source = path => execFileSync('git', ['show', `${authority}:${path}`], { cwd: root });
 const privateSource = path => execFileSync('git', ['show', `${producerAuthority}:${path}`], { cwd: producer });
+// Explicit opt-in records a real selected Cargo cache, not a retrospective claim.
+const cacheAudit=cargoHomeArg?await import('./current-v2-registry-source-witness.mjs'):null;
+const dependencyInventory=cacheAudit?JSON.parse(source('admission/current-v2-next/dependency-inventory.json')):null;
 const recovered = {
   'wasmc-host-clock': 'wasmc_lib_host_candidate_v0',
   'wasmc-owned-algorithms': 'wasmc_lib_dual_view_candidate_v0',
@@ -90,10 +93,13 @@ for (const id of selectedId ? [selectedId] : cohort) {
     writeFileSync(join(workspace, 'lib.build.json'), JSON.stringify(spec, null, 2) + '\n');
     const witnessOptions={siblingWit:Boolean(canonical)};
     const sourceInputs=snapshotBuildInputs(workspace,witnessOptions);
+    const registrySources=cacheAudit?.captureCargoRegistry(dependencyInventory,resolve(cargoHomeArg),workspace);
     const report = JSON.parse(run(join(producer, 'target/debug/wasmc'), [
       'lib', 'build', '--workspace', workspace, '--publication', publication, join(workspace, 'lib.build.json'),
     ], producer));
     verifyBuildInputsUnchanged(workspace,sourceInputs,witnessOptions);
+    if(cacheAudit)assert.deepEqual(cacheAudit.captureCargoRegistry(dependencyInventory,resolve(cargoHomeArg),workspace),registrySources,
+      'Cargo registry sources/routing changed during producer execution');
     const packageRoot = join(publication, id);
     run(join(producer, 'target/debug/wasmc'), ['lib', 'verify', packageRoot], producer);
     const inventory = {};
@@ -103,10 +109,12 @@ for (const id of selectedId ? [selectedId] : cohort) {
       else { const bytes = readFileSync(path); inventory[relative(packageRoot, path)] = { bytes: bytes.length, sha256: hash(bytes) }; }
     }};
     walk(packageRoot);
-    builds.push({ report, inventory, source_inputs:sourceInputs, build_inputs_unchanged:true });
+    builds.push({ report, inventory, source_inputs:sourceInputs, build_inputs_unchanged:true,
+      ...(cacheAudit?{registry_sources:registrySources,registry_sources_unchanged:true}:{}) });
   }
   assert.deepEqual(builds[1].inventory, builds[0].inventory, `${id}: complete package second-build drift`);
   assert.deepEqual(builds[1].source_inputs,builds[0].source_inputs,`${id}: independent build input drift`);
+  if(cacheAudit)assert.deepEqual(builds[1].registry_sources,builds[0].registry_sources,`${id}: independent registry source/routing drift`);
   rows.push({ id, version: candidate.version, builds, strict_reopen: true,
     implementation_source_authority: canonical ? producerAuthority : authority,
     canonical_source_recovered: Boolean(canonical),

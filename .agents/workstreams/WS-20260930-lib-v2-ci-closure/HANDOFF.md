@@ -679,3 +679,23 @@ PASS and git diff --check PASS. CI routing check is named
 scripts/test-current-v2-ci-routing.mjs (the guessed test-ci-routing.mjs does not
 exist and its MODULE_NOT_FOUND invocation was not a product/route test result).
 No exact new hosted all-checks PASS or release promotion is claimed.
+
+## 2026-10-01 reusable registry source and routing guard
+
+Task state: in-progress. New read-only registry witness checks exact locked
+archive bytes and every extracted file; unknown entries, additions, missing
+files, links, unsafe paths and source/registry/patch/path/env overrides reject.
+34 independent negative controls PASS. Actual current cache capture PASS:
+189 crates / 12,335 source files. SHA256 aggregate
+92d24d209afa0b99e83811d6d45909c513b861f300559a9a8009a275d93f14cd.
+Only digests/counts are public; private/compiler/cache source bodies stay private.
+
+Portable runner fourth argument after PACKAGE_ID selects an explicit CARGO_HOME
+for the real producer. The runner captures registry/routing metadata pre/post
+build and compares both independent passes. Existing no-fourth-argument receipts
+are not upgraded; their workspace gates remain valid. Configured wrappers and
+temporary generated adapter contents remain separate pending scope. No private
+source or Host API changes. Checkpoint guard before actual build invocation so
+the public Git input identity is clean. Full license/release flags stay false.
+Cargo config admission is exact reviewed non-routing digest (or absence), not
+an ad-hoc partial TOML parser; quoted/dotted override controls also reject.
