@@ -1,0 +1,13 @@
+package wasmc:resource-counter@0.0.1;
+
+interface counters {
+  resource counter {
+    constructor(initial: s32);
+    add: func(delta: s32) -> s32;
+    value: func() -> s32;
+  }
+}
+
+world resource-counter {
+  export counters;
+}

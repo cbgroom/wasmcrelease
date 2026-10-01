@@ -54,7 +54,11 @@ jobs:
         run: cargo +1.96.0 clippy --release --locked --manifest-path host/tests/https/Cargo.toml --all-targets --features reactor-candidate -- -D warnings -A dead_code -A clippy::manual_is_multiple_of -A clippy::type_complexity
       - name: Lint dedicated readiness control
         run: cargo +1.96.0 clippy --release --locked --manifest-path host/tests/https/Cargo.toml --all-targets --features readiness-dedicated -- -D warnings -A dead_code -A clippy::manual_is_multiple_of -A clippy::type_complexity
-      - name: Build polling baseline
+      - name: Reproduce startup race and qualify fail-closed readiness
+        run: |
+          node scripts/test-host-https-timing.mjs
+          cargo +1.96.0 test --release --locked --manifest-path host/tests/https/Cargo.toml --bin wasmc-host-https-qualification startup::tests
+      - name: Build polling baseline artifact
         run: cargo +1.96.0 build --release --locked --manifest-path host/tests/https/Cargo.toml
       - name: Preserve polling baseline binary
         run: node -e "require('fs').copyFileSync(process.argv[1],process.argv[2])" "host/tests/https/target/release/wasmc-host-https-qualification${{ runner.os == 'Windows' && '.exe' || '' }}" "host/tests/https/target/release/wasmc-host-https-baseline${{ runner.os == 'Windows' && '.exe' || '' }}"

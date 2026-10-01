@@ -1,0 +1,508 @@
+{
+  "schema": "wasmc.current-v2-next-local-qualification/v1",
+  "accepted": true,
+  "oracle_sources": {
+    "scripts/test-http1-libsrc.mjs": "638f326291311de137ad29926ef9de50aec7a852e75b48fbf30d72d27c0a0d65",
+    "scripts/test-data-core-libsrc.mjs": "05c00931260a6a9375936c74ed15534bfed0c1203bd7c93111a47ec4e5402f29",
+    "scripts/qualify-current-v2-next.mjs": "491515b53193d8dc8dac5a71a41e2fda74d15b2732c33a4045bc5df1d47e3572",
+    "scripts/current-v2-upstream-provenance.mjs": "880f057f961d0fc2a36fe0e2bc89bc4c0fc4e9f713728718d96bce22cd3df859",
+    "scripts/qualify-current-v2-source-free-sdk.mjs": "c5240950bee247da7906468c509f075d69e928ac619d7028a958da2958535817",
+    "scripts/test-current-v2-app.mjs": "fe8a61b6abde9300d31b4114d774fa5d670f3e6383c4aed39efb5351dff73f51",
+    "scripts/current-v2-package-license.mjs": "b1fe89ef849791e813bbca1d58f3582137195392f779e89d141fab7cc011deee",
+    "scripts/test-current-v2-package-license.mjs": "f05386530cfc2aef0558955267819dad2f3d2a3837e505fc7a1c954a82a4aaf2",
+    "scripts/current-v2-dependency-inventory.mjs": "b7e7a68f3ea74d29e4fd690b4b50fb11c6af0be7c3ea0652547218b8c4d7506f",
+    "scripts/current-v2-toolchain-notices.mjs": "1b2ca95230d2cc9a8159662e2a69a1cbc602ee8a583735a6e2fd4bdd4a054fc3",
+    "libsrc/qualification/wasmi-core/src/main.rs": "42ed5a7f900f241f2a3a286db6a396c734c64ce9f7da99b9e18aff21b522c06a",
+    "scripts/current-v2-registry-notice-review.mjs": "26f4e42e8d322b790dfe52c9a11d14ff5694fb162205516b1aaa471196f51f91",
+    "scripts/test-current-v2-registry-notice-review.mjs": "382789fdcc69c8a59bb25c6e3f692d9c78517285773cdf276c7d139866f60e61",
+    "scripts/current-v2-retained-build-witness.mjs": "8b9343f62b308b3f7d66d054ebd09629c4bb42e70e0519f4d8be7335da3e3992",
+    "scripts/test-current-v2-retained-build-witness.mjs": "561169b7d543fefcaf1bd3aaeb11bea8e4e952daa9928ba677038a8240fa4cca",
+    "scripts/current-v2-generated-manifest-witness.mjs": "80bf1058ba6be3ee2b18ee7b9a994a46f6fd5415040216180e864f01889b50a2",
+    "scripts/test-current-v2-generated-manifest-witness.mjs": "64a54c2fc569d523129506f7f3eec0f9d2acefc88636ae793d2bc3d5bb6c974b",
+    "scripts/current-v2-registry-source-witness.mjs": "3a9be005790c20b083708e19ed7eb59fd9190ff3979df9f502c639ad16fd3c74",
+    "scripts/test-current-v2-registry-source-witness.mjs": "0f4e2300e8961be44d65c325dae8a563518437c35f33243b08756ba93c0bc96b",
+    "libsrc/qualification/wasmi-core/Cargo.lock": "146c761a0910698dd231f8253d9016be8a7ea20f9343fc730be74c312e862a6c",
+    "libsrc/qualification/current-v2-consumer/src/main.rs": "6af24268f98249dbf1fe7f5ca017cd3b42a25b39dac18fc6bb33fbdb38386193",
+    "libsrc/qualification/current-v2-consumer/Cargo.lock": "b7ed1318c31e1d511eca8ad59b64939028a60594e004e4a939f9f2240b887d88"
+  },
+  "engine_tools": {
+    "wasmtime": "wasmtime 47.0.3 (5554cc1a6 2026-07-31)",
+    "wasm_tools": "wasm-tools 1.255.0"
+  },
+  "build_receipts_sha256": "bd9756e7214538594446043d573bbaf9f5e08be46c30ad3843d3e4849e3a29fa",
+  "data_build_receipts_sha256": "58f29ca2b4e8ba0795c6e066ac2fad00b0128b28f8fc26b001a6a4b6e2d2b3f9",
+  "packages": [
+    {
+      "id": "wasmc-http1",
+      "version": "0.0.1",
+      "root": "admission/current-v2-next/packages/wasmc-http1/0.0.1",
+      "manifest_sha256": "b248b689c47ea330438ec5cb5d3dbf0480d150fd909d764746dd7f4e8ac78700",
+      "artifact": {
+        "bytes": 36774,
+        "sha256": "e7615622fd807230ab6d8da08c064f23a66ee3b72f57ab0ddc8295c845d0a060"
+      },
+      "component": {
+        "bytes": 38874,
+        "sha256": "3d3047400bb3ee05462f3ed34d3b58522bf494c99339c579d73abf817af77d22"
+      }
+    },
+    {
+      "id": "wasmc-host-clock",
+      "version": "0.0.1",
+      "root": "admission/current-v2-next/packages/wasmc-host-clock/0.0.1",
+      "manifest_sha256": "ee4d9bc9fe24fd36f5587af1c6db007b05cb563f304d59b2bedec5cc309e838e",
+      "artifact": {
+        "bytes": 15261,
+        "sha256": "03e6a2096932f0b93178ed935b26da36d3005120ab188037c715b7a2e8e924b4"
+      },
+      "component": {
+        "bytes": 15971,
+        "sha256": "7aea4a1daf11bdff03e22aaef1c78737ba47a6cbc6e2a89471b34c1b9c6eb9e1"
+      }
+    },
+    {
+      "id": "wasmc-owned-algorithms",
+      "version": "0.1.0",
+      "root": "admission/current-v2-next/packages/wasmc-owned-algorithms/0.1.0",
+      "manifest_sha256": "ebcd425116e21853cccd75adca22d60e8f8a7f25b2a7e252dd39f2e9b088c7dd",
+      "artifact": {
+        "bytes": 19554,
+        "sha256": "9b1a9ff2cebef7d8f19c2be48e2a17d8b2aa9c3dd33c4d1d8d2a6e91e4b6be75"
+      },
+      "component": {
+        "bytes": 19902,
+        "sha256": "21707443691fa770845aee5d96a2b2cda9dca141a4aba27b19f242793702e39d"
+      }
+    },
+    {
+      "id": "wasmc-resource-counter",
+      "version": "0.0.1",
+      "root": "admission/current-v2-next/packages/wasmc-resource-counter/0.0.1",
+      "manifest_sha256": "3bbc32ae48037a38d58e97199c6cbde540c29763316ec2337c02501479a032a0",
+      "artifact": {
+        "bytes": 16031,
+        "sha256": "7f794dae6e02664f2a9977b6926cd05ffb4998137e398422caa3e8de1370e345"
+      },
+      "component": {
+        "bytes": 17864,
+        "sha256": "68af54b9e3ee6d6b728f0726925190fca1e8d2989272e11577e6d60e879f1d59"
+      }
+    },
+    {
+      "id": "wasmc-data-core",
+      "version": "0.0.1",
+      "root": "admission/current-v2-data-core/packages/wasmc-data-core/0.0.1",
+      "manifest_sha256": "d7fb0cb64e2097a0419383c09ccbf18ff9031d5f25c8fdbd4cfeff61317cfaaf",
+      "artifact": {
+        "bytes": 868932,
+        "sha256": "255d4625fa7f3f8bbea534476e862475585acb59edf3cff19c7e01eff736d823"
+      },
+      "component": {
+        "bytes": 871162,
+        "sha256": "43a459ec14187b333fd091cb6ad410669e7d65050c77829fe98f460c7f1ca63d"
+      }
+    }
+  ],
+  "http1_behavior": {
+    "accepted": true,
+    "candidate": "wasmc-http1",
+    "version": "0.0.1",
+    "cases": 1422,
+    "host_imports": 0,
+    "wit_equivalent": true,
+    "http1_framing_equivalent": true,
+    "oracle_sha256": "f5d528f7eb5290e128723e0b6fbf393915fe22a63501b37f97cda36062771ad6",
+    "candidate_sha256": "e7615622fd807230ab6d8da08c064f23a66ee3b72f57ab0ddc8295c845d0a060",
+    "candidate_bytes": 36774,
+    "representative_behavior_equivalent": true,
+    "resource_boundary_calibration": {
+      "input_bytes": 65536,
+      "body_bytes": 1048576,
+      "headers": 32,
+      "output_bytes": 65536,
+      "equivalent": true
+    },
+    "broader_status_header_coverage": {
+      "status_codes": 1001,
+      "header_name_cases": 136,
+      "header_value_cases": 256,
+      "equivalent": true
+    },
+    "receipts": [
+      {
+        "invocation": "parse-request([71,69,84,32,47,32,72,84,84,80,47,49,46,49,13,10,72,111,115,116,58,32,101,120,97,109,112,108,101,46,99,111,109,13,10,13,10])",
+        "result": "ok({method: \"GET\", target: \"/\", minor-version: 1, headers: [{name: \"Host\", value: [101, 120, 97, 109, 112, 108, 101, 46, 99, 111, 109]}], body-offset: 37})"
+      },
+      {
+        "invocation": "request-frame-length([71,69,84,32,47,32,72,84,84,80,47,49,46,49,13,10,72,111,115,116,58,32,101,120,97,109,112,108,101,46,99,111,109,13,10,13,10])",
+        "result": "ok(some(37))"
+      },
+      {
+        "invocation": "parse-request([80,79,83,84,32,47,105,116,101,109,115,32,72,84,84,80,47,49,46,49,13,10,72,111,115,116,58,32,120,13,10,67,111,110,116,101,110,116,45,76,101,110,103,116,104,58,32,53,13,10,13,10,104,101,108,108,111])",
+        "result": "ok({method: \"POST\", target: \"/items\", minor-version: 1, headers: [{name: \"Host\", value: [120]}, {name: \"Content-Length\", value: [53]}], body-offset: 52})"
+      },
+      {
+        "invocation": "request-frame-length([80,79,83,84,32,47,105,116,101,109,115,32,72,84,84,80,47,49,46,49,13,10,72,111,115,116,58,32,120,13,10,67,111,110,116,101,110,116,45,76,101,110,103,116,104,58,32,53,13,10,13,10,104,101,108,108,111])",
+        "result": "ok(some(57))"
+      },
+      {
+        "invocation": "parse-request([80,79,83,84,32,47,105,116,101,109,115,32,72,84,84,80,47,49,46,49,13,10,72,111,115,116,58,32,120,13,10,67,111,110,116,101,110,116,45,76,101,110,103,116,104,58,32,53,13,10,13,10,104,101,108])",
+        "result": "ok({method: \"POST\", target: \"/items\", minor-version: 1, headers: [{name: \"Host\", value: [120]}, {name: \"Content-Length\", value: [53]}], body-offset: 52})"
+      },
+      {
+        "invocation": "request-frame-length([80,79,83,84,32,47,105,116,101,109,115,32,72,84,84,80,47,49,46,49,13,10,72,111,115,116,58,32,120,13,10,67,111,110,116,101,110,116,45,76,101,110,103,116,104,58,32,53,13,10,13,10,104,101,108])",
+        "result": "ok(none)"
+      },
+      {
+        "invocation": "parse-request([80,79,83,84,32,47,105,116,101,109,115,32,72,84,84,80,47,49,46,49,13,10,67,111,110,116,101,110,116,45,76,101,110,103,116,104,58,32,120,13,10,13,10])",
+        "result": "ok({method: \"POST\", target: \"/items\", minor-version: 1, headers: [{name: \"Content-Length\", value: [120]}], body-offset: 43})"
+      },
+      {
+        "invocation": "request-frame-length([80,79,83,84,32,47,105,116,101,109,115,32,72,84,84,80,47,49,46,49,13,10,67,111,110,116,101,110,116,45,76,101,110,103,116,104,58,32,120,13,10,13,10])",
+        "result": "err(invalid-content-length)"
+      },
+      {
+        "invocation": "parse-request([80,79,83,84,32,47,105,116,101,109,115,32,72,84,84,80,47,49,46,49,13,10,84,114,97,110,115,102,101,114,45,69,110,99,111,100,105,110,103,58,32,99,104,117,110,107,101,100,13,10,13,10])",
+        "result": "ok({method: \"POST\", target: \"/items\", minor-version: 1, headers: [{name: \"Transfer-Encoding\", value: [99, 104, 117, 110, 107, 101, 100]}], body-offset: 52})"
+      },
+      {
+        "invocation": "request-frame-length([80,79,83,84,32,47,105,116,101,109,115,32,72,84,84,80,47,49,46,49,13,10,84,114,97,110,115,102,101,114,45,69,110,99,111,100,105,110,103,58,32,99,104,117,110,107,101,100,13,10,13,10])",
+        "result": "err(unsupported-framing)"
+      },
+      {
+        "invocation": "parse-request([71,69,84,32,47,32,72,84,84,80,47,49,46,48,13,10,13,10])",
+        "result": "ok({method: \"GET\", target: \"/\", minor-version: 0, headers: [], body-offset: 18})"
+      },
+      {
+        "invocation": "request-frame-length([71,69,84,32,47,32,72,84,84,80,47,49,46,48,13,10,13,10])",
+        "result": "ok(some(18))"
+      },
+      {
+        "invocation": "parse-request([66,65,68,13,10,13,10])",
+        "result": "err(invalid-syntax)"
+      },
+      {
+        "invocation": "request-frame-length([66,65,68,13,10,13,10])",
+        "result": "err(invalid-syntax)"
+      },
+      {
+        "invocation": "serialize-response-head(1, 200, [])",
+        "result": "ok([72, 84, 84, 80, 47, 49, 46, 49, 32, 50, 48, 48, 32, 79, 75, 13, 10, 13, 10])"
+      },
+      {
+        "invocation": "serialize-response-head(1, 201, [{name:\"content-type\",value:[97,112,112,108,105,99,97,116,105,111,110,47,106,115,111,110]}])",
+        "result": "ok([72, 84, 84, 80, 47, 49, 46, 49, 32, 50, 48, 49, 32, 67, 114, 101, 97, 116, 101, 100, 13, 10, 99, 111, 110, 116, 101, 110, 116, 45, 116, 121, 112, 101, 58, 32, 97, 112, 112, 108, 105, 99, 97, 116, 105, 111, 110, 47, 106, 115, 111, 110, 13, 10, 13, 10])"
+      },
+      {
+        "invocation": "serialize-response-head(0, 204, [])",
+        "result": "ok([72, 84, 84, 80, 47, 49, 46, 48, 32, 50, 48, 52, 32, 78, 111, 32, 67, 111, 110, 116, 101, 110, 116, 13, 10, 13, 10])"
+      },
+      {
+        "invocation": "serialize-response-head(2, 200, [])",
+        "result": "err(invalid-version)"
+      },
+      {
+        "invocation": "serialize-response-head(1, 99, [])",
+        "result": "err(invalid-status)"
+      }
+    ],
+    "boundary_receipts": [
+      {
+        "name": "request-headers-32",
+        "result": {
+          "ok": true
+        }
+      },
+      {
+        "name": "response-headers-32",
+        "result": {
+          "output_length": 297
+        }
+      },
+      {
+        "name": "request-headers-33",
+        "result": {
+          "error": "too-many-headers"
+        }
+      },
+      {
+        "name": "response-headers-33",
+        "result": "too-many-headers"
+      },
+      {
+        "name": "body-1048576",
+        "result": {
+          "frame_length": null
+        }
+      },
+      {
+        "name": "body-1048577",
+        "result": {
+          "error": "body-too-large"
+        }
+      },
+      {
+        "name": "input-65536",
+        "result": {
+          "frame_length": null
+        }
+      },
+      {
+        "name": "input-65537",
+        "result": {
+          "error": "input-too-large"
+        }
+      },
+      {
+        "name": "output-value-65512",
+        "result": {
+          "output_length": 65536
+        }
+      },
+      {
+        "name": "output-value-65520",
+        "result": "output-too-large"
+      }
+    ]
+  },
+  "http1_wasmi": {
+    "accepted": true,
+    "engine": "wasmi-2.0.0",
+    "candidate": "wasmc-http1",
+    "rounds": 128,
+    "host_imports": 0,
+    "scope": "representative-core-request-framing"
+  },
+  "data_core_behavior": {
+    "accepted": true,
+    "candidate": "wasmc-data-core",
+    "version": "0.0.1",
+    "candidate_bytes": 868932,
+    "candidate_sha256": "255d4625fa7f3f8bbea534476e862475585acb59edf3cff19c7e01eff736d823",
+    "core_imports": 0,
+    "arrow_backed": true,
+    "implementation_basis": [
+      "arrow-schema@60.0.0",
+      "arrow-array@60.0.0",
+      "arrow-select@60.0.0"
+    ],
+    "cases": 10,
+    "receipts": [
+      {
+        "name": "empty-validate",
+        "result": "ok(0)"
+      },
+      {
+        "name": "empty-take",
+        "result": "ok({rows: 0, fields: [], columns: []})"
+      },
+      {
+        "name": "zero-column-rows",
+        "result": "ok({rows: 4, fields: [], columns: []})"
+      },
+      {
+        "name": "empty-index",
+        "result": "err(index-out-of-bounds)"
+      },
+      {
+        "name": "validate",
+        "result": "ok(3)"
+      },
+      {
+        "name": "take",
+        "result": "ok({rows: 2, fields: [{name: \"id\", data-type: int64, nullable: false}, {name: \"name\", data-type: utf8, nullable: true}], columns: [int64-column([some(3), some(1)]), utf8-column([some(\"c\"), some(\"a\")])]})"
+      },
+      {
+        "name": "row-count",
+        "result": "err(row-count-mismatch)"
+      },
+      {
+        "name": "nullability",
+        "result": "err(nullability-violation)"
+      },
+      {
+        "name": "duplicate-field",
+        "result": "err(duplicate-field-name)"
+      },
+      {
+        "name": "index",
+        "result": "err(index-out-of-bounds)"
+      }
+    ]
+  },
+  "data_core_wasmi": {
+    "accepted": true,
+    "engine": "wasmi-2.0.0",
+    "candidate": "wasmc-data-core",
+    "rounds": 128,
+    "calls": 384,
+    "host_imports": 0,
+    "scope": "empty-batch-validate-take-invalid-index-and-cleanup"
+  },
+  "fixture_wasmi": [
+    {
+      "accepted": true,
+      "engine": "wasmi-2.0.0",
+      "candidate": "wasmc-owned-algorithms",
+      "rounds": 128,
+      "calls": 1024,
+      "host_imports": 0,
+      "scope": "all-four-owned-apis-with-empty-utf8-and-full-width-i32"
+    },
+    {
+      "accepted": true,
+      "engine": "wasmi-2.0.0",
+      "candidate": "wasmc-host-clock",
+      "rounds": 128,
+      "calls": 256,
+      "host_imports": 1,
+      "missing_host_rejected": true,
+      "wrong_signature_rejected": true,
+      "scope": "explicit-clock-binding-and-rejection"
+    },
+    {
+      "accepted": true,
+      "engine": "wasmi-2.0.0",
+      "candidate": "wasmc-resource-counter",
+      "rounds": 128,
+      "resource_lifecycles": 128,
+      "canonical_resource_imports": 2,
+      "missing_binding_rejected": true,
+      "stale_representation_absent_from_embedding": true,
+      "imported_drop_callback_executed": false,
+      "scope": "constructor-add-value-explicit-destructor-and-balanced-embedding-table"
+    }
+  ],
+  "generated_sdk": {
+    "accepted": true,
+    "engine": "wasmtime-49.0.0",
+    "packages": 5,
+    "rounds_per_package": 128,
+    "http1_calls": 768,
+    "owned_calls": 1024,
+    "clock_calls": 256,
+    "counter_lifecycles": 129,
+    "data_core_calls": 896,
+    "data_core_types": 6,
+    "missing_host_rejected": true,
+    "stale_resource_rejected": true,
+    "consumer": "generated-root-sdk-only",
+    "ordinary_wasmc_app_qualified": false
+  },
+  "upstream_review": {
+    "accepted": true,
+    "packages": 2,
+    "upstream_crates": 7,
+    "full_transitive_license_audit": false,
+    "release_qualified": false,
+    "receipt_sha256": "3edfc8f73ab246c8dd8c479ea3043b6cde9e000717e041fb621b8156d7310f3b"
+  },
+  "source_free_sdk": {
+    "accepted": true,
+    "packages": 5,
+    "isolated_files": 48,
+    "source_free_sdk_execution": true,
+    "execution": {
+      "accepted": true,
+      "engine": "wasmtime-49.0.0",
+      "packages": 5,
+      "rounds_per_package": 128,
+      "http1_calls": 768,
+      "owned_calls": 1024,
+      "clock_calls": 256,
+      "counter_lifecycles": 129,
+      "data_core_calls": 896,
+      "data_core_types": 6,
+      "missing_host_rejected": true,
+      "stale_resource_rejected": true,
+      "consumer": "generated-root-sdk-only",
+      "ordinary_wasmc_app_qualified": false
+    },
+    "release_qualified": false
+  },
+  "ordinary_app_probe": {
+    "accepted": true,
+    "ordinary_app_qualified_count": 1,
+    "blocked_count": 4,
+    "calls": 640,
+    "host_calls": 640,
+    "runtime": "Node v26.5.1 WebAssembly",
+    "published_compiler_qualified": false,
+    "release_qualified": false,
+    "negative_controls": 15,
+    "receipt_sha256": "46cd9c0d1f527f598df5f8e22626d59f186a0463db13aecf4bd72edc9f5e5f57"
+  },
+  "package_license_binding": {
+    "accepted": true,
+    "packages": 5,
+    "package_license_binding": true,
+    "carried_files": 80,
+    "primary_notices": 15,
+    "dependency_materials_carried": true,
+    "registry_crates": 189,
+    "lockfiles": 6,
+    "toolchain_documents": 2,
+    "registry_notice_review_carried": true,
+    "registry_notice_expressions": 17,
+    "retained_build_evidence_carried": true,
+    "retained_build_records": 2,
+    "build_input_witness_files": 38,
+    "registry_source_witness_crates": 189,
+    "registry_source_witness_files": 12335,
+    "generated_adapter_evidence_carried": true,
+    "generated_adapter_records": 1,
+    "generated_manifest_qualified_packages": 1,
+    "generated_manifest_independent_builds": 2,
+    "generated_adapter_input_files": 4,
+    "full_transitive_license_audit": false,
+    "release_qualified": false,
+    "negative_controls": 78,
+    "isolated_delivery": true,
+    "exact_http1_cases": 1422,
+    "source_free_licensed_sdk_execution": true,
+    "isolated_sdk_files": 82,
+    "sdk": {
+      "accepted": true,
+      "engine": "wasmtime-49.0.0",
+      "packages": 5,
+      "rounds_per_package": 128,
+      "http1_calls": 768,
+      "owned_calls": 1024,
+      "clock_calls": 256,
+      "counter_lifecycles": 129,
+      "data_core_calls": 896,
+      "data_core_types": 6,
+      "missing_host_rejected": true,
+      "stale_resource_rejected": true,
+      "consumer": "generated-root-sdk-only",
+      "ordinary_wasmc_app_qualified": false
+    },
+    "manifest_sha256": "dee92cd454110927a92b0f1881095861ffe2cd96c8dfd47ddf40cfec4d1ef2a4"
+  },
+  "generated_manifest_witness_control": {
+    "accepted": true,
+    "negative_controls": 15,
+    "actual_package_reopened": true,
+    "private_builds_reexecuted": false,
+    "release_qualified": false
+  },
+  "registry_notice_review": {
+    "accepted": true,
+    "registry_crates": 189,
+    "declared_expressions": 17,
+    "full_transitive_license_audit": false,
+    "release_qualified": false,
+    "negative_controls": 27,
+    "receipt_sha256": "951758c7302e2600fd0b23d6cd2bf988e9bf3984b96f76015a030c81b413d814"
+  },
+  "selected_current_catalog": false,
+  "ordinary_wasmc_app_qualified": false,
+  "release_qualified": false,
+  "pending": [
+    "current catalog admission and exact route/install closure",
+    "ordinary WAsmC App rich-value/resource Core transport for four staged packages; published compiler identity",
+    "complete license-obligation/target-applicability review and admit the material-carrying license envelope with a new candidate",
+    "remaining package rebuilds and qualification",
+    "exact new-candidate release and live Pi gates"
+  ]
+}

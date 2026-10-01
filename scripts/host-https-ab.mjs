@@ -86,6 +86,7 @@ function assertLifecycle(run, exactKeepAlive = null, requirePartial = false) {
   if (requirePartial) assert.ok(r.host_partial_writes > 0, run.lane);
   assert.equal((run.stderr.match(/tls-resource-drop-ok/g) ?? []).length, 3, run.lane);
   assert.equal((run.stderr.match(/host-transport-close-ack/g) ?? []).length, 3, run.lane);
+  assert.equal((run.stderr.match(/https-server-runtime-ready startup_ms=\d+/g) ?? []).length, 1, run.lane + ': runtime startup gate');
   assert.equal(run.stderr.includes('tls-resource-drop-err'), false, run.lane);
   assert.equal(run.stderr.includes('host-transport-close-err'), false, run.lane);
   assert.equal(run.stderr.includes('cannot enter component instance'), false, run.lane);
@@ -220,6 +221,16 @@ const report = {
     lib_defined_socket: libDefinedSocketAuthority,
   },
   artifact_manifest_sha256: sha256(manifestBytes),
+  qualification_harness: {
+    source_sha256: sha256(await readFile(resolve(fixtureRoot, 'src/main.rs'))),
+    startup_sha256: sha256(await readFile(resolve(fixtureRoot, 'src/startup.rs'))),
+    readiness: 'initialized-runtime-before-client-connect',
+    startup_timeout_ms: 30000,
+    socket_io_timeout_ms: 5000,
+    timed_interval: 'after-runtime-readiness',
+    prior_source_commits: 'artifact authority above is the historical base, not the revised harness identity',
+    failed_request_retry: false,
+  },
   binaries: {
     baseline: await binaryInfo(baselineBinary),
     candidate: await binaryInfo(candidateBinary),

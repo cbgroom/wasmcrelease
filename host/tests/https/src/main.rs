@@ -20,6 +20,7 @@ mod host_transport;
 mod host_transport;
 #[cfg(any(feature = "readiness-dedicated", feature = "reactor-candidate"))]
 mod readiness_owner;
+mod startup;
 
 #[cfg(feature = "lib-defined-socket")]
 use host_transport::LibSocketListener;
@@ -29,16 +30,16 @@ use rustls::{
     time_provider::TimeProvider,
     ClientConfig, ClientConnection, RootCertStore, StreamOwned,
 };
+#[cfg(not(feature = "lib-defined-socket"))]
+use std::net::TcpListener;
 use std::{
     error::Error,
     io::{Read, Write},
     net::TcpStream,
-    sync::Arc,
+    sync::{mpsc, Arc},
     thread,
     time::{Duration, Instant},
 };
-#[cfg(not(feature = "lib-defined-socket"))]
-use std::{net::TcpListener, sync::mpsc};
 use wasmtime::{Caller, Config, Engine, Instance, Linker, Memory, Module, Store, TypedFunc};
 
 struct CoreBytesResultLib {
@@ -1873,10 +1874,13 @@ fn main() -> Result<(), Box<dyn Error>> {
     #[cfg(feature = "lib-defined-socket")]
     let addr = listener.local_addr();
     let cert_server = cert.clone();
+    let startup_started = Instant::now();
+    let (ready_tx, ready_rx) = mpsc::channel();
     let server = thread::spawn(move || -> Result<ServerRuntime, String> {
-        let mut rt =
+        let mut rt = startup::initialize(ready_tx, || {
             ServerRuntime::new(&tls, &http, &json, &compression, &policy, cert_server, key)
-                .map_err(|e| e.to_string())?;
+                .map_err(|e| e.to_string())
+        })?;
         for _ in 0..3 {
             #[cfg(not(feature = "lib-defined-socket"))]
             {
@@ -1899,6 +1903,13 @@ fn main() -> Result<(), Box<dyn Error>> {
     });
 
     let cfg = client_config(&cert)?;
+    // Cold Wasmtime compilation has its own bound; retain the existing 5s I/O
+    // deadline and never replay a request to conceal a timeout or side effect.
+    startup::wait_ready(ready_rx, startup::STARTUP_LIMIT)?;
+    eprintln!(
+        "https-server-runtime-ready startup_ms={}",
+        startup_started.elapsed().as_millis()
+    );
     let started = Instant::now();
     let mut c = connect_https(addr, cfg.clone())?;
     let root = b"GET / HTTP/1.1\r\nHost: example.com\r\nAccept-Encoding: gzip\r\n\r\n";

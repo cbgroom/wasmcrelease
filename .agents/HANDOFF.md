@@ -1,5 +1,223 @@
 # WAsmC release maintainer handoff
 
+## 2026-10-01 actual build-evidence recipient delivery
+
+Both canonical five-package workspace and registry build records are now
+bound into package-license-bindings.json and physically carried in fresh
+79-file recipient capsules, outside unchanged strict nine-file roots.
+Source-free generated-SDK consumption passes from an isolated 81-file tree.
+69 recipient rejection controls cover claims, real file/link faults and
+coordinated witness/envelope self-rehash. Full private/cache builds are not
+reexecuted by recipient validation; external temporary adapters and complete
+license obligations remain pending. Qualification is refreshed locally only;
+ordinary App remains 1/5, all-package catalog/release unchanged and false.
+
+## 2026-10-01 whole staged-cohort registry closure
+
+All five staged roots now pass real selected-cache guarded dual builds from
+public input 1e3d3e4ab96704184c9498cc1cb189afa5ace122 and clean producer
+3b797a77d0afa25264a11362603b0d596d2e0ba7.
+Each build verifies the 189-crate / 12,335-file conservative registry cache and
+Cargo routing pre/post; both passes match. Separate live recheck of all ten
+retained workspaces and current cache PASS. 38 inputs and 45 output files equal
+existing staged roots. Source-free outer evidence:
+admission/current-v2-next/cohort-registry-build-witness.json; named validator:
+node scripts/current-v2-retained-build-witness.mjs --registry.
+No recipient-envelope delivery or temporary generated-adapter audit is claimed.
+New nested config guard is separately tested (36 controls); prior build revision
+is preserved, and recorded input inventories prove nested config absence.
+Ownership/default/complex App, eight unrebuilt targets and full release gates
+remain pending. Do not infer 100-percent or admission from this five-root gate.
+
+## 2026-10-01 actual HTTP1 registry-guarded rebuild
+
+New source-free outer evidence: admission/current-v2-next/http1-registry-build-witness.json.
+Both real HTTP1 builds from public input e64d2ce pass explicit selected Cargo
+cache/routing pre/post checks and independent equality: 189 crates, 12,335 files.
+Post-build live cache/workspace recheck PASS; all nine package files equal the
+existing staged root. Script fixtures have 34 registry/routing negatives plus
+a 2 MiB committed-input retrieval regression. Candidate suite 21/21 PASS.
+Four other staged roots still need this new registry guard; no old receipts
+are retroactively upgraded. Temporary generated adapters, wrappers/toolchain
+execution, full license obligations, generic App and release remain pending.
+
+## 2026-10-01 guarded staged-cohort checkpoint
+
+All five staged roots have now passed guarded independent dual builds from
+clean public input cf26b71c5b9d0d9b121bedfb6499016d42783d18 and clean producer
+3b797a77d0afa25264a11362603b0d596d2e0ba7. Actual retained-input recheck PASS:
+38 input files; complete package equality with existing roots: 45 files PASS.
+Receipt: admission/current-v2-next/cohort-build-input-witness.json; repeatable
+source-free validator and 27 negative controls are in scripts. Public validation
+does not reexecute private builds; no historical certification is claimed.
+This supersedes the four-pending guarded-rebuild status below, not other gates.
+License envelope does not yet carry these outer audit records. Registry cache
+stability, external generated adapters and full obligations remain pending.
+18-package scope, ordinary App 1/5 and release_qualified=false are unchanged.
+
+## 2026-10-01 guarded HTTP1 rebuild checkpoint
+
+Real HTTP1 dual rebuild under public input 22341148a11d4154b156e3d2bf98d77c7cf4bbbc
+and clean private producer 3b797a77d0afa25264a11362603b0d596d2e0ba7 passes.
+Both nine-file retained input witnesses are unchanged and equal; both complete
+nine-file packages equal the existing staged HTTP1 root. Source-free receipts:
+`admission/current-v2-next/http1-build-input-witness.json`. No package bytes,
+license envelope, catalog or immutable release changed. Candidate suite 19/19
+PASS at the build-input revision. Four staged roots still need guarded builds;
+all-package completion, generic App, ownership and license blockers remain.
+
+## 2026-09-30 current-v2 development closure (unreleased)
+
+This section supersedes the historical candidate status below for the current
+development workstream. Public prod remains immutable v0.0.20. Current Lib
+selection is separately bound to `catalog/current-v2-policy.json`: five v2
+packages, thirteen excluded pending migration gates. Producer protocol authority
+is 3b797a77d0afa25264a11362603b0d596d2e0ba7; package authority is
+4c25aafc02b8eaa1ba1c1ba85c5697e58e8d19a1. Neither implies a new release.
+
+PR #23 (`work/WS-20260930-lib-v2-ci-closure`) repairs API-level discovery,
+current-vs-frozen CI routing, Node 18 teaching compatibility, and fresh install
+reopen/no-clobber/tamper controls. The current consumer route is
+`agent-current-lib-quickstart.json`; old `agent-quickstart.json` describes the
+immutable v0.0.20 product, not current-v2 selection. CLI now has `--help`.
+
+Focused suite: 12/12 local PASS, including fresh-installed Std Core Base64
+behavior (six calls, nine buffers dropped). Five packages downloaded from
+their exact GitHub authority and reopened PASS. Node 18 development preflight
+PASS; Std behavior remains artifact/engine-specific. Ordinary App consumption,
+the thirteen migrations, and a new release are not closed.
+
+Pi discovery observations are diagnostic, not release pair qualification.
+The first round at 5d080ee exposed mixed quickstart routing, unsupported CLI
+help, excess ABI/engine investigation, and an underspecified evaluator field.
+Retain both failures; revised typed observation protocol is v2, not a rewrite
+of the frozen full release cohort. Live trace accounting now records child
+commands reporting failure even when a shell pipeline exits successfully.
+
+Round3 at a355b3aabc26154442bb57c8de763ba57d1f4460 passes the same one
+discovery task on both Pi 0.87.1 model routes with nine tools each, no errors
+or retries. Independent white-box review is retained in the workstream receipt;
+full frozen release cohort qualification is still false. Current search also
+checks every selected WIT export: five package routes / 91 API routes, with
+missing and extra routes rejected. This is development closure only.
+
+Resume from `.agents/workstreams/WS-20260930-lib-v2-ci-closure/HANDOFF.md`.
+The 100-percent closure loop retains an exact 189-crate dependency material
+inventory for six build/consumer lockfiles. Fourteen pinned upstream notices and
+r-efi AUTHORS close registry material omissions in that scope only; complete
+license-obligation audit remains pending. Hosted source-incubation
+development validation exposed a depth-one checkout missing the frozen baseline.
+Local shallow-failure/full-history-success reproduction passes; the workflow
+now carries full history and retains failed diagnostics. These are unreleased
+repairs, not package admission or a hosted PASS for the new milestone.
+The next audit slice recovers all three canonical adapter lockfiles, expanding
+the conservative inventory to six exact inputs and 189 registry crates. Rust
+compiler/library copyright documents are verified from the complete official
+1.96.0 rustc archive and match the installed five-package builder. License
+obligation review and inclusion in final isolated delivery remain pending.
+Hosted source-incubation at c0191b2 now passes (run 36783742678); newer audit
+changes still require their own checkpoint and hosted qualification.
+The following slice expands licensed delivery from 66 to 76 files so these
+materials are actually carried, not only checked in the producer checkout.
+The 78-file isolated consumer reuses the exact carried lock and executes five
+generated SDKs. Forty-nine controls reject dropped/tampered/self-rehashed or
+linked recipient material. Full obligation/target review and release remain
+false; the five strict generated roots are unchanged.
+A finite registry notice-choice review now covers the 189 identities and 17
+expressions, retaining all AND terms and both terms of ambiguous slash forms.
+Twenty-seven independent rejection controls and the 18-check local development
+suite pass. This review receipt is now carried in a 77-file envelope; its
+79-file isolated SDK consumer passes all five packages and 56 rejection
+controls. Audit binding is acyclic: review -> inventory; envelope -> both.
+Two ordered recaptures are byte-identical. Build modifications,
+target/toolchain obligations and the remaining thirteen
+package audits are still pending. It is not full license/release qualification.
+A new source-input guard captures workspace/WIT/config/license hashes before
+and after producer execution, compares both builds and rechecks them during
+new staging. Thirteen independent controls and the 19-check local development
+suite pass. Existing staged receipts do not gain historical input proof from
+this guard; rebuild the cohort from the committed runner to qualify it.
+Fresh private orientation remains rejected: maintainer-check status 24, with
+the standard-library skill at 510 lines. The runtime workstream remains clean
+at c169f471 with an exclusive crates/wasmc_core_runtime claim, and the WIT
+worktree still has ten unrelated dirty paths. Resolve these gates/ownership
+before private implementation; do not ignore the audit or borrow dirty source.
+The all-package closure slice now stages five additional v2 roots with complete
+second-build equality and strict reopen: HTTP1, Host Clock, Owned Algorithms,
+Resource Counter and Data Core. Exact-artifact behavior and five generated SDK
+consumers pass locally; source recovery for the three historical fixtures is
+complete. Protocol build progress is 10/18; selectable catalog remains 5/18.
+Read `admission/current-v2-next/qualification.json` and the branch handoff for
+scope-specific evidence and the remaining eight rebuild blockers. This batch
+has not been admitted to current discovery or a new immutable release.
+The new Wasmi empty-batch probe exposed a Data Core defect reproduced on
+Wasmtime: `validate` accepts zero columns, but `take` lost explicit row count
+and returned invalid-layout. The public adapter now preserves selected-index
+length in Arrow RecordBatchOptions; three native regressions PASS. Data Core
+has now been rebuilt twice from 3270e4c3d504e12a899464f115542a8efc578b06;
+strict reopen, ten Component cases, 128 Wasmi rounds and 896 generated-SDK
+calls PASS. Current staging carries only those repaired bytes. Catalog and
+release admission still remain; the original failure is separately retained.
+Preserve the other workstream's uncommitted WIT dependency implementation.
+The next checkpoint adds exact Wasmi execution for all three recovered fixture
+roots: Owned Algorithms (1024 calls), Clock (256 calls plus missing/wrong Host
+binding rejection), and Counter (128 explicit-destructor lifecycles with a
+balanced embedding resource table). Counter's imported drop callback has not
+been executed in this Core probe; full canonical drop remains covered only by
+the generated Component SDK journey. Do not conflate those scopes.
+HTTP1 and Data Core primary-upstream review now binds seven exact registry
+archives to Cargo.lock, compares their Rust source bytes to official pinned
+Git commits, and retains fifteen upstream license/notice files. In particular,
+arrow-array 60.0.0 is Apache-2.0 AND MIT, unlike the other five Arrow crates.
+The offline gate rejects altered provenance, missing notices, file/directory
+links and false promotion claims. Full transitive license audit, explicit
+package license binding and ordinary App admission remain pending. No new
+package has been selected or released by this evidence-only checkpoint.
+The next local checkpoint closes source-free SDK consumption for the five
+staged roots: a fresh isolated 48-file tree contains only their exact generated
+roots and the public consumer, with no compiler/provider/upstream semantic
+implementation source. Locked/offline compilation and all five SDK executions
+PASS. Public engine Cargo dependencies remain the admitted consumer toolchain.
+The repeated optional Intel HTTPS CI failure remains retained, not waived:
+9f498ab run 36774756671/job 110089765924 failed with baseline WouldBlock.
+The shared HTTPS test harness now waits for runtime initialization before client
+connect, retains 5s socket deadlines and prohibits request replay. Four local
+TCP/error/readiness tests and complete six-pair ARM macOS HTTPS parity PASS.
+Historical throughput deltas reject mismatched timing epochs because startup
+compilation is now excluded from the request timing interval. New Intel CI
+confirmation and ordinary App/release admission are still pending. See branch
+HANDOFF and `admission/current-v2-next/https-startup-macos-aarch64.json`.
+Do not refresh v0.0.20 metadata around these future bytes; the old candidate
+must continue rejecting this tree as product drift.
+
+The next ordinary App puncture qualifies only Host Clock with clean matching
+producer 3b797a77: 113-byte App, 640 calls and Host failure/binding controls;
+public artifact-only replays pass Node/Bun/Deno. Four other staged roots reject
+generic complex-value/resource Core transport BEFORE source-body type checking.
+Read `admission/current-v2-next/ordinary-app.json`; SDK success is not App
+success. App scope is 1/5 local, not matching published compiler or release.
+Default producer Wasmtime-only build also fails its feature gate; existing
+dual-runtime profile passes, and no producer source was changed. Generic Core
+transport and default-profile repair are the next producer implementation slice.
+The Host-boundary aggregate's nested release-surfaces validation is now guarded
+by the existing current-development route; tags retain strict release checks.
+Remote failure run 36777376287 is retained in the branch HANDOFF. Counts remain
+10/18 built and 5/18 selectable; do not claim package promotion from this slice.
+
+Exact package license binding is now implemented for all five staged roots:
+`admission/current-v2-next/package-license-bindings.json` pins each manifest and
+complete generated inventory, research policy/LICENSE and fifteen primary
+upstream notices without changing strict nine-file roots or earlier grants.
+Fresh 66-file licensed delivery and 69-file public SDK consumer pass; thirty-five
+mutation/filesystem controls reject missing notices, links, self-rehashing and
+false promotion. Full dependency/toolchain license audit still remains FALSE,
+and a future candidate must carry this outer envelope. The current catalog and
+immutable release are unchanged. See docs/CURRENT_V2_LICENSED_DELIVERY.md.
+Hosted Host-boundary run 36779278808 at exact 7f45899 now SUCCESS; that does
+not qualify this new stage. Default-build repair currently overlaps another
+workstream's exclusive Core runtime claim (fuel-observation, c169f471); do not
+modify its source or infer master integration. Branch HANDOFF preserves scope.
+
 ## 2026-09-29 v0.0.20 research-license candidate
 
 Branch `release/v0.0.20-research-license` starts from merged public main

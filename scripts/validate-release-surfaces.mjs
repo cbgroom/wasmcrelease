@@ -3,8 +3,16 @@ import assert from 'node:assert/strict';
 import { existsSync, readFileSync, statSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { execFileSync } from 'node:child_process';
+import { usesCurrentDevelopment } from './ci-suite.mjs';
 
 const root=fileURLToPath(new URL('../',import.meta.url));
+const frozenEcosystem=process.argv.slice(2).includes('--frozen-release-ecosystem');
+assert(process.argv.slice(2).every(arg=>arg==='--frozen-release-ecosystem'),'unknown validation option');
+if(frozenEcosystem){
+  assert(usesCurrentDevelopment(),'frozen ecosystem is only valid in current development, never a release tag');
+  execFileSync(process.execPath,['scripts/validate-current-development.mjs'],{cwd:root});
+}
 const read=path=>readFileSync(resolve(root,path),'utf8');
 const model=JSON.parse(read('release-surfaces.json'));
 assert.equal(model.schema,'wasmc.release-surfaces/v1');
@@ -102,7 +110,11 @@ assert.match(producerDelta?.adjacent_type_decisions?.char??'',/not implemented/)
 assert.equal(ecosystem?.schema,'wasmc.lib-ecosystem-control-plane/v1');
 assert.equal(ecosystem?.path,'lib-ecosystem-control-plane.json');
 assert(existsSync(resolve(root,ecosystem.path)),'Lib ecosystem control plane is missing');
-const ecosystemModel=JSON.parse(read(ecosystem.path));
+// The release surface describes the frozen product. Current catalog and closure
+// must pass their own preflight; do not relabel migration bytes as that product.
+const ecosystemModel=JSON.parse(frozenEcosystem
+  ?execFileSync('git',['show','c49bfcd5971fdd3780303b61378e5a1f2502a45d:'+ecosystem.path],{cwd:root,encoding:'utf8'})
+  :read(ecosystem.path));
 assert.equal(ecosystemModel.schema,ecosystem.schema);
 const routeCompleteRelease=['0.0.14','0.0.15','0.0.16','0.0.17','0.0.18','0.0.19','0.0.20'].includes(ecosystemModel.release.version);
 const v018CatalogRelease=['0.0.18','0.0.19','0.0.20'].includes(ecosystemModel.release.version);
@@ -253,6 +265,8 @@ assert.deepEqual(architecture.distribution_surfaces.extension,extensionIds);
 
 console.log(JSON.stringify({
   accepted:true,
+  ecosystem_scope:frozenEcosystem?'frozen-v0.0.20-with-current-development-preflight':'checkout',
+  release_qualified:false,
   schema:model.schema,
   agent_capability_projection:projection.schema,
   producer_capability_delta:producerDelta.schema,

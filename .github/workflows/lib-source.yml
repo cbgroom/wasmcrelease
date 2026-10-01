@@ -19,6 +19,20 @@ on:
       - "scripts/test-libsrc-all.mjs"
       - "scripts/test-libsrc-wasmi.mjs"
       - "scripts/test-data-core-libsrc.mjs"
+      - "scripts/qualify-current-v2-next.mjs"
+      - "scripts/qualify-current-v2-source-free-sdk.mjs"
+      - "scripts/test-current-v2-app.mjs"
+      - "scripts/probe-current-v2-app.mjs"
+      - "scripts/current-v2-package-license.mjs"
+      - "scripts/test-current-v2-package-license.mjs"
+      - "scripts/current-v2-dependency-inventory.mjs"
+      - "scripts/test-current-v2-dependency-inventory.mjs"
+      - "scripts/current-v2-toolchain-notices.mjs"
+      - "scripts/test-current-v2-toolchain-notices.mjs"
+      - "scripts/current-v2-upstream-provenance.mjs"
+      - "scripts/test-current-v2-upstream-provenance.mjs"
+      - "admission/current-v2-next/**"
+      - "admission/current-v2-data-core/**"
       - "scripts/test-csv-libsrc.mjs"
       - "scripts/test-data-expr-libsrc.mjs"
       - "scripts/test-data-compute-libsrc.mjs"
@@ -46,6 +60,20 @@ on:
       - "scripts/test-libsrc-all.mjs"
       - "scripts/test-libsrc-wasmi.mjs"
       - "scripts/test-data-core-libsrc.mjs"
+      - "scripts/qualify-current-v2-next.mjs"
+      - "scripts/qualify-current-v2-source-free-sdk.mjs"
+      - "scripts/test-current-v2-app.mjs"
+      - "scripts/probe-current-v2-app.mjs"
+      - "scripts/current-v2-package-license.mjs"
+      - "scripts/test-current-v2-package-license.mjs"
+      - "scripts/current-v2-dependency-inventory.mjs"
+      - "scripts/test-current-v2-dependency-inventory.mjs"
+      - "scripts/current-v2-toolchain-notices.mjs"
+      - "scripts/test-current-v2-toolchain-notices.mjs"
+      - "scripts/current-v2-upstream-provenance.mjs"
+      - "scripts/test-current-v2-upstream-provenance.mjs"
+      - "admission/current-v2-next/**"
+      - "admission/current-v2-data-core/**"
       - "scripts/test-csv-libsrc.mjs"
       - "scripts/test-data-expr-libsrc.mjs"
       - "scripts/test-data-compute-libsrc.mjs"
@@ -64,6 +92,9 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          # Current-development preflight verifies the immutable release baseline.
+          fetch-depth: 0
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
           node-version: 26.5.1
@@ -118,6 +149,12 @@ jobs:
         run: node scripts/test-libsrc-all.mjs
       - name: Execute pure and exact-import candidates on Wasmi 2
         run: node scripts/test-libsrc-wasmi.mjs
+      - name: Qualify exact next-v2 package bytes and generated Rust SDKs
+        run: |
+          node scripts/test-current-v2-upstream-provenance.mjs
+          cargo +1.96.0 fetch --locked --manifest-path libsrc/qualification/current-v2-consumer/Cargo.toml
+          cargo +1.96.0 fetch --locked --manifest-path libsrc/qualification/wasmi-core/Cargo.toml
+          node scripts/qualify-current-v2-next.mjs
       - name: Report Lib source admission readiness
         run: |
           mkdir -p target
@@ -130,6 +167,14 @@ jobs:
       - name: Candidate repository integrity
         if: github.ref != 'refs/heads/main'
         run: node scripts/ci-suite.mjs candidate
+      - name: Preserve validation diagnostics even on failure
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: lib-source-validation-diagnostics
+          path: target/ci
+          if-no-files-found: warn
+          retention-days: 14
 
   tls-client-canonical:
     name: Build exact TLS client artifact twice

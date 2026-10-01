@@ -1,0 +1,30 @@
+{
+  "schema": "wasmc.current-v2-producer-build-observation/v1",
+  "producer_commit": "3b797a77d0afa25264a11362603b0d596d2e0ba7",
+  "toolchain": "1.96.0",
+  "default_build_qualified": false,
+  "observations": [
+    {
+      "arguments": ["build", "--locked", "--offline", "--lib"],
+      "exit_code": 101,
+      "diagnostic_codes": ["E0432", "E0425"],
+      "summary": "Wasmtime-only default profile refers to EPOCH_TICK_NS while its declaration is gated by wasmi-runtime."
+    },
+    {
+      "arguments": ["build", "--locked", "--offline", "--lib", "--no-default-features"],
+      "exit_code": 0,
+      "resolver_api_available": false,
+      "consumer_compile_exit_code": 1,
+      "consumer_diagnostic_code": "E0425",
+      "summary": "compile_with_local_lib_catalog is absent without the wasmtime-runtime feature; this profile cannot qualify catalog App consumption."
+    },
+    {
+      "arguments": ["build", "--locked", "--offline", "--lib", "--features", "core-runtime-sdk"],
+      "exit_code": 0,
+      "resolver_api_available": true,
+      "summary": "Existing dual-runtime profile used by the retained ordinary App probe. This is not a repair or waiver of the default build."
+    }
+  ],
+  "producer_source_modified": false,
+  "release_qualified": false
+}

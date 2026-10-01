@@ -1,0 +1,266 @@
+{
+  "schema": "wasmc.current-v2-upstream-review/v1",
+  "accepted": true,
+  "releases_or_relicenses_upstream": false,
+  "full_transitive_license_audit": false,
+  "release_qualified": false,
+  "license_scope": "Upstream licenses remain intact. The new WAsmC adapter is governed by repository LICENSE. This review is not a full transitive dependency license audit or legal opinion.",
+  "groups": [
+    {
+      "id": "wasmc-http1",
+      "source": "libsrc/wasmc-http1",
+      "packageRoot": "admission/current-v2-next/packages/wasmc-http1/0.0.1",
+      "repository": "https://github.com/seanmonstar/httparse",
+      "tag": "v1.10.1",
+      "commit": "9f29e79f9832dbd0ae5220acb17c1866745bdecd",
+      "crates": [
+        "httparse"
+      ],
+      "version": "1.10.1",
+      "license": "MIT OR Apache-2.0",
+      "crate_licenses": {
+        "httparse": "MIT OR Apache-2.0"
+      },
+      "supported": [
+        "HTTP/1.0 and HTTP/1.1 request head parsing via httparse::Request::parse"
+      ],
+      "unsupported": [
+        "response parsing API",
+        "HTTP/2",
+        "TLS",
+        "socket I/O",
+        "transfer-encoding framing"
+      ],
+      "delta": [
+        "owned WIT request fields replace borrowed Rust slices",
+        "32 headers, 65536 input/output bytes and 1048576 body bytes",
+        "WIT errors normalize httparse errors",
+        "content-length framing and response serialization are adapter-owned, not upstream httparse APIs"
+      ],
+      "identity": {
+        "root": "admission/current-v2-next/packages/wasmc-http1/0.0.1",
+        "manifest_sha256": "b248b689c47ea330438ec5cb5d3dbf0480d150fd909d764746dd7f4e8ac78700",
+        "artifact_sha256": "e7615622fd807230ab6d8da08c064f23a66ee3b72f57ab0ddc8295c845d0a060",
+        "component_sha256": "3d3047400bb3ee05462f3ed34d3b58522bf494c99339c579d73abf817af77d22",
+        "cargo_lock_sha256": "47e955d3a82f59d595127983163c75eb6c2b9fdd72f89a647581eba1cafccd18",
+        "adapter_sha256": "a58feaaa478f8a714ab3d5b32a104b92bdf5fe8e0b01ea3e4b9446bf6457bddf",
+        "adapter_license": {
+          "path": "LICENSE",
+          "sha256": "7bca2d5818178e0bc14546700d39bf113d15139b1c3b6d1e62f621d4a276d6e3",
+          "name": "WAsmC Research-Only Non-Commercial License 1.0",
+          "upstream_license_override": false
+        }
+      },
+      "repository_archive_url": "https://codeload.github.com/seanmonstar/httparse/tar.gz/9f29e79f9832dbd0ae5220acb17c1866745bdecd",
+      "repository_archive_sha256": "0dfb2ca89ced4901793dba0880f3f9f090eadf735f536f2932cf8fba03f6116d",
+      "registry": [
+        {
+          "name": "httparse",
+          "version": "1.10.1",
+          "repository": "https://github.com/seanmonstar/httparse",
+          "license": "MIT OR Apache-2.0",
+          "archive_url": "https://static.crates.io/crates/httparse/httparse-1.10.1.crate",
+          "archive_sha256": "6dbf3de79e51f3d586ab4cb9d5c3e2c14aa28ed23d180cf89b4df0454a69cc87",
+          "source_matches_repository_commit": true,
+          "rust_source_files": 9,
+          "notices": [
+            {
+              "path": "admission/current-v2-next/upstream/notices/httparse/LICENSE-APACHE",
+              "sha256": "a60eea817514531668d7e00765731449fe14d059d3249e0bc93b36de45f759f2"
+            },
+            {
+              "path": "admission/current-v2-next/upstream/notices/httparse/LICENSE-MIT",
+              "sha256": "391a5396cec6230bfabd4ef4eb2350eb895bc5efce377a2218f5702ed020d3e3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wasmc-data-core",
+      "source": "libsrc/wasmc-data-core",
+      "packageRoot": "admission/current-v2-data-core/packages/wasmc-data-core/0.0.1",
+      "repository": "https://github.com/apache/arrow-rs",
+      "tag": "60.0.0",
+      "commit": "ef1fa157977633f0ba21aa921f9ef3d5c669235b",
+      "crates": [
+        "arrow-array",
+        "arrow-buffer",
+        "arrow-cmp",
+        "arrow-data",
+        "arrow-schema",
+        "arrow-select"
+      ],
+      "version": "60.0.0",
+      "license": "Apache-2.0 AND MIT",
+      "crate_licenses": {
+        "arrow-array": "Apache-2.0 AND MIT",
+        "arrow-buffer": "Apache-2.0",
+        "arrow-cmp": "Apache-2.0",
+        "arrow-data": "Apache-2.0",
+        "arrow-schema": "Apache-2.0",
+        "arrow-select": "Apache-2.0"
+      },
+      "supported": [
+        "RecordBatch validation",
+        "arrow_select::take with checked indices",
+        "Boolean, Int64, UInt64, Float64, Utf8 and Binary columns with nulls"
+      ],
+      "unsupported": [
+        "other Arrow data types",
+        "Arrow C Data Interface",
+        "IPC/Parquet",
+        "streaming",
+        "public Arrow Rust layouts"
+      ],
+      "delta": [
+        "owned WIT snapshots replace Arrow reference-counted arrays",
+        "adapter validates field uniqueness, row lengths, types and nullability",
+        "zero-column take explicitly preserves selected row count",
+        "WIT errors normalize Arrow errors"
+      ],
+      "identity": {
+        "root": "admission/current-v2-data-core/packages/wasmc-data-core/0.0.1",
+        "manifest_sha256": "d7fb0cb64e2097a0419383c09ccbf18ff9031d5f25c8fdbd4cfeff61317cfaaf",
+        "artifact_sha256": "255d4625fa7f3f8bbea534476e862475585acb59edf3cff19c7e01eff736d823",
+        "component_sha256": "43a459ec14187b333fd091cb6ad410669e7d65050c77829fe98f460c7f1ca63d",
+        "cargo_lock_sha256": "dae54a149a62b4f94f7baedc0addc6d523af2aa0df8a68000314cc031d9555ac",
+        "adapter_sha256": "5c99a38e1d887d7207be6e0cad11d58f661e8ef54a639c3c67fdd42eb9c4c2ec",
+        "adapter_license": {
+          "path": "LICENSE",
+          "sha256": "7bca2d5818178e0bc14546700d39bf113d15139b1c3b6d1e62f621d4a276d6e3",
+          "name": "WAsmC Research-Only Non-Commercial License 1.0",
+          "upstream_license_override": false
+        }
+      },
+      "repository_archive_url": "https://codeload.github.com/apache/arrow-rs/tar.gz/ef1fa157977633f0ba21aa921f9ef3d5c669235b",
+      "repository_archive_sha256": "b18bcd51162236c58e3c0b57cf76894dfca8c52e8bc1807c05b2ef1fa386c1b6",
+      "registry": [
+        {
+          "name": "arrow-array",
+          "version": "60.0.0",
+          "repository": "https://github.com/apache/arrow-rs",
+          "license": "Apache-2.0 AND MIT",
+          "archive_url": "https://static.crates.io/crates/arrow-array/arrow-array-60.0.0.crate",
+          "archive_sha256": "51dff6e4b9f158864a0aeb6a131ad53858ecbae7a2fc8989307b9b3c6b2f122e",
+          "source_matches_repository_commit": true,
+          "rust_source_files": 52,
+          "notices": [
+            {
+              "path": "admission/current-v2-next/upstream/notices/arrow-array/LICENSE-MIT",
+              "sha256": "a01a418b6ffb1de8f4c3814e386b35e1a93a14529b68f17d286550f355b298e1"
+            },
+            {
+              "path": "admission/current-v2-next/upstream/notices/arrow-array/LICENSE.txt",
+              "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+            },
+            {
+              "path": "admission/current-v2-next/upstream/notices/arrow-array/NOTICE.txt",
+              "sha256": "e5b198d7f809311723889814d99a92f808c69e89a847efa7a7b65270f5fdeae6"
+            }
+          ]
+        },
+        {
+          "name": "arrow-buffer",
+          "version": "60.0.0",
+          "repository": "https://github.com/apache/arrow-rs",
+          "license": "Apache-2.0",
+          "archive_url": "https://static.crates.io/crates/arrow-buffer/arrow-buffer-60.0.0.crate",
+          "archive_sha256": "c7235b863533e9db3ab86905b4521251de11226275b436ff3cb2d0010558d1c5",
+          "source_matches_repository_commit": true,
+          "rust_source_files": 29,
+          "notices": [
+            {
+              "path": "admission/current-v2-next/upstream/notices/arrow-buffer/LICENSE.txt",
+              "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+            },
+            {
+              "path": "admission/current-v2-next/upstream/notices/arrow-buffer/NOTICE.txt",
+              "sha256": "e5b198d7f809311723889814d99a92f808c69e89a847efa7a7b65270f5fdeae6"
+            }
+          ]
+        },
+        {
+          "name": "arrow-cmp",
+          "version": "60.0.0",
+          "repository": "https://github.com/apache/arrow-rs",
+          "license": "Apache-2.0",
+          "archive_url": "https://static.crates.io/crates/arrow-cmp/arrow-cmp-60.0.0.crate",
+          "archive_sha256": "73a0e9adb28d95739fabcdae637261a2c14e618caf58ba1b88857120f9ee2687",
+          "source_matches_repository_commit": true,
+          "rust_source_files": 1,
+          "notices": [
+            {
+              "path": "admission/current-v2-next/upstream/notices/arrow-cmp/LICENSE.txt",
+              "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+            },
+            {
+              "path": "admission/current-v2-next/upstream/notices/arrow-cmp/NOTICE.txt",
+              "sha256": "e5b198d7f809311723889814d99a92f808c69e89a847efa7a7b65270f5fdeae6"
+            }
+          ]
+        },
+        {
+          "name": "arrow-data",
+          "version": "60.0.0",
+          "repository": "https://github.com/apache/arrow-rs",
+          "license": "Apache-2.0",
+          "archive_url": "https://static.crates.io/crates/arrow-data/arrow-data-60.0.0.crate",
+          "archive_sha256": "5aa06d5e22786c4966ffc4d2f171d0cb65d95f6bdea108a14e8c335e9faa437f",
+          "source_matches_repository_commit": true,
+          "rust_source_files": 33,
+          "notices": [
+            {
+              "path": "admission/current-v2-next/upstream/notices/arrow-data/LICENSE.txt",
+              "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+            },
+            {
+              "path": "admission/current-v2-next/upstream/notices/arrow-data/NOTICE.txt",
+              "sha256": "e5b198d7f809311723889814d99a92f808c69e89a847efa7a7b65270f5fdeae6"
+            }
+          ]
+        },
+        {
+          "name": "arrow-schema",
+          "version": "60.0.0",
+          "repository": "https://github.com/apache/arrow-rs",
+          "license": "Apache-2.0",
+          "archive_url": "https://static.crates.io/crates/arrow-schema/arrow-schema-60.0.0.crate",
+          "archive_sha256": "f85a9a58cd03560526b0066487574aacb9008e413504fa0ee23d61141e96c338",
+          "source_matches_repository_commit": true,
+          "rust_source_files": 19,
+          "notices": [
+            {
+              "path": "admission/current-v2-next/upstream/notices/arrow-schema/LICENSE.txt",
+              "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+            },
+            {
+              "path": "admission/current-v2-next/upstream/notices/arrow-schema/NOTICE.txt",
+              "sha256": "e5b198d7f809311723889814d99a92f808c69e89a847efa7a7b65270f5fdeae6"
+            }
+          ]
+        },
+        {
+          "name": "arrow-select",
+          "version": "60.0.0",
+          "repository": "https://github.com/apache/arrow-rs",
+          "license": "Apache-2.0",
+          "archive_url": "https://static.crates.io/crates/arrow-select/arrow-select-60.0.0.crate",
+          "archive_sha256": "ba3482b7d03bf4a3bf0b195f08a7f2b071595ccd54897e35b975ac63d3104977",
+          "source_matches_repository_commit": true,
+          "rust_source_files": 15,
+          "notices": [
+            {
+              "path": "admission/current-v2-next/upstream/notices/arrow-select/LICENSE.txt",
+              "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+            },
+            {
+              "path": "admission/current-v2-next/upstream/notices/arrow-select/NOTICE.txt",
+              "sha256": "e5b198d7f809311723889814d99a92f808c69e89a847efa7a7b65270f5fdeae6"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

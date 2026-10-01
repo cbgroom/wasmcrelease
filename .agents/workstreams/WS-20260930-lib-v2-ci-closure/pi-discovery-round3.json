@@ -1,0 +1,33 @@
+{
+  "schema": "wasmc.pi-current-v2-diagnostic-summary/v1",
+  "scope": "one-development-discovery-case-not-release-qualification",
+  "protocol": "wasmc.current-discovery-observation/v2",
+  "checkout_commit": "a355b3aabc26154442bb57c8de763ba57d1f4460",
+  "prompt_sha256": "c4f7c936c8d32ec61074bfa369f5c424309b2b2cd54355b2cc729fef867940f4",
+  "runner_sha256": "5fdf2b2451b0b2166dc4101471cc8e3c0ee09a0c0518241b1d6b5e2e48db3895",
+  "pi_version": "0.87.1",
+  "accepted": true,
+  "raw_trace_retained": false,
+  "hidden_reasoning_retained": false,
+  "observations": [
+    {"model": "llm-m4dd/deepseek-v4.1-flash", "accepted": true, "tool_calls": 9, "wall_ms": 21883, "tool_errors": 0, "reported_command_failures": 0, "provider_retries": 0, "timed_out": false, "checkout_unchanged": true, "final_answer_sha256": "886709032b55ee568c361ecd6bbe0d7481b0099f33bbadae37816c29e1bd8235"},
+    {"model": "llm-m4dd/glm-5.3-flash", "accepted": true, "tool_calls": 9, "wall_ms": 54546, "tool_errors": 0, "reported_command_failures": 0, "provider_retries": 0, "timed_out": false, "checkout_unchanged": true, "final_answer_sha256": "08062d7f7a474837f5df2307f26c5a1ca92e4fc20f4104b1499c22ac349817c3"}
+  ],
+  "independent_white_box_review": {
+    "independent_from_model_self_assessment": true,
+    "both_read_selected_skill_and_wit": true,
+    "both_executed_default_search_and_development_check": true,
+    "all_expected_facts_and_digest_values_match": true,
+    "search_not_selection_authority": true,
+    "csv_and_telemetry_not_current_selectable": true,
+    "rejected_feedback": "GLM again claimed the immutable contract precedes the development section; the checked file begins with the current-development section, so that opinion did not authorize a change."
+  },
+  "claims": {
+    "single_discovery_case_both_routes_passed": true,
+    "full_frozen_release_cohort_qualified": false,
+    "ordinary_app_consumption_qualified": false,
+    "upstream_model_identity_attested": false,
+    "new_release_qualified": false
+  },
+  "limitations": "One observation per route at this exact checkout. Prior rounds remain failures. Timing is contextual, not a release gate or a causal benchmark. Later receipt/test commits do not retroactively become the tested checkout."
+}

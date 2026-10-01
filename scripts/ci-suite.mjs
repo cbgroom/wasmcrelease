@@ -1,10 +1,16 @@
 import { spawn, execFileSync } from 'node:child_process';
-import { mkdirSync, readFileSync, writeFileSync, appendFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync, appendFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
 
 const root=fileURLToPath(new URL('../',import.meta.url));
+export function usesCurrentDevelopment(refType=process.env.GITHUB_REF_TYPE) {
+  if(refType==='tag'||!existsSync(join(root,'catalog/current-v2-policy.json')))return false;
+  const release=JSON.parse(readFileSync(join(root,'release.json')));
+  const policy=JSON.parse(readFileSync(join(root,'catalog/current-v2-policy.json')));
+  return release.version==='0.0.20'&&release.stage==='prod'&&policy.status==='active';
+}
 const js=(runtime,script,args=[],permissions=[])=>({command:runtime,args:runtime==='deno'?['run',...permissions,script,...args]:[script,...args]});
 export function suiteCases(family,runtime='node',mirror='github') {
   if(!['node','bun','deno'].includes(runtime)||!['github','jsdelivr'].includes(mirror))throw Error('invalid CI matrix');
@@ -38,6 +44,32 @@ export function suiteCases(family,runtime='node',mirror='github') {
     {id:'maintainer-integrity-lib-agent-contracts',command:'bash',args:['scripts/validate-maintainer.sh']},
     item('agent-start-execution','examples/agent-start/run.mjs'),
     item('deterministic-fresh-agent-regression','scripts/wasmc-fresh-agent-evaluation-v0.mjs',['--release-root','.', '--json-out','target/ci/fresh-agent.json'])
+  ];
+  if(family==='candidate' && usesCurrentDevelopment())return [
+    item('current-v2-development-and-frozen-release-boundary','scripts/validate-current-development.mjs',[],['--allow-read','--allow-run']),
+    item('current-v2-install-and-reopen','scripts/test-current-v2-install.mjs',['--exercise'],fixturePermissions),
+    item('current-v2-ordinary-app-replay','scripts/test-current-v2-app.mjs'),
+    item('current-v2-package-license-binding','scripts/current-v2-package-license.mjs'),
+    item('current-v2-dependency-inventory','scripts/test-current-v2-dependency-inventory.mjs'),
+    item('current-v2-registry-notice-review','scripts/test-current-v2-registry-notice-review.mjs'),
+    item('current-v2-build-input-witness','scripts/test-current-v2-build-input-snapshot.mjs'),
+    item('current-v2-generated-adapter-input-witness','scripts/test-current-v2-generated-adapter-snapshot.mjs',[],fixturePermissions),
+    item('current-v2-generated-manifest-profile','scripts/test-current-v2-generated-manifest-profile.mjs',[],fixturePermissions),
+    item('current-v2-generated-manifest-witness','scripts/test-current-v2-generated-manifest-witness.mjs',[],fixturePermissions),
+    item('current-v2-retained-build-witness','scripts/test-current-v2-retained-build-witness.mjs'),
+    item('current-v2-registry-source-witness','scripts/test-current-v2-registry-source-witness.mjs'),
+    item('current-v2-toolchain-notices','scripts/test-current-v2-toolchain-notices.mjs'),
+    item('current-v2-shallow-history-rejection','scripts/test-current-v2-history-baseline.mjs'),
+    item('frozen-release-surfaces-and-current-workflow-coverage','scripts/validate-release-surfaces.mjs',['--frozen-release-ecosystem'],['--allow-read','--allow-run','--allow-env']),
+    item('live-agent-trace-evaluator','scripts/test-live-agent-trace-evaluation-v1.mjs'),
+    item('current-discovery-live-observation-oracle-controls','scripts/test-pi-current-v2-discovery.mjs'),
+    item('fresh-pi-two-model-cohort-contract','scripts/test-fresh-agent-learning-v1.mjs'),
+    item('pi-pre-release-candidate-binding-contract','scripts/test-pi-pre-release-gate-v1.mjs'),
+    item('agent-quickstart-execution','scripts/test-agent-quickstart.mjs'),
+    item('sdk-agent-routing','scripts/validate-sdk-agent-routes.mjs'),
+    item('lib-route-release-closure-negatives','scripts/test-lib-route-closure.mjs'),
+    item('release-channel-promotion-negatives','scripts/test-release-channel.mjs'),
+    item('agent-start-execution','examples/agent-start/run.mjs')
   ];
   if(family==='candidate')return [
     item('v020-product-identity','scripts/release-candidate.mjs',['verify','channels/candidates/0.0.20.json']),

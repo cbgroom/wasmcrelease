@@ -1,0 +1,29 @@
+{
+  "schema": "wasmc.current-lib-quickstart/v1",
+  "scope": "current-development",
+  "authority": "catalog/current-v2-policy.json",
+  "catalog": "catalog/libs-current-v2.json",
+  "migration_ledger": "catalog/current-v2-migration.json",
+  "check_command": "node scripts/validate-current-development.mjs",
+  "help_command": "node scripts/wasmc-lib.mjs --help",
+  "current_package_count": 5,
+  "backlog_count": 13,
+  "catalog_sha256": "bd330af885fd77632f9cb02b93ef75023723ad08b7f07f9b7d09f1746e9ce56c",
+  "base64_decode": {
+    "search_command": "node scripts/wasmc-lib.mjs search \"base64 decode\" --limit 8",
+    "api_identity": "wasmc:std@1.4.0/base64#try-decode-standard",
+    "id": "wasmc-std",
+    "version": "1.4.0",
+    "root": "current-libs/wasmc-std/1.4.0",
+    "required_additional_reads": ["current-libs/wasmc-std/1.4.0/SKILL.md", "current-libs/wasmc-std/1.4.0/lib.wit"],
+    "wit_sha256": "d565f00e91c36da68da3645ec5231dd11d1b25299a3ba5cbe3adbd9f5760d91d",
+    "artifact_sha256": "f8a8ce447f776a47680e02e19ea3a69827edbbc46e01985803ce3d3df51178d7",
+    "resolve_command": "node scripts/wasmc-lib.mjs resolve wasmc-std 1.4.0 --catalog-sha256 bd330af885fd77632f9cb02b93ef75023723ad08b7f07f9b7d09f1746e9ce56c --wit-sha256 d565f00e91c36da68da3645ec5231dd11d1b25299a3ba5cbe3adbd9f5760d91d --artifact-sha256 f8a8ce447f776a47680e02e19ea3a69827edbbc46e01985803ce3d3df51178d7"
+  },
+  "current_catalog_membership": {"wasmc-csv": false, "wasmc-system-telemetry": false},
+  "selection_authority": false,
+  "release_qualified": false,
+  "ordinary_app_consumption_qualified": false,
+  "stop_rule": "For development discovery/selection questions, this verified route plus the selected Skill/WIT is sufficient. Do not follow the immutable v0.0.20 quickstart, scan compatibility/internal ABI, or claim ordinary App execution unless the task asks for execution and its separate oracle passes.",
+  "release_rule": "agent-quickstart.json describes the frozen v0.0.20 product. Use its immutable tag for that contract; neither current discovery nor installation promotes this development tree."
+}

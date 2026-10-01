@@ -57,8 +57,10 @@
       "version": "0.0.1",
       "root": "libs/wasmc-data-core",
       "schema": "wasmc.lib/v0",
-      "status": "rebuild-required",
-      "next_gate": "rebuild from canonical source with current wasmc.lib/v2 tooling and verify"
+      "status": "qualification-pending",
+      "pending_root": "admission/current-v2-data-core/packages/wasmc-data-core/0.0.1",
+      "qualification": "admission/current-v2-next/qualification.json",
+      "next_gate": "upstream/license and ordinary App admission, then exact current catalog/search/install binding"
     },
     {
       "id": "wasmc-data-expr",
@@ -97,32 +99,40 @@
       "version": "0.0.1",
       "root": "libs/wasmc-host-clock",
       "schema": "wasmc.lib/v0",
-      "status": "source-recovery-required",
-      "next_gate": "recover and review canonical source/build authority, then rebuild with current wasmc.lib/v2 tooling and verify"
+      "status": "qualification-pending",
+      "pending_root": "admission/current-v2-next/packages/wasmc-host-clock/0.0.1",
+      "qualification": "admission/current-v2-next/qualification.json",
+      "next_gate": "ordinary App/scope admission, then exact current catalog/search/install binding"
     },
     {
       "id": "wasmc-http1",
       "version": "0.0.1",
       "root": "libs/wasmc-http1",
       "schema": "wasmc.lib/v0",
-      "status": "rebuild-required",
-      "next_gate": "rebuild from canonical source with current wasmc.lib/v2 tooling and verify"
+      "status": "qualification-pending",
+      "pending_root": "admission/current-v2-next/packages/wasmc-http1/0.0.1",
+      "qualification": "admission/current-v2-next/qualification.json",
+      "next_gate": "upstream/license and ordinary App admission, then exact current catalog/search/install binding"
     },
     {
       "id": "wasmc-owned-algorithms",
       "version": "0.1.0",
       "root": "libs/wasmc-owned-algorithms",
       "schema": "wasmc.lib/v0",
-      "status": "source-recovery-required",
-      "next_gate": "recover and review canonical source/build authority, then rebuild with current wasmc.lib/v2 tooling and verify"
+      "status": "qualification-pending",
+      "pending_root": "admission/current-v2-next/packages/wasmc-owned-algorithms/0.1.0",
+      "qualification": "admission/current-v2-next/qualification.json",
+      "next_gate": "ordinary App/scope admission, then exact current catalog/search/install binding"
     },
     {
       "id": "wasmc-resource-counter",
       "version": "0.0.1",
       "root": "libs/wasmc-resource-counter",
       "schema": "wasmc.lib/v0",
-      "status": "source-recovery-required",
-      "next_gate": "recover and review canonical source/build authority, then rebuild with current wasmc.lib/v2 tooling and verify"
+      "status": "qualification-pending",
+      "pending_root": "admission/current-v2-next/packages/wasmc-resource-counter/0.0.1",
+      "qualification": "admission/current-v2-next/qualification.json",
+      "next_gate": "ordinary App/scope admission, then exact current catalog/search/install binding"
     },
     {
       "id": "wasmc-router-policy",
@@ -145,7 +155,9 @@
     "migrated": 5,
     "backlog": 13,
     "blocked_real_provider": 1,
-    "source_recovery_required": 3
+    "source_recovery_required": 0,
+    "qualification_pending": 5,
+    "unrebuilt": 8
   },
   "rules": [
     "old release roots are immutable historical evidence",

@@ -6,6 +6,9 @@ import { join, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 
 const root = process.cwd();
+const packageRoot = process.argv[2] === '--package' && process.argv.length === 4
+  ? resolve(process.argv[3]) : null;
+assert.ok(process.argv.length === 2 || packageRoot, 'usage: test-http1-libsrc.mjs [--package EXACT_ROOT]');
 const candidateRoot = resolve(root, 'libsrc/wasmc-http1');
 const manifest = JSON.parse(await readFile(join(candidateRoot, 'candidate.json'), 'utf8'));
 const oraclePath = resolve(root, manifest.oracle.path);
@@ -31,7 +34,7 @@ const run = (command, args, options = {}) => {
   return result.stdout.trim();
 };
 
-run('cargo', [
+if (!packageRoot) run('cargo', [
   '+1.96.0',
   'build',
   '--release',
@@ -42,11 +45,21 @@ run('cargo', [
   'libsrc/wasmc-http1/Cargo.toml',
 ]);
 
-const candidatePath = resolve(
+const candidatePath = packageRoot ? join(packageRoot, 'artifact.wasm') : resolve(
   root,
   'libsrc/wasmc-http1/target/wasm32-unknown-unknown/release/wasmc_http1_public.wasm',
 );
 const candidateBytes = await readFile(candidatePath);
+if (packageRoot) {
+  const packageManifest = JSON.parse(await readFile(join(packageRoot, 'lib.json'), 'utf8'));
+  assert.equal(packageManifest.schema, 'wasmc.lib/v2');
+  assert.equal(packageManifest.id, manifest.id);
+  assert.equal(packageManifest.version, manifest.version);
+  assert.equal(createHash('sha256').update(candidateBytes).digest('hex'), packageManifest.artifact.sha256);
+  const component = await readFile(join(packageRoot, 'component.wasm'));
+  assert.equal(createHash('sha256').update(component).digest('hex'), packageManifest.component.sha256);
+  assert.deepEqual(await readFile(join(packageRoot, 'lib.wit')), await readFile(join(candidateRoot, manifest.wit)));
+}
 assert.ok(candidateBytes.length <= 256 * 1024, 'candidate unexpectedly large');
 
 const candidateModule = new WebAssembly.Module(candidateBytes);
@@ -55,8 +68,8 @@ assert.deepEqual(WebAssembly.Module.imports(candidateModule), []);
 assert.deepEqual(WebAssembly.Module.imports(oracleModule), []);
 
 const oracleWit = run('wasm-tools', ['component', 'wit', oraclePath]);
-const candidateWit = run('wasm-tools', ['component', 'wit', candidatePath]);
-assert.equal(candidateWit, oracleWit, 'candidate WIT differs from frozen oracle contract');
+const candidateWit = run('wasm-tools', ['component', 'wit', packageRoot ? join(packageRoot, 'component.wasm') : candidatePath]);
+if (!packageRoot) assert.equal(candidateWit, oracleWit, 'candidate WIT differs from frozen oracle contract');
 
 const httpErrors = [
   'input-too-large',
@@ -194,9 +207,13 @@ cases.push('serialize-response-head(1, 99, [])');
 const work = await mkdtemp(join(tmpdir(), 'wasmc-http1-graduation-'));
 try {
   const oracleComponent = join(work, 'oracle.component.wasm');
-  const candidateComponent = join(work, 'candidate.component.wasm');
+  const candidateComponent = packageRoot ? join(packageRoot, 'component.wasm') : join(work, 'candidate.component.wasm');
   run('wasm-tools', ['component', 'new', oraclePath, '-o', oracleComponent]);
-  run('wasm-tools', ['component', 'new', candidatePath, '-o', candidateComponent]);
+  if (!packageRoot) run('wasm-tools', ['component', 'new', candidatePath, '-o', candidateComponent]);
+  // Compare like views: Core metadata may retain the unused source world,
+  // while an executable Component reports only its exported world.
+  assert.equal(run('wasm-tools', ['component', 'wit', candidateComponent]),
+    run('wasm-tools', ['component', 'wit', oracleComponent]), 'executable Component WIT drift');
 
   const receipts = [];
   for (const invocation of cases) {

@@ -1,0 +1,31 @@
+{
+  "schema": "wasmc.lib-regression-repair/v1",
+  "id": "wasmc-data-core",
+  "version": "0.0.1",
+  "wit_identity_changed": false,
+  "released_roots_changed": false,
+  "before": {
+    "source_authority": "edf762d6fdaa34d05e83bd152c3eed8dc6cb3aa2",
+    "artifact_sha256": "2033910ed2c4130db930d289787204181b6d9fed94bdbcbde9651eaab949f313",
+    "input": "take({rows: 0, fields: [], columns: []}, [])",
+    "wasmtime_result": "err(invalid-layout)",
+    "wasmi_result_tag": 1,
+    "wasmi_error_ordinal": 7,
+    "qualified": false
+  },
+  "repair": {
+    "source_authority": "3270e4c3d504e12a899464f115542a8efc578b06",
+    "rule": "Preserve selected-index length through explicit Arrow RecordBatchOptions row count, including zero columns.",
+    "native_tests": 3
+  },
+  "after": {
+    "artifact_sha256": "255d4625fa7f3f8bbea534476e862475585acb59edf3cff19c7e01eff736d823",
+    "component_sha256": "43a459ec14187b333fd091cb6ad410669e7d65050c77829fe98f460c7f1ca63d",
+    "component_cases": 10,
+    "wasmi_rounds": 128,
+    "generated_sdk_data_core_calls": 896,
+    "complete_second_build_byte_identical": true,
+    "receipt": "admission/current-v2-next/qualification.json",
+    "release_qualified": false
+  }
+}

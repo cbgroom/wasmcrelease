@@ -1,0 +1,21 @@
+{
+  "schema": "wasmc.pi-current-v2-diagnostic-summary/v1",
+  "scope": "one-development-discovery-case-not-release-qualification",
+  "protocol": "wasmc.current-discovery-observation/v2",
+  "checkout_commit": "f1dc1fa9ee1d409a70383403f573ef4d15774e95",
+  "prompt_sha256": "c4f7c936c8d32ec61074bfa369f5c424309b2b2cd54355b2cc729fef867940f4",
+  "runner_sha256": "5fdf2b2451b0b2166dc4101471cc8e3c0ee09a0c0518241b1d6b5e2e48db3895",
+  "pi_version": "0.87.1",
+  "accepted": false,
+  "raw_trace_retained": false,
+  "hidden_reasoning_retained": false,
+  "observations": [
+    {"model": "llm-m4dd/deepseek-v4.1-flash", "accepted": true, "tool_calls": 11, "wall_ms": 44625, "tool_errors": 0, "reported_command_failures": 0, "provider_retries": 0, "final_answer_sha256": "db516ad77d8d51542293d1d6dea03c8a51525d09c8c9e543a26c99c2e52dc6a1"},
+    {"model": "llm-m4dd/glm-5.3-flash", "accepted": false, "tool_calls": 8, "wall_ms": 48748, "tool_errors": 0, "reported_command_failures": 0, "provider_retries": 0, "timed_out": false, "failure": "final-answer-not-json", "independent_semantic_review": "All expected facts and digests match, but a prose prefix violates the frozen single-JSON output contract. Retain failure; do not relax the oracle.", "final_answer_sha256": "9132ac0fe022936f118c4b1c1419d996ba8dd49252fe8a927329424574a58817"}
+  ],
+  "feedback_review": {
+    "accepted_hypothesis": "excluded_examples with false values can mean not excluded or not present; rename to current_catalog_membership and assert catalog membership independently",
+    "rejected_hypothesis": "AGENTS.md does not front-load immutable-product guidance ahead of current-development guidance; its current section is first",
+    "not_claimed": ["full release cohort qualification", "ordinary App consumption", "upstream model identity attestation"]
+  }
+}

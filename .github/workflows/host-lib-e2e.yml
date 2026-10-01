@@ -113,6 +113,8 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
           node-version: 26.5.1
@@ -358,24 +360,14 @@ jobs:
             deno run --allow-read=libs/wasmc-owned-algorithms,target/host-tcp-app --allow-env=NODE_V8_COVERAGE --allow-run="$benchmark" host/drivers/tcp/benchmark.mjs "$benchmark" target/host-tcp-app/guest.wasm --wasmtime
           fi
       - name: Published release integrity
-        if: runner.os == 'Linux' && github.ref == 'refs/heads/main'
+        if: runner.os == 'Linux' && github.ref_type == 'tag'
         run: ./scripts/validate-maintainer.sh
       - name: Development release-surface integrity
-        if: runner.os == 'Linux' && github.ref != 'refs/heads/main'
+        if: runner.os == 'Linux' && github.ref_type != 'tag'
         shell: bash
         run: |
           set -euo pipefail
-          node scripts/validate-release-surfaces.mjs
-          node scripts/test-performance-baseline.mjs
-          node scripts/test-release-channel.mjs
-          candidate=/tmp/wasmc-development-candidate.json
-          rm -f "$candidate"
-          if node scripts/release-candidate.mjs create "$candidate" "$GITHUB_SHA" 0.0.0; then
-            node scripts/release-candidate.mjs verify "$candidate"
-          else
-            node scripts/lib-route-closure.mjs --check
-            test "$(jq '.candidate_extras | length' catalog/lib-route-closure.json)" -gt 0
-          fi
+          node scripts/ci-suite.mjs candidate
       - name: Exact-source evidence scope
         shell: bash
         env:

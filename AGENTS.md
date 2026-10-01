@@ -1,5 +1,26 @@
 # wasmc public Agent entrypoint
 
+## Current development checkout
+
+On current main and its work branches, start Lib discovery with
+`agent-current-lib-quickstart.json`. Its named check verifies the compact route
+against `catalog/current-v2-policy.json` and `catalog/current-v2-migration.json`.
+This development route takes precedence over the frozen v0.0.20 quickstart
+below for current-v2 discovery/selection tasks. Read only the route and selected
+Skill/WIT when they answer the task, run its named check/search, then stop.
+CLI usage is available through `node scripts/wasmc-lib.mjs --help`.
+Five rebuilt packages are selectable through `catalog/libs-current-v2.json`;
+thirteen packages remain outside that catalog until their named gates close.
+Run `node scripts/validate-current-development.mjs` before using this checkout.
+It validates current package identities, API discovery and the preserved
+v0.0.20 release metadata, and proves that the old candidate rejects future
+product bytes. This result is development validation, not release promotion.
+Pin the checkout commit for current-v2 work. The v0.0.20 contract below belongs
+to the immutable release; use its tag for released-product verification.
+Development discovery, installation and package verification are not proof of
+ordinary App consumption; that requires a separate matching-compiler execution
+oracle. Do not infer it from the presence of a v2 manifest.
+
 This source-free compiler repository publishes a standard Core Wasm compiler,
 Lib packages, a package-manager-free Runtime/Registry bootstrap, and the
 public `wasmc-core-runtime` Rust SDK. This file is frozen inside the v0.0.20
