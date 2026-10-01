@@ -143,3 +143,27 @@ self-rehash; public generated-SDK consumption passes from an isolated 81-file
 tree. See CURRENT_V2_LICENSED_DELIVERY.md. This supersedes the pending delivery
 status above, not temporary-adapter, toolchain/target obligations, ordinary App
 or release status. No old strict roots were edited to carry audit metadata.
+
+## Generated-adapter capture primitive (not a real-build receipt)
+
+`node scripts/test-current-v2-generated-adapter-snapshot.mjs` exercises a
+metadata-only snapshot of one explicitly selected generated adapter child.
+It retains byte counts and digests for the complete input tree, requires
+Cargo.toml/Cargo.lock/mapping.json/src/lib.rs and rejects missing, changed,
+linked, oversized or out-of-scope inputs. Only root Cargo target output is
+excluded; src/target remains an input. The fixture has 22 negative controls
+and is included in development candidate CI, not immutable-tag release CI.
+
+At the current producer, the generated adapter is a temporary child of its
+workspace, deleted after publication, not a global TMPDIR crate. Its source
+digest covers src/lib.rs only. The mapping and lock have separate producer
+digests; none independently qualifies the generated Cargo.toml. The primitive
+can bind those three observed digests but explicitly keeps manifest
+qualification, real-build observation, full license audit and release false.
+
+Next connect this capture to this invocation's fixed Cargo child before and
+after execution, including offline lock generation. Retain a source-free
+receipt before adapter removal; compare independently built input identities
+with an explicit rule for absolute dependency paths in Cargo.toml rather than
+assuming byte equality. Do not watch shared global temporary directories,
+patch private compiler source or retrospectively relabel old build receipts.

@@ -9,6 +9,7 @@ try {
   process.env.GITHUB_REF_TYPE='branch';
   assert.equal(suiteCases('candidate')[0].id,'current-v2-development-and-frozen-release-boundary');
   assert(suiteCases('candidate').some(row=>row.id==='current-v2-ordinary-app-replay'));
+  assert(suiteCases('candidate').some(row=>row.id==='current-v2-generated-adapter-input-witness'));
   process.env.GITHUB_REF_TYPE='tag';
   const cases=suiteCases('candidate');
   assert.equal(cases[0].id,'v020-product-identity');

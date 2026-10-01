@@ -840,3 +840,30 @@ These observations change the repair order, not package qualification. The
 last committed public candidate suite passed 21/21 at 50e858a. Counts remain
 10/18 built, 5/18 selected and ordinary App 1/5; full_transitive_license_audit
 and release_qualified remain false. No new release or 100% closure is claimed.
+
+## 2026-10-01 generated adapter input capture foundation
+
+Fetched live private authority remains 3b797a77d0afa25264a11362603b0d596d2e0ba7.
+Runtime started/not-ready
+exclusive claim and ten dirty WIT files remain unchanged. No owner messages,
+private writes or process restarts occurred. Previous turn was progress through
+new gate failures, not a verified live-process wait.
+
+Read-only producer inspection clarifies the generated adapter's lifetime: it
+is an immediate workspace child .wasmc-rust-adapter-PID-NONCE, removed after
+publication. Cargo generates its lock offline before the fixed locked build.
+Generated source digest covers only src/lib.rs, not Cargo.toml/lock/mapping.
+Added a metadata-only, bounded generated-child snapshot and producer digest
+binding primitive with 22 fault controls. Initial fixture failed on macOS
+/var versus /private/var alias; fixture now uses a canonical temporary parent,
+without relaxing linked-input rejection. Development CI includes this fixture.
+
+This is a capture primitive, not actual Cargo-interposition evidence. Real
+producer integration, complete generated-manifest qualification and independent
+absolute-path-aware comparison remain next gates; all related release/audit
+flags stay false. No source bodies are copied or private code changed.
+
+Local candidate suite now passes 22/22 including the new capture fixture;
+current-v2 CI routing and git diff --check PASS. The run was from this edited
+worktree, not a hosted check or live two-model Pi regression. Existing package
+qualification receipts and immutable release identities remain unchanged.
