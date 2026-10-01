@@ -8,8 +8,6 @@ import { mkdirSync, readFileSync, writeFileSync, readdirSync, statSync } from 'n
 import { resolve, join, dirname, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {snapshotBuildInputs,verifyBuildInputsUnchanged,readCommittedBuildInput} from './current-v2-build-input-snapshot.mjs';
-import {installCargoAdapterObserver,readCargoAdapterObservations} from './current-v2-cargo-adapter-observer.mjs';
-import {bindGeneratedAdapterReport} from './current-v2-generated-adapter-snapshot.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const [producerArg, workArg, selectedId, cargoHomeArg, realCargoArg] = process.argv.slice(2);
@@ -33,6 +31,8 @@ const source = path => readCommittedBuildInput(root,authority,path);
 const privateSource = path => readCommittedBuildInput(producer,producerAuthority,path);
 // Explicit opt-in records a real selected Cargo cache, not a retrospective claim.
 const cacheAudit=cargoHomeArg?await import('./current-v2-registry-source-witness.mjs'):null;
+const observerTools=realCargoArg?await import('./current-v2-cargo-adapter-observer.mjs'):null;
+const generatedTools=realCargoArg?await import('./current-v2-generated-adapter-snapshot.mjs'):null;
 const dependencyInventory=cacheAudit?JSON.parse(source('admission/current-v2-next/dependency-inventory.json')):null;
 const recovered = {
   'wasmc-host-clock': 'wasmc_lib_host_candidate_v0',
@@ -94,7 +94,7 @@ for (const id of selectedId ? [selectedId] : cohort) {
       spec.rust = { artifact_name: artifactName, crate_dir: 'adapter', profile: 'wit-bindgen-component' };
     }
     writeFileSync(join(workspace, 'lib.build.json'), JSON.stringify(spec, null, 2) + '\n');
-    const observer=realCargoArg?installCargoAdapterObserver(dirname(workspace),workspace,resolve(realCargoArg)):null;
+    const observer=observerTools?.installCargoAdapterObserver(dirname(workspace),workspace,resolve(realCargoArg));
     const witnessOptions={siblingWit:Boolean(canonical)};
     const sourceInputs=snapshotBuildInputs(workspace,witnessOptions);
     const registrySources=cacheAudit?.captureCargoRegistry(dependencyInventory,resolve(cargoHomeArg),workspace);
@@ -107,7 +107,7 @@ for (const id of selectedId ? [selectedId] : cohort) {
     const packageRoot = join(publication, id);
     let cargoObserver=null;
     if(observer){
-      const observations=readCargoAdapterObservations(observer.output);
+      const observations=observerTools.readCargoAdapterObservations(observer.output);
       assert(observations.length>0&&observations.every(row=>row.exit_code===0),'missing or failed Cargo observations');
       const generated=observations.filter(row=>row.generated&&row.kind==='build');
       const expectedMapped=spec.rust.profile!=='wit-bindgen-component';
@@ -121,7 +121,7 @@ for (const id of selectedId ? [selectedId] : cohort) {
         const manifest=JSON.parse(readFileSync(join(packageRoot,'lib.json')));
         const lockInputs=manifest.build.inputs.filter(row=>row.kind==='cargo-lock');
         assert.equal(lockInputs.length,1);
-        binding=bindGeneratedAdapterReport(generated[0].after,{generated_source_sha256:report.generated_source_sha256,
+        binding=generatedTools.bindGeneratedAdapterReport(generated[0].after,{generated_source_sha256:report.generated_source_sha256,
           mapping_sha256:report.mapping_sha256,cargo_lock_sha256:lockInputs[0].sha256});
       }
       cargoObserver={observations,generated_adapter_expected:expectedMapped,generated_adapter_builds:generated.length,

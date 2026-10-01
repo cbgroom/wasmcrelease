@@ -886,3 +886,10 @@ existing 22 snapshot controls PASS with fixture delegates. Actual selected
 OwnedAlgorithms dual build is next; do not claim it from fixture results.
 Generated Cargo.toml qualification and independent absolute-path comparison,
 full toolchain/target/wrapper obligations and all-package release remain false.
+
+Initial candidate run rejected the builder dirty-input fixture because newly
+static-imported optional observer modules were absent from that minimal fixture;
+this is a real regression, not a candidate PASS. Observer modules now load only
+after clean public/producer checks and only on opt-in. The actual original dirty
+input rejection, all 13 retained-workspace controls and ten observer controls
+PASS after repair; diagnostics remain under target/ci/candidate-node-github.
