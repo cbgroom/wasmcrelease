@@ -167,3 +167,25 @@ receipt before adapter removal; compare independently built input identities
 with an explicit rule for absolute dependency paths in Cargo.toml rather than
 assuming byte equality. Do not watch shared global temporary directories,
 patch private compiler source or retrospectively relabel old build receipts.
+
+Apply that generated-child gate by the actual build profile, not by the CLI's
+field name. The mapped-adapter OwnedAlgorithms path creates that child; the
+direct wit-bindgen-component path (HTTP1, DataCore, HostClock, ResourceCounter)
+builds retained source and emits its source hash under the same CLI field.
+Absence of a temporary child on a direct profile is not missing evidence.
+
+The portable runner optionally accepts an explicit fifth OBSERVED_REAL_CARGO
+path after the audited Cargo home. It installs a delegate only in each private
+pass directory and prepends it only to that producer child's PATH. Known version,
+offline lock-generation and fixed locked/offline build invocations delegate to
+the exact Cargo binary unchanged. Unknown invocations and out-of-workspace builds
+reject. Generated inputs are captured before/after Cargo and bound to the
+producer's source, mapping and delivered-lock identities. The observer preserves
+nonzero Cargo exits and labels this interposed profile explicitly. No globally
+installed wrapper or shared-directory watcher is used.
+
+`node scripts/test-current-v2-cargo-adapter-observer.mjs` exercises delegation,
+lock creation, successful build observation, mutation rejection and failure
+retention using a fixture delegate, with ten rejection controls. This is not a
+real producer build. Manifest qualification, independent generated-manifest
+comparison, wrapper/toolchain execution and full obligations remain separate.

@@ -8,17 +8,20 @@ import { mkdirSync, readFileSync, writeFileSync, readdirSync, statSync } from 'n
 import { resolve, join, dirname, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {snapshotBuildInputs,verifyBuildInputsUnchanged,readCommittedBuildInput} from './current-v2-build-input-snapshot.mjs';
+import {installCargoAdapterObserver,readCargoAdapterObservations} from './current-v2-cargo-adapter-observer.mjs';
+import {bindGeneratedAdapterReport} from './current-v2-generated-adapter-snapshot.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const [producerArg, workArg, selectedId, cargoHomeArg] = process.argv.slice(2);
-assert.ok(producerArg && workArg, 'usage: build-current-v2-portable.mjs PRIVATE_PRODUCER PRIVATE_EMPTY_OUTPUT [PACKAGE_ID [CARGO_HOME]]');
+const [producerArg, workArg, selectedId, cargoHomeArg, realCargoArg] = process.argv.slice(2);
+assert.ok(producerArg && workArg, 'usage: build-current-v2-portable.mjs PRIVATE_PRODUCER PRIVATE_EMPTY_OUTPUT [PACKAGE_ID [CARGO_HOME [OBSERVED_REAL_CARGO]]]');
+assert(!realCargoArg||cargoHomeArg,'observed Cargo requires an explicit audited Cargo home');
 const producer = resolve(producerArg);
 const work = resolve(workArg);
 assert.ok(work.startsWith(producer + '/'), 'output must be inside the selected private producer');
 assert.ok(!work.startsWith(root + '/'), 'no private build in public checkout');
-const run = (cmd, args, cwd = root) => execFileSync(cmd, args, {
+const run = (cmd, args, cwd = root, extraEnv={}) => execFileSync(cmd, args, {
   cwd, encoding: 'utf8', maxBuffer: 64 << 20, timeout: 600000,
-  env: { ...process.env, RUSTUP_TOOLCHAIN: '1.96.0', ...(cargoHomeArg?{CARGO_HOME:resolve(cargoHomeArg)}:{}) },
+  env: { ...process.env, RUSTUP_TOOLCHAIN: '1.96.0', ...(cargoHomeArg?{CARGO_HOME:resolve(cargoHomeArg)}:{}),...extraEnv },
 }).trim();
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
 const authority = run('git', ['rev-parse', 'HEAD']);
@@ -91,16 +94,40 @@ for (const id of selectedId ? [selectedId] : cohort) {
       spec.rust = { artifact_name: artifactName, crate_dir: 'adapter', profile: 'wit-bindgen-component' };
     }
     writeFileSync(join(workspace, 'lib.build.json'), JSON.stringify(spec, null, 2) + '\n');
+    const observer=realCargoArg?installCargoAdapterObserver(dirname(workspace),workspace,resolve(realCargoArg)):null;
     const witnessOptions={siblingWit:Boolean(canonical)};
     const sourceInputs=snapshotBuildInputs(workspace,witnessOptions);
     const registrySources=cacheAudit?.captureCargoRegistry(dependencyInventory,resolve(cargoHomeArg),workspace);
     const report = JSON.parse(run(join(producer, 'target/debug/wasmc'), [
       'lib', 'build', '--workspace', workspace, '--publication', publication, join(workspace, 'lib.build.json'),
-    ], producer));
+    ], producer,observer?.env??{}));
     verifyBuildInputsUnchanged(workspace,sourceInputs,witnessOptions);
     if(cacheAudit)assert.deepEqual(cacheAudit.captureCargoRegistry(dependencyInventory,resolve(cargoHomeArg),workspace),registrySources,
       'Cargo registry sources/routing changed during producer execution');
     const packageRoot = join(publication, id);
+    let cargoObserver=null;
+    if(observer){
+      const observations=readCargoAdapterObservations(observer.output);
+      assert(observations.length>0&&observations.every(row=>row.exit_code===0),'missing or failed Cargo observations');
+      const generated=observations.filter(row=>row.generated&&row.kind==='build');
+      const expectedMapped=spec.rust.profile!=='wit-bindgen-component';
+      assert.equal(generated.length,expectedMapped?1:0,'generated adapter profile observation mismatch');
+      let binding=null;
+      if(expectedMapped){
+        const locks=observations.filter(row=>row.generated&&row.kind==='lock');
+        assert.equal(locks.length,1,'missing generated lock observation');
+        assert.equal(locks[0].adapter,generated[0].adapter,'lock/build adapter mismatch');
+        assert.deepEqual(locks[0].after.files,generated[0].before.files,'generated inputs changed between lock and build');
+        const manifest=JSON.parse(readFileSync(join(packageRoot,'lib.json')));
+        const lockInputs=manifest.build.inputs.filter(row=>row.kind==='cargo-lock');
+        assert.equal(lockInputs.length,1);
+        binding=bindGeneratedAdapterReport(generated[0].after,{generated_source_sha256:report.generated_source_sha256,
+          mapping_sha256:report.mapping_sha256,cargo_lock_sha256:lockInputs[0].sha256});
+      }
+      cargoObserver={observations,generated_adapter_expected:expectedMapped,generated_adapter_builds:generated.length,
+        producer_digest_binding:binding,manifest_independently_qualified:false,
+        independent_generated_manifest_comparison:false,full_transitive_license_audit:false,release_qualified:false};
+    }
     run(join(producer, 'target/debug/wasmc'), ['lib', 'verify', packageRoot], producer);
     const inventory = {};
     const walk = dir => { for (const name of readdirSync(dir).sort()) {
@@ -110,7 +137,8 @@ for (const id of selectedId ? [selectedId] : cohort) {
     }};
     walk(packageRoot);
     builds.push({ report, inventory, source_inputs:sourceInputs, build_inputs_unchanged:true,
-      ...(cacheAudit?{registry_sources:registrySources,registry_sources_unchanged:true}:{}) });
+      ...(cacheAudit?{registry_sources:registrySources,registry_sources_unchanged:true}:{}),
+      ...(observer?{cargo_observer:cargoObserver}:{}) });
   }
   assert.deepEqual(builds[1].inventory, builds[0].inventory, `${id}: complete package second-build drift`);
   assert.deepEqual(builds[1].source_inputs,builds[0].source_inputs,`${id}: independent build input drift`);

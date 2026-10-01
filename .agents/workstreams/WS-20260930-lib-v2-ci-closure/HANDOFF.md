@@ -867,3 +867,22 @@ Local candidate suite now passes 22/22 including the new capture fixture;
 current-v2 CI routing and git diff --check PASS. The run was from this edited
 worktree, not a hosted check or live two-model Pi regression. Existing package
 qualification receipts and immutable release identities remain unchanged.
+
+## 2026-10-01 scoped Cargo observer ready for actual mapped-adapter build
+
+Added optional explicit real-Cargo delegation to the portable runner. The
+observer exists only in this pass's private output directory and applies PATH
+only to the immutable producer child. Fixed known Cargo invocations execute
+against a hash-bound delegate; unknown arguments/workspace paths reject. It
+captures generated inputs around offline lock creation and locked builds,
+retains failures, and binds source/mapping/delivered-lock identities. No global
+wrapper, shared temp monitoring or private source change is involved.
+
+New read-only branch inspection corrects profile applicability: OwnedAlgorithms
+uses the temporary mapped adapter, while the other four staged roots use direct
+wit-bindgen-component retained source. Their same-named CLI source hash does
+not prove they created a temporary crate. Ten observer fault controls and the
+existing 22 snapshot controls PASS with fixture delegates. Actual selected
+OwnedAlgorithms dual build is next; do not claim it from fixture results.
+Generated Cargo.toml qualification and independent absolute-path comparison,
+full toolchain/target/wrapper obligations and all-package release remain false.

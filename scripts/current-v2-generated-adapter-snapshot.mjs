@@ -5,7 +5,7 @@ import {createHash} from 'node:crypto';
 import {lstatSync,readFileSync,readdirSync,realpathSync} from 'node:fs';
 import {resolve,dirname,basename,join} from 'node:path';
 const hash=bytes=>createHash('sha256').update(bytes).digest('hex');
-export function snapshotGeneratedAdapter(workspace,adapter){
+export function snapshotGeneratedAdapter(workspace,adapter,{requireLock=true}={}){
   const base=resolve(workspace),root=resolve(adapter);
   assert.equal(realpathSync(base),base,'linked workspace');
   assert(lstatSync(base).isDirectory(),'workspace must be a directory');
@@ -35,12 +35,12 @@ export function snapshotGeneratedAdapter(workspace,adapter){
     }
   };
   walk(root,'');
-  for(const path of ['Cargo.toml','Cargo.lock','mapping.json','src/lib.rs'])
+  for(const path of ['Cargo.toml',...(requireLock?['Cargo.lock']:[]),'mapping.json','src/lib.rs'])
     assert(Object.hasOwn(files,path),`missing generated input: ${path}`);
   const ordered=Object.fromEntries(Object.entries(files).sort(([a],[b])=>Buffer.compare(Buffer.from(a),Buffer.from(b))));
   return {schema:'wasmc.generated-adapter-input-snapshot/v1',
     scope:'one-explicit-workspace-child-before-removal-excluding-root-Cargo-target',
-    files:ordered,sha256:hash(Buffer.from(JSON.stringify(ordered)))};
+    lock_required:requireLock,files:ordered,sha256:hash(Buffer.from(JSON.stringify(ordered)))};
 }
 export function verifyGeneratedAdapterUnchanged(workspace,adapter,before){
   const after=snapshotGeneratedAdapter(workspace,adapter);
