@@ -101,3 +101,12 @@ configuration profiles require review. A config-free path is supported.
 Omitting that fourth argument does not attest to registry sources. Temporary
 generated adapter contents, wrappers/toolchain execution and full license
 obligations remain separate unclosed gates. No old build is retroactively PASS.
+
+Actual HTTP1 dual-build receipt at public input e64d2ce is retained in
+`admission/current-v2-next/http1-registry-build-witness.json`: both real builds
+passed the selected 189-crate cache/routing guard, both workspaces/current cache
+were separately rechecked afterward, and all nine output files equal the staged
+package. This is not yet carried-envelope validation, and four other staged
+roots still need the registry-guarded build. The original ENOBUFS failure before
+build execution is retained in the workstream handoff; a 2 MiB committed-input
+fixture now prevents recurrence of the default Git output-buffer truncation.

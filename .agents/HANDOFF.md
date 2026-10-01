@@ -1,5 +1,17 @@
 # WAsmC release maintainer handoff
 
+## 2026-10-01 actual HTTP1 registry-guarded rebuild
+
+New source-free outer evidence: admission/current-v2-next/http1-registry-build-witness.json.
+Both real HTTP1 builds from public input e64d2ce pass explicit selected Cargo
+cache/routing pre/post checks and independent equality: 189 crates, 12,335 files.
+Post-build live cache/workspace recheck PASS; all nine package files equal the
+existing staged root. Script fixtures have 34 registry/routing negatives plus
+a 2 MiB committed-input retrieval regression. Candidate suite 21/21 PASS.
+Four other staged roots still need this new registry guard; no old receipts
+are retroactively upgraded. Temporary generated adapters, wrappers/toolchain
+execution, full license obligations, generic App and release remain pending.
+
 ## 2026-10-01 guarded staged-cohort checkpoint
 
 All five staged roots have now passed guarded independent dual builds from

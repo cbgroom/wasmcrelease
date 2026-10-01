@@ -704,3 +704,17 @@ Git committed dependency inventory exceeded execFileSync default 1 MiB buffer
 (ENOBUFS). Fixed both public/private committed-input retrieval with a bounded
 64 MiB buffer; independent 2 MiB committed fixture proves exact-byte retrieval.
 No cache/build PASS is inferred from the failed invocation.
+
+After the buffer repair was committed/pushed as e64d2ce, actual HTTP1 dual
+build portable-v2-registry-witness-http1-r11 PASS. Explicit selected CARGO_HOME,
+all 189 conservative dependency archives/extracted source trees and retained
+Cargo routing configs pass pre/post stability and independent equality. Both
+workspaces and current registry were separately reopened after the build PASS.
+All nine files equal the existing staged complete package. Source-free evidence
+is admission/current-v2-next/http1-registry-build-witness.json; this is outer
+audit metadata, not yet a carried licensed-envelope claim. Full private receipt
+is retained in the private output directory, not copied with source bodies.
+Local candidate suite 21/21 PASS at e64d2ce. Next run this registry guard on the
+other four staged roots (all-cohort selection may use empty PACKAGE_ID followed
+by explicit CARGO_HOME), then bind and test the resulting delivery evidence.
+Default/complex App ownership and all other release blockers remain unchanged.
