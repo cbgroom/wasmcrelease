@@ -933,3 +933,25 @@ pre-delegation manifest rejection. Development CI adds this fixture. Existing
 r13 record is unchanged and cannot inherit this new gate retroactively. Next
 run the new gate in an independent OwnedAlgorithms dual build; all obligations,
 source-owner/MST blockers and all 18-package release scope remain unchanged.
+
+## 2026-10-01 finite generated-manifest gate actual dual-build PASS
+
+Fetched private origin/master still equals clean producer
+3b797a77d0afa25264a11362603b0d596d2e0ba7. Committed/pushed public input
+7f4cdf577f4e99032a901f73df5170061ef3902d executed the new full manifest gate in
+target/portable-v2-adapter-manifest-qualified-owned-r14. The actual process is
+terminal PASS. Both OwnedAlgorithms 0.1.0 builds pass generated profile audits
+before/after Cargo; semantic models and all bytes outside the one exact verified
+dependency path literal match across independent passes. The complete nine-file
+output remains byte-identical to the staged package and passes strict reopen.
+
+Post-build live retained-workspace and selected registry/routing checks PASS;
+source-free metadata records compiler-selected specification equality, source/
+mapping/lock binding and exact committed observer/auditor source hashes. New
+owned-generated-manifest-qualification.json records this result independently.
+Original r13 observation still reprojects byte-for-byte and is not upgraded.
+Local development candidate suite is now 23/23 PASS; 24 profile negatives and
+12 delegate controls PASS. The suite ran before this observation-document
+commit, not a hosted or live-model qualification. No private source bodies or
+strict Lib roots changed. New-record licensed delivery, complete obligations,
+source-owner/MST blockers and all-package counts remain unchanged; no release.

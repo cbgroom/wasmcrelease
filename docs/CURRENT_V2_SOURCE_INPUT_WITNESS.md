@@ -231,3 +231,19 @@ bytes. The old r13 observation remains unqualified by this newer gate.
 controls; the scoped Cargo observer fixture now has 12 and rejects invalid
 manifest profiles before delegation. Real execution of the new gate remains
 separate from these fixtures and must retain a new source-bound receipt.
+
+The independent r14 execution now closes that finite generated-manifest gate
+for OwnedAlgorithms 0.1.0, under public input
+`7f4cdf577f4e99032a901f73df5170061ef3902d` and the same clean private producer.
+Both real builds pass full profile checks before/after lock generation and
+build. Their semantic models and byte-preserving path-scrubbed hashes match;
+the full package inventories remain byte-identical to the staged root.
+The retained workspaces, registry/routing and all delivered files were again
+rechecked independently before projection. The source-free record is
+`admission/current-v2-next/owned-generated-manifest-qualification.json`.
+
+The exact r13 projection still reproduces byte-for-byte and stays PENDING for
+this gate; it was not rewritten. The new record does not qualify arbitrary
+Cargo manifests or other build profiles. Licensed delivery of this record,
+wrapper/toolchain/target obligations, full dependency-license audit, all-package
+ordinary App and release remain separate unclosed gates.
