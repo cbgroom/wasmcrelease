@@ -955,3 +955,30 @@ Local development candidate suite is now 23/23 PASS; 24 profile negatives and
 commit, not a hosted or live-model qualification. No private source bodies or
 strict Lib roots changed. New-record licensed delivery, complete obligations,
 source-owner/MST blockers and all-package counts remain unchanged; no release.
+
+## 2026-10-01 generated-manifest witness licensed delivery
+
+Added independent exact-observation validator for the r14 manifest witness and
+actual nine-file package reopening. Fifteen negative controls PASS, including
+internally rehashed input metadata and real missing/linked/altered package files.
+The outer licensed distribution now binds and carries that one additional
+record; its original licensed_recipient_delivery=false describes capture time
+and is not rewritten to claim its own later delivery. The carrying envelope
+reports delivery separately, preserving acyclic binding and scoped coverage.
+
+Actual fresh capsule has 80 files; source-free generated-SDK tree 82 files,
+with carried Cargo.lock reused byte-for-byte. All 78 recipient controls PASS,
+including generated-record deletion/tampering/links and coordinated semantic
+digest/record/index self-rehash. HTTP1 1,422 cases and five-package Wasmtime 49
+SDK execution PASS. New fields explicitly cover one mapped package, two builds
+and four generated input files; no all-five adapter or full audit claim.
+Qualification refresh session 81729 completed successfully, including actual
+Wasmi fixture execution and licensed SDK use; no restart occurred. Imported
+resource-drop callback remains explicitly unexecuted, not a newly closed gate.
+All 18 targets, 8 unrebuilt targets, ordinary App 1/5, private MST/owner blockers,
+matching new compiler/candidate and full live model/release gates remain open.
+
+Two ordered licensed-envelope recaptures are byte-identical. Local candidate
+suite candidate-generated-witness-delivery passes 24/24 after qualification
+refresh, with CI routing and git diff --check PASS. This is edited-worktree
+evidence, not hosted CI, a frozen new candidate, live Pi pair or release.

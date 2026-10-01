@@ -11,6 +11,7 @@ try {
   assert(suiteCases('candidate').some(row=>row.id==='current-v2-ordinary-app-replay'));
   assert(suiteCases('candidate').some(row=>row.id==='current-v2-generated-adapter-input-witness'));
   assert(suiteCases('candidate').some(row=>row.id==='current-v2-generated-manifest-profile'));
+  assert(suiteCases('candidate').some(row=>row.id==='current-v2-generated-manifest-witness'));
   process.env.GITHUB_REF_TYPE='tag';
   const cases=suiteCases('candidate');
   assert.equal(cases[0].id,'v020-product-identity');

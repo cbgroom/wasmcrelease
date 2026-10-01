@@ -247,3 +247,12 @@ this gate; it was not rewritten. The new record does not qualify arbitrary
 Cargo manifests or other build profiles. Licensed delivery of this record,
 wrapper/toolchain/target obligations, full dependency-license audit, all-package
 ordinary App and release remain separate unclosed gates.
+
+The subsequent outer licensed-delivery gate now carries the exact r14 record
+without editing it or adding audit files inside strict Lib roots. Actual fresh
+recipient reopening pins the observation independently and checks the nine-file
+package. The 80-file capsule and isolated 82-file SDK consumer pass 78 recipient
+fault controls, HTTP1 behavior and five-package SDK execution. Fifteen separate
+observed-witness controls reject substitution and actual package faults. This
+supersedes the r14 licensed-delivery pending status above, not complete
+wrapper/toolchain/target obligations, all-package ordinary App or release status.

@@ -10,6 +10,7 @@ import {validateInventory} from './current-v2-dependency-inventory.mjs';
 import {validateToolchainNotices} from './current-v2-toolchain-notices.mjs';
 import {validateRegistryNoticeReview} from './current-v2-registry-notice-review.mjs';
 import {validateRetainedBuildWitness,validateRegistryBuildWitness} from './current-v2-retained-build-witness.mjs';
+import {validateGeneratedManifestWitness,generatedManifestWitnessPath} from './current-v2-generated-manifest-witness.mjs';
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
 const path='admission/current-v2-next/package-license-bindings.json';
 const buildPaths=['admission/current-v2-next/build-receipts.json','admission/current-v2-data-core/build-receipts.json'];
@@ -61,8 +62,9 @@ function expected(){
   const registryReview=json(registryReviewPath),registryResult=validateRegistryNoticeReview(registryReview);
   const workspaceWitness=validateRetainedBuildWitness(json(workspaceWitnessPath));
   const registryWitness=validateRegistryBuildWitness(json(registryWitnessPath));
+  const generatedWitness=validateGeneratedManifestWitness(json(generatedManifestWitnessPath));
   assert.equal(registryReview.dependency_inventory_sha256,file(root,dependencyPath).sha256);
-  for(const name of [dependencyPath,toolchainPath,registryReviewPath,workspaceWitnessPath,registryWitnessPath,...dependency.inputs.map(x=>x.path),...toolchain.materials.map(x=>x.path)])add(name);
+  for(const name of [dependencyPath,toolchainPath,registryReviewPath,workspaceWitnessPath,registryWitnessPath,generatedManifestWitnessPath,...dependency.inputs.map(x=>x.path),...toolchain.materials.map(x=>x.path)])add(name);
   const materialEvidence={dependency_inventory:{path:dependencyPath,...files[dependencyPath],lockfiles:dependencyResult.lockfiles,registry_crates:dependencyResult.crates},
     toolchain_notices:{path:toolchainPath,...files[toolchainPath],documents:toolchainResult.official_toolchain_notice_files},
     registry_notice_review:{path:registryReviewPath,...files[registryReviewPath],registry_crates:registryResult.registry_crates,
@@ -71,6 +73,10 @@ function expected(){
       registry:{path:registryWitnessPath,...files[registryWitnessPath],packages:registryWitness.packages,
         crates:registryWitness.registry_crates,source_files:registryWitness.registry_source_files},
       records_carried:true,private_builds_reexecuted:false,temporary_adapter_contents_attested:false,full_transitive_license_audit:false},
+    generated_adapter_evidence:{path:generatedManifestWitnessPath,...files[generatedManifestWitnessPath],
+      receipt_carried:true,qualified_packages:generatedWitness.packages,independent_builds:generatedWitness.independent_builds,
+      input_files:generatedWitness.generated_input_files,private_builds_reexecuted:false,full_transitive_license_audit:false,
+      scope:'Exact r14 OwnedAlgorithms mapped adapter and finite manifest profile only; not other packages, arbitrary TOML, wrapper/toolchain obligations or full license audit.'},
     dependency_materials_carried:true,scope:'Conservative exact locked inputs and notice materials for these five roots and their generated-SDK consumer. Inventory/delivery evidence only; license-obligation and target review remain pending.'};
   const packages=rows.map(row=>{
     const inventory=row.builds[0].inventory;
@@ -90,6 +96,7 @@ function expected(){
       primary_upstream_notices:upstream,
       dependency_materials_carried:true,
       retained_build_evidence_carried:true,
+      generated_adapter_evidence_carried:row.id==='wasmc-owned-algorithms',
       transitive_dependencies_audited:false,
       pending:['license-obligation and target-applicability review']};
   });
@@ -109,6 +116,7 @@ export function validatePackageLicenseBindings(value,base=root,{isolated=false}=
     tree(join(root,row.root)),'strict root inventory changed');
   validateRetainedBuildWitness(JSON.parse(read(base,workspaceWitnessPath)),base);
   validateRegistryBuildWitness(JSON.parse(read(base,registryWitnessPath)),base);
+  validateGeneratedManifestWitness(JSON.parse(read(base,generatedManifestWitnessPath)),base);
   assert.deepEqual(file(base,path),file(root,path),'untrusted binding manifest');
   if(isolated){
     const inventory=tree(base),expectedInventory={...trusted.files,[path]:file(root,path)};
@@ -124,6 +132,10 @@ export function validatePackageLicenseBindings(value,base=root,{isolated=false}=
     build_input_witness_files:trusted.dependency_materials.retained_build_evidence.workspace.input_files,
     registry_source_witness_crates:trusted.dependency_materials.retained_build_evidence.registry.crates,
     registry_source_witness_files:trusted.dependency_materials.retained_build_evidence.registry.source_files,
+    generated_adapter_evidence_carried:true,generated_adapter_records:1,
+    generated_manifest_qualified_packages:trusted.dependency_materials.generated_adapter_evidence.qualified_packages,
+    generated_manifest_independent_builds:trusted.dependency_materials.generated_adapter_evidence.independent_builds,
+    generated_adapter_input_files:trusted.dependency_materials.generated_adapter_evidence.input_files,
     full_transitive_license_audit:false,release_qualified:false};
 }
 export function stageLicensedDelivery(destination){

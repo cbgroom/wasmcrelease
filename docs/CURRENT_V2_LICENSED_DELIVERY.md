@@ -18,7 +18,11 @@ It also carries both canonical five-package retained build records: workspace
 input stability and selected-registry/routing stability. They contain hashes,
 counts and producer observations, not private source or caches. Public recipient
 validation checks those exact observed identities and actual package files;
-it does not reexecute the private builds or certify temporary adapter contents.
+it does not reexecute private builds or reopen deleted private adapter bodies.
+The envelope additionally carries the exact r14 OwnedAlgorithms generated
+adapter/full finite-manifest qualification record. Independently pinned observed
+identity and actual package reopening cover that one mapped profile, not other
+packages, arbitrary Cargo manifests or full toolchain/license obligations.
 The full transitive license gate and release gate remain false.
 
 Validate the binding and the isolated delivery, including SDK consumption:
@@ -37,12 +41,13 @@ wasmc_license_parent="$(cd "$wasmc_license_parent" && pwd -P)"
 node scripts/current-v2-package-license.mjs --stage "$wasmc_license_parent/licensed-delivery"
 ```
 
-The resulting 79-file tree contains the exact five package roots, binding
+The resulting 80-file tree contains the exact five package roots, binding
 manifest, research LICENSE and policy, independently pinned producer-build
 receipts, primary-upstream review and notices, the dependency inventory and its
 six exact lockfiles, and the toolchain receipt plus two compressed copyright
 documents, registry notice-choice receipt and both full-cohort build-input
-witness records. Historical single-package observations remain repository
+witness records and the new mapped-adapter manifest qualification record.
+Historical single-package observations remain repository
 history rather than redundant required recipient files. The dependency inventory embeds complete retained notice texts and
 their source identities. No provider/compiler source is
 copied. The validator derives trusted identities from the selected checkout,
@@ -52,7 +57,7 @@ roots and false promotion/relicensing claims reject.
 
 The SDK test adds only its public Cargo.toml and main.rs: the exact Cargo.lock
 is already carried by the envelope and must equal the consumer input. This
-produces an isolated 81-file consumer tree. Locked/offline execution uses public Cargo registry
+produces an isolated 82-file consumer tree. Locked/offline execution uses public Cargo registry
 engine dependencies and compatible build caches outside that tree. Every
 source input is checked before and after execution. This is SDK consumption,
 not ordinary App qualification or commercial/production permission.
@@ -62,9 +67,11 @@ both inventory and review. It never hashes a parent index carrying its own
 bytes, nor claims its own delivery status. Actual isolated-recipient checks
 reject a missing, altered or linked review, including a self-rehashed review
 and envelope that drop an AND term. The valid capsule remains byte-unchanged
-after behavior/SDK use and all 69 rejection controls. The new controls include
+after behavior/SDK use and all 78 rejection controls. The new controls include
 actual receipt deletion/tampering/links, false scope flags, and coordinated
-workspace/registry witness plus envelope self-rehash. Exact source/build
+workspace/registry witness plus envelope self-rehash. Additional controls
+reject missing, altered or linked generated-manifest evidence
+and coordinated semantic digest/record/envelope substitution. Exact source/build
 identities are independent of the carrying envelope; they do not authorize
 replacement input metadata. Test fixtures are removed only from each
 invocation's exact owned temporary directory, not existing deliveries/caches.

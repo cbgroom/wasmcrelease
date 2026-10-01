@@ -12,9 +12,11 @@ const temp=realpathSync(mkdtempSync(join(tmpdir(),'wasmc-licensed-delivery-')));
 try{
 const delivery=join(temp,'delivery');
 const staged=stageLicensedDelivery(delivery);assert.equal(staged.packages,5);
-assert.equal(staged.carried_files,79);assert.equal(staged.primary_notices,15);
+assert.equal(staged.carried_files,80);assert.equal(staged.primary_notices,15);
 assert.equal(staged.retained_build_evidence_carried,true);assert.equal(staged.retained_build_records,2);
 assert.equal(staged.build_input_witness_files,38);assert.equal(staged.registry_source_witness_crates,189);assert.equal(staged.registry_source_witness_files,12335);
+assert.equal(staged.generated_adapter_evidence_carried,true);assert.equal(staged.generated_adapter_records,1);
+assert.equal(staged.generated_manifest_qualified_packages,1);assert.equal(staged.generated_manifest_independent_builds,2);assert.equal(staged.generated_adapter_input_files,4);
 assert.equal(staged.registry_notice_review_carried,true);assert.equal(staged.registry_notice_expressions,17);
 assert.equal(staged.dependency_materials_carried,true);assert.equal(staged.registry_crates,189);assert.equal(staged.lockfiles,6);assert.equal(staged.toolchain_documents,2);
 let rejected=0;
@@ -44,6 +46,11 @@ for(const mutate of [
   x=>x.dependency_materials.retained_build_evidence.temporary_adapter_contents_attested=true,
   x=>x.dependency_materials.retained_build_evidence.full_transitive_license_audit=true,
   x=>x.packages[0].retained_build_evidence_carried=false,
+  x=>x.dependency_materials.generated_adapter_evidence.receipt_carried=false,
+  x=>x.dependency_materials.generated_adapter_evidence.qualified_packages=5,
+  x=>x.dependency_materials.generated_adapter_evidence.private_builds_reexecuted=true,
+  x=>x.dependency_materials.generated_adapter_evidence.full_transitive_license_audit=true,
+  x=>x.packages.find(p=>p.id==='wasmc-owned-algorithms').generated_adapter_evidence_carried=false,
 ]){const altered=structuredClone(binding);mutate(altered);assert.throws(()=>validatePackageLicenseBindings(altered,delivery));rejected++;}
 // Actual malformed recipient deliveries, not just edited JSON claims.
 const fixture=name=>{const path=join(temp,name);cpSync(delivery,path,{recursive:true,errorOnExist:true,force:false});return path;};
@@ -58,6 +65,7 @@ for(const [index,path]of ['admission/current-v2-next/dependency-inventory.json',
   'admission/current-v2-next/registry-notice-review.json',
   'admission/current-v2-next/cohort-build-input-witness.json',
   'admission/current-v2-next/cohort-registry-build-witness.json',
+  'admission/current-v2-next/owned-generated-manifest-qualification.json',
   'admission/current-v2-next/toolchain-notices/COPYRIGHT-library.html.gz'].entries()){
   const missing=fixture('missing-audit-'+index);renameSync(join(missing,path),join(temp,'removed-audit-'+index));reject(missing);
   const tampered=fixture('changed-audit-'+index);writeFileSync(join(tampered,path),'changed');reject(tampered);
@@ -107,6 +115,21 @@ for(const [kind,path]of [['workspace','admission/current-v2-next/cohort-build-in
   writeFileSync(join(forgedDelivery,bindingPath),JSON.stringify(forgedBinding));
   assert.throws(()=>validatePackageLicenseBindings(forgedBinding,forgedDelivery,{isolated:true}));rejected++;
 }
+const generatedPath='admission/current-v2-next/owned-generated-manifest-qualification.json';
+const linkedGenerated=fixture('linked-generated-record'),generatedTarget=join(temp,'generated-record-target');
+renameSync(join(linkedGenerated,generatedPath),generatedTarget);symlinkSync(generatedTarget,join(linkedGenerated,generatedPath));reject(linkedGenerated);
+const forgedGenerated=fixture('self-rehashed-generated-record'),generatedRecord=JSON.parse(readFileSync(join(forgedGenerated,generatedPath)));
+for(const b of generatedRecord.builds){
+  b.manifest_profile.model.dependency_package='substituted-package';
+  b.manifest_profile.semantic_sha256=createHash('sha256').update(JSON.stringify(b.manifest_profile.model)).digest('hex');
+  b.manifest_profile.path_scrubbed_sha256='0'.repeat(64);
+}
+const generatedBytes=Buffer.from(JSON.stringify(generatedRecord)),generatedIdentity={bytes:generatedBytes.length,sha256:createHash('sha256').update(generatedBytes).digest('hex')};
+writeFileSync(join(forgedGenerated,generatedPath),generatedBytes);
+const forgedGeneratedBinding=structuredClone(binding);forgedGeneratedBinding.files[generatedPath]=generatedIdentity;
+Object.assign(forgedGeneratedBinding.dependency_materials.generated_adapter_evidence,generatedIdentity);
+writeFileSync(join(forgedGenerated,bindingPath),JSON.stringify(forgedGeneratedBinding));
+assert.throws(()=>validatePackageLicenseBindings(forgedGeneratedBinding,forgedGenerated,{isolated:true}));rejected++;
 const linkedToolchain=fixture('linked-toolchain-material'),toolchainMaterial='admission/current-v2-next/toolchain-notices/COPYRIGHT.html.gz';
 renameSync(join(linkedToolchain,toolchainMaterial),join(temp,'link-target-toolchain.gz'));
 symlinkSync(join(temp,'link-target-toolchain.gz'),join(linkedToolchain,toolchainMaterial));reject(linkedToolchain);

@@ -65,6 +65,10 @@ assert.equal(licensedDelivery.retained_build_evidence_carried,true);
 assert.equal(licensedDelivery.retained_build_records,2);
 assert.equal(licensedDelivery.isolated_sdk_files,licensedDelivery.carried_files+2);
 assert.equal(licensedDelivery.registry_source_witness_crates,189);assert.equal(licensedDelivery.registry_source_witness_files,12335);
+assert.equal(licensedDelivery.generated_adapter_evidence_carried,true);assert.equal(licensedDelivery.generated_manifest_qualified_packages,1);
+assert.equal(licensedDelivery.generated_manifest_independent_builds,2);assert.equal(licensedDelivery.generated_adapter_input_files,4);
+const generatedWitnessControl=jsonRun('node',['scripts/test-current-v2-generated-manifest-witness.mjs']);
+assert.equal(generatedWitnessControl.negative_controls,15);
 const registryNoticeReview=jsonRun('node',['scripts/test-current-v2-registry-notice-review.mjs']);
 const registryReviewBytes=readFileSync(join(root,'admission/current-v2-next/registry-notice-review.json'));
 const licenseBindingsBytes=readFileSync(join(root,'admission/current-v2-next/package-license-bindings.json'));
@@ -75,6 +79,7 @@ const receipt = {schema:'wasmc.current-v2-next-local-qualification/v1',accepted:
     'scripts/current-v2-dependency-inventory.mjs','scripts/current-v2-toolchain-notices.mjs','libsrc/qualification/wasmi-core/src/main.rs',
     'scripts/current-v2-registry-notice-review.mjs','scripts/test-current-v2-registry-notice-review.mjs',
     'scripts/current-v2-retained-build-witness.mjs','scripts/test-current-v2-retained-build-witness.mjs',
+    'scripts/current-v2-generated-manifest-witness.mjs','scripts/test-current-v2-generated-manifest-witness.mjs',
     'scripts/current-v2-registry-source-witness.mjs','scripts/test-current-v2-registry-source-witness.mjs',
     'libsrc/qualification/wasmi-core/Cargo.lock','libsrc/qualification/current-v2-consumer/src/main.rs',
     'libsrc/qualification/current-v2-consumer/Cargo.lock'].map(path=>[path,hash(readFileSync(join(root,path)))])),
@@ -86,6 +91,7 @@ const receipt = {schema:'wasmc.current-v2-next-local-qualification/v1',accepted:
   source_free_sdk:sourceFreeSdk,
   ordinary_app_probe:{...ordinaryApp,receipt_sha256:hash(appReceiptBytes)},
   package_license_binding:{...licensedDelivery,manifest_sha256:hash(licenseBindingsBytes)},
+  generated_manifest_witness_control:generatedWitnessControl,
   registry_notice_review:{...registryNoticeReview,receipt_sha256:hash(registryReviewBytes)},
   selected_current_catalog:false,ordinary_wasmc_app_qualified:false,release_qualified:false,
   pending:['current catalog admission and exact route/install closure','ordinary WAsmC App rich-value/resource Core transport for four staged packages; published compiler identity',
