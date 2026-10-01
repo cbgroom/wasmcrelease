@@ -1,9 +1,13 @@
 // Read-only build-workspace witness. It never copies implementation source.
 import assert from 'node:assert/strict';
+import {execFileSync} from 'node:child_process';
 import {createHash} from 'node:crypto';
 import {lstatSync,readdirSync,readFileSync,realpathSync,existsSync} from 'node:fs';
 import {join,dirname,resolve} from 'node:path';
 const sha=bytes=>createHash('sha256').update(bytes).digest('hex');
+export function readCommittedBuildInput(checkout,revision,path){
+  return execFileSync('git',['show',`${revision}:${path}`],{cwd:checkout,maxBuffer:64*1024*1024});
+}
 function identity(path){
   const stat=lstatSync(path);assert(stat.isFile()&&!stat.isSymbolicLink(),'linked/non-file build input');
   assert(stat.size<=4*1024*1024,'build input exceeds witness limit');

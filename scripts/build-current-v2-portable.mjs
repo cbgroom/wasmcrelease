@@ -7,7 +7,7 @@ import { createHash } from 'node:crypto';
 import { mkdirSync, readFileSync, writeFileSync, readdirSync, statSync } from 'node:fs';
 import { resolve, join, dirname, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import {snapshotBuildInputs,verifyBuildInputsUnchanged} from './current-v2-build-input-snapshot.mjs';
+import {snapshotBuildInputs,verifyBuildInputsUnchanged,readCommittedBuildInput} from './current-v2-build-input-snapshot.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const [producerArg, workArg, selectedId, cargoHomeArg] = process.argv.slice(2);
@@ -26,8 +26,8 @@ assert.equal(run('git',['status','--porcelain']),'','public input tree must be c
 const producerAuthority = run('git', ['rev-parse', 'HEAD'], producer);
 assert.equal(producerAuthority, '3b797a77d0afa25264a11362603b0d596d2e0ba7');
 assert.equal(run('git', ['status', '--porcelain'], producer), '', 'producer must be clean');
-const source = path => execFileSync('git', ['show', `${authority}:${path}`], { cwd: root });
-const privateSource = path => execFileSync('git', ['show', `${producerAuthority}:${path}`], { cwd: producer });
+const source = path => readCommittedBuildInput(root,authority,path);
+const privateSource = path => readCommittedBuildInput(producer,producerAuthority,path);
 // Explicit opt-in records a real selected Cargo cache, not a retrospective claim.
 const cacheAudit=cargoHomeArg?await import('./current-v2-registry-source-witness.mjs'):null;
 const dependencyInventory=cacheAudit?JSON.parse(source('admission/current-v2-next/dependency-inventory.json')):null;

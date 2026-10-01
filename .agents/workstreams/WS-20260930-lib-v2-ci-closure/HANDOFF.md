@@ -699,3 +699,8 @@ source or Host API changes. Checkpoint guard before actual build invocation so
 the public Git input identity is clean. Full license/release flags stay false.
 Cargo config admission is exact reviewed non-routing digest (or absence), not
 an ad-hoc partial TOML parser; quoted/dotted override controls also reject.
+First real registry-guard invocation at b8b4719 failed before output creation:
+Git committed dependency inventory exceeded execFileSync default 1 MiB buffer
+(ENOBUFS). Fixed both public/private committed-input retrieval with a bounded
+64 MiB buffer; independent 2 MiB committed fixture proves exact-byte retrieval.
+No cache/build PASS is inferred from the failed invocation.

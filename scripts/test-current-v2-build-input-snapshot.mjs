@@ -3,7 +3,7 @@ import {mkdtempSync,realpathSync,mkdirSync,writeFileSync,readFileSync,renameSync
 import {execFileSync,spawnSync} from 'node:child_process';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
-import {snapshotBuildInputs,verifyBuildInputsUnchanged} from './current-v2-build-input-snapshot.mjs';
+import {snapshotBuildInputs,verifyBuildInputsUnchanged,readCommittedBuildInput} from './current-v2-build-input-snapshot.mjs';
 const temp=realpathSync(mkdtempSync(join(tmpdir(),'wasmc-input-witness-')));let rejected=0;
 try{
   const workspace=join(temp,'workspace'),crate=join(workspace,'adapter');
@@ -57,7 +57,10 @@ try{
     {encoding:'utf8',timeout:10000});
   assert(!attempt.error);assert.equal(attempt.signal,null);assert.notEqual(attempt.status,0);
   assert.match(attempt.stderr,/public input tree must be clean/);assert.equal(existsSync(producer),false);rejected++;
+  const large=Buffer.alloc(2*1024*1024,97);writeFileSync(join(publicRoot,'large-audit-input'),large);
+  git(['add','large-audit-input']);git(['-c','user.name=Witness fixture','-c','user.email=witness@example.invalid','commit','-qm','large audit metadata fixture']);
+  assert.deepEqual(readCommittedBuildInput(publicRoot,'HEAD','large-audit-input'),large);
   console.log(JSON.stringify({accepted:true,input_files:8,negative_controls:rejected,
     source_under_target_name_retained:true,cargo_output_excluded:true,readonly_witness:true,public_dirty_input_rejected:true,
-    historical_builds_attested:false,registry_source_integrity_attested:false,release_qualified:false}));
+    large_committed_input_bytes:large.length,historical_builds_attested:false,registry_source_integrity_attested:false,release_qualified:false}));
 }finally{rmSync(temp,{recursive:true});} // Only this test's exact owned fixture.
