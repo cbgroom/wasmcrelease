@@ -800,3 +800,43 @@ SDK counts now derive from the trusted envelope plus the two reviewed public
 glue files, not duplicated stale constants across qualification/closure checks.
 Two ordered envelope recaptures byte-identical; research license, current-v2
 CI routing and git diff --check PASS. No hosted all-checks or release claim.
+
+## 2026-10-01 private source-admission preflight failures
+
+Read-only reorientation at clean detached producer
+3b797a77d0afa25264a11362603b0d596d2e0ba7 (equal to observed origin/master)
+found additional source-maintenance gates. Existing cached native bootstrap
+was used, not rebuilt or claimed as a new checker qualification. No private
+source, shared knowledge files, claims or history were changed.
+
+- maintainer-check rejects active-tree audit with status 24.
+- knowledge-core rejects global-model-and-coverage with status 407: 683
+  current sections versus 681 declared sections. The missing registrations
+  are Public Lib boundary minimization rule and Runtime/Developer Agent
+  surface rule in wasmc-standard-library-evolution/SKILL.md. Historical
+  provenance coverage passes; this is not a full MST or history audit.
+- maintainer-disclosure rejects that same Skill at status 701: 510 lines,
+  hard limit 500, no exception. A line-only deletion does not resolve the
+  separate stable-section coverage failure.
+- context-commit rejects the exact producer commit with status 10 and three
+  empty observed review-trailer groups. First parent is
+  e9841b0a938c26557470884b6d2ee7b39d79df40; kernel SHA256 is
+  ae936a41944f5c0556d42c6a0b70413b018875dbb6cdaa811a9ce4d81982be3e.
+  This command checks canonical single-commit reviews only: it does not
+  evaluate history exceptions, baseline audit or side-parent inheritance.
+- knowledge-quality and maintainer-discovery pass their independent checks;
+  neither overrides the failures or proves full MST acceptance.
+
+Private loop Skill stops implementation admission when orientation/preflight
+fails. Repair must preserve knowledge identity/provenance and route disclosure
+coherently, then follow the exact context-history policy rather than rewriting
+an immutable commit or inventing a generic waiver. Shared metadata ownership
+must be resolved before edits. Runtime exclusive started/not-ready claim and
+the WIT worktree's ten dirty files also remain untouched; no authorization to
+message their owners has arrived. The global private HANDOFF predates the
+latest protocol commit and needs an owner-authorized authority refresh.
+
+These observations change the repair order, not package qualification. The
+last committed public candidate suite passed 21/21 at 50e858a. Counts remain
+10/18 built, 5/18 selected and ordinary App 1/5; full_transitive_license_audit
+and release_qualified remain false. No new release or 100% closure is claimed.
