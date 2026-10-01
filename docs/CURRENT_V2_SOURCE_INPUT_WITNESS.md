@@ -189,3 +189,25 @@ lock creation, successful build observation, mutation rejection and failure
 retention using a fixture delegate, with ten rejection controls. This is not a
 real producer build. Manifest qualification, independent generated-manifest
 comparison, wrapper/toolchain execution and full obligations remain separate.
+
+## Actual OwnedAlgorithms mapped-adapter observation
+
+The real r13 dual build used public input
+`c0ac1e389b7f38d9a875fcb1cdda7ecf0200c150` and the exact clean private producer
+`3b797a77d0afa25264a11362603b0d596d2e0ba7`. Both lock-generation and build
+subprocesses completed successfully. The generated four-input tree was stable
+through each locked build; source, mapping and lock digests bind to producer
+and delivered manifest evidence and equal across passes. All nine delivered
+files are byte-identical between passes and to the existing staged package.
+Both retained workspaces and the selected registry/routing were independently
+rechecked after completion. No private source bodies were projected.
+
+`admission/current-v2-next/owned-generated-adapter-observation.json` records this
+explicit interposed profile, not retroactive evidence for r12 or another Lib.
+The complete private receipt remains under the exact r13 private output path;
+`scripts/capture-current-v2-owned-adapter-observation.mjs` rechecks the retained
+inputs/cache/outputs before projecting that particular observation. The two
+generated Cargo.toml digests differ. Absolute dependency paths are expected in
+the producer's manifest template, but the snapshot alone does not prove that
+paths are the only difference. Manifest qualification and independent normalized
+comparison remain false, as do licensed-recipient delivery, full audit and release.

@@ -893,3 +893,28 @@ this is a real regression, not a candidate PASS. Observer modules now load only
 after clean public/producer checks and only on opt-in. The actual original dirty
 input rejection, all 13 retained-workspace controls and ten observer controls
 PASS after repair; diagnostics remain under target/ci/candidate-node-github.
+
+## 2026-10-01 actual mapped-adapter dual build terminal PASS
+
+Committed repair c0ac1e389b7f38d9a875fcb1cdda7ecf0200c150 supplied the public
+input for target/portable-v2-adapter-observed-owned-r13 in the exact clean
+producer. The one actual process completed successfully, not a pending wait.
+OwnedAlgorithms 0.1.0 Core 19,554 bytes and Component 19,902 bytes match the
+existing staged roots; both full nine-file inventories are byte-identical and
+strictly reopened. Each pass observes offline lock creation and fixed locked
+build before adapter deletion. All four generated input files remain stable
+during build; source/mapping/lock bind to independent producer and delivered
+lock identities and match across passes. Separate post-build retained-workspace
+and selected registry/routing rechecks PASS.
+
+Source-free observation is owned-generated-adapter-observation.json under the
+current-v2-next admission directory. Exact private receipt stays private. Two
+Cargo.toml hashes differ: this record does not qualify their manifests or prove
+absolute paths are the only difference. Independent manifest qualification,
+licensed delivery of this new record, wrapper/toolchain/target obligations and
+full release remain false. Other four staged packages use the direct profile;
+do not pretend this adapter result executes their distinct builds or all 18.
+Local repaired candidate suite candidate-cargo-observer-fixed is 22/22 PASS at
+c0ac1e3, with ten separate Cargo-observer controls PASS. Source ownership and
+private MST blockers remain untouched; all-package counts still 10/18 built,
+5/18 selected, ordinary App 1/5. No live model pair or new release is claimed.
