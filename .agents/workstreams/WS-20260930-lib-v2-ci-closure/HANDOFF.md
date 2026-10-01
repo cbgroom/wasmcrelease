@@ -768,3 +768,35 @@ Local candidate suite 21/21 PASS after this slice; 36 registry-source/routing
 controls and 48 retained-receipt controls PASS, research license policy and
 current-v2 CI routing PASS, git diff --check PASS. No hosted all-checks or new
 release qualification is claimed. Live r12 process is terminal, not a wait.
+
+## 2026-10-01 retained build evidence delivered to actual recipients
+
+Task state: in-progress. Added only the two canonical full-cohort audit records
+to the outer research-license distribution; historical single-HTTP observations
+remain repository evidence, not redundant required recipient files. The two
+records are independently validated before binding and reopened from the fresh
+recipient alongside all actual complete package roots. No private source,
+compiler binary or cache contents are copied; strict roots remain unchanged.
+
+Actual capsule now has 79 files; isolated generated-SDK tree 81 files with
+carried Cargo.lock reused byte-for-byte. HTTP1 delivered behavior 1,422 cases
+PASS; five-package Wasmtime 49 SDK behavior PASS. 69 recipient negative
+controls include missing/mutated/linked records, false scope flags, internally
+self-rehashed workspace/registry identities plus forged outer indexes.
+Private build/cache reexecution, temporary adapters and full audit are false.
+Test cleanup touches only its own exact mkdtemp fixture, not prior deliveries
+or shared compatible Cargo build caches. Source ownership coordination remains
+awaiting explicit human authority; all 18 targets, 8 unrebuilt targets, ordinary
+App 1/5, new matching compiler/candidate and full live Pi/release are unchanged.
+
+Qualification rerun PASS with current oracles and actual 79/81-file recipient
+SDK evidence; Wasmi fixtures, Component/Core behaviors and original App scope
+remain explicit (intrinsic imported drop callback still not executed). Initial
+CI run was started before qualification refresh finished and rejected oracle
+drift; the legacy closure SDK count also required updating. It is not a PASS.
+Diagnostic logs remain under target/ci/candidate-node-github. After successful
+qualification, candidate-licensed-witness-delivery-r2 runs all 21 checks PASS.
+SDK counts now derive from the trusted envelope plus the two reviewed public
+glue files, not duplicated stale constants across qualification/closure checks.
+Two ordered envelope recaptures byte-identical; research license, current-v2
+CI routing and git diff --check PASS. No hosted all-checks or release claim.

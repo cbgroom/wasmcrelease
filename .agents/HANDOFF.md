@@ -1,5 +1,17 @@
 # WAsmC release maintainer handoff
 
+## 2026-10-01 actual build-evidence recipient delivery
+
+Both canonical five-package workspace and registry build records are now
+bound into package-license-bindings.json and physically carried in fresh
+79-file recipient capsules, outside unchanged strict nine-file roots.
+Source-free generated-SDK consumption passes from an isolated 81-file tree.
+69 recipient rejection controls cover claims, real file/link faults and
+coordinated witness/envelope self-rehash. Full private/cache builds are not
+reexecuted by recipient validation; external temporary adapters and complete
+license obligations remain pending. Qualification is refreshed locally only;
+ordinary App remains 1/5, all-package catalog/release unchanged and false.
+
 ## 2026-10-01 whole staged-cohort registry closure
 
 All five staged roots now pass real selected-cache guarded dual builds from

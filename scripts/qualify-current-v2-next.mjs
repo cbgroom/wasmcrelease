@@ -61,6 +61,10 @@ assert.equal(licensedDelivery.source_free_licensed_sdk_execution,true);
 assert.equal(licensedDelivery.dependency_materials_carried,true);
 assert.equal(licensedDelivery.registry_crates,189);
 assert.equal(licensedDelivery.registry_notice_review_carried,true);
+assert.equal(licensedDelivery.retained_build_evidence_carried,true);
+assert.equal(licensedDelivery.retained_build_records,2);
+assert.equal(licensedDelivery.isolated_sdk_files,licensedDelivery.carried_files+2);
+assert.equal(licensedDelivery.registry_source_witness_crates,189);assert.equal(licensedDelivery.registry_source_witness_files,12335);
 const registryNoticeReview=jsonRun('node',['scripts/test-current-v2-registry-notice-review.mjs']);
 const registryReviewBytes=readFileSync(join(root,'admission/current-v2-next/registry-notice-review.json'));
 const licenseBindingsBytes=readFileSync(join(root,'admission/current-v2-next/package-license-bindings.json'));
@@ -70,6 +74,8 @@ const receipt = {schema:'wasmc.current-v2-next-local-qualification/v1',accepted:
     'scripts/current-v2-package-license.mjs','scripts/test-current-v2-package-license.mjs',
     'scripts/current-v2-dependency-inventory.mjs','scripts/current-v2-toolchain-notices.mjs','libsrc/qualification/wasmi-core/src/main.rs',
     'scripts/current-v2-registry-notice-review.mjs','scripts/test-current-v2-registry-notice-review.mjs',
+    'scripts/current-v2-retained-build-witness.mjs','scripts/test-current-v2-retained-build-witness.mjs',
+    'scripts/current-v2-registry-source-witness.mjs','scripts/test-current-v2-registry-source-witness.mjs',
     'libsrc/qualification/wasmi-core/Cargo.lock','libsrc/qualification/current-v2-consumer/src/main.rs',
     'libsrc/qualification/current-v2-consumer/Cargo.lock'].map(path=>[path,hash(readFileSync(join(root,path)))])),
   engine_tools:{wasmtime:run('wasmtime',['--version']),wasm_tools:run('wasm-tools',['--version'])},

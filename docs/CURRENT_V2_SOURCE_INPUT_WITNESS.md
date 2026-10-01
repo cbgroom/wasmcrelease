@@ -135,3 +135,11 @@ cache/build checks. The retained-build fixture now includes 27 workspace and
 of the receipt, so coordinated self-rehash cannot authorize replacement sources
 or routing. No temporary-adapter contents, complete license obligations,
 recipient-envelope delivery, ordinary App or all-package release is attested.
+
+The subsequent licensed-delivery gate now carries both canonical full-cohort
+records in its outer 79-file capsule. Fresh-recipient verification and 69 fault
+controls cover record deletion, tampering, links and coordinated witness/index
+self-rehash; public generated-SDK consumption passes from an isolated 81-file
+tree. See CURRENT_V2_LICENSED_DELIVERY.md. This supersedes the pending delivery
+status above, not temporary-adapter, toolchain/target obligations, ordinary App
+or release status. No old strict roots were edited to carry audit metadata.

@@ -9,6 +9,7 @@ import {fileURLToPath} from 'node:url';
 import {validateInventory} from './current-v2-dependency-inventory.mjs';
 import {validateToolchainNotices} from './current-v2-toolchain-notices.mjs';
 import {validateRegistryNoticeReview} from './current-v2-registry-notice-review.mjs';
+import {validateRetainedBuildWitness,validateRegistryBuildWitness} from './current-v2-retained-build-witness.mjs';
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
 const path='admission/current-v2-next/package-license-bindings.json';
 const buildPaths=['admission/current-v2-next/build-receipts.json','admission/current-v2-data-core/build-receipts.json'];
@@ -16,6 +17,8 @@ const reviewPath='admission/current-v2-next/upstream/review.json';
 const dependencyPath='admission/current-v2-next/dependency-inventory.json';
 const toolchainPath='admission/current-v2-next/toolchain-notices/receipt.json';
 const registryReviewPath='admission/current-v2-next/registry-notice-review.json';
+const workspaceWitnessPath='admission/current-v2-next/cohort-build-input-witness.json';
+const registryWitnessPath='admission/current-v2-next/cohort-registry-build-witness.json';
 const sha=bytes=>createHash('sha256').update(bytes).digest('hex');
 const read=(base,name)=>readFileSync(join(base,name));
 const json=name=>JSON.parse(read(root,name));
@@ -56,12 +59,18 @@ function expected(){
   assert.equal(dependencyResult.notice_blockers.length,0);
   assert.equal(dependency.archive_inventory_complete,true);assert.equal(dependency.notice_material_inventory_complete,true);
   const registryReview=json(registryReviewPath),registryResult=validateRegistryNoticeReview(registryReview);
+  const workspaceWitness=validateRetainedBuildWitness(json(workspaceWitnessPath));
+  const registryWitness=validateRegistryBuildWitness(json(registryWitnessPath));
   assert.equal(registryReview.dependency_inventory_sha256,file(root,dependencyPath).sha256);
-  for(const name of [dependencyPath,toolchainPath,registryReviewPath,...dependency.inputs.map(x=>x.path),...toolchain.materials.map(x=>x.path)])add(name);
+  for(const name of [dependencyPath,toolchainPath,registryReviewPath,workspaceWitnessPath,registryWitnessPath,...dependency.inputs.map(x=>x.path),...toolchain.materials.map(x=>x.path)])add(name);
   const materialEvidence={dependency_inventory:{path:dependencyPath,...files[dependencyPath],lockfiles:dependencyResult.lockfiles,registry_crates:dependencyResult.crates},
     toolchain_notices:{path:toolchainPath,...files[toolchainPath],documents:toolchainResult.official_toolchain_notice_files},
     registry_notice_review:{path:registryReviewPath,...files[registryReviewPath],registry_crates:registryResult.registry_crates,
       declared_expressions:registryResult.declared_expressions,review_receipt_carried:true,full_transitive_license_audit:false},
+    retained_build_evidence:{workspace:{path:workspaceWitnessPath,...files[workspaceWitnessPath],packages:workspaceWitness.packages,input_files:workspaceWitness.input_files},
+      registry:{path:registryWitnessPath,...files[registryWitnessPath],packages:registryWitness.packages,
+        crates:registryWitness.registry_crates,source_files:registryWitness.registry_source_files},
+      records_carried:true,private_builds_reexecuted:false,temporary_adapter_contents_attested:false,full_transitive_license_audit:false},
     dependency_materials_carried:true,scope:'Conservative exact locked inputs and notice materials for these five roots and their generated-SDK consumer. Inventory/delivery evidence only; license-obligation and target review remain pending.'};
   const packages=rows.map(row=>{
     const inventory=row.builds[0].inventory;
@@ -80,6 +89,7 @@ function expected(){
         commercial_use:false,production_use:false,upstream_license_override:false,earlier_grants_revoked:false},
       primary_upstream_notices:upstream,
       dependency_materials_carried:true,
+      retained_build_evidence_carried:true,
       transitive_dependencies_audited:false,
       pending:['license-obligation and target-applicability review']};
   });
@@ -97,6 +107,8 @@ export function validatePackageLicenseBindings(value,base=root,{isolated=false}=
   for(const [name,identity] of Object.entries(trusted.files))assert.deepEqual(file(base,name),identity,name);
   for(const row of trusted.packages)assert.deepEqual(tree(join(base,row.root)),
     tree(join(root,row.root)),'strict root inventory changed');
+  validateRetainedBuildWitness(JSON.parse(read(base,workspaceWitnessPath)),base);
+  validateRegistryBuildWitness(JSON.parse(read(base,registryWitnessPath)),base);
   assert.deepEqual(file(base,path),file(root,path),'untrusted binding manifest');
   if(isolated){
     const inventory=tree(base),expectedInventory={...trusted.files,[path]:file(root,path)};
@@ -108,6 +120,10 @@ export function validatePackageLicenseBindings(value,base=root,{isolated=false}=
     dependency_materials_carried:true,registry_crates:trusted.dependency_materials.dependency_inventory.registry_crates,
     lockfiles:trusted.dependency_materials.dependency_inventory.lockfiles,toolchain_documents:trusted.dependency_materials.toolchain_notices.documents,
     registry_notice_review_carried:true,registry_notice_expressions:trusted.dependency_materials.registry_notice_review.declared_expressions,
+    retained_build_evidence_carried:true,retained_build_records:2,
+    build_input_witness_files:trusted.dependency_materials.retained_build_evidence.workspace.input_files,
+    registry_source_witness_crates:trusted.dependency_materials.retained_build_evidence.registry.crates,
+    registry_source_witness_files:trusted.dependency_materials.retained_build_evidence.registry.source_files,
     full_transitive_license_audit:false,release_qualified:false};
 }
 export function stageLicensedDelivery(destination){

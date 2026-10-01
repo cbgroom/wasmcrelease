@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {readFileSync,mkdtempSync,mkdirSync,writeFileSync,renameSync,symlinkSync,cpSync,realpathSync,readdirSync,lstatSync} from 'node:fs';
+import {readFileSync,mkdtempSync,mkdirSync,writeFileSync,renameSync,symlinkSync,cpSync,realpathSync,readdirSync,lstatSync,rmSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {join,dirname} from 'node:path';
 import {createHash} from 'node:crypto';
@@ -9,9 +9,12 @@ const bindingPath='admission/current-v2-next/package-license-bindings.json';
 const binding=JSON.parse(readFileSync(bindingPath));
 const sdkRequested=process.argv.includes('--sdk');assert(process.argv.slice(2).every(x=>x==='--sdk'));
 const temp=realpathSync(mkdtempSync(join(tmpdir(),'wasmc-licensed-delivery-')));
+try{
 const delivery=join(temp,'delivery');
 const staged=stageLicensedDelivery(delivery);assert.equal(staged.packages,5);
-assert.equal(staged.carried_files,77);assert.equal(staged.primary_notices,15);
+assert.equal(staged.carried_files,79);assert.equal(staged.primary_notices,15);
+assert.equal(staged.retained_build_evidence_carried,true);assert.equal(staged.retained_build_records,2);
+assert.equal(staged.build_input_witness_files,38);assert.equal(staged.registry_source_witness_crates,189);assert.equal(staged.registry_source_witness_files,12335);
 assert.equal(staged.registry_notice_review_carried,true);assert.equal(staged.registry_notice_expressions,17);
 assert.equal(staged.dependency_materials_carried,true);assert.equal(staged.registry_crates,189);assert.equal(staged.lockfiles,6);assert.equal(staged.toolchain_documents,2);
 let rejected=0;
@@ -36,6 +39,11 @@ for(const mutate of [
   x=>x.dependency_materials.registry_notice_review.review_receipt_carried=false,
   x=>x.dependency_materials.registry_notice_review.declared_expressions=1,
   x=>x.dependency_materials.registry_notice_review.full_transitive_license_audit=true,
+  x=>x.dependency_materials.retained_build_evidence.records_carried=false,
+  x=>x.dependency_materials.retained_build_evidence.private_builds_reexecuted=true,
+  x=>x.dependency_materials.retained_build_evidence.temporary_adapter_contents_attested=true,
+  x=>x.dependency_materials.retained_build_evidence.full_transitive_license_audit=true,
+  x=>x.packages[0].retained_build_evidence_carried=false,
 ]){const altered=structuredClone(binding);mutate(altered);assert.throws(()=>validatePackageLicenseBindings(altered,delivery));rejected++;}
 // Actual malformed recipient deliveries, not just edited JSON claims.
 const fixture=name=>{const path=join(temp,name);cpSync(delivery,path,{recursive:true,errorOnExist:true,force:false});return path;};
@@ -48,6 +56,8 @@ for(const [index,path]of ['admission/current-v2-next/dependency-inventory.json',
   'admission/current-v2-next/dependency-inputs/host-clock.Cargo.lock',
   'admission/current-v2-next/toolchain-notices/receipt.json',
   'admission/current-v2-next/registry-notice-review.json',
+  'admission/current-v2-next/cohort-build-input-witness.json',
+  'admission/current-v2-next/cohort-registry-build-witness.json',
   'admission/current-v2-next/toolchain-notices/COPYRIGHT-library.html.gz'].entries()){
   const missing=fixture('missing-audit-'+index);renameSync(join(missing,path),join(temp,'removed-audit-'+index));reject(missing);
   const tampered=fixture('changed-audit-'+index);writeFileSync(join(tampered,path),'changed');reject(tampered);
@@ -76,6 +86,27 @@ assert.throws(()=>validatePackageLicenseBindings(reviewBinding,reviewRehashed,{i
 const linkedReview=fixture('linked-registry-review');
 renameSync(join(linkedReview,reviewPath),join(temp,'link-target-review.json'));
 symlinkSync(join(temp,'link-target-review.json'),join(linkedReview,reviewPath));reject(linkedReview);
+for(const [kind,path]of [['workspace','admission/current-v2-next/cohort-build-input-witness.json'],
+  ['registry','admission/current-v2-next/cohort-registry-build-witness.json']]){
+  const linked=fixture('linked-build-'+kind),target=join(temp,'link-target-build-'+kind);
+  renameSync(join(linked,path),target);symlinkSync(target,join(linked,path));reject(linked);
+  const forgedDelivery=fixture('self-rehashed-build-'+kind),record=JSON.parse(readFileSync(join(forgedDelivery,path)));
+  if(kind==='workspace'){
+    for(const b of record.packages[0].builds){
+      const witness=b.source_inputs;Object.values(witness.files)[0].sha256='0'.repeat(64);
+      witness.sha256=createHash('sha256').update(JSON.stringify(witness.files)).digest('hex');
+    }
+  }else{
+    const witness=record.registry_witness;witness.crates[0].source_tree_sha256='0'.repeat(64);
+    witness.sha256=createHash('sha256').update(JSON.stringify(witness.crates)).digest('hex');
+    for(const p of record.packages)for(const b of p.builds)b.registry_source_sha256=witness.sha256;
+  }
+  const bytes=Buffer.from(JSON.stringify(record)),identity={bytes:bytes.length,sha256:createHash('sha256').update(bytes).digest('hex')};
+  writeFileSync(join(forgedDelivery,path),bytes);const forgedBinding=structuredClone(binding);
+  forgedBinding.files[path]=identity;Object.assign(forgedBinding.dependency_materials.retained_build_evidence[kind],identity);
+  writeFileSync(join(forgedDelivery,bindingPath),JSON.stringify(forgedBinding));
+  assert.throws(()=>validatePackageLicenseBindings(forgedBinding,forgedDelivery,{isolated:true}));rejected++;
+}
 const linkedToolchain=fixture('linked-toolchain-material'),toolchainMaterial='admission/current-v2-next/toolchain-notices/COPYRIGHT.html.gz';
 renameSync(join(linkedToolchain,toolchainMaterial),join(temp,'link-target-toolchain.gz'));
 symlinkSync(join(temp,'link-target-toolchain.gz'),join(linkedToolchain,toolchainMaterial));reject(linkedToolchain);
@@ -116,7 +147,8 @@ if(sdkRequested){
       else {assert(stat.isFile());found[prefix+name]=createHash('sha256').update(readFileSync(path)).digest('hex');}
     }return found;
   };
-  const before=inventory(sdkDelivery);assert.equal(Object.keys(before).length,79);
+  const sdkFiles=staged.carried_files+names.filter(name=>!Object.hasOwn(binding.files,consumer+'/'+name)).length;
+  const before=inventory(sdkDelivery);assert.equal(Object.keys(before).length,sdkFiles);
   assert.deepEqual(Object.keys(before).sort(),[...new Set([...Object.keys(binding.files),bindingPath,...names.map(x=>consumer+'/'+x)])].sort());
   const output=execFileSync('cargo',['+1.96.0','run','--locked','--offline','--quiet','--manifest-path',join(sdkDelivery,consumer,'Cargo.toml'),'--',
     join(sdkDelivery,'admission/current-v2-next/packages'),join(sdkDelivery,binding.packages.find(x=>x.id==='wasmc-data-core').root)],
@@ -127,4 +159,5 @@ if(sdkRequested){
   validatePackageLicenseBindings(binding,sdkDelivery);
 }
 console.log(JSON.stringify({...staged,negative_controls:rejected,isolated_delivery:true,exact_http1_cases:behavior.cases,
-  ...(sdk?{source_free_licensed_sdk_execution:true,isolated_sdk_files:79,sdk}:{})}));
+  ...(sdk?{source_free_licensed_sdk_execution:true,isolated_sdk_files:staged.carried_files+2,sdk}:{})}));
+}finally{rmSync(temp,{recursive:true});} // Only this invocation's exact owned fixture.
