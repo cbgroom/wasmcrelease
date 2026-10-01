@@ -110,3 +110,28 @@ package. This is not yet carried-envelope validation, and four other staged
 roots still need the registry-guarded build. The original ENOBUFS failure before
 build execution is retained in the workstream handoff; a 2 MiB committed-input
 fixture now prevents recurrence of the default Git output-buffer truncation.
+
+The routing guard also scans retained nested crate directories for Cargo configs,
+because the producer can invoke Cargo from a nested crate. Its current fixture
+has 36 rejection controls. Crate-local target output remains excluded, but a
+source directory named src/target is still inspected. Earlier real receipts
+retain their original guard revision; their workspace witnesses can prove that
+no nested config was present, but do not claim the newer nested-scan code ran.
+
+## Completed staged-cohort registry build
+
+The four-pending registry-build status above is superseded by the real full
+cohort run from 1e3d3e4ab96704184c9498cc1cb189afa5ace122. All five staged packages
+pass the selected registry/routing checks before/after each independent build.
+The ten retained workspaces/current cache were separately rechecked afterward;
+all 45 complete delivery files equal the prior staged roots. The outer receipt
+is `admission/current-v2-next/cohort-registry-build-witness.json`. Its shared
+189-crate source-tree metadata is stored once, not repeated per build.
+
+Run `node scripts/current-v2-retained-build-witness.mjs --registry` to validate
+the recorded identities and actual delivery files without reexecuting private
+cache/build checks. The retained-build fixture now includes 27 workspace and
+21 registry rejection controls. Exact observed input identities are independent
+of the receipt, so coordinated self-rehash cannot authorize replacement sources
+or routing. No temporary-adapter contents, complete license obligations,
+recipient-envelope delivery, ordinary App or all-package release is attested.

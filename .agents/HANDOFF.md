@@ -1,5 +1,22 @@
 # WAsmC release maintainer handoff
 
+## 2026-10-01 whole staged-cohort registry closure
+
+All five staged roots now pass real selected-cache guarded dual builds from
+public input 1e3d3e4ab96704184c9498cc1cb189afa5ace122 and clean producer
+3b797a77d0afa25264a11362603b0d596d2e0ba7.
+Each build verifies the 189-crate / 12,335-file conservative registry cache and
+Cargo routing pre/post; both passes match. Separate live recheck of all ten
+retained workspaces and current cache PASS. 38 inputs and 45 output files equal
+existing staged roots. Source-free outer evidence:
+admission/current-v2-next/cohort-registry-build-witness.json; named validator:
+node scripts/current-v2-retained-build-witness.mjs --registry.
+No recipient-envelope delivery or temporary generated-adapter audit is claimed.
+New nested config guard is separately tested (36 controls); prior build revision
+is preserved, and recorded input inventories prove nested config absence.
+Ownership/default/complex App, eight unrebuilt targets and full release gates
+remain pending. Do not infer 100-percent or admission from this five-root gate.
+
 ## 2026-10-01 actual HTTP1 registry-guarded rebuild
 
 New source-free outer evidence: admission/current-v2-next/http1-registry-build-witness.json.

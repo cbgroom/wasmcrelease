@@ -111,6 +111,17 @@ named target inside source. This witness does not attest to registry caches,
 external generated adapters, toolchain internals or historical builds that
 never captured it; those remain separate audit obligations.
 
+For a selected Cargo registry-source audit, verify locked archive checksums and
+all extracted source files, then pin the actual Cargo home and inherited/nested
+crate configs around producer execution. Unknown source/registry/patch/path/env
+overrides reject. Admit only explicitly reviewed configuration profiles; partial
+TOML regex checks do not prove quoted/dotted keys safe. Bind recorded cache and
+routing identities independently and reject coordinated self-rehash. Exclude
+crate-local build output, not src/target. Preserve the original guard revision
+in earlier receipts. A retained cache witness does not attest to temporary
+generated adapters, wrappers/toolchain execution, full license obligations or
+recipient delivery; close those gates separately.
+
 Use `./scripts/validate-maintainer.sh` for repository consistency, then run the
 host journeys selected by `release-host-integration`.
 

@@ -718,3 +718,53 @@ Local candidate suite 21/21 PASS at e64d2ce. Next run this registry guard on the
 other four staged roots (all-cohort selection may use empty PACKAGE_ID followed
 by explicit CARGO_HOME), then bind and test the resulting delivery evidence.
 Default/complex App ownership and all other release blockers remain unchanged.
+
+## 2026-10-01 nested Cargo configuration guard
+
+Revalidated live authority: fetched origin/master remains
+3b797a77d0afa25264a11362603b0d596d2e0ba7. Runtime owner still claims the full
+crates/wasmc_core_runtime directory exclusively with started/not-ready task;
+WIT worktree still has the ten prior dirty files. No source changes or owner
+messages were made. Asked again for human authorization to coordinate owners.
+
+Routing audit now scans retained nested crate configs, not only workspace and
+ancestors. Unknown nested source override rejects; exact reviewed config is
+recorded. Cargo target output is excluded only at a crate; src/target remains
+source. 36 negative controls PASS. Previous real builds keep their exact guard
+revision, not a retrospective claim that this newer code was executed.
+All earlier captured source input inventories have no nested Cargo config.
+Whole-cohort registry build process r12 remains live; do not restart merely
+because observation produces no output. Local 13 workspace controls and 2 MiB
+committed-input retrieval fixture PASS. All-package release flags remain false.
+
+## 2026-10-01 whole-cohort registry process terminal PASS
+
+The exact live process r12 has now terminated successfully; no restart occurred.
+Public input 1e3d3e4ab96704184c9498cc1cb189afa5ace122, producer
+3b797a77d0afa25264a11362603b0d596d2e0ba7. All five staged Libs pass registry/routing
+pre/post checks and independent equality. Separate post-build live check of both
+workspaces for every package and current registry PASS. All 38 retained inputs
+and 45 complete delivery files equal prior staged qualified roots. Observed
+source metadata: 189 crates / 12,335 files. No nested configs occur in captured
+input inventories; do not claim the newly edited nested guard ran during r12.
+
+Source-free compressed audit projection (one shared registry inventory, not ten
+repeated copies): admission/current-v2-next/cohort-registry-build-witness.json.
+The private full producer receipt remains under target/portable-v2-registry-witness-cohort-r12.
+Public validator checks exact source/producer, independent observed registry and
+workspace identities, Cargo routing/config profile and actual complete roots;
+it does not reexecute private builds/cache checks. Existing fixture now totals
+48 negative controls: 27 workspace and 21 registry, including coordinated
+self-rehash, per-package flags, routing substitution, actual package faults and
+false temporary-adapter/license/newer-guard claims.
+
+The new audit receipts are not yet bound into recipient license delivery. Next
+bind them with real recipient deletion/tamper/link/self-rehash controls, then
+continue external generated-adapter and target/toolchain obligation review.
+All source-owner claims remain active; awaiting human permission to coordinate,
+not interpreting an automatic goal continuation as that authorization. Counts
+remain 10/18 built, 5/18 selected, ordinary App 1/5; release_qualified=false.
+Local candidate suite 21/21 PASS after this slice; 36 registry-source/routing
+controls and 48 retained-receipt controls PASS, research license policy and
+current-v2 CI routing PASS, git diff --check PASS. No hosted all-checks or new
+release qualification is claimed. Live r12 process is terminal, not a wait.

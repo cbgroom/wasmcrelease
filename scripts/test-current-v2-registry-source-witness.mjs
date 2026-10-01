@@ -59,6 +59,16 @@ try{
   reject(()=>captureCargoRouting(home,workspace));rmSync(join(workspace,'.cargo/config'));
   const key='CARGO_SOURCE_WASMC_FIXTURE',previous=process.env[key];process.env[key]='fixture';
   try{reject(()=>captureCargoRouting(home,workspace));}finally{if(previous===undefined)delete process.env[key];else process.env[key]=previous;}
+  const nested=join(workspace,'crate');mkdirSync(join(nested,'.cargo'),{recursive:true});
+  writeFileSync(join(nested,'Cargo.toml'),'[package]\nname="fixture"\nversion="1.0.0"\n');
+  const nestedConfig=join(nested,'.cargo/config.toml');writeFileSync(nestedConfig,'[source.crates-io]\nreplace-with="other"');
+  reject(()=>captureCargoRouting(home,workspace));
+  writeFileSync(nestedConfig,'[build]\nrustc-wrapper = "sccache"\n');
+  assert(captureCargoRouting(home,workspace).configs['workspace-nested/crate/config.toml']);
+  mkdirSync(join(nested,'target/.cargo'),{recursive:true});writeFileSync(join(nested,'target/.cargo/config.toml'),'unreviewed build output');
+  captureCargoRouting(home,workspace); // Cargo crate output is not a retained input.
+  mkdirSync(join(nested,'src/target/.cargo'),{recursive:true});writeFileSync(join(nested,'src/target/.cargo/config.toml'),'unreviewed source config');
+  reject(()=>captureCargoRouting(home,workspace)); // A source directory named target is still input.
   console.log(JSON.stringify({accepted:true,negative_controls:negatives,source_body_not_emitted:true,
     current_snapshot_only:true,historical_builds_attested:false,release_qualified:false}));
 }finally{rmSync(temp,{recursive:true});} // Exact owned fixture only.

@@ -89,6 +89,17 @@ export function captureCargoRouting(cargoHome,workspace){
       if(dirname(dir)===dir)break;dir=dirname(dir);
     }
   }
+  // Cargo's real cwd can be a nested crate rather than the workspace root.
+  // Audit every retained nested config, not only root/ancestor lookup paths.
+  const nested=(dir,prefix='')=>{
+    check(join(dir,'.cargo'),'workspace-nested/'+prefix.replace(/\/$/,''));
+    const cargo=existsSync(join(dir,'Cargo.toml'));
+    for(const name of readdirSync(dir).sort()){
+      const target=join(dir,name),stat=lstatSync(target);assert(!stat.isSymbolicLink(),'linked nested Cargo input');
+      if(name==='target'&&cargo){assert(stat.isDirectory());continue;}
+      if(stat.isDirectory())nested(target,prefix+name+'/');
+    }
+  };nested(workspace);
   return {schema:'wasmc.retained-cargo-routing/v1',explicit_cargo_home:true,
     reviewed_registry_layout:'index.crates.io-1949cf8c6b5b557f',configs:ordered(config),temporary_adapter_contents_attested:false};
 }
