@@ -20,7 +20,9 @@ digest) reject; restored packages pass. Existing policy, all18 guard and histori
 candidate routes pass; old0.0.20 rejects product drift. Original full maintainer
 lib-catalog identity failure remains NOT PASS; no frozen identity refresh.
 Raw private qualification SHA256
-406d9df409d5b16d3d1b8fe1993d1ce41145d512755ce32366296a9a63ea262e.
+4cf6fd0f9d972051742d3b9ebb56b89f67a6fc21882e2bfcda138d4d82498faa
+binds exact pushed source3baecbc970f16ff4a32a788ff8863add1287243d,
+including the final unit-test source. This later checkpoint changes state only.
 Resume: recheck clean pushed source, integrate serially, then explicitly bind a
 reviewed future catalog/policy and dependencies into the new candidate inventory.
 Actual all18 fresh builds, notices/compatibility, ordinary App, Pi and release
