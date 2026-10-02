@@ -1,5 +1,28 @@
 # WAsmC release maintainer handoff
 
+## 2026-10-02 Future all18 license admission guard
+
+Task state: in-progress — full all18 release closure is not complete.
+Integrated source bfb37a1e99379594329d3dccf533136e5ec19696 adds a future-only
+candidate create/reopen guard for versions after immutable0.0.20. The original
+18 target identities cannot be reduced by editing migration counts. Every
+selected v2 root must carry an explicit bounded LICENSE snapshot, bound to both
+catalog and candidate product hashes; carried or manifest-declared Rust SDKs
+must bind that root LICENSE. New packaging includes the checker dependency.
+All18 positive fixture and18 negative controls pass, as do historical route
+candidate creation, current catalog/closure and license policy. Actual0.0.21
+creation rejects the incomplete five-root catalog. This is structural binding,
+not dependency notice completeness, legal compatibility, runtime or Pi acceptance.
+Old0.0.20 candidate still rejects future tools as product drift; the full
+maintainer validator still fails the pre-existing lib-catalog manifest mismatch.
+Do not refresh old release identity to conceal this pre-candidate boundary.
+Exact branch evidence is in
+.agents/workstreams/WS-20261002-all18-license-admission-v1/evidence.json.
+Next: populate all18 newly qualified roots from private producer receipts,
+complete dependency notice/compatibility and ordinary App/SDK execution gates,
+synchronize catalog/search/install, then freeze and Pi-test one new candidate.
+No new product admission, candidate, release, tag or default channel was created.
+
 ## 2026-09-29 v0.0.20 research-license candidate
 
 Branch `release/v0.0.20-research-license` starts from merged public main

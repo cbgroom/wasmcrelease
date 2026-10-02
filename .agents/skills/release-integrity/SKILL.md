@@ -95,3 +95,20 @@ In this pre-candidate state:
 An integrity script returning PASS after relabeling future bytes as an old
 release is not sufficient semantic evidence; version identity is part of the
 contract.
+
+### Future Lib license admission
+
+For a new candidate after immutable0.0.20, require the original all18 selected
+v2 target roots before candidate creation and on every reopen. Do not replace
+that denominator with migration progress or the historical22-route inventory.
+Each explicit bounded license snapshot must agree with both the selected catalog
+and independent candidate product inventory. A Rust SDK that is carried or
+declared in its manifest must carry its exact Cargo manifest and bind the root
+LICENSE; deleting a file from an inventory does not erase that obligation.
+The candidate builder packages the checker dependency and the selected current
+roots/catalog. Guard with scripts/test-future-lib-license-admission.mjs.
+
+This proves declaration and byte-identity transport only. Complete actual
+dependency notices, compatibility review, private producer/runtime/SDK behavior,
+route closure and exact-candidate Pi remain separate required evidence. Preserve
+all old roots, prior grants, frozen candidates and immutable tags unchanged.
