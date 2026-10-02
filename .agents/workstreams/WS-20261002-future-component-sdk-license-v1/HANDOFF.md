@@ -2,7 +2,7 @@
 
 ## 0. Status
 
-Task state: started. Integration state: not-ready. Public admission: false.
+Task state: in-progress. Integration state: not-ready. Public admission: false.
 Base58446f7ce50da2cff8e447913d28dbacaa45dae6 is the clean synchronized public
 target. This is an independent release-tool guard repair, not a private compiler
 history correction, new Lib qualification or release.
@@ -24,28 +24,38 @@ relevant to the selected corpus, not a new profile invented by the checker.
 
 ## 3. Recent Progress
 
-Independent read-only baseline reproduces all three invalid Component cases and
-a matching Core rejection through the actual58446 function. Existing seven Node
-validators PASS, proving only their old/current bounded scopes. Their PASS does
-not cover the missing declaration family.
+START8f8a8309d35541642259d3fc894c5fa901fc8511 was pushed before implementation.
+The same independent checker fails on the original guard: deleting Component
+Cargo from both inventories while retaining the declaration is wrongly accepted.
+Fixed guard checks both existing declaration profiles, including both together,
+before license binding; carried-but-undeclared SDKs remain checked.
+Five positive cases and185 actual negatives PASS; eight related regressions
+PASS. Independent review confirms no validator replacement, profile preference
+or refusal counted without execution. evidence.json pins code/checker digests
+and original full private receipts. These are dirty START-bound runs until the
+clean implementation commit is actually rerun, not yet a clean-source PASS.
+Frozen witness b25519e1441186d7f9d81ae491abca9a533d4b3957c526928166090b4a8deef8
+reopens309 immutable Git product files, checks9 unchanged current identity files
+and124 unchanged files across all18 selected roots against the public base.
+Old candidate verify exits1 with product drift rejected; full orientation exits1
+at the existing scripts/lib-catalog.mjs identity mismatch. Neither is relabeled PASS.
 
 ## 4. Current Action
 
-Task state: started
+Task state: in-progress
 
-Push this START before changing product scripts. Then add an independently
-structured checker and retain its real baseline failure; repair only declared
-SDK recognition/pin validation and rerun the same checker and relevant smokes.
+Repair is implemented; preserve the independent baseline failure and fixed
+structural/regression evidence, verify old identity and unchanged root bytes,
+then commit/push and actually requalify the clean source before ready-state.
 No Host API, compiler, producer, SDK payload, package root or grant changes.
 
 ## 5. Next Actions
 
-1. Commit/push START with explicit review/state trailers and inspect the actual
-   committed message; require clean upstream equality.
-2. Keep the same independent all18 checker for baseline and fixed runs.
-3. Qualify recognized declaration identity and license obligations plus negatives.
-4. Preserve exact source/output/exit and unchanged immutable identity witnesses;
-   independently review the fix before marking this branch ready.
+1. Preserve original START, checker and actual baseline FAIL.
+2. Commit/push the bounded code/evidence checkpoint with all review/state trailers.
+3. Actually rerun the clean pushed source and retain exact outputs/exits.
+4. Preserve unchanged immutable identity/root witnesses; recheck exact public main
+   target before marking this branch ready or serial integration.
 5. Leave full18 legal/runtime/SDK/catalog/candidate/Pi/release gates open.
 
 ## 6. Validation Commands
@@ -65,7 +75,7 @@ No refresh-integrity around old0.0.20, old-root replacement, grant inference,
 candidate allocation, publication or private source import. The existing full
 maintainer/orientation failure at scripts/lib-catalog.mjs is retained separately,
 not silenced. Guard-only PASS is not full18 legal or behavioral qualification.
-Private guard263 history remains rejected; no policy or owner waiver is implied.
+Compiler governance remains separately owned; no policy or owner waiver is implied.
 
 ## 8. Recovery / Resume Commands
 
