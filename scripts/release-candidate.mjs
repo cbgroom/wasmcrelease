@@ -15,6 +15,26 @@ const legacyV1ProductSets=Object.freeze({
   '0.0.12':'6c5da874b9a3cce2beef0936fa761c45d5e33869db165a30e3e2984622b7bb6b',
   '0.0.13':'e2a1bb7e3bf30092ddda1313a9c20dd37a36e820b076bd64e0ac6ecec6ec36d0'
 });
+// Narrow delivery obligations, not all public tools or a legal-review oracle.
+// Keep this inside the existing candidate tool: no new relative import may
+// introduce another omitted dependency into historical product inventories.
+const futureLibInputs=Object.freeze([
+  'LICENSE','catalog/current-v2-policy.json','catalog/libs-current-v2.json',
+  'examples/lib-search/client.mjs','license-policy.json',
+  'scripts/declared-thirdparty-notices.mjs','scripts/future-lib-license-admission.mjs',
+  'scripts/lib-catalog.mjs','scripts/lib-install.mjs','scripts/lib-route-closure.mjs',
+  'scripts/release-candidate.mjs','scripts/wasmc-lib.mjs'
+]);
+export const futureLibProductInputs=version=>needsFutureLibLicenseGate(version)?[...futureLibInputs]:[];
+function validateFutureLibProductInputs(candidate,read){
+  const inventory=new Map(candidate.product_files.map(row=>[row.path,row]));
+  for(const path of futureLibProductInputs(candidate.version)){
+    const row=inventory.get(path);
+    if(!row)throw Error(`future Lib product input missing: ${path}`);
+    const bytes=read(path);
+    if(!(bytes instanceof Uint8Array)||bytes.length!==row.bytes||hash(bytes)!==row.sha256)throw Error(`future Lib product input drift: ${path}`);
+  }
+}
 export function validateCandidate(candidate,read) {
   if(!['wasmc.release-product-candidate/v1','wasmc.release-product-candidate/v2'].includes(candidate.schema)||!/^\d+\.\d+\.\d+$/.test(candidate.version))throw Error('candidate schema/version rejected');
   if(candidate.schema==='wasmc.release-product-candidate/v1'&&legacyV1ProductSets[candidate.version]!==candidate.product_set_sha256)throw Error('legacy v1 candidate identity rejected; new candidates require v2 Lib route closure');
@@ -32,6 +52,7 @@ export function validateCandidate(candidate,read) {
     if(closure?.schema!=='wasmc.release-candidate-lib-route-closure/v1'||!safe(closure.authority_receipt?.path)||!/^[0-9a-f]{64}$/.test(closure.authority_receipt?.sha256??'')||!safe(closure.catalog?.path)||!/^[0-9a-f]{64}$/.test(closure.catalog?.sha256??'')||!safe(closure.search_index?.path)||!/^[0-9a-f]{64}$/.test(closure.search_index?.sha256??'')||!Number.isSafeInteger(closure.release_packages)||closure.release_packages<1||!Number.isSafeInteger(closure.package_routes)||closure.package_routes!==closure.release_packages||!Number.isSafeInteger(closure.api_routes)||closure.api_routes<1||closure.candidate_extras!==0||closure.exact!==true||closure.candidate_extra_grants_release!==false)throw Error('candidate Lib route closure rejected');
   }
   if(needsFutureLibLicenseGate(candidate.version)){
+    validateFutureLibProductInputs(candidate,read);
     const checked=validateFutureLibLicenses(candidate,read);
     if(JSON.stringify(candidate.lib_license_admission)!==JSON.stringify(checked))throw Error('future candidate license receipt rejected');
   }
@@ -111,7 +132,7 @@ if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)) {
       'scripts/wasmc-lib.mjs',
       'scripts/lib-catalog.mjs','scripts/lib-route-closure.mjs','scripts/release-candidate.mjs',
       'scripts/future-lib-license-admission.mjs',
-      ...(needsFutureLibLicenseGate(version)?['catalog/libs-current-v2.json']:[]),
+      ...futureLibProductInputs(version),
       'scripts/agent-guidance-contract.mjs',
       ...(carriesV019Compiler?['scripts/update-current-compiler.mjs']:[]),
       'scripts/test-agent-guidance.mjs',
@@ -119,7 +140,7 @@ if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)) {
       'scripts/validate-sdk-agent-routes.mjs',
       'skills/wasmc-lib/SKILL.md'
     ];
-    const paths=[...productDirectories.flatMap(walk),...productFiles];
+    const paths=[...new Set([...productDirectories.flatMap(walk),...productFiles])];
     const rows=paths.sort().map(path=>{const b=read(path);return {path,bytes:b.length,sha256:hash(b)};});
     const candidate={schema:'wasmc.release-product-candidate/v2',version,compiler_source_authority:compilerSource,lib_source_authority:libSource,product_files:rows,product_set_sha256:hash(JSON.stringify(rows))};
     if(needsFutureLibLicenseGate(version))candidate.lib_license_admission=validateFutureLibLicenses(candidate,read);
