@@ -28,8 +28,14 @@ export function validateFutureLibLicenses(candidate,read) {
     let total=0;const paths=new Set();
     for(const f of license.files){if(!safe(f.path)||paths.has(f.path)||!digest(f.sha256)||!Number.isSafeInteger(f.bytes)||f.bytes<1||f.bytes>262144)fail('license file bound/identity required');paths.add(f.path);total+=f.bytes;const b=bound(`${row.root}/${f.path}`);if(b.length!==f.bytes||sha(b)!==f.sha256)fail('license snapshot drift');if(Buffer.from(b).includes(0)||!Buffer.from(Buffer.from(b).toString('utf8')).equals(Buffer.from(b)))fail('license UTF-8 text required');}
     if(total>2097152||license.files[0].path!=='LICENSE')fail('bounded root LICENSE first required');
-    const cargoPath=`${row.root}/bindings/rust/Cargo.toml`,sdk=m.bindings?.rust_core,hasSdk=sdk!=null||inventory.has(cargoPath)||catalogFiles.has(cargoPath);
-    if(hasSdk){const b=bound(cargoPath),cargo=Buffer.from(b).toString('utf8');if(sdk&&(sdk.cargo_toml?.path!=='bindings/rust/Cargo.toml'||sdk.cargo_toml.sha256!==sha(b)))fail(`Rust SDK manifest identity required: ${row.id}`);if(!/^license-file\s*=\s*"\.\.\/\.\.\/LICENSE"\s*$/m.test(cargo)||/^license\s*=/m.test(cargo))fail(`Rust SDK LICENSE binding required: ${row.id}`);}
+    const cargoPath=`${row.root}/bindings/rust/Cargo.toml`;
+    const sdks=[m.bindings?.rust_core,m.bindings?.rust_component].filter(sdk=>sdk!=null);
+    const hasSdk=sdks.length>0||inventory.has(cargoPath)||catalogFiles.has(cargoPath);
+    if(hasSdk){
+      const b=bound(cargoPath),cargo=Buffer.from(b).toString('utf8');
+      for(const sdk of sdks)if(sdk.cargo_toml?.path!=='bindings/rust/Cargo.toml'||sdk.cargo_toml.sha256!==sha(b))fail(`Rust SDK manifest identity required: ${row.id}`);
+      if(!/^license-file\s*=\s*"\.\.\/\.\.\/LICENSE"\s*$/m.test(cargo)||/^license\s*=/m.test(cargo))fail(`Rust SDK LICENSE binding required: ${row.id}`);
+    }
     rows.push({id:row.id,version:row.version,root:row.root,manifest_sha256:sha(raw),license_sha256:sha(bound(`${row.root}/LICENSE`)),license_files:license.files.length,license_bytes:total,rust_sdk_license_bound:hasSdk});
   }
   return {schema:'wasmc.future-lib-license-admission/v1',catalog:{path:catalogPath,sha256:sha(exact(catalogPath))},targets:rows,all18_explicit_snapshots:true,legal_compatibility:false,dependency_notice_completeness:false,runtime_qualification:false};

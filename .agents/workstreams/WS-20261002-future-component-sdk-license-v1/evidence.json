@@ -1,0 +1,149 @@
+{
+  "schema": "wasmc.future-component-sdk-license-qualification/v1",
+  "base_commit": "58446f7ce50da2cff8e447913d28dbacaa45dae6",
+  "start_commit": "8f8a8309d35541642259d3fc894c5fa901fc8511",
+  "qualified_clean_product_commit": "6a88eaf05392d52bde9f746f7e68fdc41de798de",
+  "scope": "Structural declared Core/Component SDK Cargo and license binding only; no legal/dependency/runtime/all18 admission/candidate/release claim",
+  "same_checker_sha256": "5f21fbccbf0346f3caf8106a2a5e7e3f013eee3d4ef6806840579b96ddb3c746",
+  "baseline_guard_sha256": "b79425017fa32f8f9dee5dac2b4725dcdaa5b604a92252c1d8813467e9c4b3b6",
+  "fixed_guard_sha256": "0a0ffeb14b9ebf42b71993999f3b1f0017a7b218c0d5ac823924c9accecb67f5",
+  "baseline": {
+    "working_tree_clean": false,
+    "command": [
+      "scripts/test-future-component-sdk-license.mjs"
+    ],
+    "exit": 1,
+    "expected_failure": "Declared Component SDK Cargo removed from both product/catalog inventories is wrongly accepted",
+    "stdout": "FUTURE_RUST_SDK_LICENSE_POSITIVE name=declared-component targets=18 bound=true\nFUTURE_RUST_SDK_LICENSE_POSITIVE name=declared-core targets=18 bound=true\nFUTURE_RUST_SDK_LICENSE_POSITIVE name=both-declarations targets=18 bound=true\nFUTURE_RUST_SDK_LICENSE_POSITIVE name=carried-without-declaration targets=18 bound=true\nFUTURE_RUST_SDK_LICENSE_POSITIVE name=neither-carried-nor-declared targets=18 bound=false\nFUTURE_RUST_SDK_LICENSE_NEGATIVE name=cargo-removed-from-both-inventories profiles=rust_component target=wasmc-json expected=REJECT actual=ACCEPT\n",
+    "raw_receipt_sha256": "146b349ed5a3d7066b20363c5adfb67fe691018b6f96bd580c7d647293d83a7a"
+  },
+  "fixed": {
+    "working_tree_clean": false,
+    "positive_controls": 5,
+    "negative_controls": 185,
+    "regression_commands": [
+      {
+        "argv": [
+          "scripts/test-future-lib-license-admission.mjs"
+        ],
+        "exit": 0,
+        "stdout": "{\"accepted\":true,\"targets\":18,\"negative_controls\":18,\"scope\":\"structural license/catalog/product/SDK binding only; no legal, notice completeness, runtime or public release claim\"}\n"
+      },
+      {
+        "argv": [
+          "scripts/test-declared-thirdparty-notices.mjs"
+        ],
+        "exit": 0,
+        "stdout": "{\"accepted\":true,\"declared_notice_files\":1,\"negative_controls\":15,\"legacy_exemptions\":0,\"legal_compatibility\":false}\n"
+      },
+      {
+        "argv": [
+          "scripts/test-current-v2-catalog.mjs"
+        ],
+        "exit": 0,
+        "stdout": "{\"accepted\":true,\"packages\":5,\"telemetry_current\":false,\"default_view\":\"runtime\",\"views\":[\"runtime\",\"developer\"]}\n"
+      },
+      {
+        "argv": [
+          "scripts/test-current-v2-closure.mjs"
+        ],
+        "exit": 0,
+        "stdout": "{\"accepted\":true,\"current\":5,\"backlog\":13,\"telemetry\":\"blocked-real-provider\"}\n"
+      },
+      {
+        "argv": [
+          "scripts/test-lib-control-plane-projection.mjs"
+        ],
+        "exit": 0,
+        "stdout": "{\"accepted\":true,\"catalog_packages\":5,\"projected_selected_packages\":5,\"historical_release_packages\":22,\"future_admission_targets\":18,\"negative_controls\":6,\"generator_check\":true,\"lifecycle_promoted\":false,\"all18_qualified\":false}\n"
+      },
+      {
+        "argv": [
+          "scripts/lib-route-closure.mjs",
+          "--check"
+        ],
+        "exit": 0,
+        "stdout": "{\"accepted\":true,\"action\":\"check\",\"path\":\"catalog/lib-route-closure.json\",\"release_packages\":22,\"package_routes\":22,\"api_routes\":140,\"candidate_extras\":0}\n"
+      },
+      {
+        "argv": [
+          "scripts/test-lib-route-closure.mjs"
+        ],
+        "exit": 0,
+        "stdout": "{\"accepted\":true,\"schema\":\"wasmc.lib-route-closure/v1\",\"release_packages\":22,\"package_routes\":22,\"api_routes\":140,\"negative_tests\":6,\"candidate_extras\":0,\"formal_release_ready\":true}\n"
+      },
+      {
+        "argv": [
+          "scripts/test-release-candidate-lib-routes.mjs"
+        ],
+        "exit": 0,
+        "stdout": "{\"accepted\":true,\"required_schema\":\"wasmc.release-product-candidate/v2\",\"release_ready\":true,\"release_packages\":22,\"package_routes\":22,\"api_routes\":140,\"candidate_extras\":0,\"publishes\":false,\"next\":\"dev-stage-qualification\"}\n"
+      }
+    ],
+    "checker_exit": 0,
+    "checker_summary": {
+      "accepted": true,
+      "targets": 18,
+      "positive_controls": 5,
+      "negative_controls": 185,
+      "existing_profiles": [
+        "rust_component",
+        "rust_core"
+      ],
+      "source_free_fixture": true,
+      "scope": "structural declaration/Cargo/license/product/catalog binding only; no legal, dependency completeness, runtime, full18 admission or release claim"
+    },
+    "raw_receipt_sha256": "eaf75290146ee28a41271727868d27ec2250affa680b798b6497365eac0a8353"
+  },
+  "raw_receipts_retained_privately": true,
+  "independent_review": {
+    "passed": true,
+    "checker_positive": 5,
+    "checker_negative": 185,
+    "source_sha256": "0a0ffeb14b9ebf42b71993999f3b1f0017a7b218c0d5ac823924c9accecb67f5",
+    "checker_sha256": "5f21fbccbf0346f3caf8106a2a5e7e3f013eee3d4ef6806840579b96ddb3c746",
+    "scope": "same old/fixed validator bytes and real rejections; no fake validator or profile preference"
+  },
+  "exact_clean_rerun_pending": false,
+  "clean_qualification": {
+    "source_commit": "6a88eaf05392d52bde9f746f7e68fdc41de798de",
+    "working_tree_clean": true,
+    "raw_receipt_sha256": "e9309f28c23616e8dc624f9933c3256b2a07a059b70f7cc0e7adf9153b76f5d4",
+    "node": "v26.5.1",
+    "commands": 9,
+    "all_actual_exits_zero": true,
+    "positive_controls": 5,
+    "negative_controls": 185,
+    "related_regressions": 8,
+    "input_digests_match_dirty_fixed_receipt": true,
+    "scope": "Exact clean pushed guard/checker rerun; historical22/140 regressions do not prove current all18 route or release readiness"
+  },
+  "frozen_witness": {
+    "source_commit": "6a88eaf05392d52bde9f746f7e68fdc41de798de",
+    "working_tree_clean": true,
+    "raw_receipt_sha256": "59e027d2753ec9d391865f48a6e37c1e47472761dbdc22d1e781f4b2cd81960c",
+    "target_root_authority": "catalog/current-v2-migration.json exact id/version/root tuples at base",
+    "target_root_authority_sha256": "716ae90e2d2630ffd2e71b281c1cecb1618f99554ba8e9dea9647ce34186f47e",
+    "relational_exact_root": "libs/wasmc-data-relational-v002",
+    "immutable_tag_oid": "cf34c61a95d3c9d63ad7e85576cf3c65a4bef6e9",
+    "immutable_commit": "4674d65c2650e6cbdddc3a4d0f4510911ae97ea3",
+    "immutable_product_set_sha256": "081f07a045c6ac58b8526c1e38c7e9f59e65663981cc7ed9b93825b4795bfc94",
+    "immutable_product_files_reopened": 309,
+    "unchanged_current_identity_files": 9,
+    "original_target_roots": 18,
+    "unchanged_current_root_files": 124,
+    "old_candidate_verify_exit": 1,
+    "old_candidate_failure": "product drift rejected",
+    "whole_orientation_exit": 1,
+    "whole_orientation_failure": "manifest identity mismatch: scripts/lib-catalog.mjs",
+    "scope": "Immutable Git objects rechecked and ledger-selected roots/identities unchanged against base; existing current-side future drift remains rejected, not full maintainer PASS"
+  },
+  "superseded_frozen_witnesses": {
+    "raw_receipt_sha256": ["b25519e1441186d7f9d81ae491abca9a533d4b3957c526928166090b4a8deef8", "1814a36789c85576988657ad0b70ce21c3d0fa856fd49c0e88d585875397e770"],
+    "reason": "id-only historical first-match chose relational0.0.1 rather than ledger0.0.2. Their tag/identity checks remain observed, but they are not original-all18 exact-root evidence; original raw receipts retained. Corrected count is coincidentally also124."
+  },
+  "whole_maintainer_pass": false,
+  "all18_qualified": false,
+  "public_admission": false,
+  "candidate_created": false
+}

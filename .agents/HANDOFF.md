@@ -1,5 +1,28 @@
 # WAsmC release maintainer handoff
 
+## 2026-10-02 Declared Component SDK future license guard
+
+Serialized source01a692fcd07c5fead68cde0e08599d906dc07722 contains clean qualified
+implementation6a88eaf05392d52bde9f746f7e68fdc41de798de against target
+58446f7ce50da2cff8e447913d28dbacaa45dae6. The future all18 structural gate now
+checks both existing rust_core and rust_component Cargo declarations, including
+both simultaneously; inventory deletion cannot erase either declared obligation.
+The identical checker actually fails on the original guard and passes5 positives/
+185 actual negatives on the clean pushed source; eight regressions also pass.
+Qualification raw SHA e9309f28c23616e8dc624f9933c3256b2a07a059b70f7cc0e7adf9153b76f5d4.
+Independent review corrected an id-only freeze witness selecting relational0.0.1
+instead of the ledger target0.0.2. The corrected witness binds exact id/version/root
+tuples and independently reopens309 immutable tag files plus9 current identity
+files and124 files across the exact18 target roots; raw SHA
+59e027d2753ec9d391865f48a6e37c1e47472761dbdc22d1e781f4b2cd81960c.
+Old raw witnesses are retained as superseded, not exact-all18 evidence. No root,
+SDK payload, grant, compiler or Host API changes; no new candidate/publication.
+Actual main requalification is next, before calling the combined tree PASS.
+Full maintainer still rejects the existing lib-catalog frozen mismatch; old0.0.20
+candidate still rejects future drift. Do not refresh the old release identity.
+Full18 legal/dependency/runtime/SDK/current-route/Pi/release gates remain open.
+Owning evidence and exact next gates: WS-20261002-future-component-sdk-license-v1.
+
 ## 2026-10-02 Current-side control-plane projection convergence
 
 Serialized integration source is
