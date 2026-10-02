@@ -6,7 +6,21 @@ generic-resource telemetry experiment at
 `8522ccd20498dc369c3aaf5e2bb604a55cf89c17`. Compiler, CoreLib and Host contracts
 are unchanged. Historical benchmark timings do not qualify this successor.
 
-## Implemented boundary
+## Future source build profile (unreleased)
+
+The default Cargo build includes the standard WIT Component adapter. An author
+using the ordinary `wit-bindgen-component` Lib producer does not need an extra
+feature selection to obtain the declared exports. Explicit `--features component`
+remains valid; `--no-default-features` selects only the native computation kernel.
+This changes future source builds, not any immutable published package or WIT API.
+Dependency notice qualification must use the actual default-enabled graph, not
+the smaller native-only graph.
+
+`node scripts/test-telemetry-default-artifact.mjs <artifact.wasm> <expected-sha256>`
+checks an independently pinned prebuilt artifact. It does not build, publish or
+qualify a release. Produce new Lib bytes only through the private qualification lane.
+
+## Sampler semantics
 
 This pure library accepts complete caller-authorized Linux proc-format
 snapshots and caller-provided monotonic timestamps. It computes CPU counter

@@ -20,8 +20,23 @@ normalized, default Cargo build rejected Component encoding because the module
 has no decodable WIT world. Its Component adapter is behind the non-default
 component feature. Retained isolated failure Iff1Si SHA256
 22818a38b93c8c59c9d2891967ad39bc4fffe9a12f18860d44d0ecdf0896673f.
-Next: qualify a reviewed default/feature build profile and its actual resolved
-notice graph, then Telemetry0.0.2/provider and ordinary sampler caller. Wasmi,
+The default-profile defect is now repaired at exact reviewed source
+2aab14f07545919089f5a0360fc9cb9624e8217f: default=["component"], explicit
+--no-default-features preserves native-only. Both native profiles27/27 PASS;
+native-only Wasm correctly rejects the Component entrypoint gate. The actual
+default graph has33 registry dependencies/74 original notice texts/4bundles;
+the earlier zero-third-party graph below is native-only historical evidence.
+New private licensed Telemetry Root strictly builds/reopens; receipt SHA256
+cbf166b162e14c75673a6ad5d9ca938215bc141999827ad101c6012f43d32043.
+Independent package readback + source-free Wasmtime49 consumer128 lifecycle
+rounds PASS, zero OS Host bindings, exact two canonical resource intrinsics;
+receipt SHA256
+d56f3d370487f6dd290faee70f7b909e39d0d86b3fdb07caf5faf8f3ed726afe.
+These are private diagnostic old-version outputs, not11/11 simultaneous corpus
+qualification or new public Root/admission. Branch evidence lives in
+.agents/workstreams/WS-20261002-telemetry-default-profile-v1/HANDOFF.md.
+Next: exact integration-source qualification, then Telemetry0.0.2/provider and
+ordinary sampler caller. Wasmi,
 complete SDK callers, independent cold determinism, compatibility and all18
 admission remain open. The20 calls are bounded smoke, not a full corpus gate.
 Additional input preparation at source5e7cc8403a8e1f707211dd31f799f08511368fab:
