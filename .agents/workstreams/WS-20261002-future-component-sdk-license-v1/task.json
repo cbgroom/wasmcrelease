@@ -1,0 +1,29 @@
+{
+  "schema": "wasmc-release-workstream/v1",
+  "id": "WS-20261002-future-component-sdk-license-v1",
+  "title": "Require declared Component and Core Rust SDK license bindings in future candidates",
+  "owner": "Codex primary maintainer",
+  "branch": "work/WS-20261002-future-component-sdk-license-v1",
+  "base_commit": "58446f7ce50da2cff8e447913d28dbacaa45dae6",
+  "target_branch": "main",
+  "state": "started",
+  "integration_state": "not-ready",
+  "claims": [
+    "scripts/future-lib-license-admission.mjs declared Rust SDK recognition and Cargo identity checks only",
+    "scripts/test-future-component-sdk-license.mjs",
+    ".agents/workstreams/WS-20261002-future-component-sdk-license-v1/"
+  ],
+  "scope": "Future versions after immutable 0.0.20 only. Preserve original all18 identities and bounds; recognize both existing rust_core and rust_component declarations without allowing file/inventory removal to erase a declared SDK obligation.",
+  "validation": [
+    "Independent all18 structural fixture: identical baseline checker rejects the missing Component SDK Cargo assertion before the fix",
+    "Core, Component and simultaneous existing declarations with exact Cargo pins; undeclared-but-carried SDK remains checked",
+    "Missing product/catalog Cargo, stale or substituted declaration path/digest, missing license-file and conflicting declaration controls reject",
+    "Existing future license, notice, current-v2 and historical route regressions",
+    "Old candidate identity files and every published Lib root remain byte-identical; old candidate still rejects pre-existing product drift",
+    "Exact clean pushed source rerun and unchanged main target before any integration"
+  ],
+  "public_admission": false,
+  "candidate_created": false,
+  "integrity_refresh": "deferred; this pre-candidate workstream never rebinds immutable 0.0.20",
+  "nonclaims": ["full18 qualification", "license grant or legal compatibility", "dependency notice completeness", "runtime or ordinary App/SDK capability", "private compiler history repair", "current-side route closure", "new candidate or release"]
+}
