@@ -1,5 +1,22 @@
 # WAsmC release maintainer handoff
 
+## 2026-10-02 Current-side control-plane projection convergence
+
+Serialized integration source is
+ef8c7192dcfb6dfbe7325605e182de122079bce6 against public target
+dd30f28276a633cefb68972186c2cbeb2fca4a80. The existing generator corrects
+current-side installable roots3to5 and JSON/Compression's two derived side-route
+fields each. No catalog, qualification, all18 denominator or immutable product
+identity changed. The independent focused regression has six negative controls;
+current-v2 and historical22-package/140-API route checks also pass.
+The original before/after receipts and exact preserved-file witnesses remain in
+.agents/workstreams/WS-20261002-lib-control-plane-projection-v1/.
+The old0.0.20 candidate still rejects future product drift, and orientation/full
+maintainer still reject the existing lib-catalog frozen mismatch. This is the
+pre-candidate workstream exception, not full release PASS; do not refresh the
+old identity or tag. Continue full18 qualification and a separately frozen new
+candidate, then exact-candidate Pi and promotion gates.
+
 ## 2026-10-02 Future all18 license admission guard
 
 Task state: in-progress — full all18 release closure is not complete.

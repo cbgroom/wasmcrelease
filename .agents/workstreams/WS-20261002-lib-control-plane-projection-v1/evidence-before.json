@@ -1,0 +1,203 @@
+{
+  "schema": "wasmc.lib-control-plane-projection-evidence/v1",
+  "phase": "before",
+  "base_commit": "dd30f28276a633cefb68972186c2cbeb2fca4a80",
+  "measurement_commit": "4ca6604483492593aa18a580b6d1b37071efac6a",
+  "node": "v26.5.1",
+  "measurement_scope": "working tree with exact public base and digest-bound test scripts; commit alone is not a tested-tree assertion",
+  "test_inputs": [
+    {
+      "path": "scripts/test-lib-control-plane-projection.mjs",
+      "sha256": "215048b6cae50ee1d5dd2ba3c197214625459e2d545f46b84d489cbf7d9a3948"
+    },
+    {
+      "path": ".agents/workstreams/WS-20261002-lib-control-plane-projection-v1/record-evidence.mjs",
+      "sha256": "109f3818aeeea9ebf4617d8c0bea1431dbe7026110df0e4e5caa8906f1127121"
+    }
+  ],
+  "projection": {
+    "bytes": 66856,
+    "sha256": "367b428e05d7ee1134448361eb41178a4ddef1b5298b6d7ba3835ddb77786c84"
+  },
+  "preserved": [
+    {
+      "path": "release.json",
+      "bytes": 4680,
+      "sha256": "8b4157e4ee595ec0f444e0f65521e385f9d17e55e94d9121a7e4160e5dc14f04",
+      "unchanged_from_base": true
+    },
+    {
+      "path": "manifest.json",
+      "bytes": 96676,
+      "sha256": "94d8f42fb16c5bcac76124b6ea76964536145bdac184bac812032a1b7728fc74",
+      "unchanged_from_base": true
+    },
+    {
+      "path": "provenance.json",
+      "bytes": 101382,
+      "sha256": "0129254dee5f6eba64513b3bc8125d78ff159211d472849da943efb34fd25ffa",
+      "unchanged_from_base": true
+    },
+    {
+      "path": "SHA256SUMS",
+      "bytes": 150682,
+      "sha256": "04f96762c39bbe9cad52feb64d7f9b2e21659d3be1cc5aae05f9e8084817b1b1",
+      "unchanged_from_base": true
+    },
+    {
+      "path": "package-index.json",
+      "bytes": 3483,
+      "sha256": "7567fa0ccbb94d71f88be12424acd8f077e76db3ec1d960749849d0a3dc36f8e",
+      "unchanged_from_base": true
+    },
+    {
+      "path": "channels/candidates/0.0.20.json",
+      "bytes": 54667,
+      "sha256": "ff8107ffc0519cd661b0ed2a98e37c2e9368c96f8fa8992b34b8500260094554",
+      "unchanged_from_base": true
+    },
+    {
+      "path": "channels/dev.json",
+      "bytes": 1658,
+      "sha256": "6f826e9934661c323f92e1f06c68c413041c806b080c8fa906e7caf8545dacdc",
+      "unchanged_from_base": true
+    },
+    {
+      "path": "channels/main.json",
+      "bytes": 1660,
+      "sha256": "a1930d3f6eaa3c7a18d04d100cca64b7ded3954e315b065dd707ed2785e5523a",
+      "unchanged_from_base": true
+    },
+    {
+      "path": "channels/prod.json",
+      "bytes": 1775,
+      "sha256": "e386233130e8d75c84c842a1ddece104585d8649d12d25c61e61d4fd4f0cc62b",
+      "unchanged_from_base": true
+    },
+    {
+      "path": "release-lib-route-readiness.json",
+      "bytes": 1933,
+      "sha256": "b1d9be3aa8a774cde14cbe9bde0626e6abafbc1f6d927b51b7ce6e9bb6f5dd3d",
+      "unchanged_from_base": true
+    },
+    {
+      "path": "catalog/libs-current-v2.json",
+      "bytes": 12634,
+      "sha256": "bd330af885fd77632f9cb02b93ef75023723ad08b7f07f9b7d09f1746e9ce56c",
+      "unchanged_from_base": true
+    },
+    {
+      "path": "catalog/current-v2-policy.json",
+      "bytes": 1354,
+      "sha256": "588f37cd35e73d3f428c2152e756e59124508ea7c31c436017e1cbb2df689bea",
+      "unchanged_from_base": true
+    },
+    {
+      "path": "catalog/current-v2-migration.json",
+      "bytes": 5089,
+      "sha256": "716ae90e2d2630ffd2e71b281c1cecb1618f99554ba8e9dea9647ce34186f47e",
+      "unchanged_from_base": true
+    },
+    {
+      "path": "scripts/lib-ecosystem-control-plane.mjs",
+      "bytes": 17604,
+      "sha256": "02219a2d189be685671995a181ea409988e3b805f673b16d90c17cf8d200ba96",
+      "unchanged_from_base": true
+    }
+  ],
+  "changed_projection_fields": [],
+  "checks": [
+    {
+      "command": [
+        "node",
+        "scripts/lib-ecosystem-control-plane.mjs",
+        "--check"
+      ],
+      "exit_status": 1,
+      "classification": "retained-rejection-not-pass",
+      "stdout": "",
+      "stderr": "node:internal/modules/run_main:107\n    triggerUncaughtException(\n    ^\n\nAssertionError [ERR_ASSERTION]: lib ecosystem control plane is stale\n+ actual - expected\n... Skipped lines\n\n  '{\\n' +\n    '  \"schema\": \"wasmc.lib-ecosystem-control-plane/v1\",\\n' +\n    '  \"authority\": {\\n' +\n    '    \"immutable_product\": \"release.json -> channels/candidates/0.0.20.json\",\\n' +\n    '    \"capability_projection\": \"release-surfaces.json#agent_capability_projection\",\\n' +\n...\n    '    \"current_side_install_catalog\": \"current-v2-20260930\",\\n' +\n+   '    \"current_side_installable\": 3,\\n' +\n-   '    \"current_side_installable\": 5,\\n' +\n    '    \"current_side_inventory_matches_release\": false,\\n' +\n    '    \"inventory_is_unified\": true\\n' +\n    '  },\\n' +\n    '  \"type_position_authority\": {\\n' +\n    '    \"schema\": \"wasmc.release-agent-capabilities/v1\",\\n' +\n...\n    '        \"path\": \"lib.wit\",\\n' +\n+   '        \"sha256\": \"'... 56856 more characters\n-   '        \"sha256\": \"'... 56906 more characters\n\n    at file://<public-worktree>/scripts/lib-ecosystem-control-plane.mjs:266:10\n    at ModuleJob.run (node:internal/modules/esm/module_job:569:25)\n    at async node:internal/modules/esm/loader:650:26\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {\n  generatedMessage: false,\n  code: 'ERR_ASSERTION',\n  actual: '{\\n' +\n    '  \"schema\": \"wasmc.lib-ecosystem-control-plane/v1\",\\n' +\n    '  \"authority\": {\\n' +\n    '    \"immutable_product\": \"release.json -> channels/candidates/0.0.20.json\",\\n' +\n    '    \"capability_projection\": \"release-surfaces.json#agent_capability_projection\",\\n' +\n    '    \"producer_deltas\": \"release-surfaces.json#producer_capability_delta\",\\n' +\n    '    \"discovery_snapshot\": \"standard/wasmc-lib-search/0.4.0 + examples/lib-search/index-v018-v040.lsi\",\\n' +\n    '    \"resolver_install_catalog\": \"catalog/libs-v018.json\",\\n' +\n    '    \"rule\": \"Package existence, qualification, admission, release, discovery, installation, engine compatibility and Host authority are independent claims.\"\\n' +\n    '  },\\n' +\n    '  \"release\": {\\n' +\n    '    \"version\": \"0.0.20\",\\n' +\n    '    \"tag\": \"v0.0.20\",\\n' +\n    '    \"source_commit\": \"566eff42d0f4e4680c5ddd60c6584a9d8ff8e9f4\",\\n' +\n    '    \"staged_product_manifest\": \"channels/candidates/0.0.20.json\",\\n' +\n    '    \"product_set_sha256\": \"081f07a045c6ac58b8526c1e38c7e9f59e65663981cc7ed9b93825b4795bfc94\"\\n' +\n    '  },\\n' +\n    '  \"route_closure\": {\\n' +\n    '    \"authority\": \"catalog/lib-route-closure.json\",\\n' +\n    '    \"release_packages\": 22,\\n' +\n    '    \"package_routes\": 22,\\n' +\n    '    \"api_routes\": 140,\\n' +\n    '    \"candidate_extras\": 0,\\n' +\n    '    \"release_catalog_exact\": true,\\n' +\n    '    \"release_package_routes_exact\": true,\\n' +\n    '    \"release_api_routes_exact\": true,\\n' +\n    '    \"formal_release_ready\": true,\\n' +\n    '    \"blocking_conditions\": []\\n' +\n    '  },\\n' +\n    '  \"inventory\": {\\n' +\n    '    \"packages\": 22,\\n' +\n    '    \"qualified\": 22,\\n' +\n    '    \"admitted\": 22,\\n' +\n    '    \"released\": 22,\\n' +\n    '    \"discoverable\": 22,\\n' +\n    '    \"installable\": 22,\\n' +\n    '    \"install_catalog_release\": \"v0.0.18\",\\n' +\n    '    \"install_catalog_packages\": 22,\\n' +\n    '    \"current_side_install_catalog\": \"current-v2-20260930\",\\n' +\n    '    \"current_side_installable\": 3,\\n' +\n    '    \"current_side_inventory_matches_release\": false,\\n' +\n    '    \"inventory_is_unified\": true\\n' +\n    '  },\\n' +\n    '  \"type_position_authority\": {\\n' +\n    '    \"schema\": \"wasmc.release-agent-capabilities/v1\",\\n' +\n    '    \"product_release\": \"v0.0.20\",\\n' +\n    '    \"guidance_scope\": {\\n' +\n    '      \"status\": \"included-in-v0.0.20-product\",\\n' +\n    '      \"included_in_product\": true,\\n' +\n    '      \"lifecycle_authority\": \"release.json and channels/prod.json\",\\n' +\n    '      \"rule\": \"This frozen projection describes v0.0.20 product capability only. It does not prove the product is the current released, discoverable or installable lifecycle stage.\"\\n' +\n    '    },\\n' +\n    '    \"decision_rule\": \"A type or feature is usable only at the exact admitted position below. WIT vocabulary, local values, Core lanes, Component profiles, Host bindings and public results are separate claims.\",\\n' +\n    '    \"alternative_rule\": \"Alternatives must preserve semantics. Numeric width or signedness, async behavior, identity, ordering, ownership and failure semantics may change only with explicit application proof; otherwise stop.\",\\n' +\n    '    \"function_shape\": {\\n' +\n    '      \"parameters\": \"zero or more heterogeneous typed parameters\",\\n' +\n    '      \"result\": \"exactly one semantic value\",\\n' +\n    '      \"multiple_logical_values\": \"one tuple<...> or named record\",\\n' +\n    '      \"embedding_warning\": \"tuple and record may both flatten to multiple Core lanes; neither creates automatic JavaScript object lifting\",\\n' +\n    '      \"canonical_example\": \"agent-quickstart.json#routes/ordinary-source-positive\"\\n' +\n    '    },\\n' +\n    '    \"type_decisions\": {\\n' +\n    '      \"ordinary_source_scalars\": {\\n' +\n    '        \"status\": \"released\",\\n' +\n    '        \"spellings\": [\\n' +\n    '          \"s8\",\\n' +\n    '          \"u8\",\\n' +\n    '          \"s16\",\\n' +\n    '          \"u16\",\\n' +\n    '          \"s32\",\\n' +\n    '          \"u32\",\\n' +\n    '          \"i64\",\\n' +\n    '          \"u64\",\\n' +\n    '          \"f32\",\\n' +\n    '          \"f64\",\\n' +\n    '          \"bool\"\\n' +\n    '        ]\\n' +\n    '      },\\n' +\n    '      \"u64_ordinary_source\": {\\n' +\n    '        \"status\": \"released\",\\n' +\n    '        \"positions\": [\\n' +\n    '          \"local\",\\n' +\n    '          \"parameter\",\\n' +\n    '          \"result\",\\n' +\n    '          \"nested-source-payload\"\\n' +\n    '        ],\\n' +\n    '        \"semantics\": [\\n' +\n    '          \"full 0..=u64::MAX source range\",\\n' +\n    '          \"unsigned comparison, division, remainder and right shift\",\\n' +\n    '          \"WIT u64 identity\",\\n' +\n    '          \"Core i64 physical lane with unsigned semantics retained by the contract\"\\n' +\n    '        ]\\n' +\n    '      },\\n' +\n    '      \"tuple_record\": {\\n' +\n    '        \"status\": \"released-core-lane-source\",\\n' +\n    '        \"positions\": [\\n' +\n    '          \"ordinary-source\",\\n' +\n    '          \"parameter\",\\n' +\n    '          \"one-semantic-result\"\\n' +\n    '        ],\\n' +\n    '        \"limits\": [\\n' +\n    '          \"no tuple or record destructuring\",\\n' +\n    '          \"no automatic JavaScript object lifting\",\\n' +\n    '          \"Component use requires its exact released profile\"\\n' +\n    '        ]\\n' +\n    '      },\\n' +\n    '      \"option_result_variant_enum\": {\\n' +\n    '        \"status\": \"released-core-lane-source\",\\n' +\n    '        \"positions\": [\\n' +\n    '          \"ordinary-source\",\\n' +\n    '          \"parameter\",\\n' +\n    '          \"one-semantic-result\"\\n' +\n    '        ],\\n' +\n    '        \"limits\": [\\n' +\n    '          \"nested payload and Component support are profile-specific\",\\n' +\n    '          \"match must use the documented exhaustive forms\"\\n' +\n    '        ]\\n' +\n    '      },\\n' +\n    '      \"string_list_record_managed\": {\\n' +\n    '        \"status\": \"released-through-matching-lib\",\\n' +\n    '        \"positions\": [\\n' +\n    '          \"compatible-App-Lib-Core-domain\"\\n' +\n    '        ],\\n' +\n    '        \"limits\": [\\n' +\n    '          \"managed values do not cross the v0 high-level Host function boundary\",\\n' +\n    '          \"public Component projection requires an exact released package/profile\"\\n' +\n    '        ]\\n' +\n    '      },\\n' +\n    '      \"map\": {\\n' +\n    '        \"status\": \"released-resident-local-through-matching-lib\",\\n' +\n    '        \"positions\": [\\n' +\n    '          \"compatible-App-Lib-Core-domain\"\\n' +\n    '        ],\\n' +\n    '        \"unsupported_positions\": [\\n' +\n    '          \"direct-public-WIT-value-parameter\",\\n' +\n    '          \"direct-public-WIT-value-result\",\\n' +\n    '          \"v0-high-level-Host-function\"\\n' +\n    '        ],\\n' +\n    '        \"alternative\": \"Use an explicitly ordered list<Entry<K,V>> snapshot for copied public values or a declared resource for identity and mutation; never expose a private handle.\"\\n' +\n    '      },\\n' +\n    '      \"host_import\": {\\n' +\n    '        \"status\": \"released-bounded\",\\n' +\n    '        \"positions\": [\\n' +\n    '          \"explicit-synchronous-scalar-functions\"\\n' +\n    '        ],\\n' +\n    '        \"wit_scalars\": [\\n' +\n    '          \"bool\",\\n' +\n    '          \"s32\",\\n' +\n    '          \"u32\",\\n' +\n    '          \"s64\",\\n' +\n    '          \"u64\",\\n' +\n    '          \"float32\",\\n' +\n    '          \"float64\"\\n' +\n    '        ],\\n' +\n    '        \"unsupported\": [\\n' +\n    '          \"managed-values\",\\n' +\n    '          \"managed-references\",\\n' +\n    '          \"async\",\\n' +\n    '          \"ambient-authority\"\\n' +\n    '        ]\\n' +\n    '      },\\n' +\n    '      \"rich_resource_method_result\": {\\n' +\n    '        \"status\": \"package-profile-specific\",\\n' +\n    '        \"stop\": \"Do not infer a generic direct WAsmC source binding from a released Component or Host SDK route.\",\\n' +\n    '        \"known_negative\": \"package_profiles/wasmc-system-telemetry@0.0.1 excludes wasmc-source-direct-resource-methods\"\\n' +\n    '      }\\n' +\n    '    },\\n' +\n    '    \"feature_decisions\": {\\n' +\n    '      \"async_ordinary_source_or_lib\": \"unsupported\",\\n' +\n    '      \"open_generics_traits_lifetimes_macros_cargo\": \"unsupported\",\\n' +\n    '      \"for_range_iterators\": \"unsupported; use while\",\\n' +\n    '      \"implicit_numeric_widening\": \"unsupported; only documented explicit casts\",\\n' +\n    '      \"ambient_authority\": \"unsupported; declare and explicitly bind exact Host imports\",\\n' +\n    '      \"raw_memory_handles_lifecycle\": \"unsupported; use typed values or declared resources\",\\n' +\n    '      \"automatic_retry_after_effect\": \"unsupported\",\\n' +\n    '      \"shared_instance_parallel_entry\": \"unsupported; use independently owned instances or an exact released concurrency profile\"\\n' +\n    '    },\\n' +\n    '    \"runtime_surfaces\": {\\n' +\n    '      \"dynamic_client_gateway\": {\\n' +\n    '        \"status\": \"incubating-product-surface\",\\n' +\n    '        \"authority\": \"runtime/client-foundation-v1/release-surface.json\",\\n' +\n    '        \"host_api_changed\": false,\\n' +\n    '        \"minimal_cli_changed\": false,\\n' +\n    '        \"formal_lib_package\": false\\n' +\n    '      }\\n' +\n    '    },\\n' +\n    '    \"next_release_requirement\": \"Validate this immutable release projection against the shipped compiler, Lib, SDK and package profiles; future releases must preserve or explicitly supersede it.\"\\n' +\n    '  },\\n' +\n    '  \"producer_deltas\": [\\n' +\n    '    {\\n' +\n    '      \"schema\": \"wasmc.producer-release-delta/v1\",\\n' +\n    '      \"producer\": {\\n' +\n    '        \"repository\": \"yxsicd/wasmc\",\\n' +\n    '        \"branch\": \"master\",\\n' +\n    '        \"commit\": \"566eff42d0f4e4680c5ddd60c6584a9d8ff8e9f4\",\\n' +\n    '        \"status\": \"verified-master-containing-implementation\",\\n' +\n    '        \"capability\": \"ordinary-source-u64\",\\n' +\n    '        \"semantics\": [\\n' +\n    '          \"full 0..=u64::MAX source range\",\\n' +\n    '          \"unsigned comparison, division, remainder and right shift\",\\n' +\n    '          \"WIT u64 identity\",\\n' +\n    '          \"Host and Component full-width bit preservation\",\\n' +\n    '          \"Core i64 physical lane with semantic signedness retained by the contract\"\\n' +\n    '        ],\\n' +\n    '        \"validation\": {\\n' +\n    '          \"strict_mst\": true,\\n' +\n    '          \"u64_semantic_tests\": \"5/5\",\\n' +\n    '          \"component_full_range_round_trip\": true,\\n' +\n    '          \"capability_matrix\": \"9 type rows and 8 feature limits\",\\n' +\n    '          \"check_fast\": true,\\n' +\n    '          \"remote_master_readback\": \"0/0\"\\n' +\n    '        },\\n' +\n    '        \"implementation_commit\": \"94328ed760f93bf24b595a71facdcc773d43b762\"\\n' +\n    '      },\\n' +\n    '      \"release\": {\\n' +\n    '        \"product\": \"v0.0.20\",\\n' +\n    '        \"lifecycle_authority\": \"release.json\",\\n' +\n    '        \"compiler_source_authority\": \"566eff42d0f4e4680c5ddd60c6584a9d8ff8e9f4\",\\n' +\n    '        \"compiler_sha256\": \"4e0b9779df3bf7b627d7d9fbfc43cfffd67bb053f87c69a9f832c5690b6888a2\",\\n' +\n    '        \"ordinary_source_u64\": \"supported\",\\n' +\n    '        \"reason\": \"The v0.0.20 product reuses the exact v0.0.19 source-free compiler bytes, originally built from the exact containing producer authority and independently reproduced byte-for-byte.\"\\n' +\n    '      },\\n' +\n    '      \"adjacent_type_decisions\": {\\n' +\n    '        \"u32\": \"included in the v0.0.20 product compiler; no repair was required\",\\n' +\n    '        \"char\": \"not implemented on the cited producer authority and not released; do not substitute arbitrary u32\"\\n' +\n    '      },\\n' +\n    '      \"answer_rule\": \"When asked whether u64 is fixed or supported, report that producer master and the v0.0.20 product compiler both support it, then read release.json for the current published lifecycle stage. Do not infer async, map or char support.\"\\n' +\n    '    }\\n' +\n    '  ],\\n' +\n    '  \"packages\": [\\n' +\n    '    {\\n' +\n    '      \"id\": \"mcpgit-resident-memory\",\\n' +\n    '      \"version\": \"0.1.0\",\\n' +\n    '      \"identity\": \"mcpgit:resident-memory@0.1.0\",\\n' +\n    '      \"root\": \"libs/mcpgit-resident-memory\",\\n' +\n    '      \"metadata\": {\\n' +\n    '        \"path\": \"libs/mcpgit-resident-memory/lib.json\",\\n' +\n    '        \"sha256\": \"d131aabebef46e32b2f9d132fef93ebccddd698e79916273db9482a37cff9026\",\\n' +\n    '        \"schema\": \"wasmc.lib/v2\"\\n' +\n    '      },\\n' +\n    '      \"wit\": {\\n' +\n    '        \"package\": \"mcpgit:resident-memory@0.1.0\",\\n' +\n    '        \"path\": \"lib.wit\",\\n' +\n    '        \"sha256\": \"'... 56856 more characters,\n  expected: '{\\n' +\n    '  \"schema\": \"wasmc.lib-ecosystem-control-plane/v1\",\\n' +\n    '  \"authority\": {\\n' +\n    '    \"immutable_product\": \"release.json -> channels/candidates/0.0.20.json\",\\n' +\n    '    \"capability_projection\": \"release-surfaces.json#agent_capability_projection\",\\n' +\n    '    \"producer_deltas\": \"release-surfaces.json#producer_capability_delta\",\\n' +\n    '    \"discovery_snapshot\": \"standard/wasmc-lib-search/0.4.0 + examples/lib-search/index-v018-v040.lsi\",\\n' +\n    '    \"resolver_install_catalog\": \"catalog/libs-v018.json\",\\n' +\n    '    \"rule\": \"Package existence, qualification, admission, release, discovery, installation, engine compatibility and Host authority are independent claims.\"\\n' +\n    '  },\\n' +\n    '  \"release\": {\\n' +\n    '    \"version\": \"0.0.20\",\\n' +\n    '    \"tag\": \"v0.0.20\",\\n' +\n    '    \"source_commit\": \"566eff42d0f4e4680c5ddd60c6584a9d8ff8e9f4\",\\n' +\n    '    \"staged_product_manifest\": \"channels/candidates/0.0.20.json\",\\n' +\n    '    \"product_set_sha256\": \"081f07a045c6ac58b8526c1e38c7e9f59e65663981cc7ed9b93825b4795bfc94\"\\n' +\n    '  },\\n' +\n    '  \"route_closure\": {\\n' +\n    '    \"authority\": \"catalog/lib-route-closure.json\",\\n' +\n    '    \"release_packages\": 22,\\n' +\n    '    \"package_routes\": 22,\\n' +\n    '    \"api_routes\": 140,\\n' +\n    '    \"candidate_extras\": 0,\\n' +\n    '    \"release_catalog_exact\": true,\\n' +\n    '    \"release_package_routes_exact\": true,\\n' +\n    '    \"release_api_routes_exact\": true,\\n' +\n    '    \"formal_release_ready\": true,\\n' +\n    '    \"blocking_conditions\": []\\n' +\n    '  },\\n' +\n    '  \"inventory\": {\\n' +\n    '    \"packages\": 22,\\n' +\n    '    \"qualified\": 22,\\n' +\n    '    \"admitted\": 22,\\n' +\n    '    \"released\": 22,\\n' +\n    '    \"discoverable\": 22,\\n' +\n    '    \"installable\": 22,\\n' +\n    '    \"install_catalog_release\": \"v0.0.18\",\\n' +\n    '    \"install_catalog_packages\": 22,\\n' +\n    '    \"current_side_install_catalog\": \"current-v2-20260930\",\\n' +\n    '    \"current_side_installable\": 5,\\n' +\n    '    \"current_side_inventory_matches_release\": false,\\n' +\n    '    \"inventory_is_unified\": true\\n' +\n    '  },\\n' +\n    '  \"type_position_authority\": {\\n' +\n    '    \"schema\": \"wasmc.release-agent-capabilities/v1\",\\n' +\n    '    \"product_release\": \"v0.0.20\",\\n' +\n    '    \"guidance_scope\": {\\n' +\n    '      \"status\": \"included-in-v0.0.20-product\",\\n' +\n    '      \"included_in_product\": true,\\n' +\n    '      \"lifecycle_authority\": \"release.json and channels/prod.json\",\\n' +\n    '      \"rule\": \"This frozen projection describes v0.0.20 product capability only. It does not prove the product is the current released, discoverable or installable lifecycle stage.\"\\n' +\n    '    },\\n' +\n    '    \"decision_rule\": \"A type or feature is usable only at the exact admitted position below. WIT vocabulary, local values, Core lanes, Component profiles, Host bindings and public results are separate claims.\",\\n' +\n    '    \"alternative_rule\": \"Alternatives must preserve semantics. Numeric width or signedness, async behavior, identity, ordering, ownership and failure semantics may change only with explicit application proof; otherwise stop.\",\\n' +\n    '    \"function_shape\": {\\n' +\n    '      \"parameters\": \"zero or more heterogeneous typed parameters\",\\n' +\n    '      \"result\": \"exactly one semantic value\",\\n' +\n    '      \"multiple_logical_values\": \"one tuple<...> or named record\",\\n' +\n    '      \"embedding_warning\": \"tuple and record may both flatten to multiple Core lanes; neither creates automatic JavaScript object lifting\",\\n' +\n    '      \"canonical_example\": \"agent-quickstart.json#routes/ordinary-source-positive\"\\n' +\n    '    },\\n' +\n    '    \"type_decisions\": {\\n' +\n    '      \"ordinary_source_scalars\": {\\n' +\n    '        \"status\": \"released\",\\n' +\n    '        \"spellings\": [\\n' +\n    '          \"s8\",\\n' +\n    '          \"u8\",\\n' +\n    '          \"s16\",\\n' +\n    '          \"u16\",\\n' +\n    '          \"s32\",\\n' +\n    '          \"u32\",\\n' +\n    '          \"i64\",\\n' +\n    '          \"u64\",\\n' +\n    '          \"f32\",\\n' +\n    '          \"f64\",\\n' +\n    '          \"bool\"\\n' +\n    '        ]\\n' +\n    '      },\\n' +\n    '      \"u64_ordinary_source\": {\\n' +\n    '        \"status\": \"released\",\\n' +\n    '        \"positions\": [\\n' +\n    '          \"local\",\\n' +\n    '          \"parameter\",\\n' +\n    '          \"result\",\\n' +\n    '          \"nested-source-payload\"\\n' +\n    '        ],\\n' +\n    '        \"semantics\": [\\n' +\n    '          \"full 0..=u64::MAX source range\",\\n' +\n    '          \"unsigned comparison, division, remainder and right shift\",\\n' +\n    '          \"WIT u64 identity\",\\n' +\n    '          \"Core i64 physical lane with unsigned semantics retained by the contract\"\\n' +\n    '        ]\\n' +\n    '      },\\n' +\n    '      \"tuple_record\": {\\n' +\n    '        \"status\": \"released-core-lane-source\",\\n' +\n    '        \"positions\": [\\n' +\n    '          \"ordinary-source\",\\n' +\n    '          \"parameter\",\\n' +\n    '          \"one-semantic-result\"\\n' +\n    '        ],\\n' +\n    '        \"limits\": [\\n' +\n    '          \"no tuple or record destructuring\",\\n' +\n    '          \"no automatic JavaScript object lifting\",\\n' +\n    '          \"Component use requires its exact released profile\"\\n' +\n    '        ]\\n' +\n    '      },\\n' +\n    '      \"option_result_variant_enum\": {\\n' +\n    '        \"status\": \"released-core-lane-source\",\\n' +\n    '        \"positions\": [\\n' +\n    '          \"ordinary-source\",\\n' +\n    '          \"parameter\",\\n' +\n    '          \"one-semantic-result\"\\n' +\n    '        ],\\n' +\n    '        \"limits\": [\\n' +\n    '          \"nested payload and Component support are profile-specific\",\\n' +\n    '          \"match must use the documented exhaustive forms\"\\n' +\n    '        ]\\n' +\n    '      },\\n' +\n    '      \"string_list_record_managed\": {\\n' +\n    '        \"status\": \"released-through-matching-lib\",\\n' +\n    '        \"positions\": [\\n' +\n    '          \"compatible-App-Lib-Core-domain\"\\n' +\n    '        ],\\n' +\n    '        \"limits\": [\\n' +\n    '          \"managed values do not cross the v0 high-level Host function boundary\",\\n' +\n    '          \"public Component projection requires an exact released package/profile\"\\n' +\n    '        ]\\n' +\n    '      },\\n' +\n    '      \"map\": {\\n' +\n    '        \"status\": \"released-resident-local-through-matching-lib\",\\n' +\n    '        \"positions\": [\\n' +\n    '          \"compatible-App-Lib-Core-domain\"\\n' +\n    '        ],\\n' +\n    '        \"unsupported_positions\": [\\n' +\n    '          \"direct-public-WIT-value-parameter\",\\n' +\n    '          \"direct-public-WIT-value-result\",\\n' +\n    '          \"v0-high-level-Host-function\"\\n' +\n    '        ],\\n' +\n    '        \"alternative\": \"Use an explicitly ordered list<Entry<K,V>> snapshot for copied public values or a declared resource for identity and mutation; never expose a private handle.\"\\n' +\n    '      },\\n' +\n    '      \"host_import\": {\\n' +\n    '        \"status\": \"released-bounded\",\\n' +\n    '        \"positions\": [\\n' +\n    '          \"explicit-synchronous-scalar-functions\"\\n' +\n    '        ],\\n' +\n    '        \"wit_scalars\": [\\n' +\n    '          \"bool\",\\n' +\n    '          \"s32\",\\n' +\n    '          \"u32\",\\n' +\n    '          \"s64\",\\n' +\n    '          \"u64\",\\n' +\n    '          \"float32\",\\n' +\n    '          \"float64\"\\n' +\n    '        ],\\n' +\n    '        \"unsupported\": [\\n' +\n    '          \"managed-values\",\\n' +\n    '          \"managed-references\",\\n' +\n    '          \"async\",\\n' +\n    '          \"ambient-authority\"\\n' +\n    '        ]\\n' +\n    '      },\\n' +\n    '      \"rich_resource_method_result\": {\\n' +\n    '        \"status\": \"package-profile-specific\",\\n' +\n    '        \"stop\": \"Do not infer a generic direct WAsmC source binding from a released Component or Host SDK route.\",\\n' +\n    '        \"known_negative\": \"package_profiles/wasmc-system-telemetry@0.0.1 excludes wasmc-source-direct-resource-methods\"\\n' +\n    '      }\\n' +\n    '    },\\n' +\n    '    \"feature_decisions\": {\\n' +\n    '      \"async_ordinary_source_or_lib\": \"unsupported\",\\n' +\n    '      \"open_generics_traits_lifetimes_macros_cargo\": \"unsupported\",\\n' +\n    '      \"for_range_iterators\": \"unsupported; use while\",\\n' +\n    '      \"implicit_numeric_widening\": \"unsupported; only documented explicit casts\",\\n' +\n    '      \"ambient_authority\": \"unsupported; declare and explicitly bind exact Host imports\",\\n' +\n    '      \"raw_memory_handles_lifecycle\": \"unsupported; use typed values or declared resources\",\\n' +\n    '      \"automatic_retry_after_effect\": \"unsupported\",\\n' +\n    '      \"shared_instance_parallel_entry\": \"unsupported; use independently owned instances or an exact released concurrency profile\"\\n' +\n    '    },\\n' +\n    '    \"runtime_surfaces\": {\\n' +\n    '      \"dynamic_client_gateway\": {\\n' +\n    '        \"status\": \"incubating-product-surface\",\\n' +\n    '        \"authority\": \"runtime/client-foundation-v1/release-surface.json\",\\n' +\n    '        \"host_api_changed\": false,\\n' +\n    '        \"minimal_cli_changed\": false,\\n' +\n    '        \"formal_lib_package\": false\\n' +\n    '      }\\n' +\n    '    },\\n' +\n    '    \"next_release_requirement\": \"Validate this immutable release projection against the shipped compiler, Lib, SDK and package profiles; future releases must preserve or explicitly supersede it.\"\\n' +\n    '  },\\n' +\n    '  \"producer_deltas\": [\\n' +\n    '    {\\n' +\n    '      \"schema\": \"wasmc.producer-release-delta/v1\",\\n' +\n    '      \"producer\": {\\n' +\n    '        \"repository\": \"yxsicd/wasmc\",\\n' +\n    '        \"branch\": \"master\",\\n' +\n    '        \"commit\": \"566eff42d0f4e4680c5ddd60c6584a9d8ff8e9f4\",\\n' +\n    '        \"status\": \"verified-master-containing-implementation\",\\n' +\n    '        \"capability\": \"ordinary-source-u64\",\\n' +\n    '        \"semantics\": [\\n' +\n    '          \"full 0..=u64::MAX source range\",\\n' +\n    '          \"unsigned comparison, division, remainder and right shift\",\\n' +\n    '          \"WIT u64 identity\",\\n' +\n    '          \"Host and Component full-width bit preservation\",\\n' +\n    '          \"Core i64 physical lane with semantic signedness retained by the contract\"\\n' +\n    '        ],\\n' +\n    '        \"validation\": {\\n' +\n    '          \"strict_mst\": true,\\n' +\n    '          \"u64_semantic_tests\": \"5/5\",\\n' +\n    '          \"component_full_range_round_trip\": true,\\n' +\n    '          \"capability_matrix\": \"9 type rows and 8 feature limits\",\\n' +\n    '          \"check_fast\": true,\\n' +\n    '          \"remote_master_readback\": \"0/0\"\\n' +\n    '        },\\n' +\n    '        \"implementation_commit\": \"94328ed760f93bf24b595a71facdcc773d43b762\"\\n' +\n    '      },\\n' +\n    '      \"release\": {\\n' +\n    '        \"product\": \"v0.0.20\",\\n' +\n    '        \"lifecycle_authority\": \"release.json\",\\n' +\n    '        \"compiler_source_authority\": \"566eff42d0f4e4680c5ddd60c6584a9d8ff8e9f4\",\\n' +\n    '        \"compiler_sha256\": \"4e0b9779df3bf7b627d7d9fbfc43cfffd67bb053f87c69a9f832c5690b6888a2\",\\n' +\n    '        \"ordinary_source_u64\": \"supported\",\\n' +\n    '        \"reason\": \"The v0.0.20 product reuses the exact v0.0.19 source-free compiler bytes, originally built from the exact containing producer authority and independently reproduced byte-for-byte.\"\\n' +\n    '      },\\n' +\n    '      \"adjacent_type_decisions\": {\\n' +\n    '        \"u32\": \"included in the v0.0.20 product compiler; no repair was required\",\\n' +\n    '        \"char\": \"not implemented on the cited producer authority and not released; do not substitute arbitrary u32\"\\n' +\n    '      },\\n' +\n    '      \"answer_rule\": \"When asked whether u64 is fixed or supported, report that producer master and the v0.0.20 product compiler both support it, then read release.json for the current published lifecycle stage. Do not infer async, map or char support.\"\\n' +\n    '    }\\n' +\n    '  ],\\n' +\n    '  \"packages\": [\\n' +\n    '    {\\n' +\n    '      \"id\": \"mcpgit-resident-memory\",\\n' +\n    '      \"version\": \"0.1.0\",\\n' +\n    '      \"identity\": \"mcpgit:resident-memory@0.1.0\",\\n' +\n    '      \"root\": \"libs/mcpgit-resident-memory\",\\n' +\n    '      \"metadata\": {\\n' +\n    '        \"path\": \"libs/mcpgit-resident-memory/lib.json\",\\n' +\n    '        \"sha256\": \"d131aabebef46e32b2f9d132fef93ebccddd698e79916273db9482a37cff9026\",\\n' +\n    '        \"schema\": \"wasmc.lib/v2\"\\n' +\n    '      },\\n' +\n    '      \"wit\": {\\n' +\n    '        \"package\": \"mcpgit:resident-memory@0.1.0\",\\n' +\n    '        \"path\": \"lib.wit\",\\n' +\n    '        \"sha256\": \"'... 56906 more characters,\n  operator: 'strictEqual',\n  diff: 'simple'\n}\n\nNode.js v26.5.1\n"
+    },
+    {
+      "command": [
+        "node",
+        "scripts/test-lib-control-plane-projection.mjs"
+      ],
+      "exit_status": 1,
+      "classification": "retained-rejection-not-pass",
+      "stdout": "",
+      "stderr": "node:internal/modules/run_main:107\n    triggerUncaughtException(\n    ^\n\nAssertionError [ERR_ASSERTION]: selected count drift\n\n3 !== 5\n\n    at validateCurrentSide (file://<public-worktree>/scripts/test-lib-control-plane-projection.mjs:23:10)\n    at file://<public-worktree>/scripts/test-lib-control-plane-projection.mjs:59:1\n    at ModuleJob.run (node:internal/modules/esm/module_job:569:25)\n    at async node:internal/modules/esm/loader:650:26\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {\n  generatedMessage: false,\n  code: 'ERR_ASSERTION',\n  actual: 3,\n  expected: 5,\n  operator: 'strictEqual',\n  diff: 'simple'\n}\n\nNode.js v26.5.1\n"
+    },
+    {
+      "command": [
+        "node",
+        "scripts/test-current-v2-closure.mjs"
+      ],
+      "exit_status": 0,
+      "classification": "pass",
+      "stdout": "{\"accepted\":true,\"current\":5,\"backlog\":13,\"telemetry\":\"blocked-real-provider\"}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "node",
+        "scripts/lib-route-closure.mjs",
+        "--check"
+      ],
+      "exit_status": 0,
+      "classification": "pass",
+      "stdout": "{\"accepted\":true,\"action\":\"check\",\"path\":\"catalog/lib-route-closure.json\",\"release_packages\":22,\"package_routes\":22,\"api_routes\":140,\"candidate_extras\":0}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "node",
+        "scripts/release-candidate.mjs",
+        "verify",
+        "channels/candidates/0.0.20.json"
+      ],
+      "exit_status": 1,
+      "classification": "retained-rejection-not-pass",
+      "stdout": "",
+      "stderr": "file://<public-worktree>/scripts/release-candidate.mjs:27\n    const bytes=read(row.path);if(bytes.length!==row.bytes||hash(bytes)!==row.sha256)throw Error('product drift rejected');previous=row.path;\n                                                                                           ^\n\nError: product drift rejected\n    at validateCandidate (file://<public-worktree>/scripts/release-candidate.mjs:27:92)\n    at file://<public-worktree>/scripts/release-candidate.mjs:130:52\n    at ModuleJob.run (node:internal/modules/esm/module_job:569:25)\n    at async node:internal/modules/esm/loader:650:26\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)\n\nNode.js v26.5.1\n"
+    },
+    {
+      "command": [
+        "/bin/bash",
+        "scripts/maintainer-orient.sh"
+      ],
+      "exit_status": 1,
+      "classification": "retained-rejection-not-pass",
+      "stdout": "repository: <public-worktree>\n## work/WS-20261002-lib-control-plane-projection-v1...origin/work/WS-20261002-lib-control-plane-projection-v1\n?? .agents/workstreams/WS-20261002-lib-control-plane-projection-v1/record-evidence.mjs\n?? scripts/test-lib-control-plane-projection.mjs\nhead: 4ca6604483492593aa18a580b6d1b37071efac6a\nlatest release: 0.0.20\nmanifest: wasmc-v0.0.20 released=true\nfacade exports:\nWasmcBrowserCompiler, compile, compileDetailed, compileLib, compilePackage, compilePackageDetailed, createCompiler, flattenWasmcPackage, inspectWasm, instantiateLib, loadWasmcBrowserCompiler, main\n",
+      "stderr": "file://<public-worktree>/scripts/validate-integrity.mjs:34\n  if (bytes.length !== row.bytes || sha(bytes) !== row.sha256) throw new Error(`manifest identity mismatch: ${row.path}`);\n                                                                     ^\n\nError: manifest identity mismatch: scripts/lib-catalog.mjs\n    at file://<public-worktree>/scripts/validate-integrity.mjs:34:70\n\nNode.js v26.5.1\n"
+    },
+    {
+      "command": [
+        "/bin/bash",
+        "scripts/validate-maintainer.sh"
+      ],
+      "exit_status": 1,
+      "classification": "retained-rejection-not-pass",
+      "stdout": "",
+      "stderr": "file://<public-worktree>/scripts/validate-integrity.mjs:34\n  if (bytes.length !== row.bytes || sha(bytes) !== row.sha256) throw new Error(`manifest identity mismatch: ${row.path}`);\n                                                                     ^\n\nError: manifest identity mismatch: scripts/lib-catalog.mjs\n    at file://<public-worktree>/scripts/validate-integrity.mjs:34:70\n\nNode.js v26.5.1\n"
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit_status": 0,
+      "classification": "pass",
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "nonclaims": [
+    "full maintainer PASS",
+    "all18 qualification",
+    "new candidate or release",
+    "main integration",
+    "private producer evidence"
+  ]
+}
