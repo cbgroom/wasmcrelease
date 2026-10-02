@@ -14,11 +14,15 @@ Clean source test raw ee0a1b48a9eb2e0d4d5f05c18fc14c66d2665cc272061b6d1ac9e5066e
 freeze2e5343151e57ba81d4c57c0b5400a85e7c9fc89043552008c24c6e5dfe7ef9ef
 reopens309 immutable tag files and preserves14 inputs and124 files across exact
 18 ledger-selected roots. Old candidate/orientation actual failures stay retained.
-Actual clean merged-main rerun remains pending; source-only PASS is not main PASS.
+Actual clean pushed merge2b05592443690f8f7c020c4fb8370390250ab08d passes11
+commands; all26 inputs equal clean implementation. Test raw
+9592b55197df11c571150ae9099aacce7a734559006627dea2889ccc15a382df;
+main freeze057fd0c4355266fbdedb99633ccf23eb83790cf5c5de42e52c6d1f77ef9a2cb5.
+integration-evidence.json pins exact source/target/merge; full maintainer is not PASS.
 Independent current-route probe raw0b470b3fc59628291f902100dfede070a791ab95c288720afa51813252275830
 confirms18 licensed/resolved synthetic current roots can receive old22/140 route
 closure with zero current roots bound. This slice does not repair that route gap.
-Next: qualify this actual main, then future-only selected18 catalog/WIT/index/
+Next: future-only selected18 catalog/WIT/index/
 Search identity closure and actual search/install authority. Full18 legal/runtime/
 SDK/dependency/precise-candidate Pi/release gates remain open; no new candidate.
 Owning task: WS-20261002-future-product-input-closure-v1.
