@@ -3,6 +3,27 @@
 ## 2026-10-02 Future all18 license admission guard
 
 Task state: in-progress — full all18 release closure is not complete.
+Actual private rebuild from exact public sourced131f57b now succeeds for10
+canonical Rust roots: JSON, Compression, CSV, Data Compute/Core/Expr/Interchange/
+Profile/Relational and HTTP1. Each new diagnostic v2 Root strictly reopens and
+retains exact LICENSE/notices plus SDK license-file binding. These reuse old
+versions only in private diagnostics; no immutable public Root is replaced.
+Producer snapshotd8bf6b1c has the exact qualified CLI Rust input map. Receipt
+eleven-source-root-rebuild-JAUoc0/RECEIPT.json SHA256
+7a9d14f47bcbcde0a8d7ed8a74c1fb6fc97b8110f899bacd86b91d3034205d82
+records10 completed roots and overall failure at Telemetry, not11/11 PASS.
+Independent source/package pins and20 actual Wasmtime Component calls on those
+ten roots PASS, with zero Core imports. INDEPENDENT-RUNTIME-RECEIPT.json SHA256
+098949a4b76c3427243ba288e456a0a942a6905b002a5fd21df00f3eae144898.
+Telemetry's old API rows first rejected unsorted metadata; after ordering was
+normalized, default Cargo build rejected Component encoding because the module
+has no decodable WIT world. Its Component adapter is behind the non-default
+component feature. Retained isolated failure Iff1Si SHA256
+22818a38b93c8c59c9d2891967ad39bc4fffe9a12f18860d44d0ecdf0896673f.
+Next: qualify a reviewed default/feature build profile and its actual resolved
+notice graph, then Telemetry0.0.2/provider and ordinary sampler caller. Wasmi,
+complete SDK callers, independent cold determinism, compatibility and all18
+admission remain open. The20 calls are bounded smoke, not a full corpus gate.
 Additional input preparation at source5e7cc8403a8e1f707211dd31f799f08511368fab:
 all11 canonical public Rust source roots have offline locked metadata and exact
 bounded research-license/dependency notice snapshots prepared privately. Original
@@ -36,9 +57,8 @@ Next: bind the independently reviewed future catalog digest, policy and checker
 dependencies into a separately allocated candidate inventory; never infer the
 pin from suspect bytes or delete required notice text. Dependency completeness,
 compatibility, runtime/SDK, exact Pi and release remain separate open gates.
-Heavy builds remain stopped below the100GiB free-space floor. Compression/removal
-of three exact inactive cold caches was asked separately; no answer or permission
-is inferred from automatic continuation. Current warm pools/source remain intact.
+External disk recovery restored admission above100GiB; each private build
+rechecked pool/floor limits. No cold cache removal occurred; current pools remain intact.
 Integrated source bfb37a1e99379594329d3dccf533136e5ec19696 adds a future-only
 candidate create/reopen guard for versions after immutable0.0.20. The original
 18 target identities cannot be reduced by editing migration counts. Every
