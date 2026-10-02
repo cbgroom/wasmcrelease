@@ -20,11 +20,22 @@ upstream LICENSE Git Blob; complete root/Rust-subtree inventory has no other
 license/notice text. Supplement receipt SHA256
 5326ce8db1bd7f72d450be72f9dda78a877d414d98cbf43bea50e88ccf8b186c.
 This is private future build input preparation, not fresh Lib/SDK or legal proof.
-New issue: validate-license-policy.mjs globally rejects the exact MIT License
-heading present in legitimate prepared third-party notices. No notices have been
-imported publicly yet. Next repair must allow only identity-bound declared
-third-party notice data while retaining first-party noncommercial-grant checks;
-never delete required notice text or add a blanket directory/path exemption.
+The third-party notice scan conflict is now repaired from ready source
+ee5966f1681d2d513a4e51c9c45e5e1e3900ef0f. A separately reviewed
+thirdparty_notice_catalog_sha256 in current-v2 policy is required before any
+exemption. Exact catalog, manifest and every snapshot file must agree; only
+declared dependency-notice bundles bypass first-party grant scanning. Root
+LICENSE, undeclared files, bounds and linked/drifting inputs remain checked.
+Unit15 negative controls and actual full policy on three previously qualified
+private roots/13notice files PASS; four actual mutations reject and restored
+packages pass. Current catalog receives zero exemptions; no new digest or notice
+was imported publicly. Full maintainer still rejects the pre-existing lib-catalog
+manifest mismatch, and old0.0.20 candidate rejects future tool drift.
+Source/evidence is in .agents/workstreams/WS-20261002-thirdparty-notice-policy-v1.
+Next: bind the independently reviewed future catalog digest, policy and checker
+dependencies into a separately allocated candidate inventory; never infer the
+pin from suspect bytes or delete required notice text. Dependency completeness,
+compatibility, runtime/SDK, exact Pi and release remain separate open gates.
 Heavy builds remain stopped below the100GiB free-space floor. Compression/removal
 of three exact inactive cold caches was asked separately; no answer or permission
 is inferred from automatic continuation. Current warm pools/source remain intact.

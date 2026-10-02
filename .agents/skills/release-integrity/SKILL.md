@@ -112,3 +112,16 @@ This proves declaration and byte-identity transport only. Complete actual
 dependency notices, compatibility review, private producer/runtime/SDK behavior,
 route closure and exact-candidate Pi remain separate required evidence. Preserve
 all old roots, prior grants, frozen candidates and immutable tags unchanged.
+
+### Declared third-party notice data
+
+Verbatim third-party notice text retains its original license; its presence is
+not an unauthorized first-party grant. Exempt only exact declared dependency
+notice bundles after a separately reviewed catalog digest in current-v2 policy,
+catalog/manifest identities, all snapshot bytes, research-only root LICENSE and
+bounds pass. Never infer or refresh that pin from suspect package bytes, skip a
+whole directory, exempt root LICENSE, or accept undeclared/linked/drifting data.
+Legacy omission grants no exemption. Guard with test-declared-thirdparty-notices.
+Future candidate inventory must also bind the selected policy, catalog and
+checker dependencies. This is an identity/data classification gate, not proof of
+actual linked dependency completeness, legal compatibility or runtime/release.

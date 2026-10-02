@@ -1,7 +1,8 @@
 import assert from "node:assert/strict";
-import { readFile, readdir } from "node:fs/promises";
+import { readFile, readdir, lstat } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import {collectDeclaredThirdPartyNotices,isExactDeclaredNotice} from './declared-thirdparty-notices.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const read = (relative) => readFile(path.join(root, relative), "utf8");
@@ -78,10 +79,25 @@ assert.match(maintainers, /^## License boundary$/m);
 assert.match(maintainers, /Material first added after v0\.0\.19/);
 assert.match(maintainers, /Never rewrite its frozen product inventory/);
 
+const noticePolicy = JSON.parse(await read('catalog/current-v2-policy.json'));
+const declaredNotices = await collectDeclaredThirdPartyNotices(
+  await readFile(path.join(root,'catalog/libs-current-v2.json')),
+  noticePolicy,
+  async relative => {
+    let current=root;
+    for(const segment of relative.split('/')){current=path.join(current,segment);assert.ok(!(await lstat(current)).isSymbolicLink(),`linked declared notice input rejected: ${relative}`);}
+    const before=await lstat(current);assert.ok(before.isFile(),`regular declared notice input required: ${relative}`);
+    const bytes=await readFile(current),after=await lstat(current);
+    assert.ok(!after.isSymbolicLink()&&after.ino===before.ino&&after.size===before.size&&after.mtimeMs===before.mtimeMs,`declared notice input drift: ${relative}`);
+    return bytes;
+  },
+);
+
 async function walk(directory, relative = "") {
   const found = [];
   for (const entry of await readdir(directory, { withFileTypes: true })) {
     if (entry.name === ".git" || entry.name === "target") continue;
+    assert.ok(!entry.isSymbolicLink(), `linked license-policy input rejected: ${path.join(relative,entry.name)}`);
     const childRelative = path.join(relative, entry.name);
     const child = path.join(directory, entry.name);
     if (entry.isDirectory()) found.push(...await walk(child, childRelative));
@@ -92,7 +108,9 @@ async function walk(directory, relative = "") {
 
 for (const relative of await walk(root)) {
   if (!/\.(?:md|json|toml|txt|mjs|js|rs|wit)$/.test(relative) && path.basename(relative) !== "LICENSE") continue;
-  const content = await read(relative);
+  const bytes = await readFile(path.join(root,relative));
+  if(isExactDeclaredNotice(relative.replaceAll(path.sep,'/'),bytes,declaredNotices))continue;
+  const content = bytes.toString('utf8');
   if (!frozenCargoManifests.has(relative) && relative !== "scripts/validate-license-policy.mjs") {
     assert.doesNotMatch(content, /license\s*=\s*["']MIT OR Apache-2\.0["']/i, `${relative} introduces an unexpected old dual-license grant`);
   }
@@ -111,4 +129,5 @@ console.log(JSON.stringify({
   noncommercial_cargo_manifests_bound: nonCommercialCargoLicenseFiles.size,
   frozen_cargo_manifests_preserved: frozenCargoManifests.size,
   immutable_prior_tags_preserved: true,
+  exact_declared_thirdparty_notice_files: declaredNotices.size,
 }));
