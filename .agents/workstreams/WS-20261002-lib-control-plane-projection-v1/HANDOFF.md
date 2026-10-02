@@ -2,7 +2,8 @@
 
 ## 0. Status
 
-Task state: started. Integration state: not-ready; future public work only.
+Task state: completed. Integration state: ready; future public work only.
+The bounded projection repair is qualified, not integrated into main/released.
 
 ## 1. North Star
 
@@ -26,18 +27,32 @@ its branch/history remain unchanged. Current registered tasks are merged and
 do not overlap this claim. Related current-v2 and learning work is integrated.
 Retained discovery a02768d19e73398cc4fc857313869035c16f42db is not integrated;
 its catalog/install/discovery edits do not touch this projection or new test.
+START4ca6604483492593aa18a580b6d1b37071efac6a was pushed before implementation.
+The unmodified existing generator corrects exactly five values: current-side
+count3to5, plus JSON/Compression selected membership and catalog authority.
+Every other projection value is identical to the public base. Output66906bytes
+SHA2560ea5336ae6b5b6c6735f80246e252eaa398c66abd42d591ab4998558999fd28d.
 
 ## 4. Current Action
 
-Task state: started
-Objective: remove a stale public current-side inventory projection without
-promoting packages or modifying frozen release identity.
-Technical basis: the existing generator independently derives the exact
-current catalog set and per-package current-side fields; its read-only check
-rejects the old three-root projection. No generator/API change is necessary.
-Plan: push this START, run the existing generator, admit only its intended
-projection diff, add a focused independent positive/negative regression,
-retain failures and exact public input/output identities, then checkpoint.
+Task state: completed
+Result: actual generator check and independent focused regression PASS. The
+test separately derives the catalog identity set, per-package side membership/
+authority and unchanged frozen release inclusion. Six in-memory negative
+controls reject stale count, missing/extra membership, wrong authority,
+changed lifecycle and an orphan identity. The actual new test and generator
+both rejected the old projection before the repair; these are retained too.
+Current-v2 closure and historical22/140 route closure PASS. Fourteen protected
+files, including old release/manifest/provenance/checksums/candidate/channels,
+current catalog/ledger/policy, readiness and generator, match exact base bytes.
+Old candidate still rejects product drift. Orientation and full maintainer
+still reject the pre-existing lib-catalog frozen mismatch; neither is PASS.
+Public-only working-tree receipts bind base, Node version, exact test scripts,
+stdout/stderr/status, input/output hashes and all five changed JSON pointers.
+Machine-local paths are redacted; already-public producer identity data is
+retained as published evidence, not imported private implementation knowledge.
+Before receipt SHA2567c83ad022088bd487a992624ad3f4a89f44e57fafdf0dd3276c855a29ad27dad.
+After receipt SHA25638452b6598943f2d79c03e29f9f8057a049d3a45a3046eff81286146e0654a5d.
 Boundaries: only the three declared claims; no global HANDOFF/Skill write,
 catalog or all18 denominator change, capability/qualification promotion,
 compiler or Lib rebuild, Cargo, new release/candidate/tag, main integration,
@@ -46,15 +61,19 @@ Validation: actual generator check, independent catalog-set and per-package
 checks with stale-count/row negative controls, current-v2 closure, historical
 route closure, exact frozen-file preservation, old-candidate drift rejection,
 maintainer rejection classification, git diff check and clean push/readback.
-Resume point: implementation starts only after this START is committed/pushed.
+Resume point: Integrator rechecks this exact pushed branch against its public
+target and the retained pre-candidate exception, then integrates serially.
+Do not refresh old0.0.20 integrity, allocate a candidate or infer full18 closure.
 Cache/disk: Node-only bounded metadata; zero Cargo targets/heavy writers;
 expected additional files below1MiB, no cache eviction or floor waiver.
 
 ## 5. Next Actions
 
-1. Push START, regenerate the existing projection and review exact changed fields.
-2. Qualify the focused test, preservation and rejection controls.
-3. Commit/push the result; leave serialized main integration to its owner.
+1. Recheck the pushed source and target before serialized main integration.
+2. Run the focused projection, current-v2 and historical route checks again on
+   the combined tree; preserve known full/frozen rejection scopes.
+3. Continue independent18-root qualification and later new-candidate closure;
+   no qualification status, denominator or selected catalog changed here.
 
 ## 6. Validation Commands
 
