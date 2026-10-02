@@ -15,8 +15,13 @@ Actual clean pushed implementation2f5efe2738de200210614b63ce7d580b4f9eb630 passe
 commands; raw0c09b90fbd692efa26e41a7957139bfb5983960aaa705516cb66554c76e1a8ad.
 Clean freeze823fb78727da2d4c3aa6032b9b87192dd55c072cf283362a29338629a5c8cf82
 preserves309immutable files/14protected inputs/124files across exact18roots.
-Old candidate/orientation really exit1. Actual integrated-main qualification is
-pending. No actual
+Old candidate/orientation really exit1. Serialized source623c720db87bbca84af7bce4d2b3ef00a4b64982
+is integrated against137022b at actual clean pushed7da7a45a1f7acc4fdbfa5318890d54948d2eed5c.
+Actual main13commands PASS; all28 inputs equal qualified source. Raw tests
+0545ff53af3b6fe4194a1a0f36adca47d79b3a98848a53859887a4a0b6e87da8;
+main freezecd1331193c5b9b92ba5d680b8369ae40bbdbfba767f168b672685774f888ea96.
+Owning integration-evidence.json records bounded completion, not full18 release.
+No actual
 policy/receipt/root/CLI/grant or old-release identity change; actual missing
 reviewed pin blocks future selection. This is synthetic gate evidence, not real
 18 build/SDK/legal/Component/dual-engine/Pi/release PASS. Existing consumer strict

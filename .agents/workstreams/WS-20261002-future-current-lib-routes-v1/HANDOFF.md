@@ -2,9 +2,11 @@
 
 ## 0. Status
 
-Completed, ready, public admission=false. Clean pushed implementation
-2f5efe2738de200210614b63ce7d580b4f9eb630 passes13commands. Actual-main rerun remains
-pending. START is metadata only against
+Completed, merged, public admission=false. Serialized source623c720db87bbca84af7bce4d2b3ef00a4b64982
+is integrated against137022b. Clean pushed implementation2f5efe2 and actual clean
+pushed merge7da7a45a1f7acc4fdbfa5318890d54948d2eed5c both pass13commands; all28
+inputs match. integration-evidence.json binds actual main test/freeze receipts.
+START is metadata only against
 clean synchronized main137022b0e66b2c22bb809850ca5d0c69d2a5f89a. Reuse the clean
 completed linked checkout; preserve every earlier branch and source checkpoint.
 
@@ -52,8 +54,11 @@ ledger-selected roots. Old candidate and whole orientation still really exit1.
 
 ## 4. Current Action
 
-Integrate reviewed source against unchanged main137, then rerun actual merged
-main independently. Require separately reviewed
+Actual clean pushed main7da7a45 is qualified for this bounded gate; test raw
+0545ff53af3b6fe4194a1a0f36adca47d79b3a98848a53859887a4a0b6e87da8 and freeze
+cd1331193c5b9b92ba5d680b8369ae40bbdbfba767f168b672685774f888ea96 retain all
+309/14/18/124 preservation and actual old-candidate/orientation failures.
+Continue separate actual18 gates. Require separately reviewed
 future_route_authority policy pin, exact receipt/catalog/index and active Search
 within18; do not invent that missing actual authority. Strict selected-world WIT
 signatures and complete LSI paths/parents/UTF-8/bounds; actual Search Core executes
