@@ -35,8 +35,21 @@ d56f3d370487f6dd290faee70f7b909e39d0d86b3fdb07caf5faf8f3ed726afe.
 These are private diagnostic old-version outputs, not11/11 simultaneous corpus
 qualification or new public Root/admission. Branch evidence lives in
 .agents/workstreams/WS-20261002-telemetry-default-profile-v1/HANDOFF.md.
-Next: exact integration-source qualification, then Telemetry0.0.2/provider and
-ordinary sampler caller. Wasmi,
+Actual integrated sourceabb99795c9c89d2fb3778d2bed7fa2494862fd71 now passes
+both native profiles27/27, actual default notices and private licensed Root
+strict reopen plus128 Wasmtime49 source-free Component lifecycle rounds.
+Wasmi2.0.0 validates the complete exact Core and passes128 constructor/refresh/
+frame/post-return/destructor diagnostic rounds, resources128created/128destroyed/
+0remaining. This is raw-Core diagnostic, not sample/ordinary App/generated Core
+SDK qualification. A fresh empty bounded Cargo target and different-length
+absolute source root independently rebuild all15 package files byte-identically,
+including manifest/SDK/notices; complete producer stdout also matches. Peak
+target124080128bytes <256MiB, wrappers disabled, shared registry inputs only.
+Determinism remains bound to exact toolchain fingerprint2e4e27cb; no cross-
+toolchain claim. Exact receipt/digest/scope pins are in the owning workstream's
+integration-evidence.json. No public package or release identity changed.
+Next: Telemetry0.0.2 Core SDK/provider, Wasmi sample differential and ordinary
+sampler caller. Full Wasmi corpus,
 complete SDK callers, independent cold determinism, compatibility and all18
 admission remain open. The20 calls are bounded smoke, not a full corpus gate.
 Additional input preparation at source5e7cc8403a8e1f707211dd31f799f08511368fab:

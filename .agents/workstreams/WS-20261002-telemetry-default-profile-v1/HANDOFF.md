@@ -67,6 +67,12 @@ assumption and caller WIT-location attempts remain retained, not hidden.
 
 Focused gates: future-license18targets/18negative controls, notice15negative
 controls, license policy6Cargo/2frozen PASS. Old0.0.20 rejects product drift.
-Resume: integrate source only with global handoff, then repeat integration
-qualification. No new public Root/version/candidate/admission. Wasmi, cold
-determinism, SDK and ordinary sampler caller remain separate all18 gates.
+Actual mainabb99795c9c89d2fb3778d2bed7fa2494862fd71 repeats source/notice/
+licensed Root/Wasmtime lifecycle PASS; private receipts are digest-bound in
+integration-evidence.json. Independent empty-target second build at a different
+absolute source path yields all15 files and complete producer stdout identical
+within exact toolchain fingerprint. Wasmi2.0.0 complete Core validation and128
+constructor/refresh/frame/post-return/destructor rounds PASS; not sample,
+ordinary App or generated Core SDK qualification. No public Root/version/
+candidate/admission. Resume: Telemetry0.0.2 Core SDK/provider and ordinary sampler
+caller; full all18 engine/corpus/SDK/legal/catalog/Pi/release gates stay open.
