@@ -2,7 +2,7 @@
 
 ## 0. Status
 
-Task state: in-progress. Integration state: not-ready. Public admission: false.
+Task state: completed. Integration state: ready. Public admission: false.
 Base f5e7e14864de1a480b351872721ac6dc840215fc is clean synchronized public
 main. Reuse the completed projection workspace while retaining every old branch.
 This is public candidate-tool implementation, not compiler governance repair.
@@ -47,21 +47,29 @@ exact18 ledger-selected roots. Old candidate and full orientation still exit1.
 These are dirty implementation diagnostics; clean pushed-source rerun is pending.
 Independent review additionally reproduced18 licensed current roots receiving
 old22/140 closure with zero selected roots bound. That route defect stays open.
+Actual clean pushed implementation642c21a624ea112342e6c3836046f0882f22008c now
+passes all11 commands, raw ee0a1b48a9eb2e0d4d5f05c18fc14c66d2665cc272061b6d1ac9e5066e56c3df.
+Clean freeze2e5343151e57ba81d4c57c0b5400a85e7c9fc89043552008c24c6e5dfe7ef9ef
+preserves the exact same309/14/18/124 scope and actual two exit1 failures.
+Independent source review found no blocking issue; actual old/fixed comparison
+rejects12/12 omissions after repair and confirms old selection arrays unchanged.
+The old/current-route baseline is separately retained at raw
+0b470b3fc59628291f902100dfede070a791ab95c288720afa51813252275830.
 
 ## 4. Current Action
 
-Commit/push the bounded implementation, then run the actual clean-source checks
-before marking ready or integrating. Baseline and fixed diagnostics are retained.
-No policy,
+The source is ready for serialized integration against exact original
+f5e7e14864de1a480b351872721ac6dc840215fc. Rerun on actual merged main and retain
+source/target/merge input identities; no inherited source-only main PASS.
+Baseline and dirty/clean receipts remain distinct. No policy,
 license notice, first-party grant, selected package or artifact changes.
 
 ## 5. Next Actions
 
-1. Implement mandatory future delivery inputs and independent omission/drift tests.
-2. Exercise actual source-free product-only CLI search/resolve and regressions.
+1. Integrate the clean qualified source only if target/ownership remains exact.
+2. Rerun11 commands and frozen witness on actual clean merged main.
 3. Preserve old tags/identity files and all18 ledger-selected exact roots.
-4. Qualify a clean pushed source before serialized main integration.
-5. Continue actual root/SDK/legal/current-route/Pi/release gates separately.
+4. Continue actual root/SDK/legal/current-route/Pi/release gates separately.
 
 ## 6. Validation Commands
 
