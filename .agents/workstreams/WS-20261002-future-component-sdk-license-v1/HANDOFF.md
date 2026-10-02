@@ -2,7 +2,7 @@
 
 ## 0. Status
 
-Task state: in-progress. Integration state: not-ready. Public admission: false.
+Task state: completed. Integration state: ready. Public admission: false.
 Base58446f7ce50da2cff8e447913d28dbacaa45dae6 is the clean synchronized public
 target. This is an independent release-tool guard repair, not a private compiler
 history correction, new Lib qualification or release.
@@ -16,7 +16,7 @@ Owning Skill: release-integrity. Old roots, grants and release identity are fixe
 
 ## 2. Current Focus
 
-The future guard currently recognizes bindings.rust_core only. A manifest with
+The original future guard recognized bindings.rust_core only. A manifest with
 bindings.rust_component can retain a Cargo declaration while its Cargo file is
 removed from both inventories, or alter the declared path/digest, and still PASS.
 Actual current roots are four Component SDKs plus one Core SDK; this defect is
@@ -32,31 +32,33 @@ before license binding; carried-but-undeclared SDKs remain checked.
 Five positive cases and185 actual negatives PASS; eight related regressions
 PASS. Independent review confirms no validator replacement, profile preference
 or refusal counted without execution. evidence.json pins code/checker digests
-and original full private receipts. These are dirty START-bound runs until the
-clean implementation commit is actually rerun, not yet a clean-source PASS.
-Frozen witness b25519e1441186d7f9d81ae491abca9a533d4b3957c526928166090b4a8deef8
+and original full private receipts. Exact clean pushed implementation
+6a88eaf05392d52bde9f746f7e68fdc41de798de was actually rerun: all9 commands exit0,
+receipt e9309f28c23616e8dc624f9933c3256b2a07a059b70f7cc0e7adf9153b76f5d4.
+Corrected frozen witness59e027d2753ec9d391865f48a6e37c1e47472761dbdc22d1e781f4b2cd81960c
 reopens309 immutable Git product files, checks9 unchanged current identity files
-and124 unchanged files across all18 selected roots against the public base.
+and124 unchanged files across all18 ledger-selected exact id/version/root tuples.
+The earlier id-only witness selected relational0.0.1 instead of target0.0.2;
+it is retained but superseded, not exact-target evidence. Independent review
+caught this; the corrected relational root is libs/wasmc-data-relational-v002.
 Old candidate verify exits1 with product drift rejected; full orientation exits1
 at the existing scripts/lib-catalog.mjs identity mismatch. Neither is relabeled PASS.
 
 ## 4. Current Action
 
-Task state: in-progress
+Task state: completed
 
-Repair is implemented; preserve the independent baseline failure and fixed
-structural/regression evidence, verify old identity and unchanged root bytes,
-then commit/push and actually requalify the clean source before ready-state.
+Repair and clean-source structural/regression qualification are complete.
+The exact target remains58446f7ce50da2cff8e447913d28dbacaa45dae6 for serial integration;
+later target drift requires revalidation. This is branch-local ready, not main truth.
 No Host API, compiler, producer, SDK payload, package root or grant changes.
 
 ## 5. Next Actions
 
-1. Preserve original START, checker and actual baseline FAIL.
-2. Commit/push the bounded code/evidence checkpoint with all review/state trailers.
-3. Actually rerun the clean pushed source and retain exact outputs/exits.
-4. Preserve unchanged immutable identity/root witnesses; recheck exact public main
-   target before marking this branch ready or serial integration.
-5. Leave full18 legal/runtime/SDK/catalog/candidate/Pi/release gates open.
+1. Recheck clean branch/upstream and exact public main target, then integrate serially.
+2. Rerun actual main guard/regressions and immutable/ledger-root checks; retain
+   baseline FAIL and both superseded/corrected witness records.
+3. Leave full18 legal/runtime/SDK/catalog/candidate/Pi/release gates open.
 
 ## 6. Validation Commands
 

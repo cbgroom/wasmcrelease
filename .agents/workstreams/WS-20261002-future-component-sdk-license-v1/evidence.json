@@ -2,7 +2,7 @@
   "schema": "wasmc.future-component-sdk-license-qualification/v1",
   "base_commit": "58446f7ce50da2cff8e447913d28dbacaa45dae6",
   "start_commit": "8f8a8309d35541642259d3fc894c5fa901fc8511",
-  "qualified_clean_product_commit": null,
+  "qualified_clean_product_commit": "6a88eaf05392d52bde9f746f7e68fdc41de798de",
   "scope": "Structural declared Core/Component SDK Cargo and license binding only; no legal/dependency/runtime/all18 admission/candidate/release claim",
   "same_checker_sha256": "5f21fbccbf0346f3caf8106a2a5e7e3f013eee3d4ef6806840579b96ddb3c746",
   "baseline_guard_sha256": "b79425017fa32f8f9dee5dac2b4725dcdaa5b604a92252c1d8813467e9c4b3b6",
@@ -104,10 +104,27 @@
     "checker_sha256": "5f21fbccbf0346f3caf8106a2a5e7e3f013eee3d4ef6806840579b96ddb3c746",
     "scope": "same old/fixed validator bytes and real rejections; no fake validator or profile preference"
   },
-  "exact_clean_rerun_pending": true,
+  "exact_clean_rerun_pending": false,
+  "clean_qualification": {
+    "source_commit": "6a88eaf05392d52bde9f746f7e68fdc41de798de",
+    "working_tree_clean": true,
+    "raw_receipt_sha256": "e9309f28c23616e8dc624f9933c3256b2a07a059b70f7cc0e7adf9153b76f5d4",
+    "node": "v26.5.1",
+    "commands": 9,
+    "all_actual_exits_zero": true,
+    "positive_controls": 5,
+    "negative_controls": 185,
+    "related_regressions": 8,
+    "input_digests_match_dirty_fixed_receipt": true,
+    "scope": "Exact clean pushed guard/checker rerun; historical22/140 regressions do not prove current all18 route or release readiness"
+  },
   "frozen_witness": {
-    "source_commit": "8f8a8309d35541642259d3fc894c5fa901fc8511",
-    "raw_receipt_sha256": "b25519e1441186d7f9d81ae491abca9a533d4b3957c526928166090b4a8deef8",
+    "source_commit": "6a88eaf05392d52bde9f746f7e68fdc41de798de",
+    "working_tree_clean": true,
+    "raw_receipt_sha256": "59e027d2753ec9d391865f48a6e37c1e47472761dbdc22d1e781f4b2cd81960c",
+    "target_root_authority": "catalog/current-v2-migration.json exact id/version/root tuples at base",
+    "target_root_authority_sha256": "716ae90e2d2630ffd2e71b281c1cecb1618f99554ba8e9dea9647ce34186f47e",
+    "relational_exact_root": "libs/wasmc-data-relational-v002",
     "immutable_tag_oid": "cf34c61a95d3c9d63ad7e85576cf3c65a4bef6e9",
     "immutable_commit": "4674d65c2650e6cbdddc3a4d0f4510911ae97ea3",
     "immutable_product_set_sha256": "081f07a045c6ac58b8526c1e38c7e9f59e65663981cc7ed9b93825b4795bfc94",
@@ -119,7 +136,11 @@
     "old_candidate_failure": "product drift rejected",
     "whole_orientation_exit": 1,
     "whole_orientation_failure": "manifest identity mismatch: scripts/lib-catalog.mjs",
-    "scope": "Immutable Git objects rechecked and current roots/identities unchanged against base; existing current-side future drift remains rejected, not full maintainer PASS"
+    "scope": "Immutable Git objects rechecked and ledger-selected roots/identities unchanged against base; existing current-side future drift remains rejected, not full maintainer PASS"
+  },
+  "superseded_frozen_witnesses": {
+    "raw_receipt_sha256": ["b25519e1441186d7f9d81ae491abca9a533d4b3957c526928166090b4a8deef8", "1814a36789c85576988657ad0b70ce21c3d0fa856fd49c0e88d585875397e770"],
+    "reason": "id-only historical first-match chose relational0.0.1 rather than ledger0.0.2. Their tag/identity checks remain observed, but they are not original-all18 exact-root evidence; original raw receipts retained. Corrected count is coincidentally also124."
   },
   "whole_maintainer_pass": false,
   "all18_qualified": false,
