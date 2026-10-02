@@ -1,6 +1,6 @@
 # Telemetry default build profile
 
-Task state: started. Integration state: not-ready. Future source only.
+Task state: in-progress. Integration state: not-ready. Future source only.
 
 Objective: default reviewed telemetry source must expose its declared standard
 WIT Component API; preserve an explicit native-only opt-out.
@@ -28,5 +28,18 @@ and retained original notices; focused license/route gates; git diff --check.
 Cache: existing shared consumer pool only, one writer;12GiB/80percent,100GiB
 free floor,0.5GiB growth. No cold cache removal or new heavyweight target.
 
-Resume point: after this START is pushed, implement only the three claimed
-product paths and execute private producer gates. Full all18 closure stays open.
+Result so far: default and native-only profiles each pass27/27 unit tests,
+zero ignored. Default Wasm42008bytes SHA256
+30fd235f2c030f1fbaae39b5248f4495ce99a8731daf6f72f22262ca608a63fe
+decodes the unchanged WIT and declares only the exact two canonical resource
+intrinsics. Native-only Wasm is rejected by the new read-only artifact checker.
+Default metadata resolves34 packages, not the old native-only one-package graph.
+Raw telemetry-default-profile-36zS9u/RECEIPT.json SHA256
+75ce422a5d08805e80c20fc3afef8672f2874c0afd8443d2944d32df450d1c49.
+The initial checker incorrectly assumed a custom-section name and then import
+ordering; original failures remain retained. Final gate uses standard WIT decode
+and exact duplicate-sensitive import-set comparison, without an order promise.
+
+Resume point: rebind actual default dependency notices to the committed source,
+build/reopen the private licensed Root, run the source-free Component lifecycle
+consumer, then qualify exact source before integration. Full all18 stays open.
