@@ -1,5 +1,28 @@
 # WAsmC release maintainer handoff
 
+## 2026-10-02 Future Lib CLI and license delivery-input closure
+
+Serialized source9b5ab58cb8fd301bc604f0d47a1c9e8256bac1ad is integrated against
+targetf5e7e14864de1a480b351872721ac6dc840215fc. Clean implementation
+642c21a624ea112342e6c3836046f0882f22008c passes11 commands, including40 actual
+refusals and3 bounded product-only commands. The unchanged independent checker
+actually fails on the original validator accepting omitted LICENSE inventory.
+Future candidate creation/reopen now binds12 canonical public Lib CLI and
+license/notice inputs. No new helper dependency or maintainer wrapper/.agents
+delivery; no grant, policy content, notice pin, root, compiler or Host API changed.
+Clean source test raw ee0a1b48a9eb2e0d4d5f05c18fc14c66d2665cc272061b6d1ac9e5066e56c3df;
+freeze2e5343151e57ba81d4c57c0b5400a85e7c9fc89043552008c24c6e5dfe7ef9ef
+reopens309 immutable tag files and preserves14 inputs and124 files across exact
+18 ledger-selected roots. Old candidate/orientation actual failures stay retained.
+Actual clean merged-main rerun remains pending; source-only PASS is not main PASS.
+Independent current-route probe raw0b470b3fc59628291f902100dfede070a791ab95c288720afa51813252275830
+confirms18 licensed/resolved synthetic current roots can receive old22/140 route
+closure with zero current roots bound. This slice does not repair that route gap.
+Next: qualify this actual main, then future-only selected18 catalog/WIT/index/
+Search identity closure and actual search/install authority. Full18 legal/runtime/
+SDK/dependency/precise-candidate Pi/release gates remain open; no new candidate.
+Owning task: WS-20261002-future-product-input-closure-v1.
+
 ## 2026-10-02 Declared Component SDK future license guard
 
 Serialized source01a692fcd07c5fead68cde0e08599d906dc07722 contains clean qualified

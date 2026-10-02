@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import {all18Targets,needsFutureLibLicenseGate,validateFutureLibLicenses} from './future-lib-license-admission.mjs';
-import {validateCandidate} from './release-candidate.mjs';
+import {validateCandidate,futureLibProductInputs} from './release-candidate.mjs';
 const hash=b=>createHash('sha256').update(b).digest('hex');
 const ledger=JSON.parse(readFileSync(new URL('../catalog/current-v2-migration.json',import.meta.url)));
 assert.deepEqual([...ledger.migrated,...ledger.backlog].map(x=>x.id).sort(),all18Targets);
@@ -47,6 +47,10 @@ reject(f=>{const m=f.json(manifest(f));m.bindings={rust_core:{cargo_toml:{path:'
 reject(f=>{const p=`${f.packages[0].root}/LICENSE`,b=Buffer.from([0]),m=f.json(manifest(f));m.license.files[0]={path:'LICENSE',bytes:1,sha256:hash(b)};f.write(manifest(f),m);f.bytes.set(p,b);const c=f.json(catalog);for(const x of c.packages[0].files){const v=f.bytes.get(x.path);x.bytes=v.length;x.sha256=hash(v);}f.write(catalog,c);});
 positive.candidate.lib_license_admission=receipt;
 positive.candidate.lib_route_closure={schema:'wasmc.release-candidate-lib-route-closure/v1',authority_receipt:{path:'receipt.json',sha256:'a'.repeat(64)},catalog:{path:catalog,sha256:'a'.repeat(64)},search_index:{path:'index.lsi',sha256:'a'.repeat(64)},release_packages:18,package_routes:18,api_routes:1,candidate_extras:0,exact:true,candidate_extra_grants_release:false};
+// This remains a structural license fixture. Candidate-level validation also
+// requires its actual public delivery inputs; it does not qualify their behavior.
+for(const path of futureLibProductInputs(positive.candidate.version))if(!positive.bytes.has(path))positive.bytes.set(path,readFileSync(new URL('../'+path,import.meta.url)));
+positive.refresh();
 assert.equal(validateCandidate(positive.candidate,positive.read),true);
 positive.candidate.lib_license_admission.targets[0].manifest_sha256='0'.repeat(64);
 assert.throws(()=>validateCandidate(positive.candidate,positive.read),/license receipt rejected/);negative++;
