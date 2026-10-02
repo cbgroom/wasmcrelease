@@ -7,7 +7,7 @@ import {join,dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {spawnSync} from 'node:child_process';
 import * as validator from './release-candidate.mjs';
-import {all18Targets,validateFutureLibLicenses} from './future-lib-license-admission.mjs';
+import {makeRouteFixture} from './test-future-current-route-fixture.mjs';
 
 const root=fileURLToPath(new URL('../',import.meta.url));
 const sha=b=>createHash('sha256').update(b).digest('hex');
@@ -20,21 +20,9 @@ const required=[
   'scripts/release-candidate.mjs','scripts/wasmc-lib.mjs'
 ];
 function fixture(){
-  const bytes=new Map(),packages=[];
-  const put=(path,data)=>{const b=Buffer.from(data);bytes.set(path,b);return {path,bytes:b.length,sha256:sha(b)};};
-  for(const id of all18Targets){
-    const packageRoot=`current-libs/${id}/9.0.0`,license=Buffer.from('Structural research fixture.\n');
-    const manifest={schema:'wasmc.lib/v2',id,version:'9.0.0',license:{schema:'wasmc.lib-license/v1',identifier:'fixture',files:[{path:'LICENSE',bytes:license.length,sha256:sha(license)}]}};
-    const files=[put(packageRoot+'/LICENSE',license),put(packageRoot+'/lib.json',JSON.stringify(manifest))];
-    packages.push({id,version:'9.0.0',root:packageRoot,files});
-  }
-  for(const p of required)if(p!=='catalog/libs-current-v2.json')put(p,readFileSync(join(root,p)));
-  put('catalog/libs-current-v2.json',JSON.stringify({schema:'wasmc.public-lib-catalog/v1',packages}));
-  const candidate={schema:'wasmc.release-product-candidate/v2',version:'0.0.21',compiler_source_authority:'a'.repeat(40),lib_source_authority:'b'.repeat(40),lib_route_closure:{schema:'wasmc.release-candidate-lib-route-closure/v1',authority_receipt:{path:'fixture-receipt.json',sha256:'a'.repeat(64)},catalog:{path:'catalog/libs-current-v2.json',sha256:'b'.repeat(64)},search_index:{path:'fixture-index.lsi',sha256:'c'.repeat(64)},release_packages:18,package_routes:18,api_routes:1,candidate_extras:0,exact:true,candidate_extra_grants_release:false}};
-  const refresh=()=>{candidate.product_files=[...bytes].map(([path,b])=>({path,bytes:b.length,sha256:sha(b)})).sort((a,b)=>a.path<b.path?-1:a.path>b.path?1:0);candidate.product_set_sha256=sha(JSON.stringify(candidate.product_files));};
-  const read=p=>{assert(bytes.has(p),`fixture bytes missing: ${p}`);return bytes.get(p);};
-  refresh();candidate.lib_license_admission=validateFutureLibLicenses(candidate,read);
-  return {candidate,bytes,refresh,read};
+  // Full independent route/actual synthetic Wasm fixture: a delivery-input-only
+  // fake closure must not bypass the new future route obligation.
+  return makeRouteFixture();
 }
 const good=fixture();
 assert.equal(validator.validateCandidate(good.candidate,good.read),true);

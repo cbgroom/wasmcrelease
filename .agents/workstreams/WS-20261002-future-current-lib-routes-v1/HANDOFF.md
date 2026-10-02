@@ -26,12 +26,27 @@ Actual current Search Core still exposes old162-entry paths, not current roots.
 
 Read public instructions, narrow Skills and live main/linked checkout. Read-only
 82 remote work-ref review:73 ancestors,9 remaining, no selected-path overlaps.
-Other historical refs remain unqualified/preserved. No implementation or actual
-policy/receipt/package change has been made at START.
+Other historical refs remain unqualified/preserved. START5c8090210779d2ba8ce387b20d00a22cf18bfcb9
+was pushed before implementation. The final identical checker actually fails
+clean main137 at accepting old22/140, not at import or fake execution; raw
+e16c9dc48a407673728bc5e5e7c3caae2eb5cdbeb3bf480d595fbd076013059f.
+The inline future gate binds selected18 catalog, selected WIT world/signatures,
+all LSI fields/flags/parents and active Search manifest/Core/declared-or-carried
+Component. Recursive resource uses and external exact selected WIT packages are
+handled; full WIT compilation remains separate. Literal BOM is not erased.
+The existing typed Search consumer executes in a bounded disposable Node child.
+Independent actual Core fixtures cover18/95:4 positives,165 actual refusals and
+1110 synthetic observable calls. A valid full-export Core loop is really ended
+with ETIMEDOUT. All13 dirty diagnostic commands pass, raw
+814f7ca60a97167e401d2440a283608a5105f1d7999630a6878421fda972b249.
+Earlier raw3f111bf766cede59a966472ffbdc7203ea3440100b27e799c635593f3d8aa5cb
+retains a real missing-catalog fixture preparation failure; it is not PASS.
+Independent read-only reviews found no bounded-scope blocker after fixes.
+No actual policy/receipt/catalog/package change. Clean-source rerun is pending.
 
 ## 4. Current Action
 
-Push START before bounded public gate/test changes. Require separately reviewed
+Commit focused implementation, then rerun actual clean pushed source. Require separately reviewed
 future_route_authority policy pin, exact receipt/catalog/index and active Search
 within18; do not invent that missing actual authority. Strict selected-world WIT
 signatures and complete LSI paths/parents/UTF-8/bounds; actual Search Core executes

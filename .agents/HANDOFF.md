@@ -1,5 +1,23 @@
 # WAsmC release maintainer handoff
 
+## 2026-10-02 Future selected18 current-route closure
+
+Task WS-20261002-future-current-lib-routes-v1 starts at pushed5c809021 against
+clean synchronized main137022b0e66b2c22bb809850ca5d0c69d2a5f89a. Future candidates
+now derive selected18 current catalog/WIT signatures/index paths/parents and
+active Search pins from inventoried bytes; old22/140 is legacy only. The existing
+typed Search Core really executes in an isolated bounded Node child. Same final
+checker fails old main at accepted22/140 (raw e16c9dc48a407673728bc5e5e7c3caae2eb5cdbeb3bf480d595fbd076013059f).
+Fixed dirty13commands PASS with4 fixture positives/165 actual route negatives,
+including literal BOM, selected worlds/resource uses and real Core loop timeout;
+raw814f7ca60a97167e401d2440a283608a5105f1d7999630a6878421fda972b249.
+Source clean and actual integrated-main qualifications remain pending. No actual
+policy/receipt/root/CLI/grant or old-release identity change; actual missing
+reviewed pin blocks future selection. This is synthetic gate evidence, not real
+18 build/SDK/legal/Component/dual-engine/Pi/release PASS. Existing consumer strict
+Canonical ABI tags and general query semantics remain separate. Private source
+governance repair still awaits separately requested authorization.
+
 ## 2026-10-02 Future Lib CLI and license delivery-input closure
 
 Serialized source9b5ab58cb8fd301bc604f0d47a1c9e8256bac1ad is integrated against

@@ -3,6 +3,7 @@ import {readFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import {all18Targets,needsFutureLibLicenseGate,validateFutureLibLicenses} from './future-lib-license-admission.mjs';
 import {validateCandidate,futureLibProductInputs} from './release-candidate.mjs';
+import {makeRouteFixture} from './test-future-current-route-fixture.mjs';
 const hash=b=>createHash('sha256').update(b).digest('hex');
 const ledger=JSON.parse(readFileSync(new URL('../catalog/current-v2-migration.json',import.meta.url)));
 assert.deepEqual([...ledger.migrated,...ledger.backlog].map(x=>x.id).sort(),all18Targets);
@@ -51,7 +52,10 @@ positive.candidate.lib_route_closure={schema:'wasmc.release-candidate-lib-route-
 // requires its actual public delivery inputs; it does not qualify their behavior.
 for(const path of futureLibProductInputs(positive.candidate.version))if(!positive.bytes.has(path))positive.bytes.set(path,readFileSync(new URL('../'+path,import.meta.url)));
 positive.refresh();
-assert.equal(validateCandidate(positive.candidate,positive.read),true);
-positive.candidate.lib_license_admission.targets[0].manifest_sha256='0'.repeat(64);
-assert.throws(()=>validateCandidate(positive.candidate,positive.read),/license receipt rejected/);negative++;
+// License-only structural success cannot stand in for a current-route authority.
+assert.throws(()=>validateCandidate(positive.candidate,positive.read),/current-route authority pin required/);negative++;
+const complete=makeRouteFixture();
+assert.equal(validateCandidate(complete.candidate,complete.read),true);
+complete.candidate.lib_license_admission.targets[0].manifest_sha256='0'.repeat(64);
+assert.throws(()=>validateCandidate(complete.candidate,complete.read),/license receipt rejected/);negative++;
 console.log(JSON.stringify({accepted:true,targets:18,negative_controls:negative,scope:'structural license/catalog/product/SDK binding only; no legal, notice completeness, runtime or public release claim'}));
