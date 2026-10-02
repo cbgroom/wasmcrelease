@@ -4,8 +4,10 @@
 
 Task state: completed. Integration state: merged. Public admission: false.
 Serial source01a692fcd07c5fead68cde0e08599d906dc07722 is integrated against
-target58446f7ce50da2cff8e447913d28dbacaa45dae6. Actual clean main post-push
-requalification is pending; source PASS does not replace that combined-tree gate.
+target58446f7ce50da2cff8e447913d28dbacaa45dae6. Actual clean pushed main
+a75ba1dc8c7ac0c46c470b306021e18660aa1a7c passes all9 commands with23 exact
+input digests equal; ledger-root/old-identity witness also reran on that main.
+integration-evidence.json pins both actual receipts; whole-maintainer remains FAIL.
 Base58446f7ce50da2cff8e447913d28dbacaa45dae6 is the clean synchronized public
 target. This is an independent release-tool guard repair, not a private compiler
 history correction, new Lib qualification or release.
@@ -59,9 +61,10 @@ No Host API, compiler, producer, SDK payload, package root or grant changes.
 
 ## 5. Next Actions
 
-1. Verify clean pushed main and rerun actual main guard/regressions and immutable/ledger-root checks; retain
-   baseline FAIL and both superseded/corrected witness records.
-2. Leave full18 legal/runtime/SDK/catalog/candidate/Pi/release gates open.
+1. Preserve clean main/source qualifications, baseline FAIL and superseded/corrected
+   witnesses. Later code, root or target drift needs a new bounded check.
+2. Continue actual18 successor-root, legal/runtime/SDK/current-candidate route and
+   exact-candidate Pi/release gates; this structural guard is already integrated.
 
 ## 6. Validation Commands
 

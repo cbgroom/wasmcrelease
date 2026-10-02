@@ -17,11 +17,16 @@ files and124 files across the exact18 target roots; raw SHA
 59e027d2753ec9d391865f48a6e37c1e47472761dbdc22d1e781f4b2cd81960c.
 Old raw witnesses are retained as superseded, not exact-all18 evidence. No root,
 SDK payload, grant, compiler or Host API changes; no new candidate/publication.
-Actual main requalification is next, before calling the combined tree PASS.
+Actual clean pushed maina75ba1dc8c7ac0c46c470b306021e18660aa1a7c was requalified:
+new checker plus8 regressions all exit0; all23 inputs equal the qualified source.
+Raw tests8aab54d574666341dc96be31437762b10d5ad5dff76e264142bdeaf4575aa7f3;
+actual main exact-ledger freeze1cfaadfec8edf9c728de4502c42cceb35601dd2f7cea516f4c38dbe14b470e62.
 Full maintainer still rejects the existing lib-catalog frozen mismatch; old0.0.20
 candidate still rejects future drift. Do not refresh the old release identity.
 Full18 legal/dependency/runtime/SDK/current-route/Pi/release gates remain open.
-Owning evidence and exact next gates: WS-20261002-future-component-sdk-license-v1.
+Owning integration-evidence.json: WS-20261002-future-component-sdk-license-v1.
+Next: actual18 successor roots and current-candidate route/dependency closure,
+then legal/runtime/SDK and exact-candidate Pi gates; no percentage promotion.
 
 ## 2026-10-02 Current-side control-plane projection convergence
 
