@@ -74,5 +74,11 @@ absolute source path yields all15 files and complete producer stdout identical
 within exact toolchain fingerprint. Wasmi2.0.0 complete Core validation and128
 constructor/refresh/frame/post-return/destructor rounds PASS; not sample,
 ordinary App or generated Core SDK qualification. No public Root/version/
-candidate/admission. Resume: Telemetry0.0.2 Core SDK/provider and ordinary sampler
-caller; full all18 engine/corpus/SDK/legal/catalog/Pi/release gates stay open.
+candidate/admission. Follow-up actual raw-Core Wasmi2.0.0 versus Component
+Wasmtime49.0.0 sample differential passes128 rounds/512sample calls per engine;
+768 actual observations match exactly, including complete frame encoding and
+transactional missing-input recovery. Receipt/hash/scope in integration-evidence.
+This retains caller-owned canonical glue, not a generated Core SDK or ordinary
+App claim. Resume: general Core SDK resource/record/sum input and result support,
+Telemetry0.0.2 Core SDK/provider and ordinary sampler caller; full all18 engine/
+corpus/SDK/legal/catalog/Pi/release gates stay open.

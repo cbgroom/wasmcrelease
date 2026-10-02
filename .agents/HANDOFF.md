@@ -48,8 +48,20 @@ target124080128bytes <256MiB, wrappers disabled, shared registry inputs only.
 Determinism remains bound to exact toolchain fingerprint2e4e27cb; no cross-
 toolchain claim. Exact receipt/digest/scope pins are in the owning workstream's
 integration-evidence.json. No public package or release identity changed.
-Next: Telemetry0.0.2 Core SDK/provider, Wasmi sample differential and ordinary
-sampler caller. Full Wasmi corpus,
+Wasmi sample differential is now measured on those exact Core/Component bytes:
+128 rounds per engine/512 actual sample calls per engine yield768 identical
+observations (first/cached/recovered frame all fields, missing-input, full64-byte
+encoding and clock-regressed). Paired receipt SHA256
+6afc13ded25f756d46d2b10ae27dcefeacfba31f1202eba9151a201bdc5f5c96;
+observation stream SHA256
+6fe0518be2c2638e5f713d9f518b7db16f0e08e82c19164642f5614678000f65.
+Wasmi uses caller-owned canonical glue, not a generated SDK or ordinary App.
+Current producer's typed-resource Core SDK algebra rejects managed/aggregate
+transports and admits only finite scalar/resource adapters; default Core SDK
+selection is freestanding scalar-only. Telemetry's option<string> record input
+and result<frame,error> therefore require a general SDK/ABI extension, not a
+Telemetry-named exception or Host API. Preserve current failure boundaries.
+Next: Telemetry0.0.2 Core SDK/provider and ordinary sampler caller. Full Wasmi corpus,
 complete SDK callers, independent cold determinism, compatibility and all18
 admission remain open. The20 calls are bounded smoke, not a full corpus gate.
 Additional input preparation at source5e7cc8403a8e1f707211dd31f799f08511368fab:
