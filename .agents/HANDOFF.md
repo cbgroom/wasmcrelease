@@ -3,6 +3,31 @@
 ## 2026-10-02 Future all18 license admission guard
 
 Task state: in-progress — full all18 release closure is not complete.
+Additional input preparation at source5e7cc8403a8e1f707211dd31f799f08511368fab:
+all11 canonical public Rust source roots have offline locked metadata and exact
+bounded research-license/dependency notice snapshots prepared privately. Original
+registry notice bytes are independently reopened; every snapshot is below the
+existing2MiB/32file/256KiB bounds. Telemetry resolves no third-party Cargo package
+in this input graph; this does not qualify its missing real provider or runtime.
+Preparation receipt SHA256
+1f7bc57376f4eb91899b32f577a619baae6eec44a04f499ba8c731d3f644e562;
+independent reopen SHA256
+4fe2d130fdda71e9fac95257996b73c027f94d94ad076a258f1eaf674396acc3.
+The first preparation stopped on flatbuffers25.12.19 lacking bundled license
+text. Its exact crate VCS commit7e163021e59cca4f8e1e35a7c828b5c6b7915953,
+archive checksum and byte-identical upstream Cargo manifest now bind the original
+upstream LICENSE Git Blob; complete root/Rust-subtree inventory has no other
+license/notice text. Supplement receipt SHA256
+5326ce8db1bd7f72d450be72f9dda78a877d414d98cbf43bea50e88ccf8b186c.
+This is private future build input preparation, not fresh Lib/SDK or legal proof.
+New issue: validate-license-policy.mjs globally rejects the exact MIT License
+heading present in legitimate prepared third-party notices. No notices have been
+imported publicly yet. Next repair must allow only identity-bound declared
+third-party notice data while retaining first-party noncommercial-grant checks;
+never delete required notice text or add a blanket directory/path exemption.
+Heavy builds remain stopped below the100GiB free-space floor. Compression/removal
+of three exact inactive cold caches was asked separately; no answer or permission
+is inferred from automatic continuation. Current warm pools/source remain intact.
 Integrated source bfb37a1e99379594329d3dccf533136e5ec19696 adds a future-only
 candidate create/reopen guard for versions after immutable0.0.20. The original
 18 target identities cannot be reduced by editing migration counts. Every
