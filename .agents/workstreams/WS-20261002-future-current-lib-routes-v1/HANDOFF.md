@@ -2,7 +2,9 @@
 
 ## 0. Status
 
-In-progress, not-ready, public admission=false. START is metadata only against
+Completed, ready, public admission=false. Clean pushed implementation
+2f5efe2738de200210614b63ce7d580b4f9eb630 passes13commands. Actual-main rerun remains
+pending. START is metadata only against
 clean synchronized main137022b0e66b2c22bb809850ca5d0c69d2a5f89a. Reuse the clean
 completed linked checkout; preserve every earlier branch and source checkpoint.
 
@@ -42,11 +44,16 @@ with ETIMEDOUT. All13 dirty diagnostic commands pass, raw
 Earlier raw3f111bf766cede59a966472ffbdc7203ea3440100b27e799c635593f3d8aa5cb
 retains a real missing-catalog fixture preparation failure; it is not PASS.
 Independent read-only reviews found no bounded-scope blocker after fixes.
-No actual policy/receipt/catalog/package change. Clean-source rerun is pending.
+No actual policy/receipt/catalog/package change. Actual clean pushed source2f5efe2
+passes13commands, raw0c09b90fbd692efa26e41a7957139bfb5983960aaa705516cb66554c76e1a8ad.
+Clean freeze823fb78727da2d4c3aa6032b9b87192dd55c072cf283362a29338629a5c8cf82
+preserves309immutable product files,14protected inputs and124files across exact18
+ledger-selected roots. Old candidate and whole orientation still really exit1.
 
 ## 4. Current Action
 
-Commit focused implementation, then rerun actual clean pushed source. Require separately reviewed
+Integrate reviewed source against unchanged main137, then rerun actual merged
+main independently. Require separately reviewed
 future_route_authority policy pin, exact receipt/catalog/index and active Search
 within18; do not invent that missing actual authority. Strict selected-world WIT
 signatures and complete LSI paths/parents/UTF-8/bounds; actual Search Core executes
