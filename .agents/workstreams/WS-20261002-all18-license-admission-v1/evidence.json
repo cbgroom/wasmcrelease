@@ -1,0 +1,24 @@
+{
+  "schema": "wasmc.future-license-guard-public-evidence/v1",
+  "base_commit": "4ca6374da5521d25b3c1c0449d1c6dfb9cffe811",
+  "start_commit": "5b872fa521bbf7c5a7203107cc62dbffbabc611b",
+  "required_targets": 18,
+  "negative_controls": 18,
+  "checks": {
+    "future_license_guard": "PASS",
+    "historical_candidate_route_control": "PASS",
+    "current_v2_catalog": "PASS",
+    "current_v2_closure": "PASS",
+    "license_policy": "PASS",
+    "new_candidate_with_only_five_roots": "REJECT all18 selected roots required",
+    "old_v020_candidate": "REJECT product drift rejected",
+    "full_maintainer": "NOT PASS: pre-existing lib-catalog manifest mismatch"
+  },
+  "unchanged_base_files": ["release.json", "manifest.json", "provenance.json", "SHA256SUMS", "channels/candidates/0.0.20.json", "channels/prod.json", "catalog/current-v2-migration.json", "catalog/libs-current-v2.json"],
+  "private_raw_receipt_sha256": "021c72135923c3d941582852d3d04d94b8d0723d2d4f5a4ac0462fcbc56d2ec9",
+  "prior_probe_error": "Test used localeCompare instead of canonical code-unit product ordering; test corrected, product validator unchanged.",
+  "public_admission": false,
+  "legal_compatibility": false,
+  "dependency_notice_completeness": false,
+  "runtime_qualification": false
+}
