@@ -21,7 +21,12 @@ CDN and verify the separate compiler manifest. Task state/resume/evidence is in
 docs/COMPILER_CURRENT_HANDOFF.md. User approved the two exact JS carrier/digest
 classifications on2026-10-04; security regression preserves raw-only rejection,
 deleted credential detection and altered-current-carrier rejection. Compiler
-integrity/qualification still PASS. Product/main push and CDN readback are next.
+integrity/qualification PASS. Completed: product commit
+e2ff847ef643b89fe92de5d093b7b1ccfd53e7c7 pushed to main; GitHub Raw and jsDelivr
+full-commit Wasm/ESM/compiler-manifest downloads are byte-identical, and each
+downloaded ESM passes five frozen-source outputs plus scalar execution.
+All-reachable strict scan accepted with zero unresolved findings. Completion
+receipt and pinned URLs are in docs/COMPILER_CURRENT_HANDOFF.md.
 
 ## 2026-10-02 Future selected18 current-route closure
 

@@ -1,6 +1,24 @@
 # Current compiler distribution convergence
 
-Task state: in-progress — exact classification authorized; publication/readback next
+Task state: completed — main published and exact-commit CDN readback verified
+
+Completion receipt (2026-10-04): public product commit
+e2ff847ef643b89fe92de5d093b7b1ccfd53e7c7 was fast-forwarded to main and pushed.
+GitHub Raw and jsDelivr full-commit downloads each verified three exact files:
+current/wasmc_compiler.wasm, current/wasmc.mjs and current/compiler-release.json.
+Each downloaded self-contained ESM compiled all five frozen sources with exact
+output digests and passed the scalar execution oracle. Wasm is 1,442,266 bytes,
+SHA256 032a408b7435333f65f3bc80ef2f5646edf829698bc384a276076bff8d64666a.
+Main pre-push all-reachable scan accepted: 11,209 objects, 5,948 blobs,
+173,644,010 raw bytes, zero skipped/errors/unresolved findings; seven raw
+findings retained with exact classifications. Singleton integrity accepted:
+one version, two raw carriers, three embeddings, 37 manifest subjects.
+This completion note is outside the qualified compiler manifest subjects.
+
+Pinned ESM:
+https://cdn.jsdelivr.net/gh/cbgroom/wasmcrelease@e2ff847ef643b89fe92de5d093b7b1ccfd53e7c7/current/wasmc.mjs
+Pinned raw Wasm:
+https://cdn.jsdelivr.net/gh/cbgroom/wasmcrelease@e2ff847ef643b89fe92de5d093b7b1ccfd53e7c7/current/wasmc_compiler.wasm
 
 Objective: publish the latest qualified source-free compiler and keep only one
 current compiler version in the repository HEAD served by jsDelivr. Historical
@@ -33,7 +51,7 @@ compiler digest. Historical Lib/provider/plan and old App fixture are unchanged.
 Whole-product v0.0.20 candidate rejects changed current product, as required;
 its global identity files were not refreshed. No all18/Pi/full-release PASS.
 
-Publication candidate4157786d9f042b472e743ed7b1709808ed1bc5f5 is local only.
+Historical blocker (resolved below): candidate4157786d9f042b472e743ed7b1709808ed1bc5f5 was local only.
 Post-commit all-reachable scan covers5941blobs/173452027bytes,zero skipped/errors,
 but rejects two unclassified AWS-format carrier findings. Each lies wholly in
 the sole canonical compiler Base64 literal and decodes to the exact pinned
@@ -48,6 +66,6 @@ User explicitly approved only the two exact carrier/digest classifications on
 Wasm validation/zero imports and all nine decoded-byte detectors remain strict.
 Changed current carriers are independently rejected by Git object identity.
 
-Resume: run security regressions and post-commit full scan; if accepted, push
-the workstream and fast-forward main without changing any old tags/Releases.
-Verify GitHub/jsDelivr full-commit downloads and record the completion receipt.
+Security regressions and post-commit full scan passed before publication.
+Old tags/Releases were not changed. No remaining compiler-only publication gate;
+whole-product pending gates stay with their existing owner.
