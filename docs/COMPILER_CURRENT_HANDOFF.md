@@ -1,6 +1,6 @@
 # Current compiler distribution convergence
 
-Task state: blocked — compiler qualified; explicit credential classification required
+Task state: in-progress — exact classification authorized; publication/readback next
 
 Objective: publish the latest qualified source-free compiler and keep only one
 current compiler version in the repository HEAD served by jsDelivr. Historical
@@ -43,9 +43,11 @@ credential-shaped values or their hashes were printed. Exact carrier objects:
 b1a46490f52a5f41b4187a72cd283666cc82f565. No scanner rule was changed and no
 product commit/main/tag was pushed. Remote branch retains the start checkpoint.
 
-Resume: request explicit authorization for only these two exact carrier/digest
-false-positive classifications, preserving raw findings and all strict decoded
-and outside-literal rejection checks. After authorization add narrow reviewed
-classification, run security regression and full scan, then push and FF main.
-Only then verify GitHub/jsDelivr full-commit downloads. If not authorized retain
-this candidate locally; do not bypass the scanner or publish the binaries.
+User explicitly approved only the two exact carrier/digest classifications on
+2026-10-04. Raw findings, exact-object matching, literal bounds, canonical decode,
+Wasm validation/zero imports and all nine decoded-byte detectors remain strict.
+Changed current carriers are independently rejected by Git object identity.
+
+Resume: run security regressions and post-commit full scan; if accepted, push
+the workstream and fast-forward main without changing any old tags/Releases.
+Verify GitHub/jsDelivr full-commit downloads and record the completion receipt.

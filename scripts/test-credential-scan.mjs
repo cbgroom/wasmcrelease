@@ -20,9 +20,21 @@ try {
  assert.ok(!negative.stdout.includes(value));assert.ok(!negative.stderr.includes(value));
  const report=JSON.parse(negative.stdout);assert.equal(report.findings.length,1);assert.equal(report.skipped_blobs,0);
  const original=scan(root,true);assert.equal(original.status,1);
- const raw=JSON.parse(original.stdout);assert.equal(raw.raw_findings.length,5);assert.equal(raw.classified_false_positives.length,0);
+ const raw=JSON.parse(original.stdout);assert.equal(raw.raw_findings.length,7);assert.equal(raw.classified_false_positives.length,0);
  const approved=scan(root);assert.equal(approved.status,0);
- const admitted=JSON.parse(approved.stdout);assert.equal(admitted.raw_findings.length,5);assert.equal(admitted.classified_false_positives.length,5);assert.equal(admitted.findings.length,0);
+ const admitted=JSON.parse(approved.stdout);assert.equal(admitted.raw_findings.length,7);assert.equal(admitted.classified_false_positives.length,7);assert.equal(admitted.findings.length,0);
+ for(const object of ['3e17b25116f868ab49b17f90021bbe7c061217ac','b1a46490f52a5f41b4187a72cd283666cc82f565']) {
+  const row=admitted.classified_false_positives.find(x=>x.object===object);
+  assert.equal(row.raw_match_count,1);assert.equal(row.decoded_all_detectors_clear,true);
+  assert.equal(row.decoded_sha256,'032a408b7435333f65f3bc80ef2f5646edf829698bc384a276076bff8d64666a');
+  const source=execFileSync('git',['cat-file','blob',object],{cwd:root,maxBuffer:8388608});
+  writeFileSync(join(test,'changed-current.mjs'),Buffer.concat([source,Buffer.from('\n// changed exact current carrier\n')]));
+  git(['add','changed-current.mjs']);git(['commit','-qm','changed current carrier']);
+  const changed=git(['rev-parse','HEAD:changed-current.mjs']).toString().trim();
+  const result=JSON.parse(scan(test).stdout);
+  assert.ok(result.findings.some(x=>x.object===changed&&x.detector==='aws_access_key_id'));
+  assert.ok(!result.classified_false_positives.some(x=>x.object===changed));
+ }
  const testKey=admitted.classified_false_positives.find(x=>x.detector==='private_key_pem');
  assert.equal(testKey.classification,'verified-repository-local-self-signed-test-fixture');
  assert.equal(testKey.scope,'localhost-and-127.0.0.1-only');assert.equal(testKey.production_authority,false);

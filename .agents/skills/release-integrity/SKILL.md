@@ -63,6 +63,14 @@ claim. Prerelease stages never advance the default prod discovery pointer.
 
 Raw credential hits must remain visible even after explicitly authorized false-positive classification. The 2026-09-13 approval admits only the two exact historical compiler-carrier Git blob identities in `scripts/scan-reachable-credentials.mjs`: AWS-format matches must lie wholly inside the canonical Base64 literal, decode to the fixed reviewed compiler digest, validate as import-free Core Wasm, and pass all nine detectors on decoded raw bytes. Unknown blobs/digests, extra or outside matches and any decoded finding reject. No path-wide ignore, history rewrite, skip or general detector exception is permitted. Keep `--raw-only` rejecting evidence and a committed-then-deleted credential negative test. Admission requires zero unresolved findings, zero skipped blobs and zero scan errors, not a false claim that raw findings never existed.
 
+The 2026-10-04 user approval additionally admits exactly the current compiler
+carriers `3e17b25116f868ab49b17f90021bbe7c061217ac` and
+`b1a46490f52a5f41b4187a72cd283666cc82f565`, decoded SHA256
+`032a408b7435333f65f3bc80ef2f5646edf829698bc384a276076bff8d64666a`.
+This changes only the exact reviewed tuple set, not detector/literal/decode/import
+rules. Preserve seven raw findings including the old cases; altered new carriers
+must still reject. Use `scripts/test-credential-scan.mjs` for these boundaries.
+
 Hash equality proves byte identity, not behavior. A release needs both package
 integrity checks and executable JavaScript/Rust behavior evidence. Report
 browser, CDN, deployment, AOT, or compatibility scope only when actually run.

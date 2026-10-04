@@ -45,6 +45,9 @@ const approvedCompilerCarriers=new Map([
  ['1a12d7ae32eb35885f6f2cbf472d9f82f4252440','8f79429d5499380d93abbb980df6c16a99adc15fee8987068906af11aa757027'],
  ['41cfc2fc022d0765cea60b4553af6b9130341d84','4e0b9779df3bf7b627d7d9fbfc43cfffd67bb053f87c69a9f832c5690b6888a2'],
  ['e23905ec739997d53768aea30f6b32de9dcce175','4e0b9779df3bf7b627d7d9fbfc43cfffd67bb053f87c69a9f832c5690b6888a2'],
+ // User-approved exact two-carrier classification, 2026-10-04.
+ ['3e17b25116f868ab49b17f90021bbe7c061217ac','032a408b7435333f65f3bc80ef2f5646edf829698bc384a276076bff8d64666a'],
+ ['b1a46490f52a5f41b4187a72cd283666cc82f565','032a408b7435333f65f3bc80ef2f5646edf829698bc384a276076bff8d64666a'],
 ]);
 const approvedLocalhostKeyObject='0b20b1e6ebbcaf67e8d5ce74cdb11984e66e8bbe';
 const approvedLocalhostCertObject='dc1c06887591f2761da5dbe98f564dbfb287df18';
@@ -61,7 +64,7 @@ function classifyCarrier(id,text,pattern){
  if(decoded.toString('base64')!==literal||createHash('sha256').update(decoded).digest('hex')!==approvedCompiler)return null;
  if(!WebAssembly.validate(decoded)||WebAssembly.Module.imports(new WebAssembly.Module(decoded)).length)return null;
  if(detectors.some(([,p])=>p.test(decoded.toString('latin1'))))return null;
- return {object:id,detector:'aws_access_key_id',raw_match_count:hits.length,classification:'verified-frozen-compiler-base64-false-positive',decoded_sha256:approvedCompiler,decoded_all_detectors_clear:true,authorization:approvedCompiler==='4e0b9779df3bf7b627d7d9fbfc43cfffd67bb053f87c69a9f832c5690b6888a2'?'v0.0.19 exact compiler carrier admission 2026-09-29':'user explicit narrow remediation approval 2026-09-13'};
+ return {object:id,detector:'aws_access_key_id',raw_match_count:hits.length,classification:'verified-frozen-compiler-base64-false-positive',decoded_sha256:approvedCompiler,decoded_all_detectors_clear:true,authorization:approvedCompiler==='032a408b7435333f65f3bc80ef2f5646edf829698bc384a276076bff8d64666a'?'user explicit exact two-carrier remediation approval 2026-10-04':approvedCompiler==='4e0b9779df3bf7b627d7d9fbfc43cfffd67bb053f87c69a9f832c5690b6888a2'?'v0.0.19 exact compiler carrier admission 2026-09-29':'user explicit narrow remediation approval 2026-09-13'};
 }
 function classifyLocalhostTestKey(id,raw){
  if(rawOnly||id!==approvedLocalhostKeyObject||!ids.includes(approvedLocalhostCertObject))return null;
@@ -99,5 +102,5 @@ try{
 }catch(e){child.kill();throw e;}
 if(!refs().equals(initial))throw Error('refs changed during scan');
 const sha=b=>createHash('sha256').update(b).digest('hex');
-console.log(JSON.stringify({schema:'wasmc.reachable-credential-scan/v1',detector_set:'high-confidence-credentials-v0',accepted:findings.length===0,raw_only:rawOnly,reachable_objects:ids.length,scanned_blobs:blobs.length,raw_bytes:bytes,skipped_blobs:0,scan_errors:0,refs_sha256:sha(initial),objects_sha256:sha(ids.join('\n')+'\n'),raw_findings:rawFindings,classified_false_positives:classifiedFalsePositives,findings,scope:'all raw bytes scanned; four exact frozen compiler carriers and one exact paired localhost-only self-signed test fixture classified by object and cryptographic identity; not exhaustive secret-free proof'}));
+console.log(JSON.stringify({schema:'wasmc.reachable-credential-scan/v1',detector_set:'high-confidence-credentials-v0',accepted:findings.length===0,raw_only:rawOnly,reachable_objects:ids.length,scanned_blobs:blobs.length,raw_bytes:bytes,skipped_blobs:0,scan_errors:0,refs_sha256:sha(initial),objects_sha256:sha(ids.join('\n')+'\n'),raw_findings:rawFindings,classified_false_positives:classifiedFalsePositives,findings,scope:'all raw bytes scanned; six exact frozen compiler carriers and one exact paired localhost-only self-signed test fixture classified by object and cryptographic identity; not exhaustive secret-free proof'}));
 if(findings.length)process.exitCode=1;
