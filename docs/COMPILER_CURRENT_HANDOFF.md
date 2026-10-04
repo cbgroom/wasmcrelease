@@ -1,6 +1,6 @@
 # Current compiler distribution convergence
 
-Task state: in-progress — implementation qualified; publication/readback next
+Task state: blocked — compiler qualified; explicit credential classification required
 
 Objective: publish the latest qualified source-free compiler and keep only one
 current compiler version in the repository HEAD served by jsDelivr. Historical
@@ -33,7 +33,19 @@ compiler digest. Historical Lib/provider/plan and old App fixture are unchanged.
 Whole-product v0.0.20 candidate rejects changed current product, as required;
 its global identity files were not refreshed. No all18/Pi/full-release PASS.
 
-Resume: finalize current manifest and source-free qualification receipt; commit,
-scan all reachable raw Git blobs including the new commit, push and fast-forward
-main, then verify full-commit jsDelivr and GitHub downloads against the pinned
-SHA256. Preserve source-free and CDN readback evidence privately.
+Publication candidate4157786d9f042b472e743ed7b1709808ed1bc5f5 is local only.
+Post-commit all-reachable scan covers5941blobs/173452027bytes,zero skipped/errors,
+but rejects two unclassified AWS-format carrier findings. Each lies wholly in
+the sole canonical compiler Base64 literal and decodes to the exact pinned
+import-free Wasm; all nine detectors are clear on decoded bytes. No matched
+credential-shaped values or their hashes were printed. Exact carrier objects:
+3e17b25116f868ab49b17f90021bbe7c061217ac and
+b1a46490f52a5f41b4187a72cd283666cc82f565. No scanner rule was changed and no
+product commit/main/tag was pushed. Remote branch retains the start checkpoint.
+
+Resume: request explicit authorization for only these two exact carrier/digest
+false-positive classifications, preserving raw findings and all strict decoded
+and outside-literal rejection checks. After authorization add narrow reviewed
+classification, run security regression and full scan, then push and FF main.
+Only then verify GitHub/jsDelivr full-commit downloads. If not authorized retain
+this candidate locally; do not bypass the scanner or publish the binaries.

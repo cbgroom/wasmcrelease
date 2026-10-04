@@ -18,7 +18,9 @@ bound to v0.0.20 and intentionally reject current product drift. Full18/Pi/new
 whole-product release remains pending under other ownership. Do not relabel old
 metadata as the compiler-only successor. Use the full current public commit for
 CDN and verify the separate compiler manifest. Task state/resume/evidence is in
-docs/COMPILER_CURRENT_HANDOFF.md; compiler-only final publication is in progress.
+docs/COMPILER_CURRENT_HANDOFF.md. Publication is blocked by two new exact JS
+carrier AWS-format findings (no decoded findings); explicit narrow false-positive
+classification is requested. No product/main/tag push or CDN verification yet.
 
 ## 2026-10-02 Future selected18 current-route closure
 
