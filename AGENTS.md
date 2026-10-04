@@ -1,5 +1,20 @@
 # wasmc public Agent entrypoint
 
+## Current compiler on repository main
+
+`current/compiler-release.json` is the current compiler-only distribution
+authority. Verify it with `node scripts/current-compiler-integrity.mjs` and run
+`node scripts/test-current-compiler.mjs`. It binds one current compiler version
+across current facades and the Runtime. `dist/` and `package/` are now forwarding
+routes, not retained old compiler versions; their old raw compiler files were
+removed. Deploy the repository root, not those directories alone.
+
+The whole-product release remains immutable v0.0.20. Its `release.json`,
+channels, manifest, provenance and SHA256SUMS describe that tag, not this newer
+compiler-only main overlay. Do not refresh or relabel that old product around
+new bytes. Pending Lib qualification is separate. For current compiler CDN use,
+pin this checkout's full public commit, not the old v0.0.20 tag or mutable main.
+
 This source-free compiler repository publishes a standard Core Wasm compiler,
 Lib packages, a package-manager-free Runtime/Registry bootstrap, and the
 public `wasmc-core-runtime` Rust SDK. This file is frozen inside the v0.0.20

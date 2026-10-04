@@ -40,6 +40,22 @@ CDN alias is discovery state; an immutable tag or full commit is package identit
 
 ## Validation judgment
 
+### Explicit compiler-only HEAD convergence
+
+When the user explicitly requests the latest compiler for CDN and removal of
+obsolete compiler versions from HEAD, a separately named compiler-only
+distribution may bind clean qualified producer bytes, every facade/Runtime
+carrier and unchanged matched Lib inputs in `current/compiler-release.json`.
+Its independent singleton and behavior checks must pass before publication.
+Do not call this a new whole-product release, alter old prod/tag identities or
+refresh old whole-product manifests around the new bytes. Preserve the expected
+old-product drift rejection. Multiple delivery carriers are permitted only when
+every raw/embedded compiler has the one independently pinned SHA256. Delete old
+raw copies or make source-only routes forward to current; no obsolete embedded
+compiler may survive under a compatibility filename. Pin the public commit for
+CDN consumers and verify downloaded bytes. All18/Pi/full-product admission
+remains separately owned and uncompleted until its own gates pass.
+
 For a new version's dev/main/prod publication or promotion, first read
 [release channel contract](../../../docs/RELEASE_CHANNELS.md). A suffix-free prod
 is a promotion of one qualified product digest set, not a rebuild or a stable1.x

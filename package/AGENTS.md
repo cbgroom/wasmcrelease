@@ -1,6 +1,11 @@
 # wasmc package guidance
 
-Use the bundled [`wasmc-developer` Skill](skills/wasmc-developer/SKILL.md) for
+On current main this directory is a repository/CDN forwarding route to
+`../current/index.mjs`, not a standalone installable package. Deploy the repository
+root and verify `../current/compiler-release.json`. Historical standalone
+packages are available only at their immutable Git tags.
+
+On current main use the root [`wasmc-developer` Skill](../skills/wasmc-developer/SKILL.md) for
 every task that designs, writes, compiles, inspects, embeds, or debugs `.wasmc`
 programs. Read that file completely, then open only the references it routes to
 for the selected runtime and value model.

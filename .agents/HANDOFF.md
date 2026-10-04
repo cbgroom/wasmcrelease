@@ -1,5 +1,25 @@
 # WAsmC release maintainer handoff
 
+## 2026-10-04 Current compiler-only CDN convergence
+
+User explicitly requests one latest compiler version in repository HEAD for
+jsDelivr, not deletion of old tags/Releases or Lib history. Compiler-only
+0.0.21-compiler.1 binds clean private main e76c405f2e30af8bc113108af862637534773582
+and measured source6ef47df7d4cf3eadcae81db7cab06b9d52669a4b (1259 equal inputs).
+Wasm1442266bytes SHA256032a408b7435333f65f3bc80ef2f5646edf829698bc384a276076bff8d64666a.
+Current and Runtime binaries plus all three JS embeddings carry those same bytes;
+old dist/package raw compiler files are removed, ESM aliases forward to current.
+Independent authority: current/compiler-release.json. Node/Bun/Deno each passes
+35 exact frozen output checks/7 execution oracles; standard old/new/Rust consumers
+each engine passes7680 calls with unchanged Lib/provider/plan/old fixture.
+The updated standard App hash is pinned separately; no frozen fixture refresh.
+Whole-product release/tag/channels/global manifest/provenance/SHA256SUMS remain
+bound to v0.0.20 and intentionally reject current product drift. Full18/Pi/new
+whole-product release remains pending under other ownership. Do not relabel old
+metadata as the compiler-only successor. Use the full current public commit for
+CDN and verify the separate compiler manifest. Task state/resume/evidence is in
+docs/COMPILER_CURRENT_HANDOFF.md; compiler-only final publication is in progress.
+
 ## 2026-10-02 Future selected18 current-route closure
 
 Task WS-20261002-future-current-lib-routes-v1 starts at pushed5c809021 against

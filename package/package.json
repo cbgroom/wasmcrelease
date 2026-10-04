@@ -1,6 +1,7 @@
 {
   "name": "@wasmc/compiler",
-  "version": "0.0.0-experimental",
+  "private": true,
+  "version": "0.0.21-compiler.1",
   "type": "module",
   "sideEffects": false,
   "exports": {
@@ -11,13 +12,13 @@
   },
   "wasmc": {
     "agentGuide": "./AGENTS.md",
-    "developerSkill": "./skills/wasmc-developer/SKILL.md"
+    "developerSkill": "../skills/wasmc-developer/SKILL.md",
+    "distribution": "repository-root forwarding route; not a standalone package"
   },
   "files": [
     "AGENTS.md",
     "index.mjs",
     "cli.mjs",
-    "wasmc_compiler.wasm",
     "lib_core.wasm",
     "skills/wasmc-developer"
   ],

@@ -1,6 +1,6 @@
 # Current compiler distribution convergence
 
-Task state: started
+Task state: in-progress — implementation qualified; publication/readback next
 
 Objective: publish the latest qualified source-free compiler and keep only one
 current compiler version in the repository HEAD served by jsDelivr. Historical
@@ -25,4 +25,15 @@ and execution oracles on Node/Bun/Deno, singleton-version inventory, current
 manifest integrity, clean synchronized Git and published/CDN artifact readback.
 No Cargo build is planned; reuse the qualified bytes, no cache growth.
 
-Resume: verify candidate and inspect current facade compatibility before edits.
+Results: Node/Bun/Deno each passes35 API outputs,25 CLI outputs,7 execution
+oracles and7680 standard old/new/Rust consumer calls. Six actual tamper/carrier
+controls reject and restore cleanly in a public source-free archive. Legacy
+raw dist/package compiler files are deleted; forwarding JS and Runtime use one
+compiler digest. Historical Lib/provider/plan and old App fixture are unchanged.
+Whole-product v0.0.20 candidate rejects changed current product, as required;
+its global identity files were not refreshed. No all18/Pi/full-release PASS.
+
+Resume: finalize current manifest and source-free qualification receipt; commit,
+scan all reachable raw Git blobs including the new commit, push and fast-forward
+main, then verify full-commit jsDelivr and GitHub downloads against the pinned
+SHA256. Preserve source-free and CDN readback evidence privately.

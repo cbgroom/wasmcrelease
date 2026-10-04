@@ -10,6 +10,27 @@
 
 Source-free public packages for the private-source `wasmc` compiler.
 
+## Latest compiler-only CDN distribution
+
+Repository HEAD carries only compiler `0.0.21-compiler.1`. Its independent
+authority is [current/compiler-release.json](current/compiler-release.json).
+Use `current/wasmc.mjs` (ESM), `current/wasmc.global.js` (classic), or
+`current/wasmc_compiler.wasm` (raw Core). Runtime carries the same Wasm bytes;
+legacy package/dist JavaScript routes forward to this version and no longer
+retain their old raw compiler binaries. There is one version, not one physical
+file: sidecars and single-file embeddings intentionally use identical bytes.
+
+Verify with `node scripts/current-compiler-integrity.mjs`, then
+`node scripts/test-current-compiler.mjs`. For jsDelivr, pin the full public
+commit of this checkout: `https://cdn.jsdelivr.net/gh/cbgroom/wasmcrelease@`
+followed by that full commit and `/current/wasmc.mjs` or
+`/current/wasmc_compiler.wasm`. `main` is mutable discovery, not an integrity pin.
+
+This is a compiler-only update, not a new Lib/SDK or whole-product release.
+The old whole-product metadata/checksums below remain bound to immutable
+`v0.0.20`; they do not verify this overlay. No tag is moved and no prior grant
+is changed. Pending all18 Lib/SDK qualification is not bypassed or claimed PASS.
+
 ## License
 
 The v0.0.20 product is source-available for **non-commercial research only**
@@ -195,8 +216,11 @@ It reuses the exact v0.0.19 compiler bytes built from private source
 `566eff42d0f4e4680c5ddd60c6584a9d8ff8e9f4`; ordinary-source `u64` remains
 available without widening the independent async, public Map, or `char`
 boundaries. It also reuses the admitted v0.0.11 Data
-Foundation Lib bytes. Use `current/` for the latest compiler facade; `dist/` and
-`package/` are frozen v0.0.4 compatibility trees. The public Wasmi/Wasmtime Core
+Foundation Lib bytes. On the immutable v0.0.20 tag, `dist/` and `package/` remain
+frozen v0.0.4 compatibility trees. On current main, use `current/` and
+`current/compiler-release.json` for the compiler-only successor; old compiler
+copies are removed and legacy JS routes forward to the current facade.
+The public Wasmi/Wasmtime Core
 Runtime SDK is in `sdk/wasmc-core-runtime`; the product also includes the generic
 Rust Host embedding SDK in `sdk/wasmc-host`. Its binding policies are Host-side
 convenience only and do not add guest-visible Host operations.

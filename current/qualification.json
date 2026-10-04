@@ -1,0 +1,134 @@
+{
+  "schema": "wasmc.current-compiler-qualification/v1",
+  "accepted": true,
+  "version": "0.0.21-compiler.1",
+  "compiler_sha256": "032a408b7435333f65f3bc80ef2f5646edf829698bc384a276076bff8d64666a",
+  "product_manifest_sha256": "fe0f939f533ee322c5a3473cb8bc2a55a5aac2ec6bb33dfba63ae54e6fc42f67",
+  "source_free": true,
+  "compiler_private_source_present": false,
+  "platform": "darwin",
+  "arch": "arm64",
+  "runs": [
+    {
+      "engine": "node",
+      "version": "v26.5.1",
+      "args": [
+        "scripts/test-current-compiler.mjs"
+      ],
+      "exit_code": 0,
+      "result": {
+        "accepted": true,
+        "runtime": "node",
+        "compiler_sha256": "032a408b7435333f65f3bc80ef2f5646edf829698bc384a276076bff8d64666a",
+        "frozen_outputs": 35,
+        "execution_oracles": 7,
+        "cli_outputs": 25
+      }
+    },
+    {
+      "engine": "node",
+      "version": "v26.5.1",
+      "args": [
+        "examples/current/standard.mjs"
+      ],
+      "exit_code": 0,
+      "result": {
+        "accepted": true,
+        "standard_lib": "wasmc:std@1.4.0",
+        "functions": 73,
+        "consumer_count": 3,
+        "consumer_calls": 7680,
+        "current_app_sha256": "08a6cb5e7f19cc0f01ef8cc034da6834c8932adf1c3919eff5cc24ae4959ff32",
+        "historical_fixture_unchanged": true
+      }
+    },
+    {
+      "engine": "bun",
+      "version": "1.3.14",
+      "args": [
+        "scripts/test-current-compiler.mjs"
+      ],
+      "exit_code": 0,
+      "result": {
+        "accepted": true,
+        "runtime": "bun",
+        "compiler_sha256": "032a408b7435333f65f3bc80ef2f5646edf829698bc384a276076bff8d64666a",
+        "frozen_outputs": 35,
+        "execution_oracles": 7,
+        "cli_outputs": 25
+      }
+    },
+    {
+      "engine": "bun",
+      "version": "1.3.14",
+      "args": [
+        "examples/current/standard.mjs"
+      ],
+      "exit_code": 0,
+      "result": {
+        "accepted": true,
+        "standard_lib": "wasmc:std@1.4.0",
+        "functions": 73,
+        "consumer_count": 3,
+        "consumer_calls": 7680,
+        "current_app_sha256": "08a6cb5e7f19cc0f01ef8cc034da6834c8932adf1c3919eff5cc24ae4959ff32",
+        "historical_fixture_unchanged": true
+      }
+    },
+    {
+      "engine": "deno",
+      "version": "deno 2.9.4 (stable, release, aarch64-apple-darwin)\nv8 15.0.245.2-rusty\ntypescript 6.0.3",
+      "args": [
+        "run",
+        "--allow-read",
+        "--allow-write",
+        "--allow-run",
+        "--allow-env",
+        "scripts/test-current-compiler.mjs"
+      ],
+      "exit_code": 0,
+      "result": {
+        "accepted": true,
+        "runtime": "deno",
+        "compiler_sha256": "032a408b7435333f65f3bc80ef2f5646edf829698bc384a276076bff8d64666a",
+        "frozen_outputs": 35,
+        "execution_oracles": 7,
+        "cli_outputs": 25
+      }
+    },
+    {
+      "engine": "deno",
+      "version": "deno 2.9.4 (stable, release, aarch64-apple-darwin)\nv8 15.0.245.2-rusty\ntypescript 6.0.3",
+      "args": [
+        "run",
+        "--allow-read",
+        "examples/current/standard.mjs"
+      ],
+      "exit_code": 0,
+      "result": {
+        "accepted": true,
+        "standard_lib": "wasmc:std@1.4.0",
+        "functions": 73,
+        "consumer_count": 3,
+        "consumer_calls": 7680,
+        "current_app_sha256": "08a6cb5e7f19cc0f01ef8cc034da6834c8932adf1c3919eff5cc24ae4959ff32",
+        "historical_fixture_unchanged": true
+      }
+    }
+  ],
+  "rejection_controls": {
+    "exit_code": 0,
+    "result": {
+      "accepted": true,
+      "actual_rejections": 6,
+      "restored": true
+    }
+  },
+  "nonclaims": [
+    "whole-product release",
+    "all18 Lib qualification",
+    "Pi model-pair qualification",
+    "native SDK requalification",
+    "real browser qualification"
+  ]
+}
