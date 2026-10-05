@@ -17,11 +17,16 @@ and u64 gates were repaired without frozen-input substitution; additional
 qualification still contains an exact old CoreLib identity trap, five logical
 tests rejected identically by the old/new compilers, four unlocalized Core-domain
 traps and five missing-input targets. Full workspace remains incomplete/FAIL.
-Private source workstreamc52d89396f984ce8e0a396822ea47650a261f9cf is ready;
-serialized private master integration is underway. No compiler was admitted
+Private clean pushed master0f0e0bf770b0620d29855e78840cb17a844f4ea1 produced
+the import-free1468908-byte compiler SHA256
+30a4deb94a5cd4c94b4629e634869bca4c53bc9ded38ca987baaf996a1f9048f.
+Subsequent master8c3f9a327 integrated test-only Bool contract cleanup:
+runtime107/107,zero ignored; no compiler implementation changed. The five
+stale logical-test failures above are superseded, not the remaining traps.
+No compiler was admitted
 to this public tree. Candidate version will be0.0.21-compiler.2, replacing the
 one current compiler rather than introducing a second active version.
-Resume: obtain clean pushed-master build/receipt; synchronize and qualify all
+Resume: synchronize this exact clean-master compiler and qualify all
 carriers. Existing risk acceptance does not approve unknown security findings,
 private source publication, new Libs or whole-product closure. Controlled Pi
 pair/all18 remain separate gates.
