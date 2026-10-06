@@ -14,7 +14,7 @@ run("node", ["scripts/validate-ios-app-lifecycle.mjs"]);
 const projectDir = "target/ios-finite-background-window-project";
 const derivedDir = "target/ios-finite-background-window-derived";
 const bundle = "io.wasmc.app-lifecycle-lab";
-const exampleRoot = "libsrc/wasmc-system-ios-app-lifecycle/examples/ios-app";
+const exampleRoot = "tests/lib-refresh/native/wasmc-system-ios-app-lifecycle/examples/ios-app";
 fs.mkdirSync(projectDir, { recursive: true });
 run("xcodegen", ["generate", "--spec", `${exampleRoot}/project.yml`, "--project", projectDir,
   "--project-root", exampleRoot], { env: { ...process.env,

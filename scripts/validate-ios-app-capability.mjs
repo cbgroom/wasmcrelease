@@ -50,26 +50,26 @@ const witFiles = [
   "host/tests/ios-app-capability/WIT/app-audio.wit",
   "host/tests/ios-app-capability/WIT/app-web.wit",
   "host/tests/ios-app-capability/WIT/app-device-observation.wit",
-  "libsrc/wasmc-app-authorization-policy/lib.wit",
-  "libsrc/wasmc-system-ios-app-contacts/lib.wit",
-  "libsrc/wasmc-system-android-ui/lib.wit",
-  "libsrc/wasmc-system-ios-simulator-display/lib.wit",
+  "libspec/wasmc-app-authorization-policy/lib.wit",
+  "libspec/wasmc-system-ios-app-contacts/lib.wit",
+  "libspec/wasmc-system-android-ui/lib.wit",
+  "libspec/wasmc-system-ios-simulator-display/lib.wit",
 ];
 for (const wit of witFiles) {
   execFileSync("wasm-tools", ["component", "wit", wit], { stdio: "ignore" });
 }
 assert.deepEqual(
   fs.readFileSync("host/tests/ios-app-capability/WIT/app-authorization.wit"),
-  fs.readFileSync("libsrc/wasmc-app-authorization-policy/lib.wit"),
+  fs.readFileSync("libspec/wasmc-app-authorization-policy/lib.wit"),
   "embedded iOS authorization WIT must match the public policy candidate",
 );
 assert.deepEqual(
   fs.readFileSync("host/tests/ios-app-capability/WIT/app-contacts.wit"),
-  fs.readFileSync("libsrc/wasmc-system-ios-app-contacts/lib.wit"),
+  fs.readFileSync("libspec/wasmc-system-ios-app-contacts/lib.wit"),
   "embedded iOS Contacts WIT must match the public Contacts candidate",
 );
 const contactsProvider = fs.readFileSync(
-  "libsrc/wasmc-system-ios-app-contacts/ContactsProvider.swift", "utf8",
+  "libspec/wasmc-system-ios-app-contacts/platform/ContactsProvider.swift", "utf8",
 );
 assert.match(contactsProvider, /CNContactStore\.authorizationStatus/);
 assert.match(contactsProvider, /create\.add/);

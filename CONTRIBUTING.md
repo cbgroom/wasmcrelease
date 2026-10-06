@@ -16,13 +16,13 @@ project or any user additional rights. Repository use remains governed by the
 [Research-Only Non-Commercial License](LICENSE).
 
 Compiler/CoreLib producer source remains private. Public Lib source under
-`libsrc/` is intentionally different: once contribution terms are published,
+`libspec/` is intentionally different: once contribution terms are published,
 contributors may be invited to propose, implement, test, review and evolve
 reusable Libs here.
 
 ## The boundary
 
-- `libsrc/` — public source incubation and maintenance.
+- `libspec/` — public source incubation and maintenance.
 - `libs/` — admitted immutable Lib products for a release identity.
 - `host/` — irreducible external effects and provider/runtime machinery.
 - `catalog/` and LibSearch — discovery of admitted packages, never admission
@@ -43,12 +43,12 @@ cannot live in an import-free Lib or in a Lib over an existing capability.
 
 ## Maintainer contribution loop
 
-1. Start from `libsrc/registry.json` or add a new incubator entry.
+1. Start from `libspec/registry.json` or add a new incubator entry.
 2. Define the public WIT/API before implementation details.
 3. Declare every Host import. Prefer zero imports.
-4. Build/test the public source without private compiler source.
-5. Add behavior, negative and compatibility tests.
-6. Run `node scripts/validate-libsrc.mjs`.
+4. Generate packages with the explicitly pinned producer; test those exact package receipts, without private compiler source.
+5. Add behavior, negative and current semantic and negative tests.
+6. Run `node scripts/validate-current-only-libs.mjs && node scripts/validate-lib-refresh-v2-source.mjs`.
 7. For Host-graduated work, compare against the pinned behavior oracle without
    treating byte identity as the goal.
 8. For a new native-public Lib, record the mature implementation basis in

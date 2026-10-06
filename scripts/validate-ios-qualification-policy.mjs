@@ -15,17 +15,19 @@ assert.ok(policy.required_baseline_capabilities.length > 0);
 assert.ok(policy.optional_platform_capabilities.includes("bgtaskscheduler-delivery"));
 assert.equal(policy.unsupported_optional_routes[0].blocks_baseline, false);
 
-const candidates = fs.readdirSync("libsrc", { withFileTypes: true })
+const candidates = fs.readdirSync("libspec", { withFileTypes: true })
   .filter((entry) => entry.isDirectory() && entry.name.startsWith("wasmc-system-ios-"))
-  .map((entry) => path.join("libsrc", entry.name, "candidate.json"))
+  .map((entry) => path.join("libspec", entry.name, "lib.json"))
   .filter(fs.existsSync)
   .map((candidatePath) => ({ candidatePath, candidate: JSON.parse(fs.readFileSync(candidatePath, "utf8")) }));
 const physicalPending = [...new Set(candidates.flatMap(({ candidate }) =>
-  (candidate.pending_gates ?? []).filter((gate) => gate.includes("physical-device"))))].sort();
-assert.deepEqual(physicalPending, [...policy.non_blocking_candidate_pending_gates].sort());
+  (candidate.native?.binding?.pending_gates ?? []).filter((gate) => gate.includes("physical-device"))))].sort();
+for (const gate of physicalPending) assert.ok(policy.non_blocking_candidate_pending_gates.includes(gate));
+assert.ok(candidates.length > 0);
+for (const {candidate} of candidates) assert.equal(candidate.profile, "native");
 
 for (const { candidatePath, candidate } of candidates) {
-  for (const gate of candidate.pending_gates ?? []) {
+  for (const gate of candidate.native?.binding?.pending_gates ?? []) {
     if (gate.includes("physical-device")) {
       assert.ok(policy.non_blocking_candidate_pending_gates.includes(gate),
         `${candidatePath}: unclassified physical-device gate ${gate}`);

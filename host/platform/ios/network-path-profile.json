@@ -1,5 +1,5 @@
 {
-  "schema": "wasmc.library-os-profile/v2",
+  "schema": "wasmc.library-os-profile/v3",
   "id": "ios-network-path-v1",
   "target": {
     "os": "ios",
@@ -12,32 +12,50 @@
     "executor": "host/tests/ios-app-capability/Host/FixedHost.swift",
     "required_domain_apis": 0
   },
-  "required_lifecycle": "qualified",
-  "requirements": ["wasmc:system-network-path@0.0.1"],
+  "required_lifecycle": "source",
+  "requirements": [
+    "wasmc:system-network-path@0.0.1"
+  ],
   "bindings": [
     {
       "api": "wasmc:system-network-path@0.0.1",
       "provider": "wasmc:system-ios-network-path@0.0.1-dev.1",
-      "candidate": "libsrc/wasmc-system-ios-network-path/candidate.json",
-      "wit": "libsrc/wasmc-system-ios-network-path/lib.wit",
-      "descriptor": "libsrc/wasmc-system-ios-network-path/platform/ios/binding.json",
+      "source": "libspec/wasmc-system-ios-network-path/lib.json",
+      "source_sha256": "fefa1b63e7cd4b3877a431d2f88240f12fe895dd6f65fffcd1721850cdc2e9fa",
+      "wit": "libspec/wasmc-system-ios-network-path/lib.wit",
+      "wit_sha256": "4f81dcd5aee220ef4945349747713c4ae32730d4d4c1c6ef27dd474b5cef26c2",
+      "descriptor": "libspec/wasmc-system-ios-network-path/platform/ios/binding.json",
+      "descriptor_sha256": "0a9e0335bbc2c4e37eadfad5443e4b37b15dc49f614cdeb49d290f631d0183e7",
+      "implementation_sha256": {
+        "platform/ios/Sources/NetworkPathProvider.swift": "264f476ad477488ad63f8144e4dce9af75d664f83ad6e4bb23a00b3f2ba49817",
+        "platform/ios/binding.json": "0a9e0335bbc2c4e37eadfad5443e4b37b15dc49f614cdeb49d290f631d0183e7"
+      },
       "boundary": "wasmc.lib-defined-host-boundary/v1",
       "artifact": {
         "format": "embedded-source",
         "language": "swift",
         "linkage": "static-app",
-        "sources": ["libsrc/wasmc-system-ios-network-path/platform/ios/Sources/NetworkPathProvider.swift"],
-        "frameworks": ["Foundation", "Network"]
-      },
-      "target": {
-        "os": "ios", "architecture": "aarch64", "environment": "simulator", "embedding": "native"
+        "sources": [
+          "libspec/wasmc-system-ios-network-path/platform/ios/Sources/NetworkPathProvider.swift"
+        ],
+        "frameworks": [
+          "Foundation",
+          "Network"
+        ]
       },
       "lifecycle": {
-        "qualified": true,
+        "source": true,
+        "qualified": false,
         "admitted": false,
         "released": false,
         "discoverable": false,
         "installable": false
+      },
+      "target": {
+        "os": "ios",
+        "architecture": "aarch64",
+        "environment": "simulator",
+        "embedding": "native"
       }
     }
   ],
@@ -46,5 +64,6 @@
     "path_mutation": false,
     "path_transition": false,
     "server_reachability": false
-  }
+  },
+  "executable": false
 }

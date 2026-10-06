@@ -1,5 +1,5 @@
 {
-  "schema": "wasmc.library-os-profile/v2",
+  "schema": "wasmc.library-os-profile/v3",
   "id": "ios-local-notification-v1",
   "target": {
     "os": "ios",
@@ -12,7 +12,7 @@
     "executor": "host/tests/ios-app-capability/Host/FixedHost.swift",
     "required_domain_apis": 0
   },
-  "required_lifecycle": "qualified",
+  "required_lifecycle": "source",
   "requirements": [
     "wasmc:system-local-notification@0.0.1"
   ],
@@ -20,16 +20,23 @@
     {
       "api": "wasmc:system-local-notification@0.0.1",
       "provider": "wasmc:system-ios-local-notification@0.0.1-dev.1",
-      "candidate": "libsrc/wasmc-system-ios-local-notification/candidate.json",
-      "wit": "libsrc/wasmc-system-ios-local-notification/lib.wit",
-      "descriptor": "libsrc/wasmc-system-ios-local-notification/platform/ios/binding.json",
+      "source": "libspec/wasmc-system-ios-local-notification/lib.json",
+      "source_sha256": "0517012a261449f39bad154bbae0b289829246a580bb124add2629170f1879c4",
+      "wit": "libspec/wasmc-system-ios-local-notification/lib.wit",
+      "wit_sha256": "d28bf091f9af304c5e2f93ca8e020db14100478dc7d6d18da426540d62855f4d",
+      "descriptor": "libspec/wasmc-system-ios-local-notification/platform/ios/binding.json",
+      "descriptor_sha256": "c84e1dc0f6000787cad1bf47063a61f483698827082d940099f8e5fcacdedd5a",
+      "implementation_sha256": {
+        "platform/ios/Sources/LocalNotificationProvider.swift": "c9f1ed96bde6feb40a8dea80fa6d982de2340f50dd6d03f561e8cd15ceba1d8e",
+        "platform/ios/binding.json": "c84e1dc0f6000787cad1bf47063a61f483698827082d940099f8e5fcacdedd5a"
+      },
       "boundary": "wasmc.lib-defined-host-boundary/v1",
       "artifact": {
         "format": "embedded-source",
         "language": "swift",
         "linkage": "static-app",
         "sources": [
-          "libsrc/wasmc-system-ios-local-notification/platform/ios/Sources/LocalNotificationProvider.swift"
+          "libspec/wasmc-system-ios-local-notification/platform/ios/Sources/LocalNotificationProvider.swift"
         ],
         "frameworks": [
           "Foundation",
@@ -37,18 +44,19 @@
           "UserNotifications"
         ]
       },
+      "lifecycle": {
+        "source": true,
+        "qualified": false,
+        "admitted": false,
+        "released": false,
+        "discoverable": false,
+        "installable": false
+      },
       "target": {
         "os": "ios",
         "architecture": "aarch64",
         "environment": "simulator",
         "embedding": "native"
-      },
-      "lifecycle": {
-        "qualified": true,
-        "admitted": false,
-        "released": false,
-        "discoverable": false,
-        "installable": false
       }
     }
   ],
@@ -58,5 +66,6 @@
     "delivery_while_not_foreground": true,
     "remote_push": false,
     "notification_extensions": false
-  }
+  },
+  "executable": false
 }

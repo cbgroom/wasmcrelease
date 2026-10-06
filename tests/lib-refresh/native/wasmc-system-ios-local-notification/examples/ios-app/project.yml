@@ -1,0 +1,42 @@
+name: WAsmCIOSLocalNotification
+options:
+  deploymentTarget:
+    iOS: "18.0"
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    PRODUCT_BUNDLE_IDENTIFIER: io.wasmc.local-notification-lab
+    GENERATE_INFOPLIST_FILE: YES
+    INFOPLIST_KEY_UIApplicationSceneManifest_Generation: NO
+    INFOPLIST_KEY_UILaunchScreen_Generation: YES
+targets:
+  WAsmCIOSLocalNotification:
+    type: application
+    platform: iOS
+    info:
+      path: ${WASMC_IOS_LOCAL_NOTIFICATION_INFO_PLIST}
+      properties:
+        CFBundleShortVersionString: "0.0.1"
+        CFBundleVersion: "1"
+        LSRequiresIPhoneOS: true
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+    sources:
+      - path: App
+        excludes: [Info.plist]
+      - path: ../../../../../../libspec/wasmc-system-ios-local-notification/platform/ios/Sources
+      - path: ../../../../../../host/tests/ios-app-capability/Host/FixedHost.swift
+    settings:
+      base:
+        PRODUCT_NAME: WAsmCIOSLocalNotification
+  WAsmCIOSLocalNotificationUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: UITests
+    dependencies:
+      - target: WAsmCIOSLocalNotification
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: io.wasmc.local-notification-lab.uitests
+        TEST_TARGET_NAME: WAsmCIOSLocalNotification

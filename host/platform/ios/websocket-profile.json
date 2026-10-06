@@ -1,5 +1,5 @@
 {
-  "schema": "wasmc.library-os-profile/v2",
+  "schema": "wasmc.library-os-profile/v3",
   "id": "ios-websocket-v1",
   "target": {
     "os": "ios",
@@ -12,7 +12,7 @@
     "executor": "host/tests/ios-app-capability/Host/FixedHost.swift",
     "required_domain_apis": 0
   },
-  "required_lifecycle": "qualified",
+  "required_lifecycle": "source",
   "requirements": [
     "wasmc:system-websocket@0.0.1"
   ],
@@ -20,16 +20,23 @@
     {
       "api": "wasmc:system-websocket@0.0.1",
       "provider": "wasmc:system-ios-websocket@0.0.1-dev.5",
-      "candidate": "libsrc/wasmc-system-ios-websocket/candidate.json",
-      "wit": "libsrc/wasmc-system-ios-websocket/lib.wit",
-      "descriptor": "libsrc/wasmc-system-ios-websocket/platform/ios/binding.json",
+      "source": "libspec/wasmc-system-ios-websocket/lib.json",
+      "source_sha256": "976e375bc499f8e38049e0c810479c950b9244529cf8c7368a23c6157962dbd4",
+      "wit": "libspec/wasmc-system-ios-websocket/lib.wit",
+      "wit_sha256": "2543970a328903e2f2104b1690b7b5ce83b18d1abf094b8a03b795952113fc96",
+      "descriptor": "libspec/wasmc-system-ios-websocket/platform/ios/binding.json",
+      "descriptor_sha256": "2de203d4a662ab9d335dbc9b84484436ff7e1a17f82f08c5a2a06ff4afc3b52e",
+      "implementation_sha256": {
+        "platform/ios/Sources/WebSocketProvider.swift": "c2a4ba25be6cf21b1220058ffd3c357a3f818743f5d7078084e35800e694473f",
+        "platform/ios/binding.json": "2de203d4a662ab9d335dbc9b84484436ff7e1a17f82f08c5a2a06ff4afc3b52e"
+      },
       "boundary": "wasmc.lib-defined-host-boundary/v1",
       "artifact": {
         "format": "embedded-source",
         "language": "swift",
         "linkage": "static-app",
         "sources": [
-          "libsrc/wasmc-system-ios-websocket/platform/ios/Sources/WebSocketProvider.swift"
+          "libspec/wasmc-system-ios-websocket/platform/ios/Sources/WebSocketProvider.swift"
         ],
         "frameworks": [
           "CryptoKit",
@@ -38,18 +45,19 @@
           "UIKit"
         ]
       },
+      "lifecycle": {
+        "source": true,
+        "qualified": false,
+        "admitted": false,
+        "released": false,
+        "discoverable": false,
+        "installable": false
+      },
       "target": {
         "os": "ios",
         "architecture": "aarch64",
         "environment": "simulator",
         "embedding": "native"
-      },
-      "lifecycle": {
-        "qualified": true,
-        "admitted": false,
-        "released": false,
-        "discoverable": false,
-        "installable": false
       }
     }
   ],
@@ -68,5 +76,6 @@
     "public_ca_wss": false,
     "internet_route": false,
     "suspension_receive": false
-  }
+  },
+  "executable": false
 }

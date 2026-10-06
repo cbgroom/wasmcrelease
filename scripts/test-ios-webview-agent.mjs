@@ -13,7 +13,7 @@ run("node", ["scripts/validate-ios-app-surface-control.mjs"]);
 const projectDir = "target/ios-webview-agent-project";
 const derivedDir = "target/ios-webview-agent-derived";
 const bundle = "io.wasmc.webview-agent-lab";
-const exampleRoot = "libsrc/wasmc-system-ios-app-surface-control/examples/ios-webview-agent";
+const exampleRoot = "tests/lib-refresh/native/wasmc-system-ios-app-surface-control/examples/ios-webview-agent";
 fs.mkdirSync(projectDir, { recursive: true });
 run("xcodegen", ["generate", "--spec", `${exampleRoot}/project.yml`, "--project", projectDir,
   "--project-root", exampleRoot], { env: { ...process.env,

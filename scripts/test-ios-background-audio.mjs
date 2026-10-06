@@ -13,7 +13,7 @@ run("node", ["scripts/validate-ios-background-audio.mjs"]);
 const projectDir = "target/ios-background-audio-project";
 const derivedDir = "target/ios-background-audio-derived";
 const bundle = "io.wasmc.background-audio-lab";
-const exampleRoot = "libsrc/wasmc-system-ios-background-audio/examples/ios-app";
+const exampleRoot = "tests/lib-refresh/native/wasmc-system-ios-background-audio/examples/ios-app";
 fs.mkdirSync(projectDir, { recursive: true });
 run("xcodegen", ["generate", "--spec", `${exampleRoot}/project.yml`, "--project", projectDir,
   "--project-root", exampleRoot], { env: { ...process.env,

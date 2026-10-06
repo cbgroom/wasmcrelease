@@ -26,7 +26,7 @@ try {
   const projectDir = "target/ios-background-transfer-project";
   const derivedDir = "target/ios-background-transfer-relaunch-derived";
   const bundle = "io.wasmc.background-transfer-lab";
-  const exampleRoot = "libsrc/wasmc-system-ios-background-transfer/examples/ios-app";
+  const exampleRoot = "tests/lib-refresh/native/wasmc-system-ios-background-transfer/examples/ios-app";
   fs.mkdirSync(projectDir, { recursive: true });
   run("xcodegen", ["generate", "--spec", `${exampleRoot}/project.yml`, "--project", projectDir,
     "--project-root", exampleRoot], { env: { ...process.env,

@@ -1,3 +1,4 @@
+import { generatedLib } from './generated-lib-v2.mjs';
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { execFileSync, spawn } from 'node:child_process';
@@ -10,18 +11,14 @@ assert.equal(process.platform, 'linux', 'Linux socket TLS composition requires L
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const target = path.join(root, 'target/tls-client-linux-socket');
-const socketRoot = path.join(root, 'libsrc/wasmc-system-linux-socket');
+const selectedSocket = await generatedLib('wasmc-system-linux-socket');
+const socketRoot = selectedSocket.root;
 const adapter = path.join(target, 'libwasmc_system_linux_socket.so');
 const descriptor = path.join(target, 'native-boundary.json');
 const executorTarget = path.join(target, 'executor');
 const executor = path.join(executorTarget, 'release/wasmc-lib-boundary-native-linux');
 const executorManifest = path.join(root, 'host/runtime/lib-boundary/native-linux/Cargo.toml');
-const candidate = process.env.WASMC_TLS_CLIENT_ARTIFACT?.trim()
-  ? path.resolve(root, process.env.WASMC_TLS_CLIENT_ARTIFACT)
-  : path.join(
-      root,
-      'libsrc/wasmc-tls-client/target/wasm32-unknown-unknown/release/wasmc_tls_client_public.wasm',
-    );
+const candidate = (await generatedLib('wasmc-tls-client')).artifact;
 const certDer = path.join(root, 'host/tests/https/fixtures/server-cert.der');
 const keyDer = path.join(root, 'host/tests/https/fixtures/server-key.pkcs8.der');
 const certPem = path.join(target, 'server-cert.pem');
@@ -36,10 +33,7 @@ const command = (program, args, options = {}) => execFileSync(program, args, {
 
 fs.rmSync(target, { recursive: true, force: true });
 fs.mkdirSync(target, { recursive: true });
-command('cc', [
-  '-shared', '-fPIC', '-O2', '-Wall', '-Wextra', '-Werror',
-  path.join(socketRoot, 'native-adapter.c'), '-o', adapter,
-]);
+fs.copyFileSync(selectedSocket.artifact, adapter);
 const toolchain = process.env.WASMC_RUST_TOOLCHAIN ?? '+1.96.0';
 const cargoArgs = args => toolchain ? [toolchain, ...args] : args;
 command('cargo', cargoArgs([
@@ -47,7 +41,7 @@ command('cargo', cargoArgs([
 ]), { env: { ...process.env, CARGO_TARGET_DIR: executorTarget } });
 const adapterSha256 = sha256(fs.readFileSync(adapter));
 const descriptorTemplate = fs.readFileSync(
-  path.join(socketRoot, 'native-boundary.template.json'),
+  path.join(socketRoot, 'platform/native-boundary.template.json'),
   'utf8',
 );
 fs.writeFileSync(descriptor, descriptorTemplate.replace('BUILD_OUTPUT_SHA256', adapterSha256));

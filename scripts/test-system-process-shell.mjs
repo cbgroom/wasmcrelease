@@ -1,3 +1,4 @@
+import { generatedLib } from './generated-lib-v2.mjs';
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { mkdtemp, readFile, realpath, rm } from "node:fs/promises";
@@ -7,13 +8,14 @@ import { fileURLToPath } from "node:url";
 import { LibDefinedBoundary } from "../host/runtime/lib-boundary/reference.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const packageRoot = path.join(root, "libsrc/wasmc-system-process-prototype");
+const selected = await generatedLib("wasmc-system-process-prototype");
+const packageRoot = selected.root;
 const executorPath = path.join(root, "host/runtime/lib-boundary/reference.mjs");
 const encoder = new TextEncoder();
 const decoder = new TextDecoder();
 const sha256 = (bytes) => createHash("sha256").update(bytes).digest("hex");
 const fromBase64 = (value) => Buffer.from(value, "base64").toString("utf8");
-const candidate = JSON.parse(await readFile(path.join(packageRoot, "candidate.json"), "utf8"));
+const candidate = JSON.parse(await readFile(path.join(packageRoot, "lib.json"), "utf8"));
 
 const boundary = new LibDefinedBoundary();
 const resource = await boundary.install(packageRoot);
@@ -143,8 +145,9 @@ try {
     unsupported_shell_fail_closed: true,
     fixed_executor_sha256: sha256(await readFile(executorPath)),
     host_api_growth: false,
-    qualified: candidate.system_binding.lifecycle.qualified,
-    admitted: candidate.system_binding.lifecycle.admitted,
+    runtime_test_pass: true,
+    qualified: false,
+    admitted: false,
     released: false,
   }));
 } finally {

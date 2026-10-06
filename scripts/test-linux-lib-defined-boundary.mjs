@@ -1,3 +1,4 @@
+import { generatedLib, selectedRun } from './generated-lib-v2.mjs';
 import assert from "node:assert/strict";
 import { execFileSync, spawn, spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
@@ -10,10 +11,11 @@ assert.equal(process.platform, "linux", "Linux native-boundary qualification mus
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const target = path.join(root, "target/lib-defined-boundary-linux");
-const sourceRoot = path.join(root, "libsrc/wasmc-system-linux-endpoint");
+const selected = await generatedLib("wasmc-system-linux-endpoint");
+const sourceRoot = selected.root;
 const manifest = path.join(root, "host/runtime/lib-boundary/native-linux/Cargo.toml");
 const rustSource = path.join(root, "host/runtime/lib-boundary/native-linux/src/main.rs");
-const adapterSource = path.join(sourceRoot, "native-adapter.c");
+const adapterSource = path.join(sourceRoot, "platform/native-adapter.c");
 const adapter = path.join(target, "libwasmc_system_linux_endpoint.so");
 const descriptorPath = path.join(target, "native-boundary.json");
 const executor = path.join(target, "cargo/release/wasmc-lib-boundary-native-linux");
@@ -26,7 +28,7 @@ const rustArgs = (args) => rustToolchain ? [rustToolchain, ...args] : args;
 
 fs.rmSync(target, { recursive: true, force: true });
 fs.mkdirSync(target, { recursive: true });
-command("cc", ["-shared", "-fPIC", "-O2", "-Wall", "-Wextra", "-Werror", "-pthread", adapterSource, "-o", adapter]);
+fs.copyFileSync(selected.artifact, adapter);
 command("wasm-tools", ["component", "wit", path.join(sourceRoot, "lib.wit")]);
 command("cargo", rustArgs(["fmt", "--check", "--manifest-path", manifest]));
 command("cargo", rustArgs(["clippy", "--locked", "--manifest-path", manifest, "--all-targets", "--", "-D", "warnings"]));
@@ -35,7 +37,7 @@ command("cargo", rustArgs(["build", "--release", "--locked", "--manifest-path", 
 });
 
 const adapterSha256 = hash(read(adapter));
-const descriptorTemplate = fs.readFileSync(path.join(sourceRoot, "native-boundary.template.json"), "utf8");
+const descriptorTemplate = fs.readFileSync(path.join(sourceRoot, "platform/native-boundary.template.json"), "utf8");
 assert.match(descriptorTemplate, /BUILD_OUTPUT_SHA256/);
 fs.writeFileSync(descriptorPath, descriptorTemplate.replace("BUILD_OUTPUT_SHA256", adapterSha256));
 
@@ -598,7 +600,7 @@ const rejected = spawnSync(executor, [invalidDescriptorPath, path.join(target, "
 assert.notEqual(rejected.status, 0);
 assert.match(`${rejected.stdout}\n${rejected.stderr}`, /adapter identity mismatch/);
 
-console.log(JSON.stringify({
+const qualification = {
   accepted: true,
   candidate: "wasmc-system-linux-endpoint",
   schema: "wasmc.linux-lib-defined-boundary-qualification/v7",
@@ -673,4 +675,9 @@ console.log(JSON.stringify({
   },
   adapter_identity_rejection: true,
   lifecycle: "prototype-qualified-on-this-linux-not-admitted-not-released",
-}));
+};
+
+qualification.generated_run = selectedRun();
+qualification.host_source_sha256 = hash(read(rustSource));
+fs.writeFileSync(path.join(selectedRun(), "linux-endpoint-q1.json"),JSON.stringify(qualification,null,2)+"\n");
+console.log(JSON.stringify(qualification));

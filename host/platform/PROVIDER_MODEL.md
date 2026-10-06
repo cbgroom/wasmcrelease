@@ -19,7 +19,7 @@ Consequently:
 
 ## Exact target resolution
 
-Every selectable system Lib candidate owns a `system_binding` record declaring
+Every selectable system current Lib source owns a `native.binding` record declaring
 the platform-neutral API it implements, the fixed boundary version, its native
 descriptor, exact target tuples and five independent lifecycle states. The
 target tuple is `{os, architecture, environment, embedding}`; in particular,

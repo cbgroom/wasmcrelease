@@ -54,7 +54,7 @@ native app profiles are distinct and must not be substituted for one another.
 ## Structured app surface-control profile
 
 The app surface-control provider is packaged at
-`libsrc/wasmc-system-ios-app-surface-control`. Its public WIT is kept above the
+`libspec/wasmc-system-ios-app-surface-control`. Its public WIT is kept above the
 `platform/ios` binding, while Swift sources and required Apple frameworks are
 declared by the Lib-owned embedded-source descriptor. The generated
 `app-surface-control-profile.json` selects it for the exact
@@ -63,6 +63,6 @@ providers for the same WIT API; they do not add branches to the fixed Host or
 reuse iOS source by package-name inference.
 
 The runnable application is shipped with the candidate source at
-`libsrc/wasmc-system-ios-app-surface-control/examples/ios-app`. Host tests do
+`tests/lib-refresh/native/wasmc-system-ios-app-surface-control/examples/ios-app`. Host tests do
 not own or duplicate this example; repository qualification invokes it in
 place through `scripts/test-ios-app-surface-control.mjs`.

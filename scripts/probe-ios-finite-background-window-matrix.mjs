@@ -12,7 +12,7 @@ const simctl = (args, options = {}) => run("/usr/bin/xcrun", ["simctl", ...args]
 const projectDir = "target/ios-finite-background-window-matrix-project";
 const derivedDir = "target/ios-finite-background-window-matrix-derived";
 const bundle = "io.wasmc.app-lifecycle-lab";
-const exampleRoot = "libsrc/wasmc-system-ios-app-lifecycle/examples/ios-app";
+const exampleRoot = "tests/lib-refresh/native/wasmc-system-ios-app-lifecycle/examples/ios-app";
 fs.mkdirSync(projectDir, { recursive: true });
 run("xcodegen", ["generate", "--spec", `${exampleRoot}/project.yml`, "--project", projectDir,
   "--project-root", exampleRoot], { env: { ...process.env,

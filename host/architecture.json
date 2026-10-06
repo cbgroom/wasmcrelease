@@ -135,9 +135,9 @@
     "executor": "host/runtime/lib-boundary/reference.mjs",
     "executor_sha256": "e133672195a9641e8c813f6b07e040c5817249a055f44ebeadd9c29404cf03ef",
     "system_libs": [
-      "libsrc/wasmc-system-file-prototype",
-      "libsrc/wasmc-system-process-prototype",
-      "libsrc/wasmc-system-network-prototype"
+      "libspec/wasmc-system-file-prototype",
+      "libspec/wasmc-system-process-prototype",
+      "libspec/wasmc-system-network-prototype"
     ],
     "evidence": "scripts/test-lib-defined-boundary-runtime.mjs",
     "scope": [
@@ -149,8 +149,8 @@
     "linux_native": {
       "status": "device-io-and-lib-owned-tcp-linux-aarch64-and-x86_64-qualified-not-admitted-not-released",
       "executor": "host/runtime/lib-boundary/native-linux",
-      "system_lib": "libsrc/wasmc-system-linux-endpoint",
-      "additional_system_libs": ["libsrc/wasmc-system-linux-socket"],
+      "system_lib": "libspec/wasmc-system-linux-endpoint",
+      "additional_system_libs": ["libspec/wasmc-system-linux-socket"],
       "evidence": "scripts/test-linux-lib-defined-boundary.mjs",
       "convergence": "one Lib-owned VFS/file-descriptor adapter reaches devfs, procfs and sysfs without device names or domain APIs in the fixed Rust executor",
       "scope": [
@@ -186,10 +186,10 @@
       "executor": "host/runtime/lib-boundary/native-android",
       "profile": "host/platform/android/agent-computer-profile.json",
       "system_libs": [
-        "libsrc/wasmc-system-android-display",
-        "libsrc/wasmc-system-android-ui",
-        "libsrc/wasmc-system-android-input",
-        "libsrc/wasmc-system-android-uinput"
+        "libspec/wasmc-system-android-display",
+        "libspec/wasmc-system-android-ui",
+        "libspec/wasmc-system-android-input",
+        "libspec/wasmc-system-android-uinput"
       ],
       "evidence": "scripts/test-android-agent-computer.mjs",
       "convergence": "one fixed target Host executes an exact-target profile resolved from Lib-owned display, semantic UI and input binding metadata behind platform-neutral WIT APIs",
@@ -222,7 +222,7 @@
       "status": "ios-26.5-arm64-simulator-display-qualified-not-admitted-not-released",
       "executor": "host/runtime/lib-boundary/native-apple-simulator",
       "profile": "host/platform/ios/simulator-observation-profile.json",
-      "system_libs": ["libsrc/wasmc-system-ios-simulator-display"],
+      "system_libs": ["libspec/wasmc-system-ios-simulator-display"],
       "evidence": "scripts/test-ios-simulator-observation.mjs",
       "convergence": "one fixed domain-neutral macOS supervisor executes an exact iOS Simulator display Lib while unavailable UI and input APIs fail closed",
       "scope": [
@@ -299,8 +299,8 @@
       "status": "ios-26.5-arm64-ipad-simulator-lib-owned-runnable-example-v5-qualified-not-admitted-not-released",
       "executor": "host/tests/ios-app-capability/Host/FixedHost.swift",
       "profile": "host/platform/ios/app-surface-control-profile.json",
-      "example": "libsrc/wasmc-system-ios-app-surface-control/examples/ios-app",
-      "system_libs": ["libsrc/wasmc-system-ios-app-surface-control"],
+      "example": "tests/lib-refresh/native/wasmc-system-ios-app-surface-control/examples/ios-app",
+      "system_libs": ["libspec/wasmc-system-ios-app-surface-control"],
       "evidence": "admission/host-lib-defined-boundary-v1/ios-arm64-app-surface-control-v5.json",
       "convergence": "the public WIT, iOS embedded-source binding, exact target profile and runnable application example now form one Lib-owned package while the fixed Host and PiP/handoff behavior remain unchanged",
       "scope": [

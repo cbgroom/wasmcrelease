@@ -1,3 +1,4 @@
+import {generatedLib,selectedRun} from './generated-lib-v2.mjs';
 import assert from "node:assert/strict";
 import { execFileSync, spawn } from "node:child_process";
 import { createHash } from "node:crypto";
@@ -9,13 +10,15 @@ assert.equal(process.platform, "linux", "native operation bridge requires Linux"
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const target = path.join(root, "target/lib-defined-boundary-operation-bridge");
-const sourceRoot = path.join(root, "libsrc/wasmc-system-linux-socket");
+const selectedSocket = await generatedLib("wasmc-system-linux-socket");
+const sourceRoot = selectedSocket.root;
 const defaultManifest = path.join(root, "host/runtime/lib-boundary/native-linux/Cargo.toml");
 const bridgeManifest = path.join(root, "host/runtime/lib-boundary/native-linux-operation/Cargo.toml");
-const adapterSource = path.join(sourceRoot, "native-adapter.c");
+const adapterSource = path.join(sourceRoot, "platform/native-adapter.c");
 const adapter = path.join(target, "libwasmc_system_linux_socket.so");
 const descriptor = path.join(target, "native-boundary.json");
-const endpointSourceRoot = path.join(root, "libsrc/wasmc-system-linux-endpoint");
+const selectedEndpoint = await generatedLib("wasmc-system-linux-endpoint");
+const endpointSourceRoot = selectedEndpoint.root;
 const endpointAdapter = path.join(target, "libwasmc_system_linux_endpoint.so");
 const endpointDescriptor = path.join(target, "endpoint-native-boundary.json");
 const defaultExecutor = path.join(target, "default/release/wasmc-lib-boundary-native-linux");
@@ -28,8 +31,8 @@ const hash = (bytes) => createHash("sha256").update(bytes).digest("hex");
 
 fs.rmSync(target, { recursive: true, force: true });
 fs.mkdirSync(target, { recursive: true });
-command("cc", ["-shared", "-fPIC", "-O2", "-Wall", "-Wextra", "-Werror", adapterSource, "-o", adapter]);
-command("cc", ["-shared", "-fPIC", "-O2", "-Wall", "-Wextra", "-Werror", "-pthread", path.join(endpointSourceRoot, "native-adapter.c"), "-o", endpointAdapter]);
+fs.copyFileSync(selectedSocket.artifact, adapter);
+fs.copyFileSync(selectedEndpoint.artifact, endpointAdapter);
 command("cargo", rustArgs(["build", "--release", "--locked", "--manifest-path", defaultManifest]), {
   env: { ...process.env, CARGO_TARGET_DIR: path.join(target, "default") },
 });
@@ -37,20 +40,18 @@ command("cargo", rustArgs(["build", "--release", "--locked", "--manifest-path", 
   env: { ...process.env, CARGO_TARGET_DIR: path.join(target, "bridge") },
 });
 
-const endpointReceiptPath = process.arch === "arm64"
-  ? path.join(root, "admission/host-lib-defined-boundary-v1/linux-aarch64-device-io-v7.json")
-  : path.join(root, "admission/host-lib-defined-boundary-v1/linux-x86_64-device-io-v7.json");
+const endpointReceiptPath = path.join(selectedRun(), "linux-endpoint-q1.json");
 const endpointReceipt = JSON.parse(fs.readFileSync(endpointReceiptPath, "utf8"));
 const defaultExecutorSha256 = hash(fs.readFileSync(defaultExecutor));
 const bridgeExecutorSha256 = hash(fs.readFileSync(bridgeExecutor));
-assert.equal(defaultExecutorSha256, endpointReceipt.outputs.executor_sha256, "default executor identity drifted");
+assert.equal(defaultExecutorSha256, endpointReceipt.executor_sha256, "default executor identity drifted");
 assert.notEqual(bridgeExecutorSha256, defaultExecutorSha256, "successor bridge must have an independent identity");
 
 const adapterSha256 = hash(fs.readFileSync(adapter));
-const descriptorTemplate = fs.readFileSync(path.join(sourceRoot, "native-boundary.template.json"), "utf8");
+const descriptorTemplate = fs.readFileSync(path.join(sourceRoot, "platform/native-boundary.template.json"), "utf8");
 fs.writeFileSync(descriptor, descriptorTemplate.replace("BUILD_OUTPUT_SHA256", adapterSha256));
 const endpointAdapterSha256 = hash(fs.readFileSync(endpointAdapter));
-const endpointDescriptorTemplate = fs.readFileSync(path.join(endpointSourceRoot, "native-boundary.template.json"), "utf8");
+const endpointDescriptorTemplate = fs.readFileSync(path.join(endpointSourceRoot, "platform/native-boundary.template.json"), "utf8");
 fs.writeFileSync(
   endpointDescriptor,
   endpointDescriptorTemplate

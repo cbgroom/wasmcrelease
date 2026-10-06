@@ -1,3 +1,4 @@
+import { generatedLib } from './generated-lib-v2.mjs';
 import assert from 'node:assert/strict';
 import { mkdtemp, readFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
@@ -21,52 +22,16 @@ function run(command, args, options = {}) {
   return result.stdout.trim();
 }
 
-const libs = {
-  data: {
-    manifest: 'libsrc/wasmc-data-core/Cargo.toml',
-    artifact: 'libsrc/wasmc-data-core/target/wasm32-unknown-unknown/release/wasmc_data_core_public.wasm',
-  },
-  csv: {
-    manifest: 'libsrc/wasmc-csv/Cargo.toml',
-    artifact: 'libsrc/wasmc-csv/target/wasm32-unknown-unknown/release/wasmc_csv_public.wasm',
-  },
-  expr: {
-    manifest: 'libsrc/wasmc-data-expr/Cargo.toml',
-    artifact: 'libsrc/wasmc-data-expr/target/wasm32-unknown-unknown/release/wasmc_data_expr_public.wasm',
-  },
-  compute: {
-    manifest: 'libsrc/wasmc-data-compute/Cargo.toml',
-    artifact: 'libsrc/wasmc-data-compute/target/wasm32-unknown-unknown/release/wasmc_data_compute_public.wasm',
-  },
-  relational: {
-    manifest: 'libsrc/wasmc-data-relational/Cargo.toml',
-    artifact: 'libsrc/wasmc-data-relational/target/wasm32-unknown-unknown/release/wasmc_data_relational_public.wasm',
-  },
-  profile: {
-    manifest: 'libsrc/wasmc-data-profile/Cargo.toml',
-    artifact: 'libsrc/wasmc-data-profile/target/wasm32-unknown-unknown/release/wasmc_data_profile_public.wasm',
-  },
-  interchange: {
-    manifest: 'libsrc/wasmc-data-interchange/Cargo.toml',
-    artifact: 'libsrc/wasmc-data-interchange/target/wasm32-unknown-unknown/release/wasmc_data_interchange_public.wasm',
-  },
-};
-
-for (const lib of Object.values(libs)) {
-  run('cargo', [
-    '+1.96.0', 'build', '--release', '--locked', '--target', 'wasm32-unknown-unknown',
-    '--manifest-path', lib.manifest,
-  ]);
-  const bytes = await readFile(resolve(root, lib.artifact));
-  assert.deepEqual(WebAssembly.Module.imports(new WebAssembly.Module(bytes)), []);
-}
-
+const libs = {};
+libs.data = await generatedLib('wasmc-data-core');
+libs.csv = await generatedLib('wasmc-csv');
+libs.expr = await generatedLib('wasmc-data-expr');
+libs.compute = await generatedLib('wasmc-data-compute');
+libs.relational = await generatedLib('wasmc-data-relational');
+libs.profile = await generatedLib('wasmc-data-profile');
+libs.interchange = await generatedLib('wasmc-data-interchange');
 const work = await mkdtemp(join(tmpdir(), 'wasmc-data-pipeline-'));
 try {
-  for (const [name, lib] of Object.entries(libs)) {
-    lib.component = join(work, name + '.component.wasm');
-    run('wasm-tools', ['component', 'new', resolve(root, lib.artifact), '-o', lib.component]);
-  }
 
   const input = [...new TextEncoder().encode('id,name\n1,A\n2,B\n3,C\n')].join(',');
   const fields = '[{name: "id", data-type: int64, nullable: false}, {name: "name", data-type: utf8, nullable: false}]';

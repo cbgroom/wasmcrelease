@@ -604,7 +604,7 @@ admission and release remain pending.
 
 The v4 successor moves the unchanged WIT and Swift provider bytes out of the
 qualification App into the canonical public-source package
-`libsrc/wasmc-system-ios-app-surface-control`. Its Lib-owned iOS binding declares
+`libspec/wasmc-system-ios-app-surface-control`. Its Lib-owned iOS binding declares
 an `embedded-source` artifact, and the common exact-target resolver generates
 the retained `ios/aarch64/simulator/native` profile while still resolving the
 existing Android/Linux dynamic adapters. A complete iPad Simulator rerun

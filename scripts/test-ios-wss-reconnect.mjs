@@ -23,7 +23,7 @@ try {
   const projectDir = "target/ios-wss-reconnect-project";
   const derivedDir = "target/ios-wss-reconnect-derived";
   const bundle = "io.wasmc.websocket-lab";
-  const exampleRoot = "libsrc/wasmc-system-ios-websocket/examples/ios-app";
+  const exampleRoot = "tests/lib-refresh/native/wasmc-system-ios-websocket/examples/ios-app";
   fs.mkdirSync(projectDir, { recursive: true });
   run("xcodegen", ["generate", "--spec", `${exampleRoot}/project.yml`, "--project", projectDir,
     "--project-root", exampleRoot], { env: { ...process.env,

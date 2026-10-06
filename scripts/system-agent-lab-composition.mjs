@@ -36,19 +36,19 @@ export function validateAndMergeComposition(root, value, options = {}) {
     if (!validateBindings) continue;
 
     const candidate = readJSON(root, scenario.candidate);
-    assert.equal(candidate.schema, "wasmc.libsrc-candidate/v1");
-    assert.equal(candidate.system_binding.implements, scenario.api);
-    assert.equal(candidate.system_binding.boundary, value.host.contract);
-    assert.equal(candidate.system_binding.lifecycle.qualified, true);
-    assert.equal(candidate.system_binding.lifecycle.admitted, false);
-    assert.ok(candidate.system_binding.targets.some((target) =>
+    assert.equal(candidate.schema, "wasmc.lib-refresh-source/v2");
+    assert.equal(candidate.native.binding.implements, scenario.api);
+    assert.equal(candidate.native.binding.boundary, value.host.contract);
+    assert.equal(candidate.profile, "native");
+    assert.ok(Array.isArray(candidate.native.files));
+    assert.ok(candidate.native.binding.targets.some((target) =>
       JSON.stringify(target) === JSON.stringify(value.target)));
     const packageRoot = path.dirname(scenario.candidate);
-    const binding = readJSON(root, path.join(packageRoot, candidate.system_binding.descriptor));
+    const binding = readJSON(root, path.join(packageRoot, candidate.native.binding.descriptor));
     assert.equal(binding.identity, scenario.provider);
     for (const source of scenario.sources) {
       assert.ok(fs.statSync(path.join(root, source)).size > 0);
-      assert.ok(candidate.source.includes(path.relative(packageRoot, source)),
+      assert.ok(candidate.native.files.includes(path.relative(packageRoot, source)),
         `${scenario.id}: source absent from exact candidate: ${source}`);
     }
     options.validateBinding?.({ scenario, candidate, binding, packageRoot, manifest: value });

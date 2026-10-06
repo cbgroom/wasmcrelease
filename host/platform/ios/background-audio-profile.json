@@ -1,5 +1,5 @@
 {
-  "schema": "wasmc.library-os-profile/v2",
+  "schema": "wasmc.library-os-profile/v3",
   "id": "ios-background-audio-v1",
   "target": {
     "os": "ios",
@@ -12,7 +12,7 @@
     "executor": "host/tests/ios-app-capability/Host/FixedHost.swift",
     "required_domain_apis": 0
   },
-  "required_lifecycle": "qualified",
+  "required_lifecycle": "source",
   "requirements": [
     "wasmc:system-background-audio@0.0.1"
   ],
@@ -20,16 +20,23 @@
     {
       "api": "wasmc:system-background-audio@0.0.1",
       "provider": "wasmc:system-ios-background-audio@0.0.1-dev.1",
-      "candidate": "libsrc/wasmc-system-ios-background-audio/candidate.json",
-      "wit": "libsrc/wasmc-system-ios-background-audio/lib.wit",
-      "descriptor": "libsrc/wasmc-system-ios-background-audio/platform/ios/binding.json",
+      "source": "libspec/wasmc-system-ios-background-audio/lib.json",
+      "source_sha256": "d4da0eebaf39eb5e772232f76114a4aea4c8bbac0dfe3ecf76ce62302f88c655",
+      "wit": "libspec/wasmc-system-ios-background-audio/lib.wit",
+      "wit_sha256": "332d6e7405666f2ee06e08d6bb886a7aa51ccd197a8d677551a0481a40f57ebf",
+      "descriptor": "libspec/wasmc-system-ios-background-audio/platform/ios/binding.json",
+      "descriptor_sha256": "175c44a5ea6a137ccb065e4333792ca85ce4df3d30ed13b69a4ea1ae186fd0da",
+      "implementation_sha256": {
+        "platform/ios/Sources/BackgroundAudioProvider.swift": "33ceb2c6d813fb685bf7532e121ca1e714c2cccc973b68addbd4d20b8df33e31",
+        "platform/ios/binding.json": "175c44a5ea6a137ccb065e4333792ca85ce4df3d30ed13b69a4ea1ae186fd0da"
+      },
       "boundary": "wasmc.lib-defined-host-boundary/v1",
       "artifact": {
         "format": "embedded-source",
         "language": "swift",
         "linkage": "static-app",
         "sources": [
-          "libsrc/wasmc-system-ios-background-audio/platform/ios/Sources/BackgroundAudioProvider.swift"
+          "libspec/wasmc-system-ios-background-audio/platform/ios/Sources/BackgroundAudioProvider.swift"
         ],
         "frameworks": [
           "AVFoundation",
@@ -37,18 +44,19 @@
           "UIKit"
         ]
       },
+      "lifecycle": {
+        "source": true,
+        "qualified": false,
+        "admitted": false,
+        "released": false,
+        "discoverable": false,
+        "installable": false
+      },
       "target": {
         "os": "ios",
         "architecture": "aarch64",
         "environment": "simulator",
         "embedding": "native"
-      },
-      "lifecycle": {
-        "qualified": true,
-        "admitted": false,
-        "released": false,
-        "discoverable": false,
-        "installable": false
       }
     }
   ],
@@ -59,5 +67,6 @@
     "lock_screen": false,
     "route_change": false,
     "interruption": false
-  }
+  },
+  "executable": false
 }

@@ -19,7 +19,7 @@ run("node", ["scripts/validate-ios-app-surface-control.mjs"]);
 const projectDir = "target/ios-app-surface-control-project";
 const derivedDir = "target/ios-app-surface-control-derived";
 const bundle = "io.wasmc.surface-control-lab";
-const exampleRoot = "libsrc/wasmc-system-ios-app-surface-control/examples/ios-app";
+const exampleRoot = "tests/lib-refresh/native/wasmc-system-ios-app-surface-control/examples/ios-app";
 fs.mkdirSync(projectDir, { recursive: true });
 run("xcodegen", [
   "generate", "--spec", `${exampleRoot}/project.yml`,

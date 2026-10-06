@@ -1,16 +1,16 @@
 {
-  "schema": "wasmc.system-lib-package-layout/v1",
+  "schema": "wasmc.system-lib-package-layout/v2",
   "status": "architecture-workstream-not-released",
-  "package_root": "libsrc/<provider-package>",
+  "package_root": "libspec/<provider-package>",
   "layers": {
     "semantic": "lib.wit",
-    "metadata": "candidate.json",
+    "metadata": "lib.json",
     "platform_binding": "platform/<os>/binding.json",
     "adapter_source": "platform/<os>/Sources/",
-    "examples": "examples/<example>/",
+    "examples": "tests/lib-refresh/native/<provider-package>/examples/<example>/",
     "target_request": "host/platform/<os>/*-request.json",
     "resolved_profile": "host/platform/<os>/*-profile.json",
-    "qualification": "admission/host-lib-defined-boundary-v1/*.json"
+    "qualification": "per-run generated-package evidence; no inherited source qualification"
   },
   "rules": {
     "wit_is_platform_neutral": true,

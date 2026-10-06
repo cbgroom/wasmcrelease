@@ -1,0 +1,73 @@
+name: Current Lib source and generated-package qualification
+
+on:
+  pull_request:
+    paths: ['libspec/**', 'scripts/**', 'tests/lib-refresh/**', 'host/platform/**', '.github/workflows/lib-refresh.yml']
+  push:
+    branches: [main]
+    paths: ['libspec/**', 'scripts/**', 'tests/lib-refresh/**', 'host/platform/**', '.github/workflows/lib-refresh.yml']
+  workflow_dispatch:
+    inputs:
+      producer:
+        description: Reviewed absolute WAsmC producer executable on the controlled runner
+        required: true
+        type: string
+      producer_sha256:
+        description: Expected SHA256 for that executable
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  source-contract:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: 24
+      - run: |
+          node scripts/validate-current-only-libs.mjs
+          node scripts/validate-lib-refresh-v2-source.mjs
+          node --test scripts/test-lib-refresh-cache-v2.mjs scripts/test-lib-refresh-workflow-v2.mjs
+          node scripts/test-platform-profile-resolver.mjs
+  generated-packages:
+    if: github.event_name == 'workflow_dispatch'
+    needs: source-contract
+    runs-on: [self-hosted, wasmc-producer]
+    env:
+      WASMC_LIB_PRODUCER: ${{ inputs.producer }}
+      EXPECTED_PRODUCER_SHA256: ${{ inputs.producer_sha256 }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - name: Verify explicit producer
+        run: |
+          python3 - <<'PY'
+          import hashlib, os, pathlib, re
+          p=pathlib.Path(os.environ['WASMC_LIB_PRODUCER'])
+          expected=os.environ['EXPECTED_PRODUCER_SHA256']
+          assert p.is_absolute() and p.is_file() and re.fullmatch('[0-9a-f]{64}',expected)
+          assert hashlib.sha256(p.read_bytes()).hexdigest()==expected
+          PY
+      - name: Refresh current inventory
+        run: |
+          mkdir -p target/current-libs
+          node scripts/lib-refresh-v2.mjs --producer "$WASMC_LIB_PRODUCER" --all --out target/current-libs > target/current-libs/result.json
+          node -e 'const fs=require("fs");const x=JSON.parse(fs.readFileSync("target/current-libs/result.json"));if(!x.accepted)process.exit(1);fs.appendFileSync(process.env.GITHUB_ENV,"RUN_ROOT="+x.run_root+"\n")'
+      - name: Qualify exact generated packages
+        run: node scripts/qualify-lib-refresh-v2.mjs --run-root "$RUN_ROOT" --component
+      - name: Linux generated adapter runtime tests
+        run: |
+          node scripts/test-linux-lib-defined-boundary.mjs --run-root "$RUN_ROOT"
+          node scripts/test-linux-socket-lib-defined-boundary.mjs --run-root "$RUN_ROOT"
+          node scripts/test-linux-operation-bridge.mjs --run-root "$RUN_ROOT"
+      - name: Optional hardware uinput
+        if: vars.WASMC_UINPUT_AVAILABLE == 'true'
+        run: node scripts/test-linux-uinput-lib-defined-boundary.mjs --run-root "$RUN_ROOT"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: current-lib-evidence
+          path: target/current-libs

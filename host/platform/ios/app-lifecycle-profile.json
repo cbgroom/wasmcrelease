@@ -1,5 +1,5 @@
 {
-  "schema": "wasmc.library-os-profile/v2",
+  "schema": "wasmc.library-os-profile/v3",
   "id": "ios-app-lifecycle-v1",
   "target": {
     "os": "ios",
@@ -12,7 +12,7 @@
     "executor": "host/tests/ios-app-capability/Host/FixedHost.swift",
     "required_domain_apis": 0
   },
-  "required_lifecycle": "qualified",
+  "required_lifecycle": "source",
   "requirements": [
     "wasmc:system-app-lifecycle@0.0.1"
   ],
@@ -20,34 +20,42 @@
     {
       "api": "wasmc:system-app-lifecycle@0.0.1",
       "provider": "wasmc:system-ios-app-lifecycle@0.0.1-dev.1",
-      "candidate": "libsrc/wasmc-system-ios-app-lifecycle/candidate.json",
-      "wit": "libsrc/wasmc-system-ios-app-lifecycle/lib.wit",
-      "descriptor": "libsrc/wasmc-system-ios-app-lifecycle/platform/ios/binding.json",
+      "source": "libspec/wasmc-system-ios-app-lifecycle/lib.json",
+      "source_sha256": "fe5e6dd5410dee2d9f7748def875e491e95c45b17e72d2cd4220d06e3059466f",
+      "wit": "libspec/wasmc-system-ios-app-lifecycle/lib.wit",
+      "wit_sha256": "ca50e711b55fb315e760a961955b354e4f409c6cf3bf8da8140a08cb2fafc21c",
+      "descriptor": "libspec/wasmc-system-ios-app-lifecycle/platform/ios/binding.json",
+      "descriptor_sha256": "0c62febfd1b17e0d4560e1d78f0e7e7e0a51d6b66ccf8609cc7fecf7f4b56402",
+      "implementation_sha256": {
+        "platform/ios/Sources/AppLifecycleProvider.swift": "7d99a0ae661c44990a7e32d18045951a2d57aa4cb5e579b2ffc7229950b4a13c",
+        "platform/ios/binding.json": "0c62febfd1b17e0d4560e1d78f0e7e7e0a51d6b66ccf8609cc7fecf7f4b56402"
+      },
       "boundary": "wasmc.lib-defined-host-boundary/v1",
       "artifact": {
         "format": "embedded-source",
         "language": "swift",
         "linkage": "static-app",
         "sources": [
-          "libsrc/wasmc-system-ios-app-lifecycle/platform/ios/Sources/AppLifecycleProvider.swift"
+          "libspec/wasmc-system-ios-app-lifecycle/platform/ios/Sources/AppLifecycleProvider.swift"
         ],
         "frameworks": [
           "Foundation",
           "UIKit"
         ]
       },
+      "lifecycle": {
+        "source": true,
+        "qualified": false,
+        "admitted": false,
+        "released": false,
+        "discoverable": false,
+        "installable": false
+      },
       "target": {
         "os": "ios",
         "architecture": "aarch64",
         "environment": "simulator",
         "embedding": "native"
-      },
-      "lifecycle": {
-        "qualified": true,
-        "admitted": false,
-        "released": false,
-        "discoverable": false,
-        "installable": false
       }
     }
   ],
@@ -57,5 +65,6 @@
     "cold_relaunch_journal_recovery": true,
     "simulator_suspension": false,
     "physical_device": false
-  }
+  },
+  "executable": false
 }

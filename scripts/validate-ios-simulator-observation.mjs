@@ -4,7 +4,7 @@ import fs from "node:fs";
 import path from "node:path";
 import {
   ProfileResolutionError,
-  loadSystemLibCandidate,
+  loadSystemLibSource,
   resolveSystemProfile,
   resolveSystemProfileRequest,
 } from "../host/platform/profile-resolver.mjs";
@@ -13,9 +13,9 @@ const root = process.cwd();
 const readJson = (relative) => JSON.parse(fs.readFileSync(path.join(root, relative), "utf8"));
 const request = readJson("host/platform/ios/simulator-observation-request.json");
 const profile = readJson("host/platform/ios/simulator-observation-profile.json");
-const candidatePath = "libsrc/wasmc-system-ios-simulator-display/candidate.json";
+const candidatePath = "libspec/wasmc-system-ios-simulator-display/lib.json";
 const candidate = readJson(candidatePath);
-const descriptor = readJson("libsrc/wasmc-system-ios-simulator-display/native-boundary.template.json");
+const descriptor = readJson("libspec/wasmc-system-ios-simulator-display/platform/native-boundary.template.json");
 
 assert.deepEqual(resolveSystemProfileRequest(root, request), profile);
 assert.deepEqual(profile.target, {
@@ -24,8 +24,9 @@ assert.deepEqual(profile.target, {
 assert.equal(profile.host.required_domain_apis, 0);
 assert.deepEqual(profile.requirements, ["wasmc:system-display@0.0.1"]);
 assert.equal(profile.bindings[0].provider, "wasmc:system-ios-simulator-display@0.0.1-dev.1");
-assert.equal(candidate.system_binding.lifecycle.qualified, true);
-assert.equal(candidate.admitted, false);
+assert.equal(candidate.profile, "native");
+assert.equal(profile.executable, false);
+assert.equal(profile.bindings[0].lifecycle.qualified, false);
 assert.equal(descriptor.lifecycle, "prototype-not-admitted-not-released");
 
 const hostSource = fs.readFileSync("host/runtime/lib-boundary/native-apple-simulator/src/main.rs", "utf8");
@@ -34,15 +35,15 @@ for (const forbidden of ["simctl", "screenshot", "com.apple.Preferences", "syste
 }
 assert.match(hostSource, /wasmc\.native-boundary-descriptor\/v1/);
 assert.match(hostSource, /adapter identity mismatch/);
-const adapterSource = fs.readFileSync("libsrc/wasmc-system-ios-simulator-display/native-adapter.c", "utf8");
+const adapterSource = fs.readFileSync("libspec/wasmc-system-ios-simulator-display/platform/native-adapter.c", "utf8");
 assert.match(adapterSource, /simctl/);
 assert.match(adapterSource, /screenshot/);
 assert.match(adapterSource, /WASMC_IOS_SIMULATOR_UDID/);
-execFileSync("wasm-tools", ["component", "wit", "libsrc/wasmc-system-ios-simulator-display/lib.wit"], {
+execFileSync("wasm-tools", ["component", "wit", "libspec/wasmc-system-ios-simulator-display/lib.wit"], {
   cwd: root, stdio: "ignore",
 });
 
-const loaded = loadSystemLibCandidate(root, candidatePath);
+const loaded = loadSystemLibSource(root, candidatePath);
 for (const missingApi of [
   "wasmc:system-ui@0.0.1",
   "wasmc:system-input@0.0.1",

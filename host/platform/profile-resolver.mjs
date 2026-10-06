@@ -1,268 +1,118 @@
-import fs from "node:fs";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
+import fs from 'node:fs';
+import path from 'node:path';
+import { createHash } from 'node:crypto';
+import { fileURLToPath } from 'node:url';
 
-const PROFILE_SCHEMA = "wasmc.library-os-profile/v2";
-const REQUEST_SCHEMA = "wasmc.system-profile-request/v1";
-const CANDIDATE_SCHEMA = "wasmc.libsrc-candidate/v1";
-const NATIVE_DESCRIPTOR_SCHEMA = "wasmc.native-boundary-descriptor/v1";
-const PLATFORM_DESCRIPTOR_SCHEMA = "wasmc.platform-binding-descriptor/v1";
-const TARGET_FIELDS = ["os", "architecture", "environment", "embedding"];
-const LIFECYCLE_STAGES = ["qualified", "admitted", "released", "discoverable", "installable"];
-
+const REQUEST = 'wasmc.system-profile-request/v2';
+const SOURCE = 'wasmc.lib-refresh-source/v2';
+const TARGET = ['os', 'architecture', 'environment', 'embedding'];
+const STAGES = ['source', 'qualified', 'admitted', 'released', 'discoverable', 'installable'];
+const object = value => value !== null && typeof value === 'object' && !Array.isArray(value);
+const sha = bytes => createHash('sha256').update(bytes).digest('hex');
 export class ProfileResolutionError extends Error {
-  constructor(code, message, details = {}) {
-    super(message);
-    this.name = "ProfileResolutionError";
-    this.code = code;
-    this.details = details;
-  }
+  constructor(code, message, details = {}) { super(message); this.name = 'ProfileResolutionError'; this.code = code; this.details = details; }
 }
-
-const fail = (code, message, details) => {
-  throw new ProfileResolutionError(code, message, details);
-};
-
-const isObject = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
-
-function validateTarget(target, context) {
-  if (!isObject(target)) fail("target.invalid", `${context} target must be an object`);
-  const keys = Object.keys(target).sort();
-  const expected = [...TARGET_FIELDS].sort();
-  if (JSON.stringify(keys) !== JSON.stringify(expected)) {
-    fail("target.invalid", `${context} target must contain exactly ${TARGET_FIELDS.join(", ")}`, { target });
-  }
-  for (const field of TARGET_FIELDS) {
-    if (typeof target[field] !== "string" || target[field].length === 0) {
-      fail("target.invalid", `${context} target.${field} must be a non-empty string`, { target });
-    }
-  }
+const fail = (code, message, details) => { throw new ProfileResolutionError(code, message, details); };
+function target(value, label) {
+  if (!object(value) || JSON.stringify(Object.keys(value).sort()) !== JSON.stringify([...TARGET].sort()) ||
+      TARGET.some(key => typeof value[key] !== 'string' || !value[key])) fail('target.invalid', label + ': invalid exact target');
 }
-
-function safeRelativePath(root, relative, context) {
-  if (typeof relative !== "string" || relative.length === 0 || path.isAbsolute(relative)) {
-    fail("package.path_invalid", `${context} must be a non-empty relative path`, { path: relative });
-  }
-  const resolved = path.resolve(root, relative);
-  const prefix = `${path.resolve(root)}${path.sep}`;
-  if (!resolved.startsWith(prefix)) {
-    fail("package.path_invalid", `${context} escapes the package root`, { path: relative });
-  }
-  return resolved;
+function local(root, relative) {
+  if (typeof relative !== 'string' || !relative || path.isAbsolute(relative)) fail('package.path_invalid', 'relative file required');
+  const base = fs.realpathSync(root), result = path.resolve(base, relative);
+  if (!result.startsWith(base + path.sep)) fail('package.path_invalid', 'path escapes root', { relative });
+  const actual = fs.realpathSync(result);
+  if (actual !== result || !actual.startsWith(base + path.sep) || !fs.statSync(actual).isFile())
+    fail('package.path_invalid', 'symlink or non-regular source rejected', { relative });
+  return result;
 }
+const sameTarget = (a, b) => TARGET.every(key => a[key] === b[key]);
 
-function validateLifecycle(lifecycle, context) {
-  if (!isObject(lifecycle)) fail("lifecycle.invalid", `${context} lifecycle must be an object`);
-  let previous = true;
-  for (const stage of LIFECYCLE_STAGES) {
-    if (typeof lifecycle[stage] !== "boolean") {
-      fail("lifecycle.invalid", `${context} lifecycle.${stage} must be boolean`);
-    }
-    if (lifecycle[stage] && !previous) {
-      fail("lifecycle.invalid", `${context} lifecycle stages must be monotonic`, { lifecycle });
-    }
-    previous = lifecycle[stage];
-  }
-}
-
-export function loadSystemLibCandidate(root, candidatePath) {
-  const absoluteCandidate = safeRelativePath(root, candidatePath, "candidate path");
-  const candidate = JSON.parse(fs.readFileSync(absoluteCandidate, "utf8"));
-  if (candidate.schema !== CANDIDATE_SCHEMA) {
-    fail("package.invalid", `${candidatePath} has an unsupported candidate schema`);
-  }
-  const binding = candidate.system_binding;
-  if (!isObject(binding) || typeof binding.implements !== "string") {
-    fail("package.binding_missing", `${candidatePath} has no exact system_binding metadata`);
-  }
-  if (typeof binding.boundary !== "string" || typeof binding.descriptor !== "string") {
-    fail("package.binding_invalid", `${candidatePath} has an incomplete native binding declaration`);
-  }
-  if (!Array.isArray(binding.targets) || binding.targets.length === 0) {
-    fail("package.target_missing", `${candidatePath} has no declared target`);
-  }
-  binding.targets.forEach((target, index) => validateTarget(target, `${candidatePath} targets[${index}]`));
-  validateLifecycle(binding.lifecycle, candidatePath);
-
-  const candidateRoot = path.dirname(absoluteCandidate);
-  const witAbsolute = safeRelativePath(candidateRoot, candidate.wit, "WIT path");
-  const witSource = fs.readFileSync(witAbsolute, "utf8");
-  const witPackage = witSource.match(/^package\s+([^;]+);/m)?.[1];
-  if (witPackage !== binding.implements) {
-    fail("package.wit_mismatch", `${candidatePath} system_binding does not match its WIT package`, {
-      declared: binding.implements, wit_package: witPackage ?? null,
-    });
-  }
-  const descriptorAbsolute = safeRelativePath(candidateRoot, binding.descriptor, "descriptor path");
-  const descriptor = JSON.parse(fs.readFileSync(descriptorAbsolute, "utf8"));
-  if (![NATIVE_DESCRIPTOR_SCHEMA, PLATFORM_DESCRIPTOR_SCHEMA].includes(descriptor.schema)) {
-    fail("descriptor.invalid", `${candidatePath} has an unsupported descriptor schema`);
-  }
-  if (descriptor.wit !== candidate.wit) {
-    fail("descriptor.wit_mismatch", `${candidatePath} candidate and descriptor WIT paths differ`);
-  }
+// Current authoring only. A source plan does not inherit old admission/device
+// evidence. Executable consumers must select a verified generated Root receipt.
+export function loadSystemLibSource(root, sourcePath) {
+  if (!/^libspec\/[a-z0-9-]+\/lib\.json$/.test(sourcePath)) fail('package.invalid', 'source must be canonical libspec/<id>/lib.json');
+  const sourceFile = local(root, sourcePath), bytes = fs.readFileSync(sourceFile);
+  const spec = JSON.parse(bytes), base = path.dirname(sourceFile);
+  if (spec.schema !== SOURCE || spec.profile !== 'native') fail('package.invalid', 'current native source schema required');
+  if (path.basename(base) !== spec.id) fail('package.invalid', 'source identity/path mismatch');
+  const binding = spec.native?.binding;
+  if (!object(binding) || typeof binding.implements !== 'string' || typeof binding.boundary !== 'string' ||
+      typeof binding.descriptor !== 'string') fail('package.binding_missing', 'exact native binding required', { sourcePath });
+  if (!Array.isArray(binding.targets) || !binding.targets.length) fail('package.target_missing', 'binding targets required');
+  binding.targets.forEach(value => target(value, sourcePath));
+  const witFile = local(base, 'lib.wit'), witBytes = fs.readFileSync(witFile);
+  const witPackage = witBytes.toString().match(/^package\s+([^;]+);/m)?.[1];
+  if (witPackage !== binding.implements) fail('package.wit_mismatch', 'WIT package differs from binding');
+  if (!spec.native.files.includes(binding.descriptor)) fail('descriptor.invalid', 'descriptor not declared in source inventory');
+  const descriptorFile = local(base, binding.descriptor), descriptorBytes = fs.readFileSync(descriptorFile);
+  const descriptor = JSON.parse(descriptorBytes);
+  if (descriptor.wit !== 'lib.wit' || typeof descriptor.identity !== 'string') fail('descriptor.wit_mismatch', 'descriptor must name source-root lib.wit');
+  const declared = new Set(spec.native.files);
+  const sourceHashes = {};
+  for (const file of [...declared].sort()) sourceHashes[file] = sha(fs.readFileSync(local(base, file)));
   let artifact;
-  if (descriptor.schema === NATIVE_DESCRIPTOR_SCHEMA) {
-    if (!isObject(descriptor.adapter) || path.basename(descriptor.adapter.path) !== descriptor.adapter.path) {
-      fail("descriptor.adapter_invalid", `${candidatePath} adapter must be an exact sibling filename`);
+  if (descriptor.schema === 'wasmc.platform-binding-descriptor/v1') {
+    target(descriptor.target, 'descriptor');
+    if (!binding.targets.some(t => sameTarget(t, descriptor.target))) fail('descriptor.target_mismatch', 'descriptor target differs from binding');
+    if (descriptor.artifact?.format !== 'embedded-source' || !Array.isArray(descriptor.artifact.sources) ||
+        !descriptor.artifact.sources.length) fail('descriptor.artifact_invalid', 'embedded source list required');
+    for (const file of descriptor.artifact.sources) {
+      if (!declared.has(file)) fail('descriptor.artifact_invalid', 'embedded source is not in source inventory', { file });
+      local(base, file);
     }
-    artifact = { format: "native-adapter", path: descriptor.adapter.path };
-  } else {
-    validateTarget(descriptor.target, `${candidatePath} descriptor`);
-    if (!binding.targets.some((target) => sameTarget(target, descriptor.target))) {
-      fail("descriptor.target_mismatch", `${candidatePath} descriptor target is not declared by the candidate`);
-    }
-    if (!isObject(descriptor.artifact) || descriptor.artifact.format !== "embedded-source") {
-      fail("descriptor.artifact_invalid", `${candidatePath} platform descriptor must declare embedded-source`);
-    }
-    if (!Array.isArray(descriptor.artifact.sources) || descriptor.artifact.sources.length === 0) {
-      fail("descriptor.artifact_invalid", `${candidatePath} embedded-source must list source files`);
-    }
-    const sources = descriptor.artifact.sources.map((source, index) => {
-      const absolute = safeRelativePath(candidateRoot, source, `embedded source[${index}]`);
-      if (!fs.statSync(absolute).isFile()) {
-        fail("descriptor.artifact_invalid", `${candidatePath} embedded source is not a file`, { source });
-      }
-      return path.relative(root, absolute);
-    });
-    if (!Array.isArray(descriptor.artifact.frameworks) ||
-        descriptor.artifact.frameworks.some((framework) => typeof framework !== "string" || !framework)) {
-      fail("descriptor.artifact_invalid", `${candidatePath} embedded-source frameworks must be strings`);
-    }
-    artifact = {
-      format: descriptor.artifact.format,
-      language: descriptor.artifact.language,
-      linkage: descriptor.artifact.linkage,
-      sources,
-      frameworks: descriptor.artifact.frameworks,
-    };
-  }
-  if (binding.artifact_format !== artifact.format) {
-    fail("package.artifact_invalid", `${candidatePath} candidate and descriptor artifact formats differ`);
-  }
-
-  return {
-    api: binding.implements,
-    provider: descriptor.identity,
-    candidate: candidatePath,
-    wit: path.relative(root, witAbsolute),
-    descriptor: path.relative(root, descriptorAbsolute),
-    boundary: binding.boundary,
-    artifact,
-    targets: binding.targets,
-    lifecycle: binding.lifecycle,
-  };
+    artifact = { ...descriptor.artifact, sources: descriptor.artifact.sources.map(f => path.relative(root, local(base, f))) };
+  } else if (descriptor.schema === 'wasmc.native-boundary-descriptor/v1') {
+    if (!object(descriptor.adapter) || typeof descriptor.adapter.path !== 'string') fail('descriptor.adapter_invalid', 'native adapter declaration required');
+    artifact = { format: 'native-adapter', source: path.relative(root, local(base, spec.native.entry)),
+      build_target: spec.native.target, executable: false };
+  } else fail('descriptor.invalid', 'unsupported physical binding descriptor');
+  if (binding.artifact_format !== artifact.format) fail('package.artifact_invalid', 'binding/descriptor formats differ');
+  return { api: binding.implements, provider: descriptor.identity, source: sourcePath,
+    source_sha256: sha(bytes), wit: path.relative(root, witFile), wit_sha256: sha(witBytes),
+    descriptor: path.relative(root, descriptorFile), descriptor_sha256: sha(descriptorBytes),
+    implementation_sha256: sourceHashes, boundary: binding.boundary, artifact,
+    targets: binding.targets, lifecycle: Object.fromEntries(STAGES.map(s => [s, s === 'source'])) };
 }
 
-const sameTarget = (left, right) => TARGET_FIELDS.every((field) => left[field] === right[field]);
-
-export function resolveSystemProfile(request, candidates) {
-  if (!isObject(request) || request.schema !== REQUEST_SCHEMA) {
-    fail("request.invalid", `request schema must be ${REQUEST_SCHEMA}`);
-  }
-  validateTarget(request.target, "request");
-  if (!Array.isArray(request.requirements) || request.requirements.length === 0) {
-    fail("request.invalid", "request requirements must be a non-empty array");
-  }
-  if (new Set(request.requirements).size !== request.requirements.length) {
-    fail("request.requirement_duplicate", "request requirements must be unique");
-  }
-  const requiredLifecycle = request.required_lifecycle ?? "qualified";
-  if (!LIFECYCLE_STAGES.includes(requiredLifecycle)) {
-    fail("request.lifecycle_invalid", `unsupported required lifecycle ${requiredLifecycle}`);
-  }
+export function resolveSystemProfile(request, sources) {
+  if (!object(request) || request.schema !== REQUEST) fail('request.invalid', 'current request schema required: ' + REQUEST);
+  target(request.target, 'request');
+  if (!Array.isArray(request.requirements) || !request.requirements.length ||
+      request.requirements.some(v => typeof v !== 'string' || !v)) fail('request.invalid', 'nonempty requirements required');
+  if (new Set(request.requirements).size !== request.requirements.length) fail('request.requirement_duplicate', 'requirements must be unique');
+  const stage = request.required_lifecycle ?? 'source';
+  if (!STAGES.includes(stage)) fail('request.lifecycle_invalid', 'invalid lifecycle');
   const pins = request.pins ?? {};
-  if (!isObject(pins)) fail("request.pin_invalid", "request pins must be an object");
-
-  const providerIdentities = candidates.map((candidate) => candidate.provider);
-  if (new Set(providerIdentities).size !== providerIdentities.length) {
-    fail("provider.identity_duplicate", "candidate provider identities must be unique");
-  }
-
-  const bindings = request.requirements.map((api) => {
-    const targetMatches = candidates.filter((candidate) =>
-      candidate.api === api &&
-      candidate.boundary === request.boundary &&
-      candidate.targets.some((target) => sameTarget(target, request.target)));
-    const lifecycleMatches = targetMatches.filter((candidate) => candidate.lifecycle[requiredLifecycle] === true);
-    const pinnedProvider = pins[api];
-    const matches = pinnedProvider === undefined
-      ? lifecycleMatches
-      : lifecycleMatches.filter((candidate) => candidate.provider === pinnedProvider);
-    if (pinnedProvider !== undefined && matches.length === 0) {
-      fail("provider.pin_unmatched", `pinned provider does not satisfy ${api}`, {
-        api, provider: pinnedProvider, target: request.target, required_lifecycle: requiredLifecycle,
-      });
-    }
-    if (matches.length === 0) {
-      fail("provider.none", `no provider satisfies ${api}`, {
-        api,
-        target: request.target,
-        boundary: request.boundary,
-        required_lifecycle: requiredLifecycle,
-        target_matches: targetMatches.map((candidate) => candidate.provider),
-      });
-    }
-    if (matches.length > 1) {
-      fail("provider.ambiguous", `multiple providers satisfy ${api}; add an exact pin`, {
-        api, providers: matches.map((candidate) => candidate.provider), target: request.target,
-      });
-    }
-    const selected = matches[0];
-    return {
-      api: selected.api,
-      provider: selected.provider,
-      candidate: selected.candidate,
-      wit: selected.wit,
-      descriptor: selected.descriptor,
-      boundary: selected.boundary,
-      artifact: selected.artifact,
-      target: request.target,
-      lifecycle: selected.lifecycle,
-    };
+  if (!object(pins)) fail('request.pin_invalid', 'pins must be an object');
+  if (new Set(sources.map(s => s.provider)).size !== sources.length) fail('provider.identity_duplicate', 'provider identities must be unique');
+  const bindings = request.requirements.map(api => {
+    const eligible = sources.filter(s => s.api === api && s.boundary === request.boundary &&
+      s.targets.some(t => sameTarget(t, request.target)) && s.lifecycle[stage] === true);
+    const chosen = pins[api] === undefined ? eligible : eligible.filter(s => s.provider === pins[api]);
+    if (!chosen.length) fail(pins[api] === undefined ? 'provider.none' : 'provider.pin_unmatched', 'no exact provider satisfies request', { api, stage });
+    if (chosen.length !== 1) fail('provider.ambiguous', 'pin one exact provider', { api });
+    const { targets, ...selected } = chosen[0];
+    return { ...selected, target: request.target };
   });
-
-  return {
-    schema: PROFILE_SCHEMA,
-    id: request.id,
-    target: request.target,
-    host: request.host,
-    required_lifecycle: requiredLifecycle,
-    requirements: request.requirements,
-    bindings,
-    acceptance: request.acceptance,
-  };
+  return { schema: 'wasmc.library-os-profile/v3', id: request.id, target: request.target,
+    host: request.host, required_lifecycle: stage, requirements: request.requirements,
+    bindings, acceptance: request.acceptance, executable: false };
 }
-
 export function resolveSystemProfileRequest(root, request) {
-  if (!isObject(request) || !Array.isArray(request.candidates) || request.candidates.length === 0) {
-    fail("request.invalid", "request candidates must be a non-empty array");
-  }
-  const candidates = request.candidates.map((candidatePath) =>
-    loadSystemLibCandidate(root, candidatePath));
-  return resolveSystemProfile(request, candidates);
+  if (!object(request) || !Array.isArray(request.sources) || !request.sources.length || 'candidates' in request)
+    fail('request.invalid', 'sources required; historical candidate requests are unsupported');
+  return resolveSystemProfile(request, request.sources.map(p => loadSystemLibSource(root, p)));
 }
-
-function runCli() {
-  const [command, requestPath, outputPath] = process.argv.slice(2);
-  if (command !== "resolve" || !requestPath) {
-    console.error("usage: node host/platform/profile-resolver.mjs resolve <request.json> [output.json]");
-    process.exit(2);
-  }
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  const [command, input, output] = process.argv.slice(2);
+  if (command !== 'resolve' || !input) throw new Error('usage: profile-resolver.mjs resolve <current request> [output]');
   try {
-    const root = process.cwd();
-    const request = JSON.parse(fs.readFileSync(path.resolve(root, requestPath), "utf8"));
-    const profile = resolveSystemProfileRequest(root, request);
-    const encoded = `${JSON.stringify(profile, null, 2)}\n`;
-    if (outputPath) fs.writeFileSync(path.resolve(root, outputPath), encoded);
-    else process.stdout.write(encoded);
+    const result = resolveSystemProfileRequest(process.cwd(), JSON.parse(fs.readFileSync(input, 'utf8')));
+    const text = JSON.stringify(result, null, 2) + '\n';
+    if (output) fs.writeFileSync(output, text); else process.stdout.write(text);
   } catch (error) {
-    if (error instanceof ProfileResolutionError) {
-      console.error(JSON.stringify({ accepted: false, code: error.code, message: error.message, details: error.details }));
-      process.exit(1);
-    }
-    throw error;
+    console.error(JSON.stringify({ accepted: false, code: error.code, message: error.message }));
+    process.exitCode = 1;
   }
 }
-
-if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) runCli();

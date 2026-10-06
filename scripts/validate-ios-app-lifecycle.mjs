@@ -7,10 +7,10 @@ const fixedHost = "host/tests/ios-app-capability/Host/FixedHost.swift";
 const fixedHostDigest = createHash("sha256").update(fs.readFileSync(fixedHost)).digest("hex");
 assert.equal(fixedHostDigest, "f0d465ba7f23698d6365453b02fad2f4a0803171f970631751fc90a00a86d96f");
 
-const libRoot = "libsrc/wasmc-system-ios-app-lifecycle";
-const exampleRoot = `${libRoot}/examples/ios-app`;
+const libRoot = "libspec/wasmc-system-ios-app-lifecycle";
+const exampleRoot = `tests/lib-refresh/native/wasmc-system-ios-app-lifecycle/examples/ios-app`;
 for (const relative of [
-  "candidate.json",
+  "lib.json",
   "lib.wit",
   "platform/ios/binding.json",
   "platform/ios/Sources/AppLifecycleProvider.swift",
@@ -18,7 +18,7 @@ for (const relative of [
   "examples/ios-app/App/AppDelegate.swift",
   "examples/ios-app/App/LifecycleViewController.swift",
   "examples/ios-app/UITests/AppLifecycleUITests.swift",
-]) assert.ok(fs.statSync(`${libRoot}/${relative}`).size > 0, relative);
+]) assert.ok(fs.statSync(relative.startsWith("examples/") ? `tests/lib-refresh/native/wasmc-system-ios-app-lifecycle/${relative}` : `${libRoot}/${relative}`).size > 0, relative);
 assert.ok(fs.statSync("scripts/test-ios-finite-background-window.mjs").size > 0);
 assert.ok(fs.statSync("scripts/probe-ios-finite-background-window-matrix.mjs").size > 0);
 
@@ -26,7 +26,7 @@ execFileSync("wasm-tools", ["component", "wit", `${libRoot}/lib.wit`], { stdio: 
 const provider = fs.readFileSync(`${libRoot}/platform/ios/Sources/AppLifecycleProvider.swift`, "utf8");
 const app = fs.readFileSync(`${exampleRoot}/App/AppDelegate.swift`, "utf8");
 const uiTest = fs.readFileSync(`${exampleRoot}/UITests/AppLifecycleUITests.swift`, "utf8");
-const candidate = JSON.parse(fs.readFileSync(`${libRoot}/candidate.json`, "utf8"));
+const candidate = JSON.parse(fs.readFileSync(`${libRoot}/lib.json`, "utf8"));
 const binding = JSON.parse(fs.readFileSync(`${libRoot}/platform/ios/binding.json`, "utf8"));
 const resolvedProfile = JSON.parse(execFileSync(process.execPath, [
   "host/platform/profile-resolver.mjs", "resolve",
@@ -36,8 +36,8 @@ const retainedProfile = JSON.parse(fs.readFileSync(
   "host/platform/ios/app-lifecycle-profile.json", "utf8",
 ));
 
-assert.equal(candidate.system_binding.implements, "wasmc:system-app-lifecycle@0.0.1");
-assert.equal(candidate.system_binding.artifact_format, "embedded-source");
+assert.equal(candidate.native.binding.implements, "wasmc:system-app-lifecycle@0.0.1");
+assert.equal(candidate.native.binding.artifact_format, "embedded-source");
 assert.equal(binding.schema, "wasmc.platform-binding-descriptor/v1");
 assert.equal(binding.identity, "wasmc:system-ios-app-lifecycle@0.0.1-dev.1");
 assert.equal(binding.artifact.format, "embedded-source");
@@ -63,7 +63,7 @@ console.log(JSON.stringify({
   fixed_host_sha256: fixedHostDigest,
   package_root: libRoot,
   example_root: exampleRoot,
-  qualified: candidate.system_binding.lifecycle.qualified,
+  qualified: false,
   admitted: false,
   released: false,
 }));

@@ -1,5 +1,5 @@
 {
-  "schema": "wasmc.library-os-profile/v2",
+  "schema": "wasmc.library-os-profile/v3",
   "id": "ios-app-surface-control-v1",
   "target": {
     "os": "ios",
@@ -12,39 +12,58 @@
     "executor": "host/tests/ios-app-capability/Host/FixedHost.swift",
     "required_domain_apis": 0
   },
-  "required_lifecycle": "qualified",
-  "requirements": ["wasmc:system-app-surface-control@0.0.3"],
+  "required_lifecycle": "source",
+  "requirements": [
+    "wasmc:system-app-surface-control@0.0.3"
+  ],
   "bindings": [
     {
       "api": "wasmc:system-app-surface-control@0.0.3",
       "provider": "wasmc:system-ios-app-surface-control@0.0.3-dev.1",
-      "candidate": "libsrc/wasmc-system-ios-app-surface-control/candidate.json",
-      "wit": "libsrc/wasmc-system-ios-app-surface-control/lib.wit",
-      "descriptor": "libsrc/wasmc-system-ios-app-surface-control/platform/ios/binding.json",
+      "source": "libspec/wasmc-system-ios-app-surface-control/lib.json",
+      "source_sha256": "a9693b69e3dc74537f9e9b5da0929025f5a84eeca092bf0055d2644f8e439533",
+      "wit": "libspec/wasmc-system-ios-app-surface-control/lib.wit",
+      "wit_sha256": "fa54f901d13329c6e839b937cb3c8f98e4f77e894d2d684d1d1a38283d680cff",
+      "descriptor": "libspec/wasmc-system-ios-app-surface-control/platform/ios/binding.json",
+      "descriptor_sha256": "02d1872546e801149cde5e838ce53b60a5a69e486a2529a0a51c0c91efd80954",
+      "implementation_sha256": {
+        "platform/ios/Sources/PiPSurfaceProvider.swift": "666f0bb40dbdcef20ec95be6e3e328cbcd358ec12e94b46656b17f82512e9ba1",
+        "platform/ios/Sources/SurfaceControlProvider.swift": "52c64dfa863f40359bc308e4d0f2663575ba5f50b713ad25a168cc3a31990a85",
+        "platform/ios/Sources/WebViewSurfaceProvider.swift": "099f618969a1d6ae4e0688cc95f42fe184e0c538b7c663167ce1eab7c67b2c71",
+        "platform/ios/binding.json": "02d1872546e801149cde5e838ce53b60a5a69e486a2529a0a51c0c91efd80954"
+      },
       "boundary": "wasmc.lib-defined-host-boundary/v1",
       "artifact": {
         "format": "embedded-source",
         "language": "swift",
         "linkage": "static-app",
         "sources": [
-          "libsrc/wasmc-system-ios-app-surface-control/platform/ios/Sources/SurfaceControlProvider.swift",
-          "libsrc/wasmc-system-ios-app-surface-control/platform/ios/Sources/PiPSurfaceProvider.swift",
-          "libsrc/wasmc-system-ios-app-surface-control/platform/ios/Sources/WebViewSurfaceProvider.swift"
+          "libspec/wasmc-system-ios-app-surface-control/platform/ios/Sources/SurfaceControlProvider.swift",
+          "libspec/wasmc-system-ios-app-surface-control/platform/ios/Sources/PiPSurfaceProvider.swift",
+          "libspec/wasmc-system-ios-app-surface-control/platform/ios/Sources/WebViewSurfaceProvider.swift"
         ],
-        "frameworks": ["AVFoundation", "AVKit", "CoreMedia", "CoreVideo", "UIKit", "WebKit"]
+        "frameworks": [
+          "AVFoundation",
+          "AVKit",
+          "CoreMedia",
+          "CoreVideo",
+          "UIKit",
+          "WebKit"
+        ]
+      },
+      "lifecycle": {
+        "source": true,
+        "qualified": false,
+        "admitted": false,
+        "released": false,
+        "discoverable": false,
+        "installable": false
       },
       "target": {
         "os": "ios",
         "architecture": "aarch64",
         "environment": "simulator",
         "embedding": "native"
-      },
-      "lifecycle": {
-        "qualified": true,
-        "admitted": false,
-        "released": false,
-        "discoverable": false,
-        "installable": false
       }
     }
   ],
@@ -54,5 +73,6 @@
     "user_started_picture_in_picture": true,
     "real_wkwebview_semantic_action_isolation": true,
     "physical_device": false
-  }
+  },
+  "executable": false
 }

@@ -7,9 +7,9 @@ const fixedHost = "host/tests/ios-app-capability/Host/FixedHost.swift";
 const fixedHostDigest = createHash("sha256").update(fs.readFileSync(fixedHost)).digest("hex");
 assert.equal(fixedHostDigest, "f0d465ba7f23698d6365453b02fad2f4a0803171f970631751fc90a00a86d96f");
 
-const libRoot = "libsrc/wasmc-system-ios-app-surface-control";
-const exampleRoot = `${libRoot}/examples/ios-app`;
-const webExampleRoot = `${libRoot}/examples/ios-webview-agent`;
+const libRoot = "libspec/wasmc-system-ios-app-surface-control";
+const exampleRoot = `tests/lib-refresh/native/wasmc-system-ios-app-surface-control/examples/ios-app`;
+const webExampleRoot = `tests/lib-refresh/native/wasmc-system-ios-app-surface-control/examples/ios-webview-agent`;
 const required = [
   "project.yml",
   "App/Info.plist",
@@ -24,13 +24,13 @@ for (const relative of ["project.yml", "App/Info.plist", "App/AppDelegate.swift"
   assert.ok(fs.statSync(`${webExampleRoot}/${relative}`).size > 0, relative);
 }
 for (const relative of [
-  "candidate.json",
+  "lib.json",
   "lib.wit",
   "platform/ios/binding.json",
   "platform/ios/Sources/SurfaceControlProvider.swift",
   "platform/ios/Sources/PiPSurfaceProvider.swift",
   "platform/ios/Sources/WebViewSurfaceProvider.swift",
-]) assert.ok(fs.statSync(`${libRoot}/${relative}`).size > 0, relative);
+]) assert.ok(fs.statSync(relative.startsWith("examples/") ? `tests/lib-refresh/native/wasmc-system-ios-app-surface-control/${relative}` : `${libRoot}/${relative}`).size > 0, relative);
 
 execFileSync("wasm-tools", ["component", "wit", `${libRoot}/lib.wit`], {
   stdio: "ignore",
@@ -39,7 +39,7 @@ const provider = fs.readFileSync(`${libRoot}/platform/ios/Sources/SurfaceControl
 const controller = fs.readFileSync(`${exampleRoot}/App/SurfaceDemoViewController.swift`, "utf8");
 const pipProvider = fs.readFileSync(`${libRoot}/platform/ios/Sources/PiPSurfaceProvider.swift`, "utf8");
 const webProvider = fs.readFileSync(`${libRoot}/platform/ios/Sources/WebViewSurfaceProvider.swift`, "utf8");
-const candidate = JSON.parse(fs.readFileSync(`${libRoot}/candidate.json`, "utf8"));
+const candidate = JSON.parse(fs.readFileSync(`${libRoot}/lib.json`, "utf8"));
 const binding = JSON.parse(fs.readFileSync(`${libRoot}/platform/ios/binding.json`, "utf8"));
 const resolvedProfile = JSON.parse(execFileSync(process.execPath, [
   "host/platform/profile-resolver.mjs", "resolve",
@@ -49,8 +49,8 @@ const retainedProfile = JSON.parse(fs.readFileSync(
   "host/platform/ios/app-surface-control-profile.json", "utf8",
 ));
 assert.deepEqual(resolvedProfile, retainedProfile);
-assert.equal(candidate.system_binding.implements, "wasmc:system-app-surface-control@0.0.3");
-assert.equal(candidate.system_binding.artifact_format, "embedded-source");
+assert.equal(candidate.native.binding.implements, "wasmc:system-app-surface-control@0.0.3");
+assert.equal(candidate.native.binding.artifact_format, "embedded-source");
 assert.equal(binding.schema, "wasmc.platform-binding-descriptor/v1");
 assert.equal(binding.identity, "wasmc:system-ios-app-surface-control@0.0.3-dev.1");
 assert.equal(binding.artifact.format, "embedded-source");

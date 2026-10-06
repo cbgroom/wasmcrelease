@@ -1,5 +1,5 @@
 {
-  "schema": "wasmc.system-profile-request/v1",
+  "schema": "wasmc.system-profile-request/v2",
   "id": "ios-simulator-observation-v1",
   "target": {
     "os": "ios",
@@ -12,14 +12,18 @@
     "executor": "host/runtime/lib-boundary/native-apple-simulator",
     "required_domain_apis": 0
   },
-  "required_lifecycle": "qualified",
-  "requirements": ["wasmc:system-display@0.0.1"],
-  "candidates": ["libsrc/wasmc-system-ios-simulator-display/candidate.json"],
+  "required_lifecycle": "source",
+  "requirements": [
+    "wasmc:system-display@0.0.1"
+  ],
   "acceptance": {
     "real_frame": true,
     "semantic_frame_postcondition": true,
     "provider_name_inference": false,
     "ios_embedded_host": false,
     "physical_device": false
-  }
+  },
+  "sources": [
+    "libspec/wasmc-system-ios-simulator-display/lib.json"
+  ]
 }

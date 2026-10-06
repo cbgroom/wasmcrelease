@@ -1,5 +1,38 @@
 # Lib Refresh V2
 
+## Current all-candidate checkpoint — 2026-10-06T20:08:21.186197+00:00
+
+This is the current execution authority; older sections below are historical.
+36/36 candidates now use libspec only: 13 value, 3 resource, 20 native.
+The old libsrc tree (274 files), 26 old command entrypoints and 5 duplicate CI
+workflows are physically deleted. All 22 real platform code copies were
+byte-verified before deletion; tests/examples survive under tests/lib-refresh.
+No backward-compatible authoring or hidden source/target-directory fallback.
+
+Cold cohort refresh: 480585 ms. After deletion, normal locked
+refresh verified/reused all 36 packages in 8662 ms (zero builds).
+The current unified qualifier completed 19 suites, including original ten-Lib
+oracles, Node Core, 13-Lib Wasmi, real TLS handshakes/negative controls, and a
+source-free telemetry Component consumer with 128 resource lifecycles. Telemetry
+27 native unit tests and real Linux proc acquisition pass. Linux endpoint,
+socket, and operation-bridge tests pass against generated binaries and a current
+same-run executor identity. Uinput real-device creation returns EACCES -13 under
+this account: retain the failed witness, do not count it as hardware PASS.
+
+Native status remains explicit: 3 locally compiled Linux binaries, 3 Node native
+modules (real runtime tests also pass), 14 foreign-target source packages.
+Source-package generation is not Android/iOS/macOS compile/device qualification.
+Resource libraries emit only complete views actually supported; no fake ordinary
+Core SDK. Full ordinary WAsmC API caller Q2, foreign devices, independent cold
+cohort determinism, main integration and Q3/public release remain open.
+
+Read all-candidate-checkpoint.json SHA256 70a62368a6f979746207a716e59321eadf15f582ba26acd08ff8fc5f59f37aa2
+and legacy-retirement.json for exact roots, hashes, tests and nonclaims.
+Successful final run: /home/huawei/code/.cache/wasmc-evidence/lib-refresh-all-candidates-20261006/runs/refresh-OIOZEL
+Q1 evidence: /home/huawei/code/.cache/wasmc-evidence/lib-refresh-all-candidates-20261006/runs/refresh-OIOZEL/q1-attempt-KRUMx7
+Q1/Wasmi/telemetry logs now use unique attempts; retries preserve earlier logs.
+
+
 ## Current resumption: finish all-candidate cutover
 
 The human repeated the explicit no-compatibility instruction. Reconciliation

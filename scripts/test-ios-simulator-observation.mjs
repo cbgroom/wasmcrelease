@@ -6,7 +6,7 @@ import os from "node:os";
 import path from "node:path";
 import {
   ProfileResolutionError,
-  loadSystemLibCandidate,
+  loadSystemLibSource,
   resolveSystemProfile,
   resolveSystemProfileRequest,
 } from "../host/platform/profile-resolver.mjs";
@@ -20,7 +20,7 @@ if (!/^[0-9A-Fa-f-]{36}$/.test(udid ?? "")) {
 }
 const requestPath = "host/platform/ios/simulator-observation-request.json";
 const profilePath = "host/platform/ios/simulator-observation-profile.json";
-const candidatePath = "libsrc/wasmc-system-ios-simulator-display/candidate.json";
+const candidatePath = "libspec/wasmc-system-ios-simulator-display/lib.json";
 const packageRoot = path.join(root, path.dirname(candidatePath));
 const readJson = (relative) => JSON.parse(fs.readFileSync(path.join(root, relative), "utf8"));
 const sha256 = (bytes) => createHash("sha256").update(bytes).digest("hex");
@@ -46,7 +46,7 @@ assert.equal(expectedProfile.target.embedding, "supervisor");
 assert.equal(expectedProfile.bindings.length, 1);
 assert.equal(expectedProfile.bindings[0].api, "wasmc:system-display@0.0.1");
 
-const candidate = loadSystemLibCandidate(root, candidatePath);
+const candidate = loadSystemLibSource(root, candidatePath);
 const fullAgentRequest = {
   ...request,
   requirements: [
@@ -90,7 +90,7 @@ try {
     "--target-dir", targetDir,
   ], { cwd: root, stdio: "inherit" });
 
-  const descriptor = readJson("libsrc/wasmc-system-ios-simulator-display/native-boundary.template.json");
+  const descriptor = readJson("libspec/wasmc-system-ios-simulator-display/platform/native-boundary.template.json");
   descriptor.adapter.sha256 = sha256(fs.readFileSync(adapterPath));
   fs.writeFileSync(descriptorPath, `${JSON.stringify(descriptor, null, 2)}\n`);
   fs.writeFileSync(inputPath, Buffer.alloc(0));

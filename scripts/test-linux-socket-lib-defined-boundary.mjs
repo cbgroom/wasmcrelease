@@ -1,3 +1,4 @@
+import { generatedLib, selectedRun } from './generated-lib-v2.mjs';
 import assert from "node:assert/strict";
 import { execFileSync, spawn, spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
@@ -10,10 +11,11 @@ assert.equal(process.platform, "linux", "Linux socket Lib qualification must run
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const target = path.join(root, "target/lib-defined-boundary-linux-socket");
-const sourceRoot = path.join(root, "libsrc/wasmc-system-linux-socket");
+const selected = await generatedLib("wasmc-system-linux-socket");
+const sourceRoot = selected.root;
 const manifest = path.join(root, "host/runtime/lib-boundary/native-linux/Cargo.toml");
 const rustSource = path.join(root, "host/runtime/lib-boundary/native-linux/src/main.rs");
-const adapterSource = path.join(sourceRoot, "native-adapter.c");
+const adapterSource = path.join(sourceRoot, "platform/native-adapter.c");
 const adapter = path.join(target, "libwasmc_system_linux_socket.so");
 const descriptorPath = path.join(target, "native-boundary.json");
 const executor = path.join(target, "cargo/release/wasmc-lib-boundary-native-linux");
@@ -26,7 +28,7 @@ const rustArgs = (args) => rustToolchain ? [rustToolchain, ...args] : args;
 
 fs.rmSync(target, { recursive: true, force: true });
 fs.mkdirSync(target, { recursive: true });
-command("cc", ["-shared", "-fPIC", "-O2", "-Wall", "-Wextra", "-Werror", adapterSource, "-o", adapter]);
+fs.copyFileSync(selected.artifact, adapter);
 command("wasm-tools", ["component", "wit", path.join(sourceRoot, "lib.wit")]);
 command("cargo", rustArgs(["fmt", "--check", "--manifest-path", manifest]));
 command("cargo", rustArgs(["clippy", "--locked", "--manifest-path", manifest, "--all-targets", "--", "-D", "warnings"]));
@@ -35,13 +37,14 @@ command("cargo", rustArgs(["build", "--release", "--locked", "--manifest-path", 
 });
 
 const adapterSha256 = hash(read(adapter));
-const endpointReceiptPath = process.arch === "arm64"
-  ? path.join(root, "admission/host-lib-defined-boundary-v1/linux-aarch64-device-io-v7.json")
-  : path.join(root, "admission/host-lib-defined-boundary-v1/linux-x86_64-device-io-v7.json");
+const endpointReceiptPath = path.join(selectedRun(), "linux-endpoint-q1.json");
 const endpointReceipt = JSON.parse(fs.readFileSync(endpointReceiptPath, "utf8"));
+assert.equal(endpointReceipt.accepted, true, "current endpoint baseline must pass first");
+assert.equal(endpointReceipt.generated_run, selectedRun());
+assert.equal(endpointReceipt.host_source_sha256, hash(fs.readFileSync(rustSource)), "Host source changed after baseline");
 const executorSha256 = hash(read(executor));
-assert.equal(executorSha256, endpointReceipt.outputs.executor_sha256, "fixed executor identity drifted between system Libs");
-const descriptorTemplate = fs.readFileSync(path.join(sourceRoot, "native-boundary.template.json"), "utf8");
+assert.equal(executorSha256, endpointReceipt.executor_sha256, "fixed executor identity drifted between system Libs");
+const descriptorTemplate = fs.readFileSync(path.join(sourceRoot, "platform/native-boundary.template.json"), "utf8");
 assert.match(descriptorTemplate, /BUILD_OUTPUT_SHA256/);
 fs.writeFileSync(descriptorPath, descriptorTemplate.replace("BUILD_OUTPUT_SHA256", adapterSha256));
 

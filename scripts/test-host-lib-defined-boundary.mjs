@@ -50,7 +50,7 @@ assert.equal(boundary.platform_convergence.device_selection_owned_by_lib, true);
 assert.equal(boundary.platform_convergence.device_names_in_fixed_host, false);
 assert.match(boundary.platform_convergence.linux, /VFS.*file descriptors.*procfs.*sysfs/);
 assert.equal(architecture.prototype.linux_native.executor, "host/runtime/lib-boundary/native-linux");
-assert.equal(architecture.prototype.linux_native.system_lib, "libsrc/wasmc-system-linux-endpoint");
+assert.equal(architecture.prototype.linux_native.system_lib, "libspec/wasmc-system-linux-endpoint");
 
 console.log(JSON.stringify({
   accepted: true,

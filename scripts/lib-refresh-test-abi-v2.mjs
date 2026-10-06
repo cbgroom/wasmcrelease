@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 const align = (n, a) => Math.ceil(n / a) * a;
 const scalar = (kind, size, lane) => ({ kind, size, align: size, flat: [lane] });
 export const u8 = scalar('u8', 1, 'i32'), u16 = scalar('u16', 2, 'i32'), u32 = scalar('u32', 4, 'i32');
+export const s32 = scalar('s32', 4, 'i32');
 export const i64 = scalar('i64', 8, 'i64'), u64 = scalar('u64', 8, 'i64'), f64 = scalar('f64', 8, 'f64');
 export const bool = scalar('bool', 1, 'i32');
 export const string = { kind: 'string', size: 8, align: 4, flat: ['i32', 'i32'] };
@@ -47,6 +48,7 @@ export class CoreCaller {
       case 'u8': view.setUint8(pointer, value); return;
       case 'u16': view.setUint16(pointer, value, true); return;
       case 'u32': view.setUint32(pointer, value, true); return;
+      case 's32': view.setInt32(pointer, value, true); return;
       case 'i64': view.setBigInt64(pointer, BigInt(value), true); return;
       case 'u64': view.setBigUint64(pointer, BigInt(value), true); return;
       case 'f64': view.setFloat64(pointer, value, true); return;
@@ -77,6 +79,7 @@ export class CoreCaller {
       case 'u8': return view.getUint8(pointer);
       case 'u16': return view.getUint16(pointer, true);
       case 'u32': return view.getUint32(pointer, true);
+      case 's32': return view.getInt32(pointer, true);
       case 'i64': return view.getBigInt64(pointer, true);
       case 'u64': return view.getBigUint64(pointer, true);
       case 'f64': return view.getFloat64(pointer, true);

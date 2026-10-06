@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 root="$(cd "$(dirname "$0")/.." && pwd)"
-package="${1:-$root/admission/system-telemetry-v1/package}"
-package="$(cd "$package" && pwd)"
-node "$root/scripts/test-telemetry-package.mjs" "$package"
+cd "$root"
+package="$(node scripts/select-generated-lib.mjs wasmc-system-telemetry "$@" | node -e 'let s="";process.stdin.on("data",d=>s+=d);process.stdin.on("end",()=>console.log(JSON.parse(s).root))')"
 scratch="$(mktemp -d "${TMPDIR:-/tmp}/wasmc-telemetry-consumer.XXXXXX")"
 trap 'rm -rf "$scratch"' EXIT
 mkdir -p "$scratch/consumer/wit"

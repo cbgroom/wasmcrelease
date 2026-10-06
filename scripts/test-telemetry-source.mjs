@@ -1,17 +1,15 @@
-import { spawnSync } from 'node:child_process';
-import { dirname, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
-const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
-function run(program,args) {
-  const r=spawnSync(program,args,{cwd:root,stdio:'inherit',timeout:1500000});
-  if(r.error)throw r.error;
-  if(r.status!==0)throw Error(`${program} exited ${r.status}`);
-}
-const manifest='libsrc/wasmc-system-telemetry/Cargo.toml';
-run('cargo',['test','--locked','--manifest-path',manifest]);
+import { mkdtemp } from 'node:fs/promises';
+import { join } from 'node:path';
+import { tmpdir } from 'node:os';
+import { command, atomicJson } from './lib-refresh-cache-v2.mjs';
+const root=process.cwd(),out=await mkdtemp(join(tmpdir(),'wasmc-current-telemetry-'));
+await command('rustc',['+1.96.0','--edition=2021','--test','libspec/wasmc-system-telemetry/delta.rs','-o',join(out,'unit')],{cwd:root});
+const unit=await command(join(out,'unit'),[],{cwd:root,logs:join(out,'unit-test')});
+let linux=null;
 if(process.platform==='linux') {
-  run('cargo',['test','--locked','--manifest-path',manifest,'--example','linux']);
-  run('cargo',['run','--release','--locked','--manifest-path',manifest,'--example','linux']);
+  await command('rustc',['+1.96.0','--edition=2021','tests/lib-refresh/telemetry/linux.rs','-o',join(out,'linux')],{cwd:root});
+  linux=await command(join(out,'linux'),[],{cwd:root,logs:join(out,'linux-test')});
 }
-run('bash',['scripts/test-telemetry-component.sh']);
-console.log(JSON.stringify({accepted:true,scope:'native-and-source-free-component-current-host',release_qualified:false}));
+const result={accepted:true,schema:'wasmc.current-telemetry-delta-test/v2',unit:unit.stdout,
+  linux:linux?JSON.parse(linux.stdout):null,generated_component_test:'separate',public_admission:false};
+await atomicJson(join(out,'receipt.json'),result);console.log(JSON.stringify({...result,evidence_root:out}));

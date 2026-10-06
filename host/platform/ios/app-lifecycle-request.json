@@ -1,5 +1,5 @@
 {
-  "schema": "wasmc.system-profile-request/v1",
+  "schema": "wasmc.system-profile-request/v2",
   "id": "ios-app-lifecycle-v1",
   "target": {
     "os": "ios",
@@ -13,9 +13,10 @@
     "executor": "host/tests/ios-app-capability/Host/FixedHost.swift",
     "required_domain_apis": 0
   },
-  "required_lifecycle": "qualified",
-  "requirements": ["wasmc:system-app-lifecycle@0.0.1"],
-  "candidates": ["libsrc/wasmc-system-ios-app-lifecycle/candidate.json"],
+  "required_lifecycle": "source",
+  "requirements": [
+    "wasmc:system-app-lifecycle@0.0.1"
+  ],
   "pins": {},
   "acceptance": {
     "home_background_foreground_cycle": true,
@@ -23,5 +24,8 @@
     "cold_relaunch_journal_recovery": true,
     "simulator_suspension": false,
     "physical_device": false
-  }
+  },
+  "sources": [
+    "libspec/wasmc-system-ios-app-lifecycle/lib.json"
+  ]
 }

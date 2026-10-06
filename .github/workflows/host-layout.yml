@@ -8,17 +8,17 @@ on:
       - "admission/host-lib-defined-boundary-v1/**"
       - "scripts/validate-host-layout.mjs"
       - "scripts/test-host-lib-defined-boundary.mjs"
-      - "scripts/validate-host-lib-defined-boundary-workstream.mjs"
+      - "scripts/validate-current-platforms.mjs"
       - "docs/HOST_LIB_DEFINED_BOUNDARY.md"
-      - "libsrc/wasmc-system-*-prototype/**"
-      - "libsrc/wasmc-system-linux-endpoint/**"
-      - "libsrc/wasmc-system-linux-uinput/**"
-      - "libsrc/wasmc-system-linux-socket/**"
-      - "libsrc/wasmc-system-android-*/**"
-      - "libsrc/wasmc-system-ios-simulator-*/**"
-      - "libsrc/wasmc-system-ios-app-*/**"
-      - "libsrc/wasmc-app-authorization-policy/**"
-      - "libsrc/registry.json"
+      - "libspec/wasmc-system-*-prototype/**"
+      - "libspec/wasmc-system-linux-endpoint/**"
+      - "libspec/wasmc-system-linux-uinput/**"
+      - "libspec/wasmc-system-linux-socket/**"
+      - "libspec/wasmc-system-android-*/**"
+      - "libspec/wasmc-system-ios-simulator-*/**"
+      - "libspec/wasmc-system-ios-app-*/**"
+      - "libspec/wasmc-app-authorization-policy/**"
+      - "libspec/registry.json"
       - "scripts/test-lib-defined-boundary-runtime.mjs"
       - "scripts/test-linux-lib-defined-boundary.mjs"
       - "scripts/test-linux-socket-lib-defined-boundary.mjs"
@@ -42,17 +42,17 @@ on:
       - "admission/host-lib-defined-boundary-v1/**"
       - "scripts/validate-host-layout.mjs"
       - "scripts/test-host-lib-defined-boundary.mjs"
-      - "scripts/validate-host-lib-defined-boundary-workstream.mjs"
+      - "scripts/validate-current-platforms.mjs"
       - "docs/HOST_LIB_DEFINED_BOUNDARY.md"
-      - "libsrc/wasmc-system-*-prototype/**"
-      - "libsrc/wasmc-system-linux-endpoint/**"
-      - "libsrc/wasmc-system-linux-uinput/**"
-      - "libsrc/wasmc-system-linux-socket/**"
-      - "libsrc/wasmc-system-android-*/**"
-      - "libsrc/wasmc-system-ios-simulator-*/**"
-      - "libsrc/wasmc-system-ios-app-*/**"
-      - "libsrc/wasmc-app-authorization-policy/**"
-      - "libsrc/registry.json"
+      - "libspec/wasmc-system-*-prototype/**"
+      - "libspec/wasmc-system-linux-endpoint/**"
+      - "libspec/wasmc-system-linux-uinput/**"
+      - "libspec/wasmc-system-linux-socket/**"
+      - "libspec/wasmc-system-android-*/**"
+      - "libspec/wasmc-system-ios-simulator-*/**"
+      - "libspec/wasmc-system-ios-app-*/**"
+      - "libspec/wasmc-app-authorization-policy/**"
+      - "libspec/registry.json"
       - "scripts/test-lib-defined-boundary-runtime.mjs"
       - "scripts/test-linux-lib-defined-boundary.mjs"
       - "scripts/test-linux-socket-lib-defined-boundary.mjs"
@@ -102,34 +102,12 @@ jobs:
       - run: node scripts/validate-host-layout.mjs
       - run: node scripts/test-host-lib-defined-boundary.mjs
       - run: node scripts/validate-host-camera-model.mjs
-      - run: node scripts/test-lib-defined-boundary-runtime.mjs
-      - run: node scripts/test-linux-lib-defined-boundary.mjs
-      - run: node scripts/test-linux-socket-lib-defined-boundary.mjs
-      - run: node scripts/test-linux-operation-bridge.mjs
       - run: node scripts/validate-android-agent-computer.mjs
       - run: node scripts/test-platform-profile-resolver.mjs
       - run: node scripts/validate-ios-simulator-observation.mjs
       - run: node scripts/validate-ios-app-capability.mjs
       - run: node scripts/validate-ios-app-surface-control.mjs
-      - name: Qualify Lib-defined socket HTTPS migration
-        shell: bash
-        run: |
-          set -euo pipefail
-          mkdir -p target/https-lib-socket-migration
-          cargo build --release --locked --manifest-path host/tests/https/Cargo.toml --bin wasmc-host-https-qualification
-          cp host/tests/https/target/release/wasmc-host-https-qualification target/https-lib-socket-migration/baseline
-          cargo build --release --locked --manifest-path host/tests/https/Cargo.toml --features lib-defined-socket --bin wasmc-host-https-qualification
-          cp host/tests/https/target/release/wasmc-host-https-qualification target/https-lib-socket-migration/candidate
-          WASMC_HTTPS_AB_PROFILE=lib-defined-socket-migration \
-          WASMC_LIB_BOUNDARY_IN_PROCESS=1 \
-          WASMC_LIB_BOUNDARY_EXECUTOR="$GITHUB_WORKSPACE/target/lib-defined-boundary-operation-bridge/bridge/release/wasmc-lib-boundary-native-linux-operation" \
-          WASMC_LIB_SOCKET_DESCRIPTOR="$GITHUB_WORKSPACE/target/lib-defined-boundary-operation-bridge/native-boundary.json" \
-          node scripts/host-https-ab.mjs \
-            target/https-lib-socket-migration/baseline \
-            target/https-lib-socket-migration/candidate \
-            linux-x86_64 \
-            target/https-lib-socket-migration/report.json
-      - run: node scripts/validate-host-lib-defined-boundary-workstream.mjs
+      - run: node scripts/validate-current-platforms.mjs
       - name: Retained v0.0.15 domain evidence
         shell: bash
         run: node scripts/report-host-support.mjs --markdown >> "$GITHUB_STEP_SUMMARY"

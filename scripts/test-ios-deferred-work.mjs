@@ -13,7 +13,7 @@ run("node", ["scripts/validate-ios-deferred-work.mjs"]);
 const projectDir = "target/ios-deferred-work-project";
 const derivedDir = "target/ios-deferred-work-derived";
 const bundle = "io.wasmc.deferred-work-lab";
-const exampleRoot = "libsrc/wasmc-system-ios-deferred-work/examples/ios-app";
+const exampleRoot = "tests/lib-refresh/native/wasmc-system-ios-deferred-work/examples/ios-app";
 fs.mkdirSync(projectDir, { recursive: true });
 run("xcodegen", [
   "generate", "--spec", `${exampleRoot}/project.yml`, "--project", projectDir, "--project-root", exampleRoot,

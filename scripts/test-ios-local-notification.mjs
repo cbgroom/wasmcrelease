@@ -13,7 +13,7 @@ run("node", ["scripts/validate-ios-local-notification.mjs"]);
 const projectDir = "target/ios-local-notification-project";
 const derivedDir = "target/ios-local-notification-derived";
 const bundle = "io.wasmc.local-notification-lab";
-const exampleRoot = "libsrc/wasmc-system-ios-local-notification/examples/ios-app";
+const exampleRoot = "tests/lib-refresh/native/wasmc-system-ios-local-notification/examples/ios-app";
 fs.mkdirSync(projectDir, { recursive: true });
 run("xcodegen", ["generate", "--spec", `${exampleRoot}/project.yml`, "--project", projectDir,
   "--project-root", exampleRoot], { env: { ...process.env,

@@ -47,13 +47,13 @@ if (boundary.full_host_profile?.per_domain_grant_api !== false || boundary.full_
 if (boundary.semantic_authority?.public_types !== "exact Lib package WIT") failures.push("boundary public types must be Lib-owned");
 if (boundary.semantic_authority?.physical_binding !== "exact Lib package native boundary descriptor") failures.push("boundary physical binding must be Lib-owned");
 if (boundary.release?.included_in_v0_0_15 !== false || boundary.release?.admitted !== false || boundary.release?.released !== false) failures.push("unreleased boundary lifecycle is overstated");
-if (platformResolution.schema !== "wasmc.system-profile-resolution-contract/v1") failures.push("invalid system profile resolution contract");
+if (platformResolution.schema !== "wasmc.system-profile-resolution-contract/v2") failures.push("invalid system profile resolution contract");
 if (JSON.stringify(platformResolution.target_fields) !== JSON.stringify(["os", "architecture", "environment", "embedding"])) failures.push("system profile target fields drifted");
 if (platformResolution.rules?.provider_name_inference !== false || platformResolution.rules?.cross_platform_fallback !== false) failures.push("system profile resolution must not guess or fall back across platforms");
 if (platformResolution.rules?.unique_match_required !== true || platformResolution.rules?.ambiguity_requires_exact_pin !== true) failures.push("system profile resolution must require one exact provider");
 if (platformResolution.rules?.host_domain_api_growth !== false) failures.push("system profile resolution must not grow Host APIs");
 if (platformResolution.release?.admitted !== false || platformResolution.release?.released !== false) failures.push("system profile resolution lifecycle is overstated");
-if (systemLibPackage.schema !== "wasmc.system-lib-package-layout/v1") failures.push("invalid System Lib package layout contract");
+if (systemLibPackage.schema !== "wasmc.system-lib-package-layout/v2") failures.push("invalid System Lib package layout contract");
 if (systemLibPackage.layers?.semantic !== "lib.wit") failures.push("System Lib semantics must have one canonical WIT entrypoint");
 if (systemLibPackage.layers?.platform_binding !== "platform/<os>/binding.json") failures.push("System Lib platform binding layout drifted");
 if (systemLibPackage.rules?.wit_is_platform_neutral !== true) failures.push("System Lib WIT must remain platform neutral");
@@ -86,12 +86,12 @@ else {
   if (executorHash !== prototype.executor_sha256) failures.push("fixed boundary executor identity drifted");
 }
 if (JSON.stringify(prototype?.system_libs) !== JSON.stringify([
-  "libsrc/wasmc-system-file-prototype",
-  "libsrc/wasmc-system-process-prototype",
-  "libsrc/wasmc-system-network-prototype",
+  "libspec/wasmc-system-file-prototype",
+  "libspec/wasmc-system-process-prototype",
+  "libspec/wasmc-system-network-prototype",
 ])) failures.push("prototype system Lib graph drifted");
 for (const libRoot of prototype?.system_libs ?? []) {
-  for (const required of ["candidate.json", "lib.wit", "native-boundary.json", "native-adapter.mjs"]) {
+  for (const required of ["lib.json", "lib.wit", "platform/native-boundary.json", "platform/native-adapter.mjs"]) {
     if (!fs.existsSync(path.join(root, libRoot, required))) failures.push(`prototype system Lib file missing: ${libRoot}/${required}`);
   }
 }

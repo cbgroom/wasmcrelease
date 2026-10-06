@@ -1,0 +1,228 @@
+{
+  "schema": "wasmc.native-source-migration/v2",
+  "source_baseline": "46619598c715dbb4822cc6392d7320e0ba2dcc3c",
+  "candidate_directories": [
+    "wasmc-app-authorization-policy",
+    "wasmc-compression",
+    "wasmc-csv",
+    "wasmc-data-compute",
+    "wasmc-data-core",
+    "wasmc-data-expr",
+    "wasmc-data-interchange",
+    "wasmc-data-profile",
+    "wasmc-data-relational",
+    "wasmc-http1",
+    "wasmc-http1-client",
+    "wasmc-json",
+    "wasmc-router-policy",
+    "wasmc-system-android-display",
+    "wasmc-system-android-input",
+    "wasmc-system-android-ui",
+    "wasmc-system-android-uinput",
+    "wasmc-system-file-prototype",
+    "wasmc-system-ios-app-contacts",
+    "wasmc-system-ios-app-lifecycle",
+    "wasmc-system-ios-app-surface-control",
+    "wasmc-system-ios-background-audio",
+    "wasmc-system-ios-background-transfer",
+    "wasmc-system-ios-deferred-work",
+    "wasmc-system-ios-local-notification",
+    "wasmc-system-ios-network-path",
+    "wasmc-system-ios-simulator-display",
+    "wasmc-system-ios-websocket",
+    "wasmc-system-linux-endpoint",
+    "wasmc-system-linux-socket",
+    "wasmc-system-linux-uinput",
+    "wasmc-system-network-prototype",
+    "wasmc-system-process-prototype",
+    "wasmc-system-telemetry",
+    "wasmc-tls-client",
+    "wasmc-tls-core"
+  ],
+  "native_migrations": [
+    {
+      "id": "wasmc-system-android-display",
+      "kind": "c-boundary",
+      "target": "android",
+      "sources": {
+        "platform/native-adapter.c": "79a54600b82d13fc0972a1311df0f010e3f610964f7555ce19b2bf7cd55c14b3",
+        "platform/native-boundary.template.json": "7687fa3c625a5d9202b94208d0110aea759f36fab91ebef805c1d52e3b1adafa"
+      }
+    },
+    {
+      "id": "wasmc-system-android-input",
+      "kind": "c-boundary",
+      "target": "android",
+      "sources": {
+        "platform/native-adapter.c": "de03f5854645c1ea1afde8a8da3e52cb95eca0ece44822734167f3a028549c88",
+        "platform/native-boundary.template.json": "e58237e85ebb865303423021c0c120f2bec8a69685c90ae55bcfb97f95a6aeb6"
+      }
+    },
+    {
+      "id": "wasmc-system-android-ui",
+      "kind": "c-boundary",
+      "target": "android",
+      "sources": {
+        "platform/native-adapter.c": "87a4e64bfade91fd75c51027af553d163c860cbdd8a5932672742e87d3c8511e",
+        "platform/native-boundary.template.json": "d0f307898a33556e3c3d1facee2d56949f38df39689885bc1da172e810a6aebe"
+      }
+    },
+    {
+      "id": "wasmc-system-android-uinput",
+      "kind": "c-boundary",
+      "target": "android",
+      "sources": {
+        "platform/native-adapter.c": "0205e7105969a6fd8ef51d10996f09fb870e641bd9a6cedc9bb22cff35f0b874",
+        "platform/native-boundary.template.json": "2f655deb19aaf01d4bb3a31d96ad4d15c75c3a4e68c6e927b6beeeb7b8003606"
+      }
+    },
+    {
+      "id": "wasmc-system-file-prototype",
+      "kind": "node-boundary",
+      "target": "portable-node",
+      "sources": {
+        "platform/native-adapter.mjs": "def205e9304dbbb528d0ba6c2d8a13eae4a93dc3ffc5b8972dc4514f330e0d15",
+        "platform/native-boundary.json": "251066248405b6754f9343954b4e7f87e8d88f60d3fc4ef33691983bd2b142ed"
+      }
+    },
+    {
+      "id": "wasmc-system-ios-app-contacts",
+      "kind": "swift-embedded",
+      "target": "ios",
+      "sources": {
+        "platform/ContactsProvider.swift": "55cb0d1850143656b9c2c15285298acc617a998d60f3eb8c59f5ac62092ecd61"
+      }
+    },
+    {
+      "id": "wasmc-system-ios-app-lifecycle",
+      "kind": "swift-embedded",
+      "target": "ios",
+      "sources": {
+        "platform/ios/Sources/AppLifecycleProvider.swift": "7d99a0ae661c44990a7e32d18045951a2d57aa4cb5e579b2ffc7229950b4a13c",
+        "platform/ios/binding.json": "0c62febfd1b17e0d4560e1d78f0e7e7e0a51d6b66ccf8609cc7fecf7f4b56402"
+      }
+    },
+    {
+      "id": "wasmc-system-ios-app-surface-control",
+      "kind": "swift-embedded",
+      "target": "ios",
+      "sources": {
+        "platform/ios/Sources/PiPSurfaceProvider.swift": "666f0bb40dbdcef20ec95be6e3e328cbcd358ec12e94b46656b17f82512e9ba1",
+        "platform/ios/Sources/SurfaceControlProvider.swift": "52c64dfa863f40359bc308e4d0f2663575ba5f50b713ad25a168cc3a31990a85",
+        "platform/ios/Sources/WebViewSurfaceProvider.swift": "099f618969a1d6ae4e0688cc95f42fe184e0c538b7c663167ce1eab7c67b2c71",
+        "platform/ios/binding.json": "02d1872546e801149cde5e838ce53b60a5a69e486a2529a0a51c0c91efd80954"
+      }
+    },
+    {
+      "id": "wasmc-system-ios-background-audio",
+      "kind": "swift-embedded",
+      "target": "ios",
+      "sources": {
+        "platform/ios/Sources/BackgroundAudioProvider.swift": "33ceb2c6d813fb685bf7532e121ca1e714c2cccc973b68addbd4d20b8df33e31",
+        "platform/ios/binding.json": "175c44a5ea6a137ccb065e4333792ca85ce4df3d30ed13b69a4ea1ae186fd0da"
+      }
+    },
+    {
+      "id": "wasmc-system-ios-background-transfer",
+      "kind": "swift-embedded",
+      "target": "ios",
+      "sources": {
+        "platform/ios/Sources/BackgroundTransferProvider.swift": "230b05cd49d910243ee5571a8ee54038d0fbb59b856f2c3be3f8b843b47cc79f",
+        "platform/ios/binding.json": "d90efc3039a77f563acc5b9a90987cf63bc5c0f9026ed5ff59d1fcc683670236"
+      }
+    },
+    {
+      "id": "wasmc-system-ios-deferred-work",
+      "kind": "swift-embedded",
+      "target": "ios",
+      "sources": {
+        "platform/ios/Sources/DeferredWorkProvider.swift": "953314e6dbaa8b5606e1ff9ba0a09bbaad5a09b71c9375f136c02aef0124b79d",
+        "platform/ios/binding.json": "459bf4e22f3e2c28729ea6de48384cff2193314be67a75f3428f57e6b89d372b"
+      }
+    },
+    {
+      "id": "wasmc-system-ios-local-notification",
+      "kind": "swift-embedded",
+      "target": "ios",
+      "sources": {
+        "platform/ios/Sources/LocalNotificationProvider.swift": "c9f1ed96bde6feb40a8dea80fa6d982de2340f50dd6d03f561e8cd15ceba1d8e",
+        "platform/ios/binding.json": "c84e1dc0f6000787cad1bf47063a61f483698827082d940099f8e5fcacdedd5a"
+      }
+    },
+    {
+      "id": "wasmc-system-ios-network-path",
+      "kind": "swift-embedded",
+      "target": "ios",
+      "sources": {
+        "platform/ios/Sources/NetworkPathProvider.swift": "264f476ad477488ad63f8144e4dce9af75d664f83ad6e4bb23a00b3f2ba49817",
+        "platform/ios/binding.json": "0a9e0335bbc2c4e37eadfad5443e4b37b15dc49f614cdeb49d290f631d0183e7"
+      }
+    },
+    {
+      "id": "wasmc-system-ios-simulator-display",
+      "kind": "c-boundary",
+      "target": "ios",
+      "sources": {
+        "platform/native-adapter.c": "432ce65eba5dde01120323da306c0fd5bb73d487ac2506d94c7f5de8c32f3a52",
+        "platform/native-boundary.template.json": "9c2a77889c50e9b402b8808a16afbd8298cfbb8f8996b34c3c5dda55b562e98b"
+      }
+    },
+    {
+      "id": "wasmc-system-ios-websocket",
+      "kind": "swift-embedded",
+      "target": "ios",
+      "sources": {
+        "platform/ios/Sources/WebSocketProvider.swift": "c2a4ba25be6cf21b1220058ffd3c357a3f818743f5d7078084e35800e694473f",
+        "platform/ios/binding.json": "2de203d4a662ab9d335dbc9b84484436ff7e1a17f82f08c5a2a06ff4afc3b52e"
+      }
+    },
+    {
+      "id": "wasmc-system-linux-endpoint",
+      "kind": "c-boundary",
+      "target": "linux",
+      "sources": {
+        "platform/native-adapter.c": "582c217d08451f50758ceb8e213ddc1966b717d96468fc873bebfaccaca88232",
+        "platform/native-boundary.template.json": "fe49d5222f507f83a221209a625545223f69c31fa61b3e76fe3183e0b2e01dce"
+      }
+    },
+    {
+      "id": "wasmc-system-linux-socket",
+      "kind": "c-boundary",
+      "target": "linux",
+      "sources": {
+        "platform/native-adapter.c": "02f05d38b781b1d876409fd8a07962002306d0aad7382803f41b5e15afd4b78a",
+        "platform/native-boundary.template.json": "828c9886015baa01cc6a008e724abc12e14933da02c14171b6edc6fb65b5a112"
+      }
+    },
+    {
+      "id": "wasmc-system-linux-uinput",
+      "kind": "c-boundary",
+      "target": "linux",
+      "sources": {
+        "platform/native-adapter.c": "1bf3f5b28d3811d3eb0c30d76173394cc669066e46e1e1bc0bc4880b97a7ed76",
+        "platform/native-boundary.template.json": "84a6a371de519f42542d020ebe3b4d1532a77520e457853d12128a08881eb502",
+        "platform/wfc-profile.json": "c3b757e0196775ad8b3e4631c89f7e54521ce6818b41562798bfbab9184ee660"
+      }
+    },
+    {
+      "id": "wasmc-system-network-prototype",
+      "kind": "node-boundary",
+      "target": "portable-node",
+      "sources": {
+        "platform/native-adapter.mjs": "e1861dd9770253f1d293ef7cf60f0e38484a89743c15cd2dd18ba72802521a14",
+        "platform/native-boundary.json": "1a6d9d1ee76dbd2ad6f9b31d0b5abbf6583ce8eeb9b70b9c0fdd085c55a8d926"
+      }
+    },
+    {
+      "id": "wasmc-system-process-prototype",
+      "kind": "node-boundary",
+      "target": "portable-node",
+      "sources": {
+        "platform/native-adapter.mjs": "79af42c23e49fe9615a4a3b3bd9a12b9f1a7d1e308560ee9c245ff561913206f",
+        "platform/native-boundary.json": "450a3c063c60994cdcecf52abf959f3ec40fe93c5e246336c2b5dc38f5a9e1c0"
+      }
+    }
+  ],
+  "native_source_preserved": true,
+  "physical_requalification": false
+}

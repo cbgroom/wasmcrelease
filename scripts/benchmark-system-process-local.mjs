@@ -10,7 +10,7 @@ if (process.platform === "win32") {
 }
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const packageRoot = path.join(root, "libsrc/wasmc-system-process-prototype");
+const packageRoot = path.join(root, "libspec/wasmc-system-process-prototype");
 const encoder = new TextEncoder();
 const decoder = new TextDecoder();
 const now = () => process.hrtime.bigint();

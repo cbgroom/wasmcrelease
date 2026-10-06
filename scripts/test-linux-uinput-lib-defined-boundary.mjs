@@ -1,3 +1,4 @@
+import { generatedLib, selectedRun } from './generated-lib-v2.mjs';
 import assert from "node:assert/strict";
 import { execFileSync, spawn, spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
@@ -10,14 +11,15 @@ assert.equal(process.platform, "linux", "Linux uinput Lib qualification requires
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const target = path.join(root, "target/lib-defined-boundary-linux-uinput");
-const sourceRoot = path.join(root, "libsrc/wasmc-system-linux-uinput");
+const selected = await generatedLib("wasmc-system-linux-uinput");
+const sourceRoot = selected.root;
 const manifest = path.join(root, "host/runtime/lib-boundary/native-linux/Cargo.toml");
 const rustSource = path.join(root, "host/runtime/lib-boundary/native-linux/src/main.rs");
-const adapterSource = path.join(sourceRoot, "native-adapter.c");
+const adapterSource = path.join(sourceRoot, "platform/native-adapter.c");
 const adapter = path.join(target, "libwasmc_system_linux_uinput.so");
 const descriptorPath = path.join(target, "native-boundary.json");
 const executor = path.join(target, "cargo/release/wasmc-lib-boundary-native-linux");
-const profile = JSON.parse(fs.readFileSync(path.join(sourceRoot, "wfc-profile.json"), "utf8"));
+const profile = JSON.parse(fs.readFileSync(path.join(sourceRoot, "platform/wfc-profile.json"), "utf8"));
 const hash = (bytes) => createHash("sha256").update(bytes).digest("hex");
 const command = (program, args, options = {}) =>
   execFileSync(program, args, { cwd: root, encoding: "utf8", stdio: ["ignore", "pipe", "pipe"], ...options });
@@ -174,7 +176,7 @@ assert.equal(profile.libs[0].identity, "wasmc:system-linux-uinput@0.0.1-dev.1");
 
 fs.rmSync(target, { recursive: true, force: true });
 fs.mkdirSync(target, { recursive: true });
-command("cc", ["-shared", "-fPIC", "-O2", "-Wall", "-Wextra", "-Werror", adapterSource, "-o", adapter]);
+fs.copyFileSync(selected.artifact, adapter);
 if (process.env.WASMC_WIT_PREVALIDATED !== "1") {
   command("wasm-tools", ["component", "wit", path.join(sourceRoot, "lib.wit")]);
 }
@@ -185,13 +187,14 @@ command("cargo", rustArgs(["build", "--release", "--locked", "--manifest-path", 
 });
 
 const adapterSha256 = hash(fs.readFileSync(adapter));
-const endpointReceiptPath = process.arch === "arm64"
-  ? path.join(root, "admission/host-lib-defined-boundary-v1/linux-aarch64-device-io-v7.json")
-  : path.join(root, "admission/host-lib-defined-boundary-v1/linux-x86_64-device-io-v7.json");
+const endpointReceiptPath = path.join(selectedRun(), "linux-endpoint-q1.json");
 const endpointReceipt = JSON.parse(fs.readFileSync(endpointReceiptPath, "utf8"));
+assert.equal(endpointReceipt.accepted, true, "current endpoint baseline must pass first");
+assert.equal(endpointReceipt.generated_run, selectedRun());
+assert.equal(endpointReceipt.host_source_sha256, hash(fs.readFileSync(rustSource)), "Host source changed after baseline");
 const executorSha256 = hash(fs.readFileSync(executor));
-assert.equal(executorSha256, endpointReceipt.outputs.executor_sha256, "fixed executor identity changed for uinput");
-const descriptorTemplate = fs.readFileSync(path.join(sourceRoot, "native-boundary.template.json"), "utf8");
+assert.equal(executorSha256, endpointReceipt.executor_sha256, "fixed executor identity changed for uinput");
+const descriptorTemplate = fs.readFileSync(path.join(sourceRoot, "platform/native-boundary.template.json"), "utf8");
 fs.writeFileSync(descriptorPath, descriptorTemplate.replace("BUILD_OUTPUT_SHA256", adapterSha256));
 
 const controller = profile.controller;

@@ -1,17 +1,32 @@
 {
-  "schema": "wasmc.system-profile-resolution-contract/v1",
+  "schema": "wasmc.system-profile-resolution-contract/v2",
   "status": "architecture-workstream-not-released",
-  "request_schema": "wasmc.system-profile-request/v1",
-  "profile_schema": "wasmc.library-os-profile/v2",
-  "candidate_schema": "wasmc.libsrc-candidate/v1",
+  "request_schema": "wasmc.system-profile-request/v2",
+  "profile_schema": "wasmc.library-os-profile/v3",
+  "source_schema": "wasmc.lib-refresh-source/v2",
   "descriptor_schemas": [
     "wasmc.native-boundary-descriptor/v1",
     "wasmc.platform-binding-descriptor/v1"
   ],
-  "artifact_formats": ["native-adapter", "embedded-source"],
-  "target_fields": ["os", "architecture", "environment", "embedding"],
-  "lifecycle_fields": ["qualified", "admitted", "released", "discoverable", "installable"],
-  "selection_authority": "explicit candidate set plus Lib-owned system_binding metadata",
+  "artifact_formats": [
+    "native-adapter",
+    "embedded-source"
+  ],
+  "target_fields": [
+    "os",
+    "architecture",
+    "environment",
+    "embedding"
+  ],
+  "lifecycle_fields": [
+    "source",
+    "qualified",
+    "admitted",
+    "released",
+    "discoverable",
+    "installable"
+  ],
+  "selection_authority": "explicit current source set plus native.binding metadata; generated executables require exact refresh receipt",
   "semantic_authority": "exact WIT package identity",
   "physical_authority": "exact Lib-owned native or embedded platform binding descriptor identity",
   "rules": {

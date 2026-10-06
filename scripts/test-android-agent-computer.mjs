@@ -42,22 +42,22 @@ const adbCommand = (arguments_, options = {}) => command(adb, arguments_, option
 const domains = {
   display: {
     identity: "wasmc:system-android-display@0.0.1-dev.1",
-    root: path.join(root, "libsrc/wasmc-system-android-display"),
+    root: path.join(root, "libspec/wasmc-system-android-display"),
     adapter: "libwasmc_system_android_display.so",
   },
   ui: {
     identity: "wasmc:system-android-ui@0.0.1-dev.1",
-    root: path.join(root, "libsrc/wasmc-system-android-ui"),
+    root: path.join(root, "libspec/wasmc-system-android-ui"),
     adapter: "libwasmc_system_android_ui.so",
   },
   input: {
     identity: "wasmc:system-android-input@0.0.1-dev.1",
-    root: path.join(root, "libsrc/wasmc-system-android-input"),
+    root: path.join(root, "libspec/wasmc-system-android-input"),
     adapter: "libwasmc_system_android_input.so",
   },
   uinput: {
     identity: "wasmc:system-android-uinput@0.0.1-dev.1",
-    root: path.join(root, "libsrc/wasmc-system-android-uinput"),
+    root: path.join(root, "libspec/wasmc-system-android-uinput"),
     adapter: "libwasmc_system_android_uinput.so",
   },
 };

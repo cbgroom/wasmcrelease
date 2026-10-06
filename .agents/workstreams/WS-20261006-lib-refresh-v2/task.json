@@ -7,71 +7,23 @@
   "base_commit": "0d4f1f5085f134d8c9a3214d8e235c6ab08beed2",
   "target_branch": "main",
   "created_at": "2026-10-06T12:42:05Z",
-  "state": "in_progress",
-  "current_checkpoint": {
-    "observed_at": "2026-10-06T18:16:54Z",
-    "state": "ten_library_q0_q1_pass_cache_incremental_verified",
-    "evidence": "ten-library-checkpoint.json",
-    "evidence_sha256": "ba52a76bc1356f963112328f8d7ec171f8354882b862607fe12d0a0f54ac41a0",
-    "libraries": 10, "exported_apis_exercised": 28, "q1_cases": 50,
-    "cache_tests": 11, "q2": "not_run", "q3": "not_run",
-    "cold_ms": 421792, "single_delta_ms": 37605, "no_change_ms": 2696,
-    "single_delta_builds": 1, "single_delta_reuse": 9,
-    "current_fingerprint": "0fd2af19a112a16c305f6e6c78e06e9107b29d5cc61947e6d033be1ed4cf3904",
-    "compatibility_fallback": false, "old_authoring_physically_retired": false,
-    "public_admission": false, "running_jobs": []
-  },
+  "state": "current_source_migration_complete_qualification_scope_recorded",
   "integration_state": "not_integrated",
   "source_authority": "libspec/",
-  "legacy_authority": "libsrc is migration input only; no future compatibility contract",
-  "producer_contract": "explicit exact WAsmC producer path/digest; never mutable PATH inference",
-  "first_cohort": [
-    "wasmc-json",
-    "wasmc-compression",
-    "wasmc-http1"
-  ],
-  "q0": {
-    "state": "pass",
-    "fingerprint": "b1e1260daa0936b6cbe73f98c0aab7e67e11080a312fc6bde97e803676a1fae2",
-    "producer_sha256": "73b1885a9a5e5427755ee4565e8c05b231e03f032ba784d5e73c67088ee838da",
-    "cargo_lock_sha256": "73abce6d00084ead6327c4ca7ee3241785ab0754bac9c29e65ddf36ddd9249da",
-    "repeated_refresh_byte_identical": true,
-    "lock_bootstrap_idempotent": true
+  "legacy_authority": "none; old source/build/test paths physically retired",
+  "current_checkpoint": {
+    "evidence": "all-candidate-checkpoint.json",
+    "sha256": "70a62368a6f979746207a716e59321eadf15f582ba26acd08ff8fc5f59f37aa2",
+    "observed_at": "2026-10-06T20:08:21.186197+00:00",
+    "libraries": 36,
+    "current_suites_passed": 19,
+    "old_authoring_physically_retired": true,
+    "public_admission": false,
+    "running_jobs": []
   },
-  "q1": {
-    "state": "pass_first_cohort",
-    "receipt_sha256": "f81c0bf06b801903cc5f21c4a262bf37d8555d386592de5afec89d5b012630c6",
-    "execution": "Node Core WebAssembly over generated import-free artifact.wasm",
-    "wasmtime_cli": "not installed on hwlinux; Q2 engine matrix remains separate"
-  },
-  "generated_hashes": {
-    "wasmc-json": {
-      "artifact": "90f64abae321f0699e5fbe7b9ff647a397cefa3c32e175dcc7793585505590ae",
-      "component": "678fe804f983d9bea7fbf4c36bb41c28606df1d16e292ff60b657a2c1fbf4ef3",
-      "core_abi": "373ccf4ffeb9943b0e0d29804cc6e335320cf283dfb530c61e959729d1abc92e"
-    },
-    "wasmc-compression": {
-      "artifact": "20f5d3531223356f4bb430707aaf39a7c703e91133f0905a451723c113f1cae7",
-      "component": "aaa7236e7297339e56a4e5c2cea5678bb652692c507fb12811303522dc02ef3a",
-      "core_abi": "9af2f0ab90b12cd6c6982002282af451f22e53094f83e9e42c34cebaebeab62b"
-    },
-    "wasmc-http1": {
-      "artifact": "e2872d169913d4202bca23c5681cef447912fd33abca0e5f9a30917ff53dd138",
-      "component": "8b1fd8c0b36d70ec630e73ef0c63c49452fec3039db89df836734f0c85da1d6e",
-      "core_abi": "8a5482a1f3ae707bd0973b0c5c407edc3cdc492683bb667c233b0520ed465985"
-    }
-  },
-  "scope": "Introduce the best future Lib authoring model without preserving per-Lib Cargo/wit-bindgen compatibility. Generate Cargo/workspace/build specs/Core+Component/SDK/manifests/receipts from libspec source authority.",
   "next": [
-    "Route full oracle and multi-engine CI to exact generated ten-library Root receipts; Q1 passed 50 cases / 28 APIs.",
-    "Complete ordinary WAsmC / Rust Core / Component Q2, then retire ten old authoring shells and their CI paths together.",
-    "Add resource profile for resource-counter/resident-memory/owned-algorithms.",
-    "Add host/contract profiles for host-clock/system-telemetry/system contracts.",
-    "After cohort migration, delete historical per-Lib authoring projects rather than support two formats.",
-    "Run Q2 all18 ordinary WAsmC/Rust Core/Component Wasmi+Wasmtime qualification, then Q3 release gates."
-  ],
-  "public_admission": false,
-  "candidate_created": false,
-  "immutable_releases_mutated": false,
-  "integrity_refresh": "deferred: this is pre-candidate future source work; existing release manifest AGENTS.md mismatch already exists at base and must not be repaired by rewriting immutable release identity"
+    "Close ordinary WAsmC caller/SDK Q2 on exact generated roots without adding old authoring fallback.",
+    "Run native Android/Apple device and uinput privileged-device qualifications under exact generated package identity.",
+    "Perform independent full-cohort reproducibility and release/integration/installed-use gates."
+  ]
 }

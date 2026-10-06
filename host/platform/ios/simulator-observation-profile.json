@@ -1,5 +1,5 @@
 {
-  "schema": "wasmc.library-os-profile/v2",
+  "schema": "wasmc.library-os-profile/v3",
   "id": "ios-simulator-observation-v1",
   "target": {
     "os": "ios",
@@ -11,7 +11,7 @@
     "executor": "host/runtime/lib-boundary/native-apple-simulator",
     "required_domain_apis": 0
   },
-  "required_lifecycle": "qualified",
+  "required_lifecycle": "source",
   "requirements": [
     "wasmc:system-display@0.0.1"
   ],
@@ -19,26 +19,36 @@
     {
       "api": "wasmc:system-display@0.0.1",
       "provider": "wasmc:system-ios-simulator-display@0.0.1-dev.1",
-      "candidate": "libsrc/wasmc-system-ios-simulator-display/candidate.json",
-      "wit": "libsrc/wasmc-system-ios-simulator-display/lib.wit",
-      "descriptor": "libsrc/wasmc-system-ios-simulator-display/native-boundary.template.json",
+      "source": "libspec/wasmc-system-ios-simulator-display/lib.json",
+      "source_sha256": "f38537e1c023d57e4a8a6f56273e02f3370626d666e2894118ff03c0885ab69c",
+      "wit": "libspec/wasmc-system-ios-simulator-display/lib.wit",
+      "wit_sha256": "45e1d31b607185ffda7784c4a809cc54d5288a4771fdf444066440fde554aa77",
+      "descriptor": "libspec/wasmc-system-ios-simulator-display/platform/native-boundary.template.json",
+      "descriptor_sha256": "9c2a77889c50e9b402b8808a16afbd8298cfbb8f8996b34c3c5dda55b562e98b",
+      "implementation_sha256": {
+        "platform/native-adapter.c": "432ce65eba5dde01120323da306c0fd5bb73d487ac2506d94c7f5de8c32f3a52",
+        "platform/native-boundary.template.json": "9c2a77889c50e9b402b8808a16afbd8298cfbb8f8996b34c3c5dda55b562e98b"
+      },
       "boundary": "wasmc.lib-defined-host-boundary/v1",
       "artifact": {
         "format": "native-adapter",
-        "path": "libwasmc_system_ios_simulator_display.dylib"
+        "source": "libspec/wasmc-system-ios-simulator-display/platform/native-adapter.c",
+        "build_target": "ios",
+        "executable": false
+      },
+      "lifecycle": {
+        "source": true,
+        "qualified": false,
+        "admitted": false,
+        "released": false,
+        "discoverable": false,
+        "installable": false
       },
       "target": {
         "os": "ios",
         "architecture": "aarch64",
         "environment": "simulator",
         "embedding": "supervisor"
-      },
-      "lifecycle": {
-        "qualified": true,
-        "admitted": false,
-        "released": false,
-        "discoverable": false,
-        "installable": false
       }
     }
   ],
@@ -48,5 +58,6 @@
     "provider_name_inference": false,
     "ios_embedded_host": false,
     "physical_device": false
-  }
+  },
+  "executable": false
 }

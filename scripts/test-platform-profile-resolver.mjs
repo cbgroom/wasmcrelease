@@ -4,7 +4,7 @@ import fs from "node:fs";
 import path from "node:path";
 import {
   ProfileResolutionError,
-  loadSystemLibCandidate,
+  loadSystemLibSource,
   resolveSystemProfile,
   resolveSystemProfileRequest,
 } from "../host/platform/profile-resolver.mjs";
@@ -14,7 +14,7 @@ const requestPath = "host/platform/android/agent-computer-request.json";
 const profilePath = "host/platform/android/agent-computer-profile.json";
 const request = JSON.parse(fs.readFileSync(path.join(root, requestPath), "utf8"));
 const expectedProfile = JSON.parse(fs.readFileSync(path.join(root, profilePath), "utf8"));
-const candidates = request.candidates.map((candidate) => loadSystemLibCandidate(root, candidate));
+const candidates = request.sources.map((candidate) => loadSystemLibSource(root, candidate));
 
 const expectCode = (code, operation) => assert.throws(operation, (error) => {
   assert.ok(error instanceof ProfileResolutionError);
@@ -23,10 +23,10 @@ const expectCode = (code, operation) => assert.throws(operation, (error) => {
 });
 
 assert.deepEqual(resolveSystemProfileRequest(root, request), expectedProfile);
-assert.equal(expectedProfile.schema, "wasmc.library-os-profile/v2");
+assert.equal(expectedProfile.schema, "wasmc.library-os-profile/v3");
 assert.equal(expectedProfile.host.required_domain_apis, 0);
 assert.deepEqual(expectedProfile.bindings.map((binding) => binding.api), expectedProfile.requirements);
-assert.equal(expectedProfile.bindings.every((binding) => binding.lifecycle.qualified), true);
+assert.equal(expectedProfile.bindings.every((binding) => binding.lifecycle.source && !binding.lifecycle.qualified), true);
 assert.equal(expectedProfile.bindings.every((binding) => !binding.lifecycle.admitted), true);
 
 const iosRequestPath = "host/platform/ios/app-surface-control-request.json";
@@ -38,9 +38,9 @@ assert.deepEqual(iosProfile, iosExpectedProfile);
 assert.equal(iosProfile.host.required_domain_apis, 0);
 assert.equal(iosProfile.bindings[0].artifact.format, "embedded-source");
 assert.deepEqual(iosProfile.bindings[0].artifact.sources, [
-  "libsrc/wasmc-system-ios-app-surface-control/platform/ios/Sources/SurfaceControlProvider.swift",
-  "libsrc/wasmc-system-ios-app-surface-control/platform/ios/Sources/PiPSurfaceProvider.swift",
-  "libsrc/wasmc-system-ios-app-surface-control/platform/ios/Sources/WebViewSurfaceProvider.swift",
+  "libspec/wasmc-system-ios-app-surface-control/platform/ios/Sources/SurfaceControlProvider.swift",
+  "libspec/wasmc-system-ios-app-surface-control/platform/ios/Sources/PiPSurfaceProvider.swift",
+  "libspec/wasmc-system-ios-app-surface-control/platform/ios/Sources/WebViewSurfaceProvider.swift",
 ]);
 assert.equal(new Set(iosProfile.bindings[0].artifact.sources).size,
   iosProfile.bindings[0].artifact.sources.length);
@@ -49,7 +49,7 @@ assert.equal(iosProfile.bindings[0].artifact.frameworks.includes("WebKit"), true
 expectCode("provider.none", () => resolveSystemProfile({
   ...iosRequest,
   target: { os: "macos", architecture: "aarch64", environment: "device", embedding: "native" },
-}, [loadSystemLibCandidate(root, iosRequest.candidates[0])]));
+}, [loadSystemLibSource(root, iosRequest.sources[0])]));
 
 const cli = spawnSync(process.execPath, [
   "host/platform/profile-resolver.mjs", "resolve", requestPath,
@@ -121,7 +121,7 @@ expectCode("target.invalid", () => resolveSystemProfile({
   ...request,
   target: { os: "android", architecture: "aarch64" },
 }, candidates));
-expectCode("package.path_invalid", () => loadSystemLibCandidate(root, "../candidate.json"));
+expectCode("package.invalid", () => loadSystemLibSource(root, "../candidate.json"));
 
 console.log(JSON.stringify({
   accepted: true,

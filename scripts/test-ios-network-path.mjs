@@ -13,7 +13,7 @@ run("node", ["scripts/validate-ios-network-path.mjs"]);
 const projectDir = "target/ios-network-path-project";
 const derivedDir = "target/ios-network-path-derived";
 const bundle = "io.wasmc.network-path-lab";
-const exampleRoot = "libsrc/wasmc-system-ios-network-path/examples/ios-app";
+const exampleRoot = "tests/lib-refresh/native/wasmc-system-ios-network-path/examples/ios-app";
 fs.mkdirSync(projectDir, { recursive: true });
 run("xcodegen", ["generate", "--spec", `${exampleRoot}/project.yml`, "--project", projectDir,
   "--project-root", exampleRoot], { env: { ...process.env,

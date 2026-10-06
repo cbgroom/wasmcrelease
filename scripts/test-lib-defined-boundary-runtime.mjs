@@ -1,3 +1,4 @@
+import { generatedLib } from './generated-lib-v2.mjs';
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { copyFile, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
@@ -26,6 +27,7 @@ const encodeExchange = (host, port, payload) => {
   return output;
 };
 
+const generated = Object.fromEntries(await Promise.all(["wasmc-system-file-prototype", "wasmc-system-process-prototype", "wasmc-system-network-prototype"].map(async id => [id, await generatedLib(id)])));
 const boundary = new LibDefinedBoundary();
 const executorIdentities = [];
 const execute = async (packageRoot, input) => {
@@ -51,12 +53,12 @@ try {
   const fixture = path.join(temporary, "input.bin");
   await writeFile(fixture, utf8.encode("file-ok"));
   const fileBytes = await execute(
-    path.join(root, "libsrc/wasmc-system-file-prototype"),
+    generated["wasmc-system-file-prototype"].root,
     utf8.encode(fixture),
   );
   assert.equal(text.decode(fileBytes), "file-ok");
 
-  const cancelledResource = await boundary.install(path.join(root, "libsrc/wasmc-system-file-prototype"));
+  const cancelledResource = await boundary.install(generated["wasmc-system-file-prototype"].root);
   const cancelledWindow = boundary.acquireWindow(utf8.encode(fixture));
   const cancelledOperation = boundary.submit(cancelledResource, cancelledWindow);
   assert.equal(boundary.cancel(cancelledOperation), true);
@@ -70,7 +72,7 @@ try {
   assert.deepEqual(boundary.counts(), { resources: 0, windows: 0, operations: 0 });
 
   const processBytes = await execute(
-    path.join(root, "libsrc/wasmc-system-process-prototype"),
+    generated["wasmc-system-process-prototype"].root,
     utf8.encode(JSON.stringify({
       operation: "process-run",
       executable: process.execPath,
@@ -93,7 +95,7 @@ try {
   const address = server.address();
   assert.ok(address && typeof address === "object");
   const networkBytes = await execute(
-    path.join(root, "libsrc/wasmc-system-network-prototype"),
+    generated["wasmc-system-network-prototype"].root,
     encodeExchange("127.0.0.1", address.port, "ping"),
   );
   assert.equal(text.decode(networkBytes), "network-ok:ping");
@@ -104,11 +106,12 @@ try {
     assert.equal(executorSource.includes(forbidden), false, `domain logic leaked into fixed executor: ${forbidden}`);
   }
 
-  const descriptor = JSON.parse(await readFile(path.join(root, "libsrc/wasmc-system-file-prototype/native-boundary.json"), "utf8"));
+  const descriptor = JSON.parse(await readFile(path.join(generated["wasmc-system-file-prototype"].root, "native-boundary.json"), "utf8"));
   descriptor.adapter.sha256 = "0".repeat(64);
+  descriptor.adapter.path = "native-adapter.mjs";
   const invalidRoot = path.join(temporary, "invalid-lib");
   await mkdir(invalidRoot);
-  await copyFile(path.join(root, "libsrc/wasmc-system-file-prototype/native-adapter.mjs"), path.join(invalidRoot, "native-adapter.mjs"));
+  await copyFile(generated["wasmc-system-file-prototype"].artifact, path.join(invalidRoot, "native-adapter.mjs"));
   await writeFile(path.join(invalidRoot, "native-boundary.json"), JSON.stringify(descriptor));
   await assert.rejects(boundary.install(invalidRoot), /adapter identity mismatch/);
 

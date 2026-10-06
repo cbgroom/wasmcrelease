@@ -1,4 +1,4 @@
-package wasmc:system-app-authorization@0.0.1;
+package wasmc:system-app-authorization@0.0.2;
 
 interface authorization {
   enum capability {
@@ -39,6 +39,7 @@ interface authorization {
     request-in-flight: bool,
     plan: plan,
   }
+  observe: func(capability: capability, observed-state: state) -> result<_, s32>;
   snapshot: func() -> list<decision>;
   plan-request: func(capabilities: list<capability>) -> list<decision>;
   begin-request: func(capability: capability) -> result<u32, s32>;

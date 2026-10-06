@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 root="$(cd "$(dirname "$0")/.." && pwd)"
-package="${1:-$root/admission/system-telemetry-v1/package}"
-package="$(cd "$package" && pwd)"
-node "$root/scripts/test-telemetry-package.mjs" "$package"
+cd "$root"
+package="$(node scripts/select-generated-lib.mjs wasmc-system-telemetry "$@" | node -e 'let s="";process.stdin.on("data",d=>s+=d);process.stdin.on("end",()=>console.log(JSON.parse(s).root))')"
 scratch="$(mktemp -d "${TMPDIR:-/tmp}/wasmc-telemetry-host.XXXXXX")"
 trap 'rm -rf "$scratch"' EXIT
 mkdir -p "$scratch/public/examples/system-telemetry/host-consumer/wit" "$scratch/public/sdk" "$scratch/public/host/drivers/file" "$scratch/public/host/drivers/memory"
@@ -15,7 +14,7 @@ cp "$root/examples/system-telemetry/host-consumer/"Cargo.{toml,lock} "$scratch/p
 cp "$package/lib.wit" "$scratch/public/examples/system-telemetry/host-consumer/wit/world.wit"
 # Only public SDK/driver glue, consumer source and exact WIT are present.
 # No telemetry implementation, private compiler source, or rebuilt Lib.
-test ! -e "$scratch/public/libsrc"
+test ! -e "$scratch/public/libspec"
 export CARGO_TARGET_DIR="${WASMC_TELEMETRY_HOST_TARGET:-$scratch/target}"
 export WASMC_TELEMETRY_COMPONENT="$package/component.wasm"
 manifest="$scratch/public/examples/system-telemetry/host-consumer/Cargo.toml"

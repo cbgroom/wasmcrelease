@@ -1,3 +1,4 @@
+import {selectedRun} from './generated-lib-v2.mjs';
 import assert from 'node:assert/strict';
 import { mkdtemp, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
@@ -32,7 +33,7 @@ try {
     '/System/Library/Keychains/SystemRootCertificates.keychain',
   ]);
   await writeFile(bundlePath, bundle);
-  const output = run(process.execPath, [resolve(root, 'scripts/test-tls-client-libsrc.mjs')], {
+  const output = run(process.execPath, [resolve(root, 'scripts/test-generated-tls.mjs'), '--run-root', selectedRun()], {
     timeout: 900000,
     env: {
       WASMC_TLS_PUBLIC_CA_BUNDLE: bundlePath,
@@ -43,18 +44,19 @@ try {
   });
   const receipt = JSON.parse(output.trim().split(/\r?\n/).filter(Boolean).at(-1));
   assert.equal(receipt.accepted, true);
-  assert.equal(receipt.handshake.public_ca_https, true);
-  assert.ok(receipt.handshake.public_ca_roots > 64);
-  assert.ok(receipt.handshake.public_ca_roots <= 256);
-  assert.ok(receipt.handshake.public_ca_response_bytes > 0);
+  const handshake=receipt.packages.find(p=>p.id==="wasmc-tls-client").result;
+  assert.equal(handshake.public_ca_https, true);
+  assert.ok(handshake.public_ca_roots > 64);
+  assert.ok(handshake.public_ca_roots <= 256);
+  assert.ok(handshake.public_ca_response_bytes > 0);
   console.log(JSON.stringify({
     accepted: true,
     schema: 'wasmc.tls-client-macos-public-ca-qualification/v1',
     engine: 'wasmtime-47.0.4',
     endpoint: 'https://example.com/',
-    system_root_certificates: receipt.handshake.public_ca_roots,
-    response_plaintext_bytes: receipt.handshake.public_ca_response_bytes,
-    semantic_host_imports: receipt.semantic_host_imports,
+    system_root_certificates: handshake.public_ca_roots,
+    response_plaintext_bytes: handshake.public_ca_response_bytes,
+    semantic_host_imports: handshake.host_imports,
     fixed_host_api_changes: 0,
   }));
 } finally {

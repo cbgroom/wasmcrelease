@@ -1,5 +1,5 @@
 {
-  "schema": "wasmc.library-os-profile/v2",
+  "schema": "wasmc.library-os-profile/v3",
   "id": "android-agent-computer-v2",
   "target": {
     "os": "android",
@@ -12,7 +12,7 @@
     "executor": "host/runtime/lib-boundary/native-android",
     "required_domain_apis": 0
   },
-  "required_lifecycle": "qualified",
+  "required_lifecycle": "source",
   "requirements": [
     "wasmc:system-display@0.0.1",
     "wasmc:system-ui@0.0.1",
@@ -23,103 +23,144 @@
     {
       "api": "wasmc:system-display@0.0.1",
       "provider": "wasmc:system-android-display@0.0.1-dev.1",
-      "candidate": "libsrc/wasmc-system-android-display/candidate.json",
-      "wit": "libsrc/wasmc-system-android-display/lib.wit",
-      "descriptor": "libsrc/wasmc-system-android-display/native-boundary.template.json",
+      "source": "libspec/wasmc-system-android-display/lib.json",
+      "source_sha256": "e88fd556135f496401bf9eb68c3d798d20ce74c84c59a5f43095b53c08d6fb01",
+      "wit": "libspec/wasmc-system-android-display/lib.wit",
+      "wit_sha256": "45e1d31b607185ffda7784c4a809cc54d5288a4771fdf444066440fde554aa77",
+      "descriptor": "libspec/wasmc-system-android-display/platform/native-boundary.template.json",
+      "descriptor_sha256": "7687fa3c625a5d9202b94208d0110aea759f36fab91ebef805c1d52e3b1adafa",
+      "implementation_sha256": {
+        "platform/native-adapter.c": "79a54600b82d13fc0972a1311df0f010e3f610964f7555ce19b2bf7cd55c14b3",
+        "platform/native-boundary.template.json": "7687fa3c625a5d9202b94208d0110aea759f36fab91ebef805c1d52e3b1adafa"
+      },
       "boundary": "wasmc.lib-defined-host-boundary/v1",
       "artifact": {
         "format": "native-adapter",
-        "path": "libwasmc_system_android_display.so"
+        "source": "libspec/wasmc-system-android-display/platform/native-adapter.c",
+        "build_target": "android",
+        "executable": false
+      },
+      "lifecycle": {
+        "source": true,
+        "qualified": false,
+        "admitted": false,
+        "released": false,
+        "discoverable": false,
+        "installable": false
       },
       "target": {
         "os": "android",
         "architecture": "aarch64",
         "environment": "emulator",
         "embedding": "native"
-      },
-      "lifecycle": {
-        "qualified": true,
-        "admitted": false,
-        "released": false,
-        "discoverable": false,
-        "installable": false
       }
     },
     {
       "api": "wasmc:system-ui@0.0.1",
       "provider": "wasmc:system-android-ui@0.0.1-dev.1",
-      "candidate": "libsrc/wasmc-system-android-ui/candidate.json",
-      "wit": "libsrc/wasmc-system-android-ui/lib.wit",
-      "descriptor": "libsrc/wasmc-system-android-ui/native-boundary.template.json",
+      "source": "libspec/wasmc-system-android-ui/lib.json",
+      "source_sha256": "8d5e27a6d18228d4c812968cae774b7e60f7805d56c59087a80fd8cb2ee96860",
+      "wit": "libspec/wasmc-system-android-ui/lib.wit",
+      "wit_sha256": "78d4d39f71ac1df5c09579a00928e605d04770b8e4377e2314c558220a849844",
+      "descriptor": "libspec/wasmc-system-android-ui/platform/native-boundary.template.json",
+      "descriptor_sha256": "d0f307898a33556e3c3d1facee2d56949f38df39689885bc1da172e810a6aebe",
+      "implementation_sha256": {
+        "platform/native-adapter.c": "87a4e64bfade91fd75c51027af553d163c860cbdd8a5932672742e87d3c8511e",
+        "platform/native-boundary.template.json": "d0f307898a33556e3c3d1facee2d56949f38df39689885bc1da172e810a6aebe"
+      },
       "boundary": "wasmc.lib-defined-host-boundary/v1",
       "artifact": {
         "format": "native-adapter",
-        "path": "libwasmc_system_android_ui.so"
+        "source": "libspec/wasmc-system-android-ui/platform/native-adapter.c",
+        "build_target": "android",
+        "executable": false
+      },
+      "lifecycle": {
+        "source": true,
+        "qualified": false,
+        "admitted": false,
+        "released": false,
+        "discoverable": false,
+        "installable": false
       },
       "target": {
         "os": "android",
         "architecture": "aarch64",
         "environment": "emulator",
         "embedding": "native"
-      },
-      "lifecycle": {
-        "qualified": true,
-        "admitted": false,
-        "released": false,
-        "discoverable": false,
-        "installable": false
       }
     },
     {
       "api": "wasmc:system-input@0.0.1",
       "provider": "wasmc:system-android-input@0.0.1-dev.1",
-      "candidate": "libsrc/wasmc-system-android-input/candidate.json",
-      "wit": "libsrc/wasmc-system-android-input/lib.wit",
-      "descriptor": "libsrc/wasmc-system-android-input/native-boundary.template.json",
+      "source": "libspec/wasmc-system-android-input/lib.json",
+      "source_sha256": "9a1787271e6f56efa8444bbed613b173856328598fd4b964d4963ff6c055866a",
+      "wit": "libspec/wasmc-system-android-input/lib.wit",
+      "wit_sha256": "d740fac34d41c45bbdde18c5ebdf742409a9c424fc1199075d864ae5be457e8b",
+      "descriptor": "libspec/wasmc-system-android-input/platform/native-boundary.template.json",
+      "descriptor_sha256": "e58237e85ebb865303423021c0c120f2bec8a69685c90ae55bcfb97f95a6aeb6",
+      "implementation_sha256": {
+        "platform/native-adapter.c": "de03f5854645c1ea1afde8a8da3e52cb95eca0ece44822734167f3a028549c88",
+        "platform/native-boundary.template.json": "e58237e85ebb865303423021c0c120f2bec8a69685c90ae55bcfb97f95a6aeb6"
+      },
       "boundary": "wasmc.lib-defined-host-boundary/v1",
       "artifact": {
         "format": "native-adapter",
-        "path": "libwasmc_system_android_input.so"
+        "source": "libspec/wasmc-system-android-input/platform/native-adapter.c",
+        "build_target": "android",
+        "executable": false
+      },
+      "lifecycle": {
+        "source": true,
+        "qualified": false,
+        "admitted": false,
+        "released": false,
+        "discoverable": false,
+        "installable": false
       },
       "target": {
         "os": "android",
         "architecture": "aarch64",
         "environment": "emulator",
         "embedding": "native"
-      },
-      "lifecycle": {
-        "qualified": true,
-        "admitted": false,
-        "released": false,
-        "discoverable": false,
-        "installable": false
       }
     },
     {
       "api": "wasmc:system-virtual-input@0.0.1",
       "provider": "wasmc:system-android-uinput@0.0.1-dev.1",
-      "candidate": "libsrc/wasmc-system-android-uinput/candidate.json",
-      "wit": "libsrc/wasmc-system-android-uinput/lib.wit",
-      "descriptor": "libsrc/wasmc-system-android-uinput/native-boundary.template.json",
+      "source": "libspec/wasmc-system-android-uinput/lib.json",
+      "source_sha256": "c9aa339e8698f4a43c180815c2e7879bea8a7a1df712c048bf7d4e53826b7a85",
+      "wit": "libspec/wasmc-system-android-uinput/lib.wit",
+      "wit_sha256": "d788ed7da5625031c0505d6a71f594b79cda99c3ff3c5d34e8c0cbba710e0a2f",
+      "descriptor": "libspec/wasmc-system-android-uinput/platform/native-boundary.template.json",
+      "descriptor_sha256": "2f655deb19aaf01d4bb3a31d96ad4d15c75c3a4e68c6e927b6beeeb7b8003606",
+      "implementation_sha256": {
+        "platform/native-adapter.c": "0205e7105969a6fd8ef51d10996f09fb870e641bd9a6cedc9bb22cff35f0b874",
+        "platform/native-boundary.template.json": "2f655deb19aaf01d4bb3a31d96ad4d15c75c3a4e68c6e927b6beeeb7b8003606"
+      },
       "boundary": "wasmc.lib-defined-host-boundary/v1",
       "artifact": {
         "format": "native-adapter",
-        "path": "libwasmc_system_android_uinput.so"
+        "source": "libspec/wasmc-system-android-uinput/platform/native-adapter.c",
+        "build_target": "android",
+        "executable": false
+      },
+      "lifecycle": {
+        "source": true,
+        "qualified": false,
+        "admitted": false,
+        "released": false,
+        "discoverable": false,
+        "installable": false
       },
       "target": {
         "os": "android",
         "architecture": "aarch64",
         "environment": "emulator",
         "embedding": "native"
-      },
-      "lifecycle": {
-        "qualified": true,
-        "admitted": false,
-        "released": false,
-        "discoverable": false,
-        "installable": false
       }
     }
   ],
-  "acceptance": "query-ui-then-control-then-confirm-with-ui-and-frame"
+  "acceptance": "query-ui-then-control-then-confirm-with-ui-and-frame",
+  "executable": false
 }

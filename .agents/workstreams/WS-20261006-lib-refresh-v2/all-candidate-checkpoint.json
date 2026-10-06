@@ -1,801 +1,514 @@
 {
   "schema": "wasmc.all-candidate-migration-checkpoint/v2",
-  "observed_at": "2026-10-06T19:42:29.993294+00:00",
-  "baseline": "46619598c715dbb4822cc6392d7320e0ba2dcc3c",
-  "run_root": "/home/huawei/code/.cache/wasmc-evidence/lib-refresh-all-candidates-20261006/runs/refresh-v0EpQf",
-  "refresh_sha256": "3ebc6ca0bd16b817af3d5eb5b7d10f136a66594036f62f35e429e5a2b0798ec6",
-  "fingerprint": "f91e5c6fa3f4880f5aad884fd09e985184f30ae073a2c95f8d9c341c9930842c",
-  "producer": {
-    "path": "/home/huawei/code/.cache/wasmc-targets/lib-refresh-producer-cache/debug/wasmc",
-    "sha256": "d8d01bbb434a7bb002ab20f8e9353381c0aee07da43bbb7829853fd7e7c18306"
-  },
-  "cargo_lock_sha256": "1a31d68d169b54329b9a61bc02f5b1ee20ee0359853c060e9335030c417a636e",
+  "observed_at": "2026-10-06T20:08:21.186197+00:00",
+  "state": "all36_current_source_retired_old_paths_qualified_scope_checkpoint",
+  "source_baseline": "46619598c715dbb4822cc6392d7320e0ba2dcc3c",
+  "migration_commit": "1157efbb9af414fafc856fe1756898969a1ff4d3",
+  "source_authority": "libspec/",
+  "candidate_count": 36,
   "profiles": {
     "value": 13,
     "native": 20,
     "resource": 3
   },
-  "native_statuses": {
-    "embedded_source_packaged": 14,
-    "native_module_syntax_checked_not_runtime_qualified": 3,
-    "native_binary_built_not_runtime_qualified": 3
+  "source_input_identities_rechecked": 154,
+  "retirement": {
+    "tree": "libsrc/",
+    "tree_exists": false,
+    "files": 274,
+    "old_entrypoints": 26,
+    "old_ci_workflows": 5,
+    "real_platform_payloads_verified": 22,
+    "fallback": false
+  },
+  "producer": {
+    "path": "/home/huawei/code/.cache/wasmc-targets/lib-refresh-producer-cache/debug/wasmc",
+    "sha256": "d8d01bbb434a7bb002ab20f8e9353381c0aee07da43bbb7829853fd7e7c18306"
+  },
+  "cargo_lock_sha256": "1a31d68d169b54329b9a61bc02f5b1ee20ee0359853c060e9335030c417a636e",
+  "cold_run": "/home/huawei/code/.cache/wasmc-evidence/lib-refresh-all-candidates-20261006/runs/refresh-v0EpQf",
+  "warm_run": "/home/huawei/code/.cache/wasmc-evidence/lib-refresh-all-candidates-20261006/runs/refresh-OIOZEL",
+  "q1_attempt": "/home/huawei/code/.cache/wasmc-evidence/lib-refresh-all-candidates-20261006/runs/refresh-OIOZEL/q1-attempt-KRUMx7",
+  "timing": {
+    "full_refresh_ms": 480585,
+    "post_retirement_reuse_ms": 8662,
+    "cache_hits": 36,
+    "cache_misses": 0
+  },
+  "current_qualification": {
+    "suites_passed": 19,
+    "suites": [
+      {
+        "script": "test-lib-refresh-v2.mjs",
+        "accepted": true,
+        "script_sha256": "1cf5740ab74cecb29c67f1c833e2ab9f0bb0d3131e6835decda0ecec09a903b6"
+      },
+      {
+        "script": "test-lib-refresh-data-v2.mjs",
+        "accepted": true,
+        "script_sha256": "a58525039f37589d92a5419645460cc51bc8c8fe5cc67bfcc46c1381d3d53db1"
+      },
+      {
+        "script": "test-lib-refresh-extra-v2.mjs",
+        "accepted": true,
+        "script_sha256": "6845c8676e64dc4a93c8dd1e7c0f3485011c1f24c5a68420b3b8be1f164e21f2"
+      },
+      {
+        "script": "test-lib-defined-boundary-runtime.mjs",
+        "accepted": true,
+        "script_sha256": "579d10ab2799201f15c46837ecbb8bd8c7983e6d5ebbbff6a98dde2a6979993e"
+      },
+      {
+        "script": "test-system-process-shell.mjs",
+        "accepted": true,
+        "script_sha256": "36715218e9fb2ca4a8424676b29fb5fb3bee9bfcb533af683b63653f2a6c6526"
+      },
+      {
+        "script": "test-telemetry-source.mjs",
+        "accepted": true,
+        "script_sha256": "8051657bc24891cb75044b57bf8439d0e8402dc149481eb97adbf8c138b0b005"
+      },
+      {
+        "script": "test-generated-telemetry.mjs",
+        "accepted": true,
+        "script_sha256": "489c716a7c5ad9d25e61314d40b35c43c649691d5033ea13cb0ee356ccce030a"
+      },
+      {
+        "script": "test-generated-wasmi.mjs",
+        "accepted": true,
+        "script_sha256": "1856eee6f50851f6f48898c65888403f95bbb902960385779149adc79b723c54"
+      },
+      {
+        "script": "test-generated-tls.mjs",
+        "accepted": true,
+        "script_sha256": "c70b0ae22858772540881506cf302472af115638dba3201875dbc4d22b84e43a"
+      },
+      {
+        "script": "test-generated-json.mjs",
+        "accepted": true,
+        "script_sha256": "9edd42793f209e464b25da591c18f4d6e38cc6041ba41c9d93d2a5fe94127a27"
+      },
+      {
+        "script": "test-generated-compression.mjs",
+        "accepted": true,
+        "script_sha256": "9cea511909118b13276c9964ccc114b2e9e9f6f9cc41835bd036cb4b72cc1c83"
+      },
+      {
+        "script": "test-generated-http1.mjs",
+        "accepted": true,
+        "script_sha256": "89f4d478d9f2a24548906a9a39ce923433b426c8d66bb6080eb6ac37093b9a14"
+      },
+      {
+        "script": "test-generated-csv.mjs",
+        "accepted": true,
+        "script_sha256": "c7533458286863560c905e5a339baf362506dc9dc70706ff11960145e9412f54"
+      },
+      {
+        "script": "test-generated-data-core.mjs",
+        "accepted": true,
+        "script_sha256": "b9fe577a401c76f80352bd45f5d2a4bfa5a78dd86eb57796358d628a384b01cf"
+      },
+      {
+        "script": "test-generated-data-compute.mjs",
+        "accepted": true,
+        "script_sha256": "6738774c2e2762153695db0809c9a09f07d80b90e992513313d01b892b5e088b"
+      },
+      {
+        "script": "test-generated-data-expr.mjs",
+        "accepted": true,
+        "script_sha256": "d2be8f2ac704ce2843f911a39cef45cdbf3ff2a24d2cd28beb977de5d98a697a"
+      },
+      {
+        "script": "test-generated-data-profile.mjs",
+        "accepted": true,
+        "script_sha256": "9086bb2eba2dc36fa3992780abd13d0ebba019cd5600e3b8f52e984cd0ab7d80"
+      },
+      {
+        "script": "test-generated-data-relational.mjs",
+        "accepted": true,
+        "script_sha256": "ad259f0276b9a39ff4f319c817234fce6257df7f924d0abd3a8f7785ee6db553"
+      },
+      {
+        "script": "test-generated-data-interchange.mjs",
+        "accepted": true,
+        "script_sha256": "e1bd36130a7d73f5454f6c1e1c8bb254a4d6b8bed0325afff85467c677f60a11"
+      }
+    ],
+    "base_value_data_cases": 50,
+    "base_value_data_exported_apis": 28,
+    "extra_grouped_cases": 5,
+    "router_combinations": 1152,
+    "wasmi_libraries": 13,
+    "telemetry_unit_tests": 27,
+    "telemetry_real_linux_acquisition": true,
+    "telemetry_component_resource_rounds": 128,
+    "tls_core_client_component_handshakes": true,
+    "linux_endpoint_socket_operation_bridge": true,
+    "linux_uinput_physical_result": "failed EACCES -13 under current account; never claimed PASS",
+    "platform_source_static_checks": "scripts/validate-current-platforms.mjs",
+    "native_q0_statuses": {
+      "embedded_source_packaged": 14,
+      "native_module_syntax_checked_not_runtime_qualified": 3,
+      "native_binary_built_not_runtime_qualified": 3
+    }
   },
   "packages": [
     {
       "id": "wasmc-app-authorization-policy",
       "version": "0.0.2",
-      "key": "e31866af5ca10b6446beac3adea1120be44544c3ec2b58fbade1808d6922037f",
       "profile": "value",
-      "state": "verified",
-      "package_root": "/home/huawei/code/.cache/wasmc-evidence/lib-refresh-all-candidates-20261006/runs/refresh-v0EpQf/packages/wasmc-app-authorization-policy",
-      "action": "build",
-      "producer_ms": 14927,
-      "build_ms": 14950,
-      "supported_views": [
-        "rust_component",
-        "rust_core"
-      ],
-      "ordinary_wasmc_qualification": "not_run",
-      "native_status": null,
-      "manifest_sha256": "f9cbeca5301848b72cd46ccb958acb6ad7be9d430c06a75a3b74c3c7ab1c0d09",
       "artifact_sha256": "e929a441fe813fa16d11012520d90d99518093357074650d6050b3c9bbb2fe7f",
       "component_sha256": "58c10b24dab1d27e809f2ea9c37875947f40cf27a9f0610eb3d37516be534c52",
-      "core_abi_sha256": "758ee3d3bd1b792b68375667f807e7a8efe71e4ae5e74726cfb4952b675e048a"
+      "core_abi_sha256": "758ee3d3bd1b792b68375667f807e7a8efe71e4ae5e74726cfb4952b675e048a",
+      "native_status": null
     },
     {
       "id": "wasmc-compression",
       "version": "0.0.1",
-      "key": "d43583a206108a33e892aea5a6af7c91eb2c34ad0559629207da831ef2bf9f38",
       "profile": "value",
-      "state": "verified",
-      "package_root": "/home/huawei/code/.cache/wasmc-evidence/lib-refresh-all-candidates-20261006/runs/refresh-v0EpQf/packages/wasmc-compression",
-      "action": "build",
-      "producer_ms": 4328,
-      "build_ms": 4349,
-      "supported_views": [
-        "rust_component",
-        "rust_core"
-      ],
-      "ordinary_wasmc_qualification": "not_run",
-      "native_status": null,
-      "manifest_sha256": "b5830bd9265c78fc632e5670e60dc6b6f5a867b45bbcead8dcf886978c3075d8",
       "artifact_sha256": "20f5d3531223356f4bb430707aaf39a7c703e91133f0905a451723c113f1cae7",
       "component_sha256": "aaa7236e7297339e56a4e5c2cea5678bb652692c507fb12811303522dc02ef3a",
-      "core_abi_sha256": "9af2f0ab90b12cd6c6982002282af451f22e53094f83e9e42c34cebaebeab62b"
+      "core_abi_sha256": "9af2f0ab90b12cd6c6982002282af451f22e53094f83e9e42c34cebaebeab62b",
+      "native_status": null
     },
     {
       "id": "wasmc-csv",
       "version": "0.0.1",
-      "key": "13bd199afe8bce81b02df3593392984634f1a97568aa182c8019110f083f6b78",
       "profile": "value",
-      "state": "verified",
-      "package_root": "/home/huawei/code/.cache/wasmc-evidence/lib-refresh-all-candidates-20261006/runs/refresh-v0EpQf/packages/wasmc-csv",
-      "action": "build",
-      "producer_ms": 59622,
-      "build_ms": 59687,
-      "supported_views": [
-        "rust_component",
-        "rust_core"
-      ],
-      "ordinary_wasmc_qualification": "not_run",
-      "native_status": null,
-      "manifest_sha256": "9d181b4c27870a33b20f310b98f0b4436329d4276812b26f6cf4fd16172899b2",
       "artifact_sha256": "2a2ceb30b47252af1fda7112fbe8b2b3a17adcc673dab12ab611cf86baae9fbd",
       "component_sha256": "1ab3795fa13d7761ffbda631590f528def949dbf235ff0077c165c45c1c22964",
-      "core_abi_sha256": "a8c5237a67763c52f2d6039e88689112846f5a005b0fcd9cfc5598f39ffdc359"
+      "core_abi_sha256": "a8c5237a67763c52f2d6039e88689112846f5a005b0fcd9cfc5598f39ffdc359",
+      "native_status": null
     },
     {
       "id": "wasmc-data-compute",
       "version": "0.0.1",
-      "key": "965ecaa31982da68394e08e415ba2bd1c95dcebfafe71b39020096f8d914e323",
       "profile": "value",
-      "state": "verified",
-      "package_root": "/home/huawei/code/.cache/wasmc-evidence/lib-refresh-all-candidates-20261006/runs/refresh-v0EpQf/packages/wasmc-data-compute",
-      "action": "build",
-      "producer_ms": 59308,
-      "build_ms": 59341,
-      "supported_views": [
-        "rust_component",
-        "rust_core"
-      ],
-      "ordinary_wasmc_qualification": "not_run",
-      "native_status": null,
-      "manifest_sha256": "f60ef8e800f8d54ea93d86fa57e4915e1fad0a2bac2fc3f5e2a43ffd2951e976",
       "artifact_sha256": "da6d74423dca37825dbc44b4cb97da377c3d7b5a09a9ec0415e117f8efc67ec6",
       "component_sha256": "f9c9aab6700952929329f86bf0358d4d39b127a293c58e8ddc5876b72747f0bb",
-      "core_abi_sha256": "00417b222ba3b8972801db10241252270cf9df8f1dc2933a1eb7df8cc81b4088"
+      "core_abi_sha256": "00417b222ba3b8972801db10241252270cf9df8f1dc2933a1eb7df8cc81b4088",
+      "native_status": null
     },
     {
       "id": "wasmc-data-core",
       "version": "0.0.1",
-      "key": "61c140216a23ca53edd0687c2e9beb43d7f1bbc4607ee007b42fb23047cc330d",
       "profile": "value",
-      "state": "verified",
-      "package_root": "/home/huawei/code/.cache/wasmc-evidence/lib-refresh-all-candidates-20261006/runs/refresh-v0EpQf/packages/wasmc-data-core",
-      "action": "build",
-      "producer_ms": 34941,
-      "build_ms": 34966,
-      "supported_views": [
-        "rust_component",
-        "rust_core"
-      ],
-      "ordinary_wasmc_qualification": "not_run",
-      "native_status": null,
-      "manifest_sha256": "a0281d35cf3f8618f9a87244cd69a75e1e0a26a44b36cdf022c69c22353bd1ba",
       "artifact_sha256": "207c996f90b69bf7b5fd7c64e6989e3d95e9b46e31bb1704b0dde66f537b9498",
       "component_sha256": "873d1e73a17d80a9d764389d8f079271aee32ece2d321220e1c338eb459a3d69",
-      "core_abi_sha256": "56d4714082eaf1956790ba586d7ad1586130f13720e5d21ed0db68eeacd8e645"
+      "core_abi_sha256": "56d4714082eaf1956790ba586d7ad1586130f13720e5d21ed0db68eeacd8e645",
+      "native_status": null
     },
     {
       "id": "wasmc-data-expr",
       "version": "0.0.1",
-      "key": "b254ab7fbcdd36180c1b73e138d275fd0aca1e6fa8cb0c0426ac2bb32e2b54ce",
       "profile": "value",
-      "state": "verified",
-      "package_root": "/home/huawei/code/.cache/wasmc-evidence/lib-refresh-all-candidates-20261006/runs/refresh-v0EpQf/packages/wasmc-data-expr",
-      "action": "build",
-      "producer_ms": 63159,
-      "build_ms": 63185,
-      "supported_views": [
-        "rust_component",
-        "rust_core"
-      ],
-      "ordinary_wasmc_qualification": "not_run",
-      "native_status": null,
-      "manifest_sha256": "767456776a2b90f9ee342ee426c20721a544434f2e08df3cca1bcc0ff381a749",
       "artifact_sha256": "a2d56de0758e7cb036287308ca8c27664889d0cba7406fb3667aca728277330a",
       "component_sha256": "7d252d237a83fd05ee25e5d6f5789ec0fd692ed918f2d3c7a72e9c38b8d9b562",
-      "core_abi_sha256": "cea9b857930bac463f8bba54514665d10ecf05bf02916420d0371ba1ee432fe4"
+      "core_abi_sha256": "cea9b857930bac463f8bba54514665d10ecf05bf02916420d0371ba1ee432fe4",
+      "native_status": null
     },
     {
       "id": "wasmc-data-interchange",
       "version": "0.0.1",
-      "key": "8860eb399a4596eea857cb359ecf1fdebd2ff0ec41b4ee96ea49c560a07c61b0",
       "profile": "value",
-      "state": "verified",
-      "package_root": "/home/huawei/code/.cache/wasmc-evidence/lib-refresh-all-candidates-20261006/runs/refresh-v0EpQf/packages/wasmc-data-interchange",
-      "action": "build",
-      "producer_ms": 130600,
-      "build_ms": 130648,
-      "supported_views": [
-        "rust_component",
-        "rust_core"
-      ],
-      "ordinary_wasmc_qualification": "not_run",
-      "native_status": null,
-      "manifest_sha256": "0a3930c2b0967592df62084e4c2a139a9fb4419be7f217c6bfd3123dd514b5fc",
       "artifact_sha256": "4bc2965510fd5f5b43b297936605d0f59285701af815a27c0a92f542f2c8453c",
       "component_sha256": "b44f833f26dbdd8bc4f221d098f6e2f2fe9ec3158a3adb00d1f0df3aff865ba5",
-      "core_abi_sha256": "cac2964c61e43644425adf0bf00df78b57a5ecfcc2ce5a670171f66af8f944a7"
+      "core_abi_sha256": "cac2964c61e43644425adf0bf00df78b57a5ecfcc2ce5a670171f66af8f944a7",
+      "native_status": null
     },
     {
       "id": "wasmc-data-profile",
       "version": "0.0.1",
-      "key": "199a74b1a709bae5da77023a8e9199c422177d816d9771873fbc4f8a8fedf951",
       "profile": "value",
-      "state": "verified",
-      "package_root": "/home/huawei/code/.cache/wasmc-evidence/lib-refresh-all-candidates-20261006/runs/refresh-v0EpQf/packages/wasmc-data-profile",
-      "action": "build",
-      "producer_ms": 7791,
-      "build_ms": 7812,
-      "supported_views": [
-        "rust_component",
-        "rust_core"
-      ],
-      "ordinary_wasmc_qualification": "not_run",
-      "native_status": null,
-      "manifest_sha256": "9c29e8389981b801df3f451dc7139d707bf7c0046c33931a7dad66430dcc3f6e",
       "artifact_sha256": "62c4003069a5f130dd9a8e1f937645add9185c5ac82751ac9fb521207b970508",
       "component_sha256": "4665986eda949b0aa8f0ad8a19b52e1a3dd51283cb25b7e4e0f90c9a5072fae9",
-      "core_abi_sha256": "ad6913de5053a6f66d92c24d951b627a57e5ce87c0a18972bb6233c06f36d3fb"
+      "core_abi_sha256": "ad6913de5053a6f66d92c24d951b627a57e5ce87c0a18972bb6233c06f36d3fb",
+      "native_status": null
     },
     {
       "id": "wasmc-data-relational",
       "version": "0.0.2",
-      "key": "e21466124678ac3ac624bdc50bf803a037c019568cd09b43ff1e2de3c4e7cd11",
       "profile": "value",
-      "state": "verified",
-      "package_root": "/home/huawei/code/.cache/wasmc-evidence/lib-refresh-all-candidates-20261006/runs/refresh-v0EpQf/packages/wasmc-data-relational",
-      "action": "build",
-      "producer_ms": 40464,
-      "build_ms": 40495,
-      "supported_views": [
-        "rust_component",
-        "rust_core"
-      ],
-      "ordinary_wasmc_qualification": "not_run",
-      "native_status": null,
-      "manifest_sha256": "1e815018f65f683d1edf13464a34fc22da01aeba882bcc263993fb2d4286c844",
       "artifact_sha256": "3c86635ecb823a48ec845e415dfe49ce2dec78f2c686daf36aedb9481c61d0ca",
       "component_sha256": "b65d4c7cbfb747ddc0fa98cbf96f3370fd4f96efa0ad1fd131996d6f7547c97c",
-      "core_abi_sha256": "90e656de69656eb955b786138c14eb4d60a5f1a1078eff7c8d4d5bb674d95d0f"
+      "core_abi_sha256": "90e656de69656eb955b786138c14eb4d60a5f1a1078eff7c8d4d5bb674d95d0f",
+      "native_status": null
     },
     {
       "id": "wasmc-http1",
       "version": "0.0.1",
-      "key": "b96ca3fb473eae6a03448a48aae42ca059eba58447ee8ad396703c042748044d",
       "profile": "value",
-      "state": "verified",
-      "package_root": "/home/huawei/code/.cache/wasmc-evidence/lib-refresh-all-candidates-20261006/runs/refresh-v0EpQf/packages/wasmc-http1",
-      "action": "build",
-      "producer_ms": 2195,
-      "build_ms": 2207,
-      "supported_views": [
-        "rust_component",
-        "rust_core"
-      ],
-      "ordinary_wasmc_qualification": "not_run",
-      "native_status": null,
-      "manifest_sha256": "1924b82f7bd858c6fba915f1b204810922ed245fc53d715f078b4767204a83b3",
       "artifact_sha256": "e2872d169913d4202bca23c5681cef447912fd33abca0e5f9a30917ff53dd138",
       "component_sha256": "8b1fd8c0b36d70ec630e73ef0c63c49452fec3039db89df836734f0c85da1d6e",
-      "core_abi_sha256": "8a5482a1f3ae707bd0973b0c5c407edc3cdc492683bb667c233b0520ed465985"
+      "core_abi_sha256": "8a5482a1f3ae707bd0973b0c5c407edc3cdc492683bb667c233b0520ed465985",
+      "native_status": null
     },
     {
       "id": "wasmc-http1-client",
       "version": "0.0.1",
-      "key": "de24d32e0b59f322780e6e5cdfa44ee42fe559625b8722e8a01174fc4774f911",
       "profile": "value",
-      "state": "verified",
-      "package_root": "/home/huawei/code/.cache/wasmc-evidence/lib-refresh-all-candidates-20261006/runs/refresh-v0EpQf/packages/wasmc-http1-client",
-      "action": "build",
-      "producer_ms": 1969,
-      "build_ms": 1987,
-      "supported_views": [
-        "rust_component",
-        "rust_core"
-      ],
-      "ordinary_wasmc_qualification": "not_run",
-      "native_status": null,
-      "manifest_sha256": "ae6b99121b2bbe68198919353963fe666a47ee9f5b9efd65559d4887515a145b",
       "artifact_sha256": "00586720b2710220143ed36718e054e47e1a0c2c5f67c55955727b5fdc314e40",
       "component_sha256": "1c72a9724f108aa10dd45de5b95d96f3cf512da17626f5e91d3f45101aa91ab9",
-      "core_abi_sha256": "b4888484b3c7dc7354161e8c02c87be12169db2e5bcefbb89719669c2b12f13a"
+      "core_abi_sha256": "b4888484b3c7dc7354161e8c02c87be12169db2e5bcefbb89719669c2b12f13a",
+      "native_status": null
     },
     {
       "id": "wasmc-json",
       "version": "0.0.1",
-      "key": "73c166dc02ed34ce9abcf3273dfea38441791c758a50a5b4ba92a35e9d192454",
       "profile": "value",
-      "state": "verified",
-      "package_root": "/home/huawei/code/.cache/wasmc-evidence/lib-refresh-all-candidates-20261006/runs/refresh-v0EpQf/packages/wasmc-json",
-      "action": "build",
-      "producer_ms": 5187,
-      "build_ms": 5199,
-      "supported_views": [
-        "rust_component",
-        "rust_core"
-      ],
-      "ordinary_wasmc_qualification": "not_run",
-      "native_status": null,
-      "manifest_sha256": "46fdff01673c24452685ba0dda6db3bb216b87f3fedd96d5b0043c491e067c0c",
       "artifact_sha256": "90f64abae321f0699e5fbe7b9ff647a397cefa3c32e175dcc7793585505590ae",
       "component_sha256": "678fe804f983d9bea7fbf4c36bb41c28606df1d16e292ff60b657a2c1fbf4ef3",
-      "core_abi_sha256": "373ccf4ffeb9943b0e0d29804cc6e335320cf283dfb530c61e959729d1abc92e"
+      "core_abi_sha256": "373ccf4ffeb9943b0e0d29804cc6e335320cf283dfb530c61e959729d1abc92e",
+      "native_status": null
     },
     {
       "id": "wasmc-router-policy",
       "version": "0.0.2",
-      "key": "3163dc99f44463154a23a040bbdbef39ff020476ec051202f867fa1df9482280",
       "profile": "value",
-      "state": "verified",
-      "package_root": "/home/huawei/code/.cache/wasmc-evidence/lib-refresh-all-candidates-20261006/runs/refresh-v0EpQf/packages/wasmc-router-policy",
-      "action": "build",
-      "producer_ms": 1279,
-      "build_ms": 1298,
-      "supported_views": [
-        "rust_component",
-        "rust_core"
-      ],
-      "ordinary_wasmc_qualification": "not_run",
-      "native_status": null,
-      "manifest_sha256": "87c687e3c8ad2df526a2c0f1ce54a5ea15986a0b650f75a55b09877bff41785d",
       "artifact_sha256": "cac973f0cea77d7137a3dfa8d7955c9d78e4d702f4124d4d3965b063079fa8be",
       "component_sha256": "c8c7be894a51b23cfa4936eca67007cba4a4a8e8bedd7cd46ad1dc47327f8a21",
-      "core_abi_sha256": "b3c4a7c03f3c1195814a7351d2e09dc6bcac363f4e0ac7a152cc35d23e9897b5"
+      "core_abi_sha256": "b3c4a7c03f3c1195814a7351d2e09dc6bcac363f4e0ac7a152cc35d23e9897b5",
+      "native_status": null
     },
     {
       "id": "wasmc-system-android-display",
       "version": "0.0.1",
-      "key": "bc4b4a48424a5def3f4d18b76127d3d40c0a2bf2608e2825c170c24045dc5bfd",
       "profile": "native",
-      "state": "verified",
-      "package_root": "/home/huawei/code/.cache/wasmc-evidence/lib-refresh-all-candidates-20261006/runs/refresh-v0EpQf/packages/wasmc-system-android-display",
-      "action": "build",
-      "native_status": "embedded_source_packaged",
-      "build_ms": 5,
-      "supported_views": [
-        "native"
-      ],
-      "ordinary_wasmc_qualification": "not_run",
-      "manifest_sha256": "7c14a38fd1d6e5166d6513f75e08f7aee335ff87d53c1e0febe9a842b73bb2e2",
       "artifact_sha256": null,
       "component_sha256": null,
-      "core_abi_sha256": null
+      "core_abi_sha256": null,
+      "native_status": "embedded_source_packaged"
     },
     {
       "id": "wasmc-system-android-input",
       "version": "0.0.1",
-      "key": "5b2f55107fcac91913f0b8ca7d7f1797cd02937bdf07670e5f8f75f5d99c6452",
       "profile": "native",
-      "state": "verified",
-      "package_root": "/home/huawei/code/.cache/wasmc-evidence/lib-refresh-all-candidates-20261006/runs/refresh-v0EpQf/packages/wasmc-system-android-input",
-      "action": "build",
-      "native_status": "embedded_source_packaged",
-      "build_ms": 5,
-      "supported_views": [
-        "native"
-      ],
-      "ordinary_wasmc_qualification": "not_run",
-      "manifest_sha256": "77343266b400099773bd0863587cc333f52412c249385a58183f5ef0626adad0",
       "artifact_sha256": null,
       "component_sha256": null,
-      "core_abi_sha256": null
+      "core_abi_sha256": null,
+      "native_status": "embedded_source_packaged"
     },
     {
       "id": "wasmc-system-android-ui",
       "version": "0.0.1",
-      "key": "6d11a67a2eac0532e55592b67292dc1cea97c48e2d675b80bb90c1388114a9ae",
       "profile": "native",
-      "state": "verified",
-      "package_root": "/home/huawei/code/.cache/wasmc-evidence/lib-refresh-all-candidates-20261006/runs/refresh-v0EpQf/packages/wasmc-system-android-ui",
-      "action": "build",
-      "native_status": "embedded_source_packaged",
-      "build_ms": 12,
-      "supported_views": [
-        "native"
-      ],
-      "ordinary_wasmc_qualification": "not_run",
-      "manifest_sha256": "0232890c87964e2f0764ca499bf27c6555c9227b5ebc5846564679ab51194a27",
       "artifact_sha256": null,
       "component_sha256": null,
-      "core_abi_sha256": null
+      "core_abi_sha256": null,
+      "native_status": "embedded_source_packaged"
     },
     {
       "id": "wasmc-system-android-uinput",
       "version": "0.0.1",
-      "key": "9978b71f5d4a5b8fec0cd6e45b6fb9e5eacdee0fa0e82a0341503801e78ca0bd",
       "profile": "native",
-      "state": "verified",
-      "package_root": "/home/huawei/code/.cache/wasmc-evidence/lib-refresh-all-candidates-20261006/runs/refresh-v0EpQf/packages/wasmc-system-android-uinput",
-      "action": "build",
-      "native_status": "embedded_source_packaged",
-      "build_ms": 5,
-      "supported_views": [
-        "native"
-      ],
-      "ordinary_wasmc_qualification": "not_run",
-      "manifest_sha256": "c74cee2c9295817c7ac72740c6e04b7ddc1d143487c2d343f823a33a1a1363ef",
       "artifact_sha256": null,
       "component_sha256": null,
-      "core_abi_sha256": null
+      "core_abi_sha256": null,
+      "native_status": "embedded_source_packaged"
     },
     {
       "id": "wasmc-system-file-prototype",
       "version": "0.0.1",
-      "key": "5677110be836af0e836c0192bb91fbcd860758e92f37a832755d9bd0f08a1ed2",
       "profile": "native",
-      "state": "verified",
-      "package_root": "/home/huawei/code/.cache/wasmc-evidence/lib-refresh-all-candidates-20261006/runs/refresh-v0EpQf/packages/wasmc-system-file-prototype",
-      "action": "build",
-      "native_status": "native_module_syntax_checked_not_runtime_qualified",
-      "build_ms": 35,
-      "supported_views": [
-        "native"
-      ],
-      "ordinary_wasmc_qualification": "not_run",
-      "manifest_sha256": "aa6b877570cf3a2290795dc1477bcd1017227074bcc2a1afa05c1cc28117c69d",
       "artifact_sha256": "def205e9304dbbb528d0ba6c2d8a13eae4a93dc3ffc5b8972dc4514f330e0d15",
       "component_sha256": null,
-      "core_abi_sha256": null
+      "core_abi_sha256": null,
+      "native_status": "native_module_syntax_checked_not_runtime_qualified"
     },
     {
       "id": "wasmc-system-ios-app-contacts",
       "version": "0.0.1",
-      "key": "39b9e67f7835a5be1bf939b9593e4caa698202d0f04a60e1ac2cd320119b5c3f",
       "profile": "native",
-      "state": "verified",
-      "package_root": "/home/huawei/code/.cache/wasmc-evidence/lib-refresh-all-candidates-20261006/runs/refresh-v0EpQf/packages/wasmc-system-ios-app-contacts",
-      "action": "build",
-      "native_status": "embedded_source_packaged",
-      "build_ms": 5,
-      "supported_views": [
-        "native"
-      ],
-      "ordinary_wasmc_qualification": "not_run",
-      "manifest_sha256": "57f2be483fe8b0f57e562161db43f569c4f6631df924c66cd2c3954e53b58ce6",
       "artifact_sha256": null,
       "component_sha256": null,
-      "core_abi_sha256": null
+      "core_abi_sha256": null,
+      "native_status": "embedded_source_packaged"
     },
     {
       "id": "wasmc-system-ios-app-lifecycle",
       "version": "0.0.1",
-      "key": "165faa7b8ecca6022bca524f51d8ff305a1c2541496fede55381bdf60798715a",
       "profile": "native",
-      "state": "verified",
-      "package_root": "/home/huawei/code/.cache/wasmc-evidence/lib-refresh-all-candidates-20261006/runs/refresh-v0EpQf/packages/wasmc-system-ios-app-lifecycle",
-      "action": "build",
-      "native_status": "embedded_source_packaged",
-      "build_ms": 8,
-      "supported_views": [
-        "native"
-      ],
-      "ordinary_wasmc_qualification": "not_run",
-      "manifest_sha256": "33134929d0ae8edfc7a6ea22393bf2739b089b877ba2966bf97432e45d28e4fc",
       "artifact_sha256": null,
       "component_sha256": null,
-      "core_abi_sha256": null
+      "core_abi_sha256": null,
+      "native_status": "embedded_source_packaged"
     },
     {
       "id": "wasmc-system-ios-app-surface-control",
       "version": "0.0.3",
-      "key": "becf8e7fc8fad3a30b8177bb5ec8825af2897c31c654a193f946b5fe250d9fca",
       "profile": "native",
-      "state": "verified",
-      "package_root": "/home/huawei/code/.cache/wasmc-evidence/lib-refresh-all-candidates-20261006/runs/refresh-v0EpQf/packages/wasmc-system-ios-app-surface-control",
-      "action": "build",
-      "native_status": "embedded_source_packaged",
-      "build_ms": 9,
-      "supported_views": [
-        "native"
-      ],
-      "ordinary_wasmc_qualification": "not_run",
-      "manifest_sha256": "5a5a3fd26c3b63815f767a9b35d4b0a35b7bd524ab8ad16a8031a95bbcf1a00b",
       "artifact_sha256": null,
       "component_sha256": null,
-      "core_abi_sha256": null
+      "core_abi_sha256": null,
+      "native_status": "embedded_source_packaged"
     },
     {
       "id": "wasmc-system-ios-background-audio",
       "version": "0.0.1",
-      "key": "6a0bba6877dcbd9d8cabee5eed4a52fd20090fd76db9dd162d55df2c047bac52",
       "profile": "native",
-      "state": "verified",
-      "package_root": "/home/huawei/code/.cache/wasmc-evidence/lib-refresh-all-candidates-20261006/runs/refresh-v0EpQf/packages/wasmc-system-ios-background-audio",
-      "action": "build",
-      "native_status": "embedded_source_packaged",
-      "build_ms": 7,
-      "supported_views": [
-        "native"
-      ],
-      "ordinary_wasmc_qualification": "not_run",
-      "manifest_sha256": "c26086513597c94698a4d3395cd42301856db6ac042ff7373f9b7701716e5637",
       "artifact_sha256": null,
       "component_sha256": null,
-      "core_abi_sha256": null
+      "core_abi_sha256": null,
+      "native_status": "embedded_source_packaged"
     },
     {
       "id": "wasmc-system-ios-background-transfer",
       "version": "0.0.1",
-      "key": "e57f136c91994614e23bf40da47ab2565685cc392436aadcea1ddc4210316a3a",
       "profile": "native",
-      "state": "verified",
-      "package_root": "/home/huawei/code/.cache/wasmc-evidence/lib-refresh-all-candidates-20261006/runs/refresh-v0EpQf/packages/wasmc-system-ios-background-transfer",
-      "action": "build",
-      "native_status": "embedded_source_packaged",
-      "build_ms": 6,
-      "supported_views": [
-        "native"
-      ],
-      "ordinary_wasmc_qualification": "not_run",
-      "manifest_sha256": "59b24f33d57bc382d62ad69bba21b7cce1e19de039daee28c0a23d81d65fccf8",
       "artifact_sha256": null,
       "component_sha256": null,
-      "core_abi_sha256": null
+      "core_abi_sha256": null,
+      "native_status": "embedded_source_packaged"
     },
     {
       "id": "wasmc-system-ios-deferred-work",
       "version": "0.0.1",
-      "key": "e700fbbf9d9a7a194f516218344486e187a6a5ad4e38c273321e5c87670a21e6",
       "profile": "native",
-      "state": "verified",
-      "package_root": "/home/huawei/code/.cache/wasmc-evidence/lib-refresh-all-candidates-20261006/runs/refresh-v0EpQf/packages/wasmc-system-ios-deferred-work",
-      "action": "build",
-      "native_status": "embedded_source_packaged",
-      "build_ms": 6,
-      "supported_views": [
-        "native"
-      ],
-      "ordinary_wasmc_qualification": "not_run",
-      "manifest_sha256": "dedb738f132da9ef514ec93b646bba5ab01a7e93981ee9ce2d875d48e36f41e7",
       "artifact_sha256": null,
       "component_sha256": null,
-      "core_abi_sha256": null
+      "core_abi_sha256": null,
+      "native_status": "embedded_source_packaged"
     },
     {
       "id": "wasmc-system-ios-local-notification",
       "version": "0.0.1",
-      "key": "ca70224e2657d086aa912ea2b9b01ae4d3878d71739229661c51f7de8ecbc514",
       "profile": "native",
-      "state": "verified",
-      "package_root": "/home/huawei/code/.cache/wasmc-evidence/lib-refresh-all-candidates-20261006/runs/refresh-v0EpQf/packages/wasmc-system-ios-local-notification",
-      "action": "build",
-      "native_status": "embedded_source_packaged",
-      "build_ms": 7,
-      "supported_views": [
-        "native"
-      ],
-      "ordinary_wasmc_qualification": "not_run",
-      "manifest_sha256": "443cae6c94a69f7b6fa1eb22ad3dfbec219c8d0b943266a3a6a6471f9333fee7",
       "artifact_sha256": null,
       "component_sha256": null,
-      "core_abi_sha256": null
+      "core_abi_sha256": null,
+      "native_status": "embedded_source_packaged"
     },
     {
       "id": "wasmc-system-ios-network-path",
       "version": "0.0.1",
-      "key": "b7d1aa991b5ede73f495a96fa908f54017a29853840e38db6bd1b50b510082c8",
       "profile": "native",
-      "state": "verified",
-      "package_root": "/home/huawei/code/.cache/wasmc-evidence/lib-refresh-all-candidates-20261006/runs/refresh-v0EpQf/packages/wasmc-system-ios-network-path",
-      "action": "build",
-      "native_status": "embedded_source_packaged",
-      "build_ms": 8,
-      "supported_views": [
-        "native"
-      ],
-      "ordinary_wasmc_qualification": "not_run",
-      "manifest_sha256": "3f5dcd9d25843a4d9d86d1175362fc234ee8d1458333110e5a02d2c6e9a67e59",
       "artifact_sha256": null,
       "component_sha256": null,
-      "core_abi_sha256": null
+      "core_abi_sha256": null,
+      "native_status": "embedded_source_packaged"
     },
     {
       "id": "wasmc-system-ios-simulator-display",
       "version": "0.0.1",
-      "key": "1c6fd139ab919e54860aeef4f1dc4e00ce4ddd6a8e959a5c540449b11c451e85",
       "profile": "native",
-      "state": "verified",
-      "package_root": "/home/huawei/code/.cache/wasmc-evidence/lib-refresh-all-candidates-20261006/runs/refresh-v0EpQf/packages/wasmc-system-ios-simulator-display",
-      "action": "build",
-      "native_status": "embedded_source_packaged",
-      "build_ms": 6,
-      "supported_views": [
-        "native"
-      ],
-      "ordinary_wasmc_qualification": "not_run",
-      "manifest_sha256": "a0b3ca97360a7f564d875408b3f79e80399d126fb4a0690fb37760271761962a",
       "artifact_sha256": null,
       "component_sha256": null,
-      "core_abi_sha256": null
+      "core_abi_sha256": null,
+      "native_status": "embedded_source_packaged"
     },
     {
       "id": "wasmc-system-ios-websocket",
       "version": "0.0.1",
-      "key": "05ab583203b41093f405206572e299c8fc1bd1a7deef456f04fb1649db10ac7f",
       "profile": "native",
-      "state": "verified",
-      "package_root": "/home/huawei/code/.cache/wasmc-evidence/lib-refresh-all-candidates-20261006/runs/refresh-v0EpQf/packages/wasmc-system-ios-websocket",
-      "action": "build",
-      "native_status": "embedded_source_packaged",
-      "build_ms": 7,
-      "supported_views": [
-        "native"
-      ],
-      "ordinary_wasmc_qualification": "not_run",
-      "manifest_sha256": "0d752d642a78a9fe7d5adf479ab540a88214d8f441cf5ec70fc64f5cb9caf8e5",
       "artifact_sha256": null,
       "component_sha256": null,
-      "core_abi_sha256": null
+      "core_abi_sha256": null,
+      "native_status": "embedded_source_packaged"
     },
     {
       "id": "wasmc-system-linux-endpoint",
       "version": "0.0.1",
-      "key": "ed2acb45636c4f22c7286945e7a90d255212a40faca32b82e5be5c99a26e7848",
       "profile": "native",
-      "state": "verified",
-      "package_root": "/home/huawei/code/.cache/wasmc-evidence/lib-refresh-all-candidates-20261006/runs/refresh-v0EpQf/packages/wasmc-system-linux-endpoint",
-      "action": "build",
-      "native_status": "native_binary_built_not_runtime_qualified",
-      "build_ms": 252,
-      "supported_views": [
-        "native"
-      ],
-      "ordinary_wasmc_qualification": "not_run",
-      "manifest_sha256": "872969eb9f5f00305ef11435d56630f57e383a1ae989c570436dbe66ccd5b0b9",
       "artifact_sha256": "cf366eeaf2371ddad0d746f48ac37d6d0db486ed176df6853b3c7fb9d1ecae68",
       "component_sha256": null,
-      "core_abi_sha256": null
+      "core_abi_sha256": null,
+      "native_status": "native_binary_built_not_runtime_qualified"
     },
     {
       "id": "wasmc-system-linux-socket",
       "version": "0.0.1",
-      "key": "3303886ab46a7c6b230eccaa76f7b61d125f290ce9946566e00f52021f35e5cc",
       "profile": "native",
-      "state": "verified",
-      "package_root": "/home/huawei/code/.cache/wasmc-evidence/lib-refresh-all-candidates-20261006/runs/refresh-v0EpQf/packages/wasmc-system-linux-socket",
-      "action": "build",
-      "native_status": "native_binary_built_not_runtime_qualified",
-      "build_ms": 109,
-      "supported_views": [
-        "native"
-      ],
-      "ordinary_wasmc_qualification": "not_run",
-      "manifest_sha256": "f8e9e5c68920d25a6dce62f1a84ff05acaaf3dfb82a0a0441da89973d171fa37",
       "artifact_sha256": "2c29b019d69da0e66ef18d73305a8506c35a24a6d64fd2fd84ba219e7db3d9aa",
       "component_sha256": null,
-      "core_abi_sha256": null
+      "core_abi_sha256": null,
+      "native_status": "native_binary_built_not_runtime_qualified"
     },
     {
       "id": "wasmc-system-linux-uinput",
       "version": "0.0.1",
-      "key": "9f17df4758583d9af92f59225b683e1b8cd9dceb977709ce2a58e83c711a4e11",
       "profile": "native",
-      "state": "verified",
-      "package_root": "/home/huawei/code/.cache/wasmc-evidence/lib-refresh-all-candidates-20261006/runs/refresh-v0EpQf/packages/wasmc-system-linux-uinput",
-      "action": "build",
-      "native_status": "native_binary_built_not_runtime_qualified",
-      "build_ms": 100,
-      "supported_views": [
-        "native"
-      ],
-      "ordinary_wasmc_qualification": "not_run",
-      "manifest_sha256": "e41935581c2ca678b1efbd07b0fe774380b3e574abf4949d0d24a2060e891fcf",
       "artifact_sha256": "389636caf7bc1fd395e2b8325a3a6c1bae0a5fc061f94e86372faa1e9ae2573c",
       "component_sha256": null,
-      "core_abi_sha256": null
+      "core_abi_sha256": null,
+      "native_status": "native_binary_built_not_runtime_qualified"
     },
     {
       "id": "wasmc-system-network-prototype",
       "version": "0.0.1",
-      "key": "9f7aee5086cd23f7d48ed813d9b7b0a5bceb534544a966a593614306f3b9c27e",
       "profile": "native",
-      "state": "verified",
-      "package_root": "/home/huawei/code/.cache/wasmc-evidence/lib-refresh-all-candidates-20261006/runs/refresh-v0EpQf/packages/wasmc-system-network-prototype",
-      "action": "build",
-      "native_status": "native_module_syntax_checked_not_runtime_qualified",
-      "build_ms": 35,
-      "supported_views": [
-        "native"
-      ],
-      "ordinary_wasmc_qualification": "not_run",
-      "manifest_sha256": "2a77f23802f3c303ca7c50906f097e2efa2afb5b06aff54b1605826e0014a007",
       "artifact_sha256": "e1861dd9770253f1d293ef7cf60f0e38484a89743c15cd2dd18ba72802521a14",
       "component_sha256": null,
-      "core_abi_sha256": null
+      "core_abi_sha256": null,
+      "native_status": "native_module_syntax_checked_not_runtime_qualified"
     },
     {
       "id": "wasmc-system-process-prototype",
       "version": "0.0.1",
-      "key": "2c5140f32de67f120246c839d0eb285b5ea603794abbb1a1dd71c2545cb0fbca",
       "profile": "native",
-      "state": "verified",
-      "package_root": "/home/huawei/code/.cache/wasmc-evidence/lib-refresh-all-candidates-20261006/runs/refresh-v0EpQf/packages/wasmc-system-process-prototype",
-      "action": "build",
-      "native_status": "native_module_syntax_checked_not_runtime_qualified",
-      "build_ms": 33,
-      "supported_views": [
-        "native"
-      ],
-      "ordinary_wasmc_qualification": "not_run",
-      "manifest_sha256": "68fb6b0746bc6ed4df6fcbd74369880cd925cf2db9d2bb4615572565a11afdf0",
       "artifact_sha256": "79af42c23e49fe9615a4a3b3bd9a12b9f1a7d1e308560ee9c245ff561913206f",
       "component_sha256": null,
-      "core_abi_sha256": null
+      "core_abi_sha256": null,
+      "native_status": "native_module_syntax_checked_not_runtime_qualified"
     },
     {
       "id": "wasmc-system-telemetry",
       "version": "0.0.1",
-      "key": "0522043c714ebe5625ee8ff9ec4fdade1e097a7590d407e8bb6fe0c156436a24",
       "profile": "resource",
-      "state": "verified",
-      "package_root": "/home/huawei/code/.cache/wasmc-evidence/lib-refresh-all-candidates-20261006/runs/refresh-v0EpQf/packages/wasmc-system-telemetry",
-      "action": "build",
-      "producer_ms": 1583,
-      "build_ms": 1614,
-      "supported_views": [
-        "rust_component"
-      ],
-      "ordinary_wasmc_qualification": "not_run",
-      "native_status": null,
-      "manifest_sha256": "ff7ce7de42bc49daa90e633670952c433c764f8944fb7d1c96aef22cd7130b29",
       "artifact_sha256": "b23a69b1a45d84456f3a7d8e7055fcec6276f18b9363cda58ab36d05d850b5aa",
       "component_sha256": "94e66279c4f61ae97814c111f2217a1d47362cf2595ba9811f18d4dd512804d7",
-      "core_abi_sha256": "210efe84e3aca7b4379e47be3e095cb35e0041c8a0bf0e88f4d555990341f372"
+      "core_abi_sha256": "210efe84e3aca7b4379e47be3e095cb35e0041c8a0bf0e88f4d555990341f372",
+      "native_status": null
     },
     {
       "id": "wasmc-tls-client",
       "version": "0.0.1",
-      "key": "b9a5a0b06d10f671217f509b5c33cdb6983b8dfbaca93b0204783601045e6ccd",
       "profile": "resource",
-      "state": "verified",
-      "package_root": "/home/huawei/code/.cache/wasmc-evidence/lib-refresh-all-candidates-20261006/runs/refresh-v0EpQf/packages/wasmc-tls-client",
-      "action": "build",
-      "producer_ms": 28433,
-      "build_ms": 28453,
-      "supported_views": [
-        "rust_component"
-      ],
-      "ordinary_wasmc_qualification": "not_run",
-      "native_status": null,
-      "manifest_sha256": "8b44de19b52777686c5d894846092c662836bf6f1c3c65364c5a1636deaeec81",
       "artifact_sha256": "9291a9b67efc23b3559e0ba0ed0e2d718280987066618cf22b91d49678646ebe",
       "component_sha256": "0d0bfefbe963bfef7fd7d96376b1203bdff34888df729ebd04aa96f6e4f929fe",
-      "core_abi_sha256": "e73123becdaeb0b8d9e5c4067fe333087e05fd32b477e73e2f8bae12e3f64883"
+      "core_abi_sha256": "e73123becdaeb0b8d9e5c4067fe333087e05fd32b477e73e2f8bae12e3f64883",
+      "native_status": null
     },
     {
       "id": "wasmc-tls-core",
       "version": "0.0.1",
-      "key": "9771c48a731bf6503f67b881a008c75a301fe4e8b07ebcbe242e1561210c4b25",
       "profile": "resource",
-      "state": "verified",
-      "package_root": "/home/huawei/code/.cache/wasmc-evidence/lib-refresh-all-candidates-20261006/runs/refresh-v0EpQf/packages/wasmc-tls-core",
-      "action": "build",
-      "producer_ms": 15124,
-      "build_ms": 15168,
-      "supported_views": [
-        "rust_component"
-      ],
-      "ordinary_wasmc_qualification": "not_run",
-      "native_status": null,
-      "manifest_sha256": "1814d3a64dc451b2a254fa80e4a9e478dfa5faa69aad47bfd94f62ff801d1fe3",
       "artifact_sha256": "5d856e79e5c5ca007bc933c39d7a7a527b4b7000d68618a1bf81c28aad67e80e",
       "component_sha256": "8f4d6387ae224598d97c53ff08162623af3cfafbb47c65ec2657e87226d35353",
-      "core_abi_sha256": "ab073adbd44e92b75c57e7f017d70270db11acd08053f2da3c8dec077a4871a4"
+      "core_abi_sha256": "ab073adbd44e92b75c57e7f017d70270db11acd08053f2da3c8dec077a4871a4",
+      "native_status": null
     }
   ],
-  "timing": {
-    "total_ms": 480585,
-    "package_build_ms": {
-      "wasmc-app-authorization-policy": 14950,
-      "wasmc-compression": 4349,
-      "wasmc-csv": 59687,
-      "wasmc-data-compute": 59341,
-      "wasmc-data-core": 34966,
-      "wasmc-data-expr": 63185,
-      "wasmc-data-interchange": 130648,
-      "wasmc-data-profile": 7812,
-      "wasmc-data-relational": 40495,
-      "wasmc-http1": 2207,
-      "wasmc-http1-client": 1987,
-      "wasmc-json": 5199,
-      "wasmc-router-policy": 1298,
-      "wasmc-system-android-display": 5,
-      "wasmc-system-android-input": 5,
-      "wasmc-system-android-ui": 12,
-      "wasmc-system-android-uinput": 5,
-      "wasmc-system-file-prototype": 35,
-      "wasmc-system-ios-app-contacts": 5,
-      "wasmc-system-ios-app-lifecycle": 8,
-      "wasmc-system-ios-app-surface-control": 9,
-      "wasmc-system-ios-background-audio": 7,
-      "wasmc-system-ios-background-transfer": 6,
-      "wasmc-system-ios-deferred-work": 6,
-      "wasmc-system-ios-local-notification": 7,
-      "wasmc-system-ios-network-path": 8,
-      "wasmc-system-ios-simulator-display": 6,
-      "wasmc-system-ios-websocket": 7,
-      "wasmc-system-linux-endpoint": 252,
-      "wasmc-system-linux-socket": 109,
-      "wasmc-system-linux-uinput": 100,
-      "wasmc-system-network-prototype": 35,
-      "wasmc-system-process-prototype": 33,
-      "wasmc-system-telemetry": 1614,
-      "wasmc-tls-client": 28453,
-      "wasmc-tls-core": 15168
+  "evidence": [
+    {
+      "path": "/home/huawei/code/.cache/wasmc-evidence/lib-refresh-all-candidates-20261006/runs/refresh-OIOZEL/refresh-receipt.json",
+      "sha256": "db215fbcb25372fe220421248b496cf379b6c13365ed7ed8132b5eb2fadec9e5"
     },
-    "cache_hits": 0,
-    "cache_misses": 36,
-    "persistent_workspace": true,
-    "persistent_cargo_target": true
-  },
-  "tests": {
-    "value-q1-receipt.json": {
-      "sha256": "90cf52e45509285d1ed131714afcc2212a0b3f95046fa7e315c33dc20cd9ad20",
-      "accepted": true
+    {
+      "path": "/home/huawei/code/.cache/wasmc-evidence/lib-refresh-all-candidates-20261006/runs/refresh-OIOZEL/q1-receipt.json",
+      "sha256": "8cf2fcd2595c859174cf9cb94f42d6caf46a62fe9cd6b33d62f8ca465b9462f2"
     },
-    "data-q1-receipt.json": {
-      "sha256": "f5df2fc43019490c4d1ee0b8bc7f4e10bb6454ecbf9d6dcdcd19c81f86794553",
-      "accepted": true
+    {
+      "path": "/home/huawei/code/.cache/wasmc-evidence/lib-refresh-all-candidates-20261006/runs/refresh-v0EpQf/native-current-baseline-r3/receipt.json",
+      "sha256": "5850346af4f8f979b2fb4ffeb048c4474e2d82c9e2970429f047e05fb84d7066"
     },
-    "extra-q1-receipt.json": {
-      "sha256": "f5c2491a06cfcf6662c13fb056cd6fde785658ec526cbf99faa22ecad852e454",
-      "accepted": true
+    {
+      "path": "/home/huawei/code/.cache/wasmc-evidence/lib-refresh-all-candidates-20261006/runs/refresh-v0EpQf/linux-endpoint-q1.json",
+      "sha256": "f159b8ed9b931198d2b4a7f30c06f149089a363faae182fc67353ee01e320e8e"
     }
+  ],
+  "scope": {
+    "ordinary_wasmc_full_api_caller_q2": false,
+    "resource_core_sdk_complete": false,
+    "foreign_platform_device_requalification": false,
+    "independent_full_cohort_cold_rebuild_q3": false,
+    "public_admission": false,
+    "old_immutable_packages_modified": false,
+    "ci_executed_remotely": false
   },
-  "historical_tree_retired": false,
-  "q2_ordinary_wasmc": "not_run",
-  "physical_device_requalification": false,
-  "public_admission": false
+  "running_jobs": [],
+  "next": [
+    "Close ordinary WAsmC caller/SDK Q2 on exact generated roots without adding old authoring fallback.",
+    "Run native Android/Apple device and uinput privileged-device qualifications under exact generated package identity.",
+    "Perform independent full-cohort reproducibility and release/integration/installed-use gates."
+  ]
 }

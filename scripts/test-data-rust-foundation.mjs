@@ -4,8 +4,8 @@ import { resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 
 const root = process.cwd();
-const manifest = resolve(root, 'libsrc/qualification/data-rust-foundation/Cargo.toml');
-const lock = resolve(root, 'libsrc/qualification/data-rust-foundation/Cargo.lock');
+const manifest = resolve(root, 'tests/lib-refresh/qualification/data-rust-foundation/Cargo.toml');
+const lock = resolve(root, 'tests/lib-refresh/qualification/data-rust-foundation/Cargo.lock');
 
 const result = spawnSync('cargo', [
   '+1.96.0', 'check', '--locked', '--target', 'wasm32-unknown-unknown',
