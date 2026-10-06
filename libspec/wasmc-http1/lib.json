@@ -1,0 +1,42 @@
+{
+  "schema": "wasmc.lib-refresh-source/v2",
+  "id": "wasmc-http1",
+  "version": "0.0.1",
+  "profile": "value",
+  "crate": "wasmc_http1_refresh_v2",
+  "artifact_name": "wasmc_http1_refresh_v2",
+  "world": "http1-server",
+  "description": "Bounded HTTP/1 request framing and response-head serialization backed by httparse.",
+  "dependencies": [
+    "httparse"
+  ],
+  "apis": [
+    {
+      "api": "parse-request",
+      "delta": "Bounded HTTP/1 request-head parsing.",
+      "ecosystem": "httparse 1.10.1",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "request-frame-length",
+      "delta": "Determines complete bounded request frame length.",
+      "ecosystem": "httparse 1.10.1",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "serialize-response-head",
+      "delta": "Serializes bounded HTTP/1 response heads with validated headers.",
+      "ecosystem": "Rust byte/string operations",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    }
+  ]
+}

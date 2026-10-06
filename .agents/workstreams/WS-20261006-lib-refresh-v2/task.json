@@ -1,0 +1,64 @@
+{
+  "schema": "wasmc-release-workstream/v1",
+  "id": "WS-20261006-lib-refresh-v2",
+  "title": "Lib Refresh V2: WIT + Rust delta + thin adapter as the only future authoring model",
+  "owner": "Codex primary release maintainer",
+  "branch": "work/WS-20261006-lib-refresh-v2",
+  "base_commit": "0d4f1f5085f134d8c9a3214d8e235c6ab08beed2",
+  "target_branch": "main",
+  "created_at": "2026-10-06T12:42:05Z",
+  "state": "in_progress",
+  "integration_state": "not_integrated",
+  "source_authority": "libspec/",
+  "legacy_authority": "libsrc is migration input only; no future compatibility contract",
+  "producer_contract": "explicit exact WAsmC producer path/digest; never mutable PATH inference",
+  "first_cohort": [
+    "wasmc-json",
+    "wasmc-compression",
+    "wasmc-http1"
+  ],
+  "q0": {
+    "state": "pass",
+    "fingerprint": "b1e1260daa0936b6cbe73f98c0aab7e67e11080a312fc6bde97e803676a1fae2",
+    "producer_sha256": "73b1885a9a5e5427755ee4565e8c05b231e03f032ba784d5e73c67088ee838da",
+    "cargo_lock_sha256": "73abce6d00084ead6327c4ca7ee3241785ab0754bac9c29e65ddf36ddd9249da",
+    "repeated_refresh_byte_identical": true,
+    "lock_bootstrap_idempotent": true
+  },
+  "q1": {
+    "state": "pass_first_cohort",
+    "receipt_sha256": "f81c0bf06b801903cc5f21c4a262bf37d8555d386592de5afec89d5b012630c6",
+    "execution": "Node Core WebAssembly over generated import-free artifact.wasm",
+    "wasmtime_cli": "not installed on hwlinux; Q2 engine matrix remains separate"
+  },
+  "generated_hashes": {
+    "wasmc-json": {
+      "artifact": "90f64abae321f0699e5fbe7b9ff647a397cefa3c32e175dcc7793585505590ae",
+      "component": "678fe804f983d9bea7fbf4c36bb41c28606df1d16e292ff60b657a2c1fbf4ef3",
+      "core_abi": "373ccf4ffeb9943b0e0d29804cc6e335320cf283dfb530c61e959729d1abc92e"
+    },
+    "wasmc-compression": {
+      "artifact": "20f5d3531223356f4bb430707aaf39a7c703e91133f0905a451723c113f1cae7",
+      "component": "aaa7236e7297339e56a4e5c2cea5678bb652692c507fb12811303522dc02ef3a",
+      "core_abi": "9af2f0ab90b12cd6c6982002282af451f22e53094f83e9e42c34cebaebeab62b"
+    },
+    "wasmc-http1": {
+      "artifact": "e2872d169913d4202bca23c5681cef447912fd33abca0e5f9a30917ff53dd138",
+      "component": "8b1fd8c0b36d70ec630e73ef0c63c49452fec3039db89df836734f0c85da1d6e",
+      "core_abi": "8a5482a1f3ae707bd0973b0c5c407edc3cdc492683bb667c233b0520ed465985"
+    }
+  },
+  "scope": "Introduce the best future Lib authoring model without preserving per-Lib Cargo/wit-bindgen compatibility. Generate Cargo/workspace/build specs/Core+Component/SDK/manifests/receipts from libspec source authority.",
+  "next": [
+    "Migrate the six Data Libs into libspec.",
+    "Extract one shared Arrow/Data Rust adapter so WIT/BatchSnapshot <-> Arrow conversion is maintained once, not copied into six deltas.",
+    "Add resource profile for resource-counter/resident-memory/owned-algorithms.",
+    "Add host/contract profiles for host-clock/system-telemetry/system contracts.",
+    "After cohort migration, delete historical per-Lib authoring projects rather than support two formats.",
+    "Run Q2 all18 ordinary WAsmC/Rust Core/Component Wasmi+Wasmtime qualification, then Q3 release gates."
+  ],
+  "public_admission": false,
+  "candidate_created": false,
+  "immutable_releases_mutated": false,
+  "integrity_refresh": "deferred: this is pre-candidate future source work; existing release manifest AGENTS.md mismatch already exists at base and must not be repaired by rewriting immutable release identity"
+}

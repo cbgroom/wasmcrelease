@@ -3,6 +3,7 @@ bootstrap: .agents/MAINTAINERS.md
 handoff: .agents/HANDOFF.md
 
 selection:
+  - Use release-lib-refresh-v2 for future Lib authoring, Rust delta/adapter refresh, batch Lib rebuilds, or migration away from per-Lib Cargo/wit-bindgen projects.
   - Read only the smallest Skill set needed for the current task.
   - Use release-integrity for artifacts, versions, manifests, checksums, or publication.
   - Use release-agent-docs for AGENTS.md, LANGUAGE.md, examples, or capability claims.
@@ -10,6 +11,9 @@ selection:
   - Use release-host-integration for public Core Host standardization and proposed primitive additions.
 
 skills:
+  - id: release-lib-refresh-v2
+    path: .agents/skills/release-lib-refresh-v2
+    description: Author and refresh future Libs from WIT + Rust delta + thin adapter through one generated Rust workspace and producer pipeline.
   - id: release-integrity
     path: .agents/skills/release-integrity
     description: Preserve immutable release identity, source-authority boundaries, and package integrity.

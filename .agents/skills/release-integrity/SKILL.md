@@ -15,7 +15,14 @@ CDN alias is discovery state; an immutable tag or full commit is package identit
 ## Rules
 
 - Inspect the exact public tag and mutable branch independently.
-- Never rebuild compiler or Lib bytes here.
+- Never rebuild private compiler/provider bytes here.
+- Future public Lib implementations are different: once authored under the
+  `libspec/` Refresh V2 contract, they are intentionally rebuilt from public
+  WIT + Rust delta + thin adapter source through `scripts/lib-refresh-v2.mjs`
+  and one reviewed external WAsmC producer. Do not hand-maintain per-Lib Cargo
+  projects, wit-bindgen boilerplate, Core ABI receipts, SDKs, or package roots.
+  Historical `libsrc/` projects are migration input, not the future authoring
+  contract.
 - Compiler modification approval never implies source-publication approval.
   Open Wasmi/Wasmtime glue, Host adapters, CLI and tests may be built here against
   admitted Wasm artifacts; private compiler source, implementation-bearing source

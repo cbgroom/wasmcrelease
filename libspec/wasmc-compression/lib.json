@@ -1,0 +1,33 @@
+{
+  "schema": "wasmc.lib-refresh-source/v2",
+  "id": "wasmc-compression",
+  "version": "0.0.1",
+  "profile": "value",
+  "crate": "wasmc_compression_refresh_v2",
+  "artifact_name": "wasmc_compression_refresh_v2",
+  "world": "compression",
+  "description": "Bounded gzip compression and decompression backed by flate2.",
+  "dependencies": [
+    "flate2"
+  ],
+  "apis": [
+    {
+      "api": "compress",
+      "delta": "Bounded one-shot gzip compression.",
+      "ecosystem": "flate2 1.1.2",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "decompress",
+      "delta": "Bounded one-shot gzip decompression.",
+      "ecosystem": "flate2 1.1.2",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    }
+  ]
+}

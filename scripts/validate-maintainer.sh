@@ -54,6 +54,7 @@ for heading in {0..8}; do
   }
 done
 
+node scripts/validate-lib-refresh-v2-source.mjs
 node scripts/validate-integrity.mjs
 node scripts/validate-license-policy.mjs
 node scripts/validate-libs.mjs

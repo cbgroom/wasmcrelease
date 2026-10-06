@@ -1,0 +1,21 @@
+package wasmc:json@0.0.1;
+
+interface document {
+  enum json-error {
+    input-too-large,
+    depth-limit,
+    invalid-json,
+    too-many-pointers,
+    pointer-too-long,
+    invalid-pointer,
+    output-too-large,
+  }
+
+  compact: func(input: string) -> result<string, json-error>;
+  select: func(input: string, pointers: list<string>) -> result<list<option<string>>, json-error>;
+  validate: func(input: string) -> result<_, json-error>;
+}
+
+world json {
+  export document;
+}

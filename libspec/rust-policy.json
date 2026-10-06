@@ -1,0 +1,19 @@
+{
+  "schema": "wasmc.lib-refresh-rust-policy/v2",
+  "toolchain": "1.96.0",
+  "target": "wasm32-unknown-unknown",
+  "edition": "2021",
+  "wit_bindgen": "\"=0.62.0\"",
+  "dependencies": {
+    "serde_json": "\"=1.0.151\"",
+    "flate2": "{ version = \"=1.1.10\", default-features = false, features = [\"rust_backend\"] }",
+    "httparse": "\"=1.10.1\""
+  },
+  "release_profile": {
+    "opt_level": "z",
+    "lto": true,
+    "codegen_units": 1,
+    "panic": "abort",
+    "strip": "symbols"
+  }
+}

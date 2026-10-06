@@ -1279,3 +1279,52 @@ and rejects any receipt not bound to the exact rehearsal commit/tree, candidate
 commit and product-set digest or lacking structural and independent white-box
 first-pass acceptance. The deterministic CI case is renamed and separated from
 this live gate. The receipt is added after the tag to avoid self-reference.
+
+## 10. Lib Refresh V2 (2026-10-06)
+
+A new future-only Lib authoring authority is active on
+`work/WS-20261006-lib-refresh-v2`, owned by
+`.agents/workstreams/WS-20261006-lib-refresh-v2/`.
+
+The north star is deliberately non-compatible with the historical per-Lib
+Cargo/wit-bindgen authoring shell. `libspec/` is the future source authority;
+`libsrc/` is migration input only. Each authored Lib is exactly four files:
+`lib.json`, `lib.wit`, `delta.rs`, and thin `adapter.rs`. Cargo workspaces,
+wit-bindgen entry code, producer specs, Core/Component bytes, Core ABI,
+Rust Core/Component SDKs, manifests and receipts are generated.
+
+The first value-profile cohort (JSON, Compression, HTTP1) has passed Q0 refresh
+and Q1 direct Core behavior. Two independent fixed-lock all-refreshes produced
+the same fingerprint
+`b1e1260daa0936b6cbe73f98c0aab7e67e11080a312fc6bde97e803676a1fae2`
+and identical package hashes. Exact producer SHA256:
+`73b1885a9a5e5427755ee4565e8c05b231e03f032ba784d5e73c67088ee838da`.
+Shared Cargo.lock SHA256:
+`73abce6d00084ead6327c4ca7ee3241785ab0754bac9c29e65ddf36ddd9249da`.
+Deleting and regenerating the shared lock through `--update-lock` reproduces the
+same lock digest; the final run directory is bound to the final lock-aware
+fingerprint.
+
+Q1 uses only generated import-free Core artifacts and the refresh receipt, not
+the old libsrc Cargo projects. JSON compact/select/validation and an input
+boundary, Compression round-trip/error/input boundary, and HTTP1
+parse/frame/serialize/error/input boundary pass. Q1 receipt SHA256:
+`f81c0bf06b801903cc5f21c4a262bf37d8555d386592de5afec89d5b012630c6`.
+Wasmtime CLI is absent on this hwlinux image; Q2 remains the separate
+multi-engine ecosystem gate.
+
+The historical Compression project pins flate2 1.1.2 but its crate payload is
+no longer present in the offline Cargo cache, so that old project itself is not
+rebuildable offline. V2 intentionally does not preserve that shell. The shared
+cohort policy uses flate2 1.1.10 with rust_backend and one shared lock.
+
+Maintainer Skill `release-lib-refresh-v2` is authoritative for future Lib
+authoring. `validate-maintainer.sh` now runs the V2 source-boundary validator:
+exact four-file inventory, shared dependency policy/lock, no wit-bindgen/Core
+ABI/engine concerns in delta, and a bounded thin adapter.
+
+Next implementation slice: migrate the six Data Libs and extract one shared
+Arrow/Data adapter so BatchSnapshot/WIT-to-Arrow projection is maintained once.
+Then add generic resource and host/contract profiles. After the cohort is
+migrated, delete old per-Lib authoring projects instead of maintaining two
+formats. Do not mutate immutable admitted/released `libs/*` roots in place.
