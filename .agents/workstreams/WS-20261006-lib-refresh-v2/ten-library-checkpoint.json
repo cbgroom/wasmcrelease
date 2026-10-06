@@ -1,0 +1,662 @@
+{
+  "schema": "wasmc.lib-refresh-ten-cohort-checkpoint/v2",
+  "observed_at": "2026-10-06T18:16:54.807845+00:00",
+  "state": "q0_q1_pass_cache_incremental_verified_not_released",
+  "source_baseline": "14d547b884399562148bb8857bd4fd1f0cc67150",
+  "producer_commit": "15418b27ef663dd4f456e2d46b077e2278c2c639",
+  "producer_sha256": "d8d01bbb434a7bb002ab20f8e9353381c0aee07da43bbb7829853fd7e7c18306",
+  "cargo_lock_sha256": "92d22baf31ce6d7c1d518bdec31ff3cc17d559b1507799cc9aaf872dc146aee1",
+  "cache_tests": {
+    "pass": 11,
+    "command": "node --test scripts/test-lib-refresh-cache-v2.mjs scripts/test-lib-refresh-workflow-v2.mjs",
+    "scope": "orchestration unit/fixture tests, not production Lib execution"
+  },
+  "q1": {
+    "receipt": "/home/huawei/code/.cache/wasmc-evidence/lib-refresh-v2-closure-20261006/runs/refresh-ljQXO5/q1-receipt.json",
+    "sha256": "82f4a58a1cabbd5a87ef37af6dae0e69fecca5fb5c9aa3cb6fa6daf2c9c12218",
+    "packages": 10,
+    "exported_apis_exercised": 28,
+    "cases": 50,
+    "engine": "v24.19.0 Node Core WebAssembly",
+    "data_csv_apis": 20,
+    "data_csv_cases": 37,
+    "base_value_cases": 13,
+    "scope": "generated Core artifact behavior, not ordinary WAsmC or Component SDK Q2"
+  },
+  "semantic_fix": "Data Core take preserves explicit zero-column batch row count; empty selection/zero rows/normal/error lifecycle tested",
+  "runs": {
+    "first_cold": {
+      "path": "/home/huawei/code/.cache/wasmc-evidence/lib-refresh-v2-closure-20261006/runs/refresh-DHJ0Ks/refresh-receipt.json",
+      "sha256": "9d6ad14e6cf03ad792a4a6f4771191cd76bb0d9ec1c897c506532e794cbd94b4",
+      "fingerprint": "0e4e264f47b55f1b2559705255c85bf5242da94b079c972496424529db566a84",
+      "timing": {
+        "total_ms": 421985,
+        "package_build_ms": {
+          "wasmc-compression": 17486,
+          "wasmc-csv": 59408,
+          "wasmc-data-compute": 58417,
+          "wasmc-data-core": 34653,
+          "wasmc-data-expr": 62844,
+          "wasmc-data-interchange": 130627,
+          "wasmc-data-profile": 7937,
+          "wasmc-data-relational": 40656,
+          "wasmc-http1": 2232,
+          "wasmc-json": 5237
+        },
+        "cache_hits": 0,
+        "cache_misses": 10,
+        "persistent_workspace": true,
+        "persistent_cargo_target": true
+      },
+      "package_keys": {
+        "wasmc-compression": "6ee07d3e475522131ce97addb15ca2069084b9cd8e5d7edf332abfa1055d5989",
+        "wasmc-csv": "dfd49f4496ba052a00002e154fa929edee9e7f94933f5398e3c5912ded1806fb",
+        "wasmc-data-compute": "90c48f263407ec9350e1a18f826e23c53f79c7fd7b77bc5a7f83732280f2faac",
+        "wasmc-data-core": "ec88883c21cee424a9bb7d98b4ce95667a3d8e11abc86b76724072576f1d5599",
+        "wasmc-data-expr": "dd62e29949a2329c2ff7f7026b72f6255991332a611c5f6d538dba38b2c7852f",
+        "wasmc-data-interchange": "a1421bd1d4cf808ab1f75a5852256700597a929c97412e067563249ffa033497",
+        "wasmc-data-profile": "14a193147218a086981133e2e0fdd82e48c2da4b4af83788bd07cfad3ad36c48",
+        "wasmc-data-relational": "d91e23fa6cbefdb315be416b892e5b165008d43e6835de150abd2eac0acd0dee",
+        "wasmc-http1": "7014b0e7b15d2d084d9b2a113a7b112c1336c09a43f6fba3b96ff7dd1ace9d16",
+        "wasmc-json": "a384a9eeef2a202011c0c791a4a7e18c71b21eaf32da6dbc2b5799cc04361e23"
+      },
+      "rows": [
+        {
+          "id": "wasmc-compression",
+          "action": "build",
+          "manifest_sha256": "7423f6adcc624463aaea0c40bb5d0ea40526a2778cf3c3a99e38f6eeabc9fa87",
+          "artifact_sha256": "20f5d3531223356f4bb430707aaf39a7c703e91133f0905a451723c113f1cae7",
+          "component_sha256": "aaa7236e7297339e56a4e5c2cea5678bb652692c507fb12811303522dc02ef3a",
+          "core_abi_sha256": "9af2f0ab90b12cd6c6982002282af451f22e53094f83e9e42c34cebaebeab62b"
+        },
+        {
+          "id": "wasmc-csv",
+          "action": "build",
+          "manifest_sha256": "397db3e082f425a2f47b26dec2edb1afa4cfbf28ecc10458d06d47da55585b94",
+          "artifact_sha256": "7293ee168a7c9746da5814107c812bd71c0fff419756af0b6fd813997ed10488",
+          "component_sha256": "4eba1a0749a376f4d9905bb9697318a1c8c58e1e88cb4753d1e50240ee4509b9",
+          "core_abi_sha256": "2d645e93e0f586fad03bd3d4ee617e947ae132939b699fffa7afece15608ac70"
+        },
+        {
+          "id": "wasmc-data-compute",
+          "action": "build",
+          "manifest_sha256": "8fee25edaf2449aa119f0b63315e961647386b68dc34c8d13583316eb62323c5",
+          "artifact_sha256": "da6d74423dca37825dbc44b4cb97da377c3d7b5a09a9ec0415e117f8efc67ec6",
+          "component_sha256": "f9c9aab6700952929329f86bf0358d4d39b127a293c58e8ddc5876b72747f0bb",
+          "core_abi_sha256": "00417b222ba3b8972801db10241252270cf9df8f1dc2933a1eb7df8cc81b4088"
+        },
+        {
+          "id": "wasmc-data-core",
+          "action": "build",
+          "manifest_sha256": "0b3e679bb1bab1022ed004a5896bcace5f030634853a5d9c845e628b7833d7cd",
+          "artifact_sha256": "9def268f74b35ede5f038d75bd7a840f455fa972935b5240711fd6edcdd4e1e1",
+          "component_sha256": "6a9c436eaeed7903689597dffd87b408fbb5d1d4101e2cf047c82181897ec48d",
+          "core_abi_sha256": "5186051745f0763ea3b0d0a083c90c58d135221f1edad7099f395331da1c3e1a"
+        },
+        {
+          "id": "wasmc-data-expr",
+          "action": "build",
+          "manifest_sha256": "63aedf8a9358bbcb57698d03395dc44c996ba25617fc60d5caaff3f9ad1cdb30",
+          "artifact_sha256": "a2d56de0758e7cb036287308ca8c27664889d0cba7406fb3667aca728277330a",
+          "component_sha256": "7d252d237a83fd05ee25e5d6f5789ec0fd692ed918f2d3c7a72e9c38b8d9b562",
+          "core_abi_sha256": "cea9b857930bac463f8bba54514665d10ecf05bf02916420d0371ba1ee432fe4"
+        },
+        {
+          "id": "wasmc-data-interchange",
+          "action": "build",
+          "manifest_sha256": "b53670a92576e383c3abf81a90f4c7e43b5d74544ba37ae5026c81c7a30a76a6",
+          "artifact_sha256": "e012fdbbbb313d74b0b0c239efada225ccb3a6fe345156f4bd7d9a58a2357092",
+          "component_sha256": "420ddbc1d386b9c5c44eaf80b296177ddabed40fe1da1a26b13e3c1f1f1d4261",
+          "core_abi_sha256": "9ae3d93ce616124b8b90e5071cacf6c325e38f079eb17b6796f18009e35f4d00"
+        },
+        {
+          "id": "wasmc-data-profile",
+          "action": "build",
+          "manifest_sha256": "5da9312546d00826665222e5cd5f0c3cb6ede92b1e523591e0826ee362af5ef9",
+          "artifact_sha256": "62c4003069a5f130dd9a8e1f937645add9185c5ac82751ac9fb521207b970508",
+          "component_sha256": "4665986eda949b0aa8f0ad8a19b52e1a3dd51283cb25b7e4e0f90c9a5072fae9",
+          "core_abi_sha256": "ad6913de5053a6f66d92c24d951b627a57e5ce87c0a18972bb6233c06f36d3fb"
+        },
+        {
+          "id": "wasmc-data-relational",
+          "action": "build",
+          "manifest_sha256": "ec3d4f4816616f3dfde36ab7e53a9f84bd79f6a334645c3e5d66b9aaf7b7e999",
+          "artifact_sha256": "3c86635ecb823a48ec845e415dfe49ce2dec78f2c686daf36aedb9481c61d0ca",
+          "component_sha256": "b65d4c7cbfb747ddc0fa98cbf96f3370fd4f96efa0ad1fd131996d6f7547c97c",
+          "core_abi_sha256": "90e656de69656eb955b786138c14eb4d60a5f1a1078eff7c8d4d5bb674d95d0f"
+        },
+        {
+          "id": "wasmc-http1",
+          "action": "build",
+          "manifest_sha256": "6c425a1163648bf6a9a5afe2bda1b4b04242c6e0dbe869fd45ab5e7ad1c0cf31",
+          "artifact_sha256": "e2872d169913d4202bca23c5681cef447912fd33abca0e5f9a30917ff53dd138",
+          "component_sha256": "8b1fd8c0b36d70ec630e73ef0c63c49452fec3039db89df836734f0c85da1d6e",
+          "core_abi_sha256": "8a5482a1f3ae707bd0973b0c5c407edc3cdc492683bb667c233b0520ed465985"
+        },
+        {
+          "id": "wasmc-json",
+          "action": "build",
+          "manifest_sha256": "42f7ac19998a03369cf33257c27573409f5e5d5868dd31cab4145b79e1b69af1",
+          "artifact_sha256": "90f64abae321f0699e5fbe7b9ff647a397cefa3c32e175dcc7793585505590ae",
+          "component_sha256": "678fe804f983d9bea7fbf4c36bb41c28606df1d16e292ff60b657a2c1fbf4ef3",
+          "core_abi_sha256": "373ccf4ffeb9943b0e0d29804cc6e335320cf283dfb530c61e959729d1abc92e"
+        }
+      ]
+    },
+    "first_repeat": {
+      "path": "/home/huawei/code/.cache/wasmc-evidence/lib-refresh-v2-closure-20261006/runs/refresh-X7GAsq/refresh-receipt.json",
+      "sha256": "54fed76d4223150207daebbbd16a52a7d70e25f1835b618ba1a7a35862055df3",
+      "fingerprint": "0e4e264f47b55f1b2559705255c85bf5242da94b079c972496424529db566a84",
+      "timing": {
+        "total_ms": 2643,
+        "package_build_ms": {
+          "wasmc-compression": 18,
+          "wasmc-csv": 18,
+          "wasmc-data-compute": 31,
+          "wasmc-data-core": 21,
+          "wasmc-data-expr": 29,
+          "wasmc-data-interchange": 43,
+          "wasmc-data-profile": 13,
+          "wasmc-data-relational": 25,
+          "wasmc-http1": 10,
+          "wasmc-json": 11
+        },
+        "cache_hits": 10,
+        "cache_misses": 0,
+        "persistent_workspace": true,
+        "persistent_cargo_target": true
+      },
+      "package_keys": {
+        "wasmc-compression": "6ee07d3e475522131ce97addb15ca2069084b9cd8e5d7edf332abfa1055d5989",
+        "wasmc-csv": "dfd49f4496ba052a00002e154fa929edee9e7f94933f5398e3c5912ded1806fb",
+        "wasmc-data-compute": "90c48f263407ec9350e1a18f826e23c53f79c7fd7b77bc5a7f83732280f2faac",
+        "wasmc-data-core": "ec88883c21cee424a9bb7d98b4ce95667a3d8e11abc86b76724072576f1d5599",
+        "wasmc-data-expr": "dd62e29949a2329c2ff7f7026b72f6255991332a611c5f6d538dba38b2c7852f",
+        "wasmc-data-interchange": "a1421bd1d4cf808ab1f75a5852256700597a929c97412e067563249ffa033497",
+        "wasmc-data-profile": "14a193147218a086981133e2e0fdd82e48c2da4b4af83788bd07cfad3ad36c48",
+        "wasmc-data-relational": "d91e23fa6cbefdb315be416b892e5b165008d43e6835de150abd2eac0acd0dee",
+        "wasmc-http1": "7014b0e7b15d2d084d9b2a113a7b112c1336c09a43f6fba3b96ff7dd1ace9d16",
+        "wasmc-json": "a384a9eeef2a202011c0c791a4a7e18c71b21eaf32da6dbc2b5799cc04361e23"
+      },
+      "rows": [
+        {
+          "id": "wasmc-compression",
+          "action": "reuse",
+          "manifest_sha256": "7423f6adcc624463aaea0c40bb5d0ea40526a2778cf3c3a99e38f6eeabc9fa87",
+          "artifact_sha256": "20f5d3531223356f4bb430707aaf39a7c703e91133f0905a451723c113f1cae7",
+          "component_sha256": "aaa7236e7297339e56a4e5c2cea5678bb652692c507fb12811303522dc02ef3a",
+          "core_abi_sha256": "9af2f0ab90b12cd6c6982002282af451f22e53094f83e9e42c34cebaebeab62b"
+        },
+        {
+          "id": "wasmc-csv",
+          "action": "reuse",
+          "manifest_sha256": "397db3e082f425a2f47b26dec2edb1afa4cfbf28ecc10458d06d47da55585b94",
+          "artifact_sha256": "7293ee168a7c9746da5814107c812bd71c0fff419756af0b6fd813997ed10488",
+          "component_sha256": "4eba1a0749a376f4d9905bb9697318a1c8c58e1e88cb4753d1e50240ee4509b9",
+          "core_abi_sha256": "2d645e93e0f586fad03bd3d4ee617e947ae132939b699fffa7afece15608ac70"
+        },
+        {
+          "id": "wasmc-data-compute",
+          "action": "reuse",
+          "manifest_sha256": "8fee25edaf2449aa119f0b63315e961647386b68dc34c8d13583316eb62323c5",
+          "artifact_sha256": "da6d74423dca37825dbc44b4cb97da377c3d7b5a09a9ec0415e117f8efc67ec6",
+          "component_sha256": "f9c9aab6700952929329f86bf0358d4d39b127a293c58e8ddc5876b72747f0bb",
+          "core_abi_sha256": "00417b222ba3b8972801db10241252270cf9df8f1dc2933a1eb7df8cc81b4088"
+        },
+        {
+          "id": "wasmc-data-core",
+          "action": "reuse",
+          "manifest_sha256": "0b3e679bb1bab1022ed004a5896bcace5f030634853a5d9c845e628b7833d7cd",
+          "artifact_sha256": "9def268f74b35ede5f038d75bd7a840f455fa972935b5240711fd6edcdd4e1e1",
+          "component_sha256": "6a9c436eaeed7903689597dffd87b408fbb5d1d4101e2cf047c82181897ec48d",
+          "core_abi_sha256": "5186051745f0763ea3b0d0a083c90c58d135221f1edad7099f395331da1c3e1a"
+        },
+        {
+          "id": "wasmc-data-expr",
+          "action": "reuse",
+          "manifest_sha256": "63aedf8a9358bbcb57698d03395dc44c996ba25617fc60d5caaff3f9ad1cdb30",
+          "artifact_sha256": "a2d56de0758e7cb036287308ca8c27664889d0cba7406fb3667aca728277330a",
+          "component_sha256": "7d252d237a83fd05ee25e5d6f5789ec0fd692ed918f2d3c7a72e9c38b8d9b562",
+          "core_abi_sha256": "cea9b857930bac463f8bba54514665d10ecf05bf02916420d0371ba1ee432fe4"
+        },
+        {
+          "id": "wasmc-data-interchange",
+          "action": "reuse",
+          "manifest_sha256": "b53670a92576e383c3abf81a90f4c7e43b5d74544ba37ae5026c81c7a30a76a6",
+          "artifact_sha256": "e012fdbbbb313d74b0b0c239efada225ccb3a6fe345156f4bd7d9a58a2357092",
+          "component_sha256": "420ddbc1d386b9c5c44eaf80b296177ddabed40fe1da1a26b13e3c1f1f1d4261",
+          "core_abi_sha256": "9ae3d93ce616124b8b90e5071cacf6c325e38f079eb17b6796f18009e35f4d00"
+        },
+        {
+          "id": "wasmc-data-profile",
+          "action": "reuse",
+          "manifest_sha256": "5da9312546d00826665222e5cd5f0c3cb6ede92b1e523591e0826ee362af5ef9",
+          "artifact_sha256": "62c4003069a5f130dd9a8e1f937645add9185c5ac82751ac9fb521207b970508",
+          "component_sha256": "4665986eda949b0aa8f0ad8a19b52e1a3dd51283cb25b7e4e0f90c9a5072fae9",
+          "core_abi_sha256": "ad6913de5053a6f66d92c24d951b627a57e5ce87c0a18972bb6233c06f36d3fb"
+        },
+        {
+          "id": "wasmc-data-relational",
+          "action": "reuse",
+          "manifest_sha256": "ec3d4f4816616f3dfde36ab7e53a9f84bd79f6a334645c3e5d66b9aaf7b7e999",
+          "artifact_sha256": "3c86635ecb823a48ec845e415dfe49ce2dec78f2c686daf36aedb9481c61d0ca",
+          "component_sha256": "b65d4c7cbfb747ddc0fa98cbf96f3370fd4f96efa0ad1fd131996d6f7547c97c",
+          "core_abi_sha256": "90e656de69656eb955b786138c14eb4d60a5f1a1078eff7c8d4d5bb674d95d0f"
+        },
+        {
+          "id": "wasmc-http1",
+          "action": "reuse",
+          "manifest_sha256": "6c425a1163648bf6a9a5afe2bda1b4b04242c6e0dbe869fd45ab5e7ad1c0cf31",
+          "artifact_sha256": "e2872d169913d4202bca23c5681cef447912fd33abca0e5f9a30917ff53dd138",
+          "component_sha256": "8b1fd8c0b36d70ec630e73ef0c63c49452fec3039db89df836734f0c85da1d6e",
+          "core_abi_sha256": "8a5482a1f3ae707bd0973b0c5c407edc3cdc492683bb667c233b0520ed465985"
+        },
+        {
+          "id": "wasmc-json",
+          "action": "reuse",
+          "manifest_sha256": "42f7ac19998a03369cf33257c27573409f5e5d5868dd31cab4145b79e1b69af1",
+          "artifact_sha256": "90f64abae321f0699e5fbe7b9ff647a397cefa3c32e175dcc7793585505590ae",
+          "component_sha256": "678fe804f983d9bea7fbf4c36bb41c28606df1d16e292ff60b657a2c1fbf4ef3",
+          "core_abi_sha256": "373ccf4ffeb9943b0e0d29804cc6e335320cf283dfb530c61e959729d1abc92e"
+        }
+      ]
+    },
+    "current_cold_before_fix": {
+      "path": "/home/huawei/code/.cache/wasmc-evidence/lib-refresh-v2-closure-20261006/runs/refresh-4tWRCR/refresh-receipt.json",
+      "sha256": "6c9bf29af52361339aea792258ac59ea7e224d153cc27d0ae83b5b9e9c53d78b",
+      "fingerprint": "776d8a4e4103438d75e2a159b3fd31b66396d69ae61bfd0d0ea4f607502dae2f",
+      "timing": {
+        "total_ms": 421792,
+        "package_build_ms": {
+          "wasmc-compression": 17258,
+          "wasmc-csv": 57810,
+          "wasmc-data-compute": 58406,
+          "wasmc-data-core": 35115,
+          "wasmc-data-expr": 63159,
+          "wasmc-data-interchange": 131408,
+          "wasmc-data-profile": 7823,
+          "wasmc-data-relational": 40620,
+          "wasmc-http1": 2237,
+          "wasmc-json": 5275
+        },
+        "cache_hits": 0,
+        "cache_misses": 10,
+        "persistent_workspace": true,
+        "persistent_cargo_target": true
+      },
+      "package_keys": {
+        "wasmc-compression": "d1d268dd976ed9eadfeb334513e19085cee43e403575d576cf9b007881e91fe1",
+        "wasmc-csv": "dfab0b419fcc5c9ae5c5e8e5c924d6b2e1ce3d886d147e4f5049337fdc38ae70",
+        "wasmc-data-compute": "f368d7f0ceb0cb8f4d5ad5ed309f509a6c753d365f1cc0540bf7e8ab7ee88393",
+        "wasmc-data-core": "5e8e5a762dd26423dac4883f062277cd203ddc1be15b70d63d72e3743fe0dc72",
+        "wasmc-data-expr": "62e167e95a75779445eeb238c200d4b7767ff0b4bec6072fb3ce7e1b56efeabd",
+        "wasmc-data-interchange": "06e53961c9ece454df8e9d6ca26bfb8ba3e50fb3c8e3a7e027a3c1d4f23b3180",
+        "wasmc-data-profile": "5131fe11f551cfe273d8e7a62d9af89e761bc7477d19e570e6ad56800988977e",
+        "wasmc-data-relational": "081ba9bd4b475ead8601d922bf8c35b3cd5f99c122ad1125542cafd5d84486ac",
+        "wasmc-http1": "15b0283f3232971f13098335d88cdd8933448875f2a070b3e3c58908e56a8df6",
+        "wasmc-json": "0d6bdd7149647717bc512f4eb48b48efa2e4ff4a9151212f8005e506b4dbc6ea"
+      },
+      "rows": [
+        {
+          "id": "wasmc-compression",
+          "action": "build",
+          "manifest_sha256": "7423f6adcc624463aaea0c40bb5d0ea40526a2778cf3c3a99e38f6eeabc9fa87",
+          "artifact_sha256": "20f5d3531223356f4bb430707aaf39a7c703e91133f0905a451723c113f1cae7",
+          "component_sha256": "aaa7236e7297339e56a4e5c2cea5678bb652692c507fb12811303522dc02ef3a",
+          "core_abi_sha256": "9af2f0ab90b12cd6c6982002282af451f22e53094f83e9e42c34cebaebeab62b"
+        },
+        {
+          "id": "wasmc-csv",
+          "action": "build",
+          "manifest_sha256": "6f3caf7fd2daef621ca4fca048eec80be432cd115db81cd1a164a28f12c0c54e",
+          "artifact_sha256": "f2b88179a49cb1e7cb6e485eb27b1d2bed701e8486f5ad8b1a51bf747822ee7c",
+          "component_sha256": "c06fa65b5ac168d1c6572848f7e91f07522220958c2919a11d1dded3419315c2",
+          "core_abi_sha256": "4d5d24d1507f2872bf6d0bcb9ad61ee591501f8fdec82cf649173c1c80b14af8"
+        },
+        {
+          "id": "wasmc-data-compute",
+          "action": "build",
+          "manifest_sha256": "8fee25edaf2449aa119f0b63315e961647386b68dc34c8d13583316eb62323c5",
+          "artifact_sha256": "da6d74423dca37825dbc44b4cb97da377c3d7b5a09a9ec0415e117f8efc67ec6",
+          "component_sha256": "f9c9aab6700952929329f86bf0358d4d39b127a293c58e8ddc5876b72747f0bb",
+          "core_abi_sha256": "00417b222ba3b8972801db10241252270cf9df8f1dc2933a1eb7df8cc81b4088"
+        },
+        {
+          "id": "wasmc-data-core",
+          "action": "build",
+          "manifest_sha256": "0b3e679bb1bab1022ed004a5896bcace5f030634853a5d9c845e628b7833d7cd",
+          "artifact_sha256": "9def268f74b35ede5f038d75bd7a840f455fa972935b5240711fd6edcdd4e1e1",
+          "component_sha256": "6a9c436eaeed7903689597dffd87b408fbb5d1d4101e2cf047c82181897ec48d",
+          "core_abi_sha256": "5186051745f0763ea3b0d0a083c90c58d135221f1edad7099f395331da1c3e1a"
+        },
+        {
+          "id": "wasmc-data-expr",
+          "action": "build",
+          "manifest_sha256": "63aedf8a9358bbcb57698d03395dc44c996ba25617fc60d5caaff3f9ad1cdb30",
+          "artifact_sha256": "a2d56de0758e7cb036287308ca8c27664889d0cba7406fb3667aca728277330a",
+          "component_sha256": "7d252d237a83fd05ee25e5d6f5789ec0fd692ed918f2d3c7a72e9c38b8d9b562",
+          "core_abi_sha256": "cea9b857930bac463f8bba54514665d10ecf05bf02916420d0371ba1ee432fe4"
+        },
+        {
+          "id": "wasmc-data-interchange",
+          "action": "build",
+          "manifest_sha256": "f653cd7ed5d3056bec169f225ec0d561e6dd57a81ba1b68159581d34f150202a",
+          "artifact_sha256": "ad16eeb2f8167cb87f525d250b7cfb00f64bfc8fa796fcdd4aa20d2ea1c97762",
+          "component_sha256": "7e800058a847e58e35bc38f5b4693fd5024507d823574f811f9daf95a6828a8f",
+          "core_abi_sha256": "292f93c172a3d2062388fdf2c458117b8c7d3d848b85db1857405519c70c59e4"
+        },
+        {
+          "id": "wasmc-data-profile",
+          "action": "build",
+          "manifest_sha256": "5da9312546d00826665222e5cd5f0c3cb6ede92b1e523591e0826ee362af5ef9",
+          "artifact_sha256": "62c4003069a5f130dd9a8e1f937645add9185c5ac82751ac9fb521207b970508",
+          "component_sha256": "4665986eda949b0aa8f0ad8a19b52e1a3dd51283cb25b7e4e0f90c9a5072fae9",
+          "core_abi_sha256": "ad6913de5053a6f66d92c24d951b627a57e5ce87c0a18972bb6233c06f36d3fb"
+        },
+        {
+          "id": "wasmc-data-relational",
+          "action": "build",
+          "manifest_sha256": "ec3d4f4816616f3dfde36ab7e53a9f84bd79f6a334645c3e5d66b9aaf7b7e999",
+          "artifact_sha256": "3c86635ecb823a48ec845e415dfe49ce2dec78f2c686daf36aedb9481c61d0ca",
+          "component_sha256": "b65d4c7cbfb747ddc0fa98cbf96f3370fd4f96efa0ad1fd131996d6f7547c97c",
+          "core_abi_sha256": "90e656de69656eb955b786138c14eb4d60a5f1a1078eff7c8d4d5bb674d95d0f"
+        },
+        {
+          "id": "wasmc-http1",
+          "action": "build",
+          "manifest_sha256": "6c425a1163648bf6a9a5afe2bda1b4b04242c6e0dbe869fd45ab5e7ad1c0cf31",
+          "artifact_sha256": "e2872d169913d4202bca23c5681cef447912fd33abca0e5f9a30917ff53dd138",
+          "component_sha256": "8b1fd8c0b36d70ec630e73ef0c63c49452fec3039db89df836734f0c85da1d6e",
+          "core_abi_sha256": "8a5482a1f3ae707bd0973b0c5c407edc3cdc492683bb667c233b0520ed465985"
+        },
+        {
+          "id": "wasmc-json",
+          "action": "build",
+          "manifest_sha256": "42f7ac19998a03369cf33257c27573409f5e5d5868dd31cab4145b79e1b69af1",
+          "artifact_sha256": "90f64abae321f0699e5fbe7b9ff647a397cefa3c32e175dcc7793585505590ae",
+          "component_sha256": "678fe804f983d9bea7fbf4c36bb41c28606df1d16e292ff60b657a2c1fbf4ef3",
+          "core_abi_sha256": "373ccf4ffeb9943b0e0d29804cc6e335320cf283dfb530c61e959729d1abc92e"
+        }
+      ]
+    },
+    "single_delta": {
+      "path": "/home/huawei/code/.cache/wasmc-evidence/lib-refresh-v2-closure-20261006/runs/refresh-ljQXO5/refresh-receipt.json",
+      "sha256": "a6c01ddc446c8408962344713c0b6dfa88c545dae49a09e96e0fbd963ac6e66c",
+      "fingerprint": "0fd2af19a112a16c305f6e6c78e06e9107b29d5cc61947e6d033be1ed4cf3904",
+      "timing": {
+        "total_ms": 37605,
+        "package_build_ms": {
+          "wasmc-compression": 17,
+          "wasmc-csv": 17,
+          "wasmc-data-compute": 28,
+          "wasmc-data-core": 34899,
+          "wasmc-data-expr": 28,
+          "wasmc-data-interchange": 46,
+          "wasmc-data-profile": 13,
+          "wasmc-data-relational": 24,
+          "wasmc-http1": 14,
+          "wasmc-json": 14
+        },
+        "cache_hits": 9,
+        "cache_misses": 1,
+        "persistent_workspace": true,
+        "persistent_cargo_target": true
+      },
+      "package_keys": {
+        "wasmc-compression": "d1d268dd976ed9eadfeb334513e19085cee43e403575d576cf9b007881e91fe1",
+        "wasmc-csv": "dfab0b419fcc5c9ae5c5e8e5c924d6b2e1ce3d886d147e4f5049337fdc38ae70",
+        "wasmc-data-compute": "f368d7f0ceb0cb8f4d5ad5ed309f509a6c753d365f1cc0540bf7e8ab7ee88393",
+        "wasmc-data-core": "8e2ec6e60f98ccd6ff7a9ebdaa0b8309638d9d8a326336d386f6640de393044f",
+        "wasmc-data-expr": "62e167e95a75779445eeb238c200d4b7767ff0b4bec6072fb3ce7e1b56efeabd",
+        "wasmc-data-interchange": "06e53961c9ece454df8e9d6ca26bfb8ba3e50fb3c8e3a7e027a3c1d4f23b3180",
+        "wasmc-data-profile": "5131fe11f551cfe273d8e7a62d9af89e761bc7477d19e570e6ad56800988977e",
+        "wasmc-data-relational": "081ba9bd4b475ead8601d922bf8c35b3cd5f99c122ad1125542cafd5d84486ac",
+        "wasmc-http1": "15b0283f3232971f13098335d88cdd8933448875f2a070b3e3c58908e56a8df6",
+        "wasmc-json": "0d6bdd7149647717bc512f4eb48b48efa2e4ff4a9151212f8005e506b4dbc6ea"
+      },
+      "rows": [
+        {
+          "id": "wasmc-compression",
+          "action": "reuse",
+          "manifest_sha256": "7423f6adcc624463aaea0c40bb5d0ea40526a2778cf3c3a99e38f6eeabc9fa87",
+          "artifact_sha256": "20f5d3531223356f4bb430707aaf39a7c703e91133f0905a451723c113f1cae7",
+          "component_sha256": "aaa7236e7297339e56a4e5c2cea5678bb652692c507fb12811303522dc02ef3a",
+          "core_abi_sha256": "9af2f0ab90b12cd6c6982002282af451f22e53094f83e9e42c34cebaebeab62b"
+        },
+        {
+          "id": "wasmc-csv",
+          "action": "reuse",
+          "manifest_sha256": "6f3caf7fd2daef621ca4fca048eec80be432cd115db81cd1a164a28f12c0c54e",
+          "artifact_sha256": "f2b88179a49cb1e7cb6e485eb27b1d2bed701e8486f5ad8b1a51bf747822ee7c",
+          "component_sha256": "c06fa65b5ac168d1c6572848f7e91f07522220958c2919a11d1dded3419315c2",
+          "core_abi_sha256": "4d5d24d1507f2872bf6d0bcb9ad61ee591501f8fdec82cf649173c1c80b14af8"
+        },
+        {
+          "id": "wasmc-data-compute",
+          "action": "reuse",
+          "manifest_sha256": "8fee25edaf2449aa119f0b63315e961647386b68dc34c8d13583316eb62323c5",
+          "artifact_sha256": "da6d74423dca37825dbc44b4cb97da377c3d7b5a09a9ec0415e117f8efc67ec6",
+          "component_sha256": "f9c9aab6700952929329f86bf0358d4d39b127a293c58e8ddc5876b72747f0bb",
+          "core_abi_sha256": "00417b222ba3b8972801db10241252270cf9df8f1dc2933a1eb7df8cc81b4088"
+        },
+        {
+          "id": "wasmc-data-core",
+          "action": "build",
+          "manifest_sha256": "9b118c4d3b4e77d928ac2bc03cb610a19f41ec7c86704b3025ce7f0ec989283d",
+          "artifact_sha256": "207c996f90b69bf7b5fd7c64e6989e3d95e9b46e31bb1704b0dde66f537b9498",
+          "component_sha256": "873d1e73a17d80a9d764389d8f079271aee32ece2d321220e1c338eb459a3d69",
+          "core_abi_sha256": "56d4714082eaf1956790ba586d7ad1586130f13720e5d21ed0db68eeacd8e645"
+        },
+        {
+          "id": "wasmc-data-expr",
+          "action": "reuse",
+          "manifest_sha256": "63aedf8a9358bbcb57698d03395dc44c996ba25617fc60d5caaff3f9ad1cdb30",
+          "artifact_sha256": "a2d56de0758e7cb036287308ca8c27664889d0cba7406fb3667aca728277330a",
+          "component_sha256": "7d252d237a83fd05ee25e5d6f5789ec0fd692ed918f2d3c7a72e9c38b8d9b562",
+          "core_abi_sha256": "cea9b857930bac463f8bba54514665d10ecf05bf02916420d0371ba1ee432fe4"
+        },
+        {
+          "id": "wasmc-data-interchange",
+          "action": "reuse",
+          "manifest_sha256": "f653cd7ed5d3056bec169f225ec0d561e6dd57a81ba1b68159581d34f150202a",
+          "artifact_sha256": "ad16eeb2f8167cb87f525d250b7cfb00f64bfc8fa796fcdd4aa20d2ea1c97762",
+          "component_sha256": "7e800058a847e58e35bc38f5b4693fd5024507d823574f811f9daf95a6828a8f",
+          "core_abi_sha256": "292f93c172a3d2062388fdf2c458117b8c7d3d848b85db1857405519c70c59e4"
+        },
+        {
+          "id": "wasmc-data-profile",
+          "action": "reuse",
+          "manifest_sha256": "5da9312546d00826665222e5cd5f0c3cb6ede92b1e523591e0826ee362af5ef9",
+          "artifact_sha256": "62c4003069a5f130dd9a8e1f937645add9185c5ac82751ac9fb521207b970508",
+          "component_sha256": "4665986eda949b0aa8f0ad8a19b52e1a3dd51283cb25b7e4e0f90c9a5072fae9",
+          "core_abi_sha256": "ad6913de5053a6f66d92c24d951b627a57e5ce87c0a18972bb6233c06f36d3fb"
+        },
+        {
+          "id": "wasmc-data-relational",
+          "action": "reuse",
+          "manifest_sha256": "ec3d4f4816616f3dfde36ab7e53a9f84bd79f6a334645c3e5d66b9aaf7b7e999",
+          "artifact_sha256": "3c86635ecb823a48ec845e415dfe49ce2dec78f2c686daf36aedb9481c61d0ca",
+          "component_sha256": "b65d4c7cbfb747ddc0fa98cbf96f3370fd4f96efa0ad1fd131996d6f7547c97c",
+          "core_abi_sha256": "90e656de69656eb955b786138c14eb4d60a5f1a1078eff7c8d4d5bb674d95d0f"
+        },
+        {
+          "id": "wasmc-http1",
+          "action": "reuse",
+          "manifest_sha256": "6c425a1163648bf6a9a5afe2bda1b4b04242c6e0dbe869fd45ab5e7ad1c0cf31",
+          "artifact_sha256": "e2872d169913d4202bca23c5681cef447912fd33abca0e5f9a30917ff53dd138",
+          "component_sha256": "8b1fd8c0b36d70ec630e73ef0c63c49452fec3039db89df836734f0c85da1d6e",
+          "core_abi_sha256": "8a5482a1f3ae707bd0973b0c5c407edc3cdc492683bb667c233b0520ed465985"
+        },
+        {
+          "id": "wasmc-json",
+          "action": "reuse",
+          "manifest_sha256": "42f7ac19998a03369cf33257c27573409f5e5d5868dd31cab4145b79e1b69af1",
+          "artifact_sha256": "90f64abae321f0699e5fbe7b9ff647a397cefa3c32e175dcc7793585505590ae",
+          "component_sha256": "678fe804f983d9bea7fbf4c36bb41c28606df1d16e292ff60b657a2c1fbf4ef3",
+          "core_abi_sha256": "373ccf4ffeb9943b0e0d29804cc6e335320cf283dfb530c61e959729d1abc92e"
+        }
+      ]
+    },
+    "current_repeat": {
+      "path": "/home/huawei/code/.cache/wasmc-evidence/lib-refresh-v2-closure-20261006/runs/refresh-14rjK3/refresh-receipt.json",
+      "sha256": "f6aaa6975ed5a1fc48aee642286cc9275bf81be652ade06722e25b52d2f6cabd",
+      "fingerprint": "0fd2af19a112a16c305f6e6c78e06e9107b29d5cc61947e6d033be1ed4cf3904",
+      "timing": {
+        "total_ms": 2696,
+        "package_build_ms": {
+          "wasmc-compression": 17,
+          "wasmc-csv": 18,
+          "wasmc-data-compute": 29,
+          "wasmc-data-core": 21,
+          "wasmc-data-expr": 30,
+          "wasmc-data-interchange": 44,
+          "wasmc-data-profile": 12,
+          "wasmc-data-relational": 24,
+          "wasmc-http1": 10,
+          "wasmc-json": 12
+        },
+        "cache_hits": 10,
+        "cache_misses": 0,
+        "persistent_workspace": true,
+        "persistent_cargo_target": true
+      },
+      "package_keys": {
+        "wasmc-compression": "d1d268dd976ed9eadfeb334513e19085cee43e403575d576cf9b007881e91fe1",
+        "wasmc-csv": "dfab0b419fcc5c9ae5c5e8e5c924d6b2e1ce3d886d147e4f5049337fdc38ae70",
+        "wasmc-data-compute": "f368d7f0ceb0cb8f4d5ad5ed309f509a6c753d365f1cc0540bf7e8ab7ee88393",
+        "wasmc-data-core": "8e2ec6e60f98ccd6ff7a9ebdaa0b8309638d9d8a326336d386f6640de393044f",
+        "wasmc-data-expr": "62e167e95a75779445eeb238c200d4b7767ff0b4bec6072fb3ce7e1b56efeabd",
+        "wasmc-data-interchange": "06e53961c9ece454df8e9d6ca26bfb8ba3e50fb3c8e3a7e027a3c1d4f23b3180",
+        "wasmc-data-profile": "5131fe11f551cfe273d8e7a62d9af89e761bc7477d19e570e6ad56800988977e",
+        "wasmc-data-relational": "081ba9bd4b475ead8601d922bf8c35b3cd5f99c122ad1125542cafd5d84486ac",
+        "wasmc-http1": "15b0283f3232971f13098335d88cdd8933448875f2a070b3e3c58908e56a8df6",
+        "wasmc-json": "0d6bdd7149647717bc512f4eb48b48efa2e4ff4a9151212f8005e506b4dbc6ea"
+      },
+      "rows": [
+        {
+          "id": "wasmc-compression",
+          "action": "reuse",
+          "manifest_sha256": "7423f6adcc624463aaea0c40bb5d0ea40526a2778cf3c3a99e38f6eeabc9fa87",
+          "artifact_sha256": "20f5d3531223356f4bb430707aaf39a7c703e91133f0905a451723c113f1cae7",
+          "component_sha256": "aaa7236e7297339e56a4e5c2cea5678bb652692c507fb12811303522dc02ef3a",
+          "core_abi_sha256": "9af2f0ab90b12cd6c6982002282af451f22e53094f83e9e42c34cebaebeab62b"
+        },
+        {
+          "id": "wasmc-csv",
+          "action": "reuse",
+          "manifest_sha256": "6f3caf7fd2daef621ca4fca048eec80be432cd115db81cd1a164a28f12c0c54e",
+          "artifact_sha256": "f2b88179a49cb1e7cb6e485eb27b1d2bed701e8486f5ad8b1a51bf747822ee7c",
+          "component_sha256": "c06fa65b5ac168d1c6572848f7e91f07522220958c2919a11d1dded3419315c2",
+          "core_abi_sha256": "4d5d24d1507f2872bf6d0bcb9ad61ee591501f8fdec82cf649173c1c80b14af8"
+        },
+        {
+          "id": "wasmc-data-compute",
+          "action": "reuse",
+          "manifest_sha256": "8fee25edaf2449aa119f0b63315e961647386b68dc34c8d13583316eb62323c5",
+          "artifact_sha256": "da6d74423dca37825dbc44b4cb97da377c3d7b5a09a9ec0415e117f8efc67ec6",
+          "component_sha256": "f9c9aab6700952929329f86bf0358d4d39b127a293c58e8ddc5876b72747f0bb",
+          "core_abi_sha256": "00417b222ba3b8972801db10241252270cf9df8f1dc2933a1eb7df8cc81b4088"
+        },
+        {
+          "id": "wasmc-data-core",
+          "action": "reuse",
+          "manifest_sha256": "9b118c4d3b4e77d928ac2bc03cb610a19f41ec7c86704b3025ce7f0ec989283d",
+          "artifact_sha256": "207c996f90b69bf7b5fd7c64e6989e3d95e9b46e31bb1704b0dde66f537b9498",
+          "component_sha256": "873d1e73a17d80a9d764389d8f079271aee32ece2d321220e1c338eb459a3d69",
+          "core_abi_sha256": "56d4714082eaf1956790ba586d7ad1586130f13720e5d21ed0db68eeacd8e645"
+        },
+        {
+          "id": "wasmc-data-expr",
+          "action": "reuse",
+          "manifest_sha256": "63aedf8a9358bbcb57698d03395dc44c996ba25617fc60d5caaff3f9ad1cdb30",
+          "artifact_sha256": "a2d56de0758e7cb036287308ca8c27664889d0cba7406fb3667aca728277330a",
+          "component_sha256": "7d252d237a83fd05ee25e5d6f5789ec0fd692ed918f2d3c7a72e9c38b8d9b562",
+          "core_abi_sha256": "cea9b857930bac463f8bba54514665d10ecf05bf02916420d0371ba1ee432fe4"
+        },
+        {
+          "id": "wasmc-data-interchange",
+          "action": "reuse",
+          "manifest_sha256": "f653cd7ed5d3056bec169f225ec0d561e6dd57a81ba1b68159581d34f150202a",
+          "artifact_sha256": "ad16eeb2f8167cb87f525d250b7cfb00f64bfc8fa796fcdd4aa20d2ea1c97762",
+          "component_sha256": "7e800058a847e58e35bc38f5b4693fd5024507d823574f811f9daf95a6828a8f",
+          "core_abi_sha256": "292f93c172a3d2062388fdf2c458117b8c7d3d848b85db1857405519c70c59e4"
+        },
+        {
+          "id": "wasmc-data-profile",
+          "action": "reuse",
+          "manifest_sha256": "5da9312546d00826665222e5cd5f0c3cb6ede92b1e523591e0826ee362af5ef9",
+          "artifact_sha256": "62c4003069a5f130dd9a8e1f937645add9185c5ac82751ac9fb521207b970508",
+          "component_sha256": "4665986eda949b0aa8f0ad8a19b52e1a3dd51283cb25b7e4e0f90c9a5072fae9",
+          "core_abi_sha256": "ad6913de5053a6f66d92c24d951b627a57e5ce87c0a18972bb6233c06f36d3fb"
+        },
+        {
+          "id": "wasmc-data-relational",
+          "action": "reuse",
+          "manifest_sha256": "ec3d4f4816616f3dfde36ab7e53a9f84bd79f6a334645c3e5d66b9aaf7b7e999",
+          "artifact_sha256": "3c86635ecb823a48ec845e415dfe49ce2dec78f2c686daf36aedb9481c61d0ca",
+          "component_sha256": "b65d4c7cbfb747ddc0fa98cbf96f3370fd4f96efa0ad1fd131996d6f7547c97c",
+          "core_abi_sha256": "90e656de69656eb955b786138c14eb4d60a5f1a1078eff7c8d4d5bb674d95d0f"
+        },
+        {
+          "id": "wasmc-http1",
+          "action": "reuse",
+          "manifest_sha256": "6c425a1163648bf6a9a5afe2bda1b4b04242c6e0dbe869fd45ab5e7ad1c0cf31",
+          "artifact_sha256": "e2872d169913d4202bca23c5681cef447912fd33abca0e5f9a30917ff53dd138",
+          "component_sha256": "8b1fd8c0b36d70ec630e73ef0c63c49452fec3039db89df836734f0c85da1d6e",
+          "core_abi_sha256": "8a5482a1f3ae707bd0973b0c5c407edc3cdc492683bb667c233b0520ed465985"
+        },
+        {
+          "id": "wasmc-json",
+          "action": "reuse",
+          "manifest_sha256": "42f7ac19998a03369cf33257c27573409f5e5d5868dd31cab4145b79e1b69af1",
+          "artifact_sha256": "90f64abae321f0699e5fbe7b9ff647a397cefa3c32e175dcc7793585505590ae",
+          "component_sha256": "678fe804f983d9bea7fbf4c36bb41c28606df1d16e292ff60b657a2c1fbf4ef3",
+          "core_abi_sha256": "373ccf4ffeb9943b0e0d29804cc6e335320cf283dfb530c61e959729d1abc92e"
+        }
+      ]
+    },
+    "core_forced_rebuild": {
+      "path": "/home/huawei/code/.cache/wasmc-evidence/lib-refresh-v2-closure-20261006/runs/refresh-MbiI9W/refresh-receipt.json",
+      "sha256": "a2986be98326857f0109a1b5da3febda854d8173551ebdbe233ed6f753e4c101",
+      "fingerprint": "8551472a4f19d7dbb7402ba625413b5d04ea47733ec4be42287878c7ec7de9c5",
+      "timing": {
+        "total_ms": 29919,
+        "package_build_ms": {
+          "wasmc-data-core": 29433
+        },
+        "cache_hits": 0,
+        "cache_misses": 1,
+        "persistent_workspace": true,
+        "persistent_cargo_target": true
+      },
+      "package_keys": {
+        "wasmc-data-core": "8e2ec6e60f98ccd6ff7a9ebdaa0b8309638d9d8a326336d386f6640de393044f"
+      },
+      "rows": [
+        {
+          "id": "wasmc-data-core",
+          "action": "build",
+          "manifest_sha256": "9b118c4d3b4e77d928ac2bc03cb610a19f41ec7c86704b3025ce7f0ec989283d",
+          "artifact_sha256": "207c996f90b69bf7b5fd7c64e6989e3d95e9b46e31bb1704b0dde66f537b9498",
+          "component_sha256": "873d1e73a17d80a9d764389d8f079271aee32ece2d321220e1c338eb459a3d69",
+          "core_abi_sha256": "56d4714082eaf1956790ba586d7ad1586130f13720e5d21ed0db68eeacd8e645"
+        }
+      ]
+    }
+  },
+  "notes": [
+    "Earlier legacy cold-vs-repeat pair used the same fingerprint; later delta and repeat use the final generator. Timings are observed wall-clock, not compiler-throughput claims.",
+    "Single delta changed only Data Core implementation; WIT-only dependent siblings retained exact roots.",
+    "Forced rebuild verified Data Core full sealed inventory. Whole-cohort independent clean-room Q3 determinism remains open.",
+    "Legacy libsrc and CI remain migration evidence only, not read by the new refresh. Physical retirement is pending route/test migration.",
+    "Full legacy maintainer integrity remains blocked by pre-existing AGENTS.md manifest mismatch."
+  ],
+  "remaining": [
+    "Q2 ordinary WAsmC/Rust Core/Component multi-engine execution",
+    "Remaining all18 profiles/libraries",
+    "Legacy authoring and CI retirement after evidence migration",
+    "Q3 candidate/legal/independent determinism/install/public release"
+  ],
+  "public_admission": false,
+  "running_jobs": []
+}

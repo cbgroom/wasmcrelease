@@ -1,5 +1,61 @@
 # Lib Refresh V2
 
+## Latest verified checkpoint: 2026-10-06T18:16:54Z
+
+Ten-library migration, persistent cache and generated-Core Q1 are implemented
+and verified. This supersedes older three-library progress below. Full evidence:
+`ten-library-checkpoint.json`, SHA256
+`ba52a76bc1356f963112328f8d7ec171f8354882b862607fe12d0a0f54ac41a0`.
+
+The executor never falls back to libsrc. Stable Cargo workspaces/targets are
+separate from immutable evidence runs. Sealed per-Lib inventory/hashes are
+checked before reuse. Dependency WIT contributes types, not sibling Rust delta.
+Per-package journals/stdout/stderr/exit status survive partial failure. A final
+successful receipt exists only after every requested package verifies.
+Eleven unit/integration cache tests pass; fixture-producer tests are not Lib Q1.
+
+Actual runs under
+`/home/huawei/code/.cache/wasmc-evidence/lib-refresh-v2-closure-20261006/runs/`:
+
+- `refresh-DHJ0Ks`: first cold ten-library run, 421985ms / 10 builds.
+- `refresh-X7GAsq`: same fingerprint, 2643ms / 10 verified hits.
+- `refresh-4tWRCR`: final-generator cold run before fix, 421792ms / 10 builds.
+- `refresh-ljQXO5`: real Data Core delta fix, 37605ms / 1 build + 9 hits.
+- `refresh-14rjK3`: fixed-source repeat, 2696ms / 10 hits.
+- `refresh-MbiI9W`: forced Data Core rebuild, 29919ms; entire regenerated Root
+  matched its sealed file inventory, not only its Wasm digest.
+
+Final ten-library fingerprint:
+`0fd2af19a112a16c305f6e6c78e06e9107b29d5cc61947e6d033be1ed4cf3904`.
+Producer commit `15418b27ef663dd4f456e2d46b077e2278c2c639`, binary SHA256
+`d8d01bbb434a7bb002ab20f8e9353381c0aee07da43bbb7829853fd7e7c18306`.
+Shared lock SHA256:
+`92d22baf31ce6d7c1d518bdec31ff3cc17d559b1507799cc9aaf872dc146aee1`.
+
+Q1 PASS: 50 cases / all 28 exported APIs / ten generated Core artifacts, Node
+v24.19.0. Six Data + CSV contribute 37 cases/20 APIs; JSON/Compression/HTTP1
+contribute 13 cases/8 APIs. Receipt `refresh-ljQXO5/q1-receipt.json`, SHA256
+`82f4a58a1cabbd5a87ef37af6dae0e69fecca5fb5c9aa3cb6fa6daf2c9c12218`.
+Tests include 10k integer profile input, IPC/Parquet round trips, null/64-bit
+edges, grouping/windows and persistent Data Core error recovery/steady memory.
+
+Real bug fixed: zero-column take returned invalid-layout because Arrow could
+not infer rows from an empty array vector. RecordBatchOptions now carries the
+selected row count. Zero-column selection, empty selection and zero rows pass.
+Pre-fix failed Q1 receipts are retained.
+
+Boundaries: Q1 is Node Core artifact behavior, not ordinary WAsmC -> CoreLib ->
+DataLib Q2. It does not close the previous managed-graph 10k capacity question.
+Resource/host/contract refresh profiles, all18, independent whole-cohort cold
+determinism, Q2 and Q3 release remain open. Legacy libsrc/CI still exists as
+migration evidence, not an execution fallback; retire both together after
+redirecting oracle and engine tests. Do not overwrite immutable released bytes.
+Full legacy maintainer integrity retains the proven base AGENTS.md mismatch.
+
+Next: generated-Root Q2/oracle/CI, coordinated retirement of old ten-library
+authoring, then remaining all18 profiles. No jobs running at checkpoint.
+Original compiler-worktree HTTP1/Interchange WIP remains untouched.
+
 ## Current activation: ten-library closure (2026-10-06T17:47:57Z)
 
 Human requested continued implementation with no legacy compatibility. Live

@@ -1,5 +1,19 @@
 # WAsmC release maintainer handoff
 
+## Current Lib Refresh V2 checkpoint — 2026-10-06
+
+Read `.agents/workstreams/WS-20261006-lib-refresh-v2/HANDOFF.md` latest section
+and its `ten-library-checkpoint.json`, not the older three-library progress.
+Ten libraries have complete generated dual Roots and Node Core Q1: 50 cases /
+28 exported APIs. Persistent cache, per-package evidence and failure handling
+are implemented. A real single-delta refresh rebuilt one library/reused nine
+in 37605ms; no-change reuse took 2696ms. Eleven cache/workflow tests passed.
+
+No legacy authoring fallback exists in the new executor. Old source/CI routes
+remain migration evidence pending coordinated retirement. Q2 ordinary WAsmC,
+SDK/multi-engine, remaining all18 profiles and Q3 release are not complete.
+No immutable released package was changed.
+
 ## 2026-10-04 Current compiler-only CDN convergence
 
 User explicitly requests one latest compiler version in repository HEAD for

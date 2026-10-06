@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { readFile, writeFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
+import { verifyRoot } from './lib-refresh-cache-v2.mjs';
 
 const sha = bytes => createHash('sha256').update(bytes).digest('hex');
 const encoder = new TextEncoder();
@@ -24,7 +25,10 @@ async function loadPackage(id) {
   const row = packages.get(id);
   assert.ok(row, 'refresh receipt missing ' + id);
   const packageRoot = row.package_root;
+  const verified = await verifyRoot(packageRoot, id, row.version);
+  assert.equal(verified.manifest_sha256, row.manifest_sha256, id + ': Q0 Root identity drift');
   const artifactBytes = await readFile(join(packageRoot, 'artifact.wasm'));
+  assert.equal(sha(artifactBytes), row.artifact_sha256, id + ': Q0 artifact identity drift');
   const module = new WebAssembly.Module(artifactBytes);
   assert.deepEqual(WebAssembly.Module.imports(module), [], id + ': Core artifact must be import-free');
   const sourceWit = await readFile(join(root, 'libspec', id, 'lib.wit'));
@@ -296,23 +300,26 @@ const q1 = {
   packages: [
     {
       id: 'wasmc-json',
+      apis: ['compact', 'select', 'validate'],
       artifact_sha256: sha(json.artifactBytes),
       cases: jsonCases.length,
       semantics: ['compact', 'validate-invalid', 'select', 'input-too-large'],
     },
     {
       id: 'wasmc-compression',
+      apis: ['compress', 'decompress'],
       artifact_sha256: sha(compression.artifactBytes),
       cases: 4,
       semantics: ['round-trip', 'invalid-stream', 'input-too-large'],
     },
     {
       id: 'wasmc-http1',
+      apis: ['parse-request', 'request-frame-length', 'serialize-response-head'],
       artifact_sha256: sha(http1.artifactBytes),
       cases: 5,
       semantics: ['parse', 'frame-length', 'serialize', 'invalid-status', 'input-too-large'],
     },
   ],
 };
-await writeFile(join(runRoot, 'q1-receipt.json'), JSON.stringify(q1, null, 2) + '\n');
+await writeFile(join(runRoot, 'value-q1-receipt.json'), JSON.stringify(q1, null, 2) + '\n');
 console.log(JSON.stringify(q1));
