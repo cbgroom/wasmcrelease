@@ -1,0 +1,88 @@
+{
+  "schema": "wasmc.lib-refresh-source/v2",
+  "id": "wasmc-system-process-prototype",
+  "version": "0.0.1",
+  "profile": "native",
+  "world": "system-process",
+  "description": "Lib-defined platform implementation: wasmc-system-process-prototype",
+  "dependencies": [],
+  "apis": [
+    {
+      "api": "capabilities",
+      "delta": "Actual platform implementation, not a simulated Wasm export.",
+      "ecosystem": "node-boundary",
+      "host_authorities": [
+        "wasmc:system-process@0.0.1"
+      ],
+      "implementation": "native",
+      "origin": "adapted",
+      "support": "target-qualified-only"
+    },
+    {
+      "api": "run",
+      "delta": "Actual platform implementation, not a simulated Wasm export.",
+      "ecosystem": "node-boundary",
+      "host_authorities": [
+        "wasmc:system-process@0.0.1"
+      ],
+      "implementation": "native",
+      "origin": "adapted",
+      "support": "target-qualified-only"
+    }
+  ],
+  "native": {
+    "kind": "node-boundary",
+    "target": "portable-node",
+    "files": [
+      "platform/native-adapter.mjs",
+      "platform/native-boundary.json"
+    ],
+    "entry": "platform/native-adapter.mjs",
+    "descriptor_template": "platform/native-boundary.json",
+    "binding_contract": "wasmc.lib-defined-host-boundary/v1",
+    "binding": {
+      "implements": "wasmc:system-process@0.0.1",
+      "boundary": "wasmc.lib-defined-host-boundary/v1",
+      "descriptor": "platform/native-boundary.json",
+      "artifact_format": "native-adapter",
+      "targets": [
+        {
+          "os": "linux",
+          "architecture": "x86_64",
+          "environment": "native",
+          "embedding": "node"
+        },
+        {
+          "os": "macos",
+          "architecture": "aarch64",
+          "environment": "native",
+          "embedding": "node"
+        },
+        {
+          "os": "windows",
+          "architecture": "x86_64",
+          "environment": "native",
+          "embedding": "node"
+        }
+      ]
+    }
+  },
+  "qualification": {
+    "script": "scripts/test-system-process-shell.mjs",
+    "hosts": [
+      "darwin",
+      "linux",
+      "win32"
+    ],
+    "requires": [],
+    "current_runtime_status": "not-requalified",
+    "remaining": [
+      "additional-desktop-architecture-parity-v2",
+      "android-app-uid-native-provider",
+      "wasm-lowering",
+      "admission-review"
+    ],
+    "source_check": "scripts/validate-lib-refresh-v2-source.mjs"
+  },
+  "examples": []
+}

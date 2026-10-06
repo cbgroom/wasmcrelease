@@ -1,0 +1,46 @@
+{
+  "schema": "wasmc.lib-refresh-source/v2",
+  "id": "wasmc-system-ios-app-contacts",
+  "version": "0.0.1",
+  "profile": "native",
+  "world": "system-app-contacts",
+  "description": "Lib-defined platform implementation: wasmc-system-ios-app-contacts",
+  "dependencies": [],
+  "apis": [
+    {
+      "api": "qualification-roundtrip",
+      "delta": "Actual platform implementation, not a simulated Wasm export.",
+      "ecosystem": "swift-embedded",
+      "host_authorities": [
+        "wasmc:system-app-contacts@0.0.1"
+      ],
+      "implementation": "native",
+      "origin": "adapted",
+      "support": "target-qualified-only"
+    }
+  ],
+  "native": {
+    "kind": "swift-embedded",
+    "target": "ios",
+    "files": [
+      "platform/ContactsProvider.swift"
+    ],
+    "entry": "platform/ContactsProvider.swift",
+    "descriptor_template": null
+  },
+  "qualification": {
+    "script": "scripts/test-ios-app-capability.mjs",
+    "hosts": [
+      "darwin"
+    ],
+    "requires": [],
+    "current_runtime_status": "not-requalified",
+    "remaining": [
+      "physical-device-qualification",
+      "component-lowering",
+      "admission-review"
+    ],
+    "source_check": "scripts/validate-lib-refresh-v2-source.mjs"
+  },
+  "examples": []
+}

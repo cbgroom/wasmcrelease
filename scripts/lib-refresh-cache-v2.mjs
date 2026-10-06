@@ -52,17 +52,49 @@ export async function inventory(root, prefix = '') {
   return result;
 }
 
-export async function verifyRoot(root, id, version) {
+export async function verifyRoot(root, id, version, profile = 'value') {
   const files = await inventory(root);
   const manifest = await json(join(root, 'lib.json'));
   assert.equal(manifest.id, id);
   assert.equal(manifest.version, version);
-  assert.equal(manifest.bindings?.rust_core?.schema, 'wasmc.lib-rust-canonical-core-sdk/v1');
+  if (profile === 'native') {
+    assert.equal(manifest.schema, 'wasmc.lib-native/v2');
+    assert.equal(manifest.profile, 'native');
+    assert.equal(manifest.native?.wasm_lowered, false);
+    assert.equal(manifest.lifecycle?.runtime_qualified, false);
+    assert.equal(manifest.lifecycle?.admitted, false);
+    assert.ok(Array.isArray(manifest.implementation) && manifest.implementation.length > 0);
+    const descriptors = [manifest.wit, ...manifest.implementation,
+      ...[manifest.artifact, manifest.native_boundary].filter(Boolean)];
+    for (const item of descriptors) {
+      inside(root, item.path);
+      assert.ok(files[item.path], id + ': native file missing ' + item.path);
+      assert.equal(files[item.path].sha256, item.sha256, id + ': native digest mismatch ' + item.path);
+      assert.equal(files[item.path].bytes, item.bytes, id + ': native size mismatch ' + item.path);
+    }
+    assert.deepEqual(Object.keys(files).sort(), ['lib.json', ...new Set(descriptors.map(d => d.path))].sort(),
+      id + ': undeclared native package files');
+    if (manifest.native_boundary) {
+      const descriptor = await json(join(root, manifest.native_boundary.path));
+      assert.equal(descriptor.adapter.path, manifest.artifact.path);
+      assert.equal(descriptor.adapter.sha256, manifest.artifact.sha256);
+    }
+    return { files, manifest, manifest_sha256: files['lib.json'].sha256 };
+  }
+  assert.ok(['value', 'resource'].includes(profile), 'unsupported verification profile');
+  if (profile === 'value') {
+    assert.equal(manifest.bindings?.rust_core?.schema, 'wasmc.lib-rust-canonical-core-sdk/v1');
+  }
   assert.equal(manifest.bindings?.rust_component?.schema, 'wasmc.lib-rust-component-sdk/v0');
-  for (const name of ['artifact.wasm', 'component.wasm', 'core-abi.json', 'lib.wit',
-    'bindings/rust-core/Cargo.toml', 'bindings/rust-core/src/lib.rs',
-    'bindings/rust-component/Cargo.toml', 'bindings/rust-component/src/lib.rs']) {
+  const allowed = profile === 'value' ? ['rust_component', 'rust_core'] : ['rust_component'];
+  assert.deepEqual(Object.keys(manifest.bindings).sort(), allowed,
+    id + ': complete profile must not advertise partial or unknown SDK views');
+  for (const name of ['artifact.wasm', 'component.wasm', 'core-abi.json', 'lib.wit']) {
     assert.ok(files[name], id + ': missing generated file ' + name);
+  }
+  for (const binding of Object.values(manifest.bindings)) {
+    assert.ok(binding.cargo_toml?.path && binding.source?.path, id + ': incomplete SDK descriptor');
+    assert.ok(files[binding.cargo_toml.path] && files[binding.source.path], id + ': incomplete SDK files');
   }
   for (const [key, name] of [['artifact', 'artifact.wasm'], ['component', 'component.wasm'], ['core_abi', 'core-abi.json']]) {
     assert.equal(files[name].sha256, manifest[key]?.sha256, id + ': descriptor/hash mismatch ' + name);
@@ -87,7 +119,7 @@ export async function verifyCache(entry, key, spec) {
   assert.equal(seal.schema, 'wasmc.lib-refresh-cache-entry/v2');
   assert.equal(seal.key, key);
   assert.equal(seal.id, spec.id);
-  const current = await verifyRoot(join(entry, 'package'), spec.id, spec.version);
+  const current = await verifyRoot(join(entry, 'package'), spec.id, spec.version, spec.profile ?? 'value');
   assert.deepEqual(current.files, seal.files, spec.id + ': CACHE_INTEGRITY inventory mismatch');
   return current;
 }

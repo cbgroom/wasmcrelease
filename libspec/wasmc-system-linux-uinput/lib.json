@@ -1,0 +1,72 @@
+{
+  "schema": "wasmc.lib-refresh-source/v2",
+  "id": "wasmc-system-linux-uinput",
+  "version": "0.0.1",
+  "profile": "native",
+  "world": "system-linux-uinput",
+  "description": "Lib-defined platform implementation: wasmc-system-linux-uinput",
+  "dependencies": [],
+  "apis": [
+    {
+      "api": "create-keyboard",
+      "delta": "Actual platform implementation, not a simulated Wasm export.",
+      "ecosystem": "c-boundary",
+      "host_authorities": [
+        "wasmc:system-linux-uinput@0.0.1"
+      ],
+      "implementation": "native",
+      "origin": "adapted",
+      "support": "target-qualified-only"
+    },
+    {
+      "api": "emit-key",
+      "delta": "Actual platform implementation, not a simulated Wasm export.",
+      "ecosystem": "c-boundary",
+      "host_authorities": [
+        "wasmc:system-linux-uinput@0.0.1"
+      ],
+      "implementation": "native",
+      "origin": "adapted",
+      "support": "target-qualified-only"
+    },
+    {
+      "api": "emit-keys",
+      "delta": "Actual platform implementation, not a simulated Wasm export.",
+      "ecosystem": "c-boundary",
+      "host_authorities": [
+        "wasmc:system-linux-uinput@0.0.1"
+      ],
+      "implementation": "native",
+      "origin": "adapted",
+      "support": "target-qualified-only"
+    }
+  ],
+  "native": {
+    "kind": "c-boundary",
+    "target": "linux",
+    "files": [
+      "platform/native-adapter.c",
+      "platform/native-boundary.template.json",
+      "platform/wfc-profile.json"
+    ],
+    "entry": "platform/native-adapter.c",
+    "descriptor_template": "platform/native-boundary.template.json"
+  },
+  "qualification": {
+    "script": "scripts/test-linux-uinput-lib-defined-boundary.mjs",
+    "hosts": [
+      "linux"
+    ],
+    "requires": [
+      "real-linux-uinput"
+    ],
+    "current_runtime_status": "not-requalified",
+    "remaining": [
+      "descriptor-schema-review",
+      "wasm-lowering",
+      "admission-review"
+    ],
+    "source_check": "scripts/validate-lib-refresh-v2-source.mjs"
+  },
+  "examples": []
+}

@@ -1,5 +1,47 @@
 # Lib Refresh V2
 
+## Current resumption: finish all-candidate cutover
+
+The human repeated the explicit no-compatibility instruction. Reconciliation
+found HEAD/upstream still 46619598c715dbb4822cc6392d7320e0ba2dcc3c (0/0), but
+264 changed/deleted/new paths from the interrupted all-candidate activation.
+No staged changes or active writer were present. Those changes are preserved;
+their exact hashes and tracked patch were saved under the external evidence
+directory lib-refresh-v2-all-candidates-recovery before any further edits.
+
+Live registry: 36 candidates, 16 Rust and 20 physical platform implementations.
+The preceding partial runs already built Rust resource Components and packaged
+native source/binaries, but have no complete all-candidate receipt. Current
+execution: obtain that receipt, move remaining tests/resolver/CI onto generated
+packages/current libspec, delete the old source tree and duplicate build paths,
+then commit functional batches. Native source packaging, native compilation,
+runtime tests and device qualification remain distinct facts. Do not fabricate
+Wasm SDK views for a native implementation or discard working platform code.
+
+Preflight rechecked exact hwlinux identity, Git history and dirty ownership,
+47+ prior checkpoint inputs, current Skill, all-candidate inventory, no active
+writer and 174 GiB free. Current 36-source validator and 11 workflow/cache tests
+pass. This activation supersedes stale three/ten-library next actions below.
+
+## Activation: all-candidate migration and legacy retirement (2026-10-06)
+
+Human explicitly requests removal of all legacy authoring/compatibility paths.
+Reconciled HEAD/upstream 46619598c715dbb4822cc6392d7320e0ba2dcc3c, clean,
+0/0, exact hwlinux/huawei, no active writer. The live denominator is 36 source
+directories, versus 28 entries in the incomplete old registry.
+
+Convert remaining HTTP client/router/authorization/TLS/telemetry Rust sources.
+Native C/Swift platform implementations move into the same libspec authority;
+do not replace working hardware integration with unsupported stubs. Retire old
+Cargo/candidate authoring and duplicate CI after moving behavioral test inputs.
+Native packaging is not Wasm lowering or device qualification. Git history/tags
+retain provenance; do not rewrite them or touch unrelated worktrees.
+
+Preflight: current authority, Skill, inventory, source ownership, upstream and
+disk checked. First action: extend generic complete-profile validation and
+migrate remaining Rust candidates, then native build/test cutover. Checkpoint
+each functional batch. Existing ten-library Q0/Q1 remains the baseline.
+
 ## Latest verified checkpoint: 2026-10-06T18:16:54Z
 
 Ten-library migration, persistent cache and generated-Core Q1 are implemented

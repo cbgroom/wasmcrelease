@@ -7,9 +7,17 @@ description: Maintain the future WAsmC Lib authoring model: WIT + Rust business 
 
 ## Decision
 
-`libspec/` is the future Lib source authority. Do not extend the historical
+`libspec/` is the sole current Lib source authority. Do not extend the historical
 per-Lib Cargo/wit-bindgen project model and do not add compatibility branches
-for it. Old `libsrc/` trees are migration input only.
+for it. Old `libsrc/` trees are migration input only until retirement completes;
+remove them rather than retain a second supported format.
+
+The all-candidate denominator is the union of actual source directories and
+registry entries, not the incomplete historical registry alone. Native C/Swift
+platform payloads are irreducible implementation assets, not compatibility.
+They use the same registry and digest-bound build/evidence lifecycle. Packaging
+native sources is not Wasm lowering or physical-device qualification; record
+those statuses separately and never replace real platform code with fake stubs.
 
 Each Lib keeps exactly the authored assets that cannot be regenerated:
 
@@ -30,24 +38,28 @@ toolchain policy and cache reuse are shared. The WAsmC producer is an explicit
 input (`--producer` or `WASMC_LIB_PRODUCER`) and must never be inferred from a
 mutable PATH alias.
 
-Profiles:
+Implemented profiles:
 
 - `value`: import-free synchronous values; canonical Core + Component dual view.
-- `resource`: resource/lifetime semantics; use the reviewed managed-resource profile.
-- `host`: explicit Host-backed WIT; authority is declared by WIT and package policy.
-- `contract`: WIT-only contract; no Rust implementation is generated until a
-  physical implementation is selected.
+- `resource`: actual Rust state/resource implementation; Core artifact and
+  Component SDK. A complete ordinary Core SDK is not advertised when absent.
+  Explicit Host imports (for example TLS entropy) remain WIT-declared.
+- `native`: real C, Node or Swift implementation plus exact target/binding.
+  Linux C can be compiled locally; foreign-target source packages are labeled
+  as source packages, never as compiled/device-qualified implementations.
 
 Do not special-case package names. Selection is WIT/profile driven.
 
-Only `value` is implemented in the current refresh executor. `resource`, `host`
-and `contract` are future profile designs, not working capabilities. Reject an
-unimplemented profile explicitly instead of falling back to a legacy build.
+The complete current candidate inventory is 36: 16 Rust implementations and 20
+native platform implementations. Authoring cutover applies to all of them.
+Reject unsupported profiles explicitly; no old build or source-directory
+fallback is allowed. Device/runtime qualification must be recorded separately.
 
 ## Persistent build cache and immutable evidence
 
 The current executor consists of `lib-refresh-v2.mjs`,
-`lib-refresh-runner-v2.mjs`, and `lib-refresh-cache-v2.mjs`. Their exact bytes
+`lib-refresh-runner-v2.mjs`, `lib-refresh-cache-v2.mjs` and
+`lib-refresh-native-v2.mjs`. Their exact bytes
 are input identity, not just an informal tool version.
 
 Use `--cache` for a persistent local builder store and `--out` for immutable
@@ -112,12 +124,15 @@ manifest, target directory or admitted package may authorize replacement bytes.
 
 Q0 refresh must prove:
 
-- source inventory is exactly the V2 four-file contract;
+- Rust source inventory is exactly the V2 four-file contract; native source
+  inventory is lib.json/lib.wit plus explicitly declared platform payloads;
 - shared policy/lock is used;
 - Cargo is locked/offline and target is wasm32-unknown-unknown;
 - producer emits a complete root;
 - value profile emits both `rust_core` and `rust_component` bindings plus
   `core-abi.json` and `component.wasm`;
+- resource profile lists only complete generated SDK views; native profile
+  binds every source/binary/descriptor hash and reports physical build scope;
 - generated package can be reopened from its manifest identity.
 
 Q1 adds Lib behavior/oracle/boundary tests. Q2 is cohort ordinary-App/SDK

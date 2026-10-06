@@ -2,6 +2,7 @@
 import assert from 'node:assert/strict';
 import { readFile, readdir, stat } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
+import { inventory as fileInventory } from './lib-refresh-cache-v2.mjs';
 
 const root = process.cwd();
 const registry = JSON.parse(await readFile(resolve(root, 'libspec/registry.json'), 'utf8'));
@@ -22,16 +23,24 @@ const forbiddenDelta = [
   'Store<',
   'Linker<',
 ];
-const allowedProfiles = new Set(['value', 'resource', 'host', 'contract']);
+const allowedProfiles = new Set(['value', 'resource', 'native']);
 
 for (const row of registry.libs) {
   assert.equal(row.source, 'libspec/' + row.id, row.id + ': source must use canonical libspec/<id>');
   const dir = resolve(root, row.source);
-  assert.deepEqual((await readdir(dir)).sort(), inventory, row.id + ': authored inventory must stay exactly four files');
   const spec = JSON.parse(await readFile(join(dir, 'lib.json'), 'utf8'));
   assert.equal(spec.schema, 'wasmc.lib-refresh-source/v2');
   assert.equal(spec.id, row.id);
   assert.ok(allowedProfiles.has(spec.profile), row.id + ': invalid profile');
+  if (spec.profile === 'native') {
+    assert.ok(['c-boundary', 'node-boundary', 'swift-embedded'].includes(spec.native?.kind));
+    assert.ok(spec.native.files.length && spec.native.files.includes(spec.native.entry));
+    assert.ok(spec.native.files.every(p => p.startsWith('platform/')));
+    assert.deepEqual(Object.keys(await fileInventory(dir)).sort(),
+      ['lib.json', 'lib.wit', ...spec.native.files].sort(), row.id + ': native inventory drift');
+    continue;
+  }
+  assert.deepEqual((await readdir(dir)).sort(), inventory, row.id + ': authored Rust inventory must stay exactly four files');
   assert.ok(Array.isArray(spec.apis) && spec.apis.length > 0, row.id + ': API evidence rows missing');
   for (const dependency of spec.dependencies ?? []) {
     assert.ok(policy.dependencies[dependency], row.id + ': dependency is outside shared policy: ' + dependency);
@@ -69,5 +78,5 @@ console.log(JSON.stringify({
   inventory,
   shared_lock: true,
   authoring_authority: 'libspec',
-  legacy_libsrc: 'migration-input-only',
+  legacy_fallback: false,
 }));

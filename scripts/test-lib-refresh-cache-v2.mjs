@@ -48,8 +48,8 @@ async function fixture(root) {
   const manifest = { id: 'unit', version: '1.0.0', artifact: descriptor('artifact.wasm'),
     component: descriptor('component.wasm'), core_abi: descriptor('core-abi.json'),
     bindings: {
-      rust_core: { schema: 'wasmc.lib-rust-canonical-core-sdk/v1', source: descriptor('bindings/rust-core/src/lib.rs') },
-      rust_component: { schema: 'wasmc.lib-rust-component-sdk/v0', source: descriptor('bindings/rust-component/src/lib.rs') },
+      rust_core: { schema: 'wasmc.lib-rust-canonical-core-sdk/v1', cargo_toml: descriptor('bindings/rust-core/Cargo.toml'), source: descriptor('bindings/rust-core/src/lib.rs') },
+      rust_component: { schema: 'wasmc.lib-rust-component-sdk/v0', cargo_toml: descriptor('bindings/rust-component/Cargo.toml'), source: descriptor('bindings/rust-component/src/lib.rs') },
     } };
   await atomicJson(join(packageRoot, 'lib.json'), manifest);
   const verified = await verifyRoot(packageRoot, 'unit', '1.0.0');

@@ -1,0 +1,168 @@
+{
+  "schema": "wasmc.lib-refresh-source/v2",
+  "id": "wasmc-system-ios-app-surface-control",
+  "version": "0.0.3",
+  "profile": "native",
+  "world": "system-app-surface-control",
+  "description": "Lib-defined platform implementation: wasmc-system-ios-app-surface-control",
+  "dependencies": [],
+  "apis": [
+    {
+      "api": "activate",
+      "delta": "Actual platform implementation, not a simulated Wasm export.",
+      "ecosystem": "swift-embedded",
+      "host_authorities": [
+        "wasmc:system-app-surface-control@0.0.3"
+      ],
+      "implementation": "native",
+      "origin": "adapted",
+      "support": "target-qualified-only"
+    },
+    {
+      "api": "activate-element",
+      "delta": "Actual platform implementation, not a simulated Wasm export.",
+      "ecosystem": "swift-embedded",
+      "host_authorities": [
+        "wasmc:system-app-surface-control@0.0.3"
+      ],
+      "implementation": "native",
+      "origin": "adapted",
+      "support": "target-qualified-only"
+    },
+    {
+      "api": "capture",
+      "delta": "Actual platform implementation, not a simulated Wasm export.",
+      "ecosystem": "swift-embedded",
+      "host_authorities": [
+        "wasmc:system-app-surface-control@0.0.3"
+      ],
+      "implementation": "native",
+      "origin": "adapted",
+      "support": "target-qualified-only"
+    },
+    {
+      "api": "handoff",
+      "delta": "Actual platform implementation, not a simulated Wasm export.",
+      "ecosystem": "swift-embedded",
+      "host_authorities": [
+        "wasmc:system-app-surface-control@0.0.3"
+      ],
+      "implementation": "native",
+      "origin": "adapted",
+      "support": "target-qualified-only"
+    },
+    {
+      "api": "input-text",
+      "delta": "Actual platform implementation, not a simulated Wasm export.",
+      "ecosystem": "swift-embedded",
+      "host_authorities": [
+        "wasmc:system-app-surface-control@0.0.3"
+      ],
+      "implementation": "native",
+      "origin": "adapted",
+      "support": "target-qualified-only"
+    },
+    {
+      "api": "list-surfaces",
+      "delta": "Actual platform implementation, not a simulated Wasm export.",
+      "ecosystem": "swift-embedded",
+      "host_authorities": [
+        "wasmc:system-app-surface-control@0.0.3"
+      ],
+      "implementation": "native",
+      "origin": "adapted",
+      "support": "target-qualified-only"
+    },
+    {
+      "api": "observe-semantics",
+      "delta": "Actual platform implementation, not a simulated Wasm export.",
+      "ecosystem": "swift-embedded",
+      "host_authorities": [
+        "wasmc:system-app-surface-control@0.0.3"
+      ],
+      "implementation": "native",
+      "origin": "adapted",
+      "support": "target-qualified-only"
+    },
+    {
+      "api": "request-presentation",
+      "delta": "Actual platform implementation, not a simulated Wasm export.",
+      "ecosystem": "swift-embedded",
+      "host_authorities": [
+        "wasmc:system-app-surface-control@0.0.3"
+      ],
+      "implementation": "native",
+      "origin": "adapted",
+      "support": "target-qualified-only"
+    },
+    {
+      "api": "scroll",
+      "delta": "Actual platform implementation, not a simulated Wasm export.",
+      "ecosystem": "swift-embedded",
+      "host_authorities": [
+        "wasmc:system-app-surface-control@0.0.3"
+      ],
+      "implementation": "native",
+      "origin": "adapted",
+      "support": "target-qualified-only"
+    }
+  ],
+  "native": {
+    "kind": "swift-embedded",
+    "target": "ios",
+    "files": [
+      "platform/ios/Sources/PiPSurfaceProvider.swift",
+      "platform/ios/Sources/SurfaceControlProvider.swift",
+      "platform/ios/Sources/WebViewSurfaceProvider.swift",
+      "platform/ios/binding.json"
+    ],
+    "entry": "platform/ios/Sources/PiPSurfaceProvider.swift",
+    "descriptor_template": null,
+    "binding_contract": "wasmc.lib-defined-host-boundary/v1",
+    "binding": {
+      "implements": "wasmc:system-app-surface-control@0.0.3",
+      "boundary": "wasmc.lib-defined-host-boundary/v1",
+      "descriptor": "platform/ios/binding.json",
+      "artifact_format": "embedded-source",
+      "targets": [
+        {
+          "os": "ios",
+          "architecture": "aarch64",
+          "environment": "simulator",
+          "embedding": "native"
+        }
+      ]
+    }
+  },
+  "qualification": {
+    "script": "scripts/test-ios-app-surface-control.mjs",
+    "hosts": [
+      "darwin"
+    ],
+    "requires": [],
+    "current_runtime_status": "not-requalified",
+    "remaining": [
+      "physical-device-picture-in-picture-pixel-visibility",
+      "iphone-picture-in-picture-support",
+      "wit-to-wasm-lowering",
+      "dynamic-component-loading",
+      "admission-review"
+    ],
+    "source_check": "scripts/validate-lib-refresh-v2-source.mjs"
+  },
+  "examples": [
+    "tests/lib-refresh/native/wasmc-system-ios-app-surface-control/examples/ios-app/App/AppDelegate.swift",
+    "tests/lib-refresh/native/wasmc-system-ios-app-surface-control/examples/ios-app/App/Info.plist",
+    "tests/lib-refresh/native/wasmc-system-ios-app-surface-control/examples/ios-app/App/SurfaceDemoViewController.swift",
+    "tests/lib-refresh/native/wasmc-system-ios-app-surface-control/examples/ios-app/App/TaskSurfaceCard.swift",
+    "tests/lib-refresh/native/wasmc-system-ios-app-surface-control/examples/ios-app/README.md",
+    "tests/lib-refresh/native/wasmc-system-ios-app-surface-control/examples/ios-app/UITests/SurfaceControlUITests.swift",
+    "tests/lib-refresh/native/wasmc-system-ios-app-surface-control/examples/ios-app/project.yml",
+    "tests/lib-refresh/native/wasmc-system-ios-app-surface-control/examples/ios-webview-agent/App/AppDelegate.swift",
+    "tests/lib-refresh/native/wasmc-system-ios-app-surface-control/examples/ios-webview-agent/App/Info.plist",
+    "tests/lib-refresh/native/wasmc-system-ios-app-surface-control/examples/ios-webview-agent/App/WebViewAgentViewController.swift",
+    "tests/lib-refresh/native/wasmc-system-ios-app-surface-control/examples/ios-webview-agent/README.md",
+    "tests/lib-refresh/native/wasmc-system-ios-app-surface-control/examples/ios-webview-agent/UITests/WebViewAgentUITests.swift",
+    "tests/lib-refresh/native/wasmc-system-ios-app-surface-control/examples/ios-webview-agent/project.yml"
+  ]
+}

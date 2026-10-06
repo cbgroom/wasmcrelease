@@ -19,14 +19,14 @@ const descriptor=x=>({path:x,sha256:hash(bytes[x])});
 for(const [name,value] of Object.entries(bytes)){const p=path.join(root,name);fs.mkdirSync(path.dirname(p),{recursive:true});fs.writeFileSync(p,value);}
 fs.writeFileSync(path.join(root,'lib.json'),JSON.stringify({id:spec.skill.name,version:spec.skill.version,
  artifact:descriptor('artifact.wasm'),component:descriptor('component.wasm'),core_abi:descriptor('core-abi.json'),
- bindings:{rust_core:{schema:'wasmc.lib-rust-canonical-core-sdk/v1'},rust_component:{schema:'wasmc.lib-rust-component-sdk/v0'}}}));
+ bindings:{rust_core:{schema:'wasmc.lib-rust-canonical-core-sdk/v1',cargo_toml:descriptor('bindings/rust-core/Cargo.toml'),source:descriptor('bindings/rust-core/src/lib.rs')},rust_component:{schema:'wasmc.lib-rust-component-sdk/v0',cargo_toml:descriptor('bindings/rust-component/Cargo.toml'),source:descriptor('bindings/rust-component/src/lib.rs')}}}));
 `;
 
 test('whole runner: miss -> hit -> one delta; failure retains journal; tamper rejects', { timeout: 120000 }, async () => {
   const root = await mkdtemp(join(tmpdir(), 'wasmc-refresh-workflow-test-'));
   try {
     await mkdir(join(root, 'scripts')); await mkdir(join(root, 'libspec'));
-    for (const file of ['lib-refresh-v2.mjs', 'lib-refresh-runner-v2.mjs', 'lib-refresh-cache-v2.mjs'])
+    for (const file of ['lib-refresh-v2.mjs', 'lib-refresh-runner-v2.mjs', 'lib-refresh-cache-v2.mjs', 'lib-refresh-native-v2.mjs'])
       await cp(resolve('scripts', file), join(root, 'scripts', file));
     const entries = ['test-one', 'test-two'].map(id => ({ id, source: 'libspec/' + id }));
     await writeFile(join(root, 'libspec/registry.json'), JSON.stringify({ schema: 'wasmc.lib-refresh-registry/v2', libs: entries }));
@@ -75,7 +75,7 @@ test('whole runner: miss -> hit -> one delta; failure retains journal; tamper re
     const receipt = JSON.parse(await readFile(join(recovered.run_root, 'refresh-receipt.json')));
     const corrupted = join(cache, 'objects', receipt.package_keys['test-one'], 'package/bindings/rust-core/src/lib.rs');
     await writeFile(corrupted, '// corrupt');
-    const tampered = run(['test-one']); assert.notEqual(tampered.status, 0); assert.match(tampered.stderr, /CACHE_INTEGRITY/);
+    const tampered = run(['test-one']); assert.notEqual(tampered.status, 0); assert.match(tampered.stderr, /CACHE_INTEGRITY|digest mismatch/);
     assert.ok(await readFile(join(cold.run_root, 'refresh-receipt.json')), 'old run must remain');
   } finally { await rm(root, { recursive: true, force: true }); }
 });

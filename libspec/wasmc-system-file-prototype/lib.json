@@ -1,0 +1,46 @@
+{
+  "schema": "wasmc.lib-refresh-source/v2",
+  "id": "wasmc-system-file-prototype",
+  "version": "0.0.1",
+  "profile": "native",
+  "world": "system-file-prototype",
+  "description": "Lib-defined platform implementation: wasmc-system-file-prototype",
+  "dependencies": [],
+  "apis": [
+    {
+      "api": "read-file",
+      "delta": "Actual platform implementation, not a simulated Wasm export.",
+      "ecosystem": "node-boundary",
+      "host_authorities": [
+        "wasmc:system-file-prototype@0.0.1"
+      ],
+      "implementation": "native",
+      "origin": "adapted",
+      "support": "target-qualified-only"
+    }
+  ],
+  "native": {
+    "kind": "node-boundary",
+    "target": "portable-node",
+    "files": [
+      "platform/native-adapter.mjs",
+      "platform/native-boundary.json"
+    ],
+    "entry": "platform/native-adapter.mjs",
+    "descriptor_template": "platform/native-boundary.json"
+  },
+  "qualification": {
+    "script": "scripts/test-lib-defined-boundary-runtime.mjs",
+    "hosts": [],
+    "requires": [],
+    "current_runtime_status": "not-requalified",
+    "remaining": [
+      "descriptor-schema-review",
+      "wasm-lowering",
+      "cross-platform-qualification",
+      "admission-review"
+    ],
+    "source_check": "scripts/validate-lib-refresh-v2-source.mjs"
+  },
+  "examples": []
+}
