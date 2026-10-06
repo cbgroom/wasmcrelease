@@ -1,0 +1,36 @@
+{
+  "schema": "wasmc.lib-refresh-source/v2",
+  "id": "wasmc-data-core",
+  "version": "0.0.1",
+  "profile": "value",
+  "crate": "wasmc_data_core_refresh_v2",
+  "artifact_name": "wasmc_data_core_refresh_v2",
+  "world": "data-core",
+  "description": "Portable WAsmC data batch semantics backed by one shared Arrow/Data adapter.",
+  "dependencies": [
+    "arrow-select"
+  ],
+  "shared_modules": [
+    "data-arrow"
+  ],
+  "apis": [
+    {
+      "api": "validate",
+      "delta": "Validate a neutral BatchSnapshot through the shared Arrow adapter.",
+      "ecosystem": "Arrow 60",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "take",
+      "delta": "Take rows by index after shared batch validation.",
+      "ecosystem": "Arrow Select 60",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    }
+  ]
+}

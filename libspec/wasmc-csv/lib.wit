@@ -1,0 +1,28 @@
+package wasmc:csv@0.0.1;
+
+interface parser {
+  use wasmc:data-core/types@0.0.1.{field, batch-snapshot};
+
+  record csv-options {
+    has-header: bool,
+    validate-header: bool,
+    delimiter: u8,
+    batch-rows: u32,
+  }
+
+  enum csv-error {
+    invalid-options,
+    invalid-data,
+    unsupported-type,
+  }
+
+  parse: func(
+    input: list<u8>,
+    fields: list<field>,
+    options: csv-options,
+  ) -> result<list<batch-snapshot>, csv-error>;
+}
+
+world csv {
+  export parser;
+}

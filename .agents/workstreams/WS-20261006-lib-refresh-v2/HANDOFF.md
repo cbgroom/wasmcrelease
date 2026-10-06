@@ -1,5 +1,34 @@
 # Lib Refresh V2
 
+## Current activation: ten-library closure (2026-10-06T17:47:57Z)
+
+Human requested continued implementation with no legacy compatibility. Live
+release worktree HEAD/upstream is 1010232452e02602d0c951609caeec4a377e77dc.
+Six Data libraries, CSV, shared data-arrow and the generator/policy/lock changes
+are owned workstream changes from the preceding session. Preserve and checkpoint
+them before further edits. No other release changes or staged files were found.
+The separate producer cache branch is clean and synced at
+15418b27ef663dd4f456e2d46b077e2278c2c639. Original compiler HTTP1/Interchange WIP
+is outside this workstream and must not be staged or reset.
+
+Current evidence: nine-library cohort A has Q0 PASS, CSV has separate Q0 PASS,
+and the new producer Data Core/Compute pair has Q0 PASS. Ten-library cohort B
+has no complete receipt and no live process; it is interrupted/unqualified, not
+running and not PASS. New Data/CSV Q1 and all Q2/Q3 remain open.
+
+Preflight: exact hwlinux hostname/user/HEAD/branch/upstream, staged/unstaged/
+untracked and recent commits checked; 175GiB free; no active writer. Read the
+current release-lib-refresh-v2 Skill. YXSGIT task index still describes the old
+JSON-only stage; revision-fenced checkpoint attempts encountered concurrent
+main updates. This activation and current human instructions supersede that
+older next-action text, not its historical evidence.
+
+First executable action: checkpoint migration, then separate a persistent Cargo
+workspace/cache from immutable evidence runs. Persist each package state and
+logs, reject cache tampering, and prove no-change reuse and single-delta rebuild.
+Add generated-artifact Data/CSV behavior tests before retiring old authoring
+projects. No immutable released package is changed by this work.
+
 ## 0. Status
 
 In progress, first value-profile cohort Q0/Q1 PASS, public admission=false, no candidate allocated, no immutable `libs/*` bytes changed.

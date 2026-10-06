@@ -36,6 +36,16 @@ for (const row of registry.libs) {
   for (const dependency of spec.dependencies ?? []) {
     assert.ok(policy.dependencies[dependency], row.id + ': dependency is outside shared policy: ' + dependency);
   }
+  for (const sharedName of spec.shared_modules ?? []) {
+    const shared = policy.shared_modules?.[sharedName];
+    assert.ok(shared, row.id + ': shared module is outside shared policy: ' + sharedName);
+    for (const dependency of shared.dependencies ?? []) {
+      assert.ok(policy.dependencies[dependency], row.id + ': shared dependency is outside policy: ' + dependency);
+    }
+  }
+  for (const dependencyId of spec.wit_dependencies ?? []) {
+    assert.ok(ids.includes(dependencyId), row.id + ': unknown WIT dependency: ' + dependencyId);
+  }
   const delta = await readFile(join(dir, 'delta.rs'), 'utf8');
   for (const token of forbiddenDelta) {
     assert.ok(!delta.includes(token), row.id + ': delta contains generated/runtime concern ' + token);
@@ -45,6 +55,13 @@ for (const row of registry.libs) {
   assert.ok(adapterLines <= 120, row.id + ': adapter is no longer thin (' + adapterLines + ' lines)');
   assert.ok(adapter.includes('crate::delta'), row.id + ': adapter must delegate into delta');
 }
+for (const [name, shared] of Object.entries(policy.shared_modules ?? {})) {
+  const source = await readFile(resolve(root, shared.source), 'utf8');
+  for (const token of forbiddenDelta) {
+    assert.ok(!source.includes(token), 'shared module ' + name + ' contains generated/runtime concern ' + token);
+  }
+}
+
 console.log(JSON.stringify({
   accepted: true,
   schema: 'wasmc.lib-refresh-source-validation/v2',
