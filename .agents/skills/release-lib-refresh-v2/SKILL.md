@@ -40,6 +40,47 @@ Profiles:
 
 Do not special-case package names. Selection is WIT/profile driven.
 
+Only `value` is implemented in the current refresh executor. `resource`, `host`
+and `contract` are future profile designs, not working capabilities. Reject an
+unimplemented profile explicitly instead of falling back to a legacy build.
+
+## Persistent build cache and immutable evidence
+
+The current executor consists of `lib-refresh-v2.mjs`,
+`lib-refresh-runner-v2.mjs`, and `lib-refresh-cache-v2.mjs`. Their exact bytes
+are input identity, not just an informal tool version.
+
+Use `--cache` for a persistent local builder store and `--out` for immutable
+per-invocation evidence. Never clear a run directory to start another run.
+The store has a stable generated workspace, stable Cargo target, and sealed
+per-Lib objects. Preserve generated-file mtimes when bytes are unchanged.
+The writer lock prevents concurrent mutation; inspect the recorded host/PID
+before recovering an abandoned lock. Never steal a live or unknown lock.
+
+Per-Lib keys bind producer bytes, Rust/Cargo identity, generator bytes, shared
+policy/lock, workspace dependency manifests, the Lib source, dependency WIT,
+and used shared modules. A WIT-only dependency does not link the dependency's
+Rust implementation: changing that implementation must not invalidate callers.
+Changing one delta must rebuild that Lib, not unrelated
+siblings. Changing shared policy/lock or shared modules deliberately invalidates
+the affected identity. Cargo may reuse matching dependency objects, but a cache
+hit never authorizes output without full file inventory/hash verification.
+
+Every invocation has a distinct `runs/refresh-*` directory. `progress.json`
+starts with `accepted=false` and records each package before work starts and
+after verification. Per-package stdout/stderr/exit receipts are durable even
+when later packages fail. A directory or partial package is not a successful
+refresh. Only a terminal successful `refresh-receipt.json` proves Q0.
+
+`--rebuild` bypasses artifact reuse while retaining the warm Cargo workspace;
+the regenerated whole Root must match the sealed input identity. Use a separate
+empty `--cache` for independent cold-cache/determinism experiments. Do not erase
+the working cache merely to run a measurement.
+
+Cache tests: `node --test scripts/test-lib-refresh-cache-v2.mjs
+scripts/test-lib-refresh-workflow-v2.mjs`. Test-producer fixtures prove orchestration
+only; real generated Root receipts are separately required for Lib qualification.
+
 ## Rust boundary
 
 Business delta should use ordinary Rust structs/enums/errors and ecosystem
@@ -98,6 +139,15 @@ Migrate by semantics, not file compatibility:
 The first value-profile reference cohort is JSON, Compression and HTTP1. Six
 Data Libs follow with a shared Arrow/Data adapter so WIT↔Arrow projection is
 maintained once rather than copied across six deltas.
+
+The current migrated source cohort additionally includes six Data libraries and
+CSV. Their shared neutral model/Arrow conversion is `libspec/shared/data-arrow.rs`.
+The generated-artifact Data Q1 test is `scripts/test-lib-refresh-data-v2.mjs
+--run-root <exact successful run>`; it exercises all 20 exported Data/CSV APIs.
+`scripts/qualify-lib-refresh-v2.mjs` combines it with JSON/Compression/HTTP1
+for the exact ten-library, 28-API cohort and records all Root/artifact identities.
+This is Node Core behavior evidence, not a claim that ordinary WAsmC callers
+or generated Component SDKs passed Q2.
 
 ## Stop conditions
 
