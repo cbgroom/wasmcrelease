@@ -1,5 +1,19 @@
 # Lib Refresh V2
 
+## Latest checkpoint: complete logical dual-engine Q2
+
+JSON now passes all three APIs/nine cases for eight rounds on both Wasmi2 and
+Wasmtime49.0.2 (72 calls/engine). Owned algorithms passes four APIs/six cases
+for eight rounds (48 calls/engine). Evidence: dual-engine-q2-checkpoint.json.
+Source implementation d4bc697f7971e3a06573e747b442f7a4e6d6e164 reuses the shared
+logical decoder, bounds and deterministic cleanup; the scalar-only harness and
+skipped-engine acceptance are removed. Ten independent evidence-checker tests
+reject false completeness. The exact generated Libs and WIT are unchanged.
+This is explicit-Root App Q2 with a fresh bounded Store per call, not persistent
+Store soak, catalog resolution, public release or all39 qualification.
+Registry remains39/42; Std, Search, Resident and prior device/integration gates
+remain open. Next stage: current-registry Search, then current Std/Resident.
+
 ## Latest checkpoint: generic Unit-result fix and complete JSON Root replay
 
 This supersedes the JSON-blocked checkpoint below. Read

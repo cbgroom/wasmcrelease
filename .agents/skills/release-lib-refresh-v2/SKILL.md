@@ -153,9 +153,14 @@ For exact generated-Root App tests use `test-generated-wasmc-q2.mjs` with an
 explicit digest-pinned local maintainer runner, CoreLib, merge tool and successful
 refresh receipt. The authored harness source digest is checked against its
 tooling receipt. It compiles ordinary .wasmc sources and never resolves an old
-package. Current public logical invocation executes Wasmi; independent Wasmtime
-scalar-result controls are marked per case. A complex result not executed on
-Wasmtime must remain `tested=false`, not inherit a different engine's PASS.
+package. Current caller qualification targets both engines for every case through
+one native logical invocation contract. Expose the existing reviewed engine
+implementation rather than copy snapshot decoding or cleanup into test glue.
+The v2 checker requires actual Wasmi and Wasmtime values equal to the independent
+case oracle, complete case/round counts and exact Root/bundle identity. It rejects
+v1/scalar-only or skipped-engine reports rather than retaining a fallback.
+Cached Engine/Module objects do not imply persistent Store reuse; report actual
+invocation lifetime and never relabel fresh-Store repetitions as a soak.
 This is an explicit Root-build qualification, not proof of automatic catalog
 resolution, persistent Store soak, all-library qualification or public admission.
 
@@ -196,8 +201,11 @@ logical enum labels against the pinned WIT, not Rust/source underscore spelling.
 Correct a wrong test oracle only from that independent contract and retain the
 failed attempt. A full-Root type-registration defect must be fixed generically;
 never prune unused public functions from the Root just to pass one caller.
-Separate Wasmi logical-result evidence from scalar Wasmtime parity and from
-complex-result Wasmtime tests that the selected tooling does not implement.
+Use `node --test scripts/test-lib-q2-evidence-v2.mjs` to reject missing engines,
+wrong logical values, omitted/substituted cases, false iteration counts and
+wrong source pins. Version-one or scalar-only historical receipts are evidence
+archives, not current Q2 acceptance. Pin the harness, execution binary and
+independent checker as well as the exact Root and authored cases.
 
 Stop rather than add a package-specific branch if:
 

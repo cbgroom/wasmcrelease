@@ -3,5 +3,9 @@
   {"export":"invalid","arguments":[],"expected":{"err":"invalid-json"}},
   {"export":"select","arguments":[],"expected":{"ok":[{"some":"2"},null]}},
   {"export":"validate","arguments":[],"expected":{"ok":null}},
-  {"export":"reject","arguments":[],"expected":{"err":"invalid-json"}}
+  {"export":"reject","arguments":[],"expected":{"err":"invalid-json"}},
+  {"export":"unicode","arguments":[],"expected":{"ok":"{\"msg\":\"你好🌍\"}"}},
+  {"export":"empty_selection","arguments":[],"expected":{"ok":[]}},
+  {"export":"null_value","arguments":[],"expected":{"ok":[{"some":"null"},null]}},
+  {"export":"bad_pointer","arguments":[],"expected":{"err":"invalid-pointer"}}
 ]

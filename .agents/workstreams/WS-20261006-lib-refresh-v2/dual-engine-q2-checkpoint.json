@@ -1,0 +1,308 @@
+{
+  "schema": "wasmc.dual-engine-logical-q2-checkpoint/v1",
+  "observed_at": "2026-10-07T08:31:13.748203+00:00",
+  "implementation_revision": "d4bc697f7971e3a06573e747b442f7a4e6d6e164",
+  "implementation_worktree": "/home/huawei/code/.worktrees/wasmc/WS-20261007-logical-wasmtime-closure-v1",
+  "implementation_branch": "work/WS-20261007-logical-wasmtime-closure-v1",
+  "release_baseline": "0bd8c77e90cd48cd7cf8087b8a36eb10844b2656",
+  "release_inputs": {
+    "scripts/test-generated-wasmc-q2.mjs": "6072045b033861979d96a089091ad8b3be7b810aea28cf85934db312596b6527",
+    "scripts/lib-q2-evidence-v2.mjs": "2b871013c7be049729ad9232e3cea3322ea30db557fa8d440a55b1a3b188eb8a",
+    "scripts/test-lib-q2-evidence-v2.mjs": "4ce07cd5a09d8f803e90fe8ed1a27cb1ca2ba632f4fa61e671f4888dcf52ac36",
+    "tests/lib-refresh/q2/native-value-runner.rs": "e7d841a73d891b42a2f6dcb4174789c4e3ffd41c82555a308301ece99a4eb4c8",
+    "tests/lib-refresh/q2/wasmc-json.wasmc": "9c0846de824fa8077872816ab1b1f4c53f8ed1b908bacec54c9bbfbfb9c8ebaa",
+    "tests/lib-refresh/q2/wasmc-json.cases.json": "4bc8bc309c147811d07a97d059ee6fff69e9d3d56bfef541d26830847428ef39",
+    "tests/lib-refresh/q2/wasmc-owned-algorithms.cases.json": "4f8ca820ec5a7827b7e666d8370cb26dcc8cd4f3e282a1c76f1dca874b00aa69",
+    ".agents/skills/release-lib-refresh-v2/SKILL.md": "54898c9d2a3f7ce9e0aa55d3d0ec3232005ebd27fd91635b7da321a0d8cc1c4f",
+    "scripts/validate-maintainer.sh": "90665dac60298ee498ddcff2a48f2a2b3161090355b3c48ab430f3a6cc83a2b6",
+    ".github/workflows/lib-refresh.yml": "28f7db4303e420b76abe3dee8da4d60173380b0a2d9c41ddd4d330a2a8b02da6"
+  },
+  "compiler_inputs": {
+    "src/lib_tool_rust_consumer_sdk/native_invoke.rs": "73cb5b7b6df280965ae74ae08c386fff7dc4683ec8c2e5571b852e6ff8b3d63e",
+    "src/core/codegen.rs": "37aa3e45d651d6639bc9d2b2b9b336c981a0a5bbefc10b28711110daa9aa1577",
+    "src/language/typed_resource.rs": "82cd37afd77a5db7b632abdf3db9ff95bd000be5c605a70f50c0b5c661147181",
+    "Cargo.lock": "64ba9e578232057d3f23615b46b6b747a96af987203aa4a1e0bdf3369b295a3f"
+  },
+  "receipts": {
+    "wasmc-json": {
+      "receipt_path": "/home/huawei/code/.cache/wasmc-evidence/lib-refresh-all-candidates-20261006/runs/refresh-OIOZEL/ordinary-q2-wasmc-json-6oIgkY/receipt.json",
+      "receipt_sha256": "bb00cd94a572df52d4740e55c2469a9fe4f0e6a09645931980c647852bce0aa9",
+      "report": {
+        "accepted": true,
+        "all_cases_dual_engine": true,
+        "artifact_sha256": "90f64abae321f0699e5fbe7b9ff647a397cefa3c32e175dcc7793585505590ae",
+        "build": {
+          "app_bytes": 93173,
+          "app_sha256": "1bebf8003f710d07752a3a4b7b88dd3d96c0fa9e230d4ff09fc6bf5b32983210",
+          "domain": 81,
+          "host_imports": 0,
+          "manifest_sha256": "46fdff01673c24452685ba0dda6db3bb216b87f3fedd96d5b0043c491e067c0c",
+          "package_id": "wasmc-json",
+          "package_version": "0.0.1",
+          "provider_bytes": 524418,
+          "provider_sha256": "617c15fbf82cf3ed0073909018adb51665d529654187b463d9704bf2072fec1b",
+          "schema": "wasmc.native-root-build-receipt/v1",
+          "source_sha256": "9c0846de824fa8077872816ab1b1f4c53f8ed1b908bacec54c9bbfbfb9c8ebaa"
+        },
+        "bundle_sha256": "0ea5e468445cf78ccc1baf23dd4a3ff258087ea2fe97a9391817bcc24f4373ed",
+        "calls_per_engine": 72,
+        "cases": [
+          {
+            "export": "compact",
+            "wasmi": {
+              "ok": "{\"a\":1}"
+            },
+            "wasmtime": {
+              "tested": true,
+              "value": {
+                "ok": "{\"a\":1}"
+              }
+            }
+          },
+          {
+            "export": "invalid",
+            "wasmi": {
+              "err": "invalid-json"
+            },
+            "wasmtime": {
+              "tested": true,
+              "value": {
+                "err": "invalid-json"
+              }
+            }
+          },
+          {
+            "export": "select",
+            "wasmi": {
+              "ok": [
+                {
+                  "some": "2"
+                },
+                null
+              ]
+            },
+            "wasmtime": {
+              "tested": true,
+              "value": {
+                "ok": [
+                  {
+                    "some": "2"
+                  },
+                  null
+                ]
+              }
+            }
+          },
+          {
+            "export": "validate",
+            "wasmi": {
+              "ok": null
+            },
+            "wasmtime": {
+              "tested": true,
+              "value": {
+                "ok": null
+              }
+            }
+          },
+          {
+            "export": "reject",
+            "wasmi": {
+              "err": "invalid-json"
+            },
+            "wasmtime": {
+              "tested": true,
+              "value": {
+                "err": "invalid-json"
+              }
+            }
+          },
+          {
+            "export": "unicode",
+            "wasmi": {
+              "ok": "{\"msg\":\"你好🌍\"}"
+            },
+            "wasmtime": {
+              "tested": true,
+              "value": {
+                "ok": "{\"msg\":\"你好🌍\"}"
+              }
+            }
+          },
+          {
+            "export": "empty_selection",
+            "wasmi": {
+              "ok": []
+            },
+            "wasmtime": {
+              "tested": true,
+              "value": {
+                "ok": []
+              }
+            }
+          },
+          {
+            "export": "null_value",
+            "wasmi": {
+              "ok": [
+                {
+                  "some": "null"
+                },
+                null
+              ]
+            },
+            "wasmtime": {
+              "tested": true,
+              "value": {
+                "ok": [
+                  {
+                    "some": "null"
+                  },
+                  null
+                ]
+              }
+            }
+          },
+          {
+            "export": "bad_pointer",
+            "wasmi": {
+              "err": "invalid-pointer"
+            },
+            "wasmtime": {
+              "tested": true,
+              "value": {
+                "err": "invalid-pointer"
+              }
+            }
+          }
+        ],
+        "fuel_diagnostic_only": true,
+        "invocation_scope": "new bounded Store per invocation; not persistent Store soak",
+        "ordinary_wasmc_source": true,
+        "public_admission": false,
+        "root_manifest_sha256": "46fdff01673c24452685ba0dda6db3bb216b87f3fedd96d5b0043c491e067c0c",
+        "rounds": 8,
+        "schema": "wasmc.generated-root-ordinary-caller-q2/v2",
+        "shared_logical_decoder": true,
+        "source_sha256": "9c0846de824fa8077872816ab1b1f4c53f8ed1b908bacec54c9bbfbfb9c8ebaa",
+        "unknown_export_rejected": true,
+        "wasmi_version": "2.0.0",
+        "wasmtime_version": "49.0.2",
+        "wit_sha256": "45ab5f4ede015f76f9d152a9255414fbe15c71054b07a0302b7f0b76672c4221",
+        "wrong_bundle_pin_rejected": true,
+        "wrong_root_pin_rejected": true
+      }
+    },
+    "wasmc-owned-algorithms": {
+      "receipt_path": "/home/huawei/code/.cache/wasmc-evidence/lib-refresh-identities-20261007/runs/refresh-sv9aty/ordinary-q2-wasmc-owned-algorithms-YqIjPS/receipt.json",
+      "receipt_sha256": "45c93b9e7e7b5ca6d3da3150d65a1c45cc429a7bb0024a46e6aa299f2eacbee8",
+      "report": {
+        "accepted": true,
+        "all_cases_dual_engine": true,
+        "artifact_sha256": "7d8f30df09e7ddc8063a7ce56284e23a97cefa32b2cb1a4310b0d0880add8a03",
+        "build": {
+          "app_bytes": 45052,
+          "app_sha256": "a2004102ff0f2223189482722e3e4f28e3992fa14cfb38c2c0e6d2709c8b01f2",
+          "domain": 81,
+          "host_imports": 0,
+          "manifest_sha256": "74708223931f50fbff608b1700c9896c78b04d2f02f0e3517193a0760f976c04",
+          "package_id": "wasmc-owned-algorithms",
+          "package_version": "0.1.1",
+          "provider_bytes": 524418,
+          "provider_sha256": "617c15fbf82cf3ed0073909018adb51665d529654187b463d9704bf2072fec1b",
+          "schema": "wasmc.native-root-build-receipt/v1",
+          "source_sha256": "d3ce6121cf6e844c16df34d95231896913fa3374193c521a89de367cbd17a81c"
+        },
+        "bundle_sha256": "342aac7636b8961f7b4afdfcedc0d89146323854e886095063b51f90d6a98aa3",
+        "calls_per_engine": 48,
+        "cases": [
+          {
+            "export": "unicode",
+            "wasmi": 2004,
+            "wasmtime": {
+              "tested": true,
+              "value": 2004
+            }
+          },
+          {
+            "export": "emoji",
+            "wasmi": 1004,
+            "wasmtime": {
+              "tested": true,
+              "value": 1004
+            }
+          },
+          {
+            "export": "sum",
+            "wasmi": "4294967294",
+            "wasmtime": {
+              "tested": true,
+              "value": "4294967294"
+            }
+          },
+          {
+            "export": "empty",
+            "wasmi": "0",
+            "wasmtime": {
+              "tested": true,
+              "value": "0"
+            }
+          },
+          {
+            "export": "trues",
+            "wasmi": 2,
+            "wasmtime": {
+              "tested": true,
+              "value": 2
+            }
+          },
+          {
+            "export": "score",
+            "wasmi": "3099",
+            "wasmtime": {
+              "tested": true,
+              "value": "3099"
+            }
+          }
+        ],
+        "fuel_diagnostic_only": true,
+        "invocation_scope": "new bounded Store per invocation; not persistent Store soak",
+        "ordinary_wasmc_source": true,
+        "public_admission": false,
+        "root_manifest_sha256": "74708223931f50fbff608b1700c9896c78b04d2f02f0e3517193a0760f976c04",
+        "rounds": 8,
+        "schema": "wasmc.generated-root-ordinary-caller-q2/v2",
+        "shared_logical_decoder": true,
+        "source_sha256": "d3ce6121cf6e844c16df34d95231896913fa3374193c521a89de367cbd17a81c",
+        "unknown_export_rejected": true,
+        "wasmi_version": "2.0.0",
+        "wasmtime_version": "49.0.2",
+        "wit_sha256": "bd7dbf7b54172e6b08a80fc22b75ed44cf7d590b0b8603dd50941874d5e6db94",
+        "wrong_bundle_pin_rejected": true,
+        "wrong_root_pin_rejected": true
+      }
+    }
+  },
+  "json_apis": 3,
+  "json_cases": 9,
+  "owned_apis": 4,
+  "owned_cases": 6,
+  "rounds": 8,
+  "calls_per_engine": 120,
+  "total_calls": 240,
+  "native_tests": 3,
+  "evidence_checker_tests": 10,
+  "wasmi_only_compile": true,
+  "current_sources": 39,
+  "required_identities": 42,
+  "pending": [
+    "wasmc-std",
+    "wasmc-lib-search",
+    "mcpgit-resident-memory"
+  ],
+  "persistent_store_soak": false,
+  "public_admission": false,
+  "main_integrated": false,
+  "l1_blocker": "inherited active-tree status10 remains separate; no audit suppression",
+  "running_jobs": []
+}

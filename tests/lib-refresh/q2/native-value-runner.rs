@@ -14,37 +14,6 @@ fn read_pin(path: &Path, expected: &str) -> Result<Vec<u8>, Box<dyn Error>> {
     if pin(&bytes) != expected { return Err(format!("identity mismatch: {}", path.display()).into()); }
     Ok(bytes)
 }
-fn wasmtime_scalar(bundle: &Path, name: &str, kind: &str) -> Result<Value, Box<dyn Error>> {
-    let manifest: Value = serde_json::from_slice(&fs::read(bundle.join("bundle.json"))?)?;
-    let provider = read_pin(&bundle.join("provider.wasm"), manifest["receipt"]["provider_sha256"].as_str().ok_or("provider pin")?)?;
-    let application = read_pin(&bundle.join("app.wasm"), manifest["receipt"]["app_sha256"].as_str().ok_or("App pin")?)?;
-    let mut config = wasmtime::Config::new(); config.consume_fuel(true);
-    let engine = wasmtime::Engine::new(&config)?;
-    let limits = wasmtime::StoreLimitsBuilder::new().memory_size(16*1024*1024).instances(3).memories(8).tables(8).build();
-    let mut store = wasmtime::Store::new(&engine, limits);store.limiter(|limits| limits);store.set_fuel(u64::MAX)?;
-    let heap = wasmtime::Instance::new(&mut store, &wasmtime::Module::new(&engine, provider)?, &[])?;
-    let module = wasmtime::Module::new(&engine, application)?;
-    let mut linker = wasmtime::Linker::new(&engine);
-    for import in module.imports() {
-        if !matches!(import.module(),"wasmc-snapshot-provider"|"wasmc:lib/wasmc.lib_managed_object_heap@4.3.0") {
-            return Err("unexpected App capability".into());
-        }
-        let export=heap.get_export(&mut store,import.name()).ok_or("missing CoreLib export")?;
-        linker.define(&mut store,import.module(),import.name(),export)?;
-    }
-    let app=linker.instantiate(&mut store,&module)?;
-    let value=match kind {
-        "s32"=>json!(app.get_typed_func::<(),i32>(&mut store,name)?.call(&mut store,())?),
-        "u32"=>json!(app.get_typed_func::<(),i32>(&mut store,name)?.call(&mut store,())? as u32),
-        "s64"=>json!(app.get_typed_func::<(),i64>(&mut store,name)?.call(&mut store,())?.to_string()),
-        "bool"=>{let n=app.get_typed_func::<(),i32>(&mut store,name)?.call(&mut store,())?;if !matches!(n,0|1){return Err("invalid bool".into())}json!(n==1)},
-        _=>return Err("unsupported scalar control".into()),
-    };
-    if app.get_typed_func::<(),i32>(&mut store,"__wasmc_value_pending_allocations")?.call(&mut store,())? != 0 {
-        return Err("pending transfer allocations after scalar App call".into());
-    }
-    Ok(value)
-}
 fn main() -> Result<(), Box<dyn Error>> {
     let args: Vec<_> = std::env::args().skip(1).collect();
     if args.len() != 2 { return Err("usage: runner <input-plan.json> <absent-output-dir>".into()); }
@@ -60,6 +29,8 @@ fn main() -> Result<(), Box<dyn Error>> {
     fs::create_dir(&output)?;
     let source = fs::read_to_string(input["source"].as_str().ok_or("source path")?)?;
     let cases: Vec<Value> = serde_json::from_slice(&fs::read(input["cases"].as_str().ok_or("cases path")?)?)?;
+    let rounds=input.get("rounds").map(|n|n.as_u64().ok_or("invalid rounds")).transpose()?.unwrap_or(1);
+    if cases.is_empty() || cases.len()>128 || !(1..=128).contains(&rounds) {return Err("case/round budget".into());}
     let execute = || -> Result<Value, Box<dyn Error>> {
         let mut bridge = generate_rust_wit_canonical_value_core_bridge(&artifact, &pin(&artifact), &wit, &pin(&wit), module)?;
         bridge.source.push_str("\n#[export_name=\"allocate\"] pub unsafe extern \"C\" fn __q2_allocate(n:u32,a:u32)->u32 { __wasmc_canonical_transfer::__wasmc_value_stage_allocate(n,a) }\n");
@@ -92,6 +63,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         if NativeLogicalApp::acquire(&bundle, &"0".repeat(64)).is_ok() { return Err("wrong bundle pin accepted".into()); }
         let app = NativeLogicalApp::acquire(&bundle, &bundle_pin)?;
         let mut observations = Vec::new();
+        for round in 0..rounds {
         for case in &cases {
             let name = case["export"].as_str().ok_or("case export")?;
             let arguments = case["arguments"].as_array().ok_or("case arguments")?;
@@ -100,21 +72,18 @@ fn main() -> Result<(), Box<dyn Error>> {
             if &wasmi != expected {
                 return Err(format!("{name}: expected {expected}; Wasmi {wasmi}").into());
             }
-            let wasmtime = match case["wasmtime_scalar"].as_str() {
-                Some(kind) => {
-                    if !arguments.is_empty() {return Err("scalar control expects no parameters".into());}
-                    let actual=wasmtime_scalar(&bundle,name,kind)?;
-                    if &actual != expected {return Err(format!("{name}: Wasmtime {actual}, expected {expected}").into());}
-                    json!({"tested":true,"value":actual})
-                }
-                None => json!({"tested":false,"reason":"complex logical Wasmtime invocation is not exported by the current maintainer API"}),
-            };
-            observations.push(json!({"export":name,"wasmi":wasmi,"wasmtime":wasmtime}));
+            let actual=app.invoke_with_wasmtime(name,arguments)?;
+            if &actual != expected {return Err(format!("{name} round {round}: Wasmtime {actual}, expected {expected}").into());}
+            if round==0 {observations.push(json!({"export":name,"wasmi":wasmi,"wasmtime":{"tested":true,"value":actual}}));}
         }
-        Ok(json!({"schema":"wasmc.generated-root-ordinary-caller-q2/v1","accepted":true,
+        }
+        if app.invoke("__invalid_q2_export",&[]).is_ok() || app.invoke_with_wasmtime("__invalid_q2_export",&[]).is_ok() {return Err("unknown export accepted".into());}
+        Ok(json!({"schema":"wasmc.generated-root-ordinary-caller-q2/v2","accepted":true,
             "root_manifest_sha256":root_pin,"artifact_sha256":pin(&artifact),"wit_sha256":pin(&wit),
             "source_sha256":pin(source.as_bytes()),"build":build,"bundle_sha256":bundle_pin,
             "cases":observations,"wasmi_version":"2.0.0","wasmtime_version":"49.0.2",
+            "rounds":rounds,"calls_per_engine":cases.len() as u64*rounds,"all_cases_dual_engine":true,
+            "unknown_export_rejected":true,"shared_logical_decoder":true,
             "wrong_root_pin_rejected":true,"wrong_bundle_pin_rejected":true,
             "ordinary_wasmc_source":true,"fuel_diagnostic_only":true,
             "invocation_scope":"new bounded Store per invocation; not persistent Store soak",
@@ -123,7 +92,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     match execute() {
         Ok(report) => { fs::write(output.join("receipt.json"),serde_json::to_vec_pretty(&report)?)?; println!("{report}"); Ok(()) }
         Err(error) => {
-            let report=json!({"schema":"wasmc.generated-root-ordinary-caller-q2/v1","accepted":false,
+            let report=json!({"schema":"wasmc.generated-root-ordinary-caller-q2/v2","accepted":false,
                 "root_manifest_sha256":root_pin,"source_sha256":pin(source.as_bytes()),"error":error.to_string(),"public_admission":false});
             fs::write(output.join("receipt.json"),serde_json::to_vec_pretty(&report)?)?;
             Err(error)

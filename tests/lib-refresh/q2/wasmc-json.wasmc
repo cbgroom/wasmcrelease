@@ -10,5 +10,19 @@ interface api {
   }
   validate:func()->result<unit,json_error> {return document::validate("{\"a\":2}");}
   reject:func()->result<unit,json_error> {return document::validate("bad");}
+  unicode:func()->result<string,json_error> {return document::compact(" { \"msg\" : \"你好🌍\" } ");}
+  empty_selection:func()->result<list<option<string>>,json_error> {
+    let mut pointers:list<string> = list.new();
+    return document::select("{}",pointers);
+  }
+  null_value:func()->result<list<option<string>>,json_error> {
+    let mut pointers:list<string> = list.new();
+    pointers.push("/a");pointers.push("/absent");
+    return document::select("{\"a\":null}",pointers);
+  }
+  bad_pointer:func()->result<list<option<string>>,json_error> {
+    let mut pointers:list<string> = list.new();pointers.push("not/a/pointer");
+    return document::select("{}",pointers);
+  }
 }
 world app {export api;}

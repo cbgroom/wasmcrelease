@@ -1,14 +1,10 @@
 # WAsmC release maintainer handoff
 
-Latest Lib work, 2026-10-07: registry=39 of the42 required identity union.
-See `.agents/workstreams/WS-20261006-lib-refresh-v2/unit-result-q2-checkpoint.json`
-and paired HANDOFF. Generic compiler repair a23204e0bf closes JSON full-Root
-registration: all3 APIs/5 ordinary App cases now pass Wasmi, including Unit
-success and errors. Same Root/WIT/artifact; no Lib rebuild or WIT pruning.
-Owned-algorithms all4 APIs/6 cases still pass both engines. Complex JSON
-Wasmtime, persistent Store soak, Std/Search/Resident and full-Q2/device/release
-remain open. Compiler L1 has an independently reproduced baseline audit block.
-No legacy fallback, whole39 qualification, main integration or release claimed.
+Latest Lib work: dual-engine logical Q2 now covers JSON3 APIs/9 cases and
+owned algorithms4 APIs/6 cases, eight rounds each, 240 total calls. Read
+`.agents/workstreams/WS-20261006-lib-refresh-v2/dual-engine-q2-checkpoint.json`
+and its HANDOFF. Registry remains39/42; Std/Search/Resident, main integration,
+full-cohort/device/soak and release gates remain pending. No compatibility path.
 
 ## Current all-candidate checkpoint — 2026-10-06T20:08:21.186197+00:00
 
