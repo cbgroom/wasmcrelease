@@ -167,6 +167,17 @@ engines. Reused cases are named, not claimed as newly executed calls. Preserve
 failed/partial execution directories, use an exclusive writer, and reject changed
 inputs instead of silently mixing campaigns. Outer command timeout is not an
 OutOfFuel or a business-API failure. Full acceptance still requires every case.
+Every resume writes a unique outcome receipt. A rejected input or a verified
+re-read must not overwrite the original successful or failed receipt. Preserve
+the existing progress document on admission rejection and prove this with a
+changed-index negative. A reused receipt is revalidation, not a new runtime call.
+
+Full-index Search evidence now exists for3 APIs/7 cases/4 rounds on each engine
+with the independently pinned shared-byte provider and matching Native projection.
+Read `search-storage-q2-checkpoint.json` for exact identities. JSON and Owned
+Algorithms are rerun as controls on that same provider. This closes the original
+full-index string-input trap, not maximum64-hit result capacity, arbitrary input
+sizes, local managed-return helpers, persistent Store soak, install or release.
 
 ## Dependency policy
 

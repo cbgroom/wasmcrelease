@@ -49,6 +49,9 @@ const resumePosition=args.indexOf('--resume-attempt');
 const attempt=resumePosition<0 ? await mkdtemp(join(run,'current-search-app-q2-')) : resolve(args[resumePosition+1]);
 assert.ok(attempt.startsWith(resolve(run)+'/current-search-app-q2-') && !attempt.slice(resolve(run).length+1).includes('/'));
 const releaseWriter=await acquireWriter(attempt);
+// A rejected or repeated resume must never replace the original receipt.
+const receiptPath=join(attempt,resumePosition<0?'receipt.json':
+  'resume-receipt-'+Date.now()+'-'+process.pid+'.json');
 const report={schema:'wasmc.current-lib-search-ordinary-q2/v2',accepted:false,
   cases_sha256:sha(Buffer.from(JSON.stringify(cases))),index_sha256:sha(Buffer.from(text)),tooling,
   root_manifest_sha256:selected.row.manifest_sha256,public_admission:false,results:[],
@@ -71,6 +74,9 @@ try{
       assert.equal(await readFile(sourcePath,'utf8'),source);
       assert.deepEqual(JSON.parse(await readFile(casesPath)),[cases[i]]);
       const savedPlan=JSON.parse(await readFile(planPath));
+      assert.deepEqual(savedPlan.root,{path:selected.root,manifest_sha256:selected.row.manifest_sha256});
+      assert.equal(savedPlan.source,sourcePath);
+      assert.equal(savedPlan.cases,casesPath);
       assert.deepEqual(savedPlan.provider,tooling.provider);
       assert.deepEqual(savedPlan.merge_tool,tooling.merge_tool);
       assert.equal(savedPlan.rounds,4);
@@ -98,5 +104,5 @@ try{
   report.calls_per_engine=report.results.reduce((n,r)=>n+r.calls_per_engine,0);
   report.accepted=true;
 }catch(e){report.error=e.stack;process.exitCode=1;}
-await atomicJson(join(attempt,'receipt.json'),report);console.log(JSON.stringify({...report,attempt}));
+await atomicJson(receiptPath,report);console.log(JSON.stringify({...report,attempt,receipt_path:receiptPath}));
 await releaseWriter();

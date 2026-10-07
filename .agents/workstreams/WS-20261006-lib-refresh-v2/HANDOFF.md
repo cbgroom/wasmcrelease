@@ -1,30 +1,39 @@
 # Lib Refresh V2
 
-## Current: full-index Search storage/projection closure
+## Current checkpoint: full-index Search Q2 PASS
 
-Current40/42 identities; Std and Resident pending. No compatibility authoring
-or historical-index fallback. The inherited six-file Search WIP is adopted:
-normalized v2 stores package metadata once and retains all193 identities.
-Search generated Core Q1 passes27 cases, including193 exact lookups.39 index,
-evidence, cache and workflow regressions pass. Read search-storage-stage.json.
+Read search-storage-q2-checkpoint.json for exact source, index, provider, runner
+and immutable receipt hashes.40/42 source identities; Std/Resident pending.
+Only libspec authoring and normalized v2 index; no old-format/source fallback.
 
-Two exact failures were isolated: provider string write129 rejects after1024
-bytes; after generic pool repair the old App projection still traps above128.
-Compiler branch work/WS-20261007-corelib-byte-storage-v1 at89c0c06324 fixes both
-with a shared2MiB byte pool and Native projection's existing2MiB envelope.
-18 provider tests,10 overlapping minimal tests and47 typed-resource tests pass.
-The complete35232-byte index now passes snapshot/lookup/missing dual-engine
-repetition. Remaining Search cases are still running; NO complete Q2 claim yet.
+Search complete Root:3 APIs/7 cases/4 rounds on each of Wasmi2.0.0/Wasmtime49.0.2,
+28 calls per engine. Full35232-byte index retains40 packages/153 APIs/193 logical
+entries.27 direct Core Q1 tests, including193 exact lookups, pass.
+JSON3 APIs/9 cases/8 rounds and Owned4 APIs/6 cases/8 rounds were rerun on the
+same provider:72/48 calls per engine. Total actual runtime calls296.
 
-Resume accepts only an explicit attempt with identical pinned inputs; all saved
-case results are independently rechecked and failed directories retained.
-Original failure and zero-test-filter logs are archived, not promoted to PASS.
-Distribution packing does not reduce actual linear memory. Provider is an exact
-experimental input, not a released-byte replacement. Main integration, persistent
-Store soak, maximum-page capacity, devices and Q3 remain separate open gates.
+Two generic gates were fixed: provider's1KiB storage and Native projection's
+128-byte fixture cap. Shared2MiB byte pool retains owner/type/borrow/UTF8/clone/
+clear/drop semantics. Native plans align with the existing2MiB snapshot budget;
+explicitly pinned smaller limits remain enforced. Experimental provider is an
+independent exact input, not a rewritten released artifact.18 full provider tests,
+10 overlapping minimal tests,47 compiler tests and39 release regressions pass.
+Raw/packed initial memory is identical at3670016 bytes. The38567-byte packed
+artifact is not the runtime footprint.170 current source inputs match Q0.
 
-Next: finish remaining full-index Search cases, seal exact receipts and push
-both repositories; update YXSGIT without overwriting shared-main dirty changes.
+The first batch's outer360s timeout retained3 complete cases. Resume rechecks
+all pinned inputs and independent per-engine values, preserves failed attempts
+and names reused cases. Final Search receipt includes those3 reused cases.
+Later all-case receipt revalidation executes0 new calls. Wrong-index resume
+rejects without changing the original receipt/progress; unique outcome files.
+
+No jobs. Source code and checkpoint are phase-pushed on owning work branches;
+read live HEAD/upstream before continuing. Compiler implementation89c0c06324,
+release implementation baseline549bd1a9044; later checkpoint commits preserve
+exact tested bytes. Next: current Std and Resident, then integration and broader
+acceptance. Persistent Store, maximum64-hit result pages, general local managed
+return helpers, automatic install, external devices, all-cohort determinism and
+public release are NOT completed here. Following sections are history only.
 
 ## Historical checkpoint: current-registry Search source and generated Core
 
