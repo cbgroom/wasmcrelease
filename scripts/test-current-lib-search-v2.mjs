@@ -2,12 +2,14 @@ import assert from 'node:assert/strict';
 import { readFile, mkdtemp } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 import { generatedLib, selectedRun } from './generated-lib-v2.mjs';
+import { indexEntries } from './lib-current-index-v2.mjs';
 import { atomicJson, sha } from './lib-refresh-cache-v2.mjs';
 import { CoreCaller, bool, u32, list, option, record, result, string } from './lib-refresh-test-abi-v2.mjs';
 
 const argv = process.argv.slice(2), run = selectedRun(argv), position = argv.indexOf('--index');
 assert.ok(position >= 0 && argv[position + 1], 'required --index <exact generated index>');
-const text = await readFile(resolve(argv[position + 1]), 'utf8'), index = JSON.parse(text);
+const text = await readFile(resolve(argv[position + 1]), 'utf8'), wire = JSON.parse(text);
+const index = {...wire, entries:indexEntries(wire)};
 const subject = await generatedLib('wasmc-lib-search', run);
 const module = new WebAssembly.Module(await readFile(subject.artifact));
 assert.deepEqual(WebAssembly.Module.imports(module), []);
@@ -57,8 +59,8 @@ check('shared-WIT-platforms-not-collapsed', () => {
 check('AND-case-insensitive-terms', () => assert.deepEqual(search(q('JSON COMPACT')), ok(index.entries.filter(e =>
   [e.identity,e.wit_route,e.description,e.profile,e.target].join(' ').toLowerCase().includes('json') &&
   [e.identity,e.wit_route,e.description,e.profile,e.target].join(' ').toLowerCase().includes('compact')).slice(0,64))));
-check('unicode-input', () => { const fixture = structuredClone(index);fixture.entries[0].description = '你好🌍';
-  assert.deepEqual(search(q('你好🌍'),0,1,JSON.stringify(fixture)),ok([fixture.entries[0]])); });
+check('unicode-input', () => { const fixture = structuredClone(wire);fixture.packages[0].description = '你好🌍';
+  assert.deepEqual(search(q('你好🌍'),0,1,JSON.stringify(fixture)),ok([indexEntries(fixture)[0]])); });
 check('large-offset', () => assert.deepEqual(search(q(),0xffffffff),ok([])));
 check('zero-limit', () => assert.deepEqual(search(q(),0,0),err('invalid-limit')));
 check('large-limit', () => assert.deepEqual(search(q(),0,65),err('invalid-limit')));
@@ -68,11 +70,19 @@ check('long-query', () => assert.deepEqual(search(q('x'.repeat(513))),err('inval
 check('too-many-tokens', () => assert.deepEqual(search(q('a '.repeat(17))),err('invalid-query')));
 check('invalid-JSON', () => assert.deepEqual(snapshot('no'),err('invalid-index')));
 check('oversized-index', () => assert.deepEqual(snapshot(' '.repeat(2*1024*1024+1)),err('index-too-large')));
-check('wrong-schema', () => assert.deepEqual(snapshot(JSON.stringify({...index,schema:'LSI1'})),err('invalid-index')));
-check('duplicate-identity', () => assert.deepEqual(snapshot(JSON.stringify({...index,entries:[index.entries[0],index.entries[0]]})),err('invalid-index')));
-check('API-without-parent', () => assert.deepEqual(snapshot(JSON.stringify({...index,entries:[index.entries.find(e=>e.kind==='api')]})),err('invalid-index')));
-check('wrong-source-path', () => {const f=structuredClone(index);f.entries[0].source_path='../secret';assert.deepEqual(snapshot(JSON.stringify(f)),err('invalid-index'));});
-check('undeclared-extra-field', () => assert.deepEqual(snapshot(JSON.stringify({...index,admitted:true})),err('invalid-index')));
+check('wrong-schema', () => assert.deepEqual(snapshot(JSON.stringify({...wire,schema:'LSI1'})),err('invalid-index')));
+check('duplicate-identity', () => assert.deepEqual(snapshot(JSON.stringify({...wire,packages:[wire.packages[0],wire.packages[0]]})),err('invalid-index')));
+check('invalid-API-route', () => {const f=structuredClone(wire);f.packages[0].apis[0].route='../x#call';assert.deepEqual(snapshot(JSON.stringify(f)),err('invalid-index'));});
+check('wrong-source-path', () => {const f=structuredClone(wire);f.packages[0].source_path='../secret';assert.deepEqual(snapshot(JSON.stringify(f)),err('invalid-index'));});
+check('undeclared-extra-field', () => assert.deepEqual(snapshot(JSON.stringify({...wire,admitted:true})),err('invalid-index')));
+check('no-flat-format-fallback', () => assert.deepEqual(snapshot(JSON.stringify({...index,schema:'wasmc.current-lib-search-index/v1'})),err('invalid-index')));
+check('expanded-index-budget-before-cloning', () => {
+  const fixture=structuredClone(wire),p=fixture.packages[0];
+  p.delivery={manifest_sha256:'a'.repeat(64),receipt_sha256:'b'.repeat(64),artifact_kind:'wasm-core-component',
+    artifact_path:'artifact.wasm',artifact_sha256:'c'.repeat(64),component_sha256:'d'.repeat(64)};
+  p.apis=Array.from({length:4000},(_,i)=>({route:'api#op-'+String(i).padStart(4,'0'),description:'budget'}));
+  fixture.packages=[p];assert.deepEqual(snapshot(JSON.stringify(fixture)),err('index-too-large'));
+});
 check('persistent-direct-Lib-error-recovery', () => {
   for(let i=0;i<16;i++){assert.equal(snapshot('bad').tag,'err');assert.equal(snapshot(text).tag,'ok');}
   const bytes = caller.exports.memory.buffer.byteLength;

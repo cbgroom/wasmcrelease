@@ -8,6 +8,17 @@ import { generatedLib } from './generated-lib-v2.mjs';
 import { inventory, sha, digest } from './lib-refresh-cache-v2.mjs';
 
 const order = (a, b) => a < b ? -1 : a > b ? 1 : 0;
+// Materialize the logical discovery view for independent test oracles; the wire
+// index stores shared metadata once per implementation, not once per API.
+export function indexEntries(index) {
+  assert.equal(index.schema, 'wasmc.current-lib-search-index/v2');
+  return index.packages.flatMap(p => {
+    const { apis, ...base } = p;
+    const identity = p.package_id + '@' + p.version;
+    return [{...base,identity,kind:'package'}, ...apis.map(api => ({...base,
+      identity:identity+'/'+api.route,kind:'api',wit_route:p.wit_route+'/'+api.route,description:api.description}))];
+  });
+}
 export async function currentIndex(repo, bindings = []) {
   repo = resolve(repo);
   const registryBytes = await readFile(join(repo, 'libspec/registry.json'));
@@ -108,8 +119,14 @@ export async function currentIndex(repo, bindings = []) {
   assert.equal(new Set(entries.map(e => e.identity)).size, entries.length, 'duplicate search identity');
   assert.ok(entries.length <= 4096, 'index entry budget');
   const input = Object.fromEntries(Object.entries(source).sort(([a], [b]) => order(a, b)));
-  const index = { schema: 'wasmc.current-lib-search-index/v1', registry_sha256: sha(registryBytes),
-    source_fingerprint: digest(input), entries };
+  const packages = entries.filter(e => e.kind === 'package').map(e => {
+    const { identity, kind, ...base } = e;
+    return {...base, apis: entries.filter(a => a.kind === 'api' && a.package_id === e.package_id)
+      .map(a => ({route:a.wit_route.slice(e.wit_route.length+1),description:a.description}))};
+  });
+  const index = { schema: 'wasmc.current-lib-search-index/v2', registry_sha256: sha(registryBytes),
+    source_fingerprint: digest(input), packages };
+  assert.deepEqual(indexEntries(index), entries, 'normalization lost discovery data');
   const bytes = Buffer.from(JSON.stringify(index) + '\n');
   assert.ok(bytes.length <= 2 * 1024 * 1024, 'index byte budget');
   for (const [path, expected] of Object.entries(input)) assert.equal(sha(await readFile(join(repo, path))), expected, 'source changed during index generation: ' + path);

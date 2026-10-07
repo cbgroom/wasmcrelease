@@ -1,6 +1,32 @@
 # Lib Refresh V2
 
-## Latest checkpoint: current-registry Search source and generated Core
+## Current: full-index Search storage/projection closure
+
+Current40/42 identities; Std and Resident pending. No compatibility authoring
+or historical-index fallback. The inherited six-file Search WIP is adopted:
+normalized v2 stores package metadata once and retains all193 identities.
+Search generated Core Q1 passes27 cases, including193 exact lookups.39 index,
+evidence, cache and workflow regressions pass. Read search-storage-stage.json.
+
+Two exact failures were isolated: provider string write129 rejects after1024
+bytes; after generic pool repair the old App projection still traps above128.
+Compiler branch work/WS-20261007-corelib-byte-storage-v1 at89c0c06324 fixes both
+with a shared2MiB byte pool and Native projection's existing2MiB envelope.
+18 provider tests,10 overlapping minimal tests and47 typed-resource tests pass.
+The complete35232-byte index now passes snapshot/lookup/missing dual-engine
+repetition. Remaining Search cases are still running; NO complete Q2 claim yet.
+
+Resume accepts only an explicit attempt with identical pinned inputs; all saved
+case results are independently rechecked and failed directories retained.
+Original failure and zero-test-filter logs are archived, not promoted to PASS.
+Distribution packing does not reduce actual linear memory. Provider is an exact
+experimental input, not a released-byte replacement. Main integration, persistent
+Store soak, maximum-page capacity, devices and Q3 remain separate open gates.
+
+Next: finish remaining full-index Search cases, seal exact receipts and push
+both repositories; update YXSGIT without overwriting shared-main dirty changes.
+
+## Historical checkpoint: current-registry Search source and generated Core
 
 Search0.5.0 now uses explicit index data, never a frozen historical catalog.
 Current source count40/42; Std/Resident remain pending. Deterministic generation
@@ -15,7 +41,7 @@ call rule. Independent full-index/full-Root Apps are being replayed per case;
 this separate compiler limit is retained, and Q2 is not yet claimed PASS.
 No installation, full-cohort, integration or public release claim.
 
-## Latest checkpoint: complete logical dual-engine Q2
+## Historical checkpoint: complete logical dual-engine Q2
 
 JSON now passes all three APIs/nine cases for eight rounds on both Wasmi2 and
 Wasmtime49.0.2 (72 calls/engine). Owned algorithms passes four APIs/six cases
@@ -29,7 +55,7 @@ Store soak, catalog resolution, public release or all39 qualification.
 Registry remains39/42; Std, Search, Resident and prior device/integration gates
 remain open. Next stage: current-registry Search, then current Std/Resident.
 
-## Latest checkpoint: generic Unit-result fix and complete JSON Root replay
+## Historical checkpoint: generic Unit-result fix and complete JSON Root replay
 
 This supersedes the JSON-blocked checkpoint below. Read
 unit-result-q2-checkpoint.json for exact source, artifact, oracle and receipt
@@ -59,7 +85,7 @@ inherited active-tree/L1 metadata rejection, continue those three identities,
 then complete full generated-Root Q2/device/determinism/release gates.
 No main integration, all-Q2, new compiler/Lib release or compatibility claim.
 
-## Latest verified checkpoint: historical identities and ordinary App Q2
+## Historical verified checkpoint: historical identities and ordinary App Q2
 
 2026-10-07T06:09:10Z. Read identity-closure-checkpoint.json, SHA256
 0119ca312878b55169555b10cd7b6a73fd8548fb33d43b45e11767e792d9e0aa.
@@ -192,7 +218,7 @@ disk checked. First action: extend generic complete-profile validation and
 migrate remaining Rust candidates, then native build/test cutover. Checkpoint
 each functional batch. Existing ten-library Q0/Q1 remains the baseline.
 
-## Latest verified checkpoint: 2026-10-06T18:16:54Z
+## Historical verified checkpoint: 2026-10-06T18:16:54Z
 
 Ten-library migration, persistent cache and generated-Core Q1 are implemented
 and verified. This supersedes older three-library progress below. Full evidence:

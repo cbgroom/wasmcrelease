@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { mkdtemp, mkdir, writeFile, readFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { currentIndex } from './lib-current-index-v2.mjs';
+import { currentIndex, indexEntries } from './lib-current-index-v2.mjs';
 import { sha } from './lib-refresh-cache-v2.mjs';
 
 async function fixture(t) {
@@ -38,11 +38,12 @@ async function boundFixture(t) {
   return {...f,run,pkg,receipt,bindings:[{run_root:run,receipt_sha256:sha(rbytes)}]};
 }
 test('source-only index is deterministic and preserves same-WIT implementations',async t=>{const f=await fixture(t);const a=await currentIndex(f.root),b=await currentIndex(f.root);assert.deepEqual(a.bytes,b.bytes);assert.equal(a.summary.packages,2);assert.equal(a.summary.apis,2);assert.equal(a.summary.bound_packages,0);});
-test('registry order does not alter entry order',async t=>{const f=await fixture(t);const a=await currentIndex(f.root);f.registry.libs.reverse();await writeFile(join(f.root,'libspec/registry.json'),JSON.stringify(f.registry));assert.deepEqual((await currentIndex(f.root)).index.entries,a.index.entries);});
+test('registry order does not alter entry order',async t=>{const f=await fixture(t);const a=await currentIndex(f.root);f.registry.libs.reverse();await writeFile(join(f.root,'libspec/registry.json'),JSON.stringify(f.registry));assert.deepEqual(indexEntries((await currentIndex(f.root)).index),indexEntries(a.index));});
 test('new current WIT changes the index, not a frozen catalog',async t=>{const f=await fixture(t);const before=await currentIndex(f.root);const p=join(f.root,'libspec/ios-display/lib.wit');await writeFile(p,(await readFile(p,'utf8')).replace('read:','extra: func()->u32; read:'));const after=await currentIndex(f.root);assert.equal(after.summary.apis,3);assert.notEqual(after.summary.index_sha256,before.summary.index_sha256);});
 test('duplicate IDs reject',async t=>{const f=await fixture(t);f.registry.libs.push(f.registry.libs[0]);await writeFile(join(f.root,'libspec/registry.json'),JSON.stringify(f.registry));await assert.rejects(()=>currentIndex(f.root),/duplicate/);});
+test('normalized wire does not duplicate package metadata per API',async t=>{const f=await fixture(t);const out=await currentIndex(f.root);assert.equal(out.index.entries,undefined);assert.equal(out.index.packages.length,2);assert.equal(indexEntries(out.index).length,4);assert.equal(indexEntries(out.index)[1].wit_route,'example:display@0.0.1/screen#read');});
 test('inline export rejects rather than silently loses API',async t=>{const f=await fixture(t);await writeFile(join(f.root,'libspec/ios-display/lib.wit'),'package example:display@0.0.1;world app {export run:func();}');await assert.rejects(()=>currentIndex(f.root),/inline/);});
-test('bound native source stays source-only, never a WASM artifact',async t=>{const f=await boundFixture(t);const out=await currentIndex(f.root,f.bindings);assert.equal(out.summary.bound_packages,1);assert.equal(out.summary.native_source_packages,1);const e=out.index.entries.find(e=>e.package_id==='ios-display');assert.equal(e.delivery.artifact_kind,'native-source');assert.equal(e.delivery.artifact_sha256,null);});
+test('bound native source stays source-only, never a WASM artifact',async t=>{const f=await boundFixture(t);const out=await currentIndex(f.root,f.bindings);assert.equal(out.summary.bound_packages,1);assert.equal(out.summary.native_source_packages,1);const e=indexEntries(out.index).find(e=>e.package_id==='ios-display');assert.equal(e.delivery.artifact_kind,'native-source');assert.equal(e.delivery.artifact_sha256,null);});
 test('wrong independent receipt pin rejects',async t=>{const f=await boundFixture(t);await assert.rejects(()=>currentIndex(f.root,[{...f.bindings[0],receipt_sha256:'0'.repeat(64)}]),/pin/);});
 test('mutated package rejects even when source is unchanged',async t=>{const f=await boundFixture(t);await writeFile(join(f.pkg,'platform.swift'),'modified');await assert.rejects(()=>currentIndex(f.root,f.bindings),/digest/);});
 test('stale source rejects even if old package remains valid',async t=>{const f=await boundFixture(t);await writeFile(join(f.root,'libspec/ios-display/platform.swift'),'new source');await assert.rejects(()=>currentIndex(f.root,f.bindings),/stale source/);});

@@ -1,5 +1,18 @@
 import assert from 'node:assert/strict';
 
+// Reuse only an explicitly selected attempt with the identical test workload
+// and exact executable/provider inputs. Individual results still go through
+// checkQ2Evidence, not merely this envelope check.
+export function checkQ2Resume(previous, expected) {
+  for (const key of ['schema', 'cases_sha256', 'index_sha256', 'root_manifest_sha256', 'tooling']) {
+    assert.notEqual(expected[key], undefined, 'resume expected ' + key);
+    assert.deepEqual(previous[key], expected[key], 'resume identity ' + key);
+  }
+  assert.equal(previous.public_admission, false);
+  assert.ok(Array.isArray(previous.results));
+  return true;
+}
+
 // Independent acceptance check: an executable's own accepted flag is not proof.
 export function checkQ2Evidence(report, cases, pins, rounds) {
   assert.equal(report.schema, 'wasmc.generated-root-ordinary-caller-q2/v2');

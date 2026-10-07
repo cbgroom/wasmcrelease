@@ -119,6 +119,11 @@ If substantial algorithm logic appears in the adapter, move it to `delta.rs`.
 indexes are generated data, not Rust source or frozen historical catalogs.
 Changing registry contents must not require rebuilding the Search binary.
 This separates Search's own artifact identity from the index that discovers it.
+The sole current wire format is `wasmc.current-lib-search-index/v2`: package
+metadata appears once with a sorted API subtable. Preserve the complete logical
+hit schema and all identities while removing repeated wire metadata. Reject the
+old flat format rather than keep a compatibility decoder. Bound both encoded
+bytes and expanded logical bytes/counts before cloning repeated metadata.
 
 Use `node scripts/lib-current-index-v2.mjs --out <absent-directory>` for current
 source discovery. Each `--bind <exact-run-root> <expected-receipt-sha256>` adds
@@ -140,6 +145,28 @@ separate identity-completeness gate, not fictional search implementations.
 Core artifact. `test-current-search-wasmc-q2.mjs` generates test-only ordinary
 Apps from the full current index and requires both engines through the shared
 v2 runner/checker. Test index literals do not enter the Search implementation.
+Keep a real whole-index workload, not a hand-selected subset. A large App build
+timeout, an execution trap, and the compiler's current scalar-only local-call
+restriction are different evidence. Do not hide them by dropping index rows or
+public WIT functions. Independent test Apps per case preserve the complete
+Root/index while avoiding repeated large literals in a single compilation;
+they do not prove general local managed-return support or arbitrary input sizes.
+
+For a trap in an ordinary App, trace the first rejecting primitive before
+attributing cost or failure to the Lib. Search's full index exposed TWO distinct
+limits: the selected provider's1KiB string storage and the generated Native
+projection's128-byte fixture cap. Fix the generic storage/plan layer, preserve
+the unchanged full Root/index, and pin the experimental provider independently.
+Do not enlarge every object slot. Shared byte storage keeps record layout small;
+measure actual linear memory separately from zero-packed distribution bytes.
+
+Long Q2 campaigns checkpoint each complete case. `--resume-attempt` is explicit
+and requires the identical Root, index, cases, runner, provider and merge tool;
+each reused result is rechecked against independent expected values and both
+engines. Reused cases are named, not claimed as newly executed calls. Preserve
+failed/partial execution directories, use an exclusive writer, and reject changed
+inputs instead of silently mixing campaigns. Outer command timeout is not an
+OutOfFuel or a business-API failure. Full acceptance still requires every case.
 
 ## Dependency policy
 

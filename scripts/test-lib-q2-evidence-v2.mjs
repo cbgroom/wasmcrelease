@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { checkQ2Evidence } from './lib-q2-evidence-v2.mjs';
+import { checkQ2Evidence, checkQ2Resume } from './lib-q2-evidence-v2.mjs';
 
 const cases = [{export:'validate',arguments:[],expected:{ok:null}},
   {export:'select',arguments:[],expected:{ok:[{some:'值'},null]}}];
@@ -27,3 +27,14 @@ for (const [name,change] of [
   ['rejects old scalar-only evidence',r=>{r.schema='wasmc.generated-root-ordinary-caller-q2/v1';}],
   ['rejects absent identity negative',r=>{r.wrong_bundle_pin_rejected=false;}],
 ]) test(name,()=>{const r=report();change(r);assert.throws(()=>checkQ2Evidence(r,cases,pins,8));});
+
+const resume = {schema:'wasmc.current-lib-search-ordinary-q2/v2',cases_sha256:'cases',
+  index_sha256:'index',root_manifest_sha256:'root',public_admission:false,results:[],
+  tooling:{runner:{sha256:'runner'},provider:{sha256:'provider'}}};
+test('resume accepts exact pinned attempt only',()=>assert.equal(checkQ2Resume(resume,resume),true));
+for (const key of ['schema','cases_sha256','index_sha256','root_manifest_sha256','tooling']) {
+  test('resume rejects changed '+key,()=>{
+    const changed=structuredClone(resume);changed[key]='different';
+    assert.throws(()=>checkQ2Resume(changed,resume));
+  });
+}

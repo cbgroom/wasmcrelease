@@ -4,7 +4,7 @@ use std::collections::BTreeMap;
 
 const MAX_INDEX: usize = 2 * 1024 * 1024;
 const MAX_ENTRIES: usize = 4096;
-const SCHEMA: &str = "wasmc.current-lib-search-index/v1";
+const SCHEMA: &str = "wasmc.current-lib-search-index/v2";
 
 #[derive(Clone, Debug, PartialEq, Eq, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -31,14 +31,28 @@ pub struct Hit {
     pub description: String,
     pub delivery: Option<Binding>,
 }
+struct Index {
+    registry_sha256: String,
+    entries: Vec<Hit>,
+}
 #[derive(Deserialize)]
 #[serde(deny_unknown_fields)]
-struct Index {
+struct WireIndex {
     schema: String,
     registry_sha256: String,
     source_fingerprint: String,
-    entries: Vec<Hit>,
+    packages: Vec<Package>,
 }
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+struct Package {
+    package_id: String, version: String, profile: String, target: String,
+    wit_route: String, source_path: String, wit_sha256: String,
+    description: String, delivery: Option<Binding>, apis: Vec<Api>,
+}
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+struct Api { route: String, description: String }
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct SnapshotInfo {
     pub entry_count: u32,
@@ -64,6 +78,19 @@ fn id(value: &str) -> bool {
     !value.is_empty() && value.len() <= 128 && value.bytes().all(|b| b.is_ascii_lowercase() || b.is_ascii_digit() || b == b'-')
 }
 fn profile(value: &str) -> bool { matches!(value, "value" | "resource" | "host" | "native") }
+fn api_route(value: &str) -> bool {
+    let word = |s: &str| !s.is_empty() && s.len() <= 128
+        && s.bytes().all(|b| b.is_ascii_alphanumeric() || matches!(b, b'-' | b'_'));
+    let Some((interface, member)) = value.split_once('#') else { return false; };
+    if !word(interface) { return false; }
+    if let Some(resource) = member.strip_prefix("[constructor]") { return word(resource); }
+    for prefix in ["[method]", "[static]"] {
+        if let Some(resource) = member.strip_prefix(prefix) {
+            return resource.split_once('.').is_some_and(|(r, f)| word(r) && word(f));
+        }
+    }
+    word(member)
+}
 fn relative_path(value: &str) -> bool {
     !value.is_empty() && value.len() <= 512 && !value.contains(['\\', ':', '\0'])
         && value.split('/').all(|p| !p.is_empty() && p != "." && p != "..")
@@ -86,9 +113,41 @@ fn binding(value: &Binding, native: bool) -> bool {
 }
 fn parse(text: &str) -> Result<Index, Error> {
     if text.len() > MAX_INDEX { return Err(Error::IndexTooLarge); }
-    let index: Index = serde_json::from_str(text).map_err(|_| Error::InvalidIndex)?;
-    if index.schema != SCHEMA || !hash(&index.registry_sha256) || !hash(&index.source_fingerprint)
-        || index.entries.len() > MAX_ENTRIES { return Err(Error::InvalidIndex); }
+    let wire: WireIndex = serde_json::from_str(text).map_err(|_| Error::InvalidIndex)?;
+    if wire.schema != SCHEMA || !hash(&wire.registry_sha256) || !hash(&wire.source_fingerprint)
+        || wire.packages.len() > MAX_ENTRIES { return Err(Error::InvalidIndex); }
+    let mut entries = Vec::new();
+    let mut expanded_bytes = 0usize;
+    for package in wire.packages {
+        if entries.len().saturating_add(package.apis.len()).saturating_add(1) > MAX_ENTRIES {
+            return Err(Error::InvalidIndex);
+        }
+        let key = format!("{}@{}", package.package_id, package.version);
+        let base = Hit { identity: key.clone(), package_id: package.package_id, version: package.version,
+            profile: package.profile, target: package.target, kind: "package".into(),
+            wit_route: package.wit_route, source_path: package.source_path, wit_sha256: package.wit_sha256,
+            description: package.description, delivery: package.delivery };
+        let common_bytes = base.identity.len() + base.package_id.len() + base.version.len() + base.profile.len()
+            + base.target.len() + base.wit_route.len() + base.source_path.len() + base.wit_sha256.len()
+            + base.delivery.as_ref().map_or(0, |v| v.manifest_sha256.len() + v.receipt_sha256.len()
+                + v.artifact_kind.len() + v.artifact_path.as_ref().map_or(0, String::len)
+                + v.artifact_sha256.as_ref().map_or(0, String::len) + v.component_sha256.as_ref().map_or(0, String::len));
+        expanded_bytes = expanded_bytes.saturating_add(common_bytes).saturating_add(base.description.len());
+        if expanded_bytes > MAX_INDEX { return Err(Error::IndexTooLarge); }
+        entries.push(base.clone());
+        for api in package.apis {
+            if !api_route(&api.route) { return Err(Error::InvalidIndex); }
+            expanded_bytes = expanded_bytes.saturating_add(common_bytes).saturating_add(api.description.len())
+                .saturating_add(api.route.len().saturating_mul(2));
+            if expanded_bytes > MAX_INDEX { return Err(Error::IndexTooLarge); }
+            let mut entry = base.clone();
+            entry.identity = format!("{key}/{}", api.route);
+            entry.kind = "api".into(); entry.wit_route = format!("{}/{}", base.wit_route, api.route);
+            entry.description = api.description;
+            entries.push(entry);
+        }
+    }
+    let index = Index { registry_sha256: wire.registry_sha256, entries };
     let mut previous = "";
     let mut packages = BTreeMap::new();
     for entry in &index.entries {
