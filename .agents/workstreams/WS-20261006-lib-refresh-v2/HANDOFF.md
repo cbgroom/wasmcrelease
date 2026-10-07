@@ -1,5 +1,39 @@
 # Lib Refresh V2
 
+## Current Std73 substage: source recipe verified; compiled Root pending
+
+Same task `task-wasmc-thin-host-semantic-lifecycle-closure`, same execution chat
+`6ac3ce68-df44-83ed-8ea1-ef3cdcbcfc8a`. Parent current40 preflight remains valid;
+Std and Resident remain pending. This substage does not supersede Search Q2 or
+reopen old JSON/Option gaps and does not add a new Lib identity.
+
+Private implementation `92d4aae9b9e5c70ce75ac06755e21812ec890749` lives in
+`/home/huawei/code/.worktrees/wasmc/WS-20261007-std73-source-producer-v1`, branch
+`work/WS-20261007-std73-source-producer-v1`. The Node source composer derives
+73 exact WIT signatures and9 resource cleanup paths from pinned source fragments
+and explicit additions without loading the cached original plan in production.
+20 real-tool tests pass, including exact semantic equality to the independently
+pinned prior graph, immutable/deterministic outputs, wrong hashes/types/ownership/
+cleanup/path rejection, and generic renamed-package operation.
+
+Private checkpoint: `.agents/workstreams/WS-20261007-std73-source-producer-v1/
+source-recipe-checkpoint.json`, SHA256
+`7542ab4cf9f99cc1895c53b14f36ad8932631bde59440187f0ce929b5aac8547`.
+Graph SHA256 `fb92c489bb7c9205ab9aa3caedf0444113f9d4ab83434020eb12d12608b05405`.
+No runtime calls, fresh Std Core/Component Root or SDKs are claimed by this slice.
+
+Normal `make check` still rejects at active-tree status10 after removal of the
+temporary alternate-language prototype. The unchanged db76a3bc baseline repeats
+the same rejection; raw logs are retained. Do not suppress that gate or count
+focused source tests as a whole-repository PASS.
+
+Next: move current Rust Core assembly out of test-only helpers, bind newly built
+Core/provider exports and exact bytes to this graph, feed the strict dual-view
+producer, then run Std73 App/SDK/lifecycle acceptance. Keep resource capacity,
+local managed-return, persistent App Store, Resident, external devices and full
+current42 product/determinism/integration/release gates explicit. No jobs and no
+owner transfer; successor must read/ACK same-task L2 first.
+
 ## Current checkpoint: current40 preflight verified, product incomplete
 
 Read `current-cohort-preflight-checkpoint.json`. Execution chat

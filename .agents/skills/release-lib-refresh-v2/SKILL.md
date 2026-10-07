@@ -212,6 +212,28 @@ sizes, local managed-return helpers, persistent Store soak, install or release.
 
 ## Dependency policy
 
+### Source-derived resource/Core producer inputs
+
+For Std-like resources, a Component oracle is not a substitute for the selected
+Core/resource semantics. A private producer may compose pinned, reviewed source
+fragments into a complete logical graph, but it must discard historical artifact
+identity fields and never read a cached generated plan as production authority.
+This is a producer input, not another supported Lib authoring format.
+
+Use the exact standard WIT parser to verify every logical parameter/result,
+ownership mode, namespace and resource lifecycle. Row counts alone cannot prove
+coverage. Resource aliases must explicitly choose one compatible owner/cleanup;
+source hash drift, duplicate bindings, missing cleanup and implicit Host imports
+reject. The current composition tool uses the existing Node maintenance plane;
+do not add another language runtime to bypass maintainer validation.
+
+A source-only graph receipt keeps `compiled_root=false`, `runtime_qualified=false`
+and `public_admission=false`. An independently pinned prior plan may be a test
+oracle, never the producer input. Only fresh Core/provider builds, exact symbol
+and digest binding, complete dual SDK generation and actual ordinary-App/resource
+behavior can close the pending Std identity. Do not mark41/42 from a73-row graph.
+
+
 Dependency versions and features belong in `libspec/rust-policy.json`, not
 individual Lib directories. A Lib names dependency keys only. The cohort uses
 one committed `libspec/Cargo.lock`; refresh must run Cargo `--locked --offline`.
