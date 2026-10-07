@@ -191,6 +191,14 @@ or generated Component SDKs passed Q2.
 
 ## Stop conditions
 
+When a new ordinary-App test begins executing after a compiler repair, check
+logical enum labels against the pinned WIT, not Rust/source underscore spelling.
+Correct a wrong test oracle only from that independent contract and retain the
+failed attempt. A full-Root type-registration defect must be fixed generically;
+never prune unused public functions from the Root just to pass one caller.
+Separate Wasmi logical-result evidence from scalar Wasmtime parity and from
+complex-result Wasmtime tests that the selected tooling does not implement.
+
 Stop rather than add a package-specific branch if:
 
 - a WIT shape cannot be represented by an existing generic profile;

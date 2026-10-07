@@ -1,5 +1,35 @@
 # Lib Refresh V2
 
+## Latest checkpoint: generic Unit-result fix and complete JSON Root replay
+
+This supersedes the JSON-blocked checkpoint below. Read
+unit-result-q2-checkpoint.json for exact source, artifact, oracle and receipt
+hashes. The private compiler implementation is
+a23204e0bfdb63d12c348dc545055c3ca7e58305 on
+work/WS-20261007-unit-result-registration-v1; public compiler distribution and
+Lib producer selection have not been replaced or relabeled.
+
+The unchanged complete JSON Root now passes compact, invalid compact, select,
+validate Unit success and validate error in ordinary WAsmC on Wasmi2.
+Separate compact/select Apps also pass against that same full Root.
+Full JSON receipt SHA256:
+6697c41b6de33663fa10b2a9e8b62e62a573b600f974dcc35031c406ff9813ba.
+Owned-algorithms control remains all4 APIs/6 cases PASS on Wasmi2/Wasmtime49.0.2.
+JSON complex-return Wasmtime is not tested by the current maintainer API;
+fresh bounded Stores are not a persistent Store soak. Wrong Root/bundle pins
+reject. All52 affected compiler tests pass, including3 new regressions.
+
+The only runtime-test oracle correction is invalid_json -> invalid-json,
+independently confirmed from exact WIT. Original wrong-oracle failure remains
+archived. Logical Unit is still payload-free; only its private storage slot
+is padded, and codegen rejects mutated arm/field/role layouts.
+
+Current inventory stays39/42; Std, current-registry Search and current Resident
+remain pending. Next: integrate/revalidate the generic fix without bypassing
+inherited active-tree/L1 metadata rejection, continue those three identities,
+then complete full generated-Root Q2/device/determinism/release gates.
+No main integration, all-Q2, new compiler/Lib release or compatibility claim.
+
 ## Latest verified checkpoint: historical identities and ordinary App Q2
 
 2026-10-07T06:09:10Z. Read identity-closure-checkpoint.json, SHA256
