@@ -308,7 +308,7 @@ function walk(directory) {
   });
 }
 if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)) {
-  const [command,path,source,libSourceOrVersion,explicitVersion]=process.argv.slice(2);
+  const [command,path,source,libSourceOrVersion,explicitVersion,...currentArgs]=process.argv.slice(2);
   const read=p=>readFileSync(resolve(root,p));
   if(command==='create') {
     const compilerSource=explicitVersion===undefined?'e69abb73f667f3810b0c40937fd1a1e2d04d4255':source;
@@ -316,6 +316,13 @@ if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)) {
     const version=explicitVersion===undefined?libSourceOrVersion:explicitVersion;
     if(!/^[0-9a-f]{40}$/.test(compilerSource))throw Error('exact compiler source required');
     if(!/^[0-9a-f]{40}$/.test(libSource))throw Error('exact Lib source required');
+    if(needsFutureLibLicenseGate(version)) {
+      // New creation must first prove current source/Q0 closure. Historical
+      // read-only candidate verification below remains byte-identity scoped.
+      if(explicitVersion===undefined)throw Error('new product requires explicit compiler and Lib source authorities');
+      const {currentReleaseArguments,requireCurrentReleaseCohort}=await import('./lib-current-release-preflight.mjs');
+      await requireCurrentReleaseCohort(root,currentReleaseArguments(currentArgs));
+    } else if(currentArgs.length)throw Error('unexpected candidate creation arguments');
     const productDirectories=[
       'current','standard','sdk','runtime','libs',
       ...(needsFutureLibLicenseGate(version)?['current-libs']:[]),
@@ -362,5 +369,5 @@ if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)) {
     const candidate=JSON.parse(readFileSync(path));validateCandidate(candidate,read);
     if(candidate.schema==='wasmc.release-product-candidate/v2')assert.deepEqual(candidate.lib_route_closure,candidateClosure(candidate,read),'candidate Lib route closure drift');
     console.log(JSON.stringify({accepted:true,products:candidate.product_files.length,product_set_sha256:candidate.product_set_sha256}));
-  } else throw Error('usage: release-candidate.mjs create FILE [COMPILER_SOURCE] LIB_SOURCE VERSION | verify FILE');
+  } else throw Error('usage: release-candidate.mjs create FILE COMPILER_SOURCE LIB_SOURCE VERSION --current-run ABSOLUTE_RUN --current-receipt-sha256 SHA256 --current-producer-sha256 SHA256 | verify FILE');
 }

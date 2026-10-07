@@ -6,6 +6,7 @@ import { fileURLToPath } from 'node:url';
 import { parseWitRoutes } from './lib-route-closure.mjs';
 import { generatedLib } from './generated-lib-v2.mjs';
 import { inventory, sha, digest } from './lib-refresh-cache-v2.mjs';
+import { verifyWitClosure } from './lib-wit-closure-v2.mjs';
 
 const order = (a, b) => a < b ? -1 : a > b ? 1 : 0;
 // Materialize the logical discovery view for independent test oracles; the wire
@@ -19,7 +20,7 @@ export function indexEntries(index) {
       identity:identity+'/'+api.route,kind:'api',wit_route:p.wit_route+'/'+api.route,description:api.description}))];
   });
 }
-export async function currentIndex(repo, bindings = []) {
+export async function currentIndex(repo, bindings = [], witTool = null) {
   repo = resolve(repo);
   const registryBytes = await readFile(join(repo, 'libspec/registry.json'));
   const registry = JSON.parse(registryBytes);
@@ -50,9 +51,9 @@ export async function currentIndex(repo, bindings = []) {
     assert.ok(routes.identity.endsWith('@' + spec.version), row.id + ': version drift');
     assert.ok(routes.api_routes.length > 0, row.id + ': empty exported API inventory');
     for (const [path, value] of Object.entries(files)) source[row.source + '/' + path] = value.sha256;
-    sources.set(row.id, { row, spec, files, routes, delivery: null });
+    sources.set(row.id, { row, spec, files, wit, routes, delivery: null });
   }
-  const receipts = [];
+  const receipts = [], witNormalizations = [];
   for (const binding of bindings) {
     assert.match(binding.receipt_sha256, /^[a-f0-9]{64}$/);
     const run = resolve(binding.run_root);
@@ -85,7 +86,10 @@ export async function currentIndex(repo, bindings = []) {
         assert.ok(policy.shared_modules?.[name]); await expectedInput(policy.shared_modules[name].source);
       }
       const loaded = await generatedLib(row.id, run);
-      assert.equal(loaded.manifest.wit.sha256, current.files['lib.wit'].sha256, 'bound WIT is not current');
+      const deliveredWit = await readFile(join(loaded.root, loaded.manifest.wit.path));
+      const normalized = await verifyWitClosure(current.wit,
+        [...visited].sort(order).map(id=>({id,bytes:sources.get(id).wit})),deliveredWit,witTool);
+      witNormalizations.push({id:row.id,...normalized});
       const native = current.spec.profile === 'native';
       const artifactKind = !native ? 'wasm-core-component' : !loaded.manifest.artifact ? 'native-source'
         : current.spec.native.kind === 'node-boundary' ? 'native-module' : 'native-binary';
@@ -133,7 +137,7 @@ export async function currentIndex(repo, bindings = []) {
   assert.equal(sha(await readFile(join(repo, 'libspec/registry.json'))), index.registry_sha256);
   assert.equal(sha(await readFile(join(repo, 'libspec/rust-policy.json'))), sha(policyBytes));
   assert.equal(sha(await readFile(join(repo, 'libspec/Cargo.lock'))), lockHash);
-  return { index, bytes, inputs: input, receipts,
+  return { index, bytes, inputs: input, receipts, wit_normalizations: witNormalizations,
     summary: { packages: sources.size, apis: entries.length - sources.size, entries: entries.length,
       bound_packages: [...sources.values()].filter(s => s.delivery).length,
       native_source_packages: [...sources.values()].filter(s => s.delivery?.artifact_kind === 'native-source').length,
@@ -141,24 +145,28 @@ export async function currentIndex(repo, bindings = []) {
 }
 
 async function main() {
-  const args = process.argv.slice(2); let out, check; const bindings = [];
+  const args = process.argv.slice(2); let out, check, witToolPath, witToolSha; const bindings = [];
   for (let i = 0; i < args.length; i++) {
     if (args[i] === '--out') out = resolve(args[++i]);
     else if (args[i] === '--check') check = resolve(args[++i]);
     else if (args[i] === '--bind') bindings.push({ run_root: args[++i], receipt_sha256: args[++i] });
+    else if (args[i] === '--wit-tool') witToolPath=args[++i];
+    else if (args[i] === '--wit-tool-sha256') witToolSha=args[++i];
     else throw new Error('unknown current-index argument: ' + args[i]);
   }
   assert.ok(Boolean(out) !== Boolean(check), 'use --out <absent-dir> or --check <exact-index-file>');
-  const result = await currentIndex(process.cwd(), bindings);
+  assert.equal(Boolean(witToolPath),Boolean(witToolSha),'both WIT tool path and independent pin required');
+  const result = await currentIndex(process.cwd(), bindings,witToolPath?{path:witToolPath,sha256:witToolSha}:null);
   if (check) assert.deepEqual(await readFile(check), result.bytes, 'retained index does not match current inputs');
   else {
     await mkdir(out, { recursive: false });
     await writeFile(join(out, 'index.json'), result.bytes, { flag: 'wx' });
     const tools = {};
-    for (const file of ['lib-current-index-v2.mjs', 'lib-route-closure.mjs', 'generated-lib-v2.mjs', 'lib-refresh-cache-v2.mjs'])
+    for (const file of ['lib-current-index-v2.mjs', 'lib-wit-closure-v2.mjs', 'lib-route-closure.mjs', 'generated-lib-v2.mjs', 'lib-refresh-cache-v2.mjs'])
       tools[file] = sha(await readFile(new URL(file, import.meta.url)));
     await writeFile(join(out, 'receipt.json'), JSON.stringify({ schema: 'wasmc.current-lib-search-index-receipt/v1',
       accepted: true, ...result.summary, generator_inputs: tools, source_inputs: result.inputs, binding_receipts: result.receipts,
+      wit_normalizations: result.wit_normalizations,
       claims: { current_registry_discovery: true, generated_bindings_checked: true,
         installation: false, runtime_device_qualified: false, trusted_authority: false } }, null, 2) + '\n', { flag: 'wx' });
   }

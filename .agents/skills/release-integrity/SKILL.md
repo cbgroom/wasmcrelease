@@ -47,6 +47,26 @@ CDN alias is discovery state; an immutable tag or full commit is package identit
 
 ## Validation judgment
 
+### Current-source preflight for the next product
+
+New candidate creation after0.0.20 first calls `lib-current-release-preflight.mjs`.
+It derives the union of original candidate and historical package identities,
+then requires all current registered implementations in ONE successful refresh.
+Supply the independently chosen absolute run, receipt SHA256 and producer
+SHA256 explicitly. An old catalog, pending disposition, subset refresh, stale
+source/lock/generator, or self-rehashed package cannot satisfy this early gate.
+Every refreshed row binds `root_inventory_sha256` for the complete package tree,
+including otherwise unreferenced additions. Older receipts without that pin must
+be regenerated, not relabeled or backfilled. The gate does not infer a native
+source package is compiled, or a Component SDK is an ordinary Core SDK.
+
+This is a source/Q0 prerequisite, NOT replacement admission. Existing route,
+license, exact candidate, Pi, integration and channel gates still apply. A green
+preflight never means Q1/Q2/Q3 or publication. The current route/product assembler
+must also be migrated to the normalized index before next-product freeze; do not
+use the old LSI catalog/18-root product projection as the new42-identity product.
+Historical immutable candidate verification remains read-only and unchanged.
+
 ### Explicit compiler-only HEAD convergence
 
 When the user explicitly requests the latest compiler for CDN and removal of

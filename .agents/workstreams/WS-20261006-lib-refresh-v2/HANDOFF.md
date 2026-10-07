@@ -1,6 +1,41 @@
 # Lib Refresh V2
 
-## Current checkpoint: full-index Search Q2 PASS
+## Current checkpoint: current40 preflight verified, product incomplete
+
+Read `current-cohort-preflight-checkpoint.json`. Execution chat
+`6ac3ce68-df44-83ed-8ea1-ef3cdcbcfc8a` reviewed the14 prior preflight/WIT/Skill
+changes. Current40 whole-package inventories and WIT equivalence pass, together
+with63 regressions and13 real standard-tool tests. Existing full40 output was
+revalidated, not rebuilt. The47838-byte fully bound discovery index retains
+40 packages/153 APIs/193 entries;14 native packages remain source-only.
+This new index is not the earlier35232-byte App-Q2 subject.
+
+Preflight correctly exits1 solely for missing Std/Resident. No candidate,
+main integration or public release is claimed. Next: current Std/Resident,
+managed-value limits, full App/SDK/Host/device qualification and Q3 integration.
+Canonical Works L2 plan and chat ACK are pushed at4f067994ecde86d51c528aad3c6a50596bcf8d1b.
+Keep the same task and chat lineage; successor read+ACK precedes owner transfer.
+No active jobs. Later source/L2 commits must receive exact remote readback.
+
+## Historical plan: current cohort admission
+
+The human now explicitly targets the next complete wasmcrelease product, with
+no authoring or runtime fallback. Fresh reconciliation confirms release HEAD
+90e2a41e131dda24261a08a49e5b6d1ffbd5b434 and compiler byte-storage HEAD
+db76a3bc9a37ad1f71a2c7100098d6a113a3086f, both clean and synced. The current
+source inventory is40/42, not a released candidate. Std still needs its current
+Core/resource generation; Resident still needs the current kernel binding.
+
+This bounded slice closes stale-catalog admission and task synchronization:
+make new-product preflight derive the complete current identity cohort and
+verify an independently pinned full-refresh receipt against live source and
+all generated package inventories. Incomplete identities, subset/stale receipts,
+source-only/device scope and absent Q2/Q3 must remain visible, never a green
+legacy-catalog substitute. Update the owning Skill and YXSGIT's new per-task
+progress file, then commit/push each complete unit. Do not rewrite v0.0.20,
+move tags, disclose compiler sources, or touch any other worktree's changes.
+
+## Historical verified checkpoint: full-index Search Q2 PASS
 
 Read search-storage-q2-checkpoint.json for exact source, index, provider, runner
 and immutable receipt hashes.40/42 source identities; Std/Resident pending.

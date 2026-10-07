@@ -213,6 +213,7 @@ export async function refresh(argv, render) {
         await rename(temporary, entryPath);
       }
       Object.assign(row, { state: 'verified', build_ms: Date.now() - packageStarted,
+        root_inventory_sha256: digest(verified.files),
         supported_views: Object.keys(verified.manifest.bindings),
         ordinary_wasmc_qualification: 'not_run',
         native_status: verified.manifest.native?.status ?? null,

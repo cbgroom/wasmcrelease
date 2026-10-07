@@ -5,6 +5,18 @@ description: Maintain the future WAsmC Lib authoring model: WIT + Rust business 
 
 # Lib Refresh V2
 
+## Stage closure evidence
+
+Source/Q0 package completeness, test-orchestration success, ordinary App Q2
+and product publication are separate outcomes. Keep the actual failing release
+preflight when identities remain missing, even when every current package is
+valid. A larger newly bound Search index needs its own App evidence; previous
+full-index Q2 cannot silently authorize different bytes. Explicitly record the
+existing Rust toolchain/PATH for workflow tests and preserve environment-failure
+logs. On stage completion update this Skill or record its reviewed unchanged
+status, owning HANDOFF and same-task Works L2; ordinary push and exact readback
+are required independently of local commit.
+
 ## Decision
 
 `libspec/` is the sole current Lib source authority. Do not extend the historical
@@ -94,6 +106,14 @@ after verification. Per-package stdout/stderr/exit receipts are durable even
 when later packages fail. A directory or partial package is not a successful
 refresh. Only a terminal successful `refresh-receipt.json` proves Q0.
 
+Every new terminal package row also binds `root_inventory_sha256` over the
+complete canonical file inventory, not just the primary Wasm/manifest bytes.
+Refresh older runs through the actual executor to obtain it; do not backfill a
+claim into immutable evidence. Next-product creation calls the current-cohort
+preflight with independent run/receipt/producer pins. That gate rejects pending
+historical identities, subset runs, stale source/lock/generator and package
+inventory drift. Source/Q0 completeness is still not Q2/Q3 or release authority.
+
 `--rebuild` bypasses artifact reuse while retaining the warm Cargo workspace;
 the regenerated whole Root must match the sealed input identity. Use a separate
 empty `--cache` for independent cold-cache/determinism experiments. Do not erase
@@ -129,6 +149,17 @@ Use `node scripts/lib-current-index-v2.mjs --out <absent-directory>` for current
 source discovery. Each `--bind <exact-run-root> <expected-receipt-sha256>` adds
 only verified current generated package bindings; stale source/policy/lock,
 mutated packages and ambiguous bindings reject rather than falling back.
+Authored WIT and flattened delivery WIT may have different byte hashes. Bind
+both through the independently pinned refresh/manifest. For normalization,
+provide `--wit-tool <absolute-wasm-tools> --wit-tool-sha256 <independent-hash>`.
+The standard parser must produce identical complete canonical WIT from the
+current authored dependency graph and the delivered self-contained document.
+Do not compare only names/counts, erase fields with regex, replace authored WIT
+with generated files, or weaken the digest check. Run the real-tool suite
+`test-lib-wit-closure-v2.mjs --tool <path> --sha256 <hash>`; mutated record types,
+return types and added Host authority must reject. Index hit `wit-sha256` binds
+the authored source path; the delivery manifest independently binds packaged
+WIT. Index receipts carry the explicit normalization proof for both identities.
 Index bytes and receipts are immutable per run; `--check` regenerates and
 compares the exact current index. Runtime snapshot computes SHA256 over the
 explicit bytes; consumers independently compare that digest before selection.
