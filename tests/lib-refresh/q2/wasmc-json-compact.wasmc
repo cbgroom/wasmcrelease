@@ -1,0 +1,7 @@
+package local:json_compact_q2;
+interface api {
+  enum json_error {input_too_large,depth_limit,invalid_json,too_many_pointers,pointer_too_long,invalid_pointer,output_too_large}
+  compact:func()->result<string,json_error> {return document::compact(" { \"a\" : 1 } ");}
+  invalid:func()->result<string,json_error> {return document::compact("bad");}
+}
+world app {export api;}

@@ -2,6 +2,9 @@
   "schema": "wasmc.lib-refresh-registry/v2",
   "authority": "libspec",
   "libs": [
+    {"id": "wasmc-owned-algorithms", "source": "libspec/wasmc-owned-algorithms"},
+    {"id": "wasmc-resource-counter", "source": "libspec/wasmc-resource-counter"},
+    {"id": "wasmc-host-clock", "source": "libspec/wasmc-host-clock"},
     {
       "id": "wasmc-app-authorization-policy",
       "source": "libspec/wasmc-app-authorization-policy"
@@ -150,6 +153,9 @@
   "authoring_policy": "single-current-libspec-no-legacy-fallback",
   "cohorts": {
     "all_candidates": [
+      "wasmc-owned-algorithms",
+      "wasmc-resource-counter",
+      "wasmc-host-clock",
       "wasmc-app-authorization-policy",
       "wasmc-compression",
       "wasmc-csv",
@@ -188,6 +194,9 @@
       "wasmc-tls-core"
     ],
     "rust": [
+      "wasmc-owned-algorithms",
+      "wasmc-resource-counter",
+      "wasmc-host-clock",
       "wasmc-app-authorization-policy",
       "wasmc-compression",
       "wasmc-csv",

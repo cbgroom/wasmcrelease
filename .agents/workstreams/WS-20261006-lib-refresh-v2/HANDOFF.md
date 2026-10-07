@@ -1,5 +1,63 @@
 # Lib Refresh V2
 
+## Latest verified checkpoint: historical identities and ordinary App Q2
+
+2026-10-07T06:09:10Z. Read identity-closure-checkpoint.json, SHA256
+0119ca312878b55169555b10cd7b6a73fd8548fb33d43b45e11767e792d9e0aa.
+This supersedes older stage sections below. Registry: 39 current sources
+(14 value, 4 resource, 1 explicit Host, 20 native); required identity union=42.
+Std, Lib Search and MCPGit Resident are explicitly pending, not retired.
+validate-lib-identity-coverage.mjs --require-complete rejects those omissions.
+Legacy source tree and execution fallback remain absent.
+
+New owned-algorithms 0.1.1, counter 0.0.2 and Host clock 0.0.2 use only current
+WIT/delta/adapter sources. Three-library Q0 passes in 18118ms; identical-input
+verified reuse is 1021ms, 3 hits/0 builds. Source-free Component SDK tests pass:
+eight value cases, 128 counter rounds/257 drops, stale resource rejection,
+missing Host import rejection and exactly two explicitly bound clock reads.
+
+Ordinary owned-algorithms App Q2 passes all four APIs/six cases on Wasmi2 and
+Wasmtime49.0.2 against the exact new Root/CoreLib. Wrong Root/bundle pins reject.
+SDK receipt hash: 01b0ef292f5509f26ab00a2c7acb1162ceaee073f2f97147f03fc3622521733f.
+Q2 receipt hash: faa396c3c0d1a3cdba2bc384d29c99853e436b04a73e062bff372213d9244fc4.
+This is an explicit Root plan with fresh bounded Stores, not automatic catalog
+resolution or persistent Store soak. The local runner uses exact maintainer
+tooling without copying private compiler source into release output.
+
+JSON remains blocked: complete and isolated compact/select probes all fail
+'aggregate registration field type is unsupported'. Code points to Unit
+rejection in aggregate_registration_field_role while the complete Root includes
+result<unit,json-error>. Latest remote master also retains that restriction;
+selected producer remains 15418b27ef. Do not prune validate from the Root or
+promote Component tests into ordinary App PASS. Earlier result-unit .is_ok/
+.is_err diagnostic also rejected; direct returns isolate type registration.
+
+Next: separately owned generic Unit-result registration/ownership fix, then
+exact JSON replay; complete current Std producer/current-registry search/current
+Resident binding. No whole39 rebuild, foreign-device, full Q2/Q3 or release
+admission is claimed. No jobs running at checkpoint; original compiler dirty
+probes and all immutable releases remain untouched.
+
+
+## Active stage: historical identity closure and generated-Root caller Q2
+
+Activated 2026-10-07 after fresh YXSGIT task read. Baseline release source is
+672b6e0a0d1b4313bc3c123edaeb94f3946b3456, branch/upstream identical and clean.
+No staged, unstaged, untracked or intervening commits and no active writer.
+Read current maintainer/refresh/Host/integrity Skills. Source gates pass; the
+known immutable-product AGENTS.md drift is not a new-product admission.
+
+Reconcile the six old-all18 identities absent from the 36-candidate registry.
+Port standalone owned algorithms, counter and explicit Host clock into the
+single current source format, without old package/build fallback. Keep Std,
+search and resident implementation authority explicit; no fake replacement,
+source disclosure or capability retirement inferred from their absence.
+Then execute ordinary WAsmC source against exact generated Roots and record
+caller/SDK scope separately. Preserve original compiler-worktree dirty probes.
+Checkpoint each functional batch; public admission and main integration remain
+false until their own required gates close.
+
+
 ## Current all-candidate checkpoint — 2026-10-06T20:08:21.186197+00:00
 
 This is the current execution authority; older sections below are historical.

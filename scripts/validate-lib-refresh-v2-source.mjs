@@ -23,7 +23,7 @@ const forbiddenDelta = [
   'Store<',
   'Linker<',
 ];
-const allowedProfiles = new Set(['value', 'resource', 'native']);
+const allowedProfiles = new Set(['value', 'resource', 'host', 'native']);
 
 for (const row of registry.libs) {
   assert.equal(row.source, 'libspec/' + row.id, row.id + ': source must use canonical libspec/<id>');
@@ -32,6 +32,12 @@ for (const row of registry.libs) {
   assert.equal(spec.schema, 'wasmc.lib-refresh-source/v2');
   assert.equal(spec.id, row.id);
   assert.ok(allowedProfiles.has(spec.profile), row.id + ': invalid profile');
+  if (spec.profile === 'host') {
+    assert.ok(Array.isArray(spec.host_imports) && spec.host_imports.length > 0,
+      row.id + ': host profile requires explicit imports');
+    assert.equal(new Set(spec.host_imports).size, spec.host_imports.length,
+      row.id + ': duplicate Host import');
+  }
   if (spec.profile === 'native') {
     assert.ok(['c-boundary', 'node-boundary', 'swift-embedded'].includes(spec.native?.kind));
     assert.ok(spec.native.files.length && spec.native.files.includes(spec.native.entry));

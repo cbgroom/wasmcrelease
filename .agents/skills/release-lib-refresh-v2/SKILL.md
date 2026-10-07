@@ -44,14 +44,24 @@ Implemented profiles:
 - `resource`: actual Rust state/resource implementation; Core artifact and
   Component SDK. A complete ordinary Core SDK is not advertised when absent.
   Explicit Host imports (for example TLS entropy) remain WIT-declared.
+- `host`: Rust delta plus a thin explicitly imported WIT capability adapter.
+  Check actual Core function imports against the exact declared import set;
+  missing/extra authority rejects. The complete Component SDK is recorded;
+  do not advertise an absent ordinary Core SDK. No ambient Host acquisition.
 - `native`: real C, Node or Swift implementation plus exact target/binding.
   Linux C can be compiled locally; foreign-target source packages are labeled
   as source packages, never as compiled/device-qualified implementations.
 
 Do not special-case package names. Selection is WIT/profile driven.
 
-The complete current candidate inventory is 36: 16 Rust implementations and 20
-native platform implementations. Authoring cutover applies to all of them.
+The original candidate inventory is 36. Current registration also includes
+ported historical package identities; derive totals from the registry rather
+than treating a fixed candidate count as ecosystem completion. Validate the
+union of historical package and candidate identities with
+`node scripts/validate-lib-identity-coverage.mjs`; `--require-complete` rejects
+any unresolved implementation. `libspec/identity-dispositions.json` owns only
+explicit pending implementations, not retired capabilities or fallback routes.
+Authoring cutover applies to every registered implementation.
 Reject unsupported profiles explicitly; no old build or source-directory
 fallback is allowed. Device/runtime qualification must be recorded separately.
 
@@ -138,6 +148,21 @@ Q0 refresh must prove:
 Q1 adds Lib behavior/oracle/boundary tests. Q2 is cohort ordinary-App/SDK
 qualification. Q3 is release candidate/legal/determinism/Pi/install acceptance.
 Do not run Q3 on each delta edit.
+
+For exact generated-Root App tests use `test-generated-wasmc-q2.mjs` with an
+explicit digest-pinned local maintainer runner, CoreLib, merge tool and successful
+refresh receipt. The authored harness source digest is checked against its
+tooling receipt. It compiles ordinary .wasmc sources and never resolves an old
+package. Current public logical invocation executes Wasmi; independent Wasmtime
+scalar-result controls are marked per case. A complex result not executed on
+Wasmtime must remain `tested=false`, not inherit a different engine's PASS.
+This is an explicit Root-build qualification, not proof of automatic catalog
+resolution, persistent Store soak, all-library qualification or public admission.
+
+Generated Component SDK consumers keep their standalone Cargo workspace roots
+as siblings of the consumer, not nested workspace members. Copy only generated
+WIT/SDK glue and verify pinned component bytes; do not edit a generated SDK to
+make the consumer compile or include Lib implementation sources in the test.
 
 ## Migration rule
 

@@ -1,0 +1,161 @@
+{
+  "schema": "wasmc.historical-identity-and-q2-checkpoint/v1",
+  "observed_at": "2026-10-07T06:09:10.807618+00:00",
+  "baseline": "672b6e0a0d1b4313bc3c123edaeb94f3946b3456",
+  "state": "three_historical_identities_migrated_owned_q2_pass_json_type_registration_open",
+  "source_authority": "libspec/",
+  "source_count": 39,
+  "profiles": {
+    "value": 14,
+    "resource": 4,
+    "host": 1,
+    "native": 20
+  },
+  "required_union_identities": 42,
+  "pending_identities": [
+    "wasmc-std",
+    "wasmc-lib-search",
+    "mcpgit-resident-memory"
+  ],
+  "new_versions": {
+    "wasmc-owned-algorithms": "0.1.1",
+    "wasmc-resource-counter": "0.0.2",
+    "wasmc-host-clock": "0.0.2"
+  },
+  "evidence": {
+    "q0": {
+      "path": "/home/huawei/code/.cache/wasmc-evidence/lib-refresh-identities-20261007/runs/refresh-sv9aty/refresh-receipt.json",
+      "sha256": "54ac7f5f6e3e2e2d9db913aa06bb76134d3ca7ac7c05a2f1e7400daa74a45d11",
+      "accepted": true
+    },
+    "q0_repeat": {
+      "path": "/home/huawei/code/.cache/wasmc-evidence/lib-refresh-identities-20261007/runs/refresh-8bWJ5s/refresh-receipt.json",
+      "sha256": "d20dcac0fb081441e4470c62f0e159f57af3f463a1cb6067a4ef4d16ffdad3a7",
+      "accepted": true
+    },
+    "sdk": {
+      "path": "/home/huawei/code/.cache/wasmc-evidence/lib-refresh-identities-20261007/runs/refresh-sv9aty/identities-attempt-m8P7w2/receipt.json",
+      "sha256": "01b0ef292f5509f26ab00a2c7acb1162ceaee073f2f97147f03fc3622521733f",
+      "accepted": true
+    },
+    "ordinary_owned": {
+      "path": "/home/huawei/code/.cache/wasmc-evidence/lib-refresh-identities-20261007/runs/refresh-sv9aty/ordinary-q2-wasmc-owned-algorithms-6lSit1/receipt.json",
+      "sha256": "faa396c3c0d1a3cdba2bc384d29c99853e436b04a73e062bff372213d9244fc4",
+      "accepted": true
+    },
+    "json_whole": {
+      "path": "/home/huawei/code/.cache/wasmc-evidence/lib-refresh-all-candidates-20261006/runs/refresh-OIOZEL/ordinary-q2-wasmc-json-lskPyh/receipt.json",
+      "sha256": "35cee6b6892e53a2742d23da5253736fed9bde2dbebef28e6af470191251dcc2",
+      "accepted": false
+    },
+    "json_compact": {
+      "path": "/home/huawei/code/.cache/wasmc-evidence/lib-refresh-all-candidates-20261006/runs/refresh-OIOZEL/ordinary-q2-wasmc-json-uBxa2J/receipt.json",
+      "sha256": "1e5553fb6780b4454e6e0b2795f3c684ccf6a8054152ea978dadf1ab2d21f20f",
+      "accepted": false
+    },
+    "json_select": {
+      "path": "/home/huawei/code/.cache/wasmc-evidence/lib-refresh-all-candidates-20261006/runs/refresh-OIOZEL/ordinary-q2-wasmc-json-pTfabF/receipt.json",
+      "sha256": "3eb2695b8d91b49107f4a577c786c8844b67610ecba0d52834947e491bf5cf13",
+      "accepted": false
+    }
+  },
+  "q0_timing": {
+    "total_ms": 18118,
+    "package_build_ms": {
+      "wasmc-host-clock": 14354,
+      "wasmc-owned-algorithms": 1357,
+      "wasmc-resource-counter": 1082
+    },
+    "cache_hits": 0,
+    "cache_misses": 3,
+    "persistent_workspace": true,
+    "persistent_cargo_target": true
+  },
+  "repeat_timing": {
+    "total_ms": 1021,
+    "package_build_ms": {
+      "wasmc-host-clock": 13,
+      "wasmc-owned-algorithms": 11,
+      "wasmc-resource-counter": 9
+    },
+    "cache_hits": 3,
+    "cache_misses": 0,
+    "persistent_workspace": true,
+    "persistent_cargo_target": true
+  },
+  "sdk_report": {
+    "accepted": true,
+    "generated_component_sdks": 3,
+    "owned_cases": 8,
+    "counter_resource_rounds": 128,
+    "counter_resources_dropped": 257,
+    "stale_resource_rejected": true,
+    "missing_host_import_rejected": true,
+    "host_calls": 2,
+    "fuel_diagnostic_only": true
+  },
+  "ordinary_q2": {
+    "owned_algorithms": {
+      "apis": 4,
+      "cases": 6,
+      "wasmi": true,
+      "wasmtime": true,
+      "source_free_lib": true,
+      "scope": "explicit exact Root plan; scalar results; fresh bounded Store per call"
+    },
+    "json": {
+      "accepted": false,
+      "whole_root_and_isolated_compact_and_select": "aggregate registration field type is unsupported",
+      "suspect": "full Root type-registration includes result<unit,json-error>; unit currently rejected as managed record field",
+      "source_site": "wasmc@15418b27ef:src/language/typed_resource.rs:aggregate_registration_field_role",
+      "catalog_auto_resolution": false
+    }
+  },
+  "tooling_source_revision": "15418b27ef663dd4f456e2d46b077e2278c2c639",
+  "source_inputs": {
+    "libspec/Cargo.lock": "052bbc5365401fe0633fb7196d326b5664736c1921a967a750440d548a4f9fd3",
+    "libspec/identity-dispositions.json": "767dd03c330b2d8a5796e91ad93f3c172742e144c8a56b79f3a15e303d695fad",
+    "libspec/registry.json": "c51aae8398341632b5bf6ec22c2b01ef4e976b07e8b73b03f53e9ff5738b5012",
+    "libspec/wasmc-host-clock/adapter.rs": "3e373b71ad4d7f48c277fb81476f1f4f127498a26fb1dab5b983e785d17b6d63",
+    "libspec/wasmc-host-clock/delta.rs": "9e721620db6fc0f212f33831a4e135cceafc292684321931545ce996cb564438",
+    "libspec/wasmc-host-clock/lib.json": "557bb92fa3b32739646816963174affa6b0843b3fb1cd7d7903c6a5889eeff1f",
+    "libspec/wasmc-host-clock/lib.wit": "b6ca13754950364d74f49e69d858a0972ad648783254bb7ee0e30fbbdc623b74",
+    "libspec/wasmc-owned-algorithms/adapter.rs": "035cf3773dfe6bec53a41052257f1eee93ed4c453bbae626d116da949127a1da",
+    "libspec/wasmc-owned-algorithms/delta.rs": "cde7f1b900b56094593e1798edff77b5a5b3060fd5be6d71ea4fe5b52d34fcba",
+    "libspec/wasmc-owned-algorithms/lib.json": "3fe99b971eaca387021cae1c9569a7b745e5e290bd425e24aedba549452f96c6",
+    "libspec/wasmc-owned-algorithms/lib.wit": "bd7dbf7b54172e6b08a80fc22b75ed44cf7d590b0b8603dd50941874d5e6db94",
+    "libspec/wasmc-resource-counter/adapter.rs": "fa694fc8c2efccde434264bd33283d6872f88cfaa3747d3c27882aae4d1d07ef",
+    "libspec/wasmc-resource-counter/delta.rs": "56262a79ab22b3ddf4641a0bbce5beb0312203188b743492e330c7584c88c53d",
+    "libspec/wasmc-resource-counter/lib.json": "c893bf5b5c1ca2f5798582dcb77153a62391b4b0131109b6478e0c7e61326dc5",
+    "libspec/wasmc-resource-counter/lib.wit": "2de6002544e320d045e29be5ac44fd577943754361701ba748c3ee082bf45cc4",
+    "scripts/lib-refresh-cache-v2.mjs": "cd676315661dddc34e2b38798d6a9a4edf8527d61847d20c426ed936846f6814",
+    "scripts/lib-refresh-runner-v2.mjs": "346283eda904a95fcb75352972c5e79ed2a6f4628f92ab89fdbbbdaa0dcb9f2d",
+    "scripts/test-generated-identities.mjs": "b409a7af37771ff9b6e9235311c16516a2ab85a4accc36e85e8449dd4ba3446f",
+    "scripts/test-generated-wasmc-q2.mjs": "48b266668bd1975fd35e5dd3dff7d2e6d4a061e4792bb9c0283330f6d9fedbf1",
+    "scripts/validate-lib-identity-coverage.mjs": "d79e262c196781d11cb10f44fe16a61b882a6409b4d52f8555402beac5b3e1b1",
+    "tests/lib-refresh/identities/consumer.rs": "d7c86ac8d1e21ed6e6e3800f478a159e09418313ebd9a667e4c61b7ee69c0c12",
+    "tests/lib-refresh/q2/native-value-runner.rs": "fdb789a3eaef52697f27902bdccde4b39884201d539ab10664d263659595a3ae",
+    "tests/lib-refresh/q2/wasmc-json-compact.cases.json": "9d8753873a5fcc0b35d991b41013bc1718b3a3cbcb12f8168dad6dfa18ddca59",
+    "tests/lib-refresh/q2/wasmc-json-compact.wasmc": "339a031463be61e957aead6c3aeef9fb9bdaf10d838bc4be88bc86cdeda07d73",
+    "tests/lib-refresh/q2/wasmc-json-select.cases.json": "dbf5f1b450704daeb2de78757a2290e5eecaa88f770bb2057e761b14303861a1",
+    "tests/lib-refresh/q2/wasmc-json-select.wasmc": "73bc30714b770c1ad25979807736644227ba60ff44faa408e5f872be2d3b3bc1",
+    "tests/lib-refresh/q2/wasmc-json.cases.json": "a9044c2cc3ed56dd9e47e9907467258de8e335d257f8449ac27284821ab6de28",
+    "tests/lib-refresh/q2/wasmc-json.wasmc": "d03fb25d18f95ac01a49872394e268c71f86923d05aa8ee98d3d30d42c0e2593",
+    "tests/lib-refresh/q2/wasmc-owned-algorithms.cases.json": "fc3cc5ecbc7f871be9fe84390ddbd9b52a22be3e5ddda1d70734028c1ef87eab",
+    "tests/lib-refresh/q2/wasmc-owned-algorithms.wasmc": "d3ce6121cf6e844c16df34d95231896913fa3374193c521a89de367cbd17a81c"
+  },
+  "boundaries": {
+    "legacy_source_fallback": false,
+    "whole_39_cohort_rebuilt": false,
+    "all_q2_closed": false,
+    "foreign_device_qualified": false,
+    "public_admission": false,
+    "main_integrated": false
+  },
+  "running_jobs": [],
+  "next": [
+    "Close generic Unit-in-Result registration on a separately owned compiler branch and rerun full JSON on exact Root without pruning its WIT",
+    "Implement current Std resource producer, current-registry Lib Search and current Resident kernel binding without restoring old implementations",
+    "Rebuild/requalify complete new source union, perform device and independent reproducibility gates before main/release"
+  ]
+}

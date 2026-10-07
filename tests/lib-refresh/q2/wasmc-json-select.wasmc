@@ -1,0 +1,10 @@
+package local:json_select_q2;
+interface api {
+  enum json_error {input_too_large,depth_limit,invalid_json,too_many_pointers,pointer_too_long,invalid_pointer,output_too_large}
+  select:func()->result<list<option<string>>,json_error> {
+    let mut pointers:list<string> = list.new();
+    pointers.push("/a");pointers.push("/missing");
+    return document::select("{\"a\":2}",pointers);
+  }
+}
+world app {export api;}

@@ -81,7 +81,7 @@ export async function verifyRoot(root, id, version, profile = 'value') {
     }
     return { files, manifest, manifest_sha256: files['lib.json'].sha256 };
   }
-  assert.ok(['value', 'resource'].includes(profile), 'unsupported verification profile');
+  assert.ok(['value', 'resource', 'host'].includes(profile), 'unsupported verification profile');
   if (profile === 'value') {
     assert.equal(manifest.bindings?.rust_core?.schema, 'wasmc.lib-rust-canonical-core-sdk/v1');
   }

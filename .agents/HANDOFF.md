@@ -1,5 +1,12 @@
 # WAsmC release maintainer handoff
 
+Latest Lib work, 2026-10-07: registry=39 of the 42 required historical/candidate
+identity union. See `.agents/workstreams/WS-20261006-lib-refresh-v2/identity-closure-checkpoint.json`
+and paired HANDOFF. Three historical libraries now pass generated SDK tests;
+owned-algorithms passes ordinary WAsmC App Q2 on both engines. JSON still fails
+full-Root aggregate type registration. Std, search and Resident remain pending.
+No legacy fallback, whole39 qualification, main integration or release claimed.
+
 ## Current all-candidate checkpoint — 2026-10-06T20:08:21.186197+00:00
 
 This is the current execution authority; older sections below are historical.

@@ -1,0 +1,26 @@
+package local:current_owned_q2;
+interface api {
+  record request {label:string,values:list<s32>,enabled:bool}
+  unicode:func()->s32 {return algorithms::utf8_score("A中");}
+  emoji:func()->s32 {return algorithms::utf8_score("😀");}
+  sum:func()->i64 {
+    let mut values:list<s32> = list.new();
+    values.push(2147483647); values.push(2147483647);
+    return algorithms::sum_s32(values);
+  }
+  empty:func()->i64 {
+    let mut values:list<s32> = list.new();
+    return algorithms::sum_s32(values);
+  }
+  trues:func()->u32 {
+    let mut values:list<bool> = list.new();
+    values.push(true);values.push(false);values.push(true);
+    return algorithms::count_true(values);
+  }
+  score:func()->i64 {
+    let mut values:list<s32> = list.new(); values.push(4);values.push(-5);
+    let item:request = {label:"中",values:values,enabled:true};
+    return algorithms::request_score(item);
+  }
+}
+world app {export api;}

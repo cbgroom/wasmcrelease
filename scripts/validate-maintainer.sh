@@ -56,6 +56,7 @@ done
 
 node scripts/validate-current-only-libs.mjs
 node scripts/validate-lib-refresh-v2-source.mjs
+node scripts/validate-lib-identity-coverage.mjs
 node scripts/validate-integrity.mjs
 node scripts/validate-license-policy.mjs
 node scripts/validate-libs.mjs

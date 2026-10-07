@@ -1,0 +1,14 @@
+{
+  "schema": "wasmc.current-identity-closure-stage/v1",
+  "state": "checkpointed_three_migrated_owned_q2_pass_json_registration_open",
+  "checkpoint": "identity-closure-checkpoint.json",
+  "checkpoint_sha256": "0119ca312878b55169555b10cd7b6a73fd8548fb33d43b45e11767e792d9e0aa",
+  "baseline": "672b6e0a0d1b4313bc3c123edaeb94f3946b3456",
+  "source_authority": "libspec/",
+  "human_direction": "Continue implementation; no compatibility or legacy fallback.",
+  "preflight": {"host": "hwlinux", "user": "huawei", "upstream": "0/0", "dirty": false, "active_writer": false},
+  "identities": ["wasmc-owned-algorithms", "wasmc-resource-counter", "wasmc-host-clock", "wasmc-std", "wasmc-lib-search", "mcpgit-resident-memory"],
+  "actions": ["Port standalone Rust identities and explicit Host import profile", "Bind unresolved intrinsic/index/resident ownership instead of silently dropping capabilities", "Run ordinary WAsmC caller probes on exact generated Roots", "Checkpoint source and task authority"],
+  "validation": ["No libsrc or prior-package execution fallback", "All historical identity dispositions explicit", "Behavior/error/lifecycle proofs bind exact new Root", "Preserve unrelated worktrees and immutable tags"],
+  "public_admission": false
+}

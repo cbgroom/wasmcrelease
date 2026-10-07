@@ -74,7 +74,7 @@ export async function refresh(argv, render) {
       const bytes = { 'lib.json': specBytes };
       for (const file of names.filter(f => f !== 'lib.json')) bytes[file] = await load(inside(directory, file));
       assert.equal(spec.id, entry.id); assert.equal(spec.schema, 'wasmc.lib-refresh-source/v2');
-      assert.ok(['value', 'resource', 'native'].includes(spec.profile), 'unsupported profile: ' + spec.profile);
+      assert.ok(['value', 'resource', 'host', 'native'].includes(spec.profile), 'unsupported profile: ' + spec.profile);
       if (spec.profile !== 'native') assert.match(spec.crate, /^[A-Za-z0-9_-]+$/);
       assert.equal(new Set(spec.apis.map(a => a.api)).size, spec.apis.length, 'duplicate API evidence');
       specs.set(entry.id, spec); payloads.set(entry.id, bytes);
@@ -195,6 +195,15 @@ export async function refresh(argv, render) {
         }
       }
       const verified = await verifyRoot(packageRoot, id, spec.version, spec.profile);
+      if (spec.profile === 'host') {
+        assert.ok(Array.isArray(spec.host_imports) && spec.host_imports.length > 0,
+          id + ': explicit Host import contract required');
+        const module = new WebAssembly.Module(await readFile(join(packageRoot, 'artifact.wasm')));
+        const imports = WebAssembly.Module.imports(module);
+        assert.ok(imports.every(value => value.kind === 'function'), id + ': undeclared non-function Host import');
+        assert.deepEqual(imports.map(value => value.module + '#' + value.name).sort(),
+          [...spec.host_imports].sort(), id + ': actual Host authority differs from declared imports');
+      }
       if (cached) assert.deepEqual(verified.files, cached.files, id + ': same input generated different root bytes');
       else {
         const temporary = await mkdtemp(join(cache, 'objects', '.pending-'));

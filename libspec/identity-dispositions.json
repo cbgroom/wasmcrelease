@@ -1,0 +1,37 @@
+{
+  "schema": "wasmc.current-lib-identity-dispositions/v1",
+  "inventory_authorities": {
+    "historical_package_identities": "catalog/libs-v018.json",
+    "retired_candidate_identities": ".agents/workstreams/WS-20261006-lib-refresh-v2/legacy-retirement.json",
+    "current_sources": "libspec/registry.json"
+  },
+  "policy": "Every prior library identity must have a current source or an explicit unresolved implementation owner. A pending identity is not retirement, a compatibility route, or release completeness.",
+  "pending": [
+    {
+      "id": "wasmc-std",
+      "state": "pending_current_core_resource_generation",
+      "owner": "WAsmC standard-library producer",
+      "reason": "The 73-API standard library contains typed-resource direct Core semantics plus a Component oracle. Copying the Component oracle alone would discard the existing Core behavior and does not complete its migration.",
+      "next": "Produce one current standard-library source and generic resource plan under the new pipeline, then run all 73 APIs through ordinary App and both complete SDK views.",
+      "fallback": false
+    },
+    {
+      "id": "wasmc-lib-search",
+      "state": "pending_current_registry_index_generation",
+      "owner": "Current library discovery/index producer",
+      "reason": "The immutable 0.4.0 index covers a historical release catalog, not the current source registry. Reusing those bytes as a new source would silently omit new identities.",
+      "next": "Generate the index deterministically from current WIT/API and exact package routes; compile a thin Rust search adapter without a frozen legacy catalog dependency.",
+      "fallback": false
+    },
+    {
+      "id": "mcpgit-resident-memory",
+      "state": "pending_current_resident_kernel_binding",
+      "owner": "MCPGit Resident implementation owner",
+      "reason": "The historical WIT adapter depends on resident-kernel and resident-state revisions distinct from the current kernel. Restoring that old implementation would create a second state engine.",
+      "next": "Bind the current Resident implementation behind a thin adapter and verify revision pinning, publish conflicts, range reads, budgets and snapshot ownership before entering the current build cohort.",
+      "fallback": false
+    }
+  ],
+  "retired_capabilities": [],
+  "public_admission": false
+}

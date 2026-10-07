@@ -33,6 +33,8 @@ try {
   }
   if(ids.has('wasmc-system-telemetry'))await run('test-telemetry-source.mjs');
   if(component) {
+    if(['wasmc-owned-algorithms','wasmc-resource-counter','wasmc-host-clock'].every(id=>ids.has(id)))
+      await run('test-generated-identities.mjs',args);
     if(ids.has('wasmc-system-telemetry'))await run('test-generated-telemetry.mjs',args);
     await run('test-generated-wasmi.mjs',args);
     if(ids.has('wasmc-tls-core')&&ids.has('wasmc-tls-client'))await run('test-generated-tls.mjs',args);
