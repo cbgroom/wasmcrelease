@@ -1,10 +1,10 @@
 # WAsmC release maintainer handoff
 
-Latest Lib work: dual-engine logical Q2 now covers JSON3 APIs/9 cases and
-owned algorithms4 APIs/6 cases, eight rounds each, 240 total calls. Read
-`.agents/workstreams/WS-20261006-lib-refresh-v2/dual-engine-q2-checkpoint.json`
-and its HANDOFF. Registry remains39/42; Std/Search/Resident, main integration,
-full-cohort/device/soak and release gates remain pending. No compatibility path.
+Latest Lib work: Search0.5.0 has current source and generated Core Q0/Q1;
+registry40/42,153 APIs,193 index entries. Read
+`.agents/workstreams/WS-20261006-lib-refresh-v2/current-search-checkpoint.json`
+and HANDOFF. Strict dual-engine App replay is in progress; Std/Resident, full
+cohort/device/integration and public release remain pending. No old fallback.
 
 ## Current all-candidate checkpoint — 2026-10-06T20:08:21.186197+00:00
 

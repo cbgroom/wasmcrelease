@@ -1,0 +1,86 @@
+{
+  "schema": "wasmc.current-search-implementation-checkpoint/v1",
+  "observed_at": "2026-10-07T10:32:44.724769+00:00",
+  "release_baseline": "88ef9923efcb8d7a1d8ec1ef4d92fbc411868bb9",
+  "state": "40_of_42_search_q0_q1_pass_app_q2_in_progress",
+  "source_inputs": {
+    "libspec/registry.json": "1eb28a439b1401ef975217d9d3c38cc4f51a06efa16891690a9784a871fca19c",
+    "libspec/rust-policy.json": "cdc1b4ed6155c69c8b90eb301c6fbb1a872bcf7355d3e6eb4ec6cb8aa07939b4",
+    "libspec/Cargo.lock": "03647f6b9411cac639cd41a9b997e6f87c529ef1269004702f48dab9ca7535f3",
+    "libspec/identity-dispositions.json": "e98a5f1bc341e31dc1321dc3243672cb666a2b3137bb24e6828f30d15ce57c96",
+    "scripts/lib-current-index-v2.mjs": "554c47f665f67d1f48338459563ec759884de8531814b93567b3aed2a01a6b99",
+    "scripts/test-lib-current-index-v2.mjs": "bb69e47e7d448aca648a98d3dffbb83a5c8337b3ce410958cd64650d50d7b53f",
+    "scripts/test-current-lib-search-v2.mjs": "2138de0638f84a0f87bda823c4a5f8aeb96747c3603ae6268cd14e9e3eafd95c",
+    ".agents/skills/release-lib-refresh-v2/SKILL.md": "1fb72494b5710b67fe6ed95036a69738b3e7af577d8e45f82c8ae3dd4e0c9e7d",
+    "scripts/validate-maintainer.sh": "3ac83d834cabb0837efd6d5fbd4d303945f06ff525a49ab658bc120de32be758",
+    ".github/workflows/lib-refresh.yml": "1a0644dfaa99d7acf4b4f227b73fde62c8e79904ea406f4b57e30cd533f90c6f",
+    "libspec/wasmc-lib-search/lib.json": "584e82c3fba7da80d75e31791b96cb67e939be57bf3e5b035dd8879755fe3959",
+    "libspec/wasmc-lib-search/adapter.rs": "7793d00983a8f742a9c85970ce7225b68b287baaa9e025d7aceee0d60b201cc7",
+    "libspec/wasmc-lib-search/lib.wit": "1a9729b05dc6996dc213ce7167d9e04e11fc133dae88fe61b817837730a11ba6",
+    "libspec/wasmc-lib-search/delta.rs": "d50fd8e2a1404384e66a65e3ff6278bdc741c6a14e24a75fb34502b7cfe33283"
+  },
+  "search_version": "0.5.0",
+  "source_count": 40,
+  "required_identities": 42,
+  "pending": [
+    "wasmc-std",
+    "mcpgit-resident-memory"
+  ],
+  "index_packages": 40,
+  "index_apis": 153,
+  "index_entries": 193,
+  "bound_packages": 4,
+  "bound_native_source_packages": 2,
+  "index_sha256": "9e527e449e598f81cc32a43b1b32ab071f542aed810cd5f0b658ca2f64e0f865",
+  "q0_ms": 21364,
+  "subset_refresh": {
+    "total_ms": 6486,
+    "package_build_ms": {
+      "wasmc-json": 5249,
+      "wasmc-lib-search": 12,
+      "wasmc-system-android-display": 12,
+      "wasmc-system-ios-simulator-display": 12
+    },
+    "cache_hits": 1,
+    "cache_misses": 3,
+    "persistent_workspace": true,
+    "persistent_cargo_target": true
+  },
+  "generated_core_q1_tests": 25,
+  "full_exact_lookups": 193,
+  "checker_and_workflow_tests": 32,
+  "producer_sha256": "d8d01bbb434a7bb002ab20f8e9353381c0aee07da43bbb7829853fd7e7c18306",
+  "evidence": {
+    "q0": {
+      "path": "/home/huawei/code/.cache/wasmc-evidence/current-search-20261007/runs/refresh-Heon0b/refresh-receipt.json",
+      "sha256": "431dee774367baf7bc6ef1f5a917092f2d62a26c0233997aaff4caf14ec5f383"
+    },
+    "q0_bound": {
+      "path": "/home/huawei/code/.cache/wasmc-evidence/current-search-20261007/runs/refresh-vEGqZe/refresh-receipt.json",
+      "sha256": "e3bb87cffb670e70454fb3f106e2993938b457d093de85c5c8d3a67f2efc9d05"
+    },
+    "q1": {
+      "path": "/home/huawei/code/.cache/wasmc-evidence/current-search-20261007/runs/refresh-vEGqZe/current-search-q1-pkB9bW/receipt.json",
+      "sha256": "992d18f43b9a6f991a10ddd36ad57030fcc9dafec18814fb8b3ea6820b5b7924"
+    },
+    "index": {
+      "path": "/home/huawei/code/.cache/wasmc-evidence/current-search-20261007/index-bound/receipt.json",
+      "sha256": "6a6a1ca2b7b083a9137353cf091529e5dd4fd5e3d2ec176f564a4902fdb47610"
+    },
+    "initial_app_failure": {
+      "path": "/home/huawei/code/.cache/wasmc-evidence/current-search-20261007/runs/refresh-Heon0b/current-search-app-q2-8GwGMD/receipt.json",
+      "sha256": "ab324acac4c582da58aa6c37c2bcbe6680e2ac778a1a540f38e8f31467338485"
+    },
+    "local_managed_helper_rejection": {
+      "path": "/home/huawei/code/.cache/wasmc-evidence/current-search-20261007/runs/refresh-vEGqZe/current-search-app-q2-HJxWlg/receipt.json",
+      "sha256": "8b51a35c6d3d540ac73c45937a811a278b19509c659f689d44cf0db5ae17c388"
+    }
+  },
+  "public_admission": false,
+  "full_cohort_qualified": false,
+  "known_app_limits": [
+    "Duplicated full-index literals reached240s in first build; retained timeout evidence.",
+    "String-returning ordinary local helpers reject: complete synchronous basic scalar function required.",
+    "Independent complete-Root Apps per case are being verified; no Q2 PASS asserted."
+  ]
+}

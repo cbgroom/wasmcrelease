@@ -113,6 +113,34 @@ The thin `adapter.rs` may reference generated WIT types and implements the
 generated Guest trait. It only maps types/errors and delegates to `delta`.
 If substantial algorithm logic appears in the adapter, move it to `delta.rs`.
 
+## Current-registry discovery
+
+`wasmc-lib-search@0.5.0` is a pure value Lib with explicit index input. Current
+indexes are generated data, not Rust source or frozen historical catalogs.
+Changing registry contents must not require rebuilding the Search binary.
+This separates Search's own artifact identity from the index that discovers it.
+
+Use `node scripts/lib-current-index-v2.mjs --out <absent-directory>` for current
+source discovery. Each `--bind <exact-run-root> <expected-receipt-sha256>` adds
+only verified current generated package bindings; stale source/policy/lock,
+mutated packages and ambiguous bindings reject rather than falling back.
+Index bytes and receipts are immutable per run; `--check` regenerates and
+compares the exact current index. Runtime snapshot computes SHA256 over the
+explicit bytes; consumers independently compare that digest before selection.
+
+Key by implementation ID/version/API route, not WIT package alone. Multiple
+platform implementations may implement identical WIT. Source-only rows have no
+delivery binding, and native source packages have no pretend Wasm artifact.
+Discovery, even with artifact pins, never implies admission, runtime/device
+qualification or installation authority. Pending identities remain in the
+separate identity-completeness gate, not fictional search implementations.
+
+`test-lib-current-index-v2.mjs` validates generation and pin failures.
+`test-current-lib-search-v2.mjs` tests all actual index entries on the generated
+Core artifact. `test-current-search-wasmc-q2.mjs` generates test-only ordinary
+Apps from the full current index and requires both engines through the shared
+v2 runner/checker. Test index literals do not enter the Search implementation.
+
 ## Dependency policy
 
 Dependency versions and features belong in `libspec/rust-policy.json`, not

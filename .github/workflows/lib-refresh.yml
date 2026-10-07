@@ -32,7 +32,7 @@ jobs:
           node scripts/validate-current-only-libs.mjs
           node scripts/validate-lib-refresh-v2-source.mjs
           node scripts/validate-lib-identity-coverage.mjs
-          node --test scripts/test-lib-refresh-cache-v2.mjs scripts/test-lib-refresh-workflow-v2.mjs scripts/test-lib-q2-evidence-v2.mjs
+          node --test scripts/test-lib-refresh-cache-v2.mjs scripts/test-lib-refresh-workflow-v2.mjs scripts/test-lib-q2-evidence-v2.mjs scripts/test-lib-current-index-v2.mjs
           node scripts/test-platform-profile-resolver.mjs
   generated-packages:
     if: github.event_name == 'workflow_dispatch'
@@ -59,6 +59,11 @@ jobs:
           node -e 'const fs=require("fs");const x=JSON.parse(fs.readFileSync("target/current-libs/result.json"));if(!x.accepted)process.exit(1);fs.appendFileSync(process.env.GITHUB_ENV,"RUN_ROOT="+x.run_root+"\n")'
       - name: Qualify exact generated packages
         run: node scripts/qualify-lib-refresh-v2.mjs --run-root "$RUN_ROOT" --component
+      - name: Current-registry Search index and generated Core behavior
+        run: |
+          PIN=$(sha256sum "$RUN_ROOT/refresh-receipt.json" | cut -d' ' -f1)
+          node scripts/lib-current-index-v2.mjs --out "$RUN_ROOT/search-index" --bind "$RUN_ROOT" "$PIN"
+          node scripts/test-current-lib-search-v2.mjs --run-root "$RUN_ROOT" --index "$RUN_ROOT/search-index/index.json"
       - name: Linux generated adapter runtime tests
         run: |
           node scripts/test-linux-lib-defined-boundary.mjs --run-root "$RUN_ROOT"

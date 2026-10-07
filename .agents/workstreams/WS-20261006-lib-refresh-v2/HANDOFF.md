@@ -1,5 +1,20 @@
 # Lib Refresh V2
 
+## Latest checkpoint: current-registry Search source and generated Core
+
+Search0.5.0 now uses explicit index data, never a frozen historical catalog.
+Current source count40/42; Std/Resident remain pending. Deterministic generation
+covers40 implementations/153 WIT APIs/193 entries, preserving Android/iOS
+implementations sharing one WIT identity. Four current package bindings include
+2 native source packages, which are not Wasm artifacts or device qualification.
+Read current-search-checkpoint.json. Q0,25 generated-Core tests (including193
+exact lookups), and32 generation/cache/evidence checks PASS. An initial full-index
+ordinary App test with duplicated literals reached240s; its failure is retained.
+A string-returning local helper is rejected by the existing scalar-only local
+call rule. Independent full-index/full-Root Apps are being replayed per case;
+this separate compiler limit is retained, and Q2 is not yet claimed PASS.
+No installation, full-cohort, integration or public release claim.
+
 ## Latest checkpoint: complete logical dual-engine Q2
 
 JSON now passes all three APIs/nine cases for eight rounds on both Wasmi2 and
