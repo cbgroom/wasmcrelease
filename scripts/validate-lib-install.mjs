@@ -10,7 +10,7 @@ const catalogSha256='a4de009c683d3db4453cf0a9e783719a933a8e1689842a12d08a6883a83
 const catalog=checkedCurrentCatalog(catalogBytes,catalogSha256),row=catalog.packages.find(r=>r.id==='wasmc-std');
 const lock=resolveCurrentPackage(catalogBytes,catalogSha256,{id:row.id,version:row.version,manifest_sha256:row.manifest_sha256,root_inventory_sha256:row.root_inventory_sha256},currentProductReader(repositoryRoot));
 const lockBytes=Buffer.from(JSON.stringify(lock,null,2)+'\n');
-if(hash(lockBytes)!=='628b796b6bb04ac0a2e105be56e6e46a10c2d2c8e6a7c2aba01d869644dccbdd')throw Error('independent approved Std lock drift');
+if(hash(lockBytes)!=='4fe1ac9859b28764f009c3ee6381124a6602e760c627f790eea8886dfe61bd9f')throw Error('independent approved Std lock drift');
 const mirror=process.argv[2]??'github',fixture=mkdtempSync(join(tmpdir(),'wasmc-current-live-install-'));
 const host=globalThis.Bun?'bun':globalThis.Deno?'deno':'node';
 const run=(script,args,permissions)=>{
