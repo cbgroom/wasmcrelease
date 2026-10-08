@@ -12,7 +12,7 @@ import { retiredAuthoringDirectory, validateCurrentOnlySources } from './validat
 import { currentReleasePreflight, currentReleaseArguments } from './lib-current-release-preflight.mjs';
 import { sha, digest, inventory } from './lib-refresh-cache-v2.mjs';
 
-const gen = ['lib-refresh-v2.mjs','lib-refresh-runner-v2.mjs','lib-refresh-cache-v2.mjs','lib-refresh-native-v2.mjs'];
+const gen = ['lib-refresh-v2.mjs','lib-refresh-runner-v2.mjs','lib-refresh-cache-v2.mjs','lib-refresh-native-v2.mjs','lib-refresh-resource-core-v2.mjs'];
 const put = async (root, path, value) => {
   const file = join(root, path); await mkdir(dirname(file), {recursive:true});
   await writeFile(file, typeof value === 'string' ? value : JSON.stringify(value));

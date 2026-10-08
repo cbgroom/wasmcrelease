@@ -39,10 +39,10 @@ function libSource(spec, policy) {
   ].join('\n');
 }
 
-function buildSpec(spec) {
+function buildSpec(spec, resourceCore = null) {
   return {
     apis: [...spec.apis].sort((a, b) => a.api < b.api ? -1 : a.api > b.api ? 1 : 0),
-    rust: { artifact_name: spec.artifact_name, crate_dir: 'crates/' + spec.id, profile: 'wit-bindgen-component' },
+    rust: { artifact_name: spec.artifact_name, crate_dir: 'crates/' + spec.id, profile: 'wit-bindgen-component', ...(resourceCore ? { resource_core_source: resourceCore } : {}) },
     schema: 'wasmc.lib-build/v0', skill: { description: spec.description, name: spec.id, version: spec.version },
     wit: 'lib.wit',
   };

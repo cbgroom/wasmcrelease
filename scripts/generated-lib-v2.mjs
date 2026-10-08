@@ -21,7 +21,7 @@ export async function generatedLib(id, runRoot = selectedRun()) {
   const row = rows[0];
   const root = join(runRoot, 'packages', id);
   assert.equal(resolve(row.package_root), root, 'receipt package locator escaped selected run');
-  const verified = await verifyRoot(root, id, row.version, row.profile);
+  const verified = await verifyRoot(root, id, row.version, row.profile, Boolean(row.resource_core_inputs));
   assert.equal(verified.manifest_sha256, row.manifest_sha256, id + ': manifest identity mismatch');
   if (row.artifact_sha256 !== null) assert.equal(verified.manifest.artifact?.sha256, row.artifact_sha256);
   return { root, manifest: verified.manifest, files: verified.files, row, receipt,

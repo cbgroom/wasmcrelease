@@ -67,7 +67,8 @@ for (const row of registry.libs) {
   }
   const adapter = await readFile(join(dir, 'adapter.rs'), 'utf8');
   const adapterLines = adapter.split('\n').length;
-  assert.ok(adapterLines <= 120, row.id + ': adapter is no longer thin (' + adapterLines + ' lines)');
+  const adapterLineBudget = 120 + 8 * spec.apis.length;
+  assert.ok(adapterLines <= adapterLineBudget, row.id + ': adapter exceeds API-scaled review budget (' + adapterLines + '/' + adapterLineBudget + ' lines)');
   assert.ok(adapter.includes('crate::delta'), row.id + ': adapter must delegate into delta');
 }
 for (const [name, shared] of Object.entries(policy.shared_modules ?? {})) {

@@ -6,6 +6,7 @@ import { fileURLToPath } from 'node:url';
 import { parseWitRoutes } from './lib-route-closure.mjs';
 import { generatedLib } from './generated-lib-v2.mjs';
 import { inventory, sha, digest } from './lib-refresh-cache-v2.mjs';
+import { verifyResourceCoreReceipt } from './lib-refresh-resource-core-v2.mjs';
 import { verifyWitClosure } from './lib-wit-closure-v2.mjs';
 
 const order = (a, b) => a < b ? -1 : a > b ? 1 : 0;
@@ -62,6 +63,7 @@ export async function currentIndex(repo, bindings = [], witTool = null) {
     const receipt = JSON.parse(receiptBytes);
     assert.equal(receipt.accepted, true, 'partial refresh cannot authorize binding');
     assert.equal(receipt.schema, 'wasmc.lib-refresh-receipt/v2');
+    await verifyResourceCoreReceipt(repo, receipt, readFile);
     assert.equal(receipt.cargo_lock_sha256, lockHash, 'binding has stale shared lock');
     assert.equal(receipt.source_digests?.['libspec/rust-policy.json'], sha(policyBytes), 'binding has stale Rust policy');
     assert.equal(new Set(receipt.rows.map(row => row.id)).size, receipt.rows.length);
@@ -102,6 +104,7 @@ export async function currentIndex(repo, bindings = [], witTool = null) {
       };
       if (native) assert.equal(current.delivery.component_sha256, null);
     }
+    await verifyResourceCoreReceipt(repo, receipt, readFile);
     receipts.push({ receipt_sha256: binding.receipt_sha256, ids: receipt.rows.map(row => row.id).sort(order) });
   }
   const entries = [];
@@ -115,7 +118,7 @@ export async function currentIndex(repo, bindings = [], witTool = null) {
       const suffix = route.slice(routes.identity.length + 1);
       const leaf = suffix.split('#')[1];
       const api = leaf.startsWith('[constructor]') ? 'constructor' : leaf.replace(/^\[(?:static|method)\][^.]+\./, '');
-      const description = spec.apis.find(a => a.api === api)?.delta ?? 'Public WIT resource operation: ' + leaf;
+      const description = spec.apis.find(a => a.api === suffix.split('#')[0] + '-' + api || a.api === api)?.delta ?? 'Public WIT resource operation: ' + leaf;
       entries.push({ ...base, identity: packageIdentity + '/' + suffix, kind: 'api', wit_route: route, description });
     }
   }
@@ -162,7 +165,7 @@ async function main() {
     await mkdir(out, { recursive: false });
     await writeFile(join(out, 'index.json'), result.bytes, { flag: 'wx' });
     const tools = {};
-    for (const file of ['lib-current-index-v2.mjs', 'lib-wit-closure-v2.mjs', 'lib-route-closure.mjs', 'generated-lib-v2.mjs', 'lib-refresh-cache-v2.mjs'])
+    for (const file of ['lib-current-index-v2.mjs', 'lib-wit-closure-v2.mjs', 'lib-route-closure.mjs', 'generated-lib-v2.mjs', 'lib-refresh-cache-v2.mjs', 'lib-refresh-resource-core-v2.mjs'])
       tools[file] = sha(await readFile(new URL(file, import.meta.url)));
     await writeFile(join(out, 'receipt.json'), JSON.stringify({ schema: 'wasmc.current-lib-search-index-receipt/v1',
       accepted: true, ...result.summary, generator_inputs: tools, source_inputs: result.inputs, binding_receipts: result.receipts,

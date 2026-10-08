@@ -52,7 +52,7 @@ export async function inventory(root, prefix = '') {
   return result;
 }
 
-export async function verifyRoot(root, id, version, profile = 'value') {
+export async function verifyRoot(root, id, version, profile = 'value', resourceCore = false) {
   const files = await inventory(root);
   const manifest = await json(join(root, 'lib.json'));
   assert.equal(manifest.id, id);
@@ -86,7 +86,12 @@ export async function verifyRoot(root, id, version, profile = 'value') {
     assert.equal(manifest.bindings?.rust_core?.schema, 'wasmc.lib-rust-canonical-core-sdk/v1');
   }
   assert.equal(manifest.bindings?.rust_component?.schema, 'wasmc.lib-rust-component-sdk/v0');
-  const allowed = profile === 'value' ? ['rust_component', 'rust_core'] : ['rust_component'];
+  if (resourceCore) {
+    assert.equal(profile, 'resource');
+    assert.equal(manifest.bindings?.rust_core?.schema, 'wasmc.lib-rust-core-sdk/v0');
+    assert.ok(files['typed-resource-plan.json'], id + ': complete resource Core plan missing');
+  }
+  const allowed = profile === 'value' || resourceCore ? ['rust_component', 'rust_core'] : ['rust_component'];
   assert.deepEqual(Object.keys(manifest.bindings).sort(), allowed,
     id + ': complete profile must not advertise partial or unknown SDK views');
   for (const name of ['artifact.wasm', 'component.wasm', 'core-abi.json', 'lib.wit']) {
@@ -119,7 +124,7 @@ export async function verifyCache(entry, key, spec) {
   assert.equal(seal.schema, 'wasmc.lib-refresh-cache-entry/v2');
   assert.equal(seal.key, key);
   assert.equal(seal.id, spec.id);
-  const current = await verifyRoot(join(entry, 'package'), spec.id, spec.version, spec.profile ?? 'value');
+  const current = await verifyRoot(join(entry, 'package'), spec.id, spec.version, spec.profile ?? 'value', Boolean(spec.core_resource));
   assert.deepEqual(current.files, seal.files, spec.id + ': CACHE_INTEGRITY inventory mismatch');
   return current;
 }

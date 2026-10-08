@@ -4,6 +4,7 @@ import { homedir, tmpdir } from 'node:os';
 import { isAbsolute, join, resolve } from 'node:path';
 import { acquireWriter, atomicJson, command, digest, exists, inside, inventory as fileInventory, json, sha, verifyCache, verifyRoot, writeChanged } from './lib-refresh-cache-v2.mjs';
 import { buildNative } from './lib-refresh-native-v2.mjs';
+import { resourceCoreInputs, stageResourceCore } from './lib-refresh-resource-core-v2.mjs';
 
 function argumentsOf(argv) {
   const args = { ids: [], all: false, updateLock: false, rebuild: false,
@@ -11,7 +12,10 @@ function argumentsOf(argv) {
     out: process.env.WASMC_LIB_REFRESH_OUTPUT };
   for (let i = 0; i < argv.length; i++) {
     const value = argv[i];
-    if (value === '--all') args.all = true;
+    if (value === '--resource-core-inputs' || value === '--resource-core-inputs-sha256') {
+      assert.ok(argv[i + 1] && !argv[i + 1].startsWith('--'), 'missing value for ' + value);
+      args[value === '--resource-core-inputs' ? 'resourceCoreInputs' : 'resourceCoreInputsSha256'] = argv[++i];
+    } else if (value === '--all') args.all = true;
     else if (value === '--update-lock') args.updateLock = true;
     else if (value === '--rebuild') args.rebuild = true;
     else if (['--producer', '--cache', '--out'].includes(value)) {
@@ -100,8 +104,11 @@ export async function refresh(argv, render) {
       CARGO_BUILD_JOBS: '2', CARGO_INCREMENTAL: '0', RUSTC_WRAPPER: '', RUSTC_WORKSPACE_WRAPPER: '',
       RUSTFLAGS: '', CARGO_ENCODED_RUSTFLAGS: '' };
     const producerSha = sha(await readFile(args.producer));
+    const coreInputs = await resourceCoreInputs(args, specs, payloads, producerSha, load);
+    for (const id of selected) if (specs.get(id).core_resource)
+      assert.ok(coreInputs.has(id), id + ': explicit source-derived resource Core inputs required');
     const generator = {};
-    for (const file of ['lib-refresh-v2.mjs', 'lib-refresh-runner-v2.mjs', 'lib-refresh-cache-v2.mjs', 'lib-refresh-native-v2.mjs'])
+    for (const file of ['lib-refresh-v2.mjs', 'lib-refresh-runner-v2.mjs', 'lib-refresh-cache-v2.mjs', 'lib-refresh-native-v2.mjs', 'lib-refresh-resource-core-v2.mjs'])
       generator[file] = sha(await load(join(repo, 'scripts', file)));
     const rustc = await command('rustc', ['+' + policy.toolchain, '-vV'], { cwd: repo, env });
     const cargo = await command('cargo', ['+' + policy.toolchain, '--version'], { cwd: repo, env });
@@ -151,6 +158,7 @@ export async function refresh(argv, render) {
       const dependencies = closure(id);
       const modules = [...new Set(specs.get(id).shared_modules ?? [])].sort();
       return [id, digest({ common, id, native_toolchain: specs.get(id).profile === 'native' ? nativeToolchain : null,
+        resource_core: coreInputs.get(id)?.identity ?? null,
         source: Object.fromEntries(Object.entries(payloads.get(id)).map(([f, b]) => [f, sha(b)])),
         // WIT dependencies supply types only; no sibling Rust code is linked.
         wit_dependencies: Object.fromEntries(dependencies.filter(d => d !== id).map(d => [d, sha(payloads.get(d)['lib.wit'])])),
@@ -186,7 +194,9 @@ export async function refresh(argv, render) {
         await sync(join(specDir, 'lib.wit'), payloads.get(id)['lib.wit']);
         for (const dep of closure(id).filter(d => d !== id))
           await sync(join(specDir, 'deps', dep, 'world.wit'), payloads.get(dep)['lib.wit']);
-        await atomicJson(join(specDir, 'lib.build.json'), render.spec(spec));
+        const resourceInput = coreInputs.get(id);
+        const assembly = resourceInput ? await stageResourceCore(resourceInput, workspace, id, sync) : null;
+        await atomicJson(join(specDir, 'lib.build.json'), render.spec(spec, assembly));
         const result = await command(args.producer,
           ['lib', 'build', '--workspace', workspace, '--publication', publication, join(specDir, 'lib.build.json')],
           { cwd: repo, env: { ...env, WASMC_LIB_CARGO_TARGET_DIR: cargoTarget },
@@ -194,7 +204,7 @@ export async function refresh(argv, render) {
         row.producer_ms = result.duration_ms;
         }
       }
-      const verified = await verifyRoot(packageRoot, id, spec.version, spec.profile);
+      const verified = await verifyRoot(packageRoot, id, spec.version, spec.profile, Boolean(spec.core_resource));
       if (spec.profile === 'host') {
         assert.ok(Array.isArray(spec.host_imports) && spec.host_imports.length > 0,
           id + ': explicit Host import contract required');
@@ -212,7 +222,7 @@ export async function refresh(argv, render) {
           files: verified.files, generator, producer_sha256: producerSha });
         await rename(temporary, entryPath);
       }
-      Object.assign(row, { state: 'verified', build_ms: Date.now() - packageStarted,
+      Object.assign(row, { resource_core_inputs: coreInputs.get(id)?.identity ?? null, state: 'verified', build_ms: Date.now() - packageStarted,
         root_inventory_sha256: digest(verified.files),
         supported_views: Object.keys(verified.manifest.bindings),
         ordinary_wasmc_qualification: 'not_run',
@@ -227,7 +237,10 @@ export async function refresh(argv, render) {
     const receipt = { schema: 'wasmc.lib-refresh-receipt/v2', accepted: true, fingerprint,
       run_root: runRoot, producer: { path: args.producer, sha256: producerSha }, generator_digests: generator,
       toolchain, cargo_lock_sha256: sha(lockBytes), selected, package_keys: keys, rows: progress.rows,
-      source_digests: Object.fromEntries([...source].map(([path, bytes]) => [path.slice(repo.length + 1), sha(bytes)])),
+      resource_core_input_manifest: args.resourceCoreInputs ? { path: args.resourceCoreInputs, sha256: args.resourceCoreInputsSha256 } : null,
+      resource_core_inputs: Object.fromEntries([...coreInputs].map(([id, input]) => [id, input.identity])),
+      producer_input_digests: Object.fromEntries([...source].filter(([path]) => !path.startsWith(repo + '/')).map(([path, bytes]) => [path, sha(bytes)])),
+      source_digests: Object.fromEntries([...source].filter(([path]) => path.startsWith(repo + '/')).map(([path, bytes]) => [path.slice(repo.length + 1), sha(bytes)])),
       timing: { total_ms: Date.now() - started, package_build_ms: Object.fromEntries(progress.rows.map(r => [r.id, r.build_ms])),
         cache_hits: progress.rows.filter(r => r.action === 'reuse').length, cache_misses: progress.rows.filter(r => r.action === 'build').length,
         persistent_workspace: true, persistent_cargo_target: true },

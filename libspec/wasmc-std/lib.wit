@@ -1,0 +1,150 @@
+package wasmc:std@1.4.1;
+
+interface %string {
+  resource text;
+  new: func() -> own<text>;
+  len: func(value: borrow<text>) -> u32;
+  is-empty: func(value: borrow<text>) -> bool;
+  contains: func(value: borrow<text>, needle: borrow<text>) -> bool;
+  starts-with: func(value: borrow<text>, prefix: borrow<text>) -> bool;
+  ends-with: func(value: borrow<text>, suffix: borrow<text>) -> bool;
+  push-str: func(value: borrow<text>, suffix: borrow<text>);
+  clear: func(value: borrow<text>);
+}
+
+interface %list {
+  use %string.{text};
+  resource string-list;
+  resource s32-list;
+  new: func() -> own<string-list>;
+  len: func(value: borrow<string-list>) -> u32;
+  is-empty: func(value: borrow<string-list>) -> bool;
+  push: func(value: borrow<string-list>, item: own<text>);
+  pop: func(value: borrow<string-list>) -> option<own<text>>;
+  get: func(value: borrow<string-list>, index: u32) -> option<own<text>>;
+  reverse: func(value: borrow<string-list>);
+  clear: func(value: borrow<string-list>);
+  new-s32: func() -> own<s32-list>;
+  push-s32: func(value: borrow<s32-list>, item: s32);
+  len-s32: func(value: borrow<s32-list>) -> u32;
+  get-s32: func(value: borrow<s32-list>, index: u32) -> option<s32>;
+}
+
+interface %map {
+  resource s32-map;
+  new: func() -> own<s32-map>;
+  len: func(value: borrow<s32-map>) -> u32;
+  is-empty: func(value: borrow<s32-map>) -> bool;
+  contains-key: func(value: borrow<s32-map>, key: s32) -> bool;
+  get: func(value: borrow<s32-map>, key: s32) -> option<s32>;
+  insert: func(value: borrow<s32-map>, key: s32, item: s32) -> option<s32>;
+  remove: func(value: borrow<s32-map>, key: s32) -> option<s32>;
+  clear: func(value: borrow<s32-map>);
+}
+
+interface sum {
+  option-is-none: func(value: option<s32>) -> bool;
+  option-is-some: func(value: option<s32>) -> bool;
+  option-unwrap-or: func(value: option<s32>, fallback: s32) -> s32;
+  result-is-err: func(value: result<s32, s32>) -> bool;
+  result-is-ok: func(value: result<s32, s32>) -> bool;
+  result-unwrap-or: func(value: result<s32, s32>, fallback: s32) -> s32;
+}
+
+interface %iterator {
+  use %list.{s32-list};
+  resource s32-iterator;
+  into-iter-s32: func(value: own<s32-list>) -> own<s32-iterator>;
+  next-s32: func(value: borrow<s32-iterator>) -> option<s32>;
+  count-s32: func(value: own<s32-iterator>) -> u32;
+  fold-add-s32: func(value: own<s32-iterator>, initial: s32) -> s32;
+}
+
+interface bytes {
+  resource byte-buffer;
+  new: func() -> own<byte-buffer>;
+  len: func(value: borrow<byte-buffer>) -> u32;
+  byte-at: func(value: borrow<byte-buffer>, index: u32) -> option<u8>;
+  push: func(value: borrow<byte-buffer>, item: u8);
+  clear: func(value: borrow<byte-buffer>);
+  set: func(value: borrow<byte-buffer>, index: u32, item: u8) -> bool;
+  eq: func(left: borrow<byte-buffer>, right: borrow<byte-buffer>) -> bool;
+  contains: func(value: borrow<byte-buffer>, needle: borrow<byte-buffer>) -> bool;
+  count-byte: func(value: borrow<byte-buffer>, item: u8) -> u32;
+}
+
+interface base64 {
+  use bytes.{byte-buffer};
+  try-encode-standard: func(value: borrow<byte-buffer>, output: borrow<byte-buffer>) -> bool;
+  try-decode-standard: func(value: borrow<byte-buffer>, output: borrow<byte-buffer>) -> bool;
+}
+
+interface hex {
+  use bytes.{byte-buffer};
+  try-encode-lower: func(value: borrow<byte-buffer>, output: borrow<byte-buffer>) -> bool;
+  try-decode: func(value: borrow<byte-buffer>, output: borrow<byte-buffer>) -> bool;
+}
+
+interface integer-text {
+  use bytes.{byte-buffer};
+  parse-s32: func(value: borrow<byte-buffer>) -> option<s32>;
+  try-format-s32: func(value: s32, output: borrow<byte-buffer>) -> bool;
+}
+
+interface structured-data {
+  use bytes.{byte-buffer};
+  is-reading: func(input: borrow<byte-buffer>) -> bool;
+  try-write-reading: func(id: s32, value: s32, active: bool, output: borrow<byte-buffer>) -> bool;
+}
+
+interface structured-text {
+  use bytes.{byte-buffer};
+  use %string.{text};
+  resource reading;
+  from-utf8: func(input: borrow<byte-buffer>) -> option<own<text>>;
+  parse-reading: func(input: borrow<byte-buffer>) -> option<own<reading>>;
+  label: func(value: borrow<reading>) -> own<text>;
+  text-len: func(value: borrow<text>) -> u32;
+  id: func(value: borrow<reading>) -> s32;
+  value: func(value: borrow<reading>) -> s32;
+  active: func(value: borrow<reading>) -> bool;
+  try-write-labeled-reading: func(value: borrow<reading>, output: borrow<byte-buffer>) -> bool;
+}
+
+interface structured-collection {
+  use bytes.{byte-buffer};
+  use structured-text.{reading};
+  resource reading-list;
+  parse-readings: func(input: borrow<byte-buffer>) -> option<own<reading-list>>;
+  len: func(value: borrow<reading-list>) -> u32;
+  get: func(value: borrow<reading-list>, index: u32) -> option<own<reading>>;
+  try-write-readings: func(value: borrow<reading-list>, output: borrow<byte-buffer>) -> bool;
+}
+
+interface structured-map {
+  use bytes.{byte-buffer};
+  use structured-text.{text, reading};
+  resource reading-map;
+  parse-map: func(input: borrow<byte-buffer>) -> option<own<reading-map>>;
+  len: func(value: borrow<reading-map>) -> u32;
+  contains-key: func(value: borrow<reading-map>, key: borrow<text>) -> bool;
+  get: func(value: borrow<reading-map>, key: borrow<text>) -> option<own<reading>>;
+  insert: func(value: borrow<reading-map>, key: own<text>, item: own<reading>) -> option<own<reading>>;
+  try-write-map: func(value: borrow<reading-map>, output: borrow<byte-buffer>) -> bool;
+}
+
+world standard-lib {
+  export %string;
+  export %list;
+  export %map;
+  export sum;
+  export %iterator;
+  export bytes;
+  export base64;
+  export hex;
+  export integer-text;
+  export structured-data;
+  export structured-text;
+  export structured-collection;
+  export structured-map;
+}

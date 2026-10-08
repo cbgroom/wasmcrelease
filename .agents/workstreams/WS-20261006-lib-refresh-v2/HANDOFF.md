@@ -1,4 +1,113 @@
+## Resident current-kernel stage planned before implementation
+
+Source authority was refreshed from actual GitHub main to
+e0e1a0cd3debcbaec7592f010b54f13d3fdbdfc4. Current Resident state Blob
+1006d2b4b3bbec64f0ea0dfc900cce67cd739c2d and SHA256
+0c1e80b4226b8e72c71d9642ab75a1f756d3f0a466ced28f09f04a66996b8869
+are unchanged from observed local main95c598c; the local checkout is untouched.
+Actual source kernel25 functional tests PASS,2 explicit release diagnostics
+remain ignored, and actual wasm32 Rust compile PASS. Upstream-only receipt
+31fc431f43ab75af48921ff713a5c3037a22a43fbe4de8954c1d32cbe1ed6774.
+No Resident Lib/WIT/runtime qualification follows from these kernel tests.
+
+Resident-current-plan.json and exact task claims declare the next slice:
+generic bounded independently pinned upstream source inputs feed the existing
+generated shared-module/cohort pipeline, then four-file Resident business/WIT
+mapping delegates immutable generation/publication/snapshot budgets to current
+mcpgit-resident-state. Preserve source privacy by keeping upstream implementation
+in ignored private producer workspace, not copying it into this public Git tree.
+No historical resident-kernel engine or old authoring project is restored.
+Then qualify revision/conflict/range/version/budget/snapshot behavior and actual
+SDK/App before resolving the sole pending identity. Existing compatible pools,
+serial writers12GiB/80percent,36GiB total/100GiB free floor remain.
+
+Full maintainer run currently exits1 at frozen manifest AGENTS identity mismatch.
+Both that file and manifest are byte-identical to source baselinee7f656b, so this
+predates the current owned changes. Exact observation and raw failed run are
+retained in frozen-integrity-observation.json; no full maintainer/Product PASS
+and no immutable v0.0.20 manifest rewrite. Current four-file/source audit41,
+current index12 tests, namespaced73 routes and generic controls46 PASS.
+
+## Current Std73 libspec closure and Resident continuation
+
+The current four-file Std source now generates one complete dual-view Root.
+Current manifest ca68fd7684a9f5f680199c26c73886e97ca6754233b353e3902b7fc8b903f3f2
+and refresh b79ca86674b2c1fe6a2dbb08629593f2c01488dc59671351848036d5fe85440c
+are independently pinned. Actual73 operations and9 cleanup/resource classes
+passed256 persistent rounds on Node,Wasmi2.0.0,Wasmtime49.0.2 and Component49.0.0.
+Ordinary current WAsmC App compiled from a receipt-derived exact catalog and
+passed5120 calls. Full qualification SHA256 ca330ef5d9ab19a209438368537f1db6cfd6e836761e3b0ee7734c650f69d553.
+First status15/status14, PATH, direct macro manifest-dir and catalog-locator
+failures remain retained; no success overwrites them.
+
+Generic independently pinned resource inputs, staging, cache identity, complete
+SDK verification, discovery/current preflight and end-read byte fences are one
+current profile-driven pipeline;46 control tests PASS. Namespaced API evidence
+uses unique lower-kebab keys and current search descriptions retain namespace.
+Both generic document producers now preserve64/73/512 rows and reject513 with
+no publication;7 regressions pass. Producer source7591fcf03b7a8c623ad9945ef8f810ef21f48d68
+is ordinarily pushed/read back and canonical current context accepted; final
+137-exception audit PASS and strict839-row history820PASS/19 originalFAIL are
+verified; current commit accepted, unknown failures0. Source publication receipt
+SHA256 bad1af6b2151abc9e33cc34c16c4707b97855366c8ec4de49d0846362746d20b.
+The private compiler source stays private; public whole product remainsv0.0.20.
+
+Remove only qualified Std from pending disposition. Current source coverage is
+41/required42, with mcpgit-resident-memory still explicitly pending. Next bind
+MCPGit main95c598c2f09f7f99ea96b72ab9aaa534587a1b65 current
+crates/mcpgit-resident-state; no old resident-kernel/state engine restoration.
+Use its immutable paged/COW generations and Arc-pinned snapshots with fail-closed
+byte accounting. Higher layers own queries/ranges/durability. Verify revision
+pinning, publish conflicts, ranges, budgets and snapshot lifetime before closure.
+Current private4.8 provider byte variants must converge to one new immutable
+whole-product provider identity before release; version equality alone is
+insufficient. Whole42/Q3, native/Host/general capacity/license/determinism/
+install/Pi and channels remain. Owning Skill now records the generic input and
+current Std lessons. Preserve unrelated trees, old immutable products and caches.
+
 # Lib Refresh V2
+
+## Current Std73 libspec integration stage
+
+Execution owner: Codex chat `01a11750-35f8-7ff0-a8f7-7df28acf332c`, same parent
+`task-wasmc-thin-host-semantic-lifecycle-closure`. Prior execution chat is retained
+in task.json as lineage. Works stage plan and source checkpoint are actually
+published at `91918854d9b56df2b223ee8c1c9d80ce18b455d9`; only own L2 changed.
+
+Compiler branch source `0008cb4bf54cae30aaa199e715a35db07cee96bc` is ordinarily
+pushed, actual GitHub readback matches, clean0/0. Current canonical commit PASS;
+137 frozen exceptions verified with exact previously qualified Git2.56.
+Strict history remains819PASS/19 originalFAIL, exit1; finite approved expression
+warnings do not downgrade functional, resource, data or authority failures.
+Publication receipt SHA256
+`8e5670bb75c928e45e5b62cc4b6471bcad7a0763b885cf4929ed74983e9c69bb`.
+
+Private Std73 candidate qualification summary SHA256
+`f88b8cbeaa05c1424394bddc9a568dce0b0159aefcae162697b68a6f73d1595a`
+binds73 public operations,9 cleanup classes,256 persistent rounds on Node,
+Wasmi2.0.0 and Wasmtime49.0.2; Component SDK declared Wasmtime49.0.0 also passed
+256 rounds. Ordinary WAsmC App passed5120 Node calls. Eight strict source input
+controls rejected without publication. This is not libspec Root qualification,
+whole42, main integration, public admission, device, install or release acceptance.
+
+Current stage: preserve `libspec/` as sole authoring authority. Port WIT, ordinary
+Rust business delta and thin adapter into its four authored assets. The generic
+resource Core assembler receives independently pinned, source-derived graph,
+module and provider production inputs; these are producer inputs, never another
+per-Lib Cargo authoring format or a historical generated plan fallback. Generated
+Cargo uses the one current cohort policy/lock. No package-name dispatch.
+Missing or changed producer inputs reject before package publication.
+
+Resident orientation: MCPGit main at observed
+`95c598c2f09f7f99ea96b72ab9aaa534587a1b65` is clean and owns the accepted
+`mcpgit-resident-state` kernel. Paged/COW generations, pinned snapshots, hard
+budget and ref/revision publication belong there; thin Lib adapters own WIT
+mapping. Do not restore an old resident-kernel/state engine or change deployed
+query selection. Binding and runtime qualification remain pending.
+
+Next bounded checkpoint: generic source-input validation and new Std libspec
+Root generation, then all73 consumers and current Resident binding. Preserve
+every failed attempt and use immutable distinct run receipts.
 
 ## Current Std73 substage: source recipe verified; compiled Root pending
 

@@ -21,8 +21,8 @@ are required independently of local commit.
 
 `libspec/` is the sole current Lib source authority. Do not extend the historical
 per-Lib Cargo/wit-bindgen project model and do not add compatibility branches
-for it. Old `libsrc/` trees are migration input only until retirement completes;
-remove them rather than retain a second supported format.
+for it. Historical authoring trees are absent from current HEAD; Git holds the
+retired implementation. Never restore a second supported source format.
 
 The all-candidate denominator is the union of actual source directories and
 registry entries, not the incomplete historical registry alone. Native C/Swift
@@ -53,8 +53,9 @@ mutable PATH alias.
 Implemented profiles:
 
 - `value`: import-free synchronous values; canonical Core + Component dual view.
-- `resource`: actual Rust state/resource implementation; Core artifact and
-  Component SDK. A complete ordinary Core SDK is not advertised when absent.
+- `resource`: actual Rust state/resource implementation; the current explicit
+  `core_resource` contract selects complete source-derived Core and Component
+  SDKs. Without that contract, record the complete Component SDK only.
   Explicit Host imports (for example TLS entropy) remain WIT-declared.
 - `host`: Rust delta plus a thin explicitly imported WIT capability adapter.
   Check actual Core function imports against the exact declared import set;
@@ -80,8 +81,8 @@ fallback is allowed. Device/runtime qualification must be recorded separately.
 ## Persistent build cache and immutable evidence
 
 The current executor consists of `lib-refresh-v2.mjs`,
-`lib-refresh-runner-v2.mjs`, `lib-refresh-cache-v2.mjs` and
-`lib-refresh-native-v2.mjs`. Their exact bytes
+`lib-refresh-runner-v2.mjs`, `lib-refresh-cache-v2.mjs`,
+`lib-refresh-native-v2.mjs` and `lib-refresh-resource-core-v2.mjs`. Their exact bytes
 are input identity, not just an informal tool version.
 
 Use `--cache` for a persistent local builder store and `--out` for immutable
@@ -233,6 +234,48 @@ oracle, never the producer input. Only fresh Core/provider builds, exact symbol
 and digest binding, complete dual SDK generation and actual ordinary-App/resource
 behavior can close the pending Std identity. Do not mark41/42 from a73-row graph.
 
+
+Adapter line count is a bounded review heuristic, not semantic proof of
+business ownership. The generic budget is120 fixed mapping/import lines plus8
+per declared API evidence row, so a73-operation Rust-formatted adapter is not
+forced to compress its source into artificial single lines. Every method still
+delegates to ordinary delta logic; runtime/generated concerns remain forbidden
+in delta. Review the actual mapping and preserve complete API/runtime evidence;
+package names never choose a larger budget.
+
+Current generic refresh requires paired explicit `--resource-core-inputs`
+and independently supplied `--resource-core-inputs-sha256`. The exact bounded
+manifest pins the selected producer, published source commit, current WIT,
+logical graph, every physical module and provider identity/artifact. Staging
+is generated build input; the four authored Lib files remain sole authority.
+No inferred plan or package-name route exists. A declared Core-resource source
+without matching input rejects before Cargo. Canonical paths, byte budgets,
+duplicate/ambiguous identity and source/graph/provider drift reject.
+
+Cache keys and receipt rows include the whole resource input identity. The
+receipt separately records external producer inputs, keeping repository source
+digests repository-relative. Generated-root selection requires the complete
+declared resource Core SDK and typed plan. Discovery/preflight reread the pinned
+input manifest and every graph/module/provider byte, compare the current source
+contract and sealed row identity, and repeat the fence after reading. A changed
+input, self-rehashed provider, missing manifest, stale generator or extra source
+cannot inherit an earlier acceptance.
+
+The self-hosted document generator accepts complete evidence through512 APIs;
+513 rejects before publication. API evidence names follow existing lower-kebab
+syntax. Use unique interface-operation keys when operations repeat across WIT
+interfaces; preserve all actual WIT routes rather than truncating or relaxing
+the lexical contract. Relative-WIT generated Component SDK consumption needs
+CARGO_MANIFEST_DIR set to that actual SDK directory for direct rustc builds.
+
+Current Std73 libspec Root ca68fd7684a9f5f680199c26c73886e97ca6754233b353e3902b7fc8b903f3f2
+passed actual all73/nine-resource Core and Component SDK consumers,256 persistent
+rounds on the observed Node/Wasmi2/Wasmtime49 engines and5120 ordinary App calls.
+This closes its current-source identity disposition, not the whole42 cohort.
+The current Resident-state kernel binding, provider byte/version unification,
+general capacity/Host/native/determinism/license/install/Pi and publication
+remain independent gates. The exact qualification and failures travel with the
+owning workstream checkpoint.
 
 Dependency versions and features belong in `libspec/rust-policy.json`, not
 individual Lib directories. A Lib names dependency keys only. The cohort uses
