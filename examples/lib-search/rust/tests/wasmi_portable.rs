@@ -6,7 +6,7 @@ fn current_core_snapshot_search_lookup_and_post_return_without_jit() {
     let bytes = std::fs::read(format!("{root}/artifact.wasm")).unwrap();
     assert_eq!(format!("{:x}", Sha256::digest(&bytes)), wasmc_lib_search_component::LIB_ARTIFACT_SHA256);
     let index = std::fs::read(std::env::var("WASMC_SEARCH_INDEX_PATH").unwrap()).unwrap();
-    assert_eq!(format!("{:x}", Sha256::digest(&index)), "223ad9063abf38fffb9e6ff8e2ea1a130faf816bce50a5f8772e6e13bc439693");
+    assert_eq!(format!("{:x}", Sha256::digest(&index)), "73a1ebcce721a73dd8964030b7bb7bc61f2ed1d1aeb7d2aa46c22b8da8d8f333");
     let engine = Engine::default(); let module = Module::new(&engine, &bytes[..]).unwrap();
     assert_eq!(module.imports().count(), 0);
     let mut store = Store::new(&engine, ());

@@ -8,8 +8,8 @@ import {ScopedCompletionGuard} from '../../runtime/completion/scoped-guard.mjs';
 import {readWindow} from '../../runtime/completion/read-window.mjs';
 import {createCoreBytesProvider} from './provider.mjs';
 const digest=bytes=>createHash('sha256').update(bytes).digest('hex');
-const core=await readFile('standard/corelib/4.8.0/corelib.wasm');
-assert.equal(digest(core),'f54a892aff9068e5c79464029423a2e8f753ddb44010af9ac34a5c9efce2069c');
+const core=await readFile('standard/corelib/4.9.0/corelib.wasm');
+assert.equal(digest(core),'c3ac42b93f4c27e24065abe804b91f54761eff782e2971e947847b3d20ee7e00');
 await mkdir('target/corelib-io',{recursive:true});
 const wasmc=await compile(await readFile('host/core/io/private-abi-guest.wasmc','utf8'));
 assert.equal(WebAssembly.validate(wasmc),true);
@@ -61,7 +61,7 @@ try {
     if(process.argv[2]) {
       const prefix=`native-${name}`,vectors=[[],[7],[1,2,3,255],Array.from({length:16},(_,i)=>i)];
       for(const [index,data] of vectors.entries())await writeFile(`${root}/${prefix}-${index}.input`,Uint8Array.from(data));
-      const receipt=await native(['standard/corelib/4.8.0/corelib.wasm',`target/corelib-io/${name}-guest.wasm`,root,prefix,...(process.argv.includes('--wasmtime')?['--wasmtime']:[])]);
+      const receipt=await native(['standard/corelib/4.9.0/corelib.wasm',`target/corelib-io/${name}-guest.wasm`,root,prefix,...(process.argv.includes('--wasmtime')?['--wasmtime']:[])]);
       assert.equal(receipt.accepted,true);assert.equal(receipt.trap_cleanup,true);assert.equal(receipt.stale_rejected,true);
       assert.equal(receipt.post_trap_no_replay,true);
       assert.deepEqual(receipt.results,[0,7,261,120]);

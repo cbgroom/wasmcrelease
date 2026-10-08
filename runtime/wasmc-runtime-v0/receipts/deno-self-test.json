@@ -2,18 +2,18 @@
   "schema": "wasmc.runtime-js-self-test/v0",
   "accepted": true,
   "runtime": "deno",
-  "runtime_version": "deno 2.9.4 (stable, release, aarch64-apple-darwin)",
-  "candidate_commit": "6dc94e5f8fb0814ddc59c152ad9fd231dd08385c",
-  "compiler_bytes": 1399677,
-  "compiler_sha256": "4e0b9779df3bf7b627d7d9fbfc43cfffd67bb053f87c69a9f832c5690b6888a2",
+  "compiler_bytes": 1510219,
   "output_bytes": 41,
+  "runtime_version": "deno 2.9.7 (stable, release, x86_64-unknown-linux-gnu)\nv8 15.0.245.2-rusty\ntypescript 6.0.3",
+  "candidate_commit": "980f5b248006febace626168fd397ffc95e66fd5",
+  "compiler_sha256": "42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c",
   "source_free_package": {
-    "archive_sha256": "ad90e3d275fd961c24f14cf4667d729625050e27b1794c805993d679fc04b2a1",
+    "archive_sha256": "1cee502375ac61f927ef631b4e1f3a6ab819154700cf29292c4ba997d0738a35",
     "private_source_checked_out": false
   },
   "host": {
-    "hostname": "youdeMac-mini.local",
-    "uname": "Darwin youdeMac-mini.local 25.6.0 Darwin Kernel Version 25.6.0: Fri Jul 31 19:11:03 PDT 2026; root:xnu-12377.161.14~5/RELEASE_ARM64_T8132 arm64"
+    "hostname": "huawei-ThinkCentre-M920t",
+    "uname": "Linux huawei-ThinkCentre-M920t 6.8.0-138-generic #138~22.04.1-Ubuntu SMP PREEMPT_DYNAMIC Fri Aug  7 13:43:15 UTC  x86_64 x86_64 x86_64 GNU/Linux"
   },
   "execution": {
     "self_test": true,
@@ -31,6 +31,69 @@
   "tool_source": {
     "provider": "local-executable",
     "command": "deno",
-    "executable_sha256": "433088c827fa0e39ff162ab0e475f1fd4c7690eaedec500cf678edc3865e9287"
+    "executable_sha256": "ce6a052beb97c2b92de67077e3f3924ba7c9661ede0d8dc2f66a116a3c841f21"
+  },
+  "executed_at_utc": "2026-10-08T21:05:43.742159+00:00",
+  "evidence": {
+    "steps": [
+      {
+        "name": "deno-version",
+        "command": [
+          "/home/huawei/code/.cache/wasmc-tools/deno-2.9.7-x86_64-linux/deno",
+          "--version"
+        ],
+        "exit": 0,
+        "seconds": 0.0036804676055908203,
+        "stdout_sha256": "78f8d0e3c16d4de223982d182a555491a3aceb5337db61d67a54ab98ae01995e",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "deno-self-test",
+        "command": [
+          "/home/huawei/code/.cache/wasmc-tools/deno-2.9.7-x86_64-linux/deno",
+          "run",
+          "--allow-read",
+          "--allow-write",
+          "bootstrap.mjs",
+          "self-test"
+        ],
+        "exit": 0,
+        "seconds": 0.037734270095825195,
+        "stdout_sha256": "613028706a0481eeb55cd8f9d5d1e8354bf26b07817c0adb755fa8eba6e054c2",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "deno-compile",
+        "command": [
+          "/home/huawei/code/.cache/wasmc-tools/deno-2.9.7-x86_64-linux/deno",
+          "run",
+          "--allow-read",
+          "--allow-write",
+          "bootstrap.mjs",
+          "compile",
+          "--input",
+          "examples/add.wasmc",
+          "--output",
+          "/home/huawei/code/.cache/wasmc-evidence/current-std73-production-20261008/fresh-bootstrap-qohnmhlp/canonical42c-Runtime-three-host-source-free-dev2-9jw6rkmi/deno-add.wasm"
+        ],
+        "exit": 0,
+        "seconds": 0.032312870025634766,
+        "stdout_sha256": "47782c859674efb232f6543803312dea0e5fba59c80a78fc3c441f7420925d35",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "deno-independent-oracle",
+        "command": [
+          "/usr/local/bin/node",
+          "/home/huawei/code/.cache/wasmc-evidence/current-std73-production-20261008/fresh-bootstrap-qohnmhlp/canonical42c-Runtime-three-host-source-free-dev2-9jw6rkmi/oracle.mjs",
+          "/home/huawei/code/.cache/wasmc-evidence/current-std73-production-20261008/fresh-bootstrap-qohnmhlp/canonical42c-Runtime-three-host-source-free-dev2-9jw6rkmi/deno-add.wasm"
+        ],
+        "exit": 0,
+        "seconds": 0.030809640884399414,
+        "stdout_sha256": "81b9b8f79a882eac6041afc7dee7f6a992d753fba9ace06624c3efc95349b41e",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "compile_output_sha256": "29996fa74541742737704f64e48add2a5079ed8c57783cda4912046d5acb32c9"
   }
 }

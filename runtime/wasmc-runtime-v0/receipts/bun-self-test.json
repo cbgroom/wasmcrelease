@@ -2,18 +2,18 @@
   "schema": "wasmc.runtime-js-self-test/v0",
   "accepted": true,
   "runtime": "bun",
-  "runtime_version": "1.3.14",
-  "candidate_commit": "6dc94e5f8fb0814ddc59c152ad9fd231dd08385c",
-  "compiler_bytes": 1399677,
-  "compiler_sha256": "4e0b9779df3bf7b627d7d9fbfc43cfffd67bb053f87c69a9f832c5690b6888a2",
+  "compiler_bytes": 1510219,
   "output_bytes": 41,
+  "runtime_version": "1.3.14",
+  "candidate_commit": "980f5b248006febace626168fd397ffc95e66fd5",
+  "compiler_sha256": "42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c",
   "source_free_package": {
-    "archive_sha256": "ad90e3d275fd961c24f14cf4667d729625050e27b1794c805993d679fc04b2a1",
+    "archive_sha256": "1cee502375ac61f927ef631b4e1f3a6ab819154700cf29292c4ba997d0738a35",
     "private_source_checked_out": false
   },
   "host": {
-    "hostname": "youdeMac-mini.local",
-    "uname": "Darwin youdeMac-mini.local 25.6.0 Darwin Kernel Version 25.6.0: Fri Jul 31 19:11:03 PDT 2026; root:xnu-12377.161.14~5/RELEASE_ARM64_T8132 arm64"
+    "hostname": "huawei-ThinkCentre-M920t",
+    "uname": "Linux huawei-ThinkCentre-M920t 6.8.0-138-generic #138~22.04.1-Ubuntu SMP PREEMPT_DYNAMIC Fri Aug  7 13:43:15 UTC  x86_64 x86_64 x86_64 GNU/Linux"
   },
   "execution": {
     "self_test": true,
@@ -31,6 +31,63 @@
   "tool_source": {
     "provider": "local-executable",
     "command": "bun",
-    "executable_sha256": "e0c90ec15d33363e6b70713d56bc3b2c7585c17f40a0fe0f8fd9305901d4e233"
+    "executable_sha256": "9fd36f87e4b90b07632b987a2e4ec81ca15a62c81bf983190cea6d715be2ad74"
+  },
+  "executed_at_utc": "2026-10-08T21:05:43.099507+00:00",
+  "evidence": {
+    "steps": [
+      {
+        "name": "bun-version",
+        "command": [
+          "/usr/local/bin/bun",
+          "--version"
+        ],
+        "exit": 0,
+        "seconds": 0.001544952392578125,
+        "stdout_sha256": "56b0485099b6c5427d3b68c042fd05b632d5e52e924c5064473389812227164c",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "bun-self-test",
+        "command": [
+          "/usr/local/bin/bun",
+          "bootstrap.mjs",
+          "self-test"
+        ],
+        "exit": 0,
+        "seconds": 0.02965569496154785,
+        "stdout_sha256": "25ab084815d0d641a790096de5aea5f5cacf70da6547ea24c1e01dd2600cb40e",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "bun-compile",
+        "command": [
+          "/usr/local/bin/bun",
+          "bootstrap.mjs",
+          "compile",
+          "--input",
+          "examples/add.wasmc",
+          "--output",
+          "/home/huawei/code/.cache/wasmc-evidence/current-std73-production-20261008/fresh-bootstrap-qohnmhlp/canonical42c-Runtime-three-host-source-free-dev2-9jw6rkmi/bun-add.wasm"
+        ],
+        "exit": 0,
+        "seconds": 0.030910015106201172,
+        "stdout_sha256": "a0855b275dcbd0440c7b6a69bae3f75fa67b1cfac9499c8cbf0a6a7e157af009",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "bun-independent-oracle",
+        "command": [
+          "/usr/local/bin/node",
+          "/home/huawei/code/.cache/wasmc-evidence/current-std73-production-20261008/fresh-bootstrap-qohnmhlp/canonical42c-Runtime-three-host-source-free-dev2-9jw6rkmi/oracle.mjs",
+          "/home/huawei/code/.cache/wasmc-evidence/current-std73-production-20261008/fresh-bootstrap-qohnmhlp/canonical42c-Runtime-three-host-source-free-dev2-9jw6rkmi/bun-add.wasm"
+        ],
+        "exit": 0,
+        "seconds": 0.03023242950439453,
+        "stdout_sha256": "81b9b8f79a882eac6041afc7dee7f6a992d753fba9ace06624c3efc95349b41e",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "compile_output_sha256": "29996fa74541742737704f64e48add2a5079ed8c57783cda4912046d5acb32c9"
   }
 }

@@ -324,6 +324,20 @@ export function validateCurrentStageMetadataPartition(candidate){
   return true;
 }
 export const currentCIProductInputs=Object.freeze([
+  "host/core/io/README.md",
+  "host/core/io/test.mjs",
+  "host/core/io/snapshot-test.mjs",
+  "host/core/io/lifetime-test.mjs",
+  "host/tests/e2e/rust/tests/portable_std.rs",
+  ".github/workflows/portable-std.yml",
+  ".github/workflows/sdk-agent-guidance.yml",
+  ".github/workflows/rust-host-sdk.yml",
+  ".github/workflows/release-surfaces.yml",
+  ".github/workflows/client-gateway.yml",
+  ".github/workflows/native-compiler.yml",
+  "scripts/native-package.mjs",
+  "scripts/test-native-compiler.mjs",
+  "scripts/test-native-package.mjs",
   "scripts/pi-pre-release-gate-v1.mjs",
   "scripts/run-pi-learning-model-v1.mjs",
   "scripts/aggregate-native-cli-perf.mjs",

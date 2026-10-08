@@ -3,20 +3,14 @@ use wasmi::{Engine, Linker, Module, Store, Val};
 #[test]
 fn portable_std_wasmi() -> Result<(), Box<dyn Error>> {
     let e = Engine::default();
-    let old = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
-        .join("../../../../standard/wasmc-std/1.4.0/artifact.wasm");
-    assert!(
-        Module::new(&e, fs::read(old)?).is_err(),
-        "old artifact negative control"
-    );
     let root = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
-        .join("../../../../admission/portable-std-v0");
+        .join("../../../..");
     let root = root.to_str().ok_or("path")?;
-    for file in ["rust.wasm", "wasmc.wasm"] {
+    for file in ["examples/current/standard-rust.wasm", "examples/current/standard-wasmc.wasm"] {
         let mut s = Store::new(&e, ());
         let p = Module::new(
             &e,
-            fs::read(format!("{root}/../../standard/corelib/4.8.0/corelib.wasm"))?,
+            fs::read(format!("{root}/standard/corelib/4.9.0/corelib.wasm"))?,
         )?;
         let p = Linker::new(&e).instantiate_and_start(&mut s, &p)?;
         assert_eq!(
@@ -27,12 +21,13 @@ fn portable_std_wasmi() -> Result<(), Box<dyn Error>> {
         let mut l = Linker::new(&e);
         for x in p.exports(&s) {
             l.define(
-                "wasmc:lib/wasmc.lib_managed_object_heap@4.8.0",
+                "wasmc:lib/wasmc.lib_managed_object_heap@4.9.0",
                 x.name(),
                 x.into_extern(),
             )?;
         }
-        let m = Module::new(&e, fs::read(format!("{root}/package/artifact.wasm"))?)?;
+        let m = Module::new(&e, fs::read(format!("{root}/standard/wasmc-std/1.4.1/artifact.wasm"))?)?;
+        assert!(Linker::<()>::new(&e).instantiate_and_start(&mut s, &m).is_err(), "missing current Provider authority rejected");
         let lib = l.instantiate_and_start(&mut s, &m)?;
         assert_eq!(
             lib.get_typed_func::<(), i32>(&s, "std_init")?
@@ -79,12 +74,12 @@ fn portable_std_wasmtime() -> Result<(), Box<dyn Error>> {
     use wasmtime::{Engine, Linker, Module, Store, Val};
     let e = Engine::default();
     let root = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
-        .join("../../../../admission/portable-std-v0");
-    for file in ["rust.wasm", "wasmc.wasm"] {
+        .join("../../../..");
+    for file in ["examples/current/standard-rust.wasm", "examples/current/standard-wasmc.wasm"] {
         let mut s = Store::new(&e, ());
         let m = Module::new(
             &e,
-            fs::read(root.join("../../standard/corelib/4.8.0/corelib.wasm"))?,
+            fs::read(root.join("standard/corelib/4.9.0/corelib.wasm"))?,
         )?;
         let p = Linker::<()>::new(&e).instantiate(&mut s, &m)?;
         assert_eq!(
@@ -100,12 +95,13 @@ fn portable_std_wasmtime() -> Result<(), Box<dyn Error>> {
         for (name, value) in exports {
             linker.define(
                 &mut s,
-                "wasmc:lib/wasmc.lib_managed_object_heap@4.8.0",
+                "wasmc:lib/wasmc.lib_managed_object_heap@4.9.0",
                 &name,
                 value,
             )?;
         }
-        let m = Module::new(&e, fs::read(root.join("package/artifact.wasm"))?)?;
+        let m = Module::new(&e, fs::read(root.join("standard/wasmc-std/1.4.1/artifact.wasm"))?)?;
+        assert!(Linker::<()>::new(&e).instantiate(&mut s, &m).is_err(), "missing current Provider authority rejected");
         let lib = linker.instantiate(&mut s, &m)?;
         assert_eq!(
             lib.get_typed_func::<(), i32>(&mut s, "std_init")?

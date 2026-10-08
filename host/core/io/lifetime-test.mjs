@@ -3,12 +3,12 @@ import {readFile} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import {spawn} from 'node:child_process';
 import {createCoreBytesProvider} from './provider.mjs';
-const core=await readFile('standard/corelib/4.8.0/corelib.wasm');
-assert.equal(createHash('sha256').update(core).digest('hex'),'f54a892aff9068e5c79464029423a2e8f753ddb44010af9ac34a5c9efce2069c');
+const core=await readFile('standard/corelib/4.9.0/corelib.wasm');
+assert.equal(createHash('sha256').update(core).digest('hex'),'c3ac42b93f4c27e24065abe804b91f54761eff782e2971e947847b3d20ee7e00');
 const receipts=[];
 const nativeReceipts=[];
 async function native(name) {
-  const child=spawn(process.argv[2],['standard/corelib/4.8.0/corelib.wasm',`target/corelib-io/${name}-guest.wasm`,'unused','unused','--lifetime-only',...(process.argv.includes('--wasmtime')?['--wasmtime']:[])],{env:{},stdio:['ignore','pipe','pipe']});
+  const child=spawn(process.argv[2],['standard/corelib/4.9.0/corelib.wasm',`target/corelib-io/${name}-guest.wasm`,'unused','unused','--lifetime-only',...(process.argv.includes('--wasmtime')?['--wasmtime']:[])],{env:{},stdio:['ignore','pipe','pipe']});
   let stdout='',stderr='';child.stdout.on('data',b=>{stdout+=b;});child.stderr.on('data',b=>{stderr+=b;});
   const timer=setTimeout(()=>child.kill(),30000);
   const code=await new Promise((resolve,reject)=>{child.on('error',reject);child.on('close',resolve);}).finally(()=>clearTimeout(timer));

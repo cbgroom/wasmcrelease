@@ -5,7 +5,7 @@ use wasmc_lib_search_component::{
 use sha2::{Digest, Sha256};
 fn input() -> (String, Vec<String>) {
     let bytes = std::fs::read(std::env::var("WASMC_SEARCH_INDEX_PATH").unwrap()).unwrap();
-    assert_eq!(format!("{:x}", Sha256::digest(&bytes)), "223ad9063abf38fffb9e6ff8e2ea1a130faf816bce50a5f8772e6e13bc439693");
+    assert_eq!(format!("{:x}", Sha256::digest(&bytes)), "73a1ebcce721a73dd8964030b7bb7bc61f2ed1d1aeb7d2aa46c22b8da8d8f333");
     let index: serde_json::Value = serde_json::from_slice(&bytes).unwrap();
     let mut identities = Vec::new();
     for p in index["packages"].as_array().unwrap() {
@@ -30,7 +30,7 @@ fn main() {
     let catalog = api.wasmc_lib_search_catalog();
     let snapshot = catalog.call_snapshot(&mut store, &index).unwrap().unwrap();
     assert_eq!((snapshot.entry_count, snapshot.package_count, snapshot.api_count, snapshot.bound_package_count), (278, 42, 236, 42));
-    assert_eq!(snapshot.index_sha256, "223ad9063abf38fffb9e6ff8e2ea1a130faf816bce50a5f8772e6e13bc439693");
+    assert_eq!(snapshot.index_sha256, "73a1ebcce721a73dd8964030b7bb7bc61f2ed1d1aeb7d2aa46c22b8da8d8f333");
     for id in &identities { assert_eq!(catalog.call_lookup(&mut store, &index, id).unwrap().unwrap().unwrap().identity, *id); }
     let query = Query { text: String::new(), package_id: None, profile: None, bound_only: false };
     let mut all = Vec::new();

@@ -15,8 +15,8 @@ Host writes the resulting eight-byte little-endian integer and syncs the file.
 The Host does not implement the algorithm. No new Host operation or language
 memory model is introduced, and no compiler/provider artifact is rebuilt.
 
-Provider: `standard/corelib/4.8.0/corelib.wasm`, SHA-256
-`f54a892aff9068e5c79464029423a2e8f753ddb44010af9ac34a5c9efce2069c`.
+Provider: `standard/corelib/4.9.0/corelib.wasm`, SHA-256
+`c3ac42b93f4c27e24065abe804b91f54761eff782e2971e947847b3d20ee7e00`.
 Opaque i64 references/type handles may be negative; zero is failure. Value
 envelopes use high 32 bits for status, low 32 bits for the payload. Do not
 confuse handle sign with success/error or expose this carrier as semantic API.
