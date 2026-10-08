@@ -48,3 +48,5 @@ same commit/tree and verify dev/main/prod identity and public consumers.
 No new0.0.21 candidate/tag/channel release is claimed at this checkpoint.
 Compiler/provider source, implementation archives and private kernel stay private.
 Original failures, old grants and immutable tags remain preserved.
+
+Exact compiler byte projections1510219, facadece6ec5 and source938 are now coherent in all live entrypoints. Matching79 model/source-free qualification and full current maintainer successor pass; original stale-size/facade/model failures retained. New Native six-target workflow37835492547 is active at public6c858 and exactcompiler42c. Canonical Native78ae whole42 initially verified18 then lacked wasm-merge PATH; exact Binaryen126 environment successor0940 active. No approval rejection or whole-release completion is claimed.
