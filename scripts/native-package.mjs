@@ -47,7 +47,7 @@ if (mode === 'build') {
   if (hash(await readFile('current/wasmc_compiler.wasm')) !== compilerDigest) throw new Error('compiler drift');
   if (command('git', ['rev-parse', 'HEAD']) !== source) throw new Error('source mismatch');
   const tree = command('cargo', ['+1.96.0', 'tree', '--locked', '--manifest-path', 'sdk/wasmc-native-compiler/Cargo.toml']);
-  if (!/wasmi v2\.0\.0/.test(tree) || !/wasmtime v47\.0\.4/.test(tree)) throw new Error('runtime dependency identity mismatch');
+  if (!/wasmi v2\.0\.0/.test(tree) || !/wasmtime v49\.0\.2/.test(tree)) throw new Error('runtime dependency identity mismatch');
   const binary = process.platform === 'win32' ? 'wasmc.exe' : 'wasmc';
   await mkdir(directory, { recursive: false });
   await copyFile(`sdk/wasmc-native-compiler/target/release/${binary}`, join(directory, binary));

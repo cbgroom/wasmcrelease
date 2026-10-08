@@ -36,3 +36,7 @@ Source master/L3, five native target jobs, whole candidate/Pi and immutable
 publication are pending. Native-source14 packages remain source-only.
 Source branch95a8257c1ffaa517efdf9f3d16f1b60e98410670 has qualified current
 code; uncommitted test-fixture updates are tracked separately.
+
+## Native package dependency identity correction
+
+GitHub run37746927526 binds distribution02fa4bee. Required Linux x64, Linux arm64 and macOS arm64 completed full tests, clippy and release build, then rejected package construction because the packaging verifier still required Wasmtime47.0.4. Corrected the exact verifier identity to resolved Wasmtime49.0.2; Wasmi2.0.0 and all behavior checks remain exact. Original job log retained locally as /tmp/wasmc-native-v021-linux-package-job.log. A fresh five-target run and downloaded consumer gate are required. No whole-release or matrix acceptance is asserted.
