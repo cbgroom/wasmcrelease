@@ -1,0 +1,157 @@
+package mcpgit:resident-memory@0.2.0;
+
+interface memory {
+  enum error-code {
+    invalid-revision,
+    invalid-input,
+    not-found,
+    conflict,
+    budget-exceeded,
+    invalid-range,
+    integrity,
+    internal,
+  }
+
+  record resident-error {
+    code: error-code,
+    message: string,
+  }
+
+  record history-policy {
+    max-retained-generations: u64,
+    max-reflog-entries: u64,
+    max-refs: u64,
+  }
+
+  record object-input {
+    locator: string,
+    role: option<string>,
+    media-type: string,
+    mode: string,
+    object-version: string,
+    content: list<u8>,
+  }
+
+  record aggregate-input {
+    key: string,
+    row-version: u64,
+    aggregate-version: string,
+    objects: list<object-input>,
+  }
+
+  record replace-range {
+    locator: string,
+    expected-object-version: string,
+    next-object-version: string,
+    offset: u64,
+    delete-length: u64,
+    expected-slice-digest: option<string>,
+    data: list<u8>,
+  }
+
+  record move-object {
+    locator: string,
+    next-locator: string,
+    next-object-version: string,
+  }
+
+  variant object-mutation {
+    put(object-input),
+    patch(replace-range),
+    delete(string),
+    move(move-object),
+  }
+
+  record aggregate-change {
+    key: string,
+    row-version: u64,
+    aggregate-version: string,
+    deleted: bool,
+    objects: list<object-mutation>,
+  }
+
+  record budget-snapshot {
+    limit-bytes: u64,
+    used-bytes: u64,
+  }
+
+  record role-stat {
+    role: string,
+    object-count: u64,
+    byte-count: u64,
+  }
+
+  record aggregate-stat {
+    aggregate-version: string,
+    row-version: u64,
+    object-count: u64,
+    object-bytes: u64,
+    largest-object-bytes: u64,
+    objects-by-role: list<role-stat>,
+  }
+
+  record object-descriptor {
+    locator: string,
+    role: option<string>,
+    media-type: string,
+    mode: string,
+    byte-count: u64,
+    object-version: string,
+  }
+
+  record object-page {
+    aggregate-version: string,
+    objects: list<object-descriptor>,
+    truncated: bool,
+    next-after: option<string>,
+  }
+
+  record byte-range {
+    start: u64,
+    end: u64,
+  }
+
+  record object-read {
+    aggregate-version: string,
+    object-version: string,
+    total-bytes: u64,
+    range: byte-range,
+    bytes: list<u8>,
+  }
+
+  resource store {
+    open: static func(
+      revision: list<u8>,
+      aggregates: list<aggregate-input>,
+      budget-bytes: u64,
+      history: history-policy,
+    ) -> result<own<store>, resident-error>;
+
+    pin-current: func() -> result<own<snapshot>, resident-error>;
+    pin-revision: func(revision: list<u8>) -> result<own<snapshot>, resident-error>;
+    publish: func(
+      expected-parent: list<u8>,
+      next-revision: list<u8>,
+      next-sequence: u64,
+      changes: list<aggregate-change>,
+    ) -> result<own<snapshot>, resident-error>;
+    budget: func() -> budget-snapshot;
+  }
+
+  resource snapshot {
+    revision: func() -> list<u8>;
+    sequence: func() -> u64;
+    stat: func(owner: string) -> result<aggregate-stat, resident-error>;
+    list-objects: func(owner: string, after: option<string>, limit: u64) -> result<object-page, resident-error>;
+    read: func(
+      owner: string,
+      locator: string,
+      expected-object-version: string,
+      range: option<byte-range>,
+    ) -> result<object-read, resident-error>;
+  }
+}
+
+world resident-memory {
+  export memory;
+}

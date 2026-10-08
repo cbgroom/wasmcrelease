@@ -32,7 +32,7 @@ async function boundFixture(t) {
   const manifest={schema:'wasmc.lib-native/v2',id,version:'0.0.1',profile:'native',wit:desc[0],implementation:[desc[1]],
     artifact:null,native:{wasm_lowered:false},lifecycle:{runtime_qualified:false,admitted:false}};
   const bytes=Buffer.from(JSON.stringify(manifest));await writeFile(join(pkg,'lib.json'),bytes);
-  const receipt={schema:'wasmc.lib-refresh-receipt/v2',accepted:true,cargo_lock_sha256:sha(Buffer.from('fixture-lock')),
+  const receipt={schema:'wasmc.lib-refresh-receipt/v2',accepted:true,producer:{sha256:'a'.repeat(64)},cargo_lock_sha256:sha(Buffer.from('fixture-lock')),
     source_digests:f.sources,rows:[{id,profile:'native',version:'0.0.1',package_root:pkg,manifest_sha256:sha(bytes),artifact_sha256:null}]};
   const rbytes=Buffer.from(JSON.stringify(receipt));await writeFile(join(run,'refresh-receipt.json'),rbytes);
   return {...f,run,pkg,receipt,bindings:[{run_root:run,receipt_sha256:sha(rbytes)}]};

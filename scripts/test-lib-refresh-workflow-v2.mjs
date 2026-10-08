@@ -26,7 +26,7 @@ test('whole runner: miss -> hit -> one delta; failure retains journal; tamper re
   const root = await mkdtemp(join(tmpdir(), 'wasmc-refresh-workflow-test-'));
   try {
     await mkdir(join(root, 'scripts')); await mkdir(join(root, 'libspec'));
-    for (const file of ['lib-refresh-v2.mjs', 'lib-refresh-runner-v2.mjs', 'lib-refresh-cache-v2.mjs', 'lib-refresh-native-v2.mjs', 'lib-refresh-resource-core-v2.mjs'])
+    for (const file of ['lib-refresh-v2.mjs', 'lib-refresh-runner-v2.mjs', 'lib-refresh-cache-v2.mjs', 'lib-refresh-native-v2.mjs', 'lib-refresh-resource-core-v2.mjs', 'lib-refresh-upstream-source-v2.mjs'])
       await cp(resolve('scripts', file), join(root, 'scripts', file));
     const entries = ['test-one', 'test-two'].map(id => ({ id, source: 'libspec/' + id }));
     await writeFile(join(root, 'libspec/registry.json'), JSON.stringify({ schema: 'wasmc.lib-refresh-registry/v2', libs: entries }));

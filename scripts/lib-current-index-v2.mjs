@@ -6,6 +6,7 @@ import { fileURLToPath } from 'node:url';
 import { parseWitRoutes } from './lib-route-closure.mjs';
 import { generatedLib } from './generated-lib-v2.mjs';
 import { inventory, sha, digest } from './lib-refresh-cache-v2.mjs';
+import { verifyUpstreamSourceReceipt } from './lib-refresh-upstream-source-v2.mjs';
 import { verifyResourceCoreReceipt } from './lib-refresh-resource-core-v2.mjs';
 import { verifyWitClosure } from './lib-wit-closure-v2.mjs';
 
@@ -63,7 +64,7 @@ export async function currentIndex(repo, bindings = [], witTool = null) {
     const receipt = JSON.parse(receiptBytes);
     assert.equal(receipt.accepted, true, 'partial refresh cannot authorize binding');
     assert.equal(receipt.schema, 'wasmc.lib-refresh-receipt/v2');
-    await verifyResourceCoreReceipt(repo, receipt, readFile);
+    await verifyResourceCoreReceipt(repo, receipt, readFile, await verifyUpstreamSourceReceipt(repo, receipt, readFile));
     assert.equal(receipt.cargo_lock_sha256, lockHash, 'binding has stale shared lock');
     assert.equal(receipt.source_digests?.['libspec/rust-policy.json'], sha(policyBytes), 'binding has stale Rust policy');
     assert.equal(new Set(receipt.rows.map(row => row.id)).size, receipt.rows.length);
@@ -85,7 +86,7 @@ export async function currentIndex(repo, bindings = [], witTool = null) {
       };
       for (const dep of current.spec.wit_dependencies ?? []) await dependencies(dep);
       for (const name of current.spec.shared_modules ?? []) {
-        assert.ok(policy.shared_modules?.[name]); await expectedInput(policy.shared_modules[name].source);
+        assert.ok(policy.shared_modules?.[name]); if (policy.shared_modules[name].source) await expectedInput(policy.shared_modules[name].source);
       }
       const loaded = await generatedLib(row.id, run);
       const deliveredWit = await readFile(join(loaded.root, loaded.manifest.wit.path));
@@ -104,7 +105,7 @@ export async function currentIndex(repo, bindings = [], witTool = null) {
       };
       if (native) assert.equal(current.delivery.component_sha256, null);
     }
-    await verifyResourceCoreReceipt(repo, receipt, readFile);
+    await verifyResourceCoreReceipt(repo, receipt, readFile, await verifyUpstreamSourceReceipt(repo, receipt, readFile));
     receipts.push({ receipt_sha256: binding.receipt_sha256, ids: receipt.rows.map(row => row.id).sort(order) });
   }
   const entries = [];
@@ -165,7 +166,7 @@ async function main() {
     await mkdir(out, { recursive: false });
     await writeFile(join(out, 'index.json'), result.bytes, { flag: 'wx' });
     const tools = {};
-    for (const file of ['lib-current-index-v2.mjs', 'lib-wit-closure-v2.mjs', 'lib-route-closure.mjs', 'generated-lib-v2.mjs', 'lib-refresh-cache-v2.mjs', 'lib-refresh-resource-core-v2.mjs'])
+    for (const file of ['lib-current-index-v2.mjs', 'lib-wit-closure-v2.mjs', 'lib-route-closure.mjs', 'generated-lib-v2.mjs', 'lib-refresh-cache-v2.mjs', 'lib-refresh-resource-core-v2.mjs', 'lib-refresh-upstream-source-v2.mjs'])
       tools[file] = sha(await readFile(new URL(file, import.meta.url)));
     await writeFile(join(out, 'receipt.json'), JSON.stringify({ schema: 'wasmc.current-lib-search-index-receipt/v1',
       accepted: true, ...result.summary, generator_inputs: tools, source_inputs: result.inputs, binding_receipts: result.receipts,

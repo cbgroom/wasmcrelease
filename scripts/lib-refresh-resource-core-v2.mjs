@@ -90,7 +90,7 @@ export async function stageResourceCore(input, workspace, id, sync) {
   return assembly;
 }
 
-export async function verifyResourceCoreReceipt(repo, receipt, load) {
+export async function verifyResourceCoreReceipt(repo, receipt, load, upstreamCaptures = {}) {
   const registry = JSON.parse(await load(join(repo, 'libspec/registry.json')));
   const specs = new Map(), payloads = new Map();
   for (const row of registry.libs) {
@@ -102,7 +102,7 @@ export async function verifyResourceCoreReceipt(repo, receipt, load) {
   if (!locator) {
     assert.equal(selected.length, 0, 'resource Core receipt requires the explicit input manifest');
     assert.deepEqual(receipt.resource_core_inputs ?? {}, {});
-    assert.deepEqual(receipt.producer_input_digests ?? {}, {});
+    assert.deepEqual(receipt.producer_input_digests ?? {}, upstreamCaptures);
     for (const row of receipt.rows) assert.ok(!row.resource_core_inputs, 'unexpected resource Core row identity');
     return;
   }
@@ -124,7 +124,7 @@ export async function verifyResourceCoreReceipt(repo, receipt, load) {
   assert.deepEqual(receipt.resource_core_inputs,
     Object.fromEntries([...inputs].map(([id, input]) => [id, input.identity])),
     'resource Core receipt assembly identity mismatch');
-  assert.deepEqual(receipt.producer_input_digests, captured, 'resource Core receipt external input set mismatch');
+  assert.deepEqual(receipt.producer_input_digests, { ...upstreamCaptures, ...captured }, 'resource Core receipt external input set mismatch');
   for (const row of receipt.rows) {
     const expected = specs.get(row.id)?.core_resource ? inputs.get(row.id)?.identity : null;
     if (specs.get(row.id)?.core_resource) assert.ok(expected, row.id + ': current resource Core input missing');

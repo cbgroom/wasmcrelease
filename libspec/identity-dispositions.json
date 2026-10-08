@@ -6,16 +6,7 @@
     "current_sources": "libspec/registry.json"
   },
   "policy": "Every prior library identity must have a current source or an explicit unresolved implementation owner. A pending identity is not retirement, a compatibility route, or release completeness.",
-  "pending": [
-    {
-      "id": "mcpgit-resident-memory",
-      "state": "pending_current_resident_kernel_binding",
-      "owner": "MCPGit Resident implementation owner",
-      "reason": "The historical WIT adapter depends on resident-kernel and resident-state revisions distinct from the current kernel. Restoring that old implementation would create a second state engine.",
-      "next": "Bind the current Resident implementation behind a thin adapter and verify revision pinning, publish conflicts, range reads, budgets and snapshot ownership before entering the current build cohort.",
-      "fallback": false
-    }
-  ],
+  "pending": [],
   "retired_capabilities": [],
   "public_admission": false
 }

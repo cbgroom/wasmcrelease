@@ -2,6 +2,7 @@
 import assert from 'node:assert/strict';
 import { readFile, readdir, stat } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
+import { validateUpstreamSourceContract } from './lib-refresh-upstream-source-v2.mjs';
 import { inventory as fileInventory } from './lib-refresh-cache-v2.mjs';
 
 const root = process.cwd();
@@ -72,6 +73,8 @@ for (const row of registry.libs) {
   assert.ok(adapter.includes('crate::delta'), row.id + ': adapter must delegate into delta');
 }
 for (const [name, shared] of Object.entries(policy.shared_modules ?? {})) {
+  assert.equal(Boolean(shared.source), !Boolean(shared.upstream_source), 'one current shared source authority required');
+  if (shared.upstream_source) { validateUpstreamSourceContract(shared); continue; }
   const source = await readFile(resolve(root, shared.source), 'utf8');
   for (const token of forbiddenDelta) {
     assert.ok(!source.includes(token), 'shared module ' + name + ' contains generated/runtime concern ' + token);

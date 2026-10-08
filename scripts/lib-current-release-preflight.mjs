@@ -11,7 +11,7 @@ import { generatedLib } from './generated-lib-v2.mjs';
 import { sha, digest, inventory } from './lib-refresh-cache-v2.mjs';
 
 const generatorFiles = ['lib-refresh-v2.mjs', 'lib-refresh-runner-v2.mjs',
-  'lib-refresh-cache-v2.mjs', 'lib-refresh-native-v2.mjs', 'lib-refresh-resource-core-v2.mjs'];
+  'lib-refresh-cache-v2.mjs', 'lib-refresh-native-v2.mjs', 'lib-refresh-resource-core-v2.mjs', 'lib-refresh-upstream-source-v2.mjs'];
 const pin = value => typeof value === 'string' && /^[0-9a-f]{64}$/.test(value);
 const sorted = values => [...values].sort();
 

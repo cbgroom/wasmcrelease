@@ -82,7 +82,7 @@ fallback is allowed. Device/runtime qualification must be recorded separately.
 
 The current executor consists of `lib-refresh-v2.mjs`,
 `lib-refresh-runner-v2.mjs`, `lib-refresh-cache-v2.mjs`,
-`lib-refresh-native-v2.mjs` and `lib-refresh-resource-core-v2.mjs`. Their exact bytes
+`lib-refresh-native-v2.mjs` `lib-refresh-resource-core-v2.mjs` and `lib-refresh-upstream-source-v2.mjs`. Their exact bytes
 are input identity, not just an informal tool version.
 
 Use `--cache` for a persistent local builder store and `--out` for immutable
@@ -376,3 +376,33 @@ Stop rather than add a package-specific branch if:
 - a dependency requires an unpinned or online build;
 - the producer cannot emit a complete digest-bound dual root;
 - a refresh would mutate an immutable admitted/released root in place.
+
+### Exact private upstream source inputs
+
+A shared Rust module selects exactly one authority: repository source, or
+upstream_source with exact repository, source_path, source_commit, git_blob and
+SHA256. Supply the latter through explicit canonical absolute
+--upstream-source-inputs plus independent --upstream-source-inputs-sha256.
+The manifest binds producer bytes, module namespace and exact current source
+contract. Reject missing/extra/duplicate inputs, commit/Blob/digest drift, unsafe
+paths, symlinks, non-UTF8 and generated/runtime concerns before Cargo. Bound the
+manifest to1MiB, each source to2MiB and total source bytes to32MiB.
+
+Stage source only in the private generated workspace. The public authoring
+tree keeps the four Lib files and approved exact metadata; it does not acquire
+the private upstream implementation. Used module bytes and their full identity
+enter package keys and row receipts. Current-index/preflight reread actual
+source and require the exact union of upstream and resource-Core external
+captures at both input fences. No implicit checkout, cached source, historical
+engine or name-specific dispatch is a substitute.
+
+Current Resident0.2.0 delegates immutable generations/snapshots/resident budget
+to exact MCPGit main e0e1a0cd3debcbaec7592f010b54f13d3fdbdfc4. Ordinary
+business Rust stores its object collection in one kernel Blob row, so it
+qualifies object semantics and atomicity without claiming sparse per-object
+page updates or upstream100K latency diagnostics. Resident budget covers
+retained serialized state and kernel structures, not transient request decoding.
+All10 actual generated Component SDK APIs pass256 persistent rounds and8198
+checks with1797 explicit resource drops. Its declared complete SDK is Component;
+an ordinary Core SDK/App has not been qualified. Whole42 generation alone is
+still independent from complete SDK/ordinary App Q2 and release admission.
