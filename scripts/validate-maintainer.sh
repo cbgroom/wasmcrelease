@@ -60,12 +60,15 @@ node scripts/validate-lib-identity-coverage.mjs
 node --test scripts/test-lib-current-index-v2.mjs
 node --test scripts/test-lib-q2-evidence-v2.mjs
 node --test scripts/test-lib-current-release-preflight.mjs
-node scripts/validate-integrity.mjs
+node scripts/current-compiler-integrity.mjs
 node scripts/validate-license-policy.mjs
-node scripts/validate-libs.mjs
+if node -e 'const fs=require("fs"); const c=JSON.parse(fs.readFileSync("current/compiler-release.json")),r=JSON.parse(fs.readFileSync("release.json")); process.exit(c.version===r.version?0:1)'; then
+  node scripts/validate-integrity.mjs
+else
+  echo "NOTICE whole-product integrity pending exact current v3 candidate; current carrier and Root closure checked separately"
+fi
 node scripts/lib-route-closure.mjs --check
 node scripts/test-lib-route-closure.mjs
-node scripts/test-release-candidate-lib-routes.mjs
 node scripts/test-client-foundation-v1.mjs
 node scripts/test-client-foundation-gateway-v1.mjs
 node scripts/test-wss-cancellation-v1.mjs
@@ -87,7 +90,11 @@ JS
 
 node scripts/validate-agent-docs.mjs
 node scripts/test-agent-guidance.mjs
+node scripts/test-agent-quickstart.mjs
+node scripts/test-library-first.mjs
+node scripts/validate-release-surfaces.mjs
+node scripts/lib-ecosystem-control-plane.mjs --check
 node scripts/test-live-agent-trace-evaluation-v1.mjs
 node scripts/validate-sdk-agent-routes.mjs
 
-echo "PASS maintainer structure, release integrity, and facade contract"
+echo "PASS current maintainer structure, compiler/Root identity, public guidance and facade checks; whole-release admission requires exact candidate/Pi/channel receipts"

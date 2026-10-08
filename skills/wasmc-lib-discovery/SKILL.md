@@ -1,78 +1,60 @@
 ---
 name: wasmc-lib-discovery
-description: Find released WAsmC package/API implementations before writing algorithms or data operations; interpret embedded Wasm search hits and proceed to exact selection and verified execution. Not third-party authoring or private compiler maintenance.
+description: Find exact current WAsmC package/API implementations before writing algorithms or data operations; select complete digest-bound Roots and verify actual behavior.
 metadata:
   parent_skill: "wasmc-lib"
 ---
 
 # Library-first discovery
 
-Before searching, read `../../lib-ecosystem-control-plane.json` for the exact
-package state. It is generated from the immutable product manifest, package
-metadata, actual Core imports, the pinned search snapshot and the resolver/
-install catalog. `released`, `discoverable` and `installable` are independent;
-if the selected row has a stopping condition, report it instead of probing
-guessed paths or inferring a missing transition.
-
-For release-maintenance completeness, `../../catalog/lib-route-closure.json`
-is the fail-closed route authority. It derives every released package and
-exported WIT API from the staged product and requires exact catalog, package
-route and API route equality. Do not accept a manually sampled query list or a
-package-level hit as proof that all APIs were synchronized.
-
-The v0.0.20 product carries forward LibSearch 0.4.0. Its snapshot covers 22 identities
-including itself / 162 package and API entries. Product inclusion and admission
-do not establish the current released/default lifecycle stage; read
-`release.json` and `channels/prod.json`. Historical v0.0.13 contains 0.1.0.
-
-This is supplemental guidance after immutable v0.0.10. Pin the tooling full
-commit and verify its SHA256SUMS; do not assume mutable main is release identity.
-Search, exact resolve and pinned install shipped in v0.0.10, despite older
-parent/catalog wording describing them as supplemental main tooling.
+Use the v0.0.21 product's `catalog/libs-current-v2.json`, independently pinned
+below. It binds42 complete current package Roots, including14 native-source
+packages. LibSearch0.5.0 executes lookup and bounded search over42 package and
+236 API routes. A search result establishes discovery; channel authorities
+establish release. Native-source delivery does not establish executable or
+physical-device support.
 
 ## Find an implementation
 
-Run from the verified release/tooling root. Use concrete API/domain words,
-not an assumption of natural-language or Rust-symbol inference:
+Run from the verified immutable product or tooling root:
 
 ```sh
-node scripts/wasmc-lib.mjs search "base64 decode" --limit 8
-node scripts/wasmc-lib.mjs search "counter" --historical --limit 8
+node scripts/wasmc-lib.mjs search "base64 decode" --catalog-sha256 01fda278b3c74363643879f71cc739488a57e9d934f217ab07af3460b88923d4 --limit 8
+node scripts/wasmc-lib.mjs search "counter" --catalog-sha256 01fda278b3c74363643879f71cc739488a57e9d934f217ab07af3460b88923d4 --limit 8
 ```
 
-The first query returns `wasmc:std@1.4.0/base64#try-decode-standard`.
-Each `hit` contains `identity`, `signature`, `skill_path`, `wit_path` and
-`artifact_path`. Paths are relative to this pinned release root. Package hits
-have an empty signature; API hits include the WIT signature. Read the target
-Skill and WIT before generating glue. Do not construct handles from a signature.
-Resource API identities may include `[constructor]` or `[method]`; use the
-ordinary WIT resource and generated binding, not an invented source call name.
+The first query returns identity
+`wasmc-std@1.4.1/base64#try-decode-standard` and WIT route
+`wasmc:std@1.4.1/base64#try-decode-standard`. The response has schema
+`wasmc.public-current-lib-search/v3` and `result.tag=ok`; results are in
+`result.value`. Each hit contains identity, package_id, version, profile,
+source_path, wit_route and exact delivery pins. Read the corresponding catalog
+row's `root`, then its pinned `lib.json`, Skill and WIT. Relative artifact paths
+belong to that Root. Do not infer old hit fields or reconstruct an SDK path.
 
-All query tokens must match; ASCII case folding only, stable identity order,
-no relevance score. Empty query lists entries. Use `--offset N --limit N` for
-paging (maximum64/page). Historical qualification packages require
-`--historical`. No hit means no match in this finite snapshot, not proof that
-no implementation exists anywhere. Retry a concrete shorter term, then inspect
-the target WIT; if still absent, write missing bounded glue or report the gap.
-See [search semantics and typed JS/Rust APIs](../../examples/lib-search/README.md).
+All query tokens must match with ASCII case folding and stable identity order.
+Use explicit `--offset N --limit N` pagination, at most64/page. Package/profile
+and bound-only filters are explicit. No match describes this finite index.
+Use shorter concrete words or read the exact target WIT before writing missing
+bounded glue. Search does not choose versions or grant semver fallback.
 
-## Select and execute, separately
+## Select and execute
 
-1. Approve an exact package version and catalog/WIT/artifact digests from the
-   pinned package metadata. A search hit or newest-looking version is not trust.
-2. Use [exact resolution](../../catalog/README.md) and
-   [no-clobber installation](../../catalog/INSTALL.md). Immutable-tag callers
-   retain the four-package v0.0.9 catalog; current-side tooling may explicitly
-   select the exact 22-package `catalog/libs-v018.json`. Neither catalog nor
-   search is automatic version-selection authority.
-3. Check [artifact compatibility](../../compatibility/README.md), matching
-   CoreLib/provider identity and actual import authority. Installing bytes
-   does not admit an engine or grant capabilities. Search runs on Wasmi/Node18;
-   existing Std1.4.0 does not, because its artifact features differ.
-4. Execute the package's supported example and check the oracle before adding
-   App control logic. Report the pinned source, exact API, profile/engine and
-   observed output. Keep Core and Component verification separate.
+1. Approve the exact package version, catalog digest, manifest digest and
+   complete Root inventory digest. `resolve` requires all three independent
+   digests. The selected Root binds WIT, Core/Component or native-source view,
+   generated SDK, agent metadata, licenses and original notices.
+2. Install only with an independently approved lock digest and explicit mirror.
+   Installation preserves complete bytes and rejects an occupied destination.
+   Use the documented current commands; immutable older catalogs are historical
+   authorities for their own artifacts.
+3. Check the Root's delivery kind, runtime profile and every actual import.
+   Std1.4.1 Core requires the exact Provider4.9 module. Installation supplies no
+   Host permission. Core, Component, native-source and device evidence differ.
+4. For Base64 run [the actual behavior oracle](../../examples/base64/run.mjs).
+   It checks encode/decode, invalid input and explicit resource cleanup on the
+   pinned Std1.4.1/Core4.9 bytes. Report the exact package and WIT APIs, successful
+   resolution and observed output before adding application control logic.
 
-Missing exact identity, digest drift or unsupported engine is a stopping
-condition, not permission for semver fallback, raw handles, hidden Host calls
-or pretending third-party build/publish is available.
+Missing identity, digest drift, unsupported engine or capability blocks that
+route. Never invent private handles, hidden effects or third-party publication.

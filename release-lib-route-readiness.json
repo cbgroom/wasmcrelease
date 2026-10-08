@@ -1,23 +1,27 @@
 {
   "schema": "wasmc.release-lib-route-readiness/v1",
   "route": "release-lib-route-readiness",
-  "request": "does this v0.0.20 product set bind every included Lib package and API route, and where is its lifecycle stage decided",
+  "request": "does this v0.0.21 product set bind every included Lib package and API route, and where is its lifecycle stage decided",
   "product": {
-    "version": "0.0.20",
-    "package_routes": 22,
-    "api_routes": 140,
+    "version": "0.0.21",
+    "package_routes": 42,
+    "api_routes": 236,
     "candidate_extras": 0,
-    "formal_release_ready": true,
-    "blocking_conditions": []
+    "formal_release_ready": false,
+    "blocking_conditions": [
+      "canonical-master-and-complete-source-gate",
+      "whole-product-candidate-and-two-model-Pi",
+      "immutable-channel-publication"
+    ]
   },
   "active_search": {
-    "identity": "wasmc:lib-search@0.4.0",
+    "identity": "wasmc:lib-search@0.5.0",
     "states": {
       "qualified": true,
-      "admitted": true,
+      "admitted": false,
       "included_in_product": true,
       "qualified_before_freeze": true,
-      "admitted_before_freeze": true
+      "admitted_before_freeze": false
     },
     "api_routes": 3
   },
@@ -27,7 +31,7 @@
     "rule": "Never infer released, discoverable or installable from this frozen product projection."
   },
   "valid_resolution_count": 1,
-  "only_valid_closure": "Verify the exact v0.0.20 candidate and route closure, then read the channel authorities for lifecycle state. Every promotion must preserve the same product digest set.",
+  "only_valid_closure": "Verify the exact v0.0.21 current42 candidate and route closure, then read the channel authorities for lifecycle state. Every promotion must preserve the same product digest set.",
   "forbidden_shortcuts": [
     "treat admission as release",
     "infer lifecycle state from product presence or an admission snapshot",
@@ -35,15 +39,16 @@
     "rewrite any immutable release or prerelease tag"
   ],
   "authorities": [
-    "admission/lib-search-v040-v018-admission.json",
+    "admission/current-product-v3.json",
+    "catalog/libs-current-v2.json",
     "catalog/lib-route-closure.json",
-    "channels/candidates/0.0.20.json",
+    "channels/candidates/0.0.21.json",
     "release.json",
     "channels/prod.json"
   ],
   "check_commands": [
     "node scripts/lib-route-closure.mjs --check",
-    "node scripts/release-candidate.mjs verify channels/candidates/0.0.20.json"
+    "node scripts/release-candidate.mjs verify channels/candidates/0.0.21.json"
   ],
   "stop": "This record is sufficient for the matching readiness decision. Do not scan manifests, histories or implementation scripts unless one of its check commands fails."
 }

@@ -1,34 +1,26 @@
 ---
 name: wasmc-lib
-description: Consume reviewed WAsmC WIT Lib packages with exact provider identity and typed application APIs. Use for standard or standalone Lib selection, linking and lifecycle, not private compiler maintenance.
+description: Consume reviewed WAsmC WIT Lib Roots with exact provider identity and typed application APIs; select, link and clean up resources without private compiler access.
 ---
 
 # WAsmC Lib consumer
 
-This release tree provides [the ordinary search Lib](../../examples/lib-search/README.md).
-`node scripts/wasmc-lib.mjs search "base64"` executes its embedded Wasm index,
-not a JS catalog search. Results are typed package/API hits, not version selection.
-This capability does not retroactively change immutable v0.0.9.
+Start with [Library-first discovery](../wasmc-lib-discovery/SKILL.md).
+The v0.0.21 catalog binds42 exact current Roots and278 package/API routes.
+Search discovers candidates; exact catalog, manifest and Root inventory pins
+own selection. Install complete bytes with a pinned lock and no-clobber target.
+Read release.json and channels for lifecycle.
 
-WIT is semantic authority. Reuse the selected package's ordinary typed APIs;
-private handles, status lanes and lifecycle helpers are not application APIs.
-CoreLib owns managed storage. A provider version is not interchangeable with
-another provider just because its version number is newer.
+WIT owns semantics. Use the selected package's typed API and manifest-owned
+SDK paths. Private handles, status lanes and lifecycle helpers are not
+application APIs. Provider4.9 owns current managed storage and must match the
+selected artifact's declared imports.
 
-Read [the Lib consumer reference](../wasmc-developer/references/lib.md) for
-managed applications and [LIB.md](../../LIB.md) for the Core/Component boundary.
-The standard package is discoverable at
-[its Skill](../../standard/wasmc-std/1.4.0/SKILL.md).
-
-On supplemental main, use [the catalog](../../catalog/README.md) for exact
-selection and [installation](../../catalog/INSTALL.md) for pinned bytes.
-Selection and installation do not grant Host authority or establish engine
-support. Check [artifact compatibility](../../compatibility/README.md) before
-instantiation. Std1.4.0 requires function-references and tail-call; do not claim
-Wasmi or Node18 standard execution from compiler-only success.
-
-Use [the paired executable](../../examples/current/standard.mjs) to verify the
-WAsmC/Rust callers against the same Std and provider. Component portability is
-a separate deployment path, not shared memory between independent Components.
-Public third-party build/publish is not yet closed; do not infer a shipped
-command from authoring design documentation.
+Read [the consumer reference](../wasmc-developer/references/lib.md) and
+[LIB.md](../../LIB.md). The standard package is
+[Std1.4.1](../../standard/wasmc-std/1.4.1/SKILL.md).
+Run [its Base64 oracle](../../examples/base64/run.mjs) or
+[the ordinary-source paired example](../../examples/current/standard.mjs).
+Core and Component execution require separate profile evidence. The14
+native-source rows do not imply executable or device acceptance. Imports request
+Host effects; selection and installation grant no effect authority.

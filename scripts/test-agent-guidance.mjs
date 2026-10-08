@@ -11,14 +11,14 @@ reject(s => s.agents = s.agents.replace(`frozen inside the ${tag}\nproduct set`,
 reject(s => s.agents = s.agents.replace(`## ${tag} product capability`, '## v0.0.0 product capability'));
 reject(s => s.agents = s.agents.replace('product presence is not lifecycle authority', 'product presence establishes release authority'));
 reject(s => s.agents = s.agents.replace('full artifact inventory\nin `manifest.json`', 'full release.json inventory'));
-reject(s => s.agents = s.agents.replace('full `manifest.json` artifact inventory', 'roughly 54 KB full release inventory'));
+reject(s => s.agents += '\nroughly 54 KB full release inventory\n');
 reject(s => { if (s.surfaces) s.surfaces.release_version = '0.0.10'; });
-reject(s => s.agents = s.agents.replaceAll('standard/wasmc-std/1.4.0/', 'missing-standard/'));
+reject(s => s.agents = s.agents.replaceAll('standard/wasmc-std/1.4.1/', 'missing-standard/'));
 reject(s => s.skills = s.skills.filter(row => !row.path.includes('skills/wasmc-lib/')));
 reject(s => s.skills.push(s.skills[0]));
 reject(s => {
-  const current=s.skills.find(row=>row.path==='standard/wasmc-lib-search/0.2.0/SKILL.md');
-  current.path='standard/another-package/0.2.0/SKILL.md';
+  const current=s.skills.find(row=>row.path==='standard/wasmc-lib-search/0.5.0/SKILL.md');
+  current.path='standard/another-package/0.5.0/SKILL.md';
 });
 reject(s => { const row = s.skills.find(row => row.path.includes('skills/wasmc-lib/')); row.text = row.text.replace('name: wasmc-lib', 'name: wasmc-lib\nparent_skill: "wasmc-lib"'); });
 reject(s => s.agents = s.agents.replace('skills/wasmc-sdk-discovery/SKILL.md', 'missing-sdk-discovery/SKILL.md'));
@@ -30,7 +30,7 @@ reject(s => {
 reject(s => s.agents = s.agents.replace('Qualification is evidence, not admission', 'Qualification completes admission'));
 reject(s => s.decisionModel = s.decisionModel.replace('`installable`', '`available`'));
 reject(s => s.decisionModel = s.decisionModel.replace('Exact tested versions are observations, not ranges', 'Tested versions imply compatible ranges'));
-reject(s => s.language = s.language.replace('`u64` is admitted in the v0.0.20 product', '`u64` is unsupported'));
+reject(s => s.language = s.language.replace('`u64` is admitted in the '+tag+' product', '`u64` is unsupported'));
 reject(s => s.lib = s.lib.replace('resident/local value, not a direct public return', 'public return value'));
 reject(s => s.decisionModel = s.decisionModel.replace('retrospective is a source of hypotheses, not release authority', 'retrospective is release authority'));
-console.log(JSON.stringify({ ...result, negative_tests: 19 }));
+console.log(JSON.stringify({ ...result, negative_tests: 20 }));

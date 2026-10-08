@@ -14,7 +14,7 @@ export async function guidanceSnapshot(root) {
       else if (entry.name === 'SKILL.md') skills.push({ path, text: await readFile(join(root, path), 'utf8') });
     }
   }
-  await walk('skills'); await walk('standard'); await walk('libs'); await walk('sdk');
+  await walk('skills'); await walk('standard'); await walk('current-libs'); await walk('sdk');
   let surfaces = null;
   try {
     surfaces = JSON.parse(await readFile(join(root, 'release-surfaces.json'), 'utf8'));
@@ -74,7 +74,7 @@ export function validateGuidance({ agents, decisionModel, language, lib, release
   if (!decisionModel.includes('retrospective is a source of hypotheses, not release authority')) {
     fail('retrospective evidence boundary missing');
   }
-  if (!language.includes('`u64` is admitted in the v0.0.20 product')) {
+  if (!language.includes('`u64` is admitted in the '+expectedTag+' product')) {
     fail('ordinary-source u64 boundary missing');
   }
   if (!lib.includes('resident/local value, not a direct public return') ||
@@ -92,7 +92,7 @@ export function validateGuidance({ agents, decisionModel, language, lib, release
     if(previous){
       const version=row=>row.text.match(/^\s*version:\s*["']?(\d+)\.(\d+)\.(\d+)["']?\s*$/m);
       const a=version(previous),b=version(skill);
-      const packagePath=path=>path.startsWith('standard/')||path.startsWith('libs/');
+      const packagePath=path=>path.startsWith('standard/')||path.startsWith('current-libs/');
       if(!a||!b||!packagePath(previous.path)||!packagePath(skill.path)||previous.path===skill.path)fail(`missing or ambiguous public Skill identity: ${skill.path}`);
       const ordinal=row=>Number(row[1])*1_000_000+Number(row[2])*1_000+Number(row[3]);
       if(ordinal(b)>ordinal(a))names.set(name,skill);

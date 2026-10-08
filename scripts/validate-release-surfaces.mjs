@@ -1,158 +1,63 @@
 #!/usr/bin/env node
 import assert from 'node:assert/strict';
-import { existsSync, readFileSync, statSync } from 'node:fs';
-import { resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
-
+import {existsSync,readFileSync,statSync} from 'node:fs';
+import {resolve} from 'node:path';
+import {fileURLToPath} from 'node:url';
+import {createHash} from 'node:crypto';
+import {buildClosure} from './lib-route-closure.mjs';
 const root=fileURLToPath(new URL('../',import.meta.url));
-const read=path=>readFileSync(resolve(root,path),'utf8');
-const model=JSON.parse(read('release-surfaces.json'));
-assert.equal(model.schema,'wasmc.release-surfaces/v1');
-
-const projection=model.agent_capability_projection;
-const producerDelta=model.producer_capability_delta;
-const ecosystem=model.lib_ecosystem_control_plane;
-const learning=model.agent_learning_protocol;
-const taskRoutes=model.agent_task_routes;
-const quickstart=model.agent_learning_quickstart;
-assert.equal(projection?.schema,'wasmc.release-agent-capabilities/v1');
-assert.equal(projection?.product_release,'v'+model.release_version);
-assert.equal(learning?.schema,'wasmc.fresh-agent-learning/v2');
-assert.equal(learning?.path,'agent-evaluation/fresh-agent-learning-v2.json');
-assert.equal(learning?.single_model_pass_is_controlled_pair_qualification,false);
-assert.equal(learning?.wall_clock_is_standalone_release_gate,false);
-assert(existsSync(resolve(root,learning.path)),'agent learning protocol is missing');
-assert.equal(JSON.parse(read(learning.path)).schema,learning.schema);
-assert.equal(quickstart?.schema,'wasmc.agent-quickstart/v1');
-assert.equal(quickstart?.path,'agent-quickstart.json');
-const quickstartModel=JSON.parse(read(quickstart.path));
-const routeReadinessModel=JSON.parse(read('release-lib-route-readiness.json'));
-assert.equal(quickstartModel.schema,quickstart.schema);
-assert.equal(quickstartModel.routes['license-policy'].authority_file,taskRoutes['license-policy'].authority_file);
-assert.equal(quickstartModel.routes['license-policy'].check_command,taskRoutes['license-policy'].check_command);
-assert.equal(taskRoutes['license-policy'].commercial_use,false);
-assert.equal(taskRoutes['license-policy'].production_use,false);
-assert.equal(taskRoutes['license-policy'].open_source,false);
-assert.equal(quickstartModel.routes['release-orientation'].compiler.sha256,taskRoutes['release-orientation'].compiler.sha256);
-assert.equal(quickstartModel.routes['release-orientation'].verify_with[0],taskRoutes['release-orientation'].compact_authority);
-assert.deepEqual(quickstartModel.routes['release-lib-route-readiness'].product,taskRoutes['release-lib-route-readiness'].product);
-assert.deepEqual(quickstartModel.routes['release-lib-route-readiness'].active_search,taskRoutes['release-lib-route-readiness'].active_search);
-assert.equal(quickstartModel.routes['release-lib-route-readiness'].only_valid_closure,taskRoutes['release-lib-route-readiness'].only_valid_closure);
-assert.equal(routeReadinessModel.schema,'wasmc.release-lib-route-readiness/v1');
-assert.deepEqual(routeReadinessModel.product,taskRoutes['release-lib-route-readiness'].product);
-assert.deepEqual(routeReadinessModel.active_search,taskRoutes['release-lib-route-readiness'].active_search);
-assert.equal(routeReadinessModel.valid_resolution_count,taskRoutes['release-lib-route-readiness'].valid_resolution_count);
-assert.equal(routeReadinessModel.only_valid_closure,taskRoutes['release-lib-route-readiness'].only_valid_closure);
-assert.equal(quickstartModel.routes['ordinary-source-positive'].result.core_sha256,taskRoutes['ordinary-source-pair'].oracle.core_sha256);
-assert.equal(quickstartModel.routes['producer-release-u64-delta'].producer.commit,producerDelta.producer.commit);
-assert.equal(quickstartModel.routes['library-first-selection'].artifact_sha256,taskRoutes['released-base64'].approval.artifact_sha256);
-assert.deepEqual(quickstartModel.routes['library-first-selection'].states,taskRoutes['released-base64'].states);
-assert.deepEqual(quickstartModel.routes['library-first-selection'].exact_report,taskRoutes['released-base64'].exact_report);
-assert.equal(quickstartModel.routes['library-first-selection'].final_answer_policy,taskRoutes['released-base64'].final_answer_policy);
-assert.deepEqual(quickstartModel.routes['release-state-separation'].required_output_states,['qualified','admitted','released','discoverable','installable']);
-assert.deepEqual(quickstartModel.routes['release-state-separation'].exact_report,model.agent_status_queries['direct-wasmc-system-telemetry-resource'].exact_report);
-assert.deepEqual(Object.keys(taskRoutes).sort(),['dynamic-client-gateway','host-authority','license-policy','ordinary-source-pair','release-lib-route-readiness','release-orientation','released-base64','rule']);
-assert.equal(taskRoutes['release-orientation'].product_version,'v'+model.release_version);
-assert.equal(taskRoutes['release-orientation'].compiler.sha256,'4e0b9779df3bf7b627d7d9fbfc43cfffd67bb053f87c69a9f832c5690b6888a2');
-assert.match(taskRoutes['release-orientation'].answer_boundary,/agent-release-orientation\.json/);
-assert.equal(taskRoutes['release-lib-route-readiness'].product.formal_release_ready,true);
-assert.equal(taskRoutes['release-lib-route-readiness'].valid_resolution_count,1);
-assert.equal(taskRoutes['release-lib-route-readiness'].lifecycle_authority.current_release,'release.json');
-assert.match(taskRoutes['release-lib-route-readiness'].answer_boundary,/never infer a transition/);
-assert.equal(taskRoutes['ordinary-source-pair'].oracle.core_sha256,'55f3c7e3d09b564b89b8268299a69569a33b856b46405cb4c4dd51634afec84e');
-assert.equal(taskRoutes['ordinary-source-pair'].run_command,'node examples/agent-quickstart/run-pair.mjs');
-assert.equal(taskRoutes['released-base64'].package,'wasmc:std@1.4.0');
-assert.equal(taskRoutes['released-base64'].product_release,'v'+model.release_version);
-assert.equal(taskRoutes['released-base64'].states.installable,true);
-assert.equal(taskRoutes['released-base64'].search_is_selection_authority,false);
-assert.equal(taskRoutes['released-base64'].behavior_command,'node examples/base64/run.mjs');
-assert.equal(taskRoutes['released-base64'].catalog.path,'catalog/libs-v018.json');
-assert.equal(taskRoutes['released-base64'].catalog.sha256,'3301afa24be49543c219745e1207b04ad6e2cf6a9a57bbe474f940fbc1f961d2');
-assert.match(taskRoutes['released-base64'].resolve_command,/--catalog v018/);
-assert.equal(taskRoutes['released-base64'].exact_report.import_module,'wasmc:lib/wasmc.std@1.4.0');
-assert.match(taskRoutes['released-base64'].exact_report.instruction,/byte-for-byte/);
-assert.match(taskRoutes['host-authority'].decision,/application-owned exact allowlist/);
-assert.equal(taskRoutes['dynamic-client-gateway'].authority_file,'runtime/client-foundation-v1/release-surface.json');
-assert.equal(taskRoutes['dynamic-client-gateway'].formal_lib_package,false);
-assert.equal(quickstartModel.routes['dynamic-client-gateway'].authority,taskRoutes['dynamic-client-gateway'].authority_file);
-assert.equal(quickstartModel.routes['dynamic-client-gateway'].product.surface_status,'incubating');
-assert.equal(projection?.guidance_scope?.included_in_product,true);
-assert.equal(projection?.guidance_scope?.lifecycle_authority,'release.json and channels/prod.json');
-assert.equal(projection?.function_shape?.result,'exactly one semantic value');
-assert.match(projection?.function_shape?.multiple_logical_values??'',/tuple/);
-assert.match(projection?.function_shape?.embedding_warning??'',/multiple Core lanes/);
-assert.deepEqual(projection?.type_decisions?.ordinary_source_scalars?.spellings,
-  ['s8','u8','s16','u16','s32','u32','i64','u64','f32','f64','bool']);
-assert.equal(projection?.type_decisions?.u64_ordinary_source?.status,'released');
-assert(projection?.type_decisions?.u64_ordinary_source?.positions?.includes('nested-source-payload'));
-assert(projection?.type_decisions?.map?.unsupported_positions?.includes('direct-public-WIT-value-result'));
-assert.match(projection?.type_decisions?.map?.alternative??'',/list<Entry<K,V>>/);
-assert.equal(projection?.feature_decisions?.async_ordinary_source_or_lib,'unsupported');
-assert.match(projection?.next_release_requirement??'',/immutable release/);
-assert.equal(producerDelta?.schema,'wasmc.producer-release-delta/v1');
-assert.equal(producerDelta?.producer?.commit,'566eff42d0f4e4680c5ddd60c6584a9d8ff8e9f4');
-assert.equal(producerDelta?.producer?.implementation_commit,'94328ed760f93bf24b595a71facdcc773d43b762');
-assert.equal(producerDelta?.producer?.status,'verified-master-containing-implementation');
-assert.equal(producerDelta?.producer?.validation?.strict_mst,true);
-assert.equal(producerDelta?.release?.lifecycle_authority,'release.json');
-assert.equal(producerDelta?.release?.ordinary_source_u64,'supported');
-assert.match(producerDelta?.answer_rule??'',/both support it/);
-assert.match(producerDelta?.adjacent_type_decisions?.u32??'',/included/);
-assert.match(producerDelta?.adjacent_type_decisions?.char??'',/not implemented/);
-assert.equal(ecosystem?.schema,'wasmc.lib-ecosystem-control-plane/v1');
-assert.equal(ecosystem?.path,'lib-ecosystem-control-plane.json');
-assert(existsSync(resolve(root,ecosystem.path)),'Lib ecosystem control plane is missing');
-const ecosystemModel=JSON.parse(read(ecosystem.path));
-assert.equal(ecosystemModel.schema,ecosystem.schema);
-const routeCompleteRelease=['0.0.14','0.0.15','0.0.16','0.0.17','0.0.18','0.0.19','0.0.20'].includes(ecosystemModel.release.version);
-const v018CatalogRelease=['0.0.18','0.0.19','0.0.20'].includes(ecosystemModel.release.version);
-const expectedPackages=v018CatalogRelease?22:ecosystemModel.release.version==='0.0.17'?17:routeCompleteRelease?14:13;
-assert.equal(ecosystemModel.inventory.packages,expectedPackages);
-assert.equal(ecosystemModel.inventory.released,expectedPackages);
-assert.equal(ecosystemModel.inventory.discoverable,v018CatalogRelease?22:ecosystemModel.release.version==='0.0.17'?17:routeCompleteRelease?14:12);
-assert.equal(ecosystemModel.inventory.installable,v018CatalogRelease?22:ecosystemModel.release.version==='0.0.17'?17:routeCompleteRelease?14:4);
-assert.equal(ecosystemModel.inventory.current_side_installable,v018CatalogRelease?22:ecosystemModel.release.version==='0.0.17'?17:routeCompleteRelease?14:13);
-assert.equal(ecosystemModel.inventory.current_side_inventory_matches_release,true);
-assert.equal(ecosystemModel.inventory.inventory_is_unified,routeCompleteRelease);
-assert.deepEqual(ecosystemModel.route_closure,{
-  authority:'catalog/lib-route-closure.json',
-  release_packages:expectedPackages,
-  package_routes:expectedPackages,
-  api_routes:v018CatalogRelease?140:ecosystemModel.release.version==='0.0.17'?128:108,
-  candidate_extras:0,
-  release_catalog_exact:true,
-  release_package_routes_exact:true,
-  release_api_routes_exact:true,
-  formal_release_ready:true,
-  blocking_conditions:[]
-});
-assert.equal(ecosystemModel.successor_candidates.length,routeCompleteRelease?0:1);
-if(!routeCompleteRelease){
-  const libSearchSuccessor=ecosystemModel.successor_candidates[0];
-  assert.equal(libSearchSuccessor.identity,'wasmc:lib-search@0.2.0');
-  assert.equal(libSearchSuccessor.build_tool_commit,'f6fc94432101250b8583834b51229bedb1cd8314');
-  assert.equal(libSearchSuccessor.artifact.manifest_sha256,'ef63bdb8bb991903ef182999d1ccd22ddffca7bff66e1a0754a7a90a73b719a5');
-  assert.equal(libSearchSuccessor.toolchain.sha256,'2e4e27cb0b3644dd0c90bb71f31de5b5c72cd47671373caab8b9146ac68bf8ca');
-  assert.equal(libSearchSuccessor.toolchain.rustc_version_verbose_sha256,'c8884d5d5936b36facd062e0e669e6fefe9944611dfafa0f2b1ee56d96157cbe');
-  assert.equal(libSearchSuccessor.toolchain.cargo_version_verbose_sha256,'7325fa79f79f89eaceae5ee57920caf61b813ade023b1e50457ee0902b2d7222');
-  assert.equal(libSearchSuccessor.toolchain.target,'wasm32-unknown-unknown');
-  assert.equal(libSearchSuccessor.toolchain.encoded_rustflags,'-Cstrip=symbols');
-  assert.equal(libSearchSuccessor.catalog.role,'future-product-catalog');
-  assert.equal(libSearchSuccessor.catalog.contains_candidate,true);
-  assert.equal(libSearchSuccessor.catalog.candidate_install_authority,true);
-  assert.equal(libSearchSuccessor.catalog.public_default_install_authority,false);
-  assert.deepEqual(libSearchSuccessor.states,{qualified:true,admitted:true,released:false,discoverable:false,installable:false});
-  assert.equal(libSearchSuccessor.index.entries,122);
-  assert.equal(libSearchSuccessor.qualification.wasmi_2_0_core,'PASS');
-  assert.equal(libSearchSuccessor.reproducibility_boundary.historical_bytes_reproduced_with_current_toolchain,false);
-}else{
-  const activeSearch=ecosystemModel.release.version==='0.0.18'?'wasmc:lib-search@0.4.0':ecosystemModel.release.version==='0.0.17'?'wasmc:lib-search@0.3.0':'wasmc:lib-search@0.2.0';
-  const releasedSearch=ecosystemModel.packages.find(row=>row.identity===activeSearch);
-  assert(releasedSearch,'released active LibSearch route missing');
-  assert.deepEqual(releasedSearch.states,{qualified:true,admitted:true,released:true,discoverable:true,installable:true});
-  assert.equal(releasedSearch.current_side_remediation.included_in_immutable_tag,true);
-}
-
+const read=p=>readFileSync(resolve(root,p),'utf8'),json=p=>JSON.parse(read(p));
+const sha=p=>createHash('sha256').update(readFileSync(resolve(root,p))).digest('hex');
+const model=json('release-surfaces.json'),q=json('agent-quickstart.json'),compiler=json('current/compiler-release.json');
+const closure=buildClosure(),catalog=json(closure.catalog.path),std=catalog.packages.find(r=>r.id==='wasmc-std');
+const readiness=json('release-lib-route-readiness.json'),ecosystem=json('lib-ecosystem-control-plane.json');
+assert.equal(model.schema,'wasmc.release-surfaces/v1');assert.equal(model.release_version,'0.0.21');
+assert.equal(compiler.version,model.release_version);assert.equal(sha('current/wasmc_compiler.wasm'),compiler.compiler.sha256);
+assert.deepEqual(q.routes['release-orientation'].compiler,{...compiler.compiler,imports:0});
+assert.equal(q.routes['release-orientation'].facade.sha256,sha('current/wasmc.mjs'));
+assert.equal(model.agent_capability_projection.product_release,'v'+model.release_version);
+assert.equal(model.agent_capability_projection.function_shape.result,'exactly one semantic value');
+assert.match(model.agent_capability_projection.function_shape.multiple_logical_values,/tuple/);
+assert.match(model.agent_capability_projection.function_shape.embedding_warning,/multiple Core lanes/);
+assert.deepEqual(model.agent_capability_projection.type_decisions.ordinary_source_scalars.spellings,['s8','u8','s16','u16','s32','u32','i64','u64','f32','f64','bool']);
+assert.ok(model.agent_capability_projection.type_decisions.u64_ordinary_source.positions.includes('nested-source-payload'));
+assert.ok(model.agent_capability_projection.type_decisions.map.unsupported_positions.includes('direct-public-WIT-value-result'));
+assert.equal(model.agent_capability_projection.feature_decisions.async_ordinary_source_or_lib,'unsupported');
+assert.equal(model.producer_capability_delta.release.compiler_sha256,compiler.compiler.sha256);
+assert.equal(model.producer_capability_delta.release.compiler_source_authority,compiler.source_commit);
+assert.equal(model.producer_capability_delta.release.ordinary_source_u64,'supported');
+assert.match(q.routes['position-aware-capability-negative'].decision,/async.*map/i);
+assert.equal(q.routes['position-aware-capability-negative'].generate_source,false);
+assert.equal(q.routes['library-first-selection'].catalog_sha256,closure.catalog.sha256);
+assert.equal(q.routes['library-first-selection'].artifact_sha256,std.delivery.artifact.sha256);
+assert.equal(q.routes['library-first-selection'].wit_sha256,std.wit_sha256);
+assert.equal(q.routes['library-first-selection'].exact_report.manifest_sha256,std.manifest_sha256);
+assert.equal(q.routes['library-first-selection'].exact_report.root_inventory_sha256,std.root_inventory_sha256);
+assert.match(q.routes['library-first-selection'].final_answer_policy,/behavior separately verified companion_sha256/);
+assert.equal(q.routes['library-first-selection'].catalog_snapshot_carried_forward,false);
+assert.deepEqual(q.routes['release-state-separation'].states,{qualified:false,admitted:false,released:false,discoverable:false,installable:false});
+assert.equal(q.routes['release-state-separation'].exact_report.stop_reason,'wasmc-source-direct-resource-methods');
+assert.equal(q.routes['release-state-separation'].exact_report.identity,'wasmc-system-telemetry@0.0.1');
+assert.match(q.routes['host-authority-boundary'].decision,/application-owned exact allowlist/);
+assert.equal(q.routes['dynamic-client-gateway'].product.surface_status,'incubating');
+assert.equal(model.agent_learning_protocol.schema,'wasmc.fresh-agent-learning/v2');
+assert.equal(model.agent_learning_protocol.path,'agent-evaluation/fresh-agent-learning-v2.json');
+assert.equal(model.agent_learning_protocol.single_model_pass_is_controlled_pair_qualification,false);
+assert.equal(json(model.agent_learning_protocol.path).schema,model.agent_learning_protocol.schema);
+assert.equal(model.lib_ecosystem_control_plane.path,'lib-ecosystem-control-plane.json');
+assert.equal(model.lib_ecosystem_control_plane.schema,'wasmc.lib-ecosystem-control-plane/v3');
+assert.equal(ecosystem.schema,model.lib_ecosystem_control_plane.schema);
+assert.equal(ecosystem.inventory.packages,42);assert.equal(ecosystem.inventory.native_source_packages,14);
+assert.equal(ecosystem.route_closure.api_routes,236);assert.equal(ecosystem.route_closure.entries,278);
+assert.equal(closure.release_bindings.length,42);assert.equal(closure.search_index.api_routes,236);assert.equal(closure.search_index.entries,278);
+assert.equal(readiness.product.package_routes,42);assert.equal(readiness.product.api_routes,236);
+assert.equal(readiness.product.formal_release_ready,readiness.product.blocking_conditions.length===0);
+assert.equal(readiness.lifecycle_authority.current_release,'release.json');
+assert.deepEqual(q.routes['release-lib-route-readiness'].product,readiness.product);
+assert.deepEqual(model.agent_task_routes['release-lib-route-readiness'].product,readiness.product);
+assert.deepEqual(model.agent_task_routes['released-base64'].exact_report,q.routes['library-first-selection'].exact_report);
+assert.equal(model.agent_task_routes['release-orientation'].compiler.sha256,compiler.compiler.sha256);
+assert.equal(model.agent_task_routes['ordinary-source-pair'].oracle.core_sha256,'55f3c7e3d09b564b89b8268299a69569a33b856b46405cb4c4dd51634afec84e');
 const expectedPlatforms=[
   ['linux-x86_64','ubuntu-24.04',true,'required'],
   ['linux-aarch64','ubuntu-24.04-arm',true,'required'],
@@ -240,13 +145,16 @@ for(const workflow of ['native-compiler.yml','native-cli-perf.yml','host-lib-e2e
   const text=read('.github/workflows/'+workflow);
   for(const runner of sixRunners)assert(text.includes(runner),workflow+': missing desktop runner '+runner);
 }
-const intelWorkflows=['host-file-io.yml','host-https-flywheel.yml','host-external-load.yml','host-lib-e2e.yml','host-memory.yml','host-network.yml','lib-source.yml','native-cli-perf.yml','native-compiler.yml','rust-host-sdk.yml','thin-host.yml'];
+const intelWorkflows=['host-file-io.yml','host-https-flywheel.yml','host-external-load.yml','host-lib-e2e.yml','host-memory.yml','host-network.yml','native-cli-perf.yml','native-compiler.yml','rust-host-sdk.yml','thin-host.yml'];
 for(const workflow of intelWorkflows){
   const text=read('.github/workflows/'+workflow);
   assert(text.includes('macos-15-intel'),workflow+': legacy Intel runner missing');
   assert(text.includes('continue-on-error:'),workflow+': legacy Intel runner must be non-blocking');
 }
 
+const libRefresh=read('.github/workflows/lib-refresh.yml');
+assert.match(libRefresh,/lib-refresh-v2/);
+assert.match(libRefresh,/receipt/);
 const architecture=JSON.parse(read('host/architecture.json'));
 assert.deepEqual(architecture.distribution_surfaces.consumer,consumerIds);
 assert.deepEqual(architecture.distribution_surfaces.extension,extensionIds);
@@ -254,9 +162,9 @@ assert.deepEqual(architecture.distribution_surfaces.extension,extensionIds);
 console.log(JSON.stringify({
   accepted:true,
   schema:model.schema,
-  agent_capability_projection:projection.schema,
-  producer_capability_delta:producerDelta.schema,
-  lib_ecosystem_control_plane:ecosystem.schema,
+  agent_capability_projection:model.agent_capability_projection.schema,
+  producer_capability_delta:model.producer_capability_delta.schema,
+  lib_ecosystem_control_plane:model.lib_ecosystem_control_plane.schema,
   consumer_surfaces:consumerIds.length,
   extension_surfaces:extensionIds.length,
   desktop_platforms:expectedPlatforms.length,

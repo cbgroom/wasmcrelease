@@ -37,6 +37,39 @@ if (index.latest !== releaseJson.version || !versionRow || versionRow.tag !== re
   throw new Error('package-index latest/version row must equal release version before integrity refresh');
 }
 
+// Whole current product freeze derives its inventory from the v3 candidate.
+// Never refresh the historical whole-product inventory around an overlay.
+if (releaseJson.version === '0.0.21') {
+  const {validateCandidate}=await import('./release-candidate.mjs');
+  const candidate=JSON.parse(await readFile(join(root,releaseJson.staged_product_manifest),'utf8'));
+  if(candidate.schema!=='wasmc.release-product-candidate/v3'||candidate.version!==releaseJson.version)throw Error('exact current v3 candidate required');
+  const data=new Map();for(const r of candidate.product_files)data.set(r.path,await readFile(join(root,r.path)));
+  validateCandidate(candidate,p=>data.get(p));
+  const stagePaths=(await walk('channels')).filter(p=>p.startsWith('channels/'+releaseJson.version+'/')||['channels/dev.json','channels/main.json','channels/prod.json',releaseJson.staged_product_manifest].includes(p));
+  const paths=[...new Set([...candidate.product_files.map(r=>r.path),...stagePaths,
+    'agent-release-orientation.json','release-lib-route-readiness.json','lib-ecosystem-control-plane.json'])].sort();
+  manifest.release_id='wasmc-v'+releaseJson.version;manifest.version=releaseJson.version;manifest.release_date=versionRow.release_date;
+  manifest.channel='release';manifest.released=true;manifest.stable=false;manifest.tag=releaseJson.tag;
+  manifest.source_available=false;manifest.compiler_abi='wasmc-core-compiler-abi-v0';
+  manifest.artifacts=await Promise.all(paths.map(async path=>{const bytes=await readFile(join(root,path));const info=await stat(join(root,path));const mode=(info.mode&0o111)?'0755':'0644';
+    if(mode!==expectedMode(path))throw Error('current artifact mode violates release policy: '+path);
+    return{path,bytes:bytes.length,mode,sha256:sha(bytes)};}));
+  releaseJson.artifact_inventory={path:'manifest.json',integrity:'SHA256SUMS',artifacts:paths.length};
+  await writeFile(releasePath,JSON.stringify(releaseJson,null,2)+'\n');await writeFile(manifestPath,JSON.stringify(manifest,null,2)+'\n');
+  const provenance={schema_version:1,predicate_type:'wasmc.public-release.provenance/v3',
+    source:{integrated_private_commit:releaseJson.source_commit,integrated_private_tree:releaseJson.source_tree,
+      lib_source_authority:releaseJson.lib_source_authority,product_candidate_commit:releaseJson.product_candidate_commit,evidence_commit:releaseJson.evidence_commit,dirty:false},
+    staged_product_manifest:releaseJson.staged_product_manifest,product_set_sha256:candidate.product_set_sha256,
+    compiler_sha256:candidate.current_release_closure.compiler_sha256,current_catalog_sha256:candidate.current_catalog.sha256,
+    subjects:manifest.artifacts.map(r=>({name:r.path,bytes:r.bytes,digest:{sha256:r.sha256}})),
+    non_claims:['publisher signature or publisher authenticity','native-source execution or device qualification','automatic Host authority grant']};
+  await writeFile(provenancePath,JSON.stringify(provenance,null,2)+'\n');
+  const files=(await walk()).filter(p=>p!=='SHA256SUMS').sort();
+  await writeFile(join(root,'SHA256SUMS'),(await Promise.all(files.map(async p=>(await fileSha(p))+'  '+p))).join('\n')+'\n');
+  console.log(JSON.stringify({accepted:true,schema:candidate.schema,version:releaseJson.version,manifest:paths.length,checksums:files.length,product_set_sha256:candidate.product_set_sha256}));
+  process.exit(0);
+}
+if(JSON.parse(await readFile(join(root,'current/compiler-release.json'),'utf8')).version!==releaseJson.version)throw Error('current overlay differs from whole release: freeze the new v3 candidate before refreshing whole-product integrity');
 const runtimeFiles = (await walk('runtime')).sort();
 const admissionFiles = (await walk('admission')).sort();
 const agentEvaluationFiles = (await walk('agent-evaluation')).sort();

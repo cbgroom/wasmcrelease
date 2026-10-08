@@ -22,27 +22,33 @@ const text=read(skill);
 for(const m of text.matchAll(/\]\(([^)]+)\)/g))checkedPath(path.relative(root,path.resolve(root,path.dirname(skill),m[1])));
 const commands=text.match(/```sh\n([\s\S]*?)\n```/)[1].split('\n');
 assert.equal(commands.length,2);
+const catalogPin='01fda278b3c74363643879f71cc739488a57e9d934f217ab07af3460b88923d4';
+const catalog=JSON.parse(read('catalog/libs-current-v2.json'));
+assert.equal((await import('node:crypto')).createHash('sha256').update(read('catalog/libs-current-v2.json')).digest('hex'),catalogPin);
 let hits=0;
 for(const command of commands) {
-  // Execute only the documented read-only search shape, never arbitrary shell.
-  const m=command.match(/^node scripts\/wasmc-lib\.mjs search "([a-z0-9 ]+)"( --historical)? --limit ([1-8])$/);
-  assert.ok(m,'unsafe or unsupported teaching command');
-  const args=['scripts/wasmc-lib.mjs','search',m[1],...(m[2]?['--historical']:[]),'--limit',m[3]];
-  const result=JSON.parse(execFileSync(process.execPath,args,{cwd:root,timeout:10000,encoding:'utf8'}));
-  assert.equal(result.schema,'wasmc.public-lib-search/v2');
-  assert.equal(result.selection_authority,false);
-  assert.ok(result.hits.length>0&&result.hits.length<=Number(m[3]));
-  for(const hit of result.hits) {
-    checkedPath(hit.skill_path);const wit=checkedPath(hit.wit_path);checkedPath(hit.artifact_path);
-    if(hit.signature) {
-      const name=hit.identity.split('#')[1];
-      if(name.startsWith('[constructor]')) {
-        assert.ok(wit.includes('resource '+name.slice(13))&&wit.includes('constructor('));
-      } else assert.ok(wit.includes(name.replace(/^\[method\][^.]+\./,'')+':'));
+  const m=command.match(/^node scripts\/wasmc-lib\.mjs search "([a-z0-9 ]+)" --catalog-sha256 ([0-9a-f]{64}) --limit ([1-8])$/);
+  assert.ok(m,'unsafe or unsupported teaching command');assert.equal(m[2],catalogPin);
+  const result=JSON.parse(execFileSync(process.execPath,['scripts/wasmc-lib.mjs','search',m[1],'--catalog-sha256',m[2],'--limit',m[3]],{cwd:root,timeout:10000,encoding:'utf8'}));
+  assert.equal(result.schema,'wasmc.public-current-lib-search/v3');
+  assert.equal(result.catalog_sha256,catalogPin);assert.equal(result.selection_authority,false);
+  assert.equal(result.result.tag,'ok');const selected=result.result.value;
+  assert.ok(selected.length>0&&selected.length<=Number(m[3]));
+  for(const hit of selected) {
+    const row=catalog.packages.find(p=>p.id===hit.package_id&&p.version===hit.version);assert.ok(row);
+    const manifest=JSON.parse(checkedPath(row.root+'/lib.json'));
+    checkedPath(row.root+'/'+manifest.agent.skill.path);
+    const wit=checkedPath(row.root+'/'+manifest.wit.path);checkedPath(hit.source_path);
+    assert.equal(hit.wit_sha256,row.wit_sha256);
+    if(hit.delivery.artifact_path)checkedPath(row.root+'/'+hit.delivery.artifact_path);
+    if(hit.kind==='api') {
+      const name=hit.wit_route.split('#')[1];
+      if(name.startsWith('[constructor]'))assert.ok(wit.includes('resource '+name.slice(13))&&wit.includes('constructor('));
+      else assert.ok(wit.includes(name.replace(/^\[method\][^.]+\./,'')+':'));
     }
     hits++;
   }
-  if(!m[2])assert.deepEqual(result.hits.map(h=>h.identity),['wasmc:std@1.4.0/base64#try-decode-standard']);
+  if(m[1]==='base64 decode')assert.deepEqual(selected.map(h=>h.wit_route),['wasmc:std@1.4.1/base64#try-decode-standard']);
 }
 let negatives=0;
 for(const from of ['AGENTS.md','skills/wasmc-developer/SKILL.md']) {

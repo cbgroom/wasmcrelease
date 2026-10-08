@@ -1,0 +1,3 @@
+# Maintainer knowledge proposal
+
+Current whole-product v3 maintenance must derive the manifest from the exact candidate and current42 route closure. The full maintainer gate distinguishes a pre-candidate overlay from final whole release integrity; it preserves real Host/update/recovery checks and tests old immutable drift rejection. Current Agent capability is frozen product metadata; lifecycle states require exact release/channel receipts. Native package CI and downloaded original-license verification are separate from source L3, whole candidate and Pi admission. The global maintainer knowledge is not modified in this checkpoint.

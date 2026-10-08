@@ -9,29 +9,32 @@ shape. WIT has no native Map. When a public contract needs a copied snapshot,
 return an explicit `list<Entry<K,V>>` or use a declared resource; direct public
 Map is rejected rather than silently serialized.
 
-The established v0.0.4 facade bytes remain frozen in v0.0.7. Record-backed applications therefore retain their old default behavior. To use v0.0.7 finite **recordless** String/List/Map planning or the current aggregate-semantic lowering from a source-free repository checkout, bind the current Runtime compiler through the facade's existing compiler override:
+The v0.0.21 current facade embeds the same verified compiler as the Runtime
+package. Use the facade directly for supported ordinary managed source:
 
 ```js
-import { readFile } from "node:fs/promises";
 import { instantiateLib } from "./current/wasmc.mjs";
-
-const compilerWasmBytes = await readFile("./runtime/wasmc-runtime-v0/compiler.wasm");
-const instance = await instantiateLib(source, { compilerWasmBytes });
+const instance = await instantiateLib(source);
 console.log(instance.exports.run());
 ```
 
-Browser or other hosts supply the same verified Runtime compiler bytes through `compilerWasmBytes`; acquiring those bytes remains application policy. The compiler-internal finite managed roots are not a public plan vocabulary and cannot be injected by caller-pinned JSON plans.
+Explicit raw compiler acquisition is application policy. The compiler derives
+finite managed roots; caller-pinned JSON plans are not application source.
 
-Standalone packages demonstrate the boundary:
+Begin reusable-compute discovery with
+[the Library-first Skill](skills/wasmc-lib-discovery/SKILL.md) and the exact
+[current catalog](catalog/libs-current-v2.json). It describes42 complete Roots,
+236 exported API routes and278 index entries. Read the selected Root's own
+`SKILL.md`, `lib.wit` and `lib.json`; use its declared SDK paths and verify its
+full manifest/inventory before installation. Core, Component and native-source
+profiles have separate contracts. Fourteen native-source identities remain
+source-only. The73-API Std1.4.1 contract is available at
+[its complete Root](standard/wasmc-std/1.4.1/).
 
-- `libs/wasmc-owned-algorithms`: strings, scalar lists, and flat records through reviewed pure Rust algorithms.
-- `libs/wasmc-resource-counter`: a stateful WIT resource with constructor, receiver methods, and drop lifecycle.
-- `libs/wasmc-host-clock`: a Component that requests exactly one Host function.
-- `libs/wasmc-system-telemetry`: bounded telemetry parsing/cadence with an
-  admitted source-free Component + public Host-SDK consumption surface. Real
-  acquisition is qualified on Linux; direct WAsmC sampler-resource source is
-  explicitly unsupported in v0.0.1.
-
-Each directory is a self-describing Skill rooted at `SKILL.md` and carries authoritative `lib.wit`, `lib.json`, fast-path `artifact.wasm`, and standard `component.wasm`. Read that Skill before use.
+System Telemetry offers a generated Component resource SDK. Its ordinary source
+resource-method route remains unsupported. A declared Host import requests an
+effect and does not grant authority; supply an exact application-owned allowlist
+and a bounded adapter. Channel receipts decide public release and installation
+states; product presence and local qualification do not decide them.
 
 To build a reviewed Rust Lib, follow [skills/wasmc-developer/references/authoring-libs.md](skills/wasmc-developer/references/authoring-libs.md). The compact profile covers free functions and the documented value subset; `wit-bindgen-component` covers resources/methods and explicit imports. Async, traits, open generics, and automatic Rust API discovery are unsupported.

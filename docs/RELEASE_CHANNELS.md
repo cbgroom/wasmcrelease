@@ -21,16 +21,15 @@ than rebuilding. Stage metadata and evidence can differ and have their own
 immutable commit/digest. Any product change starts a new dev candidate; a failed
 gate cannot be relabeled main/prod. No force-push or tag movement is allowed.
 
-New candidates use `wasmc.release-product-candidate/v2`. Creation derives every
-released Lib and exported WIT API from the candidate product inventory and binds
-the exact catalog, LibSearch index and active search identity. Verification
-recomputes that closure and rejects a missing, extra or version-drifted catalog,
-package route or API route. Candidate v1 is accepted only for the four exact
-historical 0.0.10-0.0.13 product-set identities; it cannot be used to create a
-new release without the route-closure gate. A v2 candidate also requires zero
-candidate extras: the active LibSearch package itself must already be inside the
-product inventory and catalog. A complete external candidate index cannot stand
-in for synchronously releasing the search package that owns those routes.
+New current products use `wasmc.release-product-candidate/v3`. The v0.0.21
+candidate binds all 42 current Roots, 236 selected-world APIs and 278 normalized
+index entries, the independently pinned Q0 cohort, original dependency notices,
+canonical private master compiler/build identity and every source-free delivery
+carrier. Verification executes the current Core Search snapshot, all lookups
+and bounded pagination and rejects omitted or extra Roots, WIT routes, modified
+inventories or self-rehashed payloads. Fourteen native-source Roots remain
+source-only; inclusion and installation do not claim execution or device
+qualification. Historical immutable candidate verification is read-only.
 
 Consumer workflows execute immutable public files, never rebuild canonical
 compiler or Lib products. Qualification must include the specific new Lib and

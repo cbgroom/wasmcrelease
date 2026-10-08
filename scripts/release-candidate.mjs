@@ -6,7 +6,7 @@ import {fileURLToPath} from 'node:url';
 import {resolve,relative,dirname} from 'node:path';
 import {spawnSync} from 'node:child_process';
 import {checkedCurrentCatalog,verifyCurrentRelease,currentProductReader,currentProductPaths} from './current-lib-release-v3.mjs';
-import {buildClosure} from './lib-route-closure.mjs';
+import {buildHistoricalClosure} from './lib-route-closure.mjs';
 import {parseCatalog,resolveCatalog} from './lib-catalog.mjs';
 import {instantiateLibSearch} from '../examples/lib-search/client.mjs';
 import {all18Targets,needsFutureLibLicenseGate,validateFutureLibLicenses} from './future-lib-license-admission.mjs';
@@ -289,7 +289,7 @@ function closureSummary(model){
 function candidateClosure(candidate,read){
   if(candidate.schema==='wasmc.release-product-candidate/v3')return currentCandidateClosure(candidate,read);
   if(needsFutureLibLicenseGate(candidate.version))return buildFutureCurrentClosure(candidate,read);
-  return closureSummary(buildClosure(undefined,{
+  return closureSummary(buildHistoricalClosure(undefined,{
     release:{version:candidate.version,tag:`v${candidate.version}`,staged_product_manifest:null},
     stagedProduct:candidate
   }));
@@ -373,12 +373,12 @@ export async function createCurrentCandidate(repo,{compilerSource,libSource,vers
     return s.isDirectory()?walk(path):[path];
   });
   const catalogBytes=read('catalog/libs-current-v2.json'),catalog=checkedCurrentCatalog(catalogBytes,hash(catalogBytes));
-  const directories=['current','dist','package','examples/current','standard','sdk','runtime','current-libs','licenses',
-    'skills/wasmc-developer','skills/wasmc-lib-discovery','skills/wasmc-sdk-discovery',
+  const directories=['current','dist','package','examples/current','examples/base64','examples/agent-quickstart','standard','sdk','runtime','current-libs','licenses',
+    'skills',
     'host/contract','host/sdk','host/drivers/file/rust','host/drivers/memory/rust'];
   const paths=new Set([...currentV3ProductInputs,...directories.flatMap(walk),
     'AGENTS.md','README.md','HOSTING.md','LANGUAGE.md','LIB.md','license-policy.json',
-    'agent-quickstart.json','docs/RELEASE_V021.md','scripts/release-candidate.mjs']);
+    'agent-quickstart.json','release-surfaces.json','agent-evaluation/fresh-agent-learning-v2.json','docs/AGENT_DECISION_MODEL.md','docs/RELEASE_V021.md','scripts/release-candidate.mjs']);
   for(const row of catalog.packages)for(const pin of Object.values(row.source))paths.add(pin.path);
   const addImports=path=>{
     const source=read(path).toString('utf8');
@@ -424,7 +424,7 @@ if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)) {
     const productDirectories=[
       'current','standard','sdk','runtime','libs',
       ...(needsFutureLibLicenseGate(version)?['current-libs']:[]),
-      'skills/wasmc-developer','skills/wasmc-lib-discovery','skills/wasmc-sdk-discovery',
+      'skills',
       'host/contract','host/sdk','host/drivers/file/rust','host/drivers/memory/rust'
     ];
     const carriesV019Compiler=['0.0.19','0.0.20'].includes(version);

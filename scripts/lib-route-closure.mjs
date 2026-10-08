@@ -5,6 +5,8 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseCatalog } from './lib-catalog.mjs';
+import {verifyCurrentRelease,currentProductReader,currentProductPaths} from './current-lib-release-v3.mjs';
+import {witModel,selectedWitRoutes} from './current-wit-routes-v3.mjs';
 
 const root=fileURLToPath(new URL('../',import.meta.url));
 const outputPath='catalog/lib-route-closure.json';
@@ -118,7 +120,7 @@ export function validateRouteSets({releasePackages,catalogPackages,indexEntries,
   return {bindings,candidateExtra,packageRoutes:packageEntries.length,apiRoutes:apiEntries.length};
 }
 
-export function buildClosure(receiptPath=defaultReceipt,overrides={}){
+export function buildHistoricalClosure(receiptPath=defaultReceipt,overrides={}){
   const release=overrides.release??json('release.json');
   const staged=overrides.stagedProduct??json(release.staged_product_manifest);
   const receiptBytes=read(receiptPath),receipt=JSON.parse(receiptBytes);
@@ -158,23 +160,42 @@ export function buildClosure(receiptPath=defaultReceipt,overrides={}){
   };
 }
 
-function main(){
-  const [action,arg,productPath]=process.argv.slice(2);
-  if(!['--write','--check'].includes(action))throw Error('usage: lib-route-closure.mjs --write [ADMISSION_RECEIPT] | --check');
-  if(action==='--write'){
-    const product=productPath?json(productPath):null;
-    const overrides=product?{release:{version:product.version,tag:`v${product.version}`,staged_product_manifest:productPath},stagedProduct:product}:{};
-    const model=buildClosure(arg??defaultReceipt,overrides);
-    writeFileSync(resolve(root,outputPath),JSON.stringify(model,null,2)+'\n');
-    console.log(JSON.stringify({accepted:true,action:'write',path:outputPath,release_packages:model.release_bindings.length,package_routes:model.search_index.package_routes,api_routes:model.search_index.api_routes,candidate_extras:model.candidate_extras.length}));
-  }else{
-    const retained=json(outputPath);
-    const stagedPath=retained.release.staged_product_manifest;
-    const overrides=stagedPath&&stagedPath!==releasePath()?{release:retained.release,stagedProduct:json(stagedPath)}:{};
-    const actual=buildClosure(retained.authority_receipt.path,overrides);
-    assert.deepEqual(retained,actual,'retained Lib route closure drift');
-    console.log(JSON.stringify({accepted:true,action:'check',path:outputPath,release_packages:actual.release_bindings.length,package_routes:actual.search_index.package_routes,api_routes:actual.search_index.api_routes,candidate_extras:actual.candidate_extras.length}));
-  }
+// The current default binds the full current catalog, Q0 Root inventory and
+// selected-world WIT routes. Historical candidate verification is explicit.
+export function buildClosure() {
+  const admissionPath='admission/current-product-v3.json';
+  const admission=json(admissionPath),catalogPath='catalog/libs-current-v2.json';
+  const catalogBytes=read(catalogPath),catalog=JSON.parse(catalogBytes);
+  const closure=verifyCurrentRelease(catalogBytes,admission.catalog_sha256,currentProductReader(root),currentProductPaths(root));
+  assert.deepEqual(closure,admission,'current independent closure admission changed');
+  const index=json(catalog.index.path);
+  const models=new Map(catalog.packages.map(r=>{const m=witModel(read(r.root+'/lib.wit'));return [m.identity,m];}));
+  const bindings=catalog.packages.map(r=>{
+    const model=witModel(read(r.root+'/lib.wit'));
+    const routes=selectedWitRoutes(model,r.wit_world,models);
+    const row=index.packages.find(p=>p.package_id===r.id);
+    return {id:r.id,identity:model.identity,version:r.version,root:r.root,profile:r.profile,
+      delivery_kind:r.delivery.kind,manifest_sha256:r.manifest_sha256,
+      root_inventory_sha256:r.root_inventory_sha256,catalog_bound:true,
+      package_route_bound:true,api_routes:routes.routes.size,api_routes_exact:true,
+      indexed_identity:row.package_id+'@'+row.version,device_qualified:false};
+  });
+  return {schema:'wasmc.lib-route-closure/v3',authority_receipt:{path:admissionPath,sha256:sha(read(admissionPath))},
+    release:{version:catalog.version,tag:'v'+catalog.version,lifecycle_authority:'release.json and channels/dev.json, channels/main.json, channels/prod.json'},
+    catalog:{path:catalogPath,sha256:admission.catalog_sha256,role:'current-product-catalog',package_routes:closure.package_routes},
+    search_index:{path:catalog.index.path,sha256:catalog.index.sha256,active_identity:'wasmc:lib-search@0.5.0',entries:closure.entries,package_routes:closure.package_routes,api_routes:closure.api_routes},
+    release_bindings:bindings,candidate_extras:[],blocking_conditions:[],
+    claims:{release_catalog_exact:true,release_package_routes_exact:true,release_api_routes_exact:true,
+      api_parents_closed:true,formal_release_ready:false,automatic_version_selection:false,
+      candidate_extra_grants_release:false,public_release_admission:false,
+      native_source_is_executable:false,device_qualified:false}};
 }
-function releasePath(){return json('release.json').staged_product_manifest;}
+function main(){
+  const [action,...extra]=process.argv.slice(2);
+  if(!['--write','--check'].includes(action)||extra.length)throw Error('usage: lib-route-closure.mjs --write|--check');
+  const model=buildClosure();
+  if(action==='--write')writeFileSync(resolve(root,outputPath),JSON.stringify(model,null,2)+'\n');
+  else assert.deepEqual(json(outputPath),model,'retained current42 route closure drift');
+  console.log(JSON.stringify({accepted:true,action:action.slice(2),schema:model.schema,release_packages:model.release_bindings.length,package_routes:model.search_index.package_routes,api_routes:model.search_index.api_routes,entries:model.search_index.entries,candidate_extras:0,public_release_admission:false}));
+}
 if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url))main();

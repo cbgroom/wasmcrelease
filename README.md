@@ -1,440 +1,77 @@
-# wasmc release channel
+# WAsmC0.0.21
 
-[![Public verification](https://github.com/cbgroom/wasmcrelease/actions/workflows/source-free-consumer.yml/badge.svg?branch=main&event=push)](https://github.com/cbgroom/wasmcrelease/actions/workflows/source-free-consumer.yml)
-[![Native CLI performance](https://github.com/cbgroom/wasmcrelease/actions/workflows/native-cli-perf.yml/badge.svg?branch=main&event=push)](https://github.com/cbgroom/wasmcrelease/actions/workflows/native-cli-perf.yml)
-[![Release surface policy](https://github.com/cbgroom/wasmcrelease/actions/workflows/release-surfaces.yml/badge.svg?branch=main&event=push)](https://github.com/cbgroom/wasmcrelease/actions/workflows/release-surfaces.yml)
-[![Rust Host SDK](https://github.com/cbgroom/wasmcrelease/actions/workflows/rust-host-sdk.yml/badge.svg?branch=main&event=push)](https://github.com/cbgroom/wasmcrelease/actions/workflows/rust-host-sdk.yml)
-![run/Wasmi](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fcbgroom%2Fwasmcrelease%2Fperf-data%2Fbadges%2Frun.json)
-![native run](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fcbgroom%2Fwasmcrelease%2Fperf-data%2Fbadges%2Fnative.json)
-![build Wasm](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Fcbgroom%2Fwasmcrelease%2Fperf-data%2Fbadges%2Fbuild.json)
+WAsmC compiles WIT-shaped application source to standard Core Wasm. This
+source-free distribution combines one compiler, Provider4.9, Std1.4.1,
+LibSearch0.5.0,42 complete current Lib identities and public Rust/Host SDKs.
+Compiler implementation source stays private.
 
-Source-free public packages for the private-source `wasmc` compiler.
+Start with [AGENTS.md](AGENTS.md) or [agent-quickstart.json](agent-quickstart.json).
+Read [agent-release-orientation.json](agent-release-orientation.json) and run its
+check for the published immutable identity. `release.json` and channel files
+own lifecycle; product presence does not establish a released stage. Pin an
+immutable tag or full commit before constructing CDN URLs.
 
-## Latest compiler-only CDN distribution
+The product permits non-commercial research only. Read [LICENSE](LICENSE) and
+[license-policy.json](license-policy.json); commercial and production use
+require a separate written license. Original third-party notices accompany
+complete Roots and Native packages. Earlier immutable grants remain unchanged.
 
-Repository HEAD carries only compiler `0.0.21-compiler.1`. Its independent
-authority is [current/compiler-release.json](current/compiler-release.json).
-Use `current/wasmc.mjs` (ESM), `current/wasmc.global.js` (classic), or
-`current/wasmc_compiler.wasm` (raw Core). Runtime carries the same Wasm bytes;
-legacy package/dist JavaScript routes forward to this version and no longer
-retain their old raw compiler binaries. There is one version, not one physical
-file: sidecars and single-file embeddings intentionally use identical bytes.
+## Compiler and embedding
 
-Verify with `node scripts/current-compiler-integrity.mjs`, then
-`node scripts/test-current-compiler.mjs`. For jsDelivr, pin the full public
-commit of this checkout: `https://cdn.jsdelivr.net/gh/cbgroom/wasmcrelease@`
-followed by that full commit and `/current/wasmc.mjs` or
-`/current/wasmc_compiler.wasm`. `main` is mutable discovery, not an integrity pin.
+Use `current/wasmc.mjs` for ESM, `current/wasmc.global.js` for classic scripts,
+or `current/wasmc_compiler.wasm` for raw Core. The Runtime/Registry bootstrap
+carries the same compiler. The authority is
+[current/compiler-release.json](current/compiler-release.json).
 
-This is a compiler-only update, not a new Lib/SDK or whole-product release.
-The old whole-product metadata/checksums below remain bound to immutable
-`v0.0.20`; they do not verify this overlay. No tag is moved and no prior grant
-is changed. Pending all18 Lib/SDK qualification is not bypassed or claimed PASS.
-
-## License
-
-The v0.0.20 product is source-available for **non-commercial research only**
-under the [WAsmC Research-Only Non-Commercial License 1.0](LICENSE). Commercial
-use, production use, paid services and commercial product or R&D use require a
-separate written license. This is not an open-source license.
-
-Licensing is revision-specific. Immutable v0.0.19 and earlier artifacts retain
-the licenses that accompany those exact artifacts; v0.0.20 does not rewrite or
-revoke an earlier grant. The machine-readable boundary is
-[`license-policy.json`](license-policy.json).
-
-This README is frozen inside the v0.0.20 product set. Product version and
-lifecycle stage are separate: read `release.json` and `channels/prod.json` for
-the current released tag. Hardcoded v0.0.13 references retained below describe
-historical feature provenance; they are not current-release authority.
-
-## Product surfaces
-
-WAsmC has one Host contract and multiple ways to consume it:
-
-| Surface | Use it when |
-|---|---|
-| **Lib Package** | an App/runtime needs reusable WAsmC functionality |
-| **Host SDK** | an existing Rust process wants programmable Host/resource binding |
-| **Integrated Runtime / CLI** | users want compile/run/Host without assembling the stack |
-| **Lightweight Embedding** | Node/Bun/Deno/Browser should reuse their own runtime OS bridge |
-| **Native Runtime Library / Platform SDK** | system integration needs one unified, high-performance native data plane |
-
-Drivers/providers and remote providers extend physical capability behind that
-same contract rather than adding application-specific Host calls. See
-[ASMD](docs/ASMD.md), [Host architecture](host/ARCHITECTURE.md), and the
-[release surface policy](docs/RELEASE_SURFACES.md).
-
-Agents must not infer maturity from directory names. Start at
-[AGENTS.md](AGENTS.md), then use the
-[SDK discovery Skill](skills/wasmc-sdk-discovery/SKILL.md); the machine-readable
-release-surfaces.json records whether a surface is published, candidate,
-qualified-reference, incubating, or architecture-only.
-
-The [Portable Std1.4.1 qualification candidate](admission/portable-std-v0/README.md)
-regenerates the unchanged73-API Std contract for Wasmi2 and Node18, with matching
-Rust/WAsmC consumers. It is **not released/default**. The
-[18-cell public verification workflow](https://github.com/cbgroom/wasmcrelease/actions/workflows/portable-std.yml)
-tests Linux/macOS/Windows, Node18/22/26, Bun/Deno and both Native engines,
-retaining exact-SHA results and rejection controls. The corrected
-[18/18qualified Source run](https://github.com/cbgroom/wasmcrelease/actions/runs/34765946479)
-passed107520paired calls; [exact receipts](admission/portable-std-v0/qualification.json)
-separate main admission from formal release. No private compiler source
-is compiled by this workflow; old Std1.4.0 and prod remain frozen.
-
-Development [preconnected TCP + Lib reference](host/drivers/tcp/README.md) exercises real
-restricted loopback streams and frozen Wasm algorithm computation in JS/Wasmi.
-It is not a production network SDK, browser raw TCP, TLS or a new guest syscall.
-
-Experimental [startup binding identity](host/runtime/completion/SCOPED_IDENTITY.md) rejects
-old full references even when fresh processes recycle local IDs. The reviewed
-Lib/Host driver now issues scoped references with JS WebCrypto or Native OS
-randomness, rejecting entropy errors and zero output without fallback. Local
-Node/Bun/Deno tests pass; exact-candidate cross-platform acceptance remains
-pending. Freshness is not proved by accepting an injected nonzero identifier. Neither
-the Agent API nor generated App/Lib bytes change.
-
-Experimental [session/completion guard](host/runtime/completion/README.md) protects the
-Lib/Host chain's staged read: foreign/stale/duplicate completions reject;
-cancelled delivery retains the window pin until backend acknowledgement.
-Cancellation does not prove an external effect was undone. Process/restart
-identity and full typed guest async transport remain unqualified.
-
-Experimental [published Lib + real Host end-to-end chain](host/tests/e2e/README.md):
-real input file → bounded staging → WAsmC App → reviewed Rust algorithm Lib →
-real output file + explicit sync. The same App/Lib bytes run in JS and Wasmi;
-independent disk oracles cover readonly denial and trap-before-flush. This is
-scheduled I/O composition, not a complete guest async ABI or production SDK.
-[![Host and Lib E2E](https://github.com/cbgroom/wasmcrelease/actions/workflows/host-lib-e2e.yml/badge.svg?branch=main)](https://github.com/cbgroom/wasmcrelease/actions/workflows/host-lib-e2e.yml)
-The initial [exact-source Actions run](https://github.com/cbgroom/wasmcrelease/actions/runs/34748498886)
-passed all six desktop targets and fourteen JS/native pairs, twelve cases each;
-[retained evidence](admission/host-lib-e2e.json) records the qualified boundary.
-
-Next experimental Host capability: [real preopened file I/O](host/drivers/file/README.md).
-Independent JS/Rust adapters reuse read/write/invoke-sync/release without guest
-paths or certificate-specific native calls. It is not a completed Core/WIT
-transport or browser filesystem adapter. The owning maintainer Skill now requires
-proving an irreducible need before adding Host primitives.
-[![Real Host file I/O](https://github.com/cbgroom/wasmcrelease/actions/workflows/host-file-io.yml/badge.svg?branch=main)](https://github.com/cbgroom/wasmcrelease/actions/workflows/host-file-io.yml)
-Initial [six-platform exact-source run](https://github.com/cbgroom/wasmcrelease/actions/runs/34748136391)
-passed all14JS/native pairs; [retained evidence](admission/host-preopened-file-v0.json)
-separates real file behavior from unqualified Core transport/browser/durability.
-
-Public experimental [Core Host v0 contract/reference](host/contract/v0/README.md):
-low-frequency evolving Native mechanisms, reusable CoreLib policy/protocols,
-JS/Native semantic parity without requiring identical acceleration. Seven
-bounded memory-simulator operations are implemented; twelve-operation draft,
-real I/O, browser execution and typed SDK remain separate qualification gates.
-[![Core Host contract](https://github.com/cbgroom/wasmcrelease/actions/workflows/thin-host.yml/badge.svg?branch=main)](https://github.com/cbgroom/wasmcrelease/actions/workflows/thin-host.yml)
-Initial [exact-source run](https://github.com/cbgroom/wasmcrelease/actions/runs/34747009152)
-passed all six native targets and fourteen JS/native pairs; scope and source
-are retained in [prototype evidence](admission/thin-host-v0.json).
-
-Post-v0.0.10 native packaging is in development: the public
-[source-free native CLI](sdk/wasmc-native-compiler/README.md) consumes the exact
-admitted compiler Wasm and builds only open integration glue. `wasmc run` uses
-Wasmi for the shortest cold path; `wasmc build` emits portable Core Wasm;
-`wasmc build --target native` uses target-local Wasmtime AOT and emits a
-standalone executable. Its six-target desktop matrix tests Linux/macOS/Windows
-x64/arm64. This remains development tooling rather than a new formal release or
-mobile qualification. See the workflow summaries/artifacts for the exact source.
-
-The runtime model composes those engines rather than choosing one permanently.
-For an exact admitted Wasm identity, a cold request may execute immediately on
-Wasmi while a bounded background worker prepares the Wasmtime/AOT path. Later
-fresh invocations continue on Wasmi until a matching compiled candidate/cache
-entry is complete and admitted; subsequent invocations may then route to the
-cached Wasmtime/native path. An in-flight call is never migrated or replayed.
-Persistent target-local AOT cache, in-process prepared-module cache and optional
-safe Store/Instance pools are cache layers of the same routing model, not new
-guest-visible APIs. See [ASMD](docs/ASMD.md#runtime-execution-and-cache-hierarchy).
-[![Native compiler qualification](https://github.com/cbgroom/wasmcrelease/actions/workflows/native-compiler.yml/badge.svg?branch=main)](https://github.com/cbgroom/wasmcrelease/actions/workflows/native-compiler.yml)
-Qualified implementation: [six native builds + six downloaded-consumer jobs](https://github.com/cbgroom/wasmcrelease/actions/runs/34745887997),
-[complete consumer regression](https://github.com/cbgroom/wasmcrelease/actions/runs/34745902717)
-and [LibSearch regression](https://github.com/cbgroom/wasmcrelease/actions/runs/34745904387).
-The [retained receipt](admission/native-desktop-qualification.json) binds the
-exact implementation source and six package manifest digests. Main's live badge
-may be pending independently of these successful retained runs.
-
-Public performance uses the same five-source corpus previously frozen by the
-compiler performance baseline: `small_scalar`, `structured_variant`,
-`policy_small`, `policy_large`, and `std_mix_large`. The sources, expected Wasm
-digests and measurement protocol are checked into [`bench/`](bench/README.md).
-The [six-platform performance workflow](.github/workflows/native-cli-perf.yml)
-measures portable build, native cache miss/hit, and the executable oracle where
-available. GitHub-hosted timing numbers are comparative observations rather than
-absolute SLA claims; source identity, generated-Wasm identity, and behavior are
-hard gates. Latest/history JSON and badge endpoints are published on the
-[`perf-data`](https://github.com/cbgroom/wasmcrelease/tree/perf-data) branch after
-successful `main` runs.
-
-Host performance uses two independent baselines: the existing raw real-TCP Host
-lifecycle/shard flywheel and an external-client HTTPS load baseline. The latter
-uses pinned `oha` against real loopback TLS sockets and separates native
-Rustls+HTTP, WAsmC TLS+Host with native HTTP, and the complete WAsmC
-TLS+HTTP/router path. Its contract is
-[`bench/host-external-load.json`](bench/host-external-load.json); timing
-regressions are same-platform advisory signals, while required-platform
-presence, external-client success and expected HTTP status remain hard gates.
-
-The v0.0.20 product Agent guidance starts with
-[Library-first discovery](skills/wasmc-lib-discovery/SKILL.md) before implementing
-reusable algorithms/data operations. It teaches real search hits, exact selection,
-installation and supported execution, with an executable documentation regression.
-The guidance is integrity-bound in this release; earlier tags stay frozen.
-
-Frozen product version: **v0.0.20 research-only license boundary with unchanged v0.0.19 behavior**.
-The [channel policy](docs/RELEASE_CHANNELS.md) defines immutable `-dev.N` →
-`-main.N` → suffix-free prod. Read `release.json` for the default prod;
-previous tags are immutable and prod0.0.x does not imply stable1.x.
-[![LibSearch equivalence](https://github.com/cbgroom/wasmcrelease/actions/workflows/lib-search.yml/badge.svg?branch=main)](https://github.com/cbgroom/wasmcrelease/actions/workflows/lib-search.yml)
-
-v0.0.20 carries forward the Client Foundation and persistent Gateway as an incubating
-runtime surface above the fixed Host. The released source tree includes exact
-WSS control, HTTPS content-addressed bundles, dynamic serial/general-DAG Lib
-composition, atomic replacement and rollback, Client/Gateway restart recovery,
-bounded checkpoints and cross-schema state migration. It is not a newly admitted
-Lib package or a production fleet service; use
-`runtime/client-foundation-v1/release-surface.json` for the exact boundary.
-
-Search now runs inside the Lib's Wasm, with no runtime catalog/config input:
-`node scripts/wasmc-lib.mjs search "base64 decode"`. It returns v2 typed `hits`
-(packages and APIs), rather than the older v1 package-only JSON. Exact resolve/
-install use the exact carried-forward v0.0.18 catalog with explicit catalog,
-WIT and artifact digests; search does not select a version or authorize
-installation. The Lib has zero imports and a portable
-Core/Component value view. It is not a shared-memory/CoreLib fast ABI and does
-not solve Wasmi/Node18 compatibility of the existing Std1.4.0.
-
-The v0.0.20 product carries forward `wasmc:data-relational@0.0.2` and
-`mcpgit:resident-memory@0.1.0`, adds `wasmc:router-policy@0.0.1`,
-`wasmc:json@0.0.1`, `wasmc:compression@0.0.1`, and `wasmc:http1-server@0.0.1`, and
-publishes route-complete `wasmc:lib-search@0.4.0`; prior versions remain
-historical exact identities. The exact catalog closes 22 package routes and
-140 exported API routes; the embedded snapshot contains 162 total entries.
-It reuses the exact v0.0.19 compiler bytes built from private source
-`566eff42d0f4e4680c5ddd60c6584a9d8ff8e9f4`; ordinary-source `u64` remains
-available without widening the independent async, public Map, or `char`
-boundaries. It also reuses the admitted v0.0.11 Data
-Foundation Lib bytes. On the immutable v0.0.20 tag, `dist/` and `package/` remain
-frozen v0.0.4 compatibility trees. On current main, use `current/` and
-`current/compiler-release.json` for the compiler-only successor; old compiler
-copies are removed and legacy JS routes forward to the current facade.
-The public Wasmi/Wasmtime Core
-Runtime SDK is in `sdk/wasmc-core-runtime`; the product also includes the generic
-Rust Host embedding SDK in `sdk/wasmc-host`. Its binding policies are Host-side
-convenience only and do not add guest-visible Host operations.
-
-Data Foundation v1 publishes seven zero-import, source-free packages for CSV,
-typed data, expressions, compute, relational operations, profiling and Arrow
-IPC/uncompressed Parquet interchange. The qualified path is CSV → types → Expr
-→ Compute → Relational → Profile → interchange → validation. Relational v1
-includes union-all, bounded typed inner/left equi-join, deterministic ranking
-windows and group aggregation. Lag/lead, frame aggregates and distinct are v1.1;
-SQL/DB is outside this release. See [the v0.0.11 Data scope](docs/RELEASE_V011.md),
-[v0.0.12 SDK scope](docs/RELEASE_V012.md), and
-[v0.0.13 telemetry scope](docs/RELEASE_V013.md).
-
-v0.0.13 additionally publishes `libs/wasmc-system-telemetry` v0.0.1.
-Its admitted execution surfaces are source-free Rust Component consumption and
-the public Rust Host SDK; real system acquisition is qualified on Linux through
-four explicit generic read-only resources. Direct WAsmC sampler-resource source,
-Browser, Wasmi Component execution, and real Windows/macOS system acquisition
-are not release claims.
-
-This release covers bit operations, managed collection loops, stable minimal
-String paths, and the 73-function `wasmc:std@1.4.0` source-free standard Lib.
-The standard Lib is reused from its qualified producer, not rebuilt here.
-See [current examples](examples/current/standard.wasmc) and run
-`node scripts/validate-current.mjs` and `node examples/current/standard.mjs`
-(Bun and Deno are also supported). These deterministic tests are not the
-original external 114-entry evaluation or a fresh LLM-generated benchmark.
-
-GitHub Actions continuously exercises the public repository as a source-free consumer: staged deployment, Node/Bun/Deno compile and execution, JavaScript examples, Lib package contracts, and Rust/Wasmtime Component behavior. It does not build, replace, or admit canonical compiler/Lib bytes; immutable release publication remains a separate maintainer-controlled process.
-
-## Continuous verification results
-
-The badge above is GitHub's live **main/push workflow status**, not a frozen
-release certificate or source-line coverage percentage. Click it, select a run,
-and open **Required aggregate verification and downloadable report** for the
-exact commit, every matrix result, and case pass/fail counts. Download
-`verification-report` for JSON/Markdown; `ci-*` artifacts contain individual
-stdout/stderr logs, observed execution counts and tool versions, including failures.
-See [complete CI scope and reproduction](docs/CI_COVERAGE.md).
-
-Latest exact-tag baseline: [22/22 source-free consumer jobs](https://github.com/cbgroom/wasmcrelease/actions/runs/35524038477)
-plus [11/11 LibSearch/Wasmi/Component jobs](https://github.com/cbgroom/wasmcrelease/actions/runs/35523982596).
-The exact tested source is `532c0e413104786a46e3b9cf0ebafb16de55626a`;
-see [retained stage receipt](channels/main.json).
-Later documentation receipts do not retarget that measurement; the badge above
-tracks their independent main runs, which may be pending.
-
-| Coverage dimension | Continuous checks |
-|---|---|
-| Host/platform | Linux + macOS; Node26.5.1, Bun1.3.14, Deno2.9.4; both HTTPS mirrors |
-| Compatibility boundaries | Node18.19.1/22.0.0/26.5.1 on both platforms; probes, tampering, whole-module rejection |
-| Compiler/source expression | 30 corpus outputs, 23 expression cases, 192 managed calls per full journey |
-| Standard Lib | 73-API package; 5,120 representative WAsmC/Rust paired calls per execution journey |
-| Catalog and installation | Four exact packages, ten resolution negatives, ten install negatives, concurrency and cleanup |
-| Public deployment | Git-free archive compiler/managed/std execution; fresh GitHub Raw and jsDelivr installation |
-| Runtime and Lib integration | Locked release-profile Wasmi/Wasmtime SDK tests and Rust Component/resource/Host consumer |
-| Safety/integrity/Agent guidance | Complete manifests/checksums/frozen trees, all-reachable credential scan + negatives, deterministic Fresh-Agent regression |
-
-The workflow has 21 required suite cells plus an aggregate job. Expected negative
-rejections count as passing only when their assertions succeed. Failed, skipped,
-missing or source-mismatched receipts fail aggregate verification; no README bot
-commits, write token or third-party badge service is required. Counts describe
-scoped behavior, not all 73 APIs exhaustively, every algorithm, or private compiler
-source coverage. Node18 full managed/std execution is **not** supported by these
-compatibility passes. Browser/device/production/performance and third-party Lib
-authoring remain separate acceptance gates.
-
-- Agents and developers: [AGENTS.md](AGENTS.md)
-- SDK/runtime/CLI selection: [SDK discovery Skill](skills/wasmc-sdk-discovery/SKILL.md)
-- SDK-scoped Agent entrypoint: [sdk/AGENTS.md](sdk/AGENTS.md)
-- Language delta: [LANGUAGE.md](LANGUAGE.md)
-- Lib model and managed collections: [LIB.md](LIB.md)
-- JavaScript, raw Wasm, and Wasmtime: [HOSTING.md](HOSTING.md)
-- Runtime/Registry bootstrap: [runtime/README.md](runtime/README.md)
-- Wasmi + Wasmtime Core Runtime SDK: [sdk/wasmc-core-runtime/README.md](sdk/wasmc-core-runtime/README.md)
-- Rust Generic Host SDK: [sdk/wasmc-host/README.md](sdk/wasmc-host/README.md)
-- Release history: [RELEASES.md](RELEASES.md)
-
-## JavaScript context
-
-A checked-out source-free release uses the checked-in facade directly:
-
-```js
-import { compile, inspectWasm } from "./current/wasmc.mjs";
-```
-
-Only an application that has explicitly installed or resolved the package uses:
-
-```js
-import { compile, inspectWasm } from "@wasmc/compiler";
-```
-
-These are explicit contexts, not fallback probes. Repository-local use does not require npm or another external JavaScript registry.
-
-Consumers must pin the exact tag reported by `release.json` or its full commit and verify `SHA256SUMS`.
-`main` and latest metadata are mutable discovery conveniences.
-
-## Pinned-release testing instructions
-
-Supplemental public [Lib discovery and exact resolver](catalog/README.md)
-provides exact resolution over verified published package bytes. Search now
-executes the embedded-index Lib and returns package/API hits, not installation
-authority; see [the complete new Lib guide](examples/lib-search/README.md).
-[Pinned download/install](catalog/INSTALL.md) now verifies the full package and
-publishes without overwriting existing destinations. Third-party authoring
-remains unclosed. Only the new LibSearch bytes were added; compiler/Std are reused.
-
-Compatibility follow-up: [complete engine contract and independent Node18
-reproduction](compatibility/README.md). The standard Core artifact requires
-typed function references and tail calls. Original v0.0.9 does not contain the
-later preflight scripts; v0.0.10 now ships them with digest-bound metadata.
-Node18 is not covered by the release's passing full managed-Host matrix.
-
-Resolve the exact current immutable tag with `jq -r .tag release.json`, then
-resolve its commit with `git rev-parse "$(jq -r .tag release.json)^{}"`.
-All previous tags remain frozen and are never overwritten.
-This README and the GitHub Release page matching `release.json.tag`
-contain the complete handoff; no accompanying chat instructions are required.
-
-### Download and verify
-
-```bash
-release_tag=$(curl -fsSL https://raw.githubusercontent.com/cbgroom/wasmcrelease/main/release.json | node -pe 'JSON.parse(require("fs").readFileSync(0,"utf8")).tag')
-git clone --depth 1 --branch "$release_tag" https://github.com/cbgroom/wasmcrelease.git
-cd wasmcrelease
-```
-
-Verify every file listed in `SHA256SUMS` before execution. On macOS use
-`shasum -a 256 -c SHA256SUMS`; on Linux use `sha256sum -c SHA256SUMS`.
-GitHub Raw and jsDelivr support the exact pinned release:
-
-Use the exact `release.json.tag` in GitHub Raw or jsDelivr URLs; do not replace
-it with `main`, an unversioned URL, or `package-index.json.latest` after pinning.
-
-Use `current/wasmc.mjs` for the self-contained ESM path or `current/index.mjs`
-for the sidecar package path. The latter needs its sibling compiler and Lib
-files. `current/wasmc.global.js` is the classic-script carrier.
-Do not test the latest compiler through `dist/`, `package/`, or `libs/`:
-those directories are frozen historical compatibility artifacts.
-
-### Run the published regressions
-
-```bash
-node scripts/validate-current.mjs
+```sh
+node scripts/current-compiler-integrity.mjs --require-qualification
+node scripts/test-current-compiler.mjs
 node examples/current/standard.mjs
-
-bun scripts/validate-current.mjs
-bun examples/current/standard.mjs
-
-deno run --allow-read --allow-write --allow-run --allow-env scripts/validate-current.mjs
-deno run --allow-read examples/current/standard.mjs
-
-cargo test --locked -p wasmc-core-runtime
-cd examples/rust-wasmtime
-cargo test --locked
-cargo run --locked
 ```
 
-Deno permissions above belong to the test harness (file outputs and CLI child
-processes), not an implicit grant of authority to compiled applications.
-Rust commands build the public consumer/SDK, not the private compiler.
+Node, Bun and Deno consumer checks are separate evidence. The Native CLI runs
+with Wasmi2.0.0; explicit AOT uses Wasmtime49.0.2. Native packages bind their
+source commit, compiler, target, executable, lockfile and original licenses.
+Linuxx64/Linuxarm64/macOSarm64/Windowsx64/Windowsarm64 are required targets;
+macOSIntel is an additional observed target. Cross-compilation alone does not
+establish downloaded-consumer execution.
 
-### What is shipped and what passed
+## Library-first selection
 
-The compiler is 1,399,677 bytes, has zero Host imports, and its SHA-256 is
-`4e0b9779df3bf7b627d7d9fbfc43cfffd67bb053f87c69a9f832c5690b6888a2`.
-Each JS Host passed 30 frozen-corpus outputs across the public API/CLI carriers,
-23 reconstructed expression cases (including intentional rejections), and
-192 repeated managed-collection loop calls. Each also passed 5,120 paired
-WAsmC/Rust caller checks against the same standard Lib. These paired checks
-are representative behavior checks, not exhaustive coverage of all 73 APIs.
+Follow [Library-first discovery](skills/wasmc-lib-discovery/SKILL.md).
+The pinned catalog owns complete Roots, WIT, SDK views and dependency notices.
+Its42 package routes and236 API routes give278 exact search entries.
 
-The strict `wasmc:std@1.4.0` package is in `standard/wasmc-std/1.4.0`, with WIT,
-Core/Component artifacts and generated Rust SDK. Its 4.8 CoreLib companion is
-in `standard/corelib/4.8.0`; follow the complete Host reference
-`examples/current/standard.mjs`. Automatic managed-source compilation retains
-its matching 4.3 provider in `current/lib_core.wasm`. These providers are not
-interchangeable; do not replace one merely because another has a newer version.
-Application authors use ordinary typed APIs, not provider-private handles.
+```sh
+node scripts/wasmc-lib.mjs search "base64 decode" --catalog-sha256 01fda278b3c74363643879f71cc739488a57e9d934f217ab07af3460b88923d4 --limit 8
+node examples/base64/run.mjs
+```
 
-Public Wasmi/Wasmtime SDK tests passed 18/18. The actual Wasmtime compiler,
-resource Lib and authorized Host Lib journey passed (`scalar=17`, `resource=15`,
-`host=42`). Pinned GitHub Raw/jsDelivr bytes matched, and the full fresh public
-download passed checksums and JS compiler/standard-Lib tests on all three Hosts.
-[GitHub Actions](https://github.com/cbgroom/wasmcrelease/actions/runs/34726851005)
-passed all five jobs for the exact release commit.
+Search discovers candidates; resolve verifies the exact catalog, manifest and
+Root inventory. Installation uses a separately pinned lock and no-clobber
+destination. Read each Root's Skill, WIT and declared profile before using it.
+Fourteen native-source rows are source-only. They do not imply executable or
+physical-device qualification.
 
-See [qualification](admission/qualification-v009.json),
-[compiler provenance](admission/compiler-build-v009.json),
-[same-archive Host evidence](admission/runtime-local-host-evidence-v009.json),
-and [release history](RELEASES.md) for detailed evidence.
+[Std1.4.1](standard/wasmc-std/1.4.1/) retains73 operations and nine resources
+with complete generated Core and Component Rust SDKs. Its Core import requires
+Provider4.9. [LibSearch0.5.0](standard/wasmc-lib-search/0.5.0/) implements the
+bounded full-index lookup and search. The matching Provider is
+`current/lib_core.wasm`.
 
-### Boundaries and reporting failures
+## Language and external effects
 
-This is a testing release of an Agent-first execution language, not full Rust
-or proof of universal expression coverage. Raw pointers, complex generics,
-arbitrary async control flow and automatic cross-domain managed transport are
-not promised. Browser execution was not validated in this release campaign.
-The 23 cases are not the original external 114-entry corpus; deterministic
-Fresh-Agent harness scoring is not a new LLM-generation benchmark. Standard
-Lib bytes were reused from their qualified producer, not rebuilt for publication.
-No MCPGit release, deployment or production activation is included.
+Read [LANGUAGE.md](LANGUAGE.md), [LIB.md](LIB.md) and
+[HOSTING.md](HOSTING.md). Ordinary-source `u64` is supported; `char`, ordinary
+async source and a direct public Map result remain independently unsupported.
+Resident/local managed values and public Component values have distinct
+contracts. Use manifest-owned SDK paths and explicit ownership/cleanup.
 
-Historical credential-scan raw hits were retained, not hidden. Under explicit
-authorization, only two exact frozen compiler Base64 carriers were classified
-after digest, canonical encoding, import-free Wasm and decoded-byte detector
-proof. Zero unresolved findings/skips/errors and deleted-credential/unknown-carrier
-negative tests passed; this is not an exhaustive secret-free claim. Raw and
-classified receipts are in `admission/credential-scan-v009-*.json`.
+Inspect every import and compare it with an application-owned exact allowlist
+before instantiation. Imports request effects; installation supplies no Host
+capability. System Telemetry supports its declared Component resource view;
+ordinary-source direct resource methods remain unsupported. Client Foundation
+and Gateway remain incubating.
 
-For a failure, report the pinned tag/commit, Host/tool versions, minimal source,
-the exact compile or link command, structured diagnostic, explicit imports,
-inputs and expected/actual output. Distinguish compile failure, activation/link
-failure and runtime mismatch; do not treat a WIT signature alone as physical
-JS FFI support. Read `LANGUAGE.md`, `LIB.md`, `HOSTING.md` and the bundled
-developer Skill before concluding that an unsupported source form is a bug.
+The [0.0.21 release evidence](docs/RELEASE_V021.md) keeps source, artifact,
+runtime, Native platform, whole-candidate and lifecycle gates separate.

@@ -9,6 +9,10 @@ const read=path=>readFileSync(resolve(root,path),'utf8');
 const exists=path=>existsSync(resolve(root,path));
 
 const surfaces=JSON.parse(read('release-surfaces.json'));
+const release=JSON.parse(read('release.json'));
+const prod=JSON.parse(read('channels/prod.json'));
+const currentPublished=release.version===surfaces.release_version&&release.stage==='prod'&&prod.version===release.version&&prod.tag===release.tag;
+const currentStatus=currentPublished?'published':'candidate';
 assert.equal(surfaces.schema,'wasmc.release-surfaces/v1');
 assert.match(surfaces.release_version??'',/^\d+\.\d+\.\d+$/);
 const discovery=surfaces.agent_discovery;
@@ -59,13 +63,14 @@ for(const [id,path] of Object.entries(discovery.component_skills)){
 const hostSurface=surfaces.consumer_surfaces.find(row=>row.id==='host-sdk');
 assert(hostSurface,'host-sdk release surface missing');
 assert(['candidate','published'].includes(hostSurface.status),'unexpected host-sdk status '+hostSurface.status);
+assert.equal(hostSurface.status,currentStatus);
 assert(hostSurface.roots.includes('sdk/wasmc-host'));
 assert(hostSurface.roots.includes('sdk/wasmc-core-runtime'));
 if(hostSurface.status!=='published'){
   assert(hostSkill.includes('does not prove the SDK belongs to the'));
   assert(hostSkill.includes('current immutable release'));
   assert(hostSkill.includes('do not claim an older tag shipped it'));
-  assert(agents.includes('does not retroactively add a candidate path'));
+  assert(agents.includes('product presence is not lifecycle authority'));
 }
 
 const nativeSurface=surfaces.consumer_surfaces.find(row=>row.id==='integrated-runtime-cli');
@@ -85,7 +90,7 @@ const capabilityProjection=surfaces.agent_capability_projection;
 assert.equal(capabilityProjection?.product_release,'v'+surfaces.release_version);
 assert.equal(capabilityProjection?.guidance_scope?.included_in_product,true);
 assert.equal(capabilityProjection?.guidance_scope?.lifecycle_authority,'release.json and channels/prod.json');
-assert.equal(capabilityProjection?.type_decisions?.u64_ordinary_source?.status,'released');
+assert.equal(capabilityProjection?.type_decisions?.u64_ordinary_source?.status,currentPublished?'released':'qualified-product-capability');
 assert(capabilityProjection?.type_decisions?.map?.unsupported_positions?.includes('direct-public-WIT-value-result'));
 assert.equal(capabilityProjection?.feature_decisions?.async_ordinary_source_or_lib,'unsupported');
 const nativeBinaryStatus=statusQueries['prebuilt-native-runtime-library'];
@@ -98,18 +103,18 @@ assert.deepEqual(directTelemetryStatus?.states,{
   qualified:false,admitted:false,released:false,discoverable:false,installable:false
 });
 assert.equal(directTelemetryStatus?.related_released_product?.identity,'wasmc-system-telemetry@0.0.1');
-assert.equal(directTelemetryStatus?.related_released_product?.released,true);
-assert.equal(directTelemetryStatus?.related_released_product?.discoverable,true);
-assert.equal(directTelemetryStatus?.related_released_product?.installable,true);
+assert.equal(directTelemetryStatus?.related_released_product?.released,currentPublished);
+assert.equal(directTelemetryStatus?.related_released_product?.discoverable,currentPublished);
+assert.equal(directTelemetryStatus?.related_released_product?.installable,currentPublished);
 
 const components=surfaces.agent_discovery?.components;
 assert(components,'agent_discovery.components missing');
-assert.equal(components['core-runtime-sdk']?.release_status,'published');
+assert.equal(components['core-runtime-sdk']?.release_status,currentStatus);
 assert.equal(components['core-runtime-sdk']?.skill,'sdk/wasmc-core-runtime/SKILL.md');
 assert.equal(components['host-sdk']?.release_status,hostSurface.status);
 assert.equal(components['host-sdk']?.immutable_example,'v'+surfaces.release_version);
 assert.equal(components['host-sdk']?.skill,'sdk/wasmc-host/SKILL.md');
-assert.equal(components['native-cli']?.release_status,'published');
+assert.equal(components['native-cli']?.release_status,currentStatus);
 assert.equal(components['native-cli']?.skill,'sdk/wasmc-native-compiler/SKILL.md');
 assert.match(components['native-cli']?.binary_packaging??'',/not immutable release assets/i);
 assert.equal(components['lightweight-embedding']?.release_status,'qualified-reference');

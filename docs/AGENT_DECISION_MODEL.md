@@ -25,8 +25,8 @@ For a status question, stop as soon as a required authority is missing:
 
 1. Read `release-surfaces.json.agent_capability_projection` for language/type
    questions and expand the requested signature into exact positions. This
-   current-main side-remediation is bound to v0.0.13 product behavior but is
-   explicitly not an asset contained in the immutable v0.0.13 tag.
+   frozen projection describes the v0.0.21 product capability; release.json and
+   exact channel records decide its published lifecycle.
 2. Read `release-surfaces.json.agent_status_queries`. When it contains the exact
    request, use its five states and stopping condition without probing guessed
    paths or broad catalogs.
@@ -50,17 +50,17 @@ When a question uses “now”, “fixed” or “supported” without naming an
 read `producer_capability_delta` (or its compact
 `producer-release-u64-delta` quickstart route) before answering. Producer,
 frozen product and published lifecycle are separate authorities. For
-ordinary-source `u64`, producer master
-`566eff42d0f4e4680c5ddd60c6584a9d8ff8e9f4` contains the implementation commit
-`94328ed760f93bf24b595a71facdcc773d43b762`, and the v0.0.20 product compiler is
-built from that containing authority. Keep `u32` as the previously released
-type and `char` as a separate unimplemented semantic type. Scalar support does
+ordinary-source `u64`, the immutable implementation authority remains in
+`producer_capability_delta`; the current compiler bytes and containing source
+are in `current/compiler-release.json`. Verify both exact identities and the
+selected product version. Keep `u32` as an admitted scalar and `char` as a
+separate unimplemented semantic type. Scalar support does
 not imply async or direct public Map support.
 
 Do not scan all release history, read implementation tests, or infer a future
 directory layout when these authorities already answer the question.
 
-## Exact identity and compatibility
+## Exact identity and engine evidence
 
 Copyable commands contain full tags, commits, versions and digests. An
 ellipsized checksum such as `0123abcd...` is prose, not an executable identity.
