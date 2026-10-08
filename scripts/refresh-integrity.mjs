@@ -9,7 +9,7 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const slash = (value) => value.split('\\').join('/');
 const sha = (bytes) => createHash('sha256').update(bytes).digest('hex');
 const fileSha = async (path) => sha(await readFile(join(root, path)));
-const executableArtifacts = new Set(['dist/wasmc.mjs', 'package/cli.mjs', 'current/wasmc.mjs', 'current/cli.mjs']);
+const executableArtifacts = new Set(['dist/wasmc.mjs', 'package/cli.mjs', 'current/wasmc.mjs', 'current/cli.mjs', 'scripts/validate-maintainer.sh', 'scripts/validate-source-free-runtime.sh']);
 const expectedMode = (path) => executableArtifacts.has(path) ? '0755' : '0644';
 
 async function walk(dir = '') {
