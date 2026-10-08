@@ -1,14 +1,10 @@
 # WAsmC release maintainer handoff
 
-Latest Lib work: Search0.5.0 has current source and generated Core Q0/Q1;
-registry40/42,153 APIs,193 index entries. Read
-`.agents/workstreams/WS-20261006-lib-refresh-v2/current-search-checkpoint.json`
-and HANDOFF. Strict dual-engine App replay is in progress; Std/Resident, full
-cohort/device/integration and public release remain pending. No old fallback.
+Current v0.0.21 final local prod rehearsal: canonical master938, one compiler42c, Provider4.9, Std1.4.1, Search0.5.0, complete42 Roots/236 APIs/278 entries. Dev5 all nine current workflows and CSV4/Interchange10 ordinary Source both engines pass. Six Native platform builds and matching consumers retain actual6c858 source and29 unchanged inputs. Read the owned WS-20261006-lib-refresh-v2 HANDOFF and channels/main.json for exact receipts. The suffix-free tag/default branch publication still requires two-model Pi plus independent review on this exact unpushed final commit/tree. Historical checkpoints below retain their original evidence and are not current lifecycle authority.
 
-## Current all-candidate checkpoint — 2026-10-06T20:08:21.186197+00:00
+## Historical all-candidate checkpoint — 2026-10-06T20:08:21.186197+00:00
 
-This is the current execution authority; older sections below are historical.
+This retained historical checkpoint is superseded by the current release rehearsal above.
 36/36 candidates now use libspec only: 13 value, 3 resource, 20 native.
 The old libsrc tree (274 files), 26 old command entrypoints and 5 duplicate CI
 workflows are physically deleted. All 22 real platform code copies were

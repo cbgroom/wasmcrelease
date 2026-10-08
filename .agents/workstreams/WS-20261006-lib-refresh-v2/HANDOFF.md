@@ -1,3 +1,11 @@
+# Canonical v0.0.21 final release rehearsal
+
+Current exact source938 completed184 unfiltered targets and the full378-library suite, then canonical integration/context137/strict MST passed. Formal compiler42c and matching79-file model, Chrome151 and source-free Node/Bun/Deno qualify the same bytes. Fresh42-Root Q0/Q1, full278 Search, JSON/Owned/Search ordinary Source and CSV4/Interchange10 dual-engine cases passed. Native six-platform build and matching consumers retain actual6c858 source with29 unchanged inputs. Immutable dev5 and main1 use candidate849a and the same1054-file product set with94 frozen CI inputs; allnine current workflows passed. Exact compiler/Root/CI authority is in current/compiler-release.json, catalog/libs-current-v2.json and channels/main.json.
+
+This unpushed commit contains the intended final prod view. The required next action is exact two-model Pi plus independent review on this commit/tree, followed by immutable tag/main/Release/assets/public consumer readback. No compatibility or unsupported Node18 Std execution is claimed. Fourteen Native source rows remain source-only, direct SystemTelemetry resource methods unsupported and Client/Gateway incubating. Historical observations below retain their original scope and do not decide current lifecycle.
+
+## Retained workstream history
+
 # Canonical current compiler and whole0.0.21 release resume
 
 Task state: in-progress. Sole parent task-wasmc-thin-host-semantic-lifecycle-closure.
@@ -67,3 +75,8 @@ Final whole inventory preflight found7 actual POSIX mode conflicts: two maintain
 ## v0.0.21-main.1 actual current CI qualification
 
 Immutable dev.5 7bb26de9cdc0057e43b02f20ed7f6e6203781dbc passed all nine required current workflows. Main uses candidate 849a728decb6c7eace20083a26f2dcabaf1d288e and the unchanged 1054-file product digest 349931faa088659b51e171ed9056aa680618ef9478da353a89819644a4b644d1. CSV4 and Interchange10 ordinary Source cases passed Wasmi2 and CoreWasmtime49.0.2 with independent Component47 binary goldens. Native six-platform build/consumer run retains actual source 6c8580e0adabad87b806e72ecef0228c3f1c59d1 with 29 unchanged input files. Node18 current Std execution is unsupported; the CI receipt proves exact rejection before instantiation. No compatibility variant was added. Default prod remains0.0.20. Next: final clean local prod tree, two-model Pi and independent review, immutable publication/readback.
+
+
+## Final local v0.0.21 prod rehearsal
+
+This local unpushed tree contains final release21/prodchannel, current42 lifecycle projections, complete manifest/provenance/checksums and the same main-qualified 1054 product bytes. Actual dev5 nine-workflow receipts and Native29 input custody are preserved. It is an intended final publication view; no suffix-free tag or default Git branch advance is allowed before exact two-model Pi and independent review verifies this commit/tree. Ordinary SystemTelemetry direct-resource-method route stays unsupported; fourteen Native source rows stay source-only; Node18 current Std execution stays unsupported.

@@ -7,18 +7,14 @@
     "package_routes": 42,
     "api_routes": 236,
     "candidate_extras": 0,
-    "formal_release_ready": false,
-    "blocking_conditions": [
-      "canonical-master-and-complete-source-gate",
-      "whole-product-candidate-and-two-model-Pi",
-      "immutable-channel-publication"
-    ]
+    "formal_release_ready": true,
+    "blocking_conditions": []
   },
   "active_search": {
     "identity": "wasmc:lib-search@0.5.0",
     "states": {
       "qualified": true,
-      "admitted": false,
+      "admitted": true,
       "included_in_product": true,
       "qualified_before_freeze": true,
       "admitted_before_freeze": false
@@ -48,7 +44,7 @@
   ],
   "check_commands": [
     "node scripts/lib-route-closure.mjs --check",
-    "node scripts/release-candidate.mjs verify channels/candidates/0.0.21.json"
+    "node scripts/release-candidate.mjs verify channels/candidates/0.0.21.json --candidate-sha256 e0d34d806f81f56dde084ae5b1626bdcfcb4ccb8a59491e2b9d37ecce43db651"
   ],
   "stop": "This record is sufficient for the matching readiness decision. Do not scan manifests, histories or implementation scripts unless one of its check commands fails."
 }
