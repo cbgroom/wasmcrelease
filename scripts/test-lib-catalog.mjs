@@ -6,7 +6,7 @@ import {fileURLToPath} from 'node:url';
 import {hash,checkedCurrentCatalog,resolveCurrentPackage,currentProductReader} from './current-lib-release-v3.mjs';
 const root=fileURLToPath(new URL('../',import.meta.url));
 const bytes=readFileSync(join(root,'catalog/libs-current-v2.json'));
-const pin='01fda278b3c74363643879f71cc739488a57e9d934f217ab07af3460b88923d4';
+const pin='a4de009c683d3db4453cf0a9e783719a933a8e1689842a12d08a6883a83cfdad';
 const catalog=checkedCurrentCatalog(bytes,pin),read=currentProductReader(root);
 const request=r=>({id:r.id,version:r.version,manifest_sha256:r.manifest_sha256,root_inventory_sha256:r.root_inventory_sha256});
 assert.equal(catalog.packages.length,42);

@@ -28,7 +28,7 @@ export function suiteCases(family,runtime='node',mirror='github') {
     item('lib-route-release-closure-negatives','scripts/test-lib-route-closure.mjs'),
     item('sdk-agent-routing','scripts/validate-sdk-agent-routes.mjs'),
     item('release-channel-promotion-negatives','scripts/test-release-channel.mjs'),
-    item('current-complete-product-reopen-negatives','scripts/test-current-product-v3.mjs',['--product','.', '--catalog-sha256','01fda278b3c74363643879f71cc739488a57e9d934f217ab07af3460b88923d4','--out','target/ci/current-product-controls'],fixturePermissions),
+    item('current-complete-product-reopen-negatives','scripts/test-current-product-v3.mjs',['--product','.', '--catalog-sha256','a4de009c683d3db4453cf0a9e783719a933a8e1689842a12d08a6883a83cfdad','--out','target/ci/current-product-controls'],fixturePermissions),
     item('current-original-license-reopen-negatives','scripts/test-current-license-policy-v3.mjs'),
     item('release-product-identity','scripts/current-release-identity.mjs'),
     item('release-surface-model','scripts/validate-release-surfaces.mjs'),
@@ -40,7 +40,7 @@ export function suiteCases(family,runtime='node',mirror='github') {
   ];
   if(family==='candidate')return [
     item('current-v3-product-identity','scripts/current-release-identity.mjs'),
-    item('current-complete-product-reopen-negatives','scripts/test-current-product-v3.mjs',['--product','.', '--catalog-sha256','01fda278b3c74363643879f71cc739488a57e9d934f217ab07af3460b88923d4','--out','target/ci/current-product-controls'],fixturePermissions),
+    item('current-complete-product-reopen-negatives','scripts/test-current-product-v3.mjs',['--product','.', '--catalog-sha256','a4de009c683d3db4453cf0a9e783719a933a8e1689842a12d08a6883a83cfdad','--out','target/ci/current-product-controls'],fixturePermissions),
     item('current-original-license-reopen-negatives','scripts/test-current-license-policy-v3.mjs'),
     item('library-first-teaching-and-routes','scripts/test-library-first.mjs'),
     item('live-agent-trace-evaluator','scripts/test-live-agent-trace-evaluation-v1.mjs'),

@@ -43,7 +43,7 @@ The pinned catalog owns complete Roots, WIT, SDK views and dependency notices.
 Its42 package routes and236 API routes give278 exact search entries.
 
 ```sh
-node scripts/wasmc-lib.mjs search "base64 decode" --catalog-sha256 01fda278b3c74363643879f71cc739488a57e9d934f217ab07af3460b88923d4 --limit 8
+node scripts/wasmc-lib.mjs search "base64 decode" --catalog-sha256 a4de009c683d3db4453cf0a9e783719a933a8e1689842a12d08a6883a83cfdad --limit 8
 node examples/base64/run.mjs
 ```
 

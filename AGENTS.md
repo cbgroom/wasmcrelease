@@ -47,7 +47,7 @@ LibSearch0.5.0 and42 current Lib identities. `current/compiler-release.json`
 binds the compiler carriers and source build; validate them with
 `node scripts/current-compiler-integrity.mjs --require-qualification`.
 `catalog/libs-current-v2.json` binds complete current Roots. Its independent
-SHA256 is `01fda278b3c74363643879f71cc739488a57e9d934f217ab07af3460b88923d4`. The42 package routes and236 exported API routes form
+SHA256 is `a4de009c683d3db4453cf0a9e783719a933a8e1689842a12d08a6883a83cfdad`. The42 package routes and236 exported API routes form
 278 index entries. Search runs the actual compiled Core implementation.
 Fourteen native-source rows remain source-only and do not establish executable
 Native or device support. Installation grants no Host authority.
@@ -90,7 +90,7 @@ cancellation and resource cleanup. Keep native-source, emulator and physical
 
 ```sh
 node scripts/current-compiler-integrity.mjs --require-qualification
-node scripts/wasmc-lib.mjs search "base64 decode" --catalog-sha256 01fda278b3c74363643879f71cc739488a57e9d934f217ab07af3460b88923d4 --limit 8
+node scripts/wasmc-lib.mjs search "base64 decode" --catalog-sha256 a4de009c683d3db4453cf0a9e783719a933a8e1689842a12d08a6883a83cfdad --limit 8
 node examples/base64/run.mjs
 ```
 

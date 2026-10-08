@@ -22,7 +22,7 @@ const text=read(skill);
 for(const m of text.matchAll(/\]\(([^)]+)\)/g))checkedPath(path.relative(root,path.resolve(root,path.dirname(skill),m[1])));
 const commands=text.match(/```sh\n([\s\S]*?)\n```/)[1].split('\n');
 assert.equal(commands.length,2);
-const catalogPin='01fda278b3c74363643879f71cc739488a57e9d934f217ab07af3460b88923d4';
+const catalogPin='a4de009c683d3db4453cf0a9e783719a933a8e1689842a12d08a6883a83cfdad';
 const catalog=JSON.parse(read('catalog/libs-current-v2.json'));
 assert.equal((await import('node:crypto')).createHash('sha256').update(read('catalog/libs-current-v2.json')).digest('hex'),catalogPin);
 let hits=0;
