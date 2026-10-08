@@ -1,12 +1,12 @@
-package wasmc:system-network-prototype@0.0.1;
+package wasmc:system-network-prototype@0.0.2;
 
-record exchange-request {
+interface network {
+  record exchange-request {
   host: string,
   port: u16,
   payload: list<u8>,
-}
+  }
 
-interface network {
   exchange: func(request: exchange-request) -> result<list<u8>, string>;
 }
 

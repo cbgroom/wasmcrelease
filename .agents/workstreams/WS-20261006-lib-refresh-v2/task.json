@@ -7,12 +7,12 @@
   "base_commit": "0d4f1f5085f134d8c9a3214d8e235c6ab08beed2",
   "target_branch": "main",
   "created_at": "2026-10-06T12:42:05Z",
-  "state": "source_published_release_license_full42_rebuild_pending",
+  "state": "network_prototype_WIT_0.0.2_source_validated_full42_refresh_pending",
   "integration_state": "not_integrated",
   "source_authority": "libspec/",
   "legacy_authority": "none; old source/build/test paths physically retired",
   "execution_chat_id": "01a11750-35f8-7ff0-a8f7-7df28acf332c",
-  "current_checkpoint": "release-license-checkpoint.json",
+  "current_checkpoint": "network-prototype-wit-checkpoint.json",
   "previous_search_checkpoint": {
     "evidence": "search-storage-q2-checkpoint.json",
     "sha256": "126e51b5ffb121995d00d0c2128987defbc5bb18c7f4c2c4f3be874aa1e457d3",
@@ -54,20 +54,31 @@
   "claimed_paths": [
     ".agents/skills/release-lib-refresh-v2/SKILL.md",
     ".agents/workstreams/WS-20261006-lib-refresh-v2",
+    "admission/current-product-v3.json",
+    "catalog",
+    "current",
+    "current-libs",
+    "docs/RELEASE_V021.md",
     "libspec/Cargo.lock",
     "libspec/identity-dispositions.json",
     "libspec/mcpgit-resident-memory",
     "libspec/registry.json",
     "libspec/rust-policy.json",
     "libspec/wasmc-std",
+    "runtime",
+    "scripts/assemble-current-product-v3.mjs",
+    "scripts/current-lib-release-v3.mjs",
     "scripts/generated-lib-v2.mjs",
     "scripts/lib-current-index-v2.mjs",
     "scripts/lib-current-release-preflight.mjs",
+    "scripts/lib-install.mjs",
     "scripts/lib-refresh-cache-v2.mjs",
     "scripts/lib-refresh-resource-core-v2.mjs",
     "scripts/lib-refresh-runner-v2.mjs",
     "scripts/lib-refresh-upstream-source-v2.mjs",
     "scripts/lib-refresh-v2.mjs",
+    "scripts/release-candidate.mjs",
+    "scripts/test-current-product-v3.mjs",
     "scripts/test-current-search-wasmc-q2.mjs",
     "scripts/test-lib-current-index-v2.mjs",
     "scripts/test-lib-current-release-preflight.mjs",
@@ -75,7 +86,13 @@
     "scripts/test-lib-refresh-resource-core-v2.mjs",
     "scripts/test-lib-refresh-upstream-source-v2.mjs",
     "scripts/test-lib-refresh-workflow-v2.mjs",
-    "scripts/validate-lib-refresh-v2-source.mjs"
+    "scripts/validate-lib-refresh-v2-source.mjs",
+    "scripts/wasmc-lib.mjs",
+    "sdk",
+    "standard",
+    "scripts/current-core-value-codec-v3.mjs",
+    "scripts/current-wit-routes-v3.mjs",
+    "scripts/current-lib-search-v3.mjs"
   ],
   "current_source_publication": {
     "path": "/home/huawei/code/.cache/wasmc-evidence/current-std73-production-20261008/fresh-bootstrap-qohnmhlp/std73-current-source-gates-_0m7_68a/source-publication-receipt.json",
@@ -131,5 +148,13 @@
     "runtime_footprint_claim": false,
     "all_cases_accepted": false
   },
-  "private_source_workstream": "WS-20261008-final-release-compiler-v1"
+  "private_source_workstream": "WS-20261008-final-release-compiler-v1",
+  "current_product_contract": {
+    "version": "0.0.21",
+    "schema": "wasmc.release-product-candidate/v3",
+    "catalog_and_install": "complete normalized current42 profile-aware identity; native-source identity uses exact manifest/inventory, never fake Wasm artifact",
+    "old_frozen_candidates": "immutable tags and exact prior verification remain historical only",
+    "current_license_Q0_operation": "exec-00000000000005db",
+    "public_release_accepted": false
+  }
 }
