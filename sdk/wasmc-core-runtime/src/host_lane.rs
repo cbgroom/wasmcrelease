@@ -10,9 +10,10 @@ use std::{any::Any, collections::BTreeSet, error::Error, fmt, sync::Arc};
 use wasmi::{
     Caller as WasmiCaller, Extern as WasmiExtern, ExternType as WasmiExternType,
     FuncType as WasmiFuncType, Instance as WasmiInstance, Linker as WasmiLinker,
-    Module as WasmiModule, Store as WasmiStore, StoreLimits as WasmiStoreLimits,
+    Store as WasmiStore, StoreLimits as WasmiStoreLimits,
     StoreLimitsBuilder as WasmiStoreLimitsBuilder, Val as WasmiVal, ValType as WasmiValType,
 };
+#[cfg(feature = "wasmtime-runtime")]
 use wasmtime::{
     Extern as WasmtimeExtern, ExternType as WasmtimeExternType, FuncType as WasmtimeFuncType,
     InstancePre as WasmtimeInstancePre, Linker as WasmtimeLinker, Module as WasmtimeModule,
@@ -21,9 +22,11 @@ use wasmtime::{
     ValType as WasmtimeValType,
 };
 
+#[cfg(feature = "wasmtime-runtime")]
+use crate::WasmtimeSpeedRuntime;
 use crate::{
     limits::{invoke_wasmi_bounded, is_resource_limit_message},
-    CoreRuntimeLimitProfile, WasmiCompletionRuntime, WasmtimeSpeedRuntime,
+    CoreRuntimeLimitProfile, WasmiCompletionRuntime,
 };
 
 const MAX_IMPORTS: usize = 32;
@@ -200,6 +203,10 @@ impl I32LaneHostError {
         Self::new(I32LaneHostErrorCode::Callback, message)
     }
 
+    pub(crate) fn resource_limit(message: impl Into<String>) -> Self {
+        Self::new(I32LaneHostErrorCode::ResourceLimit, message)
+    }
+
     pub const fn code(&self) -> I32LaneHostErrorCode {
         self.code
     }
@@ -233,18 +240,49 @@ impl ErasedLaneSession {
             bindings,
         }
     }
+
+    pub(crate) fn into_state<S>(self) -> S
+    where
+        S: Send + 'static,
+    {
+        *self
+            .state
+            .downcast::<S>()
+            .expect("erased i32-lane Host state must preserve its concrete type")
+    }
+}
+
+pub(crate) struct ErasedLaneOutcome {
+    pub(crate) result: Result<i32, I32LaneHostError>,
+    state: Box<dyn Any + Send>,
+}
+
+impl ErasedLaneOutcome {
+    pub(crate) fn into_typed<S>(self) -> (Result<i32, I32LaneHostError>, S)
+    where
+        S: Send + 'static,
+    {
+        (
+            self.result,
+            *self
+                .state
+                .downcast::<S>()
+                .expect("erased i32-lane Host state must preserve its concrete type"),
+        )
+    }
 }
 
 struct LaneCallbacks {
     state: Option<Box<dyn Any + Send>>,
     callbacks: Vec<Option<I32LaneCallback>>,
     wasmi_limits: WasmiStoreLimits,
+    #[cfg(feature = "wasmtime-runtime")]
     wasmtime_limits: WasmtimeStoreLimits,
 }
 
 pub(crate) struct WasmiI32LaneHostModule {
     runtime: WasmiCompletionRuntime,
-    module: WasmiModule,
+    module: crate::observed_module::ObservedModule,
     imports: Arc<[I32LaneHostImport]>,
 }
 
@@ -255,12 +293,13 @@ impl WasmiI32LaneHostModule {
         reviewed: &[I32LaneHostImport],
     ) -> Result<Self, I32LaneHostError> {
         validate_plan(reviewed)?;
-        let module = WasmiModule::new(runtime.engine(), wasm).map_err(|error| {
-            I32LaneHostError::new(
-                I32LaneHostErrorCode::Compile,
-                format!("Wasmi rejected i32-lane Core module: {error}"),
-            )
-        })?;
+        let module =
+            crate::observed_module::ObservedModule::new(runtime, wasm).map_err(|error| {
+                I32LaneHostError::new(
+                    I32LaneHostErrorCode::Compile,
+                    format!("Wasmi rejected i32-lane Core module: {error}"),
+                )
+            })?;
         let actual = module
             .imports()
             .map(|import| {
@@ -306,78 +345,117 @@ impl WasmiI32LaneHostModule {
         export: &str,
         arguments: &[i32],
     ) -> Result<i32, I32LaneHostError> {
+        self.invoke_with_state(session, export, arguments).result
+    }
+
+    pub(crate) fn invoke_with_state(
+        &self,
+        session: ErasedLaneSession,
+        export: &str,
+        arguments: &[i32],
+    ) -> ErasedLaneOutcome {
         let profile = self.runtime.limits();
-        let callbacks = exact_callbacks(&self.imports, session, profile)?;
+        let mut callbacks = match exact_callbacks(&self.imports, session, profile) {
+            Ok(callbacks) => callbacks,
+            Err((error, session)) => {
+                return ErasedLaneOutcome {
+                    result: Err(error),
+                    state: session.state,
+                };
+            }
+        };
         let mut linker = WasmiLinker::<LaneCallbacks>::new(self.runtime.engine());
         for (index, import) in self.imports.iter().enumerate() {
             let ty = WasmiFuncType::new(
                 std::iter::repeat_n(WasmiValType::I32, usize::from(import.param_count)),
                 [WasmiValType::I32],
             );
-            linker
-                .func_new(
-                    import.module(),
-                    import.name(),
-                    ty,
-                    move |mut caller: WasmiCaller<'_, LaneCallbacks>, params, results| {
-                        let mut arguments = [0_i32; MAX_PARAMS as usize];
-                        for (slot, value) in arguments.iter_mut().zip(params) {
-                            *slot = match value {
-                                WasmiVal::I32(value) => *value,
-                                _ => return Err(wasmi::Error::new("non-i32 Host argument")),
-                            };
-                        }
-                        let (mut state, mut callback) = {
-                            let data = caller.data_mut();
-                            let state = data.state.take().ok_or_else(|| {
-                                wasmi::Error::new("reentrant i32-lane Host state")
-                            })?;
-                            let callback = data.callbacks[index].take().ok_or_else(|| {
-                                wasmi::Error::new("reentrant i32-lane Host callback")
-                            })?;
-                            (state, callback)
+            if let Err(error) = linker.func_new(
+                import.module(),
+                import.name(),
+                ty,
+                move |mut caller: WasmiCaller<'_, LaneCallbacks>, params, results| {
+                    let mut arguments = [0_i32; MAX_PARAMS as usize];
+                    for (slot, value) in arguments.iter_mut().zip(params) {
+                        *slot = match value {
+                            WasmiVal::I32(value) => *value,
+                            _ => return Err(wasmi::Error::new("non-i32 Host argument")),
                         };
-                        let mut memory = WasmiLaneMemory {
-                            caller: &mut caller,
-                        };
-                        let callback_result =
-                            callback(state.as_mut(), &mut memory, &arguments[..params.len()]);
+                    }
+                    let (mut state, mut callback) = {
                         let data = caller.data_mut();
-                        data.state = Some(state);
-                        data.callbacks[index] = Some(callback);
-                        let value = callback_result
-                            .map_err(|error| wasmi::Error::new(error.to_string()))?;
-                        results[0] = WasmiVal::I32(value);
-                        Ok(())
-                    },
-                )
-                .map_err(|error| binding_error("Wasmi", error))?;
+                        let state = data
+                            .state
+                            .take()
+                            .ok_or_else(|| wasmi::Error::new("reentrant i32-lane Host state"))?;
+                        let callback = data.callbacks[index]
+                            .take()
+                            .ok_or_else(|| wasmi::Error::new("reentrant i32-lane Host callback"))?;
+                        (state, callback)
+                    };
+                    let mut memory = WasmiLaneMemory {
+                        caller: &mut caller,
+                    };
+                    let callback_result =
+                        callback(state.as_mut(), &mut memory, &arguments[..params.len()]);
+                    let data = caller.data_mut();
+                    data.state = Some(state);
+                    data.callbacks[index] = Some(callback);
+                    let value =
+                        callback_result.map_err(|error| wasmi::Error::new(error.to_string()))?;
+                    results[0] = WasmiVal::I32(value);
+                    Ok(())
+                },
+            ) {
+                return ErasedLaneOutcome {
+                    result: Err(binding_error("Wasmi", error)),
+                    state: callbacks
+                        .state
+                        .take()
+                        .expect("i32-lane Host state must exist before Store creation"),
+                };
+            }
         }
         let mut store = WasmiStore::new(self.runtime.engine(), callbacks);
         if profile.is_bounded() {
             store.limiter(|data| &mut data.wasmi_limits);
-            store
-                .set_fuel(profile.wasmi_fuel())
-                .map_err(|error| invocation_error("Wasmi fuel setup", error))?;
+            if let Err(error) = store.set_fuel(profile.wasmi_fuel()) {
+                let state = store
+                    .into_data()
+                    .state
+                    .expect("i32-lane Host state must exist after fuel setup failure");
+                return ErasedLaneOutcome {
+                    result: Err(invocation_error("Wasmi fuel setup", error)),
+                    state,
+                };
+            }
         }
-        let instance: WasmiInstance = linker
-            .instantiate_and_start(&mut store, &self.module)
-            .map_err(|error| invocation_error("Wasmi instantiation", error))?;
-        let function = instance
-            .get_func(&store, export)
-            .ok_or_else(|| invocation_message(format!("Wasmi export {export:?} is missing")))?;
-        let inputs = arguments
-            .iter()
-            .copied()
-            .map(WasmiVal::I32)
-            .collect::<Vec<_>>();
-        let mut outputs = [WasmiVal::I32(0)];
-        invoke_wasmi_bounded(&mut store, &function, &inputs, &mut outputs, profile)
-            .map_err(|error| invocation_error("Wasmi call", error))?;
-        match outputs[0] {
-            WasmiVal::I32(value) => Ok(value),
-            _ => Err(invocation_message("Wasmi export result is not i32")),
-        }
+        let result = (|| {
+            let instance: WasmiInstance = self
+                .module
+                .instantiate(&self.runtime, &linker, &mut store)
+                .map_err(|error| invocation_error("Wasmi instantiation", error))?;
+            let function = instance
+                .get_func(&store, export)
+                .ok_or_else(|| invocation_message(format!("Wasmi export {export:?} is missing")))?;
+            let inputs = arguments
+                .iter()
+                .copied()
+                .map(WasmiVal::I32)
+                .collect::<Vec<_>>();
+            let mut outputs = [WasmiVal::I32(0)];
+            invoke_wasmi_bounded(&mut store, &function, &inputs, &mut outputs, profile)
+                .map_err(|error| invocation_error("Wasmi call", error))?;
+            match outputs[0] {
+                WasmiVal::I32(value) => Ok(value),
+                _ => Err(invocation_message("Wasmi export result is not i32")),
+            }
+        })();
+        let state = store
+            .into_data()
+            .state
+            .expect("i32-lane Host state must be restored after invocation");
+        ErasedLaneOutcome { result, state }
     }
 }
 
@@ -419,12 +497,14 @@ fn wasmi_memory(
     }
 }
 
+#[cfg(feature = "wasmtime-runtime")]
 pub(crate) struct WasmtimeI32LaneHostModule {
     runtime: WasmtimeSpeedRuntime,
     instance_pre: WasmtimeInstancePre<LaneCallbacks>,
     imports: Arc<[I32LaneHostImport]>,
 }
 
+#[cfg(feature = "wasmtime-runtime")]
 impl WasmtimeI32LaneHostModule {
     pub(crate) fn compile(
         runtime: &WasmtimeSpeedRuntime,
@@ -533,7 +613,8 @@ impl WasmtimeI32LaneHostModule {
         arguments: &[i32],
     ) -> Result<i32, I32LaneHostError> {
         let profile = self.runtime.limits();
-        let callbacks = exact_callbacks(&self.imports, session, profile)?;
+        let callbacks =
+            exact_callbacks(&self.imports, session, profile).map_err(|(error, _session)| error)?;
         let mut store = WasmtimeStore::new(self.runtime.engine(), callbacks);
         if profile.is_bounded() {
             store.limiter(|data| &mut data.wasmtime_limits);
@@ -565,10 +646,12 @@ impl WasmtimeI32LaneHostModule {
     }
 }
 
+#[cfg(feature = "wasmtime-runtime")]
 struct WasmtimeLaneMemory<'a, 'b> {
     caller: &'a mut wasmtime::Caller<'b, LaneCallbacks>,
 }
 
+#[cfg(feature = "wasmtime-runtime")]
 impl I32LaneMemory for WasmtimeLaneMemory<'_, '_> {
     fn byte_len(&mut self) -> Result<usize, I32LaneHostError> {
         let memory = wasmtime_memory(self.caller)?;
@@ -594,6 +677,7 @@ impl I32LaneMemory for WasmtimeLaneMemory<'_, '_> {
     }
 }
 
+#[cfg(feature = "wasmtime-runtime")]
 fn wasmtime_memory(
     caller: &mut wasmtime::Caller<'_, LaneCallbacks>,
 ) -> Result<wasmtime::Memory, I32LaneHostError> {
@@ -650,13 +734,15 @@ fn exact_callbacks(
     reviewed: &[I32LaneHostImport],
     session: ErasedLaneSession,
     profile: CoreRuntimeLimitProfile,
-) -> Result<LaneCallbacks, I32LaneHostError> {
+) -> Result<LaneCallbacks, (I32LaneHostError, ErasedLaneSession)> {
     let actual = session
         .bindings
         .iter()
         .map(|binding| binding.import.clone())
         .collect::<Vec<_>>();
-    require_exact_imports(&actual, reviewed)?;
+    if let Err(error) = require_exact_imports(&actual, reviewed) {
+        return Err((error, session));
+    }
     Ok(LaneCallbacks {
         state: Some(session.state),
         callbacks: session
@@ -669,6 +755,7 @@ fn exact_callbacks(
             .table_elements(profile.max_table_elements())
             .trap_on_grow_failure(true)
             .build(),
+        #[cfg(feature = "wasmtime-runtime")]
         wasmtime_limits: WasmtimeStoreLimitsBuilder::new()
             .memory_size(profile.max_memory_bytes())
             .table_elements(profile.max_table_elements())

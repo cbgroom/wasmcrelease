@@ -1,0 +1,101 @@
+{
+  "schema": "wasmc.lib-native/v2",
+  "id": "wasmc-system-ios-local-notification",
+  "version": "0.0.1",
+  "profile": "native",
+  "wit": {
+    "path": "lib.wit",
+    "bytes": 702,
+    "sha256": "d28bf091f9af304c5e2f93ca8e020db14100478dc7d6d18da426540d62855f4d"
+  },
+  "implementation": [
+    {
+      "path": "platform/ios/Sources/LocalNotificationProvider.swift",
+      "bytes": 7972,
+      "sha256": "c9f1ed96bde6feb40a8dea80fa6d982de2340f50dd6d03f561e8cd15ceba1d8e"
+    },
+    {
+      "path": "platform/ios/binding.json",
+      "bytes": 691,
+      "sha256": "c84e1dc0f6000787cad1bf47063a61f483698827082d940099f8e5fcacdedd5a"
+    }
+  ],
+  "artifact": null,
+  "native_boundary": null,
+  "native": {
+    "kind": "swift-embedded",
+    "target": "ios",
+    "status": "embedded_source_packaged",
+    "build_host": "linux",
+    "build_arch": "x64",
+    "device_qualified": false,
+    "wasm_lowered": false,
+    "component_sdk": false
+  },
+  "build": {
+    "input_authority": "libspec",
+    "producer_sha256": "439d5ac8b72a9e3fadb2d313e460acc63f1f5facec5932ce727b50cdc99ebc6a",
+    "native_toolchain": {
+      "platform": "linux",
+      "arch": "x64",
+      "node": "v24.19.0",
+      "cc": "cc (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0\nCopyright (C) 2021 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
+    }
+  },
+  "bindings": {
+    "native": {
+      "schema": "wasmc.lib-native-binding/v2",
+      "kind": "swift-embedded",
+      "entry": "platform/ios/Sources/LocalNotificationProvider.swift",
+      "target": "ios"
+    }
+  },
+  "lifecycle": {
+    "source_packaged": true,
+    "runtime_qualified": false,
+    "admitted": false,
+    "released": false,
+    "installable": false
+  },
+  "license": {
+    "schema": "wasmc.lib-license/v1",
+    "identifier": "WAsmC Research-Only Non-Commercial License 1.0",
+    "files": [
+      {
+        "path": "LICENSE",
+        "bytes": 3823,
+        "sha256": "7bca2d5818178e0bc14546700d39bf113d15139b1c3b6d1e62f621d4a276d6e3"
+      },
+      {
+        "path": "licenses/DEPENDENCY-NOTICES-001.txt",
+        "bytes": 245760,
+        "sha256": "66302f6dd71da97391ab2270d29b10e67bdbac6d7eb782bed043c2ff596ec5cc"
+      },
+      {
+        "path": "licenses/DEPENDENCY-NOTICES-002.txt",
+        "bytes": 245760,
+        "sha256": "0065cf38006c9a66a6c3ee9cbaf8db10422b1e5301d3c1d5132b7855e71f18ea"
+      },
+      {
+        "path": "licenses/DEPENDENCY-NOTICES-003.txt",
+        "bytes": 245760,
+        "sha256": "201dbac93dff17177b6379ee630b9658b4cec9cb9d46ce3982b3da87c4b740c8"
+      },
+      {
+        "path": "licenses/DEPENDENCY-NOTICES-004.txt",
+        "bytes": 245760,
+        "sha256": "c439e1a409b6f23d5797cec339403a0ffce97e9fcf2ae91d6a923c36d619bb76"
+      },
+      {
+        "path": "licenses/DEPENDENCY-NOTICES-005.txt",
+        "bytes": 245760,
+        "sha256": "04118f32afc6b2ce0fbfd559c56a78614016ab00167be2425c8c778fc7b064fe"
+      },
+      {
+        "path": "licenses/DEPENDENCY-NOTICES-006.txt",
+        "bytes": 8357,
+        "sha256": "aa6000805f56d3c6009ffa09dbe224083cf2e63e2498e1939deefe6ca7c43d9a"
+      }
+    ]
+  }
+}

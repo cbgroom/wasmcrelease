@@ -1,6 +1,6 @@
 ---
 name: wasmc-compression
-description: "Bounded deterministic gzip compression and decompression without external authority."
+description: "Bounded gzip compression and decompression backed by flate2."
 metadata:
   wasmc:
     version: "0.0.1"

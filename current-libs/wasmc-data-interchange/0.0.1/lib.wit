@@ -1,0 +1,102 @@
+package wasmc:data-interchange@0.0.1;
+
+interface adapter {
+  use wasmc:data-core/types@0.0.1.{batch-snapshot};
+
+  record encode-options {
+    max-batches: u32,
+    max-rows: u32,
+    max-output-bytes: u32,
+  }
+
+  record decode-options {
+    max-input-bytes: u32,
+    max-batches: u32,
+    max-rows: u32,
+    batch-rows: u32,
+  }
+
+  enum interchange-error {
+    invalid-options,
+    invalid-batch,
+    empty-input,
+    schema-mismatch,
+    unsupported-type,
+    input-limit-exceeded,
+    batch-limit-exceeded,
+    row-limit-exceeded,
+    output-limit-exceeded,
+    invalid-data,
+    encode-failure,
+    overflow,
+  }
+
+  ipc-file-encode: func(values: list<batch-snapshot>, options: encode-options) -> result<list<u8>, interchange-error>;
+
+  ipc-file-decode: func(input: list<u8>, options: decode-options) -> result<list<batch-snapshot>, interchange-error>;
+
+  parquet-encode: func(values: list<batch-snapshot>, options: encode-options) -> result<list<u8>, interchange-error>;
+
+  parquet-decode: func(input: list<u8>, options: decode-options) -> result<list<batch-snapshot>, interchange-error>;
+}
+
+world data-interchange {
+  import wasmc:data-core/types@0.0.1;
+
+  export adapter;
+}
+package wasmc:data-core@0.0.1 {
+  interface types {
+    enum data-type {
+      boolean,
+      int64,
+      uint64,
+      %float64,
+      utf8,
+      binary,
+    }
+
+    record field {
+      name: string,
+      data-type: data-type,
+      nullable: bool,
+    }
+
+    variant column {
+      boolean-column(list<option<bool>>),
+      int64-column(list<option<s64>>),
+      uint64-column(list<option<u64>>),
+      float64-column(list<option<f64>>),
+      utf8-column(list<option<string>>),
+      binary-column(list<option<list<u8>>>),
+    }
+
+    record batch-snapshot {
+      rows: u32,
+      fields: list<field>,
+      columns: list<column>,
+    }
+
+    enum data-error {
+      column-count-mismatch,
+      row-count-mismatch,
+      type-mismatch,
+      nullability-violation,
+      empty-field-name,
+      duplicate-field-name,
+      index-out-of-bounds,
+      invalid-layout,
+    }
+  }
+  interface model {
+    use types.{batch-snapshot, data-error};
+
+    validate: func(value: batch-snapshot) -> result<u32, data-error>;
+
+    take: func(value: batch-snapshot, indices: list<u32>) -> result<batch-snapshot, data-error>;
+  }
+  world data-core {
+    export types;
+    export model;
+  }
+}

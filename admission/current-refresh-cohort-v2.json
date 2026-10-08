@@ -1,0 +1,991 @@
+{
+  "schema": "wasmc.public-current-refresh-cohort/v1",
+  "q0_accepted": true,
+  "refresh_receipt_sha256": "0a3c352aaa2948591abeba584b74f47206d43b1b6feb30c6947bc972b1f1bc7b",
+  "producer_sha256": "439d5ac8b72a9e3fadb2d313e460acc63f1f5facec5932ce727b50cdc99ebc6a",
+  "source_fingerprint": "10b7d95f6ec08bb128e494c91a8710c1e3e9a293aeb95e91dd531cfffc3ed042",
+  "source_inputs": {
+    "libspec/mcpgit-resident-memory/lib.json": "e8eb72bdc751fb5ae091423d847a871df640f745f4f7d3c2f619ae466730f77f",
+    "libspec/mcpgit-resident-memory/lib.wit": "4a25855db497d33309ce696e0ce2adfc53fbe7f70a16090c16b921c151b66902",
+    "libspec/wasmc-app-authorization-policy/lib.json": "fc8cd9d5d8b8c1f14d2a55a58be79d9f4640080cd3721e062f0451d22953cdd6",
+    "libspec/wasmc-app-authorization-policy/lib.wit": "988e890b6f71a588159e00f4577330033739d7994419f2c8429108c5122f4852",
+    "libspec/wasmc-compression/lib.json": "1764b69b2dde2862495cd84ed090377f03223d8bdf89f9e7bda8d3caa056e25b",
+    "libspec/wasmc-compression/lib.wit": "299e5e3b51ebce56cae295c3e4687f3e72671b16f7be6b37f2417c290fa05697",
+    "libspec/wasmc-csv/lib.json": "8083115152661c0f1270debd584e0f88431343e06b80e3038452ddb37d54036b",
+    "libspec/wasmc-csv/lib.wit": "4de9ac3d48a6546de4c96b12034c739412c981e4af933a27fff9ba3ef247ddb1",
+    "libspec/wasmc-data-compute/lib.json": "0f179c68112d72d0d9d0a1eb24cf035a8b6fed8f3408c2d3cfa800f358ae1378",
+    "libspec/wasmc-data-compute/lib.wit": "c9387078dd747332696ec40f97f65443ed685231b8d2266204568b4351b792d6",
+    "libspec/wasmc-data-core/lib.json": "914daa8698b5c0c7b6746b420d8cfa5d0f303e71ed785518739e5b4cd61360e0",
+    "libspec/wasmc-data-core/lib.wit": "29c4e4b90690cfa6b1912859008bca535bf04802c68e887f2e29fae51fd5d8d2",
+    "libspec/wasmc-data-expr/lib.json": "4bd0fc0b50ed4338e8bb8fd1b4f184419ad0b456b8a0bc1b89d6b8361c866927",
+    "libspec/wasmc-data-expr/lib.wit": "16ae4a530a8472dc4f4fd847de98f226cb47f82cab95a00a36da485ac4436be3",
+    "libspec/wasmc-data-interchange/lib.json": "8b8feaa4268379313d0f0e01aa5db0532984065325826a44e1ae89bdcea45c5b",
+    "libspec/wasmc-data-interchange/lib.wit": "ea01ce12b3021d796033c39ce49a3f4061ec1f0d4bd6588d5a2b69413373c2ba",
+    "libspec/wasmc-data-profile/lib.json": "a111877831c403b424cc83b4b53b67a43dfd9699fb25e1af997ac8abbb3de5bc",
+    "libspec/wasmc-data-profile/lib.wit": "538e8a7415fdf4d24484cc5f4145f1a7d1d22f7bbdd103a7d7d28272b2fd68a8",
+    "libspec/wasmc-data-relational/lib.json": "73b1792190d69375c06759be3bee8c4821165c58dfce6df50faa5b1ab7450df2",
+    "libspec/wasmc-data-relational/lib.wit": "df6148e83308691a33bb1685047f80220b1d9e8c6e1e4e9ee66b67141e96bf5d",
+    "libspec/wasmc-host-clock/lib.json": "557bb92fa3b32739646816963174affa6b0843b3fb1cd7d7903c6a5889eeff1f",
+    "libspec/wasmc-host-clock/lib.wit": "b6ca13754950364d74f49e69d858a0972ad648783254bb7ee0e30fbbdc623b74",
+    "libspec/wasmc-http1/lib.json": "db32bbcbb57f5e558e06bed3206cdf86ad73ffdc7b4be7a1e826063099c194aa",
+    "libspec/wasmc-http1/lib.wit": "311e483f67b860702004e47e86234f96f4edc5e19f70875e1387a98a14f563cd",
+    "libspec/wasmc-http1-client/lib.json": "923423f35ef6dfb5b80d09a0be76b75c3136702990e2494e85bee987a0617831",
+    "libspec/wasmc-http1-client/lib.wit": "ae6a96e3cf4d6b8174dc3dec957b9ea654fae87aea10622ceae8f6376732b7ac",
+    "libspec/wasmc-json/lib.json": "2c49cc92e603dd2d56102d9722852b46f12c6e3bd49e126cb3ba9aad8885eade",
+    "libspec/wasmc-json/lib.wit": "45ab5f4ede015f76f9d152a9255414fbe15c71054b07a0302b7f0b76672c4221",
+    "libspec/wasmc-lib-search/lib.json": "584e82c3fba7da80d75e31791b96cb67e939be57bf3e5b035dd8879755fe3959",
+    "libspec/wasmc-lib-search/lib.wit": "1a9729b05dc6996dc213ce7167d9e04e11fc133dae88fe61b817837730a11ba6",
+    "libspec/wasmc-owned-algorithms/lib.json": "3fe99b971eaca387021cae1c9569a7b745e5e290bd425e24aedba549452f96c6",
+    "libspec/wasmc-owned-algorithms/lib.wit": "bd7dbf7b54172e6b08a80fc22b75ed44cf7d590b0b8603dd50941874d5e6db94",
+    "libspec/wasmc-resource-counter/lib.json": "c893bf5b5c1ca2f5798582dcb77153a62391b4b0131109b6478e0c7e61326dc5",
+    "libspec/wasmc-resource-counter/lib.wit": "2de6002544e320d045e29be5ac44fd577943754361701ba748c3ee082bf45cc4",
+    "libspec/wasmc-router-policy/lib.json": "4d8a9a3d196f4dd9a9a5e9c4e6d26c4e74d5e059e2721a214610dbdc37742090",
+    "libspec/wasmc-router-policy/lib.wit": "fe83f392b2d70db163d2c8a5613166fdc075b33b9deb55b45a25918dfc129812",
+    "libspec/wasmc-std/lib.json": "367bc8c11878b4977e197fcf10513fa546c03e5244661024ba33cad4528d4131",
+    "libspec/wasmc-std/lib.wit": "5abbed39c185835cfbbc5c2b961fb904b3ad66f42b22aef1ac7a40835ee246e9",
+    "libspec/wasmc-system-android-display/lib.json": "e88fd556135f496401bf9eb68c3d798d20ce74c84c59a5f43095b53c08d6fb01",
+    "libspec/wasmc-system-android-display/lib.wit": "45e1d31b607185ffda7784c4a809cc54d5288a4771fdf444066440fde554aa77",
+    "libspec/wasmc-system-android-input/lib.json": "9a1787271e6f56efa8444bbed613b173856328598fd4b964d4963ff6c055866a",
+    "libspec/wasmc-system-android-input/lib.wit": "d740fac34d41c45bbdde18c5ebdf742409a9c424fc1199075d864ae5be457e8b",
+    "libspec/wasmc-system-android-ui/lib.json": "8d5e27a6d18228d4c812968cae774b7e60f7805d56c59087a80fd8cb2ee96860",
+    "libspec/wasmc-system-android-ui/lib.wit": "78d4d39f71ac1df5c09579a00928e605d04770b8e4377e2314c558220a849844",
+    "libspec/wasmc-system-android-uinput/lib.json": "c9aa339e8698f4a43c180815c2e7879bea8a7a1df712c048bf7d4e53826b7a85",
+    "libspec/wasmc-system-android-uinput/lib.wit": "d788ed7da5625031c0505d6a71f594b79cda99c3ff3c5d34e8c0cbba710e0a2f",
+    "libspec/wasmc-system-file-prototype/lib.json": "3e9a7a83426dc7303dfb2838867a85d135f04423564ee5d0c4df12fe5628edb8",
+    "libspec/wasmc-system-file-prototype/lib.wit": "c3560a222711036dadf4c466d267c0687de0d1ed9e771b9f8583cc251ded2458",
+    "libspec/wasmc-system-ios-app-contacts/lib.json": "1a81e25b2e410393dac2c9b037b2323c75988df02350a036069c87f9c2057e5f",
+    "libspec/wasmc-system-ios-app-contacts/lib.wit": "c62968be62ccea2da01267532760390b8c7ca867cb61a908809ba4f85afdcb35",
+    "libspec/wasmc-system-ios-app-lifecycle/lib.json": "fe5e6dd5410dee2d9f7748def875e491e95c45b17e72d2cd4220d06e3059466f",
+    "libspec/wasmc-system-ios-app-lifecycle/lib.wit": "ca50e711b55fb315e760a961955b354e4f409c6cf3bf8da8140a08cb2fafc21c",
+    "libspec/wasmc-system-ios-app-surface-control/lib.json": "a9693b69e3dc74537f9e9b5da0929025f5a84eeca092bf0055d2644f8e439533",
+    "libspec/wasmc-system-ios-app-surface-control/lib.wit": "fa54f901d13329c6e839b937cb3c8f98e4f77e894d2d684d1d1a38283d680cff",
+    "libspec/wasmc-system-ios-background-audio/lib.json": "d4da0eebaf39eb5e772232f76114a4aea4c8bbac0dfe3ecf76ce62302f88c655",
+    "libspec/wasmc-system-ios-background-audio/lib.wit": "332d6e7405666f2ee06e08d6bb886a7aa51ccd197a8d677551a0481a40f57ebf",
+    "libspec/wasmc-system-ios-background-transfer/lib.json": "d4f5c450c678aa160e404dc02c31e8e983c1943946355462af8df4091a50f2f0",
+    "libspec/wasmc-system-ios-background-transfer/lib.wit": "bcd3f97b5b446e4383649eab9fb7c8b3b8623f788f824ecdf985701b72ef498c",
+    "libspec/wasmc-system-ios-deferred-work/lib.json": "b1a8b783b5535627bb2c0e9dfe4587e8cb60237d113cf9cfe14133a7332e3829",
+    "libspec/wasmc-system-ios-deferred-work/lib.wit": "2a43c99f7a7c7d903b87f7df0276a93d949d2ed02b403a08ed80c533d8d48033",
+    "libspec/wasmc-system-ios-local-notification/lib.json": "0517012a261449f39bad154bbae0b289829246a580bb124add2629170f1879c4",
+    "libspec/wasmc-system-ios-local-notification/lib.wit": "d28bf091f9af304c5e2f93ca8e020db14100478dc7d6d18da426540d62855f4d",
+    "libspec/wasmc-system-ios-network-path/lib.json": "fefa1b63e7cd4b3877a431d2f88240f12fe895dd6f65fffcd1721850cdc2e9fa",
+    "libspec/wasmc-system-ios-network-path/lib.wit": "4f81dcd5aee220ef4945349747713c4ae32730d4d4c1c6ef27dd474b5cef26c2",
+    "libspec/wasmc-system-ios-simulator-display/lib.json": "f38537e1c023d57e4a8a6f56273e02f3370626d666e2894118ff03c0885ab69c",
+    "libspec/wasmc-system-ios-simulator-display/lib.wit": "45e1d31b607185ffda7784c4a809cc54d5288a4771fdf444066440fde554aa77",
+    "libspec/wasmc-system-ios-websocket/lib.json": "976e375bc499f8e38049e0c810479c950b9244529cf8c7368a23c6157962dbd4",
+    "libspec/wasmc-system-ios-websocket/lib.wit": "2543970a328903e2f2104b1690b7b5ce83b18d1abf094b8a03b795952113fc96",
+    "libspec/wasmc-system-linux-endpoint/lib.json": "9e0fd17d53ab7606b43707b754c78800445b6c54d8b7eed519e948af3b390131",
+    "libspec/wasmc-system-linux-endpoint/lib.wit": "2b0f2916cff705b97a90ab4ad6f053342d54fc89f9574bf0139a9ecdd35e9cd4",
+    "libspec/wasmc-system-linux-socket/lib.json": "e31e305e22afc7fb8f0f1594764e477702b957e34acb398da5220f2101eb45e2",
+    "libspec/wasmc-system-linux-socket/lib.wit": "a428f19a4f6ff0297aa0dba400b01ab2a55d1725f82d248f0a41fd23c059d4b8",
+    "libspec/wasmc-system-linux-uinput/lib.json": "96a75be172d6c57ae5a40a801c780008e2bffa206ecd9f71905ea00a13131583",
+    "libspec/wasmc-system-linux-uinput/lib.wit": "6e118a6b0bd2affffcde9e89c2e771795cc9f109944d0bd0e03112f6bfe02fab",
+    "libspec/wasmc-system-network-prototype/lib.json": "120da380de674b39c96456845e075156b62df2b57704eb4b8a43b36a93919cd9",
+    "libspec/wasmc-system-network-prototype/lib.wit": "18ac698a3123012aece2d0ffa2c0a0210ef0e45c29af27f7b103ef22ef9664c5",
+    "libspec/wasmc-system-process-prototype/lib.json": "afde428bec9991d9eb91de26439ad5559627f42d9bac965db067214e39c3786e",
+    "libspec/wasmc-system-process-prototype/lib.wit": "739df842f2519e63d82df0982d602ae3fed8ac8a77a649cd35c93fd67335d07a",
+    "libspec/wasmc-system-telemetry/lib.json": "d6e9ab78c441fe3db6e97de6bd5e36d40ff4c2f7cacd1ef45493af3011fc8aa4",
+    "libspec/wasmc-system-telemetry/lib.wit": "c69ccee42113324a2875c352373ddaacb085363480a5f01f32ff919215fd9fe3",
+    "libspec/wasmc-tls-client/lib.json": "3b293aba883dd51e09a8f4cbd55cc13b00202db0469b6c8083107b2af3a050a2",
+    "libspec/wasmc-tls-client/lib.wit": "330db9970b0b481f98e60fbb3bb23f0df142bea2cab3053c69b9c17e4f29d43b",
+    "libspec/wasmc-tls-core/lib.json": "45624d50b996f53f6588a304e62961cc69a26fd9569c2fe9fd0f30e706475f88",
+    "libspec/wasmc-tls-core/lib.wit": "d07ee23b007d2a449feb978df83cc7481cf4473e46e800cfae28f239c0352009",
+    "licenses/dependency-notices-v3.json": "cdc27945bedaf6efe19ecf284384904dae0f1fc137fb989f2fec12bb65cda06b",
+    "licenses/DEPENDENCY-NOTICES-001.txt": "66302f6dd71da97391ab2270d29b10e67bdbac6d7eb782bed043c2ff596ec5cc",
+    "licenses/DEPENDENCY-NOTICES-002.txt": "0065cf38006c9a66a6c3ee9cbaf8db10422b1e5301d3c1d5132b7855e71f18ea",
+    "licenses/DEPENDENCY-NOTICES-003.txt": "201dbac93dff17177b6379ee630b9658b4cec9cb9d46ce3982b3da87c4b740c8",
+    "licenses/DEPENDENCY-NOTICES-004.txt": "c439e1a409b6f23d5797cec339403a0ffce97e9fcf2ae91d6a923c36d619bb76",
+    "licenses/DEPENDENCY-NOTICES-005.txt": "04118f32afc6b2ce0fbfd559c56a78614016ab00167be2425c8c778fc7b064fe",
+    "licenses/DEPENDENCY-NOTICES-006.txt": "aa6000805f56d3c6009ffa09dbe224083cf2e63e2498e1939deefe6ca7c43d9a"
+  },
+  "release_notices": {
+    "manifest": {
+      "path": "licenses/dependency-notices-v3.json",
+      "bytes": 303616,
+      "sha256": "cdc27945bedaf6efe19ecf284384904dae0f1fc137fb989f2fec12bb65cda06b"
+    },
+    "files": [
+      {
+        "bytes": 245760,
+        "path": "licenses/DEPENDENCY-NOTICES-001.txt",
+        "sha256": "66302f6dd71da97391ab2270d29b10e67bdbac6d7eb782bed043c2ff596ec5cc"
+      },
+      {
+        "bytes": 245760,
+        "path": "licenses/DEPENDENCY-NOTICES-002.txt",
+        "sha256": "0065cf38006c9a66a6c3ee9cbaf8db10422b1e5301d3c1d5132b7855e71f18ea"
+      },
+      {
+        "bytes": 245760,
+        "path": "licenses/DEPENDENCY-NOTICES-003.txt",
+        "sha256": "201dbac93dff17177b6379ee630b9658b4cec9cb9d46ce3982b3da87c4b740c8"
+      },
+      {
+        "bytes": 245760,
+        "path": "licenses/DEPENDENCY-NOTICES-004.txt",
+        "sha256": "c439e1a409b6f23d5797cec339403a0ffce97e9fcf2ae91d6a923c36d619bb76"
+      },
+      {
+        "bytes": 245760,
+        "path": "licenses/DEPENDENCY-NOTICES-005.txt",
+        "sha256": "04118f32afc6b2ce0fbfd559c56a78614016ab00167be2425c8c778fc7b064fe"
+      },
+      {
+        "bytes": 8357,
+        "path": "licenses/DEPENDENCY-NOTICES-006.txt",
+        "sha256": "aa6000805f56d3c6009ffa09dbe224083cf2e63e2498e1939deefe6ca7c43d9a"
+      }
+    ]
+  },
+  "wit_tool_sha256": "c91f36d5562b2b920cf67b0907b601cf7ec63c9a2a8903407b47f57c9153f54d",
+  "wit_normalizations": [
+    {
+      "id": "mcpgit-resident-memory",
+      "mode": "exact-bytes",
+      "authored_sha256": "4a25855db497d33309ce696e0ce2adfc53fbe7f70a16090c16b921c151b66902",
+      "delivered_sha256": "4a25855db497d33309ce696e0ce2adfc53fbe7f70a16090c16b921c151b66902",
+      "normalized_sha256": null,
+      "tool_sha256": null,
+      "dependencies": []
+    },
+    {
+      "id": "wasmc-app-authorization-policy",
+      "mode": "exact-bytes",
+      "authored_sha256": "988e890b6f71a588159e00f4577330033739d7994419f2c8429108c5122f4852",
+      "delivered_sha256": "988e890b6f71a588159e00f4577330033739d7994419f2c8429108c5122f4852",
+      "normalized_sha256": null,
+      "tool_sha256": null,
+      "dependencies": []
+    },
+    {
+      "id": "wasmc-compression",
+      "mode": "exact-bytes",
+      "authored_sha256": "299e5e3b51ebce56cae295c3e4687f3e72671b16f7be6b37f2417c290fa05697",
+      "delivered_sha256": "299e5e3b51ebce56cae295c3e4687f3e72671b16f7be6b37f2417c290fa05697",
+      "normalized_sha256": null,
+      "tool_sha256": null,
+      "dependencies": []
+    },
+    {
+      "id": "wasmc-csv",
+      "mode": "standard-tool-normalization",
+      "authored_sha256": "4de9ac3d48a6546de4c96b12034c739412c981e4af933a27fff9ba3ef247ddb1",
+      "delivered_sha256": "b3ca61e24fd9663c0e386256f144c0b1f479bb89c057a61b01f230d29ba3f8e5",
+      "normalized_sha256": "b3ca61e24fd9663c0e386256f144c0b1f479bb89c057a61b01f230d29ba3f8e5",
+      "tool_sha256": "c91f36d5562b2b920cf67b0907b601cf7ec63c9a2a8903407b47f57c9153f54d",
+      "dependencies": [
+        {
+          "id": "wasmc-data-core",
+          "sha256": "29c4e4b90690cfa6b1912859008bca535bf04802c68e887f2e29fae51fd5d8d2"
+        }
+      ]
+    },
+    {
+      "id": "wasmc-data-compute",
+      "mode": "standard-tool-normalization",
+      "authored_sha256": "c9387078dd747332696ec40f97f65443ed685231b8d2266204568b4351b792d6",
+      "delivered_sha256": "c6d4118f39f9e8353546a99f774f50b8a00cea3aad19f2c9e2fcdfedeaf1bddf",
+      "normalized_sha256": "c6d4118f39f9e8353546a99f774f50b8a00cea3aad19f2c9e2fcdfedeaf1bddf",
+      "tool_sha256": "c91f36d5562b2b920cf67b0907b601cf7ec63c9a2a8903407b47f57c9153f54d",
+      "dependencies": [
+        {
+          "id": "wasmc-data-core",
+          "sha256": "29c4e4b90690cfa6b1912859008bca535bf04802c68e887f2e29fae51fd5d8d2"
+        }
+      ]
+    },
+    {
+      "id": "wasmc-data-core",
+      "mode": "exact-bytes",
+      "authored_sha256": "29c4e4b90690cfa6b1912859008bca535bf04802c68e887f2e29fae51fd5d8d2",
+      "delivered_sha256": "29c4e4b90690cfa6b1912859008bca535bf04802c68e887f2e29fae51fd5d8d2",
+      "normalized_sha256": null,
+      "tool_sha256": null,
+      "dependencies": []
+    },
+    {
+      "id": "wasmc-data-expr",
+      "mode": "standard-tool-normalization",
+      "authored_sha256": "16ae4a530a8472dc4f4fd847de98f226cb47f82cab95a00a36da485ac4436be3",
+      "delivered_sha256": "23b73de03f749ee69967002133d18fa0c436da4b4a6de2682a46ba4e6635faa0",
+      "normalized_sha256": "23b73de03f749ee69967002133d18fa0c436da4b4a6de2682a46ba4e6635faa0",
+      "tool_sha256": "c91f36d5562b2b920cf67b0907b601cf7ec63c9a2a8903407b47f57c9153f54d",
+      "dependencies": [
+        {
+          "id": "wasmc-data-core",
+          "sha256": "29c4e4b90690cfa6b1912859008bca535bf04802c68e887f2e29fae51fd5d8d2"
+        }
+      ]
+    },
+    {
+      "id": "wasmc-data-interchange",
+      "mode": "standard-tool-normalization",
+      "authored_sha256": "ea01ce12b3021d796033c39ce49a3f4061ec1f0d4bd6588d5a2b69413373c2ba",
+      "delivered_sha256": "b264c144540517dde4534381df8926a00328486f6d3a14ff5e86eeb47ca3919a",
+      "normalized_sha256": "b264c144540517dde4534381df8926a00328486f6d3a14ff5e86eeb47ca3919a",
+      "tool_sha256": "c91f36d5562b2b920cf67b0907b601cf7ec63c9a2a8903407b47f57c9153f54d",
+      "dependencies": [
+        {
+          "id": "wasmc-data-core",
+          "sha256": "29c4e4b90690cfa6b1912859008bca535bf04802c68e887f2e29fae51fd5d8d2"
+        }
+      ]
+    },
+    {
+      "id": "wasmc-data-profile",
+      "mode": "standard-tool-normalization",
+      "authored_sha256": "538e8a7415fdf4d24484cc5f4145f1a7d1d22f7bbdd103a7d7d28272b2fd68a8",
+      "delivered_sha256": "a003750326bc01acfcfb5363826d1abe2c9fa5d8a9821d8ee42bca81769188ff",
+      "normalized_sha256": "a003750326bc01acfcfb5363826d1abe2c9fa5d8a9821d8ee42bca81769188ff",
+      "tool_sha256": "c91f36d5562b2b920cf67b0907b601cf7ec63c9a2a8903407b47f57c9153f54d",
+      "dependencies": [
+        {
+          "id": "wasmc-data-core",
+          "sha256": "29c4e4b90690cfa6b1912859008bca535bf04802c68e887f2e29fae51fd5d8d2"
+        }
+      ]
+    },
+    {
+      "id": "wasmc-data-relational",
+      "mode": "standard-tool-normalization",
+      "authored_sha256": "df6148e83308691a33bb1685047f80220b1d9e8c6e1e4e9ee66b67141e96bf5d",
+      "delivered_sha256": "72bbe6f2074f99c703fe889a6d7c3bd221fa9191b4366bd4e00bf66da39b546b",
+      "normalized_sha256": "72bbe6f2074f99c703fe889a6d7c3bd221fa9191b4366bd4e00bf66da39b546b",
+      "tool_sha256": "c91f36d5562b2b920cf67b0907b601cf7ec63c9a2a8903407b47f57c9153f54d",
+      "dependencies": [
+        {
+          "id": "wasmc-data-core",
+          "sha256": "29c4e4b90690cfa6b1912859008bca535bf04802c68e887f2e29fae51fd5d8d2"
+        }
+      ]
+    },
+    {
+      "id": "wasmc-host-clock",
+      "mode": "exact-bytes",
+      "authored_sha256": "b6ca13754950364d74f49e69d858a0972ad648783254bb7ee0e30fbbdc623b74",
+      "delivered_sha256": "b6ca13754950364d74f49e69d858a0972ad648783254bb7ee0e30fbbdc623b74",
+      "normalized_sha256": null,
+      "tool_sha256": null,
+      "dependencies": []
+    },
+    {
+      "id": "wasmc-http1",
+      "mode": "exact-bytes",
+      "authored_sha256": "311e483f67b860702004e47e86234f96f4edc5e19f70875e1387a98a14f563cd",
+      "delivered_sha256": "311e483f67b860702004e47e86234f96f4edc5e19f70875e1387a98a14f563cd",
+      "normalized_sha256": null,
+      "tool_sha256": null,
+      "dependencies": []
+    },
+    {
+      "id": "wasmc-http1-client",
+      "mode": "exact-bytes",
+      "authored_sha256": "ae6a96e3cf4d6b8174dc3dec957b9ea654fae87aea10622ceae8f6376732b7ac",
+      "delivered_sha256": "ae6a96e3cf4d6b8174dc3dec957b9ea654fae87aea10622ceae8f6376732b7ac",
+      "normalized_sha256": null,
+      "tool_sha256": null,
+      "dependencies": []
+    },
+    {
+      "id": "wasmc-json",
+      "mode": "exact-bytes",
+      "authored_sha256": "45ab5f4ede015f76f9d152a9255414fbe15c71054b07a0302b7f0b76672c4221",
+      "delivered_sha256": "45ab5f4ede015f76f9d152a9255414fbe15c71054b07a0302b7f0b76672c4221",
+      "normalized_sha256": null,
+      "tool_sha256": null,
+      "dependencies": []
+    },
+    {
+      "id": "wasmc-lib-search",
+      "mode": "exact-bytes",
+      "authored_sha256": "1a9729b05dc6996dc213ce7167d9e04e11fc133dae88fe61b817837730a11ba6",
+      "delivered_sha256": "1a9729b05dc6996dc213ce7167d9e04e11fc133dae88fe61b817837730a11ba6",
+      "normalized_sha256": null,
+      "tool_sha256": null,
+      "dependencies": []
+    },
+    {
+      "id": "wasmc-owned-algorithms",
+      "mode": "exact-bytes",
+      "authored_sha256": "bd7dbf7b54172e6b08a80fc22b75ed44cf7d590b0b8603dd50941874d5e6db94",
+      "delivered_sha256": "bd7dbf7b54172e6b08a80fc22b75ed44cf7d590b0b8603dd50941874d5e6db94",
+      "normalized_sha256": null,
+      "tool_sha256": null,
+      "dependencies": []
+    },
+    {
+      "id": "wasmc-resource-counter",
+      "mode": "exact-bytes",
+      "authored_sha256": "2de6002544e320d045e29be5ac44fd577943754361701ba748c3ee082bf45cc4",
+      "delivered_sha256": "2de6002544e320d045e29be5ac44fd577943754361701ba748c3ee082bf45cc4",
+      "normalized_sha256": null,
+      "tool_sha256": null,
+      "dependencies": []
+    },
+    {
+      "id": "wasmc-router-policy",
+      "mode": "exact-bytes",
+      "authored_sha256": "fe83f392b2d70db163d2c8a5613166fdc075b33b9deb55b45a25918dfc129812",
+      "delivered_sha256": "fe83f392b2d70db163d2c8a5613166fdc075b33b9deb55b45a25918dfc129812",
+      "normalized_sha256": null,
+      "tool_sha256": null,
+      "dependencies": []
+    },
+    {
+      "id": "wasmc-std",
+      "mode": "exact-bytes",
+      "authored_sha256": "5abbed39c185835cfbbc5c2b961fb904b3ad66f42b22aef1ac7a40835ee246e9",
+      "delivered_sha256": "5abbed39c185835cfbbc5c2b961fb904b3ad66f42b22aef1ac7a40835ee246e9",
+      "normalized_sha256": null,
+      "tool_sha256": null,
+      "dependencies": []
+    },
+    {
+      "id": "wasmc-system-android-display",
+      "mode": "exact-bytes",
+      "authored_sha256": "45e1d31b607185ffda7784c4a809cc54d5288a4771fdf444066440fde554aa77",
+      "delivered_sha256": "45e1d31b607185ffda7784c4a809cc54d5288a4771fdf444066440fde554aa77",
+      "normalized_sha256": null,
+      "tool_sha256": null,
+      "dependencies": []
+    },
+    {
+      "id": "wasmc-system-android-input",
+      "mode": "exact-bytes",
+      "authored_sha256": "d740fac34d41c45bbdde18c5ebdf742409a9c424fc1199075d864ae5be457e8b",
+      "delivered_sha256": "d740fac34d41c45bbdde18c5ebdf742409a9c424fc1199075d864ae5be457e8b",
+      "normalized_sha256": null,
+      "tool_sha256": null,
+      "dependencies": []
+    },
+    {
+      "id": "wasmc-system-android-ui",
+      "mode": "exact-bytes",
+      "authored_sha256": "78d4d39f71ac1df5c09579a00928e605d04770b8e4377e2314c558220a849844",
+      "delivered_sha256": "78d4d39f71ac1df5c09579a00928e605d04770b8e4377e2314c558220a849844",
+      "normalized_sha256": null,
+      "tool_sha256": null,
+      "dependencies": []
+    },
+    {
+      "id": "wasmc-system-android-uinput",
+      "mode": "exact-bytes",
+      "authored_sha256": "d788ed7da5625031c0505d6a71f594b79cda99c3ff3c5d34e8c0cbba710e0a2f",
+      "delivered_sha256": "d788ed7da5625031c0505d6a71f594b79cda99c3ff3c5d34e8c0cbba710e0a2f",
+      "normalized_sha256": null,
+      "tool_sha256": null,
+      "dependencies": []
+    },
+    {
+      "id": "wasmc-system-file-prototype",
+      "mode": "exact-bytes",
+      "authored_sha256": "c3560a222711036dadf4c466d267c0687de0d1ed9e771b9f8583cc251ded2458",
+      "delivered_sha256": "c3560a222711036dadf4c466d267c0687de0d1ed9e771b9f8583cc251ded2458",
+      "normalized_sha256": null,
+      "tool_sha256": null,
+      "dependencies": []
+    },
+    {
+      "id": "wasmc-system-ios-app-contacts",
+      "mode": "exact-bytes",
+      "authored_sha256": "c62968be62ccea2da01267532760390b8c7ca867cb61a908809ba4f85afdcb35",
+      "delivered_sha256": "c62968be62ccea2da01267532760390b8c7ca867cb61a908809ba4f85afdcb35",
+      "normalized_sha256": null,
+      "tool_sha256": null,
+      "dependencies": []
+    },
+    {
+      "id": "wasmc-system-ios-app-lifecycle",
+      "mode": "exact-bytes",
+      "authored_sha256": "ca50e711b55fb315e760a961955b354e4f409c6cf3bf8da8140a08cb2fafc21c",
+      "delivered_sha256": "ca50e711b55fb315e760a961955b354e4f409c6cf3bf8da8140a08cb2fafc21c",
+      "normalized_sha256": null,
+      "tool_sha256": null,
+      "dependencies": []
+    },
+    {
+      "id": "wasmc-system-ios-app-surface-control",
+      "mode": "exact-bytes",
+      "authored_sha256": "fa54f901d13329c6e839b937cb3c8f98e4f77e894d2d684d1d1a38283d680cff",
+      "delivered_sha256": "fa54f901d13329c6e839b937cb3c8f98e4f77e894d2d684d1d1a38283d680cff",
+      "normalized_sha256": null,
+      "tool_sha256": null,
+      "dependencies": []
+    },
+    {
+      "id": "wasmc-system-ios-background-audio",
+      "mode": "exact-bytes",
+      "authored_sha256": "332d6e7405666f2ee06e08d6bb886a7aa51ccd197a8d677551a0481a40f57ebf",
+      "delivered_sha256": "332d6e7405666f2ee06e08d6bb886a7aa51ccd197a8d677551a0481a40f57ebf",
+      "normalized_sha256": null,
+      "tool_sha256": null,
+      "dependencies": []
+    },
+    {
+      "id": "wasmc-system-ios-background-transfer",
+      "mode": "exact-bytes",
+      "authored_sha256": "bcd3f97b5b446e4383649eab9fb7c8b3b8623f788f824ecdf985701b72ef498c",
+      "delivered_sha256": "bcd3f97b5b446e4383649eab9fb7c8b3b8623f788f824ecdf985701b72ef498c",
+      "normalized_sha256": null,
+      "tool_sha256": null,
+      "dependencies": []
+    },
+    {
+      "id": "wasmc-system-ios-deferred-work",
+      "mode": "exact-bytes",
+      "authored_sha256": "2a43c99f7a7c7d903b87f7df0276a93d949d2ed02b403a08ed80c533d8d48033",
+      "delivered_sha256": "2a43c99f7a7c7d903b87f7df0276a93d949d2ed02b403a08ed80c533d8d48033",
+      "normalized_sha256": null,
+      "tool_sha256": null,
+      "dependencies": []
+    },
+    {
+      "id": "wasmc-system-ios-local-notification",
+      "mode": "exact-bytes",
+      "authored_sha256": "d28bf091f9af304c5e2f93ca8e020db14100478dc7d6d18da426540d62855f4d",
+      "delivered_sha256": "d28bf091f9af304c5e2f93ca8e020db14100478dc7d6d18da426540d62855f4d",
+      "normalized_sha256": null,
+      "tool_sha256": null,
+      "dependencies": []
+    },
+    {
+      "id": "wasmc-system-ios-network-path",
+      "mode": "exact-bytes",
+      "authored_sha256": "4f81dcd5aee220ef4945349747713c4ae32730d4d4c1c6ef27dd474b5cef26c2",
+      "delivered_sha256": "4f81dcd5aee220ef4945349747713c4ae32730d4d4c1c6ef27dd474b5cef26c2",
+      "normalized_sha256": null,
+      "tool_sha256": null,
+      "dependencies": []
+    },
+    {
+      "id": "wasmc-system-ios-simulator-display",
+      "mode": "exact-bytes",
+      "authored_sha256": "45e1d31b607185ffda7784c4a809cc54d5288a4771fdf444066440fde554aa77",
+      "delivered_sha256": "45e1d31b607185ffda7784c4a809cc54d5288a4771fdf444066440fde554aa77",
+      "normalized_sha256": null,
+      "tool_sha256": null,
+      "dependencies": []
+    },
+    {
+      "id": "wasmc-system-ios-websocket",
+      "mode": "exact-bytes",
+      "authored_sha256": "2543970a328903e2f2104b1690b7b5ce83b18d1abf094b8a03b795952113fc96",
+      "delivered_sha256": "2543970a328903e2f2104b1690b7b5ce83b18d1abf094b8a03b795952113fc96",
+      "normalized_sha256": null,
+      "tool_sha256": null,
+      "dependencies": []
+    },
+    {
+      "id": "wasmc-system-linux-endpoint",
+      "mode": "exact-bytes",
+      "authored_sha256": "2b0f2916cff705b97a90ab4ad6f053342d54fc89f9574bf0139a9ecdd35e9cd4",
+      "delivered_sha256": "2b0f2916cff705b97a90ab4ad6f053342d54fc89f9574bf0139a9ecdd35e9cd4",
+      "normalized_sha256": null,
+      "tool_sha256": null,
+      "dependencies": []
+    },
+    {
+      "id": "wasmc-system-linux-socket",
+      "mode": "exact-bytes",
+      "authored_sha256": "a428f19a4f6ff0297aa0dba400b01ab2a55d1725f82d248f0a41fd23c059d4b8",
+      "delivered_sha256": "a428f19a4f6ff0297aa0dba400b01ab2a55d1725f82d248f0a41fd23c059d4b8",
+      "normalized_sha256": null,
+      "tool_sha256": null,
+      "dependencies": []
+    },
+    {
+      "id": "wasmc-system-linux-uinput",
+      "mode": "exact-bytes",
+      "authored_sha256": "6e118a6b0bd2affffcde9e89c2e771795cc9f109944d0bd0e03112f6bfe02fab",
+      "delivered_sha256": "6e118a6b0bd2affffcde9e89c2e771795cc9f109944d0bd0e03112f6bfe02fab",
+      "normalized_sha256": null,
+      "tool_sha256": null,
+      "dependencies": []
+    },
+    {
+      "id": "wasmc-system-network-prototype",
+      "mode": "exact-bytes",
+      "authored_sha256": "18ac698a3123012aece2d0ffa2c0a0210ef0e45c29af27f7b103ef22ef9664c5",
+      "delivered_sha256": "18ac698a3123012aece2d0ffa2c0a0210ef0e45c29af27f7b103ef22ef9664c5",
+      "normalized_sha256": null,
+      "tool_sha256": null,
+      "dependencies": []
+    },
+    {
+      "id": "wasmc-system-process-prototype",
+      "mode": "exact-bytes",
+      "authored_sha256": "739df842f2519e63d82df0982d602ae3fed8ac8a77a649cd35c93fd67335d07a",
+      "delivered_sha256": "739df842f2519e63d82df0982d602ae3fed8ac8a77a649cd35c93fd67335d07a",
+      "normalized_sha256": null,
+      "tool_sha256": null,
+      "dependencies": []
+    },
+    {
+      "id": "wasmc-system-telemetry",
+      "mode": "exact-bytes",
+      "authored_sha256": "c69ccee42113324a2875c352373ddaacb085363480a5f01f32ff919215fd9fe3",
+      "delivered_sha256": "c69ccee42113324a2875c352373ddaacb085363480a5f01f32ff919215fd9fe3",
+      "normalized_sha256": null,
+      "tool_sha256": null,
+      "dependencies": []
+    },
+    {
+      "id": "wasmc-tls-client",
+      "mode": "standard-tool-normalization",
+      "authored_sha256": "330db9970b0b481f98e60fbb3bb23f0df142bea2cab3053c69b9c17e4f29d43b",
+      "delivered_sha256": "6991d692795ca319eb63f86a0dd3b9db29dc22bbf9a8486f1ce8fe612430cb47",
+      "normalized_sha256": "6991d692795ca319eb63f86a0dd3b9db29dc22bbf9a8486f1ce8fe612430cb47",
+      "tool_sha256": "c91f36d5562b2b920cf67b0907b601cf7ec63c9a2a8903407b47f57c9153f54d",
+      "dependencies": [
+        {
+          "id": "wasmc-tls-core",
+          "sha256": "d07ee23b007d2a449feb978df83cc7481cf4473e46e800cfae28f239c0352009"
+        }
+      ]
+    },
+    {
+      "id": "wasmc-tls-core",
+      "mode": "exact-bytes",
+      "authored_sha256": "d07ee23b007d2a449feb978df83cc7481cf4473e46e800cfae28f239c0352009",
+      "delivered_sha256": "d07ee23b007d2a449feb978df83cc7481cf4473e46e800cfae28f239c0352009",
+      "normalized_sha256": null,
+      "tool_sha256": null,
+      "dependencies": []
+    }
+  ],
+  "generator_digests": {
+    "lib-refresh-v2.mjs": "76cc4f200f8b8bbbcf7673047ab02177dff1d985e6d63b25d4f772494e58278a",
+    "lib-refresh-runner-v2.mjs": "831224c7f0cc8fba1bcb132c2ca22371ca197d7736dc6c78cef30bb429d626e1",
+    "lib-refresh-cache-v2.mjs": "5c5c23802b10e085044ba190c25f154625cd68895a138b5834089eea9e52f10a",
+    "lib-refresh-native-v2.mjs": "befbc81bbcb83ada838bac9172b39f8a9f480d3840eb542bb64338f43359ea53",
+    "lib-refresh-resource-core-v2.mjs": "ff75077060d9909eaef510df491b0f3fe8faf37fee8416f185feb3fdc7e4a006",
+    "lib-refresh-upstream-source-v2.mjs": "60026fa2d6eb9e82d586a246c899bde88ef0872d1587287d7fcc910cded3a6ad"
+  },
+  "cargo_lock_sha256": "e83312764e965beb0f76698a48033edf5435a2d1c9dd6106c7f5c10b2f606c00",
+  "release_license_sha256": "7bca2d5818178e0bc14546700d39bf113d15139b1c3b6d1e62f621d4a276d6e3",
+  "selected": [
+    "mcpgit-resident-memory",
+    "wasmc-app-authorization-policy",
+    "wasmc-compression",
+    "wasmc-csv",
+    "wasmc-data-compute",
+    "wasmc-data-core",
+    "wasmc-data-expr",
+    "wasmc-data-interchange",
+    "wasmc-data-profile",
+    "wasmc-data-relational",
+    "wasmc-host-clock",
+    "wasmc-http1",
+    "wasmc-http1-client",
+    "wasmc-json",
+    "wasmc-lib-search",
+    "wasmc-owned-algorithms",
+    "wasmc-resource-counter",
+    "wasmc-router-policy",
+    "wasmc-std",
+    "wasmc-system-android-display",
+    "wasmc-system-android-input",
+    "wasmc-system-android-ui",
+    "wasmc-system-android-uinput",
+    "wasmc-system-file-prototype",
+    "wasmc-system-ios-app-contacts",
+    "wasmc-system-ios-app-lifecycle",
+    "wasmc-system-ios-app-surface-control",
+    "wasmc-system-ios-background-audio",
+    "wasmc-system-ios-background-transfer",
+    "wasmc-system-ios-deferred-work",
+    "wasmc-system-ios-local-notification",
+    "wasmc-system-ios-network-path",
+    "wasmc-system-ios-simulator-display",
+    "wasmc-system-ios-websocket",
+    "wasmc-system-linux-endpoint",
+    "wasmc-system-linux-socket",
+    "wasmc-system-linux-uinput",
+    "wasmc-system-network-prototype",
+    "wasmc-system-process-prototype",
+    "wasmc-system-telemetry",
+    "wasmc-tls-client",
+    "wasmc-tls-core"
+  ],
+  "rows": [
+    {
+      "id": "mcpgit-resident-memory",
+      "version": "0.2.0",
+      "profile": "resource",
+      "manifest_sha256": "0c4c15c39db528cc2aeb85123fd47964e297ec6153f96ae5f371c4e5a18f5e47",
+      "root_inventory_sha256": "c7f97dd17a56ec50da6077c1894c169fbeb85b5520e2f96a90082850effdbc9c",
+      "artifact_sha256": "f7b6c60eeafbf7ee3fb12c695cb288a26b3e73583da72755c62e93036f724011",
+      "component_sha256": "c174b02cb81a65a58f87cfab1d6856d5b0620b5c6b8a0f01de36635fc76e334a"
+    },
+    {
+      "id": "wasmc-app-authorization-policy",
+      "version": "0.0.2",
+      "profile": "value",
+      "manifest_sha256": "e222fe2981d8ddcb73c4aa94985be18f557e344863370f16a68380bcb73c960b",
+      "root_inventory_sha256": "93330d248e27f678b5d833b5d8390c661025d0282577c656908b952fc506ecf3",
+      "artifact_sha256": "e929a441fe813fa16d11012520d90d99518093357074650d6050b3c9bbb2fe7f",
+      "component_sha256": "58c10b24dab1d27e809f2ea9c37875947f40cf27a9f0610eb3d37516be534c52"
+    },
+    {
+      "id": "wasmc-compression",
+      "version": "0.0.1",
+      "profile": "value",
+      "manifest_sha256": "eacd5f91874277fe9e14056f04969a12a797670af81d002156c91f2455388621",
+      "root_inventory_sha256": "86335f6d2de9a0b0559accf192de86f8f36651e99647429e4c009abd388dba74",
+      "artifact_sha256": "20f5d3531223356f4bb430707aaf39a7c703e91133f0905a451723c113f1cae7",
+      "component_sha256": "aaa7236e7297339e56a4e5c2cea5678bb652692c507fb12811303522dc02ef3a"
+    },
+    {
+      "id": "wasmc-csv",
+      "version": "0.0.1",
+      "profile": "value",
+      "manifest_sha256": "ec3b79087f85412270418589e187b14a04125939211cdeead1c5196badc55eff",
+      "root_inventory_sha256": "159b01386efdb25212d2c322a217b714463fc3616e81b85af732195761e66c82",
+      "artifact_sha256": "d5260b8960b3b24930c7927b345ba8057eddaa512864e188e61aa457521ee8f0",
+      "component_sha256": "b98a2e17434f08577b67ec7250e022cc4fe67d81368db7aa45f94cb08cf877c6"
+    },
+    {
+      "id": "wasmc-data-compute",
+      "version": "0.0.1",
+      "profile": "value",
+      "manifest_sha256": "3feffdc1ba999cacaff7d57bd9b039ce5fa6977ed2f7a3a7ef7ddf4dcf42ec4e",
+      "root_inventory_sha256": "3ea48be4040569bb1148ba97144a7b7becb47354579944c7d01ef6b874604524",
+      "artifact_sha256": "da6d74423dca37825dbc44b4cb97da377c3d7b5a09a9ec0415e117f8efc67ec6",
+      "component_sha256": "f9c9aab6700952929329f86bf0358d4d39b127a293c58e8ddc5876b72747f0bb"
+    },
+    {
+      "id": "wasmc-data-core",
+      "version": "0.0.1",
+      "profile": "value",
+      "manifest_sha256": "3df5a3cb9f97345aed50bff95c781212d22039266ccffbff3ca07bb1c8ab826e",
+      "root_inventory_sha256": "915c38a19c23b2795911af3bb2d8eefd3f5857f138696a4834f9990f3c8665a1",
+      "artifact_sha256": "207c996f90b69bf7b5fd7c64e6989e3d95e9b46e31bb1704b0dde66f537b9498",
+      "component_sha256": "873d1e73a17d80a9d764389d8f079271aee32ece2d321220e1c338eb459a3d69"
+    },
+    {
+      "id": "wasmc-data-expr",
+      "version": "0.0.1",
+      "profile": "value",
+      "manifest_sha256": "c1a8b84d0e293c40bb3ea81ca9662e0cd221828078dc4f0c91a03762fb01a48a",
+      "root_inventory_sha256": "f3608bf231015f7087fea83f0a1254f74deb6f2790efaeecc6904abd1fbd8c0a",
+      "artifact_sha256": "a2d56de0758e7cb036287308ca8c27664889d0cba7406fb3667aca728277330a",
+      "component_sha256": "7d252d237a83fd05ee25e5d6f5789ec0fd692ed918f2d3c7a72e9c38b8d9b562"
+    },
+    {
+      "id": "wasmc-data-interchange",
+      "version": "0.0.1",
+      "profile": "value",
+      "manifest_sha256": "2c6f1311733f749b6aea46f5e446ab178604c7beb7ee3279f81a784b57db5b3d",
+      "root_inventory_sha256": "dae2b7286d59a7463c09d2b731a5242ca986ca0b3a65ac20e15556dee1f9e7e2",
+      "artifact_sha256": "06056808b941b48d3dc8046d493c6b36411fc7bd29808c67bf65a2008198ba92",
+      "component_sha256": "7d80cb9f6f410625fe44ede13ad05ca8d53e5c19ba05b82383247c0ff749869b"
+    },
+    {
+      "id": "wasmc-data-profile",
+      "version": "0.0.1",
+      "profile": "value",
+      "manifest_sha256": "5f70351be22b48963f6ff9707686baac829022b4381635babe422ac326070a4f",
+      "root_inventory_sha256": "0dbd3326d172c93bc03e189db1b654b2e50f9e9c4ede778154afd4e3037985da",
+      "artifact_sha256": "62c4003069a5f130dd9a8e1f937645add9185c5ac82751ac9fb521207b970508",
+      "component_sha256": "4665986eda949b0aa8f0ad8a19b52e1a3dd51283cb25b7e4e0f90c9a5072fae9"
+    },
+    {
+      "id": "wasmc-data-relational",
+      "version": "0.0.2",
+      "profile": "value",
+      "manifest_sha256": "1a4a23776173593b899bed633ced335ccf452b21452ebda3fb3e6470e6d8c267",
+      "root_inventory_sha256": "6e451cae345a3c4e390fa375a81adf38f6babdf600fde4833d89145394aca5ee",
+      "artifact_sha256": "3c86635ecb823a48ec845e415dfe49ce2dec78f2c686daf36aedb9481c61d0ca",
+      "component_sha256": "b65d4c7cbfb747ddc0fa98cbf96f3370fd4f96efa0ad1fd131996d6f7547c97c"
+    },
+    {
+      "id": "wasmc-host-clock",
+      "version": "0.0.2",
+      "profile": "host",
+      "manifest_sha256": "100f52d3b845222674f4c6c8f1711c97c6a4febf805d5c66b0a8a2b761ef70c9",
+      "root_inventory_sha256": "0f8d79d7a9c126992b3d7de7d14c9c79826786e34b4d11be4d48f22bb5547e60",
+      "artifact_sha256": "9c4fe095262d7c4ae94cf047e1d1e3f01f5878e38b1b14290d11a6c6de0c34e7",
+      "component_sha256": "cf355b4472d9f7e068aacdad6b2503fb920f045fadd0545a684cf473c89348de"
+    },
+    {
+      "id": "wasmc-http1",
+      "version": "0.0.1",
+      "profile": "value",
+      "manifest_sha256": "4a706b75626c252769f1bf8d394695f1ac24e2c9c8bddfcfacbeedab0ad82d63",
+      "root_inventory_sha256": "aa6a4f2a887646006bf81c5a18934fd938b37ad36f8f236fa19f5d3261934356",
+      "artifact_sha256": "e2872d169913d4202bca23c5681cef447912fd33abca0e5f9a30917ff53dd138",
+      "component_sha256": "8b1fd8c0b36d70ec630e73ef0c63c49452fec3039db89df836734f0c85da1d6e"
+    },
+    {
+      "id": "wasmc-http1-client",
+      "version": "0.0.1",
+      "profile": "value",
+      "manifest_sha256": "164bdc5e998beb2018e9ff36ed25dc25049f2ed8c521a293fd5d1b5203ddc094",
+      "root_inventory_sha256": "7ab2e6d5df98ecdb932651f16c7457700db8c955520f773d1764f1974295249d",
+      "artifact_sha256": "00586720b2710220143ed36718e054e47e1a0c2c5f67c55955727b5fdc314e40",
+      "component_sha256": "1c72a9724f108aa10dd45de5b95d96f3cf512da17626f5e91d3f45101aa91ab9"
+    },
+    {
+      "id": "wasmc-json",
+      "version": "0.0.1",
+      "profile": "value",
+      "manifest_sha256": "d962491acb1fdcce3fe91dea839ca6274440861203c21208d28908f156566a91",
+      "root_inventory_sha256": "c78b8f3c262a33fbda4a429a422df43df2152c72178dba8f97be2193da060eff",
+      "artifact_sha256": "90f64abae321f0699e5fbe7b9ff647a397cefa3c32e175dcc7793585505590ae",
+      "component_sha256": "678fe804f983d9bea7fbf4c36bb41c28606df1d16e292ff60b657a2c1fbf4ef3"
+    },
+    {
+      "id": "wasmc-lib-search",
+      "version": "0.5.0",
+      "profile": "value",
+      "manifest_sha256": "f34566b22589282b64e441ada7136ddbf7f4ff7e814ebf82e46d454e63c8ce2b",
+      "root_inventory_sha256": "e4ef41c9671fe5e2d062c112bf6a63b486f6773dcac1ac5f90a6933951b2a18c",
+      "artifact_sha256": "6019e3cb0fac7bcfd11e9be634e4fa0904aa5c6d081a761fb22aa37443e3c570",
+      "component_sha256": "69459ed248206793027162fc0719315bd84c1a38e68dab7e8690d7d5278f99ed"
+    },
+    {
+      "id": "wasmc-owned-algorithms",
+      "version": "0.1.1",
+      "profile": "value",
+      "manifest_sha256": "4e837e403a6bdb761806d4cc78c2e90ff2a734b36676d1134269c1b6639afec7",
+      "root_inventory_sha256": "caa8c3992d708686ef35477b9da855c83b7935444505ac5ff6c0fd112dc9e073",
+      "artifact_sha256": "7d8f30df09e7ddc8063a7ce56284e23a97cefa32b2cb1a4310b0d0880add8a03",
+      "component_sha256": "cbace6f88bd8906c5a00a89ef74baa9917d11352d1e99cbf7a79fe2cf0cea1e3"
+    },
+    {
+      "id": "wasmc-resource-counter",
+      "version": "0.0.2",
+      "profile": "resource",
+      "manifest_sha256": "ccbcd209aac567769fee654745a8123cfaacdeac4d32bad6097630c01e437ca5",
+      "root_inventory_sha256": "514953de4db520b0bafb6b411fad9b5531b5fe4c30d8232c952b3a81c36a3734",
+      "artifact_sha256": "f44128c06ef93c4973bf04cf04cd744027a1fa37eda869216bfd1a9f48e7d252",
+      "component_sha256": "3f2989195cb799d6130cc9367da57f770b6f4d6bda27e21221395520d3efe706"
+    },
+    {
+      "id": "wasmc-router-policy",
+      "version": "0.0.2",
+      "profile": "value",
+      "manifest_sha256": "fb38d17b1ae503d3f2b602b1a30124eb61c671ccd0fa5c7ac262be62845758df",
+      "root_inventory_sha256": "4a2654b44bb22c3d8cf581e195f9c636949e9375c904480f3b47a3830de09ded",
+      "artifact_sha256": "cac973f0cea77d7137a3dfa8d7955c9d78e4d702f4124d4d3965b063079fa8be",
+      "component_sha256": "c8c7be894a51b23cfa4936eca67007cba4a4a8e8bedd7cd46ad1dc47327f8a21"
+    },
+    {
+      "id": "wasmc-std",
+      "version": "1.4.1",
+      "profile": "resource",
+      "manifest_sha256": "9db63b4f380f9a8fb7541addfde6608bbc48b3267ad903f838afedb98e74ebfc",
+      "root_inventory_sha256": "6978407b51e835a3893ac14cbb7ca2c46da48d0a778f2611f6de829af07bdf92",
+      "artifact_sha256": "b79a499c8300361125e7fcdae02170184b82d4bbeff4d8f24ed95f3fd4db8d3b",
+      "component_sha256": "bda5f25c13e553a2ed3e6c54854dfd60b60a1fa5939a2b3086b776f3e8889e7b"
+    },
+    {
+      "id": "wasmc-system-android-display",
+      "version": "0.0.1",
+      "profile": "native",
+      "manifest_sha256": "0230d27d33f93cda72ecc0ffd9506e012c36dcb50630d57bfba805766f21f309",
+      "root_inventory_sha256": "d96ea25ac74bedaa43b09610cc4bfed70a39e1a3d04a197b15bc685bbd997dd7",
+      "artifact_sha256": null,
+      "component_sha256": null
+    },
+    {
+      "id": "wasmc-system-android-input",
+      "version": "0.0.1",
+      "profile": "native",
+      "manifest_sha256": "cd1df6c421df452812a5eda1b0ff5bffb01126cfc2347f8b401a9428f69d5848",
+      "root_inventory_sha256": "5fa058e5d72084f3593501424c73f754820448b66d825a2e76fe2a615ac516b1",
+      "artifact_sha256": null,
+      "component_sha256": null
+    },
+    {
+      "id": "wasmc-system-android-ui",
+      "version": "0.0.1",
+      "profile": "native",
+      "manifest_sha256": "4c3555ce5066749199154f7480b7ec93e11313beb6eab42daa20d9d1749fb039",
+      "root_inventory_sha256": "751680ff4379161ccca66d8a4bb7afb7103d8ba9aea0c53187bbf6b371903d78",
+      "artifact_sha256": null,
+      "component_sha256": null
+    },
+    {
+      "id": "wasmc-system-android-uinput",
+      "version": "0.0.1",
+      "profile": "native",
+      "manifest_sha256": "9b855b365afc149f2ad241a3b2ed6d20b6b86755003c08e0f1e0d55f7722c621",
+      "root_inventory_sha256": "d20b7f55cf454a919f786bd2922b933bd6e6e063ac62d3a41ba6e16b6f4e0078",
+      "artifact_sha256": null,
+      "component_sha256": null
+    },
+    {
+      "id": "wasmc-system-file-prototype",
+      "version": "0.0.1",
+      "profile": "native",
+      "manifest_sha256": "8e71205025673a0f1bfe357730eff3c40ee441578bdf42ac2ac29150e037b439",
+      "root_inventory_sha256": "f5af3be9d1e5d49c300b08dba1895a077c27f77a776284571767ca82b3821cc3",
+      "artifact_sha256": "def205e9304dbbb528d0ba6c2d8a13eae4a93dc3ffc5b8972dc4514f330e0d15",
+      "component_sha256": null
+    },
+    {
+      "id": "wasmc-system-ios-app-contacts",
+      "version": "0.0.1",
+      "profile": "native",
+      "manifest_sha256": "245c85aa76863b91270484a7f45a561a7ac8553edd391029d2b6d34069384fc2",
+      "root_inventory_sha256": "5bfa0b8ef4e9e6da111c6159e778febe6c8a44f3933c4f4ac73ac224b06a4618",
+      "artifact_sha256": null,
+      "component_sha256": null
+    },
+    {
+      "id": "wasmc-system-ios-app-lifecycle",
+      "version": "0.0.1",
+      "profile": "native",
+      "manifest_sha256": "d5c4218cf15c09dc74f226a19201c8eca318ac5339102b9889633d0a42c56d57",
+      "root_inventory_sha256": "0daeb503093744936a4d723823985503a379c1e8d6ea60ffec4cfef93eea58c6",
+      "artifact_sha256": null,
+      "component_sha256": null
+    },
+    {
+      "id": "wasmc-system-ios-app-surface-control",
+      "version": "0.0.3",
+      "profile": "native",
+      "manifest_sha256": "905dc30c9af911ea4ee1480bb612cc98c9f3534a71dd1d140c3c2998ff680040",
+      "root_inventory_sha256": "b8bfbe6914a8836ac081316c9c6e481cb343376acd4474758199ccd99f5e4768",
+      "artifact_sha256": null,
+      "component_sha256": null
+    },
+    {
+      "id": "wasmc-system-ios-background-audio",
+      "version": "0.0.1",
+      "profile": "native",
+      "manifest_sha256": "bb0f65d107feedfb00e5289ce7f9d5e47ff494bd9da1b6359fdf675b01319ca9",
+      "root_inventory_sha256": "8b45a2f1ac74729647579c3d3934d29636f0ed2fda33b84307a4e6bc02af9a02",
+      "artifact_sha256": null,
+      "component_sha256": null
+    },
+    {
+      "id": "wasmc-system-ios-background-transfer",
+      "version": "0.0.1",
+      "profile": "native",
+      "manifest_sha256": "46b1efd7524afbffdd5a27ac7e9e8594dacd4f390d6b153d6904e200c1496556",
+      "root_inventory_sha256": "db4e51a7521e93cccb3892f63f5cd1f1c6000e500f0c86140743bf3224b83d35",
+      "artifact_sha256": null,
+      "component_sha256": null
+    },
+    {
+      "id": "wasmc-system-ios-deferred-work",
+      "version": "0.0.1",
+      "profile": "native",
+      "manifest_sha256": "ea124b39b51a4ea3af76c8dfb7073d8a51177820df522446806652b7959a17da",
+      "root_inventory_sha256": "4df5699bcdf00ecf394aff0701c86b9299d53d526b700071a4ada1d2cca5795f",
+      "artifact_sha256": null,
+      "component_sha256": null
+    },
+    {
+      "id": "wasmc-system-ios-local-notification",
+      "version": "0.0.1",
+      "profile": "native",
+      "manifest_sha256": "fc368dc976378ba342c3a6d884f80ac4c7868bb63435749640b8dff377e40ab8",
+      "root_inventory_sha256": "d64500de30feea200a3e78a7e7f518301702b1196a1e2bbf10b55915794f2ea5",
+      "artifact_sha256": null,
+      "component_sha256": null
+    },
+    {
+      "id": "wasmc-system-ios-network-path",
+      "version": "0.0.1",
+      "profile": "native",
+      "manifest_sha256": "7ba66045b6c3d0c4c8d7b6eae6dd6b9a162d68f5ee6289a56d1bd9fe3bef3405",
+      "root_inventory_sha256": "22427f56b3dba132706f3d68482c65d2b92d138fc38c03ede995e38defc325e6",
+      "artifact_sha256": null,
+      "component_sha256": null
+    },
+    {
+      "id": "wasmc-system-ios-simulator-display",
+      "version": "0.0.1",
+      "profile": "native",
+      "manifest_sha256": "9c4ee2783caa7dccccdf60e8e7735d9d5cad66d8208294327f53c2df46d4fddf",
+      "root_inventory_sha256": "23b5510abdbce8eb53a71eda0cb3a9a61f9ed28abac8ea75504b315648aed0ff",
+      "artifact_sha256": null,
+      "component_sha256": null
+    },
+    {
+      "id": "wasmc-system-ios-websocket",
+      "version": "0.0.1",
+      "profile": "native",
+      "manifest_sha256": "82a4b83167972d62a3e6b338db2e9551af97a6268cb51f28ef28b401b2891894",
+      "root_inventory_sha256": "55dbe850fb78cf996ab125262dfa0f0b22a46dc277ed0143974a5e3125c97455",
+      "artifact_sha256": null,
+      "component_sha256": null
+    },
+    {
+      "id": "wasmc-system-linux-endpoint",
+      "version": "0.0.1",
+      "profile": "native",
+      "manifest_sha256": "61302893ff2bca08905b8ea7cf9e7bb6ff9612322252d73a648476d57ced4163",
+      "root_inventory_sha256": "6afb8ed008e89a54f86e49256c4e77f836766006f858ac7df5e86b3c6ef12fe0",
+      "artifact_sha256": "cf366eeaf2371ddad0d746f48ac37d6d0db486ed176df6853b3c7fb9d1ecae68",
+      "component_sha256": null
+    },
+    {
+      "id": "wasmc-system-linux-socket",
+      "version": "0.0.1",
+      "profile": "native",
+      "manifest_sha256": "580101fcc0f297e2d6ba6ca1fc459a4e3be60415b3dbc8e992b98a5ce1bf3d0f",
+      "root_inventory_sha256": "7d3656f8963d2b396a9e1793c00ebbbbe0bc7aedd4c2414e76fdc3f5e8e52c0c",
+      "artifact_sha256": "2c29b019d69da0e66ef18d73305a8506c35a24a6d64fd2fd84ba219e7db3d9aa",
+      "component_sha256": null
+    },
+    {
+      "id": "wasmc-system-linux-uinput",
+      "version": "0.0.1",
+      "profile": "native",
+      "manifest_sha256": "957b66ab6e7df26c8eae688b91c34a608ba6f5c8ed07758a4c58bf20c234dde3",
+      "root_inventory_sha256": "207ddb5ef18e4368dbb647dc52adff4e61921195c813f52e0bebac3529c2bf51",
+      "artifact_sha256": "389636caf7bc1fd395e2b8325a3a6c1bae0a5fc061f94e86372faa1e9ae2573c",
+      "component_sha256": null
+    },
+    {
+      "id": "wasmc-system-network-prototype",
+      "version": "0.0.2",
+      "profile": "native",
+      "manifest_sha256": "fb93bff1efd5861a47b275e43e4c8784a35631f54cfccec744068e577fb1c1cf",
+      "root_inventory_sha256": "6011e1e60b211a097cffaf5677a14c6e74d8372c6e26ceaac994a5d3d3e780a8",
+      "artifact_sha256": "e1861dd9770253f1d293ef7cf60f0e38484a89743c15cd2dd18ba72802521a14",
+      "component_sha256": null
+    },
+    {
+      "id": "wasmc-system-process-prototype",
+      "version": "0.0.1",
+      "profile": "native",
+      "manifest_sha256": "8af1f7ccb251017eb622d991bdc7f23d79a85e5da4b8d6ce6b42a57f1e8eb941",
+      "root_inventory_sha256": "7b94d1766816c5ae7e478c92365d1a0d32352391455f27566e77e70df23da189",
+      "artifact_sha256": "79af42c23e49fe9615a4a3b3bd9a12b9f1a7d1e308560ee9c245ff561913206f",
+      "component_sha256": null
+    },
+    {
+      "id": "wasmc-system-telemetry",
+      "version": "0.0.1",
+      "profile": "resource",
+      "manifest_sha256": "83e70bb72eb9b8b793a5dec8d85f4c341ca071fa9f89435b8bdcc902b69fcc05",
+      "root_inventory_sha256": "b56da75373f297e5b2726741e57fdc68c9b22cf9c6ae5ed9ea86f8f649b21064",
+      "artifact_sha256": "b23a69b1a45d84456f3a7d8e7055fcec6276f18b9363cda58ab36d05d850b5aa",
+      "component_sha256": "94e66279c4f61ae97814c111f2217a1d47362cf2595ba9811f18d4dd512804d7"
+    },
+    {
+      "id": "wasmc-tls-client",
+      "version": "0.0.1",
+      "profile": "resource",
+      "manifest_sha256": "8a6c04d9ff5ba77e34f7da64462062dfe5eba60ad708c45de427177bb92e25ce",
+      "root_inventory_sha256": "b6963c2ea6792667c5edf04b4ff574c369acc71be28ae4dc7dcdca26d52db349",
+      "artifact_sha256": "9291a9b67efc23b3559e0ba0ed0e2d718280987066618cf22b91d49678646ebe",
+      "component_sha256": "0d0bfefbe963bfef7fd7d96376b1203bdff34888df729ebd04aa96f6e4f929fe"
+    },
+    {
+      "id": "wasmc-tls-core",
+      "version": "0.0.1",
+      "profile": "resource",
+      "manifest_sha256": "47d200a1e5d52a5bedb28d03a144b938d57e7d4a82224fa69c8149552c835ff5",
+      "root_inventory_sha256": "782a3ed9eff645c70f55d20a7b3ed40410175838d43865edcac430d4cf923786",
+      "artifact_sha256": "5d856e79e5c5ca007bc933c39d7a7a527b4b7000d68618a1bf81c28aad67e80e",
+      "component_sha256": "8f4d6387ae224598d97c53ff08162623af3cfafbb47c65ec2657e87226d35353"
+    }
+  ],
+  "public_admission": false,
+  "scope": "Exact complete source/Q0 outputs; runtime, device, install, Pi and whole release gates remain independent"
+}

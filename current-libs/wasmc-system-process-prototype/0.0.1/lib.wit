@@ -1,0 +1,67 @@
+package wasmc:system-process@0.0.1;
+
+interface processes {
+  record environment-entry {
+    name: string,
+    value: string,
+  }
+
+  record execution-options {
+    working-directory: option<string>,
+    environment: list<environment-entry>,
+    inherit-environment: bool,
+    stdin: list<u8>,
+    timeout-ms: u32,
+    max-output-bytes: u32,
+  }
+
+  record process-request {
+    executable: string,
+    arguments: list<string>,
+    options: execution-options,
+  }
+
+  record execution-result {
+    exit-code: option<s32>,
+    signal: option<string>,
+    timed-out: bool,
+    output-limit-exceeded: bool,
+    stdout: list<u8>,
+    stderr: list<u8>,
+    elapsed-ms: u64,
+  }
+
+  run: func(request: process-request) -> result<execution-result, string>;
+}
+
+interface shells {
+  use processes.{execution-options, execution-result};
+
+  enum shell-kind {
+    platform-default,
+    posix-sh,
+    windows-cmd,
+    windows-powershell,
+  }
+
+  record shell-request {
+    kind: shell-kind,
+    script: string,
+    options: execution-options,
+  }
+
+  record shell-capabilities {
+    platform: string,
+    architecture: string,
+    process-execution: bool,
+    supported-shells: list<shell-kind>,
+  }
+
+  capabilities: func() -> shell-capabilities;
+  run: func(request: shell-request) -> result<execution-result, string>;
+}
+
+world system-process {
+  export processes;
+  export shells;
+}

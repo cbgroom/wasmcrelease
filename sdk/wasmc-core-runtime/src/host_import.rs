@@ -9,22 +9,25 @@ use std::{collections::BTreeSet, error::Error, fmt, sync::Arc};
 
 use wasmi::{
     Caller as WasmiCaller, ExternType as WasmiExternType, Instance as WasmiInstance,
-    Linker as WasmiLinker, Module as WasmiModule, Store as WasmiStore,
-    StoreLimits as WasmiStoreLimits, StoreLimitsBuilder as WasmiStoreLimitsBuilder,
-    Val as WasmiVal, ValType as WasmiValType,
+    Linker as WasmiLinker, Store as WasmiStore, StoreLimits as WasmiStoreLimits,
+    StoreLimitsBuilder as WasmiStoreLimitsBuilder, Val as WasmiVal, ValType as WasmiValType,
 };
+#[cfg(feature = "wasmtime-runtime")]
 use wasmtime::{
     ExternType as WasmtimeExternType, InstancePre as WasmtimeInstancePre, Linker as WasmtimeLinker,
     Module as WasmtimeModule, Store as WasmtimeStore, StoreLimits as WasmtimeStoreLimits,
     StoreLimitsBuilder as WasmtimeStoreLimitsBuilder, ValType as WasmtimeValType,
 };
 
+#[cfg(feature = "wasmtime-runtime")]
+use crate::WasmtimeSpeedRuntime;
 use crate::{
     limits::{invoke_wasmi_bounded, is_resource_limit_message},
-    CoreRuntimeLimitProfile, WasmiCompletionRuntime, WasmtimeSpeedRuntime,
+    CoreRuntimeLimitProfile, WasmiCompletionRuntime,
 };
 
 const MAX_I32_HOST_IMPORTS: usize = 32;
+const MAX_I32_EXPORT_PARAMS: usize = 8;
 
 type I32HostCallback = Arc<dyn Fn(i32) -> i32 + Send + Sync + 'static>;
 
@@ -94,7 +97,7 @@ pub struct I32HostImportError {
 }
 
 impl I32HostImportError {
-    fn new(code: I32HostImportErrorCode, message: impl Into<String>) -> Self {
+    pub(crate) fn new(code: I32HostImportErrorCode, message: impl Into<String>) -> Self {
         Self {
             code,
             message: message.into(),
@@ -121,6 +124,7 @@ impl Error for I32HostImportError {}
 struct HostCallbacks {
     callbacks: Vec<I32HostCallback>,
     wasmi_limits: WasmiStoreLimits,
+    #[cfg(feature = "wasmtime-runtime")]
     wasmtime_limits: WasmtimeStoreLimits,
 }
 
@@ -133,6 +137,7 @@ impl HostCallbacks {
                 .table_elements(profile.max_table_elements())
                 .trap_on_grow_failure(true)
                 .build(),
+            #[cfg(feature = "wasmtime-runtime")]
             wasmtime_limits: WasmtimeStoreLimitsBuilder::new()
                 .memory_size(profile.max_memory_bytes())
                 .table_elements(profile.max_table_elements())
@@ -144,7 +149,7 @@ impl HostCallbacks {
 
 pub(crate) struct WasmiI32HostModule {
     runtime: WasmiCompletionRuntime,
-    module: WasmiModule,
+    module: crate::observed_module::ObservedModule,
     imports: Arc<[I32HostImport]>,
 }
 
@@ -155,12 +160,28 @@ impl WasmiI32HostModule {
         reviewed: &[I32HostImport],
     ) -> Result<Self, I32HostImportError> {
         validate_plan(reviewed)?;
-        let module = WasmiModule::new(runtime.engine(), wasm).map_err(|error| {
-            I32HostImportError::new(
-                I32HostImportErrorCode::Compile,
-                format!("Wasmi rejected Core module: {error}"),
-            )
-        })?;
+        Self::compile_exact(runtime, wasm, reviewed)
+    }
+
+    pub(crate) fn compile_import_free(
+        runtime: &WasmiCompletionRuntime,
+        wasm: &[u8],
+    ) -> Result<Self, I32HostImportError> {
+        Self::compile_exact(runtime, wasm, &[])
+    }
+
+    fn compile_exact(
+        runtime: &WasmiCompletionRuntime,
+        wasm: &[u8],
+        reviewed: &[I32HostImport],
+    ) -> Result<Self, I32HostImportError> {
+        let module =
+            crate::observed_module::ObservedModule::new(runtime, wasm).map_err(|error| {
+                I32HostImportError::new(
+                    I32HostImportErrorCode::Compile,
+                    format!("Wasmi rejected Core module: {error}"),
+                )
+            })?;
         let actual = module
             .imports()
             .map(|import| {
@@ -208,6 +229,21 @@ impl WasmiI32HostModule {
         export: &str,
         argument: i32,
     ) -> Result<i32, I32HostImportError> {
+        self.invoke_i32s(bindings, export, &[argument])
+    }
+
+    pub(crate) fn invoke_i32s(
+        &self,
+        bindings: &[I32HostBinding],
+        export: &str,
+        arguments: &[i32],
+    ) -> Result<i32, I32HostImportError> {
+        if arguments.len() > MAX_I32_EXPORT_PARAMS {
+            return Err(I32HostImportError::new(
+                I32HostImportErrorCode::Invocation,
+                "Wasmi scalar export accepts at most eight i32 parameters",
+            ));
+        }
         let callbacks = exact_callbacks(&self.imports, bindings)?;
         let mut linker = WasmiLinker::<HostCallbacks>::new(self.runtime.engine());
         for (index, import) in self.imports.iter().enumerate() {
@@ -240,8 +276,9 @@ impl WasmiI32HostModule {
                 )
             })?;
         }
-        let instance: WasmiInstance = linker
-            .instantiate_and_start(&mut store, &self.module)
+        let instance: WasmiInstance = self
+            .module
+            .instantiate(&self.runtime, &linker, &mut store)
             .map_err(|error| invocation_error("Wasmi instantiation", error.to_string()))?;
         let function = instance.get_func(&store, export).ok_or_else(|| {
             I32HostImportError::new(
@@ -249,7 +286,27 @@ impl WasmiI32HostModule {
                 format!("Wasmi export {export:?} is missing"),
             )
         })?;
-        let inputs = [WasmiVal::I32(argument)];
+        let function_type = function.ty(&store);
+        if function_type.params().len() != arguments.len()
+            || function_type
+                .params()
+                .iter()
+                .any(|ty| *ty != WasmiValType::I32)
+            || function_type.results() != [WasmiValType::I32]
+        {
+            return Err(I32HostImportError::new(
+                I32HostImportErrorCode::Invocation,
+                format!(
+                    "Wasmi export {export:?} is not exact ({} i32 parameters)->i32",
+                    arguments.len()
+                ),
+            ));
+        }
+        let inputs = arguments
+            .iter()
+            .copied()
+            .map(WasmiVal::I32)
+            .collect::<Vec<_>>();
         let mut outputs = [WasmiVal::I32(0)];
         invoke_wasmi_bounded(&mut store, &function, &inputs, &mut outputs, profile)
             .map_err(|error| invocation_error("Wasmi invocation", error.to_string()))?;
@@ -263,12 +320,14 @@ impl WasmiI32HostModule {
     }
 }
 
+#[cfg(feature = "wasmtime-runtime")]
 pub(crate) struct WasmtimeI32HostModule {
     runtime: WasmtimeSpeedRuntime,
     instance_pre: WasmtimeInstancePre<HostCallbacks>,
     imports: Arc<[I32HostImport]>,
 }
 
+#[cfg(feature = "wasmtime-runtime")]
 impl WasmtimeI32HostModule {
     pub(crate) fn compile(
         runtime: &WasmtimeSpeedRuntime,

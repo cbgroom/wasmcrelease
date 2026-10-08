@@ -1,13 +1,16 @@
 //! Exact WIT/Core flat-scalar Host lane shared by Wasmi and Wasmtime.
 
-use std::{any::Any, collections::BTreeSet, error::Error, fmt, sync::Arc};
+#[cfg(feature = "wasmtime-runtime")]
+use std::collections::BTreeSet;
+use std::{any::Any, error::Error, fmt, sync::Arc};
 
 use wasmi::{
     Caller as WasmiCaller, Extern as WasmiExtern, ExternType as WasmiExternType,
-    FuncType as WasmiFuncType, Linker as WasmiLinker, Module as WasmiModule, Store as WasmiStore,
+    FuncType as WasmiFuncType, Linker as WasmiLinker, Store as WasmiStore,
     StoreLimits as WasmiStoreLimits, StoreLimitsBuilder as WasmiStoreLimitsBuilder,
     Val as WasmiVal, ValType as WasmiValType,
 };
+#[cfg(feature = "wasmtime-runtime")]
 use wasmtime::{
     Extern as WasmtimeExtern, ExternType as WasmtimeExternType, FuncType as WasmtimeFuncType,
     InstancePre as WasmtimeInstancePre, Linker as WasmtimeLinker, Module as WasmtimeModule,
@@ -16,11 +19,14 @@ use wasmtime::{
     ValType as WasmtimeValType,
 };
 
+#[cfg(feature = "wasmtime-runtime")]
+use crate::WasmtimeSpeedRuntime;
 use crate::{
     limits::{invoke_wasmi_bounded_with_cancellation, is_resource_limit_message},
-    CoreRuntimeCancellation, CoreRuntimeLimitProfile, WasmiCompletionRuntime, WasmtimeSpeedRuntime,
+    CoreRuntimeCancellation, CoreRuntimeLimitProfile, WasmiCompletionRuntime,
 };
 
+#[cfg(feature = "wasmtime-runtime")]
 const MAX_IMPORTS: usize = 64;
 const MAX_VALUES: usize = 16;
 const MEMORY_EXPORT: &str = "memory";
@@ -228,6 +234,10 @@ impl CoreScalarHostError {
         Self::new(CoreScalarHostErrorCode::Callback, message)
     }
 
+    pub(crate) fn resource_limit(message: impl Into<String>) -> Self {
+        Self::new(CoreScalarHostErrorCode::ResourceLimit, message)
+    }
+
     pub const fn code(&self) -> CoreScalarHostErrorCode {
         self.code
     }
@@ -260,6 +270,7 @@ pub(crate) struct ErasedScalarSession {
 }
 
 impl ErasedScalarSession {
+    #[cfg(feature = "wasmtime-runtime")]
     pub(crate) fn into_state<S>(self) -> S
     where
         S: Send + 'static,
@@ -277,6 +288,13 @@ pub(crate) struct ErasedScalarOutcome {
 }
 
 impl ErasedScalarOutcome {
+    pub(crate) fn into_result(self) -> Result<Vec<CoreScalarValue>, CoreScalarHostError> {
+        let Self { result, state } = self;
+        drop(state);
+        result
+    }
+
+    #[cfg(feature = "wasmtime-runtime")]
     pub(crate) fn into_typed<S>(self) -> (Result<Vec<CoreScalarValue>, CoreScalarHostError>, S)
     where
         S: Send + 'static,
@@ -295,28 +313,46 @@ struct ScalarCallbacks {
     state: Option<Box<dyn Any + Send>>,
     callbacks: Vec<Option<ScalarCallback>>,
     wasmi_limits: WasmiStoreLimits,
+    #[cfg(feature = "wasmtime-runtime")]
     wasmtime_limits: WasmtimeStoreLimits,
 }
 
 pub(crate) struct WasmiScalarHostModule {
     runtime: WasmiCompletionRuntime,
-    module: WasmiModule,
+    module: crate::observed_module::ObservedModule,
     imports: Arc<[CoreScalarHostImport]>,
 }
 
 impl WasmiScalarHostModule {
+    #[cfg(feature = "wasmtime-runtime")]
     pub(crate) fn compile(
         runtime: &WasmiCompletionRuntime,
         wasm: &[u8],
         reviewed: &[CoreScalarHostImport],
     ) -> Result<Self, CoreScalarHostError> {
         validate_plan(reviewed)?;
-        let module = WasmiModule::new(runtime.engine(), wasm).map_err(|error| {
-            CoreScalarHostError::new(
-                CoreScalarHostErrorCode::Compile,
-                format!("Wasmi rejected scalar Core module: {error}"),
-            )
-        })?;
+        Self::compile_exact(runtime, wasm, reviewed)
+    }
+
+    pub(crate) fn compile_import_free(
+        runtime: &WasmiCompletionRuntime,
+        wasm: &[u8],
+    ) -> Result<Self, CoreScalarHostError> {
+        Self::compile_exact(runtime, wasm, &[])
+    }
+
+    fn compile_exact(
+        runtime: &WasmiCompletionRuntime,
+        wasm: &[u8],
+        reviewed: &[CoreScalarHostImport],
+    ) -> Result<Self, CoreScalarHostError> {
+        let module =
+            crate::observed_module::ObservedModule::new(runtime, wasm).map_err(|error| {
+                CoreScalarHostError::new(
+                    CoreScalarHostErrorCode::Compile,
+                    format!("Wasmi rejected scalar Core module: {error}"),
+                )
+            })?;
         let actual = module
             .imports()
             .map(|import| {
@@ -352,6 +388,7 @@ impl WasmiScalarHostModule {
         })
     }
 
+    #[cfg(feature = "wasmtime-runtime")]
     pub(crate) fn imports(&self) -> &[CoreScalarHostImport] {
         &self.imports
     }
@@ -433,8 +470,9 @@ impl WasmiScalarHostModule {
             }
         }
         let result = (|| {
-            let instance = linker
-                .instantiate_and_start(&mut store, &self.module)
+            let instance = self
+                .module
+                .instantiate(&self.runtime, &linker, &mut store)
                 .map_err(|error| invocation_error("Wasmi instantiation", error))?;
             let function = instance
                 .get_func(&store, export)
@@ -528,12 +566,14 @@ fn wasmi_memory(
     }
 }
 
+#[cfg(feature = "wasmtime-runtime")]
 pub(crate) struct WasmtimeScalarHostModule {
     runtime: WasmtimeSpeedRuntime,
     instance_pre: WasmtimeInstancePre<ScalarCallbacks>,
     imports: Arc<[CoreScalarHostImport]>,
 }
 
+#[cfg(feature = "wasmtime-runtime")]
 impl WasmtimeScalarHostModule {
     pub(crate) fn compile(
         runtime: &WasmtimeSpeedRuntime,
@@ -720,10 +760,12 @@ impl WasmtimeScalarHostModule {
     }
 }
 
+#[cfg(feature = "wasmtime-runtime")]
 struct WasmtimeScalarMemory<'a, 'b> {
     caller: &'a mut wasmtime::Caller<'b, ScalarCallbacks>,
 }
 
+#[cfg(feature = "wasmtime-runtime")]
 impl CoreScalarMemory for WasmtimeScalarMemory<'_, '_> {
     fn byte_len(&mut self) -> Result<usize, CoreScalarHostError> {
         Ok(wasmtime_memory(self.caller)?.data_size(&*self.caller))
@@ -742,6 +784,7 @@ impl CoreScalarMemory for WasmtimeScalarMemory<'_, '_> {
     }
 }
 
+#[cfg(feature = "wasmtime-runtime")]
 fn wasmtime_memory(
     caller: &mut wasmtime::Caller<'_, ScalarCallbacks>,
 ) -> Result<wasmtime::Memory, CoreScalarHostError> {
@@ -777,6 +820,7 @@ fn restore_callback(
     callbacks.callbacks[index] = Some(callback);
 }
 
+#[cfg(feature = "wasmtime-runtime")]
 fn validate_plan(reviewed: &[CoreScalarHostImport]) -> Result<(), CoreScalarHostError> {
     if reviewed.is_empty() || reviewed.len() > MAX_IMPORTS {
         return Err(CoreScalarHostError::new(
@@ -878,6 +922,7 @@ fn exact_callbacks(
             .table_elements(profile.max_table_elements())
             .trap_on_grow_failure(true)
             .build(),
+        #[cfg(feature = "wasmtime-runtime")]
         wasmtime_limits: WasmtimeStoreLimitsBuilder::new()
             .memory_size(profile.max_memory_bytes())
             .table_elements(profile.max_table_elements())
@@ -957,6 +1002,7 @@ fn wasmi_value(value: CoreScalarValue) -> WasmiVal {
     }
 }
 
+#[cfg(feature = "wasmtime-runtime")]
 fn core_type_from_wasmtime(value: WasmtimeValType) -> Result<CoreScalarType, CoreScalarHostError> {
     match value {
         WasmtimeValType::I32 => Ok(CoreScalarType::I32),
@@ -970,6 +1016,7 @@ fn core_type_from_wasmtime(value: WasmtimeValType) -> Result<CoreScalarType, Cor
     }
 }
 
+#[cfg(feature = "wasmtime-runtime")]
 fn wasmtime_type(value: CoreScalarType) -> WasmtimeValType {
     match value {
         CoreScalarType::I32 => WasmtimeValType::I32,
@@ -979,6 +1026,7 @@ fn wasmtime_type(value: CoreScalarType) -> WasmtimeValType {
     }
 }
 
+#[cfg(feature = "wasmtime-runtime")]
 fn core_value_from_wasmtime(value: &WasmtimeVal) -> Result<CoreScalarValue, wasmtime::Error> {
     match value {
         WasmtimeVal::I32(value) => Ok(CoreScalarValue::I32(*value)),
@@ -989,6 +1037,7 @@ fn core_value_from_wasmtime(value: &WasmtimeVal) -> Result<CoreScalarValue, wasm
     }
 }
 
+#[cfg(feature = "wasmtime-runtime")]
 fn wasmtime_value(value: CoreScalarValue) -> WasmtimeVal {
     match value {
         CoreScalarValue::I32(value) => WasmtimeVal::I32(value),

@@ -43,6 +43,11 @@ impl WasmiCompletionRuntime {
     pub(crate) fn new_with_limits(limits: CoreRuntimeLimitProfile) -> Self {
         let mut config = Config::default();
         config.consume_fuel(limits.is_bounded());
+        if limits.observational_fuel() {
+            // Lazy translation consumes fuel and cannot resume on compilation
+            // exhaustion. Compile before execution so fuel measures guest work.
+            config.compilation_mode(wasmi::CompilationMode::Eager);
+        }
         Self {
             inner: Arc::new(RuntimeInner {
                 engine: Engine::new(&config),
@@ -58,7 +63,7 @@ impl WasmiCompletionRuntime {
     /// Imports are rejected before the module becomes executable. This v0 lane
     /// never invents or grants ambient Host authority.
     pub fn compile_wasm(&self, wasm: &[u8]) -> Result<WasmiCompletionModule, wasmi::Error> {
-        let module = Module::new(&self.inner.engine, wasm)?;
+        let module = crate::observed_module::ObservedModule::new(self, wasm)?;
         if let Some(import) = module.imports().next() {
             return Err(wasmi::Error::new(format!(
                 "wasmi completion profile rejects import {}.{}; use an explicit host runner",
@@ -95,7 +100,6 @@ impl WasmiCompletionRuntime {
         &self.inner.engine
     }
 
-    #[cfg(feature = "wasmtime-runtime")]
     pub(crate) fn record_compile(&self) {
         self.inner.compile_count.fetch_add(1, Ordering::Relaxed);
     }
@@ -114,7 +118,7 @@ impl Default for WasmiCompletionRuntime {
 /// One compiled, import-free module ready for fresh request instantiation.
 pub struct WasmiCompletionModule {
     runtime: WasmiCompletionRuntime,
-    module: Module,
+    module: crate::observed_module::ObservedModule,
     wasm_bytes: usize,
 }
 
@@ -128,7 +132,9 @@ impl WasmiCompletionModule {
     pub fn instantiate(&self) -> Result<WasmiCompletionInstance, wasmi::Error> {
         let mut store = new_store(&self.runtime)?;
         let linker = Linker::<WasmiStoreData>::new(&self.runtime.inner.engine);
-        let instance = linker.instantiate_and_start(&mut store, &self.module)?;
+        let instance = self
+            .module
+            .instantiate(&self.runtime, &linker, &mut store)?;
         Ok(WasmiCompletionInstance {
             store,
             instance,

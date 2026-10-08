@@ -3,11 +3,11 @@
     "default_view": "runtime",
     "delta": {
       "path": "references/agent-delta.json",
-      "sha256": "28c32befb238040286ad3c6c45f8a2b5b1c3f16d5cfe462b63ebc9fbd1ad4282"
+      "sha256": "9ca39da5baf68c93809bb05343bb6fe34f7a0822777fa8ff4696c3b762fa682f"
     },
     "skill": {
       "path": "SKILL.md",
-      "sha256": "4b931135a3403cb5cd060f95aaf7fc0d410de7cd5d090c904cc3b0cd727700d9"
+      "sha256": "d8b4e929ab7a245a16ecdf757fd5668e0eb85019a2950728347e6012bb708078"
     },
     "views": {
       "developer": {
@@ -22,38 +22,55 @@
     }
   },
   "artifact": {
-    "bytes": 98556,
+    "bytes": 63155,
     "format": "core-wasm",
     "path": "artifact.wasm",
-    "sha256": "c6ec76b1cd2e411aeb14b63f71061da75d5bb11510a8ec0486c934a1a15304e8"
+    "sha256": "90f64abae321f0699e5fbe7b9ff647a397cefa3c32e175dcc7793585505590ae"
   },
   "bindings": {
     "rust_component": {
-      "artifact_sha256": "c6ec76b1cd2e411aeb14b63f71061da75d5bb11510a8ec0486c934a1a15304e8",
+      "artifact_sha256": "90f64abae321f0699e5fbe7b9ff647a397cefa3c32e175dcc7793585505590ae",
       "cargo_toml": {
-        "path": "bindings/rust/Cargo.toml",
-        "sha256": "f4dd732e972cf74fc88f8f70d58fe70b019515348e4d11e9d01f173bccbfb978"
+        "path": "bindings/rust-component/Cargo.toml",
+        "sha256": "2639301482feb21a08967659b6065d5b6dc076f6e31f2eb61c9004e36f01eb27"
       },
-      "component_sha256": "0d5f773adddec4846038adfa9a136a3dbac8e7f6f80dc6698cb6159221710696",
+      "component_sha256": "678fe804f983d9bea7fbf4c36bb41c28606df1d16e292ff60b657a2c1fbf4ef3",
       "crate": "wasmc-json-component",
       "functions": 3,
-      "path": "bindings/rust",
+      "path": "bindings/rust-component",
       "runtime": "wasmtime-component",
       "schema": "wasmc.lib-rust-component-sdk/v0",
       "source": {
-        "path": "bindings/rust/src/lib.rs",
-        "sha256": "0435b73af1176b9d516f468e29eba5cf41d03ea70972c71fe93795b5dc268408"
+        "path": "bindings/rust-component/src/lib.rs",
+        "sha256": "c160998b65e86f436aa89ca02520a0e546e6dbbf795d42809b1f548ca4b7df19"
       },
       "wit_sha256": "45ab5f4ede015f76f9d152a9255414fbe15c71054b07a0302b7f0b76672c4221",
       "world": "json"
+    },
+    "rust_core": {
+      "artifact_sha256": "90f64abae321f0699e5fbe7b9ff647a397cefa3c32e175dcc7793585505590ae",
+      "cargo_toml": {
+        "path": "bindings/rust-core/Cargo.toml",
+        "sha256": "0f56746a7e12a436934c1096b28d50a1dd3e072e4a491c676ea303c659e8fb19"
+      },
+      "crate": "wasmc-json-core",
+      "functions": 3,
+      "import_module": "wasmc:lib/wasmc-json@0.0.1",
+      "path": "bindings/rust-core",
+      "schema": "wasmc.lib-rust-canonical-core-sdk/v1",
+      "source": {
+        "path": "bindings/rust-core/src/lib.rs",
+        "sha256": "c6683274159f682341773eeb4fc4f6ebc47ba5a6b46f0d35b706068a7c8c8023"
+      },
+      "wit_sha256": "45ab5f4ede015f76f9d152a9255414fbe15c71054b07a0302b7f0b76672c4221"
     }
   },
   "build": {
     "inputs": [
       {
         "kind": "cargo-lock",
-        "path": "wasmc-json/Cargo.lock",
-        "sha256": "1ee258dfd39015ee1afa883304a94b39fe1c36b34ef7e9678b30f1f79d9e9e11"
+        "path": "crates/wasmc-json/Cargo.lock",
+        "sha256": "e83312764e965beb0f76698a48033edf5435a2d1c9dd6106c7f5c10b2f606c00"
       }
     ],
     "language": "rust",
@@ -63,13 +80,36 @@
     "target": "wasm32-unknown-unknown",
     "toolchain": {
       "cargo": "cargo 1.96.0 (30a34c682 2026-05-25)",
-      "cargo_version_verbose_sha256": "7325fa79f79f89eaceae5ee57920caf61b813ade023b1e50457ee0902b2d7222",
+      "cargo_version_verbose_sha256": "8f3ec46e9cc84089e62b8ba780a669179c507d6749fff11f5040f19777040c0d",
       "encoded_rustflags": "-Cstrip=symbols",
-      "host": "aarch64-apple-darwin",
+      "host": "x86_64-unknown-linux-gnu",
       "rustc": "rustc 1.96.0 (ac68faa20 2026-05-25)",
-      "rustc_version_verbose_sha256": "c8884d5d5936b36facd062e0e669e6fefe9944611dfafa0f2b1ee56d96157cbe",
-      "schema": "wasmc.rust-toolchain-fingerprint/v1",
-      "sha256": "2e4e27cb0b3644dd0c90bb71f31de5b5c72cd47671373caab8b9146ac68bf8ca",
+      "rustc_version_verbose_sha256": "2cb7cb92f27a9203b9bc560f2f504da538cd61712a3b908b004d4087f090a3c5",
+      "schema": "wasmc.rust-toolchain-fingerprint/v2",
+      "sha256": "38aa3b61934cec00fd721d83b46edb1dff3d78be3cf92de49ecfa888809ffbb4",
+      "source_path_remapping": {
+        "mappings_in_order": [
+          {
+            "from": "selected-rustc-sysroot",
+            "to": "/wasmc/rust"
+          },
+          {
+            "from": "selected-cargo-home",
+            "to": "/wasmc/cargo"
+          },
+          {
+            "from": "workspace-root",
+            "to": "/wasmc/workspace"
+          },
+          {
+            "from": "relative-src",
+            "to": "/wasmc/source/src"
+          }
+        ],
+        "resolution": "canonical-workspace-shared-flags",
+        "schema": "wasmc.rust-source-path-remapping/v2",
+        "scope": "rustc-all-default"
+      },
       "target": "wasm32-unknown-unknown"
     }
   },
@@ -84,57 +124,65 @@
     "wasmc_min": "0.0.1"
   },
   "component": {
-    "bytes": 99910,
+    "bytes": 64509,
     "format": "component-wasm",
     "path": "component.wasm",
-    "sha256": "0d5f773adddec4846038adfa9a136a3dbac8e7f6f80dc6698cb6159221710696"
+    "sha256": "678fe804f983d9bea7fbf4c36bb41c28606df1d16e292ff60b657a2c1fbf4ef3"
   },
   "core_abi": {
     "bytes": 2252,
     "path": "core-abi.json",
     "schema": "wasmc.lib-core-abi/v0",
-    "sha256": "5548792200577fee741bc061eac6029768386df6905d2d27fbd425f76cfb3400"
+    "sha256": "373ccf4ffeb9943b0e0d29804cc6e335320cf283dfb530c61e959729d1abc92e"
   },
   "id": "wasmc-json",
   "schema": "wasmc.lib/v2",
-  "upstream": {
-    "adapter_revision": 1,
-    "archive": {
-      "sha256": "c841b55ecdae098c80dcae9cf767f6f8a0c2cdb3416bbef72181df4d0fe73f14",
-      "url": "https://static.crates.io/crates/serde_json/serde_json-1.0.151.crate"
-    },
-    "delta": [
-      "Bound input/output bytes, nesting depth, pointer count and pointer length.",
-      "Errors are bounded public enum cases.",
-      "JSON values stay adapter-private.",
-      "Pinned serde_json behavior is not canonical JSON."
-    ],
-    "ecosystem": "rust-crate",
-    "license": "MIT OR Apache-2.0",
-    "name": "serde_json",
-    "release": {
-      "commit": "de8500740cdcabffb9734f503e4889def823cf10",
-      "tag": "v1.0.151"
-    },
-    "repository": "https://github.com/serde-rs/json",
-    "schema": "wasmc.lib-upstream/v0",
-    "supported_subset": [
-      "serde_json::Value::pointer",
-      "serde_json::from_str::<Value>",
-      "serde_json::to_string"
-    ],
-    "unsupported": [
-      "JCS canonicalization",
-      "public dynamic DOM resources",
-      "unbounded streaming"
-    ],
-    "version": "1.0.151"
-  },
   "version": "0.0.1",
   "wit": {
     "package": "wasmc:json@0.0.1",
     "path": "lib.wit",
     "sha256": "45ab5f4ede015f76f9d152a9255414fbe15c71054b07a0302b7f0b76672c4221",
     "world": "json"
+  },
+  "license": {
+    "schema": "wasmc.lib-license/v1",
+    "identifier": "WAsmC Research-Only Non-Commercial License 1.0",
+    "files": [
+      {
+        "path": "LICENSE",
+        "bytes": 3823,
+        "sha256": "7bca2d5818178e0bc14546700d39bf113d15139b1c3b6d1e62f621d4a276d6e3"
+      },
+      {
+        "path": "licenses/DEPENDENCY-NOTICES-001.txt",
+        "bytes": 245760,
+        "sha256": "66302f6dd71da97391ab2270d29b10e67bdbac6d7eb782bed043c2ff596ec5cc"
+      },
+      {
+        "path": "licenses/DEPENDENCY-NOTICES-002.txt",
+        "bytes": 245760,
+        "sha256": "0065cf38006c9a66a6c3ee9cbaf8db10422b1e5301d3c1d5132b7855e71f18ea"
+      },
+      {
+        "path": "licenses/DEPENDENCY-NOTICES-003.txt",
+        "bytes": 245760,
+        "sha256": "201dbac93dff17177b6379ee630b9658b4cec9cb9d46ce3982b3da87c4b740c8"
+      },
+      {
+        "path": "licenses/DEPENDENCY-NOTICES-004.txt",
+        "bytes": 245760,
+        "sha256": "c439e1a409b6f23d5797cec339403a0ffce97e9fcf2ae91d6a923c36d619bb76"
+      },
+      {
+        "path": "licenses/DEPENDENCY-NOTICES-005.txt",
+        "bytes": 245760,
+        "sha256": "04118f32afc6b2ce0fbfd559c56a78614016ab00167be2425c8c778fc7b064fe"
+      },
+      {
+        "path": "licenses/DEPENDENCY-NOTICES-006.txt",
+        "bytes": 8357,
+        "sha256": "aa6000805f56d3c6009ffa09dbe224083cf2e63e2498e1939deefe6ca7c43d9a"
+      }
+    ]
   }
 }

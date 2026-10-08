@@ -80,3 +80,40 @@ export async function installLib({catalogBytes,catalogAuthority=catalogAuthoriti
     if(!published)await rm(stage,{recursive:true});
   }
 }
+
+export async function installCurrentLib({catalogBytes,catalogSha256,lockBytes,lockSha256,destination,mirror='github'},fetcher=globalThis.fetch) {
+  const {checkedCurrentCatalog,resolveCurrentPackage}=await import('./current-lib-release-v3.mjs');
+  if (!(lockBytes instanceof Uint8Array)||lockBytes.length>262144||!/^[a-f0-9]{64}$/.test(lockSha256??'')||sha256(lockBytes)!==lockSha256)fail('install.lock_identity_mismatch');
+  let lock;try{lock=JSON.parse(lockBytes);}catch{fail('install.lock_invalid');}
+  if(lock?.schema!=='wasmc.public-lib-lock/v2')fail('install.lock_invalid');
+  const catalog=checkedCurrentCatalog(catalogBytes,catalogSha256);
+  if(lock.catalog_sha256!==catalogSha256||lock.artifact_commit!==catalog.package_authority_commit)fail('install.catalog_identity_mismatch');
+  const row=catalog.packages.find(r=>r.id===lock.id&&r.version===lock.version);
+  if(!row||row.manifest_sha256!==lock.manifest_sha256||row.root_inventory_sha256!==lock.root_inventory_sha256)fail('install.package_identity_mismatch');
+  const files=row.files;
+  if(files.reduce((sum,f)=>sum+f.bytes,0)>134217728)fail('install.budget_exceeded');
+  if(typeof destination!=='string'||!destination)fail('install.destination_invalid');
+  const requested=resolve(destination),parent=await realpath(dirname(requested)),target=join(parent,basename(requested));
+  try{await lstat(target);fail('install.destination_exists');}catch(e){if(e.code!=='ENOENT')throw e;}
+  const stage=await mkdtemp(join(parent,'.'+basename(target)+'.wasmc-'));
+  const total=new AbortController(),timer=setTimeout(()=>total.abort(),120000);let published=false;
+  try{
+    const loaded=new Map();
+    for(const file of files){
+      const data=await download(artifactUrl(mirror,catalog.package_authority_commit,file.path),file,fetcher,total.signal);
+      loaded.set(file.path,data);const path=join(stage,file.path);await mkdir(dirname(path),{recursive:true});
+      const h=await open(path,'wx',0o644);try{await h.writeFile(data);await h.sync();}finally{await h.close();}
+    }
+    const verified=resolveCurrentPackage(catalogBytes,catalogSha256,lock,path=>loaded.get(path));
+    if(!isDeepStrictEqual(verified,lock))fail('install.lock_metadata_drift');
+    const receipt={schema:'wasmc.public-lib-install/v2',lock_sha256:lockSha256,catalog_sha256:catalogSha256,
+      artifact_commit:catalog.package_authority_commit,id:row.id,version:row.version,profile:row.profile,
+      delivery_kind:row.delivery.kind,files_verified:files.length,mirror,
+      publication:'exclusive-directory-symlink',authority_granted:false,device_qualified:false};
+    const h=await open(join(stage,'install-receipt.json'),'wx',0o644);
+    try{await h.writeFile(JSON.stringify(receipt,null,2)+'\n');await h.sync();}finally{await h.close();}
+    if(total.signal.aborted)fail('install.timeout');
+    try{await symlink(basename(stage),target,'dir');}catch(e){if(e.code==='EEXIST')fail('install.destination_exists');throw e;}
+    published=true;return receipt;
+  }finally{clearTimeout(timer);if(!published)await rm(stage,{recursive:true});}
+}

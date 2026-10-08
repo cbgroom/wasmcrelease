@@ -1,0 +1,46 @@
+package wasmc:lib-search@0.5.0;
+
+// Index contents are explicit data, never a frozen legacy catalog or ambient I/O.
+// Digest-bound discovery is not release admission, installation or Host authority.
+interface catalog {
+  enum search-error { invalid-index, index-too-large, invalid-query, invalid-limit }
+  record binding {
+    manifest-sha256: string,
+    receipt-sha256: string,
+    artifact-kind: string,
+    artifact-path: option<string>,
+    artifact-sha256: option<string>,
+    component-sha256: option<string>,
+  }
+  record hit {
+    identity: string,
+    package-id: string,
+    version: string,
+    profile: string,
+    target: string,
+    kind: string,
+    wit-route: string,
+    source-path: string,
+    wit-sha256: string,
+    description: string,
+    delivery: option<binding>,
+  }
+  record snapshot-info {
+    entry-count: u32,
+    package-count: u32,
+    api-count: u32,
+    bound-package-count: u32,
+    registry-sha256: string,
+    index-sha256: string,
+  }
+  record query {
+    text: string,
+    package-id: option<string>,
+    profile: option<string>,
+    bound-only: bool,
+  }
+  snapshot: func(index: string) -> result<snapshot-info, search-error>;
+  search: func(index: string, query: query, offset: u32, limit: u32) -> result<list<hit>, search-error>;
+  lookup: func(index: string, identity: string) -> result<option<hit>, search-error>;
+}
+world search-index { export catalog; }

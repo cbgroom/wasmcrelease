@@ -5,20 +5,24 @@ mod wasmi_runtime;
 #[cfg(feature = "wasmtime-runtime")]
 mod wasmtime_speed_runtime;
 
-#[cfg(all(feature = "wasmi-runtime", feature = "wasmtime-runtime"))]
+#[cfg(feature = "wasmi-runtime")]
 mod host_import;
-#[cfg(all(feature = "wasmi-runtime", feature = "wasmtime-runtime"))]
+#[cfg(feature = "wasmi-runtime")]
 mod host_lane;
 #[cfg(any(feature = "wasmi-runtime", feature = "wasmtime-runtime"))]
 mod limits;
 #[cfg(feature = "wasmi-runtime")]
 mod module_inspection;
+#[cfg(feature = "wasmi-runtime")]
+mod observed_module;
 #[cfg(all(feature = "wasmi-runtime", feature = "wasmtime-runtime"))]
 mod promotion;
-#[cfg(all(feature = "wasmi-runtime", feature = "wasmtime-runtime"))]
+#[cfg(feature = "wasmi-runtime")]
 mod scalar_host_lane;
 #[cfg(feature = "core-runtime-sdk")]
 mod sdk;
+#[cfg(feature = "wasmi-runtime")]
+mod wasmi_host_runtime;
 
 #[cfg(feature = "wasmi-runtime")]
 pub use wasmi_runtime::{WasmiCompletionInstance, WasmiCompletionModule, WasmiCompletionRuntime};
@@ -27,13 +31,15 @@ pub use wasmtime_speed_runtime::{
     WasmtimeSpeedInstance, WasmtimeSpeedModule, WasmtimeSpeedRuntime,
 };
 
-#[cfg(all(feature = "wasmi-runtime", feature = "wasmtime-runtime"))]
+#[cfg(feature = "wasmi-runtime")]
 pub use host_import::{I32HostBinding, I32HostImport, I32HostImportError, I32HostImportErrorCode};
-#[cfg(all(feature = "wasmi-runtime", feature = "wasmtime-runtime"))]
+#[cfg(feature = "wasmi-runtime")]
 pub use host_lane::{
     I32LaneHostBinding, I32LaneHostError, I32LaneHostErrorCode, I32LaneHostImport,
     I32LaneHostSession, I32LaneMemory,
 };
+#[cfg(feature = "wasmi-runtime")]
+pub use limits::measure_wasmi_fuel;
 #[cfg(any(feature = "wasmi-runtime", feature = "wasmtime-runtime"))]
 pub use limits::{CoreRuntimeCancellation, CoreRuntimeLimitProfile};
 #[cfg(feature = "wasmi-runtime")]
@@ -49,7 +55,7 @@ pub use promotion::{
     PromotionRuntime, PromotionRuntimeStatus, PromotionScalarInvocation, PromotionScalarOutcome,
     PromotionState, PromotionStatus,
 };
-#[cfg(all(feature = "wasmi-runtime", feature = "wasmtime-runtime"))]
+#[cfg(feature = "wasmi-runtime")]
 pub use scalar_host_lane::{
     CoreScalarHostError, CoreScalarHostErrorCode, CoreScalarHostImport, CoreScalarHostSession,
     CoreScalarMemory, CoreScalarType, CoreScalarValue,
@@ -61,6 +67,11 @@ pub use sdk::{
     CoreRuntimeInvocationError, CoreRuntimeInvocationErrorCode, CoreRuntimeOptimizationDecision,
     CoreRuntimePolicyFingerprint, CoreRuntimeScalarInvocation, CoreRuntimeScalarOutcome,
     CoreRuntimeSdk, CoreRuntimeSdkConfig, CoreRuntimeSdkStatus,
+};
+#[cfg(feature = "wasmi-runtime")]
+pub use wasmi_host_runtime::{
+    WasmiHostArtifact, WasmiHostRuntime, WasmiLaneHostArtifact, WasmiLaneHostOutcome,
+    WasmiScalarLibArtifact,
 };
 
 #[cfg(all(feature = "wasmi-runtime", feature = "wasmtime-runtime"))]

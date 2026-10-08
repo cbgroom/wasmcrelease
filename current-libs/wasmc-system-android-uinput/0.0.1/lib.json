@@ -1,0 +1,101 @@
+{
+  "schema": "wasmc.lib-native/v2",
+  "id": "wasmc-system-android-uinput",
+  "version": "0.0.1",
+  "profile": "native",
+  "wit": {
+    "path": "lib.wit",
+    "bytes": 597,
+    "sha256": "d788ed7da5625031c0505d6a71f594b79cda99c3ff3c5d34e8c0cbba710e0a2f"
+  },
+  "implementation": [
+    {
+      "path": "platform/native-adapter.c",
+      "bytes": 15846,
+      "sha256": "0205e7105969a6fd8ef51d10996f09fb870e641bd9a6cedc9bb22cff35f0b874"
+    },
+    {
+      "path": "platform/native-boundary.template.json",
+      "bytes": 397,
+      "sha256": "2f655deb19aaf01d4bb3a31d96ad4d15c75c3a4e68c6e927b6beeeb7b8003606"
+    }
+  ],
+  "artifact": null,
+  "native_boundary": null,
+  "native": {
+    "kind": "c-boundary",
+    "target": "android",
+    "status": "embedded_source_packaged",
+    "build_host": "linux",
+    "build_arch": "x64",
+    "device_qualified": false,
+    "wasm_lowered": false,
+    "component_sdk": false
+  },
+  "build": {
+    "input_authority": "libspec",
+    "producer_sha256": "439d5ac8b72a9e3fadb2d313e460acc63f1f5facec5932ce727b50cdc99ebc6a",
+    "native_toolchain": {
+      "platform": "linux",
+      "arch": "x64",
+      "node": "v24.19.0",
+      "cc": "cc (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0\nCopyright (C) 2021 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
+    }
+  },
+  "bindings": {
+    "native": {
+      "schema": "wasmc.lib-native-binding/v2",
+      "kind": "c-boundary",
+      "entry": "platform/native-adapter.c",
+      "target": "android"
+    }
+  },
+  "lifecycle": {
+    "source_packaged": true,
+    "runtime_qualified": false,
+    "admitted": false,
+    "released": false,
+    "installable": false
+  },
+  "license": {
+    "schema": "wasmc.lib-license/v1",
+    "identifier": "WAsmC Research-Only Non-Commercial License 1.0",
+    "files": [
+      {
+        "path": "LICENSE",
+        "bytes": 3823,
+        "sha256": "7bca2d5818178e0bc14546700d39bf113d15139b1c3b6d1e62f621d4a276d6e3"
+      },
+      {
+        "path": "licenses/DEPENDENCY-NOTICES-001.txt",
+        "bytes": 245760,
+        "sha256": "66302f6dd71da97391ab2270d29b10e67bdbac6d7eb782bed043c2ff596ec5cc"
+      },
+      {
+        "path": "licenses/DEPENDENCY-NOTICES-002.txt",
+        "bytes": 245760,
+        "sha256": "0065cf38006c9a66a6c3ee9cbaf8db10422b1e5301d3c1d5132b7855e71f18ea"
+      },
+      {
+        "path": "licenses/DEPENDENCY-NOTICES-003.txt",
+        "bytes": 245760,
+        "sha256": "201dbac93dff17177b6379ee630b9658b4cec9cb9d46ce3982b3da87c4b740c8"
+      },
+      {
+        "path": "licenses/DEPENDENCY-NOTICES-004.txt",
+        "bytes": 245760,
+        "sha256": "c439e1a409b6f23d5797cec339403a0ffce97e9fcf2ae91d6a923c36d619bb76"
+      },
+      {
+        "path": "licenses/DEPENDENCY-NOTICES-005.txt",
+        "bytes": 245760,
+        "sha256": "04118f32afc6b2ce0fbfd559c56a78614016ab00167be2425c8c778fc7b064fe"
+      },
+      {
+        "path": "licenses/DEPENDENCY-NOTICES-006.txt",
+        "bytes": 8357,
+        "sha256": "aa6000805f56d3c6009ffa09dbe224083cf2e63e2498e1939deefe6ca7c43d9a"
+      }
+    ]
+  }
+}

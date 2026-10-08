@@ -1,3 +1,5 @@
+#![cfg(feature = "core-runtime-sdk")]
+
 use std::{
     sync::{
         atomic::{AtomicUsize, Ordering},

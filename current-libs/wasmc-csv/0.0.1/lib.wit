@@ -1,0 +1,81 @@
+package wasmc:csv@0.0.1;
+
+interface parser {
+  use wasmc:data-core/types@0.0.1.{field, batch-snapshot};
+
+  record csv-options {
+    has-header: bool,
+    validate-header: bool,
+    delimiter: u8,
+    batch-rows: u32,
+  }
+
+  enum csv-error {
+    invalid-options,
+    invalid-data,
+    unsupported-type,
+  }
+
+  parse: func(input: list<u8>, fields: list<field>, options: csv-options) -> result<list<batch-snapshot>, csv-error>;
+}
+
+world csv {
+  import wasmc:data-core/types@0.0.1;
+
+  export parser;
+}
+package wasmc:data-core@0.0.1 {
+  interface types {
+    enum data-type {
+      boolean,
+      int64,
+      uint64,
+      %float64,
+      utf8,
+      binary,
+    }
+
+    record field {
+      name: string,
+      data-type: data-type,
+      nullable: bool,
+    }
+
+    variant column {
+      boolean-column(list<option<bool>>),
+      int64-column(list<option<s64>>),
+      uint64-column(list<option<u64>>),
+      float64-column(list<option<f64>>),
+      utf8-column(list<option<string>>),
+      binary-column(list<option<list<u8>>>),
+    }
+
+    record batch-snapshot {
+      rows: u32,
+      fields: list<field>,
+      columns: list<column>,
+    }
+
+    enum data-error {
+      column-count-mismatch,
+      row-count-mismatch,
+      type-mismatch,
+      nullability-violation,
+      empty-field-name,
+      duplicate-field-name,
+      index-out-of-bounds,
+      invalid-layout,
+    }
+  }
+  interface model {
+    use types.{batch-snapshot, data-error};
+
+    validate: func(value: batch-snapshot) -> result<u32, data-error>;
+
+    take: func(value: batch-snapshot, indices: list<u32>) -> result<batch-snapshot, data-error>;
+  }
+  world data-core {
+    export types;
+    export model;
+  }
+}

@@ -1,6 +1,6 @@
 ---
 name: wasmc-json
-description: "Bounded JSON compact, validation and parse-once pointer selection backed by pinned serde_json without external authority."
+description: "Bounded JSON compact, validation and pointer selection backed by serde_json."
 metadata:
   wasmc:
     version: "0.0.1"

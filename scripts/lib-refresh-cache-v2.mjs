@@ -55,7 +55,17 @@ export async function inventory(root, prefix = '') {
 
 // Packaging metadata only: executable artifacts and generated SDK source stay exact.
 // Explicit caller input enters the refresh key; it is never inferred from a cache.
-export async function attachReleaseLicense(root, bytes, expectedSha256) {
+export async function attachReleaseLicense(root, bytes, expectedSha256, notices = []) {
+  assert.ok(Array.isArray(notices) && notices.length <= 31, 'notice file budget');
+  let noticeTotal = 0, previousNotice = '';
+  for (const row of notices) {
+    assert.match(row.path, /^licenses\/[A-Za-z0-9_.-]{1,128}$/);
+    assert.ok(row.path > previousNotice && !['licenses/.','licenses/..'].includes(row.path)); previousNotice=row.path;
+    assert.ok(Buffer.isBuffer(row.content) && row.content.length > 0 && row.content.length <= 262144);
+    assert.equal(sha(row.content),row.sha256,'notice input digest');
+    new TextDecoder('utf-8',{fatal:true}).decode(row.content); noticeTotal+=row.content.length;
+  }
+  assert.ok(noticeTotal + bytes.length <= 2097152, 'total license snapshot budget');
   assert.ok(Buffer.isBuffer(bytes) && bytes.length > 0 && bytes.length <= 262144);
   assert.equal(sha(bytes), expectedSha256, 'release license pin mismatch');
   const identifier = bytes.toString('utf8').split('\n')[0].trim();
@@ -81,7 +91,9 @@ export async function attachReleaseLicense(root, bytes, expectedSha256) {
     const existing = section.filter(line => /^license(?:-file)?\s*=/.test(line));
     assert.ok(existing.length === 0 || (existing.length === 1 && existing[0] === 'license-file = "../../LICENSE"'),
       'SDK existing license authority differs');
-    if (!existing.length) lines.splice(1, 0, 'license-file = "../../LICENSE"');
+    for(let i=lines.length-1;i>=0;i--)if(/^license-file\s*=/.test(lines[i]))lines.splice(i,1);
+    const publish=lines.indexOf('publish = false');assert.ok(publish>0&&publish<end,'canonical generated SDK publish marker');
+    lines.splice(publish+1,0,'license-file = "../../LICENSE"');
     const result = Buffer.from(lines.join('\n'));
     await writeChanged(inside(root, path), result);
     changed.set(path, {bytes:result.length,sha256:sha(result)});
@@ -95,8 +107,10 @@ export async function attachReleaseLicense(root, bytes, expectedSha256) {
     for (const child of Object.values(value)) update(child);
   };
   update(manifest);
+  for(const row of notices) await writeChanged(inside(root,row.path),row.content);
   manifest.license = {schema:'wasmc.lib-license/v1',identifier,
-    files:[{path:'LICENSE',bytes:bytes.length,sha256:expectedSha256}]};
+    files:[{path:'LICENSE',bytes:bytes.length,sha256:expectedSha256},
+      ...notices.map(row=>({path:row.path,bytes:row.content.length,sha256:row.sha256}))]};
   await atomicJson(join(root, 'lib.json'), manifest);
 }
 
@@ -105,10 +119,18 @@ export function verifyReleaseLicense(manifest, files) {
   const license = manifest.license;
   assert.equal(license.schema, 'wasmc.lib-license/v1');
   assert.equal(license.identifier, 'WAsmC Research-Only Non-Commercial License 1.0');
-  assert.deepEqual(license.files?.map(f => f.path), ['LICENSE']);
-  const pin = license.files[0];
-  assert.ok(pin.bytes > 0 && pin.bytes <= 262144);
-  assert.deepEqual(files.LICENSE, {bytes:pin.bytes,sha256:pin.sha256}, 'license snapshot drift');
+  assert.ok(Array.isArray(license.files) && license.files.length > 0 && license.files.length <= 32);
+  assert.equal(license.files[0].path,'LICENSE');
+  let previous='',total=0;
+  for(const pin of license.files) {
+    assert.deepEqual(Object.keys(pin).sort(),['bytes','path','sha256']);
+    assert.ok(pin.path==='LICENSE'||/^licenses\/[A-Za-z0-9_.-]{1,128}$/.test(pin.path));
+    assert.ok(pin.path>previous&&!['licenses/.','licenses/..'].includes(pin.path));previous=pin.path;
+    assert.ok(Number.isSafeInteger(pin.bytes)&&pin.bytes>0&&pin.bytes<=262144);total+=pin.bytes;
+    assert.match(pin.sha256,/^[0-9a-f]{64}$/);
+    assert.deepEqual(files[pin.path],{bytes:pin.bytes,sha256:pin.sha256},'license snapshot drift');
+  }
+  assert.ok(total<=2097152,'total license snapshot budget');
 }
 
 export async function verifyRoot(root, id, version, profile = 'value', resourceCore = false) {

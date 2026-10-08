@@ -3,8 +3,9 @@ import assert from 'node:assert/strict';
 import {readFileSync,writeFileSync,readdirSync,lstatSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
-import {resolve,relative} from 'node:path';
+import {resolve,relative,dirname} from 'node:path';
 import {spawnSync} from 'node:child_process';
+import {checkedCurrentCatalog,verifyCurrentRelease,currentProductReader,currentProductPaths} from './current-lib-release-v3.mjs';
 import {buildClosure} from './lib-route-closure.mjs';
 import {parseCatalog,resolveCatalog} from './lib-catalog.mjs';
 import {instantiateLibSearch} from '../examples/lib-search/client.mjs';
@@ -244,7 +245,7 @@ export function buildFutureCurrentClosure(candidate,read){
   return {schema:'wasmc.release-candidate-lib-route-closure/v1',authority_receipt:{path:pin.path,sha256:pin.sha256},catalog:{path:receipt.catalog.path,sha256:receipt.catalog.sha256},search_index:{path:receipt.index.path,sha256:receipt.index.sha256,active_identity:selected.manifest.wit.package},release_packages:18,package_routes:packages,api_routes:entries.length-packages,candidate_extras:0,exact:true,candidate_extra_grants_release:false};
 }
 export function validateCandidate(candidate,read) {
-  if(!['wasmc.release-product-candidate/v1','wasmc.release-product-candidate/v2'].includes(candidate.schema)||!/^\d+\.\d+\.\d+$/.test(candidate.version))throw Error('candidate schema/version rejected');
+  if(!['wasmc.release-product-candidate/v1','wasmc.release-product-candidate/v2','wasmc.release-product-candidate/v3'].includes(candidate.schema)||!/^\d+\.\d+\.\d+$/.test(candidate.version))throw Error('candidate schema/version rejected');
   if(candidate.schema==='wasmc.release-product-candidate/v1'&&legacyV1ProductSets[candidate.version]!==candidate.product_set_sha256)throw Error('legacy v1 candidate identity rejected; new candidates require v2 Lib route closure');
   for(const key of ['compiler_source_authority','lib_source_authority'])if(!/^[0-9a-f]{40}$/.test(candidate[key]))throw Error('exact private source authority required');
   const rows=candidate.product_files;
@@ -259,7 +260,9 @@ export function validateCandidate(candidate,read) {
     const closure=candidate.lib_route_closure;
     if(closure?.schema!=='wasmc.release-candidate-lib-route-closure/v1'||!safe(closure.authority_receipt?.path)||!/^[0-9a-f]{64}$/.test(closure.authority_receipt?.sha256??'')||!safe(closure.catalog?.path)||!/^[0-9a-f]{64}$/.test(closure.catalog?.sha256??'')||!safe(closure.search_index?.path)||!/^[0-9a-f]{64}$/.test(closure.search_index?.sha256??'')||!Number.isSafeInteger(closure.release_packages)||closure.release_packages<1||!Number.isSafeInteger(closure.package_routes)||closure.package_routes!==closure.release_packages||!Number.isSafeInteger(closure.api_routes)||closure.api_routes<1||closure.candidate_extras!==0||closure.exact!==true||closure.candidate_extra_grants_release!==false)throw Error('candidate Lib route closure rejected');
   }
-  if(needsFutureLibLicenseGate(candidate.version)){
+  if(candidate.schema==='wasmc.release-product-candidate/v3'){
+    assert.deepEqual(candidate.current_release_closure,currentCandidateClosure(candidate,read),'current42 candidate closure drift');
+  }else if(needsFutureLibLicenseGate(candidate.version)){
     validateFutureLibProductInputs(candidate,read);
     const checked=validateFutureLibLicenses(candidate,read);
     if(JSON.stringify(candidate.lib_license_admission)!==JSON.stringify(checked))throw Error('future candidate license receipt rejected');
@@ -284,6 +287,7 @@ function closureSummary(model){
 }
 
 function candidateClosure(candidate,read){
+  if(candidate.schema==='wasmc.release-product-candidate/v3')return currentCandidateClosure(candidate,read);
   if(needsFutureLibLicenseGate(candidate.version))return buildFutureCurrentClosure(candidate,read);
   return closureSummary(buildClosure(undefined,{
     release:{version:candidate.version,tag:`v${candidate.version}`,staged_product_manifest:null},
@@ -307,10 +311,75 @@ function walk(directory) {
     return s.isDirectory()?walk(path):[path];
   });
 }
+
+export const currentV3ProductInputs=Object.freeze([
+  'LICENSE','catalog/libs-current-v2.json','catalog/current-index-v2.json','libspec/registry.json',
+  'admission/current-refresh-cohort-v2.json','admission/current-product-v3.json',
+  'scripts/current-lib-release-v3.mjs','scripts/current-lib-search-v3.mjs',
+  'scripts/current-core-value-codec-v3.mjs','scripts/current-wit-routes-v3.mjs',
+  'scripts/lib-install.mjs','scripts/wasmc-lib.mjs'
+]);
+export function currentCandidateClosure(candidate,read){
+  const rows=new Map(candidate.product_files.map(r=>[r.path,r]));
+  const exact=path=>{
+    const row=rows.get(path);if(!row)throw Error('current product input missing: '+path);
+    const bytes=read(path);if(bytes.length!==row.bytes||hash(bytes)!==row.sha256)throw Error('current product input drift: '+path);
+    return bytes;
+  };
+  for(const path of currentV3ProductInputs)exact(path);
+  const catalogBytes=exact('catalog/libs-current-v2.json');
+  if(candidate.current_catalog?.path!=='catalog/libs-current-v2.json'||hash(catalogBytes)!==candidate.current_catalog.sha256)throw Error('current catalog independent candidate pin');
+  const catalog=checkedCurrentCatalog(catalogBytes,candidate.current_catalog.sha256);
+  if(catalog.version!==candidate.version)throw Error('current catalog release version drift');
+  return verifyCurrentRelease(catalogBytes,candidate.current_catalog.sha256,exact,[...rows.keys()]);
+}
+export async function createCurrentCandidate(repo,{compilerSource,libSource,version,currentOptions}){
+  const {requireCurrentReleaseCohort}=await import('./lib-current-release-preflight.mjs');
+  const preflight=await requireCurrentReleaseCohort(repo,currentOptions);
+  const read=path=>readFileSync(resolve(repo,path));
+  const walk=p=>readdirSync(resolve(repo,p)).sort().flatMap(n=>{
+    if(['target','.DS_Store'].includes(n))return [];
+    const path=p+'/'+n,s=lstatSync(resolve(repo,path));
+    if(s.isSymbolicLink()||!s.isFile()&&!s.isDirectory())throw Error('linked/nonregular product input');
+    return s.isDirectory()?walk(path):[path];
+  });
+  const catalogBytes=read('catalog/libs-current-v2.json'),catalog=checkedCurrentCatalog(catalogBytes,hash(catalogBytes));
+  const directories=['current','standard','sdk','runtime','current-libs',
+    'skills/wasmc-developer','skills/wasmc-lib-discovery','skills/wasmc-sdk-discovery',
+    'host/contract','host/sdk','host/drivers/file/rust','host/drivers/memory/rust'];
+  const paths=new Set([...currentV3ProductInputs,...directories.flatMap(walk),
+    'AGENTS.md','README.md','HOSTING.md','LANGUAGE.md','LIB.md','license-policy.json',
+    'agent-quickstart.json','docs/RELEASE_V021.md','scripts/release-candidate.mjs']);
+  for(const row of catalog.packages)for(const pin of Object.values(row.source))paths.add(pin.path);
+  const addImports=path=>{
+    const source=read(path).toString('utf8');
+    for(const match of source.matchAll(/(?:from\s*|import\s*\(\s*|import\s*)['"](\.[^'"]+)['"]/g)){
+      const target=relative(repo,resolve(repo,dirname(path),match[1])).split('\\').join('/');
+      if(!safe(target))throw Error('module import path outside product');
+      if(paths.has(target))continue;paths.add(target);if(target.endsWith('.mjs')||target.endsWith('.js'))addImports(target);
+    }
+  };
+  for(const path of [...paths])if(path.endsWith('.mjs')||path.endsWith('.js'))addImports(path);
+  const product_files=[...paths].sort().map(path=>{const b=read(path);return{path,bytes:b.length,sha256:hash(b)};});
+  const candidate={schema:'wasmc.release-product-candidate/v3',version,
+    compiler_source_authority:compilerSource,lib_source_authority:libSource,
+    current_catalog:{path:'catalog/libs-current-v2.json',sha256:hash(catalogBytes)},
+    product_files,product_set_sha256:hash(JSON.stringify(product_files))};
+  candidate.current_release_closure=currentCandidateClosure(candidate,read);
+  if(candidate.current_release_closure.refresh_receipt_sha256!==currentOptions.receipt_sha256||
+     candidate.current_release_closure.producer_sha256!==currentOptions.producer_sha256)throw Error('independent creation cohort identity drift');
+  validateCandidate(candidate,read);return candidate;
+}
+
 if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)) {
   const [command,path,source,libSourceOrVersion,explicitVersion,...currentArgs]=process.argv.slice(2);
   const read=p=>readFileSync(resolve(root,p));
-  if(command==='create') {
+  if(command==='create-current'){
+    const {currentReleaseArguments}=await import('./lib-current-release-preflight.mjs');
+    const candidate=await createCurrentCandidate(root,{compilerSource:source,libSource:libSourceOrVersion,version:explicitVersion,currentOptions:currentReleaseArguments(currentArgs)});
+    writeFileSync(path,JSON.stringify(candidate,null,2)+'\n',{flag:'wx'});
+    console.log(JSON.stringify({accepted:true,schema:candidate.schema,product_set_sha256:candidate.product_set_sha256}));
+  }else if(command==='create') {
     const compilerSource=explicitVersion===undefined?'e69abb73f667f3810b0c40937fd1a1e2d04d4255':source;
     const libSource=explicitVersion===undefined?source:libSourceOrVersion;
     const version=explicitVersion===undefined?libSourceOrVersion:explicitVersion;
@@ -364,9 +433,21 @@ if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)) {
     if(needsFutureLibLicenseGate(version))candidate.lib_license_admission=validateFutureLibLicenses(candidate,read);
     candidate.lib_route_closure=candidateClosure(candidate,read);
     if(candidate.lib_route_closure.candidate_extras!==0)throw Error('release candidate blocked: active LibSearch must be inside the product, catalog and exact route set');
-    validateCandidate(candidate,read);writeFileSync(path,JSON.stringify(candidate,null,2)+'\n',{flag:'wx'});
+    if(candidate.schema==='wasmc.release-product-candidate/v3'){
+      const exactRead=currentProductReader(root);
+      assert.deepEqual(currentProductPaths(root),candidate.product_files.map(r=>r.path).filter(p=>p.startsWith('current-libs/')),'v3 actual current package inventory drift');
+      validateCandidate(candidate,exactRead);
+    }else validateCandidate(candidate,read);writeFileSync(path,JSON.stringify(candidate,null,2)+'\n',{flag:'wx'});
   } else if(command==='verify') {
-    const candidate=JSON.parse(readFileSync(path));validateCandidate(candidate,read);
+    const candidateBytes=readFileSync(path),candidate=JSON.parse(candidateBytes);
+    if(candidate.schema==='wasmc.release-product-candidate/v3'){
+      if(source!=='--candidate-sha256'||!digest(libSourceOrVersion)||explicitVersion!==undefined||hash(candidateBytes)!==libSourceOrVersion)throw Error('v3 reopen requires independent expected candidate SHA256');
+    }
+    if(candidate.schema==='wasmc.release-product-candidate/v3'){
+      const exactRead=currentProductReader(root);
+      assert.deepEqual(currentProductPaths(root),candidate.product_files.map(r=>r.path).filter(p=>p.startsWith('current-libs/')),'v3 actual current package inventory drift');
+      validateCandidate(candidate,exactRead);
+    }else validateCandidate(candidate,read);
     if(candidate.schema==='wasmc.release-product-candidate/v2')assert.deepEqual(candidate.lib_route_closure,candidateClosure(candidate,read),'candidate Lib route closure drift');
     console.log(JSON.stringify({accepted:true,products:candidate.product_files.length,product_set_sha256:candidate.product_set_sha256}));
   } else throw Error('usage: release-candidate.mjs create FILE COMPILER_SOURCE LIB_SOURCE VERSION --current-run ABSOLUTE_RUN --current-receipt-sha256 SHA256 --current-producer-sha256 SHA256 | verify FILE');
