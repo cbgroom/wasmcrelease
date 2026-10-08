@@ -20,14 +20,16 @@ try {
  assert.ok(!negative.stdout.includes(value));assert.ok(!negative.stderr.includes(value));
  const report=JSON.parse(negative.stdout);assert.equal(report.findings.length,1);assert.equal(report.skipped_blobs,0);
  const original=scan(root,true);assert.equal(original.status,1);
- const raw=JSON.parse(original.stdout);assert.equal(raw.raw_findings.length,9);assert.equal(raw.classified_false_positives.length,0);
+ const raw=JSON.parse(original.stdout);assert.equal(raw.raw_findings.length,11);assert.equal(raw.classified_false_positives.length,0);
  const approved=scan(root);assert.equal(approved.status,0);
- const admitted=JSON.parse(approved.stdout);assert.equal(admitted.raw_findings.length,9);assert.equal(admitted.classified_false_positives.length,9);assert.equal(admitted.findings.length,0);
+ const admitted=JSON.parse(approved.stdout);assert.equal(admitted.raw_findings.length,11);assert.equal(admitted.classified_false_positives.length,11);assert.equal(admitted.findings.length,0);
  for(const [object,decoded] of [
   ['3e17b25116f868ab49b17f90021bbe7c061217ac','032a408b7435333f65f3bc80ef2f5646edf829698bc384a276076bff8d64666a'],
   ['b1a46490f52a5f41b4187a72cd283666cc82f565','032a408b7435333f65f3bc80ef2f5646edf829698bc384a276076bff8d64666a'],
   ['1a81fa534ac8a7b52d8c1e638a63189df3ba84b5','d2efa131dc65bbcd797512cf9628e329c137283b9817976d93dbc782d4b64661'],
-  ['cda8dd86abcd343292ca4055befc8c16121dd8a4','d2efa131dc65bbcd797512cf9628e329c137283b9817976d93dbc782d4b64661']
+  ['cda8dd86abcd343292ca4055befc8c16121dd8a4','d2efa131dc65bbcd797512cf9628e329c137283b9817976d93dbc782d4b64661'],
+  ['0e8b0c19bf13b15d0e1242272b83b5adf9583be7','42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c'],
+  ['ccb6f7b862db4b061feca6f48624ef2c1c446f03','42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c']
  ]) {
   const row=admitted.classified_false_positives.find(x=>x.object===object);
   assert.equal(row.raw_match_count,1);assert.equal(row.decoded_all_detectors_clear,true);

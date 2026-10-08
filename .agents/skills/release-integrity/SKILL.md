@@ -176,3 +176,16 @@ Legacy omission grants no exemption. Guard with test-declared-thirdparty-notices
 Future candidate inventory must also bind the selected policy, catalog and
 checker dependencies. This is an identity/data classification gate, not proof of
 actual linked dependency completeness, legal compatibility or runtime/release.
+
+### Canonical0.0.21 compiler carrier identity
+The canonical0.0.21 compiler rebuild additionally binds exact carriers
+0e8b0c19bf13b15d0e1242272b83b5adf9583be7 and
+ccb6f7b862db4b061feca6f48624ef2c1c446f03 to decoded SHA256
+42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c.
+Classification follows independent current transport literal/roundtrip,
+validator/import0 and all-nine decoded detector proof, after the clean qualified
+canonical private rebuild. It is reviewed mechanical transport identity under
+the user's authorized release maintenance; do not invent a new human exact-hash
+approval. Preserve all11 raw finding objects and require zero unresolved/skipped
+or scan errors. Changed tuples and outside/decoded findings still reject.
+This does not complete whole42/Native/Pi/candidate/channel admission.

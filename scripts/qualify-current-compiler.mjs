@@ -1,4 +1,5 @@
 import { spawnSync } from 'node:child_process';
+import assert from 'node:assert/strict';
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { platform, arch } from 'node:os';
@@ -24,14 +25,20 @@ for(const engine of ['node','bun','deno']) {
     runs.push({engine,version:version.stdout.trim(),args,exit_code:r.status,result});
   }
 }
-const control=spawnSync(process.execPath,['scripts/test-current-compiler-integrity.mjs'],{cwd:root,encoding:'utf8',timeout:60000});
-if(control.status!==0)throw Error(control.stderr);
+const booleanRuns=runs.filter(r=>r.args.at(-1)==='scripts/test-current-lib-api-v021.mjs');
+assert.equal(booleanRuns.length,3);
+for(const r of booleanRuns){assert.equal(r.result.calls,768);assert.equal(r.result.boolean_conditional_calls,1536);assert.equal(r.result.boolean_numeric_rejections,6);}
+const booleanConditionalCalls=booleanRuns.reduce((n,r)=>n+r.result.boolean_conditional_calls,0);
+const booleanNumericRejections=booleanRuns.reduce((n,r)=>n+r.result.boolean_numeric_rejections,0);
+const control=spawnSync(process.execPath,['scripts/test-current-compiler-integrity.mjs'],{cwd:root,encoding:'utf8',timeout:420000});
+if(control.status!==0)throw Error('current compiler integrity controls failed: '+String(control.error ?? control.signal ?? control.stderr));
 const receipt={schema:'wasmc.current-compiler-qualification/v1',accepted:true,
   version:product.version,compiler_sha256:product.compiler.sha256,
   product_manifest_sha256:createHash('sha256').update(manifest).digest('hex'),
   source_free:true,compiler_private_source_present:false,
   platform:platform(),arch:arch(),runs,
+  boolean_conditional_calls:booleanConditionalCalls,boolean_numeric_rejections:booleanNumericRejections,
   rejection_controls:{exit_code:control.status,result:JSON.parse(control.stdout)},
   nonclaims:['whole-product release','whole42 Lib runtime qualification','Pi model-pair qualification','native SDK requalification','real browser qualification']};
 writeFileSync(root+'current/qualification.json',JSON.stringify(receipt,null,2)+'\n');
-console.log(JSON.stringify({accepted:true,engines:3,api_cli_outputs:180,execution_oracles:21,standard_consumer_calls:23040,actual_rejections:6,compileLib_oracles:9,instantiateLib_oracles:9,managed_Lib_calls:2304,product_manifest_sha256:receipt.product_manifest_sha256}));
+console.log(JSON.stringify({accepted:true,engines:3,api_cli_outputs:180,execution_oracles:21,standard_consumer_calls:23040,actual_rejections:6,compileLib_oracles:9,instantiateLib_oracles:9,managed_Lib_calls:2304,boolean_conditional_calls:booleanConditionalCalls,boolean_numeric_rejections:booleanNumericRejections,product_manifest_sha256:receipt.product_manifest_sha256}));
