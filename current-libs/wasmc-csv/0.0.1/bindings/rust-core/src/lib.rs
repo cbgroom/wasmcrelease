@@ -2,7 +2,7 @@
 pub const LIB_PACKAGE: &str = "wasmc-csv";
 pub const LIB_VERSION: &str = "0.0.1";
 pub const LIB_WIT_SHA256: &str = "b3ca61e24fd9663c0e386256f144c0b1f479bb89c057a61b01f230d29ba3f8e5";
-pub const LIB_ARTIFACT_SHA256: &str = "d5260b8960b3b24930c7927b345ba8057eddaa512864e188e61aa457521ee8f0";
+pub const LIB_ARTIFACT_SHA256: &str = "a62c051389deb0ac6ad51915c807c214f99702f25db27dae0866efd305cb290b";
 pub const LIB_IMPORT_MODULE: &str = "wasmc:lib/wasmc-csv@0.0.1";
 /* Upstream wit-bindgen runtime LICENSE-MIT
 Permission is hereby granted, free of charge, to any

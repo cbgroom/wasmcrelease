@@ -50,3 +50,5 @@ Compiler/provider source, implementation archives and private kernel stay privat
 Original failures, old grants and immutable tags remain preserved.
 
 Exact compiler byte projections1510219, facadece6ec5 and source938 are now coherent in all live entrypoints. Matching79 model/source-free qualification and full current maintainer successor pass; original stale-size/facade/model failures retained. New Native six-target workflow37835492547 is active at public6c858 and exactcompiler42c. Canonical Native78ae whole42 initially verified18 then lacked wasm-merge PATH; exact Binaryen126 environment successor0940 active. No approval rejection or whole-release completion is claimed.
+
+Canonical938/Native78ae fresh whole42 Q0 and complete current preflight/Q1 pass. Exact current Roots/index/cohort are staged as one ordinary artifact checkpoint. Matching catalog must next bind the actual pushed artifact commit; provisional artifact descriptors are retained only in evidence. CSV and Interchange executable bytes changed; current full-index/native Q2 and affected Component tests remain separate. Native workflow37835492547 active; whole candidate/Pi/channels pending.
