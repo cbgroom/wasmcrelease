@@ -522,7 +522,7 @@
         "unversioned URLs",
         "package-index.json.latest"
       ],
-      "answer_boundary": "Explicitly name agent-release-orientation.json as the compact authority, report exact identities, and do not mention unrelated historical artifact digests or shorten any digest."
+      "answer_boundary": "After the named compact-authority check passes, name agent-release-orientation.json and AGENTS.md literally, report the immutable tag and compiler path, and copy the complete 64-character compiler.sha256 value once. The word sha256 or a reference to that field does not report the compiler identity. Stop after these exact identities; do not scan the full manifest or history."
     },
     "release-lib-route-readiness": {
       "authority_file": "release-lib-route-readiness.json",
@@ -743,7 +743,7 @@
       "related_released_product": {
         "identity": "wasmc-system-telemetry@0.0.1",
         "qualified": true,
-        "admitted": false,
+        "admitted": true,
         "released": true,
         "discoverable": true,
         "installable": true,

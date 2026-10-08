@@ -1,7 +1,7 @@
 {
   "schema": "wasmc.agent-quickstart/v1",
   "authority": "release-surfaces.json",
-  "rule": "Match one route, use its exact evidence, and stop. Do not inspect history, unrelated compatibility data, broad manifests or implementation tests. Never abbreviate an identity that you report. After copying an exact_report value, refer to its field name instead of restating or shortening it.",
+  "rule": "Match one route, use its exact evidence and stop. Do not inspect history, broad manifests or unrelated implementation tests. Apply exact_report and final_answer_policy only to the matching route. Report every required identity as its complete literal value; a field name alone is not that value. For release orientation, print compiler.sha256 in full once. After a literal identity has appeared once, refer to its field name rather than shortening or reconstructing it. Follow the Library-first route instruction to cite verified digest field names instead of repeating digest values.",
   "routes": {
     "license-policy": {
       "authority_file": "license-policy.json",
@@ -37,7 +37,7 @@
         "package-index.json.latest"
       ],
       "required_additional_reads": [],
-      "final_answer_policy": "After the check passes, explicitly name agent-release-orientation.json as the compact authority, report its exact release and compiler identities, and stop."
+      "final_answer_policy": "After the named compact-authority check passes, name agent-release-orientation.json and AGENTS.md literally, report the immutable tag and compiler path, and copy the complete 64-character compiler.sha256 value once. The word sha256 or a reference to that field does not report the compiler identity. Stop after these exact identities; do not scan the full manifest or history."
     },
     "release-lib-route-readiness": {
       "authority_file": "release-lib-route-readiness.json",
@@ -175,17 +175,19 @@
       "stop": "qualified=false because wasmc-source-direct-resource-methods is explicitly unsupported",
       "related_product": {
         "qualified": true,
-        "admitted": false,
-        "released": false,
-        "discoverable": false,
-        "installable": false,
+        "admitted": true,
+        "released": true,
+        "discoverable": true,
+        "installable": true,
         "routes": [
           "source-free-rust-component",
           "public-rust-host-sdk",
           "linux-explicit-generic-resource-acquisition"
-        ]
+        ],
+        "lifecycle_authority": "release.json and channels/prod.json; applies only to the three listed supported routes, never the direct ordinary Source route"
       },
-      "required_additional_reads": []
+      "required_additional_reads": [],
+      "final_answer_policy": "Copy exact_report.identity and exact_report.stop_reason literally, report the five direct-route states exactly, then distinguish the five related-product states and its three supported routes. qualified=false is the direct route stopping condition; do not broaden this successful decision into manifests, control planes, implementation files or history. Internal JSON query keys are field names, not package or WIT identities."
     },
     "dynamic-client-gateway": {
       "request": "is the dynamic Client/Gateway available in this product and is it a formal Lib",
