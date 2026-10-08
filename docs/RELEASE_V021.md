@@ -1,17 +1,20 @@
-# WAsmC0.0.21 candidate
+# WAsmC0.0.21 product candidate
 
-This candidate closes the current42-identity Lib cohort, preserves complete
-digest-bound Root inventories and original dependency notices, and uses one
-compiler with Provider4.9 and Std1.4.1. WIT routes and the278-entry index are
-checked through the actual compiled Core Search implementation. Native-source
-rows remain source-only; installation grants no Host authority.
+This product binds one canonical portable Core Wasm compiler, Provider4.9,
+Std1.4.1 and all42 current Lib identities. Complete Root inventories and original
+dependency notices remain digest-bound. Actual compiled Core Search checks
+42 package routes,236 selected-world APIs and278 index entries.
+Fourteen native-source Roots remain source-only; installation grants no Host
+authority and does not establish device qualification.
 
-The workstream has passed the42 current product controls, eight actual
-GitHub/jsDelivr installations, the Core/Native/Host SDK49 test suites, and the
-Node/Bun/Deno source-free compiler checks (180 outputs,21 execution oracles,
-23,040 Std calls and6 rejection controls). These receipts are separate gates.
+The compiler comes from clean canonical private master. Complete unfiltered
+source qualification checked184 targets with1638 passed,20 declared ignored and
+zero filtered. The canonical compiler was independently checked on Node, Bun,
+Deno and Chrome. All42 Roots were refreshed in one successful exact-producer
+cohort and passed current-source preflight and Q1. Native compiler archives
+passed six actual platform builds and six matching-platform download consumers.
 
-Canonical private master integration/build, complete source L3 with current
-explicit Root fixtures, required five native targets, exact whole candidate
-review/Pi and immutable dev/main/prod publication are still pending.
-The released lifecycle remainsv0.0.20 until those gates complete.
+Current whole-product qualification, exact-candidate two-model Pi review and
+immutable dev/main/prod promotion remain separate gates. Their exact identities
+and outcomes are recorded in the channel authorities. Read release.json and
+channels/prod.json for the published default lifecycle.

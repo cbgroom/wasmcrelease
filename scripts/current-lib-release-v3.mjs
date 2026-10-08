@@ -256,5 +256,5 @@ export function currentProductPaths(root,prefix='current-libs'){
     if(info.isDirectory())return readdirSync(join(root,path)).sort().flatMap(n=>walk(path+'/'+n));
     assert.ok(info.isFile()&&++count<=10000,'bounded regular product inventory');return[path];
   };
-  return walk(prefix);
+  return walk(prefix).sort();
 }

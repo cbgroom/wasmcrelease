@@ -19,6 +19,15 @@ const verify=(map=data,bytes=original,pin=expected)=>verifyCurrentRelease(bytes,
 },[...map.keys()]);
 const pass=(name,fn)=>{fn();results.push({name,passed:true});};
 const reject=(name,fn)=>{assert.throws(fn,undefined,name);results.push({name,passed:true,rejected:true});};
+const orderFixture=await mkdtemp(join(out,'path-order-'));
+try{
+ await mkdir(join(orderFixture,'Roots'));
+ for(const directory of ['prefix','prefix-client'])await mkdir(join(orderFixture,'Roots',directory));
+ await writeFile(join(orderFixture,'Roots/prefix/a'),'a');
+ await writeFile(join(orderFixture,'Roots/prefix-client/a'),'b');
+ assert.deepEqual(currentProductPaths(orderFixture,'Roots'),['Roots/prefix-client/a','Roots/prefix/a'],'full-path order across directory prefix collisions');
+ results.push({name:'canonical full-path inventory order across directory prefixes',passed:true});
+}finally{await rm(orderFixture,{recursive:true,force:true});}
 const closure=verify();assert.equal(closure.release_packages,42);assert.equal(closure.api_routes,236);assert.equal(closure.entries,278);
 results.push({name:'real Core snapshot all278 lookups and full pagination',passed:true});
 reject('independent catalog mismatch',()=>verify(data,original,'0'.repeat(64)));
