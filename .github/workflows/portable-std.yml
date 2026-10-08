@@ -45,7 +45,25 @@ jobs:
             deno) runner=(deno run --allow-read --allow-env=GITHUB_SHA);;
             *) runner=(node);;
           esac
-          "${runner[@]}" examples/current/standard.mjs | tee target/portable-std/receipt.json
+          if test "$RUNTIME" = node18; then
+            node scripts/test-core-compatibility.mjs > target/portable-std/feature-controls.json
+            node --input-type=module <<'JS' | tee target/portable-std/receipt.json
+          import assert from 'node:assert/strict';
+          import {readFileSync} from 'node:fs';
+          import {preflightCoreArtifact} from './scripts/core-compatibility.mjs';
+          assert.match(process.version, /^v18\./);
+          let observed;
+          assert.throws(() => preflightCoreArtifact('standard', readFileSync('standard/wasmc-std/1.4.1/artifact.wasm')), error => {
+            observed = error.diagnostic;
+            return observed.code === 'engine.feature_unsupported'
+              && observed.sha256 === 'b79a499c8300361125e7fcdae02170184b82d4bbeff4d8f24ed95f3fd4db8d3b'
+              && JSON.stringify(observed.missing_features) === '["function-references","tail-call"]';
+          });
+          console.log(JSON.stringify({accepted:true,engine:'node18',current_Std_executed:false,scope:'Exact unsupported-engine rejection before instantiation',observed}));
+          JS
+          else
+            "${runner[@]}" examples/current/standard.mjs | tee target/portable-std/receipt.json
+          fi
           cat target/portable-std/receipt.json >> "$GITHUB_STEP_SUMMARY"
       - if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02

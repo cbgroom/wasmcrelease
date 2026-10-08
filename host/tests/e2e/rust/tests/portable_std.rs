@@ -3,10 +3,12 @@ use wasmi::{Engine, Linker, Module, Store, Val};
 #[test]
 fn portable_std_wasmi() -> Result<(), Box<dyn Error>> {
     let e = Engine::default();
-    let root = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
-        .join("../../../..");
+    let root = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../..");
     let root = root.to_str().ok_or("path")?;
-    for file in ["examples/current/standard-rust.wasm", "examples/current/standard-wasmc.wasm"] {
+    for file in [
+        "examples/current/standard-rust.wasm",
+        "examples/current/standard-wasmc.wasm",
+    ] {
         let mut s = Store::new(&e, ());
         let p = Module::new(
             &e,
@@ -26,8 +28,16 @@ fn portable_std_wasmi() -> Result<(), Box<dyn Error>> {
                 x.into_extern(),
             )?;
         }
-        let m = Module::new(&e, fs::read(format!("{root}/standard/wasmc-std/1.4.1/artifact.wasm"))?)?;
-        assert!(Linker::<()>::new(&e).instantiate_and_start(&mut s, &m).is_err(), "missing current Provider authority rejected");
+        let m = Module::new(
+            &e,
+            fs::read(format!("{root}/standard/wasmc-std/1.4.1/artifact.wasm"))?,
+        )?;
+        assert!(
+            Linker::<()>::new(&e)
+                .instantiate_and_start(&mut s, &m)
+                .is_err(),
+            "missing current Provider authority rejected"
+        );
         let lib = l.instantiate_and_start(&mut s, &m)?;
         assert_eq!(
             lib.get_typed_func::<(), i32>(&s, "std_init")?
@@ -73,9 +83,11 @@ fn portable_std_wasmi() -> Result<(), Box<dyn Error>> {
 fn portable_std_wasmtime() -> Result<(), Box<dyn Error>> {
     use wasmtime::{Engine, Linker, Module, Store, Val};
     let e = Engine::default();
-    let root = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
-        .join("../../../..");
-    for file in ["examples/current/standard-rust.wasm", "examples/current/standard-wasmc.wasm"] {
+    let root = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../..");
+    for file in [
+        "examples/current/standard-rust.wasm",
+        "examples/current/standard-wasmc.wasm",
+    ] {
         let mut s = Store::new(&e, ());
         let m = Module::new(
             &e,
@@ -100,8 +112,14 @@ fn portable_std_wasmtime() -> Result<(), Box<dyn Error>> {
                 value,
             )?;
         }
-        let m = Module::new(&e, fs::read(root.join("standard/wasmc-std/1.4.1/artifact.wasm"))?)?;
-        assert!(Linker::<()>::new(&e).instantiate(&mut s, &m).is_err(), "missing current Provider authority rejected");
+        let m = Module::new(
+            &e,
+            fs::read(root.join("standard/wasmc-std/1.4.1/artifact.wasm"))?,
+        )?;
+        assert!(
+            Linker::<()>::new(&e).instantiate(&mut s, &m).is_err(),
+            "missing current Provider authority rejected"
+        );
         let lib = linker.instantiate(&mut s, &m)?;
         assert_eq!(
             lib.get_typed_func::<(), i32>(&mut s, "std_init")?
