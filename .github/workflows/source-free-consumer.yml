@@ -44,7 +44,7 @@ jobs:
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
           node-version: '26.5.1'
-      - name: Exact v0.0.20 candidate and deterministic Agent journeys
+      - name: Exact current v3 candidate and deterministic Agent journeys
         env:
           WASMC_CI_LABEL: integrity-ubuntu
         run: node scripts/ci-suite.mjs candidate
@@ -118,6 +118,8 @@ jobs:
     env:
       CARGO_BUILD_JOBS: 2
       CARGO_TARGET_DIR: ${{ github.workspace }}/target/ci-rust
+      WASMC_SEARCH_LIB_ROOT: ${{ github.workspace }}/standard/wasmc-lib-search/0.5.0
+      WASMC_SEARCH_INDEX_PATH: ${{ github.workspace }}/catalog/current-index-v2.json
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
@@ -125,8 +127,8 @@ jobs:
           node-version: '26.5.1'
       - name: Install stable Rust and capture versions
         run: |
-          rustup toolchain install stable --profile minimal --no-self-update
-          rustup default stable
+          rustup toolchain install 1.96.0 --profile minimal --no-self-update
+          rustup default 1.96.0
           rustc --version
           cargo --version
       - name: Run locked release consumer and runtime SDK qualification

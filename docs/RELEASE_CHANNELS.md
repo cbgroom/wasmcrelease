@@ -31,6 +31,17 @@ inventories or self-rehashed payloads. Fourteen native-source Roots remain
 source-only; inclusion and installation do not claim execution or device
 qualification. Historical immutable candidate verification is read-only.
 
+The v3 candidate explicitly lists five lifecycle projections in
+`stage_metadata_paths`: `agent-quickstart.json`,
+`agent-release-orientation.json`, `release-surfaces.json`,
+`release-lib-route-readiness.json` and `lib-ecosystem-control-plane.json`.
+Their phase status can advance while the compiler, Roots, SDKs, executable
+consumer checks and static capability guidance keep the same product digests.
+These projections are required in the final manifest and checksums; the final
+Pi qualification binds their exact rehearsal commit and tree. The candidate
+rejects any change to this list or inclusion of a lifecycle projection among
+frozen product files.
+
 Consumer workflows execute immutable public files, never rebuild canonical
 compiler or Lib products. Qualification must include the specific new Lib and
 its actual API, WAsmC/Rust equivalence, portable engine acceptance, lifecycle,

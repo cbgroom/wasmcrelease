@@ -261,6 +261,7 @@ export function validateCandidate(candidate,read) {
     if(closure?.schema!=='wasmc.release-candidate-lib-route-closure/v1'||!safe(closure.authority_receipt?.path)||!/^[0-9a-f]{64}$/.test(closure.authority_receipt?.sha256??'')||!safe(closure.catalog?.path)||!/^[0-9a-f]{64}$/.test(closure.catalog?.sha256??'')||!safe(closure.search_index?.path)||!/^[0-9a-f]{64}$/.test(closure.search_index?.sha256??'')||!Number.isSafeInteger(closure.release_packages)||closure.release_packages<1||!Number.isSafeInteger(closure.package_routes)||closure.package_routes!==closure.release_packages||!Number.isSafeInteger(closure.api_routes)||closure.api_routes<1||closure.candidate_extras!==0||closure.exact!==true||closure.candidate_extra_grants_release!==false)throw Error('candidate Lib route closure rejected');
   }
   if(candidate.schema==='wasmc.release-product-candidate/v3'){
+    validateCurrentStageMetadataPartition(candidate);
     assert.deepEqual(candidate.current_release_closure,currentCandidateClosure(candidate,read),'current42 candidate closure drift');
   }else if(needsFutureLibLicenseGate(candidate.version)){
     validateFutureLibProductInputs(candidate,read);
@@ -312,12 +313,25 @@ function walk(directory) {
   });
 }
 
+export const currentStageMetadataPaths=Object.freeze([
+  'agent-quickstart.json','agent-release-orientation.json','lib-ecosystem-control-plane.json',
+  'release-lib-route-readiness.json','release-surfaces.json'
+]);
+export function validateCurrentStageMetadataPartition(candidate){
+  assert.deepEqual(candidate.stage_metadata_paths,currentStageMetadataPaths,'exact current lifecycle projections');
+  const products=new Set(candidate.product_files.map(row=>row.path));
+  for(const path of currentStageMetadataPaths)assert.ok(!products.has(path),'lifecycle projection cannot be frozen product bytes: '+path);
+  return true;
+}
 export const currentV3ProductInputs=Object.freeze([
   'LICENSE','catalog/current-v3-license-policy.json','scripts/current-license-policy-v3.mjs','compatibility/core-artifacts-v021.json','current/compiler-release.json','catalog/libs-current-v2.json','catalog/current-index-v2.json','libspec/registry.json',
   'admission/current-refresh-cohort-v2.json','admission/current-product-v3.json',
   'scripts/current-lib-release-v3.mjs','scripts/current-lib-search-v3.mjs',
   'scripts/current-core-value-codec-v3.mjs','scripts/current-wit-routes-v3.mjs',
-  'scripts/lib-install.mjs','scripts/wasmc-lib.mjs'
+  'scripts/lib-install.mjs','scripts/wasmc-lib.mjs',
+  'scripts/current-release-identity.mjs','scripts/ci-suite.mjs',
+  'scripts/test-lib-catalog.mjs','scripts/test-lib-install.mjs','scripts/validate-lib-install.mjs',
+  'scripts/validate-libs.mjs','scripts/test-current-product-v3.mjs','scripts/test-current-license-policy-v3.mjs'
 ]);
 export function currentCandidateClosure(candidate,read){
   const rows=new Map(candidate.product_files.map(r=>[r.path,r]));
@@ -373,12 +387,13 @@ export async function createCurrentCandidate(repo,{compilerSource,libSource,vers
     return s.isDirectory()?walk(path):[path];
   });
   const catalogBytes=read('catalog/libs-current-v2.json'),catalog=checkedCurrentCatalog(catalogBytes,hash(catalogBytes));
-  const directories=['current','dist','package','examples/current','examples/base64','examples/agent-quickstart','standard','sdk','runtime','current-libs','licenses',
+  const directories=['current','dist','package','examples/current','examples/base64','examples/agent-quickstart','examples/lib-search','examples/agent-start','standard','sdk','runtime','current-libs','licenses',
     'skills',
     'host/contract','host/sdk','host/drivers/file/rust','host/drivers/memory/rust'];
   const paths=new Set([...currentV3ProductInputs,...directories.flatMap(walk),
     'AGENTS.md','README.md','HOSTING.md','LANGUAGE.md','LIB.md','license-policy.json',
-    'agent-quickstart.json','release-surfaces.json','agent-evaluation/fresh-agent-learning-v2.json','docs/AGENT_DECISION_MODEL.md','docs/RELEASE_V021.md','scripts/release-candidate.mjs']);
+    '.github/workflows/lib-search.yml','.github/workflows/agent-discovery.yml','.github/workflows/source-free-consumer.yml','.github/workflows/host-lib-e2e.yml',
+    'agent-evaluation/fresh-agent-learning-v2.json','docs/AGENT_DECISION_MODEL.md','docs/RELEASE_V021.md','scripts/release-candidate.mjs']);
   for(const row of catalog.packages)for(const pin of Object.values(row.source))paths.add(pin.path);
   const addImports=path=>{
     const source=read(path).toString('utf8');
@@ -393,6 +408,7 @@ export async function createCurrentCandidate(repo,{compilerSource,libSource,vers
   const candidate={schema:'wasmc.release-product-candidate/v3',version,
     compiler_source_authority:compilerSource,lib_source_authority:libSource,
     current_catalog:{path:'catalog/libs-current-v2.json',sha256:hash(catalogBytes)},
+    stage_metadata_paths:[...currentStageMetadataPaths],
     product_files,product_set_sha256:hash(JSON.stringify(product_files))};
   candidate.current_release_closure=currentCandidateClosure(candidate,read);
   if(candidate.current_release_closure.refresh_receipt_sha256!==currentOptions.receipt_sha256||

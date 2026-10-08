@@ -46,7 +46,7 @@ if (releaseJson.version === '0.0.21') {
   const data=new Map();for(const r of candidate.product_files)data.set(r.path,await readFile(join(root,r.path)));
   validateCandidate(candidate,p=>data.get(p));
   const stagePaths=(await walk('channels')).filter(p=>p.startsWith('channels/'+releaseJson.version+'/')||['channels/dev.json','channels/main.json','channels/prod.json',releaseJson.staged_product_manifest].includes(p));
-  const paths=[...new Set([...candidate.product_files.map(r=>r.path),...stagePaths,
+  const paths=[...new Set([...candidate.product_files.map(r=>r.path),...candidate.stage_metadata_paths,...stagePaths,
     'agent-release-orientation.json','release-lib-route-readiness.json','lib-ecosystem-control-plane.json'])].sort();
   manifest.release_id='wasmc-v'+releaseJson.version;manifest.version=releaseJson.version;manifest.release_date=versionRow.release_date;
   manifest.channel='release';manifest.released=true;manifest.stable=false;manifest.tag=releaseJson.tag;

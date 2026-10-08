@@ -7,10 +7,11 @@ const args=process.argv.slice(2),opts={};
 for(let i=0;i<args.length;i+=2){assert.ok(['--product','--catalog-sha256','--out'].includes(args[i])&&!opts[args[i]]&&args[i+1]);opts[args[i]]=args[i+1];}
 assert.equal(Object.keys(opts).length,3);
 const root=resolve(opts['--product']),out=resolve(opts['--out']);await mkdir(out,{recursive:true});
-const data=new Map(),walk=async p=>{for(const n of(await readdir(join(root,p))).sort()){
-  const f=p?p+'/'+n:n,s=await lstat(join(root,f));assert.ok(!s.isSymbolicLink());
-  if(s.isDirectory())await walk(f);else data.set(f,await readFile(join(root,f)));
-}};await walk('');
+const data=new Map(),read=currentProductReader(root);
+const catalogBytes=read('catalog/libs-current-v2.json'),catalogInput=JSON.parse(catalogBytes);
+const required=new Set(['LICENSE',...currentProductPaths(root,'licenses'),'catalog/libs-current-v2.json',catalogInput.registry.path,catalogInput.index.path,catalogInput.cohort.path,...currentProductPaths(root)]);
+for(const row of catalogInput.packages)for(const pin of Object.values(row.source))required.add(pin.path);
+for(const path of required)data.set(path,read(path));
 const original=data.get('catalog/libs-current-v2.json'),expected=opts['--catalog-sha256'];
 assert.equal(hash(original),expected);const catalog=JSON.parse(original);const results=[];
 const verify=(map=data,bytes=original,pin=expected)=>verifyCurrentRelease(bytes,pin,p=>{

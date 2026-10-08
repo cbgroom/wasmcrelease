@@ -14,7 +14,7 @@ const wasm = await read('../current/wasmc_compiler.wasm');
 const root = fileURLToPath(new URL('../',import.meta.url));
 const runtime = globalThis.Deno?'deno':globalThis.Bun?'bun':'node';
 mkdirSync(root+`target/current-${runtime}`,{recursive:true});
-assert.equal(hash(wasm), '4e0b9779df3bf7b627d7d9fbfc43cfffd67bb053f87c69a9f832c5690b6888a2');
+assert.equal(hash(wasm), 'd2efa131dc65bbcd797512cf9628e329c137283b9817976d93dbc782d4b64661');
 assert.ok(wasm.length <= 2097152);
 assert.deepEqual(WebAssembly.Module.imports(new WebAssembly.Module(wasm)), []);
 (0, eval)(new TextDecoder().decode(await read('../current/wasmc.global.js')));
@@ -50,7 +50,7 @@ for (const row of corpus) {
   }
 }
 const cases = JSON.parse(new TextDecoder().decode(await read('../examples/current/expressions.json'))).cases;
-const admitted = new Set(['bits','shift_i64','u64','while','option_match_expr','option_unwrap','enum_pass','string_local_len','string_field_len','string_parameter_len','list_record_index','list_record_push_loop','explicit_cast']);
+const admitted = new Set(['bits','shift_i64','u64','while','option_match_expr','option_unwrap','enum_pass','string_local_len','string_field_len','string_parameter_len','list_record_index','list_record_push_loop','list_scalar','explicit_cast']);
 for (const row of cases) {
   let bytes, error;
   try { bytes = row.profile === 'managed' ? (await api.compileLib(row.source)).appWasm : await api.compile(row.source); }

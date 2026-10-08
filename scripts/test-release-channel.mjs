@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
-import {validateCandidate,validateTransition} from './release-candidate.mjs';
+import {validateCandidate,validateTransition,currentStageMetadataPaths,validateCurrentStageMetadataPartition} from './release-candidate.mjs';
 const hash=b=>createHash('sha256').update(b).digest('hex');
 const bytes=Buffer.from('product'),rows=[{path:'current/product.wasm',bytes:bytes.length,sha256:hash(bytes)}];
 const routeClosure={schema:'wasmc.release-candidate-lib-route-closure/v1',authority_receipt:{path:'admission/route.json',sha256:'1'.repeat(64)},catalog:{path:'catalog/libs.json',sha256:'2'.repeat(64)},search_index:{path:'examples/index.lsi',sha256:'3'.repeat(64)},release_packages:1,package_routes:1,api_routes:1,candidate_extras:0,exact:true,candidate_extra_grants_release:false};
@@ -30,5 +30,16 @@ const negatives=[
  ()=>validateTransition(main,{...prod,tag:`v${c.version}-prod`},c),
  ()=>validateTransition(null,{...dev,tag:`v${c.version}-dev.0`},c)
 ];
+const current={product_files:rows,stage_metadata_paths:[...currentStageMetadataPaths]};
+assert.equal(validateCurrentStageMetadataPartition(current),true);
+for(const mutate of [
+ value=>value.stage_metadata_paths.pop(),
+ value=>value.stage_metadata_paths.push('current/compiler-release.json'),
+ value=>value.stage_metadata_paths.reverse(),
+ value=>value.product_files.push({...rows[0],path:'agent-quickstart.json'})
+]){
+ const changed=structuredClone(current);mutate(changed);
+ negatives.push(()=>validateCurrentStageMetadataPartition(changed));
+}
 for(const test of negatives)assert.throws(test);
-console.log(JSON.stringify({accepted:true,candidate_schema:c.schema,positive_transitions:3,negative_tests:negatives.length,publishes:false}));
+console.log(JSON.stringify({accepted:true,candidate_schema:c.schema,positive_transitions:3,current_lifecycle_partition_controls:4,negative_tests:negatives.length,publishes:false}));

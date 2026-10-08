@@ -1,0 +1,16 @@
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {fileURLToPath} from 'node:url';
+import {resolve} from 'node:path';
+import {validateCandidate} from './release-candidate.mjs';
+import {currentProductReader,currentProductPaths} from './current-lib-release-v3.mjs';
+const root=fileURLToPath(new URL('../',import.meta.url));
+const compiler=JSON.parse(readFileSync(resolve(root,'current/compiler-release.json')));
+const path=`channels/candidates/${compiler.version}.json`;
+const candidate=JSON.parse(readFileSync(resolve(root,path)));
+assert.equal(candidate.schema,'wasmc.release-product-candidate/v3');
+assert.equal(candidate.version,compiler.version);
+const read=currentProductReader(root);
+validateCandidate(candidate,read);
+assert.deepEqual(currentProductPaths(root),candidate.product_files.map(r=>r.path).filter(p=>p.startsWith('current-libs/')));
+console.log(JSON.stringify({accepted:true,version:candidate.version,candidate:path,product_set_sha256:candidate.product_set_sha256,current_packages:candidate.current_release_closure.release_packages}));

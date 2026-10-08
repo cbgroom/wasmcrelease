@@ -126,6 +126,7 @@ if(release.version==='0.0.21') {
   const bytes=new Map();for(const r of candidate.product_files)bytes.set(r.path,await readFile(join(root,r.path)));
   validateCandidate(candidate,p=>bytes.get(p));
   const rows=new Map(manifest.artifacts.map(r=>[r.path,r]));
+  for(const path of candidate.stage_metadata_paths)assert.ok(rows.has(path),'lifecycle projection missing from final manifest: '+path);
   for(const r of candidate.product_files){const actual=rows.get(r.path);assert.ok(actual,'candidate file absent from manifest: '+r.path);assert.equal(actual.bytes,r.bytes);assert.equal(actual.sha256,r.sha256);}
   for(const stage of ['dev','main','prod']) {
     const pointer=await json(`channels/${stage}.json`);

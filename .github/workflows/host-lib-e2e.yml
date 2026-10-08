@@ -368,14 +368,9 @@ jobs:
           node scripts/validate-release-surfaces.mjs
           node scripts/test-performance-baseline.mjs
           node scripts/test-release-channel.mjs
-          candidate=/tmp/wasmc-development-candidate.json
-          rm -f "$candidate"
-          if node scripts/release-candidate.mjs create "$candidate" "$GITHUB_SHA" 0.0.0; then
-            node scripts/release-candidate.mjs verify "$candidate"
-          else
-            node scripts/lib-route-closure.mjs --check
-            test "$(jq '.candidate_extras | length' catalog/lib-route-closure.json)" -gt 0
-          fi
+          node scripts/current-compiler-integrity.mjs --require-qualification
+          node scripts/lib-route-closure.mjs --check
+          node scripts/test-lib-route-closure.mjs
       - name: Exact-source evidence scope
         shell: bash
         env:

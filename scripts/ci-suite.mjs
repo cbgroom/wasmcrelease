@@ -18,7 +18,7 @@ export function suiteCases(family,runtime='node',mirror='github') {
   ];
   if(family==='integrity')return [
     item('library-first-teaching-and-routes','scripts/test-library-first.mjs'),
-    item('lib-search-v020-candidate-regression','examples/lib-search/run.mjs'),
+    item('current-lib-search-complete-index-regression','examples/lib-search/run.mjs'),
     item('live-agent-trace-evaluator','scripts/test-live-agent-trace-evaluation-v1.mjs'),
     item('fresh-pi-two-model-cohort-contract','scripts/test-fresh-agent-learning-v1.mjs'),
     item('pi-pre-release-candidate-binding-contract','scripts/test-pi-pre-release-gate-v1.mjs'),
@@ -28,10 +28,9 @@ export function suiteCases(family,runtime='node',mirror='github') {
     item('lib-route-release-closure-negatives','scripts/test-lib-route-closure.mjs'),
     item('sdk-agent-routing','scripts/validate-sdk-agent-routes.mjs'),
     item('release-channel-promotion-negatives','scripts/test-release-channel.mjs'),
-    item('release-candidate-lib-route-closure','scripts/test-release-candidate-lib-routes.mjs'),
-    item('release-v014-candidate-admission','scripts/validate-v014-candidate.mjs'),
-    item('release-v014-prod-readiness','scripts/validate-v014-prod-readiness.mjs'),
-    item('release-product-identity','scripts/release-candidate.mjs',['verify','channels/candidates/0.0.14.json']),
+    item('current-complete-product-reopen-negatives','scripts/test-current-product-v3.mjs',['--product','.', '--catalog-sha256','01fda278b3c74363643879f71cc739488a57e9d934f217ab07af3460b88923d4','--out','target/ci/current-product-controls'],fixturePermissions),
+    item('current-original-license-reopen-negatives','scripts/test-current-license-policy-v3.mjs'),
+    item('release-product-identity','scripts/current-release-identity.mjs'),
     item('release-surface-model','scripts/validate-release-surfaces.mjs'),
     item('same-platform-performance-baseline','scripts/test-performance-baseline.mjs'),
     item('ci-reporting-failure-controls','scripts/test-ci-reporting.mjs'),
@@ -40,7 +39,9 @@ export function suiteCases(family,runtime='node',mirror='github') {
     item('deterministic-fresh-agent-regression','scripts/wasmc-fresh-agent-evaluation-v0.mjs',['--release-root','.', '--json-out','target/ci/fresh-agent.json'])
   ];
   if(family==='candidate')return [
-    item('v020-product-identity','scripts/release-candidate.mjs',['verify','channels/candidates/0.0.20.json']),
+    item('current-v3-product-identity','scripts/current-release-identity.mjs'),
+    item('current-complete-product-reopen-negatives','scripts/test-current-product-v3.mjs',['--product','.', '--catalog-sha256','01fda278b3c74363643879f71cc739488a57e9d934f217ab07af3460b88923d4','--out','target/ci/current-product-controls'],fixturePermissions),
+    item('current-original-license-reopen-negatives','scripts/test-current-license-policy-v3.mjs'),
     item('library-first-teaching-and-routes','scripts/test-library-first.mjs'),
     item('live-agent-trace-evaluator','scripts/test-live-agent-trace-evaluation-v1.mjs'),
     item('fresh-pi-two-model-cohort-contract','scripts/test-fresh-agent-learning-v1.mjs'),
@@ -69,10 +70,11 @@ export function suiteCases(family,runtime='node',mirror='github') {
   ];
   if(family==='rust')return [
     {id:'lib-package-contracts',command:'node',args:['scripts/validate-libs.mjs']},
-    {id:'wasmtime-component-consumer-tests',command:'cargo',args:['test','--locked','--release'],cwd:join(root,'examples/rust-wasmtime'),timeoutMs:1200000},
+    {id:'wasmtime-component-consumer-tests',command:'cargo',args:['test','--locked','--release'],cwd:join(root,'examples/lib-search/rust'),timeoutMs:1200000},
     {id:'wasmi-wasmtime-runtime-sdk-tests',command:'cargo',args:['test','--locked','--release','-p','wasmc-core-runtime'],timeoutMs:1200000},
     {id:'rust-generic-host-sdk-tests',command:'cargo',args:['test','--locked','--release','--manifest-path','sdk/wasmc-host/Cargo.toml'],timeoutMs:1200000},
-    {id:'wasmtime-compiler-resource-host-execution',command:'cargo',args:['run','--locked','--release'],cwd:join(root,'examples/rust-wasmtime'),timeoutMs:300000}
+    {id:'native-current-compiler-CLI-tests',command:'cargo',args:['test','--locked','--release','--manifest-path','sdk/wasmc-native-compiler/Cargo.toml'],timeoutMs:1200000},
+    {id:'current-generated-Component-SDK-full-index-execution',command:'cargo',args:['run','--locked','--release'],cwd:join(root,'examples/lib-search/rust'),timeoutMs:300000}
   ];
   throw Error('unknown CI suite');
 }
