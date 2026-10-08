@@ -45,6 +45,6 @@ GitHub Actions builds this same source-free CLI on six desktop targets:
 | macOS | x86_64 / aarch64 | macos-15-intel / macos-14 |
 | Windows | x86_64 / aarch64 MSVC | windows-2025 / windows-11-arm |
 
-Each package contains `wasmc`, this README, Cargo.lock and a manifest binding the exact public source commit, target, compiler digest, toolchain, runtime roles and file hashes. A downloaded-consumer job re-verifies the package and reruns byte-parity, Wasmi `run`, native build/direct execution and no-clobber checks without rebuilding the CLI.
+Each package contains `wasmc`, this README, Cargo.lock, the root LICENSE, six original dependency-notice parts, their pinned inventory, and a manifest binding the exact public source commit, target, compiler digest, toolchain, runtime roles and file hashes. A downloaded-consumer job re-verifies the package and reruns byte-parity, Wasmi `run`, native build/direct execution and no-clobber checks without rebuilding the CLI.
 
 Actions artifacts are development CI outputs, not immutable release assets. Existing release tags remain unchanged until an explicitly authorized promotion retains the already-qualified bytes rather than rebuilding them.

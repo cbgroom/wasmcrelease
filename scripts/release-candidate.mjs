@@ -313,7 +313,7 @@ function walk(directory) {
 }
 
 export const currentV3ProductInputs=Object.freeze([
-  'LICENSE','compatibility/core-artifacts-v021.json','current/compiler-release.json','catalog/libs-current-v2.json','catalog/current-index-v2.json','libspec/registry.json',
+  'LICENSE','catalog/current-v3-license-policy.json','scripts/current-license-policy-v3.mjs','compatibility/core-artifacts-v021.json','current/compiler-release.json','catalog/libs-current-v2.json','catalog/current-index-v2.json','libspec/registry.json',
   'admission/current-refresh-cohort-v2.json','admission/current-product-v3.json',
   'scripts/current-lib-release-v3.mjs','scripts/current-lib-search-v3.mjs',
   'scripts/current-core-value-codec-v3.mjs','scripts/current-wit-routes-v3.mjs',

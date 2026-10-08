@@ -2,7 +2,8 @@ import assert from "node:assert/strict";
 import { readFile, readdir, lstat } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import {collectDeclaredThirdPartyNotices,isExactDeclaredNotice} from './declared-thirdparty-notices.mjs';
+import {isExactDeclaredNotice} from './declared-thirdparty-notices.mjs';
+import {collectCurrentDeclaredThirdPartyNotices} from './current-license-policy-v3.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const read = (relative) => readFile(path.join(root, relative), "utf8");
@@ -79,8 +80,8 @@ assert.match(maintainers, /^## License boundary$/m);
 assert.match(maintainers, /Material first added after v0\.0\.19/);
 assert.match(maintainers, /Never rewrite its frozen product inventory/);
 
-const noticePolicy = JSON.parse(await read('catalog/current-v2-policy.json'));
-const declaredNotices = await collectDeclaredThirdPartyNotices(
+const noticePolicy = JSON.parse(await read('catalog/current-v3-license-policy.json'));
+const declaredNotices = await collectCurrentDeclaredThirdPartyNotices(
   await readFile(path.join(root,'catalog/libs-current-v2.json')),
   noticePolicy,
   async relative => {
