@@ -323,7 +323,81 @@ export function validateCurrentStageMetadataPartition(candidate){
   for(const path of currentStageMetadataPaths)assert.ok(!products.has(path),'lifecycle projection cannot be frozen product bytes: '+path);
   return true;
 }
+export const currentCIProductInputs=Object.freeze([
+  "scripts/pi-pre-release-gate-v1.mjs",
+  "Cargo.lock",
+  "Cargo.toml",
+  "bench/host-external-load.json",
+  "bench/manifest.json",
+  "docs/FRESH_AGENT_LEARNING_FLYWHEEL.md",
+  "docs/RELEASE_SURFACES.md",
+  "examples/agent-start/run.mjs",
+  "examples/current/standard.mjs",
+  "examples/lib-search/run.mjs",
+  "examples/lib-search/rust/Cargo.lock",
+  "examples/lib-search/rust/Cargo.toml",
+  "host/ARCHITECTURE.md",
+  "host/architecture.json",
+  "host/manifest.json",
+  "scripts/assert-runtime-output.mjs",
+  "scripts/check-core-compatibility.mjs",
+  "scripts/current-compiler-integrity.mjs",
+  "scripts/current-release-identity.mjs",
+  "scripts/lib-ecosystem-control-plane.mjs",
+  "scripts/lib-route-closure.mjs",
+  "scripts/scan-reachable-credentials.mjs",
+  "scripts/test-agent-guidance.mjs",
+  "scripts/test-agent-quickstart.mjs",
+  "scripts/test-ci-reporting.mjs",
+  "scripts/test-client-foundation-gateway-v1.mjs",
+  "scripts/test-client-foundation-v1.mjs",
+  "scripts/test-core-compatibility.mjs",
+  "scripts/test-credential-scan.mjs",
+  "scripts/test-current-license-policy-v3.mjs",
+  "scripts/test-current-product-v3.mjs",
+  "scripts/test-dynamic-lib-graph-v1.mjs",
+  "scripts/test-dynamic-lib-stateful-v1.mjs",
+  "scripts/test-fresh-agent-learning-v1.mjs",
+  "scripts/test-lib-catalog.mjs",
+  "scripts/test-lib-current-index-v2.mjs",
+  "scripts/test-lib-current-release-preflight.mjs",
+  "scripts/test-lib-install.mjs",
+  "scripts/test-lib-q2-evidence-v2.mjs",
+  "scripts/test-lib-route-closure.mjs",
+  "scripts/test-library-first.mjs",
+  "scripts/test-live-agent-trace-evaluation-v1.mjs",
+  "scripts/test-performance-baseline.mjs",
+  "scripts/test-pi-pre-release-gate-v1.mjs",
+  "scripts/test-release-channel.mjs",
+  "scripts/test-wss-cancellation-v1.mjs",
+  "scripts/validate-agent-docs.mjs",
+  "scripts/validate-current-only-libs.mjs",
+  "scripts/validate-current.mjs",
+  "scripts/validate-dynamic-lib-graph-model-v1.mjs",
+  "scripts/validate-integrity.mjs",
+  "scripts/validate-lib-identity-coverage.mjs",
+  "scripts/validate-lib-install.mjs",
+  "scripts/validate-lib-refresh-v2-source.mjs",
+  "scripts/validate-libs.mjs",
+  "scripts/validate-license-policy.mjs",
+  "scripts/validate-maintainer.sh",
+  "scripts/validate-release-surfaces.mjs",
+  "scripts/validate-sdk-agent-routes.mjs",
+  "scripts/validate-source-free-runtime.sh",
+  "scripts/wasmc-fresh-agent-evaluation-v0.mjs",
+  "sdk/wasmc-host/Cargo.toml",
+  "sdk/wasmc-native-compiler/Cargo.toml"
+]);
+export function validateCurrentCIProductInputs(candidate,read){
+  const rows=new Map(candidate.product_files.map(row=>[row.path,row]));
+  for(const path of currentCIProductInputs){
+    const row=rows.get(path);assert.ok(row,"current CI product input missing: "+path);
+    const bytes=read(path);assert.equal(bytes.length,row.bytes,"current CI input length: "+path);assert.equal(hash(bytes),row.sha256,"current CI input drift: "+path);
+  }
+  return true;
+}
 export const currentV3ProductInputs=Object.freeze([
+  ...currentCIProductInputs,
   'LICENSE','catalog/current-v3-license-policy.json','scripts/current-license-policy-v3.mjs','compatibility/core-artifacts-v021.json','current/compiler-release.json','catalog/libs-current-v2.json','catalog/current-index-v2.json','libspec/registry.json',
   'admission/current-refresh-cohort-v2.json','admission/current-product-v3.json',
   'scripts/current-lib-release-v3.mjs','scripts/current-lib-search-v3.mjs',
@@ -341,6 +415,7 @@ export function currentCandidateClosure(candidate,read){
     return bytes;
   };
   for(const path of currentV3ProductInputs)exact(path);
+  validateCurrentCIProductInputs(candidate,read);
   const catalogBytes=exact('catalog/libs-current-v2.json');
   if(candidate.current_catalog?.path!=='catalog/libs-current-v2.json'||hash(catalogBytes)!==candidate.current_catalog.sha256)throw Error('current catalog independent candidate pin');
   const catalog=checkedCurrentCatalog(catalogBytes,candidate.current_catalog.sha256);

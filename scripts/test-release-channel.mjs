@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
-import {validateCandidate,validateTransition,currentStageMetadataPaths,validateCurrentStageMetadataPartition} from './release-candidate.mjs';
+import {validateCandidate,validateTransition,currentStageMetadataPaths,validateCurrentStageMetadataPartition,currentCIProductInputs,validateCurrentCIProductInputs} from './release-candidate.mjs';
 const hash=b=>createHash('sha256').update(b).digest('hex');
 const bytes=Buffer.from('product'),rows=[{path:'current/product.wasm',bytes:bytes.length,sha256:hash(bytes)}];
 const routeClosure={schema:'wasmc.release-candidate-lib-route-closure/v1',authority_receipt:{path:'admission/route.json',sha256:'1'.repeat(64)},catalog:{path:'catalog/libs.json',sha256:'2'.repeat(64)},search_index:{path:'examples/index.lsi',sha256:'3'.repeat(64)},release_packages:1,package_routes:1,api_routes:1,candidate_extras:0,exact:true,candidate_extra_grants_release:false};
@@ -41,5 +41,16 @@ for(const mutate of [
  const changed=structuredClone(current);mutate(changed);
  negatives.push(()=>validateCurrentStageMetadataPartition(changed));
 }
+const ciRows=currentCIProductInputs.map(path=>({path,bytes:bytes.length,sha256:hash(bytes)}));
+assert.equal(validateCurrentCIProductInputs({product_files:ciRows},()=>bytes),true);
+const {suiteCases}=await import('./ci-suite.mjs');
+for(const family of ['compatibility','integrity','candidate','runtime','security','rust'])for(const test of suiteCases(family))for(const arg of test.args){
+  if(/^(scripts|examples|sdk)\/.*\.(mjs|sh|toml)$/.test(arg))assert.ok(currentCIProductInputs.includes(arg),'CI executable omitted: '+arg);
+}
+for(const path of ['scripts/validate-source-free-runtime.sh','scripts/validate-current.mjs','scripts/pi-pre-release-gate-v1.mjs','Cargo.toml']){
+  assert.ok(currentCIProductInputs.includes(path));
+  negatives.push(()=>validateCurrentCIProductInputs({product_files:ciRows.filter(row=>row.path!==path)},()=>bytes));
+}
+negatives.push(()=>validateCurrentCIProductInputs({product_files:ciRows},()=>Buffer.from('changed')));
 for(const test of negatives)assert.throws(test);
-console.log(JSON.stringify({accepted:true,candidate_schema:c.schema,positive_transitions:3,current_lifecycle_partition_controls:4,negative_tests:negatives.length,publishes:false}));
+console.log(JSON.stringify({accepted:true,candidate_schema:c.schema,positive_transitions:3,current_lifecycle_partition_controls:4,current_CI_input_files:currentCIProductInputs.length,current_CI_input_controls:5,negative_tests:negatives.length,publishes:false}));

@@ -64,3 +64,30 @@ Current default catalog/install/Search consumers now use complete42 Roots and ma
 Preserved6 portable,12 runtime/mirror and10 SearchJS cells, full-history security, actual Host execution and Rust both-engine gates. CI requires a canonical current v3 candidate; current source branch95 and compiler-only overlay cannot satisfy this authority. Candidate creation freezes actual consumer tools/workflows and declares five lifecycle projections outside immutable product bytes, with exact list/frozen-overlap rejection; final manifest/checksums and Pi exact rehearsal commit/tree still bind them.
 
 Both-engine source build passes184targets including newly admitted wasmc-bootstrap; compatible workspace pool peak1569017856B, no resource waiver. Source full execution is active with real missing explicit provider/old SDK path errors. Root348 reruns with exact Git/Rust/Deno PATH after retained Git-fact failure; no approval rejection. Canonical master/build, whole candidate/CI/Pi and immutable v21 publication remain incomplete. Current-CI-checkpoint.json binds all scope and receipts. Narrow release-lib-refresh-v2 and release-integrity Skills reviewed unchanged; current lifecycle/proof separation remains applicable.
+
+
+## Current immutable CI input and exact carrier security checkpoint
+
+The v3 candidate now includes all63 exact active CI/maintainer entrypoint,
+Cargo, architecture, benchmark and Host contract inputs. All six CI families
+are checked against the literal programs they invoke. Five additional actual
+inventory/deletion/byte-mutation controls pass; total candidate negatives24,
+lifecycle transitions3 and stage partition controls4 remain passing.
+
+Five full maintainer, release-channel, CI-reporting, credential-fixture and
+reachable-history security gates all exit0. The scanner keeps nine raw findings
+visible, classifies only exact mechanically reviewed carriers and admits zero
+unresolved findings, skipped blobs or errors. Two new d2 carriers were independently
+decoded to the pinned compiler, validated as import-free Core, and scanned by
+all nine raw detectors. Their classification records this maintenance review;
+it does not assert a new human approval of those exact hashes. Unknown/mutated
+carriers, decoded/outside findings and committed-then-deleted credentials reject.
+Original seven-vs-nine fixture/full-scan failures are retained.
+
+This remains the d2 current distribution before final canonical source integration.
+Fresh source regression corrected a real Bool private-zero initialization defect.
+Current both-engine source184 build passed;183 executions completed180PASS with
+three test-harness failures corrected and awaiting exact ELF reconciliation,
+while the full348 library continues. Final compiler bytes/affected product
+qualification, canonical master, whole candidate, Pi and immutable v21 remain
+pending. No release or approval rejection is claimed.

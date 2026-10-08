@@ -1,0 +1,76 @@
+{
+  "schema": "wasmc-current-CI-inputs-security-checkpoint/v1",
+  "public_base_commit": "0cfb2ab97ecd798b4fa592053b443d2014713de3",
+  "observed_at": "2026-10-08T13:59:35.615322+00:00",
+  "current_CI_inputs": 63,
+  "candidate_negative_controls": 24,
+  "stage_partition_controls": 4,
+  "gate_receipt_sha256": "523f491511dd2b19007254587fe92a6250316612e03661647a3e65380a7fc2b3",
+  "gate_exits": [
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "exact_carrier_proof_sha256": "11c98c52dc67c0045359910fa3217947bf54819ff68bd7239adcccbea317d218",
+  "exact_reviewed_carriers": [
+    {
+      "object": "1a81fa534ac8a7b52d8c1e638a63189df3ba84b5",
+      "path": "current/wasmc.mjs",
+      "carrier_sha256": "fd9cf52f5cb495224acd18c149cbca3da7b9f8907b28bb995e823d8cb5bfc463",
+      "decoded_sha256": "d2efa131dc65bbcd797512cf9628e329c137283b9817976d93dbc782d4b64661",
+      "decoded_bytes": 1510612,
+      "raw_match_count": 1,
+      "matches_wholly_inside_canonical_literal": true,
+      "imports": 0,
+      "decoded_detectors": 9,
+      "decoded_findings": 0
+    },
+    {
+      "object": "cda8dd86abcd343292ca4055befc8c16121dd8a4",
+      "path": "current/wasmc.global.js",
+      "carrier_sha256": "c38f6a64de4c9b8584782b19dc371a08278a4fc81e6a47c1176ff00621c684ec",
+      "decoded_sha256": "d2efa131dc65bbcd797512cf9628e329c137283b9817976d93dbc782d4b64661",
+      "decoded_bytes": 1510612,
+      "raw_match_count": 1,
+      "matches_wholly_inside_canonical_literal": true,
+      "imports": 0,
+      "decoded_detectors": 9,
+      "decoded_findings": 0
+    }
+  ],
+  "security_scope": {
+    "reachable_objects": 12456,
+    "blobs": 6714,
+    "raw_bytes": 206860323,
+    "raw_findings": 9,
+    "classified_exact_findings": 9,
+    "unresolved": 0,
+    "skipped": 0,
+    "scan_errors": 0
+  },
+  "changed_inputs": [
+    {
+      "path": "scripts/release-candidate.mjs",
+      "sha256": "4e027c8f1f20ffe5397be295511b5ebbd89b1a1909c72e0cb817f4e184654d3f"
+    },
+    {
+      "path": "scripts/test-release-channel.mjs",
+      "sha256": "d5cf5c69b3ca2e184fb4b5038b194d4f84355010e806af2d7338f2b85ce1580f"
+    },
+    {
+      "path": "scripts/scan-reachable-credentials.mjs",
+      "sha256": "0f53a9102d3b0c640e659172240a0f5c8d306e331ee85f2b94bc4bb683793d0d"
+    },
+    {
+      "path": "scripts/test-credential-scan.mjs",
+      "sha256": "6b1046356b21339c19be030295403d288b0e6da18c427508a5b0415bc961885c"
+    }
+  ],
+  "source_full_gate": "current184 buildPASS;183completed180PASS3 corrected harness failures; complete348 library still active; new Bool compiler required",
+  "whole_candidate_frozen": false,
+  "canonical_master_integrated": false,
+  "Pi_accepted": false,
+  "immutable_v21_published": false
+}

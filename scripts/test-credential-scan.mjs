@@ -20,13 +20,18 @@ try {
  assert.ok(!negative.stdout.includes(value));assert.ok(!negative.stderr.includes(value));
  const report=JSON.parse(negative.stdout);assert.equal(report.findings.length,1);assert.equal(report.skipped_blobs,0);
  const original=scan(root,true);assert.equal(original.status,1);
- const raw=JSON.parse(original.stdout);assert.equal(raw.raw_findings.length,7);assert.equal(raw.classified_false_positives.length,0);
+ const raw=JSON.parse(original.stdout);assert.equal(raw.raw_findings.length,9);assert.equal(raw.classified_false_positives.length,0);
  const approved=scan(root);assert.equal(approved.status,0);
- const admitted=JSON.parse(approved.stdout);assert.equal(admitted.raw_findings.length,7);assert.equal(admitted.classified_false_positives.length,7);assert.equal(admitted.findings.length,0);
- for(const object of ['3e17b25116f868ab49b17f90021bbe7c061217ac','b1a46490f52a5f41b4187a72cd283666cc82f565']) {
+ const admitted=JSON.parse(approved.stdout);assert.equal(admitted.raw_findings.length,9);assert.equal(admitted.classified_false_positives.length,9);assert.equal(admitted.findings.length,0);
+ for(const [object,decoded] of [
+  ['3e17b25116f868ab49b17f90021bbe7c061217ac','032a408b7435333f65f3bc80ef2f5646edf829698bc384a276076bff8d64666a'],
+  ['b1a46490f52a5f41b4187a72cd283666cc82f565','032a408b7435333f65f3bc80ef2f5646edf829698bc384a276076bff8d64666a'],
+  ['1a81fa534ac8a7b52d8c1e638a63189df3ba84b5','d2efa131dc65bbcd797512cf9628e329c137283b9817976d93dbc782d4b64661'],
+  ['cda8dd86abcd343292ca4055befc8c16121dd8a4','d2efa131dc65bbcd797512cf9628e329c137283b9817976d93dbc782d4b64661']
+ ]) {
   const row=admitted.classified_false_positives.find(x=>x.object===object);
   assert.equal(row.raw_match_count,1);assert.equal(row.decoded_all_detectors_clear,true);
-  assert.equal(row.decoded_sha256,'032a408b7435333f65f3bc80ef2f5646edf829698bc384a276076bff8d64666a');
+  assert.equal(row.decoded_sha256,decoded);
   const source=execFileSync('git',['cat-file','blob',object],{cwd:root,maxBuffer:8388608});
   writeFileSync(join(test,'changed-current.mjs'),Buffer.concat([source,Buffer.from('\n// changed exact current carrier\n')]));
   git(['add','changed-current.mjs']);git(['commit','-qm','changed current carrier']);
@@ -46,5 +51,5 @@ try {
  const testKeyCarrier=execFileSync('git',['cat-file','blob','0b20b1e6ebbcaf67e8d5ce74cdb11984e66e8bbe'],{cwd:root,maxBuffer:8388608});
  writeFileSync(join(test,'unknown-key.pem'),Buffer.concat([testKeyCarrier,Buffer.from('\n# changed fixture blob\n')]));git(['add','unknown-key.pem']);git(['commit','-qm','unknown test key carrier']);
  const unknownKey=JSON.parse(scan(test).stdout);assert.ok(unknownKey.findings.some(x=>x.detector==='private_key_pem'));assert.equal(unknownKey.classified_false_positives.length,0);
- console.log('PASS: exact approved carrier proof, raw-only rejection, deleted credential and unknown-carrier rejection; no matched values disclosed');
+ console.log('PASS: exact reviewed carrier proof, raw-only rejection, deleted credential and unknown-carrier rejection; no matched values disclosed');
 } finally {rmSync(test,{recursive:true});}
