@@ -52,11 +52,71 @@ export async function inventory(root, prefix = '') {
   return result;
 }
 
+
+// Packaging metadata only: executable artifacts and generated SDK source stay exact.
+// Explicit caller input enters the refresh key; it is never inferred from a cache.
+export async function attachReleaseLicense(root, bytes, expectedSha256) {
+  assert.ok(Buffer.isBuffer(bytes) && bytes.length > 0 && bytes.length <= 262144);
+  assert.equal(sha(bytes), expectedSha256, 'release license pin mismatch');
+  const identifier = bytes.toString('utf8').split('\n')[0].trim();
+  assert.equal(identifier, 'WAsmC Research-Only Non-Commercial License 1.0');
+  await inventory(root); // reject linked or non-regular producer output before any write
+  const manifest = await json(join(root, 'lib.json'));
+  if (manifest.license) {
+    assert.equal(manifest.license.identifier, identifier, 'existing license authority differs');
+    assert.equal(manifest.license.files?.[0]?.sha256, expectedSha256, 'existing license snapshot differs');
+  }
+  await writeChanged(join(root, 'LICENSE'), bytes);
+  const changed = new Map();
+  for (const sdk of Object.values(manifest.bindings ?? {})) {
+    if (!sdk.cargo_toml) continue;
+    const path = sdk.cargo_toml.path;
+    assert.match(path, /^bindings\/[^/]+\/Cargo\.toml$/);
+    const cargo = (await readFile(inside(root, path), 'utf8'));
+    assert.ok(cargo.startsWith('[package]\n'), 'SDK package manifest required');
+    const lines = cargo.split('\n');
+    const end = lines.findIndex((line, index) => index > 0 && /^\[/.test(line));
+    assert.ok(end > 0, 'SDK manifest section boundary required');
+    const section = lines.slice(1, end);
+    const existing = section.filter(line => /^license(?:-file)?\s*=/.test(line));
+    assert.ok(existing.length === 0 || (existing.length === 1 && existing[0] === 'license-file = "../../LICENSE"'),
+      'SDK existing license authority differs');
+    if (!existing.length) lines.splice(1, 0, 'license-file = "../../LICENSE"');
+    const result = Buffer.from(lines.join('\n'));
+    await writeChanged(inside(root, path), result);
+    changed.set(path, {bytes:result.length,sha256:sha(result)});
+  }
+  const update = value => {
+    if (!value || typeof value !== 'object') return;
+    if (changed.has(value.path) && typeof value.sha256 === 'string') {
+      value.sha256 = changed.get(value.path).sha256;
+      if ('bytes' in value) value.bytes = changed.get(value.path).bytes;
+    }
+    for (const child of Object.values(value)) update(child);
+  };
+  update(manifest);
+  manifest.license = {schema:'wasmc.lib-license/v1',identifier,
+    files:[{path:'LICENSE',bytes:bytes.length,sha256:expectedSha256}]};
+  await atomicJson(join(root, 'lib.json'), manifest);
+}
+
+export function verifyReleaseLicense(manifest, files) {
+  if (!manifest.license) return;
+  const license = manifest.license;
+  assert.equal(license.schema, 'wasmc.lib-license/v1');
+  assert.equal(license.identifier, 'WAsmC Research-Only Non-Commercial License 1.0');
+  assert.deepEqual(license.files?.map(f => f.path), ['LICENSE']);
+  const pin = license.files[0];
+  assert.ok(pin.bytes > 0 && pin.bytes <= 262144);
+  assert.deepEqual(files.LICENSE, {bytes:pin.bytes,sha256:pin.sha256}, 'license snapshot drift');
+}
+
 export async function verifyRoot(root, id, version, profile = 'value', resourceCore = false) {
   const files = await inventory(root);
   const manifest = await json(join(root, 'lib.json'));
   assert.equal(manifest.id, id);
   assert.equal(manifest.version, version);
+  verifyReleaseLicense(manifest, files);
   if (profile === 'native') {
     assert.equal(manifest.schema, 'wasmc.lib-native/v2');
     assert.equal(manifest.profile, 'native');
@@ -65,7 +125,7 @@ export async function verifyRoot(root, id, version, profile = 'value', resourceC
     assert.equal(manifest.lifecycle?.admitted, false);
     assert.ok(Array.isArray(manifest.implementation) && manifest.implementation.length > 0);
     const descriptors = [manifest.wit, ...manifest.implementation,
-      ...[manifest.artifact, manifest.native_boundary].filter(Boolean)];
+      ...[manifest.artifact, manifest.native_boundary].filter(Boolean), ...(manifest.license?.files ?? [])];
     for (const item of descriptors) {
       inside(root, item.path);
       assert.ok(files[item.path], id + ': native file missing ' + item.path);
@@ -115,7 +175,7 @@ export async function verifyRoot(root, id, version, profile = 'value', resourceC
     for (const child of Object.values(value)) walk(child);
   };
   // Build input paths are workspace provenance, not files in the published Root.
-  for (const key of ['artifact', 'component', 'core_abi', 'wit', 'bindings', 'agent']) walk(manifest[key]);
+  for (const key of ['artifact', 'component', 'core_abi', 'wit', 'bindings', 'agent', 'license']) walk(manifest[key]);
   return { files, manifest, manifest_sha256: files['lib.json'].sha256 };
 }
 

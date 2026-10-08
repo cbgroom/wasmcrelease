@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { cp, mkdir, mkdtemp, readFile, readdir, rename } from 'node:fs/promises';
 import { homedir, tmpdir } from 'node:os';
 import { isAbsolute, join, resolve } from 'node:path';
-import { acquireWriter, atomicJson, command, digest, exists, inside, inventory as fileInventory, json, sha, verifyCache, verifyRoot, writeChanged } from './lib-refresh-cache-v2.mjs';
+import { acquireWriter, attachReleaseLicense, atomicJson, command, digest, exists, inside, inventory as fileInventory, json, sha, verifyCache, verifyRoot, writeChanged } from './lib-refresh-cache-v2.mjs';
 import { buildNative } from './lib-refresh-native-v2.mjs';
 import { upstreamSourceInputs } from './lib-refresh-upstream-source-v2.mjs';
 import { resourceCoreInputs, stageResourceCore } from './lib-refresh-resource-core-v2.mjs';
@@ -19,6 +19,9 @@ function argumentsOf(argv) {
     } else if (value === '--resource-core-inputs' || value === '--resource-core-inputs-sha256') {
       assert.ok(argv[i + 1] && !argv[i + 1].startsWith('--'), 'missing value for ' + value);
       args[value === '--resource-core-inputs' ? 'resourceCoreInputs' : 'resourceCoreInputsSha256'] = argv[++i];
+    } else if (value === '--release-license' || value === '--release-license-sha256') {
+      assert.ok(argv[i + 1] && !argv[i + 1].startsWith('--'), 'missing value for ' + value);
+      args[value === '--release-license' ? 'releaseLicense' : 'releaseLicenseSha256'] = argv[++i];
     } else if (value === '--all') args.all = true;
     else if (value === '--update-lock') args.updateLock = true;
     else if (value === '--rebuild') args.rebuild = true;
@@ -88,6 +91,12 @@ export async function refresh(argv, render) {
       specs.set(entry.id, spec); payloads.set(entry.id, bytes);
     }
     const producerSha = sha(await readFile(args.producer));
+    assert.equal(Boolean(args.releaseLicense), Boolean(args.releaseLicenseSha256), 'paired release license path/pin required');
+    let releaseLicense = null;
+    if (args.releaseLicense) {
+      assert.ok(isAbsolute(args.releaseLicense)); assert.match(args.releaseLicenseSha256, /^[0-9a-f]{64}$/);
+      releaseLicense = await load(args.releaseLicense); assert.equal(sha(releaseLicense), args.releaseLicenseSha256, 'release license input drift');
+    }
     const upstreamInputs = await upstreamSourceInputs(args, policy, producerSha, load);
     for (const [name, info] of Object.entries(policy.shared_modules ?? {})) {
       assert.match(info.module, /^[A-Za-z_][A-Za-z0-9_]*$/);
@@ -159,7 +168,7 @@ export async function refresh(argv, render) {
     await sync(join(workspace, 'Cargo.lock'), lockBytes);
     for (const entry of rustEntries) await sync(join(workspace, 'crates', entry.id, 'Cargo.lock'), lockBytes);
     const common = { generator, producer_sha256: producerSha, toolchain, policy_sha256: sha(policyBytes),
-      cargo_lock_sha256: sha(lockBytes), workspace_manifests_sha256: digest(manifests) };
+      cargo_lock_sha256: sha(lockBytes), workspace_manifests_sha256: digest(manifests), release_license_sha256:args.releaseLicenseSha256 ?? null };
     const keys = Object.fromEntries(selected.map(id => {
       const dependencies = closure(id);
       const modules = [...new Set(specs.get(id).shared_modules ?? [])].sort();
@@ -210,6 +219,7 @@ export async function refresh(argv, render) {
         row.producer_ms = result.duration_ms;
         }
       }
+      if (releaseLicense) await attachReleaseLicense(packageRoot, releaseLicense, args.releaseLicenseSha256);
       const verified = await verifyRoot(packageRoot, id, spec.version, spec.profile, Boolean(spec.core_resource));
       if (spec.profile === 'host') {
         assert.ok(Array.isArray(spec.host_imports) && spec.host_imports.length > 0,
@@ -242,6 +252,7 @@ export async function refresh(argv, render) {
     for (const [path, expected] of source) assert.ok((await readFile(path)).equals(expected), 'SOURCE_DRIFT: ' + path);
     const receipt = { schema: 'wasmc.lib-refresh-receipt/v2', accepted: true, fingerprint,
       run_root: runRoot, producer: { path: args.producer, sha256: producerSha }, generator_digests: generator,
+      release_license_input:args.releaseLicense ? {path:args.releaseLicense,sha256:args.releaseLicenseSha256} : null,
       toolchain, cargo_lock_sha256: sha(lockBytes), selected, package_keys: keys, rows: progress.rows,
       upstream_source_input_manifest: args.upstreamSourceInputs ? { path: args.upstreamSourceInputs, sha256: args.upstreamSourceInputsSha256 } : null,
       upstream_source_inputs: Object.fromEntries([...upstreamInputs].map(([id, input]) => [id, input.identity])),

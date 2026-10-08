@@ -406,3 +406,20 @@ All10 actual generated Component SDK APIs pass256 persistent rounds and8198
 checks with1797 explicit resource drops. Its declared complete SDK is Component;
 an ordinary Core SDK/App has not been qualified. Whole42 generation alone is
 still independent from complete SDK/ordinary App Q2 and release admission.
+
+
+## Whole-product release license input
+
+Raw source/Q0 roots do not imply a release license grant. For new product
+packaging, provide the explicit paired --release-license absolute path and
+--release-license-sha256 identity. The input enters every refresh key and the
+source/end-of-read fence before cache reuse. Generic attachment writes only the
+exact root LICENSE snapshot, manifest license descriptor, and generated Rust SDK
+Cargo license-file plus matching digest descriptors. It preserves executable
+artifacts and SDK source bytes, rejects existing different license authority and
+linked/non-regular output, and is byte-idempotent. Original unlicensed receipts
+stay unchanged; a new complete cohort/inventory is required. Snapshot transport
+does not prove actual third-party notice completeness, license compatibility,
+runtime, installation, Pi or release admission. Qualify the entire selected
+current registry and exact current manifest/Cargo paths, never an old18-root
+projection or a hard-coded bindings/rust layout.
