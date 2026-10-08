@@ -8,6 +8,15 @@ import { sha, atomicJson, command, acquireWriter } from './lib-refresh-cache-v2.
 import { checkQ2Evidence, checkQ2Resume } from './lib-q2-evidence-v2.mjs';
 
 const args=process.argv.slice(2),run=selectedRun(args);
+// Complete current-index Apps include cold JIT admission before bounded calls.
+// Keep that cold command budget finite and explicit in every attempt receipt.
+const timeoutPosition=args.indexOf('--case-timeout-ms');
+const timeoutText=timeoutPosition<0?'600000':args[timeoutPosition+1];
+assert.ok(typeof timeoutText==='string'&&/^[0-9]+$/.test(timeoutText),'case timeout must be integer milliseconds');
+const caseTimeoutMs=Number(timeoutText);
+assert.ok(Number.isSafeInteger(caseTimeoutMs)&&caseTimeoutMs>=60000&&caseTimeoutMs<=900000,
+  'case timeout must be 60000..900000 milliseconds');
+
 function arg(name){const i=args.indexOf(name);assert.ok(i>=0&&args[i+1],name+' required');return args[i+1];}
 const text=await readFile(resolve(arg('--index')),'utf8'),wire=JSON.parse(text);
 const index={...wire,entries:indexEntries(wire)};
@@ -54,7 +63,7 @@ const receiptPath=join(attempt,resumePosition<0?'receipt.json':
   'resume-receipt-'+Date.now()+'-'+process.pid+'.json');
 const report={schema:'wasmc.current-lib-search-ordinary-q2/v2',accepted:false,
   cases_sha256:sha(Buffer.from(JSON.stringify(cases))),index_sha256:sha(Buffer.from(text)),tooling,
-  root_manifest_sha256:selected.row.manifest_sha256,public_admission:false,results:[],
+  root_manifest_sha256:selected.row.manifest_sha256,public_admission:false,case_timeout_ms:caseTimeoutMs,results:[],
   scope:'Independent Apps per case; unchanged complete Root and full current index; fresh bounded Stores'};
 try{
   let previous;
@@ -95,7 +104,7 @@ try{
     console.error(JSON.stringify({case:name,state:'building-and-executing',attempt}));
     const execution=name+'-execution'+(resumePosition>=0?'-resume-'+Date.now():'');
     const output=await command(tooling.runner.path,[planPath,join(attempt,execution)],
-      {cwd:process.cwd(),timeout:240000,logs:join(attempt,execution+'-run')});
+      {cwd:process.cwd(),timeout:caseTimeoutMs,logs:join(attempt,execution+'-run')});
     const result=JSON.parse(output.stdout.trim().split('\n').at(-1));
     checkQ2Evidence(result,[cases[i]],pins,4);
     report.results.push(result);await atomicJson(join(attempt,'progress.json'),report);
