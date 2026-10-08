@@ -1,0 +1,48 @@
+{
+  "schema": "wasmc.core-compatibility/v1",
+  "candidate_version": "0.0.21",
+  "scope": "Exact current compiler/Provider49/Std141 artifacts; full validation and independent whole-product identity required. Publication is not inferred.",
+  "version_policy": "Probe actual engine capabilities and validate exact complete bytes.",
+  "artifacts": [
+    {
+      "id": "compiler",
+      "path": "current/wasmc_compiler.wasm",
+      "bytes": 1510612,
+      "sha256": "d2efa131dc65bbcd797512cf9628e329c137283b9817976d93dbc782d4b64661",
+      "validation_profile": "wasm2",
+      "additional_required_gates": []
+    },
+    {
+      "id": "automatic-provider",
+      "path": "current/lib_core.wasm",
+      "bytes": 31468,
+      "sha256": "c3ac42b93f4c27e24065abe804b91f54761eff782e2971e947847b3d20ee7e00",
+      "validation_profile": "wasm2",
+      "additional_required_gates": []
+    },
+    {
+      "id": "standard-provider",
+      "path": "standard/corelib/4.9.0/corelib.wasm",
+      "bytes": 31468,
+      "sha256": "c3ac42b93f4c27e24065abe804b91f54761eff782e2971e947847b3d20ee7e00",
+      "validation_profile": "wasm2",
+      "additional_required_gates": []
+    },
+    {
+      "id": "standard",
+      "path": "standard/wasmc-std/1.4.1/artifact.wasm",
+      "bytes": 44221,
+      "sha256": "b79a499c8300361125e7fcdae02170184b82d4bbeff4d8f24ed95f3fd4db8d3b",
+      "validation_profile": "wasm2,function-references,tail-call",
+      "additional_required_gates": [
+        "function-references",
+        "tail-call"
+      ]
+    }
+  ],
+  "non_claims": [
+    "minimal feature set",
+    "device acceptance",
+    "whole release admission"
+  ]
+}

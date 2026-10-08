@@ -22,3 +22,17 @@ Final current42 Q0/index/preflight and Std73 all-resource/SDK/ordinary-App route
 The whole release uses candidate/v3 and the current normalized index, already admitted by the existing final Pi gate. No new candidate goes through the old18/LSI projection. Current catalog/install must carry all registry implementations, actual native-source/native-binary/Wasm profile identity and exact manifest/whole-root pins; complete current Search executes actual Core snapshot/lookup/pagination. New paths are claimed here after verifying all other public workstream owners are completed. Native-source is installable source, never simulated Wasm/device acceptance. Immutable product tags remain historical evidence; no compatibility fallback is part of the new current flow.
 
 Current v3 actual strict WIT closure found network prototype top-level record rejected by wasm-tools1.252.0. Corrected as source0.0.2 with record inside network interface; standard parse/source42 validation pass. Original failure retained at /home/huawei/code/.cache/wasmc-evidence/current-std73-production-20261008/fresh-bootstrap-qohnmhlp/network-prototype-standard-WIT-source-p5qt8nsi. Fresh complete licensed42 refresh/index and exact new Search proof follow. Current v3 helper/assembler/codec/install are owned uncommitted prototypes, not accepted product.
+
+
+## 2026-10-08 current42 and compiler/SDK49 checkpoint
+
+Artifact commitff615bb67e998c6169fabaf9db7665c18500c987 was pushed/read back.
+Catalog01fda278b3c74363643879f71cc739488a57e9d934f217ab07af3460b88923d4
+binds those exact42 Roots. Eight real GitHub/jsDelivr source-free installs,
+the42 current controls, Core/Native/Host SDK49 complete tests, and the three-host
+compiler/Std checks pass. Compilerd2efa131dc65bbcd797512cf9628e329c137283b9817976d93dbc782d4b64661
+has two raw and three embedded carriers; default Provider is4.9.
+Source master/L3, five native target jobs, whole candidate/Pi and immutable
+publication are pending. Native-source14 packages remain source-only.
+Source branch95a8257c1ffaa517efdf9f3d16f1b60e98410670 has qualified current
+code; uncommitted test-fixture updates are tracked separately.

@@ -1,17 +1,17 @@
 {
   "schema": "wasmc.current-compiler-qualification/v1",
   "accepted": true,
-  "version": "0.0.21-compiler.1",
-  "compiler_sha256": "032a408b7435333f65f3bc80ef2f5646edf829698bc384a276076bff8d64666a",
-  "product_manifest_sha256": "fe0f939f533ee322c5a3473cb8bc2a55a5aac2ec6bb33dfba63ae54e6fc42f67",
+  "version": "0.0.21",
+  "compiler_sha256": "d2efa131dc65bbcd797512cf9628e329c137283b9817976d93dbc782d4b64661",
+  "product_manifest_sha256": "2dda3dade2d9e2aa70403011344dd1c58c9cbd0edd9d8ca065fd9ae530d0595f",
   "source_free": true,
   "compiler_private_source_present": false,
-  "platform": "darwin",
-  "arch": "arm64",
+  "platform": "linux",
+  "arch": "x64",
   "runs": [
     {
       "engine": "node",
-      "version": "v26.5.1",
+      "version": "v24.19.0",
       "args": [
         "scripts/test-current-compiler.mjs"
       ],
@@ -19,7 +19,7 @@
       "result": {
         "accepted": true,
         "runtime": "node",
-        "compiler_sha256": "032a408b7435333f65f3bc80ef2f5646edf829698bc384a276076bff8d64666a",
+        "compiler_sha256": "d2efa131dc65bbcd797512cf9628e329c137283b9817976d93dbc782d4b64661",
         "frozen_outputs": 35,
         "execution_oracles": 7,
         "cli_outputs": 25
@@ -27,19 +27,35 @@
     },
     {
       "engine": "node",
-      "version": "v26.5.1",
+      "version": "v24.19.0",
       "args": [
         "examples/current/standard.mjs"
       ],
       "exit_code": 0,
       "result": {
         "accepted": true,
-        "standard_lib": "wasmc:std@1.4.0",
+        "standard_lib": "wasmc:std@1.4.1",
         "functions": 73,
         "consumer_count": 3,
         "consumer_calls": 7680,
-        "current_app_sha256": "08a6cb5e7f19cc0f01ef8cc034da6834c8932adf1c3919eff5cc24ae4959ff32",
-        "historical_fixture_unchanged": true
+        "current_app_sha256": "21b6d7809c3325705e3d442aae909b7d337014189dbf355a0d72e54ad22f9dbd",
+        "rust_sdk_sha256": "4d2c55eda7cdbe4d14084de2d579ae6dcea97332e18ca9894d210a5a71472d65"
+      }
+    },
+    {
+      "engine": "node",
+      "version": "v24.19.0",
+      "args": [
+        "scripts/test-current-lib-api-v021.mjs"
+      ],
+      "exit_code": 0,
+      "result": {
+        "accepted": true,
+        "provider": "4.9.0",
+        "compileLib_oracles": 3,
+        "instantiateLib_oracles": 3,
+        "calls": 768,
+        "old_provider_fallback": false
       }
     },
     {
@@ -52,7 +68,7 @@
       "result": {
         "accepted": true,
         "runtime": "bun",
-        "compiler_sha256": "032a408b7435333f65f3bc80ef2f5646edf829698bc384a276076bff8d64666a",
+        "compiler_sha256": "d2efa131dc65bbcd797512cf9628e329c137283b9817976d93dbc782d4b64661",
         "frozen_outputs": 35,
         "execution_oracles": 7,
         "cli_outputs": 25
@@ -67,17 +83,33 @@
       "exit_code": 0,
       "result": {
         "accepted": true,
-        "standard_lib": "wasmc:std@1.4.0",
+        "standard_lib": "wasmc:std@1.4.1",
         "functions": 73,
         "consumer_count": 3,
         "consumer_calls": 7680,
-        "current_app_sha256": "08a6cb5e7f19cc0f01ef8cc034da6834c8932adf1c3919eff5cc24ae4959ff32",
-        "historical_fixture_unchanged": true
+        "current_app_sha256": "21b6d7809c3325705e3d442aae909b7d337014189dbf355a0d72e54ad22f9dbd",
+        "rust_sdk_sha256": "4d2c55eda7cdbe4d14084de2d579ae6dcea97332e18ca9894d210a5a71472d65"
+      }
+    },
+    {
+      "engine": "bun",
+      "version": "1.3.14",
+      "args": [
+        "scripts/test-current-lib-api-v021.mjs"
+      ],
+      "exit_code": 0,
+      "result": {
+        "accepted": true,
+        "provider": "4.9.0",
+        "compileLib_oracles": 3,
+        "instantiateLib_oracles": 3,
+        "calls": 768,
+        "old_provider_fallback": false
       }
     },
     {
       "engine": "deno",
-      "version": "deno 2.9.4 (stable, release, aarch64-apple-darwin)\nv8 15.0.245.2-rusty\ntypescript 6.0.3",
+      "version": "deno 2.9.7 (stable, release, x86_64-unknown-linux-gnu)\nv8 15.0.245.2-rusty\ntypescript 6.0.3",
       "args": [
         "run",
         "--allow-read",
@@ -90,7 +122,7 @@
       "result": {
         "accepted": true,
         "runtime": "deno",
-        "compiler_sha256": "032a408b7435333f65f3bc80ef2f5646edf829698bc384a276076bff8d64666a",
+        "compiler_sha256": "d2efa131dc65bbcd797512cf9628e329c137283b9817976d93dbc782d4b64661",
         "frozen_outputs": 35,
         "execution_oracles": 7,
         "cli_outputs": 25
@@ -98,7 +130,7 @@
     },
     {
       "engine": "deno",
-      "version": "deno 2.9.4 (stable, release, aarch64-apple-darwin)\nv8 15.0.245.2-rusty\ntypescript 6.0.3",
+      "version": "deno 2.9.7 (stable, release, x86_64-unknown-linux-gnu)\nv8 15.0.245.2-rusty\ntypescript 6.0.3",
       "args": [
         "run",
         "--allow-read",
@@ -107,12 +139,30 @@
       "exit_code": 0,
       "result": {
         "accepted": true,
-        "standard_lib": "wasmc:std@1.4.0",
+        "standard_lib": "wasmc:std@1.4.1",
         "functions": 73,
         "consumer_count": 3,
         "consumer_calls": 7680,
-        "current_app_sha256": "08a6cb5e7f19cc0f01ef8cc034da6834c8932adf1c3919eff5cc24ae4959ff32",
-        "historical_fixture_unchanged": true
+        "current_app_sha256": "21b6d7809c3325705e3d442aae909b7d337014189dbf355a0d72e54ad22f9dbd",
+        "rust_sdk_sha256": "4d2c55eda7cdbe4d14084de2d579ae6dcea97332e18ca9894d210a5a71472d65"
+      }
+    },
+    {
+      "engine": "deno",
+      "version": "deno 2.9.7 (stable, release, x86_64-unknown-linux-gnu)\nv8 15.0.245.2-rusty\ntypescript 6.0.3",
+      "args": [
+        "run",
+        "--allow-read",
+        "scripts/test-current-lib-api-v021.mjs"
+      ],
+      "exit_code": 0,
+      "result": {
+        "accepted": true,
+        "provider": "4.9.0",
+        "compileLib_oracles": 3,
+        "instantiateLib_oracles": 3,
+        "calls": 768,
+        "old_provider_fallback": false
       }
     }
   ],
@@ -126,7 +176,7 @@
   },
   "nonclaims": [
     "whole-product release",
-    "all18 Lib qualification",
+    "whole42 Lib runtime qualification",
     "Pi model-pair qualification",
     "native SDK requalification",
     "real browser qualification"

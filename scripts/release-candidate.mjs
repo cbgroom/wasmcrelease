@@ -313,7 +313,7 @@ function walk(directory) {
 }
 
 export const currentV3ProductInputs=Object.freeze([
-  'LICENSE','catalog/libs-current-v2.json','catalog/current-index-v2.json','libspec/registry.json',
+  'LICENSE','compatibility/core-artifacts-v021.json','current/compiler-release.json','catalog/libs-current-v2.json','catalog/current-index-v2.json','libspec/registry.json',
   'admission/current-refresh-cohort-v2.json','admission/current-product-v3.json',
   'scripts/current-lib-release-v3.mjs','scripts/current-lib-search-v3.mjs',
   'scripts/current-core-value-codec-v3.mjs','scripts/current-wit-routes-v3.mjs',
@@ -331,7 +331,36 @@ export function currentCandidateClosure(candidate,read){
   if(candidate.current_catalog?.path!=='catalog/libs-current-v2.json'||hash(catalogBytes)!==candidate.current_catalog.sha256)throw Error('current catalog independent candidate pin');
   const catalog=checkedCurrentCatalog(catalogBytes,candidate.current_catalog.sha256);
   if(catalog.version!==candidate.version)throw Error('current catalog release version drift');
-  return verifyCurrentRelease(catalogBytes,candidate.current_catalog.sha256,exact,[...rows.keys()]);
+  const compiler=JSON.parse(exact('current/compiler-release.json'));
+  if(compiler.schema!=='wasmc.current-compiler/v2'||compiler.version!==candidate.version||
+     compiler.source_commit!==candidate.compiler_source_authority||compiler.source_branch!=='master')
+    throw Error('canonical compiler source/version authority drift');
+  const raw=exact('current/wasmc_compiler.wasm');
+  if(hash(raw)!==compiler.compiler.sha256||raw.length!==compiler.compiler.bytes||raw.length>2097152)
+    throw Error('compiler identity or byte budget drift');
+  if(WebAssembly.Module.imports(new WebAssembly.Module(raw)).length)throw Error('compiler imports forbidden');
+  const binaries=[],embeddings=[];
+  for(const [path]of rows){
+    if(path.endsWith('.wasm')){
+      const bytes=exact(path);let module;try{module=new WebAssembly.Module(bytes);}catch{continue;}
+      if(WebAssembly.Module.exports(module).some(e=>e.name==='wasmc_compile')){
+        if(hash(bytes)!==compiler.compiler.sha256)throw Error('obsolete compiler '+path);binaries.push(path);
+      }
+    }else if(/\.(mjs|js)$/.test(path)){
+      for(const m of exact(path).toString().matchAll(/function decodeEmbeddedCompiler\(\) \{\s*const binary = atob\("([A-Za-z0-9+/=]+)"\);/g)){
+        if(hash(Buffer.from(m[1],'base64'))!==compiler.compiler.sha256)throw Error('obsolete embedding '+path);embeddings.push(path);
+      }
+    }
+  }
+  assert.deepEqual(binaries.sort(),['current/wasmc_compiler.wasm','runtime/wasmc-runtime-v0/compiler.wasm']);
+  assert.deepEqual(embeddings.sort(),['current/wasmc.global.js','current/wasmc.mjs','dist/wasmc.global.js']);
+  assert.equal(compiler.active_compiler_versions,1);
+  for(const pin of compiler.artifacts){const bytes=exact(pin.path);if(bytes.length!==pin.bytes||hash(bytes)!==pin.sha256)throw Error('compiler manifest artifact drift '+pin.path);}
+  const closure=verifyCurrentRelease(catalogBytes,candidate.current_catalog.sha256,exact,[...rows.keys()]);
+  return{...closure,compiler_manifest_sha256:hash(exact('current/compiler-release.json')),
+    compiler_sha256:compiler.compiler.sha256,compiler_source_commit:compiler.source_commit,
+    canonical_source_branch:compiler.source_branch,compiler_build_receipt_sha256:compiler.source_build_receipt_sha256,
+    compiler_carriers:{binaries,embeddings},active_compiler_versions:1};
 }
 export async function createCurrentCandidate(repo,{compilerSource,libSource,version,currentOptions}){
   const {requireCurrentReleaseCohort}=await import('./lib-current-release-preflight.mjs');
@@ -344,7 +373,7 @@ export async function createCurrentCandidate(repo,{compilerSource,libSource,vers
     return s.isDirectory()?walk(path):[path];
   });
   const catalogBytes=read('catalog/libs-current-v2.json'),catalog=checkedCurrentCatalog(catalogBytes,hash(catalogBytes));
-  const directories=['current','standard','sdk','runtime','current-libs',
+  const directories=['current','dist','package','examples/current','standard','sdk','runtime','current-libs','licenses',
     'skills/wasmc-developer','skills/wasmc-lib-discovery','skills/wasmc-sdk-discovery',
     'host/contract','host/sdk','host/drivers/file/rust','host/drivers/memory/rust'];
   const paths=new Set([...currentV3ProductInputs,...directories.flatMap(walk),

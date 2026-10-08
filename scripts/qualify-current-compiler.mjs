@@ -13,7 +13,8 @@ for(const engine of ['node','bun','deno']) {
   if(version.status!==0)throw Error(`missing ${engine}`);
   const commands=[
     engine==='deno'?['run','--allow-read','--allow-write','--allow-run','--allow-env','scripts/test-current-compiler.mjs']:['scripts/test-current-compiler.mjs'],
-    engine==='deno'?['run','--allow-read','examples/current/standard.mjs']:['examples/current/standard.mjs']
+    engine==='deno'?['run','--allow-read','examples/current/standard.mjs']:['examples/current/standard.mjs'],
+    engine==='deno'?['run','--allow-read','scripts/test-current-lib-api-v021.mjs']:['scripts/test-current-lib-api-v021.mjs']
   ];
   for(const args of commands) {
     const r=spawnSync(engine,args,{cwd:root,encoding:'utf8',timeout:60000});
@@ -31,6 +32,6 @@ const receipt={schema:'wasmc.current-compiler-qualification/v1',accepted:true,
   source_free:true,compiler_private_source_present:false,
   platform:platform(),arch:arch(),runs,
   rejection_controls:{exit_code:control.status,result:JSON.parse(control.stdout)},
-  nonclaims:['whole-product release','all18 Lib qualification','Pi model-pair qualification','native SDK requalification','real browser qualification']};
+  nonclaims:['whole-product release','whole42 Lib runtime qualification','Pi model-pair qualification','native SDK requalification','real browser qualification']};
 writeFileSync(root+'current/qualification.json',JSON.stringify(receipt,null,2)+'\n');
-console.log(JSON.stringify({accepted:true,engines:3,api_cli_outputs:180,execution_oracles:21,standard_consumer_calls:23040,actual_rejections:6,product_manifest_sha256:receipt.product_manifest_sha256}));
+console.log(JSON.stringify({accepted:true,engines:3,api_cli_outputs:180,execution_oracles:21,standard_consumer_calls:23040,actual_rejections:6,compileLib_oracles:9,instantiateLib_oracles:9,managed_Lib_calls:2304,product_manifest_sha256:receipt.product_manifest_sha256}));

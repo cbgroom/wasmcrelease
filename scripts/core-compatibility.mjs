@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 
-export const coreContract = JSON.parse(readFileSync(new URL('../compatibility/core-artifacts-v009.json', import.meta.url)));
+export const coreContract = JSON.parse(readFileSync(new URL('../compatibility/core-artifacts-v021.json', import.meta.url)));
 export const currentHost = () => ({name:globalThis.Bun ? 'bun' : globalThis.Deno ? 'deno' : 'node', version:globalThis.Bun?.version ?? globalThis.Deno?.version.deno ?? process.version, v8:process.versions.v8 ?? null});
 const probes = Object.freeze({
   'function-references': '0061736d010000000105016000017f03030200000707010372756e0001090501030001000a0d02040041070b0600d20014000b0015046e616d65010801000576616c7565040401000166',

@@ -18,7 +18,7 @@ use wasmtime::{
 const NATIVE_MAGIC: &[u8; 8] = b"WASMCN01";
 const NATIVE_VERSION: u32 = 1;
 const NATIVE_FOOTER_LEN: usize = 60;
-const WASMTIME_VERSION: &str = "47.0.4";
+const WASMTIME_VERSION: &str = "49.0.2";
 const AOT_PROFILE: &str = "core-speed-v1";
 
 fn main() {

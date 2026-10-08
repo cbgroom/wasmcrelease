@@ -11,7 +11,7 @@ const targets = {
   'x86_64-pc-windows-msvc': ['win32', 'x64'],
   'aarch64-pc-windows-msvc': ['win32', 'arm64'],
 };
-const compilerDigest = '4e0b9779df3bf7b627d7d9fbfc43cfffd67bb053f87c69a9f832c5690b6888a2';
+const compilerDigest = 'd2efa131dc65bbcd797512cf9628e329c137283b9817976d93dbc782d4b64661';
 const profileName = 'wasmc-cli-aot-v1';
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
 function command(program, args) {

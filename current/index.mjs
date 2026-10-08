@@ -320,7 +320,7 @@ export async function loadWasmcBrowserCompiler(url) {
 
 const DEFAULT_COMPILER_URL = new URL("./wasmc_compiler.wasm", import.meta.url);
 const DEFAULT_LIB_URL = new URL("./lib_core.wasm", import.meta.url);
-const LIB_IMPORT_MODULE = "wasmc:lib/wasmc.lib_managed_object_heap@4.3.0";
+const LIB_IMPORT_MODULE = "wasmc:lib/wasmc.lib_managed_object_heap@4.9.0";
 let defaultCompilerPromise = null;
 
 async function readCompilerArtifact(url) {
@@ -441,7 +441,7 @@ function nextLibStoreNonce() {
 async function verifyLib(libWasm) {
   const digest = new Uint8Array(await crypto.subtle.digest("SHA-256", libWasm));
   const digestHex = Array.from(digest, (value) => value.toString(16).padStart(2, "0")).join("");
-  if (digestHex !== "86670b35fe4ff01f9ad4392b42ce8816e4679f680ab788599905edb1bbe6e749") {
+  if (digestHex !== "c3ac42b93f4c27e24065abe804b91f54761eff782e2971e947847b3d20ee7e00") {
     throw new Error("wasmc lib artifact identity mismatch");
   }
   const module = new WebAssembly.Module(libWasm);

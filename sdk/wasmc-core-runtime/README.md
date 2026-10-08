@@ -2,8 +2,8 @@
 
 > **Agent entry:** read [SKILL.md](SKILL.md) before generating integration code. Verify the pinned checkout/release status first.
 
-Public release source authority: private wasmc commit
-`bddf8a371698ac7f1ced87b02952df5be5359dad`. The immutable outer release tag
+Current0.0.21 candidate source authority: private wasmc commit (canonical master integration pending)
+`95a8257c1ffaa517efdf9f3d16f1b60e98410670`. The immutable outer release tag
 and this directory's bytes are the distributable identity; the private commit
 is provenance, not a runtime network dependency.
 
