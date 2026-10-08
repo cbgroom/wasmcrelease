@@ -1,93 +1,53 @@
-# Current42 provider4.9 final release handoff
+# Current whole v0.0.21 release resume
 
-Current42 authoring inventory has no pending identity or legacy source fallback.
-The sole task-wasmc-thin-host-semantic-lifecycle-closure executor/chat01a11750 owns this workstream. Current source-only Std provider identity is coherent4.9; no frozen4.8/v0.0.20 relabel. Private compiler source and MCPGit kernel bytes are not published.
+Task state: in-progress. Sole parent task: task-wasmc-thin-host-semantic-lifecycle-closure.
+Execution chat:01a11750-35f8-7ff0-a8f7-7df28acf332c.
+Source authority:libspec; whole current candidate:v3. No compatibility fallback.
 
-provider49-current-checkpoint.json pins correctly source-containing private272b122bfeaf1dc1af117076b509d74ca99deab9 on successor WS-20261008-final-release-compiler-v1, with exact native producer439d5ac8b72a9e3fadb2d313e460acc63f1f5facec5932ce727b50cdc99ebc6a. Build/doc7/runtime107 and actual ordinary JSON9/Owned6 dual-engine/four rounds/Std5120 persistent calls pass. Correct stable task provenance restored current context/frozen137 acceptance and exact original19 historical WARN; raw strict-history exit1 remains retained.
+Current product has42 identities/236 API routes/278 index entries, Provider4.9,
+Std1.4.1 and LibSearch0.5.0. Artifact authority isff615bb67e998c6169fabaf9db7665c18500c987,
+catalog SHA01fda278b3c74363643879f71cc739488a57e9d934f217ab07af3460b88923d4.
+Full noticed Q0, Q1 and Q2, Std73/nine resource lifecycles/256 persistent rounds,
+all14 selected SDK profiles and actual GitHub/jsDelivr consumers passed for
+compilerd2/providerc3. Complete Native v3 six-archive/twelve-cell run37755329133
+passed for source02fe1df2 and compilerd2. These are scoped predecessor evidence.
 
-Fresh source-only ten-module Std graph and source-compiled4.9 provider c3ac42b9 support all73 public functions/nine resources/nine lifecycles. Existing exact Std Core/Component SDK consumers passed256 persistent rounds using Node/Wasmi/Wasmtime. Current Resident0.2.0 complete Component SDK all10 APIs/256 rounds/8198 checks/1797 drops remains exact source-backed scope; it is not ordinary Core SDK/App acceptance. Its kernel is privately staged, pinned at MCPGit e0e1a0cd source Blob1006d2b4 and SHA0c1e80b4. No old kernel source or sparse collection performance claim.
+Private source branch95 contains actual master8c3f9a32 and current4.9 semantics.
+Subsequent owned source work fixed real Bool private-zero initialization and
+manifest-owned Core/Component test views. Current workspace both-engine184 build
+passed;181 ELF bytes matched independently after three harness corrections.
+Component17 and both Rich Core tests passed. Cost256 managed-list calls pass after
+adding the actual facade's private graph initialization; full workspace-context
+reconcile is running. Complete348 library remains active and has passed six-data
+fresh publication, SDK verification and data performance tests. No complete source
+L3/canonical master or new Bool-correct compiler is yet admitted.
 
-Previous full42 cohort from f905 producer passed Q0/current index/preflight at42 packages/236 APIs/278 entries; Q1 Node/data/router/authorization/HTTP/native-prototype/realLinux telemetry gates passed with recorded target boundaries. This is prior-producer evidence; the final439d containing-source cohort is independently pending.
+Current v3 freeze binds80 executable CI/Pi/compiler-qualification/refresh inputs
+and their required contract data, including nested Pi/performance commands,
+localhost-only WSS fixture pair and full six refresh-generator identities.
+32 actual deletion/mutation negatives pass. A prospective read-only inventory
+contains all79 compiler model files,91 Q0 source inputs and6 generators with no
+omission. Five maintainer/control/history-security gates all exit0.
 
-Full current-index direct Core and actual ordinary Search snapshot passed on both engines. Lookup reached the old fixed240s cold-command deadline after bundle creation. Engines/modules are already cached within NativeLogicalApp; no runtime code patch was needed. Search harness now records finite600s default case budget and explicit60..900s override, preserving exact full Root/index/source/cases/rounds/tooling/engine fences.16 semantic evidence/resume controls pass. Original timeout and initial missing-Rust-tooling-PATH resume receipts stay immutable; exact named snapshot is reused and remaining cases run operation exec-00000000000005a2.
+Security preserves9 raw finding objects and zero unresolved/skipped/errors.
+Known localhost-only self-signed TLS fixture has no production authority.
+Two d2 compiler-carrier tuples were independently decoded/hash/import/nine-detector
+reviewed under this authorized maintenance. Their recorded provenance is mechanical
+review, not an invented new human approval of exact hashes. Unknown, altered,
+outside/decoded findings and committed-then-deleted credentials reject.
+Original security, source/resource/SDK and tool-PATH failures remain retained.
 
-libspec remains sole current source authority. Current Std metadata changes only the unpublished current candidate dependency identity to4.9. Public script changes only bounded qualification command admission; no product capability is narrowed. Foreign native source-only targets retain honest source/device status; Linux/Node actual runtime and Host/native gates must be distinguished from SDK/artifact evidence.
+Current-CI-execution-input-checkpoint.json binds this current scope;
+earlier detailed checkpoints retain exact receipts without relabeling.
+Public maintainer Skills were reviewed; branch-local knowledge proposals retain
+lessons until serialized shared ingestion. Compiler/provider implementation
+source and private MCPGit kernel remain outside public delivery.
 
-Next: generate final42 with exact containing source/producer and both independently pinned resource/upstream manifests; bind final index/preflight and complete all current-profile SDK/ordinary App/lifecycle/Host/capacity/native/license/independent rebuild/install/Pi gates. Integrate correctly contained source and publish immutable new whole product plus exact dev/main/prod channels. Whole v0.0.20 manifest remains immutable; its known overlay AGENTS mismatch is not repaired by relabelling it. Current compiler-only overlay is distinct from new whole-product publication.
-
-Owned worktrees/claims and immutable failures remain preserved. Rust1.96 compatible pools serialize writers with12GiB80percent per-pool/36GiB aggregate/100GiB-free admission; no unrelated cleanup. No active platform approval rejection is recorded.
-
-Final current42 Q0/index/preflight and Std73 all-resource/SDK/ordinary-App routes pass; original receipts remain immutable. Complete Search prior-cohort seven cases dual engines passes; final cohort independently runs. Whole package assembly found the raw Q0 roots omit explicit LICENSE snapshots and SDK Cargo license-file bindings. Current generic refresh owns an explicit paired --release-license path/SHA input, keys it before cache reuse, attaches only release metadata/root LICENSE and SDK Cargo descriptors, and binds final whole inventories. Executable artifacts and SDK sources remain exact. This is a required new-product package qualification, not relabeling the original Q0 receipt; licensed full42 rebuild/index and all release gates remain pending.
-
-The whole release uses candidate/v3 and the current normalized index, already admitted by the existing final Pi gate. No new candidate goes through the old18/LSI projection. Current catalog/install must carry all registry implementations, actual native-source/native-binary/Wasm profile identity and exact manifest/whole-root pins; complete current Search executes actual Core snapshot/lookup/pagination. New paths are claimed here after verifying all other public workstream owners are completed. Native-source is installable source, never simulated Wasm/device acceptance. Immutable product tags remain historical evidence; no compatibility fallback is part of the new current flow.
-
-Current v3 actual strict WIT closure found network prototype top-level record rejected by wasm-tools1.252.0. Corrected as source0.0.2 with record inside network interface; standard parse/source42 validation pass. Original failure retained at /home/huawei/code/.cache/wasmc-evidence/current-std73-production-20261008/fresh-bootstrap-qohnmhlp/network-prototype-standard-WIT-source-p5qt8nsi. Fresh complete licensed42 refresh/index and exact new Search proof follow. Current v3 helper/assembler/codec/install are owned uncommitted prototypes, not accepted product.
-
-
-## 2026-10-08 current42 and compiler/SDK49 checkpoint
-
-Artifact commitff615bb67e998c6169fabaf9db7665c18500c987 was pushed/read back.
-Catalog01fda278b3c74363643879f71cc739488a57e9d934f217ab07af3460b88923d4
-binds those exact42 Roots. Eight real GitHub/jsDelivr source-free installs,
-the42 current controls, Core/Native/Host SDK49 complete tests, and the three-host
-compiler/Std checks pass. Compilerd2efa131dc65bbcd797512cf9628e329c137283b9817976d93dbc782d4b64661
-has two raw and three embedded carriers; default Provider is4.9.
-Source master/L3, five native target jobs, whole candidate/Pi and immutable
-publication are pending. Native-source14 packages remain source-only.
-Source branch95a8257c1ffaa517efdf9f3d16f1b60e98410670 has qualified current
-code; uncommitted test-fixture updates are tracked separately.
-
-## Native package dependency identity correction
-
-GitHub run37746927526 binds distribution02fa4bee. Required Linux x64, Linux arm64 and macOS arm64 completed full tests, clippy and release build, then rejected package construction because the packaging verifier still required Wasmtime47.0.4. Corrected the exact verifier identity to resolved Wasmtime49.0.2; Wasmi2.0.0 and all behavior checks remain exact. Original job log retained locally as /tmp/wasmc-native-v021-linux-package-job.log. A fresh five-target run and downloaded consumer gate are required. No whole-release or matrix acceptance is asserted.
-
-## Current license and Native v3 package closure checkpoint
-
-Actual current42 Q1 and Q2 JSON/Owned/Core-index/full-Search passed against the exact noticed Q0 cohort. Whole repository license policy now validates42 catalog-authorized Roots plus exact global and two standard mirror original notices:270 snapshot files; eight independently pinned corruption controls pass. It keeps historical license inputs unchanged.
-
-Native run37748179723 at source1b68a54f passed all12 jobs, including required five targets and optional macOS Intel. Six artifacts were actually downloaded and their binary/README/Cargo.lock inventories verified. Those v2 packages prove functional qualification but omitted standalone copyright files. New package/v3 contains LICENSE, original notice inventory and six exact original notice parts, rejects symlinks and undeclared inputs, and independently validates original notice bytes even after a manifest is rehashed. A local macOS arm64 prototype repack of the actual CI binary passed5 byte-parity,4 Wasmi,4 Native execution and9 no-clobber cases plus12 packaging rejection controls. This prototype does not qualify a new source matrix. Five precommit syntax/current-license/current-compiler model checks passed; Native README remains outside the79 compiler model artifacts.
-
-Next: push this package checkpoint, run a fresh complete platform/downloaded-consumer matrix and verify exact artifact transport/digests. Source current19 business operations, HTTP and CSV Core SDK and CSV ordinary business passed; remaining canonical fixture paths and unfiltered L3 are active. No private source-master admission, final whole candidate, Pi acceptance or immutable v21/channel publication is asserted. Release-lib-refresh-v2 Skill reviewed unchanged; current exact-snapshot/SDK/source/native boundaries remain applicable.
-
-## Current defaults and complete Native package checkpoint
-
-Native source02fe1df242f6c447c8142ad25c2ff9dc52121de7 run37755329133 passed all12 jobs. Six actual archives were downloaded and verified with complete11-file inventory, exact LICENSE, original notice inventory and six original parts. All14 exact current Component/Host/resource SDK profiles passed. Two documented installed Std1.4.1 Roots from GitHub/jsDelivr each executed256 persistent rounds and1024 explicit drops, with occupied destination rejection.
-
-Current public defaults now use the42/236/278 normalized catalog and actual Core Search. Agent entry, decision model, Library-first install instructions, facade/Root/SDK boundaries and source-only Native identities are current. The full maintainer check exits0, including dynamic Client/Gateway/stateful recovery, WSS cancellation,20 guidance controls and6 actual current route mutations. The old v20 candidate explicitly rejects this changed tree; its product metadata and immutable tag remain untouched. See current-defaults-checkpoint.json for exact receipts and file pins.
-
-Whole v3 refresh/reopen now requires the current candidate, canonical master, singleton compiler carriers, full Roots, original notices and exact source/Host evidence. No final candidate has been allocated. Private source183-target bounded build passed within12GiB;348 unfiltered library tests and remaining integrations are incomplete. Finish source L3/master/build, freeze final current metadata and whole candidate, qualify exact two-model Pi and independent review, then publish the same immutable product set. No active platform approval rejection is recorded. Narrow release-agent-docs and release-integrity Skills were reviewed unchanged.
-
-## Current CI and actual consumer checkpoint
-
-Current default catalog/install/Search consumers now use complete42 Roots and manifest-owned0.5.0 SDK paths. Ten remote public maintainer/control commands exit0. Actual Wasmi Core256rounds768calls and generated Component1055calls pass; current Std installed from GitHub/jsDelivr on Node and GitHub on Bun/Deno executes256rounds1024drops. Complete Root42 controls, catalog10/install10 faults, concurrent single-winner and no-clobber cleanup pass. The old five-corpus30-output/23-expression/192-managed-call regression now pins current compilerd2 and admits current scalar lists; Node/Bun/Deno pass.
-
-Preserved6 portable,12 runtime/mirror and10 SearchJS cells, full-history security, actual Host execution and Rust both-engine gates. CI requires a canonical current v3 candidate; current source branch95 and compiler-only overlay cannot satisfy this authority. Candidate creation freezes actual consumer tools/workflows and declares five lifecycle projections outside immutable product bytes, with exact list/frozen-overlap rejection; final manifest/checksums and Pi exact rehearsal commit/tree still bind them.
-
-Both-engine source build passes184targets including newly admitted wasmc-bootstrap; compatible workspace pool peak1569017856B, no resource waiver. Source full execution is active with real missing explicit provider/old SDK path errors. Root348 reruns with exact Git/Rust/Deno PATH after retained Git-fact failure; no approval rejection. Canonical master/build, whole candidate/CI/Pi and immutable v21 publication remain incomplete. Current-CI-checkpoint.json binds all scope and receipts. Narrow release-lib-refresh-v2 and release-integrity Skills reviewed unchanged; current lifecycle/proof separation remains applicable.
-
-
-## Current immutable CI input and exact carrier security checkpoint
-
-The v3 candidate now includes all63 exact active CI/maintainer entrypoint,
-Cargo, architecture, benchmark and Host contract inputs. All six CI families
-are checked against the literal programs they invoke. Five additional actual
-inventory/deletion/byte-mutation controls pass; total candidate negatives24,
-lifecycle transitions3 and stage partition controls4 remain passing.
-
-Five full maintainer, release-channel, CI-reporting, credential-fixture and
-reachable-history security gates all exit0. The scanner keeps nine raw findings
-visible, classifies only exact mechanically reviewed carriers and admits zero
-unresolved findings, skipped blobs or errors. Two new d2 carriers were independently
-decoded to the pinned compiler, validated as import-free Core, and scanned by
-all nine raw detectors. Their classification records this maintenance review;
-it does not assert a new human approval of those exact hashes. Unknown/mutated
-carriers, decoded/outside findings and committed-then-deleted credentials reject.
-Original seven-vs-nine fixture/full-scan failures are retained.
-
-This remains the d2 current distribution before final canonical source integration.
-Fresh source regression corrected a real Bool private-zero initialization defect.
-Current both-engine source184 build passed;183 executions completed180PASS with
-three test-harness failures corrected and awaiting exact ELF reconciliation,
-while the full348 library continues. Final compiler bytes/affected product
-qualification, canonical master, whole candidate, Pi and immutable v21 remain
-pending. No release or approval rejection is claimed.
+Next executable action: finish current348 and cost workspace-context gate, push
+a coherent private source checkpoint, integrate canonical master and build exact
+new compiler/native producer. Rebuild/requalify every affected current42/compiler/
+SDK/Native input. Then freeze one whole product plus exactly five lifecycle
+projections, complete exact two-model Pi and independent review, and publish the
+same immutable dev/main/prod product. v0.0.20 tags and historical grants remain
+immutable. No v0.0.21 candidate/tag/channel release or active approval rejection
+is asserted.

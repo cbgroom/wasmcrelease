@@ -47,10 +47,10 @@ const {suiteCases}=await import('./ci-suite.mjs');
 for(const family of ['compatibility','integrity','candidate','runtime','security','rust'])for(const test of suiteCases(family))for(const arg of test.args){
   if(/^(scripts|examples|sdk)\/.*\.(mjs|sh|toml)$/.test(arg))assert.ok(currentCIProductInputs.includes(arg),'CI executable omitted: '+arg);
 }
-for(const path of ['scripts/validate-source-free-runtime.sh','scripts/validate-current.mjs','scripts/pi-pre-release-gate-v1.mjs','Cargo.toml']){
+for(const path of ['scripts/validate-source-free-runtime.sh','scripts/validate-current.mjs','scripts/pi-pre-release-gate-v1.mjs','Cargo.toml','scripts/run-pi-learning-model-v1.mjs','scripts/aggregate-native-cli-perf.mjs','scripts/qualify-current-compiler.mjs','scripts/fixtures/ios-wss-cert.pem','scripts/fixtures/ios-wss-key.pem','docs/DYNAMIC_LIB_GRAPH_MODEL.md','host/drivers/tcp/rust/Cargo.toml','scripts/lib-refresh-runner-v2.mjs']){
   assert.ok(currentCIProductInputs.includes(path));
   negatives.push(()=>validateCurrentCIProductInputs({product_files:ciRows.filter(row=>row.path!==path)},()=>bytes));
 }
 negatives.push(()=>validateCurrentCIProductInputs({product_files:ciRows},()=>Buffer.from('changed')));
 for(const test of negatives)assert.throws(test);
-console.log(JSON.stringify({accepted:true,candidate_schema:c.schema,positive_transitions:3,current_lifecycle_partition_controls:4,current_CI_input_files:currentCIProductInputs.length,current_CI_input_controls:5,negative_tests:negatives.length,publishes:false}));
+console.log(JSON.stringify({accepted:true,candidate_schema:c.schema,positive_transitions:3,current_lifecycle_partition_controls:4,current_CI_input_files:currentCIProductInputs.length,current_CI_input_controls:13,negative_tests:negatives.length,publishes:false}));

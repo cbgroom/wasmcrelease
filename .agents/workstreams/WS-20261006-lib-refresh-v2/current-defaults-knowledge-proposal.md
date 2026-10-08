@@ -14,3 +14,12 @@ review without fabricating per-hash human approval, and keep unknown or altered
 carriers, actual credentials and deleted-history credentials rejecting. Raw finding
 counts and unresolved admission counts are separate evidence. The existing narrow
 release-integrity Skill was reviewed; global knowledge ingestion remains serialized.
+
+A suite's outer command list is insufficient for product freeze: also trace child
+processes, exact fixture/contract reads and every independently pinned compiler or
+refresh-generator input. The current audit found nested Pi/performance executables,
+WSS fixtures, graph documentation, Cargo declarations and compiler qualification
+programs outside the first entrypoint inventory. Freeze all exact inputs and keep
+actual deletion/mutation rejection controls. A previously verified localhost-only
+self-signed fixture remains test data with no production authority; never infer that
+classification from a filename or apply it to an unknown key.
