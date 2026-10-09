@@ -11,8 +11,8 @@
     "path": "current/wasmc.mjs",
     "sha256": "ce6ec59d9ee40a7855df996321b52cb02ab174bd89dd2f3b7d2e0e0f2e8db856"
   },
-  "private_source_commit": "938b0dd9c81ae211740e546955ebdebc8db1712a",
-  "identity_rule": "The private_source_commit identifies compiler source, not the public Git release commit. The immutable public package identity is the release tag or the pinned public checkout commit.",
+  "provenance_reference": "current/compiler-release.json; inspect separately only when compiler-source provenance is requested",
+  "identity_rule": "Compiler-source provenance is distinct from public release identity. The immutable public package identity is the release tag or the pinned public checkout commit.",
   "check_command": "node scripts/agent-release-orientation.mjs --check",
   "required_additional_reads": [
     "agent-release-orientation.json"
@@ -22,7 +22,14 @@
     "unversioned URLs",
     "package-index.json.latest"
   ],
-  "final_answer_policy": "Name AGENTS.md and agent-release-orientation.json. Report the immutable product tag, compiler path and full compiler SHA256 once; do not substitute a field name. Stop after the named check passes.",
+  "required_report": {
+    "product": "v0.0.21",
+    "public_agent_entrypoint": "AGENTS.md",
+    "compact_authority": "agent-release-orientation.json",
+    "compiler_path": "current/wasmc_compiler.wasm",
+    "compiler_sha256": "42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c"
+  },
+  "final_answer_policy": "After the named check passes, copy every required_report value into the final answer once, including AGENTS.md and agent-release-orientation.json. These five fields are the complete orientation report. Do not add unrelated digests, source commits or shortened identities; stop.",
   "schema": "wasmc.agent-task-route/v1",
   "id": "release-orientation"
 }

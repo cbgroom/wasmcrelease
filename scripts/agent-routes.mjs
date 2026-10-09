@@ -30,12 +30,13 @@ export function buildAgentGuidance(base = root, overrides = {}) {
     product_version: release.tag, entrypoint: 'AGENTS.md',
     compiler: { ...compiler.compiler, imports: compiler.imports },
     facade: { path: facade.path, sha256: facade.sha256 },
-    private_source_commit: compiler.source_commit,
-    identity_rule: 'The private_source_commit identifies compiler source, not the public Git release commit. The immutable public package identity is the release tag or the pinned public checkout commit.',
+    provenance_reference: 'current/compiler-release.json; inspect separately only when compiler-source provenance is requested',
+    identity_rule: 'Compiler-source provenance is distinct from public release identity. The immutable public package identity is the release tag or the pinned public checkout commit.',
     check_command: 'node scripts/agent-release-orientation.mjs --check',
     required_additional_reads: ['agent-release-orientation.json'],
     mutable_not_authority: ['main', 'unversioned URLs', 'package-index.json.latest'],
-    final_answer_policy: 'Name AGENTS.md and agent-release-orientation.json. Report the immutable product tag, compiler path and full compiler SHA256 once; do not substitute a field name. Stop after the named check passes.'
+    required_report: { product: release.tag, public_agent_entrypoint: 'AGENTS.md', compact_authority: 'agent-release-orientation.json', compiler_path: compiler.compiler.path, compiler_sha256: compiler.compiler.sha256 },
+    final_answer_policy: 'After the named check passes, copy every required_report value into the final answer once, including AGENTS.md and agent-release-orientation.json. These five fields are the complete orientation report. Do not add unrelated digests, source commits or shortened identities; stop.'
   };
   routes['release-lib-route-readiness'] = { ...readiness, authority_file: 'release-lib-route-readiness.json', required_additional_reads: ['release-lib-route-readiness.json'] };
   const scalar = surfaces.agent_capability_projection.type_decisions.u64_ordinary_source;

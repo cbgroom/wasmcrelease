@@ -31,12 +31,12 @@ const model = {
     tag: release.tag,
     stage: release.stage,
     stable: prod.stable,
-    private_source_commit: release.source_commit,
     product_candidate_commit: release.product_candidate_commit,
     product_manifest: release.staged_product_manifest,
     product_set_sha256: candidate.product_set_sha256
   },
   public_agent_entrypoint: route.entrypoint,
+  required_report: route.required_report,
   compiler: route.compiler,
   facade: route.facade,
   library_catalog: {
