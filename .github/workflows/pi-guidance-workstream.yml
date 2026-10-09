@@ -1,0 +1,40 @@
+name: Unreleased Pi guidance workstream
+on:
+  pull_request:
+    paths:
+      - 'AGENTS.md'
+      - 'agent-quickstart.json'
+      - 'agent-routes/**'
+      - 'docs/AGENT_PURE_SOURCE.md'
+      - 'docs/PI_GUIDANCE_V3.md'
+      - 'examples/lib-bytes/**'
+      - 'scripts/*agent*.mjs'
+      - 'scripts/release-lifecycle.mjs'
+      - 'scripts/lib-ecosystem-control-plane.mjs'
+      - 'scripts/pi-terminal-receipt.mjs'
+      - 'scripts/run-pi-*.mjs'
+      - 'scripts/validate-pi-guidance-workstream.mjs'
+      - '.agents/agent-route-policy.json'
+      - '.agents/pi-guidance-validation-policy.json'
+      - '.github/workflows/pi-guidance-workstream.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  guidance-preflight:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: 26.5.1
+      - run: node scripts/validate-pi-guidance-workstream.mjs --out-dir target/pi-guidance-workstream
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: unreleased-pi-guidance-preflight
+          path: target/pi-guidance-workstream/
+          if-no-files-found: error

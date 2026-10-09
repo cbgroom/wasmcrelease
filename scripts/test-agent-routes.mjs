@@ -7,6 +7,7 @@ import { buildAgentGuidance, loadAgentRoutes, loadAgentRoute, readPublishedLifec
 import { publishedLifecycle } from './release-lifecycle.mjs';
 import { executeSource, inspectPure } from './wasmc-agent-execute.mjs';
 import { piTerminalReceipt } from './pi-terminal-receipt.mjs';
+import { validateGuidanceFence } from './validate-pi-guidance-workstream.mjs';
 const event = message => JSON.stringify({ type: 'message_end', message: { role: 'assistant', ...message } });
 const progress = event({ stopReason: 'toolUse', content: [{ type: 'text', text: 'Running the check' }, { type: 'toolCall', name: 'bash' }] });
 for (const terminal of [null, { stopReason: 'error', errorMessage: 'provider failure', content: [] }, { stopReason: 'stop', content: [] }, { stopReason: 'length', content: [{ type: 'text', text: 'partial' }] }]) {
@@ -20,6 +21,13 @@ const root = new URL('../', import.meta.url).pathname;
 const read = p => JSON.parse(readFileSync(join(root, p)));
 const release = read('release.json'), prod = read('channels/prod.json'), candidate = read(release.staged_product_manifest);
 const model = buildAgentGuidance(), loaded = loadAgentRoutes(); assert.deepEqual(loaded.routes, model.routes);
+assert.equal(validateGuidanceFence().protected_release_identities, 9);
+const fenceTemp = mkdtempSync(join(tmpdir(), 'pi-guidance-fence-'));
+try {
+  const identity = join(fenceTemp, 'release.json');
+  writeFileSync(identity, JSON.stringify({ ...release, version: '0.0.22' }));
+  assert.throws(() => validateGuidanceFence(fenceTemp), /protected release identity drift/);
+} finally { rmSync(fenceTemp, { recursive: true }); }
 assert.deepEqual(loadAgentRoute('library-discovery'), model.routes['library-discovery']);
 assert.equal(readPublishedLifecycle().states.installable, true);
 assert.deepEqual(model.routes['release-state-separation'].related_product.routes, read('release-surfaces.json').package_profiles['wasmc-system-telemetry@0.0.1'].supported_surfaces);
@@ -54,6 +62,9 @@ try {
 } finally { rmSync(temp, { recursive: true }); }
 const source = 'package local:calc; interface api { calc: func(x: s32) -> s32 { return x * 2 + 1; } } world app { export api; }';
 const proof = await executeSource(source, 'calc', [[0], [9], [-3]]); assert.deepEqual(proof.calls.map(r => r.result), [1, 19, -5]); assert.deepEqual(proof.imports, []);
+const rejectionRoute = loaded.routes['compiler-integrity-rejection'];
+const fixture = readFileSync(join(root, rejectionRoute.fixture_source), 'utf8');
+assert.deepEqual((await executeSource(fixture, rejectionRoute.fixture_export, rejectionRoute.fixture_calls)).calls.map(r => r.result), [[1, 1]]);
 const basics = readFileSync(join(root, 'docs/AGENT_PURE_SOURCE.md'), 'utf8').match(/```wasmc\n([\s\S]*?)```/)[1];
 assert.deepEqual((await executeSource(basics, 'keep', [[3, true], [-1, false]])).calls.map(x => x.result), [[3, 1], [-1, 0]]);
 assert.deepEqual((await executeSource(basics, 'choose', [[3, true], [-1, false]])).calls.map(x => x.result), [6, -1]);
@@ -66,7 +77,7 @@ try {
   const path = join(probeTemp, 'calc.wasmc'); writeFileSync(path, source);
   const args = ['--source', path, '--export', 'calc', '--calls', '[[0]]', '--expected-compiler-sha256', '0'.repeat(64)];
   const result = JSON.parse(execFileSync(process.execPath, ['scripts/wasmc-agent-probe.mjs', ...args], { cwd: root, encoding: 'utf8' }));
-  assert.equal(result.verifier_exit_code, 1); assert.equal(result.execution_accepted, false);
+  assert.equal(result.verifier_exit_code, 1); assert.equal(result.probe_exit_code, 0); assert.equal(result.execution_accepted, false);
   assert.equal(result.caller_expectation_verified, true); assert.equal(result.verifier_stderr.expected, args.at(-1));
   assert.throws(() => execFileSync(process.execPath, ['scripts/wasmc-agent-probe.mjs', ...args.slice(0, -1), proof.compiler_sha256], { cwd: root, stdio: 'pipe' }), 'a healthy execution cannot pass the negative probe');
 } finally { rmSync(probeTemp, { recursive: true }); }
@@ -79,4 +90,4 @@ for (const codec of ['base64', 'hex']) {
   assert.equal(combined.encoded_utf8, Buffer.from(codec === 'base64' ? 'abc' : '你好 Pi').toString(codec));
   assert.equal(combined.authority_granted, false); assert.equal(combined.search_wit_routes.length, 2); assert.equal(combined.states.installable, true);
 }
-console.log(JSON.stringify({ accepted: true, routes: 12, lifecycle_negative_cases: 7, mutated_route_rejected: true, escaping_path_rejected: true, independent_digest_rejected: true, unapproved_Host_refused_before_instantiation: true, codecs: 2, byte_codec_rounds: 512, explicit_drops: 2048 }));
+console.log(JSON.stringify({ accepted: true, routes: Object.keys(model.routes).length, lifecycle_negative_cases: 7, mutated_route_rejected: true, escaping_path_rejected: true, independent_digest_rejected: true, unapproved_Host_refused_before_instantiation: true, codecs: 2, byte_codec_rounds: 512, explicit_drops: 2048 }));

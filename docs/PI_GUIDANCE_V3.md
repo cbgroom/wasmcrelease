@@ -35,8 +35,14 @@ Telemetry methods retain five false states independently of related profiles.
 controls and pinned Base64/Hex behavior against independent Node byte encoding.
 It also checks route mutation, path escape and channel identity conflicts.
 The read-only --lifecycle command checks only release.json, channels/prod.json
-and the selected candidate. The digest-rejection probe captures an actual
-nonzero verifier subprocess and refuses unexpected errors or successful execution.
+and the selected candidate. The compiler-integrity-rejection route supplies a shipped pure fixture, its
+tested export and positional calls. It avoids new source authoring for a digest
+negative test. The probe captures an actual verifier child exit 1, while its
+expected-rejection wrapper exits 0; neither outcome approves source execution.
+The fixture receives a separate healthy execution control in focused tests.
+Library discovery uses the exact interface keyword once, reads the selected
+Root/WIT, then runs only the combined verifier. Its lifecycle, resolution and
+behavior stages must not be repeated as separate Agent commands.
 
 The v3 learning protocol retains all six v2 prompts and oracles and all existing
 model and structural thresholds. It adds four transfer cases: new source,
@@ -54,3 +60,12 @@ do not relax prompts, oracles or budgets to conceal a model failure.
 
 Report correctness and structural efficiency separately from contextual timing
 and tokens. Guidance experiment acceptance is not whole-product release admission.
+
+The Unreleased Pi guidance workstream CI runs the same eleven focused checks
+and verifies a separate pre-candidate fence against the immutable v0.0.21 tag
+and the full baseline commit. It verifies all nine protected release identity
+files and all 1054 old product files, permitting only the five named guidance
+changes. The actual old candidate verifier must exit 1 with product drift
+rejected. Every check retains stdout, stderr, exit status and hashes. This
+workstream result does not turn broad whole-product CI failures into PASS, run
+Pi automatically, or replace a future inventory freeze and full admission.

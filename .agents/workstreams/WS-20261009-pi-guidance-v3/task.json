@@ -7,7 +7,7 @@
   "branch": "work/pi-release-guidance-v3-20261009",
   "base_commit": "c888af39c11640644591ff42aeaf8b09f632f651",
   "target_branch": "main",
-  "state": "qualified_review_ready",
+  "state": "ready_for_frozen_three_round_Pi",
   "integration_state": "not_integrated",
   "scope": "Unreleased future-product guidance; unchanged admitted v0.0.21 compiler/Provider/Roots and old tag/candidate/integrity identities. Old candidate rejection is required.",
   "claimed_paths": [
@@ -35,13 +35,17 @@
     "scripts/test-agent-routes.mjs",
     "scripts/validate-release-surfaces.mjs",
     "scripts/wasmc-agent-execute.mjs",
-    "scripts/wasmc-agent-probe.mjs"
+    "scripts/wasmc-agent-probe.mjs",
+    ".github/workflows/pi-guidance-workstream.yml",
+    ".agents/pi-guidance-validation-policy.json",
+    "scripts/validate-pi-guidance-workstream.mjs"
   ],
   "next": [
-    "Review isolated draft PR",
-    "Freeze a future product inventory and complete release admission before successor publication"
+    "Reduce unnecessary discovery and rejection-test calls",
+    "Freeze and rerun all three Pi rounds on the refined guidance",
+    "Review updated draft PR; future product admission remains separate"
   ],
-  "tested_guidance_commit": "52facc4d06ff9dc530ad7a41bb9ae6e5ccf2a024",
-  "tested_guidance_tree": "e31e7f2e4b3a7136d1a73b24ad57ba3d133f60fa",
-  "qualification_receipt": "agent-evaluation/receipts/pi-guidance-v3-20261009/qualification.json"
+  "previous_qualification_receipt": "agent-evaluation/receipts/pi-guidance-v3-20261009/qualification.json",
+  "previous_tested_guidance_commit": "52facc4d06ff9dc530ad7a41bb9ae6e5ccf2a024",
+  "previous_tested_guidance_tree": "e31e7f2e4b3a7136d1a73b24ad57ba3d133f60fa"
 }

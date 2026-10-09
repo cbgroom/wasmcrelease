@@ -17,6 +17,6 @@ assert.equal(rejection.accepted, false);
 assert.equal(rejection.error, 'independent compiler digest mismatch');
 assert.equal(rejection.expected, args[at + 1]); assert.notEqual(rejection.actual, rejection.expected);
 console.log(JSON.stringify({ accepted: true, expected_rejection: true, verifier_exit_code: result.status,
-  execution_accepted: false, verifier_stderr: rejection,
+  probe_exit_code: 0, execution_accepted: false, verifier_stderr: rejection,
   caller_expectation_verified: rejection.expected === args[at + 1],
-  report_text: 'The comparison target is the fixed caller-supplied --expected-compiler-sha256 argument. Editing package metadata does not change that argument; the selected compiler bytes still fail the comparison. Changing the caller argument would change the test, not approve the rejected bytes.' }));
+  report_text: 'The verifier subprocess exited 1; the expected-rejection probe wrapper exited 0. No source compilation, export resolution, call execution or instantiation occurred. The comparison target is the fixed caller-supplied --expected-compiler-sha256 argument. Editing package metadata does not change that argument; the selected compiler bytes still fail the comparison. Changing the caller argument would change the test, not approve the rejected bytes.' }));

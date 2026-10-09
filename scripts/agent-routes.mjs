@@ -73,7 +73,7 @@ export function buildAgentGuidance(base = root, overrides = {}) {
     catalog_path: 'catalog/libs-current-v2.json', catalog_sha256: catalogHash,
     catalog_release_snapshot: release.tag, catalog_snapshot_carried_forward: false,
     artifact_sha256: std.delivery.artifact.sha256, wit_sha256: std.wit_sha256, states: lifecycle,
-    lifecycle_check: 'node scripts/agent-routes.mjs --lifecycle',
+    lifecycle_check: 'included in verify before resolution; no separate invocation',
     search: `node scripts/wasmc-lib.mjs search base64 --catalog-sha256 ${catalogHash} --limit 8`,
     resolve: `node scripts/wasmc-lib.mjs resolve ${std.id} ${std.version} --catalog-sha256 ${catalogHash} --manifest-sha256 ${std.manifest_sha256} --root-inventory-sha256 ${std.root_inventory_sha256}`,
     behavior: 'node examples/base64/run.mjs',
@@ -85,23 +85,22 @@ export function buildAgentGuidance(base = root, overrides = {}) {
     wit_sha256: std.wit_sha256, artifact_sha256: std.delivery.artifact.sha256,
     companion_sha256: provider.sha256, import_module: 'wasmc:lib/wasmc.lib_managed_object_heap@4.9.0',
     library_import_module: 'wasmc:lib/wasmc.std@' + std.version };
-  routes['library-discovery'] = { decision: 'Search is discovery, not approval. Inspect the selected Root Skill and WIT files, approve the exact API/profile, run lifecycle_check and stop unless published, then resolve with independent catalog, manifest and Root inventory pins, inspect imports and execute behavior.',
+  routes['library-discovery'] = { decision: 'Search once to discover a candidate, inspect its Root Skill and WIT, approve the exact APIs, then run the single combined verifier. That verifier checks lifecycle before pinned resolution and actual behavior. Discovery grants no approval.',
     search_prefix: `node scripts/wasmc-lib.mjs search`, catalog_sha256: catalogHash, search_options: '--catalog-sha256 ' + catalogHash + ' --limit 8',
     search_command_pattern: `node scripts/wasmc-lib.mjs search QUERY --catalog-sha256 ${catalogHash} --limit 8`,
-    search_rule: 'Replace QUERY with the requested capability. The interface above is complete; no help probe or catalog listing is needed.',
-    selected_std: { package: identity, root: std.root, states: lifecycle, resolve: base64.resolve,
+    search_rule: 'Use the WIT interface keyword first: hex for lowercase hexadecimal byte encoding/decoding, base64 for Base64. Search once. A matching exact WIT API hit is sufficient discovery: do not repeat the search with synonyms or a natural-language sentence. Inspect the selected Root and WIT next; search is not approval.',
+    selected_std: { package: identity, root: std.root,
       public_files: { skill: `${std.root}/SKILL.md`, wit: `${std.root}/lib.wit` } },
     selection_read_rule: 'After a matching hit, read the exact Skill and WIT file paths for its package Root. For Std use selected_std.public_files. WIT interface and API identities are logical names inside lib.wit, not directories under the Root; never append an interface name to a package path. The selected Root is the approval scope, not every catalog entry.',
-    lifecycle_check: 'node scripts/agent-routes.mjs --lifecycle',
-    byte_codec_driver: 'node examples/lib-bytes/run.mjs --codec CODEC --text TEXT',
     byte_codec_choices: ['base64', 'hex'],
     verify_command_pattern: 'node scripts/agent-library-check.mjs --codec CODEC --text TEXT',
-    verify_rule: 'After reading and approving the selected Root and WIT APIs, run this combined check. It performs actual search, lifecycle, pinned resolution and behavior. Copy its canonical report_text and actual behavior; catalog display identities are not WIT package identities. The declared command is complete; do not add exploratory reads or duplicate checks.',
-    driver_rule: 'Choose the codec matching the selected WIT API. The driver verifies independent catalog/Root pins and exact Provider imports, checks behavior and drops owned resources. It supports only the declared codecs; other APIs require their documented driver.',
+    verify_rule: 'After reading and approving the selected Root and WIT APIs, run the combined check exactly once. It performs actual search, lifecycle, pinned resolution and behavior in order. Do not run a separate lifecycle, resolve or behavior-driver command. Copy its report_text and actual behavior; catalog display identities are not WIT package identities.',
+    driver_rule: 'Choose the codec matching the selected WIT API. The combined check executes its pinned driver, verifies exact Provider imports and drops owned resources. Only the declared codecs are covered; other APIs require their documented driver.',
     final_answer_policy: 'Report exact package and selected WIT API identities, actual behavior and verification field names. Digest values need not be repeated in prose. If a requested digest is reported, copy its full value once. Never abbreviate any identity or digest. After the named checks pass, stop; the driver interface above is complete.',
     required_additional_reads: [], host_authority: 'Resolution and installation grant no Host authority.' };
   for (const [id, route] of Object.entries(routes)) {
-    route.named_checks = id === 'source-adaptation' ? [route.runner, route.digest_rejection_probe]
+    route.named_checks = id === 'source-adaptation' ? [route.runner]
+      : id === 'compiler-integrity-rejection' ? [route.digest_rejection_probe]
       : id === 'library-discovery' ? [route.verify_command_pattern]
       : route.verify ? [route.verify] : route.check_command ? [route.check_command] : route.run ? [route.run] : [];
     route.check_rule = 'read_command already completed route integrity verification. Run only the applicable named_checks for the request. An empty named_checks list means this is a decision route: answer and stop. Do not invent flags or extra check commands; do not repeat a completed check.';

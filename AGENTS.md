@@ -14,7 +14,9 @@ After a check returns, emit the requested final result. A sentence announcing
 that you are running a check does not complete the task.
 Choose the route by the requested output: release/version/entrypoint/compiler
 integrity uses release-orientation; import permissions use host-authority-boundary;
-writing or editing source uses source-adaptation. These are separate intents.
+writing or editing source uses source-adaptation; an independently wrong compiler
+digest test uses compiler-integrity-rejection, with the shipped pure fixture.
+These are separate intents.
 Read licensing authority only for permission or licensing questions.
 Functions have one semantic result. Preserve multiple requested values with
 one tuple or record; combining them into a boolean loses the separate values.

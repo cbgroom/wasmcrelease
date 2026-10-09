@@ -20,6 +20,7 @@ assert.deepEqual(Object.keys(quickstart.routes), [
   'library-first-selection',
   'host-authority-boundary',
   'source-adaptation',
+  'compiler-integrity-rejection',
   'library-discovery'
 ]);
 assert.equal(quickstart.routes['license-policy'].authority_file,'license-policy.json');
