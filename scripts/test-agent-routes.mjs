@@ -6,6 +6,16 @@ import { execFileSync } from 'node:child_process';
 import { buildAgentGuidance, loadAgentRoutes, loadAgentRoute, readPublishedLifecycle } from './agent-routes.mjs';
 import { publishedLifecycle } from './release-lifecycle.mjs';
 import { executeSource, inspectPure } from './wasmc-agent-execute.mjs';
+import { piTerminalReceipt } from './pi-terminal-receipt.mjs';
+const event = message => JSON.stringify({ type: 'message_end', message: { role: 'assistant', ...message } });
+const progress = event({ stopReason: 'toolUse', content: [{ type: 'text', text: 'Running the check' }, { type: 'toolCall', name: 'bash' }] });
+for (const terminal of [null, { stopReason: 'error', errorMessage: 'provider failure', content: [] }, { stopReason: 'stop', content: [] }, { stopReason: 'length', content: [{ type: 'text', text: 'partial' }] }]) {
+  const result = piTerminalReceipt(progress + '\n' + (terminal ? event(terminal) : ''));
+  assert.equal(result.receipt.complete_final_answer, false); assert.equal(result.final_text, '');
+  assert.ok(!JSON.stringify(result).includes('provider failure'));
+}
+const completed = piTerminalReceipt(progress + '\n' + event({ stopReason: 'stop', content: [{ type: 'text', text: 'Verified final result' }] }));
+assert.equal(completed.receipt.complete_final_answer, true); assert.equal(completed.final_text, 'Verified final result');
 const root = new URL('../', import.meta.url).pathname;
 const read = p => JSON.parse(readFileSync(join(root, p)));
 const release = read('release.json'), prod = read('channels/prod.json'), candidate = read(release.staged_product_manifest);

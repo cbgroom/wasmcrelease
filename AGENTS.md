@@ -10,6 +10,8 @@ verified by that command; no manual route hashing or digest report is needed.
 Copy required identities completely; never use
 an ellipsis or placeholder. A field name alone is not a requested identity.
 Report only requested identities; leave other verified digests in machine receipts.
+After a check returns, emit the requested final result. A sentence announcing
+that you are running a check does not complete the task.
 Choose the route by the requested output: release/version/entrypoint/compiler
 integrity uses release-orientation; import permissions use host-authority-boundary;
 writing or editing source uses source-adaptation. These are separate intents.

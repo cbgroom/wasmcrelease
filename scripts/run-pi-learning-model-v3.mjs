@@ -7,6 +7,7 @@ import { dirname, isAbsolute, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { evaluateTraceText } from './wasmc-live-agent-trace-evaluation-v1.mjs';
 import { answerContract } from './fresh-agent-learning-v1.mjs';
+import { piTerminalReceipt } from './pi-terminal-receipt.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const protocol = JSON.parse(readFileSync(new URL('../agent-evaluation/fresh-agent-learning-v3.json', import.meta.url), 'utf8'));
@@ -136,10 +137,15 @@ for (const caseDefinition of protocol.cases) {
       try { const bytes = readFileSync(join(checkout, path)); assert.ok(bytes.length <= 65536); captured_public_files.push({path, sha256: createHash('sha256').update(bytes).digest('hex'), utf8: bytes.toString('utf8')}); } catch (error) { if (error.code !== 'ENOENT') throw error; }
     }
     const report = evaluateTraceText(result.stdout ?? '', 'general');
+    const terminal = piTerminalReceipt(result.stdout ?? '');
+    report.final_answer = { text: terminal.final_text, characters: terminal.final_text.length,
+      sha256: terminal.final_text ? createHash('sha256').update(terminal.final_text).digest('hex') : null };
+    if (!terminal.receipt.complete_final_answer) report.hygiene_findings.push('missing-complete-terminal-answer');
     const limits = protocol.cohort_gate.structural_efficiency[caseDefinition.class];
     summary.cases.push({
       id: caseDefinition.id,
       class: caseDefinition.class,
+      terminal: terminal.receipt,
       captured_public_files,
       public_execution_receipts: executionReceipts(result.stdout ?? ''),
       tracked_files_modified: execFileSync('git', ['diff', '--name-only'], { cwd: checkout, encoding: 'utf8' }).trim().split('\n').filter(Boolean),
