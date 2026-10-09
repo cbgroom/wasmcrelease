@@ -53,6 +53,7 @@ export function buildAgentGuidance(base = root, overrides = {}) {
     catalog_path: 'catalog/libs-current-v2.json', catalog_sha256: catalogHash,
     catalog_release_snapshot: release.tag, catalog_snapshot_carried_forward: false,
     artifact_sha256: std.delivery.artifact.sha256, wit_sha256: std.wit_sha256, states: lifecycle,
+    lifecycle_check: 'node scripts/agent-routes.mjs --lifecycle',
     search: `node scripts/wasmc-lib.mjs search base64 --catalog-sha256 ${catalogHash} --limit 8`,
     resolve: `node scripts/wasmc-lib.mjs resolve ${std.id} ${std.version} --catalog-sha256 ${catalogHash} --manifest-sha256 ${std.manifest_sha256} --root-inventory-sha256 ${std.root_inventory_sha256}`,
     behavior: 'node examples/base64/run.mjs',
@@ -66,34 +67,65 @@ export function buildAgentGuidance(base = root, overrides = {}) {
   routes['library-discovery'] = { decision: 'Search is discovery, not approval. Inspect selected Root SKILL.md and lib.wit, approve the exact API/profile, resolve with independent catalog, manifest and Root inventory pins, inspect imports, then execute behavior.',
     search_prefix: `node scripts/wasmc-lib.mjs search`, catalog_sha256: catalogHash, search_options: '--catalog-sha256 ' + catalogHash + ' --limit 8',
     selected_std: { package: identity, root: std.root, states: lifecycle, resolve: base64.resolve },
+    lifecycle_check: 'node scripts/agent-routes.mjs --lifecycle',
     byte_codec_driver: 'node examples/lib-bytes/run.mjs --codec base64|hex --text TEXT',
     driver_rule: 'Choose the codec matching the selected WIT API. The driver verifies independent catalog/Root pins and exact Provider imports, checks behavior and drops owned resources. It supports only the declared codecs; other APIs require their documented driver.',
+    final_answer_policy: 'Report exact package and selected WIT API identities, actual behavior and verification field names. Digest values need not be repeated in prose. If a requested digest is reported, copy its full value once. Never abbreviate any identity or digest. After the named checks pass, stop; the driver interface above is complete.',
     required_additional_reads: [], host_authority: 'Resolution and installation grant no Host authority.' };
   for (const [id, route] of Object.entries(routes)) {
     route.schema = 'wasmc.agent-task-route/v1'; route.id = id;
   }
   const files = Object.fromEntries(Object.entries(routes).map(([id, value]) => [`agent-routes/${id}.json`, encode(value)]));
   const index = { schema: 'wasmc.agent-quickstart/v2', scope: 'Unreleased guidance experiment over unchanged v0.0.21 runtime; not a new product admission.',
-    rule: 'Choose one route. Read only its file and required_additional_reads; run named checks, report exact identities, then stop. For an unmatched task follow the relevant general route or public Skill.',
-    routes: Object.fromEntries(Object.entries(routes).map(([id]) => [id, { intent: policy.intents[id], path: `agent-routes/${id}.json`, sha256: sha(files[`agent-routes/${id}.json`]) }])) };
+    rule: 'Choose one route. Run its read_command to read and verify that selected file, then its required_additional_reads and named checks. Report requested identities exactly and stop. For an unmatched task follow the relevant general route or public Skill.',
+    routes: Object.fromEntries(Object.entries(routes).map(([id]) => [id, { intent: policy.intents[id], path: `agent-routes/${id}.json`, read_command: `node scripts/agent-routes.mjs --show ${id}` }])) };
+  files['agent-routes/integrity.json'] = encode({ schema: 'wasmc.agent-route-integrity/v1',
+    lifecycle_candidate: { path: release.staged_product_manifest, sha256: sha(readFileSync(resolve(base, release.staged_product_manifest))) },
+    routes: Object.fromEntries(Object.entries(routes).map(([id]) => [id, sha(files[`agent-routes/${id}.json`])])) });
   return { index, routes, files };
+}
+
+export function loadAgentRoute(id, base = root) {
+  assert.match(id, /^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$/);
+  const index = json(base, 'agent-quickstart.json');
+  assert.equal(index.schema, 'wasmc.agent-quickstart/v2');
+  const row = index.routes[id]; assert.ok(row, `unknown route: ${id}`);
+  assert.equal(row.path, `agent-routes/${id}.json`);
+  const integrity = json(base, 'agent-routes/integrity.json');
+  assert.equal(integrity.schema, 'wasmc.agent-route-integrity/v1');
+  const bytes = readFileSync(resolve(base, row.path));
+  assert.equal(sha(bytes), integrity.routes[id], `route digest drift: ${id}`);
+  const route = JSON.parse(bytes); assert.equal(route.id, id);
+  return route;
+}
+
+export function readPublishedLifecycle(base = root) {
+  const release = json(base, 'release.json'), prod = json(base, 'channels/prod.json');
+  const pin = json(base, 'agent-routes/integrity.json').lifecycle_candidate;
+  assert.match(release.staged_product_manifest, /^channels\/candidates\/[0-9.]+\.json$/);
+  assert.equal(release.staged_product_manifest, pin.path);
+  assert.equal(sha(readFileSync(resolve(base, pin.path))), pin.sha256, 'lifecycle candidate digest drift');
+  const candidate = json(base, release.staged_product_manifest);
+  return { product_version: release.tag, stage: prod.stage, states: publishedLifecycle(release, prod, candidate, release.version),
+    checked_authorities: ['release.json', 'channels/prod.json', release.staged_product_manifest] };
 }
 
 export function loadAgentRoutes(base = root) {
   const index = json(base, 'agent-quickstart.json');
   assert.equal(index.schema, 'wasmc.agent-quickstart/v2');
   const routes = {};
-  for (const [id, row] of Object.entries(index.routes)) {
-    assert.equal(row.path, `agent-routes/${id}.json`);
-    const bytes = readFileSync(resolve(base, row.path));
-    assert.equal(sha(bytes), row.sha256, `route digest drift: ${id}`);
-    routes[id] = JSON.parse(bytes); assert.equal(routes[id].id, id);
-  }
+  for (const id of Object.keys(index.routes)) routes[id] = loadAgentRoute(id, base);
   return { ...index, routes };
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  const action = process.argv[2]; assert.ok(['--write', '--check'].includes(action));
+  const action = process.argv[2]; assert.ok(['--write', '--check', '--show', '--lifecycle'].includes(action));
+  if (action === '--show') {
+    console.log(encode({ ...loadAgentRoute(process.argv[3]), route_digest_verified: true }));
+  } else if (action === '--lifecycle') {
+    const result = readPublishedLifecycle(); console.log(encode(result));
+    if (!result.states.installable) process.exitCode = 1;
+  } else {
   const model = buildAgentGuidance();
   const files = { 'agent-quickstart.json': encode(model.index), ...model.files };
   for (const [path, value] of Object.entries(files)) {
@@ -101,4 +133,5 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
     else assert.equal(readFileSync(resolve(root, path), 'utf8'), value, `stale generated guidance: ${path}`);
   }
   console.log(JSON.stringify({ accepted: true, action, routes: Object.keys(model.routes).length, index_bytes: Buffer.byteLength(files['agent-quickstart.json']) }));
+  }
 }

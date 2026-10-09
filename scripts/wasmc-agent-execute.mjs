@@ -29,6 +29,11 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
   const opts = {}; for (let i = 2; i < process.argv.length; i += 2) opts[process.argv[i]] = process.argv[i + 1];
   assert.ok(opts['--source'] && opts['--export'] && opts['--calls'], 'usage: wasmc-agent-execute.mjs --source PATH --export NAME --calls JSON [--expected-compiler-sha256 SHA256]');
   const calls = JSON.parse(opts['--calls']); assert.ok(Array.isArray(calls) && calls.every(Array.isArray));
-  const report = await executeSource(readFileSync(opts['--source'], 'utf8'), opts['--export'], calls, opts['--expected-compiler-sha256']);
-  console.log(JSON.stringify(report, (_, value) => typeof value === 'bigint' ? { bigint_decimal: value.toString() } : value));
+  try {
+    const report = await executeSource(readFileSync(opts['--source'], 'utf8'), opts['--export'], calls, opts['--expected-compiler-sha256']);
+    console.log(JSON.stringify(report, (_, value) => typeof value === 'bigint' ? { bigint_decimal: value.toString() } : value));
+  } catch (error) {
+    console.error(JSON.stringify({ accepted: false, error: error.message.split('\n')[0], actual: error.actual, expected: error.expected }));
+    process.exitCode = 1;
+  }
 }

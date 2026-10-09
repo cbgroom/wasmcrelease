@@ -15,8 +15,10 @@
     },
     "resolve": "node scripts/wasmc-lib.mjs resolve wasmc-std 1.4.1 --catalog-sha256 a4de009c683d3db4453cf0a9e783719a933a8e1689842a12d08a6883a83cfdad --manifest-sha256 9db63b4f380f9a8fb7541addfde6608bbc48b3267ad903f838afedb98e74ebfc --root-inventory-sha256 6978407b51e835a3893ac14cbb7ca2c46da48d0a778f2611f6de829af07bdf92"
   },
+  "lifecycle_check": "node scripts/agent-routes.mjs --lifecycle",
   "byte_codec_driver": "node examples/lib-bytes/run.mjs --codec base64|hex --text TEXT",
   "driver_rule": "Choose the codec matching the selected WIT API. The driver verifies independent catalog/Root pins and exact Provider imports, checks behavior and drops owned resources. It supports only the declared codecs; other APIs require their documented driver.",
+  "final_answer_policy": "Report exact package and selected WIT API identities, actual behavior and verification field names. Digest values need not be repeated in prose. If a requested digest is reported, copy its full value once. Never abbreviate any identity or digest. After the named checks pass, stop; the driver interface above is complete.",
   "required_additional_reads": [],
   "host_authority": "Resolution and installation grant no Host authority.",
   "schema": "wasmc.agent-task-route/v1",

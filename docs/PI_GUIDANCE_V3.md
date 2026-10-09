@@ -7,7 +7,9 @@ rejects this changed guidance tree. Its release, manifest, provenance, checksum,
 channel and tag identities must remain unchanged until a future product freeze.
 
 Consumers start at AGENTS.md, select an intent in the small agent-quickstart.json
-index, then read the named file under agent-routes/. Read only the selected
+index, then run its read_command to verify and read only the selected route.
+The machine-readable integrity file retains complete route pins without requiring
+manual hashing or repeating unrelated digests in an answer. Read only the selected
 route's additional authority and execute its named checks. General source and
 Library routes cover requests that differ from a canonical example.
 
@@ -24,6 +26,9 @@ Telemetry methods retain five false states independently of related profiles.
 `node scripts/test-agent-routes.mjs` executes compiler/hash/Host rejection
 controls and pinned Base64/Hex behavior against independent Node byte encoding.
 It also checks route mutation, path escape and channel identity conflicts.
+The read-only --lifecycle command checks only release.json, channels/prod.json
+and the selected candidate. The digest-rejection probe captures an actual
+nonzero verifier subprocess and refuses unexpected errors or successful execution.
 
 The v3 learning protocol retains all six v2 prompts and oracles and all existing
 model and structural thresholds. It adds four transfer cases: new source,

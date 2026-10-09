@@ -1,67 +1,67 @@
 {
   "schema": "wasmc.agent-quickstart/v2",
   "scope": "Unreleased guidance experiment over unchanged v0.0.21 runtime; not a new product admission.",
-  "rule": "Choose one route. Read only its file and required_additional_reads; run named checks, report exact identities, then stop. For an unmatched task follow the relevant general route or public Skill.",
+  "rule": "Choose one route. Run its read_command to read and verify that selected file, then its required_additional_reads and named checks. Report requested identities exactly and stop. For an unmatched task follow the relevant general route or public Skill.",
   "routes": {
     "license-policy": {
       "intent": "may I use the v0.0.21 product for research or commercial purposes",
       "path": "agent-routes/license-policy.json",
-      "sha256": "ee708ca86c3e50e8f8608f54562b43171b465d1b8c98ab91c843f6f380098923"
+      "read_command": "node scripts/agent-routes.mjs --show license-policy"
     },
     "release-orientation": {
       "intent": "release orientation",
       "path": "agent-routes/release-orientation.json",
-      "sha256": "22be799b858515f4b82c3f260f4742bc7f4600961578d11d8ae4467efed9ae09"
+      "read_command": "node scripts/agent-routes.mjs --show release-orientation"
     },
     "release-lib-route-readiness": {
       "intent": "does this v0.0.21 product set bind every included Lib package and API route, and where is its lifecycle stage decided",
       "path": "agent-routes/release-lib-route-readiness.json",
-      "sha256": "463ecbd808b322241dc77d103a3fd379a5f3d67a05ebf6260aeef20635ff4e3f"
+      "read_command": "node scripts/agent-routes.mjs --show release-lib-route-readiness"
     },
     "position-aware-capability-negative": {
       "intent": "async func(u64) -> map<string,u64> as an ordinary public WAsmC value",
       "path": "agent-routes/position-aware-capability-negative.json",
-      "sha256": "0d3b85d8d5a4776e763217459efc5b8da72d90a31307936e92e902815690fc21"
+      "read_command": "node scripts/agent-routes.mjs --show position-aware-capability-negative"
     },
     "producer-release-u64-delta": {
       "intent": "is ordinary-source u64 fixed or supported now",
       "path": "agent-routes/producer-release-u64-delta.json",
-      "sha256": "1a62afd5b232fd7abc8496912c73e64a6e96d0bca4c3cb44cefd5f084f727528"
+      "read_command": "node scripts/agent-routes.mjs --show producer-release-u64-delta"
     },
     "ordinary-source-positive": {
       "intent": "compile and run the canonical s32/bool tuple example",
       "path": "agent-routes/ordinary-source-positive.json",
-      "sha256": "d081a45e7ce0162ca9091b4cc39b8c27713ca740a56d392189763a5e90644236"
+      "read_command": "node scripts/agent-routes.mjs --show ordinary-source-positive"
     },
     "release-state-separation": {
       "intent": "direct WAsmC source use of wasmc-system-telemetry@0.0.1 sampler resource",
       "path": "agent-routes/release-state-separation.json",
-      "sha256": "db89c26c550bd9bbad213ccce3860bfaaaadf0f4a35be805cee1d320dd9c35e3"
+      "read_command": "node scripts/agent-routes.mjs --show release-state-separation"
     },
     "dynamic-client-gateway": {
       "intent": "is the dynamic Client/Gateway available in this product and is it a formal Lib",
       "path": "agent-routes/dynamic-client-gateway.json",
-      "sha256": "962d2f275d7c582e43c38bf6709a3f77ad46fb4b8a7c10f01b2f77b7300a2b3f"
+      "read_command": "node scripts/agent-routes.mjs --show dynamic-client-gateway"
     },
     "library-first-selection": {
       "intent": "select and verify the released Base64 capability",
       "path": "agent-routes/library-first-selection.json",
-      "sha256": "4299e2ee1e59999a570b6b22cccc1c4dc8b815050708d16bea031c2eecc8c833"
+      "read_command": "node scripts/agent-routes.mjs --show library-first-selection"
     },
     "host-authority-boundary": {
       "intent": "inspect requested imports, distinguish requests from grants, refuse undeclared Host access",
       "path": "agent-routes/host-authority-boundary.json",
-      "sha256": "5e72250cb6721436cf4efff60c0abeafd972a720b109296062f1302e66ed75d7"
+      "read_command": "node scripts/agent-routes.mjs --show host-authority-boundary"
     },
     "source-adaptation": {
       "intent": "write or change a new pure ordinary-source program and execute requested calls",
       "path": "agent-routes/source-adaptation.json",
-      "sha256": "0a09f493110f8933de76cd7cedcfd93910fabc8172bb95aed4d41a8ec8ecbda9"
+      "read_command": "node scripts/agent-routes.mjs --show source-adaptation"
     },
     "library-discovery": {
       "intent": "find an unfamiliar reusable capability; inspect exact package/API and verify behavior",
       "path": "agent-routes/library-discovery.json",
-      "sha256": "e302fa65e10f7e7812f9d01ef98054a22d72887f9d48ddd5cd82704f832f9377"
+      "read_command": "node scripts/agent-routes.mjs --show library-discovery"
     }
   }
 }

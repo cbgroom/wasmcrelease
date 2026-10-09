@@ -13,6 +13,10 @@
     "calls and actual results"
   ],
   "host_boundary": "A declared import requests an effect; application authorization and a bounded adapter are separately required.",
+  "runner_rule": "The runner interface is complete above. Run once for the requested source/calls; report exact results and stop. No repository-wide integrity test or source inspection is needed after the named runner check.",
+  "digest_rejection_probe": "node scripts/wasmc-agent-probe.mjs --source PATH --export NAME --calls JSON --expected-compiler-sha256 SHA256",
+  "digest_rejection_rule": "For an independently expected wrong digest, use the probe to capture the actual verifier subprocess nonzero exit, error and actual/expected digests as a successful expected-negative observation. It asserts the exact digest rejection before compilation or instantiation. This does not approve execution. A manifest rewrite cannot replace the independently supplied expectation. After this named probe returns, report its actual evidence and stop; do not run extra whole-product integrity tests or a positive control.",
+  "final_answer_policy": "Report requested source and Core evidence exactly. Copy a requested SHA256 in full once, or reference verified field names when no digest value was requested. Never shorten a digest, even when discussing a negative example.",
   "schema": "wasmc.agent-task-route/v1",
   "id": "source-adaptation"
 }

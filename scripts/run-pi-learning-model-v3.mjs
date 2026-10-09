@@ -11,6 +11,32 @@ import { answerContract } from './fresh-agent-learning-v1.mjs';
 const root = fileURLToPath(new URL('../', import.meta.url));
 const protocol = JSON.parse(readFileSync(new URL('../agent-evaluation/fresh-agent-learning-v3.json', import.meta.url), 'utf8'));
 
+// Retain only allowlisted public execution JSON, never raw messages or reasoning.
+function executionReceipts(text) {
+  const receipts = [];
+  const keys = ['accepted', 'compiler_sha256', 'source_sha256', 'core_bytes', 'core_sha256', 'imports', 'export', 'calls', 'call', 'value',
+    'codec', 'package', 'apis', 'input_utf8', 'encoded_utf8', 'decoded_utf8', 'imports_verified', 'selected_Root_verified',
+    'invalid_input_rejected', 'rounds', 'explicit_drops', 'persistent_provider_memory_bytes', 'expected_rejection', 'verifier_exit_code', 'execution_accepted', 'verifier_stderr'];
+  for (const line of text.split(/\r?\n/)) {
+    try {
+      const event = JSON.parse(line), message = event.message;
+      if (message?.role !== 'toolResult' || message.toolName !== 'bash') continue;
+      for (const block of message.content ?? []) {
+        if (block.type !== 'text') continue;
+        for (const outputLine of block.text.split(/\r?\n/)) {
+          try {
+            const value = JSON.parse(outputLine);
+            if (!(value.core_sha256 || value.codec || value.expected_rejection === true)) continue;
+            receipts.push({ tool_call_id: message.toolCallId, is_error: !!message.isError,
+              receipt: Object.fromEntries(keys.filter(key => Object.hasOwn(value, key)).map(key => [key, value[key]])) });
+          } catch {}
+        }
+      }
+    } catch {}
+  }
+  return receipts;
+}
+
 function options(argv) {
   const out = { model: null, commit: null, output: null, timeoutMs: 180000 };
   for (let index = 0; index < argv.length; index += 1) {
@@ -112,6 +138,7 @@ for (const caseDefinition of protocol.cases) {
       id: caseDefinition.id,
       class: caseDefinition.class,
       captured_public_files,
+      public_execution_receipts: executionReceipts(result.stdout ?? ''),
       tracked_files_modified: execFileSync('git', ['diff', '--name-only'], { cwd: checkout, encoding: 'utf8' }).trim().split('\n').filter(Boolean),
       process: {
         status: result.status,
@@ -128,6 +155,8 @@ for (const caseDefinition of protocol.cases) {
     rmSync(temporary, { recursive: true, force: true });
   }
   const current = summary.cases.at(-1);
+  mkdirSync(dirname(input.output), { recursive: true });
+  writeFileSync(input.output + '.progress.json', `${JSON.stringify({ ...summary, completed: false }, null, 2)}\n`);
   process.stdout.write(`${caseDefinition.id} structural=${current.structural.accepted} timeout=${current.process.timed_out} wall_ms=${current.process.wall_ms}\n`);
 }
 

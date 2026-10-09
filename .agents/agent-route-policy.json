@@ -125,7 +125,7 @@
     "library-first-selection": {
       "search_is_selection_authority": false,
       "catalog_snapshot_boundary": "The exact current42 catalog binds complete Roots to the independently pinned Q0 cohort. It does not grant release or Host authority.",
-      "final_answer_policy": "After verification, output package and both APIs exactly, then only these statements: search discovered the candidate but was not authority; resolve verified catalog_sha256, manifest_sha256, root_inventory_sha256, wit_sha256 and artifact_sha256; behavior separately verified companion_sha256 and import_module and passed. Do not reproduce command arguments, digest values, partial digests or any ellipsis character. Read channels for released, discoverable and installable states.",
+      "final_answer_policy": "After verification, output package and both APIs exactly, then only these statements: search discovered the candidate but was not authority; resolve verified catalog_sha256, manifest_sha256, root_inventory_sha256, wit_sha256 and artifact_sha256; behavior separately verified companion_sha256 and import_module and passed. Do not reproduce command arguments, digest values, partial digests or any ellipsis character. Run lifecycle_check before resolution for released, discoverable and installable states. It checks release.json, channels/prod.json and the selected candidate. Stop if any required state is false; do not enumerate historical or other channel directories.",
       "install_reference": "catalog/INSTALL.md",
       "required_additional_reads": []
     },
@@ -155,7 +155,11 @@
         "imports",
         "calls and actual results"
       ],
-      "host_boundary": "A declared import requests an effect; application authorization and a bounded adapter are separately required."
+      "host_boundary": "A declared import requests an effect; application authorization and a bounded adapter are separately required.",
+      "runner_rule": "The runner interface is complete above. Run once for the requested source/calls; report exact results and stop. No repository-wide integrity test or source inspection is needed after the named runner check.",
+      "digest_rejection_probe": "node scripts/wasmc-agent-probe.mjs --source PATH --export NAME --calls JSON --expected-compiler-sha256 SHA256",
+      "digest_rejection_rule": "For an independently expected wrong digest, use the probe to capture the actual verifier subprocess nonzero exit, error and actual/expected digests as a successful expected-negative observation. It asserts the exact digest rejection before compilation or instantiation. This does not approve execution. A manifest rewrite cannot replace the independently supplied expectation. After this named probe returns, report its actual evidence and stop; do not run extra whole-product integrity tests or a positive control.",
+      "final_answer_policy": "Report requested source and Core evidence exactly. Copy a requested SHA256 in full once, or reference verified field names when no digest value was requested. Never shorten a digest, even when discussing a negative example."
     },
     "library-discovery": {}
   }
