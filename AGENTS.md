@@ -4,7 +4,8 @@ Unreleased guidance workstream. Runtime artifacts are frozen inside the v0.0.21
 product set; product presence is not lifecycle authority. Start with
 `agent-quickstart.json`, a small route index. Choose the matching intent and run
 its `read_command` to read and verify only the selected route, then its
-`required_additional_reads`. Run its named checks and stop. Route integrity is
+`required_additional_reads`. Run only its applicable `named_checks`; an empty list
+means answer and stop. Route integrity is
 verified by that command; no manual route hashing or digest report is needed.
 Copy required identities completely; never use
 an ellipsis or placeholder. A field name alone is not a requested identity.

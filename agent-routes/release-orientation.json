@@ -30,6 +30,10 @@
     "compiler_sha256": "42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c"
   },
   "final_answer_policy": "After the named check passes, copy every required_report value into the final answer once, including AGENTS.md and agent-release-orientation.json. These five fields are the complete orientation report. Do not add unrelated digests, source commits or shortened identities; stop.",
+  "named_checks": [
+    "node scripts/agent-release-orientation.mjs --check"
+  ],
+  "check_rule": "read_command already completed route integrity verification. Run only the applicable named_checks for the request. An empty named_checks list means this is a decision route: answer and stop. Do not invent flags or extra check commands; do not repeat a completed check.",
   "schema": "wasmc.agent-task-route/v1",
   "id": "release-orientation"
 }

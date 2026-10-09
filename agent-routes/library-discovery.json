@@ -34,6 +34,10 @@
   "final_answer_policy": "Report exact package and selected WIT API identities, actual behavior and verification field names. Digest values need not be repeated in prose. If a requested digest is reported, copy its full value once. Never abbreviate any identity or digest. After the named checks pass, stop; the driver interface above is complete.",
   "required_additional_reads": [],
   "host_authority": "Resolution and installation grant no Host authority.",
+  "named_checks": [
+    "node scripts/agent-library-check.mjs --codec CODEC --text TEXT"
+  ],
+  "check_rule": "read_command already completed route integrity verification. Run only the applicable named_checks for the request. An empty named_checks list means this is a decision route: answer and stop. Do not invent flags or extra check commands; do not repeat a completed check.",
   "schema": "wasmc.agent-task-route/v1",
   "id": "library-discovery"
 }

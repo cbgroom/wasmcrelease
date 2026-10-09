@@ -48,6 +48,10 @@
     "import_module": "wasmc:lib/wasmc.lib_managed_object_heap@4.9.0",
     "library_import_module": "wasmc:lib/wasmc.std@1.4.1"
   },
+  "named_checks": [
+    "node scripts/agent-library-check.mjs --codec base64 --text abc"
+  ],
+  "check_rule": "read_command already completed route integrity verification. Run only the applicable named_checks for the request. An empty named_checks list means this is a decision route: answer and stop. Do not invent flags or extra check commands; do not repeat a completed check.",
   "schema": "wasmc.agent-task-route/v1",
   "id": "library-first-selection"
 }

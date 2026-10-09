@@ -91,6 +91,10 @@ export function buildAgentGuidance(base = root, overrides = {}) {
     final_answer_policy: 'Report exact package and selected WIT API identities, actual behavior and verification field names. Digest values need not be repeated in prose. If a requested digest is reported, copy its full value once. Never abbreviate any identity or digest. After the named checks pass, stop; the driver interface above is complete.',
     required_additional_reads: [], host_authority: 'Resolution and installation grant no Host authority.' };
   for (const [id, route] of Object.entries(routes)) {
+    route.named_checks = id === 'source-adaptation' ? [route.runner, route.digest_rejection_probe]
+      : id === 'library-discovery' ? [route.verify_command_pattern]
+      : route.verify ? [route.verify] : route.check_command ? [route.check_command] : route.run ? [route.run] : [];
+    route.check_rule = 'read_command already completed route integrity verification. Run only the applicable named_checks for the request. An empty named_checks list means this is a decision route: answer and stop. Do not invent flags or extra check commands; do not repeat a completed check.';
     route.schema = 'wasmc.agent-task-route/v1'; route.id = id;
   }
   const files = Object.fromEntries(Object.entries(routes).map(([id, value]) => [`agent-routes/${id}.json`, encode(value)]));

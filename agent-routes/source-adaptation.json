@@ -26,6 +26,11 @@
     "multiple_logical_values": "one tuple<...> or named record",
     "embedding_warning": "tuple and record may both flatten to multiple Core lanes; neither creates automatic JavaScript object lifting"
   },
+  "named_checks": [
+    "node scripts/wasmc-agent-execute.mjs --source PATH --export NAME --calls JSON",
+    "node scripts/wasmc-agent-probe.mjs --source PATH --export NAME --calls JSON --expected-compiler-sha256 SHA256"
+  ],
+  "check_rule": "read_command already completed route integrity verification. Run only the applicable named_checks for the request. An empty named_checks list means this is a decision route: answer and stop. Do not invent flags or extra check commands; do not repeat a completed check.",
   "schema": "wasmc.agent-task-route/v1",
   "id": "source-adaptation"
 }
