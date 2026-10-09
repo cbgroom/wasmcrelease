@@ -12,6 +12,10 @@ world exporting that interface. Parameters use WIT fixed-width types, including
 `s32` and `bool`. Use `true` and `false` for boolean arguments. A function returns
 exactly one semantic value. Preserve several requested values independently in
 one tuple or record; boolean conjunction discards those separate values.
+Determine the requested outputs before choosing expressions. When the request
+is to return both parameters without a requested transformation, return
+`tuple(value, flag)` as `tuple<s32, bool>`. Do not ignore `flag`, turn the s32
+into a predicate, add one, or substitute two values calculated from one input.
 
 ```wasmc
 package local:basics;
@@ -32,6 +36,9 @@ world app { export api; }
 
 Copy a pattern, then change names, types and expressions to implement the actual
 request. The sample is not an answer to a different requested computation.
+If the request preserves inputs, keep the `keep` return expression unchanged;
+change names only. Change arithmetic or branches only when the request asks for
+that computation, as in `choose`.
 Expressions include fixed-width arithmetic and comparisons. Use `if (condition)
 { ... }` and `return value;`. Public entrypoints are `name: func(...) -> type`
 inside the exported interface, rather than Rust `pub fn` declarations.
@@ -43,6 +50,11 @@ and exported signature. The runner checks actual compiler/facade digests, compil
 the file, inspects imports, refuses Host imports before instantiation, instantiates
 with `{}`, and returns source/Core hashes plus actual results. One invocation
 handles all requested calls. Report its evidence once and stop.
+Optionally pass `--expected-results` with JSON of the results derived from the
+request, for example `[[3,1],[3,0]]` for calls `[[3,true],[3,false]]` returning
+both inputs. The runner compares actual flattened results to this caller oracle;
+a mismatch fails. Derive expectations from the request, never from the program's
+observed output. Compilation alone proves syntax, not the requested semantics.
 
 Tuples are one semantic result; a raw JavaScript host observes flattened Core
 lanes. A bool lane is `0` or `1`; this is not automatic object lifting. Do not

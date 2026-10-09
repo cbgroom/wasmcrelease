@@ -57,6 +57,9 @@ const proof = await executeSource(source, 'calc', [[0], [9], [-3]]); assert.deep
 const basics = readFileSync(join(root, 'docs/AGENT_PURE_SOURCE.md'), 'utf8').match(/```wasmc\n([\s\S]*?)```/)[1];
 assert.deepEqual((await executeSource(basics, 'keep', [[3, true], [-1, false]])).calls.map(x => x.result), [[3, 1], [-1, 0]]);
 assert.deepEqual((await executeSource(basics, 'choose', [[3, true], [-1, false]])).calls.map(x => x.result), [6, -1]);
+assert.equal((await executeSource(basics, 'keep', [[3, true], [3, false]], undefined, [[3, 1], [3, 0]])).expected_results_verified, true);
+const discardedFlag = 'package local:wrong; interface api { pair: func(value:s32, flag:bool)->tuple<bool,s32> { return tuple(value != 0, value + 1); } } world app { export api; }';
+await assert.rejects(executeSource(discardedFlag, 'pair', [[3, true], [3, false]], undefined, [[3, 1], [3, 0]]), /execution results differ from caller-supplied oracle/);
 await assert.rejects(executeSource(source, 'calc', [[0]], '0'.repeat(64)), /independent compiler digest mismatch/);
 const probeTemp = mkdtempSync(join(tmpdir(), 'agent-digest-probe-'));
 try {
