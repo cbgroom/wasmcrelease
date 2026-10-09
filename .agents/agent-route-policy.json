@@ -144,7 +144,7 @@
       "required_additional_reads": []
     },
     "source-adaptation": {
-      "decision": "For a new pure scalar program, read LANGUAGE.md for syntax and edit your own ordinary typed source. The sample is a pattern, not your answer. Compile, inspect imports and execute the requested calls with scripts/wasmc-agent-execute.mjs. This runner refuses any Host imports before instantiation; effectful or managed programs need their separately approved profile.",
+      "decision": "For a new pure ordinary-source program, read LANGUAGE.md for syntax and edit your own ordinary typed source. The sample is a pattern, not your answer. Compile, inspect imports and execute the requested calls with scripts/wasmc-agent-execute.mjs. This runner refuses any Host imports before instantiation; effectful or managed programs need their separately approved profile.",
       "runner": "node scripts/wasmc-agent-execute.mjs --source PATH --export NAME --calls JSON",
       "required_additional_reads": [
         "LANGUAGE.md"
@@ -161,7 +161,8 @@
       "runner_rule": "The runner interface is complete above. Run once for the requested source/calls; report exact results and stop. No repository-wide integrity test or source inspection is needed after the named runner check.",
       "digest_rejection_probe": "node scripts/wasmc-agent-probe.mjs --source PATH --export NAME --calls JSON --expected-compiler-sha256 SHA256",
       "digest_rejection_rule": "For an independently expected wrong digest, use the probe to capture the actual verifier subprocess nonzero exit, error and actual/expected digests as a successful expected-negative observation. It asserts the exact digest rejection before compilation or instantiation. This does not approve execution. A manifest rewrite cannot replace the independently supplied expectation. After this named probe returns, report its actual evidence and stop; do not run extra whole-product integrity tests or a positive control.",
-      "final_answer_policy": "Report requested source and Core evidence exactly. Copy a requested SHA256 in full once, or reference verified field names when no digest value was requested. Never shorten a digest, even when discussing a negative example."
+      "final_answer_policy": "Report requested source and Core evidence exactly. Copy a requested SHA256 in full once, or reference verified field names when no digest value was requested. Never shorten a digest, even when discussing a negative example.",
+      "result_rule": "Return one semantic value. To return multiple logical values, use one tuple or record that preserves each requested value independently. A conjunction or disjunction computes a new boolean and discards the separate values; it is not a substitute for returning them. Core lanes may be flattened; report that observed representation without claiming automatic object lifting."
     },
     "library-discovery": {}
   }

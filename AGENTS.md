@@ -13,6 +13,8 @@ Choose the route by the requested output: release/version/entrypoint/compiler
 integrity uses release-orientation; import permissions use host-authority-boundary;
 writing or editing source uses source-adaptation. These are separate intents.
 Read licensing authority only for permission or licensing questions.
+Functions have one semantic result. Preserve multiple requested values with
+one tuple or record; combining them into a boolean loses the separate values.
 
 For release orientation use `agent-release-orientation.json`; open the full artifact inventory
 in `manifest.json` only if the compact check fails. `release.json` and

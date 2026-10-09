@@ -20,6 +20,7 @@ export function buildAgentGuidance(base = root, overrides = {}) {
   assert.ok(std && compiler.version === catalog.version && release.version === compiler.version);
   const lifecycle = publishedLifecycle(release, prod, candidate, catalog.version);
   const routes = structuredClone(policy.routes);
+  routes['source-adaptation'].function_shape = surfaces.agent_capability_projection.function_shape;
   const identity = `wasmc:std@${std.version}`;
   const catalogHash = candidate.current_catalog.sha256;
   assert.equal(sha(readFileSync(resolve(base, 'catalog/libs-current-v2.json'))), catalogHash);
