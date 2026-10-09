@@ -1,5 +1,6 @@
 import { loadAgentRoutes } from './agent-routes.mjs';
 import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -12,6 +13,11 @@ const quickstart = loadAgentRoutes();
 const candidate = readJson(release.staged_product_manifest);
 const route = quickstart.routes['release-orientation'];
 const base64 = quickstart.routes['library-first-selection'];
+const hash = path => createHash('sha256').update(readFileSync(resolve(root, path))).digest('hex');
+assert.equal(hash(route.compiler.path), route.compiler.sha256, 'actual compiler bytes differ from compact authority');
+assert.equal(hash(route.facade.path), route.facade.sha256, 'actual facade bytes differ from compact authority');
+assert.equal(hash(base64.catalog_path), candidate.current_catalog.sha256, 'actual catalog differs from independently pinned candidate');
+assert.equal(WebAssembly.Module.imports(new WebAssembly.Module(readFileSync(resolve(root, route.compiler.path)))).length, 0);
 
 assert.ok(['wasmc-public-release/v1', 'wasmc-public-release/v2'].includes(release.schema));
 assert.equal(release.stage, 'prod');
@@ -56,4 +62,4 @@ const action = process.argv[2];
 if (action === '--write') writeFileSync(output, encoded);
 else if (action === '--check') assert.equal(readFileSync(output, 'utf8'), encoded, 'agent release orientation is stale');
 else throw new Error('usage: agent-release-orientation.mjs --write|--check');
-console.log(JSON.stringify({ accepted: true, action: action.slice(2), release: release.tag, bytes: Buffer.byteLength(encoded), product_set_sha256: candidate.product_set_sha256 }));
+console.log(JSON.stringify({ accepted: true, action: action.slice(2), release: release.tag, bytes: Buffer.byteLength(encoded), compiler_verified: true, facade_verified: true, catalog_verified: true }));
