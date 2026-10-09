@@ -2,7 +2,9 @@
 
 This small guide covers ordinary scalar and tuple programs. Choose source only
 after Library-first discovery for reusable computation. Create your own `.wasmc`
-file in the current checkout. For syntax outside this guide read the relevant
+file directly in the current checkout. It is expected not to exist yet;
+there is no existing source file to discover before writing it. The route names
+shipped, preflight-checked runner paths, so no script-directory probes are needed. For syntax outside this guide read the relevant
 section of LANGUAGE.md; supported type/feature positions are decided separately.
 
 A complete file declares a package, an interface with function bodies, and a

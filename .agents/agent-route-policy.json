@@ -165,7 +165,14 @@
       "final_answer_policy": "Report requested source and Core evidence exactly. Copy a requested SHA256 in full once, or reference verified field names when no digest value was requested. Never shorten a digest, even when discussing a negative example.",
       "result_rule": "Return one semantic value. To return multiple logical values, use one tuple or record that preserves each requested value independently. A conjunction or disjunction computes a new boolean and discards the separate values; it is not a substitute for returning them. Core lanes may be flattened; report that observed representation without claiming automatic object lifting.",
       "calls_format": "--calls is JSON containing an array of positional argument arrays, not objects. Example for two parameters: --calls '[[1,true],[0,false]]'. Match the exported signature and the actual requested arguments. This format applies to both runner and rejection probe.",
-      "digest_rejection_report": "Copy the probe JSON unchanged once as actual rejection evidence, including verifier_exit_code and verifier_stderr. Then explain that hashing bytes against the independently supplied expectation cannot be approved by rewriting package metadata. Refer to actual and expected field names in explanation; do not repeat or abbreviate digest values. Report the true number of probe invocations; a failed invocation or repaired argument is not a first-pass success."
+      "digest_rejection_report": "Copy the probe JSON unchanged once as actual rejection evidence, including verifier_exit_code and verifier_stderr. Then explain that hashing bytes against the independently supplied expectation cannot be approved by rewriting package metadata. Refer to actual and expected field names in explanation; do not repeat or abbreviate digest values. Report the true number of probe invocations; a failed invocation or repaired argument is not a first-pass success.",
+      "workflow": [
+        "Read the small source guide",
+        "Write the requested new source file directly in the current checkout",
+        "Run the applicable runner once for all requested calls",
+        "Copy the actual execution evidence and stop"
+      ],
+      "file_rule": "The new source file is expected not to exist yet. Create it directly; do not enumerate scripts or search for existing source files before writing it. Declared runner paths are shipped and checked by preflight. If file inventory is actually requested, use find with a quoted pattern: an empty inventory is a valid result, not a failing ls glob."
     },
     "library-discovery": {}
   }
