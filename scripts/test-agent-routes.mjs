@@ -61,6 +61,7 @@ try {
   const args = ['--source', path, '--export', 'calc', '--calls', '[[0]]', '--expected-compiler-sha256', '0'.repeat(64)];
   const result = JSON.parse(execFileSync(process.execPath, ['scripts/wasmc-agent-probe.mjs', ...args], { cwd: root, encoding: 'utf8' }));
   assert.equal(result.verifier_exit_code, 1); assert.equal(result.execution_accepted, false);
+  assert.equal(result.caller_expectation_verified, true); assert.equal(result.verifier_stderr.expected, args.at(-1));
   assert.throws(() => execFileSync(process.execPath, ['scripts/wasmc-agent-probe.mjs', ...args.slice(0, -1), proof.compiler_sha256], { cwd: root, stdio: 'pipe' }), 'a healthy execution cannot pass the negative probe');
 } finally { rmSync(probeTemp, { recursive: true }); }
 const hostModule = Uint8Array.from([0,97,115,109,1,0,0,0,1,5,1,96,0,1,127,2,18,1,3,101,110,118,10,114,101,97,100,95,99,108,111,99,107,0,0,7,7,1,3,114,117,110,0,0]);

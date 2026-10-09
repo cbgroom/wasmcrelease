@@ -18,7 +18,7 @@ function executionReceipts(text) {
   const keys = ['accepted', 'compiler_sha256', 'source_sha256', 'core_bytes', 'core_sha256', 'imports', 'export', 'calls', 'call', 'value',
     'codec', 'package', 'apis', 'input_utf8', 'encoded_utf8', 'decoded_utf8', 'imports_verified', 'selected_Root_verified',
     'invalid_input_rejected', 'rounds', 'explicit_drops', 'persistent_provider_memory_bytes', 'expected_rejection', 'verifier_exit_code', 'execution_accepted', 'verifier_stderr', 'error', 'actual', 'expected',
-    'states', 'authority_granted', 'search_wit_routes', 'stage_receipts', 'report_text'];
+    'caller_expectation_verified', 'states', 'authority_granted', 'search_wit_routes', 'stage_receipts', 'report_text'];
   for (const line of text.split(/\r?\n/)) {
     try {
       const event = JSON.parse(line), message = event.message;

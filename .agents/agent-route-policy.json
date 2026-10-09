@@ -142,7 +142,8 @@
         "private handles/plans/Store nonces/lifecycle helpers",
         "JSON as WIT replacement"
       ],
-      "required_additional_reads": []
+      "required_additional_reads": [],
+      "grant_rule": "An allowlist entry alone is not approval of private or unsupported capabilities. For a supported effect require explicit application approval and a bounded adapter matching the exact module/name/kind/signature; otherwise stop. With no approval for env.read_clock, reject instantiation: never silently supply Date.now or a constant."
     },
     "source-adaptation": {
       "decision": "For a new pure ordinary-source program, read docs/AGENT_PURE_SOURCE.md for the small complete syntax guide and edit your own ordinary typed source. The sample is a pattern, not your answer. Compile, inspect imports and execute the requested calls with scripts/wasmc-agent-execute.mjs. This runner refuses any Host imports before instantiation; effectful or managed programs need their separately approved profile.",
@@ -165,7 +166,7 @@
       "final_answer_policy": "Report requested source and Core evidence exactly. Copy a requested SHA256 in full once, or reference verified field names when no digest value was requested. Never shorten a digest, even when discussing a negative example.",
       "result_rule": "Return one semantic value. To return multiple logical values, use one tuple or record that preserves each requested value independently. A conjunction or disjunction computes a new boolean and discards the separate values; it is not a substitute for returning them. Core lanes may be flattened; report that observed representation without claiming automatic object lifting.",
       "calls_format": "--calls is JSON containing an array of positional argument arrays, not objects. Example for two parameters: --calls '[[1,true],[0,false]]'. Match the exported signature and the actual requested arguments. This format applies to both runner and rejection probe.",
-      "digest_rejection_report": "Copy the probe JSON unchanged once as actual rejection evidence, including verifier_exit_code and verifier_stderr. Then explain that hashing bytes against the independently supplied expectation cannot be approved by rewriting package metadata. Refer to actual and expected field names in explanation; do not repeat or abbreviate digest values. Report the true number of probe invocations; a failed invocation or repaired argument is not a first-pass success.",
+      "digest_rejection_report": "Copy the probe JSON unchanged once as actual rejection evidence, including verifier_exit_code and verifier_stderr. Then copy its report_text unchanged as the explanation: the comparison target is the fixed caller-supplied --expected-compiler-sha256 argument. Editing metadata does not change this argument, so the same selected bytes still fail. Do not claim that editing a manifest changes the target or would make this fixed-expectation test pass. Changing the caller argument would change the test, not approve rejected bytes. Refer to actual and expected field names; do not repeat or abbreviate digest values. Report the true number of probe invocations; a failed invocation or repaired argument is not a first-pass success.",
       "workflow": [
         "Read the small source guide",
         "Write the requested new source file directly in the current checkout",
