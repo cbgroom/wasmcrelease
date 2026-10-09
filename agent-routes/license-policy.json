@@ -1,0 +1,17 @@
+{
+  "authority_file": "license-policy.json",
+  "request": "may I use the v0.0.21 product for research or commercial purposes",
+  "decision": "The v0.0.21 product permits non-commercial research only; commercial and production use require a separate written license. It is source-available, not open source.",
+  "prior_tag_rule": "Read LICENSE from the exact immutable tag. The v0.0.21 policy does not rewrite or revoke an earlier grant.",
+  "check_command": "node scripts/validate-license-policy.mjs",
+  "required_additional_reads": [
+    "license-policy.json",
+    "LICENSE"
+  ],
+  "named_checks": [
+    "node scripts/validate-license-policy.mjs"
+  ],
+  "check_rule": "read_command already completed route integrity verification. Run only the applicable named_checks for the request. An empty named_checks list means this is a decision route: answer and stop. Do not invent flags or extra check commands; do not repeat a completed check.",
+  "schema": "wasmc.agent-task-route/v1",
+  "id": "license-policy"
+}

@@ -1,0 +1,140 @@
+{
+  "guidance_commit": "46ec2092319beeda9c8cf8da41ea8f57000a9c41",
+  "accepted": true,
+  "cases": [
+    {
+      "case": "facade-before-check",
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "{\"accepted\":false,\"error\":\"facade digest mismatch before module import\",\"actual\":\"d4163e25c1b22db0814b83da8bd8834051b5427a53678c11e43b0437191d7867\",\"expected\":\"ce6ec59d9ee40a7855df996321b52cb02ab174bd89dd2f3b7d2e0e0f2e8db856\"}\n",
+      "source": "package local:pair; interface api { keep: func(v:s32, flag:bool)->tuple<s32,bool> { return tuple(v, flag); } } world app { export api; }",
+      "calls": [
+        [
+          7,
+          true
+        ]
+      ],
+      "caller_expected_results": [
+        [
+          7,
+          1
+        ]
+      ]
+    },
+    {
+      "case": "facade-before-wrong-independent-check",
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "{\"accepted\":false,\"error\":\"independent compiler digest mismatch\",\"actual\":\"42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c\",\"expected\":\"0000000000000000000000000000000000000000000000000000000000000000\"}\n",
+      "source": "package local:pair; interface api { keep: func(v:s32, flag:bool)->tuple<s32,bool> { return tuple(v, flag); } } world app { export api; }",
+      "calls": [
+        [
+          7,
+          true
+        ]
+      ],
+      "caller_expected_results": [
+        [
+          7,
+          1
+        ]
+      ]
+    },
+    {
+      "case": "checked-raw-vs-executed-embedded",
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "{\"accepted\":false,\"error\":\"wasmc.wasm is missing exports: memory, wasmc_alloc, wasmc_compile, wasmc_output_ptr, wasmc_output_len, wasmc_error_ptr, wasmc_error_len, wasmc_clear\"}\n",
+      "source": "package local:pair; interface api { keep: func(v:s32, flag:bool)->tuple<s32,bool> { return tuple(v, flag); } } world app { export api; }",
+      "calls": [
+        [
+          7,
+          true
+        ]
+      ],
+      "caller_expected_results": [
+        [
+          7,
+          1
+        ]
+      ]
+    },
+    {
+      "case": "u64-exact-decimal-call",
+      "exit_code": 0,
+      "stdout": "{\"accepted\":true,\"compiler_sha256\":\"42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c\",\"source_sha256\":\"4c417843b8936ce9b0567288a8b23305176a9ae5d23fe220015b51507dd64a47\",\"core_bytes\":38,\"core_sha256\":\"49695bc8da520363ec95ee95a768e44988c110b64056b5c3c4384e575d44dcdf\",\"imports\":[],\"export\":\"keep\",\"calls\":[{\"arguments\":[{\"bigint_decimal\":\"7\"}],\"result\":{\"bigint_decimal\":\"7\"}},{\"arguments\":[{\"bigint_decimal\":\"18446744073709551615\"}],\"result\":{\"bigint_decimal\":\"-1\"}}],\"expected_results_verified\":true}\n",
+      "stderr": "",
+      "source": "package local:wide; interface api { keep: func(v:u64)->u64 { return v; } } world app { export api; }",
+      "calls": [
+        [
+          {
+            "bigint_decimal": "7"
+          }
+        ],
+        [
+          {
+            "bigint_decimal": "18446744073709551615"
+          }
+        ]
+      ],
+      "caller_expected_results": [
+        {
+          "bigint_decimal": "7"
+        },
+        {
+          "bigint_decimal": "-1"
+        }
+      ]
+    },
+    {
+      "case": "i64-boundary-call",
+      "exit_code": 0,
+      "stdout": "{\"accepted\":true,\"compiler_sha256\":\"42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c\",\"source_sha256\":\"e7d375ba7d427cb8952d1f12c351329a87052d378958ad56e875f34d3853a2c0\",\"core_bytes\":38,\"core_sha256\":\"49695bc8da520363ec95ee95a768e44988c110b64056b5c3c4384e575d44dcdf\",\"imports\":[],\"export\":\"keep\",\"calls\":[{\"arguments\":[{\"bigint_decimal\":\"-9223372036854775808\"}],\"result\":{\"bigint_decimal\":\"-9223372036854775808\"}},{\"arguments\":[{\"bigint_decimal\":\"9223372036854775807\"}],\"result\":{\"bigint_decimal\":\"9223372036854775807\"}}],\"expected_results_verified\":true}\n",
+      "stderr": "",
+      "source": "package local:wide; interface api { keep: func(v:i64)->i64 { return v; } } world app { export api; }",
+      "calls": [
+        [
+          {
+            "bigint_decimal": "-9223372036854775808"
+          }
+        ],
+        [
+          {
+            "bigint_decimal": "9223372036854775807"
+          }
+        ]
+      ],
+      "caller_expected_results": [
+        {
+          "bigint_decimal": "-9223372036854775808"
+        },
+        {
+          "bigint_decimal": "9223372036854775807"
+        }
+      ]
+    },
+    {
+      "case": "u64-unsigned-behavior",
+      "exit_code": 0,
+      "stdout": "{\"accepted\":true,\"compiler_sha256\":\"42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c\",\"source_sha256\":\"4441fdd889a45dfb0d1e43ef257ca13559a1a0c11c92d5a9e162174ff9635812\",\"core_bytes\":41,\"core_sha256\":\"5425b71566cdc4362b2095eb2cabd146369f7caa2fe07f741f533221b0248738\",\"imports\":[],\"export\":\"keep\",\"calls\":[{\"arguments\":[{\"bigint_decimal\":\"7\"}],\"result\":0},{\"arguments\":[{\"bigint_decimal\":\"18446744073709551615\"}],\"result\":1}],\"expected_results_verified\":true}\n",
+      "stderr": "",
+      "source": "package local:wide; interface api { keep: func(v:u64)->bool { return v > 7; } } world app { export api; }",
+      "calls": [
+        [
+          {
+            "bigint_decimal": "7"
+          }
+        ],
+        [
+          {
+            "bigint_decimal": "18446744073709551615"
+          }
+        ]
+      ],
+      "caller_expected_results": [
+        0,
+        1
+      ]
+    }
+  ]
+}

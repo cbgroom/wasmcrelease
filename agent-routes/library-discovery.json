@@ -1,0 +1,33 @@
+{
+  "decision": "Search once to discover a candidate, inspect its Root Skill and WIT, approve the exact APIs, then run the single combined verifier. That verifier checks lifecycle before pinned resolution and actual behavior. Discovery grants no approval.",
+  "search_prefix": "node scripts/wasmc-lib.mjs search",
+  "catalog_sha256": "a4de009c683d3db4453cf0a9e783719a933a8e1689842a12d08a6883a83cfdad",
+  "search_options": "--catalog-sha256 a4de009c683d3db4453cf0a9e783719a933a8e1689842a12d08a6883a83cfdad --limit 8",
+  "search_command_pattern": "node scripts/wasmc-lib.mjs search QUERY --catalog-sha256 a4de009c683d3db4453cf0a9e783719a933a8e1689842a12d08a6883a83cfdad --limit 8",
+  "search_rule": "Use the WIT interface keyword first: hex for lowercase hexadecimal byte encoding/decoding, base64 for Base64. Search once. A matching exact WIT API hit is sufficient discovery: do not repeat the search with synonyms or a natural-language sentence. Inspect the selected Root and WIT next; search is not approval.",
+  "selected_std": {
+    "package": "wasmc:std@1.4.1",
+    "root": "current-libs/wasmc-std/1.4.1",
+    "public_files": {
+      "skill": "current-libs/wasmc-std/1.4.1/SKILL.md",
+      "wit": "current-libs/wasmc-std/1.4.1/lib.wit"
+    }
+  },
+  "selection_read_rule": "After a matching hit, read the exact Skill and WIT file paths for its package Root. For Std use selected_std.public_files. WIT interface and API identities are logical names inside lib.wit, not directories under the Root; never append an interface name to a package path. The selected Root is the approval scope, not every catalog entry.",
+  "byte_codec_choices": [
+    "base64",
+    "hex"
+  ],
+  "verify_command_pattern": "node scripts/agent-library-check.mjs --codec CODEC --text TEXT",
+  "verify_rule": "After reading and approving the selected Root and WIT APIs, run the combined check exactly once. It performs actual search, lifecycle, pinned resolution and behavior in order. Do not run a separate lifecycle, resolve or behavior-driver command. Copy its report_text and actual behavior; catalog display identities are not WIT package identities.",
+  "driver_rule": "Choose the codec matching the selected WIT API. The combined check executes its pinned driver, verifies exact Provider imports and drops owned resources. Only the declared codecs are covered; other APIs require their documented driver.",
+  "final_answer_policy": "Report exact package and selected WIT API identities, actual behavior and verification field names. Digest values need not be repeated in prose. If a requested digest is reported, copy its full value once. Never abbreviate any identity or digest. After the named checks pass, stop; the driver interface above is complete.",
+  "required_additional_reads": [],
+  "host_authority": "Resolution and installation grant no Host authority.",
+  "named_checks": [
+    "node scripts/agent-library-check.mjs --codec CODEC --text TEXT"
+  ],
+  "check_rule": "read_command already completed route integrity verification. Run only the applicable named_checks for the request. An empty named_checks list means this is a decision route: answer and stop. Do not invent flags or extra check commands; do not repeat a completed check.",
+  "schema": "wasmc.agent-task-route/v1",
+  "id": "library-discovery"
+}

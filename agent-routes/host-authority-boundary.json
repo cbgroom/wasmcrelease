@@ -1,0 +1,17 @@
+{
+  "decision": "Inspect every generated import before instantiation and compare module, name, kind and signature with an application-owned exact allowlist.",
+  "javascript": "compile(source), inspectWasm(bytes), then WebAssembly.instantiate(inspected.module, approvedImports)",
+  "pure": "Require imports=[] and instantiate with {}.",
+  "forbidden": [
+    "ambient filesystem/network/clock/randomness",
+    "credentials/process/device access",
+    "private handles/plans/Store nonces/lifecycle helpers",
+    "JSON as WIT replacement"
+  ],
+  "required_additional_reads": [],
+  "grant_rule": "An allowlist entry alone is not approval of private or unsupported capabilities. For a supported effect require explicit application approval and a bounded adapter matching the exact module/name/kind/signature; otherwise stop. With no approval for env.read_clock, reject instantiation: never silently supply Date.now or a constant.",
+  "named_checks": [],
+  "check_rule": "read_command already completed route integrity verification. Run only the applicable named_checks for the request. An empty named_checks list means this is a decision route: answer and stop. Do not invent flags or extra check commands; do not repeat a completed check.",
+  "schema": "wasmc.agent-task-route/v1",
+  "id": "host-authority-boundary"
+}

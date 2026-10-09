@@ -1,5 +1,6 @@
-#!/usr/bin/env node
+import { loadAgentRoutes } from './agent-routes.mjs';
 import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -8,10 +9,15 @@ const root = fileURLToPath(new URL('../', import.meta.url));
 const readJson = path => JSON.parse(readFileSync(resolve(root, path), 'utf8'));
 const release = readJson('release.json');
 const prod = readJson('channels/prod.json');
-const quickstart = readJson('agent-quickstart.json');
+const quickstart = loadAgentRoutes();
 const candidate = readJson(release.staged_product_manifest);
 const route = quickstart.routes['release-orientation'];
 const base64 = quickstart.routes['library-first-selection'];
+const hash = path => createHash('sha256').update(readFileSync(resolve(root, path))).digest('hex');
+assert.equal(hash(route.compiler.path), route.compiler.sha256, 'actual compiler bytes differ from compact authority');
+assert.equal(hash(route.facade.path), route.facade.sha256, 'actual facade bytes differ from compact authority');
+assert.equal(hash(base64.catalog_path), candidate.current_catalog.sha256, 'actual catalog differs from independently pinned candidate');
+assert.equal(WebAssembly.Module.imports(new WebAssembly.Module(readFileSync(resolve(root, route.compiler.path)))).length, 0);
 
 assert.ok(['wasmc-public-release/v1', 'wasmc-public-release/v2'].includes(release.schema));
 assert.equal(release.stage, 'prod');
@@ -24,19 +30,19 @@ assert.equal(route.product_version, release.tag);
 assert.equal(base64.product_release, release.tag);
 
 const model = {
-  schema: 'wasmc.agent-release-orientation/v1',
+  schema: 'wasmc.agent-release-orientation/v2',
   scope: 'Complete compact authority for release orientation; do not read the full artifact inventory in manifest.json unless a listed verification fails. Compact release.json is lifecycle authority, not the artifact list.',
   release: {
     version: release.version,
     tag: release.tag,
     stage: release.stage,
     stable: prod.stable,
-    release_commit: release.source_commit,
     product_candidate_commit: release.product_candidate_commit,
     product_manifest: release.staged_product_manifest,
     product_set_sha256: candidate.product_set_sha256
   },
   public_agent_entrypoint: route.entrypoint,
+  required_report: route.required_report,
   compiler: route.compiler,
   facade: route.facade,
   library_catalog: {
@@ -56,4 +62,5 @@ const action = process.argv[2];
 if (action === '--write') writeFileSync(output, encoded);
 else if (action === '--check') assert.equal(readFileSync(output, 'utf8'), encoded, 'agent release orientation is stale');
 else throw new Error('usage: agent-release-orientation.mjs --write|--check');
-console.log(JSON.stringify({ accepted: true, action: action.slice(2), release: release.tag, bytes: Buffer.byteLength(encoded), product_set_sha256: candidate.product_set_sha256 }));
+const report = Object.entries(route.required_report).map(([key, value]) => `${key}: ${value}`).join('\n');
+console.log(JSON.stringify({ accepted: true, action: action.slice(2), release: release.tag, bytes: Buffer.byteLength(encoded), compiler_verified: true, facade_verified: true, catalog_verified: true, report_text: report }));

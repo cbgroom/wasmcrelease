@@ -1,0 +1,30 @@
+{
+  "digest_rejection_probe": "node scripts/wasmc-agent-probe.mjs --source examples/agent-quickstart/pair.wasmc --export run --calls '[[5,true]]' --expected-compiler-sha256 SHA256",
+  "digest_rejection_rule": "For an independently expected wrong digest, use the probe to capture the actual verifier subprocess nonzero exit, error and actual/expected digests as a successful expected-negative observation. It asserts the exact digest rejection before compilation or instantiation. This does not approve execution. A manifest rewrite cannot replace the independently supplied expectation. After this named probe returns, report its actual evidence and stop; do not run extra whole-product integrity tests or a positive control.",
+  "digest_rejection_report": "Copy the probe JSON unchanged once as actual rejection evidence, including verifier_exit_code and verifier_stderr. Then copy its report_text unchanged as the explanation: the comparison target is the fixed caller-supplied --expected-compiler-sha256 argument. Editing metadata does not change this argument, so the same selected bytes still fail. Do not claim that editing a manifest changes the target or would make this fixed-expectation test pass. Changing the caller argument would change the test, not approve rejected bytes. Refer to actual and expected field names; do not repeat or abbreviate digest values. Report the true number of probe invocations; a failed invocation or repaired argument is not a first-pass success.",
+  "decision": "Verify the independently supplied compiler digest before compiling or instantiating the shipped pure source fixture. This is a rejection test, not source authoring or release orientation.",
+  "fixture_source": "examples/agent-quickstart/pair.wasmc",
+  "fixture_export": "run",
+  "fixture_calls": [
+    [
+      5,
+      true
+    ]
+  ],
+  "required_additional_reads": [
+    "examples/agent-quickstart/pair.wasmc"
+  ],
+  "workflow": [
+    "Read the shipped pure fixture; source path, export and calls are already provided",
+    "Replace only SHA256 with the independently supplied expectation and run the named probe once",
+    "Copy the actual rejection JSON and report_text, distinguish verifier child exit 1 from wrapper exit 0, then stop"
+  ],
+  "scope": "Digest rejection does not compile source, resolve exports, run calls or approve execution. The fixture and healthy export are tested separately.",
+  "final_answer_policy": "Copy the probe JSON and report_text unchanged as the actual rejection evidence and explanation. The verifier child exits 1; the expected-rejection wrapper exits 0. Do not write new source, open the source guide, run a positive control, rewrite package metadata or append shortened hashes.",
+  "named_checks": [
+    "node scripts/wasmc-agent-probe.mjs --source examples/agent-quickstart/pair.wasmc --export run --calls '[[5,true]]' --expected-compiler-sha256 SHA256"
+  ],
+  "check_rule": "read_command already completed route integrity verification. Run only the applicable named_checks for the request. An empty named_checks list means this is a decision route: answer and stop. Do not invent flags or extra check commands; do not repeat a completed check.",
+  "schema": "wasmc.agent-task-route/v1",
+  "id": "compiler-integrity-rejection"
+}

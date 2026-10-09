@@ -1,0 +1,206 @@
+{
+  "schema": "wasmc.agent-route-policy/v1",
+  "intents": {
+    "license-policy": "may I use the v0.0.21 product for research or commercial purposes",
+    "release-orientation": "identify the published release version/tag, public Agent entrypoint or compiler byte identity before compilation",
+    "release-lib-route-readiness": "does this v0.0.21 product set bind every included Lib package and API route, and where is its lifecycle stage decided",
+    "position-aware-capability-negative": "decide type or feature support by source, public-value, async and Host position, including u64 and Map",
+    "producer-release-u64-delta": "compare historical producer implementation versus product release status of u64, u32 and char",
+    "ordinary-source-positive": "compile and run the canonical s32/bool tuple example",
+    "release-state-separation": "direct WAsmC source use of wasmc-system-telemetry@0.0.1 sampler resource",
+    "dynamic-client-gateway": "is the dynamic Client/Gateway available in this product and is it a formal Lib",
+    "library-first-selection": "select and verify the released Base64 capability",
+    "host-authority-boundary": "determine permissions for generated Host imports: application allowlist, requests versus grants, no ambient access",
+    "source-adaptation": "write or change a new pure ordinary-source program and execute requested calls",
+    "compiler-integrity-rejection": "test rejection of an independently wrong compiler digest before pure-source execution",
+    "library-discovery": "find an unfamiliar reusable capability; inspect exact package/API and verify behavior"
+  },
+  "routes": {
+    "license-policy": {
+      "authority_file": "license-policy.json",
+      "request": "may I use the v0.0.21 product for research or commercial purposes",
+      "decision": "The v0.0.21 product permits non-commercial research only; commercial and production use require a separate written license. It is source-available, not open source.",
+      "prior_tag_rule": "Read LICENSE from the exact immutable tag. The v0.0.21 policy does not rewrite or revoke an earlier grant.",
+      "check_command": "node scripts/validate-license-policy.mjs",
+      "required_additional_reads": [
+        "license-policy.json",
+        "LICENSE"
+      ]
+    },
+    "release-orientation": {},
+    "release-lib-route-readiness": {},
+    "position-aware-capability-negative": {
+      "request": "async func(u64) -> map<string,u64> as an ordinary public WAsmC value",
+      "decision": "unsupported as a whole: u64 is supported in the v0.0.21 compiler, but async ordinary source and a direct public map result remain independently unsupported",
+      "independent_stops": [
+        "async ordinary source unsupported",
+        "Map is resident/local only and unsupported as a direct public WIT value result"
+      ],
+      "alternatives": [
+        "u32 or i64 only with application-owned bounds and signedness proof",
+        "ordered list<Entry<K,V>> snapshot only when copied-value semantics are equivalent",
+        "declared resource for identity and mutation",
+        "otherwise stop"
+      ],
+      "generate_source": false,
+      "required_additional_reads": [],
+      "scope": "Complete generated projection for the listed u64, public Map, async and Host positions; no source generation or runtime execution is requested for a capability decision.",
+      "final_answer_policy": "Decide each requested position from position_projection. u64 is supported in ordinary synchronous source and bounded synchronous scalar Host contracts, with WIT u64 identity and no implicit authority. Give alternatives only for unsupported positions when semantics remain equivalent; otherwise stop. required_additional_reads is empty because these facts are complete. Do not open unrelated routes, language syntax, catalogs, source examples or product inventories for this decision."
+    },
+    "producer-release-u64-delta": {
+      "request": "is ordinary-source u64 fixed or supported now",
+      "answer_opening": "Producer master and the v0.0.21 product compiler both support ordinary-source u64; read release.json for the currently published lifecycle stage.",
+      "producer": {
+        "repository": "yxsicd/wasmc",
+        "branch": "master",
+        "commit": "566eff42d0f4e4680c5ddd60c6584a9d8ff8e9f4",
+        "implementation_commit": "94328ed760f93bf24b595a71facdcc773d43b762",
+        "implemented": true,
+        "qualified_on_containing_commit": true
+      },
+      "release_product": {
+        "version": "v0.0.21",
+        "lifecycle_authority": "release.json",
+        "ordinary_source_u64": "supported"
+      },
+      "u32": "included in the v0.0.21 product compiler; no repair was required",
+      "char": "not implemented on the cited producer authority and not released; arbitrary u32 is not a char substitute",
+      "stop": "Report u64 support only for the v0.0.21 product compiler. Do not infer async, map, char, lifecycle stage or installation from scalar support.",
+      "required_additional_reads": []
+    },
+    "ordinary-source-positive": {
+      "source": "examples/agent-quickstart/pair.wasmc",
+      "run": "node examples/agent-quickstart/run-pair.mjs",
+      "result": {
+        "core_bytes": 49,
+        "core_sha256": "55f3c7e3d09b564b89b8268299a69569a33b856b46405cb4c4dd51634afec84e",
+        "imports": [],
+        "call": "run(5, true)",
+        "value": [
+          1,
+          1
+        ]
+      },
+      "embedding_warning": "The tuple is one semantic result; JavaScript observes two flattened Core lanes, not an automatically lifted object.",
+      "required_additional_reads": [
+        "examples/agent-quickstart/pair.wasmc"
+      ]
+    },
+    "release-state-separation": {
+      "request": "direct WAsmC source use of wasmc-system-telemetry@0.0.1 sampler resource",
+      "exact_report": {
+        "instruction": "First copy exact_report.identity and exact_report.stop_reason byte-for-byte once in the final answer. Only after both literal values appear may you refer to their field names. Never output a field name as a substitute for its value, and never reconstruct, shorten or respell either field.",
+        "identity": "wasmc-system-telemetry@0.0.1",
+        "stop_reason": "wasmc-source-direct-resource-methods"
+      },
+      "required_output_states": [
+        "qualified",
+        "admitted",
+        "released",
+        "discoverable",
+        "installable"
+      ],
+      "stop": "qualified=false because wasmc-source-direct-resource-methods is explicitly unsupported",
+      "required_additional_reads": [],
+      "final_answer_policy": "Copy report_text unchanged once as the complete final answer and stop. It is generated from the actual direct and related lifecycle states and already names the exact identity, first missing authority and three supported routes. The field names qualified, admitted, released, discoverable and installable are exact lowercase names; do not capitalize, rename or omit them. No extra reads or checks are required for this decision."
+    },
+    "dynamic-client-gateway": {
+      "request": "is the dynamic Client/Gateway available in this product and is it a formal Lib",
+      "authority": "runtime/client-foundation-v1/release-surface.json",
+      "product": {
+        "version": "0.0.21",
+        "included": true,
+        "surface_status": "incubating",
+        "lifecycle_authority": "release.json"
+      },
+      "formal_lib": {
+        "admitted": false,
+        "discoverable": false,
+        "installable": false
+      },
+      "fixed_host_api_changed": false,
+      "minimal_cli_changed": false,
+      "stop": "Report product inclusion separately from Lib admission. Do not claim production fleet service or general external-effect exactly-once behavior.",
+      "required_additional_reads": [
+        "runtime/client-foundation-v1/release-surface.json"
+      ]
+    },
+    "library-first-selection": {
+      "search_is_selection_authority": false,
+      "catalog_snapshot_boundary": "The exact current42 catalog binds complete Roots to the independently pinned Q0 cohort. It does not grant release or Host authority.",
+      "final_answer_policy": "After verification, output package and both APIs exactly, then only these statements: search discovered the candidate but was not authority; resolve verified catalog_sha256, manifest_sha256, root_inventory_sha256, wit_sha256 and artifact_sha256; behavior separately verified companion_sha256 and import_module and passed. Do not reproduce command arguments, digest values, partial digests or any ellipsis character. The combined verify command checks released, discoverable and installable states before resolution using release.json, channels/prod.json and the selected candidate. Do not invoke a separate lifecycle command. Stop if any required state is false; do not enumerate historical or other channel directories. Copy the successful verifier report_text unchanged once as the complete final answer; it already contains the exact package, APIs and all required verification statements. Do not append catalog display identities or extra narrative. Search package_id/version and WIT package identity are different namespaces.",
+      "install_reference": "catalog/INSTALL.md",
+      "required_additional_reads": [],
+      "verification_rule": "Read required_additional_reads and approve these exact WIT APIs first. Run verify once: it performs actual search, lifecycle, independently pinned resolution and behavior in order. The other command fields document its stages; they are not additional named checks. Do not repeat a stage before or after verify."
+    },
+    "host-authority-boundary": {
+      "decision": "Inspect every generated import before instantiation and compare module, name, kind and signature with an application-owned exact allowlist.",
+      "javascript": "compile(source), inspectWasm(bytes), then WebAssembly.instantiate(inspected.module, approvedImports)",
+      "pure": "Require imports=[] and instantiate with {}.",
+      "forbidden": [
+        "ambient filesystem/network/clock/randomness",
+        "credentials/process/device access",
+        "private handles/plans/Store nonces/lifecycle helpers",
+        "JSON as WIT replacement"
+      ],
+      "required_additional_reads": [],
+      "grant_rule": "An allowlist entry alone is not approval of private or unsupported capabilities. For a supported effect require explicit application approval and a bounded adapter matching the exact module/name/kind/signature; otherwise stop. With no approval for env.read_clock, reject instantiation: never silently supply Date.now or a constant."
+    },
+    "source-adaptation": {
+      "decision": "For a new pure ordinary-source program, read docs/AGENT_PURE_SOURCE.md for the small complete syntax guide and edit your own ordinary typed source. The sample is a pattern, not your answer. Compile, inspect imports and execute the requested calls with scripts/wasmc-agent-execute.mjs. This runner refuses any Host imports before instantiation; effectful or managed programs need their separately approved profile.",
+      "runner": "node scripts/wasmc-agent-execute.mjs --source PATH --export NAME --calls JSON",
+      "required_additional_reads": [
+        "docs/AGENT_PURE_SOURCE.md"
+      ],
+      "exact_evidence": [
+        "source path",
+        "source_sha256",
+        "compiler_sha256",
+        "core_sha256",
+        "imports",
+        "calls and actual results"
+      ],
+      "host_boundary": "A declared import requests an effect; application authorization and a bounded adapter are separately required.",
+      "runner_rule": "The runner interface and source basics guide are complete for scalar/tuple tasks. Write your source and run once for all requested calls; report exact results and stop. Open larger language/reference files only for a construct outside the small guide.",
+      "final_answer_policy": "Report requested source and Core evidence exactly. Copy a requested SHA256 in full once, or reference verified field names when no digest value was requested. Never shorten a digest, even when discussing a negative example.",
+      "result_rule": "First map each requested output to its input or explicitly requested expression. A request to return both s32 and bool parameters without a transformation means tuple<s32,bool> with return tuple(value, flag). Never ignore flag, substitute value!=0 or value+1, or compute two outputs from one input. Change expressions only when the request asks for that computation. A conjunction/disjunction also discards separate values. Preserve one semantic tuple/record result; report observed Core lane flattening without claiming automatic object lifting.",
+      "calls_format": "--calls is JSON containing an array of positional argument arrays, not objects. Example for two parameters: --calls '[[1,true],[0,false]]'. Match the exported signature and the actual requested arguments. This is the execution runner format.",
+      "workflow": [
+        "Read the small source guide",
+        "Write the requested new source file directly in the current checkout",
+        "Run the applicable runner once for all requested calls",
+        "Copy the actual execution evidence and stop"
+      ],
+      "file_rule": "The new source file is expected not to exist yet. Create it directly; do not enumerate scripts or search for existing source files before writing it. Declared runner paths are shipped and checked by preflight. If file inventory is actually requested, use find with a quoted pattern: an empty inventory is a valid result, not a failing ls glob.",
+      "expected_results_rule": "The runner optionally accepts --expected-results JSON. Derive this oracle from the request before execution, never from observed output. For unchanged value/flag inputs [[3,true],[3,false]], expected flattened tuple results are [[3,1],[3,0]]. For an explicitly requested computation, calculate its own expected values. A returned accepted flag proves execution and supplied-oracle agreement only; the source must still implement the requested semantics. Expected results contain one result per call: scalar -> [r1,r2], tuple -> [[lane1,lane2],[lane1,lane2]]. Input calls always use arrays of argument arrays; output scalars do not acquire an extra array. For the guide choose calls [[3,true],[-1,false]], use --expected-results [6,-1]; for keep on the same calls use [[3,1],[-1,0]].",
+      "digest_test_route": "For an independently wrong compiler digest, choose compiler-integrity-rejection; its shipped pure fixture and exact probe arguments are complete.",
+      "package_identifier_rule": "Use package local:basics or another plain source identifier such as pair_echo, pairEcho or pair2. The current compiler rejects package local:pair-echo with expected Semi, got Minus. Filenames may contain hyphens; package declarations are separate identifiers. Do not derive a package identifier by copying a hyphenated filename.",
+      "wide_integer_rule": "For source i64/u64, Core i64 arguments require BigInt. Encode exact runner JSON arguments and expected results as objects with only bigint_decimal containing a decimal string. Never convert through Number. Raw Core i64 results are signed BigInt lanes: u64::MAX is bigint_decimal -1 while its source value is unsigned 18446744073709551615. Source signed spelling is i64; WIT uses s64. Read the complete 64-bit example in docs/AGENT_PURE_SOURCE.md."
+    },
+    "compiler-integrity-rejection": {
+      "digest_rejection_probe": "node scripts/wasmc-agent-probe.mjs --source examples/agent-quickstart/pair.wasmc --export run --calls '[[5,true]]' --expected-compiler-sha256 SHA256",
+      "digest_rejection_rule": "For an independently expected wrong digest, use the probe to capture the actual verifier subprocess nonzero exit, error and actual/expected digests as a successful expected-negative observation. It asserts the exact digest rejection before compilation or instantiation. This does not approve execution. A manifest rewrite cannot replace the independently supplied expectation. After this named probe returns, report its actual evidence and stop; do not run extra whole-product integrity tests or a positive control.",
+      "digest_rejection_report": "Copy the probe JSON unchanged once as actual rejection evidence, including verifier_exit_code and verifier_stderr. Then copy its report_text unchanged as the explanation: the comparison target is the fixed caller-supplied --expected-compiler-sha256 argument. Editing metadata does not change this argument, so the same selected bytes still fail. Do not claim that editing a manifest changes the target or would make this fixed-expectation test pass. Changing the caller argument would change the test, not approve rejected bytes. Refer to actual and expected field names; do not repeat or abbreviate digest values. Report the true number of probe invocations; a failed invocation or repaired argument is not a first-pass success.",
+      "decision": "Verify the independently supplied compiler digest before compiling or instantiating the shipped pure source fixture. This is a rejection test, not source authoring or release orientation.",
+      "fixture_source": "examples/agent-quickstart/pair.wasmc",
+      "fixture_export": "run",
+      "fixture_calls": [
+        [
+          5,
+          true
+        ]
+      ],
+      "required_additional_reads": [
+        "examples/agent-quickstart/pair.wasmc"
+      ],
+      "workflow": [
+        "Read the shipped pure fixture; source path, export and calls are already provided",
+        "Replace only SHA256 with the independently supplied expectation and run the named probe once",
+        "Copy the actual rejection JSON and report_text, distinguish verifier child exit 1 from wrapper exit 0, then stop"
+      ],
+      "scope": "Digest rejection does not compile source, resolve exports, run calls or approve execution. The fixture and healthy export are tested separately.",
+      "final_answer_policy": "Copy the probe JSON and report_text unchanged as the actual rejection evidence and explanation. The verifier child exits 1; the expected-rejection wrapper exits 0. Do not write new source, open the source guide, run a positive control, rewrite package metadata or append shortened hashes."
+    },
+    "library-discovery": {}
+  }
+}

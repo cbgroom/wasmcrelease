@@ -1,0 +1,145 @@
+import assert from 'node:assert/strict';
+import { readFileSync, writeFileSync, mkdirSync, mkdtempSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { execFileSync, spawnSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
+import { buildAgentGuidance, loadAgentRoutes, loadAgentRoute, readPublishedLifecycle } from './agent-routes.mjs';
+import { publishedLifecycle } from './release-lifecycle.mjs';
+import { executeSource, inspectPure } from './wasmc-agent-execute.mjs';
+import { piTerminalReceipt } from './pi-terminal-receipt.mjs';
+import { validateGuidanceFence } from './validate-pi-guidance-workstream.mjs';
+const event = message => JSON.stringify({ type: 'message_end', message: { role: 'assistant', ...message } });
+const progress = event({ stopReason: 'toolUse', content: [{ type: 'text', text: 'Running the check' }, { type: 'toolCall', name: 'bash' }] });
+for (const terminal of [null, { stopReason: 'error', errorMessage: 'provider failure', content: [] }, { stopReason: 'stop', content: [] }, { stopReason: 'length', content: [{ type: 'text', text: 'partial' }] }]) {
+  const result = piTerminalReceipt(progress + '\n' + (terminal ? event(terminal) : ''));
+  assert.equal(result.receipt.complete_final_answer, false); assert.equal(result.final_text, '');
+  assert.ok(!JSON.stringify(result).includes('provider failure'));
+}
+const completed = piTerminalReceipt(progress + '\n' + event({ stopReason: 'stop', content: [{ type: 'text', text: 'Verified final result' }] }));
+assert.equal(completed.receipt.complete_final_answer, true); assert.equal(completed.final_text, 'Verified final result');
+const root = new URL('../', import.meta.url).pathname;
+const read = p => JSON.parse(readFileSync(join(root, p)));
+const release = read('release.json'), prod = read('channels/prod.json'), candidate = read(release.staged_product_manifest);
+const model = buildAgentGuidance(), loaded = loadAgentRoutes(); assert.deepEqual(loaded.routes, model.routes);
+assert.equal(validateGuidanceFence().protected_release_identities, 9);
+const fenceTemp = mkdtempSync(join(tmpdir(), 'pi-guidance-fence-'));
+try {
+  const identity = join(fenceTemp, 'release.json');
+  writeFileSync(identity, JSON.stringify({ ...release, version: '0.0.22' }));
+  assert.throws(() => validateGuidanceFence(fenceTemp), /protected release identity drift/);
+} finally { rmSync(fenceTemp, { recursive: true }); }
+assert.deepEqual(loadAgentRoute('library-discovery'), model.routes['library-discovery']);
+assert.equal(readPublishedLifecycle().states.installable, true);
+assert.deepEqual(model.routes['release-state-separation'].related_product.routes, read('release-surfaces.json').package_profiles['wasmc-system-telemetry@0.0.1'].supported_surfaces);
+assert.ok(Object.values(model.routes['release-state-separation'].states).every(x => x === false));
+for (const mutate of [p => p.version = '0.0.20', p => p.tag = 'v0.0.20', p => p.stage = 'dev', p => p.product_set_sha256 = '0'.repeat(64), p => p.product_candidate_commit = '0'.repeat(40), p => p.qualification.accepted = false, p => p.qualification.tested_product_set_sha256 = '0'.repeat(64)]) {
+  const bad = structuredClone(prod); mutate(bad);
+  const states = publishedLifecycle(release, bad, candidate, release.version);
+  assert.equal(states.released, false); assert.equal(states.admitted, false); assert.equal(states.installable, false);
+  const projected = buildAgentGuidance(root, { 'channels/prod.json': bad });
+  assert.deepEqual(projected.routes['library-first-selection'].states, states);
+  for (const [key, value] of Object.entries(states)) {
+    assert.equal(projected.routes['release-state-separation'].related_product[key], value);
+    assert.ok(projected.routes['release-state-separation'].report_text.includes(`related_product.${key} = ${value}`));
+  }
+}
+const temp = mkdtempSync(join(tmpdir(), 'agent-route-mutation-'));
+try {
+  mkdirSync(join(temp, 'agent-routes')); writeFileSync(join(temp, 'agent-quickstart.json'), JSON.stringify(model.index));
+  for (const [path, bytes] of Object.entries(model.files)) writeFileSync(join(temp, path), bytes);
+  const p = join(temp, 'agent-routes/release-state-separation.json'), altered = JSON.parse(readFileSync(p)); altered.related_product.released = false; writeFileSync(p, JSON.stringify(altered));
+  assert.throws(() => loadAgentRoutes(temp), /route digest drift/);
+  assert.deepEqual(loadAgentRoute('library-discovery', temp), model.routes['library-discovery'], 'selected route read does not scan other routes');
+  assert.throws(() => loadAgentRoute('release-state-separation', temp), /route digest drift/);
+  mkdirSync(join(temp, 'channels/candidates'), { recursive: true });
+  writeFileSync(join(temp, 'release.json'), JSON.stringify(release)); writeFileSync(join(temp, 'channels/prod.json'), JSON.stringify(prod));
+  writeFileSync(join(temp, release.staged_product_manifest), readFileSync(join(root, release.staged_product_manifest)));
+  assert.equal(readPublishedLifecycle(temp).states.installable, true);
+  writeFileSync(join(temp, release.staged_product_manifest), JSON.stringify({ ...candidate, product_set_sha256: '0'.repeat(64) }));
+  assert.throws(() => readPublishedLifecycle(temp), /lifecycle candidate digest drift/);
+  const index = structuredClone(model.index); index.routes['release-orientation'].path = '../release.json'; writeFileSync(join(temp, 'agent-quickstart.json'), JSON.stringify(index));
+  assert.throws(() => loadAgentRoutes(temp));
+} finally { rmSync(temp, { recursive: true }); }
+const source = 'package local:calc; interface api { calc: func(x: s32) -> s32 { return x * 2 + 1; } } world app { export api; }';
+const proof = await executeSource(source, 'calc', [[0], [9], [-3]]); assert.deepEqual(proof.calls.map(r => r.result), [1, 19, -5]); assert.deepEqual(proof.imports, []);
+for (const name of ['pair_echo', 'pairEcho', 'pair2']) {
+  const renamed = source.replace('local:calc', `local:${name}`);
+  assert.deepEqual((await executeSource(renamed, 'calc', [[0], [9], [-3]])).calls.map(r => r.result), [1, 19, -5]);
+}
+await assert.rejects(executeSource(source.replace('local:calc', 'local:pair-echo'), 'calc', [[0]]), /expected Semi, got Minus/);
+const rejectionRoute = loaded.routes['compiler-integrity-rejection'];
+const fixture = readFileSync(join(root, rejectionRoute.fixture_source), 'utf8');
+assert.deepEqual((await executeSource(fixture, rejectionRoute.fixture_export, rejectionRoute.fixture_calls)).calls.map(r => r.result), [[1, 1]]);
+const sourceGuide = readFileSync(join(root, 'docs/AGENT_PURE_SOURCE.md'), 'utf8');
+const basics = sourceGuide.match(/```wasmc\n([\s\S]*?)```/)[1];
+assert.deepEqual((await executeSource(basics, 'keep', [[3, true], [-1, false]])).calls.map(x => x.result), [[3, 1], [-1, 0]]);
+assert.deepEqual((await executeSource(basics, 'choose', [[3, true], [-1, false]])).calls.map(x => x.result), [6, -1]);
+assert.equal((await executeSource(basics, 'keep', [[3, true], [3, false]], undefined, [[3, 1], [3, 0]])).expected_results_verified, true);
+const discardedFlag = 'package local:wrong; interface api { pair: func(value:s32, flag:bool)->tuple<bool,s32> { return tuple(value != 0, value + 1); } } world app { export api; }';
+await assert.rejects(executeSource(discardedFlag, 'pair', [[3, true], [3, false]], undefined, [[3, 1], [3, 0]]), /execution results differ from caller-supplied oracle/);
+await assert.rejects(executeSource(source, 'calc', [[0]], '0'.repeat(64)), /independent compiler digest mismatch/);
+const toolchainTemp = mkdtempSync(join(tmpdir(), 'agent-toolchain-order-'));
+try {
+  for (const path of ['scripts/wasmc-agent-execute.mjs', 'current/wasmc.mjs', 'current/compiler-release.json', 'current/wasmc_compiler.wasm']) {
+    const target = join(toolchainTemp, path); mkdirSync(join(target, '..'), { recursive: true });
+    writeFileSync(target, readFileSync(join(root, path)));
+  }
+  writeFileSync(join(toolchainTemp, 'calc.wasmc'), source);
+  const argv = ['scripts/wasmc-agent-execute.mjs', '--source', 'calc.wasmc', '--export', 'calc', '--calls', '[[0]]'];
+  const run = extra => spawnSync(process.execPath, [...argv, ...extra], { cwd: toolchainTemp, encoding: 'utf8', timeout: 30000 });
+  const facadePath = join(toolchainTemp, 'current/wasmc.mjs');
+  const originalFacade = readFileSync(facadePath);
+  writeFileSync(facadePath, Buffer.concat([originalFacade, Buffer.from("\nthrow new Error('UNVERIFIED_FACADE_EXECUTED');\n")]));
+  for (const extra of [[], ['--expected-compiler-sha256', '0'.repeat(64)]]) {
+    const rejected = run(extra); assert.equal(rejected.status, 1); assert.equal(rejected.stdout, '');
+    assert.ok(!rejected.stderr.includes('UNVERIFIED_FACADE_EXECUTED'), 'unverified facade must not execute its module body');
+    assert.match(JSON.parse(rejected.stderr).error, extra.length ? /independent compiler digest mismatch/ : /facade digest mismatch before module import/);
+  }
+  writeFileSync(facadePath, originalFacade);
+  const notACompiler = Uint8Array.from([0, 97, 115, 109, 1, 0, 0, 0]);
+  const digest = createHash('sha256').update(notACompiler).digest('hex');
+  writeFileSync(join(toolchainTemp, 'current/wasmc_compiler.wasm'), notACompiler);
+  const metadataPath = join(toolchainTemp, 'current/compiler-release.json');
+  const metadata = JSON.parse(readFileSync(metadataPath)); metadata.compiler.sha256 = digest;
+  writeFileSync(metadataPath, JSON.stringify(metadata));
+  const rejected = run(['--expected-compiler-sha256', digest]);
+  assert.equal(rejected.status, 1, 'the hash-checked selected raw bytes must actually be used, never an embedded fallback');
+  assert.equal(rejected.stdout, ''); assert.equal(JSON.parse(rejected.stderr).accepted, false);
+} finally { rmSync(toolchainTemp, { recursive: true }); }
+const wide = 'package local:wide; interface api { keepU: func(v:u64)->u64 { return v; } keepS: func(v:i64)->i64 { return v; } above: func(v:u64)->bool { return v > 7; } } world app { export api; }';
+const decimal = value => ({ bigint_decimal: value });
+assert.deepEqual((await executeSource(wide, 'keepU', [[decimal('7')], [decimal('18446744073709551615')]], undefined, [decimal('7'), decimal('-1')])).calls.map(row => row.result), [7n, -1n]);
+assert.deepEqual((await executeSource(wide, 'keepS', [[decimal('-9223372036854775808')], [decimal('9223372036854775807')]], undefined, [decimal('-9223372036854775808'), decimal('9223372036854775807')])).calls.map(row => row.result), [-9223372036854775808n, 9223372036854775807n]);
+assert.deepEqual((await executeSource(wide, 'above', [[decimal('7')], [decimal('18446744073709551615')]], undefined, [0, 1])).calls.map(row => row.result), [0, 1]);
+for (const value of [decimal('7x'), decimal('18446744073709551616'), { bigint_decimal: '7', inferred: true }]) {
+  await assert.rejects(executeSource(wide, 'keepU', [[value]]), /bigint_decimal|64-bit input range/);
+}
+const wideTemp = mkdtempSync(join(tmpdir(), 'agent-wide-call-'));
+try {
+  const documentedWide = [...sourceGuide.matchAll(/```wasmc\n([\s\S]*?)```/g)][1][1];
+  const path = join(wideTemp, 'wide.wasmc'); writeFileSync(path, documentedWide);
+  const calls = [[decimal('7')], [decimal('18446744073709551615')]];
+  const result = JSON.parse(execFileSync(process.execPath, ['scripts/wasmc-agent-execute.mjs', '--source', path, '--export', 'keepU', '--calls', JSON.stringify(calls), '--expected-results', JSON.stringify([decimal('7'), decimal('-1')])], { cwd: root, encoding: 'utf8' }));
+  assert.equal(result.expected_results_verified, true); assert.deepEqual(result.calls.map(row => row.arguments), calls);
+  assert.deepEqual(result.calls.map(row => row.result), [decimal('7'), decimal('-1')]);
+} finally { rmSync(wideTemp, { recursive: true }); }
+const probeTemp = mkdtempSync(join(tmpdir(), 'agent-digest-probe-'));
+try {
+  const path = join(probeTemp, 'calc.wasmc'); writeFileSync(path, source);
+  const args = ['--source', path, '--export', 'calc', '--calls', '[[0]]', '--expected-compiler-sha256', '0'.repeat(64)];
+  const result = JSON.parse(execFileSync(process.execPath, ['scripts/wasmc-agent-probe.mjs', ...args], { cwd: root, encoding: 'utf8' }));
+  assert.equal(result.verifier_exit_code, 1); assert.equal(result.probe_exit_code, 0); assert.equal(result.execution_accepted, false);
+  assert.equal(result.caller_expectation_verified, true); assert.equal(result.verifier_stderr.expected, args.at(-1));
+  assert.throws(() => execFileSync(process.execPath, ['scripts/wasmc-agent-probe.mjs', ...args.slice(0, -1), proof.compiler_sha256], { cwd: root, stdio: 'pipe' }), 'a healthy execution cannot pass the negative probe');
+} finally { rmSync(probeTemp, { recursive: true }); }
+const hostModule = Uint8Array.from([0,97,115,109,1,0,0,0,1,5,1,96,0,1,127,2,18,1,3,101,110,118,10,114,101,97,100,95,99,108,111,99,107,0,0,7,7,1,3,114,117,110,0,0]);
+assert.ok(WebAssembly.validate(hostModule)); assert.throws(() => inspectPure(hostModule), /Host imports require/);
+for (const codec of ['base64', 'hex']) {
+  const result = JSON.parse(execFileSync(process.execPath, ['examples/lib-bytes/run.mjs', '--codec', codec, '--text', '你好 Pi'], { cwd: root, encoding: 'utf8' }));
+  assert.equal(result.encoded_utf8, Buffer.from('你好 Pi').toString(codec)); assert.equal(result.explicit_drops, 1024); assert.equal(result.selected_Root_verified, true);
+  const combined = JSON.parse(execFileSync(process.execPath, ['scripts/agent-library-check.mjs', '--codec', codec, '--text', codec === 'base64' ? 'abc' : '你好 Pi'], { cwd: root, encoding: 'utf8' }));
+  assert.equal(combined.encoded_utf8, Buffer.from(codec === 'base64' ? 'abc' : '你好 Pi').toString(codec));
+  assert.equal(combined.authority_granted, false); assert.equal(combined.search_wit_routes.length, 2); assert.equal(combined.states.installable, true);
+}
+console.log(JSON.stringify({ accepted: true, routes: Object.keys(model.routes).length, lifecycle_negative_cases: 7, mutated_route_rejected: true, escaping_path_rejected: true, independent_digest_rejected: true, unverified_facade_refused_before_import: true, hash_checked_raw_compiler_actually_used: true, wide_integer_JSON_calls_verified: true, unapproved_Host_refused_before_instantiation: true, codecs: 2, byte_codec_rounds: 512, explicit_drops: 2048 }));

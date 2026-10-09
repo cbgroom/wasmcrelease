@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import assert from 'node:assert/strict';
+import {publishedLifecycle} from './release-lifecycle.mjs';
 import {readFileSync,writeFileSync} from 'node:fs';
 import {resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
@@ -8,10 +9,11 @@ const root=fileURLToPath(new URL('../',import.meta.url));
 const read=p=>JSON.parse(readFileSync(resolve(root,p),'utf8'));
 const closure=buildClosure(),surfaces=read('release-surfaces.json'),catalog=read(closure.catalog.path);
 const version=catalog.version,release=read('release.json'),prod=read('channels/prod.json');
-const released=release.version===version&&prod.version===version&&prod.stage==='prod'&&release.tag===prod.tag;
+const lifecycle=publishedLifecycle(release,prod,read(release.staged_product_manifest),version);
+const released=lifecycle.released;
 const rows=closure.release_bindings.map(row=>({...row,
   qualification:{Root_Q0:true,runtime_claim:row.delivery_kind==='native-source'?'source-only; no execution or device qualification':'separate exact runtime receipts required'},
-  states:{qualified:true,admitted:released,released,discoverable:released,installable:released},
+  states:lifecycle,
   lifecycle_authority:'release.json and channels/prod.json',
   stopping_conditions:row.delivery_kind==='native-source'?['native-source-is-not-executable','device-not-qualified']:[]}));
 const model={schema:'wasmc.lib-ecosystem-control-plane/v3',authority:{immutable_product:'release.json -> exact candidate',

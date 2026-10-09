@@ -1,0 +1,24 @@
+{
+  "source": "examples/agent-quickstart/pair.wasmc",
+  "run": "node examples/agent-quickstart/run-pair.mjs",
+  "result": {
+    "core_bytes": 49,
+    "core_sha256": "55f3c7e3d09b564b89b8268299a69569a33b856b46405cb4c4dd51634afec84e",
+    "imports": [],
+    "call": "run(5, true)",
+    "value": [
+      1,
+      1
+    ]
+  },
+  "embedding_warning": "The tuple is one semantic result; JavaScript observes two flattened Core lanes, not an automatically lifted object.",
+  "required_additional_reads": [
+    "examples/agent-quickstart/pair.wasmc"
+  ],
+  "named_checks": [
+    "node examples/agent-quickstart/run-pair.mjs"
+  ],
+  "check_rule": "read_command already completed route integrity verification. Run only the applicable named_checks for the request. An empty named_checks list means this is a decision route: answer and stop. Do not invent flags or extra check commands; do not repeat a completed check.",
+  "schema": "wasmc.agent-task-route/v1",
+  "id": "ordinary-source-positive"
+}

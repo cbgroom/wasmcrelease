@@ -1,0 +1,1615 @@
+{
+  "schema": "wasmc.pi-learning-model-run/v1",
+  "protocol": "wasmc.fresh-agent-learning/v3",
+  "release_guidance_commit": "46ec2092319beeda9c8cf8da41ea8f57000a9c41",
+  "agent": {
+    "implementation": "pi",
+    "version": "1.0.4"
+  },
+  "model": {
+    "provider": "llm-m4dd",
+    "identity": "glm-5.3-flash"
+  },
+  "timeout_ms": 300000,
+  "raw_trace_retained": false,
+  "hidden_reasoning_retained": false,
+  "cases": [
+    {
+      "id": "release-orientation",
+      "class": "decision",
+      "terminal": {
+        "assistant_messages": 4,
+        "terminal_stop_reason": "stop",
+        "terminal_tool_calls": 0,
+        "terminal_text_characters": 226,
+        "complete_final_answer": true,
+        "provider_error_count": 0,
+        "error_message_sha256": null
+      },
+      "captured_public_files": [],
+      "public_execution_receipts": [],
+      "tracked_files_modified": [],
+      "process": {
+        "status": 0,
+        "signal": null,
+        "timed_out": false,
+        "wall_ms": 22998,
+        "stderr_characters": 0,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "structural": {
+        "accepted": true,
+        "observed": {
+          "tool_calls": 5,
+          "assistant_turns": 4,
+          "tool_result_characters": 11585,
+          "error_results": 0,
+          "retries": 0,
+          "exact_duplicate_calls": 0,
+          "repeated_reads": 0,
+          "zero_yield_results": 0
+        },
+        "limits": {
+          "max_tool_calls": 8,
+          "max_assistant_turns": 6,
+          "max_tool_result_characters": 60000,
+          "max_error_results": 0,
+          "max_retries": 0,
+          "max_exact_duplicate_calls": 0,
+          "max_repeated_reads": 0,
+          "max_zero_yield_results": 1
+        },
+        "failures": [],
+        "answer_contract": {
+          "accepted": true,
+          "observed": {
+            "digests": [
+              "42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c"
+            ],
+            "identities": []
+          },
+          "failures": []
+        }
+      },
+      "trace": {
+        "schema": "wasmc.live-agent-trace-evaluation/v1",
+        "profile": "general",
+        "provider": "llm-m4dd",
+        "model": "glm-5.3-flash",
+        "session_id": "01a12025-82c8-7068-9bc1-5dd4729b77f3",
+        "parse_errors": 0,
+        "assistant_turns": 4,
+        "tool_calls": [
+          {
+            "name": "read",
+            "arguments": {
+              "path": "AGENTS.md"
+            }
+          },
+          {
+            "name": "read",
+            "arguments": {
+              "path": "agent-quickstart.json"
+            }
+          },
+          {
+            "name": "bash",
+            "arguments": {
+              "command": "node scripts/agent-routes.mjs --show release-orientation"
+            }
+          },
+          {
+            "name": "read",
+            "arguments": {
+              "path": "agent-release-orientation.json"
+            }
+          },
+          {
+            "name": "bash",
+            "arguments": {
+              "command": "node scripts/agent-release-orientation.mjs --check"
+            }
+          }
+        ],
+        "tool_results": 5,
+        "tool_result_characters": 11585,
+        "error_results": 0,
+        "zero_yield_results": 0,
+        "retries": 0,
+        "tokens": {
+          "input": 6353,
+          "output": 235,
+          "reasoning": 64,
+          "cache_read": 9984,
+          "cache_write": 0
+        },
+        "elapsed_ms": 16114,
+        "final_answer": {
+          "text": "product: v0.0.21\npublic_agent_entrypoint: AGENTS.md\ncompact_authority: agent-release-orientation.json\ncompiler_path: current/wasmc_compiler.wasm\ncompiler_sha256: 42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c",
+          "characters": 226,
+          "sha256": "4855a321d244f4673f295cd68b7d9d5f8b7942a2d23216f44a04f03001d0b027"
+        },
+        "hygiene_findings": [],
+        "exact_duplicate_calls": [],
+        "repeated_reads": [],
+        "budget": {
+          "limits": {
+            "max_tool_calls": 32,
+            "max_assistant_turns": 20,
+            "max_tool_result_characters": 200000,
+            "max_error_results": 0,
+            "max_retries": 1,
+            "max_exact_duplicate_calls": 0,
+            "max_repeated_reads": 1,
+            "max_zero_yield_results": 4
+          },
+          "observed": {
+            "tool_calls": 5,
+            "assistant_turns": 4,
+            "tool_result_characters": 11585,
+            "error_results": 0,
+            "retries": 0,
+            "exact_duplicate_calls": 0,
+            "repeated_reads": 0,
+            "zero_yield_results": 0
+          }
+        },
+        "budget_failures": [],
+        "accepted": true
+      }
+    },
+    {
+      "id": "position-aware-capability-negative",
+      "class": "decision",
+      "terminal": {
+        "assistant_messages": 3,
+        "terminal_stop_reason": "stop",
+        "terminal_tool_calls": 0,
+        "terminal_text_characters": 2054,
+        "complete_final_answer": true,
+        "provider_error_count": 0,
+        "error_message_sha256": null
+      },
+      "captured_public_files": [],
+      "public_execution_receipts": [],
+      "tracked_files_modified": [],
+      "process": {
+        "status": 0,
+        "signal": null,
+        "timed_out": false,
+        "wall_ms": 32598,
+        "stderr_characters": 0,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "structural": {
+        "accepted": true,
+        "observed": {
+          "tool_calls": 3,
+          "assistant_turns": 3,
+          "tool_result_characters": 10714,
+          "error_results": 0,
+          "retries": 0,
+          "exact_duplicate_calls": 0,
+          "repeated_reads": 0,
+          "zero_yield_results": 0
+        },
+        "limits": {
+          "max_tool_calls": 8,
+          "max_assistant_turns": 6,
+          "max_tool_result_characters": 60000,
+          "max_error_results": 0,
+          "max_retries": 0,
+          "max_exact_duplicate_calls": 0,
+          "max_repeated_reads": 0,
+          "max_zero_yield_results": 1
+        },
+        "failures": [],
+        "answer_contract": {
+          "accepted": true,
+          "observed": {
+            "digests": [],
+            "identities": []
+          },
+          "failures": []
+        }
+      },
+      "trace": {
+        "schema": "wasmc.live-agent-trace-evaluation/v1",
+        "profile": "general",
+        "provider": "llm-m4dd",
+        "model": "glm-5.3-flash",
+        "session_id": "01a12025-df3e-7560-8eda-16054a4de72c",
+        "parse_errors": 0,
+        "assistant_turns": 3,
+        "tool_calls": [
+          {
+            "name": "read",
+            "arguments": {
+              "path": "AGENTS.md"
+            }
+          },
+          {
+            "name": "read",
+            "arguments": {
+              "path": "agent-quickstart.json"
+            }
+          },
+          {
+            "name": "bash",
+            "arguments": {
+              "command": "node scripts/agent-routes.mjs --show position-aware-capability-negative"
+            }
+          }
+        ],
+        "tool_results": 3,
+        "tool_result_characters": 10714,
+        "error_results": 0,
+        "zero_yield_results": 0,
+        "retries": 0,
+        "tokens": {
+          "input": 3398,
+          "output": 703,
+          "reasoning": 194,
+          "cache_read": 7744,
+          "cache_write": 0
+        },
+        "elapsed_ms": 16877,
+        "final_answer": {
+          "text": "Route `position-aware-capability-negative` verified (`route_digest_verified: true`); `required_additional_reads` and `named_checks` are both empty, so this is a decision route: answer and stop.\n\n## Decision (v0.0.21, by position)\n\n**1. Source — u64 in ordinary synchronous function: SUPPORTED ✅**\n- Status: released. u64 is valid in local, parameter, result, and nested-source-payload positions.\n- Semantics: full 0..=u64::MAX range, unsigned comparison/division/remainder/right shift, WIT `u64` identity, physical core `i64` lane with unsigned semantics retained by the contract.\n\n**2. Public value — direct `map<string,u64>` public value: UNSUPPORTED ❌**\n- Map is resident/local only. Unsupported positions: direct public WIT value parameter, direct public WIT value result, and v0 high-level Host function.\n- Semantics-preserving alternatives:\n  - An explicitly ordered `list<Entry<K,V>>` snapshot, only when copied-value semantics are equivalent;\n  - A declared resource for identity and mutation (never expose a private handle).\n\n**3. Async — async function publicly exposed: UNSUPPORTED ❌**\n- Async is unsupported in ordinary source and unsupported in Host contracts (listed among host unsupported positions). No semantics-preserving alternative is offered — the fallback is stop.\n\n**4. Host position — synchronous function accepting u64 across the Host boundary: SUPPORTED ✅ (bounded)**\n- Released bounded: explicit synchronous scalar functions with WIT scalars `bool`, `s32`, `u32`, `s64`, `u64`, `float32`, `float64`.\n- Unsupported: managed values, managed references, async, ambient authority.\n- Authority note: imports request effects and still require exact application-owned module/name/kind/signature allowlist approval; a supported scalar is not an authority grant.\n\n**Summary of the combined request** (`async func(u64) -> map<string,u64>` as an ordinary public value): unsupported as a whole — the u64 parameter is fine, but async source and a direct public map result are two independent stops. Per instructions, no source is generated.",
+          "characters": 2054,
+          "sha256": "b96335e73c9937c8227c50906c4096ae662c3709ba0b6ce33e0cd7e98cf6a2a5"
+        },
+        "hygiene_findings": [],
+        "exact_duplicate_calls": [],
+        "repeated_reads": [],
+        "budget": {
+          "limits": {
+            "max_tool_calls": 32,
+            "max_assistant_turns": 20,
+            "max_tool_result_characters": 200000,
+            "max_error_results": 0,
+            "max_retries": 1,
+            "max_exact_duplicate_calls": 0,
+            "max_repeated_reads": 1,
+            "max_zero_yield_results": 4
+          },
+          "observed": {
+            "tool_calls": 3,
+            "assistant_turns": 3,
+            "tool_result_characters": 10714,
+            "error_results": 0,
+            "retries": 0,
+            "exact_duplicate_calls": 0,
+            "repeated_reads": 0,
+            "zero_yield_results": 0
+          }
+        },
+        "budget_failures": [],
+        "accepted": true
+      }
+    },
+    {
+      "id": "ordinary-source-positive",
+      "class": "execution",
+      "terminal": {
+        "assistant_messages": 5,
+        "terminal_stop_reason": "stop",
+        "terminal_tool_calls": 0,
+        "terminal_text_characters": 894,
+        "complete_final_answer": true,
+        "provider_error_count": 0,
+        "error_message_sha256": null
+      },
+      "captured_public_files": [],
+      "public_execution_receipts": [
+        {
+          "tool_call_id": "call_25ea7bf7c6ef4222bec3c6cb",
+          "is_error": false,
+          "receipt": {
+            "accepted": true,
+            "expected_results_verified": true,
+            "compiler_sha256": "42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c",
+            "source_sha256": "7185df00717adee24eec840f019b5126be980875afd4829707c65d79b1e799d0",
+            "core_bytes": 47,
+            "core_sha256": "5062a008bab93c4e3b2210ad141c5011f6ceabb993eac17a4e7c455696a03d36",
+            "imports": [],
+            "export": "keep",
+            "calls": [
+              {
+                "arguments": [
+                  3,
+                  true
+                ],
+                "result": [
+                  3,
+                  1
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "tracked_files_modified": [],
+      "process": {
+        "status": 0,
+        "signal": null,
+        "timed_out": false,
+        "wall_ms": 32079,
+        "stderr_characters": 0,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "structural": {
+        "accepted": true,
+        "observed": {
+          "tool_calls": 5,
+          "assistant_turns": 5,
+          "tool_result_characters": 19068,
+          "error_results": 0,
+          "retries": 0,
+          "exact_duplicate_calls": 0,
+          "repeated_reads": 0,
+          "zero_yield_results": 0
+        },
+        "limits": {
+          "max_tool_calls": 16,
+          "max_assistant_turns": 10,
+          "max_tool_result_characters": 120000,
+          "max_error_results": 0,
+          "max_retries": 0,
+          "max_exact_duplicate_calls": 0,
+          "max_repeated_reads": 1,
+          "max_zero_yield_results": 2
+        },
+        "failures": [],
+        "answer_contract": {
+          "accepted": true,
+          "observed": {
+            "digests": [
+              "7185df00717adee24eec840f019b5126be980875afd4829707c65d79b1e799d0",
+              "42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c",
+              "5062a008bab93c4e3b2210ad141c5011f6ceabb993eac17a4e7c455696a03d36"
+            ],
+            "identities": []
+          },
+          "failures": []
+        }
+      },
+      "trace": {
+        "schema": "wasmc.live-agent-trace-evaluation/v1",
+        "profile": "general",
+        "provider": "llm-m4dd",
+        "model": "glm-5.3-flash",
+        "session_id": "01a12026-620b-7146-9620-1063830f7578",
+        "parse_errors": 0,
+        "assistant_turns": 5,
+        "tool_calls": [
+          {
+            "name": "read",
+            "arguments": {
+              "path": "AGENTS.md"
+            }
+          },
+          {
+            "name": "read",
+            "arguments": {
+              "path": "agent-quickstart.json"
+            }
+          },
+          {
+            "name": "bash",
+            "arguments": {
+              "command": "node scripts/agent-routes.mjs --show source-adaptation"
+            }
+          },
+          {
+            "name": "read",
+            "arguments": {
+              "path": "docs/AGENT_PURE_SOURCE.md"
+            }
+          },
+          {
+            "name": "bash",
+            "arguments": {
+              "command": "cat > keep_pair.wasmc <<'EOF'\npackage local:keep_pair;\n\ninterface api {\n  keep: func(value: s32, flag: bool) -> tuple<s32, bool> {\n    return tuple(value, flag);\n  }\n}\n\nworld app { export api; }\nEOF\nnode scripts/wasmc-agent-execute.mjs --source keep_pair.wasmc --export keep --calls '[[3,true]]' --expected-results '[[3,1]]'"
+            }
+          }
+        ],
+        "tool_results": 5,
+        "tool_result_characters": 19068,
+        "error_results": 0,
+        "zero_yield_results": 0,
+        "retries": 0,
+        "tokens": {
+          "input": 5564,
+          "output": 798,
+          "reasoning": 212,
+          "cache_read": 19520,
+          "cache_write": 0
+        },
+        "elapsed_ms": 19806,
+        "final_answer": {
+          "text": "The named check passed (`accepted: true`). Exact evidence:\n\n**Source path:** `keep_pair.wasmc`\n```wasmc\npackage local:keep_pair;\n\ninterface api {\n  keep: func(value: s32, flag: bool) -> tuple<s32, bool> {\n    return tuple(value, flag);\n  }\n}\n\nworld app { export api; }\n```\n\n**source_sha256:** `7185df00717adee24eec840f019b5126be980875afd4829707c65d79b1e799d0`\n**compiler_sha256:** `42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c`\n**core_sha256:** `5062a008bab93c4e3b2210ad141c5011f6ceabb993eac17a4e7c455696a03d36` (47 bytes)\n**imports:** `[]` — no Host imports; pure execution instantiated with `{}`.\n\n**Call and actual result:** `keep(3, true)` → `[3, 1]` (flattened Core lanes of tuple<s32,bool>; bool lane observed as `0`/`1`, one semantic tuple result, no automatic object lifting). Caller-supplied expected result `[3, 1]` was verified: `expected_results_verified: true`.",
+          "characters": 894,
+          "sha256": "894666e4de5f97a7db57a0e7524a88e03363506c0201c7b808a47038ebd2c9f4"
+        },
+        "hygiene_findings": [],
+        "exact_duplicate_calls": [],
+        "repeated_reads": [],
+        "budget": {
+          "limits": {
+            "max_tool_calls": 32,
+            "max_assistant_turns": 20,
+            "max_tool_result_characters": 200000,
+            "max_error_results": 0,
+            "max_retries": 1,
+            "max_exact_duplicate_calls": 0,
+            "max_repeated_reads": 1,
+            "max_zero_yield_results": 4
+          },
+          "observed": {
+            "tool_calls": 5,
+            "assistant_turns": 5,
+            "tool_result_characters": 19068,
+            "error_results": 0,
+            "retries": 0,
+            "exact_duplicate_calls": 0,
+            "repeated_reads": 0,
+            "zero_yield_results": 0
+          }
+        },
+        "budget_failures": [],
+        "accepted": true
+      }
+    },
+    {
+      "id": "release-state-separation",
+      "class": "decision",
+      "terminal": {
+        "assistant_messages": 3,
+        "terminal_stop_reason": "stop",
+        "terminal_tool_calls": 0,
+        "terminal_text_characters": 726,
+        "complete_final_answer": true,
+        "provider_error_count": 0,
+        "error_message_sha256": null
+      },
+      "captured_public_files": [],
+      "public_execution_receipts": [],
+      "tracked_files_modified": [],
+      "process": {
+        "status": 0,
+        "signal": null,
+        "timed_out": false,
+        "wall_ms": 17598,
+        "stderr_characters": 0,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "structural": {
+        "accepted": true,
+        "observed": {
+          "tool_calls": 3,
+          "assistant_turns": 3,
+          "tool_result_characters": 7882,
+          "error_results": 0,
+          "retries": 0,
+          "exact_duplicate_calls": 0,
+          "repeated_reads": 0,
+          "zero_yield_results": 0
+        },
+        "limits": {
+          "max_tool_calls": 8,
+          "max_assistant_turns": 6,
+          "max_tool_result_characters": 60000,
+          "max_error_results": 0,
+          "max_retries": 0,
+          "max_exact_duplicate_calls": 0,
+          "max_repeated_reads": 0,
+          "max_zero_yield_results": 1
+        },
+        "failures": [],
+        "answer_contract": {
+          "accepted": true,
+          "observed": {
+            "digests": [],
+            "identities": [
+              "wasmc-system-telemetry@0.0.1",
+              "wasmc-source-direct-resource-methods"
+            ]
+          },
+          "failures": []
+        }
+      },
+      "trace": {
+        "schema": "wasmc.live-agent-trace-evaluation/v1",
+        "profile": "general",
+        "provider": "llm-m4dd",
+        "model": "glm-5.3-flash",
+        "session_id": "01a12026-e20a-71f3-b6af-79d346b807f2",
+        "parse_errors": 0,
+        "assistant_turns": 3,
+        "tool_calls": [
+          {
+            "name": "read",
+            "arguments": {
+              "path": "agent-quickstart.json"
+            }
+          },
+          {
+            "name": "ls",
+            "arguments": {}
+          },
+          {
+            "name": "bash",
+            "arguments": {
+              "command": "node scripts/agent-routes.mjs --show release-state-separation"
+            }
+          }
+        ],
+        "tool_results": 3,
+        "tool_result_characters": 7882,
+        "error_results": 0,
+        "zero_yield_results": 0,
+        "retries": 0,
+        "tokens": {
+          "input": 2827,
+          "output": 340,
+          "reasoning": 99,
+          "cache_read": 7296,
+          "cache_write": 0
+        },
+        "elapsed_ms": 8999,
+        "final_answer": {
+          "text": "identity: wasmc-system-telemetry@0.0.1\ndirect_route: wasmc-source-direct-resource-methods\ndirect.qualified = false\ndirect.admitted = false\ndirect.released = false\ndirect.discoverable = false\ndirect.installable = false\nfirst_missing_authority: qualified=false; direct ordinary Source resource methods are unsupported.\nrelated_product.qualified = true\nrelated_product.admitted = true\nrelated_product.released = true\nrelated_product.discoverable = true\nrelated_product.installable = true\nrelated_supported_routes:\n- source-free-rust-component\n- public-rust-host-sdk\n- linux-explicit-generic-resource-acquisition\nlifecycle_authority: release.json and channels/prod.json; only these supported profiles, never direct ordinary Source",
+          "characters": 726,
+          "sha256": "fd0fc4d030fe23c8331a3e536c42fbff318fcf0da544eca36a86d94cae80cf67"
+        },
+        "hygiene_findings": [],
+        "exact_duplicate_calls": [],
+        "repeated_reads": [],
+        "budget": {
+          "limits": {
+            "max_tool_calls": 32,
+            "max_assistant_turns": 20,
+            "max_tool_result_characters": 200000,
+            "max_error_results": 0,
+            "max_retries": 1,
+            "max_exact_duplicate_calls": 0,
+            "max_repeated_reads": 1,
+            "max_zero_yield_results": 4
+          },
+          "observed": {
+            "tool_calls": 3,
+            "assistant_turns": 3,
+            "tool_result_characters": 7882,
+            "error_results": 0,
+            "retries": 0,
+            "exact_duplicate_calls": 0,
+            "repeated_reads": 0,
+            "zero_yield_results": 0
+          }
+        },
+        "budget_failures": [],
+        "accepted": true
+      }
+    },
+    {
+      "id": "library-first-selection",
+      "class": "execution",
+      "terminal": {
+        "assistant_messages": 5,
+        "terminal_stop_reason": "stop",
+        "terminal_tool_calls": 0,
+        "terminal_text_characters": 356,
+        "complete_final_answer": true,
+        "provider_error_count": 0,
+        "error_message_sha256": null
+      },
+      "captured_public_files": [],
+      "public_execution_receipts": [
+        {
+          "tool_call_id": "call_9de8e782b5dc4d75819a6d00",
+          "is_error": false,
+          "receipt": {
+            "accepted": true,
+            "codec": "base64",
+            "package": "wasmc:std@1.4.1",
+            "apis": [
+              "wasmc:std@1.4.1/base64#try-encode-standard",
+              "wasmc:std@1.4.1/base64#try-decode-standard"
+            ],
+            "input_utf8": "abc",
+            "encoded_utf8": "YWJj",
+            "decoded_utf8": "abc",
+            "imports_verified": true,
+            "selected_Root_verified": true,
+            "invalid_input_rejected": true,
+            "rounds": 256,
+            "explicit_drops": 1024,
+            "persistent_provider_memory_bytes": 3670016,
+            "states": {
+              "qualified": true,
+              "admitted": true,
+              "released": true,
+              "discoverable": true,
+              "installable": true
+            },
+            "authority_granted": false,
+            "search_wit_routes": [
+              "wasmc:std@1.4.1/base64#try-encode-standard",
+              "wasmc:std@1.4.1/base64#try-decode-standard"
+            ],
+            "stage_receipts": {
+              "search": "fbd4075df445601a36e8a0e85cff19340ee000a0df7fa2a9a895604aada53506",
+              "resolve": "4fe1ac9859b28764f009c3ee6381124a6602e760c627f790eea8886dfe61bd9f",
+              "behavior": "faab4d6e2a49d5e92244c6a0a82fe77fadf102e927479b58cdc3db28069062e3"
+            },
+            "report_text": "Package: wasmc:std@1.4.1\nAPIs:\n- wasmc:std@1.4.1/base64#try-encode-standard\n- wasmc:std@1.4.1/base64#try-decode-standard\nSearch discovered the candidate but was not authority.\nResolve verified catalog_sha256, manifest_sha256, root_inventory_sha256, wit_sha256 and artifact_sha256.\nBehavior separately verified companion_sha256 and import_module and passed."
+          }
+        }
+      ],
+      "tracked_files_modified": [],
+      "process": {
+        "status": 0,
+        "signal": null,
+        "timed_out": false,
+        "wall_ms": 27755,
+        "stderr_characters": 0,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "structural": {
+        "accepted": true,
+        "observed": {
+          "tool_calls": 6,
+          "assistant_turns": 5,
+          "tool_result_characters": 19955,
+          "error_results": 0,
+          "retries": 0,
+          "exact_duplicate_calls": 0,
+          "repeated_reads": 0,
+          "zero_yield_results": 0
+        },
+        "limits": {
+          "max_tool_calls": 16,
+          "max_assistant_turns": 10,
+          "max_tool_result_characters": 120000,
+          "max_error_results": 0,
+          "max_retries": 0,
+          "max_exact_duplicate_calls": 0,
+          "max_repeated_reads": 1,
+          "max_zero_yield_results": 2
+        },
+        "failures": [],
+        "answer_contract": {
+          "accepted": true,
+          "observed": {
+            "digests": [],
+            "identities": [
+              "wasmc:std@1.4.1",
+              "wasmc:std@1.4.1",
+              "wasmc:std@1.4.1"
+            ]
+          },
+          "failures": []
+        }
+      },
+      "trace": {
+        "schema": "wasmc.live-agent-trace-evaluation/v1",
+        "profile": "general",
+        "provider": "llm-m4dd",
+        "model": "glm-5.3-flash",
+        "session_id": "01a12027-2965-77fd-b40b-3766c6b600e4",
+        "parse_errors": 0,
+        "assistant_turns": 5,
+        "tool_calls": [
+          {
+            "name": "read",
+            "arguments": {
+              "path": "AGENTS.md"
+            }
+          },
+          {
+            "name": "read",
+            "arguments": {
+              "path": "agent-quickstart.json"
+            }
+          },
+          {
+            "name": "bash",
+            "arguments": {
+              "command": "node scripts/agent-routes.mjs --show library-first-selection"
+            }
+          },
+          {
+            "name": "read",
+            "arguments": {
+              "path": "current-libs/wasmc-std/1.4.1/SKILL.md"
+            }
+          },
+          {
+            "name": "read",
+            "arguments": {
+              "path": "current-libs/wasmc-std/1.4.1/lib.wit"
+            }
+          },
+          {
+            "name": "bash",
+            "arguments": {
+              "command": "node scripts/agent-library-check.mjs --codec base64 --text abc"
+            }
+          }
+        ],
+        "tool_results": 6,
+        "tool_result_characters": 19955,
+        "error_results": 0,
+        "zero_yield_results": 0,
+        "retries": 0,
+        "tokens": {
+          "input": 6641,
+          "output": 357,
+          "reasoning": 107,
+          "cache_read": 20544,
+          "cache_write": 0
+        },
+        "elapsed_ms": 22251,
+        "final_answer": {
+          "text": "Package: wasmc:std@1.4.1\nAPIs:\n- wasmc:std@1.4.1/base64#try-encode-standard\n- wasmc:std@1.4.1/base64#try-decode-standard\nSearch discovered the candidate but was not authority.\nResolve verified catalog_sha256, manifest_sha256, root_inventory_sha256, wit_sha256 and artifact_sha256.\nBehavior separately verified companion_sha256 and import_module and passed.",
+          "characters": 356,
+          "sha256": "e0ed405cfce0659e884e6b46cd343258ab63586f222b1d1493bd977414b00000"
+        },
+        "hygiene_findings": [],
+        "exact_duplicate_calls": [],
+        "repeated_reads": [],
+        "budget": {
+          "limits": {
+            "max_tool_calls": 32,
+            "max_assistant_turns": 20,
+            "max_tool_result_characters": 200000,
+            "max_error_results": 0,
+            "max_retries": 1,
+            "max_exact_duplicate_calls": 0,
+            "max_repeated_reads": 1,
+            "max_zero_yield_results": 4
+          },
+          "observed": {
+            "tool_calls": 6,
+            "assistant_turns": 5,
+            "tool_result_characters": 19955,
+            "error_results": 0,
+            "retries": 0,
+            "exact_duplicate_calls": 0,
+            "repeated_reads": 0,
+            "zero_yield_results": 0
+          }
+        },
+        "budget_failures": [],
+        "accepted": true
+      }
+    },
+    {
+      "id": "host-authority-boundary",
+      "class": "decision",
+      "terminal": {
+        "assistant_messages": 3,
+        "terminal_stop_reason": "stop",
+        "terminal_tool_calls": 0,
+        "terminal_text_characters": 2373,
+        "complete_final_answer": true,
+        "provider_error_count": 0,
+        "error_message_sha256": null
+      },
+      "captured_public_files": [],
+      "public_execution_receipts": [],
+      "tracked_files_modified": [],
+      "process": {
+        "status": 0,
+        "signal": null,
+        "timed_out": false,
+        "wall_ms": 19654,
+        "stderr_characters": 0,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "structural": {
+        "accepted": true,
+        "observed": {
+          "tool_calls": 3,
+          "assistant_turns": 3,
+          "tool_result_characters": 8475,
+          "error_results": 0,
+          "retries": 0,
+          "exact_duplicate_calls": 0,
+          "repeated_reads": 0,
+          "zero_yield_results": 0
+        },
+        "limits": {
+          "max_tool_calls": 8,
+          "max_assistant_turns": 6,
+          "max_tool_result_characters": 60000,
+          "max_error_results": 0,
+          "max_retries": 0,
+          "max_exact_duplicate_calls": 0,
+          "max_repeated_reads": 0,
+          "max_zero_yield_results": 1
+        },
+        "failures": [],
+        "answer_contract": {
+          "accepted": true,
+          "observed": {
+            "digests": [],
+            "identities": []
+          },
+          "failures": []
+        }
+      },
+      "trace": {
+        "schema": "wasmc.live-agent-trace-evaluation/v1",
+        "profile": "general",
+        "provider": "llm-m4dd",
+        "model": "glm-5.3-flash",
+        "session_id": "01a12027-9875-7243-9495-79c9d8d8dd42",
+        "parse_errors": 0,
+        "assistant_turns": 3,
+        "tool_calls": [
+          {
+            "name": "read",
+            "arguments": {
+              "path": "AGENTS.md"
+            }
+          },
+          {
+            "name": "read",
+            "arguments": {
+              "path": "agent-quickstart.json"
+            }
+          },
+          {
+            "name": "bash",
+            "arguments": {
+              "command": "node scripts/agent-routes.mjs --show host-authority-boundary"
+            }
+          }
+        ],
+        "tool_results": 3,
+        "tool_result_characters": 8475,
+        "error_results": 0,
+        "zero_yield_results": 0,
+        "retries": 0,
+        "tokens": {
+          "input": 2899,
+          "output": 618,
+          "reasoning": 55,
+          "cache_read": 7680,
+          "cache_write": 0
+        },
+        "elapsed_ms": 5961,
+        "final_answer": {
+          "text": "The route read and verified successfully (`route_digest_verified: true`), with `required_additional_reads: []` and `named_checks: []` — so per the contract this is a decision route: answer and stop.\n\n## Determining Host authority required by a newly compiled WAsmC module\n\n**What must be inspected**\n\n1. **Compile, then inspect before instantiation.** Compile the source, then run `inspectWasm(bytes)` on the compiled module bytes — before any instantiation. Enumerate *every* generated import: its **module, name, kind, and signature**.\n2. **Compare against an application-owned exact allowlist.** Each import's module/name/kind/signature must match an entry the *application* explicitly owns. An exact match only — partial or prefix matches don't qualify.\n\n**How imports relate to authority**\n\n- **Imports request effects; they grant no ambient authority.** A module requesting an import is asking the host for an effect — it does not thereby acquire the capability. Actual authority comes only from the imports object the host supplies at instantiation: `WebAssembly.instantiate(inspected.module, approvedImports)`.\n- **Approval flow for a supported effect:** an allowlist entry alone is not approval. A supported effect requires (a) explicit application approval, and (b) a **bounded adapter** matching the exact module/name/kind/signature. Otherwise, stop — do not instantiate.\n- **Rejection example:** if there is no approval for `env.read_clock`, reject instantiation outright. Never silently supply `Date.now` or a constant to make the import go away.\n\n**Pure modules**\n\nPure execution requires `imports=[]` (the module declares no imports) and instantiation with `{}`. Any import in a supposedly pure module is a defect.\n\n**Capabilities that must never be invented**\n\n- Ambient **filesystem, network, clock, or randomness** access\n- **Credentials, process, or device** access\n- **Private handles, plans, Store nonces, or lifecycle helpers** (private/internal machinery is not a grantable capability)\n- **JSON as a WIT replacement** (substituting JSON conventions for proper interface signatures)\n\nIn short: the Host authority a module requires is fully determined by its inspected import list checked against the application's exact allowlist; everything else must be denied, and no ambient or private capability may be fabricated to satisfy an unapproved request.",
+          "characters": 2373,
+          "sha256": "b534be701c7a45b5581304aeeedb8c186435f8ae311c1bd289b4510b6a9846bf"
+        },
+        "hygiene_findings": [],
+        "exact_duplicate_calls": [],
+        "repeated_reads": [],
+        "budget": {
+          "limits": {
+            "max_tool_calls": 32,
+            "max_assistant_turns": 20,
+            "max_tool_result_characters": 200000,
+            "max_error_results": 0,
+            "max_retries": 1,
+            "max_exact_duplicate_calls": 0,
+            "max_repeated_reads": 1,
+            "max_zero_yield_results": 4
+          },
+          "observed": {
+            "tool_calls": 3,
+            "assistant_turns": 3,
+            "tool_result_characters": 8475,
+            "error_results": 0,
+            "retries": 0,
+            "exact_duplicate_calls": 0,
+            "repeated_reads": 0,
+            "zero_yield_results": 0
+          }
+        },
+        "budget_failures": [],
+        "accepted": true
+      }
+    },
+    {
+      "id": "source-change-transfer",
+      "class": "execution",
+      "terminal": {
+        "assistant_messages": 6,
+        "terminal_stop_reason": "stop",
+        "terminal_tool_calls": 0,
+        "terminal_text_characters": 1161,
+        "complete_final_answer": true,
+        "provider_error_count": 0,
+        "error_message_sha256": null
+      },
+      "captured_public_files": [
+        {
+          "path": "score.wasmc",
+          "sha256": "3f94f1a6c9c83cbbad97dc4c0e839c9ec6da7be3f35b5c0422327df02db2367e",
+          "utf8": "package local:score;\n\ninterface api {\n  score: func(value: s32, flag: bool) -> s32 {\n    if (flag) { return value + 7; }\n    return value - 3;\n  }\n}\n\nworld app { export api; }\n"
+        }
+      ],
+      "public_execution_receipts": [
+        {
+          "tool_call_id": "call_02522034851d4a1dbadc6fff",
+          "is_error": false,
+          "receipt": {
+            "accepted": true,
+            "expected_results_verified": true,
+            "compiler_sha256": "42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c",
+            "source_sha256": "3f94f1a6c9c83cbbad97dc4c0e839c9ec6da7be3f35b5c0422327df02db2367e",
+            "core_bytes": 55,
+            "core_sha256": "5df3f553ff047dd72bb8ced84031b92e1cb4af9ae6d562850e19786397b84182",
+            "imports": [],
+            "export": "score",
+            "calls": [
+              {
+                "arguments": [
+                  10,
+                  true
+                ],
+                "result": 17
+              },
+              {
+                "arguments": [
+                  10,
+                  false
+                ],
+                "result": 7
+              },
+              {
+                "arguments": [
+                  -4,
+                  true
+                ],
+                "result": 3
+              }
+            ]
+          }
+        }
+      ],
+      "tracked_files_modified": [],
+      "process": {
+        "status": 0,
+        "signal": null,
+        "timed_out": false,
+        "wall_ms": 28592,
+        "stderr_characters": 0,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "structural": {
+        "accepted": true,
+        "observed": {
+          "tool_calls": 6,
+          "assistant_turns": 6,
+          "tool_result_characters": 19314,
+          "error_results": 0,
+          "retries": 0,
+          "exact_duplicate_calls": 0,
+          "repeated_reads": 0,
+          "zero_yield_results": 0
+        },
+        "limits": {
+          "max_tool_calls": 16,
+          "max_assistant_turns": 10,
+          "max_tool_result_characters": 120000,
+          "max_error_results": 0,
+          "max_retries": 0,
+          "max_exact_duplicate_calls": 0,
+          "max_repeated_reads": 1,
+          "max_zero_yield_results": 2
+        },
+        "failures": [],
+        "answer_contract": {
+          "accepted": true,
+          "observed": {
+            "digests": [
+              "3f94f1a6c9c83cbbad97dc4c0e839c9ec6da7be3f35b5c0422327df02db2367e",
+              "42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c",
+              "5df3f553ff047dd72bb8ced84031b92e1cb4af9ae6d562850e19786397b84182"
+            ],
+            "identities": [
+              "wasmc-agent-execute.mjs"
+            ]
+          },
+          "failures": []
+        }
+      },
+      "trace": {
+        "schema": "wasmc.live-agent-trace-evaluation/v1",
+        "profile": "general",
+        "provider": "llm-m4dd",
+        "model": "glm-5.3-flash",
+        "session_id": "01a12027-e7c3-7460-9171-4f1395a2d085",
+        "parse_errors": 0,
+        "assistant_turns": 6,
+        "tool_calls": [
+          {
+            "name": "read",
+            "arguments": {
+              "path": "AGENTS.md"
+            }
+          },
+          {
+            "name": "read",
+            "arguments": {
+              "path": "agent-quickstart.json"
+            }
+          },
+          {
+            "name": "bash",
+            "arguments": {
+              "command": "node scripts/agent-routes.mjs --show source-adaptation"
+            }
+          },
+          {
+            "name": "read",
+            "arguments": {
+              "path": "docs/AGENT_PURE_SOURCE.md"
+            }
+          },
+          {
+            "name": "bash",
+            "arguments": {
+              "command": "cat > score.wasmc <<'EOF'\npackage local:score;\n\ninterface api {\n  score: func(value: s32, flag: bool) -> s32 {\n    if (flag) { return value + 7; }\n    return value - 3;\n  }\n}\n\nworld app { export api; }\nEOF\ncat score.wasmc"
+            }
+          },
+          {
+            "name": "bash",
+            "arguments": {
+              "command": "node scripts/wasmc-agent-execute.mjs --source score.wasmc --export score --calls '[[10,true],[10,false],[-4,true]]' --expected-results '[17,7,3]'"
+            }
+          }
+        ],
+        "tool_results": 6,
+        "tool_result_characters": 19314,
+        "error_results": 0,
+        "zero_yield_results": 0,
+        "retries": 0,
+        "tokens": {
+          "input": 5773,
+          "output": 743,
+          "reasoning": 87,
+          "cache_read": 26368,
+          "cache_write": 0
+        },
+        "elapsed_ms": 19447,
+        "final_answer": {
+          "text": "All requested checks are complete. New source written at `score.wasmc` (package `local:score`, not the canonical pair program) and executed with the pinned public compiler.\n\n**Source path:** `score.wasmc`\n\n```wasmc\npackage local:score;\n\ninterface api {\n  score: func(value: s32, flag: bool) -> s32 {\n    if (flag) { return value + 7; }\n    return value - 3;\n  }\n}\n\nworld app { export api; }\n```\n\n**Evidence (from `scripts/wasmc-agent-execute.mjs`, `accepted: true`):**\n- `source_sha256`: `3f94f1a6c9c83cbbad97dc4c0e839c9ec6da7be3f35b5c0422327df02db2367e`\n- `compiler_sha256`: `42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c`\n- **core_sha256**: `5df3f553ff047dd72bb8ced84031b92e1cb4af9ae6d562850e19786397b84182` (55 bytes)\n- **imports:** `[]` (pure — instantiates with `{}`)\n- **export:** `score(value: s32, flag: bool) -> s32`\n\n**Calls and actual results:**\n| arguments | result |\n|---|---|\n| `score(10, true)` | `17` (10 + 7) |\n| `score(10, false)` | `7` (10 − 3) |\n| `score(-4, true)` | `3` (−4 + 7) |\n\n`expected_results_verified: true` — the caller oracle `[17, 7, 3]`, derived from the request before execution, matches all actual results.",
+          "characters": 1161,
+          "sha256": "e6ca71fd1bddfb8b62ff4757a9ba0f764f50a0be7b27797e259fbee3f8ec9994"
+        },
+        "hygiene_findings": [],
+        "exact_duplicate_calls": [],
+        "repeated_reads": [],
+        "budget": {
+          "limits": {
+            "max_tool_calls": 32,
+            "max_assistant_turns": 20,
+            "max_tool_result_characters": 200000,
+            "max_error_results": 0,
+            "max_retries": 1,
+            "max_exact_duplicate_calls": 0,
+            "max_repeated_reads": 1,
+            "max_zero_yield_results": 4
+          },
+          "observed": {
+            "tool_calls": 6,
+            "assistant_turns": 6,
+            "tool_result_characters": 19314,
+            "error_results": 0,
+            "retries": 0,
+            "exact_duplicate_calls": 0,
+            "repeated_reads": 0,
+            "zero_yield_results": 0
+          }
+        },
+        "budget_failures": [],
+        "accepted": true
+      }
+    },
+    {
+      "id": "library-hex-transfer",
+      "class": "execution",
+      "terminal": {
+        "assistant_messages": 6,
+        "terminal_stop_reason": "stop",
+        "terminal_tool_calls": 0,
+        "terminal_text_characters": 676,
+        "complete_final_answer": true,
+        "provider_error_count": 0,
+        "error_message_sha256": null
+      },
+      "captured_public_files": [],
+      "public_execution_receipts": [
+        {
+          "tool_call_id": "call_75e23dd1100f475292cca71e",
+          "is_error": false,
+          "receipt": {
+            "accepted": true,
+            "codec": "hex",
+            "package": "wasmc:std@1.4.1",
+            "apis": [
+              "wasmc:std@1.4.1/hex#try-encode-lower",
+              "wasmc:std@1.4.1/hex#try-decode"
+            ],
+            "input_utf8": "Pi42",
+            "encoded_utf8": "50693432",
+            "decoded_utf8": "Pi42",
+            "imports_verified": true,
+            "selected_Root_verified": true,
+            "invalid_input_rejected": true,
+            "rounds": 256,
+            "explicit_drops": 1024,
+            "persistent_provider_memory_bytes": 3670016,
+            "states": {
+              "qualified": true,
+              "admitted": true,
+              "released": true,
+              "discoverable": true,
+              "installable": true
+            },
+            "authority_granted": false,
+            "search_wit_routes": [
+              "wasmc:std@1.4.1/hex#try-encode-lower",
+              "wasmc:std@1.4.1/hex#try-decode"
+            ],
+            "stage_receipts": {
+              "search": "bfdb169e7296e7afb21c77efc9621624184583d1eeb4939204a51eb632c3cc6a",
+              "resolve": "4fe1ac9859b28764f009c3ee6381124a6602e760c627f790eea8886dfe61bd9f",
+              "behavior": "c2599613c22ae0534c110f76010d3350398f31ba02f6981c37de9a8a4ff6d4aa"
+            },
+            "report_text": "Package: wasmc:std@1.4.1\nAPIs:\n- wasmc:std@1.4.1/hex#try-encode-lower\n- wasmc:std@1.4.1/hex#try-decode\nSearch discovered the candidate but was not authority.\nResolve verified catalog_sha256, manifest_sha256, root_inventory_sha256, wit_sha256 and artifact_sha256.\nBehavior separately verified companion_sha256 and import_module and passed."
+          }
+        }
+      ],
+      "tracked_files_modified": [],
+      "process": {
+        "status": 0,
+        "signal": null,
+        "timed_out": false,
+        "wall_ms": 37124,
+        "stderr_characters": 0,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "structural": {
+        "accepted": true,
+        "observed": {
+          "tool_calls": 7,
+          "assistant_turns": 6,
+          "tool_result_characters": 20797,
+          "error_results": 0,
+          "retries": 0,
+          "exact_duplicate_calls": 0,
+          "repeated_reads": 0,
+          "zero_yield_results": 0
+        },
+        "limits": {
+          "max_tool_calls": 16,
+          "max_assistant_turns": 10,
+          "max_tool_result_characters": 120000,
+          "max_error_results": 0,
+          "max_retries": 0,
+          "max_exact_duplicate_calls": 0,
+          "max_repeated_reads": 1,
+          "max_zero_yield_results": 2
+        },
+        "failures": [],
+        "answer_contract": {
+          "accepted": true,
+          "observed": {
+            "digests": [],
+            "identities": [
+              "wasmc:std@1.4.1",
+              "wasmc-std",
+              "wasmc:std@1.4.1",
+              "wasmc:std@1.4.1"
+            ]
+          },
+          "failures": []
+        }
+      },
+      "trace": {
+        "schema": "wasmc.live-agent-trace-evaluation/v1",
+        "profile": "general",
+        "provider": "llm-m4dd",
+        "model": "glm-5.3-flash",
+        "session_id": "01a12028-5a37-72d5-983c-5fb130853cb0",
+        "parse_errors": 0,
+        "assistant_turns": 6,
+        "tool_calls": [
+          {
+            "name": "read",
+            "arguments": {
+              "path": "AGENTS.md"
+            }
+          },
+          {
+            "name": "read",
+            "arguments": {
+              "path": "agent-quickstart.json"
+            }
+          },
+          {
+            "name": "bash",
+            "arguments": {
+              "command": "node scripts/agent-routes.mjs --show library-discovery"
+            }
+          },
+          {
+            "name": "bash",
+            "arguments": {
+              "command": "node scripts/wasmc-lib.mjs search hex --catalog-sha256 a4de009c683d3db4453cf0a9e783719a933a8e1689842a12d08a6883a83cfdad --limit 8"
+            }
+          },
+          {
+            "name": "read",
+            "arguments": {
+              "path": "current-libs/wasmc-std/1.4.1/SKILL.md"
+            }
+          },
+          {
+            "name": "read",
+            "arguments": {
+              "path": "current-libs/wasmc-std/1.4.1/lib.wit"
+            }
+          },
+          {
+            "name": "bash",
+            "arguments": {
+              "command": "node scripts/agent-library-check.mjs --codec hex --text Pi42"
+            }
+          }
+        ],
+        "tool_results": 7,
+        "tool_result_characters": 20797,
+        "error_results": 0,
+        "zero_yield_results": 0,
+        "retries": 0,
+        "tokens": {
+          "input": 7057,
+          "output": 651,
+          "reasoning": 138,
+          "cache_read": 26496,
+          "cache_write": 0
+        },
+        "elapsed_ms": 27328,
+        "final_answer": {
+          "text": "The named check passed. Final result:\n\n**Package (approved):** `wasmc:std@1.4.1`\n**Selected Root (verified):** `current-libs/wasmc-std/1.4.1`\n**WIT API identities (approved):**\n- `wasmc:std@1.4.1/hex#try-encode-lower`\n- `wasmc:std@1.4.1/hex#try-decode`\n\n**Round trip for UTF-8 text `Pi42`:**\n- Encoded (lowercase hex): `50693432`\n- Decoded back: `Pi42`\n- Invalid input rejected: `true`\n\n**Verification:** `imports_verified: true`, `selected_Root_verified: true`, `qualified/admitted/released/discoverable/installable: true`, Provider imports exact, owned resources dropped (1024 explicit drops, 256 rounds); no authority granted. Base64 was not requested and was not selected.",
+          "characters": 676,
+          "sha256": "3604e1bdfc6618cc7e2abec6755e3bdd2607c2a4013b168ded4be5fdf1abc20b"
+        },
+        "hygiene_findings": [],
+        "exact_duplicate_calls": [],
+        "repeated_reads": [],
+        "budget": {
+          "limits": {
+            "max_tool_calls": 32,
+            "max_assistant_turns": 20,
+            "max_tool_result_characters": 200000,
+            "max_error_results": 0,
+            "max_retries": 1,
+            "max_exact_duplicate_calls": 0,
+            "max_repeated_reads": 1,
+            "max_zero_yield_results": 4
+          },
+          "observed": {
+            "tool_calls": 7,
+            "assistant_turns": 6,
+            "tool_result_characters": 20797,
+            "error_results": 0,
+            "retries": 0,
+            "exact_duplicate_calls": 0,
+            "repeated_reads": 0,
+            "zero_yield_results": 0
+          }
+        },
+        "budget_failures": [],
+        "accepted": true
+      }
+    },
+    {
+      "id": "integrity-rejection-transfer",
+      "class": "execution",
+      "terminal": {
+        "assistant_messages": 5,
+        "terminal_stop_reason": "stop",
+        "terminal_tool_calls": 0,
+        "terminal_text_characters": 2828,
+        "complete_final_answer": true,
+        "provider_error_count": 0,
+        "error_message_sha256": null
+      },
+      "captured_public_files": [],
+      "public_execution_receipts": [
+        {
+          "tool_call_id": "call_1a0fab21958a4400908baaaa",
+          "is_error": false,
+          "receipt": {
+            "accepted": true,
+            "expected_rejection": true,
+            "probe_exit_code": 0,
+            "verifier_exit_code": 1,
+            "execution_accepted": false,
+            "verifier_stderr": {
+              "accepted": false,
+              "error": "independent compiler digest mismatch",
+              "actual": "42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c",
+              "expected": "0000000000000000000000000000000000000000000000000000000000000000"
+            },
+            "caller_expectation_verified": true,
+            "report_text": "The verifier subprocess exited 1; the expected-rejection probe wrapper exited 0. No source compilation, export resolution, call execution or instantiation occurred. The comparison target is the fixed caller-supplied --expected-compiler-sha256 argument. Editing package metadata does not change that argument; the selected compiler bytes still fail the comparison. Changing the caller argument would change the test, not approve the rejected bytes."
+          }
+        }
+      ],
+      "tracked_files_modified": [],
+      "process": {
+        "status": 0,
+        "signal": null,
+        "timed_out": false,
+        "wall_ms": 37369,
+        "stderr_characters": 0,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "structural": {
+        "accepted": true,
+        "observed": {
+          "tool_calls": 5,
+          "assistant_turns": 5,
+          "tool_result_characters": 11462,
+          "error_results": 0,
+          "retries": 0,
+          "exact_duplicate_calls": 0,
+          "repeated_reads": 0,
+          "zero_yield_results": 0
+        },
+        "limits": {
+          "max_tool_calls": 16,
+          "max_assistant_turns": 10,
+          "max_tool_result_characters": 120000,
+          "max_error_results": 0,
+          "max_retries": 0,
+          "max_exact_duplicate_calls": 0,
+          "max_repeated_reads": 1,
+          "max_zero_yield_results": 2
+        },
+        "failures": [],
+        "answer_contract": {
+          "accepted": true,
+          "observed": {
+            "digests": [
+              "42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c",
+              "0000000000000000000000000000000000000000000000000000000000000000"
+            ],
+            "identities": []
+          },
+          "failures": []
+        }
+      },
+      "trace": {
+        "schema": "wasmc.live-agent-trace-evaluation/v1",
+        "profile": "general",
+        "provider": "llm-m4dd",
+        "model": "glm-5.3-flash",
+        "session_id": "01a12028-edf6-7374-9b5a-143d49342679",
+        "parse_errors": 0,
+        "assistant_turns": 5,
+        "tool_calls": [
+          {
+            "name": "read",
+            "arguments": {
+              "path": "AGENTS.md"
+            }
+          },
+          {
+            "name": "read",
+            "arguments": {
+              "path": "agent-quickstart.json"
+            }
+          },
+          {
+            "name": "bash",
+            "arguments": {
+              "command": "node scripts/agent-routes.mjs --show compiler-integrity-rejection"
+            }
+          },
+          {
+            "name": "read",
+            "arguments": {
+              "path": "examples/agent-quickstart/pair.wasmc"
+            }
+          },
+          {
+            "name": "bash",
+            "arguments": {
+              "command": "node scripts/wasmc-agent-probe.mjs --source examples/agent-quickstart/pair.wasmc --export run --calls '[[5,true]]' --expected-compiler-sha256 0000000000000000000000000000000000000000000000000000000000000000"
+            }
+          }
+        ],
+        "tool_results": 5,
+        "tool_result_characters": 11462,
+        "error_results": 0,
+        "zero_yield_results": 0,
+        "retries": 0,
+        "tokens": {
+          "input": 3735,
+          "output": 881,
+          "reasoning": 82,
+          "cache_read": 17344,
+          "cache_write": 0
+        },
+        "elapsed_ms": 21256,
+        "final_answer": {
+          "text": "The named check completed on the first (and only) probe invocation — a first-pass expected-rejection result. Per the route's `final_answer_policy`, here is the probe JSON unchanged as actual rejection evidence:\n\n```json\n{\"accepted\":true,\"expected_rejection\":true,\"verifier_exit_code\":1,\"probe_exit_code\":0,\"execution_accepted\":false,\"verifier_stderr\":{\"accepted\":false,\"error\":\"independent compiler digest mismatch\",\"actual\":\"42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c\",\"expected\":\"0000000000000000000000000000000000000000000000000000000000000000\"},\"caller_expectation_verified\":true,\"report_text\":\"The verifier subprocess exited 1; the expected-rejection probe wrapper exited 0. No source compilation, export resolution, call execution or instantiation occurred. The comparison target is the fixed caller-supplied --expected-compiler-sha256 argument. Editing package metadata does not change that argument; the selected compiler bytes still fail the comparison. Changing the caller argument would change the test, not approve the rejected bytes.\"}\n```\n\nAnd its `report_text` unchanged as the explanation:\n\n> The verifier subprocess exited 1; the expected-rejection probe wrapper exited 0. No source compilation, export resolution, call execution or instantiation occurred. The comparison target is the fixed caller-supplied `--expected-compiler-sha256` argument. Editing package metadata does not change that argument; the selected compiler bytes still fail the comparison. Changing the caller argument would change the test, not approve the rejected bytes.\n\n**Negative-test result captured (not an operational tool error):**\n- `verifier_exit_code: 1` — the verifier child process rejected the digest mismatch (\"independent compiler digest mismatch\"); `verifier_stderr.accepted` is `false`.\n- `probe_exit_code: 0` — the wrapper exited 0 precisely because this nonzero child exit is the *expected* outcome of a rejection probe (`expected_rejection: true`, `caller_expectation_verified: true`).\n- `execution_accepted: false` — no compilation, export resolution, call execution or instantiation occurred.\n\n**Why rewriting the package manifest cannot approve the wrong bytes:** the comparison target is the fixed caller-supplied `--expected-compiler-sha256` argument (all zeros), not any field in package metadata. Editing `manifest.json` does not alter that argument, so the same selected compiler bytes — whose `actual` digest differs from `expected` — still fail the comparison. Only changing the caller argument itself would change the test, which changes the test rather than approving the rejected bytes.\n\n**Integrity of the run:** exactly one probe invocation; no positive control, no extra integrity tests, no source authoring, and no published metadata was modified.\n\nPer the route rule, I stop here.",
+          "characters": 2828,
+          "sha256": "671e830f0bb40e9d632a7eb14f5089be40169aa1ee000270c66863bbdd472903"
+        },
+        "hygiene_findings": [],
+        "exact_duplicate_calls": [],
+        "repeated_reads": [],
+        "budget": {
+          "limits": {
+            "max_tool_calls": 32,
+            "max_assistant_turns": 20,
+            "max_tool_result_characters": 200000,
+            "max_error_results": 0,
+            "max_retries": 1,
+            "max_exact_duplicate_calls": 0,
+            "max_repeated_reads": 1,
+            "max_zero_yield_results": 4
+          },
+          "observed": {
+            "tool_calls": 5,
+            "assistant_turns": 5,
+            "tool_result_characters": 11462,
+            "error_results": 0,
+            "retries": 0,
+            "exact_duplicate_calls": 0,
+            "repeated_reads": 0,
+            "zero_yield_results": 0
+          }
+        },
+        "budget_failures": [],
+        "accepted": true
+      }
+    },
+    {
+      "id": "host-grant-transfer",
+      "class": "decision",
+      "terminal": {
+        "assistant_messages": 3,
+        "terminal_stop_reason": "stop",
+        "terminal_tool_calls": 0,
+        "terminal_text_characters": 1533,
+        "complete_final_answer": true,
+        "provider_error_count": 0,
+        "error_message_sha256": null
+      },
+      "captured_public_files": [],
+      "public_execution_receipts": [],
+      "tracked_files_modified": [],
+      "process": {
+        "status": 0,
+        "signal": null,
+        "timed_out": false,
+        "wall_ms": 24023,
+        "stderr_characters": 0,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "structural": {
+        "accepted": true,
+        "observed": {
+          "tool_calls": 3,
+          "assistant_turns": 3,
+          "tool_result_characters": 8475,
+          "error_results": 0,
+          "retries": 0,
+          "exact_duplicate_calls": 0,
+          "repeated_reads": 0,
+          "zero_yield_results": 0
+        },
+        "limits": {
+          "max_tool_calls": 8,
+          "max_assistant_turns": 6,
+          "max_tool_result_characters": 60000,
+          "max_error_results": 0,
+          "max_retries": 0,
+          "max_exact_duplicate_calls": 0,
+          "max_repeated_reads": 0,
+          "max_zero_yield_results": 1
+        },
+        "failures": [],
+        "answer_contract": {
+          "accepted": true,
+          "observed": {
+            "digests": [],
+            "identities": []
+          },
+          "failures": []
+        }
+      },
+      "trace": {
+        "schema": "wasmc.live-agent-trace-evaluation/v1",
+        "profile": "general",
+        "provider": "llm-m4dd",
+        "model": "glm-5.3-flash",
+        "session_id": "01a12029-82a6-7348-a56a-41950e39bb42",
+        "parse_errors": 0,
+        "assistant_turns": 3,
+        "tool_calls": [
+          {
+            "name": "read",
+            "arguments": {
+              "path": "AGENTS.md"
+            }
+          },
+          {
+            "name": "read",
+            "arguments": {
+              "path": "agent-quickstart.json"
+            }
+          },
+          {
+            "name": "bash",
+            "arguments": {
+              "command": "node scripts/agent-routes.mjs --show host-authority-boundary"
+            }
+          }
+        ],
+        "tool_results": 3,
+        "tool_result_characters": 8475,
+        "error_results": 0,
+        "zero_yield_results": 0,
+        "retries": 0,
+        "tokens": {
+          "input": 2865,
+          "output": 497,
+          "reasoning": 110,
+          "cache_read": 7744,
+          "cache_write": 0
+        },
+        "elapsed_ms": 9772,
+        "final_answer": {
+          "text": "Route verified: `host-authority-boundary` (`route_digest_verified: true`, no additional reads or named checks).\n\n**Answer:**\n\n**1. Does the import declaration authorize clock access?** No. Imports request effects but grant no ambient authority. A declaration of `env.read_clock` in the module is a request, not a grant — the declaration itself authorizes nothing.\n\n**2. What must be checked before instantiation?** Inspect every generated import before instantiation and compare module, name, kind, and signature against an application-owned **exact allowlist**:\n- `compile(source)` → `inspectWasm(bytes)` → `WebAssembly.instantiate(inspected.module, approvedImports)`\n- An allowlist entry alone is not approval of private or unsupported capabilities.\n- For a supported effect, you need **explicit application approval plus a bounded adapter matching the exact module/name/kind/signature** — otherwise stop.\n- For pure execution, require `imports=[]` and instantiate with `{}`.\n- Forbidden ambient effects include clock access: ambient filesystem/network/clock/randomness, credentials/process/device access, private handles/plans/Store nonces/lifecycle helpers, and JSON as a WIT replacement.\n\n**3. May you silently supply `Date.now` or a constant clock?** No. With no application approval for `env.read_clock`, you must **reject instantiation**. Never silently supply `Date.now` or replace the clock with a constant — that would fabricate approval the application never granted and would smuggle in an ambient (or falsified) effect.",
+          "characters": 1533,
+          "sha256": "eaf33a74989ccf5345155982f189cca69a651401d1dcd621cfa7804b068961eb"
+        },
+        "hygiene_findings": [],
+        "exact_duplicate_calls": [],
+        "repeated_reads": [],
+        "budget": {
+          "limits": {
+            "max_tool_calls": 32,
+            "max_assistant_turns": 20,
+            "max_tool_result_characters": 200000,
+            "max_error_results": 0,
+            "max_retries": 1,
+            "max_exact_duplicate_calls": 0,
+            "max_repeated_reads": 1,
+            "max_zero_yield_results": 4
+          },
+          "observed": {
+            "tool_calls": 3,
+            "assistant_turns": 3,
+            "tool_result_characters": 8475,
+            "error_results": 0,
+            "retries": 0,
+            "exact_duplicate_calls": 0,
+            "repeated_reads": 0,
+            "zero_yield_results": 0
+          }
+        },
+        "budget_failures": [],
+        "accepted": true
+      }
+    }
+  ],
+  "planned_cases": 10,
+  "completed_cases": 10,
+  "structural_pass": true
+}

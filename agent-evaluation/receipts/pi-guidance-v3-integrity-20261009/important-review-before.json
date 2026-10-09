@@ -1,0 +1,43 @@
+{
+  "head": "b637015bca86df94d6a9f8a63dd4c3dffae6d79e",
+  "cases": [
+    {
+      "case": "facade-before-check",
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "file:///private/var/folders/y0/0l0zt2_d10jcmb0xd_08bjfh0000gn/T/wasmc-important-repro-008vl3o7/current/wasmc.mjs:621\nthrow new Error('UNVERIFIED_FACADE_EXECUTED');\n      ^\n\nError: UNVERIFIED_FACADE_EXECUTED\n    at file:///private/var/folders/y0/0l0zt2_d10jcmb0xd_08bjfh0000gn/T/wasmc-important-repro-008vl3o7/current/wasmc.mjs:621:7\n\nNode.js v25.6.0\n",
+      "source": "package local:pair; interface api { keep: func(v:s32, flag:bool)->tuple<s32,bool> { return tuple(v, flag); } } world app { export api; }",
+      "calls": [
+        [
+          7,
+          true
+        ]
+      ]
+    },
+    {
+      "case": "checked-raw-vs-executed-embedded",
+      "exit_code": 0,
+      "stdout": "{\"accepted\":true,\"compiler_sha256\":\"93a44bbb96c751218e4c00d479e4c14358122a389acca16205b1e4d0dc5f9476\",\"source_sha256\":\"12608bb617aa7faffed497c5fecd9d0119ee0c50477c4854c3a81af9d31f35e7\",\"core_bytes\":47,\"core_sha256\":\"5062a008bab93c4e3b2210ad141c5011f6ceabb993eac17a4e7c455696a03d36\",\"imports\":[],\"export\":\"keep\",\"calls\":[{\"arguments\":[7,true],\"result\":[7,1]}],\"expected_results_verified\":true}\n",
+      "stderr": "",
+      "source": "package local:pair; interface api { keep: func(v:s32, flag:bool)->tuple<s32,bool> { return tuple(v, flag); } } world app { export api; }",
+      "calls": [
+        [
+          7,
+          true
+        ]
+      ]
+    },
+    {
+      "case": "u64-json-call",
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "{\"accepted\":false,\"error\":\"Cannot convert 7 to a BigInt\"}\n",
+      "source": "package local:wide; interface api { keep: func(v:u64)->u64 { return v; } } world app { export api; }",
+      "calls": [
+        [
+          7
+        ]
+      ]
+    }
+  ]
+}

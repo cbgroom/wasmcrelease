@@ -1,0 +1,25 @@
+{
+  "request": "is the dynamic Client/Gateway available in this product and is it a formal Lib",
+  "authority": "runtime/client-foundation-v1/release-surface.json",
+  "product": {
+    "version": "0.0.21",
+    "included": true,
+    "surface_status": "incubating",
+    "lifecycle_authority": "release.json"
+  },
+  "formal_lib": {
+    "admitted": false,
+    "discoverable": false,
+    "installable": false
+  },
+  "fixed_host_api_changed": false,
+  "minimal_cli_changed": false,
+  "stop": "Report product inclusion separately from Lib admission. Do not claim production fleet service or general external-effect exactly-once behavior.",
+  "required_additional_reads": [
+    "runtime/client-foundation-v1/release-surface.json"
+  ],
+  "named_checks": [],
+  "check_rule": "read_command already completed route integrity verification. Run only the applicable named_checks for the request. An empty named_checks list means this is a decision route: answer and stop. Do not invent flags or extra check commands; do not repeat a completed check.",
+  "schema": "wasmc.agent-task-route/v1",
+  "id": "dynamic-client-gateway"
+}

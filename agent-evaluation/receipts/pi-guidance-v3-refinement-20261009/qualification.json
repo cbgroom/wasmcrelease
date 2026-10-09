@@ -1,0 +1,54 @@
+{
+  "schema": "wasmc.pi-guidance-experiment-qualification/v1",
+  "accepted": true,
+  "scope": "Unreleased future guidance experiment; not whole-product or successor release admission",
+  "guidance_commit": "50ef26415a9f972bd9fa84ccac15fabf81c3a640",
+  "guidance_tree": "81b17afea4995b48c2aa9a86557679e4c9ed2310",
+  "protocol_sha256": "cd441d860b43fbd5b424fe53ca3d7532a102975471de20b5fa096ff9282465ba",
+  "agent": {
+    "implementation": "pi",
+    "version": "1.0.4",
+    "MCP_enabled": false
+  },
+  "routes": [
+    "llm-m4dd/deepseek-v4.1-flash",
+    "llm-m4dd/glm-5.3-flash"
+  ],
+  "upstream_implementation_attested": false,
+  "rounds": 3,
+  "cases": 60,
+  "structural_accepted": true,
+  "independent_semantic_accepted": true,
+  "independent_source_replays": 12,
+  "independent_input_preservation_probes": 6,
+  "no_errors_or_retries_or_duplicate_calls": true,
+  "no_provider_errors_or_incomplete_terminal_answers": true,
+  "published_metadata_edits": 0,
+  "focused_checks": 11,
+  "old_candidate_drift_rejected": true,
+  "old_release_identity_files_unchanged": [
+    "release.json",
+    "manifest.json",
+    "provenance.json",
+    "SHA256SUMS",
+    "package-index.json",
+    "channels/candidates/0.0.21.json",
+    "channels/dev.json",
+    "channels/main.json",
+    "channels/prod.json"
+  ],
+  "immutable_tag_unchanged": true,
+  "receipt_sha256": {
+    "cohort.json": "c633d90be7cabf6d0a0caf7d414a42999fb22e7b2233ce5a441d3faedfe8c7e1",
+    "independent-review.json": "d5480f826653da0ded58cd651a17ebcff25f90bd4e154e58729a88f8762f6aa0",
+    "independent-replay.json": "a6193e7be3fceb454bfb14160041777df071faa726db5dce51e13c4406e47f89",
+    "efficiency.json": "d17a815808cd010770ba34385f550d141042726d6809285c5e71048b1060fa78",
+    "refinement-efficiency.json": "f3eb5086ff66eaf48d274e162b33b46bec79412715ff085f3bd2afc68c491e30",
+    "ci-workstream.json": "af4e5fa17c62266490504c1477d1b313c757854fbfca57063d409ccaa7dba958",
+    "diagnostic-ledger.json": "94c9ef052528178afd8dbd684988edcd02b8c60f1a3b16819a60aab867466c61"
+  },
+  "future_product_freeze_and_full_release_admission_required": true,
+  "raw_trace_retained": false,
+  "hidden_reasoning_retained": false,
+  "qualified_at": "2026-10-09T05:40:02.458853+00:00"
+}

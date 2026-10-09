@@ -1,0 +1,80 @@
+{
+  "request": "async func(u64) -> map<string,u64> as an ordinary public WAsmC value",
+  "decision": "unsupported as a whole: u64 is supported in the v0.0.21 compiler, but async ordinary source and a direct public map result remain independently unsupported",
+  "independent_stops": [
+    "async ordinary source unsupported",
+    "Map is resident/local only and unsupported as a direct public WIT value result"
+  ],
+  "alternatives": [
+    "u32 or i64 only with application-owned bounds and signedness proof",
+    "ordered list<Entry<K,V>> snapshot only when copied-value semantics are equivalent",
+    "declared resource for identity and mutation",
+    "otherwise stop"
+  ],
+  "generate_source": false,
+  "required_additional_reads": [],
+  "scope": "Complete generated projection for the listed u64, public Map, async and Host positions; no source generation or runtime execution is requested for a capability decision.",
+  "final_answer_policy": "Decide each requested position from position_projection. u64 is supported in ordinary synchronous source and bounded synchronous scalar Host contracts, with WIT u64 identity and no implicit authority. Give alternatives only for unsupported positions when semantics remain equivalent; otherwise stop. required_additional_reads is empty because these facts are complete. Do not open unrelated routes, language syntax, catalogs, source examples or product inventories for this decision.",
+  "supported_positions": [
+    "u64 local",
+    "u64 parameter",
+    "u64 result",
+    "u64 nested-source-payload"
+  ],
+  "position_projection": {
+    "source_u64": {
+      "status": "released",
+      "positions": [
+        "local",
+        "parameter",
+        "result",
+        "nested-source-payload"
+      ],
+      "semantics": [
+        "full 0..=u64::MAX source range",
+        "unsigned comparison, division, remainder and right shift",
+        "WIT u64 identity",
+        "Core i64 physical lane with unsigned semantics retained by the contract"
+      ]
+    },
+    "public_map": {
+      "status": "released-resident-local-through-matching-lib",
+      "positions": [
+        "compatible-App-Lib-Core-domain"
+      ],
+      "unsupported_positions": [
+        "direct-public-WIT-value-parameter",
+        "direct-public-WIT-value-result",
+        "v0-high-level-Host-function"
+      ],
+      "alternative": "Use an explicitly ordered list<Entry<K,V>> snapshot for copied public values or a declared resource for identity and mutation; never expose a private handle."
+    },
+    "async": "unsupported",
+    "host": {
+      "status": "released-bounded",
+      "positions": [
+        "explicit-synchronous-scalar-functions"
+      ],
+      "wit_scalars": [
+        "bool",
+        "s32",
+        "u32",
+        "s64",
+        "u64",
+        "float32",
+        "float64"
+      ],
+      "unsupported": [
+        "managed-values",
+        "managed-references",
+        "async",
+        "ambient-authority"
+      ]
+    },
+    "authority_rule": "Imports request effects; explicit application approval and an exact module/name/kind/signature allowlist are still required. A supported scalar is not an authority grant."
+  },
+  "named_checks": [],
+  "check_rule": "read_command already completed route integrity verification. Run only the applicable named_checks for the request. An empty named_checks list means this is a decision route: answer and stop. Do not invent flags or extra check commands; do not repeat a completed check.",
+  "schema": "wasmc.agent-task-route/v1",
+  "id": "position-aware-capability-negative"
+}

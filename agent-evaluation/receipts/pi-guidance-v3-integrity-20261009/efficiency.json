@@ -1,0 +1,62 @@
+{
+  "guidance_commit": "46ec2092319beeda9c8cf8da41ea8f57000a9c41",
+  "protocol_sha256": "cd441d860b43fbd5b424fe53ca3d7532a102975471de20b5fa096ff9282465ba",
+  "models": [
+    {
+      "model": "deepseek-v4.1-flash",
+      "comparison_scope": "same original six frozen tasks; earlier single-round baseline versus median of three fresh rounds",
+      "baseline": {
+        "tool_calls": 23,
+        "tool_result_characters": 142592
+      },
+      "after_rounds": [
+        {
+          "tool_calls": 26,
+          "tool_result_characters": 75458
+        },
+        {
+          "tool_calls": 25,
+          "tool_result_characters": 75446
+        },
+        {
+          "tool_calls": 26,
+          "tool_result_characters": 77769
+        }
+      ],
+      "after_median": {
+        "tool_calls": 26,
+        "tool_result_characters": 75458
+      },
+      "tool_result_character_reduction_percent": 47.08
+    },
+    {
+      "model": "glm-5.3-flash",
+      "comparison_scope": "same original six frozen tasks; earlier single-round baseline versus median of three fresh rounds",
+      "baseline": {
+        "tool_calls": 21,
+        "tool_result_characters": 142840
+      },
+      "after_rounds": [
+        {
+          "tool_calls": 25,
+          "tool_result_characters": 77679
+        },
+        {
+          "tool_calls": 25,
+          "tool_result_characters": 77212
+        },
+        {
+          "tool_calls": 24,
+          "tool_result_characters": 76969
+        }
+      ],
+      "after_median": {
+        "tool_calls": 25,
+        "tool_result_characters": 77212
+      },
+      "tool_result_character_reduction_percent": 45.95
+    }
+  ],
+  "latency_is_contextual": true,
+  "no_cost_or_statistical_significance_claim": true
+}

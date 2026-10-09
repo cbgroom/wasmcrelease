@@ -1,0 +1,43 @@
+{
+  "request": "direct WAsmC source use of wasmc-system-telemetry@0.0.1 sampler resource",
+  "exact_report": {
+    "instruction": "First copy exact_report.identity and exact_report.stop_reason byte-for-byte once in the final answer. Only after both literal values appear may you refer to their field names. Never output a field name as a substitute for its value, and never reconstruct, shorten or respell either field.",
+    "identity": "wasmc-system-telemetry@0.0.1",
+    "stop_reason": "wasmc-source-direct-resource-methods"
+  },
+  "required_output_states": [
+    "qualified",
+    "admitted",
+    "released",
+    "discoverable",
+    "installable"
+  ],
+  "stop": "qualified=false because wasmc-source-direct-resource-methods is explicitly unsupported",
+  "required_additional_reads": [],
+  "final_answer_policy": "Copy report_text unchanged once as the complete final answer and stop. It is generated from the actual direct and related lifecycle states and already names the exact identity, first missing authority and three supported routes. The field names qualified, admitted, released, discoverable and installable are exact lowercase names; do not capitalize, rename or omit them. No extra reads or checks are required for this decision.",
+  "states": {
+    "qualified": false,
+    "admitted": false,
+    "released": false,
+    "discoverable": false,
+    "installable": false
+  },
+  "related_product": {
+    "qualified": true,
+    "admitted": true,
+    "released": true,
+    "discoverable": true,
+    "installable": true,
+    "routes": [
+      "source-free-rust-component",
+      "public-rust-host-sdk",
+      "linux-explicit-generic-resource-acquisition"
+    ],
+    "lifecycle_authority": "release.json and channels/prod.json; only these supported profiles, never direct ordinary Source"
+  },
+  "report_text": "identity: wasmc-system-telemetry@0.0.1\ndirect_route: wasmc-source-direct-resource-methods\ndirect.qualified = false\ndirect.admitted = false\ndirect.released = false\ndirect.discoverable = false\ndirect.installable = false\nfirst_missing_authority: qualified=false; direct ordinary Source resource methods are unsupported.\nrelated_product.qualified = true\nrelated_product.admitted = true\nrelated_product.released = true\nrelated_product.discoverable = true\nrelated_product.installable = true\nrelated_supported_routes:\n- source-free-rust-component\n- public-rust-host-sdk\n- linux-explicit-generic-resource-acquisition\nlifecycle_authority: release.json and channels/prod.json; only these supported profiles, never direct ordinary Source",
+  "named_checks": [],
+  "check_rule": "read_command already completed route integrity verification. Run only the applicable named_checks for the request. An empty named_checks list means this is a decision route: answer and stop. Do not invent flags or extra check commands; do not repeat a completed check.",
+  "schema": "wasmc.agent-task-route/v1",
+  "id": "release-state-separation"
+}

@@ -1,0 +1,39 @@
+{
+  "product_version": "v0.0.21",
+  "entrypoint": "AGENTS.md",
+  "compiler": {
+    "path": "current/wasmc_compiler.wasm",
+    "bytes": 1510219,
+    "sha256": "42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c",
+    "imports": 0
+  },
+  "facade": {
+    "path": "current/wasmc.mjs",
+    "sha256": "ce6ec59d9ee40a7855df996321b52cb02ab174bd89dd2f3b7d2e0e0f2e8db856"
+  },
+  "provenance_reference": "current/compiler-release.json; inspect separately only when compiler-source provenance is requested",
+  "identity_rule": "Compiler-source provenance is distinct from public release identity. The immutable public package identity is the release tag or the pinned public checkout commit.",
+  "check_command": "node scripts/agent-release-orientation.mjs --check",
+  "required_additional_reads": [
+    "agent-release-orientation.json"
+  ],
+  "mutable_not_authority": [
+    "main",
+    "unversioned URLs",
+    "package-index.json.latest"
+  ],
+  "required_report": {
+    "product": "v0.0.21",
+    "public_agent_entrypoint": "AGENTS.md",
+    "compact_authority": "agent-release-orientation.json",
+    "compiler_path": "current/wasmc_compiler.wasm",
+    "compiler_sha256": "42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c"
+  },
+  "final_answer_policy": "After the named check passes, copy its report_text unchanged once as the complete final answer. It includes every required_report value, including AGENTS.md and agent-release-orientation.json. Do not append a summary or explanatory identities, digests, source commits or abbreviations; stop.",
+  "named_checks": [
+    "node scripts/agent-release-orientation.mjs --check"
+  ],
+  "check_rule": "read_command already completed route integrity verification. Run only the applicable named_checks for the request. An empty named_checks list means this is a decision route: answer and stop. Do not invent flags or extra check commands; do not repeat a completed check.",
+  "schema": "wasmc.agent-task-route/v1",
+  "id": "release-orientation"
+}
