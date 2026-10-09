@@ -62,4 +62,5 @@ const action = process.argv[2];
 if (action === '--write') writeFileSync(output, encoded);
 else if (action === '--check') assert.equal(readFileSync(output, 'utf8'), encoded, 'agent release orientation is stale');
 else throw new Error('usage: agent-release-orientation.mjs --write|--check');
-console.log(JSON.stringify({ accepted: true, action: action.slice(2), release: release.tag, bytes: Buffer.byteLength(encoded), compiler_verified: true, facade_verified: true, catalog_verified: true }));
+const report = Object.entries(route.required_report).map(([key, value]) => `${key}: ${value}`).join('\n');
+console.log(JSON.stringify({ accepted: true, action: action.slice(2), release: release.tag, bytes: Buffer.byteLength(encoded), compiler_verified: true, facade_verified: true, catalog_verified: true, report_text: report }));

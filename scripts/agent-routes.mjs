@@ -38,7 +38,7 @@ export function buildAgentGuidance(base = root, overrides = {}) {
     required_additional_reads: ['agent-release-orientation.json'],
     mutable_not_authority: ['main', 'unversioned URLs', 'package-index.json.latest'],
     required_report: { product: release.tag, public_agent_entrypoint: 'AGENTS.md', compact_authority: 'agent-release-orientation.json', compiler_path: compiler.compiler.path, compiler_sha256: compiler.compiler.sha256 },
-    final_answer_policy: 'After the named check passes, copy every required_report value into the final answer once, including AGENTS.md and agent-release-orientation.json. These five fields are the complete orientation report. Do not add unrelated digests, source commits or shortened identities; stop.'
+    final_answer_policy: 'After the named check passes, copy its report_text unchanged once as the complete final answer. It includes every required_report value, including AGENTS.md and agent-release-orientation.json. Do not append a summary or explanatory identities, digests, source commits or abbreviations; stop.'
   };
   routes['release-lib-route-readiness'] = { ...readiness, authority_file: 'release-lib-route-readiness.json', required_additional_reads: ['release-lib-route-readiness.json'] };
   const scalar = surfaces.agent_capability_projection.type_decisions.u64_ordinary_source;

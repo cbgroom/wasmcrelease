@@ -29,7 +29,7 @@
     "compiler_path": "current/wasmc_compiler.wasm",
     "compiler_sha256": "42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c"
   },
-  "final_answer_policy": "After the named check passes, copy every required_report value into the final answer once, including AGENTS.md and agent-release-orientation.json. These five fields are the complete orientation report. Do not add unrelated digests, source commits or shortened identities; stop.",
+  "final_answer_policy": "After the named check passes, copy its report_text unchanged once as the complete final answer. It includes every required_report value, including AGENTS.md and agent-release-orientation.json. Do not append a summary or explanatory identities, digests, source commits or abbreviations; stop.",
   "named_checks": [
     "node scripts/agent-release-orientation.mjs --check"
   ],
