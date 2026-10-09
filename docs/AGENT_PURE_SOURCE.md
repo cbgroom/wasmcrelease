@@ -53,7 +53,12 @@ handles all requested calls. Report its evidence once and stop.
 Optionally pass `--expected-results` with JSON of the results derived from the
 request, for example `[[3,1],[3,0]]` for calls `[[3,true],[3,false]]` returning
 both inputs. The runner compares actual flattened results to this caller oracle;
-a mismatch fails. Derive expectations from the request, never from the program's
+a mismatch fails. Each call contributes one result: a scalar result is a JSON
+number (bool is 0/1); a tuple result is an array of flattened lanes. Thus scalar
+`choose` for `[[3,true],[-1,false]]` expects `[6,-1]`, while tuple `keep` for
+the same calls expects `[[3,1],[-1,0]]`. Do not wrap scalar results in extra
+arrays merely because call arguments are arrays. Derive expectations from the
+request, never from the program's
 observed output. Compilation alone proves syntax, not the requested semantics.
 
 Tuples are one semantic result; a raw JavaScript host observes flattened Core
