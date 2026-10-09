@@ -7,7 +7,7 @@
   "branch": "work/pi-release-guidance-v3-20261009",
   "base_commit": "c888af39c11640644591ff42aeaf8b09f632f651",
   "target_branch": "main",
-  "state": "ready_for_frozen_three_round_Pi",
+  "state": "qualified_review_ready",
   "integration_state": "not_integrated",
   "scope": "Unreleased future-product guidance; unchanged admitted v0.0.21 compiler/Provider/Roots and old tag/candidate/integrity identities. Old candidate rejection is required.",
   "claimed_paths": [
@@ -19,6 +19,7 @@
     "AGENTS.md",
     "agent-evaluation/fresh-agent-learning-v3.json",
     "agent-evaluation/receipts/pi-guidance-v3-20261009",
+    "agent-evaluation/receipts/pi-guidance-v3-integrity-20261009",
     "agent-evaluation/receipts/pi-guidance-v3-refinement-20261009",
     "agent-quickstart.json",
     "agent-release-orientation.json",
@@ -42,17 +43,16 @@
     "scripts/wasmc-agent-probe.mjs"
   ],
   "next": [
-    "Run actual integrity and full-width regression controls",
-    "Freeze a new guidance commit and rerun the unchanged three-round Pi protocol",
-    "Review isolated draft PR before future product freeze/admission"
+    "Review isolated draft PR",
+    "Freeze a future product inventory and complete release admission before successor publication"
   ],
   "previous_qualification_receipt": "agent-evaluation/receipts/pi-guidance-v3-refinement-20261009/qualification.json",
   "previous_tested_guidance_commit": "50ef26415a9f972bd9fa84ccac15fabf81c3a640",
   "previous_tested_guidance_tree": "81b17afea4995b48c2aa9a86557679e4c9ed2310",
-  "tested_guidance_commit": "50ef26415a9f972bd9fa84ccac15fabf81c3a640",
-  "tested_guidance_tree": "81b17afea4995b48c2aa9a86557679e4c9ed2310",
-  "qualification_receipt": "agent-evaluation/receipts/pi-guidance-v3-refinement-20261009/qualification.json",
-  "current_review_findings": [
+  "tested_guidance_commit": "46ec2092319beeda9c8cf8da41ea8f57000a9c41",
+  "tested_guidance_tree": "55fd90681ca36da185982d6b4185cfca6f307a0c",
+  "qualification_receipt": "agent-evaluation/receipts/pi-guidance-v3-integrity-20261009/qualification.json",
+  "resolved_findings": [
     "Raw compiler digest was checked but embedded compiler executed",
     "Facade module body imported before integrity checks",
     "JSON calls could not represent exact Core i64 arguments"

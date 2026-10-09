@@ -1,0 +1,1294 @@
+{
+  "attempts": [
+    {
+      "guidance_commit": "614fd4bb4af37c6bff8ef1b70a4e8dc235442503",
+      "evidence_directory": "/Users/youxianshi/code/.cache/wasmc-release-evidence/pi-guidance-v3-live-three-rounds-2oc5i8v_",
+      "reports": [
+        {
+          "file": "round-1-deepseek-v4.1-flash.json",
+          "sha256": "ce8e0ee22925db2c81a241bb11559e82b33db71e1b2fa3cb836b78e05be654ea",
+          "model": {
+            "provider": "llm-m4dd",
+            "identity": "deepseek-v4.1-flash"
+          },
+          "completed_cases": 10,
+          "completed_report": true,
+          "structural_pass": false,
+          "failures": [
+            {
+              "id": "release-state-separation",
+              "failures": [],
+              "answer_contract_failures": [],
+              "hygiene": [
+                "ellipsized-identity"
+              ],
+              "terminal": null,
+              "public_final_answer": {
+                "characters": 1470,
+                "sha256": "273cbe7e694b6580f188c27654c57131141f45cdb16b0caa9d091eee5588af90",
+                "text": "Route hash verified (`db89c26c...`), `required_additional_reads` is empty, and no additional files are required. Reporting from the named route.\n\n**Exact report values (copied byte-for-byte):**\n- `wasmc-system-telemetry@0.0.1`\n- `wasmc-source-direct-resource-methods`\n\n**Direct WAsmC source route** \u2014 request: direct WAsmC source use of `wasmc-system-telemetry@0.0.1` sampler resource:\n\n| state | value |\n|---|---|\n| qualified | false |\n| admitted | false |\n| released | false |\n| discoverable | false |\n| installable | false |\n\nThe direct ordinary-Source route stops at the first missing authority: **qualified = false**, because `wasmc-source-direct-resource-methods` is explicitly unsupported. No later state (admitted, released, discoverable, installable) can be asserted for this direct route.\n\n**Related product route** (same package, different consumption profiles) \u2014 all five states are satisfiable:\n\n| state | value |\n|---|---|\n| qualified | true |\n| admitted | true |\n| released | true |\n| discoverable | true |\n| installable | true |\n\nIts three supported released routes are:\n- `source-free-rust-component`\n- `public-rust-host-sdk`\n- `linux-explicit-generic-resource-acquisition`\n\nLifecycle authority for these related states is `release.json` and `channels/prod.json`; only these supported profiles are in scope \u2014 never direct ordinary Source. I am not broadening this decision into manifests, control planes, implementation files, or history. Stopping here."
+              }
+            },
+            {
+              "id": "library-first-selection",
+              "failures": [
+                {
+                  "metric": "error_results",
+                  "observed": 1,
+                  "limit": 0
+                }
+              ],
+              "answer_contract_failures": [],
+              "hygiene": [],
+              "terminal": null,
+              "public_final_answer": {
+                "characters": 569,
+                "sha256": "4df39c31ef0f173a8330b93a4c3f5654cfa9145f1fcac2d1da9f83f6e7d701f8",
+                "text": "Selected package identity and APIs (byte-for-byte):\n\n- Package: `wasmc:std@1.4.1`\n- APIs:\n  - `wasmc:std@1.4.1/base64#try-encode-standard`\n  - `wasmc:std@1.4.1/base64#try-decode-standard`\n\nVerification statements:\n\n- Search discovered the candidate but was not authority.\n- Resolve verified `catalog_sha256`, `manifest_sha256`, `root_inventory_sha256`, `wit_sha256` and `artifact_sha256`.\n- Behavior separately verified `companion_sha256` and `import_module` and passed.\n\nChannels read for released, discoverable and installable states: product `v0.0.21`, stage `prod`."
+              }
+            }
+          ]
+        },
+        {
+          "file": "round-1-glm-5.3-flash.json",
+          "sha256": "4a00cc5c54c70aa2e8189bceeaafc6d4699bceb463b791a812f939ca681c607e",
+          "model": {
+            "provider": "llm-m4dd",
+            "identity": "glm-5.3-flash"
+          },
+          "completed_cases": 10,
+          "completed_report": true,
+          "structural_pass": false,
+          "failures": [
+            {
+              "id": "library-hex-transfer",
+              "failures": [],
+              "answer_contract_failures": [],
+              "hygiene": [
+                "ellipsized-identity"
+              ],
+              "terminal": null,
+              "public_final_answer": {
+                "characters": 2217,
+                "sha256": "869bfa6e790ba006f1d7a539319ed44565f8ae710b1c29b997fa83d5209c9adb",
+                "text": "Done. The `--help` probe is not a route invocation and was correctly rejected by the driver's own guard; the actual route run succeeded. Report:\n\n## Route & discovery\n- **Route**: `agent-routes/library-discovery.json` (route `library-discovery`) \u2014 matched by intent: \"find an unfamiliar reusable capability; inspect exact package/API and verify behavior.\" (Not `library-first-selection`; that is Base64-specific, and Base64 is explicitly not the requested capability.)\n- **Search**: `node scripts/wasmc-lib.mjs search hex` with the route-pinned `--catalog-sha256 a4de009c\u2026cfdad` returned exactly the two hex APIs in `wasmc-std@1.4.1`.\n\n## Approved package\n- `wasmc-std@1.4.1`, profile `resource`, target `wasm32-unknown-unknown`\n- Resolved Root: `current-libs/wasmc-std/1.4.1`, `verified: true`, `authority_granted: false`\n- Pins matched independently: catalog `a4de009c\u2026cfdad`, manifest `9db63b4f\u202674ebfc`, Root inventory `6978407b\u2026bdf92`\n\n## Approved WIT API identities (from `current-libs/wasmc-std/1.4.1/lib.wit`, `interface hex`, lines 82\u201386)\n```wit\ninterface hex {\n  use bytes.{byte-buffer};\n  try-encode-lower: func(value: borrow<byte-buffer>, output: borrow<byte-buffer>) -> bool;\n  try-decode: func(value: borrow<byte-buffer>, output: borrow<byte-buffer>) -> bool;\n}\n```\n1. `wasmc:std@1.4.1/hex#try-encode-lower`\n2. `wasmc:std@1.4.1/hex#try-decode`\n\n## Execution (`node examples/lib-bytes/run.mjs --codec hex --text \"Pi42\"`)\n```json\n{\"accepted\":true,\"codec\":\"hex\",\"package\":\"wasmc:std@1.4.1\",\n \"apis\":[\"wasmc:std@1.4.1/hex#try-encode-lower\",\"wasmc:std@1.4.1/hex#try-decode\"],\n \"input_utf8\":\"Pi42\",\"encoded_utf8\":\"50693432\",\"decoded_utf8\":\"Pi42\",\n \"imports_verified\":true,\"selected_Root_verified\":true,\n \"invalid_input_rejected\":true,\"rounds\":256,\"explicit_drops\":1024,\n \"persistent_provider_memory_bytes\":3670016}\n```\n- Round trip: `\"Pi42\"` \u2192 `50693432` (correct UTF-8 bytes `50 69 34 32` = `P i 4 2`) \u2192 back to `\"Pi42\"` \u2705\n- Invalid-input rejection: `invalid_input_rejected: true` \u2705\n- Provider imports verified exact; owned resources explicitly dropped (1024 drops).\n\nNo Host authority was granted; resolution and execution stayed within the pinned public checkout. Stopping here per the route's named checks."
+              }
+            },
+            {
+              "id": "integrity-rejection-transfer",
+              "failures": [
+                {
+                  "metric": "assistant_turns",
+                  "observed": 12,
+                  "limit": 10
+                },
+                {
+                  "metric": "error_results",
+                  "observed": 1,
+                  "limit": 0
+                }
+              ],
+              "answer_contract_failures": [],
+              "hygiene": [
+                "ellipsized-identity"
+              ],
+              "terminal": null,
+              "public_final_answer": {
+                "characters": 4794,
+                "sha256": "410d637b8e596bd3a3e3a73daefe917802c9a528cab3f4ad0469909e3213bb91",
+                "text": "All evidence captured. Report follows.\n\n---\n\n## Negative-test result: independently supplied wrong compiler digest is rejected\n\n**Route used:** `agent-quickstart.json` \u2192 `agent-routes/source-adaptation.json` \u2192 `required_additional_reads: [\"LANGUAGE.md\"]` \u2192 runner `scripts/wasmc-agent-execute.mjs`. Named checks: compile pure source, inspect imports (`imports=[]` required), instantiate with `{}`, execute calls, report exact identities. No published metadata was modified (`git status --porcelain` is empty).\n\n### Program (pure ordinary source)\n- **Source path:** `/tmp/wasmc-neg/pure.wasmc`\n- **source_sha256:** `15dc8d90ddeaf20b0c38e0c371470c808a335ea4892a9bb7227f11fc1f43524a`\n- Pure: no Host imports; `world app { export api; }` only.\n\n### Rejection evidence (actual process result)\nCommand:\n```\nnode scripts/wasmc-agent-execute.mjs --source /tmp/wasmc-neg/pure.wasmc --export add \\\n  --calls '[[2,3]]' --expected-compiler-sha256 0000000000000000000000000000000000000000000000000000000000000000\n```\n- **Process exit: 1 (nonzero, expected)** \u2014 captured as the negative-test result, not treated as an operational tool error.\n- Assertion thrown at `scripts/wasmc-agent-execute.mjs:17`:\n  ```\n  AssertionError [ERR_ASSERTION]: independent compiler digest mismatch\n  + actual:   '42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c'\n  - expected: '0000000000000000000000000000000000000000000000000000000000000000'\n  ```\n- Rejection fired **before** compilation and **before** instantiation; the source was never executed under the wrong bytes.\n\n### Positive control (proves the runner itself is healthy)\nSame source, genuine digest:\n```\n{\"accepted\":true,\"compiler_sha256\":\"42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c\",\n \"source_sha256\":\"15dc8d90ddeaf20b0c38e0c371470c808a335ea4892a9bb7227f11fc1f43524a\",\n \"core_bytes\":41,\"core_sha256\":\"f61fd62f57c41269c3c23f360eeaf1090b1db9c38651106674d48bc65dba88ba\",\n \"imports\":[],\"export\":\"add\",\n \"calls\":[{\"arguments\":[2,3],\"result\":5},{\"arguments\":[-4,9],\"result\":5}]}\n```\nExit 0, `imports: []`, pure instantiation with `{}` \u2014 so the nonzero exit above is solely the digest gate.\n\n### Why rewriting `current/compiler-release.json` cannot approve the wrong bytes\n1. **Two independent comparisons, one source of truth.** `executeSource` runs:\n   - `assert.equal(sha(compiler), expectedCompiler ?? carrier.compiler.sha256)` \u2014 the independent caller-supplied digest (`64 zero chars`), and\n   - `assert.equal(sha(compiler), carrier.compiler.sha256)` \u2014 the pinned manifest digest.\n   The independent expectation is the attestation; the manifest is only a secondary pin. If you rewrite `compiler.sha256` to `0000\u20260000` to match the wrong bytes, the first assertion still compares against the **independent** `--expected-compiler-sha256` and still fails: the runner never trusts the manifest as its sole authority.\n2. **Even editing the artifact list doesn't help.** The facade check `sha(current/wasmc.mjs) === facade.sha256` derives `facade.path` from the manifest but the digest must match the **actual file bytes** (`ce6ec59d\u2026db856` verified on disk). Changing manifest text changes nothing about the bytes; `shasum -a 256 current/wasmc_compiler.wasm` still yields `42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c`.\n3. **Semantics: manifest text is not execution identity.** SHA-256 binds execution to the actual bytes of `current/wasmc_compiler.wasm`. A manifest is a published claim about those bytes; editing the claim cannot change the bytes, so no manifest rewrite can make an assertion that hashes real bytes accept different ones. (And per the workstream rules, published metadata is frozen and must not be modified \u2014 it wasn't.)\n\n### Exact identities\n| Item | Value |\n|---|---|\n| compiler_sha256 (actual) | `42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c` |\n| independent expected | `0000000000000000000000000000000000000000000000000000000000000000` |\n| source path | `/tmp/wasmc-neg/pure.wasmc` |\n| source_sha256 | `15dc8d90ddeaf20b0c38e0c371470c808a335ea4892a9bb7227f11fc1f43524a` |\n| core_sha256 (positive control) | `f61fd62f57c41269c3c23f360eeaf1090b1db9c38651106674d48bc65dba88ba` |\n| imports (positive control) | `[]` |\n| facade sha256 | `ce6ec59d9ee40a7855df996321b52cb02ab174bd89dd2f3b7d2e0e0f2e8db856` |\n| negative-test exit code | `1` (expected nonzero; correct gate behavior) |\n\n**Conclusion:** The public runner correctly refuses the independently wrong compiler digest with a nonzero exit, as a designed verification gate rather than an operational failure. Manifest rewriting cannot approve the wrong bytes because the runner's authority is the caller-supplied independent digest plus on-disk byte hashes, not mutable manifest text. No published metadata was touched."
+              }
+            }
+          ]
+        }
+      ],
+      "accepted": false,
+      "rule": "Diagnostic observation only; no passing cases transplanted into final qualification"
+    },
+    {
+      "guidance_commit": "03d2ff0cfbf2402cc2c33ed8bd431dae35276715",
+      "evidence_directory": "/Users/youxianshi/code/.cache/wasmc-release-evidence/pi-guidance-v3-live-three-rounds-wjqbaldo",
+      "reports": [
+        {
+          "file": "round-1-deepseek-v4.1-flash.json",
+          "sha256": "f276b9794141ea978f115a7f435890856c919fa26b082fcc2c317567961c5591",
+          "model": {
+            "provider": "llm-m4dd",
+            "identity": "deepseek-v4.1-flash"
+          },
+          "completed_cases": 2,
+          "completed_report": true,
+          "structural_pass": false,
+          "failures": [
+            {
+              "id": "position-aware-capability-negative",
+              "failures": [
+                {
+                  "metric": "tool_calls",
+                  "observed": 12,
+                  "limit": 8
+                },
+                {
+                  "metric": "assistant_turns",
+                  "observed": 9,
+                  "limit": 6
+                }
+              ],
+              "answer_contract_failures": [],
+              "hygiene": [],
+              "terminal": null,
+              "public_final_answer": {
+                "characters": 2923,
+                "sha256": "5aa8e999b2fe35b0808239c1474f170a547f916b8b5fe5f0de6f6811c2afa12d",
+                "text": "## Route used\n\n`agent-quickstart.json` \u2192 `position-aware-capability-negative` (exact match for \"async func(u64) \u2192 map<string,u64> as an ordinary public WAsmC value\"), read via `node scripts/agent-routes.mjs --show position-aware-capability-negative` with `route_digest_verified: true` and `required_additional_reads: []`. The narrow u64 question also matched `producer-release-u64-delta`. Position detail confirmed against `release-surfaces.json.agent_capability_projection` (the Skill-directed projection). No source generated.\n\n## Pinned release\n\n`v0.0.21` (tag `v0.0.21`, stage `prod`). Capability is per position, as the projection requires.\n\n## Positions decided separately\n\n**1. Source position \u2014 ordinary synchronous function accepting `u64`: SUPPORTED**\n- `u64_ordinary_source` is `released`, positions `local`, `parameter`, `result`, `nested-source-payload`; it is in `ordinary_source_scalars` (`qualified-product-capability`).\n- Semantics preserved: full `0..=u64::MAX` range; unsigned comparison, division, remainder and right-shift; WIT `u64` identity on the Core `i64` physical lane.\n- A synchronous `func(value: u64) -> ...` is fine. No alternative needed.\n\n**2. Public-value position \u2014 ordinary `map<string,u64>` as a public value: UNSUPPORTED**\n- `map` is `released-resident-local-through-matching-lib`, usable only in `compatible-App-Lib-Core-domain`.\n- Unsupported positions: `direct-public-WIT-value-parameter`, `direct-public-WIT-value-result`, `v0-high-level-Host-function`. A `map` cannot be exposed as an ordinary public WIT value (parameter or result).\n- Semantics-preserving alternatives (only when equivalent):\n  - explicitly ordered `list<Entry<K,V>>` snapshot for copied public values;\n  - a declared resource for identity and mutation;\n  - otherwise stop. Never expose a private handle.\n\n**3. Async position \u2014 publicly expose an async function: UNSUPPORTED**\n- `feature_decisions.async_ordinary_source_or_lib = \"unsupported\"`; Host imports list `async` as unsupported; `release.json` nonclaims \"async ordinary WAsmC source or Lib execution\".\n- No semantics-preserving substitute: changing async behavior (scheduling/await ordering) is not permitted without explicit application proof \u2192 stop. Provide no sync stand-in.\n\n**4. Host position \u2014 explicit Host boundary: SUPPORTED ONLY AS BOUNDED EXPLICIT SYNCHRONOUS SCALARS**\n- `host_import` is `released-bounded`, position `explicit-synchronous-scalar-functions`; admitted WIT scalars include `u64` (also `bool`, `s32`, `u32`, `s64`, `float32`, `float64`).\n- So a synchronous `u64` Host import parameter/result is allowed; `async` and `managed-values` (including `map`) are unsupported at Host.\n- An import is a request, not authority: inspect every generated import and match module/name/kind/signature against an application-owned exact allowlist; pure execution requires `imports=[]` and `{}`. No ambient authority.\n\nStopping here per the route."
+              }
+            }
+          ]
+        },
+        {
+          "file": "round-1-glm-5.3-flash.json.progress.json",
+          "sha256": "45ff1e9ef280062a6919bd02770206d3d64319256bc888d8ebe427a0a843ae1e",
+          "model": {
+            "provider": "llm-m4dd",
+            "identity": "glm-5.3-flash"
+          },
+          "completed_cases": 4,
+          "completed_report": false,
+          "structural_pass": false,
+          "failures": []
+        }
+      ],
+      "accepted": false,
+      "rule": "Diagnostic observation only; no passing cases transplanted into final qualification"
+    },
+    {
+      "guidance_commit": "09896f7ad6d3b6b07a950515d863c943f23737dd",
+      "evidence_directory": "/Users/youxianshi/code/.cache/wasmc-release-evidence/pi-guidance-v3-live-three-rounds-de3gsxvm",
+      "reports": [
+        {
+          "file": "round-1-deepseek-v4.1-flash.json",
+          "sha256": "e5503dc4cfe75f665ff64837b5d69193894ee6e44bfdec561f4786326bb37c4a",
+          "model": {
+            "provider": "llm-m4dd",
+            "identity": "deepseek-v4.1-flash"
+          },
+          "completed_cases": 10,
+          "completed_report": true,
+          "structural_pass": true,
+          "failures": []
+        },
+        {
+          "file": "round-1-glm-5.3-flash.json",
+          "sha256": "079410a111873e0606199614577336b4dbac0dd17f8a3dd49b8991e6276b921f",
+          "model": {
+            "provider": "llm-m4dd",
+            "identity": "glm-5.3-flash"
+          },
+          "completed_cases": 10,
+          "completed_report": true,
+          "structural_pass": true,
+          "failures": []
+        },
+        {
+          "file": "round-2-deepseek-v4.1-flash.json",
+          "sha256": "3f7b65048015869ba8b808fa1d20fd2b6fc3771b8c063bf542591199b2b682d6",
+          "model": {
+            "provider": "llm-m4dd",
+            "identity": "deepseek-v4.1-flash"
+          },
+          "completed_cases": 5,
+          "completed_report": true,
+          "structural_pass": false,
+          "failures": [
+            {
+              "id": "library-first-selection",
+              "failures": [],
+              "answer_contract_failures": [
+                {
+                  "metric": "required_literal",
+                  "expected": "wasmc:std@1.4.1"
+                },
+                {
+                  "metric": "required_literal",
+                  "expected": "wasmc:std@1.4.1/base64#try-encode-standard"
+                },
+                {
+                  "metric": "required_literal",
+                  "expected": "wasmc:std@1.4.1/base64#try-decode-standard"
+                }
+              ],
+              "hygiene": [],
+              "terminal": null,
+              "public_final_answer": {
+                "characters": 87,
+                "sha256": "926d6c53bd2a817a9b8cc6f1b0fee5a8e5680966e4405a1a91f7c3df20730e21",
+                "text": "All required states are true. Running the named check (complete combined verification)."
+              }
+            }
+          ]
+        },
+        {
+          "file": "round-2-glm-5.3-flash.json.progress.json",
+          "sha256": "4b36acab37773930428fbe0604349bb72f34f2ddd73af3973332ea91db18eb33",
+          "model": {
+            "provider": "llm-m4dd",
+            "identity": "glm-5.3-flash"
+          },
+          "completed_cases": 6,
+          "completed_report": false,
+          "structural_pass": false,
+          "failures": []
+        }
+      ],
+      "accepted": false,
+      "rule": "Diagnostic observation only; no passing cases transplanted into final qualification"
+    },
+    {
+      "guidance_commit": "0ad055471cd90570716bf2bc03ae504482f5aa0d",
+      "evidence_directory": "/Users/youxianshi/code/.cache/wasmc-release-evidence/pi-guidance-v3-live-three-rounds-1_e4l3j4",
+      "reports": [
+        {
+          "file": "round-1-deepseek-v4.1-flash.json",
+          "sha256": "e72711137ef4ff79491c4a9cc1646e41519c40d64fb5dcfbb5917ea69bdb290e",
+          "model": {
+            "provider": "llm-m4dd",
+            "identity": "deepseek-v4.1-flash"
+          },
+          "completed_cases": 10,
+          "completed_report": true,
+          "structural_pass": true,
+          "failures": []
+        },
+        {
+          "file": "round-1-glm-5.3-flash.json",
+          "sha256": "745d733bc068661fb6445b029cf530fde5a85b61912b9b8d54f336b467ad25b0",
+          "model": {
+            "provider": "llm-m4dd",
+            "identity": "glm-5.3-flash"
+          },
+          "completed_cases": 8,
+          "completed_report": true,
+          "structural_pass": false,
+          "failures": [
+            {
+              "id": "library-hex-transfer",
+              "failures": [],
+              "answer_contract_failures": [],
+              "hygiene": [
+                "ellipsized-identity"
+              ],
+              "terminal": null,
+              "public_final_answer": {
+                "characters": 1676,
+                "sha256": "66166e1b860664734c9803c8a00ac1d945816b960814c594d1fd99673c3c9fad",
+                "text": "Route completed: `library-discovery` (intent: find an unfamiliar reusable capability; inspect exact package/API and verify behavior).\n\n## Search (discovery, not approval)\nSearched `hex` against the pinned catalog (`a4de009c\u2026cfdad`); matched two APIs in `wasmc-std@1.4.1`.\n\n## Selected package and approved WIT APIs\n- **Package:** `wasmc:std@1.4.1`\n- **API 1:** `wasmc:std@1.4.1/hex#try-encode-lower`\n- **API 2:** `wasmc:std@1.4.1/hex#try-decode`\n\n(Base64 excluded per task; Base64 APIs `base64#try-encode-standard`/`try-decode-standard` exist but are not the requested capability.)\n\n## Selected Root verified\n`current-libs/wasmc-std/1.4.1` \u2014 `resolve` independently verified `catalog_sha256`, `manifest_sha256`, `root_inventory_sha256`, `wit_sha256` and `artifact_sha256`. Lifecycle check: `v0.0.21`, stage `prod`, all states `qualified/admitted/released/discoverable/installable: true`. `authority_granted: false` (resolution grants no Host authority). Exact Root WIT (`lib.wit`, `5abbed39\u2026246e9`) confirms both operations in `interface hex`, exported by `world standard-lib`.\n\n## Round trip for `Pi42` (named check)\n`node scripts/agent-library-check.mjs --codec hex --text Pi42` \u2014 accepted:\n\n| Field | Value |\n|---|---|\n| `input_utf8` | `Pi42` |\n| `encoded_utf8` | `50693432` |\n| `decoded_utf8` | `Pi42` |\n| `imports_verified` | `true` |\n| `selected_Root_verified` | `true` |\n| `invalid_input_rejected` | `true` |\n| `states` | all true (released) |\n| `authority_granted` | `false` |\n\nThe same behavior was independently reproduced by the declared driver `node examples/lib-bytes/run.mjs --codec hex --text Pi42` (identical result fields). Named checks passed; stopping here."
+              }
+            }
+          ]
+        }
+      ],
+      "accepted": false,
+      "rule": "Diagnostic observation only; no passing cases transplanted into final qualification"
+    },
+    {
+      "guidance_commit": "150491c16fd38f0259c6f41cc626983e452bcba0",
+      "evidence_directory": "/Users/youxianshi/code/.cache/wasmc-release-evidence/pi-guidance-v3-live-three-rounds-a0_t2nvx",
+      "reports": [
+        {
+          "file": "round-1-deepseek-v4.1-flash.json.progress.json",
+          "sha256": "10f273e56914439ee27eaf44a1c69b3cf5b247387550b2957065897f5ef2cac6",
+          "model": {
+            "provider": "llm-m4dd",
+            "identity": "deepseek-v4.1-flash"
+          },
+          "completed_cases": 2,
+          "completed_report": false,
+          "structural_pass": false,
+          "failures": [
+            {
+              "id": "release-orientation",
+              "failures": [],
+              "answer_contract_failures": [],
+              "hygiene": [
+                "ellipsized-identity"
+              ],
+              "terminal": null,
+              "public_final_answer": {
+                "characters": 1333,
+                "sha256": "b6b7e0e1417718d42c596ff46f618f5f6076f50023ce817c1fba42b0c2f78c18",
+                "text": "The named check passed (`accepted:true`). Reporting only the requested identities and stopping.\n\nPer the `release-orientation` route (`agent-release-orientation.json`, opened from the `AGENTS.md` public entrypoint via `agent-quickstart.json`):\n\n**Current immutable release**\n- Product tag: `v0.0.21` (stage `prod`, `stable: false`)\n- Product set SHA256: `349931faa088659b51e171ed9056aa680618ef9478da353a89819644a4b644d1`\n- The private source commit (`938b0dd9...`) is *not* the public release identity; the immutable public identity is the tag or the pinned public checkout commit. `main`, unversioned URLs, and `package-index.json.latest` are mutable and not authority.\n\n**First public Agent entrypoint**\n- `AGENTS.md`, which routes through `agent-quickstart.json`.\n\n**Exact authority to verify before compiling** (`exact_authorities`):\n- `agent-release-orientation.json`\n- `release.json`\n- `channels/prod.json`\n- `channels/candidates/0.0.21.json`\n- `manifest.json`\n- `SHA256SUMS`\n\nCompiler artifact to pin:\n- Path: `current/wasmc_compiler.wasm`\n- Bytes: `1510219`\n- SHA256: `42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c`\n- Requested imports: `0`\n\nThe compiler declares zero imports, so no host effect is requested; broader host-authority allowlisting is governed by the separate `host-authority-boundary` route."
+              }
+            },
+            {
+              "id": "position-aware-capability-negative",
+              "failures": [
+                {
+                  "metric": "tool_calls",
+                  "observed": 10,
+                  "limit": 8
+                },
+                {
+                  "metric": "assistant_turns",
+                  "observed": 7,
+                  "limit": 6
+                }
+              ],
+              "answer_contract_failures": [],
+              "hygiene": [],
+              "terminal": null,
+              "public_final_answer": {
+                "characters": 3883,
+                "sha256": "9f107e55d40c3aa52c2b60e97e4dc0550e9f8f73b1fb36349c694087fe53dcff",
+                "text": "## Answer\n\nRoute matched and verified: `agent-routes/position-aware-capability-negative` (`route_digest_verified: true`), corroborated by the u64-source route `agent-routes/producer-release-u64-delta` and the authority projection `release-surfaces.json` (`agent_capability_projection`) that generates them. No source generated.\n\nPinned product: **v0.0.21**. The four capability positions are independent claims, decided from the projection's `decision_rule` (\"a type or feature is usable only at the exact admitted position below\").\n\n| Position | Verdict | Authority |\n|---|---|---|\n| **Source** \u2014 ordinary synchronous `func` accepting `u64` | **Supported** | `type_decisions.u64_ordinary_source`: status `released`, positions `local`, `parameter`, `result`, `nested-source-payload` |\n| **Public value** \u2014 `map<string,u64>` as a direct public value | **Unsupported** | `type_decisions.map`: `released-resident-local-through-matching-lib` only; `unsupported_positions` include `direct-public-WIT-value-parameter`, `direct-public-WIT-value-result` |\n| **Async** \u2014 async ordinary source or Lib | **Unsupported** | `feature_decisions.async_ordinary_source_or_lib: \"unsupported\"` |\n| **Host** \u2014 Host function boundary | **Bounded: synchronous scalars only**; `u64` is admitted, but async and managed values are not | `type_decisions.host_import`: status `released-bounded`, position `explicit-synchronous-scalar-functions`, `wit_scalars` include `u64`; `unsupported`: `managed-values`, `managed-references`, `async`, `ambient-authority` |\n\n### Detail\n\n- **Source:** Yes \u2014 the release compiles an ordinary synchronous function with a `u64` parameter. `u64` is released at `parameter` (and `local`, `result`, `nested-source-payload`), with full `0..=u64::MAX` range, unsigned comparison/division/remainder/right-shift, WIT `u64` identity, and a Core `i64` physical lane. Synchronous ordinary functions take zero or more heterogeneous typed parameters.\n- **Public value:** No \u2014 `map<string,u64>` is resident/local and reachable only in the `compatible-App-Lib-Core-domain`, not as a direct public WIT value parameter or result. It is also excluded from the v0 high-level Host function boundary.\n- **Async:** No \u2014 async ordinary source or Lib is unsupported, independent of the `u64` question.\n- **Host:** The only admitted Host position is explicit synchronous scalar functions; `u64` is one of the admitted WIT scalars. The Host position does **not** admit async or managed values/references, so neither the async function nor the `map<string,u64>` value can cross it.\n\n### Semantics-preserving alternatives (unsupported positions only)\n\nPer the projection's `alternative_rule`, alternatives may change numeric width/signedness, async behavior, identity, ordering, ownership or failure semantics only with explicit application proof.\n\n- **Public-value `map<string,u64>`:** Use an explicitly ordered `list<Entry<K,V>>` snapshot only when copied-value semantics are equivalent; or use a declared resource for identity and mutation. Never expose a private handle. Otherwise stop. (`type_decisions.map.alternative`)\n- **Async:** No default semantics-preserving substitute; async behavior may change only with explicit application-owned proof, otherwise stop. (The route lists no async alternative.)\n- **Host:** No alternative needed for a synchronous scalar `u64`; for `map`/async at the Host boundary the same map/async alternatives above apply only with proof, otherwise stop.\n- **Source `u64`:** Supported \u2014 no alternative required. (Note: `char` is not released, and arbitrary `u32` is not a `char` substitute.)\n\n### Boundary\n\nThe route's `generate_source` is `false`, and no source was generated. Scalar `u64` support does not imply async, `map`, `char`, lifecycle stage, or installation; those must be read from their own authorities (`release.json` / `channels/prod.json` for lifecycle)."
+              }
+            }
+          ]
+        },
+        {
+          "file": "round-1-glm-5.3-flash.json.progress.json",
+          "sha256": "4e951761c36be1634400c56e5866086b7608664cef3c650af64f07b77f0ef911",
+          "model": {
+            "provider": "llm-m4dd",
+            "identity": "glm-5.3-flash"
+          },
+          "completed_cases": 2,
+          "completed_report": false,
+          "structural_pass": false,
+          "failures": [
+            {
+              "id": "release-orientation",
+              "failures": [],
+              "answer_contract_failures": [
+                {
+                  "metric": "required_literal",
+                  "expected": "agent-release-orientation.json"
+                }
+              ],
+              "hygiene": [],
+              "terminal": null,
+              "public_final_answer": {
+                "characters": 742,
+                "sha256": "cc7dbabec0963f97ca34f88749c19801f0fca734704464ba3dd188b8172daf08",
+                "text": "Named check passed (`{\"accepted\":true, \"release\":\"v0.0.21\"}`). Requested identities:\n\n**Immutable release:** `v0.0.21` (release.json stage `prod`, not stable; product set SHA256 `349931faa088659b51e171ed9056aa680618ef9478da353a89819644a4b644d1`)\n\n**First public Agent entrypoint:** `AGENTS.md`\n\n**Exact authority to verify before compiling:** the compiler artifact itself\n- path: `current/wasmc_compiler.wasm`\n- bytes: `1510219`\n- sha256: `42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c`\n- imports: `0`\n\nPer the route, the `private_source_commit` (`938b0dd...`) identifies compiler source, not the public release; the immutable public identity is the tag `v0.0.21` or the pinned checkout commit. Stopping here as instructed."
+              }
+            }
+          ]
+        }
+      ],
+      "accepted": false,
+      "rule": "Diagnostic observation only; no passing cases transplanted into final qualification"
+    },
+    {
+      "guidance_commit": "1d0209ebe4d06a202623a99182c2a5b45ad3c932",
+      "evidence_directory": "/Users/youxianshi/code/.cache/wasmc-release-evidence/pi-guidance-v3-live-three-rounds-jxlhnh1y",
+      "reports": [
+        {
+          "file": "round-1-deepseek-v4.1-flash.json",
+          "sha256": "804ffbcf8fb65e4fe2519011adf65e0f314b311570b73c69e31de884b4f35c26",
+          "model": {
+            "provider": "llm-m4dd",
+            "identity": "deepseek-v4.1-flash"
+          },
+          "completed_cases": 10,
+          "completed_report": true,
+          "structural_pass": true,
+          "failures": []
+        },
+        {
+          "file": "round-1-glm-5.3-flash.json",
+          "sha256": "1198865ce48ed30f447747fe47d101ae12aedc0e2c88219c4eaa6d902b42eeea",
+          "model": {
+            "provider": "llm-m4dd",
+            "identity": "glm-5.3-flash"
+          },
+          "completed_cases": 6,
+          "completed_report": true,
+          "structural_pass": false,
+          "failures": [
+            {
+              "id": "host-authority-boundary",
+              "failures": [
+                {
+                  "metric": "error_results",
+                  "observed": 1,
+                  "limit": 0
+                }
+              ],
+              "answer_contract_failures": [],
+              "hygiene": [],
+              "terminal": null,
+              "public_final_answer": {
+                "characters": 1350,
+                "sha256": "6c88ba2f4d65718291beb6bc22d2ff123cd0e1e5be837e398c6ea36a961376ba",
+                "text": "Route integrity verified by the read command (`route_digest_verified: true`); `required_additional_reads` is empty. Answering per the `host-authority-boundary` route:\n\n## Determining Host authority required by a newly compiled WAsmC module\n\n**What must be inspected:**\n1. Compile the source, then inspect the produced bytes with `inspectWasm(bytes)` **before instantiation** \u2014 every generated import must be examined (module, name, kind, signature).\n2. Compare each import against an **application-owned exact allowlist**. An import that is not on the allowlist must not be satisfied.\n3. Only then instantiate with exactly the approved imports: `WebAssembly.instantiate(inspected.module, approvedImports)`.\n4. If the module is intended to be **pure**, the requirement is stricter: it must have `imports=[]` and be instantiated with `{}`.\n\n**Semantics of imports:** imports *request* effects; they **grant no ambient authority**. The host decides, per import, which capability (if any) to bind \u2014 the module never receives access merely by declaring an import.\n\n**Capabilities that must NOT be invented:**\n- Ambient filesystem, network, clock, or randomness access\n- Credentials, process, or device access\n- Private handles, plans, Store nonces, or lifecycle helpers\n- JSON as a WIT replacement\n\nRoute `host-authority-boundary` complete; stopping here."
+              }
+            }
+          ]
+        }
+      ],
+      "accepted": false,
+      "rule": "Diagnostic observation only; no passing cases transplanted into final qualification"
+    },
+    {
+      "guidance_commit": "2ea3958a74739df282555d3a2278d1532ea86496",
+      "evidence_directory": "/Users/youxianshi/code/.cache/wasmc-release-evidence/pi-guidance-v3-live-three-rounds-xpponebn",
+      "reports": [
+        {
+          "file": "round-1-deepseek-v4.1-flash.json.progress.json",
+          "sha256": "046ac878ba44a4d2eaa7993a308d1b63bc28128336d41685b0f9ac1b8db0f170",
+          "model": {
+            "provider": "llm-m4dd",
+            "identity": "deepseek-v4.1-flash"
+          },
+          "completed_cases": 8,
+          "completed_report": false,
+          "structural_pass": false,
+          "failures": []
+        },
+        {
+          "file": "round-1-glm-5.3-flash.json.progress.json",
+          "sha256": "a642f5d407e4d4157109eada0be34c91ea492537a1beff3a91b00cc29053c1e7",
+          "model": {
+            "provider": "llm-m4dd",
+            "identity": "glm-5.3-flash"
+          },
+          "completed_cases": 4,
+          "completed_report": false,
+          "structural_pass": false,
+          "failures": []
+        }
+      ],
+      "accepted": false,
+      "rule": "Diagnostic observation only; no passing cases transplanted into final qualification",
+      "semantic_rejection": {
+        "reason": "Independent review rejected a boolean conjunction that discarded the two separately requested values despite structural success."
+      }
+    },
+    {
+      "guidance_commit": "46ec2092319beeda9c8cf8da41ea8f57000a9c41",
+      "evidence_directory": "/Users/youxianshi/code/.cache/wasmc-release-evidence/pi-guidance-v3-live-three-rounds-plp3i4u3",
+      "reports": [
+        {
+          "file": "round-1-deepseek-v4.1-flash.json",
+          "sha256": "6ea65c310a3a4116b0e7316e34b8bd7cc6a2fb45548f7627d482d596c801986e",
+          "model": {
+            "provider": "llm-m4dd",
+            "identity": "deepseek-v4.1-flash"
+          },
+          "completed_cases": 10,
+          "completed_report": true,
+          "structural_pass": true,
+          "failures": []
+        },
+        {
+          "file": "round-1-glm-5.3-flash.json",
+          "sha256": "1d3ce621c69855e788b2f2dc98b64a73a785afa2da5e6fe7e43e89f94da3fb72",
+          "model": {
+            "provider": "llm-m4dd",
+            "identity": "glm-5.3-flash"
+          },
+          "completed_cases": 10,
+          "completed_report": true,
+          "structural_pass": true,
+          "failures": []
+        },
+        {
+          "file": "round-2-deepseek-v4.1-flash.json",
+          "sha256": "c64ef0c6e6c5314a58b0a85f8cc9bc848ef8af9c15f6e972cf8b801e3db88ecc",
+          "model": {
+            "provider": "llm-m4dd",
+            "identity": "deepseek-v4.1-flash"
+          },
+          "completed_cases": 7,
+          "completed_report": true,
+          "structural_pass": false,
+          "failures": [
+            {
+              "id": "source-change-transfer",
+              "failures": [
+                {
+                  "metric": "retries",
+                  "observed": 1,
+                  "limit": 0
+                }
+              ],
+              "answer_contract_failures": [],
+              "hygiene": [
+                "missing-complete-terminal-answer"
+              ],
+              "terminal": {
+                "assistant_messages": 7,
+                "terminal_stop_reason": "stop",
+                "terminal_tool_calls": 0,
+                "terminal_text_characters": 883,
+                "complete_final_answer": false,
+                "provider_error_count": 1,
+                "error_message_sha256": null
+              },
+              "public_final_answer": {
+                "text": "",
+                "characters": 0,
+                "sha256": null
+              }
+            }
+          ]
+        },
+        {
+          "file": "round-2-glm-5.3-flash.json",
+          "sha256": "6c78a7a6bffeb4223b83edc36b629d44a0066fbdf48413c0eaa23508cc783433",
+          "model": {
+            "provider": "llm-m4dd",
+            "identity": "glm-5.3-flash"
+          },
+          "completed_cases": 10,
+          "completed_report": true,
+          "structural_pass": true,
+          "failures": []
+        }
+      ],
+      "accepted": false,
+      "rule": "Diagnostic observation only; no passing cases transplanted into final qualification",
+      "provider_diagnostic": {
+        "schema": "wasmc.guidance-provider-diagnostic/v1",
+        "guidance_commit": "46ec2092319beeda9c8cf8da41ea8f57000a9c41",
+        "qualified": false,
+        "case": "source-change-transfer",
+        "round": 2,
+        "model": "deepseek-v4.1-flash",
+        "source_execution_accepted": true,
+        "actual_results": [
+          17,
+          7,
+          3
+        ],
+        "tool_error_count": 0,
+        "automatic_retries": 1,
+        "terminal": {
+          "assistant_messages": 7,
+          "terminal_stop_reason": "stop",
+          "terminal_tool_calls": 0,
+          "terminal_text_characters": 883,
+          "complete_final_answer": false,
+          "provider_error_count": 1,
+          "error_message_sha256": null
+        },
+        "reason": "Actual source execution passed; automatic retry and provider-error terminal history fail the unchanged zero-retry/complete-terminal gate. No guidance or oracle change is justified by this observation."
+      }
+    },
+    {
+      "guidance_commit": "4815a2038ada53722b58ead186a49bbd36e38ea2",
+      "evidence_directory": "/Users/youxianshi/code/.cache/wasmc-release-evidence/pi-guidance-v3-live-three-rounds-nr4i8q0e",
+      "reports": [
+        {
+          "file": "round-1-deepseek-v4.1-flash.json.progress.json",
+          "sha256": "68308d767f1a524c850bf8f2a37b977e2d74c32a6ab6b3e84884885385e8da73",
+          "model": {
+            "provider": "llm-m4dd",
+            "identity": "deepseek-v4.1-flash"
+          },
+          "completed_cases": 9,
+          "completed_report": false,
+          "structural_pass": false,
+          "failures": []
+        },
+        {
+          "file": "round-1-glm-5.3-flash.json",
+          "sha256": "81ce2afd7647dce467e22ce1a6fbd9ab8fb3ca2fcdecd15e56777c45465646ff",
+          "model": {
+            "provider": "llm-m4dd",
+            "identity": "glm-5.3-flash"
+          },
+          "completed_cases": 4,
+          "completed_report": true,
+          "structural_pass": false,
+          "failures": [
+            {
+              "id": "release-state-separation",
+              "failures": [],
+              "answer_contract_failures": [
+                {
+                  "metric": "required_literal",
+                  "expected": "admitted"
+                },
+                {
+                  "metric": "required_literal",
+                  "expected": "released"
+                },
+                {
+                  "metric": "required_literal",
+                  "expected": "discoverable"
+                },
+                {
+                  "metric": "required_literal",
+                  "expected": "installable"
+                }
+              ],
+              "hygiene": [],
+              "terminal": {
+                "assistant_messages": 3,
+                "terminal_stop_reason": "stop",
+                "terminal_tool_calls": 0,
+                "terminal_text_characters": 1192,
+                "complete_final_answer": true,
+                "provider_error_count": 0,
+                "error_message_sha256": null
+              },
+              "public_final_answer": {
+                "text": "The route file is read and verified (`route_digest_verified: true`). It is a decision route: `required_additional_reads` and `named_checks` are both empty \u2014 so I answer and stop.\n\n## Requested result\n\n- Identity: `wasmc-system-telemetry@0.0.1`\n- Stop reason: `wasmc-source-direct-resource-methods`\n\n**Direct WAsmC source use of the system-telemetry sampler resource \u2014 five states:**\n\n| State | Value |\n|---|---|\n| Qualified | `false` |\n| Admitted | `false` |\n| Released | `false` |\n| Discoverable | `false` |\n| Installable | `false` |\n\n`qualified=false` is the stopping condition: `wasmc-source-direct-resource-methods` is explicitly unsupported, so the direct route is missing authority at the first step.\n\n**Related product (`wasmc-system-telemetry@0.0.1` as product) \u2014 distinguished states:**\n\n| State | Value |\n|---|---|\n| Qualified | `true` |\n| Admitted | `true` |\n| Released | `true` |\n| Discoverable | `true` |\n| Installable | `true` |\n\nIts three supported routes are: `source-free-rust-component`, `public-rust-host-sdk`, `linux-explicit-generic-resource-acquisition`. Lifecycle authority is `release.json` and `channels/prod.json` \u2014 these profiles only, never direct ordinary Source.",
+                "characters": 1192,
+                "sha256": "9dce062a4b17886a3d0a04076d634e7b9f9fe63f07619be1e784ad411746c94b"
+              }
+            }
+          ]
+        }
+      ],
+      "accepted": false,
+      "rule": "Diagnostic observation only; no passing cases transplanted into final qualification"
+    },
+    {
+      "guidance_commit": "4815a2038ada53722b58ead186a49bbd36e38ea2",
+      "evidence_directory": "/Users/youxianshi/code/.cache/wasmc-release-evidence/pi-guidance-v3-live-three-rounds-yzj0oqfh",
+      "reports": [
+        {
+          "file": "round-1-deepseek-v4.1-flash.json",
+          "sha256": "3f5a00746af6984e32f6015503fb43eb0aeb5d31684985aa5f94bb9e906f1f95",
+          "model": {
+            "provider": "llm-m4dd",
+            "identity": "deepseek-v4.1-flash"
+          },
+          "completed_cases": 10,
+          "completed_report": true,
+          "structural_pass": true,
+          "failures": []
+        },
+        {
+          "file": "round-1-glm-5.3-flash.json",
+          "sha256": "e948d33162d28fff9c64bc41cb3f50453fb19505be5aebd4fac0ff0ff329a72c",
+          "model": {
+            "provider": "llm-m4dd",
+            "identity": "glm-5.3-flash"
+          },
+          "completed_cases": 2,
+          "completed_report": true,
+          "structural_pass": false,
+          "failures": [
+            {
+              "id": "position-aware-capability-negative",
+              "failures": [
+                {
+                  "metric": "retries",
+                  "observed": 1,
+                  "limit": 0
+                }
+              ],
+              "answer_contract_failures": [],
+              "hygiene": [
+                "missing-complete-terminal-answer"
+              ],
+              "terminal": {
+                "assistant_messages": 4,
+                "terminal_stop_reason": "stop",
+                "terminal_tool_calls": 0,
+                "terminal_text_characters": 2076,
+                "complete_final_answer": false,
+                "provider_error_count": 1,
+                "error_message_sha256": null
+              },
+              "public_final_answer": {
+                "text": "",
+                "characters": 0,
+                "sha256": null
+              }
+            }
+          ]
+        }
+      ],
+      "accepted": false,
+      "rule": "Diagnostic observation only; no passing cases transplanted into final qualification"
+    },
+    {
+      "guidance_commit": "7130cd6c72efe355f3e01a36b1e27757e64d891d",
+      "evidence_directory": "/Users/youxianshi/code/.cache/wasmc-release-evidence/pi-guidance-v3-live-three-rounds-m4pi56im",
+      "reports": [
+        {
+          "file": "round-1-deepseek-v4.1-flash.json",
+          "sha256": "fa1d812d0ef5d4b83c27670d5fccd1483cfe16584f39260ac8c994f1d2fc5597",
+          "model": {
+            "provider": "llm-m4dd",
+            "identity": "deepseek-v4.1-flash"
+          },
+          "completed_cases": 10,
+          "completed_report": true,
+          "structural_pass": true,
+          "failures": []
+        },
+        {
+          "file": "round-1-glm-5.3-flash.json",
+          "sha256": "2fc457c018eeeda07f399839ef9b0392f865f1cfe884fee2e82469222007efbe",
+          "model": {
+            "provider": "llm-m4dd",
+            "identity": "glm-5.3-flash"
+          },
+          "completed_cases": 10,
+          "completed_report": true,
+          "structural_pass": true,
+          "failures": []
+        },
+        {
+          "file": "round-2-deepseek-v4.1-flash.json",
+          "sha256": "7b51924f006fa0f259acb7b2d983f42873521034b14fb6dd41ead8aa9c4dd72b",
+          "model": {
+            "provider": "llm-m4dd",
+            "identity": "deepseek-v4.1-flash"
+          },
+          "completed_cases": 10,
+          "completed_report": true,
+          "structural_pass": true,
+          "failures": []
+        },
+        {
+          "file": "round-2-glm-5.3-flash.json",
+          "sha256": "3a7fbd5c450ea433f2138b24668c0f5fc9ae0d23874fc86727929eafa9b54c07",
+          "model": {
+            "provider": "llm-m4dd",
+            "identity": "glm-5.3-flash"
+          },
+          "completed_cases": 10,
+          "completed_report": true,
+          "structural_pass": true,
+          "failures": []
+        },
+        {
+          "file": "round-3-deepseek-v4.1-flash.json",
+          "sha256": "12fd48563b25b737986ce48bb837286c95efdda7333c503f7df98855d2fc1ea7",
+          "model": {
+            "provider": "llm-m4dd",
+            "identity": "deepseek-v4.1-flash"
+          },
+          "completed_cases": 10,
+          "completed_report": true,
+          "structural_pass": true,
+          "failures": []
+        },
+        {
+          "file": "round-3-glm-5.3-flash.json",
+          "sha256": "e863a1ddd1ac382f94003f8a1b1304fce0391d642701efc0c2305512000ecd33",
+          "model": {
+            "provider": "llm-m4dd",
+            "identity": "glm-5.3-flash"
+          },
+          "completed_cases": 10,
+          "completed_report": true,
+          "structural_pass": true,
+          "failures": []
+        }
+      ],
+      "accepted": false,
+      "rule": "Diagnostic observation only; no passing cases transplanted into final qualification",
+      "semantic_rejection": {
+        "accepted": false,
+        "guidance_commit": "7130cd6c72efe355f3e01a36b1e27757e64d891d",
+        "reason": "GLM round 3 original source discards bool input and returns unrequested n!=0/n+1 instead of both requested values. Structural pass and successful execution/replay do not establish semantic correctness."
+      }
+    },
+    {
+      "guidance_commit": "912afc9dd495ec56d3d9a805c2301702c50abc65",
+      "evidence_directory": "/Users/youxianshi/code/.cache/wasmc-release-evidence/pi-guidance-v3-live-three-rounds-_pvchlxa",
+      "reports": [
+        {
+          "file": "round-1-deepseek-v4.1-flash.json",
+          "sha256": "16907c47f19b33af2a71e4298498b7ef5ba50c93a252b82c8bc695ba4d023e51",
+          "model": {
+            "provider": "llm-m4dd",
+            "identity": "deepseek-v4.1-flash"
+          },
+          "completed_cases": 8,
+          "completed_report": true,
+          "structural_pass": false,
+          "failures": [
+            {
+              "id": "library-hex-transfer",
+              "failures": [
+                {
+                  "metric": "error_results",
+                  "observed": 1,
+                  "limit": 0
+                }
+              ],
+              "answer_contract_failures": [],
+              "hygiene": [],
+              "terminal": null,
+              "public_final_answer": {
+                "characters": 1763,
+                "sha256": "1ddb573a7f55c693ca70a9503d8c896b1f5a1ac51aa28394817ba912b9f1147e",
+                "text": "Route `library-discovery` complete. Named checks pass; stopping as instructed.\n\n## Result\n\n**Package:** `wasmc:std@1.4.1` (profile `resource`, target `wasm32-unknown-unknown`, delivery kind `wasm-core-component`; lifecycle: qualified/admitted/released/discoverable/installable in `v0.0.21`).\n\n**Approved WIT API identities:**\n- `wasmc:std@1.4.1/hex#try-encode-lower`\n- `wasmc:std@1.4.1/hex#try-decode`\n\nBoth are `try-encode-lower: func(value: borrow<byte-buffer>, output: borrow<byte-buffer>) -> bool` and `try-decode: func(value: borrow<byte-buffer>, output: borrow<byte-buffer>) -> bool` on the `hex` interface, using `bytes.byte-buffer`.\n\n**Resolution/verification:** `resolve wasmc-std 1.4.1` returned `verified: true` (independent catalog, manifest, and complete Root inventory pins matched), `authority_granted: false`, `engine_admission: separate`. Selected Root confirmed by the driver (`selected_Root_verified: true`) with exact Provider imports (`imports_verified: true`).\n\n**Round trip for UTF-8 text `Pi42`** (`node examples/lib-bytes/run.mjs --codec hex --text Pi42`):\n- `input_utf8`: `Pi42`\n- `encoded_utf8`: `50693432` (lowercase hex)\n- `decoded_utf8`: `Pi42`\n- `invalid_input_rejected`: `true`\n- `accepted`: `true`; `rounds`: `256`; `explicit_drops`: `1024`; `persistent_provider_memory_bytes`: `3670016`\n\nDriver result field names reported: `accepted`, `codec`, `package`, `apis`, `input_utf8`, `encoded_utf8`, `decoded_utf8`, `imports_verified`, `selected_Root_verified`, `invalid_input_rejected`, `rounds`, `explicit_drops`, `persistent_provider_memory_bytes`.\n\nBase64 was not used; the selected capability is the lowercase hex codec. Resolution and installation grant no Host authority; nothing beyond the pinned public checkout was consulted."
+              }
+            }
+          ]
+        },
+        {
+          "file": "round-1-glm-5.3-flash.json",
+          "sha256": "930c07828bd0d441f9377b8666185a3acf03e53d95402bf6fdcebf2bb44f6902",
+          "model": {
+            "provider": "llm-m4dd",
+            "identity": "glm-5.3-flash"
+          },
+          "completed_cases": 9,
+          "completed_report": true,
+          "structural_pass": false,
+          "failures": [
+            {
+              "id": "integrity-rejection-transfer",
+              "failures": [],
+              "answer_contract_failures": [],
+              "hygiene": [
+                "ellipsized-identity"
+              ],
+              "terminal": null,
+              "public_final_answer": {
+                "characters": 2452,
+                "sha256": "c09c6f713125739657dc61f8c3974bcf69b8cc22c3412eaa3a59f266b45b1995",
+                "text": "The named probe returned. Report and stop.\n\n## Negative-test result record\n\n**Route followed:** `agent-quickstart.json` \u2192 route `source-adaptation` (read_command verified, `route_digest_verified: true`), plus required read `LANGUAGE.md`.\n\n**Probe command (named check, run once):**\n```\nnode scripts/wasmc-agent-probe.mjs --source /tmp/wasmc-negative-probe.wasmc --export run --calls '[[2,3]]' --expected-compiler-sha256 0000000000000000000000000000000000000000000000000000000000000000\n```\n\n**Source program** (`/tmp/wasmc-negative-probe.wasmc`, `source_sha256` `9cd0dc57a66a4881dc33c988dc7129fb758a866cd8a31d974dbca55d4604288d`):\n```wasmc\npackage local:negative_probe;\n\ninterface api {\n  run: func(a: s32, b: s32) -> s32 {\n    return a + b;\n  }\n}\n\nworld app { export api; }\n```\n\n**Captured actual evidence** (probe stdout, `accepted: true, expected_rejection: true`):\n- `verifier_exit_code`: `1` \u2014 the public source execution runner (`scripts/wasmc-agent-execute.mjs`) exited nonzero, captured as the expected negative outcome, not treated as an operational tool error.\n- `execution_accepted`: `false`\n- Verifier stderr:\n```json\n{\"accepted\":false,\"error\":\"independent compiler digest mismatch\",\n \"actual\":\"42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c\",\n \"expected\":\"0000000000000000000000000000000000000000000000000000000000000000\"}\n```\n- Rejection occurred **before compilation or instantiation** (verifier stdout was empty; the digest assert runs before `compile()` in `executeSource`).\n\n**Why a manifest rewrite cannot approve the wrong bytes:** the expectation is *independently supplied* on the command line (`--expected-compiler-sha256`), and the verifier recomputes the SHA256 of the compiler bytes at `current/compiler-release.json`'s `compiler.path` at every run and compares against that independent value. Editing the manifest's `compiler.sha256` to match the zero digest would only make the runner's secondary self-consistency assert (`sha(compiler) == carrier.compiler.sha256`) fail with a different mismatch \u2014 it cannot change the hash of the bytes on disk, so it cannot make the independently expected zero digest equal the actual digest `42c27913...998c`. Approval here is evidence-bound, not declaration-bound: the check verifies bytes against the caller's expectation, never a file against itself. Per the route's rule, no published metadata was modified, and no extra integrity tests or positive control were run."
+              }
+            }
+          ]
+        }
+      ],
+      "accepted": false,
+      "rule": "Diagnostic observation only; no passing cases transplanted into final qualification"
+    },
+    {
+      "guidance_commit": "9d6d4bfd6653b79c20a1c23ffc48d606a2c2bd3a",
+      "evidence_directory": "/Users/youxianshi/code/.cache/wasmc-release-evidence/pi-guidance-v3-live-three-rounds-9mtr5faz",
+      "reports": [
+        {
+          "file": "round-1-deepseek-v4.1-flash.json",
+          "sha256": "cabfdc80d13e39ec04a38c8b98ffb1bac509e1e25360bd93cfe64053080758ec",
+          "model": {
+            "provider": "llm-m4dd",
+            "identity": "deepseek-v4.1-flash"
+          },
+          "completed_cases": 7,
+          "completed_report": true,
+          "structural_pass": false,
+          "failures": [
+            {
+              "id": "source-change-transfer",
+              "failures": [
+                {
+                  "metric": "error_results",
+                  "observed": 1,
+                  "limit": 0
+                }
+              ],
+              "answer_contract_failures": [],
+              "hygiene": [],
+              "terminal": null,
+              "public_final_answer": {
+                "characters": 1062,
+                "sha256": "3157beb902368d76baf094ee7501665bc1a647efab9b477a34bc097234cefcd5",
+                "text": "Done. Route was `source-adaptation`; I wrote my own source (not the canonical pair sample), read `docs/AGENT_PURE_SOURCE.md`, and ran the applicable runner check once for all three calls. The digest-rejection probe is only for independently-wrong-digest tests and was not applicable, so no other check was run.\n\n**Source path:** `score.wasmc`\n\n```wasmc\npackage local:score;\n\ninterface api {\n  score: func(value: s32, flag: bool) -> s32 {\n    if (flag) { return value + 7; }\n    return value - 3;\n  }\n}\n\nworld app { export api; }\n```\n\n**Exact core hash:**\n- `core_sha256`: `5df3f553ff047dd72bb8ced84031b92e1cb4af9ae6d562850e19786397b84182`\n- core_bytes: 55\n\n**Imports:** `imports: []` (pure; no Host imports declared or present \u2014 instantiated with `{}`)\n\n**Actual results:**\n| call | result |\n|------|--------|\n| `score(10, true)` | `17` |\n| `score(10, false)` | `7` |\n| `score(-4, true)` | `3` |\n\nMachine receipt (verified, not requested for report): `source_sha256` and `compiler_sha256` are recorded in the runner output above. Runner verdict: `accepted:true`."
+              }
+            }
+          ]
+        },
+        {
+          "file": "round-1-glm-5.3-flash.json",
+          "sha256": "cfe04af1af88936ce2891e93803ab3d9bb2083737ee6f365528b6a0ca5e37ae5",
+          "model": {
+            "provider": "llm-m4dd",
+            "identity": "glm-5.3-flash"
+          },
+          "completed_cases": 10,
+          "completed_report": true,
+          "structural_pass": true,
+          "failures": []
+        }
+      ],
+      "accepted": false,
+      "rule": "Diagnostic observation only; no passing cases transplanted into final qualification"
+    },
+    {
+      "guidance_commit": "a0d913633f5b5675e08fbe1e5a848986ab5cd2f1",
+      "evidence_directory": "/Users/youxianshi/code/.cache/wasmc-release-evidence/pi-guidance-v3-live-three-rounds-yqrr6wq5",
+      "reports": [
+        {
+          "file": "round-1-deepseek-v4.1-flash.json",
+          "sha256": "bde4559a72301bf71ecfb8adc4f8a9105c8f7c75b75568f2b3f1d53548374b70",
+          "model": {
+            "provider": "llm-m4dd",
+            "identity": "deepseek-v4.1-flash"
+          },
+          "completed_cases": 10,
+          "completed_report": true,
+          "structural_pass": true,
+          "failures": []
+        },
+        {
+          "file": "round-1-glm-5.3-flash.json",
+          "sha256": "a60b3aa12a2c02c53bdc20c4287d546fcfa83881258ba440360d1e3639600e92",
+          "model": {
+            "provider": "llm-m4dd",
+            "identity": "glm-5.3-flash"
+          },
+          "completed_cases": 10,
+          "completed_report": true,
+          "structural_pass": true,
+          "failures": []
+        },
+        {
+          "file": "round-2-deepseek-v4.1-flash.json",
+          "sha256": "1dbd7936b84a3a8cf508eb0fe8a8e58b37ca154dfad716387edf50bdff5fec1b",
+          "model": {
+            "provider": "llm-m4dd",
+            "identity": "deepseek-v4.1-flash"
+          },
+          "completed_cases": 10,
+          "completed_report": true,
+          "structural_pass": true,
+          "failures": []
+        },
+        {
+          "file": "round-2-glm-5.3-flash.json",
+          "sha256": "8230424cae462371b2d10ebde888bb6a409f4ebe64314ef582f21961facd0b26",
+          "model": {
+            "provider": "llm-m4dd",
+            "identity": "glm-5.3-flash"
+          },
+          "completed_cases": 3,
+          "completed_report": true,
+          "structural_pass": false,
+          "failures": [
+            {
+              "id": "ordinary-source-positive",
+              "failures": [
+                {
+                  "metric": "error_results",
+                  "observed": 2,
+                  "limit": 0
+                }
+              ],
+              "answer_contract_failures": [],
+              "hygiene": [],
+              "terminal": {
+                "assistant_messages": 7,
+                "terminal_stop_reason": "stop",
+                "terminal_tool_calls": 0,
+                "terminal_text_characters": 1091,
+                "complete_final_answer": true,
+                "provider_error_count": 0,
+                "error_message_sha256": null
+              },
+              "public_final_answer": {
+                "text": "**Accepted, one call per requested arguments, expected results verified.**\n\nExact evidence:\n\n- **Source path:** `local-pair-echo.wasmc` (written in this checkout)\n  ```wasmc\n  package local:pairecho;\n\n  interface api {\n    pair: func(value: s32, flag: bool) -> tuple<s32, bool> {\n      return tuple(value, flag);\n    }\n  }\n\n  world app { export api; }\n  ```\n- **source_sha256:** `05b2a31134e13ecacfa695669d70cc934a14c2cbe1c81f714fd383deb2c0c2fb`\n- **compiler_sha256:** `42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c`\n- **core_sha256:** `40f7c54f596181f85fcd5552e1e2a6d0fb9a279de86597a51a0ff02bdac45d2b` (47 bytes)\n- **imports:** `[]` \u2014 no Host imports; pure instantiation with `{}`\n- **calls and actual results:**\n  - `pair(7, true)` \u2192 `[7, 1]`\n  - `pair(-3, false)` \u2192 `[-3, 0]`\n- **expected_results_verified:** `true` (caller oracle `[[7,1],[-3,0]]` derived before execution)\n\nThe exported `pair` returns one semantic `tuple<s32, bool>` preserving both parameters; the raw JS host observes the flattened Core lanes (`bool` as `1`/`0`), not an automatically lifted object.",
+                "characters": 1091,
+                "sha256": "e24d0aeb767264071ab675d19c7e1f564f444a4d18b510a462fa95f924950b4a"
+              }
+            }
+          ]
+        }
+      ],
+      "accepted": false,
+      "rule": "Diagnostic observation only; no passing cases transplanted into final qualification",
+      "guidance_defect": {
+        "root_cause": "A hyphenated filename was copied into an ordinary-source package identifier, producing expected Semi, got Minus and two failed compiler invocations before repair.",
+        "controlled_reproduction": {
+          "pair-echo": "rejected: expected Semi, got Minus",
+          "pair_echo": "accepted",
+          "pairEcho": "accepted",
+          "pair2": "accepted"
+        },
+        "decision": "Retain this failed cohort; add an actual compiler naming regression and explicit source-guide rule; restart all three rounds without altering the frozen protocol."
+      }
+    },
+    {
+      "guidance_commit": "bef5fffbb03d42e6de57e25b7e7fd55ac44dc081",
+      "evidence_directory": "/Users/youxianshi/code/.cache/wasmc-release-evidence/pi-guidance-v3-live-three-rounds-t8vszu5o",
+      "reports": [
+        {
+          "file": "round-1-deepseek-v4.1-flash.json",
+          "sha256": "661f828685901c3c56704d6af0319f95bd7542b87ec3b43715bdd8a25ef69c7e",
+          "model": {
+            "provider": "llm-m4dd",
+            "identity": "deepseek-v4.1-flash"
+          },
+          "completed_cases": 10,
+          "completed_report": true,
+          "structural_pass": true,
+          "failures": []
+        },
+        {
+          "file": "round-1-glm-5.3-flash.json",
+          "sha256": "8857f3807e4e73a8b0174d28433bb07067566e0b942f68f532bdf1344b4877d3",
+          "model": {
+            "provider": "llm-m4dd",
+            "identity": "glm-5.3-flash"
+          },
+          "completed_cases": 7,
+          "completed_report": true,
+          "structural_pass": false,
+          "failures": [
+            {
+              "id": "source-change-transfer",
+              "failures": [
+                {
+                  "metric": "error_results",
+                  "observed": 1,
+                  "limit": 0
+                }
+              ],
+              "answer_contract_failures": [],
+              "hygiene": [],
+              "terminal": {
+                "assistant_messages": 7,
+                "terminal_stop_reason": "stop",
+                "terminal_tool_calls": 0,
+                "terminal_text_characters": 1554,
+                "complete_final_answer": true,
+                "provider_error_count": 0,
+                "error_message_sha256": null
+              },
+              "public_final_answer": {
+                "text": "The named check completed with `\"accepted\": true`. Final result:\n\n## Report\n\n**Source path:** `score.wasmc` (new file, written directly in the checkout)\n\n```wasmc\npackage local:score;\n\ninterface api {\n  score: func(value: s32, flag: bool) -> s32 {\n    if (flag) { return value + 7; }\n    return value - 3;\n  }\n}\n\nworld app { export api; }\n```\n\n**Compiler SHA256:** `42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c`\n\n**Source SHA256:** `3f94f1a6c9c83cbbad97dc4c0e839c9ec6da7be3f35b5c0422327df02db2367e`\n\n**Core SHA256:** `5df3f553ff047dd72bb8ced84031b92e1cb4af9ae6d562850e19786397b84182` (core_bytes: 55)\n\n**Imports:** `[]` \u2014 pure program, no Host imports; instantiated with `{}`.\n\n**Export:** `score`\n\n**Calls and actual results:**\n| call | arguments | actual result |\n|---|---|---|\n| `score(10, true)` | `[10, true]` | `17` (10 + 7) |\n| `score(10, false)` | `[10, false]` | `7` (10 \u2212 3) |\n| `score(-4, true)` | `[-4, true]` | `3` (\u22124 + 7) |\n\n`expected_results_verified: true` \u2014 actual results match the oracle derived from the request before execution.\n\nNotes:\n- This is a NEW program written for the requested semantics; the canonical `keep`/`choose` pair example from the guide was used only as a syntax pattern, not as the answer.\n- The first runner invocation failed only on my own oracle JSON shape (s32 results are scalar lanes, not arrays); the execution itself was correct on that run. The check was then rerun once with the corrected caller-supplied expectation and returned `\"accepted\": true` on first pass of that invocation.",
+                "characters": 1554,
+                "sha256": "e01348a25969c4b3883d6443d86cceb3edef91bd0aea2834b4c379aec0e13bb0"
+              }
+            }
+          ]
+        }
+      ],
+      "accepted": false,
+      "rule": "Diagnostic observation only; no passing cases transplanted into final qualification"
+    },
+    {
+      "guidance_commit": "f0aed3768e46f7718ef1e7572b8a39685c6cd2cd",
+      "evidence_directory": "/Users/youxianshi/code/.cache/wasmc-release-evidence/pi-guidance-v3-live-three-rounds-ipoorun9",
+      "reports": [
+        {
+          "file": "round-1-deepseek-v4.1-flash.json.progress.json",
+          "sha256": "f784d144a1a6b3be417ffb23691894df56c319e84d446117c53cf05bfccd732a",
+          "model": {
+            "provider": "llm-m4dd",
+            "identity": "deepseek-v4.1-flash"
+          },
+          "completed_cases": 2,
+          "completed_report": false,
+          "structural_pass": false,
+          "failures": [
+            {
+              "id": "release-orientation",
+              "failures": [
+                {
+                  "metric": "tool_calls",
+                  "observed": 9,
+                  "limit": 8
+                }
+              ],
+              "answer_contract_failures": [],
+              "hygiene": [],
+              "terminal": null,
+              "public_final_answer": {
+                "characters": 2075,
+                "sha256": "a61c85f8b0ed7e996e116ee3fe03cc081540fcc413255f319a409611175e5dd2",
+                "text": "Release-orientation check passed (`accepted: true`). Here is the requested report.\n\n## 1. Current immutable WAsmC release\n\n- **Product / release:** `v0.0.21`\n- Immutable public identity is the **release tag** (`v0.0.21`) or the pinned public checkout commit \u2014 not mutable `main`, unversioned URLs, or `package-index.json.latest`.\n- Compact lifecycle authority: `agent-release-orientation.json` (stage `prod`, stable `false`).\n\n## 2. First public Agent entrypoint\n\n- **`AGENTS.md`** \u2014 the WAsmC public Agent entrypoint, which routes through `agent-quickstart.json`.\n\n## 3. Exact authority to verify before compiling\n\nPer the host-authority-boundary and source-adaptation routes:\n\n- **Compiler identity (verify before compile):** `current/wasmc_compiler.wasm`, `sha256` `42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c`, `imports: 0`. A mismatch against an independently expected digest must be rejected *before* compilation or instantiation.\n- **Every generated import:** inspect each `module` / `name` / `kind` / `signature` and compare against an **application-owned exact allowlist**. Imports only *request* effects and grant no ambient authority. Pure execution requires `imports=[]` and instantiate with `{}`; filesystem/network/clock/randomness, credentials/process/device, private handles/nonces/lifecycle helpers, and JSON-as-WIT are forbidden.\n- **License authority (per `license-policy.json` and `LICENSE`):** WAsmC Research-Only Non-Commercial License 1.0 \u2014 permitted for non-commercial research, education, evaluation, reproducibility, benchmarking. Commercial and production use are **not** permitted and require a separate written license.\n\n### Required orientation identities (from the passed check)\n\n| Field | Value |\n|---|---|\n| product | `v0.0.21` |\n| public_agent_entrypoint | `AGENTS.md` |\n| compact_authority | `agent-release-orientation.json` |\n| compiler_path | `current/wasmc_compiler.wasm` |\n| compiler_sha256 | `42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c` |\n\nStopping here per the route's `final_answer_policy`."
+              }
+            },
+            {
+              "id": "position-aware-capability-negative",
+              "failures": [
+                {
+                  "metric": "tool_calls",
+                  "observed": 9,
+                  "limit": 8
+                },
+                {
+                  "metric": "assistant_turns",
+                  "observed": 7,
+                  "limit": 6
+                }
+              ],
+              "answer_contract_failures": [],
+              "hygiene": [],
+              "terminal": null,
+              "public_final_answer": {
+                "characters": 3003,
+                "sha256": "3c1a95cff0299aeacbdf0b7e87797f1e0c27a8197e36a525c06fc345eced4876",
+                "text": "Route selected: `position-aware-capability-negative` (verified `route_digest_verified: true`, `required_additional_reads: []`, no named checks). The route covers source/public-value/async; for the Host position the developer Skill directs reading `release-surfaces.json.agent_capability_projection`, which I did.\n\n## Pinned release\n\n- `wasmc` v0.0.21, tag `v0.0.21`, stage `prod` (`stable: false`), `product_set_sha256` `349931faa088659b51e171ed9056aa680618ef9478da353a89819644a4b644d1`. Product presence is not lifecycle authority; `release.json`/`channels/prod.json` decide.\n\n## Position-by-position\n\n**1. Source position \u2014 ordinary synchronous `func` accepting `u64`: SUPPORTED.**\n`u64_ordinary_source` status is `released` at positions `local`, `parameter`, `result`, `nested-source-payload`, with full `0..=u64::MAX` range, unsigned comparison/division/remainder/shift, WIT `u64` identity over a Core i64 lane. So a synchronous ordinary function that accepts `u64` compiles. No alternative needed.\n\n**2. Public-value position \u2014 ordinary `map<string,u64>` as a public value: UNSUPPORTED.**\n`map` is `released-resident-local-through-matching-lib` only, at `compatible-App-Lib-Core-domain`. `unsupported_positions`: `direct-public-WIT-value-parameter`, `direct-public-WIT-value-result`, `v0-high-level-Host-function`.\n\n**3. Async position \u2014 publicly exposed async function: UNSUPPORTED.**\n`feature_decisions.async_ordinary_source_or_lib = unsupported`; async is also listed under `host_import.unsupported`.\n\n**4. Host position \u2014 SEPARATE from source:**\n- `u64` as a Host function scalar: SUPPORTED, but only in `explicit-synchronous-scalar-functions` (`wit_scalars` include `u64`).\n- Managed values (`map`) at the v0 high-level Host boundary: UNSUPPORTED (`managed-values`, `managed-references`).\n- `async` at the Host boundary: UNSUPPORTED.\n- Imports are requests, not authority: they must match an application-owned exact allowlist.\n\nSo: the whole tuple `async func(u64) -> map<string,u64>` as an ordinary public WAsmC value is unsupported \u2014 the `u64` source part is fine, but async ordinary source and a direct public map result each independently stop.\n\n## Semantics-preserving alternatives (unsupported positions only)\n\n- **Public `map<string,u64>`:** use an explicitly ordered `list<Entry<K,V>>` snapshot only when copied-value semantics are equivalent (public Component projection still requires an exact released package/profile), or a declared resource for identity and mutation. Never expose a private handle. Otherwise stop.\n- **Async:** no semantics-preserving alternative is admitted. Async behavior, identity, ordering, ownership and failure semantics may change only with explicit application proof; otherwise stop (a shared-instance parallel entry is also unsupported).\n- **Host managed-value / async:** no direct crossing; a declared resource only where an exact released package/profile admits it (resource methods are package-profile-specific), otherwise stop.\n\nNo source generated."
+              }
+            }
+          ]
+        },
+        {
+          "file": "round-1-glm-5.3-flash.json.progress.json",
+          "sha256": "ebd94e9693e4f35f431b28220d8562412123bb169f049cb9e59e98cc4c1061d1",
+          "model": {
+            "provider": "llm-m4dd",
+            "identity": "glm-5.3-flash"
+          },
+          "completed_cases": 2,
+          "completed_report": false,
+          "structural_pass": false,
+          "failures": [
+            {
+              "id": "release-orientation",
+              "failures": [],
+              "answer_contract_failures": [
+                {
+                  "metric": "required_literal",
+                  "expected": "agent-release-orientation.json"
+                },
+                {
+                  "metric": "required_literal",
+                  "expected": "42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c"
+                }
+              ],
+              "hygiene": [],
+              "terminal": null,
+              "public_final_answer": {
+                "characters": 1428,
+                "sha256": "2082499c328e8bd93d64c145e8239071f0467b992fb4353e94dc6fa7ae0f7cbd",
+                "text": "Route `host-authority-boundary` verified: `route_digest_verified: true`. Its `required_additional_reads` is empty and it defines no extra named checks, so per the contract I stop after reporting.\n\n## Answer\n\n**Current immutable WAsmC release:** `v0.0.21` \u2014 the runtime artifact set frozen in this pinned public checkout (per `AGENTS.md` and `agent-quickstart.json` scope; published product is decided by `release.json` and `channels/prod.json`).\n\n**First public Agent entrypoint:** `AGENTS.md` \u2192 the small route index `agent-quickstart.json`, from which the matching route `agent-routes/host-authority-boundary.json` was selected and verified via `node scripts/agent-routes.mjs --show host-authority-boundary`.\n\n**Exact authority to verify before compiling:**\n- **Decision:** Inspect every generated import before instantiation and compare module, name, kind, and signature against an **application-owned exact allowlist**.\n- **Procedure:** `compile(source)` \u2192 `inspectWasm(bytes)` \u2192 `WebAssembly.instantiate(inspected.module, approvedImports)`.\n- **Pure execution:** require `imports=[]` and instantiate with `{}`.\n- **Forbidden authority:** ambient filesystem/network/clock/randomness; credentials/process/device access; private handles/plans/Store nonces/lifecycle helpers; JSON as a WIT replacement.\n\nImports request effects and grant no ambient authority; nothing beyond this exact allowlist match authorizes instantiation."
+              }
+            }
+          ]
+        }
+      ],
+      "accepted": false,
+      "rule": "Diagnostic observation only; no passing cases transplanted into final qualification"
+    },
+    {
+      "guidance_commit": "fc11ade7ca1230151f461e58ac8b4e9af8eb490b",
+      "evidence_directory": "/Users/youxianshi/code/.cache/wasmc-release-evidence/pi-guidance-v3-live-three-rounds-szmgp39n",
+      "reports": [
+        {
+          "file": "round-1-deepseek-v4.1-flash.json",
+          "sha256": "af0d6092061f0d68c99afe0d839abf443b6106eb8bacfd5961ef61531d69cced",
+          "model": {
+            "provider": "llm-m4dd",
+            "identity": "deepseek-v4.1-flash"
+          },
+          "completed_cases": 10,
+          "completed_report": true,
+          "structural_pass": true,
+          "failures": []
+        },
+        {
+          "file": "round-1-glm-5.3-flash.json",
+          "sha256": "c5624012141e61ecd051fb418a9cd08318b4dc507d9465f022cb867232c0cc47",
+          "model": {
+            "provider": "llm-m4dd",
+            "identity": "glm-5.3-flash"
+          },
+          "completed_cases": 10,
+          "completed_report": true,
+          "structural_pass": true,
+          "failures": []
+        },
+        {
+          "file": "round-2-deepseek-v4.1-flash.json.progress.json",
+          "sha256": "1694410e75e89243b1a2a2f185eec1ada27b8547c953be9c287b0cb6496fb37c",
+          "model": {
+            "provider": "llm-m4dd",
+            "identity": "deepseek-v4.1-flash"
+          },
+          "completed_cases": 4,
+          "completed_report": false,
+          "structural_pass": false,
+          "failures": []
+        },
+        {
+          "file": "round-2-glm-5.3-flash.json.progress.json",
+          "sha256": "6b2b893a8f685cbf3a8988246e28842ddcfb25f6bd3917096f2f7c4d438effc7",
+          "model": {
+            "provider": "llm-m4dd",
+            "identity": "glm-5.3-flash"
+          },
+          "completed_cases": 4,
+          "completed_report": false,
+          "structural_pass": false,
+          "failures": []
+        }
+      ],
+      "accepted": false,
+      "rule": "Diagnostic observation only; no passing cases transplanted into final qualification",
+      "semantic_rejection": {
+        "accepted": false,
+        "guidance_commit": "fc11ade7ca1230151f461e58ac8b4e9af8eb490b",
+        "reason": "GLM round 1 wrong-independent-digest explanation incorrectly said changing metadata also changes the fixed comparison target.",
+        "structural_success_is_not_semantic_success": true
+      }
+    },
+    {
+      "guidance_commit": "fcdee81e234c24809dff7e39b5b5b3a91de343b3",
+      "evidence_directory": "/Users/youxianshi/code/.cache/wasmc-release-evidence/pi-guidance-v3-live-three-rounds-zu0mn4b0",
+      "reports": [
+        {
+          "file": "round-1-deepseek-v4.1-flash.json",
+          "sha256": "467a96a9a6b1ce84376043dbe2352fb86caebf3b91df2d7ec74ca8cbed4abad5",
+          "model": {
+            "provider": "llm-m4dd",
+            "identity": "deepseek-v4.1-flash"
+          },
+          "completed_cases": 3,
+          "completed_report": true,
+          "structural_pass": false,
+          "failures": [
+            {
+              "id": "ordinary-source-positive",
+              "failures": [
+                {
+                  "metric": "assistant_turns",
+                  "observed": 11,
+                  "limit": 10
+                }
+              ],
+              "answer_contract_failures": [],
+              "hygiene": [],
+              "terminal": null,
+              "public_final_answer": {
+                "characters": 2275,
+                "sha256": "2c66868bf6a5106a86605c12f306fae2f04b450fc0548475f1c30bbd0708ce83",
+                "text": "Done. Report follows the route's `exact_evidence` fields, run once.\n\n## Route used\n`source-adaptation` (writing/editing new source). Read via `node scripts/agent-routes.mjs --show source-adaptation`; required additional read `LANGUAGE.md` was read. Canonical example (`ordinary-source-positive`) was **not** substituted.\n\n## Source (path + sha256)\nPath: `agent-src/pair-preserve.wasmc`\n\n```wasmc\npackage local:pair_preserve;\n\ninterface api {\n  preserve: func(value: s32, flag: bool) -> tuple<s32, bool> {\n    return tuple(value, flag);\n  }\n}\n\nworld app { export api; }\n```\n\n`source_sha256`: `08524650fe7aa0ea7ed173f760cbaeba2ea9a0f1115c34103d7049ba01ae2a18`\n\nSemantics note: the one semantic result is a `tuple<s32, bool>` that preserves each argument independently. The `s32` is returned as an `s32` (not reduced to a boolean); no `&&`/`||` conjunction collapses the two values.\n\n## Compile + inspect + execute (single named runner invocation)\nCommand:\n`node scripts/wasmc-agent-execute.mjs --source agent-src/pair-preserve.wasmc --export preserve --calls '[[42,false]]'`\n\n```\n{\"accepted\":true,\"compiler_sha256\":\"42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c\",\"source_sha256\":\"08524650fe7aa0ea7ed173f760cbaeba2ea9a0f1115c34103d7049ba01ae2a18\",\"core_bytes\":51,\"core_sha256\":\"0f0c4d98b8a5eced7d43801129c50349330edc161e9690334aa8f42b9f740064\",\"imports\":[],\"export\":\"preserve\",\"calls\":[{\"arguments\":[42,false],\"result\":[42,0]}]}\n```\n\n- `compiler_sha256`: `42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c` (pinned public v0.0.21 compiler; matches `release.json` `runtime.compiler_sha256`, tag `v0.0.21`)\n- `core_sha256`: `0f0c4d98b8a5eced7d43801129c50349330edc161e9690334aa8f42b9f740064` (`core_bytes`: 51)\n- `imports`: `[]` \u2014 pure; runner refused none because there were no Host imports to refuse\n- call/actual result: `preserve(42, false)` \u2192 `[42, 0]`\n\nObserved representation: the tuple flattened to two Core lanes, and the runner returned a flat JS array (no automatic object lifting). The boolean `false` is the Core `i32` lane `0`; the `s32` `42` is its own lane. The two requested values are preserved separately, not combined into a new boolean.\n\nStopped after the named check; no repository-wide integrity test or extra probe was run."
+              }
+            }
+          ]
+        },
+        {
+          "file": "round-1-glm-5.3-flash.json",
+          "sha256": "c043b4d1d32d2c7a804700be8382234fad6d0046a2cb61a5d6882947114df7ec",
+          "model": {
+            "provider": "llm-m4dd",
+            "identity": "glm-5.3-flash"
+          },
+          "completed_cases": 5,
+          "completed_report": true,
+          "structural_pass": false,
+          "failures": [
+            {
+              "id": "library-first-selection",
+              "failures": [],
+              "answer_contract_failures": [
+                {
+                  "metric": "unknown_identity",
+                  "observed": "wasmc-std@1.4.1"
+                }
+              ],
+              "hygiene": [],
+              "terminal": null,
+              "public_final_answer": {
+                "characters": 2004,
+                "sha256": "8106726ae534ff942e97b1e4315d8e707edf65a3cfbbdb99165e76f798769296",
+                "text": "All named checks ran successfully. Final report per the route's `exact_report` policy:\n\n## Selected identity\n\n- Package: `wasmc:std@1.4.1`\n- APIs:\n  - `wasmc:std@1.4.1/base64#try-encode-standard`\n  - `wasmc:std@1.4.1/base64#try-decode-standard`\n\n## Verification steps\n\n1. **Route selection**: `agent-quickstart.json` matched the intent \"select and verify the released Base64 capability\" to the `library-first-selection` route; its `read_command` verified route integrity (`route_digest_verified: true`).\n2. **Required reads**: `current-libs/wasmc-std/1.4.1/SKILL.md` and `current-libs/wasmc-std/1.4.1/lib.wit` \u2014 the WIT declares the `base64` interface with exactly these two operations over `byte-buffer`, exported by world `standard-lib`.\n3. **Lifecycle check** (run before resolution, as required): all required states true \u2014 qualified, admitted, released, discoverable, installable (checked against `release.json`, `channels/prod.json`, and the selected candidate). No stop condition triggered.\n4. **Search** (discovery only, not approval): the catalog search returned both Base64 API candidates in `wasmc-std@1.4.1`.\n5. **Resolve**: the resolver verified catalog_sha256, manifest_sha256, root_inventory_sha256, wit_sha256 and artifact_sha256; it reported `verified: true` and `authority_granted: false` for root `current-libs/wasmc-std/1.4.1` at release version 0.0.21.\n6. **Behavior** (separate verification): the companion example passed \u2014 it separately verified companion_sha256 and import_module, rejected invalid input, completed all rounds with explicit drops, and round-tripped `\"abc\"` \u2192 `\"YWJj\"` \u2192 `\"abc\"`.\n\n## Required statements\n\n- Search discovered the candidate but was not authority.\n- Resolve verified catalog_sha256, manifest_sha256, root_inventory_sha256, wit_sha256 and artifact_sha256.\n- Behavior separately verified companion_sha256 and import_module and passed.\n\nDigest values are left in machine receipts as instructed; no historical or other channel directories were enumerated."
+              }
+            }
+          ]
+        }
+      ],
+      "accepted": false,
+      "rule": "Diagnostic observation only; no passing cases transplanted into final qualification"
+    }
+  ],
+  "all_retained": true,
+  "protocol_and_budgets_not_relaxed": true,
+  "caveat": "Earlier diagnostic attempts remain failed observations; final qualification is scoped only to the separately identified complete frozen cohort."
+}
