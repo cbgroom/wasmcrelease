@@ -43,6 +43,13 @@ export function buildAgentGuidance(base = root, overrides = {}) {
   assert.ok(scalar.positions.includes('parameter'));
   assert.equal(surfaces.agent_capability_projection.feature_decisions.async_ordinary_source_or_lib, 'unsupported');
   routes['position-aware-capability-negative'].supported_positions = scalar.positions.map(p => 'u64 ' + p);
+  routes['position-aware-capability-negative'].position_projection = {
+    source_u64: scalar,
+    public_map: surfaces.agent_capability_projection.type_decisions.map,
+    async: surfaces.agent_capability_projection.feature_decisions.async_ordinary_source_or_lib,
+    host: surfaces.agent_capability_projection.type_decisions.host_import,
+    authority_rule: 'Imports request effects; explicit application approval and an exact module/name/kind/signature allowlist are still required. A supported scalar is not an authority grant.'
+  };
   const telemetry = surfaces.package_profiles['wasmc-system-telemetry@0.0.1'];
   assert.ok(telemetry.unsupported_surfaces.includes('wasmc-source-direct-resource-methods'));
   routes['release-state-separation'].states = Object.fromEntries(Object.keys(lifecycle).map(key => [key, false]));

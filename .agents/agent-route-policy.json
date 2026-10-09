@@ -4,8 +4,8 @@
     "license-policy": "may I use the v0.0.21 product for research or commercial purposes",
     "release-orientation": "identify the published release version/tag, public Agent entrypoint or compiler byte identity before compilation",
     "release-lib-route-readiness": "does this v0.0.21 product set bind every included Lib package and API route, and where is its lifecycle stage decided",
-    "position-aware-capability-negative": "async func(u64) -> map<string,u64> as an ordinary public WAsmC value",
-    "producer-release-u64-delta": "is ordinary-source u64 fixed or supported now",
+    "position-aware-capability-negative": "decide type or feature support by source, public-value, async and Host position, including u64 and Map",
+    "producer-release-u64-delta": "compare historical producer implementation versus product release status of u64, u32 and char",
     "ordinary-source-positive": "compile and run the canonical s32/bool tuple example",
     "release-state-separation": "direct WAsmC source use of wasmc-system-telemetry@0.0.1 sampler resource",
     "dynamic-client-gateway": "is the dynamic Client/Gateway available in this product and is it a formal Lib",
@@ -42,7 +42,9 @@
         "otherwise stop"
       ],
       "generate_source": false,
-      "required_additional_reads": []
+      "required_additional_reads": [],
+      "scope": "Complete generated projection for the listed u64, public Map, async and Host positions; no source generation or runtime execution is requested for a capability decision.",
+      "final_answer_policy": "Decide each requested position from position_projection. u64 is supported in ordinary synchronous source and bounded synchronous scalar Host contracts, with WIT u64 identity and no implicit authority. Give alternatives only for unsupported positions when semantics remain equivalent; otherwise stop. required_additional_reads is empty because these facts are complete. Do not open unrelated routes, language syntax, catalogs, source examples or product inventories for this decision."
     },
     "producer-release-u64-delta": {
       "request": "is ordinary-source u64 fixed or supported now",
