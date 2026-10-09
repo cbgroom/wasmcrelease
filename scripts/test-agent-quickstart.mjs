@@ -1,3 +1,4 @@
+import { loadAgentRoutes } from './agent-routes.mjs';
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
@@ -5,8 +6,8 @@ import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
-const quickstart = JSON.parse(readFileSync(new URL('../agent-quickstart.json', import.meta.url), 'utf8'));
-assert.equal(quickstart.schema, 'wasmc.agent-quickstart/v1');
+const quickstart = loadAgentRoutes();
+assert.equal(quickstart.schema, 'wasmc.agent-quickstart/v2');
 assert.deepEqual(Object.keys(quickstart.routes), [
   'license-policy',
   'release-orientation',
@@ -17,7 +18,9 @@ assert.deepEqual(Object.keys(quickstart.routes), [
   'release-state-separation',
   'dynamic-client-gateway',
   'library-first-selection',
-  'host-authority-boundary'
+  'host-authority-boundary',
+  'source-adaptation',
+  'library-discovery'
 ]);
 assert.equal(quickstart.routes['license-policy'].authority_file,'license-policy.json');
 assert.equal(quickstart.routes['license-policy'].check_command,'node scripts/validate-license-policy.mjs');
@@ -73,7 +76,7 @@ assert.equal(telemetry.exact_report.identity,'wasmc-system-telemetry@0.0.1');
 assert.equal(telemetry.exact_report.stop_reason,'wasmc-source-direct-resource-methods');
 assert.match(telemetry.exact_report.instruction,/First copy exact_report\.identity and exact_report\.stop_reason byte-for-byte once/);
 assert.match(telemetry.exact_report.instruction,/Never output a field name as a substitute for its value/);
-assert.match(quickstart.rule,/refer to its field name/);
+assert.match(quickstart.rule,/Choose one route/);
 const routeReadiness=quickstart.routes['release-lib-route-readiness'];
 const routeReadinessAuthority=JSON.parse(readFileSync(new URL('../release-lib-route-readiness.json',import.meta.url),'utf8'));
 assert.equal(routeReadinessAuthority.schema,'wasmc.release-lib-route-readiness/v1');

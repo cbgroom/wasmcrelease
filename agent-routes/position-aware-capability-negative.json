@@ -1,0 +1,24 @@
+{
+  "request": "async func(u64) -> map<string,u64> as an ordinary public WAsmC value",
+  "decision": "unsupported as a whole: u64 is supported in the v0.0.21 compiler, but async ordinary source and a direct public map result remain independently unsupported",
+  "independent_stops": [
+    "async ordinary source unsupported",
+    "Map is resident/local only and unsupported as a direct public WIT value result"
+  ],
+  "alternatives": [
+    "u32 or i64 only with application-owned bounds and signedness proof",
+    "ordered list<Entry<K,V>> snapshot only when copied-value semantics are equivalent",
+    "declared resource for identity and mutation",
+    "otherwise stop"
+  ],
+  "generate_source": false,
+  "required_additional_reads": [],
+  "supported_positions": [
+    "u64 local",
+    "u64 parameter",
+    "u64 result",
+    "u64 nested-source-payload"
+  ],
+  "schema": "wasmc.agent-task-route/v1",
+  "id": "position-aware-capability-negative"
+}

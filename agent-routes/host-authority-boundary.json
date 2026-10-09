@@ -1,0 +1,14 @@
+{
+  "decision": "Inspect every generated import before instantiation and compare module, name, kind and signature with an application-owned exact allowlist.",
+  "javascript": "compile(source), inspectWasm(bytes), then WebAssembly.instantiate(inspected.module, approvedImports)",
+  "pure": "Require imports=[] and instantiate with {}.",
+  "forbidden": [
+    "ambient filesystem/network/clock/randomness",
+    "credentials/process/device access",
+    "private handles/plans/Store nonces/lifecycle helpers",
+    "JSON as WIT replacement"
+  ],
+  "required_additional_reads": [],
+  "schema": "wasmc.agent-task-route/v1",
+  "id": "host-authority-boundary"
+}

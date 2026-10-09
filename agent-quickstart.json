@@ -1,271 +1,67 @@
 {
-  "schema": "wasmc.agent-quickstart/v1",
-  "authority": "release-surfaces.json",
-  "rule": "Match one route, use its exact evidence and stop. Do not inspect history, broad manifests or unrelated implementation tests. Apply exact_report and final_answer_policy only to the matching route. Report every required identity as its complete literal value; a field name alone is not that value. For release orientation, print compiler.sha256 in full once. After a literal identity has appeared once, refer to its field name rather than shortening or reconstructing it. Follow the Library-first route instruction to cite verified digest field names instead of repeating digest values.",
+  "schema": "wasmc.agent-quickstart/v2",
+  "scope": "Unreleased guidance experiment over unchanged v0.0.21 runtime; not a new product admission.",
+  "rule": "Choose one route. Read only its file and required_additional_reads; run named checks, report exact identities, then stop. For an unmatched task follow the relevant general route or public Skill.",
   "routes": {
     "license-policy": {
-      "authority_file": "license-policy.json",
-      "request": "may I use the v0.0.21 product for research or commercial purposes",
-      "decision": "The v0.0.21 product permits non-commercial research only; commercial and production use require a separate written license. It is source-available, not open source.",
-      "prior_tag_rule": "Read LICENSE from the exact immutable tag. The v0.0.21 policy does not rewrite or revoke an earlier grant.",
-      "check_command": "node scripts/validate-license-policy.mjs",
-      "required_additional_reads": [
-        "license-policy.json",
-        "LICENSE"
-      ]
+      "intent": "may I use the v0.0.21 product for research or commercial purposes",
+      "path": "agent-routes/license-policy.json",
+      "sha256": "ee708ca86c3e50e8f8608f54562b43171b465d1b8c98ab91c843f6f380098923"
     },
     "release-orientation": {
-      "product_version": "v0.0.21",
-      "lifecycle_authority": "Read agent-release-orientation.json and run its check; open the full artifact inventory in manifest.json only if that compact authority fails validation. In the final answer, name agent-release-orientation.json literally as the compact authority. Compact release.json is lifecycle authority, not the artifact list.",
-      "entrypoint": "AGENTS.md",
-      "compiler": {
-        "path": "current/wasmc_compiler.wasm",
-        "bytes": 1510219,
-        "sha256": "42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c",
-        "imports": 0
-      },
-      "facade": {
-        "path": "current/wasmc.mjs",
-        "sha256": "ce6ec59d9ee40a7855df996321b52cb02ab174bd89dd2f3b7d2e0e0f2e8db856"
-      },
-      "verify_with": [
-        "agent-release-orientation.json"
-      ],
-      "mutable_not_authority": [
-        "main",
-        "unversioned URLs",
-        "package-index.json.latest"
-      ],
-      "required_additional_reads": [],
-      "final_answer_policy": "After the named compact-authority check passes, name agent-release-orientation.json and AGENTS.md literally, report the immutable tag and compiler path, and copy the complete 64-character compiler.sha256 value once. The word sha256 or a reference to that field does not report the compiler identity. Stop after these exact identities; do not scan the full manifest or history."
+      "intent": "release orientation",
+      "path": "agent-routes/release-orientation.json",
+      "sha256": "22be799b858515f4b82c3f260f4742bc7f4600961578d11d8ae4467efed9ae09"
     },
     "release-lib-route-readiness": {
-      "authority_file": "release-lib-route-readiness.json",
-      "request": "does this v0.0.21 product set bind every included Lib package and API route, and where is its lifecycle stage decided",
-      "product": {
-        "version": "0.0.21",
-        "package_routes": 42,
-        "api_routes": 236,
-        "candidate_extras": 0,
-        "formal_release_ready": true,
-        "blocking_conditions": []
-      },
-      "active_search": {
-        "identity": "wasmc:lib-search@0.5.0",
-        "states": {
-          "qualified": true,
-          "admitted": true,
-          "included_in_product": true,
-          "qualified_before_freeze": true,
-          "admitted_before_freeze": false
-        },
-        "api_routes": 3
-      },
-      "lifecycle_authority": {
-        "current_release": "release.json",
-        "stages": "channels/dev.json, channels/main.json, channels/prod.json",
-        "rule": "Never infer released, discoverable or installable from this frozen product projection."
-      },
-      "valid_resolution_count": 1,
-      "only_valid_closure": "Verify the exact v0.0.21 current42 candidate and route closure, then read the channel authorities for lifecycle state. Every promotion must preserve the same product digest set.",
-      "forbidden_shortcuts": [
-        "treat admission as release",
-        "infer lifecycle state from product presence or an admission snapshot",
-        "rebuild product bytes during promotion",
-        "rewrite any immutable release or prerelease tag"
-      ],
-      "authorities": [
-        "admission/current-product-v3.json",
-        "catalog/libs-current-v2.json",
-        "catalog/lib-route-closure.json",
-        "channels/candidates/0.0.21.json",
-        "release.json",
-        "channels/prod.json"
-      ],
-      "check_commands": [
-        "node scripts/lib-route-closure.mjs --check",
-        "node scripts/release-candidate.mjs verify channels/candidates/0.0.21.json --candidate-sha256 e0d34d806f81f56dde084ae5b1626bdcfcb4ccb8a59491e2b9d37ecce43db651"
-      ],
-      "required_additional_reads": [
-        "release-lib-route-readiness.json"
-      ]
+      "intent": "does this v0.0.21 product set bind every included Lib package and API route, and where is its lifecycle stage decided",
+      "path": "agent-routes/release-lib-route-readiness.json",
+      "sha256": "463ecbd808b322241dc77d103a3fd379a5f3d67a05ebf6260aeef20635ff4e3f"
     },
     "position-aware-capability-negative": {
-      "request": "async func(u64) -> map<string,u64> as an ordinary public WAsmC value",
-      "decision": "unsupported as a whole: u64 is supported in the v0.0.21 compiler, but async ordinary source and a direct public map result remain independently unsupported",
-      "independent_stops": [
-        "async ordinary source unsupported",
-        "Map is resident/local only and unsupported as a direct public WIT value result"
-      ],
-      "alternatives": [
-        "u32 or i64 only with application-owned bounds and signedness proof",
-        "ordered list<Entry<K,V>> snapshot only when copied-value semantics are equivalent",
-        "declared resource for identity and mutation",
-        "otherwise stop"
-      ],
-      "generate_source": false,
-      "required_additional_reads": [],
-      "supported_positions": [
-        "u64 ordinary local",
-        "u64 parameter",
-        "u64 result",
-        "u64 nested source payload"
-      ]
+      "intent": "async func(u64) -> map<string,u64> as an ordinary public WAsmC value",
+      "path": "agent-routes/position-aware-capability-negative.json",
+      "sha256": "0d3b85d8d5a4776e763217459efc5b8da72d90a31307936e92e902815690fc21"
     },
     "producer-release-u64-delta": {
-      "request": "is ordinary-source u64 fixed or supported now",
-      "answer_opening": "Producer master and the v0.0.21 product compiler both support ordinary-source u64; read release.json for the currently published lifecycle stage.",
-      "producer": {
-        "repository": "yxsicd/wasmc",
-        "branch": "master",
-        "commit": "566eff42d0f4e4680c5ddd60c6584a9d8ff8e9f4",
-        "implementation_commit": "94328ed760f93bf24b595a71facdcc773d43b762",
-        "implemented": true,
-        "qualified_on_containing_commit": true
-      },
-      "release_product": {
-        "version": "v0.0.21",
-        "lifecycle_authority": "release.json",
-        "ordinary_source_u64": "supported"
-      },
-      "u32": "included in the v0.0.21 product compiler; no repair was required",
-      "char": "not implemented on the cited producer authority and not released; arbitrary u32 is not a char substitute",
-      "stop": "Report u64 support only for the v0.0.21 product compiler. Do not infer async, map, char, lifecycle stage or installation from scalar support.",
-      "required_additional_reads": []
+      "intent": "is ordinary-source u64 fixed or supported now",
+      "path": "agent-routes/producer-release-u64-delta.json",
+      "sha256": "1a62afd5b232fd7abc8496912c73e64a6e96d0bca4c3cb44cefd5f084f727528"
     },
     "ordinary-source-positive": {
-      "source": "examples/agent-quickstart/pair.wasmc",
-      "run": "node examples/agent-quickstart/run-pair.mjs",
-      "result": {
-        "core_bytes": 49,
-        "core_sha256": "55f3c7e3d09b564b89b8268299a69569a33b856b46405cb4c4dd51634afec84e",
-        "imports": [],
-        "call": "run(5, true)",
-        "value": [
-          1,
-          1
-        ]
-      },
-      "embedding_warning": "The tuple is one semantic result; JavaScript observes two flattened Core lanes, not an automatically lifted object.",
-      "required_additional_reads": [
-        "examples/agent-quickstart/pair.wasmc"
-      ]
+      "intent": "compile and run the canonical s32/bool tuple example",
+      "path": "agent-routes/ordinary-source-positive.json",
+      "sha256": "d081a45e7ce0162ca9091b4cc39b8c27713ca740a56d392189763a5e90644236"
     },
     "release-state-separation": {
-      "request": "direct WAsmC source use of wasmc-system-telemetry@0.0.1 sampler resource",
-      "states": {
-        "qualified": false,
-        "admitted": false,
-        "released": false,
-        "discoverable": false,
-        "installable": false
-      },
-      "exact_report": {
-        "instruction": "First copy exact_report.identity and exact_report.stop_reason byte-for-byte once in the final answer. Only after both literal values appear may you refer to their field names. Never output a field name as a substitute for its value, and never reconstruct, shorten or respell either field.",
-        "identity": "wasmc-system-telemetry@0.0.1",
-        "stop_reason": "wasmc-source-direct-resource-methods"
-      },
-      "required_output_states": [
-        "qualified",
-        "admitted",
-        "released",
-        "discoverable",
-        "installable"
-      ],
-      "stop": "qualified=false because wasmc-source-direct-resource-methods is explicitly unsupported",
-      "related_product": {
-        "qualified": true,
-        "admitted": true,
-        "released": true,
-        "discoverable": true,
-        "installable": true,
-        "routes": [
-          "source-free-rust-component",
-          "public-rust-host-sdk",
-          "linux-explicit-generic-resource-acquisition"
-        ],
-        "lifecycle_authority": "release.json and channels/prod.json; applies only to the three listed supported routes, never the direct ordinary Source route"
-      },
-      "required_additional_reads": [],
-      "final_answer_policy": "Copy exact_report.identity and exact_report.stop_reason literally, report the five direct-route states exactly, then distinguish the five related-product states and its three supported routes. qualified=false is the direct route stopping condition; do not broaden this successful decision into manifests, control planes, implementation files or history. Internal JSON query keys are field names, not package or WIT identities."
+      "intent": "direct WAsmC source use of wasmc-system-telemetry@0.0.1 sampler resource",
+      "path": "agent-routes/release-state-separation.json",
+      "sha256": "db89c26c550bd9bbad213ccce3860bfaaaadf0f4a35be805cee1d320dd9c35e3"
     },
     "dynamic-client-gateway": {
-      "request": "is the dynamic Client/Gateway available in this product and is it a formal Lib",
-      "authority": "runtime/client-foundation-v1/release-surface.json",
-      "product": {
-        "version": "0.0.21",
-        "included": true,
-        "surface_status": "incubating",
-        "lifecycle_authority": "release.json"
-      },
-      "formal_lib": {
-        "admitted": false,
-        "discoverable": false,
-        "installable": false
-      },
-      "fixed_host_api_changed": false,
-      "minimal_cli_changed": false,
-      "stop": "Report product inclusion separately from Lib admission. Do not claim production fleet service or general external-effect exactly-once behavior.",
-      "required_additional_reads": [
-        "runtime/client-foundation-v1/release-surface.json"
-      ]
+      "intent": "is the dynamic Client/Gateway available in this product and is it a formal Lib",
+      "path": "agent-routes/dynamic-client-gateway.json",
+      "sha256": "962d2f275d7c582e43c38bf6709a3f77ad46fb4b8a7c10f01b2f77b7300a2b3f"
     },
     "library-first-selection": {
-      "product_release": "v0.0.21",
-      "package": "wasmc:std@1.4.1",
-      "apis": [
-        "wasmc:std@1.4.1/base64#try-encode-standard",
-        "wasmc:std@1.4.1/base64#try-decode-standard"
-      ],
-      "search": "node scripts/wasmc-lib.mjs search base64 --catalog-sha256 a4de009c683d3db4453cf0a9e783719a933a8e1689842a12d08a6883a83cfdad --limit 8",
-      "search_is_selection_authority": false,
-      "wit_sha256": "5abbed39c185835cfbbc5c2b961fb904b3ad66f42b22aef1ac7a40835ee246e9",
-      "artifact_sha256": "b79a499c8300361125e7fcdae02170184b82d4bbeff4d8f24ed95f3fd4db8d3b",
-      "catalog_release_snapshot": "v0.0.21",
-      "catalog_path": "catalog/libs-current-v2.json",
-      "catalog_sha256": "a4de009c683d3db4453cf0a9e783719a933a8e1689842a12d08a6883a83cfdad",
-      "catalog_snapshot_carried_forward": false,
-      "states": {
-        "qualified": true,
-        "admitted": true,
-        "released": true,
-        "discoverable": true,
-        "installable": true
-      },
-      "catalog_snapshot_boundary": "The exact current42 catalog binds complete Roots to the independently pinned Q0 cohort. It does not grant release or Host authority.",
-      "exact_report": {
-        "instruction": "Copy package and APIs byte-for-byte. Do not reproduce digest values in prose; cite the exact_report field names and the successful resolver instead. If you report any digest anyway, it must be the full exact value with no reconstruction, extension, abbreviation or ellipsis.",
-        "package": "wasmc:std@1.4.1",
-        "apis": [
-          "wasmc:std@1.4.1/base64#try-encode-standard",
-          "wasmc:std@1.4.1/base64#try-decode-standard"
-        ],
-        "catalog_sha256": "a4de009c683d3db4453cf0a9e783719a933a8e1689842a12d08a6883a83cfdad",
-        "wit_sha256": "5abbed39c185835cfbbc5c2b961fb904b3ad66f42b22aef1ac7a40835ee246e9",
-        "artifact_sha256": "b79a499c8300361125e7fcdae02170184b82d4bbeff4d8f24ed95f3fd4db8d3b",
-        "companion_sha256": "c3ac42b93f4c27e24065abe804b91f54761eff782e2971e947847b3d20ee7e00",
-        "import_module": "wasmc:lib/wasmc.lib_managed_object_heap@4.9.0",
-        "manifest_sha256": "9db63b4f380f9a8fb7541addfde6608bbc48b3267ad903f838afedb98e74ebfc",
-        "root_inventory_sha256": "6978407b51e835a3893ac14cbb7ca2c46da48d0a778f2611f6de829af07bdf92",
-        "library_import_module": "wasmc:lib/wasmc.std@1.4.1"
-      },
-      "final_answer_policy": "After verification, output package and both APIs exactly, then only these statements: search discovered the candidate but was not authority; resolve verified catalog_sha256, manifest_sha256, root_inventory_sha256, wit_sha256 and artifact_sha256; behavior separately verified companion_sha256 and import_module and passed. Do not reproduce command arguments, digest values, partial digests or any ellipsis character. Read channels for released, discoverable and installable states.",
-      "resolve": "node scripts/wasmc-lib.mjs resolve wasmc-std 1.4.1 --catalog-sha256 a4de009c683d3db4453cf0a9e783719a933a8e1689842a12d08a6883a83cfdad --manifest-sha256 9db63b4f380f9a8fb7541addfde6608bbc48b3267ad903f838afedb98e74ebfc --root-inventory-sha256 6978407b51e835a3893ac14cbb7ca2c46da48d0a778f2611f6de829af07bdf92",
-      "behavior": "node examples/base64/run.mjs",
-      "install_reference": "catalog/INSTALL.md",
-      "required_additional_reads": []
+      "intent": "select and verify the released Base64 capability",
+      "path": "agent-routes/library-first-selection.json",
+      "sha256": "4299e2ee1e59999a570b6b22cccc1c4dc8b815050708d16bea031c2eecc8c833"
     },
     "host-authority-boundary": {
-      "decision": "Inspect every generated import before instantiation and compare module, name, kind and signature with an application-owned exact allowlist.",
-      "javascript": "compile(source), inspectWasm(bytes), then WebAssembly.instantiate(inspected.module, approvedImports)",
-      "pure": "Require imports=[] and instantiate with {}.",
-      "forbidden": [
-        "ambient filesystem/network/clock/randomness",
-        "credentials/process/device access",
-        "private handles/plans/Store nonces/lifecycle helpers",
-        "JSON as WIT replacement"
-      ],
-      "required_additional_reads": []
+      "intent": "inspect requested imports, distinguish requests from grants, refuse undeclared Host access",
+      "path": "agent-routes/host-authority-boundary.json",
+      "sha256": "5e72250cb6721436cf4efff60c0abeafd972a720b109296062f1302e66ed75d7"
+    },
+    "source-adaptation": {
+      "intent": "write or change a new pure ordinary-source program and execute requested calls",
+      "path": "agent-routes/source-adaptation.json",
+      "sha256": "0a09f493110f8933de76cd7cedcfd93910fabc8172bb95aed4d41a8ec8ecbda9"
+    },
+    "library-discovery": {
+      "intent": "find an unfamiliar reusable capability; inspect exact package/API and verify behavior",
+      "path": "agent-routes/library-discovery.json",
+      "sha256": "e302fa65e10f7e7812f9d01ef98054a22d72887f9d48ddd5cd82704f832f9377"
     }
   }
 }

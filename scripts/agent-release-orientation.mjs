@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+import { loadAgentRoutes } from './agent-routes.mjs';
 import assert from 'node:assert/strict';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
@@ -8,7 +8,7 @@ const root = fileURLToPath(new URL('../', import.meta.url));
 const readJson = path => JSON.parse(readFileSync(resolve(root, path), 'utf8'));
 const release = readJson('release.json');
 const prod = readJson('channels/prod.json');
-const quickstart = readJson('agent-quickstart.json');
+const quickstart = loadAgentRoutes();
 const candidate = readJson(release.staged_product_manifest);
 const route = quickstart.routes['release-orientation'];
 const base64 = quickstart.routes['library-first-selection'];
@@ -24,14 +24,14 @@ assert.equal(route.product_version, release.tag);
 assert.equal(base64.product_release, release.tag);
 
 const model = {
-  schema: 'wasmc.agent-release-orientation/v1',
+  schema: 'wasmc.agent-release-orientation/v2',
   scope: 'Complete compact authority for release orientation; do not read the full artifact inventory in manifest.json unless a listed verification fails. Compact release.json is lifecycle authority, not the artifact list.',
   release: {
     version: release.version,
     tag: release.tag,
     stage: release.stage,
     stable: prod.stable,
-    release_commit: release.source_commit,
+    private_source_commit: release.source_commit,
     product_candidate_commit: release.product_candidate_commit,
     product_manifest: release.staged_product_manifest,
     product_set_sha256: candidate.product_set_sha256

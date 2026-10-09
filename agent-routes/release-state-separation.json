@@ -1,0 +1,40 @@
+{
+  "request": "direct WAsmC source use of wasmc-system-telemetry@0.0.1 sampler resource",
+  "exact_report": {
+    "instruction": "First copy exact_report.identity and exact_report.stop_reason byte-for-byte once in the final answer. Only after both literal values appear may you refer to their field names. Never output a field name as a substitute for its value, and never reconstruct, shorten or respell either field.",
+    "identity": "wasmc-system-telemetry@0.0.1",
+    "stop_reason": "wasmc-source-direct-resource-methods"
+  },
+  "required_output_states": [
+    "qualified",
+    "admitted",
+    "released",
+    "discoverable",
+    "installable"
+  ],
+  "stop": "qualified=false because wasmc-source-direct-resource-methods is explicitly unsupported",
+  "required_additional_reads": [],
+  "final_answer_policy": "Copy exact_report.identity and exact_report.stop_reason literally, report the five direct-route states exactly, then distinguish the five related-product states and its three supported routes. qualified=false is the direct route stopping condition; do not broaden this successful decision into manifests, control planes, implementation files or history. Internal JSON query keys are field names, not package or WIT identities.",
+  "states": {
+    "qualified": false,
+    "admitted": false,
+    "released": false,
+    "discoverable": false,
+    "installable": false
+  },
+  "related_product": {
+    "qualified": true,
+    "admitted": true,
+    "released": true,
+    "discoverable": true,
+    "installable": true,
+    "routes": [
+      "source-free-rust-component",
+      "public-rust-host-sdk",
+      "linux-explicit-generic-resource-acquisition"
+    ],
+    "lifecycle_authority": "release.json and channels/prod.json; only these supported profiles, never direct ordinary Source"
+  },
+  "schema": "wasmc.agent-task-route/v1",
+  "id": "release-state-separation"
+}

@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+import { loadAgentRoutes } from './agent-routes.mjs';
 import assert from 'node:assert/strict';
 import {existsSync,readFileSync,statSync} from 'node:fs';
 import {resolve} from 'node:path';
@@ -8,7 +8,7 @@ import {buildClosure} from './lib-route-closure.mjs';
 const root=fileURLToPath(new URL('../',import.meta.url));
 const read=p=>readFileSync(resolve(root,p),'utf8'),json=p=>JSON.parse(read(p));
 const sha=p=>createHash('sha256').update(readFileSync(resolve(root,p))).digest('hex');
-const model=json('release-surfaces.json'),q=json('agent-quickstart.json'),compiler=json('current/compiler-release.json');
+const model=json('release-surfaces.json'),q=loadAgentRoutes(),compiler=json('current/compiler-release.json');
 const closure=buildClosure(),catalog=json(closure.catalog.path),std=catalog.packages.find(r=>r.id==='wasmc-std');
 const readiness=json('release-lib-route-readiness.json'),ecosystem=json('lib-ecosystem-control-plane.json');
 assert.equal(model.schema,'wasmc.release-surfaces/v1');assert.equal(model.release_version,'0.0.21');

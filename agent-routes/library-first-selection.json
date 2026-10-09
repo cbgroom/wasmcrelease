@@ -1,0 +1,50 @@
+{
+  "search_is_selection_authority": false,
+  "catalog_snapshot_boundary": "The exact current42 catalog binds complete Roots to the independently pinned Q0 cohort. It does not grant release or Host authority.",
+  "final_answer_policy": "After verification, output package and both APIs exactly, then only these statements: search discovered the candidate but was not authority; resolve verified catalog_sha256, manifest_sha256, root_inventory_sha256, wit_sha256 and artifact_sha256; behavior separately verified companion_sha256 and import_module and passed. Do not reproduce command arguments, digest values, partial digests or any ellipsis character. Read channels for released, discoverable and installable states.",
+  "install_reference": "catalog/INSTALL.md",
+  "required_additional_reads": [
+    "current-libs/wasmc-std/1.4.1/SKILL.md",
+    "current-libs/wasmc-std/1.4.1/lib.wit"
+  ],
+  "product_release": "v0.0.21",
+  "package": "wasmc:std@1.4.1",
+  "apis": [
+    "wasmc:std@1.4.1/base64#try-encode-standard",
+    "wasmc:std@1.4.1/base64#try-decode-standard"
+  ],
+  "catalog_path": "catalog/libs-current-v2.json",
+  "catalog_sha256": "a4de009c683d3db4453cf0a9e783719a933a8e1689842a12d08a6883a83cfdad",
+  "catalog_release_snapshot": "v0.0.21",
+  "catalog_snapshot_carried_forward": false,
+  "artifact_sha256": "b79a499c8300361125e7fcdae02170184b82d4bbeff4d8f24ed95f3fd4db8d3b",
+  "wit_sha256": "5abbed39c185835cfbbc5c2b961fb904b3ad66f42b22aef1ac7a40835ee246e9",
+  "states": {
+    "qualified": true,
+    "admitted": true,
+    "released": true,
+    "discoverable": true,
+    "installable": true
+  },
+  "search": "node scripts/wasmc-lib.mjs search base64 --catalog-sha256 a4de009c683d3db4453cf0a9e783719a933a8e1689842a12d08a6883a83cfdad --limit 8",
+  "resolve": "node scripts/wasmc-lib.mjs resolve wasmc-std 1.4.1 --catalog-sha256 a4de009c683d3db4453cf0a9e783719a933a8e1689842a12d08a6883a83cfdad --manifest-sha256 9db63b4f380f9a8fb7541addfde6608bbc48b3267ad903f838afedb98e74ebfc --root-inventory-sha256 6978407b51e835a3893ac14cbb7ca2c46da48d0a778f2611f6de829af07bdf92",
+  "behavior": "node examples/base64/run.mjs",
+  "exact_report": {
+    "instruction": "Copy package and APIs byte-for-byte. Do not reproduce digest values in prose; cite the exact_report field names and the successful resolver instead. If you report any digest anyway, it must be the full exact value with no reconstruction, extension, abbreviation or ellipsis.",
+    "package": "wasmc:std@1.4.1",
+    "apis": [
+      "wasmc:std@1.4.1/base64#try-encode-standard",
+      "wasmc:std@1.4.1/base64#try-decode-standard"
+    ],
+    "catalog_sha256": "a4de009c683d3db4453cf0a9e783719a933a8e1689842a12d08a6883a83cfdad",
+    "manifest_sha256": "9db63b4f380f9a8fb7541addfde6608bbc48b3267ad903f838afedb98e74ebfc",
+    "root_inventory_sha256": "6978407b51e835a3893ac14cbb7ca2c46da48d0a778f2611f6de829af07bdf92",
+    "wit_sha256": "5abbed39c185835cfbbc5c2b961fb904b3ad66f42b22aef1ac7a40835ee246e9",
+    "artifact_sha256": "b79a499c8300361125e7fcdae02170184b82d4bbeff4d8f24ed95f3fd4db8d3b",
+    "companion_sha256": "c3ac42b93f4c27e24065abe804b91f54761eff782e2971e947847b3d20ee7e00",
+    "import_module": "wasmc:lib/wasmc.lib_managed_object_heap@4.9.0",
+    "library_import_module": "wasmc:lib/wasmc.std@1.4.1"
+  },
+  "schema": "wasmc.agent-task-route/v1",
+  "id": "library-first-selection"
+}

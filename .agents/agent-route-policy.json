@@ -1,0 +1,162 @@
+{
+  "schema": "wasmc.agent-route-policy/v1",
+  "intents": {
+    "license-policy": "may I use the v0.0.21 product for research or commercial purposes",
+    "release-orientation": "release orientation",
+    "release-lib-route-readiness": "does this v0.0.21 product set bind every included Lib package and API route, and where is its lifecycle stage decided",
+    "position-aware-capability-negative": "async func(u64) -> map<string,u64> as an ordinary public WAsmC value",
+    "producer-release-u64-delta": "is ordinary-source u64 fixed or supported now",
+    "ordinary-source-positive": "compile and run the canonical s32/bool tuple example",
+    "release-state-separation": "direct WAsmC source use of wasmc-system-telemetry@0.0.1 sampler resource",
+    "dynamic-client-gateway": "is the dynamic Client/Gateway available in this product and is it a formal Lib",
+    "library-first-selection": "select and verify the released Base64 capability",
+    "host-authority-boundary": "inspect requested imports, distinguish requests from grants, refuse undeclared Host access",
+    "source-adaptation": "write or change a new pure ordinary-source program and execute requested calls",
+    "library-discovery": "find an unfamiliar reusable capability; inspect exact package/API and verify behavior"
+  },
+  "routes": {
+    "license-policy": {
+      "authority_file": "license-policy.json",
+      "request": "may I use the v0.0.21 product for research or commercial purposes",
+      "decision": "The v0.0.21 product permits non-commercial research only; commercial and production use require a separate written license. It is source-available, not open source.",
+      "prior_tag_rule": "Read LICENSE from the exact immutable tag. The v0.0.21 policy does not rewrite or revoke an earlier grant.",
+      "check_command": "node scripts/validate-license-policy.mjs",
+      "required_additional_reads": [
+        "license-policy.json",
+        "LICENSE"
+      ]
+    },
+    "release-orientation": {},
+    "release-lib-route-readiness": {},
+    "position-aware-capability-negative": {
+      "request": "async func(u64) -> map<string,u64> as an ordinary public WAsmC value",
+      "decision": "unsupported as a whole: u64 is supported in the v0.0.21 compiler, but async ordinary source and a direct public map result remain independently unsupported",
+      "independent_stops": [
+        "async ordinary source unsupported",
+        "Map is resident/local only and unsupported as a direct public WIT value result"
+      ],
+      "alternatives": [
+        "u32 or i64 only with application-owned bounds and signedness proof",
+        "ordered list<Entry<K,V>> snapshot only when copied-value semantics are equivalent",
+        "declared resource for identity and mutation",
+        "otherwise stop"
+      ],
+      "generate_source": false,
+      "required_additional_reads": []
+    },
+    "producer-release-u64-delta": {
+      "request": "is ordinary-source u64 fixed or supported now",
+      "answer_opening": "Producer master and the v0.0.21 product compiler both support ordinary-source u64; read release.json for the currently published lifecycle stage.",
+      "producer": {
+        "repository": "yxsicd/wasmc",
+        "branch": "master",
+        "commit": "566eff42d0f4e4680c5ddd60c6584a9d8ff8e9f4",
+        "implementation_commit": "94328ed760f93bf24b595a71facdcc773d43b762",
+        "implemented": true,
+        "qualified_on_containing_commit": true
+      },
+      "release_product": {
+        "version": "v0.0.21",
+        "lifecycle_authority": "release.json",
+        "ordinary_source_u64": "supported"
+      },
+      "u32": "included in the v0.0.21 product compiler; no repair was required",
+      "char": "not implemented on the cited producer authority and not released; arbitrary u32 is not a char substitute",
+      "stop": "Report u64 support only for the v0.0.21 product compiler. Do not infer async, map, char, lifecycle stage or installation from scalar support.",
+      "required_additional_reads": []
+    },
+    "ordinary-source-positive": {
+      "source": "examples/agent-quickstart/pair.wasmc",
+      "run": "node examples/agent-quickstart/run-pair.mjs",
+      "result": {
+        "core_bytes": 49,
+        "core_sha256": "55f3c7e3d09b564b89b8268299a69569a33b856b46405cb4c4dd51634afec84e",
+        "imports": [],
+        "call": "run(5, true)",
+        "value": [
+          1,
+          1
+        ]
+      },
+      "embedding_warning": "The tuple is one semantic result; JavaScript observes two flattened Core lanes, not an automatically lifted object.",
+      "required_additional_reads": [
+        "examples/agent-quickstart/pair.wasmc"
+      ]
+    },
+    "release-state-separation": {
+      "request": "direct WAsmC source use of wasmc-system-telemetry@0.0.1 sampler resource",
+      "exact_report": {
+        "instruction": "First copy exact_report.identity and exact_report.stop_reason byte-for-byte once in the final answer. Only after both literal values appear may you refer to their field names. Never output a field name as a substitute for its value, and never reconstruct, shorten or respell either field.",
+        "identity": "wasmc-system-telemetry@0.0.1",
+        "stop_reason": "wasmc-source-direct-resource-methods"
+      },
+      "required_output_states": [
+        "qualified",
+        "admitted",
+        "released",
+        "discoverable",
+        "installable"
+      ],
+      "stop": "qualified=false because wasmc-source-direct-resource-methods is explicitly unsupported",
+      "required_additional_reads": [],
+      "final_answer_policy": "Copy exact_report.identity and exact_report.stop_reason literally, report the five direct-route states exactly, then distinguish the five related-product states and its three supported routes. qualified=false is the direct route stopping condition; do not broaden this successful decision into manifests, control planes, implementation files or history. Internal JSON query keys are field names, not package or WIT identities."
+    },
+    "dynamic-client-gateway": {
+      "request": "is the dynamic Client/Gateway available in this product and is it a formal Lib",
+      "authority": "runtime/client-foundation-v1/release-surface.json",
+      "product": {
+        "version": "0.0.21",
+        "included": true,
+        "surface_status": "incubating",
+        "lifecycle_authority": "release.json"
+      },
+      "formal_lib": {
+        "admitted": false,
+        "discoverable": false,
+        "installable": false
+      },
+      "fixed_host_api_changed": false,
+      "minimal_cli_changed": false,
+      "stop": "Report product inclusion separately from Lib admission. Do not claim production fleet service or general external-effect exactly-once behavior.",
+      "required_additional_reads": [
+        "runtime/client-foundation-v1/release-surface.json"
+      ]
+    },
+    "library-first-selection": {
+      "search_is_selection_authority": false,
+      "catalog_snapshot_boundary": "The exact current42 catalog binds complete Roots to the independently pinned Q0 cohort. It does not grant release or Host authority.",
+      "final_answer_policy": "After verification, output package and both APIs exactly, then only these statements: search discovered the candidate but was not authority; resolve verified catalog_sha256, manifest_sha256, root_inventory_sha256, wit_sha256 and artifact_sha256; behavior separately verified companion_sha256 and import_module and passed. Do not reproduce command arguments, digest values, partial digests or any ellipsis character. Read channels for released, discoverable and installable states.",
+      "install_reference": "catalog/INSTALL.md",
+      "required_additional_reads": []
+    },
+    "host-authority-boundary": {
+      "decision": "Inspect every generated import before instantiation and compare module, name, kind and signature with an application-owned exact allowlist.",
+      "javascript": "compile(source), inspectWasm(bytes), then WebAssembly.instantiate(inspected.module, approvedImports)",
+      "pure": "Require imports=[] and instantiate with {}.",
+      "forbidden": [
+        "ambient filesystem/network/clock/randomness",
+        "credentials/process/device access",
+        "private handles/plans/Store nonces/lifecycle helpers",
+        "JSON as WIT replacement"
+      ],
+      "required_additional_reads": []
+    },
+    "source-adaptation": {
+      "decision": "For a new pure scalar program, read LANGUAGE.md for syntax and edit your own ordinary typed source. The sample is a pattern, not your answer. Compile, inspect imports and execute the requested calls with scripts/wasmc-agent-execute.mjs. This runner refuses any Host imports before instantiation; effectful or managed programs need their separately approved profile.",
+      "runner": "node scripts/wasmc-agent-execute.mjs --source PATH --export NAME --calls JSON",
+      "required_additional_reads": [
+        "LANGUAGE.md"
+      ],
+      "exact_evidence": [
+        "source path",
+        "source_sha256",
+        "compiler_sha256",
+        "core_sha256",
+        "imports",
+        "calls and actual results"
+      ],
+      "host_boundary": "A declared import requests an effect; application authorization and a bounded adapter are separately required."
+    },
+    "library-discovery": {}
+  }
+}

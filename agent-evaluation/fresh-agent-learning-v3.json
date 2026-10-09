@@ -1,0 +1,226 @@
+{
+  "schema": "wasmc.fresh-agent-learning/v3",
+  "objective": "A fresh Pi Agent must use compact generated public guidance accurately, transfer it to unfamiliar tasks and pass three independent cold rounds on each controlled model route.",
+  "session_preamble": "First read AGENTS.md and obey its public routing contract. Read the small agent-quickstart.json index and the one matching route file. Use its required_additional_reads and named checks, then stop. For a new task use the relevant general route; do not substitute a canonical example for the requested semantics. Do not read evaluation protocols, tests or maintainer files as answer hints. Use only the pinned public checkout; no private source or prior session knowledge.",
+  "authority_scope": {
+    "allowed": [
+      "the pinned public wasmcrelease checkout",
+      "tools explicitly declared by the run receipt",
+      "the frozen case prompt"
+    ],
+    "forbidden": [
+      "private wasmc source or private handoffs",
+      "prior conversation or session state",
+      "maintainer hints added after the case starts",
+      "hidden model reasoning as evidence"
+    ],
+    "rule": "Every case starts in a fresh session. The case prompt, oracle and release commit are frozen before the first evaluated cohort run."
+  },
+  "evidence_levels": {
+    "observation": "one case on one Pi and model route; useful for diagnosis only",
+    "model_pass": "all required cases pass for one exact Pi version and model route",
+    "controlled_pair_qualification": "both required model routes pass the complete suite on the same Pi version and release commit"
+  },
+  "cases": [
+    {
+      "id": "release-orientation",
+      "class": "decision",
+      "critical": true,
+      "prompt": "Using only this pinned public checkout, identify the current immutable WAsmC release, the first public Agent entrypoint, and the exact authority you would verify before compiling. Do not use private implementation knowledge.",
+      "oracle": "Select the exact pinned release and public entrypoint, explicitly read the compact release orientation named by that entrypoint, and verify the compiler identity without using mutable main as product authority or private implementation knowledge.",
+      "answer_contract": {
+        "required_literals": [
+          "v0.0.21",
+          "AGENTS.md",
+          "agent-release-orientation.json",
+          "42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c"
+        ],
+        "allowed_sha256": [
+          "42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c",
+          "ce6ec59d9ee40a7855df996321b52cb02ab174bd89dd2f3b7d2e0e0f2e8db856",
+          "a4de009c683d3db4453cf0a9e783719a933a8e1689842a12d08a6883a83cfdad"
+        ],
+        "allowed_identity_tokens": [
+          "wasmc-public-release"
+        ],
+        "forbidden_literals": [
+          "release.json inventory",
+          "roughly 54 KB"
+        ]
+      }
+    },
+    {
+      "id": "position-aware-capability-negative",
+      "class": "decision",
+      "critical": true,
+      "prompt": "Can the pinned release compile an ordinary synchronous function that accepts u64? Can that same release publicly expose an async function or an ordinary map<string,u64> value? Decide source, public-value, async and Host positions separately. Give semantics-preserving alternatives only for unsupported positions and do not generate source.",
+      "oracle": "Accept ordinary-source u64 and its WIT u64 identity, while independently rejecting async source syntax and direct ordinary public Map values; do not infer unsupported Host or ambient authority and generate no source."
+    },
+    {
+      "id": "ordinary-source-positive",
+      "class": "execution",
+      "critical": true,
+      "prompt": "Write the smallest supported WAsmC program whose exported function accepts s32 and bool parameters and returns both logical values as one semantic result. Compile it with the pinned public compiler, inspect imports, execute one call, and report exact evidence.",
+      "oracle": "Generate a supported multi-parameter, one-semantic-result program and independently compile, inspect and execute it against the pinned public compiler."
+    },
+    {
+      "id": "release-state-separation",
+      "class": "decision",
+      "critical": true,
+      "prompt": "For direct WAsmC source use of the system-telemetry sampler resource, report qualified, admitted, released, discoverable and installable separately. Stop at the first missing authority and distinguish related released routes.",
+      "oracle": "Keep qualified, admitted, released, discoverable and installable separate and stop at the first missing authority.",
+      "answer_contract": {
+        "required_literals": [
+          "wasmc-source-direct-resource-methods",
+          "qualified",
+          "admitted",
+          "released",
+          "discoverable",
+          "installable"
+        ],
+        "allowed_identity_tokens": [
+          "wasmc-system-telemetry@0.0.1",
+          "wasmc:system-telemetry@0.0.1",
+          "wasmc-source-direct-resource-methods"
+        ]
+      }
+    },
+    {
+      "id": "library-first-selection",
+      "class": "execution",
+      "critical": false,
+      "prompt": "Find a released reusable Base64 capability through the pinned public Library-first path. Show the exact selected package/API identity and the verification steps without treating search as approval.",
+      "oracle": "Search, inspect, approve an exact package identity, resolve or install only when published, then verify imports and behavior.",
+      "answer_contract": {
+        "required_literals": [
+          "wasmc:std@1.4.1",
+          "wasmc:std@1.4.1/base64#try-encode-standard",
+          "wasmc:std@1.4.1/base64#try-decode-standard"
+        ],
+        "allowed_sha256": [
+          "a4de009c683d3db4453cf0a9e783719a933a8e1689842a12d08a6883a83cfdad",
+          "9db63b4f380f9a8fb7541addfde6608bbc48b3267ad903f838afedb98e74ebfc",
+          "6978407b51e835a3893ac14cbb7ca2c46da48d0a778f2611f6de829af07bdf92",
+          "5abbed39c185835cfbbc5c2b961fb904b3ad66f42b22aef1ac7a40835ee246e9",
+          "b79a499c8300361125e7fcdae02170184b82d4bbeff4d8f24ed95f3fd4db8d3b",
+          "c3ac42b93f4c27e24065abe804b91f54761eff782e2971e947847b3d20ee7e00"
+        ],
+        "allowed_identity_tokens": [
+          "wasmc:std@1.4.1",
+          "wasmc-std",
+          "wasmc-lib.mjs",
+          "wasmc-lib",
+          "wasmc:lib"
+        ]
+      }
+    },
+    {
+      "id": "host-authority-boundary",
+      "class": "decision",
+      "critical": true,
+      "prompt": "Explain how to determine the Host authority required by a newly compiled WAsmC module. State what must be inspected and which ambient or private capabilities must not be invented.",
+      "oracle": "Inspect generated imports and reject ambient authority, raw private handles and undeclared Host capabilities."
+    },
+    {
+      "id": "source-change-transfer",
+      "class": "execution",
+      "critical": true,
+      "prompt": "Write a NEW pure WAsmC program in score.wasmc with exported score(value:s32, flag:bool)->s32. When flag is true return value+7, otherwise value-3. Compile and inspect it with the pinned public compiler and execute score(10,true), score(10,false), score(-4,true). Report source path, exact core hash, imports and all actual results. Do not use the canonical pair program as the answer.",
+      "oracle": "Independent replay of the captured model-authored source must return 17,7,3 with zero imports; actual model execution must agree.",
+      "capture_public_files": [
+        "score.wasmc"
+      ]
+    },
+    {
+      "id": "library-hex-transfer",
+      "class": "execution",
+      "critical": true,
+      "prompt": "Find the released lowercase hexadecimal byte encoding and decoding capability through Library-first discovery. Approve its exact package and two WIT API identities, verify the selected Root, and execute a round trip for UTF-8 text Pi42 including an invalid-input rejection. Base64 is not the requested capability.",
+      "oracle": "Actual exact hex search/Root/WIT and resolver proof plus independently verified hex driver roundtrip Pi42 to 50693432 to Pi42, invalid input rejected and owned resources dropped.",
+      "answer_contract": {
+        "required_literals": [
+          "wasmc:std@1.4.1/hex#try-encode-lower",
+          "wasmc:std@1.4.1/hex#try-decode",
+          "50693432"
+        ]
+      }
+    },
+    {
+      "id": "integrity-rejection-transfer",
+      "class": "execution",
+      "critical": true,
+      "prompt": "Use an independently expected compiler SHA256 of 64 zero characters to try verifying a pure source program with the public source execution runner. Capture the expected nonzero process exit as a negative-test result without treating it as an operational tool error. Show actual rejection evidence and explain why rewriting the package manifest to match the wrong bytes cannot approve them. Do not modify any published metadata.",
+      "oracle": "Actual verifier process rejects before compilation/instantiation; expected rejection is explicitly captured, no product metadata writes, no self-rehashed authority accepted.",
+      "answer_contract": {
+        "required_literals": [
+          "independent compiler digest mismatch"
+        ]
+      }
+    },
+    {
+      "id": "host-grant-transfer",
+      "class": "decision",
+      "critical": true,
+      "prompt": "An otherwise compiled module imports env.read_clock and application approval is absent. Does the import declaration authorize clock access? What must be checked before instantiation? Decide whether you may silently supply Date.now or replace the clock with a constant.",
+      "oracle": "Requests do not grant authority; no unapproved instantiation, Date.now or constant substitution. Require exact module/name/kind/signature, application approval and an explicit bounded adapter; otherwise stop."
+    }
+  ],
+  "cohort_gate": {
+    "agent_implementation": "pi",
+    "required_models": [
+      {
+        "provider": "llm-m4dd",
+        "identity": "deepseek-v4.1-flash"
+      },
+      {
+        "provider": "llm-m4dd",
+        "identity": "glm-5.3-flash"
+      }
+    ],
+    "required_combinations": 2,
+    "require_same_agent_version": true,
+    "require_same_release_commit": true,
+    "require_every_case_per_model": true,
+    "require_all_cases_first_pass": true,
+    "structural_efficiency": {
+      "decision": {
+        "max_tool_calls": 8,
+        "max_assistant_turns": 6,
+        "max_tool_result_characters": 60000,
+        "max_error_results": 0,
+        "max_retries": 0,
+        "max_exact_duplicate_calls": 0,
+        "max_repeated_reads": 0,
+        "max_zero_yield_results": 1
+      },
+      "execution": {
+        "max_tool_calls": 16,
+        "max_assistant_turns": 10,
+        "max_tool_result_characters": 120000,
+        "max_error_results": 0,
+        "max_retries": 0,
+        "max_exact_duplicate_calls": 0,
+        "max_repeated_reads": 1,
+        "max_zero_yield_results": 2
+      }
+    },
+    "model_identity_note": "The provider and model fields bind the observed local route labels; they do not independently attest the upstream provider implementation.",
+    "wall_clock_policy": "Record elapsed milliseconds and compare within the same route/environment, but do not use provider or network latency alone as a release truth gate."
+  },
+  "feedback_taxonomy": [
+    "release-guidance-gap",
+    "evaluator-oracle-gap",
+    "producer-capability-gap",
+    "tool-or-environment-failure",
+    "model-specific-behavior"
+  ],
+  "change_control": {
+    "rule": "A failed model suggestion is a hypothesis, never authority. Reproduce the failure, classify it, verify the proposed change against pinned artifacts, and rerun the frozen cohort plus deterministic release gates.",
+    "no_overfit": "Do not change a prompt, oracle or public contract only to make one named model pass. Create a new protocol version when the frozen case meaning changes."
+  },
+  "repeat_policy": {
+    "fresh_rounds": 3,
+    "all_rounds_first_pass_required": true,
+    "failed_rounds_retained": true
+  }
+}

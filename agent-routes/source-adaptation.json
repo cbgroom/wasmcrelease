@@ -1,0 +1,18 @@
+{
+  "decision": "For a new pure scalar program, read LANGUAGE.md for syntax and edit your own ordinary typed source. The sample is a pattern, not your answer. Compile, inspect imports and execute the requested calls with scripts/wasmc-agent-execute.mjs. This runner refuses any Host imports before instantiation; effectful or managed programs need their separately approved profile.",
+  "runner": "node scripts/wasmc-agent-execute.mjs --source PATH --export NAME --calls JSON",
+  "required_additional_reads": [
+    "LANGUAGE.md"
+  ],
+  "exact_evidence": [
+    "source path",
+    "source_sha256",
+    "compiler_sha256",
+    "core_sha256",
+    "imports",
+    "calls and actual results"
+  ],
+  "host_boundary": "A declared import requests an effect; application authorization and a bounded adapter are separately required.",
+  "schema": "wasmc.agent-task-route/v1",
+  "id": "source-adaptation"
+}
