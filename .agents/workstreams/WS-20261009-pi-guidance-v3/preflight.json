@@ -1,4 +1,5 @@
 {
+  "schema": "wasmc.pi-guidance-workstream-preflight/v1",
   "accepted": true,
   "scope": "Unreleased guidance checks and immutable-release fence; not whole-product or successor admission",
   "checks": [
@@ -20,7 +21,7 @@
       ],
       "exit_code": 0,
       "signal": null,
-      "stdout_sha256": "e4dedcac6815f506fcebbcd4c7df9615a93c64907b40841e546d3ba324812f6f",
+      "stdout_sha256": "3f528f70760d16af6c6cb25bb9f9bf7c374278518061205352e020e0661b02de",
       "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     },
     {
@@ -117,7 +118,7 @@
       "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     }
   ],
-  "pre_candidate_fence": {
+  "fence": {
     "protected_release_identities": 9,
     "frozen_product_files": 1054,
     "changed_frozen_files": [
@@ -129,16 +130,21 @@
     "candidate_path": "channels/candidates/0.0.21.json",
     "candidate_sha256": "e0d34d806f81f56dde084ae5b1626bdcfcb4ccb8a59491e2b9d37ecce43db651"
   },
-  "old_candidate_rejected": true,
-  "old_candidate_exit_code": 1,
-  "product_files": 1054,
-  "changed_frozen_product_files": [
-    "AGENTS.md",
-    "scripts/lib-ecosystem-control-plane.mjs",
-    "scripts/test-agent-quickstart.mjs",
-    "scripts/validate-release-surfaces.mjs"
-  ],
-  "all_other_product_bytes_unchanged": true,
+  "old_candidate": {
+    "argv": [
+      "node",
+      "scripts/release-candidate.mjs",
+      "verify",
+      "channels/candidates/0.0.21.json",
+      "--candidate-sha256",
+      "e0d34d806f81f56dde084ae5b1626bdcfcb4ccb8a59491e2b9d37ecce43db651"
+    ],
+    "exit_code": 1,
+    "signal": null,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "2a33c1ba581ffe19c7670cb902faf31e8cae070b9e76bbbe70b878d61fbc8549",
+    "expected_product_drift_rejected": true
+  },
   "release_identity_files_unchanged": [
     "release.json",
     "manifest.json",
@@ -150,7 +156,12 @@
     "channels/main.json",
     "channels/prod.json"
   ],
-  "immutable_tag_unchanged": true,
-  "evidence": "/Users/youxianshi/code/.cache/wasmc-release-evidence/pi-guidance-refinement-package-preflight",
-  "at": "2026-10-09T05:29:04.871437+00:00"
+  "old_candidate_rejected": true,
+  "old_candidate_exit_code": 1,
+  "execution_integrity_regressions": {
+    "unverified_facade_refused_before_import": true,
+    "hash_checked_raw_compiler_actually_used": true,
+    "wide_integer_JSON_calls_verified": true
+  },
+  "raw_logs": "/Users/youxianshi/code/.cache/wasmc-release-evidence/pi-guidance-important-review-20261009/preflight"
 }

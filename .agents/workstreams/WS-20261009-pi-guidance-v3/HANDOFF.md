@@ -1,13 +1,18 @@
 # Pi-guided release guidance V3
 
-Qualified for isolated review on 2026-10-09T05:40:02.578296+00:00.
-Pi-tested commit 50ef26415a9f972bd9fa84ccac15fabf81c3a640 / tree 81b17afea4995b48c2aa9a86557679e4c9ed2310: two routes,
-three fresh rounds, 60/60 structural and independent semantic cases, plus 12
-matching actual source replays and six independent input-preservation probes.
-Qualification receipt: agent-evaluation/receipts/pi-guidance-v3-refinement-20261009/qualification.json.
+Current work: critical execution integrity and exact 64-bit call fixes.
+Previous 60-case qualification applies only to 50ef26415a9f972bd9fa84ccac15fabf81c3a640,
+not the changed working tree. Its immutable receipts remain under
+agent-evaluation/receipts/pi-guidance-v3-refinement-20261009.
 
-The old v0.0.21 immutable runtime/tag/candidate/prod and integrity identities
-remain unchanged; old candidate drift rejection is intentional and proven.
-This metadata-only successor records evidence without modifying tested guidance.
-Integration, future whole-product inventory/admission and successor publication
-remain open. No old release qualification is reused as new product admission.
+Actual temporary-copy reproductions showed that a hash-checked eight-byte empty
+Wasm was reported as the compiler while the default embedded compiler executed;
+an altered facade executed before the integrity check; and JSON number arguments
+could not execute a supported u64 program. Compiler, facade, Provider and Roots
+remain byte-unchanged. Fixes target only the new execution helper, its guide and
+actual regression controls. No oracle/budget/protocol changes are authorized.
+
+Complete focused preflight, freeze the next guidance commit, and run all three
+fresh Pi rounds plus independent review and source replay. Preserve old prod/tag
+and all nine release identity files; old candidate drift rejection is required.
+This remains an unreleased guidance workstream, not successor release admission.

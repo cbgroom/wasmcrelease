@@ -52,20 +52,53 @@ inside the exported interface, rather than Rust `pub fn` declarations.
 The execution runner takes `--source`, `--export` and `--calls`. Calls are JSON
 arrays of positional argument arrays: `[[3,true],[-1,false]]` for two parameters.
 They are not objects containing an `args` property. Match the requested arguments
-and exported signature. The runner checks actual compiler/facade digests, compiles
-the file, inspects imports, refuses Host imports before instantiation, instantiates
+and exported signature. The runner checks compiler and facade digests before
+importing the facade, compiles with the exact hash-checked raw compiler bytes,
+inspects imports, refuses Host imports before instantiation, instantiates
 with `{}`, and returns source/Core hashes plus actual results. One invocation
 handles all requested calls. Report its evidence once and stop.
 Optionally pass `--expected-results` with JSON of the results derived from the
 request, for example `[[3,1],[3,0]]` for calls `[[3,true],[3,false]]` returning
 both inputs. The runner compares actual flattened results to this caller oracle;
-a mismatch fails. Each call contributes one result: a scalar result is a JSON
-number (bool is 0/1); a tuple result is an array of flattened lanes. Thus scalar
+a mismatch fails. Each call contributes one result: bool and 32-bit/float scalar
+results are JSON numbers (bool is 0/1); Core i64 results use the decimal object
+described below. A tuple result is an array of flattened lanes. Thus scalar
 `choose` for `[[3,true],[-1,false]]` expects `[6,-1]`, while tuple `keep` for
 the same calls expects `[[3,1],[-1,0]]`. Do not wrap scalar results in extra
 arrays merely because call arguments are arrays. Derive expectations from the
 request, never from the program's
 observed output. Compilation alone proves syntax, not the requested semantics.
+
+## Exact 64-bit calls
+
+Ordinary source uses `i64` for signed 64-bit integers and `u64` for unsigned
+64-bit integers. The WIT signed name is `s64`; it is not the source spelling.
+Both use Core i64 lanes, which require JavaScript BigInt arguments. In runner
+JSON, encode each such argument or expected result as an object containing only
+`bigint_decimal` with an exact decimal string. Do not pass a JSON number or
+convert through Number; a JSON number cannot carry every 64-bit integer exactly.
+
+For example, write `wide.wasmc`:
+
+```wasmc
+package local:wide;
+interface api {
+  keepU: func(value: u64) -> u64 { return value; }
+}
+world app { export api; }
+```
+
+```sh
+node scripts/wasmc-agent-execute.mjs --source wide.wasmc --export keepU --calls '[[{"bigint_decimal":"7"}],[{"bigint_decimal":"18446744073709551615"}]]' --expected-results '[{"bigint_decimal":"7"},{"bigint_decimal":"-1"}]'
+```
+
+The raw JavaScript Core result is a signed BigInt lane. The all-one bit pattern
+of `u64::MAX` is reported as `{"bigint_decimal":"-1"}`; the source value is
+still the unsigned `18446744073709551615`. Interpret signedness from the declared
+source/WIT type; this runner does not automatically lift unsigned results.
+Tuple lanes may mix JSON numbers and these decimal objects. Argument objects
+reject extra fields, invalid decimal strings and values outside the combined
+signed/unsigned 64-bit input range.
 
 Tuples are one semantic result; a raw JavaScript host observes flattened Core
 lanes. A bool lane is `0` or `1`; this is not automatic object lifting. Do not

@@ -21,6 +21,13 @@ the Agent still reads and approves the selected Root Skill and WIT API first.
 Machine receipts retain separate stage digests and canonical WIT report text.
 Search display identities are kept distinct from package/API selection identities.
 
+The pure-source execution helper verifies the facade before importing its module
+body and passes the exact hash-checked raw compiler bytes into compilation. It
+never attests a raw compiler digest while using a different embedded compiler.
+Mutated-facade and selected non-compiler Wasm copies are actual rejection controls.
+Exact i64/u64 calls use decimal BigInt objects in input, output and caller-oracle
+JSON; full-width boundaries and unsigned behavior are separately exercised.
+
 Maintainers edit route policy under .agents/agent-route-policy.json. Run
 `node scripts/agent-routes.mjs --write` to generate the index and individual
 routes, and `node scripts/agent-routes.mjs --check` to detect drift. Compiler

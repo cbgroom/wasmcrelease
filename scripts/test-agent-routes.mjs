@@ -2,7 +2,8 @@ import assert from 'node:assert/strict';
 import { readFileSync, writeFileSync, mkdirSync, mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { execFileSync } from 'node:child_process';
+import { execFileSync, spawnSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { buildAgentGuidance, loadAgentRoutes, loadAgentRoute, readPublishedLifecycle } from './agent-routes.mjs';
 import { publishedLifecycle } from './release-lifecycle.mjs';
 import { executeSource, inspectPure } from './wasmc-agent-execute.mjs';
@@ -70,13 +71,59 @@ await assert.rejects(executeSource(source.replace('local:calc', 'local:pair-echo
 const rejectionRoute = loaded.routes['compiler-integrity-rejection'];
 const fixture = readFileSync(join(root, rejectionRoute.fixture_source), 'utf8');
 assert.deepEqual((await executeSource(fixture, rejectionRoute.fixture_export, rejectionRoute.fixture_calls)).calls.map(r => r.result), [[1, 1]]);
-const basics = readFileSync(join(root, 'docs/AGENT_PURE_SOURCE.md'), 'utf8').match(/```wasmc\n([\s\S]*?)```/)[1];
+const sourceGuide = readFileSync(join(root, 'docs/AGENT_PURE_SOURCE.md'), 'utf8');
+const basics = sourceGuide.match(/```wasmc\n([\s\S]*?)```/)[1];
 assert.deepEqual((await executeSource(basics, 'keep', [[3, true], [-1, false]])).calls.map(x => x.result), [[3, 1], [-1, 0]]);
 assert.deepEqual((await executeSource(basics, 'choose', [[3, true], [-1, false]])).calls.map(x => x.result), [6, -1]);
 assert.equal((await executeSource(basics, 'keep', [[3, true], [3, false]], undefined, [[3, 1], [3, 0]])).expected_results_verified, true);
 const discardedFlag = 'package local:wrong; interface api { pair: func(value:s32, flag:bool)->tuple<bool,s32> { return tuple(value != 0, value + 1); } } world app { export api; }';
 await assert.rejects(executeSource(discardedFlag, 'pair', [[3, true], [3, false]], undefined, [[3, 1], [3, 0]]), /execution results differ from caller-supplied oracle/);
 await assert.rejects(executeSource(source, 'calc', [[0]], '0'.repeat(64)), /independent compiler digest mismatch/);
+const toolchainTemp = mkdtempSync(join(tmpdir(), 'agent-toolchain-order-'));
+try {
+  for (const path of ['scripts/wasmc-agent-execute.mjs', 'current/wasmc.mjs', 'current/compiler-release.json', 'current/wasmc_compiler.wasm']) {
+    const target = join(toolchainTemp, path); mkdirSync(join(target, '..'), { recursive: true });
+    writeFileSync(target, readFileSync(join(root, path)));
+  }
+  writeFileSync(join(toolchainTemp, 'calc.wasmc'), source);
+  const argv = ['scripts/wasmc-agent-execute.mjs', '--source', 'calc.wasmc', '--export', 'calc', '--calls', '[[0]]'];
+  const run = extra => spawnSync(process.execPath, [...argv, ...extra], { cwd: toolchainTemp, encoding: 'utf8', timeout: 30000 });
+  const facadePath = join(toolchainTemp, 'current/wasmc.mjs');
+  const originalFacade = readFileSync(facadePath);
+  writeFileSync(facadePath, Buffer.concat([originalFacade, Buffer.from("\nthrow new Error('UNVERIFIED_FACADE_EXECUTED');\n")]));
+  for (const extra of [[], ['--expected-compiler-sha256', '0'.repeat(64)]]) {
+    const rejected = run(extra); assert.equal(rejected.status, 1); assert.equal(rejected.stdout, '');
+    assert.ok(!rejected.stderr.includes('UNVERIFIED_FACADE_EXECUTED'), 'unverified facade must not execute its module body');
+    assert.match(JSON.parse(rejected.stderr).error, extra.length ? /independent compiler digest mismatch/ : /facade digest mismatch before module import/);
+  }
+  writeFileSync(facadePath, originalFacade);
+  const notACompiler = Uint8Array.from([0, 97, 115, 109, 1, 0, 0, 0]);
+  const digest = createHash('sha256').update(notACompiler).digest('hex');
+  writeFileSync(join(toolchainTemp, 'current/wasmc_compiler.wasm'), notACompiler);
+  const metadataPath = join(toolchainTemp, 'current/compiler-release.json');
+  const metadata = JSON.parse(readFileSync(metadataPath)); metadata.compiler.sha256 = digest;
+  writeFileSync(metadataPath, JSON.stringify(metadata));
+  const rejected = run(['--expected-compiler-sha256', digest]);
+  assert.equal(rejected.status, 1, 'the hash-checked selected raw bytes must actually be used, never an embedded fallback');
+  assert.equal(rejected.stdout, ''); assert.equal(JSON.parse(rejected.stderr).accepted, false);
+} finally { rmSync(toolchainTemp, { recursive: true }); }
+const wide = 'package local:wide; interface api { keepU: func(v:u64)->u64 { return v; } keepS: func(v:i64)->i64 { return v; } above: func(v:u64)->bool { return v > 7; } } world app { export api; }';
+const decimal = value => ({ bigint_decimal: value });
+assert.deepEqual((await executeSource(wide, 'keepU', [[decimal('7')], [decimal('18446744073709551615')]], undefined, [decimal('7'), decimal('-1')])).calls.map(row => row.result), [7n, -1n]);
+assert.deepEqual((await executeSource(wide, 'keepS', [[decimal('-9223372036854775808')], [decimal('9223372036854775807')]], undefined, [decimal('-9223372036854775808'), decimal('9223372036854775807')])).calls.map(row => row.result), [-9223372036854775808n, 9223372036854775807n]);
+assert.deepEqual((await executeSource(wide, 'above', [[decimal('7')], [decimal('18446744073709551615')]], undefined, [0, 1])).calls.map(row => row.result), [0, 1]);
+for (const value of [decimal('7x'), decimal('18446744073709551616'), { bigint_decimal: '7', inferred: true }]) {
+  await assert.rejects(executeSource(wide, 'keepU', [[value]]), /bigint_decimal|64-bit input range/);
+}
+const wideTemp = mkdtempSync(join(tmpdir(), 'agent-wide-call-'));
+try {
+  const documentedWide = [...sourceGuide.matchAll(/```wasmc\n([\s\S]*?)```/g)][1][1];
+  const path = join(wideTemp, 'wide.wasmc'); writeFileSync(path, documentedWide);
+  const calls = [[decimal('7')], [decimal('18446744073709551615')]];
+  const result = JSON.parse(execFileSync(process.execPath, ['scripts/wasmc-agent-execute.mjs', '--source', path, '--export', 'keepU', '--calls', JSON.stringify(calls), '--expected-results', JSON.stringify([decimal('7'), decimal('-1')])], { cwd: root, encoding: 'utf8' }));
+  assert.equal(result.expected_results_verified, true); assert.deepEqual(result.calls.map(row => row.arguments), calls);
+  assert.deepEqual(result.calls.map(row => row.result), [decimal('7'), decimal('-1')]);
+} finally { rmSync(wideTemp, { recursive: true }); }
 const probeTemp = mkdtempSync(join(tmpdir(), 'agent-digest-probe-'));
 try {
   const path = join(probeTemp, 'calc.wasmc'); writeFileSync(path, source);
@@ -95,4 +142,4 @@ for (const codec of ['base64', 'hex']) {
   assert.equal(combined.encoded_utf8, Buffer.from(codec === 'base64' ? 'abc' : '你好 Pi').toString(codec));
   assert.equal(combined.authority_granted, false); assert.equal(combined.search_wit_routes.length, 2); assert.equal(combined.states.installable, true);
 }
-console.log(JSON.stringify({ accepted: true, routes: Object.keys(model.routes).length, lifecycle_negative_cases: 7, mutated_route_rejected: true, escaping_path_rejected: true, independent_digest_rejected: true, unapproved_Host_refused_before_instantiation: true, codecs: 2, byte_codec_rounds: 512, explicit_drops: 2048 }));
+console.log(JSON.stringify({ accepted: true, routes: Object.keys(model.routes).length, lifecycle_negative_cases: 7, mutated_route_rejected: true, escaping_path_rejected: true, independent_digest_rejected: true, unverified_facade_refused_before_import: true, hash_checked_raw_compiler_actually_used: true, wide_integer_JSON_calls_verified: true, unapproved_Host_refused_before_instantiation: true, codecs: 2, byte_codec_rounds: 512, explicit_drops: 2048 }));
