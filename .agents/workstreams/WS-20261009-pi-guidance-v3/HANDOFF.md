@@ -16,3 +16,9 @@ Next: focused preflight, freeze a clean successor commit, rerun the unchanged
 10-case protocol on both routes for three fresh rounds, independent review and
 source replay, then update the existing draft PR with separate evidence. Future
 whole-product inventory, admission and publication remain separate.
+
+The a0d913633f5b5675e08fbe1e5a848986ab5cd2f1 cohort failed on a hyphenated
+ordinary-source package name. Both first rounds passed; GLM second-round source
+had two compiler errors before repair, so it is not qualified. The source guide
+and actual compiler regression now cover plain package identifiers. Dedicated
+unreleased CI passed on a0d9136 independently of that failed live-model gate.

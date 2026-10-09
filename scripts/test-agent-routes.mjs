@@ -62,6 +62,11 @@ try {
 } finally { rmSync(temp, { recursive: true }); }
 const source = 'package local:calc; interface api { calc: func(x: s32) -> s32 { return x * 2 + 1; } } world app { export api; }';
 const proof = await executeSource(source, 'calc', [[0], [9], [-3]]); assert.deepEqual(proof.calls.map(r => r.result), [1, 19, -5]); assert.deepEqual(proof.imports, []);
+for (const name of ['pair_echo', 'pairEcho', 'pair2']) {
+  const renamed = source.replace('local:calc', `local:${name}`);
+  assert.deepEqual((await executeSource(renamed, 'calc', [[0], [9], [-3]])).calls.map(r => r.result), [1, 19, -5]);
+}
+await assert.rejects(executeSource(source.replace('local:calc', 'local:pair-echo'), 'calc', [[0]]), /expected Semi, got Minus/);
 const rejectionRoute = loaded.routes['compiler-integrity-rejection'];
 const fixture = readFileSync(join(root, rejectionRoute.fixture_source), 'utf8');
 assert.deepEqual((await executeSource(fixture, rejectionRoute.fixture_export, rejectionRoute.fixture_calls)).calls.map(r => r.result), [[1, 1]]);

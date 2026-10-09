@@ -7,6 +7,12 @@ there is no existing source file to discover before writing it. The route names
 shipped, preflight-checked runner paths, so no script-directory probes are needed. For syntax outside this guide read the relevant
 section of LANGUAGE.md; supported type/feature positions are decided separately.
 
+Use a plain source package name such as `package local:basics;`. The current
+compiler accepts names such as `pair_echo`, `pairEcho` and `pair2`, but rejects
+`package local:pair-echo;` with `expected Semi, got Minus`. A `.wasmc` filename
+may contain hyphens; it is separate from the source package identifier. Do not
+copy a hyphenated filename into the package declaration.
+
 A complete file declares a package, an interface with function bodies, and a
 world exporting that interface. Parameters use WIT fixed-width types, including
 `s32` and `bool`. Use `true` and `false` for boolean arguments. A function returns
@@ -65,8 +71,9 @@ Tuples are one semantic result; a raw JavaScript host observes flattened Core
 lanes. A bool lane is `0` or `1`; this is not automatic object lifting. Do not
 convert an s32 argument into a boolean unless that transformation was requested.
 
-For independently wrong compiler-digest tests, use the route's rejection probe
-with the same argument-array format. It captures the actual verifier nonzero exit
+For independently wrong compiler-digest tests, choose the
+`compiler-integrity-rejection` route. Its shipped pure fixture, export and calls
+are provided; no new source file is required. It captures the actual verifier nonzero exit
 and accepts only the expected digest mismatch. Copy its JSON unchanged once; in
 the explanation refer to `actual` and `expected` fields instead of repeating or
 shortening digest values. An unexpected error or repaired invocation is a failure.
