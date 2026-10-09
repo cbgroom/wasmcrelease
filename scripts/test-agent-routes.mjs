@@ -30,7 +30,10 @@ for (const mutate of [p => p.version = '0.0.20', p => p.tag = 'v0.0.20', p => p.
   assert.equal(states.released, false); assert.equal(states.admitted, false); assert.equal(states.installable, false);
   const projected = buildAgentGuidance(root, { 'channels/prod.json': bad });
   assert.deepEqual(projected.routes['library-first-selection'].states, states);
-  for (const [key, value] of Object.entries(states)) assert.equal(projected.routes['release-state-separation'].related_product[key], value);
+  for (const [key, value] of Object.entries(states)) {
+    assert.equal(projected.routes['release-state-separation'].related_product[key], value);
+    assert.ok(projected.routes['release-state-separation'].report_text.includes(`related_product.${key} = ${value}`));
+  }
 }
 const temp = mkdtempSync(join(tmpdir(), 'agent-route-mutation-'));
 try {

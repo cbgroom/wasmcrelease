@@ -57,6 +57,16 @@ export function buildAgentGuidance(base = root, overrides = {}) {
   routes['release-state-separation'].states = Object.fromEntries(Object.keys(lifecycle).map(key => [key, false]));
   routes['release-state-separation'].related_product = { ...lifecycle, routes: telemetry.supported_surfaces,
     lifecycle_authority: 'release.json and channels/prod.json; only these supported profiles, never direct ordinary Source' };
+  const separated = routes['release-state-separation'];
+  separated.report_text = [
+    `identity: ${separated.exact_report.identity}`,
+    `direct_route: ${separated.exact_report.stop_reason}`,
+    ...Object.entries(separated.states).map(([key, value]) => `direct.${key} = ${value}`),
+    'first_missing_authority: qualified=false; direct ordinary Source resource methods are unsupported.',
+    ...Object.entries(lifecycle).map(([key, value]) => `related_product.${key} = ${value}`),
+    'related_supported_routes:', ...telemetry.supported_surfaces.map(route => `- ${route}`),
+    `lifecycle_authority: ${separated.related_product.lifecycle_authority}`
+  ].join('\n');
   const base64 = routes['library-first-selection'];
   Object.assign(base64, { product_release: release.tag, package: identity,
     apis: [`${identity}/base64#try-encode-standard`, `${identity}/base64#try-decode-standard`],
