@@ -9,6 +9,10 @@ verified by that command; no manual route hashing or digest report is needed.
 Copy required identities completely; never use
 an ellipsis or placeholder. A field name alone is not a requested identity.
 Report only requested identities; leave other verified digests in machine receipts.
+Choose the route by the requested output: release/version/entrypoint/compiler
+integrity uses release-orientation; import permissions use host-authority-boundary;
+writing or editing source uses source-adaptation. These are separate intents.
+Read licensing authority only for permission or licensing questions.
 
 For release orientation use `agent-release-orientation.json`; open the full artifact inventory
 in `manifest.json` only if the compact check fails. `release.json` and
@@ -28,5 +32,5 @@ For an unfamiliar task follow the general route, then the selected public Skill:
 Before instantiation inspect every import and compare module/name/kind/signature
 against an application-owned exact allowlist. Imports request effects and grant
 no ambient authority. Pure execution requires `imports=[]` and `{}`.
-Read `license-policy.json` and `LICENSE` for permissions; commercial and production
+For permission questions read `license-policy.json` and `LICENSE`; commercial and production
 use require a separate written license. Compiler implementation source is private.

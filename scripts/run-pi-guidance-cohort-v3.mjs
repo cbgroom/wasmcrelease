@@ -37,6 +37,6 @@ for (let round = 1; round <= 3; round++) {
 const accepted = reports.length === 6 && reports.every(row => row.exit_code === 0);
 const result = { accepted, scope: 'structural-guidance-experiment-only; independent semantic and artifact review required, not whole-product release qualification',
   guidance_commit: commit, guidance_tree: tree, protocol_sha256: sha(protocolBytes), planned_rounds: 3, completed_rounds: reports.length / 2,
-  models: 2, cases: reports.length * 10, stopped_on_failed_round: !accepted, reports };
+  models: 2, cases: reports.reduce((n, row) => n + JSON.parse(readFileSync(row.path)).cases.length, 0), stopped_on_failed_round: !accepted, reports };
 writeFileSync(join(output, 'cohort.json'), JSON.stringify(result, null, 2) + '\n'); console.log(JSON.stringify(result));
 if (!accepted) process.exitCode = 1;

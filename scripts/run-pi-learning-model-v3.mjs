@@ -158,9 +158,12 @@ for (const caseDefinition of protocol.cases) {
   mkdirSync(dirname(input.output), { recursive: true });
   writeFileSync(input.output + '.progress.json', `${JSON.stringify({ ...summary, completed: false }, null, 2)}\n`);
   process.stdout.write(`${caseDefinition.id} structural=${current.structural.accepted} timeout=${current.process.timed_out} wall_ms=${current.process.wall_ms}\n`);
+  if (!current.structural.accepted || current.process.timed_out || current.process.status !== 0 || current.tracked_files_modified.length) break;
 }
 
-summary.structural_pass = summary.cases.every(row => row.structural.accepted && !row.process.timed_out && row.process.status === 0 && row.tracked_files_modified.length === 0);
+summary.planned_cases = protocol.cases.length;
+summary.completed_cases = summary.cases.length;
+summary.structural_pass = summary.cases.length === protocol.cases.length && summary.cases.every(row => row.structural.accepted && !row.process.timed_out && row.process.status === 0 && row.tracked_files_modified.length === 0);
 mkdirSync(dirname(input.output), { recursive: true });
 writeFileSync(input.output, `${JSON.stringify(summary, null, 2)}\n`);
 process.stdout.write(`${JSON.stringify({ accepted: summary.structural_pass, output: input.output })}\n`);
