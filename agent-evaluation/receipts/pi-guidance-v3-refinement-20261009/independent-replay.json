@@ -1,0 +1,1431 @@
+{
+  "accepted": true,
+  "scope": "Independent execution replay; final-answer semantic review is separate",
+  "guidance_commit": "50ef26415a9f972bd9fa84ccac15fabf81c3a640",
+  "guidance_tree": "81b17afea4995b48c2aa9a86557679e4c9ed2310",
+  "protocol_sha256": "cd441d860b43fbd5b424fe53ca3d7532a102975471de20b5fa096ff9282465ba",
+  "source_replays": 12,
+  "input_preservation_probes": 6,
+  "proofs": [
+    {
+      "round": 1,
+      "model": "deepseek-v4.1-flash",
+      "captured_source": {
+        "path": "score.wasmc",
+        "sha256": "3f94f1a6c9c83cbbad97dc4c0e839c9ec6da7be3f35b5c0422327df02db2367e",
+        "utf8": "package local:score;\n\ninterface api {\n  score: func(value: s32, flag: bool) -> s32 {\n    if (flag) { return value + 7; }\n    return value - 3;\n  }\n}\n\nworld app { export api; }\n"
+      },
+      "independent_replay": {
+        "accepted": true,
+        "compiler_sha256": "42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c",
+        "source_sha256": "3f94f1a6c9c83cbbad97dc4c0e839c9ec6da7be3f35b5c0422327df02db2367e",
+        "core_bytes": 55,
+        "core_sha256": "5df3f553ff047dd72bb8ced84031b92e1cb4af9ae6d562850e19786397b84182",
+        "imports": [],
+        "export": "score",
+        "calls": [
+          {
+            "arguments": [
+              10,
+              true
+            ],
+            "result": 17
+          },
+          {
+            "arguments": [
+              10,
+              false
+            ],
+            "result": 7
+          },
+          {
+            "arguments": [
+              -4,
+              true
+            ],
+            "result": 3
+          }
+        ],
+        "expected_results_verified": false
+      },
+      "actual_Pi_execution": {
+        "accepted": true,
+        "expected_results_verified": true,
+        "compiler_sha256": "42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c",
+        "source_sha256": "3f94f1a6c9c83cbbad97dc4c0e839c9ec6da7be3f35b5c0422327df02db2367e",
+        "core_bytes": 55,
+        "core_sha256": "5df3f553ff047dd72bb8ced84031b92e1cb4af9ae6d562850e19786397b84182",
+        "imports": [],
+        "export": "score",
+        "calls": [
+          {
+            "arguments": [
+              10,
+              true
+            ],
+            "result": 17
+          },
+          {
+            "arguments": [
+              10,
+              false
+            ],
+            "result": 7
+          },
+          {
+            "arguments": [
+              -4,
+              true
+            ],
+            "result": 3
+          }
+        ]
+      },
+      "original_authored_source": "package local:pair_echo;\n\ninterface api {\n  pair_echo: func(value: s32, flag: bool) -> tuple<s32, bool> {\n    return tuple(value, flag);\n  }\n}\n\nworld app { export api; }\n",
+      "original_source_independent_replay": {
+        "accepted": true,
+        "compiler_sha256": "42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c",
+        "source_sha256": "3913ee7c8a02c2f78aa3b37ed88adeb6f6ccdfd75dc3bb0bc071783d789edaec",
+        "core_bytes": 52,
+        "core_sha256": "472723af7c9e2e78ee2899f151aa4cdc49733bc76b2d2e1d79eb07d5d23f17f1",
+        "imports": [],
+        "export": "pair_echo",
+        "calls": [
+          {
+            "arguments": [
+              3,
+              true
+            ],
+            "result": [
+              3,
+              1
+            ]
+          }
+        ],
+        "expected_results_verified": false
+      },
+      "original_actual_Pi_execution": {
+        "accepted": true,
+        "expected_results_verified": true,
+        "compiler_sha256": "42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c",
+        "source_sha256": "3913ee7c8a02c2f78aa3b37ed88adeb6f6ccdfd75dc3bb0bc071783d789edaec",
+        "core_bytes": 52,
+        "core_sha256": "472723af7c9e2e78ee2899f151aa4cdc49733bc76b2d2e1d79eb07d5d23f17f1",
+        "imports": [],
+        "export": "pair_echo",
+        "calls": [
+          {
+            "arguments": [
+              3,
+              true
+            ],
+            "result": [
+              3,
+              1
+            ]
+          }
+        ]
+      },
+      "independent_input_preservation": {
+        "accepted": true,
+        "compiler_sha256": "42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c",
+        "source_sha256": "3913ee7c8a02c2f78aa3b37ed88adeb6f6ccdfd75dc3bb0bc071783d789edaec",
+        "core_bytes": 52,
+        "core_sha256": "472723af7c9e2e78ee2899f151aa4cdc49733bc76b2d2e1d79eb07d5d23f17f1",
+        "imports": [],
+        "export": "pair_echo",
+        "calls": [
+          {
+            "arguments": [
+              0,
+              true
+            ],
+            "result": [
+              0,
+              1
+            ]
+          },
+          {
+            "arguments": [
+              2,
+              true
+            ],
+            "result": [
+              2,
+              1
+            ]
+          },
+          {
+            "arguments": [
+              2,
+              false
+            ],
+            "result": [
+              2,
+              0
+            ]
+          },
+          {
+            "arguments": [
+              -2,
+              false
+            ],
+            "result": [
+              -2,
+              0
+            ]
+          }
+        ],
+        "expected_results_verified": false
+      },
+      "actual_Pi_Hex": {
+        "accepted": true,
+        "codec": "hex",
+        "package": "wasmc:std@1.4.1",
+        "apis": [
+          "wasmc:std@1.4.1/hex#try-encode-lower",
+          "wasmc:std@1.4.1/hex#try-decode"
+        ],
+        "input_utf8": "Pi42",
+        "encoded_utf8": "50693432",
+        "decoded_utf8": "Pi42",
+        "imports_verified": true,
+        "selected_Root_verified": true,
+        "invalid_input_rejected": true,
+        "rounds": 256,
+        "explicit_drops": 1024,
+        "persistent_provider_memory_bytes": 3670016,
+        "states": {
+          "qualified": true,
+          "admitted": true,
+          "released": true,
+          "discoverable": true,
+          "installable": true
+        },
+        "authority_granted": false,
+        "search_wit_routes": [
+          "wasmc:std@1.4.1/hex#try-encode-lower",
+          "wasmc:std@1.4.1/hex#try-decode"
+        ],
+        "stage_receipts": {
+          "search": "bfdb169e7296e7afb21c77efc9621624184583d1eeb4939204a51eb632c3cc6a",
+          "resolve": "4fe1ac9859b28764f009c3ee6381124a6602e760c627f790eea8886dfe61bd9f",
+          "behavior": "c2599613c22ae0534c110f76010d3350398f31ba02f6981c37de9a8a4ff6d4aa"
+        },
+        "report_text": "Package: wasmc:std@1.4.1\nAPIs:\n- wasmc:std@1.4.1/hex#try-encode-lower\n- wasmc:std@1.4.1/hex#try-decode\nSearch discovered the candidate but was not authority.\nResolve verified catalog_sha256, manifest_sha256, root_inventory_sha256, wit_sha256 and artifact_sha256.\nBehavior separately verified companion_sha256 and import_module and passed."
+      },
+      "actual_Pi_rejection": {
+        "accepted": true,
+        "expected_rejection": true,
+        "probe_exit_code": 0,
+        "verifier_exit_code": 1,
+        "execution_accepted": false,
+        "verifier_stderr": {
+          "accepted": false,
+          "error": "independent compiler digest mismatch",
+          "actual": "42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c",
+          "expected": "0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        "caller_expectation_verified": true,
+        "report_text": "The verifier subprocess exited 1; the expected-rejection probe wrapper exited 0. No source compilation, export resolution, call execution or instantiation occurred. The comparison target is the fixed caller-supplied --expected-compiler-sha256 argument. Editing package metadata does not change that argument; the selected compiler bytes still fail the comparison. Changing the caller argument would change the test, not approve the rejected bytes."
+      }
+    },
+    {
+      "round": 1,
+      "model": "glm-5.3-flash",
+      "captured_source": {
+        "path": "score.wasmc",
+        "sha256": "3f94f1a6c9c83cbbad97dc4c0e839c9ec6da7be3f35b5c0422327df02db2367e",
+        "utf8": "package local:score;\n\ninterface api {\n  score: func(value: s32, flag: bool) -> s32 {\n    if (flag) { return value + 7; }\n    return value - 3;\n  }\n}\n\nworld app { export api; }\n"
+      },
+      "independent_replay": {
+        "accepted": true,
+        "compiler_sha256": "42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c",
+        "source_sha256": "3f94f1a6c9c83cbbad97dc4c0e839c9ec6da7be3f35b5c0422327df02db2367e",
+        "core_bytes": 55,
+        "core_sha256": "5df3f553ff047dd72bb8ced84031b92e1cb4af9ae6d562850e19786397b84182",
+        "imports": [],
+        "export": "score",
+        "calls": [
+          {
+            "arguments": [
+              10,
+              true
+            ],
+            "result": 17
+          },
+          {
+            "arguments": [
+              10,
+              false
+            ],
+            "result": 7
+          },
+          {
+            "arguments": [
+              -4,
+              true
+            ],
+            "result": 3
+          }
+        ],
+        "expected_results_verified": false
+      },
+      "actual_Pi_execution": {
+        "accepted": true,
+        "expected_results_verified": true,
+        "compiler_sha256": "42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c",
+        "source_sha256": "3f94f1a6c9c83cbbad97dc4c0e839c9ec6da7be3f35b5c0422327df02db2367e",
+        "core_bytes": 55,
+        "core_sha256": "5df3f553ff047dd72bb8ced84031b92e1cb4af9ae6d562850e19786397b84182",
+        "imports": [],
+        "export": "score",
+        "calls": [
+          {
+            "arguments": [
+              10,
+              true
+            ],
+            "result": 17
+          },
+          {
+            "arguments": [
+              10,
+              false
+            ],
+            "result": 7
+          },
+          {
+            "arguments": [
+              -4,
+              true
+            ],
+            "result": 3
+          }
+        ]
+      },
+      "original_authored_source": "package local:pair_echo;\n\ninterface api {\n  keep: func(value: s32, flag: bool) -> tuple<s32, bool> {\n    return tuple(value, flag);\n  }\n}\n\nworld app { export api; }\n",
+      "original_source_independent_replay": {
+        "accepted": true,
+        "compiler_sha256": "42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c",
+        "source_sha256": "a2c0634661e18ab307601ed92f2bb392e5bc65ec8ca41fc1bded2d8a89fe9c90",
+        "core_bytes": 47,
+        "core_sha256": "5062a008bab93c4e3b2210ad141c5011f6ceabb993eac17a4e7c455696a03d36",
+        "imports": [],
+        "export": "keep",
+        "calls": [
+          {
+            "arguments": [
+              3,
+              true
+            ],
+            "result": [
+              3,
+              1
+            ]
+          }
+        ],
+        "expected_results_verified": false
+      },
+      "original_actual_Pi_execution": {
+        "accepted": true,
+        "expected_results_verified": true,
+        "compiler_sha256": "42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c",
+        "source_sha256": "a2c0634661e18ab307601ed92f2bb392e5bc65ec8ca41fc1bded2d8a89fe9c90",
+        "core_bytes": 47,
+        "core_sha256": "5062a008bab93c4e3b2210ad141c5011f6ceabb993eac17a4e7c455696a03d36",
+        "imports": [],
+        "export": "keep",
+        "calls": [
+          {
+            "arguments": [
+              3,
+              true
+            ],
+            "result": [
+              3,
+              1
+            ]
+          }
+        ]
+      },
+      "independent_input_preservation": {
+        "accepted": true,
+        "compiler_sha256": "42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c",
+        "source_sha256": "a2c0634661e18ab307601ed92f2bb392e5bc65ec8ca41fc1bded2d8a89fe9c90",
+        "core_bytes": 47,
+        "core_sha256": "5062a008bab93c4e3b2210ad141c5011f6ceabb993eac17a4e7c455696a03d36",
+        "imports": [],
+        "export": "keep",
+        "calls": [
+          {
+            "arguments": [
+              0,
+              true
+            ],
+            "result": [
+              0,
+              1
+            ]
+          },
+          {
+            "arguments": [
+              2,
+              true
+            ],
+            "result": [
+              2,
+              1
+            ]
+          },
+          {
+            "arguments": [
+              2,
+              false
+            ],
+            "result": [
+              2,
+              0
+            ]
+          },
+          {
+            "arguments": [
+              -2,
+              false
+            ],
+            "result": [
+              -2,
+              0
+            ]
+          }
+        ],
+        "expected_results_verified": false
+      },
+      "actual_Pi_Hex": {
+        "accepted": true,
+        "codec": "hex",
+        "package": "wasmc:std@1.4.1",
+        "apis": [
+          "wasmc:std@1.4.1/hex#try-encode-lower",
+          "wasmc:std@1.4.1/hex#try-decode"
+        ],
+        "input_utf8": "Pi42",
+        "encoded_utf8": "50693432",
+        "decoded_utf8": "Pi42",
+        "imports_verified": true,
+        "selected_Root_verified": true,
+        "invalid_input_rejected": true,
+        "rounds": 256,
+        "explicit_drops": 1024,
+        "persistent_provider_memory_bytes": 3670016,
+        "states": {
+          "qualified": true,
+          "admitted": true,
+          "released": true,
+          "discoverable": true,
+          "installable": true
+        },
+        "authority_granted": false,
+        "search_wit_routes": [
+          "wasmc:std@1.4.1/hex#try-encode-lower",
+          "wasmc:std@1.4.1/hex#try-decode"
+        ],
+        "stage_receipts": {
+          "search": "bfdb169e7296e7afb21c77efc9621624184583d1eeb4939204a51eb632c3cc6a",
+          "resolve": "4fe1ac9859b28764f009c3ee6381124a6602e760c627f790eea8886dfe61bd9f",
+          "behavior": "c2599613c22ae0534c110f76010d3350398f31ba02f6981c37de9a8a4ff6d4aa"
+        },
+        "report_text": "Package: wasmc:std@1.4.1\nAPIs:\n- wasmc:std@1.4.1/hex#try-encode-lower\n- wasmc:std@1.4.1/hex#try-decode\nSearch discovered the candidate but was not authority.\nResolve verified catalog_sha256, manifest_sha256, root_inventory_sha256, wit_sha256 and artifact_sha256.\nBehavior separately verified companion_sha256 and import_module and passed."
+      },
+      "actual_Pi_rejection": {
+        "accepted": true,
+        "expected_rejection": true,
+        "probe_exit_code": 0,
+        "verifier_exit_code": 1,
+        "execution_accepted": false,
+        "verifier_stderr": {
+          "accepted": false,
+          "error": "independent compiler digest mismatch",
+          "actual": "42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c",
+          "expected": "0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        "caller_expectation_verified": true,
+        "report_text": "The verifier subprocess exited 1; the expected-rejection probe wrapper exited 0. No source compilation, export resolution, call execution or instantiation occurred. The comparison target is the fixed caller-supplied --expected-compiler-sha256 argument. Editing package metadata does not change that argument; the selected compiler bytes still fail the comparison. Changing the caller argument would change the test, not approve the rejected bytes."
+      }
+    },
+    {
+      "round": 2,
+      "model": "deepseek-v4.1-flash",
+      "captured_source": {
+        "path": "score.wasmc",
+        "sha256": "3f94f1a6c9c83cbbad97dc4c0e839c9ec6da7be3f35b5c0422327df02db2367e",
+        "utf8": "package local:score;\n\ninterface api {\n  score: func(value: s32, flag: bool) -> s32 {\n    if (flag) { return value + 7; }\n    return value - 3;\n  }\n}\n\nworld app { export api; }\n"
+      },
+      "independent_replay": {
+        "accepted": true,
+        "compiler_sha256": "42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c",
+        "source_sha256": "3f94f1a6c9c83cbbad97dc4c0e839c9ec6da7be3f35b5c0422327df02db2367e",
+        "core_bytes": 55,
+        "core_sha256": "5df3f553ff047dd72bb8ced84031b92e1cb4af9ae6d562850e19786397b84182",
+        "imports": [],
+        "export": "score",
+        "calls": [
+          {
+            "arguments": [
+              10,
+              true
+            ],
+            "result": 17
+          },
+          {
+            "arguments": [
+              10,
+              false
+            ],
+            "result": 7
+          },
+          {
+            "arguments": [
+              -4,
+              true
+            ],
+            "result": 3
+          }
+        ],
+        "expected_results_verified": false
+      },
+      "actual_Pi_execution": {
+        "accepted": true,
+        "expected_results_verified": true,
+        "compiler_sha256": "42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c",
+        "source_sha256": "3f94f1a6c9c83cbbad97dc4c0e839c9ec6da7be3f35b5c0422327df02db2367e",
+        "core_bytes": 55,
+        "core_sha256": "5df3f553ff047dd72bb8ced84031b92e1cb4af9ae6d562850e19786397b84182",
+        "imports": [],
+        "export": "score",
+        "calls": [
+          {
+            "arguments": [
+              10,
+              true
+            ],
+            "result": 17
+          },
+          {
+            "arguments": [
+              10,
+              false
+            ],
+            "result": 7
+          },
+          {
+            "arguments": [
+              -4,
+              true
+            ],
+            "result": 3
+          }
+        ]
+      },
+      "original_authored_source": "package local:pair_echo;\n\ninterface api {\n  keep: func(value: s32, flag: bool) -> tuple<s32, bool> {\n    return tuple(value, flag);\n  }\n}\n\nworld app { export api; }\n",
+      "original_source_independent_replay": {
+        "accepted": true,
+        "compiler_sha256": "42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c",
+        "source_sha256": "a2c0634661e18ab307601ed92f2bb392e5bc65ec8ca41fc1bded2d8a89fe9c90",
+        "core_bytes": 47,
+        "core_sha256": "5062a008bab93c4e3b2210ad141c5011f6ceabb993eac17a4e7c455696a03d36",
+        "imports": [],
+        "export": "keep",
+        "calls": [
+          {
+            "arguments": [
+              7,
+              true
+            ],
+            "result": [
+              7,
+              1
+            ]
+          }
+        ],
+        "expected_results_verified": false
+      },
+      "original_actual_Pi_execution": {
+        "accepted": true,
+        "expected_results_verified": true,
+        "compiler_sha256": "42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c",
+        "source_sha256": "a2c0634661e18ab307601ed92f2bb392e5bc65ec8ca41fc1bded2d8a89fe9c90",
+        "core_bytes": 47,
+        "core_sha256": "5062a008bab93c4e3b2210ad141c5011f6ceabb993eac17a4e7c455696a03d36",
+        "imports": [],
+        "export": "keep",
+        "calls": [
+          {
+            "arguments": [
+              7,
+              true
+            ],
+            "result": [
+              7,
+              1
+            ]
+          }
+        ]
+      },
+      "independent_input_preservation": {
+        "accepted": true,
+        "compiler_sha256": "42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c",
+        "source_sha256": "a2c0634661e18ab307601ed92f2bb392e5bc65ec8ca41fc1bded2d8a89fe9c90",
+        "core_bytes": 47,
+        "core_sha256": "5062a008bab93c4e3b2210ad141c5011f6ceabb993eac17a4e7c455696a03d36",
+        "imports": [],
+        "export": "keep",
+        "calls": [
+          {
+            "arguments": [
+              0,
+              true
+            ],
+            "result": [
+              0,
+              1
+            ]
+          },
+          {
+            "arguments": [
+              2,
+              true
+            ],
+            "result": [
+              2,
+              1
+            ]
+          },
+          {
+            "arguments": [
+              2,
+              false
+            ],
+            "result": [
+              2,
+              0
+            ]
+          },
+          {
+            "arguments": [
+              -2,
+              false
+            ],
+            "result": [
+              -2,
+              0
+            ]
+          }
+        ],
+        "expected_results_verified": false
+      },
+      "actual_Pi_Hex": {
+        "accepted": true,
+        "codec": "hex",
+        "package": "wasmc:std@1.4.1",
+        "apis": [
+          "wasmc:std@1.4.1/hex#try-encode-lower",
+          "wasmc:std@1.4.1/hex#try-decode"
+        ],
+        "input_utf8": "Pi42",
+        "encoded_utf8": "50693432",
+        "decoded_utf8": "Pi42",
+        "imports_verified": true,
+        "selected_Root_verified": true,
+        "invalid_input_rejected": true,
+        "rounds": 256,
+        "explicit_drops": 1024,
+        "persistent_provider_memory_bytes": 3670016,
+        "states": {
+          "qualified": true,
+          "admitted": true,
+          "released": true,
+          "discoverable": true,
+          "installable": true
+        },
+        "authority_granted": false,
+        "search_wit_routes": [
+          "wasmc:std@1.4.1/hex#try-encode-lower",
+          "wasmc:std@1.4.1/hex#try-decode"
+        ],
+        "stage_receipts": {
+          "search": "bfdb169e7296e7afb21c77efc9621624184583d1eeb4939204a51eb632c3cc6a",
+          "resolve": "4fe1ac9859b28764f009c3ee6381124a6602e760c627f790eea8886dfe61bd9f",
+          "behavior": "c2599613c22ae0534c110f76010d3350398f31ba02f6981c37de9a8a4ff6d4aa"
+        },
+        "report_text": "Package: wasmc:std@1.4.1\nAPIs:\n- wasmc:std@1.4.1/hex#try-encode-lower\n- wasmc:std@1.4.1/hex#try-decode\nSearch discovered the candidate but was not authority.\nResolve verified catalog_sha256, manifest_sha256, root_inventory_sha256, wit_sha256 and artifact_sha256.\nBehavior separately verified companion_sha256 and import_module and passed."
+      },
+      "actual_Pi_rejection": {
+        "accepted": true,
+        "expected_rejection": true,
+        "probe_exit_code": 0,
+        "verifier_exit_code": 1,
+        "execution_accepted": false,
+        "verifier_stderr": {
+          "accepted": false,
+          "error": "independent compiler digest mismatch",
+          "actual": "42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c",
+          "expected": "0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        "caller_expectation_verified": true,
+        "report_text": "The verifier subprocess exited 1; the expected-rejection probe wrapper exited 0. No source compilation, export resolution, call execution or instantiation occurred. The comparison target is the fixed caller-supplied --expected-compiler-sha256 argument. Editing package metadata does not change that argument; the selected compiler bytes still fail the comparison. Changing the caller argument would change the test, not approve the rejected bytes."
+      }
+    },
+    {
+      "round": 2,
+      "model": "glm-5.3-flash",
+      "captured_source": {
+        "path": "score.wasmc",
+        "sha256": "73f818964acda1503b62fd9bcc1971e4d6694c1a2b10b2609381c3a57774a6eb",
+        "utf8": "package local:score_prog;\n\ninterface api {\n  score: func(value: s32, flag: bool) -> s32 {\n    if (flag) { return value + 7; }\n    return value - 3;\n  }\n}\n\nworld app { export api; }\n"
+      },
+      "independent_replay": {
+        "accepted": true,
+        "compiler_sha256": "42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c",
+        "source_sha256": "73f818964acda1503b62fd9bcc1971e4d6694c1a2b10b2609381c3a57774a6eb",
+        "core_bytes": 55,
+        "core_sha256": "5df3f553ff047dd72bb8ced84031b92e1cb4af9ae6d562850e19786397b84182",
+        "imports": [],
+        "export": "score",
+        "calls": [
+          {
+            "arguments": [
+              10,
+              true
+            ],
+            "result": 17
+          },
+          {
+            "arguments": [
+              10,
+              false
+            ],
+            "result": 7
+          },
+          {
+            "arguments": [
+              -4,
+              true
+            ],
+            "result": 3
+          }
+        ],
+        "expected_results_verified": false
+      },
+      "actual_Pi_execution": {
+        "accepted": true,
+        "expected_results_verified": true,
+        "compiler_sha256": "42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c",
+        "source_sha256": "73f818964acda1503b62fd9bcc1971e4d6694c1a2b10b2609381c3a57774a6eb",
+        "core_bytes": 55,
+        "core_sha256": "5df3f553ff047dd72bb8ced84031b92e1cb4af9ae6d562850e19786397b84182",
+        "imports": [],
+        "export": "score",
+        "calls": [
+          {
+            "arguments": [
+              10,
+              true
+            ],
+            "result": 17
+          },
+          {
+            "arguments": [
+              10,
+              false
+            ],
+            "result": 7
+          },
+          {
+            "arguments": [
+              -4,
+              true
+            ],
+            "result": 3
+          }
+        ]
+      },
+      "original_authored_source": "package local:basics;\n\ninterface api {\n  keep: func(value: s32, flag: bool) -> tuple<s32, bool> {\n    return tuple(value, flag);\n  }\n}\n\nworld app { export api; }\n",
+      "original_source_independent_replay": {
+        "accepted": true,
+        "compiler_sha256": "42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c",
+        "source_sha256": "41e878a03db2130a7a85916397e217e28a07c9544919952292e8df6e2f8158e3",
+        "core_bytes": 47,
+        "core_sha256": "5062a008bab93c4e3b2210ad141c5011f6ceabb993eac17a4e7c455696a03d36",
+        "imports": [],
+        "export": "keep",
+        "calls": [
+          {
+            "arguments": [
+              3,
+              true
+            ],
+            "result": [
+              3,
+              1
+            ]
+          },
+          {
+            "arguments": [
+              -1,
+              false
+            ],
+            "result": [
+              -1,
+              0
+            ]
+          }
+        ],
+        "expected_results_verified": false
+      },
+      "original_actual_Pi_execution": {
+        "accepted": true,
+        "expected_results_verified": true,
+        "compiler_sha256": "42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c",
+        "source_sha256": "41e878a03db2130a7a85916397e217e28a07c9544919952292e8df6e2f8158e3",
+        "core_bytes": 47,
+        "core_sha256": "5062a008bab93c4e3b2210ad141c5011f6ceabb993eac17a4e7c455696a03d36",
+        "imports": [],
+        "export": "keep",
+        "calls": [
+          {
+            "arguments": [
+              3,
+              true
+            ],
+            "result": [
+              3,
+              1
+            ]
+          },
+          {
+            "arguments": [
+              -1,
+              false
+            ],
+            "result": [
+              -1,
+              0
+            ]
+          }
+        ]
+      },
+      "independent_input_preservation": {
+        "accepted": true,
+        "compiler_sha256": "42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c",
+        "source_sha256": "41e878a03db2130a7a85916397e217e28a07c9544919952292e8df6e2f8158e3",
+        "core_bytes": 47,
+        "core_sha256": "5062a008bab93c4e3b2210ad141c5011f6ceabb993eac17a4e7c455696a03d36",
+        "imports": [],
+        "export": "keep",
+        "calls": [
+          {
+            "arguments": [
+              0,
+              true
+            ],
+            "result": [
+              0,
+              1
+            ]
+          },
+          {
+            "arguments": [
+              2,
+              true
+            ],
+            "result": [
+              2,
+              1
+            ]
+          },
+          {
+            "arguments": [
+              2,
+              false
+            ],
+            "result": [
+              2,
+              0
+            ]
+          },
+          {
+            "arguments": [
+              -2,
+              false
+            ],
+            "result": [
+              -2,
+              0
+            ]
+          }
+        ],
+        "expected_results_verified": false
+      },
+      "actual_Pi_Hex": {
+        "accepted": true,
+        "codec": "hex",
+        "package": "wasmc:std@1.4.1",
+        "apis": [
+          "wasmc:std@1.4.1/hex#try-encode-lower",
+          "wasmc:std@1.4.1/hex#try-decode"
+        ],
+        "input_utf8": "Pi42",
+        "encoded_utf8": "50693432",
+        "decoded_utf8": "Pi42",
+        "imports_verified": true,
+        "selected_Root_verified": true,
+        "invalid_input_rejected": true,
+        "rounds": 256,
+        "explicit_drops": 1024,
+        "persistent_provider_memory_bytes": 3670016,
+        "states": {
+          "qualified": true,
+          "admitted": true,
+          "released": true,
+          "discoverable": true,
+          "installable": true
+        },
+        "authority_granted": false,
+        "search_wit_routes": [
+          "wasmc:std@1.4.1/hex#try-encode-lower",
+          "wasmc:std@1.4.1/hex#try-decode"
+        ],
+        "stage_receipts": {
+          "search": "bfdb169e7296e7afb21c77efc9621624184583d1eeb4939204a51eb632c3cc6a",
+          "resolve": "4fe1ac9859b28764f009c3ee6381124a6602e760c627f790eea8886dfe61bd9f",
+          "behavior": "c2599613c22ae0534c110f76010d3350398f31ba02f6981c37de9a8a4ff6d4aa"
+        },
+        "report_text": "Package: wasmc:std@1.4.1\nAPIs:\n- wasmc:std@1.4.1/hex#try-encode-lower\n- wasmc:std@1.4.1/hex#try-decode\nSearch discovered the candidate but was not authority.\nResolve verified catalog_sha256, manifest_sha256, root_inventory_sha256, wit_sha256 and artifact_sha256.\nBehavior separately verified companion_sha256 and import_module and passed."
+      },
+      "actual_Pi_rejection": {
+        "accepted": true,
+        "expected_rejection": true,
+        "probe_exit_code": 0,
+        "verifier_exit_code": 1,
+        "execution_accepted": false,
+        "verifier_stderr": {
+          "accepted": false,
+          "error": "independent compiler digest mismatch",
+          "actual": "42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c",
+          "expected": "0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        "caller_expectation_verified": true,
+        "report_text": "The verifier subprocess exited 1; the expected-rejection probe wrapper exited 0. No source compilation, export resolution, call execution or instantiation occurred. The comparison target is the fixed caller-supplied --expected-compiler-sha256 argument. Editing package metadata does not change that argument; the selected compiler bytes still fail the comparison. Changing the caller argument would change the test, not approve the rejected bytes."
+      }
+    },
+    {
+      "round": 3,
+      "model": "deepseek-v4.1-flash",
+      "captured_source": {
+        "path": "score.wasmc",
+        "sha256": "6bcbc82d1f7f92b7dfee836109e388257e4b5e941ff75be97223794eeacc9b1e",
+        "utf8": "package local:scoresvc;\n\ninterface api {\n  score: func(value: s32, flag: bool) -> s32 {\n    if (flag) { return value + 7; }\n    return value - 3;\n  }\n}\n\nworld app { export api; }\n"
+      },
+      "independent_replay": {
+        "accepted": true,
+        "compiler_sha256": "42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c",
+        "source_sha256": "6bcbc82d1f7f92b7dfee836109e388257e4b5e941ff75be97223794eeacc9b1e",
+        "core_bytes": 55,
+        "core_sha256": "5df3f553ff047dd72bb8ced84031b92e1cb4af9ae6d562850e19786397b84182",
+        "imports": [],
+        "export": "score",
+        "calls": [
+          {
+            "arguments": [
+              10,
+              true
+            ],
+            "result": 17
+          },
+          {
+            "arguments": [
+              10,
+              false
+            ],
+            "result": 7
+          },
+          {
+            "arguments": [
+              -4,
+              true
+            ],
+            "result": 3
+          }
+        ],
+        "expected_results_verified": false
+      },
+      "actual_Pi_execution": {
+        "accepted": true,
+        "expected_results_verified": true,
+        "compiler_sha256": "42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c",
+        "source_sha256": "6bcbc82d1f7f92b7dfee836109e388257e4b5e941ff75be97223794eeacc9b1e",
+        "core_bytes": 55,
+        "core_sha256": "5df3f553ff047dd72bb8ced84031b92e1cb4af9ae6d562850e19786397b84182",
+        "imports": [],
+        "export": "score",
+        "calls": [
+          {
+            "arguments": [
+              10,
+              true
+            ],
+            "result": 17
+          },
+          {
+            "arguments": [
+              10,
+              false
+            ],
+            "result": 7
+          },
+          {
+            "arguments": [
+              -4,
+              true
+            ],
+            "result": 3
+          }
+        ]
+      },
+      "original_authored_source": "package local:pair_echo;\n\ninterface api {\n  pairEcho: func(value: s32, flag: bool) -> tuple<s32, bool> {\n    return tuple(value, flag);\n  }\n}\n\nworld app { export api; }\n",
+      "original_source_independent_replay": {
+        "accepted": true,
+        "compiler_sha256": "42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c",
+        "source_sha256": "f862413197755c8a789f51b472aeffcdbaaf654bfb37e9a676243452d5035c9e",
+        "core_bytes": 51,
+        "core_sha256": "bd17059d9641b15184be547c4472ca9550d3f025628db79ecef105140d52f23d",
+        "imports": [],
+        "export": "pairEcho",
+        "calls": [
+          {
+            "arguments": [
+              3,
+              true
+            ],
+            "result": [
+              3,
+              1
+            ]
+          }
+        ],
+        "expected_results_verified": false
+      },
+      "original_actual_Pi_execution": {
+        "accepted": true,
+        "expected_results_verified": true,
+        "compiler_sha256": "42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c",
+        "source_sha256": "f862413197755c8a789f51b472aeffcdbaaf654bfb37e9a676243452d5035c9e",
+        "core_bytes": 51,
+        "core_sha256": "bd17059d9641b15184be547c4472ca9550d3f025628db79ecef105140d52f23d",
+        "imports": [],
+        "export": "pairEcho",
+        "calls": [
+          {
+            "arguments": [
+              3,
+              true
+            ],
+            "result": [
+              3,
+              1
+            ]
+          }
+        ]
+      },
+      "independent_input_preservation": {
+        "accepted": true,
+        "compiler_sha256": "42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c",
+        "source_sha256": "f862413197755c8a789f51b472aeffcdbaaf654bfb37e9a676243452d5035c9e",
+        "core_bytes": 51,
+        "core_sha256": "bd17059d9641b15184be547c4472ca9550d3f025628db79ecef105140d52f23d",
+        "imports": [],
+        "export": "pairEcho",
+        "calls": [
+          {
+            "arguments": [
+              0,
+              true
+            ],
+            "result": [
+              0,
+              1
+            ]
+          },
+          {
+            "arguments": [
+              2,
+              true
+            ],
+            "result": [
+              2,
+              1
+            ]
+          },
+          {
+            "arguments": [
+              2,
+              false
+            ],
+            "result": [
+              2,
+              0
+            ]
+          },
+          {
+            "arguments": [
+              -2,
+              false
+            ],
+            "result": [
+              -2,
+              0
+            ]
+          }
+        ],
+        "expected_results_verified": false
+      },
+      "actual_Pi_Hex": {
+        "accepted": true,
+        "codec": "hex",
+        "package": "wasmc:std@1.4.1",
+        "apis": [
+          "wasmc:std@1.4.1/hex#try-encode-lower",
+          "wasmc:std@1.4.1/hex#try-decode"
+        ],
+        "input_utf8": "Pi42",
+        "encoded_utf8": "50693432",
+        "decoded_utf8": "Pi42",
+        "imports_verified": true,
+        "selected_Root_verified": true,
+        "invalid_input_rejected": true,
+        "rounds": 256,
+        "explicit_drops": 1024,
+        "persistent_provider_memory_bytes": 3670016,
+        "states": {
+          "qualified": true,
+          "admitted": true,
+          "released": true,
+          "discoverable": true,
+          "installable": true
+        },
+        "authority_granted": false,
+        "search_wit_routes": [
+          "wasmc:std@1.4.1/hex#try-encode-lower",
+          "wasmc:std@1.4.1/hex#try-decode"
+        ],
+        "stage_receipts": {
+          "search": "bfdb169e7296e7afb21c77efc9621624184583d1eeb4939204a51eb632c3cc6a",
+          "resolve": "4fe1ac9859b28764f009c3ee6381124a6602e760c627f790eea8886dfe61bd9f",
+          "behavior": "c2599613c22ae0534c110f76010d3350398f31ba02f6981c37de9a8a4ff6d4aa"
+        },
+        "report_text": "Package: wasmc:std@1.4.1\nAPIs:\n- wasmc:std@1.4.1/hex#try-encode-lower\n- wasmc:std@1.4.1/hex#try-decode\nSearch discovered the candidate but was not authority.\nResolve verified catalog_sha256, manifest_sha256, root_inventory_sha256, wit_sha256 and artifact_sha256.\nBehavior separately verified companion_sha256 and import_module and passed."
+      },
+      "actual_Pi_rejection": {
+        "accepted": true,
+        "expected_rejection": true,
+        "probe_exit_code": 0,
+        "verifier_exit_code": 1,
+        "execution_accepted": false,
+        "verifier_stderr": {
+          "accepted": false,
+          "error": "independent compiler digest mismatch",
+          "actual": "42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c",
+          "expected": "0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        "caller_expectation_verified": true,
+        "report_text": "The verifier subprocess exited 1; the expected-rejection probe wrapper exited 0. No source compilation, export resolution, call execution or instantiation occurred. The comparison target is the fixed caller-supplied --expected-compiler-sha256 argument. Editing package metadata does not change that argument; the selected compiler bytes still fail the comparison. Changing the caller argument would change the test, not approve the rejected bytes."
+      }
+    },
+    {
+      "round": 3,
+      "model": "glm-5.3-flash",
+      "captured_source": {
+        "path": "score.wasmc",
+        "sha256": "3f94f1a6c9c83cbbad97dc4c0e839c9ec6da7be3f35b5c0422327df02db2367e",
+        "utf8": "package local:score;\n\ninterface api {\n  score: func(value: s32, flag: bool) -> s32 {\n    if (flag) { return value + 7; }\n    return value - 3;\n  }\n}\n\nworld app { export api; }\n"
+      },
+      "independent_replay": {
+        "accepted": true,
+        "compiler_sha256": "42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c",
+        "source_sha256": "3f94f1a6c9c83cbbad97dc4c0e839c9ec6da7be3f35b5c0422327df02db2367e",
+        "core_bytes": 55,
+        "core_sha256": "5df3f553ff047dd72bb8ced84031b92e1cb4af9ae6d562850e19786397b84182",
+        "imports": [],
+        "export": "score",
+        "calls": [
+          {
+            "arguments": [
+              10,
+              true
+            ],
+            "result": 17
+          },
+          {
+            "arguments": [
+              10,
+              false
+            ],
+            "result": 7
+          },
+          {
+            "arguments": [
+              -4,
+              true
+            ],
+            "result": 3
+          }
+        ],
+        "expected_results_verified": false
+      },
+      "actual_Pi_execution": {
+        "accepted": true,
+        "expected_results_verified": true,
+        "compiler_sha256": "42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c",
+        "source_sha256": "3f94f1a6c9c83cbbad97dc4c0e839c9ec6da7be3f35b5c0422327df02db2367e",
+        "core_bytes": 55,
+        "core_sha256": "5df3f553ff047dd72bb8ced84031b92e1cb4af9ae6d562850e19786397b84182",
+        "imports": [],
+        "export": "score",
+        "calls": [
+          {
+            "arguments": [
+              10,
+              true
+            ],
+            "result": 17
+          },
+          {
+            "arguments": [
+              10,
+              false
+            ],
+            "result": 7
+          },
+          {
+            "arguments": [
+              -4,
+              true
+            ],
+            "result": 3
+          }
+        ]
+      },
+      "original_authored_source": "package pair_echo;\n\ninterface api {\n  keep: func(value: s32, flag: bool) -> tuple<s32, bool> {\n    return tuple(value, flag);\n  }\n}\n\nworld app { export api; }\n",
+      "original_source_independent_replay": {
+        "accepted": true,
+        "compiler_sha256": "42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c",
+        "source_sha256": "62fa16a921f9848a4cfdfc83fad5a23682a031d0f7fbeb1dca6ac8f269d1b6f3",
+        "core_bytes": 47,
+        "core_sha256": "5062a008bab93c4e3b2210ad141c5011f6ceabb993eac17a4e7c455696a03d36",
+        "imports": [],
+        "export": "keep",
+        "calls": [
+          {
+            "arguments": [
+              3,
+              true
+            ],
+            "result": [
+              3,
+              1
+            ]
+          },
+          {
+            "arguments": [
+              -1,
+              false
+            ],
+            "result": [
+              -1,
+              0
+            ]
+          }
+        ],
+        "expected_results_verified": false
+      },
+      "original_actual_Pi_execution": {
+        "accepted": true,
+        "expected_results_verified": true,
+        "compiler_sha256": "42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c",
+        "source_sha256": "62fa16a921f9848a4cfdfc83fad5a23682a031d0f7fbeb1dca6ac8f269d1b6f3",
+        "core_bytes": 47,
+        "core_sha256": "5062a008bab93c4e3b2210ad141c5011f6ceabb993eac17a4e7c455696a03d36",
+        "imports": [],
+        "export": "keep",
+        "calls": [
+          {
+            "arguments": [
+              3,
+              true
+            ],
+            "result": [
+              3,
+              1
+            ]
+          },
+          {
+            "arguments": [
+              -1,
+              false
+            ],
+            "result": [
+              -1,
+              0
+            ]
+          }
+        ]
+      },
+      "independent_input_preservation": {
+        "accepted": true,
+        "compiler_sha256": "42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c",
+        "source_sha256": "62fa16a921f9848a4cfdfc83fad5a23682a031d0f7fbeb1dca6ac8f269d1b6f3",
+        "core_bytes": 47,
+        "core_sha256": "5062a008bab93c4e3b2210ad141c5011f6ceabb993eac17a4e7c455696a03d36",
+        "imports": [],
+        "export": "keep",
+        "calls": [
+          {
+            "arguments": [
+              0,
+              true
+            ],
+            "result": [
+              0,
+              1
+            ]
+          },
+          {
+            "arguments": [
+              2,
+              true
+            ],
+            "result": [
+              2,
+              1
+            ]
+          },
+          {
+            "arguments": [
+              2,
+              false
+            ],
+            "result": [
+              2,
+              0
+            ]
+          },
+          {
+            "arguments": [
+              -2,
+              false
+            ],
+            "result": [
+              -2,
+              0
+            ]
+          }
+        ],
+        "expected_results_verified": false
+      },
+      "actual_Pi_Hex": {
+        "accepted": true,
+        "codec": "hex",
+        "package": "wasmc:std@1.4.1",
+        "apis": [
+          "wasmc:std@1.4.1/hex#try-encode-lower",
+          "wasmc:std@1.4.1/hex#try-decode"
+        ],
+        "input_utf8": "Pi42",
+        "encoded_utf8": "50693432",
+        "decoded_utf8": "Pi42",
+        "imports_verified": true,
+        "selected_Root_verified": true,
+        "invalid_input_rejected": true,
+        "rounds": 256,
+        "explicit_drops": 1024,
+        "persistent_provider_memory_bytes": 3670016,
+        "states": {
+          "qualified": true,
+          "admitted": true,
+          "released": true,
+          "discoverable": true,
+          "installable": true
+        },
+        "authority_granted": false,
+        "search_wit_routes": [
+          "wasmc:std@1.4.1/hex#try-encode-lower",
+          "wasmc:std@1.4.1/hex#try-decode"
+        ],
+        "stage_receipts": {
+          "search": "bfdb169e7296e7afb21c77efc9621624184583d1eeb4939204a51eb632c3cc6a",
+          "resolve": "4fe1ac9859b28764f009c3ee6381124a6602e760c627f790eea8886dfe61bd9f",
+          "behavior": "c2599613c22ae0534c110f76010d3350398f31ba02f6981c37de9a8a4ff6d4aa"
+        },
+        "report_text": "Package: wasmc:std@1.4.1\nAPIs:\n- wasmc:std@1.4.1/hex#try-encode-lower\n- wasmc:std@1.4.1/hex#try-decode\nSearch discovered the candidate but was not authority.\nResolve verified catalog_sha256, manifest_sha256, root_inventory_sha256, wit_sha256 and artifact_sha256.\nBehavior separately verified companion_sha256 and import_module and passed."
+      },
+      "actual_Pi_rejection": {
+        "accepted": true,
+        "expected_rejection": true,
+        "probe_exit_code": 0,
+        "verifier_exit_code": 1,
+        "execution_accepted": false,
+        "verifier_stderr": {
+          "accepted": false,
+          "error": "independent compiler digest mismatch",
+          "actual": "42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c",
+          "expected": "0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        "caller_expectation_verified": true,
+        "report_text": "The verifier subprocess exited 1; the expected-rejection probe wrapper exited 0. No source compilation, export resolution, call execution or instantiation occurred. The comparison target is the fixed caller-supplied --expected-compiler-sha256 argument. Editing package metadata does not change that argument; the selected compiler bytes still fail the comparison. Changing the caller argument would change the test, not approve the rejected bytes."
+      }
+    }
+  ],
+  "independent_Hex": {
+    "accepted": true,
+    "codec": "hex",
+    "package": "wasmc:std@1.4.1",
+    "apis": [
+      "wasmc:std@1.4.1/hex#try-encode-lower",
+      "wasmc:std@1.4.1/hex#try-decode"
+    ],
+    "input_utf8": "Pi42",
+    "encoded_utf8": "50693432",
+    "decoded_utf8": "Pi42",
+    "imports_verified": true,
+    "selected_Root_verified": true,
+    "invalid_input_rejected": true,
+    "rounds": 256,
+    "explicit_drops": 1024,
+    "persistent_provider_memory_bytes": 3670016
+  },
+  "independent_verifier": {
+    "exit_code": 1,
+    "stderr": {
+      "accepted": false,
+      "error": "independent compiler digest mismatch",
+      "actual": "42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c",
+      "expected": "0000000000000000000000000000000000000000000000000000000000000000"
+    }
+  },
+  "independent_negative_probe": {
+    "accepted": true,
+    "expected_rejection": true,
+    "verifier_exit_code": 1,
+    "probe_exit_code": 0,
+    "execution_accepted": false,
+    "verifier_stderr": {
+      "accepted": false,
+      "error": "independent compiler digest mismatch",
+      "actual": "42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c",
+      "expected": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "caller_expectation_verified": true,
+    "report_text": "The verifier subprocess exited 1; the expected-rejection probe wrapper exited 0. No source compilation, export resolution, call execution or instantiation occurred. The comparison target is the fixed caller-supplied --expected-compiler-sha256 argument. Editing package metadata does not change that argument; the selected compiler bytes still fail the comparison. Changing the caller argument would change the test, not approve the rejected bytes."
+  }
+}

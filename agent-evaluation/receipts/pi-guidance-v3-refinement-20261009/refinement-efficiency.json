@@ -1,0 +1,100 @@
+{
+  "scope": "Same ten frozen cases and three-round medians on both observed routes; previous qualified guidance compared with current refinement",
+  "previous_guidance_commit": "52facc4d06ff9dc530ad7a41bb9ae6e5ccf2a024",
+  "guidance_commit": "50ef26415a9f972bd9fa84ccac15fabf81c3a640",
+  "protocol_sha256": "cd441d860b43fbd5b424fe53ca3d7532a102975471de20b5fa096ff9282465ba",
+  "previous_cohort_sha256": "7a4e656a66fadcb09994bfec7310897fe7d33d7d5fe48515b01c9d8a1e17d94b",
+  "models": [
+    {
+      "model": "deepseek-v4.1-flash",
+      "previous": {
+        "rounds": [
+          {
+            "tool_calls": 55,
+            "tool_result_characters": 165362
+          },
+          {
+            "tool_calls": 54,
+            "tool_result_characters": 139591
+          },
+          {
+            "tool_calls": 53,
+            "tool_result_characters": 144245
+          }
+        ],
+        "median": {
+          "tool_calls": 54,
+          "tool_result_characters": 144245
+        }
+      },
+      "refined": {
+        "rounds": [
+          {
+            "tool_calls": 46,
+            "tool_result_characters": 129154
+          },
+          {
+            "tool_calls": 47,
+            "tool_result_characters": 131484
+          },
+          {
+            "tool_calls": 48,
+            "tool_result_characters": 131604
+          }
+        ],
+        "median": {
+          "tool_calls": 47,
+          "tool_result_characters": 131484
+        }
+      },
+      "tool_calls_saved": 7,
+      "tool_result_character_reduction_percent": 8.85
+    },
+    {
+      "model": "glm-5.3-flash",
+      "previous": {
+        "rounds": [
+          {
+            "tool_calls": 48,
+            "tool_result_characters": 146120
+          },
+          {
+            "tool_calls": 45,
+            "tool_result_characters": 134430
+          },
+          {
+            "tool_calls": 48,
+            "tool_result_characters": 140261
+          }
+        ],
+        "median": {
+          "tool_calls": 48,
+          "tool_result_characters": 140261
+        }
+      },
+      "refined": {
+        "rounds": [
+          {
+            "tool_calls": 46,
+            "tool_result_characters": 133636
+          },
+          {
+            "tool_calls": 44,
+            "tool_result_characters": 127063
+          },
+          {
+            "tool_calls": 45,
+            "tool_result_characters": 133036
+          }
+        ],
+        "median": {
+          "tool_calls": 45,
+          "tool_result_characters": 133036
+        }
+      },
+      "tool_calls_saved": 3,
+      "tool_result_character_reduction_percent": 5.15
+    }
+  ],
+  "no_latency_cost_or_statistical_significance_claim": true
+}

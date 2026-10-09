@@ -1,0 +1,148 @@
+{
+  "schema": "wasmc.pi-guidance-workstream-preflight/v1",
+  "accepted": true,
+  "scope": "Unreleased guidance checks and immutable-release fence; not whole-product or successor admission",
+  "checks": [
+    {
+      "argv": [
+        "node",
+        "scripts/agent-routes.mjs",
+        "--check"
+      ],
+      "exit_code": 0,
+      "signal": null,
+      "stdout_sha256": "c9634786c186db15f6fa821a128a673e495751432ae266adf81f2cd100c5a759",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "node",
+        "scripts/test-agent-routes.mjs"
+      ],
+      "exit_code": 0,
+      "signal": null,
+      "stdout_sha256": "e4dedcac6815f506fcebbcd4c7df9615a93c64907b40841e546d3ba324812f6f",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "node",
+        "scripts/test-agent-quickstart.mjs"
+      ],
+      "exit_code": 0,
+      "signal": null,
+      "stdout_sha256": "fa83c08bf0f9c95f486935488e83419072a7da785a889a3de5cd7d74c7cb9771",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "node",
+        "scripts/agent-release-orientation.mjs",
+        "--check"
+      ],
+      "exit_code": 0,
+      "signal": null,
+      "stdout_sha256": "28c3e4a9b2944bd30c3b4251a9ad3799c170f539f2b14f8ca4c482955996fe73",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "node",
+        "scripts/validate-agent-docs.mjs"
+      ],
+      "exit_code": 0,
+      "signal": null,
+      "stdout_sha256": "cd249e68da5657e3be821ba7fc6cfe37b5b2430f9b941cd31aa952aadbba7962",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "node",
+        "scripts/test-agent-guidance.mjs"
+      ],
+      "exit_code": 0,
+      "signal": null,
+      "stdout_sha256": "e0f7033c0386821a2b2af9e6baae8b14abe55be2c23f9d1e35df1a85bf1cb2a3",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "node",
+        "scripts/validate-release-surfaces.mjs"
+      ],
+      "exit_code": 0,
+      "signal": null,
+      "stdout_sha256": "6c3e7bad22e46dd927dcc1207f48d9a8b8f58bd8893f5cdc36bc256c27559587",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "node",
+        "scripts/lib-ecosystem-control-plane.mjs",
+        "--check"
+      ],
+      "exit_code": 0,
+      "signal": null,
+      "stdout_sha256": "1e301cb9d44be18f2a21582c2b77bb351fc7a52d0b946dbc79306f8732125136",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "node",
+        "scripts/validate-sdk-agent-routes.mjs"
+      ],
+      "exit_code": 0,
+      "signal": null,
+      "stdout_sha256": "99bb24ff34628582380d9c3584efa22128d785ddd9801dc79fa5061585afb8c1",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "node",
+        "scripts/test-library-first.mjs"
+      ],
+      "exit_code": 0,
+      "signal": null,
+      "stdout_sha256": "61a1bcc6ebcb6676e24fd16ecd4fb48713d25f029dec273feba0c308a991ded3",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "node",
+        "scripts/current-compiler-integrity.mjs",
+        "--require-qualification"
+      ],
+      "exit_code": 0,
+      "signal": null,
+      "stdout_sha256": "7802fef7ff325e18e302460f9d1a4da5fe15063d4f01cb2dd0143cbd876c120e",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "fence": {
+    "protected_release_identities": 9,
+    "frozen_product_files": 1054,
+    "changed_frozen_files": [
+      "AGENTS.md",
+      "scripts/lib-ecosystem-control-plane.mjs",
+      "scripts/test-agent-quickstart.mjs",
+      "scripts/validate-release-surfaces.mjs"
+    ],
+    "candidate_path": "channels/candidates/0.0.21.json",
+    "candidate_sha256": "e0d34d806f81f56dde084ae5b1626bdcfcb4ccb8a59491e2b9d37ecce43db651"
+  },
+  "old_candidate": {
+    "argv": [
+      "node",
+      "scripts/release-candidate.mjs",
+      "verify",
+      "channels/candidates/0.0.21.json",
+      "--candidate-sha256",
+      "e0d34d806f81f56dde084ae5b1626bdcfcb4ccb8a59491e2b9d37ecce43db651"
+    ],
+    "exit_code": 1,
+    "signal": null,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "2a33c1ba581ffe19c7670cb902faf31e8cae070b9e76bbbe70b878d61fbc8549",
+    "expected_product_drift_rejected": true
+  }
+}

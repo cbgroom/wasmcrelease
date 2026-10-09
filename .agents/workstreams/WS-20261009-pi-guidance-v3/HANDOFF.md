@@ -1,24 +1,13 @@
-# Pi-guided release guidance V3 refinement
+# Pi-guided release guidance V3
 
-The user requested continued improvement after draft PR #24. Prior 60-case
-qualification remains bound only to 52facc4d06ff9dc530ad7a41bb9ae6e5ccf2a024 and
-agent-evaluation/receipts/pi-guidance-v3-20261009. Do not present it as evidence
-for the modified successor.
+Qualified for isolated review on 2026-10-09T05:40:02.578296+00:00.
+Pi-tested commit 50ef26415a9f972bd9fa84ccac15fabf81c3a640 / tree 81b17afea4995b48c2aa9a86557679e4c9ed2310: two routes,
+three fresh rounds, 60/60 structural and independent semantic cases, plus 12
+matching actual source replays and six independent input-preservation probes.
+Qualification receipt: agent-evaluation/receipts/pi-guidance-v3-refinement-20261009/qualification.json.
 
-Refinement: use the exact interface keyword for Library discovery, run its
-combined verification once, and route digest rejection to a shipped pure
-fixture with a tested export/calls. Distinguish verifier child exit 1 from
-expected-rejection wrapper exit 0. A dedicated CI fence checks the immutable
-old product, focused tests and actual old candidate drift rejection. Broad
-whole-product failures remain visible; no old metadata refresh is authorized.
-
-Next: focused preflight, freeze a clean successor commit, rerun the unchanged
-10-case protocol on both routes for three fresh rounds, independent review and
-source replay, then update the existing draft PR with separate evidence. Future
-whole-product inventory, admission and publication remain separate.
-
-The a0d913633f5b5675e08fbe1e5a848986ab5cd2f1 cohort failed on a hyphenated
-ordinary-source package name. Both first rounds passed; GLM second-round source
-had two compiler errors before repair, so it is not qualified. The source guide
-and actual compiler regression now cover plain package identifiers. Dedicated
-unreleased CI passed on a0d9136 independently of that failed live-model gate.
+The old v0.0.21 immutable runtime/tag/candidate/prod and integrity identities
+remain unchanged; old candidate drift rejection is intentional and proven.
+This metadata-only successor records evidence without modifying tested guidance.
+Integration, future whole-product inventory/admission and successor publication
+remain open. No old release qualification is reused as new product admission.
