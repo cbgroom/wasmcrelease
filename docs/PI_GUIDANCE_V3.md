@@ -11,7 +11,10 @@ index, then run its read_command to verify and read only the selected route.
 The machine-readable integrity file retains complete route pins without requiring
 manual hashing or repeating unrelated digests in an answer. Read only the selected
 route's additional authority and execute its named checks. General source and
-Library routes cover requests that differ from a canonical example.
+Library routes cover requests that differ from a canonical example. Preserve
+multiple source values in one tuple/record; API names are logical WIT identities,
+not subdirectories. Runner calls use arrays of positional argument arrays, and
+a captured negative receipt is reported once without shortening any identity.
 
 Maintainers edit route policy under .agents/agent-route-policy.json. Run
 `node scripts/agent-routes.mjs --write` to generate the index and individual

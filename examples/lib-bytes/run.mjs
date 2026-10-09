@@ -8,6 +8,10 @@ const root = fileURLToPath(new URL('../../', import.meta.url));
 const read = path => readFileSync(resolve(root, path));
 const sha = bytes => createHash('sha256').update(bytes).digest('hex');
 const args = process.argv.slice(2), opts = {};
+if (args.length === 1 && args[0] === '--help') {
+  console.log('Usage: node examples/lib-bytes/run.mjs --codec CODEC --text TEXT\nCODEC: base64 or hex. Verifies the selected Root and imports, tests the roundtrip and invalid input, and drops owned resources.');
+  process.exit(0);
+}
 for (let i = 0; i < args.length; i += 2) opts[args[i]] = args[i + 1];
 const codec = opts['--codec'], text = opts['--text'];
 assert.ok(['base64', 'hex'].includes(codec) && typeof text === 'string');
