@@ -15,6 +15,11 @@ Library routes cover requests that differ from a canonical example. Preserve
 multiple source values in one tuple/record; API names are logical WIT identities,
 not subdirectories. Runner calls use arrays of positional argument arrays, and
 a captured negative receipt is reported once without shortening any identity.
+The pure-source guide is compiled and executed by the focused tests. Byte-codec
+verification composes the real search, lifecycle, resolver and behavior commands;
+the Agent still reads and approves the selected Root Skill and WIT API first.
+Machine receipts retain separate stage digests and canonical WIT report text.
+Search display identities are kept distinct from package/API selection identities.
 
 Maintainers edit route policy under .agents/agent-route-policy.json. Run
 `node scripts/agent-routes.mjs --write` to generate the index and individual

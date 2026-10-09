@@ -127,9 +127,10 @@
     "library-first-selection": {
       "search_is_selection_authority": false,
       "catalog_snapshot_boundary": "The exact current42 catalog binds complete Roots to the independently pinned Q0 cohort. It does not grant release or Host authority.",
-      "final_answer_policy": "After verification, output package and both APIs exactly, then only these statements: search discovered the candidate but was not authority; resolve verified catalog_sha256, manifest_sha256, root_inventory_sha256, wit_sha256 and artifact_sha256; behavior separately verified companion_sha256 and import_module and passed. Do not reproduce command arguments, digest values, partial digests or any ellipsis character. Run lifecycle_check before resolution for released, discoverable and installable states. It checks release.json, channels/prod.json and the selected candidate. Stop if any required state is false; do not enumerate historical or other channel directories.",
+      "final_answer_policy": "After verification, output package and both APIs exactly, then only these statements: search discovered the candidate but was not authority; resolve verified catalog_sha256, manifest_sha256, root_inventory_sha256, wit_sha256 and artifact_sha256; behavior separately verified companion_sha256 and import_module and passed. Do not reproduce command arguments, digest values, partial digests or any ellipsis character. Run lifecycle_check before resolution for released, discoverable and installable states. It checks release.json, channels/prod.json and the selected candidate. Stop if any required state is false; do not enumerate historical or other channel directories. Copy the successful verifier report_text unchanged once as the complete final answer; it already contains the exact package, APIs and all required verification statements. Do not append catalog display identities or extra narrative. Search package_id/version and WIT package identity are different namespaces.",
       "install_reference": "catalog/INSTALL.md",
-      "required_additional_reads": []
+      "required_additional_reads": [],
+      "verification_rule": "Read required_additional_reads and approve these exact WIT APIs first. Then run verify, the complete combined command: actual search, lifecycle, independently pinned resolution and behavior. Separate commands are reference interfaces; do not repeat them after verify succeeds."
     },
     "host-authority-boundary": {
       "decision": "Inspect every generated import before instantiation and compare module, name, kind and signature with an application-owned exact allowlist.",
@@ -144,10 +145,10 @@
       "required_additional_reads": []
     },
     "source-adaptation": {
-      "decision": "For a new pure ordinary-source program, read LANGUAGE.md for syntax and edit your own ordinary typed source. The sample is a pattern, not your answer. Compile, inspect imports and execute the requested calls with scripts/wasmc-agent-execute.mjs. This runner refuses any Host imports before instantiation; effectful or managed programs need their separately approved profile.",
+      "decision": "For a new pure ordinary-source program, read docs/AGENT_PURE_SOURCE.md for the small complete syntax guide and edit your own ordinary typed source. The sample is a pattern, not your answer. Compile, inspect imports and execute the requested calls with scripts/wasmc-agent-execute.mjs. This runner refuses any Host imports before instantiation; effectful or managed programs need their separately approved profile.",
       "runner": "node scripts/wasmc-agent-execute.mjs --source PATH --export NAME --calls JSON",
       "required_additional_reads": [
-        "LANGUAGE.md"
+        "docs/AGENT_PURE_SOURCE.md"
       ],
       "exact_evidence": [
         "source path",
@@ -158,7 +159,7 @@
         "calls and actual results"
       ],
       "host_boundary": "A declared import requests an effect; application authorization and a bounded adapter are separately required.",
-      "runner_rule": "The runner interface is complete above. Run once for the requested source/calls; report exact results and stop. No repository-wide integrity test or source inspection is needed after the named runner check.",
+      "runner_rule": "The runner interface and source basics guide are complete for scalar/tuple tasks. Write your source and run once for all requested calls; report exact results and stop. Open larger language/reference files only for a construct outside the small guide.",
       "digest_rejection_probe": "node scripts/wasmc-agent-probe.mjs --source PATH --export NAME --calls JSON --expected-compiler-sha256 SHA256",
       "digest_rejection_rule": "For an independently expected wrong digest, use the probe to capture the actual verifier subprocess nonzero exit, error and actual/expected digests as a successful expected-negative observation. It asserts the exact digest rejection before compilation or instantiation. This does not approve execution. A manifest rewrite cannot replace the independently supplied expectation. After this named probe returns, report its actual evidence and stop; do not run extra whole-product integrity tests or a positive control.",
       "final_answer_policy": "Report requested source and Core evidence exactly. Copy a requested SHA256 in full once, or reference verified field names when no digest value was requested. Never shorten a digest, even when discussing a negative example.",

@@ -41,6 +41,9 @@ try {
 } finally { rmSync(temp, { recursive: true }); }
 const source = 'package local:calc; interface api { calc: func(x: s32) -> s32 { return x * 2 + 1; } } world app { export api; }';
 const proof = await executeSource(source, 'calc', [[0], [9], [-3]]); assert.deepEqual(proof.calls.map(r => r.result), [1, 19, -5]); assert.deepEqual(proof.imports, []);
+const basics = readFileSync(join(root, 'docs/AGENT_PURE_SOURCE.md'), 'utf8').match(/```wasmc\n([\s\S]*?)```/)[1];
+assert.deepEqual((await executeSource(basics, 'keep', [[3, true], [-1, false]])).calls.map(x => x.result), [[3, 1], [-1, 0]]);
+assert.deepEqual((await executeSource(basics, 'choose', [[3, true], [-1, false]])).calls.map(x => x.result), [6, -1]);
 await assert.rejects(executeSource(source, 'calc', [[0]], '0'.repeat(64)), /independent compiler digest mismatch/);
 const probeTemp = mkdtempSync(join(tmpdir(), 'agent-digest-probe-'));
 try {
@@ -55,5 +58,8 @@ assert.ok(WebAssembly.validate(hostModule)); assert.throws(() => inspectPure(hos
 for (const codec of ['base64', 'hex']) {
   const result = JSON.parse(execFileSync(process.execPath, ['examples/lib-bytes/run.mjs', '--codec', codec, '--text', '你好 Pi'], { cwd: root, encoding: 'utf8' }));
   assert.equal(result.encoded_utf8, Buffer.from('你好 Pi').toString(codec)); assert.equal(result.explicit_drops, 1024); assert.equal(result.selected_Root_verified, true);
+  const combined = JSON.parse(execFileSync(process.execPath, ['scripts/agent-library-check.mjs', '--codec', codec, '--text', codec === 'base64' ? 'abc' : '你好 Pi'], { cwd: root, encoding: 'utf8' }));
+  assert.equal(combined.encoded_utf8, Buffer.from(codec === 'base64' ? 'abc' : '你好 Pi').toString(codec));
+  assert.equal(combined.authority_granted, false); assert.equal(combined.search_wit_routes.length, 2); assert.equal(combined.states.installable, true);
 }
 console.log(JSON.stringify({ accepted: true, routes: 12, lifecycle_negative_cases: 7, mutated_route_rejected: true, escaping_path_rejected: true, independent_digest_rejected: true, unapproved_Host_refused_before_instantiation: true, codecs: 2, byte_codec_rounds: 512, explicit_drops: 2048 }));

@@ -1,8 +1,8 @@
 {
-  "decision": "For a new pure ordinary-source program, read LANGUAGE.md for syntax and edit your own ordinary typed source. The sample is a pattern, not your answer. Compile, inspect imports and execute the requested calls with scripts/wasmc-agent-execute.mjs. This runner refuses any Host imports before instantiation; effectful or managed programs need their separately approved profile.",
+  "decision": "For a new pure ordinary-source program, read docs/AGENT_PURE_SOURCE.md for the small complete syntax guide and edit your own ordinary typed source. The sample is a pattern, not your answer. Compile, inspect imports and execute the requested calls with scripts/wasmc-agent-execute.mjs. This runner refuses any Host imports before instantiation; effectful or managed programs need their separately approved profile.",
   "runner": "node scripts/wasmc-agent-execute.mjs --source PATH --export NAME --calls JSON",
   "required_additional_reads": [
-    "LANGUAGE.md"
+    "docs/AGENT_PURE_SOURCE.md"
   ],
   "exact_evidence": [
     "source path",
@@ -13,7 +13,7 @@
     "calls and actual results"
   ],
   "host_boundary": "A declared import requests an effect; application authorization and a bounded adapter are separately required.",
-  "runner_rule": "The runner interface is complete above. Run once for the requested source/calls; report exact results and stop. No repository-wide integrity test or source inspection is needed after the named runner check.",
+  "runner_rule": "The runner interface and source basics guide are complete for scalar/tuple tasks. Write your source and run once for all requested calls; report exact results and stop. Open larger language/reference files only for a construct outside the small guide.",
   "digest_rejection_probe": "node scripts/wasmc-agent-probe.mjs --source PATH --export NAME --calls JSON --expected-compiler-sha256 SHA256",
   "digest_rejection_rule": "For an independently expected wrong digest, use the probe to capture the actual verifier subprocess nonzero exit, error and actual/expected digests as a successful expected-negative observation. It asserts the exact digest rejection before compilation or instantiation. This does not approve execution. A manifest rewrite cannot replace the independently supplied expectation. After this named probe returns, report its actual evidence and stop; do not run extra whole-product integrity tests or a positive control.",
   "final_answer_policy": "Report requested source and Core evidence exactly. Copy a requested SHA256 in full once, or reference verified field names when no digest value was requested. Never shorten a digest, even when discussing a negative example.",
@@ -24,8 +24,7 @@
     "parameters": "zero or more heterogeneous typed parameters",
     "result": "exactly one semantic value",
     "multiple_logical_values": "one tuple<...> or named record",
-    "embedding_warning": "tuple and record may both flatten to multiple Core lanes; neither creates automatic JavaScript object lifting",
-    "canonical_example": "agent-quickstart.json#routes/ordinary-source-positive"
+    "embedding_warning": "tuple and record may both flatten to multiple Core lanes; neither creates automatic JavaScript object lifting"
   },
   "schema": "wasmc.agent-task-route/v1",
   "id": "source-adaptation"

@@ -24,7 +24,8 @@ Private source commits identify compiler source, not public release commits.
 
 ## v0.0.21 product capability contract
 
-For an unfamiliar task follow the general route, then the selected public Skill:
+For a task beyond the selected route's complete scope, use the public reference:
+- Pure scalar/tuple authoring: [small source guide](docs/AGENT_PURE_SOURCE.md).
 - Source: [developer Skill](skills/wasmc-developer/SKILL.md) and `LANGUAGE.md`.
 - Reusable computation: [Library-first discovery](skills/wasmc-lib-discovery/SKILL.md); search is discovery, not approval.
 - SDK/embedding: [SDK discovery](skills/wasmc-sdk-discovery/SKILL.md).

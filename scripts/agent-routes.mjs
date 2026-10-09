@@ -21,6 +21,7 @@ export function buildAgentGuidance(base = root, overrides = {}) {
   const lifecycle = publishedLifecycle(release, prod, candidate, catalog.version);
   const routes = structuredClone(policy.routes);
   routes['source-adaptation'].function_shape = surfaces.agent_capability_projection.function_shape;
+  delete routes['source-adaptation'].function_shape.canonical_example;
   const identity = `wasmc:std@${std.version}`;
   const catalogHash = candidate.current_catalog.sha256;
   assert.equal(sha(readFileSync(resolve(base, 'catalog/libs-current-v2.json'))), catalogHash);
@@ -66,6 +67,7 @@ export function buildAgentGuidance(base = root, overrides = {}) {
     search: `node scripts/wasmc-lib.mjs search base64 --catalog-sha256 ${catalogHash} --limit 8`,
     resolve: `node scripts/wasmc-lib.mjs resolve ${std.id} ${std.version} --catalog-sha256 ${catalogHash} --manifest-sha256 ${std.manifest_sha256} --root-inventory-sha256 ${std.root_inventory_sha256}`,
     behavior: 'node examples/base64/run.mjs',
+    verify: 'node scripts/agent-library-check.mjs --codec base64 --text abc',
     required_additional_reads: [`${std.root}/SKILL.md`, `${std.root}/lib.wit`] });
   base64.exact_report = { instruction: surfaces.agent_task_routes['released-base64'].exact_report.instruction,
     package: base64.package, apis: base64.apis, catalog_sha256: catalogHash,
@@ -83,6 +85,8 @@ export function buildAgentGuidance(base = root, overrides = {}) {
     lifecycle_check: 'node scripts/agent-routes.mjs --lifecycle',
     byte_codec_driver: 'node examples/lib-bytes/run.mjs --codec CODEC --text TEXT',
     byte_codec_choices: ['base64', 'hex'],
+    verify_command_pattern: 'node scripts/agent-library-check.mjs --codec CODEC --text TEXT',
+    verify_rule: 'After reading and approving the selected Root and WIT APIs, run this combined check. It performs actual search, lifecycle, pinned resolution and behavior. Copy its canonical report_text and actual behavior; catalog display identities are not WIT package identities. The declared command is complete; do not add exploratory reads or duplicate checks.',
     driver_rule: 'Choose the codec matching the selected WIT API. The driver verifies independent catalog/Root pins and exact Provider imports, checks behavior and drops owned resources. It supports only the declared codecs; other APIs require their documented driver.',
     final_answer_policy: 'Report exact package and selected WIT API identities, actual behavior and verification field names. Digest values need not be repeated in prose. If a requested digest is reported, copy its full value once. Never abbreviate any identity or digest. After the named checks pass, stop; the driver interface above is complete.',
     required_additional_reads: [], host_authority: 'Resolution and installation grant no Host authority.' };

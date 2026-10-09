@@ -28,6 +28,8 @@
     "base64",
     "hex"
   ],
+  "verify_command_pattern": "node scripts/agent-library-check.mjs --codec CODEC --text TEXT",
+  "verify_rule": "After reading and approving the selected Root and WIT APIs, run this combined check. It performs actual search, lifecycle, pinned resolution and behavior. Copy its canonical report_text and actual behavior; catalog display identities are not WIT package identities. The declared command is complete; do not add exploratory reads or duplicate checks.",
   "driver_rule": "Choose the codec matching the selected WIT API. The driver verifies independent catalog/Root pins and exact Provider imports, checks behavior and drops owned resources. It supports only the declared codecs; other APIs require their documented driver.",
   "final_answer_policy": "Report exact package and selected WIT API identities, actual behavior and verification field names. Digest values need not be repeated in prose. If a requested digest is reported, copy its full value once. Never abbreviate any identity or digest. After the named checks pass, stop; the driver interface above is complete.",
   "required_additional_reads": [],
