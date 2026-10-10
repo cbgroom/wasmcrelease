@@ -1,0 +1,61 @@
+{
+  "schema": "wasmc-workstream/v1",
+  "task_id": "WS-20261010-lib-installed-consumer-v1",
+  "branch": "work/WS-20261010-lib-installed-consumer-v1",
+  "base_branch": "main",
+  "target_branch": "main",
+  "base_commit": "c888af39c11640644591ff42aeaf8b09f632f651",
+  "execution_state": "completed",
+  "integration_state": "not-ready",
+  "owner": "WAsmC Std/Lib production coverage task; E5 WSL source-free consumer qualification",
+  "parent_task": "task-wasmc-std-lib-production-coverage",
+  "scope": "Add exact installed Std1.4.1 consumer with digest-checked nested current-libs product-relative Root layout and real compiled WAsmC/paired Rust execution; do not modify published product set.",
+  "claims": [
+    {
+      "kind": "file",
+      "scope": "scripts/test-current-installed-std-v1.mjs",
+      "mode": "exclusive"
+    },
+    {
+      "kind": "file",
+      "scope": ".agents/workstreams/WS-20261010-lib-installed-consumer-v1",
+      "mode": "exclusive"
+    },
+    {
+      "kind": "resource",
+      "scope": "isolated local target/wasmc-std-live-install-e5-20261010",
+      "mode": "shared"
+    },
+    {
+      "kind": "file",
+      "scope": ".agents/workstreams/WS-20261010-lib-installed-consumer-v1/qualification.json",
+      "mode": "exclusive"
+    }
+  ],
+  "gates": [
+    "Independent pinned Catalog a4de SHA, v0.0.21 release immutability, exact reviewed Provider4.9 c3ac SHA",
+    "Real jsdelivr 19-file installation already completed, installed Root must supply WIT/artifact/plan not product built-ins",
+    "Exact lock+inventory reopen; reject wrong location, tampered bytes, missing provider, unsupported Host grants",
+    "Compile from current source through current compiler and execute against actual installed Std Core bytes; compare Rust/app fixture and 7680 real calls",
+    "Keep Native-source/device and commercial/legal nonclaims, no updating frozen Release manifests"
+  ],
+  "results": {
+    "status": "qualified_pushed_branch_pending",
+    "qualified_at": "2026-10-10T20:53:51.002625+00:00",
+    "checks": {
+      "test-lib-install.mjs": "PASS mocked exact 19 files plus10 negatives",
+      "test-lib-current-index-v2.mjs": "PASS 12/12",
+      "test-library-first.mjs": "PASS five hits and six negative cases",
+      "test-current-lib-api-v021.mjs": "PASS 768+1536 calls and six numeric negatives",
+      "examples/current/standard.mjs": "PASS 7680 calls",
+      "wrong installed directory": "REJECTED",
+      "wrong provider": "REJECTED"
+    },
+    "complete_file_count": 19,
+    "current_compiler_source_free_consumer_calls": 7680,
+    "negative_provenance_cases": 5,
+    "published_main_modified": false,
+    "release_new_version": false,
+    "live_mirror_acceptance": "one E5 session, 19/19"
+  }
+}

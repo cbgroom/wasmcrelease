@@ -1,0 +1,78 @@
+{
+  "schema": "wasmc.lib-installed-std-e5-source-free-acceptance/v1",
+  "observed_at": "2026-10-10T20:53:51.002625+00:00",
+  "environment": "E5 WSL Node24.19.0 on x86_64 Linux 6.6 WSL; existing HTTP proxy Xray1081 for live download only",
+  "authority": {
+    "published_immutable_tag": "v0.0.21",
+    "release_main_before": "c888af39c11640644591ff42aeaf8b09f632f651",
+    "package_authority_commit": "57f03cf6c0f2a98b37ea9c2294046ccd6644c1ba",
+    "catalog_sha256": "a4de009c683d3db4453cf0a9e783719a933a8e1689842a12d08a6883a83cfdad",
+    "current_compiler_sha256": "42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c",
+    "provider_sha256": "c3ac42b93f4c27e24065abe804b91f54761eff782e2971e947847b3d20ee7e00",
+    "std_core_sha256": "b79a499c8300361125e7fcdae02170184b82d4bbeff4d8f24ed95f3fd4db8d3b",
+    "std_plan_sha256": "8be27de32e1e8dadcb997f2b886d0349531eb9448c1b7dd73a74a3d9e34f87b3"
+  },
+  "observed_live_mirror": {
+    "mirror": "jsdelivr",
+    "sample": "19 exact current-libs/wasmc-std/1.4.1 files, HTTP200, sizes and SHA256 matched",
+    "install_method": "installCurrentLib with direct real Node fetch wrapped only to record per-file request; no fixture/mocked transport",
+    "installer_receipt": {
+      "complete_files_verified": 19,
+      "published_atomically_as_symlink": true,
+      "authority_granted": false,
+      "device_qualified": false
+    },
+    "prior_direct_cli": {
+      "attempts": 2,
+      "result": "install.transport_failed",
+      "files_not_published": true
+    },
+    "qualification_boundary": "Recorded one successful local E5 mirror session, not availability guarantee for all sites/networks or commercial admission."
+  },
+  "installed_consumer": {
+    "accepted": true,
+    "source": "exact-installed-complete-root",
+    "lib": "wasmc-std@1.4.1",
+    "package_root": "current-libs/wasmc-std/1.4.1",
+    "artifact_commit": "57f03cf6c0f2a98b37ea9c2294046ccd6644c1ba",
+    "catalog_sha256": "a4de009c683d3db4453cf0a9e783719a933a8e1689842a12d08a6883a83cfdad",
+    "complete_files_verified": 19,
+    "installed_app_source_compiled": true,
+    "providers_instantiated": 3,
+    "actual_consumer_calls": 7680,
+    "consumer_count": 3,
+    "negative_cases": 5,
+    "provider_sha256": "c3ac42b93f4c27e24065abe804b91f54761eff782e2971e947847b3d20ee7e00",
+    "library_sha256": "b79a499c8300361125e7fcdae02170184b82d4bbeff4d8f24ed95f3fd4db8d3b",
+    "plan_sha256": "8be27de32e1e8dadcb997f2b886d0349531eb9448c1b7dd73a74a3d9e34f87b3",
+    "bytes_from_in_tree_lib": false,
+    "install_receipt_verified": true,
+    "mirror_receipt": "jsdelivr",
+    "network_fetched_by_consumer": false,
+    "authority_granted": false,
+    "commercial_use_qualified": false,
+    "device_qualified": false
+  },
+  "test_command": "node scripts/test-current-installed-std-v1.mjs --installed-root target/wasmc-std-live-install-e5-20261010/standard/wasmc-std/1.4.1 --provider standard/corelib/4.9.0/corelib.wasm",
+  "consumer_log_sha256": "96f8467767eb90ab4488bab0ab4504e0314c738af36c169010f64f6a22f9cd7a",
+  "independent_existing_gates": {
+    "test-lib-install.mjs": "PASS mocked exact 19 files plus10 negatives",
+    "test-lib-current-index-v2.mjs": "PASS 12/12",
+    "test-library-first.mjs": "PASS five hits and six negative cases",
+    "test-current-lib-api-v021.mjs": "PASS 768+1536 calls and six numeric negatives",
+    "examples/current/standard.mjs": "PASS 7680 calls",
+    "wrong installed directory": "REJECTED",
+    "wrong provider": "REJECTED"
+  },
+  "nonclaims": [
+    "No modification to immutable published v0.0.21",
+    "No real live network request during installed-consumer replay",
+    "No Host rights granted",
+    "No commercial license",
+    "No device/Native-source execution gate",
+    "No generic Map<Record> ownership support"
+  ],
+  "separate_dependency": {
+    "map_owned_record_replace": "CoreLib4.9 object_set_child_move drops replaced subtree and exports no object_take_child; require versioned owner-transfer before map.insert can return Option<Record>."
+  }
+}
