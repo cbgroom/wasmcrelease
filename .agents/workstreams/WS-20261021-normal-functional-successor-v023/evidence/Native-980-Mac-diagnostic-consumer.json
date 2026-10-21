@@ -1,0 +1,53 @@
+{
+  "scope": "Actual downloaded new980 Mac Native SDK package only; fullcohort separate",
+  "source": "980378fcd810ea2b7b88928851d074691f8b5cb3",
+  "artifact_id": 12363494200,
+  "zip_bytes": 4474261,
+  "zip_sha256": "151877d06a09babeaca7832f10ba9d892bfb7e281a2987102b543a3d6eba28e2",
+  "verify": {
+    "accepted": true,
+    "source": "980378fcd810ea2b7b88928851d074691f8b5cb3",
+    "target": "aarch64-apple-darwin",
+    "profile": "wasmc-cli-aot-v1",
+    "license_snapshots": 7,
+    "original_notice_manifest_bound": true,
+    "byte_parity_cases": 5,
+    "wasmi_run_cases": 4,
+    "native_execution_cases": 4,
+    "no_clobber_cases": 9
+  },
+  "package_controls": {
+    "accepted": true,
+    "rejected": 12
+  },
+  "actual_embedded49_fuel_cases": [
+    {
+      "command": [
+        "/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261021-normal-functional-successor-v023/target/v023-native-diagnostic-Mac/downloaded/wasmc",
+        "build",
+        "/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261021-normal-functional-successor-v023/target/v023-native-independent-Mac/isolated-2098.wasmc",
+        "-o",
+        "/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261021-normal-functional-successor-v023/target/v023-native-diagnostic-Mac/isolated-2098.wasm"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "error while executing at wasm backtrace:\n    0:  0x4e751 - <unknown>!<wasm function 717>\n    1:  0x4dd1e - <unknown>!<wasm function 709>\n    2:  0x4c1bf - <unknown>!<wasm function 690>\n    3:  0x492e2 - <unknown>!<wasm function 686>\n    4:  0xdf612 - <unknown>!<wasm function 1635>\n    5:   0x1d58 - <unknown>!<wasm function 13>\n    6:   0x1310 - <unknown>!<wasm function 3>: wasm trap: all fuel consumed by WebAssembly\n"
+    },
+    {
+      "command": [
+        "/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261021-normal-functional-successor-v023/target/v023-native-diagnostic-Mac/downloaded/wasmc",
+        "build",
+        "/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261021-normal-functional-successor-v023/target/v023-native-independent-Mac/neutral-helpers.wasmc",
+        "-o",
+        "/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261021-normal-functional-successor-v023/target/v023-native-diagnostic-Mac/neutral-helpers.wasm"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "error while executing at wasm backtrace:\n    0:  0x4f4f6 - <unknown>!<wasm function 719>\n    1:  0x4dcc1 - <unknown>!<wasm function 709>\n    2:  0x4c1bf - <unknown>!<wasm function 690>\n    3:  0x492e2 - <unknown>!<wasm function 686>\n    4:  0xdf612 - <unknown>!<wasm function 1635>\n    5:   0x1d58 - <unknown>!<wasm function 13>\n    6:   0x1310 - <unknown>!<wasm function 3>: wasm trap: all fuel consumed by WebAssembly\n"
+    }
+  ],
+  "failed_output_not_created": true,
+  "budget_changed": false,
+  "compiler_or_Lib_rebuilds": 0,
+  "formal_release": false
+}
