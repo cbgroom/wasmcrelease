@@ -509,7 +509,10 @@ export async function createCurrentCandidate(repo,{compilerSource,libSource,vers
   const directories=['current','dist','package','examples/current','examples/base64','examples/agent-quickstart','examples/lib-search','examples/agent-start','standard','sdk','runtime','current-libs','licenses',
     'skills',
     'host/contract','host/sdk','host/drivers/file/rust','host/drivers/memory/rust'];
-  const paths=new Set([...currentV3ProductInputsForVersion(version),...directories.flatMap(walk),
+  const compiler=JSON.parse(read('current/compiler-release.json'));
+  assert.equal(compiler.version,version);assert.equal(compiler.source_commit,compilerSource);
+  const compilerPaths=compiler.artifacts.map(row=>{assert.ok(safe(row.path),'unsafe compiler product input');return row.path;});
+  const paths=new Set([...currentV3ProductInputsForVersion(version),...compilerPaths,...directories.flatMap(walk),
     'AGENTS.md','README.md','HOSTING.md','LANGUAGE.md','LIB.md','license-policy.json',
     '.github/workflows/lib-search.yml','.github/workflows/agent-discovery.yml','.github/workflows/source-free-consumer.yml','.github/workflows/host-lib-e2e.yml',
     'agent-evaluation/fresh-agent-learning-v2.json','docs/AGENT_DECISION_MODEL.md',`docs/RELEASE_V${version.split('.').slice(1).join('')}.md`,'scripts/release-candidate.mjs']);
