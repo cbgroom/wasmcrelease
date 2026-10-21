@@ -1,5 +1,15 @@
 # Formal normal-functional release
 
+## v0.0.22 bounded product and unchanged current cohort
+
+The selected release ships the integrated normal basic-function and compatibility repairs in compiler620a, retaining all42 already admitted Lib Roots, Std1.4.1, Search0.5.0 and Provider4.9. Map/Core4.11 and JSON0.0.2 keep their own producer/runtime/million-entry evidence and remain separate publication successors; their incomplete admission no longer expands this bounded release.
+
+New containing catalog76f9a0ca465c7d6169738be04ac725dceac2cdde14bbfc5215c37c2e97c86f43 changes only release version21to22. All Root rows, package authority57f03, index73a1, cohortaf1 and original measured Q03a84/producer78ae are preserved. Actual hwlinux preflight passed all7checks after188 input bytes matched current public c888. Local complete Root/Search closure, catalog selection, transactional install, route negatives, library discovery, original notices and newcompiler current validation pass. The predecessor version-negative control accidentally selected the new positive version22; its original failed output is retained, and the successor enforces a distinct version and passes all8 controls.
+
+The version22 Std lock3527e22fb85650cab77d008951963af7870194765b4221a3b1a45adcc063577c differs from original4fe only in catalog digest/release version. Fresh HTTPS installation from exact old package authority57f03 verified19 files and executed256 rounds/1024explicit drops with the separately pinned unchanged Provider4.9. This is actual new-catalog consumer evidence, not a new Lib build or new product publication.
+
+Native build/source7fbdb6a450354dda20c9077a403b503db0ca7f1f aligns all3public native compiler pins to620a. Actual six-platform workflow39560999862 is running; no result is assumed. Next: final stage projections, exact whole candidate/CI/Pi, ordered channels, formal GitHub Release and independent downloads/consumers. Current public main and released lifecycle remain v0.0.21 until lawful promotion. The goal stays active.
+
 ## New compiler carriers and source-free consumers qualified
 
 Private PR14 actually merged atcc29517073666181d80e17b218621ebce1c74b57; canonical receiptfa0b2348827c97dbb8239ee4dd525f5ac1b0e22c and globalf2570551322cc493c45f4370fbe1b7ee67394693 are ordinarily pushed/read back. Old failed unpublished receipt2e6508 is losslessly retained in the private owning evidence and never entered canonical history. Private SourceReady8d9 remains immutable. No private compiler implementation source is included here.

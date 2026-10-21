@@ -1,0 +1,58 @@
+{
+  "schema": "wasmc.current42-versioned-catalog-checks/v1",
+  "catalog_sha256": "76f9a0ca465c7d6169738be04ac725dceac2cdde14bbfc5215c37c2e97c86f43",
+  "runs": [
+    {
+      "command": "node scripts/validate-libs.mjs",
+      "exit": 0,
+      "output": "{\"accepted\":true,\"schema\":\"wasmc.current-release-closure/v3\",\"catalog_sha256\":\"76f9a0ca465c7d6169738be04ac725dceac2cdde14bbfc5215c37c2e97c86f43\",\"registry_sha256\":\"3b2292a4805783cc826402046d056e517a55700ab1797d835e09c8cbb0f9ac66\",\"index_sha256\":\"73a1ebcce721a73dd8964030b7bb7bc61f2ed1d1aeb7d2aa46c22b8da8d8f333\",\"cohort_sha256\":\"af1b7843be3a0ef40d255e0f1a0c5959f5d33c1797390c1d1ce9495e4d47e29a\",\"refresh_receipt_sha256\":\"3a84eea9d791f2600a07487d07859f0e7f75ea0b076b0ea0b837d869307ba943\",\"producer_sha256\":\"78ae99b691666a9961862440449a93cf92be9da6a1e3a37f78e39574c3c79ba7\",\"release_packages\":42,\"api_routes\":236,\"package_routes\":42,\"entries\":278,\"native_source_packages\":14,\"exact\":true,\"candidate_extras\":0,\"license_snapshots_exact\":true,\"sdk_cargo_license_bound\":true,\"original_dependency_notices_exact\":true,\"actual_Core_Search_snapshot_lookup_pagination\":true,\"device_qualified\":false,\"public_release_admission\":false,\"scope\":\"current complete Roots, public WIT routes, source/notice pins and actual compiled Core Search; source-only Native remains unexecuted\"}\n"
+    },
+    {
+      "command": "node scripts/test-lib-catalog.mjs",
+      "exit": 0,
+      "output": "{\"accepted\":true,\"current_packages\":42,\"native_source_packages\":14,\"negative_tests\":10,\"selection\":\"unique exact complete-Root lock\",\"network_access\":false}\n"
+    },
+    {
+      "command": "node scripts/test-lib-install.mjs",
+      "exit": 0,
+      "output": "{\"accepted\":true,\"files_verified\":19,\"negative_tests\":10,\"concurrent_single_winner\":true,\"competing_directory_preserved\":true,\"failed_stage_cleanup\":true,\"network_access\":false,\"companion_installed\":false}\n"
+    },
+    {
+      "command": "node scripts/test-lib-route-closure.mjs",
+      "exit": 0,
+      "output": "{\"accepted\":true,\"schema\":\"wasmc.lib-route-closure/v3\",\"release_packages\":42,\"package_routes\":42,\"api_routes\":236,\"entries\":278,\"negative_tests\":6,\"public_release_admission\":false}\n"
+    },
+    {
+      "command": "node scripts/test-current-license-policy-v3.mjs",
+      "exit": 1,
+      "output": "node:internal/modules/run_main:107\n    triggerUncaughtException(\n    ^\n\nAssertionError [ERR_ASSERTION]: Missing expected rejection.\n    at async file:///Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261021-formal-normal-functional-v022/scripts/test-current-license-policy-v3.mjs:13:3 {\n  generatedMessage: false,\n  code: 'ERR_ASSERTION',\n  actual: undefined,\n  expected: undefined,\n  operator: 'rejects',\n  diff: 'simple'\n}\n\nNode.js v26.5.1\n"
+    },
+    {
+      "command": "node scripts/test-library-first.mjs",
+      "exit": 0,
+      "output": "{\"accepted\":true,\"teaching_commands\":2,\"checked_hits\":5,\"negative_tests\":6,\"network_access\":false}\n"
+    },
+    {
+      "command": "node examples/base64/run.mjs",
+      "exit": 0,
+      "output": "{\"accepted\":true,\"installed_root_verified\":false,\"rounds\":256,\"explicit_drops\":1024,\"invalid_input_rejected\":true,\"persistent_provider_memory_bytes\":3670016,\"package\":\"wasmc:std@1.4.1\",\"apis\":[\"wasmc:std@1.4.1/base64#try-encode-standard\",\"wasmc:std@1.4.1/base64#try-decode-standard\"],\"artifact_sha256\":\"b79a499c8300361125e7fcdae02170184b82d4bbeff4d8f24ed95f3fd4db8d3b\",\"import_module\":\"wasmc:lib/wasmc.lib_managed_object_heap@4.9.0\",\"input_utf8\":\"abc\",\"encoded_utf8\":\"YWJj\",\"decoded_utf8\":\"abc\"}\n"
+    },
+    {
+      "command": "node examples/lib-search/run.mjs",
+      "exit": 0,
+      "output": "{\"accepted\":true,\"scope\":\"current compiled Core Search and exact complete Root/index identity\",\"version\":\"0.5.0\",\"snapshot\":{\"tag\":\"ok\",\"value\":{\"entry_count\":278,\"package_count\":42,\"api_count\":236,\"bound_package_count\":42,\"registry_sha256\":\"3b2292a4805783cc826402046d056e517a55700ab1797d835e09c8cbb0f9ac66\",\"index_sha256\":\"73a1ebcce721a73dd8964030b7bb7bc61f2ed1d1aeb7d2aa46c22b8da8d8f333\"}},\"closure\":{\"schema\":\"wasmc.current-release-closure/v3\",\"catalog_sha256\":\"76f9a0ca465c7d6169738be04ac725dceac2cdde14bbfc5215c37c2e97c86f43\",\"registry_sha256\":\"3b2292a4805783cc826402046d056e517a55700ab1797d835e09c8cbb0f9ac66\",\"index_sha256\":\"73a1ebcce721a73dd8964030b7bb7bc61f2ed1d1aeb7d2aa46c22b8da8d8f333\",\"cohort_sha256\":\"af1b7843be3a0ef40d255e0f1a0c5959f5d33c1797390c1d1ce9495e4d47e29a\",\"refresh_receipt_sha256\":\"3a84eea9d791f2600a07487d07859f0e7f75ea0b076b0ea0b837d869307ba943\",\"producer_sha256\":\"78ae99b691666a9961862440449a93cf92be9da6a1e3a37f78e39574c3c79ba7\",\"release_packages\":42,\"api_routes\":236,\"package_routes\":42,\"entries\":278,\"native_source_packages\":14,\"exact\":true,\"candidate_extras\":0,\"license_snapshots_exact\":true,\"sdk_cargo_license_bound\":true,\"original_dependency_notices_exact\":true,\"actual_Core_Search_snapshot_lookup_pagination\":true,\"device_qualified\":false,\"public_release_admission\":false},\"hits\":[{\"identity\":\"wasmc-std@1.4.1/base64#try-decode-standard\",\"package_id\":\"wasmc-std\",\"version\":\"1.4.1\",\"profile\":\"resource\",\"target\":\"wasm32-unknown-unknown\",\"kind\":\"api\",\"wit_route\":\"wasmc:std@1.4.1/base64#try-decode-standard\",\"source_path\":\"libspec/wasmc-std/lib.wit\",\"wit_sha256\":\"5abbed39c185835cfbbc5c2b961fb904b3ad66f42b22aef1ac7a40835ee246e9\",\"description\":\"Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.\",\"delivery\":{\"manifest_sha256\":\"9db63b4f380f9a8fb7541addfde6608bbc48b3267ad903f838afedb98e74ebfc\",\"receipt_sha256\":\"3a84eea9d791f2600a07487d07859f0e7f75ea0b076b0ea0b837d869307ba943\",\"artifact_kind\":\"wasm-core-component\",\"artifact_path\":\"artifact.wasm\",\"artifact_sha256\":\"b79a499c8300361125e7fcdae02170184b82d4bbeff4d8f24ed95f3fd4db8d3b\",\"component_sha256\":\"bda5f25c13e553a2ed3e6c54854dfd60b60a1fa5939a2b3086b776f3e8889e7b\"}},{\"identity\":\"wasmc-std@1.4.1/base64#try-encode-standard\",\"package_id\":\"wasmc-std\",\"version\":\"1.4.1\",\"profile\":\"resource\",\"target\":\"wasm32-unknown-unknown\",\"kind\":\"api\",\"wit_route\":\"wasmc:std@1.4.1/base64#try-encode-standard\",\"source_path\":\"libspec/wasmc-std/lib.wit\",\"wit_sha256\":\"5abbed39c185835cfbbc5c2b961fb904b3ad66f42b22aef1ac7a40835ee246e9\",\"description\":\"Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.\",\"delivery\":{\"manifest_sha256\":\"9db63b4f380f9a8fb7541addfde6608bbc48b3267ad903f838afedb98e74ebfc\",\"receipt_sha256\":\"3a84eea9d791f2600a07487d07859f0e7f75ea0b076b0ea0b837d869307ba943\",\"artifact_kind\":\"wasm-core-component\",\"artifact_path\":\"artifact.wasm\",\"artifact_sha256\":\"b79a499c8300361125e7fcdae02170184b82d4bbeff4d8f24ed95f3fd4db8d3b\",\"component_sha256\":\"bda5f25c13e553a2ed3e6c54854dfd60b60a1fa5939a2b3086b776f3e8889e7b\"}}],\"rounds\":256,\"negative_cases\":4,\"public_release_admission\":false}\n"
+    },
+    {
+      "command": "node scripts/test-current-license-policy-v3.mjs",
+      "exit": 0,
+      "output": "{\"accepted\":true,\"current_roots\":42,\"declared_notice_files\":270,\"negative_controls\":8,\"legal_compatibility\":false,\"linked_dependency_completeness\":false}\n"
+    },
+    {
+      "command": "node scripts/validate-current.mjs",
+      "exit": 0,
+      "output": "{\"accepted\":true,\"runtime\":\"node\",\"compiler_sha256\":\"620a6b5f7b9a4565f14857975e37a03196f8f7e4279a2f4da388882638f2a658\",\"frozen_corpus_outputs\":30,\"expression_cases\":23,\"mode\":\"full\",\"managed_repeated_calls\":192}\n"
+    }
+  ],
+  "original_failure_preserved": true,
+  "formal_release": false
+}

@@ -9,7 +9,8 @@ assert.equal(notices.size,270);
 const paths=[...notices.keys()];
 let rejected=0;
 for(const key of ['catalog_sha256','package_authority_commit','version']) {
-  const changed={...policy,[key]:key==='version'?'0.0.22':'0'.repeat(key==='catalog_sha256'?64:40)};
+  const changed={...policy,[key]:key==='version'?policy.version+'-mismatch':'0'.repeat(key==='catalog_sha256'?64:40)};
+  assert.notEqual(changed[key],policy[key],'negative control must change the selected identity');
   await assert.rejects(()=>collectCurrentDeclaredThirdPartyNotices(catalog,changed,read));rejected++;
 }
 for(const target of ['licenses/DEPENDENCY-NOTICES-001.txt',paths.find(p=>p.startsWith('current-libs/')),paths.find(p=>p.startsWith('standard/'))]) {

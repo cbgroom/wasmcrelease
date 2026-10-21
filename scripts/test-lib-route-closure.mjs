@@ -5,7 +5,7 @@ import {hash,verifyCurrentRelease,currentProductReader,currentProductPaths} from
 const root=new URL('../',import.meta.url).pathname;
 const read=p=>readFileSync(new URL('../'+p,import.meta.url));
 const catalogBytes=read('catalog/libs-current-v2.json'),catalog=JSON.parse(catalogBytes);
-const pin='a4de009c683d3db4453cf0a9e783719a933a8e1689842a12d08a6883a83cfdad';
+const pin='76f9a0ca465c7d6169738be04ac725dceac2cdde14bbfc5215c37c2e97c86f43';
 assert.equal(hash(catalogBytes),pin);
 const model=buildClosure();
 assert.equal(model.schema,'wasmc.lib-route-closure/v3');assert.equal(model.release_bindings.length,42);

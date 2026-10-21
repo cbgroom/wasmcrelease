@@ -499,7 +499,7 @@ export async function createCurrentCandidate(repo,{compilerSource,libSource,vers
   const paths=new Set([...currentV3ProductInputs,...directories.flatMap(walk),
     'AGENTS.md','README.md','HOSTING.md','LANGUAGE.md','LIB.md','license-policy.json',
     '.github/workflows/lib-search.yml','.github/workflows/agent-discovery.yml','.github/workflows/source-free-consumer.yml','.github/workflows/host-lib-e2e.yml',
-    'agent-evaluation/fresh-agent-learning-v2.json','docs/AGENT_DECISION_MODEL.md','docs/RELEASE_V021.md','scripts/release-candidate.mjs']);
+    'agent-evaluation/fresh-agent-learning-v2.json','docs/AGENT_DECISION_MODEL.md',`docs/RELEASE_V${version.split('.').slice(1).join('')}.md`,'scripts/release-candidate.mjs']);
   for(const row of catalog.packages)for(const pin of Object.values(row.source))paths.add(pin.path);
   const addImports=path=>{
     const source=read(path).toString('utf8');

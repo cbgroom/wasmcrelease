@@ -7,7 +7,7 @@ metadata:
 
 # Library-first discovery
 
-Use the v0.0.21 product's `catalog/libs-current-v2.json`, independently pinned
+Use the v0.0.22 product's `catalog/libs-current-v2.json`, independently pinned
 below. It binds42 complete current package Roots, including14 native-source
 packages. LibSearch0.5.0 executes lookup and bounded search over42 package and
 236 API routes. A search result establishes discovery; channel authorities
@@ -19,8 +19,8 @@ physical-device support.
 Run from the verified immutable product or tooling root:
 
 ```sh
-node scripts/wasmc-lib.mjs search "base64 decode" --catalog-sha256 a4de009c683d3db4453cf0a9e783719a933a8e1689842a12d08a6883a83cfdad --limit 8
-node scripts/wasmc-lib.mjs search "counter" --catalog-sha256 a4de009c683d3db4453cf0a9e783719a933a8e1689842a12d08a6883a83cfdad --limit 8
+node scripts/wasmc-lib.mjs search "base64 decode" --catalog-sha256 76f9a0ca465c7d6169738be04ac725dceac2cdde14bbfc5215c37c2e97c86f43 --limit 8
+node scripts/wasmc-lib.mjs search "counter" --catalog-sha256 76f9a0ca465c7d6169738be04ac725dceac2cdde14bbfc5215c37c2e97c86f43 --limit 8
 ```
 
 The first query returns identity

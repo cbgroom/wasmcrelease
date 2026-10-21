@@ -54,7 +54,7 @@ if (release.schema === 'wasmc-public-release/v1') {
     !Number.isSafeInteger(release.artifact_inventory?.artifacts) ||
     release.artifact_inventory.artifacts < 1
   ) throw new Error('compact release artifact inventory rejected');
-  const releaseInventory = release.version==='0.0.21'?manifest.artifacts:manifest.artifacts.filter((row) => !['AGENTS.md', 'LANGUAGE.md', 'LIB.md'].includes(row.path));
+  const releaseInventory = ['0.0.21','0.0.22'].includes(release.version)?manifest.artifacts:manifest.artifacts.filter((row) => !['AGENTS.md', 'LANGUAGE.md', 'LIB.md'].includes(row.path));
   if (release.artifact_inventory.artifacts !== releaseInventory.length) throw new Error('compact release artifact count mismatch');
 } else {
   throw new Error('unsupported release schema');
@@ -112,7 +112,7 @@ if (JSON.stringify(checksumPaths) !== JSON.stringify(checksumExpected)) {
 
 // The current whole release is one exact v3 candidate; historical staging
 // fallback cannot authorize replacement compiler or Root bytes.
-if(release.version==='0.0.21') {
+if(['0.0.21','0.0.22'].includes(release.version)) {
   const {validateCandidate}=await import('./release-candidate.mjs');
   const candidate=await json(release.staged_product_manifest);
   assert.equal(candidate.schema,'wasmc.release-product-candidate/v3');
@@ -184,7 +184,7 @@ const releaseRuntimeMatches =
   release.runtime.compiler_sha256 === sha(compiler);
 let expectedHostCommit = releaseRuntimeMatches ? release.runtime.product_candidate_commit : null;
 let expectedHostArchive = releaseRuntimeMatches ? release.runtime.source_free_archive_sha256 : null;
-if(release.version==='0.0.21'&&!releaseRuntimeMatches)throw Error('current whole release Runtime compiler authority differs');
+if(['0.0.21','0.0.22'].includes(release.version)&&!releaseRuntimeMatches)throw Error('current whole release Runtime compiler authority differs');
 if (!releaseRuntimeMatches) {
   const dev = await json('channels/dev.json');
   const candidatePath = `channels/candidates/${dev.version}.json`;

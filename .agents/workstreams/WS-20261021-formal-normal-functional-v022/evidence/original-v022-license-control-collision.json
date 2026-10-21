@@ -1,0 +1,7 @@
+{
+  "schema": "wasmc.retained-qualification-failure/v1",
+  "command": "node scripts/test-current-license-policy-v3.mjs",
+  "exit": 1,
+  "stdout_stderr": "node:internal/modules/run_main:107\n    triggerUncaughtException(\n    ^\n\nAssertionError [ERR_ASSERTION]: Missing expected rejection.\n    at async file:///Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261021-formal-normal-functional-v022/scripts/test-current-license-policy-v3.mjs:13:3 {\n  generatedMessage: false,\n  code: 'ERR_ASSERTION',\n  actual: undefined,\n  expected: undefined,\n  operator: 'rejects',\n  diff: 'simple'\n}\n\nNode.js v26.5.1\n",
+  "reason": "The predecessor negative control sets version to0.0.22. That is now the actual positive policy version, so it performs no mutation. Preserve this failure and make the control select a distinct version."
+}
