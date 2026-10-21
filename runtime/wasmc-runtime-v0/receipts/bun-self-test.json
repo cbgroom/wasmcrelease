@@ -2,14 +2,16 @@
   "schema": "wasmc.runtime-js-self-test/v0",
   "accepted": true,
   "runtime": "bun",
-  "compiler_bytes": 1527770,
+  "compiler_bytes": 1545807,
   "output_bytes": 41,
   "runtime_version": "1.3.14",
-  "candidate_commit": "9c34b6030a4e17bf7f08c551d229262e668c897d",
-  "compiler_sha256": "620a6b5f7b9a4565f14857975e37a03196f8f7e4279a2f4da388882638f2a658",
+  "candidate_commit": "39dacb1936b851fa0e2310ee06f24b84e0e31761",
+  "compiler_sha256": "1a04d9ef830be8770bc37e507e50addac10be3615e610beab1241ccba6d090b0",
   "source_free_package": {
-    "archive_sha256": "022fe99dce868b2074cf90412bfac8f6b2d7c969b47aabf10e6b7804977e6c55",
-    "private_source_checked_out": false
+    "archive_sha256": "716480ac79f0ca0dec24aafd08f9ad36c8ea9c329bde33333ce89f273b41e71f",
+    "private_source_checked_out": false,
+    "git_metadata_present": false,
+    "origin": "local git archive of exact already-published commit; not an HTTPS download receipt"
   },
   "host": {
     "hostname": "youdeMac-mini.local",
@@ -33,7 +35,7 @@
     "command": "bun",
     "executable_sha256": "e0c90ec15d33363e6b70713d56bc3b2c7585c17f40a0fe0f8fd9305901d4e233"
   },
-  "executed_at_utc": "2026-10-21T09:00:25.343861+00:00",
+  "executed_at_utc": "2026-10-21T16:45:17.928629+00:00",
   "evidence": {
     "steps": [
       {
@@ -54,7 +56,7 @@
           "self-test"
         ],
         "exit": 0,
-        "stdout_sha256": "4e5f9feae8be32c2c090b5c6e5dc08f57b1a246cc0aa52ff140097c0f66c9f91",
+        "stdout_sha256": "35bc72448090c68eb8bdbee8c7791d3aa70930ffaffea88cda73fe10ee750b11",
         "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       {
@@ -66,18 +68,18 @@
           "--input",
           "examples/add.wasmc",
           "--output",
-          "/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261021-formal-normal-functional-v022/target/v022-HTTPS-runtime-receipts/bun.wasm"
+          "/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261021-normal-functional-successor-v023/target/v023-runtime-current-receipts/bun.wasm"
         ],
         "exit": 0,
-        "stdout_sha256": "d9cd8adaf998237371a5a00095fb43d4b8de989e3a85811aef5e4c9c750275f8",
+        "stdout_sha256": "64f22d6fa274aa85a2bc5626b173603ea55cc8918211a8587e5bfb3c3dbe0930",
         "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       {
         "name": "independent-oracle",
         "command": [
           "/Users/youxianshi/.bun/bin/bun",
-          "/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261021-formal-normal-functional-v022/target/v022-HTTPS-runtime-dev2/wasmcrelease-9c34b6030a4e17bf7f08c551d229262e668c897d/scripts/assert-runtime-output.mjs",
-          "/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261021-formal-normal-functional-v022/target/v022-HTTPS-runtime-receipts/bun.wasm"
+          "/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261021-normal-functional-successor-v023/target/v023-runtime-current-receipts/sourcefree/scripts/assert-runtime-output.mjs",
+          "/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261021-normal-functional-successor-v023/target/v023-runtime-current-receipts/bun.wasm"
         ],
         "exit": 0,
         "stdout_sha256": "b8a9e1923777acafe4164083c1eeb13195ca866e596de8a4244abe79be66022e",
@@ -85,5 +87,6 @@
       }
     ],
     "compile_output_sha256": "29996fa74541742737704f64e48add2a5079ed8c57783cda4912046d5acb32c9"
-  }
+  },
+  "qualification_scope": "Pre-candidate Runtime component consumer; not whole product, formal release or downloaded public package admission"
 }

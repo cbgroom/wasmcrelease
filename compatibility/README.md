@@ -1,3 +1,28 @@
+# Current v0.0.23 compiler compatibility (unreleased)
+
+The current preflight selects `core-artifacts-v023.json` from the explicit
+`current/compiler-release.json` version. Its compiler identity is
+`1a04d9ef830be8770bc37e507e50addac10be3615e610beab1241ccba6d090b0`.
+Provider4.9 and Std1.4.1 bytes remain unchanged. This is component evidence;
+whole-product and formal release admission remain separate.
+
+On 2026-10-21, the existing official archive-verified Darwin arm64 Node18.19.1
+reference validated the exact new compiler and both Provider carriers. It passed
+30 frozen compiler outputs, 23 expression cases, and 20 private-helper sources
+with 66 successful guest calls, including recursion, loops and a 2098-term body.
+The same reference still rejects Std1.4.1 for missing function references and
+tail calls before instantiation; all six compatibility rejection controls pass.
+No experimental flags were enabled. Node18 compile-only success does not qualify
+the complete managed or Std journey and does not establish an engine version range.
+
+Actual Node, Bun and Deno full current-consumer checks each passed the unchanged
+30-output corpus, 23 expression cases and 192 managed repeated calls. Read the
+exact versions and command evidence in
+[the v023 consumer receipt](../.agents/workstreams/WS-20261021-normal-functional-successor-v023/evidence/v023-current-consumer-node18-and-threehost.json).
+The historical v009 diagnosis and its versioned artifacts below remain preserved.
+
+---
+
 # v0.0.9 Core compatibility and independent reproduction
 
 This is a supplemental, digest-bound contract for the existing immutable

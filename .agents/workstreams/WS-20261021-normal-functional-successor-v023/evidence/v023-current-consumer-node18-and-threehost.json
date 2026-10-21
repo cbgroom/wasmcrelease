@@ -1,0 +1,117 @@
+{
+  "scope": "actual consumer validation and exact Node18 reference; no inferred engine range",
+  "Node18_reference_archive_sha256": "0c7249318868877032ed21cc0ed450015ee44b31b9b281955521cd3fc39fbfa3",
+  "Node18_binary_sha256": "3a13e47059d5145d469f5fe324395ee9024ab20f6170718f75517fdf32b3340a",
+  "results": [
+    {
+      "name": "node18-version",
+      "command": [
+        "/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261021-formal-normal-functional-v022/target/node18-reference/node",
+        "--version"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "stdout_sha256": "d42a242f539c376dfe7d9dd3046f1a617901918b0066771733e7fa20a5edfe9d",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "v18.19.1\n",
+      "stderr": ""
+    },
+    {
+      "name": "node18-features",
+      "command": [
+        "/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261021-formal-normal-functional-v022/target/node18-reference/node",
+        "scripts/test-core-compatibility.mjs"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "stdout_sha256": "640675ab11dc98522b3b8ba21ea092b6e80e67c8d1bbeb9a30af7c74acd23f79",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "{\"accepted\":true,\"host\":{\"name\":\"node\",\"version\":\"v18.19.1\",\"v8\":\"10.2.154.26-node.28\"},\"features\":{\"function-references\":false,\"tail-call\":false},\"negative_tests\":6,\"supported_probe_oracle\":7}\n",
+      "stderr": ""
+    },
+    {
+      "name": "node18-preflight",
+      "command": [
+        "/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261021-formal-normal-functional-v022/target/node18-reference/node",
+        "scripts/check-core-compatibility.mjs"
+      ],
+      "exit": 1,
+      "expected_exit": 1,
+      "stdout_sha256": "0937ba4efe6ec0feaea2a700ad9fec69388e8939d559d68f852e84365d02bfad",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "{\"schema\":\"wasmc.core-compatibility-check/v1\",\"accepted\":false,\"host\":{\"name\":\"node\",\"version\":\"v18.19.1\",\"v8\":\"10.2.154.26-node.28\"},\"results\":[{\"accepted\":true,\"artifact\":\"compiler\",\"sha256\":\"1a04d9ef830be8770bc37e507e50addac10be3615e610beab1241ccba6d090b0\",\"validation_profile\":\"wasm2\",\"feature_support\":{\"function-references\":false,\"tail-call\":false}},{\"accepted\":true,\"artifact\":\"automatic-provider\",\"sha256\":\"c3ac42b93f4c27e24065abe804b91f54761eff782e2971e947847b3d20ee7e00\",\"validation_profile\":\"wasm2\",\"feature_support\":{\"function-references\":false,\"tail-call\":false}},{\"accepted\":true,\"artifact\":\"standard-provider\",\"sha256\":\"c3ac42b93f4c27e24065abe804b91f54761eff782e2971e947847b3d20ee7e00\",\"validation_profile\":\"wasm2\",\"feature_support\":{\"function-references\":false,\"tail-call\":false}},{\"accepted\":false,\"code\":\"engine.feature_unsupported\",\"artifact\":\"standard\",\"missing_features\":[\"function-references\",\"tail-call\"],\"sha256\":\"b79a499c8300361125e7fcdae02170184b82d4bbeff4d8f24ed95f3fd4db8d3b\",\"action\":\"Use a supported engine or a separately admitted portable variant; do not change immutable bytes or enable flags silently.\"}]}\n",
+      "stderr": ""
+    },
+    {
+      "name": "node18-compile",
+      "command": [
+        "/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261021-formal-normal-functional-v022/target/node18-reference/node",
+        "scripts/validate-current.mjs",
+        "--compile-only"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "stdout_sha256": "acac9b9a6b384c085f10df9c0048763c3153269cc4c76d8b7129218a49af5fc4",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "{\"accepted\":true,\"runtime\":\"node\",\"compiler_sha256\":\"1a04d9ef830be8770bc37e507e50addac10be3615e610beab1241ccba6d090b0\",\"frozen_corpus_outputs\":30,\"expression_cases\":23,\"mode\":\"compile-only\",\"managed_repeated_calls\":null}\n",
+      "stderr": ""
+    },
+    {
+      "name": "node18-private-helpers",
+      "command": [
+        "/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261021-formal-normal-functional-v022/target/node18-reference/node",
+        "scripts/test-current-private-helpers.mjs"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "stdout_sha256": "a8aab60b48a6e49b910c296ffa7d49794e22c3cd417722bbd7dcf35679da15bf",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "{\"accepted\":true,\"source_cases\":20,\"guest_calls\":66,\"repeats_per_instance\":3,\"basic_scalar_types\":11,\"long_helper_terms\":2098,\"invalid_sources_rejected\":5,\"selected_guest_trap\":true,\"healthy_after_rejections\":true,\"imports\":0,\"real_MCP_acceptance\":false}\n",
+      "stderr": ""
+    },
+    {
+      "name": "node-full-current",
+      "command": [
+        "/opt/homebrew/bin/node",
+        "scripts/validate-current.mjs"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "stdout_sha256": "af0f91a671ed58ab3083e24224d696bc12d1840bf5aebd8865acaedb1b5dadf6",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "{\"accepted\":true,\"runtime\":\"node\",\"compiler_sha256\":\"1a04d9ef830be8770bc37e507e50addac10be3615e610beab1241ccba6d090b0\",\"frozen_corpus_outputs\":30,\"expression_cases\":23,\"mode\":\"full\",\"managed_repeated_calls\":192}\n",
+      "stderr": ""
+    },
+    {
+      "name": "bun-full-current",
+      "command": [
+        "/Users/youxianshi/.bun/bin/bun",
+        "scripts/validate-current.mjs"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "stdout_sha256": "fe108f0f2ae111625223632c1b5f847083df024fbb94fca7f2b4a2aee45af0fa",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "{\"accepted\":true,\"runtime\":\"bun\",\"compiler_sha256\":\"1a04d9ef830be8770bc37e507e50addac10be3615e610beab1241ccba6d090b0\",\"frozen_corpus_outputs\":30,\"expression_cases\":23,\"mode\":\"full\",\"managed_repeated_calls\":192}\n",
+      "stderr": ""
+    },
+    {
+      "name": "deno-full-current",
+      "command": [
+        "/Users/youxianshi/.deno/bin/deno",
+        "run",
+        "--allow-read",
+        "--allow-write",
+        "--allow-run",
+        "--allow-env",
+        "scripts/validate-current.mjs"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "stdout_sha256": "c23cc02ee5138ea25060ba9b2553de6dedf564013e0c0926cd6b6ba943649973",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "{\"accepted\":true,\"runtime\":\"deno\",\"compiler_sha256\":\"1a04d9ef830be8770bc37e507e50addac10be3615e610beab1241ccba6d090b0\",\"frozen_corpus_outputs\":30,\"expression_cases\":23,\"mode\":\"full\",\"managed_repeated_calls\":192}\n",
+      "stderr": ""
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "accepted": true,
+  "source": "39dacb1936b851fa0e2310ee06f24b84e0e31761",
+  "archive_sha256": "716480ac79f0ca0dec24aafd08f9ad36c8ea9c329bde33333ce89f273b41e71f",
+  "compiler_sha256": "1a04d9ef830be8770bc37e507e50addac10be3615e610beab1241ccba6d090b0",
+  "hosts": [
+    "node",
+    "bun",
+    "deno"
+  ],
+  "oracle_result": 42,
+  "output_bytes": 44,
+  "formal_release": false,
+  "staged_sourcefree_runs": [
+    {
+      "runtime": "node",
+      "exit": 0,
+      "stdout_sha256": "7cf3eb7875622c789af6a5d76e7c2b475ef584805fcb4c5e2f761c5ed80da3a8",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "{\n  \"schema\": \"wasmc.runtime-js-self-test/v0\",\n  \"accepted\": true,\n  \"runtime\": \"node\",\n  \"compiler_bytes\": 1545807,\n  \"output_bytes\": 41\n}\n{\n  \"schema\": \"wasmc.runtime-js-compile/v0\",\n  \"accepted\": true,\n  \"runtime\": \"node\",\n  \"input\": \"examples/add.wasmc\",\n  \"output\": \"/var/folders/y0/0l0zt2_d10jcmb0xd_08bjfh0000gn/T//wasmc-source-free.1NfRBJ/deployment/runtime/wasmc-runtime-v0/examples/ci-output.wasm\",\n  \"output_bytes\": 44\n}\nPASS runtime output: run(6,18)=42, wasm=44 bytes, imports=0\n{\"accepted\":true,\"runtime\":\"node\",\"compiler_sha256\":\"1a04d9ef830be8770bc37e507e50addac10be3615e610beab1241ccba6d090b0\",\"frozen_corpus_outputs\":30,\"expression_cases\":23,\"mode\":\"full\",\"managed_repeated_calls\":192}\n{\"accepted\":true,\"standard_lib\":\"wasmc:std@1.4.1\",\"functions\":73,\"consumer_count\":3,\"consumer_calls\":7680,\"current_app_sha256\":\"f704d2c4d99f9efc97ef6d3c99bfd29c3987e1a96601ec7ff026dd0ac6e0581a\",\"rust_sdk_sha256\":\"4d2c55eda7cdbe4d14084de2d579ae6dcea97332e18ca9894d210a5a71472d65\"}\nPASS source-free staged deployment: runtime=node git_metadata=absent\n"
+    },
+    {
+      "runtime": "bun",
+      "exit": 0,
+      "stdout_sha256": "9534f5ed83e7f093bf665eb20183abb4d66ecb00b3250508ff811e4d0a25398a",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "{\n  \"schema\": \"wasmc.runtime-js-self-test/v0\",\n  \"accepted\": true,\n  \"runtime\": \"bun\",\n  \"compiler_bytes\": 1545807,\n  \"output_bytes\": 41\n}\n{\n  \"schema\": \"wasmc.runtime-js-compile/v0\",\n  \"accepted\": true,\n  \"runtime\": \"bun\",\n  \"input\": \"examples/add.wasmc\",\n  \"output\": \"/var/folders/y0/0l0zt2_d10jcmb0xd_08bjfh0000gn/T//wasmc-source-free.DVoUqt/deployment/runtime/wasmc-runtime-v0/examples/ci-output.wasm\",\n  \"output_bytes\": 44\n}\nPASS runtime output: run(6,18)=42, wasm=44 bytes, imports=0\n{\"accepted\":true,\"runtime\":\"bun\",\"compiler_sha256\":\"1a04d9ef830be8770bc37e507e50addac10be3615e610beab1241ccba6d090b0\",\"frozen_corpus_outputs\":30,\"expression_cases\":23,\"mode\":\"full\",\"managed_repeated_calls\":192}\n{\"accepted\":true,\"standard_lib\":\"wasmc:std@1.4.1\",\"functions\":73,\"consumer_count\":3,\"consumer_calls\":7680,\"current_app_sha256\":\"f704d2c4d99f9efc97ef6d3c99bfd29c3987e1a96601ec7ff026dd0ac6e0581a\",\"rust_sdk_sha256\":\"4d2c55eda7cdbe4d14084de2d579ae6dcea97332e18ca9894d210a5a71472d65\"}\nPASS source-free staged deployment: runtime=bun git_metadata=absent\n"
+    },
+    {
+      "runtime": "deno",
+      "exit": 0,
+      "stdout_sha256": "bbe89c4b8bd467e099c83a3d12424daccf268f5b2480da6242992cd55d616af3",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "{\n  \"schema\": \"wasmc.runtime-js-self-test/v0\",\n  \"accepted\": true,\n  \"runtime\": \"deno\",\n  \"compiler_bytes\": 1545807,\n  \"output_bytes\": 41\n}\n{\n  \"schema\": \"wasmc.runtime-js-compile/v0\",\n  \"accepted\": true,\n  \"runtime\": \"deno\",\n  \"input\": \"examples/add.wasmc\",\n  \"output\": \"/var/folders/y0/0l0zt2_d10jcmb0xd_08bjfh0000gn/T//wasmc-source-free.3BvE1L/deployment/runtime/wasmc-runtime-v0/examples/ci-output.wasm\",\n  \"output_bytes\": 44\n}\nPASS runtime output: run(6,18)=42, wasm=44 bytes, imports=0\n{\"accepted\":true,\"runtime\":\"deno\",\"compiler_sha256\":\"1a04d9ef830be8770bc37e507e50addac10be3615e610beab1241ccba6d090b0\",\"frozen_corpus_outputs\":30,\"expression_cases\":23,\"mode\":\"full\",\"managed_repeated_calls\":192}\n{\"accepted\":true,\"standard_lib\":\"wasmc:std@1.4.1\",\"functions\":73,\"consumer_count\":3,\"consumer_calls\":7680,\"current_app_sha256\":\"f704d2c4d99f9efc97ef6d3c99bfd29c3987e1a96601ec7ff026dd0ac6e0581a\",\"rust_sdk_sha256\":\"4d2c55eda7cdbe4d14084de2d579ae6dcea97332e18ca9894d210a5a71472d65\"}\nPASS source-free staged deployment: runtime=deno git_metadata=absent\n"
+    }
+  ],
+  "staged_tree": "3ae9d9c7051295f2a99e3119ca22a5a5477f01a7",
+  "input_source_commit": "39dacb1936b851fa0e2310ee06f24b84e0e31761",
+  "original_compiler_component_manifest_unchanged": true
+}
