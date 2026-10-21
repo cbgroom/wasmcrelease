@@ -526,12 +526,18 @@
     }
   },
   "Native_budget_diagnostic_slice": {
-    "state": "admitted before edits",
+    "state": "implemented; formatting check passed, actualnewNative CI required before qualification",
     "files": [
       "sdk/wasmc-native-compiler/src/lib.rs",
       "sdk/wasmc-native-compiler/tests/compiler.rs",
       "sdk/wasmc-native-compiler/README.md"
     ],
-    "scope": "Generic preserve Wasmtime error cause chain in publicSDK, assert actualfuel-exhaustion cause and poisonedinstance behavior, document existingLimits. No changed500Mbudget/stack/sourcecap, no compiler orLib algorithm/build. Native39actualexistingoracles pass; original newlongfailure preserved. ChangedSDK requires actualnewNativecohort; do not reuseold39validation."
+    "scope": "Generic preserve Wasmtime error cause chain in publicSDK, assert actualfuel-exhaustion cause and poisonedinstance behavior, document existingLimits. No changed500Mbudget/stack/sourcecap, no compiler orLib algorithm/build. Native39actualexistingoracles pass; original newlongfailure preserved. ChangedSDK requires actualnewNativecohort; do not reuseold39validation.",
+    "validation": {
+      "local_rustfmt": "pass after formatting two existing teststatements as well as ownchange",
+      "actual_Rust_test_execution": "pending newCI; no localcoldRustbuild",
+      "default_fuel": 500000000,
+      "compiler_sha256_unchanged": "1a04d9ef830be8770bc37e507e50addac10be3615e610beab1241ccba6d090b0"
+    }
   }
 }

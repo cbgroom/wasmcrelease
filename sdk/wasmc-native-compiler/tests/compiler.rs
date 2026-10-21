@@ -8,7 +8,10 @@ interface api {
  shift: func(x:u64)->u64 { return x >> 63; }
 }
 world app { export api; }"#;
-    let wasm = Compiler::new(Limits::default()).unwrap().compile(source).unwrap();
+    let wasm = Compiler::new(Limits::default())
+        .unwrap()
+        .compile(source)
+        .unwrap();
 
     let wasmi_engine = wasmi::Engine::default();
     let wasmi_module = wasmi::Module::new(&wasmi_engine, &wasm).unwrap();
@@ -36,12 +39,8 @@ world app { export api; }"#;
     let wasmtime_engine = wasmtime::Engine::default();
     let wasmtime_module = wasmtime::Module::new(&wasmtime_engine, &wasm).unwrap();
     let mut wasmtime_store = wasmtime::Store::new(&wasmtime_engine, ());
-    let wasmtime_instance = wasmtime::Instance::new(
-        &mut wasmtime_store,
-        &wasmtime_module,
-        &[],
-    )
-    .unwrap();
+    let wasmtime_instance =
+        wasmtime::Instance::new(&mut wasmtime_store, &wasmtime_module, &[]).unwrap();
     assert_eq!(
         wasmtime_instance
             .get_typed_func::<(), i64>(&mut wasmtime_store, "max")
@@ -91,7 +90,8 @@ fn fuel_exhaustion_poisoned_instance() {
     })
     .unwrap();
     let source = include_str!("../../../examples/agent-start/01_add.wasmc");
-    assert!(compiler.compile(source).is_err());
+    let error = compiler.compile(source).unwrap_err();
+    assert!(error.contains("all fuel consumed"), "{error}");
     assert_eq!(
         compiler.compile(source).unwrap_err(),
         "compiler instance poisoned"

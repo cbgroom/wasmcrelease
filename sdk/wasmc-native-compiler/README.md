@@ -23,6 +23,19 @@ wasmc build --target native INPUT.wasmc -o EXECUTABLE
 
 The current v1 CLI runs/builds import-free scalar Apps directly. CoreLib/Lib publication remains standard Core Wasm and is not duplicated as a native package format. Existing public Host/CoreLib composition work remains separate from this initial CLI/native packaging slice.
 
+## Compiler operation limits
+
+`Limits::default()` supplies 500,000,000 fuel units per compilation, 256 MiB
+linear memory, a 1 MiB source limit and a 16 MiB output limit. Fuel measures
+executed Wasm work; source length alone cannot predict it. Embedders select an
+explicit `Limits` value when constructing `Compiler`; the CLI uses the default.
+A valid source can exhaust that operation budget. Report the full Wasmtime cause
+chain, including `all fuel consumed`, and preserve the poisoned-instance rule.
+Construct a fresh compiler after a trap; do not silently retry or increase limits.
+A default-budget rejection is separate from source rejection and from portable
+engine or language support. These limits do not establish a production capacity
+or performance ceiling.
+
 ## Build and use
 
 ```bash
