@@ -15,3 +15,7 @@ Current action: ordinary commit/push/readback of this START. Product file claims
 Next: finish private CI/integration and exact sanitized canonical/build custody. Then claim normal-task guidance/evaluator and generated compiler-family/Native/compatibility successor files, implement the generic correctness repairs, qualify actual source-free consumers and changed Native cohort, freeze/reopen new v023 candidate, exact dev CI/main/final local prod Pi pair, formal publication and independent downloads. A single-model observation is not full release acceptance.
 
 Unchanged Lib/Core products retain original Q0/build/runtime attribution and must not be cold rebuilt. No new Map/Core4.11 or JSON002 publication claim. Preserve frozen Core4.9, all old failures and foreign WIP. Public compiler permission never includes private implementation source or implementation-bearing maps/logs. No existing job is stopped and no old UNKNOWN transfer is retried.
+
+## First implementation slice admitted
+
+Exact five script claims are in task.json. Repair generic terminal-answer extraction and require completed command evidence for execution-class journeys, retaining independent compile/import/run review. Parse complete machine tokens so a longer internal query key does not manufacture a package identity; retain wrong real-package/typo controls. Original prompts and efficiency budgets stay unchanged. Commit/push/readback this scope extension before implementation. Compiler intake and public guidance remain later slices with separate exact claims.
