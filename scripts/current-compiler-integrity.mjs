@@ -26,6 +26,26 @@ const prior=refresh?null:json('current/compiler-release.json');
 const pin=refresh?options['--compiler-sha256']:prior.compiler.sha256;
 const canonical=read('current/wasmc_compiler.wasm');
 assert.equal(sha(canonical),pin);assert.ok(canonical.length<=2097152);
+// Canonical admission and the earlier measured build retain separate identities.
+const custodyPath='current/source-build-custody-v022.json';
+const custody=json(custodyPath),build=json(custody.actual_build_receipt.path),proof=json(custody.canonical_input_proof.path);
+assert.equal(custody.schema,'wasmc.compiler-source-build-custody/v1');
+for(const input of [custody.actual_build_receipt,custody.canonical_input_proof])assert.deepEqual(input,row(input.path));
+assert.equal(sha(read(custodyPath)),refresh?options['--build-receipt-sha256']:prior.source_build_receipt_sha256);
+assert.equal(proof.schema,'wasmc.compiler-canonical-input-custody/v1');
+assert.equal(build.exit,0);assert.equal(build.compiler_sha256,pin);assert.equal(proof.compiler_sha256,pin);
+assert.equal(build.compiler_bytes,canonical.length);assert.equal(proof.compiler_bytes,canonical.length);
+assert.equal(proof.actual_build_receipt_sha256,custody.actual_build_receipt.sha256);
+assert.equal(proof.actual_build_source,build.Source);assert.equal(proof.actual_build_tree,build.tree);
+assert.equal(proof.canonical_source,refresh?options['--source-commit']:prior.source_commit);
+assert.equal(proof.canonical_branch,refresh?options['--source-branch']:prior.source_branch);assert.equal(proof.canonical_branch,'master');
+assert.equal(build.lock_sha256,refresh?options['--cargo-lock-sha256']:prior.cargo_lock_sha256);
+assert.equal(proof.source_inputs.length,proof.source_input_count);assert.ok(proof.source_input_count>0);
+assert.equal(new Set(proof.source_inputs.map(x=>x.path)).size,proof.source_input_count);
+for(const input of proof.source_inputs){assert.match(input.sha256,/^[a-f0-9]{64}$/);assert.match(input.build_blob,/^[a-f0-9]{40}$/);assert.equal(input.build_blob,input.canonical_blob);}
+assert.ok(proof.all_changed_paths.every(p=>p.startsWith('.agents/')));
+assert.equal(proof.actual_compiler_dependencies_and_Cargo_inputs_equal,true);assert.equal(proof.tracked_non_governance_tree_equal,true);
+assert.equal(proof.private_implementation_source_included,false);assert.equal(proof.new_builds,0);
 const cm=new WebAssembly.Module(canonical);assert.deepEqual(WebAssembly.Module.imports(cm),[]);
 for(const name of ['memory','wasmc_alloc','wasmc_compile','wasmc_output_ptr','wasmc_output_len','wasmc_error_ptr','wasmc_error_len','wasmc_clear'])assert.ok(WebAssembly.Module.exports(cm).some(e=>e.name===name));
 const binaries=[],embeddings=[];
