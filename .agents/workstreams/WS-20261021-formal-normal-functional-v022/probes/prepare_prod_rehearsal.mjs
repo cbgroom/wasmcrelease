@@ -3,13 +3,13 @@ import {readFileSync,writeFileSync,existsSync} from 'node:fs';
 import {validateCandidate,validateTransition} from '../../../../scripts/release-candidate.mjs';
 const read=p=>readFileSync(p),json=p=>JSON.parse(read(p)),put=(p,x)=>writeFileSync(p,JSON.stringify(x,null,2)+'\n');
 const candidate=json('channels/candidates/0.0.22.json');validateCandidate(candidate,read);
-assert.equal(candidate.product_set_sha256,'deb5321647d7dd1ccc27bd662d0b5b02a0c3300a2351a37045097484cbcf411a');
-const main=json('channels/main.json');assert.equal(main.tag,'v0.0.22-main.1');
+assert.equal(candidate.product_set_sha256,'1d31e575b77cb3bdd810ad4601bac242ea1acad8550cd0febf828d80b6b5f9f3');
+const main=json('channels/main.json');assert.equal(main.tag,'v0.0.22-main.2');
 assert.equal(main.qualification.exact_current_workflows.length,9);
-for(const r of main.qualification.exact_current_workflows){assert.equal(r.conclusion,'success');assert.equal(r.source_commit,'9c34b6030a4e17bf7f08c551d229262e668c897d');}
+for(const r of main.qualification.exact_current_workflows){assert.equal(r.conclusion,'success');assert.equal(r.source_commit,'6cb402860df296d11cd6332917a4ac00e38878de');}
 const prod={...main,stage:'prod',tag:'v0.0.22',qualification:{...main.qualification,
  final_local_prod_Pi:'Required separate exact final local commit/tree bound two-model Pi receipt and independent review; publisher must verify before suffix-free tag or push.'},
- promotion:'Identical immutable dev2/main1 product. This local final rehearsal requires actual independent Pi qualification before formal tag or publication.'};
+ promotion:'Identical immutable dev3/main2 product. This local final rehearsal requires actual independent Pi qualification before formal tag or publication.'};
 delete prod.default_prod_advanced;validateTransition(main,prod,candidate);
 assert.equal(existsSync('channels/0.0.22/prod.json'),false);writeFileSync('channels/0.0.22/prod.json',JSON.stringify(prod,null,2)+'\n',{flag:'wx'});put('channels/prod.json',prod);
 const release=json('release.json');assert.equal(release.version,'0.0.21');
