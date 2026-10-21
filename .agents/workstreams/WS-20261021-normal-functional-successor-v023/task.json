@@ -49,6 +49,26 @@
       "kind": "file",
       "scope": "scripts/run-pi-learning-model-v1.mjs",
       "mode": "exclusive"
+    },
+    {
+      "kind": "file",
+      "scope": "agent-quickstart.json",
+      "mode": "exclusive"
+    },
+    {
+      "kind": "file",
+      "scope": "skills/wasmc-lib-discovery/SKILL.md",
+      "mode": "exclusive"
+    },
+    {
+      "kind": "file",
+      "scope": "docs/AGENT_DECISION_MODEL.md",
+      "mode": "exclusive"
+    },
+    {
+      "kind": "file",
+      "scope": "scripts/test-agent-quickstart.mjs",
+      "mode": "exclusive"
     }
   ],
   "scope": "First product implementation scope: generic Pi final-answer extraction, minimum completed-command evidence for execution-class tasks, and complete machine-token identity parsing. Preserve original fixed prompts, budgets, real failures and independent review; do not infer full behavior acceptance from one command. Compiler/Lib/guidance/old candidate bytes remain outside this slice; add exact claims before their later edits.",
@@ -125,5 +145,21 @@
       "original_candidate_rejected_reason": "product drift rejected",
       "fresh_model_run": false
     }
+  },
+  "library_reporting_slice": {
+    "scope": "Clarify caller approval vs mechanical resolve verification, packaged-root vs installed-root behavior evidence, and mandatory lifecycle reads for the selected route. No resolver, installer, license, Root or compiler behavior change.",
+    "files": [
+      "agent-quickstart.json",
+      "skills/wasmc-lib-discovery/SKILL.md",
+      "docs/AGENT_DECISION_MODEL.md",
+      "scripts/test-agent-quickstart.mjs"
+    ],
+    "basis": "Actual retained GLM single-model answer called resolve approval and packaged-root run installed, despite authority_granted=false and installed_root_verified=false. Recovered-pair GLM omitted release/channel reads and called resolver/behavior approval evidence.",
+    "validation": [
+      "Use the actual resolver output and packaged-root Base64 oracle, not invented permission/install fields.",
+      "Existing quickstart/library-first fixtures and unchanged pair result; no Root/Lib rebuild.",
+      "Require selected-route lifecycle reads; keep fixed prompts/budgets and original model failures.",
+      "Old frozen candidate remains byte-identical and rejects changed future product."
+    ]
   }
 }
