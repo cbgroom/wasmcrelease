@@ -47,7 +47,7 @@
   "consumer_surfaces": [
     {
       "id": "lib-package",
-      "status": "candidate",
+      "status": "published",
       "roots": [
         "current-libs"
       ],
@@ -59,7 +59,7 @@
     },
     {
       "id": "host-sdk",
-      "status": "candidate",
+      "status": "published",
       "roots": [
         "sdk/wasmc-host",
         "sdk/wasmc-core-runtime"
@@ -74,7 +74,7 @@
     },
     {
       "id": "integrated-runtime-cli",
-      "status": "candidate",
+      "status": "published",
       "roots": [
         "runtime/wasmc-runtime-v0",
         "sdk/wasmc-native-compiler"
@@ -202,21 +202,21 @@
       "core-runtime-sdk": {
         "root": "sdk/wasmc-core-runtime",
         "skill": "sdk/wasmc-core-runtime/SKILL.md",
-        "release_status": "candidate",
+        "release_status": "published",
         "immutable_example": "v0.0.23"
       },
       "host-sdk": {
         "root": "sdk/wasmc-host",
         "skill": "sdk/wasmc-host/SKILL.md",
-        "release_status": "candidate",
+        "release_status": "published",
         "immutable_example": "v0.0.23"
       },
       "native-cli": {
         "root": "sdk/wasmc-native-compiler",
         "skill": "sdk/wasmc-native-compiler/SKILL.md",
-        "release_status": "candidate",
+        "release_status": "published",
         "immutable_example": "v0.0.23",
-        "binary_packaging": "CI/development packages are not immutable release assets; all6 Native builds and6 matching downloaded consumers passed at actual source7fbdb6a450354dda20c9077a403b503db0ca7f1f, run39560999862. Formal assets require immutable Release publication and input custody."
+        "binary_packaging": "CI/development packages are not immutable release assets. Six release archives prepared and independently reopened from actual Source980378fcd810ea2b7b88928851d074691f8b5cb3 run39639944873, all six builds and six matching downloaded consumers passed. Compiler1a04 and all27 build inputs match frozen productcf39. This final local release view is not live publication until the publisher verifies final Pi and publishes the exact tag/assets."
       },
       "lightweight-embedding": {
         "root": "host/embedding",
@@ -265,7 +265,7 @@
   },
   "package_profiles": {
     "wasmc-system-telemetry@0.0.1": {
-      "status": "candidate",
+      "status": "published",
       "supported_surfaces": [
         "source-free-rust-component",
         "public-rust-host-sdk",
@@ -317,7 +317,7 @@
         ]
       },
       "u64_ordinary_source": {
-        "status": "qualified-product-capability",
+        "status": "released",
         "positions": [
           "local",
           "parameter",
@@ -534,7 +534,7 @@
         "candidate_extras": 0,
         "formal_release_ready": false,
         "blocking_conditions": [
-              "v023-final-Pi-and-publication-pending"
+          "v023-final-Pi-and-publication-pending"
         ]
       },
       "active_search": {
@@ -747,9 +747,9 @@
         "identity": "wasmc-system-telemetry@0.0.1",
         "qualified": true,
         "admitted": true,
-        "released": false,
-        "discoverable": false,
-        "installable": false,
+        "released": true,
+        "discoverable": true,
+        "installable": true,
         "supported_routes": [
           "source-free-rust-component",
           "public-rust-host-sdk",
