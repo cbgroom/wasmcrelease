@@ -1,9 +1,9 @@
 {
   "schema": "wasmc.current-compiler-qualification/v1",
   "accepted": true,
-  "version": "0.0.22",
-  "compiler_sha256": "620a6b5f7b9a4565f14857975e37a03196f8f7e4279a2f4da388882638f2a658",
-  "product_manifest_sha256": "0d4c853d429d69ac7d530d9420c9ce50541f3ca5e38bc19a13e2d9bde15686cf",
+  "version": "0.0.23",
+  "compiler_sha256": "1a04d9ef830be8770bc37e507e50addac10be3615e610beab1241ccba6d090b0",
+  "product_manifest_sha256": "4bceb71d4bca928990e3d6465fdd509cd841d8a73f3aaa1eda848391d1267dca",
   "source_free": true,
   "compiler_private_source_present": false,
   "platform": "darwin",
@@ -11,7 +11,7 @@
   "runs": [
     {
       "engine": "node",
-      "version": "v26.5.1",
+      "version": "v25.6.0",
       "args": [
         "scripts/test-current-compiler.mjs"
       ],
@@ -19,7 +19,7 @@
       "result": {
         "accepted": true,
         "runtime": "node",
-        "compiler_sha256": "620a6b5f7b9a4565f14857975e37a03196f8f7e4279a2f4da388882638f2a658",
+        "compiler_sha256": "1a04d9ef830be8770bc37e507e50addac10be3615e610beab1241ccba6d090b0",
         "frozen_outputs": 35,
         "execution_oracles": 7,
         "cli_outputs": 25
@@ -27,7 +27,7 @@
     },
     {
       "engine": "node",
-      "version": "v26.5.1",
+      "version": "v25.6.0",
       "args": [
         "examples/current/standard.mjs"
       ],
@@ -44,7 +44,7 @@
     },
     {
       "engine": "node",
-      "version": "v26.5.1",
+      "version": "v25.6.0",
       "args": [
         "scripts/test-current-lib-api-v021.mjs"
       ],
@@ -58,6 +58,27 @@
         "boolean_conditional_calls": 1536,
         "boolean_numeric_rejections": 6,
         "old_provider_fallback": false
+      }
+    },
+    {
+      "engine": "node",
+      "version": "v25.6.0",
+      "args": [
+        "scripts/test-current-private-helpers.mjs"
+      ],
+      "exit_code": 0,
+      "result": {
+        "accepted": true,
+        "source_cases": 20,
+        "guest_calls": 66,
+        "repeats_per_instance": 3,
+        "basic_scalar_types": 11,
+        "long_helper_terms": 2098,
+        "invalid_sources_rejected": 5,
+        "selected_guest_trap": true,
+        "healthy_after_rejections": true,
+        "imports": 0,
+        "real_MCP_acceptance": false
       }
     },
     {
@@ -70,7 +91,7 @@
       "result": {
         "accepted": true,
         "runtime": "bun",
-        "compiler_sha256": "620a6b5f7b9a4565f14857975e37a03196f8f7e4279a2f4da388882638f2a658",
+        "compiler_sha256": "1a04d9ef830be8770bc37e507e50addac10be3615e610beab1241ccba6d090b0",
         "frozen_outputs": 35,
         "execution_oracles": 7,
         "cli_outputs": 25
@@ -109,6 +130,27 @@
         "boolean_conditional_calls": 1536,
         "boolean_numeric_rejections": 6,
         "old_provider_fallback": false
+      }
+    },
+    {
+      "engine": "bun",
+      "version": "1.3.14",
+      "args": [
+        "scripts/test-current-private-helpers.mjs"
+      ],
+      "exit_code": 0,
+      "result": {
+        "accepted": true,
+        "source_cases": 20,
+        "guest_calls": 66,
+        "repeats_per_instance": 3,
+        "basic_scalar_types": 11,
+        "long_helper_terms": 2098,
+        "invalid_sources_rejected": 5,
+        "selected_guest_trap": true,
+        "healthy_after_rejections": true,
+        "imports": 0,
+        "real_MCP_acceptance": false
       }
     },
     {
@@ -126,7 +168,7 @@
       "result": {
         "accepted": true,
         "runtime": "deno",
-        "compiler_sha256": "620a6b5f7b9a4565f14857975e37a03196f8f7e4279a2f4da388882638f2a658",
+        "compiler_sha256": "1a04d9ef830be8770bc37e507e50addac10be3615e610beab1241ccba6d090b0",
         "frozen_outputs": 35,
         "execution_oracles": 7,
         "cli_outputs": 25
@@ -170,10 +212,34 @@
         "boolean_numeric_rejections": 6,
         "old_provider_fallback": false
       }
+    },
+    {
+      "engine": "deno",
+      "version": "deno 2.9.4 (stable, release, aarch64-apple-darwin)\nv8 15.0.245.2-rusty\ntypescript 6.0.3",
+      "args": [
+        "run",
+        "--allow-read",
+        "scripts/test-current-private-helpers.mjs"
+      ],
+      "exit_code": 0,
+      "result": {
+        "accepted": true,
+        "source_cases": 20,
+        "guest_calls": 66,
+        "repeats_per_instance": 3,
+        "basic_scalar_types": 11,
+        "long_helper_terms": 2098,
+        "invalid_sources_rejected": 5,
+        "selected_guest_trap": true,
+        "healthy_after_rejections": true,
+        "imports": 0,
+        "real_MCP_acceptance": false
+      }
     }
   ],
   "boolean_conditional_calls": 4608,
   "boolean_numeric_rejections": 18,
+  "private_helper_guest_calls": 198,
   "rejection_controls": {
     "exit_code": 0,
     "result": {

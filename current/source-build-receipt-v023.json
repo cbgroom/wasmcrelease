@@ -1,0 +1,76 @@
+{
+  "schema": "wasmc.compiler-source-build-receipt/v1",
+  "Source": "73a22c6aceedff950413a01e3088ac72fef8521c",
+  "tree": "5e07daf4fe0e8a3d1323b8dd69ed5f14b0e1177a",
+  "branch": "work/WS-20261021-private-helper-resource-convergence-v1",
+  "source_clean_at_build": true,
+  "exit": 0,
+  "compiler_sha256": "1a04d9ef830be8770bc37e507e50addac10be3615e610beab1241ccba6d090b0",
+  "compiler_bytes": 1545807,
+  "lock_sha256": "8308ac2c488f1b843a8d991cd69b3922c78c1a74454bd5081961e7d6e7045ba8",
+  "method": "Three changed Rust roots, direct rustc using four exact cached external dependencies; no Cargo or external cold build.",
+  "target": "wasm32-unknown-unknown",
+  "features": [
+    "default",
+    "wasmtime-runtime"
+  ],
+  "commands": [
+    {
+      "crate": "wasmc",
+      "input": "src/lib.rs",
+      "target": "wasm32-unknown-unknown",
+      "opt_level": "z",
+      "panic": "abort",
+      "codegen_units": 1,
+      "strip": "symbols",
+      "lto": "linker-plugin",
+      "exit": 0,
+      "seconds": 15.278129262966104
+    },
+    {
+      "crate": "wasmc_wasm",
+      "input": "crates/wasmc_wasm/src/lib.rs",
+      "target": "wasm32-unknown-unknown",
+      "opt_level": "z",
+      "panic": "abort",
+      "codegen_units": 1,
+      "strip": "symbols",
+      "lto": "linker-plugin",
+      "exit": 0,
+      "seconds": 0.5891730560688302
+    },
+    {
+      "crate": "wasmc_wasm_cdylib",
+      "input": "crates/wasmc_wasm_cdylib/src/lib.rs",
+      "target": "wasm32-unknown-unknown",
+      "opt_level": "z",
+      "panic": "abort",
+      "codegen_units": 1,
+      "strip": "symbols",
+      "lto": "fat",
+      "exit": 0,
+      "seconds": 7.638490863027982
+    }
+  ],
+  "cached_external_dependencies": {
+    "serde_json": {
+      "sha256": "c3a43b658e5d4500e322f7e42ede84288f14af459edbd8eb4d22ca816e6de488",
+      "cached": true
+    },
+    "serde": {
+      "sha256": "e32f6b47481dd1a9ab5e49afe92035e26fb8ff234d745a10839d25ebd35fc99b",
+      "cached": true
+    },
+    "wasm_encoder": {
+      "sha256": "d3f426799f2f6e2cbe54c0918d048cdf551f8d979ed692e09a29286a57636787",
+      "cached": true
+    },
+    "wit_parser": {
+      "sha256": "da529d7c679da80a6c79c6b09431f457965df9e684011fcf4144667c3bed8da6",
+      "cached": true
+    }
+  },
+  "toolchain_compatibility": "rustc 1.99.0 b940084d7 / LLVM23.1.1 strict cached-dependency compatibility class from the prior measured admission; successful direct roots reused exact cached hashes. No new rustc-version measurement claimed.",
+  "new_compiler_builds_in_public": 0,
+  "formal_release": false
+}

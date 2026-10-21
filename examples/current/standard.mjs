@@ -18,9 +18,9 @@ assert.equal(sha(lib),'b79a499c8300361125e7fcdae02170184b82d4bbeff4d8f24ed95f3fd
 assert.equal(sha(plan),'8be27de32e1e8dadcb997f2b886d0349531eb9448c1b7dd73a74a3d9e34f87b3');
 const source=new TextDecoder().decode(await load('standard.wasmc'));
 const compiled=(await compileLib(source,{plan,libWasmBytes:lib})).appWasm;
-const sealed=await load('standard-wasmc-v022.wasm'),rust=await load('standard-rust.wasm');
-const pins=JSON.parse(new TextDecoder().decode(await load('standard-fixtures-v022.json')));
-assert.equal(pins.schema,'wasmc.current-standard-fixtures/v2');assert.equal(pins.release,'0.0.22');
+const sealed=await load('standard-wasmc-v023.wasm'),rust=await load('standard-rust.wasm');
+const pins=JSON.parse(new TextDecoder().decode(await load('standard-fixtures-v023.json')));
+assert.equal(pins.schema,'wasmc.current-standard-fixtures/v2');assert.equal(pins.release,'0.0.23');
 assert.equal(sha(await load('standard-wasmc.wasm')),pins.baseline_wasmc_sha256);
 assert.equal(sha(await load('../../current/wasmc_compiler.wasm')),pins.compiler_sha256);assert.equal(sha(new TextEncoder().encode(source)),pins.source_sha256);
 assert.equal(sha(compiled),pins.wasmc_sha256);assert.equal(sha(sealed),pins.wasmc_sha256);assert.equal(sha(rust),pins.rust_sha256);

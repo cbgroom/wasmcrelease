@@ -15,7 +15,8 @@ for(const engine of ['node','bun','deno']) {
   const commands=[
     engine==='deno'?['run','--allow-read','--allow-write','--allow-run','--allow-env','scripts/test-current-compiler.mjs']:['scripts/test-current-compiler.mjs'],
     engine==='deno'?['run','--allow-read','examples/current/standard.mjs']:['examples/current/standard.mjs'],
-    engine==='deno'?['run','--allow-read','scripts/test-current-lib-api-v021.mjs']:['scripts/test-current-lib-api-v021.mjs']
+    engine==='deno'?['run','--allow-read','scripts/test-current-lib-api-v021.mjs']:['scripts/test-current-lib-api-v021.mjs'],
+    engine==='deno'?['run','--allow-read','scripts/test-current-private-helpers.mjs']:['scripts/test-current-private-helpers.mjs']
   ];
   for(const args of commands) {
     const r=spawnSync(engine,args,{cwd:root,encoding:'utf8',timeout:60000});
@@ -30,6 +31,8 @@ assert.equal(booleanRuns.length,3);
 for(const r of booleanRuns){assert.equal(r.result.calls,768);assert.equal(r.result.boolean_conditional_calls,1536);assert.equal(r.result.boolean_numeric_rejections,6);}
 const booleanConditionalCalls=booleanRuns.reduce((n,r)=>n+r.result.boolean_conditional_calls,0);
 const booleanNumericRejections=booleanRuns.reduce((n,r)=>n+r.result.boolean_numeric_rejections,0);
+const helpers=runs.filter(r=>r.args.at(-1)==='scripts/test-current-private-helpers.mjs');assert.equal(helpers.length,3);
+for(const r of helpers){assert.equal(r.result.source_cases,20);assert.equal(r.result.guest_calls,66);assert.equal(r.result.invalid_sources_rejected,5);assert.equal(r.result.long_helper_terms,2098);}
 const control=spawnSync(process.execPath,['scripts/test-current-compiler-integrity.mjs'],{cwd:root,encoding:'utf8',timeout:420000});
 if(control.status!==0)throw Error('current compiler integrity controls failed: '+String(control.error ?? control.signal ?? control.stderr));
 const receipt={schema:'wasmc.current-compiler-qualification/v1',accepted:true,
@@ -38,6 +41,7 @@ const receipt={schema:'wasmc.current-compiler-qualification/v1',accepted:true,
   source_free:true,compiler_private_source_present:false,
   platform:platform(),arch:arch(),runs,
   boolean_conditional_calls:booleanConditionalCalls,boolean_numeric_rejections:booleanNumericRejections,
+  private_helper_guest_calls:helpers.reduce((n,r)=>n+r.result.guest_calls,0),
   rejection_controls:{exit_code:control.status,result:JSON.parse(control.stdout)},
   nonclaims:['whole-product release','whole42 Lib runtime qualification','Pi model-pair qualification','native SDK requalification','real browser qualification']};
 writeFileSync(root+'current/qualification.json',JSON.stringify(receipt,null,2)+'\n');

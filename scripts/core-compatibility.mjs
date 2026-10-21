@@ -1,7 +1,10 @@
 import { readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 
-export const coreContract = JSON.parse(readFileSync(new URL('../compatibility/core-artifacts-v022.json', import.meta.url)));
+const compilerAuthority=JSON.parse(readFileSync(new URL('../current/compiler-release.json',import.meta.url)));
+if(!/^0\.0\.[0-9]+$/.test(compilerAuthority.version))throw Error('invalid compiler product version');
+export const coreContract = JSON.parse(readFileSync(new URL('../compatibility/core-artifacts-v0'+compilerAuthority.version.split('.')[2]+'.json', import.meta.url)));
+if(coreContract.candidate_version!==compilerAuthority.version)throw Error('compatibility product version mismatch');
 export const currentHost = () => ({name:globalThis.Bun ? 'bun' : globalThis.Deno ? 'deno' : 'node', version:globalThis.Bun?.version ?? globalThis.Deno?.version.deno ?? process.version, v8:process.versions.v8 ?? null});
 const probes = Object.freeze({
   'function-references': '0061736d010000000105016000017f03030200000707010372756e0001090501030001000a0d02040041070b0600d20014000b0015046e616d65010801000576616c7565040401000166',
