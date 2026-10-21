@@ -1,0 +1,224 @@
+{
+  "schema": "wasmc.single-case-model-observation/v1",
+  "scope": "Changed guidance observation only; no complete suite, controlled pair or formal release acceptance.",
+  "commit": "702dc4a8ebbb533d3b10d2ca3288146abe4af650",
+  "agent": {
+    "implementation": "pi",
+    "version": "1.0.4"
+  },
+  "model": {
+    "provider": "llm-m4dd",
+    "identity": "glm-5.3-flash"
+  },
+  "case_id": "library-first-selection",
+  "protocol_sha256": "31de0e1094291d4e936f456f98f946b0c0623c024753a361abc02d5180e1c91d",
+  "prompt_sha256": "4f0ded263f6ba0f80578b8a62d5abcb89584e6a139abe2d8e5c38536e4d9015e",
+  "raw_trace_retained": false,
+  "hidden_reasoning_retained": false,
+  "process": {
+    "status": 0,
+    "signal": null,
+    "timed_out": false,
+    "wall_ms": 50331,
+    "stderr_characters": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "structural": {
+    "accepted": true,
+    "observed": {
+      "tool_calls": 8,
+      "assistant_turns": 5,
+      "tool_result_characters": 39356,
+      "error_results": 0,
+      "retries": 0,
+      "exact_duplicate_calls": 0,
+      "repeated_reads": 0,
+      "zero_yield_results": 0
+    },
+    "limits": {
+      "max_tool_calls": 16,
+      "max_assistant_turns": 10,
+      "max_tool_result_characters": 120000,
+      "max_error_results": 0,
+      "max_retries": 0,
+      "max_exact_duplicate_calls": 0,
+      "max_repeated_reads": 1,
+      "max_zero_yield_results": 2
+    },
+    "failures": [],
+    "answer_contract": {
+      "accepted": true,
+      "observed": {
+        "digests": [],
+        "identities": [
+          "wasmc:std@1.4.1",
+          "wasmc:std@1.4.1",
+          "wasmc:std@1.4.1",
+          "wasmc-std",
+          "wasmc:lib"
+        ]
+      },
+      "failures": []
+    },
+    "execution_evidence": {
+      "accepted": true,
+      "completed_commands": 3,
+      "scope": "Minimum completed command evidence; independent review must still verify compilation, import inspection and behavior required by the task."
+    }
+  },
+  "trace": {
+    "schema": "wasmc.live-agent-trace-evaluation/v1",
+    "profile": "general",
+    "provider": "llm-m4dd",
+    "model": "glm-5.3-flash",
+    "session_id": "01a15f22-f161-7607-9e9c-ae69078d79ad",
+    "parse_errors": 0,
+    "assistant_turns": 5,
+    "tool_calls": [
+      {
+        "name": "read",
+        "arguments": {
+          "path": "agent-quickstart.json"
+        }
+      },
+      {
+        "name": "ls",
+        "arguments": {}
+      },
+      {
+        "name": "read",
+        "arguments": {
+          "path": "AGENTS.md"
+        }
+      },
+      {
+        "name": "read",
+        "arguments": {
+          "path": "release.json"
+        }
+      },
+      {
+        "name": "read",
+        "arguments": {
+          "path": "channels/prod.json"
+        }
+      },
+      {
+        "name": "bash",
+        "arguments": {
+          "command": "node scripts/wasmc-lib.mjs search base64 --catalog-sha256 76f9a0ca465c7d6169738be04ac725dceac2cdde14bbfc5215c37c2e97c86f43 --limit 8"
+        }
+      },
+      {
+        "name": "bash",
+        "arguments": {
+          "command": "node scripts/wasmc-lib.mjs resolve wasmc-std 1.4.1 --catalog-sha256 76f9a0ca465c7d6169738be04ac725dceac2cdde14bbfc5215c37c2e97c86f43 --manifest-sha256 9db63b4f380f9a8fb7541addfde6608bbc48b3267ad903f838afedb98e74ebfc --root-inventory-sha256 6978407b51e835a3893ac14cbb7ca2c46da48d0a778f2611f6de829af07bdf92"
+        }
+      },
+      {
+        "name": "bash",
+        "arguments": {
+          "command": "node examples/base64/run.mjs"
+        }
+      }
+    ],
+    "tool_outcomes": [
+      {
+        "name": "read",
+        "matched_call": true,
+        "is_error": false,
+        "result_characters": 15532
+      },
+      {
+        "name": "ls",
+        "matched_call": true,
+        "is_error": false,
+        "result_characters": 700
+      },
+      {
+        "name": "read",
+        "matched_call": true,
+        "is_error": false,
+        "result_characters": 5491
+      },
+      {
+        "name": "read",
+        "matched_call": true,
+        "is_error": false,
+        "result_characters": 4912
+      },
+      {
+        "name": "read",
+        "matched_call": true,
+        "is_error": false,
+        "result_characters": 4951
+      },
+      {
+        "name": "bash",
+        "matched_call": true,
+        "is_error": false,
+        "result_characters": 2590
+      },
+      {
+        "name": "bash",
+        "matched_call": true,
+        "is_error": false,
+        "result_characters": 4684
+      },
+      {
+        "name": "bash",
+        "matched_call": true,
+        "is_error": false,
+        "result_characters": 496
+      }
+    ],
+    "tool_results": 8,
+    "tool_result_characters": 39356,
+    "error_results": 0,
+    "zero_yield_results": 0,
+    "retries": 0,
+    "tokens": {
+      "input": 15334,
+      "output": 1561,
+      "reasoning": 588,
+      "cache_read": 37760,
+      "cache_write": 0
+    },
+    "elapsed_ms": 30796,
+    "final_answer": {
+      "characters": 2291,
+      "sha256": "eba7d17961f8c54f0dbf2ab3bc9d053c77f2a255ac21f5d1d5501d0d2f51aa75",
+      "text": "All route steps are complete. Following the `library-first-selection` route in `agent-quickstart.json`:\n\n## Selected identity (byte-for-byte)\n\n- **Package:** `wasmc:std@1.4.1`\n- **APIs:**\n  - `wasmc:std@1.4.1/base64#try-encode-standard`\n  - `wasmc:std@1.4.1/base64#try-decode-standard`\n\n## Verification steps (search \u2260 approval)\n\n1. **Search (discovery only, `selection_authority: false`):** ran the route's search command against the pinned catalog. It returned exactly these two Base64 API routes. Search discovered the candidate; it granted no approval.\n2. **Resolve (pinned verification):** ran the route's resolve command. Result: `verified: true`, `authority_granted: false`, `engine_admission: \"separate\"`. This confirmed `catalog_sha256`, `manifest_sha256`, `root_inventory_sha256`, `wit_sha256` and `artifact_sha256` for the packaged Root at `current-libs/wasmc-std/1.4.1`. No installation was performed.\n3. **Behavior oracle:** ran `node examples/base64/run.mjs`. `accepted: true`, 256 rounds, invalid input rejected, `YWJj` round-trips to `abc`. It confirmed `companion_sha256`/`import_module` (`wasmc:lib/wasmc.lib_managed_object_heap@4.9.0`) and passed. `installed_root_verified: false` \u2014 the oracle executed the packaged Root; only its explicit installed-directory mode verifies an installed package.\n\nPer the route's `exact_report`, the verified digest fields are `catalog_sha256`, `wit_sha256`, `artifact_sha256`, `companion_sha256`, `import_module`, `manifest_sha256`, `root_inventory_sha256`, and `library_import_module` \u2014 reported by field name here as instructed, not reconstructed in prose.\n\n## Lifecycle states\n\nThe route's states are `qualified: true`, `admitted: true`, `released: true`, `discoverable: true`, `installable: true` for the v0.0.22 catalog snapshot. Per the final-answer policy I also read the lifecycle authorities: `release.json` and `channels/prod.json` in this checkout both currently bind tag `v0.0.21`, stage `prod` \u2014 the product projection alone does not decide lifecycle, and these channel receipts are what determine which exact immutable product is released.\n\nApproval note: search, resolve, and the passing behavior oracle are verification observations, not caller approval \u2014 the caller or its policy approves exact pins for the intended use.",
+      "stop_reason": "stop"
+    },
+    "hygiene_findings": [],
+    "exact_duplicate_calls": [],
+    "repeated_reads": [],
+    "budget": {
+      "limits": {
+        "max_tool_calls": 32,
+        "max_assistant_turns": 20,
+        "max_tool_result_characters": 200000,
+        "max_error_results": 0,
+        "max_retries": 1,
+        "max_exact_duplicate_calls": 0,
+        "max_repeated_reads": 1,
+        "max_zero_yield_results": 4
+      },
+      "observed": {
+        "tool_calls": 8,
+        "assistant_turns": 5,
+        "tool_result_characters": 39356,
+        "error_results": 0,
+        "retries": 0,
+        "exact_duplicate_calls": 0,
+        "repeated_reads": 0,
+        "zero_yield_results": 0
+      }
+    },
+    "budget_failures": [],
+    "accepted": true
+  },
+  "independent_review": "pending",
+  "formal_release": false
+}
