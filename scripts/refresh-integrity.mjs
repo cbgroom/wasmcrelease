@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import {usesCurrentProductV3} from './current-release-version.mjs';
 import { createHash } from 'node:crypto';
 import { readdir, readFile, stat, writeFile } from 'node:fs/promises';
 import { arch, platform, release as osRelease } from 'node:os';
@@ -39,7 +40,7 @@ if (index.latest !== releaseJson.version || !versionRow || versionRow.tag !== re
 
 // Whole current product freeze derives its inventory from the v3 candidate.
 // Never refresh the historical whole-product inventory around an overlay.
-if (['0.0.21','0.0.22'].includes(releaseJson.version)) {
+if (usesCurrentProductV3(releaseJson.version)) {
   const {validateCandidate}=await import('./release-candidate.mjs');
   const candidate=JSON.parse(await readFile(join(root,releaseJson.staged_product_manifest),'utf8'));
   if(candidate.schema!=='wasmc.release-product-candidate/v3'||candidate.version!==releaseJson.version)throw Error('exact current v3 candidate required');

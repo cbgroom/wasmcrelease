@@ -1,5 +1,6 @@
 // Offline product-identity gate. This does not publish, sign or grant authority.
 import assert from 'node:assert/strict';
+import {currentCompatibilityPath,requiresPrivateHelperQualification} from './current-release-version.mjs';
 import {readFileSync,writeFileSync,readdirSync,lstatSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
@@ -429,7 +430,7 @@ export function validateCurrentCIProductInputs(candidate,read){
 }
 export const currentV3ProductInputs=Object.freeze([
   ...currentCIProductInputs,
-  'LICENSE','catalog/current-v3-license-policy.json','scripts/current-license-policy-v3.mjs','compatibility/core-artifacts-v022.json','current/compiler-release.json','catalog/libs-current-v2.json','catalog/current-index-v2.json','libspec/registry.json',
+  'LICENSE','catalog/current-v3-license-policy.json','scripts/current-license-policy-v3.mjs','current/compiler-release.json','catalog/libs-current-v2.json','catalog/current-index-v2.json','libspec/registry.json',
   'admission/current-refresh-cohort-v2.json','admission/current-product-v3.json',
   'scripts/current-lib-release-v3.mjs','scripts/current-lib-search-v3.mjs',
   'scripts/current-core-value-codec-v3.mjs','scripts/current-wit-routes-v3.mjs',
@@ -438,6 +439,10 @@ export const currentV3ProductInputs=Object.freeze([
   'scripts/test-lib-catalog.mjs','scripts/test-lib-install.mjs','scripts/validate-lib-install.mjs',
   'scripts/validate-libs.mjs','scripts/test-current-product-v3.mjs','scripts/test-current-license-policy-v3.mjs'
 ]);
+export function currentV3ProductInputsForVersion(version){
+  return [...currentV3ProductInputs,currentCompatibilityPath(version),
+    ...(requiresPrivateHelperQualification(version)?['scripts/current-release-version.mjs','scripts/test-current-release-version.mjs']:[])];
+}
 export function currentCandidateClosure(candidate,read){
   const rows=new Map(candidate.product_files.map(r=>[r.path,r]));
   const exact=path=>{
@@ -445,7 +450,7 @@ export function currentCandidateClosure(candidate,read){
     const bytes=read(path);if(bytes.length!==row.bytes||hash(bytes)!==row.sha256)throw Error('current product input drift: '+path);
     return bytes;
   };
-  for(const path of currentV3ProductInputs)exact(path);
+  for(const path of currentV3ProductInputsForVersion(candidate.version))exact(path);
   validateCurrentCIProductInputs(candidate,read);
   const catalogBytes=exact('catalog/libs-current-v2.json');
   if(candidate.current_catalog?.path!=='catalog/libs-current-v2.json'||hash(catalogBytes)!==candidate.current_catalog.sha256)throw Error('current catalog independent candidate pin');
@@ -455,6 +460,10 @@ export function currentCandidateClosure(candidate,read){
   if(compiler.schema!=='wasmc.current-compiler/v2'||compiler.version!==candidate.version||
      compiler.source_commit!==candidate.compiler_source_authority||compiler.source_branch!=='master')
     throw Error('canonical compiler source/version authority drift');
+  const compatibility=JSON.parse(exact(currentCompatibilityPath(candidate.version)));
+  assert.equal(compatibility.schema,'wasmc.core-compatibility/v1');assert.equal(compatibility.candidate_version,candidate.version);
+  const compatibleCompiler=compatibility.artifacts.find(row=>row.id==='compiler');
+  assert.equal(compatibleCompiler?.sha256,compiler.compiler.sha256);assert.equal(compatibleCompiler.bytes,compiler.compiler.bytes);
   const raw=exact('current/wasmc_compiler.wasm');
   if(hash(raw)!==compiler.compiler.sha256||raw.length!==compiler.compiler.bytes||raw.length>2097152)
     throw Error('compiler identity or byte budget drift');
@@ -496,7 +505,7 @@ export async function createCurrentCandidate(repo,{compilerSource,libSource,vers
   const directories=['current','dist','package','examples/current','examples/base64','examples/agent-quickstart','examples/lib-search','examples/agent-start','standard','sdk','runtime','current-libs','licenses',
     'skills',
     'host/contract','host/sdk','host/drivers/file/rust','host/drivers/memory/rust'];
-  const paths=new Set([...currentV3ProductInputs,...directories.flatMap(walk),
+  const paths=new Set([...currentV3ProductInputsForVersion(version),...directories.flatMap(walk),
     'AGENTS.md','README.md','HOSTING.md','LANGUAGE.md','LIB.md','license-policy.json',
     '.github/workflows/lib-search.yml','.github/workflows/agent-discovery.yml','.github/workflows/source-free-consumer.yml','.github/workflows/host-lib-e2e.yml',
     'agent-evaluation/fresh-agent-learning-v2.json','docs/AGENT_DECISION_MODEL.md',`docs/RELEASE_V${version.split('.').slice(1).join('')}.md`,'scripts/release-candidate.mjs']);

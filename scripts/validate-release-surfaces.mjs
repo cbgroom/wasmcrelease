@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import {usesCurrentProductV3} from './current-release-version.mjs';
 import assert from 'node:assert/strict';
 import {existsSync,readFileSync,statSync} from 'node:fs';
 import {resolve} from 'node:path';
@@ -11,7 +12,7 @@ const sha=p=>createHash('sha256').update(readFileSync(resolve(root,p))).digest('
 const model=json('release-surfaces.json'),q=json('agent-quickstart.json'),compiler=json('current/compiler-release.json');
 const closure=buildClosure(),catalog=json(closure.catalog.path),std=catalog.packages.find(r=>r.id==='wasmc-std');
 const readiness=json('release-lib-route-readiness.json'),ecosystem=json('lib-ecosystem-control-plane.json');
-assert.equal(model.schema,'wasmc.release-surfaces/v1');assert.equal(model.release_version,'0.0.22');
+assert.equal(model.schema,'wasmc.release-surfaces/v1');assert.ok(usesCurrentProductV3(model.release_version));
 assert.equal(compiler.version,model.release_version);assert.equal(sha('current/wasmc_compiler.wasm'),compiler.compiler.sha256);
 assert.deepEqual(q.routes['release-orientation'].compiler,{...compiler.compiler,imports:0});
 assert.equal(q.routes['release-orientation'].facade.sha256,sha('current/wasmc.mjs'));

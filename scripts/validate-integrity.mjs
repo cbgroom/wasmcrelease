@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import {usesCurrentProductV3,assertCompilerQualification} from './current-release-version.mjs';
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { execFile } from 'node:child_process';
@@ -54,7 +55,7 @@ if (release.schema === 'wasmc-public-release/v1') {
     !Number.isSafeInteger(release.artifact_inventory?.artifacts) ||
     release.artifact_inventory.artifacts < 1
   ) throw new Error('compact release artifact inventory rejected');
-  const releaseInventory = ['0.0.21','0.0.22'].includes(release.version)?manifest.artifacts:manifest.artifacts.filter((row) => !['AGENTS.md', 'LANGUAGE.md', 'LIB.md'].includes(row.path));
+  const releaseInventory = usesCurrentProductV3(release.version)?manifest.artifacts:manifest.artifacts.filter((row) => !['AGENTS.md', 'LANGUAGE.md', 'LIB.md'].includes(row.path));
   if (release.artifact_inventory.artifacts !== releaseInventory.length) throw new Error('compact release artifact count mismatch');
 } else {
   throw new Error('unsupported release schema');
@@ -112,7 +113,7 @@ if (JSON.stringify(checksumPaths) !== JSON.stringify(checksumExpected)) {
 
 // The current whole release is one exact v3 candidate; historical staging
 // fallback cannot authorize replacement compiler or Root bytes.
-if(['0.0.21','0.0.22'].includes(release.version)) {
+if(usesCurrentProductV3(release.version)) {
   const {validateCandidate}=await import('./release-candidate.mjs');
   const candidate=await json(release.staged_product_manifest);
   assert.equal(candidate.schema,'wasmc.release-product-candidate/v3');
@@ -146,18 +147,7 @@ if(['0.0.21','0.0.22'].includes(release.version)) {
   await execFileAsync(process.execPath,[join(root,'scripts/current-compiler-integrity.mjs'),'--require-qualification']);
   await execFileAsync(process.execPath,[join(root,'scripts/validate-license-policy.mjs')]);
   const q=await json('current/qualification.json');
-  assert.equal(q.compiler_private_source_present,false);assert.equal(q.version,release.version);
-  assert.equal(q.runs.length,9);assert.equal(q.rejection_controls.exit_code,0);assert.equal(q.rejection_controls.result.actual_rejections,6);
-  for(const engine of ['node','bun','deno']){
-    const runs=q.runs.filter(r=>r.engine===engine);assert.equal(runs.length,3);
-    for(const r of runs){assert.equal(r.exit_code,0);assert.equal(r.result.accepted,true);assert.ok(r.version);}
-    const compiler=runs.find(r=>r.args.at(-1)==='scripts/test-current-compiler.mjs');
-    assert.equal(compiler?.result.compiler_sha256,q.compiler_sha256);assert.equal(compiler.result.frozen_outputs,35);assert.equal(compiler.result.execution_oracles,7);assert.equal(compiler.result.cli_outputs,25);
-    const std=runs.find(r=>r.args.at(-1)==='examples/current/standard.mjs');
-    assert.equal(std?.result.standard_lib,'wasmc:std@1.4.1');assert.equal(std.result.functions,73);assert.equal(std.result.consumer_calls,7680);
-    const managed=runs.find(r=>r.args.at(-1)==='scripts/test-current-lib-api-v021.mjs');
-    assert.equal(managed?.result.provider,'4.9.0');assert.equal(managed.result.compileLib_oracles,3);assert.equal(managed.result.instantiateLib_oracles,3);assert.equal(managed.result.calls,768);assert.equal(managed.result.old_provider_fallback,false);
-  }
+  assertCompilerQualification(q,release.version,sha(await readFile(join(root,'current/wasmc_compiler.wasm'))),sha(await readFile(join(root,'current/compiler-release.json'))));
 }
 
 const runtime = await json('runtime/wasmc-runtime-v0/manifest.json');
@@ -184,7 +174,7 @@ const releaseRuntimeMatches =
   release.runtime.compiler_sha256 === sha(compiler);
 let expectedHostCommit = releaseRuntimeMatches ? release.runtime.product_candidate_commit : null;
 let expectedHostArchive = releaseRuntimeMatches ? release.runtime.source_free_archive_sha256 : null;
-if(['0.0.21','0.0.22'].includes(release.version)&&!releaseRuntimeMatches)throw Error('current whole release Runtime compiler authority differs');
+if(usesCurrentProductV3(release.version)&&!releaseRuntimeMatches)throw Error('current whole release Runtime compiler authority differs');
 if (!releaseRuntimeMatches) {
   const dev = await json('channels/dev.json');
   const candidatePath = `channels/candidates/${dev.version}.json`;
