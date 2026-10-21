@@ -1,6 +1,10 @@
 # Formal normal-functional release
 
-## Current successor: versioned compatibility contract and dev.2 candidate
+## Current: dev.2 nine exact CI checks passed; same-product main.1
+
+Actual dev.2 tag9c34b6030a4e17bf7f08c551d229262e668c897d completed all9required workflows SUCCESS, recorded with exact GitHub run subjects in evidence/dev2-all-nine-actual-success.json. Actual immutable HTTPS archive022fe99dce868b2074cf90412bfac8f6b2d7c969b47aabf10e6b7804977e6c55 verified all1059product rows and9real Node/Bun/Deno commands. Native6builds and6matching downloaded consumers are SUCCESS. Same59b/deb candidate is locally validated as main.1; prod/default release still21. Next final clean local prod22 rehearsal, actual required Pi pair plus independent review, then formal publication and independent downloads.
+
+## Preserved successor history: versioned compatibility contract and dev.2 candidate
 
 Immutable dev.1 e831 completed7of9 required workflows successfully. Std39564063818 and SourceFree39564037459 correctly failed because the active compatibility helper still read the historical v021 compiler42c identity. Their original logs, candidate and compiler manifest/qualification are preserved; dev.1 is never rewritten. Original compatibility/core-artifacts-v021.json is byte-identical.
 

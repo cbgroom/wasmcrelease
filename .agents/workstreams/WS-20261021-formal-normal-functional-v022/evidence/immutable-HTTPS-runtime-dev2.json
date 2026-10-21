@@ -1,0 +1,129 @@
+{
+  "schema": "wasmc.immutable-HTTPS-runtime-consumers/v1",
+  "accepted": true,
+  "commit": "9c34b6030a4e17bf7f08c551d229262e668c897d",
+  "archive_url": "https://codeload.github.com/cbgroom/wasmcrelease/tar.gz/9c34b6030a4e17bf7f08c551d229262e668c897d",
+  "archive_bytes": 21737633,
+  "archive_sha256": "022fe99dce868b2074cf90412bfac8f6b2d7c969b47aabf10e6b7804977e6c55",
+  "started_at": "2026-10-21T08:24:10.667629+00:00",
+  "finished_at": "2026-10-21T08:24:16.027047+00:00",
+  "source_free": true,
+  "private_source_present": false,
+  "compiler_sha256": "620a6b5f7b9a4565f14857975e37a03196f8f7e4279a2f4da388882638f2a658",
+  "product_set_sha256": "deb5321647d7dd1ccc27bd662d0b5b02a0c3300a2351a37045097484cbcf411a",
+  "product_files": 1059,
+  "runs": [
+    {
+      "engine": "node",
+      "version": "v26.5.1",
+      "args": [
+        "bootstrap.mjs",
+        "self-test"
+      ],
+      "exit": 0,
+      "stdout": "{\n  \"schema\": \"wasmc.runtime-js-self-test/v0\",\n  \"accepted\": true,\n  \"runtime\": \"node\",\n  \"compiler_bytes\": 1527770,\n  \"output_bytes\": 41\n}\n",
+      "stderr": ""
+    },
+    {
+      "engine": "node",
+      "version": "v26.5.1",
+      "args": [
+        "bootstrap.mjs",
+        "compile",
+        "--input",
+        "examples/add.wasmc",
+        "--output",
+        "/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261021-formal-normal-functional-v022/target/v022-HTTPS-runtime-dev2/node.wasm"
+      ],
+      "exit": 0,
+      "stdout": "{\n  \"schema\": \"wasmc.runtime-js-compile/v0\",\n  \"accepted\": true,\n  \"runtime\": \"node\",\n  \"input\": \"examples/add.wasmc\",\n  \"output\": \"/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261021-formal-normal-functional-v022/target/v022-HTTPS-runtime-dev2/node.wasm\",\n  \"output_bytes\": 44\n}\n",
+      "stderr": ""
+    },
+    {
+      "engine": "node",
+      "version": "v26.5.1",
+      "args": [
+        "scripts/assert-runtime-output.mjs",
+        "/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261021-formal-normal-functional-v022/target/v022-HTTPS-runtime-dev2/node.wasm"
+      ],
+      "exit": 0,
+      "stdout": "PASS runtime output: run(6,18)=42, wasm=44 bytes, imports=0\n",
+      "stderr": ""
+    },
+    {
+      "engine": "bun",
+      "version": "1.3.14",
+      "args": [
+        "bootstrap.mjs",
+        "self-test"
+      ],
+      "exit": 0,
+      "stdout": "{\n  \"schema\": \"wasmc.runtime-js-self-test/v0\",\n  \"accepted\": true,\n  \"runtime\": \"bun\",\n  \"compiler_bytes\": 1527770,\n  \"output_bytes\": 41\n}\n",
+      "stderr": ""
+    },
+    {
+      "engine": "bun",
+      "version": "1.3.14",
+      "args": [
+        "bootstrap.mjs",
+        "compile",
+        "--input",
+        "examples/add.wasmc",
+        "--output",
+        "/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261021-formal-normal-functional-v022/target/v022-HTTPS-runtime-dev2/bun.wasm"
+      ],
+      "exit": 0,
+      "stdout": "{\n  \"schema\": \"wasmc.runtime-js-compile/v0\",\n  \"accepted\": true,\n  \"runtime\": \"bun\",\n  \"input\": \"examples/add.wasmc\",\n  \"output\": \"/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261021-formal-normal-functional-v022/target/v022-HTTPS-runtime-dev2/bun.wasm\",\n  \"output_bytes\": 44\n}\n",
+      "stderr": ""
+    },
+    {
+      "engine": "bun",
+      "version": "1.3.14",
+      "args": [
+        "scripts/assert-runtime-output.mjs",
+        "/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261021-formal-normal-functional-v022/target/v022-HTTPS-runtime-dev2/bun.wasm"
+      ],
+      "exit": 0,
+      "stdout": "PASS runtime output: run(6,18)=42, wasm=44 bytes, imports=0\n",
+      "stderr": ""
+    },
+    {
+      "engine": "deno",
+      "version": "deno 2.9.4 (stable, release, aarch64-apple-darwin)\nv8 15.0.245.2-rusty\ntypescript 6.0.3",
+      "args": [
+        "bootstrap.mjs",
+        "self-test"
+      ],
+      "exit": 0,
+      "stdout": "{\n  \"schema\": \"wasmc.runtime-js-self-test/v0\",\n  \"accepted\": true,\n  \"runtime\": \"deno\",\n  \"compiler_bytes\": 1527770,\n  \"output_bytes\": 41\n}\n",
+      "stderr": ""
+    },
+    {
+      "engine": "deno",
+      "version": "deno 2.9.4 (stable, release, aarch64-apple-darwin)\nv8 15.0.245.2-rusty\ntypescript 6.0.3",
+      "args": [
+        "bootstrap.mjs",
+        "compile",
+        "--input",
+        "examples/add.wasmc",
+        "--output",
+        "/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261021-formal-normal-functional-v022/target/v022-HTTPS-runtime-dev2/deno.wasm"
+      ],
+      "exit": 0,
+      "stdout": "{\n  \"schema\": \"wasmc.runtime-js-compile/v0\",\n  \"accepted\": true,\n  \"runtime\": \"deno\",\n  \"input\": \"examples/add.wasmc\",\n  \"output\": \"/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261021-formal-normal-functional-v022/target/v022-HTTPS-runtime-dev2/deno.wasm\",\n  \"output_bytes\": 44\n}\n",
+      "stderr": ""
+    },
+    {
+      "engine": "deno",
+      "version": "deno 2.9.4 (stable, release, aarch64-apple-darwin)\nv8 15.0.245.2-rusty\ntypescript 6.0.3",
+      "args": [
+        "scripts/assert-runtime-output.mjs",
+        "/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261021-formal-normal-functional-v022/target/v022-HTTPS-runtime-dev2/deno.wasm"
+      ],
+      "exit": 0,
+      "stdout": "PASS runtime output: run(6,18)=42, wasm=44 bytes, imports=0\n",
+      "stderr": ""
+    }
+  ],
+  "formal_release": false
+}
