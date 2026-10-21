@@ -49,7 +49,8 @@
         "candidate_extras": 0,
         "formal_release_ready": false,
         "blocking_conditions": [
-          "v023-product-candidate-not-frozen"
+          "v023-exact-dev-CI-pending",
+          "v023-final-Pi-and-publication-pending"
         ]
       },
       "active_search": {
@@ -69,7 +70,7 @@
         "rule": "Never infer released, discoverable or installable from this frozen product projection."
       },
       "valid_resolution_count": 1,
-      "only_valid_closure": "The v0.0.23 compiler component and current42 route closure can be verified. Stop at v023-product-candidate-not-frozen until an independently pinned whole-product candidate is created; then verify that candidate and read the channel authorities. Promotion must preserve product bytes.",
+      "only_valid_closure": "Verify the exact v0.0.23 current42 candidate and route closure, then read the channel authorities. The wholeproduct candidate is frozen; stop at outstanding exact dev CI and final Pi/publication gates. Every promotion must preserve product bytes.",
       "forbidden_shortcuts": [
         "treat admission as release",
         "infer lifecycle state from product presence or an admission snapshot",
@@ -80,12 +81,13 @@
         "admission/current-product-v3.json",
         "catalog/libs-current-v2.json",
         "catalog/lib-route-closure.json",
+        "channels/candidates/0.0.23.json",
         "release.json",
         "channels/prod.json"
       ],
       "check_commands": [
         "node scripts/lib-route-closure.mjs --check",
-        "node scripts/current-compiler-integrity.mjs --require-qualification"
+        "node scripts/release-candidate.mjs verify channels/candidates/0.0.23.json --candidate-sha256 5c1f9baaaa1328ca5b55f85987e014db8ff9a264f88736844b3b006c92567c44"
       ],
       "required_additional_reads": [
         "release-lib-route-readiness.json"
