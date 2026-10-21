@@ -1,0 +1,79 @@
+{
+  "planning_trace": {
+    "schema": "wasmc.live-agent-trace-evaluation/v1",
+    "profile": "general",
+    "provider": null,
+    "model": null,
+    "session_id": null,
+    "parse_errors": 0,
+    "assistant_turns": 1,
+    "tool_calls": [
+      {
+        "name": "read",
+        "arguments": {
+          "path": "agent-quickstart.json"
+        }
+      }
+    ],
+    "tool_results": 1,
+    "tool_result_characters": 27,
+    "error_results": 0,
+    "zero_yield_results": 0,
+    "retries": 0,
+    "tokens": {
+      "input": 0,
+      "output": 0,
+      "reasoning": 0,
+      "cache_read": 0,
+      "cache_write": 0
+    },
+    "elapsed_ms": null,
+    "final_answer": {
+      "characters": 49,
+      "sha256": "dfc2db0579f830b4c6a120f42be58b273f7ae395241793e841bfe683d110f8ed",
+      "text": "I'll start by reading the routing contract files."
+    },
+    "hygiene_findings": [],
+    "exact_duplicate_calls": [],
+    "repeated_reads": [],
+    "budget": {
+      "limits": {
+        "max_tool_calls": 32,
+        "max_assistant_turns": 20,
+        "max_tool_result_characters": 200000,
+        "max_error_results": 0,
+        "max_retries": 1,
+        "max_exact_duplicate_calls": 0,
+        "max_repeated_reads": 1,
+        "max_zero_yield_results": 4
+      },
+      "observed": {
+        "tool_calls": 1,
+        "assistant_turns": 1,
+        "tool_result_characters": 27,
+        "error_results": 0,
+        "retries": 0,
+        "exact_duplicate_calls": 0,
+        "repeated_reads": 0,
+        "zero_yield_results": 0
+      }
+    },
+    "budget_failures": [],
+    "accepted": true
+  },
+  "internal_query": {
+    "accepted": false,
+    "observed": {
+      "digests": [],
+      "identities": [
+        "wasmc-system-telemetry-resource"
+      ]
+    },
+    "failures": [
+      {
+        "metric": "unknown_identity",
+        "observed": "wasmc-system-telemetry-resource"
+      }
+    ]
+  }
+}

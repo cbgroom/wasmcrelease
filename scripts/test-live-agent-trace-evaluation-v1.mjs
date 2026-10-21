@@ -87,9 +87,42 @@ const contradictedReadScopeReport = evaluateTraceText(contradictedReadScope, 'st
 assert.equal(contradictedReadScopeReport.accepted, false);
 assert.deepEqual(contradictedReadScopeReport.hygiene_findings, ['contradicted-read-scope-claim:migration-route']);
 
+const planningRead = [
+  assistant([
+    { type: 'text', text: "I'll start by reading the routing contract files." },
+    { type: 'toolCall', name: 'read', arguments: { path: 'agent-quickstart.json' } }
+  ]),
+  toolResult('{"route":"ordinary-source"}')
+].join('\n');
+assert.equal(evaluateTraceText(planningRead).accepted, false);
+assert.equal(evaluateTraceText(planningRead).final_answer.text, '');
+
+const splitAnswer = assistant([
+  { type: 'text', text: 'Exact release identity.' },
+  { type: 'text', text: 'Observed execution result.' }
+]);
+assert.equal(evaluateTraceText(splitAnswer).final_answer.text, 'Exact release identity.\nObserved execution result.');
+
+for (const stopReason of ['length', 'error', 'aborted', 'toolUse']) {
+  const incomplete = line({ type: 'message_end', message: {
+    role: 'assistant', stopReason, content: [{ type: 'text', text: 'Partial answer.' }]
+  } });
+  assert.equal(evaluateTraceText(incomplete).accepted, false, stopReason);
+}
+
+const obsoleteAnswer = [
+  assistant([{ type: 'text', text: 'Earlier answer.' }]),
+  assistant([{ type: 'toolCall', name: 'read', arguments: { path: 'release.json' } }]),
+  toolResult('{"tag":"v0.0.23"}')
+].join('\n');
+assert.equal(evaluateTraceText(obsoleteAnswer).final_answer.text, '');
+const pending = evaluateTraceText(assistant([{ type: 'toolCall', name: 'bash', arguments: { command: 'node caller.mjs' } }]));
+assert.ok(pending.hygiene_findings.includes('unfinished-tool-calls'));
+
 console.log(JSON.stringify({
   accepted: true,
   schema: goodReport.schema,
   profiles: ['general', 'status-query'],
-  negative_signals: 10
+  negative_signals: 10,
+  terminal_answer_controls: 8
 }));

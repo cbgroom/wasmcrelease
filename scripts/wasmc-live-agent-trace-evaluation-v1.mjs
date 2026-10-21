@@ -68,6 +68,7 @@ export function evaluateTraceText(input, profileName = 'general') {
     parse_errors: 0,
     assistant_turns: 0,
     tool_calls: [],
+    tool_outcomes: [],
     tool_results: 0,
     tool_result_characters: 0,
     error_results: 0,
@@ -81,6 +82,8 @@ export function evaluateTraceText(input, profileName = 'general') {
   let started = null;
   let ended = null;
   let finalAnswer = '';
+  let finalStopReason = null;
+  const pendingCalls = [];
   for (const line of input.split(/\r?\n/)) {
     if (!line.trim()) continue;
     let event;
@@ -105,13 +108,31 @@ export function evaluateTraceText(input, profileName = 'general') {
       report.tokens.reasoning += usage.reasoning ?? 0;
       report.tokens.cache_read += usage.cacheRead ?? 0;
       report.tokens.cache_write += usage.cacheWrite ?? 0;
-      for (const item of message.content ?? []) {
+      const content = message.content ?? [];
+      const calls = content.filter(item => item.type === 'toolCall');
+      const terminal = calls.length === 0 && (message.stopReason === undefined || message.stopReason === 'stop');
+      finalAnswer = terminal ? content.filter(item => item.type === 'text').map(item => item.text).join('\n') : '';
+      finalStopReason = terminal ? message.stopReason ?? null : null;
+      for (const item of content) {
         if (item.type === 'toolCall') {
           report.tool_calls.push({ name: item.name, arguments: item.arguments ?? {} });
-        } else if (item.type === 'text') finalAnswer = item.text;
+          pendingCalls.push({ id: item.id ?? null, name: item.name });
+        }
       }
     } else if (message.role === 'toolResult') {
+      finalAnswer = '';
+      finalStopReason = null;
       const text = resultText(message);
+      const pendingIndex = pendingCalls.findIndex(call => message.toolCallId
+        ? call.id === message.toolCallId
+        : call.name === message.toolName);
+      const call = pendingIndex < 0 ? null : pendingCalls.splice(pendingIndex, 1)[0];
+      report.tool_outcomes.push({
+        name: call?.name ?? message.toolName ?? null,
+        matched_call: call !== null && (message.toolName === undefined || message.toolName === call.name),
+        is_error: message.isError === true,
+        result_characters: text.length
+      });
       report.tool_results += 1;
       report.tool_result_characters += text.length;
       if (message.isError) report.error_results += 1;
@@ -123,10 +144,12 @@ export function evaluateTraceText(input, profileName = 'general') {
   report.elapsed_ms = started !== null && ended !== null ? ended - started : null;
   report.final_answer.characters = finalAnswer.length;
   report.final_answer.text = finalAnswer;
+  report.final_answer.stop_reason = finalStopReason;
   report.final_answer.sha256 = finalAnswer
     ? createHash('sha256').update(finalAnswer).digest('hex')
     : null;
   if (!finalAnswer.trim()) report.hygiene_findings.push('missing-final-answer');
+  if (pendingCalls.length) report.hygiene_findings.push('unfinished-tool-calls');
   const signatures = report.tool_calls.map(call => `${call.name}:${JSON.stringify(call.arguments)}`);
   report.exact_duplicate_calls = countBy(signatures);
   const reads = report.tool_calls

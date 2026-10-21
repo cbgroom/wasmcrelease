@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
-import { answerContract, evaluateCohort, readProtocol, validateProtocol } from './fresh-agent-learning-v1.mjs';
+import { answerContract, evaluateCohort, executionEvidenceContract, readProtocol, validateProtocol } from './fresh-agent-learning-v1.mjs';
+import { evaluateTraceText } from './wasmc-live-agent-trace-evaluation-v1.mjs';
 
 const protocol = validateProtocol(readProtocol());
 const exactAnswer = answerContract({final_answer:{text:'wasmc:std@1.4.0 d565f00e91c36da68da3645ec5231dd11d1b25299a3ba5cbe3adbd9f5760d91d'}},{
@@ -13,6 +14,9 @@ assert.equal(answerContract({final_answer:{text:'candidate ac35f039f28e2f5715b2c
 assert.equal(answerContract({final_answer:{text:'wamsc-system-telemetry@0.0.1'}},{allowed_identity_tokens:['wasmc-system-telemetry@0.0.1']}).accepted,false);
 assert.equal(answerContract({final_answer:{text:'wasc-system-telemetry@0.0.1'}},{allowed_identity_tokens:['wasmc-system-telemetry@0.0.1']}).accepted,false);
 assert.equal(answerContract({final_answer:{text:'Direct WAsmC-source use'}},{allowed_identity_tokens:[]}).accepted,true);
+assert.equal(answerContract({final_answer:{text:'Internal lookup key direct-wasmc-system-telemetry-resource.'}},{allowed_identity_tokens:[]}).accepted,true);
+assert.equal(answerContract({final_answer:{text:'wasmc-system-telemetry-resource'}},{allowed_identity_tokens:[]}).accepted,false);
+assert.equal(answerContract({final_answer:{text:'wasmc:system-telemetry@0.0.1'}},{allowed_identity_tokens:['wasmc:system-telemetry@0.0.1']}).accepted,true);
 assert.equal(answerContract({final_answer:{text:'d565f00e91c36da68da68da3645ec5231dd11d1b25299a3ba5cbe3adbd9f5760d91d'}},{allowed_sha256:['d565f00e91c36da68da3645ec5231dd11d1b25299a3ba5cbe3adbd9f5760d91d']}).accepted,false);
 const traceFor = caseClass => ({
   tool_calls: caseClass === 'decision' ? 2 : 5,
@@ -24,6 +28,22 @@ const traceFor = caseClass => ({
   repeated_reads: 0,
   zero_yield_results: 0
 });
+
+function commandTrace({name = 'bash', returnedName = name, isError = false, returnedId = 'command-one', result = true} = {}) {
+  const events = [{type:'message_end',message:{role:'assistant',stopReason:'toolUse',content:[
+    {type:'toolCall',id:'command-one',name,arguments:{command:'node caller.mjs'}}
+  ]}}];
+  if (result) events.push({type:'message_end',message:{role:'toolResult',toolName:returnedName,toolCallId:returnedId,isError,content:[{type:'text',text:'imports=[]; result=[-7,true]'}]}});
+  events.push({type:'message_end',message:{role:'assistant',stopReason:'stop',content:[{type:'text',text:'Observed imports=[] and result=[-7,true].'}]}});
+  return evaluateTraceText(events.map(JSON.stringify).join('\n'));
+}
+assert.equal(executionEvidenceContract(commandTrace(), 'execution').accepted, true);
+for (const options of [{name:'read'},{isError:true},{returnedId:'unmatched'},{returnedName:'read'},{result:false}]) {
+  assert.equal(executionEvidenceContract(commandTrace(options), 'execution').accepted, false);
+}
+assert.equal(executionEvidenceContract(commandTrace({name:'read'}), 'decision').accepted, true);
+const finalPlanning = evaluateTraceText(JSON.stringify({type:'message_end',message:{role:'assistant',stopReason:'stop',content:[{type:'text',text:'I will compile and execute it next.'}]}}));
+assert.equal(executionEvidenceContract(finalPlanning, 'execution').accepted, false);
 
 function receiptsFor(agent, model) {
   return protocol.cases.map(row => ({
@@ -89,5 +109,6 @@ console.log(JSON.stringify({
   requires_exact_controlled_pair: true,
   rejects_split_pi_version: true,
   rejects_case_error: true,
-  rejects_retry_over_budget: true
+  rejects_retry_over_budget: true,
+  minimum_execution_evidence_controls: 8
 }));

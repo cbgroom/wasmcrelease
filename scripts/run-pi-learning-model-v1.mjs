@@ -6,7 +6,7 @@ import { tmpdir } from 'node:os';
 import { dirname, isAbsolute, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { evaluateTraceText } from './wasmc-live-agent-trace-evaluation-v1.mjs';
-import { answerContract } from './fresh-agent-learning-v1.mjs';
+import { answerContract, executionEvidenceContract } from './fresh-agent-learning-v1.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const protocol = JSON.parse(readFileSync(new URL('../agent-evaluation/fresh-agent-learning-v2.json', import.meta.url), 'utf8'));
@@ -31,7 +31,7 @@ function options(argv) {
   return out;
 }
 
-function structural(report, limits, contract) {
+function structural(report, limits, contract, caseClass) {
   const observed = {
     tool_calls: report.tool_calls.length,
     assistant_turns: report.assistant_turns,
@@ -46,7 +46,8 @@ function structural(report, limits, contract) {
     .filter(([key, limit]) => observed[key.replace(/^max_/, '')] > limit)
     .map(([key, limit]) => ({ metric: key.replace(/^max_/, ''), observed: observed[key.replace(/^max_/, '')], limit }));
   const answer = answerContract(report, contract);
-  return { accepted: failures.length === 0 && report.hygiene_findings.length === 0 && answer.accepted, observed, limits, failures, answer_contract: answer };
+  const execution = executionEvidenceContract(report, caseClass);
+  return { accepted: failures.length === 0 && report.hygiene_findings.length === 0 && answer.accepted && execution.accepted, observed, limits, failures, answer_contract: answer, execution_evidence: execution };
 }
 
 function authorityBoundContract(caseDefinition, checkout) {
@@ -113,7 +114,7 @@ for (const caseDefinition of protocol.cases) {
         stderr_characters: (result.stderr ?? '').length,
         stderr_sha256: createHash('sha256').update(result.stderr ?? '').digest('hex')
       },
-      structural: structural(report, limits, authorityBoundContract(caseDefinition, checkout)),
+      structural: structural(report, limits, authorityBoundContract(caseDefinition, checkout), caseDefinition.class),
       trace: report
     });
   } finally {
