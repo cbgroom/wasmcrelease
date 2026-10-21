@@ -1,3 +1,7 @@
+# Current: local final prod22 deterministic rehearsal passed; exact Pi next
+
+Same dev3/main2 product1d31e575b77cb3bdd810ad4601bac242ea1acad8550cd0febf828d80b6b5f9f3 binds1059frozen files and1074final manifest artifacts. Final full release/manifest/checksum/Runtime/Host integrity passes, including actual three new620a Runtime receipts and activePython0; fullmaintainer,quickstart,surfaces pass. Remote release/prod stays21; local22prodview is prepared for the required exactcleancommit/tree Pi1.0.4 controlled pair and independentreview. A model structural pass alone never authorizes publication. No v22formal tag or Release exists yet.
+
 # Current: dev.3 all nine actual CI successful; same-product main.2
 
 Actual dev3source6cb402860df296d11cd6332917a4ac00e38878de completed all9required workflows SUCCESS. Newcandidate429e9f77319a7abc99b63beab0ec9d8043cc78af30ed5fbac6c4db70feffc7af/product1d31e575b77cb3bdd810ad4601bac242ea1acad8550cd0febf828d80b6b5f9f3 binds1059files; only3actual Runtime receipts differ from dev2. Raworiginals/finalfirstrejection remain preserved. main2sameproduct validated. Next final clean local prod22tree, fullintegrity, actual Pi pair and independentreview, formalpublication and independentdownloads. Compiler/Lib/Native bytes unchanged.
