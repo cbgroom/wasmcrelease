@@ -1,0 +1,139 @@
+{
+  "scope": "Actual downloaded Mac package existingoracles plus separate newprivatehelper/defaultbudget observation; not allplatform or formalrelease",
+  "source": "39dacb1936b851fa0e2310ee06f24b84e0e31761",
+  "artifact": {
+    "id": 12363196412,
+    "bytes": 4473237,
+    "zip_sha256": "64aad576d01a0aa0764edc55544b0c0b219ef9f1d0ad21fe527b363cc2740773"
+  },
+  "existing_package_verify": {
+    "accepted": true,
+    "source": "39dacb1936b851fa0e2310ee06f24b84e0e31761",
+    "target": "aarch64-apple-darwin",
+    "profile": "wasmc-cli-aot-v1",
+    "license_snapshots": 7,
+    "original_notice_manifest_bound": true,
+    "byte_parity_cases": 5,
+    "wasmi_run_cases": 4,
+    "native_execution_cases": 4,
+    "no_clobber_cases": 9
+  },
+  "package_negatives": {
+    "accepted": true,
+    "rejected": 12
+  },
+  "neutral_combination_failure": [
+    {
+      "command": [
+        "/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261021-normal-functional-successor-v023/target/v023-native-independent-Mac/downloaded/wasmc",
+        "build",
+        "/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261021-normal-functional-successor-v023/target/v023-native-independent-Mac/neutral-helpers.wasmc",
+        "-o",
+        "/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261021-normal-functional-successor-v023/target/v023-native-independent-Mac/neutral-helpers.wasm"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "error while executing at wasm backtrace:\n    0:  0x4f4f6 - <unknown>!<wasm function 719>\n    1:  0x4dcc1 - <unknown>!<wasm function 709>\n    2:  0x4c1bf - <unknown>!<wasm function 690>\n    3:  0x492e2 - <unknown>!<wasm function 686>\n    4:  0xdf612 - <unknown>!<wasm function 1635>\n    5:   0x1d58 - <unknown>!<wasm function 13>\n    6:   0x1310 - <unknown>!<wasm function 3>\n"
+    }
+  ],
+  "isolated_helper_terms": [
+    {
+      "terms": 0,
+      "source_sha256": "66e4ab84a5363099408324664a5a684f37bdf14ad85ee5caa88c5c4243368d1d",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "terms": 1,
+      "source_sha256": "ce517dce2210124a73a4422de56c1dc69164487d276bcaf9d8fea9e8ba93e44e",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "terms": 16,
+      "source_sha256": "1e4f8fb7ba1508f0e4d1e5b8c6747a412f62248e560210c29410fe391b04a4b0",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "terms": 128,
+      "source_sha256": "3e55c4b3dc9dda86cde23113b8b0f33c88784654245a837895ea4a9b4214c690",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "terms": 512,
+      "source_sha256": "d21a5cf3694540fe77de9339242dd482361c03f5b8334c42c5eba65b6d9dd03f",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "terms": 1024,
+      "source_sha256": "1a795551b87f20b2af4a2195cffcbc5cbe649f5368386cac629e145180ab8363",
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "terms": 2098,
+      "source_sha256": "9da5de60c36d7090101086a880b11263e946328465ee93581f5a2cfd2f820c4d",
+      "exit": 1,
+      "stdout": "",
+      "stderr": "error while executing at wasm backtrace:\n    0:  0x4e751 - <unknown>!<wasm function 717>\n    1:  0x4dd1e - <unknown>!<wasm function 709>\n    2:  0x4c1bf - <unknown>!<wasm function 690>\n    3:  0x492e2 - <unknown>!<wasm function 686>\n    4:  0xdf612 - <unknown>!<wasm function 1635>\n    5:   0x1d58 - <unknown>!<wasm function 13>\n    6:   0x1310 - <unknown>!<wasm function 3>\n"
+    }
+  ],
+  "independent_diagnosis": {
+    "engine": "Wasmtime CLI47.0.3; distinct from downloaded embedded49.0.2",
+    "unmetered_stdout": "0\n",
+    "unmetered_stderr": "warning: using `--invoke` with a function that returns values is experimental and may break in the future\n",
+    "metered_runs": [
+      {
+        "name": "fuel500m",
+        "command": [
+          "wasmtime",
+          "run",
+          "-W",
+          "fuel=500000000",
+          "--preload",
+          "compiler=current/wasmc_compiler.wasm",
+          "--invoke",
+          "run",
+          "target/v023-native-independent-Mac/diagnostic-wrapper.wat"
+        ],
+        "exit": 134,
+        "stdout": "",
+        "stderr": "Error: failed to run main module `target/v023-native-independent-Mac/diagnostic-wrapper.wat`\n\nCaused by:\n    0: failed to invoke `run`\n    1: error while executing at wasm backtrace:\n    0:  0x4c922 - <unknown>!<wasm function 700>\n    1:  0x4e2eb - <unknown>!<wasm function 716>\n    2:  0x4dbcd - <unknown>!<wasm function 709>\n    3:  0x4c1bf - <unknown>!<wasm function 690>\n    4:  0x492e2 - <unknown>!<wasm function 686>\n    5:  0xdf612 - <unknown>!<wasm function 1635>\n    6:   0x1d58 - <unknown>!<wasm function 13>\n    7:   0x1310 - <unknown>!<wasm function 3>\n    8:     0x8c - <unknown>!<wasm function 2>\n    2: wasm trap: all fuel consumed by WebAssembly\n\n"
+      },
+      {
+        "name": "native-target-fuel500m",
+        "command": [
+          "wasmtime",
+          "run",
+          "--target",
+          "aarch64-apple-darwin",
+          "-O",
+          "opt-level=s",
+          "-W",
+          "fuel=500000000",
+          "--preload",
+          "compiler=current/wasmc_compiler.wasm",
+          "--invoke",
+          "run",
+          "target/v023-native-independent-Mac/diagnostic-wrapper.wat"
+        ],
+        "exit": 134,
+        "stdout": "",
+        "stderr": "Error: failed to run main module `target/v023-native-independent-Mac/diagnostic-wrapper.wat`\n\nCaused by:\n    0: failed to invoke `run`\n    1: error while executing at wasm backtrace:\n    0:  0x4c922 - <unknown>!<wasm function 700>\n    1:  0x4e2eb - <unknown>!<wasm function 716>\n    2:  0x4dbcd - <unknown>!<wasm function 709>\n    3:  0x4c1bf - <unknown>!<wasm function 690>\n    4:  0x492e2 - <unknown>!<wasm function 686>\n    5:  0xdf612 - <unknown>!<wasm function 1635>\n    6:   0x1d58 - <unknown>!<wasm function 13>\n    7:   0x1310 - <unknown>!<wasm function 3>\n    8:     0x8c - <unknown>!<wasm function 2>\n    2: wasm trap: all fuel consumed by WebAssembly\n\n"
+      }
+    ],
+    "conclusion": "Equal500M fuel produces explicit exhaustion in separate47 engine; Native49 currently strips the cause with error.to_string. This supports budgetclassification but exact49 cause requires diagnosticfix and actualrebuild."
+  },
+  "compiler_rebuilds": 0,
+  "Lib_rebuilds": 0,
+  "formal_release": false
+}
