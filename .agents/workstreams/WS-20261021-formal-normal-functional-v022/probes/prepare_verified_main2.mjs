@@ -23,7 +23,7 @@ const observed=expected.map(([workflow,id])=>{
 const previous=json('channels/dev.json');assert.equal(previous.tag,'v0.0.22-dev.3');
 const next={schema:'wasmc.release-stage/v1',version:'0.0.22',stage:'main',tag:'v0.0.22-main.2',stable:false,
  product_candidate_commit:previous.product_candidate_commit,product_set_sha256:candidate.product_set_sha256,
- qualification:{...previous.qualification,accepted:true,tested_source_commit:source,
+ qualification:{...previous.qualification,scope:'Exact dev3 product1059 independently reopened, actual three-host Runtime receipts, all nine exact current workflows successful, original Native6build/6matchingconsumers with27unchanged inputs. Final clean-tree Pi and independent review remain separate pre-publication requirements.',accepted:true,tested_source_commit:source,
  tested_product_set_sha256:candidate.product_set_sha256,lib_search_result:'success',lib_search_run:observed[0].url,
  full_consumer_result:'success',full_consumer_run:observed[1].url,exact_current_workflows:observed},default_prod_advanced:false};
 validateTransition(previous,next,candidate);
