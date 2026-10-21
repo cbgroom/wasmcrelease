@@ -1,0 +1,12 @@
+{
+  "schema": "wasmc.archive-consumer-probe-correction/v1",
+  "original_probe": "Compared raw Git tar headers directly with post-extraction manifest modes before extraction; rejected.",
+  "observed_archive_modes": {
+    "0664-to-0644": 1074,
+    "0775-to-0755": 6
+  },
+  "execute_bit_mismatches": 0,
+  "correction": "Use actual system tar extraction with explicit standard umask022, then assert all1080 extracted filesystem modes exactly equal manifest; keep all original bytes/hash checks and frozen validators.",
+  "product_change": false,
+  "original_probe_driver_preserved": "original-raw-archive-mode-probe.py"
+}
