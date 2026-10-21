@@ -1,0 +1,11 @@
+{
+  "command": [
+    "node",
+    "scripts/validate-current.mjs",
+    "--compile-only"
+  ],
+  "exit": 1,
+  "stdout": "",
+  "stderr": "node:internal/modules/run_main:107\n    triggerUncaughtException(\n    ^\n\nAssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ '1a04d9ef830be8770bc37e507e50addac10be3615e610beab1241ccba6d090b0'\n- '620a6b5f7b9a4565f14857975e37a03196f8f7e4279a2f4da388882638f2a658'\n\n    at file:///Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261021-normal-functional-successor-v023/scripts/validate-current.mjs:17:8 {\n  generatedMessage: true,\n  code: 'ERR_ASSERTION',\n  actual: '1a04d9ef830be8770bc37e507e50addac10be3615e610beab1241ccba6d090b0',\n  expected: '620a6b5f7b9a4565f14857975e37a03196f8f7e4279a2f4da388882638f2a658',\n  operator: 'strictEqual',\n  diff: 'simple'\n}\n\nNode.js v26.5.1\n",
+  "cause": "Historical compiler620a literal rejects admitted1a04 before any behavioral oracle; no compilerbehavior failure inferred"
+}

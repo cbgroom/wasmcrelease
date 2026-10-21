@@ -59,3 +59,5 @@ This is a pre-candidate compiler component, not a wholeproduct/newNative/modelpa
 ## Runtime receipt slice admitted
 
 Four exact Runtime receipt claims extend this own workstream before edits. Archive exact public39dacb1, prove noGit/privatecompilerSource, actually run Node/Bun/Deno version+selftest+compile+44B/imports0/run(6,18)=42, and generate new receipts from current outputs/executable hashes. Preserve old620a receipts separately and do not call this a frozen wholecandidate or HTTPS download test. Existing Node18 reference is an actual exactengine check, not an inferredversionrange or flag change. Compatibility README may append a clearly dated v023 section without rewriting historicalv009 evidence. NewNative run39636952342 is already running; do not redispatch.
+
+Actual validate-current --compile-only currently rejects1a04 at its historical620a literal. Preserve exact stderr in evidence/current-validator-stale-pin-before.json. Add the exact script claim before changing only its digest to independentlyadmitted1a04; keep all originalbehavior oracles and expression acceptance rules. Run fullsupportedhost and actualNode18 compileonly checks after repair.
