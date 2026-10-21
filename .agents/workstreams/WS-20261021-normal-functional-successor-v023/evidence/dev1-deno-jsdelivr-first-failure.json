@@ -1,0 +1,275 @@
+{
+  "scope": "Normalfunctional mirror-install failure only; security audit untouched and excluded by directhuman scope",
+  "run": 39646097101,
+  "job": 119381967692,
+  "source": "37ab6cefbbe3fd410761f034068e8eb5a5e6897f",
+  "artifact_id": 12367053063,
+  "artifact_zip_sha256": "3d45e88eb511dac8453a13d2fb463bec038e189e2d3944cea0453360fb6f1c0b",
+  "suite": {
+    "schema": "wasmc.public-ci-suite/v1",
+    "label": "runtime-ubuntu-24.04-deno-jsdelivr",
+    "family": "runtime",
+    "runtime": "deno",
+    "mirror": "jsdelivr",
+    "source_commit": "37ab6cefbbe3fd410761f034068e8eb5a5e6897f",
+    "dirty": false,
+    "platform": "linux",
+    "arch": "x64",
+    "compiler_sha256": "1a04d9ef830be8770bc37e507e50addac10be3615e610beab1241ccba6d090b0",
+    "runtime_version": "deno 2.9.4 (stable, release, x86_64-unknown-linux-gnu)\nv8 15.0.245.2-rusty\ntypescript 6.0.3",
+    "tests": [
+      {
+        "id": "source-free-archive-deployment",
+        "invocation": {
+          "command": "bash",
+          "args": [
+            "scripts/validate-source-free-runtime.sh",
+            "deno"
+          ]
+        },
+        "accepted": true,
+        "exit_code": 0,
+        "timed_out": false,
+        "elapsed_ms": 1445,
+        "observation": {
+          "accepted": true,
+          "standard_lib": "wasmc:std@1.4.1",
+          "functions": 73,
+          "consumer_count": 3,
+          "consumer_calls": 7680,
+          "current_app_sha256": "f704d2c4d99f9efc97ef6d3c99bfd29c3987e1a96601ec7ff026dd0ac6e0581a",
+          "rust_sdk_sha256": "4d2c55eda7cdbe4d14084de2d579ae6dcea97332e18ca9894d210a5a71472d65"
+        },
+        "rust_test_summaries": []
+      },
+      {
+        "id": "core-full-artifact-admission",
+        "invocation": {
+          "command": "deno",
+          "args": [
+            "run",
+            "--allow-read",
+            "scripts/check-core-compatibility.mjs"
+          ]
+        },
+        "accepted": true,
+        "exit_code": 0,
+        "timed_out": false,
+        "elapsed_ms": 49,
+        "observation": {
+          "schema": "wasmc.core-compatibility-check/v1",
+          "accepted": true,
+          "host": {
+            "name": "deno",
+            "version": "2.9.4",
+            "v8": "15.0.245.2-rusty"
+          },
+          "results": [
+            {
+              "accepted": true,
+              "artifact": "compiler",
+              "sha256": "1a04d9ef830be8770bc37e507e50addac10be3615e610beab1241ccba6d090b0",
+              "validation_profile": "wasm2",
+              "feature_support": {
+                "function-references": true,
+                "tail-call": true
+              }
+            },
+            {
+              "accepted": true,
+              "artifact": "automatic-provider",
+              "sha256": "c3ac42b93f4c27e24065abe804b91f54761eff782e2971e947847b3d20ee7e00",
+              "validation_profile": "wasm2",
+              "feature_support": {
+                "function-references": true,
+                "tail-call": true
+              }
+            },
+            {
+              "accepted": true,
+              "artifact": "standard-provider",
+              "sha256": "c3ac42b93f4c27e24065abe804b91f54761eff782e2971e947847b3d20ee7e00",
+              "validation_profile": "wasm2",
+              "feature_support": {
+                "function-references": true,
+                "tail-call": true
+              }
+            },
+            {
+              "accepted": true,
+              "artifact": "standard",
+              "sha256": "b79a499c8300361125e7fcdae02170184b82d4bbeff4d8f24ed95f3fd4db8d3b",
+              "validation_profile": "wasm2,function-references,tail-call",
+              "feature_support": {
+                "function-references": true,
+                "tail-call": true
+              }
+            }
+          ]
+        },
+        "rust_test_summaries": []
+      },
+      {
+        "id": "core-feature-probes-and-negatives",
+        "invocation": {
+          "command": "deno",
+          "args": [
+            "run",
+            "--allow-read",
+            "scripts/test-core-compatibility.mjs"
+          ]
+        },
+        "accepted": true,
+        "exit_code": 0,
+        "timed_out": false,
+        "elapsed_ms": 53,
+        "observation": {
+          "accepted": true,
+          "host": {
+            "name": "deno",
+            "version": "2.9.4",
+            "v8": "15.0.245.2-rusty"
+          },
+          "features": {
+            "function-references": true,
+            "tail-call": true
+          },
+          "negative_tests": 6,
+          "supported_probe_oracle": 7
+        },
+        "rust_test_summaries": []
+      },
+      {
+        "id": "catalog-exact-resolution",
+        "invocation": {
+          "command": "deno",
+          "args": [
+            "run",
+            "--allow-read",
+            "--allow-write",
+            "--allow-env=TMPDIR,TMP,TEMP",
+            "scripts/test-lib-catalog.mjs"
+          ]
+        },
+        "accepted": true,
+        "exit_code": 0,
+        "timed_out": false,
+        "elapsed_ms": 390,
+        "observation": {
+          "accepted": true,
+          "current_packages": 42,
+          "native_source_packages": 14,
+          "negative_tests": 10,
+          "selection": "unique exact complete-Root lock",
+          "network_access": false
+        },
+        "rust_test_summaries": []
+      },
+      {
+        "id": "install-no-clobber-and-faults",
+        "invocation": {
+          "command": "deno",
+          "args": [
+            "run",
+            "--allow-read",
+            "--allow-write",
+            "--allow-env=TMPDIR,TMP,TEMP",
+            "scripts/test-lib-install.mjs"
+          ]
+        },
+        "accepted": true,
+        "exit_code": 0,
+        "timed_out": false,
+        "elapsed_ms": 221,
+        "observation": {
+          "accepted": true,
+          "files_verified": 19,
+          "negative_tests": 10,
+          "concurrent_single_winner": true,
+          "competing_directory_preserved": true,
+          "failed_stage_cleanup": true,
+          "network_access": false,
+          "companion_installed": false
+        },
+        "rust_test_summaries": []
+      },
+      {
+        "id": "fresh-mirror-install-and-paired-execution",
+        "invocation": {
+          "command": "deno",
+          "args": [
+            "run",
+            "--allow-read",
+            "--allow-write",
+            "--allow-env=TMPDIR,TMP,TEMP",
+            "--allow-run",
+            "scripts/validate-lib-install.mjs",
+            "jsdelivr"
+          ]
+        },
+        "accepted": false,
+        "exit_code": 1,
+        "timed_out": false,
+        "elapsed_ms": 1407,
+        "observation": null,
+        "rust_test_summaries": []
+      },
+      {
+        "id": "compiler-and-managed-regression",
+        "invocation": {
+          "command": "deno",
+          "args": [
+            "run",
+            "--allow-read",
+            "--allow-write",
+            "--allow-run",
+            "--allow-env",
+            "scripts/validate-current.mjs"
+          ]
+        },
+        "accepted": true,
+        "exit_code": 0,
+        "timed_out": false,
+        "elapsed_ms": 764,
+        "observation": {
+          "accepted": true,
+          "runtime": "deno",
+          "compiler_sha256": "1a04d9ef830be8770bc37e507e50addac10be3615e610beab1241ccba6d090b0",
+          "frozen_corpus_outputs": 30,
+          "expression_cases": 23,
+          "mode": "full",
+          "managed_repeated_calls": 192
+        },
+        "rust_test_summaries": []
+      },
+      {
+        "id": "standard-wasmc-rust-paired-execution",
+        "invocation": {
+          "command": "deno",
+          "args": [
+            "run",
+            "--allow-read",
+            "examples/current/standard.mjs"
+          ]
+        },
+        "accepted": true,
+        "exit_code": 0,
+        "timed_out": false,
+        "elapsed_ms": 158,
+        "observation": {
+          "accepted": true,
+          "standard_lib": "wasmc:std@1.4.1",
+          "functions": 73,
+          "consumer_count": 3,
+          "consumer_calls": 7680,
+          "current_app_sha256": "f704d2c4d99f9efc97ef6d3c99bfd29c3987e1a96601ec7ff026dd0ac6e0581a",
+          "rust_sdk_sha256": "4d2c55eda7cdbe4d14084de2d579ae6dcea97332e18ca9894d210a5a71472d65"
+        },
+        "rust_test_summaries": []
+      }
+    ],
+    "accepted": false
+  },
+  "stderr": "\u001b[0m\u001b[1m\u001b[31merror\u001b[0m: Uncaught (in promise) Error: {\"host\":\"deno\",\"status\":1,\"diagnostic\":\"{\\\"accepted\\\":false,\\\"code\\\":\\\"install.http_rejected\\\",\\\"message\\\":\\\"install.http_rejected\\\"}\\n\"}\n if(result.status!==0)throw Error(JSON.stringify({host,status:result.status,diagnostic:result.stderr.split(fixture).join('<install-fixture>')}));\n\u001b[0m\u001b[31m                            ^\u001b[0m\n    at \u001b[0m\u001b[1m\u001b[3mrun\u001b[0m (\u001b[0m\u001b[2m\u001b[38;5;245mfile:///home/runner/work/wasmcrelease/wasmcrelease/\u001b[0m\u001b[0m\u001b[36mscripts/validate-lib-install.mjs\u001b[0m:\u001b[0m\u001b[33m22\u001b[0m:\u001b[0m\u001b[33m29\u001b[0m)\n    at \u001b[0m\u001b[2m\u001b[38;5;245mfile:///home/runner/work/wasmcrelease/wasmcrelease/\u001b[0m\u001b[0m\u001b[36mscripts/validate-lib-install.mjs\u001b[0m:\u001b[0m\u001b[33m27\u001b[0m:\u001b[0m\u001b[33m16\u001b[0m\n",
+  "classification": "install.http_rejected; actualHTTPstatus notreported, no evidence ofcompiler/Lib semantics failure. No fallback/redirect/digest weakening."
+}

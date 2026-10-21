@@ -1,0 +1,1870 @@
+{
+  "schema": "wasmc.normal-functional-CI-qualification/v1",
+  "observed_at": "2026-10-21T18:15:49.640880+00:00",
+  "accepted": true,
+  "scope": "Human-authorized normal functional tasks only. Overall Source-free workflow remains failure; excluded security and its aggregate are not claimed successful. No workflow, detector, oracle or protection changed.",
+  "source_commit": "37ab6cefbbe3fd410761f034068e8eb5a5e6897f",
+  "candidate_sha256": "5c1f9baaaa1328ca5b55f85987e014db8ff9a264f88736844b3b006c92567c44",
+  "product_set_sha256": "dcd3dcd07ae35208057ba5c14557f88cd6bc83b26d4db5becbf799db97f91039",
+  "independent_workflows": [
+    {
+      "conclusion": "success",
+      "databaseId": 39646101902,
+      "headSha": "37ab6cefbbe3fd410761f034068e8eb5a5e6897f",
+      "status": "completed",
+      "url": "https://github.com/cbgroom/wasmcrelease/actions/runs/39646101902",
+      "workflowName": "Release surface policy"
+    },
+    {
+      "conclusion": "success",
+      "databaseId": 39646107892,
+      "headSha": "37ab6cefbbe3fd410761f034068e8eb5a5e6897f",
+      "status": "completed",
+      "url": "https://github.com/cbgroom/wasmcrelease/actions/runs/39646107892",
+      "workflowName": "Agent Library-first guidance"
+    },
+    {
+      "conclusion": "success",
+      "databaseId": 39646113366,
+      "headSha": "37ab6cefbbe3fd410761f034068e8eb5a5e6897f",
+      "status": "completed",
+      "url": "https://github.com/cbgroom/wasmcrelease/actions/runs/39646113366",
+      "workflowName": "Dynamic Client Gateway"
+    },
+    {
+      "conclusion": "success",
+      "databaseId": 39646120014,
+      "headSha": "37ab6cefbbe3fd410761f034068e8eb5a5e6897f",
+      "status": "completed",
+      "url": "https://github.com/cbgroom/wasmcrelease/actions/runs/39646120014",
+      "workflowName": "Current Std 73 dual-consumer qualification"
+    },
+    {
+      "conclusion": "success",
+      "databaseId": 39646126144,
+      "headSha": "37ab6cefbbe3fd410761f034068e8eb5a5e6897f",
+      "status": "completed",
+      "url": "https://github.com/cbgroom/wasmcrelease/actions/runs/39646126144",
+      "workflowName": "Public Host and Lib end-to-end"
+    },
+    {
+      "conclusion": "success",
+      "databaseId": 39645823000,
+      "headSha": "37ab6cefbbe3fd410761f034068e8eb5a5e6897f",
+      "status": "completed",
+      "url": "https://github.com/cbgroom/wasmcrelease/actions/runs/39645823000",
+      "workflowName": "LibSearch portable equivalence"
+    },
+    {
+      "conclusion": "success",
+      "databaseId": 39645822980,
+      "headSha": "37ab6cefbbe3fd410761f034068e8eb5a5e6897f",
+      "status": "completed",
+      "url": "https://github.com/cbgroom/wasmcrelease/actions/runs/39645822980",
+      "workflowName": "SDK Agent guidance"
+    },
+    {
+      "conclusion": "success",
+      "databaseId": 39645822927,
+      "headSha": "37ab6cefbbe3fd410761f034068e8eb5a5e6897f",
+      "status": "completed",
+      "url": "https://github.com/cbgroom/wasmcrelease/actions/runs/39645822927",
+      "workflowName": "Rust Host SDK"
+    }
+  ],
+  "sourcefree": {
+    "run_id": 39646097101,
+    "attempt": 2,
+    "overall_conclusion": "failure",
+    "normal_cells": [
+      {
+        "completedAt": "2026-10-21T17:42:25Z",
+        "conclusion": "success",
+        "databaseId": 119393676432,
+        "name": "Integrity, Agent guidance and reporting controls",
+        "startedAt": "2026-10-21T17:42:05Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-10-21T17:42:07Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-10-21T17:42:06Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:42:10Z",
+            "conclusion": "success",
+            "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "number": 2,
+            "startedAt": "2026-10-21T17:42:07Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:42:15Z",
+            "conclusion": "success",
+            "name": "Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+            "number": 3,
+            "startedAt": "2026-10-21T17:42:10Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:42:20Z",
+            "conclusion": "success",
+            "name": "Exact current v3 candidate and deterministic Agent journeys",
+            "number": 4,
+            "startedAt": "2026-10-21T17:42:15Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:42:22Z",
+            "conclusion": "success",
+            "name": "Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+            "number": 5,
+            "startedAt": "2026-10-21T17:42:20Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:42:22Z",
+            "conclusion": "success",
+            "name": "Post Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+            "number": 9,
+            "startedAt": "2026-10-21T17:42:22Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:42:23Z",
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "number": 10,
+            "startedAt": "2026-10-21T17:42:22Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:42:23Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 11,
+            "startedAt": "2026-10-21T17:42:23Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/cbgroom/wasmcrelease/actions/runs/39646097101/job/119393676432"
+      },
+      {
+        "completedAt": "2026-10-21T17:44:03Z",
+        "conclusion": "success",
+        "databaseId": 119393676631,
+        "name": "Compatibility ubuntu-24.04 Node 18.19.1",
+        "startedAt": "2026-10-21T17:43:46Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-10-21T17:43:48Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-10-21T17:43:47Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:43:50Z",
+            "conclusion": "success",
+            "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "number": 2,
+            "startedAt": "2026-10-21T17:43:48Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:43:55Z",
+            "conclusion": "success",
+            "name": "Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+            "number": 3,
+            "startedAt": "2026-10-21T17:43:50Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:43:59Z",
+            "conclusion": "success",
+            "name": "Feature, exact-resolution, install-fault and compiler-only regression",
+            "number": 4,
+            "startedAt": "2026-10-21T17:43:55Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:44:00Z",
+            "conclusion": "success",
+            "name": "Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+            "number": 5,
+            "startedAt": "2026-10-21T17:43:59Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:44:00Z",
+            "conclusion": "success",
+            "name": "Post Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+            "number": 9,
+            "startedAt": "2026-10-21T17:44:00Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:44:00Z",
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "number": 10,
+            "startedAt": "2026-10-21T17:44:00Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:44:00Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 11,
+            "startedAt": "2026-10-21T17:44:00Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/cbgroom/wasmcrelease/actions/runs/39646097101/job/119393676631"
+      },
+      {
+        "completedAt": "2026-10-21T18:05:07Z",
+        "conclusion": "success",
+        "databaseId": 119393676963,
+        "name": "deno ubuntu-24.04 jsdelivr full journey",
+        "startedAt": "2026-10-21T18:04:48Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-10-21T18:04:49Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-10-21T18:04:48Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T18:04:52Z",
+            "conclusion": "success",
+            "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "number": 2,
+            "startedAt": "2026-10-21T18:04:49Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T18:04:56Z",
+            "conclusion": "success",
+            "name": "Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+            "number": 3,
+            "startedAt": "2026-10-21T18:04:52Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T18:04:56Z",
+            "conclusion": "skipped",
+            "name": "Run oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6",
+            "number": 4,
+            "startedAt": "2026-10-21T18:04:56Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T18:04:58Z",
+            "conclusion": "success",
+            "name": "Run denoland/setup-deno@22d081ff2d3a40755e97629de92e3bcbfa7cf2ed",
+            "number": 5,
+            "startedAt": "2026-10-21T18:04:56Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T18:05:04Z",
+            "conclusion": "success",
+            "name": "Source-free deployment, full expressions/managed/standard, fresh mirror install",
+            "number": 6,
+            "startedAt": "2026-10-21T18:04:58Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T18:05:05Z",
+            "conclusion": "success",
+            "name": "Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+            "number": 7,
+            "startedAt": "2026-10-21T18:05:04Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T18:05:05Z",
+            "conclusion": "success",
+            "name": "Post Run denoland/setup-deno@22d081ff2d3a40755e97629de92e3bcbfa7cf2ed",
+            "number": 12,
+            "startedAt": "2026-10-21T18:05:05Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T18:05:05Z",
+            "conclusion": "success",
+            "name": "Post Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+            "number": 13,
+            "startedAt": "2026-10-21T18:05:05Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T18:05:05Z",
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "number": 14,
+            "startedAt": "2026-10-21T18:05:05Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T18:05:05Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 15,
+            "startedAt": "2026-10-21T18:05:05Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/cbgroom/wasmcrelease/actions/runs/39646097101/job/119393676963"
+      },
+      {
+        "completedAt": "2026-10-21T17:55:46Z",
+        "conclusion": "success",
+        "databaseId": 119393677728,
+        "name": "Release-profile Rust, Wasmi, Wasmtime and Component Libs",
+        "startedAt": "2026-10-21T17:42:07Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-10-21T17:42:08Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-10-21T17:42:07Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:42:11Z",
+            "conclusion": "success",
+            "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "number": 2,
+            "startedAt": "2026-10-21T17:42:08Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:42:17Z",
+            "conclusion": "success",
+            "name": "Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+            "number": 3,
+            "startedAt": "2026-10-21T17:42:11Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:42:25Z",
+            "conclusion": "success",
+            "name": "Install stable Rust and capture versions",
+            "number": 4,
+            "startedAt": "2026-10-21T17:42:17Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:55:43Z",
+            "conclusion": "success",
+            "name": "Run locked release consumer and runtime SDK qualification",
+            "number": 5,
+            "startedAt": "2026-10-21T17:42:25Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:55:44Z",
+            "conclusion": "success",
+            "name": "Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+            "number": 6,
+            "startedAt": "2026-10-21T17:55:43Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:55:44Z",
+            "conclusion": "success",
+            "name": "Post Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+            "number": 11,
+            "startedAt": "2026-10-21T17:55:44Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:55:44Z",
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "number": 12,
+            "startedAt": "2026-10-21T17:55:44Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:55:44Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 13,
+            "startedAt": "2026-10-21T17:55:44Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/cbgroom/wasmcrelease/actions/runs/39646097101/job/119393677728"
+      },
+      {
+        "completedAt": "2026-10-21T17:44:03Z",
+        "conclusion": "success",
+        "databaseId": 119393677752,
+        "name": "node ubuntu-24.04 jsdelivr full journey",
+        "startedAt": "2026-10-21T17:43:43Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-10-21T17:43:46Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-10-21T17:43:44Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:43:48Z",
+            "conclusion": "success",
+            "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "number": 2,
+            "startedAt": "2026-10-21T17:43:46Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:43:53Z",
+            "conclusion": "success",
+            "name": "Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+            "number": 3,
+            "startedAt": "2026-10-21T17:43:48Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:43:53Z",
+            "conclusion": "skipped",
+            "name": "Run oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6",
+            "number": 4,
+            "startedAt": "2026-10-21T17:43:53Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:43:53Z",
+            "conclusion": "skipped",
+            "name": "Run denoland/setup-deno@22d081ff2d3a40755e97629de92e3bcbfa7cf2ed",
+            "number": 5,
+            "startedAt": "2026-10-21T17:43:53Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:43:59Z",
+            "conclusion": "success",
+            "name": "Source-free deployment, full expressions/managed/standard, fresh mirror install",
+            "number": 6,
+            "startedAt": "2026-10-21T17:43:53Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:44:00Z",
+            "conclusion": "success",
+            "name": "Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+            "number": 7,
+            "startedAt": "2026-10-21T17:43:59Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:44:00Z",
+            "conclusion": "success",
+            "name": "Post Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+            "number": 13,
+            "startedAt": "2026-10-21T17:44:00Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:44:00Z",
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "number": 14,
+            "startedAt": "2026-10-21T17:44:00Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:44:00Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 15,
+            "startedAt": "2026-10-21T17:44:00Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/cbgroom/wasmcrelease/actions/runs/39646097101/job/119393677752"
+      },
+      {
+        "completedAt": "2026-10-21T17:50:40Z",
+        "conclusion": "success",
+        "databaseId": 119393677976,
+        "name": "Compatibility macos-15 Node 26.5.1",
+        "startedAt": "2026-10-21T17:50:21Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-10-21T17:50:22Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-10-21T17:50:21Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:50:26Z",
+            "conclusion": "success",
+            "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "number": 2,
+            "startedAt": "2026-10-21T17:50:22Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:50:33Z",
+            "conclusion": "success",
+            "name": "Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+            "number": 3,
+            "startedAt": "2026-10-21T17:50:26Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:50:36Z",
+            "conclusion": "success",
+            "name": "Feature, exact-resolution, install-fault and compiler-only regression",
+            "number": 4,
+            "startedAt": "2026-10-21T17:50:33Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:50:37Z",
+            "conclusion": "success",
+            "name": "Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+            "number": 5,
+            "startedAt": "2026-10-21T17:50:36Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:50:38Z",
+            "conclusion": "success",
+            "name": "Post Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+            "number": 9,
+            "startedAt": "2026-10-21T17:50:37Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:50:38Z",
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "number": 10,
+            "startedAt": "2026-10-21T17:50:38Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:50:38Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 11,
+            "startedAt": "2026-10-21T17:50:38Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/cbgroom/wasmcrelease/actions/runs/39646097101/job/119393677976"
+      },
+      {
+        "completedAt": "2026-10-21T17:55:59Z",
+        "conclusion": "success",
+        "databaseId": 119393678041,
+        "name": "Compatibility macos-15 Node 22.0.0",
+        "startedAt": "2026-10-21T17:55:29Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-10-21T17:55:32Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-10-21T17:55:30Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:55:36Z",
+            "conclusion": "success",
+            "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "number": 2,
+            "startedAt": "2026-10-21T17:55:32Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:55:47Z",
+            "conclusion": "success",
+            "name": "Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+            "number": 3,
+            "startedAt": "2026-10-21T17:55:36Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:55:53Z",
+            "conclusion": "success",
+            "name": "Feature, exact-resolution, install-fault and compiler-only regression",
+            "number": 4,
+            "startedAt": "2026-10-21T17:55:47Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:55:54Z",
+            "conclusion": "success",
+            "name": "Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+            "number": 5,
+            "startedAt": "2026-10-21T17:55:53Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:55:54Z",
+            "conclusion": "success",
+            "name": "Post Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+            "number": 9,
+            "startedAt": "2026-10-21T17:55:54Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:55:55Z",
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "number": 10,
+            "startedAt": "2026-10-21T17:55:54Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:55:55Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 11,
+            "startedAt": "2026-10-21T17:55:55Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/cbgroom/wasmcrelease/actions/runs/39646097101/job/119393678041"
+      },
+      {
+        "completedAt": "2026-10-21T17:51:23Z",
+        "conclusion": "success",
+        "databaseId": 119393678112,
+        "name": "node macos-15 jsdelivr full journey",
+        "startedAt": "2026-10-21T17:50:55Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-10-21T17:50:58Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-10-21T17:50:56Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:51:03Z",
+            "conclusion": "success",
+            "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "number": 2,
+            "startedAt": "2026-10-21T17:50:58Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:51:10Z",
+            "conclusion": "success",
+            "name": "Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+            "number": 3,
+            "startedAt": "2026-10-21T17:51:03Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:51:10Z",
+            "conclusion": "skipped",
+            "name": "Run oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6",
+            "number": 4,
+            "startedAt": "2026-10-21T17:51:10Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:51:10Z",
+            "conclusion": "skipped",
+            "name": "Run denoland/setup-deno@22d081ff2d3a40755e97629de92e3bcbfa7cf2ed",
+            "number": 5,
+            "startedAt": "2026-10-21T17:51:10Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:51:19Z",
+            "conclusion": "success",
+            "name": "Source-free deployment, full expressions/managed/standard, fresh mirror install",
+            "number": 6,
+            "startedAt": "2026-10-21T17:51:10Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:51:20Z",
+            "conclusion": "success",
+            "name": "Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+            "number": 7,
+            "startedAt": "2026-10-21T17:51:19Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:51:20Z",
+            "conclusion": "success",
+            "name": "Post Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+            "number": 13,
+            "startedAt": "2026-10-21T17:51:20Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:51:21Z",
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "number": 14,
+            "startedAt": "2026-10-21T17:51:20Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:51:21Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 15,
+            "startedAt": "2026-10-21T17:51:21Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/cbgroom/wasmcrelease/actions/runs/39646097101/job/119393678112"
+      },
+      {
+        "completedAt": "2026-10-21T17:44:13Z",
+        "conclusion": "success",
+        "databaseId": 119393678133,
+        "name": "Compatibility ubuntu-24.04 Node 22.0.0",
+        "startedAt": "2026-10-21T17:43:58Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-10-21T17:44:00Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-10-21T17:43:59Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:44:02Z",
+            "conclusion": "success",
+            "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "number": 2,
+            "startedAt": "2026-10-21T17:44:00Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:44:06Z",
+            "conclusion": "success",
+            "name": "Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+            "number": 3,
+            "startedAt": "2026-10-21T17:44:02Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:44:09Z",
+            "conclusion": "success",
+            "name": "Feature, exact-resolution, install-fault and compiler-only regression",
+            "number": 4,
+            "startedAt": "2026-10-21T17:44:06Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:44:11Z",
+            "conclusion": "success",
+            "name": "Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+            "number": 5,
+            "startedAt": "2026-10-21T17:44:09Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:44:11Z",
+            "conclusion": "success",
+            "name": "Post Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+            "number": 9,
+            "startedAt": "2026-10-21T17:44:11Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:44:11Z",
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "number": 10,
+            "startedAt": "2026-10-21T17:44:11Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:44:11Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 11,
+            "startedAt": "2026-10-21T17:44:11Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/cbgroom/wasmcrelease/actions/runs/39646097101/job/119393678133"
+      },
+      {
+        "completedAt": "2026-10-21T17:48:41Z",
+        "conclusion": "success",
+        "databaseId": 119393678216,
+        "name": "node macos-15 github full journey",
+        "startedAt": "2026-10-21T17:48:12Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-10-21T17:48:16Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-10-21T17:48:13Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:48:19Z",
+            "conclusion": "success",
+            "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "number": 2,
+            "startedAt": "2026-10-21T17:48:16Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:48:26Z",
+            "conclusion": "success",
+            "name": "Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+            "number": 3,
+            "startedAt": "2026-10-21T17:48:19Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:48:26Z",
+            "conclusion": "skipped",
+            "name": "Run oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6",
+            "number": 4,
+            "startedAt": "2026-10-21T17:48:26Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:48:26Z",
+            "conclusion": "skipped",
+            "name": "Run denoland/setup-deno@22d081ff2d3a40755e97629de92e3bcbfa7cf2ed",
+            "number": 5,
+            "startedAt": "2026-10-21T17:48:26Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:48:36Z",
+            "conclusion": "success",
+            "name": "Source-free deployment, full expressions/managed/standard, fresh mirror install",
+            "number": 6,
+            "startedAt": "2026-10-21T17:48:26Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:48:37Z",
+            "conclusion": "success",
+            "name": "Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+            "number": 7,
+            "startedAt": "2026-10-21T17:48:36Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:48:37Z",
+            "conclusion": "success",
+            "name": "Post Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+            "number": 13,
+            "startedAt": "2026-10-21T17:48:37Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:48:38Z",
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "number": 14,
+            "startedAt": "2026-10-21T17:48:37Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:48:38Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 15,
+            "startedAt": "2026-10-21T17:48:38Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/cbgroom/wasmcrelease/actions/runs/39646097101/job/119393678216"
+      },
+      {
+        "completedAt": "2026-10-21T17:43:19Z",
+        "conclusion": "success",
+        "databaseId": 119393678397,
+        "name": "bun ubuntu-24.04 jsdelivr full journey",
+        "startedAt": "2026-10-21T17:42:54Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-10-21T17:42:57Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-10-21T17:42:55Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:43:00Z",
+            "conclusion": "success",
+            "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "number": 2,
+            "startedAt": "2026-10-21T17:42:57Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:43:07Z",
+            "conclusion": "success",
+            "name": "Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+            "number": 3,
+            "startedAt": "2026-10-21T17:43:00Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:43:09Z",
+            "conclusion": "success",
+            "name": "Run oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6",
+            "number": 4,
+            "startedAt": "2026-10-21T17:43:07Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:43:09Z",
+            "conclusion": "skipped",
+            "name": "Run denoland/setup-deno@22d081ff2d3a40755e97629de92e3bcbfa7cf2ed",
+            "number": 5,
+            "startedAt": "2026-10-21T17:43:09Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:43:14Z",
+            "conclusion": "success",
+            "name": "Source-free deployment, full expressions/managed/standard, fresh mirror install",
+            "number": 6,
+            "startedAt": "2026-10-21T17:43:09Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:43:15Z",
+            "conclusion": "success",
+            "name": "Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+            "number": 7,
+            "startedAt": "2026-10-21T17:43:14Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:43:16Z",
+            "conclusion": "success",
+            "name": "Post Run oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6",
+            "number": 12,
+            "startedAt": "2026-10-21T17:43:15Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:43:16Z",
+            "conclusion": "success",
+            "name": "Post Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+            "number": 13,
+            "startedAt": "2026-10-21T17:43:16Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:43:16Z",
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "number": 14,
+            "startedAt": "2026-10-21T17:43:16Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:43:16Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 15,
+            "startedAt": "2026-10-21T17:43:16Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/cbgroom/wasmcrelease/actions/runs/39646097101/job/119393678397"
+      },
+      {
+        "completedAt": "2026-10-21T17:51:58Z",
+        "conclusion": "success",
+        "databaseId": 119393678482,
+        "name": "bun macos-15 jsdelivr full journey",
+        "startedAt": "2026-10-21T17:51:27Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-10-21T17:51:30Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-10-21T17:51:28Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:51:34Z",
+            "conclusion": "success",
+            "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "number": 2,
+            "startedAt": "2026-10-21T17:51:30Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:51:42Z",
+            "conclusion": "success",
+            "name": "Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+            "number": 3,
+            "startedAt": "2026-10-21T17:51:34Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:51:44Z",
+            "conclusion": "success",
+            "name": "Run oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6",
+            "number": 4,
+            "startedAt": "2026-10-21T17:51:42Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:51:44Z",
+            "conclusion": "skipped",
+            "name": "Run denoland/setup-deno@22d081ff2d3a40755e97629de92e3bcbfa7cf2ed",
+            "number": 5,
+            "startedAt": "2026-10-21T17:51:44Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:51:51Z",
+            "conclusion": "success",
+            "name": "Source-free deployment, full expressions/managed/standard, fresh mirror install",
+            "number": 6,
+            "startedAt": "2026-10-21T17:51:44Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:51:53Z",
+            "conclusion": "success",
+            "name": "Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+            "number": 7,
+            "startedAt": "2026-10-21T17:51:51Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:51:53Z",
+            "conclusion": "success",
+            "name": "Post Run oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6",
+            "number": 12,
+            "startedAt": "2026-10-21T17:51:53Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:51:53Z",
+            "conclusion": "success",
+            "name": "Post Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+            "number": 13,
+            "startedAt": "2026-10-21T17:51:53Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:51:54Z",
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "number": 14,
+            "startedAt": "2026-10-21T17:51:53Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:51:54Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 15,
+            "startedAt": "2026-10-21T17:51:54Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/cbgroom/wasmcrelease/actions/runs/39646097101/job/119393678482"
+      },
+      {
+        "completedAt": "2026-10-21T17:44:33Z",
+        "conclusion": "success",
+        "databaseId": 119393678490,
+        "name": "deno ubuntu-24.04 github full journey",
+        "startedAt": "2026-10-21T17:44:05Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-10-21T17:44:08Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-10-21T17:44:06Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:44:10Z",
+            "conclusion": "success",
+            "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "number": 2,
+            "startedAt": "2026-10-21T17:44:08Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:44:17Z",
+            "conclusion": "success",
+            "name": "Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+            "number": 3,
+            "startedAt": "2026-10-21T17:44:10Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:44:17Z",
+            "conclusion": "skipped",
+            "name": "Run oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6",
+            "number": 4,
+            "startedAt": "2026-10-21T17:44:17Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:44:19Z",
+            "conclusion": "success",
+            "name": "Run denoland/setup-deno@22d081ff2d3a40755e97629de92e3bcbfa7cf2ed",
+            "number": 5,
+            "startedAt": "2026-10-21T17:44:17Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:44:29Z",
+            "conclusion": "success",
+            "name": "Source-free deployment, full expressions/managed/standard, fresh mirror install",
+            "number": 6,
+            "startedAt": "2026-10-21T17:44:19Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:44:30Z",
+            "conclusion": "success",
+            "name": "Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+            "number": 7,
+            "startedAt": "2026-10-21T17:44:29Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:44:30Z",
+            "conclusion": "success",
+            "name": "Post Run denoland/setup-deno@22d081ff2d3a40755e97629de92e3bcbfa7cf2ed",
+            "number": 12,
+            "startedAt": "2026-10-21T17:44:30Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:44:30Z",
+            "conclusion": "success",
+            "name": "Post Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+            "number": 13,
+            "startedAt": "2026-10-21T17:44:30Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:44:30Z",
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "number": 14,
+            "startedAt": "2026-10-21T17:44:30Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:44:30Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 15,
+            "startedAt": "2026-10-21T17:44:30Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/cbgroom/wasmcrelease/actions/runs/39646097101/job/119393678490"
+      },
+      {
+        "completedAt": "2026-10-21T17:50:19Z",
+        "conclusion": "success",
+        "databaseId": 119393679690,
+        "name": "deno macos-15 github full journey",
+        "startedAt": "2026-10-21T17:49:52Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-10-21T17:49:55Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-10-21T17:49:53Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:49:59Z",
+            "conclusion": "success",
+            "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "number": 2,
+            "startedAt": "2026-10-21T17:49:55Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:50:05Z",
+            "conclusion": "success",
+            "name": "Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+            "number": 3,
+            "startedAt": "2026-10-21T17:49:59Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:50:05Z",
+            "conclusion": "skipped",
+            "name": "Run oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6",
+            "number": 4,
+            "startedAt": "2026-10-21T17:50:05Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:50:07Z",
+            "conclusion": "success",
+            "name": "Run denoland/setup-deno@22d081ff2d3a40755e97629de92e3bcbfa7cf2ed",
+            "number": 5,
+            "startedAt": "2026-10-21T17:50:05Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:50:15Z",
+            "conclusion": "success",
+            "name": "Source-free deployment, full expressions/managed/standard, fresh mirror install",
+            "number": 6,
+            "startedAt": "2026-10-21T17:50:07Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:50:16Z",
+            "conclusion": "success",
+            "name": "Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+            "number": 7,
+            "startedAt": "2026-10-21T17:50:15Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:50:16Z",
+            "conclusion": "success",
+            "name": "Post Run denoland/setup-deno@22d081ff2d3a40755e97629de92e3bcbfa7cf2ed",
+            "number": 12,
+            "startedAt": "2026-10-21T17:50:16Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:50:16Z",
+            "conclusion": "success",
+            "name": "Post Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+            "number": 13,
+            "startedAt": "2026-10-21T17:50:16Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:50:17Z",
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "number": 14,
+            "startedAt": "2026-10-21T17:50:16Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:50:17Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 15,
+            "startedAt": "2026-10-21T17:50:17Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/cbgroom/wasmcrelease/actions/runs/39646097101/job/119393679690"
+      },
+      {
+        "completedAt": "2026-10-21T17:56:22Z",
+        "conclusion": "success",
+        "databaseId": 119393679786,
+        "name": "bun macos-15 github full journey",
+        "startedAt": "2026-10-21T17:55:48Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-10-21T17:55:51Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-10-21T17:55:49Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:55:56Z",
+            "conclusion": "success",
+            "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "number": 2,
+            "startedAt": "2026-10-21T17:55:52Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:56:04Z",
+            "conclusion": "success",
+            "name": "Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+            "number": 3,
+            "startedAt": "2026-10-21T17:55:56Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:56:07Z",
+            "conclusion": "success",
+            "name": "Run oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6",
+            "number": 4,
+            "startedAt": "2026-10-21T17:56:04Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:56:07Z",
+            "conclusion": "skipped",
+            "name": "Run denoland/setup-deno@22d081ff2d3a40755e97629de92e3bcbfa7cf2ed",
+            "number": 5,
+            "startedAt": "2026-10-21T17:56:07Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:56:16Z",
+            "conclusion": "success",
+            "name": "Source-free deployment, full expressions/managed/standard, fresh mirror install",
+            "number": 6,
+            "startedAt": "2026-10-21T17:56:07Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:56:17Z",
+            "conclusion": "success",
+            "name": "Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+            "number": 7,
+            "startedAt": "2026-10-21T17:56:16Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:56:18Z",
+            "conclusion": "success",
+            "name": "Post Run oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6",
+            "number": 12,
+            "startedAt": "2026-10-21T17:56:17Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:56:18Z",
+            "conclusion": "success",
+            "name": "Post Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+            "number": 13,
+            "startedAt": "2026-10-21T17:56:18Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:56:19Z",
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "number": 14,
+            "startedAt": "2026-10-21T17:56:18Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:56:19Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 15,
+            "startedAt": "2026-10-21T17:56:19Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/cbgroom/wasmcrelease/actions/runs/39646097101/job/119393679786"
+      },
+      {
+        "completedAt": "2026-10-21T17:49:54Z",
+        "conclusion": "success",
+        "databaseId": 119393679808,
+        "name": "deno macos-15 jsdelivr full journey",
+        "startedAt": "2026-10-21T17:49:17Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-10-21T17:49:20Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-10-21T17:49:17Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:49:25Z",
+            "conclusion": "success",
+            "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "number": 2,
+            "startedAt": "2026-10-21T17:49:20Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:49:36Z",
+            "conclusion": "success",
+            "name": "Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+            "number": 3,
+            "startedAt": "2026-10-21T17:49:25Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:49:36Z",
+            "conclusion": "skipped",
+            "name": "Run oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6",
+            "number": 4,
+            "startedAt": "2026-10-21T17:49:36Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:49:39Z",
+            "conclusion": "success",
+            "name": "Run denoland/setup-deno@22d081ff2d3a40755e97629de92e3bcbfa7cf2ed",
+            "number": 5,
+            "startedAt": "2026-10-21T17:49:36Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:49:49Z",
+            "conclusion": "success",
+            "name": "Source-free deployment, full expressions/managed/standard, fresh mirror install",
+            "number": 6,
+            "startedAt": "2026-10-21T17:49:39Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:49:50Z",
+            "conclusion": "success",
+            "name": "Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+            "number": 7,
+            "startedAt": "2026-10-21T17:49:49Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:49:51Z",
+            "conclusion": "success",
+            "name": "Post Run denoland/setup-deno@22d081ff2d3a40755e97629de92e3bcbfa7cf2ed",
+            "number": 12,
+            "startedAt": "2026-10-21T17:49:50Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:49:51Z",
+            "conclusion": "success",
+            "name": "Post Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+            "number": 13,
+            "startedAt": "2026-10-21T17:49:51Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:49:52Z",
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "number": 14,
+            "startedAt": "2026-10-21T17:49:51Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:49:52Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 15,
+            "startedAt": "2026-10-21T17:49:52Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/cbgroom/wasmcrelease/actions/runs/39646097101/job/119393679808"
+      },
+      {
+        "completedAt": "2026-10-21T17:43:16Z",
+        "conclusion": "success",
+        "databaseId": 119393735293,
+        "name": "Compatibility ubuntu-24.04 Node 26.5.1",
+        "startedAt": "2026-10-21T17:43:01Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-10-21T17:43:02Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-10-21T17:43:01Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:43:05Z",
+            "conclusion": "success",
+            "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "number": 2,
+            "startedAt": "2026-10-21T17:43:02Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:43:11Z",
+            "conclusion": "success",
+            "name": "Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+            "number": 3,
+            "startedAt": "2026-10-21T17:43:05Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:43:13Z",
+            "conclusion": "success",
+            "name": "Feature, exact-resolution, install-fault and compiler-only regression",
+            "number": 4,
+            "startedAt": "2026-10-21T17:43:11Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:43:14Z",
+            "conclusion": "success",
+            "name": "Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+            "number": 5,
+            "startedAt": "2026-10-21T17:43:13Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:43:14Z",
+            "conclusion": "success",
+            "name": "Post Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+            "number": 9,
+            "startedAt": "2026-10-21T17:43:14Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:43:14Z",
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "number": 10,
+            "startedAt": "2026-10-21T17:43:14Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:43:14Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 11,
+            "startedAt": "2026-10-21T17:43:14Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/cbgroom/wasmcrelease/actions/runs/39646097101/job/119393735293"
+      },
+      {
+        "completedAt": "2026-10-21T17:49:13Z",
+        "conclusion": "success",
+        "databaseId": 119393739762,
+        "name": "Compatibility macos-15 Node 18.19.1",
+        "startedAt": "2026-10-21T17:48:48Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-10-21T17:48:49Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-10-21T17:48:48Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:48:53Z",
+            "conclusion": "success",
+            "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "number": 2,
+            "startedAt": "2026-10-21T17:48:49Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:49:00Z",
+            "conclusion": "success",
+            "name": "Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+            "number": 3,
+            "startedAt": "2026-10-21T17:48:53Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:49:06Z",
+            "conclusion": "success",
+            "name": "Feature, exact-resolution, install-fault and compiler-only regression",
+            "number": 4,
+            "startedAt": "2026-10-21T17:49:00Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:49:08Z",
+            "conclusion": "success",
+            "name": "Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+            "number": 5,
+            "startedAt": "2026-10-21T17:49:06Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:49:08Z",
+            "conclusion": "success",
+            "name": "Post Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+            "number": 9,
+            "startedAt": "2026-10-21T17:49:08Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:49:09Z",
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "number": 10,
+            "startedAt": "2026-10-21T17:49:08Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:49:09Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 11,
+            "startedAt": "2026-10-21T17:49:09Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/cbgroom/wasmcrelease/actions/runs/39646097101/job/119393739762"
+      },
+      {
+        "completedAt": "2026-10-21T17:44:28Z",
+        "conclusion": "success",
+        "databaseId": 119393741280,
+        "name": "bun ubuntu-24.04 github full journey",
+        "startedAt": "2026-10-21T17:44:05Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-10-21T17:44:08Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-10-21T17:44:06Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:44:09Z",
+            "conclusion": "success",
+            "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "number": 2,
+            "startedAt": "2026-10-21T17:44:08Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:44:15Z",
+            "conclusion": "success",
+            "name": "Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+            "number": 3,
+            "startedAt": "2026-10-21T17:44:09Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:44:16Z",
+            "conclusion": "success",
+            "name": "Run oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6",
+            "number": 4,
+            "startedAt": "2026-10-21T17:44:15Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:44:16Z",
+            "conclusion": "skipped",
+            "name": "Run denoland/setup-deno@22d081ff2d3a40755e97629de92e3bcbfa7cf2ed",
+            "number": 5,
+            "startedAt": "2026-10-21T17:44:16Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:44:24Z",
+            "conclusion": "success",
+            "name": "Source-free deployment, full expressions/managed/standard, fresh mirror install",
+            "number": 6,
+            "startedAt": "2026-10-21T17:44:16Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:44:25Z",
+            "conclusion": "success",
+            "name": "Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+            "number": 7,
+            "startedAt": "2026-10-21T17:44:24Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:44:25Z",
+            "conclusion": "success",
+            "name": "Post Run oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6",
+            "number": 12,
+            "startedAt": "2026-10-21T17:44:25Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:44:26Z",
+            "conclusion": "success",
+            "name": "Post Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+            "number": 13,
+            "startedAt": "2026-10-21T17:44:25Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:44:26Z",
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "number": 14,
+            "startedAt": "2026-10-21T17:44:26Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:44:26Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 15,
+            "startedAt": "2026-10-21T17:44:26Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/cbgroom/wasmcrelease/actions/runs/39646097101/job/119393741280"
+      },
+      {
+        "completedAt": "2026-10-21T17:42:17Z",
+        "conclusion": "success",
+        "databaseId": 119393749970,
+        "name": "node ubuntu-24.04 github full journey",
+        "startedAt": "2026-10-21T17:41:59Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-10-21T17:42:01Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-10-21T17:41:59Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:42:03Z",
+            "conclusion": "success",
+            "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "number": 2,
+            "startedAt": "2026-10-21T17:42:01Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:42:08Z",
+            "conclusion": "success",
+            "name": "Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+            "number": 3,
+            "startedAt": "2026-10-21T17:42:03Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:42:08Z",
+            "conclusion": "skipped",
+            "name": "Run oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6",
+            "number": 4,
+            "startedAt": "2026-10-21T17:42:08Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:42:08Z",
+            "conclusion": "skipped",
+            "name": "Run denoland/setup-deno@22d081ff2d3a40755e97629de92e3bcbfa7cf2ed",
+            "number": 5,
+            "startedAt": "2026-10-21T17:42:08Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:42:13Z",
+            "conclusion": "success",
+            "name": "Source-free deployment, full expressions/managed/standard, fresh mirror install",
+            "number": 6,
+            "startedAt": "2026-10-21T17:42:08Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:42:14Z",
+            "conclusion": "success",
+            "name": "Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+            "number": 7,
+            "startedAt": "2026-10-21T17:42:13Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:42:14Z",
+            "conclusion": "success",
+            "name": "Post Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+            "number": 13,
+            "startedAt": "2026-10-21T17:42:14Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:42:15Z",
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "number": 14,
+            "startedAt": "2026-10-21T17:42:14Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-10-21T17:42:15Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 15,
+            "startedAt": "2026-10-21T17:42:15Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/cbgroom/wasmcrelease/actions/runs/39646097101/job/119393749970"
+      }
+    ],
+    "normal_cells_success": 20,
+    "excluded_cells": [
+      {
+        "name": "All-reachable history and credential rejection boundaries",
+        "conclusion": "failure",
+        "startedAt": "2026-10-21T17:43:01Z"
+      },
+      {
+        "name": "Required aggregate verification and downloadable report",
+        "conclusion": "failure",
+        "startedAt": "2026-10-21T18:05:11Z"
+      }
+    ],
+    "security_started_at_unchanged": true,
+    "specific_normal_retry": {
+      "original_job": 119381967692,
+      "original_conclusion": "failure",
+      "retry_job": 119393676963,
+      "retry_conclusion": "success",
+      "diagnostic": "install.http_rejected; HTTP status was not reported",
+      "code_or_product_change": false,
+      "original_failure_preserved": "dev1-deno-jsdelivr-first-failure.json"
+    }
+  },
+  "formal_release": false
+}
