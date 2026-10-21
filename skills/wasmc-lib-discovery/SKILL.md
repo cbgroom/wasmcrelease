@@ -40,9 +40,14 @@ bounded glue. Search does not choose versions or grant semver fallback.
 
 ## Select and execute
 
-1. Approve the exact package version, catalog digest, manifest digest and
-   complete Root inventory digest. `resolve` requires all three independent
-   digests. The selected Root binds WIT, Core/Component or native-source view,
+1. Select the exact package version, catalog digest, manifest digest and
+   complete Root inventory digest under the caller's instruction or policy.
+   `resolve` requires all three independent digests and mechanically verifies
+   the complete packaged Root. Its `verified=true` reports byte verification;
+   `authority_granted=false` and `engine_admission=separate` remain explicit.
+   Search, resolution and behavior checks do not grant caller approval. Carry
+   out the requested read-only verification and report approval separately.
+   The selected Root binds WIT, Core/Component or native-source view,
    generated SDK, agent metadata, licenses and original notices.
 2. Install only with an independently approved lock digest and explicit mirror.
    Installation preserves complete bytes and rejects an occupied destination.
@@ -53,8 +58,13 @@ bounded glue. Search does not choose versions or grant semver fallback.
    Host permission. Core, Component, native-source and device evidence differ.
 4. For Base64 run [the actual behavior oracle](../../examples/base64/run.mjs).
    It checks encode/decode, invalid input and explicit resource cleanup on the
-   pinned Std1.4.1/Core4.9 bytes. Report the exact package and WIT APIs, successful
-   resolution and observed output before adding application control logic.
+   pinned Std1.4.1/Core4.9 bytes. Its default invocation uses the packaged Root
+   and reports `installed_root_verified=false`; it proves no installation.
+   The documented `--installed` form verifies the actual installed directory
+   separately. Report the exact package and WIT APIs, resolver verification and
+   observed output. Read `release.json` and `channels/prod.json` before stating
+   release or installation-route availability. An installable route is not
+   evidence that this task installed the package.
 
 Missing identity, digest drift, unsupported engine or capability blocks that
 route. Never invent private handles, hidden effects or third-party publication.

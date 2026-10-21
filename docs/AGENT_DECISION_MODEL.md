@@ -19,6 +19,24 @@ Admission review does not publish a package. Release does not silently add a
 catalog entry. Search does not approve a hit. Installation does not admit an
 engine or grant a Host capability.
 
+## Verification observations
+
+Caller approval is a decision to accept exact pins for an intended use.
+Discovery, resolver success and a passing behavior oracle do not make that
+decision. Continue the read-only verification requested by the task and report
+what each command actually observed.
+
+| Observation | Evidence | Permitted report |
+|---|---|---|
+| Resolver verified the selected Root | `verified=true` with exact catalog, manifest and inventory pins | packaged bytes verified; no installation performed |
+| Default behavior oracle passed | output has `installed_root_verified=false` | packaged Root executed successfully |
+| Installed-directory oracle passed | explicit installed-directory invocation and `installed_root_verified=true` | that installed Root verified and executed |
+| Package is released or installable | exact package identity in the read release/channel authorities | that route is available; this does not prove an installation occurred |
+
+The resolver also reports `authority_granted=false` and
+`engine_admission=separate`. Keep these facts separate from both caller approval
+and successful package verification.
+
 ## Bounded lookup order
 
 For a status question, stop as soon as a required authority is missing:

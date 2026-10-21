@@ -249,11 +249,27 @@
         "root_inventory_sha256": "6978407b51e835a3893ac14cbb7ca2c46da48d0a778f2611f6de829af07bdf92",
         "library_import_module": "wasmc:lib/wasmc.std@1.4.1"
       },
-      "final_answer_policy": "After verification, output package and both APIs exactly, then only these statements: search discovered the candidate but was not authority; resolve verified catalog_sha256, manifest_sha256, root_inventory_sha256, wit_sha256 and artifact_sha256; behavior separately verified companion_sha256 and import_module and passed. Do not reproduce command arguments, digest values, partial digests or any ellipsis character. Read channels for released, discoverable and installable states.",
+      "final_answer_policy": "Report the package and both APIs literally. Search discovered the candidate; resolve verified catalog_sha256, manifest_sha256, root_inventory_sha256, wit_sha256 and artifact_sha256; behavior verified companion_sha256 and import_module and passed. These are verification observations, not caller approval. Report installed_root_verified from the actual oracle; false means packaged Root only, not an installed package. Read release.json and channels/prod.json before reporting lifecycle states; product projection alone is insufficient. Do not reproduce command arguments or digest values, partial digests or any ellipsis character.",
       "resolve": "node scripts/wasmc-lib.mjs resolve wasmc-std 1.4.1 --catalog-sha256 76f9a0ca465c7d6169738be04ac725dceac2cdde14bbfc5215c37c2e97c86f43 --manifest-sha256 9db63b4f380f9a8fb7541addfde6608bbc48b3267ad903f838afedb98e74ebfc --root-inventory-sha256 6978407b51e835a3893ac14cbb7ca2c46da48d0a778f2611f6de829af07bdf92",
       "behavior": "node examples/base64/run.mjs",
       "install_reference": "catalog/INSTALL.md",
-      "required_additional_reads": []
+      "required_additional_reads": [
+        "release.json",
+        "channels/prod.json"
+      ],
+      "verification_facts": {
+        "consumer_approval": "The caller or its policy selects and approves exact pins for the intended use. Search, resolve and behavior checks do not grant that approval.",
+        "resolve": {
+          "verified": true,
+          "authority_granted": false,
+          "engine_admission": "separate",
+          "meaning": "Pinned catalog and complete packaged Root bytes verified; no installation is performed."
+        },
+        "behavior": {
+          "installed_root_verified": false,
+          "meaning": "The named default oracle executes the packaged Root. Only its explicit installed-directory mode verifies an installed Root."
+        }
+      }
     },
     "host-authority-boundary": {
       "decision": "Inspect every generated import before instantiation and compare module, name, kind and signature with an application-owned exact allowlist.",

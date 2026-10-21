@@ -1,0 +1,80 @@
+{
+  "tests": [
+    {
+      "command": [
+        "node",
+        "scripts/test-agent-quickstart.mjs"
+      ],
+      "exit": 0,
+      "result": {
+        "accepted": true,
+        "schema": "wasmc.agent-quickstart/v1",
+        "routes": 10,
+        "pair": {
+          "accepted": true,
+          "source": "examples/agent-quickstart/pair.wasmc",
+          "core_bytes": 49,
+          "core_sha256": "55f3c7e3d09b564b89b8268299a69569a33b856b46405cb4c4dd51634afec84e",
+          "imports": [],
+          "exports": [
+            {
+              "name": "run",
+              "kind": "function"
+            }
+          ],
+          "call": "run(5, true)",
+          "result": [
+            1,
+            1
+          ]
+        },
+        "base64": {
+          "accepted": true,
+          "installed_root_verified": false,
+          "rounds": 256,
+          "explicit_drops": 1024,
+          "invalid_input_rejected": true,
+          "persistent_provider_memory_bytes": 3670016,
+          "package": "wasmc:std@1.4.1",
+          "apis": [
+            "wasmc:std@1.4.1/base64#try-encode-standard",
+            "wasmc:std@1.4.1/base64#try-decode-standard"
+          ],
+          "artifact_sha256": "b79a499c8300361125e7fcdae02170184b82d4bbeff4d8f24ed95f3fd4db8d3b",
+          "import_module": "wasmc:lib/wasmc.lib_managed_object_heap@4.9.0",
+          "input_utf8": "abc",
+          "encoded_utf8": "YWJj",
+          "decoded_utf8": "abc"
+        },
+        "route_readiness": {
+          "formal_release_ready": true,
+          "candidate_extras": 0,
+          "lifecycle_authority": "release.json"
+        }
+      }
+    },
+    {
+      "command": [
+        "node",
+        "scripts/test-library-first.mjs"
+      ],
+      "exit": 0,
+      "result": {
+        "accepted": true,
+        "teaching_commands": 2,
+        "checked_hits": 5,
+        "negative_tests": 6,
+        "network_access": false
+      }
+    }
+  ],
+  "old_candidate": {
+    "sha256": "429e9f77319a7abc99b63beab0ec9d8043cc78af30ed5fbac6c4db70feffc7af",
+    "unchanged": true,
+    "reopen_exit": 1,
+    "stderr": "file:///Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261021-normal-functional-successor-v023/scripts/release-candidate.mjs:256\n    const bytes=read(row.path);if(bytes.length!==row.bytes||hash(bytes)!==row.sha256)throw Error('product drift rejected');previous=row.path;\n                                                                                           ^\n\nError: product drift rejected\n    at validateCandidate (file:///Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261021-normal-functional-successor-v023/scripts/release-candidate.mjs:256:92)\n    at file:///Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261021-normal-functional-successor-v023/scripts/release-candidate.mjs:600:7\n    at ModuleJob.run (node:internal/modules/esm/module_job:430:25)\n    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:655:26)\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)\n\nNode.js v25.6.0\n"
+  },
+  "new_compiler_or_Lib_builds": 0,
+  "fresh_model_regression": false,
+  "fixed_prompts_budgets_unchanged": true
+}
