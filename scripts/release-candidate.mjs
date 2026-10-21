@@ -1,6 +1,7 @@
 // Offline product-identity gate. This does not publish, sign or grant authority.
 import assert from 'node:assert/strict';
 import {currentCompatibilityPath,requiresPrivateHelperQualification} from './current-release-version.mjs';
+import {loadBoundProtocol} from './fresh-agent-learning-v1.mjs';
 import {readFileSync,writeFileSync,readdirSync,lstatSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
@@ -441,7 +442,7 @@ export const currentV3ProductInputs=Object.freeze([
 ]);
 export function currentV3ProductInputsForVersion(version){
   return [...currentV3ProductInputs,currentCompatibilityPath(version),
-    ...(requiresPrivateHelperQualification(version)?['scripts/current-release-version.mjs','scripts/test-current-release-version.mjs']:[])];
+    ...(requiresPrivateHelperQualification(version)?['scripts/current-release-version.mjs','scripts/test-current-release-version.mjs','scripts/fresh-agent-learning-v1.mjs','agent-evaluation/fresh-agent-learning-v2.json','agent-evaluation/fresh-agent-learning-v3.json']:[])];
 }
 export function currentCandidateClosure(candidate,read){
   const rows=new Map(candidate.product_files.map(r=>[r.path,r]));
@@ -464,6 +465,9 @@ export function currentCandidateClosure(candidate,read){
   assert.equal(compatibility.schema,'wasmc.core-compatibility/v1');assert.equal(compatibility.candidate_version,candidate.version);
   const compatibleCompiler=compatibility.artifacts.find(row=>row.id==='compiler');
   assert.equal(compatibleCompiler?.sha256,compiler.compiler.sha256);assert.equal(compatibleCompiler.bytes,compiler.compiler.bytes);
+  if(requiresPrivateHelperQualification(candidate.version)) {
+    const selected=loadBoundProtocol(exact);assert.equal(selected.protocol.release_binding.version,candidate.version);
+  }
   const raw=exact('current/wasmc_compiler.wasm');
   if(hash(raw)!==compiler.compiler.sha256||raw.length!==compiler.compiler.bytes||raw.length>2097152)
     throw Error('compiler identity or byte budget drift');

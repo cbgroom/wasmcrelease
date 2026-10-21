@@ -96,7 +96,7 @@ The north star is controlled cold-start transfer: a fresh Pi Agent must learn
 the pinned release from public material alone with either of the two declared
 cost-controlled model routes. Follow
 `docs/FRESH_AGENT_LEARNING_FLYWHEEL.md` and
-`agent-evaluation/fresh-agent-learning-v2.json`. One model PASS is an
+`agent-evaluation/fresh-agent-learning-v3.json`. One model PASS is an
 observation; both routes must pass the frozen suite on the same Pi and release.
 
 For a live Agent journey retain only the privacy-safe event surface:

@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import {usesCurrentProductV3} from './current-release-version.mjs';
+import {loadBoundProtocol} from './fresh-agent-learning-v1.mjs';
 import assert from 'node:assert/strict';
 import {existsSync,readFileSync,statSync} from 'node:fs';
 import {resolve} from 'node:path';
@@ -41,8 +42,9 @@ assert.equal(q.routes['release-state-separation'].exact_report.stop_reason,'wasm
 assert.equal(q.routes['release-state-separation'].exact_report.identity,'wasmc-system-telemetry@0.0.1');
 assert.match(q.routes['host-authority-boundary'].decision,/application-owned exact allowlist/);
 assert.equal(q.routes['dynamic-client-gateway'].product.surface_status,'incubating');
-assert.equal(model.agent_learning_protocol.schema,'wasmc.fresh-agent-learning/v2');
-assert.equal(model.agent_learning_protocol.path,'agent-evaluation/fresh-agent-learning-v2.json');
+const selectedProtocol=loadBoundProtocol(path=>readFileSync(resolve(root,path)));
+assert.equal(model.agent_learning_protocol.schema,selectedProtocol.protocol.schema);
+assert.equal(model.agent_learning_protocol.path,selectedProtocol.path);
 assert.equal(model.agent_learning_protocol.single_model_pass_is_controlled_pair_qualification,false);
 assert.equal(json(model.agent_learning_protocol.path).schema,model.agent_learning_protocol.schema);
 assert.equal(model.lib_ecosystem_control_plane.path,'lib-ecosystem-control-plane.json');

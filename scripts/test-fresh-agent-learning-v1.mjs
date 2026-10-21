@@ -1,8 +1,32 @@
 import assert from 'node:assert/strict';
-import { answerContract, evaluateCohort, executionEvidenceContract, readProtocol, validateProtocol } from './fresh-agent-learning-v1.mjs';
+import { answerContract, evaluateCohort, executionEvidenceContract, readProtocol, validateProtocol, loadBoundProtocol, protocolDigest, protocolRelativePath } from './fresh-agent-learning-v1.mjs';
 import { evaluateTraceText } from './wasmc-live-agent-trace-evaluation-v1.mjs';
+import {readFileSync} from 'node:fs';
+import {createHash} from 'node:crypto';
 
 const protocol = validateProtocol(readProtocol());
+const read=p=>readFileSync(new URL('../'+p,import.meta.url));
+const bound=loadBoundProtocol(read);
+assert.equal(bound.sha256,protocolDigest(protocol));
+assert.equal(bound.path,protocolRelativePath(protocol.release_binding.version));
+const predecessor=read('agent-evaluation/fresh-agent-learning-v2.json');
+assert.equal(createHash('sha256').update(predecessor).digest('hex'),'31de0e1094291d4e936f456f98f946b0c0623c024753a361abc02d5180e1c91d');
+assert.equal(validateProtocol(JSON.parse(predecessor)).schema,'wasmc.fresh-agent-learning/v2');
+let bindingControls=0;
+for(const mutate of [
+  p=>p.cases[0].prompt+=' Changed meaning.',
+  p=>p.cases[0].oracle+=' Relaxed.',
+  p=>p.session_preamble+=' Hint.',
+  p=>p.cohort_gate.structural_efficiency.execution.max_tool_calls++,
+  p=>p.cohort_gate.required_models.pop(),
+  p=>p.release_binding.predecessor_sha256='0'.repeat(64),
+  p=>p.cases[0].answer_contract.required_literals[0]='v0.0.22',
+  p=>p.cases[4].answer_contract.allowed_sha256.push('0'.repeat(64))
+]){const p=structuredClone(protocol);mutate(p);assert.throws(()=>validateProtocol(p));bindingControls++;}
+for(const path of ['current/wasmc_compiler.wasm','current/wasmc.mjs','catalog/libs-current-v2.json','agent-evaluation/fresh-agent-learning-v2.json']){
+  assert.throws(()=>loadBoundProtocol(p=>p===path?Buffer.concat([read(p),Buffer.from('x')]):read(p)));bindingControls++;
+}
+assert.throws(()=>loadBoundProtocol(p=>p===bound.path?predecessor:read(p)));bindingControls++;
 const exactAnswer = answerContract({final_answer:{text:'wasmc:std@1.4.0 d565f00e91c36da68da3645ec5231dd11d1b25299a3ba5cbe3adbd9f5760d91d'}},{
   required_literals:['wasmc:std@1.4.0'],
   allowed_sha256:['d565f00e91c36da68da3645ec5231dd11d1b25299a3ba5cbe3adbd9f5760d91d'],
@@ -110,5 +134,6 @@ console.log(JSON.stringify({
   rejects_split_pi_version: true,
   rejects_case_error: true,
   rejects_retry_over_budget: true,
-  minimum_execution_evidence_controls: 8
+  minimum_execution_evidence_controls: 8,
+  protocol_binding_controls: bindingControls
 }));

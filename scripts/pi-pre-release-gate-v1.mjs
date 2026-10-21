@@ -4,7 +4,7 @@ import { execFileSync, spawn } from 'node:child_process';
 import { mkdirSync, readFileSync } from 'node:fs';
 import { dirname, isAbsolute, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { validateProtocol } from './fresh-agent-learning-v1.mjs';
+import { validateProtocol, loadBoundProtocol, protocolRelativePath, protocolDigest } from './fresh-agent-learning-v1.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const sha256 = value => createHash('sha256').update(value).digest('hex');
@@ -56,6 +56,17 @@ export function validateQualification(candidate, release, commit, tree, receipt,
   assert.equal(receipt.release?.candidate_commit, release.product_candidate_commit);
   assert.equal(receipt.release?.product_set_sha256, candidate.product_set_sha256);
   assert.equal(receipt.protocol, protocol.schema);
+  if (protocol.release_binding) {
+    assert.equal(candidate.schema, 'wasmc.release-product-candidate/v3');
+    const binding=protocol.release_binding;
+    assert.equal(binding.version,candidate.version);
+    assert.equal(binding.compiler_sha256,candidate.current_release_closure?.compiler_sha256);
+    assert.equal(binding.catalog_sha256,candidate.current_catalog?.sha256);
+    const row=candidate.product_files.find(row=>row.path===protocolRelativePath(candidate.version));
+    assert.equal(row?.sha256,protocolDigest(protocol),'candidate protocol identity mismatch');
+    assert.equal(receipt.protocol_sha256,row.sha256,'qualification protocol identity mismatch');
+    assert.equal(candidate.product_files.find(row=>row.path==='current/wasmc.mjs')?.sha256,binding.facade_sha256);
+  }
   assert.equal(receipt.agent?.implementation, 'pi');
   assert.match(receipt.agent?.version ?? '', /^\d+\.\d+\.\d+$/);
   assert.equal(receipt.fresh_local_git_clone_per_case, true);
@@ -129,9 +140,11 @@ async function runModel(model, commit, output, timeoutMs) {
 
 async function main() {
   const { command, options } = parse(process.argv.slice(2));
-  const protocol = validateProtocol(JSON.parse(readFileSync(join(root, 'agent-evaluation/fresh-agent-learning-v2.json'), 'utf8')));
   if (command === 'run') {
     const commit = options.commit;
+    assert.ok(exactCommit(commit), 'exact release commit required before protocol selection');
+    const selectedProtocol = loadBoundProtocol(path => git('show', `${commit}:${path}`));
+    const protocol = selectedProtocol.protocol;
     assert.ok(exactCommit(commit), '--commit must be an exact 40-character commit');
     assert.equal(git('status', '--porcelain').trim(), '', 'pre-release Pi run requires a clean worktree; commit the final candidate first');
     git('cat-file', '-e', `${commit}^{commit}`);
@@ -149,6 +162,7 @@ async function main() {
     console.log(JSON.stringify({
       accepted,
       scope: 'structural-live-model-run-only',
+      protocol_file: selectedProtocol.path, protocol_sha256: selectedProtocol.sha256,
       release_rehearsal_commit: commit,
       release_rehearsal_tree: tree,
       candidate_commit: release.product_candidate_commit,
@@ -159,6 +173,9 @@ async function main() {
     if (!accepted) process.exitCode = 1;
   } else if (command === 'verify') {
     const commit = options.commit;
+    assert.ok(exactCommit(commit), 'exact release commit required before protocol selection');
+    const selectedProtocol = loadBoundProtocol(path => git('show', `${commit}:${path}`));
+    const protocol = selectedProtocol.protocol;
     const candidatePath = options.candidate;
     const receiptPath = options.receipt;
     assert.ok(exactCommit(commit) && candidatePath && receiptPath, 'verify requires --commit, --candidate and --receipt');

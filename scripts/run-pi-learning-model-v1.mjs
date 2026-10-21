@@ -6,10 +6,9 @@ import { tmpdir } from 'node:os';
 import { dirname, isAbsolute, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { evaluateTraceText } from './wasmc-live-agent-trace-evaluation-v1.mjs';
-import { answerContract, executionEvidenceContract } from './fresh-agent-learning-v1.mjs';
+import { answerContract, executionEvidenceContract, loadBoundProtocol } from './fresh-agent-learning-v1.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
-const protocol = JSON.parse(readFileSync(new URL('../agent-evaluation/fresh-agent-learning-v2.json', import.meta.url), 'utf8'));
 
 function options(argv) {
   const out = { model: null, commit: null, output: null, timeoutMs: 180000 };
@@ -21,8 +20,6 @@ function options(argv) {
     else throw new Error(`unknown argument: ${argv[index]}`);
   }
   assert.ok(out.model, '--model is required');
-  const allowed = protocol.cohort_gate.required_models.map(row => `${row.provider}/${row.identity}`);
-  assert.ok(allowed.includes(out.model), `model is not in controlled pair: ${out.model}`);
   out.commit ??= execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim();
   assert.match(out.commit, /^[0-9a-f]{40}$/);
   assert.ok(Number.isSafeInteger(out.timeoutMs) && out.timeoutMs >= 1000 && out.timeoutMs <= 600000);
@@ -55,6 +52,12 @@ function authorityBoundContract(caseDefinition, checkout) {
   if (caseDefinition.id !== 'release-orientation') return contract;
   const authority = JSON.parse(readFileSync(join(checkout, 'agent-release-orientation.json'), 'utf8'));
   assert.match(authority.release?.product_set_sha256 ?? '', /^[0-9a-f]{64}$/);
+  if (protocol.release_binding) {
+    assert.equal(authority.release.version, protocol.release_binding.version, 'release orientation differs from frozen protocol');
+    assert.equal(authority.compiler.sha256, protocol.release_binding.compiler_sha256);
+    assert.equal(authority.facade.sha256, protocol.release_binding.facade_sha256);
+    assert.equal(authority.library_catalog.sha256, protocol.release_binding.catalog_sha256);
+  }
   contract.allowed_sha256 = [...new Set([
     ...(contract.allowed_sha256 ?? []),
     authority.release.product_set_sha256
@@ -63,11 +66,16 @@ function authorityBoundContract(caseDefinition, checkout) {
 }
 
 const input = options(process.argv.slice(2));
+const selectedProtocol = loadBoundProtocol(path => execFileSync('git', ['show', `${input.commit}:${path}`], {cwd:root,maxBuffer:64*1024*1024}));
+const protocol = selectedProtocol.protocol;
+assert.ok(protocol.cohort_gate.required_models.some(row => `${row.provider}/${row.identity}` === input.model), 'model is not in controlled pair');
 const piVersion = execFileSync('pi', ['--version'], { encoding: 'utf8' }).trim();
 const [provider, identity] = input.model.split('/', 2);
 const summary = {
   schema: 'wasmc.pi-learning-model-run/v1',
   protocol: protocol.schema,
+  protocol_file: selectedProtocol.path,
+  protocol_sha256: selectedProtocol.sha256,
   release_guidance_commit: input.commit,
   agent: { implementation: 'pi', version: piVersion },
   model: { provider, identity },
@@ -83,6 +91,9 @@ for (const caseDefinition of protocol.cases) {
   try {
     execFileSync('git', ['clone', '--quiet', '--no-checkout', '--shared', root, checkout]);
     execFileSync('git', ['checkout', '--quiet', '--detach', input.commit], { cwd: checkout });
+    const checkoutProtocol = loadBoundProtocol(path => readFileSync(join(checkout,path)));
+    assert.equal(checkoutProtocol.sha256, selectedProtocol.sha256, 'checkout protocol differs from exact commit');
+    const contract = authorityBoundContract(caseDefinition, checkout);
     const started = Date.now();
     const result = spawnSync('pi', [
       '--model', input.model,
@@ -114,7 +125,7 @@ for (const caseDefinition of protocol.cases) {
         stderr_characters: (result.stderr ?? '').length,
         stderr_sha256: createHash('sha256').update(result.stderr ?? '').digest('hex')
       },
-      structural: structural(report, limits, authorityBoundContract(caseDefinition, checkout), caseDefinition.class),
+      structural: structural(report, limits, contract, caseDefinition.class),
       trace: report
     });
   } finally {

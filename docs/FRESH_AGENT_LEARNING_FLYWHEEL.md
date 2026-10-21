@@ -13,9 +13,14 @@ One model run is an observation. The controlled pair is qualified only when
 both required Pi routes pass the same frozen suite on the same Pi version and
 release commit. The route labels bind observed local configuration; they do not
 independently attest an upstream provider implementation. The machine-readable
-protocol is `agent-evaluation/fresh-agent-learning-v2.json`. The v1 protocol
-remains immutable evidence for earlier releases; v2 accepts ordinary-source
-`u64` while continuing to reject async source and direct public Map positions.
+protocol for0.0.23 is `agent-evaluation/fresh-agent-learning-v3.json`. Both v1
+and v2 remain immutable evidence. The v3 protocol changes only the exact release,
+compiler, facade and containing-catalog identities from v2; its six prompts,
+oracles, session preamble, required models and efficiency budgets are unchanged.
+The predecessor file digest is independently pinned. Runners select and validate
+the protocol from the exact evaluated Git commit, and the final receipt binds
+its candidate-owned SHA256. Ordinary-source `u64` remains supported; async source
+and direct public Map positions remain unsupported.
 
 ## Loop
 
@@ -67,6 +72,10 @@ node scripts/pi-pre-release-gate-v1.mjs verify \
   --candidate channels/candidates/<version>.json \
   --receipt agent-evaluation/receipts/<receipt>.json
 ```
+
+For v3, copy `protocol_sha256` from the exact runner's frozen protocol-file
+observation into the final qualification receipt. It must match the immutable
+candidate's protocol row; a schema name alone is insufficient.
 
 The verifier fails closed unless the receipt binds the same release rehearsal
 commit and tree, underlying candidate commit and product-set digest, contains
