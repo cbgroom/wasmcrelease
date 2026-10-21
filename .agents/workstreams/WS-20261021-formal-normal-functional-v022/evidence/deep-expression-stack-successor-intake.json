@@ -1,0 +1,29 @@
+{
+  "schema": "wasmc.normal-functional-successor-intake/v1",
+  "status": "confirmed external reproduction evidence; compiler fix not performed",
+  "compiler_sha256": "620a6b5f7b9a4565f14857975e37a03196f8f7e4279a2f4da388882638f2a658",
+  "reported_trigger": "approximately2098 left-associated additions in captured ordinary source",
+  "observed_profile": "external Wasmtime Winch pinned Table FastABI profile; same backend healthy -> deep-source recursive trap1891 -> healthy traps4/81",
+  "independently_read_external_evidence": [
+    {
+      "name": "c118-captured-before-v3.log",
+      "bytes": 2255,
+      "sha256": "6c1891d8cda9b378622b9c9033a8c3e67b90fb1421950392f6f21d585f5bf6d3"
+    },
+    {
+      "name": "c118-captured-after-v2.log",
+      "bytes": 1624,
+      "sha256": "bf93022540d31b7edca4455b13ede85c366134bceda24a93d6b7324f228725a4"
+    },
+    {
+      "name": "c118-captured-repro-test.rs",
+      "bytes": 2063,
+      "sha256": "1bb4affa4c7f016a3b2887e5306aac17478be29865ec5beb5dbe2d810edd3219"
+    }
+  ],
+  "host_recovery_observation": "External owner discards damaged instance after backend trap and does not replay automatically; before FAIL/after PASS. This does not repair compiler expression recursion. Deployment not claimed.",
+  "public_facade_observation": "current JS facade caches default compiler and reusable compiler object; clearing in finally is not proof of stack recovery. This host/engine route was not executed for this intake.",
+  "next_source_scope": "Generic compiler expression traversal stack safety or controlled nesting rejection; not business parser algorithms. Must obtain exact successor Source claim/START.",
+  "separate_existing_C43_gap_preserved": true,
+  "scope_policy": "Finish bounded current exact release phase; no restart/interruption of jobs, no new all-platform build, no business replay or compiler-source publication. Record an accurate limitation and schedule normal follow-up after current phase."
+}

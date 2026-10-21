@@ -6,6 +6,8 @@ The release preserves Provider4.9, Std1.4.1, LibSearch0.5.0 and all 42 admitted 
 
 Source-free Node/Bun/Deno qualification passed 180 API/CLI outputs, 21 execution oracles, 23,040 Std calls, 2,304 managed-Lib calls, 4,608 boolean conditionals and 18 numeric-boolean rejections. The current compiler also passed the actual Node18 compiler contract; current Std keeps its explicit unsupported Node18 feature rejection. Finite correctness results do not establish a performance ceiling or SLA.
 
+A captured external Wasmtime Winch consumer exposed a remaining limitation: a deeply left-associated expression can trap during compilation and leave that compiler instance unusable. A Host must discard a trapped instance; Host recovery is separate from the pending generic compiler stack-safety repair. The evidence is retained as a normal functional successor issue. This release does not claim arbitrary expression depth or safe reuse of a trapped compiler instance.
+
 Six Native archives retain their actual six-platform build and six matching downloaded-consumer qualification. `Native-final-input-custody-bridge.json` binds all 27 unchanged build/package inputs to this final release tree. `Pi-final-tree-qualification.json` and `Pi-independent-review.json` bind the actual final local tree review; checksums bind the downloadable assets. Original failed candidates and their evidence remain preserved.
 
 Use the exact `v0.0.22` tag and start at `AGENTS.md`. `release.json`, the prod channel, the exact candidate and checksums describe this release. This is a 0.0.x formal release with `stable=false`; the existing research-only license and prior immutable grants remain unchanged.
