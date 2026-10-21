@@ -1,3 +1,7 @@
+# Current: actual Runtime receipt successor required
+
+Final whole-product rehearsal correctly rejected strict Host receipt drift: the three frozen Runtime receipt files still described v021/42c. The rejected rehearsal and raw error are preserved in evidence/first-prod-rehearsal-rejected.tar.gz; all original three receipts are preserved separately. Real immutable dev2 source9c archive022f already passed, and a fresh same-archive three-engine version/self-test/compile/independent-oracle run now generates actual620a receipts. No private compiler, Lib or Native rebuild. Freeze successor dev3 with only these three changed product rows, run exactCI, then newmain2/finalPi/formalpublication. main1/dev2 tags stay immutable; no formalv22 publication.
+
 # Formal normal-functional release
 
 ## Current: dev.2 nine exact CI checks passed; same-product main.1
