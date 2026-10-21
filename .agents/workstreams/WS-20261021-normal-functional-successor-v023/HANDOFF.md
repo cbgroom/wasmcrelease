@@ -143,3 +143,7 @@ Eight exact37ab independent workflows succeeded. Source-free39646097101 attempt2
 ## Same-product main and final rehearsal scope admitted
 
 Exact main1/main/prod versioned and mutable channel, release/manifest/provenance/checksum/index/orientation claims precede edits. Historical v022 claim belongs to same chat; its failed local rehearsal and worktree remain unchanged. No foreign writer or source changes. Main normal-functional qualification explicitly retains overall Source-free failure and excluded scope; no check changes. Final prod view will be assembled only in a new isolated linked worktree, tested before any suffix-free tag/push; GLM full suite first, required final samecommit Pi pair and independent review remain open.
+
+## Main1 same-product promotion prepared and validated
+
+Versioned main1/mutable main carry exactcf39 candidate authority/productdcd/1068 unchanged files. Complete normal-functional scope accepted from eight whole workflows plus twenty normal Source-free cells; raw workflowfailure and scope retained adjacent to result, no securitycheck change. Exact dev-to-main validator and independent5c candidate reopen PASS; quickstart actual pair/Base64 and release-surface projection checks PASS. Remaining readiness block is finalPi/publication. Default release/prod/latest21 untouched. Next publish append-only main1 prerelease, then isolated local finalprod rehearsal and GLM fullsuite.
