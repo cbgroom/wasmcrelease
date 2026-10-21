@@ -1,9 +1,9 @@
 {
   "schema": "wasmc.release-lib-route-readiness/v1",
   "route": "release-lib-route-readiness",
-  "request": "does this v0.0.21 product set bind every included Lib package and API route, and where is its lifecycle stage decided",
+  "request": "does this v0.0.22 product set bind every included Lib package and API route, and where is its lifecycle stage decided",
   "product": {
-    "version": "0.0.21",
+    "version": "0.0.22",
     "package_routes": 42,
     "api_routes": 236,
     "candidate_extras": 0,
@@ -27,7 +27,7 @@
     "rule": "Never infer released, discoverable or installable from this frozen product projection."
   },
   "valid_resolution_count": 1,
-  "only_valid_closure": "Verify the exact v0.0.21 current42 candidate and route closure, then read the channel authorities for lifecycle state. Every promotion must preserve the same product digest set.",
+  "only_valid_closure": "Verify the exact v0.0.22 current42 candidate and route closure, then read the channel authorities for lifecycle state. Every promotion must preserve the same product digest set.",
   "forbidden_shortcuts": [
     "treat admission as release",
     "infer lifecycle state from product presence or an admission snapshot",
@@ -38,13 +38,13 @@
     "admission/current-product-v3.json",
     "catalog/libs-current-v2.json",
     "catalog/lib-route-closure.json",
-    "channels/candidates/0.0.21.json",
+    "channels/candidates/0.0.22.json",
     "release.json",
     "channels/prod.json"
   ],
   "check_commands": [
     "node scripts/lib-route-closure.mjs --check",
-    "node scripts/release-candidate.mjs verify channels/candidates/0.0.21.json --candidate-sha256 e0d34d806f81f56dde084ae5b1626bdcfcb4ccb8a59491e2b9d37ecce43db651"
+    "node scripts/release-candidate.mjs verify channels/candidates/0.0.22.json --candidate-sha256 11665963756cfdd24e57be294b21c2eb09d24673698c6a3f1aab4787203aa2b4"
   ],
   "stop": "This record is sufficient for the matching readiness decision. Do not scan manifests, histories or implementation scripts unless one of its check commands fails."
 }

@@ -47,7 +47,7 @@
   "consumer_surfaces": [
     {
       "id": "lib-package",
-      "status": "published",
+      "status": "candidate",
       "roots": [
         "current-libs"
       ],
@@ -59,7 +59,7 @@
     },
     {
       "id": "host-sdk",
-      "status": "published",
+      "status": "candidate",
       "roots": [
         "sdk/wasmc-host",
         "sdk/wasmc-core-runtime"
@@ -74,7 +74,7 @@
     },
     {
       "id": "integrated-runtime-cli",
-      "status": "published",
+      "status": "candidate",
       "roots": [
         "runtime/wasmc-runtime-v0",
         "sdk/wasmc-native-compiler"
@@ -202,21 +202,21 @@
       "core-runtime-sdk": {
         "root": "sdk/wasmc-core-runtime",
         "skill": "sdk/wasmc-core-runtime/SKILL.md",
-        "release_status": "published",
-        "immutable_example": "v0.0.21"
+        "release_status": "candidate",
+        "immutable_example": "v0.0.22"
       },
       "host-sdk": {
         "root": "sdk/wasmc-host",
         "skill": "sdk/wasmc-host/SKILL.md",
-        "release_status": "published",
-        "immutable_example": "v0.0.21"
+        "release_status": "candidate",
+        "immutable_example": "v0.0.22"
       },
       "native-cli": {
         "root": "sdk/wasmc-native-compiler",
         "skill": "sdk/wasmc-native-compiler/SKILL.md",
-        "release_status": "published",
-        "immutable_example": "v0.0.21",
-        "binary_packaging": "CI/development packages are not immutable release assets; six separately published v0.0.21 Native archives retain actual build and input custody."
+        "release_status": "candidate",
+        "immutable_example": "v0.0.22",
+        "binary_packaging": "CI/development packages are not immutable release assets; all6 Native builds and6 matching downloaded consumers passed at actual source7fbdb6a450354dda20c9077a403b503db0ca7f1f, run39560999862. Formal assets require immutable Release publication and input custody."
       },
       "lightweight-embedding": {
         "root": "host/embedding",
@@ -265,7 +265,7 @@
   },
   "package_profiles": {
     "wasmc-system-telemetry@0.0.1": {
-      "status": "published",
+      "status": "candidate",
       "supported_surfaces": [
         "source-free-rust-component",
         "public-rust-host-sdk",
@@ -283,12 +283,12 @@
   },
   "agent_capability_projection": {
     "schema": "wasmc.release-agent-capabilities/v1",
-    "product_release": "v0.0.21",
+    "product_release": "v0.0.22",
     "guidance_scope": {
-      "status": "included-in-v0.0.21-product",
+      "status": "included-in-v0.0.22-product",
       "included_in_product": true,
       "lifecycle_authority": "release.json and channels/prod.json",
-      "rule": "This frozen projection describes v0.0.21 product capability only. It does not prove the product is the current released, discoverable or installable lifecycle stage."
+      "rule": "This frozen projection describes v0.0.22 product capability only. It does not prove the product is the current released, discoverable or installable lifecycle stage."
     },
     "decision_rule": "A type or feature is usable only at the exact admitted position below. WIT vocabulary, local values, Core lanes, Component profiles, Host bindings and public results are separate claims.",
     "alternative_rule": "Alternatives must preserve semantics. Numeric width or signedness, async behavior, identity, ordering, ownership and failure semantics may change only with explicit application proof; otherwise stop.",
@@ -317,7 +317,7 @@
         ]
       },
       "u64_ordinary_source": {
-        "status": "released",
+        "status": "qualified-product-capability",
         "positions": [
           "local",
           "parameter",
@@ -453,18 +453,18 @@
       "qualification_scope": "Immutable containing u64 implementation authority; current complete source and canonical master gates remain independent."
     },
     "release": {
-      "product": "v0.0.21",
+      "product": "v0.0.22",
       "lifecycle_authority": "release.json",
-      "compiler_source_authority": "938b0dd9c81ae211740e546955ebdebc8db1712a",
-      "compiler_sha256": "42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c",
+      "compiler_source_authority": "f2570551322cc493c45f4370fbe1b7ee67394693",
+      "compiler_sha256": "620a6b5f7b9a4565f14857975e37a03196f8f7e4279a2f4da388882638f2a658",
       "ordinary_source_u64": "supported",
-      "reason": "Current v0.0.21 staged compiler supports the same qualified full-width u64 contract; lifecycle remains channel-owned."
+      "reason": "Current v0.0.22 staged compiler supports the same qualified full-width u64 contract; lifecycle remains channel-owned."
     },
     "adjacent_type_decisions": {
-      "u32": "included in the v0.0.21 product compiler; no repair was required",
+      "u32": "included in the v0.0.22 product compiler; no repair was required",
       "char": "not implemented on the cited producer authority and not released; do not substitute arbitrary u32"
     },
-    "answer_rule": "When asked whether u64 is fixed or supported, report that producer master and the v0.0.21 product compiler both support it, then read release.json for the current published lifecycle stage. Do not infer async, map or char support."
+    "answer_rule": "When asked whether u64 is fixed or supported, report that producer master and the v0.0.22 product compiler both support it, then read release.json for the current published lifecycle stage. Do not infer async, map or char support."
   },
   "lib_ecosystem_control_plane": {
     "schema": "wasmc.lib-ecosystem-control-plane/v3",
@@ -487,7 +487,7 @@
   "agent_task_routes": {
     "rule": "When one route matches the request, read this record first and stop once its evidence answers the task. Do not scan release history, unrelated compatibility identities, implementation tests or broad manifests to reconfirm it. Report every identity in full or omit an identity that the answer does not need.",
     "license-policy": {
-      "intent": "decide whether the v0.0.21 product permits research, production or commercial use",
+      "intent": "decide whether the v0.0.22 product permits research, production or commercial use",
       "authority_file": "license-policy.json",
       "license_file": "LICENSE",
       "source_available": true,
@@ -495,23 +495,23 @@
       "noncommercial_research": true,
       "commercial_use": false,
       "production_use": false,
-      "prior_tag_rule": "Read LICENSE from the exact immutable tag; v0.0.21 does not rewrite or revoke an earlier grant.",
+      "prior_tag_rule": "Read LICENSE from the exact immutable tag; v0.0.22 does not rewrite or revoke an earlier grant.",
       "check_command": "node scripts/validate-license-policy.mjs",
       "answer_boundary": "Report the exact revision boundary and stop; never describe this policy as open source or as a retroactive revocation."
     },
     "release-orientation": {
       "intent": "identify the immutable release, public Agent entrypoint and compiler authority",
-      "product_version": "v0.0.21",
+      "product_version": "v0.0.22",
       "public_agent_entrypoint": "AGENTS.md",
       "compiler": {
         "path": "current/wasmc_compiler.wasm",
-        "bytes": 1510219,
-        "sha256": "42c27913120d4ecf8a05ed990287767296aba9ae3b5af0a4e7ede182d5ad998c",
+        "bytes": 1527770,
+        "sha256": "620a6b5f7b9a4565f14857975e37a03196f8f7e4279a2f4da388882638f2a658",
         "imports": 0
       },
       "facade": {
         "path": "current/wasmc.mjs",
-        "sha256": "ce6ec59d9ee40a7855df996321b52cb02ab174bd89dd2f3b7d2e0e0f2e8db856"
+        "sha256": "cdeb9f96d86a8718b8918ea39c1ee3eca486cfa5ae5a101e2da10f69053be447"
       },
       "compact_authority": "agent-release-orientation.json",
       "verify_with": [
@@ -528,7 +528,7 @@
       "authority_file": "release-lib-route-readiness.json",
       "intent": "decide whether every released Lib package and exported API route is synchronized for a new formal release candidate",
       "product": {
-        "version": "0.0.21",
+        "version": "0.0.22",
         "package_routes": 42,
         "api_routes": 236,
         "candidate_extras": 0,
@@ -552,7 +552,7 @@
         "rule": "Never infer released, discoverable or installable from this frozen product projection."
       },
       "valid_resolution_count": 1,
-      "only_valid_closure": "Verify the exact v0.0.21 current42 candidate and route closure, then read the channel authorities for lifecycle state. Every promotion must preserve the same product digest set.",
+      "only_valid_closure": "Verify the exact v0.0.22 current42 candidate and route closure, then read the channel authorities for lifecycle state. Every promotion must preserve the same product digest set.",
       "forbidden_shortcuts": [
         "treat admission as release",
         "infer lifecycle state from product presence or an admission snapshot",
@@ -563,21 +563,21 @@
         "admission/current-product-v3.json",
         "catalog/libs-current-v2.json",
         "catalog/lib-route-closure.json",
-        "channels/candidates/0.0.21.json",
+        "channels/candidates/0.0.22.json",
         "release.json",
         "channels/prod.json"
       ],
       "check_commands": [
         "node scripts/lib-route-closure.mjs --check",
-        "node scripts/release-candidate.mjs verify channels/candidates/0.0.21.json --candidate-sha256 e0d34d806f81f56dde084ae5b1626bdcfcb4ccb8a59491e2b9d37ecce43db651"
+        "node scripts/release-candidate.mjs verify channels/candidates/0.0.22.json --candidate-sha256 11665963756cfdd24e57be294b21c2eb09d24673698c6a3f1aab4787203aa2b4"
       ],
       "answer_boundary": "Stop after reporting the product closure and the exact lifecycle state read from release.json/channels; never infer a transition."
     },
     "dynamic-client-gateway": {
-      "intent": "determine the v0.0.21 Client/Gateway dynamic Lib surface, lifecycle and limits",
+      "intent": "determine the v0.0.22 Client/Gateway dynamic Lib surface, lifecycle and limits",
       "authority_file": "runtime/client-foundation-v1/release-surface.json",
       "status": "incubating",
-      "product_version": "0.0.21",
+      "product_version": "0.0.22",
       "formal_lib_package": false,
       "lifecycle_authority": "release.json",
       "verify_commands": [
@@ -622,14 +622,14 @@
     },
     "released-base64": {
       "intent": "find and approve the released Base64 capability",
-      "product_release": "v0.0.21",
+      "product_release": "v0.0.22",
       "package": "wasmc:std@1.4.1",
       "root": "standard/wasmc-std/1.4.1",
       "apis": [
         "wasmc:std@1.4.1/base64#try-encode-standard",
         "wasmc:std@1.4.1/base64#try-decode-standard"
       ],
-      "search_command": "node scripts/wasmc-lib.mjs search base64 --catalog-sha256 a4de009c683d3db4453cf0a9e783719a933a8e1689842a12d08a6883a83cfdad --limit 8",
+      "search_command": "node scripts/wasmc-lib.mjs search base64 --catalog-sha256 76f9a0ca465c7d6169738be04ac725dceac2cdde14bbfc5215c37c2e97c86f43 --limit 8",
       "search_is_selection_authority": false,
       "approval": {
         "skill": "standard/wasmc-std/1.4.1/SKILL.md",
@@ -642,8 +642,8 @@
       },
       "catalog": {
         "path": "catalog/libs-current-v2.json",
-        "sha256": "a4de009c683d3db4453cf0a9e783719a933a8e1689842a12d08a6883a83cfdad",
-        "release_snapshot": "v0.0.21",
+        "sha256": "76f9a0ca465c7d6169738be04ac725dceac2cdde14bbfc5215c37c2e97c86f43",
+        "release_snapshot": "v0.0.22",
         "carried_forward": false
       },
       "exact_report": {
@@ -653,7 +653,7 @@
           "wasmc:std@1.4.1/base64#try-encode-standard",
           "wasmc:std@1.4.1/base64#try-decode-standard"
         ],
-        "catalog_sha256": "a4de009c683d3db4453cf0a9e783719a933a8e1689842a12d08a6883a83cfdad",
+        "catalog_sha256": "76f9a0ca465c7d6169738be04ac725dceac2cdde14bbfc5215c37c2e97c86f43",
         "wit_sha256": "5abbed39c185835cfbbc5c2b961fb904b3ad66f42b22aef1ac7a40835ee246e9",
         "artifact_sha256": "b79a499c8300361125e7fcdae02170184b82d4bbeff4d8f24ed95f3fd4db8d3b",
         "companion_sha256": "c3ac42b93f4c27e24065abe804b91f54761eff782e2971e947847b3d20ee7e00",
@@ -663,7 +663,7 @@
         "library_import_module": "wasmc:lib/wasmc.std@1.4.1"
       },
       "final_answer_policy": "After verification, output package and both APIs exactly, then only these statements: search discovered the candidate but was not authority; resolve verified catalog_sha256, manifest_sha256, root_inventory_sha256, wit_sha256 and artifact_sha256; behavior separately verified companion_sha256 and import_module and passed. Do not reproduce command arguments, digest values, partial digests or any ellipsis character. Read channels for released, discoverable and installable states.",
-      "resolve_command": "node scripts/wasmc-lib.mjs resolve wasmc-std 1.4.1 --catalog-sha256 a4de009c683d3db4453cf0a9e783719a933a8e1689842a12d08a6883a83cfdad --manifest-sha256 9db63b4f380f9a8fb7541addfde6608bbc48b3267ad903f838afedb98e74ebfc --root-inventory-sha256 6978407b51e835a3893ac14cbb7ca2c46da48d0a778f2611f6de829af07bdf92",
+      "resolve_command": "node scripts/wasmc-lib.mjs resolve wasmc-std 1.4.1 --catalog-sha256 76f9a0ca465c7d6169738be04ac725dceac2cdde14bbfc5215c37c2e97c86f43 --manifest-sha256 9db63b4f380f9a8fb7541addfde6608bbc48b3267ad903f838afedb98e74ebfc --root-inventory-sha256 6978407b51e835a3893ac14cbb7ca2c46da48d0a778f2611f6de829af07bdf92",
       "states": {
         "qualified": true,
         "admitted": true,
@@ -699,7 +699,7 @@
     "dynamic-client-gateway": {
       "request": "is the dynamic Client and Gateway released and is it a formal Lib",
       "product_inclusion": {
-        "version": "0.0.21",
+        "version": "0.0.22",
         "surface_status": "incubating",
         "lifecycle_authority": "release.json"
       },
@@ -744,9 +744,9 @@
         "identity": "wasmc-system-telemetry@0.0.1",
         "qualified": true,
         "admitted": true,
-        "released": true,
-        "discoverable": true,
-        "installable": true,
+        "released": false,
+        "discoverable": false,
+        "installable": false,
         "supported_routes": [
           "source-free-rust-component",
           "public-rust-host-sdk",
@@ -755,5 +755,5 @@
       }
     }
   },
-  "release_version": "0.0.21"
+  "release_version": "0.0.22"
 }
