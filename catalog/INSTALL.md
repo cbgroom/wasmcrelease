@@ -7,8 +7,8 @@ is bound to Std1.4.1 at public artifact commit
 
 ```sh
 wasmc_install_demo=$(mktemp -d)
-node scripts/wasmc-lib.mjs resolve wasmc-std 1.4.1 --catalog-sha256 76f9a0ca465c7d6169738be04ac725dceac2cdde14bbfc5215c37c2e97c86f43 --manifest-sha256 9db63b4f380f9a8fb7541addfde6608bbc48b3267ad903f838afedb98e74ebfc --root-inventory-sha256 6978407b51e835a3893ac14cbb7ca2c46da48d0a778f2611f6de829af07bdf92 > "$wasmc_install_demo/lock.json"
-node scripts/wasmc-lib.mjs install "$wasmc_install_demo/lock.json" "$wasmc_install_demo/lib" --catalog-sha256 76f9a0ca465c7d6169738be04ac725dceac2cdde14bbfc5215c37c2e97c86f43 --lock-sha256 628b796b6bb04ac0a2e105be56e6e46a10c2d2c8e6a7c2aba01d869644dccbdd --mirror github
+node scripts/wasmc-lib.mjs resolve wasmc-std 1.4.1 --catalog-sha256 81db5d610d53c7627fd91a4bbd47a22610bd1982718b845dc1557b81657f0e74 --manifest-sha256 9db63b4f380f9a8fb7541addfde6608bbc48b3267ad903f838afedb98e74ebfc --root-inventory-sha256 6978407b51e835a3893ac14cbb7ca2c46da48d0a778f2611f6de829af07bdf92 > "$wasmc_install_demo/lock.json"
+node scripts/wasmc-lib.mjs install "$wasmc_install_demo/lock.json" "$wasmc_install_demo/lib" --catalog-sha256 81db5d610d53c7627fd91a4bbd47a22610bd1982718b845dc1557b81657f0e74 --lock-sha256 628b796b6bb04ac0a2e105be56e6e46a10c2d2c8e6a7c2aba01d869644dccbdd --mirror github
 node examples/base64/run.mjs --installed "$wasmc_install_demo/lib"
 ```
 

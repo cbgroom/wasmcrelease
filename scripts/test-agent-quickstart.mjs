@@ -72,7 +72,7 @@ assert.equal(delta.producer.commit, '566eff42d0f4e4680c5ddd60c6584a9d8ff8e9f4');
 assert.equal(delta.producer.implementation_commit, '94328ed760f93bf24b595a71facdcc773d43b762');
 assert.equal(delta.producer.implemented, true);
 assert.match(delta.answer_opening, /both support ordinary-source u64/);
-assert.equal(delta.release_product.version,'v0.0.22');
+assert.equal(delta.release_product.version,'v0.0.23');
 assert.equal(delta.release_product.ordinary_source_u64,'supported');
 assert.equal(delta.release_product.lifecycle_authority,'release.json');
 assert.match(delta.char, /not implemented/);

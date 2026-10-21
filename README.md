@@ -1,4 +1,4 @@
-# WAsmC0.0.22
+# WAsmC0.0.23
 
 WAsmC compiles WIT-shaped application source to standard Core Wasm. This
 source-free distribution combines one compiler, Provider4.9, Std1.4.1,
@@ -43,7 +43,7 @@ The pinned catalog owns complete Roots, WIT, SDK views and dependency notices.
 Its42 package routes and236 API routes give278 exact search entries.
 
 ```sh
-node scripts/wasmc-lib.mjs search "base64 decode" --catalog-sha256 76f9a0ca465c7d6169738be04ac725dceac2cdde14bbfc5215c37c2e97c86f43 --limit 8
+node scripts/wasmc-lib.mjs search "base64 decode" --catalog-sha256 81db5d610d53c7627fd91a4bbd47a22610bd1982718b845dc1557b81657f0e74 --limit 8
 node examples/base64/run.mjs
 ```
 
@@ -73,5 +73,5 @@ capability. System Telemetry supports its declared Component resource view;
 ordinary-source direct resource methods remain unsupported. Client Foundation
 and Gateway remain incubating.
 
-The [0.0.22 release evidence](docs/RELEASE_V022.md) keeps source, artifact,
+The [0.0.23 release evidence](docs/RELEASE_V023.md) keeps source, artifact,
 runtime, Native platform, whole-candidate and lifecycle gates separate.

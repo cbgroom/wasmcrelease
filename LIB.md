@@ -9,7 +9,7 @@ shape. WIT has no native Map. When a public contract needs a copied snapshot,
 return an explicit `list<Entry<K,V>>` or use a declared resource; direct public
 Map is rejected rather than silently serialized.
 
-The v0.0.22 current facade embeds the same verified compiler as the Runtime
+The v0.0.23 current facade embeds the same verified compiler as the Runtime
 package. Use the facade directly for supported ordinary managed source:
 
 ```js

@@ -5,7 +5,7 @@ import {resolve} from 'node:path';
 import {checkedCurrentCatalog,verifyCurrentRelease,currentProductReader,currentProductPaths} from '../../scripts/current-lib-release-v3.mjs';
 import {CurrentSearchCaller} from '../../scripts/current-lib-search-v3.mjs';
 const root=fileURLToPath(new URL('../../',import.meta.url)),read=currentProductReader(root);
-const bytes=read('catalog/libs-current-v2.json'),pin='76f9a0ca465c7d6169738be04ac725dceac2cdde14bbfc5215c37c2e97c86f43';
+const bytes=read('catalog/libs-current-v2.json'),pin='81db5d610d53c7627fd91a4bbd47a22610bd1982718b845dc1557b81657f0e74';
 const catalog=checkedCurrentCatalog(bytes,pin),closure=verifyCurrentRelease(bytes,pin,read,currentProductPaths(root));
 const selected=catalog.packages.find(r=>r.id==='wasmc-lib-search');
 const caller=new CurrentSearchCaller(read(catalog.index.path),read(selected.root+'/artifact.wasm'),read(selected.root+'/core-abi.json'));

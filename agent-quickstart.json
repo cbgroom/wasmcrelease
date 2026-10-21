@@ -5,9 +5,9 @@
   "routes": {
     "license-policy": {
       "authority_file": "license-policy.json",
-      "request": "may I use the v0.0.22 product for research or commercial purposes",
-      "decision": "The v0.0.22 product permits non-commercial research only; commercial and production use require a separate written license. It is source-available, not open source.",
-      "prior_tag_rule": "Read LICENSE from the exact immutable tag. The v0.0.22 policy does not rewrite or revoke an earlier grant.",
+      "request": "may I use the v0.0.23 product for research or commercial purposes",
+      "decision": "The v0.0.23 product permits non-commercial research only; commercial and production use require a separate written license. It is source-available, not open source.",
+      "prior_tag_rule": "Read LICENSE from the exact immutable tag. The v0.0.23 policy does not rewrite or revoke an earlier grant.",
       "check_command": "node scripts/validate-license-policy.mjs",
       "required_additional_reads": [
         "license-policy.json",
@@ -15,7 +15,7 @@
       ]
     },
     "release-orientation": {
-      "product_version": "v0.0.22",
+      "product_version": "v0.0.23",
       "lifecycle_authority": "Read agent-release-orientation.json and run its check; open the full artifact inventory in manifest.json only if that compact authority fails validation. In the final answer, name agent-release-orientation.json literally as the compact authority. Compact release.json is lifecycle authority, not the artifact list.",
       "entrypoint": "AGENTS.md",
       "compiler": {
@@ -41,14 +41,16 @@
     },
     "release-lib-route-readiness": {
       "authority_file": "release-lib-route-readiness.json",
-      "request": "does this v0.0.22 product set bind every included Lib package and API route, and where is its lifecycle stage decided",
+      "request": "does this v0.0.23 product set bind every included Lib package and API route, and where is its lifecycle stage decided",
       "product": {
-        "version": "0.0.22",
+        "version": "0.0.23",
         "package_routes": 42,
         "api_routes": 236,
         "candidate_extras": 0,
-        "formal_release_ready": true,
-        "blocking_conditions": []
+        "formal_release_ready": false,
+        "blocking_conditions": [
+          "v023-product-candidate-not-frozen"
+        ]
       },
       "active_search": {
         "identity": "wasmc:lib-search@0.5.0",
@@ -67,7 +69,7 @@
         "rule": "Never infer released, discoverable or installable from this frozen product projection."
       },
       "valid_resolution_count": 1,
-      "only_valid_closure": "Verify the exact v0.0.22 current42 candidate and route closure, then read the channel authorities for lifecycle state. Every promotion must preserve the same product digest set.",
+      "only_valid_closure": "The v0.0.23 compiler component and current42 route closure can be verified. Stop at v023-product-candidate-not-frozen until an independently pinned whole-product candidate is created; then verify that candidate and read the channel authorities. Promotion must preserve product bytes.",
       "forbidden_shortcuts": [
         "treat admission as release",
         "infer lifecycle state from product presence or an admission snapshot",
@@ -78,21 +80,21 @@
         "admission/current-product-v3.json",
         "catalog/libs-current-v2.json",
         "catalog/lib-route-closure.json",
-        "channels/candidates/0.0.22.json",
         "release.json",
         "channels/prod.json"
       ],
       "check_commands": [
         "node scripts/lib-route-closure.mjs --check",
-        "node scripts/release-candidate.mjs verify channels/candidates/0.0.22.json --candidate-sha256 429e9f77319a7abc99b63beab0ec9d8043cc78af30ed5fbac6c4db70feffc7af"
+        "node scripts/current-compiler-integrity.mjs --require-qualification"
       ],
       "required_additional_reads": [
         "release-lib-route-readiness.json"
-      ]
+      ],
+      "stop": "This record is sufficient for the matching readiness decision. Do not scan manifests, histories or implementation scripts unless one of its check commands fails."
     },
     "position-aware-capability-negative": {
       "request": "async func(u64) -> map<string,u64> as an ordinary public WAsmC value",
-      "decision": "unsupported as a whole: u64 is supported in the v0.0.22 compiler, but async ordinary source and a direct public map result remain independently unsupported",
+      "decision": "unsupported as a whole: u64 is supported in the v0.0.23 compiler, but async ordinary source and a direct public map result remain independently unsupported",
       "independent_stops": [
         "async ordinary source unsupported",
         "Map is resident/local only and unsupported as a direct public WIT value result"
@@ -114,7 +116,7 @@
     },
     "producer-release-u64-delta": {
       "request": "is ordinary-source u64 fixed or supported now",
-      "answer_opening": "Producer master and the v0.0.22 product compiler both support ordinary-source u64; read release.json for the currently published lifecycle stage.",
+      "answer_opening": "Producer master and the v0.0.23 product compiler both support ordinary-source u64; read release.json for the currently published lifecycle stage.",
       "producer": {
         "repository": "yxsicd/wasmc",
         "branch": "master",
@@ -124,13 +126,13 @@
         "qualified_on_containing_commit": true
       },
       "release_product": {
-        "version": "v0.0.22",
+        "version": "v0.0.23",
         "lifecycle_authority": "release.json",
         "ordinary_source_u64": "supported"
       },
-      "u32": "included in the v0.0.22 product compiler; no repair was required",
+      "u32": "included in the v0.0.23 product compiler; no repair was required",
       "char": "not implemented on the cited producer authority and not released; arbitrary u32 is not a char substitute",
-      "stop": "Report u64 support only for the v0.0.22 product compiler. Do not infer async, map, char, lifecycle stage or installation from scalar support.",
+      "stop": "Report u64 support only for the v0.0.23 product compiler. Do not infer async, map, char, lifecycle stage or installation from scalar support.",
       "required_additional_reads": []
     },
     "ordinary-source-positive": {
@@ -193,7 +195,7 @@
       "request": "is the dynamic Client/Gateway available in this product and is it a formal Lib",
       "authority": "runtime/client-foundation-v1/release-surface.json",
       "product": {
-        "version": "0.0.22",
+        "version": "0.0.23",
         "included": true,
         "surface_status": "incubating",
         "lifecycle_authority": "release.json"
@@ -211,19 +213,19 @@
       ]
     },
     "library-first-selection": {
-      "product_release": "v0.0.22",
+      "product_release": "v0.0.23",
       "package": "wasmc:std@1.4.1",
       "apis": [
         "wasmc:std@1.4.1/base64#try-encode-standard",
         "wasmc:std@1.4.1/base64#try-decode-standard"
       ],
-      "search": "node scripts/wasmc-lib.mjs search base64 --catalog-sha256 76f9a0ca465c7d6169738be04ac725dceac2cdde14bbfc5215c37c2e97c86f43 --limit 8",
+      "search": "node scripts/wasmc-lib.mjs search base64 --catalog-sha256 81db5d610d53c7627fd91a4bbd47a22610bd1982718b845dc1557b81657f0e74 --limit 8",
       "search_is_selection_authority": false,
       "wit_sha256": "5abbed39c185835cfbbc5c2b961fb904b3ad66f42b22aef1ac7a40835ee246e9",
       "artifact_sha256": "b79a499c8300361125e7fcdae02170184b82d4bbeff4d8f24ed95f3fd4db8d3b",
-      "catalog_release_snapshot": "v0.0.22",
+      "catalog_release_snapshot": "v0.0.23",
       "catalog_path": "catalog/libs-current-v2.json",
-      "catalog_sha256": "76f9a0ca465c7d6169738be04ac725dceac2cdde14bbfc5215c37c2e97c86f43",
+      "catalog_sha256": "81db5d610d53c7627fd91a4bbd47a22610bd1982718b845dc1557b81657f0e74",
       "catalog_snapshot_carried_forward": false,
       "states": {
         "qualified": true,
@@ -240,7 +242,7 @@
           "wasmc:std@1.4.1/base64#try-encode-standard",
           "wasmc:std@1.4.1/base64#try-decode-standard"
         ],
-        "catalog_sha256": "76f9a0ca465c7d6169738be04ac725dceac2cdde14bbfc5215c37c2e97c86f43",
+        "catalog_sha256": "81db5d610d53c7627fd91a4bbd47a22610bd1982718b845dc1557b81657f0e74",
         "wit_sha256": "5abbed39c185835cfbbc5c2b961fb904b3ad66f42b22aef1ac7a40835ee246e9",
         "artifact_sha256": "b79a499c8300361125e7fcdae02170184b82d4bbeff4d8f24ed95f3fd4db8d3b",
         "companion_sha256": "c3ac42b93f4c27e24065abe804b91f54761eff782e2971e947847b3d20ee7e00",
@@ -249,8 +251,8 @@
         "root_inventory_sha256": "6978407b51e835a3893ac14cbb7ca2c46da48d0a778f2611f6de829af07bdf92",
         "library_import_module": "wasmc:lib/wasmc.std@1.4.1"
       },
-      "final_answer_policy": "Report the package and both APIs literally. Search discovered the candidate; resolve verified catalog_sha256, manifest_sha256, root_inventory_sha256, wit_sha256 and artifact_sha256; behavior verified companion_sha256 and import_module and passed. These are verification observations, not caller approval. Report installed_root_verified from the actual oracle; false means packaged Root only, not an installed package. Read release.json and channels/prod.json before reporting lifecycle states; product projection alone is insufficient. Do not reproduce command arguments or digest values, partial digests or any ellipsis character.",
-      "resolve": "node scripts/wasmc-lib.mjs resolve wasmc-std 1.4.1 --catalog-sha256 76f9a0ca465c7d6169738be04ac725dceac2cdde14bbfc5215c37c2e97c86f43 --manifest-sha256 9db63b4f380f9a8fb7541addfde6608bbc48b3267ad903f838afedb98e74ebfc --root-inventory-sha256 6978407b51e835a3893ac14cbb7ca2c46da48d0a778f2611f6de829af07bdf92",
+      "final_answer_policy": "Report the package and both APIs literally. Search discovered the candidate; resolve verified catalog_sha256, manifest_sha256, root_inventory_sha256, wit_sha256 and artifact_sha256; behavior separately verified companion_sha256 and import_module and passed. These are verification observations, not caller approval. Report installed_root_verified from the actual oracle; false means packaged Root only, not an installed package. Read release.json and channels/prod.json before reporting lifecycle states; product projection alone is insufficient. Do not reproduce command arguments or digest values, partial digests or any ellipsis character.",
+      "resolve": "node scripts/wasmc-lib.mjs resolve wasmc-std 1.4.1 --catalog-sha256 81db5d610d53c7627fd91a4bbd47a22610bd1982718b845dc1557b81657f0e74 --manifest-sha256 9db63b4f380f9a8fb7541addfde6608bbc48b3267ad903f838afedb98e74ebfc --root-inventory-sha256 6978407b51e835a3893ac14cbb7ca2c46da48d0a778f2611f6de829af07bdf92",
       "behavior": "node examples/base64/run.mjs",
       "install_reference": "catalog/INSTALL.md",
       "required_additional_reads": [

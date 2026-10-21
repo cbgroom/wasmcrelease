@@ -1,0 +1,190 @@
+{
+  "scope": "Pre-candidate containingproduct coherence and unchangedRoot consumers; not newQ0 or formalrelease",
+  "catalog_sha256": "81db5d610d53c7627fd91a4bbd47a22610bd1982718b845dc1557b81657f0e74",
+  "only_catalog_version_changed": true,
+  "Root_count": 42,
+  "api_routes": 236,
+  "index_entries": 278,
+  "new_Lib_builds": 0,
+  "checks": [
+    {
+      "name": "complete-Root-closure",
+      "command": [
+        "node",
+        "scripts/validate-libs.mjs"
+      ],
+      "exit": 0,
+      "stdout": "{\"accepted\":true,\"schema\":\"wasmc.current-release-closure/v3\",\"catalog_sha256\":\"81db5d610d53c7627fd91a4bbd47a22610bd1982718b845dc1557b81657f0e74\",\"registry_sha256\":\"3b2292a4805783cc826402046d056e517a55700ab1797d835e09c8cbb0f9ac66\",\"index_sha256\":\"73a1ebcce721a73dd8964030b7bb7bc61f2ed1d1aeb7d2aa46c22b8da8d8f333\",\"cohort_sha256\":\"af1b7843be3a0ef40d255e0f1a0c5959f5d33c1797390c1d1ce9495e4d47e29a\",\"refresh_receipt_sha256\":\"3a84eea9d791f2600a07487d07859f0e7f75ea0b076b0ea0b837d869307ba943\",\"producer_sha256\":\"78ae99b691666a9961862440449a93cf92be9da6a1e3a37f78e39574c3c79ba7\",\"release_packages\":42,\"api_routes\":236,\"package_routes\":42,\"entries\":278,\"native_source_packages\":14,\"exact\":true,\"candidate_extras\":0,\"license_snapshots_exact\":true,\"sdk_cargo_license_bound\":true,\"original_dependency_notices_exact\":true,\"actual_Core_Search_snapshot_lookup_pagination\":true,\"device_qualified\":false,\"public_release_admission\":false,\"scope\":\"current complete Roots, public WIT routes, source/notice pins and actual compiled Core Search; source-only Native remains unexecuted\"}\n",
+      "stderr": ""
+    },
+    {
+      "name": "catalog-resolution",
+      "command": [
+        "node",
+        "scripts/test-lib-catalog.mjs"
+      ],
+      "exit": 0,
+      "stdout": "{\"accepted\":true,\"current_packages\":42,\"native_source_packages\":14,\"negative_tests\":10,\"selection\":\"unique exact complete-Root lock\",\"network_access\":false}\n",
+      "stderr": ""
+    },
+    {
+      "name": "install-controls",
+      "command": [
+        "node",
+        "scripts/test-lib-install.mjs"
+      ],
+      "exit": 0,
+      "stdout": "{\"accepted\":true,\"files_verified\":19,\"negative_tests\":10,\"concurrent_single_winner\":true,\"competing_directory_preserved\":true,\"failed_stage_cleanup\":true,\"network_access\":false,\"companion_installed\":false}\n",
+      "stderr": ""
+    },
+    {
+      "name": "route-closure",
+      "command": [
+        "node",
+        "scripts/lib-route-closure.mjs",
+        "--check"
+      ],
+      "exit": 0,
+      "stdout": "{\"accepted\":true,\"action\":\"check\",\"schema\":\"wasmc.lib-route-closure/v3\",\"release_packages\":42,\"package_routes\":42,\"api_routes\":236,\"entries\":278,\"candidate_extras\":0,\"public_release_admission\":false}\n",
+      "stderr": ""
+    },
+    {
+      "name": "route-controls",
+      "command": [
+        "node",
+        "scripts/test-lib-route-closure.mjs"
+      ],
+      "exit": 0,
+      "stdout": "{\"accepted\":true,\"schema\":\"wasmc.lib-route-closure/v3\",\"release_packages\":42,\"package_routes\":42,\"api_routes\":236,\"entries\":278,\"negative_tests\":6,\"public_release_admission\":false}\n",
+      "stderr": ""
+    },
+    {
+      "name": "Core-Search",
+      "command": [
+        "node",
+        "examples/lib-search/run.mjs"
+      ],
+      "exit": 0,
+      "stdout": "{\"accepted\":true,\"scope\":\"current compiled Core Search and exact complete Root/index identity\",\"version\":\"0.5.0\",\"snapshot\":{\"tag\":\"ok\",\"value\":{\"entry_count\":278,\"package_count\":42,\"api_count\":236,\"bound_package_count\":42,\"registry_sha256\":\"3b2292a4805783cc826402046d056e517a55700ab1797d835e09c8cbb0f9ac66\",\"index_sha256\":\"73a1ebcce721a73dd8964030b7bb7bc61f2ed1d1aeb7d2aa46c22b8da8d8f333\"}},\"closure\":{\"schema\":\"wasmc.current-release-closure/v3\",\"catalog_sha256\":\"81db5d610d53c7627fd91a4bbd47a22610bd1982718b845dc1557b81657f0e74\",\"registry_sha256\":\"3b2292a4805783cc826402046d056e517a55700ab1797d835e09c8cbb0f9ac66\",\"index_sha256\":\"73a1ebcce721a73dd8964030b7bb7bc61f2ed1d1aeb7d2aa46c22b8da8d8f333\",\"cohort_sha256\":\"af1b7843be3a0ef40d255e0f1a0c5959f5d33c1797390c1d1ce9495e4d47e29a\",\"refresh_receipt_sha256\":\"3a84eea9d791f2600a07487d07859f0e7f75ea0b076b0ea0b837d869307ba943\",\"producer_sha256\":\"78ae99b691666a9961862440449a93cf92be9da6a1e3a37f78e39574c3c79ba7\",\"release_packages\":42,\"api_routes\":236,\"package_routes\":42,\"entries\":278,\"native_source_packages\":14,\"exact\":true,\"candidate_extras\":0,\"license_snapshots_exact\":true,\"sdk_cargo_license_bound\":true,\"original_dependency_notices_exact\":true,\"actual_Core_Search_snapshot_lookup_pagination\":true,\"device_qualified\":false,\"public_release_admission\":false},\"hits\":[{\"identity\":\"wasmc-std@1.4.1/base64#try-decode-standard\",\"package_id\":\"wasmc-std\",\"version\":\"1.4.1\",\"profile\":\"resource\",\"target\":\"wasm32-unknown-unknown\",\"kind\":\"api\",\"wit_route\":\"wasmc:std@1.4.1/base64#try-decode-standard\",\"source_path\":\"libspec/wasmc-std/lib.wit\",\"wit_sha256\":\"5abbed39c185835cfbbc5c2b961fb904b3ad66f42b22aef1ac7a40835ee246e9\",\"description\":\"Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.\",\"delivery\":{\"manifest_sha256\":\"9db63b4f380f9a8fb7541addfde6608bbc48b3267ad903f838afedb98e74ebfc\",\"receipt_sha256\":\"3a84eea9d791f2600a07487d07859f0e7f75ea0b076b0ea0b837d869307ba943\",\"artifact_kind\":\"wasm-core-component\",\"artifact_path\":\"artifact.wasm\",\"artifact_sha256\":\"b79a499c8300361125e7fcdae02170184b82d4bbeff4d8f24ed95f3fd4db8d3b\",\"component_sha256\":\"bda5f25c13e553a2ed3e6c54854dfd60b60a1fa5939a2b3086b776f3e8889e7b\"}},{\"identity\":\"wasmc-std@1.4.1/base64#try-encode-standard\",\"package_id\":\"wasmc-std\",\"version\":\"1.4.1\",\"profile\":\"resource\",\"target\":\"wasm32-unknown-unknown\",\"kind\":\"api\",\"wit_route\":\"wasmc:std@1.4.1/base64#try-encode-standard\",\"source_path\":\"libspec/wasmc-std/lib.wit\",\"wit_sha256\":\"5abbed39c185835cfbbc5c2b961fb904b3ad66f42b22aef1ac7a40835ee246e9\",\"description\":\"Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.\",\"delivery\":{\"manifest_sha256\":\"9db63b4f380f9a8fb7541addfde6608bbc48b3267ad903f838afedb98e74ebfc\",\"receipt_sha256\":\"3a84eea9d791f2600a07487d07859f0e7f75ea0b076b0ea0b837d869307ba943\",\"artifact_kind\":\"wasm-core-component\",\"artifact_path\":\"artifact.wasm\",\"artifact_sha256\":\"b79a499c8300361125e7fcdae02170184b82d4bbeff4d8f24ed95f3fd4db8d3b\",\"component_sha256\":\"bda5f25c13e553a2ed3e6c54854dfd60b60a1fa5939a2b3086b776f3e8889e7b\"}}],\"rounds\":256,\"negative_cases\":4,\"public_release_admission\":false}\n",
+      "stderr": ""
+    },
+    {
+      "name": "library-first",
+      "command": [
+        "node",
+        "scripts/test-library-first.mjs"
+      ],
+      "exit": 0,
+      "stdout": "{\"accepted\":true,\"teaching_commands\":2,\"checked_hits\":5,\"negative_tests\":6,\"network_access\":false}\n",
+      "stderr": ""
+    },
+    {
+      "name": "quickstart",
+      "command": [
+        "node",
+        "scripts/test-agent-quickstart.mjs"
+      ],
+      "exit": 0,
+      "stdout": "{\"accepted\":true,\"schema\":\"wasmc.agent-quickstart/v1\",\"routes\":10,\"pair\":{\"accepted\":true,\"source\":\"examples/agent-quickstart/pair.wasmc\",\"core_bytes\":49,\"core_sha256\":\"55f3c7e3d09b564b89b8268299a69569a33b856b46405cb4c4dd51634afec84e\",\"imports\":[],\"exports\":[{\"name\":\"run\",\"kind\":\"function\"}],\"call\":\"run(5, true)\",\"result\":[1,1]},\"base64\":{\"accepted\":true,\"installed_root_verified\":false,\"rounds\":256,\"explicit_drops\":1024,\"invalid_input_rejected\":true,\"persistent_provider_memory_bytes\":3670016,\"package\":\"wasmc:std@1.4.1\",\"apis\":[\"wasmc:std@1.4.1/base64#try-encode-standard\",\"wasmc:std@1.4.1/base64#try-decode-standard\"],\"artifact_sha256\":\"b79a499c8300361125e7fcdae02170184b82d4bbeff4d8f24ed95f3fd4db8d3b\",\"import_module\":\"wasmc:lib/wasmc.lib_managed_object_heap@4.9.0\",\"input_utf8\":\"abc\",\"encoded_utf8\":\"YWJj\",\"decoded_utf8\":\"abc\"},\"route_readiness\":{\"formal_release_ready\":false,\"candidate_extras\":0,\"lifecycle_authority\":\"release.json\"}}\n",
+      "stderr": "",
+      "initial_exit": 1,
+      "original_failure_preserved": true
+    },
+    {
+      "name": "original-notices",
+      "command": [
+        "node",
+        "scripts/test-current-license-policy-v3.mjs"
+      ],
+      "exit": 0,
+      "stdout": "{\"accepted\":true,\"current_roots\":42,\"declared_notice_files\":270,\"negative_controls\":8,\"legal_compatibility\":false,\"linked_dependency_completeness\":false}\n",
+      "stderr": ""
+    },
+    {
+      "name": "license-policy",
+      "command": [
+        "node",
+        "scripts/validate-license-policy.mjs"
+      ],
+      "exit": 0,
+      "stdout": "{\"accepted\":true,\"schema\":\"wasmc.license-policy/v1\",\"policy\":\"research-only-non-commercial\",\"open_source\":false,\"commercial_use\":false,\"production_use\":false,\"noncommercial_cargo_manifests_bound\":6,\"frozen_cargo_manifests_preserved\":2,\"immutable_prior_tags_preserved\":true,\"exact_declared_thirdparty_notice_files\":270}\n",
+      "stderr": ""
+    },
+    {
+      "name": "complete-product-controls",
+      "command": [
+        "node",
+        "scripts/test-current-product-v3.mjs",
+        "--product",
+        ".",
+        "--catalog-sha256",
+        "81db5d610d53c7627fd91a4bbd47a22610bd1982718b845dc1557b81657f0e74",
+        "--out",
+        "target/v023-catalog-coherence/root-controls"
+      ],
+      "exit": 0,
+      "stdout": "{\"schema\":\"wasmc.current-product-v3-controls/v1\",\"accepted\":true,\"tests\":43,\"catalog_sha256\":\"81db5d610d53c7627fd91a4bbd47a22610bd1982718b845dc1557b81657f0e74\",\"test_source_sha256\":\"472500df15b11fe7039dc6b9e07fa240e0955e43167fb7229c994ef905f36e50\",\"results\":[{\"name\":\"canonical full-path inventory order across directory prefixes\",\"passed\":true},{\"name\":\"real Core snapshot all278 lookups and full pagination\",\"passed\":true},{\"name\":\"independent catalog mismatch\",\"passed\":true,\"rejected\":true},{\"name\":\"actual modified artifact.wasm\",\"passed\":true,\"rejected\":true},{\"name\":\"actual modified component.wasm\",\"passed\":true,\"rejected\":true},{\"name\":\"actual modified lib.wit\",\"passed\":true,\"rejected\":true},{\"name\":\"actual modified LICENSE\",\"passed\":true,\"rejected\":true},{\"name\":\"actual modified Cargo.toml\",\"passed\":true,\"rejected\":true},{\"name\":\"missing current implementation\",\"passed\":true,\"rejected\":true},{\"name\":\"duplicate implementation\",\"passed\":true,\"rejected\":true},{\"name\":\"native-source cannot claim Wasm\",\"passed\":true,\"rejected\":true},{\"name\":\"unsafe package path\",\"passed\":true,\"rejected\":true},{\"name\":\"unsealed extra Root inventory\",\"passed\":true,\"rejected\":true},{\"name\":\"self-rehashed artifact fails Q0 root authority\",\"passed\":true,\"rejected\":true},{\"name\":\"self-rehashed API omission fails WIT closure\",\"passed\":true,\"rejected\":true},{\"name\":\"self-rehashed authored source fails Q0 input\",\"passed\":true,\"rejected\":true},{\"name\":\"actual undeclared current file\",\"passed\":true,\"rejected\":true},{\"name\":\"controlled install wasm-core-component\",\"passed\":true,\"transport_fixture\":true},{\"name\":\"install wasm-core-component rejects http302\",\"passed\":true},{\"name\":\"install wasm-core-component rejects truncated\",\"passed\":true},{\"name\":\"install wasm-core-component rejects oversized\",\"passed\":true},{\"name\":\"install wasm-core-component rejects digest\",\"passed\":true},{\"name\":\"self-rehashed lock cannot grant authority wasm-core-component\",\"passed\":true},{\"name\":\"controlled install native-source\",\"passed\":true,\"transport_fixture\":true},{\"name\":\"install native-source rejects http302\",\"passed\":true},{\"name\":\"install native-source rejects truncated\",\"passed\":true},{\"name\":\"install native-source rejects oversized\",\"passed\":true},{\"name\":\"install native-source rejects digest\",\"passed\":true},{\"name\":\"self-rehashed lock cannot grant authority native-source\",\"passed\":true},{\"name\":\"controlled install native-module\",\"passed\":true,\"transport_fixture\":true},{\"name\":\"install native-module rejects http302\",\"passed\":true},{\"name\":\"install native-module rejects truncated\",\"passed\":true},{\"name\":\"install native-module rejects oversized\",\"passed\":true},{\"name\":\"install native-module rejects digest\",\"passed\":true},{\"name\":\"self-rehashed lock cannot grant authority native-module\",\"passed\":true},{\"name\":\"controlled install native-binary\",\"passed\":true,\"transport_fixture\":true},{\"name\":\"install native-binary rejects http302\",\"passed\":true},{\"name\":\"install native-binary rejects truncated\",\"passed\":true},{\"name\":\"install native-binary rejects oversized\",\"passed\":true},{\"name\":\"install native-binary rejects digest\",\"passed\":true},{\"name\":\"self-rehashed lock cannot grant authority native-binary\",\"passed\":true},{\"name\":\"actual byte-identical linked input\",\"passed\":true,\"rejected\":true},{\"name\":\"actual filesystem extra Root file\",\"passed\":true,\"rejected\":true}],\"scope\":\"Actual42 data/WIT/Root/Core Search and four delivery kinds with controlled transport/faults; immutable public network install and whole release remain independent\"}\n",
+      "stderr": ""
+    },
+    {
+      "name": "release-channel",
+      "command": [
+        "node",
+        "scripts/test-release-channel.mjs"
+      ],
+      "exit": 0,
+      "stdout": "{\"accepted\":true,\"candidate_schema\":\"wasmc.release-product-candidate/v2\",\"positive_transitions\":3,\"current_lifecycle_partition_controls\":4,\"current_CI_input_files\":94,\"current_CI_input_controls\":13,\"negative_tests\":32,\"publishes\":false}\n",
+      "stderr": ""
+    },
+    {
+      "name": "version-qualification",
+      "command": [
+        "node",
+        "scripts/test-current-release-version.mjs"
+      ],
+      "exit": 0,
+      "stdout": "{\"accepted\":true,\"actual_current_receipt\":true,\"legacy_schema_fixture\":true,\"rejections\":29,\"whole_product_admission\":false}\n",
+      "stderr": ""
+    },
+    {
+      "name": "surfaces",
+      "command": [
+        "node",
+        "scripts/validate-release-surfaces.mjs"
+      ],
+      "exit": 0,
+      "stdout": "{\"accepted\":true,\"schema\":\"wasmc.release-surfaces/v1\",\"agent_capability_projection\":\"wasmc.release-agent-capabilities/v1\",\"producer_capability_delta\":\"wasmc.producer-release-delta/v1\",\"lib_ecosystem_control_plane\":\"wasmc.lib-ecosystem-control-plane/v3\",\"consumer_surfaces\":6,\"extension_surfaces\":2,\"desktop_platforms\":6,\"required_desktop_platforms\":5,\"optional_desktop_platforms\":[\"macos-x86_64\"],\"validated_roots\":17,\"workflow_references\":24,\"performance_comparison\":\"same-platform-only\",\"performance_hard_gate\":false}\n",
+      "stderr": "",
+      "initial_exit": 1,
+      "original_failure_preserved": true
+    },
+    {
+      "name": "ecosystem",
+      "command": [
+        "node",
+        "scripts/lib-ecosystem-control-plane.mjs",
+        "--check"
+      ],
+      "exit": 0,
+      "stdout": "{\"accepted\":true,\"action\":\"check\",\"schema\":\"wasmc.lib-ecosystem-control-plane/v3\",\"packages\":42,\"api_routes\":236,\"entries\":278,\"published\":false,\"native_source_packages\":14}\n",
+      "stderr": ""
+    },
+    {
+      "name": "actual-HTTPS-Std-install",
+      "command": [
+        "node",
+        "scripts/validate-lib-install.mjs",
+        "github"
+      ],
+      "exit": 0,
+      "stdout": "{\"accepted\":true,\"host\":\"node\",\"mirror\":\"github\",\"lock_sha256\":\"af7781ad14960709202216539eb7009386098c6050cdeb88b309651a9a4b4c60\",\"receipt\":{\"schema\":\"wasmc.public-lib-install/v2\",\"lock_sha256\":\"af7781ad14960709202216539eb7009386098c6050cdeb88b309651a9a4b4c60\",\"catalog_sha256\":\"81db5d610d53c7627fd91a4bbd47a22610bd1982718b845dc1557b81657f0e74\",\"artifact_commit\":\"57f03cf6c0f2a98b37ea9c2294046ccd6644c1ba\",\"id\":\"wasmc-std\",\"version\":\"1.4.1\",\"profile\":\"resource\",\"delivery_kind\":\"wasm-core-component\",\"files_verified\":19,\"mirror\":\"github\",\"publication\":\"exclusive-directory-symlink\",\"authority_granted\":false,\"device_qualified\":false},\"execution\":{\"accepted\":true,\"installed_root_verified\":true,\"rounds\":256,\"explicit_drops\":1024,\"invalid_input_rejected\":true,\"persistent_provider_memory_bytes\":3670016,\"package\":\"wasmc:std@1.4.1\",\"apis\":[\"wasmc:std@1.4.1/base64#try-encode-standard\",\"wasmc:std@1.4.1/base64#try-decode-standard\"],\"artifact_sha256\":\"b79a499c8300361125e7fcdae02170184b82d4bbeff4d8f24ed95f3fd4db8d3b\",\"import_module\":\"wasmc:lib/wasmc.lib_managed_object_heap@4.9.0\",\"input_utf8\":\"abc\",\"encoded_utf8\":\"YWJj\",\"decoded_utf8\":\"abc\"},\"source\":\"fresh exact-public-commit HTTPS downloads\",\"provider_companion\":\"separately pinned current tooling\",\"artifact_changes\":false}\n",
+      "stderr": ""
+    }
+  ],
+  "formal_release_ready": false,
+  "blocking_conditions": [
+    "v023-product-candidate-not-frozen"
+  ],
+  "fixed_v2_protocol_unchanged": true,
+  "old_global_release_identities_unchanged": true
+}

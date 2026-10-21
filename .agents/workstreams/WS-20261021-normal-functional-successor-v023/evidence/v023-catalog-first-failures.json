@@ -1,0 +1,25 @@
+{
+  "stage": "Actual first focusedrun aftercatalogprojection update; no wholecandidate/modelqualification",
+  "failures": [
+    {
+      "name": "quickstart",
+      "command": [
+        "node",
+        "scripts/test-agent-quickstart.mjs"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "node:internal/modules/run_main:107\n    triggerUncaughtException(\n    ^\n\nAssertionError [ERR_ASSERTION]: The input did not match the regular expression /read the channel authorities/. Input:\n\n'The v0.0.23 compiler component and current42 route closure can be verified. Stop at v023-product-candidate-not-frozen until an independently pinned whole-product candidate is created; then verify that candidate and read channel authorities. Promotion must preserve product bytes.'\n\n    at file:///Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261021-normal-functional-successor-v023/scripts/test-agent-quickstart.mjs:103:8\n    at ModuleJob.run (node:internal/modules/esm/module_job:569:25)\n    at async node:internal/modules/esm/loader:650:26\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {\n  generatedMessage: true,\n  code: 'ERR_ASSERTION',\n  actual: 'The v0.0.23 compiler component and current42 route closure can be verified. Stop at v023-product-candidate-not-frozen until an independently pinned whole-product candidate is created; then verify that candidate and read channel authorities. Promotion must preserve product bytes.',\n  expected: /read the channel authorities/,\n  operator: 'match',\n  diff: 'simple'\n}\n\nNode.js v26.5.1\n"
+    },
+    {
+      "name": "surfaces",
+      "command": [
+        "node",
+        "scripts/validate-release-surfaces.mjs"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "node:internal/modules/run_main:107\n    triggerUncaughtException(\n    ^\n\nAssertionError [ERR_ASSERTION]: The input did not match the regular expression /behavior separately verified companion_sha256/. Input:\n\n'Report the package and both APIs literally. Search discovered the candidate; resolve verified catalog_sha256, manifest_sha256, root_inventory_sha256, wit_sha256 and artifact_sha256; behavior verified companion_sha256 and import_module and passed. These are verification observations, not caller approval. Report installed_root_verified from the actual oracle; false means packaged Root only, not an installed package. Read release.json and channels/prod.json before reporting lifecycle states; product projection alone is insufficient. Do not reproduce command arguments or digest values, partial digests or any ellipsis character.'\n\n    at file:///Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261021-normal-functional-successor-v023/scripts/validate-release-surfaces.mjs:37:8\n    at ModuleJob.run (node:internal/modules/esm/module_job:569:25)\n    at async node:internal/modules/esm/loader:650:26\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {\n  generatedMessage: true,\n  code: 'ERR_ASSERTION',\n  actual: 'Report the package and both APIs literally. Search discovered the candidate; resolve verified catalog_sha256, manifest_sha256, root_inventory_sha256, wit_sha256 and artifact_sha256; behavior verified companion_sha256 and import_module and passed. These are verification observations, not caller approval. Report installed_root_verified from the actual oracle; false means packaged Root only, not an installed package. Read release.json and channels/prod.json before reporting lifecycle states; product projection alone is insufficient. Do not reproduce command arguments or digest values, partial digests or any ellipsis character.',\n  expected: /behavior separately verified companion_sha256/,\n  operator: 'match',\n  diff: 'simple'\n}\n\nNode.js v26.5.1\n"
+    }
+  ]
+}
