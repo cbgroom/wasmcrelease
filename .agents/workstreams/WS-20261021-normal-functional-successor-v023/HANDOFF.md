@@ -139,3 +139,7 @@ Tagauto-firedrequiredLibSearch/SDKAgent/RustHost; dispatchedonlysixmissingrequir
 ## Dev1 normal functional CI qualified
 
 Eight exact37ab independent workflows succeeded. Source-free39646097101 attempt2 has all20 normal cells success. Original Deno/jsDelivr install.http_rejected preserved; only original normal job119381967692 retried, current119393676963 success, no product/check change. Excluded security job original start unchanged; broader workflow and dependent aggregate remain actualfailure and are not reported green. Human normal-task scope governs subsequent work; no security analysis, rerun or configuration change. Receipt evidence/dev1-normal-functional-CI-qualification.json. Next prepare actual980 six Native archives, sameproduct main, final localprod/GLM-first full suite/requiredpair/review/publication/downloads.
+
+## Same-product main and final rehearsal scope admitted
+
+Exact main1/main/prod versioned and mutable channel, release/manifest/provenance/checksum/index/orientation claims precede edits. Historical v022 claim belongs to same chat; its failed local rehearsal and worktree remain unchanged. No foreign writer or source changes. Main normal-functional qualification explicitly retains overall Source-free failure and excluded scope; no check changes. Final prod view will be assembled only in a new isolated linked worktree, tested before any suffix-free tag/push; GLM full suite first, required final samecommit Pi pair and independent review remain open.
