@@ -10,6 +10,14 @@
   "integration_state": "not-ready",
   "authority": "Direct human completion criterion: 完成的标准是wasmcrelease完成正式发布; all normal task permissions. No network-security expansion.",
   "claims": [
+    { "kind": "file", "scope": "dist", "mode": "exclusive" },
+    { "kind": "file", "scope": "package", "mode": "exclusive" },
+    { "kind": "file", "scope": "standard", "mode": "exclusive" },
+    { "kind": "file", "scope": "current-libs", "mode": "exclusive" },
+    { "kind": "file", "scope": "libspec", "mode": "exclusive" },
+    { "kind": "file", "scope": "examples/current", "mode": "exclusive" },
+    { "kind": "file", "scope": "scripts/current-compiler-integrity.mjs", "mode": "exclusive" },
+    { "kind": "file", "scope": "scripts/test-current-compiler.mjs", "mode": "exclusive" },
     {
       "kind": "resource",
       "scope": "release-artifact-export:/root/code/.cache/wasmcrelease-v022-inputs-20261021",
