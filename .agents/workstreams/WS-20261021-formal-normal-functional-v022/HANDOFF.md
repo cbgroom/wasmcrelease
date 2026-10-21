@@ -1,5 +1,15 @@
 # Formal normal-functional release
 
+## Current successor: versioned compatibility contract and dev.2 candidate
+
+Immutable dev.1 e831 completed7of9 required workflows successfully. Std39564063818 and SourceFree39564037459 correctly failed because the active compatibility helper still read the historical v021 compiler42c identity. Their original logs, candidate and compiler manifest/qualification are preserved; dev.1 is never rewritten. Original compatibility/core-artifacts-v021.json is byte-identical.
+
+The successor adds compatibility/core-artifacts-v022.json and directs the current preflight to it. Actual official Node18.19.1 validates compiler620a/imports0, passes30frozen outputs/23expression cases and6feature controls; Std remains explicitly unsupported for missing function-references/tail-call, with its exact pre-instantiation rejection retained. Node/Bun/Deno full4artifact checks and all9source-free compiler runs pass. Manifest0d4c853d429d69ac7d530d9420c9ce50541f3ca5e38bc19a13e2d9bde15686cf and qualification43a8b8bffefa8ca71d74a806e095678aa816dce9fe5c7c3b479c654787cad579 bind this exact successor. No engine flags, fallback variant, compiler rebuild or Lib rebuild.
+
+Actual source-free publicbfd388041202ed55dc3547c7423168cf411cfdbc generated candidate59b0d5309ff8d82eda61e7a29421ba4bea09b4d90e72bdda6ec43c8b2942d202 / productdeb5321647d7dd1ccc27bd662d0b5b02a0c3300a2351a37045097484cbcf411a. It retains1059files:1053 rows unchanged, replaces the selected compatibility descriptor, and changes only5related manifest/qualification/gate rows. Every compiler/Lib/Native input byte remains unchanged. Exact data-plane transfer and independent Mac reopen passed. The versioned dev.2 candidate and mutable current candidate selection contain identical actual bytes. Next: stage dev.2 and qualify its actual nine-workflow cohort, then unchanged-product main/finalPi/prod/formal publication/downloads.
+
+Separate C43 natural handoff is evidence/JSON002-ordinary-caller-gap-handoff.json: no admitted ordinary WAsmC Canonical JSON002 caller/plan; RustSDK qualification is separate. Canonicalf257 records owner Codex primary maintainer / WS-20261002-resource-sdk-complex-closure-v1 with exclusive resolver/consumer-SDK/binder scopes, in-progress/not-ready. Minimum legal next action is its real narrow release/reassignment or implementation in that owner branch. This operation-specific gap does not stop the normal-functional release, impersonate the owner or authorize replay of business/deployment effects.
+
 ## v0.0.22 bounded product and unchanged current cohort
 
 The selected release ships the integrated normal basic-function and compatibility repairs in compiler620a, retaining all42 already admitted Lib Roots, Std1.4.1, Search0.5.0 and Provider4.9. Map/Core4.11 and JSON0.0.2 keep their own producer/runtime/million-entry evidence and remain separate publication successors; their incomplete admission no longer expands this bounded release.
