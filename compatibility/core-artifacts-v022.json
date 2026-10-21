@@ -1,0 +1,49 @@
+{
+  "schema": "wasmc.core-compatibility/v1",
+  "candidate_version": "0.0.22",
+  "scope": "Exact v0.0.22 compiler and unchanged Provider49/Std141 artifacts; full validation and independent whole-product identity required. Original v021 descriptor remains immutable historical evidence.",
+  "version_policy": "Probe actual engine capabilities and validate exact complete bytes.",
+  "artifacts": [
+    {
+      "id": "compiler",
+      "path": "current/wasmc_compiler.wasm",
+      "bytes": 1527770,
+      "sha256": "620a6b5f7b9a4565f14857975e37a03196f8f7e4279a2f4da388882638f2a658",
+      "validation_profile": "wasm2",
+      "additional_required_gates": []
+    },
+    {
+      "id": "automatic-provider",
+      "path": "current/lib_core.wasm",
+      "bytes": 31468,
+      "sha256": "c3ac42b93f4c27e24065abe804b91f54761eff782e2971e947847b3d20ee7e00",
+      "validation_profile": "wasm2",
+      "additional_required_gates": []
+    },
+    {
+      "id": "standard-provider",
+      "path": "standard/corelib/4.9.0/corelib.wasm",
+      "bytes": 31468,
+      "sha256": "c3ac42b93f4c27e24065abe804b91f54761eff782e2971e947847b3d20ee7e00",
+      "validation_profile": "wasm2",
+      "additional_required_gates": []
+    },
+    {
+      "id": "standard",
+      "path": "standard/wasmc-std/1.4.1/artifact.wasm",
+      "bytes": 44221,
+      "sha256": "b79a499c8300361125e7fcdae02170184b82d4bbeff4d8f24ed95f3fd4db8d3b",
+      "validation_profile": "wasm2,function-references,tail-call",
+      "additional_required_gates": [
+        "function-references",
+        "tail-call"
+      ]
+    }
+  ],
+  "non_claims": [
+    "minimal feature set",
+    "device acceptance",
+    "whole release admission"
+  ]
+}
+
