@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {checkedCurrentCatalog,hash} from './current-lib-release-v3.mjs';
+import {checkedCurrentCatalog,hash,verifyCurrentRelease} from './current-lib-release-v3.mjs';
 const text=b=>new TextDecoder('utf-8',{fatal:true}).decode(b);
 export async function collectCurrentDeclaredThirdPartyNotices(catalogBytes,policy,read) {
   assert.equal(policy.schema,'wasmc.current-license-policy/v1');
@@ -16,6 +16,10 @@ export async function collectCurrentDeclaredThirdPartyNotices(catalogBytes,polic
     return bytes;
   };
   const cohort=JSON.parse(text(await exact(catalog.cohort)));
+  if(cohort.schema==='wasmc.public-current-composition-cohort/v1'||catalog.cohort.path==='admission/current-composition-cohort-v1.json'){
+    assert.equal(cohort.schema,'wasmc.public-current-composition-cohort/v1','composition cohort cannot impersonate full Q0');
+    return collectComposedNotices(catalogBytes,catalog,policy,read,cohort);
+  }
   const notices=cohort.release_notices;
   assert.ok(notices?.manifest&&Array.isArray(notices.files));
   const manifest=JSON.parse(text(await exact(notices.manifest)));
@@ -75,6 +79,74 @@ export async function collectCurrentDeclaredThirdPartyNotices(catalogBytes,polic
       const path=mirror.root+'/'+pin.path,bytes=await read(path);
       assert.equal(bytes.length,pin.bytes);assert.equal(hash(bytes),pin.sha256,'standard mirror snapshot');
       if(pin.path!=='LICENSE')result.set(path,{bytes:pin.bytes,sha256:pin.sha256,manifest_sha256:hash(rootBytes),catalog_sha256:policy.catalog_sha256});
+    }
+  }
+  return result;
+}
+
+// Snapshot the declared graph for the synchronous product verifier. Reading a
+// declaration grants no notice exemption: the entire original base, current
+// Root/source lineage, WIT and Core Search must verify before any row is used.
+async function collectComposedNotices(catalogBytes,catalog,policy,read,cohort){
+  const prefix='admission/current-composition-inputs-v1',data=new Map();
+  const safe=p=>typeof p==='string'&&p&&!p.startsWith('/')&&!p.includes('\\')&&p.split('/').every(s=>s&&s!=='.'&&s!=='..');
+  assert.equal(cohort.input_prefix,prefix);assert.ok(Array.isArray(cohort.input_files)&&cohort.input_files.length>0&&cohort.input_files.length<=10000);
+  const load=async path=>{assert.ok(safe(path));if(!data.has(path)){const b=await read(path);assert.ok(b instanceof Uint8Array);data.set(path,Buffer.from(b));}return data.get(path);};
+  const get=path=>{assert.ok(data.has(path),'missing composed notice proof input '+path);return data.get(path);};
+  for(const pin of cohort.input_files){assert.ok(safe(pin.path));await load(prefix+'/'+pin.path);}
+  for(const pin of [catalog.registry,catalog.index,catalog.cohort])await load(pin.path);
+  await load('LICENSE');
+  for(const pin of cohort.input_files)if(pin.path.startsWith('licenses/'))await load(pin.path);
+  for(const row of catalog.packages){
+    for(const pin of row.files)await load(pin.path);
+    for(const pin of Object.values(row.source))await load(pin.path);
+    const spec=JSON.parse(text(get(row.source.spec.path)));
+    if(spec.schema==='wasmc.lib-refresh-source/v2'){
+      const directory=row.source.spec.path.slice(0,-'/lib.json'.length);
+      for(const pin of cohort.input_files)if(pin.path.startsWith(directory+'/'))await load(pin.path);
+    }
+  }
+  const closure=verifyCurrentRelease(catalogBytes,policy.catalog_sha256,get,[...data.keys()]);
+  assert.equal(closure.schema,'wasmc.current-composition-release-closure/v1');
+  assert.equal(closure.fresh_full_q0,false);assert.equal(closure.original_receipt_bytes_verified,false);
+  const baseOptions=cohort.input_options.base,baseBytes=get(prefix+'/'+baseOptions.catalog_path);
+  const base=checkedCurrentCatalog(baseBytes,baseOptions.catalog_sha256);
+  const baseRead=async path=>path.startsWith('standard/')?read(path):get(prefix+'/'+path);
+  const basePolicy={...policy,version:base.version,catalog_sha256:baseOptions.catalog_sha256,package_authority_commit:base.package_authority_commit};
+  const baseRows=await collectCurrentDeclaredThirdPartyNotices(baseBytes,basePolicy,baseRead),result=new Map();
+  const currentFiles=new Set(catalog.packages.flatMap(row=>row.files.map(pin=>pin.path)));
+  for(const [path,pin]of baseRows){
+    const row={...pin,catalog_sha256:policy.catalog_sha256};
+    if(path.startsWith('standard/')||!path.startsWith('current-libs/')||currentFiles.has(path))result.set(path,row);
+    if(!path.startsWith('standard/'))result.set(prefix+'/'+path,row);
+  }
+  for(const admitted of cohort.source_lineage.admitted_original_sources){
+    const source=admitted.source,row=catalog.packages.find(p=>p.id===source.id);assert.ok(row);
+    const raw=get(row.root+'/lib.json'),manifest=JSON.parse(text(raw));
+    const original=prefix+'/'+source.root.locator,spec=JSON.parse(text(get(prefix+'/'+source.source_spec.path)));
+    assert.deepEqual(manifest.license,spec.license,'original producer license declaration');
+    const license=manifest.license;assert.equal(license.schema,'wasmc.lib-license/v1');
+    assert.equal(license.identifier,'WAsmC Research-Only Non-Commercial License 1.0');
+    assert.ok(Array.isArray(license.files)&&license.files.length>1&&license.files.length<=32);
+    assert.deepEqual(license.files[0],{path:'LICENSE',bytes:get('LICENSE').length,sha256:hash(get('LICENSE'))});
+    let previous='',total=0;
+    for(const pin of license.files){
+      assert.deepEqual(Object.keys(pin).sort(),['bytes','path','sha256']);
+      assert.ok(Number.isSafeInteger(pin.bytes)&&pin.bytes>0&&pin.bytes<=262144);assert.match(pin.sha256,/^[0-9a-f]{64}$/);
+      if(pin.path!=='LICENSE')assert.match(pin.path,/^licenses\/DEPENDENCY-NOTICES-[0-9]{3}\.txt$/);
+      assert.ok(pin.path>previous,'ordered unique original producer license files');previous=pin.path;total+=pin.bytes;
+      for(const root of [row.root,original]){
+        const path=root+'/'+pin.path,bytes=get(path);assert.equal(bytes.length,pin.bytes);assert.equal(hash(bytes),pin.sha256);
+        text(bytes);assert.ok(!bytes.includes(0),'notice text contains NUL');
+        if(pin.path!=='LICENSE')result.set(path,{bytes:pin.bytes,sha256:pin.sha256,manifest_sha256:hash(raw),catalog_sha256:policy.catalog_sha256});
+      }
+    }
+    assert.ok(total<=2097152);
+    for(const key of ['rust_core','rust_component']){
+      const sdk=manifest.bindings?.[key];if(!sdk)continue;assert.ok(sdk.cargo_toml&&typeof sdk.cargo_toml.path==='string');
+      const bytes=get(row.root+'/'+sdk.cargo_toml.path);assert.equal(hash(bytes),sdk.cargo_toml.sha256);const cargo=text(bytes);
+      assert.equal(cargo.match(/^license-file\s*=/gm)?.length,1);assert.match(cargo,/^license-file\s*=\s*"\.\.\/\.\.\/LICENSE"\s*$/m);
+      assert.ok(!/^license\s*=/m.test(cargo));
     }
   }
   return result;
