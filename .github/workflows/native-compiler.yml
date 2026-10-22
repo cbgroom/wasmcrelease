@@ -39,22 +39,11 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           ref: ${{ env.SOURCE_COMMIT }}
-          # Native inputs only. The historical source may contain unrelated
-          # fixture paths that Windows cannot materialize.
-          sparse-checkout-cone-mode: false
-          sparse-checkout: |
-            /sdk/wasmc-native-compiler/
-            /current/
-            /scripts/
-            /examples/agent-start/
-            /licenses/
-            /LICENSE
-            /.gitattributes
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
           node-version: 26.5.1
       - name: Exact Native source checkout
-        run: node -e "const a=require('node:assert/strict');const c=require('node:child_process');const s=process.env.SOURCE_COMMIT;a.match(s,/^[a-f0-9]{40}$/);a.equal(c.execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),s);console.log(JSON.stringify({accepted:true,source_commit:s,workflow_revision:process.env.GITHUB_SHA,checkout_scope:'Native inputs; unrelated fixtures excluded'}))"
+        run: node -e "const a=require('node:assert/strict');const c=require('node:child_process');const s=process.env.SOURCE_COMMIT;a.match(s,/^[a-f0-9]{40}$/);a.equal(c.execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),s);console.log(JSON.stringify({accepted:true,source_commit:s,workflow_revision:process.env.GITHUB_SHA,checkout_scope:'complete source tree'}))"
       - run: rustup toolchain install 1.96.0 --profile minimal --component clippy,rustfmt
       - run: cargo +1.96.0 test --locked --manifest-path sdk/wasmc-native-compiler/Cargo.toml
       - run: cargo +1.96.0 clippy --locked --manifest-path sdk/wasmc-native-compiler/Cargo.toml --all-targets -- -D warnings
@@ -79,22 +68,11 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           ref: ${{ env.SOURCE_COMMIT }}
-          # Native inputs only. The historical source may contain unrelated
-          # fixture paths that Windows cannot materialize.
-          sparse-checkout-cone-mode: false
-          sparse-checkout: |
-            /sdk/wasmc-native-compiler/
-            /current/
-            /scripts/
-            /examples/agent-start/
-            /licenses/
-            /LICENSE
-            /.gitattributes
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
         with:
           node-version: 26.5.1
       - name: Exact Native source checkout
-        run: node -e "const a=require('node:assert/strict');const c=require('node:child_process');const s=process.env.SOURCE_COMMIT;a.match(s,/^[a-f0-9]{40}$/);a.equal(c.execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),s);console.log(JSON.stringify({accepted:true,source_commit:s,workflow_revision:process.env.GITHUB_SHA,checkout_scope:'Native inputs; unrelated fixtures excluded'}))"
+        run: node -e "const a=require('node:assert/strict');const c=require('node:child_process');const s=process.env.SOURCE_COMMIT;a.match(s,/^[a-f0-9]{40}$/);a.equal(c.execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),s);console.log(JSON.stringify({accepted:true,source_commit:s,workflow_revision:process.env.GITHUB_SHA,checkout_scope:'complete source tree'}))"
       - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: wasmc-${{ matrix.target }}-${{ env.SOURCE_COMMIT }}
