@@ -1,0 +1,85 @@
+{
+  "accepted": true,
+  "commands": 6,
+  "scope": "existing coherent final-prod normal maintainer/identity/candidate/orientation/entrypoint checks; no compiler/Core/Native build",
+  "rows": [
+    {
+      "argv": [
+        "bash",
+        "scripts/validate-maintainer.sh"
+      ],
+      "exit": 0,
+      "seconds": 19.01886483398266,
+      "stdout_bytes": 15735,
+      "stdout_sha256": "980ad2984dd16049caf62f83120f347da12d10f2173206e1f6579c3d73a5ff86",
+      "stderr_bytes": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "node",
+        "scripts/release-candidate.mjs",
+        "verify",
+        "channels/candidates/0.0.24.json",
+        "--candidate-sha256",
+        "5607113f2ca3c389fd50bc3ba9022905c50f12b632434c3d872a9d1276ecbccb"
+      ],
+      "exit": 0,
+      "seconds": 1.4476177080068737,
+      "stdout_bytes": 122,
+      "stdout_sha256": "2165485324a43f871cfff0c4889704e49fdd4538bb63607f198779f863001c36",
+      "stderr_bytes": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "node",
+        "scripts/current-release-identity.mjs"
+      ],
+      "exit": 0,
+      "seconds": 1.4585301670012996,
+      "stdout_bytes": 193,
+      "stdout_sha256": "b57d25a63fbb8d95b93968bd61ef77ce09f366d39a36e704d2f9e51e8048ca57",
+      "stderr_bytes": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "node",
+        "scripts/agent-release-orientation.mjs",
+        "--check"
+      ],
+      "exit": 0,
+      "seconds": 0.030774833052419126,
+      "stdout_bytes": 156,
+      "stdout_sha256": "8fe753f6438db0c01bf8d33d15b1acd81859a79123b7089f38253fb20d1688e9",
+      "stderr_bytes": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "node",
+        "examples/agent-start/run.mjs"
+      ],
+      "exit": 0,
+      "seconds": 0.10365208302391693,
+      "stdout_bytes": 292,
+      "stdout_sha256": "939ab5489a9dbc61b24a3dd9f18079dabaf3750f51210d032cbbf29977d51e04",
+      "stderr_bytes": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit": 0,
+      "seconds": 0.021397417003754526,
+      "stdout_bytes": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_bytes": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}

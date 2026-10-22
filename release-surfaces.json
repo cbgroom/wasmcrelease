@@ -47,7 +47,7 @@
   "consumer_surfaces": [
     {
       "id": "lib-package",
-      "status": "candidate",
+      "status": "published",
       "roots": [
         "current-libs"
       ],
@@ -59,7 +59,7 @@
     },
     {
       "id": "host-sdk",
-      "status": "candidate",
+      "status": "published",
       "roots": [
         "sdk/wasmc-host",
         "sdk/wasmc-core-runtime"
@@ -74,7 +74,7 @@
     },
     {
       "id": "integrated-runtime-cli",
-      "status": "candidate",
+      "status": "published",
       "roots": [
         "runtime/wasmc-runtime-v0",
         "sdk/wasmc-native-compiler"
@@ -202,24 +202,24 @@
       "core-runtime-sdk": {
         "root": "sdk/wasmc-core-runtime",
         "skill": "sdk/wasmc-core-runtime/SKILL.md",
-        "release_status": "candidate",
+        "release_status": "published",
         "immutable_example": "v0.0.24",
-        "immutable_example_scope": "Intended successor selection; the immutable v0.0.24 tag is unavailable until formal publication. Current status remains candidate."
+        "immutable_example_scope": "Final local prod view for v0.0.24. The actual immutable tag, exact final local commit/tree GLM5.3 single-model qualification, independent review and publisher readback remain publication authorities; this projection alone does not prove publication."
       },
       "host-sdk": {
         "root": "sdk/wasmc-host",
         "skill": "sdk/wasmc-host/SKILL.md",
-        "release_status": "candidate",
+        "release_status": "published",
         "immutable_example": "v0.0.24",
-        "immutable_example_scope": "Intended successor selection; the immutable v0.0.24 tag is unavailable until formal publication. Current status remains candidate."
+        "immutable_example_scope": "Final local prod view for v0.0.24. The actual immutable tag, exact final local commit/tree GLM5.3 single-model qualification, independent review and publisher readback remain publication authorities; this projection alone does not prove publication."
       },
       "native-cli": {
         "root": "sdk/wasmc-native-compiler",
         "skill": "sdk/wasmc-native-compiler/SKILL.md",
-        "release_status": "candidate",
+        "release_status": "published",
         "immutable_example": "v0.0.24",
         "binary_packaging": "Current v0.0.24 compiler carriers bind compiler c78816376228b6091599845c6a9a531eb76f949fe419655c012ec30c05f75832 and canonical source81966eaef368769a569bfac17db9e8c3416ba9ad. Actual six Native builds and six matching downloaded consumers passed; consult their current qualification receipts. CI/development artifacts alone do not establish immutable Release assets, and final v0.0.24 publication remains pending. Earlier v0.0.23 receipts remain historical. CI/development packages are not immutable release assets.",
-        "immutable_example_scope": "Intended successor selection; the immutable v0.0.24 tag is unavailable until formal publication. Current status remains candidate."
+        "immutable_example_scope": "Final local prod view for v0.0.24. The actual immutable tag, exact final local commit/tree GLM5.3 single-model qualification, independent review and publisher readback remain publication authorities; this projection alone does not prove publication."
       },
       "lightweight-embedding": {
         "root": "host/embedding",
@@ -268,7 +268,7 @@
   },
   "package_profiles": {
     "wasmc-system-telemetry@0.0.1": {
-      "status": "candidate",
+      "status": "published",
       "supported_surfaces": [
         "source-free-rust-component",
         "public-rust-host-sdk",
@@ -288,11 +288,11 @@
     "schema": "wasmc.release-agent-capabilities/v1",
     "product_release": "v0.0.24",
     "guidance_scope": {
-      "status": "included-in-v0.0.24-product-pending-lifecycle",
+      "status": "included-in-v0.0.24-prod-rehearsal-view",
       "included_in_product": true,
       "lifecycle_authority": "release.json and channels/prod.json",
-      "rule": "This frozen projection describes v0.0.24 product capability only. It does not prove the product is the current released, discoverable or installable lifecycle stage.",
-      "lifecycle_status": "pending-v0.0.24-channel-decision"
+      "rule": "This projection is the final local prod capability/lifecycle view. Exact channel/GLM single-model qualification and publisher readback remain separate authorities.",
+      "lifecycle_status": "prod-rehearsal-view"
     },
     "decision_rule": "A type or feature is usable only at the exact admitted position below. WIT vocabulary, local values, Core lanes, Component profiles, Host bindings and public results are separate claims.",
     "alternative_rule": "Alternatives must preserve semantics. Numeric width or signedness, async behavior, identity, ordering, ownership and failure semantics may change only with explicit application proof; otherwise stop.",
@@ -321,7 +321,7 @@
         ]
       },
       "u64_ordinary_source": {
-        "status": "qualified-product-capability",
+        "status": "released",
         "positions": [
           "local",
           "parameter",
@@ -463,8 +463,8 @@
       "compiler_sha256": "c78816376228b6091599845c6a9a531eb76f949fe419655c012ec30c05f75832",
       "ordinary_source_u64": "supported",
       "reason": "Current v0.0.24 staged compiler supports the same qualified full-width u64 contract; lifecycle remains channel-owned.",
-      "released": false,
-      "lifecycle_status": "pending-v0.0.24-channel-decision"
+      "released": true,
+      "lifecycle_status": "prod-rehearsal-view"
     },
     "adjacent_type_decisions": {
       "u32": "included in the v0.0.24 product compiler; no repair was required",
@@ -530,7 +530,7 @@
         "package-index.json.latest"
       ],
       "answer_boundary": "After the named compact-authority check passes, name agent-release-orientation.json and AGENTS.md literally, report the immutable tag and compiler path, and copy the complete 64-character compiler.sha256 value once. The word sha256 or a reference to that field does not report the compiler identity. Stop after these exact identities; do not scan the full manifest or history.",
-      "lifecycle_status": "pending-v0.0.24-channel-decision"
+      "lifecycle_status": "prod-rehearsal-view"
     },
     "release-lib-route-readiness": {
       "authority_file": "release-lib-route-readiness.json",
@@ -540,32 +540,30 @@
         "package_routes": 42,
         "api_routes": 247,
         "candidate_extras": 0,
-        "formal_release_ready": false,
-        "blocking_conditions": [
-          "exact-dev-normal-consumers-and-final-GLM-single-model-publication-pending"
-        ],
+        "formal_release_ready": true,
+        "blocking_conditions": [],
         "index_entries": 289
       },
       "active_search": {
         "identity": "wasmc:lib-search@0.5.0",
         "states": {
           "qualified": true,
-          "admitted": false,
+          "admitted": true,
           "included_in_product": true,
           "qualified_before_freeze": true,
           "admitted_before_freeze": false
         },
         "api_routes": 3,
-        "lifecycle_status": "dev-qualified-pending-prod"
+        "lifecycle_status": "prod-rehearsal-view"
       },
       "lifecycle_authority": {
         "current_release": "release.json",
         "stages": "channels/dev.json, channels/main.json, channels/prod.json",
         "rule": "Never infer released, discoverable or installable from this frozen product projection.",
-        "status": "dev-qualified-pending-prod"
+        "status": "prod-rehearsal-view"
       },
       "valid_resolution_count": 1,
-      "only_valid_closure": "Verify the exact current42 composition and2102-file candidate, then read the channel authorities and exact final-candidate qualification receipt. The existing15-case candidate suite passed. Preserve this product set through dev/main/prod. Exact dev consumers, final GLM single-model regression and independent review, immutable publication and public readback remain required. Original41 Root cohorts and JSON006 original producer custody remain distinct; no new42-Root build.",
+      "only_valid_closure": "Verify the exact42/247/289 candidate, read the channel authorities, then require the final local commit/tree GLM5.3 single-model receipt and independent review before publication. This projection proves complete product route closure only.",
       "forbidden_shortcuts": [
         "treat admission as release",
         "infer lifecycle state from product presence or an admission snapshot",
@@ -702,10 +700,10 @@
       "resolve_command": "node scripts/wasmc-lib.mjs resolve wasmc-std 1.4.1 --catalog-sha256 c583d5444d9bcba8f5932660d5b632fd64aa9a212c2002f1a91fa03b9d4e0aa9 --manifest-sha256 9db63b4f380f9a8fb7541addfde6608bbc48b3267ad903f838afedb98e74ebfc --root-inventory-sha256 6978407b51e835a3893ac14cbb7ca2c46da48d0a778f2611f6de829af07bdf92",
       "states": {
         "qualified": true,
-        "admitted": false,
-        "released": false,
-        "discoverable": false,
-        "installable": false
+        "admitted": true,
+        "released": true,
+        "discoverable": true,
+        "installable": true
       },
       "catalog_snapshot_boundary": "The current42 catalog binds a verified original-producer composition:41 inherited full-Q0 Roots plus JSON0.0.6 original source custody, fresh_full_q0=false. It grants no release or Host authority.",
       "behavior_command": "node examples/base64/run.mjs",
@@ -729,7 +727,7 @@
           "installed_root_verified": false
         },
         "lifecycle_authority": "release.json and channels/prod.json",
-        "released": false
+        "released": true
       }
     },
     "host-authority": {
@@ -799,16 +797,16 @@
       "related_released_product": {
         "identity": "wasmc-system-telemetry@0.0.1",
         "qualified": true,
-        "admitted": false,
-        "released": false,
-        "discoverable": false,
-        "installable": false,
+        "admitted": true,
+        "released": true,
+        "discoverable": true,
+        "installable": true,
         "supported_routes": [
           "source-free-rust-component",
           "public-rust-host-sdk",
           "linux-explicit-generic-resource-acquisition"
         ],
-        "lifecycle_status": "pending-v0.0.24-channel-decision"
+        "lifecycle_status": "prod-rehearsal-view"
       }
     }
   },
@@ -859,7 +857,7 @@
         "installed_root_verified": false
       },
       "lifecycle_authority": "release.json and channels/prod.json",
-      "released": false
+      "released": true
     },
     "qualification": {
       "kind": "verified-original-producer-composition",
@@ -876,16 +874,17 @@
       "rule": "Reuse the original full-Q0 evidence for 41 unchanged Roots and the verified original producer/source custody for JSON0.0.6; this is not a fresh 42-Root Q0 run."
     },
     "lifecycle": {
-      "status": "dev-qualified-pending-prod",
+      "status": "prod-rehearsal-view",
       "product_version": "0.0.24",
-      "released": false,
-      "discoverable": false,
-      "installable": false,
+      "released": true,
+      "discoverable": true,
+      "installable": true,
       "authority": "release.json and channels/dev.json, channels/main.json, channels/prod.json",
-      "observed_release_version": "0.0.23",
-      "observed_prod_version": "0.0.23",
-      "rule": "Dev selects the exact admitted candidate; release.json and prod still select0.0.23. No formal0.0.24 publication is inferred.",
-      "observed_dev_version": "0.0.24"
+      "observed_release_version": "0.0.24",
+      "observed_prod_version": "0.0.24",
+      "rule": "Final local prod lifecycle view. Publication requires exact GLM single-model receipt, independent review and immutable tag/publisher readback; this view alone grants no publication or Host authority.",
+      "observed_dev_version": "0.0.24",
+      "observed_main_version": "0.0.24"
     }
   }
 }
