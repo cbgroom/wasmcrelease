@@ -11,6 +11,7 @@ function patch(version) {
 
 export const usesCurrentProductV3 = version => patch(version) >= 21;
 export const requiresPrivateHelperQualification = version => patch(version) >= 23;
+export const requiresCanonicalHostQualification = version => patch(version) >= 24;
 export function currentCompatibilityPath(version) {
   assert.ok(usesCurrentProductV3(version), 'current v3 product version required');
   return `compatibility/core-artifacts-v0${patch(version)}.json`;
@@ -28,7 +29,8 @@ export function assertCompilerQualification(q, version, compilerSha256, manifest
   assert.equal(q.source_free, true); assert.equal(q.compiler_private_source_present, false);
   const helpers = requiresPrivateHelperQualification(version);
   const commands = ['scripts/test-current-compiler.mjs', 'examples/current/standard.mjs',
-    'scripts/test-current-lib-api-v021.mjs', ...(helpers ? ['scripts/test-current-private-helpers.mjs'] : [])];
+    'scripts/test-current-lib-api-v021.mjs', ...(helpers ? ['scripts/test-current-private-helpers.mjs'] : []),
+    ...(requiresCanonicalHostQualification(version) ? ['scripts/test-canonical-host-sdk.mjs'] : [])];
   assert.equal(q.runs.length, commands.length * 3);
   assert.deepEqual([...new Set(q.runs.map(r => r.engine))].sort(), ['bun', 'deno', 'node']);
   assert.equal(q.rejection_controls.exit_code, 0);
@@ -59,6 +61,14 @@ export function assertCompilerQualification(q, version, compilerSha256, manifest
       for (const [key, value] of Object.entries({source_cases:20, guest_calls:66, repeats_per_instance:3,
         basic_scalar_types:11, long_helper_terms:2098, invalid_sources_rejected:5, selected_guest_trap:true,
         healthy_after_rejections:true, imports:0, real_MCP_acceptance:false})) assert.equal(h[key], value, key);
+    }
+    if (requiresCanonicalHostQualification(version)) {
+      const c = result('scripts/test-canonical-host-sdk.mjs');
+      assert.equal(c.compiler_sha256, compilerSha256);
+      assert.equal(c.compiled_frames, 4); assert.equal(c.modules_per_frame, 8);
+      assert.equal(c.native_parity, 'c68796a617b5fd41447b8b9e0cec087407c755faac11404ae8c13d74a55f483c');
+      assert.equal(c.rejection_then_recovery, true); assert.equal(c.source_rebinding, true);
+      assert.equal(c.real_Host_invocation, false);
     }
   }
   if (helpers) {

@@ -16,7 +16,8 @@ for(const engine of ['node','bun','deno']) {
     engine==='deno'?['run','--allow-read','--allow-write','--allow-run','--allow-env','scripts/test-current-compiler.mjs']:['scripts/test-current-compiler.mjs'],
     engine==='deno'?['run','--allow-read','examples/current/standard.mjs']:['examples/current/standard.mjs'],
     engine==='deno'?['run','--allow-read','scripts/test-current-lib-api-v021.mjs']:['scripts/test-current-lib-api-v021.mjs'],
-    engine==='deno'?['run','--allow-read','scripts/test-current-private-helpers.mjs']:['scripts/test-current-private-helpers.mjs']
+    engine==='deno'?['run','--allow-read','scripts/test-current-private-helpers.mjs']:['scripts/test-current-private-helpers.mjs'],
+    engine==='deno'?['run','--allow-read','scripts/test-canonical-host-sdk.mjs']:['scripts/test-canonical-host-sdk.mjs']
   ];
   for(const args of commands) {
     const r=spawnSync(engine,args,{cwd:root,encoding:'utf8',timeout:60000});

@@ -12,7 +12,7 @@ use wasmtime::{
 const COMPILER_WASM: &[u8] = include_bytes!("../../../current/wasmc_compiler.wasm");
 const COMPILER_AOT: &[u8] = include_bytes!(concat!(env!("OUT_DIR"), "/compiler.cwasm"));
 pub const COMPILER_SHA256: &str =
-    "1a04d9ef830be8770bc37e507e50addac10be3615e610beab1241ccba6d090b0";
+    "ae039150425e1931c8860cde2ee8da31170ed700a05cdad733da8ad94664fb38";
 
 #[derive(Clone, Copy)]
 pub struct Limits {

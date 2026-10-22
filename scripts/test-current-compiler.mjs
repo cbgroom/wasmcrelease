@@ -14,7 +14,7 @@ import { loadCompiler } from '../runtime/wasmc-runtime-v0/host/common.mjs';
 const read=p=>readFileSync(new URL(p,import.meta.url));
 const hash=b=>createHash('sha256').update(b).digest('hex');
 const corpus=JSON.parse(read('../examples/current/corpus.json'));
-const pin='1a04d9ef830be8770bc37e507e50addac10be3615e610beab1241ccba6d090b0';
+const pin=JSON.parse(read('../current/compiler-release.json')).compiler.sha256;
 assert.equal(hash(read('../current/wasmc_compiler.wasm')),pin);
 (0,eval)(read('../current/wasmc.global.js').toString());
 const classic=globalThis.Wasmc;

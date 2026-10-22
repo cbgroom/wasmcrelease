@@ -1,14 +1,14 @@
 {
   "schema": "wasmc.current-compiler/v2",
-  "version": "0.0.23",
-  "source_commit": "05c0c310aca7c50195a3ff3245d4a5a38249cb44",
+  "version": "0.0.24",
+  "source_commit": "9e6d8f1732733f457c1799c565a9962035250be4",
   "source_branch": "master",
-  "source_build_receipt_sha256": "d5a25eca33da18840755f9c1b3b7e921bc79aa3b94c1d20800ba72e01aef3d36",
+  "source_build_receipt_sha256": "b08cb64b78cc36d89131cf8bb29948f07c0cf473071592073ad181e94bc895a2",
   "cargo_lock_sha256": "8308ac2c488f1b843a8d991cd69b3922c78c1a74454bd5081961e7d6e7045ba8",
   "compiler": {
     "path": "current/wasmc_compiler.wasm",
-    "bytes": 1545807,
-    "sha256": "1a04d9ef830be8770bc37e507e50addac10be3615e610beab1241ccba6d090b0"
+    "bytes": 1952322,
+    "sha256": "ae039150425e1931c8860cde2ee8da31170ed700a05cdad733da8ad94664fb38"
   },
   "imports": 0,
   "max_bytes": 2097152,
@@ -25,9 +25,19 @@
   ],
   "artifacts": [
     {
-      "path": "compatibility/core-artifacts-v023.json",
-      "bytes": 1653,
-      "sha256": "ca6cbf88816d2703578b23ca0bc281976f11bd4980801d5b248c4c24fc2230e8"
+      "path": "compatibility/core-artifacts-v024.json",
+      "bytes": 1659,
+      "sha256": "0a35f59dd0e64f358a98a9fa7a6bad649703cdcbae699f24fae429edfaf14353"
+    },
+    {
+      "path": "current/canonical-host-README.md",
+      "bytes": 1783,
+      "sha256": "dfd3b00c14d02694b3f9ddee45542300e58e8480d20e24013bf7ff6265dcefd7"
+    },
+    {
+      "path": "current/canonical-host.mjs",
+      "bytes": 6103,
+      "sha256": "3e95ff2514c6b7ec20f49653c8964f8c642dd248cfd88d539518ddda725d58e0"
     },
     {
       "path": "current/canonical-source-custody-v022.json",
@@ -38,6 +48,11 @@
       "path": "current/canonical-source-custody-v023.json",
       "bytes": 14552,
       "sha256": "f6ee2de4e8267de4583bb62044b4f86a7c03e40d77b0801b4a52e867417358eb"
+    },
+    {
+      "path": "current/canonical-source-custody-v024.json",
+      "bytes": 11522,
+      "sha256": "b8e8250c71a24f22e8a31a55e33149fc9716ec35d131d1c5c991539a34cfe6c0"
     },
     {
       "path": "current/cli.mjs",
@@ -65,6 +80,11 @@
       "sha256": "d5a25eca33da18840755f9c1b3b7e921bc79aa3b94c1d20800ba72e01aef3d36"
     },
     {
+      "path": "current/source-build-custody-v024.json",
+      "bytes": 599,
+      "sha256": "b08cb64b78cc36d89131cf8bb29948f07c0cf473071592073ad181e94bc895a2"
+    },
+    {
       "path": "current/source-build-receipt-v022.json",
       "bytes": 1946,
       "sha256": "d3a5b22a2438e2bc8e84ed0ddfb2daa3fb492f19c717d09747c26dc05d1a6cb4"
@@ -75,19 +95,24 @@
       "sha256": "67f3652cca88081176464b12cfaf6f4425258e2ff0baf4a2669e465b60bbd844"
     },
     {
+      "path": "current/source-build-receipt-v024.json",
+      "bytes": 1840,
+      "sha256": "52abc8d0a2f4414c3c503c7e8f294c9915f4be0ee5880bf40103e6ed451cf987"
+    },
+    {
       "path": "current/wasmc.global.js",
-      "bytes": 2120734,
-      "sha256": "a58a99cb18e5fefb4bd0e0ab105d5ea91b98d3549d99b8f3d0b51b6908f9aa1f"
+      "bytes": 2662754,
+      "sha256": "bb0e19a539df62de7fb0335de91fc9272645f31326961f88603d8ccc7c8ea12b"
     },
     {
       "path": "current/wasmc.mjs",
-      "bytes": 2122573,
-      "sha256": "caf0526fcdac150fe8b803fdb004de316cc4436b668ac53dd5bb360fccdbe451"
+      "bytes": 2664593,
+      "sha256": "f439e0a956fe1b63710fe0f8c7447016480595a7108ae14582dea4fce61846b2"
     },
     {
       "path": "current/wasmc_compiler.wasm",
-      "bytes": 1545807,
-      "sha256": "1a04d9ef830be8770bc37e507e50addac10be3615e610beab1241ccba6d090b0"
+      "bytes": 1952322,
+      "sha256": "ae039150425e1931c8860cde2ee8da31170ed700a05cdad733da8ad94664fb38"
     },
     {
       "path": "dist/lib_core.wasm",
@@ -96,13 +121,113 @@
     },
     {
       "path": "dist/wasmc.global.js",
-      "bytes": 2120734,
-      "sha256": "a58a99cb18e5fefb4bd0e0ab105d5ea91b98d3549d99b8f3d0b51b6908f9aa1f"
+      "bytes": 2662754,
+      "sha256": "bb0e19a539df62de7fb0335de91fc9272645f31326961f88603d8ccc7c8ea12b"
     },
     {
       "path": "dist/wasmc.mjs",
       "bytes": 479,
       "sha256": "3dab7c244e3d68abbaf72683ec22268c5406e55936c1ee3727038d7ed08a7850"
+    },
+    {
+      "path": "examples/canonical-host/README.md",
+      "bytes": 666,
+      "sha256": "f20a4df415b89befdd8fad5110d2b20c8b51d62ebfc65a89563b706ad62d992f"
+    },
+    {
+      "path": "examples/canonical-host/app/activation.json",
+      "bytes": 735,
+      "sha256": "e05f3fc30db13957fc8ea603e04b681319b34559b8e3d2202fe756c14d455378"
+    },
+    {
+      "path": "examples/canonical-host/app/ordinary.wasmc",
+      "bytes": 4156,
+      "sha256": "a05f532eba99ec1dd1c6dfb33e0a7aeb8e94611d552ac0939f0cc741eafc8bea"
+    },
+    {
+      "path": "examples/canonical-host/app/same-uuid-input.bin",
+      "bytes": 261,
+      "sha256": "315a6506727ea04fac12d5e381b239875e031203be62ad320e0f6350e7b5bd78"
+    },
+    {
+      "path": "examples/canonical-host/aux/canonical-template.json",
+      "bytes": 50449,
+      "sha256": "3b6f0805b6cf8490e9be12f7349c5c52a78ff6a815714b0bcda25a32a4bb05fa"
+    },
+    {
+      "path": "examples/canonical-host/aux/merge-assets.json",
+      "bytes": 1807,
+      "sha256": "7340fa6142be95e3ba137b18623f609781af5c31b93a72e24889de4d77cdaf41"
+    },
+    {
+      "path": "examples/canonical-host/aux/prepared-lib-core.wasm",
+      "bytes": 92324,
+      "sha256": "0fa2cad27c2c22ceb8bdf0de55758c501c607e3cb48520c7bcde93e120b01201"
+    },
+    {
+      "path": "examples/canonical-host/aux/prepared-transfer.wasm",
+      "bytes": 38593,
+      "sha256": "d21c439938a7cf5ea8e5ea1db4da55d46fd335c563303f04526446f45bdeaa4b"
+    },
+    {
+      "path": "examples/canonical-host/aux/raw-transfer.wasm",
+      "bytes": 42910,
+      "sha256": "2bcc3796b969f64f17e4be93878304f495f2b56a93ae9cc67684280ab17d023f"
+    },
+    {
+      "path": "examples/canonical-host/expected-frame.json",
+      "bytes": 473,
+      "sha256": "df6568b585c7603b07f583add3087ec44650a01592e493367cf5495b48c969bb"
+    },
+    {
+      "path": "examples/canonical-host/host/entry/binding.json",
+      "bytes": 6682,
+      "sha256": "3db4b5c10627cc9e81ea8372385cffa7e943e3e905859d1532c3d26e8f8204fe"
+    },
+    {
+      "path": "examples/canonical-host/host/entry/digests.bin",
+      "bytes": 128,
+      "sha256": "0bb61abb8eeb781ed71ee134815fccb1d6239aa293f80403c569a0fc7fd57425"
+    },
+    {
+      "path": "examples/canonical-host/host/entry/execution-abi.json",
+      "bytes": 5205,
+      "sha256": "03c2bca5bdfd6174a021cfbc7ec12fe1183b39ed2f2a15623498b8c53c2e44c9"
+    },
+    {
+      "path": "examples/canonical-host/host/entry/lib.wit",
+      "bytes": 7845,
+      "sha256": "b9986cc5188185e89915d60e9a0a9ac0b448372bc02d379784b7a71effcc4d53"
+    },
+    {
+      "path": "examples/canonical-host/host/entry/provider-contract.json",
+      "bytes": 328,
+      "sha256": "f50cb2636d1f0072a7c01964335c4188ec1c797d96e49e62d2059349cfd02530"
+    },
+    {
+      "path": "examples/canonical-host/host/operations/binding.json",
+      "bytes": 4885,
+      "sha256": "b5eafa21fd2d80a31f4dbc695ef9721d7a89f3c1d9838ee8523d8d53bc46a797"
+    },
+    {
+      "path": "examples/canonical-host/host/operations/digests.bin",
+      "bytes": 128,
+      "sha256": "315c0c5644ac3df991bc821224f8d3e8e75ce0859f039786ae6ef3e6537afc62"
+    },
+    {
+      "path": "examples/canonical-host/host/operations/execution-abi.json",
+      "bytes": 5205,
+      "sha256": "03c2bca5bdfd6174a021cfbc7ec12fe1183b39ed2f2a15623498b8c53c2e44c9"
+    },
+    {
+      "path": "examples/canonical-host/host/operations/lib.wit",
+      "bytes": 7845,
+      "sha256": "b9986cc5188185e89915d60e9a0a9ac0b448372bc02d379784b7a71effcc4d53"
+    },
+    {
+      "path": "examples/canonical-host/host/operations/provider-contract.json",
+      "bytes": 328,
+      "sha256": "f50cb2636d1f0072a7c01964335c4188ec1c797d96e49e62d2059349cfd02530"
     },
     {
       "path": "examples/current/corpus.json",
@@ -123,6 +248,11 @@
       "path": "examples/current/standard-fixtures-v023.json",
       "bytes": 840,
       "sha256": "d36ccdc2b4faca9fd794f703fa466c990ba74899e97d754de9c5b1c66764535f"
+    },
+    {
+      "path": "examples/current/standard-fixtures-v024.json",
+      "bytes": 854,
+      "sha256": "b461dd4ba5310ee098271a04ebf22aca68bb2bd26e361d1f0ddba3adb617998a"
     },
     {
       "path": "examples/current/standard-fixtures.json",
@@ -150,14 +280,19 @@
       "sha256": "f704d2c4d99f9efc97ef6d3c99bfd29c3987e1a96601ec7ff026dd0ac6e0581a"
     },
     {
+      "path": "examples/current/standard-wasmc-v024.wasm",
+      "bytes": 2673,
+      "sha256": "f704d2c4d99f9efc97ef6d3c99bfd29c3987e1a96601ec7ff026dd0ac6e0581a"
+    },
+    {
       "path": "examples/current/standard-wasmc.wasm",
       "bytes": 2680,
       "sha256": "21b6d7809c3325705e3d442aae909b7d337014189dbf355a0d72e54ad22f9dbd"
     },
     {
       "path": "examples/current/standard.mjs",
-      "bytes": 3298,
-      "sha256": "95b538c4a15f36eef35546c8c124b1e96a399ac3bc01a4eaeae0f516acddc4a9"
+      "bytes": 3525,
+      "sha256": "b36e3c7c284132ab294bb622a85291d2c2f123a0dbd637bf5517618bf4cbd486"
     },
     {
       "path": "examples/current/standard.wasmc",
@@ -227,27 +362,27 @@
     {
       "path": "runtime/registry-v0/channels/dev.json",
       "bytes": 503,
-      "sha256": "a98df9392e14b342509f88c696dee4e3b05aea16f6c3c0eee78ca68da2c848a9"
+      "sha256": "a3123274efa68525dbb480dfadbf784e89bbbade6e5f7ce3b19b0878b1b41d0e"
     },
     {
       "path": "runtime/registry-v0/packages/wasmc-runtime/0.1.0-runtime-v0.json",
       "bytes": 1250,
-      "sha256": "903da567ef01ec22a0c7c337f22dd7643137c55fe466e1173243a144e3a1acad"
+      "sha256": "0c9e0a66aaaad8acd05244650ad6a3056ef6602cce05287c3e31c4e56f516752"
     },
     {
       "path": "runtime/wasmc-runtime-v0/compiler.wasm",
-      "bytes": 1545807,
-      "sha256": "1a04d9ef830be8770bc37e507e50addac10be3615e610beab1241ccba6d090b0"
+      "bytes": 1952322,
+      "sha256": "ae039150425e1931c8860cde2ee8da31170ed700a05cdad733da8ad94664fb38"
     },
     {
       "path": "runtime/wasmc-runtime-v0/manifest.json",
       "bytes": 3129,
-      "sha256": "8952e07f42e6d3a39607cb80829b0b417b6a8bb96c43a12efba0fced887abbdd"
+      "sha256": "9bd5d505cbbe99237adaa77ae4d9692bb43325188cf257a83a4dbaa9aa65baad"
     },
     {
       "path": "runtime/wasmc-runtime-v0/receipts/compiler-wasm.json",
       "bytes": 1235,
-      "sha256": "113f7885f2453e33a6d1a642abe88294e687bf31424392cec84383bbd5b30e44"
+      "sha256": "9f4da22ee7a88857365bc9bfbc737049d3e0e164a04965b8108a4fd045a82595"
     },
     {
       "path": "scripts/core-compatibility.mjs",
@@ -256,13 +391,23 @@
     },
     {
       "path": "scripts/current-compiler-integrity.mjs",
-      "bytes": 9957,
-      "sha256": "666a0779afa6f8fcc007ea26414f7964e792b7cfccd5569779aecee6d04c86a5"
+      "bytes": 10121,
+      "sha256": "fb91a2a08b55921154e5c3cab8933646fe50027ed069a477ad95e3d5401e3f04"
+    },
+    {
+      "path": "scripts/current-release-version.mjs",
+      "bytes": 4713,
+      "sha256": "35efcb1ef0c4761f1e16b36082369ffbd10592409e6717cee5fd58bc75e0eb90"
     },
     {
       "path": "scripts/qualify-current-compiler.mjs",
-      "bytes": 4113,
-      "sha256": "96eef50f8c8165c9c94317bf5e2276951badf660c9dd3c8f9b9b981625a18bbb"
+      "bytes": 4235,
+      "sha256": "804aaf314751dc83d5d8a65a949eff19f3c2d750e174ae88736c0ab8397994ef"
+    },
+    {
+      "path": "scripts/test-canonical-host-sdk.mjs",
+      "bytes": 2900,
+      "sha256": "dbdc7eed8b64b6476ae19081892f196c74183b29211957d47004a190691a7835"
     },
     {
       "path": "scripts/test-current-compiler-integrity.mjs",
@@ -271,8 +416,8 @@
     },
     {
       "path": "scripts/test-current-compiler.mjs",
-      "bytes": 3110,
-      "sha256": "b9311c143634d9aa5afaef63760e228d7cdc4e4701d898e85c1fd403ab287444"
+      "bytes": 3112,
+      "sha256": "1aef4940950aa5df6ca7e0f66d205fe5265e4eba1e801886a383fe3c63741b0d"
     },
     {
       "path": "scripts/test-current-lib-api-v021.mjs",
@@ -288,6 +433,96 @@
       "path": "standard/corelib/4.9.0/corelib.wasm",
       "bytes": 31468,
       "sha256": "c3ac42b93f4c27e24065abe804b91f54761eff782e2971e947847b3d20ee7e00"
+    },
+    {
+      "path": "standard/wasmc-json/0.0.5/LICENSE",
+      "bytes": 3823,
+      "sha256": "7bca2d5818178e0bc14546700d39bf113d15139b1c3b6d1e62f621d4a276d6e3"
+    },
+    {
+      "path": "standard/wasmc-json/0.0.5/SKILL.md",
+      "bytes": 880,
+      "sha256": "713d540184b3514c1b16ed4baa94610fea7eb43e97a21eae42faa3f5c1a3b9fc"
+    },
+    {
+      "path": "standard/wasmc-json/0.0.5/artifact.wasm",
+      "bytes": 99143,
+      "sha256": "8965648084a384e5ce26b4c20e587455d6fda82c03680688ada014f873c0239c"
+    },
+    {
+      "path": "standard/wasmc-json/0.0.5/bindings/rust-component/Cargo.toml",
+      "bytes": 297,
+      "sha256": "0efe8d33817f2952a3e97ad12d53b457e31c17666d9c056f52a41b5bebe6c26a"
+    },
+    {
+      "path": "standard/wasmc-json/0.0.5/bindings/rust-component/src/lib.rs",
+      "bytes": 630,
+      "sha256": "e7c09cfbd0eecfa4fbcafff0f087ef75a323a61f5262f0b63a9df0288aa5f166"
+    },
+    {
+      "path": "standard/wasmc-json/0.0.5/bindings/rust-core/Cargo.toml",
+      "bytes": 159,
+      "sha256": "4378f04b794623865af9e3816425c6942ac23e1361cd2ca8ef3b5b6b1ce3bac6"
+    },
+    {
+      "path": "standard/wasmc-json/0.0.5/bindings/rust-core/src/lib.rs",
+      "bytes": 74951,
+      "sha256": "85493ca3853203aca182337b15c7cacd2ce03124c012efff06889828cc78bbf6"
+    },
+    {
+      "path": "standard/wasmc-json/0.0.5/component.wasm",
+      "bytes": 104107,
+      "sha256": "9609758c7fa9903d8071dd698cbfe8d73c8e83cf2b33c02dfd729dc855ab94b6"
+    },
+    {
+      "path": "standard/wasmc-json/0.0.5/core-abi.json",
+      "bytes": 6106,
+      "sha256": "00cafbf9cbea7180e1ed4378f5f468a4205ef7f4620e139091f72d7f3b532886"
+    },
+    {
+      "path": "standard/wasmc-json/0.0.5/lib.json",
+      "bytes": 8487,
+      "sha256": "3bfaa6449d8800aaa98a7068ceccaae3527490f6cb7773b53b70195e9c7eaadc"
+    },
+    {
+      "path": "standard/wasmc-json/0.0.5/lib.wit",
+      "bytes": 2122,
+      "sha256": "225b23395b09023305c0c6e24b0168af7847bfe72cfd9db18bb2b52a544038be"
+    },
+    {
+      "path": "standard/wasmc-json/0.0.5/licenses/DEPENDENCY-NOTICES-001.txt",
+      "bytes": 245760,
+      "sha256": "66302f6dd71da97391ab2270d29b10e67bdbac6d7eb782bed043c2ff596ec5cc"
+    },
+    {
+      "path": "standard/wasmc-json/0.0.5/licenses/DEPENDENCY-NOTICES-002.txt",
+      "bytes": 245760,
+      "sha256": "0065cf38006c9a66a6c3ee9cbaf8db10422b1e5301d3c1d5132b7855e71f18ea"
+    },
+    {
+      "path": "standard/wasmc-json/0.0.5/licenses/DEPENDENCY-NOTICES-003.txt",
+      "bytes": 245760,
+      "sha256": "201dbac93dff17177b6379ee630b9658b4cec9cb9d46ce3982b3da87c4b740c8"
+    },
+    {
+      "path": "standard/wasmc-json/0.0.5/licenses/DEPENDENCY-NOTICES-004.txt",
+      "bytes": 245760,
+      "sha256": "c439e1a409b6f23d5797cec339403a0ffce97e9fcf2ae91d6a923c36d619bb76"
+    },
+    {
+      "path": "standard/wasmc-json/0.0.5/licenses/DEPENDENCY-NOTICES-005.txt",
+      "bytes": 245760,
+      "sha256": "04118f32afc6b2ce0fbfd559c56a78614016ab00167be2425c8c778fc7b064fe"
+    },
+    {
+      "path": "standard/wasmc-json/0.0.5/licenses/DEPENDENCY-NOTICES-006.txt",
+      "bytes": 8357,
+      "sha256": "aa6000805f56d3c6009ffa09dbe224083cf2e63e2498e1939deefe6ca7c43d9a"
+    },
+    {
+      "path": "standard/wasmc-json/0.0.5/references/agent-delta.json",
+      "bytes": 3929,
+      "sha256": "725a7ea113828daf2fde9d82771a2eb28e346face6348ba647df970d00a840e8"
     },
     {
       "path": "standard/wasmc-lib-search/0.5.0/LICENSE",
