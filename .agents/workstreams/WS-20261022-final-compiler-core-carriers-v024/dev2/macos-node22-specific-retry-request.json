@@ -1,0 +1,40 @@
+{
+  "observed_at": "2026-10-22T20:22:33.034740+00:00",
+  "source_commit": "6b1318e7ffd05f3fa471bb9f3a9f522d3df0dd14",
+  "run_id": 39844558653,
+  "original_job": 120054302929,
+  "original_conclusion": "cancelled",
+  "execution_started": false,
+  "original_evidence_sha256": "2fbd40d1d98d3921dbce4e3d07c2eaacf35cfe49b472797cf16465f57b18d963",
+  "diagnosis": "Official annotation: hosted runner not acquired after multiple attempts; macOS arm64 capacity constraints; runner_id=0, steps=[]; original log 404 BlobNotFound preserved",
+  "preflight": {
+    "argv": [
+      "gh",
+      "run",
+      "view",
+      "39844558653",
+      "--repo",
+      "cbgroom/wasmcrelease",
+      "--json",
+      "headSha,event,headBranch,status,conclusion,attempt,url"
+    ],
+    "exit": 0,
+    "stdout": "{\"attempt\":1,\"conclusion\":\"failure\",\"event\":\"workflow_dispatch\",\"headBranch\":\"v0.0.24-dev.2\",\"headSha\":\"6b1318e7ffd05f3fa471bb9f3a9f522d3df0dd14\",\"status\":\"completed\",\"url\":\"https://github.com/cbgroom/wasmcrelease/actions/runs/39844558653\"}\n",
+    "stderr": ""
+  },
+  "argv": [
+    "gh",
+    "run",
+    "rerun",
+    "39844558653",
+    "--repo",
+    "cbgroom/wasmcrelease",
+    "--job",
+    "120054302929"
+  ],
+  "exit": 0,
+  "stdout": "",
+  "stderr": "",
+  "code_or_product_change": false,
+  "retry_scope": "one original normal Compatibility macos-15 Node22.0.0 job and platform-dependent aggregate; excluded job not selected"
+}

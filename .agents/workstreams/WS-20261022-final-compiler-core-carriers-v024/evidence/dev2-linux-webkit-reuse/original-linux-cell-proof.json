@@ -1,0 +1,155 @@
+{
+  "schema": "wasmc.original-linux-browser-cell-reuse/v1",
+  "observed_at": "2026-10-22T20:37:16.630693+00:00",
+  "source_commit": "03fe3b889eff58c2a2bbac5802da0990fe50223d",
+  "target_commit": "6b1318e7ffd05f3fa471bb9f3a9f522d3df0dd14",
+  "original_run": {
+    "id": 39841976749,
+    "run_attempt": 1,
+    "head_sha": "03fe3b889eff58c2a2bbac5802da0990fe50223d",
+    "status": "completed",
+    "conclusion": "success",
+    "html_url": "https://github.com/cbgroom/wasmcrelease/actions/runs/39841976749",
+    "raw": {
+      "path": "original-run.stdout",
+      "bytes": 12159,
+      "sha256": "a2fec638aa46819029e2a616c130b1be91db088539a6018573d99d5c989ac4b1"
+    }
+  },
+  "original_job": {
+    "id": 120045121587,
+    "run_id": 39841976749,
+    "run_attempt": 1,
+    "head_sha": "03fe3b889eff58c2a2bbac5802da0990fe50223d",
+    "name": "browser (webkit)",
+    "status": "completed",
+    "conclusion": "success",
+    "labels": [
+      "ubuntu-24.04"
+    ],
+    "html_url": "https://github.com/cbgroom/wasmcrelease/actions/runs/39841976749/job/120045121587",
+    "started_at": "2026-10-22T19:41:17Z",
+    "completed_at": "2026-10-22T19:42:19Z",
+    "raw": {
+      "path": "original-webkit-job.json",
+      "bytes": 2742,
+      "sha256": "da996c96deb68af770147871aebdbffc6204c67ba22a01ec5458fcce5f2ee3ce"
+    },
+    "API_collection_raw": {
+      "path": "original-jobs.stdout",
+      "bytes": 100842,
+      "sha256": "8e0ae548e5940c57f471bc7676c1e0b3d0c3bd3a5beec5f5a1031e9121904963"
+    }
+  },
+  "original_log": {
+    "path": "original-webkit-log.txt",
+    "bytes": 140584,
+    "sha256": "a404788d50b99195d44d6b998cd1cc5acdc1bba67f2d8e1a895a7190e3373a4f"
+  },
+  "original_receipt": {
+    "path": "original-browser-receipt.json",
+    "bytes": 846,
+    "sha256": "b7795dca139d3de3bba1252be5583cec9482748a55fa6b92ca6271e4b53be3bf",
+    "value": {
+      "accepted": true,
+      "browser_user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.5 Safari/605.1.15",
+      "app_sha256": "4eff84eccf06251a0b5de89e81d4faaeb5f51bce18724d8f011b95ea0ab7fd19",
+      "lib_sha256": "44638f7cfa5a653f986e2237db4f26f1534539c8c0d0d1e7258c51a976df19e3",
+      "kernel_sha256": "3774b4d3484abf247f56dbd0adc28295fcafe2e06fe0247b797d2b7aef1abe21",
+      "kernel_core_cases": 4,
+      "kernel_simulator_only": true,
+      "resident_calls": 1000,
+      "resident_snapshot_cases": 3,
+      "core_cases": 4,
+      "guard_cases": 4,
+      "completion_snapshot_cases": 3,
+      "driver_write_snapshot_cases": 1,
+      "guard_pool_cases": 1,
+      "quarantine_retirement_cases": 1,
+      "stop_failure_cases": 4,
+      "supervisor_cases": 1,
+      "trap_poisoned": true,
+      "no_replay": true,
+      "resource_cleanup": true,
+      "quarantine_retained": true,
+      "raw_tcp": false,
+      "real_device_io": false,
+      "mobile_qualified": false
+    }
+  },
+  "input_bridge": {
+    "path": "input-bridge.json",
+    "bytes": 9713,
+    "sha256": "bbef4ac82ecaa1fa508a0a31b37712182a14770f2629d0d148f0e99d89f14676",
+    "file_count": 17,
+    "tracked_bytes": 6236592
+  },
+  "input_closure": {
+    "path": "input-closure.json",
+    "bytes": 7723,
+    "sha256": "89eabc2763171b507916499ed6f8e3a71dae7f9349cfd114080954357b0b1965"
+  },
+  "toolchain": {
+    "CLI_package": "@playwright/cli@0.1.19",
+    "CLI_pin_present_in_actual_job_commands": true,
+    "WebKit_version": "26.5",
+    "WebKit_revision": "2358",
+    "actual_download_artifact": "webkit-ubuntu-24.04.zip",
+    "runner_OS": "Ubuntu24.04",
+    "runner_image_version": "20261012.334.1",
+    "Node_setup_pin": "26.5.1",
+    "browser_user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.5 Safari/605.1.15"
+  },
+  "all_original_receipt_oracles_verified": {
+    "accepted": true,
+    "no_replay": true,
+    "trap_poisoned": true,
+    "resource_cleanup": true,
+    "quarantine_retained": true,
+    "resident_calls": 1000,
+    "guard_cases": 4,
+    "stop_failure_cases": 4,
+    "supervisor_cases": 1,
+    "completion_snapshot_cases": 3,
+    "driver_write_snapshot_cases": 1,
+    "guard_pool_cases": 1,
+    "kernel_core_cases": 4,
+    "quarantine_retirement_cases": 1,
+    "resident_snapshot_cases": 3
+  },
+  "generated_fixture_identity": {
+    "guest": {
+      "source": "host/tests/e2e/guest.wasmc",
+      "original_Linux_observed_sha256": "4eff84eccf06251a0b5de89e81d4faaeb5f51bce18724d8f011b95ea0ab7fd19"
+    },
+    "kernel": {
+      "source": "host/contract/v0/guest.wasmc",
+      "original_Linux_observed_sha256": "3774b4d3484abf247f56dbd0adc28295fcafe2e06fe0247b797d2b7aef1abe21"
+    },
+    "derivation": "Both are pure deterministic compile(source) outputs of the identical embedded import-free compiler/default ESM and byte-identical fixed UTF8 source. Probe hash assertions and original Linux receipt identify generated bytes. Original ephemeral raw fixture buffers are not retained by the workflow; this proof reuses their complete unchanged producer/input closure, and does not claim a new Linux execution.",
+    "compiler": {
+      "bytes": 1956578,
+      "sha256": "c78816376228b6091599845c6a9a531eb76f949fe419655c012ec30c05f75832"
+    },
+    "lib": {
+      "path": "libs/wasmc-owned-algorithms/artifact.wasm",
+      "sha256": "44638f7cfa5a653f986e2237db4f26f1534539c8c0d0d1e7258c51a976df19e3"
+    }
+  },
+  "input_closure_verified": true,
+  "all_17_actual_mode_blob_bytes_sha256_equal": true,
+  "product8_changed_paths_outside_closure": true,
+  "reusable_original_linux_cell": true,
+  "reuse_scope": "Original Ubuntu24.04 WebKit cell only, qualified on actual03fe run39841976749/job120045121587, reused for unchanged complete17-input browser component at6b. No GitHub result or source identity is relabeled. No local Mac evidence is used as Linux replacement.",
+  "target_official_workflow": {
+    "id": 39844581831,
+    "run_attempt": 2,
+    "head_sha": "6b1318e7ffd05f3fa471bb9f3a9f522d3df0dd14",
+    "status": "completed",
+    "conclusion": "cancelled",
+    "original_results_retained": true
+  },
+  "target_official_whole_PASS_claimed": false,
+  "admission_or_CI_files_modified": false,
+  "new_browser_or_build_executed": false
+}

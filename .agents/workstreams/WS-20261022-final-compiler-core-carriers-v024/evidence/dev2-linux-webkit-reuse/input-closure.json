@@ -1,0 +1,229 @@
+{
+  "schema": "wasmc.browser-related-input-closure/v1",
+  "source_commit": "03fe3b889eff58c2a2bbac5802da0990fe50223d",
+  "target_commit": "6b1318e7ffd05f3fa471bb9f3a9f522d3df0dd14",
+  "server": "host/embedding/browser/server.mjs",
+  "server_HTTP_static_allowlist": [
+    "host/embedding/browser/index.html",
+    "host/embedding/browser/probe.mjs",
+    "host/contract/v0/reference.mjs",
+    "host/drivers/tcp/resident-app.mjs",
+    "host/drivers/tcp/read-window.mjs",
+    "host/drivers/tcp/write-window.mjs",
+    "host/drivers/tcp/stop-fence.mjs",
+    "host/drivers/tcp/supervisor.mjs",
+    "host/runtime/completion/scoped-guard.mjs",
+    "host/runtime/completion/guard.mjs",
+    "libs/wasmc-owned-algorithms/artifact.wasm"
+  ],
+  "server_generated_routes": [
+    {
+      "url": "/fixture/guest.wasm",
+      "source": "host/tests/e2e/guest.wasmc",
+      "producer": "current/wasmc.mjs#compile(source)"
+    },
+    {
+      "url": "/fixture/kernel.wasm",
+      "source": "host/contract/v0/guest.wasmc",
+      "producer": "current/wasmc.mjs#compile(source)"
+    }
+  ],
+  "HTML_module": "/host/embedding/browser/probe.mjs",
+  "HTML_favicon": "data:, (no file/network input)",
+  "recursive_edges": [
+    {
+      "from": "current/wasmc.mjs",
+      "line": 576,
+      "kind": "Node builtin",
+      "to": "node:fs/promises"
+    },
+    {
+      "from": "current/wasmc.mjs",
+      "line": 610,
+      "kind": "Node builtin",
+      "to": "node:url"
+    },
+    {
+      "from": "host/drivers/tcp/read-window.mjs",
+      "line": 2,
+      "kind": "static repo import",
+      "specifier": "./stop-fence.mjs",
+      "to": "host/drivers/tcp/stop-fence.mjs"
+    },
+    {
+      "from": "host/drivers/tcp/supervisor.mjs",
+      "line": 1,
+      "kind": "static repo import",
+      "specifier": "../../runtime/completion/scoped-guard.mjs",
+      "to": "host/runtime/completion/scoped-guard.mjs"
+    },
+    {
+      "from": "host/drivers/tcp/supervisor.mjs",
+      "line": 2,
+      "kind": "static repo import",
+      "specifier": "./read-window.mjs",
+      "to": "host/drivers/tcp/read-window.mjs"
+    },
+    {
+      "from": "host/drivers/tcp/supervisor.mjs",
+      "line": 3,
+      "kind": "static repo import",
+      "specifier": "./write-window.mjs",
+      "to": "host/drivers/tcp/write-window.mjs"
+    },
+    {
+      "from": "host/drivers/tcp/supervisor.mjs",
+      "line": 4,
+      "kind": "static repo import",
+      "specifier": "./stop-fence.mjs",
+      "to": "host/drivers/tcp/stop-fence.mjs"
+    },
+    {
+      "from": "host/drivers/tcp/write-window.mjs",
+      "line": 2,
+      "kind": "static repo import",
+      "specifier": "./stop-fence.mjs",
+      "to": "host/drivers/tcp/stop-fence.mjs"
+    },
+    {
+      "from": "host/embedding/browser/probe.mjs",
+      "line": 1,
+      "kind": "static repo import",
+      "specifier": "../../drivers/tcp/resident-app.mjs",
+      "to": "host/drivers/tcp/resident-app.mjs"
+    },
+    {
+      "from": "host/embedding/browser/probe.mjs",
+      "line": 2,
+      "kind": "static repo import",
+      "specifier": "../../runtime/completion/scoped-guard.mjs",
+      "to": "host/runtime/completion/scoped-guard.mjs"
+    },
+    {
+      "from": "host/embedding/browser/probe.mjs",
+      "line": 3,
+      "kind": "static repo import",
+      "specifier": "../../drivers/tcp/read-window.mjs",
+      "to": "host/drivers/tcp/read-window.mjs"
+    },
+    {
+      "from": "host/embedding/browser/probe.mjs",
+      "line": 4,
+      "kind": "static repo import",
+      "specifier": "../../drivers/tcp/write-window.mjs",
+      "to": "host/drivers/tcp/write-window.mjs"
+    },
+    {
+      "from": "host/embedding/browser/probe.mjs",
+      "line": 5,
+      "kind": "static repo import",
+      "specifier": "../../drivers/tcp/stop-fence.mjs",
+      "to": "host/drivers/tcp/stop-fence.mjs"
+    },
+    {
+      "from": "host/embedding/browser/probe.mjs",
+      "line": 6,
+      "kind": "static repo import",
+      "specifier": "../../drivers/tcp/supervisor.mjs",
+      "to": "host/drivers/tcp/supervisor.mjs"
+    },
+    {
+      "from": "host/embedding/browser/probe.mjs",
+      "line": 7,
+      "kind": "static repo import",
+      "specifier": "../../contract/v0/reference.mjs",
+      "to": "host/contract/v0/reference.mjs"
+    },
+    {
+      "from": "host/embedding/browser/server.mjs",
+      "line": 2,
+      "kind": "Node builtin",
+      "to": "node:http"
+    },
+    {
+      "from": "host/embedding/browser/server.mjs",
+      "line": 3,
+      "kind": "Node builtin",
+      "to": "node:fs/promises"
+    },
+    {
+      "from": "host/embedding/browser/server.mjs",
+      "line": 4,
+      "kind": "Node builtin",
+      "to": "node:url"
+    },
+    {
+      "from": "host/embedding/browser/server.mjs",
+      "line": 5,
+      "kind": "static repo import",
+      "specifier": "../../../current/wasmc.mjs",
+      "to": "current/wasmc.mjs"
+    },
+    {
+      "from": "host/runtime/completion/scoped-guard.mjs",
+      "line": 1,
+      "kind": "static repo import",
+      "specifier": "./guard.mjs",
+      "to": "host/runtime/completion/guard.mjs"
+    },
+    {
+      "from": "host/embedding/browser/probe.mjs",
+      "kind": "load(url) -> fetch(url)",
+      "to": "/fixture/kernel.wasm"
+    },
+    {
+      "from": "host/embedding/browser/probe.mjs",
+      "kind": "load(url) -> fetch(url)",
+      "to": "/libs/wasmc-owned-algorithms/artifact.wasm"
+    },
+    {
+      "from": "host/embedding/browser/probe.mjs",
+      "kind": "load(url) -> fetch(url)",
+      "to": "/fixture/guest.wasm"
+    }
+  ],
+  "all_browser_repo_imports_in_server_allowlist": true,
+  "all_dynamic_import_sites": [
+    {
+      "from": "current/wasmc.mjs",
+      "line": 576,
+      "expression": "const fs = await import(\"node:fs/promises\");"
+    },
+    {
+      "from": "current/wasmc.mjs",
+      "line": 610,
+      "expression": "const { pathToFileURL } = await import(\"node:url\");"
+    }
+  ],
+  "external_Node_builtins": [
+    "node:fs/promises",
+    "node:http",
+    "node:url"
+  ],
+  "dynamic_read_explanation": {
+    "server_readFile_path": "Only static allowlisted11 files or the two already generated in-memory fixture buffers. Includes every allowlisted route, even not fetched by this probe.",
+    "probe_fetch_url": "Single load(url) wrapper; its only three call sites use the three listed fixed absolute routes. Imported modules have no additional fetch/readFile/dynamic repo import.",
+    "server_compiler": "compile(source) called without options for both fixed UTF8 source files. DEFAULT_COMPILER_URL undefined and defaultCompilerBytes returns the embedded import-free compiler; exported fetch loader is not invoked. CLI automaticHost/main is not invoked because imported ESM is not the server entrypoint. Node builtin import node:url is included as toolchain dependency.",
+    "embedded_payloads": "Whole ESM actual bytes compared; decoded compiler/Core hashes independently checked, no sidecar/Runtime receipt/installer/Search read."
+  },
+  "embedded_compiler": {
+    "bytes": 1956578,
+    "sha256": "c78816376228b6091599845c6a9a531eb76f949fe419655c012ec30c05f75832"
+  },
+  "embedded_Core": {
+    "bytes": 2640152,
+    "sha256": "7cd4f0c60536f1825da3fed9d525a43ee9724250203a261f298505a503e9bcbf"
+  },
+  "product8_changed_paths": [
+    "examples/lib-search/run.mjs",
+    "examples/lib-search/rust/src/main.rs",
+    "examples/lib-search/rust/tests/wasmi_portable.rs",
+    "runtime/wasmc-runtime-v0/receipts/bun-self-test.json",
+    "runtime/wasmc-runtime-v0/receipts/deno-self-test.json",
+    "runtime/wasmc-runtime-v0/receipts/node-self-test.json",
+    "scripts/lib-install.mjs",
+    "scripts/test-lib-install.mjs"
+  ],
+  "product8_intersection_with_browser_inputs": [],
+  "whole_workflow_outside_browser_cell_not_admitted_by_this_graph": true
+}
