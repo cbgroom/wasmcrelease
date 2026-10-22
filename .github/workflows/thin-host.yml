@@ -22,7 +22,7 @@ jobs:
           node-version: 26.5.1
       - run: rustup toolchain install 1.96.0 --profile minimal --component clippy,rustfmt
       - name: Restore locked kernel dependency compilation cache
-        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         with:
           path: host/contract/v0/rust/target
           key: host-kernel-v1-${{ matrix.os }}-${{ runner.arch }}-rust1.96.0-${{ hashFiles('host/contract/v0/rust/Cargo.lock', 'host/contract/v0/rust/Cargo.toml') }}
