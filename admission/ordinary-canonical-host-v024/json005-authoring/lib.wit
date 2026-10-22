@@ -1,0 +1,48 @@
+package wasmc:json@0.0.5;
+
+interface document {
+  enum json-error {
+    input-too-large,
+    depth-limit,
+    invalid-json,
+    too-many-pointers,
+    pointer-too-long,
+    invalid-pointer,
+    output-too-large,
+  }
+  compact: func(input: string) -> result<string, json-error>;
+  select: func(input: string, pointers: list<string>) -> result<list<option<string>>, json-error>;
+  validate: func(input: string) -> result<_, json-error>;
+  /// Identical bounded semantics with binary input, parsed directly by serde_json.
+  compact-bytes: func(input: list<u8>) -> result<string, json-error>;
+  select-bytes: func(input: list<u8>, pointers: list<string>) -> result<list<option<string>>, json-error>;
+  validate-bytes: func(input: list<u8>) -> result<_, json-error>;
+  /// Record view of the same bounded selection; missing has present=false and empty json.
+  /// Present JSON null has present=true and json="null".
+  record selected-value {
+    present: bool,
+    json: string,
+  }
+  select-values: func(input: string, pointers: list<string>) -> result<list<selected-value>, json-error>;
+  select-values-bytes: func(input: list<u8>, pointers: list<string>) -> result<list<selected-value>, json-error>;
+  /// Same bounded compact parse; return caller fallback on any JsonError.
+  compact-or-bytes: func(input: list<u8>, fallback: string) -> string;
+  /// Read a JSON string at a strict pointer; fallback for missing/non-string or JsonError.
+  select-string-or-bytes: func(input: list<u8>, pointer: string, fallback: string) -> string;
+  record selection-view {
+    valid: bool,
+    values: list<selected-value>,
+    error: option<json-error>,
+  }
+  /// Plain record view of the same parse-once selection and documented errors.
+  inspect-values-bytes: func(input: list<u8>, pointers: list<string>) -> selection-view;
+  /// Same bounded text compact, with caller fallback on JsonError.
+  compact-or: func(input: string, fallback: string) -> string;
+  /// Decode a bounded JSON string; fallback on non-string or JsonError.
+  decode-string-or: func(input: string, fallback: string) -> string;
+
+}
+
+world json {
+  export document;
+}

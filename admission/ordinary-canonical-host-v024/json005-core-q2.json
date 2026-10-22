@@ -1,0 +1,67 @@
+{
+  "schema": "wasmc.lib-core-q2/v1",
+  "scope": "Actual completed Node/Bun/Deno rawCore API test outputs; only27normal valid-input comparisons againstold001; no actualComponentruntime/currentcatalog/install/formalrelease claim.",
+  "commands": [
+    "node scripts/test-json005-core.mjs",
+    "bun scripts/test-json005-core.mjs",
+    "deno run --allow-read scripts/test-json005-core.mjs"
+  ],
+  "results": [
+    {
+      "accepted": true,
+      "package": "wasmc-json@0.0.5",
+      "artifact_sha256": "8965648084a384e5ce26b4c20e587455d6fda82c03680688ada014f873c0239c",
+      "public_apis": 13,
+      "prior_version_normal_case_comparisons": 27,
+      "old_calls": 27,
+      "new_calls": 559,
+      "repeated_success_failure_pairs": 256,
+      "heap_pages_before": 18,
+      "heap_pages_after": 18,
+      "no_Rust_build": true,
+      "real_Host_calls": 0,
+      "runtime": "node"
+    },
+    {
+      "accepted": true,
+      "package": "wasmc-json@0.0.5",
+      "artifact_sha256": "8965648084a384e5ce26b4c20e587455d6fda82c03680688ada014f873c0239c",
+      "public_apis": 13,
+      "prior_version_normal_case_comparisons": 27,
+      "old_calls": 27,
+      "new_calls": 559,
+      "repeated_success_failure_pairs": 256,
+      "heap_pages_before": 18,
+      "heap_pages_after": 18,
+      "no_Rust_build": true,
+      "real_Host_calls": 0,
+      "runtime": "bun"
+    },
+    {
+      "accepted": true,
+      "package": "wasmc-json@0.0.5",
+      "artifact_sha256": "8965648084a384e5ce26b4c20e587455d6fda82c03680688ada014f873c0239c",
+      "public_apis": 13,
+      "prior_version_normal_case_comparisons": 27,
+      "old_calls": 27,
+      "new_calls": 559,
+      "repeated_success_failure_pairs": 256,
+      "heap_pages_before": 18,
+      "heap_pages_after": 18,
+      "no_Rust_build": true,
+      "real_Host_calls": 0,
+      "runtime": "deno"
+    }
+  ],
+  "total_new_calls": 1677,
+  "total_prior_version_normal_case_comparisons": 81,
+  "actual_Core_and_Component_type_validation": {
+    "tool": "/root/.cargo/bin/wasm-tools",
+    "Core_exit": 0,
+    "Component_exit": 0,
+    "new_compilations": 0
+  },
+  "original_producer_custody": "json005-authoring/producer-custody.json",
+  "source_spec_materialization_proof": "json005-authoring/source-spec-custody.json",
+  "formal_release": false
+}
