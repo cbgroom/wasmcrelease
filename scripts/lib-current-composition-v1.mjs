@@ -2,7 +2,6 @@
 // This receipt is deliberately not a lib-refresh-receipt/v2 or a fresh Q0 run.
 // Catalog authoring, public admission, installation and release remain separate.
 import assert from 'node:assert/strict';
-import {createHash} from 'node:crypto';
 import {readFile} from 'node:fs/promises';
 import {join,resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
@@ -10,11 +9,11 @@ import {checkedCurrentCatalog,verifyCurrentRelease,currentProductReader,currentP
 import {sha,digest,verifyRoot,inventory} from './lib-refresh-cache-v2.mjs';
 import {witModel,selectedWitRoutes} from './current-wit-routes-v3.mjs';
 import {CurrentSearchCaller,currentIndexEntries} from './current-lib-search-v3.mjs';
+import {verifyImportedProducerCustodyData as sourceCustody,buildCurrentCompositionLineageData} from './current-lib-source-custody-v1.mjs';
 
 const sorted=values=>[...values].sort();
 const exact=(value,keys)=>assert.deepEqual(Object.keys(value).sort(),sorted(keys),'closed composition input schema');
 const pin=value=>assert.match(value,/^[0-9a-f]{64}$/,'independent SHA256 required');
-const commit=value=>assert.match(value,/^[0-9a-f]{40}$/,'full source identity required');
 const safe=value=>{assert.equal(typeof value,'string');assert.ok(value&&!value.startsWith('/')&&!value.includes('\\')&&
   value.split('/').every(p=>p&&p!=='.'&&p!=='..'),'safe composition input path');return value;};
 const decode=bytes=>new TextDecoder('utf-8',{fatal:true}).decode(bytes);
@@ -43,69 +42,6 @@ function verifyLocalDescriptors(manifest,files){
     for(const child of Object.values(value))visit(child);
   };
   for(const key of ['artifact','component','core_abi','wit','bindings','agent','license'])visit(manifest[key]);
-}
-function sourceCustody(input,replacement,files,manifest){
-  const source=replacement.source;
-  exact(source,['root','inventory_sha256','producer_custody','materialization_custody','source_spec','materialized_spec',
-    'generated_source','logic','cargo_manifest','cargo_lock','wit','authority']);
-  pin(source.inventory_sha256);const packet=rootInventory(input,source.root);
-  assert.equal(digest(packet),source.inventory_sha256,'independent source packet inventory');
-  const get=path=>pinnedFile(input,source.root,packet,path);
-  const producer=parse(get(source.producer_custody)),materialization=parse(get(source.materialization_custody));
-  const authority=source.authority;
-  exact(authority,['original_receipt_sha256','driver_sha256','original_source','canonical_source_commit','canonical_source_blob']);
-  pin(authority.original_receipt_sha256);pin(authority.driver_sha256);
-  for(const key of ['original_source','canonical_source_commit','canonical_source_blob'])commit(authority[key]);
-  assert.equal(producer.schema,'wasmc.imported-lib-producer-custody/v1');
-  assert.equal(producer.original_private_receipt_sha256,authority.original_receipt_sha256,'original receipt authority');
-  assert.equal(producer.driver_sha256,authority.driver_sha256,'original producer authority');
-  assert.equal(producer.original_source,authority.original_source,'observed build Source authority');
-  assert.equal(producer.exit,0);assert.equal(producer.new_builds,0,'import is not a new producer build');
-  assert.ok(Number.isFinite(producer.seconds)&&producer.seconds>0);
-  assert.ok(Array.isArray(producer.actual_command)&&producer.actual_command.length>0&&producer.actual_command.every(x=>typeof x==='string'&&x));
-  const report=producer.original_producer_report;
-  assert.equal(report.schema,'wasmc.lib-build-receipt/v0');assert.equal(report.accepted,true);
-  assert.equal(report.package,replacement.id);assert.equal(report.version,replacement.version);
-  assert.equal(report.manifest_sha256,replacement.manifest_sha256,'producer manifest identity');
-  for(const field of ['artifact','component','core_abi']){
-    assert.deepEqual(report[field],{bytes:files[manifest[field].path].bytes,sha256:files[manifest[field].path].sha256},'original produced '+field);
-  }
-  assert.deepEqual(report.toolchain,manifest.build.toolchain,'original producer toolchain');
-  const raw=get(source.source_spec),spec=parse(raw),materialized=parse(get(source.materialized_spec));
-  assert.equal(spec.schema,'wasmc.lib-build/v0');assert.equal(spec.skill.name,replacement.id);
-  assert.equal(spec.skill.version,replacement.version);assert.equal(producer.source_spec_sha256,sha(raw),'original source spec');
-  assert.equal(materialization.schema,'wasmc.lib-source-spec-materialization-custody/v1');
-  assert.equal(materialization.new_builds,0);assert.equal(materialization.only_changed_json_field,'/rust/crate_dir');
-  assert.equal(materialization.source_file,source.source_spec);assert.equal(materialization.materialized_file,source.materialized_spec);
-  const canonical=materialization.canonical_source_spec;
-  assert.equal(canonical.source_commit,authority.canonical_source_commit,'canonical source commit');
-  assert.equal(canonical.git_blob,authority.canonical_source_blob,'canonical source blob');safe(canonical.path);
-  assert.equal(canonical.sha256,sha(raw));assert.equal(canonical.bytes,raw.length);
-  assert.equal(createHash('sha1').update(Buffer.from('blob '+raw.length+'\0')).update(raw).digest('hex'),canonical.git_blob,'actual Git source blob');
-  assert.equal(materialization.materialized_sha256,sha(get(source.materialized_spec)));
-  assert.equal(materialization.source_value,spec.rust.crate_dir);assert.equal(materialization.materialized_value,materialized.rust.crate_dir);
-  const originalShape=structuredClone(spec),materializedShape=structuredClone(materialized);
-  delete originalShape.rust.crate_dir;delete materializedShape.rust.crate_dir;
-  assert.deepEqual(originalShape,materializedShape,'only producer crate locator may be materialized');
-  assert.equal(materialization.all_other_JSON_fields_equal,true);
-  assert.equal(report.generated_source_sha256,sha(get(source.generated_source)),'actual generated Rust source');
-  assert.equal(producer.logic_sha256,sha(get(source.logic)),'actual Lib implementation source');
-  const cargo=decode(get(source.cargo_manifest));
-  assert.ok(cargo.includes('version = '+JSON.stringify(replacement.version)),'source Cargo version');
-  assert.ok(cargo.includes('name = '+JSON.stringify(spec.rust.artifact_name.replaceAll('_','-'))),'source Cargo package');
-  const cargoHash=sha(get(source.cargo_lock));
-  assert.ok(manifest.build.inputs.some(row=>row.kind==='cargo-lock'&&row.path===materialized.rust.crate_dir+'/Cargo.lock'&&row.sha256===cargoHash),'original locked Cargo input');
-  assert.equal(sha(get(source.wit)),files['lib.wit'].sha256,'source and produced WIT must match');
-  assert.equal(spec.wit,source.wit,'explicit producer WIT locator');
-  return {spec,report,proof:{kind:'imported-producer-root',original_receipt_sha256:authority.original_receipt_sha256,
-    producer_sha256:authority.driver_sha256,observed_build_source:authority.original_source,
-    canonical_source_commit:authority.canonical_source_commit,canonical_source_blob:authority.canonical_source_blob,
-    source_spec_sha256:sha(raw),materialized_spec_sha256:sha(get(source.materialized_spec)),
-    source_root:source.root,source_inventory_sha256:source.inventory_sha256,
-    producer_custody:descriptor(input,source.root+'/'+source.producer_custody),
-    materialization_custody:descriptor(input,source.root+'/'+source.materialization_custody),
-    original_q0_producer_pass:true,original_receipt_bytes_verified:false,
-    evidence_mode:'independently-pinned imported custody and original producer report',fresh_build_performed:false}};
 }
 function importedRoot(input,replacement,baseLicense){
   exact(replacement,['id','version','profile','root','manifest_sha256','root_inventory_sha256','source']);
@@ -239,6 +175,7 @@ function candidateFromComposition(input,options,composition){
   const ordered=map=>Object.fromEntries(Object.entries(map).sort(([a],[b])=>a<b?-1:a>b?1:0));
   assert.equal(digest(ordered(originalSource)),baseIndex.source_fingerprint,'original complete authoring fingerprint');
   const compositionSha=digest(composition),packages=[],roots=[],projectedSourceFiles=[];
+  const sourceLineage=buildCurrentCompositionLineageData(input,options,composition,compositionSha);
   for(const row of composition.rows){
     const manifest=parse(readBytes(input,row.root+'/lib.json'));
     if(row.origin.kind==='reused-public-root')packages.push(structuredClone(baseIndex.packages.find(p=>p.package_id===row.id)));
@@ -263,10 +200,13 @@ function candidateFromComposition(input,options,composition){
       manifest_sha256:row.manifest_sha256,root_inventory_sha256:row.root_inventory_sha256,
       files:Object.entries(row.files).map(([path,value])=>({path:row.root+'/'+path,...value})),
       source:row.origin.kind==='reused-public-root'?{kind:'current-authoring',...row.catalog_row.source}:
-        {kind:'original-producer-source-packet',spec:row.discovery_metadata.spec,
+        {kind:'current-original-producer-source',spec:row.discovery_metadata.spec,
           wit:descriptor(input,options.replacements.find(p=>p.id===row.id).source.root+'/'+options.replacements.find(p=>p.id===row.id).source.wit),
-          packet_root:row.origin.source_root,packet_inventory_sha256:row.origin.source_inventory_sha256},
-      origin:row.origin,current_authoring_admitted:!row.required_current_authoring_admission});
+          packet_root:row.origin.source_root,packet_inventory_sha256:row.origin.source_inventory_sha256,
+          source_schema:'wasmc.current-original-producer-source/v1',
+          source_admission:sourceLineage.admitted_original_sources.find(value=>value.source.id===row.id).admission},
+      origin:row.origin,current_authoring_admitted:!row.required_current_authoring_admission,
+      source_custody_admitted_for_current_composition:true});
   }
   // The wire order is the full package identity, including '@'. Bare IDs have
   // a different order at prefix collisions such as http1/http1-client.
@@ -327,9 +267,10 @@ function candidateFromComposition(input,options,composition){
   for(const [path,expected]of Object.entries(sourceInputs))assert.equal(sha(readBytes(input,path)),expected,'candidate authoring end fence');
   return {schema:'wasmc.current-lib-admission-candidate/v1',accepted:true,candidate_verified:true,
     current_directory_admitted:false,public_admission:false,released:false,installation:false,fresh_full_q0:false,
-    composition_sha256:compositionSha,index,index_pin:indexPin,index_source_paths:'proposed-current-product',
+    composition_sha256:compositionSha,index,index_pin:indexPin,index_source_paths:'proposed-current-product',source_lineage:sourceLineage,
     manifest:{schema:'wasmc.current-lib-composition-manifest/v1',base_catalog:composition.base.catalog,
       registry:catalog.registry,composition_sha256:compositionSha,index:indexPin,
+      source_lineage_sha256:digest(sourceLineage),
       source_fingerprint_mode:'composition-selected-discovery-inputs/v1',source_inputs:sourceInputs,
       projected_source_files:projectedSourceFiles,packages:roots},
     verification:{actual_Core_Search_snapshot:true,actual_Core_Search_lookups:entries.length,
@@ -337,14 +278,15 @@ function candidateFromComposition(input,options,composition){
       original_first_candidate_probes:rejectedInitialProbes,
       bare_id_order_probe:{index_sha256:sha(orderProbeBytes),observed:orderObserved,rejected:differentOrder},
       search_core_sha256:sha(searchArtifact),search_abi_sha256:sha(searchAbi)},summary:composition.summary,
-    exact_remaining_identity_gaps:options.replacements.map(replacement=>({id:replacement.id,
+    exact_remaining_identity_gaps:[],
+    pending_current_materializations:options.replacements.map(replacement=>({id:replacement.id,
       current_spec:descriptor(input,'libspec/'+replacement.id+'/lib.json'),
       proposed_source_spec:descriptor(input,replacement.source.root+'/'+replacement.source.source_spec),
       current_wit:descriptor(input,'libspec/'+replacement.id+'/lib.wit'),
       proposed_wit:descriptor(input,replacement.source.root+'/'+replacement.source.wit),
-      reason:'Current source registry still selects the prior authoring version; imported producer source and its current composition lineage need explicit admission before promotion.'})),
-    remaining_gates:['admit imported original producer source as current authoring with an explicit schema',
-      'connect strict composition lineage to current product assembler/verifier',
+      admitted_source_schema:'wasmc.current-original-producer-source/v1',
+      reason:'Source custody is admitted for the current composition; the physical current source registry, WIT projection and product lineage adapter remain unapplied.'})),
+    remaining_gates:['connect admitted original-producer-source and strict composition lineage to current product assembler/verifier',
       'materialize complete current catalog/Roots, then actual resolve/install and App/SDK qualification',
       'release acceptance and immutable formal publication']};
 }

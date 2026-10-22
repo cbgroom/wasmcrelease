@@ -143,8 +143,13 @@ assert.deepEqual(candidate.verification.replaced,[{id:'wasmc-json',old_identity:
 assert.equal(candidate.verification.actual_Core_Search_lookups,288);
 assert.equal(candidate.verification.actual_Core_Search_pages,5);
 assert.equal(candidate.current_directory_admitted,false);
-assert.equal(candidate.exact_remaining_identity_gaps.length,1);
-assert.notEqual(candidate.exact_remaining_identity_gaps[0].current_wit.sha256,candidate.exact_remaining_identity_gaps[0].proposed_wit.sha256);
+assert.equal(candidate.exact_remaining_identity_gaps.length,0);
+assert.equal(candidate.pending_current_materializations.length,1);
+assert.notEqual(candidate.pending_current_materializations[0].current_wit.sha256,candidate.pending_current_materializations[0].proposed_wit.sha256);
+assert.equal(candidate.source_lineage.source_custody_admitted_for_current_composition,true);
+assert.equal(candidate.source_lineage.admitted_original_sources[0].admission.accepted,true);
+assert.equal(candidate.source_lineage.admitted_original_sources[0].source.source_spec.sha256,
+  '283ce7886cdca94d53b7a646b403471c0482be502be933e0a5a3e7e072ce9820');
 for(const id of options.reused_ids)assert.deepEqual(candidate.index.packages.find(row=>row.package_id===id),
   JSON.parse(data.get(catalog.index.path)).packages.find(row=>row.package_id===id),'all41 reused index rows unchanged');
 assert.equal(candidate.index.packages.find(row=>row.package_id==='wasmc-json').source_path,'libspec/wasmc-json/lib.wit');
@@ -168,6 +173,7 @@ rejectCandidate('candidate cannot use unsupported authoring locator',c=>c.index.
 rejectCandidate('candidate cannot claim proposed WIT copied into current',c=>c.manifest.projected_source_files[0].applied=true);
 rejectCandidate('candidate cannot replace unchanged Root locator',c=>c.manifest.packages[0].locator='standard/made-up');
 rejectCandidate('candidate cannot claim current directory admitted',c=>c.current_directory_admitted=true);
+rejectCandidate('candidate cannot relabel original producer source lineage',c=>c.source_lineage.rows.find(row=>row.id==='wasmc-json').source_schema='wasmc.lib-refresh-source/v2');
 rejectCandidate('candidate cannot relabel imported receipt asfresh Q0',c=>c.fresh_full_q0=true);
 {
   const changed=new Map(data),path='libspec/wasmc-json/adapter.rs';
