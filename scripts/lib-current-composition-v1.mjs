@@ -9,6 +9,7 @@ import {fileURLToPath} from 'node:url';
 import {checkedCurrentCatalog,verifyCurrentRelease,currentProductReader,currentProductPaths} from './current-lib-release-v3.mjs';
 import {sha,digest,verifyRoot,inventory} from './lib-refresh-cache-v2.mjs';
 import {witModel,selectedWitRoutes} from './current-wit-routes-v3.mjs';
+import {CurrentSearchCaller,currentIndexEntries} from './current-lib-search-v3.mjs';
 
 const sorted=values=>[...values].sort();
 const exact=(value,keys)=>assert.deepEqual(Object.keys(value).sort(),sorted(keys),'closed composition input schema');
@@ -223,6 +224,142 @@ export async function composeCurrentLibs(repo,options){
   }
   for(const row of receipt.rows)assert.deepEqual(await inventory(join(repo,row.root)),row.files,'physical end-of-read Root fence');
   return receipt;
+}
+
+function candidateFromComposition(input,options,composition){
+  const catalog=parse(readBytes(input,options.base.catalog_path)),baseIndex=parse(readBytes(input,catalog.index.path));
+  const originalSource={},selectedSource={};
+  for(const row of catalog.packages){
+    const directory=row.source.spec.path.slice(0,-'/lib.json'.length),files=rootInventory(input,directory);
+    for(const [path,value]of Object.entries(files)){
+      originalSource[directory+'/'+path]=value.sha256;
+      if(options.reused_ids.includes(row.id))selectedSource[directory+'/'+path]=value.sha256;
+    }
+  }
+  const ordered=map=>Object.fromEntries(Object.entries(map).sort(([a],[b])=>a<b?-1:a>b?1:0));
+  assert.equal(digest(ordered(originalSource)),baseIndex.source_fingerprint,'original complete authoring fingerprint');
+  const compositionSha=digest(composition),packages=[],roots=[],projectedSourceFiles=[];
+  for(const row of composition.rows){
+    const manifest=parse(readBytes(input,row.root+'/lib.json'));
+    if(row.origin.kind==='reused-public-root')packages.push(structuredClone(baseIndex.packages.find(p=>p.package_id===row.id)));
+    else{
+      const replacement=options.replacements.find(p=>p.id===row.id),source=replacement.source;
+      for(const [path,value]of Object.entries(rootInventory(input,source.root)))selectedSource[source.root+'/'+path]=value.sha256;
+      packages.push({package_id:row.id,version:row.version,profile:row.profile,target:manifest.build.target,
+        source_path:'libspec/'+row.id+'/lib.wit',wit_sha256:row.wit.sha256,
+        delivery:{manifest_sha256:row.manifest_sha256,receipt_sha256:compositionSha,
+          artifact_kind:'wasm-core-component',artifact_path:manifest.artifact.path,
+          artifact_sha256:manifest.artifact.sha256,component_sha256:manifest.component.sha256},
+        wit_route:row.wit.identity,description:row.discovery_metadata.description,
+        apis:row.wit.api_routes.map(route=>({route:route.slice(row.wit.identity.length+1),
+          description:row.discovery_metadata.apis.find(api=>api.api===route.split('#')[1]).delta}))});
+      projectedSourceFiles.push({target_path:'libspec/'+row.id+'/lib.wit',
+        source:descriptor(input,source.root+'/'+source.wit),
+        current:descriptor(input,'libspec/'+row.id+'/lib.wit'),applied:false,
+        mode:'byte-identical proposed current WIT materialization'});
+    }
+    roots.push({id:row.id,version:row.version,profile:row.profile,locator:row.root,
+      proposed_current_root:'current-libs/'+row.id+'/'+row.version,
+      manifest_sha256:row.manifest_sha256,root_inventory_sha256:row.root_inventory_sha256,
+      files:Object.entries(row.files).map(([path,value])=>({path:row.root+'/'+path,...value})),
+      source:row.origin.kind==='reused-public-root'?{kind:'current-authoring',...row.catalog_row.source}:
+        {kind:'original-producer-source-packet',spec:row.discovery_metadata.spec,
+          wit:descriptor(input,options.replacements.find(p=>p.id===row.id).source.root+'/'+options.replacements.find(p=>p.id===row.id).source.wit),
+          packet_root:row.origin.source_root,packet_inventory_sha256:row.origin.source_inventory_sha256},
+      origin:row.origin,current_authoring_admitted:!row.required_current_authoring_admission});
+  }
+  // The wire order is the full package identity, including '@'. Bare IDs have
+  // a different order at prefix collisions such as http1/http1-client.
+  const bareIdOrder=structuredClone(packages);
+  packages.sort((a,b)=>{const x=a.package_id+'@'+a.version,y=b.package_id+'@'+b.version;return x<y?-1:x>y?1:0;});
+  const sourceInputs=ordered(selectedSource),index={schema:'wasmc.current-lib-search-index/v2',
+    registry_sha256:catalog.registry.sha256,source_fingerprint:digest(sourceInputs),packages};
+  const indexBytes=Buffer.from(JSON.stringify(index)+'\n'),indexPin={bytes:indexBytes.length,sha256:sha(indexBytes)};
+  assert.ok(indexBytes.length<=2097152);const entries=currentIndexEntries(index);
+  assert.equal(new Set(entries.map(row=>row.identity)).size,entries.length,'unique complete candidate identities');
+  const search=composition.rows.find(row=>row.id==='wasmc-lib-search');
+  const searchArtifact=readBytes(input,search.root+'/artifact.wasm'),searchAbi=readBytes(input,search.root+'/core-abi.json');
+  assert.equal(sha(searchArtifact),search.files['artifact.wasm'].sha256);
+  assert.equal(sha(searchAbi),search.files['core-abi.json'].sha256);
+  const caller=new CurrentSearchCaller(indexBytes,searchArtifact,searchAbi);
+  assert.deepEqual(caller.snapshot(),{tag:'ok',value:{entry_count:entries.length,package_count:packages.length,
+    api_count:entries.length-packages.length,bound_package_count:packages.length,
+    registry_sha256:catalog.registry.sha256,index_sha256:indexPin.sha256}});
+  for(const entry of entries)assert.deepEqual(caller.lookup(entry.identity),{tag:'ok',value:entry});
+  const all=[];let pages=0;
+  for(let offset=0;offset<entries.length;offset+=64){
+    const result=caller.search({text:'',package_id:null,profile:null,bound_only:true},offset,64);
+    assert.equal(result.tag,'ok');all.push(...result.value);pages++;
+  }
+  assert.deepEqual(all,entries,'actual candidate Core Search full pagination');
+  const replaced=[],rejectedSourcePathProbes=[],rejectedInitialProbes=[];
+  for(const replacement of options.replacements){
+    const expected=entries.filter(row=>row.package_id===replacement.id);
+    assert.deepEqual(caller.search({text:'',package_id:replacement.id,profile:null,bound_only:true},0,64),{tag:'ok',value:expected});
+    const old=catalog.packages.find(row=>row.id===replacement.id),oldIdentity=old.id+'@'+old.version;
+    assert.deepEqual(caller.lookup(oldIdentity),{tag:'ok',value:null},'old replaced identity absent');
+    replaced.push({id:replacement.id,old_identity:oldIdentity,new_identity:replacement.id+'@'+replacement.version,
+      filtered_entries:expected.length,old_identity_absent:true});
+    // Preserve the first real candidate failure as an executable contrast:
+    // LibSearch0.5.0 requires the logical current-authoring path. The candidate
+    // manifest explicitly projects original WIT bytes to that path without
+    // writing them into the current product or claiming authoring admission.
+    const probe=structuredClone(index),sourcePath=replacement.source.root+'/'+replacement.source.wit;
+    probe.packages.find(row=>row.package_id===replacement.id).source_path=sourcePath;
+    const probeBytes=Buffer.from(JSON.stringify(probe)+'\n');
+    const observed=new CurrentSearchCaller(probeBytes,searchArtifact,searchAbi).snapshot();
+    assert.deepEqual(observed,{tag:'err',value:'invalid-index'},'actual LibSearch rejects noncanonical authoring locator');
+    rejectedSourcePathProbes.push({id:replacement.id,source_path:sourcePath,index_sha256:sha(probeBytes),observed,
+      reason:'LibSearch0.5.0 requires libspec/<id>/lib.wit; current-source projection remains unapplied.'});
+    const initial={...probe,packages:structuredClone(bareIdOrder)};
+    initial.packages.find(row=>row.package_id===replacement.id).source_path=sourcePath;
+    const initialBytes=Buffer.from(JSON.stringify(initial)+'\n');
+    const initialObserved=new CurrentSearchCaller(initialBytes,searchArtifact,searchAbi).snapshot();
+    assert.deepEqual(initialObserved,{tag:'err',value:'invalid-index'});
+    rejectedInitialProbes.push({id:replacement.id,index_sha256:sha(initialBytes),observed:initialObserved,
+      reason:'Original first candidate used a producer path and bare-ID package ordering; exact rejected input identity retained.'});
+  }
+  const orderProbe={...index,packages:bareIdOrder},orderProbeBytes=Buffer.from(JSON.stringify(orderProbe)+'\n');
+  const orderObserved=new CurrentSearchCaller(orderProbeBytes,searchArtifact,searchAbi).snapshot();
+  const differentOrder=JSON.stringify(bareIdOrder.map(row=>row.package_id))!==JSON.stringify(packages.map(row=>row.package_id));
+  if(differentOrder)assert.deepEqual(orderObserved,{tag:'err',value:'invalid-index'},'actual Core Search rejects bare-ID ordering at prefix collisions');
+  for(const root of roots)for(const expected of root.files)assert.deepEqual(descriptor(input,expected.path),expected,'candidate original Root end fence');
+  for(const [path,expected]of Object.entries(sourceInputs))assert.equal(sha(readBytes(input,path)),expected,'candidate authoring end fence');
+  return {schema:'wasmc.current-lib-admission-candidate/v1',accepted:true,candidate_verified:true,
+    current_directory_admitted:false,public_admission:false,released:false,installation:false,fresh_full_q0:false,
+    composition_sha256:compositionSha,index,index_pin:indexPin,index_source_paths:'proposed-current-product',
+    manifest:{schema:'wasmc.current-lib-composition-manifest/v1',base_catalog:composition.base.catalog,
+      registry:catalog.registry,composition_sha256:compositionSha,index:indexPin,
+      source_fingerprint_mode:'composition-selected-discovery-inputs/v1',source_inputs:sourceInputs,
+      projected_source_files:projectedSourceFiles,packages:roots},
+    verification:{actual_Core_Search_snapshot:true,actual_Core_Search_lookups:entries.length,
+      actual_Core_Search_pages:pages,bound_packages:packages.length,replaced,rejected_source_path_probes:rejectedSourcePathProbes,
+      original_first_candidate_probes:rejectedInitialProbes,
+      bare_id_order_probe:{index_sha256:sha(orderProbeBytes),observed:orderObserved,rejected:differentOrder},
+      search_core_sha256:sha(searchArtifact),search_abi_sha256:sha(searchAbi)},summary:composition.summary,
+    exact_remaining_identity_gaps:options.replacements.map(replacement=>({id:replacement.id,
+      current_spec:descriptor(input,'libspec/'+replacement.id+'/lib.json'),
+      proposed_source_spec:descriptor(input,replacement.source.root+'/'+replacement.source.source_spec),
+      current_wit:descriptor(input,'libspec/'+replacement.id+'/lib.wit'),
+      proposed_wit:descriptor(input,replacement.source.root+'/'+replacement.source.wit),
+      reason:'Current source registry still selects the prior authoring version; imported producer source and its current composition lineage need explicit admission before promotion.'})),
+    remaining_gates:['admit imported original producer source as current authoring with an explicit schema',
+      'connect strict composition lineage to current product assembler/verifier',
+      'materialize complete current catalog/Roots, then actual resolve/install and App/SDK qualification',
+      'release acceptance and immutable formal publication']};
+}
+
+export function buildCurrentCompositionCandidateData(input,options){
+  return candidateFromComposition(input,options,composeCurrentLibData(input,options));
+}
+export async function buildCurrentCompositionCandidate(repo,options){
+  repo=resolve(repo);const composition=await composeCurrentLibs(repo,options);
+  return candidateFromComposition({read:currentProductReader(repo),paths:prefix=>currentProductPaths(repo,prefix)},options,composition);
+}
+export function verifyCurrentCompositionCandidateData(input,options,candidate){
+  assert.deepEqual(candidate,buildCurrentCompositionCandidateData(input,options),'candidate must equal its independently verified source/Root composition');
+  return {accepted:true,index_sha256:candidate.index_pin.sha256,composition_sha256:candidate.composition_sha256,
+    current_directory_admitted:false,public_admission:false};
 }
 
 if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)){

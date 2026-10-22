@@ -2,8 +2,11 @@
 // Faults live in byte-map overlays; no product or producer file is changed.
 import assert from 'node:assert/strict';
 import {fileURLToPath} from 'node:url';
+import {readFile,writeFile} from 'node:fs/promises';
+import {resolve} from 'node:path';
 import {currentProductReader,currentProductPaths} from './current-lib-release-v3.mjs';
-import {composeCurrentLibs,composeCurrentLibData} from './lib-current-composition-v1.mjs';
+import {composeCurrentLibs,composeCurrentLibData,buildCurrentCompositionCandidate,
+  verifyCurrentCompositionCandidateData} from './lib-current-composition-v1.mjs';
 import {digest,sha} from './lib-refresh-cache-v2.mjs';
 
 const repo=fileURLToPath(new URL('../',import.meta.url)),read=currentProductReader(repo);
@@ -29,7 +32,10 @@ const data=new Map();
 const required=new Set([basePath,catalog.registry.path,catalog.index.path,catalog.cohort.path,'LICENSE',
   ...currentProductPaths(repo),...currentProductPaths(repo,'licenses'),
   ...currentProductPaths(repo,root),...currentProductPaths(repo,packet)]);
-for(const row of catalog.packages)for(const pin of Object.values(row.source))required.add(pin.path);
+for(const row of catalog.packages){
+  for(const pin of Object.values(row.source))required.add(pin.path);
+  for(const path of currentProductPaths(repo,row.source.spec.path.slice(0,-'/lib.json'.length)))required.add(path);
+}
 for(const path of required)data.set(path,read(path));
 const input=map=>({read:path=>{assert.ok(map.has(path),'missing byte input: '+path);return map.get(path);},
   paths:prefix=>[...map.keys()].filter(path=>path.startsWith(prefix+'/')).sort()});
@@ -129,9 +135,64 @@ reject('closed composition schema',o=>o.q0_accepted=true,/closed composition inp
   assert.throws(()=>composeCurrentLibData(changing,options),/base product input changed during composition/);
   results.push({name:'base producer cohort changes after earlier successful verification',pass:true,rejected:true});
 }
+const candidate=await buildCurrentCompositionCandidate(repo,options);
+assert.deepEqual(candidate.summary,receipt.summary);
+assert.equal(candidate.composition_sha256,digest(receipt));
+assert.deepEqual(candidate.verification.replaced,[{id:'wasmc-json',old_identity:'wasmc-json@0.0.1',
+  new_identity:'wasmc-json@0.0.5',filtered_entries:14,old_identity_absent:true}]);
+assert.equal(candidate.verification.actual_Core_Search_lookups,288);
+assert.equal(candidate.verification.actual_Core_Search_pages,5);
+assert.equal(candidate.current_directory_admitted,false);
+assert.equal(candidate.exact_remaining_identity_gaps.length,1);
+assert.notEqual(candidate.exact_remaining_identity_gaps[0].current_wit.sha256,candidate.exact_remaining_identity_gaps[0].proposed_wit.sha256);
+for(const id of options.reused_ids)assert.deepEqual(candidate.index.packages.find(row=>row.package_id===id),
+  JSON.parse(data.get(catalog.index.path)).packages.find(row=>row.package_id===id),'all41 reused index rows unchanged');
+assert.equal(candidate.index.packages.find(row=>row.package_id==='wasmc-json').source_path,'libspec/wasmc-json/lib.wit');
+assert.equal(candidate.manifest.projected_source_files[0].source.path,packet+'/lib.wit');
+assert.equal(candidate.manifest.projected_source_files[0].applied,false);
+assert.deepEqual(candidate.verification.rejected_source_path_probes[0].observed,{tag:'err',value:'invalid-index'});
+assert.equal(candidate.verification.original_first_candidate_probes[0].index_sha256,
+  '6488d7a24e26634880462b5ae12a9ca41f4ca2674250daaba89d00de7016f7b4','original real candidate failure retained');
+assert.equal(candidate.verification.bare_id_order_probe.index_sha256,
+  'd6bff004c01a009ddb6855fd3f40f3d8ebc46237a7c8febd1d8f70315167de55','original second candidate failure retained');
+assert.equal(candidate.verification.bare_id_order_probe.rejected,true);
+verifyCurrentCompositionCandidateData(input(data),options,candidate);
+results.push({name:'actual candidate Core Search snapshot, all288 lookups, five pages, JSON14-hit filter and old001 absence',pass:true});
+const rejectCandidate=(name,mutate)=>{
+  const changed=structuredClone(candidate);mutate(changed);
+  assert.throws(()=>verifyCurrentCompositionCandidateData(input(data),options,changed),/candidate must equal/);
+  results.push({name,pass:true,rejected:true});
+};
+rejectCandidate('candidate cannot silently omit JSON005 API',c=>c.index.packages.find(row=>row.package_id==='wasmc-json').apis.pop());
+rejectCandidate('candidate cannot use unsupported authoring locator',c=>c.index.packages.find(row=>row.package_id==='wasmc-json').source_path=packet+'/lib.wit');
+rejectCandidate('candidate cannot claim proposed WIT copied into current',c=>c.manifest.projected_source_files[0].applied=true);
+rejectCandidate('candidate cannot replace unchanged Root locator',c=>c.manifest.packages[0].locator='standard/made-up');
+rejectCandidate('candidate cannot claim current directory admitted',c=>c.current_directory_admitted=true);
+rejectCandidate('candidate cannot relabel imported receipt asfresh Q0',c=>c.fresh_full_q0=true);
+{
+  const changed=new Map(data),path='libspec/wasmc-json/adapter.rs';
+  changed.set(path,Buffer.concat([changed.get(path),Buffer.from('\n// untracked current authoring drift\n')]));
+  assert.throws(()=>verifyCurrentCompositionCandidateData(input(changed),options,candidate),/original complete authoring fingerprint/);
+  results.push({name:'candidate checks complete original authoring fingerprint including adapter source',pass:true,rejected:true});
+}
 assert.equal(sha(read(basePath)),options.base.catalog_sha256,'original catalog unchanged');
 for(const row of receipt.rows)for(const [name,pin]of Object.entries(row.files))assert.equal(sha(read(row.root+'/'+name)),pin.sha256,'every original Root byte unchanged');
-console.log(JSON.stringify({schema:'wasmc.current-lib-composition-controls/v1',accepted:true,tests:results.length,
+const controls={schema:'wasmc.current-lib-composition-controls/v1',accepted:true,tests:results.length,
   composition_schema:receipt.schema,composition_sha256:digest(receipt),input_sha256:digest(options),summary:receipt.summary,
+  candidate_index_sha256:candidate.index_pin.sha256,candidate_manifest_sha256:digest(candidate.manifest),
   public_admission:false,fresh_full_q0:false,results,
-  scope:'Actual source-custody/whole-Root composition and byte-overlay rejection controls; no current authoring/catalog admission, new-index Search, installation or formal release claimed.'}));
+  scope:'Actual source-custody/whole-Root composition, candidate288-entry Core Search and byte-overlay rejection controls; no current authoring/catalog admission, installation or formal release claimed.'};
+const args=process.argv.slice(2);
+if(args.length){
+  assert.equal(args.length,2,'optional: --out admission/ordinary-canonical-host-v024/root-admission-next.json');assert.equal(args[0],'--out');
+  const allowed=resolve(repo,'admission/ordinary-canonical-host-v024/root-admission-next.json');assert.equal(resolve(args[1]),allowed);
+  const report={schema:'wasmc.current-lib-root-admission-next/v1',accepted:true,
+    public_admission:false,current_directory_admitted:false,composition_input:options,
+    composition:receipt,candidate,controls,
+    tool_inputs:{'scripts/lib-current-composition-v1.mjs':sha(await readFile(new URL('./lib-current-composition-v1.mjs',import.meta.url))),
+      'scripts/test-lib-current-composition-v1.mjs':sha(await readFile(new URL(import.meta.url)))}};
+  const bytes=Buffer.from(JSON.stringify(report,null,2)+'\n');
+  try{await writeFile(allowed,bytes,{flag:'wx'});}catch(error){if(error.code!=='EEXIST')throw error;
+    assert.deepEqual(await readFile(allowed),bytes,'existing owned candidate report differs');}
+}
+console.log(JSON.stringify(controls));
