@@ -1,0 +1,423 @@
+{
+  "conclusion": "success",
+  "createdAt": "2026-10-22T13:23:27Z",
+  "databaseId": 39786397745,
+  "headSha": "dfdf978567c3719030b520ff338f58426773bfe6",
+  "jobs": [
+    {
+      "completedAt": "2026-10-22T13:34:56Z",
+      "conclusion": "success",
+      "databaseId": 119850663209,
+      "name": "native (windows-2025, x86_64-pc-windows-msvc)",
+      "startedAt": "2026-10-22T13:23:32Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-10-22T13:23:34Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-22T13:23:33Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-22T13:23:41Z",
+          "conclusion": "success",
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "number": 2,
+          "startedAt": "2026-10-22T13:23:34Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-22T13:23:51Z",
+          "conclusion": "success",
+          "name": "Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+          "number": 3,
+          "startedAt": "2026-10-22T13:23:41Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-22T13:23:51Z",
+          "conclusion": "success",
+          "name": "Exact Native source checkout",
+          "number": 4,
+          "startedAt": "2026-10-22T13:23:51Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-22T13:24:03Z",
+          "conclusion": "success",
+          "name": "Run rustup toolchain install 1.96.0 --profile minimal --component clippy,rustfmt",
+          "number": 5,
+          "startedAt": "2026-10-22T13:23:51Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-22T13:27:02Z",
+          "conclusion": "success",
+          "name": "Run cargo +1.96.0 test --locked --manifest-path sdk/wasmc-native-compiler/Cargo.toml",
+          "number": 6,
+          "startedAt": "2026-10-22T13:24:03Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-22T13:29:40Z",
+          "conclusion": "success",
+          "name": "Run cargo +1.96.0 clippy --locked --manifest-path sdk/wasmc-native-compiler/Cargo.toml --all-targets -- -D warnings",
+          "number": 7,
+          "startedAt": "2026-10-22T13:27:02Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-22T13:34:47Z",
+          "conclusion": "success",
+          "name": "Run cargo +1.96.0 build --release --locked --manifest-path sdk/wasmc-native-compiler/Cargo.toml",
+          "number": 8,
+          "startedAt": "2026-10-22T13:29:40Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-22T13:34:50Z",
+          "conclusion": "success",
+          "name": "Run node scripts/native-package.mjs build native-package x86_64-pc-windows-msvc 3b84957dabccb146545e1eb1b998ae6d5f477c3d",
+          "number": 9,
+          "startedAt": "2026-10-22T13:34:47Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-22T13:34:52Z",
+          "conclusion": "success",
+          "name": "Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "number": 10,
+          "startedAt": "2026-10-22T13:34:50Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-22T13:34:52Z",
+          "conclusion": "success",
+          "name": "Post Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+          "number": 19,
+          "startedAt": "2026-10-22T13:34:52Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-22T13:34:55Z",
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "number": 20,
+          "startedAt": "2026-10-22T13:34:52Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-22T13:34:55Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 21,
+          "startedAt": "2026-10-22T13:34:55Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/cbgroom/wasmcrelease/actions/runs/39786397745/job/119850663209"
+    },
+    {
+      "completedAt": "2026-10-22T13:32:08Z",
+      "conclusion": "success",
+      "databaseId": 119850663573,
+      "name": "native (windows-11-arm, aarch64-pc-windows-msvc)",
+      "startedAt": "2026-10-22T13:23:32Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-10-22T13:23:35Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-22T13:23:33Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-22T13:23:48Z",
+          "conclusion": "success",
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "number": 2,
+          "startedAt": "2026-10-22T13:23:35Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-22T13:24:00Z",
+          "conclusion": "success",
+          "name": "Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+          "number": 3,
+          "startedAt": "2026-10-22T13:23:48Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-22T13:24:01Z",
+          "conclusion": "success",
+          "name": "Exact Native source checkout",
+          "number": 4,
+          "startedAt": "2026-10-22T13:24:00Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-22T13:24:12Z",
+          "conclusion": "success",
+          "name": "Run rustup toolchain install 1.96.0 --profile minimal --component clippy,rustfmt",
+          "number": 5,
+          "startedAt": "2026-10-22T13:24:01Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-22T13:26:37Z",
+          "conclusion": "success",
+          "name": "Run cargo +1.96.0 test --locked --manifest-path sdk/wasmc-native-compiler/Cargo.toml",
+          "number": 6,
+          "startedAt": "2026-10-22T13:24:12Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-22T13:28:32Z",
+          "conclusion": "success",
+          "name": "Run cargo +1.96.0 clippy --locked --manifest-path sdk/wasmc-native-compiler/Cargo.toml --all-targets -- -D warnings",
+          "number": 7,
+          "startedAt": "2026-10-22T13:26:37Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-22T13:31:58Z",
+          "conclusion": "success",
+          "name": "Run cargo +1.96.0 build --release --locked --manifest-path sdk/wasmc-native-compiler/Cargo.toml",
+          "number": 8,
+          "startedAt": "2026-10-22T13:28:32Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-22T13:32:01Z",
+          "conclusion": "success",
+          "name": "Run node scripts/native-package.mjs build native-package aarch64-pc-windows-msvc 3b84957dabccb146545e1eb1b998ae6d5f477c3d",
+          "number": 9,
+          "startedAt": "2026-10-22T13:31:58Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-22T13:32:02Z",
+          "conclusion": "success",
+          "name": "Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "number": 10,
+          "startedAt": "2026-10-22T13:32:01Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-22T13:32:03Z",
+          "conclusion": "success",
+          "name": "Post Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+          "number": 19,
+          "startedAt": "2026-10-22T13:32:02Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-22T13:32:07Z",
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "number": 20,
+          "startedAt": "2026-10-22T13:32:03Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-22T13:32:07Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 21,
+          "startedAt": "2026-10-22T13:32:07Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/cbgroom/wasmcrelease/actions/runs/39786397745/job/119850663573"
+    },
+    {
+      "completedAt": "2026-10-22T13:35:43Z",
+      "conclusion": "success",
+      "databaseId": 119856501395,
+      "name": "downloaded-consumer (windows-11-arm, aarch64-pc-windows-msvc)",
+      "startedAt": "2026-10-22T13:35:00Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-10-22T13:35:03Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-22T13:35:01Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-22T13:35:18Z",
+          "conclusion": "success",
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "number": 2,
+          "startedAt": "2026-10-22T13:35:03Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-22T13:35:31Z",
+          "conclusion": "success",
+          "name": "Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+          "number": 3,
+          "startedAt": "2026-10-22T13:35:18Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-22T13:35:32Z",
+          "conclusion": "success",
+          "name": "Exact Native source checkout",
+          "number": 4,
+          "startedAt": "2026-10-22T13:35:31Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-22T13:35:33Z",
+          "conclusion": "success",
+          "name": "Run actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c",
+          "number": 5,
+          "startedAt": "2026-10-22T13:35:32Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-22T13:35:35Z",
+          "conclusion": "success",
+          "name": "Run node scripts/native-package.mjs verify downloaded aarch64-pc-windows-msvc 3b84957dabccb146545e1eb1b998ae6d5f477c3d",
+          "number": 6,
+          "startedAt": "2026-10-22T13:35:33Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-22T13:35:36Z",
+          "conclusion": "success",
+          "name": "Run node scripts/test-native-package.mjs downloaded aarch64-pc-windows-msvc 3b84957dabccb146545e1eb1b998ae6d5f477c3d",
+          "number": 7,
+          "startedAt": "2026-10-22T13:35:35Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-22T13:35:36Z",
+          "conclusion": "success",
+          "name": "Post Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+          "number": 13,
+          "startedAt": "2026-10-22T13:35:36Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-22T13:35:41Z",
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "number": 14,
+          "startedAt": "2026-10-22T13:35:36Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-22T13:35:41Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 15,
+          "startedAt": "2026-10-22T13:35:41Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/cbgroom/wasmcrelease/actions/runs/39786397745/job/119856501395"
+    },
+    {
+      "completedAt": "2026-10-22T13:35:36Z",
+      "conclusion": "success",
+      "databaseId": 119856501668,
+      "name": "downloaded-consumer (windows-2025, x86_64-pc-windows-msvc)",
+      "startedAt": "2026-10-22T13:35:00Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-10-22T13:35:02Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-10-22T13:35:01Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-22T13:35:15Z",
+          "conclusion": "success",
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "number": 2,
+          "startedAt": "2026-10-22T13:35:02Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-22T13:35:28Z",
+          "conclusion": "success",
+          "name": "Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+          "number": 3,
+          "startedAt": "2026-10-22T13:35:15Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-22T13:35:28Z",
+          "conclusion": "success",
+          "name": "Exact Native source checkout",
+          "number": 4,
+          "startedAt": "2026-10-22T13:35:28Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-22T13:35:29Z",
+          "conclusion": "success",
+          "name": "Run actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c",
+          "number": 5,
+          "startedAt": "2026-10-22T13:35:28Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-22T13:35:31Z",
+          "conclusion": "success",
+          "name": "Run node scripts/native-package.mjs verify downloaded x86_64-pc-windows-msvc 3b84957dabccb146545e1eb1b998ae6d5f477c3d",
+          "number": 6,
+          "startedAt": "2026-10-22T13:35:29Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-22T13:35:32Z",
+          "conclusion": "success",
+          "name": "Run node scripts/test-native-package.mjs downloaded x86_64-pc-windows-msvc 3b84957dabccb146545e1eb1b998ae6d5f477c3d",
+          "number": 7,
+          "startedAt": "2026-10-22T13:35:31Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-22T13:35:32Z",
+          "conclusion": "success",
+          "name": "Post Run actions/setup-node@820762786026740c76f36085b0efc47a31fe5020",
+          "number": 13,
+          "startedAt": "2026-10-22T13:35:32Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-22T13:35:34Z",
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "number": 14,
+          "startedAt": "2026-10-22T13:35:32Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-10-22T13:35:34Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 15,
+          "startedAt": "2026-10-22T13:35:34Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/cbgroom/wasmcrelease/actions/runs/39786397745/job/119856501668"
+    }
+  ],
+  "status": "completed",
+  "updatedAt": "2026-10-22T13:35:59Z",
+  "url": "https://github.com/cbgroom/wasmcrelease/actions/runs/39786397745"
+}
