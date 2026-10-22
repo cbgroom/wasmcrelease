@@ -3,7 +3,7 @@ import { resolve, dirname, basename, join } from 'node:path';
 import { isDeepStrictEqual } from 'node:util';
 import { sha256, selectCatalog, resolveCatalog, packageReader, catalogAuthorities } from './lib-catalog.mjs';
 
-const fail = code => { throw Object.assign(new Error(code), {code}); };
+const fail = (code, message = code) => { throw Object.assign(new Error(message), {code}); };
 const mirrors = Object.freeze({github:'https://raw.githubusercontent.com/cbgroom/wasmcrelease/',jsdelivr:'https://cdn.jsdelivr.net/gh/cbgroom/wasmcrelease@'});
 export function artifactUrl(mirror, commit, path) {
   if (!Object.hasOwn(mirrors,mirror) || !/^[a-f0-9]{40}$/.test(commit)) fail('install.mirror_invalid');
@@ -18,7 +18,9 @@ async function download(url, file, fetcher, totalSignal) {
   try {
     if (totalSignal.aborted) fail('install.timeout');
     const response=await fetcher(url,{redirect:'manual',signal:controller.signal});
-    if (response.status!==200 || response.redirected) fail('install.http_rejected');
+    if (response.status!==200 || response.redirected) {
+      fail('install.http_rejected', `install.http_rejected: HTTP ${response.status} for ${file.path}`);
+    }
     reader=response.body?.getReader();
     if (!reader) fail('install.body_missing');
     const chunks=[]; let bytes=0;
@@ -33,7 +35,7 @@ async function download(url, file, fetcher, totalSignal) {
     if(sha256(result)!==file.sha256)fail('install.digest_mismatch');
     return result;
   } catch(error) {
-    if(error.code?.startsWith('install.'))throw error;
+    if(typeof error?.code==='string' && error.code.startsWith('install.'))throw error;
     fail(controller.signal.aborted?'install.timeout':'install.transport_failed');
   } finally {
     clearTimeout(timer);totalSignal.removeEventListener('abort',abort);

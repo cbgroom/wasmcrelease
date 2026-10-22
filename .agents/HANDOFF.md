@@ -1,5 +1,8 @@
 # WAsmC release maintainer handoff
 
+Latest2026-10-22: v024dev1 is publicly prereleased at03fe and independently downloaded; suffix-freev024/prod/default publication remains pending. The next legal successor isdev2 for ordinary installer error masking, three genuinely refreshed Runtime Host receipts and Search fixture pins. Originaldev1/097/43d and all actual failures remain immutable. Compiler/Core/168 family and actual six Native builds+six consumers remain unchanged; no compiler or Core rebuild is required. Follow the latest WS-20261022-final-compiler-core-carriers-v024/HANDOFF.md section before promotion.
+
+
 Current workstream,2026-10-22: v0.0.24 successor is under qualification; no v0.0.24 immutable tag or Release exists yet. The actual c788 compiler/raw Core7cd family is fixed and passed15 source-free commands; all six Native builds and six downloaded consumers passed at their actual4d input. Canonical private Source819/PR18 merged, JSON006 original19-case fixture and public11-input deterministic assembly passed. Current catalog c583 contains42 Roots/247 APIs/289 entries with41 reused original producer cohorts and one exact JSON006 replacement; it is not a new all42 build. Read WS-20261022-final-compiler-core-carriers-v024/HANDOFF.md and the current composition receipts for the resume point. The next release actions are strict current candidate freeze, coherent channel promotion, authorized GLM5.3flash single-model regression and independent review, then immutable publication/public readback. Frozen publications below are historical evidence.
 
 

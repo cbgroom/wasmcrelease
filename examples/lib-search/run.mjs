@@ -5,8 +5,14 @@ import {resolve} from 'node:path';
 import {checkedCurrentCatalog,verifyCurrentRelease,currentProductReader,currentProductPaths} from '../../scripts/current-lib-release-v3.mjs';
 import {CurrentSearchCaller} from '../../scripts/current-lib-search-v3.mjs';
 const root=fileURLToPath(new URL('../../',import.meta.url)),read=currentProductReader(root);
-const bytes=read('catalog/libs-current-v2.json'),pin='81db5d610d53c7627fd91a4bbd47a22610bd1982718b845dc1557b81657f0e74';
-const catalog=checkedCurrentCatalog(bytes,pin),closure=verifyCurrentRelease(bytes,pin,read,currentProductPaths(root));
+const bytes=read('catalog/libs-current-v2.json'),pin='c583d5444d9bcba8f5932660d5b632fd64aa9a212c2002f1a91fa03b9d4e0aa9';
+const catalog=checkedCurrentCatalog(bytes,pin),cohort=JSON.parse(read(catalog.cohort.path));
+assert.equal(cohort.schema,'wasmc.public-current-composition-cohort/v1');
+const paths=[...currentProductPaths(root),...currentProductPaths(root,cohort.input_prefix),
+  ...catalog.packages.flatMap(item=>currentProductPaths(root,item.source.spec.path.slice(0,-'/lib.json'.length))),
+  ...cohort.source_lineage.admitted_original_sources.flatMap(({source})=>
+    [...currentProductPaths(root,source.root.locator),...currentProductPaths(root,source.source_packet.root)])];
+const closure=verifyCurrentRelease(bytes,pin,read,paths);
 const selected=catalog.packages.find(r=>r.id==='wasmc-lib-search');
 const caller=new CurrentSearchCaller(read(catalog.index.path),read(selected.root+'/artifact.wasm'),read(selected.root+'/core-abi.json'));
 const query={text:'base64',package_id:'wasmc-std',profile:null,bound_only:true};

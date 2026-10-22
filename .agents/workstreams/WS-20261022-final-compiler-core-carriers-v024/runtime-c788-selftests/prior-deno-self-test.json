@@ -1,0 +1,101 @@
+{
+  "schema": "wasmc.runtime-js-self-test/v0",
+  "accepted": true,
+  "runtime": "deno",
+  "compiler_bytes": 1545807,
+  "output_bytes": 41,
+  "runtime_version": "deno 2.9.4 (stable, release, aarch64-apple-darwin)\nv8 15.0.245.2-rusty\ntypescript 6.0.3",
+  "candidate_commit": "39dacb1936b851fa0e2310ee06f24b84e0e31761",
+  "compiler_sha256": "1a04d9ef830be8770bc37e507e50addac10be3615e610beab1241ccba6d090b0",
+  "source_free_package": {
+    "archive_sha256": "716480ac79f0ca0dec24aafd08f9ad36c8ea9c329bde33333ce89f273b41e71f",
+    "private_source_checked_out": false,
+    "git_metadata_present": false,
+    "origin": "local git archive of exact already-published commit; not an HTTPS download receipt"
+  },
+  "host": {
+    "hostname": "youdeMac-mini.local",
+    "uname": "Darwin youdeMac-mini.local 25.6.0 Darwin Kernel Version 25.6.0: Fri Jul 31 19:11:03 PDT 2026; root:xnu-12377.161.14~5/RELEASE_ARM64_T8132 arm64"
+  },
+  "execution": {
+    "self_test": true,
+    "compile": true,
+    "compile_output_bytes": 44,
+    "wasm_validate": true,
+    "instantiate": true,
+    "oracle_export": "run",
+    "oracle_args": [
+      6,
+      18
+    ],
+    "oracle_result": 42
+  },
+  "tool_source": {
+    "provider": "local-executable",
+    "command": "deno",
+    "executable_sha256": "433088c827fa0e39ff162ab0e475f1fd4c7690eaedec500cf678edc3865e9287"
+  },
+  "executed_at_utc": "2026-10-21T16:45:18.113230+00:00",
+  "evidence": {
+    "steps": [
+      {
+        "name": "version",
+        "command": [
+          "/Users/youxianshi/.deno/bin/deno",
+          "--version"
+        ],
+        "exit": 0,
+        "stdout_sha256": "54acb47c32992730653db6160034e34721230f105d9917d2d868039a73d00039",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "self-test",
+        "command": [
+          "/Users/youxianshi/.deno/bin/deno",
+          "run",
+          "--allow-read",
+          "--allow-write",
+          "bootstrap.mjs",
+          "self-test"
+        ],
+        "exit": 0,
+        "stdout_sha256": "4b4aa4ba088f4d44ea25c93e85d583e71d6e892dd5654cfcfb0bece95b7f9539",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "compile",
+        "command": [
+          "/Users/youxianshi/.deno/bin/deno",
+          "run",
+          "--allow-read",
+          "--allow-write",
+          "bootstrap.mjs",
+          "compile",
+          "--input",
+          "examples/add.wasmc",
+          "--output",
+          "/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261021-normal-functional-successor-v023/target/v023-runtime-current-receipts/deno.wasm"
+        ],
+        "exit": 0,
+        "stdout_sha256": "7f0bccd235a93496895f49b7843f8c06cd3b7ecc8e7156c4e0b59454ff922423",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "name": "independent-oracle",
+        "command": [
+          "/Users/youxianshi/.deno/bin/deno",
+          "run",
+          "--allow-read",
+          "--allow-write",
+          "/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261021-normal-functional-successor-v023/target/v023-runtime-current-receipts/sourcefree/scripts/assert-runtime-output.mjs",
+          "/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261021-normal-functional-successor-v023/target/v023-runtime-current-receipts/deno.wasm"
+        ],
+        "exit": 0,
+        "stdout_sha256": "b8a9e1923777acafe4164083c1eeb13195ca866e596de8a4244abe79be66022e",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "compile_output_sha256": "29996fa74541742737704f64e48add2a5079ed8c57783cda4912046d5acb32c9"
+  },
+  "qualification_scope": "Pre-candidate Runtime component consumer; not whole product, formal release or downloaded public package admission"
+}

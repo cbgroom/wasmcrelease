@@ -6,7 +6,7 @@ fn current_core_snapshot_search_lookup_and_post_return_without_jit() {
     let bytes = std::fs::read(format!("{root}/artifact.wasm")).unwrap();
     assert_eq!(format!("{:x}", Sha256::digest(&bytes)), wasmc_lib_search_component::LIB_ARTIFACT_SHA256);
     let index = std::fs::read(std::env::var("WASMC_SEARCH_INDEX_PATH").unwrap()).unwrap();
-    assert_eq!(format!("{:x}", Sha256::digest(&index)), "73a1ebcce721a73dd8964030b7bb7bc61f2ed1d1aeb7d2aa46c22b8da8d8f333");
+    assert_eq!(format!("{:x}", Sha256::digest(&index)), "6489af00168c3343f489edb8f7f20d57743e4f3c07b648bbd62f6f5b8ab98fa2");
     let engine = Engine::default(); let module = Module::new(&engine, &bytes[..]).unwrap();
     assert_eq!(module.imports().count(), 0);
     let mut store = Store::new(&engine, ());
@@ -26,7 +26,7 @@ fn current_core_snapshot_search_lookup_and_post_return_without_jit() {
         let p=put(&mut store,&index);let result=snapshot.call(&mut store,(p,index.len()as i32)).unwrap();
         let mut v=[0;36];memory.read(&store,result as usize,&mut v).unwrap();assert_eq!(v[0],0);
         let n=|i|u32::from_le_bytes(v[i..i+4].try_into().unwrap());
-        assert_eq!((n(4),n(8),n(12),n(16)),(278,42,236,42));post_snapshot.call(&mut store,result).unwrap();
+        assert_eq!((n(4),n(8),n(12),n(16)),(289,42,247,42));post_snapshot.call(&mut store,result).unwrap();
         let p=put(&mut store,&index);let q=put(&mut store,b"base64");
         let result=search.call(&mut store,(p,index.len()as i32,q,6,0,0,0,0,0,0,1,0,64)).unwrap();
         let mut v=[0;12];memory.read(&store,result as usize,&mut v).unwrap();assert_eq!(v[0],0);assert!(u32::from_le_bytes(v[8..].try_into().unwrap())>=2);post_search.call(&mut store,result).unwrap();
