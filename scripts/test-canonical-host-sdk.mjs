@@ -14,7 +14,7 @@ const source = new TextDecoder().decode(read(fixture + 'app/ordinary.wasmc'));
 const input = {source, activation: read(fixture + 'app/activation.json'),
   entry: readTuple('entry'), operations: readTuple('operations'),
   libCore: read('standard/wasmc-json/0.0.5/artifact.wasm'),
-  libWit: read('standard/wasmc-json/0.0.5/lib.wit'), template: read(fixture + 'aux/canonical-template.json')};
+  libWit: read('standard/wasmc-json/0.0.5/lib.wit'), template: read(fixture + 'producer-assets/canonical-template.json')};
 const expected = JSON.parse(new TextDecoder().decode(read(fixture + 'expected-frame.json')));
 const compiler = await createCanonicalHostCompiler(read('current/wasmc_compiler.wasm'));
 let outputs = 0;
