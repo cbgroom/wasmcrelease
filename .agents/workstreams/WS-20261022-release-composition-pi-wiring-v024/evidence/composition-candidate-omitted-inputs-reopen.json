@@ -1,0 +1,12 @@
+{
+  "invocation": [
+    "/Users/youxianshi/.local/state/wasmcrelease/composition-product-yJjIum/product/scripts/release-candidate.mjs",
+    "verify",
+    "/Users/youxianshi/.local/state/wasmcrelease/composition-product-yJjIum/candidate-omitted-inputs.json",
+    "--candidate-sha256",
+    "f7357107e748448c324fe20536e5a78d4d3078db109dd72a9ce51d20acc44d99"
+  ],
+  "exit": 1,
+  "stdout": "",
+  "stderr": "file:///Users/youxianshi/.local/state/wasmcrelease/composition-product-yJjIum/product/scripts/release-candidate.mjs:450\n    const row=rows.get(path);if(!row)throw Error('current product input missing: '+path);\n                                           ^\n\nError: current product input missing: admission/current-composition-inputs-v1/LICENSE\n    at exact (file:///Users/youxianshi/.local/state/wasmcrelease/composition-product-yJjIum/product/scripts/release-candidate.mjs:450:44)\n    at readPin (file:///Users/youxianshi/.local/state/wasmcrelease/composition-product-yJjIum/product/scripts/current-lib-composition-release-v1.mjs:18:50)\n    at graphReader (file:///Users/youxianshi/.local/state/wasmcrelease/composition-product-yJjIum/product/scripts/current-lib-composition-release-v1.mjs:23:124)\n    at verifyComposedCurrentRelease (file:///Users/youxianshi/.local/state/wasmcrelease/composition-product-yJjIum/product/scripts/current-lib-composition-release-v1.mjs:61:15)\n    at verifyCurrentRelease (file:///Users/youxianshi/.local/state/wasmcrelease/composition-product-yJjIum/product/scripts/current-lib-release-v3.mjs:75:12)\n    at currentCandidateClosure (file:///Users/youxianshi/.local/state/wasmcrelease/composition-product-yJjIum/product/scripts/release-candidate.mjs:492:17)\n    at validateCandidate (file:///Users/youxianshi/.local/state/wasmcrelease/composition-product-yJjIum/product/scripts/release-candidate.mjs:267:56)\n    at file:///Users/youxianshi/.local/state/wasmcrelease/composition-product-yJjIum/product/scripts/release-candidate.mjs:650:7\n    at ModuleJob.run (node:internal/modules/esm/module_job:569:25)\n    at async node:internal/modules/esm/loader:650:26\n\nNode.js v26.5.1\n"
+}

@@ -103,7 +103,7 @@ export function verifyComposedCurrentRelease(catalogBytes,catalogSha256,read,pro
   assert.deepEqual(pages,entries);
   return {schema:'wasmc.current-composition-release-closure/v1',accepted:true,catalog_sha256:catalogSha256,
     original_base_catalog_sha256:options.base.catalog_sha256,original_base_closure:baseClosure,
-    source_lineage_sha256:cohort.source_lineage_sha256,release_packages:ids.length,api_routes:apis,entries:entries.length,root_files_verified:rootFiles,
+    source_lineage_sha256:cohort.source_lineage_sha256,release_packages:ids.length,package_routes:ids.length,api_routes:apis,entries:entries.length,root_files_verified:rootFiles,
     exact:true,actual_Core_Search_snapshot_lookup_pagination:true,current_source_custody_verified:true,
     original_receipt_bytes_verified:false,fresh_full_q0:false,fresh_builds:0,public_release_admission:false};
 }

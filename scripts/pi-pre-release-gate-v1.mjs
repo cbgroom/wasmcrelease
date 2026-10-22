@@ -46,10 +46,23 @@ export function validateReleaseRehearsal(candidate, release, commit, tree) {
   return true;
 }
 
-export function validateQualification(candidate, release, commit, tree, receipt, protocol) {
+// The explicit v024 policy changes only model cardinality. The frozen protocol,
+// exact candidate/rehearsal binding, all cases, budgets and review stay required.
+export function qualificationPolicy(policy, candidate, protocol){
+  validateProtocol(protocol);
+  if(policy==='controlled-pair-v1')return {id:policy,models:protocol.cohort_gate.required_models};
+  assert.equal(policy,'glm-5.3-flash-single-v1','unknown Pi qualification policy');
+  assert.equal(candidate.schema,'wasmc.release-product-candidate/v3');assert.equal(candidate.version,'0.0.24');
+  assert.equal(protocol.schema,'wasmc.fresh-agent-learning/v3');assert.equal(protocol.release_binding.version,candidate.version);
+  return {id:policy,models:[{provider:'llm-m4dd',identity:'glm-5.3-flash'}]};
+}
+export function validateQualification(candidate, release, commit, tree, receipt, protocol, policy='controlled-pair-v1') {
   validateProtocol(protocol);
   validateReleaseRehearsal(candidate, release, commit, tree);
-  assert.equal(receipt.schema, 'wasmc.pi-pre-release-qualification/v1');
+  const selected=qualificationPolicy(policy,candidate,protocol),single=selected.id==='glm-5.3-flash-single-v1';
+  assert.equal(receipt.schema,single?'wasmc.pi-pre-release-qualification/v2':'wasmc.pi-pre-release-qualification/v1');
+  if(single){assert.equal(receipt.qualification_policy,selected.id);assert.equal(receipt.controlled_pair_accepted,false);
+    assert.equal(receipt.single_model_accepted,true);}
   assert.equal(receipt.release?.version, candidate.version);
   assert.equal(receipt.release?.rehearsal_commit, commit);
   assert.equal(receipt.release?.rehearsal_tree, tree);
@@ -74,7 +87,7 @@ export function validateQualification(candidate, release, commit, tree, receipt,
   assert.equal(receipt.hidden_reasoning_retained, false);
   assert.equal(receipt.review?.independent_from_model_self_assessment, true);
 
-  const requiredModels = protocol.cohort_gate.required_models;
+  const requiredModels = selected.models;
   assert.equal(receipt.models?.length, requiredModels.length);
   for (const required of requiredModels) {
     const model = receipt.models.find(row => row.provider === required.provider && row.identity === required.identity);
@@ -94,7 +107,7 @@ export function validateQualification(candidate, release, commit, tree, receipt,
       assert.equal(row.retries, 0, `${required.identity}/${row.id} retries present`);
     }
   }
-  assert.equal(receipt.controlled_pair_accepted, true);
+  if(!single)assert.equal(receipt.controlled_pair_accepted, true);
   return true;
 }
 
@@ -154,14 +167,16 @@ async function main() {
     const outputDirectory = resolve(options['out-dir'] ?? join(root, 'target/fresh-agent/pre-release', commit));
     const timeoutMs = Number(options['timeout-ms'] ?? 180000);
     assert.ok(Number.isSafeInteger(timeoutMs) && timeoutMs >= 1000 && timeoutMs <= 600000);
-    const results = await Promise.all(protocol.cohort_gate.required_models.map(row => {
+    const selected=qualificationPolicy(options.policy??'controlled-pair-v1',candidate,protocol);
+    const results = await Promise.all(selected.models.map(row => {
       const model = `${row.provider}/${row.identity}`;
       return runModel(model, commit, join(outputDirectory, `${row.identity}.json`), timeoutMs);
     }));
     const accepted = results.every(row => row.accepted);
     console.log(JSON.stringify({
       accepted,
-      scope: 'structural-live-model-run-only',
+      scope: 'structural-live-model-run-only', qualification_policy:selected.id,
+      controlled_pair_accepted:false, single_model_accepted:false,
       protocol_file: selectedProtocol.path, protocol_sha256: selectedProtocol.sha256,
       release_rehearsal_commit: commit,
       release_rehearsal_tree: tree,
@@ -181,10 +196,11 @@ async function main() {
     assert.ok(exactCommit(commit) && candidatePath && receiptPath, 'verify requires --commit, --candidate and --receipt');
     const { candidate, release, tree } = releaseInputs(commit, candidatePath);
     const receipt = JSON.parse(readFileSync(isAbsolute(receiptPath) ? receiptPath : resolve(root, receiptPath), 'utf8'));
-    validateQualification(candidate, release, commit, tree, receipt, protocol);
-    console.log(JSON.stringify({ accepted: true, release_rehearsal_commit: commit, release_rehearsal_tree: tree, candidate_commit: release.product_candidate_commit, product_set_sha256: candidate.product_set_sha256, controlled_pair_accepted: true }));
+    const policy=options.policy??'controlled-pair-v1';
+    validateQualification(candidate, release, commit, tree, receipt, protocol,policy);
+    console.log(JSON.stringify({ accepted: true, release_rehearsal_commit: commit, release_rehearsal_tree: tree, candidate_commit: release.product_candidate_commit, product_set_sha256: candidate.product_set_sha256, qualification_policy:policy, controlled_pair_accepted:policy==='controlled-pair-v1',single_model_accepted:policy==='glm-5.3-flash-single-v1' }));
   } else {
-    throw new Error('usage: pi-pre-release-gate-v1.mjs run|verify --commit SHA --candidate FILE [--receipt FILE]');
+    throw new Error('usage: pi-pre-release-gate-v1.mjs run|verify --commit SHA --candidate FILE [--receipt FILE] [--policy controlled-pair-v1|glm-5.3-flash-single-v1]');
   }
 }
 

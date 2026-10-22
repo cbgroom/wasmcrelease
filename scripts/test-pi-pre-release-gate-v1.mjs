@@ -4,7 +4,21 @@ import { validateCandidateTree, validateQualification, validateReleaseRehearsal 
 import { readProtocol, protocolDigest, protocolRelativePath } from './fresh-agent-learning-v1.mjs';
 import {readFileSync} from 'node:fs';
 
+// The public workstream intentionally retains a frozen v23 protocol alongside
+// future compiler carriers. Bind a legal v3 fixture in memory; never refresh
+// the actual frozen protocol or pretend this is live final-candidate evidence.
 const protocol = readProtocol();
+if(protocol.release_binding){
+  const prior=structuredClone(protocol.release_binding),compiler=JSON.parse(readFileSync(new URL('../current/compiler-release.json',import.meta.url)));
+  const sha=value=>createHash('sha256').update(value).digest('hex');
+  Object.assign(protocol.release_binding,{version:compiler.version,compiler_sha256:compiler.compiler.sha256,
+    facade_sha256:sha(readFileSync(new URL('../current/wasmc.mjs',import.meta.url))),
+    catalog_sha256:sha(readFileSync(new URL('../catalog/libs-current-v2.json',import.meta.url)))});
+  const identities=new Map([['v'+prior.version,'v'+compiler.version],
+    ...['compiler_sha256','facade_sha256','catalog_sha256'].map(key=>[prior[key],protocol.release_binding[key]])]);
+  for(const row of protocol.cases)for(const key of ['required_literals','allowed_sha256'])
+    if(row.answer_contract?.[key])row.answer_contract[key]=row.answer_contract[key].map(value=>identities.get(value)??value);
+}
 const commit = '1'.repeat(40);
 const tree = 'b'.repeat(40);
 const product = Buffer.from('final candidate guidance');
@@ -90,4 +104,33 @@ if(protocol.release_binding)for(const mutate of [
   assert.throws(()=>validateQualification(invalid,release,commit,tree,receipt,protocol));
 }
 
-console.log(JSON.stringify({ accepted: true, rejects_stale_rehearsal_commit_or_tree: true, rejects_candidate_or_product_drift: true, rejects_incomplete_pair: true, rejects_structural_or_white_box_failure: true, rejects_retry_or_wrong_first_answer: true, rejects_protocol_or_bound_artifact_drift:true }));
+const singlePolicy='glm-5.3-flash-single-v1',single=structuredClone(receipt);
+single.schema='wasmc.pi-pre-release-qualification/v2';single.qualification_policy=singlePolicy;
+single.models=single.models.filter(row=>row.identity==='glm-5.3-flash');
+single.controlled_pair_accepted=false;single.single_model_accepted=true;
+assert.equal(validateQualification(candidate,release,commit,tree,single,protocol,singlePolicy),true);
+assert.throws(()=>validateQualification(candidate,release,commit,tree,single,protocol),'single cannot satisfy default pair policy');
+assert.throws(()=>validateQualification(candidate,release,commit,tree,receipt,protocol,singlePolicy),'pair receipt cannot impersonate single policy');
+let singleControls=0;
+for(const mutate of [
+ value=>value.qualification_policy='controlled-pair-v1',
+ value=>value.controlled_pair_accepted=true,
+ value=>value.single_model_accepted=false,
+ value=>value.models[0].identity='deepseek-v4.1-flash',
+ value=>value.models.push(structuredClone(value.models[0])),
+ value=>value.models[0].cases.pop(),
+ value=>value.models[0].cases[1].id=value.models[0].cases[0].id,
+ value=>value.models[0].cases[0].error_results=1,
+ value=>value.models[0].cases[0].retries=1,
+ value=>value.models[0].cases[0].oracle_passed=false,
+ value=>value.models[0].white_box_pass=false,
+ value=>value.release.rehearsal_commit='2'.repeat(40),
+ value=>value.release.rehearsal_tree='2'.repeat(40),
+ value=>value.protocol_sha256='0'.repeat(64),
+ value=>value.review.independent_from_model_self_assessment=false
+]){const invalid=structuredClone(single);mutate(invalid);
+ assert.throws(()=>validateQualification(candidate,release,commit,tree,invalid,protocol,singlePolicy));singleControls++;}
+const historical=structuredClone(candidate);historical.version='0.0.23';
+assert.throws(()=>validateQualification(historical,{...release,version:historical.version,tag:'v0.0.23',staged_product_manifest:'channels/candidates/0.0.23.json'},commit,tree,single,protocol,singlePolicy));
+assert.throws(()=>validateQualification(candidate,release,commit,tree,single,protocol,'arbitrary-single-model'));
+console.log(JSON.stringify({ accepted: true, rejects_stale_rehearsal_commit_or_tree: true, rejects_candidate_or_product_drift: true, rejects_incomplete_pair: true, rejects_structural_or_white_box_failure: true, rejects_retry_or_wrong_first_answer: true, rejects_protocol_or_bound_artifact_drift:true,explicit_glm_single_model_accepted:true,single_model_negative_controls:singleControls+4,historical_pair_default_preserved:true,live_model_run:false }));

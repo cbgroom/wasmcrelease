@@ -1,0 +1,51 @@
+{
+  "schema": "wasmcrelease.focused-command-receipts/v1",
+  "formal_release": false,
+  "commands": [
+    {
+      "argv": [
+        "node",
+        "scripts/test-fresh-agent-learning-v1.mjs"
+      ],
+      "exit": 1,
+      "seconds": 0.092,
+      "stdout": "",
+      "stderr": "node:internal/modules/run_main:107\n    triggerUncaughtException(\n    ^\n\nAssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n'0.0.23' !== '0.0.24'\n\n    at loadBoundProtocol (file:///Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261022-ordinary-canonical-host-v024/scripts/fresh-agent-learning-v1.mjs:26:12)\n    at file:///Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261022-ordinary-canonical-host-v024/scripts/test-fresh-agent-learning-v1.mjs:9:13\n    at ModuleJob.run (node:internal/modules/esm/module_job:569:25)\n    at async node:internal/modules/esm/loader:650:26\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {\n  generatedMessage: true,\n  code: 'ERR_ASSERTION',\n  actual: '0.0.23',\n  expected: '0.0.24',\n  operator: 'strictEqual',\n  diff: 'simple'\n}\n\nNode.js v26.5.1\n"
+    },
+    {
+      "argv": [
+        "node",
+        "scripts/test-lib-current-composition-v1.mjs"
+      ],
+      "exit": 0,
+      "seconds": 15.724,
+      "stdout": "{\"schema\":\"wasmc.current-lib-composition-controls/v1\",\"accepted\":true,\"tests\":41,\"composition_schema\":\"wasmc.current-lib-composition/v1\",\"composition_sha256\":\"525cc9eb24c1041650569de20e87bad3dd3828963da940c653ce19ca05badd61\",\"input_sha256\":\"b50ea7e9e803ff4aa09ed4e1db04526580cc6e81f1aa5ef930d0026fb3d50d7b\",\"summary\":{\"packages\":42,\"reused_roots\":41,\"imported_roots\":1,\"apis\":246,\"entries\":288,\"fresh_builds\":0},\"candidate_index_sha256\":\"650340d42ff2f3ee6494bd12bb7f08ca0540b333873a5569e9ce852b761c1ab7\",\"candidate_manifest_sha256\":\"5e3178507210fb48c649f821124c4bc5f1e2fc53cb6054e59000cded6911643d\",\"public_admission\":false,\"fresh_full_q0\":false,\"results\":[{\"name\":\"actual old42-Root closure and new41+1 composition, byte-exact reused Roots and original13-API Root\",\"pass\":true},{\"name\":\"wrong independent base catalog pin\",\"pass\":true,\"rejected\":true},{\"name\":\"missing reused identity\",\"pass\":true,\"rejected\":true},{\"name\":\"duplicate reused identity\",\"pass\":true,\"rejected\":true},{\"name\":\"duplicate replacement identity\",\"pass\":true,\"rejected\":true},{\"name\":\"reuse and replacement overlap\",\"pass\":true,\"rejected\":true},{\"name\":\"unknown replacement identity\",\"pass\":true,\"rejected\":true},{\"name\":\"missing actual reused artifact\",\"pass\":true,\"rejected\":true},{\"name\":\"changed actual reused artifact\",\"pass\":true,\"rejected\":true},{\"name\":\"undeclared actual reused Root file\",\"pass\":true,\"rejected\":true},{\"name\":\"wrong imported manifest pin\",\"pass\":true,\"rejected\":true},{\"name\":\"wrong imported whole Root pin\",\"pass\":true,\"rejected\":true},{\"name\":\"changed actual imported Wasm\",\"pass\":true,\"rejected\":true},{\"name\":\"undeclared imported Root file\",\"pass\":true,\"rejected\":true},{\"name\":\"wrong source packet pin\",\"pass\":true,\"rejected\":true},{\"name\":\"changed actual source implementation\",\"pass\":true,\"rejected\":true},{\"name\":\"self-rehashed packet with different implementation\",\"pass\":true,\"rejected\":true},{\"name\":\"self-rehashed packet with forged producer\",\"pass\":true,\"rejected\":true},{\"name\":\"self-rehashed packet with forged original receipt\",\"pass\":true,\"rejected\":true},{\"name\":\"self-rehashed packet with failed original producer\",\"pass\":true,\"rejected\":true},{\"name\":\"self-rehashed packet with false produced API count\",\"pass\":true,\"rejected\":true},{\"name\":\"self-rehashed packet with relabelled build Source\",\"pass\":true,\"rejected\":true},{\"name\":\"self-rehashed packet with wrong canonical source\",\"pass\":true,\"rejected\":true},{\"name\":\"self-rehashed packet with wrong source spec\",\"pass\":true,\"rejected\":true},{\"name\":\"materialization changes more than producer locator\",\"pass\":true,\"rejected\":true},{\"name\":\"self-rehashed packet with wrong original WIT\",\"pass\":true,\"rejected\":true},{\"name\":\"self-rehashed packet with wrong generated source\",\"pass\":true,\"rejected\":true},{\"name\":\"unsafe imported Root locator\",\"pass\":true,\"rejected\":true},{\"name\":\"unsupported imported profile\",\"pass\":true,\"rejected\":true},{\"name\":\"closed composition schema\",\"pass\":true,\"rejected\":true},{\"name\":\"source packet changes after earlier successful verification\",\"pass\":true,\"rejected\":true},{\"name\":\"base producer cohort changes after earlier successful verification\",\"pass\":true,\"rejected\":true},{\"name\":\"actual candidate Core Search snapshot, all288 lookups, five pages, JSON14-hit filter and old001 absence\",\"pass\":true},{\"name\":\"candidate cannot silently omit JSON005 API\",\"pass\":true,\"rejected\":true},{\"name\":\"candidate cannot use unsupported authoring locator\",\"pass\":true,\"rejected\":true},{\"name\":\"candidate cannot claim proposed WIT copied into current\",\"pass\":true,\"rejected\":true},{\"name\":\"candidate cannot replace unchanged Root locator\",\"pass\":true,\"rejected\":true},{\"name\":\"candidate cannot claim current directory admitted\",\"pass\":true,\"rejected\":true},{\"name\":\"candidate cannot relabel original producer source lineage\",\"pass\":true,\"rejected\":true},{\"name\":\"candidate cannot relabel imported receipt asfresh Q0\",\"pass\":true,\"rejected\":true},{\"name\":\"candidate checks complete original authoring fingerprint including adapter source\",\"pass\":true,\"rejected\":true}],\"scope\":\"Actual source-custody/whole-Root composition, candidate288-entry Core Search and byte-overlay rejection controls; no current authoring/catalog admission, installation or formal release claimed.\"}\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit": 0,
+      "seconds": 0.02,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "node",
+        "scripts/release-candidate.mjs",
+        "verify",
+        "channels/candidates/0.0.23.json",
+        "--candidate-sha256",
+        "5c1f9baaaa1328ca5b55f85987e014db8ff9a264f88736844b3b006c92567c44"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "file:///Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261022-ordinary-canonical-host-v024/scripts/release-candidate.mjs:258\n    const bytes=read(row.path);if(bytes.length!==row.bytes||hash(bytes)!==row.sha256)throw Error('product drift rejected');previous=row.path;\n                                                                                           ^\n\nError: product drift rejected\n    at validateCandidate (file:///Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261022-ordinary-canonical-host-v024/scripts/release-candidate.mjs:258:92)\n    at file:///Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261022-ordinary-canonical-host-v024/scripts/release-candidate.mjs:650:7\n    at ModuleJob.run (node:internal/modules/esm/module_job:569:25)\n    at async node:internal/modules/esm/loader:650:26\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)\n\nNode.js v26.5.1\n",
+      "expected_rejection": true
+    }
+  ]
+}

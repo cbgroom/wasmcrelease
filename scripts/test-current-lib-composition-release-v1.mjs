@@ -2,12 +2,13 @@
 // consumer entrypoints and installer. Transport is explicitly a staged fixture;
 // no request is sent to a public mirror and no formal publication is claimed.
 import assert from 'node:assert/strict';
-import {mkdir,mkdtemp,realpath,readFile,writeFile,lstat} from 'node:fs/promises';
+import {mkdir,mkdtemp,realpath,readFile,writeFile,lstat,cp,readdir} from 'node:fs/promises';
 import {join} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {spawnSync} from 'node:child_process';
 import {assembleComposedCurrentProduct} from './current-lib-composition-release-v1.mjs';
 import {verifyCurrentRelease,currentProductReader,resolveCurrentPackage} from './current-lib-release-v3.mjs';
+import {currentCandidateArguments,verifyCurrentCandidateComposition} from './release-candidate.mjs';
 import {installCurrentLib,artifactUrl} from './lib-install.mjs';
 import {inventory,sha,digest} from './lib-refresh-cache-v2.mjs';
 import {CoreCaller,string,list,u8,result} from './current-core-value-codec-v3.mjs';
@@ -26,10 +27,32 @@ try{
   const catalogBytes=data.get('catalog/libs-current-v2.json'),catalog=JSON.parse(catalogBytes),results=[];
   const from=map=>path=>{assert.ok(map.has(path),'missing staged input '+path);return map.get(path);};
   const verify=(map=data,bytes=catalogBytes,pin=assembled.catalog_sha256)=>verifyCurrentRelease(bytes,pin,from(map),[...map.keys()]);
-  const closure=verify();assert.equal(closure.release_packages,42);assert.equal(closure.api_routes,246);assert.equal(closure.entries,288);
+  const closure=verify();assert.equal(closure.release_packages,42);assert.equal(closure.package_routes,42);assert.equal(closure.api_routes,246);assert.equal(closure.entries,288);
   assert.equal(closure.original_base_closure.release_packages,42);assert.equal(closure.original_base_closure.api_routes,236);
   assert.equal(closure.original_receipt_bytes_verified,false);assert.equal(closure.fresh_full_q0,false);
   results.push({name:'actual staged42/246/288 closure plus actual original42/236 base verification',pass:true});
+  const creationOptions={catalog_sha256:assembled.catalog_sha256,composition_cohort_sha256:catalog.cohort.sha256,
+    source_lineage_sha256:assembled.source_lineage_sha256};
+  const creationArgs=['--current-catalog-sha256',creationOptions.catalog_sha256,
+    '--current-composition-cohort-sha256',creationOptions.composition_cohort_sha256,
+    '--current-source-lineage-sha256',creationOptions.source_lineage_sha256];
+  assert.deepEqual(await currentCandidateArguments(creationArgs),creationOptions);
+  const creation=verifyCurrentCandidateComposition(product,creationOptions);assert.deepEqual(creation.closure,closure);
+  assert.equal(creation.closure.fresh_full_q0,false);assert.equal(Object.hasOwn(creation.closure,'refresh_receipt_sha256'),false);
+  assert.ok(creation.product_inputs.includes(catalog.cohort.path));
+  assert.ok(creation.product_inputs.some(path=>path.startsWith('admission/current-composition-inputs-v1/')));
+  results.push({name:'existing candidate creation dispatch independently pins and strictly verifies real composition graph',pass:true});
+  for(const key of Object.keys(creationOptions)){
+    assert.throws(()=>verifyCurrentCandidateComposition(product,{...creationOptions,[key]:'0'.repeat(64)}));
+    results.push({name:'candidate creation rejects independent '+key+' drift',pass:true,rejected:true});
+  }
+  for(const args of [creationArgs.slice(0,4),[...creationArgs,'--current-run','/tmp/fake-full-q0'],
+    [...creationArgs.slice(0,4),'--current-catalog-sha256',creationOptions.catalog_sha256]])
+    await assert.rejects(()=>currentCandidateArguments(args));
+  assert.throws(()=>verifyCurrentCandidateComposition(product,{...creationOptions,receipt_sha256:'0'.repeat(64)}));
+  assert.deepEqual(await currentCandidateArguments(['--current-run','/tmp/original-run','--current-receipt-sha256','1'.repeat(64),
+    '--current-producer-sha256','2'.repeat(64)]),{run_root:'/tmp/original-run',receipt_sha256:'1'.repeat(64),producer_sha256:'2'.repeat(64)});
+  results.push({name:'closed composition arguments reject missing/duplicate/mixed fresh-Q0 pins; original parser retained',pass:true});
   const json=catalog.packages.find(p=>p.id==='wasmc-json');
   assert.equal(JSON.parse(data.get(json.source.spec.path)).schema,'wasmc.current-original-producer-source/v1');
   assert.equal(sha(data.get(json.source.wit.path)),'225b23395b09023305c0c6e24b0168af7847bfe72cfd9db18bb2b52a544038be');
@@ -95,6 +118,39 @@ try{
     async url=>{const b=Buffer.from(transport.get(url));b[0]^=1;return new Response(b,{status:200});}),/install.digest_mismatch/);
   await assert.rejects(()=>lstat(failedDestination),{code:'ENOENT'});
   results.push({name:'actual installer rejects altered staged transport and publishes no destination',pass:true,rejected:true});
+  // Fill only absent supporting public files in the owned product fixture.
+  // Selected Roots/source/index stay exactly those already checked above.
+  for(const name of await readdir(repo)){
+    if(['.git','.agents','target','current-libs','libspec'].includes(name))continue;
+    await cp(join(repo,name),join(product,name),{recursive:true,force:false});
+  }
+  const compiler=JSON.parse(await readFile(join(product,'current/compiler-release.json')));
+  const protocol=JSON.parse(await readFile(join(product,'agent-evaluation/fresh-agent-learning-v3.json'))),prior=structuredClone(protocol.release_binding);
+  Object.assign(protocol.release_binding,{version:compiler.version,compiler_sha256:compiler.compiler.sha256,
+    facade_sha256:sha(await readFile(join(product,'current/wasmc.mjs'))),catalog_sha256:assembled.catalog_sha256});
+  const replacements=new Map([['v'+prior.version,'v'+compiler.version],
+    ...['compiler_sha256','facade_sha256','catalog_sha256'].map(key=>[prior[key],protocol.release_binding[key]])]);
+  for(const row of protocol.cases)for(const key of ['required_literals','allowed_sha256'])
+    if(row.answer_contract?.[key])row.answer_contract[key]=row.answer_contract[key].map(value=>replacements.get(value)??value);
+  await writeFile(join(product,'agent-evaluation/fresh-agent-learning-v3.json'),JSON.stringify(protocol,null,2)+'\n');
+  await writeFile(join(product,'docs/RELEASE_V024.md'),'# Unpublished v024 candidate wiring fixture\n');
+  const candidatePath=join(state,'candidate-fixture.json');
+  const candidateCli=args=>{const invocation=[join(product,'scripts/release-candidate.mjs'),...args],r=spawnSync(process.execPath,invocation,{cwd:product,encoding:'utf8',timeout:120000,maxBuffer:2097152});
+    return {invocation,exit:r.status,stdout:r.stdout,stderr:r.stderr};};
+  const created=candidateCli(['create-current',candidatePath,compiler.source_commit,compiler.source_commit,compiler.version,...creationArgs]);
+  await writeFile(join(state,'candidate-create.json'),JSON.stringify(created,null,2)+'\n');assert.equal(created.exit,0,created.stderr);
+  const candidateBytes=await readFile(candidatePath),candidate=JSON.parse(candidateBytes);
+  assert.equal(candidate.current_release_closure.package_routes,42);assert.equal(candidate.current_release_closure.api_routes,246);
+  assert.equal(candidate.current_release_closure.fresh_full_q0,false);assert.equal(Object.hasOwn(candidate.current_release_closure,'refresh_receipt_sha256'),false);
+  assert.ok(candidate.product_files.some(pin=>pin.path.startsWith('admission/current-composition-inputs-v1/')));
+  const reopened=candidateCli(['verify',candidatePath,'--candidate-sha256',sha(candidateBytes)]);
+  await writeFile(join(state,'candidate-reopen.json'),JSON.stringify(reopened,null,2)+'\n');assert.equal(reopened.exit,0,reopened.stderr);
+  const omitted=structuredClone(candidate);omitted.product_files=omitted.product_files.filter(pin=>!pin.path.startsWith('admission/current-composition-inputs-v1/'));
+  omitted.product_set_sha256=sha(JSON.stringify(omitted.product_files));const omittedPath=join(state,'candidate-omitted-inputs.json'),omittedBytes=Buffer.from(JSON.stringify(omitted)+'\n');
+  await writeFile(omittedPath,omittedBytes);const refused=candidateCli(['verify',omittedPath,'--candidate-sha256',sha(omittedBytes)]);
+  await writeFile(join(state,'candidate-omitted-inputs-reopen.json'),JSON.stringify(refused,null,2)+'\n');assert.notEqual(refused.exit,0);
+  results.push({name:'actual existing create-current and independently pinned reopen execute for complete composed product fixture',pass:true,formal_release:false});
+  results.push({name:'actual candidate reopen rejects self-rehashed omission of original full-base graph',pass:true,rejected:true});
   const report={schema:'wasmc.current-composition-product-controls/v1',accepted:true,tests:results.length,state_root:state,product,
     catalog_sha256:assembled.catalog_sha256,index_sha256:assembled.index_sha256,source_lineage_sha256:assembled.source_lineage_sha256,
     closure,installed,installed_path:destination,network_installation:false,formal_release:false,

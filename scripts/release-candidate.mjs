@@ -495,9 +495,43 @@ export function currentCandidateClosure(candidate,read){
     canonical_source_branch:compiler.source_branch,compiler_build_receipt_sha256:compiler.source_build_receipt_sha256,
     compiler_carriers:{binaries,embeddings},active_compiler_versions:1};
 }
+const compositionCreationKeys=['catalog_sha256','composition_cohort_sha256','source_lineage_sha256'];
+export async function currentCandidateArguments(argv){
+  const names={'--current-catalog-sha256':'catalog_sha256',
+    '--current-composition-cohort-sha256':'composition_cohort_sha256','--current-source-lineage-sha256':'source_lineage_sha256'};
+  if(!argv.some(value=>Object.hasOwn(names,value))){
+    const {currentReleaseArguments}=await import('./lib-current-release-preflight.mjs');return currentReleaseArguments(argv);
+  }
+  assert.equal(argv.length,6,'exact composition creation pins required');const options={};
+  for(let i=0;i<argv.length;i+=2){const key=names[argv[i]];
+    assert.ok(key&&!Object.hasOwn(options,key),'unknown, duplicate or mixed composition creation argument');
+    assert.match(argv[i+1]??'',/^[0-9a-f]{64}$/);options[key]=argv[i+1];}
+  return options;
+}
+export function verifyCurrentCandidateComposition(repo,options){
+  assert.deepEqual(Object.keys(options).sort(),[...compositionCreationKeys].sort(),'closed composition creation pins');
+  for(const key of compositionCreationKeys)assert.match(options[key],/^[0-9a-f]{64}$/);
+  const read=currentProductReader(repo),bytes=read('catalog/libs-current-v2.json');
+  const catalog=checkedCurrentCatalog(bytes,options.catalog_sha256);
+  assert.equal(catalog.cohort.path,'admission/current-composition-cohort-v1.json');
+  assert.equal(catalog.cohort.sha256,options.composition_cohort_sha256,'independent composition cohort identity drift');
+  const cohort=JSON.parse(read(catalog.cohort.path));
+  assert.equal(cohort.schema,'wasmc.public-current-composition-cohort/v1');
+  assert.equal(cohort.input_prefix,'admission/current-composition-inputs-v1');
+  assert.equal(cohort.source_lineage_sha256,options.source_lineage_sha256,'independent source lineage identity drift');
+  const inputPaths=currentProductPaths(repo,cohort.input_prefix);
+  const paths=[...inputPaths,...currentProductPaths(repo),...currentProductPaths(repo,'libspec')];
+  const closure=verifyCurrentRelease(bytes,options.catalog_sha256,read,paths);
+  assert.equal(closure.schema,'wasmc.current-composition-release-closure/v1');
+  assert.equal(closure.source_lineage_sha256,options.source_lineage_sha256);
+  assert.equal(closure.fresh_full_q0,false);assert.equal(closure.fresh_builds,0);
+  return {closure,product_inputs:[catalog.cohort.path,...inputPaths,...currentProductPaths(repo,'libspec')]};
+}
 export async function createCurrentCandidate(repo,{compilerSource,libSource,version,currentOptions}){
-  const {requireCurrentReleaseCohort}=await import('./lib-current-release-preflight.mjs');
-  const preflight=await requireCurrentReleaseCohort(repo,currentOptions);
+  const composed=currentOptions&&Object.hasOwn(currentOptions,'composition_cohort_sha256')
+    ?verifyCurrentCandidateComposition(repo,currentOptions):null;
+  if(!composed){const {requireCurrentReleaseCohort}=await import('./lib-current-release-preflight.mjs');
+    await requireCurrentReleaseCohort(repo,currentOptions);}
   const read=path=>readFileSync(resolve(repo,path));
   const walk=p=>readdirSync(resolve(repo,p)).sort().flatMap(n=>{
     if(['target','.DS_Store'].includes(n))return [];
@@ -512,7 +546,7 @@ export async function createCurrentCandidate(repo,{compilerSource,libSource,vers
   const compiler=JSON.parse(read('current/compiler-release.json'));
   assert.equal(compiler.version,version);assert.equal(compiler.source_commit,compilerSource);
   const compilerPaths=compiler.artifacts.map(row=>{assert.ok(safe(row.path),'unsafe compiler product input');return row.path;});
-  const paths=new Set([...currentV3ProductInputsForVersion(version),...compilerPaths,...directories.flatMap(walk),
+  const paths=new Set([...currentV3ProductInputsForVersion(version),...(composed?.product_inputs??[]),...compilerPaths,...directories.flatMap(walk),
     'AGENTS.md','README.md','HOSTING.md','LANGUAGE.md','LIB.md','license-policy.json',
     '.github/workflows/lib-search.yml','.github/workflows/agent-discovery.yml','.github/workflows/source-free-consumer.yml','.github/workflows/host-lib-e2e.yml',
     'agent-evaluation/fresh-agent-learning-v2.json','docs/AGENT_DECISION_MODEL.md',`docs/RELEASE_V${version.split('.').slice(1).join('')}.md`,'scripts/release-candidate.mjs']);
@@ -533,7 +567,8 @@ export async function createCurrentCandidate(repo,{compilerSource,libSource,vers
     stage_metadata_paths:[...currentStageMetadataPaths],
     product_files,product_set_sha256:hash(JSON.stringify(product_files))};
   candidate.current_release_closure=currentCandidateClosure(candidate,read);
-  if(candidate.current_release_closure.refresh_receipt_sha256!==currentOptions.receipt_sha256||
+  if(composed)assert.deepEqual(composed.closure,verifyCurrentRelease(catalogBytes,currentOptions.catalog_sha256,read,[...paths]),'composition creation read fence');
+  else if(candidate.current_release_closure.refresh_receipt_sha256!==currentOptions.receipt_sha256||
      candidate.current_release_closure.producer_sha256!==currentOptions.producer_sha256)throw Error('independent creation cohort identity drift');
   validateCandidate(candidate,read);return candidate;
 }
@@ -542,8 +577,7 @@ if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)) {
   const [command,path,source,libSourceOrVersion,explicitVersion,...currentArgs]=process.argv.slice(2);
   const read=p=>readFileSync(resolve(root,p));
   if(command==='create-current'){
-    const {currentReleaseArguments}=await import('./lib-current-release-preflight.mjs');
-    const candidate=await createCurrentCandidate(root,{compilerSource:source,libSource:libSourceOrVersion,version:explicitVersion,currentOptions:currentReleaseArguments(currentArgs)});
+    const candidate=await createCurrentCandidate(root,{compilerSource:source,libSource:libSourceOrVersion,version:explicitVersion,currentOptions:await currentCandidateArguments(currentArgs)});
     writeFileSync(path,JSON.stringify(candidate,null,2)+'\n',{flag:'wx'});
     console.log(JSON.stringify({accepted:true,schema:candidate.schema,product_set_sha256:candidate.product_set_sha256}));
   }else if(command==='create') {

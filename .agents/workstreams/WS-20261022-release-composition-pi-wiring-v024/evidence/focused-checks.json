@@ -1,0 +1,57 @@
+{
+  "schema": "wasmcrelease.focused-command-receipts/v1",
+  "formal_release": false,
+  "live_model_run": false,
+  "commands": [
+    {
+      "argv": [
+        "node",
+        "scripts/test-pi-pre-release-gate-v1.mjs"
+      ],
+      "exit": 0,
+      "seconds": 0.067,
+      "stdout": "{\"accepted\":true,\"rejects_stale_rehearsal_commit_or_tree\":true,\"rejects_candidate_or_product_drift\":true,\"rejects_incomplete_pair\":true,\"rejects_structural_or_white_box_failure\":true,\"rejects_retry_or_wrong_first_answer\":true,\"rejects_protocol_or_bound_artifact_drift\":true,\"explicit_glm_single_model_accepted\":true,\"single_model_negative_controls\":19,\"historical_pair_default_preserved\":true,\"live_model_run\":false}\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "node",
+        "scripts/test-release-channel.mjs"
+      ],
+      "exit": 0,
+      "seconds": 0.046,
+      "stdout": "{\"accepted\":true,\"candidate_schema\":\"wasmc.release-product-candidate/v2\",\"positive_transitions\":3,\"current_lifecycle_partition_controls\":4,\"current_CI_input_files\":94,\"current_CI_input_controls\":13,\"negative_tests\":32,\"publishes\":false}\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "node",
+        "scripts/test-lib-current-release-preflight.mjs"
+      ],
+      "exit": 0,
+      "seconds": 0.306,
+      "stdout": "\u2714 complete source and pinned Q0 do not claim runtime or release admission (18.530084ms)\n\u2714 pending historical identity still blocks an otherwise complete current build (12.992833ms)\n\u2714 authority cannot be redirected to a reduced convenience list (9.222583ms)\n\u2714 duplicate current identities reject independently of other source validators (7.417917ms)\n\u2714 old authoring tree rejects even with no files in it (12.718375ms)\n\u2714 dangling retired-authoring symlink cannot evade the no-legacy check (12.901542ms)\n\u2714 current-only audit accepts registered non-wasmc-prefixed implementations (7.177333ms)\n\u2714 missing independent pins do not infer trust from receipt contents (6.906791ms)\n\u2714 wrong independent receipt pin rejects (5.51125ms)\n\u2714 producer selection is independent of the supplied receipt (5.783541ms)\n\u2714 selected subset is not a whole-product build (6.291334ms)\n\u2714 duplicate receipt rows reject (5.678083ms)\n\u2714 unverified package row rejects (6.269458ms)\n\u2714 accepted false is retained as a failed build (5.714542ms)\n\u2714 old generator receipt cannot be used after a builder change (7.045542ms)\n\u2714 live delta/source drift rejects an intact old package (29.417542ms)\n\u2714 shared lock drift rejects (9.919667ms)\n\u2714 old receipts without whole-root pins must be regenerated (10.5195ms)\n\u2714 wrong independently sealed package inventory rejects (10.170667ms)\n\u2714 extra package file is not hidden by a valid manifest (9.294084ms)\n\u2714 package symlink rejects (9.789083ms)\n\u2714 self-rehashed replacement still fails the independent receipt (9.606625ms)\n\u2714 CLI rejects missing, duplicate and unknown current pins (0.204542ms)\n\u2714 actual new-product creation refuses missing current pins before creating a candidate file (45.637667ms)\n\u2139 tests 24\n\u2139 suites 0\n\u2139 pass 24\n\u2139 fail 0\n\u2139 cancelled 0\n\u2139 skipped 0\n\u2139 todo 0\n\u2139 duration_ms 268.371084\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "node",
+        "scripts/test-lib-current-index-v2.mjs"
+      ],
+      "exit": 0,
+      "seconds": 0.102,
+      "stdout": "\u2714 source-only index is deterministic and preserves same-WIT implementations (13.921125ms)\n\u2714 registry order does not alter entry order (5.22625ms)\n\u2714 new current WIT changes the index, not a frozen catalog (4.7375ms)\n\u2714 duplicate IDs reject (3.414625ms)\n\u2714 normalized wire does not duplicate package metadata per API (3.312167ms)\n\u2714 inline export rejects rather than silently loses API (2.628875ms)\n\u2714 bound native source stays source-only, never a WASM artifact (5.852666ms)\n\u2714 wrong independent receipt pin rejects (3.834667ms)\n\u2714 mutated package rejects even when source is unchanged (4.788208ms)\n\u2714 stale source rejects even if old package remains valid (4.493542ms)\n\u2714 stale lock rejects (3.750291ms)\n\u2714 two bindings for the same implementation reject (5.921458ms)\n\u2139 tests 12\n\u2139 suites 0\n\u2139 pass 12\n\u2139 fail 0\n\u2139 cancelled 0\n\u2139 skipped 0\n\u2139 todo 0\n\u2139 duration_ms 64.571792\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "node",
+        "scripts/test-current-lib-source-custody-v1.mjs"
+      ],
+      "exit": 0,
+      "seconds": 2.721,
+      "stdout": "{\"schema\":\"wasmc.current-source-custody-controls/v1\",\"accepted\":true,\"tests\":35,\"source_schema\":\"wasmc.current-original-producer-source/v1\",\"source_sha256\":\"053652c3716448c042ab975f0f6133bd866415fceff5cff626a99aebbfe6068a\",\"lineage_sha256\":\"70235fe1db5b81410c3a9640b94d7d7b6652d48a7b690ef19c5269ce78b4dffd\",\"producer_report\":{\"container\":{\"path\":\"admission/ordinary-canonical-host-v024/json005-authoring/producer-custody.json\",\"bytes\":3442,\"sha256\":\"6ef9091ebd48682c2e34419e558da0fa7bbbd56c77a6141ba8dae32e520432d8\"},\"json_pointer\":\"/original_producer_report\",\"canonical_json_sha256\":\"973f3f6cc4170c3c7fbd2172a711faee211d9a4ae02f118b68d974dd4b9f49e5\",\"representation\":\"JSON pointer value; SHA256 of JSON.stringify(value), not raw original receipt bytes\"},\"original_receipt_bytes_verified\":false,\"source_custody_admitted_for_current_composition\":true,\"current_directory_admitted\":false,\"public_admission\":false,\"fresh_full_q0\":false,\"selected\":42,\"oldv2_sources\":41,\"original_producer_sources\":1,\"results\":[{\"name\":\"actual closed source283/producer report/Root005 admission with18 exact files and13 APIs\",\"pass\":true},{\"name\":\"closed source rejects unknown fields\",\"pass\":true,\"rejected\":true},{\"name\":\"original source cannot masquerade as oldv2\",\"pass\":true,\"rejected\":true},{\"name\":\"source cannot replace original spec283\",\"pass\":true,\"rejected\":true},{\"name\":\"source cannot replace original canonical blob\",\"pass\":true,\"rejected\":true},{\"name\":\"source cannot replace actual producer report container\",\"pass\":true,\"rejected\":true},{\"name\":\"source cannot replace actual producer report value\",\"pass\":true,\"rejected\":true},{\"name\":\"source cannot claim raw original receipt bytes read\",\"pass\":true,\"rejected\":true},{\"name\":\"source cannot claim fresh full Q0\",\"pass\":true,\"rejected\":true},{\"name\":\"source cannot rebind Root inventory\",\"pass\":true,\"rejected\":true},{\"name\":\"source cannot omit original generated SDK file\",\"pass\":true,\"rejected\":true},{\"name\":\"source cannot omit original exported API\",\"pass\":true,\"rejected\":true},{\"name\":\"actual original Rust implementation drift rejected\",\"pass\":true,\"rejected\":true},{\"name\":\"actual original WIT drift rejected\",\"pass\":true,\"rejected\":true},{\"name\":\"actual Root binary drift rejected\",\"pass\":true,\"rejected\":true},{\"name\":\"wrong independent producer driver rejected\",\"pass\":true,\"rejected\":true},{\"name\":\"wrong independent original receipt pin rejected\",\"pass\":true,\"rejected\":true},{\"name\":\"actual complete42-row lineage preserves41 oldv2 sources and admits exact original producer source\",\"pass\":true},{\"name\":\"closed lineage rejects unknown fields\",\"pass\":true,\"rejected\":true},{\"name\":\"lineage cannot masquerade as old full Q0\",\"pass\":true,\"rejected\":true},{\"name\":\"lineage cannot omit an unchanged Root\",\"pass\":true,\"rejected\":true},{\"name\":\"lineage cannot duplicate an unchanged Root\",\"pass\":true,\"rejected\":true},{\"name\":\"lineage cannot relabel original producer as oldv2\",\"pass\":true,\"rejected\":true},{\"name\":\"lineage cannot replace original source admission\",\"pass\":true,\"rejected\":true},{\"name\":\"lineage cannot claim physical current directory admission\",\"pass\":true,\"rejected\":true},{\"name\":\"lineage cannot claim a new full producer run\",\"pass\":true,\"rejected\":true},{\"name\":\"self-rehashed composition cannot forge reused producer\",\"pass\":true,\"rejected\":true},{\"name\":\"self-rehashed composition cannot relabel reused version\",\"pass\":true,\"rejected\":true},{\"name\":\"self-rehashed composition cannot rebind original source\",\"pass\":true,\"rejected\":true},{\"name\":\"self-rehashed composition cannot rebind imported Root\",\"pass\":true,\"rejected\":true},{\"name\":\"independent composition receipt pin remains mandatory\",\"pass\":true,\"rejected\":true},{\"name\":\"actual existing v2 current authoring still selects original42/236 includingJSON001\",\"pass\":true},{\"name\":\"unchanged oldv2 index rejects new source schema without explicit adapter\",\"pass\":true,\"rejected\":true},{\"name\":\"unchanged old full-Q0 loader rejects wasmc.current-original-producer-source/v1\",\"pass\":true,\"rejected\":true},{\"name\":\"unchanged old full-Q0 loader rejects wasmc.current-composition-lineage/v1\",\"pass\":true,\"rejected\":true}]}\n",
+      "stderr": ""
+    }
+  ]
+}
