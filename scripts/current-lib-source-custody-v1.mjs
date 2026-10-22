@@ -4,7 +4,6 @@
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
 import {sha,digest} from './lib-refresh-cache-v2.mjs';
-import {checkedCurrentCatalog,verifyCurrentRelease} from './current-lib-release-v3.mjs';
 import {witModel,selectedWitRoutes} from './current-wit-routes-v3.mjs';
 const sorted=values=>[...values].sort();
 const exact=(value,keys)=>assert.deepEqual(Object.keys(value).sort(),sorted(keys),'closed composition input schema');
@@ -170,7 +169,9 @@ export function admitOriginalProducerSourceData(input,expected){
   return {source,admission:verifyOriginalProducerSourceData(input,expected,source)};
 }
 
-function buildLineage(input,options,composition,compositionSha256){
+function buildLineage(input,options,composition,compositionSha256,baseVerification){
+  assert.equal(typeof baseVerification?.checkedCurrentCatalog,'function');assert.equal(typeof baseVerification?.verifyCurrentRelease,'function');
+  const {checkedCurrentCatalog,verifyCurrentRelease}=baseVerification;
   pin(compositionSha256);assert.equal(digest(composition),compositionSha256,'independent composition receipt pin');
   exact(options,['schema','base','reused_ids','replacements']);assert.equal(options.schema,'wasmc.current-lib-composition-input/v1');
   exact(options.base,['catalog_path','catalog_sha256']);
@@ -222,15 +223,15 @@ function buildLineage(input,options,composition,compositionSha256){
     selected:ids,rows,admitted_original_sources:sources,
     current_directory_admitted:false,public_admission:false,fresh_full_q0:false,fresh_builds:0};
 }
-export function buildCurrentCompositionLineageData(input,options,composition,compositionSha256){
-  return buildLineage(input,options,composition,compositionSha256);
+export function buildCurrentCompositionLineageData(input,options,composition,compositionSha256,baseVerification){
+  return buildLineage(input,options,composition,compositionSha256,baseVerification);
 }
-export function verifyCurrentCompositionLineageData(input,options,composition,compositionSha256,lineage){
+export function verifyCurrentCompositionLineageData(input,options,composition,compositionSha256,lineage,baseVerification){
   exact(lineage,['schema','accepted','source_custody_admitted_for_current_composition','composition_sha256',
     'base_catalog_sha256','original_base_refresh_receipt_sha256','original_base_closure','selected','rows','admitted_original_sources',
     'current_directory_admitted','public_admission','fresh_full_q0','fresh_builds']);
   assert.equal(lineage.schema,'wasmc.current-composition-lineage/v1');
-  assert.deepEqual(lineage,buildLineage(input,options,composition,compositionSha256),'closed current composition lineage');
+  assert.deepEqual(lineage,buildLineage(input,options,composition,compositionSha256,baseVerification),'closed current composition lineage');
   return {accepted:true,lineage_sha256:digest(lineage),source_custody_admitted_for_current_composition:true,
     current_directory_admitted:false,public_admission:false,fresh_full_q0:false};
 }

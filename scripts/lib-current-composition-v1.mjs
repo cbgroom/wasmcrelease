@@ -175,7 +175,7 @@ function candidateFromComposition(input,options,composition){
   const ordered=map=>Object.fromEntries(Object.entries(map).sort(([a],[b])=>a<b?-1:a>b?1:0));
   assert.equal(digest(ordered(originalSource)),baseIndex.source_fingerprint,'original complete authoring fingerprint');
   const compositionSha=digest(composition),packages=[],roots=[],projectedSourceFiles=[];
-  const sourceLineage=buildCurrentCompositionLineageData(input,options,composition,compositionSha);
+  const sourceLineage=buildCurrentCompositionLineageData(input,options,composition,compositionSha,{checkedCurrentCatalog,verifyCurrentRelease});
   for(const row of composition.rows){
     const manifest=parse(readBytes(input,row.root+'/lib.json'));
     if(row.origin.kind==='reused-public-root')packages.push(structuredClone(baseIndex.packages.find(p=>p.package_id===row.id)));

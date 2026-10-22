@@ -4,6 +4,7 @@ import {resolve,join} from 'node:path';
 import {createHash} from 'node:crypto';
 import {witModel,selectedWitRoutes} from './current-wit-routes-v3.mjs';
 import {currentIndexEntries as indexEntries,CurrentSearchCaller} from './current-lib-search-v3.mjs';
+import {verifyComposedCurrentRelease} from './current-lib-composition-release-v1.mjs';
 export const hash = bytes => createHash('sha256').update(bytes).digest('hex');
 const digest = value => typeof value === 'string' && /^[0-9a-f]{64}$/.test(value);
 const commit = value => typeof value === 'string' && /^[0-9a-f]{40}$/.test(value);
@@ -70,6 +71,8 @@ export function verifyCurrentRelease(catalogBytes,catalogSha256,read,productPath
   const ids=sorted(registry.libs.map(row=>row.id));assert.equal(new Set(ids).size,ids.length);
   assert.deepEqual(catalog.packages.map(row=>row.id),ids,'whole current registry');
   const cohort=JSON.parse(decode(pinned(catalog.cohort,read)));
+  if(cohort.schema==='wasmc.public-current-composition-cohort/v1')
+    return verifyComposedCurrentRelease(catalogBytes,catalogSha256,read,productPaths,{checkedCurrentCatalog,verifyCurrentRelease});
   assert.equal(cohort.schema,'wasmc.public-current-refresh-cohort/v1');
   assert.equal(cohort.q0_accepted,true);assert.ok(digest(cohort.refresh_receipt_sha256)&&digest(cohort.producer_sha256));
   assert.equal(cohort.public_admission,false);assert.deepEqual(cohort.selected,ids);

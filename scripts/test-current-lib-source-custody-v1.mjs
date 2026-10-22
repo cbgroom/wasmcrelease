@@ -6,7 +6,7 @@ import {mkdtemp,mkdir,writeFile,rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {fileURLToPath} from 'node:url';
-import {currentProductReader,currentProductPaths} from './current-lib-release-v3.mjs';
+import {currentProductReader,currentProductPaths,checkedCurrentCatalog,verifyCurrentRelease} from './current-lib-release-v3.mjs';
 import {currentIndex} from './lib-current-index-v2.mjs';
 import {generatedLib} from './generated-lib-v2.mjs';
 import {sha,digest} from './lib-refresh-cache-v2.mjs';
@@ -17,6 +17,7 @@ const repo=fileURLToPath(new URL('../',import.meta.url)),read=currentProductRead
 const fixturePath='admission/ordinary-canonical-host-v024/root-admission-next.json',fixtureBytes=read(fixturePath);
 assert.equal(sha(fixtureBytes),'a38ca55e3029482811ae15ddd51409633c16db6e25d02f7436c6a1c8c8c212aa');
 const fixture=JSON.parse(fixtureBytes),options=fixture.composition_input,composition=fixture.composition;
+const baseVerification={checkedCurrentCatalog,verifyCurrentRelease};
 const compositionSha='525cc9eb24c1041650569de20e87bad3dd3828963da940c653ce19ca05badd61';
 assert.equal(digest(composition),compositionSha);
 const expected=options.replacements[0],catalog=JSON.parse(read(options.base.catalog_path)),data=new Map();
@@ -70,8 +71,8 @@ inputReject('actual Root binary drift rejected',map=>{
 });
 inputReject('wrong independent producer driver rejected',(map,e)=>e.source.authority.driver_sha256='0'.repeat(64));
 inputReject('wrong independent original receipt pin rejected',(map,e)=>e.source.authority.original_receipt_sha256='0'.repeat(64));
-const lineage=buildCurrentCompositionLineageData(provider,options,composition,compositionSha);
-verifyCurrentCompositionLineageData(provider,options,composition,compositionSha,lineage);
+const lineage=buildCurrentCompositionLineageData(provider,options,composition,compositionSha,baseVerification);
+verifyCurrentCompositionLineageData(provider,options,composition,compositionSha,lineage,baseVerification);
 assert.equal(lineage.rows.length,42);assert.equal(lineage.admitted_original_sources.length,1);
 assert.equal(lineage.rows.filter(row=>row.source_schema==='wasmc.lib-refresh-source/v2').length,41);
 assert.equal(lineage.rows.filter(row=>row.source_schema==='wasmc.current-original-producer-source/v1').length,1);
@@ -79,7 +80,7 @@ assert.equal(lineage.fresh_builds,0);assert.equal(lineage.fresh_full_q0,false);
 results.push({name:'actual complete42-row lineage preserves41 oldv2 sources and admits exact original producer source',pass:true});
 const lineageReject=(name,mutate)=>{
   const changed=structuredClone(lineage);mutate(changed);
-  assert.throws(()=>verifyCurrentCompositionLineageData(provider,options,composition,compositionSha,changed));results.push({name,pass:true,rejected:true});
+  assert.throws(()=>verifyCurrentCompositionLineageData(provider,options,composition,compositionSha,changed,baseVerification));results.push({name,pass:true,rejected:true});
 };
 lineageReject('closed lineage rejects unknown fields',l=>l.q0_accepted=true);
 lineageReject('lineage cannot masquerade as old full Q0',l=>l.schema='wasmc.lib-refresh-receipt/v2');
@@ -91,14 +92,14 @@ lineageReject('lineage cannot claim physical current directory admission',l=>l.c
 lineageReject('lineage cannot claim a new full producer run',l=>l.fresh_full_q0=true);
 const compositionReject=(name,mutate)=>{
   const changed=structuredClone(composition);mutate(changed);
-  assert.throws(()=>buildCurrentCompositionLineageData(provider,options,changed,digest(changed)));
+  assert.throws(()=>buildCurrentCompositionLineageData(provider,options,changed,digest(changed),baseVerification));
   results.push({name,pass:true,rejected:true});
 };
 compositionReject('self-rehashed composition cannot forge reused producer',c=>c.rows[0].origin.producer_sha256='0'.repeat(64));
 compositionReject('self-rehashed composition cannot relabel reused version',c=>c.rows[0].version='99.0.0');
 compositionReject('self-rehashed composition cannot rebind original source',c=>c.rows.find(row=>row.id==='wasmc-json').origin.source_spec_sha256='0'.repeat(64));
 compositionReject('self-rehashed composition cannot rebind imported Root',c=>c.rows.find(row=>row.id==='wasmc-json').root_inventory_sha256='0'.repeat(64));
-assert.throws(()=>buildCurrentCompositionLineageData(provider,options,composition,'0'.repeat(64)));
+assert.throws(()=>buildCurrentCompositionLineageData(provider,options,composition,'0'.repeat(64),baseVerification));
 results.push({name:'independent composition receipt pin remains mandatory',pass:true,rejected:true});
 
 // Exercise the unchanged legacy entrypoints rather than asserting their source

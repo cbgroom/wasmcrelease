@@ -1,0 +1,38 @@
+{
+  "schema": "wasmc.current-composition-product-regressions/v1",
+  "accepted": true,
+  "stage_controls_sha256": "7f6049ff2ac4e1febca0c38fbedb1a929e6c4944d8aa1148c818dec0c00689c1",
+  "commands": [
+    {
+      "command": "node scripts/test-current-lib-composition-release-v1.mjs",
+      "exit_code": 0,
+      "tests": 15
+    },
+    {
+      "command": "node --test scripts/test-lib-current-release-preflight.mjs scripts/test-lib-current-index-v2.mjs",
+      "exit_code": 0,
+      "tests": 36
+    },
+    {
+      "command": "node scripts/test-current-lib-source-custody-v1.mjs",
+      "exit_code": 0,
+      "tests": 35
+    },
+    {
+      "command": "node scripts/test-lib-current-composition-v1.mjs",
+      "exit_code": 0,
+      "tests": 41
+    }
+  ],
+  "tool_inputs": {
+    "scripts/current-lib-release-v3.mjs": "2eadb5911be4784af4df49719839b6e63352c0b7f1d1c0273c291ac29b80553f",
+    "scripts/current-lib-source-custody-v1.mjs": "7cca78fc78bff435133843202b1003ad50a3bb83835525d44cf35fd312ca79de",
+    "scripts/lib-current-composition-v1.mjs": "8cb596e8a76e6a1297535cb18a56b819fbf2927cf0e363d37e2160ae70f8d889",
+    "scripts/test-current-lib-source-custody-v1.mjs": "d167710e10884ec24dec2e10a300b1df64be9c679d041a87ec647d4ef57417e7",
+    "scripts/current-lib-composition-release-v1.mjs": "a5af0370eb20d38d5783b7f66711df36b87453937cc1a19a4f0b996eb1ae6f5f",
+    "scripts/test-current-lib-composition-release-v1.mjs": "ff1df33f67a7ab20e4a185076eeffd2bb12bfa3bd7325505a6396efa69ce7c2a"
+  },
+  "git_diff_check_pass": true,
+  "formal_release": false,
+  "network_installation": false
+}
