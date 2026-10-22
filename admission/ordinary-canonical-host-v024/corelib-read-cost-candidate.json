@@ -1,0 +1,2577 @@
+{
+  "schema": "wasmc.corelib-read-cost-candidate/v1",
+  "observed_at": "2026-10-22T14:08:57.901224+00:00",
+  "Source": "9e6d8f1732733f457c1799c565a9962035250be4",
+  "private_source_edited": false,
+  "compiler_edited": false,
+  "instance_effects": false,
+  "baseline": {
+    "Host_call_limit": 64,
+    "artifact_sha256": "c762cd4af9de9aa2eb6e01364e26956b06994924ec3649043f1cea22685911ac",
+    "effect_scope": "pure local fixture; no actual transactions",
+    "fuel": 10000000,
+    "memory_bytes": 67108864,
+    "observations": [
+      {
+        "Host_calls": 14,
+        "committed_before_trap": false,
+        "completed": true,
+        "error": null,
+        "error_drops": 0,
+        "fuel_used": 6705455,
+        "initialization_fuel_used": 79633,
+        "input_bytes": 336,
+        "label": "minimal-success",
+        "mode": -1,
+        "pending": [
+          0,
+          0,
+          0
+        ],
+        "raw_Host_calls": 1,
+        "raw_Host_entry_remaining_fuel": 3597431,
+        "response_remaining_fuel": 3294991,
+        "result": 0,
+        "rows": 2,
+        "seconds": 0.000949235
+      },
+      {
+        "Host_calls": 12,
+        "committed_before_trap": false,
+        "completed": false,
+        "error": "error while executing at wasm backtrace:\n    0:  0x27d6d - <unknown>!<wasm function 734>\n    1:  0x26c94 - <unknown>!<wasm function 719>\n    2:  0x27f84 - <unknown>!<wasm function 737>\n    3:  0x2b800 - <unknown>!<wasm function 793>\n    4:  0x241d0 - <unknown>!<wasm function 665>\n    5:  0x24308 - <unknown>!<wasm function 667>\n    6:  0x2477d - <unknown>!<wasm function 674>\n    7:  0x2488b - <unknown>!<wasm function 675>\n    8:  0x249b0 - <unknown>!<wasm function 676>\n    9:  0x24bcb - <unknown>!<wasm function 679>\n   10:  0x265ab - <unknown>!<wasm function 713>\n   11:   0xba71 - <unknown>!<wasm function 181>\n   12:  0x22a2f - <unknown>!<wasm function 628>\n   13:  0x240f7 - <unknown>!<wasm function 663>\n\nCaused by:\n    wasm trap: all fuel consumed by WebAssembly\n",
+        "error_drops": 0,
+        "fuel_used": 10000000,
+        "initialization_fuel_used": 79633,
+        "input_bytes": 445,
+        "label": "nested-allow-success",
+        "mode": -1,
+        "pending": null,
+        "raw_Host_calls": 0,
+        "raw_Host_entry_remaining_fuel": null,
+        "response_remaining_fuel": null,
+        "result": null,
+        "rows": 0,
+        "seconds": 0.001213229
+      },
+      {
+        "Host_calls": 13,
+        "committed_before_trap": false,
+        "completed": true,
+        "error": null,
+        "error_drops": 0,
+        "fuel_used": 4982278,
+        "initialization_fuel_used": 79633,
+        "input_bytes": 446,
+        "label": "nested-allow-false",
+        "mode": -1,
+        "pending": [
+          0,
+          0,
+          0
+        ],
+        "raw_Host_calls": 0,
+        "raw_Host_entry_remaining_fuel": null,
+        "response_remaining_fuel": 5018168,
+        "result": 0,
+        "rows": 0,
+        "seconds": 0.000628886
+      },
+      {
+        "Host_calls": 14,
+        "committed_before_trap": false,
+        "completed": true,
+        "error": null,
+        "error_drops": 0,
+        "fuel_used": 9670071,
+        "initialization_fuel_used": 79633,
+        "input_bytes": 417,
+        "label": "array-success",
+        "mode": -1,
+        "pending": [
+          0,
+          0,
+          0
+        ],
+        "raw_Host_calls": 1,
+        "raw_Host_entry_remaining_fuel": 895984,
+        "response_remaining_fuel": 330375,
+        "result": 0,
+        "rows": 2,
+        "seconds": 0.001137477
+      },
+      {
+        "Host_calls": 14,
+        "committed_before_trap": false,
+        "completed": true,
+        "error": null,
+        "error_drops": 0,
+        "fuel_used": 9119893,
+        "initialization_fuel_used": 79633,
+        "input_bytes": 402,
+        "label": "object-success",
+        "mode": -1,
+        "pending": [
+          0,
+          0,
+          0
+        ],
+        "raw_Host_calls": 1,
+        "raw_Host_entry_remaining_fuel": 1397427,
+        "response_remaining_fuel": 880553,
+        "result": 0,
+        "rows": 2,
+        "seconds": 0.001036398
+      },
+      {
+        "Host_calls": 18,
+        "committed_before_trap": false,
+        "completed": true,
+        "error": null,
+        "error_drops": 1,
+        "fuel_used": 6729246,
+        "initialization_fuel_used": 79633,
+        "input_bytes": 336,
+        "label": "minimal-error-2",
+        "mode": 2,
+        "pending": [
+          0,
+          0,
+          0
+        ],
+        "raw_Host_calls": 1,
+        "raw_Host_entry_remaining_fuel": 3597431,
+        "response_remaining_fuel": 3271200,
+        "result": 0,
+        "rows": 0,
+        "seconds": 0.000854728
+      },
+      {
+        "Host_calls": 18,
+        "committed_before_trap": false,
+        "completed": true,
+        "error": null,
+        "error_drops": 1,
+        "fuel_used": 6729246,
+        "initialization_fuel_used": 79633,
+        "input_bytes": 336,
+        "label": "minimal-error-3",
+        "mode": 3,
+        "pending": [
+          0,
+          0,
+          0
+        ],
+        "raw_Host_calls": 1,
+        "raw_Host_entry_remaining_fuel": 3597431,
+        "response_remaining_fuel": 3271200,
+        "result": 0,
+        "rows": 0,
+        "seconds": 0.000889463
+      },
+      {
+        "Host_calls": 18,
+        "committed_before_trap": false,
+        "completed": true,
+        "error": null,
+        "error_drops": 1,
+        "fuel_used": 9693862,
+        "initialization_fuel_used": 79633,
+        "input_bytes": 417,
+        "label": "array-error-2",
+        "mode": 2,
+        "pending": [
+          0,
+          0,
+          0
+        ],
+        "raw_Host_calls": 1,
+        "raw_Host_entry_remaining_fuel": 895984,
+        "response_remaining_fuel": 306584,
+        "result": 0,
+        "rows": 0,
+        "seconds": 0.001124103
+      },
+      {
+        "Host_calls": 18,
+        "committed_before_trap": false,
+        "completed": true,
+        "error": null,
+        "error_drops": 1,
+        "fuel_used": 9693862,
+        "initialization_fuel_used": 79633,
+        "input_bytes": 417,
+        "label": "array-error-3",
+        "mode": 3,
+        "pending": [
+          0,
+          0,
+          0
+        ],
+        "raw_Host_calls": 1,
+        "raw_Host_entry_remaining_fuel": 895984,
+        "response_remaining_fuel": 306584,
+        "result": 0,
+        "rows": 0,
+        "seconds": 0.001100298
+      },
+      {
+        "Host_calls": 12,
+        "committed_before_trap": false,
+        "completed": false,
+        "error": "error while executing at wasm backtrace:\n    0:  0x27d6d - <unknown>!<wasm function 734>\n    1:  0x26c94 - <unknown>!<wasm function 719>\n    2:  0x27f84 - <unknown>!<wasm function 737>\n    3:  0x2b800 - <unknown>!<wasm function 793>\n    4:  0x241d0 - <unknown>!<wasm function 665>\n    5:  0x24308 - <unknown>!<wasm function 667>\n    6:  0x2477d - <unknown>!<wasm function 674>\n    7:  0x2488b - <unknown>!<wasm function 675>\n    8:  0x249b0 - <unknown>!<wasm function 676>\n    9:  0x24bcb - <unknown>!<wasm function 679>\n   10:  0x265ab - <unknown>!<wasm function 713>\n   11:   0xba71 - <unknown>!<wasm function 181>\n   12:  0x22a2f - <unknown>!<wasm function 628>\n   13:  0x240f7 - <unknown>!<wasm function 663>\n\nCaused by:\n    wasm trap: all fuel consumed by WebAssembly\n",
+        "error_drops": 0,
+        "fuel_used": 10000000,
+        "initialization_fuel_used": 79633,
+        "input_bytes": 445,
+        "label": "nested-error-2",
+        "mode": 2,
+        "pending": null,
+        "raw_Host_calls": 0,
+        "raw_Host_entry_remaining_fuel": null,
+        "response_remaining_fuel": null,
+        "result": null,
+        "rows": 0,
+        "seconds": 0.001163666
+      },
+      {
+        "Host_calls": 12,
+        "committed_before_trap": false,
+        "completed": false,
+        "error": "error while executing at wasm backtrace:\n    0:  0x27d6d - <unknown>!<wasm function 734>\n    1:  0x26c94 - <unknown>!<wasm function 719>\n    2:  0x27f84 - <unknown>!<wasm function 737>\n    3:  0x2b800 - <unknown>!<wasm function 793>\n    4:  0x241d0 - <unknown>!<wasm function 665>\n    5:  0x24308 - <unknown>!<wasm function 667>\n    6:  0x2477d - <unknown>!<wasm function 674>\n    7:  0x2488b - <unknown>!<wasm function 675>\n    8:  0x249b0 - <unknown>!<wasm function 676>\n    9:  0x24bcb - <unknown>!<wasm function 679>\n   10:  0x265ab - <unknown>!<wasm function 713>\n   11:   0xba71 - <unknown>!<wasm function 181>\n   12:  0x22a2f - <unknown>!<wasm function 628>\n   13:  0x240f7 - <unknown>!<wasm function 663>\n\nCaused by:\n    wasm trap: all fuel consumed by WebAssembly\n",
+        "error_drops": 0,
+        "fuel_used": 10000000,
+        "initialization_fuel_used": 79633,
+        "input_bytes": 445,
+        "label": "nested-error-3",
+        "mode": 3,
+        "pending": null,
+        "raw_Host_calls": 0,
+        "raw_Host_entry_remaining_fuel": null,
+        "response_remaining_fuel": null,
+        "result": null,
+        "rows": 0,
+        "seconds": 0.00117093
+      },
+      {
+        "Host_calls": 14,
+        "committed_before_trap": false,
+        "completed": true,
+        "error": null,
+        "error_drops": 0,
+        "fuel_used": 6743565,
+        "initialization_fuel_used": 79633,
+        "input_bytes": 337,
+        "label": "ascii-string-0",
+        "mode": -1,
+        "pending": [
+          0,
+          0,
+          0
+        ],
+        "raw_Host_calls": 1,
+        "raw_Host_entry_remaining_fuel": 3562570,
+        "response_remaining_fuel": 3256881,
+        "result": 0,
+        "rows": 2,
+        "seconds": 0.000919179
+      },
+      {
+        "Host_calls": 14,
+        "committed_before_trap": false,
+        "completed": true,
+        "error": null,
+        "error_drops": 0,
+        "fuel_used": 7893136,
+        "initialization_fuel_used": 79633,
+        "input_bytes": 369,
+        "label": "ascii-string-32",
+        "mode": -1,
+        "pending": [
+          0,
+          0,
+          0
+        ],
+        "raw_Host_calls": 1,
+        "raw_Host_entry_remaining_fuel": 2516967,
+        "response_remaining_fuel": 2107310,
+        "result": 0,
+        "rows": 2,
+        "seconds": 0.000982567
+      },
+      {
+        "Host_calls": 14,
+        "committed_before_trap": false,
+        "completed": true,
+        "error": null,
+        "error_drops": 0,
+        "fuel_used": 9040040,
+        "initialization_fuel_used": 79633,
+        "input_bytes": 401,
+        "label": "ascii-string-64",
+        "mode": -1,
+        "pending": [
+          0,
+          0,
+          0
+        ],
+        "raw_Host_calls": 1,
+        "raw_Host_entry_remaining_fuel": 1474031,
+        "response_remaining_fuel": 960406,
+        "result": 0,
+        "rows": 2,
+        "seconds": 0.001033482
+      },
+      {
+        "Host_calls": 13,
+        "committed_before_trap": true,
+        "completed": false,
+        "error": "error while executing at wasm backtrace:\n    0:  0x27d6d - <unknown>!<wasm function 734>\n    1:  0x270e4 - <unknown>!<wasm function 721>\n    2:  0x26d6b - <unknown>!<wasm function 720>\n    3:  0x29c1a - <unknown>!<wasm function 771>\n    4:  0x22cbf - <unknown>!<wasm function 634>\n    5:  0x22fa1 - <unknown>!<wasm function 638>\n    6:  0x23012 - <unknown>!<wasm function 640>\n    7:  0x22a36 - <unknown>!<wasm function 628>\n    8:  0x240f7 - <unknown>!<wasm function 663>\n\nCaused by:\n    wasm trap: all fuel consumed by WebAssembly\n",
+        "error_drops": 0,
+        "fuel_used": 10000000,
+        "initialization_fuel_used": 79633,
+        "input_bytes": 433,
+        "label": "ascii-string-96",
+        "mode": -1,
+        "pending": null,
+        "raw_Host_calls": 1,
+        "raw_Host_entry_remaining_fuel": 431132,
+        "response_remaining_fuel": null,
+        "result": null,
+        "rows": 2,
+        "seconds": 0.001376384
+      },
+      {
+        "Host_calls": 12,
+        "committed_before_trap": false,
+        "completed": false,
+        "error": "error while executing at wasm backtrace:\n    0:  0x27d6d - <unknown>!<wasm function 734>\n    1:  0x27a0e - <unknown>!<wasm function 733>\n    2:  0x26c77 - <unknown>!<wasm function 719>\n    3:  0x27f84 - <unknown>!<wasm function 737>\n    4:  0x2b800 - <unknown>!<wasm function 793>\n    5:  0x241d0 - <unknown>!<wasm function 665>\n    6:  0x24308 - <unknown>!<wasm function 667>\n    7:  0x2477d - <unknown>!<wasm function 674>\n    8:  0x2488b - <unknown>!<wasm function 675>\n    9:  0x249b0 - <unknown>!<wasm function 676>\n   10:  0x24bcb - <unknown>!<wasm function 679>\n   11:  0x265ab - <unknown>!<wasm function 713>\n   12:   0xba71 - <unknown>!<wasm function 181>\n   13:  0x22a2f - <unknown>!<wasm function 628>\n   14:  0x240f7 - <unknown>!<wasm function 663>\n\nCaused by:\n    wasm trap: all fuel consumed by WebAssembly\n",
+        "error_drops": 0,
+        "fuel_used": 10000000,
+        "initialization_fuel_used": 79633,
+        "input_bytes": 465,
+        "label": "ascii-string-128",
+        "mode": -1,
+        "pending": null,
+        "raw_Host_calls": 0,
+        "raw_Host_entry_remaining_fuel": null,
+        "response_remaining_fuel": null,
+        "result": null,
+        "rows": 0,
+        "seconds": 0.001183152
+      },
+      {
+        "Host_calls": 12,
+        "committed_before_trap": false,
+        "completed": false,
+        "error": "error while executing at wasm backtrace:\n    0:  0x2845a - <unknown>!<wasm function 742>\n    1:  0x2a055 - <unknown>!<wasm function 776>\n    2:   0xaaf5 - <unknown>!<wasm function 181>\n    3:  0x22a2f - <unknown>!<wasm function 628>\n    4:  0x240f7 - <unknown>!<wasm function 663>\n\nCaused by:\n    wasm trap: all fuel consumed by WebAssembly\n",
+        "error_drops": 0,
+        "fuel_used": 10000000,
+        "initialization_fuel_used": 79633,
+        "input_bytes": 593,
+        "label": "ascii-string-256",
+        "mode": -1,
+        "pending": null,
+        "raw_Host_calls": 0,
+        "raw_Host_entry_remaining_fuel": null,
+        "response_remaining_fuel": null,
+        "result": null,
+        "rows": 0,
+        "seconds": 0.001043752
+      },
+      {
+        "Host_calls": 12,
+        "committed_before_trap": false,
+        "completed": false,
+        "error": "error while executing at wasm backtrace:\n    0:  0x2acd8 - <unknown>!<wasm function 785>\n    1:   0xaac2 - <unknown>!<wasm function 181>\n    2:  0x22a2f - <unknown>!<wasm function 628>\n    3:  0x240f7 - <unknown>!<wasm function 663>\n\nCaused by:\n    wasm trap: all fuel consumed by WebAssembly\n",
+        "error_drops": 0,
+        "fuel_used": 10000000,
+        "initialization_fuel_used": 79633,
+        "input_bytes": 849,
+        "label": "ascii-string-512",
+        "mode": -1,
+        "pending": null,
+        "raw_Host_calls": 0,
+        "raw_Host_entry_remaining_fuel": null,
+        "response_remaining_fuel": null,
+        "result": null,
+        "rows": 0,
+        "seconds": 0.001040015
+      },
+      {
+        "Host_calls": 12,
+        "committed_before_trap": false,
+        "completed": false,
+        "error": "error while executing at wasm backtrace:\n    0:  0x2672e - <unknown>!<wasm function 715>\n    1:  0x26f42 - <unknown>!<wasm function 720>\n    2:  0x29c1a - <unknown>!<wasm function 771>\n    3:  0x20175 - <unknown>!<wasm function 506>\n    4:  0x209d4 - <unknown>!<wasm function 539>\n    5:  0x22902 - <unknown>!<wasm function 625>\n    6:   0xa42f - <unknown>!<wasm function 181>\n    7:  0x22a2f - <unknown>!<wasm function 628>\n    8:  0x240f7 - <unknown>!<wasm function 663>\n\nCaused by:\n    wasm trap: all fuel consumed by WebAssembly\n",
+        "error_drops": 0,
+        "fuel_used": 10000000,
+        "initialization_fuel_used": 79633,
+        "input_bytes": 1361,
+        "label": "ascii-string-1024",
+        "mode": -1,
+        "pending": null,
+        "raw_Host_calls": 0,
+        "raw_Host_entry_remaining_fuel": null,
+        "response_remaining_fuel": null,
+        "result": null,
+        "rows": 0,
+        "seconds": 0.000917886
+      }
+    ],
+    "plan_sha256": "165214e167281b40cb0148edff007c8d3e2ed7d4617170e2014e968c86a50c0d",
+    "schema": "wasmc.pure-json-fuel-fixture/v1",
+    "seconds_limit": 5
+  },
+  "candidate": {
+    "Host_call_limit": 64,
+    "artifact_sha256": "c61faddcbe47ccc174e51b59b4639a82e7d67796114efecfda589e1fd1016e6f",
+    "effect_scope": "pure local fixture; no actual transactions",
+    "expected_corelib_sha256": "149208562de372aab284e7d97274075b01cee2ec3378f2c3c34b48b954ba6169",
+    "fuel": 10000000,
+    "memory_bytes": 67108864,
+    "observations": [
+      {
+        "Host_calls": 14,
+        "committed_before_trap": false,
+        "completed": true,
+        "error": null,
+        "error_drops": 0,
+        "fuel_used": 5170151,
+        "initialization_fuel_used": 57102,
+        "input_bytes": 336,
+        "label": "minimal-success",
+        "mode": -1,
+        "pending": [
+          0,
+          0,
+          0
+        ],
+        "raw_Host_calls": 1,
+        "raw_Host_entry_remaining_fuel": 5115984,
+        "response_remaining_fuel": 4830295,
+        "result": 0,
+        "rows": 2,
+        "seconds": 0.001086552
+      },
+      {
+        "Host_calls": 14,
+        "committed_before_trap": false,
+        "completed": true,
+        "error": null,
+        "error_drops": 0,
+        "fuel_used": 8190732,
+        "initialization_fuel_used": 57102,
+        "input_bytes": 445,
+        "label": "nested-allow-success",
+        "mode": -1,
+        "pending": [
+          0,
+          0,
+          0
+        ],
+        "raw_Host_calls": 1,
+        "raw_Host_entry_remaining_fuel": 2343923,
+        "response_remaining_fuel": 1809714,
+        "result": 0,
+        "rows": 2,
+        "seconds": 0.001073919
+      },
+      {
+        "Host_calls": 13,
+        "committed_before_trap": false,
+        "completed": true,
+        "error": null,
+        "error_drops": 0,
+        "fuel_used": 4068777,
+        "initialization_fuel_used": 57102,
+        "input_bytes": 446,
+        "label": "nested-allow-false",
+        "mode": -1,
+        "pending": [
+          0,
+          0,
+          0
+        ],
+        "raw_Host_calls": 0,
+        "raw_Host_entry_remaining_fuel": null,
+        "response_remaining_fuel": 5931669,
+        "result": 0,
+        "rows": 0,
+        "seconds": 0.000540711
+      },
+      {
+        "Host_calls": 14,
+        "committed_before_trap": false,
+        "completed": true,
+        "error": null,
+        "error_drops": 0,
+        "fuel_used": 7404583,
+        "initialization_fuel_used": 57102,
+        "input_bytes": 417,
+        "label": "array-success",
+        "mode": -1,
+        "pending": [
+          0,
+          0,
+          0
+        ],
+        "raw_Host_calls": 1,
+        "raw_Host_entry_remaining_fuel": 3066232,
+        "response_remaining_fuel": 2595863,
+        "result": 0,
+        "rows": 2,
+        "seconds": 0.000898621
+      },
+      {
+        "Host_calls": 14,
+        "committed_before_trap": false,
+        "completed": true,
+        "error": null,
+        "error_drops": 0,
+        "fuel_used": 6988282,
+        "initialization_fuel_used": 57102,
+        "input_bytes": 402,
+        "label": "object-success",
+        "mode": -1,
+        "pending": [
+          0,
+          0,
+          0
+        ],
+        "raw_Host_calls": 1,
+        "raw_Host_entry_remaining_fuel": 3448333,
+        "response_remaining_fuel": 3012164,
+        "result": 0,
+        "rows": 2,
+        "seconds": 0.000906035
+      },
+      {
+        "Host_calls": 18,
+        "committed_before_trap": false,
+        "completed": true,
+        "error": null,
+        "error_drops": 1,
+        "fuel_used": 5188938,
+        "initialization_fuel_used": 57102,
+        "input_bytes": 336,
+        "label": "minimal-error-2",
+        "mode": 2,
+        "pending": [
+          0,
+          0,
+          0
+        ],
+        "raw_Host_calls": 1,
+        "raw_Host_entry_remaining_fuel": 5115984,
+        "response_remaining_fuel": 4811508,
+        "result": 0,
+        "rows": 0,
+        "seconds": 0.0007269
+      },
+      {
+        "Host_calls": 18,
+        "committed_before_trap": false,
+        "completed": true,
+        "error": null,
+        "error_drops": 1,
+        "fuel_used": 5188938,
+        "initialization_fuel_used": 57102,
+        "input_bytes": 336,
+        "label": "minimal-error-3",
+        "mode": 3,
+        "pending": [
+          0,
+          0,
+          0
+        ],
+        "raw_Host_calls": 1,
+        "raw_Host_entry_remaining_fuel": 5115984,
+        "response_remaining_fuel": 4811508,
+        "result": 0,
+        "rows": 0,
+        "seconds": 0.000720477
+      },
+      {
+        "Host_calls": 18,
+        "committed_before_trap": false,
+        "completed": true,
+        "error": null,
+        "error_drops": 1,
+        "fuel_used": 7423370,
+        "initialization_fuel_used": 57102,
+        "input_bytes": 417,
+        "label": "array-error-2",
+        "mode": 2,
+        "pending": [
+          0,
+          0,
+          0
+        ],
+        "raw_Host_calls": 1,
+        "raw_Host_entry_remaining_fuel": 3066232,
+        "response_remaining_fuel": 2577076,
+        "result": 0,
+        "rows": 0,
+        "seconds": 0.000911605
+      },
+      {
+        "Host_calls": 18,
+        "committed_before_trap": false,
+        "completed": true,
+        "error": null,
+        "error_drops": 1,
+        "fuel_used": 7423370,
+        "initialization_fuel_used": 57102,
+        "input_bytes": 417,
+        "label": "array-error-3",
+        "mode": 3,
+        "pending": [
+          0,
+          0,
+          0
+        ],
+        "raw_Host_calls": 1,
+        "raw_Host_entry_remaining_fuel": 3066232,
+        "response_remaining_fuel": 2577076,
+        "result": 0,
+        "rows": 0,
+        "seconds": 0.000906776
+      },
+      {
+        "Host_calls": 18,
+        "committed_before_trap": false,
+        "completed": true,
+        "error": null,
+        "error_drops": 1,
+        "fuel_used": 8209519,
+        "initialization_fuel_used": 57102,
+        "input_bytes": 445,
+        "label": "nested-error-2",
+        "mode": 2,
+        "pending": [
+          0,
+          0,
+          0
+        ],
+        "raw_Host_calls": 1,
+        "raw_Host_entry_remaining_fuel": 2343923,
+        "response_remaining_fuel": 1790927,
+        "result": 0,
+        "rows": 0,
+        "seconds": 0.000989401
+      },
+      {
+        "Host_calls": 18,
+        "committed_before_trap": false,
+        "completed": true,
+        "error": null,
+        "error_drops": 1,
+        "fuel_used": 8209519,
+        "initialization_fuel_used": 57102,
+        "input_bytes": 445,
+        "label": "nested-error-3",
+        "mode": 3,
+        "pending": [
+          0,
+          0,
+          0
+        ],
+        "raw_Host_calls": 1,
+        "raw_Host_entry_remaining_fuel": 2343923,
+        "response_remaining_fuel": 1790927,
+        "result": 0,
+        "rows": 0,
+        "seconds": 0.000988629
+      },
+      {
+        "Host_calls": 14,
+        "committed_before_trap": false,
+        "completed": true,
+        "error": null,
+        "error_drops": 0,
+        "fuel_used": 5198221,
+        "initialization_fuel_used": 57102,
+        "input_bytes": 337,
+        "label": "ascii-string-0",
+        "mode": -1,
+        "pending": [
+          0,
+          0,
+          0
+        ],
+        "raw_Host_calls": 1,
+        "raw_Host_entry_remaining_fuel": 5090194,
+        "response_remaining_fuel": 4802225,
+        "result": 0,
+        "rows": 2,
+        "seconds": 0.000827197
+      },
+      {
+        "Host_calls": 14,
+        "committed_before_trap": false,
+        "completed": true,
+        "error": null,
+        "error_drops": 0,
+        "fuel_used": 6059680,
+        "initialization_fuel_used": 57102,
+        "input_bytes": 369,
+        "label": "ascii-string-32",
+        "mode": -1,
+        "pending": [
+          0,
+          0,
+          0
+        ],
+        "raw_Host_calls": 1,
+        "raw_Host_entry_remaining_fuel": 4301695,
+        "response_remaining_fuel": 3940766,
+        "result": 0,
+        "rows": 2,
+        "seconds": 0.000771994
+      },
+      {
+        "Host_calls": 14,
+        "committed_before_trap": false,
+        "completed": true,
+        "error": null,
+        "error_drops": 0,
+        "fuel_used": 6918472,
+        "initialization_fuel_used": 57102,
+        "input_bytes": 401,
+        "label": "ascii-string-64",
+        "mode": -1,
+        "pending": [
+          0,
+          0,
+          0
+        ],
+        "raw_Host_calls": 1,
+        "raw_Host_entry_remaining_fuel": 3515863,
+        "response_remaining_fuel": 3081974,
+        "result": 0,
+        "rows": 2,
+        "seconds": 0.000888642
+      },
+      {
+        "Host_calls": 14,
+        "committed_before_trap": false,
+        "completed": true,
+        "error": null,
+        "error_drops": 0,
+        "fuel_used": 7777227,
+        "initialization_fuel_used": 57102,
+        "input_bytes": 433,
+        "label": "ascii-string-96",
+        "mode": -1,
+        "pending": [
+          0,
+          0,
+          0
+        ],
+        "raw_Host_calls": 1,
+        "raw_Host_entry_remaining_fuel": 2730068,
+        "response_remaining_fuel": 2223219,
+        "result": 0,
+        "rows": 2,
+        "seconds": 0.000868414
+      },
+      {
+        "Host_calls": 14,
+        "committed_before_trap": false,
+        "completed": true,
+        "error": null,
+        "error_drops": 0,
+        "fuel_used": 8635771,
+        "initialization_fuel_used": 57102,
+        "input_bytes": 465,
+        "label": "ascii-string-128",
+        "mode": -1,
+        "pending": [
+          0,
+          0,
+          0
+        ],
+        "raw_Host_calls": 1,
+        "raw_Host_entry_remaining_fuel": 1944484,
+        "response_remaining_fuel": 1364675,
+        "result": 0,
+        "rows": 2,
+        "seconds": 0.0009459
+      },
+      {
+        "Host_calls": 12,
+        "committed_before_trap": false,
+        "completed": false,
+        "error": "error while executing at wasm backtrace:\n    0:   0x4289 - <unknown>!<wasm function 37>\n    1:   0x4958 - <unknown>!<wasm function 45>\n    2:   0x623a - <unknown>!<wasm function 64>\n    3:   0x73ad - <unknown>!<wasm function 81>\n    4:  0x22997 - <unknown>!<wasm function 627>\n    5:   0xb366 - <unknown>!<wasm function 181>\n    6:  0x229dc - <unknown>!<wasm function 628>\n    7:  0x240a4 - <unknown>!<wasm function 663>\n\nCaused by:\n    wasm trap: all fuel consumed by WebAssembly\n",
+        "error_drops": 0,
+        "fuel_used": 10000000,
+        "initialization_fuel_used": 57102,
+        "input_bytes": 593,
+        "label": "ascii-string-256",
+        "mode": -1,
+        "pending": null,
+        "raw_Host_calls": 0,
+        "raw_Host_entry_remaining_fuel": null,
+        "response_remaining_fuel": null,
+        "result": null,
+        "rows": 0,
+        "seconds": 0.001331981
+      },
+      {
+        "Host_calls": 12,
+        "committed_before_trap": false,
+        "completed": false,
+        "error": "error while executing at wasm backtrace:\n    0:  0x28a9c - <unknown>!<wasm function 733>\n    1:  0x28762 - <unknown>!<wasm function 731>\n    2:  0x2b71a - <unknown>!<wasm function 760>\n    3:   0xa854 - <unknown>!<wasm function 181>\n    4:  0x229dc - <unknown>!<wasm function 628>\n    5:  0x240a4 - <unknown>!<wasm function 663>\n\nCaused by:\n    wasm trap: all fuel consumed by WebAssembly\n",
+        "error_drops": 0,
+        "fuel_used": 10000000,
+        "initialization_fuel_used": 57102,
+        "input_bytes": 849,
+        "label": "ascii-string-512",
+        "mode": -1,
+        "pending": null,
+        "raw_Host_calls": 0,
+        "raw_Host_entry_remaining_fuel": null,
+        "response_remaining_fuel": null,
+        "result": null,
+        "rows": 0,
+        "seconds": 0.001022071
+      },
+      {
+        "Host_calls": 12,
+        "committed_before_trap": false,
+        "completed": false,
+        "error": "error while executing at wasm backtrace:\n    0:   0x4944 - <unknown>!<wasm function 45>\n    1:   0x45e3 - <unknown>!<wasm function 42>\n    2:   0x5eec - <unknown>!<wasm function 62>\n    3:   0x71b1 - <unknown>!<wasm function 79>\n    4:  0x228d9 - <unknown>!<wasm function 625>\n    5:   0xa3dc - <unknown>!<wasm function 181>\n    6:  0x229dc - <unknown>!<wasm function 628>\n    7:  0x240a4 - <unknown>!<wasm function 663>\n\nCaused by:\n    wasm trap: all fuel consumed by WebAssembly\n",
+        "error_drops": 0,
+        "fuel_used": 10000000,
+        "initialization_fuel_used": 57102,
+        "input_bytes": 1361,
+        "label": "ascii-string-1024",
+        "mode": -1,
+        "pending": null,
+        "raw_Host_calls": 0,
+        "raw_Host_entry_remaining_fuel": null,
+        "response_remaining_fuel": null,
+        "result": null,
+        "rows": 0,
+        "seconds": 0.000944386
+      }
+    ],
+    "plan_sha256": "7b1cf515d673519547d9d169b754f70c40c8e45d1bd40242144edd02f1eef4fb",
+    "schema": "wasmc.pure-json-fuel-fixture/v1",
+    "seconds_limit": 5
+  },
+  "receipts": {
+    "build-comparison.json": {
+      "sha256": "82584459ca40e0ee19698eac1596bc96e48d877b2c6ae3a6996e1ffee0a56c42",
+      "bytes": 4282,
+      "value": {
+        "schema": "wasmc.corelib-build-comparison/v1",
+        "observed_at": "2026-10-22T13:57:15.706372+00:00",
+        "source_commit": "9e6d8f1732733f457c1799c565a9962035250be4",
+        "source_files": {
+          "Cargo.toml": "e0107984e6072e47410a2c376b0cd8540f7f84411e6b93cef5cbd6803b06e687",
+          "Cargo.lock": "328bf5f16a267197e6d59e3295c92731f794d1d395b0e7831775bba0a0cf641c",
+          "src/capacity.rs": "6515ba25976a76112c5eef3069058d389aafe32b204c7e76d1082039a3b8e6ee",
+          "src/lib.rs": "8778731dcbe66b996b4aae00c547fb2a9c8dd753d99d694f09d0d94e36ae3f6e",
+          "src/byte_pool_lifecycle_tests.rs": "5cb75bc364984ad233e73e0110359754b99cc91ea38e11ea8b9728cc1287ae5d",
+          "src/bytes_mut.rs": "302357fe3f1b06162bd7239ef09c8ce0db532a9f81090713f883dfca9c9e2731",
+          "src/core_resource_bridge.rs": "d423a231a9e26065f711afae31d37ae9367018423cee1e4652eb8ee250ca416b",
+          "src/opaque_registry.rs": "67568f0e68cfe18e13611ee1515f9a566791602b9b127307bf1c16d9623fc55f",
+          "src/budgeted_sequence.rs": "8c9fa64d77865f52d262c2e4eed0fde367bdf448ec830b8473673b069d8dd6ed",
+          "src/budgeted_arena.rs": "a32668e8e3a404fd84439d60c1147a8bb8614ae7556aea5b121c506ac6658ea1",
+          "src/managed_store.rs": "7488c67815043fbcdae6ce656411a8212ce97849c3ef7da7b60cd78aed9c5dc4",
+          "src/byte_pool.rs": "90a9b4a4d62b1619209fe2f3c3729d746d03581ac087df3d5e2d9c51e394b4b2"
+        },
+        "features": [
+          "projection_r7",
+          "std_string_list_v0",
+          "std_map_v0",
+          "std_encoding_v0",
+          "std_bytes_mut_v0",
+          "bounded_capacity_v1",
+          "packed_scalar_lists_v1"
+        ],
+        "rows": [
+          {
+            "command": [
+              "/root/.cargo/bin/rustc",
+              "--edition=2021",
+              "--crate-name=core_speed_probe",
+              "--crate-type=cdylib",
+              "--target=wasm32-unknown-unknown",
+              "-Copt-level=s",
+              "-Clto=fat",
+              "-Ccodegen-units=1",
+              "-Cpanic=abort",
+              "-Cstrip=symbols",
+              "--cfg",
+              "feature=\"projection_r7\"",
+              "--cfg",
+              "feature=\"std_string_list_v0\"",
+              "--cfg",
+              "feature=\"std_map_v0\"",
+              "--cfg",
+              "feature=\"std_encoding_v0\"",
+              "--cfg",
+              "feature=\"std_bytes_mut_v0\"",
+              "--cfg",
+              "feature=\"bounded_capacity_v1\"",
+              "--cfg",
+              "feature=\"packed_scalar_lists_v1\"",
+              "/root/code/.worktrees/wasmc/WS-20261012-pr2-target-integrator/examples/fastapi_managed_object_core_provider_v4/rust-core/src/lib.rs",
+              "-o",
+              "/root/code/wasmc/target/ordinary-canonical-host-20261021/core-speed-20261022/core-opt-s.wasm"
+            ],
+            "seconds": 0.842,
+            "exit": 0,
+            "stderr": "",
+            "stdout": "",
+            "pool_KiB": 10039232,
+            "bytes": 2623976,
+            "sha256": "31f471ea3e0ac41311a00e9230c92c6a7c54cab7f83f37e9522d6ef89a8b46ba",
+            "wasm2_validation": {
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            }
+          },
+          {
+            "command": [
+              "/root/.cargo/bin/rustc",
+              "--edition=2021",
+              "--crate-name=core_speed_probe",
+              "--crate-type=cdylib",
+              "--target=wasm32-unknown-unknown",
+              "-Copt-level=3",
+              "-Clto=fat",
+              "-Ccodegen-units=1",
+              "-Cpanic=abort",
+              "-Cstrip=symbols",
+              "--cfg",
+              "feature=\"projection_r7\"",
+              "--cfg",
+              "feature=\"std_string_list_v0\"",
+              "--cfg",
+              "feature=\"std_map_v0\"",
+              "--cfg",
+              "feature=\"std_encoding_v0\"",
+              "--cfg",
+              "feature=\"std_bytes_mut_v0\"",
+              "--cfg",
+              "feature=\"bounded_capacity_v1\"",
+              "--cfg",
+              "feature=\"packed_scalar_lists_v1\"",
+              "/root/code/.worktrees/wasmc/WS-20261012-pr2-target-integrator/examples/fastapi_managed_object_core_provider_v4/rust-core/src/lib.rs",
+              "-o",
+              "/root/code/wasmc/target/ordinary-canonical-host-20261021/core-speed-20261022/core-opt-3.wasm"
+            ],
+            "seconds": 0.544,
+            "exit": 0,
+            "stderr": "",
+            "stdout": "",
+            "pool_KiB": 10041816,
+            "bytes": 2639806,
+            "sha256": "149208562de372aab284e7d97274075b01cee2ec3378f2c3c34b48b954ba6169",
+            "wasm2_validation": {
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            }
+          }
+        ],
+        "frozen_Core4_9_unchanged": true,
+        "not_original_Core4_9_reproduction": true,
+        "functional_qualified": false
+      }
+    },
+    "export-comparison.json": {
+      "sha256": "866b16f9d79bf0cf44d5e10b63b1bd47f36fd0777003db0f5421e9b991733877",
+      "bytes": 12094,
+      "value": [
+        {
+          "path": "/root/code/wasmc/target/ordinary-canonical-host-20261021/guest-http-table-899379/sealed/input-10.wasm",
+          "imports": [],
+          "exports": [
+            {
+              "name": "memory",
+              "kind": "memory"
+            },
+            {
+              "name": "borrow_drop",
+              "kind": "function"
+            },
+            {
+              "name": "bytes_builder_finish",
+              "kind": "function"
+            },
+            {
+              "name": "bytes_builder_new",
+              "kind": "function"
+            },
+            {
+              "name": "bytes_builder_push_u64_le",
+              "kind": "function"
+            },
+            {
+              "name": "bytes_byte_at",
+              "kind": "function"
+            },
+            {
+              "name": "bytes_clear",
+              "kind": "function"
+            },
+            {
+              "name": "bytes_eq",
+              "kind": "function"
+            },
+            {
+              "name": "bytes_len",
+              "kind": "function"
+            },
+            {
+              "name": "bytes_push_u64_le",
+              "kind": "function"
+            },
+            {
+              "name": "bytes_set",
+              "kind": "function"
+            },
+            {
+              "name": "list_clear",
+              "kind": "function"
+            },
+            {
+              "name": "list_drop",
+              "kind": "function"
+            },
+            {
+              "name": "list_get_borrow",
+              "kind": "function"
+            },
+            {
+              "name": "list_get_mut_borrow",
+              "kind": "function"
+            },
+            {
+              "name": "list_len",
+              "kind": "function"
+            },
+            {
+              "name": "list_new",
+              "kind": "function"
+            },
+            {
+              "name": "list_pop_move",
+              "kind": "function"
+            },
+            {
+              "name": "list_push_move",
+              "kind": "function"
+            },
+            {
+              "name": "list_remove_move",
+              "kind": "function"
+            },
+            {
+              "name": "list_reverse",
+              "kind": "function"
+            },
+            {
+              "name": "object_drop",
+              "kind": "function"
+            },
+            {
+              "name": "object_get_child_borrow",
+              "kind": "function"
+            },
+            {
+              "name": "object_get_child_mut_borrow",
+              "kind": "function"
+            },
+            {
+              "name": "object_get_list_child_borrow",
+              "kind": "function"
+            },
+            {
+              "name": "object_get_scalar_bits",
+              "kind": "function"
+            },
+            {
+              "name": "object_get_scalar_status",
+              "kind": "function"
+            },
+            {
+              "name": "object_new",
+              "kind": "function"
+            },
+            {
+              "name": "object_set_child_move",
+              "kind": "function"
+            },
+            {
+              "name": "object_set_list_child_move",
+              "kind": "function"
+            },
+            {
+              "name": "object_set_scalar",
+              "kind": "function"
+            },
+            {
+              "name": "provider_domain_init",
+              "kind": "function"
+            },
+            {
+              "name": "string_builder_finish",
+              "kind": "function"
+            },
+            {
+              "name": "string_builder_new",
+              "kind": "function"
+            },
+            {
+              "name": "string_builder_push_u64_le",
+              "kind": "function"
+            },
+            {
+              "name": "string_byte_at",
+              "kind": "function"
+            },
+            {
+              "name": "string_clear",
+              "kind": "function"
+            },
+            {
+              "name": "string_clone",
+              "kind": "function"
+            },
+            {
+              "name": "string_eq",
+              "kind": "function"
+            },
+            {
+              "name": "string_len",
+              "kind": "function"
+            },
+            {
+              "name": "string_push_string",
+              "kind": "function"
+            },
+            {
+              "name": "type_bytes",
+              "kind": "function"
+            },
+            {
+              "name": "type_record_begin",
+              "kind": "function"
+            },
+            {
+              "name": "type_record_child",
+              "kind": "function"
+            },
+            {
+              "name": "type_record_field",
+              "kind": "function"
+            },
+            {
+              "name": "type_record_finish",
+              "kind": "function"
+            },
+            {
+              "name": "type_record_list_child",
+              "kind": "function"
+            },
+            {
+              "name": "type_string",
+              "kind": "function"
+            },
+            {
+              "name": "__data_end",
+              "kind": "global"
+            },
+            {
+              "name": "__heap_base",
+              "kind": "global"
+            }
+          ]
+        },
+        {
+          "path": "/root/code/wasmc/target/ordinary-canonical-host-20261021/core-speed-20261022/core-opt-s.wasm",
+          "imports": [],
+          "exports": [
+            {
+              "name": "memory",
+              "kind": "memory"
+            },
+            {
+              "name": "borrow_drop",
+              "kind": "function"
+            },
+            {
+              "name": "bytes_builder_finish",
+              "kind": "function"
+            },
+            {
+              "name": "bytes_builder_new",
+              "kind": "function"
+            },
+            {
+              "name": "bytes_builder_push_u64_le",
+              "kind": "function"
+            },
+            {
+              "name": "bytes_byte_at",
+              "kind": "function"
+            },
+            {
+              "name": "bytes_clear",
+              "kind": "function"
+            },
+            {
+              "name": "bytes_eq",
+              "kind": "function"
+            },
+            {
+              "name": "bytes_len",
+              "kind": "function"
+            },
+            {
+              "name": "bytes_push_u64_le",
+              "kind": "function"
+            },
+            {
+              "name": "bytes_set",
+              "kind": "function"
+            },
+            {
+              "name": "list_clear",
+              "kind": "function"
+            },
+            {
+              "name": "list_drop",
+              "kind": "function"
+            },
+            {
+              "name": "list_get_borrow",
+              "kind": "function"
+            },
+            {
+              "name": "list_get_mut_borrow",
+              "kind": "function"
+            },
+            {
+              "name": "list_len",
+              "kind": "function"
+            },
+            {
+              "name": "list_new",
+              "kind": "function"
+            },
+            {
+              "name": "list_pop_move",
+              "kind": "function"
+            },
+            {
+              "name": "list_push_move",
+              "kind": "function"
+            },
+            {
+              "name": "list_remove_move",
+              "kind": "function"
+            },
+            {
+              "name": "list_reverse",
+              "kind": "function"
+            },
+            {
+              "name": "object_drop",
+              "kind": "function"
+            },
+            {
+              "name": "object_get_child_borrow",
+              "kind": "function"
+            },
+            {
+              "name": "object_get_child_mut_borrow",
+              "kind": "function"
+            },
+            {
+              "name": "object_get_list_child_borrow",
+              "kind": "function"
+            },
+            {
+              "name": "object_get_scalar_bits",
+              "kind": "function"
+            },
+            {
+              "name": "object_get_scalar_status",
+              "kind": "function"
+            },
+            {
+              "name": "object_new",
+              "kind": "function"
+            },
+            {
+              "name": "object_set_child_move",
+              "kind": "function"
+            },
+            {
+              "name": "object_set_list_child_move",
+              "kind": "function"
+            },
+            {
+              "name": "object_set_scalar",
+              "kind": "function"
+            },
+            {
+              "name": "provider_domain_init",
+              "kind": "function"
+            },
+            {
+              "name": "string_builder_finish",
+              "kind": "function"
+            },
+            {
+              "name": "string_builder_new",
+              "kind": "function"
+            },
+            {
+              "name": "string_builder_push_u64_le",
+              "kind": "function"
+            },
+            {
+              "name": "string_byte_at",
+              "kind": "function"
+            },
+            {
+              "name": "string_clear",
+              "kind": "function"
+            },
+            {
+              "name": "string_clone",
+              "kind": "function"
+            },
+            {
+              "name": "string_eq",
+              "kind": "function"
+            },
+            {
+              "name": "string_len",
+              "kind": "function"
+            },
+            {
+              "name": "string_push_string",
+              "kind": "function"
+            },
+            {
+              "name": "type_bytes",
+              "kind": "function"
+            },
+            {
+              "name": "type_record_begin",
+              "kind": "function"
+            },
+            {
+              "name": "type_record_child",
+              "kind": "function"
+            },
+            {
+              "name": "type_record_field",
+              "kind": "function"
+            },
+            {
+              "name": "type_record_finish",
+              "kind": "function"
+            },
+            {
+              "name": "type_record_list_child",
+              "kind": "function"
+            },
+            {
+              "name": "type_string",
+              "kind": "function"
+            }
+          ]
+        },
+        {
+          "path": "/root/code/wasmc/target/ordinary-canonical-host-20261021/core-speed-20261022/core-opt-3.wasm",
+          "imports": [],
+          "exports": [
+            {
+              "name": "memory",
+              "kind": "memory"
+            },
+            {
+              "name": "borrow_drop",
+              "kind": "function"
+            },
+            {
+              "name": "bytes_builder_finish",
+              "kind": "function"
+            },
+            {
+              "name": "bytes_builder_new",
+              "kind": "function"
+            },
+            {
+              "name": "bytes_builder_push_u64_le",
+              "kind": "function"
+            },
+            {
+              "name": "bytes_byte_at",
+              "kind": "function"
+            },
+            {
+              "name": "bytes_clear",
+              "kind": "function"
+            },
+            {
+              "name": "bytes_eq",
+              "kind": "function"
+            },
+            {
+              "name": "bytes_len",
+              "kind": "function"
+            },
+            {
+              "name": "bytes_push_u64_le",
+              "kind": "function"
+            },
+            {
+              "name": "bytes_set",
+              "kind": "function"
+            },
+            {
+              "name": "list_clear",
+              "kind": "function"
+            },
+            {
+              "name": "list_drop",
+              "kind": "function"
+            },
+            {
+              "name": "list_get_borrow",
+              "kind": "function"
+            },
+            {
+              "name": "list_get_mut_borrow",
+              "kind": "function"
+            },
+            {
+              "name": "list_len",
+              "kind": "function"
+            },
+            {
+              "name": "list_new",
+              "kind": "function"
+            },
+            {
+              "name": "list_pop_move",
+              "kind": "function"
+            },
+            {
+              "name": "list_push_move",
+              "kind": "function"
+            },
+            {
+              "name": "list_remove_move",
+              "kind": "function"
+            },
+            {
+              "name": "list_reverse",
+              "kind": "function"
+            },
+            {
+              "name": "object_drop",
+              "kind": "function"
+            },
+            {
+              "name": "object_get_child_borrow",
+              "kind": "function"
+            },
+            {
+              "name": "object_get_child_mut_borrow",
+              "kind": "function"
+            },
+            {
+              "name": "object_get_list_child_borrow",
+              "kind": "function"
+            },
+            {
+              "name": "object_get_scalar_bits",
+              "kind": "function"
+            },
+            {
+              "name": "object_get_scalar_status",
+              "kind": "function"
+            },
+            {
+              "name": "object_new",
+              "kind": "function"
+            },
+            {
+              "name": "object_set_child_move",
+              "kind": "function"
+            },
+            {
+              "name": "object_set_list_child_move",
+              "kind": "function"
+            },
+            {
+              "name": "object_set_scalar",
+              "kind": "function"
+            },
+            {
+              "name": "provider_domain_init",
+              "kind": "function"
+            },
+            {
+              "name": "string_builder_finish",
+              "kind": "function"
+            },
+            {
+              "name": "string_builder_new",
+              "kind": "function"
+            },
+            {
+              "name": "string_builder_push_u64_le",
+              "kind": "function"
+            },
+            {
+              "name": "string_byte_at",
+              "kind": "function"
+            },
+            {
+              "name": "string_clear",
+              "kind": "function"
+            },
+            {
+              "name": "string_clone",
+              "kind": "function"
+            },
+            {
+              "name": "string_eq",
+              "kind": "function"
+            },
+            {
+              "name": "string_len",
+              "kind": "function"
+            },
+            {
+              "name": "string_push_string",
+              "kind": "function"
+            },
+            {
+              "name": "type_bytes",
+              "kind": "function"
+            },
+            {
+              "name": "type_record_begin",
+              "kind": "function"
+            },
+            {
+              "name": "type_record_child",
+              "kind": "function"
+            },
+            {
+              "name": "type_record_field",
+              "kind": "function"
+            },
+            {
+              "name": "type_record_finish",
+              "kind": "function"
+            },
+            {
+              "name": "type_record_list_child",
+              "kind": "function"
+            },
+            {
+              "name": "type_string",
+              "kind": "function"
+            }
+          ]
+        }
+      ]
+    },
+    "roundtrip-comparison.json": {
+      "sha256": "2f695b4f2c22673f1b5e0af68d333c03b9515b95208638888b6744f2ed84c25d",
+      "bytes": 1083,
+      "value": [
+        {
+          "command": [
+            "/root/code/.local/state/wasmc-tools/binaryen-126/wasm-merge",
+            "/root/code/wasmc/target/ordinary-canonical-host-20261021/core-speed-20261022/core-opt-s.wasm",
+            "corelib",
+            "--all-features",
+            "-o",
+            "/root/code/wasmc/target/ordinary-canonical-host-20261021/core-speed-20261022/core-roundtrip-s.wasm"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.034,
+          "bytes": 2621224,
+          "sha256": "5b55e20cca258462675135b4461de150066eb838b57f831a96b0ecb0d32c6d4c"
+        },
+        {
+          "command": [
+            "/root/code/.local/state/wasmc-tools/binaryen-126/wasm-merge",
+            "/root/code/wasmc/target/ordinary-canonical-host-20261021/core-speed-20261022/core-opt-3.wasm",
+            "corelib",
+            "--all-features",
+            "-o",
+            "/root/code/wasmc/target/ordinary-canonical-host-20261021/core-speed-20261022/core-roundtrip-3.wasm"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.033,
+          "bytes": 2636476,
+          "sha256": "9fff54efe96d081a5b68ce1aedd263294da9eef24b2e5c4dd6e1073502214dc4"
+        }
+      ]
+    },
+    "merge-parity.json": {
+      "sha256": "524fd647df3070b24a7209399cc7ec4d510c32539c7c8491c936277c063a189a",
+      "bytes": 2061,
+      "value": {
+        "command": [
+          "/root/code/.local/state/wasmc-tools/binaryen-126/wasm-merge",
+          "/root/code/wasmc/target/ordinary-canonical-host-20261021/guest-http-table-899379/sealed/input-0.wasm",
+          "wasmc-value-staging",
+          "/root/code/wasmc/target/ordinary-canonical-host-20261021/guest-http-table-899379/sealed/input-1.wasm",
+          "wasmc-snapshot-caller",
+          "/root/code/wasmc/target/ordinary-canonical-host-20261021/guest-http-table-899379/sealed/input-2.wasm",
+          "wasmc:lib/wasmc-json@0.0.5",
+          "/root/code/wasmc/target/ordinary-canonical-host-20261021/guest-http-table-899379/sealed/input-3.wasm",
+          "wasmc-native-value-projection",
+          "/root/code/wasmc/target/ordinary-canonical-host-20261021/guest-http-table-899379/sealed/input-4.wasm",
+          "wasmc-native-value-calls",
+          "/root/code/wasmc/target/ordinary-canonical-host-20261021/guest-http-table-899379/sealed/input-5.wasm",
+          "wasmc-canonical-app-entry",
+          "/root/code/wasmc/target/ordinary-canonical-host-20261021/guest-http-table-899379/sealed/input-6.wasm",
+          "wasmc-app-value-projection",
+          "/root/code/wasmc/target/ordinary-canonical-host-20261021/guest-http-table-899379/sealed/input-7.wasm",
+          "wasmc-host-entry",
+          "/root/code/wasmc/target/ordinary-canonical-host-20261021/guest-http-table-899379/sealed/input-8.wasm",
+          "wasmc-host-value-projection",
+          "/root/code/wasmc/target/ordinary-canonical-host-20261021/guest-http-table-899379/sealed/input-9.wasm",
+          "wasmc-native-host-calls",
+          "/root/code/wasmc/target/ordinary-canonical-host-20261021/guest-http-table-899379/sealed/input-10.wasm",
+          "wasmc:lib/wasmc.lib_managed_object_heap@4.9.0",
+          "--all-features",
+          "--skip-export-conflicts",
+          "-o",
+          "/root/code/wasmc/target/ordinary-canonical-host-20261021/core-speed-20261022/app-parity.wasm"
+        ],
+        "exit": 0,
+        "seconds": 0.03651089605409652,
+        "sha256": "d40935933f95456c61e1deb60edf1c1a6a479fb8f6bb3dcfaf4249925ed1b8d7",
+        "bytes": 212859,
+        "stderr": "",
+        "original_sha256": "c762cd4af9de9aa2eb6e01364e26956b06994924ec3649043f1cea22685911ac"
+      }
+    },
+    "merge-comparison.json": {
+      "sha256": "eb6ccca7f2c573675ee2acc5d1be8c8feb1688fe3ce491ceb9de3fc63b44bb6c",
+      "bytes": 4691,
+      "value": [
+        {
+          "label": "parity",
+          "command": [
+            "/root/code/.local/state/wasmc-tools/binaryen-126/wasm-merge",
+            "/root/code/wasmc/target/ordinary-canonical-host-20261021/guest-http-table-899379/sealed/input-0.wasm",
+            "wasmc-value-staging",
+            "/root/code/wasmc/target/ordinary-canonical-host-20261021/guest-http-table-899379/sealed/input-1.wasm",
+            "wasmc-snapshot-caller",
+            "/root/code/wasmc/target/ordinary-canonical-host-20261021/guest-http-table-899379/sealed/input-2.wasm",
+            "wasmc:lib/wasmc-json@0.0.5",
+            "/root/code/wasmc/target/ordinary-canonical-host-20261021/guest-http-table-899379/sealed/input-3.wasm",
+            "wasmc-native-value-projection",
+            "/root/code/wasmc/target/ordinary-canonical-host-20261021/guest-http-table-899379/sealed/input-4.wasm",
+            "wasmc-native-value-calls",
+            "/root/code/wasmc/target/ordinary-canonical-host-20261021/guest-http-table-899379/sealed/input-5.wasm",
+            "wasmc-canonical-app-entry",
+            "/root/code/wasmc/target/ordinary-canonical-host-20261021/guest-http-table-899379/sealed/input-6.wasm",
+            "wasmc-app-value-projection",
+            "/root/code/wasmc/target/ordinary-canonical-host-20261021/guest-http-table-899379/sealed/input-7.wasm",
+            "wasmc-host-entry",
+            "/root/code/wasmc/target/ordinary-canonical-host-20261021/guest-http-table-899379/sealed/input-8.wasm",
+            "wasmc-host-value-projection",
+            "/root/code/wasmc/target/ordinary-canonical-host-20261021/guest-http-table-899379/sealed/input-9.wasm",
+            "wasmc-native-host-calls",
+            "/root/code/wasmc/target/ordinary-canonical-host-20261021/guest-http-table-899379/sealed/input-10.wasm",
+            "wasmc:lib/wasmc.lib_managed_object_heap@4.9.0",
+            "--rename-export-conflicts",
+            "--all-features",
+            "--quiet",
+            "-o",
+            "/root/code/wasmc/target/ordinary-canonical-host-20261021/core-speed-20261022/app-parity.wasm"
+          ],
+          "exit": 0,
+          "seconds": 0.03757104405667633,
+          "sha256": "c762cd4af9de9aa2eb6e01364e26956b06994924ec3649043f1cea22685911ac",
+          "bytes": 211721,
+          "core_sha256": "c3ac42b93f4c27e24065abe804b91f54761eff782e2971e947847b3d20ee7e00",
+          "stderr": "",
+          "validate_wasm2": {
+            "exit": 1,
+            "stderr": "error: multiple memories (at offset 0x7b0)\n"
+          },
+          "validate_all": {
+            "exit": 0,
+            "stderr": ""
+          }
+        },
+        {
+          "label": "opt3",
+          "command": [
+            "/root/code/.local/state/wasmc-tools/binaryen-126/wasm-merge",
+            "/root/code/wasmc/target/ordinary-canonical-host-20261021/guest-http-table-899379/sealed/input-0.wasm",
+            "wasmc-value-staging",
+            "/root/code/wasmc/target/ordinary-canonical-host-20261021/guest-http-table-899379/sealed/input-1.wasm",
+            "wasmc-snapshot-caller",
+            "/root/code/wasmc/target/ordinary-canonical-host-20261021/guest-http-table-899379/sealed/input-2.wasm",
+            "wasmc:lib/wasmc-json@0.0.5",
+            "/root/code/wasmc/target/ordinary-canonical-host-20261021/guest-http-table-899379/sealed/input-3.wasm",
+            "wasmc-native-value-projection",
+            "/root/code/wasmc/target/ordinary-canonical-host-20261021/guest-http-table-899379/sealed/input-4.wasm",
+            "wasmc-native-value-calls",
+            "/root/code/wasmc/target/ordinary-canonical-host-20261021/guest-http-table-899379/sealed/input-5.wasm",
+            "wasmc-canonical-app-entry",
+            "/root/code/wasmc/target/ordinary-canonical-host-20261021/guest-http-table-899379/sealed/input-6.wasm",
+            "wasmc-app-value-projection",
+            "/root/code/wasmc/target/ordinary-canonical-host-20261021/guest-http-table-899379/sealed/input-7.wasm",
+            "wasmc-host-entry",
+            "/root/code/wasmc/target/ordinary-canonical-host-20261021/guest-http-table-899379/sealed/input-8.wasm",
+            "wasmc-host-value-projection",
+            "/root/code/wasmc/target/ordinary-canonical-host-20261021/guest-http-table-899379/sealed/input-9.wasm",
+            "wasmc-native-host-calls",
+            "/root/code/wasmc/target/ordinary-canonical-host-20261021/core-speed-20261022/core-opt-3.wasm",
+            "wasmc:lib/wasmc.lib_managed_object_heap@4.9.0",
+            "--rename-export-conflicts",
+            "--all-features",
+            "--quiet",
+            "-o",
+            "/root/code/wasmc/target/ordinary-canonical-host-20261021/core-speed-20261022/app-opt3.wasm"
+          ],
+          "exit": 0,
+          "seconds": 0.06161175493616611,
+          "sha256": "c61faddcbe47ccc174e51b59b4639a82e7d67796114efecfda589e1fd1016e6f",
+          "bytes": 2816710,
+          "core_sha256": "149208562de372aab284e7d97274075b01cee2ec3378f2c3c34b48b954ba6169",
+          "stderr": "",
+          "validate_wasm2": {
+            "exit": 1,
+            "stderr": "error: multiple memories (at offset 0x789)\n"
+          },
+          "validate_all": {
+            "exit": 0,
+            "stderr": ""
+          }
+        }
+      ]
+    },
+    "owned-compaction-1408.json": {
+      "sha256": "50cff7c03bbfadcf652185aac5cbdbca50efa13bf9eff78b513d658f4c3a6ce1",
+      "bytes": 1425,
+      "value": [
+        {
+          "path": "/root/code/wasmc/target/ordinary-canonical-host-20261021/core-speed-20261022/core-opt-s.wasm",
+          "bytes": 2623976,
+          "sha256": "31f471ea3e0ac41311a00e9230c92c6a7c54cab7f83f37e9522d6ef89a8b46ba",
+          "gzip": "/root/code/wasmc/target/ordinary-canonical-host-20261021/core-speed-20261022/core-opt-s.wasm.gz",
+          "gzip_bytes": 13905,
+          "gzip_sha256": "c94964461663b8f1de75c1c47cbf257c18cd76e5c7fcfe2a651ca51b70851d26",
+          "roundtrip": true
+        },
+        {
+          "path": "/root/code/wasmc/target/ordinary-canonical-host-20261021/core-speed-20261022/core-roundtrip-s.wasm",
+          "bytes": 2621224,
+          "sha256": "5b55e20cca258462675135b4461de150066eb838b57f831a96b0ecb0d32c6d4c",
+          "gzip": "/root/code/wasmc/target/ordinary-canonical-host-20261021/core-speed-20261022/core-roundtrip-s.wasm.gz",
+          "gzip_bytes": 13690,
+          "gzip_sha256": "1543cb236684590a36632f69cca15c0990d30aa0905af37796464a17d2ea3a39",
+          "roundtrip": true
+        },
+        {
+          "path": "/root/code/wasmc/target/ordinary-canonical-host-20261021/core-speed-20261022/core-roundtrip-3.wasm",
+          "bytes": 2636476,
+          "sha256": "9fff54efe96d081a5b68ce1aedd263294da9eef24b2e5c4dd6e1073502214dc4",
+          "gzip": "/root/code/wasmc/target/ordinary-canonical-host-20261021/core-speed-20261022/core-roundtrip-3.wasm.gz",
+          "gzip_bytes": 16483,
+          "gzip_sha256": "01a90995ab576d9f0b2bb5bf7a4d28b06a6a5e527c0378665c05dacb67fdd93a",
+          "roundtrip": true
+        }
+      ]
+    },
+    "owned-receipt-compaction-1412.json": {
+      "sha256": "849fd3b3328a85a7f316281ca282c4fe577ea89371a1e4ed0ea90b7ee11767f2",
+      "bytes": 4842,
+      "value": [
+        {
+          "path": "/root/code/wasmc/target/ordinary-canonical-host-20261021/source-ready-history-1328-postpush.json",
+          "bytes": 1478958,
+          "sha256": "d79bf616cafac2b843dc209d9f428c7f2a08ad777db5943405ce21d6ffd4cb18",
+          "gzip": "/root/code/wasmc/target/ordinary-canonical-host-20261021/source-ready-history-1328-postpush.json.gz",
+          "gzip_sha256": "87da5e2dca1732a9de8447a74280d15cf3b2fb39e9275c4b85303a80d5cf7f3e",
+          "roundtrip": true
+        },
+        {
+          "path": "/root/code/wasmc/target/ordinary-canonical-host-20261021/canonical-d048-full-policy-history.json",
+          "bytes": 1477318,
+          "sha256": "b629933a925929367309aef828f1a628fe1755c3fc321579cb0f07e28d84ad7f",
+          "gzip": "/root/code/wasmc/target/ordinary-canonical-host-20261021/canonical-d048-full-policy-history.json.gz",
+          "gzip_sha256": "6b78b4e34ed356b7e64a9827fe74547bcbaf0e02491f9945f1a5f767301f0237",
+          "roundtrip": true
+        },
+        {
+          "path": "/root/code/wasmc/target/ordinary-canonical-host-20261021/source-ready-current-1328-postpush.json",
+          "bytes": 289655,
+          "sha256": "5a1d5201ae8a8e774ce67ab2d00a7a9a85d9d88c6f85a08df8a270153b08489f",
+          "gzip": "/root/code/wasmc/target/ordinary-canonical-host-20261021/source-ready-current-1328-postpush.json.gz",
+          "gzip_sha256": "4a7738e7a8773be4ecf25ba457b7f68360e9d3b3e2471b4deb6eb9521013e10d",
+          "roundtrip": true
+        },
+        {
+          "path": "/root/code/wasmc/target/ordinary-canonical-host-20261021/portable-sdk-size-maintainer-check.json",
+          "bytes": 289635,
+          "sha256": "a9bb18cc2c106fb472eb1813269d3e1503c86acc9c5271305c8e6096f9e38eaf",
+          "gzip": "/root/code/wasmc/target/ordinary-canonical-host-20261021/portable-sdk-size-maintainer-check.json.gz",
+          "gzip_sha256": "291c01bf60c46c68e8f7730e1dc593fc8646ff66dc469223609a0d06b375f570",
+          "roundtrip": true
+        },
+        {
+          "path": "/root/code/wasmc/target/ordinary-canonical-host-20261021/portable-qualified-maintainer-check.json",
+          "bytes": 289635,
+          "sha256": "a9bb18cc2c106fb472eb1813269d3e1503c86acc9c5271305c8e6096f9e38eaf",
+          "gzip": "/root/code/wasmc/target/ordinary-canonical-host-20261021/portable-qualified-maintainer-check.json.gz",
+          "gzip_sha256": "291c01bf60c46c68e8f7730e1dc593fc8646ff66dc469223609a0d06b375f570",
+          "roundtrip": true
+        },
+        {
+          "path": "/root/code/wasmc/target/ordinary-canonical-host-20261021/portable-qualified-maintainer-check-v2.json",
+          "bytes": 289635,
+          "sha256": "a9bb18cc2c106fb472eb1813269d3e1503c86acc9c5271305c8e6096f9e38eaf",
+          "gzip": "/root/code/wasmc/target/ordinary-canonical-host-20261021/portable-qualified-maintainer-check-v2.json.gz",
+          "gzip_sha256": "291c01bf60c46c68e8f7730e1dc593fc8646ff66dc469223609a0d06b375f570",
+          "roundtrip": true
+        },
+        {
+          "path": "/root/code/wasmc/target/ordinary-canonical-host-20261021/selected-fields-maintainer-check.json",
+          "bytes": 265795,
+          "sha256": "1741eb8013db43b3db815f1d68240e3208f4d535bbaa25039ab14a7f1ed32cc2",
+          "gzip": "/root/code/wasmc/target/ordinary-canonical-host-20261021/selected-fields-maintainer-check.json.gz",
+          "gzip_sha256": "d1fde8ab100bb8b0c6e991b361d8d09571dc8be22d094542ca7122a3d0305b15",
+          "roundtrip": true
+        },
+        {
+          "path": "/root/code/wasmc/target/ordinary-canonical-host-20261021/metadata-final.stdout",
+          "bytes": 265795,
+          "sha256": "1741eb8013db43b3db815f1d68240e3208f4d535bbaa25039ab14a7f1ed32cc2",
+          "gzip": "/root/code/wasmc/target/ordinary-canonical-host-20261021/metadata-final.stdout.gz",
+          "gzip_sha256": "d1fde8ab100bb8b0c6e991b361d8d09571dc8be22d094542ca7122a3d0305b15",
+          "roundtrip": true
+        },
+        {
+          "path": "/root/code/wasmc/target/ordinary-canonical-host-20261021/http-owned-maintainer.stdout",
+          "bytes": 265795,
+          "sha256": "1741eb8013db43b3db815f1d68240e3208f4d535bbaa25039ab14a7f1ed32cc2",
+          "gzip": "/root/code/wasmc/target/ordinary-canonical-host-20261021/http-owned-maintainer.stdout.gz",
+          "gzip_sha256": "d1fde8ab100bb8b0c6e991b361d8d09571dc8be22d094542ca7122a3d0305b15",
+          "roundtrip": true
+        },
+        {
+          "path": "/root/code/wasmc/target/ordinary-canonical-host-20261021/entry-maintainer.stdout",
+          "bytes": 265795,
+          "sha256": "1741eb8013db43b3db815f1d68240e3208f4d535bbaa25039ab14a7f1ed32cc2",
+          "gzip": "/root/code/wasmc/target/ordinary-canonical-host-20261021/entry-maintainer.stdout.gz",
+          "gzip_sha256": "d1fde8ab100bb8b0c6e991b361d8d09571dc8be22d094542ca7122a3d0305b15",
+          "roundtrip": true
+        },
+        {
+          "path": "/root/code/wasmc/target/ordinary-canonical-host-20261021/core-speed-20261022/core-opt-3.wasm",
+          "bytes": 2639806,
+          "sha256": "149208562de372aab284e7d97274075b01cee2ec3378f2c3c34b48b954ba6169",
+          "gzip": "/root/code/wasmc/target/ordinary-canonical-host-20261021/core-speed-20261022/core-opt-3.wasm.gz",
+          "gzip_sha256": "56887b974a04e11c98750b66e50daec6923d50b4ab86765467cf50dd0cda4ba7",
+          "roundtrip": true
+        }
+      ]
+    },
+    "warm-fixture-link.json": {
+      "sha256": "cf8634e91b0e6b6abd40831ad2da81cc29350fdbca08642e153b2b1b30caeae8",
+      "bytes": 944,
+      "value": {
+        "command": [
+          "/root/.cargo/bin/rustc",
+          "--edition=2021",
+          "/root/code/wasmc/target/ordinary-canonical-host-20261021/core-speed-20261022/json-fuel-core-variant-fixture.rs",
+          "-Cdebuginfo=0",
+          "-Cembed-bitcode=no",
+          "-Cstrip=symbols",
+          "-L",
+          "dependency=/root/code/wasmc/target/debug/deps",
+          "--extern",
+          "wasmtime=/root/code/wasmc/target/debug/deps/libwasmtime-0f094922d5412d41.rlib",
+          "--extern",
+          "serde_json=/root/code/wasmc/target/debug/deps/libserde_json-402a2b243316fe8b.rlib",
+          "-o",
+          "/root/code/wasmc/target/ordinary-canonical-host-20261021/core-speed-20261022/json-fuel-core-variant-fixture"
+        ],
+        "exit": 0,
+        "seconds": 1.3760985350236297,
+        "source_sha256": "656479cf77cccae1254ba595adc233db7bb44716f6f66b36f0164f311d4c03c3",
+        "stderr": "",
+        "binary_sha256": "c89497e0a0094c083ae2a63f832da7f69976204da43c1624b5acfe448d914b08",
+        "binary_bytes": 27935360,
+        "pool_KiB": 10061776
+      }
+    },
+    "opt3-fuel-exec.json": {
+      "sha256": "380153139b3432fef7b02523c3e7553b8123f35725ca56590fd0901cf678cc4a",
+      "bytes": 530,
+      "value": {
+        "command": [
+          "/root/code/wasmc/target/ordinary-canonical-host-20261021/core-speed-20261022/json-fuel-core-variant-fixture",
+          "/root/code/wasmc/target/ordinary-canonical-host-20261021/core-speed-20261022/app-opt3.wasm",
+          "/root/code/wasmc/target/ordinary-canonical-host-20261021/core-speed-20261022/caller-plan-opt3.json",
+          "c61faddcbe47ccc174e51b59b4639a82e7d67796114efecfda589e1fd1016e6f",
+          "149208562de372aab284e7d97274075b01cee2ec3378f2c3c34b48b954ba6169"
+        ],
+        "exit": 0,
+        "seconds": 5.908254083013162
+      }
+    },
+    "core-function-abi.json": {
+      "sha256": "7fca9878a45b55d670c22377725d60b16b75a26db165f5401ab21226bc87319c",
+      "bytes": 9458,
+      "value": {
+        "Core_old_sha256": "c3ac42b93f4c27e24065abe804b91f54761eff782e2971e947847b3d20ee7e00",
+        "Core_candidate_sha256": "149208562de372aab284e7d97274075b01cee2ec3378f2c3c34b48b954ba6169",
+        "function_exports": 47,
+        "exact_function_signature_equality": true,
+        "removed_non_function_exports": [
+          "__data_end",
+          "__heap_base"
+        ],
+        "candidate_imports": 0,
+        "signatures": {
+          "borrow_drop": {
+            "kind": 0,
+            "signature": {
+              "params": [
+                126,
+                126
+              ],
+              "results": [
+                127
+              ]
+            }
+          },
+          "bytes_builder_finish": {
+            "kind": 0,
+            "signature": {
+              "params": [
+                126,
+                126
+              ],
+              "results": [
+                127
+              ]
+            }
+          },
+          "bytes_builder_new": {
+            "kind": 0,
+            "signature": {
+              "params": [
+                126
+              ],
+              "results": [
+                126
+              ]
+            }
+          },
+          "bytes_builder_push_u64_le": {
+            "kind": 0,
+            "signature": {
+              "params": [
+                126,
+                126,
+                126,
+                127
+              ],
+              "results": [
+                127
+              ]
+            }
+          },
+          "bytes_byte_at": {
+            "kind": 0,
+            "signature": {
+              "params": [
+                126,
+                126,
+                127
+              ],
+              "results": [
+                126
+              ]
+            }
+          },
+          "bytes_clear": {
+            "kind": 0,
+            "signature": {
+              "params": [
+                126,
+                126
+              ],
+              "results": [
+                127
+              ]
+            }
+          },
+          "bytes_eq": {
+            "kind": 0,
+            "signature": {
+              "params": [
+                126,
+                126,
+                126
+              ],
+              "results": [
+                126
+              ]
+            }
+          },
+          "bytes_len": {
+            "kind": 0,
+            "signature": {
+              "params": [
+                126,
+                126
+              ],
+              "results": [
+                126
+              ]
+            }
+          },
+          "bytes_push_u64_le": {
+            "kind": 0,
+            "signature": {
+              "params": [
+                126,
+                126,
+                126,
+                127
+              ],
+              "results": [
+                127
+              ]
+            }
+          },
+          "bytes_set": {
+            "kind": 0,
+            "signature": {
+              "params": [
+                126,
+                126,
+                127,
+                127
+              ],
+              "results": [
+                127
+              ]
+            }
+          },
+          "list_clear": {
+            "kind": 0,
+            "signature": {
+              "params": [
+                126,
+                126
+              ],
+              "results": [
+                127
+              ]
+            }
+          },
+          "list_drop": {
+            "kind": 0,
+            "signature": {
+              "params": [
+                126,
+                126
+              ],
+              "results": [
+                127
+              ]
+            }
+          },
+          "list_get_borrow": {
+            "kind": 0,
+            "signature": {
+              "params": [
+                126,
+                127,
+                126
+              ],
+              "results": [
+                126
+              ]
+            }
+          },
+          "list_get_mut_borrow": {
+            "kind": 0,
+            "signature": {
+              "params": [
+                126,
+                127,
+                126
+              ],
+              "results": [
+                126
+              ]
+            }
+          },
+          "list_len": {
+            "kind": 0,
+            "signature": {
+              "params": [
+                126,
+                126
+              ],
+              "results": [
+                126
+              ]
+            }
+          },
+          "list_new": {
+            "kind": 0,
+            "signature": {
+              "params": [
+                126
+              ],
+              "results": [
+                126
+              ]
+            }
+          },
+          "list_pop_move": {
+            "kind": 0,
+            "signature": {
+              "params": [
+                126,
+                126
+              ],
+              "results": [
+                126
+              ]
+            }
+          },
+          "list_push_move": {
+            "kind": 0,
+            "signature": {
+              "params": [
+                126,
+                126,
+                126
+              ],
+              "results": [
+                127
+              ]
+            }
+          },
+          "list_remove_move": {
+            "kind": 0,
+            "signature": {
+              "params": [
+                126,
+                127,
+                126
+              ],
+              "results": [
+                126
+              ]
+            }
+          },
+          "list_reverse": {
+            "kind": 0,
+            "signature": {
+              "params": [
+                126,
+                126
+              ],
+              "results": [
+                127
+              ]
+            }
+          },
+          "object_drop": {
+            "kind": 0,
+            "signature": {
+              "params": [
+                126,
+                126
+              ],
+              "results": [
+                127
+              ]
+            }
+          },
+          "object_get_child_borrow": {
+            "kind": 0,
+            "signature": {
+              "params": [
+                126,
+                126,
+                127,
+                126
+              ],
+              "results": [
+                126
+              ]
+            }
+          },
+          "object_get_child_mut_borrow": {
+            "kind": 0,
+            "signature": {
+              "params": [
+                126,
+                126,
+                127,
+                126
+              ],
+              "results": [
+                126
+              ]
+            }
+          },
+          "object_get_list_child_borrow": {
+            "kind": 0,
+            "signature": {
+              "params": [
+                126,
+                126,
+                127,
+                126
+              ],
+              "results": [
+                126
+              ]
+            }
+          },
+          "object_get_scalar_bits": {
+            "kind": 0,
+            "signature": {
+              "params": [
+                126,
+                126,
+                127
+              ],
+              "results": [
+                126
+              ]
+            }
+          },
+          "object_get_scalar_status": {
+            "kind": 0,
+            "signature": {
+              "params": [
+                126,
+                126,
+                127
+              ],
+              "results": [
+                127
+              ]
+            }
+          },
+          "object_new": {
+            "kind": 0,
+            "signature": {
+              "params": [
+                126
+              ],
+              "results": [
+                126
+              ]
+            }
+          },
+          "object_set_child_move": {
+            "kind": 0,
+            "signature": {
+              "params": [
+                126,
+                126,
+                127,
+                126,
+                126
+              ],
+              "results": [
+                127
+              ]
+            }
+          },
+          "object_set_list_child_move": {
+            "kind": 0,
+            "signature": {
+              "params": [
+                126,
+                126,
+                127,
+                126,
+                126
+              ],
+              "results": [
+                127
+              ]
+            }
+          },
+          "object_set_scalar": {
+            "kind": 0,
+            "signature": {
+              "params": [
+                126,
+                126,
+                127,
+                126
+              ],
+              "results": [
+                127
+              ]
+            }
+          },
+          "provider_domain_init": {
+            "kind": 0,
+            "signature": {
+              "params": [
+                127,
+                127
+              ],
+              "results": [
+                127
+              ]
+            }
+          },
+          "string_builder_finish": {
+            "kind": 0,
+            "signature": {
+              "params": [
+                126,
+                126
+              ],
+              "results": [
+                127
+              ]
+            }
+          },
+          "string_builder_new": {
+            "kind": 0,
+            "signature": {
+              "params": [
+                126
+              ],
+              "results": [
+                126
+              ]
+            }
+          },
+          "string_builder_push_u64_le": {
+            "kind": 0,
+            "signature": {
+              "params": [
+                126,
+                126,
+                126,
+                127
+              ],
+              "results": [
+                127
+              ]
+            }
+          },
+          "string_byte_at": {
+            "kind": 0,
+            "signature": {
+              "params": [
+                126,
+                126,
+                127
+              ],
+              "results": [
+                126
+              ]
+            }
+          },
+          "string_clear": {
+            "kind": 0,
+            "signature": {
+              "params": [
+                126,
+                126
+              ],
+              "results": [
+                127
+              ]
+            }
+          },
+          "string_clone": {
+            "kind": 0,
+            "signature": {
+              "params": [
+                126,
+                126
+              ],
+              "results": [
+                126
+              ]
+            }
+          },
+          "string_eq": {
+            "kind": 0,
+            "signature": {
+              "params": [
+                126,
+                126,
+                126
+              ],
+              "results": [
+                126
+              ]
+            }
+          },
+          "string_len": {
+            "kind": 0,
+            "signature": {
+              "params": [
+                126,
+                126
+              ],
+              "results": [
+                126
+              ]
+            }
+          },
+          "string_push_string": {
+            "kind": 0,
+            "signature": {
+              "params": [
+                126,
+                126,
+                126
+              ],
+              "results": [
+                127
+              ]
+            }
+          },
+          "type_bytes": {
+            "kind": 0,
+            "signature": {
+              "params": [],
+              "results": [
+                126
+              ]
+            }
+          },
+          "type_record_begin": {
+            "kind": 0,
+            "signature": {
+              "params": [
+                127,
+                127,
+                127
+              ],
+              "results": [
+                126
+              ]
+            }
+          },
+          "type_record_child": {
+            "kind": 0,
+            "signature": {
+              "params": [
+                126,
+                127,
+                126
+              ],
+              "results": [
+                127
+              ]
+            }
+          },
+          "type_record_field": {
+            "kind": 0,
+            "signature": {
+              "params": [
+                126,
+                127,
+                127,
+                127,
+                127
+              ],
+              "results": [
+                127
+              ]
+            }
+          },
+          "type_record_finish": {
+            "kind": 0,
+            "signature": {
+              "params": [
+                126
+              ],
+              "results": [
+                126
+              ]
+            }
+          },
+          "type_record_list_child": {
+            "kind": 0,
+            "signature": {
+              "params": [
+                126,
+                127,
+                126
+              ],
+              "results": [
+                127
+              ]
+            }
+          },
+          "type_string": {
+            "kind": 0,
+            "signature": {
+              "params": [],
+              "results": [
+                126
+              ]
+            }
+          }
+        }
+      }
+    },
+    "fixture-retirement.json": {
+      "sha256": "54426726c7583c329e77b4939b60ab3388fba2a517d691be2b9fe3529d9baafd",
+      "bytes": 354,
+      "value": {
+        "binary_path": "/root/code/wasmc/target/ordinary-canonical-host-20261021/core-speed-20261022/json-fuel-core-variant-fixture",
+        "sha256": "c89497e0a0094c083ae2a63f832da7f69976204da43c1624b5acfe448d914b08",
+        "bytes": 27935360,
+        "terminal_run": "exec-0000000000000b02 exit0",
+        "rebuild_recipe": "warm-fixture-link.json",
+        "source_retained": true
+      }
+    }
+  },
+  "conclusion": {
+    "nested_full_write_and_response": "PASS within unchanged10M/64MiB/64Host/5s; purefixture",
+    "ascii96_previous_postcommittrap": "nowcomplete",
+    "ascii128_previous_preHosttrap": "nowcomplete",
+    "ascii256_512_1024": "stillpreHostfueltrap; notqualifiedforrelease",
+    "Core_raw_bytes": 2639806,
+    "Core_packing": "pendingpinnedoptimizer; mergealoneprovednotpacking",
+    "formal_release": "pending",
+    "actual_install_adoption": "notrequested; 06solewriterretained"
+  }
+}
