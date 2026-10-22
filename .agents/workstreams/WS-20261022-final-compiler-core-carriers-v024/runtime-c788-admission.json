@@ -1,0 +1,174 @@
+{
+  "schema": "wasmc.final-runtime-admission-projection/v1",
+  "accepted": true,
+  "original_native_report_sha256": "8c7dc8c1ab63d696a37ab8c07d868fbc553819bcb0911579ccb10c70bc55a097",
+  "original_execution_receipt_sha256": "2719147a8ddda2f9fd16f3e559e6cf3495f9704dd0e9cc6bc4a68ca695e7ada4",
+  "original_private_readback_archive_sha256": "4da801476cceb333930da186f8da369a351a39cc4e2ff27bfd9355a6f0dbc23d",
+  "actual_command": [
+    "wasmc-bootstrap",
+    "runtime-package-compiler-admit",
+    "<owned runtime staging>",
+    "<exact admitted compiler candidate>",
+    "c78816376228b6091599845c6a9a531eb76f949fe419655c012ec30c05f75832"
+  ],
+  "command_form": "logical argv projection; original absolute staging paths excluded",
+  "seconds": 0.815,
+  "previous": {
+    "compiler_bytes": 1952322,
+    "compiler_sha256": "ae039150425e1931c8860cde2ee8da31170ed700a05cdad733da8ad94664fb38"
+  },
+  "current": {
+    "compiler_bytes": 1956578,
+    "compiler_sha256": "c78816376228b6091599845c6a9a531eb76f949fe419655c012ec30c05f75832",
+    "manifest_sha256": "f85253714014608e4ebcb94acfb5453009f5ebbcd76c6bc916239a8ccd2d052e",
+    "receipt_sha256": "f9356c0d87bf7cdf6e823929ec39f0c19686e6eaf7d0574ede2467e4f3acbaed"
+  },
+  "preserved": {
+    "Host_abi": {
+      "authorities": [
+        "filesystem",
+        "process",
+        "hash",
+        "http"
+      ],
+      "wit": {
+        "bytes": 568,
+        "path": "wit/host.wit",
+        "sha256": "4418ee5d3985c74742c023ef13ba10ea991c4591beaf299c6daacbd2a2f695b0"
+      }
+    },
+    "distribution_policy": {
+      "external_js_package_registry": false,
+      "node_bun_deno_are_host_providers_only": true,
+      "registry": "wasmc-registry"
+    },
+    "entrypoints": {
+      "bun": "host/bun.mjs",
+      "deno": "host/deno.mjs",
+      "node": "host/node.mjs",
+      "universal": "bootstrap.mjs"
+    },
+    "non_claims": [
+      "the package does not require npm or another external JS package registry",
+      "the JavaScript Host adapters do not own compiler semantics",
+      "Git/HTTP/cache/publish authorities remain explicit Host capabilities"
+    ],
+    "package_id": "wasmc:runtime",
+    "package_version": "0.1.0-runtime-v0",
+    "required_exports": [
+      "memory",
+      "wasmc_alloc",
+      "wasmc_compile",
+      "wasmc_output_ptr",
+      "wasmc_output_len",
+      "wasmc_error_ptr",
+      "wasmc_error_len",
+      "wasmc_diagnostic_ptr",
+      "wasmc_diagnostic_len",
+      "wasmc_clear"
+    ]
+  },
+  "strict_package_audit": {
+    "accepted": true,
+    "compiler": {
+      "adapter_abi": "wasmc-wasm-c-abi/v0",
+      "bytes": 1956578,
+      "path": "compiler.wasm",
+      "sha256": "c78816376228b6091599845c6a9a531eb76f949fe419655c012ec30c05f75832",
+      "target": "wasm32-unknown-unknown"
+    },
+    "distribution": {
+      "external_js_package_registry": false,
+      "node_bun_deno_are_host_providers_only": true,
+      "registry": "wasmc-registry"
+    },
+    "entrypoints": {
+      "bun": "host/bun.mjs",
+      "deno": "host/deno.mjs",
+      "node": "host/node.mjs",
+      "universal": "bootstrap.mjs"
+    },
+    "host_abi": {
+      "authorities": [
+        "filesystem",
+        "process",
+        "hash",
+        "http"
+      ],
+      "wit": {
+        "bytes": 568,
+        "path": "wit/host.wit",
+        "sha256": "4418ee5d3985c74742c023ef13ba10ea991c4591beaf299c6daacbd2a2f695b0"
+      }
+    },
+    "id": "wasmc:runtime",
+    "manifest": {
+      "bytes": 3129,
+      "path": "manifest.json",
+      "sha256": "f85253714014608e4ebcb94acfb5453009f5ebbcd76c6bc916239a8ccd2d052e"
+    },
+    "receipt": {
+      "bytes": 1161,
+      "path": "receipts/compiler-wasm.json",
+      "sha256": "f9356c0d87bf7cdf6e823929ec39f0c19686e6eaf7d0574ede2467e4f3acbaed"
+    },
+    "schema": "wasmc.runtime-package-audit/v0",
+    "verified_files": [
+      {
+        "bytes": 17,
+        "path": "VERSION",
+        "sha256": "b10e46f75ee7c58896204f308750f3d2407d335d029053d5780212e23e06fb5b"
+      },
+      {
+        "bytes": 1192,
+        "path": "README.md",
+        "sha256": "30bcec8bd9e26b100346a8d5d20a722e3d9e619f8d5cb99710e8beaaad9093ef"
+      },
+      {
+        "bytes": 1956578,
+        "path": "compiler.wasm",
+        "sha256": "c78816376228b6091599845c6a9a531eb76f949fe419655c012ec30c05f75832"
+      },
+      {
+        "bytes": 1311,
+        "path": "bootstrap.mjs",
+        "sha256": "f91bd85040e9b8e0075eade5aa782d4e0d66d984bc99048a4f6e58b939fc6717"
+      },
+      {
+        "bytes": 6488,
+        "path": "host/common.mjs",
+        "sha256": "0335cc677a0a61925e25562942608e71e4aa2896301d6ebc1fc9c25480b5825d"
+      },
+      {
+        "bytes": 836,
+        "path": "host/node.mjs",
+        "sha256": "c7f187f13ed6ae74b090bd65e6acf005efe4e43a60b9d1ff5d0d4310d7464e3a"
+      },
+      {
+        "bytes": 361,
+        "path": "host/bun.mjs",
+        "sha256": "3040514b15f8baa7ccf2428f53836a51fdb350cb9f377032a7d4362a771dc6d3"
+      },
+      {
+        "bytes": 821,
+        "path": "host/deno.mjs",
+        "sha256": "08e4764ff360ba3877e3af4d21a6130166b08279307358881294060d887b9f3c"
+      },
+      {
+        "bytes": 568,
+        "path": "wit/host.wit",
+        "sha256": "4418ee5d3985c74742c023ef13ba10ea991c4591beaf299c6daacbd2a2f695b0"
+      },
+      {
+        "bytes": 134,
+        "path": "examples/add.wasmc",
+        "sha256": "129b276fd0d708109d8c028706402857c453cdd2437236961c7199fc661d5781"
+      }
+    ],
+    "version": "0.1.0-runtime-v0"
+  },
+  "original_package_unchanged": true,
+  "old_compiler_recovered_only_into_owned_staging_from_verified_lossless_archive": true,
+  "new_builds": 0,
+  "formal_release": false
+}

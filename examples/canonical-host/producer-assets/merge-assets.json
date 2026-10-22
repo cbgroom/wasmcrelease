@@ -1,26 +1,33 @@
 {
+  "schema": "wasmc.canonical-merge-assets/v1",
   "app_source_binding": "separate activation/frame/build receipt",
-  "cold_source_sha256": "32de2265c7713f6445805853ec5182f55b03a6d7f65c8573dbd7bc5283e7e84d",
+  "cold_source_sha256": "b2dfce3592e0d14897bafa82a2a9ef49968788806cd107dbcfd7852c60ab945a",
   "entry_binding_sha256": "3db4b5c10627cc9e81ea8372385cffa7e943e3e905859d1532c3d26e8f8204fe",
-  "lib_import_module": "wasmc:lib/wasmc-json@0.0.5",
   "operation_binding_sha256": "b5eafa21fd2d80a31f4dbc695ef9721d7a89f3c1d9838ee8523d8d53bc46a797",
+  "lib_import_module": "wasmc:lib/wasmc-json@0.0.6",
+  "root": {
+    "artifact_sha256": "eeb951756b8aa32115df8de3907fabc2ede385322bf1989d8ee0fc129f008ebd",
+    "manifest_sha256": "07a15fe29afe16a058a26850672fc7b91a8e8301fcc8dda5d356a00adacaec7f",
+    "wit_sha256": "2c12fb7ee9795183fce66264c35324ec55b5c93032ab77dd8a33dad32fa4f925"
+  },
   "prepared_cold": {
-    "bytes": 38593,
     "path": "prepared-transfer.wasm",
-    "sha256": "d21c439938a7cf5ea8e5ea1db4da55d46fd335c563303f04526446f45bdeaa4b"
+    "bytes": 39559,
+    "sha256": "85ed44f0c0b7c532cc49a66dfbf94aa94519deac06864ea5bdc240074b993a06"
   },
   "prepared_lib_core": {
-    "bytes": 92324,
     "path": "prepared-lib-core.wasm",
-    "sha256": "0fa2cad27c2c22ceb8bdf0de55758c501c607e3cb48520c7bcde93e120b01201"
+    "bytes": 92553,
+    "sha256": "24fe10b0716260dbad6106da856143a98b9e190dfaeb1da16d0c5c0f6c11ee9a"
   },
   "raw_cold": {
-    "bytes": 42910,
-    "sha256": "2bcc3796b969f64f17e4be93878304f495f2b56a93ae9cc67684280ab17d023f"
+    "path": "raw-transfer.wasm",
+    "bytes": 44024,
+    "sha256": "f603f78ec8d277fac7a0a3f9c543c2afa12569ccba476c7a71694246fd33dda6"
   },
   "raw_lib_core": {
-    "bytes": 99143,
-    "sha256": "8965648084a384e5ce26b4c20e587455d6fda82c03680688ada014f873c0239c"
+    "bytes": 99374,
+    "sha256": "eeb951756b8aa32115df8de3907fabc2ede385322bf1989d8ee0fc129f008ebd"
   },
   "recipe": {
     "original_root": "immutable",
@@ -33,10 +40,164 @@
     ]
   },
   "recipe_sha256": "4f3278269983f827d16f07cc208662ad57311b571ec6653a8a302a19b0dd438f",
-  "root": {
-    "artifact_sha256": "8965648084a384e5ce26b4c20e587455d6fda82c03680688ada014f873c0239c",
-    "manifest_sha256": "3bfaa6449d8800aaa98a7068ceccaae3527490f6cb7773b53b70195e9c7eaadc",
-    "wit_sha256": "225b23395b09023305c0c6e24b0168af7847bfe72cfd9db18bb2b52a544038be"
+  "core_provider": {
+    "abi_namespace": "wasmc:lib/wasmc.lib_managed_object_heap@4.9.0",
+    "abi_version": "4.9.0",
+    "successor_candidate_version": "4.9.1-candidate.1",
+    "raw": {
+      "path": "../../../current/lib_core.wasm",
+      "bytes": 2640152,
+      "sha256": "7cd4f0c60536f1825da3fed9d525a43ee9724250203a261f298505a503e9bcbf"
+    },
+    "prepared": {
+      "path": "prepared-core-provider.wasm",
+      "bytes": 2636489,
+      "sha256": "846bcd14899dead4f88984e0e1f3a5ff05410f3e2837c3c308636f986c9d4100"
+    },
+    "preparation": "existing Native canonical Root preparation; original raw Core and ABI namespace preserved"
   },
-  "schema": "wasmc.canonical-merge-assets/v1"
+  "inputs": [
+    {
+      "index": 0,
+      "path": "prepared-transfer.wasm",
+      "plan_path": "input-0.wasm",
+      "module": "wasmc-value-staging",
+      "bytes": 39559,
+      "sha256": "85ed44f0c0b7c532cc49a66dfbf94aa94519deac06864ea5bdc240074b993a06"
+    },
+    {
+      "index": 1,
+      "path": "modules/caller.wasm",
+      "plan_path": "input-1.wasm",
+      "module": "wasmc-snapshot-caller",
+      "bytes": 23895,
+      "sha256": "d9b9686a5ac48d11fec67b9ab6015db088f86c379eb7171d6c1676a57a784e50"
+    },
+    {
+      "index": 2,
+      "path": "prepared-lib-core.wasm",
+      "plan_path": "input-2.wasm",
+      "module": "wasmc:lib/wasmc-json@0.0.6",
+      "bytes": 92553,
+      "sha256": "24fe10b0716260dbad6106da856143a98b9e190dfaeb1da16d0c5c0f6c11ee9a"
+    },
+    {
+      "index": 3,
+      "path": "modules/lib-projection.wasm",
+      "plan_path": "input-3.wasm",
+      "module": "wasmc-native-value-projection",
+      "bytes": 14263,
+      "sha256": "529b18bddaed871c6b3258875be6f510eacaec3ad982080841716c37255fe055"
+    },
+    {
+      "index": 4,
+      "path": "modules/lib-calls.wasm",
+      "plan_path": "input-4.wasm",
+      "module": "wasmc-native-value-calls",
+      "bytes": 5971,
+      "sha256": "ffbe0ebcca78e2391fbc45da536ea10ab513baa2d0ebf49c42c952b224ffb499"
+    },
+    {
+      "index": 5,
+      "path": "modules/canonical-entry.wasm",
+      "plan_path": "input-5.wasm",
+      "module": "wasmc-canonical-app-entry",
+      "bytes": 499,
+      "sha256": "6691e05dc68a3b758939191790c8b3dd1b1eb8e376feb3cb7268b5fbcc65706b"
+    },
+    {
+      "index": 6,
+      "path": "modules/app-projection.wasm",
+      "plan_path": "input-6.wasm",
+      "module": "wasmc-app-value-projection",
+      "bytes": 6984,
+      "sha256": "96d63ba03e7d3a8cc3b47db98e7f8fbeb4d0cf0da4a674a54f108f164a4c216a"
+    },
+    {
+      "index": 7,
+      "path": "modules/host-entry.wasm",
+      "plan_path": "input-7.wasm",
+      "module": "wasmc-host-entry",
+      "bytes": 1318,
+      "sha256": "419444b623d01152a59bff8af2b71a7dfd3136147b4e29a2fdfcb890c9f4839f"
+    },
+    {
+      "index": 8,
+      "path": "modules/host-projection.wasm",
+      "plan_path": "input-8.wasm",
+      "module": "wasmc-host-value-projection",
+      "bytes": 10640,
+      "sha256": "70b442f95a6bca0c73d0416e4cf7c40c4536e3359f9b7008ab3694fdab58f7d5"
+    },
+    {
+      "index": 9,
+      "path": "modules/host-calls.wasm",
+      "plan_path": "input-9.wasm",
+      "module": "wasmc-native-host-calls",
+      "bytes": 872,
+      "sha256": "eb019bbf6c212e7fd8c35d8d61d1db9bfba1128231f6e426e98443c210a4d403"
+    },
+    {
+      "index": 10,
+      "path": "prepared-core-provider.wasm",
+      "plan_path": "input-10.wasm",
+      "module": "wasmc:lib/wasmc.lib_managed_object_heap@4.9.0",
+      "bytes": 2636489,
+      "sha256": "846bcd14899dead4f88984e0e1f3a5ff05410f3e2837c3c308636f986c9d4100"
+    }
+  ],
+  "merger": {
+    "program": "wasm-merge",
+    "version": "126",
+    "sha256": "ae5505560c2c07c3d686bf44bb77d488fe4eb693d930d2b5f8a235b98e1fdd91",
+    "working_directory": "examples/canonical-host/producer-assets",
+    "argv": [
+      "prepared-transfer.wasm",
+      "wasmc-value-staging",
+      "modules/caller.wasm",
+      "wasmc-snapshot-caller",
+      "prepared-lib-core.wasm",
+      "wasmc:lib/wasmc-json@0.0.6",
+      "modules/lib-projection.wasm",
+      "wasmc-native-value-projection",
+      "modules/lib-calls.wasm",
+      "wasmc-native-value-calls",
+      "modules/canonical-entry.wasm",
+      "wasmc-canonical-app-entry",
+      "modules/app-projection.wasm",
+      "wasmc-app-value-projection",
+      "modules/host-entry.wasm",
+      "wasmc-host-entry",
+      "modules/host-projection.wasm",
+      "wasmc-host-value-projection",
+      "modules/host-calls.wasm",
+      "wasmc-native-host-calls",
+      "prepared-core-provider.wasm",
+      "wasmc:lib/wasmc.lib_managed_object_heap@4.9.0",
+      "--rename-export-conflicts",
+      "--all-features",
+      "--quiet",
+      "-o",
+      "app.wasm"
+    ],
+    "writes": "app.wasm only; merge does not instantiate application or grant Host authority",
+    "expected_output": {
+      "path": "app.wasm",
+      "bytes": 2822346,
+      "sha256": "a2fa90d63eed06eede7da0678f67c303b22835aa939ad6c5915cd5ebff78d643"
+    },
+    "expected_host_import_count": 18,
+    "Core_instances": 1
+  },
+  "memory_binding": {
+    "allocation": "actual Lib cabi_realloc; actual transfer allocator",
+    "host_memory": "wasmc-value-staging.memory",
+    "lib_memory": "exact Lib artifact memory; Canonical transfer imports it explicitly",
+    "post_return": "original WIT-generated lease/post-return protocol"
+  },
+  "qualified_caller_plan": {
+    "path": "caller-plan.json",
+    "bytes": 23925,
+    "sha256": "96daa54a5beea01e50e1efd8ee7a56d94cde0dbd81ffc4f8c1c2f8bbaff675c7"
+  }
 }

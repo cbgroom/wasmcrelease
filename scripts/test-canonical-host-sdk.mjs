@@ -13,9 +13,21 @@ const readTuple = name => Object.fromEntries([
 const source = new TextDecoder().decode(read(fixture + 'app/ordinary.wasmc'));
 const input = {source, activation: read(fixture + 'app/activation.json'),
   entry: readTuple('entry'), operations: readTuple('operations'),
-  libCore: read('standard/wasmc-json/0.0.5/artifact.wasm'),
-  libWit: read('standard/wasmc-json/0.0.5/lib.wit'), template: read(fixture + 'producer-assets/canonical-template.json')};
+  libCore: read('standard/wasmc-json/0.0.6/artifact.wasm'),
+  libWit: read('standard/wasmc-json/0.0.6/lib.wit'), template: read(fixture + 'producer-assets/canonical-template.json')};
 const expected = JSON.parse(new TextDecoder().decode(read(fixture + 'expected-frame.json')));
+assert.equal(hash(input.activation), expected.activation_sha256);
+assert.equal(hash(read('current/wasmc_compiler.wasm')), expected.compiler_sha256);
+assert.equal(hash(read(fixture + 'producer-assets/frame-descriptor.json')), expected.frame_descriptor_sha256);
+assert.equal(hash(read(fixture + 'producer-assets/caller-plan.json')), expected.caller_plan_sha256);
+const checkModules = result => {
+  for (const row of expected.modules) {
+    const bytes = result.modules.get(row.path);
+    assert.ok(bytes, row.path);
+    assert.equal(bytes.length, row.bytes, row.path);
+    assert.equal(hash(bytes), row.sha256, row.path);
+  }
+};
 const compiler = await createCanonicalHostCompiler(read('current/wasmc_compiler.wasm'));
 let outputs = 0;
 try {
@@ -24,12 +36,15 @@ try {
     assert.equal(hash(result.frame), expected.frame_sha256);
     assert.equal(result.frame.length, expected.frame_bytes);
     assert.equal(result.modules.size, expected.module_count);
+    checkModules(result);
     assert.equal(result.descriptor.source_sha256, hash(new TextEncoder().encode(source)));
     outputs++;
   }
   // A rejected source must leave no one-shot configuration for the next call.
   await assert.rejects(compiler.compile({...input, source: source + '\ninvalid source body'}));
-  assert.equal(hash((await compiler.compile(input)).frame), expected.frame_sha256);
+  const recovered = await compiler.compile(input);
+  assert.equal(hash(recovered.frame), expected.frame_sha256);
+  checkModules(recovered);
   outputs++;
   const nextSource = source + '\n';
   const activation = JSON.parse(new TextDecoder().decode(input.activation));
@@ -46,4 +61,5 @@ console.log(JSON.stringify({accepted: true,
   runtime: globalThis.Deno ? 'deno' : globalThis.Bun ? 'bun' : 'node',
   compiler_sha256: hash(read('current/wasmc_compiler.wasm')),
   compiled_frames: outputs, modules_per_frame: 8, native_parity: expected.frame_sha256,
+  frame_bytes: expected.frame_bytes, exact_native_modules: expected.modules.length,
   rejection_then_recovery: true, source_rebinding: true, real_Host_invocation: false}));

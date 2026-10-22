@@ -1,45 +1,53 @@
 {
   "schema": "wasmc.compiler-source-build-receipt/v1",
-  "Source": "d0484b4888995e721f41432ca0d572d3fbd2bb81",
-  "tree": "8d31f5486e4533ddf66fad1e40eb13a6fb141b00",
-  "branch": "work/WS-20261021-ordinary-canonical-host-lib-v1",
+  "Source": "f869332b9bfa44d09ea1ae5bc95ad0d4d0c74816",
+  "tree": "8e95866cc8325a13f65da6cd64b81edc944cf0da",
+  "branch": "work/WS-20261022-ordinary-json-release-source-v1",
   "source_clean_at_build": true,
   "exit": 0,
-  "compiler_sha256": "ae039150425e1931c8860cde2ee8da31170ed700a05cdad733da8ad94664fb38",
-  "compiler_bytes": 1952322,
+  "compiler_sha256": "c78816376228b6091599845c6a9a531eb76f949fe419655c012ec30c05f75832",
+  "compiler_bytes": 1956578,
   "lock_sha256": "8308ac2c488f1b843a8d991cd69b3922c78c1a74454bd5081961e7d6e7045ba8",
-  "method": "Locked/offline warm Cargo build. Actual clean pushed Source build readback reused the already linked exact artifact in0.152s; no new cold/link build is claimed. Prior changed-root warm compilation took27.188s and produced the same bytes.",
   "target": "wasm32-unknown-unknown",
-  "commands": [
-    {
-      "command": [
-        "/root/.cargo/bin/cargo",
-        "build",
-        "--offline",
-        "--locked",
-        "--release",
-        "--target",
-        "wasm32-unknown-unknown",
-        "--manifest-path",
-        "/Users/youxianshi/code/.worktrees/wasmc/WS-20261021-ordinary-canonical-host-lib-v1/crates/wasmc_wasm_cdylib/Cargo.toml",
-        "--target-dir",
-        "/root/code/wasmc/target",
-        "-j",
-        "1"
-      ],
-      "exit": 0,
-      "seconds": 0.152,
-      "cache": "up to date; exact compiler artifact readback"
-    }
+  "method": "Actual locked/offline warm Cargo build of three changed local crates, with unchanged dependency cache reused. The original complete build receipt and all 5138 tracked Git inputs are independently archived. No private implementation source is included.",
+  "actual_build_seconds": 27.218,
+  "compiled_local_crates": [
+    "wasmc",
+    "wasmc_wasm",
+    "wasmc_wasm_cdylib"
   ],
-  "earlier_changed_root_build": {
-    "seconds": 27.188,
-    "exit": 0,
-    "compiler_sha256": "ae039150425e1931c8860cde2ee8da31170ed700a05cdad733da8ad94664fb38",
-    "raw_private_receipt_sha256": "21853862b1be46014be864d0e0f5421c5365a60d791d3c96e2ac0602fa1e768c"
+  "tracked_source_input_count": 5138,
+  "tracked_source_and_git_before_after_equal": true,
+  "cold_dependencies_allowed": false,
+  "rustc_vV": "rustc 1.99.0 (b940084d7 2026-09-28)\nbinary: rustc\ncommit-hash: b940084d7eb6a299eb4bfeb8e34901bc051e7ac4\ncommit-date: 2026-09-28\nhost: x86_64-unknown-linux-gnu\nrelease: 1.99.0\nLLVM version: 23.1.1\n",
+  "cargo_vV": "cargo 1.99.0 (5f94df478 2026-08-27)\nrelease: 1.99.0\ncommit-hash: 5f94df4789f005f9a352888e8355ffc645b7ed0e\ncommit-date: 2026-08-27\nhost: x86_64-unknown-linux-gnu\nlibgit2: 1.9.6 (sys:0.21.0 vendored)\nlibcurl: 8.21.0-DEV (sys:0.4.90+curl-8.21.0 vendored ssl:OpenSSL/3.6.3)\nssl: OpenSSL 3.6.3 9 Jun 2026\nos: Ubuntu 24.4.0 (noble) [64-bit]\n",
+  "command_projection": {
+    "kind": "logical relative argv projection; original machine paths omitted",
+    "argv": [
+      "cargo",
+      "build",
+      "--offline",
+      "--locked",
+      "--release",
+      "--target",
+      "wasm32-unknown-unknown",
+      "--manifest-path",
+      "crates/wasmc_wasm_cdylib/Cargo.toml",
+      "--target-dir",
+      "<existing warm target pool>",
+      "-j",
+      "1"
+    ],
+    "original_argv_sha256": "a1040f7d65eb798963add1879a5394bd57b2d6f8776bb1ac6d4b8398bb8a6ee4"
   },
-  "clean_build_raw_private_receipt_sha256": "303c8f37caedae6d86dc6417eac59b859e177e1fd63d619fa0bb1b89389575d0",
+  "original_actual_build_receipt_sha256": "5c260d78deeec6eebd6dad89e628d4141456772183b5a2bd33225ba0c76e66be",
+  "independent_archive_sha256": "f9732fc454b00b5581106f31ca8c520c24cf1476b08979b4f7b599e952410949",
   "private_implementation_source_included": false,
   "new_compiler_builds_in_public": 0,
-  "formal_release": false
+  "formal_release": false,
+  "actual_compiler_depfile_sha256": "eb0e507d5c1283fe0123fb6deee202ed27f35e1b010667af8562b3aedda87784",
+  "actual_compiler_dependency_and_Cargo_input_count": 30,
+  "original_raw_receipt_root_Cargo_lock_sha256": "64ba9e578232057d3f23615b46b6b747a96af987203aa4a1e0bdf3369b295a3f",
+  "operative_Cargo_lock_path": "crates/wasmc_wasm_cdylib/Cargo.lock",
+  "lock_identity_projection": "The actual invoked manifest declares its own workspace. This field binds that workspace Cargo.lock; the archived raw receipt separately recorded the repository-root Cargo.lock. Both exact Git inputs were measured and are retained."
 }

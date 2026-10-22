@@ -1,0 +1,276 @@
+package mcpgit:programmable-query@1.11.0;
+
+interface types {
+  enum value-type { null, integer, real, text, blob, mixed }
+
+  variant value {
+    null,
+    integer(s64),
+    real(f64),
+    text(string),
+    blob(list<u8>),
+  }
+
+  record column {
+    id: u32,
+    name: string,
+    value-type: value-type,
+    nullable: bool,
+  }
+
+  record content-ref {
+    skill-key: string,
+    locator: string,
+    object-version: string,
+  }
+
+  variant query-error {
+    invalid-argument(string),
+    missing-column(string),
+    ambiguous-column(string),
+    type-mismatch(string),
+    out-of-bounds(string),
+    budget-exceeded(string),
+    query-rejected(string),
+    stale-generation(string),
+  }
+}
+
+interface query {
+  use types.{column, query-error, value};
+
+  resource parameters {
+    constructor();
+    push: func(value: value) -> result<_, query-error>;
+  }
+
+  resource row-batch {
+    row-count: func() -> u32;
+    rows: func() -> result<list<list<value>>, query-error>;
+    get: func(row: u32, column-id: u32) -> result<value, query-error>;
+    get-i64: func(row: u32, column-id: u32) -> result<s64, query-error>;
+  }
+
+  resource relation {
+    schema: func() -> list<column>;
+    row-count: func() -> u32;
+    column-id: func(name: string) -> result<u32, query-error>;
+    batch: func(offset: u32, max-rows: u32) -> result<row-batch, query-error>;
+    /// Transfer this already-metered dynamic Relation into the invocation result.
+    /// No row serialization or Guest-memory copy occurs on this path.
+    finish: func() -> result<_, query-error>;
+  }
+
+  search: func(query: string, limit: u32) -> result<relation, query-error>;
+  sql: func(
+    statement: string,
+    parameters: borrow<parameters>,
+    bindings: list<tuple<string, borrow<relation>>>,
+  ) -> result<relation, query-error>;
+}
+
+interface content {
+  use types.{content-ref, query-error};
+
+  resource reader {
+    len: func() -> u64;
+    read: func(offset: u64, capacity: u32) -> result<list<u8>, query-error>;
+  }
+
+  open: func(reference: content-ref) -> result<reader, query-error>;
+  byte-len: func(reference: content-ref) -> result<u64, query-error>;
+}
+
+interface table {
+  record set-field {
+    field: string,
+    value-json: string,
+  }
+
+  record patch-field {
+    field: string,
+    patch: string,
+    expected-value-sha256: option<string>,
+  }
+
+  variant field-update {
+    set(set-field),
+    unset(string),
+    apply-patch(patch-field),
+  }
+
+  record insert-operation {
+    operation-id: string,
+    key: string,
+    row-json: string,
+  }
+
+  record update-operation {
+    operation-id: string,
+    key: string,
+    expected-row-version: u64,
+    field-updates: list<field-update>,
+  }
+
+  record delete-operation {
+    operation-id: string,
+    key: string,
+    expected-row-version: u64,
+  }
+
+  variant operation {
+    insert(insert-operation),
+    update(update-operation),
+    delete(delete-operation),
+  }
+
+  record transaction {
+    table-path: string,
+    expected-revision: string,
+    transaction-id: string,
+    idempotency-key: option<string>,
+    operations: list<operation>,
+  }
+
+  record operation-result {
+    operation-id: string,
+    operation: string,
+    key: string,
+    previous-row-version: option<u64>,
+    row-version: u64,
+    deleted: bool,
+  }
+
+  record conflict {
+    operation-id: string,
+    key: string,
+    kind: string,
+    expected-row-version: option<u64>,
+    actual-row-version: option<u64>,
+    diagnostic: string,
+  }
+
+  record transaction-result {
+    table-path: string,
+    transaction-id: string,
+    outcome: string,
+    applied: bool,
+    previous-revision: option<string>,
+    revision: option<string>,
+    results: list<operation-result>,
+    conflicts: list<conflict>,
+  }
+
+  variant table-error {
+    invalid-argument(string),
+    permission-denied(string),
+    stale-revision(string),
+    transaction-rejected(string),
+    budget-exceeded(string),
+  }
+
+  record status-result {
+    table-path: string,
+    revision: string,
+  }
+
+  status: func(table-path: string) -> result<status-result, table-error>;
+  transact: func(input: transaction) -> result<transaction-result, table-error>;
+
+  /// Invoke any Host-admitted TableGit Service operation. The Host fixes the
+  /// repository/organization and reauthorizes the exact operation; source
+  /// programs never receive credentials, Gateway leases, or transport state.
+  /// The success value is an invocation-local response handle containing the
+  /// canonical JSON Service result.
+  invoke: func(operation: string, request-json: string) -> result<u32, table-error>;
+  /// Open one exact Object through the raw BULK plane. Request JSON contains
+  /// path, key, locator, expected_object_version, optional view and max_bytes.
+  /// Host fixes repository/caller and verifies revision, length and SHA-256.
+  /// Success is a native-byte response handle, not JSON or Base64. At most
+  /// 8 MiB per Object and 64 MiB cumulatively per invocation; release it with
+  /// response-drop. All response window/ownership rules also apply here.
+  object-open: func(request-json: string) -> result<u32, table-error>;
+  /// Append one raw byte chunk to an already admitted Table Object upload.
+  /// The upload id resolves through Host-owned Service state; the Program
+  /// cannot select a repository, organization, transport, or credential.
+  /// Returns the number of bytes confirmed for this chunk. Recover the
+  /// authoritative cumulative offset through upload status after uncertainty.
+  upload-write: func(upload-id: string, offset: u64, bytes: list<u8>) -> result<u32, table-error>;
+  response-len: func(response: u32) -> result<u32, table-error>;
+  response-byte: func(response: u32, index: u32) -> result<u32, table-error>;
+  /// Copy at most capacity bytes starting at offset into an invocation-owned
+  /// byte value. EOF yields an empty list. The copy remains valid after the
+  /// response is dropped; no mutable WIT list or Guest pointer is exposed.
+  /// Capacity must fit the caller-pinned finite byte transport. Offset must
+  /// fit the physical signed-i32 boundary, as with the safe Rust SDK read.
+  response-read: func(response: u32, offset: u32, capacity: u32) -> result<list<u8>, table-error>;
+  response-drop: func(response: u32) -> result<_, table-error>;
+}
+
+/// Structured calls to the existing organization-local Service. Method DTOs
+/// and authorization remain Service-owned; this interface has no separate
+/// business method allowlist. Response ownership uses the existing Table byte
+/// handles. Bulk payloads continue to use the raw data plane.
+interface service {
+  use table.{table-error};
+  invoke: func(operation: string, request-json: string) -> result<u32, table-error>;
+  /// Transfer one complete bounded JSON response to final output. Consumes the
+  /// response only on success; after success only cleanup and scalar finish
+  /// remain legal. This does not commit or roll back any business transaction.
+  finish-json: func(response: u32) -> result<_, table-error>;
+}
+
+interface output {
+  finish-i64: func(value: s64) -> result;
+}
+
+interface http-route {
+  record query-pair {
+    name: string,
+    value: string,
+  }
+
+  record header {
+    name: string,
+    value: list<u8>,
+  }
+
+  record request {
+    method: string,
+    path: string,
+    parameters: list<query-pair>,
+    query: list<query-pair>,
+    headers: list<header>,
+    body: list<u8>,
+  }
+
+  record response {
+    status: u16,
+    body: list<u8>,
+  }
+
+  handle: func(input: request) -> response;
+}
+
+world programmable-query-skill {
+  import query;
+  import content;
+  import table;
+  import service;
+  import output;
+  export run: func() -> result;
+}
+
+world programmable-analysis-skill {
+  import query;
+  import content;
+  import output;
+  export run: func() -> result;
+}
+
+world programmable-http-route {
+  import query;
+  import content;
+  import table;
+  export http-route;
+}

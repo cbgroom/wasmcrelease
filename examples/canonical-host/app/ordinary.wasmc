@@ -23,38 +23,37 @@ interface api {
   if (selected.valid) {
    if (selected.values.get(1).present) {if (allowed) {status=200;} else {status=403;}} else {status=404;}
   }
-  let mut body:list<u8> = list.new();
   if (allowed) {
-   let mut index:u32=0;
-   while (index < selected.values.get(1).json.len()) {
-    body.push(selected.values.get(1).json.byte_at(index).unwrap_or(0));index=index+1;
+   let value_json:string = selected.values.get(1).json;
+   let allowed_body:list<u8> = utf8::encode(value_json);
+   if (status == 200) {
+    let row_json:string = document::compact_or(selected.values.get(8).json,"{}");
+    let second_json:string = document::compact_or(selected.values.get(8).json,"{}");
+    let key:string = document::decode_string_or(selected.values.get(2).json,"");
+    let second_key:string = document::decode_string_or(selected.values.get(3).json,"");
+    let revision:string = document::decode_string_or(selected.values.get(4).json,"");
+    let txid:string = document::decode_string_or(selected.values.get(5).json,"");
+    let operation_id:string = document::decode_string_or(selected.values.get(6).json,"");
+    let second_operation_id:string = document::decode_string_or(selected.values.get(7).json,"");
+    let action:variant {insert(insert_operation),update(update_operation),delete(delete_operation)} =
+     variant.insert({operation_id:operation_id,key:key,row_json:row_json});
+    let mut operations:list<variant {insert(insert_operation),update(update_operation),delete(delete_operation)}> = list.new();
+    operations.push(action);
+    let second_action:variant {insert(insert_operation),update(update_operation),delete(delete_operation)} =
+     variant.insert({operation_id:second_operation_id,key:second_key,row_json:second_json});
+    operations.push(second_action);
+    let committed:result<unit,variant {invalid_argument(string),permission_denied(string),stale_revision(string),transaction_rejected(string),budget_exceeded(string)}> =
+     table::transact_discarded({table_path:"tables/ordinary-json",expected_revision:revision,transaction_id:txid,idempotency_key:none,operations:operations});
+    status = match committed {ok=>200,err=>409};
    }
+   return {status:status,body:allowed_body};
   }
   if (status == 422) {
    let fallback_json:string = document::compact_or_bytes(req.body,"{}");
-   let mut fallback_index:u32=0;
-   while (fallback_index < fallback_json.len()) {body.push(fallback_json.byte_at(fallback_index).unwrap_or(0));fallback_index=fallback_index+1;}
+   let fallback_body:list<u8> = utf8::encode(fallback_json);
+   return {status:status,body:fallback_body};
   }
-  if (status == 200) {
-   let row_json:string = document::compact_or(selected.values.get(8).json,"{}");
-   let second_json:string = document::compact_or(selected.values.get(8).json,"{}");
-   let key:string = document::decode_string_or(selected.values.get(2).json,"");
-   let second_key:string = document::decode_string_or(selected.values.get(3).json,"");
-   let revision:string = document::decode_string_or(selected.values.get(4).json,"");
-   let txid:string = document::decode_string_or(selected.values.get(5).json,"");
-   let operation_id:string = document::decode_string_or(selected.values.get(6).json,"");
-   let second_operation_id:string = document::decode_string_or(selected.values.get(7).json,"");
-   let action:variant {insert(insert_operation),update(update_operation),delete(delete_operation)} =
-    variant.insert({operation_id:operation_id,key:key,row_json:row_json});
-   let mut operations:list<variant {insert(insert_operation),update(update_operation),delete(delete_operation)}> = list.new();
-   operations.push(action);
-   let second_action:variant {insert(insert_operation),update(update_operation),delete(delete_operation)} =
-    variant.insert({operation_id:second_operation_id,key:second_key,row_json:second_json});
-   operations.push(second_action);
-   let committed:result<unit,variant {invalid_argument(string),permission_denied(string),stale_revision(string),transaction_rejected(string),budget_exceeded(string)}> =
-    table::transact_discarded({table_path:"tables/ordinary-json",expected_revision:revision,transaction_id:txid,idempotency_key:none,operations:operations});
-   status = match committed {ok=>200,err=>409};
-  }
-  return {status:status,body:body};
+  let empty_body:list<u8> = list.new();
+  return {status:status,body:empty_body};
  }
 } world app {export api;}

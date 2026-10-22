@@ -27,3 +27,7 @@ conformance fixture. The same test supports Bun and Deno. It checks all eight
 generated modules against the independently qualified Native frame, recovery
 after rejection and a freshly bound source on the same compiler instance.
 It does not invoke a real Host or establish platform installation acceptance.
+
+The included fixture selects the complete JSON0.0.6 Root and its generated
+producer assets. Its expected frame pins all eight modules and the exact
+source-bound activation; the SDK itself remains package-independent.

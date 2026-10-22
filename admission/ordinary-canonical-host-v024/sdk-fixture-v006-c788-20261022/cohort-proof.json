@@ -1,0 +1,107 @@
+{
+  "schema": "wasmc.public-sdk-fixture-source-cohort-proof/v1",
+  "source_qualification_commit": "f869332b9bfa44d09ea1ae5bc95ad0d4d0c74816",
+  "compiler_sha256": "c78816376228b6091599845c6a9a531eb76f949fe419655c012ec30c05f75832",
+  "sdk_sha256": "3e95ff2514c6b7ec20f49653c8964f8c642dd248cfd88d539518ddda725d58e0",
+  "selected_Core_sha256": "7cd4f0c60536f1825da3fed9d525a43ee9724250203a261f298505a503e9bcbf",
+  "prepared_Core_sha256": "846bcd14899dead4f88984e0e1f3a5ff05410f3e2837c3c308636f986c9d4100",
+  "ordinary_source_sha256": "011041202dcd18b34504f535950508cc6defb157a979efa47c14559db5e8b3dc",
+  "activation_sha256": "e3d7607a89be5481b5c3dfd5688eaf287379af8afaa49e3e235e71d4d7453c41",
+  "root": {
+    "artifact_sha256": "eeb951756b8aa32115df8de3907fabc2ede385322bf1989d8ee0fc129f008ebd",
+    "manifest_sha256": "07a15fe29afe16a058a26850672fc7b91a8e8301fcc8dda5d356a00adacaec7f",
+    "template_sha256": "1da31cd0fd4fd570c9697b8185ec00123e76a6a44eef5ae4cea56ef62987638e",
+    "wit_sha256": "2c12fb7ee9795183fce66264c35324ec55b5c93032ab77dd8a33dad32fa4f925"
+  },
+  "frame": {
+    "bytes": 76588,
+    "sha256": "89b0b692492e3bc65603a6f2788de8030dc272170bde0bbd903679e1621da03a",
+    "modules": [
+      {
+        "bytes": 23895,
+        "module": "wasmc-snapshot-caller",
+        "offset": 0,
+        "path": "caller.wasm",
+        "sha256": "d9b9686a5ac48d11fec67b9ab6015db088f86c379eb7171d6c1676a57a784e50"
+      },
+      {
+        "bytes": 14263,
+        "module": "wasmc-native-value-projection",
+        "offset": 23895,
+        "path": "lib-projection.wasm",
+        "sha256": "529b18bddaed871c6b3258875be6f510eacaec3ad982080841716c37255fe055"
+      },
+      {
+        "bytes": 5971,
+        "module": "wasmc-native-value-calls",
+        "offset": 38158,
+        "path": "lib-calls.wasm",
+        "sha256": "ffbe0ebcca78e2391fbc45da536ea10ab513baa2d0ebf49c42c952b224ffb499"
+      },
+      {
+        "bytes": 499,
+        "module": "wasmc-canonical-app-entry",
+        "offset": 44129,
+        "path": "canonical-entry.wasm",
+        "sha256": "6691e05dc68a3b758939191790c8b3dd1b1eb8e376feb3cb7268b5fbcc65706b"
+      },
+      {
+        "bytes": 6984,
+        "module": "wasmc-app-value-projection",
+        "offset": 44628,
+        "path": "app-projection.wasm",
+        "sha256": "96d63ba03e7d3a8cc3b47db98e7f8fbeb4d0cf0da4a674a54f108f164a4c216a"
+      },
+      {
+        "bytes": 1318,
+        "module": "wasmc-host-entry",
+        "offset": 51612,
+        "path": "host-entry.wasm",
+        "sha256": "419444b623d01152a59bff8af2b71a7dfd3136147b4e29a2fdfcb890c9f4839f"
+      },
+      {
+        "bytes": 10640,
+        "module": "wasmc-host-value-projection",
+        "offset": 52930,
+        "path": "host-projection.wasm",
+        "sha256": "70b442f95a6bca0c73d0416e4cf7c40c4536e3359f9b7008ab3694fdab58f7d5"
+      },
+      {
+        "bytes": 872,
+        "module": "wasmc-native-host-calls",
+        "offset": 63570,
+        "path": "host-calls.wasm",
+        "sha256": "eb019bbf6c212e7fd8c35d8d61d1db9bfba1128231f6e426e98443c210a4d403"
+      }
+    ]
+  },
+  "same_Core_Native_App": {
+    "bytes": 2822346,
+    "sha256": "a2fa90d63eed06eede7da0678f67c303b22835aa939ad6c5915cd5ebff78d643"
+  },
+  "actual_portable_cohort_operation": "exec-0000000000000c00",
+  "actual_portable_cohort_exit": 0,
+  "actual_portable_modules_equal_Native": true,
+  "actual_non_Core_inputs_equal_Native": true,
+  "actual_whole_export_ABI_equals_same_Core_Native": true,
+  "original_failed_operation": "exec-0000000000000bfb",
+  "original_failed_exit": 1,
+  "historic_c3_whole_export_ABI_equal": false,
+  "historic_c3_only_extra_exports": [
+    {
+      "name": "__data_end",
+      "kind": 3
+    },
+    {
+      "name": "__heap_base",
+      "kind": 3
+    }
+  ],
+  "original_failure_retained": true,
+  "private_evidence_packet_sha256": "f9732fc454b00b5581106f31ca8c520c24cf1476b08979b4f7b599e952410949",
+  "historical_kit_compiler5299_selected": false,
+  "new_rust_or_compiler_build": false,
+  "formal_release": false,
+  "real_Host_invocation": false,
+  "regression": "all Node/Bun/Deno PASS"
+}

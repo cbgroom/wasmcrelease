@@ -1,0 +1,72 @@
+{
+  "schema": "wasmc.public-producer-assets-check-actual-command/v1",
+  "argv": [
+    "node",
+    "admission/ordinary-canonical-host-v024/sdk-fixture-v006-c788-20261022/check-producer-assets.mjs"
+  ],
+  "working_directory": "public repository root",
+  "exit": 0,
+  "runtime": "Node v25.6.0",
+  "script_sha256": "8af88deb6e419c389dc04e48a82c310729cd26045d4933d5efb646decefe9e69",
+  "stdout_bytes": 1053,
+  "stdout_sha256": "931d7238a046bddf5c554296fbccb3215ca7a005d4fabcc4d1432436cada836a",
+  "stderr_bytes": 0,
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "raw_stdout_preservation": "exact tool stdout JSON line copied after actual run; no repeated execution",
+  "report": {
+    "accepted": true,
+    "inputs": 11,
+    "all_input_bytes_and_hashes_exact": true,
+    "all_modules_engine_validated": true,
+    "memory_edges": [
+      {
+        "consumer": "wasmc-value-staging",
+        "provider": "wasmc:lib/wasmc-json@0.0.6",
+        "memory": "memory"
+      },
+      {
+        "consumer": "wasmc-native-value-projection",
+        "provider": "wasmc-value-staging",
+        "memory": "memory"
+      },
+      {
+        "consumer": "wasmc-native-value-calls",
+        "provider": "wasmc-value-staging",
+        "memory": "memory"
+      },
+      {
+        "consumer": "wasmc-canonical-app-entry",
+        "provider": "wasmc-value-staging",
+        "memory": "memory"
+      },
+      {
+        "consumer": "wasmc-app-value-projection",
+        "provider": "wasmc-value-staging",
+        "memory": "memory"
+      },
+      {
+        "consumer": "wasmc-host-entry",
+        "provider": "wasmc-value-staging",
+        "memory": "memory"
+      },
+      {
+        "consumer": "wasmc-host-value-projection",
+        "provider": "wasmc-value-staging",
+        "memory": "memory"
+      }
+    ],
+    "host_memory": "wasmc-value-staging.memory",
+    "lib_memory_export": true,
+    "exact_merge_argv": true,
+    "expected_app": {
+      "path": "app.wasm",
+      "bytes": 2822346,
+      "sha256": "a2fa90d63eed06eede7da0678f67c303b22835aa939ad6c5915cd5ebff78d643"
+    },
+    "app_instantiated": false,
+    "Rust_build": false,
+    "original19_rerun": false
+  },
+  "new_compiler_Core_Rust_build": false,
+  "original19_rerun": false
+}
