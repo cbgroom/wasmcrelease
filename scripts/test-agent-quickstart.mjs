@@ -28,7 +28,7 @@ assert.equal(hash('standard/wasmc-std/1.4.1/artifact.wasm'), quickstart.routes['
 assert.equal(hash('catalog/libs-current-v2.json'), quickstart.routes['library-first-selection'].catalog_sha256);
 assert.equal(quickstart.routes['library-first-selection'].catalog_path,'catalog/libs-current-v2.json');
 assert.equal(quickstart.routes['library-first-selection'].catalog_snapshot_carried_forward,false);
-assert.equal(quickstart.routes['library-first-selection'].exact_report.companion_sha256,'c3ac42b93f4c27e24065abe804b91f54761eff782e2971e947847b3d20ee7e00');
+assert.equal(quickstart.routes['library-first-selection'].exact_report.companion_sha256,'7cd4f0c60536f1825da3fed9d525a43ee9724250203a261f298505a503e9bcbf');
 assert.equal(quickstart.routes['library-first-selection'].exact_report.import_module,'wasmc:lib/wasmc.lib_managed_object_heap@4.9.0');
 assert.match(quickstart.routes['library-first-selection'].exact_report.instruction,/byte-for-byte/);
 assert.match(quickstart.routes['library-first-selection'].final_answer_policy,/Do not reproduce command arguments/);
@@ -72,7 +72,7 @@ assert.equal(delta.producer.commit, '566eff42d0f4e4680c5ddd60c6584a9d8ff8e9f4');
 assert.equal(delta.producer.implementation_commit, '94328ed760f93bf24b595a71facdcc773d43b762');
 assert.equal(delta.producer.implemented, true);
 assert.match(delta.answer_opening, /both support ordinary-source u64/);
-assert.equal(delta.release_product.version,'v0.0.23');
+assert.equal(delta.release_product.version,'v0.0.24');
 assert.equal(delta.release_product.ordinary_source_u64,'supported');
 assert.equal(delta.release_product.lifecycle_authority,'release.json');
 assert.match(delta.char, /not implemented/);
@@ -94,7 +94,7 @@ assert.equal(routeReadiness.valid_resolution_count,routeReadinessAuthority.valid
 assert.equal(routeReadiness.only_valid_closure,routeReadinessAuthority.only_valid_closure);
 assert.equal(typeof routeReadiness.product.formal_release_ready,'boolean');
 assert.equal(routeReadiness.product.package_routes,42);
-assert.equal(routeReadiness.product.api_routes,236);
+assert.equal(routeReadiness.product.api_routes,247);
 assert.equal(routeReadiness.product.formal_release_ready,routeReadiness.product.blocking_conditions.length===0);
 assert.equal(routeReadiness.product.candidate_extras,0);
 assert.ok(Array.isArray(routeReadiness.product.blocking_conditions));

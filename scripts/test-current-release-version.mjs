@@ -27,6 +27,8 @@ for (const version of ['0.0.023', '0.0.23-dev.1', '../23', '0.1.0', '0.0.9007199
   assert.throws(() => usesCurrentProductV3(version)); rejected++;
 }
 const mutations = [
+  x => x.runs.find(r => r.args.at(-1) === 'scripts/test-canonical-host-sdk.mjs').result.native_parity = 'c68796a617b5fd41447b8b9e0cec087407c755faac11404ae8c13d74a55f483c',
+  x => x.runs.find(r => r.args.at(-1) === 'scripts/test-current-lib-api-v021.mjs').result.provider = '4.9.0',
   x => x.runs.pop(),
   x => x.runs.splice(x.runs.findIndex(r => r.args.at(-1) === 'scripts/test-current-private-helpers.mjs'), 1),
   x => x.runs[3] = structuredClone(x.runs[0]),
@@ -55,5 +57,6 @@ for (const mutate of mutations) {const changed = structuredClone(q); mutate(chan
 // Schema compatibility fixture, never written as historical execution evidence.
 const legacy = structuredClone(q); legacy.version = '0.0.22';
 legacy.runs = legacy.runs.filter(r => !['scripts/test-current-private-helpers.mjs', 'scripts/test-canonical-host-sdk.mjs'].includes(r.args.at(-1)));
+for (const r of legacy.runs.filter(r => r.args.at(-1) === 'scripts/test-current-lib-api-v021.mjs')) r.result.provider = '4.9.0';
 assert.equal(assertCompilerQualification(legacy, '0.0.22', compiler.compiler.sha256, hash(read('current/compiler-release.json'))), true);
 console.log(JSON.stringify({accepted:true, actual_current_receipt:true, legacy_schema_fixture:true, rejections:rejected, whole_product_admission:false}));

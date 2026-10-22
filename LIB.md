@@ -9,7 +9,7 @@ shape. WIT has no native Map. When a public contract needs a copied snapshot,
 return an explicit `list<Entry<K,V>>` or use a declared resource; direct public
 Map is rejected rather than silently serialized.
 
-The v0.0.23 current facade embeds the same verified compiler as the Runtime
+The v0.0.24 current facade embeds the same verified compiler as the Runtime
 package. Use the facade directly for supported ordinary managed source:
 
 ```js
@@ -24,7 +24,7 @@ finite managed roots; caller-pinned JSON plans are not application source.
 Begin reusable-compute discovery with
 [the Library-first Skill](skills/wasmc-lib-discovery/SKILL.md) and the exact
 [current catalog](catalog/libs-current-v2.json). It describes42 complete Roots,
-236 exported API routes and278 index entries. Read the selected Root's own
+247 exported API routes and289 index entries. Read the selected Root's own
 `SKILL.md`, `lib.wit` and `lib.json`; use its declared SDK paths and verify its
 full manifest/inventory before installation. Core, Component and native-source
 profiles have separate contracts. Fourteen native-source identities remain

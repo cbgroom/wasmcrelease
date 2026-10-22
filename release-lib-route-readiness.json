@@ -1,33 +1,38 @@
 {
   "schema": "wasmc.release-lib-route-readiness/v1",
   "route": "release-lib-route-readiness",
-  "request": "does this v0.0.23 product set bind every included Lib package and API route, and where is its lifecycle stage decided",
+  "request": "does this v0.0.24 product set bind every included Lib package and API route, and where is its lifecycle stage decided",
   "product": {
-    "version": "0.0.23",
+    "version": "0.0.24",
     "package_routes": 42,
-    "api_routes": 236,
+    "api_routes": 247,
     "candidate_extras": 0,
-    "formal_release_ready": true,
-    "blocking_conditions": []
+    "formal_release_ready": false,
+    "blocking_conditions": [
+      "v0.0.24-final-candidate-and-channel-receipts-pending"
+    ],
+    "index_entries": 289
   },
   "active_search": {
     "identity": "wasmc:lib-search@0.5.0",
     "states": {
       "qualified": true,
-      "admitted": true,
+      "admitted": false,
       "included_in_product": true,
       "qualified_before_freeze": true,
       "admitted_before_freeze": false
     },
-    "api_routes": 3
+    "api_routes": 3,
+    "lifecycle_status": "pending-v0.0.24-channel-decision"
   },
   "lifecycle_authority": {
     "current_release": "release.json",
     "stages": "channels/dev.json, channels/main.json, channels/prod.json",
-    "rule": "Never infer released, discoverable or installable from this frozen product projection."
+    "rule": "Never infer released, discoverable or installable from this frozen product projection.",
+    "status": "pending-v0.0.24-channel-decision"
   },
   "valid_resolution_count": 1,
-  "only_valid_closure": "Verify the exact v0.0.23 current42 candidate and route closure, then read the channel authorities and exact final-commit Pi qualification receipt. This projection establishes complete product route closure only and grants no publication authority. Normal functional dev CI has passed; its broader workflow failure is retained under the direct human scope. Every promotion must preserve product bytes.",
+  "only_valid_closure": "Verify the exact v0.0.24 current42 composition and route closure, then read the channel authorities and exact final-candidate qualification receipt. The 41 unchanged Roots reuse their original full-Q0 evidence; JSON0.0.6 uses verified original producer/source custody, and fresh_full_q0=false. Candidate creation, final rehearsal and new lifecycle receipts remain pending. This projection grants no publication authority. Every promotion must preserve product bytes.",
   "forbidden_shortcuts": [
     "treat admission as release",
     "infer lifecycle state from product presence or an admission snapshot",
@@ -38,13 +43,108 @@
     "admission/current-product-v3.json",
     "catalog/libs-current-v2.json",
     "catalog/lib-route-closure.json",
-    "channels/candidates/0.0.23.json",
     "release.json",
+    "channels/dev.json",
+    "channels/main.json",
     "channels/prod.json"
   ],
   "check_commands": [
     "node scripts/lib-route-closure.mjs --check",
-    "node scripts/release-candidate.mjs verify channels/candidates/0.0.23.json --candidate-sha256 5c1f9baaaa1328ca5b55f85987e014db8ff9a264f88736844b3b006c92567c44"
+    "node scripts/current-compiler-integrity.mjs --require-qualification"
   ],
-  "stop": "This record is sufficient for the matching readiness decision. Do not scan manifests, histories or implementation scripts unless one of its check commands fails."
+  "stop": "This record is sufficient for the matching readiness decision. Do not scan manifests, histories or implementation scripts unless one of its check commands fails.",
+  "current_product": {
+    "version": "0.0.24",
+    "compiler": {
+      "path": "current/wasmc_compiler.wasm",
+      "bytes": 1956578,
+      "sha256": "c78816376228b6091599845c6a9a531eb76f949fe419655c012ec30c05f75832",
+      "source_commit": "81966eaef368769a569bfac17db9e8c3416ba9ad",
+      "source_build_receipt_sha256": "079e192423e4b435972f60fd4807209b40dae682349947f6569220d662c79f83",
+      "imports": 0,
+      "source_free_qualification": {
+        "path": "current/qualification.json",
+        "bytes": 9598,
+        "sha256": "d52a6e89dc638b435064f5002d55693456294bcfbb6ddf9104bbbdb4eedc2e7d",
+        "accepted": true,
+        "runs": 15,
+        "compiler_sha256": "c78816376228b6091599845c6a9a531eb76f949fe419655c012ec30c05f75832",
+        "product_manifest_sha256": "bed0d11c8dcbfc1f72d444c6dc9c21c50583874e52da03657fe8c54949f20f0c",
+        "not_whole42_Q0": true,
+        "not_controlled_model_pair_qualification": true
+      }
+    },
+    "catalog": {
+      "path": "catalog/libs-current-v2.json",
+      "sha256": "c583d5444d9bcba8f5932660d5b632fd64aa9a212c2002f1a91fa03b9d4e0aa9",
+      "package_routes": 42,
+      "api_routes": 247,
+      "entries": 289
+    },
+    "CoreLib": {
+      "version": "4.9.1",
+      "path": "current/lib_core.wasm",
+      "bytes": 2640152,
+      "sha256": "7cd4f0c60536f1825da3fed9d525a43ee9724250203a261f298505a503e9bcbf",
+      "import_module": "wasmc:lib/wasmc.lib_managed_object_heap@4.9.0",
+      "ABI_import_namespace": "4.9.0",
+      "import_namespace_unchanged": true,
+      "behavior": {
+        "command": "node examples/base64/run.mjs",
+        "accepted": true,
+        "rounds": 256,
+        "explicit_drops": 1024,
+        "invalid_input_rejected": true,
+        "persistent_provider_memory_bytes": 3670016,
+        "installed_root_verified": false
+      },
+      "lifecycle_authority": "release.json and channels/prod.json",
+      "released": false
+    },
+    "qualification": {
+      "kind": "verified-original-producer-composition",
+      "packages": 42,
+      "inherited_original_full_Q0_roots": 41,
+      "original_producer_source_verified_roots": 1,
+      "imported_root": "wasmc-json@0.0.6",
+      "fresh_full_q0": false,
+      "fresh_builds": 0,
+      "current_source_custody_verified": true,
+      "original_receipt_bytes_verified": false,
+      "authority": "admission/current-product-v3.json",
+      "source_lineage_sha256": "bd4298b34909bedc21052ff7b4dce7d458231c6f0bc2bd5c29b257d69d01eb83",
+      "rule": "Reuse the original full-Q0 evidence for 41 unchanged Roots and the verified original producer/source custody for JSON0.0.6; this is not a fresh 42-Root Q0 run."
+    },
+    "lifecycle": {
+      "status": "pending-v0.0.24-channel-decision",
+      "product_version": "0.0.24",
+      "released": false,
+      "discoverable": false,
+      "installable": false,
+      "authority": "release.json and channels/dev.json, channels/main.json, channels/prod.json",
+      "observed_release_version": "0.0.23",
+      "observed_prod_version": "0.0.23",
+      "rule": "The channel authorities still describe v0.0.23. Current product capability and qualification do not promote v0.0.24."
+    }
+  },
+  "pending_candidate_verification": {
+    "path": "channels/candidates/0.0.24.json",
+    "candidate_sha256": null,
+    "status": "await-final-candidate",
+    "rule": "After final candidate creation, use its complete independently read-back SHA256 for release-candidate verification. The v0.0.23 candidate pin is historical and must not be substituted."
+  },
+  "composition_qualification": {
+    "kind": "verified-original-producer-composition",
+    "packages": 42,
+    "inherited_original_full_Q0_roots": 41,
+    "original_producer_source_verified_roots": 1,
+    "imported_root": "wasmc-json@0.0.6",
+    "fresh_full_q0": false,
+    "fresh_builds": 0,
+    "current_source_custody_verified": true,
+    "original_receipt_bytes_verified": false,
+    "authority": "admission/current-product-v3.json",
+    "source_lineage_sha256": "bd4298b34909bedc21052ff7b4dce7d458231c6f0bc2bd5c29b257d69d01eb83",
+    "rule": "Reuse the original full-Q0 evidence for 41 unchanged Roots and the verified original producer/source custody for JSON0.0.6; this is not a fresh 42-Root Q0 run."
+  }
 }

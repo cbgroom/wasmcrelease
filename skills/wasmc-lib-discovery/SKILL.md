@@ -7,10 +7,10 @@ metadata:
 
 # Library-first discovery
 
-Use the v0.0.23 product's `catalog/libs-current-v2.json`, independently pinned
+Use the v0.0.24 product's `catalog/libs-current-v2.json`, independently pinned
 below. It binds42 complete current package Roots, including14 native-source
 packages. LibSearch0.5.0 executes lookup and bounded search over42 package and
-236 API routes. A search result establishes discovery; channel authorities
+247 API routes. A search result establishes discovery; channel authorities
 establish release. Native-source delivery does not establish executable or
 physical-device support.
 
@@ -19,8 +19,8 @@ physical-device support.
 Run from the verified immutable product or tooling root:
 
 ```sh
-node scripts/wasmc-lib.mjs search "base64 decode" --catalog-sha256 81db5d610d53c7627fd91a4bbd47a22610bd1982718b845dc1557b81657f0e74 --limit 8
-node scripts/wasmc-lib.mjs search "counter" --catalog-sha256 81db5d610d53c7627fd91a4bbd47a22610bd1982718b845dc1557b81657f0e74 --limit 8
+node scripts/wasmc-lib.mjs search "base64 decode" --catalog-sha256 c583d5444d9bcba8f5932660d5b632fd64aa9a212c2002f1a91fa03b9d4e0aa9 --limit 8
+node scripts/wasmc-lib.mjs search "counter" --catalog-sha256 c583d5444d9bcba8f5932660d5b632fd64aa9a212c2002f1a91fa03b9d4e0aa9 --limit 8
 ```
 
 The first query returns identity
@@ -54,7 +54,7 @@ bounded glue. Search does not choose versions or grant semver fallback.
    Use the documented current commands; immutable older catalogs are historical
    authorities for their own artifacts.
 3. Check the Root's delivery kind, runtime profile and every actual import.
-   Std1.4.1 Core requires the exact Provider4.9 module. Installation supplies no
+   Std1.4.1 Core requires the exact Provider4.9.1 module (ABI namespace4.9.0). Installation supplies no
    Host permission. Core, Component, native-source and device evidence differ.
 4. For Base64 run [the actual behavior oracle](../../examples/base64/run.mjs).
    It checks encode/decode, invalid input and explicit resource cleanup on the

@@ -5,11 +5,11 @@ import {hash,verifyCurrentRelease,currentProductReader,currentProductPaths} from
 const root=new URL('../',import.meta.url).pathname;
 const read=p=>readFileSync(new URL('../'+p,import.meta.url));
 const catalogBytes=read('catalog/libs-current-v2.json'),catalog=JSON.parse(catalogBytes);
-const pin='81db5d610d53c7627fd91a4bbd47a22610bd1982718b845dc1557b81657f0e74';
+const pin='c583d5444d9bcba8f5932660d5b632fd64aa9a212c2002f1a91fa03b9d4e0aa9';
 assert.equal(hash(catalogBytes),pin);
 const model=buildClosure();
 assert.equal(model.schema,'wasmc.lib-route-closure/v3');assert.equal(model.release_bindings.length,42);
-assert.equal(model.search_index.api_routes,236);assert.equal(model.search_index.entries,278);
+assert.equal(model.search_index.api_routes,247);assert.equal(model.search_index.entries,289);
 assert.deepEqual(model.candidate_extras,[]);assert.equal(model.claims.public_release_admission,false);
 const verify=(bytes=catalogBytes,p=pin,overrides=new Map(),paths=currentProductPaths(root))=>verifyCurrentRelease(bytes,p,n=>overrides.has(n)?overrides.get(n):read(n),paths);
 let controls=0;
@@ -28,4 +28,4 @@ for(const [name,change] of [
 }
 const row=catalog.packages[0],path=row.root+'/lib.wit',b=Buffer.from(read(path));b[0]^=1;
 reject('actual selected WIT mutation',()=>verify(catalogBytes,pin,new Map([[path,b]])));
-console.log(JSON.stringify({accepted:true,schema:model.schema,release_packages:42,package_routes:42,api_routes:236,entries:278,negative_tests:controls,public_release_admission:false}));
+console.log(JSON.stringify({accepted:true,schema:model.schema,release_packages:42,package_routes:42,api_routes:247,entries:289,negative_tests:controls,public_release_admission:false}));

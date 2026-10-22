@@ -53,7 +53,7 @@ export function assertCompilerQualification(q, version, compilerSha256, manifest
     const std = result(commands[1]);
     assert.equal(std.standard_lib, 'wasmc:std@1.4.1'); assert.equal(std.functions, 73); assert.equal(std.consumer_calls, 7680);
     const managed = result(commands[2]);
-    assert.equal(managed.provider, '4.9.0'); assert.equal(managed.compileLib_oracles, 3);
+    assert.equal(managed.provider, requiresCanonicalHostQualification(version) ? '4.9.1' : '4.9.0'); assert.equal(managed.compileLib_oracles, 3);
     assert.equal(managed.instantiateLib_oracles, 3); assert.equal(managed.calls, 768); assert.equal(managed.old_provider_fallback, false);
     if (helpers) {
       assert.equal(managed.boolean_conditional_calls, 1536); assert.equal(managed.boolean_numeric_rejections, 6);
@@ -66,7 +66,7 @@ export function assertCompilerQualification(q, version, compilerSha256, manifest
       const c = result('scripts/test-canonical-host-sdk.mjs');
       assert.equal(c.compiler_sha256, compilerSha256);
       assert.equal(c.compiled_frames, 4); assert.equal(c.modules_per_frame, 8);
-      assert.equal(c.native_parity, 'c68796a617b5fd41447b8b9e0cec087407c755faac11404ae8c13d74a55f483c');
+      assert.equal(c.native_parity, '89b0b692492e3bc65603a6f2788de8030dc272170bde0bbd903679e1621da03a');
       assert.equal(c.rejection_then_recovery, true); assert.equal(c.source_rebinding, true);
       assert.equal(c.real_Host_invocation, false);
     }

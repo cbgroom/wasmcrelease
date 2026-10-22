@@ -6,11 +6,11 @@ import {fileURLToPath} from 'node:url';
 import {hash,checkedCurrentCatalog,resolveCurrentPackage,currentProductReader} from './current-lib-release-v3.mjs';
 const repositoryRoot=fileURLToPath(new URL('../',import.meta.url));
 const catalogBytes=readFileSync(join(repositoryRoot,'catalog/libs-current-v2.json'));
-const catalogSha256='81db5d610d53c7627fd91a4bbd47a22610bd1982718b845dc1557b81657f0e74';
+const catalogSha256='c583d5444d9bcba8f5932660d5b632fd64aa9a212c2002f1a91fa03b9d4e0aa9';
 const catalog=checkedCurrentCatalog(catalogBytes,catalogSha256),row=catalog.packages.find(r=>r.id==='wasmc-std');
 const lock=resolveCurrentPackage(catalogBytes,catalogSha256,{id:row.id,version:row.version,manifest_sha256:row.manifest_sha256,root_inventory_sha256:row.root_inventory_sha256},currentProductReader(repositoryRoot));
 const lockBytes=Buffer.from(JSON.stringify(lock,null,2)+'\n');
-if(hash(lockBytes)!=='af7781ad14960709202216539eb7009386098c6050cdeb88b309651a9a4b4c60')throw Error('independent approved Std lock drift');
+if(hash(lockBytes)!=='8b9d7c35172774af2863d7bbab7014c5238243d8bf6ca2155c3cace60231f2b9')throw Error('independent approved Std lock drift');
 const mirror=process.argv[2]??'github',fixture=mkdtempSync(join(tmpdir(),'wasmc-current-live-install-'));
 const host=globalThis.Bun?'bun':globalThis.Deno?'deno':'node';
 const run=(script,args,permissions)=>{

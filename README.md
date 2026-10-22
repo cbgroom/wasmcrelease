@@ -1,7 +1,7 @@
-# WAsmC0.0.23
+# WAsmC0.0.24
 
 WAsmC compiles WIT-shaped application source to standard Core Wasm. This
-source-free distribution combines one compiler, Provider4.9, Std1.4.1,
+source-free distribution combines one compiler, Provider4.9.1, Std1.4.1,
 LibSearch0.5.0,42 complete current Lib identities and public Rust/Host SDKs.
 Compiler implementation source stays private.
 
@@ -40,10 +40,10 @@ establish downloaded-consumer execution.
 
 Follow [Library-first discovery](skills/wasmc-lib-discovery/SKILL.md).
 The pinned catalog owns complete Roots, WIT, SDK views and dependency notices.
-Its42 package routes and236 API routes give278 exact search entries.
+Its42 package routes and247 API routes give289 exact search entries.
 
 ```sh
-node scripts/wasmc-lib.mjs search "base64 decode" --catalog-sha256 81db5d610d53c7627fd91a4bbd47a22610bd1982718b845dc1557b81657f0e74 --limit 8
+node scripts/wasmc-lib.mjs search "base64 decode" --catalog-sha256 c583d5444d9bcba8f5932660d5b632fd64aa9a212c2002f1a91fa03b9d4e0aa9 --limit 8
 node examples/base64/run.mjs
 ```
 
@@ -55,9 +55,15 @@ physical-device qualification.
 
 [Std1.4.1](standard/wasmc-std/1.4.1/) retains73 operations and nine resources
 with complete generated Core and Component Rust SDKs. Its Core import requires
-Provider4.9. [LibSearch0.5.0](standard/wasmc-lib-search/0.5.0/) implements the
+Provider4.9.1 (ABI namespace4.9.0). [LibSearch0.5.0](standard/wasmc-lib-search/0.5.0/) implements the
 bounded full-index lookup and search. The matching Provider is
 `current/lib_core.wasm`.
+
+The complete [JSON0.0.6 Root](standard/wasmc-json/0.0.6/) includes typed
+JSON document operations and UTF-8 byte conversion. Ordinary WAsmC applications
+use the generic [Canonical Host SDK example](examples/canonical-host/) to bind
+the selected Lib and application Host contracts. The SDK owns the generated
+caller, plan and memory bindings. Application source calls the typed API.
 
 ## Language and external effects
 
@@ -73,5 +79,5 @@ capability. System Telemetry supports its declared Component resource view;
 ordinary-source direct resource methods remain unsupported. Client Foundation
 and Gateway remain incubating.
 
-The [0.0.23 release evidence](docs/RELEASE_V023.md) keeps source, artifact,
+The [0.0.24 release evidence](docs/RELEASE_V024.md) keeps source, artifact,
 runtime, Native platform, whole-candidate and lifecycle gates separate.
