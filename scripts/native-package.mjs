@@ -8,7 +8,7 @@ const targets={
   'x86_64-apple-darwin':['darwin','x64'],'aarch64-apple-darwin':['darwin','arm64'],
   'x86_64-pc-windows-msvc':['win32','x64'],'aarch64-pc-windows-msvc':['win32','arm64'],
 };
-const compilerDigest='ae039150425e1931c8860cde2ee8da31170ed700a05cdad733da8ad94664fb38';
+const compilerDigest='c78816376228b6091599845c6a9a531eb76f949fe419655c012ec30c05f75832';
 const profileName='wasmc-cli-aot-v1';
 const hash=b=>createHash('sha256').update(b).digest('hex');
 const licensePin={path:'LICENSE',bytes:3823,sha256:'7bca2d5818178e0bc14546700d39bf113d15139b1c3b6d1e62f621d4a276d6e3'};

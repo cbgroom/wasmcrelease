@@ -1,0 +1,12 @@
+{
+  "schema": "wasmc.carrier-migration-original-failure/v1",
+  "accepted": false,
+  "operation": "assert all three Core sidecars have c3 digest before replacing",
+  "partial_writes": "three embedded Core payloads and current/dist Core sidecars changed; package guard rejected before package/standard/native edits",
+  "actual_package_core_bytes": 34158,
+  "actual_package_core_sha256": "86670b35fe4ff01f9ad4392b42ce8816e4679f680ab788599905edb1bbe6e749",
+  "expected_uniform_old_sha256": "c3ac42b93f4c27e24065abe804b91f54761eff782e2971e947847b3d20ee7e00",
+  "followup_test": "test-current-lib-api-v021 failed explicit old facade verifyLib digest",
+  "resolution": "package/package.json explicitly frozen0.0.21 forwarding route; preserve package bytes, migrate only current/dist and new standard4.9.1, update exact default digest",
+  "formal_release": false
+}

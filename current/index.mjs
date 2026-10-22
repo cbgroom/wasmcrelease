@@ -441,7 +441,7 @@ function nextLibStoreNonce() {
 async function verifyLib(libWasm) {
   const digest = new Uint8Array(await crypto.subtle.digest("SHA-256", libWasm));
   const digestHex = Array.from(digest, (value) => value.toString(16).padStart(2, "0")).join("");
-  if (digestHex !== "c3ac42b93f4c27e24065abe804b91f54761eff782e2971e947847b3d20ee7e00") {
+  if (digestHex !== "7cd4f0c60536f1825da3fed9d525a43ee9724250203a261f298505a503e9bcbf") {
     throw new Error("wasmc lib artifact identity mismatch");
   }
   const module = new WebAssembly.Module(libWasm);

@@ -30,4 +30,4 @@ for(const api of [sidecar,single,globalThis.Wasmc]){
  ]){await assert.rejects(api.compileLib(changed));booleanTypeNegatives++;}
 }
 
-console.log(JSON.stringify({accepted:true,provider:'4.9.0',compileLib_oracles:oracles,instantiateLib_oracles:oracles,calls,boolean_conditional_calls:booleanCalls,boolean_numeric_rejections:booleanTypeNegatives,old_provider_fallback:false}));
+console.log(JSON.stringify({accepted:true,provider:'4.9.1',abi_namespace:'wasmc:lib/wasmc.lib_managed_object_heap@4.9.0',compileLib_oracles:oracles,instantiateLib_oracles:oracles,calls,boolean_conditional_calls:booleanCalls,boolean_numeric_rejections:booleanTypeNegatives,old_provider_fallback:false}));
