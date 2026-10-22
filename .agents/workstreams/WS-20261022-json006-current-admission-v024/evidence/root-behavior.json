@@ -1,0 +1,52 @@
+{
+  "schema": "wasmc.json006-current-import-behavior/v1",
+  "artifact_sha256": "eeb951756b8aa32115df8de3907fabc2ede385322bf1989d8ee0fc129f008ebd",
+  "manifest_sha256": "07a15fe29afe16a058a26850672fc7b91a8e8301fcc8dda5d356a00adacaec7f",
+  "observations": [
+    {
+      "name": "empty",
+      "input_utf8_bytes": 0,
+      "output_bytes": 0,
+      "byte_exact": true
+    },
+    {
+      "name": "ascii",
+      "input_utf8_bytes": 5,
+      "output_bytes": 5,
+      "byte_exact": true
+    },
+    {
+      "name": "Unicode-NUL",
+      "input_utf8_bytes": 10,
+      "output_bytes": 10,
+      "byte_exact": true
+    },
+    {
+      "name": "1KiB",
+      "input_utf8_bytes": 1024,
+      "output_bytes": 1024,
+      "byte_exact": true
+    }
+  ],
+  "codec_boundary": {
+    "input_utf8_bytes": 65536,
+    "completed": false,
+    "error": "Core output node budget",
+    "scope": "Existing JS test codec output-node budget; retained without limit change or new release gate. Not a claim of failed Root/SDK behavior."
+  },
+  "recovered_after_codec_rejection": true,
+  "original13_WIT_signatures_exact": true,
+  "old_api_routes": 13,
+  "new_api_routes": 14,
+  "imports": [],
+  "original_compact": {
+    "tag": "ok",
+    "value": "{\"a\":\"新输入\",\"b\":2}"
+  },
+  "original_invalid_utf8": {
+    "tag": "err",
+    "value": "invalid-json"
+  },
+  "formal_release": false,
+  "new_builds": 0
+}

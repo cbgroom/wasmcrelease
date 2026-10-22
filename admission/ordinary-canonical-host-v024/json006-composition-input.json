@@ -1,0 +1,80 @@
+{
+  "schema": "wasmc.current-lib-composition-input/v1",
+  "base": {
+    "catalog_path": "catalog/libs-current-v2.json",
+    "catalog_sha256": "81db5d610d53c7627fd91a4bbd47a22610bd1982718b845dc1557b81657f0e74"
+  },
+  "reused_ids": [
+    "mcpgit-resident-memory",
+    "wasmc-app-authorization-policy",
+    "wasmc-compression",
+    "wasmc-csv",
+    "wasmc-data-compute",
+    "wasmc-data-core",
+    "wasmc-data-expr",
+    "wasmc-data-interchange",
+    "wasmc-data-profile",
+    "wasmc-data-relational",
+    "wasmc-host-clock",
+    "wasmc-http1",
+    "wasmc-http1-client",
+    "wasmc-lib-search",
+    "wasmc-owned-algorithms",
+    "wasmc-resource-counter",
+    "wasmc-router-policy",
+    "wasmc-std",
+    "wasmc-system-android-display",
+    "wasmc-system-android-input",
+    "wasmc-system-android-ui",
+    "wasmc-system-android-uinput",
+    "wasmc-system-file-prototype",
+    "wasmc-system-ios-app-contacts",
+    "wasmc-system-ios-app-lifecycle",
+    "wasmc-system-ios-app-surface-control",
+    "wasmc-system-ios-background-audio",
+    "wasmc-system-ios-background-transfer",
+    "wasmc-system-ios-deferred-work",
+    "wasmc-system-ios-local-notification",
+    "wasmc-system-ios-network-path",
+    "wasmc-system-ios-simulator-display",
+    "wasmc-system-ios-websocket",
+    "wasmc-system-linux-endpoint",
+    "wasmc-system-linux-socket",
+    "wasmc-system-linux-uinput",
+    "wasmc-system-network-prototype",
+    "wasmc-system-process-prototype",
+    "wasmc-system-telemetry",
+    "wasmc-tls-client",
+    "wasmc-tls-core"
+  ],
+  "replacements": [
+    {
+      "id": "wasmc-json",
+      "version": "0.0.6",
+      "profile": "value",
+      "root": "standard/wasmc-json/0.0.6",
+      "manifest_sha256": "07a15fe29afe16a058a26850672fc7b91a8e8301fcc8dda5d356a00adacaec7f",
+      "root_inventory_sha256": "0054d7e874ecee3f3b15a009859b74a63d37cd99912fac572f6d66e4629d5340",
+      "source": {
+        "root": "admission/ordinary-canonical-host-v024/json006-authoring",
+        "inventory_sha256": "266532326061d7d910d5a35c578561c10e670bb6a8f26dab57f5d73dcf4ce3dc",
+        "producer_custody": "producer-custody.json",
+        "materialization_custody": "source-spec-custody.json",
+        "source_spec": "source-lib.build.json",
+        "materialized_spec": "lib.build.json",
+        "generated_source": "workspace/json-adapter/src/lib.rs",
+        "logic": "workspace/json-adapter/src/logic.rs",
+        "cargo_manifest": "workspace/json-adapter/Cargo.toml",
+        "cargo_lock": "workspace/json-adapter/Cargo.lock",
+        "wit": "lib.wit",
+        "authority": {
+          "original_receipt_sha256": "d737ec4d9dd2e6452661d9da597b6063b8b3c8a89a48387ab34037c6b692c632",
+          "driver_sha256": "73b6c3c9fc05bd1ccf5c19294ca74320438f9620eba7d11bb3d78a92f60a8286",
+          "original_source": "e1c90d21cbe1646b9c12f2ae9d125801785977ad",
+          "canonical_source_commit": "f869332b9bfa44d09ea1ae5bc95ad0d4d0c74816",
+          "canonical_source_blob": "62ce6c8cbe44562d9518ed5a70dbfe1c7b6ff107"
+        }
+      }
+    }
+  ]
+}

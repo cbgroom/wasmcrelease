@@ -1,0 +1,17 @@
+{
+  "schema": "wasmc.public-projected-operation-evidence/v1",
+  "raw_receipt": {
+    "bytes": 1813,
+    "sha256": "2b724932f6177b35964e9ceb4723585bb07c31f69837515a4703e06336b50258"
+  },
+  "absolute_public_host_paths_redacted": true,
+  "receipt": {
+    "argv": [
+      "node",
+      "<owned-public-preparation>/probe.mjs"
+    ],
+    "exit": 1,
+    "stdout": "{\"composition_complete\":true,\"summary\":{\"packages\":42,\"reused_roots\":41,\"imported_roots\":1,\"apis\":247,\"entries\":289,\"fresh_builds\":0}}\n",
+    "stderr": "node:internal/modules/run_main:107\n    triggerUncaughtException(\n    ^\n\nAssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   tag: 'err',\n+   value: 'invalid-index'\n-   tag: 'ok',\n-   value: {\n-     api_count: 247,\n-     bound_package_count: 42,\n-     entry_count: 289,\n-     index_sha256: 'c147c29eaf43ad1a58bd52e07e33d742e33a58ff2d7e9d417f2ff83298eb2b68',\n-     package_count: 42,\n-     registry_sha256: '3b2292a4805783cc826402046d056e517a55700ab1797d835e09c8cbb0f9ac66'\n-   }\n  }\n\n    at candidateFromComposition (file://<owned-public-preparation>/scripts/lib-current-composition-v1.mjs:225:10)\n    at buildCurrentCompositionCandidate (file://<owned-public-preparation>/scripts/lib-current-composition-v1.mjs:299:10)\n    at async file://<owned-public-preparation>/probe.mjs:4:226 {\n  generatedMessage: true,\n  code: 'ERR_ASSERTION',\n  actual: { tag: 'err', value: 'invalid-index' },\n  expected: {\n    tag: 'ok',\n    value: {\n      entry_count: 289,\n      package_count: 42,\n      api_count: 247,\n      bound_package_count: 42,\n      registry_sha256: '3b2292a4805783cc826402046d056e517a55700ab1797d835e09c8cbb0f9ac66',\n      index_sha256: 'c147c29eaf43ad1a58bd52e07e33d742e33a58ff2d7e9d417f2ff83298eb2b68'\n    }\n  },\n  operator: 'deepStrictEqual',\n  diff: 'simple'\n}\n\nNode.js v26.5.1\n"
+  }
+}

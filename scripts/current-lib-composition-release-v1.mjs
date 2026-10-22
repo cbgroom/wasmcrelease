@@ -44,7 +44,7 @@ function expectedIndex(input,catalog,lineage,composition,options){
       delivery:{manifest_sha256:s.root.manifest_sha256,receipt_sha256:digest(composition),artifact_kind:'wasm-core-component',
         artifact_path:manifest.artifact.path,artifact_sha256:manifest.artifact.sha256,component_sha256:manifest.component.sha256},
       wit_route:model.identity,description:s.description,
-      apis:[...routes.routes.keys()].sort().map(route=>({route:route.slice(model.identity.length+1),description:s.apis.find(api=>api.api===route.split('#')[1]).delta}))};
+      apis:[...routes.routes.keys()].sort().map(route=>({route:route.slice(model.identity.length+1),description:(api=>api.delta??api.ecosystem)(s.apis.find(api=>api.api===route.split('#')[1]))}))};
   }
   packages.sort((a,b)=>(a.package_id+'@'+a.version)<(b.package_id+'@'+b.version)?-1:1);
   return {schema:'wasmc.current-lib-search-index/v2',registry_sha256:catalog.registry.sha256,

@@ -189,7 +189,7 @@ function candidateFromComposition(input,options,composition){
           artifact_sha256:manifest.artifact.sha256,component_sha256:manifest.component.sha256},
         wit_route:row.wit.identity,description:row.discovery_metadata.description,
         apis:row.wit.api_routes.map(route=>({route:route.slice(row.wit.identity.length+1),
-          description:row.discovery_metadata.apis.find(api=>api.api===route.split('#')[1]).delta}))});
+          description:(api=>api.delta??api.ecosystem)(row.discovery_metadata.apis.find(api=>api.api===route.split('#')[1]))}))});
       projectedSourceFiles.push({target_path:'libspec/'+row.id+'/lib.wit',
         source:descriptor(input,source.root+'/'+source.wit),
         current:descriptor(input,'libspec/'+row.id+'/lib.wit'),applied:false,
