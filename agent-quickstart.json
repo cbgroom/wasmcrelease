@@ -50,7 +50,7 @@
         "candidate_extras": 0,
         "formal_release_ready": false,
         "blocking_conditions": [
-          "v0.0.24-final-candidate-and-channel-receipts-pending"
+          "exact-dev-normal-consumers-and-final-GLM-single-model-publication-pending"
         ],
         "index_entries": 289
       },
@@ -64,16 +64,16 @@
           "admitted_before_freeze": false
         },
         "api_routes": 3,
-        "lifecycle_status": "pending-v0.0.24-channel-decision"
+        "lifecycle_status": "dev-qualified-pending-prod"
       },
       "lifecycle_authority": {
         "current_release": "release.json",
         "stages": "channels/dev.json, channels/main.json, channels/prod.json",
         "rule": "Never infer released, discoverable or installable from this frozen product projection.",
-        "status": "pending-v0.0.24-channel-decision"
+        "status": "dev-qualified-pending-prod"
       },
       "valid_resolution_count": 1,
-      "only_valid_closure": "Verify the exact v0.0.24 current42 composition and route closure, then read the channel authorities and exact final-candidate qualification receipt. The 41 unchanged Roots reuse their original full-Q0 evidence; JSON0.0.6 uses verified original producer/source custody, and fresh_full_q0=false. Candidate creation, final rehearsal and new lifecycle receipts remain pending. This projection grants no publication authority. Every promotion must preserve product bytes.",
+      "only_valid_closure": "Verify the exact current42 composition and2102-file candidate, then read the channel authorities and exact final-candidate qualification receipt. The existing15-case candidate suite passed. Preserve this product set through dev/main/prod. Exact dev consumers, final GLM single-model regression and independent review, immutable publication and public readback remain required. Original41 Root cohorts and JSON006 original producer custody remain distinct; no new42-Root build.",
       "forbidden_shortcuts": [
         "treat admission as release",
         "infer lifecycle state from product presence or an admission snapshot",
@@ -91,7 +91,8 @@
       ],
       "check_commands": [
         "node scripts/lib-route-closure.mjs --check",
-        "node scripts/current-compiler-integrity.mjs --require-qualification"
+        "node scripts/current-compiler-integrity.mjs --require-qualification",
+        "node scripts/release-candidate.mjs verify channels/candidates/0.0.24.json --candidate-sha256 097bb54e8d715273de579eb353e3662b104a58f16a08cac894fe13d777c1db6d"
       ],
       "required_additional_reads": [
         "release-lib-route-readiness.json"
@@ -99,9 +100,9 @@
       "stop": "This record is sufficient for the matching readiness decision. Do not scan manifests, histories or implementation scripts unless one of its check commands fails.",
       "pending_candidate_verification": {
         "path": "channels/candidates/0.0.24.json",
-        "candidate_sha256": null,
-        "status": "await-final-candidate",
-        "rule": "After final candidate creation, use its complete independently read-back SHA256 for release-candidate verification. The v0.0.23 candidate pin is historical and must not be substituted."
+        "candidate_sha256": "097bb54e8d715273de579eb353e3662b104a58f16a08cac894fe13d777c1db6d",
+        "status": "verified-exact-frozen-candidate",
+        "rule": "Use this complete independent candidate SHA256; stage promotions must preserve its product set."
       },
       "composition_qualification": {
         "kind": "verified-original-producer-composition",
@@ -406,7 +407,7 @@
       "rule": "Reuse the original full-Q0 evidence for 41 unchanged Roots and the verified original producer/source custody for JSON0.0.6; this is not a fresh 42-Root Q0 run."
     },
     "lifecycle": {
-      "status": "pending-v0.0.24-channel-decision",
+      "status": "dev-qualified-pending-prod",
       "product_version": "0.0.24",
       "released": false,
       "discoverable": false,
@@ -414,7 +415,8 @@
       "authority": "release.json and channels/dev.json, channels/main.json, channels/prod.json",
       "observed_release_version": "0.0.23",
       "observed_prod_version": "0.0.23",
-      "rule": "The channel authorities still describe v0.0.23. Current product capability and qualification do not promote v0.0.24."
+      "rule": "Dev selects the exact admitted candidate; release.json and prod still select0.0.23. No formal0.0.24 publication is inferred.",
+      "observed_dev_version": "0.0.24"
     }
   }
 }
