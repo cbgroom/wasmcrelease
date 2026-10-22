@@ -1,0 +1,2050 @@
+[
+  {
+    "name": "git-0",
+    "argv": [
+      "git",
+      "-C",
+      "/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261022-v024-final-prod-rehearsal",
+      "rev-parse",
+      "c49933e0263ecac3fe085b6342a6508bfd7f2374^{tree}"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 0.01710412499960512,
+    "stdout_bytes": 41,
+    "stdout_sha256": "50a2f5795d35b0fac2867bb1587f773148a0326817498b1d2539cc0645c34f78",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "git-1",
+    "argv": [
+      "git",
+      "-C",
+      "/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261022-v024-final-prod-rehearsal",
+      "ls-remote",
+      "--tags",
+      "origin",
+      "refs/tags/v0.0.24",
+      "refs/tags/v0.0.24^{}"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 0.6212567909969948,
+    "stdout_bytes": 121,
+    "stdout_sha256": "1d9d6d597699fe14e2954fb20cce5f668b91a3e82534178dbc2b5952ce3bd7e8",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "official-release",
+    "argv": [
+      "gh",
+      "api",
+      "repos/cbgroom/wasmcrelease/releases/tags/v0.0.24"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 0.6456542920204811,
+    "stdout_bytes": 32610,
+    "stdout_sha256": "4ca4c09126b7f51522b79a8270871a030a513955789d7160ca09f032b49e004a",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "official-latest",
+    "argv": [
+      "gh",
+      "api",
+      "repos/cbgroom/wasmcrelease/releases/latest"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 0.4377368339919485,
+    "stdout_bytes": 32610,
+    "stdout_sha256": "4ca4c09126b7f51522b79a8270871a030a513955789d7160ca09f032b49e004a",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "asset-pi-pre-release-qualification-v0.0.24.json",
+    "argv": [
+      "curl",
+      "--fail",
+      "--location",
+      "--silent",
+      "--show-error",
+      "--max-time",
+      "120",
+      "--dump-header",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/logs/asset-pi-pre-release-qualification-v0.0.24.json.headers",
+      "--output",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/download/pi-pre-release-qualification-v0.0.24.json",
+      "--write-out",
+      "%{json}",
+      "https://github.com/cbgroom/wasmcrelease/releases/download/v0.0.24/pi-pre-release-qualification-v0.0.24.json"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 0.7507856670417823,
+    "stdout_bytes": 18413,
+    "stdout_sha256": "93bd17bfbae2d0e57beee6384a856dc594800b1b825f95452d0f1c9e6ed3e3df",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "asset-NATIVE-SHA256SUMS",
+    "argv": [
+      "curl",
+      "--fail",
+      "--location",
+      "--silent",
+      "--show-error",
+      "--max-time",
+      "120",
+      "--dump-header",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/logs/asset-NATIVE-SHA256SUMS.headers",
+      "--output",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/download/NATIVE-SHA256SUMS",
+      "--write-out",
+      "%{json}",
+      "https://github.com/cbgroom/wasmcrelease/releases/download/v0.0.24/NATIVE-SHA256SUMS"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 0.7545427089789882,
+    "stdout_bytes": 18243,
+    "stdout_sha256": "154d9a3098f1074274c2c9f262882581c5028366245a5d615d52f94dc7ddeef5",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "asset-0.0.24.json",
+    "argv": [
+      "curl",
+      "--fail",
+      "--location",
+      "--silent",
+      "--show-error",
+      "--max-time",
+      "120",
+      "--dump-header",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/logs/asset-0.0.24.json.headers",
+      "--output",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/download/0.0.24.json",
+      "--write-out",
+      "%{json}",
+      "https://github.com/cbgroom/wasmcrelease/releases/download/v0.0.24/0.0.24.json"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 1.1527322080219164,
+    "stdout_bytes": 18211,
+    "stdout_sha256": "bfa723e7f843447f26aa9833a0b366a17a5161d56ab97a3a88371707899137bc",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "asset-compiler-release.json",
+    "argv": [
+      "curl",
+      "--fail",
+      "--location",
+      "--silent",
+      "--show-error",
+      "--max-time",
+      "120",
+      "--dump-header",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/logs/asset-compiler-release.json.headers",
+      "--output",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/download/compiler-release.json",
+      "--write-out",
+      "%{json}",
+      "https://github.com/cbgroom/wasmcrelease/releases/download/v0.0.24/compiler-release.json"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 1.1895803340012208,
+    "stdout_bytes": 18279,
+    "stdout_sha256": "9f9aeef36921c2415b6fdf91a86200da694d73898b5ff0df25ed207977fe5b1f",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "asset-qualification.json",
+    "argv": [
+      "curl",
+      "--fail",
+      "--location",
+      "--silent",
+      "--show-error",
+      "--max-time",
+      "120",
+      "--dump-header",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/logs/asset-qualification.json.headers",
+      "--output",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/download/qualification.json",
+      "--write-out",
+      "%{json}",
+      "https://github.com/cbgroom/wasmcrelease/releases/download/v0.0.24/qualification.json"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 0.7042184580350295,
+    "stdout_bytes": 18269,
+    "stdout_sha256": "34409fae3e79be82cf5948d475847ad1ede5f3349a04422a0cd30ab0d10cc404",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "asset-provenance.json",
+    "argv": [
+      "curl",
+      "--fail",
+      "--location",
+      "--silent",
+      "--show-error",
+      "--max-time",
+      "120",
+      "--dump-header",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/logs/asset-provenance.json.headers",
+      "--output",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/download/provenance.json",
+      "--write-out",
+      "%{json}",
+      "https://github.com/cbgroom/wasmcrelease/releases/download/v0.0.24/provenance.json"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 0.9006620839936659,
+    "stdout_bytes": 18239,
+    "stdout_sha256": "d589124f4d276e8cef65507906475a26643c0df52429e94e31e2f8e3fcb1d2cf",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "asset-manifest.json",
+    "argv": [
+      "curl",
+      "--fail",
+      "--location",
+      "--silent",
+      "--show-error",
+      "--max-time",
+      "120",
+      "--dump-header",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/logs/asset-manifest.json.headers",
+      "--output",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/download/manifest.json",
+      "--write-out",
+      "%{json}",
+      "https://github.com/cbgroom/wasmcrelease/releases/download/v0.0.24/manifest.json"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 1.8188251670217142,
+    "stdout_bytes": 18221,
+    "stdout_sha256": "33ae4d1dea7778d5819d13be636c933e59c8a199b1195d481077c21f058ac38d",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "asset-RELEASE-ASSET-SHA256SUMS",
+    "argv": [
+      "curl",
+      "--fail",
+      "--location",
+      "--silent",
+      "--show-error",
+      "--max-time",
+      "120",
+      "--dump-header",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/logs/asset-RELEASE-ASSET-SHA256SUMS.headers",
+      "--output",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/download/RELEASE-ASSET-SHA256SUMS",
+      "--write-out",
+      "%{json}",
+      "https://github.com/cbgroom/wasmcrelease/releases/download/v0.0.24/RELEASE-ASSET-SHA256SUMS"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 0.7127929590060376,
+    "stdout_bytes": 18302,
+    "stdout_sha256": "95bfa3c8b0892c6e2751d4f409dc630fa1fc7b9de850ffe406c77b6e60080d42",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "asset-release.json",
+    "argv": [
+      "curl",
+      "--fail",
+      "--location",
+      "--silent",
+      "--show-error",
+      "--max-time",
+      "120",
+      "--dump-header",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/logs/asset-release.json.headers",
+      "--output",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/download/release.json",
+      "--write-out",
+      "%{json}",
+      "https://github.com/cbgroom/wasmcrelease/releases/download/v0.0.24/release.json"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 0.7092717919731513,
+    "stdout_bytes": 18214,
+    "stdout_sha256": "ed376a1e25f87f2e847a10d40986da85cd0df4caf8923d9d8d6732b2c2c96b29",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "asset-SHA256SUMS",
+    "argv": [
+      "curl",
+      "--fail",
+      "--location",
+      "--silent",
+      "--show-error",
+      "--max-time",
+      "120",
+      "--dump-header",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/logs/asset-SHA256SUMS.headers",
+      "--output",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/download/SHA256SUMS",
+      "--write-out",
+      "%{json}",
+      "https://github.com/cbgroom/wasmcrelease/releases/download/v0.0.24/SHA256SUMS"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 1.041813749994617,
+    "stdout_bytes": 18204,
+    "stdout_sha256": "fe5e45279e833584cff9a995356ac72aaff1e0a86d66851d31d0cdac302051b6",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "asset-wasmc-v0.0.24-aarch64-unknown-linux-gnu.tar.gz",
+    "argv": [
+      "curl",
+      "--fail",
+      "--location",
+      "--silent",
+      "--show-error",
+      "--max-time",
+      "120",
+      "--dump-header",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/logs/asset-wasmc-v0.0.24-aarch64-unknown-linux-gnu.tar.gz.headers",
+      "--output",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/download/wasmc-v0.0.24-aarch64-unknown-linux-gnu.tar.gz",
+      "--write-out",
+      "%{json}",
+      "https://github.com/cbgroom/wasmcrelease/releases/download/v0.0.24/wasmc-v0.0.24-aarch64-unknown-linux-gnu.tar.gz"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 2.4024524999549612,
+    "stdout_bytes": 18458,
+    "stdout_sha256": "eb486d3736140cf2807f20bbf331fb6d4b15dba97e4bebfd979d45b06a9d47c2",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "asset-wasmc-v0.0.24-x86_64-unknown-linux-gnu.tar.gz",
+    "argv": [
+      "curl",
+      "--fail",
+      "--location",
+      "--silent",
+      "--show-error",
+      "--max-time",
+      "120",
+      "--dump-header",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/logs/asset-wasmc-v0.0.24-x86_64-unknown-linux-gnu.tar.gz.headers",
+      "--output",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/download/wasmc-v0.0.24-x86_64-unknown-linux-gnu.tar.gz",
+      "--write-out",
+      "%{json}",
+      "https://github.com/cbgroom/wasmcrelease/releases/download/v0.0.24/wasmc-v0.0.24-x86_64-unknown-linux-gnu.tar.gz"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 1.2093522499781102,
+    "stdout_bytes": 18447,
+    "stdout_sha256": "f3ef9abe9a1cbd548443619a7466402da3cdf3fc7343fc321e3cc1ef082c8df5",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "asset-wasmc-v0.0.24-x86_64-apple-darwin.tar.gz",
+    "argv": [
+      "curl",
+      "--fail",
+      "--location",
+      "--silent",
+      "--show-error",
+      "--max-time",
+      "120",
+      "--dump-header",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/logs/asset-wasmc-v0.0.24-x86_64-apple-darwin.tar.gz.headers",
+      "--output",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/download/wasmc-v0.0.24-x86_64-apple-darwin.tar.gz",
+      "--write-out",
+      "%{json}",
+      "https://github.com/cbgroom/wasmcrelease/releases/download/v0.0.24/wasmc-v0.0.24-x86_64-apple-darwin.tar.gz"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 13.017198625020683,
+    "stdout_bytes": 18416,
+    "stdout_sha256": "089ffd7bc10387c332072e242b2f07e73d2566772ab77d5102ada25c6d29f44c",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "asset-wasmc.mjs",
+    "argv": [
+      "curl",
+      "--fail",
+      "--location",
+      "--silent",
+      "--show-error",
+      "--max-time",
+      "120",
+      "--dump-header",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/logs/asset-wasmc.mjs.headers",
+      "--output",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/download/wasmc.mjs",
+      "--write-out",
+      "%{json}",
+      "https://github.com/cbgroom/wasmcrelease/releases/download/v0.0.24/wasmc.mjs"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 1.086347833974287,
+    "stdout_bytes": 18199,
+    "stdout_sha256": "2526de06524d5fe951e36170178189a61edb89c4cfbd20853b892d32c7172292",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "asset-wasmc-v0.0.24-aarch64-pc-windows-msvc.zip",
+    "argv": [
+      "curl",
+      "--fail",
+      "--location",
+      "--silent",
+      "--show-error",
+      "--max-time",
+      "120",
+      "--dump-header",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/logs/asset-wasmc-v0.0.24-aarch64-pc-windows-msvc.zip.headers",
+      "--output",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/download/wasmc-v0.0.24-aarch64-pc-windows-msvc.zip",
+      "--write-out",
+      "%{json}",
+      "https://github.com/cbgroom/wasmcrelease/releases/download/v0.0.24/wasmc-v0.0.24-aarch64-pc-windows-msvc.zip"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 14.495043125003576,
+    "stdout_bytes": 18423,
+    "stdout_sha256": "5c1d14a6540005ec1386886bbf5efbaf2d461388c8b511a373937383eaef439b",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "asset-wasmc-v0.0.24-aarch64-apple-darwin.tar.gz",
+    "argv": [
+      "curl",
+      "--fail",
+      "--location",
+      "--silent",
+      "--show-error",
+      "--max-time",
+      "120",
+      "--dump-header",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/logs/asset-wasmc-v0.0.24-aarch64-apple-darwin.tar.gz.headers",
+      "--output",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/download/wasmc-v0.0.24-aarch64-apple-darwin.tar.gz",
+      "--write-out",
+      "%{json}",
+      "https://github.com/cbgroom/wasmcrelease/releases/download/v0.0.24/wasmc-v0.0.24-aarch64-apple-darwin.tar.gz"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 15.370725792017765,
+    "stdout_bytes": 18427,
+    "stdout_sha256": "619499348b0b4d3484eb4193fc7e181e822a5e7ffb7d2ffc4784068fc6de2cef",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "asset-wasmc_compiler.wasm",
+    "argv": [
+      "curl",
+      "--fail",
+      "--location",
+      "--silent",
+      "--show-error",
+      "--max-time",
+      "120",
+      "--dump-header",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/logs/asset-wasmc_compiler.wasm.headers",
+      "--output",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/download/wasmc_compiler.wasm",
+      "--write-out",
+      "%{json}",
+      "https://github.com/cbgroom/wasmcrelease/releases/download/v0.0.24/wasmc_compiler.wasm"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 1.0295562909450382,
+    "stdout_bytes": 18273,
+    "stdout_sha256": "1b8cadf9f2c1f1a84294e489e434d67bf6ea842dfbb6019ca870a937d15816f2",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "asset-wasmcrelease-v0.0.24.tar.gz",
+    "argv": [
+      "curl",
+      "--fail",
+      "--location",
+      "--silent",
+      "--show-error",
+      "--max-time",
+      "120",
+      "--dump-header",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/logs/asset-wasmcrelease-v0.0.24.tar.gz.headers",
+      "--output",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/download/wasmcrelease-v0.0.24.tar.gz",
+      "--write-out",
+      "%{json}",
+      "https://github.com/cbgroom/wasmcrelease/releases/download/v0.0.24/wasmcrelease-v0.0.24.tar.gz"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 2.134543832973577,
+    "stdout_bytes": 18327,
+    "stdout_sha256": "b7715acdb932098712fd18030ba356d151c8110d66f6959b123839652af7fc1f",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "asset-wasmc-v0.0.24-x86_64-pc-windows-msvc.zip",
+    "argv": [
+      "curl",
+      "--fail",
+      "--location",
+      "--silent",
+      "--show-error",
+      "--max-time",
+      "120",
+      "--dump-header",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/logs/asset-wasmc-v0.0.24-x86_64-pc-windows-msvc.zip.headers",
+      "--output",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/download/wasmc-v0.0.24-x86_64-pc-windows-msvc.zip",
+      "--write-out",
+      "%{json}",
+      "https://github.com/cbgroom/wasmcrelease/releases/download/v0.0.24/wasmc-v0.0.24-x86_64-pc-windows-msvc.zip"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 15.898323374975007,
+    "stdout_bytes": 18416,
+    "stdout_sha256": "23f1f6958ceb0551b0813dcf8fdd26ed32194e812aec937d1b7192e9e6787103",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "asset-wasmc.global.js",
+    "argv": [
+      "curl",
+      "--fail",
+      "--location",
+      "--silent",
+      "--show-error",
+      "--max-time",
+      "120",
+      "--dump-header",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/logs/asset-wasmc.global.js.headers",
+      "--output",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/download/wasmc.global.js",
+      "--write-out",
+      "%{json}",
+      "https://github.com/cbgroom/wasmcrelease/releases/download/v0.0.24/wasmc.global.js"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 13.160212958988268,
+    "stdout_bytes": 18241,
+    "stdout_sha256": "8d0cdabef0269c23abc0b704e00d10cafa90b1cc7682f2e69f6235c80675cc80",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "git-24",
+    "argv": [
+      "git",
+      "-C",
+      "/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261022-v024-final-prod-rehearsal",
+      "show",
+      "c49933e0263ecac3fe085b6342a6508bfd7f2374:channels/candidates/0.0.24.json"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 0.018809625005815178,
+    "stdout_bytes": 442526,
+    "stdout_sha256": "5607113f2ca3c389fd50bc3ba9022905c50f12b632434c3d872a9d1276ecbccb",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "git-25",
+    "argv": [
+      "git",
+      "-C",
+      "/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261022-v024-final-prod-rehearsal",
+      "show",
+      "c49933e0263ecac3fe085b6342a6508bfd7f2374:current/compiler-release.json"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 0.014113042037934065,
+    "stdout_bytes": 31661,
+    "stdout_sha256": "bed0d11c8dcbfc1f72d444c6dc9c21c50583874e52da03657fe8c54949f20f0c",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "git-26",
+    "argv": [
+      "git",
+      "-C",
+      "/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261022-v024-final-prod-rehearsal",
+      "show",
+      "c49933e0263ecac3fe085b6342a6508bfd7f2374:manifest.json"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 0.01422145904507488,
+    "stdout_bytes": 488341,
+    "stdout_sha256": "dae654ab6d791c820eaa1d4827acfb1353c974447f70d5018072f1ae813a65c4",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "git-27",
+    "argv": [
+      "git",
+      "-C",
+      "/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261022-v024-final-prod-rehearsal",
+      "show",
+      "c49933e0263ecac3fe085b6342a6508bfd7f2374:provenance.json"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 0.013210417004302144,
+    "stdout_bytes": 501530,
+    "stdout_sha256": "0e282f6104cbad2d1e321023855cba784630edefff8aaa3d26a15b35cc29bf19",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "git-28",
+    "argv": [
+      "git",
+      "-C",
+      "/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261022-v024-final-prod-rehearsal",
+      "show",
+      "c49933e0263ecac3fe085b6342a6508bfd7f2374:current/qualification.json"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 0.011768208001740277,
+    "stdout_bytes": 9598,
+    "stdout_sha256": "d52a6e89dc638b435064f5002d55693456294bcfbb6ddf9104bbbdb4eedc2e7d",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "git-29",
+    "argv": [
+      "git",
+      "-C",
+      "/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261022-v024-final-prod-rehearsal",
+      "show",
+      "c49933e0263ecac3fe085b6342a6508bfd7f2374:release.json"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 0.012024625029880553,
+    "stdout_bytes": 5487,
+    "stdout_sha256": "cbc7af4586cba8896e9e03a68b0cf30aa7ca13614c06f7ee1db9a3b5577b2099",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "git-30",
+    "argv": [
+      "git",
+      "-C",
+      "/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261022-v024-final-prod-rehearsal",
+      "show",
+      "c49933e0263ecac3fe085b6342a6508bfd7f2374:SHA256SUMS"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 0.012524624995421618,
+    "stdout_bytes": 465004,
+    "stdout_sha256": "ecdd3336a13b1b9a28779626866250baa4b10024bff068d3485e7aaae5fedfec",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "git-31",
+    "argv": [
+      "git",
+      "-C",
+      "/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261022-v024-final-prod-rehearsal",
+      "show",
+      "c49933e0263ecac3fe085b6342a6508bfd7f2374:current/wasmc.global.js"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 0.021851541998330504,
+    "stdout_bytes": 6146674,
+    "stdout_sha256": "248e4628d7c442f079fde4cbdcec164586811978ed5eccd1340714569bddd495",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "git-32",
+    "argv": [
+      "git",
+      "-C",
+      "/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261022-v024-final-prod-rehearsal",
+      "show",
+      "c49933e0263ecac3fe085b6342a6508bfd7f2374:current/wasmc.mjs"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 0.022657624969724566,
+    "stdout_bytes": 6148513,
+    "stdout_sha256": "21ea95ad6a96fd3c612d76b0926b1ffe3dde1a16248819cef0c5b9adbbf7f17c",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "git-33",
+    "argv": [
+      "git",
+      "-C",
+      "/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261022-v024-final-prod-rehearsal",
+      "show",
+      "c49933e0263ecac3fe085b6342a6508bfd7f2374:current/wasmc_compiler.wasm"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 0.017182666982989758,
+    "stdout_bytes": 1956578,
+    "stdout_sha256": "c78816376228b6091599845c6a9a531eb76f949fe419655c012ec30c05f75832",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "git-34",
+    "argv": [
+      "git",
+      "-C",
+      "/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261022-v024-final-prod-rehearsal",
+      "ls-tree",
+      "-rz",
+      "--full-tree",
+      "c49933e0263ecac3fe085b6342a6508bfd7f2374"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 0.02565012499690056,
+    "stdout_bytes": 420400,
+    "stdout_sha256": "74034b259816a71d65a0864798ea08a01c05ba2c1da099944bf326cec56623ea",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "node-extract-sourcefree",
+    "argv": [
+      "tar",
+      "-xzf",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/download/wasmcrelease-v0.0.24.tar.gz",
+      "--strip-components",
+      "1",
+      "-C",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/sourcefree-consumers/node"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 0.6036600840161555,
+    "stdout_bytes": 0,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "node-version",
+    "argv": [
+      "node",
+      "--version"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 0.07656416698591784,
+    "stdout_bytes": 8,
+    "stdout_sha256": "ed7cbf7c64695c4f9ea33d3b2516ce5fdb81f81c8697af17e2f326fda69293ad",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "node-candidate-reopen",
+    "argv": [
+      "node",
+      "scripts/release-candidate.mjs",
+      "verify",
+      "channels/candidates/0.0.24.json",
+      "--candidate-sha256",
+      "5607113f2ca3c389fd50bc3ba9022905c50f12b632434c3d872a9d1276ecbccb"
+    ],
+    "cwd": "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/sourcefree-consumers/node",
+    "exit": 0,
+    "elapsed_seconds": 1.6508427080116235,
+    "stdout_bytes": 122,
+    "stdout_sha256": "2165485324a43f871cfff0c4889704e49fdd4538bb63607f198779f863001c36",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "node-whole-integrity",
+    "argv": [
+      "node",
+      "scripts/validate-integrity.mjs"
+    ],
+    "cwd": "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/sourcefree-consumers/node",
+    "exit": 0,
+    "elapsed_seconds": 4.060852249967866,
+    "stdout_bytes": 100,
+    "stdout_sha256": "38a29a080080248f33893f589d28dd03bd5ed98a203cc3432fa28c961215b311",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "node-self-test",
+    "argv": [
+      "node",
+      "bootstrap.mjs",
+      "self-test"
+    ],
+    "cwd": "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/sourcefree-consumers/node/runtime/wasmc-runtime-v0",
+    "exit": 0,
+    "elapsed_seconds": 0.03769812500104308,
+    "stdout_bytes": 140,
+    "stdout_sha256": "e3d5a3cc64e65b1658a8d11fd7a47c52d419f62ccec1caa20d0092a528a8c51a",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "node-compile",
+    "argv": [
+      "node",
+      "bootstrap.mjs",
+      "compile",
+      "--input",
+      "examples/add.wasmc",
+      "--output",
+      "examples/formal-node.wasm"
+    ],
+    "cwd": "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/sourcefree-consumers/node/runtime/wasmc-runtime-v0",
+    "exit": 0,
+    "elapsed_seconds": 0.034251000033691525,
+    "stdout_bytes": 183,
+    "stdout_sha256": "f0f9cadc4ae85d11925481ccb1d2441196b122f92ff7a5351fab907f690877fd",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "node-runtime-oracle",
+    "argv": [
+      "node",
+      "../../scripts/assert-runtime-output.mjs",
+      "examples/formal-node.wasm"
+    ],
+    "cwd": "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/sourcefree-consumers/node/runtime/wasmc-runtime-v0",
+    "exit": 0,
+    "elapsed_seconds": 0.024276832991745323,
+    "stdout_bytes": 60,
+    "stdout_sha256": "b8a9e1923777acafe4164083c1eeb13195ca866e596de8a4244abe79be66022e",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "node-current-corpus",
+    "argv": [
+      "node",
+      "scripts/validate-current.mjs"
+    ],
+    "cwd": "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/sourcefree-consumers/node",
+    "exit": 0,
+    "elapsed_seconds": 0.9565372919896618,
+    "stdout_bytes": 212,
+    "stdout_sha256": "20978503a0f540acc120d4764007e158d6ab6f9b247357d3a66b40497fa048b2",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "node-private-helpers",
+    "argv": [
+      "node",
+      "scripts/test-current-private-helpers.mjs"
+    ],
+    "cwd": "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/sourcefree-consumers/node",
+    "exit": 0,
+    "elapsed_seconds": 0.19909912499133497,
+    "stdout_bytes": 255,
+    "stdout_sha256": "a8aab60b48a6e49b910c296ffa7d49794e22c3cd417722bbd7dcf35679da15bf",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "node-Std",
+    "argv": [
+      "node",
+      "examples/current/standard.mjs"
+    ],
+    "cwd": "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/sourcefree-consumers/node",
+    "exit": 0,
+    "elapsed_seconds": 0.07847558299545199,
+    "stdout_bytes": 280,
+    "stdout_sha256": "d13a7179325195359edea3ffede25a5f6cda54d7be0e55a6db4849b3d122ef05",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "bun-extract-sourcefree",
+    "argv": [
+      "tar",
+      "-xzf",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/download/wasmcrelease-v0.0.24.tar.gz",
+      "--strip-components",
+      "1",
+      "-C",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/sourcefree-consumers/bun"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 0.5536574580473825,
+    "stdout_bytes": 0,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "bun-version",
+    "argv": [
+      "bun",
+      "--version"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 0.012211875000502914,
+    "stdout_bytes": 7,
+    "stdout_sha256": "56b0485099b6c5427d3b68c042fd05b632d5e52e924c5064473389812227164c",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "bun-self-test",
+    "argv": [
+      "bun",
+      "bootstrap.mjs",
+      "self-test"
+    ],
+    "cwd": "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/sourcefree-consumers/bun/runtime/wasmc-runtime-v0",
+    "exit": 0,
+    "elapsed_seconds": 0.11353937501553446,
+    "stdout_bytes": 139,
+    "stdout_sha256": "495fbb0995201ac3e95e2e1f0dc52c06b9ad8688f15d8cf370eabef9c7b66bed",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "bun-compile",
+    "argv": [
+      "bun",
+      "bootstrap.mjs",
+      "compile",
+      "--input",
+      "examples/add.wasmc",
+      "--output",
+      "examples/formal-bun.wasm"
+    ],
+    "cwd": "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/sourcefree-consumers/bun/runtime/wasmc-runtime-v0",
+    "exit": 0,
+    "elapsed_seconds": 0.02018554200185463,
+    "stdout_bytes": 181,
+    "stdout_sha256": "d49219590919c63c0a5c7a206e418ee2f8b23a8e3b73cefdf719af41472ec38f",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "bun-runtime-oracle",
+    "argv": [
+      "bun",
+      "../../scripts/assert-runtime-output.mjs",
+      "examples/formal-bun.wasm"
+    ],
+    "cwd": "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/sourcefree-consumers/bun/runtime/wasmc-runtime-v0",
+    "exit": 0,
+    "elapsed_seconds": 0.012340166023932397,
+    "stdout_bytes": 60,
+    "stdout_sha256": "b8a9e1923777acafe4164083c1eeb13195ca866e596de8a4244abe79be66022e",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "bun-current-corpus",
+    "argv": [
+      "bun",
+      "scripts/validate-current.mjs"
+    ],
+    "cwd": "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/sourcefree-consumers/bun",
+    "exit": 0,
+    "elapsed_seconds": 0.5999587919795886,
+    "stdout_bytes": 211,
+    "stdout_sha256": "44b4968a0933ee966c5ab37944038472575868f1231101e3c359e5a4fdc87c33",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "bun-private-helpers",
+    "argv": [
+      "bun",
+      "scripts/test-current-private-helpers.mjs"
+    ],
+    "cwd": "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/sourcefree-consumers/bun",
+    "exit": 0,
+    "elapsed_seconds": 0.12419312499696389,
+    "stdout_bytes": 255,
+    "stdout_sha256": "a8aab60b48a6e49b910c296ffa7d49794e22c3cd417722bbd7dcf35679da15bf",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "bun-Std",
+    "argv": [
+      "bun",
+      "examples/current/standard.mjs"
+    ],
+    "cwd": "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/sourcefree-consumers/bun",
+    "exit": 0,
+    "elapsed_seconds": 0.08019033295568079,
+    "stdout_bytes": 280,
+    "stdout_sha256": "d13a7179325195359edea3ffede25a5f6cda54d7be0e55a6db4849b3d122ef05",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "deno-extract-sourcefree",
+    "argv": [
+      "tar",
+      "-xzf",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/download/wasmcrelease-v0.0.24.tar.gz",
+      "--strip-components",
+      "1",
+      "-C",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/sourcefree-consumers/deno"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 0.5620370000251569,
+    "stdout_bytes": 0,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "deno-version",
+    "argv": [
+      "deno",
+      "--version"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 0.03296841698465869,
+    "stdout_bytes": 88,
+    "stdout_sha256": "54acb47c32992730653db6160034e34721230f105d9917d2d868039a73d00039",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "deno-self-test",
+    "argv": [
+      "deno",
+      "run",
+      "--allow-read",
+      "--allow-write",
+      "--allow-run",
+      "--allow-env",
+      "bootstrap.mjs",
+      "self-test"
+    ],
+    "cwd": "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/sourcefree-consumers/deno/runtime/wasmc-runtime-v0",
+    "exit": 0,
+    "elapsed_seconds": 0.12908129097195342,
+    "stdout_bytes": 140,
+    "stdout_sha256": "61bbbcef7655a2678ab4d3cfde78c4610a6129897beac0de08c4387e17cec4cd",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "deno-compile",
+    "argv": [
+      "deno",
+      "run",
+      "--allow-read",
+      "--allow-write",
+      "--allow-run",
+      "--allow-env",
+      "bootstrap.mjs",
+      "compile",
+      "--input",
+      "examples/add.wasmc",
+      "--output",
+      "examples/formal-deno.wasm"
+    ],
+    "cwd": "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/sourcefree-consumers/deno/runtime/wasmc-runtime-v0",
+    "exit": 0,
+    "elapsed_seconds": 0.02626900002360344,
+    "stdout_bytes": 183,
+    "stdout_sha256": "748e2be3b95d4875f9a46b022eda9c2aab95aaee54479d11b59d4d490882daea",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "deno-runtime-oracle",
+    "argv": [
+      "deno",
+      "run",
+      "--allow-read",
+      "--allow-write",
+      "--allow-run",
+      "--allow-env",
+      "../../scripts/assert-runtime-output.mjs",
+      "examples/formal-deno.wasm"
+    ],
+    "cwd": "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/sourcefree-consumers/deno/runtime/wasmc-runtime-v0",
+    "exit": 0,
+    "elapsed_seconds": 0.01243804203113541,
+    "stdout_bytes": 60,
+    "stdout_sha256": "b8a9e1923777acafe4164083c1eeb13195ca866e596de8a4244abe79be66022e",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "deno-current-corpus",
+    "argv": [
+      "deno",
+      "run",
+      "--allow-read",
+      "--allow-write",
+      "--allow-run",
+      "--allow-env",
+      "scripts/validate-current.mjs"
+    ],
+    "cwd": "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/sourcefree-consumers/deno",
+    "exit": 0,
+    "elapsed_seconds": 0.5784513750113547,
+    "stdout_bytes": 212,
+    "stdout_sha256": "8fd5607fa5ede44897d664fd00f463216fe550508ea2ed5af109533ee87ce048",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "deno-private-helpers",
+    "argv": [
+      "deno",
+      "run",
+      "--allow-read",
+      "--allow-write",
+      "--allow-run",
+      "--allow-env",
+      "scripts/test-current-private-helpers.mjs"
+    ],
+    "cwd": "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/sourcefree-consumers/deno",
+    "exit": 0,
+    "elapsed_seconds": 0.12952366605168208,
+    "stdout_bytes": 255,
+    "stdout_sha256": "a8aab60b48a6e49b910c296ffa7d49794e22c3cd417722bbd7dcf35679da15bf",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "deno-Std",
+    "argv": [
+      "deno",
+      "run",
+      "--allow-read",
+      "--allow-write",
+      "--allow-run",
+      "--allow-env",
+      "examples/current/standard.mjs"
+    ],
+    "cwd": "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/sourcefree-consumers/deno",
+    "exit": 0,
+    "elapsed_seconds": 0.07668679096968845,
+    "stdout_bytes": 280,
+    "stdout_sha256": "d13a7179325195359edea3ffede25a5f6cda54d7be0e55a6db4849b3d122ef05",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "extract-native-MacARM",
+    "argv": [
+      "tar",
+      "-xzf",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/download/wasmc-v0.0.24-aarch64-apple-darwin.tar.gz",
+      "-C",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/downloaded-native-MacARM"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 0.02695212495746091,
+    "stdout_bytes": 0,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "native-MacARM-existing-verify",
+    "argv": [
+      "node",
+      "scripts/native-package.mjs",
+      "verify",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/downloaded-native-MacARM/wasmc-v0.0.24-aarch64-apple-darwin",
+      "aarch64-apple-darwin",
+      "4d23975cfb9d4206bea89b2ea1d0acea1657e8d8"
+    ],
+    "cwd": "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/sourcefree-consumers/node",
+    "exit": 0,
+    "elapsed_seconds": 1.8159634580370039,
+    "stdout_bytes": 281,
+    "stdout_sha256": "1a9cd00353262f81be8b11c2b7351dc574626aeb971304d04d6df0adabc1687b",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "git-63",
+    "argv": [
+      "git",
+      "-C",
+      "/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261022-v024-final-prod-rehearsal",
+      "show",
+      "c49933e0263ecac3fe085b6342a6508bfd7f2374:release.json"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 0.017845458001829684,
+    "stdout_bytes": 5487,
+    "stdout_sha256": "cbc7af4586cba8896e9e03a68b0cf30aa7ca13614c06f7ee1db9a3b5577b2099",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "github-raw-release.json",
+    "argv": [
+      "curl",
+      "--fail",
+      "--location",
+      "--silent",
+      "--show-error",
+      "--max-time",
+      "120",
+      "--dump-header",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/logs/github-raw-release.json.headers",
+      "--output",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/public-web/github-raw/release.json",
+      "--write-out",
+      "%{json}",
+      "https://raw.githubusercontent.com/cbgroom/wasmcrelease/v0.0.24/release.json"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 0.4199444170226343,
+    "stdout_bytes": 16565,
+    "stdout_sha256": "518df200f84e17a225bcdc08f2dc162fb4b37d58c9eff16526e761952d1d9499",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "git-65",
+    "argv": [
+      "git",
+      "-C",
+      "/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261022-v024-final-prod-rehearsal",
+      "show",
+      "c49933e0263ecac3fe085b6342a6508bfd7f2374:package-index.json"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 0.020611707994248718,
+    "stdout_bytes": 3954,
+    "stdout_sha256": "9dfd58e067d652ab26d3dd17ad858965708632eda03cb7b67526a4d0143d9dbe",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "github-raw-package-index.json",
+    "argv": [
+      "curl",
+      "--fail",
+      "--location",
+      "--silent",
+      "--show-error",
+      "--max-time",
+      "120",
+      "--dump-header",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/logs/github-raw-package-index.json.headers",
+      "--output",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/public-web/github-raw/package-index.json",
+      "--write-out",
+      "%{json}",
+      "https://raw.githubusercontent.com/cbgroom/wasmcrelease/v0.0.24/package-index.json"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 0.4228291250183247,
+    "stdout_bytes": 16594,
+    "stdout_sha256": "91a65417b47d2e18cbd94c9f6b37a9af770a016bc8d7cf1a3d7dc3826718780f",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "git-67",
+    "argv": [
+      "git",
+      "-C",
+      "/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261022-v024-final-prod-rehearsal",
+      "show",
+      "c49933e0263ecac3fe085b6342a6508bfd7f2374:channels/prod.json"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 0.019471874984446913,
+    "stdout_bytes": 10304,
+    "stdout_sha256": "78e32c80c5cfb47dada7b16a7c30f0a381b3e6239807f9446ef5d93fecb3b1e3",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "github-raw-channels_prod.json",
+    "argv": [
+      "curl",
+      "--fail",
+      "--location",
+      "--silent",
+      "--show-error",
+      "--max-time",
+      "120",
+      "--dump-header",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/logs/github-raw-channels_prod.json.headers",
+      "--output",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/public-web/github-raw/channels/prod.json",
+      "--write-out",
+      "%{json}",
+      "https://raw.githubusercontent.com/cbgroom/wasmcrelease/v0.0.24/channels/prod.json"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 0.3764000829542056,
+    "stdout_bytes": 16596,
+    "stdout_sha256": "43a50092a76c1fb7b1e38aba896ed0895b590be4ad538103ac01f4adb0125adc",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "git-69",
+    "argv": [
+      "git",
+      "-C",
+      "/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261022-v024-final-prod-rehearsal",
+      "show",
+      "c49933e0263ecac3fe085b6342a6508bfd7f2374:manifest.json"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 0.019259916967712343,
+    "stdout_bytes": 488341,
+    "stdout_sha256": "dae654ab6d791c820eaa1d4827acfb1353c974447f70d5018072f1ae813a65c4",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "github-raw-manifest.json",
+    "argv": [
+      "curl",
+      "--fail",
+      "--location",
+      "--silent",
+      "--show-error",
+      "--max-time",
+      "120",
+      "--dump-header",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/logs/github-raw-manifest.json.headers",
+      "--output",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/public-web/github-raw/manifest.json",
+      "--write-out",
+      "%{json}",
+      "https://raw.githubusercontent.com/cbgroom/wasmcrelease/v0.0.24/manifest.json"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 1.6277964999899268,
+    "stdout_bytes": 16573,
+    "stdout_sha256": "1fe034a13710b5a6ef786ffd3b86ecb875c3afaa3259b20ddfb34fef3fab0dcc",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "git-71",
+    "argv": [
+      "git",
+      "-C",
+      "/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261022-v024-final-prod-rehearsal",
+      "show",
+      "c49933e0263ecac3fe085b6342a6508bfd7f2374:current/wasmc.mjs"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 0.029308750003110617,
+    "stdout_bytes": 6148513,
+    "stdout_sha256": "21ea95ad6a96fd3c612d76b0926b1ffe3dde1a16248819cef0c5b9adbbf7f17c",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "github-raw-current_wasmc.mjs",
+    "argv": [
+      "curl",
+      "--fail",
+      "--location",
+      "--silent",
+      "--show-error",
+      "--max-time",
+      "120",
+      "--dump-header",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/logs/github-raw-current_wasmc.mjs.headers",
+      "--output",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/public-web/github-raw/current/wasmc.mjs",
+      "--write-out",
+      "%{json}",
+      "https://raw.githubusercontent.com/cbgroom/wasmcrelease/v0.0.24/current/wasmc.mjs"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 1.0845746250124648,
+    "stdout_bytes": 16595,
+    "stdout_sha256": "f03c588952373ffb7d66873b03109371da0302abebb12a0cd381c6daf349b28d",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "git-73",
+    "argv": [
+      "git",
+      "-C",
+      "/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261022-v024-final-prod-rehearsal",
+      "show",
+      "c49933e0263ecac3fe085b6342a6508bfd7f2374:current/wasmc_compiler.wasm"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 0.02000729099381715,
+    "stdout_bytes": 1956578,
+    "stdout_sha256": "c78816376228b6091599845c6a9a531eb76f949fe419655c012ec30c05f75832",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "github-raw-current_wasmc_compiler.wasm",
+    "argv": [
+      "curl",
+      "--fail",
+      "--location",
+      "--silent",
+      "--show-error",
+      "--max-time",
+      "120",
+      "--dump-header",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/logs/github-raw-current_wasmc_compiler.wasm.headers",
+      "--output",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/public-web/github-raw/current/wasmc_compiler.wasm",
+      "--write-out",
+      "%{json}",
+      "https://raw.githubusercontent.com/cbgroom/wasmcrelease/v0.0.24/current/wasmc_compiler.wasm"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 0.8487970829592086,
+    "stdout_bytes": 16644,
+    "stdout_sha256": "2c8881446f26c32a3ce2cd0a1c738380152f94dea0ba08274d0cd90c29e28049",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "git-75",
+    "argv": [
+      "git",
+      "-C",
+      "/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261022-v024-final-prod-rehearsal",
+      "show",
+      "c49933e0263ecac3fe085b6342a6508bfd7f2374:current/compiler-release.json"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 0.019376915995962918,
+    "stdout_bytes": 31661,
+    "stdout_sha256": "bed0d11c8dcbfc1f72d444c6dc9c21c50583874e52da03657fe8c54949f20f0c",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "github-raw-current_compiler-release.json",
+    "argv": [
+      "curl",
+      "--fail",
+      "--location",
+      "--silent",
+      "--show-error",
+      "--max-time",
+      "120",
+      "--dump-header",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/logs/github-raw-current_compiler-release.json.headers",
+      "--output",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/public-web/github-raw/current/compiler-release.json",
+      "--write-out",
+      "%{json}",
+      "https://raw.githubusercontent.com/cbgroom/wasmcrelease/v0.0.24/current/compiler-release.json"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 0.4291296669980511,
+    "stdout_bytes": 16651,
+    "stdout_sha256": "e795fca3d6e0668f55ab227f29b50d41ba89d258b7d84bd9fde68e682be41f49",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "git-77",
+    "argv": [
+      "git",
+      "-C",
+      "/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261022-v024-final-prod-rehearsal",
+      "show",
+      "c49933e0263ecac3fe085b6342a6508bfd7f2374:current/lib_core.wasm"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 0.026114457985386252,
+    "stdout_bytes": 2640152,
+    "stdout_sha256": "7cd4f0c60536f1825da3fed9d525a43ee9724250203a261f298505a503e9bcbf",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "github-raw-current_lib_core.wasm",
+    "argv": [
+      "curl",
+      "--fail",
+      "--location",
+      "--silent",
+      "--show-error",
+      "--max-time",
+      "120",
+      "--dump-header",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/logs/github-raw-current_lib_core.wasm.headers",
+      "--output",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/public-web/github-raw/current/lib_core.wasm",
+      "--write-out",
+      "%{json}",
+      "https://raw.githubusercontent.com/cbgroom/wasmcrelease/v0.0.24/current/lib_core.wasm"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 0.823616250010673,
+    "stdout_bytes": 16614,
+    "stdout_sha256": "6209f721e603fa81b23616a2158be9819e327e05f670e632200037881908d0c5",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "github-raw-node-default-facade",
+    "argv": [
+      "node",
+      "/private/tmp/wasmc-v024-formal-readback-20261022/facade-consumer.mjs",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/public-web/github-raw/current/wasmc.mjs",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/sourcefree-consumers/node/examples/current/corpus.json"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 0.14154287497512996,
+    "stdout_bytes": 147,
+    "stdout_sha256": "4c8f2eaf15612ba3d5b24b880d90e510bea42d6ccbcf20407838428c7922862b",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "github-raw-bun-default-facade",
+    "argv": [
+      "bun",
+      "/private/tmp/wasmc-v024-formal-readback-20261022/facade-consumer.mjs",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/public-web/github-raw/current/wasmc.mjs",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/sourcefree-consumers/node/examples/current/corpus.json"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 0.0829684580094181,
+    "stdout_bytes": 146,
+    "stdout_sha256": "ddbcf6b1334e34b4ee110dad6da4a2269ab4afa6ef5009c4d044c51a59ad518b",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "github-raw-deno-default-facade",
+    "argv": [
+      "deno",
+      "run",
+      "--allow-read",
+      "/private/tmp/wasmc-v024-formal-readback-20261022/facade-consumer.mjs",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/public-web/github-raw/current/wasmc.mjs",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/sourcefree-consumers/node/examples/current/corpus.json"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 0.09561004099668935,
+    "stdout_bytes": 147,
+    "stdout_sha256": "ae506a0f9eb9b339fd710c7eae06af6e5e4c7075cb9cca5556fd3940963cd25a",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "git-82",
+    "argv": [
+      "git",
+      "-C",
+      "/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261022-v024-final-prod-rehearsal",
+      "show",
+      "c49933e0263ecac3fe085b6342a6508bfd7f2374:release.json"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 0.0145776669960469,
+    "stdout_bytes": 5487,
+    "stdout_sha256": "cbc7af4586cba8896e9e03a68b0cf30aa7ca13614c06f7ee1db9a3b5577b2099",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "jsdelivr-release.json",
+    "argv": [
+      "curl",
+      "--fail",
+      "--location",
+      "--silent",
+      "--show-error",
+      "--max-time",
+      "120",
+      "--dump-header",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/logs/jsdelivr-release.json.headers",
+      "--output",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/public-web/jsdelivr/release.json",
+      "--write-out",
+      "%{json}",
+      "https://cdn.jsdelivr.net/gh/cbgroom/wasmcrelease@v0.0.24/release.json"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 1.395286000042688,
+    "stdout_bytes": 17813,
+    "stdout_sha256": "34732e60f2467b1b523d5c39a01a89f2dcdb312a861e8b8aa9f26c8d6613e494",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "git-84",
+    "argv": [
+      "git",
+      "-C",
+      "/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261022-v024-final-prod-rehearsal",
+      "show",
+      "c49933e0263ecac3fe085b6342a6508bfd7f2374:package-index.json"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 0.018645000003743917,
+    "stdout_bytes": 3954,
+    "stdout_sha256": "9dfd58e067d652ab26d3dd17ad858965708632eda03cb7b67526a4d0143d9dbe",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "jsdelivr-package-index.json",
+    "argv": [
+      "curl",
+      "--fail",
+      "--location",
+      "--silent",
+      "--show-error",
+      "--max-time",
+      "120",
+      "--dump-header",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/logs/jsdelivr-package-index.json.headers",
+      "--output",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/public-web/jsdelivr/package-index.json",
+      "--write-out",
+      "%{json}",
+      "https://cdn.jsdelivr.net/gh/cbgroom/wasmcrelease@v0.0.24/package-index.json"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 0.5953252500039525,
+    "stdout_bytes": 17843,
+    "stdout_sha256": "e9f9331bdcb4b05185453fb2228c3e44bf7ad8421cc9bd13227c0aa0f6abf102",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "git-86",
+    "argv": [
+      "git",
+      "-C",
+      "/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261022-v024-final-prod-rehearsal",
+      "show",
+      "c49933e0263ecac3fe085b6342a6508bfd7f2374:channels/prod.json"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 0.01911250001285225,
+    "stdout_bytes": 10304,
+    "stdout_sha256": "78e32c80c5cfb47dada7b16a7c30f0a381b3e6239807f9446ef5d93fecb3b1e3",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "jsdelivr-channels_prod.json",
+    "argv": [
+      "curl",
+      "--fail",
+      "--location",
+      "--silent",
+      "--show-error",
+      "--max-time",
+      "120",
+      "--dump-header",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/logs/jsdelivr-channels_prod.json.headers",
+      "--output",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/public-web/jsdelivr/channels/prod.json",
+      "--write-out",
+      "%{json}",
+      "https://cdn.jsdelivr.net/gh/cbgroom/wasmcrelease@v0.0.24/channels/prod.json"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 2.2950560419703834,
+    "stdout_bytes": 17844,
+    "stdout_sha256": "2c7f677824dd473564fbee48cb7cea63dc128bb39ab22686212482ebb84132c5",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "git-88",
+    "argv": [
+      "git",
+      "-C",
+      "/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261022-v024-final-prod-rehearsal",
+      "show",
+      "c49933e0263ecac3fe085b6342a6508bfd7f2374:manifest.json"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 0.020993374986574054,
+    "stdout_bytes": 488341,
+    "stdout_sha256": "dae654ab6d791c820eaa1d4827acfb1353c974447f70d5018072f1ae813a65c4",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "jsdelivr-manifest.json",
+    "argv": [
+      "curl",
+      "--fail",
+      "--location",
+      "--silent",
+      "--show-error",
+      "--max-time",
+      "120",
+      "--dump-header",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/logs/jsdelivr-manifest.json.headers",
+      "--output",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/public-web/jsdelivr/manifest.json",
+      "--write-out",
+      "%{json}",
+      "https://cdn.jsdelivr.net/gh/cbgroom/wasmcrelease@v0.0.24/manifest.json"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 1.4693687499966472,
+    "stdout_bytes": 17822,
+    "stdout_sha256": "7dc1fa4dff35eaa9ecb3fad8ea7f09abc8f6c470373f05a23128ac53b3caf146",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "git-90",
+    "argv": [
+      "git",
+      "-C",
+      "/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261022-v024-final-prod-rehearsal",
+      "show",
+      "c49933e0263ecac3fe085b6342a6508bfd7f2374:current/wasmc.mjs"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 0.028570666967425495,
+    "stdout_bytes": 6148513,
+    "stdout_sha256": "21ea95ad6a96fd3c612d76b0926b1ffe3dde1a16248819cef0c5b9adbbf7f17c",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "jsdelivr-current_wasmc.mjs",
+    "argv": [
+      "curl",
+      "--fail",
+      "--location",
+      "--silent",
+      "--show-error",
+      "--max-time",
+      "120",
+      "--dump-header",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/logs/jsdelivr-current_wasmc.mjs.headers",
+      "--output",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/public-web/jsdelivr/current/wasmc.mjs",
+      "--write-out",
+      "%{json}",
+      "https://cdn.jsdelivr.net/gh/cbgroom/wasmcrelease@v0.0.24/current/wasmc.mjs"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 2.136575457989238,
+    "stdout_bytes": 17850,
+    "stdout_sha256": "d175bbead1c3e7c4dc45edd2bd3b6ead86d6e9f128eca138cad879e9e2f11123",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "git-92",
+    "argv": [
+      "git",
+      "-C",
+      "/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261022-v024-final-prod-rehearsal",
+      "show",
+      "c49933e0263ecac3fe085b6342a6508bfd7f2374:current/wasmc_compiler.wasm"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 0.017199291964061558,
+    "stdout_bytes": 1956578,
+    "stdout_sha256": "c78816376228b6091599845c6a9a531eb76f949fe419655c012ec30c05f75832",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "jsdelivr-current_wasmc_compiler.wasm",
+    "argv": [
+      "curl",
+      "--fail",
+      "--location",
+      "--silent",
+      "--show-error",
+      "--max-time",
+      "120",
+      "--dump-header",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/logs/jsdelivr-current_wasmc_compiler.wasm.headers",
+      "--output",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/public-web/jsdelivr/current/wasmc_compiler.wasm",
+      "--write-out",
+      "%{json}",
+      "https://cdn.jsdelivr.net/gh/cbgroom/wasmcrelease@v0.0.24/current/wasmc_compiler.wasm"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 1.9301156249712221,
+    "stdout_bytes": 17879,
+    "stdout_sha256": "068e54f7051a862d394db3140a3375e7f84a3258fc8006a24b3e86aaab4ee5fe",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "git-94",
+    "argv": [
+      "git",
+      "-C",
+      "/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261022-v024-final-prod-rehearsal",
+      "show",
+      "c49933e0263ecac3fe085b6342a6508bfd7f2374:current/compiler-release.json"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 0.018905250006355345,
+    "stdout_bytes": 31661,
+    "stdout_sha256": "bed0d11c8dcbfc1f72d444c6dc9c21c50583874e52da03657fe8c54949f20f0c",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "jsdelivr-current_compiler-release.json",
+    "argv": [
+      "curl",
+      "--fail",
+      "--location",
+      "--silent",
+      "--show-error",
+      "--max-time",
+      "120",
+      "--dump-header",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/logs/jsdelivr-current_compiler-release.json.headers",
+      "--output",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/public-web/jsdelivr/current/compiler-release.json",
+      "--write-out",
+      "%{json}",
+      "https://cdn.jsdelivr.net/gh/cbgroom/wasmcrelease@v0.0.24/current/compiler-release.json"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 1.6909238749649376,
+    "stdout_bytes": 17900,
+    "stdout_sha256": "18f3c85a4d475d0e494641d4fd05875a69dd2ee182ab1382e1f3db9c4ab846c6",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "git-96",
+    "argv": [
+      "git",
+      "-C",
+      "/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261022-v024-final-prod-rehearsal",
+      "show",
+      "c49933e0263ecac3fe085b6342a6508bfd7f2374:current/lib_core.wasm"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 0.0176868750131689,
+    "stdout_bytes": 2640152,
+    "stdout_sha256": "7cd4f0c60536f1825da3fed9d525a43ee9724250203a261f298505a503e9bcbf",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "jsdelivr-current_lib_core.wasm",
+    "argv": [
+      "curl",
+      "--fail",
+      "--location",
+      "--silent",
+      "--show-error",
+      "--max-time",
+      "120",
+      "--dump-header",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/logs/jsdelivr-current_lib_core.wasm.headers",
+      "--output",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/public-web/jsdelivr/current/lib_core.wasm",
+      "--write-out",
+      "%{json}",
+      "https://cdn.jsdelivr.net/gh/cbgroom/wasmcrelease@v0.0.24/current/lib_core.wasm"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 1.8007095420034602,
+    "stdout_bytes": 17849,
+    "stdout_sha256": "634795d148d936d88706e896785ae196d6fe905d1de1515aa0fe7be85b048c34",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "jsdelivr-node-default-facade",
+    "argv": [
+      "node",
+      "/private/tmp/wasmc-v024-formal-readback-20261022/facade-consumer.mjs",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/public-web/jsdelivr/current/wasmc.mjs",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/sourcefree-consumers/node/examples/current/corpus.json"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 0.1503375829779543,
+    "stdout_bytes": 147,
+    "stdout_sha256": "4c8f2eaf15612ba3d5b24b880d90e510bea42d6ccbcf20407838428c7922862b",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "jsdelivr-bun-default-facade",
+    "argv": [
+      "bun",
+      "/private/tmp/wasmc-v024-formal-readback-20261022/facade-consumer.mjs",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/public-web/jsdelivr/current/wasmc.mjs",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/sourcefree-consumers/node/examples/current/corpus.json"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 0.07923295901855454,
+    "stdout_bytes": 146,
+    "stdout_sha256": "ddbcf6b1334e34b4ee110dad6da4a2269ab4afa6ef5009c4d044c51a59ad518b",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "jsdelivr-deno-default-facade",
+    "argv": [
+      "deno",
+      "run",
+      "--allow-read",
+      "/private/tmp/wasmc-v024-formal-readback-20261022/facade-consumer.mjs",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/public-web/jsdelivr/current/wasmc.mjs",
+      "/private/tmp/wasmc-v024-formal-actual-readback-c499-20261022/sourcefree-consumers/node/examples/current/corpus.json"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 0.09862741699907929,
+    "stdout_bytes": 147,
+    "stdout_sha256": "ae506a0f9eb9b339fd710c7eae06af6e5e4c7075cb9cca5556fd3940963cd25a",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "official-latest-after",
+    "argv": [
+      "gh",
+      "api",
+      "repos/cbgroom/wasmcrelease/releases/latest"
+    ],
+    "cwd": null,
+    "exit": 0,
+    "elapsed_seconds": 0.5745601669768803,
+    "stdout_bytes": 32610,
+    "stdout_sha256": "4ca4c09126b7f51522b79a8270871a030a513955789d7160ca09f032b49e004a",
+    "stderr_bytes": 0,
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+]
