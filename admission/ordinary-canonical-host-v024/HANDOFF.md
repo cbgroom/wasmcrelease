@@ -71,3 +71,22 @@ Next: finishWindows recovery/realdownloadedconsumers, current Lib catalog/SDK/au
 - Exact small raw receipts are composition-product-controls.json (SHA7f6049ff2ac4e1febca0c38fbedb1a929e6c4944d8aa1148c818dec0c00689c1) and composition-product-regressions.json (SHA2c5e52b8ab54a6579b228a679db471dfce52e8ddea175183032bcb369d8a8b68). Product15/15, legacy preflight/index36/36, source custody35/35 and composition41/41 passed, exit0. Recorded tool hashes independently match the six files submitted here. No unchanged dependency or Root rebuild occurred.
 - Boundaries remain explicit: original_receipt_bytes_verified=false, fresh_full_q0=false, fresh_builds=0, formal_release=false, network_installation=false. The staged catalog's artifact commit is a controlled-transport fixture reference; actual public artifact paths still require publication/readback before any authoritative promotion. Real current/catalog/libspec/Root/SDK/Native CI and the historical735KB candidate are unchanged. No tag/release or authoritative-current promotion is part of this narrow commit.
 - Next: integrate the qualified functional CoreLib successor, preserve the original JSON Root/source custody and stage lineage, publish exact product artifacts under a real read-back commit, then run immutable network consumer/release acceptance. The overall formal wasmcrelease goal remains active;06 retains all instance build/install/new-input authority.
+
+## Generic loop-borrow repair candidate
+
+Private Source Codea44d602 and scope extension5e76e914 are pushed/readback.
+Warm portable27.094s produced52996e0e (1956514B); native L1 passed43.806s.
+OldAe actual generic regression fails stale-borrow101; new compiler completes
+1824 calls on Wasmtime/Wasmi with exact cleanup/failure recovery assertions.
+This fixes generic loop backedge liveness, with no JSON/compiler algorithms.
+
+Same hoistedSource2d8/newApp1d119 with frozen Corec3/JSON005 now completes15
+of19 full response/effect checks;4 long-input fuel failures remain, including
+128 after2rows committed. Limits unchanged. All10 nonCaller modules and full
+Host import/export ABI are unchanged. Detailed functional receipt is
+admission/ordinary-canonical-host-v024/loop-borrow-functional-checkpoint.json.
+
+This is a candidate; no SourceReady/integration/install/formal release or
+new full native matrix is claimed. Current carriers/currentRoot/frozenassets
+remain unchanged. Next legalSource step is SDK-only bulk UTF8 validation
+gather, claimed before edit; actual19 comparison precedes any adoption.
