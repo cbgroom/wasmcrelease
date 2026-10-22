@@ -1,0 +1,63 @@
+{
+  "schema": "wasmc.lib-refresh-source/v2",
+  "id": "wasmc-system-android-display",
+  "version": "0.0.1",
+  "profile": "native",
+  "world": "system-display",
+  "description": "Lib-defined platform implementation: wasmc-system-android-display",
+  "dependencies": [],
+  "apis": [
+    {
+      "api": "capture-png",
+      "delta": "Actual platform implementation, not a simulated Wasm export.",
+      "ecosystem": "c-boundary",
+      "host_authorities": [
+        "wasmc:system-display@0.0.1"
+      ],
+      "implementation": "native",
+      "origin": "adapted",
+      "support": "target-qualified-only"
+    }
+  ],
+  "native": {
+    "kind": "c-boundary",
+    "target": "android",
+    "files": [
+      "platform/native-adapter.c",
+      "platform/native-boundary.template.json"
+    ],
+    "entry": "platform/native-adapter.c",
+    "descriptor_template": "platform/native-boundary.template.json",
+    "binding_contract": "wasmc.lib-defined-host-boundary/v1",
+    "binding": {
+      "implements": "wasmc:system-display@0.0.1",
+      "boundary": "wasmc.lib-defined-host-boundary/v1",
+      "descriptor": "platform/native-boundary.template.json",
+      "artifact_format": "native-adapter",
+      "targets": [
+        {
+          "os": "android",
+          "architecture": "aarch64",
+          "environment": "emulator",
+          "embedding": "native"
+        }
+      ]
+    }
+  },
+  "qualification": {
+    "script": "scripts/test-android-agent-computer.mjs",
+    "hosts": [
+      "darwin"
+    ],
+    "requires": [],
+    "current_runtime_status": "not-requalified",
+    "remaining": [
+      "descriptor-schema-review",
+      "wasm-lowering",
+      "physical-device-qualification",
+      "admission-review"
+    ],
+    "source_check": "scripts/validate-lib-refresh-v2-source.mjs"
+  },
+  "examples": []
+}

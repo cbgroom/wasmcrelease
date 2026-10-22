@@ -6,7 +6,7 @@ import {fileURLToPath} from 'node:url';
 import {assembleComposedCurrentProduct} from './current-lib-composition-release-v1.mjs';
 import {currentProductReader,hash} from './current-lib-release-v3.mjs';
 import {isExactDeclaredNotice} from './declared-thirdparty-notices.mjs';
-import {collectCurrentDeclaredThirdPartyNotices} from './current-license-policy-v3.mjs';
+import {collectCurrentDeclaredThirdPartyNotices,requiredHistoricalNoticeCompositions,historicalNoticeProductInputs} from './current-license-policy-v3.mjs';
 const catalog=readFileSync('catalog/libs-current-v2.json');
 const policy=JSON.parse(readFileSync('catalog/current-v3-license-policy.json'));
 const read=async path=>readFileSync(path);
@@ -52,8 +52,14 @@ try{
   const imported=co.source_lineage.admitted_original_sources[0].source,row=current.packages.find(p=>p.id===imported.id);
   const manifest=JSON.parse(get(row.root+'/lib.json')),producerSpec=JSON.parse(get(prefix+'/'+imported.source_spec.path));
   assert.equal(imported.producer.original_receipt_bytes_verified,false);assert.deepEqual(manifest.license,producerSpec.license);
-  for(const pin of manifest.license.files.filter(pin=>pin.path!=='LICENSE'))for(const root of [row.root,prefix+'/'+imported.root.locator]){
-    assert.deepEqual(composed.get(root+'/'+pin.path),{bytes:pin.bytes,sha256:pin.sha256,manifest_sha256:row.manifest_sha256,catalog_sha256:selected.catalog_sha256});
+  const noticeAliases=pin=>{
+    const aliases=[row.root+'/'+pin.path,prefix+'/'+imported.root.locator+'/'+pin.path,imported.root.locator+'/'+pin.path];
+    const sourcePath=imported.source_packet.root+'/'+pin.path;
+    if(imported.source_packet.files.some(file=>file.path===sourcePath))aliases.push(sourcePath,prefix+'/'+sourcePath);
+    return aliases;
+  };
+  for(const pin of manifest.license.files.filter(pin=>pin.path!=='LICENSE'))for(const path of noticeAliases(pin)){
+    assert.deepEqual(composed.get(path),{bytes:pin.bytes,sha256:pin.sha256,manifest_sha256:row.manifest_sha256,catalog_sha256:selected.catalog_sha256});
   }
   const base=JSON.parse(get(prefix+'/'+co.input_options.base.catalog_path));
   const old=base.packages.find(p=>p.id===row.id);
@@ -67,7 +73,7 @@ try{
   };
   const notice=manifest.license.files.find(pin=>pin.path!=='LICENSE').path;
   const targets=['licenses/DEPENDENCY-NOTICES-001.txt',prefix+'/licenses/DEPENDENCY-NOTICES-001.txt',
-    row.root+'/'+notice,prefix+'/'+imported.root.locator+'/'+notice,prefix+'/'+old.root+'/'+notice,
+    ...noticeAliases({path:notice}),prefix+'/'+old.root+'/'+notice,
     policy.standard_root_mirrors[0].root+'/licenses/DEPENDENCY-NOTICES-001.txt'];
   for(const path of targets){
     const changed=Buffer.from(get(path));changed[0]^=1;
@@ -81,6 +87,11 @@ try{
   await reject('cohort cannot omit imported Root notice obligation',new Map([[current.cohort.path,Buffer.from(JSON.stringify(blank)+'\n')]]));
   for(const [name,mutate]of [
     ['self-rehashed lineage cannot remove imported source notices',value=>{value.source_lineage.admitted_original_sources=[];}],
+    ['self-rehashed lineage cannot grant a wrong source notice alias',value=>{
+      const source=value.source_lineage.admitted_original_sources[0].source;
+      const pin=source.source_packet.files.find(pin=>pin.path.endsWith('/licenses/DEPENDENCY-NOTICES-001.txt'))??source.source_packet.files[0];
+      pin.path=source.source_packet.root+'/unrelated/licenses/DEPENDENCY-NOTICES-001.txt';
+    }],
     ['self-rehashed cohort cannot impersonate original fullQ0',value=>{value.schema='wasmc.public-current-refresh-cohort/v1';}],
     ['self-rehashed cohort cannot invent unrelated notice grant',value=>{value.release_notices={manifest:{path:'licenses/not-original.json'},files:[]};}]
   ]){
@@ -91,8 +102,38 @@ try{
     await assert.rejects(()=>collectCurrentDeclaredThirdPartyNotices(bytes,rebound,async path=>path===current.cohort.path?cohortBytes:get(path)));
     outcomes.push({name,rejected:true});composedRejected++;
   }
+  const wrongAlias='unrelated/licenses/'+notice.split('/').at(-1);
+  assert.equal(isExactDeclaredNotice(wrongAlias,get(row.root+'/'+notice),composed),false,'identical bytes at undeclared path confer no alias');
+  assert.equal(isExactDeclaredNotice(imported.source_packet.root+'/other-notice.txt',get(row.root+'/'+notice),composed),false);
+  assert.equal(isExactDeclaredNotice(imported.root.locator+'/LICENSE',get('LICENSE'),composed),false,'root license is never a notice alias');
+  outcomes.push({name:'exact bytes do not exempt undeclared aliases or root LICENSE',rejected:true});composedRejected++;
+  const historicalRecords=requiredHistoricalNoticeCompositions(co);
+  const historicalInputs=historicalNoticeProductInputs(co,get);
+  for(const record of historicalRecords){
+    const historical=JSON.parse(get(record.cohort.path));
+    assert.equal(historical.fresh_full_q0,false);assert.equal(historical.public_admission,false);
+    await reject('missing independent historical composition',new Map([[record.cohort.path,null]]));
+    const forged=structuredClone(historical);forged.source_lineage.admitted_original_sources[0].source.producer.original_receipt_bytes_verified=true;
+    forged.source_lineage_sha256=hash(JSON.stringify(forged.source_lineage));
+    await reject('self-rehashed historical lineage cannot replace independent history pin',new Map([[record.cohort.path,Buffer.from(JSON.stringify(forged)+'\n')]]));
+    for(const {source} of historical.source_lineage.admitted_original_sources){
+      const raw=get(source.root.locator+'/lib.json'),m=JSON.parse(raw);
+      assert.equal(source.producer.original_receipt_bytes_verified,false);
+      for(const pin of m.license.files.filter(pin=>pin.path!=='LICENSE')){
+        const path=source.root.locator+'/'+pin.path;assert.ok(historicalInputs.includes(path));
+        assert.deepEqual(composed.get(path),{bytes:pin.bytes,sha256:pin.sha256,manifest_sha256:hash(raw),catalog_sha256:selected.catalog_sha256});
+      }
+      for(const path of [source.root.locator+'/artifact.wasm',source.root.locator+'/'+notice,source.source_spec.path,source.producer.custody.path]){
+        const changed=Buffer.from(get(path));changed[0]^=1;
+        await reject('historical chain byte drift '+path,new Map([[path,changed]]));
+        await reject('historical chain missing '+path,new Map([[path,null]]));
+        assert.throws(()=>historicalNoticeProductInputs(co,p=>{assert.notEqual(p,path,'historical product input missing');return get(p);}));
+      }
+    }
+  }
   const report={accepted:true,current_roots:42,declared_notice_files:notices.size,negative_controls:rejected,
     composed_notice_files:composed.size,composed_negative_controls:composedRejected,strict_original_base_and_current_graph:true,all_declared_rows_real_bytes_exact:true,
+    historical_composition_inputs:historicalInputs.length,historical_compositions_verified:historicalRecords.length,
     original_receipt_bytes_verified:false,fresh_builds:0,product,imported_root:{id:row.id,version:row.version,notice_files:manifest.license.files.length-1},
     legal_compatibility:false,linked_dependency_completeness:false,formal_release:false,outcomes};
   await writeFile(join(state,'receipt.json'),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify({...report,state_root:state}));

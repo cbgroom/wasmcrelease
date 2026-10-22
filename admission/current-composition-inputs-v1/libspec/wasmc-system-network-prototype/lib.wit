@@ -1,0 +1,15 @@
+package wasmc:system-network-prototype@0.0.2;
+
+interface network {
+  record exchange-request {
+  host: string,
+  port: u16,
+  payload: list<u8>,
+  }
+
+  exchange: func(request: exchange-request) -> result<list<u8>, string>;
+}
+
+world system-network-prototype {
+  export network;
+}

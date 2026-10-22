@@ -1,0 +1,171 @@
+{
+  "agent": {
+    "default_view": "runtime",
+    "delta": {
+      "path": "references/agent-delta.json",
+      "sha256": "8b78d3977a11bb3bec95819dd0f59e37f543082a5410b49fd1815a2085b39bab"
+    },
+    "skill": {
+      "path": "SKILL.md",
+      "sha256": "c773286c6de6c203022b0d0737a0934f061754acbcfb0cb7007e4c8dd9968e52"
+    },
+    "views": {
+      "developer": {
+        "includes_runtime": true,
+        "mode": "developer",
+        "skill": "SKILL.md"
+      },
+      "runtime": {
+        "mode": "runtime",
+        "skill": "SKILL.md"
+      }
+    }
+  },
+  "artifact": {
+    "bytes": 29820,
+    "format": "core-wasm",
+    "path": "artifact.wasm",
+    "sha256": "b23a69b1a45d84456f3a7d8e7055fcec6276f18b9363cda58ab36d05d850b5aa"
+  },
+  "bindings": {
+    "rust_component": {
+      "artifact_sha256": "b23a69b1a45d84456f3a7d8e7055fcec6276f18b9363cda58ab36d05d850b5aa",
+      "cargo_toml": {
+        "path": "bindings/rust/Cargo.toml",
+        "sha256": "6c0990e5dd0bdf96d5a285113d1ac1d722113ec6b70546a30c8979bbc0faadb2"
+      },
+      "component_sha256": "94e66279c4f61ae97814c111f2217a1d47362cf2595ba9811f18d4dd512804d7",
+      "crate": "wasmc-system-telemetry-component",
+      "functions": 4,
+      "path": "bindings/rust",
+      "runtime": "wasmtime-component",
+      "schema": "wasmc.lib-rust-component-sdk/v0",
+      "source": {
+        "path": "bindings/rust/src/lib.rs",
+        "sha256": "71da0dd10673ac40a7d356282a854c2553bab4e99478ba2bd2c0cca675a5cdb4"
+      },
+      "wit_sha256": "c69ccee42113324a2875c352373ddaacb085363480a5f01f32ff919215fd9fe3",
+      "world": "system-telemetry"
+    }
+  },
+  "build": {
+    "inputs": [
+      {
+        "kind": "cargo-lock",
+        "path": "crates/wasmc-system-telemetry/Cargo.lock",
+        "sha256": "e83312764e965beb0f76698a48033edf5435a2d1c9dd6106c7f5c10b2f606c00"
+      }
+    ],
+    "language": "rust",
+    "locked": true,
+    "offline": true,
+    "profile": "release",
+    "target": "wasm32-unknown-unknown",
+    "toolchain": {
+      "cargo": "cargo 1.96.0 (30a34c682 2026-05-25)",
+      "cargo_version_verbose_sha256": "8f3ec46e9cc84089e62b8ba780a669179c507d6749fff11f5040f19777040c0d",
+      "encoded_rustflags": "-Cstrip=symbols",
+      "host": "x86_64-unknown-linux-gnu",
+      "rustc": "rustc 1.96.0 (ac68faa20 2026-05-25)",
+      "rustc_version_verbose_sha256": "2cb7cb92f27a9203b9bc560f2f504da538cd61712a3b908b004d4087f090a3c5",
+      "schema": "wasmc.rust-toolchain-fingerprint/v2",
+      "sha256": "38aa3b61934cec00fd721d83b46edb1dff3d78be3cf92de49ecfa888809ffbb4",
+      "source_path_remapping": {
+        "mappings_in_order": [
+          {
+            "from": "selected-rustc-sysroot",
+            "to": "/wasmc/rust"
+          },
+          {
+            "from": "selected-cargo-home",
+            "to": "/wasmc/cargo"
+          },
+          {
+            "from": "workspace-root",
+            "to": "/wasmc/workspace"
+          },
+          {
+            "from": "relative-src",
+            "to": "/wasmc/source/src"
+          }
+        ],
+        "resolution": "canonical-workspace-shared-flags",
+        "schema": "wasmc.rust-source-path-remapping/v2",
+        "scope": "rustc-all-default"
+      },
+      "target": "wasm32-unknown-unknown"
+    }
+  },
+  "closure": {
+    "build_dependencies": "linked-into-artifact",
+    "public_exports": "root-wit-only",
+    "public_lib_dependencies": [],
+    "schema": "wasmc.lib-closure/v0"
+  },
+  "compatibility": {
+    "abi_epoch": 1,
+    "wasmc_min": "0.0.1"
+  },
+  "component": {
+    "bytes": 32906,
+    "format": "component-wasm",
+    "path": "component.wasm",
+    "sha256": "94e66279c4f61ae97814c111f2217a1d47362cf2595ba9811f18d4dd512804d7"
+  },
+  "core_abi": {
+    "bytes": 3325,
+    "path": "core-abi.json",
+    "schema": "wasmc.lib-core-abi/v0",
+    "sha256": "210efe84e3aca7b4379e47be3e095cb35e0041c8a0bf0e88f4d555990341f372"
+  },
+  "id": "wasmc-system-telemetry",
+  "schema": "wasmc.lib/v2",
+  "version": "0.0.1",
+  "wit": {
+    "package": "wasmc:system-telemetry@0.0.1",
+    "path": "lib.wit",
+    "sha256": "c69ccee42113324a2875c352373ddaacb085363480a5f01f32ff919215fd9fe3",
+    "world": "system-telemetry"
+  },
+  "license": {
+    "schema": "wasmc.lib-license/v1",
+    "identifier": "WAsmC Research-Only Non-Commercial License 1.0",
+    "files": [
+      {
+        "path": "LICENSE",
+        "bytes": 3823,
+        "sha256": "7bca2d5818178e0bc14546700d39bf113d15139b1c3b6d1e62f621d4a276d6e3"
+      },
+      {
+        "path": "licenses/DEPENDENCY-NOTICES-001.txt",
+        "bytes": 245760,
+        "sha256": "66302f6dd71da97391ab2270d29b10e67bdbac6d7eb782bed043c2ff596ec5cc"
+      },
+      {
+        "path": "licenses/DEPENDENCY-NOTICES-002.txt",
+        "bytes": 245760,
+        "sha256": "0065cf38006c9a66a6c3ee9cbaf8db10422b1e5301d3c1d5132b7855e71f18ea"
+      },
+      {
+        "path": "licenses/DEPENDENCY-NOTICES-003.txt",
+        "bytes": 245760,
+        "sha256": "201dbac93dff17177b6379ee630b9658b4cec9cb9d46ce3982b3da87c4b740c8"
+      },
+      {
+        "path": "licenses/DEPENDENCY-NOTICES-004.txt",
+        "bytes": 245760,
+        "sha256": "c439e1a409b6f23d5797cec339403a0ffce97e9fcf2ae91d6a923c36d619bb76"
+      },
+      {
+        "path": "licenses/DEPENDENCY-NOTICES-005.txt",
+        "bytes": 245760,
+        "sha256": "04118f32afc6b2ce0fbfd559c56a78614016ab00167be2425c8c778fc7b064fe"
+      },
+      {
+        "path": "licenses/DEPENDENCY-NOTICES-006.txt",
+        "bytes": 8357,
+        "sha256": "aa6000805f56d3c6009ffa09dbe224083cf2e63e2498e1939deefe6ca7c43d9a"
+      }
+    ]
+  }
+}

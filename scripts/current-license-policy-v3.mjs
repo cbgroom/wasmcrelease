@@ -1,6 +1,38 @@
 import assert from 'node:assert/strict';
 import {checkedCurrentCatalog,hash,verifyCurrentRelease} from './current-lib-release-v3.mjs';
+import {verifyCurrentCompositionLineageData} from './current-lib-source-custody-v1.mjs';
 const text=b=>new TextDecoder('utf-8',{fatal:true}).decode(b);
+// Reviewed historical delivery input, not a permission or a current selection.
+// Its full original composition and source custody must still verify below.
+export const historicalNoticeCompositions=Object.freeze([Object.freeze({
+  cohort:Object.freeze({path:'admission/ordinary-canonical-host-v024/historical-composition-005-cohort-v1.json',bytes:615518,
+    sha256:'1f782e36252f280f6c21a4ef092ddfcb16d021b5b38bfb7b81112d4fde0d9f8a'}),
+  roots:Object.freeze([Object.freeze({locator:'standard/wasmc-json/0.0.5',
+    manifest_sha256:'3bfaa6449d8800aaa98a7068ceccaae3527490f6cb7773b53b70195e9c7eaadc',
+    inventory_sha256:'c4adbe3a37e49d028c7f0a8351bab2686ef26ae154549068b4bb1a8b1b39e63c'})])
+})]);
+export function historicalNoticeCarrierPins(record,cohort){
+  assert.equal(cohort.schema,'wasmc.public-current-composition-cohort/v1');
+  assert.deepEqual(cohort.source_lineage.admitted_original_sources.map(({source})=>({locator:source.root.locator,
+    manifest_sha256:source.root.manifest_sha256,inventory_sha256:source.root.inventory_sha256})),record.roots);
+  return cohort.source_lineage.admitted_original_sources.flatMap(({source})=>[...source.root.files,...source.source_packet.files]);
+}
+export function requiredHistoricalNoticeCompositions(cohort){
+  if(cohort.schema!=='wasmc.public-current-composition-cohort/v1')return [];
+  const active=cohort.source_lineage.admitted_original_sources.map(({source})=>source.root);
+  return historicalNoticeCompositions.filter(record=>!record.roots.every(root=>active.some(value=>
+    value.locator===root.locator&&value.manifest_sha256===root.manifest_sha256&&value.inventory_sha256===root.inventory_sha256)));
+}
+export function historicalNoticeProductInputs(cohort,read){
+  const paths=[];
+  for(const record of requiredHistoricalNoticeCompositions(cohort)){
+    const bytes=read(record.cohort.path);assert.equal(bytes.length,record.cohort.bytes);assert.equal(hash(bytes),record.cohort.sha256);
+    for(const pin of [record.cohort,...historicalNoticeCarrierPins(record,JSON.parse(text(bytes)))]){
+      const b=read(pin.path);assert.equal(b.length,pin.bytes);assert.equal(hash(b),pin.sha256);paths.push(pin.path);
+    }
+  }
+  return paths;
+}
 export async function collectCurrentDeclaredThirdPartyNotices(catalogBytes,policy,read) {
   assert.equal(policy.schema,'wasmc.current-license-policy/v1');
   const catalog=checkedCurrentCatalog(catalogBytes,policy.catalog_sha256);
@@ -106,6 +138,8 @@ async function collectComposedNotices(catalogBytes,catalog,policy,read,cohort){
       for(const pin of cohort.input_files)if(pin.path.startsWith(directory+'/'))await load(pin.path);
     }
   }
+  for(const {source} of cohort.source_lineage.admitted_original_sources)
+    for(const pin of [...source.root.files,...source.source_packet.files])await load(pin.path);
   const closure=verifyCurrentRelease(catalogBytes,policy.catalog_sha256,get,[...data.keys()]);
   assert.equal(closure.schema,'wasmc.current-composition-release-closure/v1');
   assert.equal(closure.fresh_full_q0,false);assert.equal(closure.original_receipt_bytes_verified,false);
@@ -120,10 +154,15 @@ async function collectComposedNotices(catalogBytes,catalog,policy,read,cohort){
     if(path.startsWith('standard/')||!path.startsWith('current-libs/')||currentFiles.has(path))result.set(path,row);
     if(!path.startsWith('standard/'))result.set(prefix+'/'+path,row);
   }
-  for(const admitted of cohort.source_lineage.admitted_original_sources){
-    const source=admitted.source,row=catalog.packages.find(p=>p.id===source.id);assert.ok(row);
-    const raw=get(row.root+'/lib.json'),manifest=JSON.parse(text(raw));
-    const original=prefix+'/'+source.root.locator,spec=JSON.parse(text(get(prefix+'/'+source.source_spec.path)));
+  const contexts=cohort.source_lineage.admitted_original_sources.map(({source})=>{
+    const row=catalog.packages.find(p=>p.id===source.id);assert.ok(row);
+    return {source,row,read:get,specPath:prefix+'/'+source.source_spec.path,
+      roots:[row.root,prefix+'/'+source.root.locator,source.root.locator],packetPrefixes:['',prefix+'/']};
+  });
+  contexts.push(...await historicalNoticeContexts(cohort,read,get));
+  for(const context of contexts){
+    const {source,row,read:get,specPath,roots,packetPrefixes}=context;
+    const raw=get(row.root+'/lib.json'),manifest=JSON.parse(text(raw)),spec=JSON.parse(text(get(specPath)));
     assert.deepEqual(manifest.license,spec.license,'original producer license declaration');
     const license=manifest.license;assert.equal(license.schema,'wasmc.lib-license/v1');
     assert.equal(license.identifier,'WAsmC Research-Only Non-Commercial License 1.0');
@@ -135,8 +174,13 @@ async function collectComposedNotices(catalogBytes,catalog,policy,read,cohort){
       assert.ok(Number.isSafeInteger(pin.bytes)&&pin.bytes>0&&pin.bytes<=262144);assert.match(pin.sha256,/^[0-9a-f]{64}$/);
       if(pin.path!=='LICENSE')assert.match(pin.path,/^licenses\/DEPENDENCY-NOTICES-[0-9]{3}\.txt$/);
       assert.ok(pin.path>previous,'ordered unique original producer license files');previous=pin.path;total+=pin.bytes;
-      for(const root of [row.root,original]){
-        const path=root+'/'+pin.path,bytes=get(path);assert.equal(bytes.length,pin.bytes);assert.equal(hash(bytes),pin.sha256);
+      const aliases=roots.map(root=>root+'/'+pin.path);
+      const sourcePath=source.source_packet.root+'/'+pin.path;
+      const sourcePin=source.source_packet.files.find(file=>file.path===sourcePath);
+      if(sourcePin){assert.deepEqual(sourcePin,{path:sourcePath,bytes:pin.bytes,sha256:pin.sha256},'declared exact source notice alias');
+        aliases.push(...packetPrefixes.map(prefix=>prefix+sourcePath));}
+      for(const path of aliases){
+        const bytes=get(path);assert.equal(bytes.length,pin.bytes);assert.equal(hash(bytes),pin.sha256);
         text(bytes);assert.ok(!bytes.includes(0),'notice text contains NUL');
         if(pin.path!=='LICENSE')result.set(path,{bytes:pin.bytes,sha256:pin.sha256,manifest_sha256:hash(raw),catalog_sha256:policy.catalog_sha256});
       }
@@ -150,4 +194,28 @@ async function collectComposedNotices(catalogBytes,catalog,policy,read,cohort){
     }
   }
   return result;
+}
+
+async function historicalNoticeContexts(current,read,baseGet){
+  const contexts=[];
+  for(const record of requiredHistoricalNoticeCompositions(current)){
+    const raw=await read(record.cohort.path);assert.equal(raw.length,record.cohort.bytes);assert.equal(hash(raw),record.cohort.sha256,'independent historical composition identity');
+    const historical=JSON.parse(text(raw)),carriers=historicalNoticeCarrierPins(record,historical);
+    assert.equal(historical.fresh_full_q0,false);assert.equal(historical.public_admission,false);
+    assert.deepEqual(historical.input_options.base,current.input_options.base,'same exact original full-base authority');
+    const carrierPaths=new Set(carriers.map(pin=>pin.path)),snapshot=new Map();
+    for(const pin of historical.input_files){
+      const bytes=carrierPaths.has(pin.path)?await read(pin.path):baseGet(current.input_prefix+'/'+pin.path);
+      assert.equal(bytes.length,pin.bytes);assert.equal(hash(bytes),pin.sha256,'historical original input bytes');snapshot.set(pin.path,bytes);
+    }
+    const get=path=>{assert.ok(snapshot.has(path),'historical composition input missing');return snapshot.get(path);};
+    const input={read:get,paths:root=>[...snapshot.keys()].filter(path=>path.startsWith(root+'/')).sort()};
+    const {composeCurrentLibData}=await import('./lib-current-composition-v1.mjs');
+    assert.deepEqual(composeCurrentLibData(input,historical.input_options),historical.composition,'actual historical whole-Root composition');
+    verifyCurrentCompositionLineageData(input,historical.input_options,historical.composition,historical.composition_sha256,
+      historical.source_lineage,{checkedCurrentCatalog,verifyCurrentRelease});
+    for(const {source} of historical.source_lineage.admitted_original_sources)
+      contexts.push({source,row:{root:source.root.locator},read:get,specPath:source.source_spec.path,roots:[source.root.locator],packetPrefixes:[]});
+  }
+  return contexts;
 }

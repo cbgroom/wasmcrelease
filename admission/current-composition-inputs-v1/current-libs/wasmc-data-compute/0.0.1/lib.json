@@ -1,0 +1,188 @@
+{
+  "agent": {
+    "default_view": "runtime",
+    "delta": {
+      "path": "references/agent-delta.json",
+      "sha256": "4935017d5d1bbf3f7d4610db586af4f0c217f21e503be5086ac11b3d8a4e2c00"
+    },
+    "skill": {
+      "path": "SKILL.md",
+      "sha256": "ceae359913224c7e70b4f6c1dd00c630a1ce2366ed11da202dd1cc0cf1c4b274"
+    },
+    "views": {
+      "developer": {
+        "includes_runtime": true,
+        "mode": "developer",
+        "skill": "SKILL.md"
+      },
+      "runtime": {
+        "mode": "runtime",
+        "skill": "SKILL.md"
+      }
+    }
+  },
+  "artifact": {
+    "bytes": 1495592,
+    "format": "core-wasm",
+    "path": "artifact.wasm",
+    "sha256": "da6d74423dca37825dbc44b4cb97da377c3d7b5a09a9ec0415e117f8efc67ec6"
+  },
+  "bindings": {
+    "rust_component": {
+      "artifact_sha256": "da6d74423dca37825dbc44b4cb97da377c3d7b5a09a9ec0415e117f8efc67ec6",
+      "cargo_toml": {
+        "path": "bindings/rust-component/Cargo.toml",
+        "sha256": "35839412708935a24296aba296872ce4332e1d2686ad3aa18069aecf90c4b468"
+      },
+      "component_sha256": "f9c9aab6700952929329f86bf0358d4d39b127a293c58e8ddc5876b72747f0bb",
+      "crate": "wasmc-data-compute-component",
+      "functions": 3,
+      "path": "bindings/rust-component",
+      "runtime": "wasmtime-component",
+      "schema": "wasmc.lib-rust-component-sdk/v0",
+      "source": {
+        "path": "bindings/rust-component/src/lib.rs",
+        "sha256": "a64e09506c46bc4ae96e29f9b28212c0477259a293269b714a0d03ac9687cec8"
+      },
+      "wit_sha256": "c6d4118f39f9e8353546a99f774f50b8a00cea3aad19f2c9e2fcdfedeaf1bddf",
+      "world": "data-compute"
+    },
+    "rust_core": {
+      "artifact_sha256": "da6d74423dca37825dbc44b4cb97da377c3d7b5a09a9ec0415e117f8efc67ec6",
+      "cargo_toml": {
+        "path": "bindings/rust-core/Cargo.toml",
+        "sha256": "967f923fe6e0590fcb172abbd77849a2b724e3bc3b9a64c7e416134e1b08cde1"
+      },
+      "crate": "wasmc-data-compute-core",
+      "functions": 3,
+      "import_module": "wasmc:lib/wasmc-data-compute@0.0.1",
+      "path": "bindings/rust-core",
+      "schema": "wasmc.lib-rust-canonical-core-sdk/v1",
+      "source": {
+        "path": "bindings/rust-core/src/lib.rs",
+        "sha256": "215d6f442713ee2fe080ac696da5be8a2ec6dc9c1691fe2a6d83609a51f929b8"
+      },
+      "wit_sha256": "c6d4118f39f9e8353546a99f774f50b8a00cea3aad19f2c9e2fcdfedeaf1bddf"
+    }
+  },
+  "build": {
+    "inputs": [
+      {
+        "kind": "cargo-lock",
+        "path": "crates/wasmc-data-compute/Cargo.lock",
+        "sha256": "e83312764e965beb0f76698a48033edf5435a2d1c9dd6106c7f5c10b2f606c00"
+      }
+    ],
+    "language": "rust",
+    "locked": true,
+    "offline": true,
+    "profile": "release",
+    "target": "wasm32-unknown-unknown",
+    "toolchain": {
+      "cargo": "cargo 1.96.0 (30a34c682 2026-05-25)",
+      "cargo_version_verbose_sha256": "8f3ec46e9cc84089e62b8ba780a669179c507d6749fff11f5040f19777040c0d",
+      "encoded_rustflags": "-Cstrip=symbols",
+      "host": "x86_64-unknown-linux-gnu",
+      "rustc": "rustc 1.96.0 (ac68faa20 2026-05-25)",
+      "rustc_version_verbose_sha256": "2cb7cb92f27a9203b9bc560f2f504da538cd61712a3b908b004d4087f090a3c5",
+      "schema": "wasmc.rust-toolchain-fingerprint/v2",
+      "sha256": "38aa3b61934cec00fd721d83b46edb1dff3d78be3cf92de49ecfa888809ffbb4",
+      "source_path_remapping": {
+        "mappings_in_order": [
+          {
+            "from": "selected-rustc-sysroot",
+            "to": "/wasmc/rust"
+          },
+          {
+            "from": "selected-cargo-home",
+            "to": "/wasmc/cargo"
+          },
+          {
+            "from": "workspace-root",
+            "to": "/wasmc/workspace"
+          },
+          {
+            "from": "relative-src",
+            "to": "/wasmc/source/src"
+          }
+        ],
+        "resolution": "canonical-workspace-shared-flags",
+        "schema": "wasmc.rust-source-path-remapping/v2",
+        "scope": "rustc-all-default"
+      },
+      "target": "wasm32-unknown-unknown"
+    }
+  },
+  "closure": {
+    "build_dependencies": "linked-into-artifact",
+    "public_exports": "root-wit-only",
+    "public_lib_dependencies": [],
+    "schema": "wasmc.lib-closure/v0"
+  },
+  "compatibility": {
+    "abi_epoch": 1,
+    "wasmc_min": "0.0.1"
+  },
+  "component": {
+    "bytes": 1497834,
+    "format": "component-wasm",
+    "path": "component.wasm",
+    "sha256": "f9c9aab6700952929329f86bf0358d4d39b127a293c58e8ddc5876b72747f0bb"
+  },
+  "core_abi": {
+    "bytes": 2723,
+    "path": "core-abi.json",
+    "schema": "wasmc.lib-core-abi/v0",
+    "sha256": "00417b222ba3b8972801db10241252270cf9df8f1dc2933a1eb7df8cc81b4088"
+  },
+  "id": "wasmc-data-compute",
+  "schema": "wasmc.lib/v2",
+  "version": "0.0.1",
+  "wit": {
+    "package": "wasmc:data-compute@0.0.1",
+    "path": "lib.wit",
+    "sha256": "c6d4118f39f9e8353546a99f774f50b8a00cea3aad19f2c9e2fcdfedeaf1bddf",
+    "world": "data-compute"
+  },
+  "license": {
+    "schema": "wasmc.lib-license/v1",
+    "identifier": "WAsmC Research-Only Non-Commercial License 1.0",
+    "files": [
+      {
+        "path": "LICENSE",
+        "bytes": 3823,
+        "sha256": "7bca2d5818178e0bc14546700d39bf113d15139b1c3b6d1e62f621d4a276d6e3"
+      },
+      {
+        "path": "licenses/DEPENDENCY-NOTICES-001.txt",
+        "bytes": 245760,
+        "sha256": "66302f6dd71da97391ab2270d29b10e67bdbac6d7eb782bed043c2ff596ec5cc"
+      },
+      {
+        "path": "licenses/DEPENDENCY-NOTICES-002.txt",
+        "bytes": 245760,
+        "sha256": "0065cf38006c9a66a6c3ee9cbaf8db10422b1e5301d3c1d5132b7855e71f18ea"
+      },
+      {
+        "path": "licenses/DEPENDENCY-NOTICES-003.txt",
+        "bytes": 245760,
+        "sha256": "201dbac93dff17177b6379ee630b9658b4cec9cb9d46ce3982b3da87c4b740c8"
+      },
+      {
+        "path": "licenses/DEPENDENCY-NOTICES-004.txt",
+        "bytes": 245760,
+        "sha256": "c439e1a409b6f23d5797cec339403a0ffce97e9fcf2ae91d6a923c36d619bb76"
+      },
+      {
+        "path": "licenses/DEPENDENCY-NOTICES-005.txt",
+        "bytes": 245760,
+        "sha256": "04118f32afc6b2ce0fbfd559c56a78614016ab00167be2425c8c778fc7b064fe"
+      },
+      {
+        "path": "licenses/DEPENDENCY-NOTICES-006.txt",
+        "bytes": 8357,
+        "sha256": "aa6000805f56d3c6009ffa09dbe224083cf2e63e2498e1939deefe6ca7c43d9a"
+      }
+    ]
+  }
+}

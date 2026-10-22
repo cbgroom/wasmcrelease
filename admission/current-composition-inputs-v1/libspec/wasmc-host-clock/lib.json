@@ -1,0 +1,15 @@
+{
+  "schema": "wasmc.lib-refresh-source/v2",
+  "id": "wasmc-host-clock",
+  "version": "0.0.2",
+  "profile": "host",
+  "crate": "wasmc_host_clock_refresh_v2",
+  "artifact_name": "wasmc_host_clock_refresh_v2",
+  "world": "host-clock",
+  "description": "Explicit WIT clock import delegated through a thin adapter; no ambient clock acquisition.",
+  "dependencies": [],
+  "host_imports": ["wasmc:host-clock/clock-host@0.0.2#now"],
+  "apis": [
+    {"api":"sampled","delta":"Read one explicitly bound clock and add a wrapping signed offset.","ecosystem":"WIT Host import","host_authorities":["clock-read"],"implementation":"host","origin":"adapted","support":"supported"}
+  ]
+}

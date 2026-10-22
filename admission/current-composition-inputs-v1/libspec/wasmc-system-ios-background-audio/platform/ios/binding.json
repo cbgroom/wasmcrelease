@@ -1,0 +1,21 @@
+{
+  "schema": "wasmc.platform-binding-descriptor/v1",
+  "identity": "wasmc:system-ios-background-audio@0.0.1-dev.1",
+  "wit": "lib.wit",
+  "target": {
+    "os": "ios", "architecture": "aarch64", "environment": "simulator", "embedding": "native"
+  },
+  "artifact": {
+    "format": "embedded-source",
+    "language": "swift",
+    "linkage": "static-app",
+    "sources": ["platform/ios/Sources/BackgroundAudioProvider.swift"],
+    "frameworks": ["AVFoundation", "Foundation", "UIKit"]
+  },
+  "limits": {
+    "playback": true,
+    "recording": false,
+    "physical_output_qualified": false
+  },
+  "lifecycle": "qualified-not-admitted-not-released"
+}

@@ -1,0 +1,77 @@
+package wasmc:data-profile@0.0.1;
+
+interface profile {
+  use wasmc:data-core/types@0.0.1.{data-type, batch-snapshot};
+
+  record boolean-summary {
+    non-null: u64,
+    nulls: u64,
+    true-count: u64,
+    false-count: u64,
+  }
+
+  record int64-summary {
+    non-null: u64,
+    nulls: u64,
+    min: option<s64>,
+    max: option<s64>,
+    mean: option<f64>,
+  }
+
+  record uint64-summary {
+    non-null: u64,
+    nulls: u64,
+    min: option<u64>,
+    max: option<u64>,
+    mean: option<f64>,
+  }
+
+  record float64-summary {
+    non-null: u64,
+    nulls: u64,
+    min: option<f64>,
+    max: option<f64>,
+    mean: option<f64>,
+  }
+
+  record length-summary {
+    non-null: u64,
+    nulls: u64,
+    min-length: option<u32>,
+    max-length: option<u32>,
+    mean-length: option<f64>,
+  }
+
+  variant summary {
+    boolean(boolean-summary),
+    int64(int64-summary),
+    uint64(uint64-summary),
+    float64(float64-summary),
+    utf8(length-summary),
+    binary(length-summary),
+  }
+
+  record column-profile {
+    column: u32,
+    name: string,
+    data-type: data-type,
+    summary: summary,
+  }
+
+  enum profile-error {
+    invalid-batch,
+    column-out-of-bounds,
+    duplicate-column,
+    overflow,
+    compute-failure,
+  }
+
+  describe: func(
+    value: batch-snapshot,
+    columns: list<u32>,
+  ) -> result<list<column-profile>, profile-error>;
+}
+
+world data-profile {
+  export profile;
+}

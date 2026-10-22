@@ -1,20 +1,69 @@
 {
-  "schema": "wasmc.lib-refresh-source/v2",
+  "schema": "wasmc.current-original-producer-source/v1",
   "id": "wasmc-json",
-  "version": "0.0.1",
+  "version": "0.0.6",
   "profile": "value",
-  "crate": "wasmc_json_refresh_v2",
-  "artifact_name": "wasmc_json_refresh_v2",
   "world": "json",
-  "description": "Bounded JSON compact, validation and pointer selection backed by serde_json.",
-  "dependencies": [
-    "serde_json"
-  ],
+  "description": "Bounded JSON compact, validation and parse-once pointer selection backed by pinned serde_json, plus independent owned UTF8 encoding without external authority.",
   "apis": [
     {
       "api": "compact",
-      "delta": "Bounded parse and compact serialization.",
-      "ecosystem": "serde_json 1.0.151",
+      "delta": "Bounded JSON parse and compact serialization; sorted object keys, last duplicate key wins, no lexical number preservation or JCS claim.",
+      "ecosystem": "serde_json 1.0.151 from_str and to_writer",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "compact-bytes",
+      "delta": "Copied list<u8> input; invalid UTF-8 is invalid-json. Bounded JSON parse and compact serialization; sorted object keys, last duplicate key wins, no lexical number preservation or JCS claim.",
+      "ecosystem": "serde_json 1.0.151 from_slice and to_writer",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "compact-or",
+      "delta": "Same bounded compact text semantics with exactly the caller fallback on a documented JsonError.",
+      "ecosystem": "serde_json 1.0.151 Value::pointer and string decoding",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "compact-or-bytes",
+      "delta": "Same bounded compact-bytes parse/serialization; returns the caller-supplied owned fallback on any JsonError. No lossy UTF8 and no external authority.",
+      "ecosystem": "serde_json 1.0.151; explicit Result::unwrap_or in Lib",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "decode-string-or",
+      "delta": "Same bounded JSON validation, followed by serde_json UTF8 string decoding. Return exactly caller fallback on non-string values or documented JsonError.",
+      "ecosystem": "serde_json 1.0.151 Value::pointer and string decoding",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "encode",
+      "delta": null,
+      "ecosystem": "Rust standard library String::into_bytes",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "exact",
+      "support": "supported"
+    },
+    {
+      "api": "inspect-values-bytes",
+      "delta": "Plain record view of the existing parse-once selected-value batch: valid=true and complete values on success; valid=false/empty values/documented error on failure. Same bounds and no partial publication.",
+      "ecosystem": "serde_json 1.0.151 Value::pointer and string decoding",
       "host_authorities": [],
       "implementation": "lib",
       "origin": "adapted",
@@ -22,8 +71,44 @@
     },
     {
       "api": "select",
-      "delta": "Parse once and select bounded strict JSON pointers.",
-      "ecosystem": "serde_json 1.0.151",
+      "delta": "Parses once and selects at most 64 strict JSON pointers; None means missing, Some(null) means JSON null; selected JSON strings share a 65536-byte output cap.",
+      "ecosystem": "serde_json 1.0.151 Value::pointer",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "select-bytes",
+      "delta": "Copied list<u8> input; invalid UTF-8 is invalid-json. Parses once and selects at most 64 strict JSON pointers; None means missing, Some(null) means JSON null; selected JSON strings share a 65536-byte output cap.",
+      "ecosystem": "serde_json 1.0.151 Value::pointer",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "select-string-or-bytes",
+      "delta": "Same bounded pointer selection; decode a selected JSON string to owned UTF8 text. Return caller fallback for missing, non-string values or any JsonError. Original eight APIs unchanged.",
+      "ecosystem": "serde_json 1.0.151 Value::pointer and from_str<String>",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "select-values",
+      "delta": "Record view of select: present distinguishes missing from JSON null; json carries the same bounded compact JSON value. Reuses the same single parse, pointer order, errors and shared 65536-byte output cap.",
+      "ecosystem": "serde_json 1.0.151 Value::pointer",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "select-values-bytes",
+      "delta": "Copied list<u8> record view of select-bytes, with exact UTF-8 validation and present/json fields. Reuses the same parse and bounds; no Host access.",
+      "ecosystem": "serde_json 1.0.151 Value::pointer",
       "host_authorities": [],
       "implementation": "lib",
       "origin": "adapted",
@@ -31,12 +116,283 @@
     },
     {
       "api": "validate",
-      "delta": "Bounded JSON validation with explicit public errors.",
-      "ecosystem": "serde_json 1.0.151",
+      "delta": "Input is UTF-8 JSON text bounded to 65536 bytes and 64 open containers; parser failures become invalid-json with no partial result.",
+      "ecosystem": "serde_json 1.0.151 from_str",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "validate-bytes",
+      "delta": "Copied list<u8> input; invalid UTF-8 is invalid-json. Input is UTF-8 JSON text bounded to 65536 bytes and 64 open containers; parser failures become invalid-json with no partial result.",
+      "ecosystem": "serde_json 1.0.151 from_slice",
       "host_authorities": [],
       "implementation": "lib",
       "origin": "adapted",
       "support": "supported"
     }
-  ]
+  ],
+  "source_spec": {
+    "path": "admission/ordinary-canonical-host-v024/json006-authoring/source-lib.build.json",
+    "bytes": 9793,
+    "sha256": "99cde3fcccca4a65ced4adc5c8899192361dc0665ea8ce6f3ae7ecdc97f658a0"
+  },
+  "source_packet": {
+    "root": "admission/ordinary-canonical-host-v024/json006-authoring",
+    "inventory_sha256": "266532326061d7d910d5a35c578561c10e670bb6a8f26dab57f5d73dcf4ce3dc",
+    "files": [
+      {
+        "path": "admission/ordinary-canonical-host-v024/json006-authoring/LICENSE",
+        "bytes": 3823,
+        "sha256": "7bca2d5818178e0bc14546700d39bf113d15139b1c3b6d1e62f621d4a276d6e3"
+      },
+      {
+        "path": "admission/ordinary-canonical-host-v024/json006-authoring/README.md",
+        "bytes": 2087,
+        "sha256": "005a87cb451753d8cd0ae8c330b48eb9ee02e9bae891e1e23d44ae8a3db24ff2"
+      },
+      {
+        "path": "admission/ordinary-canonical-host-v024/json006-authoring/lib.build.json",
+        "bytes": 9822,
+        "sha256": "8f50a84bd1ca8b369743e841a2e8032eabc8970061bd5103e75d3512c05561ea"
+      },
+      {
+        "path": "admission/ordinary-canonical-host-v024/json006-authoring/lib.wit",
+        "bytes": 2275,
+        "sha256": "2c12fb7ee9795183fce66264c35324ec55b5c93032ab77dd8a33dad32fa4f925"
+      },
+      {
+        "path": "admission/ordinary-canonical-host-v024/json006-authoring/licenses/DEPENDENCY-NOTICES-001.txt",
+        "bytes": 245760,
+        "sha256": "66302f6dd71da97391ab2270d29b10e67bdbac6d7eb782bed043c2ff596ec5cc"
+      },
+      {
+        "path": "admission/ordinary-canonical-host-v024/json006-authoring/licenses/DEPENDENCY-NOTICES-002.txt",
+        "bytes": 245760,
+        "sha256": "0065cf38006c9a66a6c3ee9cbaf8db10422b1e5301d3c1d5132b7855e71f18ea"
+      },
+      {
+        "path": "admission/ordinary-canonical-host-v024/json006-authoring/licenses/DEPENDENCY-NOTICES-003.txt",
+        "bytes": 245760,
+        "sha256": "201dbac93dff17177b6379ee630b9658b4cec9cb9d46ce3982b3da87c4b740c8"
+      },
+      {
+        "path": "admission/ordinary-canonical-host-v024/json006-authoring/licenses/DEPENDENCY-NOTICES-004.txt",
+        "bytes": 245760,
+        "sha256": "c439e1a409b6f23d5797cec339403a0ffce97e9fcf2ae91d6a923c36d619bb76"
+      },
+      {
+        "path": "admission/ordinary-canonical-host-v024/json006-authoring/licenses/DEPENDENCY-NOTICES-005.txt",
+        "bytes": 245760,
+        "sha256": "04118f32afc6b2ce0fbfd559c56a78614016ab00167be2425c8c778fc7b064fe"
+      },
+      {
+        "path": "admission/ordinary-canonical-host-v024/json006-authoring/licenses/DEPENDENCY-NOTICES-006.txt",
+        "bytes": 8357,
+        "sha256": "aa6000805f56d3c6009ffa09dbe224083cf2e63e2498e1939deefe6ca7c43d9a"
+      },
+      {
+        "path": "admission/ordinary-canonical-host-v024/json006-authoring/original-input-observation.json",
+        "bytes": 3516,
+        "sha256": "dd21b532e1c7274555a923010f8aa7159587c6e6c0da4e73742d6d4e4b5cf876"
+      },
+      {
+        "path": "admission/ordinary-canonical-host-v024/json006-authoring/producer-custody.json",
+        "bytes": 3605,
+        "sha256": "e223f3e1e90bced22976d786b1ed10a38a975aabcb7c2167de5b0a1203c34ae5"
+      },
+      {
+        "path": "admission/ordinary-canonical-host-v024/json006-authoring/producer-report.json",
+        "bytes": 1594,
+        "sha256": "dbcefcbd673b343b7282f9ff337c311dd89676eba1821594da1488d0689a24d1"
+      },
+      {
+        "path": "admission/ordinary-canonical-host-v024/json006-authoring/source-lib.build.json",
+        "bytes": 9793,
+        "sha256": "99cde3fcccca4a65ced4adc5c8899192361dc0665ea8ce6f3ae7ecdc97f658a0"
+      },
+      {
+        "path": "admission/ordinary-canonical-host-v024/json006-authoring/source-spec-custody.json",
+        "bytes": 773,
+        "sha256": "9d24d51760cfd0b74c3dd05bff092655d57724a2cbc6581aaa346d84ebd474a1"
+      },
+      {
+        "path": "admission/ordinary-canonical-host-v024/json006-authoring/workspace/json-adapter/Cargo.lock",
+        "bytes": 8268,
+        "sha256": "899071ca535064c87ff3a183d430f3d0e6992774e6c96051f524da3ca0ca691c"
+      },
+      {
+        "path": "admission/ordinary-canonical-host-v024/json006-authoring/workspace/json-adapter/Cargo.toml",
+        "bytes": 434,
+        "sha256": "2d4181f8d8d328ec189112503b5ef386d9168b2ef55165d1b27db6b1d3d30701"
+      },
+      {
+        "path": "admission/ordinary-canonical-host-v024/json006-authoring/workspace/json-adapter/src/lib.rs",
+        "bytes": 3661,
+        "sha256": "2cb9aab4181dd5e67e4eed73b1d6035b5509627bfc017ce0098dfac24c51974c"
+      },
+      {
+        "path": "admission/ordinary-canonical-host-v024/json006-authoring/workspace/json-adapter/src/logic.rs",
+        "bytes": 7899,
+        "sha256": "bed7ec69f0ad63237dfd28e1ae3f06dcdf0d961dc052b6c4f4a528f0880db1ac"
+      },
+      {
+        "path": "admission/ordinary-canonical-host-v024/json006-authoring/workspace/json-adapter/src/utf8.rs",
+        "bytes": 1829,
+        "sha256": "a50bc2fc87c0147e967de31bc9de488bffd5abcde92002f855848d512320609e"
+      }
+    ]
+  },
+  "canonical_source": {
+    "source_commit": "f869332b9bfa44d09ea1ae5bc95ad0d4d0c74816",
+    "path": "examples/wasmc_lib_json_utf8_v1/lib.build.json",
+    "git_blob": "62ce6c8cbe44562d9518ed5a70dbfe1c7b6ff107",
+    "sha256": "99cde3fcccca4a65ced4adc5c8899192361dc0665ea8ce6f3ae7ecdc97f658a0",
+    "bytes": 9793
+  },
+  "materialization": {
+    "custody": {
+      "path": "admission/ordinary-canonical-host-v024/json006-authoring/source-spec-custody.json",
+      "bytes": 773,
+      "sha256": "9d24d51760cfd0b74c3dd05bff092655d57724a2cbc6581aaa346d84ebd474a1"
+    },
+    "source_spec": {
+      "path": "admission/ordinary-canonical-host-v024/json006-authoring/source-lib.build.json",
+      "bytes": 9793,
+      "sha256": "99cde3fcccca4a65ced4adc5c8899192361dc0665ea8ce6f3ae7ecdc97f658a0"
+    },
+    "materialized_spec": {
+      "path": "admission/ordinary-canonical-host-v024/json006-authoring/lib.build.json",
+      "bytes": 9822,
+      "sha256": "8f50a84bd1ca8b369743e841a2e8032eabc8970061bd5103e75d3512c05561ea"
+    },
+    "only_changed_json_field": "/rust/crate_dir"
+  },
+  "producer": {
+    "custody": {
+      "path": "admission/ordinary-canonical-host-v024/json006-authoring/producer-custody.json",
+      "bytes": 3605,
+      "sha256": "e223f3e1e90bced22976d786b1ed10a38a975aabcb7c2167de5b0a1203c34ae5"
+    },
+    "report": {
+      "container": {
+        "path": "admission/ordinary-canonical-host-v024/json006-authoring/producer-custody.json",
+        "bytes": 3605,
+        "sha256": "e223f3e1e90bced22976d786b1ed10a38a975aabcb7c2167de5b0a1203c34ae5"
+      },
+      "json_pointer": "/original_producer_report",
+      "canonical_json_sha256": "08467bc20d517ddd18370d4bc116623e76a15169b8323b034c566785ab220103",
+      "representation": "JSON pointer value; SHA256 of JSON.stringify(value), not raw original receipt bytes"
+    },
+    "driver_sha256": "73b6c3c9fc05bd1ccf5c19294ca74320438f9620eba7d11bb3d78a92f60a8286",
+    "observed_build_source": "e1c90d21cbe1646b9c12f2ae9d125801785977ad",
+    "original_receipt_sha256": "d737ec4d9dd2e6452661d9da597b6063b8b3c8a89a48387ab34037c6b692c632",
+    "original_receipt_bytes_verified": false
+  },
+  "root": {
+    "locator": "standard/wasmc-json/0.0.6",
+    "manifest_sha256": "07a15fe29afe16a058a26850672fc7b91a8e8301fcc8dda5d356a00adacaec7f",
+    "inventory_sha256": "0054d7e874ecee3f3b15a009859b74a63d37cd99912fac572f6d66e4629d5340",
+    "files": [
+      {
+        "path": "standard/wasmc-json/0.0.6/LICENSE",
+        "bytes": 3823,
+        "sha256": "7bca2d5818178e0bc14546700d39bf113d15139b1c3b6d1e62f621d4a276d6e3"
+      },
+      {
+        "path": "standard/wasmc-json/0.0.6/SKILL.md",
+        "bytes": 918,
+        "sha256": "2509e09eab76df700b768d98800b3ad7ed46bab9cb5b9f9ce52613a2c3789245"
+      },
+      {
+        "path": "standard/wasmc-json/0.0.6/artifact.wasm",
+        "bytes": 99374,
+        "sha256": "eeb951756b8aa32115df8de3907fabc2ede385322bf1989d8ee0fc129f008ebd"
+      },
+      {
+        "path": "standard/wasmc-json/0.0.6/bindings/rust-component/Cargo.toml",
+        "bytes": 297,
+        "sha256": "be41b3b9b171b81af8b753fb5e961c528f33b967f67650ad47bc7a26127ac39a"
+      },
+      {
+        "path": "standard/wasmc-json/0.0.6/bindings/rust-component/src/lib.rs",
+        "bytes": 630,
+        "sha256": "1c447d959a1f161f36a719870846ac54523ae182762aa9f1930ed1570500e9ef"
+      },
+      {
+        "path": "standard/wasmc-json/0.0.6/bindings/rust-core/Cargo.toml",
+        "bytes": 159,
+        "sha256": "1f577840330c19aef44122385e854c65292249fb2455da910d31c8e0a5aabddb"
+      },
+      {
+        "path": "standard/wasmc-json/0.0.6/bindings/rust-core/src/lib.rs",
+        "bytes": 77402,
+        "sha256": "730eee02d8847d3576e01335680b2e55d53caed77346097214fe1b93b51171ab"
+      },
+      {
+        "path": "standard/wasmc-json/0.0.6/component.wasm",
+        "bytes": 104768,
+        "sha256": "37a7163b2664a939ac68565cac9e06fbda36d0092e99eaa38a6c84c99a9aa5de"
+      },
+      {
+        "path": "standard/wasmc-json/0.0.6/core-abi.json",
+        "bytes": 6482,
+        "sha256": "829c69291b546e45d41223cc2eb100c02073dc8e9dc683f9e074d88c7a30e97c"
+      },
+      {
+        "path": "standard/wasmc-json/0.0.6/lib.json",
+        "bytes": 8643,
+        "sha256": "07a15fe29afe16a058a26850672fc7b91a8e8301fcc8dda5d356a00adacaec7f"
+      },
+      {
+        "path": "standard/wasmc-json/0.0.6/lib.wit",
+        "bytes": 2275,
+        "sha256": "2c12fb7ee9795183fce66264c35324ec55b5c93032ab77dd8a33dad32fa4f925"
+      },
+      {
+        "path": "standard/wasmc-json/0.0.6/licenses/DEPENDENCY-NOTICES-001.txt",
+        "bytes": 245760,
+        "sha256": "66302f6dd71da97391ab2270d29b10e67bdbac6d7eb782bed043c2ff596ec5cc"
+      },
+      {
+        "path": "standard/wasmc-json/0.0.6/licenses/DEPENDENCY-NOTICES-002.txt",
+        "bytes": 245760,
+        "sha256": "0065cf38006c9a66a6c3ee9cbaf8db10422b1e5301d3c1d5132b7855e71f18ea"
+      },
+      {
+        "path": "standard/wasmc-json/0.0.6/licenses/DEPENDENCY-NOTICES-003.txt",
+        "bytes": 245760,
+        "sha256": "201dbac93dff17177b6379ee630b9658b4cec9cb9d46ce3982b3da87c4b740c8"
+      },
+      {
+        "path": "standard/wasmc-json/0.0.6/licenses/DEPENDENCY-NOTICES-004.txt",
+        "bytes": 245760,
+        "sha256": "c439e1a409b6f23d5797cec339403a0ffce97e9fcf2ae91d6a923c36d619bb76"
+      },
+      {
+        "path": "standard/wasmc-json/0.0.6/licenses/DEPENDENCY-NOTICES-005.txt",
+        "bytes": 245760,
+        "sha256": "04118f32afc6b2ce0fbfd559c56a78614016ab00167be2425c8c778fc7b064fe"
+      },
+      {
+        "path": "standard/wasmc-json/0.0.6/licenses/DEPENDENCY-NOTICES-006.txt",
+        "bytes": 8357,
+        "sha256": "aa6000805f56d3c6009ffa09dbe224083cf2e63e2498e1939deefe6ca7c43d9a"
+      },
+      {
+        "path": "standard/wasmc-json/0.0.6/references/agent-delta.json",
+        "bytes": 4043,
+        "sha256": "8b632fadd9aaf03cd049b8f9e95f9d57bb152026aff3bb1382886f08633fafbb"
+      }
+    ]
+  },
+  "wit": {
+    "path": "admission/ordinary-canonical-host-v024/json006-authoring/lib.wit",
+    "bytes": 2275,
+    "sha256": "2c12fb7ee9795183fce66264c35324ec55b5c93032ab77dd8a33dad32fa4f925"
+  },
+  "source_mode": "original-completed-producer",
+  "fresh_build_performed": false,
+  "fresh_full_q0": false
 }

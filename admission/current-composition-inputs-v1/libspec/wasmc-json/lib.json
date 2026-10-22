@@ -1,0 +1,42 @@
+{
+  "schema": "wasmc.lib-refresh-source/v2",
+  "id": "wasmc-json",
+  "version": "0.0.1",
+  "profile": "value",
+  "crate": "wasmc_json_refresh_v2",
+  "artifact_name": "wasmc_json_refresh_v2",
+  "world": "json",
+  "description": "Bounded JSON compact, validation and pointer selection backed by serde_json.",
+  "dependencies": [
+    "serde_json"
+  ],
+  "apis": [
+    {
+      "api": "compact",
+      "delta": "Bounded parse and compact serialization.",
+      "ecosystem": "serde_json 1.0.151",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "select",
+      "delta": "Parse once and select bounded strict JSON pointers.",
+      "ecosystem": "serde_json 1.0.151",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "validate",
+      "delta": "Bounded JSON validation with explicit public errors.",
+      "ecosystem": "serde_json 1.0.151",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    }
+  ]
+}

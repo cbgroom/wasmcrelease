@@ -1,0 +1,22 @@
+{
+  "schema": "wasmc.library-os-profile/v1",
+  "id": "linux-uinput-keyboard-smoke",
+  "host": {
+    "contract": "wasmc.lib-defined-host-boundary/v1",
+    "required_domain_apis": 0
+  },
+  "libs": [
+    {
+      "identity": "wasmc:system-linux-uinput@0.0.1-dev.1",
+      "descriptor": "native-boundary.template.json"
+    }
+  ],
+  "controller": {
+    "device_name": "wasmc-lib-uinput-keyboard",
+    "keys": [30],
+    "events": [
+      { "code": 30, "value": 1 },
+      { "code": 30, "value": 0 }
+    ]
+  }
+}

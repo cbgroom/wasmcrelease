@@ -1,0 +1,30 @@
+package wasmc:system-websocket@0.0.1;
+
+interface websocket {
+  type connection-id = u64;
+
+  enum state {
+    connecting,
+    open,
+    closing,
+    closed,
+    failed,
+  }
+
+  record snapshot {
+    id: connection-id,
+    state: state,
+    sent-messages: u64,
+    received-messages: u64,
+  }
+
+  connect: func(url: string) -> result<connection-id, s32>;
+  send-text: func(id: connection-id, message: string) -> result<_, s32>;
+  receive-text: func(id: connection-id) -> result<string, s32>;
+  inspect: func(id: connection-id) -> result<snapshot, s32>;
+  close: func(id: connection-id) -> result<_, s32>;
+}
+
+world system-websocket {
+  export websocket;
+}

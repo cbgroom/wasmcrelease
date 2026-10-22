@@ -1,0 +1,40 @@
+{
+  "schema": "wasmc.lib-refresh-source/v2",
+  "id": "wasmc-data-expr",
+  "version": "0.0.1",
+  "profile": "value",
+  "crate": "wasmc_data_expr_refresh_v2",
+  "artifact_name": "wasmc_data_expr_refresh_v2",
+  "world": "data-expr",
+  "description": "Expression evaluation over the shared neutral Data snapshot and Arrow arrays.",
+  "dependencies": [
+    "arrow-arith",
+    "arrow-ord"
+  ],
+  "shared_modules": [
+    "data-arrow"
+  ],
+  "wit_dependencies": [
+    "wasmc-data-core"
+  ],
+  "apis": [
+    {
+      "api": "evaluate",
+      "delta": "Evaluate a bounded expression DAG and return a neutral column.",
+      "ecosystem": "Arrow Arith/Ord 60",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "validate",
+      "delta": "Evaluate expression shape/type and return the result DataType.",
+      "ecosystem": "Arrow 60",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    }
+  ]
+}

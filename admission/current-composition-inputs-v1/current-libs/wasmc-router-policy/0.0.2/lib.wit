@@ -1,0 +1,19 @@
+package wasmc:router-policy@0.0.2;
+
+interface policy {
+  record decision {
+    status: u32,
+    upstream: u32,
+    %flags: u32,
+  }
+  route: func(
+    method: u32,
+    path: u32,
+    body-class: u32,
+    request-count: u32,
+  ) -> decision;
+}
+
+world router-policy {
+  export policy;
+}

@@ -4,8 +4,8 @@
   "owner": "01a129c3-6473-7c62-8856-2cb7a6abca28",
   "branch": "work/WS-20261022-ordinary-canonical-host-v024",
   "base_commit": "c6c74a5218291ef82e0a505ca338ef0d23409bb3",
-  "execution_state": "in-progress",
-  "integration_state": "not-ready",
+  "execution_state": "checkpoint-complete",
+  "integration_state": "ready-for-parent-final-candidate",
   "authority": "Direct parent delegation: import actual006 Root/source custody, preserve originalbase41, assemble strict current composition, ordinary artifact/candidate checkpoints. No final release or compiler/Core/SDK carrier ownership.",
   "claims": [
     {
@@ -82,17 +82,74 @@
       "kind": "file",
       "scope": ".agents/workstreams/WS-20261022-json006-current-admission-v024",
       "mode": "exclusive"
+    },
+    {
+      "kind": "file",
+      "scope": "scripts/current-license-policy-v3.mjs",
+      "mode": "exclusive"
+    },
+    {
+      "kind": "file",
+      "scope": "scripts/test-current-license-policy-v3.mjs",
+      "mode": "exclusive"
+    },
+    {
+      "kind": "file",
+      "scope": "scripts/test-current-lib-composition-release-v1.mjs",
+      "mode": "exclusive"
+    },
+    {
+      "kind": "file",
+      "scope": "scripts/release-candidate.mjs",
+      "mode": "exclusive"
+    },
+    {
+      "kind": "file",
+      "scope": "scripts/validate-libs.mjs",
+      "mode": "exclusive"
+    },
+    {
+      "kind": "file",
+      "scope": "scripts/test-current-product-v3.mjs",
+      "mode": "exclusive"
+    },
+    {
+      "kind": "file",
+      "scope": "scripts/lib-ecosystem-control-plane.mjs",
+      "mode": "exclusive"
+    },
+    {
+      "kind": "file",
+      "scope": "catalog/lib-route-closure.json",
+      "mode": "exclusive"
+    },
+    {
+      "kind": "file",
+      "scope": "lib-ecosystem-control-plane.json",
+      "mode": "exclusive"
+    },
+    {
+      "kind": "file",
+      "scope": "admission/ordinary-canonical-host-v024/historical-composition-005-cohort-v1.json",
+      "mode": "exclusive"
     }
   ],
-  "phase": "artifact-bearing checkpoint before catalog promotion",
+  "phase": "actual current006 composition verified; formal release handed to parent",
   "actual_summary": {
     "packages": 42,
     "reused_roots": 41,
     "imported_roots": 1,
     "apis": 247,
     "entries": 289,
-    "fresh_builds": 0
+    "fresh_builds": 0,
+    "public_network_installation_files": 18,
+    "license_notice_files": 558,
+    "current_product_controls": 43,
+    "legacy_product_controls": 43,
+    "notice_negative_controls": 44
   },
   "parent_parallel_scope": "Compiler/Core/SDK/carrier files remain parent-owned WIP; this checkpoint stages only its own Root/source/catalog helper paths.",
-  "formal_release": false
+  "formal_release": false,
+  "artifact_commit": "0e91db5e63ab5750cb621add5ad48a5581aedfa1",
+  "current_catalog_sha256": "c583d5444d9bcba8f5932660d5b632fd64aa9a212c2002f1a91fa03b9d4e0aa9"
 }

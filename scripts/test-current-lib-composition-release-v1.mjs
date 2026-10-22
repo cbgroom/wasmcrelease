@@ -41,6 +41,11 @@ try{
   assert.equal(creation.closure.fresh_full_q0,false);assert.equal(Object.hasOwn(creation.closure,'refresh_receipt_sha256'),false);
   assert.ok(creation.product_inputs.includes(catalog.cohort.path));
   assert.ok(creation.product_inputs.some(path=>path.startsWith('admission/current-composition-inputs-v1/')));
+  const admitted=JSON.parse(reader(catalog.cohort.path)).source_lineage.admitted_original_sources[0].source;
+  for(const pin of [...admitted.root.files,...admitted.source_packet.files]){
+    assert.ok(creation.product_inputs.includes(pin.path),'direct original carrier is candidate-bound');
+    assert.equal(sha(reader(pin.path)),pin.sha256);
+  }
   results.push({name:'existing candidate creation dispatch independently pins and strictly verifies real composition graph',pass:true});
   for(const key of Object.keys(creationOptions)){
     assert.throws(()=>verifyCurrentCandidateComposition(product,{...creationOptions,[key]:'0'.repeat(64)}));
@@ -103,6 +108,11 @@ try{
   reject('actual original base input byte drift',(map,c)=>{
     const co=JSON.parse(map.get(c.cohort.path)),path=co.input_prefix+'/catalog/current-index-v2.json';map.set(path,Buffer.concat([map.get(path),Buffer.from('changed')]));
   });
+  for(const pin of [admitted.root.files[0],admitted.source_packet.files[0]]){
+    reject('actual original public carrier byte drift '+pin.path,map=>{const b=Buffer.from(map.get(pin.path));b[0]^=1;map.set(pin.path,b);});
+    reject('missing original public carrier '+pin.path,map=>map.delete(pin.path));
+  }
+  reject('hidden original source packet file',map=>map.set(admitted.source_packet.root+'/hidden.txt',Buffer.from('extra')),/complete original public carrier inventory/);
   reject('self-rehashed original base still requires full old WIT verification',(map,c)=>{
     const co=JSON.parse(map.get(c.cohort.path)),prefix=co.input_prefix,basePath=co.input_options.base.catalog_path;
     const base=JSON.parse(map.get(prefix+'/'+basePath)),indexPath=base.index.path;

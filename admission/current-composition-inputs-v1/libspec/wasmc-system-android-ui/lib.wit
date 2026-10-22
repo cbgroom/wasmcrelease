@@ -1,0 +1,10 @@
+package wasmc:system-ui@0.0.1;
+
+interface ui {
+  snapshot: func() -> result<string, s32>;
+  foreground-state: func() -> result<string, s32>;
+}
+
+world system-ui {
+  export ui;
+}

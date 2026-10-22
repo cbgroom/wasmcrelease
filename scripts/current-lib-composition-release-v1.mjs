@@ -3,7 +3,7 @@
 // in a composition receipt. No compiler or unchanged Root is rebuilt here.
 import assert from 'node:assert/strict';
 import {mkdir,writeFile,readdir,readFile} from 'node:fs/promises';
-import {join,resolve,isAbsolute} from 'node:path';
+import {join,isAbsolute} from 'node:path';
 import {sha,digest,inventory} from './lib-refresh-cache-v2.mjs';
 import {verifyCurrentCompositionLineageData} from './current-lib-source-custody-v1.mjs';
 import {CurrentSearchCaller,currentIndexEntries} from './current-lib-search-v3.mjs';
@@ -64,6 +64,15 @@ export function verifyComposedCurrentRelease(catalogBytes,catalogSha256,read,pro
   const baseClosure=baseVerification.verifyCurrentRelease(input.read(options.base.catalog_path),options.base.catalog_sha256,input.read,input.paths('current-libs'));
   assert.equal(digest(cohort.source_lineage),cohort.source_lineage_sha256,'independent current source lineage pin');
   verifyCurrentCompositionLineageData(input,options,composition,cohort.composition_sha256,cohort.source_lineage,baseVerification);
+  // These public carriers are aliases of the already verified original graph,
+  // never alternate source authorities. Keep the direct routes candidate-bound.
+  for(const {source} of cohort.source_lineage.admitted_original_sources){
+    for(const group of [source.root,source.source_packet]){
+      const root=group.locator??group.root;
+      for(const pin of group.files)assert.deepEqual(readPin(pin,read),input.read(pin.path),'exact original public carrier');
+      if(productPaths?.some(path=>path.startsWith(root+'/')))assert.deepEqual(sorted(productPaths.filter(path=>path.startsWith(root+'/'))),group.files.map(pin=>pin.path),'complete original public carrier inventory');
+    }
+  }
   const registry=readPin(catalog.registry,read);assert.deepEqual(registry,input.read(base.registry.path),'current identity registry is unchanged');
   const ids=base.packages.map(row=>row.id);assert.deepEqual(catalog.packages.map(row=>row.id),ids);
   const indexBytes=readPin(catalog.index,read),index=parse(indexBytes);
@@ -120,6 +129,8 @@ export async function assembleComposedCurrentProduct(repo,{compositionOptions,ve
   await mkdir(out,{recursive:false});
   const put=async(path,b)=>{assert.ok(safe(path));await mkdir(join(out,path,'..'),{recursive:true});await writeFile(join(out,path),b,{flag:'wx'});};
   const inputFiles=[];for(const path of [...inputPaths].sort()){const b=read(path);await put(prefix+'/'+path,b);inputFiles.push(pinFor(path,b));}
+  for(const {source} of candidate.source_lineage.admitted_original_sources)
+    for(const pin of [...source.root.files,...source.source_packet.files])await put(pin.path,read(pin.path));
   for(const path of ['LICENSE',base.registry.path,...paths('licenses')])await put(path,read(path));
   for(const path of ['libspec/rust-policy.json','libspec/Cargo.lock'])await put(path,read(path));
   const packages=[];
@@ -149,7 +160,7 @@ export async function assembleComposedCurrentProduct(repo,{compositionOptions,ve
   // Original consumer entrypoints run from this self-contained staging root.
   for(const name of (await readdir(join(repo,'scripts'))).filter(n=>n.endsWith('.mjs')))await put('scripts/'+name,await readFile(join(repo,'scripts',name)));
   const fileInventory=await inventory(out),checked=api.verifyCurrentRelease(catalogBytes,sha(catalogBytes),api.currentProductReader(out),Object.keys(fileInventory));
-  const receipt={schema:'wasmc.current-composition-assembly/v1',accepted:true,out:resolve(out),catalog_sha256:sha(catalogBytes),
+  const receipt={schema:'wasmc.current-composition-assembly/v1',accepted:true,out:'.',catalog_sha256:sha(catalogBytes),
     index_sha256:sha(indexBytes),source_lineage_sha256:digest(candidate.source_lineage),closure:checked,
     fresh_builds:0,original_receipt_bytes_verified:false,formal_release:false,network_installation:false,
     actual_public_artifact_commit_paths_readback_required:true,artifact_commit:artifactCommit};

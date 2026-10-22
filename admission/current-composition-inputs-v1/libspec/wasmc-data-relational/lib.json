@@ -1,0 +1,86 @@
+{
+  "schema": "wasmc.lib-refresh-source/v2",
+  "id": "wasmc-data-relational",
+  "version": "0.0.2",
+  "profile": "value",
+  "crate": "wasmc_data_relational_refresh_v2",
+  "artifact_name": "wasmc_data_relational_refresh_v2",
+  "world": "data-relational",
+  "description": "Relational grouping, union, joins, distinct and window algorithms over the shared neutral Data snapshot model.",
+  "dependencies": [
+    "arrow-arith",
+    "arrow-select",
+    "ordered-float"
+  ],
+  "shared_modules": [
+    "data-arrow"
+  ],
+  "wit_dependencies": [
+    "wasmc-data-core"
+  ],
+  "apis": [
+    {
+      "api": "distinct",
+      "delta": "Distinct rows by selected key columns.",
+      "ecosystem": "Arrow 60 + ordered-float 5.5",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "equi-join",
+      "delta": "Inner/left equi-join with bounded output.",
+      "ecosystem": "Rust ordered maps + neutral columns",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "group-aggregate",
+      "delta": "Grouped count/sum/min/max/mean/first/last/variance/stddev.",
+      "ecosystem": "Arrow Arith 60",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "union-all",
+      "delta": "Schema-checked append of compatible batches.",
+      "ecosystem": "neutral Data model",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "window-aggregate",
+      "delta": "ROWS-frame window aggregates.",
+      "ecosystem": "Arrow Arith 60",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "window-offset",
+      "delta": "Lag/lead over ordered partitions.",
+      "ecosystem": "neutral Data model",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "window-rank",
+      "delta": "row-number/rank/dense-rank over ordered partitions.",
+      "ecosystem": "neutral Data model",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "schema": "wasmc.lib-refresh-source/v2",
+  "id": "wasmc-lib-search",
+  "version": "0.5.0",
+  "profile": "value",
+  "crate": "wasmc_lib_search_refresh_v2",
+  "artifact_name": "wasmc_lib_search_refresh_v2",
+  "world": "search-index",
+  "description": "Deterministic current-registry discovery over an explicit bounded index; discovery is not installation or authority.",
+  "dependencies": ["serde", "serde_json", "sha2"],
+  "apis": [
+    {"api":"lookup","delta":"Exact implementation-qualified identity lookup in a caller-supplied validated index.","ecosystem":"Rust/serde_json","host_authorities":[],"implementation":"lib","origin":"adapted","support":"supported"},
+    {"api":"search","delta":"Stable Unicode-aware AND-token search, implementation/profile filters and bounded pagination.","ecosystem":"Rust/serde_json","host_authorities":[],"implementation":"lib","origin":"adapted","support":"supported"},
+    {"api":"snapshot","delta":"Validate the explicit catalog and compute its SHA256 and complete package/API counts.","ecosystem":"Rust/serde_json/sha2","host_authorities":[],"implementation":"lib","origin":"adapted","support":"supported"}
+  ]
+}

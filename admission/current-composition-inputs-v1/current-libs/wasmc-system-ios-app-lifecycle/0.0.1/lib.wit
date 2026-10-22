@@ -1,0 +1,33 @@
+package wasmc:system-app-lifecycle@0.0.1;
+
+interface lifecycle {
+  enum phase {
+    inactive,
+    active,
+    background,
+  }
+
+  record snapshot {
+    phase: phase,
+    protected-data-available: bool,
+    background-refresh-available: bool,
+    background-time-remaining-ms: u64,
+  }
+
+  record event {
+    sequence: u64,
+    launch-id: string,
+    name: string,
+    phase: phase,
+    monotonic-ns: u64,
+  }
+
+  observe: func() -> snapshot;
+  read-events: func(after-sequence: u64, limit: u32) -> list<event>;
+  begin-finite-work: func(label: string, duration-ms: u32) -> result<u64, s32>;
+  cancel-work: func(work-id: u64) -> result<_, s32>;
+}
+
+world system-app-lifecycle {
+  export lifecycle;
+}

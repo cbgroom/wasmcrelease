@@ -1,0 +1,59 @@
+{
+  "schema": "wasmc.lib-refresh-source/v2",
+  "id": "wasmc-data-interchange",
+  "version": "0.0.1",
+  "profile": "value",
+  "crate": "wasmc_data_interchange_refresh_v2",
+  "artifact_name": "wasmc_data_interchange_refresh_v2",
+  "world": "data-interchange",
+  "description": "Arrow IPC file and Parquet interchange over the shared neutral Data snapshot model.",
+  "dependencies": [
+    "arrow-ipc",
+    "bytes",
+    "parquet"
+  ],
+  "shared_modules": [
+    "data-arrow"
+  ],
+  "wit_dependencies": [
+    "wasmc-data-core"
+  ],
+  "apis": [
+    {
+      "api": "ipc-file-decode",
+      "delta": "Decode bounded Arrow IPC file bytes into neutral batches.",
+      "ecosystem": "Arrow IPC 60",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "ipc-file-encode",
+      "delta": "Encode validated neutral batches as bounded Arrow IPC file bytes.",
+      "ecosystem": "Arrow IPC 60",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "parquet-decode",
+      "delta": "Decode bounded Parquet bytes into neutral batches.",
+      "ecosystem": "Parquet 60",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "parquet-encode",
+      "delta": "Encode validated neutral batches as bounded Parquet bytes.",
+      "ecosystem": "Parquet 60",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    }
+  ]
+}

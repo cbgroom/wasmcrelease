@@ -1,0 +1,136 @@
+{
+  "schema": "wasmc.lib-refresh-source/v2",
+  "id": "wasmc-system-linux-socket",
+  "version": "0.0.1",
+  "profile": "native",
+  "world": "system-linux-socket",
+  "description": "Lib-defined platform implementation: wasmc-system-linux-socket",
+  "dependencies": [],
+  "apis": [
+    {
+      "api": "accept",
+      "delta": "Actual platform implementation, not a simulated Wasm export.",
+      "ecosystem": "c-boundary",
+      "host_authorities": [
+        "wasmc:system-linux-socket@0.0.1"
+      ],
+      "implementation": "native",
+      "origin": "adapted",
+      "support": "target-qualified-only"
+    },
+    {
+      "api": "bind-ipv4-tcp",
+      "delta": "Actual platform implementation, not a simulated Wasm export.",
+      "ecosystem": "c-boundary",
+      "host_authorities": [
+        "wasmc:system-linux-socket@0.0.1"
+      ],
+      "implementation": "native",
+      "origin": "adapted",
+      "support": "target-qualified-only"
+    },
+    {
+      "api": "connect-ipv4-tcp",
+      "delta": "Actual platform implementation, not a simulated Wasm export.",
+      "ecosystem": "c-boundary",
+      "host_authorities": [
+        "wasmc:system-linux-socket@0.0.1"
+      ],
+      "implementation": "native",
+      "origin": "adapted",
+      "support": "target-qualified-only"
+    },
+    {
+      "api": "local-endpoint",
+      "delta": "Actual platform implementation, not a simulated Wasm export.",
+      "ecosystem": "c-boundary",
+      "host_authorities": [
+        "wasmc:system-linux-socket@0.0.1"
+      ],
+      "implementation": "native",
+      "origin": "adapted",
+      "support": "target-qualified-only"
+    },
+    {
+      "api": "peer-endpoint",
+      "delta": "Actual platform implementation, not a simulated Wasm export.",
+      "ecosystem": "c-boundary",
+      "host_authorities": [
+        "wasmc:system-linux-socket@0.0.1"
+      ],
+      "implementation": "native",
+      "origin": "adapted",
+      "support": "target-qualified-only"
+    },
+    {
+      "api": "poll",
+      "delta": "Actual platform implementation, not a simulated Wasm export.",
+      "ecosystem": "c-boundary",
+      "host_authorities": [
+        "wasmc:system-linux-socket@0.0.1"
+      ],
+      "implementation": "native",
+      "origin": "adapted",
+      "support": "target-qualified-only"
+    },
+    {
+      "api": "read",
+      "delta": "Actual platform implementation, not a simulated Wasm export.",
+      "ecosystem": "c-boundary",
+      "host_authorities": [
+        "wasmc:system-linux-socket@0.0.1"
+      ],
+      "implementation": "native",
+      "origin": "adapted",
+      "support": "target-qualified-only"
+    },
+    {
+      "api": "shutdown-write",
+      "delta": "Actual platform implementation, not a simulated Wasm export.",
+      "ecosystem": "c-boundary",
+      "host_authorities": [
+        "wasmc:system-linux-socket@0.0.1"
+      ],
+      "implementation": "native",
+      "origin": "adapted",
+      "support": "target-qualified-only"
+    },
+    {
+      "api": "write",
+      "delta": "Actual platform implementation, not a simulated Wasm export.",
+      "ecosystem": "c-boundary",
+      "host_authorities": [
+        "wasmc:system-linux-socket@0.0.1"
+      ],
+      "implementation": "native",
+      "origin": "adapted",
+      "support": "target-qualified-only"
+    }
+  ],
+  "native": {
+    "kind": "c-boundary",
+    "target": "linux",
+    "files": [
+      "platform/native-adapter.c",
+      "platform/native-boundary.template.json"
+    ],
+    "entry": "platform/native-adapter.c",
+    "descriptor_template": "platform/native-boundary.template.json"
+  },
+  "qualification": {
+    "script": "scripts/test-linux-socket-lib-defined-boundary.mjs",
+    "hosts": [
+      "linux"
+    ],
+    "requires": [],
+    "current_runtime_status": "not-requalified",
+    "remaining": [
+      "descriptor-schema-review",
+      "wasm-lowering",
+      "admission-review",
+      "production-default-switch"
+    ],
+    "source_check": "scripts/validate-lib-refresh-v2-source.mjs"
+  },
+  "examples": []
+}

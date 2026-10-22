@@ -1,0 +1,29 @@
+package wasmc:system-linux-socket@0.0.1;
+
+interface sockets {
+  record ipv4-endpoint {
+    address: tuple<u8, u8, u8, u8>,
+    port: u16,
+  }
+
+  resource tcp-stream {
+    read: func(maximum-bytes: u32) -> result<list<u8>, s32>;
+    write: func(payload: list<u8>) -> result<u64, s32>;
+    poll: func(events: u16, timeout-milliseconds: s32) -> result<u16, s32>;
+    local-endpoint: func() -> result<ipv4-endpoint, s32>;
+    peer-endpoint: func() -> result<ipv4-endpoint, s32>;
+    shutdown-write: func() -> result<_, s32>;
+  }
+
+  resource tcp-listener {
+    local-endpoint: func() -> result<ipv4-endpoint, s32>;
+    accept: func() -> result<tuple<tcp-stream, ipv4-endpoint>, s32>;
+  }
+
+  bind-ipv4-tcp: func(endpoint: ipv4-endpoint, backlog: u32) -> result<tcp-listener, s32>;
+  connect-ipv4-tcp: func(endpoint: ipv4-endpoint) -> result<tcp-stream, s32>;
+}
+
+world system-linux-socket {
+  export sockets;
+}

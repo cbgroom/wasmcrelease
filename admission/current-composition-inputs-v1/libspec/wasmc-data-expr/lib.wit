@@ -1,0 +1,65 @@
+package wasmc:data-expr@0.0.1;
+
+interface expr {
+  use wasmc:data-core/types@0.0.1.{data-type, column, batch-snapshot};
+
+  record unary {
+    input: u32,
+  }
+
+  record binary {
+    left: u32,
+    right: u32,
+  }
+
+  variant literal {
+    boolean(bool),
+    int64(s64),
+    uint64(u64),
+    float64(f64),
+    utf8(string),
+    typed-null(data-type),
+  }
+
+  variant node {
+    column(u32),
+    literal(literal),
+    equal(binary),
+    not-equal(binary),
+    less(binary),
+    less-equal(binary),
+    greater(binary),
+    greater-equal(binary),
+    add(binary),
+    subtract(binary),
+    multiply(binary),
+    divide(binary),
+    logical-and(binary),
+    logical-or(binary),
+    logical-not(unary),
+    is-null(unary),
+  }
+
+  record program {
+    nodes: list<node>,
+    root: u32,
+  }
+
+  enum expr-error {
+    empty-program,
+    root-out-of-bounds,
+    forward-reference,
+    column-out-of-bounds,
+    type-mismatch,
+    unsupported-type,
+    compute-failure,
+    invalid-program,
+  }
+
+  validate: func(value: batch-snapshot, expression: program) -> result<data-type, expr-error>;
+  evaluate: func(value: batch-snapshot, expression: program) -> result<column, expr-error>;
+}
+
+world data-expr {
+  export expr;
+}

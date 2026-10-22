@@ -1,0 +1,20 @@
+[package]
+name = "wasmc-lib-json"
+version = "0.0.6"
+edition = "2021"
+publish = false
+
+[dependencies]
+serde_json = { version = "=1.0.151", default-features = false, features = ["std", "float_roundtrip"] }
+wit-bindgen = { version = "=0.57.1", default-features = false, features = ["macros", "realloc", "std"] }
+
+[lib]
+crate-type = ["cdylib"]
+
+[workspace]
+
+[profile.release]
+opt-level = "z"
+lto = "fat"
+codegen-units = 1
+panic = "abort"

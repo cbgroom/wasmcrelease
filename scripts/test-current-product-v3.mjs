@@ -11,6 +11,15 @@ const data=new Map(),read=currentProductReader(root);
 const catalogBytes=read('catalog/libs-current-v2.json'),catalogInput=JSON.parse(catalogBytes);
 const required=new Set(['LICENSE',...currentProductPaths(root,'licenses'),'catalog/libs-current-v2.json',catalogInput.registry.path,catalogInput.index.path,catalogInput.cohort.path,...currentProductPaths(root)]);
 for(const row of catalogInput.packages)for(const pin of Object.values(row.source))required.add(pin.path);
+const cohortInput=JSON.parse(read(catalogInput.cohort.path));
+const composed=cohortInput.schema==='wasmc.public-current-composition-cohort/v1'||catalogInput.cohort.path==='admission/current-composition-cohort-v1.json';
+if(composed){
+ assert.equal(cohortInput.schema,'wasmc.public-current-composition-cohort/v1');
+ for(const path of currentProductPaths(root,cohortInput.input_prefix))required.add(path);
+ for(const row of catalogInput.packages)for(const path of currentProductPaths(root,row.source.spec.path.slice(0,-'/lib.json'.length)))required.add(path);
+ for(const {source} of cohortInput.source_lineage.admitted_original_sources)
+  for(const path of [...currentProductPaths(root,source.root.locator),...currentProductPaths(root,source.source_packet.root)])required.add(path);
+}
 for(const path of required)data.set(path,read(path));
 const original=data.get('catalog/libs-current-v2.json'),expected=opts['--catalog-sha256'];
 assert.equal(hash(original),expected);const catalog=JSON.parse(original);const results=[];
@@ -28,8 +37,17 @@ try{
  assert.deepEqual(currentProductPaths(orderFixture,'Roots'),['Roots/prefix-client/a','Roots/prefix/a'],'full-path order across directory prefix collisions');
  results.push({name:'canonical full-path inventory order across directory prefixes',passed:true});
 }finally{await rm(orderFixture,{recursive:true,force:true});}
-const closure=verify();assert.equal(closure.release_packages,42);assert.equal(closure.api_routes,236);assert.equal(closure.entries,278);
-results.push({name:'real Core snapshot all278 lookups and full pagination',passed:true});
+const closure=verify();
+if(composed){
+ const index=JSON.parse(data.get(catalog.index.path)),apis=index.packages.reduce((n,row)=>n+row.apis.length,0);
+ assert.equal(closure.schema,'wasmc.current-composition-release-closure/v1');assert.equal(closure.release_packages,42);
+ assert.equal(closure.api_routes,apis);assert.equal(closure.entries,42+apis);
+ assert.equal(closure.fresh_full_q0,false);assert.equal(closure.original_receipt_bytes_verified,false);
+ results.push({name:'real composed Core snapshot all'+closure.entries+' lookups and full pagination; original full-base verified',passed:true});
+}else{
+ assert.equal(closure.release_packages,42);assert.equal(closure.api_routes,236);assert.equal(closure.entries,278);
+ results.push({name:'real Core snapshot all278 lookups and full pagination',passed:true});
+}
 reject('independent catalog mismatch',()=>verify(data,original,'0'.repeat(64)));
 for(const suffix of ['artifact.wasm','component.wasm','lib.wit','LICENSE','Cargo.toml']){
  const row=catalog.packages.find(r=>r.files.some(f=>f.path.endsWith('/'+suffix)));assert.ok(row,suffix);

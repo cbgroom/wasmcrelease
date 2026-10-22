@@ -1,0 +1,188 @@
+{
+  "agent": {
+    "default_view": "runtime",
+    "delta": {
+      "path": "references/agent-delta.json",
+      "sha256": "d5150070794f601c42820ce4873d9ee8972a1fdd9d463364454c64c8cda86af8"
+    },
+    "skill": {
+      "path": "SKILL.md",
+      "sha256": "5fe8c869b547c3351df52aa72b8856965dc4017fa430bfb049adf4c9200d430a"
+    },
+    "views": {
+      "developer": {
+        "includes_runtime": true,
+        "mode": "developer",
+        "skill": "SKILL.md"
+      },
+      "runtime": {
+        "mode": "runtime",
+        "skill": "SKILL.md"
+      }
+    }
+  },
+  "artifact": {
+    "bytes": 14199,
+    "format": "core-wasm",
+    "path": "artifact.wasm",
+    "sha256": "cac973f0cea77d7137a3dfa8d7955c9d78e4d702f4124d4d3965b063079fa8be"
+  },
+  "bindings": {
+    "rust_component": {
+      "artifact_sha256": "cac973f0cea77d7137a3dfa8d7955c9d78e4d702f4124d4d3965b063079fa8be",
+      "cargo_toml": {
+        "path": "bindings/rust-component/Cargo.toml",
+        "sha256": "3b79da8e7e065cdc7489e5adae92212390b2caf189bf6fe37a36943fb118479b"
+      },
+      "component_sha256": "c8c7be894a51b23cfa4936eca67007cba4a4a8e8bedd7cd46ad1dc47327f8a21",
+      "crate": "wasmc-router-policy-component",
+      "functions": 1,
+      "path": "bindings/rust-component",
+      "runtime": "wasmtime-component",
+      "schema": "wasmc.lib-rust-component-sdk/v0",
+      "source": {
+        "path": "bindings/rust-component/src/lib.rs",
+        "sha256": "08e2d2787d64e7d5cb023112fecc1fb5ee419d625337028cab7c78c27b9a16fe"
+      },
+      "wit_sha256": "fe83f392b2d70db163d2c8a5613166fdc075b33b9deb55b45a25918dfc129812",
+      "world": "router-policy"
+    },
+    "rust_core": {
+      "artifact_sha256": "cac973f0cea77d7137a3dfa8d7955c9d78e4d702f4124d4d3965b063079fa8be",
+      "cargo_toml": {
+        "path": "bindings/rust-core/Cargo.toml",
+        "sha256": "5ba4077549dc8159421f7dc2b30f9b2b3119d5ac7b1dabfe426684eaaad735c7"
+      },
+      "crate": "wasmc-router-policy-core",
+      "functions": 1,
+      "import_module": "wasmc:lib/wasmc-router-policy@0.0.2",
+      "path": "bindings/rust-core",
+      "schema": "wasmc.lib-rust-canonical-core-sdk/v1",
+      "source": {
+        "path": "bindings/rust-core/src/lib.rs",
+        "sha256": "35484ac2f1cb5b2a830e7794ae326c80708e9811992a49605e748c306ac66b5f"
+      },
+      "wit_sha256": "fe83f392b2d70db163d2c8a5613166fdc075b33b9deb55b45a25918dfc129812"
+    }
+  },
+  "build": {
+    "inputs": [
+      {
+        "kind": "cargo-lock",
+        "path": "crates/wasmc-router-policy/Cargo.lock",
+        "sha256": "e83312764e965beb0f76698a48033edf5435a2d1c9dd6106c7f5c10b2f606c00"
+      }
+    ],
+    "language": "rust",
+    "locked": true,
+    "offline": true,
+    "profile": "release",
+    "target": "wasm32-unknown-unknown",
+    "toolchain": {
+      "cargo": "cargo 1.96.0 (30a34c682 2026-05-25)",
+      "cargo_version_verbose_sha256": "8f3ec46e9cc84089e62b8ba780a669179c507d6749fff11f5040f19777040c0d",
+      "encoded_rustflags": "-Cstrip=symbols",
+      "host": "x86_64-unknown-linux-gnu",
+      "rustc": "rustc 1.96.0 (ac68faa20 2026-05-25)",
+      "rustc_version_verbose_sha256": "2cb7cb92f27a9203b9bc560f2f504da538cd61712a3b908b004d4087f090a3c5",
+      "schema": "wasmc.rust-toolchain-fingerprint/v2",
+      "sha256": "38aa3b61934cec00fd721d83b46edb1dff3d78be3cf92de49ecfa888809ffbb4",
+      "source_path_remapping": {
+        "mappings_in_order": [
+          {
+            "from": "selected-rustc-sysroot",
+            "to": "/wasmc/rust"
+          },
+          {
+            "from": "selected-cargo-home",
+            "to": "/wasmc/cargo"
+          },
+          {
+            "from": "workspace-root",
+            "to": "/wasmc/workspace"
+          },
+          {
+            "from": "relative-src",
+            "to": "/wasmc/source/src"
+          }
+        ],
+        "resolution": "canonical-workspace-shared-flags",
+        "schema": "wasmc.rust-source-path-remapping/v2",
+        "scope": "rustc-all-default"
+      },
+      "target": "wasm32-unknown-unknown"
+    }
+  },
+  "closure": {
+    "build_dependencies": "linked-into-artifact",
+    "public_exports": "root-wit-only",
+    "public_lib_dependencies": [],
+    "schema": "wasmc.lib-closure/v0"
+  },
+  "compatibility": {
+    "abi_epoch": 1,
+    "wasmc_min": "0.0.1"
+  },
+  "component": {
+    "bytes": 14852,
+    "format": "component-wasm",
+    "path": "component.wasm",
+    "sha256": "c8c7be894a51b23cfa4936eca67007cba4a4a8e8bedd7cd46ad1dc47327f8a21"
+  },
+  "core_abi": {
+    "bytes": 1508,
+    "path": "core-abi.json",
+    "schema": "wasmc.lib-core-abi/v0",
+    "sha256": "b3c4a7c03f3c1195814a7351d2e09dc6bcac363f4e0ac7a152cc35d23e9897b5"
+  },
+  "id": "wasmc-router-policy",
+  "schema": "wasmc.lib/v2",
+  "version": "0.0.2",
+  "wit": {
+    "package": "wasmc:router-policy@0.0.2",
+    "path": "lib.wit",
+    "sha256": "fe83f392b2d70db163d2c8a5613166fdc075b33b9deb55b45a25918dfc129812",
+    "world": "router-policy"
+  },
+  "license": {
+    "schema": "wasmc.lib-license/v1",
+    "identifier": "WAsmC Research-Only Non-Commercial License 1.0",
+    "files": [
+      {
+        "path": "LICENSE",
+        "bytes": 3823,
+        "sha256": "7bca2d5818178e0bc14546700d39bf113d15139b1c3b6d1e62f621d4a276d6e3"
+      },
+      {
+        "path": "licenses/DEPENDENCY-NOTICES-001.txt",
+        "bytes": 245760,
+        "sha256": "66302f6dd71da97391ab2270d29b10e67bdbac6d7eb782bed043c2ff596ec5cc"
+      },
+      {
+        "path": "licenses/DEPENDENCY-NOTICES-002.txt",
+        "bytes": 245760,
+        "sha256": "0065cf38006c9a66a6c3ee9cbaf8db10422b1e5301d3c1d5132b7855e71f18ea"
+      },
+      {
+        "path": "licenses/DEPENDENCY-NOTICES-003.txt",
+        "bytes": 245760,
+        "sha256": "201dbac93dff17177b6379ee630b9658b4cec9cb9d46ce3982b3da87c4b740c8"
+      },
+      {
+        "path": "licenses/DEPENDENCY-NOTICES-004.txt",
+        "bytes": 245760,
+        "sha256": "c439e1a409b6f23d5797cec339403a0ffce97e9fcf2ae91d6a923c36d619bb76"
+      },
+      {
+        "path": "licenses/DEPENDENCY-NOTICES-005.txt",
+        "bytes": 245760,
+        "sha256": "04118f32afc6b2ce0fbfd559c56a78614016ab00167be2425c8c778fc7b064fe"
+      },
+      {
+        "path": "licenses/DEPENDENCY-NOTICES-006.txt",
+        "bytes": 8357,
+        "sha256": "aa6000805f56d3c6009ffa09dbe224083cf2e63e2498e1939deefe6ca7c43d9a"
+      }
+    ]
+  }
+}

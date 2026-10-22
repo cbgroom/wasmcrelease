@@ -8,41 +8,44 @@
     "rule": "Root qualification, runtime execution, admission, release, discovery, installation and Host authority are independent."
   },
   "release": {
-    "version": "0.0.23",
-    "tag": "v0.0.23",
+    "version": "0.0.24",
+    "tag": "v0.0.24",
     "lifecycle_authority": "release.json and channels/prod.json",
-    "published": true
+    "published": false
   },
   "route_closure": {
     "authority": "catalog/lib-route-closure.json",
     "release_packages": 42,
     "package_routes": 42,
-    "api_routes": 236,
-    "entries": 278,
+    "api_routes": 247,
+    "entries": 289,
     "candidate_extras": 0,
     "exact": true,
     "public_release_admission": false
   },
   "inventory": {
     "packages": 42,
-    "Root_Q0_qualified": 42,
+    "Root_Q0_qualified": 41,
+    "original_producer_source_verified": 1,
+    "fresh_full_q0": false,
     "native_source_packages": 14,
-    "admitted": 42,
-    "released": 42,
-    "discoverable": 42,
-    "installable": 42,
-    "install_catalog_release": "v0.0.23",
+    "admitted": 0,
+    "released": 0,
+    "discoverable": 0,
+    "installable": 0,
+    "install_catalog_release": "v0.0.24",
     "install_catalog_packages": 42,
     "inventory_is_unified": true
   },
   "type_position_authority": {
     "schema": "wasmc.release-agent-capabilities/v1",
-    "product_release": "v0.0.23",
+    "product_release": "v0.0.24",
     "guidance_scope": {
-      "status": "included-in-v0.0.23-product",
+      "status": "included-in-v0.0.24-product-pending-lifecycle",
       "included_in_product": true,
       "lifecycle_authority": "release.json and channels/prod.json",
-      "rule": "This frozen projection describes v0.0.23 product capability only. It does not prove the product is the current released, discoverable or installable lifecycle stage."
+      "rule": "This frozen projection describes v0.0.24 product capability only. It does not prove the product is the current released, discoverable or installable lifecycle stage.",
+      "lifecycle_status": "pending-v0.0.24-channel-decision"
     },
     "decision_rule": "A type or feature is usable only at the exact admitted position below. WIT vocabulary, local values, Core lanes, Component profiles, Host bindings and public results are separate claims.",
     "alternative_rule": "Alternatives must preserve semantics. Numeric width or signedness, async behavior, identity, ordering, ownership and failure semantics may change only with explicit application proof; otherwise stop.",
@@ -71,7 +74,7 @@
         ]
       },
       "u64_ordinary_source": {
-        "status": "released",
+        "status": "qualified",
         "positions": [
           "local",
           "parameter",
@@ -86,7 +89,7 @@
         ]
       },
       "tuple_record": {
-        "status": "released-core-lane-source",
+        "status": "qualified-core-lane-source",
         "positions": [
           "ordinary-source",
           "parameter",
@@ -99,7 +102,7 @@
         ]
       },
       "option_result_variant_enum": {
-        "status": "released-core-lane-source",
+        "status": "qualified-core-lane-source",
         "positions": [
           "ordinary-source",
           "parameter",
@@ -111,7 +114,7 @@
         ]
       },
       "string_list_record_managed": {
-        "status": "released-through-matching-lib",
+        "status": "qualified-through-matching-lib",
         "positions": [
           "compatible-App-Lib-Core-domain"
         ],
@@ -121,7 +124,7 @@
         ]
       },
       "map": {
-        "status": "released-resident-local-through-matching-lib",
+        "status": "qualified-resident-local-through-matching-lib",
         "positions": [
           "compatible-App-Lib-Core-domain"
         ],
@@ -133,7 +136,7 @@
         "alternative": "Use an explicitly ordered list<Entry<K,V>> snapshot for copied public values or a declared resource for identity and mutation; never expose a private handle."
       },
       "host_import": {
-        "status": "released-bounded",
+        "status": "qualified-bounded",
         "positions": [
           "explicit-synchronous-scalar-functions"
         ],
@@ -207,18 +210,21 @@
       "qualification_scope": "Immutable containing u64 implementation authority; current complete source and canonical master gates remain independent."
     },
     "release": {
-      "product": "v0.0.23",
+      "product": "v0.0.24",
       "lifecycle_authority": "release.json",
-      "compiler_source_authority": "05c0c310aca7c50195a3ff3245d4a5a38249cb44",
-      "compiler_sha256": "1a04d9ef830be8770bc37e507e50addac10be3615e610beab1241ccba6d090b0",
+      "compiler_source_authority": "81966eaef368769a569bfac17db9e8c3416ba9ad",
+      "compiler_sha256": "c78816376228b6091599845c6a9a531eb76f949fe419655c012ec30c05f75832",
       "ordinary_source_u64": "supported",
-      "reason": "Current v0.0.23 staged compiler supports the same qualified full-width u64 contract; lifecycle remains channel-owned."
+      "reason": "Current v0.0.24 staged compiler supports the same qualified full-width u64 contract; lifecycle remains channel-owned.",
+      "released": false,
+      "lifecycle_status": "pending-v0.0.24-channel-decision"
     },
     "adjacent_type_decisions": {
-      "u32": "included in the v0.0.23 product compiler; no repair was required",
+      "u32": "included in the v0.0.24 product compiler; no repair was required",
       "char": "not implemented on the cited producer authority and not released; do not substitute arbitrary u32"
     },
-    "answer_rule": "When asked whether u64 is fixed or supported, report that producer master and the v0.0.23 product compiler both support it, then read release.json for the current published lifecycle stage. Do not infer async, map or char support."
+    "answer_rule": "When asked whether u64 is fixed or supported, report that producer master and the v0.0.24 product compiler both support it, then read release.json for the current published lifecycle stage. Do not infer async, map or char support.",
+    "producer_anchor_scope": "Immutable 566eff42 containing-u64 qualification; current canonical source and product build are bound separately."
   },
   "packages": [
     {
@@ -238,14 +244,18 @@
       "device_qualified": false,
       "qualification": {
         "Root_Q0": true,
+        "qualification_kind": "inherited-original-full-Q0",
+        "original_producer_source_verified": false,
+        "source_lineage_sha256": "bd4298b34909bedc21052ff7b4dce7d458231c6f0bc2bd5c29b257d69d01eb83",
+        "fresh_full_q0": false,
         "runtime_claim": "separate exact runtime receipts required"
       },
       "states": {
         "qualified": true,
-        "admitted": true,
-        "released": true,
-        "discoverable": true,
-        "installable": true
+        "admitted": false,
+        "released": false,
+        "discoverable": false,
+        "installable": false
       },
       "lifecycle_authority": "release.json and channels/prod.json",
       "stopping_conditions": []
@@ -267,14 +277,18 @@
       "device_qualified": false,
       "qualification": {
         "Root_Q0": true,
+        "qualification_kind": "inherited-original-full-Q0",
+        "original_producer_source_verified": false,
+        "source_lineage_sha256": "bd4298b34909bedc21052ff7b4dce7d458231c6f0bc2bd5c29b257d69d01eb83",
+        "fresh_full_q0": false,
         "runtime_claim": "separate exact runtime receipts required"
       },
       "states": {
         "qualified": true,
-        "admitted": true,
-        "released": true,
-        "discoverable": true,
-        "installable": true
+        "admitted": false,
+        "released": false,
+        "discoverable": false,
+        "installable": false
       },
       "lifecycle_authority": "release.json and channels/prod.json",
       "stopping_conditions": []
@@ -296,14 +310,18 @@
       "device_qualified": false,
       "qualification": {
         "Root_Q0": true,
+        "qualification_kind": "inherited-original-full-Q0",
+        "original_producer_source_verified": false,
+        "source_lineage_sha256": "bd4298b34909bedc21052ff7b4dce7d458231c6f0bc2bd5c29b257d69d01eb83",
+        "fresh_full_q0": false,
         "runtime_claim": "separate exact runtime receipts required"
       },
       "states": {
         "qualified": true,
-        "admitted": true,
-        "released": true,
-        "discoverable": true,
-        "installable": true
+        "admitted": false,
+        "released": false,
+        "discoverable": false,
+        "installable": false
       },
       "lifecycle_authority": "release.json and channels/prod.json",
       "stopping_conditions": []
@@ -325,14 +343,18 @@
       "device_qualified": false,
       "qualification": {
         "Root_Q0": true,
+        "qualification_kind": "inherited-original-full-Q0",
+        "original_producer_source_verified": false,
+        "source_lineage_sha256": "bd4298b34909bedc21052ff7b4dce7d458231c6f0bc2bd5c29b257d69d01eb83",
+        "fresh_full_q0": false,
         "runtime_claim": "separate exact runtime receipts required"
       },
       "states": {
         "qualified": true,
-        "admitted": true,
-        "released": true,
-        "discoverable": true,
-        "installable": true
+        "admitted": false,
+        "released": false,
+        "discoverable": false,
+        "installable": false
       },
       "lifecycle_authority": "release.json and channels/prod.json",
       "stopping_conditions": []
@@ -354,14 +376,18 @@
       "device_qualified": false,
       "qualification": {
         "Root_Q0": true,
+        "qualification_kind": "inherited-original-full-Q0",
+        "original_producer_source_verified": false,
+        "source_lineage_sha256": "bd4298b34909bedc21052ff7b4dce7d458231c6f0bc2bd5c29b257d69d01eb83",
+        "fresh_full_q0": false,
         "runtime_claim": "separate exact runtime receipts required"
       },
       "states": {
         "qualified": true,
-        "admitted": true,
-        "released": true,
-        "discoverable": true,
-        "installable": true
+        "admitted": false,
+        "released": false,
+        "discoverable": false,
+        "installable": false
       },
       "lifecycle_authority": "release.json and channels/prod.json",
       "stopping_conditions": []
@@ -383,14 +409,18 @@
       "device_qualified": false,
       "qualification": {
         "Root_Q0": true,
+        "qualification_kind": "inherited-original-full-Q0",
+        "original_producer_source_verified": false,
+        "source_lineage_sha256": "bd4298b34909bedc21052ff7b4dce7d458231c6f0bc2bd5c29b257d69d01eb83",
+        "fresh_full_q0": false,
         "runtime_claim": "separate exact runtime receipts required"
       },
       "states": {
         "qualified": true,
-        "admitted": true,
-        "released": true,
-        "discoverable": true,
-        "installable": true
+        "admitted": false,
+        "released": false,
+        "discoverable": false,
+        "installable": false
       },
       "lifecycle_authority": "release.json and channels/prod.json",
       "stopping_conditions": []
@@ -412,14 +442,18 @@
       "device_qualified": false,
       "qualification": {
         "Root_Q0": true,
+        "qualification_kind": "inherited-original-full-Q0",
+        "original_producer_source_verified": false,
+        "source_lineage_sha256": "bd4298b34909bedc21052ff7b4dce7d458231c6f0bc2bd5c29b257d69d01eb83",
+        "fresh_full_q0": false,
         "runtime_claim": "separate exact runtime receipts required"
       },
       "states": {
         "qualified": true,
-        "admitted": true,
-        "released": true,
-        "discoverable": true,
-        "installable": true
+        "admitted": false,
+        "released": false,
+        "discoverable": false,
+        "installable": false
       },
       "lifecycle_authority": "release.json and channels/prod.json",
       "stopping_conditions": []
@@ -441,14 +475,18 @@
       "device_qualified": false,
       "qualification": {
         "Root_Q0": true,
+        "qualification_kind": "inherited-original-full-Q0",
+        "original_producer_source_verified": false,
+        "source_lineage_sha256": "bd4298b34909bedc21052ff7b4dce7d458231c6f0bc2bd5c29b257d69d01eb83",
+        "fresh_full_q0": false,
         "runtime_claim": "separate exact runtime receipts required"
       },
       "states": {
         "qualified": true,
-        "admitted": true,
-        "released": true,
-        "discoverable": true,
-        "installable": true
+        "admitted": false,
+        "released": false,
+        "discoverable": false,
+        "installable": false
       },
       "lifecycle_authority": "release.json and channels/prod.json",
       "stopping_conditions": []
@@ -470,14 +508,18 @@
       "device_qualified": false,
       "qualification": {
         "Root_Q0": true,
+        "qualification_kind": "inherited-original-full-Q0",
+        "original_producer_source_verified": false,
+        "source_lineage_sha256": "bd4298b34909bedc21052ff7b4dce7d458231c6f0bc2bd5c29b257d69d01eb83",
+        "fresh_full_q0": false,
         "runtime_claim": "separate exact runtime receipts required"
       },
       "states": {
         "qualified": true,
-        "admitted": true,
-        "released": true,
-        "discoverable": true,
-        "installable": true
+        "admitted": false,
+        "released": false,
+        "discoverable": false,
+        "installable": false
       },
       "lifecycle_authority": "release.json and channels/prod.json",
       "stopping_conditions": []
@@ -499,14 +541,18 @@
       "device_qualified": false,
       "qualification": {
         "Root_Q0": true,
+        "qualification_kind": "inherited-original-full-Q0",
+        "original_producer_source_verified": false,
+        "source_lineage_sha256": "bd4298b34909bedc21052ff7b4dce7d458231c6f0bc2bd5c29b257d69d01eb83",
+        "fresh_full_q0": false,
         "runtime_claim": "separate exact runtime receipts required"
       },
       "states": {
         "qualified": true,
-        "admitted": true,
-        "released": true,
-        "discoverable": true,
-        "installable": true
+        "admitted": false,
+        "released": false,
+        "discoverable": false,
+        "installable": false
       },
       "lifecycle_authority": "release.json and channels/prod.json",
       "stopping_conditions": []
@@ -528,14 +574,18 @@
       "device_qualified": false,
       "qualification": {
         "Root_Q0": true,
+        "qualification_kind": "inherited-original-full-Q0",
+        "original_producer_source_verified": false,
+        "source_lineage_sha256": "bd4298b34909bedc21052ff7b4dce7d458231c6f0bc2bd5c29b257d69d01eb83",
+        "fresh_full_q0": false,
         "runtime_claim": "separate exact runtime receipts required"
       },
       "states": {
         "qualified": true,
-        "admitted": true,
-        "released": true,
-        "discoverable": true,
-        "installable": true
+        "admitted": false,
+        "released": false,
+        "discoverable": false,
+        "installable": false
       },
       "lifecycle_authority": "release.json and channels/prod.json",
       "stopping_conditions": []
@@ -557,14 +607,18 @@
       "device_qualified": false,
       "qualification": {
         "Root_Q0": true,
+        "qualification_kind": "inherited-original-full-Q0",
+        "original_producer_source_verified": false,
+        "source_lineage_sha256": "bd4298b34909bedc21052ff7b4dce7d458231c6f0bc2bd5c29b257d69d01eb83",
+        "fresh_full_q0": false,
         "runtime_claim": "separate exact runtime receipts required"
       },
       "states": {
         "qualified": true,
-        "admitted": true,
-        "released": true,
-        "discoverable": true,
-        "installable": true
+        "admitted": false,
+        "released": false,
+        "discoverable": false,
+        "installable": false
       },
       "lifecycle_authority": "release.json and channels/prod.json",
       "stopping_conditions": []
@@ -586,43 +640,51 @@
       "device_qualified": false,
       "qualification": {
         "Root_Q0": true,
+        "qualification_kind": "inherited-original-full-Q0",
+        "original_producer_source_verified": false,
+        "source_lineage_sha256": "bd4298b34909bedc21052ff7b4dce7d458231c6f0bc2bd5c29b257d69d01eb83",
+        "fresh_full_q0": false,
         "runtime_claim": "separate exact runtime receipts required"
       },
       "states": {
         "qualified": true,
-        "admitted": true,
-        "released": true,
-        "discoverable": true,
-        "installable": true
+        "admitted": false,
+        "released": false,
+        "discoverable": false,
+        "installable": false
       },
       "lifecycle_authority": "release.json and channels/prod.json",
       "stopping_conditions": []
     },
     {
       "id": "wasmc-json",
-      "identity": "wasmc:json@0.0.1",
-      "version": "0.0.1",
-      "root": "current-libs/wasmc-json/0.0.1",
+      "identity": "wasmc:json@0.0.6",
+      "version": "0.0.6",
+      "root": "current-libs/wasmc-json/0.0.6",
       "profile": "value",
       "delivery_kind": "wasm-core-component",
-      "manifest_sha256": "d962491acb1fdcce3fe91dea839ca6274440861203c21208d28908f156566a91",
-      "root_inventory_sha256": "c78b8f3c262a33fbda4a429a422df43df2152c72178dba8f97be2193da060eff",
+      "manifest_sha256": "07a15fe29afe16a058a26850672fc7b91a8e8301fcc8dda5d356a00adacaec7f",
+      "root_inventory_sha256": "0054d7e874ecee3f3b15a009859b74a63d37cd99912fac572f6d66e4629d5340",
       "catalog_bound": true,
       "package_route_bound": true,
-      "api_routes": 3,
+      "api_routes": 14,
       "api_routes_exact": true,
-      "indexed_identity": "wasmc-json@0.0.1",
+      "indexed_identity": "wasmc-json@0.0.6",
       "device_qualified": false,
       "qualification": {
-        "Root_Q0": true,
+        "Root_Q0": false,
+        "qualification_kind": "verified-original-producer-source-composition",
+        "original_producer_source_verified": true,
+        "source_lineage_sha256": "bd4298b34909bedc21052ff7b4dce7d458231c6f0bc2bd5c29b257d69d01eb83",
+        "fresh_full_q0": false,
         "runtime_claim": "separate exact runtime receipts required"
       },
       "states": {
         "qualified": true,
-        "admitted": true,
-        "released": true,
-        "discoverable": true,
-        "installable": true
+        "admitted": false,
+        "released": false,
+        "discoverable": false,
+        "installable": false
       },
       "lifecycle_authority": "release.json and channels/prod.json",
       "stopping_conditions": []
@@ -644,14 +706,18 @@
       "device_qualified": false,
       "qualification": {
         "Root_Q0": true,
+        "qualification_kind": "inherited-original-full-Q0",
+        "original_producer_source_verified": false,
+        "source_lineage_sha256": "bd4298b34909bedc21052ff7b4dce7d458231c6f0bc2bd5c29b257d69d01eb83",
+        "fresh_full_q0": false,
         "runtime_claim": "separate exact runtime receipts required"
       },
       "states": {
         "qualified": true,
-        "admitted": true,
-        "released": true,
-        "discoverable": true,
-        "installable": true
+        "admitted": false,
+        "released": false,
+        "discoverable": false,
+        "installable": false
       },
       "lifecycle_authority": "release.json and channels/prod.json",
       "stopping_conditions": []
@@ -673,14 +739,18 @@
       "device_qualified": false,
       "qualification": {
         "Root_Q0": true,
+        "qualification_kind": "inherited-original-full-Q0",
+        "original_producer_source_verified": false,
+        "source_lineage_sha256": "bd4298b34909bedc21052ff7b4dce7d458231c6f0bc2bd5c29b257d69d01eb83",
+        "fresh_full_q0": false,
         "runtime_claim": "separate exact runtime receipts required"
       },
       "states": {
         "qualified": true,
-        "admitted": true,
-        "released": true,
-        "discoverable": true,
-        "installable": true
+        "admitted": false,
+        "released": false,
+        "discoverable": false,
+        "installable": false
       },
       "lifecycle_authority": "release.json and channels/prod.json",
       "stopping_conditions": []
@@ -702,14 +772,18 @@
       "device_qualified": false,
       "qualification": {
         "Root_Q0": true,
+        "qualification_kind": "inherited-original-full-Q0",
+        "original_producer_source_verified": false,
+        "source_lineage_sha256": "bd4298b34909bedc21052ff7b4dce7d458231c6f0bc2bd5c29b257d69d01eb83",
+        "fresh_full_q0": false,
         "runtime_claim": "separate exact runtime receipts required"
       },
       "states": {
         "qualified": true,
-        "admitted": true,
-        "released": true,
-        "discoverable": true,
-        "installable": true
+        "admitted": false,
+        "released": false,
+        "discoverable": false,
+        "installable": false
       },
       "lifecycle_authority": "release.json and channels/prod.json",
       "stopping_conditions": []
@@ -731,14 +805,18 @@
       "device_qualified": false,
       "qualification": {
         "Root_Q0": true,
+        "qualification_kind": "inherited-original-full-Q0",
+        "original_producer_source_verified": false,
+        "source_lineage_sha256": "bd4298b34909bedc21052ff7b4dce7d458231c6f0bc2bd5c29b257d69d01eb83",
+        "fresh_full_q0": false,
         "runtime_claim": "separate exact runtime receipts required"
       },
       "states": {
         "qualified": true,
-        "admitted": true,
-        "released": true,
-        "discoverable": true,
-        "installable": true
+        "admitted": false,
+        "released": false,
+        "discoverable": false,
+        "installable": false
       },
       "lifecycle_authority": "release.json and channels/prod.json",
       "stopping_conditions": []
@@ -760,14 +838,18 @@
       "device_qualified": false,
       "qualification": {
         "Root_Q0": true,
+        "qualification_kind": "inherited-original-full-Q0",
+        "original_producer_source_verified": false,
+        "source_lineage_sha256": "bd4298b34909bedc21052ff7b4dce7d458231c6f0bc2bd5c29b257d69d01eb83",
+        "fresh_full_q0": false,
         "runtime_claim": "separate exact runtime receipts required"
       },
       "states": {
         "qualified": true,
-        "admitted": true,
-        "released": true,
-        "discoverable": true,
-        "installable": true
+        "admitted": false,
+        "released": false,
+        "discoverable": false,
+        "installable": false
       },
       "lifecycle_authority": "release.json and channels/prod.json",
       "stopping_conditions": []
@@ -789,14 +871,18 @@
       "device_qualified": false,
       "qualification": {
         "Root_Q0": true,
+        "qualification_kind": "inherited-original-full-Q0",
+        "original_producer_source_verified": false,
+        "source_lineage_sha256": "bd4298b34909bedc21052ff7b4dce7d458231c6f0bc2bd5c29b257d69d01eb83",
+        "fresh_full_q0": false,
         "runtime_claim": "source-only; no execution or device qualification"
       },
       "states": {
         "qualified": true,
-        "admitted": true,
-        "released": true,
-        "discoverable": true,
-        "installable": true
+        "admitted": false,
+        "released": false,
+        "discoverable": false,
+        "installable": false
       },
       "lifecycle_authority": "release.json and channels/prod.json",
       "stopping_conditions": [
@@ -821,14 +907,18 @@
       "device_qualified": false,
       "qualification": {
         "Root_Q0": true,
+        "qualification_kind": "inherited-original-full-Q0",
+        "original_producer_source_verified": false,
+        "source_lineage_sha256": "bd4298b34909bedc21052ff7b4dce7d458231c6f0bc2bd5c29b257d69d01eb83",
+        "fresh_full_q0": false,
         "runtime_claim": "source-only; no execution or device qualification"
       },
       "states": {
         "qualified": true,
-        "admitted": true,
-        "released": true,
-        "discoverable": true,
-        "installable": true
+        "admitted": false,
+        "released": false,
+        "discoverable": false,
+        "installable": false
       },
       "lifecycle_authority": "release.json and channels/prod.json",
       "stopping_conditions": [
@@ -853,14 +943,18 @@
       "device_qualified": false,
       "qualification": {
         "Root_Q0": true,
+        "qualification_kind": "inherited-original-full-Q0",
+        "original_producer_source_verified": false,
+        "source_lineage_sha256": "bd4298b34909bedc21052ff7b4dce7d458231c6f0bc2bd5c29b257d69d01eb83",
+        "fresh_full_q0": false,
         "runtime_claim": "source-only; no execution or device qualification"
       },
       "states": {
         "qualified": true,
-        "admitted": true,
-        "released": true,
-        "discoverable": true,
-        "installable": true
+        "admitted": false,
+        "released": false,
+        "discoverable": false,
+        "installable": false
       },
       "lifecycle_authority": "release.json and channels/prod.json",
       "stopping_conditions": [
@@ -885,14 +979,18 @@
       "device_qualified": false,
       "qualification": {
         "Root_Q0": true,
+        "qualification_kind": "inherited-original-full-Q0",
+        "original_producer_source_verified": false,
+        "source_lineage_sha256": "bd4298b34909bedc21052ff7b4dce7d458231c6f0bc2bd5c29b257d69d01eb83",
+        "fresh_full_q0": false,
         "runtime_claim": "source-only; no execution or device qualification"
       },
       "states": {
         "qualified": true,
-        "admitted": true,
-        "released": true,
-        "discoverable": true,
-        "installable": true
+        "admitted": false,
+        "released": false,
+        "discoverable": false,
+        "installable": false
       },
       "lifecycle_authority": "release.json and channels/prod.json",
       "stopping_conditions": [
@@ -917,14 +1015,18 @@
       "device_qualified": false,
       "qualification": {
         "Root_Q0": true,
+        "qualification_kind": "inherited-original-full-Q0",
+        "original_producer_source_verified": false,
+        "source_lineage_sha256": "bd4298b34909bedc21052ff7b4dce7d458231c6f0bc2bd5c29b257d69d01eb83",
+        "fresh_full_q0": false,
         "runtime_claim": "separate exact runtime receipts required"
       },
       "states": {
         "qualified": true,
-        "admitted": true,
-        "released": true,
-        "discoverable": true,
-        "installable": true
+        "admitted": false,
+        "released": false,
+        "discoverable": false,
+        "installable": false
       },
       "lifecycle_authority": "release.json and channels/prod.json",
       "stopping_conditions": []
@@ -946,14 +1048,18 @@
       "device_qualified": false,
       "qualification": {
         "Root_Q0": true,
+        "qualification_kind": "inherited-original-full-Q0",
+        "original_producer_source_verified": false,
+        "source_lineage_sha256": "bd4298b34909bedc21052ff7b4dce7d458231c6f0bc2bd5c29b257d69d01eb83",
+        "fresh_full_q0": false,
         "runtime_claim": "source-only; no execution or device qualification"
       },
       "states": {
         "qualified": true,
-        "admitted": true,
-        "released": true,
-        "discoverable": true,
-        "installable": true
+        "admitted": false,
+        "released": false,
+        "discoverable": false,
+        "installable": false
       },
       "lifecycle_authority": "release.json and channels/prod.json",
       "stopping_conditions": [
@@ -978,14 +1084,18 @@
       "device_qualified": false,
       "qualification": {
         "Root_Q0": true,
+        "qualification_kind": "inherited-original-full-Q0",
+        "original_producer_source_verified": false,
+        "source_lineage_sha256": "bd4298b34909bedc21052ff7b4dce7d458231c6f0bc2bd5c29b257d69d01eb83",
+        "fresh_full_q0": false,
         "runtime_claim": "source-only; no execution or device qualification"
       },
       "states": {
         "qualified": true,
-        "admitted": true,
-        "released": true,
-        "discoverable": true,
-        "installable": true
+        "admitted": false,
+        "released": false,
+        "discoverable": false,
+        "installable": false
       },
       "lifecycle_authority": "release.json and channels/prod.json",
       "stopping_conditions": [
@@ -1010,14 +1120,18 @@
       "device_qualified": false,
       "qualification": {
         "Root_Q0": true,
+        "qualification_kind": "inherited-original-full-Q0",
+        "original_producer_source_verified": false,
+        "source_lineage_sha256": "bd4298b34909bedc21052ff7b4dce7d458231c6f0bc2bd5c29b257d69d01eb83",
+        "fresh_full_q0": false,
         "runtime_claim": "source-only; no execution or device qualification"
       },
       "states": {
         "qualified": true,
-        "admitted": true,
-        "released": true,
-        "discoverable": true,
-        "installable": true
+        "admitted": false,
+        "released": false,
+        "discoverable": false,
+        "installable": false
       },
       "lifecycle_authority": "release.json and channels/prod.json",
       "stopping_conditions": [
@@ -1042,14 +1156,18 @@
       "device_qualified": false,
       "qualification": {
         "Root_Q0": true,
+        "qualification_kind": "inherited-original-full-Q0",
+        "original_producer_source_verified": false,
+        "source_lineage_sha256": "bd4298b34909bedc21052ff7b4dce7d458231c6f0bc2bd5c29b257d69d01eb83",
+        "fresh_full_q0": false,
         "runtime_claim": "source-only; no execution or device qualification"
       },
       "states": {
         "qualified": true,
-        "admitted": true,
-        "released": true,
-        "discoverable": true,
-        "installable": true
+        "admitted": false,
+        "released": false,
+        "discoverable": false,
+        "installable": false
       },
       "lifecycle_authority": "release.json and channels/prod.json",
       "stopping_conditions": [
@@ -1074,14 +1192,18 @@
       "device_qualified": false,
       "qualification": {
         "Root_Q0": true,
+        "qualification_kind": "inherited-original-full-Q0",
+        "original_producer_source_verified": false,
+        "source_lineage_sha256": "bd4298b34909bedc21052ff7b4dce7d458231c6f0bc2bd5c29b257d69d01eb83",
+        "fresh_full_q0": false,
         "runtime_claim": "source-only; no execution or device qualification"
       },
       "states": {
         "qualified": true,
-        "admitted": true,
-        "released": true,
-        "discoverable": true,
-        "installable": true
+        "admitted": false,
+        "released": false,
+        "discoverable": false,
+        "installable": false
       },
       "lifecycle_authority": "release.json and channels/prod.json",
       "stopping_conditions": [
@@ -1106,14 +1228,18 @@
       "device_qualified": false,
       "qualification": {
         "Root_Q0": true,
+        "qualification_kind": "inherited-original-full-Q0",
+        "original_producer_source_verified": false,
+        "source_lineage_sha256": "bd4298b34909bedc21052ff7b4dce7d458231c6f0bc2bd5c29b257d69d01eb83",
+        "fresh_full_q0": false,
         "runtime_claim": "source-only; no execution or device qualification"
       },
       "states": {
         "qualified": true,
-        "admitted": true,
-        "released": true,
-        "discoverable": true,
-        "installable": true
+        "admitted": false,
+        "released": false,
+        "discoverable": false,
+        "installable": false
       },
       "lifecycle_authority": "release.json and channels/prod.json",
       "stopping_conditions": [
@@ -1138,14 +1264,18 @@
       "device_qualified": false,
       "qualification": {
         "Root_Q0": true,
+        "qualification_kind": "inherited-original-full-Q0",
+        "original_producer_source_verified": false,
+        "source_lineage_sha256": "bd4298b34909bedc21052ff7b4dce7d458231c6f0bc2bd5c29b257d69d01eb83",
+        "fresh_full_q0": false,
         "runtime_claim": "source-only; no execution or device qualification"
       },
       "states": {
         "qualified": true,
-        "admitted": true,
-        "released": true,
-        "discoverable": true,
-        "installable": true
+        "admitted": false,
+        "released": false,
+        "discoverable": false,
+        "installable": false
       },
       "lifecycle_authority": "release.json and channels/prod.json",
       "stopping_conditions": [
@@ -1170,14 +1300,18 @@
       "device_qualified": false,
       "qualification": {
         "Root_Q0": true,
+        "qualification_kind": "inherited-original-full-Q0",
+        "original_producer_source_verified": false,
+        "source_lineage_sha256": "bd4298b34909bedc21052ff7b4dce7d458231c6f0bc2bd5c29b257d69d01eb83",
+        "fresh_full_q0": false,
         "runtime_claim": "source-only; no execution or device qualification"
       },
       "states": {
         "qualified": true,
-        "admitted": true,
-        "released": true,
-        "discoverable": true,
-        "installable": true
+        "admitted": false,
+        "released": false,
+        "discoverable": false,
+        "installable": false
       },
       "lifecycle_authority": "release.json and channels/prod.json",
       "stopping_conditions": [
@@ -1202,14 +1336,18 @@
       "device_qualified": false,
       "qualification": {
         "Root_Q0": true,
+        "qualification_kind": "inherited-original-full-Q0",
+        "original_producer_source_verified": false,
+        "source_lineage_sha256": "bd4298b34909bedc21052ff7b4dce7d458231c6f0bc2bd5c29b257d69d01eb83",
+        "fresh_full_q0": false,
         "runtime_claim": "source-only; no execution or device qualification"
       },
       "states": {
         "qualified": true,
-        "admitted": true,
-        "released": true,
-        "discoverable": true,
-        "installable": true
+        "admitted": false,
+        "released": false,
+        "discoverable": false,
+        "installable": false
       },
       "lifecycle_authority": "release.json and channels/prod.json",
       "stopping_conditions": [
@@ -1234,14 +1372,18 @@
       "device_qualified": false,
       "qualification": {
         "Root_Q0": true,
+        "qualification_kind": "inherited-original-full-Q0",
+        "original_producer_source_verified": false,
+        "source_lineage_sha256": "bd4298b34909bedc21052ff7b4dce7d458231c6f0bc2bd5c29b257d69d01eb83",
+        "fresh_full_q0": false,
         "runtime_claim": "source-only; no execution or device qualification"
       },
       "states": {
         "qualified": true,
-        "admitted": true,
-        "released": true,
-        "discoverable": true,
-        "installable": true
+        "admitted": false,
+        "released": false,
+        "discoverable": false,
+        "installable": false
       },
       "lifecycle_authority": "release.json and channels/prod.json",
       "stopping_conditions": [
@@ -1266,14 +1408,18 @@
       "device_qualified": false,
       "qualification": {
         "Root_Q0": true,
+        "qualification_kind": "inherited-original-full-Q0",
+        "original_producer_source_verified": false,
+        "source_lineage_sha256": "bd4298b34909bedc21052ff7b4dce7d458231c6f0bc2bd5c29b257d69d01eb83",
+        "fresh_full_q0": false,
         "runtime_claim": "separate exact runtime receipts required"
       },
       "states": {
         "qualified": true,
-        "admitted": true,
-        "released": true,
-        "discoverable": true,
-        "installable": true
+        "admitted": false,
+        "released": false,
+        "discoverable": false,
+        "installable": false
       },
       "lifecycle_authority": "release.json and channels/prod.json",
       "stopping_conditions": []
@@ -1295,14 +1441,18 @@
       "device_qualified": false,
       "qualification": {
         "Root_Q0": true,
+        "qualification_kind": "inherited-original-full-Q0",
+        "original_producer_source_verified": false,
+        "source_lineage_sha256": "bd4298b34909bedc21052ff7b4dce7d458231c6f0bc2bd5c29b257d69d01eb83",
+        "fresh_full_q0": false,
         "runtime_claim": "separate exact runtime receipts required"
       },
       "states": {
         "qualified": true,
-        "admitted": true,
-        "released": true,
-        "discoverable": true,
-        "installable": true
+        "admitted": false,
+        "released": false,
+        "discoverable": false,
+        "installable": false
       },
       "lifecycle_authority": "release.json and channels/prod.json",
       "stopping_conditions": []
@@ -1324,14 +1474,18 @@
       "device_qualified": false,
       "qualification": {
         "Root_Q0": true,
+        "qualification_kind": "inherited-original-full-Q0",
+        "original_producer_source_verified": false,
+        "source_lineage_sha256": "bd4298b34909bedc21052ff7b4dce7d458231c6f0bc2bd5c29b257d69d01eb83",
+        "fresh_full_q0": false,
         "runtime_claim": "separate exact runtime receipts required"
       },
       "states": {
         "qualified": true,
-        "admitted": true,
-        "released": true,
-        "discoverable": true,
-        "installable": true
+        "admitted": false,
+        "released": false,
+        "discoverable": false,
+        "installable": false
       },
       "lifecycle_authority": "release.json and channels/prod.json",
       "stopping_conditions": []
@@ -1353,14 +1507,18 @@
       "device_qualified": false,
       "qualification": {
         "Root_Q0": true,
+        "qualification_kind": "inherited-original-full-Q0",
+        "original_producer_source_verified": false,
+        "source_lineage_sha256": "bd4298b34909bedc21052ff7b4dce7d458231c6f0bc2bd5c29b257d69d01eb83",
+        "fresh_full_q0": false,
         "runtime_claim": "separate exact runtime receipts required"
       },
       "states": {
         "qualified": true,
-        "admitted": true,
-        "released": true,
-        "discoverable": true,
-        "installable": true
+        "admitted": false,
+        "released": false,
+        "discoverable": false,
+        "installable": false
       },
       "lifecycle_authority": "release.json and channels/prod.json",
       "stopping_conditions": []
@@ -1382,14 +1540,18 @@
       "device_qualified": false,
       "qualification": {
         "Root_Q0": true,
+        "qualification_kind": "inherited-original-full-Q0",
+        "original_producer_source_verified": false,
+        "source_lineage_sha256": "bd4298b34909bedc21052ff7b4dce7d458231c6f0bc2bd5c29b257d69d01eb83",
+        "fresh_full_q0": false,
         "runtime_claim": "separate exact runtime receipts required"
       },
       "states": {
         "qualified": true,
-        "admitted": true,
-        "released": true,
-        "discoverable": true,
-        "installable": true
+        "admitted": false,
+        "released": false,
+        "discoverable": false,
+        "installable": false
       },
       "lifecycle_authority": "release.json and channels/prod.json",
       "stopping_conditions": []
@@ -1411,14 +1573,18 @@
       "device_qualified": false,
       "qualification": {
         "Root_Q0": true,
+        "qualification_kind": "inherited-original-full-Q0",
+        "original_producer_source_verified": false,
+        "source_lineage_sha256": "bd4298b34909bedc21052ff7b4dce7d458231c6f0bc2bd5c29b257d69d01eb83",
+        "fresh_full_q0": false,
         "runtime_claim": "separate exact runtime receipts required"
       },
       "states": {
         "qualified": true,
-        "admitted": true,
-        "released": true,
-        "discoverable": true,
-        "installable": true
+        "admitted": false,
+        "released": false,
+        "discoverable": false,
+        "installable": false
       },
       "lifecycle_authority": "release.json and channels/prod.json",
       "stopping_conditions": []
@@ -1440,14 +1606,18 @@
       "device_qualified": false,
       "qualification": {
         "Root_Q0": true,
+        "qualification_kind": "inherited-original-full-Q0",
+        "original_producer_source_verified": false,
+        "source_lineage_sha256": "bd4298b34909bedc21052ff7b4dce7d458231c6f0bc2bd5c29b257d69d01eb83",
+        "fresh_full_q0": false,
         "runtime_claim": "separate exact runtime receipts required"
       },
       "states": {
         "qualified": true,
-        "admitted": true,
-        "released": true,
-        "discoverable": true,
-        "installable": true
+        "admitted": false,
+        "released": false,
+        "discoverable": false,
+        "installable": false
       },
       "lifecycle_authority": "release.json and channels/prod.json",
       "stopping_conditions": []
@@ -1469,14 +1639,18 @@
       "device_qualified": false,
       "qualification": {
         "Root_Q0": true,
+        "qualification_kind": "inherited-original-full-Q0",
+        "original_producer_source_verified": false,
+        "source_lineage_sha256": "bd4298b34909bedc21052ff7b4dce7d458231c6f0bc2bd5c29b257d69d01eb83",
+        "fresh_full_q0": false,
         "runtime_claim": "separate exact runtime receipts required"
       },
       "states": {
         "qualified": true,
-        "admitted": true,
-        "released": true,
-        "discoverable": true,
-        "installable": true
+        "admitted": false,
+        "released": false,
+        "discoverable": false,
+        "installable": false
       },
       "lifecycle_authority": "release.json and channels/prod.json",
       "stopping_conditions": []

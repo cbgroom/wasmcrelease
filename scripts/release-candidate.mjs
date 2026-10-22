@@ -12,6 +12,7 @@ import {buildHistoricalClosure} from './lib-route-closure.mjs';
 import {parseCatalog,resolveCatalog} from './lib-catalog.mjs';
 import {instantiateLibSearch} from '../examples/lib-search/client.mjs';
 import {all18Targets,needsFutureLibLicenseGate,validateFutureLibLicenses} from './future-lib-license-admission.mjs';
+import {historicalNoticeProductInputs} from './current-license-policy-v3.mjs';
 const root=fileURLToPath(new URL('../',import.meta.url));
 const hash=b=>createHash('sha256').update(b).digest('hex');
 const safe=p=>typeof p==='string'&&p.split('/').every(x=>x&&x!=='.'&&x!=='..')&&!p.includes('\\')&&!p.startsWith('/');
@@ -490,6 +491,7 @@ export function currentCandidateClosure(candidate,read){
   assert.equal(compiler.active_compiler_versions,1);
   for(const pin of compiler.artifacts){const bytes=exact(pin.path);if(bytes.length!==pin.bytes||hash(bytes)!==pin.sha256)throw Error('compiler manifest artifact drift '+pin.path);}
   const closure=verifyCurrentRelease(catalogBytes,candidate.current_catalog.sha256,exact,[...rows.keys()]);
+  historicalNoticeProductInputs(JSON.parse(exact(catalog.cohort.path)),exact);
   return{...closure,compiler_manifest_sha256:hash(exact('current/compiler-release.json')),
     compiler_sha256:compiler.compiler.sha256,compiler_source_commit:compiler.source_commit,
     canonical_source_branch:compiler.source_branch,compiler_build_receipt_sha256:compiler.source_build_receipt_sha256,
@@ -520,12 +522,17 @@ export function verifyCurrentCandidateComposition(repo,options){
   assert.equal(cohort.input_prefix,'admission/current-composition-inputs-v1');
   assert.equal(cohort.source_lineage_sha256,options.source_lineage_sha256,'independent source lineage identity drift');
   const inputPaths=currentProductPaths(repo,cohort.input_prefix);
-  const paths=[...inputPaths,...currentProductPaths(repo),...currentProductPaths(repo,'libspec')];
+  const authoringPaths=catalog.packages.flatMap(row=>currentProductPaths(repo,row.source.spec.path.slice(0,-'/lib.json'.length)));
+  const commonAuthoring=['libspec/registry.json','libspec/rust-policy.json','libspec/Cargo.lock'];
+  const carrierPaths=cohort.source_lineage.admitted_original_sources.flatMap(({source})=>
+    [...currentProductPaths(repo,source.root.locator),...currentProductPaths(repo,source.source_packet.root)]);
+  const paths=[...inputPaths,...currentProductPaths(repo),...authoringPaths,...commonAuthoring,...carrierPaths];
   const closure=verifyCurrentRelease(bytes,options.catalog_sha256,read,paths);
   assert.equal(closure.schema,'wasmc.current-composition-release-closure/v1');
   assert.equal(closure.source_lineage_sha256,options.source_lineage_sha256);
   assert.equal(closure.fresh_full_q0,false);assert.equal(closure.fresh_builds,0);
-  return {closure,product_inputs:[catalog.cohort.path,...inputPaths,...currentProductPaths(repo,'libspec')]};
+  return {closure,product_inputs:[catalog.cohort.path,...inputPaths,...authoringPaths,...commonAuthoring,...carrierPaths,
+    ...historicalNoticeProductInputs(cohort,read)]};
 }
 export async function createCurrentCandidate(repo,{compilerSource,libSource,version,currentOptions}){
   const composed=currentOptions&&Object.hasOwn(currentOptions,'composition_cohort_sha256')
