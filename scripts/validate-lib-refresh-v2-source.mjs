@@ -4,6 +4,7 @@ import { readFile, readdir, stat } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 import { validateUpstreamSourceContract } from './lib-refresh-upstream-source-v2.mjs';
 import { inventory as fileInventory } from './lib-refresh-cache-v2.mjs';
+import {currentProductReader,currentProductPaths,verifyCurrentRelease} from './current-lib-release-v3.mjs';
 
 const root = process.cwd();
 const registry = JSON.parse(await readFile(resolve(root, 'libspec/registry.json'), 'utf8'));
@@ -25,11 +26,36 @@ const forbiddenDelta = [
   'Linker<',
 ];
 const allowedProfiles = new Set(['value', 'resource', 'host', 'native']);
+let originalProducerClosure=null,originalProducerSources=0;
+function verifiedOriginalProducerSource(row,spec){
+  const read=currentProductReader(root);
+  if(!originalProducerClosure){
+    const admission=JSON.parse(read('admission/current-product-v3.json'));
+    assert.equal(admission.schema,'wasmc.current-composition-release-closure/v1','original source requires independently retained composition closure');
+    const bytes=read('catalog/libs-current-v2.json'),catalog=JSON.parse(bytes),cohort=JSON.parse(read(catalog.cohort.path));
+    assert.equal(cohort.schema,'wasmc.public-current-composition-cohort/v1');
+    const paths=[...currentProductPaths(root),...currentProductPaths(root,cohort.input_prefix),
+      ...catalog.packages.flatMap(item=>currentProductPaths(root,item.source.spec.path.slice(0,-'/lib.json'.length))),
+      ...cohort.source_lineage.admitted_original_sources.flatMap(({source})=>
+        [...currentProductPaths(root,source.root.locator),...currentProductPaths(root,source.source_packet.root)])];
+    originalProducerClosure=verifyCurrentRelease(bytes,admission.catalog_sha256,read,paths);
+    assert.deepEqual(originalProducerClosure,admission,'actual full base/source/Root lineage differs from independent closure');
+  }
+  const catalog=JSON.parse(read('catalog/libs-current-v2.json')),selected=catalog.packages.find(item=>item.id===row.id);
+  assert.ok(selected&&selected.source.spec.path===row.source+'/lib.json','original source must be a selected current registry identity');
+  assert.deepEqual(JSON.parse(read(selected.source.spec.path)),spec,'actual selected original source');
+  assert.equal(originalProducerClosure.fresh_full_q0,false);assert.equal(originalProducerClosure.original_receipt_bytes_verified,false);
+}
 
 for (const row of registry.libs) {
   assert.equal(row.source, 'libspec/' + row.id, row.id + ': source must use canonical libspec/<id>');
   const dir = resolve(root, row.source);
   const spec = JSON.parse(await readFile(join(dir, 'lib.json'), 'utf8'));
+  if(spec.schema==='wasmc.current-original-producer-source/v1'){
+    verifiedOriginalProducerSource(row,spec);
+    assert.deepEqual(Object.keys(await fileInventory(dir)).sort(),['lib.json','lib.wit'],row.id+': exact admitted original-source projection');
+    originalProducerSources++;continue;
+  }
   assert.equal(spec.schema, 'wasmc.lib-refresh-source/v2');
   assert.equal(spec.id, row.id);
   assert.ok(allowedProfiles.has(spec.profile), row.id + ': invalid profile');
@@ -89,4 +115,7 @@ console.log(JSON.stringify({
   shared_lock: true,
   authoring_authority: 'libspec',
   legacy_fallback: false,
+  ...(originalProducerSources?{original_producer_sources:originalProducerSources,
+    composition_catalog_sha256:originalProducerClosure.catalog_sha256,fresh_full_q0:false,
+    original_receipt_bytes_verified:false}:{}),
 }));

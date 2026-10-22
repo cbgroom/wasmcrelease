@@ -1,0 +1,99 @@
+{"accepted":true,"schema":"wasmc.current-only-source-audit/v2","candidates":42,"retired_files":274,"retired_entrypoints":26,"legacy_tree":false,"legacy_fallback":false}
+{"accepted":true,"schema":"wasmc.lib-refresh-source-validation/v2","libs":42,"inventory":["adapter.rs","delta.rs","lib.json","lib.wit"],"shared_lock":true,"authoring_authority":"libspec","legacy_fallback":false,"original_producer_sources":1,"composition_catalog_sha256":"c583d5444d9bcba8f5932660d5b632fd64aa9a212c2002f1a91fa03b9d4e0aa9","fresh_full_q0":false,"original_receipt_bytes_verified":false}
+{"schema":"wasmc.current-lib-identity-coverage/v1","accepted":true,"required_identity_count":42,"current_source_count":42,"historical_package_count":18,"required_ids":["mcpgit-resident-memory","wasmc-app-authorization-policy","wasmc-compression","wasmc-csv","wasmc-data-compute","wasmc-data-core","wasmc-data-expr","wasmc-data-interchange","wasmc-data-profile","wasmc-data-relational","wasmc-host-clock","wasmc-http1","wasmc-http1-client","wasmc-json","wasmc-lib-search","wasmc-owned-algorithms","wasmc-resource-counter","wasmc-router-policy","wasmc-std","wasmc-system-android-display","wasmc-system-android-input","wasmc-system-android-ui","wasmc-system-android-uinput","wasmc-system-file-prototype","wasmc-system-ios-app-contacts","wasmc-system-ios-app-lifecycle","wasmc-system-ios-app-surface-control","wasmc-system-ios-background-audio","wasmc-system-ios-background-transfer","wasmc-system-ios-deferred-work","wasmc-system-ios-local-notification","wasmc-system-ios-network-path","wasmc-system-ios-simulator-display","wasmc-system-ios-websocket","wasmc-system-linux-endpoint","wasmc-system-linux-socket","wasmc-system-linux-uinput","wasmc-system-network-prototype","wasmc-system-process-prototype","wasmc-system-telemetry","wasmc-tls-client","wasmc-tls-core"],"current_ids":["mcpgit-resident-memory","wasmc-app-authorization-policy","wasmc-compression","wasmc-csv","wasmc-data-compute","wasmc-data-core","wasmc-data-expr","wasmc-data-interchange","wasmc-data-profile","wasmc-data-relational","wasmc-host-clock","wasmc-http1","wasmc-http1-client","wasmc-json","wasmc-lib-search","wasmc-owned-algorithms","wasmc-resource-counter","wasmc-router-policy","wasmc-std","wasmc-system-android-display","wasmc-system-android-input","wasmc-system-android-ui","wasmc-system-android-uinput","wasmc-system-file-prototype","wasmc-system-ios-app-contacts","wasmc-system-ios-app-lifecycle","wasmc-system-ios-app-surface-control","wasmc-system-ios-background-audio","wasmc-system-ios-background-transfer","wasmc-system-ios-deferred-work","wasmc-system-ios-local-notification","wasmc-system-ios-network-path","wasmc-system-ios-simulator-display","wasmc-system-ios-websocket","wasmc-system-linux-endpoint","wasmc-system-linux-socket","wasmc-system-linux-uinput","wasmc-system-network-prototype","wasmc-system-process-prototype","wasmc-system-telemetry","wasmc-tls-client","wasmc-tls-core"],"pending":[],"implementation_complete":true,"legacy_fallback":false,"public_admission":false}
+✔ source-only index is deterministic and preserves same-WIT implementations (9.155875ms)
+✔ registry order does not alter entry order (4.876125ms)
+✔ new current WIT changes the index, not a frozen catalog (4.626042ms)
+✔ duplicate IDs reject (2.807125ms)
+✔ normalized wire does not duplicate package metadata per API (3.166125ms)
+✔ inline export rejects rather than silently loses API (2.401417ms)
+✔ bound native source stays source-only, never a WASM artifact (5.677375ms)
+✔ wrong independent receipt pin rejects (3.927708ms)
+✔ mutated package rejects even when source is unchanged (3.94675ms)
+✔ stale source rejects even if old package remains valid (3.951833ms)
+✔ stale lock rejects (3.856542ms)
+✔ two bindings for the same implementation reject (5.472458ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 97.017709
+✔ accepts complete dual-engine Unit and nested values (1.120917ms)
+✔ rejects skipped Wasmtime (0.499625ms)
+✔ rejects wrong Wasmtime value (0.340125ms)
+✔ rejects wrong Wasmi value (0.139667ms)
+✔ rejects missing cases (0.089542ms)
+✔ rejects duplicate case substitution (0.113417ms)
+✔ rejects false repeat count (0.083041ms)
+✔ rejects wrong pinned source (0.082625ms)
+✔ rejects old scalar-only evidence (0.07525ms)
+✔ rejects absent identity negative (0.104041ms)
+✔ resume accepts exact pinned attempt only (0.076333ms)
+✔ resume rejects changed schema (0.083834ms)
+✔ resume rejects changed cases_sha256 (0.054625ms)
+✔ resume rejects changed index_sha256 (0.094042ms)
+✔ resume rejects changed root_manifest_sha256 (0.069791ms)
+✔ resume rejects changed tooling (0.130125ms)
+ℹ tests 16
+ℹ suites 0
+ℹ pass 16
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 42.333042
+✔ complete source and pinned Q0 do not claim runtime or release admission (17.396042ms)
+✔ pending historical identity still blocks an otherwise complete current build (10.409833ms)
+✔ authority cannot be redirected to a reduced convenience list (5.775625ms)
+✔ duplicate current identities reject independently of other source validators (5.905125ms)
+✔ old authoring tree rejects even with no files in it (10.598375ms)
+✔ dangling retired-authoring symlink cannot evade the no-legacy check (11.131416ms)
+✔ current-only audit accepts registered non-wasmc-prefixed implementations (6.515375ms)
+✔ missing independent pins do not infer trust from receipt contents (6.054541ms)
+✔ wrong independent receipt pin rejects (5.501041ms)
+✔ producer selection is independent of the supplied receipt (5.413334ms)
+✔ selected subset is not a whole-product build (7.537333ms)
+✔ duplicate receipt rows reject (6.254542ms)
+✔ unverified package row rejects (5.718458ms)
+✔ accepted false is retained as a failed build (5.971083ms)
+✔ old generator receipt cannot be used after a builder change (7.0405ms)
+✔ live delta/source drift rejects an intact old package (8.461042ms)
+✔ shared lock drift rejects (7.941709ms)
+✔ old receipts without whole-root pins must be regenerated (8.637417ms)
+✔ wrong independently sealed package inventory rejects (8.996833ms)
+✔ extra package file is not hidden by a valid manifest (8.253083ms)
+✔ package symlink rejects (7.267208ms)
+✔ self-rehashed replacement still fails the independent receipt (8.253167ms)
+✔ CLI rejects missing, duplicate and unknown current pins (0.207209ms)
+✔ actual new-product creation refuses missing current pins before creating a candidate file (44.231458ms)
+ℹ tests 24
+ℹ suites 0
+ℹ pass 24
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 263.445042
+{"accepted":true,"version":"0.0.24","compiler_sha256":"c78816376228b6091599845c6a9a531eb76f949fe419655c012ec30c05f75832","active_compiler_versions":1,"binaries":2,"embeddings":3,"artifacts":168}
+{"accepted":true,"schema":"wasmc.license-policy/v1","policy":"research-only-non-commercial","open_source":false,"commercial_use":false,"production_use":false,"noncommercial_cargo_manifests_bound":6,"frozen_cargo_manifests_preserved":2,"immutable_prior_tags_preserved":true,"exact_declared_thirdparty_notice_files":558}
+NOTICE whole-product integrity pending exact current v3 candidate; current carrier and Root closure checked separately
+{"accepted":true,"action":"check","schema":"wasmc.lib-route-closure/v3","release_packages":42,"package_routes":42,"api_routes":247,"entries":289,"candidate_extras":0,"public_release_admission":false}
+{"accepted":true,"schema":"wasmc.lib-route-closure/v3","release_packages":42,"package_routes":42,"api_routes":247,"entries":289,"negative_tests":6,"public_release_admission":false}
+{"accepted":true,"schema":"wasmc.client-foundation-local-qualification/v1","lifecycle":"incubating-product-surface-local-qualified-not-lib-admitted","fixed_host_api_changed":false,"minimal_cli_changed":false,"wss_control":true,"https_artifact":true,"slots":["A","B"],"immutable_factory_rescue":true,"committed_graph_revision":2,"active_provider":"wasmc:client-foundation-dynamic@0.0.1-dev.1","reconnects":1,"duplicate_command_replayed":1,"broken_candidate_rollbacks":1,"cold_recovery":"dynamic:cold-recovery","graph_commit_before_receipt_recovery":"committed","probation_crash_recovery":"dynamic:probation-recovery","missing_slot_factory_rescue":"factory:missing-slot-recovery","boundary_counts_after_close":{"resources":0,"windows":0,"operations":0},"protected_sha256":{"current/cli.mjs":"68c9511464319520cc7b4b04ae3d12b7499ad2754476b75aeb93a04c065319fd","current/wasmc.mjs":"21ea95ad6a96fd3c612d76b0926b1ffe3dde1a16248819cef0c5b9adbbf7f17c","host/runtime/lib-boundary/reference.mjs":"e133672195a9641e8c813f6b07e040c5817249a055f44ebeadd9c29404cf03ef"}}
+{"accepted":true,"schema":"wasmc.client-foundation-gateway-local-qualification/v1","lifecycle":"incubating-product-surface-local-qualified-not-lib-admitted","artifacts_persistent":1,"clients_persistent":2,"active_commands_persistent":3,"command_sequences":[1,2,3,4,5,6,7,8,9,10,11,12,13],"duplicate_enqueue_idempotent":true,"archived_duplicate_idempotent":true,"canonical_payload_identity":true,"bounded_receipt_wait":true,"single_writer_lock":true,"stale_lock_recovery":true,"heartbeat_pongs":1,"stale_connection_evicted":true,"compacted_through_sequence":10,"bounded_archive_metadata":3,"merged_archive_range":[1,6],"archive_sha256":"308ce2f7076c789cf77d919d1cd278346f9e04d004bf337b35d2a2d3b807b75f","bounded_message_index":3,"archive_corruption_rejected":true,"artifact_corruption_rejected":true,"repaired_state_restart":true,"orphan_archive_collected":true,"gateway_restart_reconnect":true,"post_restart_invoke":"dynamic:after-gateway-restart","fixed_host_api_changed":false,"minimal_cli_changed":false}
+{"accepted":true,"schema":"wasmc.client-foundation-wss-cancellation/v1","preconnect_abort":true,"tls_handshake_abort":true,"leaked_server_sockets":0}
+{"accepted":true,"schema":"wasmc.dynamic-lib-graph-model/v1","phases":4,"transitions":7,"invariants":21,"implementation_profile":"serial-pipeline-and-general-dag-client-gateway","open_gates":0,"fixed_host_api_changed":false}
+{"accepted":true,"schema":"wasmc.dynamic-lib-graph-local-qualification/v1","lifecycle":"incubating-product-surface-local-qualified-not-lib-admitted","initial_composition":"B1(A1(x))","one_block_replacement":"B1(A2(x))","unchanged_block_reused":true,"atomic_generation_overlap":{"old":"B1(A1(slow))","new":"B1(A2(fast))"},"concurrent_update_rejected":true,"route_only_reorder":"A2(B1(x))","route_only_installed":0,"canonical_graph_digest":"b723da2507e90883070ca660a9525428f851b8532d00f8480ae88f6b8b661141","canonical_declaration_order":true,"canonical_json_negative_controls":4,"local_root_excluded_from_digest":true,"pipeline_order_bound_to_digest":true,"serial_graph_closure_rejected":true,"configuration_replacement":"A2C(B1(x))","configuration_reinstalled":1,"configuration_snapshot_immutable":true,"unchanged_graph_noop":true,"false_graph_digest_rejected":true,"false_configuration_digest_rejected":true,"incompatible_wit_contract_rejected":true,"unsupported_state_policy_rejected":true,"broken_replacement_rolled_back":true,"broken_candidate_never_visible":true,"postpublication_cleanup_failure_retained":true,"later_update_blocked_until_cleanup":true,"false_identity_rejected":true,"false_artifact_rejected":true,"final_revision":4,"boundary_counts_after_close":{"resources":0,"windows":0,"operations":0},"fixed_host_api_changed":false,"minimal_cli_changed":false}
+{"accepted":true,"schema":"wasmc.dynamic-lib-stateful-local-qualification/v1","lifecycle":"incubating-product-surface-local-qualified-not-lib-admitted","snapshot_same_schema_replacement":"V1:3->V2:4","old_invocation_drained_before_snapshot":true,"new_invocation_blocked_until_publish":true,"failed_restore_rolled_back":true,"invocation_barrier_released_after_rollback":true,"cross_schema_exact_migration_lib":"CROSS1:2->CROSS2:2","cross_schema_missing_migration_rejected":true,"cross_schema_broken_migration_rolled_back":true,"sticky_unchanged_reused":true,"sticky_automatic_replacement_rejected":true,"sticky_missing_disposition_rejected":true,"snapshot_extraneous_disposition_rejected":true,"sticky_fail_closed_restart_rejected":true,"sticky_explicit_reset_restart":"STICKY-RESET:0","package_state_contract_mismatch_rejected":true,"state_policy_transition_rejected":true,"stateful_removal_without_disposition_rejected":true,"noncanonical_snapshot_rejected":true,"snapshot_digest_mismatch_rejected":true,"oversized_snapshot_rejected":true,"active_checkpoint_restored":"V2:6","checkpoint_barrier_queued_new_invocation":"V2:7","corrupt_checkpoint_rejected":true,"partial_checkpoint_restore_poisoned_until_close":true,"external_effect_exactly_once_claimed":false,"fixed_host_api_changed":false,"minimal_cli_changed":false,"boundary_counts_after_close":{"resources":0,"windows":0,"operations":0},"sticky_boundary_counts_after_close":{"resources":0,"windows":0,"operations":0}}
+PASS public Agent scalar/record-backed/recordless managed journeys plus package-manager-free Runtime journey
+{"accepted":true,"release_tag":"v0.0.24","prod_tag":"v0.0.23","public_skills":29,"parent_edges":26,"negative_tests":20}
+{"accepted":true,"schema":"wasmc.agent-quickstart/v1","routes":10,"pair":{"accepted":true,"source":"examples/agent-quickstart/pair.wasmc","core_bytes":49,"core_sha256":"55f3c7e3d09b564b89b8268299a69569a33b856b46405cb4c4dd51634afec84e","imports":[],"exports":[{"name":"run","kind":"function"}],"call":"run(5, true)","result":[1,1]},"base64":{"accepted":true,"installed_root_verified":false,"rounds":256,"explicit_drops":1024,"invalid_input_rejected":true,"persistent_provider_memory_bytes":3670016,"package":"wasmc:std@1.4.1","apis":["wasmc:std@1.4.1/base64#try-encode-standard","wasmc:std@1.4.1/base64#try-decode-standard"],"artifact_sha256":"b79a499c8300361125e7fcdae02170184b82d4bbeff4d8f24ed95f3fd4db8d3b","import_module":"wasmc:lib/wasmc.lib_managed_object_heap@4.9.0","input_utf8":"abc","encoded_utf8":"YWJj","decoded_utf8":"abc"},"route_readiness":{"formal_release_ready":false,"candidate_extras":0,"lifecycle_authority":"release.json"}}
+{"accepted":true,"teaching_commands":2,"checked_hits":5,"negative_tests":6,"network_access":false}
+{"accepted":true,"schema":"wasmc.release-surfaces/v1","agent_capability_projection":"wasmc.release-agent-capabilities/v1","producer_capability_delta":"wasmc.producer-release-delta/v1","lib_ecosystem_control_plane":"wasmc.lib-ecosystem-control-plane/v3","consumer_surfaces":6,"extension_surfaces":2,"desktop_platforms":6,"required_desktop_platforms":5,"optional_desktop_platforms":["macos-x86_64"],"validated_roots":17,"workflow_references":24,"performance_comparison":"same-platform-only","performance_hard_gate":false}
+{"accepted":true,"action":"check","schema":"wasmc.lib-ecosystem-control-plane/v3","packages":42,"api_routes":247,"entries":289,"published":false,"native_source_packages":14}
+{"accepted":true,"schema":"wasmc.live-agent-trace-evaluation/v1","profiles":["general","status-query"],"negative_signals":10,"terminal_answer_controls":8}
+{"accepted":true,"schema":"wasmc-sdk-agent-routing/v1","host_sdk_status":"candidate","native_runtime_status":"incubating","component_skills":3,"status_queries":3,"capability_projection":"wasmc.release-agent-capabilities/v1","stale_api_names_rejected":3,"source_symbols_verified":10,"routes":{"core_runtime":"sdk/wasmc-core-runtime/SKILL.md","host_sdk":"sdk/wasmc-host/SKILL.md","native_cli":"sdk/wasmc-native-compiler/SKILL.md","lightweight_embedding":"host/embedding/*"}}
+PASS current maintainer structure, compiler/Root identity, public guidance and facade checks; whole-release admission requires exact candidate/Pi/channel receipts

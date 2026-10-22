@@ -1,0 +1,90 @@
+{
+  "schema": "wasmc.current-catalog-docs-v024-verification/v1",
+  "accepted": true,
+  "changed_files": [
+    "catalog/README.md",
+    "catalog/INSTALL.md"
+  ],
+  "original_audit_files_unchanged": {
+    "catalog-doc-reproduction.json": "f854565d9f064dddba91060e0d4e49234900e7c71d68c0b60f10c969f9e22bf0",
+    "four-normal-scripts-actual-runs.json": "7d7343428717e8df0cfc37645b1c58327e6d377f3f81e5b3263e2101c62b7b69",
+    "test-lib-route-closure.mjs.before": "be8b565f8e33e4d87671b410412c30355f2da2ca14d93bb4d9c6ab1506f5ab68",
+    "test-library-first.mjs.after": "222b5c831bb36952a790b5b55f88b7369e3508ed484ac101b53b89f5ca91bfa4",
+    "test-lib-catalog.mjs.before": "ac83d96b350d890e394c6436678cbbbfdcc19cc45fac708b9cbadfc9dbd5e0a8",
+    "test-lib-install.mjs.after": "f522ace6315197384366c34ded3ba50a361613ca9518f11b21cec3bbf1c9ef17",
+    "current-std-lock.json": "8b9d7c35172774af2863d7bbab7014c5238243d8bf6ca2155c3cace60231f2b9",
+    "test-lib-catalog.mjs.after": "82e9ad09c1bea7be9690b137f058279f00216417d80fdc17fcf3b3298b8f33b3",
+    "four-normal-scripts-update.json": "5893010dee37b39e859d01328f5ccec6422b87626bf2806be6d40ef7ec0c59b9",
+    "test-library-first.mjs.before": "260179c563331cfead3fa153d4a348040edf9a1acd326bbb37321d638cb83f8d",
+    "test-lib-route-closure.mjs.after": "c2eb29da1442c2cf767785d9404aed265250c7ef8033c4034a52caa2048fe091",
+    "existing-normal-check-old-pin-failures.json": "d480fdb8c39fec415a774d8bf207f96722516cf4c678f562f57547fd251cbb4f",
+    "test-lib-install.mjs.before": "c5d53861a444dcad6a21a303f76edaa83ca37f9cfbb2d3129be71545fe7822b8"
+  },
+  "results": [
+    {
+      "doc": "catalog/README.md",
+      "argv": [
+        "node",
+        "scripts/wasmc-lib.mjs",
+        "search",
+        "base64 decode",
+        "--catalog-sha256",
+        "c583d5444d9bcba8f5932660d5b632fd64aa9a212c2002f1a91fa03b9d4e0aa9",
+        "--limit",
+        "8"
+      ],
+      "exit": 0,
+      "stdout_sha256": "b9995e0527c149eedd54cd8ec5ad06c5b97a1539809509f358991f5b5e197452",
+      "stdout_bytes": 1467,
+      "stderr": "",
+      "actual_Core_Search_hits": 1
+    },
+    {
+      "doc": "catalog/README.md",
+      "argv": [
+        "node",
+        "scripts/wasmc-lib.mjs",
+        "resolve",
+        "wasmc-std",
+        "1.4.1",
+        "--catalog-sha256",
+        "c583d5444d9bcba8f5932660d5b632fd64aa9a212c2002f1a91fa03b9d4e0aa9",
+        "--manifest-sha256",
+        "9db63b4f380f9a8fb7541addfde6608bbc48b3267ad903f838afedb98e74ebfc",
+        "--root-inventory-sha256",
+        "6978407b51e835a3893ac14cbb7ca2c46da48d0a778f2611f6de829af07bdf92"
+      ],
+      "exit": 0,
+      "stdout_sha256": "8b9d7c35172774af2863d7bbab7014c5238243d8bf6ca2155c3cace60231f2b9",
+      "stdout_bytes": 4684,
+      "stderr": "",
+      "artifact_commit": "0e91db5e63ab5750cb621add5ad48a5581aedfa1",
+      "lock_sha256_verified": true
+    },
+    {
+      "doc": "catalog/INSTALL.md",
+      "argv": [
+        "node",
+        "scripts/wasmc-lib.mjs",
+        "resolve",
+        "wasmc-std",
+        "1.4.1",
+        "--catalog-sha256",
+        "c583d5444d9bcba8f5932660d5b632fd64aa9a212c2002f1a91fa03b9d4e0aa9",
+        "--manifest-sha256",
+        "9db63b4f380f9a8fb7541addfde6608bbc48b3267ad903f838afedb98e74ebfc",
+        "--root-inventory-sha256",
+        "6978407b51e835a3893ac14cbb7ca2c46da48d0a778f2611f6de829af07bdf92"
+      ],
+      "exit": 0,
+      "stdout_sha256": "8b9d7c35172774af2863d7bbab7014c5238243d8bf6ca2155c3cace60231f2b9",
+      "stdout_bytes": 4684,
+      "stderr": "",
+      "artifact_commit": "0e91db5e63ab5750cb621add5ad48a5581aedfa1",
+      "lock_sha256_verified": true
+    }
+  ],
+  "lock_sha256": "8b9d7c35172774af2863d7bbab7014c5238243d8bf6ca2155c3cace60231f2b9",
+  "new_installation_repeated": false,
+  "formal_release": false
+}

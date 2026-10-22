@@ -1,14 +1,14 @@
 # Exact current Lib selection
 
-The v0.0.23 current catalog is `libs-current-v2.json`, schema
+The v0.0.24 current catalog is `libs-current-v2.json`, schema
 `wasmc.public-lib-catalog/v2`. Its independently reviewed SHA256 is
-`81db5d610d53c7627fd91a4bbd47a22610bd1982718b845dc1557b81657f0e74`. It binds42 complete current Roots and their236 WIT API routes.
+`c583d5444d9bcba8f5932660d5b632fd64aa9a212c2002f1a91fa03b9d4e0aa9`. It binds42 complete current Roots and their247 WIT API routes, forming289 index entries.
 The package artifact authority is immutable public commit
-`57f03cf6c0f2a98b37ea9c2294046ccd6644c1ba`.
+`0e91db5e63ab5750cb621add5ad48a5581aedfa1`.
 
 ```sh
-node scripts/wasmc-lib.mjs search "base64 decode" --catalog-sha256 81db5d610d53c7627fd91a4bbd47a22610bd1982718b845dc1557b81657f0e74 --limit 8
-node scripts/wasmc-lib.mjs resolve wasmc-std 1.4.1 --catalog-sha256 81db5d610d53c7627fd91a4bbd47a22610bd1982718b845dc1557b81657f0e74 --manifest-sha256 9db63b4f380f9a8fb7541addfde6608bbc48b3267ad903f838afedb98e74ebfc --root-inventory-sha256 6978407b51e835a3893ac14cbb7ca2c46da48d0a778f2611f6de829af07bdf92
+node scripts/wasmc-lib.mjs search "base64 decode" --catalog-sha256 c583d5444d9bcba8f5932660d5b632fd64aa9a212c2002f1a91fa03b9d4e0aa9 --limit 8
+node scripts/wasmc-lib.mjs resolve wasmc-std 1.4.1 --catalog-sha256 c583d5444d9bcba8f5932660d5b632fd64aa9a212c2002f1a91fa03b9d4e0aa9 --manifest-sha256 9db63b4f380f9a8fb7541addfde6608bbc48b3267ad903f838afedb98e74ebfc --root-inventory-sha256 6978407b51e835a3893ac14cbb7ca2c46da48d0a778f2611f6de829af07bdf92
 ```
 
 Search executes the compiled Core implementation. The v3 response uses
