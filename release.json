@@ -1,11 +1,11 @@
 {
   "schema": "wasmc-public-release/v2",
   "name": "wasmc",
-  "version": "0.0.24",
-  "tag": "v0.0.24",
+  "version": "0.0.25",
+  "tag": "v0.0.25",
   "stage": "prod",
   "lib_source_authority": "81966eaef368769a569bfac17db9e8c3416ba9ad",
-  "staged_product_manifest": "channels/candidates/0.0.24.json",
+  "staged_product_manifest": "channels/candidates/0.0.25.json",
   "staged_qualification": "channels/main.json",
   "source_available": false,
   "compiler_source_available": false,
@@ -18,9 +18,9 @@
     "production_use": false,
     "immutable_prior_tags_preserved": true
   },
-  "source_commit": "81966eaef368769a569bfac17db9e8c3416ba9ad",
-  "source_tree": "bee5ff2ecb3195b12b99dffd2191a8062fd0602d",
-  "cdn": "https://cdn.jsdelivr.net/gh/cbgroom/wasmcrelease@v0.0.24",
+  "source_commit": "113f1a7ff2c53b20d3edd0272c9c611cadfc3d4b",
+  "source_tree": "c46511a12d9c5f3657d6444b6f3b58268bea493c",
+  "cdn": "https://cdn.jsdelivr.net/gh/cbgroom/wasmcrelease@v0.0.25",
   "capabilities": [
     "package-manager-free Runtime compiler bootstrap on Node/Deno/Bun adapters",
     "compiler-owned structured diagnostics for Runtime repair loops",
@@ -48,7 +48,8 @@
     "integrated ordinary-call, record-value, scalar-comparison, invalid adapter-return cleanup and copied-byte correctness repairs",
     "generic private scalar helper calls with forward declarations, recursion, control flow and typed invalid-source recovery",
     "ordinary Source JSON/bytes calls through the canonical SDK with exact caller plan and memory bindings",
-    "independent UTF8 encoding in JSON0.0.6 and the Core4.9.1 provider with unchanged47-function ABI and import namespace"
+    "independent UTF8 encoding in JSON0.0.6 and the Core4.9.1 provider with unchanged47-function ABI and import namespace",
+    "branch-local scalar, record and managed String names in sibling and nested if branches with out-of-scope rejection and preserved cleanup ownership"
   ],
   "nonclaims": [
     "private compiler source",
@@ -74,12 +75,12 @@
     "package": "wasmc:runtime@0.1.0-runtime-v0",
     "path": "runtime/wasmc-runtime-v0",
     "registry": "runtime/registry-v0",
-    "compiler_bytes": 1956578,
-    "compiler_sha256": "c78816376228b6091599845c6a9a531eb76f949fe419655c012ec30c05f75832",
-    "product_candidate_commit": "03fe3b889eff58c2a2bbac5802da0990fe50223d",
+    "compiler_bytes": 1957478,
+    "compiler_sha256": "23a91517a5217575d099a5c116a72db87f01e8cce22e4dc9af573ff6d456ac47",
+    "product_candidate_commit": "27a774cd4decb3d6eb9da0e19641846086b1493c",
     "product_candidate_repository": "cbgroom/wasmcrelease",
-    "evidence_commit": "b50a5c78e05c96ad30e212d2cb02aeb31499d572",
-    "source_free_archive_sha256": "e8d55a0abb561dc204622df1d108309ef4db06c5b636d1680ead7b3663ab572b",
+    "evidence_commit": "94f74177756119ee7b04f913d265d1195b8c0dc5",
+    "source_free_archive_sha256": "54cdaffb95138b472d0891b3f4cecf96a1d6f64b3cff03085a6a0cfc8cf9b04a",
     "host_providers": [
       "node",
       "bun",
@@ -87,14 +88,15 @@
     ],
     "host_evidence_same_candidate": true,
     "external_js_package_registry": false,
-    "python_active_tree_allowed": false
+    "python_active_tree_allowed": false,
+    "archive_scope": "exact tracked candidate tree local archive with actual15 Node/Bun/Deno Runtime steps; formal whole-public archive has its independent release-asset digest"
   },
-  "release_date": "2026-10-22",
-  "product_candidate_commit": "988f2f96dd6b2abe1969ddb3feccee284098a011",
-  "evidence_commit": "b50a5c78e05c96ad30e212d2cb02aeb31499d572",
+  "release_date": "2026-10-24",
+  "product_candidate_commit": "8492518eee26dd39c7ee4bcc34619f3f171d7d28",
+  "evidence_commit": "94f74177756119ee7b04f913d265d1195b8c0dc5",
   "artifact_inventory": {
     "path": "manifest.json",
     "integrity": "SHA256SUMS",
-    "artifacts": 2115
+    "artifacts": 2139
   }
 }

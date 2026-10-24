@@ -47,7 +47,7 @@
   "consumer_surfaces": [
     {
       "id": "lib-package",
-      "status": "candidate",
+      "status": "published",
       "roots": [
         "current-libs"
       ],
@@ -59,7 +59,7 @@
     },
     {
       "id": "host-sdk",
-      "status": "candidate",
+      "status": "published",
       "roots": [
         "sdk/wasmc-host",
         "sdk/wasmc-core-runtime"
@@ -74,7 +74,7 @@
     },
     {
       "id": "integrated-runtime-cli",
-      "status": "candidate",
+      "status": "published",
       "roots": [
         "runtime/wasmc-runtime-v0",
         "sdk/wasmc-native-compiler"
@@ -202,24 +202,24 @@
       "core-runtime-sdk": {
         "root": "sdk/wasmc-core-runtime",
         "skill": "sdk/wasmc-core-runtime/SKILL.md",
-        "release_status": "candidate",
+        "release_status": "published",
         "immutable_example": "v0.0.25",
-        "immutable_example_scope": "Unreleased v0.0.25 candidate; final immutable tag and exact qualification remain required."
+        "immutable_example_scope": "Final local v0.0.25 prod rehearsal view; exact final commit/tree live GLM single-model acceptance and independent review authorize the immutable tag, followed by actual publisher/download readback."
       },
       "host-sdk": {
         "root": "sdk/wasmc-host",
         "skill": "sdk/wasmc-host/SKILL.md",
-        "release_status": "candidate",
+        "release_status": "published",
         "immutable_example": "v0.0.25",
-        "immutable_example_scope": "Unreleased v0.0.25 candidate; final immutable tag and exact qualification remain required."
+        "immutable_example_scope": "Final local v0.0.25 prod rehearsal view; exact final commit/tree live GLM single-model acceptance and independent review authorize the immutable tag, followed by actual publisher/download readback."
       },
       "native-cli": {
         "root": "sdk/wasmc-native-compiler",
         "skill": "sdk/wasmc-native-compiler/SKILL.md",
-        "release_status": "candidate",
+        "release_status": "published",
         "immutable_example": "v0.0.25",
         "binary_packaging": "Current v0.0.25 compiler carriers bind compiler 23a91517a5217575d099a5c116a72db87f01e8cce22e4dc9af573ff6d456ac47 and canonical source113f1a7ff2c53b20d3edd0272c9c611cadfc3d4b. Actual six Native builds and six matching downloaded consumers passed; consult their current qualification receipts. CI/development artifacts alone do not establish immutable Release assets, and final v0.0.25 publication remains pending. Earlier v0.0.23 receipts remain historical. CI/development packages are not immutable release assets.",
-        "immutable_example_scope": "Unreleased v0.0.25 candidate; final immutable tag and exact qualification remain required."
+        "immutable_example_scope": "Final local v0.0.25 prod rehearsal view; exact final commit/tree live GLM single-model acceptance and independent review authorize the immutable tag, followed by actual publisher/download readback."
       },
       "lightweight-embedding": {
         "root": "host/embedding",
@@ -322,7 +322,7 @@
         ]
       },
       "u64_ordinary_source": {
-        "status": "qualified-product-capability",
+        "status": "released",
         "positions": [
           "local",
           "parameter",
@@ -555,13 +555,13 @@
           "admitted_before_freeze": false
         },
         "api_routes": 3,
-        "lifecycle_status": "unreleased-candidate"
+        "lifecycle_status": "prod-rehearsal-view"
       },
       "lifecycle_authority": {
         "current_release": "release.json",
         "stages": "channels/dev.json, channels/main.json, channels/prod.json",
         "rule": "Never infer released, discoverable or installable from this frozen product projection.",
-        "status": "unreleased-candidate"
+        "status": "prod-rehearsal-view"
       },
       "valid_resolution_count": 1,
       "only_valid_closure": "Verify the exact42/247/289 candidate, read the channel authorities, then require the final local commit/tree GLM5.3 single-model receipt and independent review before publication. This projection proves complete product route closure only.",
@@ -583,13 +583,13 @@
       "check_commands": [
         "node scripts/lib-route-closure.mjs --check",
         "node scripts/current-compiler-integrity.mjs --require-qualification",
-        "node scripts/release-candidate.mjs verify channels/candidates/0.0.25.json --candidate-sha256 76ffb68f0a7515389b598db92c6db5cf3ba1c378cfc100189422af76e8032e9b"
+        "node scripts/release-candidate.mjs verify channels/candidates/0.0.25.json --candidate-sha256 5607113f2ca3c389fd50bc3ba9022905c50f12b632434c3d872a9d1276ecbccb"
       ],
       "answer_boundary": "Stop after reporting the product closure and the exact lifecycle state read from release.json/channels; never infer a transition.",
       "stop": "This record is sufficient for the matching readiness decision. Do not scan manifests, histories or implementation scripts unless one of its check commands fails.",
       "pending_candidate_verification": {
         "path": "channels/candidates/0.0.25.json",
-        "candidate_sha256": "76ffb68f0a7515389b598db92c6db5cf3ba1c378cfc100189422af76e8032e9b",
+        "candidate_sha256": "5607113f2ca3c389fd50bc3ba9022905c50f12b632434c3d872a9d1276ecbccb",
         "status": "verified-exact-frozen-candidate",
         "rule": "Use this complete independent candidate SHA256; stage promotions must preserve its product set."
       },
@@ -799,9 +799,9 @@
         "identity": "wasmc-system-telemetry@0.0.1",
         "qualified": true,
         "admitted": true,
-        "released": false,
-        "discoverable": false,
-        "installable": false,
+        "released": true,
+        "discoverable": true,
+        "installable": true,
         "supported_routes": [
           "source-free-rust-component",
           "public-rust-host-sdk",
@@ -875,15 +875,15 @@
       "rule": "Reuse the original full-Q0 evidence for 41 unchanged Roots and the verified original producer/source custody for JSON0.0.6; this is not a fresh 42-Root Q0 run."
     },
     "lifecycle": {
-      "status": "unreleased-candidate",
+      "status": "prod-rehearsal-view",
       "product_version": "0.0.25",
-      "released": false,
-      "discoverable": false,
-      "installable": false,
+      "released": true,
+      "discoverable": true,
+      "installable": true,
       "authority": "release.json and channels/dev.json, channels/main.json, channels/prod.json",
-      "observed_release_version": "0.0.24",
-      "observed_prod_version": "0.0.24",
-      "rule": "Unreleased v0.0.25 candidate; only existing release.json and channels/prod.json authorize formal publication. Native and final Pi qualification remain pending.",
+      "observed_release_version": "0.0.25",
+      "observed_prod_version": "0.0.25",
+      "rule": "Final local prod lifecycle view. Publication requires the exact commit/tree GLM5.3 single-model passing receipt, independent review and immutable publisher readback. This projection alone grants no publication or Host authority.",
       "observed_dev_version": "0.0.25",
       "observed_main_version": "0.0.25"
     }
