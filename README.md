@@ -1,5 +1,6 @@
-# WAsmC0.0.25
+# WAsmC0.0.26
 
+v0.0.26 removes unused Table/error imports from static HTTP and read-only JSON applications. The SDK emits13 HTTP imports for these applications and preserves the18 required imports for actual Table callers. The existing Core/Lib identities and fuel/permission contracts are unchanged.
 WAsmC compiles WIT-shaped application source to standard Core Wasm. This
 source-free distribution combines one compiler, Provider4.9.1, Std1.4.1,
 LibSearch0.5.0,42 complete current Lib identities and public Rust/Host SDKs.
@@ -79,5 +80,5 @@ capability. System Telemetry supports its declared Component resource view;
 ordinary-source direct resource methods remain unsupported. Client Foundation
 and Gateway remain incubating.
 
-The [0.0.25 release evidence](docs/RELEASE_V025.md) keeps source, artifact,
+The [0.0.26 release evidence](docs/RELEASE_V026.md) keeps source, artifact,
 runtime, Native platform, whole-candidate and lifecycle gates separate.

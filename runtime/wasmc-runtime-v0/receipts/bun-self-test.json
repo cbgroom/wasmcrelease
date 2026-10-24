@@ -2,20 +2,16 @@
   "schema": "wasmc.runtime-js-self-test/v0",
   "accepted": true,
   "runtime": "bun",
-  "compiler_bytes": 1957478,
+  "compiler_bytes": 1960808,
   "output_bytes": 41,
   "runtime_version": "1.3.14",
-  "candidate_commit": "27a774cd4decb3d6eb9da0e19641846086b1493c",
-  "compiler_sha256": "23a91517a5217575d099a5c116a72db87f01e8cce22e4dc9af573ff6d456ac47",
+  "candidate_commit": "24c8f68a1faf2a77438ebad70e3d811a83866043",
+  "compiler_sha256": "42c547a4f0819c081d66fddebedfa984098cbdb18d463c6a872e62a8683d70fe",
   "source_free_package": {
-    "archive_sha256": "54cdaffb95138b472d0891b3f4cecf96a1d6f64b3cff03085a6a0cfc8cf9b04a",
+    "archive_sha256": "1b3464d7895d565191baaceb024702c155d102d88ca9a2ce23d2d6e82ba8ec39",
     "private_source_checked_out": false,
     "git_metadata_present": false,
-    "origin": "local git archive of exact source tree27a774c; not an HTTPS download receipt"
-  },
-  "host": {
-    "hostname": "youdeMac-mini.local",
-    "uname": "Darwin youdeMac-mini.local 25.6.0 Darwin Kernel Version 25.6.0: Fri Jul 31 19:11:03 PDT 2026; root:xnu-12377.161.14~5/RELEASE_ARM64_T8132 arm64 arm"
+    "origin": "local git archive of exact source; HTTPS download independently required after publication"
   },
   "execution": {
     "self_test": true,
@@ -43,51 +39,44 @@
     "command": "bun",
     "executable_sha256": "e0c90ec15d33363e6b70713d56bc3b2c7585c17f40a0fe0f8fd9305901d4e233"
   },
-  "executed_at_utc": "2026-10-24T16:23:16.148030+00:00",
+  "executed_at_utc": "2026-10-24T19:27:42.013561+00:00",
   "evidence": {
     "actual_steps": [
       {
         "host": "bun",
-        "script": "runtime/wasmc-runtime-v0/bootstrap.mjs",
+        "step": 1,
         "exit": 0,
-        "seconds": 0.161,
-        "stdout_sha256": "416ea3dbd9f2a1473d92f95594c13b39762353fd19e764531bc1e59d2e9338ae",
+        "stdout_sha256": "1d7a0c7924eb9c7ba5dbaa56e8c6b7705c6adc4a24d0a1f363011b0465520c5a",
         "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       {
         "host": "bun",
-        "script": "runtime/wasmc-runtime-v0/bootstrap.mjs",
+        "step": 2,
         "exit": 0,
-        "seconds": 0.023,
-        "stdout_sha256": "949c8d025efba33f4b5bf49b8fd2f6b5e97fba6b1deb5e9fc8ddf034c5132f4b",
+        "stdout_sha256": "ca1d1d4576bba80c07e25493826cadcdcf98783d0472abe0170b3500e13389c6",
         "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       {
         "host": "bun",
-        "script": "scripts/assert-runtime-output.mjs",
+        "step": 3,
         "exit": 0,
-        "seconds": 0.013,
         "stdout_sha256": "b8a9e1923777acafe4164083c1eeb13195ca866e596de8a4244abe79be66022e",
         "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       {
         "host": "bun",
-        "script": "runtime/wasmc-runtime-v0/bootstrap.mjs",
+        "step": 4,
         "exit": 0,
-        "seconds": 0.021,
-        "stdout_sha256": "a6fe3faa0e1af454cafde36522aab16f48473f6f7a6306ae915d3a64a0e6122d",
+        "stdout_sha256": "7c0741e404b3951c297d0b2c44f8921237e0df75bc2368ce5ac9f8dc5b15b31b",
         "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       {
         "host": "bun",
-        "script": "external branch oracle",
+        "step": 5,
         "exit": 0,
-        "seconds": 0.024,
-        "stdout_sha256": "0eae18127fa3505aabb96de3754f35099bbbceb2ad7c054e0c305b67fd910e85",
+        "stdout_sha256": "c74df234d723f4bf710b4b0f59785f939c1c6bef11a6ab7cbcd492a9592a0caf",
         "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       }
-    ],
-    "compile_output_sha256": "29996fa74541742737704f64e48add2a5079ed8c57783cda4912046d5acb32c9"
-  },
-  "qualification_scope": "Actual exact-source27a source-free local archive Runtime consumer including both branch inputs; whole final release and HTTPS readback remain separate"
+    ]
+  }
 }
