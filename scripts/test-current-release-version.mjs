@@ -58,7 +58,7 @@ const mutations = [
 for (const mutate of mutations) {const changed = structuredClone(q); mutate(changed); assert.throws(() => check(changed)); rejected++;}
 // Schema compatibility fixture, never written as historical execution evidence.
 const legacy = structuredClone(q); legacy.version = '0.0.22';
-legacy.runs = legacy.runs.filter(r => !['scripts/test-current-private-helpers.mjs', 'scripts/test-canonical-host-sdk.mjs', 'scripts/test-if-branch-scope.mjs'].includes(r.args.at(-1)));
+legacy.runs = legacy.runs.filter(r => !['scripts/test-current-private-helpers.mjs', 'scripts/test-canonical-host-sdk.mjs', 'scripts/test-if-branch-scope.mjs', 'scripts/test-canonical-host-import-demand.mjs'].includes(r.args.at(-1)));
 for (const r of legacy.runs.filter(r => r.args.at(-1) === 'scripts/test-current-lib-api-v021.mjs')) r.result.provider = '4.9.0';
 assert.equal(assertCompilerQualification(legacy, '0.0.22', compiler.compiler.sha256, hash(read('current/compiler-release.json'))), true);
 console.log(JSON.stringify({accepted:true, actual_current_receipt:true, legacy_schema_fixture:true, rejections:rejected, whole_product_admission:false}));
