@@ -1,3 +1,7 @@
+Current result2026-10-24: v0.0.26 is formally published/default latest at immutable604122681165fbecd72821093dac26d5f38a2eb0. All20 official assets/3529 archive files verified; downloaded three-host SDK/scope, MacARM Native and fixed-tag CDN consumers pass. Static/read-only JSON omit unused Table/error imports13 instead of18; Table retains18. Exact GLM single-model6/6 and independent review pass. Closure: .agents/workstreams/WS-20261024-unused-host-imports-release-v026/publication/closure.json. No Core/42-Root/permissions/fuel/live-default change.
+
+Historical completion records follow.
+
 Current result2026-10-24: v0.0.25 formally published/default latest at immutablee675229/tagf3220fe7. Actual20 assets and3492 archive files downloaded/verified; Node/Bun/Deno scope and Runtime, NativeMac and CDN consumers pass. Final exact GLM single-model6/6 plus independent review pass. Own closure: .agents/workstreams/WS-20261024-if-scope-release-v025/publication/closure.json. No Core/42-Root change; imports/fuel and current MCPGit Native batch acceptance remain independently scoped diagnosis.
 
 Historical preparation records follow.

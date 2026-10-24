@@ -1,0 +1,89 @@
+{
+  "accepted": true,
+  "commands": [
+    {
+      "command": [
+        "node",
+        "scripts/validate-integrity.mjs"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "node",
+        "scripts/current-compiler-integrity.mjs",
+        "--require-qualification"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "node",
+        "scripts/test-canonical-host-import-demand.mjs"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "node",
+        "scripts/test-canonical-host-sdk.mjs"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "node",
+        "scripts/test-if-branch-scope.mjs"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "bun",
+        "scripts/test-canonical-host-import-demand.mjs"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "bun",
+        "scripts/test-canonical-host-sdk.mjs"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "bun",
+        "scripts/test-if-branch-scope.mjs"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "deno",
+        "run",
+        "-A",
+        "scripts/test-canonical-host-import-demand.mjs"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "deno",
+        "run",
+        "-A",
+        "scripts/test-canonical-host-sdk.mjs"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "deno",
+        "run",
+        "-A",
+        "scripts/test-if-branch-scope.mjs"
+      ],
+      "exit_code": 0
+    }
+  ]
+}

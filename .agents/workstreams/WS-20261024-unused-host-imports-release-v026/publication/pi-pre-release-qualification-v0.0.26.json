@@ -1,0 +1,98 @@
+{
+  "schema": "wasmc.pi-pre-release-qualification/v2",
+  "qualification_policy": "glm-5.3-flash-single-v1",
+  "protocol": "wasmc.fresh-agent-learning/v3",
+  "protocol_sha256": "0e086f1071acea9858389a986c320f622c423744a44857e60fae16af276b69cc",
+  "release": {
+    "version": "0.0.26",
+    "rehearsal_commit": "604122681165fbecd72821093dac26d5f38a2eb0",
+    "rehearsal_tree": "49033c20a881b9576bdf04aea7ea5b452807cd1b",
+    "candidate_commit": "d19eae9fad8294c0e56d6d8ccf8d1b4d9fe571ef",
+    "product_set_sha256": "e56dff8ece5de752f76f5950d9a77120d290d65bc6a10c6cdba36cde2556bebc"
+  },
+  "agent": {
+    "implementation": "pi",
+    "version": "1.0.4"
+  },
+  "fresh_local_git_clone_per_case": true,
+  "raw_trace_retained": false,
+  "hidden_reasoning_retained": false,
+  "review": {
+    "independent_from_model_self_assessment": true,
+    "method": "Read every retained first-final and actual tool invocation/outcome, compare all six frozen oracles, independently replay ten public commands and verify current compiler/facade/qualification/catalog projections. Keep private Source identity distinct from exact public rehearsal. Publication and official downloaded installation remain separate effects.",
+    "receipt_sha256": "cd6942cdd6c69aecd08719656bac245b930878e1b94053d0ecadd175994d2378"
+  },
+  "models": [
+    {
+      "provider": "llm-m4dd",
+      "identity": "glm-5.3-flash",
+      "structural_pass": true,
+      "white_box_pass": true,
+      "model_run_receipt_sha256": "85f134919e15e54002352ba37778c60f18d654ebdb4ab147b8e07e4bf27228ed",
+      "cases": [
+        {
+          "id": "release-orientation",
+          "structural_pass": true,
+          "oracle_passed": true,
+          "first_final_correct": true,
+          "final_answer_sha256": "7d292e392ad5d89a8e4b73d3dcca85e1fb4619311ca77a84ca6324374aef95d9",
+          "error_results": 0,
+          "retries": 0,
+          "independent_oracle_note": "First final identifies v26, public entrypoint/compact check and exact compiler/facade/catalog. Its4a299f identity is the compiler Source authority field; public rehearsal/tag commit is independently fixed to6041226 here, not inferred from that private Source identity. All three current compiler projections independently match."
+        },
+        {
+          "id": "position-aware-capability-negative",
+          "structural_pass": true,
+          "oracle_passed": true,
+          "first_final_correct": true,
+          "final_answer_sha256": "c0f53b7ee6ecedb70535c3b7b09f3b0eeb88e61d84b08c1b1861f62cd2f3aa11",
+          "error_results": 0,
+          "retries": 0,
+          "independent_oracle_note": "First final preserves ordinary synchronous u64, rejects independent async and direct public map positions, and only gives value/identity-preserving alternatives. No source generation or unsupported-position promotion credited."
+        },
+        {
+          "id": "ordinary-source-positive",
+          "structural_pass": true,
+          "oracle_passed": true,
+          "first_final_correct": true,
+          "final_answer_sha256": "dae02ba3f49e77a2e55abaec0cdf06dc29facea8e4dcce4237efa997aaad70ad",
+          "error_results": 0,
+          "retries": 0,
+          "independent_oracle_note": "Exact actual pair source/script executed; independent replay compiles49-byte55f3c7e3 Core with imports[] and returns[1,1] for run(5,true). Credit packaged program compile/inspect/run only, not novel program synthesis."
+        },
+        {
+          "id": "release-state-separation",
+          "structural_pass": true,
+          "oracle_passed": true,
+          "first_final_correct": true,
+          "final_answer_sha256": "03dbe78f4edfaba3e959b1a2fe0ca429d8c8fe86f9d21b3cb35cf440bafd7052",
+          "error_results": 0,
+          "retries": 0,
+          "independent_oracle_note": "Exact telemetry identity and stop reason, all five direct-source states false, and the three separately supported integration routes match authoritative quickstart data. Related lifecycle is explicitly a local prod-rehearsal view; no direct method or new external acquisition credited."
+        },
+        {
+          "id": "library-first-selection",
+          "structural_pass": true,
+          "oracle_passed": true,
+          "first_final_correct": true,
+          "final_answer_sha256": "36815a8392ff4dfbb826302ecf55c321027ac3ca315edd42d496e8cf1ca845ac",
+          "error_results": 0,
+          "retries": 0,
+          "independent_oracle_note": "Actual search/resolve/oracle commands independently replayed. Exact Std1.4.1/2 Base64 APIs and complete Root pins verified; actual256 rounds/1024 drops/invalid input control pass. Model correctly distinguishes discovery, caller approval, packaged execution and no performed installation. Final external publication remains a separate effect."
+        },
+        {
+          "id": "host-authority-boundary",
+          "structural_pass": true,
+          "oracle_passed": true,
+          "first_final_correct": true,
+          "final_answer_sha256": "f9d7394e54751036c75f3a45c9a9f96b31ae16ae9f141b85939a0b76823b23dc",
+          "error_results": 0,
+          "retries": 0,
+          "independent_oracle_note": "First final requires module/name/kind/signature exact allowlist before instantiation, imports[]/{} for pure programs, and no ambient/private authority. Independent actual pair and SDK demand tests confirm physical imports and behavior; conceptual Host binding decision, not an additional network-security audit."
+        }
+      ]
+    }
+  ],
+  "controlled_pair_accepted": false,
+  "single_model_accepted": true
+}
