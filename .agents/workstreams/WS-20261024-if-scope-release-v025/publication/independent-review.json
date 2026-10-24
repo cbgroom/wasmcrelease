@@ -1,0 +1,147 @@
+{
+  "schema": "wasmc.pi-independent-review/v1",
+  "accepted": true,
+  "reviewer": "Codex independent review, separate from evaluated Pi/GLM self-assessment",
+  "independent_from_model_self_assessment": true,
+  "rehearsal_commit": "e675229e181a4a801b1f06f8f0d8160e2772060f",
+  "rehearsal_tree": "f68818fbfa2cd7068762340960a9f99f2e5aef1b",
+  "qualification_policy": "glm-5.3-flash-single-v1",
+  "controlled_pair_accepted": false,
+  "model_run_sha256": "3216bbd055adee6bc4431fbe56097db889079bfe32924bc1dd1dc557d643a2a4",
+  "raw_trace_retained": false,
+  "hidden_reasoning_retained": false,
+  "method": "Read every actual retained first-final, exact tool argument and matched outcome. Compare frozen six oracles and independently replay the actual public commands and verify source/program/import/behavior and all three compiler projections. Preserve original metadata rejection and same-tree provider retry failure; selected bounded recovery has six fresh sessions and zero retries/errors.",
+  "independent_commands": [
+    {
+      "case": "release-orientation",
+      "argv": [
+        "node",
+        "scripts/agent-release-orientation.mjs",
+        "--check"
+      ],
+      "exit": 0,
+      "stdout_sha256": "2baf5714f6dc91ebd8b20154ffee166a497e239829fab02195794e3c2f5943c9",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "ordinary-source-positive",
+      "argv": [
+        "node",
+        "examples/agent-quickstart/run-pair.mjs"
+      ],
+      "exit": 0,
+      "stdout_sha256": "e84fad523d4e3929cf69df4792a6a2e71e6a95a701c71146daabdbb73fa38e76",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "library-first-selection",
+      "argv": [
+        "node",
+        "scripts/wasmc-lib.mjs",
+        "search",
+        "base64",
+        "--catalog-sha256",
+        "762a1f80bec8b739c2652b4a13f4d4f3076815fa1fe2579d5da5d508d4f2fbf3",
+        "--limit",
+        "8"
+      ],
+      "exit": 0,
+      "stdout_sha256": "ceb97019422457778fd8e3257310a29e349a6e6b62b57b99fb57de7225d708b4",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "library-first-selection",
+      "argv": [
+        "node",
+        "scripts/wasmc-lib.mjs",
+        "resolve",
+        "wasmc-std",
+        "1.4.1",
+        "--catalog-sha256",
+        "762a1f80bec8b739c2652b4a13f4d4f3076815fa1fe2579d5da5d508d4f2fbf3",
+        "--manifest-sha256",
+        "9db63b4f380f9a8fb7541addfde6608bbc48b3267ad903f838afedb98e74ebfc",
+        "--root-inventory-sha256",
+        "6978407b51e835a3893ac14cbb7ca2c46da48d0a778f2611f6de829af07bdf92"
+      ],
+      "exit": 0,
+      "stdout_sha256": "7dd11ade686a86cf65eab92950958acdc375ddae4612f62aa58fd929175ae5c9",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "library-first-selection",
+      "argv": [
+        "node",
+        "examples/base64/run.mjs"
+      ],
+      "exit": 0,
+      "stdout_sha256": "faab4d6e2a49d5e92244c6a0a82fe77fadf102e927479b58cdc3db28069062e3",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "independent-compiler-authority",
+      "argv": [
+        "node",
+        "scripts/current-compiler-integrity.mjs",
+        "--require-qualification"
+      ],
+      "exit": 0,
+      "stdout_sha256": "b406d7c2079d84877d29b2a8fc742e0c38a22c44ba2f187beef03c6abec911fd",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "independent-license",
+      "argv": [
+        "node",
+        "scripts/validate-license-policy.mjs"
+      ],
+      "exit": 0,
+      "stdout_sha256": "4583b1de3ec414cc84ef169c3d18feb6ba12ae5250480d5632b954c52cf1027e",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "cases": [
+    {
+      "id": "release-orientation",
+      "oracle_passed": true,
+      "first_final_correct": true,
+      "final_answer_sha256": "f63172c4c83391cb1aa613b76546d5356939f7b4a246a4c514278f8631a9ec50",
+      "note": "Actual first-final selects v0.0.25, AGENTS.md, compact orientation, new23 compiler, exact facade and18 runs. Replayed named check and independently verified actual compiler carriers/qualification. Canonical private113f identity is distinct from this independently bound public e675 rehearsal; prod-rehearsal-view does not itself prove already completed publisher action."
+    },
+    {
+      "id": "position-aware-capability-negative",
+      "oracle_passed": true,
+      "first_final_correct": true,
+      "final_answer_sha256": "8da0690d1921d778359d62db9d0b7ac1802c3737ee5fc256d2c28d5f768c5d7b",
+      "note": "First-final separately accepts synchronous ordinary u64 positions and rejects async ordinary source/direct public Map. It produces no source and retains copied-value/signedness equivalence conditions; no unsupported or ambient capability is granted."
+    },
+    {
+      "id": "ordinary-source-positive",
+      "oracle_passed": true,
+      "first_final_correct": true,
+      "final_answer_sha256": "7c88d7c45fe3ea96e30d28691f3e742f009d5cfdc4f405c2639ed676dfa1f819",
+      "note": "Actual first-final identifies and describes the exact required public pair program, one tuple semantic result and flattened lanes. Exact source was read by Pi and independently inspected; replayed its actual run-pair command compiles49 bytes with55f3 digest, imports=[], run export and run(5,true)=[1,1]. This credits the route-directed public program and actual compile/inspect/run, not novel-program synthesis."
+    },
+    {
+      "id": "release-state-separation",
+      "oracle_passed": true,
+      "first_final_correct": true,
+      "final_answer_sha256": "cb962c395759a8d633e7e26f27318c5ac41709d23ef665d7431684ebe614b478",
+      "note": "Actual first-final reports exact telemetry identity and first missing direct-resource-method authority, all five direct-route states false, and only the separate three supported integration routes. Independent current route data matches; no direct-source resource or new external acquisition is credited."
+    },
+    {
+      "id": "library-first-selection",
+      "oracle_passed": true,
+      "first_final_correct": true,
+      "final_answer_sha256": "9b68778c69cfa7af4eb3fb8c52d824dec4ad90440b8f6fdea380c8e4ca5f4d20",
+      "note": "Replayed exact search/resolve/oracle commands from actual trace. Exact Std1.4.1 and two Base64 APIs, complete Root/manifest/catalog/WIT/artifact pins and Core4.9.1 import module match; actual behavior256 rounds/1024 drops/invalid-input rejection passes. Caller/policy approval remains separate. Packaged Root execution is credited; no installation or installed_root_verified claim is made. Local final prod view is not standalone proof of external publication."
+    },
+    {
+      "id": "host-authority-boundary",
+      "oracle_passed": true,
+      "first_final_correct": true,
+      "final_answer_sha256": "6f55226eca5222f22b1237e25d22b23b9a1bd87d3497685d3b84f0694b585067",
+      "note": "Actual first-final requires exact declared import module/name/kind/signature approval, imports=[] for pure programs and no ambient/private handles or JSON/WIT replacement. Independent actual inspectWasm helper returns module/imports/exports and pure pair instance runs with {}. Conceptual boundary, not an additional network-security audit."
+    }
+  ]
+}

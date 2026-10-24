@@ -1,3 +1,7 @@
+Current result2026-10-24: v0.0.25 formally published/default latest at immutablee675229/tagf3220fe7. Actual20 assets and3492 archive files downloaded/verified; Node/Bun/Deno scope and Runtime, NativeMac and CDN consumers pass. Final exact GLM single-model6/6 plus independent review pass. Own closure: .agents/workstreams/WS-20261024-if-scope-release-v025/publication/closure.json. No Core/42-Root change; imports/fuel and current MCPGit Native batch acceptance remain independently scoped diagnosis.
+
+Historical preparation records follow.
+
 Current v25 checkpoint: private PR19 merged113f1a7ff; new compiler23a91517 qualified with18 source-free commands and43 product controls; all42 Roots retained. Native/cross-platform and final prod publication pending. See `.agents/workstreams/WS-20261024-if-scope-release-v025/HANDOFF.md`. Formal default remainsv0.0.24.
 
 # WAsmC release maintainer handoff

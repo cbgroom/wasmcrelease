@@ -1,3 +1,11 @@
+# Current result: completed v0.0.25 formal publication
+
+The if-branch scope repair is merged as private113f and formally released as immutable publice675229 / tagv0.0.25. Default latest/main point to the new release; the published20 assets were actually downloaded, both checksum sets and every3492 tagged archive file verified. Downloaded Node/Bun/Deno scope+Runtime consumers and actual NativeMac package pass; immutable jsDelivr ESM executes record14/26 and managed5/3 on new inputs in the same instances. Final GLM single-model6/6 and independent review are exact e675; original stale projection and provider-retry failures remain preserved. See publication/closure.json and exact receipts.
+
+All42 Roots/Core4.9.1, old tags, original failures, prior Map-million/install/consumer/integration evidence and foreign WIP remain intact. Private global-only closure812431445 passes Native720/720; immutable SourceReady/HANDOFF snapshot is preserved and original ambiguous two-HANDOFF closure failure retained. Remaining bounded work is SDK/Lib-first long-response fuel and unused Table/error imports diagnosis. The same-GREEN-batch/current MCPGit Native result is not claimed. Do not infer it from release notes or Native compiler-package CI; do not start a Core change or extra release from this closure.
+
+## Historical checkpoints retained
+
 # v0.0.25 if-branch scope publication
 
 PR19 merged as private canonical113f1a7ff2c53b20d3edd0272c9c611cadfc3d4b. Strict prepared Target719/719 and actual canonical719/719 passed. Immutable SourceReady7534e248c97db31bed84088830c04f4aad1c3cec supplied one warm offline portable build; 5172 tracked inputs unchanged. Compiler23a91517a5217575d099a5c116a72db87f01e8cce22e4dc9af573ff6d456ac47 is import-free,1957478B. Canonical/source custody proves only four governance paths differ, with identical product inputs. Public custody contains relative paths and reviewed facts only.

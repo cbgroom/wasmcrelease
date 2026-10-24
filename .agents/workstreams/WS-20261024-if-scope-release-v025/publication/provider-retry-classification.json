@@ -1,0 +1,37 @@
+{
+  "schema": "wasmc.release-model-route-retry-classification/v1",
+  "accepted": false,
+  "rehearsal_commit": "e675229e181a4a801b1f06f8f0d8160e2772060f",
+  "failed_cases": [
+    {
+      "id": "library-first-selection",
+      "failures": [
+        {
+          "metric": "retries",
+          "observed": 1,
+          "limit": 0
+        }
+      ],
+      "observed": {
+        "tool_calls": 7,
+        "assistant_turns": 6,
+        "tool_result_characters": 44042,
+        "error_results": 0,
+        "retries": 1,
+        "exact_duplicate_calls": 0,
+        "repeated_reads": 0,
+        "zero_yield_results": 0
+      },
+      "process": {
+        "status": 0,
+        "signal": null,
+        "timed_out": false,
+        "wall_ms": 58718,
+        "stderr_characters": 0,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ],
+  "facts": "All seven library-case tool outcomes are matched, non-error, distinct completed calls. The evaluator increments retries only for a Pi event.willRetry=true. Actual underlying provider retry reason is unavailable in the privacy-safe summary. The later final Host-boundary case completes with zero retries.",
+  "next": "One bounded complete same-commit fresh-cohort recovery attempt. Retain this actual failed result; change no tree, prompt, budget, oracle, evaluator or retry gate. Do not credit old failed attempt as passing."
+}
