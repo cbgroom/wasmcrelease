@@ -19,8 +19,8 @@ physical-device support.
 Run from the verified immutable product or tooling root:
 
 ```sh
-node scripts/wasmc-lib.mjs search "base64 decode" --catalog-sha256 762a1f80bec8b739c2652b4a13f4d4f3076815fa1fe2579d5da5d508d4f2fbf3 --limit 8
-node scripts/wasmc-lib.mjs search "counter" --catalog-sha256 762a1f80bec8b739c2652b4a13f4d4f3076815fa1fe2579d5da5d508d4f2fbf3 --limit 8
+node scripts/wasmc-lib.mjs search "base64 decode" --catalog-sha256 0a3eaa87733eb32c69379cff4f8c79079c49045787999396a9e2730ebf13d90a --limit 8
+node scripts/wasmc-lib.mjs search "counter" --catalog-sha256 0a3eaa87733eb32c69379cff4f8c79079c49045787999396a9e2730ebf13d90a --limit 8
 ```
 
 The first query returns identity

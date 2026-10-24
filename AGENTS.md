@@ -47,7 +47,7 @@ LibSearch0.5.0 and42 current Lib identities. `current/compiler-release.json`
 binds the compiler carriers and source build; validate them with
 `node scripts/current-compiler-integrity.mjs --require-qualification`.
 `catalog/libs-current-v2.json` binds complete current Roots. Its independent
-SHA256 is `762a1f80bec8b739c2652b4a13f4d4f3076815fa1fe2579d5da5d508d4f2fbf3`. The42 package routes and247 exported API routes form
+SHA256 is `0a3eaa87733eb32c69379cff4f8c79079c49045787999396a9e2730ebf13d90a`. The42 package routes and247 exported API routes form
 289 index entries. Search runs the actual compiled Core implementation.
 Fourteen native-source rows remain source-only and do not establish executable
 Native or device support. Installation grants no Host authority.
@@ -70,7 +70,9 @@ For JSON/bytes, select [JSON0.0.6](standard/wasmc-json/0.0.6/) and follow
 [the Canonical Host SDK example](examples/canonical-host/). The generic SDK
 owns caller generation, transfer plans and memory bindings. Keep JSON parsing,
 UTF-8 conversion and application decisions in the Guest/Lib; Host adapters
-perform only the explicitly supplied effects.
+perform only the explicitly supplied effects. For static HTTP or read-only JSON, use
+`examples/canonical-host/app/static.wasmc` or `app/json-read.wasmc`; these omit
+unused Table/error imports through the same SDK packaging path.
 The [historical JSON0.0.5 Root](standard/wasmc-json/0.0.5/) retains its original
 manifest and notices; current discovery selects JSON0.0.6.
 
@@ -98,7 +100,7 @@ cancellation and resource cleanup. Keep native-source, emulator and physical
 
 ```sh
 node scripts/current-compiler-integrity.mjs --require-qualification
-node scripts/wasmc-lib.mjs search "base64 decode" --catalog-sha256 762a1f80bec8b739c2652b4a13f4d4f3076815fa1fe2579d5da5d508d4f2fbf3 --limit 8
+node scripts/wasmc-lib.mjs search "base64 decode" --catalog-sha256 0a3eaa87733eb32c69379cff4f8c79079c49045787999396a9e2730ebf13d90a --limit 8
 node examples/base64/run.mjs
 ```
 
