@@ -583,13 +583,13 @@
       "check_commands": [
         "node scripts/lib-route-closure.mjs --check",
         "node scripts/current-compiler-integrity.mjs --require-qualification",
-        "node scripts/release-candidate.mjs verify channels/candidates/0.0.25.json --candidate-sha256 83c00dbe492d75da9ea5b0a31c1ea7053c551fcc9d4734bfc5958001f58d020e"
+        "node scripts/release-candidate.mjs verify channels/candidates/0.0.25.json --candidate-sha256 76ffb68f0a7515389b598db92c6db5cf3ba1c378cfc100189422af76e8032e9b"
       ],
       "answer_boundary": "Stop after reporting the product closure and the exact lifecycle state read from release.json/channels; never infer a transition.",
       "stop": "This record is sufficient for the matching readiness decision. Do not scan manifests, histories or implementation scripts unless one of its check commands fails.",
       "pending_candidate_verification": {
         "path": "channels/candidates/0.0.25.json",
-        "candidate_sha256": "83c00dbe492d75da9ea5b0a31c1ea7053c551fcc9d4734bfc5958001f58d020e",
+        "candidate_sha256": "76ffb68f0a7515389b598db92c6db5cf3ba1c378cfc100189422af76e8032e9b",
         "status": "verified-exact-frozen-candidate",
         "rule": "Use this complete independent candidate SHA256; stage promotions must preserve its product set."
       },
@@ -875,7 +875,7 @@
       "rule": "Reuse the original full-Q0 evidence for 41 unchanged Roots and the verified original producer/source custody for JSON0.0.6; this is not a fresh 42-Root Q0 run."
     },
     "lifecycle": {
-      "status": "qualified-main-candidate",
+      "status": "unreleased-candidate",
       "product_version": "0.0.25",
       "released": false,
       "discoverable": false,
