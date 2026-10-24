@@ -1,5 +1,7 @@
 # WAsmC release maintainer handoff
 
+Current2026-10-24: explicit if-branch scope patch publication v0.0.25 started in WS-20261024-if-scope-release-v025. v0.0.24 remains current formal release; all old tags/Roots and failures preserved. Next strict private PR19 integration, fresh source-bound portable compiler, matching public carriers and exact download qualification.
+
 Latest2026-10-22: suffixfree v0.0.24 is formally published at exact c49933e0263ecac3fe085b6342a6508bfd7f2374/tree9f60f19198b4986e6594531f447b9a6bb9219202, annotatedtag69279b402cfee240b112032ed38c77b5d943e73d; all20 officialAPI assets match and latest selectsv24. ActualGLM six cases and independentseven-command review passed; originalgate accepted single-model receipt e494e767, controlledpair=false. Independentpublic20downloads, full3437file archive, threeHosts, downloadedMacARM andbothRaw/CDN defaultconsumers allpassed in102actualcommands; allformalacceptance conditions are now fulfilled. Posttag evidence is in owned WS-20261022-final-compiler-core-carriers-v024/final-publication; immutabletagtree is unchanged. CurrentnormalCIv2 retains officialcancelled/failure facts and same-input componentproofs; no new compiler/Core/Native/Rootbuild.
 
 
