@@ -1,0 +1,229 @@
+{
+  "schema": "wasmc.normal-functional-dev-qualification/v1",
+  "accepted": true,
+  "source_commit": "27a774cd4decb3d6eb9da0e19641846086b1493c",
+  "product_set_sha256": "55911f5b741384336bd6ad1cec87b6fa9ec59dc35970201ee709a1d56d3c7bfc",
+  "candidate_sha256": "83c00dbe492d75da9ea5b0a31c1ea7053c551fcc9d4734bfc5958001f58d020e",
+  "sourcefree_qualification": {
+    "path": "current/qualification.json",
+    "sha256": "58d0911da93b1cf21b0153f4eab54e5bcb801ee2825535cdce93acecec9bb81a",
+    "actual_commands": 18,
+    "source_free": true
+  },
+  "original_candidate_suite": {
+    "passed": 14,
+    "total": 15,
+    "dirty": false,
+    "failure": "current-complete-product-reopen-negatives: install.destination_exists in predecessor-owned scratch output; original receipt and stdout/stderr retained outside delivery"
+  },
+  "targeted_current_product_controls": {
+    "schema": "wasmc.current-product-v3-controls/v1",
+    "accepted": true,
+    "tests": 43,
+    "catalog_sha256": "762a1f80bec8b739c2652b4a13f4d4f3076815fa1fe2579d5da5d508d4f2fbf3",
+    "test_source_sha256": "3791f3790254f3ead2da27036fcbcf60e7d2bd5afa50eccd163b725af439307a",
+    "results": [
+      {
+        "name": "canonical full-path inventory order across directory prefixes",
+        "passed": true
+      },
+      {
+        "name": "real composed Core snapshot all289 lookups and full pagination; original full-base verified",
+        "passed": true
+      },
+      {
+        "name": "independent catalog mismatch",
+        "passed": true,
+        "rejected": true
+      },
+      {
+        "name": "actual modified artifact.wasm",
+        "passed": true,
+        "rejected": true
+      },
+      {
+        "name": "actual modified component.wasm",
+        "passed": true,
+        "rejected": true
+      },
+      {
+        "name": "actual modified lib.wit",
+        "passed": true,
+        "rejected": true
+      },
+      {
+        "name": "actual modified LICENSE",
+        "passed": true,
+        "rejected": true
+      },
+      {
+        "name": "actual modified Cargo.toml",
+        "passed": true,
+        "rejected": true
+      },
+      {
+        "name": "missing current implementation",
+        "passed": true,
+        "rejected": true
+      },
+      {
+        "name": "duplicate implementation",
+        "passed": true,
+        "rejected": true
+      },
+      {
+        "name": "native-source cannot claim Wasm",
+        "passed": true,
+        "rejected": true
+      },
+      {
+        "name": "unsafe package path",
+        "passed": true,
+        "rejected": true
+      },
+      {
+        "name": "unsealed extra Root inventory",
+        "passed": true,
+        "rejected": true
+      },
+      {
+        "name": "self-rehashed artifact fails Q0 root authority",
+        "passed": true,
+        "rejected": true
+      },
+      {
+        "name": "self-rehashed API omission fails WIT closure",
+        "passed": true,
+        "rejected": true
+      },
+      {
+        "name": "self-rehashed authored source fails Q0 input",
+        "passed": true,
+        "rejected": true
+      },
+      {
+        "name": "actual undeclared current file",
+        "passed": true,
+        "rejected": true
+      },
+      {
+        "name": "controlled install wasm-core-component",
+        "passed": true,
+        "transport_fixture": true
+      },
+      {
+        "name": "install wasm-core-component rejects http302",
+        "passed": true
+      },
+      {
+        "name": "install wasm-core-component rejects truncated",
+        "passed": true
+      },
+      {
+        "name": "install wasm-core-component rejects oversized",
+        "passed": true
+      },
+      {
+        "name": "install wasm-core-component rejects digest",
+        "passed": true
+      },
+      {
+        "name": "self-rehashed lock cannot grant authority wasm-core-component",
+        "passed": true
+      },
+      {
+        "name": "controlled install native-source",
+        "passed": true,
+        "transport_fixture": true
+      },
+      {
+        "name": "install native-source rejects http302",
+        "passed": true
+      },
+      {
+        "name": "install native-source rejects truncated",
+        "passed": true
+      },
+      {
+        "name": "install native-source rejects oversized",
+        "passed": true
+      },
+      {
+        "name": "install native-source rejects digest",
+        "passed": true
+      },
+      {
+        "name": "self-rehashed lock cannot grant authority native-source",
+        "passed": true
+      },
+      {
+        "name": "controlled install native-module",
+        "passed": true,
+        "transport_fixture": true
+      },
+      {
+        "name": "install native-module rejects http302",
+        "passed": true
+      },
+      {
+        "name": "install native-module rejects truncated",
+        "passed": true
+      },
+      {
+        "name": "install native-module rejects oversized",
+        "passed": true
+      },
+      {
+        "name": "install native-module rejects digest",
+        "passed": true
+      },
+      {
+        "name": "self-rehashed lock cannot grant authority native-module",
+        "passed": true
+      },
+      {
+        "name": "controlled install native-binary",
+        "passed": true,
+        "transport_fixture": true
+      },
+      {
+        "name": "install native-binary rejects http302",
+        "passed": true
+      },
+      {
+        "name": "install native-binary rejects truncated",
+        "passed": true
+      },
+      {
+        "name": "install native-binary rejects oversized",
+        "passed": true
+      },
+      {
+        "name": "install native-binary rejects digest",
+        "passed": true
+      },
+      {
+        "name": "self-rehashed lock cannot grant authority native-binary",
+        "passed": true
+      },
+      {
+        "name": "actual byte-identical linked input",
+        "passed": true,
+        "rejected": true
+      },
+      {
+        "name": "actual filesystem extra Root file",
+        "passed": true,
+        "rejected": true
+      }
+    ],
+    "scope": "Actual42 data/WIT/Root/Core Search and four delivery kinds with controlled transport/faults; immutable public network install and whole release remain independent"
+  },
+  "version_rejection_controls": 31,
+  "normal_reporting_rejection_controls": 52,
+  "maintainer_structure_and_current_checks": "success",
+  "native_platform_qualification": "pending",
+  "cross_platform_normal_consumers": "pending",
+  "final_glm_acceptance": false,
+  "formal_published": false
+}

@@ -583,13 +583,13 @@
       "check_commands": [
         "node scripts/lib-route-closure.mjs --check",
         "node scripts/current-compiler-integrity.mjs --require-qualification",
-        "node scripts/release-candidate.mjs verify channels/candidates/0.0.25.json --candidate-sha256 5607113f2ca3c389fd50bc3ba9022905c50f12b632434c3d872a9d1276ecbccb"
+        "node scripts/release-candidate.mjs verify channels/candidates/0.0.25.json --candidate-sha256 83c00dbe492d75da9ea5b0a31c1ea7053c551fcc9d4734bfc5958001f58d020e"
       ],
       "answer_boundary": "Stop after reporting the product closure and the exact lifecycle state read from release.json/channels; never infer a transition.",
       "stop": "This record is sufficient for the matching readiness decision. Do not scan manifests, histories or implementation scripts unless one of its check commands fails.",
       "pending_candidate_verification": {
         "path": "channels/candidates/0.0.25.json",
-        "candidate_sha256": "5607113f2ca3c389fd50bc3ba9022905c50f12b632434c3d872a9d1276ecbccb",
+        "candidate_sha256": "83c00dbe492d75da9ea5b0a31c1ea7053c551fcc9d4734bfc5958001f58d020e",
         "status": "verified-exact-frozen-candidate",
         "rule": "Use this complete independent candidate SHA256; stage promotions must preserve its product set."
       },
@@ -884,7 +884,7 @@
       "observed_release_version": "0.0.24",
       "observed_prod_version": "0.0.24",
       "rule": "Unreleased v0.0.25 candidate; only existing release.json and channels/prod.json authorize formal publication. Native and final Pi qualification remain pending.",
-      "observed_dev_version": "0.0.24",
+      "observed_dev_version": "0.0.25",
       "observed_main_version": "0.0.24"
     }
   }
