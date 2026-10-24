@@ -5,7 +5,7 @@ import {resolve} from 'node:path';
 import {checkedCurrentCatalog,verifyCurrentRelease,currentProductReader,currentProductPaths} from '../../scripts/current-lib-release-v3.mjs';
 import {CurrentSearchCaller} from '../../scripts/current-lib-search-v3.mjs';
 const root=fileURLToPath(new URL('../../',import.meta.url)),read=currentProductReader(root);
-const bytes=read('catalog/libs-current-v2.json'),pin='762a1f80bec8b739c2652b4a13f4d4f3076815fa1fe2579d5da5d508d4f2fbf3';
+const bytes=read('catalog/libs-current-v2.json'),pin='0a3eaa87733eb32c69379cff4f8c79079c49045787999396a9e2730ebf13d90a';
 const catalog=checkedCurrentCatalog(bytes,pin),cohort=JSON.parse(read(catalog.cohort.path));
 assert.equal(cohort.schema,'wasmc.public-current-composition-cohort/v1');
 const paths=[...currentProductPaths(root),...currentProductPaths(root,cohort.input_prefix),
