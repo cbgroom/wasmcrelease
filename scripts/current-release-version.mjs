@@ -70,9 +70,16 @@ export function assertCompilerQualification(q, version, compilerSha256, manifest
       const c = result('scripts/test-canonical-host-sdk.mjs');
       assert.equal(c.compiler_sha256, compilerSha256);
       assert.equal(c.compiled_frames, 4); assert.equal(c.modules_per_frame, 8);
-      assert.equal(c.native_parity, '89b0b692492e3bc65603a6f2788de8030dc272170bde0bbd903679e1621da03a');
+      assert.equal(c.native_parity, requiresUnusedHostImportsQualification(version)
+        ? 'd407267385d46f6ec4cdcd199fed5e2bc1320aea641140ac34b6b63014fe1c1f'
+        : '89b0b692492e3bc65603a6f2788de8030dc272170bde0bbd903679e1621da03a');
       assert.equal(c.rejection_then_recovery, true); assert.equal(c.source_rebinding, true);
       assert.equal(c.real_Host_invocation, false);
+    }
+    if (requiresUnusedHostImportsQualification(version)) {
+      const demand = result('scripts/test-canonical-host-import-demand.mjs');
+      assert.equal(demand.compiler_sha256, compilerSha256);
+      for (const [key,value] of Object.entries({cases:3,static_imports:13,json_read_imports:13,table_imports:18,modules_per_frame:8,exact_frame_pins:true,real_Host_invocation:false})) assert.equal(demand[key],value,key);
     }
     if (requiresIfBranchScopeQualification(version)) {
       const s = result('scripts/test-if-branch-scope.mjs');
