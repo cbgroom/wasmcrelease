@@ -1,0 +1,450 @@
+{
+  "schema": "wasmc.current-compiler-qualification/v1",
+  "accepted": true,
+  "version": "0.0.26",
+  "compiler_sha256": "42c547a4f0819c081d66fddebedfa984098cbdb18d463c6a872e62a8683d70fe",
+  "product_manifest_sha256": "311cc486956ca7859ac1bdee699aa6a2505bb949f1533f16d4a8117647d91b1e",
+  "source_free": true,
+  "compiler_private_source_present": false,
+  "platform": "darwin",
+  "arch": "arm64",
+  "runs": [
+    {
+      "engine": "node",
+      "version": "v26.5.1",
+      "args": [
+        "scripts/test-current-compiler.mjs"
+      ],
+      "exit_code": 0,
+      "result": {
+        "accepted": true,
+        "runtime": "node",
+        "compiler_sha256": "42c547a4f0819c081d66fddebedfa984098cbdb18d463c6a872e62a8683d70fe",
+        "frozen_outputs": 35,
+        "execution_oracles": 7,
+        "cli_outputs": 25
+      }
+    },
+    {
+      "engine": "node",
+      "version": "v26.5.1",
+      "args": [
+        "examples/current/standard.mjs"
+      ],
+      "exit_code": 0,
+      "result": {
+        "accepted": true,
+        "standard_lib": "wasmc:std@1.4.1",
+        "functions": 73,
+        "consumer_count": 3,
+        "consumer_calls": 7680,
+        "current_app_sha256": "f704d2c4d99f9efc97ef6d3c99bfd29c3987e1a96601ec7ff026dd0ac6e0581a",
+        "rust_sdk_sha256": "4d2c55eda7cdbe4d14084de2d579ae6dcea97332e18ca9894d210a5a71472d65"
+      }
+    },
+    {
+      "engine": "node",
+      "version": "v26.5.1",
+      "args": [
+        "scripts/test-current-lib-api-v021.mjs"
+      ],
+      "exit_code": 0,
+      "result": {
+        "accepted": true,
+        "provider": "4.9.1",
+        "abi_namespace": "wasmc:lib/wasmc.lib_managed_object_heap@4.9.0",
+        "compileLib_oracles": 3,
+        "instantiateLib_oracles": 3,
+        "calls": 768,
+        "boolean_conditional_calls": 1536,
+        "boolean_numeric_rejections": 6,
+        "old_provider_fallback": false
+      }
+    },
+    {
+      "engine": "node",
+      "version": "v26.5.1",
+      "args": [
+        "scripts/test-current-private-helpers.mjs"
+      ],
+      "exit_code": 0,
+      "result": {
+        "accepted": true,
+        "source_cases": 20,
+        "guest_calls": 66,
+        "repeats_per_instance": 3,
+        "basic_scalar_types": 11,
+        "long_helper_terms": 2098,
+        "invalid_sources_rejected": 5,
+        "selected_guest_trap": true,
+        "healthy_after_rejections": true,
+        "imports": 0,
+        "real_MCP_acceptance": false
+      }
+    },
+    {
+      "engine": "node",
+      "version": "v26.5.1",
+      "args": [
+        "scripts/test-canonical-host-sdk.mjs"
+      ],
+      "exit_code": 0,
+      "result": {
+        "accepted": true,
+        "runtime": "node",
+        "compiler_sha256": "42c547a4f0819c081d66fddebedfa984098cbdb18d463c6a872e62a8683d70fe",
+        "compiled_frames": 4,
+        "modules_per_frame": 8,
+        "native_parity": "d407267385d46f6ec4cdcd199fed5e2bc1320aea641140ac34b6b63014fe1c1f",
+        "frame_bytes": 74348,
+        "exact_native_modules": 8,
+        "rejection_then_recovery": true,
+        "source_rebinding": true,
+        "real_Host_invocation": false
+      }
+    },
+    {
+      "engine": "node",
+      "version": "v26.5.1",
+      "args": [
+        "scripts/test-if-branch-scope.mjs"
+      ],
+      "exit_code": 0,
+      "result": {
+        "accepted": true,
+        "engine": "node",
+        "compiler_sha256": "42c547a4f0819c081d66fddebedfa984098cbdb18d463c6a872e62a8683d70fe",
+        "source_cases": 5,
+        "scalar_calls": 1200,
+        "managed_calls": 192,
+        "scope_rejections": 24,
+        "carrier_forms": 3,
+        "physical_owner_slots_preserved": true
+      }
+    },
+    {
+      "engine": "node",
+      "version": "v26.5.1",
+      "args": [
+        "scripts/test-canonical-host-import-demand.mjs"
+      ],
+      "exit_code": 0,
+      "result": {
+        "accepted": true,
+        "runtime": "node",
+        "compiler_sha256": "42c547a4f0819c081d66fddebedfa984098cbdb18d463c6a872e62a8683d70fe",
+        "cases": 3,
+        "static_imports": 13,
+        "json_read_imports": 13,
+        "table_imports": 18,
+        "modules_per_frame": 8,
+        "exact_frame_pins": true,
+        "real_Host_invocation": false,
+        "actual_merged_execution_evidence": "examples/canonical-host/import-demand-proof.json"
+      }
+    },
+    {
+      "engine": "bun",
+      "version": "1.3.14",
+      "args": [
+        "scripts/test-current-compiler.mjs"
+      ],
+      "exit_code": 0,
+      "result": {
+        "accepted": true,
+        "runtime": "bun",
+        "compiler_sha256": "42c547a4f0819c081d66fddebedfa984098cbdb18d463c6a872e62a8683d70fe",
+        "frozen_outputs": 35,
+        "execution_oracles": 7,
+        "cli_outputs": 25
+      }
+    },
+    {
+      "engine": "bun",
+      "version": "1.3.14",
+      "args": [
+        "examples/current/standard.mjs"
+      ],
+      "exit_code": 0,
+      "result": {
+        "accepted": true,
+        "standard_lib": "wasmc:std@1.4.1",
+        "functions": 73,
+        "consumer_count": 3,
+        "consumer_calls": 7680,
+        "current_app_sha256": "f704d2c4d99f9efc97ef6d3c99bfd29c3987e1a96601ec7ff026dd0ac6e0581a",
+        "rust_sdk_sha256": "4d2c55eda7cdbe4d14084de2d579ae6dcea97332e18ca9894d210a5a71472d65"
+      }
+    },
+    {
+      "engine": "bun",
+      "version": "1.3.14",
+      "args": [
+        "scripts/test-current-lib-api-v021.mjs"
+      ],
+      "exit_code": 0,
+      "result": {
+        "accepted": true,
+        "provider": "4.9.1",
+        "abi_namespace": "wasmc:lib/wasmc.lib_managed_object_heap@4.9.0",
+        "compileLib_oracles": 3,
+        "instantiateLib_oracles": 3,
+        "calls": 768,
+        "boolean_conditional_calls": 1536,
+        "boolean_numeric_rejections": 6,
+        "old_provider_fallback": false
+      }
+    },
+    {
+      "engine": "bun",
+      "version": "1.3.14",
+      "args": [
+        "scripts/test-current-private-helpers.mjs"
+      ],
+      "exit_code": 0,
+      "result": {
+        "accepted": true,
+        "source_cases": 20,
+        "guest_calls": 66,
+        "repeats_per_instance": 3,
+        "basic_scalar_types": 11,
+        "long_helper_terms": 2098,
+        "invalid_sources_rejected": 5,
+        "selected_guest_trap": true,
+        "healthy_after_rejections": true,
+        "imports": 0,
+        "real_MCP_acceptance": false
+      }
+    },
+    {
+      "engine": "bun",
+      "version": "1.3.14",
+      "args": [
+        "scripts/test-canonical-host-sdk.mjs"
+      ],
+      "exit_code": 0,
+      "result": {
+        "accepted": true,
+        "runtime": "bun",
+        "compiler_sha256": "42c547a4f0819c081d66fddebedfa984098cbdb18d463c6a872e62a8683d70fe",
+        "compiled_frames": 4,
+        "modules_per_frame": 8,
+        "native_parity": "d407267385d46f6ec4cdcd199fed5e2bc1320aea641140ac34b6b63014fe1c1f",
+        "frame_bytes": 74348,
+        "exact_native_modules": 8,
+        "rejection_then_recovery": true,
+        "source_rebinding": true,
+        "real_Host_invocation": false
+      }
+    },
+    {
+      "engine": "bun",
+      "version": "1.3.14",
+      "args": [
+        "scripts/test-if-branch-scope.mjs"
+      ],
+      "exit_code": 0,
+      "result": {
+        "accepted": true,
+        "engine": "bun",
+        "compiler_sha256": "42c547a4f0819c081d66fddebedfa984098cbdb18d463c6a872e62a8683d70fe",
+        "source_cases": 5,
+        "scalar_calls": 1200,
+        "managed_calls": 192,
+        "scope_rejections": 24,
+        "carrier_forms": 3,
+        "physical_owner_slots_preserved": true
+      }
+    },
+    {
+      "engine": "bun",
+      "version": "1.3.14",
+      "args": [
+        "scripts/test-canonical-host-import-demand.mjs"
+      ],
+      "exit_code": 0,
+      "result": {
+        "accepted": true,
+        "runtime": "bun",
+        "compiler_sha256": "42c547a4f0819c081d66fddebedfa984098cbdb18d463c6a872e62a8683d70fe",
+        "cases": 3,
+        "static_imports": 13,
+        "json_read_imports": 13,
+        "table_imports": 18,
+        "modules_per_frame": 8,
+        "exact_frame_pins": true,
+        "real_Host_invocation": false,
+        "actual_merged_execution_evidence": "examples/canonical-host/import-demand-proof.json"
+      }
+    },
+    {
+      "engine": "deno",
+      "version": "deno 2.9.4 (stable, release, aarch64-apple-darwin)\nv8 15.0.245.2-rusty\ntypescript 6.0.3",
+      "args": [
+        "run",
+        "--allow-read",
+        "--allow-write",
+        "--allow-run",
+        "--allow-env",
+        "scripts/test-current-compiler.mjs"
+      ],
+      "exit_code": 0,
+      "result": {
+        "accepted": true,
+        "runtime": "deno",
+        "compiler_sha256": "42c547a4f0819c081d66fddebedfa984098cbdb18d463c6a872e62a8683d70fe",
+        "frozen_outputs": 35,
+        "execution_oracles": 7,
+        "cli_outputs": 25
+      }
+    },
+    {
+      "engine": "deno",
+      "version": "deno 2.9.4 (stable, release, aarch64-apple-darwin)\nv8 15.0.245.2-rusty\ntypescript 6.0.3",
+      "args": [
+        "run",
+        "--allow-read",
+        "examples/current/standard.mjs"
+      ],
+      "exit_code": 0,
+      "result": {
+        "accepted": true,
+        "standard_lib": "wasmc:std@1.4.1",
+        "functions": 73,
+        "consumer_count": 3,
+        "consumer_calls": 7680,
+        "current_app_sha256": "f704d2c4d99f9efc97ef6d3c99bfd29c3987e1a96601ec7ff026dd0ac6e0581a",
+        "rust_sdk_sha256": "4d2c55eda7cdbe4d14084de2d579ae6dcea97332e18ca9894d210a5a71472d65"
+      }
+    },
+    {
+      "engine": "deno",
+      "version": "deno 2.9.4 (stable, release, aarch64-apple-darwin)\nv8 15.0.245.2-rusty\ntypescript 6.0.3",
+      "args": [
+        "run",
+        "--allow-read",
+        "scripts/test-current-lib-api-v021.mjs"
+      ],
+      "exit_code": 0,
+      "result": {
+        "accepted": true,
+        "provider": "4.9.1",
+        "abi_namespace": "wasmc:lib/wasmc.lib_managed_object_heap@4.9.0",
+        "compileLib_oracles": 3,
+        "instantiateLib_oracles": 3,
+        "calls": 768,
+        "boolean_conditional_calls": 1536,
+        "boolean_numeric_rejections": 6,
+        "old_provider_fallback": false
+      }
+    },
+    {
+      "engine": "deno",
+      "version": "deno 2.9.4 (stable, release, aarch64-apple-darwin)\nv8 15.0.245.2-rusty\ntypescript 6.0.3",
+      "args": [
+        "run",
+        "--allow-read",
+        "scripts/test-current-private-helpers.mjs"
+      ],
+      "exit_code": 0,
+      "result": {
+        "accepted": true,
+        "source_cases": 20,
+        "guest_calls": 66,
+        "repeats_per_instance": 3,
+        "basic_scalar_types": 11,
+        "long_helper_terms": 2098,
+        "invalid_sources_rejected": 5,
+        "selected_guest_trap": true,
+        "healthy_after_rejections": true,
+        "imports": 0,
+        "real_MCP_acceptance": false
+      }
+    },
+    {
+      "engine": "deno",
+      "version": "deno 2.9.4 (stable, release, aarch64-apple-darwin)\nv8 15.0.245.2-rusty\ntypescript 6.0.3",
+      "args": [
+        "run",
+        "--allow-read",
+        "scripts/test-canonical-host-sdk.mjs"
+      ],
+      "exit_code": 0,
+      "result": {
+        "accepted": true,
+        "runtime": "deno",
+        "compiler_sha256": "42c547a4f0819c081d66fddebedfa984098cbdb18d463c6a872e62a8683d70fe",
+        "compiled_frames": 4,
+        "modules_per_frame": 8,
+        "native_parity": "d407267385d46f6ec4cdcd199fed5e2bc1320aea641140ac34b6b63014fe1c1f",
+        "frame_bytes": 74348,
+        "exact_native_modules": 8,
+        "rejection_then_recovery": true,
+        "source_rebinding": true,
+        "real_Host_invocation": false
+      }
+    },
+    {
+      "engine": "deno",
+      "version": "deno 2.9.4 (stable, release, aarch64-apple-darwin)\nv8 15.0.245.2-rusty\ntypescript 6.0.3",
+      "args": [
+        "run",
+        "--allow-read",
+        "scripts/test-if-branch-scope.mjs"
+      ],
+      "exit_code": 0,
+      "result": {
+        "accepted": true,
+        "engine": "deno",
+        "compiler_sha256": "42c547a4f0819c081d66fddebedfa984098cbdb18d463c6a872e62a8683d70fe",
+        "source_cases": 5,
+        "scalar_calls": 1200,
+        "managed_calls": 192,
+        "scope_rejections": 24,
+        "carrier_forms": 3,
+        "physical_owner_slots_preserved": true
+      }
+    },
+    {
+      "engine": "deno",
+      "version": "deno 2.9.4 (stable, release, aarch64-apple-darwin)\nv8 15.0.245.2-rusty\ntypescript 6.0.3",
+      "args": [
+        "run",
+        "--allow-read",
+        "scripts/test-canonical-host-import-demand.mjs"
+      ],
+      "exit_code": 0,
+      "result": {
+        "accepted": true,
+        "runtime": "deno",
+        "compiler_sha256": "42c547a4f0819c081d66fddebedfa984098cbdb18d463c6a872e62a8683d70fe",
+        "cases": 3,
+        "static_imports": 13,
+        "json_read_imports": 13,
+        "table_imports": 18,
+        "modules_per_frame": 8,
+        "exact_frame_pins": true,
+        "real_Host_invocation": false,
+        "actual_merged_execution_evidence": "examples/canonical-host/import-demand-proof.json"
+      }
+    }
+  ],
+  "boolean_conditional_calls": 4608,
+  "boolean_numeric_rejections": 18,
+  "private_helper_guest_calls": 198,
+  "rejection_controls": {
+    "exit_code": 0,
+    "result": {
+      "accepted": true,
+      "actual_rejections": 6,
+      "restored": true
+    }
+  },
+  "nonclaims": [
+    "whole-product release",
+    "whole42 Lib runtime qualification",
+    "Pi model-pair qualification",
+    "native SDK requalification",
+    "real browser qualification"
+  ]
+}
