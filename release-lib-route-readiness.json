@@ -49,33 +49,33 @@
   "check_commands": [
     "node scripts/lib-route-closure.mjs --check",
     "node scripts/current-compiler-integrity.mjs --require-qualification",
-    "node scripts/release-candidate.mjs verify channels/candidates/0.0.25.json --candidate-sha256 5607113f2ca3c389fd50bc3ba9022905c50f12b632434c3d872a9d1276ecbccb"
+    "node scripts/release-candidate.mjs verify channels/candidates/0.0.25.json --candidate-sha256 76ffb68f0a7515389b598db92c6db5cf3ba1c378cfc100189422af76e8032e9b"
   ],
   "stop": "This record is sufficient for the matching readiness decision. Do not scan manifests, histories or implementation scripts unless one of its check commands fails.",
   "current_product": {
     "version": "0.0.25",
     "compiler": {
       "path": "current/wasmc_compiler.wasm",
-      "bytes": 1956578,
-      "sha256": "c78816376228b6091599845c6a9a531eb76f949fe419655c012ec30c05f75832",
-      "source_commit": "81966eaef368769a569bfac17db9e8c3416ba9ad",
-      "source_build_receipt_sha256": "079e192423e4b435972f60fd4807209b40dae682349947f6569220d662c79f83",
+      "bytes": 1957478,
+      "sha256": "23a91517a5217575d099a5c116a72db87f01e8cce22e4dc9af573ff6d456ac47",
+      "source_commit": "113f1a7ff2c53b20d3edd0272c9c611cadfc3d4b",
+      "source_build_receipt_sha256": "4589e6dbf26852e9298a1457531c0d966cf5c7f1653cd3e89c854dba60fbc785",
       "imports": 0,
       "source_free_qualification": {
         "path": "current/qualification.json",
-        "bytes": 9598,
-        "sha256": "d52a6e89dc638b435064f5002d55693456294bcfbb6ddf9104bbbdb4eedc2e7d",
+        "bytes": 11282,
+        "sha256": "58d0911da93b1cf21b0153f4eab54e5bcb801ee2825535cdce93acecec9bb81a",
         "accepted": true,
-        "runs": 15,
-        "compiler_sha256": "c78816376228b6091599845c6a9a531eb76f949fe419655c012ec30c05f75832",
-        "product_manifest_sha256": "bed0d11c8dcbfc1f72d444c6dc9c21c50583874e52da03657fe8c54949f20f0c",
+        "runs": 18,
+        "compiler_sha256": "23a91517a5217575d099a5c116a72db87f01e8cce22e4dc9af573ff6d456ac47",
+        "product_manifest_sha256": "d1a6841ff6a7ada0052725df9b64f081ebcb4ad4f1b6ad5cc168b98c9cc89a55",
         "not_whole42_Q0": true,
         "not_controlled_model_pair_qualification": true
       }
     },
     "catalog": {
       "path": "catalog/libs-current-v2.json",
-      "sha256": "c583d5444d9bcba8f5932660d5b632fd64aa9a212c2002f1a91fa03b9d4e0aa9",
+      "sha256": "762a1f80bec8b739c2652b4a13f4d4f3076815fa1fe2579d5da5d508d4f2fbf3",
       "package_routes": 42,
       "api_routes": 247,
       "entries": 289
@@ -123,14 +123,14 @@
       "authority": "release.json and channels/dev.json, channels/main.json, channels/prod.json",
       "observed_release_version": "0.0.25",
       "observed_prod_version": "0.0.25",
-      "rule": "Final local prod lifecycle view. Publication requires exact GLM single-model receipt, independent review and immutable tag/publisher readback; this view alone grants no publication or Host authority.",
+      "rule": "Final local prod lifecycle view. Publication requires the exact commit/tree GLM5.3 single-model passing receipt, independent review and immutable publisher readback. This projection alone grants no publication or Host authority.",
       "observed_dev_version": "0.0.25",
       "observed_main_version": "0.0.25"
     }
   },
   "pending_candidate_verification": {
     "path": "channels/candidates/0.0.25.json",
-    "candidate_sha256": "5607113f2ca3c389fd50bc3ba9022905c50f12b632434c3d872a9d1276ecbccb",
+    "candidate_sha256": "76ffb68f0a7515389b598db92c6db5cf3ba1c378cfc100189422af76e8032e9b",
     "status": "verified-exact-frozen-candidate",
     "rule": "Use this complete independent candidate SHA256; stage promotions must preserve its product set."
   },
