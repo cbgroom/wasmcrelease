@@ -48,3 +48,9 @@ The expected App is 2,822,346 bytes with SHA256
 `a2fa90d63eed06eede7da0678f67c303b22835aa939ad6c5915cd5ebff78d643`.
 The recipe also binds the tool SHA256, original caller plan and memory binding.
 Merging produces an artifact; it performs no Host operation.
+
+## Optional operation demand in v0.0.26
+
+Use app/static.wasmc for a static HTTP response or app/json-read.wasmc for JSON-only input. These ordinary sources use the same pinned activation and complete Host contracts. The SDK includes operation wrappers only when the caller actually imports an operation: static/read-only final Apps have13 HTTP imports, while ordinary.wasmc retains its Table transact and four error functions. Fixed eight-module framing and all pinned cold helper assets stay the same.
+
+Run node scripts/test-canonical-host-import-demand.mjs for exact frame/module demand checks. import-demand-proof.json binds actual Binaryen126 final merges and HTTP-only execution with fresh inputs in the same installed instance; native-frame-proof.json independently proves direct Native and Wasmi2-hosted compiler frame parity for all three cases. These are finite compiler/SDK checks, separate from live MCPGit admission or its fuel limit.

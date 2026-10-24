@@ -13,6 +13,7 @@ export const usesCurrentProductV3 = version => patch(version) >= 21;
 export const requiresPrivateHelperQualification = version => patch(version) >= 23;
 export const requiresCanonicalHostQualification = version => patch(version) >= 24;
 export const requiresIfBranchScopeQualification = version => patch(version) >= 25;
+export const requiresUnusedHostImportsQualification = version => patch(version) >= 26;
 export function currentCompatibilityPath(version) {
   assert.ok(usesCurrentProductV3(version), 'current v3 product version required');
   return `compatibility/core-artifacts-v0${patch(version)}.json`;
@@ -32,7 +33,8 @@ export function assertCompilerQualification(q, version, compilerSha256, manifest
   const commands = ['scripts/test-current-compiler.mjs', 'examples/current/standard.mjs',
     'scripts/test-current-lib-api-v021.mjs', ...(helpers ? ['scripts/test-current-private-helpers.mjs'] : []),
     ...(requiresCanonicalHostQualification(version) ? ['scripts/test-canonical-host-sdk.mjs'] : []),
-    ...(requiresIfBranchScopeQualification(version) ? ['scripts/test-if-branch-scope.mjs'] : [])];
+    ...(requiresIfBranchScopeQualification(version) ? ['scripts/test-if-branch-scope.mjs'] : []),
+    ...(requiresUnusedHostImportsQualification(version) ? ['scripts/test-canonical-host-import-demand.mjs'] : [])];
   assert.equal(q.runs.length, commands.length * 3);
   assert.deepEqual([...new Set(q.runs.map(r => r.engine))].sort(), ['bun', 'deno', 'node']);
   assert.equal(q.rejection_controls.exit_code, 0);

@@ -1,0 +1,48 @@
+{
+  "schema": "wasmc.core-compatibility/v1",
+  "candidate_version": "0.0.26",
+  "scope": "Exact v0.0.24 successor compiler and CoreLib4.9.1, retaining ABI namespace4.9.0 and unchanged Std1.4.1. Complete consumer-engine validation remains required for the exact bytes.",
+  "version_policy": "Probe actual engine capabilities and validate exact complete bytes.",
+  "artifacts": [
+    {
+      "id": "compiler",
+      "path": "current/wasmc_compiler.wasm",
+      "bytes": 1957478,
+      "sha256": "42c547a4f0819c081d66fddebedfa984098cbdb18d463c6a872e62a8683d70fe",
+      "validation_profile": "complete-engine-validation",
+      "additional_required_gates": []
+    },
+    {
+      "id": "automatic-provider",
+      "path": "current/lib_core.wasm",
+      "bytes": 2640152,
+      "sha256": "7cd4f0c60536f1825da3fed9d525a43ee9724250203a261f298505a503e9bcbf",
+      "validation_profile": "complete-engine-validation",
+      "additional_required_gates": []
+    },
+    {
+      "id": "standard-provider",
+      "path": "standard/corelib/4.9.1/corelib.wasm",
+      "bytes": 2640152,
+      "sha256": "7cd4f0c60536f1825da3fed9d525a43ee9724250203a261f298505a503e9bcbf",
+      "validation_profile": "complete-engine-validation",
+      "additional_required_gates": []
+    },
+    {
+      "id": "standard",
+      "path": "standard/wasmc-std/1.4.1/artifact.wasm",
+      "bytes": 44221,
+      "sha256": "b79a499c8300361125e7fcdae02170184b82d4bbeff4d8f24ed95f3fd4db8d3b",
+      "validation_profile": "wasm2,function-references,tail-call",
+      "additional_required_gates": [
+        "function-references",
+        "tail-call"
+      ]
+    }
+  ],
+  "non_claims": [
+    "minimal feature set",
+    "device acceptance",
+    "whole release admission"
+  ]
+}

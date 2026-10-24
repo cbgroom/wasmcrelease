@@ -1,5 +1,7 @@
 # Optional Host imports release v0.0.26
 
-Started from published v25 closure503dd4e. Source candidate c854/42c547a4 has Native SDK red/green, L1 and actual hosted final static/read JSON18->13/Table18 unchanged with actual HTTP-only execution. Source integration is pending; do not claim a formal release yet.
+In progress: private PR20 actually merged4a299f, immutable SourceReady165. Portable compiler42c547a4 built once from c854, exact product inputs to canonical proven. Native SDK red/green, L1, source history723/723 and strict prepared/canonical721/721 pass; actual Node final merge HTTP-only execution and Wasmi2/direct-Native frame parity3/3 pass.
 
-Next: finish strict SourceReady/canonical integration, copy only reviewed compiler binary and public proof, synchronize carriers/Runtime/Native, qualify source-free consumers and normal CI, formal new tag publication then independently download and install. Keep all42 Roots/Core4.9.1/frozen tags unchanged and preserve original failures. No private compiler source copied.
+Public compiler cohort is synchronized:2 binaries/3 embeddings, Runtime base receipt admission plus preserved public authority annotation, exact frame fixtures, static/JSON templates and import-demand gate. Current42 Roots/Core4.9.1 unchanged. This checkpoint is an unqualified build input, not a formal release.
+
+Next: source-free3-host compiler qualification, actual6 Native packages and matching consumers; synchronize current guidance/lifecycle, create v26 product candidate from existing42-Root composition closure (zero Lib rebuilds), normal CI/GLM single-model, formal publication and independently downloaded installation. Source closure needs format-only global HANDOFF disclosure recheck; no product rebuild. Preserve v25 and every original failure.
