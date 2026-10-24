@@ -1,9 +1,9 @@
 {
   "schema": "wasmc.release-lib-route-readiness/v1",
   "route": "release-lib-route-readiness",
-  "request": "does this v0.0.24 product set bind every included Lib package and API route, and where is its lifecycle stage decided",
+  "request": "does this v0.0.25 product set bind every included Lib package and API route, and where is its lifecycle stage decided",
   "product": {
-    "version": "0.0.24",
+    "version": "0.0.25",
     "package_routes": 42,
     "api_routes": 247,
     "candidate_extras": 0,
@@ -21,13 +21,13 @@
       "admitted_before_freeze": false
     },
     "api_routes": 3,
-    "lifecycle_status": "prod-rehearsal-view"
+    "lifecycle_status": "unreleased-candidate"
   },
   "lifecycle_authority": {
     "current_release": "release.json",
     "stages": "channels/dev.json, channels/main.json, channels/prod.json",
     "rule": "Never infer released, discoverable or installable from this frozen product projection.",
-    "status": "prod-rehearsal-view"
+    "status": "unreleased-candidate"
   },
   "valid_resolution_count": 1,
   "only_valid_closure": "Verify the exact42/247/289 candidate, read the channel authorities, then require the final local commit/tree GLM5.3 single-model receipt and independent review before publication. This projection proves complete product route closure only.",
@@ -49,11 +49,11 @@
   "check_commands": [
     "node scripts/lib-route-closure.mjs --check",
     "node scripts/current-compiler-integrity.mjs --require-qualification",
-    "node scripts/release-candidate.mjs verify channels/candidates/0.0.24.json --candidate-sha256 5607113f2ca3c389fd50bc3ba9022905c50f12b632434c3d872a9d1276ecbccb"
+    "node scripts/release-candidate.mjs verify channels/candidates/0.0.25.json --candidate-sha256 5607113f2ca3c389fd50bc3ba9022905c50f12b632434c3d872a9d1276ecbccb"
   ],
   "stop": "This record is sufficient for the matching readiness decision. Do not scan manifests, histories or implementation scripts unless one of its check commands fails.",
   "current_product": {
-    "version": "0.0.24",
+    "version": "0.0.25",
     "compiler": {
       "path": "current/wasmc_compiler.wasm",
       "bytes": 1956578,
@@ -116,20 +116,20 @@
     },
     "lifecycle": {
       "status": "prod-rehearsal-view",
-      "product_version": "0.0.24",
+      "product_version": "0.0.25",
       "released": true,
       "discoverable": true,
       "installable": true,
       "authority": "release.json and channels/dev.json, channels/main.json, channels/prod.json",
-      "observed_release_version": "0.0.24",
-      "observed_prod_version": "0.0.24",
+      "observed_release_version": "0.0.25",
+      "observed_prod_version": "0.0.25",
       "rule": "Final local prod lifecycle view. Publication requires exact GLM single-model receipt, independent review and immutable tag/publisher readback; this view alone grants no publication or Host authority.",
-      "observed_dev_version": "0.0.24",
-      "observed_main_version": "0.0.24"
+      "observed_dev_version": "0.0.25",
+      "observed_main_version": "0.0.25"
     }
   },
   "pending_candidate_verification": {
-    "path": "channels/candidates/0.0.24.json",
+    "path": "channels/candidates/0.0.25.json",
     "candidate_sha256": "5607113f2ca3c389fd50bc3ba9022905c50f12b632434c3d872a9d1276ecbccb",
     "status": "verified-exact-frozen-candidate",
     "rule": "Use this complete independent candidate SHA256; stage promotions must preserve its product set."

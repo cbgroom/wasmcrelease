@@ -8,7 +8,7 @@ const targets={
   'x86_64-apple-darwin':['darwin','x64'],'aarch64-apple-darwin':['darwin','arm64'],
   'x86_64-pc-windows-msvc':['win32','x64'],'aarch64-pc-windows-msvc':['win32','arm64'],
 };
-const compilerDigest='c78816376228b6091599845c6a9a531eb76f949fe419655c012ec30c05f75832';
+const compilerDigest='23a91517a5217575d099a5c116a72db87f01e8cce22e4dc9af573ff6d456ac47';
 const profileName='wasmc-cli-aot-v1';
 const hash=b=>createHash('sha256').update(b).digest('hex');
 const licensePin={path:'LICENSE',bytes:3823,sha256:'7bca2d5818178e0bc14546700d39bf113d15139b1c3b6d1e62f621d4a276d6e3'};
@@ -95,7 +95,7 @@ if(mode==='build') {
 if(mode==='build'||mode==='verify') {
   const binary=await verify(directory,source,target);
   const receipt=JSON.parse(command(process.execPath,['scripts/test-native-compiler.mjs',binary]));
-  if(!receipt.accepted||receipt.byte_parity_cases!==5||receipt.wasmi_run_cases!==4||
-    receipt.native_execution_cases!==4||receipt.no_clobber_cases!==9)throw Error('invalid behavior receipt');
+  if(!receipt.accepted||receipt.byte_parity_cases!==7||receipt.wasmi_run_cases!==6||
+    receipt.native_execution_cases!==6||receipt.no_clobber_cases!==13)throw Error('invalid behavior receipt');
   console.log(JSON.stringify({accepted:true,source,target,profile:profileName,license_snapshots:7,original_notice_manifest_bound:true,...receipt}));
 }

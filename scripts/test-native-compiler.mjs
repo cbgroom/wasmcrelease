@@ -20,10 +20,12 @@ try {
     ['03_private_function', ['-9'], '10', true],
     ['04_record', ['4', '5'], '9', true],
     ['05_host_import', ['7'], '15', false],
+    ['06_if_branch_scope', ['0'], '14', true],
+    ['06_if_branch_scope', ['1'], '26', true],
   ];
-  for (const [name, args, expectedResult, canRunDirect] of cases) {
+  for (const [index, [name, args, expectedResult, canRunDirect]] of cases.entries()) {
     const input = resolve(`examples/agent-start/${name}.wasmc`);
-    const output = join(directory, `${name}.wasm`);
+    const output = join(directory, `${index}-${name}.wasm`);
     const built = command(['build', input, '-o', output]);
     if (built.status !== 0) throw new Error(`portable build failed: ${built.stderr}`);
     const expected = await compile(await readFile(input, 'utf8'));
@@ -41,8 +43,8 @@ try {
     }
     execution++;
 
-    const native = join(directory, process.platform === 'win32' ? `${name}.exe` : `${name}.native`);
-    const cache = join(directory, `cache-${name}`);
+    const native = join(directory, process.platform === 'win32' ? `${index}-${name}.exe` : `${index}-${name}.native`);
+    const cache = join(directory, `cache-${index}-${name}`);
     const nativeBuild = command(['build', '--target', 'native', input, '-o', native], {
       env: { ...process.env, WASMC_CACHE_DIR: cache },
     });

@@ -1,6 +1,6 @@
 # WAsmC public Agent entrypoint
 
-This file is frozen inside the v0.0.24
+This file is frozen inside the v0.0.25
 product set; product presence is not lifecycle authority. Start with
 `agent-quickstart.json`. For release orientation, read the validated compact
 `agent-release-orientation.json` and run its named check. Open the full artifact inventory
@@ -40,14 +40,14 @@ Compiler implementation source is private. Reviewed compiler Wasm and public
 Host/runtime/SDK/CLI integration glue may be distributed. Compiler modification
 permission does not grant compiler-source publication permission.
 
-## v0.0.24 product capability contract
+## v0.0.25 product capability contract
 
 The product uses one portable Core Wasm compiler, Provider4.9.1, Std1.4.1,
 LibSearch0.5.0 and42 current Lib identities. `current/compiler-release.json`
 binds the compiler carriers and source build; validate them with
 `node scripts/current-compiler-integrity.mjs --require-qualification`.
 `catalog/libs-current-v2.json` binds complete current Roots. Its independent
-SHA256 is `c583d5444d9bcba8f5932660d5b632fd64aa9a212c2002f1a91fa03b9d4e0aa9`. The42 package routes and247 exported API routes form
+SHA256 is `762a1f80bec8b739c2652b4a13f4d4f3076815fa1fe2579d5da5d508d4f2fbf3`. The42 package routes and247 exported API routes form
 289 index entries. Search runs the actual compiled Core implementation.
 Fourteen native-source rows remain source-only and do not establish executable
 Native or device support. Installation grants no Host authority.
@@ -98,7 +98,7 @@ cancellation and resource cleanup. Keep native-source, emulator and physical
 
 ```sh
 node scripts/current-compiler-integrity.mjs --require-qualification
-node scripts/wasmc-lib.mjs search "base64 decode" --catalog-sha256 c583d5444d9bcba8f5932660d5b632fd64aa9a212c2002f1a91fa03b9d4e0aa9 --limit 8
+node scripts/wasmc-lib.mjs search "base64 decode" --catalog-sha256 762a1f80bec8b739c2652b4a13f4d4f3076815fa1fe2579d5da5d508d4f2fbf3 --limit 8
 node examples/base64/run.mjs
 ```
 

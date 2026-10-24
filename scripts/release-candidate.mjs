@@ -1,6 +1,6 @@
 // Offline product-identity gate. This does not publish, sign or grant authority.
 import assert from 'node:assert/strict';
-import {currentCompatibilityPath,requiresPrivateHelperQualification} from './current-release-version.mjs';
+import {currentCompatibilityPath,requiresPrivateHelperQualification,requiresIfBranchScopeQualification} from './current-release-version.mjs';
 import {loadBoundProtocol} from './fresh-agent-learning-v1.mjs';
 import {readFileSync,writeFileSync,readdirSync,lstatSync} from 'node:fs';
 import {createHash} from 'node:crypto';
@@ -443,6 +443,7 @@ export const currentV3ProductInputs=Object.freeze([
 ]);
 export function currentV3ProductInputsForVersion(version){
   return [...currentV3ProductInputs,currentCompatibilityPath(version),
+    ...(requiresIfBranchScopeQualification(version)?['scripts/ci-normal-summary.mjs','scripts/test-ci-normal-summary.mjs','.github/workflows/normal-source-free-consumer.yml','.github/workflows/current-compiler.yml','scripts/test-native-compiler.mjs','scripts/native-package.mjs']:[]),
     ...(requiresPrivateHelperQualification(version)?['scripts/current-release-version.mjs','scripts/test-current-release-version.mjs','scripts/fresh-agent-learning-v1.mjs','agent-evaluation/fresh-agent-learning-v2.json','agent-evaluation/fresh-agent-learning-v3.json']:[])];
 }
 export function currentCandidateClosure(candidate,read){

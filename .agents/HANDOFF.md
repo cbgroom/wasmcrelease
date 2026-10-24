@@ -1,3 +1,5 @@
+Current v25 checkpoint: private PR19 merged113f1a7ff; new compiler23a91517 qualified with18 source-free commands and43 product controls; all42 Roots retained. Native/cross-platform and final prod publication pending. See `.agents/workstreams/WS-20261024-if-scope-release-v025/HANDOFF.md`. Formal default remainsv0.0.24.
+
 # WAsmC release maintainer handoff
 
 Current2026-10-24: explicit if-branch scope patch publication v0.0.25 started in WS-20261024-if-scope-release-v025. v0.0.24 remains current formal release; all old tags/Roots and failures preserved. Next strict private PR19 integration, fresh source-bound portable compiler, matching public carriers and exact download qualification.

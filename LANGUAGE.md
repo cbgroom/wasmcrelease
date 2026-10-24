@@ -138,7 +138,7 @@ record tuple option result variant enum
 
 Use fixed-width names. `s32` is the normal signed integer; `u32` is suitable
 for non-negative sizes and indices. There is no target-dependent `usize`.
-`u64` is admitted in the v0.0.24 product for ordinary locals, parameters,
+`u64` is admitted in the v0.0.25 product for ordinary locals, parameters,
 results, nested source payloads and explicit Host imports. It preserves the full
 `0..=18446744073709551615` range and unsigned comparison, division, remainder
 and right-shift semantics while using the Core `i64` physical lane. This does
@@ -327,3 +327,7 @@ node examples/agent-start/run.mjs
 That command compiles every example through the published compiler and executes
 the scalar, control-flow, structured-record, private-function, and explicit
 Host-import behaviors.
+
+`if` statement branches have separate local visibility. Sibling branches may
+reuse a local name, and branch locals do not escape. An already visible local
+or parameter name still cannot be redeclared; outer-name shadowing is not admitted.

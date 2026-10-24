@@ -46,13 +46,13 @@ export function validateReleaseRehearsal(candidate, release, commit, tree) {
   return true;
 }
 
-// The explicit v024 policy changes only model cardinality. The frozen protocol,
+// The human-selected v024/v025 policy changes only model cardinality. The frozen protocol,
 // exact candidate/rehearsal binding, all cases, budgets and review stay required.
 export function qualificationPolicy(policy, candidate, protocol){
   validateProtocol(protocol);
   if(policy==='controlled-pair-v1')return {id:policy,models:protocol.cohort_gate.required_models};
   assert.equal(policy,'glm-5.3-flash-single-v1','unknown Pi qualification policy');
-  assert.equal(candidate.schema,'wasmc.release-product-candidate/v3');assert.equal(candidate.version,'0.0.24');
+  assert.equal(candidate.schema,'wasmc.release-product-candidate/v3');assert.ok(['0.0.24','0.0.25'].includes(candidate.version),'single-model policy requires an explicitly admitted release');
   assert.equal(protocol.schema,'wasmc.fresh-agent-learning/v3');assert.equal(protocol.release_binding.version,candidate.version);
   return {id:policy,models:[{provider:'llm-m4dd',identity:'glm-5.3-flash'}]};
 }

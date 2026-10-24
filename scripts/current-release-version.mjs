@@ -12,6 +12,7 @@ function patch(version) {
 export const usesCurrentProductV3 = version => patch(version) >= 21;
 export const requiresPrivateHelperQualification = version => patch(version) >= 23;
 export const requiresCanonicalHostQualification = version => patch(version) >= 24;
+export const requiresIfBranchScopeQualification = version => patch(version) >= 25;
 export function currentCompatibilityPath(version) {
   assert.ok(usesCurrentProductV3(version), 'current v3 product version required');
   return `compatibility/core-artifacts-v0${patch(version)}.json`;
@@ -30,7 +31,8 @@ export function assertCompilerQualification(q, version, compilerSha256, manifest
   const helpers = requiresPrivateHelperQualification(version);
   const commands = ['scripts/test-current-compiler.mjs', 'examples/current/standard.mjs',
     'scripts/test-current-lib-api-v021.mjs', ...(helpers ? ['scripts/test-current-private-helpers.mjs'] : []),
-    ...(requiresCanonicalHostQualification(version) ? ['scripts/test-canonical-host-sdk.mjs'] : [])];
+    ...(requiresCanonicalHostQualification(version) ? ['scripts/test-canonical-host-sdk.mjs'] : []),
+    ...(requiresIfBranchScopeQualification(version) ? ['scripts/test-if-branch-scope.mjs'] : [])];
   assert.equal(q.runs.length, commands.length * 3);
   assert.deepEqual([...new Set(q.runs.map(r => r.engine))].sort(), ['bun', 'deno', 'node']);
   assert.equal(q.rejection_controls.exit_code, 0);
@@ -69,6 +71,11 @@ export function assertCompilerQualification(q, version, compilerSha256, manifest
       assert.equal(c.native_parity, '89b0b692492e3bc65603a6f2788de8030dc272170bde0bbd903679e1621da03a');
       assert.equal(c.rejection_then_recovery, true); assert.equal(c.source_rebinding, true);
       assert.equal(c.real_Host_invocation, false);
+    }
+    if (requiresIfBranchScopeQualification(version)) {
+      const s = result('scripts/test-if-branch-scope.mjs');
+      assert.equal(s.accepted, true); assert.equal(s.compiler_sha256, compilerSha256);
+      for (const [key,value] of Object.entries({source_cases:5,scalar_calls:1200,managed_calls:192,scope_rejections:24,carrier_forms:3})) assert.equal(s[key],value,key);
     }
   }
   if (helpers) {

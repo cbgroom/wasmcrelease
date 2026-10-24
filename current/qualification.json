@@ -1,9 +1,9 @@
 {
   "schema": "wasmc.current-compiler-qualification/v1",
   "accepted": true,
-  "version": "0.0.24",
-  "compiler_sha256": "c78816376228b6091599845c6a9a531eb76f949fe419655c012ec30c05f75832",
-  "product_manifest_sha256": "bed0d11c8dcbfc1f72d444c6dc9c21c50583874e52da03657fe8c54949f20f0c",
+  "version": "0.0.25",
+  "compiler_sha256": "23a91517a5217575d099a5c116a72db87f01e8cce22e4dc9af573ff6d456ac47",
+  "product_manifest_sha256": "d1a6841ff6a7ada0052725df9b64f081ebcb4ad4f1b6ad5cc168b98c9cc89a55",
   "source_free": true,
   "compiler_private_source_present": false,
   "platform": "darwin",
@@ -19,7 +19,7 @@
       "result": {
         "accepted": true,
         "runtime": "node",
-        "compiler_sha256": "c78816376228b6091599845c6a9a531eb76f949fe419655c012ec30c05f75832",
+        "compiler_sha256": "23a91517a5217575d099a5c116a72db87f01e8cce22e4dc9af573ff6d456ac47",
         "frozen_outputs": 35,
         "execution_oracles": 7,
         "cli_outputs": 25
@@ -92,7 +92,7 @@
       "result": {
         "accepted": true,
         "runtime": "node",
-        "compiler_sha256": "c78816376228b6091599845c6a9a531eb76f949fe419655c012ec30c05f75832",
+        "compiler_sha256": "23a91517a5217575d099a5c116a72db87f01e8cce22e4dc9af573ff6d456ac47",
         "compiled_frames": 4,
         "modules_per_frame": 8,
         "native_parity": "89b0b692492e3bc65603a6f2788de8030dc272170bde0bbd903679e1621da03a",
@@ -101,6 +101,25 @@
         "rejection_then_recovery": true,
         "source_rebinding": true,
         "real_Host_invocation": false
+      }
+    },
+    {
+      "engine": "node",
+      "version": "v26.5.1",
+      "args": [
+        "scripts/test-if-branch-scope.mjs"
+      ],
+      "exit_code": 0,
+      "result": {
+        "accepted": true,
+        "engine": "node",
+        "compiler_sha256": "23a91517a5217575d099a5c116a72db87f01e8cce22e4dc9af573ff6d456ac47",
+        "source_cases": 5,
+        "scalar_calls": 1200,
+        "managed_calls": 192,
+        "scope_rejections": 24,
+        "carrier_forms": 3,
+        "physical_owner_slots_preserved": true
       }
     },
     {
@@ -113,7 +132,7 @@
       "result": {
         "accepted": true,
         "runtime": "bun",
-        "compiler_sha256": "c78816376228b6091599845c6a9a531eb76f949fe419655c012ec30c05f75832",
+        "compiler_sha256": "23a91517a5217575d099a5c116a72db87f01e8cce22e4dc9af573ff6d456ac47",
         "frozen_outputs": 35,
         "execution_oracles": 7,
         "cli_outputs": 25
@@ -186,7 +205,7 @@
       "result": {
         "accepted": true,
         "runtime": "bun",
-        "compiler_sha256": "c78816376228b6091599845c6a9a531eb76f949fe419655c012ec30c05f75832",
+        "compiler_sha256": "23a91517a5217575d099a5c116a72db87f01e8cce22e4dc9af573ff6d456ac47",
         "compiled_frames": 4,
         "modules_per_frame": 8,
         "native_parity": "89b0b692492e3bc65603a6f2788de8030dc272170bde0bbd903679e1621da03a",
@@ -195,6 +214,25 @@
         "rejection_then_recovery": true,
         "source_rebinding": true,
         "real_Host_invocation": false
+      }
+    },
+    {
+      "engine": "bun",
+      "version": "1.3.14",
+      "args": [
+        "scripts/test-if-branch-scope.mjs"
+      ],
+      "exit_code": 0,
+      "result": {
+        "accepted": true,
+        "engine": "bun",
+        "compiler_sha256": "23a91517a5217575d099a5c116a72db87f01e8cce22e4dc9af573ff6d456ac47",
+        "source_cases": 5,
+        "scalar_calls": 1200,
+        "managed_calls": 192,
+        "scope_rejections": 24,
+        "carrier_forms": 3,
+        "physical_owner_slots_preserved": true
       }
     },
     {
@@ -212,7 +250,7 @@
       "result": {
         "accepted": true,
         "runtime": "deno",
-        "compiler_sha256": "c78816376228b6091599845c6a9a531eb76f949fe419655c012ec30c05f75832",
+        "compiler_sha256": "23a91517a5217575d099a5c116a72db87f01e8cce22e4dc9af573ff6d456ac47",
         "frozen_outputs": 35,
         "execution_oracles": 7,
         "cli_outputs": 25
@@ -293,7 +331,7 @@
       "result": {
         "accepted": true,
         "runtime": "deno",
-        "compiler_sha256": "c78816376228b6091599845c6a9a531eb76f949fe419655c012ec30c05f75832",
+        "compiler_sha256": "23a91517a5217575d099a5c116a72db87f01e8cce22e4dc9af573ff6d456ac47",
         "compiled_frames": 4,
         "modules_per_frame": 8,
         "native_parity": "89b0b692492e3bc65603a6f2788de8030dc272170bde0bbd903679e1621da03a",
@@ -302,6 +340,27 @@
         "rejection_then_recovery": true,
         "source_rebinding": true,
         "real_Host_invocation": false
+      }
+    },
+    {
+      "engine": "deno",
+      "version": "deno 2.9.4 (stable, release, aarch64-apple-darwin)\nv8 15.0.245.2-rusty\ntypescript 6.0.3",
+      "args": [
+        "run",
+        "--allow-read",
+        "scripts/test-if-branch-scope.mjs"
+      ],
+      "exit_code": 0,
+      "result": {
+        "accepted": true,
+        "engine": "deno",
+        "compiler_sha256": "23a91517a5217575d099a5c116a72db87f01e8cce22e4dc9af573ff6d456ac47",
+        "source_cases": 5,
+        "scalar_calls": 1200,
+        "managed_calls": 192,
+        "scope_rejections": 24,
+        "carrier_forms": 3,
+        "physical_owner_slots_preserved": true
       }
     }
   ],

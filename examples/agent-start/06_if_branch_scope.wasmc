@@ -1,0 +1,16 @@
+package neutral:branches;
+interface api {
+  record Pair { left:u32, right:u32 }
+  run:func(input:u32)->u32 {
+    if (input == 0) {
+      let mut body:Pair = {left:10,right:1};
+      body.left = body.left + 3;
+      return body.left + body.right;
+    } else {
+      let mut body:Pair = {left:20,right:2};
+      body.right = body.right + 4;
+      return body.left + body.right;
+    }
+  }
+}
+world app { export api; }
