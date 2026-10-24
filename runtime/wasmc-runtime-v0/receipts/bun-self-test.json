@@ -2,20 +2,20 @@
   "schema": "wasmc.runtime-js-self-test/v0",
   "accepted": true,
   "runtime": "bun",
-  "compiler_bytes": 1956578,
+  "compiler_bytes": 1957478,
   "output_bytes": 41,
   "runtime_version": "1.3.14",
-  "candidate_commit": "03fe3b889eff58c2a2bbac5802da0990fe50223d",
-  "compiler_sha256": "c78816376228b6091599845c6a9a531eb76f949fe419655c012ec30c05f75832",
+  "candidate_commit": "27a774cd4decb3d6eb9da0e19641846086b1493c",
+  "compiler_sha256": "23a91517a5217575d099a5c116a72db87f01e8cce22e4dc9af573ff6d456ac47",
   "source_free_package": {
-    "archive_sha256": "e8d55a0abb561dc204622df1d108309ef4db06c5b636d1680ead7b3663ab572b",
+    "archive_sha256": "54cdaffb95138b472d0891b3f4cecf96a1d6f64b3cff03085a6a0cfc8cf9b04a",
     "private_source_checked_out": false,
     "git_metadata_present": false,
-    "origin": "local git archive of exact already-published commit; not an HTTPS download receipt"
+    "origin": "local git archive of exact source tree27a774c; not an HTTPS download receipt"
   },
   "host": {
     "hostname": "youdeMac-mini.local",
-    "uname": "Darwin youdeMac-mini.local 25.6.0 Darwin Kernel Version 25.6.0: Fri Jul 31 19:11:03 PDT 2026; root:xnu-12377.161.14~5/RELEASE_ARM64_T8132 arm64"
+    "uname": "Darwin youdeMac-mini.local 25.6.0 Darwin Kernel Version 25.6.0: Fri Jul 31 19:11:03 PDT 2026; root:xnu-12377.161.14~5/RELEASE_ARM64_T8132 arm64 arm"
   },
   "execution": {
     "self_test": true,
@@ -28,65 +28,66 @@
       6,
       18
     ],
-    "oracle_result": 42
+    "oracle_result": 42,
+    "branch_inputs": [
+      0,
+      1
+    ],
+    "branch_results": [
+      14,
+      26
+    ]
   },
   "tool_source": {
     "provider": "local-executable",
     "command": "bun",
     "executable_sha256": "e0c90ec15d33363e6b70713d56bc3b2c7585c17f40a0fe0f8fd9305901d4e233"
   },
-  "executed_at_utc": "2026-10-22T19:44:57.445894+00:00",
+  "executed_at_utc": "2026-10-24T16:23:16.148030+00:00",
   "evidence": {
-    "steps": [
+    "actual_steps": [
       {
-        "name": "version",
-        "command": [
-          "bun",
-          "--version"
-        ],
+        "host": "bun",
+        "script": "runtime/wasmc-runtime-v0/bootstrap.mjs",
         "exit": 0,
-        "stdout_sha256": "56b0485099b6c5427d3b68c042fd05b632d5e52e924c5064473389812227164c",
+        "seconds": 0.161,
+        "stdout_sha256": "416ea3dbd9f2a1473d92f95594c13b39762353fd19e764531bc1e59d2e9338ae",
         "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       {
-        "name": "self-test",
-        "command": [
-          "bun",
-          "bootstrap.mjs",
-          "self-test"
-        ],
+        "host": "bun",
+        "script": "runtime/wasmc-runtime-v0/bootstrap.mjs",
         "exit": 0,
-        "stdout_sha256": "495fbb0995201ac3e95e2e1f0dc52c06b9ad8688f15d8cf370eabef9c7b66bed",
+        "seconds": 0.023,
+        "stdout_sha256": "949c8d025efba33f4b5bf49b8fd2f6b5e97fba6b1deb5e9fc8ddf034c5132f4b",
         "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       {
-        "name": "compile",
-        "command": [
-          "bun",
-          "bootstrap.mjs",
-          "compile",
-          "--input",
-          "examples/add.wasmc",
-          "--output",
-          "examples/receipt-bun.wasm"
-        ],
+        "host": "bun",
+        "script": "scripts/assert-runtime-output.mjs",
         "exit": 0,
-        "stdout_sha256": "70ed7e4f30b744b48cd0b126e7d00077b2b5bf2b93762b3108bdc079c84919b0",
-        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-      },
-      {
-        "name": "independent-oracle",
-        "command": [
-          "bun",
-          "../../scripts/assert-runtime-output.mjs",
-          "examples/receipt-bun.wasm"
-        ],
-        "exit": 0,
+        "seconds": 0.013,
         "stdout_sha256": "b8a9e1923777acafe4164083c1eeb13195ca866e596de8a4244abe79be66022e",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "host": "bun",
+        "script": "runtime/wasmc-runtime-v0/bootstrap.mjs",
+        "exit": 0,
+        "seconds": 0.021,
+        "stdout_sha256": "a6fe3faa0e1af454cafde36522aab16f48473f6f7a6306ae915d3a64a0e6122d",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "host": "bun",
+        "script": "external branch oracle",
+        "exit": 0,
+        "seconds": 0.024,
+        "stdout_sha256": "0eae18127fa3505aabb96de3754f35099bbbceb2ad7c054e0c305b67fd910e85",
         "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       }
     ],
     "compile_output_sha256": "29996fa74541742737704f64e48add2a5079ed8c57783cda4912046d5acb32c9"
   },
-  "qualification_scope": "Runtime component consumer of exact already-published dev.1 commit; not whole product, formal release or downloaded public package admission"
+  "qualification_scope": "Actual exact-source27a source-free local archive Runtime consumer including both branch inputs; whole final release and HTTPS readback remain separate"
 }

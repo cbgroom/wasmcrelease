@@ -2,20 +2,20 @@
   "schema": "wasmc.runtime-js-self-test/v0",
   "accepted": true,
   "runtime": "deno",
-  "compiler_bytes": 1956578,
+  "compiler_bytes": 1957478,
   "output_bytes": 41,
   "runtime_version": "deno 2.9.4 (stable, release, aarch64-apple-darwin)\nv8 15.0.245.2-rusty\ntypescript 6.0.3",
-  "candidate_commit": "03fe3b889eff58c2a2bbac5802da0990fe50223d",
-  "compiler_sha256": "c78816376228b6091599845c6a9a531eb76f949fe419655c012ec30c05f75832",
+  "candidate_commit": "27a774cd4decb3d6eb9da0e19641846086b1493c",
+  "compiler_sha256": "23a91517a5217575d099a5c116a72db87f01e8cce22e4dc9af573ff6d456ac47",
   "source_free_package": {
-    "archive_sha256": "e8d55a0abb561dc204622df1d108309ef4db06c5b636d1680ead7b3663ab572b",
+    "archive_sha256": "54cdaffb95138b472d0891b3f4cecf96a1d6f64b3cff03085a6a0cfc8cf9b04a",
     "private_source_checked_out": false,
     "git_metadata_present": false,
-    "origin": "local git archive of exact already-published commit; not an HTTPS download receipt"
+    "origin": "local git archive of exact source tree27a774c; not an HTTPS download receipt"
   },
   "host": {
     "hostname": "youdeMac-mini.local",
-    "uname": "Darwin youdeMac-mini.local 25.6.0 Darwin Kernel Version 25.6.0: Fri Jul 31 19:11:03 PDT 2026; root:xnu-12377.161.14~5/RELEASE_ARM64_T8132 arm64"
+    "uname": "Darwin youdeMac-mini.local 25.6.0 Darwin Kernel Version 25.6.0: Fri Jul 31 19:11:03 PDT 2026; root:xnu-12377.161.14~5/RELEASE_ARM64_T8132 arm64 arm"
   },
   "execution": {
     "self_test": true,
@@ -28,73 +28,66 @@
       6,
       18
     ],
-    "oracle_result": 42
+    "oracle_result": 42,
+    "branch_inputs": [
+      0,
+      1
+    ],
+    "branch_results": [
+      14,
+      26
+    ]
   },
   "tool_source": {
     "provider": "local-executable",
     "command": "deno",
     "executable_sha256": "433088c827fa0e39ff162ab0e475f1fd4c7690eaedec500cf678edc3865e9287"
   },
-  "executed_at_utc": "2026-10-22T19:44:57.587951+00:00",
+  "executed_at_utc": "2026-10-24T16:23:16.401489+00:00",
   "evidence": {
-    "steps": [
+    "actual_steps": [
       {
-        "name": "version",
-        "command": [
-          "deno",
-          "--version"
-        ],
+        "host": "deno",
+        "script": "runtime/wasmc-runtime-v0/bootstrap.mjs",
         "exit": 0,
-        "stdout_sha256": "54acb47c32992730653db6160034e34721230f105d9917d2d868039a73d00039",
+        "seconds": 0.173,
+        "stdout_sha256": "d6b7bbf25a7f435fc1d53cdfd3d747e215f3255b1dd6b06e640003f45ed135da",
         "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       {
-        "name": "self-test",
-        "command": [
-          "deno",
-          "run",
-          "--allow-read",
-          "--allow-write",
-          "bootstrap.mjs",
-          "self-test"
-        ],
+        "host": "deno",
+        "script": "runtime/wasmc-runtime-v0/bootstrap.mjs",
         "exit": 0,
-        "stdout_sha256": "61bbbcef7655a2678ab4d3cfde78c4610a6129897beac0de08c4387e17cec4cd",
+        "seconds": 0.029,
+        "stdout_sha256": "2cd6b87fd14c891e394dd22d756c91fe81904f381704c5ae0738474ef3aa2bd2",
         "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       },
       {
-        "name": "compile",
-        "command": [
-          "deno",
-          "run",
-          "--allow-read",
-          "--allow-write",
-          "bootstrap.mjs",
-          "compile",
-          "--input",
-          "examples/add.wasmc",
-          "--output",
-          "examples/receipt-deno.wasm"
-        ],
+        "host": "deno",
+        "script": "scripts/assert-runtime-output.mjs",
         "exit": 0,
-        "stdout_sha256": "9ceab33c2afacae71e5be09f08d0a9cee5f7d49d41ba3e237d4372c4fa6cc425",
-        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-      },
-      {
-        "name": "independent-oracle",
-        "command": [
-          "deno",
-          "run",
-          "--allow-read",
-          "../../scripts/assert-runtime-output.mjs",
-          "examples/receipt-deno.wasm"
-        ],
-        "exit": 0,
+        "seconds": 0.013,
         "stdout_sha256": "b8a9e1923777acafe4164083c1eeb13195ca866e596de8a4244abe79be66022e",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "host": "deno",
+        "script": "runtime/wasmc-runtime-v0/bootstrap.mjs",
+        "exit": 0,
+        "seconds": 0.025,
+        "stdout_sha256": "e7edb84c428a4f13ea8a9ae65b6d1f134d19f60f8fb2ad5f976ab5ac8ec49895",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "host": "deno",
+        "script": "external branch oracle",
+        "exit": 0,
+        "seconds": 0.039,
+        "stdout_sha256": "0eae18127fa3505aabb96de3754f35099bbbceb2ad7c054e0c305b67fd910e85",
         "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
       }
     ],
     "compile_output_sha256": "29996fa74541742737704f64e48add2a5079ed8c57783cda4912046d5acb32c9"
   },
-  "qualification_scope": "Runtime component consumer of exact already-published dev.1 commit; not whole product, formal release or downloaded public package admission"
+  "qualification_scope": "Actual exact-source27a source-free local archive Runtime consumer including both branch inputs; whole final release and HTTPS readback remain separate"
 }
