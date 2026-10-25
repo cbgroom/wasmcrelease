@@ -4,7 +4,7 @@ import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { platform, arch } from 'node:os';
 import { fileURLToPath } from 'node:url';
-import {requiresIfBranchScopeQualification,requiresUnusedHostImportsQualification,requiresUnitResultMatchQualification} from './current-release-version.mjs';
+import {requiresIfBranchScopeQualification,requiresUnusedHostImportsQualification,requiresUnitResultMatchQualification,requiresCanonicalCheckedResultsQualification} from './current-release-version.mjs';
 const root=fileURLToPath(new URL('../',import.meta.url));
 if(existsSync(root+'.git'))throw Error('qualification must run from a source-free public archive');
 if(existsSync(root+'src/language')||existsSync(root+'crates/wasmc_wasm_cdylib'))throw Error('private compiler source must not be present');
@@ -21,7 +21,8 @@ for(const engine of ['node','bun','deno']) {
     engine==='deno'?['run','--allow-read','scripts/test-canonical-host-sdk.mjs']:['scripts/test-canonical-host-sdk.mjs'],
     ...(requiresIfBranchScopeQualification(product.version)?[engine==='deno'?['run','--allow-read','scripts/test-if-branch-scope.mjs']:['scripts/test-if-branch-scope.mjs']]:[]),
     ...(requiresUnusedHostImportsQualification(product.version)?[engine==='deno'?['run','--allow-read','scripts/test-canonical-host-import-demand.mjs']:['scripts/test-canonical-host-import-demand.mjs']]:[]),
-    ...(requiresUnitResultMatchQualification(product.version)?[engine==='deno'?['run','--allow-read','scripts/test-unit-result-match.mjs']:['scripts/test-unit-result-match.mjs']]:[])
+    ...(requiresUnitResultMatchQualification(product.version)?[engine==='deno'?['run','--allow-read','scripts/test-unit-result-match.mjs']:['scripts/test-unit-result-match.mjs']]:[]),
+    ...(requiresCanonicalCheckedResultsQualification(product.version)?[engine==='deno'?['run','--allow-read','scripts/test-canonical-checked-results.mjs']:['scripts/test-canonical-checked-results.mjs']]:[])
   ];
   for(const args of commands) {
     const r=spawnSync(engine,args,{cwd:root,encoding:'utf8',timeout:60000});

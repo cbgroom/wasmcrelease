@@ -445,6 +445,7 @@ export function currentV3ProductInputsForVersion(version){
   return [...currentV3ProductInputs,currentCompatibilityPath(version),
     ...(requiresCheckedChunkQualification(version)?['admission/checked-chunk-v0'+version.split('.')[2]+'.json']:[]),
     ...(Number(version.split('.')[2])>=28?['scripts/test-unit-result-match.mjs']:[]),
+    ...(Number(version.split('.')[2])>=29?['scripts/test-canonical-checked-results.mjs']:[]),
     ...(requiresIfBranchScopeQualification(version)?['scripts/ci-normal-summary.mjs','scripts/test-ci-normal-summary.mjs','.github/workflows/normal-source-free-consumer.yml','.github/workflows/current-compiler.yml','scripts/test-native-compiler.mjs','scripts/native-package.mjs']:[]),
     ...(requiresPrivateHelperQualification(version)?['scripts/current-release-version.mjs','scripts/test-current-release-version.mjs','scripts/fresh-agent-learning-v1.mjs','agent-evaluation/fresh-agent-learning-v2.json','agent-evaluation/fresh-agent-learning-v3.json']:[])];
 }
@@ -551,12 +552,13 @@ export async function createCurrentCandidate(repo,{compilerSource,libSource,vers
   });
   const catalogBytes=read('catalog/libs-current-v2.json'),catalog=checkedCurrentCatalog(catalogBytes,hash(catalogBytes));
   const directories=['current','dist','package','examples/current','examples/base64','examples/agent-quickstart','examples/lib-search','examples/agent-start','standard','sdk','runtime','current-libs','licenses',
+    ...(Number(version.split('.')[2])>=29?['lib-releases/wasmc-json/0.0.7/root','lib-releases/wasmc-json/0.0.7/host']:[]),
     'skills',
     'host/contract','host/sdk','host/drivers/file/rust','host/drivers/memory/rust'];
   const compiler=JSON.parse(read('current/compiler-release.json'));
   assert.equal(compiler.version,version);assert.equal(compiler.source_commit,compilerSource);
   const compilerPaths=compiler.artifacts.map(row=>{assert.ok(safe(row.path),'unsafe compiler product input');return row.path;});
-  const paths=new Set([...currentV3ProductInputsForVersion(version),...(composed?.product_inputs??[]),...compilerPaths,...directories.flatMap(walk),
+  const paths=new Set([...(Number(version.split('.')[2])>=29?['lib-releases/wasmc-json/0.0.7/cold/canonical-template.json']:[]),...currentV3ProductInputsForVersion(version),...(composed?.product_inputs??[]),...compilerPaths,...directories.flatMap(walk),
     'AGENTS.md','README.md','HOSTING.md','LANGUAGE.md','LIB.md','license-policy.json',
     '.github/workflows/lib-search.yml','.github/workflows/agent-discovery.yml','.github/workflows/source-free-consumer.yml','.github/workflows/host-lib-e2e.yml',
     'agent-evaluation/fresh-agent-learning-v2.json','docs/AGENT_DECISION_MODEL.md',`docs/RELEASE_V${version.split('.').slice(1).join('')}.md`,'scripts/release-candidate.mjs']);

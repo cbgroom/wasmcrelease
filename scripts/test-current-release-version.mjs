@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
-import {usesCurrentProductV3, requiresPrivateHelperQualification, requiresCanonicalHostQualification, requiresIfBranchScopeQualification, requiresUnitResultMatchQualification, currentCompatibilityPath, assertCompilerQualification} from './current-release-version.mjs';
+import {usesCurrentProductV3, requiresPrivateHelperQualification, requiresCanonicalHostQualification, requiresIfBranchScopeQualification, requiresUnitResultMatchQualification, requiresCanonicalCheckedResultsQualification, currentCompatibilityPath, assertCompilerQualification} from './current-release-version.mjs';
 import {currentV3ProductInputsForVersion} from './release-candidate.mjs';
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
 const read = p => readFileSync(new URL('../' + p, import.meta.url));
@@ -26,6 +26,8 @@ assert.equal(requiresIfBranchScopeQualification('0.0.24'), false);
 assert.equal(requiresIfBranchScopeQualification('0.0.25'), true);
 assert.equal(requiresUnitResultMatchQualification('0.0.27'), false);
 assert.equal(requiresUnitResultMatchQualification('0.0.28'), true);
+assert.equal(requiresCanonicalCheckedResultsQualification('0.0.28'), false);
+assert.equal(requiresCanonicalCheckedResultsQualification('0.0.29'), true);
 let rejected = 0;
 for (const version of ['0.0.023', '0.0.23-dev.1', '../23', '0.1.0', '0.0.9007199254740992', null]) {
   assert.throws(() => usesCurrentProductV3(version)); rejected++;
@@ -58,10 +60,11 @@ const mutations = [
   x => x.boolean_conditional_calls--
 ];
 if(requiresUnitResultMatchQualification(compiler.version)){mutations.push(x=>x.runs.find(r=>r.args.at(-1)==='scripts/test-unit-result-match.mjs').result.guest_calls--);mutations.push(x=>x.runs.find(r=>r.args.at(-1)==='scripts/test-unit-result-match.mjs').result.live_handles=1);}
+if(requiresCanonicalCheckedResultsQualification(compiler.version)){mutations.push(x=>x.runs.find(r=>r.args.at(-1)==='scripts/test-canonical-checked-results.mjs').result.guest_calls--);mutations.push(x=>x.runs.find(r=>r.args.at(-1)==='scripts/test-canonical-checked-results.mjs').result.pending_counters_zero=0);}
 for (const mutate of mutations) {const changed = structuredClone(q); mutate(changed); assert.throws(() => check(changed)); rejected++;}
 // Schema compatibility fixture, never written as historical execution evidence.
 const legacy = structuredClone(q); legacy.version = '0.0.22';
-legacy.runs = legacy.runs.filter(r => !['scripts/test-unit-result-match.mjs', 'scripts/test-current-private-helpers.mjs', 'scripts/test-canonical-host-sdk.mjs', 'scripts/test-if-branch-scope.mjs', 'scripts/test-canonical-host-import-demand.mjs'].includes(r.args.at(-1)));
+legacy.runs = legacy.runs.filter(r => !['scripts/test-canonical-checked-results.mjs', 'scripts/test-unit-result-match.mjs', 'scripts/test-current-private-helpers.mjs', 'scripts/test-canonical-host-sdk.mjs', 'scripts/test-if-branch-scope.mjs', 'scripts/test-canonical-host-import-demand.mjs'].includes(r.args.at(-1)));
 for (const r of legacy.runs.filter(r => r.args.at(-1) === 'scripts/test-current-lib-api-v021.mjs')) r.result.provider = '4.9.0';
 assert.equal(assertCompilerQualification(legacy, '0.0.22', compiler.compiler.sha256, hash(read('current/compiler-release.json'))), true);
 console.log(JSON.stringify({accepted:true, actual_current_receipt:true, legacy_schema_fixture:true, rejections:rejected, whole_product_admission:false}));

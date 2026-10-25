@@ -1,6 +1,6 @@
-# WAsmC0.0.28
+# WAsmC0.0.29
 
-v0.0.28 emits checked chunk byte transport directly from the canonical-host Wasm compiler carrier. The matching current CoreLib and prepared canonical provider are b06eb9a3; the existing14inputs,8-module WASMCB01/v1 frame and Host contracts are unchanged. Original4128-byte responses and fresh external JSON inputs pass the fixed10M fuel qualification on Wasmi and Wasmtime. Frozen CoreLib4.9.1 and all existing Lib Roots remain unchanged.
+v0.0.29 emits checked chunk byte transport directly from the canonical-host Wasm compiler carrier. The matching current CoreLib and prepared canonical provider are b06eb9a3; the existing14inputs,8-module WASMCB01/v1 frame and Host contracts are unchanged. Original4128-byte responses and fresh external JSON inputs pass the fixed10M fuel qualification on Wasmi and Wasmtime. Frozen CoreLib4.9.1 and all existing Lib Roots remain unchanged.
 
 
 Start with [AGENTS.md](AGENTS.md) or [agent-quickstart.json](agent-quickstart.json).
@@ -41,7 +41,7 @@ The pinned catalog owns complete Roots, WIT, SDK views and dependency notices.
 Its42 package routes and247 API routes give289 exact search entries.
 
 ```sh
-node scripts/wasmc-lib.mjs search "base64 decode" --catalog-sha256 b9d7162bcc40fd394a475e670f9cfd64173c8f4af1407a2a075802c499ad9b6d --limit 8
+node scripts/wasmc-lib.mjs search "base64 decode" --catalog-sha256 86981ab84b16cc06684dc87da28c436b190d79c8c9c312ffa7f27206e444cb5a --limit 8
 node examples/base64/run.mjs
 ```
 
@@ -77,5 +77,5 @@ capability. System Telemetry supports its declared Component resource view;
 ordinary-source direct resource methods remain unsupported. Client Foundation
 and Gateway remain incubating.
 
-The [0.0.28 release evidence](docs/RELEASE_V027.md) keeps source, artifact,
+The [0.0.29 release evidence](docs/RELEASE_V027.md) keeps source, artifact,
 runtime, Native platform, whole-candidate and lifecycle gates separate.

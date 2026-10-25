@@ -16,6 +16,7 @@ export const requiresIfBranchScopeQualification = version => patch(version) >= 2
 export const requiresUnusedHostImportsQualification = version => patch(version) >= 26;
 export const requiresCheckedChunkQualification = version => patch(version) >= 27;
 export const requiresUnitResultMatchQualification = version => patch(version) >= 28;
+export const requiresCanonicalCheckedResultsQualification = version => patch(version) >= 29;
 export function currentCompatibilityPath(version) {
   assert.ok(usesCurrentProductV3(version), 'current v3 product version required');
   return `compatibility/core-artifacts-v0${patch(version)}.json`;
@@ -37,7 +38,8 @@ export function assertCompilerQualification(q, version, compilerSha256, manifest
     ...(requiresCanonicalHostQualification(version) ? ['scripts/test-canonical-host-sdk.mjs'] : []),
     ...(requiresIfBranchScopeQualification(version) ? ['scripts/test-if-branch-scope.mjs'] : []),
     ...(requiresUnusedHostImportsQualification(version) ? ['scripts/test-canonical-host-import-demand.mjs'] : []),
-    ...(requiresUnitResultMatchQualification(version) ? ['scripts/test-unit-result-match.mjs'] : [])];
+    ...(requiresUnitResultMatchQualification(version) ? ['scripts/test-unit-result-match.mjs'] : []),
+    ...(requiresCanonicalCheckedResultsQualification(version) ? ['scripts/test-canonical-checked-results.mjs'] : [])];
   assert.equal(q.runs.length, commands.length * 3);
   assert.deepEqual([...new Set(q.runs.map(r => r.engine))].sort(), ['bun', 'deno', 'node']);
   assert.equal(q.rejection_controls.exit_code, 0);
@@ -87,6 +89,14 @@ export function assertCompilerQualification(q, version, compilerSha256, manifest
       const demand = result('scripts/test-canonical-host-import-demand.mjs');
       assert.equal(demand.compiler_sha256, compilerSha256);
       for (const [key,value] of Object.entries({cases:3,static_imports:13,json_read_imports:13,table_imports:18,modules_per_frame:8,exact_frame_pins:true,real_Host_invocation:false})) assert.equal(demand[key],value,key);
+    }
+    if (requiresCanonicalCheckedResultsQualification(version)) {
+      const checked = result('scripts/test-canonical-checked-results.mjs');
+      assert.equal(checked.compiler_sha256,compilerSha256);
+      if(engine==='bun'&&checked.app_engine_admitted===false){assert.equal(checked.guest_calls,0);assert.equal(checked.execution_profile,'compiler-frames-only');assert.equal(checked.unsupported_feature,'multi-memory');assert.equal(checked.compiled_frames,3);assert.equal(checked.modules_per_frame,8);assert.equal(checked.real_Host_effects,false);}else {
+      assert.equal(checked.app_engine_admitted,true);
+      for(const [key,value] of Object.entries({accepted:true,compiled_frames:3,modules_per_frame:8,guest_calls:800,same_instance:true,service_calls:800,response_drops:580,owned_error_drops:760,malformed_rejections:180,pending_counters_zero:3,fresh_dynamic_inputs:true,exact_error_case_decisions:5,rejection_then_recovery:true,real_Host_effects:false,business_Guest_executed:false}))assert.equal(checked[key],value,key);
+      }
     }
     if (requiresUnitResultMatchQualification(version)) {
       const unit = result('scripts/test-unit-result-match.mjs');

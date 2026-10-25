@@ -7,7 +7,8 @@ const sha=b=>createHash('sha256').update(b).digest('hex');
 const f='examples/canonical-host/',encode=new TextEncoder();
 const tuple=n=>Object.fromEntries([['wit','lib.wit'],['executionAbi','execution-abi.json'],['providerContract','provider-contract.json'],['binding','binding.json']].map(([k,p])=>[k,read(f+'host/'+n+'/'+p)]));
 const proof=JSON.parse(new TextDecoder().decode(read(f+'import-demand-proof.json')));
-assert.equal(sha(read('current/wasmc_compiler.wasm')),proof.compiler_sha256);
+const active=JSON.parse(new TextDecoder().decode(read('current/compiler-release.json')));
+assert.equal(sha(read('current/wasmc_compiler.wasm')),active.compiler.sha256);
 const compiler=await createCanonicalHostCompiler(read('current/wasmc_compiler.wasm'));
 let cases=0;
 try {
@@ -30,4 +31,4 @@ try {
  }
 } finally {compiler.dispose();}
 assert.equal(cases,3);
-console.log(JSON.stringify({accepted:true,runtime:globalThis.Deno?'deno':globalThis.Bun?'bun':'node',compiler_sha256:proof.compiler_sha256,cases,static_imports:13,json_read_imports:13,table_imports:18,modules_per_frame:8,exact_frame_pins:true,real_Host_invocation:false,actual_merged_execution_evidence:f+'import-demand-proof.json'}));
+console.log(JSON.stringify({accepted:true,runtime:globalThis.Deno?'deno':globalThis.Bun?'bun':'node',compiler_sha256:active.compiler.sha256,baseline_producer_compiler_sha256:proof.compiler_sha256,cases,static_imports:13,json_read_imports:13,table_imports:18,modules_per_frame:8,exact_frame_pins:true,real_Host_invocation:false,actual_merged_execution_evidence:f+'import-demand-proof.json'}));

@@ -69,3 +69,10 @@ capability contract and actual compiler result outrank historical examples.
 Do not repair by silently changing width, signedness, async behavior, identity,
 ordering, ownership or failure semantics. If exact application constraints do
 not prove the documented alternative equivalent, stop.
+
+
+## Existing canonical checked Result composition
+
+Bind each checked Host call to an explicitly typed Result local before matching it. Read-only nested Variant matching can choose the exact declared error case; exhaust the original WIT cases. Use the selected Root's existing document/utf8 functions to produce owned response bytes. A borrowed request-body projection cannot move into a returned record. SDK-owned caller/window/plan/memory details stay out of application source. Ordinary scalar u32 and UTF8-string arguments are admitted for the checked u32/unit canonical profile; arbitrary nested error-branch calls and list<string> indexing in that aggregate composition profile remain outside it.
+
+The public fixture examples/current/canonical-checked-results-v1 and scripts/test-canonical-checked-results.mjs distinguish compiler-frame verification from complete App execution. The complete App needs multi-memory: Node/Deno/Wasmi/Wasmtime execute the admitted profile, while Bun1.3.14 verifies the compiler frames only. Select an admitted engine without silently relabeling a compiler check as runtime acceptance. Existing Lib Roots and CoreLib are reused unchanged.

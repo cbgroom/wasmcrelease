@@ -1,0 +1,28 @@
+{
+  "schema": "wasmc.rejected-memory-packaging/v1",
+  "admitted": false,
+  "shipped_App_sha256": "65fa108eb28c58922e589ca1a28f6365ff530972dd4e7466a226ef8b00f432fe",
+  "failed_attempts": [
+    {
+      "file": "canonical-checked-bun-first.log",
+      "sha256": "cadbb742aef5b2e71b784cd8950f0113231e47cf7de645f002f550df46df5915",
+      "text": "12 | const source=read(fixture+'ordinary.wasmc').toString(),activation=JSON.parse(read(fixture+'activation.json'));\n13 | const input=source=>({...{source,entry:tuple('entry'),operations:tuple('operations'),libCore:read(kit+'root/artifact.wasm'),libWit:read(kit+'root/lib.wit'),template:read(kit+'cold/canonical-template.json')},activation:Buffer.from(JSON.stringify({...activation,source_sha256:hash(Buffer.from(source))}))});\n14 | const compiler=await createCanonicalHostCompiler(bytes);let frames=0;\n15 | const checkFrame=r=>{assert.equal(hash(r.frame),proof.frame_sha256);assert.equal(r.modules.size,8);for(const row of proof.modules)assert.equal(hash(r.modules.get(row.path)),row.sha256,row.path);frames++;};\n16 | try{checkFrame(await compiler.compile(input(source)));await assert.rejects(compiler.compile(input(source.replace('body:body','body:req.body'))),/cannot move a projected owner/);checkFrame(await compiler.compile(input(source)));const changed=source+'\\n';const r=await compiler.compile(input(changed));assert.equal(r.descriptor.source_sha256,hash(Buffer.from(changed)));assert.notEqual(hash(r.frame),proof.frame_sha256);for(const row of proof.modules)assert.equal(hash(r.modules.get(row.path)),row.sha256);frames++;}finally{compiler.dispose();}\n17 | const app=check(proof.complete_App),module=new WebAssembly.Module(app),imports={};let instance;\n                                                ^\nCompileError: WebAssembly.Module doesn't parse at byte 2097: Memory section has more than one memory, WebAssembly currently only allows zero or one (evaluating 'new WebAssembly.Module(app)')\n      at /Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-canonical-checked-release-v029/scripts/test-canonical-checked-results.mjs:17:44\n\nBun v1.3.14 (macOS arm64)\n"
+    },
+    {
+      "file": "single-memory-lowering.log",
+      "sha256": "0053f18f763e3a0a481ee11ddaa092826f9787f34895a32e7b25363359ab08e7",
+      "text": "Fatal: MultiMemoryLowering: only the first memory can be exported\n"
+    },
+    {
+      "file": "single-memory-lowering-selected.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "text": ""
+    },
+    {
+      "file": "canonical-checked-node-single-memory.log",
+      "sha256": "25ad0ef7bc748378273edab7704511f71fa29ae44e72fc3df49fc1730ead2412",
+      "text": "wasm://wasm/00b3801a:1\n\n\nRuntimeError: unreachable\n    at wasm://wasm/00b3801a:wasm-function[267]:0x21f43\n    at wasm://wasm/00b3801a:wasm-function[706]:0x48307\n    at file:///Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-canonical-checked-release-v029/scripts/test-canonical-checked-results.mjs:42:10\n\nNode.js v26.12.1\n"
+    }
+  ],
+  "interpretation": "Original multi-memory App remains admitted on Node/Deno/Wasmi/Wasmtime. Bun1.3.14 compiles all frame modules but cannot instantiate the App. Bounds-preserving Binaryen lowering failed initialization and is not shipped. No compiler/CoreLib/Root changes or gate waiver."
+}
