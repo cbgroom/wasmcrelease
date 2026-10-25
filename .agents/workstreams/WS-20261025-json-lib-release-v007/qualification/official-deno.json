@@ -1,0 +1,153 @@
+{
+  "accepted": true,
+  "runtime": "deno",
+  "runtime_versions": {
+    "node": "26.3.0",
+    "uv": "1.52.1",
+    "zlib": "1.3.1-e00f703",
+    "brotli": "1.2.0",
+    "ares": "1.34.6",
+    "modules": "147",
+    "nghttp2": "1.69.0",
+    "napi": "10",
+    "llhttp": "9.4.1",
+    "openssl": "3.0.7+quic",
+    "cldr": "48.0",
+    "icu": "78.3",
+    "tz": "2026b",
+    "unicode": "17.0",
+    "ngtcp2": "",
+    "nghttp3": "",
+    "sqlite": "3.53.1",
+    "deno": "2.9.4",
+    "v8": "15.0.245.2-rusty",
+    "typescript": "6.0.3"
+  },
+  "Root_manifest_sha256": "be20f9443c091b77d60838add8a0a7e6a3a8b2fd8a246fa2355a8faca883fc61",
+  "compiler_sha256": "fc8b025e8a6ef8d1a4a41246e4b7a87d077b428c5738162bf1984602182dc3d5",
+  "SDK_sha256": "3e95ff2514c6b7ec20f49653c8964f8c642dd248cfd88d539518ddda725d58e0",
+  "CoreLib_sha256": "b06eb9a32dddb75e278cd8aa9b1126f6e4b51e885a83897c80f7b5da85b81c3f",
+  "files": 66,
+  "compiled_frames": 3,
+  "compile_rejection_recovery": true,
+  "source_rebinding": true,
+  "guest_cases": 11,
+  "same_instance": true,
+  "actual_Host_imports": 13,
+  "Host_calls_per_request": 13,
+  "pending_zero": 2,
+  "Guest_uses_new_external_inputs": true,
+  "live_platform_effects": false,
+  "rows": [
+    {
+      "name": "new-number",
+      "input_sha256": "d33d7e70117669c698cc907867ebe91b1eeeca44abae226a6ed38667dc10d2e7",
+      "response": {
+        "status": 200,
+        "body": "{\"echo\":73}"
+      },
+      "Host_calls": 13,
+      "pending_zero": 2
+    },
+    {
+      "name": "unicode-nul-quote",
+      "input_sha256": "17010a0833f87aa0cc32c029814449dca499480f9a86c3a60c6583885a3940f2",
+      "response": {
+        "status": 200,
+        "body": "{\"echo\":\"new-雪🦀\\u0000\\\"\\n\"}"
+      },
+      "Host_calls": 13,
+      "pending_zero": 2
+    },
+    {
+      "name": "object",
+      "input_sha256": "d248be87e3d40557078f69ab4d4f3130305615377b69c05508c000aaaf38015e",
+      "response": {
+        "status": 200,
+        "body": "{\"echo\":{\"a\":1,\"z\":2}}"
+      },
+      "Host_calls": 13,
+      "pending_zero": 2
+    },
+    {
+      "name": "empty-text",
+      "input_sha256": "cff59dd7cecf22f44150801f1a7ddb443f12f5fae632f1307c159bc5873fb90f",
+      "response": {
+        "status": 200,
+        "body": "{\"echo\":\"\"}"
+      },
+      "Host_calls": 13,
+      "pending_zero": 2
+    },
+    {
+      "name": "null",
+      "input_sha256": "1c197daef20de3f47eec5e2f735ec6669869d3180cc29f35be4788511e0af0f8",
+      "response": {
+        "status": 200,
+        "body": "{\"echo\":null}"
+      },
+      "Host_calls": 13,
+      "pending_zero": 2
+    },
+    {
+      "name": "array",
+      "input_sha256": "7a3e3365eaaf682109823a95571194494f8dbe2b34e35c1abfccfcdb850328d2",
+      "response": {
+        "status": 200,
+        "body": "{\"echo\":[1,\"雪\",null]}"
+      },
+      "Host_calls": 13,
+      "pending_zero": 2
+    },
+    {
+      "name": "u64-exact-JSON",
+      "input_sha256": "c56e341ae44b253436122959e52972050180294cb8c4d087f1466cc5fe829860",
+      "response": {
+        "status": 200,
+        "body": "{\"echo\":18446744073709551615}"
+      },
+      "Host_calls": 13,
+      "pending_zero": 2
+    },
+    {
+      "name": "explicit-fallback",
+      "input_sha256": "d33d7e70117669c698cc907867ebe91b1eeeca44abae226a6ed38667dc10d2e7",
+      "response": {
+        "status": 200,
+        "body": "{\"error\":\"assembly_failed\"}"
+      },
+      "Host_calls": 13,
+      "pending_zero": 2
+    },
+    {
+      "name": "fresh-after-fallback",
+      "input_sha256": "a9ad2c28ea1e92d24ddddf802d8798bedb888813801cb69f17eba24a0b071857",
+      "response": {
+        "status": 200,
+        "body": "{\"echo\":91}"
+      },
+      "Host_calls": 13,
+      "pending_zero": 2
+    },
+    {
+      "name": "invalid-JSON",
+      "input_sha256": "021fb596db81e6d02bf3d2586ee3981fe519f275c0ac9ca76bbcf2ebb4097d96",
+      "response": {
+        "status": 400,
+        "body": "{\"error\":\"invalid_input\"}"
+      },
+      "Host_calls": 13,
+      "pending_zero": 2
+    },
+    {
+      "name": "missing-value",
+      "input_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "response": {
+        "status": 400,
+        "body": "{\"error\":\"missing_value\"}"
+      },
+      "Host_calls": 13,
+      "pending_zero": 2
+    }
+  ]
+}
