@@ -1,0 +1,27 @@
+package local:json_parts;
+interface api {
+ enum json_error {input_too_large,depth_limit,invalid_json,too_many_pointers,pointer_too_long,invalid_pointer,output_too_large}
+ record selected_value {present:bool,json:string}
+ record selection_view {valid:bool,values:list<selected_value>,error:option<json_error>}
+ record query_pair {name:string,value:string}
+ record header {name:string,value:list<u8>}
+ record request {method:string,path:string,parameters:list<query_pair>,query:list<query_pair>,headers:list<header>,body:list<u8>}
+ record response {status:u16,body:list<u8>}
+ run:func(req:request)->response {
+  let mut pointers:list<string> = list.new();
+  pointers.push("/value");
+  let selected:selection_view = document::inspect_values_bytes(req.body,pointers);
+  if (!selected.valid) {return {status:400,body:utf8::encode("{\"error\":\"invalid_input\"}")};}
+  if (!selected.values.get(0).present) {return {status:400,body:utf8::encode("{\"error\":\"missing_value\"}")};}
+  let mut parts:list<string> = list.new();
+  parts.push("{\"echo\":");
+  let fragment:string = document::compact_or(selected.values.get(0).json,"null");
+  parts.push(fragment);
+  parts.push("}");
+  let mut limit:u32 = 65536;
+  if (req.path == "/small") {limit = 8;}
+  let bytes:list<u8> = utf8::encode_parts_or(parts,limit,"{\"error\":\"assembly_failed\"}");
+  return {status:200,body:bytes};
+ }
+}
+world app {export api;}

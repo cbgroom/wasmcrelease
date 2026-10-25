@@ -1,0 +1,88 @@
+{
+  "schema": "wasmc.standalone-lib-release/v1",
+  "id": "wasmc-json",
+  "version": "0.0.7",
+  "tag": "wasmc-json-v0.0.7",
+  "scope": "additive standalone Lib release; existing compiler Latest and current catalogs unchanged",
+  "api": "utf8.encode-parts-or(parts:list<string>,max-bytes:u32,fallback:string)->list<u8>",
+  "root_manifest": {
+    "path": "root/lib.json",
+    "bytes": 8610,
+    "sha256": "be20f9443c091b77d60838add8a0a7e6a3a8b2fd8a246fa2355a8faca883fc61",
+    "mode": "0644"
+  },
+  "root_core": {
+    "path": "root/artifact.wasm",
+    "bytes": 97363,
+    "sha256": "e2d4bb2f7e79cd3cdd5b35f9425fbd8d11e6158b6d015fcea938326922c08bbf",
+    "mode": "0644"
+  },
+  "root_component": {
+    "path": "root/component.wasm",
+    "bytes": 103117,
+    "sha256": "6b70ab1c0e52214f6dc76cddd198095469801b961caf41d994e5eeee80471870",
+    "mode": "0644"
+  },
+  "root_wit": {
+    "path": "root/lib.wit",
+    "bytes": 2707,
+    "sha256": "8cbfe2efa0a6d52a226a740750d28dbefeed448a63fae4e92517cc90ad83c88d",
+    "mode": "0644"
+  },
+  "compatible_release": "v0.0.27",
+  "compiler": {
+    "path": "compiler/wasmc_compiler.wasm",
+    "bytes": 2010461,
+    "sha256": "fc8b025e8a6ef8d1a4a41246e4b7a87d077b428c5738162bf1984602182dc3d5",
+    "mode": "0644"
+  },
+  "SDK": {
+    "path": "compiler/canonical-host.mjs",
+    "bytes": 6103,
+    "sha256": "3e95ff2514c6b7ec20f49653c8964f8c642dd248cfd88d539518ddda725d58e0",
+    "mode": "0644"
+  },
+  "CoreLib": {
+    "path": "compiler/lib_core.wasm",
+    "bytes": 2632162,
+    "sha256": "b06eb9a32dddb75e278cd8aa9b1126f6e4b51e885a83897c80f7b5da85b81c3f",
+    "mode": "0644"
+  },
+  "profile": {
+    "path": "checked-chunk-profile.json",
+    "bytes": 4323,
+    "sha256": "39438a875221637f97df2198aae633a4923837d1b28bfeffe33e8b591313d9db",
+    "mode": "0644"
+  },
+  "private_SourceReady": "c0658f6249ae54435936c4b9d9d2f968723a84d2",
+  "private_measured_Code": "bd77a38b76d365d525f42064b4fdbbc27cde30e8",
+  "Host_imports": 13,
+  "frame_modules": 8,
+  "protocol": "WASMCB01/v1",
+  "input_slots": 14,
+  "deployment_performed": false,
+  "qualifications": {
+    "Rust_native_tests": 22,
+    "complete_Root_reproducibility_files": 18,
+    "full_filter_same_instance_Core_calls": 64,
+    "public_App_cases": 4,
+    "generated_Component_Rust_SDK_calls": 65,
+    "Component_CLI_cases": 7
+  },
+  "fixed_fuel_scope": {
+    "limit": 10000000,
+    "full_filter_fixture": {
+      "198B": "pass both engines",
+      "1024B": "pass both engines",
+      "4128B": "OutOfFuel both engines; original failures retained"
+    },
+    "claim": "No arbitrary-size full-filter or platform deployment acceptance"
+  },
+  "private_canonical_integration": "70d9192a548e278de22fc0075a0b3dbb95976dab",
+  "Source_PR": "https://github.com/yxsicd/wasmc/pull/22",
+  "runtime_scope": {
+    "Node": "full public11input App conformance",
+    "Deno": "full public11input App conformance",
+    "Bun1.3.14": "integrity/compiler frames only; merged multi-memory App unsupported"
+  }
+}

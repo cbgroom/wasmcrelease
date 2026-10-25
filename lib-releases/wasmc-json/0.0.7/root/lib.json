@@ -1,0 +1,229 @@
+{
+  "agent": {
+    "default_view": "runtime",
+    "delta": {
+      "path": "references/agent-delta.json",
+      "sha256": "4bba4529d2d28558924efc26ff07cfd4272b4f67af2694153cd2206f286d7f04"
+    },
+    "skill": {
+      "path": "SKILL.md",
+      "sha256": "cdbbaa7aa049f6ca3ab7c8c3fea4aef7a473586269eaf8fd121110faa7b2e8ef"
+    },
+    "views": {
+      "developer": {
+        "includes_runtime": true,
+        "mode": "developer",
+        "skill": "SKILL.md"
+      },
+      "runtime": {
+        "mode": "runtime",
+        "skill": "SKILL.md"
+      }
+    }
+  },
+  "artifact": {
+    "bytes": 97363,
+    "format": "core-wasm",
+    "path": "artifact.wasm",
+    "sha256": "e2d4bb2f7e79cd3cdd5b35f9425fbd8d11e6158b6d015fcea938326922c08bbf"
+  },
+  "bindings": {
+    "rust_component": {
+      "artifact_sha256": "e2d4bb2f7e79cd3cdd5b35f9425fbd8d11e6158b6d015fcea938326922c08bbf",
+      "cargo_toml": {
+        "path": "bindings/rust-component/Cargo.toml",
+        "sha256": "c32470d2b047b148e7da9e06d50fd54de32a89bb9f6336ad8ac333d4253170d0"
+      },
+      "component_sha256": "6b70ab1c0e52214f6dc76cddd198095469801b961caf41d994e5eeee80471870",
+      "crate": "wasmc-json-component",
+      "functions": 15,
+      "path": "bindings/rust-component",
+      "runtime": "wasmtime-component",
+      "schema": "wasmc.lib-rust-component-sdk/v0",
+      "source": {
+        "path": "bindings/rust-component/src/lib.rs",
+        "sha256": "0363fe2cfb8af4688c2e6dc78cd04d196bb57c42c2960140e5c05a3ef6700554"
+      },
+      "wit_sha256": "8cbfe2efa0a6d52a226a740750d28dbefeed448a63fae4e92517cc90ad83c88d",
+      "world": "json"
+    },
+    "rust_core": {
+      "artifact_sha256": "e2d4bb2f7e79cd3cdd5b35f9425fbd8d11e6158b6d015fcea938326922c08bbf",
+      "cargo_toml": {
+        "path": "bindings/rust-core/Cargo.toml",
+        "sha256": "1256eeede8af34964359618a85f616fb0f82ca331926679ea21d78a1f09564d3"
+      },
+      "crate": "wasmc-json-core",
+      "functions": 15,
+      "import_module": "wasmc:lib/wasmc-json@0.0.7",
+      "path": "bindings/rust-core",
+      "schema": "wasmc.lib-rust-canonical-core-sdk/v1",
+      "source": {
+        "path": "bindings/rust-core/src/lib.rs",
+        "sha256": "c59b90c1f984d5eba0f5aa9aec7fd9692abb510a2e9f51741ed486aeb24ea7e1"
+      },
+      "wit_sha256": "8cbfe2efa0a6d52a226a740750d28dbefeed448a63fae4e92517cc90ad83c88d"
+    }
+  },
+  "build": {
+    "inputs": [
+      {
+        "kind": "cargo-lock",
+        "path": "json-adapter/Cargo.lock",
+        "sha256": "1f4a5ec0f3617d9a17cd19ef1cc31e1199ebedb9e7e62958a6ba4fab92fa01f6"
+      }
+    ],
+    "language": "rust",
+    "locked": true,
+    "offline": true,
+    "profile": "release",
+    "target": "wasm32-unknown-unknown",
+    "toolchain": {
+      "cargo": "cargo 1.96.0 (30a34c682 2026-05-25)",
+      "cargo_version_verbose_sha256": "7325fa79f79f89eaceae5ee57920caf61b813ade023b1e50457ee0902b2d7222",
+      "encoded_rustflags": "-Cstrip=symbols",
+      "host": "aarch64-apple-darwin",
+      "rustc": "rustc 1.96.0 (ac68faa20 2026-05-25)",
+      "rustc_version_verbose_sha256": "c8884d5d5936b36facd062e0e669e6fefe9944611dfafa0f2b1ee56d96157cbe",
+      "schema": "wasmc.rust-toolchain-fingerprint/v2",
+      "sha256": "2c183caac36979b889b8ba6296d5d800eb9c6c4089931fda1572af85061a246c",
+      "source_path_remapping": {
+        "mappings_in_order": [
+          {
+            "from": "selected-rustc-sysroot",
+            "to": "/wasmc/rust"
+          },
+          {
+            "from": "selected-cargo-home",
+            "to": "/wasmc/cargo"
+          },
+          {
+            "from": "workspace-root",
+            "to": "/wasmc/workspace"
+          },
+          {
+            "from": "relative-src",
+            "to": "/wasmc/source/src"
+          }
+        ],
+        "resolution": "canonical-workspace-shared-flags",
+        "schema": "wasmc.rust-source-path-remapping/v2",
+        "scope": "rustc-all-default"
+      },
+      "target": "wasm32-unknown-unknown"
+    }
+  },
+  "closure": {
+    "build_dependencies": "linked-into-artifact",
+    "public_exports": "root-wit-only",
+    "public_lib_dependencies": [],
+    "schema": "wasmc.lib-closure/v0"
+  },
+  "compatibility": {
+    "abi_epoch": 1,
+    "wasmc_min": "0.0.1"
+  },
+  "component": {
+    "bytes": 103117,
+    "format": "component-wasm",
+    "path": "component.wasm",
+    "sha256": "6b70ab1c0e52214f6dc76cddd198095469801b961caf41d994e5eeee80471870"
+  },
+  "core_abi": {
+    "bytes": 7180,
+    "path": "core-abi.json",
+    "schema": "wasmc.lib-core-abi/v0",
+    "sha256": "d941b278e4330440956218b21705479af223386b0013c32a9fd6690f08d299ff"
+  },
+  "id": "wasmc-json",
+  "license": {
+    "files": [
+      {
+        "bytes": 3823,
+        "path": "LICENSE",
+        "sha256": "7bca2d5818178e0bc14546700d39bf113d15139b1c3b6d1e62f621d4a276d6e3"
+      },
+      {
+        "bytes": 245760,
+        "path": "licenses/DEPENDENCY-NOTICES-001.txt",
+        "sha256": "66302f6dd71da97391ab2270d29b10e67bdbac6d7eb782bed043c2ff596ec5cc"
+      },
+      {
+        "bytes": 245760,
+        "path": "licenses/DEPENDENCY-NOTICES-002.txt",
+        "sha256": "0065cf38006c9a66a6c3ee9cbaf8db10422b1e5301d3c1d5132b7855e71f18ea"
+      },
+      {
+        "bytes": 245760,
+        "path": "licenses/DEPENDENCY-NOTICES-003.txt",
+        "sha256": "201dbac93dff17177b6379ee630b9658b4cec9cb9d46ce3982b3da87c4b740c8"
+      },
+      {
+        "bytes": 245760,
+        "path": "licenses/DEPENDENCY-NOTICES-004.txt",
+        "sha256": "c439e1a409b6f23d5797cec339403a0ffce97e9fcf2ae91d6a923c36d619bb76"
+      },
+      {
+        "bytes": 245760,
+        "path": "licenses/DEPENDENCY-NOTICES-005.txt",
+        "sha256": "04118f32afc6b2ce0fbfd559c56a78614016ab00167be2425c8c778fc7b064fe"
+      },
+      {
+        "bytes": 8357,
+        "path": "licenses/DEPENDENCY-NOTICES-006.txt",
+        "sha256": "aa6000805f56d3c6009ffa09dbe224083cf2e63e2498e1939deefe6ca7c43d9a"
+      }
+    ],
+    "identifier": "WAsmC Research-Only Non-Commercial License 1.0",
+    "schema": "wasmc.lib-license/v1"
+  },
+  "schema": "wasmc.lib/v2",
+  "upstream": {
+    "adapter_revision": 6,
+    "archive": {
+      "sha256": "c841b55ecdae098c80dcae9cf767f6f8a0c2cdb3416bbef72181df4d0fe73f14",
+      "url": "https://static.crates.io/crates/serde_json/serde_json-1.0.151.crate"
+    },
+    "delta": [
+      "Add copied list<u8> inputs without lossy UTF-8 conversion; old text APIs share exact parser, bounds and error precedence.",
+      "Add explicit caller-fallback compact-or-bytes projection using the same bounded compact parser; original eight APIs and logic remain unchanged.",
+      "Add independent utf8.encode using Rust String::into_bytes; all thirteen JSON operations and the original parser/selector logic remain unchanged.",
+      "Add owned JSON string pointer projection with caller fallback; same existing selection bounds/errors and serde_json string decoding, with no Host access.",
+      "Add parse-once record inspection and owned text projections; existing ten APIs and original parser/selector logic remain unchanged.",
+      "Add record selection views without reparsing or changing the original six APIs: missing is present=false/json empty; JSON null is present=true/json null.",
+      "Bound input/output bytes, nesting depth, pointer count and pointer length; all results publish only on success.",
+      "Errors are bounded public enum cases; strict pointer syntax errors are distinct from missing values.",
+      "JSON values stay adapter-private; selected values cross WIT as optional compact JSON strings.",
+      "Pinned std and float_roundtrip features retain upstream i64/u64/f64 behavior, sorted keys and last-key-wins duplicates; not canonical JSON."
+    ],
+    "ecosystem": "rust-crate",
+    "license": "MIT OR Apache-2.0",
+    "name": "serde_json",
+    "release": {
+      "commit": "de8500740cdcabffb9734f503e4889def823cf10",
+      "tag": "v1.0.151"
+    },
+    "repository": "https://github.com/serde-rs/json",
+    "schema": "wasmc.lib-upstream/v0",
+    "supported_subset": [
+      "serde_json::Value::pointer",
+      "serde_json::from_slice::<Value>",
+      "serde_json::from_str::<Value>",
+      "serde_json::to_writer"
+    ],
+    "unsupported": [
+      "JCS canonicalization and preserved duplicate keys",
+      "JSON mutation and public dynamic DOM resources",
+      "arbitrary precision and lexical number preservation",
+      "external IO, schema fetch and unbounded streaming"
+    ],
+    "version": "1.0.151"
+  },
+  "version": "0.0.7",
+  "wit": {
+    "package": "wasmc:json@0.0.7",
+    "path": "lib.wit",
+    "sha256": "8cbfe2efa0a6d52a226a740750d28dbefeed448a63fae4e92517cc90ad83c88d",
+    "world": "json"
+  }
+}
