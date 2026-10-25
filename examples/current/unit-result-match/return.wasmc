@@ -1,0 +1,1 @@
+package example:unit; interface api {run:func(mode:u32)->result<u32,variant {first(string),retry(string)}> {return match operations::finish(mode) {ok=>7,err(failure)=>match failure {first(message)=>19,retry(message)=>23}};}} world app {export api;}

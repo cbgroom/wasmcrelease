@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
-import {usesCurrentProductV3, requiresPrivateHelperQualification, requiresCanonicalHostQualification, requiresIfBranchScopeQualification, currentCompatibilityPath, assertCompilerQualification} from './current-release-version.mjs';
+import {usesCurrentProductV3, requiresPrivateHelperQualification, requiresCanonicalHostQualification, requiresIfBranchScopeQualification, requiresUnitResultMatchQualification, currentCompatibilityPath, assertCompilerQualification} from './current-release-version.mjs';
 import {currentV3ProductInputsForVersion} from './release-candidate.mjs';
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
 const read = p => readFileSync(new URL('../' + p, import.meta.url));
@@ -24,6 +24,8 @@ assert.equal(requiresCanonicalHostQualification('0.0.23'), false);
 assert.equal(requiresCanonicalHostQualification('0.0.24'), true);
 assert.equal(requiresIfBranchScopeQualification('0.0.24'), false);
 assert.equal(requiresIfBranchScopeQualification('0.0.25'), true);
+assert.equal(requiresUnitResultMatchQualification('0.0.27'), false);
+assert.equal(requiresUnitResultMatchQualification('0.0.28'), true);
 let rejected = 0;
 for (const version of ['0.0.023', '0.0.23-dev.1', '../23', '0.1.0', '0.0.9007199254740992', null]) {
   assert.throws(() => usesCurrentProductV3(version)); rejected++;
@@ -55,6 +57,7 @@ const mutations = [
   x => x.private_helper_guest_calls--,
   x => x.boolean_conditional_calls--
 ];
+if(requiresUnitResultMatchQualification(compiler.version)){mutations.push(x=>x.runs.find(r=>r.args.at(-1)==='scripts/test-unit-result-match.mjs').result.guest_calls--);mutations.push(x=>x.runs.find(r=>r.args.at(-1)==='scripts/test-unit-result-match.mjs').result.live_handles=1);}
 for (const mutate of mutations) {const changed = structuredClone(q); mutate(changed); assert.throws(() => check(changed)); rejected++;}
 // Schema compatibility fixture, never written as historical execution evidence.
 const legacy = structuredClone(q); legacy.version = '0.0.22';

@@ -1,0 +1,122 @@
+{
+  "schema": "wasmc.canonical-checked-chunk-admission/v1",
+  "accepted": true,
+  "version": "0.0.28",
+  "scope": "Qualified exact checked-chunk profile retained by unchanged frames/modules; new unit Result match validated. Formal lifecycle/publication remains separate.",
+  "compiler": {
+    "path": "current/wasmc_compiler.wasm",
+    "bytes": 2041733,
+    "sha256": "eae0ea18618acc947ffdd59380676bf16516e90d16c26f04973817b46e5ba784",
+    "mode": "0644"
+  },
+  "canonical_provider": {
+    "path": "current/lib_core.wasm",
+    "bytes": 2632162,
+    "sha256": "b06eb9a32dddb75e278cd8aa9b1126f6e4b51e885a83897c80f7b5da85b81c3f",
+    "mode": "0644"
+  },
+  "source_ready": "e655987ee048562802a16967ecd3bbdad599f622",
+  "canonical_source": "68ac7ec79bd7a306fc0e5ec68c64315f55f6cd70",
+  "profile_map": {
+    "path": "examples/canonical-host/checked-chunk-profile.json",
+    "bytes": 4794,
+    "sha256": "62c7b3ce612f878462f2deaab1c961b88d4faafd6436dbd729d7aec210ffb9bd",
+    "mode": "0644"
+  },
+  "native_and_hosted_frame_equality": {
+    "path": "examples/canonical-host/native-frame-proof.json",
+    "bytes": 1068,
+    "sha256": "5288779965942d4f6c180fb38b05471c327e6c891e01bfa2e104dbeb2dde9442",
+    "mode": "0644"
+  },
+  "actual_NativeSDK_plan": {
+    "path": "examples/canonical-host/producer-assets/caller-plan.json",
+    "bytes": 23924,
+    "sha256": "f0976bae297b4f1d0788cadfc06ff7ba1b1127824cfe779321a2d9bc30c54b44",
+    "mode": "0644"
+  },
+  "frame_expected": {
+    "path": "examples/canonical-host/expected-frame.json",
+    "bytes": 3266,
+    "sha256": "2ebef32dbc7d87fdb6405aefe500dee7dc15a533d75fa92835dafc960d34526f",
+    "mode": "0644"
+  },
+  "actual_merged_Host_qualification": {
+    "path": "examples/canonical-host/import-demand-proof.json",
+    "bytes": 15954,
+    "sha256": "9386a7c942b962d6f6547df1a1298a1f11a97308cc7e6dcc5e6df5e4c849295a",
+    "mode": "0644"
+  },
+  "original_private_fixture": {
+    "source_sha256": "7615c11514448e14b588bd938bf561a0557f1a3c9d902e46498b62f19b1a6a9e",
+    "response_bytes": 4128,
+    "response_sha256": "58bf42c43ef750a6bd87d45502d348b9312cde3730df9b9bba4bc7e2f7bdebf9",
+    "app_sha256": "196cd5691b6c8efdc35370803695b3543e41504b15cbd89fece945d33b558e61",
+    "source_or_business_fixture_published": false,
+    "Wasmtime_cold_fuel": 6920919,
+    "Wasmi_cold_fuel": 7303446,
+    "fixed_fuel": 10000000
+  },
+  "runtime_qualification": [
+    {
+      "mode": "original",
+      "artifact_sha256": "196cd5691b6c8efdc35370803695b3543e41504b15cbd89fece945d33b558e61",
+      "wasmtime_calls": 12,
+      "wasmi_calls": 12,
+      "fixed_fuel": 10000000,
+      "wasmtime_cold_fuel": 6920919,
+      "wasmi_cold_fuel": 7303446,
+      "failure_then_recovery": true,
+      "pending_counters": 3
+    },
+    {
+      "mode": "dynamic",
+      "artifact_sha256": "1b36619e5b2e69f9df669f95239125a7c2b39bd220514a074cf6f926e2af0599",
+      "wasmtime_calls": 44,
+      "wasmi_calls": 44,
+      "fixed_fuel": 10000000,
+      "wasmtime_cold_fuel": 2880833,
+      "wasmi_cold_fuel": 898935,
+      "failure_then_recovery": true,
+      "pending_counters": 3
+    },
+    {
+      "mode": "unicode",
+      "artifact_sha256": "a60aa757c2543c8c36a1cf67bc9ac86b6a4566136597c3ec6bcfbecc886f7001",
+      "wasmtime_calls": 4,
+      "wasmi_calls": 4,
+      "fixed_fuel": 10000000,
+      "wasmtime_cold_fuel": 2855038,
+      "wasmi_cold_fuel": 676228,
+      "failure_then_recovery": true,
+      "pending_counters": 3
+    }
+  ],
+  "SDK_fixed_fuel": 10000000,
+  "SDK_capacity_failure": {
+    "input_bytes": 257,
+    "setup": "511pages occupied through separate typed API invocations; one SDK decode and cleanup measured",
+    "wasmtime_fuel": 90028,
+    "wasmi_fuel": 139351,
+    "full512page_reuse": true
+  },
+  "immutable_CoreLib_producer_lock": {
+    "path": "standard/corelib/4.11.0-candidate.1/profile.lock.json",
+    "bytes": 743,
+    "sha256": "1cc804a1ceaedeed88b84e0c757cb180cd5cc4a3dab75ed92f742464888635f4",
+    "mode": "0644"
+  },
+  "tuple_adapter_digest_note": "The producer lock tuple_adapter_sha256 is its original WAT-input provenance digest. The distributed binary tuple adapter has its own exact artifact identity; no private implementation source is included.",
+  "unchanged_contracts": {
+    "Root_and_released_Core4_9_1_bytes": true,
+    "strict_Native_profile_fields": true,
+    "input_slots_0_to_13": true,
+    "HTTP13": true,
+    "WASMCB01v1": true,
+    "fuel_and_permissions": true
+  },
+  "live_MCPGit_install_or_GREEN_deployment": false,
+  "ordinary_and_canonical_current_Core_match": true,
+  "frozen_standard_Core4_9_1_sha256": "7cd4f0c60536f1825da3fed9d525a43ee9724250203a261f298505a503e9bcbf",
+  "attribution": "Exact prior golden frame/SDK/Core inputs are unchanged; new compiler reproduces all module bytes. New Native distribution qualification is separate and must execute changed packages."
+}

@@ -10,8 +10,10 @@ const sha=b=>createHash('sha256').update(b).digest('hex');
 const json=p=>JSON.parse(read(p));
 const put=(p,v)=>writeFileSync(resolve(root,p),JSON.stringify(v,null,2)+'\n');
 const row=p=>{assert.ok(lstatSync(resolve(root,p)).isFile());const b=read(p);return{path:p,bytes:b.length,sha256:sha(b)};};
+// Immutable standalone Lib bundles select their own pinned compiler tuple.
+// They are historical artifacts, outside this current compiler inventory.
 function walk(d=''){return readdirSync(resolve(root,d),{withFileTypes:true}).flatMap(e=>{
- if(['.git','target','.DS_Store'].includes(e.name))return[];
+ if(['.git','target','.DS_Store'].includes(e.name)||(d===''&&e.name==='lib-releases'))return[];
  const p=d?d+'/'+e.name:e.name;assert.ok(!lstatSync(resolve(root,p)).isSymbolicLink(),p);
  return e.isDirectory()?walk(p):e.isFile()?[p]:[];
 });}
@@ -71,6 +73,7 @@ if(refresh){
  ...(Number(productVersion.split('.')[2])>=25?['scripts/test-if-branch-scope.mjs']:[]),
  ...(Number(productVersion.split('.')[2])>=26?['scripts/test-canonical-host-import-demand.mjs']:[]),
  ...(Number(productVersion.split('.')[2])>=27?['admission/checked-chunk-v0'+productVersion.split('.')[2]+'.json']:[]),
+ ...(Number(productVersion.split('.')[2])>=28?['scripts/test-unit-result-match.mjs']:[]),
  'compatibility/core-artifacts-'+versionKey+'.json','scripts/core-compatibility.mjs','scripts/test-current-lib-api-v021.mjs','scripts/current-compiler-integrity.mjs','scripts/test-current-compiler-integrity.mjs','scripts/test-current-compiler.mjs','scripts/test-current-private-helpers.mjs','scripts/qualify-current-compiler.mjs',
  'runtime/wasmc-runtime-v0/compiler.wasm','runtime/wasmc-runtime-v0/manifest.json','runtime/wasmc-runtime-v0/receipts/compiler-wasm.json','runtime/registry-v0/packages/wasmc-runtime/0.1.0-runtime-v0.json','runtime/registry-v0/channels/dev.json'].sort();
  put('current/compiler-release.json',{schema:'wasmc.current-compiler/v2',version:options['--version'],source_commit:options['--source-commit'],source_branch:options['--source-branch'],source_build_receipt_sha256:options['--build-receipt-sha256'],cargo_lock_sha256:options['--cargo-lock-sha256'],compiler:row('current/wasmc_compiler.wasm'),imports:0,max_bytes:2097152,standard_app_sha256:options['--standard-app-sha256'],active_compiler_versions:1,binary_paths:binaries,embedded_paths:embeddings,artifacts:paths.map(row),immutable_selection:'Use the whole product candidate digest and fixed public commit; mutable main is discovery.',scope:'Current compiler identity and carrier integrity; whole product and publication require independent release admission'});

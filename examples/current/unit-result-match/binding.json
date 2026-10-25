@@ -1,0 +1,84 @@
+{
+  "schema": "wasmc.wit-fastabi-execution-binding.v5",
+  "world": "app",
+  "wit_sha256": "52605cdba4bf4625938102fd71af9791e963db5865c9a3c9edbd81c9b9dcd83f",
+  "execution_abi_sha256": "676ef967586e8dafff608e13c49a6b55f6d41f4b6392d50c7699c0447fe2a066",
+  "provider_contract_sha256": "34e63b488563fef5a0e1fcdcf7a17472d20f9c0703d3c97f517a0e7f7435790c",
+  "resources": [],
+  "operations": [
+    {
+      "id": 1,
+      "wit_operation": "operations.finish",
+      "receiver": "none",
+      "argument_adapters": [
+        "identity"
+      ],
+      "result_adapter": "checked-unit-i32-error-handle",
+      "core": {
+        "module": "conformance:unit/v1",
+        "function": "finish",
+        "params": [
+          "i32"
+        ],
+        "results": [
+          "i32",
+          "i32"
+        ],
+        "host_authorities": []
+      }
+    }
+  ],
+  "guest_memory": {
+    "export": "memory",
+    "maximum_static_utf8_bytes": 65536
+  },
+  "error_transport": {
+    "maximum_message_bytes": 1024,
+    "case": {
+      "module": "conformance:unit/v1",
+      "function": "case",
+      "params": [
+        "i32"
+      ],
+      "results": [
+        "i32"
+      ],
+      "host_authorities": []
+    },
+    "message_len": {
+      "module": "conformance:unit/v1",
+      "function": "len",
+      "params": [
+        "i32"
+      ],
+      "results": [
+        "i32"
+      ],
+      "host_authorities": []
+    },
+    "message_read": {
+      "module": "conformance:unit/v1",
+      "function": "read",
+      "params": [
+        "i32",
+        "i32",
+        "i32"
+      ],
+      "results": [
+        "i32"
+      ],
+      "host_authorities": []
+    },
+    "drop": {
+      "module": "conformance:unit/v1",
+      "function": "drop",
+      "params": [
+        "i32"
+      ],
+      "results": [
+        "i32"
+      ],
+      "host_authorities": []
+    }
+  }
+}

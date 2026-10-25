@@ -15,6 +15,7 @@ export const requiresCanonicalHostQualification = version => patch(version) >= 2
 export const requiresIfBranchScopeQualification = version => patch(version) >= 25;
 export const requiresUnusedHostImportsQualification = version => patch(version) >= 26;
 export const requiresCheckedChunkQualification = version => patch(version) >= 27;
+export const requiresUnitResultMatchQualification = version => patch(version) >= 28;
 export function currentCompatibilityPath(version) {
   assert.ok(usesCurrentProductV3(version), 'current v3 product version required');
   return `compatibility/core-artifacts-v0${patch(version)}.json`;
@@ -35,7 +36,8 @@ export function assertCompilerQualification(q, version, compilerSha256, manifest
     'scripts/test-current-lib-api-v021.mjs', ...(helpers ? ['scripts/test-current-private-helpers.mjs'] : []),
     ...(requiresCanonicalHostQualification(version) ? ['scripts/test-canonical-host-sdk.mjs'] : []),
     ...(requiresIfBranchScopeQualification(version) ? ['scripts/test-if-branch-scope.mjs'] : []),
-    ...(requiresUnusedHostImportsQualification(version) ? ['scripts/test-canonical-host-import-demand.mjs'] : [])];
+    ...(requiresUnusedHostImportsQualification(version) ? ['scripts/test-canonical-host-import-demand.mjs'] : []),
+    ...(requiresUnitResultMatchQualification(version) ? ['scripts/test-unit-result-match.mjs'] : [])];
   assert.equal(q.runs.length, commands.length * 3);
   assert.deepEqual([...new Set(q.runs.map(r => r.engine))].sort(), ['bun', 'deno', 'node']);
   assert.equal(q.rejection_controls.exit_code, 0);
@@ -85,6 +87,11 @@ export function assertCompilerQualification(q, version, compilerSha256, manifest
       const demand = result('scripts/test-canonical-host-import-demand.mjs');
       assert.equal(demand.compiler_sha256, compilerSha256);
       for (const [key,value] of Object.entries({cases:3,static_imports:13,json_read_imports:13,table_imports:18,modules_per_frame:8,exact_frame_pins:true,real_Host_invocation:false})) assert.equal(demand[key],value,key);
+    }
+    if (requiresUnitResultMatchQualification(version)) {
+      const unit = result('scripts/test-unit-result-match.mjs');
+      assert.equal(unit.accepted,true);assert.equal(unit.compiler_sha256,compilerSha256);
+      for(const [key,value]of Object.entries({source_cases:4,guest_calls:1152,host_effects:1280,error_handles_dropped:384,malformed_traps:640,negative_sources_rejected:6,same_instance_recovery:true,live_handles:0,real_Host_effects:false}))assert.equal(unit[key],value,key);
     }
     if (requiresIfBranchScopeQualification(version)) {
       const s = result('scripts/test-if-branch-scope.mjs');

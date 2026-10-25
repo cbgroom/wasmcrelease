@@ -1,0 +1,56 @@
+{
+  "schema": "wasmc.core-compatibility/v1",
+  "candidate_version": "0.0.28",
+  "scope": "Exact v0.0.28 compiler and current/canonical CoreLib4.11.0-candidate.1. Explicit standard fixture retains immutable CoreLib4.9.1 and Std1.4.1. Complete exact artifact validation is required.",
+  "version_policy": "Probe actual engine capabilities and validate exact complete bytes.",
+  "artifacts": [
+    {
+      "id": "compiler",
+      "path": "current/wasmc_compiler.wasm",
+      "bytes": 2041733,
+      "sha256": "eae0ea18618acc947ffdd59380676bf16516e90d16c26f04973817b46e5ba784",
+      "validation_profile": "complete-engine-validation",
+      "additional_required_gates": []
+    },
+    {
+      "id": "automatic-provider",
+      "path": "current/lib_core.wasm",
+      "bytes": 2632162,
+      "sha256": "b06eb9a32dddb75e278cd8aa9b1126f6e4b51e885a83897c80f7b5da85b81c3f",
+      "validation_profile": "complete-engine-validation",
+      "additional_required_gates": []
+    },
+    {
+      "id": "standard-provider",
+      "path": "standard/corelib/4.9.1/corelib.wasm",
+      "bytes": 2640152,
+      "sha256": "7cd4f0c60536f1825da3fed9d525a43ee9724250203a261f298505a503e9bcbf",
+      "validation_profile": "complete-engine-validation",
+      "additional_required_gates": []
+    },
+    {
+      "id": "standard",
+      "path": "standard/wasmc-std/1.4.1/artifact.wasm",
+      "bytes": 44221,
+      "sha256": "b79a499c8300361125e7fcdae02170184b82d4bbeff4d8f24ed95f3fd4db8d3b",
+      "validation_profile": "wasm2,function-references,tail-call",
+      "additional_required_gates": [
+        "function-references",
+        "tail-call"
+      ]
+    },
+    {
+      "id": "canonical-checked-chunk-provider",
+      "path": "standard/corelib/4.11.0-candidate.1/canonical-corelib.wasm",
+      "bytes": 2632162,
+      "sha256": "b06eb9a32dddb75e278cd8aa9b1126f6e4b51e885a83897c80f7b5da85b81c3f",
+      "validation_profile": "complete-engine-validation",
+      "additional_required_gates": []
+    }
+  ],
+  "non_claims": [
+    "minimal feature set",
+    "device acceptance",
+    "whole release admission"
+  ]
+}

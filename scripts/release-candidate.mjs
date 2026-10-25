@@ -444,6 +444,7 @@ export const currentV3ProductInputs=Object.freeze([
 export function currentV3ProductInputsForVersion(version){
   return [...currentV3ProductInputs,currentCompatibilityPath(version),
     ...(requiresCheckedChunkQualification(version)?['admission/checked-chunk-v0'+version.split('.')[2]+'.json']:[]),
+    ...(Number(version.split('.')[2])>=28?['scripts/test-unit-result-match.mjs']:[]),
     ...(requiresIfBranchScopeQualification(version)?['scripts/ci-normal-summary.mjs','scripts/test-ci-normal-summary.mjs','.github/workflows/normal-source-free-consumer.yml','.github/workflows/current-compiler.yml','scripts/test-native-compiler.mjs','scripts/native-package.mjs']:[]),
     ...(requiresPrivateHelperQualification(version)?['scripts/current-release-version.mjs','scripts/test-current-release-version.mjs','scripts/fresh-agent-learning-v1.mjs','agent-evaluation/fresh-agent-learning-v2.json','agent-evaluation/fresh-agent-learning-v3.json']:[])];
 }
