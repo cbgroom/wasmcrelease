@@ -6,7 +6,7 @@ import {fileURLToPath} from 'node:url';
 import {hash,checkedCurrentCatalog,resolveCurrentPackage,currentProductReader} from './current-lib-release-v3.mjs';
 const repositoryRoot=fileURLToPath(new URL('../',import.meta.url));
 const catalogBytes=readFileSync(join(repositoryRoot,'catalog/libs-current-v2.json'));
-const catalogSha256='1c049a472505013d40f0771eae11684d119d0e857e2744c6e88ae7b4bcedc286';
+const catalogSha256='b9d7162bcc40fd394a475e670f9cfd64173c8f4af1407a2a075802c499ad9b6d';
 const catalog=checkedCurrentCatalog(catalogBytes,catalogSha256),row=catalog.packages.find(r=>r.id==='wasmc-std');
 const lock=resolveCurrentPackage(catalogBytes,catalogSha256,{id:row.id,version:row.version,manifest_sha256:row.manifest_sha256,root_inventory_sha256:row.root_inventory_sha256},currentProductReader(repositoryRoot));
 const lockBytes=Buffer.from(JSON.stringify(lock,null,2)+'\n');

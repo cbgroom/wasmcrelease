@@ -1,6 +1,6 @@
 # WAsmC public Agent entrypoint
 
-This file is frozen inside the v0.0.27
+This file is frozen inside the v0.0.28
 product set; product presence is not lifecycle authority. Start with
 `agent-quickstart.json`. For release orientation, read the validated compact
 `agent-release-orientation.json` and run its named check. Open the full artifact inventory
@@ -40,14 +40,14 @@ Compiler implementation source is private. Reviewed compiler Wasm and public
 Host/runtime/SDK/CLI integration glue may be distributed. Compiler modification
 permission does not grant compiler-source publication permission.
 
-## v0.0.27 product capability contract
+## v0.0.28 product capability contract
 
 The product uses one portable Core Wasm compiler, CoreLib4.11.0-candidate.1, Std1.4.1,
 LibSearch0.5.0 and42 current Lib identities. `current/compiler-release.json`
 binds the compiler carriers and source build; validate them with
 `node scripts/current-compiler-integrity.mjs --require-qualification`.
 `catalog/libs-current-v2.json` binds complete current Roots. Its independent
-SHA256 is `1c049a472505013d40f0771eae11684d119d0e857e2744c6e88ae7b4bcedc286`. The42 package routes and247 exported API routes form
+SHA256 is `b9d7162bcc40fd394a475e670f9cfd64173c8f4af1407a2a075802c499ad9b6d`. The42 package routes and247 exported API routes form
 289 index entries. Search runs the actual compiled Core implementation.
 Fourteen native-source rows remain source-only and do not establish executable
 Native or device support. Installation grants no Host authority.
@@ -100,7 +100,7 @@ cancellation and resource cleanup. Keep native-source, emulator and physical
 
 ```sh
 node scripts/current-compiler-integrity.mjs --require-qualification
-node scripts/wasmc-lib.mjs search "base64 decode" --catalog-sha256 1c049a472505013d40f0771eae11684d119d0e857e2744c6e88ae7b4bcedc286 --limit 8
+node scripts/wasmc-lib.mjs search "base64 decode" --catalog-sha256 b9d7162bcc40fd394a475e670f9cfd64173c8f4af1407a2a075802c499ad9b6d --limit 8
 node examples/base64/run.mjs
 ```
 

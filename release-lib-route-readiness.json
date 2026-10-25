@@ -1,9 +1,9 @@
 {
   "schema": "wasmc.release-lib-route-readiness/v1",
   "route": "release-lib-route-readiness",
-  "request": "does this v0.0.27 product set bind every included Lib package and API route, and where is its lifecycle stage decided",
+  "request": "does this v0.0.28 product set bind every included Lib package and API route, and where is its lifecycle stage decided",
   "product": {
-    "version": "0.0.27",
+    "version": "0.0.28",
     "package_routes": 42,
     "api_routes": 247,
     "candidate_extras": 0,
@@ -49,33 +49,33 @@
   "check_commands": [
     "node scripts/lib-route-closure.mjs --check",
     "node scripts/current-compiler-integrity.mjs --require-qualification",
-    "node scripts/release-candidate.mjs verify channels/candidates/0.0.27.json --candidate-sha256 a379b7b61ce6070ee3dafc7b802d93c53915b8b0eef013b2c7f95124fefd4578"
+    "node scripts/release-candidate.mjs verify channels/candidates/0.0.28.json --candidate-sha256 a379b7b61ce6070ee3dafc7b802d93c53915b8b0eef013b2c7f95124fefd4578"
   ],
   "stop": "This record is sufficient for the matching readiness decision. Do not scan manifests, histories or implementation scripts unless one of its check commands fails.",
   "current_product": {
-    "version": "0.0.27",
+    "version": "0.0.28",
     "compiler": {
       "path": "current/wasmc_compiler.wasm",
-      "bytes": 2010461,
-      "sha256": "fc8b025e8a6ef8d1a4a41246e4b7a87d077b428c5738162bf1984602182dc3d5",
-      "source_commit": "38a8e154347724db63cb775addb9249f0974af4d",
-      "source_build_receipt_sha256": "4fe23a0fd88711ce2b85e5565a1f9420a16c761dc41dd34509dc121afcd6190a",
+      "bytes": 2041733,
+      "sha256": "eae0ea18618acc947ffdd59380676bf16516e90d16c26f04973817b46e5ba784",
+      "source_commit": "68ac7ec79bd7a306fc0e5ec68c64315f55f6cd70",
+      "source_build_receipt_sha256": "167897e04a49a6ab7257b67d63847bf202afc798b2cde653074b182b310bfb22",
       "imports": 0,
       "source_free_qualification": {
         "path": "current/qualification.json",
-        "bytes": 13803,
-        "sha256": "588f775a34d43c4c5552f0a9b06a8549aea4cd618689da0e6d3636c9e675b15b",
+        "bytes": 15736,
+        "sha256": "3c2695a5897d96feddbd8f1f510ffcad98cdae672e8ae61ab261fd678efb4a55",
         "accepted": true,
-        "runs": 21,
-        "compiler_sha256": "fc8b025e8a6ef8d1a4a41246e4b7a87d077b428c5738162bf1984602182dc3d5",
-        "product_manifest_sha256": "85cf62543bf5f148e3e0d8ce5a63fc86ae332ec4aa7562a981126a71374c23db",
+        "runs": 24,
+        "compiler_sha256": "eae0ea18618acc947ffdd59380676bf16516e90d16c26f04973817b46e5ba784",
+        "product_manifest_sha256": "89e6e16c7a248b96702ec0fe10190fdab50d18237a6a2ec74b8443eadb72a76c",
         "not_whole42_Q0": true,
         "not_controlled_model_pair_qualification": true
       }
     },
     "catalog": {
       "path": "catalog/libs-current-v2.json",
-      "sha256": "1c049a472505013d40f0771eae11684d119d0e857e2744c6e88ae7b4bcedc286",
+      "sha256": "b9d7162bcc40fd394a475e670f9cfd64173c8f4af1407a2a075802c499ad9b6d",
       "package_routes": 42,
       "api_routes": 247,
       "entries": 289
@@ -115,21 +115,13 @@
       "rule": "Reuse the original full-Q0 evidence for 41 unchanged Roots and the verified original producer/source custody for JSON0.0.6; this is not a fresh 42-Root Q0 run."
     },
     "lifecycle": {
-      "status": "prod-rehearsal-view",
-      "product_version": "0.0.27",
-      "released": true,
-      "discoverable": true,
-      "installable": true,
-      "authority": "release.json and channels/dev.json, channels/main.json, channels/prod.json",
-      "observed_release_version": "0.0.27",
-      "observed_prod_version": "0.0.27",
-      "rule": "Final local prod view backed by actual20 normal cells/141commands and6Native builds/6downloads. Exact final GLM review, immutable publisher and official download readback remain separate mandatory evidence; this local projection alone proves no external publication.",
-      "observed_dev_version": "0.0.27",
-      "observed_main_version": "0.0.27"
+      "status": "dev-staging",
+      "authority": "release.json and channels/prod.json",
+      "rule": "v028 branch staging only; v027 remains released until new normal/Native/final-model and official-download gates close."
     }
   },
   "pending_candidate_verification": {
-    "path": "channels/candidates/0.0.27.json",
+    "path": "channels/candidates/0.0.28.json",
     "candidate_sha256": "a379b7b61ce6070ee3dafc7b802d93c53915b8b0eef013b2c7f95124fefd4578",
     "status": "verified-exact-frozen-candidate",
     "rule": "Use this complete independent candidate SHA256; stage promotions must preserve its product set."

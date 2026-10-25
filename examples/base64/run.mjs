@@ -12,7 +12,7 @@ const installed=args.length?resolve(args[1]):null;
 const root='current-libs/wasmc-std/1.4.1';
 if(installed) {
   resolveCurrentPackage(readFileSync(new URL('../../catalog/libs-current-v2.json',import.meta.url)),
-    '1c049a472505013d40f0771eae11684d119d0e857e2744c6e88ae7b4bcedc286',
+    'b9d7162bcc40fd394a475e670f9cfd64173c8f4af1407a2a075802c499ad9b6d',
     {id:'wasmc-std',version:'1.4.1',manifest_sha256:'9db63b4f380f9a8fb7541addfde6608bbc48b3267ad903f838afedb98e74ebfc',root_inventory_sha256:'6978407b51e835a3893ac14cbb7ca2c46da48d0a778f2611f6de829af07bdf92'},
     path=>readFileSync(resolve(installed,path)));
 }

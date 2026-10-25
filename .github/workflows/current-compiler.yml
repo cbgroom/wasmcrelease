@@ -30,6 +30,9 @@ jobs:
           node scripts/test-if-branch-scope.mjs
           bun scripts/test-if-branch-scope.mjs
           deno run --allow-read scripts/test-if-branch-scope.mjs
+          node scripts/test-unit-result-match.mjs
+          bun scripts/test-unit-result-match.mjs
+          deno run --allow-read scripts/test-unit-result-match.mjs
           node examples/current/standard.mjs
           bun examples/current/standard.mjs
           deno run --allow-read examples/current/standard.mjs
@@ -40,3 +43,4 @@ jobs:
           cd "$stage"
           node scripts/test-current-compiler.mjs
           node scripts/test-current-compiler-integrity.mjs
+          node scripts/test-unit-result-match.mjs

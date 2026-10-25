@@ -203,23 +203,23 @@
         "root": "sdk/wasmc-core-runtime",
         "skill": "sdk/wasmc-core-runtime/SKILL.md",
         "release_status": "published",
-        "immutable_example": "v0.0.27",
-        "immutable_example_scope": "Final local v0.0.27 prod rehearsal view; exact final commit/tree live GLM single-model acceptance and independent review authorize the immutable tag, followed by actual publisher/download readback."
+        "immutable_example": "v0.0.28",
+        "immutable_example_scope": "Final local v0.0.28 prod rehearsal view; exact final commit/tree live GLM single-model acceptance and independent review authorize the immutable tag, followed by actual publisher/download readback."
       },
       "host-sdk": {
         "root": "sdk/wasmc-host",
         "skill": "sdk/wasmc-host/SKILL.md",
         "release_status": "published",
-        "immutable_example": "v0.0.27",
-        "immutable_example_scope": "Final local v0.0.27 prod rehearsal view; exact final commit/tree live GLM single-model acceptance and independent review authorize the immutable tag, followed by actual publisher/download readback."
+        "immutable_example": "v0.0.28",
+        "immutable_example_scope": "Final local v0.0.28 prod rehearsal view; exact final commit/tree live GLM single-model acceptance and independent review authorize the immutable tag, followed by actual publisher/download readback."
       },
       "native-cli": {
         "root": "sdk/wasmc-native-compiler",
         "skill": "sdk/wasmc-native-compiler/SKILL.md",
         "release_status": "published",
-        "immutable_example": "v0.0.27",
-        "binary_packaging": "Current v0.0.27 compiler carriers bind compiler fc8b025e8a6ef8d1a4a41246e4b7a87d077b428c5738162bf1984602182dc3d5 and canonical source38a8e154347724db63cb775addb9249f0974af4d. Actual six Native builds and six matching downloaded consumers passed; consult their current qualification receipts. CI/development artifacts alone do not establish immutable Release assets, and final v0.0.27 publication remains pending. Earlier v0.0.23 receipts remain historical. CI/development packages are not immutable release assets.",
-        "immutable_example_scope": "Final local v0.0.27 prod rehearsal view; exact final commit/tree live GLM single-model acceptance and independent review authorize the immutable tag, followed by actual publisher/download readback."
+        "immutable_example": "v0.0.28",
+        "binary_packaging": "Current v0.0.28 compiler carriers bind compiler eae0ea18618acc947ffdd59380676bf16516e90d16c26f04973817b46e5ba784 and canonical source68ac7ec79bd7a306fc0e5ec68c64315f55f6cd70. Actual six Native builds and six matching downloaded consumers passed; consult their current qualification receipts. CI/development artifacts alone do not establish immutable Release assets, and final v0.0.28 publication remains pending. Earlier v0.0.23 receipts remain historical. CI/development packages are not immutable release assets.",
+        "immutable_example_scope": "Final local v0.0.28 prod rehearsal view; exact final commit/tree live GLM single-model acceptance and independent review authorize the immutable tag, followed by actual publisher/download readback."
       },
       "lightweight-embedding": {
         "root": "host/embedding",
@@ -233,7 +233,7 @@
         "root": "runtime/client-foundation-v1",
         "release_status": "candidate",
         "authority": "runtime/client-foundation-v1/release-surface.json",
-        "immutable_example_scope": "Unreleased v0.0.27 candidate; final immutable tag and exact qualification remain required."
+        "immutable_example_scope": "Unreleased v0.0.28 candidate; final immutable tag and exact qualification remain required."
       }
     },
     "intent_routes": [
@@ -287,9 +287,9 @@
   },
   "agent_capability_projection": {
     "schema": "wasmc.release-agent-capabilities/v1",
-    "product_release": "v0.0.27",
+    "product_release": "v0.0.28",
     "guidance_scope": {
-      "status": "included-in-v0.0.27-prod-rehearsal-view",
+      "status": "included-in-v0.0.28-prod-rehearsal-view",
       "included_in_product": true,
       "lifecycle_authority": "release.json and channels/prod.json",
       "rule": "This projection is the final local prod capability/lifecycle view. Exact channel/GLM single-model qualification and publisher readback remain separate authorities.",
@@ -458,20 +458,20 @@
       "qualification_scope": "Immutable containing u64 implementation authority; current complete source and canonical master gates remain independent."
     },
     "release": {
-      "product": "v0.0.27",
+      "product": "v0.0.28",
       "lifecycle_authority": "release.json",
-      "compiler_source_authority": "38a8e154347724db63cb775addb9249f0974af4d",
-      "compiler_sha256": "fc8b025e8a6ef8d1a4a41246e4b7a87d077b428c5738162bf1984602182dc3d5",
+      "compiler_source_authority": "68ac7ec79bd7a306fc0e5ec68c64315f55f6cd70",
+      "compiler_sha256": "eae0ea18618acc947ffdd59380676bf16516e90d16c26f04973817b46e5ba784",
       "ordinary_source_u64": "supported",
-      "reason": "Current v0.0.27 staged compiler supports the same qualified full-width u64 contract; lifecycle remains channel-owned.",
+      "reason": "Current v0.0.28 staged compiler supports the same qualified full-width u64 contract; lifecycle remains channel-owned.",
       "released": true,
       "lifecycle_status": "prod-rehearsal-view"
     },
     "adjacent_type_decisions": {
-      "u32": "included in the v0.0.27 product compiler; no repair was required",
+      "u32": "included in the v0.0.28 product compiler; no repair was required",
       "char": "not implemented on the cited producer authority and not released; do not substitute arbitrary u32"
     },
-    "answer_rule": "When asked whether u64 is fixed or supported, report that producer master and the v0.0.27 product compiler both support it, then read release.json for the current published lifecycle stage. Do not infer async, map or char support.",
+    "answer_rule": "When asked whether u64 is fixed or supported, report that producer master and the v0.0.28 product compiler both support it, then read release.json for the current published lifecycle stage. Do not infer async, map or char support.",
     "producer_anchor_scope": "Immutable 566eff42 containing-u64 qualification; current canonical source and product build are bound separately."
   },
   "lib_ecosystem_control_plane": {
@@ -495,7 +495,7 @@
   "agent_task_routes": {
     "rule": "When one route matches the request, read this record first and stop once its evidence answers the task. Do not scan release history, unrelated compatibility identities, implementation tests or broad manifests to reconfirm it. Report every identity in full or omit an identity that the answer does not need.",
     "license-policy": {
-      "intent": "decide whether the v0.0.27 product permits research, production or commercial use",
+      "intent": "decide whether the v0.0.28 product permits research, production or commercial use",
       "authority_file": "license-policy.json",
       "license_file": "LICENSE",
       "source_available": true,
@@ -503,18 +503,18 @@
       "noncommercial_research": true,
       "commercial_use": false,
       "production_use": false,
-      "prior_tag_rule": "Read LICENSE from the exact immutable tag; v0.0.27 does not rewrite or revoke an earlier grant.",
+      "prior_tag_rule": "Read LICENSE from the exact immutable tag; v0.0.28 does not rewrite or revoke an earlier grant.",
       "check_command": "node scripts/validate-license-policy.mjs",
       "answer_boundary": "Report the exact revision boundary and stop; never describe this policy as open source or as a retroactive revocation."
     },
     "release-orientation": {
       "intent": "identify the immutable release, public Agent entrypoint and compiler authority",
-      "product_version": "v0.0.27",
+      "product_version": "v0.0.28",
       "public_agent_entrypoint": "AGENTS.md",
       "compiler": {
         "path": "current/wasmc_compiler.wasm",
         "bytes": 1960808,
-        "sha256": "fc8b025e8a6ef8d1a4a41246e4b7a87d077b428c5738162bf1984602182dc3d5",
+        "sha256": "eae0ea18618acc947ffdd59380676bf16516e90d16c26f04973817b46e5ba784",
         "imports": 0
       },
       "facade": {
@@ -537,7 +537,7 @@
       "authority_file": "release-lib-route-readiness.json",
       "intent": "decide whether every released Lib package and exported API route is synchronized for a new formal release candidate",
       "product": {
-        "version": "0.0.27",
+        "version": "0.0.28",
         "package_routes": 42,
         "api_routes": 247,
         "candidate_extras": 0,
@@ -583,12 +583,12 @@
       "check_commands": [
         "node scripts/lib-route-closure.mjs --check",
         "node scripts/current-compiler-integrity.mjs --require-qualification",
-        "node scripts/release-candidate.mjs verify channels/candidates/0.0.27.json --candidate-sha256 a379b7b61ce6070ee3dafc7b802d93c53915b8b0eef013b2c7f95124fefd4578"
+        "node scripts/release-candidate.mjs verify channels/candidates/0.0.28.json --candidate-sha256 a379b7b61ce6070ee3dafc7b802d93c53915b8b0eef013b2c7f95124fefd4578"
       ],
       "answer_boundary": "Stop after reporting the product closure and the exact lifecycle state read from release.json/channels; never infer a transition.",
       "stop": "This record is sufficient for the matching readiness decision. Do not scan manifests, histories or implementation scripts unless one of its check commands fails.",
       "pending_candidate_verification": {
-        "path": "channels/candidates/0.0.27.json",
+        "path": "channels/candidates/0.0.28.json",
         "candidate_sha256": "a379b7b61ce6070ee3dafc7b802d93c53915b8b0eef013b2c7f95124fefd4578",
         "status": "verified-exact-frozen-candidate",
         "rule": "Use this complete independent candidate SHA256; stage promotions must preserve its product set."
@@ -609,10 +609,10 @@
       }
     },
     "dynamic-client-gateway": {
-      "intent": "determine the v0.0.27 Client/Gateway dynamic Lib surface, lifecycle and limits",
+      "intent": "determine the v0.0.28 Client/Gateway dynamic Lib surface, lifecycle and limits",
       "authority_file": "runtime/client-foundation-v1/release-surface.json",
       "status": "incubating",
-      "product_version": "0.0.27",
+      "product_version": "0.0.28",
       "formal_lib_package": false,
       "lifecycle_authority": "release.json",
       "verify_commands": [
@@ -657,14 +657,14 @@
     },
     "released-base64": {
       "intent": "find and approve the released Base64 capability",
-      "product_release": "v0.0.27",
+      "product_release": "v0.0.28",
       "package": "wasmc:std@1.4.1",
       "root": "standard/wasmc-std/1.4.1",
       "apis": [
         "wasmc:std@1.4.1/base64#try-encode-standard",
         "wasmc:std@1.4.1/base64#try-decode-standard"
       ],
-      "search_command": "node scripts/wasmc-lib.mjs search base64 --catalog-sha256 1c049a472505013d40f0771eae11684d119d0e857e2744c6e88ae7b4bcedc286 --limit 8",
+      "search_command": "node scripts/wasmc-lib.mjs search base64 --catalog-sha256 b9d7162bcc40fd394a475e670f9cfd64173c8f4af1407a2a075802c499ad9b6d --limit 8",
       "search_is_selection_authority": false,
       "approval": {
         "skill": "standard/wasmc-std/1.4.1/SKILL.md",
@@ -677,8 +677,8 @@
       },
       "catalog": {
         "path": "catalog/libs-current-v2.json",
-        "sha256": "1c049a472505013d40f0771eae11684d119d0e857e2744c6e88ae7b4bcedc286",
-        "release_snapshot": "v0.0.27",
+        "sha256": "b9d7162bcc40fd394a475e670f9cfd64173c8f4af1407a2a075802c499ad9b6d",
+        "release_snapshot": "v0.0.28",
         "carried_forward": false
       },
       "exact_report": {
@@ -688,7 +688,7 @@
           "wasmc:std@1.4.1/base64#try-encode-standard",
           "wasmc:std@1.4.1/base64#try-decode-standard"
         ],
-        "catalog_sha256": "1c049a472505013d40f0771eae11684d119d0e857e2744c6e88ae7b4bcedc286",
+        "catalog_sha256": "b9d7162bcc40fd394a475e670f9cfd64173c8f4af1407a2a075802c499ad9b6d",
         "wit_sha256": "5abbed39c185835cfbbc5c2b961fb904b3ad66f42b22aef1ac7a40835ee246e9",
         "artifact_sha256": "b79a499c8300361125e7fcdae02170184b82d4bbeff4d8f24ed95f3fd4db8d3b",
         "companion_sha256": "b06eb9a32dddb75e278cd8aa9b1126f6e4b51e885a83897c80f7b5da85b81c3f",
@@ -698,7 +698,7 @@
         "library_import_module": "wasmc:lib/wasmc.std@1.4.1"
       },
       "final_answer_policy": "After verification, output package and both APIs exactly, then only these statements: search discovered the candidate but was not authority; resolve verified catalog_sha256, manifest_sha256, root_inventory_sha256, wit_sha256 and artifact_sha256; behavior separately verified companion_sha256 and import_module and passed. Do not reproduce command arguments, digest values, partial digests or any ellipsis character. Read channels for released, discoverable and installable states.",
-      "resolve_command": "node scripts/wasmc-lib.mjs resolve wasmc-std 1.4.1 --catalog-sha256 1c049a472505013d40f0771eae11684d119d0e857e2744c6e88ae7b4bcedc286 --manifest-sha256 9db63b4f380f9a8fb7541addfde6608bbc48b3267ad903f838afedb98e74ebfc --root-inventory-sha256 6978407b51e835a3893ac14cbb7ca2c46da48d0a778f2611f6de829af07bdf92",
+      "resolve_command": "node scripts/wasmc-lib.mjs resolve wasmc-std 1.4.1 --catalog-sha256 b9d7162bcc40fd394a475e670f9cfd64173c8f4af1407a2a075802c499ad9b6d --manifest-sha256 9db63b4f380f9a8fb7541addfde6608bbc48b3267ad903f838afedb98e74ebfc --root-inventory-sha256 6978407b51e835a3893ac14cbb7ca2c46da48d0a778f2611f6de829af07bdf92",
       "states": {
         "qualified": true,
         "admitted": true,
@@ -754,7 +754,7 @@
     "dynamic-client-gateway": {
       "request": "is the dynamic Client and Gateway released and is it a formal Lib",
       "product_inclusion": {
-        "version": "0.0.27",
+        "version": "0.0.28",
         "surface_status": "incubating",
         "lifecycle_authority": "release.json"
       },
@@ -811,31 +811,31 @@
       }
     }
   },
-  "release_version": "0.0.27",
+  "release_version": "0.0.28",
   "current_product": {
-    "version": "0.0.27",
+    "version": "0.0.28",
     "compiler": {
       "path": "current/wasmc_compiler.wasm",
-      "bytes": 2010461,
-      "sha256": "fc8b025e8a6ef8d1a4a41246e4b7a87d077b428c5738162bf1984602182dc3d5",
-      "source_commit": "38a8e154347724db63cb775addb9249f0974af4d",
-      "source_build_receipt_sha256": "4fe23a0fd88711ce2b85e5565a1f9420a16c761dc41dd34509dc121afcd6190a",
+      "bytes": 2041733,
+      "sha256": "eae0ea18618acc947ffdd59380676bf16516e90d16c26f04973817b46e5ba784",
+      "source_commit": "68ac7ec79bd7a306fc0e5ec68c64315f55f6cd70",
+      "source_build_receipt_sha256": "167897e04a49a6ab7257b67d63847bf202afc798b2cde653074b182b310bfb22",
       "imports": 0,
       "source_free_qualification": {
         "path": "current/qualification.json",
-        "bytes": 13803,
-        "sha256": "588f775a34d43c4c5552f0a9b06a8549aea4cd618689da0e6d3636c9e675b15b",
+        "bytes": 15736,
+        "sha256": "3c2695a5897d96feddbd8f1f510ffcad98cdae672e8ae61ab261fd678efb4a55",
         "accepted": true,
-        "runs": 21,
-        "compiler_sha256": "fc8b025e8a6ef8d1a4a41246e4b7a87d077b428c5738162bf1984602182dc3d5",
-        "product_manifest_sha256": "85cf62543bf5f148e3e0d8ce5a63fc86ae332ec4aa7562a981126a71374c23db",
+        "runs": 24,
+        "compiler_sha256": "eae0ea18618acc947ffdd59380676bf16516e90d16c26f04973817b46e5ba784",
+        "product_manifest_sha256": "89e6e16c7a248b96702ec0fe10190fdab50d18237a6a2ec74b8443eadb72a76c",
         "not_whole42_Q0": true,
         "not_controlled_model_pair_qualification": true
       }
     },
     "catalog": {
       "path": "catalog/libs-current-v2.json",
-      "sha256": "1c049a472505013d40f0771eae11684d119d0e857e2744c6e88ae7b4bcedc286",
+      "sha256": "b9d7162bcc40fd394a475e670f9cfd64173c8f4af1407a2a075802c499ad9b6d",
       "package_routes": 42,
       "api_routes": 247,
       "entries": 289
@@ -875,17 +875,9 @@
       "rule": "Reuse the original full-Q0 evidence for 41 unchanged Roots and the verified original producer/source custody for JSON0.0.6; this is not a fresh 42-Root Q0 run."
     },
     "lifecycle": {
-      "status": "prod-rehearsal-view",
-      "product_version": "0.0.27",
-      "released": true,
-      "discoverable": true,
-      "installable": true,
-      "authority": "release.json and channels/dev.json, channels/main.json, channels/prod.json",
-      "observed_release_version": "0.0.27",
-      "observed_prod_version": "0.0.27",
-      "rule": "Final local prod view backed by actual20 normal cells/141commands and6Native builds/6downloads. Exact final GLM review, immutable publisher and official download readback remain separate mandatory evidence; this local projection alone proves no external publication.",
-      "observed_dev_version": "0.0.27",
-      "observed_main_version": "0.0.27"
+      "status": "dev-staging",
+      "authority": "release.json and channels/prod.json",
+      "rule": "v028 branch staging only; v027 remains released until new normal/Native/final-model and official-download gates close."
     }
   }
 }
