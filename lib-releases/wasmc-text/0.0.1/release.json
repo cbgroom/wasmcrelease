@@ -1,0 +1,73 @@
+{
+  "schema": "wasmc.standalone-lib-release/v1",
+  "id": "wasmc-text",
+  "version": "0.0.1",
+  "tag": "wasmc-text-v0.0.1",
+  "compatible_release": "v0.0.27",
+  "scope": "standalone additive ordinary string-value Lib; existing current catalogs and compiler Latest unchanged",
+  "APIs": 30,
+  "root_manifest": {
+    "path": "root/lib.json",
+    "bytes": 7486,
+    "sha256": "a49379289b2b54da12ed0874af55e46e7b58966235d9096637b0c249e1ba49dd",
+    "mode": "0644"
+  },
+  "root_core": {
+    "path": "root/artifact.wasm",
+    "bytes": 67966,
+    "sha256": "c3b6966c906896575c2d08cbbf61d1d4861cb42d2f30aea994b8182fd851b300",
+    "mode": "0644"
+  },
+  "root_component": {
+    "path": "root/component.wasm",
+    "bytes": 75815,
+    "sha256": "69c3c5924f4e8cfc45dc10478326fba6da6a5d99165522e30f05082272abd961",
+    "mode": "0644"
+  },
+  "root_wit": {
+    "path": "root/lib.wit",
+    "bytes": 1877,
+    "sha256": "f2f6d81c426d239f3b13caad86a319c998abee93cad48f532ed0ea583a822bd0",
+    "mode": "0644"
+  },
+  "compiler": {
+    "path": "compiler/wasmc_compiler.wasm",
+    "bytes": 2010461,
+    "sha256": "fc8b025e8a6ef8d1a4a41246e4b7a87d077b428c5738162bf1984602182dc3d5",
+    "mode": "0644"
+  },
+  "SDK": {
+    "path": "compiler/canonical-host.mjs",
+    "bytes": 6103,
+    "sha256": "3e95ff2514c6b7ec20f49653c8964f8c642dd248cfd88d539518ddda725d58e0",
+    "mode": "0644"
+  },
+  "CoreLib": {
+    "path": "compiler/lib_core.wasm",
+    "bytes": 2632162,
+    "sha256": "b06eb9a32dddb75e278cd8aa9b1126f6e4b51e885a83897c80f7b5da85b81c3f",
+    "mode": "0644"
+  },
+  "profile": {
+    "path": "checked-chunk-profile.json",
+    "bytes": 4483,
+    "sha256": "0e49087f6460ae13e669c8af8fd1146c78c2e47d7a4a0faff22835a3e411f19a",
+    "mode": "0644"
+  },
+  "private_measured_Code": "b7d3c924b894a6847f0deee4055ff52ef9a7a213",
+  "qualifications": {
+    "native_tests": 8,
+    "reproducible_Root_files": 18,
+    "ordinary_Guest_calls": 544,
+    "Component_SDK_calls": 512
+  },
+  "runtime_scope": {
+    "Node": "full ordinary 34cases/544same-instance calls",
+    "Deno": "full ordinary 34cases/544same-instance calls",
+    "Bun1.3.14": "compiler-only; multi-memory App unsupported"
+  },
+  "ordinary_Option_string_delta": "get-or/strip-prefix-or/strip-suffix-or/from-utf8-or return exactly explicit caller fallback; no separate status; one public form each",
+  "transport": "owned WIT values; copies at boundary, eager lists; not resident zero-copy",
+  "deployment_performed": false,
+  "fuel_claim": "No unlimited-input or fixed-platform-fuel guarantee; actual quotas apply"
+}

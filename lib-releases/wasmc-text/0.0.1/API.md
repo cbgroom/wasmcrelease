@@ -1,0 +1,1 @@
+WIT root/lib.wit is authoritative. Thirty operations follow stable Rust str/String semantics, with explicit adaptations in README.md and root/references/agent-delta.json. Inputs and output are subject to actual transport/memory/fuel quotas.
