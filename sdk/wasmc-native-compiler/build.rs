@@ -3,7 +3,7 @@ use std::{env, fs, path::PathBuf};
 use sha2::{Digest, Sha256};
 use wasmtime::{Config, Engine, OptLevel};
 
-const COMPILER_SHA256: &str = "42c547a4f0819c081d66fddebedfa984098cbdb18d463c6a872e62a8683d70fe";
+const COMPILER_SHA256: &str = "fc8b025e8a6ef8d1a4a41246e4b7a87d077b428c5738162bf1984602182dc3d5";
 
 fn main() {
     // Windows build-script processes have a much smaller default stack than
