@@ -1,0 +1,93 @@
+{
+  "rehearsal_commit": "83b7c908af76f89795a137e65f4962f1df9ba640",
+  "commands": [
+    {
+      "case": "release-orientation",
+      "argv": [
+        "node",
+        "scripts/agent-release-orientation.mjs",
+        "--check"
+      ],
+      "exit": 0,
+      "stdout_sha256": "8b37810f59d9249d35a03a357dbf8b562cfdba4aa3a3b22a6f37c5ee8e6da843",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "ordinary-source-positive",
+      "argv": [
+        "node",
+        "examples/agent-quickstart/run-pair.mjs"
+      ],
+      "exit": 0,
+      "stdout_sha256": "e84fad523d4e3929cf69df4792a6a2e71e6a95a701c71146daabdbb73fa38e76",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "library-first-selection-search",
+      "argv": [
+        "node",
+        "scripts/wasmc-lib.mjs",
+        "search",
+        "base64",
+        "--catalog-sha256",
+        "1c049a472505013d40f0771eae11684d119d0e857e2744c6e88ae7b4bcedc286",
+        "--limit",
+        "8"
+      ],
+      "exit": 0,
+      "stdout_sha256": "7c76c7c82ffe5c7946c198d5e8aa9de131203db2b1d729a3c7d4da62be2dc21b",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "library-first-selection-resolve",
+      "argv": [
+        "node",
+        "scripts/wasmc-lib.mjs",
+        "resolve",
+        "wasmc-std",
+        "1.4.1",
+        "--catalog-sha256",
+        "1c049a472505013d40f0771eae11684d119d0e857e2744c6e88ae7b4bcedc286",
+        "--manifest-sha256",
+        "9db63b4f380f9a8fb7541addfde6608bbc48b3267ad903f838afedb98e74ebfc",
+        "--root-inventory-sha256",
+        "6978407b51e835a3893ac14cbb7ca2c46da48d0a778f2611f6de829af07bdf92"
+      ],
+      "exit": 0,
+      "stdout_sha256": "2aa3701f78f68513c97718ce9726f1a262951b55be2daf97cb88b9cfa122657f",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "library-first-selection-behavior",
+      "argv": [
+        "node",
+        "examples/base64/run.mjs"
+      ],
+      "exit": 0,
+      "stdout_sha256": "faab4d6e2a49d5e92244c6a0a82fe77fadf102e927479b58cdc3db28069062e3",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "compiler",
+      "argv": [
+        "node",
+        "scripts/current-compiler-integrity.mjs",
+        "--require-qualification"
+      ],
+      "exit": 0,
+      "stdout_sha256": "beab734c71d54ae2f26a43923ebc941fb085befcd0ee54d65156a8e9c73b4757",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "all-quickstart-routes",
+      "argv": [
+        "node",
+        "scripts/test-agent-quickstart.mjs"
+      ],
+      "exit": 0,
+      "stdout_sha256": "6595a3c0dc557fc550c337003f7d1293be9c3d34dfd956ad1e04fa1846df09e4",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "all_passed": true
+}
