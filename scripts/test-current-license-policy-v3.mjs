@@ -1,3 +1,4 @@
+import {collectStandaloneReleaseNotices} from './standalone-release-notices-v1.mjs';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {mkdir,mkdtemp,readFile,writeFile,cp,realpath} from 'node:fs/promises';
@@ -138,3 +139,11 @@ try{
     legal_compatibility:false,linked_dependency_completeness:false,formal_release:false,outcomes};
   await writeFile(join(state,'receipt.json'),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify({...report,state_root:state}));
 }catch(error){await writeFile(join(state,'failure.json'),JSON.stringify({message:error.message,stack:error.stack},null,2)+'\n');throw error;}
+
+const standalone=await collectStandaloneReleaseNotices(read);assert.equal(standalone.size,18);
+for(const [name,alter] of [['inventory',b=>Buffer.concat([b,Buffer.from(' ')] )],['notice',b=>{const c=Buffer.from(b);c[0]^=1;return c;}],['missing',()=>{throw Error('missing');}]]){
+ const target=name==='inventory'?'lib-releases/wasmc-json/0.0.7/manifest.json':[...standalone.keys()][0];
+ await assert.rejects(()=>collectStandaloneReleaseNotices(async p=>p===target?alter(await read(p)):read(p)));
+}
+assert.equal(isExactDeclaredNotice('lib-releases/wasmc-json/0.0.7/licenses/unlisted.txt',Buffer.from('MIT License'),standalone),false);
+console.log(JSON.stringify({accepted:true,immutable_standalone_notices:18,rejections:4,exact_bytes_only:true}));

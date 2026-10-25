@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readFile, readdir, lstat } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import {collectStandaloneReleaseNotices} from './standalone-release-notices-v1.mjs';
 import {isExactDeclaredNotice} from './declared-thirdparty-notices.mjs';
 import {collectCurrentDeclaredThirdPartyNotices} from './current-license-policy-v3.mjs';
 
@@ -94,6 +95,11 @@ const declaredNotices = await collectCurrentDeclaredThirdPartyNotices(
   },
 );
 
+// Source-free standalone releases retain their independently pinned original notices.
+for(const [noticePath,pin] of await collectStandaloneReleaseNotices(async relative=>{
+ let current=root;for(const segment of relative.split('/')){current=path.join(current,segment);assert.ok(!(await lstat(current)).isSymbolicLink(),'linked standalone notice');}
+ assert.ok((await lstat(current)).isFile());return readFile(current);
+}))declaredNotices.set(noticePath,pin);
 async function walk(directory, relative = "") {
   const found = [];
   for (const entry of await readdir(directory, { withFileTypes: true })) {
