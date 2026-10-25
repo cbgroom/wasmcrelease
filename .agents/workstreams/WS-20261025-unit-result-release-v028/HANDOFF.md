@@ -1,3 +1,9 @@
+# Completed v0.0.28 formal publication and installed verification
+
+Completed formal WAsmC v0.0.28 publication (default Latest) at 2026-10-25T19:30:02Z, exact99138c15679c7f3b196332038abd06d750556a3f/treef8c3de7d5c21d76125d11123fcb0e1711205f828. All20assets anonymously downloaded;3766Gitblobs/modes and6Native inventories verified. Actual21installedcommands pass including3hosts/3456unitcalls/3840mockHosteffects/1152errorhandledrops/1920malformedtraps/sameinstancerecovery andMacNative7parity/6Wasmi/6AOT/13noclobber plus12rejections. Raw/jsDelivr4exactdownloads pass. Baseline20normal141commands and freshdev2Ubuntu15candidate checks retain separate actualsources with2145unchangedfile/3checkerfile bridge. Native6builds+6matchingdownloads allpassed, no unchangedproduct rebuild. FinalexactGLM6andindependent10commands passed afteronebounded completecohort recovery; originalcase-sensitive state-label failure remains, no casestitching or weakened gates. CoreLib/42Roots/standard/JSON007/Text001/frozenversions/foreignWIP preserved. No realinstance orServiceeffect. Publication proof: .agents/workstreams/WS-20261025-unit-result-release-v028/publication/closure.json.
+
+Historical checkpoints follow.
+
 # Unit Result compiler release v0.0.28
 
 Task state: started
