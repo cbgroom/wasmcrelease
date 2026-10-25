@@ -1,0 +1,607 @@
+{
+  "schema": "wasmc.public-ci-suite/v1",
+  "label": "local-v029-candidate-clean",
+  "family": "candidate",
+  "runtime": "node",
+  "mirror": "github",
+  "source_commit": "e79ff06f2c531b96b15262310b3f877c69a92f90",
+  "dirty": true,
+  "platform": "darwin",
+  "arch": "arm64",
+  "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+  "runtime_version": "v26.12.1",
+  "tests": [
+    {
+      "id": "current-v3-product-identity",
+      "invocation": {
+        "command": "node",
+        "args": [
+          "scripts/current-release-identity.mjs"
+        ]
+      },
+      "accepted": true,
+      "exit_code": 0,
+      "timed_out": false,
+      "elapsed_ms": 1722,
+      "observation": {
+        "accepted": true,
+        "version": "0.0.29",
+        "candidate": "channels/candidates/0.0.29.json",
+        "product_set_sha256": "a308da279496329f75958b8cfbd11d48e8dcd1ecb6b8a6603d8a62adf4f1e13b",
+        "current_packages": 42
+      },
+      "rust_test_summaries": []
+    },
+    {
+      "id": "current-complete-product-reopen-negatives",
+      "invocation": {
+        "command": "node",
+        "args": [
+          "scripts/test-current-product-v3.mjs",
+          "--product",
+          ".",
+          "--catalog-sha256",
+          "86981ab84b16cc06684dc87da28c436b190d79c8c9c312ffa7f27206e444cb5a",
+          "--out",
+          "target/ci/current-product-controls"
+        ]
+      },
+      "accepted": true,
+      "exit_code": 0,
+      "timed_out": false,
+      "elapsed_ms": 8134,
+      "observation": {
+        "schema": "wasmc.current-product-v3-controls/v1",
+        "accepted": true,
+        "tests": 43,
+        "catalog_sha256": "86981ab84b16cc06684dc87da28c436b190d79c8c9c312ffa7f27206e444cb5a",
+        "test_source_sha256": "3791f3790254f3ead2da27036fcbcf60e7d2bd5afa50eccd163b725af439307a",
+        "results": [
+          {
+            "name": "canonical full-path inventory order across directory prefixes",
+            "passed": true
+          },
+          {
+            "name": "real composed Core snapshot all289 lookups and full pagination; original full-base verified",
+            "passed": true
+          },
+          {
+            "name": "independent catalog mismatch",
+            "passed": true,
+            "rejected": true
+          },
+          {
+            "name": "actual modified artifact.wasm",
+            "passed": true,
+            "rejected": true
+          },
+          {
+            "name": "actual modified component.wasm",
+            "passed": true,
+            "rejected": true
+          },
+          {
+            "name": "actual modified lib.wit",
+            "passed": true,
+            "rejected": true
+          },
+          {
+            "name": "actual modified LICENSE",
+            "passed": true,
+            "rejected": true
+          },
+          {
+            "name": "actual modified Cargo.toml",
+            "passed": true,
+            "rejected": true
+          },
+          {
+            "name": "missing current implementation",
+            "passed": true,
+            "rejected": true
+          },
+          {
+            "name": "duplicate implementation",
+            "passed": true,
+            "rejected": true
+          },
+          {
+            "name": "native-source cannot claim Wasm",
+            "passed": true,
+            "rejected": true
+          },
+          {
+            "name": "unsafe package path",
+            "passed": true,
+            "rejected": true
+          },
+          {
+            "name": "unsealed extra Root inventory",
+            "passed": true,
+            "rejected": true
+          },
+          {
+            "name": "self-rehashed artifact fails Q0 root authority",
+            "passed": true,
+            "rejected": true
+          },
+          {
+            "name": "self-rehashed API omission fails WIT closure",
+            "passed": true,
+            "rejected": true
+          },
+          {
+            "name": "self-rehashed authored source fails Q0 input",
+            "passed": true,
+            "rejected": true
+          },
+          {
+            "name": "actual undeclared current file",
+            "passed": true,
+            "rejected": true
+          },
+          {
+            "name": "controlled install wasm-core-component",
+            "passed": true,
+            "transport_fixture": true
+          },
+          {
+            "name": "install wasm-core-component rejects http302",
+            "passed": true
+          },
+          {
+            "name": "install wasm-core-component rejects truncated",
+            "passed": true
+          },
+          {
+            "name": "install wasm-core-component rejects oversized",
+            "passed": true
+          },
+          {
+            "name": "install wasm-core-component rejects digest",
+            "passed": true
+          },
+          {
+            "name": "self-rehashed lock cannot grant authority wasm-core-component",
+            "passed": true
+          },
+          {
+            "name": "controlled install native-source",
+            "passed": true,
+            "transport_fixture": true
+          },
+          {
+            "name": "install native-source rejects http302",
+            "passed": true
+          },
+          {
+            "name": "install native-source rejects truncated",
+            "passed": true
+          },
+          {
+            "name": "install native-source rejects oversized",
+            "passed": true
+          },
+          {
+            "name": "install native-source rejects digest",
+            "passed": true
+          },
+          {
+            "name": "self-rehashed lock cannot grant authority native-source",
+            "passed": true
+          },
+          {
+            "name": "controlled install native-module",
+            "passed": true,
+            "transport_fixture": true
+          },
+          {
+            "name": "install native-module rejects http302",
+            "passed": true
+          },
+          {
+            "name": "install native-module rejects truncated",
+            "passed": true
+          },
+          {
+            "name": "install native-module rejects oversized",
+            "passed": true
+          },
+          {
+            "name": "install native-module rejects digest",
+            "passed": true
+          },
+          {
+            "name": "self-rehashed lock cannot grant authority native-module",
+            "passed": true
+          },
+          {
+            "name": "controlled install native-binary",
+            "passed": true,
+            "transport_fixture": true
+          },
+          {
+            "name": "install native-binary rejects http302",
+            "passed": true
+          },
+          {
+            "name": "install native-binary rejects truncated",
+            "passed": true
+          },
+          {
+            "name": "install native-binary rejects oversized",
+            "passed": true
+          },
+          {
+            "name": "install native-binary rejects digest",
+            "passed": true
+          },
+          {
+            "name": "self-rehashed lock cannot grant authority native-binary",
+            "passed": true
+          },
+          {
+            "name": "actual byte-identical linked input",
+            "passed": true,
+            "rejected": true
+          },
+          {
+            "name": "actual filesystem extra Root file",
+            "passed": true,
+            "rejected": true
+          }
+        ],
+        "scope": "Actual42 data/WIT/Root/Core Search and four delivery kinds with controlled transport/faults; immutable public network install and whole release remain independent"
+      },
+      "rust_test_summaries": []
+    },
+    {
+      "id": "current-original-license-reopen-negatives",
+      "invocation": {
+        "command": "node",
+        "args": [
+          "scripts/test-current-license-policy-v3.mjs"
+        ]
+      },
+      "accepted": true,
+      "exit_code": 0,
+      "timed_out": false,
+      "elapsed_ms": 20217,
+      "observation": {
+        "accepted": true,
+        "immutable_standalone_notices": 18,
+        "rejections": 4,
+        "exact_bytes_only": true
+      },
+      "rust_test_summaries": []
+    },
+    {
+      "id": "library-first-teaching-and-routes",
+      "invocation": {
+        "command": "node",
+        "args": [
+          "scripts/test-library-first.mjs"
+        ]
+      },
+      "accepted": true,
+      "exit_code": 0,
+      "timed_out": false,
+      "elapsed_ms": 2117,
+      "observation": {
+        "accepted": true,
+        "teaching_commands": 2,
+        "checked_hits": 5,
+        "negative_tests": 6,
+        "network_access": false
+      },
+      "rust_test_summaries": []
+    },
+    {
+      "id": "live-agent-trace-evaluator",
+      "invocation": {
+        "command": "node",
+        "args": [
+          "scripts/test-live-agent-trace-evaluation-v1.mjs"
+        ]
+      },
+      "accepted": true,
+      "exit_code": 0,
+      "timed_out": false,
+      "elapsed_ms": 51,
+      "observation": {
+        "accepted": true,
+        "schema": "wasmc.live-agent-trace-evaluation/v1",
+        "profiles": [
+          "general",
+          "status-query"
+        ],
+        "negative_signals": 10,
+        "terminal_answer_controls": 8
+      },
+      "rust_test_summaries": []
+    },
+    {
+      "id": "fresh-pi-two-model-cohort-contract",
+      "invocation": {
+        "command": "node",
+        "args": [
+          "scripts/test-fresh-agent-learning-v1.mjs"
+        ]
+      },
+      "accepted": true,
+      "exit_code": 0,
+      "timed_out": false,
+      "elapsed_ms": 74,
+      "observation": {
+        "accepted": true,
+        "schema": "wasmc.fresh-agent-learning/v3",
+        "cases": 6,
+        "rejects_single_model_claim": true,
+        "requires_exact_controlled_pair": true,
+        "rejects_split_pi_version": true,
+        "rejects_case_error": true,
+        "rejects_retry_over_budget": true,
+        "minimum_execution_evidence_controls": 8,
+        "protocol_binding_controls": 13
+      },
+      "rust_test_summaries": []
+    },
+    {
+      "id": "pi-pre-release-candidate-binding-contract",
+      "invocation": {
+        "command": "node",
+        "args": [
+          "scripts/test-pi-pre-release-gate-v1.mjs"
+        ]
+      },
+      "accepted": true,
+      "exit_code": 0,
+      "timed_out": false,
+      "elapsed_ms": 64,
+      "observation": {
+        "accepted": true,
+        "rejects_stale_rehearsal_commit_or_tree": true,
+        "rejects_candidate_or_product_drift": true,
+        "rejects_incomplete_pair": true,
+        "rejects_structural_or_white_box_failure": true,
+        "rejects_retry_or_wrong_first_answer": true,
+        "rejects_protocol_or_bound_artifact_drift": true,
+        "explicit_glm_single_model_accepted": true,
+        "single_model_negative_controls": 19,
+        "historical_pair_default_preserved": true,
+        "live_model_run": false
+      },
+      "rust_test_summaries": []
+    },
+    {
+      "id": "agent-quickstart-execution",
+      "invocation": {
+        "command": "node",
+        "args": [
+          "scripts/test-agent-quickstart.mjs"
+        ]
+      },
+      "accepted": true,
+      "exit_code": 0,
+      "timed_out": false,
+      "elapsed_ms": 1273,
+      "observation": {
+        "accepted": true,
+        "schema": "wasmc.agent-quickstart/v1",
+        "routes": 10,
+        "pair": {
+          "accepted": true,
+          "source": "examples/agent-quickstart/pair.wasmc",
+          "core_bytes": 49,
+          "core_sha256": "55f3c7e3d09b564b89b8268299a69569a33b856b46405cb4c4dd51634afec84e",
+          "imports": [],
+          "exports": [
+            {
+              "name": "run",
+              "kind": "function"
+            }
+          ],
+          "call": "run(5, true)",
+          "result": [
+            1,
+            1
+          ]
+        },
+        "base64": {
+          "accepted": true,
+          "installed_root_verified": false,
+          "rounds": 256,
+          "explicit_drops": 1024,
+          "invalid_input_rejected": true,
+          "persistent_provider_memory_bytes": 3670016,
+          "package": "wasmc:std@1.4.1",
+          "apis": [
+            "wasmc:std@1.4.1/base64#try-encode-standard",
+            "wasmc:std@1.4.1/base64#try-decode-standard"
+          ],
+          "artifact_sha256": "b79a499c8300361125e7fcdae02170184b82d4bbeff4d8f24ed95f3fd4db8d3b",
+          "import_module": "wasmc:lib/wasmc.lib_managed_object_heap@4.9.0",
+          "input_utf8": "abc",
+          "encoded_utf8": "YWJj",
+          "decoded_utf8": "abc"
+        },
+        "route_readiness": {
+          "formal_release_ready": true,
+          "candidate_extras": 0,
+          "lifecycle_authority": "release.json"
+        }
+      },
+      "rust_test_summaries": []
+    },
+    {
+      "id": "candidate-release-surface-model",
+      "invocation": {
+        "command": "node",
+        "args": [
+          "scripts/validate-release-surfaces.mjs"
+        ]
+      },
+      "accepted": true,
+      "exit_code": 0,
+      "timed_out": false,
+      "elapsed_ms": 1058,
+      "observation": {
+        "accepted": true,
+        "schema": "wasmc.release-surfaces/v1",
+        "agent_capability_projection": "wasmc.release-agent-capabilities/v1",
+        "producer_capability_delta": "wasmc.producer-release-delta/v1",
+        "lib_ecosystem_control_plane": "wasmc.lib-ecosystem-control-plane/v3",
+        "consumer_surfaces": 6,
+        "extension_surfaces": 2,
+        "desktop_platforms": 6,
+        "required_desktop_platforms": 5,
+        "optional_desktop_platforms": [
+          "macos-x86_64"
+        ],
+        "validated_roots": 17,
+        "workflow_references": 24,
+        "performance_comparison": "same-platform-only",
+        "performance_hard_gate": false
+      },
+      "rust_test_summaries": []
+    },
+    {
+      "id": "candidate-agent-guidance",
+      "invocation": {
+        "command": "node",
+        "args": [
+          "scripts/test-agent-guidance.mjs"
+        ]
+      },
+      "accepted": true,
+      "exit_code": 0,
+      "timed_out": false,
+      "elapsed_ms": 64,
+      "observation": {
+        "accepted": true,
+        "release_tag": "v0.0.29",
+        "prod_tag": "v0.0.29",
+        "public_skills": 29,
+        "parent_edges": 26,
+        "negative_tests": 20
+      },
+      "rust_test_summaries": []
+    },
+    {
+      "id": "sdk-agent-routing",
+      "invocation": {
+        "command": "node",
+        "args": [
+          "scripts/validate-sdk-agent-routes.mjs"
+        ]
+      },
+      "accepted": true,
+      "exit_code": 0,
+      "timed_out": false,
+      "elapsed_ms": 49,
+      "observation": {
+        "accepted": true,
+        "schema": "wasmc-sdk-agent-routing/v1",
+        "host_sdk_status": "published",
+        "native_runtime_status": "incubating",
+        "component_skills": 3,
+        "status_queries": 3,
+        "capability_projection": "wasmc.release-agent-capabilities/v1",
+        "stale_api_names_rejected": 3,
+        "source_symbols_verified": 10,
+        "routes": {
+          "core_runtime": "sdk/wasmc-core-runtime/SKILL.md",
+          "host_sdk": "sdk/wasmc-host/SKILL.md",
+          "native_cli": "sdk/wasmc-native-compiler/SKILL.md",
+          "lightweight_embedding": "host/embedding/*"
+        }
+      },
+      "rust_test_summaries": []
+    },
+    {
+      "id": "lib-route-release-closure-negatives",
+      "invocation": {
+        "command": "node",
+        "args": [
+          "scripts/test-lib-route-closure.mjs"
+        ]
+      },
+      "accepted": true,
+      "exit_code": 0,
+      "timed_out": false,
+      "elapsed_ms": 3603,
+      "observation": {
+        "accepted": true,
+        "schema": "wasmc.lib-route-closure/v3",
+        "release_packages": 42,
+        "package_routes": 42,
+        "api_routes": 247,
+        "entries": 289,
+        "negative_tests": 6,
+        "public_release_admission": false
+      },
+      "rust_test_summaries": []
+    },
+    {
+      "id": "release-channel-promotion-negatives",
+      "invocation": {
+        "command": "node",
+        "args": [
+          "scripts/test-release-channel.mjs"
+        ]
+      },
+      "accepted": true,
+      "exit_code": 0,
+      "timed_out": false,
+      "elapsed_ms": 63,
+      "observation": {
+        "accepted": true,
+        "candidate_schema": "wasmc.release-product-candidate/v2",
+        "positive_transitions": 3,
+        "current_lifecycle_partition_controls": 4,
+        "current_CI_input_files": 94,
+        "current_CI_input_controls": 13,
+        "negative_tests": 32,
+        "publishes": false
+      },
+      "rust_test_summaries": []
+    },
+    {
+      "id": "current-release-version-and-qualification-contract",
+      "invocation": {
+        "command": "node",
+        "args": [
+          "scripts/test-current-release-version.mjs"
+        ]
+      },
+      "accepted": true,
+      "exit_code": 0,
+      "timed_out": false,
+      "elapsed_ms": 61,
+      "observation": {
+        "accepted": true,
+        "actual_current_receipt": true,
+        "legacy_schema_fixture": true,
+        "rejections": 35,
+        "whole_product_admission": false
+      },
+      "rust_test_summaries": []
+    },
+    {
+      "id": "agent-start-execution",
+      "invocation": {
+        "command": "node",
+        "args": [
+          "examples/agent-start/run.mjs"
+        ]
+      },
+      "accepted": true,
+      "exit_code": 0,
+      "timed_out": false,
+      "elapsed_ms": 111,
+      "observation": null,
+      "rust_test_summaries": []
+    }
+  ],
+  "accepted": true
+}
