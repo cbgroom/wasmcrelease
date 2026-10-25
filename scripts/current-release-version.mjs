@@ -93,9 +93,9 @@ export function assertCompilerQualification(q, version, compilerSha256, manifest
     if (requiresCanonicalCheckedResultsQualification(version)) {
       const checked = result('scripts/test-canonical-checked-results.mjs');
       assert.equal(checked.compiler_sha256,compilerSha256);
-      if(engine==='bun'&&checked.app_engine_admitted===false){assert.equal(checked.guest_calls,0);assert.equal(checked.execution_profile,'compiler-frames-only');assert.equal(checked.unsupported_feature,'multi-memory');assert.equal(checked.compiled_frames,3);assert.equal(checked.modules_per_frame,8);assert.equal(checked.real_Host_effects,false);}else {
+      if(engine==='bun'&&checked.app_engine_admitted===false){assert.equal(checked.guest_calls,0);assert.equal(checked.execution_profile,'compiler-frames-only');assert.equal(checked.unsupported_feature,'multi-memory');assert.equal(checked.compiled_frames,4);assert.equal(checked.http_only_imports,13);assert.equal(checked.old_cold_tuple_rejected,true);assert.equal(checked.modules_per_frame,8);assert.equal(checked.real_Host_effects,false);}else {
       assert.equal(checked.app_engine_admitted,true);
-      for(const [key,value] of Object.entries({accepted:true,compiled_frames:3,modules_per_frame:8,guest_calls:800,same_instance:true,service_calls:800,response_drops:580,owned_error_drops:760,malformed_rejections:180,pending_counters_zero:3,fresh_dynamic_inputs:true,exact_error_case_decisions:5,rejection_then_recovery:true,real_Host_effects:false,business_Guest_executed:false}))assert.equal(checked[key],value,key);
+      for(const [key,value] of Object.entries({accepted:true,compiled_frames:4,modules_per_frame:8,http_only_imports:13,old_cold_tuple_rejected:true,guest_calls:800,same_instance:true,service_calls:800,response_drops:580,owned_error_drops:760,malformed_rejections:180,pending_counters_zero:3,fresh_dynamic_inputs:true,exact_error_case_decisions:5,rejection_then_recovery:true,real_Host_effects:false,business_Guest_executed:false}))assert.equal(checked[key],value,key);
       }
     }
     if (requiresUnitResultMatchQualification(version)) {
