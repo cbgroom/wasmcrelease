@@ -1,0 +1,267 @@
+{
+  "schema": "wasmc.runtime-consumer-qualification/v1",
+  "accepted": true,
+  "actual_source": "f7e07baca6c0cbed37828b6b264adfcfc3aa8ea9",
+  "actual_steps": 15,
+  "hosts": [
+    {
+      "schema": "wasmc.runtime-js-self-test/v0",
+      "accepted": true,
+      "runtime": "node",
+      "compiler_bytes": 2055961,
+      "output_bytes": 41,
+      "runtime_version": "v26.12.1",
+      "candidate_commit": "f7e07baca6c0cbed37828b6b264adfcfc3aa8ea9",
+      "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+      "source_free_package": {
+        "archive_sha256": "c43beb23b0434ec4dd65b4a1422c5919d4d5dfc8addf47e158c7813c264bca01",
+        "private_source_checked_out": false,
+        "git_metadata_present": false,
+        "origin": "Exact commit git archive subset: runtime/wasmc-runtime-v0, scripts/assert-runtime-output.mjs, examples/agent-start/06_if_branch_scope.wasmc; actual HTTPS release download remains separate"
+      },
+      "execution": {
+        "self_test": true,
+        "compile": true,
+        "compile_output_bytes": 44,
+        "wasm_validate": true,
+        "instantiate": true,
+        "oracle_export": "run",
+        "oracle_args": [
+          6,
+          18
+        ],
+        "oracle_result": 42,
+        "branch_inputs": [
+          0,
+          1
+        ],
+        "branch_results": [
+          14,
+          26
+        ]
+      },
+      "tool_source": {
+        "provider": "local-executable",
+        "command": "node",
+        "executable_sha256": "92a0c4293164f55741d9b3fbf00bd61c50263ccfa847b583348f5eb5f64f6d08"
+      },
+      "executed_at_utc": "2026-10-25T22:57:31.302138+00:00",
+      "evidence": {
+        "actual_steps": [
+          {
+            "host": "node",
+            "step": 1,
+            "exit": 0,
+            "stdout_sha256": "4691acb54083f2bb27aa18080078b2d41b4dd8e1cbd069ce44470d547c619eca",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "host": "node",
+            "step": 2,
+            "exit": 0,
+            "stdout_sha256": "66b1ad3c643fb5edd2ae6719c3d44ba70723217492567e10d813eceec022818b",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "host": "node",
+            "step": 3,
+            "exit": 0,
+            "stdout_sha256": "b8a9e1923777acafe4164083c1eeb13195ca866e596de8a4244abe79be66022e",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "host": "node",
+            "step": 4,
+            "exit": 0,
+            "stdout_sha256": "5fb78d3140f150b8da11da24c1bedf82aaae56f31a81f1399e7d71fa06b69d04",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "host": "node",
+            "step": 5,
+            "exit": 0,
+            "stdout_sha256": "0eae18127fa3505aabb96de3754f35099bbbceb2ad7c054e0c305b67fd910e85",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ]
+      },
+      "host": {
+        "hostname": "youdeMac-mini.local",
+        "uname": "Darwin youdeMac-mini.local 25.6.0 Darwin Kernel Version 25.6.0: Fri Jul 31 19:11:03 PDT 2026; root:xnu-12377.161.14~5/RELEASE_ARM64_T8132 arm64"
+      }
+    },
+    {
+      "schema": "wasmc.runtime-js-self-test/v0",
+      "accepted": true,
+      "runtime": "bun",
+      "compiler_bytes": 2055961,
+      "output_bytes": 41,
+      "runtime_version": "1.3.14",
+      "candidate_commit": "f7e07baca6c0cbed37828b6b264adfcfc3aa8ea9",
+      "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+      "source_free_package": {
+        "archive_sha256": "c43beb23b0434ec4dd65b4a1422c5919d4d5dfc8addf47e158c7813c264bca01",
+        "private_source_checked_out": false,
+        "git_metadata_present": false,
+        "origin": "Exact commit git archive subset: runtime/wasmc-runtime-v0, scripts/assert-runtime-output.mjs, examples/agent-start/06_if_branch_scope.wasmc; actual HTTPS release download remains separate"
+      },
+      "execution": {
+        "self_test": true,
+        "compile": true,
+        "compile_output_bytes": 44,
+        "wasm_validate": true,
+        "instantiate": true,
+        "oracle_export": "run",
+        "oracle_args": [
+          6,
+          18
+        ],
+        "oracle_result": 42,
+        "branch_inputs": [
+          0,
+          1
+        ],
+        "branch_results": [
+          14,
+          26
+        ]
+      },
+      "tool_source": {
+        "provider": "local-executable",
+        "command": "bun",
+        "executable_sha256": "e0c90ec15d33363e6b70713d56bc3b2c7585c17f40a0fe0f8fd9305901d4e233"
+      },
+      "executed_at_utc": "2026-10-25T22:57:31.522228+00:00",
+      "evidence": {
+        "actual_steps": [
+          {
+            "host": "bun",
+            "step": 1,
+            "exit": 0,
+            "stdout_sha256": "c840e2a1c0ca26fc09f40d0ad10c3c2dd4ddecb2a488df545afac896fb37ad25",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "host": "bun",
+            "step": 2,
+            "exit": 0,
+            "stdout_sha256": "dcafb56728d9bea3d8b890c944afdb99a5abf51583fb3fd622533e2cebc52c4e",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "host": "bun",
+            "step": 3,
+            "exit": 0,
+            "stdout_sha256": "b8a9e1923777acafe4164083c1eeb13195ca866e596de8a4244abe79be66022e",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "host": "bun",
+            "step": 4,
+            "exit": 0,
+            "stdout_sha256": "d63f2cc52a277f53b887d50018e5f7137676be0897356c196125e960fe1bd411",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "host": "bun",
+            "step": 5,
+            "exit": 0,
+            "stdout_sha256": "0eae18127fa3505aabb96de3754f35099bbbceb2ad7c054e0c305b67fd910e85",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ]
+      },
+      "host": {
+        "hostname": "youdeMac-mini.local",
+        "uname": "Darwin youdeMac-mini.local 25.6.0 Darwin Kernel Version 25.6.0: Fri Jul 31 19:11:03 PDT 2026; root:xnu-12377.161.14~5/RELEASE_ARM64_T8132 arm64"
+      }
+    },
+    {
+      "schema": "wasmc.runtime-js-self-test/v0",
+      "accepted": true,
+      "runtime": "deno",
+      "compiler_bytes": 2055961,
+      "output_bytes": 41,
+      "runtime_version": "deno 2.9.4 (stable, release, aarch64-apple-darwin)",
+      "candidate_commit": "f7e07baca6c0cbed37828b6b264adfcfc3aa8ea9",
+      "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+      "source_free_package": {
+        "archive_sha256": "c43beb23b0434ec4dd65b4a1422c5919d4d5dfc8addf47e158c7813c264bca01",
+        "private_source_checked_out": false,
+        "git_metadata_present": false,
+        "origin": "Exact commit git archive subset: runtime/wasmc-runtime-v0, scripts/assert-runtime-output.mjs, examples/agent-start/06_if_branch_scope.wasmc; actual HTTPS release download remains separate"
+      },
+      "execution": {
+        "self_test": true,
+        "compile": true,
+        "compile_output_bytes": 44,
+        "wasm_validate": true,
+        "instantiate": true,
+        "oracle_export": "run",
+        "oracle_args": [
+          6,
+          18
+        ],
+        "oracle_result": 42,
+        "branch_inputs": [
+          0,
+          1
+        ],
+        "branch_results": [
+          14,
+          26
+        ]
+      },
+      "tool_source": {
+        "provider": "local-executable",
+        "command": "deno",
+        "executable_sha256": "433088c827fa0e39ff162ab0e475f1fd4c7690eaedec500cf678edc3865e9287"
+      },
+      "executed_at_utc": "2026-10-25T22:57:31.816323+00:00",
+      "evidence": {
+        "actual_steps": [
+          {
+            "host": "deno",
+            "step": 1,
+            "exit": 0,
+            "stdout_sha256": "da4431fd5bbb19a345f081b3a0d63ed5ee21f6b59d83cc4f515558d9250d57ed",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "host": "deno",
+            "step": 2,
+            "exit": 0,
+            "stdout_sha256": "359b98615f5de2fb7b32db80969cad1b906a743229d3da8be86d9faf50bee21d",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "host": "deno",
+            "step": 3,
+            "exit": 0,
+            "stdout_sha256": "b8a9e1923777acafe4164083c1eeb13195ca866e596de8a4244abe79be66022e",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "host": "deno",
+            "step": 4,
+            "exit": 0,
+            "stdout_sha256": "02c404e1b56f4fd0cb6c2fdf354c39d92e4a93dc5163ed7ad00d9f18fb237cf5",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "host": "deno",
+            "step": 5,
+            "exit": 0,
+            "stdout_sha256": "0eae18127fa3505aabb96de3754f35099bbbceb2ad7c054e0c305b67fd910e85",
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ]
+      },
+      "host": {
+        "hostname": "youdeMac-mini.local",
+        "uname": "Darwin youdeMac-mini.local 25.6.0 Darwin Kernel Version 25.6.0: Fri Jul 31 19:11:03 PDT 2026; root:xnu-12377.161.14~5/RELEASE_ARM64_T8132 arm64"
+      }
+    }
+  ],
+  "formal_whole_release_download": false
+}
