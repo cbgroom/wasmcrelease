@@ -44,8 +44,8 @@ wasm-merge prepared-transfer.wasm wasmc-value-staging \
   --rename-export-conflicts --all-features --quiet -o app.wasm
 ```
 
-The expected App is 2,822,346 bytes with SHA256
-`a2fa90d63eed06eede7da0678f67c303b22835aa939ad6c5915cd5ebff78d643`.
+The expected App is 2,818,646 bytes with SHA256
+`9bc7ee1d06e56e61635ba7cf2e00c27f52bec01eba3b881f141af6d3591aa057`.
 The recipe also binds the tool SHA256, original caller plan and memory binding.
 Merging produces an artifact; it performs no Host operation.
 
