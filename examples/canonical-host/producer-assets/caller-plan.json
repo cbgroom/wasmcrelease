@@ -1,9 +1,9 @@
 {
   "activation": "none; exact Host binding and runtime admission remain embedding-owned",
   "artifact": {
+    "bytes": 2818646,
     "path": "app.wasm",
-    "bytes": 2822346,
-    "sha256": "a2fa90d63eed06eede7da0678f67c303b22835aa939ad6c5915cd5ebff78d643"
+    "sha256": "9bc7ee1d06e56e61635ba7cf2e00c27f52bec01eba3b881f141af6d3591aa057"
   },
   "canonical_entries": [
     {
@@ -203,20 +203,20 @@
     }
   ],
   "corelib_instances": 1,
-  "corelib_sha256": "7cd4f0c60536f1825da3fed9d525a43ee9724250203a261f298505a503e9bcbf",
+  "corelib_sha256": "b06eb9a32dddb75e278cd8aa9b1126f6e4b51e885a83897c80f7b5da85b81c3f",
   "host_binding_sha256": "3db4b5c10627cc9e81ea8372385cffa7e943e3e905859d1532c3d26e8f8204fe",
   "imports": [
     {
-      "module": "mcpgit:http/v1",
       "function": "request-method-len",
+      "module": "mcpgit:http/v1",
       "params": [],
       "results": [
         "i32"
       ]
     },
     {
-      "module": "mcpgit:http/v1",
       "function": "request-method-read",
+      "module": "mcpgit:http/v1",
       "params": [
         "i32",
         "i32",
@@ -227,16 +227,16 @@
       ]
     },
     {
-      "module": "mcpgit:http/v1",
       "function": "request-path-len",
+      "module": "mcpgit:http/v1",
       "params": [],
       "results": [
         "i32"
       ]
     },
     {
-      "module": "mcpgit:http/v1",
       "function": "request-path-read",
+      "module": "mcpgit:http/v1",
       "params": [
         "i32",
         "i32",
@@ -247,16 +247,16 @@
       ]
     },
     {
-      "module": "mcpgit:http/v1",
       "function": "request-parameters-len",
+      "module": "mcpgit:http/v1",
       "params": [],
       "results": [
         "i32"
       ]
     },
     {
-      "module": "mcpgit:http/v1",
       "function": "request-parameters-read",
+      "module": "mcpgit:http/v1",
       "params": [
         "i32",
         "i32",
@@ -267,16 +267,16 @@
       ]
     },
     {
-      "module": "mcpgit:http/v1",
       "function": "request-query-len",
+      "module": "mcpgit:http/v1",
       "params": [],
       "results": [
         "i32"
       ]
     },
     {
-      "module": "mcpgit:http/v1",
       "function": "request-query-read",
+      "module": "mcpgit:http/v1",
       "params": [
         "i32",
         "i32",
@@ -287,16 +287,16 @@
       ]
     },
     {
-      "module": "mcpgit:http/v1",
       "function": "request-headers-len",
+      "module": "mcpgit:http/v1",
       "params": [],
       "results": [
         "i32"
       ]
     },
     {
-      "module": "mcpgit:http/v1",
       "function": "request-headers-read",
+      "module": "mcpgit:http/v1",
       "params": [
         "i32",
         "i32",
@@ -307,28 +307,28 @@
       ]
     },
     {
-      "module": "mcpgit:http/v1",
       "function": "request-body-len",
+      "module": "mcpgit:http/v1",
       "params": [],
       "results": [
         "i32"
       ]
     },
     {
-      "module": "mcpgit:http/v1",
       "function": "request-body-read",
-      "params": [
-        "i32",
-        "i32",
-        "i32"
-      ],
-      "results": [
-        "i32"
-      ]
-    },
-    {
       "module": "mcpgit:http/v1",
+      "params": [
+        "i32",
+        "i32",
+        "i32"
+      ],
+      "results": [
+        "i32"
+      ]
+    },
+    {
       "function": "response-canonical-write",
+      "module": "mcpgit:http/v1",
       "params": [
         "i32",
         "i32",
@@ -339,8 +339,8 @@
       ]
     },
     {
-      "module": "mcpgit:lib/v1",
       "function": "wit-table-transact",
+      "module": "mcpgit:lib/v1",
       "params": [
         "i32",
         "i32"
@@ -351,8 +351,8 @@
       ]
     },
     {
-      "module": "mcpgit:lib-error/v1",
       "function": "error-case",
+      "module": "mcpgit:lib-error/v1",
       "params": [
         "i32"
       ],
@@ -361,8 +361,8 @@
       ]
     },
     {
-      "module": "mcpgit:lib-error/v1",
       "function": "error-message-len",
+      "module": "mcpgit:lib-error/v1",
       "params": [
         "i32"
       ],
@@ -371,8 +371,8 @@
       ]
     },
     {
-      "module": "mcpgit:lib-error/v1",
       "function": "error-message-read",
+      "module": "mcpgit:lib-error/v1",
       "params": [
         "i32",
         "i32",
@@ -383,8 +383,8 @@
       ]
     },
     {
-      "module": "mcpgit:lib-error/v1",
       "function": "error-drop",
+      "module": "mcpgit:lib-error/v1",
       "params": [
         "i32"
       ],
@@ -395,70 +395,70 @@
   ],
   "inputs": [
     {
-      "path": "input-0.wasm",
-      "module": "wasmc-value-staging",
       "bytes": 39559,
+      "module": "wasmc-value-staging",
+      "path": "input-0.wasm",
       "sha256": "85ed44f0c0b7c532cc49a66dfbf94aa94519deac06864ea5bdc240074b993a06"
     },
     {
-      "path": "input-1.wasm",
-      "module": "wasmc-snapshot-caller",
       "bytes": 23895,
+      "module": "wasmc-snapshot-caller",
+      "path": "input-1.wasm",
       "sha256": "d9b9686a5ac48d11fec67b9ab6015db088f86c379eb7171d6c1676a57a784e50"
     },
     {
-      "path": "input-2.wasm",
-      "module": "wasmc:lib/wasmc-json@0.0.6",
       "bytes": 92553,
+      "module": "wasmc:lib/wasmc-json@0.0.6",
+      "path": "input-2.wasm",
       "sha256": "24fe10b0716260dbad6106da856143a98b9e190dfaeb1da16d0c5c0f6c11ee9a"
     },
     {
-      "path": "input-3.wasm",
+      "bytes": 15161,
       "module": "wasmc-native-value-projection",
-      "bytes": 14263,
-      "sha256": "529b18bddaed871c6b3258875be6f510eacaec3ad982080841716c37255fe055"
+      "path": "input-3.wasm",
+      "sha256": "1ff3841682a63f65c5b7a580889db2c28ec5339875d4d09538da928156bde349"
     },
     {
-      "path": "input-4.wasm",
-      "module": "wasmc-native-value-calls",
       "bytes": 5971,
+      "module": "wasmc-native-value-calls",
+      "path": "input-4.wasm",
       "sha256": "ffbe0ebcca78e2391fbc45da536ea10ab513baa2d0ebf49c42c952b224ffb499"
     },
     {
-      "path": "input-5.wasm",
-      "module": "wasmc-canonical-app-entry",
       "bytes": 499,
+      "module": "wasmc-canonical-app-entry",
+      "path": "input-5.wasm",
       "sha256": "6691e05dc68a3b758939191790c8b3dd1b1eb8e376feb3cb7268b5fbcc65706b"
     },
     {
-      "path": "input-6.wasm",
+      "bytes": 7872,
       "module": "wasmc-app-value-projection",
-      "bytes": 6984,
-      "sha256": "96d63ba03e7d3a8cc3b47db98e7f8fbeb4d0cf0da4a674a54f108f164a4c216a"
+      "path": "input-6.wasm",
+      "sha256": "ad25c251ac8523fadf959f680ebb861e8be3b246fda22ae7f4e20dbf684ce01b"
     },
     {
-      "path": "input-7.wasm",
-      "module": "wasmc-host-entry",
       "bytes": 1318,
+      "module": "wasmc-host-entry",
+      "path": "input-7.wasm",
       "sha256": "419444b623d01152a59bff8af2b71a7dfd3136147b4e29a2fdfcb890c9f4839f"
     },
     {
-      "path": "input-8.wasm",
-      "module": "wasmc-host-value-projection",
       "bytes": 10640,
+      "module": "wasmc-host-value-projection",
+      "path": "input-8.wasm",
       "sha256": "70b442f95a6bca0c73d0416e4cf7c40c4536e3359f9b7008ab3694fdab58f7d5"
     },
     {
-      "path": "input-9.wasm",
-      "module": "wasmc-native-host-calls",
       "bytes": 872,
+      "module": "wasmc-native-host-calls",
+      "path": "input-9.wasm",
       "sha256": "eb019bbf6c212e7fd8c35d8d61d1db9bfba1128231f6e426e98443c210a4d403"
     },
     {
-      "path": "input-10.wasm",
+      "bytes": 2632162,
       "module": "wasmc:lib/wasmc.lib_managed_object_heap@4.9.0",
-      "bytes": 2636489,
-      "sha256": "846bcd14899dead4f88984e0e1f3a5ff05410f3e2837c3c308636f986c9d4100"
+      "path": "input-10.wasm",
+      "sha256": "b06eb9a32dddb75e278cd8aa9b1126f6e4b51e885a83897c80f7b5da85b81c3f"
     }
   ],
   "lib": {

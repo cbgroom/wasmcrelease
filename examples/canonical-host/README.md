@@ -54,3 +54,9 @@ Merging produces an artifact; it performs no Host operation.
 Use app/static.wasmc for a static HTTP response or app/json-read.wasmc for JSON-only input. These ordinary sources use the same pinned activation and complete Host contracts. The SDK includes operation wrappers only when the caller actually imports an operation: static/read-only final Apps have13 HTTP imports, while ordinary.wasmc retains its Table transact and four error functions. Fixed eight-module framing and all pinned cold helper assets stay the same.
 
 Run node scripts/test-canonical-host-import-demand.mjs for exact frame/module demand checks. import-demand-proof.json binds actual Binaryen126 final merges and HTTP-only execution with fresh inputs in the same installed instance; native-frame-proof.json independently proves direct Native and Wasmi2-hosted compiler frame parity for all three cases. These are finite compiler/SDK checks, separate from live MCPGit admission or its fuel limit.
+
+## Checked byte transport in v0.0.27
+
+The current canonical-host Wasm carrier emits checked8-byte transport directly inside its eight-module frame. Use the complete15-role map in `checked-chunk-profile.json` and `admission/checked-chunk-v027.json`. The current compiler facades and canonical preparation both select CoreLib4.11.0-candidate.1 at `current/lib_core.wasm` through `provider.core`. The frozen `standard/corelib/4.9.1` and every existing LibRoot remain unchanged. The4.9.0 link namespace is the existing Native ABI label. No SDK postprocessing or module replacement is required.
+
+The same14inputs and strictWASMCB01/v1 descriptor work with frozen Native619321. A matching immutable compiler and canonical provider must be selected together. Full-tag manifest/checksums/modes own exact delivery identities. Consumer Host admission, actual Native installation and application activation remain separate from these SDK examples; no GREEN deployment is performed by this package.

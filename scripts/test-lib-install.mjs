@@ -7,7 +7,7 @@ import {fileURLToPath} from 'node:url';
 import {hash,checkedCurrentCatalog,resolveCurrentPackage,currentProductReader} from './current-lib-release-v3.mjs';
 import {installCurrentLib,artifactUrl} from './lib-install.mjs';
 const root=fileURLToPath(new URL('../',import.meta.url)),catalogBytes=readFileSync(join(root,'catalog/libs-current-v2.json'));
-const catalogSha256='0a3eaa87733eb32c69379cff4f8c79079c49045787999396a9e2730ebf13d90a';
+const catalogSha256='1c049a472505013d40f0771eae11684d119d0e857e2744c6e88ae7b4bcedc286';
 const catalog=checkedCurrentCatalog(catalogBytes,catalogSha256),row=catalog.packages.find(r=>r.id==='wasmc-std'),read=currentProductReader(root);
 const lock=resolveCurrentPackage(catalogBytes,catalogSha256,{id:row.id,version:row.version,manifest_sha256:row.manifest_sha256,root_inventory_sha256:row.root_inventory_sha256},read),lockBytes=Buffer.from(JSON.stringify(lock));
 const fixture=await mkdtemp(join(tmpdir(),'wasmc-current-install-'));let number=0,negativeTests=0;

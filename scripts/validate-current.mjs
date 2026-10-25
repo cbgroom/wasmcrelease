@@ -14,7 +14,7 @@ const wasm = await read('../current/wasmc_compiler.wasm');
 const root = fileURLToPath(new URL('../',import.meta.url));
 const runtime = globalThis.Deno?'deno':globalThis.Bun?'bun':'node';
 mkdirSync(root+`target/current-${runtime}`,{recursive:true});
-assert.equal(hash(wasm), '42c547a4f0819c081d66fddebedfa984098cbdb18d463c6a872e62a8683d70fe');
+assert.equal(hash(wasm), 'fc8b025e8a6ef8d1a4a41246e4b7a87d077b428c5738162bf1984602182dc3d5');
 assert.ok(wasm.length <= 2097152);
 assert.deepEqual(WebAssembly.Module.imports(new WebAssembly.Module(wasm)), []);
 (0, eval)(new TextDecoder().decode(await read('../current/wasmc.global.js')));

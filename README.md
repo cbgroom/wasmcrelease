@@ -1,10 +1,7 @@
-# WAsmC0.0.26
+# WAsmC0.0.27
 
-v0.0.26 removes unused Table/error imports from static HTTP and read-only JSON applications. The SDK emits13 HTTP imports for these applications and preserves the18 required imports for actual Table callers. The existing Core/Lib identities and fuel/permission contracts are unchanged.
-WAsmC compiles WIT-shaped application source to standard Core Wasm. This
-source-free distribution combines one compiler, Provider4.9.1, Std1.4.1,
-LibSearch0.5.0,42 complete current Lib identities and public Rust/Host SDKs.
-Compiler implementation source stays private.
+v0.0.27 emits checked chunk byte transport directly from the canonical-host Wasm compiler carrier. The matching current CoreLib and prepared canonical provider are b06eb9a3; the existing14inputs,8-module WASMCB01/v1 frame and Host contracts are unchanged. Original4128-byte responses and fresh external JSON inputs pass the fixed10M fuel qualification on Wasmi and Wasmtime. Frozen CoreLib4.9.1 and all existing Lib Roots remain unchanged.
+
 
 Start with [AGENTS.md](AGENTS.md) or [agent-quickstart.json](agent-quickstart.json).
 Read [agent-release-orientation.json](agent-release-orientation.json) and run its
@@ -44,7 +41,7 @@ The pinned catalog owns complete Roots, WIT, SDK views and dependency notices.
 Its42 package routes and247 API routes give289 exact search entries.
 
 ```sh
-node scripts/wasmc-lib.mjs search "base64 decode" --catalog-sha256 0a3eaa87733eb32c69379cff4f8c79079c49045787999396a9e2730ebf13d90a --limit 8
+node scripts/wasmc-lib.mjs search "base64 decode" --catalog-sha256 1c049a472505013d40f0771eae11684d119d0e857e2744c6e88ae7b4bcedc286 --limit 8
 node examples/base64/run.mjs
 ```
 
@@ -56,7 +53,7 @@ physical-device qualification.
 
 [Std1.4.1](standard/wasmc-std/1.4.1/) retains73 operations and nine resources
 with complete generated Core and Component Rust SDKs. Its Core import requires
-Provider4.9.1 (ABI namespace4.9.0). [LibSearch0.5.0](standard/wasmc-lib-search/0.5.0/) implements the
+CoreLib4.11.0-candidate.1 (ABI namespace4.9.0). [LibSearch0.5.0](standard/wasmc-lib-search/0.5.0/) implements the
 bounded full-index lookup and search. The matching Provider is
 `current/lib_core.wasm`.
 
@@ -80,5 +77,5 @@ capability. System Telemetry supports its declared Component resource view;
 ordinary-source direct resource methods remain unsupported. Client Foundation
 and Gateway remain incubating.
 
-The [0.0.26 release evidence](docs/RELEASE_V026.md) keeps source, artifact,
+The [0.0.27 release evidence](docs/RELEASE_V027.md) keeps source, artifact,
 runtime, Native platform, whole-candidate and lifecycle gates separate.

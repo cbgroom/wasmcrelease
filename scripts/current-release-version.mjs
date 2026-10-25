@@ -14,6 +14,7 @@ export const requiresPrivateHelperQualification = version => patch(version) >= 2
 export const requiresCanonicalHostQualification = version => patch(version) >= 24;
 export const requiresIfBranchScopeQualification = version => patch(version) >= 25;
 export const requiresUnusedHostImportsQualification = version => patch(version) >= 26;
+export const requiresCheckedChunkQualification = version => patch(version) >= 27;
 export function currentCompatibilityPath(version) {
   assert.ok(usesCurrentProductV3(version), 'current v3 product version required');
   return `compatibility/core-artifacts-v0${patch(version)}.json`;
@@ -57,7 +58,8 @@ export function assertCompilerQualification(q, version, compilerSha256, manifest
     const std = result(commands[1]);
     assert.equal(std.standard_lib, 'wasmc:std@1.4.1'); assert.equal(std.functions, 73); assert.equal(std.consumer_calls, 7680);
     const managed = result(commands[2]);
-    assert.equal(managed.provider, requiresCanonicalHostQualification(version) ? '4.9.1' : '4.9.0'); assert.equal(managed.compileLib_oracles, 3);
+    assert.equal(managed.provider, requiresCheckedChunkQualification(version) ? '4.11.0-candidate.1' : requiresCanonicalHostQualification(version) ? '4.9.1' : '4.9.0'); assert.equal(managed.compileLib_oracles, 3);
+    if(requiresCheckedChunkQualification(version))assert.equal(managed.provider_sha256,'b06eb9a32dddb75e278cd8aa9b1126f6e4b51e885a83897c80f7b5da85b81c3f');
     assert.equal(managed.instantiateLib_oracles, 3); assert.equal(managed.calls, 768); assert.equal(managed.old_provider_fallback, false);
     if (helpers) {
       assert.equal(managed.boolean_conditional_calls, 1536); assert.equal(managed.boolean_numeric_rejections, 6);
@@ -70,9 +72,12 @@ export function assertCompilerQualification(q, version, compilerSha256, manifest
       const c = result('scripts/test-canonical-host-sdk.mjs');
       assert.equal(c.compiler_sha256, compilerSha256);
       assert.equal(c.compiled_frames, 4); assert.equal(c.modules_per_frame, 8);
-      assert.equal(c.native_parity, requiresUnusedHostImportsQualification(version)
+      assert.equal(c.native_parity, requiresCheckedChunkQualification(version)
+        ? '6c48c4bdade45afc63d2eaf372552bcdc85ac3f88c58fc4ce6866ec52ea1eecb'
+        : requiresUnusedHostImportsQualification(version)
         ? 'd407267385d46f6ec4cdcd199fed5e2bc1320aea641140ac34b6b63014fe1c1f'
         : '89b0b692492e3bc65603a6f2788de8030dc272170bde0bbd903679e1621da03a');
+      if(requiresCheckedChunkQualification(version))assert.equal(c.checked_chunk_profile,true);
       assert.equal(c.rejection_then_recovery, true); assert.equal(c.source_rebinding, true);
       assert.equal(c.real_Host_invocation, false);
     }

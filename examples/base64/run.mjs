@@ -12,13 +12,13 @@ const installed=args.length?resolve(args[1]):null;
 const root='current-libs/wasmc-std/1.4.1';
 if(installed) {
   resolveCurrentPackage(readFileSync(new URL('../../catalog/libs-current-v2.json',import.meta.url)),
-    '0a3eaa87733eb32c69379cff4f8c79079c49045787999396a9e2730ebf13d90a',
+    '1c049a472505013d40f0771eae11684d119d0e857e2744c6e88ae7b4bcedc286',
     {id:'wasmc-std',version:'1.4.1',manifest_sha256:'9db63b4f380f9a8fb7541addfde6608bbc48b3267ad903f838afedb98e74ebfc',root_inventory_sha256:'6978407b51e835a3893ac14cbb7ca2c46da48d0a778f2611f6de829af07bdf92'},
     path=>readFileSync(resolve(installed,path)));
 }
 const libBytes=installed?readFileSync(resolve(installed,root,'artifact.wasm')):
   await readFile(new URL('../../'+root+'/artifact.wasm',import.meta.url));
-assert.equal(createHash('sha256').update(providerBytes).digest('hex'), '7cd4f0c60536f1825da3fed9d525a43ee9724250203a261f298505a503e9bcbf');
+assert.equal(createHash('sha256').update(providerBytes).digest('hex'), 'b06eb9a32dddb75e278cd8aa9b1126f6e4b51e885a83897c80f7b5da85b81c3f');
 assert.equal(createHash('sha256').update(libBytes).digest('hex'), 'b79a499c8300361125e7fcdae02170184b82d4bbeff4d8f24ed95f3fd4db8d3b');
 const providerModule = new WebAssembly.Module(providerBytes);
 assert.deepEqual(WebAssembly.Module.imports(providerModule), []);

@@ -28,7 +28,7 @@ assert.equal(hash('standard/wasmc-std/1.4.1/artifact.wasm'), quickstart.routes['
 assert.equal(hash('catalog/libs-current-v2.json'), quickstart.routes['library-first-selection'].catalog_sha256);
 assert.equal(quickstart.routes['library-first-selection'].catalog_path,'catalog/libs-current-v2.json');
 assert.equal(quickstart.routes['library-first-selection'].catalog_snapshot_carried_forward,false);
-assert.equal(quickstart.routes['library-first-selection'].exact_report.companion_sha256,'7cd4f0c60536f1825da3fed9d525a43ee9724250203a261f298505a503e9bcbf');
+assert.equal(quickstart.routes['library-first-selection'].exact_report.companion_sha256,'b06eb9a32dddb75e278cd8aa9b1126f6e4b51e885a83897c80f7b5da85b81c3f');
 assert.equal(quickstart.routes['library-first-selection'].exact_report.import_module,'wasmc:lib/wasmc.lib_managed_object_heap@4.9.0');
 assert.match(quickstart.routes['library-first-selection'].exact_report.instruction,/byte-for-byte/);
 assert.match(quickstart.routes['library-first-selection'].final_answer_policy,/Do not reproduce command arguments/);

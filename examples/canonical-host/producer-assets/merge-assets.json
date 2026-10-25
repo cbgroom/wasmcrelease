@@ -43,18 +43,18 @@
   "core_provider": {
     "abi_namespace": "wasmc:lib/wasmc.lib_managed_object_heap@4.9.0",
     "abi_version": "4.9.0",
-    "successor_candidate_version": "4.9.1-candidate.1",
+    "successor_candidate_version": "4.11.0-candidate.1",
     "raw": {
-      "path": "../../../current/lib_core.wasm",
-      "bytes": 2640152,
-      "sha256": "7cd4f0c60536f1825da3fed9d525a43ee9724250203a261f298505a503e9bcbf"
+      "path": "../../../standard/corelib/4.11.0-candidate.1/corelib.wasm",
+      "bytes": 2642828,
+      "sha256": "63c08fe2dcd2e69fb02bf93f62cc7969bacb7e4c0657de1a9a036b6a6ce99946"
     },
     "prepared": {
       "path": "prepared-core-provider.wasm",
-      "bytes": 2636489,
-      "sha256": "846bcd14899dead4f88984e0e1f3a5ff05410f3e2837c3c308636f986c9d4100"
+      "bytes": 2632162,
+      "sha256": "b06eb9a32dddb75e278cd8aa9b1126f6e4b51e885a83897c80f7b5da85b81c3f"
     },
-    "preparation": "existing Native canonical Root preparation; original raw Core and ABI namespace preserved"
+    "preparation": "Qualified checked-chunk CoreLib successor and exact tuple ABI adapter; 4.9.0 is the frozen link namespace, not the artifact release version. Published4.9.1 and every LibRoot remain byte-identical."
   },
   "inputs": [
     {
@@ -86,8 +86,8 @@
       "path": "modules/lib-projection.wasm",
       "plan_path": "input-3.wasm",
       "module": "wasmc-native-value-projection",
-      "bytes": 14263,
-      "sha256": "529b18bddaed871c6b3258875be6f510eacaec3ad982080841716c37255fe055"
+      "bytes": 15161,
+      "sha256": "1ff3841682a63f65c5b7a580889db2c28ec5339875d4d09538da928156bde349"
     },
     {
       "index": 4,
@@ -110,8 +110,8 @@
       "path": "modules/app-projection.wasm",
       "plan_path": "input-6.wasm",
       "module": "wasmc-app-value-projection",
-      "bytes": 6984,
-      "sha256": "96d63ba03e7d3a8cc3b47db98e7f8fbeb4d0cf0da4a674a54f108f164a4c216a"
+      "bytes": 7872,
+      "sha256": "ad25c251ac8523fadf959f680ebb861e8be3b246fda22ae7f4e20dbf684ce01b"
     },
     {
       "index": 7,
@@ -142,8 +142,8 @@
       "path": "prepared-core-provider.wasm",
       "plan_path": "input-10.wasm",
       "module": "wasmc:lib/wasmc.lib_managed_object_heap@4.9.0",
-      "bytes": 2636489,
-      "sha256": "846bcd14899dead4f88984e0e1f3a5ff05410f3e2837c3c308636f986c9d4100"
+      "bytes": 2632162,
+      "sha256": "b06eb9a32dddb75e278cd8aa9b1126f6e4b51e885a83897c80f7b5da85b81c3f"
     }
   ],
   "merger": {
@@ -182,9 +182,9 @@
     ],
     "writes": "app.wasm only; merge does not instantiate application or grant Host authority",
     "expected_output": {
+      "bytes": 2818646,
       "path": "app.wasm",
-      "bytes": 2822346,
-      "sha256": "a2fa90d63eed06eede7da0678f67c303b22835aa939ad6c5915cd5ebff78d643"
+      "sha256": "9bc7ee1d06e56e61635ba7cf2e00c27f52bec01eba3b881f141af6d3591aa057"
     },
     "expected_host_import_count": 18,
     "Core_instances": 1
@@ -197,7 +197,7 @@
   },
   "qualified_caller_plan": {
     "path": "caller-plan.json",
-    "bytes": 23925,
-    "sha256": "96daa54a5beea01e50e1efd8ee7a56d94cde0dbd81ffc4f8c1c2f8bbaff675c7"
+    "bytes": 23924,
+    "sha256": "f0976bae297b4f1d0788cadfc06ff7ba1b1127824cfe779321a2d9bc30c54b44"
   }
 }

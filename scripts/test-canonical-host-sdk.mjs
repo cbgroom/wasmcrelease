@@ -28,6 +28,16 @@ const checkModules = result => {
     assert.equal(hash(bytes), row.sha256, row.path);
   }
 };
+const product=JSON.parse(new TextDecoder().decode(read('current/compiler-release.json')));
+let checkedProfile=false;
+if(Number(product.version.split('.')[2])>=27) {
+ const map=JSON.parse(new TextDecoder().decode(read(fixture+'checked-chunk-profile.json')));
+ assert.equal(map.version,product.version);assert.equal(map.compiler.sha256,expected.compiler_sha256);
+ assert.equal(Object.keys(map.assets).length,15);assert.equal(map.input_slots,14);assert.equal(map.module_count,8);
+ for(const row of [map.compiler,...Object.values(map.assets)]){const bytes=read(row.path);assert.equal(bytes.length,row.bytes);assert.equal(hash(bytes),row.sha256);assert.equal(row.mode,'0644');}
+ assert.equal(map.sdk_postprocessor,false);assert.equal(map.manual_module_substitution,false);
+ checkedProfile=true;
+}
 const compiler = await createCanonicalHostCompiler(read('current/wasmc_compiler.wasm'));
 let outputs = 0;
 try {
@@ -37,6 +47,10 @@ try {
     assert.equal(result.frame.length, expected.frame_bytes);
     assert.equal(result.modules.size, expected.module_count);
     checkModules(result);
+    if(checkedProfile)for(const name of ['lib-projection.wasm','app-projection.wasm']) {
+      const imports=WebAssembly.Module.imports(new WebAssembly.Module(result.modules.get(name)));
+      for(const op of ['string_read_chunk_le','list_u8_read_chunk_le','list_u8_extend_chunk_le'])assert(imports.some(i=>i.name===op));
+    }
     assert.equal(result.descriptor.source_sha256, hash(new TextEncoder().encode(source)));
     outputs++;
   }
@@ -61,5 +75,5 @@ console.log(JSON.stringify({accepted: true,
   runtime: globalThis.Deno ? 'deno' : globalThis.Bun ? 'bun' : 'node',
   compiler_sha256: hash(read('current/wasmc_compiler.wasm')),
   compiled_frames: outputs, modules_per_frame: 8, native_parity: expected.frame_sha256,
-  frame_bytes: expected.frame_bytes, exact_native_modules: expected.modules.length,
+  frame_bytes: expected.frame_bytes, checked_chunk_profile:checkedProfile, exact_native_modules: expected.modules.length,
   rejection_then_recovery: true, source_rebinding: true, real_Host_invocation: false}));
