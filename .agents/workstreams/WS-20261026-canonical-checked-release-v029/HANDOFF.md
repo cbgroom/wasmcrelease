@@ -1,0 +1,9 @@
+# Canonical checked-result SDK release v0.0.29
+
+Task state: started
+Objective: complete formal successor publication for existing canonical checked u32/unit/error Variant SDK composition; v0.0.28 remains the official default until accepted publication.
+Basis: measured private Code bf379a0b347fe554072581e2fea14f7da45ae79d, complete SourceReady f70e5d2f063ee0e74fbc17e63a114b6a53787ac8. Actual checked-chunk compiler098b470d/2055961B/import0 and full adapted Source compile-only pass; Native4000Wasmtime/800Wasmi neutral calls and exact eight-module/complete-App portable equality. Prior v028 frame/modules/cold/App preserved.
+Plan: finish strict prepared Target/canonical integration; stage unchanged qualified compiler and matching carriers/Runtime; add source-neutral checked-u32/unit/error-case SDK fixture using existing immutable JSON007 Root. Add exact successor qualification threshold; normal source-free consumers, changed-input Native6build/6download matrix, final fixed GLM single-model review, formal assets and anonymous installed readback.
+Boundaries: old releases/frozen versions/CoreLib/42Roots/std/JSON007/Text001/foreignWIP unchanged. No compiler/CoreLib/Lib rebuild here, no private compiler Source publication, no business Guest execution or MCPGit/Core deployment. Existing Lib compact normalizes service JSON object-key order; parsed values are equivalent, raw service argument bytes not claimed identical. Original red evidence retained. Private CI billing unstarted is not a code failure/pass.
+Cache: compiler/changed SDK cold inputs reused exact; changed Native packages must build. Own scratch8GiB/freefloor20GiB; preserve current jobs and all immutable dependencies.
+Resume: durable START push, complete private canonical closure, then stage carriers/custody and generic SDK source-free test. Exact final model gate and official downloaded installation remain completion requirements.
