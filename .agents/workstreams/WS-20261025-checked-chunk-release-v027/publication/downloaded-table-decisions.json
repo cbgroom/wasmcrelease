@@ -1,0 +1,64 @@
+{
+  "schema": "wasmc.installed-canonical-table-decisions/v1",
+  "accepted": true,
+  "release": "v0.0.27",
+  "artifact_sha256": "9bc7ee1d06e56e61635ba7cf2e00c27f52bec01eba3b881f141af6d3591aa057",
+  "same_instance": true,
+  "Guest_parses_and_decides": true,
+  "one_existing_atomic_transact_invocation_per_allowed_request": true,
+  "transaction_request_is_opaque": true,
+  "Host_returns_mocked_success": true,
+  "live_MCPGit_effects": false,
+  "rows": [
+    {
+      "name": "allowed-first",
+      "input_sha256": "78f21253410e505767473a664bb69cf75acb773087e47bf71cc5b6f0cb429c49",
+      "response": {
+        "status": 200,
+        "body": "14"
+      },
+      "atomic_transact_invocations": 1,
+      "pending_counters_zero": 3
+    },
+    {
+      "name": "denied-new-input",
+      "input_sha256": "9584aab22e1fa2dbcbb31257bd0de99b7dafc9266e558863d816ae342f903639",
+      "response": {
+        "status": 403,
+        "body": ""
+      },
+      "atomic_transact_invocations": 1,
+      "pending_counters_zero": 3
+    },
+    {
+      "name": "allowed-fresh-input",
+      "input_sha256": "6d35163ad5288ac73ab87d87a69eb5ae673d9f530bc24f83dbaa7c982f7ce675",
+      "response": {
+        "status": 200,
+        "body": "29"
+      },
+      "atomic_transact_invocations": 2,
+      "pending_counters_zero": 3
+    },
+    {
+      "name": "invalid-JSON-no-write",
+      "input_sha256": "021fb596db81e6d02bf3d2586ee3981fe519f275c0ac9ca76bbcf2ebb4097d96",
+      "response": {
+        "status": 422,
+        "body": "{}"
+      },
+      "atomic_transact_invocations": 2,
+      "pending_counters_zero": 3
+    }
+  ],
+  "transactions": [
+    {
+      "bytes": 462,
+      "sha256": "99daeeb699de98d2d9c85e8f4922dbf3171674afc158425e0508a88bb43d23dc"
+    },
+    {
+      "bytes": 462,
+      "sha256": "ae7798d7a3137dc063419184991031f26daa79eea84b5670cf3ec74678288db2"
+    }
+  ]
+}

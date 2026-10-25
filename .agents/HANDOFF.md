@@ -1,3 +1,11 @@
+Current result (2026-10-25): WAsmC v0.0.27 is formally published as the default latest release at immutable commit b735525d186939da3094f838da65d49c33e348fc, tree a5db3a135e982e18ff41f60c263275bb79fc3de2. The checked chunk CoreLib/SDK carrier uses compiler fc8b and matching current Core b06, retaining existing Native/Core public interfaces.
+
+All 20 official assets were anonymously downloaded after publication; 3,565 archive Git blobs/modes matched. Fifteen downloaded Node/Bun/Deno commands and Mac Native 7/6/6/13 plus 12 rejection controls passed. Original 4,128-byte and fresh-input fixtures passed the unchanged 10M fuel budget on both Wasmi and Wasmtime, with 60 same-instance calls and three failure/recovery pairs per engine, and three pending counters zero. New JSON decisions and atomic transaction requests passed bounded Host mocks; no live business write is claimed.
+
+Normal CI source 6e050ce510465a395dd1028f5c0e5256d4b43501 passed 20 cells/141 commands; Native source 41ee22c2ecca8c2673097b43045f5a936d894bb6 passed six builds/six downloads. Exact input bridges preserve those source identities. Final exact-tree GLM six-case acceptance and independent review passed after one bounded full-cohort retry; original failures remain preserved. Closure: .agents/workstreams/WS-20261025-checked-chunk-release-v027/publication/closure.json. All 75 old standard files, 616 files in 42 current Roots, and frozen tags remain preserved. No GREEN/fleet deployment occurred. Live MCPGit adoption remains consumer-owned.
+
+Historical completion records follow.
+
 Current result2026-10-24: v0.0.26 is formally published/default latest at immutable604122681165fbecd72821093dac26d5f38a2eb0. All20 official assets/3529 archive files verified; downloaded three-host SDK/scope, MacARM Native and fixed-tag CDN consumers pass. Static/read-only JSON omit unused Table/error imports13 instead of18; Table retains18. Exact GLM single-model6/6 and independent review pass. Closure: .agents/workstreams/WS-20261024-unused-host-imports-release-v026/publication/closure.json. No Core/42-Root/permissions/fuel/live-default change.
 
 Historical completion records follow.

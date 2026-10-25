@@ -1,0 +1,38 @@
+{
+  "schema": "wasmc.final-pi-failed-cohort-classification/v1",
+  "rehearsal_commit": "b735525d186939da3094f838da65d49c33e348fc",
+  "rehearsal_tree": "a5db3a135e982e18ff41f60c263275bb79fc3de2",
+  "failed_run_sha256": "56f478ecf93fdf836d89719e68376cc97e0f1119e43d5b12419b6f4b49a3623d",
+  "accepted": false,
+  "failed_cases": [
+    {
+      "case": "release-orientation",
+      "process_exit": 0,
+      "failed_contract": [
+        {
+          "metric": "required_literal",
+          "expected": "agent-release-orientation.json"
+        }
+      ],
+      "first_final_sha256": "b481f0fc62b55f4c8a2a9c847134eaf642a6300009808a67513613926d24736e",
+      "tool_errors": 0,
+      "session_retries": 0
+    },
+    {
+      "case": "release-state-separation",
+      "process_exit": 0,
+      "failed_contract": [
+        {
+          "metric": "required_literal",
+          "expected": "admitted"
+        }
+      ],
+      "first_final_sha256": "1b7cad35f1f6371eab8f6a8d535250d7ceee74847dab2df67ad9cadc73ff899e",
+      "tool_errors": 0,
+      "session_retries": 0
+    }
+  ],
+  "classification": "Two exact answer-literal compliance failures; no runtime check, tool or timeout failure. Original cohort remains failed.",
+  "bounded_recovery": "At most one complete fresh six-case cohort on the identical frozen commit/protocol/prompts/budgets; no case selection, no gate change, no product/build repetition. Record separately from failed cohort.",
+  "failed_cohort_supplies_release_authorization": false
+}

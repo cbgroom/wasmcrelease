@@ -1,3 +1,19 @@
+# Completed v0.0.27 publication and downloaded installation
+
+Published as the default latest release at 2026-10-25T02:30:03Z. Tag `v0.0.27` points to commit `b735525d186939da3094f838da65d49c33e348fc`, tree `a5db3a135e982e18ff41f60c263275bb79fc3de2`; annotated tag object `2bddc8ef880367a2badacbcd7060af6870e9c292`.
+
+All 20 official assets were downloaded anonymously after publication. Every one of the archive's 3,565 Git blobs and modes and all six Native package manifests matched. Fifteen downloaded Node/Bun/Deno commands passed. The downloaded Mac ARM package passed 7 byte-parity, 6 Wasmi, 6 native execution, 13 no-clobber and 12 package-rejection controls.
+
+The downloaded compiler and Core rebuilt the original 4,128-byte scenario: cold Wasmi fuel 7,303,446; cold Wasmtime fuel 6,920,908, both within the unchanged 10M budget. Each engine passed 60 same-instance calls, three failure/recovery pairs and three zero pending counters. The same installed Table App handled allowed values 14 and 29, a denial and invalid JSON. Allowed inputs each invoked the existing atomic transaction interface once; denied/invalid inputs invoked no writes. These are bounded Host mocks; no live MCPGit business state or GREEN deployment is claimed.
+
+Actual normal CI source `6e050ce510465a395dd1028f5c0e5256d4b43501` passed 20 cells/141 commands. Actual Native source `41ee22c2ecca8c2673097b43045f5a936d894bb6` passed six builds and six matching download consumers. Complete input bridges distinguish those sources from the final release commit. The final exact-tree GLM six-case cohort and independent ten-command review passed after one bounded complete-cohort retry; the original two answer-literal failures remain preserved. No prompt, budget, oracle, product or case selection changed.
+
+See `publication/closure.json` and sibling receipts for final identities and evidence. There are 15 canonical assets plus a separately pinned compiler, yielding 16 file bindings and 13 distinct file contents (consumer resource identities are separate). All 75 previous standard files and 616 files in 42 current Lib Roots retained their bytes/modes. Frozen releases, original failures and foreign WIP remain preserved.
+
+This release goal is complete. Do not rebuild or replay closed gates. Keep the tag immutable; a future iteration needs a successor. Live MCPGit adoption remains consumer-owned.
+
+Historical progress follows.
+
 # Checked chunk formal release successor
 
 Task state: started. New0.0.27 only. Base latestpublice133 verifiedremote main; previous release0.0.26 immutable. Current chat remains sole publisher for its successor; oldpublisher task belongs tosame owner.

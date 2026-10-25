@@ -1,0 +1,318 @@
+{
+  "accepted": true,
+  "root": "/Users/youxianshi/.local/state/wasmc-maintenance/v027-official-extracted/wasmcrelease-v0.0.27",
+  "commands": [
+    {
+      "argv": [
+        "node",
+        "scripts/validate-integrity.mjs"
+      ],
+      "exit_code": 0,
+      "stdout_sha256": "38a29a080080248f33893f589d28dd03bd5ed98a203cc3432fa28c961215b311",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "actual_observation": {
+        "accepted": true,
+        "literal_PASS": "PASS release/manifest/checksum/runtime/Host evidence integrity (prod authority) and active Python=0"
+      }
+    },
+    {
+      "argv": [
+        "node",
+        "scripts/current-compiler-integrity.mjs",
+        "--require-qualification"
+      ],
+      "exit_code": 0,
+      "stdout_sha256": "beab734c71d54ae2f26a43923ebc941fb085befcd0ee54d65156a8e9c73b4757",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "actual_observation": {
+        "accepted": true,
+        "version": "0.0.27",
+        "compiler_sha256": "fc8b025e8a6ef8d1a4a41246e4b7a87d077b428c5738162bf1984602182dc3d5",
+        "active_compiler_versions": 1,
+        "binaries": 2,
+        "embeddings": 3,
+        "artifacts": 195
+      }
+    },
+    {
+      "argv": [
+        "node",
+        "scripts/current-release-identity.mjs"
+      ],
+      "exit_code": 0,
+      "stdout_sha256": "33753ea2756082b767f656c2de9b688b2f77e076f7ddced86faa3943f95d8aa0",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "actual_observation": {
+        "accepted": true,
+        "version": "0.0.27",
+        "candidate": "channels/candidates/0.0.27.json",
+        "product_set_sha256": "0253094db456fe696513f0c6c68b03cbdb58795fd2c7482d78c573022b6ad8a6",
+        "current_packages": 42
+      }
+    },
+    {
+      "argv": [
+        "node",
+        "scripts/test-canonical-host-sdk.mjs"
+      ],
+      "exit_code": 0,
+      "stdout_sha256": "4653c4fcecff2a84b5dd9d7b5fc931fd18045bbee9fb5c9813ad003bd7dbb1df",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "actual_observation": {
+        "accepted": true,
+        "runtime": "node",
+        "compiler_sha256": "fc8b025e8a6ef8d1a4a41246e4b7a87d077b428c5738162bf1984602182dc3d5",
+        "compiled_frames": 4,
+        "modules_per_frame": 8,
+        "native_parity": "6c48c4bdade45afc63d2eaf372552bcdc85ac3f88c58fc4ce6866ec52ea1eecb",
+        "frame_bytes": 76134,
+        "checked_chunk_profile": true,
+        "exact_native_modules": 8,
+        "rejection_then_recovery": true,
+        "source_rebinding": true,
+        "real_Host_invocation": false
+      }
+    },
+    {
+      "argv": [
+        "node",
+        "scripts/test-current-lib-api-v021.mjs"
+      ],
+      "exit_code": 0,
+      "stdout_sha256": "b3e96d7ccd13565a7c211de1a563f5da504bec10b0d4102f9306f415710832c4",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "actual_observation": {
+        "accepted": true,
+        "provider": "4.11.0-candidate.1",
+        "provider_sha256": "b06eb9a32dddb75e278cd8aa9b1126f6e4b51e885a83897c80f7b5da85b81c3f",
+        "abi_namespace": "wasmc:lib/wasmc.lib_managed_object_heap@4.9.0",
+        "compileLib_oracles": 3,
+        "instantiateLib_oracles": 3,
+        "calls": 768,
+        "boolean_conditional_calls": 1536,
+        "boolean_numeric_rejections": 6,
+        "old_provider_fallback": false
+      }
+    },
+    {
+      "argv": [
+        "node",
+        "scripts/test-if-branch-scope.mjs"
+      ],
+      "exit_code": 0,
+      "stdout_sha256": "f181ee810ff7b16f35d9dc967484a4478d072367f66b401cbfd973647efe76fd",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "actual_observation": {
+        "accepted": true,
+        "engine": "node",
+        "compiler_sha256": "fc8b025e8a6ef8d1a4a41246e4b7a87d077b428c5738162bf1984602182dc3d5",
+        "source_cases": 5,
+        "scalar_calls": 1200,
+        "managed_calls": 192,
+        "scope_rejections": 24,
+        "carrier_forms": 3,
+        "physical_owner_slots_preserved": true
+      }
+    },
+    {
+      "argv": [
+        "node",
+        "runtime/wasmc-runtime-v0/bootstrap.mjs",
+        "self-test"
+      ],
+      "exit_code": 0,
+      "stdout_sha256": "a59ab49b53d0b7502f0dee8db7b2d4265132c361e8438e58c7ebe7f3df33504b",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "actual_observation": {
+        "schema": "wasmc.runtime-js-self-test/v0",
+        "accepted": true,
+        "runtime": "node",
+        "compiler_bytes": 2010461,
+        "output_bytes": 41
+      }
+    },
+    {
+      "argv": [
+        "bun",
+        "scripts/test-canonical-host-sdk.mjs"
+      ],
+      "exit_code": 0,
+      "stdout_sha256": "e93e8b9a6e9def4dd73ad7954974be29ef55a4573cc6b55dc75c26c0bb48854b",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "actual_observation": {
+        "accepted": true,
+        "runtime": "bun",
+        "compiler_sha256": "fc8b025e8a6ef8d1a4a41246e4b7a87d077b428c5738162bf1984602182dc3d5",
+        "compiled_frames": 4,
+        "modules_per_frame": 8,
+        "native_parity": "6c48c4bdade45afc63d2eaf372552bcdc85ac3f88c58fc4ce6866ec52ea1eecb",
+        "frame_bytes": 76134,
+        "checked_chunk_profile": true,
+        "exact_native_modules": 8,
+        "rejection_then_recovery": true,
+        "source_rebinding": true,
+        "real_Host_invocation": false
+      }
+    },
+    {
+      "argv": [
+        "bun",
+        "scripts/test-current-lib-api-v021.mjs"
+      ],
+      "exit_code": 0,
+      "stdout_sha256": "b3e96d7ccd13565a7c211de1a563f5da504bec10b0d4102f9306f415710832c4",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "actual_observation": {
+        "accepted": true,
+        "provider": "4.11.0-candidate.1",
+        "provider_sha256": "b06eb9a32dddb75e278cd8aa9b1126f6e4b51e885a83897c80f7b5da85b81c3f",
+        "abi_namespace": "wasmc:lib/wasmc.lib_managed_object_heap@4.9.0",
+        "compileLib_oracles": 3,
+        "instantiateLib_oracles": 3,
+        "calls": 768,
+        "boolean_conditional_calls": 1536,
+        "boolean_numeric_rejections": 6,
+        "old_provider_fallback": false
+      }
+    },
+    {
+      "argv": [
+        "bun",
+        "scripts/test-if-branch-scope.mjs"
+      ],
+      "exit_code": 0,
+      "stdout_sha256": "34ad78b0339de9e80f6620f1d500e906204a38368a1b6eb7ee54edb491832bf1",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "actual_observation": {
+        "accepted": true,
+        "engine": "bun",
+        "compiler_sha256": "fc8b025e8a6ef8d1a4a41246e4b7a87d077b428c5738162bf1984602182dc3d5",
+        "source_cases": 5,
+        "scalar_calls": 1200,
+        "managed_calls": 192,
+        "scope_rejections": 24,
+        "carrier_forms": 3,
+        "physical_owner_slots_preserved": true
+      }
+    },
+    {
+      "argv": [
+        "bun",
+        "runtime/wasmc-runtime-v0/bootstrap.mjs",
+        "self-test"
+      ],
+      "exit_code": 0,
+      "stdout_sha256": "ef06c955df0af108e2b3d588480986dbba0ea2bc00d51abde8091999229fa355",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "actual_observation": {
+        "schema": "wasmc.runtime-js-self-test/v0",
+        "accepted": true,
+        "runtime": "bun",
+        "compiler_bytes": 2010461,
+        "output_bytes": 41
+      }
+    },
+    {
+      "argv": [
+        "deno",
+        "run",
+        "--allow-read",
+        "--allow-write",
+        "--allow-run",
+        "--allow-env",
+        "scripts/test-canonical-host-sdk.mjs"
+      ],
+      "exit_code": 0,
+      "stdout_sha256": "a14887f3041ecf16d21dc6515e61d81bfcd8ea9911b4c06b5e7cb7580c1cb0b8",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "actual_observation": {
+        "accepted": true,
+        "runtime": "deno",
+        "compiler_sha256": "fc8b025e8a6ef8d1a4a41246e4b7a87d077b428c5738162bf1984602182dc3d5",
+        "compiled_frames": 4,
+        "modules_per_frame": 8,
+        "native_parity": "6c48c4bdade45afc63d2eaf372552bcdc85ac3f88c58fc4ce6866ec52ea1eecb",
+        "frame_bytes": 76134,
+        "checked_chunk_profile": true,
+        "exact_native_modules": 8,
+        "rejection_then_recovery": true,
+        "source_rebinding": true,
+        "real_Host_invocation": false
+      }
+    },
+    {
+      "argv": [
+        "deno",
+        "run",
+        "--allow-read",
+        "--allow-write",
+        "--allow-run",
+        "--allow-env",
+        "scripts/test-current-lib-api-v021.mjs"
+      ],
+      "exit_code": 0,
+      "stdout_sha256": "b3e96d7ccd13565a7c211de1a563f5da504bec10b0d4102f9306f415710832c4",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "actual_observation": {
+        "accepted": true,
+        "provider": "4.11.0-candidate.1",
+        "provider_sha256": "b06eb9a32dddb75e278cd8aa9b1126f6e4b51e885a83897c80f7b5da85b81c3f",
+        "abi_namespace": "wasmc:lib/wasmc.lib_managed_object_heap@4.9.0",
+        "compileLib_oracles": 3,
+        "instantiateLib_oracles": 3,
+        "calls": 768,
+        "boolean_conditional_calls": 1536,
+        "boolean_numeric_rejections": 6,
+        "old_provider_fallback": false
+      }
+    },
+    {
+      "argv": [
+        "deno",
+        "run",
+        "--allow-read",
+        "--allow-write",
+        "--allow-run",
+        "--allow-env",
+        "scripts/test-if-branch-scope.mjs"
+      ],
+      "exit_code": 0,
+      "stdout_sha256": "ea76831bafe49ddf523a7702a61e3898e8936f47fe43165b5b94ec3b70ed3181",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "actual_observation": {
+        "accepted": true,
+        "engine": "deno",
+        "compiler_sha256": "fc8b025e8a6ef8d1a4a41246e4b7a87d077b428c5738162bf1984602182dc3d5",
+        "source_cases": 5,
+        "scalar_calls": 1200,
+        "managed_calls": 192,
+        "scope_rejections": 24,
+        "carrier_forms": 3,
+        "physical_owner_slots_preserved": true
+      }
+    },
+    {
+      "argv": [
+        "deno",
+        "run",
+        "--allow-read",
+        "--allow-write",
+        "--allow-run",
+        "--allow-env",
+        "runtime/wasmc-runtime-v0/bootstrap.mjs",
+        "self-test"
+      ],
+      "exit_code": 0,
+      "stdout_sha256": "101fb49754ccbaaf107f303beba4541dd7352752bf65ae8391ab5cc717f49952",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "actual_observation": {
+        "schema": "wasmc.runtime-js-self-test/v0",
+        "accepted": true,
+        "runtime": "deno",
+        "compiler_bytes": 2010461,
+        "output_bytes": 41
+      }
+    }
+  ],
+  "source": "actual anonymous post-publication download"
+}

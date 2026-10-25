@@ -1,0 +1,720 @@
+{
+  "schema": "wasmc.official-installed-checked-chunk/v1",
+  "accepted": true,
+  "downloaded_release": "v0.0.27",
+  "actual_root": "/Users/youxianshi/.local/state/wasmc-maintenance/v027-official-extracted/wasmcrelease-v0.0.27",
+  "compiler_sha256": "fc8b025e8a6ef8d1a4a41246e4b7a87d077b428c5738162bf1984602182dc3d5",
+  "core_sha256": "b06eb9a32dddb75e278cd8aa9b1126f6e4b51e885a83897c80f7b5da85b81c3f",
+  "fixed_fuel": 10000000,
+  "private_compiler_source_present": false,
+  "SDK_postprocessing": false,
+  "installed_same_app_handles_new_external_inputs": true,
+  "cases": [
+    {
+      "name": "original",
+      "source_sha256": "7615c11514448e14b588bd938bf561a0557f1a3c9d902e46498b62f19b1a6a9e",
+      "frame_sha256": "d225404eae1c594afb7416e05cab4353665a76be234976b622be400c1c260530",
+      "artifact_sha256": "196cd5691b6c8efdc35370803695b3543e41504b15cbd89fece945d33b558e61",
+      "wasmi": {
+        "mode": "original",
+        "engine": "wasmi2.0.0",
+        "same_instance_calls": 12,
+        "failure_then_recovery": true,
+        "pending_counters": 3,
+        "accepted": true
+      },
+      "wasmi_cold_first": {
+        "engine": "wasmi2.0.0",
+        "round": 0,
+        "case": 2,
+        "fuel": 7303446,
+        "bytes": 4128,
+        "pass": true
+      },
+      "wasmtime": {
+        "accepted": true,
+        "engine": "wasmtime49.0.0",
+        "artifact_sha256": "196cd5691b6c8efdc35370803695b3543e41504b15cbd89fece945d33b558e61",
+        "fixed_fuel": 10000000,
+        "instantiation_fuel": 2727864,
+        "cold_first_includes_instantiation": true,
+        "memory_limit": 67108864,
+        "same_instance_successes": 12,
+        "failure_recovery_pairs": 1,
+        "pending_counters_zero": 3,
+        "cases": [
+          {
+            "round": 0,
+            "case": 0,
+            "fuel": 6920908,
+            "bytes": 4128,
+            "response_sha256": "58bf42c43ef750a6bd87d45502d348b9312cde3730df9b9bba4bc7e2f7bdebf9"
+          },
+          {
+            "round": 0,
+            "case": 1,
+            "fuel": 1587612,
+            "bytes": 1465,
+            "response_sha256": "e4a8d36159c79842503bd5ed870be1311d011584fcf5cfc135a4407ee02b6060"
+          },
+          {
+            "round": 0,
+            "case": 2,
+            "fuel": 372947,
+            "bytes": 215,
+            "response_sha256": "b6da8e9b49573f1dac697c49bd09ff5d9127036e96ed06c232f94ce4cfe571d0"
+          },
+          {
+            "round": 1,
+            "case": 0,
+            "fuel": 4192243,
+            "bytes": 4128,
+            "response_sha256": "58bf42c43ef750a6bd87d45502d348b9312cde3730df9b9bba4bc7e2f7bdebf9"
+          },
+          {
+            "round": 1,
+            "case": 1,
+            "fuel": 1587612,
+            "bytes": 1465,
+            "response_sha256": "e4a8d36159c79842503bd5ed870be1311d011584fcf5cfc135a4407ee02b6060"
+          },
+          {
+            "round": 1,
+            "case": 2,
+            "fuel": 372947,
+            "bytes": 215,
+            "response_sha256": "b6da8e9b49573f1dac697c49bd09ff5d9127036e96ed06c232f94ce4cfe571d0"
+          },
+          {
+            "round": 2,
+            "case": 0,
+            "fuel": 4192243,
+            "bytes": 4128,
+            "response_sha256": "58bf42c43ef750a6bd87d45502d348b9312cde3730df9b9bba4bc7e2f7bdebf9"
+          },
+          {
+            "round": 2,
+            "case": 1,
+            "fuel": 1587612,
+            "bytes": 1465,
+            "response_sha256": "e4a8d36159c79842503bd5ed870be1311d011584fcf5cfc135a4407ee02b6060"
+          },
+          {
+            "round": 2,
+            "case": 2,
+            "fuel": 372947,
+            "bytes": 215,
+            "response_sha256": "b6da8e9b49573f1dac697c49bd09ff5d9127036e96ed06c232f94ce4cfe571d0"
+          },
+          {
+            "round": 3,
+            "case": 0,
+            "fuel": 4192243,
+            "bytes": 4128,
+            "response_sha256": "58bf42c43ef750a6bd87d45502d348b9312cde3730df9b9bba4bc7e2f7bdebf9"
+          },
+          {
+            "round": 3,
+            "case": 1,
+            "fuel": 1587612,
+            "bytes": 1465,
+            "response_sha256": "e4a8d36159c79842503bd5ed870be1311d011584fcf5cfc135a4407ee02b6060"
+          },
+          {
+            "round": 3,
+            "case": 2,
+            "fuel": 372947,
+            "bytes": 215,
+            "response_sha256": "b6da8e9b49573f1dac697c49bd09ff5d9127036e96ed06c232f94ce4cfe571d0"
+          }
+        ]
+      },
+      "actual_compiler_and_Core_from_official_download": true
+    },
+    {
+      "name": "dynamic",
+      "source_sha256": "d6ed49e3c54d1c5335867a0e8448dcae0e9352472366b26f75db21e0dcf2ef84",
+      "frame_sha256": "8b1e4f9de3b06118e58f9dc08560bcc694b967b2b6193a129e2e88718f8b6433",
+      "artifact_sha256": "1b36619e5b2e69f9df669f95239125a7c2b39bd220514a074cf6f926e2af0599",
+      "wasmi": {
+        "mode": "dynamic",
+        "engine": "wasmi2.0.0",
+        "same_instance_calls": 44,
+        "failure_then_recovery": true,
+        "pending_counters": 3,
+        "accepted": true
+      },
+      "wasmi_cold_first": {
+        "engine": "wasmi2.0.0",
+        "round": 0,
+        "case": 0,
+        "fuel": 898935,
+        "bytes": 0,
+        "pass": true
+      },
+      "wasmtime": {
+        "accepted": true,
+        "engine": "wasmtime49.0.0",
+        "artifact_sha256": "1b36619e5b2e69f9df669f95239125a7c2b39bd220514a074cf6f926e2af0599",
+        "fixed_fuel": 10000000,
+        "instantiation_fuel": 2727864,
+        "cold_first_includes_instantiation": true,
+        "memory_limit": 67108864,
+        "same_instance_successes": 44,
+        "failure_recovery_pairs": 1,
+        "pending_counters_zero": 3,
+        "cases": [
+          {
+            "round": 0,
+            "case": 0,
+            "fuel": 2880822,
+            "bytes": 0,
+            "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "round": 0,
+            "case": 1,
+            "fuel": 165887,
+            "bytes": 1,
+            "response_sha256": "ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb"
+          },
+          {
+            "round": 0,
+            "case": 2,
+            "fuel": 177544,
+            "bytes": 7,
+            "response_sha256": "8bb0cf6eb9b17d0f7d22b456f121257dc1254e1f01665370476383ea776df414"
+          },
+          {
+            "round": 0,
+            "case": 3,
+            "fuel": 175579,
+            "bytes": 8,
+            "response_sha256": "ef797c8118f02dfb649607dd5d3f8c7623048c9c063d532cc95c5ed7a898a64f"
+          },
+          {
+            "round": 0,
+            "case": 4,
+            "fuel": 180261,
+            "bytes": 9,
+            "response_sha256": "15e2b0d3c33891ebb0f1ef609ec419420c20e320ce94c65fbc8c3312448eb225"
+          },
+          {
+            "round": 0,
+            "case": 5,
+            "fuel": 194972,
+            "bytes": 13,
+            "response_sha256": "ad1316998fc886e0db9a68736451eb7c25d14332dc1b3f4c9c5dac4ed807bbd0"
+          },
+          {
+            "round": 0,
+            "case": 6,
+            "fuel": 181259,
+            "bytes": 9,
+            "response_sha256": "e9ac5becf9547fb5ea75ee9bcccdb850e6bb89acce9b303abbe3b9eefa0a917b"
+          },
+          {
+            "round": 0,
+            "case": 7,
+            "fuel": 604775,
+            "bytes": 255,
+            "response_sha256": "d22609da3ae3956ca4877056a8e580eed744a6f7d7cfa5b19dd88d52fcc0d435"
+          },
+          {
+            "round": 0,
+            "case": 8,
+            "fuel": 602546,
+            "bytes": 256,
+            "response_sha256": "85e62acd750c4eb56b7b6a1d66dca5bfaac5f062608a1a893410d0288936c09a"
+          },
+          {
+            "round": 0,
+            "case": 9,
+            "fuel": 607850,
+            "bytes": 257,
+            "response_sha256": "15eb95a462ee20bd91a415ae2d4aed341288186ddaa2b37908f7d592f0c3f85f"
+          },
+          {
+            "round": 0,
+            "case": 10,
+            "fuel": 145852,
+            "bytes": 0,
+            "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "round": 1,
+            "case": 0,
+            "fuel": 152185,
+            "bytes": 0,
+            "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "round": 1,
+            "case": 1,
+            "fuel": 165901,
+            "bytes": 1,
+            "response_sha256": "ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb"
+          },
+          {
+            "round": 1,
+            "case": 2,
+            "fuel": 177530,
+            "bytes": 7,
+            "response_sha256": "8bb0cf6eb9b17d0f7d22b456f121257dc1254e1f01665370476383ea776df414"
+          },
+          {
+            "round": 1,
+            "case": 3,
+            "fuel": 175593,
+            "bytes": 8,
+            "response_sha256": "ef797c8118f02dfb649607dd5d3f8c7623048c9c063d532cc95c5ed7a898a64f"
+          },
+          {
+            "round": 1,
+            "case": 4,
+            "fuel": 180247,
+            "bytes": 9,
+            "response_sha256": "15e2b0d3c33891ebb0f1ef609ec419420c20e320ce94c65fbc8c3312448eb225"
+          },
+          {
+            "round": 1,
+            "case": 5,
+            "fuel": 194986,
+            "bytes": 13,
+            "response_sha256": "ad1316998fc886e0db9a68736451eb7c25d14332dc1b3f4c9c5dac4ed807bbd0"
+          },
+          {
+            "round": 1,
+            "case": 6,
+            "fuel": 181245,
+            "bytes": 9,
+            "response_sha256": "e9ac5becf9547fb5ea75ee9bcccdb850e6bb89acce9b303abbe3b9eefa0a917b"
+          },
+          {
+            "round": 1,
+            "case": 7,
+            "fuel": 604789,
+            "bytes": 255,
+            "response_sha256": "d22609da3ae3956ca4877056a8e580eed744a6f7d7cfa5b19dd88d52fcc0d435"
+          },
+          {
+            "round": 1,
+            "case": 8,
+            "fuel": 602532,
+            "bytes": 256,
+            "response_sha256": "85e62acd750c4eb56b7b6a1d66dca5bfaac5f062608a1a893410d0288936c09a"
+          },
+          {
+            "round": 1,
+            "case": 9,
+            "fuel": 607864,
+            "bytes": 257,
+            "response_sha256": "15eb95a462ee20bd91a415ae2d4aed341288186ddaa2b37908f7d592f0c3f85f"
+          },
+          {
+            "round": 1,
+            "case": 10,
+            "fuel": 145838,
+            "bytes": 0,
+            "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "round": 2,
+            "case": 0,
+            "fuel": 152199,
+            "bytes": 0,
+            "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "round": 2,
+            "case": 1,
+            "fuel": 165887,
+            "bytes": 1,
+            "response_sha256": "ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb"
+          },
+          {
+            "round": 2,
+            "case": 2,
+            "fuel": 177544,
+            "bytes": 7,
+            "response_sha256": "8bb0cf6eb9b17d0f7d22b456f121257dc1254e1f01665370476383ea776df414"
+          },
+          {
+            "round": 2,
+            "case": 3,
+            "fuel": 175579,
+            "bytes": 8,
+            "response_sha256": "ef797c8118f02dfb649607dd5d3f8c7623048c9c063d532cc95c5ed7a898a64f"
+          },
+          {
+            "round": 2,
+            "case": 4,
+            "fuel": 180261,
+            "bytes": 9,
+            "response_sha256": "15e2b0d3c33891ebb0f1ef609ec419420c20e320ce94c65fbc8c3312448eb225"
+          },
+          {
+            "round": 2,
+            "case": 5,
+            "fuel": 194972,
+            "bytes": 13,
+            "response_sha256": "ad1316998fc886e0db9a68736451eb7c25d14332dc1b3f4c9c5dac4ed807bbd0"
+          },
+          {
+            "round": 2,
+            "case": 6,
+            "fuel": 181259,
+            "bytes": 9,
+            "response_sha256": "e9ac5becf9547fb5ea75ee9bcccdb850e6bb89acce9b303abbe3b9eefa0a917b"
+          },
+          {
+            "round": 2,
+            "case": 7,
+            "fuel": 604775,
+            "bytes": 255,
+            "response_sha256": "d22609da3ae3956ca4877056a8e580eed744a6f7d7cfa5b19dd88d52fcc0d435"
+          },
+          {
+            "round": 2,
+            "case": 8,
+            "fuel": 602546,
+            "bytes": 256,
+            "response_sha256": "85e62acd750c4eb56b7b6a1d66dca5bfaac5f062608a1a893410d0288936c09a"
+          },
+          {
+            "round": 2,
+            "case": 9,
+            "fuel": 607850,
+            "bytes": 257,
+            "response_sha256": "15eb95a462ee20bd91a415ae2d4aed341288186ddaa2b37908f7d592f0c3f85f"
+          },
+          {
+            "round": 2,
+            "case": 10,
+            "fuel": 145852,
+            "bytes": 0,
+            "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "round": 3,
+            "case": 0,
+            "fuel": 152185,
+            "bytes": 0,
+            "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          {
+            "round": 3,
+            "case": 1,
+            "fuel": 165901,
+            "bytes": 1,
+            "response_sha256": "ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb"
+          },
+          {
+            "round": 3,
+            "case": 2,
+            "fuel": 177530,
+            "bytes": 7,
+            "response_sha256": "8bb0cf6eb9b17d0f7d22b456f121257dc1254e1f01665370476383ea776df414"
+          },
+          {
+            "round": 3,
+            "case": 3,
+            "fuel": 175593,
+            "bytes": 8,
+            "response_sha256": "ef797c8118f02dfb649607dd5d3f8c7623048c9c063d532cc95c5ed7a898a64f"
+          },
+          {
+            "round": 3,
+            "case": 4,
+            "fuel": 180247,
+            "bytes": 9,
+            "response_sha256": "15e2b0d3c33891ebb0f1ef609ec419420c20e320ce94c65fbc8c3312448eb225"
+          },
+          {
+            "round": 3,
+            "case": 5,
+            "fuel": 194986,
+            "bytes": 13,
+            "response_sha256": "ad1316998fc886e0db9a68736451eb7c25d14332dc1b3f4c9c5dac4ed807bbd0"
+          },
+          {
+            "round": 3,
+            "case": 6,
+            "fuel": 181245,
+            "bytes": 9,
+            "response_sha256": "e9ac5becf9547fb5ea75ee9bcccdb850e6bb89acce9b303abbe3b9eefa0a917b"
+          },
+          {
+            "round": 3,
+            "case": 7,
+            "fuel": 604789,
+            "bytes": 255,
+            "response_sha256": "d22609da3ae3956ca4877056a8e580eed744a6f7d7cfa5b19dd88d52fcc0d435"
+          },
+          {
+            "round": 3,
+            "case": 8,
+            "fuel": 602532,
+            "bytes": 256,
+            "response_sha256": "85e62acd750c4eb56b7b6a1d66dca5bfaac5f062608a1a893410d0288936c09a"
+          },
+          {
+            "round": 3,
+            "case": 9,
+            "fuel": 607864,
+            "bytes": 257,
+            "response_sha256": "15eb95a462ee20bd91a415ae2d4aed341288186ddaa2b37908f7d592f0c3f85f"
+          },
+          {
+            "round": 3,
+            "case": 10,
+            "fuel": 145838,
+            "bytes": 0,
+            "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ]
+      },
+      "actual_compiler_and_Core_from_official_download": true
+    },
+    {
+      "name": "unicode",
+      "source_sha256": "8eab8c976a9d5e8850a94252ec9e176ab8de4ba1ca67b3ab1a799b5b8d074275",
+      "frame_sha256": "3837a92121936db003bd62db36c8849dbc22f9cb57bfdd3d480aab2fbc989611",
+      "artifact_sha256": "a60aa757c2543c8c36a1cf67bc9ac86b6a4566136597c3ec6bcfbecc886f7001",
+      "wasmi": {
+        "mode": "unicode",
+        "engine": "wasmi2.0.0",
+        "same_instance_calls": 4,
+        "failure_then_recovery": true,
+        "pending_counters": 3,
+        "accepted": true
+      },
+      "wasmi_cold_first": {
+        "engine": "wasmi2.0.0",
+        "round": 0,
+        "case": 0,
+        "fuel": 676228,
+        "bytes": 13,
+        "pass": true
+      },
+      "wasmtime": {
+        "accepted": true,
+        "engine": "wasmtime49.0.0",
+        "artifact_sha256": "a60aa757c2543c8c36a1cf67bc9ac86b6a4566136597c3ec6bcfbecc886f7001",
+        "fixed_fuel": 10000000,
+        "instantiation_fuel": 2727864,
+        "cold_first_includes_instantiation": true,
+        "memory_limit": 67108864,
+        "same_instance_successes": 4,
+        "failure_recovery_pairs": 1,
+        "pending_counters_zero": 3,
+        "cases": [
+          {
+            "round": 0,
+            "case": 0,
+            "fuel": 2855027,
+            "bytes": 13,
+            "response_sha256": "ad1316998fc886e0db9a68736451eb7c25d14332dc1b3f4c9c5dac4ed807bbd0"
+          },
+          {
+            "round": 1,
+            "case": 0,
+            "fuel": 126418,
+            "bytes": 13,
+            "response_sha256": "ad1316998fc886e0db9a68736451eb7c25d14332dc1b3f4c9c5dac4ed807bbd0"
+          },
+          {
+            "round": 2,
+            "case": 0,
+            "fuel": 126432,
+            "bytes": 13,
+            "response_sha256": "ad1316998fc886e0db9a68736451eb7c25d14332dc1b3f4c9c5dac4ed807bbd0"
+          },
+          {
+            "round": 3,
+            "case": 0,
+            "fuel": 126418,
+            "bytes": 13,
+            "response_sha256": "ad1316998fc886e0db9a68736451eb7c25d14332dc1b3f4c9c5dac4ed807bbd0"
+          }
+        ]
+      },
+      "actual_compiler_and_Core_from_official_download": true
+    }
+  ],
+  "commands": [
+    {
+      "name": "original-compile",
+      "argv": [
+        "node",
+        "/Users/youxianshi/code/.worktrees/wasmc/WS-20261025-canonical-chunk-carrier-v1/.agents/workstreams/WS-20261025-canonical-chunk-carrier-v1/compile-carrier.mjs",
+        "/Users/youxianshi/.local/state/wasmc-maintenance/v027-official-extracted/wasmcrelease-v0.0.27",
+        "/Users/youxianshi/.local/state/wasmc-maintenance/v027-official-extracted/wasmcrelease-v0.0.27/current/wasmc_compiler.wasm",
+        "fc8b025e8a6ef8d1a4a41246e4b7a87d077b428c5738162bf1984602182dc3d5",
+        "/Users/youxianshi/.local/state/wasmc-maintenance/v027-official-extracted/wasmcrelease-v0.0.27/current/lib_core.wasm",
+        "/Users/youxianshi/.local/state/wasmc-maintenance/green-static-cost-20261025/carrier-v2-original/source.wasmc",
+        "/Users/youxianshi/.local/state/wasmc-maintenance/v027-official-chunk/original-frame"
+      ],
+      "exit": 0,
+      "stdout_sha256": "013b217bbe1328fd31c21134a6c7eea6ccdcae0a5a5cb081aa2d0ed2f566f395",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "original-seal",
+      "argv": [
+        "node",
+        "/Users/youxianshi/code/.worktrees/wasmc/WS-20261025-canonical-chunk-carrier-v1/.agents/workstreams/WS-20261025-canonical-chunk-carrier-v1/compose-frame.mjs",
+        "/Users/youxianshi/.local/state/wasmc-maintenance/v027-official-extracted/wasmcrelease-v0.0.27",
+        "/Users/youxianshi/.local/state/wasmc-maintenance/v027-official-chunk/original-frame",
+        "/Users/youxianshi/.local/state/wasmc-maintenance/v027-official-extracted/wasmcrelease-v0.0.27/current/lib_core.wasm",
+        "/opt/homebrew/bin/wasm-merge",
+        "/Users/youxianshi/.local/state/wasmc-maintenance/v027-official-chunk/original-app"
+      ],
+      "exit": 0,
+      "stdout_sha256": "6937ff14fe395b7ad86f927969e167ca994701b010950c4ebe9bba310ddf0bca",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "original-wasmi",
+      "argv": [
+        "/Users/youxianshi/.local/state/wasmc-maintenance/green-static-cost-20261025/fixture-target/debug/checked-chunk-engine-fixture",
+        "/Users/youxianshi/.local/state/wasmc-maintenance/v027-official-chunk/original-app/app.wasm",
+        "/Users/youxianshi/.local/state/wasmc-maintenance/green-static-cost-20261025/carrier-v2-qualification",
+        "original"
+      ],
+      "exit": 0,
+      "stdout_sha256": "59f6860f114571640dded4e603263b8799b372e793c718bc335e3294f88c74d4",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "original-wasmtime",
+      "argv": [
+        "/Users/youxianshi/.local/state/wasmc-maintenance/green-static-cost-20261025/venv/bin/python",
+        "/Users/youxianshi/.local/state/wasmc-maintenance/v027-wasmtime-installed.py",
+        "/Users/youxianshi/.local/state/wasmc-maintenance/v027-official-chunk/original-app/app.wasm",
+        "/Users/youxianshi/.local/state/wasmc-maintenance/green-static-cost-20261025/carrier-v2-qualification",
+        "original",
+        "/Users/youxianshi/.local/state/wasmc-maintenance/v027-official-chunk/original-wasmtime.json"
+      ],
+      "exit": 0,
+      "stdout_sha256": "8cc5a782ad37e896314fb9ee119dd3c3e7f669a799f3f839b3e5e947959a6c6b",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "dynamic-compile",
+      "argv": [
+        "node",
+        "/Users/youxianshi/code/.worktrees/wasmc/WS-20261025-canonical-chunk-carrier-v1/.agents/workstreams/WS-20261025-canonical-chunk-carrier-v1/compile-carrier.mjs",
+        "/Users/youxianshi/.local/state/wasmc-maintenance/v027-official-extracted/wasmcrelease-v0.0.27",
+        "/Users/youxianshi/.local/state/wasmc-maintenance/v027-official-extracted/wasmcrelease-v0.0.27/current/wasmc_compiler.wasm",
+        "fc8b025e8a6ef8d1a4a41246e4b7a87d077b428c5738162bf1984602182dc3d5",
+        "/Users/youxianshi/.local/state/wasmc-maintenance/v027-official-extracted/wasmcrelease-v0.0.27/current/lib_core.wasm",
+        "/Users/youxianshi/.local/state/wasmc-maintenance/green-static-cost-20261025/carrier-v2-dynamic/source.wasmc",
+        "/Users/youxianshi/.local/state/wasmc-maintenance/v027-official-chunk/dynamic-frame"
+      ],
+      "exit": 0,
+      "stdout_sha256": "ac0a42067ab28a7ad0d2d4829169a034681644b02af8612a8dd16881f5127c64",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "dynamic-seal",
+      "argv": [
+        "node",
+        "/Users/youxianshi/code/.worktrees/wasmc/WS-20261025-canonical-chunk-carrier-v1/.agents/workstreams/WS-20261025-canonical-chunk-carrier-v1/compose-frame.mjs",
+        "/Users/youxianshi/.local/state/wasmc-maintenance/v027-official-extracted/wasmcrelease-v0.0.27",
+        "/Users/youxianshi/.local/state/wasmc-maintenance/v027-official-chunk/dynamic-frame",
+        "/Users/youxianshi/.local/state/wasmc-maintenance/v027-official-extracted/wasmcrelease-v0.0.27/current/lib_core.wasm",
+        "/opt/homebrew/bin/wasm-merge",
+        "/Users/youxianshi/.local/state/wasmc-maintenance/v027-official-chunk/dynamic-app"
+      ],
+      "exit": 0,
+      "stdout_sha256": "0aac5f58ada0aec5b3057670acecd6677073624832f5dfb0576f5596131d0578",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "dynamic-wasmi",
+      "argv": [
+        "/Users/youxianshi/.local/state/wasmc-maintenance/green-static-cost-20261025/fixture-target/debug/checked-chunk-engine-fixture",
+        "/Users/youxianshi/.local/state/wasmc-maintenance/v027-official-chunk/dynamic-app/app.wasm",
+        "/Users/youxianshi/.local/state/wasmc-maintenance/green-static-cost-20261025/carrier-v2-qualification",
+        "dynamic"
+      ],
+      "exit": 0,
+      "stdout_sha256": "a8bc6a5dfd926e5602e60f479f56bf30b80dfa9f44971364f7c58e602d0dcd5b",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "dynamic-wasmtime",
+      "argv": [
+        "/Users/youxianshi/.local/state/wasmc-maintenance/green-static-cost-20261025/venv/bin/python",
+        "/Users/youxianshi/.local/state/wasmc-maintenance/v027-wasmtime-installed.py",
+        "/Users/youxianshi/.local/state/wasmc-maintenance/v027-official-chunk/dynamic-app/app.wasm",
+        "/Users/youxianshi/.local/state/wasmc-maintenance/green-static-cost-20261025/carrier-v2-qualification",
+        "dynamic",
+        "/Users/youxianshi/.local/state/wasmc-maintenance/v027-official-chunk/dynamic-wasmtime.json"
+      ],
+      "exit": 0,
+      "stdout_sha256": "03c735c4c9f3142c786e27dd5b95648284280c8c910255d6e143a748e7e5a365",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "unicode-compile",
+      "argv": [
+        "node",
+        "/Users/youxianshi/code/.worktrees/wasmc/WS-20261025-canonical-chunk-carrier-v1/.agents/workstreams/WS-20261025-canonical-chunk-carrier-v1/compile-carrier.mjs",
+        "/Users/youxianshi/.local/state/wasmc-maintenance/v027-official-extracted/wasmcrelease-v0.0.27",
+        "/Users/youxianshi/.local/state/wasmc-maintenance/v027-official-extracted/wasmcrelease-v0.0.27/current/wasmc_compiler.wasm",
+        "fc8b025e8a6ef8d1a4a41246e4b7a87d077b428c5738162bf1984602182dc3d5",
+        "/Users/youxianshi/.local/state/wasmc-maintenance/v027-official-extracted/wasmcrelease-v0.0.27/current/lib_core.wasm",
+        "/Users/youxianshi/.local/state/wasmc-maintenance/green-static-cost-20261025/carrier-v2-unicode/source.wasmc",
+        "/Users/youxianshi/.local/state/wasmc-maintenance/v027-official-chunk/unicode-frame"
+      ],
+      "exit": 0,
+      "stdout_sha256": "0145ab32b305f967caecd593538a0cc6274d623399481ffc44c04f5aee9ec80c",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "unicode-seal",
+      "argv": [
+        "node",
+        "/Users/youxianshi/code/.worktrees/wasmc/WS-20261025-canonical-chunk-carrier-v1/.agents/workstreams/WS-20261025-canonical-chunk-carrier-v1/compose-frame.mjs",
+        "/Users/youxianshi/.local/state/wasmc-maintenance/v027-official-extracted/wasmcrelease-v0.0.27",
+        "/Users/youxianshi/.local/state/wasmc-maintenance/v027-official-chunk/unicode-frame",
+        "/Users/youxianshi/.local/state/wasmc-maintenance/v027-official-extracted/wasmcrelease-v0.0.27/current/lib_core.wasm",
+        "/opt/homebrew/bin/wasm-merge",
+        "/Users/youxianshi/.local/state/wasmc-maintenance/v027-official-chunk/unicode-app"
+      ],
+      "exit": 0,
+      "stdout_sha256": "9c55c6e69b0b727ae83ef7b138053316c14650b387d12c4981d315fb1104b9a6",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "unicode-wasmi",
+      "argv": [
+        "/Users/youxianshi/.local/state/wasmc-maintenance/green-static-cost-20261025/fixture-target/debug/checked-chunk-engine-fixture",
+        "/Users/youxianshi/.local/state/wasmc-maintenance/v027-official-chunk/unicode-app/app.wasm",
+        "/Users/youxianshi/.local/state/wasmc-maintenance/green-static-cost-20261025/carrier-v2-qualification",
+        "unicode"
+      ],
+      "exit": 0,
+      "stdout_sha256": "b08ee473a8f6f251d7bb6b9153941379afc571298414158e8249891cf7da166d",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "unicode-wasmtime",
+      "argv": [
+        "/Users/youxianshi/.local/state/wasmc-maintenance/green-static-cost-20261025/venv/bin/python",
+        "/Users/youxianshi/.local/state/wasmc-maintenance/v027-wasmtime-installed.py",
+        "/Users/youxianshi/.local/state/wasmc-maintenance/v027-official-chunk/unicode-app/app.wasm",
+        "/Users/youxianshi/.local/state/wasmc-maintenance/green-static-cost-20261025/carrier-v2-qualification",
+        "unicode",
+        "/Users/youxianshi/.local/state/wasmc-maintenance/v027-official-chunk/unicode-wasmtime.json"
+      ],
+      "exit": 0,
+      "stdout_sha256": "99848fd8837ef8103ba2520d575a748cb229767203ba76f066a58a97df0bef74",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "GREEN_deployed": false,
+  "live_business_effects": false
+}
