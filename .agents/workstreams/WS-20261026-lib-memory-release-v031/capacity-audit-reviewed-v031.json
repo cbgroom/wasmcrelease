@@ -608,13 +608,14 @@
       "delivery_kind": "native-binary",
       "current_frozen_root_changed": false,
       "formal_successor_release": false,
-      "status": "dynamic-native-platform-source-and-focused-tests",
+      "status": "complete-successor-root-candidate-verified",
       "remaining": [
-        "Complete successor Native Root packaging and full generic C Host invocation.",
-        "Legacy descriptor-local input/output ceilings remain unresolved; never replay effects to grow output."
+        "Direct session and other C Host routes need dynamic output capacity; only operation-session was proven.",
+        "Current registry/catalog and formal release."
       ],
       "ci": [
-        40407682439
+        40407682439,
+        40409527972
       ],
       "source_manifest_sha256": "9e0fd17d53ab7606b43707b754c78800445b6c54d8b7eed519e948af3b390131",
       "original_descriptor_caps": [
@@ -625,7 +626,9 @@
             "max_output_bytes": 1048576
           }
         }
-      ]
+      ],
+      "candidate_root": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-system-linux-endpoint/0.1.0",
+      "behavior": "Linux operation-session: 3MiB real endpoint read and later 2MiB new input, no descriptor byte quota; 4096 handles/2048 mappings/300MiB mapping/8192 epoll verified separately"
     },
     {
       "id": "wasmc-system-linux-socket",
@@ -783,9 +786,9 @@
   "status_counts": {
     "no-fixed-data-capacity-found-in-reviewed-implementation": 11,
     "excluded-by-human-no-security-work": 3,
-    "complete-successor-root-candidate-verified": 12,
+    "complete-successor-root-candidate-verified": 13,
     "native-source-and-descriptor-audit-pending": 13,
-    "dynamic-native-platform-source-and-focused-tests": 4
+    "dynamic-native-platform-source-and-focused-tests": 3
   },
   "shared_remaining": [
     "Native C fixed output buffers require growth within a single actual call; never retry an effectful call to infer required size.",
