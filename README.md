@@ -1,6 +1,6 @@
 # WAsmC0.0.30
 
-v0.0.30 emits checked chunk byte transport directly from the canonical-host Wasm compiler carrier. The matching current CoreLib and prepared canonical provider are b06eb9a3; the existing14inputs,8-module WASMCB01/v1 frame and Host contracts are unchanged. Original4128-byte responses and fresh external JSON inputs pass the fixed10M fuel qualification on Wasmi and Wasmtime. Frozen CoreLib4.9.1 and all existing Lib Roots remain unchanged.
+v0.0.30 makes the existing Text0.0.1 Rust library discoverable through the normal catalog and replaces fixed CoreLib byte/String pools with fallible Rust Vec storage. The matching current CoreLib is4.11.0-candidate.2. Compiler bytes, all51 CoreLib export signatures, Host contracts and previously published Lib Roots remain unchanged. Run `node scripts/test-current-string-support.mjs` for ordinary Source, Unicode, larger input and failure/recovery checks. Caller memory, fuel, handle limits and the existing canonical ingress work budget still apply.
 
 
 Start with [AGENTS.md](AGENTS.md) or [agent-quickstart.json](agent-quickstart.json).
@@ -38,7 +38,7 @@ establish downloaded-consumer execution.
 
 Follow [Library-first discovery](skills/wasmc-lib-discovery/SKILL.md).
 The pinned catalog owns complete Roots, WIT, SDK views and dependency notices.
-Its42 package routes and277 API routes give289 exact search entries.
+Its43 package routes and277 API routes give320 exact search entries.
 
 ```sh
 node scripts/wasmc-lib.mjs search "base64 decode" --catalog-sha256 e12684efb3e475ad551eddabda12bc4c196f19edb48e7ace9069fda1ef5e7871 --limit 8
