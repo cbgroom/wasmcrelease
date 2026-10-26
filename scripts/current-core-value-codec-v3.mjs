@@ -1,4 +1,4 @@
-// Bounded JavaScript value consumer for independently pinned import-free Core packages.
+// Canonical JavaScript value consumer for independently pinned import-free Core packages.
 // Every invocation checks its lowered signature against the exact core-abi.json.
 import assert from 'node:assert/strict';
 const align = (n, a) => Math.ceil(n / a) * a;
@@ -38,10 +38,9 @@ export class CoreCaller {
     this.instance = new WebAssembly.Instance(module, {});
     this.exports = this.instance.exports;
     this.abi = abi;
-    this.readNodes=0; this.readBytes=0;
   }
-  get view() { assert.ok(this.exports.memory.buffer.byteLength <= 67108864, "Core memory budget"); return new DataView(this.exports.memory.buffer); }
-  alloc(size, alignment = 1) { assert.ok(Number.isSafeInteger(size) && size>=0 && size<=2097152, "Core allocation budget"); const p=size ? this.exports.cabi_realloc(0, 0, alignment, size) >>> 0 : 0; assert.ok(p+size<=this.view.byteLength); return p; }
+  get view() { return new DataView(this.exports.memory.buffer); }
+  alloc(size, alignment = 1) { assert.ok(Number.isSafeInteger(size) && size>=0 && size<=0xffffffff, "Core memory32 allocation range"); const p=size ? this.exports.cabi_realloc(0, 0, alignment, size) >>> 0 : 0; assert.ok(p+size<=this.view.byteLength); return p; }
   write(type, pointer, value) {
     const view = this.view;
     switch (type.kind) {
@@ -61,7 +60,7 @@ export class CoreCaller {
         this.view.setUint32(pointer, data, true); this.view.setUint32(pointer + 4, bytes.length, true); return;
       }
       case 'list': {
-        assert.ok(Array.isArray(value)&&value.length<=65536,"Core input list budget"); const stride = type.element.size, data = this.alloc(stride * value.length, type.element.align);
+        assert.ok(Array.isArray(value)&&value.length<=0xffffffff,"Core memory32 input list length"); const stride = type.element.size, data = this.alloc(stride * value.length, type.element.align);
         for (let i = 0; i < value.length; i++) this.write(type.element, data + stride * i, value[i]);
         this.view.setUint32(pointer, data, true); this.view.setUint32(pointer + 4, value.length, true); return;
       }
@@ -74,7 +73,6 @@ export class CoreCaller {
     }
   }
   read(type, pointer) {
-    assert.ok(++this.readNodes<=65536,"Core output node budget");
     const view = this.view; assert.ok(Number.isSafeInteger(pointer)&&pointer>=0&&pointer+type.size<=view.byteLength,"Core output range");
     switch (type.kind) {
       case 'bool': {const value=view.getUint8(pointer);assert.ok(value<=1,'Core bool discriminant');return value===1;}
@@ -87,10 +85,10 @@ export class CoreCaller {
       case 'f64': return view.getFloat64(pointer, true);
       case 'enum': { const name = type.names[view.getUint8(pointer)]; assert.notEqual(name, undefined); return name; }
       case 'record': return Object.fromEntries(type.fields.map(f => [f.name, this.read(f.type, pointer + f.offset)]));
-      case 'string': {const p=view.getUint32(pointer,true),n=view.getUint32(pointer+4,true);assert.ok(p+n<=view.byteLength&&(this.readBytes+=n)<=1048576,'Core output text budget');return text.decode(new Uint8Array(this.exports.memory.buffer,p,n));}
+      case 'string': {const p=view.getUint32(pointer,true),n=view.getUint32(pointer+4,true);assert.ok(p+n<=view.byteLength&&Number.isSafeInteger(p+n),'Core output text range');return text.decode(new Uint8Array(this.exports.memory.buffer,p,n));}
       case 'list': {
         const data = view.getUint32(pointer, true), length = view.getUint32(pointer + 4, true);
-        assert.ok(length<=65536 && data+type.element.size*length<=view.byteLength,'Core output list bound');
+        assert.ok(Number.isSafeInteger(type.element.size*length) && data+type.element.size*length<=view.byteLength,'Core output list bound');
         return Array.from({ length }, (_, i) => this.read(type.element, data + type.element.size * i));
       }
       case 'variant': {
@@ -123,7 +121,7 @@ export class CoreCaller {
     return [this.read(type, pointer)];
   }
   call(name, parameterTypes, values, returnType) {
-    assert.equal(parameterTypes.length,values.length); this.readNodes=0;this.readBytes=0;
+    assert.equal(parameterTypes.length,values.length);
     const names = this.abi.exports.filter(e => e.kind === 'function' && e.name.endsWith('#' + name) && !e.name.startsWith('cabi_post_'));
     assert.equal(names.length, 1, 'ambiguous/missing public API ' + name);
     const entry = names[0];

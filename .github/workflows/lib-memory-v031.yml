@@ -6,6 +6,7 @@ on:
   workflow_dispatch:
 permissions:
   contents: read
+  actions: read
 jobs:
   json:
     runs-on: ubuntu-24.04
@@ -30,18 +31,49 @@ jobs:
           assert free>=12*2**30
           PY
           node .agents/workstreams/WS-20261026-lib-memory-release-v031/producer/materialize.mjs "$RUNNER_TEMP/lib-memory-json"
+          python3 .agents/workstreams/WS-20261026-lib-memory-release-v031/producer/materialize-additional.py "$RUNNER_TEMP/lib-memory-additional"
           mkdir -p target/lib-memory-evidence
+      - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830
+        with:
+          path: |
+            ~/.cargo/registry
+            target/lib-memory-v031
+          key: lib-memory-linux-rust196-${{ hashFiles('.agents/workstreams/WS-20261026-lib-memory-release-v031/producer/inputs/**') }}-${{ hashFiles('.agents/workstreams/WS-20261026-lib-memory-release-v031/producer/libspec/**') }}
+          restore-keys: lib-memory-linux-rust196-${{ hashFiles('.agents/workstreams/WS-20261026-lib-memory-release-v031/producer/inputs/**') }}-
       - name: Exact Rust, Native tests and portable changed-Lib build
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           rustup toolchain install 1.96.0 --profile minimal --no-self-update
           rustup default 1.96.0
           rustup target add wasm32-unknown-unknown
-          cargo fetch --locked --manifest-path "$RUNNER_TEMP/lib-memory-json/Cargo.toml"
           set -o pipefail
-          cargo test --offline --locked --manifest-path "$RUNNER_TEMP/lib-memory-json/Cargo.toml" 2>&1 | tee target/lib-memory-evidence/native.log
-          cargo build --offline --locked --release --target wasm32-unknown-unknown --manifest-path "$RUNNER_TEMP/lib-memory-json/Cargo.toml" 2>&1 | tee target/lib-memory-evidence/wasm.log
-          cp "$CARGO_TARGET_DIR/wasm32-unknown-unknown/release/wasmc_json_memory_v031.wasm" target/lib-memory-evidence/json-raw.wasm
-          cp "$RUNNER_TEMP/lib-memory-json/source-receipt.json" target/lib-memory-evidence/
+          gh run download 40373158771 --repo cbgroom/wasmcrelease --name lib-memory-json --dir "$RUNNER_TEMP/json-qualified"
+          python3 - <<'PYREUSE'
+          import json,hashlib,os,pathlib,shutil
+          p=pathlib.Path(os.environ['RUNNER_TEMP'])
+          source=json.loads((p/'lib-memory-json/source-receipt.json').read_text())
+          prior=json.loads((p/'json-qualified/source-receipt.json').read_text())
+          assert source==prior, 'changed JSON source requires fresh qualification instead of baseline reuse'
+          assert (p/'json-qualified/source.txt').read_text().strip()=='805853f2b774a9603f1d31b646eb0ab5cf9e58ff'
+          assert hashlib.sha256((p/'json-qualified/json-raw.wasm').read_bytes()).hexdigest()=='8bf27c964cdf4d772ab9cd55d3d8d52631d6dd644f47651f2ebae41f1380a559'
+          for name in ['json-raw.wasm','source-receipt.json','native.log','wasm.log']:
+              shutil.copy(p/'json-qualified'/name,pathlib.Path('target/lib-memory-evidence')/name)
+          pathlib.Path('target/lib-memory-evidence/json-reuse.json').write_text(json.dumps({'reused_run':40373158771,'source':'805853f2b774a9603f1d31b646eb0ab5cf9e58ff','unchanged_four_file_source':True,'fresh_json_rust_build':False}))
+          PYREUSE
+          cargo fetch --locked --manifest-path "$RUNNER_TEMP/lib-memory-additional/Cargo.toml"
+          cargo test --offline --locked --manifest-path "$RUNNER_TEMP/lib-memory-additional/Cargo.toml" 2>&1 | tee target/lib-memory-evidence/additional-native.log
+          cargo build --offline --locked --release --target wasm32-unknown-unknown --manifest-path "$RUNNER_TEMP/lib-memory-additional/Cargo.toml" 2>&1 | tee target/lib-memory-evidence/additional-wasm.log
+          cp "$RUNNER_TEMP/lib-memory-additional/source-receipt.json" target/lib-memory-evidence/additional-source-receipt.json
+          cp "$RUNNER_TEMP/lib-memory-additional/Cargo.lock" target/lib-memory-evidence/additional.Cargo.lock
+          cp "$CARGO_TARGET_DIR/wasm32-unknown-unknown/release/wasmc_compression_memory_v031.wasm" target/lib-memory-evidence/compression-raw.wasm
+          cp "$CARGO_TARGET_DIR/wasm32-unknown-unknown/release/wasmc_lib_search_memory_v031.wasm" target/lib-memory-evidence/search-raw.wasm
+          python3 - <<'PYRESOURCE'
+          import os,shutil
+          total=sum(os.path.getsize(os.path.join(p,n)) for p,_,ns in os.walk(os.environ['CARGO_TARGET_DIR']) for n in ns)
+          print({'target_bytes':total,'budget_bytes':2*2**30,'remaining_GiB':shutil.disk_usage('.').free/2**30})
+          assert total<2*2**30
+          PYRESOURCE
           rustc -vV > target/lib-memory-evidence/rustc.txt
           cargo -vV > target/lib-memory-evidence/cargo.txt
           git rev-parse HEAD > target/lib-memory-evidence/source.txt

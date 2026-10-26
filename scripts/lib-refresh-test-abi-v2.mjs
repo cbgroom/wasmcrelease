@@ -88,7 +88,7 @@ export class CoreCaller {
       case 'string': return text.decode(new Uint8Array(this.exports.memory.buffer, view.getUint32(pointer, true), view.getUint32(pointer + 4, true)));
       case 'list': {
         const data = view.getUint32(pointer, true), length = view.getUint32(pointer + 4, true);
-        assert.ok(length < 10000000, 'invalid test result length');
+        assert.ok(Number.isSafeInteger(type.element.size * length) && data + type.element.size * length <= view.byteLength, 'test result exceeds actual memory');
         return Array.from({ length }, (_, i) => this.read(type.element, data + type.element.size * i));
       }
       case 'variant': {
