@@ -1,0 +1,37 @@
+{
+  "schema": "wasmc.ordinary-json-capacity-qualification/v1",
+  "accepted_on_wasmtime": true,
+  "source_sha256": "6c74ecedcff13d5f7adc7efc3a07e2c5bfe405a16b62a675c490d005f185831b",
+  "Root_manifest_sha256": "21548e59fc7deb989b93f8b07d2183d2b7623b73b7ab5901ffe420430120ccda",
+  "Root_core_sha256": "f903ac970f5c4876303c0a5413e191adf1500360ee660ab3f9afab70ff0a59c8",
+  "Root_component_sha256": "b0a4b047e4c76f1c24a31ac6c1efb4cff475407741b5b3d56bff8b61729ef2ab",
+  "bundle_sha256": "582b28c1d4240aae7cae6b5af7c887397e73e8ae47ca3e7191149f00c27ec73d",
+  "app_sha256": "d61d48788ccaad6bbd21c6f1d7829d45607bc5570b6568db92b163b0296c939e",
+  "provider_sha256": "8231aba425ef1bb0aa07a760ff4c77917e247382ef73a41408db6b6b1cb40b1e",
+  "Guest_Host_imports": 0,
+  "input_counts": [
+    0,
+    8,
+    70000,
+    3145728
+  ],
+  "output_bytes": [
+    2,
+    10,
+    70002,
+    3145730
+  ],
+  "same_bundle_new_external_inputs": true,
+  "Guest_path": "ordinary WAsmC loop -> CoreLib list<u8> -> JSON Lib compact -> full Native String -> owner drop and zero pending lease checks",
+  "Native_wasmi": {
+    "accepted_counts": [
+      0,
+      8,
+      70000
+    ],
+    "3145728": "debug CLI exceeded external test deadline180seconds; timeout retained, not accepted and not a capacity rejection"
+  },
+  "failed_Current_profile": "Root1a22d47043c975e7d31232a3a74d11641f93e1ba86b8b970aa6d1a22fc1514e3 added function references under optimizer Current; rejected by Wasmi. Existing PortableV0 profile produces accepted Wasm2-compatible successor without Rust delta change.",
+  "public_admission": false,
+  "formal_release": false
+}

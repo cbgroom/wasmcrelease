@@ -1,0 +1,11 @@
+package local:json_memory;
+interface api {
+ run:func(n:u32)->string {
+  let mut data:list<u8> = list.new();
+  data.push(34);
+  let mut i:u32 = 0;
+  while (i < n) {data.push(120);i = i + 1;}
+  data.push(34);
+  return document::compact_or_bytes(data,"bad");
+ }
+} world app {export api;}
