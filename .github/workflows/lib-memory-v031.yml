@@ -61,19 +61,6 @@ jobs:
               shutil.copy(p/'json-qualified'/name,pathlib.Path('target/lib-memory-evidence')/name)
           pathlib.Path('target/lib-memory-evidence/json-reuse.json').write_text(json.dumps({'reused_run':40373158771,'source':'805853f2b774a9603f1d31b646eb0ab5cf9e58ff','unchanged_four_file_source':True,'fresh_json_rust_build':False}))
           PYREUSE
-          # Development lock selection: Cargo normalizes the exact cohort seed.
-          # Reject any resolved registry package version/checksum outside that committed cohort.
-          cargo fetch --manifest-path "$RUNNER_TEMP/lib-memory-additional/Cargo.toml"
-          python3 - <<'PYLOCK'
-          import tomllib,pathlib,os,json
-          base=pathlib.Path('.agents/workstreams/WS-20261026-lib-memory-release-v031/producer/inputs/cohort.Cargo.lock')
-          actual=pathlib.Path(os.environ['RUNNER_TEMP'])/'lib-memory-additional/Cargo.lock'
-          allowed={(p['name'],p['version'],p.get('checksum')) for p in tomllib.loads(base.read_text())['package'] if 'source' in p}
-          selected={(p['name'],p['version'],p.get('checksum')) for p in tomllib.loads(actual.read_text())['package'] if 'source' in p}
-          assert selected<=allowed, sorted(selected-allowed)
-          pathlib.Path('target/lib-memory-evidence/lock-selection.json').write_text(json.dumps({'accepted':True,'registry_packages':len(selected),'all_exact_cohort_versions_and_checksums':True,'phase':'development Cargo lock normalization; promote actual lock before final locked qualification'}))
-          PYLOCK
-          cp "$RUNNER_TEMP/lib-memory-additional/Cargo.lock" target/lib-memory-evidence/additional.Cargo.lock
           cargo fetch --locked --manifest-path "$RUNNER_TEMP/lib-memory-additional/Cargo.toml"
           cargo test --offline --locked --manifest-path "$RUNNER_TEMP/lib-memory-additional/Cargo.toml" 2>&1 | tee target/lib-memory-evidence/additional-native.log
           cargo build --offline --locked --release --target wasm32-unknown-unknown --manifest-path "$RUNNER_TEMP/lib-memory-additional/Cargo.toml" 2>&1 | tee target/lib-memory-evidence/additional-wasm.log

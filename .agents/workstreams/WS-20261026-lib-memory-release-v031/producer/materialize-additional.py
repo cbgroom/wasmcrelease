@@ -46,7 +46,9 @@ from collections import Counter
 counts=Counter(k[0] for k in seen)
 body=''.join(packages[k][1] for k in sorted(seen))+''.join(roots)
 body=re.sub(r'(?m)^ \"([^\"]+) ([^\"]+)\",$',lambda m:' \"'+m[1]+'\",' if counts[m[1]]==1 else m[0],body)
-(out/'Cargo.lock').write_text('# Generated dependency closure of the exact committed cohort lock.\nversion = 4\n\n'+body)
+(out/'Cargo.lock').write_bytes((own/'inputs/seven.Cargo.lock').read_bytes())
+resolved=tomllib.loads((out/'Cargo.lock').read_text())
+assert {p['name'] for p in resolved['package'] if 'source' not in p}=={json.loads((own/'libspec'/name/'lib.json').read_text())['crate'] for name in selected}
 (out/'Cargo.toml').write_text('[workspace]\nresolver="2"\nmembers='+json.dumps(['crates/'+n for n in selected])+'\n[profile.release]\nopt-level="z"\nlto=true\ncodegen-units=1\npanic="abort"\nstrip="symbols"\n')
 (out/'source-receipt.json').write_text(json.dumps({'schema':'wasmc.lib-memory-materialization/v1','generated':True,'inputs':inputs,'policy_sha256':hashlib.sha256((own/'inputs/cohort-rust-policy.json').read_bytes()).hexdigest(),'cohort_lock_sha256':hashlib.sha256(lock.encode()).hexdigest(),'lock_sha256':hashlib.sha256((out/'Cargo.lock').read_bytes()).hexdigest()},indent=2)+'\n')
 print(json.dumps({'out':str(out),'packages':selected,'dependency_packages':len(seen)}))

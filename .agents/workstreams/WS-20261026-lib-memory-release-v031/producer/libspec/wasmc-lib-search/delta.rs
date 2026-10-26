@@ -262,9 +262,6 @@ pub fn snapshot(text: String) -> Result<SnapshotInfo, Error> {
     })
 }
 pub fn search(text: String, query: Query, offset: u32, limit: u32) -> Result<Vec<Hit>, Error> {
-    if limit == 0 {
-        return Err(Error::InvalidLimit);
-    }
     if query
         .text
         .chars()
@@ -344,7 +341,7 @@ mod tests {
         assert_eq!(search(text, query, 4990, 1000).unwrap().len(), 11);
     }
     #[test]
-    fn schema_order_and_zero_page_validation_remain() {
+    fn schema_validation_and_zero_page_semantics_remain() {
         assert_eq!(snapshot("{}".into()).err(), Some(Error::InvalidIndex));
         let (text, _) = index();
         let query = Query {
@@ -353,6 +350,6 @@ mod tests {
             profile: None,
             bound_only: false,
         };
-        assert_eq!(search(text, query, 0, 0).err(), Some(Error::InvalidLimit));
+        assert!(search(text, query, 0, 0).unwrap().is_empty());
     }
 }
