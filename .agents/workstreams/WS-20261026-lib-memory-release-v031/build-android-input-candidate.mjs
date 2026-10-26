@@ -1,0 +1,12 @@
+import {readFile,mkdir,writeFile} from 'node:fs/promises';
+import {resolve,join} from 'node:path';
+import {buildNative} from '../../../scripts/lib-refresh-native-v2.mjs';
+import {attachReleaseLicense,sha,verifyRoot} from '../../../scripts/lib-refresh-cache-v2.mjs';
+const own=resolve('.agents/workstreams/WS-20261026-lib-memory-release-v031'),source=join(own,'native-platform/android-input'),root=join(own,'candidate-roots/wasmc-system-android-input/0.1.0');
+const spec=JSON.parse(await readFile(join(source,'lib.json'))),files=['lib.wit',...spec.native.files],payloads=Object.fromEntries(await Promise.all(files.map(async path=>[path,await readFile(join(source,path))])));
+const builder=await readFile('scripts/lib-refresh-native-v2.mjs'),logs='/Users/youxianshi/.local/state/wasmc-maintenance/20261026-lib-memory-json-32/android-input-build-logs';await mkdir(logs,{recursive:true});await mkdir(root,{recursive:true});
+const status=await buildNative(spec,payloads,root,{repo:process.cwd(),env:process.env,logs,producerSha:sha(builder),nativeToolchain:{platform:process.platform,arch:process.arch,node:process.version}});
+const license=await readFile('LICENSE'),input=JSON.parse(await readFile(join(own,'producer/inputs/notices/additional-notices.json'))),notices=await Promise.all(input.files.map(async pin=>({path:pin.path,sha256:pin.sha256,content:await readFile(pin.path.endsWith('007.txt')?join(own,'producer/inputs/notices/DEPENDENCY-NOTICES-007.txt'):pin.path)})));
+await attachReleaseLicense(root,license,sha(license),notices);const verified=await verifyRoot(root,spec.id,spec.version,'native');
+if(status!=='embedded_source_packaged'||verified.manifest.artifact!==null||verified.manifest.native.device_qualified)throw Error('Android source-only status mismatch');
+const receipt={accepted:true,status,id:spec.id,version:spec.version,source_manifest_sha256:sha(await readFile(join(source,'lib.json'))),manifest_sha256:verified.manifest_sha256,files:verified.files,device_qualified:false,cross_compilation_in_root:false,formal_release:false};await writeFile(join(own,'qualification/android-input-capacity/root.json'),JSON.stringify(receipt,null,2)+'\n',{flag:'wx'});console.log(JSON.stringify({accepted:true,status,manifest_sha256:verified.manifest_sha256}));
