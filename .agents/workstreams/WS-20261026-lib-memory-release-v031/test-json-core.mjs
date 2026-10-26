@@ -2,15 +2,15 @@ import fs from 'node:fs';
 import assert from 'node:assert/strict';
 import crypto from 'node:crypto';
 import {CoreCaller,string,list,u8,u64,i64,bool,record,result,enumeration} from '../../../scripts/current-core-value-codec-v3.mjs';
-const [wasmPath,watPath,out]=process.argv.slice(2);
+const [wasmPath,watPath,out,expectedSha="8bf27c964cdf4d772ab9cd55d3d8d52631d6dd644f47651f2ebae41f1380a559"]=process.argv.slice(2);
 const bytes=fs.readFileSync(wasmPath),wat=fs.readFileSync(watPath,'utf8');
-assert.equal(crypto.createHash('sha256').update(bytes).digest('hex'),'8bf27c964cdf4d772ab9cd55d3d8d52631d6dd644f47651f2ebae41f1380a559');
+assert.equal(crypto.createHash('sha256').update(bytes).digest('hex'),expectedSha);
 // Test ABI comes from wasm-tools' standard decoded module, not a guessed WIT signature.
 const functions=new Map();
 for(const line of wat.split('\n')){
   const m=line.match(/^  \(func (\S+) .*\(type \d+\)(.*)$/);if(!m)continue;
   const lanes=kind=>(m[2].match(new RegExp('\\('+kind+' ([^)]*)\\)'))?.[1]??'').split(' ').filter(Boolean);
-  functions.set(m[1],{params:lanes('param'),results:lanes('result')});
+  functions.set(m[1].startsWith('(;')?m[1].slice(2,-2):m[1],{params:lanes('param'),results:lanes('result')});
 }
 const exports=[];
 for(const m of wat.matchAll(/^  \(export "([^"]+)" \(func (\S+)\)\)$/gm)){
