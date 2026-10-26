@@ -1,0 +1,220 @@
+Diff in /Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-lib-memory-release-v031/host/runtime/lib-boundary/native-linux-operation/src/main.rs:100:
+         if descriptor.identity.is_empty() {
+             return Err("missing exact Lib identity".into());
+         }
+-        if descriptor.limits.max_input_bytes.is_some_and(|n| n > u32::MAX as usize)
+-            || descriptor.limits.max_output_bytes.is_some_and(|n| n > u32::MAX as usize)
++        if descriptor
++            .limits
++            .max_input_bytes
++            .is_some_and(|n| n > u32::MAX as usize)
++            || descriptor
++                .limits
++                .max_output_bytes
++                .is_some_and(|n| n > u32::MAX as usize)
+         {
+             return Err("descriptor limits exceed framing capacity".into());
+         }
+Diff in /Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-lib-memory-release-v031/host/runtime/lib-boundary/native-linux-operation/src/main.rs:134:
+     }
+ 
+     fn call(&mut self, input: &[u8]) -> Result<(i32, &[u8]), String> {
+-        let capacity = self.descriptor.limits.max_output_bytes
+-            .ok_or("direct session requires an output capacity; use capacity-session or operation-session")?;
++        let capacity = self.descriptor.limits.max_output_bytes.ok_or(
++            "direct session requires an output capacity; use capacity-session or operation-session",
++        )?;
+         self.call_with_capacity(input, capacity)
+     }
+ 
+Diff in /Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-lib-memory-release-v031/host/runtime/lib-boundary/native-linux-operation/src/main.rs:142:
+-    fn call_with_capacity(&mut self, input: &[u8], capacity: usize) -> Result<(i32, &[u8]), String> {
+-        if self.descriptor.limits.max_input_bytes.is_some_and(|limit| input.len() > limit) {
++    fn call_with_capacity(
++        &mut self,
++        input: &[u8],
++        capacity: usize,
++    ) -> Result<(i32, &[u8]), String> {
++        if self
++            .descriptor
++            .limits
++            .max_input_bytes
++            .is_some_and(|limit| input.len() > limit)
++        {
+             return Err("input limit".into());
+         }
+-        if self.descriptor.limits.max_output_bytes.is_some_and(|limit| capacity > limit) {
++        if self
++            .descriptor
++            .limits
++            .max_output_bytes
++            .is_some_and(|limit| capacity > limit)
++        {
+             return Err("output limit".into());
+         }
+         let allocation = capacity.max(1);
+Diff in /Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-lib-memory-release-v031/host/runtime/lib-boundary/native-linux-operation/src/main.rs:150:
+         if self.output.len() < allocation {
+-            self.output.try_reserve_exact(allocation - self.output.len()).map_err(|error| error.to_string())?;
++            self.output
++                .try_reserve_exact(allocation - self.output.len())
++                .map_err(|error| error.to_string())?;
+             self.output.resize(allocation, 0);
+         }
+         let mut output_len = 0usize;
+Diff in /Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-lib-memory-release-v031/host/runtime/lib-boundary/native-linux-operation/src/main.rs:245:
+         let input_len = u32::from_le_bytes(length_bytes) as usize;
+         let capacity = if caller_capacity {
+             let mut capacity_bytes = [0u8; 4];
+-            reader.read_exact(&mut capacity_bytes).map_err(|error| error.to_string())?;
++            reader
++                .read_exact(&mut capacity_bytes)
++                .map_err(|error| error.to_string())?;
+             Some(u32::from_le_bytes(capacity_bytes) as usize)
+-        } else { None };
+-        if boundary.descriptor.limits.max_input_bytes.is_some_and(|limit| input_len > limit) {
++        } else {
++            None
++        };
++        if boundary
++            .descriptor
++            .limits
++            .max_input_bytes
++            .is_some_and(|limit| input_len > limit)
++        {
+             return Err("session input limit".into());
+         }
+         let mut input = Vec::new();
+Diff in /Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-lib-memory-release-v031/host/runtime/lib-boundary/native-linux-operation/src/main.rs:255:
+-        input.try_reserve_exact(input_len).map_err(|error| error.to_string())?;
++        input
++            .try_reserve_exact(input_len)
++            .map_err(|error| error.to_string())?;
+         input.resize(input_len, 0);
+         reader
+             .read_exact(&mut input)
+Diff in /Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-lib-memory-release-v031/host/runtime/lib-boundary/native-linux-operation/src/main.rs:309:
+ impl WorkerGroup {
+     fn spawn(&mut self, task: OperationTask) -> Result<(), i32> {
+         self.0.try_reserve(1).map_err(|_| -ENOMEM)?;
+-        let handle = thread::Builder::new().spawn(move || run_operation_task(task)).map_err(|_| -EAGAIN)?;
++        let handle = thread::Builder::new()
++            .spawn(move || run_operation_task(task))
++            .map_err(|_| -EAGAIN)?;
+         self.0.push(handle);
+         Ok(())
+     }
+Diff in /Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-lib-memory-release-v031/host/runtime/lib-boundary/native-linux-operation/src/main.rs:318:
+         for worker in self.0.drain(..) {
+             panicked |= worker.join().is_err();
+         }
+-        if panicked { Err("operation worker panicked".to_string()) } else { Ok(()) }
++        if panicked {
++            Err("operation worker panicked".to_string())
++        } else {
++            Ok(())
++        }
+     }
+     fn reap_finished(&mut self) -> Result<(), String> {
+         let mut index = 0;
+Diff in /Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-lib-memory-release-v031/host/runtime/lib-boundary/native-linux-operation/src/main.rs:325:
+         while index < self.0.len() {
+             if self.0[index].is_finished() {
+-                self.0.swap_remove(index).join().map_err(|_| "operation worker panicked".to_string())?;
++                self.0
++                    .swap_remove(index)
++                    .join()
++                    .map_err(|_| "operation worker panicked".to_string())?;
+             } else {
+                 index += 1;
+             }
+Diff in /Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-lib-memory-release-v031/host/runtime/lib-boundary/native-linux-operation/src/main.rs:336:
+ #[cfg(feature = "operation-bridge")]
+ impl Drop for WorkerGroup {
+     fn drop(&mut self) {
+-        for worker in self.0.drain(..) { let _ = worker.join(); }
++        for worker in self.0.drain(..) {
++            let _ = worker.join();
++        }
+     }
+ }
+ 
+Diff in /Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-lib-memory-release-v031/host/runtime/lib-boundary/native-linux-operation/src/main.rs:350:
+         output.resize(task.output_capacity.max(1), 0);
+         let mut output_len = 0usize;
+         let mut status = unsafe {
+-            (task.invoke)(task.input.as_ptr(), task.input.len(), output.as_mut_ptr(), task.output_capacity, &mut output_len)
++            (task.invoke)(
++                task.input.as_ptr(),
++                task.input.len(),
++                output.as_mut_ptr(),
++                task.output_capacity,
++                &mut output_len,
++            )
+         };
+         if output_len > task.output_capacity {
+             status = -EOVERFLOW;
+Diff in /Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-lib-memory-release-v031/host/runtime/lib-boundary/native-linux-operation/src/main.rs:362:
+     let mut state = task.cell.state.lock().unwrap();
+     *state = match *state {
+         OperationState::CancelRequested => OperationState::CancelledDrained,
+-        OperationState::Pending => OperationState::Completed { status, output: Some(output) },
++        OperationState::Pending => OperationState::Completed {
++            status,
++            output: Some(output),
++        },
+         _ => return,
+     };
+     task.cell.changed.notify_all();
+Diff in /Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-lib-memory-release-v031/host/runtime/lib-boundary/native-linux-operation/src/main.rs:430:
+                 return (-EINVAL, Vec::new());
+             };
+             let payload = &input[9..];
+-            if boundary.descriptor.limits.max_input_bytes.is_some_and(|limit| payload.len() > limit)
+-                || boundary.descriptor.limits.max_output_bytes.is_some_and(|limit| output_capacity > limit)
++            if boundary
++                .descriptor
++                .limits
++                .max_input_bytes
++                .is_some_and(|limit| payload.len() > limit)
++                || boundary
++                    .descriptor
++                    .limits
++                    .max_output_bytes
++                    .is_some_and(|limit| output_capacity > limit)
+                 || output_capacity > u32::MAX as usize - if command == 8 { 12 } else { 4 }
+             {
+                 return (-EINVAL, Vec::new());
+Diff in /Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-lib-memory-release-v031/host/runtime/lib-boundary/native-linux-operation/src/main.rs:484:
+                 return (-EINVAL, Vec::new());
+             };
+             let payload = &input[5..];
+-            if boundary.descriptor.limits.max_input_bytes.is_some_and(|limit| payload.len() > limit)
+-                || boundary.descriptor.limits.max_output_bytes.is_some_and(|limit| output_capacity > limit)
++            if boundary
++                .descriptor
++                .limits
++                .max_input_bytes
++                .is_some_and(|limit| payload.len() > limit)
++                || boundary
++                    .descriptor
++                    .limits
++                    .max_output_bytes
++                    .is_some_and(|limit| output_capacity > limit)
+                 || output_capacity > u32::MAX as usize - if command == 8 { 12 } else { 4 }
+             {
+                 return (-EINVAL, Vec::new());
+Diff in /Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-lib-memory-release-v031/host/runtime/lib-boundary/native-linux-operation/src/main.rs:672:
+             Err(error) => return Err(error.to_string()),
+         }
+         let input_len = u32::from_le_bytes(length_bytes) as usize;
+-        if boundary.descriptor.limits.max_input_bytes.is_some_and(|limit| input_len > limit.saturating_add(13)) {
++        if boundary
++            .descriptor
++            .limits
++            .max_input_bytes
++            .is_some_and(|limit| input_len > limit.saturating_add(13))
++        {
+             return Err("operation session input limit".into());
+         }
+         let mut input = vec![0u8; input_len];

@@ -124,7 +124,7 @@ impl NativeBoundary {
             return Err(dynamic_error("dlsym failed"));
         }
         let invoke: Invoke = unsafe { std::mem::transmute(symbol) };
-        let output = vec![0u8; descriptor.limits.max_output_bytes.unwrap_or(0)];
+        let output = Vec::new();
         Ok(Self {
             descriptor,
             _library: library,
@@ -134,11 +134,22 @@ impl NativeBoundary {
     }
 
     fn call(&mut self, input: &[u8]) -> Result<(i32, &[u8]), String> {
+        let capacity = self.descriptor.limits.max_output_bytes
+            .ok_or("direct session requires an output capacity; use capacity-session or operation-session")?;
+        self.call_with_capacity(input, capacity)
+    }
+
+    fn call_with_capacity(&mut self, input: &[u8], capacity: usize) -> Result<(i32, &[u8]), String> {
         if self.descriptor.limits.max_input_bytes.is_some_and(|limit| input.len() > limit) {
             return Err("input limit".into());
         }
-        if self.descriptor.limits.max_output_bytes.is_none() {
-            return Err("direct session requires an output capacity; use operation-session".into());
+        if self.descriptor.limits.max_output_bytes.is_some_and(|limit| capacity > limit) {
+            return Err("output limit".into());
+        }
+        let allocation = capacity.max(1);
+        if self.output.len() < allocation {
+            self.output.try_reserve_exact(allocation - self.output.len()).map_err(|error| error.to_string())?;
+            self.output.resize(allocation, 0);
         }
         let mut output_len = 0usize;
         let status = unsafe {
@@ -146,11 +157,11 @@ impl NativeBoundary {
                 input.as_ptr(),
                 input.len(),
                 self.output.as_mut_ptr(),
-                self.output.len(),
+                capacity,
                 &mut output_len,
             )
         };
-        if output_len > self.output.len() {
+        if output_len > capacity {
             return Err("adapter returned invalid output length".into());
         }
         Ok((status, &self.output[..output_len]))
@@ -215,7 +226,7 @@ fn run_once(descriptor_path: &Path, input_path: &Path, output_path: &Path) -> Re
     Ok(())
 }
 
-fn run_session(descriptor_path: &Path) -> Result<(), String> {
+fn run_session(descriptor_path: &Path, caller_capacity: bool) -> Result<(), String> {
     let mut boundary = NativeBoundary::load(descriptor_path)?;
     let stdin = io::stdin();
     let stdout = io::stdout();
@@ -232,14 +243,24 @@ fn run_session(descriptor_path: &Path) -> Result<(), String> {
             Err(error) => return Err(error.to_string()),
         }
         let input_len = u32::from_le_bytes(length_bytes) as usize;
+        let capacity = if caller_capacity {
+            let mut capacity_bytes = [0u8; 4];
+            reader.read_exact(&mut capacity_bytes).map_err(|error| error.to_string())?;
+            Some(u32::from_le_bytes(capacity_bytes) as usize)
+        } else { None };
         if boundary.descriptor.limits.max_input_bytes.is_some_and(|limit| input_len > limit) {
             return Err("session input limit".into());
         }
-        let mut input = vec![0u8; input_len];
+        let mut input = Vec::new();
+        input.try_reserve_exact(input_len).map_err(|error| error.to_string())?;
+        input.resize(input_len, 0);
         reader
             .read_exact(&mut input)
             .map_err(|error| error.to_string())?;
-        let (status, output) = boundary.call(&input)?;
+        let (status, output) = match capacity {
+            Some(capacity) => boundary.call_with_capacity(&input, capacity)?,
+            None => boundary.call(&input)?,
+        };
         writer
             .write_all(&status.to_le_bytes())
             .and_then(|()| writer.write_all(&(output.len() as u32).to_le_bytes()))
@@ -673,7 +694,8 @@ fn run_operation_session(descriptor_path: &Path) -> Result<(), String> {
 fn run() -> Result<(), String> {
     let arguments: Vec<String> = env::args().collect();
     match arguments.as_slice() {
-        [_, mode, descriptor] if mode == "--session" => run_session(Path::new(descriptor)),
+        [_, mode, descriptor] if mode == "--session" => run_session(Path::new(descriptor), false),
+        [_, mode, descriptor] if mode == "--capacity-session" => run_session(Path::new(descriptor), true),
         #[cfg(feature = "operation-bridge")]
         [_, mode, descriptor] if mode == "--operation-session" => {
             run_operation_session(Path::new(descriptor))
@@ -682,7 +704,7 @@ fn run() -> Result<(), String> {
             run_once(Path::new(descriptor), Path::new(input), Path::new(output))
         }
         _ => Err(
-            "usage: native-linux <descriptor.json> <input.bin> <output.bin> | native-linux --session <descriptor.json> | native-linux --operation-session <descriptor.json>"
+            "usage: native-linux <descriptor.json> <input.bin> <output.bin> | native-linux --session <descriptor.json> | native-linux --capacity-session <descriptor.json> | native-linux --operation-session <descriptor.json>"
                 .into(),
         ),
     }
