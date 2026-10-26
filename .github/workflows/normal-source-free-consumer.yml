@@ -8,7 +8,7 @@ on:
         description: Full verification or only runtime/candidate recovery (no Rust rebuild)
         type: choice
         default: full
-        options: [full, runtime-recovery]
+        options: [full, runtime-recovery, rust-search-recovery]
 permissions:
   contents: read
 concurrency:
@@ -16,7 +16,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   core-compatibility:
-    if: inputs.scope != 'runtime-recovery'
+    if: inputs.scope != 'runtime-recovery' && inputs.scope != 'rust-search-recovery'
     name: Compatibility ${{ matrix.os }} Node ${{ matrix.node }}
     runs-on: ${{ matrix.os }}
     timeout-minutes: 10
@@ -42,6 +42,7 @@ jobs:
           retention-days: 14
           if-no-files-found: error
   integrity-and-javascript:
+    if: inputs.scope != 'rust-search-recovery'
     name: Integrity, Agent guidance and reporting controls
     runs-on: ubuntu-24.04
     timeout-minutes: 10
@@ -62,6 +63,7 @@ jobs:
           retention-days: 14
           if-no-files-found: error
   runtime-consumer:
+    if: inputs.scope != 'rust-search-recovery'
     name: ${{ matrix.runtime }} ${{ matrix.os }} ${{ matrix.mirror }} full journey
     runs-on: ${{ matrix.os }}
     timeout-minutes: 15
@@ -117,9 +119,13 @@ jobs:
           rustc --version
           cargo --version
       - name: Run locked release consumer and runtime SDK qualification
+        if: inputs.scope != 'rust-search-recovery'
         env:
           WASMC_CI_LABEL: rust-release-ubuntu
         run: node scripts/ci-suite.mjs rust
+      - name: Rerun only changed Core and Component search commands
+        if: inputs.scope == 'rust-search-recovery'
+        run: node scripts/ci-rust-search-recovery.mjs
       - if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
@@ -129,7 +135,7 @@ jobs:
           if-no-files-found: error
   verification-summary:
     name: Required aggregate verification and downloadable report
-    if: always() && inputs.scope != 'runtime-recovery'
+    if: always() && inputs.scope != 'runtime-recovery' && inputs.scope != 'rust-search-recovery'
     needs: [core-compatibility, integrity-and-javascript, runtime-consumer, rust-wasmtime-and-libs]
     runs-on: ubuntu-24.04
     timeout-minutes: 5
