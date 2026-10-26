@@ -16,10 +16,10 @@ const safe=value=>{assert.equal(typeof value,'string');assert.ok(value&&!value.s
 const decode=bytes=>new TextDecoder('utf-8',{fatal:true}).decode(bytes);
 const parse=bytes=>JSON.parse(decode(bytes));
 const readBytes=(input,path)=>{safe(path);const bytes=input.read(path);assert.ok(bytes instanceof Uint8Array);
-  assert.ok(bytes.length>0&&bytes.length<=16777216,'bounded composition input');return bytes;};
+  assert.ok(bytes.length>0,'nonempty composition input');return bytes;};
 const descriptor=(input,path)=>{const bytes=readBytes(input,path);return {path,bytes:bytes.length,sha256:sha(bytes)};};
 function rootInventory(input,root){
-  safe(root);const paths=input.paths(root);assert.ok(Array.isArray(paths)&&paths.length>0&&paths.length<=256);
+  safe(root);const paths=input.paths(root);assert.ok(Array.isArray(paths)&&paths.length>0);
   assert.deepEqual(paths,sorted(new Set(paths)),'complete ordered unique Root inventory');const files={};
   for(const path of paths){safe(path);assert.ok(path.startsWith(root+'/'),'Root inventory escaped locator');
     const bytes=readBytes(input,path);files[path.slice(root.length+1)]={bytes:bytes.length,sha256:sha(bytes)};}

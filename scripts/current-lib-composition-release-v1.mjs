@@ -15,11 +15,11 @@ const exact=(value,keys)=>assert.deepEqual(Object.keys(value).sort(),sorted(keys
 const safe=p=>typeof p==='string'&&p&&!p.startsWith('/')&&!p.includes('\\')&&p.split('/').every(x=>x&&x!=='.'&&x!=='..');
 const parse=bytes=>JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(bytes));
 const jsonBytes=value=>Buffer.from(JSON.stringify(value,null,2)+'\n');
-const checkPin=pin=>{exact(pin,['path','bytes','sha256']);assert.ok(safe(pin.path));assert.match(pin.sha256,/^[0-9a-f]{64}$/);assert.ok(Number.isInteger(pin.bytes)&&pin.bytes>0&&pin.bytes<=16777216);};
+const checkPin=pin=>{exact(pin,['path','bytes','sha256']);assert.ok(safe(pin.path));assert.match(pin.sha256,/^[0-9a-f]{64}$/);assert.ok(Number.isSafeInteger(pin.bytes)&&pin.bytes>0);};
 const readPin=(pin,read)=>{checkPin(pin);const b=read(pin.path);assert.ok(b instanceof Uint8Array);assert.equal(b.length,pin.bytes);assert.equal(sha(b),pin.sha256);return b;};
 const pinFor=(path,b)=>({path,bytes:b.length,sha256:sha(b)});
 function graphReader(cohort,read,productPaths){
-  assert.equal(cohort.input_prefix,prefix);assert.ok(Array.isArray(cohort.input_files)&&cohort.input_files.length>0&&cohort.input_files.length<=10000);
+  assert.equal(cohort.input_prefix,prefix);assert.ok(Array.isArray(cohort.input_files)&&cohort.input_files.length>0);
   const pins=new Map();let previous='';
   for(const pin of cohort.input_files){checkPin(pin);assert.ok(pin.path>previous);previous=pin.path;pins.set(pin.path,pin);readPin({...pin,path:prefix+'/'+pin.path},read);}
   if(productPaths?.some(p=>p.startsWith(prefix+'/')))assert.deepEqual(sorted(productPaths.filter(p=>p.startsWith(prefix+'/'))),cohort.input_files.map(p=>prefix+'/'+p.path));

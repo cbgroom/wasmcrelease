@@ -20,10 +20,10 @@ const safe=value=>{assert.equal(typeof value,'string');assert.ok(value&&!value.s
 const decode=bytes=>new TextDecoder('utf-8',{fatal:true}).decode(bytes);
 const parse=bytes=>JSON.parse(decode(bytes));
 const readBytes=(input,path)=>{safe(path);const bytes=input.read(path);assert.ok(bytes instanceof Uint8Array);
-  assert.ok(bytes.length>0&&bytes.length<=16777216,'bounded composition input');return bytes;};
+  assert.ok(bytes.length>0,'nonempty composition input');return bytes;};
 const descriptor=(input,path)=>{const bytes=readBytes(input,path);return {path,bytes:bytes.length,sha256:sha(bytes)};};
 function rootInventory(input,root){
-  safe(root);const paths=input.paths(root);assert.ok(Array.isArray(paths)&&paths.length>0&&paths.length<=256);
+  safe(root);const paths=input.paths(root);assert.ok(Array.isArray(paths)&&paths.length>0);
   assert.deepEqual(paths,sorted(new Set(paths)),'complete ordered unique Root inventory');const files={};
   for(const path of paths){safe(path);assert.ok(path.startsWith(root+'/'),'Root inventory escaped locator');
     const bytes=readBytes(input,path);files[path.slice(root.length+1)]={bytes:bytes.length,sha256:sha(bytes)};}
@@ -98,7 +98,7 @@ function importedRoot(input,replacement,baseLicense){
 export function composeCurrentLibData(input,options){
   assert.ok(['wasmc.current-lib-composition-input/v1','wasmc.current-lib-composition-input/v2'].includes(options.schema));
   exact(options.base,['catalog_path','catalog_sha256']);pin(options.base.catalog_sha256);
-  assert.ok(Array.isArray(options.reused_ids)&&Array.isArray(options.replacements)&&options.replacements.length<=64);
+  assert.ok(Array.isArray(options.reused_ids)&&Array.isArray(options.replacements));
   const bytes=readBytes(input,options.base.catalog_path),catalog=checkedCurrentCatalog(bytes,options.base.catalog_sha256);
   const basePaths=input.paths('current-libs');
   const baseClosure=verifyCurrentRelease(bytes,options.base.catalog_sha256,input.read,basePaths);
@@ -218,7 +218,7 @@ function candidateFromComposition(input,options,composition){
   const sourceInputs=ordered(selectedSource),index={schema:'wasmc.current-lib-search-index/v2',
     registry_sha256:registry.sha256,source_fingerprint:digest(sourceInputs),packages};
   const indexBytes=Buffer.from(JSON.stringify(index)+'\n'),indexPin={bytes:indexBytes.length,sha256:sha(indexBytes)};
-  assert.ok(indexBytes.length<=2097152);const entries=currentIndexEntries(index);
+  const entries=currentIndexEntries(index);
   assert.equal(new Set(entries.map(row=>row.identity)).size,entries.length,'unique complete candidate identities');
   const search=composition.rows.find(row=>row.id==='wasmc-lib-search');
   const searchArtifact=readBytes(input,search.root+'/artifact.wasm'),searchAbi=readBytes(input,search.root+'/core-abi.json');

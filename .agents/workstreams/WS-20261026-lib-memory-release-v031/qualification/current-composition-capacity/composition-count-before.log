@@ -1,0 +1,22 @@
+node:internal/modules/run_main:111
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+
+  assert.ok(options.replacements.length<=64)
+
+    at checkCompositionOptions (file:///Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-lib-memory-release-v031/scripts/current-lib-composition-input-v2.mjs:11:9)
+    at file:///Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-lib-memory-release-v031/.agents/workstreams/WS-20261026-lib-memory-release-v031/test-composition-count-capacity.mjs:1:437
+    at ModuleJob.run (node:internal/modules/esm/module_job:569:25)
+    at async node:internal/modules/esm/loader:650:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:105:5) {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v26.12.1

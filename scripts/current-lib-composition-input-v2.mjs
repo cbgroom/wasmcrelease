@@ -8,15 +8,13 @@ export function checkCompositionOptions(options,baseIds){
  assert.deepEqual(Object.keys(options).sort(),keys.sort(),'closed composition input schema');
  assert.ok(['wasmc.current-lib-composition-input/v1','wasmc.current-lib-composition-input/v2'].includes(options.schema));
  assert.ok(Array.isArray(options.reused_ids)&&Array.isArray(options.replacements));
- assert.ok(options.replacements.length<=64);
  assert.deepEqual(options.reused_ids,sorted(new Set(options.reused_ids)));
  const replaced=options.replacements.map(r=>r.id);assert.equal(new Set(replaced).size,replaced.length);
  assert.deepEqual(sorted([...options.reused_ids,...replaced]),baseIds,'exact original cohort partition');
  if(!additive(options)){assert.ok(replaced.length>0);return [...baseIds];}
- assert.ok(Array.isArray(options.additions)&&options.additions.length>0&&options.additions.length<=64);
+ assert.ok(Array.isArray(options.additions)&&options.additions.length>0);
  const added=options.additions.map(r=>r.id);assert.deepEqual(added,sorted(new Set(added)),'ordered unique additions');
  assert.ok(added.every(id=>/^[a-z][a-z0-9-]*$/.test(id)&&!baseIds.includes(id)),'addition must be a new identity');
- assert.ok(baseIds.length+added.length<=64,'bounded complete cohort');
  return sorted([...baseIds,...added]);
 }
 export const importedSelections=options=>[...options.replacements,...(additive(options)?options.additions:[])];
