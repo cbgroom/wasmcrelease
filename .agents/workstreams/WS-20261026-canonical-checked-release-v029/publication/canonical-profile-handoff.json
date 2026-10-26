@@ -1,0 +1,142 @@
+{
+  "schema": "wasmc.formal-canonical-profile-handoff/v1",
+  "accepted": true,
+  "tag": "v0.0.29",
+  "release_url": "https://github.com/cbgroom/wasmcrelease/releases/tag/v0.0.29",
+  "release_commit": "681c976fd2b99ec0827a6a13dfd96a5ec1cc0770",
+  "release_tree": "b935f6d10066b1478f98988d6109a010582f383b",
+  "profile": {
+    "path": "examples/current/canonical-checked-results-v1/checked-profile.json",
+    "bytes": 5587,
+    "sha256": "0d22b220a3dba1506e1b8a5a34ee57be5d707802c4159943f53e2ab5a8e98d8a",
+    "url": "https://raw.githubusercontent.com/cbgroom/wasmcrelease/v0.0.29/examples/current/canonical-checked-results-v1/checked-profile.json"
+  },
+  "matching_profile": {
+    "schema": "wasmc.canonical-checked-host-profile/v1",
+    "version": "0.0.29",
+    "domain": 17,
+    "root": {
+      "artifact_sha256": "e2d4bb2f7e79cd3cdd5b35f9425fbd8d11e6158b6d015fcea938326922c08bbf",
+      "manifest_sha256": "be20f9443c091b77d60838add8a0a7e6a3a8b2fd8a246fa2355a8faca883fc61",
+      "wit_sha256": "8cbfe2efa0a6d52a226a740750d28dbefeed448a63fae4e92517cc90ad83c88d",
+      "template_sha256": "7daf3e312da8026aea732e511c4a5886bdbca3c4547f8cadfde0e54d99c7718a"
+    },
+    "entry_operation_selection": [],
+    "operation_selection": [
+      "service.invoke",
+      "table.response-len",
+      "table.response-drop"
+    ],
+    "cold_transfer": {
+      "sha256": "659a94935ba8849421f644392149adf3564af806985fa040698be6a02675f336",
+      "source_sha256": "9423aa9b5bc6b39eefc878489134aeadcb4184dabd8f1abf4688631e1dbc49a3"
+    },
+    "compiler": {
+      "path": "current/wasmc_compiler.wasm",
+      "bytes": 2055961,
+      "sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817"
+    },
+    "facade": {
+      "path": "current/canonical-host.mjs",
+      "bytes": 6103,
+      "sha256": "3e95ff2514c6b7ec20f49653c8964f8c642dd248cfd88d539518ddda725d58e0"
+    },
+    "entry": {
+      "wit": {
+        "path": "lib-releases/wasmc-json/0.0.7/host/entry/lib.wit",
+        "bytes": 7845,
+        "sha256": "b9986cc5188185e89915d60e9a0a9ac0b448372bc02d379784b7a71effcc4d53"
+      },
+      "executionAbi": {
+        "path": "lib-releases/wasmc-json/0.0.7/host/entry/execution-abi.json",
+        "bytes": 5205,
+        "sha256": "03c2bca5bdfd6174a021cfbc7ec12fe1183b39ed2f2a15623498b8c53c2e44c9"
+      },
+      "providerContract": {
+        "path": "lib-releases/wasmc-json/0.0.7/host/entry/provider-contract.json",
+        "bytes": 328,
+        "sha256": "f50cb2636d1f0072a7c01964335c4188ec1c797d96e49e62d2059349cfd02530"
+      },
+      "binding": {
+        "path": "lib-releases/wasmc-json/0.0.7/host/entry/binding.json",
+        "bytes": 6682,
+        "sha256": "3db4b5c10627cc9e81ea8372385cffa7e943e3e905859d1532c3d26e8f8204fe"
+      }
+    },
+    "operations": {
+      "wit": {
+        "path": "lib-releases/wasmc-json/0.0.7/host/operations/lib.wit",
+        "bytes": 7845,
+        "sha256": "b9986cc5188185e89915d60e9a0a9ac0b448372bc02d379784b7a71effcc4d53"
+      },
+      "executionAbi": {
+        "path": "lib-releases/wasmc-json/0.0.7/host/operations/execution-abi.json",
+        "bytes": 5205,
+        "sha256": "03c2bca5bdfd6174a021cfbc7ec12fe1183b39ed2f2a15623498b8c53c2e44c9"
+      },
+      "providerContract": {
+        "path": "lib-releases/wasmc-json/0.0.7/host/operations/provider-contract.json",
+        "bytes": 328,
+        "sha256": "f50cb2636d1f0072a7c01964335c4188ec1c797d96e49e62d2059349cfd02530"
+      },
+      "binding": {
+        "path": "lib-releases/wasmc-json/0.0.7/host/operations/binding.json",
+        "bytes": 4885,
+        "sha256": "b5eafa21fd2d80a31f4dbc695ef9721d7a89f3c1d9838ee8523d8d53bc46a797"
+      }
+    },
+    "libCore": {
+      "path": "lib-releases/wasmc-json/0.0.7/root/artifact.wasm",
+      "bytes": 97363,
+      "sha256": "e2d4bb2f7e79cd3cdd5b35f9425fbd8d11e6158b6d015fcea938326922c08bbf"
+    },
+    "libWit": {
+      "path": "lib-releases/wasmc-json/0.0.7/root/lib.wit",
+      "bytes": 2707,
+      "sha256": "8cbfe2efa0a6d52a226a740750d28dbefeed448a63fae4e92517cc90ad83c88d"
+    },
+    "template": {
+      "path": "lib-releases/wasmc-json/0.0.7/cold/canonical-template.json",
+      "bytes": 55010,
+      "sha256": "7daf3e312da8026aea732e511c4a5886bdbca3c4547f8cadfde0e54d99c7718a"
+    },
+    "prepared": {
+      "transfer": {
+        "path": "examples/current/canonical-checked-results-v1/prepared-transfer.wasm",
+        "bytes": 39538,
+        "sha256": "659a94935ba8849421f644392149adf3564af806985fa040698be6a02675f336"
+      },
+      "lib": {
+        "path": "examples/current/canonical-checked-results-v1/prepared-lib-core.wasm",
+        "bytes": 90704,
+        "sha256": "fa19d44a9371f787ef5b57aa3b4ac5b193d71d139922c7236733f9caabfbea18"
+      },
+      "CoreLib": {
+        "path": "current/lib_core.wasm",
+        "bytes": 2632162,
+        "sha256": "b06eb9a32dddb75e278cd8aa9b1126f6e4b51e885a83897c80f7b5da85b81c3f"
+      }
+    },
+    "producer": {
+      "raw_transfer": {
+        "path": "examples/current/canonical-checked-results-v1/raw-transfer.wasm",
+        "bytes": 44207,
+        "sha256": "909cfa5a747e581259c7fc54c5d0374be09857aab4be168976aa60c52e233f70"
+      },
+      "transfer_source": {
+        "path": "examples/current/canonical-checked-results-v1/transfer.rs",
+        "bytes": 41268,
+        "sha256": "9423aa9b5bc6b39eefc878489134aeadcb4184dabd8f1abf4688631e1dbc49a3"
+      },
+      "source_sha256": "9423aa9b5bc6b39eefc878489134aeadcb4184dabd8f1abf4688631e1dbc49a3",
+      "recipe_sha256": "4f3278269983f827d16f07cc208662ad57311b571ec6653a8a302a19b0dd438f"
+    },
+    "activation_schema": "wasmc.canonical-host-activation/v1",
+    "source_binding": "Construct the existing activation with this exact domain/root/selections/cold_transfer and SHA256 of the actual UTF8 Source; do not reuse the neutral example Source hash.",
+    "scope": "Exact original JSON007 Root and eight Host buffers, selected three operations, existing request/response entry shape. Changing Root, Host contracts, public entry type or selection requires a separately matching producer tuple. Plain compiler substitution or selection-only editing is not a prepare operation.",
+    "cold_asset_selection": "prepared.transfer.sha256 equals cold_transfer.sha256; producer.transfer_source.sha256 equals cold_transfer.source_sha256. Original JSON007 cold profile remains immutable and is not compatible with this newly selected bridge.",
+    "runtime": "Complete App requires multi-memory; Node/Deno/Wasmi/Wasmtime execute, Bun1.3.14 verifies compiler frames only."
+  },
+  "rule": "Consume the complete matching profile including prepared cold/source producer; old standalone JSON007 cold plus only compiler replacement remains rejected. Existing JSON007 Root and eight Host buffers remain exact. No business Guest or instance deployment performed.",
+  "formal_archive": "https://github.com/cbgroom/wasmcrelease/releases/download/v0.0.29/wasmcrelease-v0.0.29.tar.gz"
+}

@@ -1,3 +1,9 @@
+# Completed formal v0.0.29 publication and installed verification
+
+Completed formal WAsmC v0.0.29 publication (default Latest) at 2026-10-26T00:23:03Z, exact 681c976fd2b99ec0827a6a13dfd96a5ec1cc0770/tree b935f6d10066b1478f98988d6109a010582f383b. All20assets anonymously downloaded; 3819Gitblobs/modes and6Nativeinventories verified. Actual24installedcommands pass, including4frames/eightmodules on3hosts, Node/Deno800calls each and Buncompilerframes-only; MacNative7parity/6Wasmi/6AOT/13noclobber plus12rejections. Raw/jsDelivr4exactdownloads pass. Normal20effective141commands retain originalfailed40246813030 and explicit7unchangedbaseline+13freshrecovery40248163538; no single-Source20aggregateclaim. Native6builds+6matchingdownloads allpassed; no unchanged Compiler/CoreLib/Lib/Native rebuild. Finalsame-treeGLM6 and independent10commands passed under actual single-modelpolicy, notpair. CoreLib/42Roots/Std/JSON007/Text001/frozenversions/foreignWIP preserved. No realinstance orServiceeffect. Publicationproof: .agents/workstreams/WS-20261026-canonical-checked-release-v029/publication/closure.json.
+
+Historical checkpoints follow.
+
 # Canonical checked-result SDK release v0.0.29
 
 Task state: started
