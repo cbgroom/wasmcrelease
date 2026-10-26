@@ -21,6 +21,12 @@ export class LibDefinedBoundary {
     const descriptor = JSON.parse(await readFile(descriptorPath, "utf8"));
     if (descriptor.schema !== "wasmc.native-boundary-descriptor/v1") throw new Error("unsupported descriptor schema");
     if (typeof descriptor.identity !== "string" || descriptor.identity.length === 0) throw new Error("missing exact Lib identity");
+    // A future Lib may omit local transfer ceilings. Its allocations then
+    // follow the embedding process memory policy. Explicit legacy limits stay
+    // exact and are validated before importing or invoking the adapter.
+    for (const value of [descriptor.limits?.max_input_bytes, descriptor.limits?.max_output_bytes]) {
+      if (value !== undefined && (!Number.isSafeInteger(value) || value < 0)) throw new Error("invalid transfer limit");
+    }
     const adapter = descriptor.adapter;
     if (!adapter || typeof adapter.path !== "string" || typeof adapter.sha256 !== "string" || typeof adapter.export !== "string") throw new Error("incomplete adapter identity");
     const adapterPath = await realpath(path.resolve(root, adapter.path));
@@ -51,7 +57,7 @@ export class LibDefinedBoundary {
     const resource = this.#resource(resourceId);
     const window = this.#window(windowId);
     if (window.pinned) throw new Error("window busy");
-    if (!Number.isSafeInteger(resource.maxInputBytes) || window.bytes.length > resource.maxInputBytes) throw new Error("input limit");
+    if (resource.maxInputBytes !== undefined && window.bytes.length > resource.maxInputBytes) throw new Error("input limit");
     window.pinned = true;
     const controller = new AbortController();
     const operation = this.#next++;
@@ -70,7 +76,7 @@ export class LibDefinedBoundary {
       .then(() => resource.invoke(Uint8Array.from(window.bytes), { signal: controller.signal }))
       .then((output) => {
         const bytes = copyBytes(output);
-        if (!Number.isSafeInteger(resource.maxOutputBytes) || bytes.length > resource.maxOutputBytes) throw new Error("output limit");
+        if (resource.maxOutputBytes !== undefined && bytes.length > resource.maxOutputBytes) throw new Error("output limit");
         if (record.cancelRequested) record.state = "cancelled";
         else {
           record.output = bytes;
