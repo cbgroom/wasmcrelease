@@ -1,0 +1,18 @@
+Traceback (most recent call last):
+  File "/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-lib-memory-release-v031/.agents/workstreams/WS-20261026-lib-memory-release-v031/build-data-sdk-successor.py", line 5, in <module>
+    rows=sorted(source['apis'],key=lambda a:a['api']);spec={'schema':'wasmc.lib-build/v0','skill':{'name':id,'version':'0.0.2','description':source['description']},'wit':'lib.wit','apis':rows,'core':{'root':{'module':'facade','artifact':'facade.wasm','sha256':sha(root/'facade.wasm')},'dependencies':[{'module':'rust-implementation','artifact':'implementation.wasm','sha256':sha(root/'implementation.wasm')}]}};(root/'lib.build.json').write_text(json.dumps(spec,indent=2)+'\n');cmd=[str(e/'seal-portable-root'),str(root),str(pub),'/Users/youxianshi/code/.worktrees/wasmc/WS-20261026-lib-memory-json-v1'];p=subprocess.run(cmd,capture_output=True,text=True,timeout=120);(e/(id+'-sdk-seal.log')).write_text(p.stdout+p.stderr);receipt={'accepted':p.returncode==0,'status':p.returncode,'stdout':p.stdout,'stderr':p.stderr,'source_manifest_sha256':sha(old/'lib.json'),'original_artifact_sha256':sha(old/'artifact.wasm'),'facade_sha256':sha(root/'facade.wasm'),'renamed_receipt':json.loads((root/'facade/receipt.json').read_text()),'fresh_Rust_build':False,'formal_release':False};(e/(id+'-sdk-seal.json')).write_text(json.dumps(receipt,indent=2)+'\n');print(json.dumps(receipt),flush=True);assert p.returncode==0
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/subprocess.py", line 557, in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/subprocess.py", line 1221, in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/subprocess.py", line 2154, in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/subprocess.py", line 1268, in _check_timeout
+    raise TimeoutExpired(
+    ...<2 lines>...
+            stderr=b''.join(stderr_seq) if stderr_seq else None)
+subprocess.TimeoutExpired: Command '['/Users/youxianshi/.local/state/wasmc-maintenance/20261026-lib-memory-json-32/seal-portable-root', '/Users/youxianshi/.local/state/wasmc-maintenance/20261026-lib-memory-json-32/wasmc-data-compute-sdk-root-input', '/Users/youxianshi/.local/state/wasmc-maintenance/20261026-lib-memory-json-32/wasmc-data-compute-sdk-publication', '/Users/youxianshi/code/.worktrees/wasmc/WS-20261026-lib-memory-json-v1']' timed out after 120 seconds
