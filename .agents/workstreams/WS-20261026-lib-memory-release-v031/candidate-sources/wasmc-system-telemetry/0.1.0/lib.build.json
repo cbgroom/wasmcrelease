@@ -1,0 +1,61 @@
+{
+  "schema": "wasmc.lib-build/v0",
+  "skill": {
+    "version": "0.1.0",
+    "description": "Rust wasmc-system-telemetry with aggregate-memory capacity and unchanged protocol/type validation.",
+    "name": "wasmc-system-telemetry"
+  },
+  "wit": "lib.wit",
+  "apis": [
+    {
+      "api": "constructor",
+      "delta": "Typed adapter delegates into Rust implementation.",
+      "ecosystem": "Rust and shared dependency policy",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "encode-frame",
+      "delta": "Typed adapter delegates into Rust implementation.",
+      "ecosystem": "Rust and shared dependency policy",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "refresh-mask",
+      "delta": "Typed adapter delegates into Rust implementation.",
+      "ecosystem": "Rust and shared dependency policy",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "sample",
+      "delta": "Typed adapter delegates into Rust implementation.",
+      "ecosystem": "Rust and shared dependency policy",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    }
+  ],
+  "core": {
+    "root": {
+      "module": "facade",
+      "artifact": "facade.wasm",
+      "sha256": "0366f50832d20f6686c70d426da6330c163359b286987e85f8de2d46e181fc57"
+    },
+    "dependencies": [
+      {
+        "module": "rust-implementation",
+        "artifact": "implementation.wasm",
+        "sha256": "a96053a6130eacc53cfa30908296dfb9bad9d658b331f36a3931df919a3fbac6"
+      }
+    ]
+  }
+}

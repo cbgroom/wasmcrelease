@@ -1,0 +1,15 @@
+file:///Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-lib-memory-release-v031/scripts/current-lib-composition-release-v1.mjs:49
+      apis:[...routes.routes.keys()].sort().map(route=>({route:route.slice(model.identity.length+1),description:(api=>api.delta??api.ecosystem)(s.apis.find(api=>api.api===route.split('#')[1]))}))};
+                                                                                                                          ^
+
+TypeError: Cannot read properties of undefined (reading 'delta')
+    at file:///Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-lib-memory-release-v031/scripts/current-lib-composition-release-v1.mjs:49:123
+    at file:///Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-lib-memory-release-v031/scripts/current-lib-composition-release-v1.mjs:49:144
+    at Array.map (<anonymous>)
+    at expectedIndex (file:///Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-lib-memory-release-v031/scripts/current-lib-composition-release-v1.mjs:49:45)
+    at verifyComposedCurrentRelease (file:///Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-lib-memory-release-v031/scripts/current-lib-composition-release-v1.mjs:83:26)
+    at Module.verifyCurrentRelease (file:///Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-lib-memory-release-v031/scripts/current-lib-release-v3.mjs:75:12)
+    at assembleComposedCurrentProduct (file:///Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-lib-memory-release-v031/scripts/current-lib-composition-release-v1.mjs:167:56)
+    at async file:///Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-lib-memory-release-v031/.agents/workstreams/WS-20261026-lib-memory-release-v031/assemble-json020-fixture.mjs:8:70
+
+Node.js v26.12.1

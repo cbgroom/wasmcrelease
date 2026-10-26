@@ -13,6 +13,7 @@ import {CurrentSearchCaller,currentIndexEntries} from './current-lib-search-v3.m
 import {verifyImportedProducerCustodyData as sourceCustody,buildCurrentCompositionLineageData} from './current-lib-source-custody-v1.mjs';
 
 const sorted=values=>[...values].sort();
+const sourceApi=route=>{const name=route.split('#')[1];if(name.startsWith('[constructor]'))return 'constructor';if(name.startsWith('[method]'))return name.slice(name.indexOf('.')+1);return name;};
 const exact=(value,keys)=>assert.deepEqual(Object.keys(value).sort(),sorted(keys),'closed composition input schema');
 const pin=value=>assert.match(value,/^[0-9a-f]{64}$/,'independent SHA256 required');
 const safe=value=>{assert.equal(typeof value,'string');assert.ok(value&&!value.startsWith('/')&&!value.includes('\\')&&
@@ -47,15 +48,16 @@ function verifyLocalDescriptors(manifest,files){
 function importedRoot(input,replacement,baseLicense){
   exact(replacement,['id','version','profile','root','manifest_sha256','root_inventory_sha256','source']);
   assert.match(replacement.id,/^[a-z][a-z0-9-]*$/);assert.match(replacement.version,/^\d+\.\d+\.\d+$/);
-  assert.equal(replacement.profile,'value','v1 imports only complete canonical value Roots');
+  assert.ok(['value','resource'].includes(replacement.profile),'supported imported Root profile');
   pin(replacement.manifest_sha256);pin(replacement.root_inventory_sha256);
   const files=rootInventory(input,replacement.root);
   assert.equal(digest(files),replacement.root_inventory_sha256,'independent imported whole-Root inventory');
   const get=path=>pinnedFile(input,replacement.root,files,path),manifest=parse(get('lib.json'));
   assert.equal(sha(get('lib.json')),replacement.manifest_sha256,'independent imported manifest');
   assert.equal(manifest.schema,'wasmc.lib/v2');assert.equal(manifest.id,replacement.id);assert.equal(manifest.version,replacement.version);
-  assert.deepEqual(sorted(Object.keys(manifest.bindings)),['rust_component','rust_core'],'complete imported SDK views');
-  assert.equal(manifest.bindings.rust_core.schema,'wasmc.lib-rust-canonical-core-sdk/v1');
+  const resourceCore=replacement.profile==='resource'&&!!manifest.bindings.rust_core;
+  assert.deepEqual(sorted(Object.keys(manifest.bindings)),replacement.profile==='value'||resourceCore?['rust_component','rust_core']:['rust_component'],'complete imported SDK views');
+  if(manifest.bindings.rust_core)assert.equal(manifest.bindings.rust_core.schema,resourceCore?'wasmc.lib-rust-core-sdk/v0':'wasmc.lib-rust-canonical-core-sdk/v1');
   assert.equal(manifest.bindings.rust_component.schema,'wasmc.lib-rust-component-sdk/v0');
   for(const name of ['artifact.wasm','component.wasm','core-abi.json','lib.wit','LICENSE'])assert.ok(files[name],'complete imported Root: '+name);
   for(const binding of Object.values(manifest.bindings)){
@@ -75,17 +77,20 @@ function importedRoot(input,replacement,baseLicense){
   const apis=[...selected.routes.keys()].sort();
   assert.equal(custody.report.function_count,apis.length,'producer function count versus actual selected WIT');
   assert.equal(new Set(custody.spec.apis.map(row=>row.api)).size,custody.spec.apis.length,'duplicate producer API');
-  assert.deepEqual(sorted(custody.spec.apis.map(row=>row.api)),apis.map(route=>route.split('#')[1]).sort(),'original source API set versus selected WIT');
+  assert.deepEqual(sorted(custody.spec.apis.map(row=>row.api)),apis.map(sourceApi).sort(),'original source API set versus selected WIT');
   const module=new WebAssembly.Module(get('artifact.wasm')),abi=parse(get('core-abi.json'));
   assert.equal(abi.schema,'wasmc.lib-core-abi/v0');assert.equal(abi.artifact_sha256,files['artifact.wasm'].sha256);
   assert.deepEqual(abi.wit,{package:model.identity,sha256:files['lib.wit'].sha256,world});
-  assert.deepEqual(WebAssembly.Module.imports(module),[],'pure imported value Root');assert.deepEqual(abi.imports,[]);
+  const imports=WebAssembly.Module.imports(module);
+  assert.deepEqual(imports,abi.imports.map(({module,name,kind})=>({module,name,kind})),'actual Core ABI imports');
+  if(replacement.profile==='value')assert.deepEqual(imports,[],'pure imported value Root');
   assert.deepEqual(WebAssembly.Module.exports(module).map(row=>({name:row.name,kind:row.kind})),
     abi.exports.map(row=>({name:row.name,kind:row.kind==='function'?'function':row.kind})),'actual Core ABI exports');
   const [namespace,version]=model.identity.split('@');
   const expectedExports=apis.map(route=>namespace+'/'+route.slice(model.identity.length+1).replace('#','@'+version+'#'));
   const actualExports=WebAssembly.Module.exports(module).filter(row=>row.kind==='function'&&row.name.startsWith(namespace+'/')).map(row=>row.name).sort();
-  assert.deepEqual(actualExports,expectedExports.sort(),'actual exported public Core API set');
+  const destructors=replacement.profile==='resource'?expectedExports.filter(name=>name.includes('#[constructor]')).map(name=>name.replace('#[constructor]','#[dtor]')):[];
+  assert.deepEqual(actualExports,[...expectedExports,...destructors].sort(),'actual exported public Core API set');
   return {id:replacement.id,version:replacement.version,profile:replacement.profile,
     root:replacement.root,manifest_sha256:replacement.manifest_sha256,root_inventory_sha256:replacement.root_inventory_sha256,
     files,origin:custody.proof,wit:{identity:model.identity,world,sha256:files['lib.wit'].sha256,
@@ -164,7 +169,8 @@ export async function composeCurrentLibs(repo,options){
   // Reuse the existing physical Root verifier in addition to composition's
   // original-producer and actual-Core checks. It writes no files.
   for(const replacement of importedSelections(options)){
-    const verified=await verifyRoot(join(repo,safe(replacement.root)),replacement.id,replacement.version,replacement.profile);
+    const manifest=parse(readBytes(input,replacement.root+'/lib.json'));
+    const verified=await verifyRoot(join(repo,safe(replacement.root)),replacement.id,replacement.version,replacement.profile,replacement.profile==='resource'&&!!manifest.bindings.rust_core);
     assert.equal(verified.manifest_sha256,replacement.manifest_sha256);
     assert.equal(digest(verified.files),replacement.root_inventory_sha256);
   }
@@ -200,7 +206,7 @@ function candidateFromComposition(input,options,composition){
           artifact_sha256:manifest.artifact.sha256,component_sha256:manifest.component.sha256},
         wit_route:row.wit.identity,description:row.discovery_metadata.description,
         apis:row.wit.api_routes.map(route=>({route:route.slice(row.wit.identity.length+1),
-          description:(api=>api.delta??api.ecosystem)(row.discovery_metadata.apis.find(api=>api.api===route.split('#')[1]))}))});
+          description:(api=>api.delta??api.ecosystem)(row.discovery_metadata.apis.find(api=>api.api===sourceApi(route)))}))});
       projectedSourceFiles.push({target_path:'libspec/'+row.id+'/lib.wit',
         source:descriptor(input,source.root+'/'+source.wit),
         current:descriptor(input,'libspec/'+row.id+'/lib.wit'),applied:false,
