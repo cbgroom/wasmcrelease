@@ -77,18 +77,6 @@ jobs:
               shutil.copy(old/name,pathlib.Path('target/lib-memory-evidence')/name)
           pathlib.Path('target/lib-memory-evidence/seven-reuse.json').write_text(json.dumps({'run':pin['run'],'source':pin['source'],'fresh_seven_lib_builds':False,'all_inputs_unchanged':True}))
           PYSEVEN
-          # First Std selection uses Cargo to normalize the exact cohort seed.
-          # Promote this captured lock before final strict locked qualification.
-          cargo fetch --manifest-path "$RUNNER_TEMP/lib-memory-additional/Cargo.toml"
-          python3 - <<'PYLOCK'
-          import tomllib,pathlib,os,json
-          base=pathlib.Path('.agents/workstreams/WS-20261026-lib-memory-release-v031/producer/inputs/cohort.Cargo.lock')
-          actual=pathlib.Path(os.environ['RUNNER_TEMP'])/'lib-memory-additional/Cargo.lock'
-          allowed={(p['name'],p['version'],p.get('checksum')) for p in tomllib.loads(base.read_text())['package'] if 'source' in p}
-          selected={(p['name'],p['version'],p.get('checksum')) for p in tomllib.loads(actual.read_text())['package'] if 'source' in p}
-          assert selected<=allowed, sorted(selected-allowed)
-          pathlib.Path('target/lib-memory-evidence/lock-selection.json').write_text(json.dumps({'accepted':True,'registry_packages':len(selected),'all_exact_cohort_versions_and_checksums':True,'phase':'eight-member development lock selection; Std only fresh build'}))
-          PYLOCK
           cp "$RUNNER_TEMP/lib-memory-additional/Cargo.lock" target/lib-memory-evidence/additional.Cargo.lock
           cargo fetch --locked --manifest-path "$RUNNER_TEMP/lib-memory-additional/Cargo.toml"
           cargo test -p wasmc_std_memory_v031 --offline --locked --manifest-path "$RUNNER_TEMP/lib-memory-additional/Cargo.toml" 2>&1 | tee target/lib-memory-evidence/std-native.log

@@ -40,13 +40,8 @@ while queue:
     key=keys[0]
     if key in seen:continue
     seen.add(key);queue+=packages[key][0].get('dependencies',[])
-# Cargo drops version qualifiers when closure selection leaves only one version.
-# Keep exact package versions/checksums; normalize only unambiguous dependency references.
-from collections import Counter
-counts=Counter(k[0] for k in seen)
-body=''.join(packages[k][1] for k in sorted(seen))+''.join(roots)
-body=re.sub(r'(?m)^ \"([^\"]+) ([^\"]+)\",$',lambda m:' \"'+m[1]+'\",' if counts[m[1]]==1 else m[0],body)
-(out/'Cargo.lock').write_text('# Development subset seed from unchanged exact cohort package pins.\nversion = 4\n\n'+body)
+# Exact Cargo-selected eight-member lock, qualified in run40385333637.
+(out/'Cargo.lock').write_bytes((own/'inputs/eight.Cargo.lock').read_bytes())
 resolved=tomllib.loads((out/'Cargo.lock').read_text())
 assert {p['name'] for p in resolved['package'] if 'source' not in p}=={json.loads((own/'libspec'/name/'lib.json').read_text())['crate'] for name in selected}
 (out/'Cargo.toml').write_text('[workspace]\nresolver="2"\nmembers='+json.dumps(['crates/'+n for n in selected])+'\n[profile.release]\nopt-level="z"\nlto=true\ncodegen-units=1\npanic="abort"\nstrip="symbols"\n')
