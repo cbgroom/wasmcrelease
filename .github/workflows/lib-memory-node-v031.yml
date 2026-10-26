@@ -1,0 +1,45 @@
+name: Node Lib memory-owned transfer
+on:
+  push:
+    branches: [work/WS-20261026-lib-memory-release-v031]
+    paths:
+      - '.agents/workstreams/WS-20261026-lib-memory-release-v031/native-node/**'
+      - '.agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-system-file-prototype/**'
+      - '.agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-system-network-prototype/**'
+      - '.agents/workstreams/WS-20261026-lib-memory-release-v031/test-node-memory.mjs'
+      - 'host/runtime/lib-boundary/reference.mjs'
+      - '.github/workflows/lib-memory-node-v031.yml'
+permissions:
+  contents: read
+jobs:
+  node-memory:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: '26.5.1'
+      - name: Verify candidate Roots and normal file and loopback behavior
+        shell: bash
+        run: |
+          set -euo pipefail
+          own=.agents/workstreams/WS-20261026-lib-memory-release-v031
+          out="$RUNNER_TEMP/node-memory-evidence"
+          mkdir -p "$out"
+          git rev-parse HEAD > "$out/source.txt"
+          node --version > "$out/node.txt"
+          uname -a > "$out/host.txt"
+          node --input-type=module - <<'JS'
+          import {verifyRoot} from './scripts/lib-refresh-cache-v2.mjs';
+          for (const id of ['wasmc-system-file-prototype','wasmc-system-network-prototype']) {
+            await verifyRoot(`.agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/${id}/0.1.0`,id,'0.1.0','native');
+          }
+          JS
+          node "$own/test-node-memory.mjs" "$out/node-memory.json" 2>&1 | tee "$out/node-memory.log"
+      - if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: node-memory-capacity
+          path: ${{ runner.temp }}/node-memory-evidence/**
+          retention-days: 7
