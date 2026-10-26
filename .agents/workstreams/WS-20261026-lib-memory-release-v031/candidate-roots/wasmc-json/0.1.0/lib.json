@@ -1,0 +1,113 @@
+{
+  "agent": {
+    "default_view": "runtime",
+    "delta": {
+      "path": "references/agent-delta.json",
+      "sha256": "f2cb07187360065d3cb81cf487cbda8e2312a40f243f7072086f4147cc8ccd95"
+    },
+    "skill": {
+      "path": "SKILL.md",
+      "sha256": "d66d17442708c28b177ca3eba03ac4c45d43c6bbaf1486c8ca0bc5146d9e537f"
+    },
+    "views": {
+      "developer": {
+        "includes_runtime": true,
+        "mode": "developer",
+        "skill": "SKILL.md"
+      },
+      "runtime": {
+        "mode": "runtime",
+        "skill": "SKILL.md"
+      }
+    }
+  },
+  "artifact": {
+    "bytes": 151009,
+    "format": "core-wasm",
+    "path": "artifact.wasm",
+    "sha256": "1a22d47043c975e7d31232a3a74d11641f93e1ba86b8b970aa6d1a22fc1514e3"
+  },
+  "bindings": {
+    "rust_component": {
+      "artifact_sha256": "1a22d47043c975e7d31232a3a74d11641f93e1ba86b8b970aa6d1a22fc1514e3",
+      "cargo_toml": {
+        "path": "bindings/rust-component/Cargo.toml",
+        "sha256": "3497cf6b53703ae081e454827d21eff07f2eda3b2ce6f77807e613342881d77d"
+      },
+      "component_sha256": "5be28940d93fc58a7397b63dafa400d1f3965abf4b74f3419eef3d99bb2986e7",
+      "crate": "wasmc-json-component",
+      "functions": 23,
+      "path": "bindings/rust-component",
+      "runtime": "wasmtime-component",
+      "schema": "wasmc.lib-rust-component-sdk/v0",
+      "source": {
+        "path": "bindings/rust-component/src/lib.rs",
+        "sha256": "5196c89e8b19f543bddf07f5476d665db7be2c213a33c673a848328db6bff5dd"
+      },
+      "wit_sha256": "3bf0e21889dba4b4d515f1de3b7ac165ee6e25af8fc6eb87584b26d5d911f352",
+      "world": "json"
+    },
+    "rust_core": {
+      "artifact_sha256": "1a22d47043c975e7d31232a3a74d11641f93e1ba86b8b970aa6d1a22fc1514e3",
+      "cargo_toml": {
+        "path": "bindings/rust-core/Cargo.toml",
+        "sha256": "1b8815e86c31e55832cbe9ea29e9784b4fc762608c250ba181e70e6a9c81ec6c"
+      },
+      "crate": "wasmc-json-core",
+      "functions": 23,
+      "import_module": "wasmc:lib/wasmc-json@0.1.0",
+      "path": "bindings/rust-core",
+      "schema": "wasmc.lib-rust-canonical-core-sdk/v1",
+      "source": {
+        "path": "bindings/rust-core/src/lib.rs",
+        "sha256": "d408b71f3ac11db255df632e8c3d704b0ba4828a398a6f85bc129b67750cb98d"
+      },
+      "wit_sha256": "3bf0e21889dba4b4d515f1de3b7ac165ee6e25af8fc6eb87584b26d5d911f352"
+    }
+  },
+  "build": {
+    "inputs": [
+      {
+        "kind": "composition-lock",
+        "path": "private/core-inputs.lock",
+        "sha256": "1189f194adba0a7b3652f131d9788313280a26e15b964c06a86580646f0c5218"
+      }
+    ],
+    "language": "core-wasm",
+    "locked": true,
+    "offline": true,
+    "profile": "sealed-release",
+    "target": "core-wasm"
+  },
+  "closure": {
+    "build_dependencies": "linked-into-artifact",
+    "public_exports": "root-wit-only",
+    "public_lib_dependencies": [],
+    "schema": "wasmc.lib-closure/v0"
+  },
+  "compatibility": {
+    "abi_epoch": 1,
+    "wasmc_min": "0.0.1"
+  },
+  "component": {
+    "bytes": 159669,
+    "format": "component-wasm",
+    "path": "component.wasm",
+    "sha256": "5be28940d93fc58a7397b63dafa400d1f3965abf4b74f3419eef3d99bb2986e7"
+  },
+  "core_abi": {
+    "bytes": 9710,
+    "path": "core-abi.json",
+    "schema": "wasmc.lib-core-abi/v0",
+    "sha256": "e8fcd9e679a2f83d2c5fe7170ba45d362fa850cb9c392223907f20de1314096b"
+  },
+  "id": "wasmc-json",
+  "schema": "wasmc.lib/v2",
+  "version": "0.1.0",
+  "wit": {
+    "package": "wasmc:json@0.1.0",
+    "path": "lib.wit",
+    "sha256": "3bf0e21889dba4b4d515f1de3b7ac165ee6e25af8fc6eb87584b26d5d911f352",
+    "world": "json"
+  }
+}
