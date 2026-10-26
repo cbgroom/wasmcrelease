@@ -1,0 +1,43 @@
+{
+  "schema": "wasmc.lib-build/v0",
+  "skill": {
+    "version": "0.1.0",
+    "description": "gzip compression and decompression backed by flate2. Capacity follows aggregate runtime memory.",
+    "name": "wasmc-compression"
+  },
+  "wit": "lib.wit",
+  "apis": [
+    {
+      "api": "compress",
+      "delta": "Bounded one-shot gzip compression.",
+      "ecosystem": "flate2 1.1.2",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "decompress",
+      "delta": "Bounded one-shot gzip decompression.",
+      "ecosystem": "flate2 1.1.2",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    }
+  ],
+  "core": {
+    "root": {
+      "module": "facade",
+      "artifact": "facade.wasm",
+      "sha256": "27a47880d62393e8eccd33b277dcc55e3610c1ab6cf6c397dba8dedd8a836637"
+    },
+    "dependencies": [
+      {
+        "module": "rust-implementation",
+        "artifact": "implementation.wasm",
+        "sha256": "9b158c6b7b8d15921d3325adfe6f97bf3432e3734c6181ca514931c6dd86ebcc"
+      }
+    ]
+  }
+}

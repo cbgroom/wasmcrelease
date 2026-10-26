@@ -1,0 +1,43 @@
+{
+  "schema": "wasmc.lib-build/v0",
+  "skill": {
+    "version": "0.1.0",
+    "description": "Rust wasmc-http1-client with aggregate-memory capacity and unchanged protocol/type validation.",
+    "name": "wasmc-http1-client"
+  },
+  "wit": "lib.wit",
+  "apis": [
+    {
+      "api": "decode-response",
+      "delta": "Typed adapter delegates into Rust implementation.",
+      "ecosystem": "Rust and shared dependency policy",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "serialize-request",
+      "delta": "Typed adapter delegates into Rust implementation.",
+      "ecosystem": "Rust and shared dependency policy",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    }
+  ],
+  "core": {
+    "root": {
+      "module": "facade",
+      "artifact": "facade.wasm",
+      "sha256": "fbd3031c55e2910d0c617bbbf0747f01c9afc8b1d93a555c336e222882968daa"
+    },
+    "dependencies": [
+      {
+        "module": "rust-implementation",
+        "artifact": "implementation.wasm",
+        "sha256": "33651b350268762ac06a20f085f7937cd63d55397477790ea2dc963567cccd23"
+      }
+    ]
+  }
+}
