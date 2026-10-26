@@ -1,0 +1,63 @@
+warning: unnecessary parentheses around block return value
+   --> .agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-owned-algorithms/0.1.2/bindings/rust-core/src/lib.rs:479:430
+    |
+479 | ...,(result) as u64,4);c_u32(out.p,out.p,false,false);(r(false,out.p,4) as i32)}
+    |                                                       ^                       ^
+    |
+    = note: `#[warn(unused_parens)]` (part of `#[warn(unused)]`) on by default
+help: remove these parentheses
+    |
+479 - #[no_mangle]pub unsafe extern "C" fn __wasmc_canonical_bridge_0(p0:i32,p1:i32)->i32{let args=Scratch::new(8, 4);w(false,add(args.p,0),(p0) as u32 as u64,4);w(false,add(add(args.p,0),4),(p1) as u32 as u64,4);c2(add(args.p,0),add(args.p,0),false,false);let result=raw0(r(false,add(args.p,0),4) as i32,r(false,add(add(args.p,0),4),4) as i32);let out=Scratch::new(4,4);w(false,out.p,(result) as u64,4);c_u32(out.p,out.p,false,false);(r(false,out.p,4) as i32)}
+479 + #[no_mangle]pub unsafe extern "C" fn __wasmc_canonical_bridge_0(p0:i32,p1:i32)->i32{let args=Scratch::new(8, 4);w(false,add(args.p,0),(p0) as u32 as u64,4);w(false,add(add(args.p,0),4),(p1) as u32 as u64,4);c2(add(args.p,0),add(args.p,0),false,false);let result=raw0(r(false,add(args.p,0),4) as i32,r(false,add(add(args.p,0),4),4) as i32);let out=Scratch::new(4,4);w(false,out.p,(result) as u64,4);c_u32(out.p,out.p,false,false);r(false,out.p,4) as i32}
+    |
+
+warning: unnecessary parentheses around function argument
+   --> .agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-owned-algorithms/0.1.2/bindings/rust-core/src/lib.rs:481:663
+    |
+481 | ...alse,add(add(add(args.p,0),8),4),4) as i32,(r(false,add(add(args.p,0),16),1) as i32));let out=Scratch::new(8,8);w(false,out.p,(r...
+    |                                               ^                                       ^
+    |
+help: remove these parentheses
+    |
+481 - #[no_mangle]pub unsafe extern "C" fn __wasmc_canonical_bridge_1(p0:i32,p1:i32,p2:i32,p3:i32,p4:i32)->i64{let args=Scratch::new(20, 4);w(false,add(add(args.p,0),0),(p0) as u32 as u64,4);w(false,add(add(add(args.p,0),0),4),(p1) as u32 as u64,4);w(false,add(add(args.p,0),8),(p2) as u32 as u64,4);w(false,add(add(add(args.p,0),8),4),(p3) as u32 as u64,4);let bit=(p4) as u32;assert!(bit<=1);w(false,add(add(args.p,0),16),bit as u64,1);c1(add(args.p,0),add(args.p,0),false,false);let result=raw1(r(false,add(add(args.p,0),0),4) as i32,r(false,add(add(add(args.p,0),0),4),4) as i32,r(false,add(add(args.p,0),8),4) as i32,r(false,add(add(add(args.p,0),8),4),4) as i32,(r(false,add(add(args.p,0),16),1) as i32));let out=Scratch::new(8,8);w(false,out.p,(result) as u64,8);c_s64(out.p,out.p,false,false);(r(false,out.p,8) as i64)}
+481 + #[no_mangle]pub unsafe extern "C" fn __wasmc_canonical_bridge_1(p0:i32,p1:i32,p2:i32,p3:i32,p4:i32)->i64{let args=Scratch::new(20, 4);w(false,add(add(args.p,0),0),(p0) as u32 as u64,4);w(false,add(add(add(args.p,0),0),4),(p1) as u32 as u64,4);w(false,add(add(args.p,0),8),(p2) as u32 as u64,4);w(false,add(add(add(args.p,0),8),4),(p3) as u32 as u64,4);let bit=(p4) as u32;assert!(bit<=1);w(false,add(add(args.p,0),16),bit as u64,1);c1(add(args.p,0),add(args.p,0),false,false);let result=raw1(r(false,add(add(args.p,0),0),4) as i32,r(false,add(add(add(args.p,0),0),4),4) as i32,r(false,add(add(args.p,0),8),4) as i32,r(false,add(add(add(args.p,0),8),4),4) as i32,r(false,add(add(args.p,0),16),1) as i32);let out=Scratch::new(8,8);w(false,out.p,(result) as u64,8);c_s64(out.p,out.p,false,false);(r(false,out.p,8) as i64)}
+    |
+
+warning: unnecessary parentheses around block return value
+   --> .agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-owned-algorithms/0.1.2/bindings/rust-core/src/lib.rs:481:796
+    |
+481 | ...,(result) as u64,8);c_s64(out.p,out.p,false,false);(r(false,out.p,8) as i64)}
+    |                                                       ^                       ^
+    |
+help: remove these parentheses
+    |
+481 - #[no_mangle]pub unsafe extern "C" fn __wasmc_canonical_bridge_1(p0:i32,p1:i32,p2:i32,p3:i32,p4:i32)->i64{let args=Scratch::new(20, 4);w(false,add(add(args.p,0),0),(p0) as u32 as u64,4);w(false,add(add(add(args.p,0),0),4),(p1) as u32 as u64,4);w(false,add(add(args.p,0),8),(p2) as u32 as u64,4);w(false,add(add(add(args.p,0),8),4),(p3) as u32 as u64,4);let bit=(p4) as u32;assert!(bit<=1);w(false,add(add(args.p,0),16),bit as u64,1);c1(add(args.p,0),add(args.p,0),false,false);let result=raw1(r(false,add(add(args.p,0),0),4) as i32,r(false,add(add(add(args.p,0),0),4),4) as i32,r(false,add(add(args.p,0),8),4) as i32,r(false,add(add(add(args.p,0),8),4),4) as i32,(r(false,add(add(args.p,0),16),1) as i32));let out=Scratch::new(8,8);w(false,out.p,(result) as u64,8);c_s64(out.p,out.p,false,false);(r(false,out.p,8) as i64)}
+481 + #[no_mangle]pub unsafe extern "C" fn __wasmc_canonical_bridge_1(p0:i32,p1:i32,p2:i32,p3:i32,p4:i32)->i64{let args=Scratch::new(20, 4);w(false,add(add(args.p,0),0),(p0) as u32 as u64,4);w(false,add(add(add(args.p,0),0),4),(p1) as u32 as u64,4);w(false,add(add(args.p,0),8),(p2) as u32 as u64,4);w(false,add(add(add(args.p,0),8),4),(p3) as u32 as u64,4);let bit=(p4) as u32;assert!(bit<=1);w(false,add(add(args.p,0),16),bit as u64,1);c1(add(args.p,0),add(args.p,0),false,false);let result=raw1(r(false,add(add(args.p,0),0),4) as i32,r(false,add(add(add(args.p,0),0),4),4) as i32,r(false,add(add(args.p,0),8),4) as i32,r(false,add(add(add(args.p,0),8),4),4) as i32,(r(false,add(add(args.p,0),16),1) as i32));let out=Scratch::new(8,8);w(false,out.p,(result) as u64,8);c_s64(out.p,out.p,false,false);r(false,out.p,8) as i64}
+    |
+
+warning: unnecessary parentheses around block return value
+   --> .agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-owned-algorithms/0.1.2/bindings/rust-core/src/lib.rs:483:430
+    |
+483 | ...,(result) as u64,8);c_s64(out.p,out.p,false,false);(r(false,out.p,8) as i64)}
+    |                                                       ^                       ^
+    |
+help: remove these parentheses
+    |
+483 - #[no_mangle]pub unsafe extern "C" fn __wasmc_canonical_bridge_2(p0:i32,p1:i32)->i64{let args=Scratch::new(8, 4);w(false,add(args.p,0),(p0) as u32 as u64,4);w(false,add(add(args.p,0),4),(p1) as u32 as u64,4);c0(add(args.p,0),add(args.p,0),false,false);let result=raw2(r(false,add(args.p,0),4) as i32,r(false,add(add(args.p,0),4),4) as i32);let out=Scratch::new(8,8);w(false,out.p,(result) as u64,8);c_s64(out.p,out.p,false,false);(r(false,out.p,8) as i64)}
+483 + #[no_mangle]pub unsafe extern "C" fn __wasmc_canonical_bridge_2(p0:i32,p1:i32)->i64{let args=Scratch::new(8, 4);w(false,add(args.p,0),(p0) as u32 as u64,4);w(false,add(add(args.p,0),4),(p1) as u32 as u64,4);c0(add(args.p,0),add(args.p,0),false,false);let result=raw2(r(false,add(args.p,0),4) as i32,r(false,add(add(args.p,0),4),4) as i32);let out=Scratch::new(8,8);w(false,out.p,(result) as u64,8);c_s64(out.p,out.p,false,false);r(false,out.p,8) as i64}
+    |
+
+warning: unnecessary parentheses around block return value
+   --> .agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-owned-algorithms/0.1.2/bindings/rust-core/src/lib.rs:485:436
+    |
+485 | ...,(result) as u64,4);c_s32(out.p,out.p,false,false);(r(false,out.p,4) as i32)}
+    |                                                       ^                       ^
+    |
+help: remove these parentheses
+    |
+485 - #[no_mangle]pub unsafe extern "C" fn __wasmc_canonical_bridge_3(p0:i32,p1:i32)->i32{let args=Scratch::new(8, 4);w(false,add(args.p,0),(p0) as u32 as u64,4);w(false,add(add(args.p,0),4),(p1) as u32 as u64,4);c_string(add(args.p,0),add(args.p,0),false,false);let result=raw3(r(false,add(args.p,0),4) as i32,r(false,add(add(args.p,0),4),4) as i32);let out=Scratch::new(4,4);w(false,out.p,(result) as u64,4);c_s32(out.p,out.p,false,false);(r(false,out.p,4) as i32)}
+485 + #[no_mangle]pub unsafe extern "C" fn __wasmc_canonical_bridge_3(p0:i32,p1:i32)->i32{let args=Scratch::new(8, 4);w(false,add(args.p,0),(p0) as u32 as u64,4);w(false,add(add(args.p,0),4),(p1) as u32 as u64,4);c_string(add(args.p,0),add(args.p,0),false,false);let result=raw3(r(false,add(args.p,0),4) as i32,r(false,add(add(args.p,0),4),4) as i32);let out=Scratch::new(4,4);w(false,out.p,(result) as u64,4);c_s32(out.p,out.p,false,false);r(false,out.p,4) as i32}
+    |
+
+warning: 5 warnings emitted
+

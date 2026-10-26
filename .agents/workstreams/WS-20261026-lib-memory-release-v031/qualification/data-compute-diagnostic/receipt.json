@@ -1,0 +1,11 @@
+{
+  "accepted": true,
+  "scope": "eight-second sample of independently started seal diagnostic stopped afterward; prior 120-second timeout retained separately",
+  "sample_sha256": "0d43cab920e699b54dddfa77800a95852d9882d8ba854de6527443f838af1d42",
+  "sample_gzip_sha256": "3421c043337bf1e57410ee02eab8d4dcfca58df0647536c3b6424b13a4152a23",
+  "implementation_sha256": "da6d74423dca37825dbc44b4cb97da377c3d7b5a09a9ec0415e117f8efc67ec6",
+  "observed_stack": "compose_and_publish_for_view -> wasmtime Module::new -> Cranelift compilation including register allocation",
+  "comparison": "independent Wasmtime CLI 47.0.3 opt-level=0 compiled the same implementation in 0.35s wall; original seal links different Wasmtime version and default settings",
+  "inference": "validation compilation is a measured bottleneck; results do not prove identical output or end-to-end equivalence",
+  "formal_release": false
+}
