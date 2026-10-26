@@ -1,0 +1,43 @@
+{
+  "schema": "wasmc.normal-consumer-command-recovery-qualification/v1",
+  "accepted": true,
+  "scope": "20 effective normal cells with explicit immutable command custody; original failed20aggregate retained",
+  "single_source_aggregate_accepted": false,
+  "baseline": {
+    "source": "84e21916ba11ea1e919e878b88797522073b2515",
+    "run": 40302699859,
+    "conclusion": "failure",
+    "successful_compatibility_cells": 6,
+    "successful_Rust_commands": 4,
+    "original_aggregate_sha256": "e5f25c36d564e54896c63fed5f8898ba83c54fdd7becdb9fdf59ea33e530e8e4"
+  },
+  "runtime_recovery": {
+    "source": "ca6e36ab5f7617894ed595e98ac0ee39eee0008e",
+    "run": 40305466069,
+    "conclusion": "success",
+    "actual_cells": 13
+  },
+  "rust_search_recovery": {
+    "source": "ca6e36ab5f7617894ed595e98ac0ee39eee0008e",
+    "run": 40305460547,
+    "conclusion": "success",
+    "actual_commands": 2
+  },
+  "product_candidate_commit": "ca6e36ab5f7617894ed595e98ac0ee39eee0008e",
+  "product_set_sha256": "60669ecb5e043bfdd88704e11136a1c300e8604087e46ec01308b9a1be6efe1d",
+  "changed_product_paths": [
+    ".github/workflows/normal-source-free-consumer.yml",
+    "LIB.md",
+    "README.md",
+    "examples/lib-search/rust/src/main.rs",
+    "examples/lib-search/rust/tests/wasmi_portable.rs",
+    "scripts/ci-rust-search-recovery.mjs",
+    "scripts/release-candidate.mjs"
+  ],
+  "verified_product_files": 2333,
+  "all_other_product_bytes_and_modes_identical": true,
+  "original_summary_verifier_unchanged": true,
+  "actual_effective_cells": 20,
+  "actual_effective_commands": 141,
+  "errors": []
+}

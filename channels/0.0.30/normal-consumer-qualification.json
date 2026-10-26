@@ -1,0 +1,5352 @@
+{
+  "schema": "wasmc.normal-consumer-command-recovery-qualification/v1",
+  "accepted": true,
+  "scope": "20 effective normal cells with explicit immutable command custody; original failed20aggregate retained",
+  "single_source_aggregate_accepted": false,
+  "baseline": {
+    "source": "84e21916ba11ea1e919e878b88797522073b2515",
+    "run": 40302699859,
+    "conclusion": "failure",
+    "successful_compatibility_cells": 6,
+    "successful_Rust_commands": 4,
+    "original_aggregate_sha256": "e5f25c36d564e54896c63fed5f8898ba83c54fdd7becdb9fdf59ea33e530e8e4"
+  },
+  "runtime_recovery": {
+    "source": "ca6e36ab5f7617894ed595e98ac0ee39eee0008e",
+    "run": 40305466069,
+    "conclusion": "success",
+    "actual_cells": 13
+  },
+  "rust_search_recovery": {
+    "source": "ca6e36ab5f7617894ed595e98ac0ee39eee0008e",
+    "run": 40305460547,
+    "conclusion": "success",
+    "actual_commands": 2
+  },
+  "product_candidate_commit": "ca6e36ab5f7617894ed595e98ac0ee39eee0008e",
+  "product_set_sha256": "60669ecb5e043bfdd88704e11136a1c300e8604087e46ec01308b9a1be6efe1d",
+  "changed_product_paths": [
+    ".github/workflows/normal-source-free-consumer.yml",
+    "LIB.md",
+    "README.md",
+    "examples/lib-search/rust/src/main.rs",
+    "examples/lib-search/rust/tests/wasmi_portable.rs",
+    "scripts/ci-rust-search-recovery.mjs",
+    "scripts/release-candidate.mjs"
+  ],
+  "verified_product_files": 2333,
+  "all_other_product_bytes_and_modes_identical": true,
+  "original_summary_verifier_unchanged": true,
+  "actual_effective_cells": 20,
+  "actual_effective_commands": 141,
+  "errors": [],
+  "cells": [
+    {
+      "origin": "baseline",
+      "raw_receipt_sha256": "bb4c75559010cac02035b160ac5e2cec4374022eab03aa0178f35d947eab7357",
+      "receipt": {
+        "schema": "wasmc.public-ci-suite/v1",
+        "label": "compatibility-macos-15-18.19.1",
+        "family": "compatibility",
+        "runtime": "node",
+        "mirror": "github",
+        "source_commit": "84e21916ba11ea1e919e878b88797522073b2515",
+        "dirty": false,
+        "platform": "darwin",
+        "arch": "arm64",
+        "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+        "runtime_version": "v18.19.1",
+        "tests": [
+          {
+            "id": "core-feature-probes-and-negatives",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/test-core-compatibility.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 89,
+            "observation": {
+              "accepted": true,
+              "host": {
+                "name": "node",
+                "version": "v18.19.1",
+                "v8": "10.2.154.26-node.28"
+              },
+              "features": {
+                "function-references": false,
+                "tail-call": false
+              },
+              "negative_tests": 6,
+              "supported_probe_oracle": 7
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "catalog-exact-resolution",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/test-lib-catalog.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 1013,
+            "observation": {
+              "accepted": true,
+              "current_packages": 43,
+              "native_source_packages": 14,
+              "negative_tests": 10,
+              "selection": "unique exact complete-Root lock",
+              "network_access": false
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "install-no-clobber-and-faults",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/test-lib-install.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 15440,
+            "observation": {
+              "accepted": true,
+              "files_verified": 19,
+              "negative_tests": 17,
+              "numeric_and_nonerror_transport_rejections": 6,
+              "http_status_and_relative_path_verified": true,
+              "numeric_abort_maps_to_timeout": true,
+              "concurrent_single_winner": true,
+              "competing_directory_preserved": true,
+              "failed_stage_cleanup": true,
+              "network_access": false,
+              "companion_installed": false
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "compiler-expression-only",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/validate-current.mjs",
+                "--compile-only"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 2192,
+            "observation": {
+              "accepted": true,
+              "runtime": "node",
+              "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+              "frozen_corpus_outputs": 30,
+              "expression_cases": 23,
+              "mode": "compile-only",
+              "managed_repeated_calls": null
+            },
+            "rust_test_summaries": []
+          }
+        ],
+        "accepted": true
+      }
+    },
+    {
+      "origin": "baseline",
+      "raw_receipt_sha256": "70e6e20f21ff7a14dda63cc45685699ef1a86ba29efadc83298a737db9814290",
+      "receipt": {
+        "schema": "wasmc.public-ci-suite/v1",
+        "label": "compatibility-macos-15-22.0.0",
+        "family": "compatibility",
+        "runtime": "node",
+        "mirror": "github",
+        "source_commit": "84e21916ba11ea1e919e878b88797522073b2515",
+        "dirty": false,
+        "platform": "darwin",
+        "arch": "arm64",
+        "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+        "runtime_version": "v22.0.0",
+        "tests": [
+          {
+            "id": "core-feature-probes-and-negatives",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/test-core-compatibility.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 73,
+            "observation": {
+              "accepted": true,
+              "host": {
+                "name": "node",
+                "version": "v22.0.0",
+                "v8": "12.4.254.14-node.10"
+              },
+              "features": {
+                "function-references": true,
+                "tail-call": true
+              },
+              "negative_tests": 6,
+              "supported_probe_oracle": 7
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "catalog-exact-resolution",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/test-lib-catalog.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 462,
+            "observation": {
+              "accepted": true,
+              "current_packages": 43,
+              "native_source_packages": 14,
+              "negative_tests": 10,
+              "selection": "unique exact complete-Root lock",
+              "network_access": false
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "install-no-clobber-and-faults",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/test-lib-install.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 15337,
+            "observation": {
+              "accepted": true,
+              "files_verified": 19,
+              "negative_tests": 17,
+              "numeric_and_nonerror_transport_rejections": 6,
+              "http_status_and_relative_path_verified": true,
+              "numeric_abort_maps_to_timeout": true,
+              "concurrent_single_winner": true,
+              "competing_directory_preserved": true,
+              "failed_stage_cleanup": true,
+              "network_access": false,
+              "companion_installed": false
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "compiler-expression-only",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/validate-current.mjs",
+                "--compile-only"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 1432,
+            "observation": {
+              "accepted": true,
+              "runtime": "node",
+              "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+              "frozen_corpus_outputs": 30,
+              "expression_cases": 23,
+              "mode": "compile-only",
+              "managed_repeated_calls": null
+            },
+            "rust_test_summaries": []
+          }
+        ],
+        "accepted": true
+      }
+    },
+    {
+      "origin": "baseline",
+      "raw_receipt_sha256": "4c985480a60f52ae47921c95f03b2458a07555185233a6a5543a536568a3782d",
+      "receipt": {
+        "schema": "wasmc.public-ci-suite/v1",
+        "label": "compatibility-macos-15-26.5.1",
+        "family": "compatibility",
+        "runtime": "node",
+        "mirror": "github",
+        "source_commit": "84e21916ba11ea1e919e878b88797522073b2515",
+        "dirty": false,
+        "platform": "darwin",
+        "arch": "arm64",
+        "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+        "runtime_version": "v26.5.1",
+        "tests": [
+          {
+            "id": "core-feature-probes-and-negatives",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/test-core-compatibility.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 90,
+            "observation": {
+              "accepted": true,
+              "host": {
+                "name": "node",
+                "version": "v26.5.1",
+                "v8": "14.6.202.34-node.24"
+              },
+              "features": {
+                "function-references": true,
+                "tail-call": true
+              },
+              "negative_tests": 6,
+              "supported_probe_oracle": 7
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "catalog-exact-resolution",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/test-lib-catalog.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 874,
+            "observation": {
+              "accepted": true,
+              "current_packages": 43,
+              "native_source_packages": 14,
+              "negative_tests": 10,
+              "selection": "unique exact complete-Root lock",
+              "network_access": false
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "install-no-clobber-and-faults",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/test-lib-install.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 15602,
+            "observation": {
+              "accepted": true,
+              "files_verified": 19,
+              "negative_tests": 17,
+              "numeric_and_nonerror_transport_rejections": 6,
+              "http_status_and_relative_path_verified": true,
+              "numeric_abort_maps_to_timeout": true,
+              "concurrent_single_winner": true,
+              "competing_directory_preserved": true,
+              "failed_stage_cleanup": true,
+              "network_access": false,
+              "companion_installed": false
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "compiler-expression-only",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/validate-current.mjs",
+                "--compile-only"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 1593,
+            "observation": {
+              "accepted": true,
+              "runtime": "node",
+              "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+              "frozen_corpus_outputs": 30,
+              "expression_cases": 23,
+              "mode": "compile-only",
+              "managed_repeated_calls": null
+            },
+            "rust_test_summaries": []
+          }
+        ],
+        "accepted": true
+      }
+    },
+    {
+      "origin": "baseline",
+      "raw_receipt_sha256": "ac8c88d08df4d69c8a67218d12316132fac298b6c746002bea3899abcd631532",
+      "receipt": {
+        "schema": "wasmc.public-ci-suite/v1",
+        "label": "compatibility-ubuntu-24.04-18.19.1",
+        "family": "compatibility",
+        "runtime": "node",
+        "mirror": "github",
+        "source_commit": "84e21916ba11ea1e919e878b88797522073b2515",
+        "dirty": false,
+        "platform": "linux",
+        "arch": "x64",
+        "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+        "runtime_version": "v18.19.1",
+        "tests": [
+          {
+            "id": "core-feature-probes-and-negatives",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/test-core-compatibility.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 47,
+            "observation": {
+              "accepted": true,
+              "host": {
+                "name": "node",
+                "version": "v18.19.1",
+                "v8": "10.2.154.26-node.28"
+              },
+              "features": {
+                "function-references": false,
+                "tail-call": false
+              },
+              "negative_tests": 6,
+              "supported_probe_oracle": 7
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "catalog-exact-resolution",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/test-lib-catalog.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 378,
+            "observation": {
+              "accepted": true,
+              "current_packages": 43,
+              "native_source_packages": 14,
+              "negative_tests": 10,
+              "selection": "unique exact complete-Root lock",
+              "network_access": false
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "install-no-clobber-and-faults",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/test-lib-install.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 15298,
+            "observation": {
+              "accepted": true,
+              "files_verified": 19,
+              "negative_tests": 17,
+              "numeric_and_nonerror_transport_rejections": 6,
+              "http_status_and_relative_path_verified": true,
+              "numeric_abort_maps_to_timeout": true,
+              "concurrent_single_winner": true,
+              "competing_directory_preserved": true,
+              "failed_stage_cleanup": true,
+              "network_access": false,
+              "companion_installed": false
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "compiler-expression-only",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/validate-current.mjs",
+                "--compile-only"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 1795,
+            "observation": {
+              "accepted": true,
+              "runtime": "node",
+              "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+              "frozen_corpus_outputs": 30,
+              "expression_cases": 23,
+              "mode": "compile-only",
+              "managed_repeated_calls": null
+            },
+            "rust_test_summaries": []
+          }
+        ],
+        "accepted": true
+      }
+    },
+    {
+      "origin": "baseline",
+      "raw_receipt_sha256": "bd0637f14658b8614e38c2727449a4922e838421da4434c22858986c9e050282",
+      "receipt": {
+        "schema": "wasmc.public-ci-suite/v1",
+        "label": "compatibility-ubuntu-24.04-22.0.0",
+        "family": "compatibility",
+        "runtime": "node",
+        "mirror": "github",
+        "source_commit": "84e21916ba11ea1e919e878b88797522073b2515",
+        "dirty": false,
+        "platform": "linux",
+        "arch": "x64",
+        "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+        "runtime_version": "v22.0.0",
+        "tests": [
+          {
+            "id": "core-feature-probes-and-negatives",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/test-core-compatibility.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 58,
+            "observation": {
+              "accepted": true,
+              "host": {
+                "name": "node",
+                "version": "v22.0.0",
+                "v8": "12.4.254.14-node.10"
+              },
+              "features": {
+                "function-references": true,
+                "tail-call": true
+              },
+              "negative_tests": 6,
+              "supported_probe_oracle": 7
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "catalog-exact-resolution",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/test-lib-catalog.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 506,
+            "observation": {
+              "accepted": true,
+              "current_packages": 43,
+              "native_source_packages": 14,
+              "negative_tests": 10,
+              "selection": "unique exact complete-Root lock",
+              "network_access": false
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "install-no-clobber-and-faults",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/test-lib-install.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 15343,
+            "observation": {
+              "accepted": true,
+              "files_verified": 19,
+              "negative_tests": 17,
+              "numeric_and_nonerror_transport_rejections": 6,
+              "http_status_and_relative_path_verified": true,
+              "numeric_abort_maps_to_timeout": true,
+              "concurrent_single_winner": true,
+              "competing_directory_preserved": true,
+              "failed_stage_cleanup": true,
+              "network_access": false,
+              "companion_installed": false
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "compiler-expression-only",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/validate-current.mjs",
+                "--compile-only"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 1369,
+            "observation": {
+              "accepted": true,
+              "runtime": "node",
+              "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+              "frozen_corpus_outputs": 30,
+              "expression_cases": 23,
+              "mode": "compile-only",
+              "managed_repeated_calls": null
+            },
+            "rust_test_summaries": []
+          }
+        ],
+        "accepted": true
+      }
+    },
+    {
+      "origin": "baseline",
+      "raw_receipt_sha256": "1dbbe29ebda838359c9d6f71e4f3ceb979e704dd8344b98377d41056cca19c5c",
+      "receipt": {
+        "schema": "wasmc.public-ci-suite/v1",
+        "label": "compatibility-ubuntu-24.04-26.5.1",
+        "family": "compatibility",
+        "runtime": "node",
+        "mirror": "github",
+        "source_commit": "84e21916ba11ea1e919e878b88797522073b2515",
+        "dirty": false,
+        "platform": "linux",
+        "arch": "x64",
+        "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+        "runtime_version": "v26.5.1",
+        "tests": [
+          {
+            "id": "core-feature-probes-and-negatives",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/test-core-compatibility.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 49,
+            "observation": {
+              "accepted": true,
+              "host": {
+                "name": "node",
+                "version": "v26.5.1",
+                "v8": "14.6.202.34-node.24"
+              },
+              "features": {
+                "function-references": true,
+                "tail-call": true
+              },
+              "negative_tests": 6,
+              "supported_probe_oracle": 7
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "catalog-exact-resolution",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/test-lib-catalog.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 341,
+            "observation": {
+              "accepted": true,
+              "current_packages": 43,
+              "native_source_packages": 14,
+              "negative_tests": 10,
+              "selection": "unique exact complete-Root lock",
+              "network_access": false
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "install-no-clobber-and-faults",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/test-lib-install.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 15272,
+            "observation": {
+              "accepted": true,
+              "files_verified": 19,
+              "negative_tests": 17,
+              "numeric_and_nonerror_transport_rejections": 6,
+              "http_status_and_relative_path_verified": true,
+              "numeric_abort_maps_to_timeout": true,
+              "concurrent_single_winner": true,
+              "competing_directory_preserved": true,
+              "failed_stage_cleanup": true,
+              "network_access": false,
+              "companion_installed": false
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "compiler-expression-only",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/validate-current.mjs",
+                "--compile-only"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 929,
+            "observation": {
+              "accepted": true,
+              "runtime": "node",
+              "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+              "frozen_corpus_outputs": 30,
+              "expression_cases": 23,
+              "mode": "compile-only",
+              "managed_repeated_calls": null
+            },
+            "rust_test_summaries": []
+          }
+        ],
+        "accepted": true
+      }
+    },
+    {
+      "origin": "runtime-recovery",
+      "raw_receipt_sha256": "fa925fc40ab9d4aa0d63699a0a10d5f2058459db804c7f1ae61d2ab612de9a31",
+      "receipt": {
+        "schema": "wasmc.public-ci-suite/v1",
+        "label": "integrity-ubuntu",
+        "family": "candidate",
+        "runtime": "node",
+        "mirror": "github",
+        "source_commit": "ca6e36ab5f7617894ed595e98ac0ee39eee0008e",
+        "dirty": false,
+        "platform": "linux",
+        "arch": "x64",
+        "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+        "runtime_version": "v26.5.1",
+        "tests": [
+          {
+            "id": "current-v3-product-identity",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/current-release-identity.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 3348,
+            "observation": {
+              "accepted": true,
+              "version": "0.0.30",
+              "candidate": "channels/candidates/0.0.30.json",
+              "product_set_sha256": "60669ecb5e043bfdd88704e11136a1c300e8604087e46ec01308b9a1be6efe1d",
+              "current_packages": 43
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "current-complete-product-reopen-negatives",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/test-current-product-v3.mjs",
+                "--product",
+                ".",
+                "--catalog-sha256",
+                "e12684efb3e475ad551eddabda12bc4c196f19edb48e7ace9069fda1ef5e7871",
+                "--out",
+                "target/ci/current-product-controls"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 17839,
+            "observation": {
+              "schema": "wasmc.current-product-v3-controls/v1",
+              "accepted": true,
+              "tests": 43,
+              "catalog_sha256": "e12684efb3e475ad551eddabda12bc4c196f19edb48e7ace9069fda1ef5e7871",
+              "test_source_sha256": "f861992cede9de83469b8fafe9b1dfeee8f1399c60947f338e75ee53692d5175",
+              "results": [
+                {
+                  "name": "canonical full-path inventory order across directory prefixes",
+                  "passed": true
+                },
+                {
+                  "name": "real composed Core snapshot all320 lookups and full pagination; original full-base verified",
+                  "passed": true
+                },
+                {
+                  "name": "independent catalog mismatch",
+                  "passed": true,
+                  "rejected": true
+                },
+                {
+                  "name": "actual modified artifact.wasm",
+                  "passed": true,
+                  "rejected": true
+                },
+                {
+                  "name": "actual modified component.wasm",
+                  "passed": true,
+                  "rejected": true
+                },
+                {
+                  "name": "actual modified lib.wit",
+                  "passed": true,
+                  "rejected": true
+                },
+                {
+                  "name": "actual modified LICENSE",
+                  "passed": true,
+                  "rejected": true
+                },
+                {
+                  "name": "actual modified Cargo.toml",
+                  "passed": true,
+                  "rejected": true
+                },
+                {
+                  "name": "missing current implementation",
+                  "passed": true,
+                  "rejected": true
+                },
+                {
+                  "name": "duplicate implementation",
+                  "passed": true,
+                  "rejected": true
+                },
+                {
+                  "name": "native-source cannot claim Wasm",
+                  "passed": true,
+                  "rejected": true
+                },
+                {
+                  "name": "unsafe package path",
+                  "passed": true,
+                  "rejected": true
+                },
+                {
+                  "name": "unsealed extra Root inventory",
+                  "passed": true,
+                  "rejected": true
+                },
+                {
+                  "name": "self-rehashed artifact fails Q0 root authority",
+                  "passed": true,
+                  "rejected": true
+                },
+                {
+                  "name": "self-rehashed API omission fails WIT closure",
+                  "passed": true,
+                  "rejected": true
+                },
+                {
+                  "name": "self-rehashed authored source fails Q0 input",
+                  "passed": true,
+                  "rejected": true
+                },
+                {
+                  "name": "actual undeclared current file",
+                  "passed": true,
+                  "rejected": true
+                },
+                {
+                  "name": "controlled install wasm-core-component",
+                  "passed": true,
+                  "transport_fixture": true
+                },
+                {
+                  "name": "install wasm-core-component rejects http302",
+                  "passed": true
+                },
+                {
+                  "name": "install wasm-core-component rejects truncated",
+                  "passed": true
+                },
+                {
+                  "name": "install wasm-core-component rejects oversized",
+                  "passed": true
+                },
+                {
+                  "name": "install wasm-core-component rejects digest",
+                  "passed": true
+                },
+                {
+                  "name": "self-rehashed lock cannot grant authority wasm-core-component",
+                  "passed": true
+                },
+                {
+                  "name": "controlled install native-source",
+                  "passed": true,
+                  "transport_fixture": true
+                },
+                {
+                  "name": "install native-source rejects http302",
+                  "passed": true
+                },
+                {
+                  "name": "install native-source rejects truncated",
+                  "passed": true
+                },
+                {
+                  "name": "install native-source rejects oversized",
+                  "passed": true
+                },
+                {
+                  "name": "install native-source rejects digest",
+                  "passed": true
+                },
+                {
+                  "name": "self-rehashed lock cannot grant authority native-source",
+                  "passed": true
+                },
+                {
+                  "name": "controlled install native-module",
+                  "passed": true,
+                  "transport_fixture": true
+                },
+                {
+                  "name": "install native-module rejects http302",
+                  "passed": true
+                },
+                {
+                  "name": "install native-module rejects truncated",
+                  "passed": true
+                },
+                {
+                  "name": "install native-module rejects oversized",
+                  "passed": true
+                },
+                {
+                  "name": "install native-module rejects digest",
+                  "passed": true
+                },
+                {
+                  "name": "self-rehashed lock cannot grant authority native-module",
+                  "passed": true
+                },
+                {
+                  "name": "controlled install native-binary",
+                  "passed": true,
+                  "transport_fixture": true
+                },
+                {
+                  "name": "install native-binary rejects http302",
+                  "passed": true
+                },
+                {
+                  "name": "install native-binary rejects truncated",
+                  "passed": true
+                },
+                {
+                  "name": "install native-binary rejects oversized",
+                  "passed": true
+                },
+                {
+                  "name": "install native-binary rejects digest",
+                  "passed": true
+                },
+                {
+                  "name": "self-rehashed lock cannot grant authority native-binary",
+                  "passed": true
+                },
+                {
+                  "name": "actual byte-identical linked input",
+                  "passed": true,
+                  "rejected": true
+                },
+                {
+                  "name": "actual filesystem extra Root file",
+                  "passed": true,
+                  "rejected": true
+                }
+              ],
+              "scope": "Actual42 data/WIT/Root/Core Search and four delivery kinds with controlled transport/faults; immutable public network install and whole release remain independent"
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "current-original-license-reopen-negatives",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/test-current-license-policy-v3.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 44740,
+            "observation": {
+              "accepted": true,
+              "immutable_standalone_notices": 18,
+              "rejections": 4,
+              "exact_bytes_only": true
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "library-first-teaching-and-routes",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/test-library-first.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 4588,
+            "observation": {
+              "accepted": true,
+              "teaching_commands": 2,
+              "checked_hits": 5,
+              "negative_tests": 6,
+              "network_access": false
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "live-agent-trace-evaluator",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/test-live-agent-trace-evaluation-v1.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 38,
+            "observation": {
+              "accepted": true,
+              "schema": "wasmc.live-agent-trace-evaluation/v1",
+              "profiles": [
+                "general",
+                "status-query"
+              ],
+              "negative_signals": 10,
+              "terminal_answer_controls": 8
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "fresh-pi-two-model-cohort-contract",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/test-fresh-agent-learning-v1.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 81,
+            "observation": {
+              "accepted": true,
+              "schema": "wasmc.fresh-agent-learning/v3",
+              "cases": 6,
+              "rejects_single_model_claim": true,
+              "requires_exact_controlled_pair": true,
+              "rejects_split_pi_version": true,
+              "rejects_case_error": true,
+              "rejects_retry_over_budget": true,
+              "minimum_execution_evidence_controls": 8,
+              "protocol_binding_controls": 13
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "pi-pre-release-candidate-binding-contract",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/test-pi-pre-release-gate-v1.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 69,
+            "observation": {
+              "accepted": true,
+              "rejects_stale_rehearsal_commit_or_tree": true,
+              "rejects_candidate_or_product_drift": true,
+              "rejects_incomplete_pair": true,
+              "rejects_structural_or_white_box_failure": true,
+              "rejects_retry_or_wrong_first_answer": true,
+              "rejects_protocol_or_bound_artifact_drift": true,
+              "explicit_glm_single_model_accepted": true,
+              "single_model_negative_controls": 19,
+              "historical_pair_default_preserved": true,
+              "live_model_run": false
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "agent-quickstart-execution",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/test-agent-quickstart.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 2447,
+            "observation": {
+              "accepted": true,
+              "schema": "wasmc.agent-quickstart/v1",
+              "routes": 10,
+              "pair": {
+                "accepted": true,
+                "source": "examples/agent-quickstart/pair.wasmc",
+                "core_bytes": 49,
+                "core_sha256": "55f3c7e3d09b564b89b8268299a69569a33b856b46405cb4c4dd51634afec84e",
+                "imports": [],
+                "exports": [
+                  {
+                    "name": "run",
+                    "kind": "function"
+                  }
+                ],
+                "call": "run(5, true)",
+                "result": [
+                  1,
+                  1
+                ]
+              },
+              "base64": {
+                "accepted": true,
+                "installed_root_verified": false,
+                "rounds": 256,
+                "explicit_drops": 1024,
+                "invalid_input_rejected": true,
+                "persistent_provider_memory_bytes": 1376256,
+                "package": "wasmc:std@1.4.1",
+                "apis": [
+                  "wasmc:std@1.4.1/base64#try-encode-standard",
+                  "wasmc:std@1.4.1/base64#try-decode-standard"
+                ],
+                "artifact_sha256": "b79a499c8300361125e7fcdae02170184b82d4bbeff4d8f24ed95f3fd4db8d3b",
+                "import_module": "wasmc:lib/wasmc.lib_managed_object_heap@4.9.0",
+                "input_utf8": "abc",
+                "encoded_utf8": "YWJj",
+                "decoded_utf8": "abc"
+              },
+              "route_readiness": {
+                "formal_release_ready": true,
+                "candidate_extras": 0,
+                "lifecycle_authority": "release.json"
+              }
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "candidate-release-surface-model",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/validate-release-surfaces.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 2351,
+            "observation": {
+              "accepted": true,
+              "schema": "wasmc.release-surfaces/v1",
+              "agent_capability_projection": "wasmc.release-agent-capabilities/v1",
+              "producer_capability_delta": "wasmc.producer-release-delta/v1",
+              "lib_ecosystem_control_plane": "wasmc.lib-ecosystem-control-plane/v3",
+              "consumer_surfaces": 6,
+              "extension_surfaces": 2,
+              "desktop_platforms": 6,
+              "required_desktop_platforms": 5,
+              "optional_desktop_platforms": [
+                "macos-x86_64"
+              ],
+              "validated_roots": 17,
+              "workflow_references": 24,
+              "performance_comparison": "same-platform-only",
+              "performance_hard_gate": false
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "candidate-agent-guidance",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/test-agent-guidance.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 68,
+            "observation": {
+              "accepted": true,
+              "release_tag": "v0.0.30",
+              "prod_tag": "v0.0.30",
+              "public_skills": 30,
+              "parent_edges": 27,
+              "negative_tests": 20
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "sdk-agent-routing",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/validate-sdk-agent-routes.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 35,
+            "observation": {
+              "accepted": true,
+              "schema": "wasmc-sdk-agent-routing/v1",
+              "host_sdk_status": "published",
+              "native_runtime_status": "incubating",
+              "component_skills": 3,
+              "status_queries": 3,
+              "capability_projection": "wasmc.release-agent-capabilities/v1",
+              "stale_api_names_rejected": 3,
+              "source_symbols_verified": 10,
+              "routes": {
+                "core_runtime": "sdk/wasmc-core-runtime/SKILL.md",
+                "host_sdk": "sdk/wasmc-host/SKILL.md",
+                "native_cli": "sdk/wasmc-native-compiler/SKILL.md",
+                "lightweight_embedding": "host/embedding/*"
+              }
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "lib-route-release-closure-negatives",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/test-lib-route-closure.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 7738,
+            "observation": {
+              "accepted": true,
+              "schema": "wasmc.lib-route-closure/v3",
+              "release_packages": 43,
+              "package_routes": 43,
+              "api_routes": 277,
+              "entries": 320,
+              "negative_tests": 6,
+              "public_release_admission": false
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "release-channel-promotion-negatives",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/test-release-channel.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 57,
+            "observation": {
+              "accepted": true,
+              "candidate_schema": "wasmc.release-product-candidate/v2",
+              "positive_transitions": 3,
+              "current_lifecycle_partition_controls": 4,
+              "current_CI_input_files": 94,
+              "current_CI_input_controls": 13,
+              "negative_tests": 32,
+              "publishes": false
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "current-release-version-and-qualification-contract",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/test-current-release-version.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 65,
+            "observation": {
+              "accepted": true,
+              "actual_current_receipt": true,
+              "legacy_schema_fixture": true,
+              "rejections": 37,
+              "whole_product_admission": false
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "agent-start-execution",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "examples/agent-start/run.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 94,
+            "observation": null,
+            "rust_test_summaries": []
+          }
+        ],
+        "accepted": true
+      }
+    },
+    {
+      "origin": "runtime-recovery",
+      "raw_receipt_sha256": "b9932fdde9afdb1a99db49b027a3c35e7da9ad7f4d6779a7a9f89c9946e38d7c",
+      "receipt": {
+        "schema": "wasmc.public-ci-suite/v1",
+        "label": "runtime-macos-15-bun-github",
+        "family": "runtime",
+        "runtime": "bun",
+        "mirror": "github",
+        "source_commit": "ca6e36ab5f7617894ed595e98ac0ee39eee0008e",
+        "dirty": false,
+        "platform": "darwin",
+        "arch": "arm64",
+        "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+        "runtime_version": "1.3.14",
+        "tests": [
+          {
+            "id": "source-free-archive-deployment",
+            "invocation": {
+              "command": "bash",
+              "args": [
+                "scripts/validate-source-free-runtime.sh",
+                "bun"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 3285,
+            "observation": {
+              "accepted": true,
+              "standard_lib": "wasmc:std@1.4.1",
+              "functions": 73,
+              "consumer_count": 3,
+              "consumer_calls": 7680,
+              "current_app_sha256": "f704d2c4d99f9efc97ef6d3c99bfd29c3987e1a96601ec7ff026dd0ac6e0581a",
+              "rust_sdk_sha256": "4d2c55eda7cdbe4d14084de2d579ae6dcea97332e18ca9894d210a5a71472d65"
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "core-full-artifact-admission",
+            "invocation": {
+              "command": "bun",
+              "args": [
+                "scripts/check-core-compatibility.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 49,
+            "observation": {
+              "schema": "wasmc.core-compatibility-check/v1",
+              "accepted": true,
+              "host": {
+                "name": "bun",
+                "version": "1.3.14",
+                "v8": "13.6.233.10-node.18"
+              },
+              "results": [
+                {
+                  "accepted": true,
+                  "artifact": "compiler",
+                  "sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+                  "validation_profile": "complete-engine-validation",
+                  "feature_support": {
+                    "function-references": true,
+                    "tail-call": true
+                  }
+                },
+                {
+                  "accepted": true,
+                  "artifact": "automatic-provider",
+                  "sha256": "1fac280b1d3f2d82399e61e49fcb47f1c6ffc6c3d5b3b27e5d98059952fefabd",
+                  "validation_profile": "complete-engine-validation",
+                  "feature_support": {
+                    "function-references": true,
+                    "tail-call": true
+                  }
+                },
+                {
+                  "accepted": true,
+                  "artifact": "standard-provider",
+                  "sha256": "7cd4f0c60536f1825da3fed9d525a43ee9724250203a261f298505a503e9bcbf",
+                  "validation_profile": "complete-engine-validation",
+                  "feature_support": {
+                    "function-references": true,
+                    "tail-call": true
+                  }
+                },
+                {
+                  "accepted": true,
+                  "artifact": "standard",
+                  "sha256": "b79a499c8300361125e7fcdae02170184b82d4bbeff4d8f24ed95f3fd4db8d3b",
+                  "validation_profile": "wasm2,function-references,tail-call",
+                  "feature_support": {
+                    "function-references": true,
+                    "tail-call": true
+                  }
+                },
+                {
+                  "accepted": true,
+                  "artifact": "canonical-checked-chunk-provider",
+                  "sha256": "1fac280b1d3f2d82399e61e49fcb47f1c6ffc6c3d5b3b27e5d98059952fefabd",
+                  "validation_profile": "complete-engine-validation",
+                  "feature_support": {
+                    "function-references": true,
+                    "tail-call": true
+                  }
+                }
+              ]
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "core-feature-probes-and-negatives",
+            "invocation": {
+              "command": "bun",
+              "args": [
+                "scripts/test-core-compatibility.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 78,
+            "observation": {
+              "accepted": true,
+              "host": {
+                "name": "bun",
+                "version": "1.3.14",
+                "v8": "13.6.233.10-node.18"
+              },
+              "features": {
+                "function-references": true,
+                "tail-call": true
+              },
+              "negative_tests": 6,
+              "supported_probe_oracle": 7
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "catalog-exact-resolution",
+            "invocation": {
+              "command": "bun",
+              "args": [
+                "scripts/test-lib-catalog.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 629,
+            "observation": {
+              "accepted": true,
+              "current_packages": 43,
+              "native_source_packages": 14,
+              "negative_tests": 10,
+              "selection": "unique exact complete-Root lock",
+              "network_access": false
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "install-no-clobber-and-faults",
+            "invocation": {
+              "command": "bun",
+              "args": [
+                "scripts/test-lib-install.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 15284,
+            "observation": {
+              "accepted": true,
+              "files_verified": 19,
+              "negative_tests": 17,
+              "numeric_and_nonerror_transport_rejections": 6,
+              "http_status_and_relative_path_verified": true,
+              "numeric_abort_maps_to_timeout": true,
+              "concurrent_single_winner": true,
+              "competing_directory_preserved": true,
+              "failed_stage_cleanup": true,
+              "network_access": false,
+              "companion_installed": false
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "fresh-mirror-install-and-paired-execution",
+            "invocation": {
+              "command": "bun",
+              "args": [
+                "scripts/validate-lib-install.mjs",
+                "github"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 2431,
+            "observation": {
+              "accepted": true,
+              "host": "bun",
+              "mirror": "github",
+              "lock_sha256": "f0c10b63f9f26bae3e71f31546f0ff37b5cff54316fa0403f35335113b52670b",
+              "receipt": {
+                "schema": "wasmc.public-lib-install/v2",
+                "lock_sha256": "f0c10b63f9f26bae3e71f31546f0ff37b5cff54316fa0403f35335113b52670b",
+                "catalog_sha256": "e12684efb3e475ad551eddabda12bc4c196f19edb48e7ace9069fda1ef5e7871",
+                "artifact_commit": "d5b05d1fa6671438d2bb976d286e7f0dccc25e59",
+                "id": "wasmc-std",
+                "version": "1.4.1",
+                "profile": "resource",
+                "delivery_kind": "wasm-core-component",
+                "files_verified": 19,
+                "mirror": "github",
+                "publication": "exclusive-directory-symlink",
+                "authority_granted": false,
+                "device_qualified": false
+              },
+              "execution": {
+                "accepted": true,
+                "installed_root_verified": true,
+                "rounds": 256,
+                "explicit_drops": 1024,
+                "invalid_input_rejected": true,
+                "persistent_provider_memory_bytes": 1376256,
+                "package": "wasmc:std@1.4.1",
+                "apis": [
+                  "wasmc:std@1.4.1/base64#try-encode-standard",
+                  "wasmc:std@1.4.1/base64#try-decode-standard"
+                ],
+                "artifact_sha256": "b79a499c8300361125e7fcdae02170184b82d4bbeff4d8f24ed95f3fd4db8d3b",
+                "import_module": "wasmc:lib/wasmc.lib_managed_object_heap@4.9.0",
+                "input_utf8": "abc",
+                "encoded_utf8": "YWJj",
+                "decoded_utf8": "abc"
+              },
+              "source": "fresh exact-public-commit HTTPS downloads",
+              "provider_companion": "separately pinned current tooling",
+              "artifact_changes": false
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "compiler-and-managed-regression",
+            "invocation": {
+              "command": "bun",
+              "args": [
+                "scripts/validate-current.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 1086,
+            "observation": {
+              "accepted": true,
+              "runtime": "bun",
+              "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+              "frozen_corpus_outputs": 30,
+              "expression_cases": 23,
+              "mode": "full",
+              "managed_repeated_calls": 192
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "standard-wasmc-rust-paired-execution",
+            "invocation": {
+              "command": "bun",
+              "args": [
+                "examples/current/standard.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 204,
+            "observation": {
+              "accepted": true,
+              "standard_lib": "wasmc:std@1.4.1",
+              "functions": 73,
+              "consumer_count": 3,
+              "consumer_calls": 7680,
+              "current_app_sha256": "f704d2c4d99f9efc97ef6d3c99bfd29c3987e1a96601ec7ff026dd0ac6e0581a",
+              "rust_sdk_sha256": "4d2c55eda7cdbe4d14084de2d579ae6dcea97332e18ca9894d210a5a71472d65"
+            },
+            "rust_test_summaries": []
+          }
+        ],
+        "accepted": true
+      }
+    },
+    {
+      "origin": "runtime-recovery",
+      "raw_receipt_sha256": "20170d798d05cb532b3112b837337e3450d7a99b9d2f6cb760d78a22d2951416",
+      "receipt": {
+        "schema": "wasmc.public-ci-suite/v1",
+        "label": "runtime-macos-15-bun-jsdelivr",
+        "family": "runtime",
+        "runtime": "bun",
+        "mirror": "jsdelivr",
+        "source_commit": "ca6e36ab5f7617894ed595e98ac0ee39eee0008e",
+        "dirty": false,
+        "platform": "darwin",
+        "arch": "arm64",
+        "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+        "runtime_version": "1.3.14",
+        "tests": [
+          {
+            "id": "source-free-archive-deployment",
+            "invocation": {
+              "command": "bash",
+              "args": [
+                "scripts/validate-source-free-runtime.sh",
+                "bun"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 3475,
+            "observation": {
+              "accepted": true,
+              "standard_lib": "wasmc:std@1.4.1",
+              "functions": 73,
+              "consumer_count": 3,
+              "consumer_calls": 7680,
+              "current_app_sha256": "f704d2c4d99f9efc97ef6d3c99bfd29c3987e1a96601ec7ff026dd0ac6e0581a",
+              "rust_sdk_sha256": "4d2c55eda7cdbe4d14084de2d579ae6dcea97332e18ca9894d210a5a71472d65"
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "core-full-artifact-admission",
+            "invocation": {
+              "command": "bun",
+              "args": [
+                "scripts/check-core-compatibility.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 60,
+            "observation": {
+              "schema": "wasmc.core-compatibility-check/v1",
+              "accepted": true,
+              "host": {
+                "name": "bun",
+                "version": "1.3.14",
+                "v8": "13.6.233.10-node.18"
+              },
+              "results": [
+                {
+                  "accepted": true,
+                  "artifact": "compiler",
+                  "sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+                  "validation_profile": "complete-engine-validation",
+                  "feature_support": {
+                    "function-references": true,
+                    "tail-call": true
+                  }
+                },
+                {
+                  "accepted": true,
+                  "artifact": "automatic-provider",
+                  "sha256": "1fac280b1d3f2d82399e61e49fcb47f1c6ffc6c3d5b3b27e5d98059952fefabd",
+                  "validation_profile": "complete-engine-validation",
+                  "feature_support": {
+                    "function-references": true,
+                    "tail-call": true
+                  }
+                },
+                {
+                  "accepted": true,
+                  "artifact": "standard-provider",
+                  "sha256": "7cd4f0c60536f1825da3fed9d525a43ee9724250203a261f298505a503e9bcbf",
+                  "validation_profile": "complete-engine-validation",
+                  "feature_support": {
+                    "function-references": true,
+                    "tail-call": true
+                  }
+                },
+                {
+                  "accepted": true,
+                  "artifact": "standard",
+                  "sha256": "b79a499c8300361125e7fcdae02170184b82d4bbeff4d8f24ed95f3fd4db8d3b",
+                  "validation_profile": "wasm2,function-references,tail-call",
+                  "feature_support": {
+                    "function-references": true,
+                    "tail-call": true
+                  }
+                },
+                {
+                  "accepted": true,
+                  "artifact": "canonical-checked-chunk-provider",
+                  "sha256": "1fac280b1d3f2d82399e61e49fcb47f1c6ffc6c3d5b3b27e5d98059952fefabd",
+                  "validation_profile": "complete-engine-validation",
+                  "feature_support": {
+                    "function-references": true,
+                    "tail-call": true
+                  }
+                }
+              ]
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "core-feature-probes-and-negatives",
+            "invocation": {
+              "command": "bun",
+              "args": [
+                "scripts/test-core-compatibility.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 62,
+            "observation": {
+              "accepted": true,
+              "host": {
+                "name": "bun",
+                "version": "1.3.14",
+                "v8": "13.6.233.10-node.18"
+              },
+              "features": {
+                "function-references": true,
+                "tail-call": true
+              },
+              "negative_tests": 6,
+              "supported_probe_oracle": 7
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "catalog-exact-resolution",
+            "invocation": {
+              "command": "bun",
+              "args": [
+                "scripts/test-lib-catalog.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 544,
+            "observation": {
+              "accepted": true,
+              "current_packages": 43,
+              "native_source_packages": 14,
+              "negative_tests": 10,
+              "selection": "unique exact complete-Root lock",
+              "network_access": false
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "install-no-clobber-and-faults",
+            "invocation": {
+              "command": "bun",
+              "args": [
+                "scripts/test-lib-install.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 15370,
+            "observation": {
+              "accepted": true,
+              "files_verified": 19,
+              "negative_tests": 17,
+              "numeric_and_nonerror_transport_rejections": 6,
+              "http_status_and_relative_path_verified": true,
+              "numeric_abort_maps_to_timeout": true,
+              "concurrent_single_winner": true,
+              "competing_directory_preserved": true,
+              "failed_stage_cleanup": true,
+              "network_access": false,
+              "companion_installed": false
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "fresh-mirror-install-and-paired-execution",
+            "invocation": {
+              "command": "bun",
+              "args": [
+                "scripts/validate-lib-install.mjs",
+                "jsdelivr"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 646,
+            "observation": {
+              "accepted": true,
+              "host": "bun",
+              "mirror": "jsdelivr",
+              "lock_sha256": "f0c10b63f9f26bae3e71f31546f0ff37b5cff54316fa0403f35335113b52670b",
+              "receipt": {
+                "schema": "wasmc.public-lib-install/v2",
+                "lock_sha256": "f0c10b63f9f26bae3e71f31546f0ff37b5cff54316fa0403f35335113b52670b",
+                "catalog_sha256": "e12684efb3e475ad551eddabda12bc4c196f19edb48e7ace9069fda1ef5e7871",
+                "artifact_commit": "d5b05d1fa6671438d2bb976d286e7f0dccc25e59",
+                "id": "wasmc-std",
+                "version": "1.4.1",
+                "profile": "resource",
+                "delivery_kind": "wasm-core-component",
+                "files_verified": 19,
+                "mirror": "jsdelivr",
+                "publication": "exclusive-directory-symlink",
+                "authority_granted": false,
+                "device_qualified": false
+              },
+              "execution": {
+                "accepted": true,
+                "installed_root_verified": true,
+                "rounds": 256,
+                "explicit_drops": 1024,
+                "invalid_input_rejected": true,
+                "persistent_provider_memory_bytes": 1376256,
+                "package": "wasmc:std@1.4.1",
+                "apis": [
+                  "wasmc:std@1.4.1/base64#try-encode-standard",
+                  "wasmc:std@1.4.1/base64#try-decode-standard"
+                ],
+                "artifact_sha256": "b79a499c8300361125e7fcdae02170184b82d4bbeff4d8f24ed95f3fd4db8d3b",
+                "import_module": "wasmc:lib/wasmc.lib_managed_object_heap@4.9.0",
+                "input_utf8": "abc",
+                "encoded_utf8": "YWJj",
+                "decoded_utf8": "abc"
+              },
+              "source": "fresh exact-public-commit HTTPS downloads",
+              "provider_companion": "separately pinned current tooling",
+              "artifact_changes": false
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "compiler-and-managed-regression",
+            "invocation": {
+              "command": "bun",
+              "args": [
+                "scripts/validate-current.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 1980,
+            "observation": {
+              "accepted": true,
+              "runtime": "bun",
+              "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+              "frozen_corpus_outputs": 30,
+              "expression_cases": 23,
+              "mode": "full",
+              "managed_repeated_calls": 192
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "standard-wasmc-rust-paired-execution",
+            "invocation": {
+              "command": "bun",
+              "args": [
+                "examples/current/standard.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 307,
+            "observation": {
+              "accepted": true,
+              "standard_lib": "wasmc:std@1.4.1",
+              "functions": 73,
+              "consumer_count": 3,
+              "consumer_calls": 7680,
+              "current_app_sha256": "f704d2c4d99f9efc97ef6d3c99bfd29c3987e1a96601ec7ff026dd0ac6e0581a",
+              "rust_sdk_sha256": "4d2c55eda7cdbe4d14084de2d579ae6dcea97332e18ca9894d210a5a71472d65"
+            },
+            "rust_test_summaries": []
+          }
+        ],
+        "accepted": true
+      }
+    },
+    {
+      "origin": "runtime-recovery",
+      "raw_receipt_sha256": "f4f35dee06ca9169da28a97ff50c5c4a7833ed87badb54457a937321a854a7cf",
+      "receipt": {
+        "schema": "wasmc.public-ci-suite/v1",
+        "label": "runtime-macos-15-deno-github",
+        "family": "runtime",
+        "runtime": "deno",
+        "mirror": "github",
+        "source_commit": "ca6e36ab5f7617894ed595e98ac0ee39eee0008e",
+        "dirty": false,
+        "platform": "darwin",
+        "arch": "arm64",
+        "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+        "runtime_version": "deno 2.9.4 (stable, release, aarch64-apple-darwin)\nv8 15.0.245.2-rusty\ntypescript 6.0.3",
+        "tests": [
+          {
+            "id": "source-free-archive-deployment",
+            "invocation": {
+              "command": "bash",
+              "args": [
+                "scripts/validate-source-free-runtime.sh",
+                "deno"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 3747,
+            "observation": {
+              "accepted": true,
+              "standard_lib": "wasmc:std@1.4.1",
+              "functions": 73,
+              "consumer_count": 3,
+              "consumer_calls": 7680,
+              "current_app_sha256": "f704d2c4d99f9efc97ef6d3c99bfd29c3987e1a96601ec7ff026dd0ac6e0581a",
+              "rust_sdk_sha256": "4d2c55eda7cdbe4d14084de2d579ae6dcea97332e18ca9894d210a5a71472d65"
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "core-full-artifact-admission",
+            "invocation": {
+              "command": "deno",
+              "args": [
+                "run",
+                "--allow-read",
+                "scripts/check-core-compatibility.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 68,
+            "observation": {
+              "schema": "wasmc.core-compatibility-check/v1",
+              "accepted": true,
+              "host": {
+                "name": "deno",
+                "version": "2.9.4",
+                "v8": "15.0.245.2-rusty"
+              },
+              "results": [
+                {
+                  "accepted": true,
+                  "artifact": "compiler",
+                  "sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+                  "validation_profile": "complete-engine-validation",
+                  "feature_support": {
+                    "function-references": true,
+                    "tail-call": true
+                  }
+                },
+                {
+                  "accepted": true,
+                  "artifact": "automatic-provider",
+                  "sha256": "1fac280b1d3f2d82399e61e49fcb47f1c6ffc6c3d5b3b27e5d98059952fefabd",
+                  "validation_profile": "complete-engine-validation",
+                  "feature_support": {
+                    "function-references": true,
+                    "tail-call": true
+                  }
+                },
+                {
+                  "accepted": true,
+                  "artifact": "standard-provider",
+                  "sha256": "7cd4f0c60536f1825da3fed9d525a43ee9724250203a261f298505a503e9bcbf",
+                  "validation_profile": "complete-engine-validation",
+                  "feature_support": {
+                    "function-references": true,
+                    "tail-call": true
+                  }
+                },
+                {
+                  "accepted": true,
+                  "artifact": "standard",
+                  "sha256": "b79a499c8300361125e7fcdae02170184b82d4bbeff4d8f24ed95f3fd4db8d3b",
+                  "validation_profile": "wasm2,function-references,tail-call",
+                  "feature_support": {
+                    "function-references": true,
+                    "tail-call": true
+                  }
+                },
+                {
+                  "accepted": true,
+                  "artifact": "canonical-checked-chunk-provider",
+                  "sha256": "1fac280b1d3f2d82399e61e49fcb47f1c6ffc6c3d5b3b27e5d98059952fefabd",
+                  "validation_profile": "complete-engine-validation",
+                  "feature_support": {
+                    "function-references": true,
+                    "tail-call": true
+                  }
+                }
+              ]
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "core-feature-probes-and-negatives",
+            "invocation": {
+              "command": "deno",
+              "args": [
+                "run",
+                "--allow-read",
+                "scripts/test-core-compatibility.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 65,
+            "observation": {
+              "accepted": true,
+              "host": {
+                "name": "deno",
+                "version": "2.9.4",
+                "v8": "15.0.245.2-rusty"
+              },
+              "features": {
+                "function-references": true,
+                "tail-call": true
+              },
+              "negative_tests": 6,
+              "supported_probe_oracle": 7
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "catalog-exact-resolution",
+            "invocation": {
+              "command": "deno",
+              "args": [
+                "run",
+                "--allow-read",
+                "--allow-write",
+                "--allow-env=TMPDIR,TMP,TEMP",
+                "scripts/test-lib-catalog.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 1101,
+            "observation": {
+              "accepted": true,
+              "current_packages": 43,
+              "native_source_packages": 14,
+              "negative_tests": 10,
+              "selection": "unique exact complete-Root lock",
+              "network_access": false
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "install-no-clobber-and-faults",
+            "invocation": {
+              "command": "deno",
+              "args": [
+                "run",
+                "--allow-read",
+                "--allow-write",
+                "--allow-env=TMPDIR,TMP,TEMP",
+                "scripts/test-lib-install.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 15725,
+            "observation": {
+              "accepted": true,
+              "files_verified": 19,
+              "negative_tests": 17,
+              "numeric_and_nonerror_transport_rejections": 6,
+              "http_status_and_relative_path_verified": true,
+              "numeric_abort_maps_to_timeout": true,
+              "concurrent_single_winner": true,
+              "competing_directory_preserved": true,
+              "failed_stage_cleanup": true,
+              "network_access": false,
+              "companion_installed": false
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "fresh-mirror-install-and-paired-execution",
+            "invocation": {
+              "command": "deno",
+              "args": [
+                "run",
+                "--allow-read",
+                "--allow-write",
+                "--allow-env=TMPDIR,TMP,TEMP",
+                "--allow-run",
+                "scripts/validate-lib-install.mjs",
+                "github"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 654,
+            "observation": {
+              "accepted": true,
+              "host": "deno",
+              "mirror": "github",
+              "lock_sha256": "f0c10b63f9f26bae3e71f31546f0ff37b5cff54316fa0403f35335113b52670b",
+              "receipt": {
+                "schema": "wasmc.public-lib-install/v2",
+                "lock_sha256": "f0c10b63f9f26bae3e71f31546f0ff37b5cff54316fa0403f35335113b52670b",
+                "catalog_sha256": "e12684efb3e475ad551eddabda12bc4c196f19edb48e7ace9069fda1ef5e7871",
+                "artifact_commit": "d5b05d1fa6671438d2bb976d286e7f0dccc25e59",
+                "id": "wasmc-std",
+                "version": "1.4.1",
+                "profile": "resource",
+                "delivery_kind": "wasm-core-component",
+                "files_verified": 19,
+                "mirror": "github",
+                "publication": "exclusive-directory-symlink",
+                "authority_granted": false,
+                "device_qualified": false
+              },
+              "execution": {
+                "accepted": true,
+                "installed_root_verified": true,
+                "rounds": 256,
+                "explicit_drops": 1024,
+                "invalid_input_rejected": true,
+                "persistent_provider_memory_bytes": 1376256,
+                "package": "wasmc:std@1.4.1",
+                "apis": [
+                  "wasmc:std@1.4.1/base64#try-encode-standard",
+                  "wasmc:std@1.4.1/base64#try-decode-standard"
+                ],
+                "artifact_sha256": "b79a499c8300361125e7fcdae02170184b82d4bbeff4d8f24ed95f3fd4db8d3b",
+                "import_module": "wasmc:lib/wasmc.lib_managed_object_heap@4.9.0",
+                "input_utf8": "abc",
+                "encoded_utf8": "YWJj",
+                "decoded_utf8": "abc"
+              },
+              "source": "fresh exact-public-commit HTTPS downloads",
+              "provider_companion": "separately pinned current tooling",
+              "artifact_changes": false
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "compiler-and-managed-regression",
+            "invocation": {
+              "command": "deno",
+              "args": [
+                "run",
+                "--allow-read",
+                "--allow-write",
+                "--allow-run",
+                "--allow-env",
+                "scripts/validate-current.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 1464,
+            "observation": {
+              "accepted": true,
+              "runtime": "deno",
+              "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+              "frozen_corpus_outputs": 30,
+              "expression_cases": 23,
+              "mode": "full",
+              "managed_repeated_calls": 192
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "standard-wasmc-rust-paired-execution",
+            "invocation": {
+              "command": "deno",
+              "args": [
+                "run",
+                "--allow-read",
+                "examples/current/standard.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 253,
+            "observation": {
+              "accepted": true,
+              "standard_lib": "wasmc:std@1.4.1",
+              "functions": 73,
+              "consumer_count": 3,
+              "consumer_calls": 7680,
+              "current_app_sha256": "f704d2c4d99f9efc97ef6d3c99bfd29c3987e1a96601ec7ff026dd0ac6e0581a",
+              "rust_sdk_sha256": "4d2c55eda7cdbe4d14084de2d579ae6dcea97332e18ca9894d210a5a71472d65"
+            },
+            "rust_test_summaries": []
+          }
+        ],
+        "accepted": true
+      }
+    },
+    {
+      "origin": "runtime-recovery",
+      "raw_receipt_sha256": "761e86b99c4b0d3417f79212fee6061862d79e7f244429e3779e08ab8cac56a5",
+      "receipt": {
+        "schema": "wasmc.public-ci-suite/v1",
+        "label": "runtime-macos-15-deno-jsdelivr",
+        "family": "runtime",
+        "runtime": "deno",
+        "mirror": "jsdelivr",
+        "source_commit": "ca6e36ab5f7617894ed595e98ac0ee39eee0008e",
+        "dirty": false,
+        "platform": "darwin",
+        "arch": "arm64",
+        "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+        "runtime_version": "deno 2.9.4 (stable, release, aarch64-apple-darwin)\nv8 15.0.245.2-rusty\ntypescript 6.0.3",
+        "tests": [
+          {
+            "id": "source-free-archive-deployment",
+            "invocation": {
+              "command": "bash",
+              "args": [
+                "scripts/validate-source-free-runtime.sh",
+                "deno"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 4340,
+            "observation": {
+              "accepted": true,
+              "standard_lib": "wasmc:std@1.4.1",
+              "functions": 73,
+              "consumer_count": 3,
+              "consumer_calls": 7680,
+              "current_app_sha256": "f704d2c4d99f9efc97ef6d3c99bfd29c3987e1a96601ec7ff026dd0ac6e0581a",
+              "rust_sdk_sha256": "4d2c55eda7cdbe4d14084de2d579ae6dcea97332e18ca9894d210a5a71472d65"
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "core-full-artifact-admission",
+            "invocation": {
+              "command": "deno",
+              "args": [
+                "run",
+                "--allow-read",
+                "scripts/check-core-compatibility.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 66,
+            "observation": {
+              "schema": "wasmc.core-compatibility-check/v1",
+              "accepted": true,
+              "host": {
+                "name": "deno",
+                "version": "2.9.4",
+                "v8": "15.0.245.2-rusty"
+              },
+              "results": [
+                {
+                  "accepted": true,
+                  "artifact": "compiler",
+                  "sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+                  "validation_profile": "complete-engine-validation",
+                  "feature_support": {
+                    "function-references": true,
+                    "tail-call": true
+                  }
+                },
+                {
+                  "accepted": true,
+                  "artifact": "automatic-provider",
+                  "sha256": "1fac280b1d3f2d82399e61e49fcb47f1c6ffc6c3d5b3b27e5d98059952fefabd",
+                  "validation_profile": "complete-engine-validation",
+                  "feature_support": {
+                    "function-references": true,
+                    "tail-call": true
+                  }
+                },
+                {
+                  "accepted": true,
+                  "artifact": "standard-provider",
+                  "sha256": "7cd4f0c60536f1825da3fed9d525a43ee9724250203a261f298505a503e9bcbf",
+                  "validation_profile": "complete-engine-validation",
+                  "feature_support": {
+                    "function-references": true,
+                    "tail-call": true
+                  }
+                },
+                {
+                  "accepted": true,
+                  "artifact": "standard",
+                  "sha256": "b79a499c8300361125e7fcdae02170184b82d4bbeff4d8f24ed95f3fd4db8d3b",
+                  "validation_profile": "wasm2,function-references,tail-call",
+                  "feature_support": {
+                    "function-references": true,
+                    "tail-call": true
+                  }
+                },
+                {
+                  "accepted": true,
+                  "artifact": "canonical-checked-chunk-provider",
+                  "sha256": "1fac280b1d3f2d82399e61e49fcb47f1c6ffc6c3d5b3b27e5d98059952fefabd",
+                  "validation_profile": "complete-engine-validation",
+                  "feature_support": {
+                    "function-references": true,
+                    "tail-call": true
+                  }
+                }
+              ]
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "core-feature-probes-and-negatives",
+            "invocation": {
+              "command": "deno",
+              "args": [
+                "run",
+                "--allow-read",
+                "scripts/test-core-compatibility.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 77,
+            "observation": {
+              "accepted": true,
+              "host": {
+                "name": "deno",
+                "version": "2.9.4",
+                "v8": "15.0.245.2-rusty"
+              },
+              "features": {
+                "function-references": true,
+                "tail-call": true
+              },
+              "negative_tests": 6,
+              "supported_probe_oracle": 7
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "catalog-exact-resolution",
+            "invocation": {
+              "command": "deno",
+              "args": [
+                "run",
+                "--allow-read",
+                "--allow-write",
+                "--allow-env=TMPDIR,TMP,TEMP",
+                "scripts/test-lib-catalog.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 794,
+            "observation": {
+              "accepted": true,
+              "current_packages": 43,
+              "native_source_packages": 14,
+              "negative_tests": 10,
+              "selection": "unique exact complete-Root lock",
+              "network_access": false
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "install-no-clobber-and-faults",
+            "invocation": {
+              "command": "deno",
+              "args": [
+                "run",
+                "--allow-read",
+                "--allow-write",
+                "--allow-env=TMPDIR,TMP,TEMP",
+                "scripts/test-lib-install.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 15617,
+            "observation": {
+              "accepted": true,
+              "files_verified": 19,
+              "negative_tests": 17,
+              "numeric_and_nonerror_transport_rejections": 6,
+              "http_status_and_relative_path_verified": true,
+              "numeric_abort_maps_to_timeout": true,
+              "concurrent_single_winner": true,
+              "competing_directory_preserved": true,
+              "failed_stage_cleanup": true,
+              "network_access": false,
+              "companion_installed": false
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "fresh-mirror-install-and-paired-execution",
+            "invocation": {
+              "command": "deno",
+              "args": [
+                "run",
+                "--allow-read",
+                "--allow-write",
+                "--allow-env=TMPDIR,TMP,TEMP",
+                "--allow-run",
+                "scripts/validate-lib-install.mjs",
+                "jsdelivr"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 666,
+            "observation": {
+              "accepted": true,
+              "host": "deno",
+              "mirror": "jsdelivr",
+              "lock_sha256": "f0c10b63f9f26bae3e71f31546f0ff37b5cff54316fa0403f35335113b52670b",
+              "receipt": {
+                "schema": "wasmc.public-lib-install/v2",
+                "lock_sha256": "f0c10b63f9f26bae3e71f31546f0ff37b5cff54316fa0403f35335113b52670b",
+                "catalog_sha256": "e12684efb3e475ad551eddabda12bc4c196f19edb48e7ace9069fda1ef5e7871",
+                "artifact_commit": "d5b05d1fa6671438d2bb976d286e7f0dccc25e59",
+                "id": "wasmc-std",
+                "version": "1.4.1",
+                "profile": "resource",
+                "delivery_kind": "wasm-core-component",
+                "files_verified": 19,
+                "mirror": "jsdelivr",
+                "publication": "exclusive-directory-symlink",
+                "authority_granted": false,
+                "device_qualified": false
+              },
+              "execution": {
+                "accepted": true,
+                "installed_root_verified": true,
+                "rounds": 256,
+                "explicit_drops": 1024,
+                "invalid_input_rejected": true,
+                "persistent_provider_memory_bytes": 1376256,
+                "package": "wasmc:std@1.4.1",
+                "apis": [
+                  "wasmc:std@1.4.1/base64#try-encode-standard",
+                  "wasmc:std@1.4.1/base64#try-decode-standard"
+                ],
+                "artifact_sha256": "b79a499c8300361125e7fcdae02170184b82d4bbeff4d8f24ed95f3fd4db8d3b",
+                "import_module": "wasmc:lib/wasmc.lib_managed_object_heap@4.9.0",
+                "input_utf8": "abc",
+                "encoded_utf8": "YWJj",
+                "decoded_utf8": "abc"
+              },
+              "source": "fresh exact-public-commit HTTPS downloads",
+              "provider_companion": "separately pinned current tooling",
+              "artifact_changes": false
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "compiler-and-managed-regression",
+            "invocation": {
+              "command": "deno",
+              "args": [
+                "run",
+                "--allow-read",
+                "--allow-write",
+                "--allow-run",
+                "--allow-env",
+                "scripts/validate-current.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 1083,
+            "observation": {
+              "accepted": true,
+              "runtime": "deno",
+              "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+              "frozen_corpus_outputs": 30,
+              "expression_cases": 23,
+              "mode": "full",
+              "managed_repeated_calls": 192
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "standard-wasmc-rust-paired-execution",
+            "invocation": {
+              "command": "deno",
+              "args": [
+                "run",
+                "--allow-read",
+                "examples/current/standard.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 180,
+            "observation": {
+              "accepted": true,
+              "standard_lib": "wasmc:std@1.4.1",
+              "functions": 73,
+              "consumer_count": 3,
+              "consumer_calls": 7680,
+              "current_app_sha256": "f704d2c4d99f9efc97ef6d3c99bfd29c3987e1a96601ec7ff026dd0ac6e0581a",
+              "rust_sdk_sha256": "4d2c55eda7cdbe4d14084de2d579ae6dcea97332e18ca9894d210a5a71472d65"
+            },
+            "rust_test_summaries": []
+          }
+        ],
+        "accepted": true
+      }
+    },
+    {
+      "origin": "runtime-recovery",
+      "raw_receipt_sha256": "21ec1c86126d564f37169c386f9bef34308ac7b6430c76b9768dff609e1d06dd",
+      "receipt": {
+        "schema": "wasmc.public-ci-suite/v1",
+        "label": "runtime-macos-15-node-github",
+        "family": "runtime",
+        "runtime": "node",
+        "mirror": "github",
+        "source_commit": "ca6e36ab5f7617894ed595e98ac0ee39eee0008e",
+        "dirty": false,
+        "platform": "darwin",
+        "arch": "arm64",
+        "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+        "runtime_version": "v26.5.1",
+        "tests": [
+          {
+            "id": "source-free-archive-deployment",
+            "invocation": {
+              "command": "bash",
+              "args": [
+                "scripts/validate-source-free-runtime.sh",
+                "node"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 3473,
+            "observation": {
+              "accepted": true,
+              "standard_lib": "wasmc:std@1.4.1",
+              "functions": 73,
+              "consumer_count": 3,
+              "consumer_calls": 7680,
+              "current_app_sha256": "f704d2c4d99f9efc97ef6d3c99bfd29c3987e1a96601ec7ff026dd0ac6e0581a",
+              "rust_sdk_sha256": "4d2c55eda7cdbe4d14084de2d579ae6dcea97332e18ca9894d210a5a71472d65"
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "core-full-artifact-admission",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/check-core-compatibility.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 73,
+            "observation": {
+              "schema": "wasmc.core-compatibility-check/v1",
+              "accepted": true,
+              "host": {
+                "name": "node",
+                "version": "v26.5.1",
+                "v8": "14.6.202.34-node.24"
+              },
+              "results": [
+                {
+                  "accepted": true,
+                  "artifact": "compiler",
+                  "sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+                  "validation_profile": "complete-engine-validation",
+                  "feature_support": {
+                    "function-references": true,
+                    "tail-call": true
+                  }
+                },
+                {
+                  "accepted": true,
+                  "artifact": "automatic-provider",
+                  "sha256": "1fac280b1d3f2d82399e61e49fcb47f1c6ffc6c3d5b3b27e5d98059952fefabd",
+                  "validation_profile": "complete-engine-validation",
+                  "feature_support": {
+                    "function-references": true,
+                    "tail-call": true
+                  }
+                },
+                {
+                  "accepted": true,
+                  "artifact": "standard-provider",
+                  "sha256": "7cd4f0c60536f1825da3fed9d525a43ee9724250203a261f298505a503e9bcbf",
+                  "validation_profile": "complete-engine-validation",
+                  "feature_support": {
+                    "function-references": true,
+                    "tail-call": true
+                  }
+                },
+                {
+                  "accepted": true,
+                  "artifact": "standard",
+                  "sha256": "b79a499c8300361125e7fcdae02170184b82d4bbeff4d8f24ed95f3fd4db8d3b",
+                  "validation_profile": "wasm2,function-references,tail-call",
+                  "feature_support": {
+                    "function-references": true,
+                    "tail-call": true
+                  }
+                },
+                {
+                  "accepted": true,
+                  "artifact": "canonical-checked-chunk-provider",
+                  "sha256": "1fac280b1d3f2d82399e61e49fcb47f1c6ffc6c3d5b3b27e5d98059952fefabd",
+                  "validation_profile": "complete-engine-validation",
+                  "feature_support": {
+                    "function-references": true,
+                    "tail-call": true
+                  }
+                }
+              ]
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "core-feature-probes-and-negatives",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/test-core-compatibility.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 64,
+            "observation": {
+              "accepted": true,
+              "host": {
+                "name": "node",
+                "version": "v26.5.1",
+                "v8": "14.6.202.34-node.24"
+              },
+              "features": {
+                "function-references": true,
+                "tail-call": true
+              },
+              "negative_tests": 6,
+              "supported_probe_oracle": 7
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "catalog-exact-resolution",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/test-lib-catalog.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 670,
+            "observation": {
+              "accepted": true,
+              "current_packages": 43,
+              "native_source_packages": 14,
+              "negative_tests": 10,
+              "selection": "unique exact complete-Root lock",
+              "network_access": false
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "install-no-clobber-and-faults",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/test-lib-install.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 15652,
+            "observation": {
+              "accepted": true,
+              "files_verified": 19,
+              "negative_tests": 17,
+              "numeric_and_nonerror_transport_rejections": 6,
+              "http_status_and_relative_path_verified": true,
+              "numeric_abort_maps_to_timeout": true,
+              "concurrent_single_winner": true,
+              "competing_directory_preserved": true,
+              "failed_stage_cleanup": true,
+              "network_access": false,
+              "companion_installed": false
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "fresh-mirror-install-and-paired-execution",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/validate-lib-install.mjs",
+                "github"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 1205,
+            "observation": {
+              "accepted": true,
+              "host": "node",
+              "mirror": "github",
+              "lock_sha256": "f0c10b63f9f26bae3e71f31546f0ff37b5cff54316fa0403f35335113b52670b",
+              "receipt": {
+                "schema": "wasmc.public-lib-install/v2",
+                "lock_sha256": "f0c10b63f9f26bae3e71f31546f0ff37b5cff54316fa0403f35335113b52670b",
+                "catalog_sha256": "e12684efb3e475ad551eddabda12bc4c196f19edb48e7ace9069fda1ef5e7871",
+                "artifact_commit": "d5b05d1fa6671438d2bb976d286e7f0dccc25e59",
+                "id": "wasmc-std",
+                "version": "1.4.1",
+                "profile": "resource",
+                "delivery_kind": "wasm-core-component",
+                "files_verified": 19,
+                "mirror": "github",
+                "publication": "exclusive-directory-symlink",
+                "authority_granted": false,
+                "device_qualified": false
+              },
+              "execution": {
+                "accepted": true,
+                "installed_root_verified": true,
+                "rounds": 256,
+                "explicit_drops": 1024,
+                "invalid_input_rejected": true,
+                "persistent_provider_memory_bytes": 1376256,
+                "package": "wasmc:std@1.4.1",
+                "apis": [
+                  "wasmc:std@1.4.1/base64#try-encode-standard",
+                  "wasmc:std@1.4.1/base64#try-decode-standard"
+                ],
+                "artifact_sha256": "b79a499c8300361125e7fcdae02170184b82d4bbeff4d8f24ed95f3fd4db8d3b",
+                "import_module": "wasmc:lib/wasmc.lib_managed_object_heap@4.9.0",
+                "input_utf8": "abc",
+                "encoded_utf8": "YWJj",
+                "decoded_utf8": "abc"
+              },
+              "source": "fresh exact-public-commit HTTPS downloads",
+              "provider_companion": "separately pinned current tooling",
+              "artifact_changes": false
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "compiler-and-managed-regression",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/validate-current.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 1252,
+            "observation": {
+              "accepted": true,
+              "runtime": "node",
+              "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+              "frozen_corpus_outputs": 30,
+              "expression_cases": 23,
+              "mode": "full",
+              "managed_repeated_calls": 192
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "standard-wasmc-rust-paired-execution",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "examples/current/standard.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 158,
+            "observation": {
+              "accepted": true,
+              "standard_lib": "wasmc:std@1.4.1",
+              "functions": 73,
+              "consumer_count": 3,
+              "consumer_calls": 7680,
+              "current_app_sha256": "f704d2c4d99f9efc97ef6d3c99bfd29c3987e1a96601ec7ff026dd0ac6e0581a",
+              "rust_sdk_sha256": "4d2c55eda7cdbe4d14084de2d579ae6dcea97332e18ca9894d210a5a71472d65"
+            },
+            "rust_test_summaries": []
+          }
+        ],
+        "accepted": true
+      }
+    },
+    {
+      "origin": "runtime-recovery",
+      "raw_receipt_sha256": "693a6793f1b8f89ce235af6e283eb69ad5f8ff2131f31ad1b65106c5abaa4ccc",
+      "receipt": {
+        "schema": "wasmc.public-ci-suite/v1",
+        "label": "runtime-macos-15-node-jsdelivr",
+        "family": "runtime",
+        "runtime": "node",
+        "mirror": "jsdelivr",
+        "source_commit": "ca6e36ab5f7617894ed595e98ac0ee39eee0008e",
+        "dirty": false,
+        "platform": "darwin",
+        "arch": "arm64",
+        "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+        "runtime_version": "v26.5.1",
+        "tests": [
+          {
+            "id": "source-free-archive-deployment",
+            "invocation": {
+              "command": "bash",
+              "args": [
+                "scripts/validate-source-free-runtime.sh",
+                "node"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 4127,
+            "observation": {
+              "accepted": true,
+              "standard_lib": "wasmc:std@1.4.1",
+              "functions": 73,
+              "consumer_count": 3,
+              "consumer_calls": 7680,
+              "current_app_sha256": "f704d2c4d99f9efc97ef6d3c99bfd29c3987e1a96601ec7ff026dd0ac6e0581a",
+              "rust_sdk_sha256": "4d2c55eda7cdbe4d14084de2d579ae6dcea97332e18ca9894d210a5a71472d65"
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "core-full-artifact-admission",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/check-core-compatibility.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 63,
+            "observation": {
+              "schema": "wasmc.core-compatibility-check/v1",
+              "accepted": true,
+              "host": {
+                "name": "node",
+                "version": "v26.5.1",
+                "v8": "14.6.202.34-node.24"
+              },
+              "results": [
+                {
+                  "accepted": true,
+                  "artifact": "compiler",
+                  "sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+                  "validation_profile": "complete-engine-validation",
+                  "feature_support": {
+                    "function-references": true,
+                    "tail-call": true
+                  }
+                },
+                {
+                  "accepted": true,
+                  "artifact": "automatic-provider",
+                  "sha256": "1fac280b1d3f2d82399e61e49fcb47f1c6ffc6c3d5b3b27e5d98059952fefabd",
+                  "validation_profile": "complete-engine-validation",
+                  "feature_support": {
+                    "function-references": true,
+                    "tail-call": true
+                  }
+                },
+                {
+                  "accepted": true,
+                  "artifact": "standard-provider",
+                  "sha256": "7cd4f0c60536f1825da3fed9d525a43ee9724250203a261f298505a503e9bcbf",
+                  "validation_profile": "complete-engine-validation",
+                  "feature_support": {
+                    "function-references": true,
+                    "tail-call": true
+                  }
+                },
+                {
+                  "accepted": true,
+                  "artifact": "standard",
+                  "sha256": "b79a499c8300361125e7fcdae02170184b82d4bbeff4d8f24ed95f3fd4db8d3b",
+                  "validation_profile": "wasm2,function-references,tail-call",
+                  "feature_support": {
+                    "function-references": true,
+                    "tail-call": true
+                  }
+                },
+                {
+                  "accepted": true,
+                  "artifact": "canonical-checked-chunk-provider",
+                  "sha256": "1fac280b1d3f2d82399e61e49fcb47f1c6ffc6c3d5b3b27e5d98059952fefabd",
+                  "validation_profile": "complete-engine-validation",
+                  "feature_support": {
+                    "function-references": true,
+                    "tail-call": true
+                  }
+                }
+              ]
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "core-feature-probes-and-negatives",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/test-core-compatibility.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 88,
+            "observation": {
+              "accepted": true,
+              "host": {
+                "name": "node",
+                "version": "v26.5.1",
+                "v8": "14.6.202.34-node.24"
+              },
+              "features": {
+                "function-references": true,
+                "tail-call": true
+              },
+              "negative_tests": 6,
+              "supported_probe_oracle": 7
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "catalog-exact-resolution",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/test-lib-catalog.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 605,
+            "observation": {
+              "accepted": true,
+              "current_packages": 43,
+              "native_source_packages": 14,
+              "negative_tests": 10,
+              "selection": "unique exact complete-Root lock",
+              "network_access": false
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "install-no-clobber-and-faults",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/test-lib-install.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 15436,
+            "observation": {
+              "accepted": true,
+              "files_verified": 19,
+              "negative_tests": 17,
+              "numeric_and_nonerror_transport_rejections": 6,
+              "http_status_and_relative_path_verified": true,
+              "numeric_abort_maps_to_timeout": true,
+              "concurrent_single_winner": true,
+              "competing_directory_preserved": true,
+              "failed_stage_cleanup": true,
+              "network_access": false,
+              "companion_installed": false
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "fresh-mirror-install-and-paired-execution",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/validate-lib-install.mjs",
+                "jsdelivr"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 748,
+            "observation": {
+              "accepted": true,
+              "host": "node",
+              "mirror": "jsdelivr",
+              "lock_sha256": "f0c10b63f9f26bae3e71f31546f0ff37b5cff54316fa0403f35335113b52670b",
+              "receipt": {
+                "schema": "wasmc.public-lib-install/v2",
+                "lock_sha256": "f0c10b63f9f26bae3e71f31546f0ff37b5cff54316fa0403f35335113b52670b",
+                "catalog_sha256": "e12684efb3e475ad551eddabda12bc4c196f19edb48e7ace9069fda1ef5e7871",
+                "artifact_commit": "d5b05d1fa6671438d2bb976d286e7f0dccc25e59",
+                "id": "wasmc-std",
+                "version": "1.4.1",
+                "profile": "resource",
+                "delivery_kind": "wasm-core-component",
+                "files_verified": 19,
+                "mirror": "jsdelivr",
+                "publication": "exclusive-directory-symlink",
+                "authority_granted": false,
+                "device_qualified": false
+              },
+              "execution": {
+                "accepted": true,
+                "installed_root_verified": true,
+                "rounds": 256,
+                "explicit_drops": 1024,
+                "invalid_input_rejected": true,
+                "persistent_provider_memory_bytes": 1376256,
+                "package": "wasmc:std@1.4.1",
+                "apis": [
+                  "wasmc:std@1.4.1/base64#try-encode-standard",
+                  "wasmc:std@1.4.1/base64#try-decode-standard"
+                ],
+                "artifact_sha256": "b79a499c8300361125e7fcdae02170184b82d4bbeff4d8f24ed95f3fd4db8d3b",
+                "import_module": "wasmc:lib/wasmc.lib_managed_object_heap@4.9.0",
+                "input_utf8": "abc",
+                "encoded_utf8": "YWJj",
+                "decoded_utf8": "abc"
+              },
+              "source": "fresh exact-public-commit HTTPS downloads",
+              "provider_companion": "separately pinned current tooling",
+              "artifact_changes": false
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "compiler-and-managed-regression",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/validate-current.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 1210,
+            "observation": {
+              "accepted": true,
+              "runtime": "node",
+              "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+              "frozen_corpus_outputs": 30,
+              "expression_cases": 23,
+              "mode": "full",
+              "managed_repeated_calls": 192
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "standard-wasmc-rust-paired-execution",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "examples/current/standard.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 150,
+            "observation": {
+              "accepted": true,
+              "standard_lib": "wasmc:std@1.4.1",
+              "functions": 73,
+              "consumer_count": 3,
+              "consumer_calls": 7680,
+              "current_app_sha256": "f704d2c4d99f9efc97ef6d3c99bfd29c3987e1a96601ec7ff026dd0ac6e0581a",
+              "rust_sdk_sha256": "4d2c55eda7cdbe4d14084de2d579ae6dcea97332e18ca9894d210a5a71472d65"
+            },
+            "rust_test_summaries": []
+          }
+        ],
+        "accepted": true
+      }
+    },
+    {
+      "origin": "runtime-recovery",
+      "raw_receipt_sha256": "c4994dea3c33f304e527ca3be4f37931a17b1ad65490af2681c4d74dcc8e011e",
+      "receipt": {
+        "schema": "wasmc.public-ci-suite/v1",
+        "label": "runtime-ubuntu-24.04-bun-github",
+        "family": "runtime",
+        "runtime": "bun",
+        "mirror": "github",
+        "source_commit": "ca6e36ab5f7617894ed595e98ac0ee39eee0008e",
+        "dirty": false,
+        "platform": "linux",
+        "arch": "x64",
+        "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+        "runtime_version": "1.3.14",
+        "tests": [
+          {
+            "id": "source-free-archive-deployment",
+            "invocation": {
+              "command": "bash",
+              "args": [
+                "scripts/validate-source-free-runtime.sh",
+                "bun"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 1831,
+            "observation": {
+              "accepted": true,
+              "standard_lib": "wasmc:std@1.4.1",
+              "functions": 73,
+              "consumer_count": 3,
+              "consumer_calls": 7680,
+              "current_app_sha256": "f704d2c4d99f9efc97ef6d3c99bfd29c3987e1a96601ec7ff026dd0ac6e0581a",
+              "rust_sdk_sha256": "4d2c55eda7cdbe4d14084de2d579ae6dcea97332e18ca9894d210a5a71472d65"
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "core-full-artifact-admission",
+            "invocation": {
+              "command": "bun",
+              "args": [
+                "scripts/check-core-compatibility.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 63,
+            "observation": {
+              "schema": "wasmc.core-compatibility-check/v1",
+              "accepted": true,
+              "host": {
+                "name": "bun",
+                "version": "1.3.14",
+                "v8": "13.6.233.10-node.18"
+              },
+              "results": [
+                {
+                  "accepted": true,
+                  "artifact": "compiler",
+                  "sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+                  "validation_profile": "complete-engine-validation",
+                  "feature_support": {
+                    "function-references": true,
+                    "tail-call": true
+                  }
+                },
+                {
+                  "accepted": true,
+                  "artifact": "automatic-provider",
+                  "sha256": "1fac280b1d3f2d82399e61e49fcb47f1c6ffc6c3d5b3b27e5d98059952fefabd",
+                  "validation_profile": "complete-engine-validation",
+                  "feature_support": {
+                    "function-references": true,
+                    "tail-call": true
+                  }
+                },
+                {
+                  "accepted": true,
+                  "artifact": "standard-provider",
+                  "sha256": "7cd4f0c60536f1825da3fed9d525a43ee9724250203a261f298505a503e9bcbf",
+                  "validation_profile": "complete-engine-validation",
+                  "feature_support": {
+                    "function-references": true,
+                    "tail-call": true
+                  }
+                },
+                {
+                  "accepted": true,
+                  "artifact": "standard",
+                  "sha256": "b79a499c8300361125e7fcdae02170184b82d4bbeff4d8f24ed95f3fd4db8d3b",
+                  "validation_profile": "wasm2,function-references,tail-call",
+                  "feature_support": {
+                    "function-references": true,
+                    "tail-call": true
+                  }
+                },
+                {
+                  "accepted": true,
+                  "artifact": "canonical-checked-chunk-provider",
+                  "sha256": "1fac280b1d3f2d82399e61e49fcb47f1c6ffc6c3d5b3b27e5d98059952fefabd",
+                  "validation_profile": "complete-engine-validation",
+                  "feature_support": {
+                    "function-references": true,
+                    "tail-call": true
+                  }
+                }
+              ]
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "core-feature-probes-and-negatives",
+            "invocation": {
+              "command": "bun",
+              "args": [
+                "scripts/test-core-compatibility.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 54,
+            "observation": {
+              "accepted": true,
+              "host": {
+                "name": "bun",
+                "version": "1.3.14",
+                "v8": "13.6.233.10-node.18"
+              },
+              "features": {
+                "function-references": true,
+                "tail-call": true
+              },
+              "negative_tests": 6,
+              "supported_probe_oracle": 7
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "catalog-exact-resolution",
+            "invocation": {
+              "command": "bun",
+              "args": [
+                "scripts/test-lib-catalog.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 332,
+            "observation": {
+              "accepted": true,
+              "current_packages": 43,
+              "native_source_packages": 14,
+              "negative_tests": 10,
+              "selection": "unique exact complete-Root lock",
+              "network_access": false
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "install-no-clobber-and-faults",
+            "invocation": {
+              "command": "bun",
+              "args": [
+                "scripts/test-lib-install.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 15293,
+            "observation": {
+              "accepted": true,
+              "files_verified": 19,
+              "negative_tests": 17,
+              "numeric_and_nonerror_transport_rejections": 6,
+              "http_status_and_relative_path_verified": true,
+              "numeric_abort_maps_to_timeout": true,
+              "concurrent_single_winner": true,
+              "competing_directory_preserved": true,
+              "failed_stage_cleanup": true,
+              "network_access": false,
+              "companion_installed": false
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "fresh-mirror-install-and-paired-execution",
+            "invocation": {
+              "command": "bun",
+              "args": [
+                "scripts/validate-lib-install.mjs",
+                "github"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 708,
+            "observation": {
+              "accepted": true,
+              "host": "bun",
+              "mirror": "github",
+              "lock_sha256": "f0c10b63f9f26bae3e71f31546f0ff37b5cff54316fa0403f35335113b52670b",
+              "receipt": {
+                "schema": "wasmc.public-lib-install/v2",
+                "lock_sha256": "f0c10b63f9f26bae3e71f31546f0ff37b5cff54316fa0403f35335113b52670b",
+                "catalog_sha256": "e12684efb3e475ad551eddabda12bc4c196f19edb48e7ace9069fda1ef5e7871",
+                "artifact_commit": "d5b05d1fa6671438d2bb976d286e7f0dccc25e59",
+                "id": "wasmc-std",
+                "version": "1.4.1",
+                "profile": "resource",
+                "delivery_kind": "wasm-core-component",
+                "files_verified": 19,
+                "mirror": "github",
+                "publication": "exclusive-directory-symlink",
+                "authority_granted": false,
+                "device_qualified": false
+              },
+              "execution": {
+                "accepted": true,
+                "installed_root_verified": true,
+                "rounds": 256,
+                "explicit_drops": 1024,
+                "invalid_input_rejected": true,
+                "persistent_provider_memory_bytes": 1376256,
+                "package": "wasmc:std@1.4.1",
+                "apis": [
+                  "wasmc:std@1.4.1/base64#try-encode-standard",
+                  "wasmc:std@1.4.1/base64#try-decode-standard"
+                ],
+                "artifact_sha256": "b79a499c8300361125e7fcdae02170184b82d4bbeff4d8f24ed95f3fd4db8d3b",
+                "import_module": "wasmc:lib/wasmc.lib_managed_object_heap@4.9.0",
+                "input_utf8": "abc",
+                "encoded_utf8": "YWJj",
+                "decoded_utf8": "abc"
+              },
+              "source": "fresh exact-public-commit HTTPS downloads",
+              "provider_companion": "separately pinned current tooling",
+              "artifact_changes": false
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "compiler-and-managed-regression",
+            "invocation": {
+              "command": "bun",
+              "args": [
+                "scripts/validate-current.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 1013,
+            "observation": {
+              "accepted": true,
+              "runtime": "bun",
+              "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+              "frozen_corpus_outputs": 30,
+              "expression_cases": 23,
+              "mode": "full",
+              "managed_repeated_calls": 192
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "standard-wasmc-rust-paired-execution",
+            "invocation": {
+              "command": "bun",
+              "args": [
+                "examples/current/standard.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 160,
+            "observation": {
+              "accepted": true,
+              "standard_lib": "wasmc:std@1.4.1",
+              "functions": 73,
+              "consumer_count": 3,
+              "consumer_calls": 7680,
+              "current_app_sha256": "f704d2c4d99f9efc97ef6d3c99bfd29c3987e1a96601ec7ff026dd0ac6e0581a",
+              "rust_sdk_sha256": "4d2c55eda7cdbe4d14084de2d579ae6dcea97332e18ca9894d210a5a71472d65"
+            },
+            "rust_test_summaries": []
+          }
+        ],
+        "accepted": true
+      }
+    },
+    {
+      "origin": "runtime-recovery",
+      "raw_receipt_sha256": "e1deb8214e23242e0cf7f62e98da58a93a9fe81165609fd217bc7d5394d02906",
+      "receipt": {
+        "schema": "wasmc.public-ci-suite/v1",
+        "label": "runtime-ubuntu-24.04-bun-jsdelivr",
+        "family": "runtime",
+        "runtime": "bun",
+        "mirror": "jsdelivr",
+        "source_commit": "ca6e36ab5f7617894ed595e98ac0ee39eee0008e",
+        "dirty": false,
+        "platform": "linux",
+        "arch": "x64",
+        "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+        "runtime_version": "1.3.14",
+        "tests": [
+          {
+            "id": "source-free-archive-deployment",
+            "invocation": {
+              "command": "bash",
+              "args": [
+                "scripts/validate-source-free-runtime.sh",
+                "bun"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 2985,
+            "observation": {
+              "accepted": true,
+              "standard_lib": "wasmc:std@1.4.1",
+              "functions": 73,
+              "consumer_count": 3,
+              "consumer_calls": 7680,
+              "current_app_sha256": "f704d2c4d99f9efc97ef6d3c99bfd29c3987e1a96601ec7ff026dd0ac6e0581a",
+              "rust_sdk_sha256": "4d2c55eda7cdbe4d14084de2d579ae6dcea97332e18ca9894d210a5a71472d65"
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "core-full-artifact-admission",
+            "invocation": {
+              "command": "bun",
+              "args": [
+                "scripts/check-core-compatibility.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 73,
+            "observation": {
+              "schema": "wasmc.core-compatibility-check/v1",
+              "accepted": true,
+              "host": {
+                "name": "bun",
+                "version": "1.3.14",
+                "v8": "13.6.233.10-node.18"
+              },
+              "results": [
+                {
+                  "accepted": true,
+                  "artifact": "compiler",
+                  "sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+                  "validation_profile": "complete-engine-validation",
+                  "feature_support": {
+                    "function-references": true,
+                    "tail-call": true
+                  }
+                },
+                {
+                  "accepted": true,
+                  "artifact": "automatic-provider",
+                  "sha256": "1fac280b1d3f2d82399e61e49fcb47f1c6ffc6c3d5b3b27e5d98059952fefabd",
+                  "validation_profile": "complete-engine-validation",
+                  "feature_support": {
+                    "function-references": true,
+                    "tail-call": true
+                  }
+                },
+                {
+                  "accepted": true,
+                  "artifact": "standard-provider",
+                  "sha256": "7cd4f0c60536f1825da3fed9d525a43ee9724250203a261f298505a503e9bcbf",
+                  "validation_profile": "complete-engine-validation",
+                  "feature_support": {
+                    "function-references": true,
+                    "tail-call": true
+                  }
+                },
+                {
+                  "accepted": true,
+                  "artifact": "standard",
+                  "sha256": "b79a499c8300361125e7fcdae02170184b82d4bbeff4d8f24ed95f3fd4db8d3b",
+                  "validation_profile": "wasm2,function-references,tail-call",
+                  "feature_support": {
+                    "function-references": true,
+                    "tail-call": true
+                  }
+                },
+                {
+                  "accepted": true,
+                  "artifact": "canonical-checked-chunk-provider",
+                  "sha256": "1fac280b1d3f2d82399e61e49fcb47f1c6ffc6c3d5b3b27e5d98059952fefabd",
+                  "validation_profile": "complete-engine-validation",
+                  "feature_support": {
+                    "function-references": true,
+                    "tail-call": true
+                  }
+                }
+              ]
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "core-feature-probes-and-negatives",
+            "invocation": {
+              "command": "bun",
+              "args": [
+                "scripts/test-core-compatibility.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 76,
+            "observation": {
+              "accepted": true,
+              "host": {
+                "name": "bun",
+                "version": "1.3.14",
+                "v8": "13.6.233.10-node.18"
+              },
+              "features": {
+                "function-references": true,
+                "tail-call": true
+              },
+              "negative_tests": 6,
+              "supported_probe_oracle": 7
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "catalog-exact-resolution",
+            "invocation": {
+              "command": "bun",
+              "args": [
+                "scripts/test-lib-catalog.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 443,
+            "observation": {
+              "accepted": true,
+              "current_packages": 43,
+              "native_source_packages": 14,
+              "negative_tests": 10,
+              "selection": "unique exact complete-Root lock",
+              "network_access": false
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "install-no-clobber-and-faults",
+            "invocation": {
+              "command": "bun",
+              "args": [
+                "scripts/test-lib-install.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 15265,
+            "observation": {
+              "accepted": true,
+              "files_verified": 19,
+              "negative_tests": 17,
+              "numeric_and_nonerror_transport_rejections": 6,
+              "http_status_and_relative_path_verified": true,
+              "numeric_abort_maps_to_timeout": true,
+              "concurrent_single_winner": true,
+              "competing_directory_preserved": true,
+              "failed_stage_cleanup": true,
+              "network_access": false,
+              "companion_installed": false
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "fresh-mirror-install-and-paired-execution",
+            "invocation": {
+              "command": "bun",
+              "args": [
+                "scripts/validate-lib-install.mjs",
+                "jsdelivr"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 418,
+            "observation": {
+              "accepted": true,
+              "host": "bun",
+              "mirror": "jsdelivr",
+              "lock_sha256": "f0c10b63f9f26bae3e71f31546f0ff37b5cff54316fa0403f35335113b52670b",
+              "receipt": {
+                "schema": "wasmc.public-lib-install/v2",
+                "lock_sha256": "f0c10b63f9f26bae3e71f31546f0ff37b5cff54316fa0403f35335113b52670b",
+                "catalog_sha256": "e12684efb3e475ad551eddabda12bc4c196f19edb48e7ace9069fda1ef5e7871",
+                "artifact_commit": "d5b05d1fa6671438d2bb976d286e7f0dccc25e59",
+                "id": "wasmc-std",
+                "version": "1.4.1",
+                "profile": "resource",
+                "delivery_kind": "wasm-core-component",
+                "files_verified": 19,
+                "mirror": "jsdelivr",
+                "publication": "exclusive-directory-symlink",
+                "authority_granted": false,
+                "device_qualified": false
+              },
+              "execution": {
+                "accepted": true,
+                "installed_root_verified": true,
+                "rounds": 256,
+                "explicit_drops": 1024,
+                "invalid_input_rejected": true,
+                "persistent_provider_memory_bytes": 1376256,
+                "package": "wasmc:std@1.4.1",
+                "apis": [
+                  "wasmc:std@1.4.1/base64#try-encode-standard",
+                  "wasmc:std@1.4.1/base64#try-decode-standard"
+                ],
+                "artifact_sha256": "b79a499c8300361125e7fcdae02170184b82d4bbeff4d8f24ed95f3fd4db8d3b",
+                "import_module": "wasmc:lib/wasmc.lib_managed_object_heap@4.9.0",
+                "input_utf8": "abc",
+                "encoded_utf8": "YWJj",
+                "decoded_utf8": "abc"
+              },
+              "source": "fresh exact-public-commit HTTPS downloads",
+              "provider_companion": "separately pinned current tooling",
+              "artifact_changes": false
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "compiler-and-managed-regression",
+            "invocation": {
+              "command": "bun",
+              "args": [
+                "scripts/validate-current.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 1627,
+            "observation": {
+              "accepted": true,
+              "runtime": "bun",
+              "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+              "frozen_corpus_outputs": 30,
+              "expression_cases": 23,
+              "mode": "full",
+              "managed_repeated_calls": 192
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "standard-wasmc-rust-paired-execution",
+            "invocation": {
+              "command": "bun",
+              "args": [
+                "examples/current/standard.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 325,
+            "observation": {
+              "accepted": true,
+              "standard_lib": "wasmc:std@1.4.1",
+              "functions": 73,
+              "consumer_count": 3,
+              "consumer_calls": 7680,
+              "current_app_sha256": "f704d2c4d99f9efc97ef6d3c99bfd29c3987e1a96601ec7ff026dd0ac6e0581a",
+              "rust_sdk_sha256": "4d2c55eda7cdbe4d14084de2d579ae6dcea97332e18ca9894d210a5a71472d65"
+            },
+            "rust_test_summaries": []
+          }
+        ],
+        "accepted": true
+      }
+    },
+    {
+      "origin": "runtime-recovery",
+      "raw_receipt_sha256": "4871a3f9aff770f8ce3c1a39d0396eac5f9552b5139210e0c4a46cd2be2ba22b",
+      "receipt": {
+        "schema": "wasmc.public-ci-suite/v1",
+        "label": "runtime-ubuntu-24.04-deno-github",
+        "family": "runtime",
+        "runtime": "deno",
+        "mirror": "github",
+        "source_commit": "ca6e36ab5f7617894ed595e98ac0ee39eee0008e",
+        "dirty": false,
+        "platform": "linux",
+        "arch": "x64",
+        "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+        "runtime_version": "deno 2.9.4 (stable, release, x86_64-unknown-linux-gnu)\nv8 15.0.245.2-rusty\ntypescript 6.0.3",
+        "tests": [
+          {
+            "id": "source-free-archive-deployment",
+            "invocation": {
+              "command": "bash",
+              "args": [
+                "scripts/validate-source-free-runtime.sh",
+                "deno"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 1752,
+            "observation": {
+              "accepted": true,
+              "standard_lib": "wasmc:std@1.4.1",
+              "functions": 73,
+              "consumer_count": 3,
+              "consumer_calls": 7680,
+              "current_app_sha256": "f704d2c4d99f9efc97ef6d3c99bfd29c3987e1a96601ec7ff026dd0ac6e0581a",
+              "rust_sdk_sha256": "4d2c55eda7cdbe4d14084de2d579ae6dcea97332e18ca9894d210a5a71472d65"
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "core-full-artifact-admission",
+            "invocation": {
+              "command": "deno",
+              "args": [
+                "run",
+                "--allow-read",
+                "scripts/check-core-compatibility.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 57,
+            "observation": {
+              "schema": "wasmc.core-compatibility-check/v1",
+              "accepted": true,
+              "host": {
+                "name": "deno",
+                "version": "2.9.4",
+                "v8": "15.0.245.2-rusty"
+              },
+              "results": [
+                {
+                  "accepted": true,
+                  "artifact": "compiler",
+                  "sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+                  "validation_profile": "complete-engine-validation",
+                  "feature_support": {
+                    "function-references": true,
+                    "tail-call": true
+                  }
+                },
+                {
+                  "accepted": true,
+                  "artifact": "automatic-provider",
+                  "sha256": "1fac280b1d3f2d82399e61e49fcb47f1c6ffc6c3d5b3b27e5d98059952fefabd",
+                  "validation_profile": "complete-engine-validation",
+                  "feature_support": {
+                    "function-references": true,
+                    "tail-call": true
+                  }
+                },
+                {
+                  "accepted": true,
+                  "artifact": "standard-provider",
+                  "sha256": "7cd4f0c60536f1825da3fed9d525a43ee9724250203a261f298505a503e9bcbf",
+                  "validation_profile": "complete-engine-validation",
+                  "feature_support": {
+                    "function-references": true,
+                    "tail-call": true
+                  }
+                },
+                {
+                  "accepted": true,
+                  "artifact": "standard",
+                  "sha256": "b79a499c8300361125e7fcdae02170184b82d4bbeff4d8f24ed95f3fd4db8d3b",
+                  "validation_profile": "wasm2,function-references,tail-call",
+                  "feature_support": {
+                    "function-references": true,
+                    "tail-call": true
+                  }
+                },
+                {
+                  "accepted": true,
+                  "artifact": "canonical-checked-chunk-provider",
+                  "sha256": "1fac280b1d3f2d82399e61e49fcb47f1c6ffc6c3d5b3b27e5d98059952fefabd",
+                  "validation_profile": "complete-engine-validation",
+                  "feature_support": {
+                    "function-references": true,
+                    "tail-call": true
+                  }
+                }
+              ]
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "core-feature-probes-and-negatives",
+            "invocation": {
+              "command": "deno",
+              "args": [
+                "run",
+                "--allow-read",
+                "scripts/test-core-compatibility.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 63,
+            "observation": {
+              "accepted": true,
+              "host": {
+                "name": "deno",
+                "version": "2.9.4",
+                "v8": "15.0.245.2-rusty"
+              },
+              "features": {
+                "function-references": true,
+                "tail-call": true
+              },
+              "negative_tests": 6,
+              "supported_probe_oracle": 7
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "catalog-exact-resolution",
+            "invocation": {
+              "command": "deno",
+              "args": [
+                "run",
+                "--allow-read",
+                "--allow-write",
+                "--allow-env=TMPDIR,TMP,TEMP",
+                "scripts/test-lib-catalog.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 454,
+            "observation": {
+              "accepted": true,
+              "current_packages": 43,
+              "native_source_packages": 14,
+              "negative_tests": 10,
+              "selection": "unique exact complete-Root lock",
+              "network_access": false
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "install-no-clobber-and-faults",
+            "invocation": {
+              "command": "deno",
+              "args": [
+                "run",
+                "--allow-read",
+                "--allow-write",
+                "--allow-env=TMPDIR,TMP,TEMP",
+                "scripts/test-lib-install.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 15255,
+            "observation": {
+              "accepted": true,
+              "files_verified": 19,
+              "negative_tests": 17,
+              "numeric_and_nonerror_transport_rejections": 6,
+              "http_status_and_relative_path_verified": true,
+              "numeric_abort_maps_to_timeout": true,
+              "concurrent_single_winner": true,
+              "competing_directory_preserved": true,
+              "failed_stage_cleanup": true,
+              "network_access": false,
+              "companion_installed": false
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "fresh-mirror-install-and-paired-execution",
+            "invocation": {
+              "command": "deno",
+              "args": [
+                "run",
+                "--allow-read",
+                "--allow-write",
+                "--allow-env=TMPDIR,TMP,TEMP",
+                "--allow-run",
+                "scripts/validate-lib-install.mjs",
+                "github"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 2163,
+            "observation": {
+              "accepted": true,
+              "host": "deno",
+              "mirror": "github",
+              "lock_sha256": "f0c10b63f9f26bae3e71f31546f0ff37b5cff54316fa0403f35335113b52670b",
+              "receipt": {
+                "schema": "wasmc.public-lib-install/v2",
+                "lock_sha256": "f0c10b63f9f26bae3e71f31546f0ff37b5cff54316fa0403f35335113b52670b",
+                "catalog_sha256": "e12684efb3e475ad551eddabda12bc4c196f19edb48e7ace9069fda1ef5e7871",
+                "artifact_commit": "d5b05d1fa6671438d2bb976d286e7f0dccc25e59",
+                "id": "wasmc-std",
+                "version": "1.4.1",
+                "profile": "resource",
+                "delivery_kind": "wasm-core-component",
+                "files_verified": 19,
+                "mirror": "github",
+                "publication": "exclusive-directory-symlink",
+                "authority_granted": false,
+                "device_qualified": false
+              },
+              "execution": {
+                "accepted": true,
+                "installed_root_verified": true,
+                "rounds": 256,
+                "explicit_drops": 1024,
+                "invalid_input_rejected": true,
+                "persistent_provider_memory_bytes": 1376256,
+                "package": "wasmc:std@1.4.1",
+                "apis": [
+                  "wasmc:std@1.4.1/base64#try-encode-standard",
+                  "wasmc:std@1.4.1/base64#try-decode-standard"
+                ],
+                "artifact_sha256": "b79a499c8300361125e7fcdae02170184b82d4bbeff4d8f24ed95f3fd4db8d3b",
+                "import_module": "wasmc:lib/wasmc.lib_managed_object_heap@4.9.0",
+                "input_utf8": "abc",
+                "encoded_utf8": "YWJj",
+                "decoded_utf8": "abc"
+              },
+              "source": "fresh exact-public-commit HTTPS downloads",
+              "provider_companion": "separately pinned current tooling",
+              "artifact_changes": false
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "compiler-and-managed-regression",
+            "invocation": {
+              "command": "deno",
+              "args": [
+                "run",
+                "--allow-read",
+                "--allow-write",
+                "--allow-run",
+                "--allow-env",
+                "scripts/validate-current.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 809,
+            "observation": {
+              "accepted": true,
+              "runtime": "deno",
+              "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+              "frozen_corpus_outputs": 30,
+              "expression_cases": 23,
+              "mode": "full",
+              "managed_repeated_calls": 192
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "standard-wasmc-rust-paired-execution",
+            "invocation": {
+              "command": "deno",
+              "args": [
+                "run",
+                "--allow-read",
+                "examples/current/standard.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 139,
+            "observation": {
+              "accepted": true,
+              "standard_lib": "wasmc:std@1.4.1",
+              "functions": 73,
+              "consumer_count": 3,
+              "consumer_calls": 7680,
+              "current_app_sha256": "f704d2c4d99f9efc97ef6d3c99bfd29c3987e1a96601ec7ff026dd0ac6e0581a",
+              "rust_sdk_sha256": "4d2c55eda7cdbe4d14084de2d579ae6dcea97332e18ca9894d210a5a71472d65"
+            },
+            "rust_test_summaries": []
+          }
+        ],
+        "accepted": true
+      }
+    },
+    {
+      "origin": "runtime-recovery",
+      "raw_receipt_sha256": "a23b33444e6463e7c0eb68f60719e11f47e50decd2e61bd98f4ef20f77e463bc",
+      "receipt": {
+        "schema": "wasmc.public-ci-suite/v1",
+        "label": "runtime-ubuntu-24.04-deno-jsdelivr",
+        "family": "runtime",
+        "runtime": "deno",
+        "mirror": "jsdelivr",
+        "source_commit": "ca6e36ab5f7617894ed595e98ac0ee39eee0008e",
+        "dirty": false,
+        "platform": "linux",
+        "arch": "x64",
+        "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+        "runtime_version": "deno 2.9.4 (stable, release, x86_64-unknown-linux-gnu)\nv8 15.0.245.2-rusty\ntypescript 6.0.3",
+        "tests": [
+          {
+            "id": "source-free-archive-deployment",
+            "invocation": {
+              "command": "bash",
+              "args": [
+                "scripts/validate-source-free-runtime.sh",
+                "deno"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 2368,
+            "observation": {
+              "accepted": true,
+              "standard_lib": "wasmc:std@1.4.1",
+              "functions": 73,
+              "consumer_count": 3,
+              "consumer_calls": 7680,
+              "current_app_sha256": "f704d2c4d99f9efc97ef6d3c99bfd29c3987e1a96601ec7ff026dd0ac6e0581a",
+              "rust_sdk_sha256": "4d2c55eda7cdbe4d14084de2d579ae6dcea97332e18ca9894d210a5a71472d65"
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "core-full-artifact-admission",
+            "invocation": {
+              "command": "deno",
+              "args": [
+                "run",
+                "--allow-read",
+                "scripts/check-core-compatibility.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 81,
+            "observation": {
+              "schema": "wasmc.core-compatibility-check/v1",
+              "accepted": true,
+              "host": {
+                "name": "deno",
+                "version": "2.9.4",
+                "v8": "15.0.245.2-rusty"
+              },
+              "results": [
+                {
+                  "accepted": true,
+                  "artifact": "compiler",
+                  "sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+                  "validation_profile": "complete-engine-validation",
+                  "feature_support": {
+                    "function-references": true,
+                    "tail-call": true
+                  }
+                },
+                {
+                  "accepted": true,
+                  "artifact": "automatic-provider",
+                  "sha256": "1fac280b1d3f2d82399e61e49fcb47f1c6ffc6c3d5b3b27e5d98059952fefabd",
+                  "validation_profile": "complete-engine-validation",
+                  "feature_support": {
+                    "function-references": true,
+                    "tail-call": true
+                  }
+                },
+                {
+                  "accepted": true,
+                  "artifact": "standard-provider",
+                  "sha256": "7cd4f0c60536f1825da3fed9d525a43ee9724250203a261f298505a503e9bcbf",
+                  "validation_profile": "complete-engine-validation",
+                  "feature_support": {
+                    "function-references": true,
+                    "tail-call": true
+                  }
+                },
+                {
+                  "accepted": true,
+                  "artifact": "standard",
+                  "sha256": "b79a499c8300361125e7fcdae02170184b82d4bbeff4d8f24ed95f3fd4db8d3b",
+                  "validation_profile": "wasm2,function-references,tail-call",
+                  "feature_support": {
+                    "function-references": true,
+                    "tail-call": true
+                  }
+                },
+                {
+                  "accepted": true,
+                  "artifact": "canonical-checked-chunk-provider",
+                  "sha256": "1fac280b1d3f2d82399e61e49fcb47f1c6ffc6c3d5b3b27e5d98059952fefabd",
+                  "validation_profile": "complete-engine-validation",
+                  "feature_support": {
+                    "function-references": true,
+                    "tail-call": true
+                  }
+                }
+              ]
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "core-feature-probes-and-negatives",
+            "invocation": {
+              "command": "deno",
+              "args": [
+                "run",
+                "--allow-read",
+                "scripts/test-core-compatibility.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 78,
+            "observation": {
+              "accepted": true,
+              "host": {
+                "name": "deno",
+                "version": "2.9.4",
+                "v8": "15.0.245.2-rusty"
+              },
+              "features": {
+                "function-references": true,
+                "tail-call": true
+              },
+              "negative_tests": 6,
+              "supported_probe_oracle": 7
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "catalog-exact-resolution",
+            "invocation": {
+              "command": "deno",
+              "args": [
+                "run",
+                "--allow-read",
+                "--allow-write",
+                "--allow-env=TMPDIR,TMP,TEMP",
+                "scripts/test-lib-catalog.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 693,
+            "observation": {
+              "accepted": true,
+              "current_packages": 43,
+              "native_source_packages": 14,
+              "negative_tests": 10,
+              "selection": "unique exact complete-Root lock",
+              "network_access": false
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "install-no-clobber-and-faults",
+            "invocation": {
+              "command": "deno",
+              "args": [
+                "run",
+                "--allow-read",
+                "--allow-write",
+                "--allow-env=TMPDIR,TMP,TEMP",
+                "scripts/test-lib-install.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 15330,
+            "observation": {
+              "accepted": true,
+              "files_verified": 19,
+              "negative_tests": 17,
+              "numeric_and_nonerror_transport_rejections": 6,
+              "http_status_and_relative_path_verified": true,
+              "numeric_abort_maps_to_timeout": true,
+              "concurrent_single_winner": true,
+              "competing_directory_preserved": true,
+              "failed_stage_cleanup": true,
+              "network_access": false,
+              "companion_installed": false
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "fresh-mirror-install-and-paired-execution",
+            "invocation": {
+              "command": "deno",
+              "args": [
+                "run",
+                "--allow-read",
+                "--allow-write",
+                "--allow-env=TMPDIR,TMP,TEMP",
+                "--allow-run",
+                "scripts/validate-lib-install.mjs",
+                "jsdelivr"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 1758,
+            "observation": {
+              "accepted": true,
+              "host": "deno",
+              "mirror": "jsdelivr",
+              "lock_sha256": "f0c10b63f9f26bae3e71f31546f0ff37b5cff54316fa0403f35335113b52670b",
+              "receipt": {
+                "schema": "wasmc.public-lib-install/v2",
+                "lock_sha256": "f0c10b63f9f26bae3e71f31546f0ff37b5cff54316fa0403f35335113b52670b",
+                "catalog_sha256": "e12684efb3e475ad551eddabda12bc4c196f19edb48e7ace9069fda1ef5e7871",
+                "artifact_commit": "d5b05d1fa6671438d2bb976d286e7f0dccc25e59",
+                "id": "wasmc-std",
+                "version": "1.4.1",
+                "profile": "resource",
+                "delivery_kind": "wasm-core-component",
+                "files_verified": 19,
+                "mirror": "jsdelivr",
+                "publication": "exclusive-directory-symlink",
+                "authority_granted": false,
+                "device_qualified": false
+              },
+              "execution": {
+                "accepted": true,
+                "installed_root_verified": true,
+                "rounds": 256,
+                "explicit_drops": 1024,
+                "invalid_input_rejected": true,
+                "persistent_provider_memory_bytes": 1376256,
+                "package": "wasmc:std@1.4.1",
+                "apis": [
+                  "wasmc:std@1.4.1/base64#try-encode-standard",
+                  "wasmc:std@1.4.1/base64#try-decode-standard"
+                ],
+                "artifact_sha256": "b79a499c8300361125e7fcdae02170184b82d4bbeff4d8f24ed95f3fd4db8d3b",
+                "import_module": "wasmc:lib/wasmc.lib_managed_object_heap@4.9.0",
+                "input_utf8": "abc",
+                "encoded_utf8": "YWJj",
+                "decoded_utf8": "abc"
+              },
+              "source": "fresh exact-public-commit HTTPS downloads",
+              "provider_companion": "separately pinned current tooling",
+              "artifact_changes": false
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "compiler-and-managed-regression",
+            "invocation": {
+              "command": "deno",
+              "args": [
+                "run",
+                "--allow-read",
+                "--allow-write",
+                "--allow-run",
+                "--allow-env",
+                "scripts/validate-current.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 1128,
+            "observation": {
+              "accepted": true,
+              "runtime": "deno",
+              "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+              "frozen_corpus_outputs": 30,
+              "expression_cases": 23,
+              "mode": "full",
+              "managed_repeated_calls": 192
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "standard-wasmc-rust-paired-execution",
+            "invocation": {
+              "command": "deno",
+              "args": [
+                "run",
+                "--allow-read",
+                "examples/current/standard.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 227,
+            "observation": {
+              "accepted": true,
+              "standard_lib": "wasmc:std@1.4.1",
+              "functions": 73,
+              "consumer_count": 3,
+              "consumer_calls": 7680,
+              "current_app_sha256": "f704d2c4d99f9efc97ef6d3c99bfd29c3987e1a96601ec7ff026dd0ac6e0581a",
+              "rust_sdk_sha256": "4d2c55eda7cdbe4d14084de2d579ae6dcea97332e18ca9894d210a5a71472d65"
+            },
+            "rust_test_summaries": []
+          }
+        ],
+        "accepted": true
+      }
+    },
+    {
+      "origin": "runtime-recovery",
+      "raw_receipt_sha256": "4b09dc20912b941c16bcb1ce75b473487031758fa85880ba9ccb156df9f659b5",
+      "receipt": {
+        "schema": "wasmc.public-ci-suite/v1",
+        "label": "runtime-ubuntu-24.04-node-github",
+        "family": "runtime",
+        "runtime": "node",
+        "mirror": "github",
+        "source_commit": "ca6e36ab5f7617894ed595e98ac0ee39eee0008e",
+        "dirty": false,
+        "platform": "linux",
+        "arch": "x64",
+        "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+        "runtime_version": "v26.5.1",
+        "tests": [
+          {
+            "id": "source-free-archive-deployment",
+            "invocation": {
+              "command": "bash",
+              "args": [
+                "scripts/validate-source-free-runtime.sh",
+                "node"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 2363,
+            "observation": {
+              "accepted": true,
+              "standard_lib": "wasmc:std@1.4.1",
+              "functions": 73,
+              "consumer_count": 3,
+              "consumer_calls": 7680,
+              "current_app_sha256": "f704d2c4d99f9efc97ef6d3c99bfd29c3987e1a96601ec7ff026dd0ac6e0581a",
+              "rust_sdk_sha256": "4d2c55eda7cdbe4d14084de2d579ae6dcea97332e18ca9894d210a5a71472d65"
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "core-full-artifact-admission",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/check-core-compatibility.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 54,
+            "observation": {
+              "schema": "wasmc.core-compatibility-check/v1",
+              "accepted": true,
+              "host": {
+                "name": "node",
+                "version": "v26.5.1",
+                "v8": "14.6.202.34-node.24"
+              },
+              "results": [
+                {
+                  "accepted": true,
+                  "artifact": "compiler",
+                  "sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+                  "validation_profile": "complete-engine-validation",
+                  "feature_support": {
+                    "function-references": true,
+                    "tail-call": true
+                  }
+                },
+                {
+                  "accepted": true,
+                  "artifact": "automatic-provider",
+                  "sha256": "1fac280b1d3f2d82399e61e49fcb47f1c6ffc6c3d5b3b27e5d98059952fefabd",
+                  "validation_profile": "complete-engine-validation",
+                  "feature_support": {
+                    "function-references": true,
+                    "tail-call": true
+                  }
+                },
+                {
+                  "accepted": true,
+                  "artifact": "standard-provider",
+                  "sha256": "7cd4f0c60536f1825da3fed9d525a43ee9724250203a261f298505a503e9bcbf",
+                  "validation_profile": "complete-engine-validation",
+                  "feature_support": {
+                    "function-references": true,
+                    "tail-call": true
+                  }
+                },
+                {
+                  "accepted": true,
+                  "artifact": "standard",
+                  "sha256": "b79a499c8300361125e7fcdae02170184b82d4bbeff4d8f24ed95f3fd4db8d3b",
+                  "validation_profile": "wasm2,function-references,tail-call",
+                  "feature_support": {
+                    "function-references": true,
+                    "tail-call": true
+                  }
+                },
+                {
+                  "accepted": true,
+                  "artifact": "canonical-checked-chunk-provider",
+                  "sha256": "1fac280b1d3f2d82399e61e49fcb47f1c6ffc6c3d5b3b27e5d98059952fefabd",
+                  "validation_profile": "complete-engine-validation",
+                  "feature_support": {
+                    "function-references": true,
+                    "tail-call": true
+                  }
+                }
+              ]
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "core-feature-probes-and-negatives",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/test-core-compatibility.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 53,
+            "observation": {
+              "accepted": true,
+              "host": {
+                "name": "node",
+                "version": "v26.5.1",
+                "v8": "14.6.202.34-node.24"
+              },
+              "features": {
+                "function-references": true,
+                "tail-call": true
+              },
+              "negative_tests": 6,
+              "supported_probe_oracle": 7
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "catalog-exact-resolution",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/test-lib-catalog.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 475,
+            "observation": {
+              "accepted": true,
+              "current_packages": 43,
+              "native_source_packages": 14,
+              "negative_tests": 10,
+              "selection": "unique exact complete-Root lock",
+              "network_access": false
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "install-no-clobber-and-faults",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/test-lib-install.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 15318,
+            "observation": {
+              "accepted": true,
+              "files_verified": 19,
+              "negative_tests": 17,
+              "numeric_and_nonerror_transport_rejections": 6,
+              "http_status_and_relative_path_verified": true,
+              "numeric_abort_maps_to_timeout": true,
+              "concurrent_single_winner": true,
+              "competing_directory_preserved": true,
+              "failed_stage_cleanup": true,
+              "network_access": false,
+              "companion_installed": false
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "fresh-mirror-install-and-paired-execution",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/validate-lib-install.mjs",
+                "github"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 2365,
+            "observation": {
+              "accepted": true,
+              "host": "node",
+              "mirror": "github",
+              "lock_sha256": "f0c10b63f9f26bae3e71f31546f0ff37b5cff54316fa0403f35335113b52670b",
+              "receipt": {
+                "schema": "wasmc.public-lib-install/v2",
+                "lock_sha256": "f0c10b63f9f26bae3e71f31546f0ff37b5cff54316fa0403f35335113b52670b",
+                "catalog_sha256": "e12684efb3e475ad551eddabda12bc4c196f19edb48e7ace9069fda1ef5e7871",
+                "artifact_commit": "d5b05d1fa6671438d2bb976d286e7f0dccc25e59",
+                "id": "wasmc-std",
+                "version": "1.4.1",
+                "profile": "resource",
+                "delivery_kind": "wasm-core-component",
+                "files_verified": 19,
+                "mirror": "github",
+                "publication": "exclusive-directory-symlink",
+                "authority_granted": false,
+                "device_qualified": false
+              },
+              "execution": {
+                "accepted": true,
+                "installed_root_verified": true,
+                "rounds": 256,
+                "explicit_drops": 1024,
+                "invalid_input_rejected": true,
+                "persistent_provider_memory_bytes": 1376256,
+                "package": "wasmc:std@1.4.1",
+                "apis": [
+                  "wasmc:std@1.4.1/base64#try-encode-standard",
+                  "wasmc:std@1.4.1/base64#try-decode-standard"
+                ],
+                "artifact_sha256": "b79a499c8300361125e7fcdae02170184b82d4bbeff4d8f24ed95f3fd4db8d3b",
+                "import_module": "wasmc:lib/wasmc.lib_managed_object_heap@4.9.0",
+                "input_utf8": "abc",
+                "encoded_utf8": "YWJj",
+                "decoded_utf8": "abc"
+              },
+              "source": "fresh exact-public-commit HTTPS downloads",
+              "provider_companion": "separately pinned current tooling",
+              "artifact_changes": false
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "compiler-and-managed-regression",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/validate-current.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 1374,
+            "observation": {
+              "accepted": true,
+              "runtime": "node",
+              "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+              "frozen_corpus_outputs": 30,
+              "expression_cases": 23,
+              "mode": "full",
+              "managed_repeated_calls": 192
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "standard-wasmc-rust-paired-execution",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "examples/current/standard.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 173,
+            "observation": {
+              "accepted": true,
+              "standard_lib": "wasmc:std@1.4.1",
+              "functions": 73,
+              "consumer_count": 3,
+              "consumer_calls": 7680,
+              "current_app_sha256": "f704d2c4d99f9efc97ef6d3c99bfd29c3987e1a96601ec7ff026dd0ac6e0581a",
+              "rust_sdk_sha256": "4d2c55eda7cdbe4d14084de2d579ae6dcea97332e18ca9894d210a5a71472d65"
+            },
+            "rust_test_summaries": []
+          }
+        ],
+        "accepted": true
+      }
+    },
+    {
+      "origin": "runtime-recovery",
+      "raw_receipt_sha256": "e394e5c3549772ada2153c413ee7222d25e5b194d04fe99df6b29d18d11dde2b",
+      "receipt": {
+        "schema": "wasmc.public-ci-suite/v1",
+        "label": "runtime-ubuntu-24.04-node-jsdelivr",
+        "family": "runtime",
+        "runtime": "node",
+        "mirror": "jsdelivr",
+        "source_commit": "ca6e36ab5f7617894ed595e98ac0ee39eee0008e",
+        "dirty": false,
+        "platform": "linux",
+        "arch": "x64",
+        "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+        "runtime_version": "v26.5.1",
+        "tests": [
+          {
+            "id": "source-free-archive-deployment",
+            "invocation": {
+              "command": "bash",
+              "args": [
+                "scripts/validate-source-free-runtime.sh",
+                "node"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 2443,
+            "observation": {
+              "accepted": true,
+              "standard_lib": "wasmc:std@1.4.1",
+              "functions": 73,
+              "consumer_count": 3,
+              "consumer_calls": 7680,
+              "current_app_sha256": "f704d2c4d99f9efc97ef6d3c99bfd29c3987e1a96601ec7ff026dd0ac6e0581a",
+              "rust_sdk_sha256": "4d2c55eda7cdbe4d14084de2d579ae6dcea97332e18ca9894d210a5a71472d65"
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "core-full-artifact-admission",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/check-core-compatibility.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 56,
+            "observation": {
+              "schema": "wasmc.core-compatibility-check/v1",
+              "accepted": true,
+              "host": {
+                "name": "node",
+                "version": "v26.5.1",
+                "v8": "14.6.202.34-node.24"
+              },
+              "results": [
+                {
+                  "accepted": true,
+                  "artifact": "compiler",
+                  "sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+                  "validation_profile": "complete-engine-validation",
+                  "feature_support": {
+                    "function-references": true,
+                    "tail-call": true
+                  }
+                },
+                {
+                  "accepted": true,
+                  "artifact": "automatic-provider",
+                  "sha256": "1fac280b1d3f2d82399e61e49fcb47f1c6ffc6c3d5b3b27e5d98059952fefabd",
+                  "validation_profile": "complete-engine-validation",
+                  "feature_support": {
+                    "function-references": true,
+                    "tail-call": true
+                  }
+                },
+                {
+                  "accepted": true,
+                  "artifact": "standard-provider",
+                  "sha256": "7cd4f0c60536f1825da3fed9d525a43ee9724250203a261f298505a503e9bcbf",
+                  "validation_profile": "complete-engine-validation",
+                  "feature_support": {
+                    "function-references": true,
+                    "tail-call": true
+                  }
+                },
+                {
+                  "accepted": true,
+                  "artifact": "standard",
+                  "sha256": "b79a499c8300361125e7fcdae02170184b82d4bbeff4d8f24ed95f3fd4db8d3b",
+                  "validation_profile": "wasm2,function-references,tail-call",
+                  "feature_support": {
+                    "function-references": true,
+                    "tail-call": true
+                  }
+                },
+                {
+                  "accepted": true,
+                  "artifact": "canonical-checked-chunk-provider",
+                  "sha256": "1fac280b1d3f2d82399e61e49fcb47f1c6ffc6c3d5b3b27e5d98059952fefabd",
+                  "validation_profile": "complete-engine-validation",
+                  "feature_support": {
+                    "function-references": true,
+                    "tail-call": true
+                  }
+                }
+              ]
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "core-feature-probes-and-negatives",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/test-core-compatibility.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 58,
+            "observation": {
+              "accepted": true,
+              "host": {
+                "name": "node",
+                "version": "v26.5.1",
+                "v8": "14.6.202.34-node.24"
+              },
+              "features": {
+                "function-references": true,
+                "tail-call": true
+              },
+              "negative_tests": 6,
+              "supported_probe_oracle": 7
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "catalog-exact-resolution",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/test-lib-catalog.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 506,
+            "observation": {
+              "accepted": true,
+              "current_packages": 43,
+              "native_source_packages": 14,
+              "negative_tests": 10,
+              "selection": "unique exact complete-Root lock",
+              "network_access": false
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "install-no-clobber-and-faults",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/test-lib-install.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 15303,
+            "observation": {
+              "accepted": true,
+              "files_verified": 19,
+              "negative_tests": 17,
+              "numeric_and_nonerror_transport_rejections": 6,
+              "http_status_and_relative_path_verified": true,
+              "numeric_abort_maps_to_timeout": true,
+              "concurrent_single_winner": true,
+              "competing_directory_preserved": true,
+              "failed_stage_cleanup": true,
+              "network_access": false,
+              "companion_installed": false
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "fresh-mirror-install-and-paired-execution",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/validate-lib-install.mjs",
+                "jsdelivr"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 756,
+            "observation": {
+              "accepted": true,
+              "host": "node",
+              "mirror": "jsdelivr",
+              "lock_sha256": "f0c10b63f9f26bae3e71f31546f0ff37b5cff54316fa0403f35335113b52670b",
+              "receipt": {
+                "schema": "wasmc.public-lib-install/v2",
+                "lock_sha256": "f0c10b63f9f26bae3e71f31546f0ff37b5cff54316fa0403f35335113b52670b",
+                "catalog_sha256": "e12684efb3e475ad551eddabda12bc4c196f19edb48e7ace9069fda1ef5e7871",
+                "artifact_commit": "d5b05d1fa6671438d2bb976d286e7f0dccc25e59",
+                "id": "wasmc-std",
+                "version": "1.4.1",
+                "profile": "resource",
+                "delivery_kind": "wasm-core-component",
+                "files_verified": 19,
+                "mirror": "jsdelivr",
+                "publication": "exclusive-directory-symlink",
+                "authority_granted": false,
+                "device_qualified": false
+              },
+              "execution": {
+                "accepted": true,
+                "installed_root_verified": true,
+                "rounds": 256,
+                "explicit_drops": 1024,
+                "invalid_input_rejected": true,
+                "persistent_provider_memory_bytes": 1376256,
+                "package": "wasmc:std@1.4.1",
+                "apis": [
+                  "wasmc:std@1.4.1/base64#try-encode-standard",
+                  "wasmc:std@1.4.1/base64#try-decode-standard"
+                ],
+                "artifact_sha256": "b79a499c8300361125e7fcdae02170184b82d4bbeff4d8f24ed95f3fd4db8d3b",
+                "import_module": "wasmc:lib/wasmc.lib_managed_object_heap@4.9.0",
+                "input_utf8": "abc",
+                "encoded_utf8": "YWJj",
+                "decoded_utf8": "abc"
+              },
+              "source": "fresh exact-public-commit HTTPS downloads",
+              "provider_companion": "separately pinned current tooling",
+              "artifact_changes": false
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "compiler-and-managed-regression",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/validate-current.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 1233,
+            "observation": {
+              "accepted": true,
+              "runtime": "node",
+              "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+              "frozen_corpus_outputs": 30,
+              "expression_cases": 23,
+              "mode": "full",
+              "managed_repeated_calls": 192
+            },
+            "rust_test_summaries": []
+          },
+          {
+            "id": "standard-wasmc-rust-paired-execution",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "examples/current/standard.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 179,
+            "observation": {
+              "accepted": true,
+              "standard_lib": "wasmc:std@1.4.1",
+              "functions": 73,
+              "consumer_count": 3,
+              "consumer_calls": 7680,
+              "current_app_sha256": "f704d2c4d99f9efc97ef6d3c99bfd29c3987e1a96601ec7ff026dd0ac6e0581a",
+              "rust_sdk_sha256": "4d2c55eda7cdbe4d14084de2d579ae6dcea97332e18ca9894d210a5a71472d65"
+            },
+            "rust_test_summaries": []
+          }
+        ],
+        "accepted": true
+      }
+    },
+    {
+      "origin": "split-command-rust-qualification",
+      "schema": "wasmc.normal-rust-split-command-qualification/v1",
+      "accepted": true,
+      "baseline_raw_receipt_sha256": "983363d5de8522566f76af65f2a00bef7bcba0262cd382912079c5c0b42c5c18",
+      "recovery_raw_receipt_sha256": "73e1a894e1c3538d6a8fdc2136ceecab249bc8a8dcd96f43261914af8938e59c",
+      "tests": [
+        {
+          "origin": "baseline",
+          "actual_source": "84e21916ba11ea1e919e878b88797522073b2515",
+          "test": {
+            "id": "lib-package-contracts",
+            "invocation": {
+              "command": "node",
+              "args": [
+                "scripts/validate-libs.mjs"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 2171,
+            "observation": {
+              "accepted": true,
+              "schema": "wasmc.current-composition-release-closure/v1",
+              "catalog_sha256": "e12684efb3e475ad551eddabda12bc4c196f19edb48e7ace9069fda1ef5e7871",
+              "original_base_catalog_sha256": "81db5d610d53c7627fd91a4bbd47a22610bd1982718b845dc1557b81657f0e74",
+              "original_base_closure": {
+                "schema": "wasmc.current-release-closure/v3",
+                "catalog_sha256": "81db5d610d53c7627fd91a4bbd47a22610bd1982718b845dc1557b81657f0e74",
+                "registry_sha256": "3b2292a4805783cc826402046d056e517a55700ab1797d835e09c8cbb0f9ac66",
+                "index_sha256": "73a1ebcce721a73dd8964030b7bb7bc61f2ed1d1aeb7d2aa46c22b8da8d8f333",
+                "cohort_sha256": "af1b7843be3a0ef40d255e0f1a0c5959f5d33c1797390c1d1ce9495e4d47e29a",
+                "refresh_receipt_sha256": "3a84eea9d791f2600a07487d07859f0e7f75ea0b076b0ea0b837d869307ba943",
+                "producer_sha256": "78ae99b691666a9961862440449a93cf92be9da6a1e3a37f78e39574c3c79ba7",
+                "release_packages": 42,
+                "api_routes": 236,
+                "package_routes": 42,
+                "entries": 278,
+                "native_source_packages": 14,
+                "exact": true,
+                "candidate_extras": 0,
+                "license_snapshots_exact": true,
+                "sdk_cargo_license_bound": true,
+                "original_dependency_notices_exact": true,
+                "actual_Core_Search_snapshot_lookup_pagination": true,
+                "device_qualified": false,
+                "public_release_admission": false
+              },
+              "source_lineage_sha256": "50a53afbfd3c0a3157cb40efa4ddb03cb48383ab96062ea3a00cde592a98e905",
+              "release_packages": 43,
+              "package_routes": 43,
+              "api_routes": 277,
+              "entries": 320,
+              "root_files_verified": 634,
+              "exact": true,
+              "actual_Core_Search_snapshot_lookup_pagination": true,
+              "current_source_custody_verified": true,
+              "original_receipt_bytes_verified": false,
+              "fresh_full_q0": false,
+              "fresh_builds": 0,
+              "public_release_admission": false,
+              "scope": "current complete Roots, public WIT routes, source/notice pins and actual compiled Core Search; source-only Native remains unexecuted"
+            },
+            "rust_test_summaries": []
+          }
+        },
+        {
+          "origin": "rust-search-recovery",
+          "actual_source": "ca6e36ab5f7617894ed595e98ac0ee39eee0008e",
+          "test": {
+            "id": "wasmtime-component-consumer-tests",
+            "invocation": {
+              "command": "cargo",
+              "args": [
+                "test",
+                "--locked",
+                "--release"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 172556,
+            "observation": null,
+            "rust_test_summaries": [
+              {
+                "result": "ok",
+                "passed": 0,
+                "failed": 0,
+                "ignored": 0,
+                "measured": 0,
+                "filtered": 0
+              },
+              {
+                "result": "ok",
+                "passed": 1,
+                "failed": 0,
+                "ignored": 0,
+                "measured": 0,
+                "filtered": 0
+              }
+            ]
+          }
+        },
+        {
+          "origin": "baseline",
+          "actual_source": "84e21916ba11ea1e919e878b88797522073b2515",
+          "test": {
+            "id": "wasmi-wasmtime-runtime-sdk-tests",
+            "invocation": {
+              "command": "cargo",
+              "args": [
+                "test",
+                "--locked",
+                "--release",
+                "-p",
+                "wasmc-core-runtime"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 176091,
+            "observation": null,
+            "rust_test_summaries": [
+              {
+                "result": "ok",
+                "passed": 2,
+                "failed": 0,
+                "ignored": 0,
+                "measured": 0,
+                "filtered": 0
+              },
+              {
+                "result": "ok",
+                "passed": 18,
+                "failed": 0,
+                "ignored": 0,
+                "measured": 0,
+                "filtered": 0
+              },
+              {
+                "result": "ok",
+                "passed": 14,
+                "failed": 0,
+                "ignored": 0,
+                "measured": 0,
+                "filtered": 0
+              },
+              {
+                "result": "ok",
+                "passed": 0,
+                "failed": 0,
+                "ignored": 0,
+                "measured": 0,
+                "filtered": 0
+              }
+            ]
+          }
+        },
+        {
+          "origin": "baseline",
+          "actual_source": "84e21916ba11ea1e919e878b88797522073b2515",
+          "test": {
+            "id": "rust-generic-host-sdk-tests",
+            "invocation": {
+              "command": "cargo",
+              "args": [
+                "test",
+                "--locked",
+                "--release",
+                "--manifest-path",
+                "sdk/wasmc-host/Cargo.toml"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 142592,
+            "observation": null,
+            "rust_test_summaries": [
+              {
+                "result": "ok",
+                "passed": 5,
+                "failed": 0,
+                "ignored": 0,
+                "measured": 0,
+                "filtered": 0
+              },
+              {
+                "result": "ok",
+                "passed": 0,
+                "failed": 0,
+                "ignored": 0,
+                "measured": 0,
+                "filtered": 0
+              }
+            ]
+          }
+        },
+        {
+          "origin": "baseline",
+          "actual_source": "84e21916ba11ea1e919e878b88797522073b2515",
+          "test": {
+            "id": "native-current-compiler-CLI-tests",
+            "invocation": {
+              "command": "cargo",
+              "args": [
+                "test",
+                "--locked",
+                "--release",
+                "--manifest-path",
+                "sdk/wasmc-native-compiler/Cargo.toml"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 275652,
+            "observation": null,
+            "rust_test_summaries": [
+              {
+                "result": "ok",
+                "passed": 0,
+                "failed": 0,
+                "ignored": 0,
+                "measured": 0,
+                "filtered": 0
+              },
+              {
+                "result": "ok",
+                "passed": 0,
+                "failed": 0,
+                "ignored": 0,
+                "measured": 0,
+                "filtered": 0
+              },
+              {
+                "result": "ok",
+                "passed": 4,
+                "failed": 0,
+                "ignored": 0,
+                "measured": 0,
+                "filtered": 0
+              },
+              {
+                "result": "ok",
+                "passed": 0,
+                "failed": 0,
+                "ignored": 0,
+                "measured": 0,
+                "filtered": 0
+              }
+            ]
+          }
+        },
+        {
+          "origin": "rust-search-recovery",
+          "actual_source": "ca6e36ab5f7617894ed595e98ac0ee39eee0008e",
+          "test": {
+            "id": "current-generated-Component-SDK-full-index-execution",
+            "invocation": {
+              "command": "cargo",
+              "args": [
+                "run",
+                "--locked",
+                "--release"
+              ]
+            },
+            "accepted": true,
+            "exit_code": 0,
+            "timed_out": false,
+            "elapsed_ms": 1045,
+            "observation": {
+              "accepted": true,
+              "generated_sdk": true,
+              "packages": 43,
+              "entries": 320,
+              "component_calls": 1097
+            },
+            "rust_test_summaries": []
+          }
+        }
+      ]
+    }
+  ]
+}
