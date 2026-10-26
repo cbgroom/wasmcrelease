@@ -172,7 +172,7 @@ static int32_t invoke_emit_batch(
   int32_t status = resolve_keyboard(read_u64(input + 1), NULL, &descriptor);
   if (status != 0) return status;
   const uint16_t count = read_u16(input + 9);
-  if (count == 0 || count > 512 || input_len != 11u + (size_t)count * 6u) return -EINVAL;
+  if (count == 0 || input_len != 11u + (size_t)count * 6u) return -EINVAL;
   struct input_event *events = calloc((size_t)count * 2u, sizeof(*events));
   if (!events) return -ENOMEM;
   for (uint16_t index = 0; index < count; index += 1) {

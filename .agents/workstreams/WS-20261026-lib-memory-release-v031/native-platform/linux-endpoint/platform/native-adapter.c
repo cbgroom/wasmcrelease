@@ -514,7 +514,7 @@ static int32_t invoke_epoll_wait(
   if (status != 0) return status;
   const uint32_t maximum = read_u32(input + 9);
   const int32_t timeout = (int32_t)read_u32(input + 13);
-  if (output_capacity < 4 || maximum == 0 || maximum > 4096 || maximum > (output_capacity - 4) / 12) return -EINVAL;
+  if (output_capacity < 4 || maximum == 0 || maximum > INT32_MAX || maximum > (output_capacity - 4) / 12) return -EINVAL;
   struct epoll_event *events = calloc(maximum, sizeof(*events));
   if (!events) return -ENOMEM;
   const int count = epoll_wait(epoll_descriptor, events, (int)maximum, timeout);

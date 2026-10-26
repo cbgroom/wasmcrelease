@@ -201,7 +201,7 @@ static int32_t emit_keys(const uint8_t *input, size_t input_len,
   if (status != 0)
     return status;
   const uint16_t count = read_u16(input + 9);
-  if (count == 0 || count > 512 || input_len != 11u + (size_t)count * 6u) {
+  if (count == 0 || input_len != 11u + (size_t)count * 6u) {
     return -EINVAL;
   }
 

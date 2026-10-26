@@ -54,7 +54,14 @@ int main(void) {
   for(size_t i=0;i<OPERATIONS;i++)dispatch_unit(22,operations_test[i]);
   dispatch_unit(22,pending);
   dispatch_unit(6,reader);dispatch_unit(6,writer);
+  uint8_t epoll_create_request[1]={14};
+  const uint64_t epoll_token=dispatch_token(epoll_create_request,sizeof(epoll_create_request));
+  enum { EPOLL_EVENTS=8192 };
+  uint8_t epoll_request[17]={16};write_u64(epoll_request+1,epoll_token);write_u32(epoll_request+9,EPOLL_EVENTS);
+  uint8_t *epoll_output=malloc(4+EPOLL_EVENTS*12);assert(epoll_output);
+  assert(wasmc_boundary_v1_invoke(epoll_request,sizeof(epoll_request),epoll_output,4+EPOLL_EVENTS*12,&output_len)==0);
+  assert(output_len==4&&read_u32(epoll_output)==0);free(epoll_output);dispatch_unit(6,epoll_token);
   const long iov=sysconf(_SC_IOV_MAX);assert(iov>0);
   close_retained_handles();assert(handles==NULL&&mappings==NULL&&readiness_operations==NULL);
-  printf("{\"accepted\":true,\"fixture\":\"endpoint\",\"handles\":4096,\"mappings\":2048,\"large_mapping_bytes\":%llu,\"retained_completed_operations\":1100,\"pending_worker_address_stable\":true,\"kernel_iov_max\":%ld,\"cleanup\":true}\n",(unsigned long long)length,iov);
+  printf("{\"accepted\":true,\"fixture\":\"endpoint\",\"handles\":4096,\"mappings\":2048,\"large_mapping_bytes\":%llu,\"retained_completed_operations\":1100,\"pending_worker_address_stable\":true,\"epoll_requested_events\":8192,\"kernel_iov_max\":%ld,\"cleanup\":true}\n",(unsigned long long)length,iov);
 }
