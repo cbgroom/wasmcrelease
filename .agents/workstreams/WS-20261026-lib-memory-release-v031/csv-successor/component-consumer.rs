@@ -1,0 +1,6 @@
+use std::{env,fs};
+use wasmc_csv_component::{Lib,wasmtime};
+use wasmc_csv_component::wasmc::data_core::types::{Field,DataType,Column};
+use wasmc_csv_component::exports::wasmc::csv::parser::CsvOptions;
+use wasmtime::{Engine,Store};use wasmtime::component::{Component,Linker};
+fn main(){let args:Vec<_>=env::args().collect();let engine=Engine::default();let component=Component::new(&engine,fs::read(&args[1]).unwrap()).unwrap();let mut store=Store::new(&engine,());let lib=Lib::instantiate(&mut store,&component,&Linker::new(&engine)).unwrap();let parser=lib.wasmc_csv_parser();for (n,byte) in [(8,b'a'),(1048577,b'b'),(3145728,b'c'),(11,b'd')]{let mut input=vec![byte;n];input.push(b'\n');let fields=[Field{name:"value".into(),data_type:DataType::Utf8,nullable:false}];let options=CsvOptions{has_header:false,validate_header:false,delimiter:b',',batch_rows:1};let result=parser.call_parse(&mut store,&input,&fields,options).unwrap().unwrap();assert_eq!(result.len(),1);assert_eq!(result[0].rows,1);match &result[0].columns[0]{Column::Utf8Column(v)=>{let x=v[0].as_ref().unwrap();assert_eq!(x.len(),n);assert!(x.bytes().all(|b|b==byte));},_=>panic!("unexpected column")};}println!("{{\"accepted\":true,\"engine\":\"wasmtime-component\",\"largest_input\":3145728,\"same_instance_new_inputs\":true}}");}

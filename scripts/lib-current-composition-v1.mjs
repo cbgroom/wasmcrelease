@@ -72,12 +72,12 @@ function importedRoot(input,replacement,baseLicense){
     assert.match(cargo,/^license-file\s*=\s*"\.\.\/\.\.\/LICENSE"\s*$/m);assert.ok(!/^license\s*=/m.test(cargo));
   }
   verifyLocalDescriptors(manifest,files);
-  if(['wasmc.changed-rust-lib-source-input/v1','wasmc.reexported-rust-lib-source-input/v1','wasmc.std-resource-source-input/v1'].includes(replacement.source.schema)) {
+  if(['wasmc.changed-rust-lib-source-input/v1','wasmc.reexported-rust-lib-source-input/v1','wasmc.std-resource-source-input/v1','wasmc.cohort-reexport-source-input/v1'].includes(replacement.source.schema)) {
     assert.equal(manifest.license.schema,baseLicense.schema);assert.equal(manifest.license.identifier,baseLicense.identifier);
     for(const original of baseLicense.files)assert.deepEqual(manifest.license.files.find(row=>row.path===original.path),original,'original common license snapshot');
   } else assert.deepEqual(manifest.license,baseLicense,'exact original common license and notice snapshots');
   const custody=sourceCustody(input,replacement,files,manifest),model=witModel(get('lib.wit'));
-  assert.ok(model.identity.endsWith('@'+replacement.version));if(replacement.source.schema!=='wasmc.changed-rust-lib-source-input/v1')assert.equal(model.dependencies.size,0,'v1 imported WIT has no external dependency');
+  assert.ok(model.identity.endsWith('@'+replacement.version));if(!['wasmc.changed-rust-lib-source-input/v1','wasmc.cohort-reexport-source-input/v1'].includes(replacement.source.schema))assert.equal(model.dependencies.size,0,'v1 imported WIT has no external dependency');
   assert.equal(manifest.wit.package,model.identity);const world=manifest.wit.world;
   const selected=selectedWitRoutes(model,world,new Map([[model.identity,model],...model.dependencies]));
   const apis=[...selected.routes.keys()].sort();

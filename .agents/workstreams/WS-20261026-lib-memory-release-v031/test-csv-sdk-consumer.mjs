@@ -1,0 +1,14 @@
+import fs from 'node:fs';import path from 'node:path';import assert from 'node:assert/strict';import crypto from 'node:crypto';
+const root=path.resolve(process.argv[4]??'.agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-csv/0.0.2'),wasm=fs.readFileSync(process.argv[2]),libbytes=fs.readFileSync(path.join(root,'artifact.wasm')),m=JSON.parse(fs.readFileSync(path.join(root,'lib.json'))),sha=b=>crypto.createHash('sha256').update(b).digest('hex');assert.equal(sha(libbytes),m.artifact.sha256);
+const lib=new WebAssembly.Instance(new WebAssembly.Module(libbytes),{});let app,ownBuffer,ownView,libBuffer,libView;
+const view=isLib=>{const mem=isLib?lib.exports.memory:app.exports.memory;if(isLib){if(libBuffer!==mem.buffer){libBuffer=mem.buffer;libView=new DataView(libBuffer);}return libView;}if(ownBuffer!==mem.buffer){ownBuffer=mem.buffer;ownView=new DataView(ownBuffer);}return ownView;};
+const api={lib_memory_size:()=>lib.exports.memory.buffer.byteLength/65536,own_memory_size:()=>app.exports.memory.buffer.byteLength/65536,copy_to_lib:(d,s,n)=>new Uint8Array(lib.exports.memory.buffer).set(new Uint8Array(app.exports.memory.buffer,s>>>0,n>>>0),d>>>0),copy_from_lib:(d,s,n)=>new Uint8Array(app.exports.memory.buffer).set(new Uint8Array(lib.exports.memory.buffer,s>>>0,n>>>0),d>>>0)};
+for(const [prefix,isLib] of [['',true],['own_',false]])for(const width of [8,32,64]){
+ const get=width===8?'getUint8':width===32?'getInt32':'getBigInt64',set=width===8?'setUint8':width===32?'setInt32':'setBigInt64';
+ api[prefix+'read'+width]=p=>view(isLib)[get](p>>>0,true);api[prefix+'write'+width]=(p,v)=>view(isLib)[set](p>>>0,v,true);
+}
+const module=new WebAssembly.Module(wasm),imports={'wasmc:private/canonical-memory@1':api,'wasmc:lib/wasmc-csv@0.0.2':lib.exports,'wasmc:csv/parser@0.0.2':{'parse':(...args)=>app.exports.__wasmc_canonical_bridge_0(...args)}};
+for(const i of WebAssembly.Module.imports(module))assert.equal(typeof imports[i.module]?.[i.name],'function',`${i.module}/${i.name}`);
+app=new WebAssembly.Instance(module,imports);const cases=[[8,0],[1048577,1],[3145728,0],...(process.env.WASMC_LARGE_CSV==='1'?[[17*1024*1024+1,1]]:[]),[11,1]],observed=[];
+for(const [length,seed] of cases){const start=Date.now();assert.equal(app.exports.run(length,seed),length);observed.push({length,seed,elapsed_ms:Date.now()-start});console.log(JSON.stringify({accepted:true,length,seed}));}
+fs.writeFileSync(process.argv[3],JSON.stringify({accepted:true,consumer_sha256:sha(wasm),root_artifact_sha256:sha(libbytes),root_manifest_sha256:sha(fs.readFileSync(path.join(root,'lib.json'))),cases:observed,generated_rust_sdk_executed:true,actual_canonical_transfer:true,same_instance_new_inputs:true,elapsed_is_not_upper_bound:true,current_catalog:false,formal_release:false},null,2)+'\n');
