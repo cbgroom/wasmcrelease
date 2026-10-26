@@ -208,8 +208,8 @@ function candidateFromComposition(input,options,composition){
       packages.push({package_id:row.id,version:row.version,profile:row.profile,target:row.profile==='native'?manifest.native.target:manifest.build.target,
         source_path:'libspec/'+row.id+'/lib.wit',wit_sha256:row.wit.sha256,
         delivery:{manifest_sha256:row.manifest_sha256,receipt_sha256:compositionSha,
-          artifact_kind:row.profile==='native'?(manifest.native.kind==='node-boundary'?'native-module':'native-binary'):'wasm-core-component',artifact_path:manifest.artifact.path,
-          artifact_sha256:manifest.artifact.sha256,component_sha256:manifest.component?.sha256??null},
+          artifact_kind:row.profile==='native'?(!manifest.artifact?'native-source':manifest.native.kind==='node-boundary'?'native-module':'native-binary'):'wasm-core-component',artifact_path:manifest.artifact?.path??null,
+          artifact_sha256:manifest.artifact?.sha256??null,component_sha256:manifest.component?.sha256??null},
         wit_route:row.wit.identity,description:row.discovery_metadata.description,
         apis:row.wit.api_routes.map(route=>({route:route.slice(row.wit.identity.length+1),
           description:(api=>api.delta??api.ecosystem)(row.discovery_metadata.apis.find(api=>api.api===sourceApi(route,!!manifest.bindings.rust_core&&row.profile==='resource')))}))});
