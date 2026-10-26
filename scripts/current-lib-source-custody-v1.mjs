@@ -44,7 +44,7 @@ function verifyLocalDescriptors(manifest,files){
   for(const key of ['artifact','component','core_abi','wit','bindings','agent','license'])visit(manifest[key]);
 }
 export function verifyImportedProducerCustodyData(input,replacement,files,manifest){
-  if(replacement.source.schema==='wasmc.native-node-source-input/v1')return nativeCustody(input,replacement,files,manifest);
+  if(['wasmc.native-node-source-input/v1','wasmc.native-c-source-input/v1'].includes(replacement.source.schema))return nativeCustody(input,replacement,files,manifest);
   if(replacement.source.schema==='wasmc.std-resource-source-input/v1')return stdCustody(input,replacement,files,manifest);
   if(replacement.source.schema==='wasmc.published-lib-source-input/v1')return publishedProducerCustody(input,replacement,files,manifest);
   if(replacement.source.schema==='wasmc.changed-rust-lib-source-input/v1')return builtProducerCustody(input,replacement,files,manifest);
@@ -113,7 +113,7 @@ export function verifyImportedProducerCustodyData(input,replacement,files,manife
 }
 
 export function buildOriginalProducerSourceData(input,expected){
-  if(expected.source.schema==='wasmc.native-node-source-input/v1')return buildNativeSource(input,expected);
+  if(['wasmc.native-node-source-input/v1','wasmc.native-c-source-input/v1'].includes(expected.source.schema))return buildNativeSource(input,expected);
   if(expected.source.schema==='wasmc.std-resource-source-input/v1')return buildStdSource(input,expected);
   if(expected.source.schema==='wasmc.published-lib-source-input/v1')return buildPublishedSource(input,expected);
   if(expected.source.schema==='wasmc.changed-rust-lib-source-input/v1')return buildBuiltSource(input,expected);
@@ -168,7 +168,7 @@ export function buildOriginalProducerSourceData(input,expected){
   return record;
 }
 export function verifyOriginalProducerSourceData(input,expected,source){
-  if(expected.source.schema==='wasmc.native-node-source-input/v1'){assert.deepEqual(source,buildNativeSource(input,expected));return {schema:'wasmc.current-source-custody-admission/v1',accepted:true,source_schema:source.schema,id:source.id,version:source.version,source_sha256:digest(source),source_spec:source.source_spec,root_manifest_sha256:source.root.manifest_sha256,root_inventory_sha256:source.root.inventory_sha256,source_custody_admitted_for_current_composition:true,current_directory_admitted:false,public_admission:false,original_receipt_bytes_verified:false,fresh_full_q0:false};}
+  if(['wasmc.native-node-source-input/v1','wasmc.native-c-source-input/v1'].includes(expected.source.schema)){assert.deepEqual(source,buildNativeSource(input,expected));return {schema:'wasmc.current-source-custody-admission/v1',accepted:true,source_schema:source.schema,id:source.id,version:source.version,source_sha256:digest(source),source_spec:source.source_spec,root_manifest_sha256:source.root.manifest_sha256,root_inventory_sha256:source.root.inventory_sha256,source_custody_admitted_for_current_composition:true,current_directory_admitted:false,public_admission:false,original_receipt_bytes_verified:false,fresh_full_q0:false};}
   if(expected.source.schema==='wasmc.std-resource-source-input/v1'){assert.deepEqual(source,buildStdSource(input,expected));return {schema:'wasmc.current-source-custody-admission/v1',accepted:true,source_schema:source.schema,id:source.id,version:source.version,source_sha256:digest(source),source_spec:source.source_spec,root_manifest_sha256:source.root.manifest_sha256,root_inventory_sha256:source.root.inventory_sha256,source_custody_admitted_for_current_composition:true,current_directory_admitted:false,public_admission:false,original_receipt_bytes_verified:false,fresh_full_q0:false};}
   if(expected.source.schema==='wasmc.reexported-rust-lib-source-input/v1'){
     assert.deepEqual(source,buildReexportedSource(input,expected),'complete reexported Rust Root/source identity');
