@@ -3,6 +3,12 @@ on:
   push:
     branches: [main, work/WS-20261024-if-scope-release-v025]
   workflow_dispatch:
+    inputs:
+      scope:
+        description: Full verification or only runtime/candidate recovery (no Rust rebuild)
+        type: choice
+        default: full
+        options: [full, runtime-recovery]
 permissions:
   contents: read
 concurrency:
@@ -10,6 +16,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   core-compatibility:
+    if: inputs.scope != 'runtime-recovery'
     name: Compatibility ${{ matrix.os }} Node ${{ matrix.node }}
     runs-on: ${{ matrix.os }}
     timeout-minutes: 10
@@ -89,6 +96,7 @@ jobs:
           retention-days: 14
           if-no-files-found: error
   rust-wasmtime-and-libs:
+    if: inputs.scope != 'runtime-recovery'
     name: Release-profile Rust, Wasmi, Wasmtime and Component Libs
     runs-on: ubuntu-24.04
     timeout-minutes: 45
@@ -121,7 +129,7 @@ jobs:
           if-no-files-found: error
   verification-summary:
     name: Required aggregate verification and downloadable report
-    if: always()
+    if: always() && inputs.scope != 'runtime-recovery'
     needs: [core-compatibility, integrity-and-javascript, runtime-consumer, rust-wasmtime-and-libs]
     runs-on: ubuntu-24.04
     timeout-minutes: 5
