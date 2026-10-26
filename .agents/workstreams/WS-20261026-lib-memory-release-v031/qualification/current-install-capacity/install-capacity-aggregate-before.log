@@ -1,0 +1,12 @@
+file:///Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-lib-memory-release-v031/scripts/lib-install.mjs:6
+const fail = (code, message = code) => { throw Object.assign(new Error(message), {code}); };
+                                                             ^
+
+Error: install.budget_exceeded
+    at fail (file:///Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-lib-memory-release-v031/scripts/lib-install.mjs:6:62)
+    at installCurrentLib (file:///Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-lib-memory-release-v031/scripts/lib-install.mjs:96:53)
+    at async file:///Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-lib-memory-release-v031/.agents/workstreams/WS-20261026-lib-memory-release-v031/test-current-install-capacity.mjs:2:1511 {
+  code: 'install.budget_exceeded'
+}
+
+Node.js v26.12.1

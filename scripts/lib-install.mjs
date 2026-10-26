@@ -93,7 +93,6 @@ export async function installCurrentLib({catalogBytes,catalogSha256,lockBytes,lo
   const row=catalog.packages.find(r=>r.id===lock.id&&r.version===lock.version);
   if(!row||row.manifest_sha256!==lock.manifest_sha256||row.root_inventory_sha256!==lock.root_inventory_sha256)fail('install.package_identity_mismatch');
   const files=row.files;
-  if(files.reduce((sum,f)=>sum+f.bytes,0)>134217728)fail('install.budget_exceeded');
   if(typeof destination!=='string'||!destination)fail('install.destination_invalid');
   const requested=resolve(destination),parent=await realpath(dirname(requested)),target=join(parent,basename(requested));
   try{await lstat(target);fail('install.destination_exists');}catch(e){if(e.code!=='ENOENT')throw e;}

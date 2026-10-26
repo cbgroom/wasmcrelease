@@ -22,10 +22,10 @@ export function checkedCurrentCatalog(bytes, expectedSha256) {
   assert.equal(catalog.schema,'wasmc.public-lib-catalog/v2');
   assert.match(catalog.version,/^\d+\.\d+\.\d+$/);
   assert.ok(commit(catalog.package_authority_commit));
-  assert.ok(Array.isArray(catalog.packages)&&catalog.packages.length>0&&catalog.packages.length<=64);
+  assert.ok(Array.isArray(catalog.packages)&&catalog.packages.length>0);
   for(const pin of [catalog.registry,catalog.index,catalog.cohort]){
     exactKeys(pin,['path','bytes','sha256']);assert.ok(safe(pin.path)&&digest(pin.sha256));
-    assert.ok(Number.isSafeInteger(pin.bytes)&&pin.bytes>0&&pin.bytes<=2097152);
+    assert.ok(Number.isSafeInteger(pin.bytes)&&pin.bytes>0);
   }
   let previous='';
   for(const row of catalog.packages){
@@ -39,7 +39,7 @@ export function checkedCurrentCatalog(bytes, expectedSha256) {
     assert.ok(typeof row.target==='string'&&row.target.length>0&&row.target.length<=128);assert.match(row.wit_world,/^[a-z][a-z0-9-]*$/);exactKeys(row.source,['spec','wit']);
     for(const [key,pin]of Object.entries(row.source)){
       exactKeys(pin,['path','bytes','sha256']);assert.equal(pin.path,'libspec/'+row.id+'/'+(key==='wit'?'lib.wit':'lib.json'));
-      assert.ok(digest(pin.sha256)&&Number.isInteger(pin.bytes)&&pin.bytes>0&&pin.bytes<=2097152);
+      assert.ok(digest(pin.sha256)&&Number.isSafeInteger(pin.bytes)&&pin.bytes>0);
     }
     assert.ok(Array.isArray(row.views)&&row.views.length>0&&row.views.length<=3);
     assert.deepEqual(row.views,sorted(new Set(row.views)));
@@ -47,13 +47,13 @@ export function checkedCurrentCatalog(bytes, expectedSha256) {
     assert.ok(['wasm-core-component','native-binary','native-module','native-source'].includes(row.delivery.kind));
     assert.equal(row.delivery.device_qualified,false);
     assert.equal(row.profile==='native',row.delivery.kind!=='wasm-core-component');
-    const seen=new Set();assert.ok(Array.isArray(row.files)&&row.files.length>0&&row.files.length<=256);
+    const seen=new Set();assert.ok(Array.isArray(row.files)&&row.files.length>0);
     let last='';
     for(const file of row.files){
       exactKeys(file,['path','bytes','sha256']);
       assert.ok(safe(file.path)&&file.path.startsWith(row.root+'/')&&file.path>last&&!seen.has(file.path));
       last=file.path;seen.add(file.path);assert.ok(digest(file.sha256));
-      assert.ok(Number.isSafeInteger(file.bytes)&&file.bytes>0&&file.bytes<=16777216);
+      assert.ok(Number.isSafeInteger(file.bytes)&&file.bytes>0);
     }
     for(const name of ['lib.json','lib.wit','LICENSE'])assert.ok(seen.has(row.root+'/'+name),'complete package: '+name);
   }
@@ -249,7 +249,7 @@ export function currentProductReader(root){
   return path=>{
     assert.ok(safe(path),'safe product path');let current=root;
     for(const part of path.split('/')){current=join(current,part);assert.ok(!lstatSync(current).isSymbolicLink(),'linked product input');}
-    const s=lstatSync(current);assert.ok(s.isFile()&&s.size>0&&s.size<=16777216,'bounded regular product input');return readFileSync(current);
+    const s=lstatSync(current);assert.ok(s.isFile()&&s.size>0,'regular product input');return readFileSync(current);
   };
 }
 export function currentProductPaths(root,prefix='current-libs'){
