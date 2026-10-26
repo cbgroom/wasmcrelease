@@ -1,0 +1,159 @@
+{
+  "agent": {
+    "default_view": "runtime",
+    "delta": {
+      "path": "references/agent-delta.json",
+      "sha256": "89d8c8983d7b89e8fac4ce06fc08cb3f41358f54ef8997129508cd295db91622"
+    },
+    "skill": {
+      "path": "SKILL.md",
+      "sha256": "d705d5c222916b7a32b9c2b1f77322110a3220c315f17529ce2d89a33fea21b6"
+    },
+    "views": {
+      "developer": {
+        "includes_runtime": true,
+        "mode": "developer",
+        "skill": "SKILL.md"
+      },
+      "runtime": {
+        "mode": "runtime",
+        "skill": "SKILL.md"
+      }
+    }
+  },
+  "artifact": {
+    "bytes": 1052165,
+    "format": "core-wasm",
+    "path": "artifact.wasm",
+    "sha256": "7f417e23bcc5fda33d434b7f3b988bc1d309e58d0d7e2ad0c4597f84125b5a4b"
+  },
+  "bindings": {
+    "rust_component": {
+      "artifact_sha256": "7f417e23bcc5fda33d434b7f3b988bc1d309e58d0d7e2ad0c4597f84125b5a4b",
+      "cargo_toml": {
+        "path": "bindings/rust-component/Cargo.toml",
+        "sha256": "46ed28b00981496635ac53cdc0bb4123d74db49c373c1b3751a2e321ef8dccdd"
+      },
+      "component_sha256": "1fe25cd130fc03a089978e332f00d3c2f85c30cd7dba819ff6de5517f289c76f",
+      "crate": "wasmc-data-expr-component",
+      "functions": 2,
+      "path": "bindings/rust-component",
+      "runtime": "wasmtime-component",
+      "schema": "wasmc.lib-rust-component-sdk/v0",
+      "source": {
+        "path": "bindings/rust-component/src/lib.rs",
+        "sha256": "ed967ef12c8b3c30bb51c708b6580f21edb5b817fb72ada0d9877dc69c4fa9eb"
+      },
+      "wit_sha256": "b96fd548913ef577e76386fe87b51d0f6dd399b67bac1fa53fe8b2260386e978",
+      "world": "data-expr"
+    },
+    "rust_core": {
+      "artifact_sha256": "7f417e23bcc5fda33d434b7f3b988bc1d309e58d0d7e2ad0c4597f84125b5a4b",
+      "cargo_toml": {
+        "path": "bindings/rust-core/Cargo.toml",
+        "sha256": "82d9b84882c5f2a5dbe705f9becb14c2aab7fff8b7521139176a735691c7a99f"
+      },
+      "crate": "wasmc-data-expr-core",
+      "functions": 2,
+      "import_module": "wasmc:lib/wasmc-data-expr@0.0.2",
+      "path": "bindings/rust-core",
+      "schema": "wasmc.lib-rust-canonical-core-sdk/v1",
+      "source": {
+        "path": "bindings/rust-core/src/lib.rs",
+        "sha256": "55120c718209b857cd4552d739749e0d0c41fb20c12c9ecfbd18e98d3f2063f0"
+      },
+      "wit_sha256": "b96fd548913ef577e76386fe87b51d0f6dd399b67bac1fa53fe8b2260386e978"
+    }
+  },
+  "build": {
+    "inputs": [
+      {
+        "kind": "composition-lock",
+        "path": "private/core-inputs.lock",
+        "sha256": "1b14141c13c1935faf1bf0e71b800637f7e34a6247adaaec2e3d31cafc4c47b6"
+      }
+    ],
+    "language": "core-wasm",
+    "locked": true,
+    "offline": true,
+    "profile": "sealed-release",
+    "target": "core-wasm"
+  },
+  "closure": {
+    "build_dependencies": "linked-into-artifact",
+    "public_exports": "root-wit-only",
+    "public_lib_dependencies": [],
+    "schema": "wasmc.lib-closure/v0"
+  },
+  "compatibility": {
+    "abi_epoch": 1,
+    "wasmc_min": "0.0.1"
+  },
+  "component": {
+    "bytes": 1054764,
+    "format": "component-wasm",
+    "path": "component.wasm",
+    "sha256": "1fe25cd130fc03a089978e332f00d3c2f85c30cd7dba819ff6de5517f289c76f"
+  },
+  "core_abi": {
+    "bytes": 2035,
+    "path": "core-abi.json",
+    "schema": "wasmc.lib-core-abi/v0",
+    "sha256": "99ace202356f91eb0a024a758d6a6c4ad8a0b550305ee8f5089d9c6686bd8287"
+  },
+  "id": "wasmc-data-expr",
+  "schema": "wasmc.lib/v2",
+  "version": "0.0.2",
+  "wit": {
+    "package": "wasmc:data-expr@0.0.2",
+    "path": "lib.wit",
+    "sha256": "b96fd548913ef577e76386fe87b51d0f6dd399b67bac1fa53fe8b2260386e978",
+    "world": "data-expr"
+  },
+  "license": {
+    "schema": "wasmc.lib-license/v1",
+    "identifier": "WAsmC Research-Only Non-Commercial License 1.0",
+    "files": [
+      {
+        "path": "LICENSE",
+        "bytes": 3823,
+        "sha256": "7bca2d5818178e0bc14546700d39bf113d15139b1c3b6d1e62f621d4a276d6e3"
+      },
+      {
+        "path": "licenses/DEPENDENCY-NOTICES-001.txt",
+        "bytes": 245760,
+        "sha256": "66302f6dd71da97391ab2270d29b10e67bdbac6d7eb782bed043c2ff596ec5cc"
+      },
+      {
+        "path": "licenses/DEPENDENCY-NOTICES-002.txt",
+        "bytes": 245760,
+        "sha256": "0065cf38006c9a66a6c3ee9cbaf8db10422b1e5301d3c1d5132b7855e71f18ea"
+      },
+      {
+        "path": "licenses/DEPENDENCY-NOTICES-003.txt",
+        "bytes": 245760,
+        "sha256": "201dbac93dff17177b6379ee630b9658b4cec9cb9d46ce3982b3da87c4b740c8"
+      },
+      {
+        "path": "licenses/DEPENDENCY-NOTICES-004.txt",
+        "bytes": 245760,
+        "sha256": "c439e1a409b6f23d5797cec339403a0ffce97e9fcf2ae91d6a923c36d619bb76"
+      },
+      {
+        "path": "licenses/DEPENDENCY-NOTICES-005.txt",
+        "bytes": 245760,
+        "sha256": "04118f32afc6b2ce0fbfd559c56a78614016ab00167be2425c8c778fc7b064fe"
+      },
+      {
+        "path": "licenses/DEPENDENCY-NOTICES-006.txt",
+        "bytes": 8357,
+        "sha256": "aa6000805f56d3c6009ffa09dbe224083cf2e63e2498e1939deefe6ca7c43d9a"
+      },
+      {
+        "path": "licenses/DEPENDENCY-NOTICES-007.txt",
+        "bytes": 25602,
+        "sha256": "f0429335a0831b75f3b3277e20303d94bbf7af5719769055178aab3e2dce6e7a"
+      }
+    ]
+  }
+}
