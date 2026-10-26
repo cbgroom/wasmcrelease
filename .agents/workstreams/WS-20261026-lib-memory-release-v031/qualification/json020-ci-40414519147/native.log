@@ -1,0 +1,202 @@
+   Compiling unicode-ident v1.0.24
+   Compiling indexmap v2.14.1
+   Compiling proc-macro2 v1.0.107
+   Compiling quote v1.0.47
+   Compiling bitflags v2.13.1
+   Compiling semver v1.0.28
+   Compiling syn v3.0.4
+   Compiling wasmparser v0.247.0
+   Compiling prettyplease v0.2.37
+   Compiling serde_derive v1.0.229
+   Compiling unicode-xid v0.2.6
+   Compiling syn v2.0.119
+   Compiling wit-parser v0.247.0
+   Compiling wasm-encoder v0.247.0
+   Compiling wasm-metadata v0.247.0
+   Compiling wit-bindgen-rust v0.57.1
+   Compiling wit-component v0.247.0
+   Compiling wit-bindgen-core v0.57.1
+   Compiling serde_core v1.0.229
+   Compiling wit-bindgen-rust-macro v0.57.1
+   Compiling wit-bindgen v0.57.1
+   Compiling serde_json v1.0.151
+   Compiling wasmc_json_memory_direct_v032 v0.2.0 (/home/runner/work/_temp/json-direct-v032/crates/wasmc-json)
+warning: enum `Error` is never used
+ --> crates/wasmc-json/src/delta.rs:8:10
+  |
+8 | pub enum Error {
+  |          ^^^^^
+  |
+  = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: type alias `Result` is never used
+  --> crates/wasmc-json/src/delta.rs:18:6
+   |
+18 | type Result<T> = std::result::Result<T, Error>;
+   |      ^^^^^^
+
+warning: enum `Node` is never used
+  --> crates/wasmc-json/src/delta.rs:20:6
+   |
+20 | enum Node {
+   |      ^^^^
+
+warning: struct `Document` is never constructed
+  --> crates/wasmc-json/src/delta.rs:28:8
+   |
+28 | struct Document {
+   |        ^^^^^^^^
+
+warning: function `push` is never used
+  --> crates/wasmc-json/src/delta.rs:33:4
+   |
+33 | fn push<T>(v: &mut Vec<T>, value: T) -> Result<()> {
+   |    ^^^^
+
+warning: function `json` is never used
+  --> crates/wasmc-json/src/delta.rs:38:4
+   |
+38 | fn json<T>(r: serde_json::Result<T>) -> Result<T> {
+   |    ^^^^
+
+warning: associated items `new`, `slot`, `parse`, `render`, `get`, and `retire` are never used
+   --> crates/wasmc-json/src/delta.rs:42:8
+    |
+ 41 | impl Document {
+    | ------------- associated items in this implementation
+ 42 |     fn new(input: &[u8]) -> Result<Self> {
+    |        ^^^
+...
+ 51 |     fn slot(&mut self) -> Result<usize> {
+    |        ^^^^
+...
+ 59 |     fn parse(&mut self, input: &[u8]) -> Result<usize> {
+    |        ^^^^^
+...
+101 |     fn render(&self, root: usize) -> Result<String> {
+    |        ^^^^^^
+...
+149 |     fn get(&self, parts: &[String]) -> Result<Option<usize>> {
+    |        ^^^
+...
+166 |     fn retire(&mut self, root: usize) -> Result<()> {
+    |        ^^^^^^
+
+warning: function `array_index` is never used
+   --> crates/wasmc-json/src/delta.rs:187:4
+    |
+187 | fn array_index(s: &str) -> Result<usize> {
+    |    ^^^^^^^^^^^
+
+warning: function `pointer` is never used
+   --> crates/wasmc-json/src/delta.rs:194:4
+    |
+194 | fn pointer(pointer: &str) -> Result<Vec<String>> {
+    |    ^^^^^^^
+
+warning: function `compact` is never used
+   --> crates/wasmc-json/src/delta.rs:221:8
+    |
+221 | pub fn compact(input: &[u8]) -> Result<String> {
+    |        ^^^^^^^
+
+warning: function `validate` is never used
+   --> crates/wasmc-json/src/delta.rs:225:8
+    |
+225 | pub fn validate(input: &[u8]) -> Result<()> {
+    |        ^^^^^^^^
+
+warning: function `select` is never used
+   --> crates/wasmc-json/src/delta.rs:228:8
+    |
+228 | pub fn select(input: &[u8], pointers: &[String]) -> Result<Vec<Option<String>>> {
+    |        ^^^^^^
+
+warning: function `quote` is never used
+   --> crates/wasmc-json/src/delta.rs:239:8
+    |
+239 | pub fn quote(input: &str) -> String {
+    |        ^^^^^
+
+warning: function `object` is never used
+   --> crates/wasmc-json/src/delta.rs:243:8
+    |
+243 | pub fn object(fields: Vec<(String, String)>) -> Result<String> {
+    |        ^^^^^^
+
+warning: function `array` is never used
+   --> crates/wasmc-json/src/delta.rs:255:8
+    |
+255 | pub fn array(values: Vec<String>) -> Result<String> {
+    |        ^^^^^
+
+warning: enum `EditKind` is never used
+   --> crates/wasmc-json/src/delta.rs:266:10
+    |
+266 | pub enum EditKind {
+    |          ^^^^^^^^
+
+warning: struct `Edit` is never constructed
+   --> crates/wasmc-json/src/delta.rs:271:12
+    |
+271 | pub struct Edit {
+    |            ^^^^
+
+warning: function `edit` is never used
+   --> crates/wasmc-json/src/delta.rs:276:8
+    |
+276 | pub fn edit(input: &[u8], edits: Vec<Edit>) -> Result<String> {
+    |        ^^^^
+
+warning: function `selected` is never used
+   --> crates/wasmc-json/src/delta.rs:332:4
+    |
+332 | fn selected(input: &[u8], path: &str) -> Result<(Document, Option<usize>)> {
+    |    ^^^^^^^^
+
+warning: function `read_u64` is never used
+   --> crates/wasmc-json/src/delta.rs:338:8
+    |
+338 | pub fn read_u64(input: &[u8], path: &str) -> Result<Option<u64>> {
+    |        ^^^^^^^^
+
+warning: function `read_i64` is never used
+   --> crates/wasmc-json/src/delta.rs:346:8
+    |
+346 | pub fn read_i64(input: &[u8], path: &str) -> Result<Option<i64>> {
+    |        ^^^^^^^^
+
+warning: function `read_f64` is never used
+   --> crates/wasmc-json/src/delta.rs:354:8
+    |
+354 | pub fn read_f64(input: &[u8], path: &str) -> Result<Option<f64>> {
+    |        ^^^^^^^^
+
+warning: function `read_bool` is never used
+   --> crates/wasmc-json/src/delta.rs:362:8
+    |
+362 | pub fn read_bool(input: &[u8], path: &str) -> Result<Option<bool>> {
+    |        ^^^^^^^^^
+
+warning: `wasmc_json_memory_direct_v032` (lib) generated 23 warnings
+    Finished `test` profile [unoptimized] target(s) in 10.97s
+     Running unittests src/lib.rs (target/lib-memory-v031/debug/deps/wasmc_json_memory_direct_v032-5044ef49b99357bf)
+
+running 8 tests
+test delta::tests::build_and_atomic_batch_edits ... ok
+test delta::tests::missing_null_type_and_exact_integer_width ... ok
+test delta::tests::pointer_and_container_correctness_is_not_a_capacity_limit ... ok
+test delta::tests::repeated_replacement_reuses_arena_slots ... ok
+test delta::tests::rust_oracle_and_complete_input ... ok
+test delta::tests::no_pointer_count_length_or_sum_output_ceiling ... ok
+test delta::tests::no_document_or_output_byte_ceiling ... ok
+test delta::tests::no_recursive_depth_or_drop_ceiling ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.07s
+
+   Doc-tests wasmc_json_memory_direct_v032
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

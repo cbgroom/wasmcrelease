@@ -1,0 +1,23 @@
+node:internal/modules/run_main:111
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: /Users/youxianshi/.local/state/wasmc-maintenance/20261026-lib-memory-json-32/seal-portable-root: 
+thread 'main' (45740087) panicked at /Users/youxianshi/.local/state/wasmc-maintenance/20261026-lib-memory-json-32/seal-portable-root.rs:9:458:
+called `Result::unwrap()` on an `Err` value: LibToolRustBuildHostError { code: InvalidInput, message: "workspace document stage failed: core-rejected: Core export emit_agent_delta_document returned status 17" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+101 !== 0
+
+    at run (file:///Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-lib-memory-release-v031/.agents/workstreams/WS-20261026-lib-memory-release-v031/seal-json-direct.mjs:2:622)
+    at file:///Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-lib-memory-release-v031/.agents/workstreams/WS-20261026-lib-memory-release-v031/seal-json-direct.mjs:4:163 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 101,
+  expected: 0,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v26.12.1

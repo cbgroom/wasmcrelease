@@ -1,0 +1,18 @@
+{
+  "accepted": true,
+  "raw_sha256": "11805dcb0f20874e1c1c2886cb98c2cd0295e9a071bfff2bc5c3fba3dc4700a5",
+  "decoded_export_count": 44,
+  "checks": [
+    "3MiB compact crosses document allocation and output ceilings",
+    "70000 byte output crosses list and output-node ceilings",
+    "70000 input parts cross input list ceiling",
+    "typed integer exactness and missing distinction",
+    "atomic batch edits and later independent call",
+    "direct edit preserves exact atomic output and explicit fallback",
+    "actual memory above64MiB remains usable",
+    "actual out-of-memory range and invalid bool remain rejected"
+  ],
+  "ordinary_wasmc_app": false,
+  "generated_sdk": false,
+  "scope": "actual Core Guest and shared canonical JS consumer; changed Rust CI and explicit fallback qualification separately pinned"
+}
