@@ -1,0 +1,52 @@
+name: Native Lib aggregate-memory capacity
+on:
+  push:
+    branches: [work/WS-20261026-lib-memory-release-v031]
+    paths:
+      - '.agents/workstreams/WS-20261026-lib-memory-release-v031/native-platform/**'
+      - '.agents/workstreams/WS-20261026-lib-memory-release-v031/native-process/**'
+      - '.agents/workstreams/WS-20261026-lib-memory-release-v031/test-process-memory.mjs'
+      - 'host/runtime/lib-boundary/reference.mjs'
+      - '.github/workflows/lib-memory-native-v031.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  normal-native:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: '26.5.1'
+      - name: Bounded changed Native C builds and normal behavior
+        shell: bash
+        run: |
+          set -euo pipefail
+          own=.agents/workstreams/WS-20261026-lib-memory-release-v031
+          out="$RUNNER_TEMP/native-memory-evidence"
+          mkdir -p "$out"
+          git rev-parse HEAD > "$out/source.txt"
+          uname -a > "$out/host.txt"
+          cc --version > "$out/cc.txt"
+          node --version > "$out/node.txt"
+          df -Pk . > "$out/disk.txt"
+          ulimit -n 8192
+          ulimit -n > "$out/fd-admission.txt"
+          for lib in socket endpoint; do
+            cc -std=c11 -O2 -Wall -Wextra -Werror -pthread -shared -fPIC "$own/native-platform/linux-$lib/platform/native-adapter.c" -o "$out/linux-$lib.so"
+            cc -std=c11 -O1 -g -Wall -Wextra -Werror -pthread -fsanitize=address,undefined -fno-omit-frame-pointer "$own/native-platform/test-$lib.c" -o "$out/test-$lib"
+            ASAN_OPTIONS=detect_leaks=1:abort_on_error=1 "$out/test-$lib" 2>&1 | tee "$out/$lib.log"
+          done
+          node "$own/test-process-memory.mjs" "$out/process-memory.json" 2>&1 | tee "$out/process-memory.log"
+          node "$own/test-process-legacy-root.mjs" > "$out/process-legacy.log" 2>&1
+          sha256sum "$out/"*.so > "$out/sha256.txt"
+          du -sk "$out" > "$out/output-size.txt"
+          test "$(du -sk "$out" | cut -f1)" -lt 131072
+      - if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: native-memory-capacity
+          path: ${{ runner.temp }}/native-memory-evidence/**
+          retention-days: 7
