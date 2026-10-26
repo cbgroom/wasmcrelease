@@ -1,3 +1,4 @@
+import {builtProducerCustody,buildBuiltSource} from './current-built-lib-source-v1.mjs';
 import {publishedProducerCustody,buildPublishedSource} from './current-published-lib-source-v1.mjs';
 import {additive,checkCompositionOptions,importedSelections,registryProjection} from './current-lib-composition-input-v2.mjs';
 // Closed original-producer source admission for a current composition.
@@ -42,6 +43,7 @@ function verifyLocalDescriptors(manifest,files){
 }
 export function verifyImportedProducerCustodyData(input,replacement,files,manifest){
   if(replacement.source.schema==='wasmc.published-lib-source-input/v1')return publishedProducerCustody(input,replacement,files,manifest);
+  if(replacement.source.schema==='wasmc.changed-rust-lib-source-input/v1')return builtProducerCustody(input,replacement,files,manifest);
   const source=replacement.source;
   exact(source,['root','inventory_sha256','producer_custody','materialization_custody','source_spec','materialized_spec',
     'generated_source','logic','cargo_manifest','cargo_lock','wit','authority']);
@@ -107,6 +109,7 @@ export function verifyImportedProducerCustodyData(input,replacement,files,manife
 
 export function buildOriginalProducerSourceData(input,expected){
   if(expected.source.schema==='wasmc.published-lib-source-input/v1')return buildPublishedSource(input,expected);
+  if(expected.source.schema==='wasmc.changed-rust-lib-source-input/v1')return buildBuiltSource(input,expected);
   exact(expected,['id','version','profile','root','manifest_sha256','root_inventory_sha256','source']);
   assert.match(expected.id,/^[a-z][a-z0-9-]*$/);assert.match(expected.version,/^\d+\.\d+\.\d+$/);
   assert.equal(expected.profile,'value','v1 admits complete canonical value producer sources');
@@ -157,6 +160,10 @@ export function buildOriginalProducerSourceData(input,expected){
   return record;
 }
 export function verifyOriginalProducerSourceData(input,expected,source){
+  if(expected.source.schema==='wasmc.changed-rust-lib-source-input/v1'){
+    assert.deepEqual(source,buildBuiltSource(input,expected),'complete changed Rust Root/source identity');
+    return {schema:'wasmc.current-source-custody-admission/v1',accepted:true,source_schema:source.schema,id:source.id,version:source.version,source_sha256:digest(source),source_spec:source.source_spec,root_manifest_sha256:source.root.manifest_sha256,root_inventory_sha256:source.root.inventory_sha256,source_custody_admitted_for_current_composition:true,current_directory_admitted:false,public_admission:false,original_receipt_bytes_verified:false,fresh_full_q0:false};
+  }
   if(expected.source.schema==='wasmc.published-lib-source-input/v1'){
     assert.deepEqual(source,buildPublishedSource(input,expected),'complete published Root/source identity');
     return {schema:'wasmc.current-source-custody-admission/v1',accepted:true,source_schema:source.schema,id:source.id,version:source.version,source_sha256:digest(source),source_spec:source.source_spec,publication:source.publication,root_manifest_sha256:source.root.manifest_sha256,root_inventory_sha256:source.root.inventory_sha256,source_custody_admitted_for_current_composition:true,current_directory_admitted:false,public_admission:false,original_receipt_bytes_verified:false,original_driver_identity_verified:false,fresh_full_q0:false};
