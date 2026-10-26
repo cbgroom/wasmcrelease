@@ -1,3 +1,9 @@
+# Completed formal v0.0.30 string support publication
+
+FormalLatest published2026-10-26T10:32:08Z, exactccc8706ee1b15fd3f855f98449eb547b735d383e/tree7a9059ae7b39581a1bc4f235b0e1d4958fea3031. Anonymous20assets/full3987Gitblobs+modes/6Nativeinventories verified. Actual27installedcommands passed includingString581callsNode/Deno/Bunframesonly, checked800Node/Deno, MacNative7parity/6Wasmi/6AOT/13noclobber. Raw/jsDelivr8exactdownloads. Finalsame-treeGLM6 and independent10replayspassed single-modelpolicy, notpair. Effective20normal141commands retain originalfailed40302699859; exact6baselinecompat+13fresh+splitRust4baseline/2fresh across40305466069/40305460547, originalsummaryverifierunchanged. ExistingText30RustAPIsnowcurrent43/277/320; Root/compilerunchanged. NewCoreLib1facgrowableRuststorage retains51ABI/import0; existingcanonical1MiBworkbudget andcallerlimitsremain. Allold79standard/616Root/125standaloneLibblobs+modes preserved. No unchangedcompiler/Lib/Native rebuild and no businessinstanceeffects. Evidence publication/closure.json.
+
+Historical checkpoints follow.
+
 # String delivery and existing Text Lib admission
 
 Task state: started

@@ -1,0 +1,100 @@
+{
+  "schema": "wasmc.pi-pre-release-qualification/v2",
+  "qualification_policy": "glm-5.3-flash-single-v1",
+  "protocol": "wasmc.fresh-agent-learning/v3",
+  "protocol_sha256": "7215885647fc6f084cd276c7073af182353c07bb8cf3738ea77890db39474e3e",
+  "release": {
+    "version": "0.0.30",
+    "rehearsal_commit": "ccc8706ee1b15fd3f855f98449eb547b735d383e",
+    "rehearsal_tree": "7a9059ae7b39581a1bc4f235b0e1d4958fea3031",
+    "candidate_commit": "ca6e36ab5f7617894ed595e98ac0ee39eee0008e",
+    "product_set_sha256": "60669ecb5e043bfdd88704e11136a1c300e8604087e46ec01308b9a1be6efe1d"
+  },
+  "agent": {
+    "implementation": "pi",
+    "version": "1.0.4"
+  },
+  "fresh_local_git_clone_per_case": true,
+  "raw_trace_retained": false,
+  "hidden_reasoning_retained": false,
+  "review": {
+    "independent_from_model_self_assessment": true,
+    "method": "Codex read each actual first-final, matched tool outcomes and frozen oracle separately from evaluated GLM, then compared ten independent public command replays on the identical final commit/tree. All six cases pass as one complete cohort; no case stitching. Raw trace and hidden reasoning are not retained.",
+    "receipt_sha256": "9bef7ae9d5fab50b72055d083205ad3b811ecf9438e002cf9251f7a155bac97d"
+  },
+  "models": [
+    {
+      "provider": "llm-m4dd",
+      "identity": "glm-5.3-flash",
+      "structural_pass": true,
+      "white_box_pass": true,
+      "model_run_receipt_sha256": "34938960c1758ed3c82f1ee6a9f2b3e132bf2a051903f5fcebebb53891498fb1",
+      "cases": [
+        {
+          "id": "release-orientation",
+          "oracle_passed": true,
+          "first_final_correct": true,
+          "final_answer_sha256": "17f747eb536917b208e59bdc8ecf3c472ef1344843c56c8ca88902918afdd40b",
+          "independent_oracle_note": "Actual first-final gives exact v030/AGENTS/compiler098b/2055961B/import0/product6066 and executes compact orientation check, independently replayed. It reads quickstart before AGENTS, then the named compact authority; no strict first-read-order claim is credited. The compact release_commit59f3 denotes private compiler Source, whereas actual public immutable rehearsal is ccc8706e/tree7a9059. These are local final-rehearsal metadata observations, not independent proof of existing external publication; publisher/tag/download verification remains separate.",
+          "structural_pass": true,
+          "error_results": 0,
+          "retries": 0
+        },
+        {
+          "id": "position-aware-capability-negative",
+          "oracle_passed": true,
+          "first_final_correct": true,
+          "final_answer_sha256": "48cc3aa2e94f081c432c5167ff865707b4154502252b500ab998833060871966",
+          "independent_oracle_note": "First-final correctly admits synchronous ordinary u64 with width/signedness preserved and independently rejects async ordinary syntax and direct public Map result. It generates no unsupported source and infers no Host authority. List snapshots/resources are credited only as conditional Map alternatives, never as implementation of unsupported async behavior. Exact public quickstart projection independently replayed.",
+          "structural_pass": true,
+          "error_results": 0,
+          "retries": 0
+        },
+        {
+          "id": "ordinary-source-positive",
+          "oracle_passed": true,
+          "first_final_correct": true,
+          "final_answer_sha256": "6da033ff8d0130fada32267dcdc925b412564402814a3d3e4dd064dc72b2cdc3",
+          "independent_oracle_note": "Actual first-final reads and executes the route-directed pair program:49bytes/55f3digest/imports=[]/run(5,true)=[1,1]. It inspects the oracle implementation before execution and distinguishes one semantic tuple from flattened Core lanes. Exact compiler098b and facade8c6f identities match. Independent direct replay agrees. Credits successful route use, not novel source synthesis.",
+          "structural_pass": true,
+          "error_results": 0,
+          "retries": 0
+        },
+        {
+          "id": "release-state-separation",
+          "oracle_passed": true,
+          "first_final_correct": true,
+          "final_answer_sha256": "c1b409503bd369fef0167a8a8aebea06de229290257ab32abf6efa6a2ef0c261",
+          "independent_oracle_note": "First-final reports all five direct Telemetry Source states false with exact wasmc-system-telemetry@0.0.1 and wasmc-source-direct-resource-methods stop; separates three related supported routes and explicitly names prod-rehearsal-view. No direct Source discovery/installation or physical-device execution is inferred. Independent complete quickstart replay agrees.",
+          "structural_pass": true,
+          "error_results": 0,
+          "retries": 0
+        },
+        {
+          "id": "library-first-selection",
+          "oracle_passed": true,
+          "first_final_correct": true,
+          "final_answer_sha256": "e830662c83df8e838472e7ef5176805bb3a0c31d343104de7c8b7acffce6ff4c",
+          "independent_oracle_note": "Actual exact-catalog search/resolve and Base64 behavior calls match independent direct command replays. Correct Std1.4.1/two API identities, verified=true/authority=false/engine-admission-separate,256rounds/1024drops/abc-YWJj-abc and installed_root_verified=false. Final prose cites exact report fields rather than inventing pins. The model pipes behavior output through tail; accepted observed JSON plus independent unpiped exit0 replay establishes behavior, not pipeline exit alone. Product lifecycle statements are credited as frozen prod-rehearsal-view observations; actual anonymous installation/publication remains independently required.",
+          "structural_pass": true,
+          "error_results": 0,
+          "retries": 0
+        },
+        {
+          "id": "host-authority-boundary",
+          "oracle_passed": true,
+          "first_final_correct": true,
+          "final_answer_sha256": "a85892c5687e919a0f8141dd591e06298b32d43613d606918aa2c44fa5db3813",
+          "independent_oracle_note": "First-final requires every generated import module/name/kind/signature checked against exact caller-owned allowlist before instantiation, pureimports=[]/{} and no ambient/privatehandle/Store/lifecycle or JSON-as-WIT invention. Parsing/UTF8/application decisions remain in Guest/Lib. This case establishes correct public contract interpretation only, not actual external effects or business Guest execution.",
+          "structural_pass": true,
+          "error_results": 0,
+          "retries": 0
+        }
+      ]
+    }
+  ],
+  "single_model_accepted": true,
+  "controlled_pair_accepted": false,
+  "complete_cohort_attempts": 1,
+  "case_stitching": false
+}
