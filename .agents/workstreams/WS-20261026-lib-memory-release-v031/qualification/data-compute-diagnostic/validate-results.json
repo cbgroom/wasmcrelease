@@ -1,0 +1,28 @@
+{
+  "accepted": true,
+  "scope": "Wasmtime 49.0.2 validate original complete DataCompute module and reject truncated copy; no publication or package generation",
+  "artifact_sha256": "da6d74423dca37825dbc44b4cb97da377c3d7b5a09a9ec0415e117f8efc67ec6",
+  "cases": [
+    {
+      "case": "valid-validate",
+      "exit": 0,
+      "stdout": "accepted=true elapsed_ms=203 bytes=1495592",
+      "stderr": ""
+    },
+    {
+      "case": "invalid-validate",
+      "exit": 2,
+      "stdout": "",
+      "stderr": "validation rejected: unexpected end-of-file (at offset 0x16cde1)"
+    },
+    {
+      "case": "invalid-none-module",
+      "exit": 101,
+      "stdout": "",
+      "stderr": "thread 'main' (46696431) panicked at .agents/workstreams/WS-20261026-lib-memory-release-v031/diagnose-wasmtime-validation.rs:2:589:\ncalled `Result::unwrap()` on an `Err` value: failed to parse WebAssembly module\n\nCaused by:\n    unexpected end-of-file (at offset 0x16cde1)\n\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace"
+    }
+  ],
+  "type_extraction_checked_separately": false,
+  "full_seal_equivalence": false,
+  "formal_release": false
+}
