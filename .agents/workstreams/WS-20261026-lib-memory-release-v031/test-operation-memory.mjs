@@ -3,7 +3,7 @@ import {spawn} from 'node:child_process';
 import {readFile,writeFile} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import path from 'node:path';
-const [executor,fixture,endpoint,out]=process.argv.slice(2);assert(executor&&fixture&&endpoint&&out);
+const [executor,fixture,endpointRoot,out]=process.argv.slice(2);assert(executor&&fixture&&endpointRoot&&out);const endpoint=path.join(endpointRoot,'native-adapter.so');
 const hash=b=>createHash('sha256').update(b).digest('hex');const dir=path.dirname(fixture),checks=[];
 async function descriptor(filename,adapter,limits){const row={schema:'wasmc.native-boundary-descriptor/v1',identity:'test:normal-operation@0.1.0',adapter:{path:path.basename(adapter),sha256:hash(await readFile(adapter)),export:'wasmc_boundary_v1_invoke'}};if(limits)row.limits=limits;const p=path.join(dir,filename);await writeFile(p,JSON.stringify(row));return p;}
 class Session {
@@ -31,7 +31,7 @@ await check('timed-out single call drains before process and library exit',async
 session=new Session(legacy);
 await check('explicit legacy descriptor input and output limits remain enforced',async()=>{let b=Buffer.alloc(5+65);b[0]=1;b.writeUInt32LE(1,1);b[5]=3;assert.equal((await session.request(b)).status,-22);b=Buffer.alloc(6);b[0]=1;b.writeUInt32LE(129,1);b[5]=3;assert.equal((await session.request(b)).status,-22);assert.deepEqual(await run(session,Buffer.from([3,11]),1),Buffer.from([11]));});
 await session.close();
-const endpointDesc=await descriptor('endpoint-free.json',endpoint);session=new Session(endpointDesc);
+const endpointDesc=path.join(endpointRoot,'native-boundary.json');const endpointManifest=JSON.parse(await readFile(path.join(endpointRoot,'lib.json')));assert.equal(endpointManifest.artifact.sha256,hash(await readFile(endpoint)));session=new Session(endpointDesc);
 await check('real endpoint reads3MiB in a single call and accepts later new data',async()=>{const filename=path.join(dir,'endpoint-fixture.bin'),first=Buffer.alloc(3*1024*1024,0x51),second=Buffer.alloc(2*1024*1024,0x52),p=Buffer.from(filename);const request=Buffer.alloc(9+p.length);request[0]=1;request.writeUInt32LE(p.length,1);request.writeUInt32LE(first.length,5);p.copy(request,9);await writeFile(filename,first);assert((await run(session,request,first.length)).equals(first));await writeFile(filename,second);request.writeUInt32LE(second.length,5);assert((await run(session,request,second.length)).equals(second));});
 await session.close();
-await writeFile(out,JSON.stringify({accepted:true,checks,platform:process.platform,arch:process.arch,executor_sha256:hash(await readFile(executor)),fixture_sha256:hash(await readFile(fixture)),endpoint_sha256:hash(await readFile(endpoint)),same_process_new_inputs:true,network_security_work:false,current_catalog:false,formal_release:false},null,2)+'\n');
+await writeFile(out,JSON.stringify({accepted:true,checks,platform:process.platform,arch:process.arch,executor_sha256:hash(await readFile(executor)),fixture_sha256:hash(await readFile(fixture)),endpoint_sha256:hash(await readFile(endpoint)),endpoint_manifest_sha256:hash(await readFile(path.join(endpointRoot,'lib.json'))),same_process_new_inputs:true,network_security_work:false,current_catalog:false,formal_release:false},null,2)+'\n');

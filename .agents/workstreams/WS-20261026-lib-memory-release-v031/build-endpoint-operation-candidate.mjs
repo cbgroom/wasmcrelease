@@ -1,0 +1,17 @@
+import {readFile,mkdir,writeFile} from 'node:fs/promises';
+import {execFileSync} from 'node:child_process';
+import {resolve,join} from 'node:path';
+import {buildNative} from '../../../scripts/lib-refresh-native-v2.mjs';
+import {attachReleaseLicense,sha,verifyRoot} from '../../../scripts/lib-refresh-cache-v2.mjs';
+if(process.platform!=='linux')throw Error('candidate executable must be produced on Linux');
+const own=resolve('.agents/workstreams/WS-20261026-lib-memory-release-v031'),source=join(own,'native-platform/linux-endpoint'),out=resolve(process.argv[2]),id='wasmc-system-linux-endpoint';
+const spec=JSON.parse(await readFile(join(source,'lib.json'))),root=join(out,'roots',id,spec.version),logs=join(out,'build-logs'),files=['lib.wit',...spec.native.files];
+const payloads=Object.fromEntries(await Promise.all(files.map(async p=>[p,await readFile(join(source,p))])));await mkdir(root,{recursive:true});await mkdir(logs,{recursive:true});
+const builder=await readFile('scripts/lib-refresh-native-v2.mjs'),cc=execFileSync('cc',['--version'],{encoding:'utf8'});
+const status=await buildNative(spec,payloads,root,{repo:process.cwd(),env:process.env,logs,producerSha:sha(builder),nativeToolchain:{platform:process.platform,arch:process.arch,node:process.version,cc}});
+const license=await readFile('LICENSE'),input=JSON.parse(await readFile(join(own,'producer/inputs/notices/additional-notices.json'))),notices=await Promise.all(input.files.map(async pin=>({path:pin.path,sha256:pin.sha256,content:await readFile(pin.path.endsWith('007.txt')?join(own,'producer/inputs/notices/DEPENDENCY-NOTICES-007.txt'):pin.path)})));
+await attachReleaseLicense(root,license,sha(license),notices);const verified=await verifyRoot(root,id,spec.version,'native');
+if(verified.manifest.native.status!=='native_binary_built_not_runtime_qualified')throw Error('Linux native binary missing');
+const d=JSON.parse(await readFile(join(root,'native-boundary.json')));if(d.limits!==undefined)throw Error('candidate descriptor still imposes local limits');
+await writeFile(join(out,'endpoint-build.json'),JSON.stringify({accepted:true,id,version:spec.version,status,manifest_sha256:verified.manifest_sha256,artifact_sha256:verified.manifest.artifact.sha256,source_manifest_sha256:sha(await readFile(join(source,'lib.json'))),device_qualified:false,current_catalog:false,formal_release:false},null,2)+'\n');
+console.log(JSON.stringify({accepted:true,id,version:spec.version,manifest_sha256:verified.manifest_sha256}));
