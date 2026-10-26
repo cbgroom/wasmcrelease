@@ -16,18 +16,17 @@ const summary=record({entry_count:u32,package_count:u32,api_count:u32,bound_pack
 const query=record({text:string,package_id:option(string),profile:option(string),bound_only:bool});
 export class CurrentSearchCaller {
   constructor(indexBytes,artifact,abiBytes){
-    assert.ok(indexBytes.length<=2097152&&artifact.length<=16777216&&abiBytes.length<=1048576);
     this.text=new TextDecoder('utf-8',{fatal:true}).decode(indexBytes);
     this.caller=new CoreCaller(new WebAssembly.Module(artifact),JSON.parse(new TextDecoder().decode(abiBytes)));
   }
   snapshot(){return this.caller.call('snapshot',[string],[this.text],result(summary,errors));}
-  lookup(identity){assert.ok(typeof identity==='string'&&identity.length<=4096);
+  lookup(identity){assert.ok(typeof identity==='string');
     return this.caller.call('lookup',[string,string],[this.text,identity],result(option(hit),errors));}
   search(selection,offset=0,limit=64){
     assert.ok(Number.isInteger(offset)&&offset>=0&&offset<=4294967295);
-    assert.ok(Number.isInteger(limit)&&limit>0&&limit<=64);
-    assert.ok(typeof selection.text==='string'&&new TextEncoder().encode(selection.text).length<=4096);
-    for(const name of ['package_id','profile'])assert.ok(selection[name]===null||typeof selection[name]==='string'&&selection[name].length<=128);
+    assert.ok(Number.isInteger(limit)&&limit>=0&&limit<=4294967295);
+    assert.ok(typeof selection.text==='string');
+    for(const name of ['package_id','profile'])assert.ok(selection[name]===null||typeof selection[name]==='string');
     assert.equal(typeof selection.bound_only,'boolean');
     return this.caller.call('search',[string,query,u32,u32],[this.text,selection,offset,limit],result(list(hit),errors));
   }
