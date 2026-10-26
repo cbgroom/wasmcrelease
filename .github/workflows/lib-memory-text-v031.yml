@@ -1,0 +1,50 @@
+name: Text Lib memory-owned SDK successor
+on:
+  push:
+    branches: [work/WS-20261026-lib-memory-release-v031]
+    paths:
+      - '.agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-text/**'
+      - '.agents/workstreams/WS-20261026-lib-memory-release-v031/text-successor/**'
+      - '.agents/workstreams/WS-20261026-lib-memory-release-v031/test-text-successor.mjs'
+      - '.agents/workstreams/WS-20261026-lib-memory-release-v031/test-text-sdk-consumer.mjs'
+      - '.github/workflows/lib-memory-text-v031.yml'
+permissions:
+  contents: read
+jobs:
+  text-core:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: '26.5.1'
+      - name: Verify exact candidate Root and generated SDK with no Rust rebuild
+        shell: bash
+        run: |
+          set -euo pipefail
+          own=.agents/workstreams/WS-20261026-lib-memory-release-v031
+          out="$RUNNER_TEMP/text-memory-evidence"
+          mkdir -p "$out"
+          git rev-parse HEAD > "$out/source.txt"
+          node --version > "$out/node.txt"
+          uname -a > "$out/host.txt"
+          node --input-type=module - <<'JS'
+          import {verifyRoot,sha} from './scripts/lib-refresh-cache-v2.mjs';
+          import {readFile} from 'node:fs/promises';
+          const own='.agents/workstreams/WS-20261026-lib-memory-release-v031';
+          const root=`${own}/candidate-roots/wasmc-text/0.0.2`;
+          const verified=await verifyRoot(root,'wasmc-text','0.0.2','value');
+          const pin=JSON.parse(await readFile(`${own}/qualification/text-sdk-build.json`));
+          if(sha(await readFile(`${own}/text-successor/sdk-consumer.wasm`))!==pin.consumer_wasm_sha256)throw Error('SDK consumer digest drift');
+          if(sha(await readFile(`${root}/bindings/rust-core/src/lib.rs`))!==pin.sdk_sha256)throw Error('SDK source digest drift');
+          console.log(JSON.stringify({accepted:true,manifest_sha256:verified.manifest_sha256}));
+          JS
+          node "$own/test-text-successor.mjs" "$out/text-core.json" 2>&1 | tee "$out/text-core.log"
+          node "$own/test-text-sdk-consumer.mjs" "$own/text-successor/sdk-consumer.wasm" "$out/text-sdk.json" 2>&1 | tee "$out/text-sdk.log"
+      - if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: text-memory-capacity
+          path: ${{ runner.temp }}/text-memory-evidence/**
+          retention-days: 7

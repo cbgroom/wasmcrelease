@@ -1,0 +1,25 @@
+import fs from 'node:fs';import path from 'node:path';import assert from 'node:assert/strict';import crypto from 'node:crypto';
+import {CoreCaller,bool,u8,u32,string,list,option} from '../../../scripts/current-core-value-codec-v3.mjs';
+const root=path.resolve('.agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-text/0.0.2'),m=JSON.parse(fs.readFileSync(path.join(root,'lib.json'))),binary=fs.readFileSync(path.join(root,'artifact.wasm')),sha=b=>crypto.createHash('sha256').update(b).digest('hex');assert.equal(sha(binary),m.artifact.sha256);
+const sdk=fs.readFileSync(path.join(root,'bindings/rust-core/src/lib.rs'),'utf8');assert(!sdk.includes('struct Budget'));assert(!sdk.includes('MAX_VALUE_NODES'));assert(sdk.includes('wasmc-text@0.0.2'));
+const c=new CoreCaller(new WebAssembly.Module(binary),JSON.parse(fs.readFileSync(path.join(root,'core-abi.json')))),covered=new Set(),checks=[];
+const call=(name,types,values,result)=>{covered.add(name);const v=c.call(name,types,values,result);return result===bool?Boolean(v):v;};
+const check=(name,fn)=>{fn();checks.push(name);console.log(JSON.stringify({accepted:true,check:name}));};
+check('all30 Rust string APIs and Unicode semantics',()=>{
+ const p=(name,types,values,result,expected)=>assert.deepEqual(call(name,types,values,result),expected);
+ p('contains',[string,string],['a雪b','雪'],bool,true);p('starts-with',[string,string],['雪abc','雪'],bool,true);p('ends-with',[string,string],['abc雪','雪'],bool,true);
+ p('is-empty',[string],[''],bool,true);p('is-ascii',[string],['雪'],bool,false);p('eq-ignore-ascii-case',[string,string],['AbC','aBc'],bool,true);
+ p('find',[string,string],['雪🦀x','x'],option(u32),7);p('rfind',[string,string],['abcabc','bc'],option(u32),4);
+ p('trim',[string],[' \t雪\n'],string,'雪');p('trim-start',[string],[' \t雪 '],string,'雪 ');p('trim-end',[string],[' 雪 \n'],string,' 雪');
+ p('to-lowercase',[string],['İABC'],string,'i\u0307abc');p('to-uppercase',[string],['Straße'],string,'STRASSE');p('to-ascii-lowercase',[string],['ÄABC'],string,'Äabc');p('to-ascii-uppercase',[string],['äabc'],string,'äABC');
+ p('split',[string,string],['a,b,c',','],list(string),['a','b','c']);p('splitn',[string,u32,string],['a,b,c',2,','],list(string),['a','b,c']);
+ p('split-whitespace',[string],['a\u00a0b c'],list(string),['a','b','c']);p('split-ascii-whitespace',[string],['a\u00a0b c'],list(string),['a\u00a0b','c']);p('lines',[string],['a\r\nb\n'],list(string),['a','b']);
+ p('replace',[string,string,string],['a--b--c','--','/'],string,'a/b/c');p('replacen',[string,string,string,u32],['a--b--c','--','/',1],string,'a/b--c');p('join',[list(string),string],[['雪','🦀','x'],'\0'],string,'雪\0🦀\0x');
+ p('strip-prefix-or',[string,string,string],['prefix-data','prefix-','fallback'],string,'data');p('strip-suffix-or',[string,string,string],['data-end','-end','fallback'],string,'data');p('get-or',[string,u32,u32,string],['雪X',0,3,'fallback'],string,'雪');
+ p('is-char-boundary',[string,u32],['雪X',1],bool,false);p('into-bytes',[string],['雪'],list(u8),[0xe9,0x9b,0xaa]);p('from-utf8-or',[list(u8),string],[[0xff],'fallback'],string,'fallback');p('from-utf8-lossy',[list(u8)],[[0x66,0x80]],string,'f�');
+ assert.equal(covered.size,30);
+});
+check('3MiB Unicode case conversion on complete Core Root',()=>{const value='a'.repeat(3*1024*1024)+'雪🦀';assert.equal(call('to-uppercase',[string],[value],string),'A'.repeat(3*1024*1024)+'雪🦀');});
+check('70000 input strings join correctly and later UTF8 fallback recovers',()=>{const parts=Array(70000).fill('x');assert.equal(call('join',[list(string),string],[parts,''],string),'x'.repeat(70000));assert.equal(call('get-or',[string,u32,u32,string],['雪',1,2,'fallback'],string),'fallback');});
+check('same persistent instance handles new inputs and reuses memory',()=>{const cycle=()=>{assert.equal(call('trim',[string],['  雪\0🦀  '],string),'雪\0🦀');assert.equal(call('contains',[string,string],['fresh-雪','雪'],bool),true);};for(let i=0;i<16;i++)cycle();const before=c.exports.memory.buffer.byteLength;for(let i=0;i<256;i++)cycle();assert.equal(c.exports.memory.buffer.byteLength,before);});
+fs.writeFileSync(process.argv[2],JSON.stringify({accepted:true,checks,covered_apis:[...covered].sort(),artifact_sha256:sha(binary),manifest_sha256:sha(fs.readFileSync(path.join(root,'lib.json'))),memory_after_bytes:c.exports.memory.buffer.byteLength,same_persistent_instance:true,generated_sdk_source_budget_removed:true,current_catalog:false,formal_release:false},null,2)+'\n');
