@@ -1,0 +1,1474 @@
+{
+  "schema": "wasmc.lib-capacity-audit/v1",
+  "catalog_sha256": "e12684efb3e475ad551eddabda12bc4c196f19edb48e7ace9069fda1ef5e7871",
+  "package_count": 43,
+  "rows": [
+    {
+      "id": "mcpgit-resident-memory",
+      "version": "0.2.0",
+      "delivery_kind": "wasm-core-component",
+      "source_paths": [
+        {
+          "path": "libspec/mcpgit-resident-memory/adapter.rs",
+          "sha256": "71b142d655f3ae3d9e02005155d3917dbaeac45a100081fa3674df9b9669b0c3",
+          "candidates": []
+        },
+        {
+          "path": "libspec/mcpgit-resident-memory/delta.rs",
+          "sha256": "0c38583174a705e7e19019de7f7da645cf27cc46b13ee19f59796ec08c4d8daa",
+          "candidates": [
+            {
+              "line": 440,
+              "text": ".take(limit)"
+            }
+          ]
+        }
+      ],
+      "special_source": false,
+      "classification": "needs-reviewed-capacity-classification"
+    },
+    {
+      "id": "wasmc-app-authorization-policy",
+      "version": "0.0.2",
+      "delivery_kind": "wasm-core-component",
+      "source_paths": [
+        {
+          "path": "libspec/wasmc-app-authorization-policy/adapter.rs",
+          "sha256": "5d70828d2cba7465447d5e31701fc5cc6113eeb0c048f351a44a392f33e60eb1",
+          "candidates": []
+        },
+        {
+          "path": "libspec/wasmc-app-authorization-policy/delta.rs",
+          "sha256": "2689d1f23801d0fa59044e8d8916d1cbd883be092e692a1513af3bd746845b7b",
+          "candidates": []
+        }
+      ],
+      "special_source": false,
+      "classification": "needs-reviewed-capacity-classification"
+    },
+    {
+      "id": "wasmc-compression",
+      "version": "0.0.1",
+      "delivery_kind": "wasm-core-component",
+      "source_paths": [
+        {
+          "path": "libspec/wasmc-compression/adapter.rs",
+          "sha256": "1108a4705171552f5ca8c39ba65ce42b05d541fa2690b9193ac99aafd0637de6",
+          "candidates": []
+        },
+        {
+          "path": "libspec/wasmc-compression/delta.rs",
+          "sha256": "fd7d9819b0e74ca6a0e9804800d621e39af2d1f8862b6a0774cef4c96e09a1e0",
+          "candidates": [
+            {
+              "line": 4,
+              "text": "const MAX_INPUT_BYTES: usize = 1 << 20;"
+            },
+            {
+              "line": 5,
+              "text": "const MAX_OUTPUT_BYTES: usize = 4 << 20;"
+            },
+            {
+              "line": 16,
+              "text": "if bytes.len() > MAX_INPUT_BYTES {"
+            },
+            {
+              "line": 22,
+              "text": "if output.len() > MAX_OUTPUT_BYTES {"
+            },
+            {
+              "line": 30,
+              "text": "if bytes.len() > MAX_INPUT_BYTES {"
+            },
+            {
+              "line": 34,
+              "text": "let mut limited = decoder.take((MAX_OUTPUT_BYTES as u64) + 1);"
+            },
+            {
+              "line": 37,
+              "text": "if output.len() > MAX_OUTPUT_BYTES {"
+            }
+          ]
+        }
+      ],
+      "special_source": false,
+      "classification": "needs-reviewed-capacity-classification"
+    },
+    {
+      "id": "wasmc-csv",
+      "version": "0.0.1",
+      "delivery_kind": "wasm-core-component",
+      "source_paths": [
+        {
+          "path": "libspec/wasmc-csv/adapter.rs",
+          "sha256": "2dc06c0d77bd8c2071eac08e73bace5c9ecd511f4eff51eb2100e11a33197240",
+          "candidates": []
+        },
+        {
+          "path": "libspec/wasmc-csv/delta.rs",
+          "sha256": "78311db240907bcaacf9ad94bacfd61722e2ab152178bb14010d5cc9c9b1243c",
+          "candidates": []
+        }
+      ],
+      "special_source": false,
+      "classification": "needs-reviewed-capacity-classification"
+    },
+    {
+      "id": "wasmc-data-compute",
+      "version": "0.0.1",
+      "delivery_kind": "wasm-core-component",
+      "source_paths": [
+        {
+          "path": "libspec/wasmc-data-compute/adapter.rs",
+          "sha256": "28c60ed7ff3162867c80c16f2dc62c12ef7867edf4c8df2ddf2de5934443aa48",
+          "candidates": []
+        },
+        {
+          "path": "libspec/wasmc-data-compute/delta.rs",
+          "sha256": "7f5cdd8e3d9d81d974cf5aa93df32bea747bd2f09d85e92ece5bece78ee153d7",
+          "candidates": []
+        }
+      ],
+      "special_source": false,
+      "classification": "needs-reviewed-capacity-classification"
+    },
+    {
+      "id": "wasmc-data-core",
+      "version": "0.0.1",
+      "delivery_kind": "wasm-core-component",
+      "source_paths": [
+        {
+          "path": "libspec/wasmc-data-core/adapter.rs",
+          "sha256": "b9331862080adb5dfccfec664b6aa6909e064d2dc2915e358f91ab0916659dd9",
+          "candidates": []
+        },
+        {
+          "path": "libspec/wasmc-data-core/delta.rs",
+          "sha256": "5571968e27d42b489799965f2f1c20ebf6684b96f5cefc2f5d9dcd22c2821bfe",
+          "candidates": []
+        }
+      ],
+      "special_source": false,
+      "classification": "needs-reviewed-capacity-classification"
+    },
+    {
+      "id": "wasmc-data-expr",
+      "version": "0.0.1",
+      "delivery_kind": "wasm-core-component",
+      "source_paths": [
+        {
+          "path": "libspec/wasmc-data-expr/adapter.rs",
+          "sha256": "2040cc8104a5ccdc5e1fd74c8e22f97461607d5964d32857ed107e195d9c2dec",
+          "candidates": []
+        },
+        {
+          "path": "libspec/wasmc-data-expr/delta.rs",
+          "sha256": "c14e212e275555a88fbcc2f9f2895b8de5a858ce3208128e27ace75d83166cc3",
+          "candidates": []
+        }
+      ],
+      "special_source": false,
+      "classification": "needs-reviewed-capacity-classification"
+    },
+    {
+      "id": "wasmc-data-interchange",
+      "version": "0.0.1",
+      "delivery_kind": "wasm-core-component",
+      "source_paths": [
+        {
+          "path": "libspec/wasmc-data-interchange/adapter.rs",
+          "sha256": "cc272b32407600e01b48e36aa540955507b55e97cfa620cc1596e0a5d248f605",
+          "candidates": [
+            {
+              "line": 13,
+              "text": "fn encode(v:WitEncodeOptions)->delta::EncodeOptions{delta::EncodeOptions{max_batches:v.max_batches,max_rows:v.max_rows,max_output_bytes:v.max_output_bytes}}"
+            },
+            {
+              "line": 14,
+              "text": "fn decode(v:WitDecodeOptions)->delta::DecodeOptions{delta::DecodeOptions{max_input_bytes:v.max_input_bytes,max_batches:v.max_batches,max_rows:v.max_rows,batch_rows:v.batch_rows}}"
+            }
+          ]
+        },
+        {
+          "path": "libspec/wasmc-data-interchange/delta.rs",
+          "sha256": "2dbc9b34377bd6675eaef9dc328813ddfcc6ba81a5001f2f98aa554245c31dbb",
+          "candidates": [
+            {
+              "line": 16,
+              "text": "pub max_batches: u32,"
+            },
+            {
+              "line": 17,
+              "text": "pub max_rows: u32,"
+            },
+            {
+              "line": 18,
+              "text": "pub max_output_bytes: u32,"
+            },
+            {
+              "line": 23,
+              "text": "pub max_input_bytes: u32,"
+            },
+            {
+              "line": 24,
+              "text": "pub max_batches: u32,"
+            },
+            {
+              "line": 25,
+              "text": "pub max_rows: u32,"
+            },
+            {
+              "line": 76,
+              "text": "if options.max_batches == 0 || options.max_rows == 0 || options.max_output_bytes == 0 {"
+            },
+            {
+              "line": 80,
+              "text": "if values.len() > options.max_batches as usize { return Err(Error::BatchLimitExceeded); }"
+            },
+            {
+              "line": 85,
+              "text": "if rows > options.max_rows { return Err(Error::RowLimitExceeded); }"
+            },
+            {
+              "line": 95,
+              "text": "if options.max_input_bytes == 0 || options.max_batches == 0"
+            },
+            {
+              "line": 96,
+              "text": "|| options.max_rows == 0 || options.batch_rows == 0 {"
+            },
+            {
+              "line": 100,
+              "text": "if input.len() > options.max_input_bytes as usize { return Err(Error::InputLimitExceeded); }"
+            },
+            {
+              "line": 109,
+              "text": "if output.len() >= options.max_batches as usize { return Err(Error::BatchLimitExceeded); }"
+            },
+            {
+              "line": 112,
+              "text": "if rows>options.max_rows { return Err(Error::RowLimitExceeded); }"
+            },
+            {
+              "line": 124,
+              "text": "let sink=BoundedWriter{bytes:Vec::new(),limit:options.max_output_bytes as usize,exceeded:exceeded.clone()};"
+            },
+            {
+              "line": 137,
+              "text": "let sink=BoundedWriter{bytes:Vec::new(),limit:options.max_output_bytes as usize,exceeded:exceeded.clone()};"
+            }
+          ]
+        }
+      ],
+      "special_source": false,
+      "classification": "needs-reviewed-capacity-classification"
+    },
+    {
+      "id": "wasmc-data-profile",
+      "version": "0.0.1",
+      "delivery_kind": "wasm-core-component",
+      "source_paths": [
+        {
+          "path": "libspec/wasmc-data-profile/adapter.rs",
+          "sha256": "7f279306ff7020b001201e9a951fb1744aeb15e764d818d022c4a5f080c7300f",
+          "candidates": []
+        },
+        {
+          "path": "libspec/wasmc-data-profile/delta.rs",
+          "sha256": "46b993a55de488b4f6d2d67c58f1682f5fa64b210891aa38741df5b6bd4c68f7",
+          "candidates": []
+        }
+      ],
+      "special_source": false,
+      "classification": "needs-reviewed-capacity-classification"
+    },
+    {
+      "id": "wasmc-data-relational",
+      "version": "0.0.2",
+      "delivery_kind": "wasm-core-component",
+      "source_paths": [
+        {
+          "path": "libspec/wasmc-data-relational/adapter.rs",
+          "sha256": "d1c39afa448b478f8ecc9308a4020f97ee6c38084cdb648f8c0b5b56e89a5896",
+          "candidates": [
+            {
+              "line": 41,
+              "text": "delta::JoinOptions{kind:join_kind(v.kind),right_prefix:v.right_prefix,max_output_rows:v.max_output_rows}"
+            },
+            {
+              "line": 51,
+              "text": "fn window_options(v:WitWindowOptions)->delta::WindowOptions{delta::WindowOptions{max_rows:v.max_rows}}"
+            },
+            {
+              "line": 67,
+              "text": "fn distinct_options(v:WitDistinctOptions)->delta::DistinctOptions{delta::DistinctOptions{max_rows:v.max_rows}}"
+            }
+          ]
+        },
+        {
+          "path": "libspec/wasmc-data-relational/delta.rs",
+          "sha256": "43f07e29578aee8f805bffa7d45f3c3c73bde23c3217da3744fd96f88d057137",
+          "candidates": [
+            {
+              "line": 23,
+              "text": "pub struct JoinOptions { pub kind: JoinKind, pub right_prefix: String, pub max_output_rows: u32 }"
+            },
+            {
+              "line": 29,
+              "text": "pub struct WindowOptions { pub max_rows: u32 }"
+            },
+            {
+              "line": 37,
+              "text": "pub struct DistinctOptions { pub max_rows: u32 }"
+            },
+            {
+              "line": 166,
+              "text": "max_output_rows: u32,"
+            },
+            {
+              "line": 168,
+              "text": "if pairs.len() >= max_output_rows as usize {"
+            },
+            {
+              "line": 217,
+              "text": "max_rows: u32,"
+            },
+            {
+              "line": 219,
+              "text": "if max_rows == 0 {"
+            },
+            {
+              "line": 222,
+              "text": "if value.rows > max_rows {"
+            },
+            {
+              "line": 767,
+              "text": "ordered_window_partitions(&value, &partition_by, &order_by, options.max_rows)?;"
+            },
+            {
+              "line": 822,
+              "text": "if options.max_rows == 0 {"
+            },
+            {
+              "line": 825,
+              "text": "if value.rows > options.max_rows {"
+            },
+            {
+              "line": 934,
+              "text": "ordered_window_partitions(&value, &partition_by, &order_by, options.max_rows)?;"
+            },
+            {
+              "line": 1003,
+              "text": "ordered_window_partitions(&value, &partition_by, &order_by, options.max_rows)?;"
+            },
+            {
+              "line": 1041,
+              "text": "if options.max_output_rows == 0 {"
+            },
+            {
+              "line": 1105,
+              "text": "options.max_output_rows,"
+            },
+            {
+              "line": 1110,
+              "text": "push_join_pair(&mut pairs, (left_row as u32, None), options.max_output_rows)?"
+            }
+          ]
+        }
+      ],
+      "special_source": false,
+      "classification": "needs-reviewed-capacity-classification"
+    },
+    {
+      "id": "wasmc-host-clock",
+      "version": "0.0.2",
+      "delivery_kind": "wasm-core-component",
+      "source_paths": [
+        {
+          "path": "libspec/wasmc-host-clock/adapter.rs",
+          "sha256": "3e373b71ad4d7f48c277fb81476f1f4f127498a26fb1dab5b983e785d17b6d63",
+          "candidates": []
+        },
+        {
+          "path": "libspec/wasmc-host-clock/delta.rs",
+          "sha256": "9e721620db6fc0f212f33831a4e135cceafc292684321931545ce996cb564438",
+          "candidates": []
+        }
+      ],
+      "special_source": false,
+      "classification": "needs-reviewed-capacity-classification"
+    },
+    {
+      "id": "wasmc-http1",
+      "version": "0.0.1",
+      "delivery_kind": "wasm-core-component",
+      "source_paths": [
+        {
+          "path": "libspec/wasmc-http1/adapter.rs",
+          "sha256": "0d8e75ba564d7b682e9deec1e54f7c690c11f59085f789a9ca53a2917c8b3983",
+          "candidates": []
+        },
+        {
+          "path": "libspec/wasmc-http1/delta.rs",
+          "sha256": "44dbc63f4746e5f6b986c532bcb09e8de49ee2d90383c7cfc3328ec3e3271f92",
+          "candidates": [
+            {
+              "line": 1,
+              "text": "const MAX_INPUT_BYTES: usize = 64 << 10;"
+            },
+            {
+              "line": 2,
+              "text": "const MAX_BODY_BYTES: usize = 1 << 20;"
+            },
+            {
+              "line": 3,
+              "text": "const MAX_HEADERS: usize = 32;"
+            },
+            {
+              "line": 4,
+              "text": "const MAX_OUTPUT_BYTES: usize = 64 << 10;"
+            },
+            {
+              "line": 38,
+              "text": "if bytes.len() > MAX_INPUT_BYTES {"
+            },
+            {
+              "line": 41,
+              "text": "let mut headers = [httparse::EMPTY_HEADER; MAX_HEADERS];"
+            },
+            {
+              "line": 84,
+              "text": "if value > MAX_BODY_BYTES {"
+            },
+            {
+              "line": 92,
+              "text": "if bytes.len() > MAX_INPUT_BYTES {"
+            },
+            {
+              "line": 95,
+              "text": "let mut headers = [httparse::EMPTY_HEADER; MAX_HEADERS];"
+            },
+            {
+              "line": 248,
+              "text": "if headers.len() > MAX_HEADERS {"
+            },
+            {
+              "line": 272,
+              "text": "if output.len() > MAX_OUTPUT_BYTES {"
+            },
+            {
+              "line": 277,
+              "text": "if output.len() > MAX_OUTPUT_BYTES {"
+            }
+          ]
+        }
+      ],
+      "special_source": false,
+      "classification": "needs-reviewed-capacity-classification"
+    },
+    {
+      "id": "wasmc-http1-client",
+      "version": "0.0.1",
+      "delivery_kind": "wasm-core-component",
+      "source_paths": [
+        {
+          "path": "libspec/wasmc-http1-client/adapter.rs",
+          "sha256": "2e099a1b71c450308d28b9ed87a395c8404b871ea4d11f17135527b8ae29534e",
+          "candidates": []
+        },
+        {
+          "path": "libspec/wasmc-http1-client/delta.rs",
+          "sha256": "aad954319ef18125730d0cc2588fc6f698dd308227b6eb94259a3399c0951045",
+          "candidates": [
+            {
+              "line": 8,
+              "text": "const MAX_HEAD_BYTES: usize = 64 << 10;"
+            },
+            {
+              "line": 9,
+              "text": "const MAX_BODY_BYTES: usize = 1 << 20;"
+            },
+            {
+              "line": 10,
+              "text": "const MAX_HEADERS: usize = 32;"
+            },
+            {
+              "line": 11,
+              "text": "const MAX_WIRE_BYTES: usize = MAX_HEAD_BYTES + MAX_BODY_BYTES + 4096;"
+            },
+            {
+              "line": 53,
+              "text": "if parsed > MAX_BODY_BYTES {"
+            },
+            {
+              "line": 82,
+              "text": "if headers.len() > MAX_HEADERS {"
+            },
+            {
+              "line": 85,
+              "text": "if body.len() > MAX_BODY_BYTES {"
+            },
+            {
+              "line": 142,
+              "text": "if output.len() > MAX_WIRE_BYTES {"
+            },
+            {
+              "line": 159,
+              "text": "if bytes.len() > MAX_WIRE_BYTES {"
+            },
+            {
+              "line": 162,
+              "text": "let head_limit = bytes.len().min(MAX_HEAD_BYTES + 1);"
+            },
+            {
+              "line": 163,
+              "text": "let mut raw_headers = [httparse::EMPTY_HEADER; MAX_HEADERS];"
+            },
+            {
+              "line": 166,
+              "text": "Ok(httparse::Status::Partial) if bytes.len() > MAX_HEAD_BYTES => {"
+            },
+            {
+              "line": 263,
+              "text": "if cursor - start > MAX_HEAD_BYTES {"
+            },
+            {
+              "line": 271,
+              "text": ".is_none_or(|total| total > MAX_BODY_BYTES)"
+            },
+            {
+              "line": 330,
+              "text": "if body.len() > MAX_BODY_BYTES {"
+            }
+          ]
+        }
+      ],
+      "special_source": false,
+      "classification": "needs-reviewed-capacity-classification"
+    },
+    {
+      "id": "wasmc-json",
+      "version": "0.0.6",
+      "delivery_kind": "wasm-core-component",
+      "source_paths": [],
+      "special_source": true,
+      "classification": "needs-reviewed-capacity-classification"
+    },
+    {
+      "id": "wasmc-lib-search",
+      "version": "0.5.0",
+      "delivery_kind": "wasm-core-component",
+      "source_paths": [
+        {
+          "path": "libspec/wasmc-lib-search/adapter.rs",
+          "sha256": "7793d00983a8f742a9c85970ce7225b68b287baaa9e025d7aceee0d60b201cc7",
+          "candidates": []
+        },
+        {
+          "path": "libspec/wasmc-lib-search/delta.rs",
+          "sha256": "6b31ec94c588bba77ced8e679853bad51ac7de013d29edfb7dd3b830817b692c",
+          "candidates": [
+            {
+              "line": 5,
+              "text": "const MAX_INDEX: usize = 2 * 1024 * 1024;"
+            },
+            {
+              "line": 6,
+              "text": "const MAX_ENTRIES: usize = 4096;"
+            },
+            {
+              "line": 78,
+              "text": "!value.is_empty() && value.len() <= 128 && value.bytes().all(|b| b.is_ascii_lowercase() || b.is_ascii_digit() || b == b'-')"
+            },
+            {
+              "line": 82,
+              "text": "let word = |s: &str| !s.is_empty() && s.len() <= 128"
+            },
+            {
+              "line": 95,
+              "text": "!value.is_empty() && value.len() <= 512 && !value.contains(['\\\\', ':', '\\0'])"
+            },
+            {
+              "line": 115,
+              "text": "if text.len() > MAX_INDEX { return Err(Error::IndexTooLarge); }"
+            },
+            {
+              "line": 118,
+              "text": "|| wire.packages.len() > MAX_ENTRIES { return Err(Error::InvalidIndex); }"
+            },
+            {
+              "line": 122,
+              "text": "if entries.len().saturating_add(package.apis.len()).saturating_add(1) > MAX_ENTRIES {"
+            },
+            {
+              "line": 136,
+              "text": "if expanded_bytes > MAX_INDEX { return Err(Error::IndexTooLarge); }"
+            },
+            {
+              "line": 142,
+              "text": "if expanded_bytes > MAX_INDEX { return Err(Error::IndexTooLarge); }"
+            },
+            {
+              "line": 158,
+              "text": "|| !profile(&entry.profile) || entry.identity.len() > 512 || entry.wit_route.len() > 512"
+            },
+            {
+              "line": 159,
+              "text": "|| entry.target.is_empty() || entry.target.len() > 128 || entry.description.len() > 4096"
+            },
+            {
+              "line": 197,
+              "text": "if query.text.len() > 512 || query.text.chars().any(|c| c.is_control() && !c.is_whitespace())"
+            },
+            {
+              "line": 202,
+              "text": "if terms.len() > 16 { return Err(Error::InvalidQuery); }"
+            },
+            {
+              "line": 211,
+              "text": "}).skip(offset as usize).take(limit as usize).collect())"
+            },
+            {
+              "line": 214,
+              "text": "if identity.is_empty() || identity.len() > 512 || identity.chars().any(char::is_control) {"
+            }
+          ]
+        }
+      ],
+      "special_source": false,
+      "classification": "needs-reviewed-capacity-classification"
+    },
+    {
+      "id": "wasmc-owned-algorithms",
+      "version": "0.1.1",
+      "delivery_kind": "wasm-core-component",
+      "source_paths": [
+        {
+          "path": "libspec/wasmc-owned-algorithms/adapter.rs",
+          "sha256": "035cf3773dfe6bec53a41052257f1eee93ed4c453bbae626d116da949127a1da",
+          "candidates": []
+        },
+        {
+          "path": "libspec/wasmc-owned-algorithms/delta.rs",
+          "sha256": "cde7f1b900b56094593e1798edff77b5a5b3060fd5be6d71ea4fe5b52d34fcba",
+          "candidates": []
+        }
+      ],
+      "special_source": false,
+      "classification": "needs-reviewed-capacity-classification"
+    },
+    {
+      "id": "wasmc-resource-counter",
+      "version": "0.0.2",
+      "delivery_kind": "wasm-core-component",
+      "source_paths": [
+        {
+          "path": "libspec/wasmc-resource-counter/adapter.rs",
+          "sha256": "fa694fc8c2efccde434264bd33283d6872f88cfaa3747d3c27882aae4d1d07ef",
+          "candidates": []
+        },
+        {
+          "path": "libspec/wasmc-resource-counter/delta.rs",
+          "sha256": "56262a79ab22b3ddf4641a0bbce5beb0312203188b743492e330c7584c88c53d",
+          "candidates": []
+        }
+      ],
+      "special_source": false,
+      "classification": "needs-reviewed-capacity-classification"
+    },
+    {
+      "id": "wasmc-router-policy",
+      "version": "0.0.2",
+      "delivery_kind": "wasm-core-component",
+      "source_paths": [
+        {
+          "path": "libspec/wasmc-router-policy/adapter.rs",
+          "sha256": "5fffd1cb4b0b11fbaaa5dfa0ec43017b01a8f676370931e62dc694dd3f25e7af",
+          "candidates": []
+        },
+        {
+          "path": "libspec/wasmc-router-policy/delta.rs",
+          "sha256": "60b254d6604d24cec31157dcb82956bf17109655e5e873a31ca20cc1c185a5d2",
+          "candidates": []
+        }
+      ],
+      "special_source": false,
+      "classification": "needs-reviewed-capacity-classification"
+    },
+    {
+      "id": "wasmc-std",
+      "version": "1.4.1",
+      "delivery_kind": "wasm-core-component",
+      "source_paths": [
+        {
+          "path": "libspec/wasmc-std/adapter.rs",
+          "sha256": "2e538213311fd8b09a8efd42e3daeb3d56e962362e9c03657d8b1ca464cf3a26",
+          "candidates": []
+        },
+        {
+          "path": "libspec/wasmc-std/delta.rs",
+          "sha256": "4224100bcac4b809bf30169b74d28c658d653431be951a0a80b316af853c98db",
+          "candidates": [
+            {
+              "line": 7,
+              "text": "const MAX_BYTES: usize = 128;"
+            },
+            {
+              "line": 8,
+              "text": "const MAX_LABEL: usize = 48;"
+            },
+            {
+              "line": 9,
+              "text": "const MAX_RECORDS: usize = 4;"
+            },
+            {
+              "line": 10,
+              "text": "const MAX_KEY: usize = 24;"
+            },
+            {
+              "line": 157,
+              "text": "value.len() < MAX_BYTES,"
+            },
+            {
+              "line": 192,
+              "text": "if value.len() > MAX_BYTES {"
+            },
+            {
+              "line": 274,
+              "text": "if bytes.len() > MAX_LABEL {"
+            },
+            {
+              "line": 286,
+              "text": "if value.label.len() > MAX_LABEL {"
+            },
+            {
+              "line": 316,
+              "text": "if values.len() > MAX_RECORDS || values.iter().any(|v| v.label.len() > MAX_LABEL) {"
+            },
+            {
+              "line": 340,
+              "text": "if values.len() > MAX_RECORDS"
+            },
+            {
+              "line": 343,
+              "text": ".any(|(k, v)| k.len() > MAX_KEY || v.label.len() > MAX_LABEL)"
+            },
+            {
+              "line": 362,
+              "text": "values.contains_key(&key) || values.len() < MAX_RECORDS,"
+            }
+          ]
+        }
+      ],
+      "special_source": false,
+      "classification": "needs-reviewed-capacity-classification"
+    },
+    {
+      "id": "wasmc-system-android-display",
+      "version": "0.0.1",
+      "delivery_kind": "native-source",
+      "source_paths": [
+        {
+          "path": "libspec/wasmc-system-android-display/platform/native-adapter.c",
+          "sha256": "79a54600b82d13fc0972a1311df0f010e3f610964f7555ce19b2bf7cd55c14b3",
+          "candidates": []
+        }
+      ],
+      "special_source": false,
+      "classification": "needs-reviewed-capacity-classification"
+    },
+    {
+      "id": "wasmc-system-android-input",
+      "version": "0.0.1",
+      "delivery_kind": "native-source",
+      "source_paths": [
+        {
+          "path": "libspec/wasmc-system-android-input/platform/native-adapter.c",
+          "sha256": "de03f5854645c1ea1afde8a8da3e52cb95eca0ece44822734167f3a028549c88",
+          "candidates": []
+        }
+      ],
+      "special_source": false,
+      "classification": "needs-reviewed-capacity-classification"
+    },
+    {
+      "id": "wasmc-system-android-ui",
+      "version": "0.0.1",
+      "delivery_kind": "native-source",
+      "source_paths": [
+        {
+          "path": "libspec/wasmc-system-android-ui/platform/native-adapter.c",
+          "sha256": "87a4e64bfade91fd75c51027af553d163c860cbdd8a5932672742e87d3c8511e",
+          "candidates": []
+        }
+      ],
+      "special_source": false,
+      "classification": "needs-reviewed-capacity-classification"
+    },
+    {
+      "id": "wasmc-system-android-uinput",
+      "version": "0.0.1",
+      "delivery_kind": "native-source",
+      "source_paths": [
+        {
+          "path": "libspec/wasmc-system-android-uinput/platform/native-adapter.c",
+          "sha256": "0205e7105969a6fd8ef51d10996f09fb870e641bd9a6cedc9bb22cff35f0b874",
+          "candidates": [
+            {
+              "line": 11,
+              "text": "#define MAX_KEYBOARDS 16"
+            },
+            {
+              "line": 12,
+              "text": "#define MAX_TOUCHSCREENS 16"
+            },
+            {
+              "line": 13,
+              "text": "#define MAX_KEYS 64"
+            },
+            {
+              "line": 23,
+              "text": "static struct keyboard_slot keyboards[MAX_KEYBOARDS];"
+            },
+            {
+              "line": 24,
+              "text": "static struct keyboard_slot touchscreens[MAX_TOUCHSCREENS];"
+            },
+            {
+              "line": 50,
+              "text": "for (uint32_t index = 0; index < MAX_KEYBOARDS; index += 1) {"
+            },
+            {
+              "line": 69,
+              "text": "if (encoded_index == 0 || encoded_index > MAX_KEYBOARDS || generation == 0) {"
+            },
+            {
+              "line": 84,
+              "text": "for (uint32_t index = 0; index < MAX_TOUCHSCREENS; index += 1) {"
+            },
+            {
+              "line": 107,
+              "text": "if (encoded_index == 0 || encoded_index > MAX_TOUCHSCREENS ||"
+            },
+            {
+              "line": 144,
+              "text": "key_count > MAX_KEYS ||"
+            },
+            {
+              "line": 434,
+              "text": "for (size_t index = 0; index < MAX_KEYBOARDS; index += 1) {"
+            },
+            {
+              "line": 441,
+              "text": "for (size_t index = 0; index < MAX_TOUCHSCREENS; index += 1) {"
+            }
+          ]
+        }
+      ],
+      "special_source": false,
+      "classification": "needs-reviewed-capacity-classification"
+    },
+    {
+      "id": "wasmc-system-file-prototype",
+      "version": "0.0.1",
+      "delivery_kind": "native-module",
+      "source_paths": [
+        {
+          "path": "libspec/wasmc-system-file-prototype/platform/native-adapter.mjs",
+          "sha256": "def205e9304dbbb528d0ba6c2d8a13eae4a93dc3ffc5b8972dc4514f330e0d15",
+          "candidates": []
+        }
+      ],
+      "special_source": false,
+      "classification": "needs-reviewed-capacity-classification"
+    },
+    {
+      "id": "wasmc-system-ios-app-contacts",
+      "version": "0.0.1",
+      "delivery_kind": "native-source",
+      "source_paths": [
+        {
+          "path": "libspec/wasmc-system-ios-app-contacts/platform/ContactsProvider.swift",
+          "sha256": "55cb0d1850143656b9c2c15285298acc617a998d60f3eb8c59f5ac62092ecd61",
+          "candidates": []
+        }
+      ],
+      "special_source": false,
+      "classification": "needs-reviewed-capacity-classification"
+    },
+    {
+      "id": "wasmc-system-ios-app-lifecycle",
+      "version": "0.0.1",
+      "delivery_kind": "native-source",
+      "source_paths": [
+        {
+          "path": "libspec/wasmc-system-ios-app-lifecycle/platform/ios/Sources/AppLifecycleProvider.swift",
+          "sha256": "7d99a0ae661c44990a7e32d18045951a2d57aa4cb5e579b2ffc7229950b4a13c",
+          "candidates": []
+        }
+      ],
+      "special_source": false,
+      "classification": "needs-reviewed-capacity-classification"
+    },
+    {
+      "id": "wasmc-system-ios-app-surface-control",
+      "version": "0.0.3",
+      "delivery_kind": "native-source",
+      "source_paths": [
+        {
+          "path": "libspec/wasmc-system-ios-app-surface-control/platform/ios/Sources/PiPSurfaceProvider.swift",
+          "sha256": "666f0bb40dbdcef20ec95be6e3e328cbcd358ec12e94b46656b17f82512e9ba1",
+          "candidates": []
+        },
+        {
+          "path": "libspec/wasmc-system-ios-app-surface-control/platform/ios/Sources/SurfaceControlProvider.swift",
+          "sha256": "52c64dfa863f40359bc308e4d0f2663575ba5f50b713ad25a168cc3a31990a85",
+          "candidates": []
+        },
+        {
+          "path": "libspec/wasmc-system-ios-app-surface-control/platform/ios/Sources/WebViewSurfaceProvider.swift",
+          "sha256": "099f618969a1d6ae4e0688cc95f42fe184e0c538b7c663167ce1eab7c67b2c71",
+          "candidates": []
+        }
+      ],
+      "special_source": false,
+      "classification": "needs-reviewed-capacity-classification"
+    },
+    {
+      "id": "wasmc-system-ios-background-audio",
+      "version": "0.0.1",
+      "delivery_kind": "native-source",
+      "source_paths": [
+        {
+          "path": "libspec/wasmc-system-ios-background-audio/platform/ios/Sources/BackgroundAudioProvider.swift",
+          "sha256": "33ceb2c6d813fb685bf7532e121ca1e714c2cccc973b68addbd4d20b8df33e31",
+          "candidates": []
+        }
+      ],
+      "special_source": false,
+      "classification": "needs-reviewed-capacity-classification"
+    },
+    {
+      "id": "wasmc-system-ios-background-transfer",
+      "version": "0.0.1",
+      "delivery_kind": "native-source",
+      "source_paths": [
+        {
+          "path": "libspec/wasmc-system-ios-background-transfer/platform/ios/Sources/BackgroundTransferProvider.swift",
+          "sha256": "230b05cd49d910243ee5571a8ee54038d0fbb59b856f2c3be3f8b843b47cc79f",
+          "candidates": []
+        }
+      ],
+      "special_source": false,
+      "classification": "needs-reviewed-capacity-classification"
+    },
+    {
+      "id": "wasmc-system-ios-deferred-work",
+      "version": "0.0.1",
+      "delivery_kind": "native-source",
+      "source_paths": [
+        {
+          "path": "libspec/wasmc-system-ios-deferred-work/platform/ios/Sources/DeferredWorkProvider.swift",
+          "sha256": "953314e6dbaa8b5606e1ff9ba0a09bbaad5a09b71c9375f136c02aef0124b79d",
+          "candidates": []
+        }
+      ],
+      "special_source": false,
+      "classification": "needs-reviewed-capacity-classification"
+    },
+    {
+      "id": "wasmc-system-ios-local-notification",
+      "version": "0.0.1",
+      "delivery_kind": "native-source",
+      "source_paths": [
+        {
+          "path": "libspec/wasmc-system-ios-local-notification/platform/ios/Sources/LocalNotificationProvider.swift",
+          "sha256": "c9f1ed96bde6feb40a8dea80fa6d982de2340f50dd6d03f561e8cd15ceba1d8e",
+          "candidates": []
+        }
+      ],
+      "special_source": false,
+      "classification": "needs-reviewed-capacity-classification"
+    },
+    {
+      "id": "wasmc-system-ios-network-path",
+      "version": "0.0.1",
+      "delivery_kind": "native-source",
+      "source_paths": [
+        {
+          "path": "libspec/wasmc-system-ios-network-path/platform/ios/Sources/NetworkPathProvider.swift",
+          "sha256": "264f476ad477488ad63f8144e4dce9af75d664f83ad6e4bb23a00b3f2ba49817",
+          "candidates": []
+        }
+      ],
+      "special_source": false,
+      "classification": "needs-reviewed-capacity-classification"
+    },
+    {
+      "id": "wasmc-system-ios-simulator-display",
+      "version": "0.0.1",
+      "delivery_kind": "native-source",
+      "source_paths": [
+        {
+          "path": "libspec/wasmc-system-ios-simulator-display/platform/native-adapter.c",
+          "sha256": "432ce65eba5dde01120323da306c0fd5bb73d487ac2506d94c7f5de8c32f3a52",
+          "candidates": []
+        }
+      ],
+      "special_source": false,
+      "classification": "needs-reviewed-capacity-classification"
+    },
+    {
+      "id": "wasmc-system-ios-websocket",
+      "version": "0.0.1",
+      "delivery_kind": "native-source",
+      "source_paths": [
+        {
+          "path": "libspec/wasmc-system-ios-websocket/platform/ios/Sources/WebSocketProvider.swift",
+          "sha256": "c2a4ba25be6cf21b1220058ffd3c357a3f818743f5d7078084e35800e694473f",
+          "candidates": []
+        }
+      ],
+      "special_source": false,
+      "classification": "needs-reviewed-capacity-classification"
+    },
+    {
+      "id": "wasmc-system-linux-endpoint",
+      "version": "0.0.1",
+      "delivery_kind": "native-binary",
+      "source_paths": [
+        {
+          "path": "libspec/wasmc-system-linux-endpoint/platform/native-adapter.c",
+          "sha256": "582c217d08451f50758ceb8e213ddc1966b717d96468fc873bebfaccaca88232",
+          "candidates": [
+            {
+              "line": 17,
+              "text": "#define MAX_HANDLES 1024"
+            },
+            {
+              "line": 18,
+              "text": "#define MAX_MAPPINGS 1024"
+            },
+            {
+              "line": 19,
+              "text": "#define MAX_MAPPING_BYTES (UINT64_C(256) * 1024 * 1024)"
+            },
+            {
+              "line": 20,
+              "text": "#define MAX_READINESS_OPERATIONS 1024"
+            },
+            {
+              "line": 21,
+              "text": "#define MAX_WRITE_VECTORS 1024"
+            },
+            {
+              "line": 35,
+              "text": "static struct handle_slot handles[MAX_HANDLES];"
+            },
+            {
+              "line": 44,
+              "text": "static struct mapping_slot mappings[MAX_MAPPINGS];"
+            },
+            {
+              "line": 60,
+              "text": "static struct readiness_slot readiness_operations[MAX_READINESS_OPERATIONS];"
+            },
+            {
+              "line": 103,
+              "text": "for (uint32_t index = 0; index < MAX_HANDLES; index += 1) {"
+            },
+            {
+              "line": 119,
+              "text": "if (encoded_index == 0 || encoded_index > MAX_HANDLES || generation == 0) return -EBADF;"
+            },
+            {
+              "line": 128,
+              "text": "for (uint32_t index = 0; index < MAX_MAPPINGS; index += 1) {"
+            },
+            {
+              "line": 145,
+              "text": "if (encoded_index == 0 || encoded_index > MAX_MAPPINGS || generation == 0) return -EBADF;"
+            },
+            {
+              "line": 334,
+              "text": "if (vector_count == 0 || vector_count > MAX_WRITE_VECTORS) return -EINVAL;"
+            },
+            {
+              "line": 403,
+              "text": "if (length == 0 || length > MAX_MAPPING_BYTES || (uint64_t)native_length != length || offset > INT64_MAX) return -EINVAL;"
+            },
+            {
+              "line": 610,
+              "text": "if (encoded_index == 0 || encoded_index > MAX_READINESS_OPERATIONS || generation == 0) return -EBADF;"
+            },
+            {
+              "line": 633,
+              "text": "uint32_t index = MAX_READINESS_OPERATIONS;"
+            },
+            {
+              "line": 634,
+              "text": "for (uint32_t candidate = 0; candidate < MAX_READINESS_OPERATIONS; candidate += 1) {"
+            },
+            {
+              "line": 640,
+              "text": "if (index == MAX_READINESS_OPERATIONS) {"
+            },
+            {
+              "line": 779,
+              "text": "for (size_t index = 0; index < MAX_READINESS_OPERATIONS; index += 1) {"
+            },
+            {
+              "line": 797,
+              "text": "for (size_t index = 0; index < MAX_MAPPINGS; index += 1) {"
+            },
+            {
+              "line": 803,
+              "text": "for (size_t index = 0; index < MAX_HANDLES; index += 1) {"
+            }
+          ]
+        }
+      ],
+      "special_source": false,
+      "classification": "needs-reviewed-capacity-classification"
+    },
+    {
+      "id": "wasmc-system-linux-socket",
+      "version": "0.0.1",
+      "delivery_kind": "native-binary",
+      "source_paths": [
+        {
+          "path": "libspec/wasmc-system-linux-socket/platform/native-adapter.c",
+          "sha256": "02f05d38b781b1d876409fd8a07962002306d0aad7382803f41b5e15afd4b78a",
+          "candidates": [
+            {
+              "line": 12,
+              "text": "#define MAX_HANDLES 1024"
+            },
+            {
+              "line": 23,
+              "text": "static struct handle_slot handles[MAX_HANDLES];"
+            },
+            {
+              "line": 50,
+              "text": "for (uint32_t index = 0; index < MAX_HANDLES; index += 1) {"
+            },
+            {
+              "line": 69,
+              "text": "if (encoded_index == 0 || encoded_index > MAX_HANDLES || generation == 0) return -EBADF;"
+            },
+            {
+              "line": 305,
+              "text": "for (size_t index = 0; index < MAX_HANDLES; index += 1) {"
+            }
+          ]
+        }
+      ],
+      "special_source": false,
+      "classification": "needs-reviewed-capacity-classification"
+    },
+    {
+      "id": "wasmc-system-linux-uinput",
+      "version": "0.0.1",
+      "delivery_kind": "native-binary",
+      "source_paths": [
+        {
+          "path": "libspec/wasmc-system-linux-uinput/platform/native-adapter.c",
+          "sha256": "1bf3f5b28d3811d3eb0c30d76173394cc669066e46e1e1bc0bc4880b97a7ed76",
+          "candidates": [
+            {
+              "line": 13,
+              "text": "#define MAX_KEYBOARDS 16"
+            },
+            {
+              "line": 14,
+              "text": "#define MAX_KEYS 64"
+            },
+            {
+              "line": 22,
+              "text": "static struct keyboard_slot keyboards[MAX_KEYBOARDS];"
+            },
+            {
+              "line": 44,
+              "text": "for (uint32_t index = 0; index < MAX_KEYBOARDS; index += 1) {"
+            },
+            {
+              "line": 60,
+              "text": "if (encoded_index == 0 || encoded_index > MAX_KEYBOARDS || generation == 0) return -EBADF;"
+            },
+            {
+              "line": 74,
+              "text": "if (name_len == 0 || name_len >= UINPUT_MAX_NAME_SIZE || key_count == 0 || key_count > MAX_KEYS) {"
+            },
+            {
+              "line": 198,
+              "text": "for (size_t index = 0; index < MAX_KEYBOARDS; index += 1) {"
+            }
+          ]
+        }
+      ],
+      "special_source": false,
+      "classification": "needs-reviewed-capacity-classification"
+    },
+    {
+      "id": "wasmc-system-network-prototype",
+      "version": "0.0.2",
+      "delivery_kind": "native-module",
+      "source_paths": [
+        {
+          "path": "libspec/wasmc-system-network-prototype/platform/native-adapter.mjs",
+          "sha256": "e1861dd9770253f1d293ef7cf60f0e38484a89743c15cd2dd18ba72802521a14",
+          "candidates": []
+        }
+      ],
+      "special_source": false,
+      "classification": "needs-reviewed-capacity-classification"
+    },
+    {
+      "id": "wasmc-system-process-prototype",
+      "version": "0.0.1",
+      "delivery_kind": "native-module",
+      "source_paths": [
+        {
+          "path": "libspec/wasmc-system-process-prototype/platform/native-adapter.mjs",
+          "sha256": "79af42c23e49fe9615a4a3b3bd9a12b9f1a7d1e308560ee9c245ff561913206f",
+          "candidates": [
+            {
+              "line": 5,
+              "text": "const DEFAULT_OUTPUT_LIMIT = 1024 * 1024;"
+            },
+            {
+              "line": 6,
+              "text": "const MAX_OUTPUT_LIMIT = 16 * 1024 * 1024;"
+            },
+            {
+              "line": 8,
+              "text": "const MAX_TIMEOUT_MS = 10 * 60_000;"
+            },
+            {
+              "line": 110,
+              "text": "const timeoutMs = boundedInteger(request.timeout_ms, DEFAULT_TIMEOUT_MS, MAX_TIMEOUT_MS, \"timeout_ms\");"
+            },
+            {
+              "line": 111,
+              "text": "const outputLimit = boundedInteger(request.max_output_bytes, DEFAULT_OUTPUT_LIMIT, MAX_OUTPUT_LIMIT, \"max_output_bytes\");"
+            }
+          ]
+        }
+      ],
+      "special_source": false,
+      "classification": "needs-reviewed-capacity-classification"
+    },
+    {
+      "id": "wasmc-system-telemetry",
+      "version": "0.0.1",
+      "delivery_kind": "wasm-core-component",
+      "source_paths": [
+        {
+          "path": "libspec/wasmc-system-telemetry/adapter.rs",
+          "sha256": "811cb14ad5b2d84c53f4eb4ec8012de3a3ded257d1b278458b56a4451112d43a",
+          "candidates": []
+        },
+        {
+          "path": "libspec/wasmc-system-telemetry/delta.rs",
+          "sha256": "f1be6221a370ac293aa870c1f1c383743456469dc88ab9b3b920aa594ffee6c7",
+          "candidates": [
+            {
+              "line": 10,
+              "text": "pub const MAX_SNAPSHOT_BYTES: usize = 262_144;"
+            },
+            {
+              "line": 132,
+              "text": "if s.len() > MAX_SNAPSHOT_BYTES {"
+            },
+            {
+              "line": 187,
+              "text": "for (i, f) in line.split_whitespace().skip(1).take(8).enumerate() {"
+            },
+            {
+              "line": 266,
+              "text": "for (i, b) in fraction.bytes().take(3).enumerate() {"
+            },
+            {
+              "line": 454,
+              "text": "let big = \"x\".repeat(MAX_SNAPSHOT_BYTES + 1);"
+            }
+          ]
+        }
+      ],
+      "special_source": false,
+      "classification": "needs-reviewed-capacity-classification"
+    },
+    {
+      "id": "wasmc-text",
+      "version": "0.0.1",
+      "delivery_kind": "wasm-core-component",
+      "source_paths": [],
+      "special_source": true,
+      "classification": "needs-reviewed-capacity-classification"
+    },
+    {
+      "id": "wasmc-tls-client",
+      "version": "0.0.1",
+      "delivery_kind": "wasm-core-component",
+      "source_paths": [
+        {
+          "path": "libspec/wasmc-tls-client/adapter.rs",
+          "sha256": "530f388ac9ea92c84d27243260cf37c12d08ddc20840617c4ac53a94ea382257",
+          "candidates": []
+        },
+        {
+          "path": "libspec/wasmc-tls-client/delta.rs",
+          "sha256": "686c57bf3372cae68affa3f196912dde42a02e88dd1744824e769f4e11884465",
+          "candidates": [
+            {
+              "line": 18,
+              "text": "const MAX_CIPHERTEXT_BUFFER: usize = 1 << 20;"
+            },
+            {
+              "line": 19,
+              "text": "const MAX_OUTPUT_BUFFER: usize = 1 << 20;"
+            },
+            {
+              "line": 20,
+              "text": "const MAX_PLAINTEXT_BUFFER: usize = 1 << 20;"
+            },
+            {
+              "line": 21,
+              "text": "const MAX_WRITE_BYTES: usize = 16 << 10;"
+            },
+            {
+              "line": 22,
+              "text": "const MAX_ROOT_CERTIFICATES: usize = 256;"
+            },
+            {
+              "line": 23,
+              "text": "const MAX_ROOT_CERTIFICATE_BYTES: usize = 256 << 10;"
+            },
+            {
+              "line": 24,
+              "text": "const MAX_ALPN_PROTOCOLS: usize = 16;"
+            },
+            {
+              "line": 25,
+              "text": "const MAX_ALPN_BYTES: usize = 255;"
+            },
+            {
+              "line": 113,
+              "text": "> MAX_OUTPUT_BUFFER"
+            },
+            {
+              "line": 126,
+              "text": "if encoded.len() > MAX_OUTPUT_BUFFER {"
+            },
+            {
+              "line": 146,
+              "text": "> MAX_PLAINTEXT_BUFFER"
+            },
+            {
+              "line": 175,
+              "text": "} else if let Some(plaintext) = self.pending_write.take() {"
+            },
+            {
+              "line": 181,
+              "text": "> MAX_OUTPUT_BUFFER"
+            },
+            {
+              "line": 247,
+              "text": "if root_certificates.is_empty() || root_certificates.len() > MAX_ROOT_CERTIFICATES {"
+            },
+            {
+              "line": 252,
+              "text": ".any(|cert| cert.is_empty() || cert.len() > MAX_ROOT_CERTIFICATE_BYTES)"
+            },
+            {
+              "line": 256,
+              "text": "if alpn_protocols.len() > MAX_ALPN_PROTOCOLS"
+            },
+            {
+              "line": 259,
+              "text": ".any(|protocol| protocol.is_empty() || protocol.len() > MAX_ALPN_BYTES)"
+            },
+            {
+              "line": 309,
+              "text": "if inner.incoming.len().saturating_add(ciphertext.len()) > MAX_CIPHERTEXT_BUFFER {"
+            },
+            {
+              "line": 337,
+              "text": "if plaintext.len() > MAX_WRITE_BYTES {"
+            }
+          ]
+        }
+      ],
+      "special_source": false,
+      "classification": "needs-reviewed-capacity-classification"
+    },
+    {
+      "id": "wasmc-tls-core",
+      "version": "0.0.1",
+      "delivery_kind": "wasm-core-component",
+      "source_paths": [
+        {
+          "path": "libspec/wasmc-tls-core/adapter.rs",
+          "sha256": "c731361920471ee0a4ae6f6de65f828a4abbd7f308880adb0d545d539ed58598",
+          "candidates": []
+        },
+        {
+          "path": "libspec/wasmc-tls-core/delta.rs",
+          "sha256": "9c404d9563e7205ccf1617a06d31d5e7aad5a1fac0331fc277bd89f7c8f2c402",
+          "candidates": [
+            {
+              "line": 18,
+              "text": "const MAX_CIPHERTEXT_BUFFER: usize = 1 << 20;"
+            },
+            {
+              "line": 19,
+              "text": "const MAX_OUTPUT_BUFFER: usize = 1 << 20;"
+            },
+            {
+              "line": 20,
+              "text": "const MAX_PLAINTEXT_BUFFER: usize = 1 << 20;"
+            },
+            {
+              "line": 21,
+              "text": "const MAX_WRITE_BYTES: usize = 16 << 10;"
+            },
+            {
+              "line": 114,
+              "text": "> MAX_OUTPUT_BUFFER"
+            },
+            {
+              "line": 127,
+              "text": "if encoded.len() > MAX_OUTPUT_BUFFER {"
+            },
+            {
+              "line": 151,
+              "text": "> MAX_PLAINTEXT_BUFFER"
+            },
+            {
+              "line": 171,
+              "text": "> MAX_PLAINTEXT_BUFFER"
+            },
+            {
+              "line": 197,
+              "text": "} else if let Some(plaintext) = self.pending_write.take() {"
+            },
+            {
+              "line": 203,
+              "text": "> MAX_OUTPUT_BUFFER"
+            },
+            {
+              "line": 312,
+              "text": "if inner.incoming.len().saturating_add(ciphertext.len()) > MAX_CIPHERTEXT_BUFFER {"
+            },
+            {
+              "line": 340,
+              "text": "if plaintext.len() > MAX_WRITE_BYTES {"
+            }
+          ]
+        }
+      ],
+      "special_source": false,
+      "classification": "needs-reviewed-capacity-classification"
+    }
+  ]
+}

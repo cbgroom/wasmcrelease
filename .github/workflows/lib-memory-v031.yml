@@ -1,0 +1,55 @@
+name: Normal Lib aggregate-memory successor
+on:
+  push:
+    branches: [work/WS-20261026-lib-memory-release-v031]
+    paths: ['.agents/workstreams/WS-20261026-lib-memory-release-v031/producer/**', '.github/workflows/lib-memory-v031.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  json:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      CARGO_TARGET_DIR: ${{ github.workspace }}/target/lib-memory-v031
+      CARGO_BUILD_JOBS: 2
+      CARGO_PROFILE_DEV_DEBUG: 0
+      CARGO_PROFILE_TEST_DEBUG: 0
+      RUSTC_WRAPPER: ''
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: '26.5.1'
+      - name: Materialize one changed Lib only and inspect resource admission
+        run: |
+          python3 - <<'PY'
+          import shutil
+          free=shutil.disk_usage('.').free
+          print({'free_GiB':free/2**30,'floor_GiB':12,'pool_budget_GiB':2,'lane':'disposable changed-Lib CI; no local persistent Cargo pool'})
+          assert free>=12*2**30
+          PY
+          node .agents/workstreams/WS-20261026-lib-memory-release-v031/producer/materialize.mjs "$RUNNER_TEMP/lib-memory-json"
+          mkdir -p target/lib-memory-evidence
+      - name: Exact Rust, Native tests and portable changed-Lib build
+        run: |
+          rustup toolchain install 1.96.0 --profile minimal --no-self-update
+          rustup default 1.96.0
+          rustup target add wasm32-unknown-unknown
+          cargo fetch --locked --manifest-path "$RUNNER_TEMP/lib-memory-json/Cargo.toml"
+          set -o pipefail
+          cargo test --offline --locked --manifest-path "$RUNNER_TEMP/lib-memory-json/Cargo.toml" 2>&1 | tee target/lib-memory-evidence/native.log
+          cargo build --offline --locked --release --target wasm32-unknown-unknown --manifest-path "$RUNNER_TEMP/lib-memory-json/Cargo.toml" 2>&1 | tee target/lib-memory-evidence/wasm.log
+          cp "$CARGO_TARGET_DIR/wasm32-unknown-unknown/release/wasmc_json_memory_v031.wasm" target/lib-memory-evidence/json-raw.wasm
+          cp "$RUNNER_TEMP/lib-memory-json/source-receipt.json" target/lib-memory-evidence/
+          rustc -vV > target/lib-memory-evidence/rustc.txt
+          cargo -vV > target/lib-memory-evidence/cargo.txt
+          git rev-parse HEAD > target/lib-memory-evidence/source.txt
+          sha256sum target/lib-memory-evidence/json-raw.wasm > target/lib-memory-evidence/sha256.txt
+      - if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: lib-memory-json
+          path: target/lib-memory-evidence/**
+          retention-days: 30
+          if-no-files-found: error
