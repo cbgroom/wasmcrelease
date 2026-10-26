@@ -11,7 +11,7 @@ use std::path::{Path, PathBuf};
 #[cfg(feature = "operation-bridge")]
 use std::{
     collections::BTreeMap,
-    sync::{Arc, Condvar, Mutex, mpsc},
+    sync::{Arc, Condvar, Mutex},
     thread::{self, JoinHandle},
     time::Duration,
 };
@@ -19,7 +19,9 @@ use std::{
 const RTLD_NOW: c_int = 2;
 const RTLD_LOCAL: c_int = 0;
 #[cfg(feature = "operation-bridge")]
-const MAX_OPERATIONS: usize = 64;
+const ENOMEM: i32 = 12;
+#[cfg(feature = "operation-bridge")]
+const EAGAIN: i32 = 11;
 #[cfg(feature = "operation-bridge")]
 const EINVAL: i32 = 22;
 #[cfg(feature = "operation-bridge")]
@@ -45,6 +47,7 @@ struct Descriptor {
     schema: String,
     identity: String,
     adapter: Adapter,
+    #[serde(default)]
     limits: Limits,
 }
 
@@ -55,10 +58,10 @@ struct Adapter {
     export: String,
 }
 
-#[derive(Deserialize)]
+#[derive(Default, Deserialize)]
 struct Limits {
-    max_input_bytes: usize,
-    max_output_bytes: usize,
+    max_input_bytes: Option<usize>,
+    max_output_bytes: Option<usize>,
 }
 
 struct Library(*mut c_void);
@@ -97,8 +100,8 @@ impl NativeBoundary {
         if descriptor.identity.is_empty() {
             return Err("missing exact Lib identity".into());
         }
-        if descriptor.limits.max_input_bytes > u32::MAX as usize
-            || descriptor.limits.max_output_bytes > u32::MAX as usize
+        if descriptor.limits.max_input_bytes.is_some_and(|n| n > u32::MAX as usize)
+            || descriptor.limits.max_output_bytes.is_some_and(|n| n > u32::MAX as usize)
         {
             return Err("descriptor limits exceed framing capacity".into());
         }
@@ -121,7 +124,7 @@ impl NativeBoundary {
             return Err(dynamic_error("dlsym failed"));
         }
         let invoke: Invoke = unsafe { std::mem::transmute(symbol) };
-        let output = vec![0u8; descriptor.limits.max_output_bytes];
+        let output = vec![0u8; descriptor.limits.max_output_bytes.unwrap_or(0)];
         Ok(Self {
             descriptor,
             _library: library,
@@ -131,8 +134,11 @@ impl NativeBoundary {
     }
 
     fn call(&mut self, input: &[u8]) -> Result<(i32, &[u8]), String> {
-        if input.len() > self.descriptor.limits.max_input_bytes {
+        if self.descriptor.limits.max_input_bytes.is_some_and(|limit| input.len() > limit) {
             return Err("input limit".into());
+        }
+        if self.descriptor.limits.max_output_bytes.is_none() {
+            return Err("direct session requires an output capacity; use operation-session".into());
         }
         let mut output_len = 0usize;
         let status = unsafe {
@@ -226,7 +232,7 @@ fn run_session(descriptor_path: &Path) -> Result<(), String> {
             Err(error) => return Err(error.to_string()),
         }
         let input_len = u32::from_le_bytes(length_bytes) as usize;
-        if input_len > boundary.descriptor.limits.max_input_bytes {
+        if boundary.descriptor.limits.max_input_bytes.is_some_and(|limit| input_len > limit) {
             return Err("session input limit".into());
         }
         let mut input = vec![0u8; input_len];
@@ -274,43 +280,70 @@ struct OperationTask {
     cell: Arc<OperationCell>,
 }
 
+// Keep every running task joined before the owning dynamic library is unloaded.
 #[cfg(feature = "operation-bridge")]
-fn run_operation_worker(tasks: Arc<Mutex<mpsc::Receiver<OperationTask>>>) {
-    loop {
-        let task = {
-            let receiver = tasks.lock().unwrap();
-            receiver.recv()
-        };
-        let Ok(task) = task else {
-            return;
-        };
-        let mut output = vec![0u8; task.output_capacity.max(1)];
+struct WorkerGroup(Vec<JoinHandle<()>>);
+
+#[cfg(feature = "operation-bridge")]
+impl WorkerGroup {
+    fn spawn(&mut self, task: OperationTask) -> Result<(), i32> {
+        self.0.try_reserve(1).map_err(|_| -ENOMEM)?;
+        let handle = thread::Builder::new().spawn(move || run_operation_task(task)).map_err(|_| -EAGAIN)?;
+        self.0.push(handle);
+        Ok(())
+    }
+    fn join_all(&mut self) -> Result<(), String> {
+        for worker in self.0.drain(..) {
+            worker.join().map_err(|_| "operation worker panicked".to_string())?;
+        }
+        Ok(())
+    }
+    fn reap_finished(&mut self) -> Result<(), String> {
+        let mut index = 0;
+        while index < self.0.len() {
+            if self.0[index].is_finished() {
+                self.0.swap_remove(index).join().map_err(|_| "operation worker panicked".to_string())?;
+            } else {
+                index += 1;
+            }
+        }
+        Ok(())
+    }
+}
+
+#[cfg(feature = "operation-bridge")]
+impl Drop for WorkerGroup {
+    fn drop(&mut self) {
+        for worker in self.0.drain(..) { let _ = worker.join(); }
+    }
+}
+
+#[cfg(feature = "operation-bridge")]
+fn run_operation_task(task: OperationTask) {
+    let mut output = Vec::new();
+    let reserve = output.try_reserve_exact(task.output_capacity.max(1));
+    let (status, output) = if reserve.is_err() {
+        (-ENOMEM, Vec::new())
+    } else {
+        output.resize(task.output_capacity.max(1), 0);
         let mut output_len = 0usize;
         let mut status = unsafe {
-            (task.invoke)(
-                task.input.as_ptr(),
-                task.input.len(),
-                output.as_mut_ptr(),
-                task.output_capacity,
-                &mut output_len,
-            )
+            (task.invoke)(task.input.as_ptr(), task.input.len(), output.as_mut_ptr(), task.output_capacity, &mut output_len)
         };
         if output_len > task.output_capacity {
             status = -EOVERFLOW;
             output_len = 0;
         }
         output.truncate(output_len);
-        let mut state = task.cell.state.lock().unwrap();
-        *state = match *state {
-            OperationState::CancelRequested => OperationState::CancelledDrained,
-            OperationState::Pending => OperationState::Completed {
-                status,
-                output: Some(output),
-            },
-            _ => continue,
-        };
-        task.cell.changed.notify_all();
-    }
+        (status, output)
+    };
+    let mut state = task.cell.state.lock().unwrap();
+    *state = match *state {
+        OperationState::CancelRequested => OperationState::CancelledDrained,
+        OperationState::Pending => OperationState::Completed { status, output: Some(output) },
+        _ => return,
+    };
+    task.cell.changed.notify_all();
 }
 
 #[cfg(feature = "operation-bridge")]
@@ -355,7 +388,7 @@ fn operation_reply(writer: &mut impl Write, status: i32, output: &[u8]) -> Resul
 #[cfg(feature = "operation-bridge")]
 fn operation_command(
     boundary: &NativeBoundary,
-    tasks: &mpsc::SyncSender<OperationTask>,
+    workers: &mut WorkerGroup,
     operations: &mut BTreeMap<u64, OperationRecord>,
     next_operation: &mut u64,
     input: &[u8],
@@ -375,8 +408,9 @@ fn operation_command(
                 return (-EINVAL, Vec::new());
             };
             let payload = &input[9..];
-            if payload.len() > boundary.descriptor.limits.max_input_bytes
-                || output_capacity > boundary.descriptor.limits.max_output_bytes
+            if boundary.descriptor.limits.max_input_bytes.is_some_and(|limit| payload.len() > limit)
+                || boundary.descriptor.limits.max_output_bytes.is_some_and(|limit| output_capacity > limit)
+                || output_capacity > u32::MAX as usize - if command == 8 { 12 } else { 4 }
             {
                 return (-EINVAL, Vec::new());
             }
@@ -397,8 +431,8 @@ fn operation_command(
                 output_capacity,
                 cell: cell.clone(),
             };
-            if tasks.try_send(task).is_err() {
-                return (-EBUSY, Vec::new());
+            if let Err(status) = workers.spawn(task) {
+                return (status, Vec::new());
             }
             let state = cell.state.lock().unwrap();
             let (mut state, result) = cell
@@ -424,15 +458,13 @@ fn operation_command(
             (0, result)
         }
         1 => {
-            if operations.len() >= MAX_OPERATIONS {
-                return (-EBUSY, Vec::new());
-            }
             let Ok(output_capacity) = read_u32(input, 1).map(|value| value as usize) else {
                 return (-EINVAL, Vec::new());
             };
             let payload = &input[5..];
-            if payload.len() > boundary.descriptor.limits.max_input_bytes
-                || output_capacity > boundary.descriptor.limits.max_output_bytes
+            if boundary.descriptor.limits.max_input_bytes.is_some_and(|limit| payload.len() > limit)
+                || boundary.descriptor.limits.max_output_bytes.is_some_and(|limit| output_capacity > limit)
+                || output_capacity > u32::MAX as usize - if command == 8 { 12 } else { 4 }
             {
                 return (-EINVAL, Vec::new());
             }
@@ -453,8 +485,8 @@ fn operation_command(
                 output_capacity,
                 cell: cell.clone(),
             };
-            if tasks.try_send(task).is_err() {
-                return (-EBUSY, Vec::new());
+            if let Err(status) = workers.spawn(task) {
+                return (status, Vec::new());
             }
             operations.insert(token, OperationRecord { cell });
             (0, token.to_le_bytes().to_vec())
@@ -593,14 +625,7 @@ fn operation_command(
 #[cfg(feature = "operation-bridge")]
 fn run_operation_session(descriptor_path: &Path) -> Result<(), String> {
     let boundary = NativeBoundary::load(descriptor_path)?;
-    let (task_sender, task_receiver) = mpsc::sync_channel(MAX_OPERATIONS);
-    let task_receiver = Arc::new(Mutex::new(task_receiver));
-    let workers = (0..MAX_OPERATIONS)
-        .map(|_| {
-            let task_receiver = task_receiver.clone();
-            thread::spawn(move || run_operation_worker(task_receiver))
-        })
-        .collect::<Vec<JoinHandle<()>>>();
+    let mut workers = WorkerGroup(Vec::new());
     let stdin = io::stdin();
     let stdout = io::stdout();
     let mut reader = stdin.lock();
@@ -612,12 +637,7 @@ fn run_operation_session(descriptor_path: &Path) -> Result<(), String> {
         match reader.read(&mut length_bytes[..1]) {
             Ok(0) => {
                 if operations.is_empty() {
-                    drop(task_sender);
-                    for worker in workers {
-                        worker
-                            .join()
-                            .map_err(|_| "operation worker panicked".to_string())?;
-                    }
+                    workers.join_all()?;
                     return Ok(());
                 }
                 eprintln!("operation session closed with live operations; quarantining process");
@@ -630,7 +650,7 @@ fn run_operation_session(descriptor_path: &Path) -> Result<(), String> {
             Err(error) => return Err(error.to_string()),
         }
         let input_len = u32::from_le_bytes(length_bytes) as usize;
-        if input_len > boundary.descriptor.limits.max_input_bytes + 13 {
+        if boundary.descriptor.limits.max_input_bytes.is_some_and(|limit| input_len > limit.saturating_add(13)) {
             return Err("operation session input limit".into());
         }
         let mut input = vec![0u8; input_len];
@@ -639,12 +659,13 @@ fn run_operation_session(descriptor_path: &Path) -> Result<(), String> {
             .map_err(|error| error.to_string())?;
         let (status, output) = operation_command(
             &boundary,
-            &task_sender,
+            &mut workers,
             &mut operations,
             &mut next_operation,
             &input,
         );
         operation_reply(&mut writer, status, &output)?;
+        workers.reap_finished()?;
     }
 }
 
