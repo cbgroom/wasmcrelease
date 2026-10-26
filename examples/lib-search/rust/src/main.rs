@@ -13,7 +13,7 @@ fn input() -> (String, Vec<String>) {
         identities.push(id.clone());
         for api in p["apis"].as_array().unwrap() { identities.push(format!("{id}/{}", api["route"].as_str().unwrap())); }
     }
-    assert_eq!(identities.len(), 289);
+    assert_eq!(identities.len(), 320);
     (String::from_utf8(bytes).unwrap(), identities)
 }
 fn main() {
@@ -29,12 +29,12 @@ fn main() {
     let api = Lib::instantiate(&mut store, &Component::new(&engine, component).unwrap(), &Linker::new(&engine)).unwrap();
     let catalog = api.wasmc_lib_search_catalog();
     let snapshot = catalog.call_snapshot(&mut store, &index).unwrap().unwrap();
-    assert_eq!((snapshot.entry_count, snapshot.package_count, snapshot.api_count, snapshot.bound_package_count), (289, 42, 247, 42));
+    assert_eq!((snapshot.entry_count, snapshot.package_count, snapshot.api_count, snapshot.bound_package_count), (320, 43, 277, 43));
     assert_eq!(snapshot.index_sha256, "6489af00168c3343f489edb8f7f20d57743e4f3c07b648bbd62f6f5b8ab98fa2");
     for id in &identities { assert_eq!(catalog.call_lookup(&mut store, &index, id).unwrap().unwrap().unwrap().identity, *id); }
     let query = Query { text: String::new(), package_id: None, profile: None, bound_only: false };
     let mut all = Vec::new();
-    for offset in (0..289).step_by(64) {
+    for offset in (0..320).step_by(64) {
         all.extend(catalog.call_search(&mut store, &index, &query, offset, 64).unwrap().unwrap().into_iter().map(|h| h.identity));
     }
     assert_eq!(all, identities);
@@ -48,5 +48,5 @@ fn main() {
     assert!(catalog.call_lookup(&mut store, &index, "missing").unwrap().unwrap().is_none());
     assert!(matches!(catalog.call_search(&mut store, &index, &query, 0, 65).unwrap(), Err(SearchError::InvalidLimit)));
     assert!(matches!(catalog.call_snapshot(&mut store, "{}").unwrap(), Err(SearchError::InvalidIndex)));
-    println!("{{\"accepted\":true,\"generated_sdk\":true,\"packages\":42,\"entries\":289,\"component_calls\":{}}}", calls + 3);
+    println!("{{\"accepted\":true,\"generated_sdk\":true,\"packages\":43,\"entries\":320,\"component_calls\":{}}}", calls + 3);
 }

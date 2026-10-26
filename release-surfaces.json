@@ -583,15 +583,17 @@
       "check_commands": [
         "node scripts/lib-route-closure.mjs --check",
         "node scripts/current-compiler-integrity.mjs --require-qualification",
-        "node scripts/release-candidate.mjs verify channels/candidates/0.0.30.json --candidate-sha256 a379b7b61ce6070ee3dafc7b802d93c53915b8b0eef013b2c7f95124fefd4578"
+        "node scripts/release-candidate.mjs verify channels/candidates/0.0.30.json --candidate-sha256 12361f0170cf343e0e75d796847e61f5fc20c0e5fe3b2603fad5c88d862cf827"
       ],
       "answer_boundary": "Stop after reporting the product closure and the exact lifecycle state read from release.json/channels; never infer a transition.",
       "stop": "This record is sufficient for the matching readiness decision. Do not scan manifests, histories or implementation scripts unless one of its check commands fails.",
       "pending_candidate_verification": {
         "path": "channels/candidates/0.0.30.json",
-        "candidate_sha256": "a379b7b61ce6070ee3dafc7b802d93c53915b8b0eef013b2c7f95124fefd4578",
+        "candidate_sha256": "12361f0170cf343e0e75d796847e61f5fc20c0e5fe3b2603fad5c88d862cf827",
         "status": "verified-exact-frozen-candidate",
-        "rule": "Use this complete independent candidate SHA256; stage promotions must preserve its product set."
+        "rule": "Use this complete independent candidate SHA256; stage promotions must preserve its product set.",
+        "bytes": 487848,
+        "sha256": "12361f0170cf343e0e75d796847e61f5fc20c0e5fe3b2603fad5c88d862cf827"
       },
       "composition_qualification": {
         "kind": "verified-original-producer-composition",
@@ -691,7 +693,7 @@
         "catalog_sha256": "e12684efb3e475ad551eddabda12bc4c196f19edb48e7ace9069fda1ef5e7871",
         "wit_sha256": "5abbed39c185835cfbbc5c2b961fb904b3ad66f42b22aef1ac7a40835ee246e9",
         "artifact_sha256": "b79a499c8300361125e7fcdae02170184b82d4bbeff4d8f24ed95f3fd4db8d3b",
-        "companion_sha256": "b06eb9a32dddb75e278cd8aa9b1126f6e4b51e885a83897c80f7b5da85b81c3f",
+        "companion_sha256": "1fac280b1d3f2d82399e61e49fcb47f1c6ffc6c3d5b3b27e5d98059952fefabd",
         "import_module": "wasmc:lib/wasmc.lib_managed_object_heap@4.9.0",
         "manifest_sha256": "9db63b4f380f9a8fb7541addfde6608bbc48b3267ad903f838afedb98e74ebfc",
         "root_inventory_sha256": "6978407b51e835a3893ac14cbb7ca2c46da48d0a778f2611f6de829af07bdf92",
@@ -714,7 +716,7 @@
         "version": "4.11.0-candidate.2",
         "path": "current/lib_core.wasm",
         "bytes": 2632162,
-        "sha256": "b06eb9a32dddb75e278cd8aa9b1126f6e4b51e885a83897c80f7b5da85b81c3f",
+        "sha256": "1fac280b1d3f2d82399e61e49fcb47f1c6ffc6c3d5b3b27e5d98059952fefabd",
         "import_module": "wasmc:lib/wasmc.lib_managed_object_heap@4.9.0",
         "ABI_import_namespace": "4.9.0",
         "import_namespace_unchanged": true,
@@ -844,7 +846,7 @@
       "version": "4.11.0-candidate.2",
       "path": "current/lib_core.wasm",
       "bytes": 2632162,
-      "sha256": "b06eb9a32dddb75e278cd8aa9b1126f6e4b51e885a83897c80f7b5da85b81c3f",
+      "sha256": "1fac280b1d3f2d82399e61e49fcb47f1c6ffc6c3d5b3b27e5d98059952fefabd",
       "import_module": "wasmc:lib/wasmc.lib_managed_object_heap@4.9.0",
       "ABI_import_namespace": "4.9.0",
       "import_namespace_unchanged": true,

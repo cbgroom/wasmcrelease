@@ -78,6 +78,8 @@ manifest and notices; current discovery selects JSON0.0.6.
 
 For checked scalar/unit Host composition, use [the canonical checked Result fixture](examples/current/canonical-checked-results-v1/). It uses existing typed Result bindings and the separately selected published JSON0.0.7 Root. Its complete App requires a multi-memory engine; Bun1.3.14 validates compiler frames only.
 
+For strings, search the existing Text0.0.1 Root (30 Rust APIs), then use [the ordinary string example](examples/current/string-support-v1/) and `node scripts/test-current-string-support.mjs`. CoreLib storage grows with fallible Rust allocation. Caller memory, handle limits and the existing canonical ingress work budget still apply.
+
 System Telemetry has a generated Component resource SDK. Its current ordinary
 source direct resource-method route remains unsupported. Client Foundation and
 Gateway surfaces remain incubating; their presence does not imply production

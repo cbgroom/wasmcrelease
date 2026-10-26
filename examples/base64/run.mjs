@@ -18,7 +18,7 @@ if(installed) {
 }
 const libBytes=installed?readFileSync(resolve(installed,root,'artifact.wasm')):
   await readFile(new URL('../../'+root+'/artifact.wasm',import.meta.url));
-assert.equal(createHash('sha256').update(providerBytes).digest('hex'), 'b06eb9a32dddb75e278cd8aa9b1126f6e4b51e885a83897c80f7b5da85b81c3f');
+assert.equal(createHash('sha256').update(providerBytes).digest('hex'), '1fac280b1d3f2d82399e61e49fcb47f1c6ffc6c3d5b3b27e5d98059952fefabd');
 assert.equal(createHash('sha256').update(libBytes).digest('hex'), 'b79a499c8300361125e7fcdae02170184b82d4bbeff4d8f24ed95f3fd4db8d3b');
 const providerModule = new WebAssembly.Module(providerBytes);
 assert.deepEqual(WebAssembly.Module.imports(providerModule), []);

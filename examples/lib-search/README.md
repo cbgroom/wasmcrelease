@@ -1,8 +1,8 @@
 # Current LibSearch 0.5.0 consumer
 
 Read the exact [current catalog](../../catalog/README.md). The index is explicit
-[catalog data](../../catalog/current-index-v2.json), with 42 packages, 236 exported
-APIs and 278 entries. The executable Search Root is
+[catalog data](../../catalog/current-index-v2.json), with 43 packages, 277 exported
+APIs and 320 entries. The executable Search Root is
 [LibSearch 0.5.0](../../standard/wasmc-lib-search/0.5.0/). The public metadata pins
 the complete Root and its manifest-owned Core and Component SDK paths.
 

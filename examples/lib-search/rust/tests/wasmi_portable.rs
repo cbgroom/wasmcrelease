@@ -26,7 +26,7 @@ fn current_core_snapshot_search_lookup_and_post_return_without_jit() {
         let p=put(&mut store,&index);let result=snapshot.call(&mut store,(p,index.len()as i32)).unwrap();
         let mut v=[0;36];memory.read(&store,result as usize,&mut v).unwrap();assert_eq!(v[0],0);
         let n=|i|u32::from_le_bytes(v[i..i+4].try_into().unwrap());
-        assert_eq!((n(4),n(8),n(12),n(16)),(289,42,247,42));post_snapshot.call(&mut store,result).unwrap();
+        assert_eq!((n(4),n(8),n(12),n(16)),(320,43,277,43));post_snapshot.call(&mut store,result).unwrap();
         let p=put(&mut store,&index);let q=put(&mut store,b"base64");
         let result=search.call(&mut store,(p,index.len()as i32,q,6,0,0,0,0,0,0,1,0,64)).unwrap();
         let mut v=[0;12];memory.read(&store,result as usize,&mut v).unwrap();assert_eq!(v[0],0);assert!(u32::from_le_bytes(v[8..].try_into().unwrap())>=2);post_search.call(&mut store,result).unwrap();
