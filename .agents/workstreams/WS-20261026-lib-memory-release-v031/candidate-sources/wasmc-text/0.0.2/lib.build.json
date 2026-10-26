@@ -1,0 +1,295 @@
+{
+  "schema": "wasmc.lib-build/v0",
+  "skill": {
+    "name": "wasmc-text",
+    "version": "0.0.2",
+    "description": "Rust UTF8 string processing with capacity governed by aggregate runtime memory."
+  },
+  "wit": "lib.wit",
+  "apis": [
+    {
+      "api": "contains",
+      "delta": "WIT owned strings/lists replace borrowed slices/iterators; Wasm32 indices/counts are u32. Strict UTF8 returns None on invalid input; lossy decoding is explicit. No normalization or locale state.",
+      "ecosystem": "str::contains",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "ends-with",
+      "delta": "WIT owned strings/lists replace borrowed slices/iterators; Wasm32 indices/counts are u32. Strict UTF8 returns None on invalid input; lossy decoding is explicit. No normalization or locale state.",
+      "ecosystem": "str::ends_with",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "eq-ignore-ascii-case",
+      "delta": "WIT owned strings/lists replace borrowed slices/iterators; Wasm32 indices/counts are u32. Strict UTF8 returns None on invalid input; lossy decoding is explicit. No normalization or locale state.",
+      "ecosystem": "str::eq_ignore_ascii_case",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "find",
+      "delta": "WIT owned strings/lists replace borrowed slices/iterators; Wasm32 indices/counts are u32. Strict UTF8 returns None on invalid input; lossy decoding is explicit. No normalization or locale state.",
+      "ecosystem": "str::find; memchr::memmem::find",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "from-utf8-lossy",
+      "delta": "WIT owned strings/lists replace borrowed slices/iterators; Wasm32 indices/counts are u32. Strict UTF8 returns None on invalid input; lossy decoding is explicit. No normalization or locale state.",
+      "ecosystem": "String::from_utf8_lossy",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "from-utf8-or",
+      "delta": "Rust optional/error result maps to exactly the explicit caller fallback; no separate status. Owned result, checked UTF8 byte indices, ordinary runtime allocation/transport limits.",
+      "ecosystem": "String::from_utf8",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "get-or",
+      "delta": "Rust optional/error result maps to exactly the explicit caller fallback; no separate status. Owned result, checked UTF8 byte indices, ordinary runtime allocation/transport limits.",
+      "ecosystem": "str::get",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "into-bytes",
+      "delta": "WIT owned strings/lists replace borrowed slices/iterators; Wasm32 indices/counts are u32. Strict UTF8 returns None on invalid input; lossy decoding is explicit. No normalization or locale state.",
+      "ecosystem": "String::into_bytes",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "is-ascii",
+      "delta": "WIT owned strings/lists replace borrowed slices/iterators; Wasm32 indices/counts are u32. Strict UTF8 returns None on invalid input; lossy decoding is explicit. No normalization or locale state.",
+      "ecosystem": "str::is_ascii",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "is-char-boundary",
+      "delta": "WIT owned strings/lists replace borrowed slices/iterators; Wasm32 indices/counts are u32. Strict UTF8 returns None on invalid input; lossy decoding is explicit. No normalization or locale state.",
+      "ecosystem": "str::is_char_boundary",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "is-empty",
+      "delta": "WIT owned strings/lists replace borrowed slices/iterators; Wasm32 indices/counts are u32. Strict UTF8 returns None on invalid input; lossy decoding is explicit. No normalization or locale state.",
+      "ecosystem": "str::is_empty",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "join",
+      "delta": "WIT owned strings/lists replace borrowed slices/iterators; Wasm32 indices/counts are u32. Strict UTF8 returns None on invalid input; lossy decoding is explicit. No normalization or locale state.",
+      "ecosystem": "slice::join",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "lines",
+      "delta": "WIT owned strings/lists replace borrowed slices/iterators; Wasm32 indices/counts are u32. Strict UTF8 returns None on invalid input; lossy decoding is explicit. No normalization or locale state.",
+      "ecosystem": "str::lines",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "replace",
+      "delta": "WIT owned strings/lists replace borrowed slices/iterators; Wasm32 indices/counts are u32. Strict UTF8 returns None on invalid input; lossy decoding is explicit. No normalization or locale state.",
+      "ecosystem": "str::replace",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "replacen",
+      "delta": "WIT owned strings/lists replace borrowed slices/iterators; Wasm32 indices/counts are u32. Strict UTF8 returns None on invalid input; lossy decoding is explicit. No normalization or locale state.",
+      "ecosystem": "str::replacen",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "rfind",
+      "delta": "WIT owned strings/lists replace borrowed slices/iterators; Wasm32 indices/counts are u32. Strict UTF8 returns None on invalid input; lossy decoding is explicit. No normalization or locale state.",
+      "ecosystem": "str::rfind; memchr::memmem::rfind",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "split",
+      "delta": "WIT owned strings/lists replace borrowed slices/iterators; Wasm32 indices/counts are u32. Strict UTF8 returns None on invalid input; lossy decoding is explicit. No normalization or locale state.",
+      "ecosystem": "str::split",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "split-ascii-whitespace",
+      "delta": "WIT owned strings/lists replace borrowed slices/iterators; Wasm32 indices/counts are u32. Strict UTF8 returns None on invalid input; lossy decoding is explicit. No normalization or locale state.",
+      "ecosystem": "str::split_ascii_whitespace",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "split-whitespace",
+      "delta": "WIT owned strings/lists replace borrowed slices/iterators; Wasm32 indices/counts are u32. Strict UTF8 returns None on invalid input; lossy decoding is explicit. No normalization or locale state.",
+      "ecosystem": "str::split_whitespace",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "splitn",
+      "delta": "WIT owned strings/lists replace borrowed slices/iterators; Wasm32 indices/counts are u32. Strict UTF8 returns None on invalid input; lossy decoding is explicit. No normalization or locale state.",
+      "ecosystem": "str::splitn",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "starts-with",
+      "delta": "WIT owned strings/lists replace borrowed slices/iterators; Wasm32 indices/counts are u32. Strict UTF8 returns None on invalid input; lossy decoding is explicit. No normalization or locale state.",
+      "ecosystem": "str::starts_with",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "strip-prefix-or",
+      "delta": "Rust optional/error result maps to exactly the explicit caller fallback; no separate status. Owned result, checked UTF8 byte indices, ordinary runtime allocation/transport limits.",
+      "ecosystem": "str::strip_prefix",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "strip-suffix-or",
+      "delta": "Rust optional/error result maps to exactly the explicit caller fallback; no separate status. Owned result, checked UTF8 byte indices, ordinary runtime allocation/transport limits.",
+      "ecosystem": "str::strip_suffix",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "to-ascii-lowercase",
+      "delta": "WIT owned strings/lists replace borrowed slices/iterators; Wasm32 indices/counts are u32. Strict UTF8 returns None on invalid input; lossy decoding is explicit. No normalization or locale state.",
+      "ecosystem": "str::to_ascii_lowercase",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "to-ascii-uppercase",
+      "delta": "WIT owned strings/lists replace borrowed slices/iterators; Wasm32 indices/counts are u32. Strict UTF8 returns None on invalid input; lossy decoding is explicit. No normalization or locale state.",
+      "ecosystem": "str::to_ascii_uppercase",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "to-lowercase",
+      "delta": "WIT owned strings/lists replace borrowed slices/iterators; Wasm32 indices/counts are u32. Strict UTF8 returns None on invalid input; lossy decoding is explicit. No normalization or locale state.",
+      "ecosystem": "str::to_lowercase",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "to-uppercase",
+      "delta": "WIT owned strings/lists replace borrowed slices/iterators; Wasm32 indices/counts are u32. Strict UTF8 returns None on invalid input; lossy decoding is explicit. No normalization or locale state.",
+      "ecosystem": "str::to_uppercase",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "trim",
+      "delta": "WIT owned strings/lists replace borrowed slices/iterators; Wasm32 indices/counts are u32. Strict UTF8 returns None on invalid input; lossy decoding is explicit. No normalization or locale state.",
+      "ecosystem": "str::trim",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "trim-end",
+      "delta": "WIT owned strings/lists replace borrowed slices/iterators; Wasm32 indices/counts are u32. Strict UTF8 returns None on invalid input; lossy decoding is explicit. No normalization or locale state.",
+      "ecosystem": "str::trim_end",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "trim-start",
+      "delta": "WIT owned strings/lists replace borrowed slices/iterators; Wasm32 indices/counts are u32. Strict UTF8 returns None on invalid input; lossy decoding is explicit. No normalization or locale state.",
+      "ecosystem": "str::trim_start",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    }
+  ],
+  "core": {
+    "root": {
+      "module": "facade",
+      "artifact": "facade.wasm",
+      "sha256": "dc0314b29996bbb08c3bcdaa769d8d34e079d1deca6ad755598bfc02d6311a2a"
+    },
+    "dependencies": [
+      {
+        "module": "rust-implementation",
+        "artifact": "implementation.wasm",
+        "sha256": "c3b6966c906896575c2d08cbbf61d1d4861cb42d2f30aea994b8182fd851b300"
+      }
+    ]
+  }
+}

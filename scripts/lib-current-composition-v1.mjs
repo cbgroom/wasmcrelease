@@ -64,7 +64,7 @@ function importedRoot(input,replacement,baseLicense){
     assert.match(cargo,/^license-file\s*=\s*"\.\.\/\.\.\/LICENSE"\s*$/m);assert.ok(!/^license\s*=/m.test(cargo));
   }
   verifyLocalDescriptors(manifest,files);
-  if(replacement.source.schema==='wasmc.changed-rust-lib-source-input/v1') {
+  if(['wasmc.changed-rust-lib-source-input/v1','wasmc.reexported-rust-lib-source-input/v1'].includes(replacement.source.schema)) {
     assert.equal(manifest.license.schema,baseLicense.schema);assert.equal(manifest.license.identifier,baseLicense.identifier);
     for(const original of baseLicense.files)assert.deepEqual(manifest.license.files.find(row=>row.path===original.path),original,'original common license snapshot');
   } else assert.deepEqual(manifest.license,baseLicense,'exact original common license and notice snapshots');
