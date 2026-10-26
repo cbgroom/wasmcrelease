@@ -1,3 +1,4 @@
+import {additive,checkCompositionOptions,importedSelections,registryProjection} from './current-lib-composition-input-v2.mjs';
 // Verify a complete cohort assembled from immutable, already produced Roots.
 // This receipt is deliberately not a lib-refresh-receipt/v2 or a fresh Q0 run.
 // Catalog authoring, public admission, installation and release remain separate.
@@ -95,9 +96,9 @@ function importedRoot(input,replacement,baseLicense){
 // read provider. Production callers should use composeCurrentLibs below; tests
 // can exercise byte changes without changing the immutable filesystem inputs.
 export function composeCurrentLibData(input,options){
-  exact(options,['schema','base','reused_ids','replacements']);assert.equal(options.schema,'wasmc.current-lib-composition-input/v1');
+  assert.ok(['wasmc.current-lib-composition-input/v1','wasmc.current-lib-composition-input/v2'].includes(options.schema));
   exact(options.base,['catalog_path','catalog_sha256']);pin(options.base.catalog_sha256);
-  assert.ok(Array.isArray(options.reused_ids)&&Array.isArray(options.replacements)&&options.replacements.length>0&&options.replacements.length<=64);
+  assert.ok(Array.isArray(options.reused_ids)&&Array.isArray(options.replacements)&&options.replacements.length<=64);
   const bytes=readBytes(input,options.base.catalog_path),catalog=checkedCurrentCatalog(bytes,options.base.catalog_sha256);
   const basePaths=input.paths('current-libs');
   const baseClosure=verifyCurrentRelease(bytes,options.base.catalog_sha256,input.read,basePaths);
@@ -105,7 +106,7 @@ export function composeCurrentLibData(input,options){
   const ids=catalog.packages.map(row=>row.id),replaced=options.replacements.map(row=>row.id);
   assert.deepEqual(options.reused_ids,sorted(new Set(options.reused_ids)),'ordered unique explicit reused identities');
   assert.equal(new Set(replaced).size,replaced.length,'duplicate replacement identity');
-  assert.deepEqual(sorted([...options.reused_ids,...replaced]),ids,'exact whole current cohort; no missing, duplicate or added identity');
+  const selectedIds=checkCompositionOptions(options,ids);
   const baseLicense={schema:'wasmc.lib-license/v1',identifier:'WAsmC Research-Only Non-Commercial License 1.0',
     files:[descriptor(input,'LICENSE'),...cohort.release_notices.files]};
   const rows=[];
@@ -126,7 +127,8 @@ export function composeCurrentLibData(input,options){
     const row=importedRoot(input,replacement,baseLicense),previous=catalog.packages.find(p=>p.id===replacement.id);
     assert.notEqual(row.version,previous.version,'replacement requires a distinct explicit version');rows.push(row);
   }
-  rows.sort((a,b)=>a.id<b.id?-1:a.id>b.id?1:0);assert.deepEqual(rows.map(row=>row.id),ids);
+  for(const addition of options.additions??[])rows.push(importedRoot(input,addition,baseLicense));
+  rows.sort((a,b)=>a.id<b.id?-1:a.id>b.id?1:0);assert.deepEqual(rows.map(row=>row.id),selectedIds);
   // End-of-read fences cover the source packet, the replacement Root and every
   // reused Root. No earlier successful read can authorize a later changed byte.
   assert.equal(sha(readBytes(input,options.base.catalog_path)),options.base.catalog_sha256);
@@ -135,13 +137,13 @@ export function composeCurrentLibData(input,options){
     ...catalog.packages.flatMap(row=>[...Object.values(row.source),...row.files])])
     assert.deepEqual(descriptor(input,expected.path),expected,'base product input changed during composition');
   for(const row of rows){assert.deepEqual(rootInventory(input,row.root),row.files,'Root changed during composition');
-    if(row.origin.kind==='imported-producer-root')assert.equal(digest(rootInventory(input,row.origin.source_root)),row.origin.source_inventory_sha256,'producer packet changed during composition');}
+    if(row.origin.kind!=='reused-public-root')assert.equal(digest(rootInventory(input,row.origin.source_root)),row.origin.source_inventory_sha256,'producer packet changed during composition');}
   const apis=rows.reduce((n,row)=>n+row.wit.api_routes.length,0);
   return {schema:'wasmc.current-lib-composition/v1',accepted:true,composition_complete:true,
     fresh_full_q0:false,public_admission:false,released:false,installation:false,
     base:{catalog:descriptor(input,options.base.catalog_path),cohort:catalog.cohort,index:catalog.index,
       original_closure:baseClosure},input_sha256:digest(options),rows,
-    summary:{packages:rows.length,reused_roots:options.reused_ids.length,imported_roots:replaced.length,
+    summary:{packages:rows.length,reused_roots:options.reused_ids.length,imported_roots:importedSelections(options).length,
       apis,entries:rows.length+apis,fresh_builds:0},
     remaining_gates:['current authoring identity admission for imported Roots','complete current WIT/index/catalog assembly',
       'independent assembled-product verification and actual Core Search','current resolve/install and ordinary App/SDK qualification',
@@ -153,7 +155,7 @@ export async function composeCurrentLibs(repo,options){
   const receipt=composeCurrentLibData(input,options);
   // Reuse the existing physical Root verifier in addition to composition's
   // original-producer and actual-Core checks. It writes no files.
-  for(const replacement of options.replacements){
+  for(const replacement of importedSelections(options)){
     const verified=await verifyRoot(join(repo,safe(replacement.root)),replacement.id,replacement.version,replacement.profile);
     assert.equal(verified.manifest_sha256,replacement.manifest_sha256);
     assert.equal(digest(verified.files),replacement.root_inventory_sha256);
@@ -175,12 +177,13 @@ function candidateFromComposition(input,options,composition){
   const ordered=map=>Object.fromEntries(Object.entries(map).sort(([a],[b])=>a<b?-1:a>b?1:0));
   assert.equal(digest(ordered(originalSource)),baseIndex.source_fingerprint,'original complete authoring fingerprint');
   const compositionSha=digest(composition),packages=[],roots=[],projectedSourceFiles=[];
+  const registry=registryProjection(input,catalog,options).pin;
   const sourceLineage=buildCurrentCompositionLineageData(input,options,composition,compositionSha,{checkedCurrentCatalog,verifyCurrentRelease});
   for(const row of composition.rows){
     const manifest=parse(readBytes(input,row.root+'/lib.json'));
     if(row.origin.kind==='reused-public-root')packages.push(structuredClone(baseIndex.packages.find(p=>p.package_id===row.id)));
     else{
-      const replacement=options.replacements.find(p=>p.id===row.id),source=replacement.source;
+      const replacement=importedSelections(options).find(p=>p.id===row.id),source=replacement.source;
       for(const [path,value]of Object.entries(rootInventory(input,source.root)))selectedSource[source.root+'/'+path]=value.sha256;
       packages.push({package_id:row.id,version:row.version,profile:row.profile,target:manifest.build.target,
         source_path:'libspec/'+row.id+'/lib.wit',wit_sha256:row.wit.sha256,
@@ -201,9 +204,9 @@ function candidateFromComposition(input,options,composition){
       files:Object.entries(row.files).map(([path,value])=>({path:row.root+'/'+path,...value})),
       source:row.origin.kind==='reused-public-root'?{kind:'current-authoring',...row.catalog_row.source}:
         {kind:'current-original-producer-source',spec:row.discovery_metadata.spec,
-          wit:descriptor(input,options.replacements.find(p=>p.id===row.id).source.root+'/'+options.replacements.find(p=>p.id===row.id).source.wit),
+          wit:descriptor(input,importedSelections(options).find(p=>p.id===row.id).source.root+'/'+importedSelections(options).find(p=>p.id===row.id).source.wit),
           packet_root:row.origin.source_root,packet_inventory_sha256:row.origin.source_inventory_sha256,
-          source_schema:'wasmc.current-original-producer-source/v1',
+          source_schema:sourceLineage.admitted_original_sources.find(value=>value.source.id===row.id).source.schema,
           source_admission:sourceLineage.admitted_original_sources.find(value=>value.source.id===row.id).admission},
       origin:row.origin,current_authoring_admitted:!row.required_current_authoring_admission,
       source_custody_admitted_for_current_composition:true});
@@ -213,7 +216,7 @@ function candidateFromComposition(input,options,composition){
   const bareIdOrder=structuredClone(packages);
   packages.sort((a,b)=>{const x=a.package_id+'@'+a.version,y=b.package_id+'@'+b.version;return x<y?-1:x>y?1:0;});
   const sourceInputs=ordered(selectedSource),index={schema:'wasmc.current-lib-search-index/v2',
-    registry_sha256:catalog.registry.sha256,source_fingerprint:digest(sourceInputs),packages};
+    registry_sha256:registry.sha256,source_fingerprint:digest(sourceInputs),packages};
   const indexBytes=Buffer.from(JSON.stringify(index)+'\n'),indexPin={bytes:indexBytes.length,sha256:sha(indexBytes)};
   assert.ok(indexBytes.length<=2097152);const entries=currentIndexEntries(index);
   assert.equal(new Set(entries.map(row=>row.identity)).size,entries.length,'unique complete candidate identities');
@@ -224,7 +227,7 @@ function candidateFromComposition(input,options,composition){
   const caller=new CurrentSearchCaller(indexBytes,searchArtifact,searchAbi);
   assert.deepEqual(caller.snapshot(),{tag:'ok',value:{entry_count:entries.length,package_count:packages.length,
     api_count:entries.length-packages.length,bound_package_count:packages.length,
-    registry_sha256:catalog.registry.sha256,index_sha256:indexPin.sha256}});
+    registry_sha256:registry.sha256,index_sha256:indexPin.sha256}});
   for(const entry of entries)assert.deepEqual(caller.lookup(entry.identity),{tag:'ok',value:entry});
   const all=[];let pages=0;
   for(let offset=0;offset<entries.length;offset+=64){
@@ -233,11 +236,11 @@ function candidateFromComposition(input,options,composition){
   }
   assert.deepEqual(all,entries,'actual candidate Core Search full pagination');
   const replaced=[],rejectedSourcePathProbes=[],rejectedInitialProbes=[];
-  for(const replacement of options.replacements){
+  for(const replacement of importedSelections(options)){
     const expected=entries.filter(row=>row.package_id===replacement.id);
     assert.deepEqual(caller.search({text:'',package_id:replacement.id,profile:null,bound_only:true},0,64),{tag:'ok',value:expected});
-    const old=catalog.packages.find(row=>row.id===replacement.id),oldIdentity=old.id+'@'+old.version;
-    assert.deepEqual(caller.lookup(oldIdentity),{tag:'ok',value:null},'old replaced identity absent');
+    const old=catalog.packages.find(row=>row.id===replacement.id),oldIdentity=old?old.id+'@'+old.version:null;
+    if(oldIdentity)assert.deepEqual(caller.lookup(oldIdentity),{tag:'ok',value:null},'old replaced identity absent');
     replaced.push({id:replacement.id,old_identity:oldIdentity,new_identity:replacement.id+'@'+replacement.version,
       filtered_entries:expected.length,old_identity_absent:true});
     // Preserve the first real candidate failure as an executable contrast:
@@ -269,7 +272,7 @@ function candidateFromComposition(input,options,composition){
     current_directory_admitted:false,public_admission:false,released:false,installation:false,fresh_full_q0:false,
     composition_sha256:compositionSha,index,index_pin:indexPin,index_source_paths:'proposed-current-product',source_lineage:sourceLineage,
     manifest:{schema:'wasmc.current-lib-composition-manifest/v1',base_catalog:composition.base.catalog,
-      registry:catalog.registry,composition_sha256:compositionSha,index:indexPin,
+      registry,composition_sha256:compositionSha,index:indexPin,
       source_lineage_sha256:digest(sourceLineage),
       source_fingerprint_mode:'composition-selected-discovery-inputs/v1',source_inputs:sourceInputs,
       projected_source_files:projectedSourceFiles,packages:roots},
@@ -279,12 +282,12 @@ function candidateFromComposition(input,options,composition){
       bare_id_order_probe:{index_sha256:sha(orderProbeBytes),observed:orderObserved,rejected:differentOrder},
       search_core_sha256:sha(searchArtifact),search_abi_sha256:sha(searchAbi)},summary:composition.summary,
     exact_remaining_identity_gaps:[],
-    pending_current_materializations:options.replacements.map(replacement=>({id:replacement.id,
+    pending_current_materializations:importedSelections(options).map(replacement=>({id:replacement.id,
       current_spec:descriptor(input,'libspec/'+replacement.id+'/lib.json'),
       proposed_source_spec:descriptor(input,replacement.source.root+'/'+replacement.source.source_spec),
       current_wit:descriptor(input,'libspec/'+replacement.id+'/lib.wit'),
       proposed_wit:descriptor(input,replacement.source.root+'/'+replacement.source.wit),
-      admitted_source_schema:'wasmc.current-original-producer-source/v1',
+      admitted_source_schema:sourceLineage.admitted_original_sources.find(value=>value.source.id===replacement.id).source.schema,
       reason:'Source custody is admitted for the current composition; the physical current source registry, WIT projection and product lineage adapter remain unapplied.'})),
     remaining_gates:['connect admitted original-producer-source and strict composition lineage to current product assembler/verifier',
       'materialize complete current catalog/Roots, then actual resolve/install and App/SDK qualification',

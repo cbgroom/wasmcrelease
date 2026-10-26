@@ -1,3 +1,4 @@
+import {additive,checkCompositionOptions,importedSelections,registryProjection} from './current-lib-composition-input-v2.mjs';
 // A separate closed cohort for original-producer composition. The legacy
 // full-refresh branch is supplied explicitly and is never replaced by trust
 // in a composition receipt. No compiler or unchanged Root is rebuilt here.
@@ -27,6 +28,7 @@ function graphReader(cohort,read,productPaths){
 }
 function expectedIndex(input,catalog,lineage,composition,options){
   const index=parse(input.read(catalog.index.path)),selected={};
+  const registry=registryProjection(input,catalog,options).pin;
   const packages=index.packages.map(row=>structuredClone(row));
   for(const original of catalog.packages){
     if(options.reused_ids.includes(original.id)){
@@ -39,15 +41,16 @@ function expectedIndex(input,catalog,lineage,composition,options){
     const model=witModel(input.read(s.wit.path)),routes=selectedWitRoutes(model,s.world,new Map([[model.identity,model]]));
     for(const pin of s.source_packet.files)selected[pin.path]=pin.sha256;
     const p=packages.findIndex(row=>row.package_id===s.id);
-    packages[p]={package_id:s.id,version:s.version,profile:s.profile,target:manifest.build.target,
+    const projected={package_id:s.id,version:s.version,profile:s.profile,target:manifest.build.target,
       source_path:'libspec/'+s.id+'/lib.wit',wit_sha256:s.wit.sha256,
       delivery:{manifest_sha256:s.root.manifest_sha256,receipt_sha256:digest(composition),artifact_kind:'wasm-core-component',
         artifact_path:manifest.artifact.path,artifact_sha256:manifest.artifact.sha256,component_sha256:manifest.component.sha256},
       wit_route:model.identity,description:s.description,
       apis:[...routes.routes.keys()].sort().map(route=>({route:route.slice(model.identity.length+1),description:(api=>api.delta??api.ecosystem)(s.apis.find(api=>api.api===route.split('#')[1]))}))};
+    if(p<0)packages.push(projected);else packages[p]=projected;
   }
   packages.sort((a,b)=>(a.package_id+'@'+a.version)<(b.package_id+'@'+b.version)?-1:1);
-  return {schema:'wasmc.current-lib-search-index/v2',registry_sha256:catalog.registry.sha256,
+  return {schema:'wasmc.current-lib-search-index/v2',registry_sha256:registry.sha256,
     source_fingerprint:digest(Object.fromEntries(Object.entries(selected).sort(([a],[b])=>a<b?-1:1))),packages};
 }
 export function verifyComposedCurrentRelease(catalogBytes,catalogSha256,read,productPaths,baseVerification){
@@ -73,8 +76,9 @@ export function verifyComposedCurrentRelease(catalogBytes,catalogSha256,read,pro
       if(productPaths?.some(path=>path.startsWith(root+'/')))assert.deepEqual(sorted(productPaths.filter(path=>path.startsWith(root+'/'))),group.files.map(pin=>pin.path),'complete original public carrier inventory');
     }
   }
-  const registry=readPin(catalog.registry,read);assert.deepEqual(registry,input.read(base.registry.path),'current identity registry is unchanged');
-  const ids=base.packages.map(row=>row.id);assert.deepEqual(catalog.packages.map(row=>row.id),ids);
+  const registry=readPin(catalog.registry,read),expectedRegistry=registryProjection(input,base,options);
+  assert.deepEqual(registry,expectedRegistry.bytes,'exact explicitly admitted registry projection');assert.deepEqual(catalog.registry,expectedRegistry.pin);
+  const ids=checkCompositionOptions(options,base.packages.map(row=>row.id));assert.deepEqual(catalog.packages.map(row=>row.id),ids);
   const indexBytes=readPin(catalog.index,read),index=parse(indexBytes);
   assert.deepEqual(index,expectedIndex(input,base,cohort.source_lineage,composition,options),'complete current source/WIT/index binding');
   const currentFiles=[];let rootFiles=0;
@@ -125,13 +129,14 @@ export async function assembleComposedCurrentProduct(repo,{compositionOptions,ve
   const base=api.checkedCurrentCatalog(read(compositionOptions.base.catalog_path),compositionOptions.base.catalog_sha256);
   const inputPaths=new Set(['LICENSE',compositionOptions.base.catalog_path,base.registry.path,base.index.path,base.cohort.path,...paths('licenses')]);
   for(const row of base.packages){for(const p of paths(row.root))inputPaths.add(p);for(const p of paths(row.source.spec.path.slice(0,-'/lib.json'.length)))inputPaths.add(p);}
-  for(const row of compositionOptions.replacements){for(const p of paths(row.root))inputPaths.add(p);for(const p of paths(row.source.root))inputPaths.add(p);}
+  for(const row of importedSelections(compositionOptions)){for(const p of paths(row.root))inputPaths.add(p);for(const p of paths(row.source.root))inputPaths.add(p);}
   await mkdir(out,{recursive:false});
   const put=async(path,b)=>{assert.ok(safe(path));await mkdir(join(out,path,'..'),{recursive:true});await writeFile(join(out,path),b,{flag:'wx'});};
   const inputFiles=[];for(const path of [...inputPaths].sort()){const b=read(path);await put(prefix+'/'+path,b);inputFiles.push(pinFor(path,b));}
   for(const {source} of candidate.source_lineage.admitted_original_sources)
     for(const pin of [...source.root.files,...source.source_packet.files])await put(pin.path,read(pin.path));
-  for(const path of ['LICENSE',base.registry.path,...paths('licenses')])await put(path,read(path));
+  for(const path of ['LICENSE',...paths('licenses')])await put(path,read(path));
+  const projectedRegistry=registryProjection({read},base,compositionOptions);await put(base.registry.path,projectedRegistry.bytes);
   for(const path of ['libspec/rust-policy.json','libspec/Cargo.lock'])await put(path,read(path));
   const packages=[];
   for(const row of composition.rows){
@@ -155,7 +160,7 @@ export async function assembleComposedCurrentProduct(repo,{compositionOptions,ve
     source_lineage_sha256:digest(candidate.source_lineage),fresh_full_q0:false,public_admission:false};
   const cohortBytes=jsonBytes(cohort),cohortPath='admission/current-composition-cohort-v1.json';await put(cohortPath,cohortBytes);
   const catalog={schema:'wasmc.public-lib-catalog/v2',version,package_authority_commit:artifactCommit,
-    registry:base.registry,index:pinFor('catalog/current-index-v2.json',indexBytes),cohort:pinFor(cohortPath,cohortBytes),packages};
+    registry:projectedRegistry.pin,index:pinFor('catalog/current-index-v2.json',indexBytes),cohort:pinFor(cohortPath,cohortBytes),packages};
   const catalogBytes=jsonBytes(catalog);await put('catalog/libs-current-v2.json',catalogBytes);
   // Original consumer entrypoints run from this self-contained staging root.
   for(const name of (await readdir(join(repo,'scripts'))).filter(n=>n.endsWith('.mjs')))await put('scripts/'+name,await readFile(join(repo,'scripts',name)));

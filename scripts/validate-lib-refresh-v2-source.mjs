@@ -51,7 +51,7 @@ for (const row of registry.libs) {
   assert.equal(row.source, 'libspec/' + row.id, row.id + ': source must use canonical libspec/<id>');
   const dir = resolve(root, row.source);
   const spec = JSON.parse(await readFile(join(dir, 'lib.json'), 'utf8'));
-  if(spec.schema==='wasmc.current-original-producer-source/v1'){
+  if(['wasmc.current-original-producer-source/v1','wasmc.current-published-producer-source/v1'].includes(spec.schema)){
     verifiedOriginalProducerSource(row,spec);
     assert.deepEqual(Object.keys(await fileInventory(dir)).sort(),['lib.json','lib.wit'],row.id+': exact admitted original-source projection');
     originalProducerSources++;continue;

@@ -1,3 +1,5 @@
+import {publishedProducerCustody,buildPublishedSource} from './current-published-lib-source-v1.mjs';
+import {additive,checkCompositionOptions,importedSelections,registryProjection} from './current-lib-composition-input-v2.mjs';
 // Closed original-producer source admission for a current composition.
 // Existing full-refresh v2 authoring/receipts retain their separate validators.
 // This imports exact completed producer evidence; it performs no new build.
@@ -39,6 +41,7 @@ function verifyLocalDescriptors(manifest,files){
   for(const key of ['artifact','component','core_abi','wit','bindings','agent','license'])visit(manifest[key]);
 }
 export function verifyImportedProducerCustodyData(input,replacement,files,manifest){
+  if(replacement.source.schema==='wasmc.published-lib-source-input/v1')return publishedProducerCustody(input,replacement,files,manifest);
   const source=replacement.source;
   exact(source,['root','inventory_sha256','producer_custody','materialization_custody','source_spec','materialized_spec',
     'generated_source','logic','cargo_manifest','cargo_lock','wit','authority']);
@@ -103,6 +106,7 @@ export function verifyImportedProducerCustodyData(input,replacement,files,manife
 }
 
 export function buildOriginalProducerSourceData(input,expected){
+  if(expected.source.schema==='wasmc.published-lib-source-input/v1')return buildPublishedSource(input,expected);
   exact(expected,['id','version','profile','root','manifest_sha256','root_inventory_sha256','source']);
   assert.match(expected.id,/^[a-z][a-z0-9-]*$/);assert.match(expected.version,/^\d+\.\d+\.\d+$/);
   assert.equal(expected.profile,'value','v1 admits complete canonical value producer sources');
@@ -153,6 +157,10 @@ export function buildOriginalProducerSourceData(input,expected){
   return record;
 }
 export function verifyOriginalProducerSourceData(input,expected,source){
+  if(expected.source.schema==='wasmc.published-lib-source-input/v1'){
+    assert.deepEqual(source,buildPublishedSource(input,expected),'complete published Root/source identity');
+    return {schema:'wasmc.current-source-custody-admission/v1',accepted:true,source_schema:source.schema,id:source.id,version:source.version,source_sha256:digest(source),source_spec:source.source_spec,publication:source.publication,root_manifest_sha256:source.root.manifest_sha256,root_inventory_sha256:source.root.inventory_sha256,source_custody_admitted_for_current_composition:true,current_directory_admitted:false,public_admission:false,original_receipt_bytes_verified:false,original_driver_identity_verified:false,fresh_full_q0:false};
+  }
   exact(source,['schema','id','version','profile','world','description','apis','source_spec','source_packet','canonical_source',
     'materialization','producer','root','wit','source_mode','fresh_build_performed','fresh_full_q0']);
   assert.equal(source.schema,'wasmc.current-original-producer-source/v1');
@@ -173,7 +181,7 @@ function buildLineage(input,options,composition,compositionSha256,baseVerificati
   assert.equal(typeof baseVerification?.checkedCurrentCatalog,'function');assert.equal(typeof baseVerification?.verifyCurrentRelease,'function');
   const {checkedCurrentCatalog,verifyCurrentRelease}=baseVerification;
   pin(compositionSha256);assert.equal(digest(composition),compositionSha256,'independent composition receipt pin');
-  exact(options,['schema','base','reused_ids','replacements']);assert.equal(options.schema,'wasmc.current-lib-composition-input/v1');
+  assert.ok(['wasmc.current-lib-composition-input/v1','wasmc.current-lib-composition-input/v2'].includes(options.schema));
   exact(options.base,['catalog_path','catalog_sha256']);
   assert.equal(composition.schema,'wasmc.current-lib-composition/v1');assert.equal(composition.accepted,true);
   assert.equal(composition.fresh_full_q0,false);assert.equal(composition.public_admission,false);
@@ -182,10 +190,10 @@ function buildLineage(input,options,composition,compositionSha256,baseVerificati
   const catalogBytes=readBytes(input,options.base.catalog_path),catalog=checkedCurrentCatalog(catalogBytes,options.base.catalog_sha256);
   const baseClosure=verifyCurrentRelease(catalogBytes,options.base.catalog_sha256,input.read,input.paths('current-libs'));
   assert.equal(composition.base.catalog.sha256,options.base.catalog_sha256);
-  const cohort=parse(readBytes(input,catalog.cohort.path)),ids=catalog.packages.map(row=>row.id);
+  const cohort=parse(readBytes(input,catalog.cohort.path)),ids=checkCompositionOptions(options,catalog.packages.map(row=>row.id));
   assert.deepEqual(composition.rows.map(row=>row.id),ids,'whole source lineage cohort');
   assert.equal(new Set(options.replacements.map(row=>row.id)).size,options.replacements.length);
-  assert.deepEqual(sorted([...options.reused_ids,...options.replacements.map(row=>row.id)]),ids,'complete explicit lineage selection');
+  assert.deepEqual(sorted([...options.reused_ids,...importedSelections(options).map(row=>row.id)]),ids,'complete explicit lineage selection');
   const rows=[],sources=[];
   for(const row of composition.rows){
     const original=catalog.packages.find(value=>value.id===row.id);
@@ -203,7 +211,7 @@ function buildLineage(input,options,composition,compositionSha256,baseVerificati
         producer_sha256:cohort.producer_sha256,manifest_sha256:row.manifest_sha256,
         root_inventory_sha256:row.root_inventory_sha256,fresh_build_performed:false});
     }else{
-      const expected=options.replacements.find(value=>value.id===row.id),admitted=admitOriginalProducerSourceData(input,expected);
+      const expected=importedSelections(options).find(value=>value.id===row.id),admitted=admitOriginalProducerSourceData(input,expected);
       assert.equal(row.root,expected.root);assert.equal(row.profile,expected.profile);
       assert.equal(row.version,admitted.source.version);assert.equal(row.manifest_sha256,admitted.source.root.manifest_sha256);
       assert.equal(row.root_inventory_sha256,admitted.source.root.inventory_sha256);
