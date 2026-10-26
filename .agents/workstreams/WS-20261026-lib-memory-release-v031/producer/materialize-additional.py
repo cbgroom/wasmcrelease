@@ -9,7 +9,7 @@ sections=re.split(r'(?=\[\[package\]\])',lock)[1:]
 packages={}
 for section in sections:
     p=tomllib.loads(section)['package'][0];packages[(p['name'],p['version'])]=(p,section)
-selected=['wasmc-compression','wasmc-lib-search','wasmc-http1','wasmc-http1-client','wasmc-system-telemetry','wasmc-data-interchange','wasmc-data-relational']
+selected=['wasmc-compression','wasmc-lib-search','wasmc-http1','wasmc-http1-client','wasmc-system-telemetry','wasmc-data-interchange','wasmc-data-relational','wasmc-std']
 original={name:name.replace('-','_')+'_refresh_v2' for name in selected}
 queue=[]; roots=[]; inputs={}
 for name in selected:
@@ -46,7 +46,7 @@ from collections import Counter
 counts=Counter(k[0] for k in seen)
 body=''.join(packages[k][1] for k in sorted(seen))+''.join(roots)
 body=re.sub(r'(?m)^ \"([^\"]+) ([^\"]+)\",$',lambda m:' \"'+m[1]+'\",' if counts[m[1]]==1 else m[0],body)
-(out/'Cargo.lock').write_bytes((own/'inputs/seven.Cargo.lock').read_bytes())
+(out/'Cargo.lock').write_text('# Development subset seed from unchanged exact cohort package pins.\nversion = 4\n\n'+body)
 resolved=tomllib.loads((out/'Cargo.lock').read_text())
 assert {p['name'] for p in resolved['package'] if 'source' not in p}=={json.loads((own/'libspec'/name/'lib.json').read_text())['crate'] for name in selected}
 (out/'Cargo.toml').write_text('[workspace]\nresolver="2"\nmembers='+json.dumps(['crates/'+n for n in selected])+'\n[profile.release]\nopt-level="z"\nlto=true\ncodegen-units=1\npanic="abort"\nstrip="symbols"\n')
