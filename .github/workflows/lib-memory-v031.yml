@@ -38,8 +38,8 @@ jobs:
           path: |
             ~/.cargo/registry
             target/lib-memory-v031
-          key: lib-memory-linux-rust196-${{ hashFiles('.agents/workstreams/WS-20261026-lib-memory-release-v031/producer/inputs/**') }}-${{ hashFiles('.agents/workstreams/WS-20261026-lib-memory-release-v031/producer/libspec/**') }}
-          restore-keys: lib-memory-linux-rust196-${{ hashFiles('.agents/workstreams/WS-20261026-lib-memory-release-v031/producer/inputs/**') }}-
+          key: lib-memory-linux-rust196-${{ hashFiles('.agents/workstreams/WS-20261026-lib-memory-release-v031/producer/inputs/cohort.Cargo.lock', '.agents/workstreams/WS-20261026-lib-memory-release-v031/producer/inputs/cohort-rust-policy.json') }}-${{ hashFiles('.agents/workstreams/WS-20261026-lib-memory-release-v031/producer/libspec/**') }}
+          restore-keys: lib-memory-linux-rust196-${{ hashFiles('.agents/workstreams/WS-20261026-lib-memory-release-v031/producer/inputs/cohort.Cargo.lock', '.agents/workstreams/WS-20261026-lib-memory-release-v031/producer/inputs/cohort-rust-policy.json') }}-
       - name: Exact Rust, Native tests and portable changed-Lib build
         env:
           GH_TOKEN: ${{ github.token }}
@@ -79,8 +79,9 @@ jobs:
           cargo build --offline --locked --release --target wasm32-unknown-unknown --manifest-path "$RUNNER_TEMP/lib-memory-additional/Cargo.toml" 2>&1 | tee target/lib-memory-evidence/additional-wasm.log
           cp "$RUNNER_TEMP/lib-memory-additional/source-receipt.json" target/lib-memory-evidence/additional-source-receipt.json
           cp "$RUNNER_TEMP/lib-memory-additional/Cargo.lock" target/lib-memory-evidence/additional.Cargo.lock
-          cp "$CARGO_TARGET_DIR/wasm32-unknown-unknown/release/wasmc_compression_memory_v031.wasm" target/lib-memory-evidence/compression-raw.wasm
-          cp "$CARGO_TARGET_DIR/wasm32-unknown-unknown/release/wasmc_lib_search_memory_v031.wasm" target/lib-memory-evidence/search-raw.wasm
+          for id in compression lib_search http1 http1_client system_telemetry data_interchange data_relational; do
+            cp "$CARGO_TARGET_DIR/wasm32-unknown-unknown/release/wasmc_${id}_memory_v031.wasm" "target/lib-memory-evidence/${id}-raw.wasm"
+          done
           python3 - <<'PYRESOURCE'
           import os,shutil
           total=sum(os.path.getsize(os.path.join(p,n)) for p,_,ns in os.walk(os.environ['CARGO_TARGET_DIR']) for n in ns)
