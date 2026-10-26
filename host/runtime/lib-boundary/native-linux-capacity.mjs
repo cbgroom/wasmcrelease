@@ -1,11 +1,12 @@
 import {spawn} from 'node:child_process';
 
-// A serial client for the Linux executor's explicit-capacity direct protocol.
+// A serial client for an executor's explicit-capacity direct protocol.
 // Each request is sent once: an adapter may have effects and must not be replayed.
-export class NativeLinuxCapacitySession {
+export class NativeCapacitySession {
   #child; #iterator; #chunks=[]; #offset=0; #available=0; #tail=Promise.resolve(); #ended=false; #exit; #stderr='';
-  constructor(executor, descriptor) {
-    this.#child=spawn(executor,['--capacity-session',descriptor],{stdio:['pipe','pipe','pipe']});
+  constructor(executor, descriptor, {prefixArgs=[]}={}) {
+    if(!Array.isArray(prefixArgs)||!prefixArgs.every(value=>typeof value==='string'))throw new TypeError('prefixArgs must be strings');
+    this.#child=spawn(executor,[...prefixArgs,'--capacity-session',descriptor],{stdio:['pipe','pipe','pipe']});
     this.#iterator=this.#child.stdout[Symbol.asyncIterator]();
     this.#child.stderr.on('data',chunk=>{this.#stderr+=chunk.toString();});
     this.#exit=new Promise(resolve=>{
@@ -49,3 +50,4 @@ export class NativeLinuxCapacitySession {
     if(result.code!==0)throw new Error(`native session exited ${result.code}/${result.signal}: ${this.#stderr}`);
   }
 }
+export {NativeCapacitySession as NativeLinuxCapacitySession};
