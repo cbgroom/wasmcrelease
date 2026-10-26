@@ -4,6 +4,7 @@ import hashlib
 import json
 from pathlib import Path
 import platform
+import os
 import sys
 
 own=Path('.agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-host/native-linux-operation')
@@ -17,6 +18,7 @@ try:
         receipt=json.loads((evidence/'receipt.json').read_text()); observed=json.loads((evidence/'operation-memory.json').read_text())
         if not receipt['accepted'] or not observed['accepted'] or pin['qualified_run']!=receipt['run'] or pin['source_commit']!=receipt['source'] or (evidence/'source.txt').read_text().strip()!=pin['source_commit']:
             raise ValueError('direct executor qualification identity differs')
+        if not os.access(newer/'executor',os.X_OK): raise ValueError('qualified executor is not executable')
         if pin['sha256']!=receipt['executor_sha256'] or pin['sha256']!=observed['executor_sha256'] or sha(newer/'executor')!=pin['sha256']:
             raise ValueError('direct executor digest differs')
         if sha(evidence/'rustc.txt')!=pin['rustc_vv_sha256'] or pin['features']!=['operation-bridge'] or pin['profile']!='release' or pin['target']!='x86_64-unknown-linux-gnu':

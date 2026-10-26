@@ -1,0 +1,77 @@
+native-operation	Build changed Native executor and verify single-call operation behavior	﻿2026-10-26T23:26:26.8883368Z ##[group]Run set -euo pipefail
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:26.8883848Z [36;1mset -euo pipefail[0m
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:26.8884228Z [36;1mown=.agents/workstreams/WS-20261026-lib-memory-release-v031[0m
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:26.8884676Z [36;1mout="$RUNNER_TEMP/operation-memory-evidence"[0m
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:26.8885023Z [36;1mmkdir -p "$out"[0m
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:26.8885308Z [36;1mgit rev-parse HEAD > "$out/source.txt"[0m
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:26.8885672Z [36;1muname -a > "$out/host.txt"[0m
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:26.8885955Z [36;1mnode --version > "$out/node.txt"[0m
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:26.8886234Z [36;1mpython3 - <<'PY'[0m
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:26.8886483Z [36;1mimport shutil[0m
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:26.8886730Z [36;1mfree=shutil.disk_usage('.').free[0m
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:26.8887616Z [36;1mprint({'free_bytes':free,'minimum_bytes':12*2**30,'disposable_target_budget_bytes':2*2**30})[0m
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:26.8888074Z [36;1massert free>=12*2**30[0m
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:26.8888329Z [36;1mPY[0m
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:26.8888657Z [36;1mrustup toolchain install 1.96.0 --profile minimal --no-self-update[0m
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:26.8889122Z [36;1mrustc +1.96.0 -vV > "$out/rustc.txt"[0m
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:26.8889507Z [36;1mexport CARGO_TARGET_DIR="$RUNNER_TEMP/operation-memory-target"[0m
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:26.8889879Z [36;1mset +e[0m
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:26.8890314Z [36;1mpython3 "$own/verify-operation-executor-reuse.py" "$out/rustc.txt" > "$out/executor-reuse.json"[0m
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:26.8890812Z [36;1mreuse_status=$?[0m
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:26.8891086Z [36;1mset -e[0m
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:26.8891351Z [36;1mif [ "$reuse_status" -eq 0 ]; then[0m
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:26.8891930Z [36;1m  executor_path=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["executor_path"])' "$out/executor-reuse.json")[0m
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:26.8892555Z [36;1m  cp "$executor_path" "$out/executor"[0m
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:26.8893069Z [36;1m  printf 'Reused independently qualified identical executor; no Rust rebuild.\n' > "$out/build.log"[0m
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:26.8893576Z [36;1melif [ "$reuse_status" -eq 1 ]; then[0m
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:26.8894346Z [36;1m  cargo +1.96.0 build --locked --release --manifest-path host/runtime/lib-boundary/native-linux-operation/Cargo.toml --features operation-bridge 2>&1 | tee "$out/build.log"[0m
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:26.8895252Z [36;1m  cp "$CARGO_TARGET_DIR/release/wasmc-lib-boundary-native-linux-operation" "$out/executor"[0m
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:26.8895713Z [36;1melse[0m
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:26.8895943Z [36;1m  cat "$out/executor-reuse.json"[0m
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:26.8896223Z [36;1m  exit 1[0m
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:26.8896428Z [36;1mfi[0m
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:26.8896889Z [36;1mcc -std=c11 -O2 -Wall -Wextra -Werror -shared -fPIC -pthread "$own/operation-memory-fixture.c" -o "$out/fixture.so"[0m
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:26.8897812Z [36;1mnode "$own/build-endpoint-operation-candidate.mjs" "$out" 2>&1 | tee "$out/endpoint-build.log"[0m
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:26.8898813Z [36;1mtimeout 45s node "$own/test-operation-memory.mjs" "$out/executor" "$out/fixture.so" "$out/roots/wasmc-system-linux-endpoint/0.1.0" "$out/operation-memory.json" 2>&1 | tee "$out/operation-memory.log"[0m
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:26.8899610Z [36;1mif [ -d "$CARGO_TARGET_DIR" ]; then[0m
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:26.8899962Z [36;1m  du -sk "$CARGO_TARGET_DIR" > "$out/target-size.txt"[0m
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:26.8900363Z [36;1m  test "$(du -sk "$CARGO_TARGET_DIR" | cut -f1)" -lt 2097152[0m
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:26.8900689Z [36;1melse[0m
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:26.8901060Z [36;1m  printf '0\t(no target directory; reused qualified executor)\n' > "$out/target-size.txt"[0m
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:26.8901484Z [36;1mfi[0m
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:26.9161480Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:26.9161921Z env:
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:26.9162178Z   CARGO_BUILD_JOBS: 2
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:26.9162418Z   CARGO_INCREMENTAL: 0
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:26.9162649Z   RUSTC_WRAPPER: 
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:26.9162886Z ##[endgroup]
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:26.9589558Z {'free_bytes': 90836819968, 'minimum_bytes': 12884901888, 'disposable_target_budget_bytes': 2147483648}
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:27.0012313Z info: syncing channel updates for 1.96.0-x86_64-unknown-linux-gnu
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:27.1358968Z info: latest update on 2026-05-28 for version 1.96.0 (ac68faa20 2026-05-25)
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:27.1359612Z info: downloading 3 components
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:35.1151974Z 
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:35.1236607Z   1.96.0-x86_64-unknown-linux-gnu installed - rustc 1.96.0 (ac68faa20 2026-05-25)
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:35.1238112Z 
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:35.8354085Z {"accepted":true,"id":"wasmc-system-linux-endpoint","version":"0.1.0","manifest_sha256":"08d16b8929b2669be9501c56d1411af4737a3bac7a75aa33db119681078b29b2"}
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:35.8901404Z node:internal/modules/run_main:107
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:35.8902016Z     triggerUncaughtException(
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:35.8902765Z     ^
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:35.8902971Z 
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:35.8903129Z Error: write EPIPE
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:35.8903681Z     at afterWriteDispatched (node:internal/stream_base_commons:159:15)
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:35.8904352Z     at writeGeneric (node:internal/stream_base_commons:150:3)
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:35.8904889Z     at Socket._writeGeneric (node:net:1171:11)
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:35.8905378Z     at Socket._write (node:net:1183:8)
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:35.8905912Z     at writeOrBuffer (node:internal/streams/writable:572:12)
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:35.8906505Z     at _write (node:internal/streams/writable:501:10)
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:35.8907368Z     at Writable.write (node:internal/streams/writable:510:10)
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:35.8908612Z     at file:///home/runner/work/wasmcrelease/wasmcrelease/.agents/workstreams/WS-20261026-lib-memory-release-v031/test-operation-memory.mjs:12:310
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:35.8909692Z     at new Promise (<anonymous>)
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:35.8910911Z     at Session.request (file:///home/runner/work/wasmcrelease/wasmcrelease/.agents/workstreams/WS-20261026-lib-memory-release-v031/test-operation-memory.mjs:12:226) {
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:35.8912083Z   errno: -32,
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:35.8912406Z   code: 'EPIPE',
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:35.8912731Z   syscall: 'write'
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:35.8913074Z }
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:35.8913232Z 
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:35.8913362Z Node.js v26.5.1
+native-operation	Build changed Native executor and verify single-call operation behavior	2026-10-26T23:26:35.8960402Z ##[error]Process completed with exit code 1.
