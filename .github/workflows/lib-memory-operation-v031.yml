@@ -4,6 +4,7 @@ on:
     branches: [work/WS-20261026-lib-memory-release-v031]
     paths:
       - 'host/runtime/lib-boundary/native-linux-operation/**'
+      - 'host/runtime/lib-boundary/native-linux-capacity.mjs'
       - '.agents/workstreams/WS-20261026-lib-memory-release-v031/operation-memory-fixture.c'
       - '.agents/workstreams/WS-20261026-lib-memory-release-v031/test-operation-memory.mjs'
       - '.agents/workstreams/WS-20261026-lib-memory-release-v031/build-endpoint-operation-candidate.mjs'
@@ -50,7 +51,8 @@ jobs:
           reuse_status=$?
           set -e
           if [ "$reuse_status" -eq 0 ]; then
-            cp "$own/candidate-host/native-linux-operation/executor" "$out/executor"
+            executor_path=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["executor_path"])' "$out/executor-reuse.json")
+            cp "$executor_path" "$out/executor"
             printf 'Reused independently qualified identical executor; no Rust rebuild.\n' > "$out/build.log"
           elif [ "$reuse_status" -eq 1 ]; then
             cargo +1.96.0 build --locked --release --manifest-path host/runtime/lib-boundary/native-linux-operation/Cargo.toml --features operation-bridge 2>&1 | tee "$out/build.log"
