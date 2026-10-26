@@ -1,0 +1,32 @@
+{
+  "schema": "wasmc.normal-consumer-recovery-qualification/v1",
+  "accepted": true,
+  "scope": "20 effective normal functional cells; explicit immutable 7 baseline +13 recovery receipts; original failing aggregate retained",
+  "single_source_aggregate_accepted": false,
+  "baseline": {
+    "source": "494ebe36778e795ca5d3b6a468667fa011874f9f",
+    "run": 40246813030,
+    "conclusion": "failure",
+    "original_aggregate_sha256": "b4261be02fb808c893c3e9cec62f9c1acdfbe8ef4bb04a2a19231482d8b12f0d"
+  },
+  "recovery": {
+    "source": "66a8a37ed6d7963cfa29c053ec2d5cef0fcd82e5",
+    "run": 40248163538,
+    "conclusion": "success",
+    "actual_cells": 13
+  },
+  "product_candidate_commit": "77f4f8fbabc520b36110e73a8a6b373b7050e547",
+  "product_set_sha256": "480f3e91bb715e289a9e95db8c066a06d31d3ee68f8c581900233c67007eced1",
+  "changed_product_paths": [
+    ".github/workflows/normal-source-free-consumer.yml",
+    "scripts/validate-lib-install.mjs"
+  ],
+  "verified_product_files": 2203,
+  "all_other_product_bytes_and_modes_identical": true,
+  "original_summary_verifier_unchanged": true,
+  "actual_effective_cells": 20,
+  "actual_effective_commands": 141,
+  "baseline_cells": 7,
+  "recovery_cells": 13,
+  "errors": []
+}

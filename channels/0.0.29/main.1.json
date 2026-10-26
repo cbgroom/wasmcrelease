@@ -8,7 +8,7 @@
   "product_set_sha256": "480f3e91bb715e289a9e95db8c066a06d31d3ee68f8c581900233c67007eced1",
   "qualification": {
     "accepted": true,
-    "scope": "Actual source-free27compiler commands and15Runtime steps; all6Native builds/6matching downloaded consumers pass. Full normal20consumer matrix, final fixed GLM, formal publication and anonymous installation remain pending.",
+    "scope": "Actual27 source-free compiler commands,15 Runtime steps,20 effective normal cells/141 commands,6 Native builds/6 matching downloaded consumers. Exact final GLM, publication and anonymous installation remain separate required gates.",
     "tested_source_commit": "77f4f8fbabc520b36110e73a8a6b373b7050e547",
     "tested_product_set_sha256": "480f3e91bb715e289a9e95db8c066a06d31d3ee68f8c581900233c67007eced1",
     "candidate_sha256": "c995b7339ec94bac212dc3437598323e648853359091bac1390e82fdcbe683f2",
@@ -24,12 +24,19 @@
     "Native_actual_download_consumers": 6,
     "Native_evidence": "channels/0.0.29/native-consumer-qualification.json",
     "Native_input_bridge": "channels/0.0.29/native-input-bridge.json",
-    "normal_consumer_result": "pending",
+    "normal_consumer_result": "success",
     "formal_publication": false,
     "final_Pi_policy": "glm-5.3-flash-single-v1",
     "final_Pi_receipt_asset": "pi-pre-release-qualification-v0.0.29.json",
-    "full_qualification_complete": false,
-    "final_model_accepted": false
+    "normal_consumer_cells": 20,
+    "normal_consumer_commands": 141,
+    "normal_consumer_basis": "7 unchanged successful baseline cells +13 fresh recovery cells; explicit multi-source input custody, original failed aggregate retained",
+    "normal_consumer_baseline_source": "494ebe36778e795ca5d3b6a468667fa011874f9f",
+    "normal_consumer_recovery_source": "66a8a37ed6d7963cfa29c053ec2d5cef0fcd82e5",
+    "normal_consumer_baseline_run": "https://github.com/cbgroom/wasmcrelease/actions/runs/40246813030",
+    "normal_consumer_recovery_run": "https://github.com/cbgroom/wasmcrelease/actions/runs/40248163538",
+    "normal_consumer_evidence": "channels/0.0.29/normal-consumer-qualification.json",
+    "normal_input_bridge": "channels/0.0.29/normal-input-bridge.json"
   },
-  "promotion": "Proposed local rehearsal view only; normal consumer and final model/publication gates remain pending. No tag or formal release exists."
+  "promotion": "Final local rehearsal view; exact final model gate required before tag/push/publication."
 }
