@@ -43,9 +43,15 @@ function verifyLocalDescriptors(manifest,files){
     }
     for(const child of Object.values(value))visit(child);
   };
-  for(const key of ['artifact','component','core_abi','wit','bindings','agent','license'])visit(manifest[key]);
+  for(const key of ['artifact','component','core_abi','wit','bindings','agent','license','implementation','native_boundary','typed_resource_plan'])visit(manifest[key]);
+}
+function importedNativeRoot(input,replacement,baseLicense){
+  exact(replacement,['id','version','profile','root','manifest_sha256','root_inventory_sha256','source']);pin(replacement.manifest_sha256);pin(replacement.root_inventory_sha256);const files=rootInventory(input,replacement.root);assert.equal(digest(files),replacement.root_inventory_sha256);const get=p=>pinnedFile(input,replacement.root,files,p),manifest=parse(get('lib.json'));assert.equal(sha(get('lib.json')),replacement.manifest_sha256);assert.equal(manifest.schema,'wasmc.lib-native/v2');assert.equal(manifest.id,replacement.id);assert.equal(manifest.version,replacement.version);assert.equal(manifest.profile,'native');assert.deepEqual(Object.keys(manifest.bindings),['native']);verifyLocalDescriptors(manifest,files);for(const item of manifest.implementation){assert.ok(files[item.path]);assert.equal(files[item.path].sha256,item.sha256);assert.equal(files[item.path].bytes,item.bytes);}assert.equal(manifest.license.schema,baseLicense.schema);assert.equal(manifest.license.identifier,baseLicense.identifier);for(const original of baseLicense.files)assert.deepEqual(manifest.license.files.find(x=>x.path===original.path),original);
+  const custody=sourceCustody(input,replacement,files,manifest),model=witModel(get('lib.wit')),world=custody.sourceSpec.world;assert.ok(model.identity.endsWith('@'+replacement.version));assert.equal(model.dependencies.size,0);const selected=selectedWitRoutes(model,world,new Map([[model.identity,model]])),apis=[...selected.routes.keys()].sort();assert.equal(custody.report.function_count,apis.length);assert.deepEqual(sorted(custody.spec.apis.map(x=>x.api)),apis.map(sourceApi).sort());
+  return {id:replacement.id,version:replacement.version,profile:'native',root:replacement.root,manifest_sha256:replacement.manifest_sha256,root_inventory_sha256:replacement.root_inventory_sha256,files,origin:custody.proof,wit:{identity:model.identity,world,sha256:files['lib.wit'].sha256,api_routes:apis,api_signatures:Object.fromEntries([...selected.routes].sort(([a],[b])=>a<b?-1:a>b?1:0))},discovery_metadata:{kind:'original-producer-build-spec',spec:descriptor(input,replacement.source.root+'/'+replacement.source.source_spec),description:custody.spec.skill.description,apis:custody.spec.apis},required_current_authoring_admission:true};
 }
 function importedRoot(input,replacement,baseLicense){
+  if(replacement.profile==='native')return importedNativeRoot(input,replacement,baseLicense);
   exact(replacement,['id','version','profile','root','manifest_sha256','root_inventory_sha256','source']);
   assert.match(replacement.id,/^[a-z][a-z0-9-]*$/);assert.match(replacement.version,/^\d+\.\d+\.\d+$/);
   assert.ok(['value','resource'].includes(replacement.profile),'supported imported Root profile');
@@ -199,11 +205,11 @@ function candidateFromComposition(input,options,composition){
     else{
       const replacement=importedSelections(options).find(p=>p.id===row.id),source=replacement.source;
       for(const [path,value]of Object.entries(rootInventory(input,source.root)))selectedSource[source.root+'/'+path]=value.sha256;
-      packages.push({package_id:row.id,version:row.version,profile:row.profile,target:manifest.build.target,
+      packages.push({package_id:row.id,version:row.version,profile:row.profile,target:row.profile==='native'?manifest.native.target:manifest.build.target,
         source_path:'libspec/'+row.id+'/lib.wit',wit_sha256:row.wit.sha256,
         delivery:{manifest_sha256:row.manifest_sha256,receipt_sha256:compositionSha,
-          artifact_kind:'wasm-core-component',artifact_path:manifest.artifact.path,
-          artifact_sha256:manifest.artifact.sha256,component_sha256:manifest.component.sha256},
+          artifact_kind:row.profile==='native'?(manifest.native.kind==='node-boundary'?'native-module':'native-binary'):'wasm-core-component',artifact_path:manifest.artifact.path,
+          artifact_sha256:manifest.artifact.sha256,component_sha256:manifest.component?.sha256??null},
         wit_route:row.wit.identity,description:row.discovery_metadata.description,
         apis:row.wit.api_routes.map(route=>({route:route.slice(row.wit.identity.length+1),
           description:(api=>api.delta??api.ecosystem)(row.discovery_metadata.apis.find(api=>api.api===sourceApi(route,!!manifest.bindings.rust_core&&row.profile==='resource')))}))});
