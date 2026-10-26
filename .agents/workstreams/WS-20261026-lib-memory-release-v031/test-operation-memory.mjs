@@ -23,6 +23,11 @@ await check('single invocation moves3MiB input and3MiB output',async()=>{const p
 await check('seventy pending operations and later unblocking operation all complete',async()=>{const tokens=[];for(let i=0;i<70;i++)tokens.push(await submit(session,Buffer.from([1]),0));assert.deepEqual(await run(session,Buffer.from([2]),0),Buffer.alloc(0));for(const token of tokens)assert.deepEqual(await result(session,token),Buffer.alloc(0));const count=await run(session,Buffer.from([4]),4);assert.equal(count.readUInt32LE(),73);});
 await check('cancelled pending operation drains after actual completion',async()=>{await run(session,Buffer.from([5]),0);const token=await submit(session,Buffer.from([1]),0);await ok(session.request(cmd(4,token)));await run(session,Buffer.from([2]),0);const state=await ok(session.request(cmd(3,token,5000)));assert.equal(state[0],3);await ok(session.request(cmd(6,token)));});
 await session.close();
+session=new Session(free);
+await check('timed-out single call drains before process and library exit',async()=>{
+ const request=Buffer.alloc(10);request[0]=8;request.writeUInt32LE(0,1);request.writeUInt32LE(20,5);request[9]=6;
+ const started=Date.now(),reply=await session.request(request);assert.equal(reply.status,-110);await session.close();assert(Date.now()-started>=150);
+});
 session=new Session(legacy);
 await check('explicit legacy descriptor input and output limits remain enforced',async()=>{let b=Buffer.alloc(5+65);b[0]=1;b.writeUInt32LE(1,1);b[5]=3;assert.equal((await session.request(b)).status,-22);b=Buffer.alloc(6);b[0]=1;b.writeUInt32LE(129,1);b[5]=3;assert.equal((await session.request(b)).status,-22);assert.deepEqual(await run(session,Buffer.from([3,11]),1),Buffer.from([11]));});
 await session.close();

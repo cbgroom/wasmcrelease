@@ -293,10 +293,11 @@ impl WorkerGroup {
         Ok(())
     }
     fn join_all(&mut self) -> Result<(), String> {
+        let mut panicked = false;
         for worker in self.0.drain(..) {
-            worker.join().map_err(|_| "operation worker panicked".to_string())?;
+            panicked |= worker.join().is_err();
         }
-        Ok(())
+        if panicked { Err("operation worker panicked".to_string()) } else { Ok(()) }
     }
     fn reap_finished(&mut self) -> Result<(), String> {
         let mut index = 0;
