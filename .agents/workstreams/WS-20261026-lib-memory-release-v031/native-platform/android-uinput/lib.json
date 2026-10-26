@@ -1,10 +1,10 @@
 {
   "schema": "wasmc.lib-refresh-source/v2",
   "id": "wasmc-system-android-uinput",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "profile": "native",
   "world": "system-virtual-input",
-  "description": "Lib-defined platform implementation: wasmc-system-android-uinput",
+  "description": "Lib-defined platform implementation: wasmc-system-android-uinput Dynamic memory-backed device tables and no private key-count quota.",
   "dependencies": [],
   "apis": [
     {
@@ -12,7 +12,7 @@
       "delta": "Actual platform implementation, not a simulated Wasm export.",
       "ecosystem": "c-boundary",
       "host_authorities": [
-        "wasmc:system-virtual-input@0.0.1"
+        "wasmc:system-virtual-input@0.1.0"
       ],
       "implementation": "native",
       "origin": "adapted",
@@ -23,7 +23,7 @@
       "delta": "Actual platform implementation, not a simulated Wasm export.",
       "ecosystem": "c-boundary",
       "host_authorities": [
-        "wasmc:system-virtual-input@0.0.1"
+        "wasmc:system-virtual-input@0.1.0"
       ],
       "implementation": "native",
       "origin": "adapted",
@@ -34,7 +34,7 @@
       "delta": "Actual platform implementation, not a simulated Wasm export.",
       "ecosystem": "c-boundary",
       "host_authorities": [
-        "wasmc:system-virtual-input@0.0.1"
+        "wasmc:system-virtual-input@0.1.0"
       ],
       "implementation": "native",
       "origin": "adapted",
@@ -45,7 +45,7 @@
       "delta": "Actual platform implementation, not a simulated Wasm export.",
       "ecosystem": "c-boundary",
       "host_authorities": [
-        "wasmc:system-virtual-input@0.0.1"
+        "wasmc:system-virtual-input@0.1.0"
       ],
       "implementation": "native",
       "origin": "adapted",
@@ -56,7 +56,7 @@
       "delta": "Actual platform implementation, not a simulated Wasm export.",
       "ecosystem": "c-boundary",
       "host_authorities": [
-        "wasmc:system-virtual-input@0.0.1"
+        "wasmc:system-virtual-input@0.1.0"
       ],
       "implementation": "native",
       "origin": "adapted",
@@ -68,13 +68,14 @@
     "target": "android",
     "files": [
       "platform/native-adapter.c",
-      "platform/native-boundary.template.json"
+      "platform/native-boundary.template.json",
+      "platform/native-slots.h"
     ],
     "entry": "platform/native-adapter.c",
     "descriptor_template": "platform/native-boundary.template.json",
     "binding_contract": "wasmc.lib-defined-host-boundary/v1",
     "binding": {
-      "implements": "wasmc:system-virtual-input@0.0.1",
+      "implements": "wasmc:system-virtual-input@0.1.0",
       "boundary": "wasmc.lib-defined-host-boundary/v1",
       "descriptor": "platform/native-boundary.template.json",
       "artifact_format": "native-adapter",

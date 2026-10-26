@@ -1,0 +1,42 @@
+name: Uinput Lib dynamic capacity logic
+on:
+  push:
+    branches: [work/WS-20261026-lib-memory-release-v031]
+    paths:
+      - '.agents/workstreams/WS-20261026-lib-memory-release-v031/native-platform/linux-uinput/**'
+      - '.agents/workstreams/WS-20261026-lib-memory-release-v031/native-platform/android-uinput/**'
+      - '.agents/workstreams/WS-20261026-lib-memory-release-v031/native-platform/test-uinput.c'
+      - '.github/workflows/lib-memory-uinput-v031.yml'
+permissions:
+  contents: read
+jobs:
+  source-logic:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - name: Compile changed adapters and explicit device-boundary fixtures only
+        shell: bash
+        run: |
+          set -euo pipefail
+          own=.agents/workstreams/WS-20261026-lib-memory-release-v031/native-platform
+          out="$RUNNER_TEMP/uinput-memory-evidence"
+          mkdir -p "$out"
+          git rev-parse HEAD > "$out/source.txt"
+          uname -a > "$out/host.txt"
+          cc --version > "$out/cc.txt"
+          cc -std=c11 -O2 -Wall -Wextra -Werror -shared -fPIC "$own/linux-uinput/platform/native-adapter.c" -o "$out/linux-uinput.so"
+          cc -std=c11 -O2 -Wall -Wextra -Werror -shared -fPIC "$own/android-uinput/platform/native-adapter.c" -o "$out/android-source-on-linux.so"
+          cc -std=c11 -O1 -g -Wall -Wextra -Werror -fsanitize=address,undefined -fno-omit-frame-pointer "$own/test-uinput.c" -o "$out/test-linux-uinput"
+          cc -std=c11 -O1 -g -Wall -Wextra -Werror -DANDROID_ADAPTER -fsanitize=address,undefined -fno-omit-frame-pointer "$own/test-uinput.c" -o "$out/test-android-source"
+          ASAN_OPTIONS=detect_leaks=1:abort_on_error=1 "$out/test-linux-uinput" 2>&1 | tee "$out/linux-uinput.log"
+          ASAN_OPTIONS=detect_leaks=1:abort_on_error=1 "$out/test-android-source" 2>&1 | tee "$out/android-source.log"
+          sha256sum "$out/"*.so > "$out/sha256.txt"
+          du -sk "$out" > "$out/output-size.txt"
+          test "$(du -sk "$out" | cut -f1)" -lt 131072
+      - if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: uinput-memory-logic
+          path: ${{ runner.temp }}/uinput-memory-evidence/**
+          retention-days: 7

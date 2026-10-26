@@ -1,3 +1,4 @@
+#define _GNU_SOURCE
 #include <errno.h>
 #include <fcntl.h>
 #include <linux/input.h>
@@ -7,10 +8,8 @@
 #include <string.h>
 #include <sys/ioctl.h>
 #include <unistd.h>
+#include "native-slots.h"
 
-#define MAX_KEYBOARDS 16
-#define MAX_TOUCHSCREENS 16
-#define MAX_KEYS 64
 
 struct keyboard_slot {
   int descriptor;
@@ -20,8 +19,10 @@ struct keyboard_slot {
   uint8_t active;
 };
 
-static struct keyboard_slot keyboards[MAX_KEYBOARDS];
-static struct keyboard_slot touchscreens[MAX_TOUCHSCREENS];
+static struct keyboard_slot *keyboards;
+static size_t keyboards_capacity;
+static struct keyboard_slot *touchscreens;
+static size_t touchscreens_capacity;
 
 static uint16_t read_u16(const uint8_t *bytes) {
   return (uint16_t)bytes[0] | ((uint16_t)bytes[1] << 8);
@@ -47,26 +48,28 @@ static void write_u64(uint8_t *bytes, uint64_t value) {
 }
 
 static int32_t register_keyboard(int descriptor, uint64_t *token) {
-  for (uint32_t index = 0; index < MAX_KEYBOARDS; index += 1) {
-    if (!keyboards[index].active) {
-      keyboards[index].generation += 1;
-      if (keyboards[index].generation == 0)
-        keyboards[index].generation = 1;
-      keyboards[index].descriptor = descriptor;
-      keyboards[index].active = 1;
-      *token =
-          ((uint64_t)keyboards[index].generation << 32) | ((uint64_t)index + 1);
-      return 0;
-    }
+  size_t index;
+  for (index = 0; index < keyboards_capacity; index += 1)
+    if (!keyboards[index].active && keyboards[index].generation != UINT32_MAX) break;
+  if (index == keyboards_capacity) {
+    void *grown = NULL;
+    const int32_t status = grow_slot_table(keyboards, &keyboards_capacity, sizeof(*keyboards), &grown);
+    if (status != 0) return status;
+    keyboards = grown;
   }
-  return -EMFILE;
+  keyboards[index].generation += 1;
+  keyboards[index].descriptor = descriptor;
+
+  keyboards[index].active = 1;
+  *token = ((uint64_t)keyboards[index].generation << 32) | ((uint64_t)index + 1);
+  return 0;
 }
 
 static int32_t resolve_keyboard(uint64_t token, uint32_t *index,
                                 int *descriptor) {
   const uint32_t encoded_index = (uint32_t)token;
   const uint32_t generation = (uint32_t)(token >> 32);
-  if (encoded_index == 0 || encoded_index > MAX_KEYBOARDS || generation == 0) {
+  if (encoded_index == 0 || encoded_index > keyboards_capacity || generation == 0) {
     return -EBADF;
   }
   const uint32_t slot = encoded_index - 1;
@@ -79,24 +82,23 @@ static int32_t resolve_keyboard(uint64_t token, uint32_t *index,
   return 0;
 }
 
-static int32_t register_touchscreen(int descriptor, uint32_t width,
-                                    uint32_t height, uint64_t *token) {
-  for (uint32_t index = 0; index < MAX_TOUCHSCREENS; index += 1) {
-    if (!touchscreens[index].active) {
-      touchscreens[index].generation += 1;
-      if (touchscreens[index].generation == 0) {
-        touchscreens[index].generation = 1;
-      }
-      touchscreens[index].descriptor = descriptor;
-      touchscreens[index].width = width;
-      touchscreens[index].height = height;
-      touchscreens[index].active = 1;
-      *token = ((uint64_t)touchscreens[index].generation << 32) |
-               ((uint64_t)index + 1);
-      return 0;
-    }
+static int32_t register_touchscreen(int descriptor, uint32_t width, uint32_t height, uint64_t *token) {
+  size_t index;
+  for (index = 0; index < touchscreens_capacity; index += 1)
+    if (!touchscreens[index].active && touchscreens[index].generation != UINT32_MAX) break;
+  if (index == touchscreens_capacity) {
+    void *grown = NULL;
+    const int32_t status = grow_slot_table(touchscreens, &touchscreens_capacity, sizeof(*touchscreens), &grown);
+    if (status != 0) return status;
+    touchscreens = grown;
   }
-  return -EMFILE;
+  touchscreens[index].generation += 1;
+  touchscreens[index].descriptor = descriptor;
+  touchscreens[index].width = width;
+  touchscreens[index].height = height;
+  touchscreens[index].active = 1;
+  *token = ((uint64_t)touchscreens[index].generation << 32) | ((uint64_t)index + 1);
+  return 0;
 }
 
 static int32_t resolve_touchscreen(uint64_t token, uint32_t *index,
@@ -104,7 +106,7 @@ static int32_t resolve_touchscreen(uint64_t token, uint32_t *index,
                                    uint32_t *height) {
   const uint32_t encoded_index = (uint32_t)token;
   const uint32_t generation = (uint32_t)(token >> 32);
-  if (encoded_index == 0 || encoded_index > MAX_TOUCHSCREENS ||
+  if (encoded_index == 0 || encoded_index > touchscreens_capacity ||
       generation == 0) {
     return -EBADF;
   }
@@ -141,7 +143,6 @@ static int32_t create_keyboard(const uint8_t *input, size_t input_len,
   const uint16_t name_len = read_u16(input + 1);
   const uint16_t key_count = read_u16(input + 3);
   if (name_len == 0 || name_len >= UINPUT_MAX_NAME_SIZE || key_count == 0 ||
-      key_count > MAX_KEYS ||
       input_len != 5u + (size_t)name_len + (size_t)key_count * 2u) {
     return -EINVAL;
   }
@@ -431,20 +432,22 @@ static int32_t destroy_touchscreen(const uint8_t *input, size_t input_len,
 }
 
 __attribute__((destructor)) static void close_keyboards(void) {
-  for (size_t index = 0; index < MAX_KEYBOARDS; index += 1) {
+  for (size_t index = 0; index < keyboards_capacity; index += 1) {
     if (keyboards[index].active) {
       ioctl(keyboards[index].descriptor, UI_DEV_DESTROY);
       close(keyboards[index].descriptor);
       keyboards[index].active = 0;
     }
   }
-  for (size_t index = 0; index < MAX_TOUCHSCREENS; index += 1) {
+  for (size_t index = 0; index < touchscreens_capacity; index += 1) {
     if (touchscreens[index].active) {
       ioctl(touchscreens[index].descriptor, UI_DEV_DESTROY);
       close(touchscreens[index].descriptor);
       touchscreens[index].active = 0;
     }
   }
+  free(keyboards); keyboards = NULL; keyboards_capacity = 0;
+  free(touchscreens); touchscreens = NULL; touchscreens_capacity = 0;
 }
 
 int32_t wasmc_boundary_v1_invoke(const uint8_t *input, size_t input_len,
