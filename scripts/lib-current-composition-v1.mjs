@@ -69,9 +69,9 @@ function importedRoot(input,replacement,baseLicense){
     for(const original of baseLicense.files)assert.deepEqual(manifest.license.files.find(row=>row.path===original.path),original,'original common license snapshot');
   } else assert.deepEqual(manifest.license,baseLicense,'exact original common license and notice snapshots');
   const custody=sourceCustody(input,replacement,files,manifest),model=witModel(get('lib.wit'));
-  assert.ok(model.identity.endsWith('@'+replacement.version));assert.equal(model.dependencies.size,0,'v1 imported WIT has no external dependency');
+  assert.ok(model.identity.endsWith('@'+replacement.version));if(replacement.source.schema!=='wasmc.changed-rust-lib-source-input/v1')assert.equal(model.dependencies.size,0,'v1 imported WIT has no external dependency');
   assert.equal(manifest.wit.package,model.identity);const world=manifest.wit.world;
-  const selected=selectedWitRoutes(model,world,new Map([[model.identity,model]]));
+  const selected=selectedWitRoutes(model,world,new Map([[model.identity,model],...model.dependencies]));
   const apis=[...selected.routes.keys()].sort();
   assert.equal(custody.report.function_count,apis.length,'producer function count versus actual selected WIT');
   assert.equal(new Set(custody.spec.apis.map(row=>row.api)).size,custody.spec.apis.length,'duplicate producer API');
@@ -132,6 +132,11 @@ export function composeCurrentLibData(input,options){
   }
   for(const addition of options.additions??[])rows.push(importedRoot(input,addition,baseLicense));
   rows.sort((a,b)=>a.id<b.id?-1:a.id>b.id?1:0);assert.deepEqual(rows.map(row=>row.id),selectedIds);
+  // Every embedded dependency must match the selected Root that owns its WIT identity.
+  const models=new Map();const declarations=map=>[...map].map(([name,tokens])=>[name,tokens.filter((t,i)=>!(t===','&&[')', '}', '>'].includes(tokens[i+1]))).map(t=>t.startsWith('%')?t.slice(1):t)]).sort(([a],[b])=>a<b?-1:a>b?1:0);
+  for(const row of rows){const model=witModel(readBytes(input,row.root+'/lib.wit'));const existing=models.get(model.identity);if(existing){assert.deepEqual(declarations(model.interfaces),declarations(existing.interfaces));assert.deepEqual(declarations(model.worlds),declarations(existing.worlds));}else models.set(model.identity,model);}
+  for(const row of rows.filter(row=>row.origin.kind!=='reused-public-root'))for(const [id,dep] of witModel(readBytes(input,row.root+'/lib.wit')).dependencies){const selected=models.get(id);assert.ok(selected,'selected WIT dependency required: '+id);assert.deepEqual(declarations(dep.interfaces),declarations(selected.interfaces),'selected WIT dependency interfaces');assert.deepEqual(declarations(dep.worlds),declarations(selected.worlds),'selected WIT dependency worlds');for(const world of dep.worlds.keys())assert.deepEqual([...selectedWitRoutes(dep,world,models).routes].sort(),[...selectedWitRoutes(selected,world,models).routes].sort(),'selected WIT dependency routes');}
+
   // End-of-read fences cover the source packet, the replacement Root and every
   // reused Root. No earlier successful read can authorize a later changed byte.
   assert.equal(sha(readBytes(input,options.base.catalog_path)),options.base.catalog_sha256);

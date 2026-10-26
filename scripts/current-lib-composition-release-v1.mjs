@@ -38,7 +38,7 @@ function expectedIndex(input,catalog,lineage,composition,options){
   }
   for(const admitted of lineage.admitted_original_sources){
     const s=admitted.source,root=composition.rows.find(row=>row.id===s.id),manifest=parse(input.read(root.root+'/lib.json'));
-    const model=witModel(input.read(s.wit.path)),routes=selectedWitRoutes(model,s.world,new Map([[model.identity,model]]));
+    const model=witModel(input.read(s.wit.path)),routes=selectedWitRoutes(model,s.world,new Map([[model.identity,model],...model.dependencies]));
     for(const pin of s.source_packet.files)selected[pin.path]=pin.sha256;
     const p=packages.findIndex(row=>row.package_id===s.id);
     const projected={package_id:s.id,version:s.version,profile:s.profile,target:manifest.build.target,

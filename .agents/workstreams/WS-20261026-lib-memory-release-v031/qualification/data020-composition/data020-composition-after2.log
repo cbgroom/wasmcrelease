@@ -1,0 +1,152 @@
+node:internal/modules/run_main:111
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: selected WIT dependency interfaces
++ actual - expected
+... Skipped lines
+
+  [
+    [
+      'entropy',
+      [
+        'enum',
+...
+        '<',
+-       'own',
+-       '<',
+        'session',
+-       '>',
+        ',',
+        'tls-error',
+        '>',
+        ';'
+      ]
+
+    at composeCurrentLibData (file:///Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-lib-memory-release-v031/scripts/lib-current-composition-v1.mjs:138:177)
+    at file:///Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-lib-memory-release-v031/.agents/workstreams/WS-20261026-lib-memory-release-v031/test-data020-composition.mjs:4:19 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: [
+    [
+      'entropy',
+      [
+        'enum',   'entropy-error',
+        '{',      'unavailable',
+        '}',      'fill',
+        ':',      'func',
+        '(',      'length',
+        ':',      'u32',
+        ')',      '->',
+        'result', '<',
+        'list',   '<',
+        'u8',     '>',
+        ',',      'entropy-error',
+        '>',      ';'
+      ]
+    ],
+    [
+      'tls',
+      [
+        'enum',             'connection-state', '{',
+        'handshaking',      ',',                'ready',
+        ',',                'closing',          ',',
+        'peer-closed',      ',',                'closed',
+        ',',                'failed',           '}',
+        'record',           'progress',         '{',
+        'state',            ':',                'connection-state',
+        ',',                'pending-output',   ':',
+        'u32',              ',',                'plaintext-available',
+        ':',                'u32',              '}',
+        'enum',             'tls-error',        '{',
+        'invalid-config',   ',',                'invalid-state',
+        ',',                'input-too-large',  ',',
+        'output-too-large', ',',                'crypto-failure',
+        ',',                'entropy-failure',  '}',
+        'resource',         'session',          '{',
+        'state',            ':',                'func',
+        '(',                ')',                '->',
+        'progress',         ';',                'ingest',
+        ':',                'func',             '(',
+        'ciphertext',       ':',                'list',
+        '<',                'u8',               '>',
+        ')',                '->',               'result',
+        '<',                'u32',              ',',
+        'tls-error',        '>',                ';',
+        'output',           ':',                'func',
+        '(',                'limit',            ':',
+        'u32',              ')',                '->',
+        'result',           '<',                'list',
+        '<',                'u8',               '>',
+        ',',                'tls-error',        '>',
+        ';',                'commit-output',    ':',
+        'func',             '(',                'transferred',
+        ':',
+        ... 91 more items
+      ]
+    ]
+  ],
+  expected: [
+    [
+      'entropy',
+      [
+        'enum',   'entropy-error',
+        '{',      'unavailable',
+        '}',      'fill',
+        ':',      'func',
+        '(',      'length',
+        ':',      'u32',
+        ')',      '->',
+        'result', '<',
+        'list',   '<',
+        'u8',     '>',
+        ',',      'entropy-error',
+        '>',      ';'
+      ]
+    ],
+    [
+      'tls',
+      [
+        'enum',             'connection-state', '{',
+        'handshaking',      ',',                'ready',
+        ',',                'closing',          ',',
+        'peer-closed',      ',',                'closed',
+        ',',                'failed',           '}',
+        'record',           'progress',         '{',
+        'state',            ':',                'connection-state',
+        ',',                'pending-output',   ':',
+        'u32',              ',',                'plaintext-available',
+        ':',                'u32',              '}',
+        'enum',             'tls-error',        '{',
+        'invalid-config',   ',',                'invalid-state',
+        ',',                'input-too-large',  ',',
+        'output-too-large', ',',                'crypto-failure',
+        ',',                'entropy-failure',  '}',
+        'resource',         'session',          '{',
+        'state',            ':',                'func',
+        '(',                ')',                '->',
+        'progress',         ';',                'ingest',
+        ':',                'func',             '(',
+        'ciphertext',       ':',                'list',
+        '<',                'u8',               '>',
+        ')',                '->',               'result',
+        '<',                'u32',              ',',
+        'tls-error',        '>',                ';',
+        'output',           ':',                'func',
+        '(',                'limit',            ':',
+        'u32',              ')',                '->',
+        'result',           '<',                'list',
+        '<',                'u8',               '>',
+        ',',                'tls-error',        '>',
+        ';',                'commit-output',    ':',
+        'func',             '(',                'transferred',
+        ':',
+        ... 94 more items
+      ]
+    ]
+  ],
+  operator: 'deepStrictEqual',
+  diff: 'simple'
+}
+
+Node.js v26.12.1

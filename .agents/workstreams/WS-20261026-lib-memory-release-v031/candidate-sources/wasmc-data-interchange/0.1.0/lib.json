@@ -1,0 +1,59 @@
+{
+  "schema": "wasmc.lib-refresh-source/v2",
+  "id": "wasmc-data-interchange",
+  "version": "0.1.0",
+  "profile": "value",
+  "crate": "wasmc_data_interchange_memory_v031",
+  "artifact_name": "wasmc_data_interchange_memory_v031",
+  "world": "data-interchange",
+  "description": "Arrow IPC file and Parquet interchange over the shared neutral Data snapshot model. No Lib-local capacity quotas.",
+  "dependencies": [
+    "arrow-ipc",
+    "bytes",
+    "parquet"
+  ],
+  "shared_modules": [
+    "data-arrow"
+  ],
+  "wit_dependencies": [
+    "wasmc-data-core"
+  ],
+  "apis": [
+    {
+      "api": "ipc-file-decode",
+      "delta": "Decode Arrow IPC file bytes into neutral batches. Capacity follows aggregate memory; type/schema/overflow checks remain.",
+      "ecosystem": "Arrow IPC 60",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "ipc-file-encode",
+      "delta": "Encode validated neutral batches as Arrow IPC file bytes. Capacity follows aggregate memory; type/schema/overflow checks remain.",
+      "ecosystem": "Arrow IPC 60",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "parquet-decode",
+      "delta": "Decode Parquet bytes into neutral batches. Capacity follows aggregate memory; type/schema/overflow checks remain.",
+      "ecosystem": "Parquet 60",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "parquet-encode",
+      "delta": "Encode validated neutral batches as Parquet bytes. Capacity follows aggregate memory; type/schema/overflow checks remain.",
+      "ecosystem": "Parquet 60",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    }
+  ]
+}

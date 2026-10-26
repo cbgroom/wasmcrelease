@@ -1,0 +1,24 @@
+node:internal/modules/run_main:111
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++ actual - expected
+
++ 'lib.wit'
+- 'sealed.wit'
+
+    at builtProducerCustody (file:///Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-lib-memory-release-v031/scripts/current-built-lib-source-v1.mjs:16:199)
+    at verifyImportedProducerCustodyData (file:///Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-lib-memory-release-v031/scripts/current-lib-source-custody-v1.mjs:46:82)
+    at importedRoot (file:///Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-lib-memory-release-v031/scripts/lib-current-composition-v1.mjs:71:17)
+    at composeCurrentLibData (file:///Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-lib-memory-release-v031/scripts/lib-current-composition-v1.mjs:130:15)
+    at file:///Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-lib-memory-release-v031/.agents/workstreams/WS-20261026-lib-memory-release-v031/test-data020-composition.mjs:4:19 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 'lib.wit',
+  expected: 'sealed.wit',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v26.12.1
