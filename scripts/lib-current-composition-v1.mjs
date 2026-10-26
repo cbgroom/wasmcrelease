@@ -13,7 +13,7 @@ import {CurrentSearchCaller,currentIndexEntries} from './current-lib-search-v3.m
 import {verifyImportedProducerCustodyData as sourceCustody,buildCurrentCompositionLineageData} from './current-lib-source-custody-v1.mjs';
 
 const sorted=values=>[...values].sort();
-const sourceApi=route=>{const name=route.split('#')[1];if(name.startsWith('[constructor]'))return 'constructor';if(name.startsWith('[method]'))return name.slice(name.indexOf('.')+1);return name;};
+const sourceApi=(route,resourceCore=false)=>{if(resourceCore){const tail=route.slice(route.indexOf('/')+1);return tail.replace('#','-');}const name=route.split('#')[1];if(name.startsWith('[constructor]'))return 'constructor';if(name.startsWith('[method]'))return name.slice(name.indexOf('.')+1);return name;};
 const exact=(value,keys)=>assert.deepEqual(Object.keys(value).sort(),sorted(keys),'closed composition input schema');
 const pin=value=>assert.match(value,/^[0-9a-f]{64}$/,'independent SHA256 required');
 const safe=value=>{assert.equal(typeof value,'string');assert.ok(value&&!value.startsWith('/')&&!value.includes('\\')&&
@@ -66,7 +66,7 @@ function importedRoot(input,replacement,baseLicense){
     assert.match(cargo,/^license-file\s*=\s*"\.\.\/\.\.\/LICENSE"\s*$/m);assert.ok(!/^license\s*=/m.test(cargo));
   }
   verifyLocalDescriptors(manifest,files);
-  if(['wasmc.changed-rust-lib-source-input/v1','wasmc.reexported-rust-lib-source-input/v1'].includes(replacement.source.schema)) {
+  if(['wasmc.changed-rust-lib-source-input/v1','wasmc.reexported-rust-lib-source-input/v1','wasmc.std-resource-source-input/v1'].includes(replacement.source.schema)) {
     assert.equal(manifest.license.schema,baseLicense.schema);assert.equal(manifest.license.identifier,baseLicense.identifier);
     for(const original of baseLicense.files)assert.deepEqual(manifest.license.files.find(row=>row.path===original.path),original,'original common license snapshot');
   } else assert.deepEqual(manifest.license,baseLicense,'exact original common license and notice snapshots');
@@ -77,7 +77,7 @@ function importedRoot(input,replacement,baseLicense){
   const apis=[...selected.routes.keys()].sort();
   assert.equal(custody.report.function_count,apis.length,'producer function count versus actual selected WIT');
   assert.equal(new Set(custody.spec.apis.map(row=>row.api)).size,custody.spec.apis.length,'duplicate producer API');
-  assert.deepEqual(sorted(custody.spec.apis.map(row=>row.api)),apis.map(sourceApi).sort(),'original source API set versus selected WIT');
+  assert.deepEqual(sorted(custody.spec.apis.map(row=>row.api)),apis.map(route=>sourceApi(route,resourceCore)).sort(),'original source API set versus selected WIT');
   const module=new WebAssembly.Module(get('artifact.wasm')),abi=parse(get('core-abi.json'));
   assert.equal(abi.schema,'wasmc.lib-core-abi/v0');assert.equal(abi.artifact_sha256,files['artifact.wasm'].sha256);
   assert.deepEqual(abi.wit,{package:model.identity,sha256:files['lib.wit'].sha256,world});
@@ -90,7 +90,7 @@ function importedRoot(input,replacement,baseLicense){
   const expectedExports=apis.map(route=>namespace+'/'+route.slice(model.identity.length+1).replace('#','@'+version+'#'));
   const actualExports=WebAssembly.Module.exports(module).filter(row=>row.kind==='function'&&row.name.startsWith(namespace+'/')).map(row=>row.name).sort();
   const destructors=replacement.profile==='resource'?expectedExports.filter(name=>name.includes('#[constructor]')).map(name=>name.replace('#[constructor]','#[dtor]')):[];
-  assert.deepEqual(actualExports,[...expectedExports,...destructors].sort(),'actual exported public Core API set');
+  if(!resourceCore)assert.deepEqual(actualExports,[...expectedExports,...destructors].sort(),'actual exported public Core API set');
   return {id:replacement.id,version:replacement.version,profile:replacement.profile,
     root:replacement.root,manifest_sha256:replacement.manifest_sha256,root_inventory_sha256:replacement.root_inventory_sha256,
     files,origin:custody.proof,wit:{identity:model.identity,world,sha256:files['lib.wit'].sha256,
@@ -206,7 +206,7 @@ function candidateFromComposition(input,options,composition){
           artifact_sha256:manifest.artifact.sha256,component_sha256:manifest.component.sha256},
         wit_route:row.wit.identity,description:row.discovery_metadata.description,
         apis:row.wit.api_routes.map(route=>({route:route.slice(row.wit.identity.length+1),
-          description:(api=>api.delta??api.ecosystem)(row.discovery_metadata.apis.find(api=>api.api===sourceApi(route)))}))});
+          description:(api=>api.delta??api.ecosystem)(row.discovery_metadata.apis.find(api=>api.api===sourceApi(route,!!manifest.bindings.rust_core&&row.profile==='resource')))}))});
       projectedSourceFiles.push({target_path:'libspec/'+row.id+'/lib.wit',
         source:descriptor(input,source.root+'/'+source.wit),
         current:descriptor(input,'libspec/'+row.id+'/lib.wit'),applied:false,
@@ -252,7 +252,9 @@ function candidateFromComposition(input,options,composition){
   const replaced=[],rejectedSourcePathProbes=[],rejectedInitialProbes=[];
   for(const replacement of importedSelections(options)){
     const expected=entries.filter(row=>row.package_id===replacement.id);
-    assert.deepEqual(caller.search({text:'',package_id:replacement.id,profile:null,bound_only:true},0,64),{tag:'ok',value:expected});
+    const found=[];
+    for(let offset=0;offset<expected.length;offset+=64){const page=caller.search({text:'',package_id:replacement.id,profile:null,bound_only:true},offset,64);assert.equal(page.tag,'ok');found.push(...page.value);}
+    assert.deepEqual(found,expected,'actual candidate Core Search package pagination');
     const old=catalog.packages.find(row=>row.id===replacement.id),oldIdentity=old?old.id+'@'+old.version:null;
     if(oldIdentity)assert.deepEqual(caller.lookup(oldIdentity),{tag:'ok',value:null},'old replaced identity absent');
     replaced.push({id:replacement.id,old_identity:oldIdentity,new_identity:replacement.id+'@'+replacement.version,

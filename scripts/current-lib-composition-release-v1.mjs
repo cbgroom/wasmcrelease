@@ -46,7 +46,7 @@ function expectedIndex(input,catalog,lineage,composition,options){
       delivery:{manifest_sha256:s.root.manifest_sha256,receipt_sha256:digest(composition),artifact_kind:'wasm-core-component',
         artifact_path:manifest.artifact.path,artifact_sha256:manifest.artifact.sha256,component_sha256:manifest.component.sha256},
       wit_route:model.identity,description:s.description,
-      apis:[...routes.routes.keys()].sort().map(route=>({route:route.slice(model.identity.length+1),description:(api=>api.delta??api.ecosystem)(s.apis.find(api=>{const name=route.split('#')[1];return api.api===(name.startsWith('[constructor]')?'constructor':name.startsWith('[method]')?name.slice(name.indexOf('.')+1):name);} ))}))};
+      apis:[...routes.routes.keys()].sort().map(route=>({route:route.slice(model.identity.length+1),description:(api=>api.delta??api.ecosystem)(s.apis.find(api=>{const name=route.split('#')[1];if(s.profile==='resource'&&manifest.bindings.rust_core)return api.api===route.slice(model.identity.length+1).replace('#','-');return api.api===(name.startsWith('[constructor]')?'constructor':name.startsWith('[method]')?name.slice(name.indexOf('.')+1):name);} ))}))};
     if(p<0)packages.push(projected);else packages[p]=projected;
   }
   packages.sort((a,b)=>(a.package_id+'@'+a.version)<(b.package_id+'@'+b.version)?-1:1);
