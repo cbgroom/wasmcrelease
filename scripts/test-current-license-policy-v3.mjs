@@ -132,7 +132,7 @@ try{
       }
     }
   }
-  const report={accepted:true,current_roots:42,declared_notice_files:notices.size,negative_controls:rejected,
+  const report={accepted:true,current_roots:JSON.parse(catalog).packages.length,declared_notice_files:notices.size,negative_controls:rejected,
     composed_notice_files:composed.size,composed_negative_controls:composedRejected,strict_original_base_and_current_graph:true,all_declared_rows_real_bytes_exact:true,
     historical_composition_inputs:historicalInputs.length,historical_compositions_verified:historicalRecords.length,
     original_receipt_bytes_verified:false,fresh_builds:0,product,imported_root:{id:row.id,version:row.version,notice_files:manifest.license.files.length-1},

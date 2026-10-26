@@ -29,7 +29,7 @@ export function suiteCases(family,runtime='node',mirror='github') {
     item('sdk-agent-routing','scripts/validate-sdk-agent-routes.mjs'),
     item('release-channel-promotion-negatives','scripts/test-release-channel.mjs'),
     item('current-release-version-and-qualification-contract','scripts/test-current-release-version.mjs'),
-    item('current-complete-product-reopen-negatives','scripts/test-current-product-v3.mjs',['--product','.', '--catalog-sha256','86981ab84b16cc06684dc87da28c436b190d79c8c9c312ffa7f27206e444cb5a','--out','target/ci/current-product-controls'],fixturePermissions),
+    item('current-complete-product-reopen-negatives','scripts/test-current-product-v3.mjs',['--product','.', '--catalog-sha256','e12684efb3e475ad551eddabda12bc4c196f19edb48e7ace9069fda1ef5e7871','--out','target/ci/current-product-controls'],fixturePermissions),
     item('current-original-license-reopen-negatives','scripts/test-current-license-policy-v3.mjs'),
     item('release-product-identity','scripts/current-release-identity.mjs'),
     item('release-surface-model','scripts/validate-release-surfaces.mjs'),
@@ -41,7 +41,7 @@ export function suiteCases(family,runtime='node',mirror='github') {
   ];
   if(family==='candidate')return [
     item('current-v3-product-identity','scripts/current-release-identity.mjs'),
-    item('current-complete-product-reopen-negatives','scripts/test-current-product-v3.mjs',['--product','.', '--catalog-sha256','86981ab84b16cc06684dc87da28c436b190d79c8c9c312ffa7f27206e444cb5a','--out','target/ci/current-product-controls'],fixturePermissions),
+    item('current-complete-product-reopen-negatives','scripts/test-current-product-v3.mjs',['--product','.', '--catalog-sha256','e12684efb3e475ad551eddabda12bc4c196f19edb48e7ace9069fda1ef5e7871','--out','target/ci/current-product-controls'],fixturePermissions),
     item('current-original-license-reopen-negatives','scripts/test-current-license-policy-v3.mjs'),
     item('library-first-teaching-and-routes','scripts/test-library-first.mjs'),
     item('live-agent-trace-evaluator','scripts/test-live-agent-trace-evaluation-v1.mjs'),

@@ -28,7 +28,7 @@ assert.equal(hash('standard/wasmc-std/1.4.1/artifact.wasm'), quickstart.routes['
 assert.equal(hash('catalog/libs-current-v2.json'), quickstart.routes['library-first-selection'].catalog_sha256);
 assert.equal(quickstart.routes['library-first-selection'].catalog_path,'catalog/libs-current-v2.json');
 assert.equal(quickstart.routes['library-first-selection'].catalog_snapshot_carried_forward,false);
-assert.equal(quickstart.routes['library-first-selection'].exact_report.companion_sha256,'b06eb9a32dddb75e278cd8aa9b1126f6e4b51e885a83897c80f7b5da85b81c3f');
+assert.equal(quickstart.routes['library-first-selection'].exact_report.companion_sha256,'1fac280b1d3f2d82399e61e49fcb47f1c6ffc6c3d5b3b27e5d98059952fefabd');
 assert.equal(quickstart.routes['library-first-selection'].exact_report.import_module,'wasmc:lib/wasmc.lib_managed_object_heap@4.9.0');
 assert.match(quickstart.routes['library-first-selection'].exact_report.instruction,/byte-for-byte/);
 assert.match(quickstart.routes['library-first-selection'].final_answer_policy,/Do not reproduce command arguments/);
@@ -93,8 +93,8 @@ assert.deepEqual(routeReadiness.active_search,routeReadinessAuthority.active_sea
 assert.equal(routeReadiness.valid_resolution_count,routeReadinessAuthority.valid_resolution_count);
 assert.equal(routeReadiness.only_valid_closure,routeReadinessAuthority.only_valid_closure);
 assert.equal(typeof routeReadiness.product.formal_release_ready,'boolean');
-assert.equal(routeReadiness.product.package_routes,42);
-assert.equal(routeReadiness.product.api_routes,247);
+assert.equal(routeReadiness.product.package_routes,43);
+assert.equal(routeReadiness.product.api_routes,277);
 assert.equal(routeReadiness.product.formal_release_ready,routeReadiness.product.blocking_conditions.length===0);
 assert.equal(routeReadiness.product.candidate_extras,0);
 assert.ok(Array.isArray(routeReadiness.product.blocking_conditions));

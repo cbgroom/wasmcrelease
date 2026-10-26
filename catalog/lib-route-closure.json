@@ -2,26 +2,26 @@
   "schema": "wasmc.lib-route-closure/v3",
   "authority_receipt": {
     "path": "admission/current-product-v3.json",
-    "sha256": "adc49a311d4534a8ad31ab32d54637b8856399871cf076c5e8caadffbc653f62"
+    "sha256": "1569d06b524f8af12b6fcd34cef8fe65e7f3c4a1786e1606337d48701f1a441b"
   },
   "release": {
-    "version": "0.0.29",
-    "tag": "v0.0.29",
+    "version": "0.0.30",
+    "tag": "v0.0.30",
     "lifecycle_authority": "release.json and channels/dev.json, channels/main.json, channels/prod.json"
   },
   "catalog": {
     "path": "catalog/libs-current-v2.json",
-    "sha256": "86981ab84b16cc06684dc87da28c436b190d79c8c9c312ffa7f27206e444cb5a",
+    "sha256": "e12684efb3e475ad551eddabda12bc4c196f19edb48e7ace9069fda1ef5e7871",
     "role": "current-product-catalog",
-    "package_routes": 42
+    "package_routes": 43
   },
   "search_index": {
     "path": "catalog/current-index-v2.json",
-    "sha256": "6489af00168c3343f489edb8f7f20d57743e4f3c07b648bbd62f6f5b8ab98fa2",
+    "sha256": "b1761ba3964474a3784c559e8f2731d6a315efc4aa50bb4d2fd8e725627d5607",
     "active_identity": "wasmc:lib-search@0.5.0",
-    "entries": 289,
-    "package_routes": 42,
-    "api_routes": 247
+    "entries": 320,
+    "package_routes": 43,
+    "api_routes": 277
   },
   "release_bindings": [
     {
@@ -662,6 +662,22 @@
       "api_routes": 4,
       "api_routes_exact": true,
       "indexed_identity": "wasmc-system-telemetry@0.0.1",
+      "device_qualified": false
+    },
+    {
+      "id": "wasmc-text",
+      "identity": "wasmc:text@0.0.1",
+      "version": "0.0.1",
+      "root": "current-libs/wasmc-text/0.0.1",
+      "profile": "value",
+      "delivery_kind": "wasm-core-component",
+      "manifest_sha256": "a49379289b2b54da12ed0874af55e46e7b58966235d9096637b0c249e1ba49dd",
+      "root_inventory_sha256": "68848b01c3d1cb351e413565337f03c8885c874d8d66d281150a9412c56808c3",
+      "catalog_bound": true,
+      "package_route_bound": true,
+      "api_routes": 30,
+      "api_routes_exact": true,
+      "indexed_identity": "wasmc-text@0.0.1",
       "device_qualified": false
     },
     {

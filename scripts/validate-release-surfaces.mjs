@@ -50,10 +50,10 @@ assert.equal(json(model.agent_learning_protocol.path).schema,model.agent_learnin
 assert.equal(model.lib_ecosystem_control_plane.path,'lib-ecosystem-control-plane.json');
 assert.equal(model.lib_ecosystem_control_plane.schema,'wasmc.lib-ecosystem-control-plane/v3');
 assert.equal(ecosystem.schema,model.lib_ecosystem_control_plane.schema);
-assert.equal(ecosystem.inventory.packages,42);assert.equal(ecosystem.inventory.native_source_packages,14);
-assert.equal(ecosystem.route_closure.api_routes,247);assert.equal(ecosystem.route_closure.entries,289);
-assert.equal(closure.release_bindings.length,42);assert.equal(closure.search_index.api_routes,247);assert.equal(closure.search_index.entries,289);
-assert.equal(readiness.product.package_routes,42);assert.equal(readiness.product.api_routes,247);
+assert.equal(ecosystem.inventory.packages,43);assert.equal(ecosystem.inventory.native_source_packages,14);
+assert.equal(ecosystem.route_closure.api_routes,277);assert.equal(ecosystem.route_closure.entries,320);
+assert.equal(closure.release_bindings.length,43);assert.equal(closure.search_index.api_routes,277);assert.equal(closure.search_index.entries,320);
+assert.equal(readiness.product.package_routes,43);assert.equal(readiness.product.api_routes,277);
 assert.equal(readiness.product.formal_release_ready,readiness.product.blocking_conditions.length===0);
 assert.equal(readiness.lifecycle_authority.current_release,'release.json');
 assert.deepEqual(q.routes['release-lib-route-readiness'].product,readiness.product);

@@ -52,7 +52,7 @@ export function qualificationPolicy(policy, candidate, protocol){
   validateProtocol(protocol);
   if(policy==='controlled-pair-v1')return {id:policy,models:protocol.cohort_gate.required_models};
   assert.equal(policy,'glm-5.3-flash-single-v1','unknown Pi qualification policy');
-  assert.equal(candidate.schema,'wasmc.release-product-candidate/v3');assert.ok(['0.0.24','0.0.25','0.0.26','0.0.27','0.0.28','0.0.29'].includes(candidate.version),'single-model policy requires an explicitly admitted release');
+  assert.equal(candidate.schema,'wasmc.release-product-candidate/v3');assert.ok(['0.0.24','0.0.25','0.0.26','0.0.27','0.0.28','0.0.29','0.0.30'].includes(candidate.version),'single-model policy requires an explicitly admitted release');
   assert.equal(protocol.schema,'wasmc.fresh-agent-learning/v3');assert.equal(protocol.release_binding.version,candidate.version);
   return {id:policy,models:[{provider:'llm-m4dd',identity:'glm-5.3-flash'}]};
 }

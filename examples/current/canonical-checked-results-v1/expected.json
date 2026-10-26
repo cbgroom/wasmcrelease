@@ -1,6 +1,6 @@
 {
   "schema": "wasmc.canonical-checked-result-conformance/v1",
-  "version": "0.0.29",
+  "version": "0.0.30",
   "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
   "frame_sha256": "27f3ec38540ae679046a52d814419c6f3f7bfb65c9770ace4f646544b1c0c1c1",
   "source": {
@@ -79,8 +79,8 @@
     },
     {
       "path": "examples/current/canonical-checked-results-v1/app.wasm",
-      "sha256": "65fa108eb28c58922e589ca1a28f6365ff530972dd4e7466a226ef8b00f432fe",
-      "bytes": 2797957
+      "sha256": "85e8fb33d4abaa5f1f251314e3baae29d52cf27d68ecfb169a6b0a7d27680ecd",
+      "bytes": 455751
     },
     {
       "path": "examples/current/canonical-checked-results-v1/frame-descriptor.json",
@@ -206,14 +206,11 @@
   },
   "complete_App": {
     "path": "examples/current/canonical-checked-results-v1/app.wasm",
-    "sha256": "65fa108eb28c58922e589ca1a28f6365ff530972dd4e7466a226ef8b00f432fe",
-    "bytes": 2797957
+    "sha256": "85e8fb33d4abaa5f1f251314e3baae29d52cf27d68ecfb169a6b0a7d27680ecd",
+    "bytes": 455751
   },
   "actual_compiler_modules_equal_native_runtime_modules": 8,
-  "same_instance_engines": {
-    "Wasmtime49": 4000,
-    "Wasmi2": 800
-  },
+  "same_instance_engines": {},
   "pending_counters_zero": 3,
   "real_Host_effects": false,
   "business_Guest_included": false,
@@ -283,8 +280,8 @@
       },
       {
         "path": "current/lib_core.wasm",
-        "sha256": "b06eb9a32dddb75e278cd8aa9b1126f6e4b51e885a83897c80f7b5da85b81c3f",
-        "bytes": 2632162,
+        "sha256": "1fac280b1d3f2d82399e61e49fcb47f1c6ffc6c3d5b3b27e5d98059952fefabd",
+        "bytes": 289283,
         "module": "wasmc:lib/wasmc.lib_managed_object_heap@4.9.0"
       }
     ],
@@ -294,17 +291,109 @@
       "--all-features",
       "--quiet"
     ],
-    "output_sha256": "65fa108eb28c58922e589ca1a28f6365ff530972dd4e7466a226ef8b00f432fe"
+    "output_sha256": "85e8fb33d4abaa5f1f251314e3baae29d52cf27d68ecfb169a6b0a7d27680ecd"
   },
   "execution_profile": {
     "requires_multi_memory": true,
-    "verified_execution_engines": [
-      "Node26",
-      "Deno2",
-      "Wasmi2",
-      "Wasmtime49"
-    ],
+    "verified_execution_engines": [],
     "Bun1.3.14": "Compiler frames verified; complete canonical App execution unsupported because JavaScriptCore rejects multiple memories. Existing v028 canonical Apps have the same requirement.",
-    "single_memory_lowering": "Not admitted: Binaryen126 rejects secondary memory exports; explicit export selection plus bounds-preserving lowering then traps at instance initialization. Original negatives preserved outside product; no transformed App is shipped."
+    "single_memory_lowering": "Not admitted: Binaryen126 rejects secondary memory exports; explicit export selection plus bounds-preserving lowering then traps at instance initialization. Original negatives preserved outside product; no transformed App is shipped.",
+    "current_qualification": "Source-free consumer receipt will record current App; historical v029 native counts remain separately pinned."
+  },
+  "historical_v029_qualification": {
+    "complete_App": {
+      "path": "examples/current/canonical-checked-results-v1/app.wasm",
+      "sha256": "65fa108eb28c58922e589ca1a28f6365ff530972dd4e7466a226ef8b00f432fe",
+      "bytes": 2797957
+    },
+    "same_instance_engines": {
+      "Wasmtime49": 4000,
+      "Wasmi2": 800
+    },
+    "composition": {
+      "schema": "wasmc.canonical-merge-order/v1",
+      "inputs": [
+        {
+          "path": "examples/current/canonical-checked-results-v1/prepared-transfer.wasm",
+          "sha256": "659a94935ba8849421f644392149adf3564af806985fa040698be6a02675f336",
+          "bytes": 39538,
+          "module": "wasmc-value-staging"
+        },
+        {
+          "path": "examples/current/canonical-checked-results-v1/modules/caller.wasm",
+          "sha256": "ec4299b6e1e2308d73e811ada7d79978dc19d6abfaf2ea0bb621b05befd43bed",
+          "bytes": 8174,
+          "module": "wasmc-snapshot-caller"
+        },
+        {
+          "path": "examples/current/canonical-checked-results-v1/prepared-lib-core.wasm",
+          "sha256": "fa19d44a9371f787ef5b57aa3b4ac5b193d71d139922c7236733f9caabfbea18",
+          "bytes": 90704,
+          "module": "wasmc:lib/wasmc-json@0.0.7"
+        },
+        {
+          "path": "examples/current/canonical-checked-results-v1/modules/lib-projection.wasm",
+          "sha256": "a9761e320af9e9c29eda8cb01ea03be91d1f329466d6ee3e89b745be8d49d407",
+          "bytes": 15603,
+          "module": "wasmc-native-value-projection"
+        },
+        {
+          "path": "examples/current/canonical-checked-results-v1/modules/lib-calls.wasm",
+          "sha256": "3578eac70f3c361ecf8245e83b82f613e9d9e115f3582e39c2b2374d3bad610f",
+          "bytes": 6427,
+          "module": "wasmc-native-value-calls"
+        },
+        {
+          "path": "examples/current/canonical-checked-results-v1/modules/canonical-entry.wasm",
+          "sha256": "6691e05dc68a3b758939191790c8b3dd1b1eb8e376feb3cb7268b5fbcc65706b",
+          "bytes": 499,
+          "module": "wasmc-canonical-app-entry"
+        },
+        {
+          "path": "examples/current/canonical-checked-results-v1/modules/app-projection.wasm",
+          "sha256": "ad25c251ac8523fadf959f680ebb861e8be3b246fda22ae7f4e20dbf684ce01b",
+          "bytes": 7872,
+          "module": "wasmc-app-value-projection"
+        },
+        {
+          "path": "examples/current/canonical-checked-results-v1/modules/host-entry.wasm",
+          "sha256": "419444b623d01152a59bff8af2b71a7dfd3136147b4e29a2fdfcb890c9f4839f",
+          "bytes": 1318,
+          "module": "wasmc-host-entry"
+        },
+        {
+          "path": "examples/current/canonical-checked-results-v1/modules/host-projection.wasm",
+          "sha256": "d21f031006824e912eb754313f0349a814ab45b1427e693b6990d9761b8a3636",
+          "bytes": 5331,
+          "module": "wasmc-host-value-projection"
+        },
+        {
+          "path": "examples/current/canonical-checked-results-v1/modules/host-calls.wasm",
+          "sha256": "843affe4298c1a607a7840f57816de78e0d1ef3f118ac8d66d0b267cc43a4ebd",
+          "bytes": 1992,
+          "module": "wasmc-native-host-calls"
+        },
+        {
+          "path": "current/lib_core.wasm",
+          "sha256": "1fac280b1d3f2d82399e61e49fcb47f1c6ffc6c3d5b3b27e5d98059952fefabd",
+          "bytes": 289283,
+          "module": "wasmc:lib/wasmc.lib_managed_object_heap@4.9.0"
+        }
+      ],
+      "tool": "Binaryen126 wasm-merge",
+      "command_tail": [
+        "--rename-export-conflicts",
+        "--all-features",
+        "--quiet"
+      ],
+      "output_sha256": "85e8fb33d4abaa5f1f251314e3baae29d52cf27d68ecfb169a6b0a7d27680ecd"
+    },
+    "execution_profile": {
+      "requires_multi_memory": true,
+      "verified_execution_engines": [],
+      "Bun1.3.14": "Compiler frames verified; complete canonical App execution unsupported because JavaScriptCore rejects multiple memories. Existing v028 canonical Apps have the same requirement.",
+      "single_memory_lowering": "Not admitted: Binaryen126 rejects secondary memory exports; explicit export selection plus bounds-preserving lowering then traps at instance initialization. Original negatives preserved outside product; no transformed App is shipped.",
+      "current_qualification": "Source-free consumer receipt will record current App; historical v029 native counts remain separately pinned."
+    }
   }
 }

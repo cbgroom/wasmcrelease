@@ -1,9 +1,9 @@
 {
   "schema": "wasmc.current-compiler-qualification/v1",
   "accepted": true,
-  "version": "0.0.29",
+  "version": "0.0.30",
   "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
-  "product_manifest_sha256": "3635282eed0f59e61e14c405d66702171ba11190c37fda99e81ff952f83a64b5",
+  "product_manifest_sha256": "eca810bc7aee10e0affec2852ae3c8fe0eace2f06f3ab14fa64f7c1ca6ca203d",
   "source_free": true,
   "compiler_private_source_present": false,
   "platform": "darwin",
@@ -51,8 +51,8 @@
       "exit_code": 0,
       "result": {
         "accepted": true,
-        "provider": "4.11.0-candidate.1",
-        "provider_sha256": "b06eb9a32dddb75e278cd8aa9b1126f6e4b51e885a83897c80f7b5da85b81c3f",
+        "provider": "4.11.0-candidate.2",
+        "provider_sha256": "1fac280b1d3f2d82399e61e49fcb47f1c6ffc6c3d5b3b27e5d98059952fefabd",
         "abi_namespace": "wasmc:lib/wasmc.lib_managed_object_heap@4.9.0",
         "compileLib_oracles": 3,
         "instantiateLib_oracles": 3,
@@ -199,6 +199,40 @@
       }
     },
     {
+      "engine": "node",
+      "version": "v26.12.1",
+      "args": [
+        "scripts/test-current-string-support.mjs"
+      ],
+      "exit_code": 0,
+      "result": {
+        "accepted": true,
+        "host": "node",
+        "CoreLib_version": "4.11.0-candidate.2",
+        "CoreLib_sha256": "1fac280b1d3f2d82399e61e49fcb47f1c6ffc6c3d5b3b27e5d98059952fefabd",
+        "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+        "Root_APIs": 30,
+        "compiled_frames": 4,
+        "modules_per_frame": 8,
+        "old_Root_and_compiler_unchanged": true,
+        "basic_Guest_calls": 544,
+        "Guest_calls": 581,
+        "large_input_bytes": [
+          131072,
+          262144,
+          524288
+        ],
+        "Unicode_case_expansion": true,
+        "canonical_ingress_work_budget_rejected": true,
+        "same_instance_recovery": true,
+        "pending_counters_zero": 2,
+        "Host_imports": 13,
+        "Host_calls_per_success": 13,
+        "Source_rejection_recovery": true,
+        "business_effects": false
+      }
+    },
+    {
       "engine": "bun",
       "version": "1.3.14",
       "args": [
@@ -240,8 +274,8 @@
       "exit_code": 0,
       "result": {
         "accepted": true,
-        "provider": "4.11.0-candidate.1",
-        "provider_sha256": "b06eb9a32dddb75e278cd8aa9b1126f6e4b51e885a83897c80f7b5da85b81c3f",
+        "provider": "4.11.0-candidate.2",
+        "provider_sha256": "1fac280b1d3f2d82399e61e49fcb47f1c6ffc6c3d5b3b27e5d98059952fefabd",
         "abi_namespace": "wasmc:lib/wasmc.lib_managed_object_heap@4.9.0",
         "compileLib_oracles": 3,
         "instantiateLib_oracles": 3,
@@ -381,6 +415,30 @@
       }
     },
     {
+      "engine": "bun",
+      "version": "1.3.14",
+      "args": [
+        "scripts/test-current-string-support.mjs"
+      ],
+      "exit_code": 0,
+      "result": {
+        "accepted": true,
+        "host": "bun",
+        "CoreLib_version": "4.11.0-candidate.2",
+        "CoreLib_sha256": "1fac280b1d3f2d82399e61e49fcb47f1c6ffc6c3d5b3b27e5d98059952fefabd",
+        "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+        "Root_APIs": 30,
+        "compiled_frames": 4,
+        "modules_per_frame": 8,
+        "old_Root_and_compiler_unchanged": true,
+        "Guest_calls": 0,
+        "execution_profile": "compiler-frames-only",
+        "unsupported_feature": "multi-memory",
+        "Source_rejection_recovery": true,
+        "business_effects": false
+      }
+    },
+    {
       "engine": "deno",
       "version": "deno 2.9.4 (stable, release, aarch64-apple-darwin)\nv8 15.0.245.2-rusty\ntypescript 6.0.3",
       "args": [
@@ -431,8 +489,8 @@
       "exit_code": 0,
       "result": {
         "accepted": true,
-        "provider": "4.11.0-candidate.1",
-        "provider_sha256": "b06eb9a32dddb75e278cd8aa9b1126f6e4b51e885a83897c80f7b5da85b81c3f",
+        "provider": "4.11.0-candidate.2",
+        "provider_sha256": "1fac280b1d3f2d82399e61e49fcb47f1c6ffc6c3d5b3b27e5d98059952fefabd",
         "abi_namespace": "wasmc:lib/wasmc.lib_managed_object_heap@4.9.0",
         "compileLib_oracles": 3,
         "instantiateLib_oracles": 3,
@@ -588,6 +646,42 @@
         "rejection_then_recovery": true,
         "real_Host_effects": false,
         "business_Guest_executed": false
+      }
+    },
+    {
+      "engine": "deno",
+      "version": "deno 2.9.4 (stable, release, aarch64-apple-darwin)\nv8 15.0.245.2-rusty\ntypescript 6.0.3",
+      "args": [
+        "run",
+        "--allow-read",
+        "scripts/test-current-string-support.mjs"
+      ],
+      "exit_code": 0,
+      "result": {
+        "accepted": true,
+        "host": "deno",
+        "CoreLib_version": "4.11.0-candidate.2",
+        "CoreLib_sha256": "1fac280b1d3f2d82399e61e49fcb47f1c6ffc6c3d5b3b27e5d98059952fefabd",
+        "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+        "Root_APIs": 30,
+        "compiled_frames": 4,
+        "modules_per_frame": 8,
+        "old_Root_and_compiler_unchanged": true,
+        "basic_Guest_calls": 544,
+        "Guest_calls": 581,
+        "large_input_bytes": [
+          131072,
+          262144,
+          524288
+        ],
+        "Unicode_case_expansion": true,
+        "canonical_ingress_work_budget_rejected": true,
+        "same_instance_recovery": true,
+        "pending_counters_zero": 2,
+        "Host_imports": 13,
+        "Host_calls_per_success": 13,
+        "Source_rejection_recovery": true,
+        "business_effects": false
       }
     }
   ],

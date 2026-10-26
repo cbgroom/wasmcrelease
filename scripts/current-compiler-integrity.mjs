@@ -52,16 +52,17 @@ assert.equal(proof.actual_compiler_dependencies_and_Cargo_inputs_equal,true);ass
 assert.equal(proof.private_implementation_source_included,false);assert.equal(proof.new_builds,0);
 const cm=new WebAssembly.Module(canonical);assert.deepEqual(WebAssembly.Module.imports(cm),[]);
 for(const name of ['memory','wasmc_alloc','wasmc_compile','wasmc_output_ptr','wasmc_output_len','wasmc_error_ptr','wasmc_error_len','wasmc_clear'])assert.ok(WebAssembly.Module.exports(cm).some(e=>e.name===name));
-const binaries=[],embeddings=[];
+const binaries=[],embeddings=[],libEmbeddings=[];const corePin=sha(read('current/lib_core.wasm'));
 for(const p of walk()){
  if(p.endsWith('.wasm')){let m;const b=read(p);try{m=new WebAssembly.Module(b);}catch{continue;}
   if(WebAssembly.Module.exports(m).some(e=>e.name==='wasmc_compile')){assert.equal(sha(b),pin,'obsolete compiler '+p);binaries.push(p);}
  }else if(/\.(mjs|js)$/.test(p)){
+  for(const m of read(p).toString().matchAll(/function decodeEmbeddedLib\(\) \{\s*const binary = atob\(\"([A-Za-z0-9+/=]+)\"\);/g)){assert.equal(sha(Buffer.from(m[1],'base64')),corePin,'obsolete CoreLib embedding '+p);libEmbeddings.push(p);}
   for(const m of read(p).toString().matchAll(/function decodeEmbeddedCompiler\(\) \{\s*const binary = atob\("([A-Za-z0-9+/=]+)"\);/g)){assert.equal(sha(Buffer.from(m[1],'base64')),pin,'obsolete embedding '+p);embeddings.push(p);}
  }
 }
 assert.deepEqual(binaries.sort(),['current/wasmc_compiler.wasm','runtime/wasmc-runtime-v0/compiler.wasm']);
-assert.deepEqual(embeddings.sort(),['current/wasmc.global.js','current/wasmc.mjs','dist/wasmc.global.js']);
+assert.deepEqual(embeddings.sort(),['current/wasmc.global.js','current/wasmc.mjs','dist/wasmc.global.js']);assert.deepEqual(libEmbeddings.sort(),['current/wasmc.global.js','current/wasmc.mjs','dist/wasmc.global.js']);
 if(refresh){
  const runtime=json('runtime/wasmc-runtime-v0/manifest.json');runtime.compiler.file={...row('runtime/wasmc-runtime-v0/compiler.wasm'),path:'compiler.wasm'};runtime.files['compiler.wasm']=runtime.compiler.file;put('runtime/wasmc-runtime-v0/manifest.json',runtime);
  const receipt=json('runtime/wasmc-runtime-v0/receipts/compiler-wasm.json');receipt.compiler=runtime.compiler.file;receipt.manifest={...row('runtime/wasmc-runtime-v0/manifest.json'),path:'manifest.json'};receipt.current_compiler_authority='../../../current/compiler-release.json';put('runtime/wasmc-runtime-v0/receipts/compiler-wasm.json',receipt);
@@ -75,6 +76,7 @@ if(refresh){
  ...(Number(productVersion.split('.')[2])>=27?['admission/checked-chunk-v0'+productVersion.split('.')[2]+'.json']:[]),
  ...(Number(productVersion.split('.')[2])>=28?['scripts/test-unit-result-match.mjs']:[]),
  ...(Number(productVersion.split('.')[2])>=29?['scripts/test-canonical-checked-results.mjs']:[]),
+ ...(Number(productVersion.split('.')[2])>=30?['scripts/test-current-string-support.mjs']:[]),
  'compatibility/core-artifacts-'+versionKey+'.json','scripts/core-compatibility.mjs','scripts/test-current-lib-api-v021.mjs','scripts/current-compiler-integrity.mjs','scripts/test-current-compiler-integrity.mjs','scripts/test-current-compiler.mjs','scripts/test-current-private-helpers.mjs','scripts/qualify-current-compiler.mjs',
  'runtime/wasmc-runtime-v0/compiler.wasm','runtime/wasmc-runtime-v0/manifest.json','runtime/wasmc-runtime-v0/receipts/compiler-wasm.json','runtime/registry-v0/packages/wasmc-runtime/0.1.0-runtime-v0.json','runtime/registry-v0/channels/dev.json'].sort();
  put('current/compiler-release.json',{schema:'wasmc.current-compiler/v2',version:options['--version'],source_commit:options['--source-commit'],source_branch:options['--source-branch'],source_build_receipt_sha256:options['--build-receipt-sha256'],cargo_lock_sha256:options['--cargo-lock-sha256'],compiler:row('current/wasmc_compiler.wasm'),imports:0,max_bytes:2097152,standard_app_sha256:options['--standard-app-sha256'],active_compiler_versions:1,binary_paths:binaries,embedded_paths:embeddings,artifacts:paths.map(row),immutable_selection:'Use the whole product candidate digest and fixed public commit; mutable main is discovery.',scope:'Current compiler identity and carrier integrity; whole product and publication require independent release admission'});

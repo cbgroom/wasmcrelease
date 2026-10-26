@@ -40,8 +40,8 @@ try{
 const closure=verify();
 if(composed){
  const index=JSON.parse(data.get(catalog.index.path)),apis=index.packages.reduce((n,row)=>n+row.apis.length,0);
- assert.equal(closure.schema,'wasmc.current-composition-release-closure/v1');assert.equal(closure.release_packages,42);
- assert.equal(closure.api_routes,apis);assert.equal(closure.entries,42+apis);
+ assert.equal(closure.schema,'wasmc.current-composition-release-closure/v1');assert.equal(closure.release_packages,43);
+ assert.equal(closure.api_routes,apis);assert.equal(closure.entries,43+apis);
  assert.equal(closure.fresh_full_q0,false);assert.equal(closure.original_receipt_bytes_verified,false);
  results.push({name:'real composed Core snapshot all'+closure.entries+' lookups and full pagination; original full-base verified',passed:true});
 }else{

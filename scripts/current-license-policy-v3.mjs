@@ -37,7 +37,7 @@ export async function collectCurrentDeclaredThirdPartyNotices(catalogBytes,polic
   assert.equal(policy.schema,'wasmc.current-license-policy/v1');
   const catalog=checkedCurrentCatalog(catalogBytes,policy.catalog_sha256);
   assert.equal(catalog.package_authority_commit,policy.package_authority_commit);
-  assert.equal(catalog.packages.length,42);
+  assert.equal(catalog.packages.length,policy.current_packages);assert.ok([42,43].includes(policy.current_packages));
   assert.equal(catalog.version,policy.version);
   const exact=async pin=>{
     const bytes=await read(pin.path);
@@ -146,7 +146,7 @@ async function collectComposedNotices(catalogBytes,catalog,policy,read,cohort){
   const baseOptions=cohort.input_options.base,baseBytes=get(prefix+'/'+baseOptions.catalog_path);
   const base=checkedCurrentCatalog(baseBytes,baseOptions.catalog_sha256);
   const baseRead=async path=>path.startsWith('standard/')?read(path):get(prefix+'/'+path);
-  const basePolicy={...policy,version:base.version,catalog_sha256:baseOptions.catalog_sha256,package_authority_commit:base.package_authority_commit};
+  const basePolicy={...policy,version:base.version,catalog_sha256:baseOptions.catalog_sha256,package_authority_commit:base.package_authority_commit,current_packages:base.packages.length};
   const baseRows=await collectCurrentDeclaredThirdPartyNotices(baseBytes,basePolicy,baseRead),result=new Map();
   const currentFiles=new Set(catalog.packages.flatMap(row=>row.files.map(pin=>pin.path)));
   for(const [path,pin]of baseRows){

@@ -1,0 +1,176 @@
+[
+  {
+    "path": "/trim",
+    "input": "  雪\t\r\n",
+    "expected": "雪"
+  },
+  {
+    "path": "/trim_start",
+    "input": " 雪 ",
+    "expected": "雪 "
+  },
+  {
+    "path": "/trim_end",
+    "input": " 雪 ",
+    "expected": " 雪"
+  },
+  {
+    "path": "/to_lowercase",
+    "input": "İ",
+    "expected": "i̇"
+  },
+  {
+    "path": "/to_uppercase",
+    "input": "straße",
+    "expected": "STRASSE"
+  },
+  {
+    "path": "/to_ascii_lowercase",
+    "input": "ÉABC",
+    "expected": "Éabc"
+  },
+  {
+    "path": "/to_ascii_uppercase",
+    "input": "éabc",
+    "expected": "éABC"
+  },
+  {
+    "path": "/split",
+    "input": "a,,b,",
+    "expected": "a||b|"
+  },
+  {
+    "path": "/splitn",
+    "input": "x=y=z",
+    "expected": "x|y=z"
+  },
+  {
+    "path": "/split_whitespace",
+    "input": "  雪\t🦀",
+    "expected": "雪|🦀"
+  },
+  {
+    "path": "/split_ascii_whitespace",
+    "input": "  雪\t🦀",
+    "expected": " |雪|🦀"
+  },
+  {
+    "path": "/lines",
+    "input": "雪\r\n🦀\n",
+    "expected": "雪|🦀"
+  },
+  {
+    "path": "/replace",
+    "input": "a.a",
+    "expected": "a$1a"
+  },
+  {
+    "path": "/replacen",
+    "input": "ababa",
+    "expected": "XbXba"
+  },
+  {
+    "path": "/contains",
+    "input": "x雪x",
+    "expected": "true"
+  },
+  {
+    "path": "/contains",
+    "input": "abc",
+    "expected": "false"
+  },
+  {
+    "path": "/starts_with",
+    "input": "雪x",
+    "expected": "true"
+  },
+  {
+    "path": "/ends_with",
+    "input": "x🦀",
+    "expected": "true"
+  },
+  {
+    "path": "/is_empty",
+    "input": "",
+    "expected": "true"
+  },
+  {
+    "path": "/is_ascii",
+    "input": "雪",
+    "expected": "false"
+  },
+  {
+    "path": "/eq_ignore_ascii_case",
+    "input": "get",
+    "expected": "true"
+  },
+  {
+    "path": "/is_char_boundary",
+    "input": "雪🦀",
+    "expected": "true"
+  },
+  {
+    "path": "/find",
+    "input": "雪🦀雪",
+    "expected": "true"
+  },
+  {
+    "path": "/find",
+    "input": "none",
+    "expected": "false"
+  },
+  {
+    "path": "/rfind",
+    "input": "雪🦀雪",
+    "expected": "true"
+  },
+  {
+    "path": "/get",
+    "input": "雪🦀",
+    "expected": "雪"
+  },
+  {
+    "path": "/get_invalid",
+    "input": "雪🦀",
+    "expected": "missing"
+  },
+  {
+    "path": "/strip_prefix",
+    "input": "prefix雪",
+    "expected": "雪"
+  },
+  {
+    "path": "/strip_prefix",
+    "input": "x",
+    "expected": "missing"
+  },
+  {
+    "path": "/strip_suffix",
+    "input": "雪suffix",
+    "expected": "雪"
+  },
+  {
+    "path": "/from_utf8",
+    "input": "雪",
+    "expected": "雪"
+  },
+  {
+    "path": "/echo",
+    "input": "fresh-雪\u0000🦀",
+    "expected": "fresh-雪\u0000🦀"
+  },
+  {
+    "path": "/from_utf8",
+    "bytes": [
+      255
+    ],
+    "expected": "invalid"
+  },
+  {
+    "path": "/echo",
+    "bytes": [
+      255
+    ],
+    "expected": "�"
+  }
+]

@@ -1,0 +1,405 @@
+{
+  "activation_sha256": "55cd51e9572fa0bf1954dd4a4a179882530b9ef4d7b726ec6aac666f3126091c",
+  "canonical_entries": [
+    {
+      "argument_alignment": 4,
+      "argument_kind": "value",
+      "argument_projection": "__wasmc_app_arg_0_0",
+      "argument_shape": {
+        "alignment": 4,
+        "fields": [
+          {
+            "name": "method",
+            "offset": 0,
+            "value": {
+              "alignment": 4,
+              "kind": "string",
+              "size": 8
+            }
+          },
+          {
+            "name": "path",
+            "offset": 8,
+            "value": {
+              "alignment": 4,
+              "kind": "string",
+              "size": 8
+            }
+          },
+          {
+            "name": "parameters",
+            "offset": 16,
+            "value": {
+              "alignment": 4,
+              "element": {
+                "alignment": 4,
+                "fields": [
+                  {
+                    "name": "name",
+                    "offset": 0,
+                    "value": {
+                      "alignment": 4,
+                      "kind": "string",
+                      "size": 8
+                    }
+                  },
+                  {
+                    "name": "value",
+                    "offset": 8,
+                    "value": {
+                      "alignment": 4,
+                      "kind": "string",
+                      "size": 8
+                    }
+                  }
+                ],
+                "kind": "record",
+                "size": 16
+              },
+              "kind": "list",
+              "size": 8
+            }
+          },
+          {
+            "name": "query",
+            "offset": 24,
+            "value": {
+              "alignment": 4,
+              "element": {
+                "alignment": 4,
+                "fields": [
+                  {
+                    "name": "name",
+                    "offset": 0,
+                    "value": {
+                      "alignment": 4,
+                      "kind": "string",
+                      "size": 8
+                    }
+                  },
+                  {
+                    "name": "value",
+                    "offset": 8,
+                    "value": {
+                      "alignment": 4,
+                      "kind": "string",
+                      "size": 8
+                    }
+                  }
+                ],
+                "kind": "record",
+                "size": 16
+              },
+              "kind": "list",
+              "size": 8
+            }
+          },
+          {
+            "name": "headers",
+            "offset": 32,
+            "value": {
+              "alignment": 4,
+              "element": {
+                "alignment": 4,
+                "fields": [
+                  {
+                    "name": "name",
+                    "offset": 0,
+                    "value": {
+                      "alignment": 4,
+                      "kind": "string",
+                      "size": 8
+                    }
+                  },
+                  {
+                    "name": "value",
+                    "offset": 8,
+                    "value": {
+                      "alignment": 4,
+                      "element": {
+                        "alignment": 1,
+                        "kind": "scalar",
+                        "size": 1,
+                        "type": "U8"
+                      },
+                      "kind": "list",
+                      "size": 8
+                    }
+                  }
+                ],
+                "kind": "record",
+                "size": 16
+              },
+              "kind": "list",
+              "size": 8
+            }
+          },
+          {
+            "name": "body",
+            "offset": 40,
+            "value": {
+              "alignment": 4,
+              "element": {
+                "alignment": 1,
+                "kind": "scalar",
+                "size": 1,
+                "type": "U8"
+              },
+              "kind": "list",
+              "size": 8
+            }
+          }
+        ],
+        "kind": "record",
+        "size": 48
+      },
+      "argument_size": 48,
+      "canonical_export": "__wasmc_invoke_canonical_run",
+      "owned_result": {
+        "drop_function": "object_drop",
+        "drop_module": "wasmc:lib/wasmc.lib_managed_object_heap@4.9.0",
+        "projection": "__wasmc_app_result_0",
+        "shape": {
+          "alignment": 4,
+          "fields": [
+            {
+              "name": "status",
+              "offset": 0,
+              "value": {
+                "alignment": 2,
+                "kind": "scalar",
+                "size": 2,
+                "type": "U16"
+              }
+            },
+            {
+              "name": "body",
+              "offset": 4,
+              "value": {
+                "alignment": 4,
+                "element": {
+                  "alignment": 1,
+                  "kind": "scalar",
+                  "size": 1,
+                  "type": "U8"
+                },
+                "kind": "list",
+                "size": 8
+              }
+            }
+          ],
+          "kind": "record",
+          "size": 12
+        },
+        "type_ordinal": 5
+      },
+      "result_lane": "i32",
+      "source_export": "run"
+    }
+  ],
+  "entry_binding_sha256": "3db4b5c10627cc9e81ea8372385cffa7e943e3e905859d1532c3d26e8f8204fe",
+  "expected_final_host_imports": [
+    {
+      "function": "request-body-len",
+      "module": "mcpgit:http/v1",
+      "params": [],
+      "results": [
+        "i32"
+      ]
+    },
+    {
+      "function": "request-body-read",
+      "module": "mcpgit:http/v1",
+      "params": [
+        "i32",
+        "i32",
+        "i32"
+      ],
+      "results": [
+        "i32"
+      ]
+    },
+    {
+      "function": "request-headers-len",
+      "module": "mcpgit:http/v1",
+      "params": [],
+      "results": [
+        "i32"
+      ]
+    },
+    {
+      "function": "request-headers-read",
+      "module": "mcpgit:http/v1",
+      "params": [
+        "i32",
+        "i32",
+        "i32"
+      ],
+      "results": [
+        "i32"
+      ]
+    },
+    {
+      "function": "request-method-len",
+      "module": "mcpgit:http/v1",
+      "params": [],
+      "results": [
+        "i32"
+      ]
+    },
+    {
+      "function": "request-method-read",
+      "module": "mcpgit:http/v1",
+      "params": [
+        "i32",
+        "i32",
+        "i32"
+      ],
+      "results": [
+        "i32"
+      ]
+    },
+    {
+      "function": "request-parameters-len",
+      "module": "mcpgit:http/v1",
+      "params": [],
+      "results": [
+        "i32"
+      ]
+    },
+    {
+      "function": "request-parameters-read",
+      "module": "mcpgit:http/v1",
+      "params": [
+        "i32",
+        "i32",
+        "i32"
+      ],
+      "results": [
+        "i32"
+      ]
+    },
+    {
+      "function": "request-path-len",
+      "module": "mcpgit:http/v1",
+      "params": [],
+      "results": [
+        "i32"
+      ]
+    },
+    {
+      "function": "request-path-read",
+      "module": "mcpgit:http/v1",
+      "params": [
+        "i32",
+        "i32",
+        "i32"
+      ],
+      "results": [
+        "i32"
+      ]
+    },
+    {
+      "function": "request-query-len",
+      "module": "mcpgit:http/v1",
+      "params": [],
+      "results": [
+        "i32"
+      ]
+    },
+    {
+      "function": "request-query-read",
+      "module": "mcpgit:http/v1",
+      "params": [
+        "i32",
+        "i32",
+        "i32"
+      ],
+      "results": [
+        "i32"
+      ]
+    },
+    {
+      "function": "response-canonical-write",
+      "module": "mcpgit:http/v1",
+      "params": [
+        "i32",
+        "i32",
+        "i32"
+      ],
+      "results": [
+        "i32"
+      ]
+    }
+  ],
+  "lib_import_module": "wasmc:lib/wasmc-text@0.0.1",
+  "modules": [
+    {
+      "bytes": 266246,
+      "module": "wasmc-snapshot-caller",
+      "offset": 0,
+      "path": "caller.wasm",
+      "sha256": "603746a4414bb959c85185aa0cd56027aa3fe8197396abc4a5610035d2578690"
+    },
+    {
+      "bytes": 15721,
+      "module": "wasmc-native-value-projection",
+      "offset": 266246,
+      "path": "lib-projection.wasm",
+      "sha256": "02a90a7d6093bf147679a76c27c620f0cd181ce56b512a3fb7a6f35c93d49bff"
+    },
+    {
+      "bytes": 12243,
+      "module": "wasmc-native-value-calls",
+      "offset": 281967,
+      "path": "lib-calls.wasm",
+      "sha256": "149e34d33f77b25c37f35cc7c42588707f16d81efe549388d3dbcad17962be9a"
+    },
+    {
+      "bytes": 499,
+      "module": "wasmc-canonical-app-entry",
+      "offset": 294210,
+      "path": "canonical-entry.wasm",
+      "sha256": "5c9e6f56f09fc401062b8def8ccbd2a7c37a06b48b07479bfd7f1521f5696f7d"
+    },
+    {
+      "bytes": 7872,
+      "module": "wasmc-app-value-projection",
+      "offset": 294709,
+      "path": "app-projection.wasm",
+      "sha256": "6635544a9c3a5a9e79cb17c35d21d92b36e632c8373f69fddcf12f213b614359"
+    },
+    {
+      "bytes": 1318,
+      "module": "wasmc-host-entry",
+      "offset": 302581,
+      "path": "host-entry.wasm",
+      "sha256": "419444b623d01152a59bff8af2b71a7dfd3136147b4e29a2fdfcb890c9f4839f"
+    },
+    {
+      "bytes": 8,
+      "module": "wasmc-host-value-projection",
+      "offset": 303899,
+      "path": "host-projection.wasm",
+      "sha256": "93a44bbb96c751218e4c00d479e4c14358122a389acca16205b1e4d0dc5f9476"
+    },
+    {
+      "bytes": 8,
+      "module": "wasmc-native-host-calls",
+      "offset": 303907,
+      "path": "host-calls.wasm",
+      "sha256": "93a44bbb96c751218e4c00d479e4c14358122a389acca16205b1e4d0dc5f9476"
+    }
+  ],
+  "native_host_projection": [],
+  "operation_binding_sha256": "b5eafa21fd2d80a31f4dbc695ef9721d7a89f3c1d9838ee8523d8d53bc46a797",
+  "root": {
+    "artifact_sha256": "c3b6966c906896575c2d08cbbf61d1d4861cb42d2f30aea994b8182fd851b300",
+    "manifest_sha256": "a49379289b2b54da12ed0874af55e46e7b58966235d9096637b0c249e1ba49dd",
+    "template_sha256": "e307267e3189d814c2715b20761b4329df05a734b13260b4a734607e4f6d6a50",
+    "wit_sha256": "f2f6d81c426d239f3b13caad86a319c998abee93cad48f532ed0ea583a822bd0"
+  },
+  "schema": "wasmc.canonical-host-modules/v1",
+  "source_sha256": "3f60ea0230021e98e00fc0f68742f8c5305e0c0fa158bbd506fdf17211787408",
+  "transfer_source_sha256": "ddc154e10c08e9120fcf5023bf216548c14cf4ec238ac697b97d5b06b62ba8df"
+}
