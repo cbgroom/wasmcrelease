@@ -1,0 +1,34 @@
+package wasmc:text@0.0.1;
+interface text {
+  contains: func(input: string, pattern: string) -> bool;
+  starts-with: func(input: string, pattern: string) -> bool;
+  ends-with: func(input: string, pattern: string) -> bool;
+  is-empty: func(input: string) -> bool;
+  is-ascii: func(input: string) -> bool;
+  eq-ignore-ascii-case: func(input: string, other: string) -> bool;
+  find: func(input: string, pattern: string) -> option<u32>;
+  rfind: func(input: string, pattern: string) -> option<u32>;
+  trim: func(input: string) -> string;
+  trim-start: func(input: string) -> string;
+  trim-end: func(input: string) -> string;
+  to-lowercase: func(input: string) -> string;
+  to-uppercase: func(input: string) -> string;
+  to-ascii-lowercase: func(input: string) -> string;
+  to-ascii-uppercase: func(input: string) -> string;
+  split: func(input: string, pattern: string) -> list<string>;
+  splitn: func(input: string, count: u32, pattern: string) -> list<string>;
+  split-whitespace: func(input: string) -> list<string>;
+  split-ascii-whitespace: func(input: string) -> list<string>;
+  lines: func(input: string) -> list<string>;
+  replace: func(input: string, pattern: string, replacement: string) -> string;
+  replacen: func(input: string, pattern: string, replacement: string, count: u32) -> string;
+  join: func(parts: list<string>, separator: string) -> string;
+  strip-prefix-or: func(input: string, pattern: string, fallback: string) -> string;
+  strip-suffix-or: func(input: string, pattern: string, fallback: string) -> string;
+  get-or: func(input: string, start: u32, end: u32, fallback: string) -> string;
+  is-char-boundary: func(input: string, index: u32) -> bool;
+  into-bytes: func(input: string) -> list<u8>;
+  from-utf8-or: func(input: list<u8>, fallback: string) -> string;
+  from-utf8-lossy: func(input: list<u8>) -> string;
+}
+world text-world { export text; }
