@@ -9,12 +9,15 @@ const native='/Users/youxianshi/code/.worktrees/wasmc/WS-20261025-json-utf8-part
 const input=JSON.parse(await readFile(join(own,'producer/inputs/notices/additional-notices.json')));
 const notices=await Promise.all(input.files.map(async pin=>({path:pin.path,sha256:pin.sha256,content:await readFile(pin.path.endsWith('007.txt')?join(own,'producer/inputs/notices/DEPENDENCY-NOTICES-007.txt'):pin.path)})));
 const license=await readFile('LICENSE'), receipts=[];
-for(const row of [{id:'wasmc-json',version:'0.1.0',profile:'value',root:join(evidence,'json-portable-memory-root/wasmc-json')},{id:'wasmc-std',version:'1.5.0',profile:'resource',root:join(evidence,'std-root-publication/wasmc-std')}]){
+const rows=[{id:'wasmc-json',version:'0.1.0',profile:'value',root:join(evidence,'json-portable-memory-root/wasmc-json')},{id:'wasmc-std',version:'1.5.0',profile:'resource',root:join(evidence,'std-root-publication/wasmc-std')}];
+for(const pin of JSON.parse(await readFile(join(evidence,'seven-root-sealing.json')))){assert.equal(pin.status,0);assert.equal(pin.verify_status,0);rows.push({id:pin.id,version:pin.version,profile:pin.id==='wasmc-system-telemetry'?'resource':'value',root:pin.root});}
+for(const row of rows){
  const before=await inventory(row.root);
  await attachReleaseLicense(row.root,license,sha(license),notices);
  const after=await inventory(row.root);
  for(const [path,pin] of Object.entries(before))if(path!=='lib.json'&&!/^bindings\/[^/]+\/Cargo.toml$/.test(path))assert.deepEqual(after[path],pin,path);
- await verifyRoot(row.root,row.id,row.version,row.profile,row.profile==='resource');
+ const originalManifest=JSON.parse(await readFile(join(row.root,'lib.json')));
+ await verifyRoot(row.root,row.id,row.version,row.profile,Boolean(originalManifest.bindings?.rust_core&&row.profile==='resource'));
  const verified=spawnSync(native,['lib','verify',row.root],{encoding:'utf8',timeout:120000,maxBuffer:1048576});
  await writeFile(join(evidence,`${row.id}-licensed-root-verify.json`),JSON.stringify({status:verified.status,stdout:verified.stdout,stderr:verified.stderr},null,2)+'\n');
  assert.equal(verified.status,0,verified.stderr);

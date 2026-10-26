@@ -1,0 +1,53 @@
+{
+  "accepted": true,
+  "checks": [
+    "compression5MiB input and decompressed output, malformed stream then later success",
+    "HTTP512headers, head above64KiB, body above1MiB and complete frame",
+    "HTTP client2MiB body,512headers request and response exact",
+    "Search index above2MiB,5001entries,160character package,650character query,full page and zero page",
+    "Arrow IPC and Parquet140000rows roundtrip without capacity options; batch_rows remains chunk semantics",
+    "Relational70000unique rows,140000union and70000join without maximum-row options"
+  ],
+  "pins": [
+    {
+      "id": "wasmc-compression",
+      "version": "0.1.0",
+      "manifest_sha256": "a75fb6b0a05164e7842d9c36506b6e22ade88b886a69c4bc5fbae0a625b6eb90",
+      "artifact_sha256": "ae218480a4e5619afa5161daf02c7747ad97717638405bec56eb4b2af44967cb"
+    },
+    {
+      "id": "wasmc-http1",
+      "version": "0.1.0",
+      "manifest_sha256": "384bdbdd5026293e7f5ce3b36881bce5fe8b1de29b06a8dbbe83359c2fd9e0db",
+      "artifact_sha256": "62cea9ceb6a178862e5e062718808211e0f699df6d57bdb5be10184d5e15d4ed"
+    },
+    {
+      "id": "wasmc-http1-client",
+      "version": "0.1.0",
+      "manifest_sha256": "bcf5f75fac6fcb5d214af1e1390aff2dc6018eacc35240fd16087511332f03fa",
+      "artifact_sha256": "89ea44adda54b93c805e9275e1cdab62e7f1786e7ab22c9c079dd08939b2735b"
+    },
+    {
+      "id": "wasmc-lib-search",
+      "version": "0.6.0",
+      "manifest_sha256": "e13029a5fcbb772d087f5c5ed58ecc45c0edddaaaf69e7bd64b3abb4acd10afb",
+      "artifact_sha256": "bfaac05dde39027eb1a9ab5a8f9c54e09d90f1019afdd950983d0ed79b8594e1"
+    },
+    {
+      "id": "wasmc-data-interchange",
+      "version": "0.1.0",
+      "manifest_sha256": "0e03361d912713638c6a6058af0e75d59b29dd20924e6581f439fb83e65227ce",
+      "artifact_sha256": "fba1ca307c7a30a75a4cfd244a5c7d5ce0f1c2742867dc8665e6063c41ad6d25"
+    },
+    {
+      "id": "wasmc-data-relational",
+      "version": "0.1.0",
+      "manifest_sha256": "d48b7b14b9b4a7b5a41bc110971653125a174cf93593be2a8416e7240171839a",
+      "artifact_sha256": "baf77ccf8bb1ab8a5065a82a9af14b0b3ae0048cb8244e0d108467575ca4dfb5"
+    }
+  ],
+  "actual_complete_root": true,
+  "current_catalog": false,
+  "installed": false,
+  "formal_release": false
+}
