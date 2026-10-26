@@ -1,0 +1,789 @@
+{
+  "schema": "wasmc.lib-capacity-reviewed-ledger/v1",
+  "catalog_sha256": "e12684efb3e475ad551eddabda12bc4c196f19edb48e7ace9069fda1ef5e7871",
+  "package_count": 43,
+  "human_policy": "Only aggregate memory governs normal Lib capacity. Preserve exact types/ranges/format/OS constraints and caller-requested operation semantics. No security work.",
+  "rows": [
+    {
+      "id": "mcpgit-resident-memory",
+      "original_version": "0.2.0",
+      "delivery_kind": "wasm-core-component",
+      "current_frozen_root_changed": false,
+      "formal_successor_release": false,
+      "status": "no-fixed-data-capacity-found-in-reviewed-implementation",
+      "remaining": [
+        "Regenerate successor consumer SDK/transfer surfaces where legacy frozen Root embeds old quotas.",
+        "Full candidate and installed package qualification; no blanket capacity proof from a source scan."
+      ],
+      "semantic_checks_kept": [
+        "Explicit caller whole-Store memory budget and history retention policies.",
+        "Requested page size, revision shape and exact range/type checks."
+      ],
+      "source_manifest_sha256": "e8eb72bdc751fb5ae091423d847a871df640f745f4f7d3c2f619ae466730f77f"
+    },
+    {
+      "id": "wasmc-app-authorization-policy",
+      "original_version": "0.0.2",
+      "delivery_kind": "wasm-core-component",
+      "current_frozen_root_changed": false,
+      "formal_successor_release": false,
+      "status": "excluded-by-human-no-security-work",
+      "remaining": [
+        "Human explicitly excludes security-domain work; no unlimited claim."
+      ],
+      "source_manifest_sha256": "fc8cd9d5d8b8c1f14d2a55a58be79d9f4640080cd3721e062f0451d22953cdd6"
+    },
+    {
+      "id": "wasmc-compression",
+      "original_version": "0.0.1",
+      "delivery_kind": "wasm-core-component",
+      "current_frozen_root_changed": false,
+      "formal_successor_release": false,
+      "status": "complete-successor-root-candidate-verified",
+      "candidate_root": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-compression",
+      "remaining": [
+        "Current registry/catalog/SDK/install admission and formal release."
+      ],
+      "source_manifest_sha256": "1764b69b2dde2862495cd84ed090377f03223d8bdf89f9e7bda8d3caa056e25b"
+    },
+    {
+      "id": "wasmc-csv",
+      "original_version": "0.0.1",
+      "delivery_kind": "wasm-core-component",
+      "current_frozen_root_changed": false,
+      "formal_successor_release": false,
+      "status": "no-fixed-data-capacity-found-in-reviewed-implementation",
+      "remaining": [
+        "Regenerate successor consumer SDK/transfer surfaces where legacy frozen Root embeds old quotas.",
+        "Full candidate and installed package qualification; no blanket capacity proof from a source scan."
+      ],
+      "semantic_checks_kept": [
+        "Requested batch_rows is output chunking; delimiter/schema are format checks."
+      ],
+      "source_manifest_sha256": "8083115152661c0f1270debd584e0f88431343e06b80e3038452ddb37d54036b"
+    },
+    {
+      "id": "wasmc-data-compute",
+      "original_version": "0.0.1",
+      "delivery_kind": "wasm-core-component",
+      "current_frozen_root_changed": false,
+      "formal_successor_release": false,
+      "status": "no-fixed-data-capacity-found-in-reviewed-implementation",
+      "remaining": [
+        "Regenerate successor consumer SDK/transfer surfaces where legacy frozen Root embeds old quotas.",
+        "Full candidate and installed package qualification; no blanket capacity proof from a source scan."
+      ],
+      "semantic_checks_kept": [
+        "Requested sort output limit."
+      ],
+      "source_manifest_sha256": "0f179c68112d72d0d9d0a1eb24cf035a8b6fed8f3408c2d3cfa800f358ae1378"
+    },
+    {
+      "id": "wasmc-data-core",
+      "original_version": "0.0.1",
+      "delivery_kind": "wasm-core-component",
+      "current_frozen_root_changed": false,
+      "formal_successor_release": false,
+      "status": "no-fixed-data-capacity-found-in-reviewed-implementation",
+      "remaining": [
+        "Regenerate successor consumer SDK/transfer surfaces where legacy frozen Root embeds old quotas.",
+        "Full candidate and installed package qualification; no blanket capacity proof from a source scan."
+      ],
+      "source_manifest_sha256": "914daa8698b5c0c7b6746b420d8cfa5d0f303e71ed785518739e5b4cd61360e0"
+    },
+    {
+      "id": "wasmc-data-expr",
+      "original_version": "0.0.1",
+      "delivery_kind": "wasm-core-component",
+      "current_frozen_root_changed": false,
+      "formal_successor_release": false,
+      "status": "no-fixed-data-capacity-found-in-reviewed-implementation",
+      "remaining": [
+        "Regenerate successor consumer SDK/transfer surfaces where legacy frozen Root embeds old quotas.",
+        "Full candidate and installed package qualification; no blanket capacity proof from a source scan."
+      ],
+      "source_manifest_sha256": "4bd0fc0b50ed4338e8bb8fd1b4f184419ad0b456b8a0bc1b89d6b8361c866927"
+    },
+    {
+      "id": "wasmc-data-interchange",
+      "original_version": "0.0.1",
+      "delivery_kind": "wasm-core-component",
+      "current_frozen_root_changed": false,
+      "formal_successor_release": false,
+      "status": "complete-successor-root-candidate-verified",
+      "candidate_root": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-data-interchange",
+      "remaining": [
+        "Current registry/catalog/SDK/install admission and formal release."
+      ],
+      "source_manifest_sha256": "8b8feaa4268379313d0f0e01aa5db0532984065325826a44e1ae89bdcea45c5b"
+    },
+    {
+      "id": "wasmc-data-profile",
+      "original_version": "0.0.1",
+      "delivery_kind": "wasm-core-component",
+      "current_frozen_root_changed": false,
+      "formal_successor_release": false,
+      "status": "no-fixed-data-capacity-found-in-reviewed-implementation",
+      "remaining": [
+        "Regenerate successor consumer SDK/transfer surfaces where legacy frozen Root embeds old quotas.",
+        "Full candidate and installed package qualification; no blanket capacity proof from a source scan."
+      ],
+      "source_manifest_sha256": "a111877831c403b424cc83b4b53b67a43dfd9699fb25e1af997ac8abbb3de5bc"
+    },
+    {
+      "id": "wasmc-data-relational",
+      "original_version": "0.0.2",
+      "delivery_kind": "wasm-core-component",
+      "current_frozen_root_changed": false,
+      "formal_successor_release": false,
+      "status": "complete-successor-root-candidate-verified",
+      "candidate_root": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-data-relational",
+      "remaining": [
+        "Current registry/catalog/SDK/install admission and formal release."
+      ],
+      "source_manifest_sha256": "73b1792190d69375c06759be3bee8c4821165c58dfce6df50faa5b1ab7450df2"
+    },
+    {
+      "id": "wasmc-host-clock",
+      "original_version": "0.0.2",
+      "delivery_kind": "wasm-core-component",
+      "current_frozen_root_changed": false,
+      "formal_successor_release": false,
+      "status": "no-fixed-data-capacity-found-in-reviewed-implementation",
+      "remaining": [
+        "Regenerate successor consumer SDK/transfer surfaces where legacy frozen Root embeds old quotas.",
+        "Full candidate and installed package qualification; no blanket capacity proof from a source scan."
+      ],
+      "source_manifest_sha256": "557bb92fa3b32739646816963174affa6b0843b3fb1cd7d7903c6a5889eeff1f"
+    },
+    {
+      "id": "wasmc-http1",
+      "original_version": "0.0.1",
+      "delivery_kind": "wasm-core-component",
+      "current_frozen_root_changed": false,
+      "formal_successor_release": false,
+      "status": "complete-successor-root-candidate-verified",
+      "candidate_root": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-http1",
+      "remaining": [
+        "Current registry/catalog/SDK/install admission and formal release."
+      ],
+      "source_manifest_sha256": "db32bbcbb57f5e558e06bed3206cdf86ad73ffdc7b4be7a1e826063099c194aa"
+    },
+    {
+      "id": "wasmc-http1-client",
+      "original_version": "0.0.1",
+      "delivery_kind": "wasm-core-component",
+      "current_frozen_root_changed": false,
+      "formal_successor_release": false,
+      "status": "complete-successor-root-candidate-verified",
+      "candidate_root": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-http1-client",
+      "remaining": [
+        "Current registry/catalog/SDK/install admission and formal release."
+      ],
+      "source_manifest_sha256": "923423f35ef6dfb5b80d09a0be76b75c3136702990e2494e85bee987a0617831"
+    },
+    {
+      "id": "wasmc-json",
+      "original_version": "0.0.6",
+      "delivery_kind": "wasm-core-component",
+      "current_frozen_root_changed": false,
+      "formal_successor_release": false,
+      "status": "complete-successor-root-candidate-verified",
+      "candidate_root": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-json",
+      "remaining": [
+        "Current registry/catalog/SDK/install admission and formal release."
+      ],
+      "source_manifest_sha256": "5b9bd27b9126ba273adb4b11320486cbc5179265022ae96955b71828c66e1cf9"
+    },
+    {
+      "id": "wasmc-lib-search",
+      "original_version": "0.5.0",
+      "delivery_kind": "wasm-core-component",
+      "current_frozen_root_changed": false,
+      "formal_successor_release": false,
+      "status": "complete-successor-root-candidate-verified",
+      "candidate_root": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-lib-search",
+      "remaining": [
+        "Current registry/catalog/SDK/install admission and formal release."
+      ],
+      "source_manifest_sha256": "584e82c3fba7da80d75e31791b96cb67e939be57bf3e5b035dd8879755fe3959"
+    },
+    {
+      "id": "wasmc-owned-algorithms",
+      "original_version": "0.1.1",
+      "delivery_kind": "wasm-core-component",
+      "current_frozen_root_changed": false,
+      "formal_successor_release": false,
+      "status": "no-fixed-data-capacity-found-in-reviewed-implementation",
+      "remaining": [
+        "Regenerate successor consumer SDK/transfer surfaces where legacy frozen Root embeds old quotas.",
+        "Full candidate and installed package qualification; no blanket capacity proof from a source scan."
+      ],
+      "source_manifest_sha256": "3fe99b971eaca387021cae1c9569a7b745e5e290bd425e24aedba549452f96c6"
+    },
+    {
+      "id": "wasmc-resource-counter",
+      "original_version": "0.0.2",
+      "delivery_kind": "wasm-core-component",
+      "current_frozen_root_changed": false,
+      "formal_successor_release": false,
+      "status": "no-fixed-data-capacity-found-in-reviewed-implementation",
+      "remaining": [
+        "Regenerate successor consumer SDK/transfer surfaces where legacy frozen Root embeds old quotas.",
+        "Full candidate and installed package qualification; no blanket capacity proof from a source scan."
+      ],
+      "source_manifest_sha256": "c893bf5b5c1ca2f5798582dcb77153a62391b4b0131109b6478e0c7e61326dc5"
+    },
+    {
+      "id": "wasmc-router-policy",
+      "original_version": "0.0.2",
+      "delivery_kind": "wasm-core-component",
+      "current_frozen_root_changed": false,
+      "formal_successor_release": false,
+      "status": "no-fixed-data-capacity-found-in-reviewed-implementation",
+      "remaining": [
+        "Regenerate successor consumer SDK/transfer surfaces where legacy frozen Root embeds old quotas.",
+        "Full candidate and installed package qualification; no blanket capacity proof from a source scan."
+      ],
+      "semantic_checks_kept": [
+        "request_count>=100 is the explicit routing-policy result, not an allocation capacity."
+      ],
+      "source_manifest_sha256": "4d8a9a3d196f4dd9a9a5e9c4e6d26c4e74d5e059e2721a214610dbdc37742090"
+    },
+    {
+      "id": "wasmc-std",
+      "original_version": "1.4.1",
+      "delivery_kind": "wasm-core-component",
+      "current_frozen_root_changed": false,
+      "formal_successor_release": false,
+      "status": "complete-successor-root-candidate-verified",
+      "candidate_root": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-std",
+      "remaining": [
+        "Current registry/catalog/SDK/install admission and formal release."
+      ],
+      "source_manifest_sha256": "367bc8c11878b4977e197fcf10513fa546c03e5244661024ba33cad4528d4131"
+    },
+    {
+      "id": "wasmc-system-android-display",
+      "original_version": "0.0.1",
+      "delivery_kind": "native-source",
+      "current_frozen_root_changed": false,
+      "formal_successor_release": false,
+      "status": "native-source-and-descriptor-audit-pending",
+      "remaining": [
+        "Descriptor and caller transfer capacities; preserve source-only/device qualification boundary."
+      ],
+      "source_manifest_sha256": "e88fd556135f496401bf9eb68c3d798d20ce74c84c59a5f43095b53c08d6fb01",
+      "original_descriptor_caps": [
+        {
+          "path": "libspec/wasmc-system-android-display/platform/native-boundary.template.json",
+          "limits": {
+            "max_input_bytes": 16,
+            "max_output_bytes": 8388608
+          }
+        }
+      ]
+    },
+    {
+      "id": "wasmc-system-android-input",
+      "original_version": "0.0.1",
+      "delivery_kind": "native-source",
+      "current_frozen_root_changed": false,
+      "formal_successor_release": false,
+      "status": "native-source-and-descriptor-audit-pending",
+      "remaining": [
+        "Descriptor and caller transfer capacities; preserve source-only/device qualification boundary.",
+        "Inline length>1024 text guard newly identified; existing private u16 text framing also requires explicit treatment, not a false unlimited claim."
+      ],
+      "source_manifest_sha256": "9a1787271e6f56efa8444bbed613b173856328598fd4b964d4963ff6c055866a",
+      "original_descriptor_caps": [
+        {
+          "path": "libspec/wasmc-system-android-input/platform/native-boundary.template.json",
+          "limits": {
+            "max_input_bytes": 4096,
+            "max_output_bytes": 64
+          }
+        }
+      ]
+    },
+    {
+      "id": "wasmc-system-android-ui",
+      "original_version": "0.0.1",
+      "delivery_kind": "native-source",
+      "current_frozen_root_changed": false,
+      "formal_successor_release": false,
+      "status": "native-source-and-descriptor-audit-pending",
+      "remaining": [
+        "Descriptor and caller transfer capacities; preserve source-only/device qualification boundary."
+      ],
+      "source_manifest_sha256": "8d5e27a6d18228d4c812968cae774b7e60f7805d56c59087a80fd8cb2ee96860",
+      "original_descriptor_caps": [
+        {
+          "path": "libspec/wasmc-system-android-ui/platform/native-boundary.template.json",
+          "limits": {
+            "max_input_bytes": 16,
+            "max_output_bytes": 2097152
+          }
+        }
+      ]
+    },
+    {
+      "id": "wasmc-system-android-uinput",
+      "original_version": "0.0.1",
+      "delivery_kind": "native-source",
+      "current_frozen_root_changed": false,
+      "formal_successor_release": false,
+      "status": "dynamic-native-platform-source-and-focused-tests",
+      "remaining": [
+        "Complete successor Native Root packaging and full generic C Host invocation.",
+        "Legacy descriptor-local input/output ceilings remain unresolved; never replay effects to grow output."
+      ],
+      "ci": [
+        40407682475
+      ],
+      "qualification_scope": "Logic and allocation on Linux, explicit mocked kernel device; no physical device or Android ABI claim.",
+      "source_manifest_sha256": "c9aa339e8698f4a43c180815c2e7879bea8a7a1df712c048bf7d4e53826b7a85",
+      "original_descriptor_caps": [
+        {
+          "path": "libspec/wasmc-system-android-uinput/platform/native-boundary.template.json",
+          "limits": {
+            "max_input_bytes": 4096,
+            "max_output_bytes": 64
+          }
+        }
+      ]
+    },
+    {
+      "id": "wasmc-system-file-prototype",
+      "original_version": "0.0.1",
+      "delivery_kind": "native-module",
+      "current_frozen_root_changed": false,
+      "formal_successor_release": false,
+      "status": "native-source-and-descriptor-audit-pending",
+      "remaining": [
+        "Implementation uses normal dynamic Node byte storage; package successor without descriptor-local ceilings and verify actual normal I/O."
+      ],
+      "source_manifest_sha256": "3e9a7a83426dc7303dfb2838867a85d135f04423564ee5d0c4df12fe5628edb8",
+      "original_descriptor_caps": [
+        {
+          "path": "libspec/wasmc-system-file-prototype/platform/native-boundary.json",
+          "limits": {
+            "max_input_bytes": 4096,
+            "max_output_bytes": 1048576
+          }
+        }
+      ]
+    },
+    {
+      "id": "wasmc-system-ios-app-contacts",
+      "original_version": "0.0.1",
+      "delivery_kind": "native-source",
+      "current_frozen_root_changed": false,
+      "formal_successor_release": false,
+      "status": "native-source-and-descriptor-audit-pending",
+      "remaining": [
+        "Descriptor and caller transfer capacities; preserve source-only/device qualification boundary."
+      ],
+      "source_manifest_sha256": "1a81e25b2e410393dac2c9b037b2323c75988df02350a036069c87f9c2057e5f"
+    },
+    {
+      "id": "wasmc-system-ios-app-lifecycle",
+      "original_version": "0.0.1",
+      "delivery_kind": "native-source",
+      "current_frozen_root_changed": false,
+      "formal_successor_release": false,
+      "status": "native-source-and-descriptor-audit-pending",
+      "remaining": [
+        "Descriptor and caller transfer capacities; preserve source-only/device qualification boundary."
+      ],
+      "source_manifest_sha256": "fe5e6dd5410dee2d9f7748def875e491e95c45b17e72d2cd4220d06e3059466f",
+      "original_descriptor_caps": [
+        {
+          "path": "libspec/wasmc-system-ios-app-lifecycle/platform/ios/binding.json",
+          "limits": {
+            "max_events_per_read": 256,
+            "finite_background_work_only": true,
+            "system_scheduling_guaranteed": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "wasmc-system-ios-app-surface-control",
+      "original_version": "0.0.3",
+      "delivery_kind": "native-source",
+      "current_frozen_root_changed": false,
+      "formal_successor_release": false,
+      "status": "native-source-and-descriptor-audit-pending",
+      "remaining": [
+        "Descriptor and caller transfer capacities; preserve source-only/device qualification boundary."
+      ],
+      "source_manifest_sha256": "a9693b69e3dc74537f9e9b5da0929025f5a84eeca092bf0055d2644f8e439533",
+      "original_descriptor_caps": [
+        {
+          "path": "libspec/wasmc-system-ios-app-surface-control/platform/ios/binding.json",
+          "limits": {
+            "max_surfaces": 5,
+            "physical_input_injection": false,
+            "real_wkwebview_surfaces": true,
+            "semantic_dom_snapshot": true,
+            "virtual_dom_action": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "wasmc-system-ios-background-audio",
+      "original_version": "0.0.1",
+      "delivery_kind": "native-source",
+      "current_frozen_root_changed": false,
+      "formal_successor_release": false,
+      "status": "native-source-and-descriptor-audit-pending",
+      "remaining": [
+        "Descriptor and caller transfer capacities; preserve source-only/device qualification boundary."
+      ],
+      "source_manifest_sha256": "d4da0eebaf39eb5e772232f76114a4aea4c8bbac0dfe3ecf76ce62302f88c655",
+      "original_descriptor_caps": [
+        {
+          "path": "libspec/wasmc-system-ios-background-audio/platform/ios/binding.json",
+          "limits": {
+            "playback": true,
+            "recording": false,
+            "physical_output_qualified": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "wasmc-system-ios-background-transfer",
+      "original_version": "0.0.1",
+      "delivery_kind": "native-source",
+      "current_frozen_root_changed": false,
+      "formal_successor_release": false,
+      "status": "native-source-and-descriptor-audit-pending",
+      "remaining": [
+        "Descriptor and caller transfer capacities; preserve source-only/device qualification boundary."
+      ],
+      "source_manifest_sha256": "d4f5c450c678aa160e404dc02c31e8e983c1943946355462af8df4091a50f2f0",
+      "original_descriptor_caps": [
+        {
+          "path": "libspec/wasmc-system-ios-background-transfer/platform/ios/binding.json",
+          "limits": {
+            "background_download": true,
+            "background_upload": false,
+            "process_relaunch_delivery_qualified": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "wasmc-system-ios-deferred-work",
+      "original_version": "0.0.1",
+      "delivery_kind": "native-source",
+      "current_frozen_root_changed": false,
+      "formal_successor_release": false,
+      "status": "native-source-and-descriptor-audit-pending",
+      "remaining": [
+        "Descriptor and caller transfer capacities; preserve source-only/device qualification boundary."
+      ],
+      "source_manifest_sha256": "b1a8b783b5535627bb2c0e9dfe4587e8cb60237d113cf9cfe14133a7332e3829",
+      "original_descriptor_caps": [
+        {
+          "path": "libspec/wasmc-system-ios-deferred-work/platform/ios/binding.json",
+          "limits": {
+            "refresh_request": true,
+            "processing_request": false,
+            "system_delivery_qualified": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "wasmc-system-ios-local-notification",
+      "original_version": "0.0.1",
+      "delivery_kind": "native-source",
+      "current_frozen_root_changed": false,
+      "formal_successor_release": false,
+      "status": "native-source-and-descriptor-audit-pending",
+      "remaining": [
+        "Descriptor and caller transfer capacities; preserve source-only/device qualification boundary."
+      ],
+      "source_manifest_sha256": "0517012a261449f39bad154bbae0b289829246a580bb124add2629170f1879c4",
+      "original_descriptor_caps": [
+        {
+          "path": "libspec/wasmc-system-ios-local-notification/platform/ios/binding.json",
+          "limits": {
+            "local_notification": true,
+            "remote_push": false,
+            "silent_push": false,
+            "notification_extensions": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "wasmc-system-ios-network-path",
+      "original_version": "0.0.1",
+      "delivery_kind": "native-source",
+      "current_frozen_root_changed": false,
+      "formal_successor_release": false,
+      "status": "native-source-and-descriptor-audit-pending",
+      "remaining": [
+        "Descriptor and caller transfer capacities; preserve source-only/device qualification boundary."
+      ],
+      "source_manifest_sha256": "fefa1b63e7cd4b3877a431d2f88240f12fe895dd6f65fffcd1721850cdc2e9fa",
+      "original_descriptor_caps": [
+        {
+          "path": "libspec/wasmc-system-ios-network-path/platform/ios/binding.json",
+          "limits": {
+            "path_observation": true,
+            "path_mutation": false,
+            "server_reachability": false,
+            "transition_qualified": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "wasmc-system-ios-simulator-display",
+      "original_version": "0.0.1",
+      "delivery_kind": "native-source",
+      "current_frozen_root_changed": false,
+      "formal_successor_release": false,
+      "status": "native-source-and-descriptor-audit-pending",
+      "remaining": [
+        "Descriptor and caller transfer capacities; preserve source-only/device qualification boundary."
+      ],
+      "source_manifest_sha256": "f38537e1c023d57e4a8a6f56273e02f3370626d666e2894118ff03c0885ab69c",
+      "original_descriptor_caps": [
+        {
+          "path": "libspec/wasmc-system-ios-simulator-display/platform/native-boundary.template.json",
+          "limits": {
+            "max_input_bytes": 0,
+            "max_output_bytes": 16777216
+          }
+        }
+      ]
+    },
+    {
+      "id": "wasmc-system-ios-websocket",
+      "original_version": "0.0.1",
+      "delivery_kind": "native-source",
+      "current_frozen_root_changed": false,
+      "formal_successor_release": false,
+      "status": "native-source-and-descriptor-audit-pending",
+      "remaining": [
+        "Descriptor and caller transfer capacities; preserve source-only/device qualification boundary."
+      ],
+      "source_manifest_sha256": "976e375bc499f8e38049e0c810479c950b9244529cf8c7368a23c6157962dbd4",
+      "original_descriptor_caps": [
+        {
+          "path": "libspec/wasmc-system-ios-websocket/platform/ios/binding.json",
+          "limits": {
+            "text_frames": true,
+            "binary_frames": false,
+            "local_pinned_wss_qualified": true,
+            "service_restart_reconnect_qualified": true,
+            "reconnect_policy": "350ms-fixed-max-8",
+            "outbox_scope": "process-memory-single-message-fixture",
+            "durable_outbox": "json-atomic-two-message-ordered-ack-drain",
+            "process_relaunch_reconnect_qualified": true,
+            "crash_before_ack_replay_qualified": true,
+            "idempotent_effect_once_qualified": true,
+            "idempotency_scope": "two-stable-message-ids-server-retained-fixture",
+            "public_ca_wss_qualified": false,
+            "background_scope": "finite-background-task-only",
+            "suspension_receive_qualified": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "wasmc-system-linux-endpoint",
+      "original_version": "0.0.1",
+      "delivery_kind": "native-binary",
+      "current_frozen_root_changed": false,
+      "formal_successor_release": false,
+      "status": "dynamic-native-platform-source-and-focused-tests",
+      "remaining": [
+        "Complete successor Native Root packaging and full generic C Host invocation.",
+        "Legacy descriptor-local input/output ceilings remain unresolved; never replay effects to grow output."
+      ],
+      "ci": [
+        40407682439
+      ],
+      "source_manifest_sha256": "9e0fd17d53ab7606b43707b754c78800445b6c54d8b7eed519e948af3b390131",
+      "original_descriptor_caps": [
+        {
+          "path": "libspec/wasmc-system-linux-endpoint/platform/native-boundary.template.json",
+          "limits": {
+            "max_input_bytes": 1048576,
+            "max_output_bytes": 1048576
+          }
+        }
+      ]
+    },
+    {
+      "id": "wasmc-system-linux-socket",
+      "original_version": "0.0.1",
+      "delivery_kind": "native-binary",
+      "current_frozen_root_changed": false,
+      "formal_successor_release": false,
+      "status": "dynamic-native-platform-source-and-focused-tests",
+      "remaining": [
+        "Complete successor Native Root packaging and full generic C Host invocation.",
+        "Legacy descriptor-local input/output ceilings remain unresolved; never replay effects to grow output."
+      ],
+      "ci": [
+        40407682439
+      ],
+      "source_manifest_sha256": "e31e305e22afc7fb8f0f1594764e477702b957e34acb398da5220f2101eb45e2",
+      "original_descriptor_caps": [
+        {
+          "path": "libspec/wasmc-system-linux-socket/platform/native-boundary.template.json",
+          "limits": {
+            "max_input_bytes": 1048576,
+            "max_output_bytes": 1048576
+          }
+        }
+      ]
+    },
+    {
+      "id": "wasmc-system-linux-uinput",
+      "original_version": "0.0.1",
+      "delivery_kind": "native-binary",
+      "current_frozen_root_changed": false,
+      "formal_successor_release": false,
+      "status": "dynamic-native-platform-source-and-focused-tests",
+      "remaining": [
+        "Complete successor Native Root packaging and full generic C Host invocation.",
+        "Legacy descriptor-local input/output ceilings remain unresolved; never replay effects to grow output."
+      ],
+      "ci": [
+        40407682475
+      ],
+      "qualification_scope": "Logic and allocation on Linux, explicit mocked kernel device; no physical device or Android ABI claim.",
+      "source_manifest_sha256": "96a75be172d6c57ae5a40a801c780008e2bffa206ecd9f71905ea00a13131583",
+      "original_descriptor_caps": [
+        {
+          "path": "libspec/wasmc-system-linux-uinput/platform/native-boundary.template.json",
+          "limits": {
+            "max_input_bytes": 4096,
+            "max_output_bytes": 64
+          }
+        }
+      ]
+    },
+    {
+      "id": "wasmc-system-network-prototype",
+      "original_version": "0.0.2",
+      "delivery_kind": "native-module",
+      "current_frozen_root_changed": false,
+      "formal_successor_release": false,
+      "status": "native-source-and-descriptor-audit-pending",
+      "remaining": [
+        "Implementation uses normal dynamic Node byte storage; package successor without descriptor-local ceilings and verify actual normal I/O."
+      ],
+      "source_manifest_sha256": "120da380de674b39c96456845e075156b62df2b57704eb4b8a43b36a93919cd9",
+      "original_descriptor_caps": [
+        {
+          "path": "libspec/wasmc-system-network-prototype/platform/native-boundary.json",
+          "limits": {
+            "max_input_bytes": 1048576,
+            "max_output_bytes": 1048576
+          }
+        }
+      ]
+    },
+    {
+      "id": "wasmc-system-process-prototype",
+      "original_version": "0.0.1",
+      "delivery_kind": "native-module",
+      "current_frozen_root_changed": false,
+      "formal_successor_release": false,
+      "status": "complete-successor-root-candidate-verified",
+      "candidate_root": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-system-process-prototype",
+      "remaining": [
+        "Current registry/catalog/SDK/install admission and formal release.",
+        "Windows target qualification."
+      ],
+      "behavior": "macOSarm64 and Linuxx64 actual17MiB/2MiB/31s/longdeadline/cleanup",
+      "source_manifest_sha256": "afde428bec9991d9eb91de26439ad5559627f42d9bac965db067214e39c3786e",
+      "original_descriptor_caps": [
+        {
+          "path": "libspec/wasmc-system-process-prototype/platform/native-boundary.json",
+          "limits": {
+            "max_input_bytes": 65536,
+            "max_output_bytes": 1048576
+          }
+        }
+      ]
+    },
+    {
+      "id": "wasmc-system-telemetry",
+      "original_version": "0.0.1",
+      "delivery_kind": "wasm-core-component",
+      "current_frozen_root_changed": false,
+      "formal_successor_release": false,
+      "status": "complete-successor-root-candidate-verified",
+      "candidate_root": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-system-telemetry",
+      "remaining": [
+        "Current registry/catalog/SDK/install admission and formal release.",
+        "Generated Component SDK large snapshot execution, not merely Core/Component manifest verification."
+      ],
+      "source_manifest_sha256": "d6e9ab78c441fe3db6e97de6bd5e36d40ff4c2f7cacd1ef45493af3011fc8aa4"
+    },
+    {
+      "id": "wasmc-text",
+      "original_version": "0.0.1",
+      "delivery_kind": "wasm-core-component",
+      "current_frozen_root_changed": false,
+      "formal_successor_release": false,
+      "status": "no-fixed-data-capacity-found-in-reviewed-implementation",
+      "remaining": [
+        "Regenerate successor consumer SDK/transfer surfaces where legacy frozen Root embeds old quotas.",
+        "Full candidate and installed package qualification; no blanket capacity proof from a source scan.",
+        "Reuse existing Rust Text artifact with versioned identity/new SDK rather than rebuilding string algorithms."
+      ],
+      "source_manifest_sha256": "1336a43173d6bdb8483c9f6f89d3b40d0e6543223e1b806690578e2f272881bc"
+    },
+    {
+      "id": "wasmc-tls-client",
+      "original_version": "0.0.1",
+      "delivery_kind": "wasm-core-component",
+      "current_frozen_root_changed": false,
+      "formal_successor_release": false,
+      "status": "excluded-by-human-no-security-work",
+      "remaining": [
+        "Human explicitly excludes security-domain work; no unlimited claim."
+      ],
+      "source_manifest_sha256": "3b293aba883dd51e09a8f4cbd55cc13b00202db0469b6c8083107b2af3a050a2"
+    },
+    {
+      "id": "wasmc-tls-core",
+      "original_version": "0.0.1",
+      "delivery_kind": "wasm-core-component",
+      "current_frozen_root_changed": false,
+      "formal_successor_release": false,
+      "status": "excluded-by-human-no-security-work",
+      "remaining": [
+        "Human explicitly excludes security-domain work; no unlimited claim."
+      ],
+      "source_manifest_sha256": "45624d50b996f53f6588a304e62961cc69a26fd9569c2fe9fd0f30e706475f88"
+    }
+  ],
+  "status_counts": {
+    "no-fixed-data-capacity-found-in-reviewed-implementation": 11,
+    "excluded-by-human-no-security-work": 3,
+    "complete-successor-root-candidate-verified": 10,
+    "native-source-and-descriptor-audit-pending": 15,
+    "dynamic-native-platform-source-and-focused-tests": 4
+  },
+  "shared_remaining": [
+    "Native C fixed output buffers require growth within a single actual call; never retry an effectful call to infer required size.",
+    "SDK schema/source/build metadata ceilings remain separately audited; physical Canonical ABI limits are distinct from arbitrary quotas.",
+    "New portable compiler/Native carriers, current catalog/index, installed verification and formal v031 not yet published."
+  ],
+  "all_43_unlimited": false,
+  "formal_release_complete": false
+}
