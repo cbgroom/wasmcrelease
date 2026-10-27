@@ -1,0 +1,37 @@
+node:internal/modules/run_main:111
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: unsupported imported profile
+    at reject (file:///Users/youxianshi/.local/state/wasmc-maintenance/20261026-lib-memory-json-32/datacore-custody-baseline-fixture/scripts/test-lib-current-composition-v1.mjs:58:10)
+    at file:///Users/youxianshi/.local/state/wasmc-maintenance/20261026-lib-memory-json-32/datacore-custody-baseline-fixture/scripts/test-lib-current-composition-v1.mjs:123:1 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'wasmc.lib/v2'
+  - 'wasmc.lib-native/v2'
+              ^
+  
+      at importedNativeRoot (file:///Users/youxianshi/.local/state/wasmc-maintenance/20261026-lib-memory-json-32/datacore-custody-baseline-fixture/scripts/lib-current-composition-v1.mjs:49:449)
+      at importedRoot (file:///Users/youxianshi/.local/state/wasmc-maintenance/20261026-lib-memory-json-32/datacore-custody-baseline-fixture/scripts/lib-current-composition-v1.mjs:54:44)
+      at composeCurrentLibData (file:///Users/youxianshi/.local/state/wasmc-maintenance/20261026-lib-memory-json-32/datacore-custody-baseline-fixture/scripts/lib-current-composition-v1.mjs:141:15)
+      at file:///Users/youxianshi/.local/state/wasmc-maintenance/20261026-lib-memory-json-32/datacore-custody-baseline-fixture/scripts/test-lib-current-composition-v1.mjs:58:21
+      at getActual (node:assert:580:5)
+      at strict.throws (node:assert:728:24)
+      at reject (file:///Users/youxianshi/.local/state/wasmc-maintenance/20261026-lib-memory-json-32/datacore-custody-baseline-fixture/scripts/test-lib-current-composition-v1.mjs:58:10)
+      at file:///Users/youxianshi/.local/state/wasmc-maintenance/20261026-lib-memory-json-32/datacore-custody-baseline-fixture/scripts/test-lib-current-composition-v1.mjs:123:1 {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'wasmc.lib/v2',
+    expected: 'wasmc.lib-native/v2',
+    operator: 'strictEqual',
+    diff: 'simple'
+  },
+  expected: /v1 imports only complete canonical value Roots/,
+  operator: 'throws',
+  diff: 'simple'
+}
+
+Node.js v26.12.1

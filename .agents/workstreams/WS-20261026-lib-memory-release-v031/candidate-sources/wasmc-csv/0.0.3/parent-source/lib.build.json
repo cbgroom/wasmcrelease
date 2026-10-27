@@ -1,0 +1,34 @@
+{
+  "schema": "wasmc.lib-build/v0",
+  "skill": {
+    "name": "wasmc-csv",
+    "version": "0.0.2",
+    "description": "Arrow CSV parsing with capacity governed by aggregate runtime memory."
+  },
+  "wit": "lib.wit",
+  "apis": [
+    {
+      "api": "parse",
+      "delta": "Parse CSV into typed batches using the caller schema and batching options.",
+      "ecosystem": "Arrow CSV 60",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    }
+  ],
+  "core": {
+    "root": {
+      "module": "facade",
+      "artifact": "facade.wasm",
+      "sha256": "8b04fe5844607c032ea7fc0f6608efc0d8a5a61be5cb77853630b92c0c13fa2e"
+    },
+    "dependencies": [
+      {
+        "module": "rust-implementation",
+        "artifact": "implementation.wasm",
+        "sha256": "a62c051389deb0ac6ad51915c807c214f99702f25db27dae0866efd305cb290b"
+      }
+    ]
+  }
+}

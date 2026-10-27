@@ -1,0 +1,34 @@
+{
+  "schema": "wasmc.lib-build/v0",
+  "skill": {
+    "name": "wasmc-data-profile",
+    "version": "0.0.3",
+    "description": "Column statistics over the shared neutral Data snapshot model."
+  },
+  "wit": "lib.wit",
+  "apis": [
+    {
+      "api": "describe",
+      "delta": "Column null/count/min/max/mean and variable-length summaries after shared batch validation.",
+      "ecosystem": "Arrow Arith 60",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    }
+  ],
+  "core": {
+    "root": {
+      "module": "facade",
+      "artifact": "facade.wasm",
+      "sha256": "e8391aadf6c889fc175e4c45a25abaf2b71ffa432afe79f0cf4c9da94b347d5e"
+    },
+    "dependencies": [
+      {
+        "module": "implementation",
+        "artifact": "implementation.wasm",
+        "sha256": "db647f1a9ef8e5a5dc1006a3c84caac122fdb5ee8bbd4a2321a0159991727915"
+      }
+    ]
+  }
+}

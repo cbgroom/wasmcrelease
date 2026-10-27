@@ -1,4 +1,5 @@
 import {cohortReexportCustody,buildCohortReexportSource} from './current-cohort-reexport-source-v1.mjs';
+import {witRebindCustody,buildWitRebindSource} from './current-wit-rebind-source-v1.mjs';
 import {nativeCustody,buildNativeSource} from './current-native-source-v1.mjs';
 import {stdCustody,buildStdSource} from './current-std-source-v1.mjs';
 import {builtProducerCustody,buildBuiltSource,reexportedProducerCustody,buildReexportedSource} from './current-built-lib-source-v1.mjs';
@@ -45,6 +46,7 @@ function verifyLocalDescriptors(manifest,files){
   for(const key of ['artifact','component','core_abi','wit','bindings','agent','license'])visit(manifest[key]);
 }
 export function verifyImportedProducerCustodyData(input,replacement,files,manifest){
+  if(replacement.source.schema==='wasmc.wit-rebind-source-input/v1')return witRebindCustody(input,replacement,files,manifest,verifyImportedProducerCustodyData);
   if(replacement.source.schema==='wasmc.cohort-reexport-source-input/v1')return cohortReexportCustody(input,replacement,files,manifest);
   if(['wasmc.native-node-source-input/v1','wasmc.native-c-source-input/v1','wasmc.native-source-only-input/v1'].includes(replacement.source.schema))return nativeCustody(input,replacement,files,manifest);
   if(replacement.source.schema==='wasmc.std-resource-source-input/v1')return stdCustody(input,replacement,files,manifest);
@@ -115,6 +117,7 @@ export function verifyImportedProducerCustodyData(input,replacement,files,manife
 }
 
 export function buildOriginalProducerSourceData(input,expected){
+  if(expected.source.schema==='wasmc.wit-rebind-source-input/v1')return buildWitRebindSource(input,expected,verifyImportedProducerCustodyData);
   if(expected.source.schema==='wasmc.cohort-reexport-source-input/v1')return buildCohortReexportSource(input,expected);
   if(['wasmc.native-node-source-input/v1','wasmc.native-c-source-input/v1','wasmc.native-source-only-input/v1'].includes(expected.source.schema))return buildNativeSource(input,expected);
   if(expected.source.schema==='wasmc.std-resource-source-input/v1')return buildStdSource(input,expected);
@@ -171,6 +174,7 @@ export function buildOriginalProducerSourceData(input,expected){
   return record;
 }
 export function verifyOriginalProducerSourceData(input,expected,source){
+  if(expected.source.schema==='wasmc.wit-rebind-source-input/v1'){assert.deepEqual(source,buildWitRebindSource(input,expected,verifyImportedProducerCustodyData));return {schema:'wasmc.current-source-custody-admission/v1',accepted:true,source_schema:source.schema,id:source.id,version:source.version,source_sha256:digest(source),source_spec:source.source_spec,root_manifest_sha256:source.root.manifest_sha256,root_inventory_sha256:source.root.inventory_sha256,source_custody_admitted_for_current_composition:true,current_directory_admitted:false,public_admission:false,original_receipt_bytes_verified:false,fresh_full_q0:false};}
   if(expected.source.schema==='wasmc.cohort-reexport-source-input/v1'){assert.deepEqual(source,buildCohortReexportSource(input,expected));return {schema:'wasmc.current-source-custody-admission/v1',accepted:true,source_schema:source.schema,id:source.id,version:source.version,source_sha256:digest(source),source_spec:source.source_spec,root_manifest_sha256:source.root.manifest_sha256,root_inventory_sha256:source.root.inventory_sha256,source_custody_admitted_for_current_composition:true,current_directory_admitted:false,public_admission:false,original_receipt_bytes_verified:false,fresh_full_q0:false};}
   if(['wasmc.native-node-source-input/v1','wasmc.native-c-source-input/v1','wasmc.native-source-only-input/v1'].includes(expected.source.schema)){assert.deepEqual(source,buildNativeSource(input,expected));return {schema:'wasmc.current-source-custody-admission/v1',accepted:true,source_schema:source.schema,id:source.id,version:source.version,source_sha256:digest(source),source_spec:source.source_spec,root_manifest_sha256:source.root.manifest_sha256,root_inventory_sha256:source.root.inventory_sha256,source_custody_admitted_for_current_composition:true,current_directory_admitted:false,public_admission:false,original_receipt_bytes_verified:false,fresh_full_q0:false};}
   if(expected.source.schema==='wasmc.std-resource-source-input/v1'){assert.deepEqual(source,buildStdSource(input,expected));return {schema:'wasmc.current-source-custody-admission/v1',accepted:true,source_schema:source.schema,id:source.id,version:source.version,source_sha256:digest(source),source_spec:source.source_spec,root_manifest_sha256:source.root.manifest_sha256,root_inventory_sha256:source.root.inventory_sha256,source_custody_admitted_for_current_composition:true,current_directory_admitted:false,public_admission:false,original_receipt_bytes_verified:false,fresh_full_q0:false};}
