@@ -485,3 +485,6 @@ Using exact Source 017d native producer and the immutable JSON 0.0.7 Root, regen
 
 
 2026-10-27 full unbounded cohort: checked compiler b272 and regenerated fixtures pass all 30 Node/Bun/Deno compiler qualification commands on one source-free candidate archive, preserving Bun multi-memory limitation. First integrity check correctly rejected absent current/source-build-custody-v031.json; no synthetic master custody. CI check 121982255349 for Source 49310c88 did not start because account payments/spending limit. Evidence: qualification/unbounded-full-cohort-v031-20261027. Source L1 independently underway; L2, provenance, public install and release pending.
+
+
+2026-10-27 Source L1 at exact 49310c88: make check passed status 0 in own linked detached worktree and APFS-cloned warm Cargo cache with checked profile, offline, disk monitored; 68.2s, log SHA 1accd8e04b6b51330742ae722313dd4d6391b7b2a0194e9b8374261fca89cba2. Exact receipt and lossless log under qualification/unbounded-source-l1-v031-20261027. Source L2, main integration, CI billing and formal release remain pending.
