@@ -1,27 +1,14 @@
 {
-  "schema": "wasmc.lib-refresh-source/v2",
+  "schema": "wasmc.current-wit-rebind-producer-source/v1",
   "id": "wasmc-data-interchange",
-  "version": "0.0.1",
+  "version": "0.1.1",
   "profile": "value",
-  "crate": "wasmc_data_interchange_refresh_v2",
-  "artifact_name": "wasmc_data_interchange_refresh_v2",
   "world": "data-interchange",
-  "description": "Arrow IPC file and Parquet interchange over the shared neutral Data snapshot model.",
-  "dependencies": [
-    "arrow-ipc",
-    "bytes",
-    "parquet"
-  ],
-  "shared_modules": [
-    "data-arrow"
-  ],
-  "wit_dependencies": [
-    "wasmc-data-core"
-  ],
+  "description": "Arrow IPC file and Parquet interchange over the shared neutral Data snapshot model. No Lib-local capacity quotas.",
   "apis": [
     {
       "api": "ipc-file-decode",
-      "delta": "Decode bounded Arrow IPC file bytes into neutral batches.",
+      "delta": "Decode Arrow IPC file bytes into neutral batches. Capacity follows aggregate memory; type/schema/overflow checks remain.",
       "ecosystem": "Arrow IPC 60",
       "host_authorities": [],
       "implementation": "lib",
@@ -30,7 +17,7 @@
     },
     {
       "api": "ipc-file-encode",
-      "delta": "Encode validated neutral batches as bounded Arrow IPC file bytes.",
+      "delta": "Encode validated neutral batches as Arrow IPC file bytes. Capacity follows aggregate memory; type/schema/overflow checks remain.",
       "ecosystem": "Arrow IPC 60",
       "host_authorities": [],
       "implementation": "lib",
@@ -39,7 +26,7 @@
     },
     {
       "api": "parquet-decode",
-      "delta": "Decode bounded Parquet bytes into neutral batches.",
+      "delta": "Decode Parquet bytes into neutral batches. Capacity follows aggregate memory; type/schema/overflow checks remain.",
       "ecosystem": "Parquet 60",
       "host_authorities": [],
       "implementation": "lib",
@@ -48,12 +35,355 @@
     },
     {
       "api": "parquet-encode",
-      "delta": "Encode validated neutral batches as bounded Parquet bytes.",
+      "delta": "Encode validated neutral batches as Parquet bytes. Capacity follows aggregate memory; type/schema/overflow checks remain.",
       "ecosystem": "Parquet 60",
       "host_authorities": [],
       "implementation": "lib",
       "origin": "adapted",
       "support": "supported"
     }
-  ]
+  ],
+  "source_spec": {
+    "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-data-interchange/0.1.1/lib.build.json",
+    "bytes": 2016,
+    "sha256": "da5db15c334882b1e9b786edf9ade6bc46d061a2086ff73a6bf28f05c99efc6f"
+  },
+  "source_packet": {
+    "root": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-data-interchange/0.1.1",
+    "inventory_sha256": "398d0babf19c5f6231e5d8edb93f12e2a60937c46920f0fc960aaa9fb70b8d8d",
+    "files": [
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-data-interchange/0.1.1/facade-receipt.json",
+        "bytes": 419,
+        "sha256": "1dbe2f83d5dea214bbca9ff0d02d12ed5a44e807106583bc02cab81385b65e4e"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-data-interchange/0.1.1/facade.wasm",
+        "bytes": 1474,
+        "sha256": "6a4e5f61cff5c51cd3f362d6d80eb49b60afde091d1a6d3a9cd46189442e6eaf"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-data-interchange/0.1.1/implementation.wasm",
+        "bytes": 2691233,
+        "sha256": "fba1ca307c7a30a75a4cfd244a5c7d5ce0f1c2742867dc8665e6063c41ad6d25"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-data-interchange/0.1.1/lib.build.json",
+        "bytes": 2016,
+        "sha256": "da5db15c334882b1e9b786edf9ade6bc46d061a2086ff73a6bf28f05c99efc6f"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-data-interchange/0.1.1/lib.wit",
+        "bytes": 2144,
+        "sha256": "bbee42bef19b89ab759f75b5cd17c1e4f361f0d2bd420c3bddde987a3b458f01"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-data-interchange/0.1.1/parent-root/LICENSE",
+        "bytes": 3823,
+        "sha256": "7bca2d5818178e0bc14546700d39bf113d15139b1c3b6d1e62f621d4a276d6e3"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-data-interchange/0.1.1/parent-root/SKILL.md",
+        "bytes": 884,
+        "sha256": "e124588eafff31d6633efb29f7a367d087053e3cd18ba58138a0b7b9268515e6"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-data-interchange/0.1.1/parent-root/artifact.wasm",
+        "bytes": 2691233,
+        "sha256": "fba1ca307c7a30a75a4cfd244a5c7d5ce0f1c2742867dc8665e6063c41ad6d25"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-data-interchange/0.1.1/parent-root/bindings/rust-component/Cargo.toml",
+        "bytes": 309,
+        "sha256": "d196ed98f1d26deebd09c22b4d96e5528df7a1cb7a6fdb0179c12ceac916ae03"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-data-interchange/0.1.1/parent-root/bindings/rust-component/src/lib.rs",
+        "bytes": 677,
+        "sha256": "ce4874c46d6b412e97eceaa0a14fe40b31625491e0bbaebde91de54589238fcc"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-data-interchange/0.1.1/parent-root/bindings/rust-core/Cargo.toml",
+        "bytes": 171,
+        "sha256": "d0ba8609e0358b3dcfcdaa6c67cd41cdbd219c52bd7a17464a981e5acbfa0451"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-data-interchange/0.1.1/parent-root/bindings/rust-core/src/lib.rs",
+        "bytes": 123638,
+        "sha256": "267db1f615d04d68e11d32fec6e0ede5c2a190468ee2068700f4716e04397199"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-data-interchange/0.1.1/parent-root/component.wasm",
+        "bytes": 2694088,
+        "sha256": "b3c8a497fac2a8c9a2bb8c4175b20b4006ea31554d600c965ea4d25d02cc12de"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-data-interchange/0.1.1/parent-root/core-abi.json",
+        "bytes": 2991,
+        "sha256": "4623536cfc3e2bbf0f7f329bb8b28c70e6ce93918e7fccfb0946ee060fecdbf9"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-data-interchange/0.1.1/parent-root/lib.json",
+        "bytes": 5226,
+        "sha256": "0e03361d912713638c6a6058af0e75d59b29dd20924e6581f439fb83e65227ce"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-data-interchange/0.1.1/parent-root/lib.wit",
+        "bytes": 2144,
+        "sha256": "c607845985b87dfcee1c34d1b4fa19e9215e0697a14a9285b9b21abf577c5e52"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-data-interchange/0.1.1/parent-root/licenses/DEPENDENCY-NOTICES-001.txt",
+        "bytes": 245760,
+        "sha256": "66302f6dd71da97391ab2270d29b10e67bdbac6d7eb782bed043c2ff596ec5cc"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-data-interchange/0.1.1/parent-root/licenses/DEPENDENCY-NOTICES-002.txt",
+        "bytes": 245760,
+        "sha256": "0065cf38006c9a66a6c3ee9cbaf8db10422b1e5301d3c1d5132b7855e71f18ea"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-data-interchange/0.1.1/parent-root/licenses/DEPENDENCY-NOTICES-003.txt",
+        "bytes": 245760,
+        "sha256": "201dbac93dff17177b6379ee630b9658b4cec9cb9d46ce3982b3da87c4b740c8"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-data-interchange/0.1.1/parent-root/licenses/DEPENDENCY-NOTICES-004.txt",
+        "bytes": 245760,
+        "sha256": "c439e1a409b6f23d5797cec339403a0ffce97e9fcf2ae91d6a923c36d619bb76"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-data-interchange/0.1.1/parent-root/licenses/DEPENDENCY-NOTICES-005.txt",
+        "bytes": 245760,
+        "sha256": "04118f32afc6b2ce0fbfd559c56a78614016ab00167be2425c8c778fc7b064fe"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-data-interchange/0.1.1/parent-root/licenses/DEPENDENCY-NOTICES-006.txt",
+        "bytes": 8357,
+        "sha256": "aa6000805f56d3c6009ffa09dbe224083cf2e63e2498e1939deefe6ca7c43d9a"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-data-interchange/0.1.1/parent-root/licenses/DEPENDENCY-NOTICES-007.txt",
+        "bytes": 25602,
+        "sha256": "f0429335a0831b75f3b3277e20303d94bbf7af5719769055178aab3e2dce6e7a"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-data-interchange/0.1.1/parent-root/references/agent-delta.json",
+        "bytes": 947,
+        "sha256": "209c913c3b278e658d71f1a35e0a498ab5a439bd6861a962c9493eb4c8f1a71c"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-data-interchange/0.1.1/parent-selection.json",
+        "bytes": 1247,
+        "sha256": "98100471ed50464385e7e70c125921677781242bafbc6233c4d6de73fdfcae77"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-data-interchange/0.1.1/parent-source/Cargo.lock",
+        "bytes": 28136,
+        "sha256": "b78b45d342392726c23ad59fee26cea6f08ca245d4e9ee96c03a2483fedc1392"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-data-interchange/0.1.1/parent-source/adapter.rs",
+        "bytes": 2629,
+        "sha256": "e59d1ff7f9cb7bdaf3ce571f3beb90857ab105b9402eaf241b9e170c02d53e36"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-data-interchange/0.1.1/parent-source/ci-evidence.json",
+        "bytes": 408,
+        "sha256": "09834f26da02b2946136a98d52d9bf1c511cfa01480e1012acf186d5424fe055"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-data-interchange/0.1.1/parent-source/ci-native.log.gz",
+        "bytes": 6201,
+        "sha256": "e60cff306f2e0da4e79da70d87ba644dde3fbc8884eaad1050566570a367ee4f"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-data-interchange/0.1.1/parent-source/ci-source.txt",
+        "bytes": 41,
+        "sha256": "90eb21c88142e14f5d8002d834dd95b5a48de14ea6571593cfb678c6ef0edf25"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-data-interchange/0.1.1/parent-source/delta.rs",
+        "bytes": 5646,
+        "sha256": "dd51205b176533d484451b2d04b21efaae4b228b1bfc10b2aa2a120846560e62"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-data-interchange/0.1.1/parent-source/facade.wasm",
+        "bytes": 1539,
+        "sha256": "75ecc9d88f0caf586a682adba2cc48cf580c3836872d851e3983ff1d232fa65a"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-data-interchange/0.1.1/parent-source/lib.build.json",
+        "bytes": 2021,
+        "sha256": "5eff49a41d04fe78eef614fc8ef038a41aa92cf8175df11a67a4012c6220e9d1"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-data-interchange/0.1.1/parent-source/lib.json",
+        "bytes": 1915,
+        "sha256": "a0f48e85b03f30a1ea54f8c113968f1feca9de47b10c12a3bbdfe9db19723823"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-data-interchange/0.1.1/parent-source/lib.wit",
+        "bytes": 968,
+        "sha256": "18158fe853b3c75227e0f92e806d995f03f118f1b9296c40f6e22037a1d86dba"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-data-interchange/0.1.1/parent-source/original-seal-record.json",
+        "bytes": 1007,
+        "sha256": "f181df4a0b9ebed92e019353c633b5dc663d95664fe6d6407c9432404e41cd15"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-data-interchange/0.1.1/parent-source/raw.wasm",
+        "bytes": 3408280,
+        "sha256": "eb65f2d9234f96b150c7a4fcf28917490a729a8442dfade79fdbfc8f4f302d45"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-data-interchange/0.1.1/parent-source/seal-receipt.json",
+        "bytes": 870,
+        "sha256": "3c584b7b4b518c6734530ece9513321fedc33cd82e3e83a36bd48d1847f48586"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-data-interchange/0.1.1/parent-source/sealed.wit",
+        "bytes": 2144,
+        "sha256": "c607845985b87dfcee1c34d1b4fa19e9215e0697a14a9285b9b21abf577c5e52"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-data-interchange/0.1.1/parent-source/shared/data-arrow.rs",
+        "bytes": 14555,
+        "sha256": "856d077a9a727a8230b0d4475cd48cbbeee71d7eda53e8650dc4034afc3f1107"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-data-interchange/0.1.1/parent-source/source-receipt.json",
+        "bytes": 3405,
+        "sha256": "0a3684134fdc5c5057f9bb241dde5225a8533b773e2b30226b71d40cba522897"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-data-interchange/0.1.1/parent-source/wit-deps/wasmc-data-core.wit",
+        "bytes": 1085,
+        "sha256": "29c4e4b90690cfa6b1912859008bca535bf04802c68e887f2e29fae51fd5d8d2"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-data-interchange/0.1.1/seal-receipt.json",
+        "bytes": 841,
+        "sha256": "9badc6909c506f7685b53f1a845e3855580c5496608f9ab1054e62fb5b64502c"
+      }
+    ]
+  },
+  "producer": {
+    "original_receipt_sha256": null,
+    "driver_sha256": null,
+    "original_receipt_bytes_verified": false,
+    "parent_manifest_sha256": "0e03361d912713638c6a6058af0e75d59b29dd20924e6581f439fb83e65227ce",
+    "original_artifact_sha256": "fba1ca307c7a30a75a4cfd244a5c7d5ce0f1c2742867dc8665e6063c41ad6d25"
+  },
+  "root": {
+    "locator": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-experiments/datacore-rebind-wasmc-data-interchange/root",
+    "manifest_sha256": "7af4548661f9eb0bebace1b12175816c3742b92ed647fd91d951cfa85cbc12fc",
+    "inventory_sha256": "702e62d65b3cd42d32c2ca0dccda5b5a4f4aa83db20df3658fd045bc0b79de2a",
+    "files": [
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-experiments/datacore-rebind-wasmc-data-interchange/root/LICENSE",
+        "bytes": 3823,
+        "sha256": "7bca2d5818178e0bc14546700d39bf113d15139b1c3b6d1e62f621d4a276d6e3"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-experiments/datacore-rebind-wasmc-data-interchange/root/SKILL.md",
+        "bytes": 884,
+        "sha256": "5a15f44738b5b6587d2d9c7acbef0af2e6f820580dbe8bd728b765534596632b"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-experiments/datacore-rebind-wasmc-data-interchange/root/artifact.wasm",
+        "bytes": 2688530,
+        "sha256": "a4c664e65799a33d05e1ae5101d858f998959e37f4258129818ac74c0bcdd51e"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-experiments/datacore-rebind-wasmc-data-interchange/root/bindings/rust-component/Cargo.toml",
+        "bytes": 309,
+        "sha256": "c3a01eeba3120b0d99520723561b34905ce004564f09ae54061553cb0f88276c"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-experiments/datacore-rebind-wasmc-data-interchange/root/bindings/rust-component/src/lib.rs",
+        "bytes": 677,
+        "sha256": "8556470fcca3c928887619465d7ac3b91897b2663b4cf247e033d4abf32af287"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-experiments/datacore-rebind-wasmc-data-interchange/root/bindings/rust-core/Cargo.toml",
+        "bytes": 171,
+        "sha256": "337919161edd138e4d9e01024dbe0a2b76e9961beea82686a2a0b3e10bae7978"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-experiments/datacore-rebind-wasmc-data-interchange/root/bindings/rust-core/src/lib.rs",
+        "bytes": 123638,
+        "sha256": "b737e0122a13f1bc4bd3e48d9f69336646df2188d8b0c4bf7663d1018a2a337c"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-experiments/datacore-rebind-wasmc-data-interchange/root/component.wasm",
+        "bytes": 2691385,
+        "sha256": "69186e892c4d2ca75fc2395c188e2859e582b53974f63c936707631bd981ba52"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-experiments/datacore-rebind-wasmc-data-interchange/root/core-abi.json",
+        "bytes": 2991,
+        "sha256": "d10e9fe239f053a451b2b577cffd0d60994e783ce3ab4463b8a9631eee36baa2"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-experiments/datacore-rebind-wasmc-data-interchange/root/lib.json",
+        "bytes": 5226,
+        "sha256": "7af4548661f9eb0bebace1b12175816c3742b92ed647fd91d951cfa85cbc12fc"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-experiments/datacore-rebind-wasmc-data-interchange/root/lib.wit",
+        "bytes": 2144,
+        "sha256": "bbee42bef19b89ab759f75b5cd17c1e4f361f0d2bd420c3bddde987a3b458f01"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-experiments/datacore-rebind-wasmc-data-interchange/root/licenses/DEPENDENCY-NOTICES-001.txt",
+        "bytes": 245760,
+        "sha256": "66302f6dd71da97391ab2270d29b10e67bdbac6d7eb782bed043c2ff596ec5cc"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-experiments/datacore-rebind-wasmc-data-interchange/root/licenses/DEPENDENCY-NOTICES-002.txt",
+        "bytes": 245760,
+        "sha256": "0065cf38006c9a66a6c3ee9cbaf8db10422b1e5301d3c1d5132b7855e71f18ea"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-experiments/datacore-rebind-wasmc-data-interchange/root/licenses/DEPENDENCY-NOTICES-003.txt",
+        "bytes": 245760,
+        "sha256": "201dbac93dff17177b6379ee630b9658b4cec9cb9d46ce3982b3da87c4b740c8"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-experiments/datacore-rebind-wasmc-data-interchange/root/licenses/DEPENDENCY-NOTICES-004.txt",
+        "bytes": 245760,
+        "sha256": "c439e1a409b6f23d5797cec339403a0ffce97e9fcf2ae91d6a923c36d619bb76"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-experiments/datacore-rebind-wasmc-data-interchange/root/licenses/DEPENDENCY-NOTICES-005.txt",
+        "bytes": 245760,
+        "sha256": "04118f32afc6b2ce0fbfd559c56a78614016ab00167be2425c8c778fc7b064fe"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-experiments/datacore-rebind-wasmc-data-interchange/root/licenses/DEPENDENCY-NOTICES-006.txt",
+        "bytes": 8357,
+        "sha256": "aa6000805f56d3c6009ffa09dbe224083cf2e63e2498e1939deefe6ca7c43d9a"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-experiments/datacore-rebind-wasmc-data-interchange/root/licenses/DEPENDENCY-NOTICES-007.txt",
+        "bytes": 25602,
+        "sha256": "f0429335a0831b75f3b3277e20303d94bbf7af5719769055178aab3e2dce6e7a"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-experiments/datacore-rebind-wasmc-data-interchange/root/references/agent-delta.json",
+        "bytes": 947,
+        "sha256": "209c913c3b278e658d71f1a35e0a498ab5a439bd6861a962c9493eb4c8f1a71c"
+      }
+    ]
+  },
+  "wit": {
+    "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-data-interchange/0.1.1/lib.wit",
+    "bytes": 2144,
+    "sha256": "bbee42bef19b89ab759f75b5cd17c1e4f361f0d2bd420c3bddde987a3b458f01"
+  },
+  "source_mode": "wit-dependency-rebound-qualified-root",
+  "fresh_build_performed": false,
+  "fresh_full_q0": false
 }

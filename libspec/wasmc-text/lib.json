@@ -1,10 +1,10 @@
 {
-  "schema": "wasmc.current-published-producer-source/v1",
+  "schema": "wasmc.current-reexported-rust-producer-source/v1",
   "id": "wasmc-text",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "profile": "value",
   "world": "text-world",
-  "description": "Ordinary UTF8 string processing delegated to Rust str/String and pinned memchr; owned WIT results for slices and materialized iterators.",
+  "description": "Rust UTF8 string processing with capacity governed by aggregate runtime memory.",
   "apis": [
     {
       "api": "contains",
@@ -278,218 +278,336 @@
     }
   ],
   "source_spec": {
-    "path": "admission/string-text-v030/text001-authoring/lib.build.json",
-    "bytes": 15345,
-    "sha256": "d8e0cd1910b9c4e2233b5b9c40c86c74422da28c4c35afba37a363f720d187be"
+    "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-text/0.0.2/lib.build.json",
+    "bytes": 12893,
+    "sha256": "5d0089faf9ae50786b4550f9b4ceba9c044f2f1bdbbc6a4a43019b0f3c75bed1"
   },
   "source_packet": {
-    "root": "admission/string-text-v030/text001-authoring",
-    "inventory_sha256": "c7c631a2c0950464759419b61b1668e97e891a4bcfb38dd6a470d0bb383fa28e",
+    "root": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-text/0.0.2",
+    "inventory_sha256": "27ed28f31fbc91e072cc9fc671430c38250686024971b4c163244ebb636fb1e5",
     "files": [
       {
-        "path": "admission/string-text-v030/text001-authoring/LICENSE",
-        "bytes": 3823,
-        "sha256": "7bca2d5818178e0bc14546700d39bf113d15139b1c3b6d1e62f621d4a276d6e3"
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-text/0.0.2/facade-receipt.json",
+        "bytes": 390,
+        "sha256": "2f363b9ff9542142ac0fe9a19625cabb4bc7fb580550f410aac94614dddd5f03"
       },
       {
-        "path": "admission/string-text-v030/text001-authoring/build-report.json",
-        "bytes": 1590,
-        "sha256": "ae904ce94b4d3a68c210d5570e273277f0688502a10a993632b1803705b1ec2f"
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-text/0.0.2/facade.mjs",
+        "bytes": 2808,
+        "sha256": "5f326d605912f834623941b90fe6d3e154dcffd29c8bf8f9e97c0b6b78d2bc9f"
       },
       {
-        "path": "admission/string-text-v030/text001-authoring/lib.build.json",
-        "bytes": 15345,
-        "sha256": "d8e0cd1910b9c4e2233b5b9c40c86c74422da28c4c35afba37a363f720d187be"
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-text/0.0.2/facade.wasm",
+        "bytes": 5883,
+        "sha256": "dc0314b29996bbb08c3bcdaa769d8d34e079d1deca6ad755598bfc02d6311a2a"
       },
       {
-        "path": "admission/string-text-v030/text001-authoring/lib.wit",
-        "bytes": 1877,
-        "sha256": "f2f6d81c426d239f3b13caad86a319c998abee93cad48f532ed0ea583a822bd0"
-      },
-      {
-        "path": "admission/string-text-v030/text001-authoring/licenses/DEPENDENCY-NOTICES-001.txt",
-        "bytes": 245760,
-        "sha256": "66302f6dd71da97391ab2270d29b10e67bdbac6d7eb782bed043c2ff596ec5cc"
-      },
-      {
-        "path": "admission/string-text-v030/text001-authoring/licenses/DEPENDENCY-NOTICES-002.txt",
-        "bytes": 245760,
-        "sha256": "0065cf38006c9a66a6c3ee9cbaf8db10422b1e5301d3c1d5132b7855e71f18ea"
-      },
-      {
-        "path": "admission/string-text-v030/text001-authoring/licenses/DEPENDENCY-NOTICES-003.txt",
-        "bytes": 245760,
-        "sha256": "201dbac93dff17177b6379ee630b9658b4cec9cb9d46ce3982b3da87c4b740c8"
-      },
-      {
-        "path": "admission/string-text-v030/text001-authoring/licenses/DEPENDENCY-NOTICES-004.txt",
-        "bytes": 245760,
-        "sha256": "c439e1a409b6f23d5797cec339403a0ffce97e9fcf2ae91d6a923c36d619bb76"
-      },
-      {
-        "path": "admission/string-text-v030/text001-authoring/licenses/DEPENDENCY-NOTICES-005.txt",
-        "bytes": 245760,
-        "sha256": "04118f32afc6b2ce0fbfd559c56a78614016ab00167be2425c8c778fc7b064fe"
-      },
-      {
-        "path": "admission/string-text-v030/text001-authoring/licenses/DEPENDENCY-NOTICES-006.txt",
-        "bytes": 8357,
-        "sha256": "aa6000805f56d3c6009ffa09dbe224083cf2e63e2498e1939deefe6ca7c43d9a"
-      },
-      {
-        "path": "admission/string-text-v030/text001-authoring/publication.json",
-        "bytes": 1663,
-        "sha256": "b1028b18528ab3c304baaa1fb0ef37750991e40d39cbc1ff4d8ad63670ce4883"
-      },
-      {
-        "path": "admission/string-text-v030/text001-authoring/text-adapter/Cargo.lock",
-        "bytes": 8264,
-        "sha256": "90e761a081bc7f05c9a416cb5733181169fa7f260faad3108412faf5af4feb74"
-      },
-      {
-        "path": "admission/string-text-v030/text001-authoring/text-adapter/Cargo.toml",
-        "bytes": 426,
-        "sha256": "b5827b0690198ce17728fd5d520b9798b2db58533fd27f677400bd2490084f2f"
-      },
-      {
-        "path": "admission/string-text-v030/text001-authoring/text-adapter/src/lib.rs",
-        "bytes": 3356,
-        "sha256": "1efce2a3c4833d3173fd48ddc01823100aa49677b80c5b12a9f911884d3bbde9"
-      }
-    ]
-  },
-  "canonical_source": {
-    "source_commit": "0720d771a9b37060ee550ec38f4355457ed7f687",
-    "path": "examples/wasmc_lib_text_v1/lib.build.json",
-    "git_blob": "0c06b6d483a7160d56418189c0f5c2edd0e101d5",
-    "sha256": "d8e0cd1910b9c4e2233b5b9c40c86c74422da28c4c35afba37a363f720d187be",
-    "bytes": 15345
-  },
-  "publication": {
-    "custody": {
-      "path": "admission/string-text-v030/text001-authoring/publication.json",
-      "bytes": 1663,
-      "sha256": "b1028b18528ab3c304baaa1fb0ef37750991e40d39cbc1ff4d8ad63670ce4883"
-    },
-    "repository": "cbgroom/wasmcrelease",
-    "tag": "wasmc-text-v0.0.1",
-    "commit": "e89ec37b0096ce90de17bedcccec613045b839d9"
-  },
-  "producer": {
-    "report": {
-      "path": "admission/string-text-v030/text001-authoring/build-report.json",
-      "bytes": 1590,
-      "sha256": "ae904ce94b4d3a68c210d5570e273277f0688502a10a993632b1803705b1ec2f"
-    },
-    "driver_sha256": null,
-    "observed_build_source": "0720d771a9b37060ee550ec38f4355457ed7f687",
-    "original_receipt_sha256": null,
-    "original_receipt_bytes_verified": false,
-    "original_driver_identity_verified": false
-  },
-  "root": {
-    "locator": "admission/string-text-v030/text001-root",
-    "manifest_sha256": "a49379289b2b54da12ed0874af55e46e7b58966235d9096637b0c249e1ba49dd",
-    "inventory_sha256": "68848b01c3d1cb351e413565337f03c8885c874d8d66d281150a9412c56808c3",
-    "files": [
-      {
-        "path": "admission/string-text-v030/text001-root/LICENSE",
-        "bytes": 3823,
-        "sha256": "7bca2d5818178e0bc14546700d39bf113d15139b1c3b6d1e62f621d4a276d6e3"
-      },
-      {
-        "path": "admission/string-text-v030/text001-root/SKILL.md",
-        "bytes": 895,
-        "sha256": "7baa30a1b7546f79a7d0a6a942ec988c410f57262dbbed18fe5d4ad72511a115"
-      },
-      {
-        "path": "admission/string-text-v030/text001-root/artifact.wasm",
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-text/0.0.2/implementation.wasm",
         "bytes": 67966,
         "sha256": "c3b6966c906896575c2d08cbbf61d1d4861cb42d2f30aea994b8182fd851b300"
       },
       {
-        "path": "admission/string-text-v030/text001-root/bindings/rust-component/Cargo.toml",
-        "bytes": 297,
-        "sha256": "672269bc84e18654dfe219d50ac8b70dc0ee36ef2663e188d1d4c1c3ad0fda37"
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-text/0.0.2/lib.build.json",
+        "bytes": 12893,
+        "sha256": "5d0089faf9ae50786b4550f9b4ceba9c044f2f1bdbbc6a4a43019b0f3c75bed1"
       },
       {
-        "path": "admission/string-text-v030/text001-root/bindings/rust-component/src/lib.rs",
-        "bytes": 647,
-        "sha256": "f094fb091b180d7a280469de2f163aafe58238c91d28e479a77494c2e4a77ee6"
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-text/0.0.2/lib.wit",
+        "bytes": 1877,
+        "sha256": "1ee6df797dbc371a61a3bc44117f22c3a607ee95ad589593b8fb53bea7a61cb4"
       },
       {
-        "path": "admission/string-text-v030/text001-root/bindings/rust-core/Cargo.toml",
-        "bytes": 159,
-        "sha256": "8cb72c1043c9a83308f6b4d8f50724e1f68a25f306db99c51c9689902c545a29"
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-text/0.0.2/original-authoring/LICENSE",
+        "bytes": 3823,
+        "sha256": "7bca2d5818178e0bc14546700d39bf113d15139b1c3b6d1e62f621d4a276d6e3"
       },
       {
-        "path": "admission/string-text-v030/text001-root/bindings/rust-core/src/lib.rs",
-        "bytes": 97418,
-        "sha256": "9e2728c33ff26cee9017357ef3b5d4cbac2beecb76623071a18905b2127958fa"
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-text/0.0.2/original-authoring/build-report.json",
+        "bytes": 1590,
+        "sha256": "ae904ce94b4d3a68c210d5570e273277f0688502a10a993632b1803705b1ec2f"
       },
       {
-        "path": "admission/string-text-v030/text001-root/component.wasm",
-        "bytes": 75815,
-        "sha256": "69c3c5924f4e8cfc45dc10478326fba6da6a5d99165522e30f05082272abd961"
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-text/0.0.2/original-authoring/lib.build.json",
+        "bytes": 15345,
+        "sha256": "d8e0cd1910b9c4e2233b5b9c40c86c74422da28c4c35afba37a363f720d187be"
       },
       {
-        "path": "admission/string-text-v030/text001-root/core-abi.json",
-        "bytes": 11840,
-        "sha256": "8dbcf69c6085315e716525a17aaf4a2c8ad3fbf335f3ebfdd371d218753a3cda"
-      },
-      {
-        "path": "admission/string-text-v030/text001-root/lib.json",
-        "bytes": 7486,
-        "sha256": "a49379289b2b54da12ed0874af55e46e7b58966235d9096637b0c249e1ba49dd"
-      },
-      {
-        "path": "admission/string-text-v030/text001-root/lib.wit",
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-text/0.0.2/original-authoring/lib.wit",
         "bytes": 1877,
         "sha256": "f2f6d81c426d239f3b13caad86a319c998abee93cad48f532ed0ea583a822bd0"
       },
       {
-        "path": "admission/string-text-v030/text001-root/licenses/DEPENDENCY-NOTICES-001.txt",
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-text/0.0.2/original-authoring/licenses/DEPENDENCY-NOTICES-001.txt",
         "bytes": 245760,
         "sha256": "66302f6dd71da97391ab2270d29b10e67bdbac6d7eb782bed043c2ff596ec5cc"
       },
       {
-        "path": "admission/string-text-v030/text001-root/licenses/DEPENDENCY-NOTICES-002.txt",
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-text/0.0.2/original-authoring/licenses/DEPENDENCY-NOTICES-002.txt",
         "bytes": 245760,
         "sha256": "0065cf38006c9a66a6c3ee9cbaf8db10422b1e5301d3c1d5132b7855e71f18ea"
       },
       {
-        "path": "admission/string-text-v030/text001-root/licenses/DEPENDENCY-NOTICES-003.txt",
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-text/0.0.2/original-authoring/licenses/DEPENDENCY-NOTICES-003.txt",
         "bytes": 245760,
         "sha256": "201dbac93dff17177b6379ee630b9658b4cec9cb9d46ce3982b3da87c4b740c8"
       },
       {
-        "path": "admission/string-text-v030/text001-root/licenses/DEPENDENCY-NOTICES-004.txt",
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-text/0.0.2/original-authoring/licenses/DEPENDENCY-NOTICES-004.txt",
         "bytes": 245760,
         "sha256": "c439e1a409b6f23d5797cec339403a0ffce97e9fcf2ae91d6a923c36d619bb76"
       },
       {
-        "path": "admission/string-text-v030/text001-root/licenses/DEPENDENCY-NOTICES-005.txt",
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-text/0.0.2/original-authoring/licenses/DEPENDENCY-NOTICES-005.txt",
         "bytes": 245760,
         "sha256": "04118f32afc6b2ce0fbfd559c56a78614016ab00167be2425c8c778fc7b064fe"
       },
       {
-        "path": "admission/string-text-v030/text001-root/licenses/DEPENDENCY-NOTICES-006.txt",
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-text/0.0.2/original-authoring/licenses/DEPENDENCY-NOTICES-006.txt",
         "bytes": 8357,
         "sha256": "aa6000805f56d3c6009ffa09dbe224083cf2e63e2498e1939deefe6ca7c43d9a"
       },
       {
-        "path": "admission/string-text-v030/text001-root/references/agent-delta.json",
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-text/0.0.2/original-authoring/publication.json",
+        "bytes": 1663,
+        "sha256": "b1028b18528ab3c304baaa1fb0ef37750991e40d39cbc1ff4d8ad63670ce4883"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-text/0.0.2/original-authoring/text-adapter/Cargo.lock",
+        "bytes": 8264,
+        "sha256": "90e761a081bc7f05c9a416cb5733181169fa7f260faad3108412faf5af4feb74"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-text/0.0.2/original-authoring/text-adapter/Cargo.toml",
+        "bytes": 426,
+        "sha256": "b5827b0690198ce17728fd5d520b9798b2db58533fd27f677400bd2490084f2f"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-text/0.0.2/original-authoring/text-adapter/src/lib.rs",
+        "bytes": 3356,
+        "sha256": "1efce2a3c4833d3173fd48ddc01823100aa49677b80c5b12a9f911884d3bbde9"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-text/0.0.2/original-root/LICENSE",
+        "bytes": 3823,
+        "sha256": "7bca2d5818178e0bc14546700d39bf113d15139b1c3b6d1e62f621d4a276d6e3"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-text/0.0.2/original-root/SKILL.md",
+        "bytes": 895,
+        "sha256": "7baa30a1b7546f79a7d0a6a942ec988c410f57262dbbed18fe5d4ad72511a115"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-text/0.0.2/original-root/artifact.wasm",
+        "bytes": 67966,
+        "sha256": "c3b6966c906896575c2d08cbbf61d1d4861cb42d2f30aea994b8182fd851b300"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-text/0.0.2/original-root/bindings/rust-component/Cargo.toml",
+        "bytes": 297,
+        "sha256": "672269bc84e18654dfe219d50ac8b70dc0ee36ef2663e188d1d4c1c3ad0fda37"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-text/0.0.2/original-root/bindings/rust-component/src/lib.rs",
+        "bytes": 647,
+        "sha256": "f094fb091b180d7a280469de2f163aafe58238c91d28e479a77494c2e4a77ee6"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-text/0.0.2/original-root/bindings/rust-core/Cargo.toml",
+        "bytes": 159,
+        "sha256": "8cb72c1043c9a83308f6b4d8f50724e1f68a25f306db99c51c9689902c545a29"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-text/0.0.2/original-root/bindings/rust-core/src/lib.rs",
+        "bytes": 97418,
+        "sha256": "9e2728c33ff26cee9017357ef3b5d4cbac2beecb76623071a18905b2127958fa"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-text/0.0.2/original-root/component.wasm",
+        "bytes": 75815,
+        "sha256": "69c3c5924f4e8cfc45dc10478326fba6da6a5d99165522e30f05082272abd961"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-text/0.0.2/original-root/core-abi.json",
+        "bytes": 11840,
+        "sha256": "8dbcf69c6085315e716525a17aaf4a2c8ad3fbf335f3ebfdd371d218753a3cda"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-text/0.0.2/original-root/lib.json",
+        "bytes": 7486,
+        "sha256": "a49379289b2b54da12ed0874af55e46e7b58966235d9096637b0c249e1ba49dd"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-text/0.0.2/original-root/lib.wit",
+        "bytes": 1877,
+        "sha256": "f2f6d81c426d239f3b13caad86a319c998abee93cad48f532ed0ea583a822bd0"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-text/0.0.2/original-root/licenses/DEPENDENCY-NOTICES-001.txt",
+        "bytes": 245760,
+        "sha256": "66302f6dd71da97391ab2270d29b10e67bdbac6d7eb782bed043c2ff596ec5cc"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-text/0.0.2/original-root/licenses/DEPENDENCY-NOTICES-002.txt",
+        "bytes": 245760,
+        "sha256": "0065cf38006c9a66a6c3ee9cbaf8db10422b1e5301d3c1d5132b7855e71f18ea"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-text/0.0.2/original-root/licenses/DEPENDENCY-NOTICES-003.txt",
+        "bytes": 245760,
+        "sha256": "201dbac93dff17177b6379ee630b9658b4cec9cb9d46ce3982b3da87c4b740c8"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-text/0.0.2/original-root/licenses/DEPENDENCY-NOTICES-004.txt",
+        "bytes": 245760,
+        "sha256": "c439e1a409b6f23d5797cec339403a0ffce97e9fcf2ae91d6a923c36d619bb76"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-text/0.0.2/original-root/licenses/DEPENDENCY-NOTICES-005.txt",
+        "bytes": 245760,
+        "sha256": "04118f32afc6b2ce0fbfd559c56a78614016ab00167be2425c8c778fc7b064fe"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-text/0.0.2/original-root/licenses/DEPENDENCY-NOTICES-006.txt",
+        "bytes": 8357,
+        "sha256": "aa6000805f56d3c6009ffa09dbe224083cf2e63e2498e1939deefe6ca7c43d9a"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-text/0.0.2/original-root/references/agent-delta.json",
+        "bytes": 9005,
+        "sha256": "e7a38020d00da2025e878d401e4005b37b003240c9b6dbea4592a7d7dd352459"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-text/0.0.2/original-selection.json",
+        "bytes": 1302,
+        "sha256": "1357b254086166c00419dcb27aa766158b230ff052c78181d8b01f3cb7c3af47"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-text/0.0.2/root-receipt.json",
+        "bytes": 518,
+        "sha256": "e9ec21c11b16a2fe1940442e317f96a9fee81ca43ea1cb9c6a7723eb969ebbb2"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-text/0.0.2/seal-receipt.json",
+        "bytes": 1182,
+        "sha256": "0532bd202275e5ce4f07e68bb7065f8ead1cd7b803c4aef9ed7076cc7233ed61"
+      }
+    ]
+  },
+  "producer": {
+    "original_receipt_sha256": null,
+    "driver_sha256": null,
+    "original_publication_sha256": "b1028b18528ab3c304baaa1fb0ef37750991e40d39cbc1ff4d8ad63670ce4883",
+    "original_artifact_sha256": "c3b6966c906896575c2d08cbbf61d1d4861cb42d2f30aea994b8182fd851b300",
+    "original_receipt_bytes_verified": false
+  },
+  "root": {
+    "locator": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-text/0.0.2",
+    "manifest_sha256": "9dedc34b98181f2be57d80fd985af8760a74dd1cf87b177634ced81085ff759a",
+    "inventory_sha256": "dd7376ea71a4887cc7a288bb23b454972bcc3fddb3c52df96eb80b8c6f4563f4",
+    "files": [
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-text/0.0.2/LICENSE",
+        "bytes": 3823,
+        "sha256": "7bca2d5818178e0bc14546700d39bf113d15139b1c3b6d1e62f621d4a276d6e3"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-text/0.0.2/SKILL.md",
+        "bytes": 838,
+        "sha256": "b9b67f2ae5f546b692f88907c469c1140b04fcafb63e30318959962a06da54cb"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-text/0.0.2/artifact.wasm",
+        "bytes": 61218,
+        "sha256": "520f2624d9aa602e9360ce06d78163a4baf5ede36c20b24ca29e374d3dff3b74"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-text/0.0.2/bindings/rust-component/Cargo.toml",
+        "bytes": 297,
+        "sha256": "5842fe8b86882e197629779a7f4e19667efe1243ea1bbff627feeaf9c44556dd"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-text/0.0.2/bindings/rust-component/src/lib.rs",
+        "bytes": 647,
+        "sha256": "58eece0c27a228b222c0a972bdb77490db96e9be1486b872d963793c30e399fe"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-text/0.0.2/bindings/rust-core/Cargo.toml",
+        "bytes": 159,
+        "sha256": "06ff77f1de7855f026fd9998fd0f9cde8be549e416f9582e01f005812c6d1e36"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-text/0.0.2/bindings/rust-core/src/lib.rs",
+        "bytes": 94705,
+        "sha256": "665b7e5510e47a1ad0518a0a6ae2273a00634989bcf69ec5189fbaf21fdfe2f3"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-text/0.0.2/component.wasm",
+        "bytes": 69067,
+        "sha256": "cb06cd219b2bfec6d9cf262b4103852186715c08d5ad04545477e713ca033511"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-text/0.0.2/core-abi.json",
+        "bytes": 11840,
+        "sha256": "113af917d257a674f152e512907529ffdb42cc5ed47dd899adc509fcfdd51645"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-text/0.0.2/lib.json",
+        "bytes": 5153,
+        "sha256": "9dedc34b98181f2be57d80fd985af8760a74dd1cf87b177634ced81085ff759a"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-text/0.0.2/lib.wit",
+        "bytes": 1877,
+        "sha256": "1ee6df797dbc371a61a3bc44117f22c3a607ee95ad589593b8fb53bea7a61cb4"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-text/0.0.2/licenses/DEPENDENCY-NOTICES-001.txt",
+        "bytes": 245760,
+        "sha256": "66302f6dd71da97391ab2270d29b10e67bdbac6d7eb782bed043c2ff596ec5cc"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-text/0.0.2/licenses/DEPENDENCY-NOTICES-002.txt",
+        "bytes": 245760,
+        "sha256": "0065cf38006c9a66a6c3ee9cbaf8db10422b1e5301d3c1d5132b7855e71f18ea"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-text/0.0.2/licenses/DEPENDENCY-NOTICES-003.txt",
+        "bytes": 245760,
+        "sha256": "201dbac93dff17177b6379ee630b9658b4cec9cb9d46ce3982b3da87c4b740c8"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-text/0.0.2/licenses/DEPENDENCY-NOTICES-004.txt",
+        "bytes": 245760,
+        "sha256": "c439e1a409b6f23d5797cec339403a0ffce97e9fcf2ae91d6a923c36d619bb76"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-text/0.0.2/licenses/DEPENDENCY-NOTICES-005.txt",
+        "bytes": 245760,
+        "sha256": "04118f32afc6b2ce0fbfd559c56a78614016ab00167be2425c8c778fc7b064fe"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-text/0.0.2/licenses/DEPENDENCY-NOTICES-006.txt",
+        "bytes": 8357,
+        "sha256": "aa6000805f56d3c6009ffa09dbe224083cf2e63e2498e1939deefe6ca7c43d9a"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-text/0.0.2/licenses/DEPENDENCY-NOTICES-007.txt",
+        "bytes": 25602,
+        "sha256": "f0429335a0831b75f3b3277e20303d94bbf7af5719769055178aab3e2dce6e7a"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-text/0.0.2/references/agent-delta.json",
         "bytes": 9005,
         "sha256": "e7a38020d00da2025e878d401e4005b37b003240c9b6dbea4592a7d7dd352459"
       }
     ]
   },
   "wit": {
-    "path": "admission/string-text-v030/text001-authoring/lib.wit",
+    "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-text/0.0.2/lib.wit",
     "bytes": 1877,
-    "sha256": "f2f6d81c426d239f3b13caad86a319c998abee93cad48f532ed0ea583a822bd0"
+    "sha256": "1ee6df797dbc371a61a3bc44117f22c3a607ee95ad589593b8fb53bea7a61cb4"
   },
-  "source_mode": "already-published-complete-root",
+  "source_mode": "reexported-published-rust-root",
   "fresh_build_performed": false,
   "fresh_full_q0": false
 }

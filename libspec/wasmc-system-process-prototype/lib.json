@@ -1,18 +1,17 @@
 {
-  "schema": "wasmc.lib-refresh-source/v2",
+  "schema": "wasmc.current-native-node-producer-source/v1",
   "id": "wasmc-system-process-prototype",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "profile": "native",
   "world": "system-process",
-  "description": "Lib-defined platform implementation: wasmc-system-process-prototype",
-  "dependencies": [],
+  "description": "Process and shell execution with no adapter output or timeout defaults; explicit caller limits remain supported.",
   "apis": [
     {
       "api": "capabilities",
       "delta": "Actual platform implementation, not a simulated Wasm export.",
       "ecosystem": "node-boundary",
       "host_authorities": [
-        "wasmc:system-process@0.0.1"
+        "wasmc:system-process@0.1.0"
       ],
       "implementation": "native",
       "origin": "adapted",
@@ -23,66 +22,142 @@
       "delta": "Actual platform implementation, not a simulated Wasm export.",
       "ecosystem": "node-boundary",
       "host_authorities": [
-        "wasmc:system-process@0.0.1"
+        "wasmc:system-process@0.1.0"
       ],
       "implementation": "native",
       "origin": "adapted",
       "support": "target-qualified-only"
     }
   ],
-  "native": {
-    "kind": "node-boundary",
-    "target": "portable-node",
+  "source_spec": {
+    "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-system-process-prototype/0.1.0/lib.json",
+    "bytes": 2495,
+    "sha256": "533d5770e85d757165ffad45faffbb0f4cfe6e175ce0df3ae4fbdd4b8841b470"
+  },
+  "source_packet": {
+    "root": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-system-process-prototype/0.1.0",
+    "inventory_sha256": "399e10b3a345718d9ee1943285ce279afb82d0be98cf447c7db37e8d180a13c5",
     "files": [
-      "platform/native-adapter.mjs",
-      "platform/native-boundary.json"
-    ],
-    "entry": "platform/native-adapter.mjs",
-    "descriptor_template": "platform/native-boundary.json",
-    "binding_contract": "wasmc.lib-defined-host-boundary/v1",
-    "binding": {
-      "implements": "wasmc:system-process@0.0.1",
-      "boundary": "wasmc.lib-defined-host-boundary/v1",
-      "descriptor": "platform/native-boundary.json",
-      "artifact_format": "native-adapter",
-      "targets": [
-        {
-          "os": "linux",
-          "architecture": "x86_64",
-          "environment": "native",
-          "embedding": "node"
-        },
-        {
-          "os": "macos",
-          "architecture": "aarch64",
-          "environment": "native",
-          "embedding": "node"
-        },
-        {
-          "os": "windows",
-          "architecture": "x86_64",
-          "environment": "native",
-          "embedding": "node"
-        }
-      ]
-    }
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-system-process-prototype/0.1.0/build.json",
+        "bytes": 2451,
+        "sha256": "bab750ed0c8fa6c7c35956bd78b0992ab30772c9222cd91fe8f833631b201628"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-system-process-prototype/0.1.0/ci.json",
+        "bytes": 573,
+        "sha256": "cb7247286fe59cd475b12dee1d45cd140afeaab8b7106a1c1fa34872bb4716ce"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-system-process-prototype/0.1.0/lib.json",
+        "bytes": 2495,
+        "sha256": "533d5770e85d757165ffad45faffbb0f4cfe6e175ce0df3ae4fbdd4b8841b470"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-system-process-prototype/0.1.0/lib.wit",
+        "bytes": 1381,
+        "sha256": "3981cd690d37eb7e332899ffa7244414d0a12a2cfc0f5e611a1840ed0738d92b"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-system-process-prototype/0.1.0/platform/native-adapter.mjs",
+        "bytes": 7163,
+        "sha256": "4d5de14f8f7be61eeb093be73047a63a654dd8216760897ce0405066479bb2f9"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-system-process-prototype/0.1.0/platform/native-boundary.json",
+        "bytes": 336,
+        "sha256": "c88adaa1c08ef95908c99fd5f11f6e2dcda141b7b3d9756bc5e92edfa74d7e0d"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-system-process-prototype/0.1.0/runtime.json",
+        "bytes": 879,
+        "sha256": "31410c454cd3c4a139cabc76365987ac087f15ec76e25a83b8ba813099cfca04"
+      }
+    ]
   },
-  "qualification": {
-    "script": "scripts/test-system-process-shell.mjs",
-    "hosts": [
-      "darwin",
-      "linux",
-      "win32"
-    ],
-    "requires": [],
-    "current_runtime_status": "not-requalified",
-    "remaining": [
-      "additional-desktop-architecture-parity-v2",
-      "android-app-uid-native-provider",
-      "wasm-lowering",
-      "admission-review"
-    ],
-    "source_check": "scripts/validate-lib-refresh-v2-source.mjs"
+  "producer": {
+    "original_receipt_sha256": null,
+    "driver_sha256": "befbc81bbcb83ada838bac9172b39f8a9f480d3840eb542bb64338f43359ea53",
+    "original_receipt_bytes_verified": false
   },
-  "examples": []
+  "root": {
+    "locator": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-system-process-prototype/0.1.0",
+    "manifest_sha256": "861ed688418077d880727c5c16474c2cd9c4b3c6ab0d5e6d4adf5ba3277fdf31",
+    "inventory_sha256": "16630aa638d1255b9dff59021600ca88094f2c1a7352eff13baeb95455ed0cf5",
+    "files": [
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-system-process-prototype/0.1.0/LICENSE",
+        "bytes": 3823,
+        "sha256": "7bca2d5818178e0bc14546700d39bf113d15139b1c3b6d1e62f621d4a276d6e3"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-system-process-prototype/0.1.0/lib.json",
+        "bytes": 3402,
+        "sha256": "861ed688418077d880727c5c16474c2cd9c4b3c6ab0d5e6d4adf5ba3277fdf31"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-system-process-prototype/0.1.0/lib.wit",
+        "bytes": 1381,
+        "sha256": "3981cd690d37eb7e332899ffa7244414d0a12a2cfc0f5e611a1840ed0738d92b"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-system-process-prototype/0.1.0/licenses/DEPENDENCY-NOTICES-001.txt",
+        "bytes": 245760,
+        "sha256": "66302f6dd71da97391ab2270d29b10e67bdbac6d7eb782bed043c2ff596ec5cc"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-system-process-prototype/0.1.0/licenses/DEPENDENCY-NOTICES-002.txt",
+        "bytes": 245760,
+        "sha256": "0065cf38006c9a66a6c3ee9cbaf8db10422b1e5301d3c1d5132b7855e71f18ea"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-system-process-prototype/0.1.0/licenses/DEPENDENCY-NOTICES-003.txt",
+        "bytes": 245760,
+        "sha256": "201dbac93dff17177b6379ee630b9658b4cec9cb9d46ce3982b3da87c4b740c8"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-system-process-prototype/0.1.0/licenses/DEPENDENCY-NOTICES-004.txt",
+        "bytes": 245760,
+        "sha256": "c439e1a409b6f23d5797cec339403a0ffce97e9fcf2ae91d6a923c36d619bb76"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-system-process-prototype/0.1.0/licenses/DEPENDENCY-NOTICES-005.txt",
+        "bytes": 245760,
+        "sha256": "04118f32afc6b2ce0fbfd559c56a78614016ab00167be2425c8c778fc7b064fe"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-system-process-prototype/0.1.0/licenses/DEPENDENCY-NOTICES-006.txt",
+        "bytes": 8357,
+        "sha256": "aa6000805f56d3c6009ffa09dbe224083cf2e63e2498e1939deefe6ca7c43d9a"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-system-process-prototype/0.1.0/licenses/DEPENDENCY-NOTICES-007.txt",
+        "bytes": 25602,
+        "sha256": "f0429335a0831b75f3b3277e20303d94bbf7af5719769055178aab3e2dce6e7a"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-system-process-prototype/0.1.0/native-boundary.json",
+        "bytes": 356,
+        "sha256": "9078b9d11131c3f39836bdf60979b472958cd52157d5721afd59395f5bfa04a5"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-system-process-prototype/0.1.0/platform/native-adapter.mjs",
+        "bytes": 7163,
+        "sha256": "4d5de14f8f7be61eeb093be73047a63a654dd8216760897ce0405066479bb2f9"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-system-process-prototype/0.1.0/platform/native-boundary.json",
+        "bytes": 336,
+        "sha256": "c88adaa1c08ef95908c99fd5f11f6e2dcda141b7b3d9756bc5e92edfa74d7e0d"
+      }
+    ]
+  },
+  "wit": {
+    "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-system-process-prototype/0.1.0/lib.wit",
+    "bytes": 1381,
+    "sha256": "3981cd690d37eb7e332899ffa7244414d0a12a2cfc0f5e611a1840ed0738d92b"
+  },
+  "source_mode": "qualified-native-node-root",
+  "fresh_build_performed": false,
+  "fresh_full_q0": false
 }

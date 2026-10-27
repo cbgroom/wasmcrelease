@@ -1,63 +1,147 @@
 {
-  "schema": "wasmc.lib-refresh-source/v2",
+  "schema": "wasmc.current-native-source-only-producer-source/v1",
   "id": "wasmc-system-android-display",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "profile": "native",
   "world": "system-display",
   "description": "Lib-defined platform implementation: wasmc-system-android-display",
-  "dependencies": [],
   "apis": [
     {
       "api": "capture-png",
       "delta": "Actual platform implementation, not a simulated Wasm export.",
       "ecosystem": "c-boundary",
       "host_authorities": [
-        "wasmc:system-display@0.0.1"
+        "wasmc:system-display@0.1.0"
       ],
       "implementation": "native",
       "origin": "adapted",
       "support": "target-qualified-only"
     }
   ],
-  "native": {
-    "kind": "c-boundary",
-    "target": "android",
+  "source_spec": {
+    "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-system-android-display/0.1.0/lib.json",
+    "bytes": 1793,
+    "sha256": "c988d48edc7522084d6a14747ae6ce4db8fd5821be52d643aa8fc8a5ae5e60f7"
+  },
+  "source_packet": {
+    "root": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-system-android-display/0.1.0",
+    "inventory_sha256": "21c8feb88e1fee8a4a83f3a562bd015910045ff8f87f53c0386a8fea0542e046",
     "files": [
-      "platform/native-adapter.c",
-      "platform/native-boundary.template.json"
-    ],
-    "entry": "platform/native-adapter.c",
-    "descriptor_template": "platform/native-boundary.template.json",
-    "binding_contract": "wasmc.lib-defined-host-boundary/v1",
-    "binding": {
-      "implements": "wasmc:system-display@0.0.1",
-      "boundary": "wasmc.lib-defined-host-boundary/v1",
-      "descriptor": "platform/native-boundary.template.json",
-      "artifact_format": "native-adapter",
-      "targets": [
-        {
-          "os": "android",
-          "architecture": "aarch64",
-          "environment": "emulator",
-          "embedding": "native"
-        }
-      ]
-    }
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-system-android-display/0.1.0/android-aarch64-api24.so",
+        "bytes": 6760,
+        "sha256": "83710983bccbb85a6cb358b9d60f20ceec932d0a6dc6cf4bbf67504df3b1cd7c"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-system-android-display/0.1.0/cross-qualification.json",
+        "bytes": 1024,
+        "sha256": "a85e0bd4f332eb9c9a85ed115e85e2f37c270762a31de30a99210b4ca1842177"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-system-android-display/0.1.0/lib.json",
+        "bytes": 1793,
+        "sha256": "c988d48edc7522084d6a14747ae6ce4db8fd5821be52d643aa8fc8a5ae5e60f7"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-system-android-display/0.1.0/lib.wit",
+        "bytes": 151,
+        "sha256": "0a12c6b669ee3e7b03891cdfffa4779f6c6dc79fa64f1402bb74f0496b3dcb2c"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-system-android-display/0.1.0/platform/native-adapter.c",
+        "bytes": 1890,
+        "sha256": "d498b49df4b7f6eb0383615cb9e22eabcb9e5f68073def865214c0b17e6ee37e"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-system-android-display/0.1.0/platform/native-boundary.template.json",
+        "bytes": 328,
+        "sha256": "6ffb12d19f97c987b2e6d2872df7ec52b90b0704bbf606a77922942a0e19f48d"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-system-android-display/0.1.0/root.json",
+        "bytes": 2212,
+        "sha256": "a3c23e9e372d2c4258aa20b0e1f2fc64d59d72b09dba38f4b33da7bbcce21a37"
+      }
+    ]
   },
-  "qualification": {
-    "script": "scripts/test-android-agent-computer.mjs",
-    "hosts": [
-      "darwin"
-    ],
-    "requires": [],
-    "current_runtime_status": "not-requalified",
-    "remaining": [
-      "descriptor-schema-review",
-      "wasm-lowering",
-      "physical-device-qualification",
-      "admission-review"
-    ],
-    "source_check": "scripts/validate-lib-refresh-v2-source.mjs"
+  "producer": {
+    "original_receipt_sha256": null,
+    "driver_sha256": "befbc81bbcb83ada838bac9172b39f8a9f480d3840eb542bb64338f43359ea53",
+    "original_receipt_bytes_verified": false
   },
-  "examples": []
+  "root": {
+    "locator": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-system-android-display/0.1.0",
+    "manifest_sha256": "bbfcc31a25dc8516b5e362fb0d8a0c0aabc383708aa4b361176863f40796e67e",
+    "inventory_sha256": "bc2447f85b925aeecd97cd7b6aa01bd7f3e0f8ea665640e6d23f3c68a5f96eb2",
+    "files": [
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-system-android-display/0.1.0/LICENSE",
+        "bytes": 3823,
+        "sha256": "7bca2d5818178e0bc14546700d39bf113d15139b1c3b6d1e62f621d4a276d6e3"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-system-android-display/0.1.0/lib.json",
+        "bytes": 3080,
+        "sha256": "bbfcc31a25dc8516b5e362fb0d8a0c0aabc383708aa4b361176863f40796e67e"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-system-android-display/0.1.0/lib.wit",
+        "bytes": 151,
+        "sha256": "0a12c6b669ee3e7b03891cdfffa4779f6c6dc79fa64f1402bb74f0496b3dcb2c"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-system-android-display/0.1.0/licenses/DEPENDENCY-NOTICES-001.txt",
+        "bytes": 245760,
+        "sha256": "66302f6dd71da97391ab2270d29b10e67bdbac6d7eb782bed043c2ff596ec5cc"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-system-android-display/0.1.0/licenses/DEPENDENCY-NOTICES-002.txt",
+        "bytes": 245760,
+        "sha256": "0065cf38006c9a66a6c3ee9cbaf8db10422b1e5301d3c1d5132b7855e71f18ea"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-system-android-display/0.1.0/licenses/DEPENDENCY-NOTICES-003.txt",
+        "bytes": 245760,
+        "sha256": "201dbac93dff17177b6379ee630b9658b4cec9cb9d46ce3982b3da87c4b740c8"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-system-android-display/0.1.0/licenses/DEPENDENCY-NOTICES-004.txt",
+        "bytes": 245760,
+        "sha256": "c439e1a409b6f23d5797cec339403a0ffce97e9fcf2ae91d6a923c36d619bb76"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-system-android-display/0.1.0/licenses/DEPENDENCY-NOTICES-005.txt",
+        "bytes": 245760,
+        "sha256": "04118f32afc6b2ce0fbfd559c56a78614016ab00167be2425c8c778fc7b064fe"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-system-android-display/0.1.0/licenses/DEPENDENCY-NOTICES-006.txt",
+        "bytes": 8357,
+        "sha256": "aa6000805f56d3c6009ffa09dbe224083cf2e63e2498e1939deefe6ca7c43d9a"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-system-android-display/0.1.0/licenses/DEPENDENCY-NOTICES-007.txt",
+        "bytes": 25602,
+        "sha256": "f0429335a0831b75f3b3277e20303d94bbf7af5719769055178aab3e2dce6e7a"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-system-android-display/0.1.0/platform/native-adapter.c",
+        "bytes": 1890,
+        "sha256": "d498b49df4b7f6eb0383615cb9e22eabcb9e5f68073def865214c0b17e6ee37e"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-system-android-display/0.1.0/platform/native-boundary.template.json",
+        "bytes": 328,
+        "sha256": "6ffb12d19f97c987b2e6d2872df7ec52b90b0704bbf606a77922942a0e19f48d"
+      }
+    ]
+  },
+  "wit": {
+    "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-system-android-display/0.1.0/lib.wit",
+    "bytes": 151,
+    "sha256": "0a12c6b669ee3e7b03891cdfffa4779f6c6dc79fa64f1402bb74f0496b3dcb2c"
+  },
+  "source_mode": "qualified-native-source-only-root",
+  "fresh_build_performed": false,
+  "fresh_full_q0": false
 }

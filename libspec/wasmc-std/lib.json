@@ -1,36 +1,13 @@
 {
-  "schema": "wasmc.lib-refresh-source/v2",
+  "schema": "wasmc.current-std-resource-producer-source/v1",
   "id": "wasmc-std",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "profile": "resource",
-  "crate": "wasmc_std_refresh_v2",
-  "artifact_name": "wasmc_std_refresh_v2",
   "world": "standard-lib",
-  "description": "Typed standard resources, collections, encoding, signed integer text and structured records with explicit ownership.",
-  "dependencies": [
-    "base64",
-    "hex",
-    "indexmap",
-    "serde",
-    "serde_json"
-  ],
-  "core_resource": {
-    "target_profile": "portable-v0",
-    "provider": {
-      "id": "wasmc.lib_managed_object_heap",
-      "module": "wasmc:lib/wasmc.lib_managed_object_heap@4.9.0",
-      "version": "4.9.0"
-    },
-    "exports": [
-      {
-        "module": "aggregate-caller",
-        "name": "std_init"
-      }
-    ]
-  },
+  "description": "Typed standard resources, collections, encoding, signed integer text and structured records with explicit ownership. All collection, byte, label and key capacities follow aggregate runtime memory.",
   "apis": [
     {
-      "api": "string-clear",
+      "api": "base64-try-decode-standard",
       "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
       "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
       "host_authorities": [],
@@ -39,7 +16,7 @@
       "support": "supported"
     },
     {
-      "api": "string-contains",
+      "api": "base64-try-encode-standard",
       "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
       "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
       "host_authorities": [],
@@ -48,7 +25,7 @@
       "support": "supported"
     },
     {
-      "api": "string-ends-with",
+      "api": "bytes-byte-at",
       "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
       "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
       "host_authorities": [],
@@ -57,7 +34,7 @@
       "support": "supported"
     },
     {
-      "api": "string-is-empty",
+      "api": "bytes-clear",
       "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
       "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
       "host_authorities": [],
@@ -66,7 +43,7 @@
       "support": "supported"
     },
     {
-      "api": "string-len",
+      "api": "bytes-contains",
       "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
       "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
       "host_authorities": [],
@@ -75,7 +52,7 @@
       "support": "supported"
     },
     {
-      "api": "string-new",
+      "api": "bytes-count-byte",
       "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
       "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
       "host_authorities": [],
@@ -84,7 +61,7 @@
       "support": "supported"
     },
     {
-      "api": "string-push-str",
+      "api": "bytes-eq",
       "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
       "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
       "host_authorities": [],
@@ -93,7 +70,106 @@
       "support": "supported"
     },
     {
-      "api": "string-starts-with",
+      "api": "bytes-len",
+      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
+      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "bytes-new",
+      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
+      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "bytes-push",
+      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
+      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "bytes-set",
+      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
+      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "hex-try-decode",
+      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
+      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "hex-try-encode-lower",
+      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
+      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "integer-text-parse-s32",
+      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
+      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "integer-text-try-format-s32",
+      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
+      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "iterator-count-s32",
+      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
+      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "iterator-fold-add-s32",
+      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
+      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "iterator-into-iter-s32",
+      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
+      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "iterator-next-s32",
       "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
       "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
       "host_authorities": [],
@@ -282,7 +358,7 @@
       "support": "supported"
     },
     {
-      "api": "sum-option-is-none",
+      "api": "string-clear",
       "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
       "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
       "host_authorities": [],
@@ -291,7 +367,7 @@
       "support": "supported"
     },
     {
-      "api": "sum-option-is-some",
+      "api": "string-contains",
       "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
       "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
       "host_authorities": [],
@@ -300,7 +376,7 @@
       "support": "supported"
     },
     {
-      "api": "sum-option-unwrap-or",
+      "api": "string-ends-with",
       "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
       "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
       "host_authorities": [],
@@ -309,7 +385,7 @@
       "support": "supported"
     },
     {
-      "api": "sum-result-is-err",
+      "api": "string-is-empty",
       "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
       "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
       "host_authorities": [],
@@ -318,7 +394,7 @@
       "support": "supported"
     },
     {
-      "api": "sum-result-is-ok",
+      "api": "string-len",
       "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
       "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
       "host_authorities": [],
@@ -327,7 +403,7 @@
       "support": "supported"
     },
     {
-      "api": "sum-result-unwrap-or",
+      "api": "string-new",
       "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
       "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
       "host_authorities": [],
@@ -336,7 +412,7 @@
       "support": "supported"
     },
     {
-      "api": "iterator-count-s32",
+      "api": "string-push-str",
       "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
       "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
       "host_authorities": [],
@@ -345,7 +421,7 @@
       "support": "supported"
     },
     {
-      "api": "iterator-fold-add-s32",
+      "api": "string-starts-with",
       "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
       "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
       "host_authorities": [],
@@ -354,7 +430,7 @@
       "support": "supported"
     },
     {
-      "api": "iterator-into-iter-s32",
+      "api": "structured-collection-get",
       "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
       "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
       "host_authorities": [],
@@ -363,7 +439,7 @@
       "support": "supported"
     },
     {
-      "api": "iterator-next-s32",
+      "api": "structured-collection-len",
       "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
       "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
       "host_authorities": [],
@@ -372,7 +448,7 @@
       "support": "supported"
     },
     {
-      "api": "bytes-byte-at",
+      "api": "structured-collection-parse-readings",
       "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
       "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
       "host_authorities": [],
@@ -381,124 +457,7 @@
       "support": "supported"
     },
     {
-      "api": "bytes-clear",
-      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
-      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
-      "host_authorities": [],
-      "implementation": "lib",
-      "origin": "adapted",
-      "support": "supported"
-    },
-    {
-      "api": "bytes-contains",
-      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
-      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
-      "host_authorities": [],
-      "implementation": "lib",
-      "origin": "adapted",
-      "support": "supported"
-    },
-    {
-      "api": "bytes-count-byte",
-      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
-      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
-      "host_authorities": [],
-      "implementation": "lib",
-      "origin": "adapted",
-      "support": "supported"
-    },
-    {
-      "api": "bytes-eq",
-      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
-      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
-      "host_authorities": [],
-      "implementation": "lib",
-      "origin": "adapted",
-      "support": "supported"
-    },
-    {
-      "api": "bytes-len",
-      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
-      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
-      "host_authorities": [],
-      "implementation": "lib",
-      "origin": "adapted",
-      "support": "supported"
-    },
-    {
-      "api": "bytes-new",
-      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
-      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
-      "host_authorities": [],
-      "implementation": "lib",
-      "origin": "adapted",
-      "support": "supported"
-    },
-    {
-      "api": "bytes-push",
-      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
-      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
-      "host_authorities": [],
-      "implementation": "lib",
-      "origin": "adapted",
-      "support": "supported"
-    },
-    {
-      "api": "bytes-set",
-      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
-      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
-      "host_authorities": [],
-      "implementation": "lib",
-      "origin": "adapted",
-      "support": "supported"
-    },
-    {
-      "api": "base64-try-decode-standard",
-      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
-      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
-      "host_authorities": [],
-      "implementation": "lib",
-      "origin": "adapted",
-      "support": "supported"
-    },
-    {
-      "api": "base64-try-encode-standard",
-      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
-      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
-      "host_authorities": [],
-      "implementation": "lib",
-      "origin": "adapted",
-      "support": "supported"
-    },
-    {
-      "api": "hex-try-decode",
-      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
-      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
-      "host_authorities": [],
-      "implementation": "lib",
-      "origin": "adapted",
-      "support": "supported"
-    },
-    {
-      "api": "hex-try-encode-lower",
-      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
-      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
-      "host_authorities": [],
-      "implementation": "lib",
-      "origin": "adapted",
-      "support": "supported"
-    },
-    {
-      "api": "integer-text-parse-s32",
-      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
-      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
-      "host_authorities": [],
-      "implementation": "lib",
-      "origin": "adapted",
-      "support": "supported"
-    },
-    {
-      "api": "integer-text-try-format-s32",
+      "api": "structured-collection-try-write-readings",
       "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
       "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
       "host_authorities": [],
@@ -517,6 +476,60 @@
     },
     {
       "api": "structured-data-try-write-reading",
+      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
+      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "structured-map-contains-key",
+      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
+      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "structured-map-get",
+      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
+      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "structured-map-insert",
+      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
+      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "structured-map-len",
+      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
+      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "structured-map-parse-map",
+      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
+      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "structured-map-try-write-map",
       "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
       "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
       "host_authorities": [],
@@ -597,7 +610,7 @@
       "support": "supported"
     },
     {
-      "api": "structured-collection-get",
+      "api": "sum-option-is-none",
       "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
       "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
       "host_authorities": [],
@@ -606,7 +619,7 @@
       "support": "supported"
     },
     {
-      "api": "structured-collection-len",
+      "api": "sum-option-is-some",
       "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
       "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
       "host_authorities": [],
@@ -615,7 +628,7 @@
       "support": "supported"
     },
     {
-      "api": "structured-collection-parse-readings",
+      "api": "sum-option-unwrap-or",
       "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
       "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
       "host_authorities": [],
@@ -624,7 +637,7 @@
       "support": "supported"
     },
     {
-      "api": "structured-collection-try-write-readings",
+      "api": "sum-result-is-err",
       "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
       "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
       "host_authorities": [],
@@ -633,7 +646,7 @@
       "support": "supported"
     },
     {
-      "api": "structured-map-contains-key",
+      "api": "sum-result-is-ok",
       "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
       "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
       "host_authorities": [],
@@ -642,43 +655,7 @@
       "support": "supported"
     },
     {
-      "api": "structured-map-get",
-      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
-      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
-      "host_authorities": [],
-      "implementation": "lib",
-      "origin": "adapted",
-      "support": "supported"
-    },
-    {
-      "api": "structured-map-insert",
-      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
-      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
-      "host_authorities": [],
-      "implementation": "lib",
-      "origin": "adapted",
-      "support": "supported"
-    },
-    {
-      "api": "structured-map-len",
-      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
-      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
-      "host_authorities": [],
-      "implementation": "lib",
-      "origin": "adapted",
-      "support": "supported"
-    },
-    {
-      "api": "structured-map-parse-map",
-      "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
-      "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
-      "host_authorities": [],
-      "implementation": "lib",
-      "origin": "adapted",
-      "support": "supported"
-    },
-    {
-      "api": "structured-map-try-write-map",
+      "api": "sum-result-unwrap-or",
       "delta": "Preserve the declared WIT operation and resource ownership through ordinary Rust business logic and complete Core/Component views.",
       "ecosystem": "Rust standard library and exact cohort ecosystem dependencies",
       "host_authorities": [],
@@ -686,5 +663,226 @@
       "origin": "adapted",
       "support": "supported"
     }
-  ]
+  ],
+  "source_spec": {
+    "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-std/1.5.0/lib.build.json",
+    "bytes": 30327,
+    "sha256": "07cbf32aa0e26fc44157a04ef139ce61b6cb5b84eb67073391a4e40708e784a6"
+  },
+  "source_packet": {
+    "root": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-std/1.5.0",
+    "inventory_sha256": "79e171502530d4c18de8aa8f126de626371fd87e6a26221a658c356c63461f3b",
+    "files": [
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-std/1.5.0/Cargo.lock",
+        "bytes": 28690,
+        "sha256": "9da7bf5fb19e18d1c2df034270a18b8cb2a6450aaf2fb2692ce911db27a155e5"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-std/1.5.0/activation.json",
+        "bytes": 6745,
+        "sha256": "3c5d060ccbbfbaa8ab8f08ec6d409f13be0c4eea1f9064a9d0108cc40325f5b4"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-std/1.5.0/adapter.rs",
+        "bytes": 12113,
+        "sha256": "2e538213311fd8b09a8efd42e3daeb3d56e962362e9c03657d8b1ca464cf3a26"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-std/1.5.0/composite.wasm",
+        "bytes": 134675,
+        "sha256": "c1f2e8f53258a2b174ac1b3fe431d713abb30b8449e666eedcb0516ca42f3cfa"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-std/1.5.0/core-build.json",
+        "bytes": 1033,
+        "sha256": "231071c4205665581aeece953a9da0256eead6c0c2fa1a4f197a61c8c29f96b0"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-std/1.5.0/core-receipt.json",
+        "bytes": 1720,
+        "sha256": "9ed0cc69d5a2f36bec8d9fcbb7cc805aafddfcb8a414dcfd4c7e5a31b7359b53"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-std/1.5.0/delta.rs",
+        "bytes": 11876,
+        "sha256": "04b8ad66027af7ea309ba03164680b7e5723e130316d497f6070ce67c28158b7"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-std/1.5.0/graph-receipt.json",
+        "bytes": 1520,
+        "sha256": "a7c00dc1b48cec94e5178f862bccc5bc5d4713dd810865cf2281fe6e1a691d92"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-std/1.5.0/graph.json",
+        "bytes": 32018,
+        "sha256": "cb2ec79d7d9a9769dbf9873920a987b10788f3506f3352ada26cb70cf26009e3"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-std/1.5.0/lib.build.json",
+        "bytes": 30327,
+        "sha256": "07cbf32aa0e26fc44157a04ef139ce61b6cb5b84eb67073391a4e40708e784a6"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-std/1.5.0/lib.wit",
+        "bytes": 5704,
+        "sha256": "3bf6a7d15bed2b005e81e0c02d76b9cb96b9a391cc2dcf277994e5a28e04cf1d"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-std/1.5.0/new.wasm",
+        "bytes": 138930,
+        "sha256": "0cc2e5ec67408a45d9a967be5b4633f2bfe997875afe4f538df9666739774a4a"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-std/1.5.0/old.wasm",
+        "bytes": 44221,
+        "sha256": "b79a499c8300361125e7fcdae02170184b82d4bbeff4d8f24ed95f3fd4db8d3b"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-std/1.5.0/provider.wasm",
+        "bytes": 84594,
+        "sha256": "8231aba425ef1bb0aa07a760ff4c77917e247382ef73a41408db6b6b1cb40b1e"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-std/1.5.0/root-build.json",
+        "bytes": 250,
+        "sha256": "5abcededb7855290b69098b7d6191731649d5455809ba8d08f7272c68320c949"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-std/1.5.0/root-build.log",
+        "bytes": 1591,
+        "sha256": "806322bf82c51e83c111d4c1613d0e153c88cd02dd0bc9d12bebeefab52a7e52"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-std/1.5.0/source-receipt.json",
+        "bytes": 3775,
+        "sha256": "a2f7527245e24827ce6550a46e18e20fdd5b305b7427b0ed7cfe5f19ed427fc9"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-std/1.5.0/std-qualified.json",
+        "bytes": 718,
+        "sha256": "bab57292a94e7c5eceb0ef1b7fb4af455da9278f3ccd46bde45d48d567e1fdba"
+      }
+    ]
+  },
+  "producer": {
+    "original_receipt_sha256": null,
+    "driver_sha256": null,
+    "original_receipt_bytes_verified": false
+  },
+  "root": {
+    "locator": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-std/1.5.0",
+    "manifest_sha256": "289f5a2d47abdb631175e0be5cd9529c76b6925bf6395133635b02468e065986",
+    "inventory_sha256": "b036806df38eb186a1f6546ddada51c7a07175c591f8f204d06cce4cd3dc36b7",
+    "files": [
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-std/1.5.0/LICENSE",
+        "bytes": 3823,
+        "sha256": "7bca2d5818178e0bc14546700d39bf113d15139b1c3b6d1e62f621d4a276d6e3"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-std/1.5.0/SKILL.md",
+        "bytes": 954,
+        "sha256": "34967469fdec671c8dea797e251e718dfa44508de398603c1aaf5e68eea0ae5a"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-std/1.5.0/artifact.wasm",
+        "bytes": 123121,
+        "sha256": "0b74fdb82ef404afa6f232ec2643f4f6e92a7ab3cac13299a5266639e60a8e5c"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-std/1.5.0/bindings/rust-component/Cargo.toml",
+        "bytes": 296,
+        "sha256": "fafd25fb31bdd7fbea31b01ebe13140eb75f2b4b698007fb9200eca317324cd6"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-std/1.5.0/bindings/rust-component/src/lib.rs",
+        "bytes": 652,
+        "sha256": "5fa90624f934e54138dbbef380ef4e567ba5d42858657b0794b9915ba7c6a66c"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-std/1.5.0/bindings/rust-core/Cargo.toml",
+        "bytes": 158,
+        "sha256": "ce83f04ff3f833f1c6e9a4b071180e1d92962fbba4ef285448ccdac873cfbdbf"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-std/1.5.0/bindings/rust-core/src/lib.rs",
+        "bytes": 28360,
+        "sha256": "679aaaec8b720bc166e2bd3d52164b44adb704929d3e240834d2ce5c408122e8"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-std/1.5.0/component.wasm",
+        "bytes": 180303,
+        "sha256": "226d1a46d04811bf85b256b6c7bfe5b2b8853aaa8083f946dd994270ee92cd22"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-std/1.5.0/core-abi.json",
+        "bytes": 26407,
+        "sha256": "78948d33f61c51ed56e575baeb67fb526d0ac435e87285b11fbe702e53ed72e8"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-std/1.5.0/lib.json",
+        "bytes": 7040,
+        "sha256": "289f5a2d47abdb631175e0be5cd9529c76b6925bf6395133635b02468e065986"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-std/1.5.0/lib.wit",
+        "bytes": 5704,
+        "sha256": "3bf6a7d15bed2b005e81e0c02d76b9cb96b9a391cc2dcf277994e5a28e04cf1d"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-std/1.5.0/licenses/DEPENDENCY-NOTICES-001.txt",
+        "bytes": 245760,
+        "sha256": "66302f6dd71da97391ab2270d29b10e67bdbac6d7eb782bed043c2ff596ec5cc"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-std/1.5.0/licenses/DEPENDENCY-NOTICES-002.txt",
+        "bytes": 245760,
+        "sha256": "0065cf38006c9a66a6c3ee9cbaf8db10422b1e5301d3c1d5132b7855e71f18ea"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-std/1.5.0/licenses/DEPENDENCY-NOTICES-003.txt",
+        "bytes": 245760,
+        "sha256": "201dbac93dff17177b6379ee630b9658b4cec9cb9d46ce3982b3da87c4b740c8"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-std/1.5.0/licenses/DEPENDENCY-NOTICES-004.txt",
+        "bytes": 245760,
+        "sha256": "c439e1a409b6f23d5797cec339403a0ffce97e9fcf2ae91d6a923c36d619bb76"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-std/1.5.0/licenses/DEPENDENCY-NOTICES-005.txt",
+        "bytes": 245760,
+        "sha256": "04118f32afc6b2ce0fbfd559c56a78614016ab00167be2425c8c778fc7b064fe"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-std/1.5.0/licenses/DEPENDENCY-NOTICES-006.txt",
+        "bytes": 8357,
+        "sha256": "aa6000805f56d3c6009ffa09dbe224083cf2e63e2498e1939deefe6ca7c43d9a"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-std/1.5.0/licenses/DEPENDENCY-NOTICES-007.txt",
+        "bytes": 25602,
+        "sha256": "f0429335a0831b75f3b3277e20303d94bbf7af5719769055178aab3e2dce6e7a"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-std/1.5.0/references/agent-delta.json",
+        "bytes": 21014,
+        "sha256": "a2b49fbb251122d13a31b1c0415d246c6a7f6bb3faf411aff2547f795ebaff9f"
+      },
+      {
+        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-std/1.5.0/typed-resource-plan.json",
+        "bytes": 36177,
+        "sha256": "93c0e2fef495e14a5de7f0c024ffdfc312ef43e0fe0f6c811e35e597ddc6b1b3"
+      }
+    ]
+  },
+  "wit": {
+    "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-std/1.5.0/lib.wit",
+    "bytes": 5704,
+    "sha256": "3bf6a7d15bed2b005e81e0c02d76b9cb96b9a391cc2dcf277994e5a28e04cf1d"
+  },
+  "source_mode": "std-resource-multi-input-root",
+  "fresh_build_performed": false,
+  "fresh_full_q0": false
 }
