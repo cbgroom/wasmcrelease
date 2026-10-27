@@ -1,0 +1,54 @@
+--- historical/wasmc-data-interchange.rs
++++ successor/wasmc-data-interchange.rs
+@@ -1775,19 +1775,18 @@
+ mod interchange_case {
+     use super::*;use wasmc::data_core::types;
+-    use wasmc::data_interchange::adapter::{EncodeOptions,DecodeOptions,InterchangeError};
++    use wasmc::data_interchange::adapter::{DecodeOptions,InterchangeError};
+     batch_fn!(types);
+     pub fn run()->u32 {
+         use wasmc::data_interchange::adapter as api;let values=vec![batch()];
+         {
+-            let encode=EncodeOptions{max_batches:2,max_rows:8,max_output_bytes:1048576};
+-            let decode=DecodeOptions{max_input_bytes:1048576,max_batches:2,max_rows:8,batch_rows:3};
+-            let ipc=api::ipc_file_encode(&values,encode).unwrap();assert!(ipc.starts_with(b"ARROW1"));
++            
++            let decode=DecodeOptions{batch_rows:3};
++            let ipc=api::ipc_file_encode(&values).unwrap();assert!(ipc.starts_with(b"ARROW1"));
+             let result=api::ipc_file_decode(&ipc,decode).unwrap();assert_eq!(result.len(),1);same(&result[0],&values[0]);
+-            let parquet=api::parquet_encode(&values,encode).unwrap();assert!(parquet.starts_with(b"PAR1"));
++            let parquet=api::parquet_encode(&values).unwrap();assert!(parquet.starts_with(b"PAR1"));
+             let result=api::parquet_decode(&parquet,decode).unwrap();assert_eq!(result.len(),1);same(&result[0],&values[0]);
+             assert!(matches!(api::ipc_file_decode(&[0,1,2],decode),Err(InterchangeError::InvalidData)));
+             assert!(matches!(api::parquet_decode(&[0,1,2],decode),Err(InterchangeError::InvalidData)));
+-            let small=EncodeOptions{max_output_bytes:1,..encode};
+-            assert!(matches!(api::ipc_file_encode(&values,small),Err(InterchangeError::OutputLimitExceeded)));
++            assert!(matches!(api::ipc_file_encode(&[]),Err(InterchangeError::EmptyInput)));
+         } 7
+     }
+--- historical/wasmc-data-relational.rs
++++ successor/wasmc-data-relational.rs
+@@ -4880,16 +4880,16 @@
+             assert!(matches!(&group.columns[1],types::Column::Uint64Column(v) if v==&[Some(1),Some(1),Some(1)]));
+             let union=api::union_all(&[batch(),batch()]).unwrap();assert_eq!(union.rows,6);
+-            let distinct=api::distinct(&union,&[],DistinctOptions{max_rows:16}).unwrap();same(&distinct,&value);
+-            let join=api::equi_join(&value,&value,&[JoinKey{left_column:4,right_column:4}],&JoinOptions{kind:JoinKind::Inner,right_prefix:"r_".into(),max_output_rows:16}).unwrap();assert_eq!(join.rows,2);assert_eq!(join.columns.len(),12);
+-            let order=[WindowOrder{column:2,descending:false,nulls_first:true}];let options=WindowOptions{max_rows:16};
+-            let rank=api::window_rank(&value,&[],&order,&[WindowFunction::RowNumber("row".into())],options).unwrap();
++            let distinct=api::distinct(&union,&[]).unwrap();same(&distinct,&value);
++            let join=api::equi_join(&value,&value,&[JoinKey{left_column:4,right_column:4}],&JoinOptions{kind:JoinKind::Inner,right_prefix:"r_".into()}).unwrap();assert_eq!(join.rows,2);assert_eq!(join.columns.len(),12);
++            let order=[WindowOrder{column:2,descending:false,nulls_first:true}];
++            let rank=api::window_rank(&value,&[],&order,&[WindowFunction::RowNumber("row".into())]).unwrap();
+             assert!(matches!(&rank.columns[6],types::Column::Uint64Column(v) if v==&[Some(3),Some(1),Some(2)]));
+-            let offset=api::window_offset(&value,&[],&order,&[OffsetWindowFunction::Lag(OffsetWindow{column:1,offset:1,alias:"lag".into()}),OffsetWindowFunction::Lead(OffsetWindow{column:2,offset:0,alias:"current".into()})],options).unwrap();
++            let offset=api::window_offset(&value,&[],&order,&[OffsetWindowFunction::Lag(OffsetWindow{column:1,offset:1,alias:"lag".into()}),OffsetWindowFunction::Lead(OffsetWindow{column:2,offset:0,alias:"current".into()})]).unwrap();
+             assert!(matches!(&offset.columns[6],types::Column::Int64Column(v) if v==&[Some(i64::MAX),None,None]));same(&offset.columns[7],&value.columns[2]);
+             let frame=RowsFrame{start:RowsFrameStart::Unbounded,end:RowsFrameEnd::CurrentRow};
+-            let window=api::window_aggregate(&value,&[],&order,frame,&[Aggregate::CountAll("n".into())],options).unwrap();
++            let window=api::window_aggregate(&value,&[],&order,frame,&[Aggregate::CountAll("n".into())]).unwrap();
+             assert!(matches!(&window.columns[6],types::Column::Uint64Column(v) if v==&[Some(3),Some(1),Some(2)]));
+             assert!(matches!(api::union_all(&[]),Err(RelationalError::EmptyInput)));
+-            assert!(matches!(api::window_aggregate(&value,&[],&order,RowsFrame{start:RowsFrameStart::Following(1),end:RowsFrameEnd::Preceding(1)},&[Aggregate::CountAll("n".into())],options),Err(RelationalError::InvalidFrame)));
++            assert!(matches!(api::window_aggregate(&value,&[],&order,RowsFrame{start:RowsFrameStart::Following(1),end:RowsFrameEnd::Preceding(1)},&[Aggregate::CountAll("n".into())]),Err(RelationalError::InvalidFrame)));
+         } 9
+     }

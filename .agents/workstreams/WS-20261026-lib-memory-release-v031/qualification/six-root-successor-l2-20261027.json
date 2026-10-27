@@ -1,0 +1,98 @@
+{
+  "schema": "wasmc.six-current-roots-successor-regression/v1",
+  "accepted": true,
+  "scope": "six candidate Roots and recovered original historical pins; isolated Source test path override and explicitly migrated consumers",
+  "source_commit": "017d0466bcb44274f72a19990c425153e1df8f81",
+  "historical_archive_sha256": "8a36baa3e1733a90df86618417c49e85309a50c7984a04723e8d4a1a5310dae9",
+  "historical_inventory_sha256": "f4d831ab224e64e37aa08fbc223638a4ef8c68ae650b7b1fad225205ddd2f7e1",
+  "historical_files_verified": 258,
+  "fixture_path_patch_sha256": "8ad645be4b75beebb1aab4876d97ed4c2c4ac23d0bcef5376e759ce35da6395a",
+  "consumer_patch_sha256": "001dc19e7439957957b289f0718855113bfb603c8daa326b4ddcb9293bff1162",
+  "first_original_failure": {
+    "status": 101,
+    "floor_reached": false,
+    "timeout": false,
+    "duration_s": 168.4,
+    "free_gib": 108.15,
+    "command": [
+      "cargo",
+      "+1.96.0",
+      "test",
+      "--locked",
+      "--offline",
+      "--features",
+      "wasmi-runtime",
+      "--lib",
+      "canonical_package_root_pinned_consumers_and_negatives",
+      "--",
+      "--nocapture"
+    ],
+    "source_base": "017d0466bcb44274f72a19990c425153e1df8f81",
+    "test_only_path_override": true,
+    "fixture_inventory_sha256": "2b5642f2c6c3e80de8cbfa932b4fb01ebaf973639ec0551127e23b3e031b8c55",
+    "log_sha256": "ff394f33c57322306ebf39140612149c5344dc17172f5f7d9d53db61c54a27ab",
+    "compiling": [
+      "Compiling wasmc v0.1.0 (/Users/youxianshi/code/.worktrees/wasmc/WS-20261027-lib-memory-l1-isolated-v2)"
+    ]
+  },
+  "second_partial_recovery_failure": {
+    "status": 101,
+    "floor_reached": false,
+    "timeout": false,
+    "duration_s": 200.6,
+    "free_gib": 107.86,
+    "command": [
+      "cargo",
+      "+1.96.0",
+      "test",
+      "--locked",
+      "--offline",
+      "--features",
+      "wasmi-runtime",
+      "--lib",
+      "canonical_package_root_pinned_consumers_and_negatives",
+      "--",
+      "--nocapture"
+    ],
+    "source_base": "017d0466bcb44274f72a19990c425153e1df8f81",
+    "test_only_path_override": true,
+    "fixture_inventory_sha256": "2b5642f2c6c3e80de8cbfa932b4fb01ebaf973639ec0551127e23b3e031b8c55",
+    "new_interchange_consumer_sha256": "2572af3699c01b0ade3c161451f354df261c5d819bc794980b5777739ba04504",
+    "log_sha256": "0f6bf6968365aa2ad9c1865789ba4cba34d06881d56d4b9818d6268c287bba34"
+  },
+  "third_successor_recovery": {
+    "status": 0,
+    "floor_reached": false,
+    "timeout": false,
+    "duration_s": 250.7,
+    "free_gib": 107.84,
+    "command": [
+      "cargo",
+      "+1.96.0",
+      "test",
+      "--locked",
+      "--offline",
+      "--features",
+      "wasmi-runtime",
+      "--lib",
+      "canonical_package_root_pinned_consumers_and_negatives",
+      "--",
+      "--nocapture"
+    ],
+    "source_base": "017d0466bcb44274f72a19990c425153e1df8f81",
+    "test_only_path_override": true,
+    "fixture_inventory_sha256": "2b5642f2c6c3e80de8cbfa932b4fb01ebaf973639ec0551127e23b3e031b8c55",
+    "interchange_consumer_sha256": "2572af3699c01b0ade3c161451f354df261c5d819bc794980b5777739ba04504",
+    "relational_consumer_sha256": "bbc7e9947a54a660bb36311f61e8dede5a60be5a598ae027ffc4d7f493fe2866",
+    "log_sha256": "955ad3510c63bcd45e2ce4ce98173f2e8082e9341e1ec7f51fd4f6ba2f288227"
+  },
+  "operations": 33,
+  "dual_engine_calls": 528,
+  "negative_cases": 8,
+  "scope_difference": "interchange obsolete output-limit assertion replaced by empty-input error; relational all nine assertions retained",
+  "nonclaims": [
+    "unmodified full L2",
+    "old SDK source compatibility with changed successor signatures",
+    "formal release"
+  ]
+}
