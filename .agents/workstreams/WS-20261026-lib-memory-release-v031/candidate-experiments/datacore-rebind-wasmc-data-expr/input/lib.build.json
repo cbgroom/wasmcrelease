@@ -1,0 +1,43 @@
+{
+  "schema": "wasmc.lib-build/v0",
+  "skill": {
+    "name": "wasmc-data-expr",
+    "version": "0.0.3",
+    "description": "Expression evaluation over the shared neutral Data snapshot and Arrow arrays."
+  },
+  "wit": "lib.wit",
+  "apis": [
+    {
+      "api": "evaluate",
+      "delta": "Evaluate a bounded expression DAG and return a neutral column.",
+      "ecosystem": "Arrow Arith/Ord 60",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "validate",
+      "delta": "Evaluate expression shape/type and return the result DataType.",
+      "ecosystem": "Arrow 60",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    }
+  ],
+  "core": {
+    "root": {
+      "module": "facade",
+      "artifact": "facade.wasm",
+      "sha256": "61a58b6ee98db23dba68d31babb8ad68699a1ee8a73da75374d1aed92e6729c8"
+    },
+    "dependencies": [
+      {
+        "module": "implementation",
+        "artifact": "implementation.wasm",
+        "sha256": "7f417e23bcc5fda33d434b7f3b988bc1d309e58d0d7e2ad0c4597f84125b5a4b"
+      }
+    ]
+  }
+}

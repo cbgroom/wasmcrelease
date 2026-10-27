@@ -1,0 +1,61 @@
+{
+  "schema": "wasmc.lib-build/v0",
+  "skill": {
+    "version": "0.1.1",
+    "description": "Arrow IPC file and Parquet interchange over the shared neutral Data snapshot model. No Lib-local capacity quotas.",
+    "name": "wasmc-data-interchange"
+  },
+  "wit": "lib.wit",
+  "apis": [
+    {
+      "api": "ipc-file-decode",
+      "delta": "Decode Arrow IPC file bytes into neutral batches. Capacity follows aggregate memory; type/schema/overflow checks remain.",
+      "ecosystem": "Arrow IPC 60",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "ipc-file-encode",
+      "delta": "Encode validated neutral batches as Arrow IPC file bytes. Capacity follows aggregate memory; type/schema/overflow checks remain.",
+      "ecosystem": "Arrow IPC 60",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "parquet-decode",
+      "delta": "Decode Parquet bytes into neutral batches. Capacity follows aggregate memory; type/schema/overflow checks remain.",
+      "ecosystem": "Parquet 60",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "parquet-encode",
+      "delta": "Encode validated neutral batches as Parquet bytes. Capacity follows aggregate memory; type/schema/overflow checks remain.",
+      "ecosystem": "Parquet 60",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    }
+  ],
+  "core": {
+    "root": {
+      "module": "facade",
+      "artifact": "facade.wasm",
+      "sha256": "6a4e5f61cff5c51cd3f362d6d80eb49b60afde091d1a6d3a9cd46189442e6eaf"
+    },
+    "dependencies": [
+      {
+        "module": "implementation",
+        "artifact": "implementation.wasm",
+        "sha256": "fba1ca307c7a30a75a4cfd244a5c7d5ce0f1c2742867dc8665e6063c41ad6d25"
+      }
+    ]
+  }
+}
