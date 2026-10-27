@@ -1,0 +1,50 @@
+{
+  "schema": "wasmc.checked-profile-recovery/v1",
+  "source_head": "017d0466bcb44274f72a19990c425153e1df8f81",
+  "failed_compiler_sha256": "d725ecc9e6fe5b2717b566bdc86b7a571f76b4abc71f111f048f91bb539ded09",
+  "failure": "checked-chunk-transfer-v1 imports missing from both projections; old-profile candidate must not be released",
+  "root_cause": "WASMC_SDK_PROFILE not set when building earlier compiler",
+  "recovery": {
+    "command": [
+      "cargo",
+      "+1.96.0",
+      "build",
+      "--locked",
+      "--offline",
+      "--release",
+      "--target",
+      "wasm32-unknown-unknown",
+      "--manifest-path",
+      "crates/wasmc_wasm_cdylib/Cargo.toml"
+    ],
+    "profile": "checked-chunk-transfer-v1",
+    "source_head": "017d0466bcb44274f72a19990c425153e1df8f81",
+    "inputs_before": "9f8e68e6304a5ad6188f731950ffd24d0c44e1a089c8ff80b5ba8971b3d03753",
+    "inputs_after": "9f8e68e6304a5ad6188f731950ffd24d0c44e1a089c8ff80b5ba8971b3d03753",
+    "input_count": 121,
+    "status": 0,
+    "free_bytes": 114278866944,
+    "sha256": "0c07d9b6b2edf9b18117860259c350346db1b8b79b667604fd32a2fddf851c17",
+    "bytes": 2054362
+  },
+  "engines": {
+    "node": [
+      "{\"name\":\"static\",\"accepted\":true,\"frame_sha256\":\"bebb6244f98800b67fc866e8ff11e34096566b70e9fe4922aebc8c2acace5b12\",\"host_imports\":13,\"host_projection\":0,\"prepared_transfer_sha256\":\"81a17bc5d28445922c0e2b7bdc90cb380d40c4fd4a5eafad3a8631671962ec89\"}",
+      "{\"name\":\"json_read\",\"accepted\":true,\"frame_sha256\":\"1481dbddb06a46e741553b7c6e7d224ec109344d89002b0de8922dc9509ea42e\",\"host_imports\":13,\"host_projection\":0,\"prepared_transfer_sha256\":\"81a17bc5d28445922c0e2b7bdc90cb380d40c4fd4a5eafad3a8631671962ec89\"}",
+      "{\"name\":\"table_control\",\"accepted\":true,\"frame_sha256\":\"bb808374f6184316127b04b100850dd11d6aa876573981b3f3ff87c96cddabb5\",\"host_imports\":18,\"host_projection\":1,\"prepared_transfer_sha256\":\"81a17bc5d28445922c0e2b7bdc90cb380d40c4fd4a5eafad3a8631671962ec89\"}"
+    ],
+    "bun": [
+      "{\"name\":\"static\",\"accepted\":true,\"frame_sha256\":\"bebb6244f98800b67fc866e8ff11e34096566b70e9fe4922aebc8c2acace5b12\",\"host_imports\":13,\"host_projection\":0,\"prepared_transfer_sha256\":\"81a17bc5d28445922c0e2b7bdc90cb380d40c4fd4a5eafad3a8631671962ec89\"}",
+      "{\"name\":\"json_read\",\"accepted\":true,\"frame_sha256\":\"1481dbddb06a46e741553b7c6e7d224ec109344d89002b0de8922dc9509ea42e\",\"host_imports\":13,\"host_projection\":0,\"prepared_transfer_sha256\":\"81a17bc5d28445922c0e2b7bdc90cb380d40c4fd4a5eafad3a8631671962ec89\"}",
+      "{\"name\":\"table_control\",\"accepted\":true,\"frame_sha256\":\"bb808374f6184316127b04b100850dd11d6aa876573981b3f3ff87c96cddabb5\",\"host_imports\":18,\"host_projection\":1,\"prepared_transfer_sha256\":\"81a17bc5d28445922c0e2b7bdc90cb380d40c4fd4a5eafad3a8631671962ec89\"}"
+    ],
+    "deno": [
+      "{\"name\":\"static\",\"accepted\":true,\"frame_sha256\":\"bebb6244f98800b67fc866e8ff11e34096566b70e9fe4922aebc8c2acace5b12\",\"host_imports\":13,\"host_projection\":0,\"prepared_transfer_sha256\":\"81a17bc5d28445922c0e2b7bdc90cb380d40c4fd4a5eafad3a8631671962ec89\"}",
+      "{\"name\":\"json_read\",\"accepted\":true,\"frame_sha256\":\"1481dbddb06a46e741553b7c6e7d224ec109344d89002b0de8922dc9509ea42e\",\"host_imports\":13,\"host_projection\":0,\"prepared_transfer_sha256\":\"81a17bc5d28445922c0e2b7bdc90cb380d40c4fd4a5eafad3a8631671962ec89\"}",
+      "{\"name\":\"table_control\",\"accepted\":true,\"frame_sha256\":\"bb808374f6184316127b04b100850dd11d6aa876573981b3f3ff87c96cddabb5\",\"host_imports\":18,\"host_projection\":1,\"prepared_transfer_sha256\":\"81a17bc5d28445922c0e2b7bdc90cb380d40c4fd4a5eafad3a8631671962ec89\"}"
+    ]
+  },
+  "old_profile_native_frame_and_sealed_modules_equal": true,
+  "old_profile_native_frame_sha256": "57abd169a8e3cc3feaa94fec382c54aa93eb3632b9f3630333b89c3332d1c0f9",
+  "limits": "new-profile executions, source-free release qualification, native parity, installation, L2 and release remain outstanding; no formal release claim"
+}

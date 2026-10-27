@@ -1,0 +1,114 @@
+   Compiling wasmc v0.1.0 (/Users/youxianshi/code/.worktrees/wasmc/WS-20261026-lib-memory-json-v1)
+warning: unused variable: `operand_ty`
+     --> /Users/youxianshi/code/.worktrees/wasmc/WS-20261026-lib-memory-json-v1/src/core/codegen.rs:20112:21
+      |
+20112 |                 let operand_ty = operation_ty
+      |                     ^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_operand_ty`
+      |
+      = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `emit_managed_value_canonical_ingress_adapter` is never used
+    --> /Users/youxianshi/code/.worktrees/wasmc/WS-20261026-lib-memory-json-v1/src/core/codegen.rs:6440:15
+     |
+6440 | pub(crate) fn emit_managed_value_canonical_ingress_adapter(
+     |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+     = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: struct `ManagedS3Program` is never constructed
+     --> /Users/youxianshi/code/.worktrees/wasmc/WS-20261026-lib-memory-json-v1/src/core/codegen.rs:12564:8
+      |
+12564 | struct ManagedS3Program {
+      |        ^^^^^^^^^^^^^^^^
+
+warning: function `exact_s32_result` is never used
+     --> /Users/youxianshi/code/.worktrees/wasmc/WS-20261026-lib-memory-json-v1/src/core/codegen.rs:12570:4
+      |
+12570 | fn exact_s32_result(ty: &Type) -> bool {
+      |    ^^^^^^^^^^^^^^^^
+
+warning: function `analyze_managed_s3_program` is never used
+     --> /Users/youxianshi/code/.worktrees/wasmc/WS-20261026-lib-memory-json-v1/src/core/codegen.rs:12578:4
+      |
+12578 | fn analyze_managed_s3_program(
+      |    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `emit_managed_s3_checked_delta` is never used
+     --> /Users/youxianshi/code/.worktrees/wasmc/WS-20261026-lib-memory-json-v1/src/core/codegen.rs:12748:4
+      |
+12748 | fn emit_managed_s3_checked_delta() -> Function {
+      |    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `emit_s3_status_to_result` is never used
+     --> /Users/youxianshi/code/.worktrees/wasmc/WS-20261026-lib-memory-json-v1/src/core/codegen.rs:12764:4
+      |
+12764 | fn emit_s3_status_to_result(function: &mut Function, payload: u32, tag: u32) {
+      |    ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `emit_managed_s3_run` is never used
+     --> /Users/youxianshi/code/.worktrees/wasmc/WS-20261026-lib-memory-json-v1/src/core/codegen.rs:12775:4
+      |
+12775 | fn emit_managed_s3_run(program: &ManagedS3Program) -> Function {
+      |    ^^^^^^^^^^^^^^^^^^^
+
+warning: variant `Return` is never constructed
+  --> /Users/youxianshi/code/.worktrees/wasmc/WS-20261026-lib-memory-json-v1/src/language/managed_lifetime.rs:27:5
+   |
+21 | pub(crate) enum SlotOrigin {
+   |                 ---------- variant in this enum
+...
+27 |     Return,
+   |     ^^^^^^
+   |
+   = note: `SlotOrigin` has derived impls for the traits `Clone` and `Debug`, but these are intentionally ignored during dead code analysis
+
+warning: variant `ProviderErr` is never constructed
+   --> /Users/youxianshi/code/.worktrees/wasmc/WS-20261026-lib-memory-json-v1/src/language/managed_lifetime.rs:212:5
+    |
+207 | pub(crate) enum ExitKind {
+    |                 -------- variant in this enum
+...
+212 |     ProviderErr,
+    |     ^^^^^^^^^^^
+    |
+    = note: `ExitKind` has derived impls for the traits `Clone` and `Debug`, but these are intentionally ignored during dead code analysis
+
+warning: variant `FieldGet` is never constructed
+   --> /Users/youxianshi/code/.worktrees/wasmc/WS-20261026-lib-memory-json-v1/src/language/managed_lifetime.rs:266:5
+    |
+223 | pub(crate) enum LifetimeOp {
+    |                 ---------- variant in this enum
+...
+266 |     FieldGet {
+    |     ^^^^^^^^
+    |
+    = note: `LifetimeOp` has derived impls for the traits `Clone` and `Debug`, but these are intentionally ignored during dead code analysis
+
+warning: method `with_operation` is never used
+   --> /Users/youxianshi/code/.worktrees/wasmc/WS-20261026-lib-memory-json-v1/src/language/parser.rs:118:19
+    |
+ 61 | impl ExternalSymbolEnvironment {
+    | ------------------------------ method in this implementation
+...
+118 |     pub(crate) fn with_operation(
+    |                   ^^^^^^^^^^^^^^
+
+warning: function `parse_with_external_symbols` is never used
+   --> /Users/youxianshi/code/.worktrees/wasmc/WS-20261026-lib-memory-json-v1/src/language/parser.rs:255:15
+    |
+255 | pub(crate) fn parse_with_external_symbols(
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: method `verify_package_artifact` is never used
+   --> /Users/youxianshi/code/.worktrees/wasmc/WS-20261026-lib-memory-json-v1/src/language/typed_resource.rs:128:19
+    |
+ 39 | impl<'a> TypedResourceActivation<'a> {
+    | ------------------------------------ method in this implementation
+...
+128 |     pub(crate) fn verify_package_artifact(&self, package_artifact: &[u8]) -> Result<()> {
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^
+
+   Compiling wasmc_wasm v0.1.0 (/Users/youxianshi/code/.worktrees/wasmc/WS-20261026-lib-memory-json-v1/crates/wasmc_wasm)
+warning: `wasmc` (lib) generated 14 warnings (run `cargo fix --lib -p wasmc` to apply 1 suggestion)
+   Compiling wasmc_wasm_cdylib v0.1.0 (/Users/youxianshi/code/.worktrees/wasmc/WS-20261026-lib-memory-json-v1/crates/wasmc_wasm_cdylib)
+    Finished `release` profile [optimized] target(s) in 24.50s
