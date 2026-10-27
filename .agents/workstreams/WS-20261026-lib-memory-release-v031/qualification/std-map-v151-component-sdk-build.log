@@ -1,0 +1,17 @@
+error: proc macro panicked
+ --> /Users/youxianshi/.local/state/wasmc-maintenance/20261026-lib-memory-json-32/std-map-v151-publication/wasmc-std/bindings/rust-component/src/lib.rs:3:1
+  |
+3 | wasmtime::component::bindgen!({ path: "../../lib.wit", world: "standard-lib" });
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  |
+  = help: message: called `Result::unwrap()` on an `Err` value: NotPresent
+
+error[E0432]: unresolved import `StandardLib`
+ --> /Users/youxianshi/.local/state/wasmc-maintenance/20261026-lib-memory-json-32/std-map-v151-publication/wasmc-std/bindings/rust-component/src/lib.rs:4:9
+  |
+4 | pub use StandardLib as Lib;
+  |         ^^^^^^^^^^^^^^^^^^ no external crate `StandardLib`
+
+error: aborting due to 2 previous errors
+
+For more information about this error, try `rustc --explain E0432`.

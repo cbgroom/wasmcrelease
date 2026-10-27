@@ -72,7 +72,7 @@ function importedRoot(input,replacement,baseLicense){
     assert.match(cargo,/^license-file\s*=\s*"\.\.\/\.\.\/LICENSE"\s*$/m);assert.ok(!/^license\s*=/m.test(cargo));
   }
   verifyLocalDescriptors(manifest,files);
-  if(['wasmc.changed-rust-lib-source-input/v1','wasmc.reexported-rust-lib-source-input/v1','wasmc.std-resource-source-input/v1','wasmc.cohort-reexport-source-input/v1','wasmc.wit-rebind-source-input/v1'].includes(replacement.source.schema)) {
+  if(['wasmc.changed-rust-lib-source-input/v1','wasmc.reexported-rust-lib-source-input/v1','wasmc.std-resource-source-input/v1','wasmc.std-map-successor-source-input/v1','wasmc.cohort-reexport-source-input/v1','wasmc.wit-rebind-source-input/v1'].includes(replacement.source.schema)) {
     assert.equal(manifest.license.schema,baseLicense.schema);assert.equal(manifest.license.identifier,baseLicense.identifier);
     for(const original of baseLicense.files)assert.deepEqual(manifest.license.files.find(row=>row.path===original.path),original,'original common license snapshot');
   } else assert.deepEqual(manifest.license,baseLicense,'exact original common license and notice snapshots');
