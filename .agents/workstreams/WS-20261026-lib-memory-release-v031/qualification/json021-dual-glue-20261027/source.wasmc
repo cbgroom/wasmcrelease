@@ -1,0 +1,19 @@
+package conformance:checked;
+interface api {
+ record boolean_value {present:bool,value:bool}
+ record json_field {name:string,value_json:string}
+ enum edit_kind {set,remove}
+ record edit {kind:edit_kind,path:string,value_json:string}
+ enum json_error {invalid_json,invalid_pointer,missing_target,type_mismatch,invalid_index,out_of_range,invalid_operation,allocation_failed}
+ record query_pair {name:string,value:string}
+ record header {name:string,value:list<u8>}
+ record request {method:string,path:string,parameters:list<query_pair>,query:list<query_pair>,headers:list<header>,body:list<u8>}
+ record response {status:u16,body:list<u8>}
+ run:func(req:request)->response {
+  let mut changes:list<edit> = list.new();
+  changes.push({kind:0,path:"/b/-",value_json:"true"});
+  changes.push({kind:1,path:"/a",value_json:""});
+  let output:string = document::edit_or_bytes(req.body,changes,"fallback");
+  return {status:200,body:utf8::encode(output)};
+ }
+} world app {export api;}

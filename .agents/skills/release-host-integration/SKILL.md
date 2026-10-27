@@ -115,6 +115,15 @@ failure followed by same-instance recovery. The Rust guest did not consume the
 selected WAsmC CoreLib or JSON Lib, so that observation does not establish
 shared-Lib or shared-CoreLib parity, real Hosted acceptance, or a release.
 
+The separate [JSON dual-glue candidate evidence](../../workstreams/WS-20261026-lib-memory-release-v031/qualification/json021-dual-glue-20261027/)
+compares the same JSON 0.2.1 candidate Core artifact through the generated Rust
+SDK and ordinary WAsmC. Node and Deno pass the same edit, invalid-input
+fallback and same-instance recovery for three inputs. Rust dynamically binds
+the installed artifact; WAsmC links the byte-identical artifact into its App
+with CoreLib. The Rust Guest does not import CoreLib. Both paths thus prove a
+bounded shared-Lib case, not shared-CoreLib parity, full API coverage, native
+runtime parity or a formally released product. WAsmC HTTP framing is simulated.
+
 ## Host authority and lifecycle
 
 Real asynchronous I/O cancellation suppresses delivery, not already-issued

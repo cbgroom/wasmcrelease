@@ -1,0 +1,93 @@
+{
+  "schema": "wasmc.same-json-lib-dual-consumer/v1",
+  "engine": "node",
+  "root_manifest_sha256": "d0dcc046018ac37523e079b0990e5427aac1b2220a0df5da5d4610a19dfc2af0",
+  "json_artifact_sha256": "09b833d6b1910ef1e345e73c9b2698deb6f78b6077e4ab31b3ed9c5e0c1e2c06",
+  "rust_consumer_sha256": "8cacd36dc4389c11d8d3381c0c245cebb144da22b43aea24db7d80cfd93f40fd",
+  "wasmc_consumer_sha256": "477f774a19b15a3b4688274e6fbce44c5080186c9f39606cf2b64fafc32efde3",
+  "compiler_sha256": "ac2f8ce5555d130d2f4dea9827cf7f1d06fdd080dc691bc310f10e10b9ac1c9e",
+  "wasmc_corelib_sha256": "62182db9d8859acfc79f0e9cebe960d90321829a96ea9d5a9fa041ca42f71c32",
+  "rust_imports_corelib": false,
+  "root": "wasmc-json 0.2.1 candidate installed via controlled transport",
+  "lib_instances": "Rust dynamically instantiated installed Core; WAsmC linked prepared form derived from same installed Core",
+  "rust_success_and_invalid_asserted_in_guest": true,
+  "same_instance_recovery": true,
+  "host": "simulated HTTP framing for WAsmC, canonical-memory adapter for Rust",
+  "same_lib": true,
+  "same_corelib": false,
+  "formal_release": false,
+  "rows": [
+    {
+      "n": 8,
+      "seed": 0,
+      "kind": "success",
+      "input_sha256": "e565f5615f25cedb82bff1c7932dc7d9eb1a0f5a15550a3ee79b4432e24328bd",
+      "output_sha256": "1f1a1af802990c9462aafd806ce08ee2aab6b1e73d2d7293161696df545d5244",
+      "output": "{\"b\":[true],\"text\":\"aaaaaaaa\"}"
+    },
+    {
+      "n": 8,
+      "seed": 0,
+      "kind": "invalid",
+      "input_sha256": "f1234d75178d892a133a410355a5a990cf75d2f33eba25d575943d4df632f3a4",
+      "output_sha256": "5c7ee2074b65853f71fc5a01ce194ff26deedf6daacdb715c6beefdfd3f31b35",
+      "output": "fallback"
+    },
+    {
+      "n": 8,
+      "seed": 0,
+      "kind": "recovery",
+      "input_sha256": "e565f5615f25cedb82bff1c7932dc7d9eb1a0f5a15550a3ee79b4432e24328bd",
+      "output_sha256": "1f1a1af802990c9462aafd806ce08ee2aab6b1e73d2d7293161696df545d5244",
+      "output": "{\"b\":[true],\"text\":\"aaaaaaaa\"}"
+    },
+    {
+      "n": 11,
+      "seed": 1,
+      "kind": "success",
+      "input_sha256": "faf88d1ab09fa853eb192f7faf9fb84192fae33bfcabde488f6ecea4a39e1001",
+      "output_sha256": "130e415f2a3b702020840e66df1d077febb48561c6552e8f334f0cb12644ad9f",
+      "output": "{\"b\":[true],\"text\":\"bbbbbbbbbbb\"}"
+    },
+    {
+      "n": 11,
+      "seed": 1,
+      "kind": "invalid",
+      "input_sha256": "f1234d75178d892a133a410355a5a990cf75d2f33eba25d575943d4df632f3a4",
+      "output_sha256": "5c7ee2074b65853f71fc5a01ce194ff26deedf6daacdb715c6beefdfd3f31b35",
+      "output": "fallback"
+    },
+    {
+      "n": 11,
+      "seed": 1,
+      "kind": "recovery",
+      "input_sha256": "faf88d1ab09fa853eb192f7faf9fb84192fae33bfcabde488f6ecea4a39e1001",
+      "output_sha256": "130e415f2a3b702020840e66df1d077febb48561c6552e8f334f0cb12644ad9f",
+      "output": "{\"b\":[true],\"text\":\"bbbbbbbbbbb\"}"
+    },
+    {
+      "n": 64,
+      "seed": 0,
+      "kind": "success",
+      "input_sha256": "40ffb11e2b6798078a26966d35b8518da806f89223ba000445ea54790083fc94",
+      "output_sha256": "84b10fd433f92464195ab33195ddb2c150936a87d77d0b7e00abbbb15a6ae7b3",
+      "output": "{\"b\":[true],\"text\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}"
+    },
+    {
+      "n": 64,
+      "seed": 0,
+      "kind": "invalid",
+      "input_sha256": "f1234d75178d892a133a410355a5a990cf75d2f33eba25d575943d4df632f3a4",
+      "output_sha256": "5c7ee2074b65853f71fc5a01ce194ff26deedf6daacdb715c6beefdfd3f31b35",
+      "output": "fallback"
+    },
+    {
+      "n": 64,
+      "seed": 0,
+      "kind": "recovery",
+      "input_sha256": "40ffb11e2b6798078a26966d35b8518da806f89223ba000445ea54790083fc94",
+      "output_sha256": "84b10fd433f92464195ab33195ddb2c150936a87d77d0b7e00abbbb15a6ae7b3",
+      "output": "{\"b\":[true],\"text\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}"
+    }
+  ]
+}
