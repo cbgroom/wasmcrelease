@@ -3,14 +3,15 @@ on:
   push:
     branches: [work/WS-20261026-lib-memory-release-v031]
     paths:
-      - '.agents/workstreams/WS-20261026-lib-memory-release-v031/native-platform/linux-socket/**'
-      - '.agents/workstreams/WS-20261026-lib-memory-release-v031/native-platform/linux-endpoint/**'
+      - '.agents/workstreams/WS-20261026-lib-memory-release-v031/native-platform/linux-socket/platform/native-adapter.c'
+      - '.agents/workstreams/WS-20261026-lib-memory-release-v031/native-platform/linux-socket/platform/native-slots.h'
+      - '.agents/workstreams/WS-20261026-lib-memory-release-v031/native-platform/linux-endpoint/platform/native-adapter.c'
+      - '.agents/workstreams/WS-20261026-lib-memory-release-v031/native-platform/linux-endpoint/platform/native-slots.h'
       - '.agents/workstreams/WS-20261026-lib-memory-release-v031/native-platform/test-socket.c'
       - '.agents/workstreams/WS-20261026-lib-memory-release-v031/native-platform/test-endpoint.c'
       - '.agents/workstreams/WS-20261026-lib-memory-release-v031/native-process/**'
       - '.agents/workstreams/WS-20261026-lib-memory-release-v031/test-process-memory.mjs'
       - 'host/runtime/lib-boundary/reference.mjs'
-      - '.github/workflows/lib-memory-native-v031.yml'
   workflow_dispatch:
 permissions:
   contents: read
