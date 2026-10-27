@@ -1,0 +1,56 @@
+{
+  "schema": "wasmc.paired-candidate-provisional-qualification/v1",
+  "compiler_sha256": "ac2f8ce5555d130d2f4dea9827cf7f1d06fdd080dc691bc310f10e10b9ac1c9e",
+  "corelib_sha256": "62182db9d8859acfc79f0e9cebe960d90321829a96ea9d5a9fa041ca42f71c32",
+  "source_commit": "4590589be55ff94ce7dfd42e352697f1c3a89150",
+  "additive_contract_sha256": "0e2fd753f7a8b286f3178ad6eeb7c4d04498084587fc409de7bb0e989719ea37",
+  "updater_cases": "2 accepted (unchanged, explicit additive), 7 rejected; full raw results in recheck/",
+  "initial_cohort": {
+    "passed": 15,
+    "failed": 15,
+    "commands": 30
+  },
+  "std_recovery": "3 engines pass 7680 calls each; newly compiled Std app exactly matches previous candidate bytes",
+  "host_fixture_recovery": "3 engines each pass Host frame and import-demand checks with newly generated json006 template and test-only frame pins; native parity not independently established despite labels in inherited stdout",
+  "template_sha256": "a3f28770160ba869d2f4a8c2fe100ee41bf5eaf066b0616f2613e273bea28193",
+  "template_transfer_source": "byte-identical to prior candidate; projected plan changed",
+  "nonclaims": [
+    "formal metadata or source custody",
+    "full 30-command cohort",
+    "installed release",
+    "Host package admission",
+    "native frame parity for json006 recovery"
+  ],
+  "raw_files_sha256": {
+    "bad-digest.json": "491ee22fc6ec003e9187356cbdad42035f941548e47a262a03b71867e11b25e7",
+    "candidate-contract.json": "0e2fd753f7a8b286f3178ad6eeb7c4d04498084587fc409de7bb0e989719ea37",
+    "default.json": "86c195d17fdf0b24b222586732aad23b26e9eea2503f9765cfdfd3b14b6af7c5",
+    "duplicate.json": "5e2d3b818d6cd18625f7acb9b68749c830a24684e80f231ea954d5556e375041",
+    "numeric-459-candidate-cohort.json": "702328a6ce6a2704747c17776d961c2cb9b4efae80c6e0e1d501e8d78485b66b",
+    "numeric-459-host-fixture-recovery.json": "21601ac0009f096e22891f78b542a73f1f5bf3656625dd4274608ff05e25c00c",
+    "numeric-459-std-recovery.json": "b4d8bb3b836dc260af52305a54943a76ad2ad36829bbc73b4591a7a87f10dc12",
+    "unknown-export.json": "6eea63bf26136473ded97aecafc920189b6388767ad01dcf073ac1fd917e590b",
+    "valid.json": "d397e88583f757fb2eee2160aa80917a275a5a4da3d4d1148d9d084d1b02e649",
+    "wrong-candidate.json": "e9da7f18c0d80707b0ce954ab9eede1a9d154403411fa07e20c0cb3badb82530",
+    "wrong-predecessor.json": "7c136c2b40f3d90c44602c7dd52deea19cc2d8ef0e8e33965095f226646b6a9b",
+    "wrong-signature.json": "1332ad3884947c29044e9803a931d80dbb52346389bc725612d7cae69b1b13ef"
+  },
+  "recheck_files_sha256": {
+    "bad-digest.json": "4cfea3f6a0ff19ae4fa36019b94b6cc11e871d28eb9408c7046c4a77e37d53da",
+    "default.json": "a7b591088bcf7477cebeb688c3a0c7c9eddf8e8547db77d001c0331e75079edd",
+    "duplicate.json": "c8ff14ba8827a76241a62dfd79c91bb88c86c7964d05991efc0c61c9a144177d",
+    "unchanged.json": "eb94bbe8ff3432d7d1e5877ebf81e3fd90acbb414be39903719a4b7574b19ad4",
+    "unknown-export.json": "4a0fd7a8e83514a537d5e548ffa35ce0c5813d01e40d697a864fce6d7e91daa2",
+    "valid.json": "356b415af3e823f2e6a022c5715701f42cbfa273ee466ca8983b5f64a0b60ca4",
+    "wrong-candidate.json": "3d80787affbd3f317b7ecef33f70c7b030671b2fd42348eea8f8cb8fee5d242c",
+    "wrong-predecessor.json": "964826f41b995072fa036a299318845db9d4e8741368ff5a1dbc8371eae73aad",
+    "wrong-signature.json": "d2b17150dac0958be17be4e8357b4f61c16dc3ec31e22043ab25844630687bf2"
+  },
+  "old_product_integrity": "status 1 first rejects pre-existing composition cohort drift; not proof this updater alone caused drift",
+  "provisional_corelib_metadata": "corrected candidate inventory only; clean integrated source custody and final admission missing",
+  "maintainer_check": {
+    "status": 1,
+    "failure": "validate-lib-refresh-v2-source.mjs:59 expected wasmc.lib-refresh-source/v2, found wasmc.current-built-rust-producer-source/v1",
+    "log_sha256": "7e0d46f8c8941626cf64491a66ded6cd206125031be1446e68d3ee744bb6d5f2"
+  }
+}

@@ -1,0 +1,325 @@
+[
+  {
+    "command": [
+      "node",
+      "scripts/test-current-compiler.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"runtime\":\"node\",\"compiler_sha256\":\"ac2f8ce5555d130d2f4dea9827cf7f1d06fdd080dc691bc310f10e10b9ac1c9e\",\"frozen_outputs\":35,\"execution_oracles\":7,\"cli_outputs\":25}\n",
+    "stderr": "",
+    "duration_s": 2.7
+  },
+  {
+    "command": [
+      "node",
+      "examples/current/standard.mjs"
+    ],
+    "status": 1,
+    "stdout": "",
+    "stderr": "node:internal/modules/run_main:111\n    triggerUncaughtException(\n    ^\n\nAssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ 'ac2f8ce5555d130d2f4dea9827cf7f1d06fdd080dc691bc310f10e10b9ac1c9e'\n- 'b27229753141562c6bde0c876647ab7d3f27548d89b90a559524075fc8a699a2'\n\n    at file:///Users/youxianshi/.local/state/wasmc-maintenance/20261026-lib-memory-json-32/numeric-459-controlled-packaging-20261027/examples/current/standard.mjs:28:8 {\n  generatedMessage: true,\n  code: 'ERR_ASSERTION',\n  actual: 'ac2f8ce5555d130d2f4dea9827cf7f1d06fdd080dc691bc310f10e10b9ac1c9e',\n  expected: 'b27229753141562c6bde0c876647ab7d3f27548d89b90a559524075fc8a699a2',\n  operator: 'strictEqual',\n  diff: 'simple'\n}\n\nNode.js v26.12.1\n",
+    "duration_s": 0.16
+  },
+  {
+    "command": [
+      "node",
+      "scripts/test-current-lib-api-v021.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"provider\":\"4.12.0-candidate.1\",\"provider_sha256\":\"62182db9d8859acfc79f0e9cebe960d90321829a96ea9d5a9fa041ca42f71c32\",\"abi_namespace\":\"wasmc:lib/wasmc.lib_managed_object_heap@4.9.0\",\"compileLib_oracles\":3,\"instantiateLib_oracles\":3,\"calls\":768,\"boolean_conditional_calls\":1536,\"boolean_numeric_rejections\":6,\"old_provider_fallback\":false}\n",
+    "stderr": "",
+    "duration_s": 0.17
+  },
+  {
+    "command": [
+      "node",
+      "scripts/test-current-private-helpers.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"source_cases\":20,\"guest_calls\":66,\"repeats_per_instance\":3,\"basic_scalar_types\":11,\"long_helper_terms\":2098,\"invalid_sources_rejected\":5,\"selected_guest_trap\":true,\"healthy_after_rejections\":true,\"imports\":0,\"real_MCP_acceptance\":false}\n",
+    "stderr": "",
+    "duration_s": 0.19
+  },
+  {
+    "command": [
+      "node",
+      "scripts/test-canonical-host-sdk-v031.mjs"
+    ],
+    "status": 1,
+    "stdout": "",
+    "stderr": "node:internal/modules/run_main:111\n    triggerUncaughtException(\n    ^\n\nAssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ 'ac2f8ce5555d130d2f4dea9827cf7f1d06fdd080dc691bc310f10e10b9ac1c9e'\n- 'b27229753141562c6bde0c876647ab7d3f27548d89b90a559524075fc8a699a2'\n\n    at file:///Users/youxianshi/.local/state/wasmc-maintenance/20261026-lib-memory-json-32/numeric-459-controlled-packaging-20261027/scripts/test-canonical-host-sdk-v031.mjs:20:8\n    at ModuleJob.run (node:internal/modules/esm/module_job:569:25)\n    at async node:internal/modules/esm/loader:650:26\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:105:5) {\n  generatedMessage: true,\n  code: 'ERR_ASSERTION',\n  actual: 'ac2f8ce5555d130d2f4dea9827cf7f1d06fdd080dc691bc310f10e10b9ac1c9e',\n  expected: 'b27229753141562c6bde0c876647ab7d3f27548d89b90a559524075fc8a699a2',\n  operator: 'strictEqual',\n  diff: 'simple'\n}\n\nNode.js v26.12.1\n",
+    "duration_s": 0.06
+  },
+  {
+    "command": [
+      "node",
+      "scripts/test-if-branch-scope.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"engine\":\"node\",\"compiler_sha256\":\"ac2f8ce5555d130d2f4dea9827cf7f1d06fdd080dc691bc310f10e10b9ac1c9e\",\"source_cases\":5,\"scalar_calls\":1200,\"managed_calls\":192,\"scope_rejections\":24,\"carrier_forms\":3,\"physical_owner_slots_preserved\":true}\n",
+    "stderr": "",
+    "duration_s": 0.19
+  },
+  {
+    "command": [
+      "node",
+      "scripts/test-canonical-host-import-demand-v031.mjs"
+    ],
+    "status": 1,
+    "stdout": "",
+    "stderr": "file:///Users/youxianshi/.local/state/wasmc-maintenance/20261026-lib-memory-json-32/numeric-459-controlled-packaging-20261027/current/canonical-host.mjs:104\n          const error = new Error(message || 'Canonical Host compilation failed');\n                        ^\n\nError: runtime error: Canonical template generic plan differs from the original WIT\n    at Object.compile (file:///Users/youxianshi/.local/state/wasmc-maintenance/20261026-lib-memory-json-32/numeric-459-controlled-packaging-20261027/current/canonical-host.mjs:104:25)\n    at async file:///Users/youxianshi/.local/state/wasmc-maintenance/20261026-lib-memory-json-32/numeric-459-controlled-packaging-20261027/scripts/test-canonical-host-import-demand-v031.mjs:21:16 {\n  status: 2\n}\n\nNode.js v26.12.1\n",
+    "duration_s": 0.1
+  },
+  {
+    "command": [
+      "node",
+      "scripts/test-unit-result-match.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"compiler_sha256\":\"ac2f8ce5555d130d2f4dea9827cf7f1d06fdd080dc691bc310f10e10b9ac1c9e\",\"source_cases\":4,\"guest_calls\":1152,\"host_effects\":1280,\"error_handles_dropped\":384,\"malformed_traps\":640,\"negative_sources_rejected\":6,\"same_instance_recovery\":true,\"live_handles\":0,\"real_Host_effects\":false}\n",
+    "stderr": "",
+    "duration_s": 0.1
+  },
+  {
+    "command": [
+      "node",
+      "scripts/test-canonical-checked-results-v031.mjs"
+    ],
+    "status": 1,
+    "stdout": "",
+    "stderr": "node:internal/modules/run_main:111\n    triggerUncaughtException(\n    ^\n\nAssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ 'ac2f8ce5555d130d2f4dea9827cf7f1d06fdd080dc691bc310f10e10b9ac1c9e'\n- 'b27229753141562c6bde0c876647ab7d3f27548d89b90a559524075fc8a699a2'\n\n    at file:///Users/youxianshi/.local/state/wasmc-maintenance/20261026-lib-memory-json-32/numeric-459-controlled-packaging-20261027/scripts/test-canonical-checked-results-v031.mjs:11:56\n    at ModuleJob.run (node:internal/modules/esm/module_job:569:25)\n    at async node:internal/modules/esm/loader:650:26\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:105:5) {\n  generatedMessage: true,\n  code: 'ERR_ASSERTION',\n  actual: 'ac2f8ce5555d130d2f4dea9827cf7f1d06fdd080dc691bc310f10e10b9ac1c9e',\n  expected: 'b27229753141562c6bde0c876647ab7d3f27548d89b90a559524075fc8a699a2',\n  operator: 'strictEqual',\n  diff: 'simple'\n}\n\nNode.js v26.12.1\n",
+    "duration_s": 0.06
+  },
+  {
+    "command": [
+      "node",
+      "scripts/test-current-string-support-v031.mjs"
+    ],
+    "status": 1,
+    "stdout": "",
+    "stderr": "node:internal/modules/run_main:111\n    triggerUncaughtException(\n    ^\n\nAssertionError [ERR_ASSERTION]: current/wasmc_compiler.wasm\n+ actual - expected\n\n+ 1840829\n- 2054208\n\n    at file:///Users/youxianshi/.local/state/wasmc-maintenance/20261026-lib-memory-json-32/numeric-459-controlled-packaging-20261027/scripts/test-current-string-support-v031.mjs:4:168\n    at ModuleJob.run (node:internal/modules/esm/module_job:569:25)\n    at async node:internal/modules/esm/loader:650:26\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:105:5) {\n  generatedMessage: false,\n  code: 'ERR_ASSERTION',\n  actual: 1840829,\n  expected: 2054208,\n  operator: 'strictEqual',\n  diff: 'simple'\n}\n\nNode.js v26.12.1\n",
+    "duration_s": 0.05
+  },
+  {
+    "command": [
+      "bun",
+      "scripts/test-current-compiler.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"runtime\":\"bun\",\"compiler_sha256\":\"ac2f8ce5555d130d2f4dea9827cf7f1d06fdd080dc691bc310f10e10b9ac1c9e\",\"frozen_outputs\":35,\"execution_oracles\":7,\"cli_outputs\":25}\n",
+    "stderr": "",
+    "duration_s": 1.52
+  },
+  {
+    "command": [
+      "bun",
+      "examples/current/standard.mjs"
+    ],
+    "status": 1,
+    "stdout": "",
+    "stderr": "23 | const suffix='v0'+authority.version.split('.')[2];\n24 | const sealed=await load('standard-wasmc-'+suffix+'.wasm'),rust=await load('standard-rust.wasm');\n25 | const pins=JSON.parse(new TextDecoder().decode(await load('standard-fixtures-'+suffix+'.json')));\n26 | assert.equal(pins.schema,'wasmc.current-standard-fixtures/v2');assert.equal(pins.release,authority.version);\n27 | assert.equal(sha(await load('standard-wasmc.wasm')),pins.baseline_wasmc_sha256);\n28 | assert.equal(sha(await load('../../current/wasmc_compiler.wasm')),pins.compiler_sha256);assert.equal(sha(new TextEncoder().encode(source)),pins.source_sha256);\n            ^\nAssertionError: Expected values to be strictly equal:\n+ actual - expected\n\n+ 'ac2f8ce5555d130d2f4dea9827cf7f1d06fdd080dc691bc310f10e10b9ac1c9e'\n- 'b27229753141562c6bde0c876647ab7d3f27548d89b90a559524075fc8a699a2'\n\n generatedMessage: true,\n     actual: \"ac2f8ce5555d130d2f4dea9827cf7f1d06fdd080dc691bc310f10e10b9ac1c9e\",\n   expected: \"b27229753141562c6bde0c876647ab7d3f27548d89b90a559524075fc8a699a2\",\n   operator: \"strictEqual\",\n       code: \"ERR_ASSERTION\"\n\n      at /Users/youxianshi/.local/state/wasmc-maintenance/20261026-lib-memory-json-32/numeric-459-controlled-packaging-20261027/examples/current/standard.mjs:28:8\n\nBun v1.3.14 (macOS arm64)\n",
+    "duration_s": 0.06
+  },
+  {
+    "command": [
+      "bun",
+      "scripts/test-current-lib-api-v021.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"provider\":\"4.12.0-candidate.1\",\"provider_sha256\":\"62182db9d8859acfc79f0e9cebe960d90321829a96ea9d5a9fa041ca42f71c32\",\"abi_namespace\":\"wasmc:lib/wasmc.lib_managed_object_heap@4.9.0\",\"compileLib_oracles\":3,\"instantiateLib_oracles\":3,\"calls\":768,\"boolean_conditional_calls\":1536,\"boolean_numeric_rejections\":6,\"old_provider_fallback\":false}\n",
+    "stderr": "",
+    "duration_s": 0.15
+  },
+  {
+    "command": [
+      "bun",
+      "scripts/test-current-private-helpers.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"source_cases\":20,\"guest_calls\":66,\"repeats_per_instance\":3,\"basic_scalar_types\":11,\"long_helper_terms\":2098,\"invalid_sources_rejected\":5,\"selected_guest_trap\":true,\"healthy_after_rejections\":true,\"imports\":0,\"real_MCP_acceptance\":false}\n",
+    "stderr": "",
+    "duration_s": 0.13
+  },
+  {
+    "command": [
+      "bun",
+      "scripts/test-canonical-host-sdk-v031.mjs"
+    ],
+    "status": 1,
+    "stdout": "",
+    "stderr": "15 |   entry: readTuple('entry'), operations: readTuple('operations'),\n16 |   libCore: read('standard/wasmc-json/0.0.6/artifact.wasm'),\n17 |   libWit: read('standard/wasmc-json/0.0.6/lib.wit'), template: read(fixture + 'producer-assets/canonical-template.json')};\n18 | const expected = JSON.parse(new TextDecoder().decode(read(fixture + 'expected-frame.json')));\n19 | assert.equal(hash(input.activation), expected.activation_sha256);\n20 | assert.equal(hash(read('current/wasmc_compiler.wasm')), expected.compiler_sha256);\n            ^\nAssertionError: Expected values to be strictly equal:\n+ actual - expected\n\n+ 'ac2f8ce5555d130d2f4dea9827cf7f1d06fdd080dc691bc310f10e10b9ac1c9e'\n- 'b27229753141562c6bde0c876647ab7d3f27548d89b90a559524075fc8a699a2'\n\n generatedMessage: true,\n     actual: \"ac2f8ce5555d130d2f4dea9827cf7f1d06fdd080dc691bc310f10e10b9ac1c9e\",\n   expected: \"b27229753141562c6bde0c876647ab7d3f27548d89b90a559524075fc8a699a2\",\n   operator: \"strictEqual\",\n       code: \"ERR_ASSERTION\"\n\n      at /Users/youxianshi/.local/state/wasmc-maintenance/20261026-lib-memory-json-32/numeric-459-controlled-packaging-20261027/scripts/test-canonical-host-sdk-v031.mjs:20:8\n\nBun v1.3.14 (macOS arm64)\n",
+    "duration_s": 0.02
+  },
+  {
+    "command": [
+      "bun",
+      "scripts/test-if-branch-scope.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"engine\":\"bun\",\"compiler_sha256\":\"ac2f8ce5555d130d2f4dea9827cf7f1d06fdd080dc691bc310f10e10b9ac1c9e\",\"source_cases\":5,\"scalar_calls\":1200,\"managed_calls\":192,\"scope_rejections\":24,\"carrier_forms\":3,\"physical_owner_slots_preserved\":true}\n",
+    "stderr": "",
+    "duration_s": 0.13
+  },
+  {
+    "command": [
+      "bun",
+      "scripts/test-canonical-host-import-demand-v031.mjs"
+    ],
+    "status": 1,
+    "stdout": "",
+    "stderr": " 99 |         }\n100 |         const pointer = write(api, length => api.wasmc_alloc(length), input);\n101 |         const status = api.wasmc_compile_wit_fastabi(pointer, input.length);\n102 |         if (status !== 0) {\n103 |           const message = decoder.decode(window(api, api.wasmc_error_ptr(), api.wasmc_error_len()));\n104 |           const error = new Error(message || 'Canonical Host compilation failed');\n                                  ^\nerror: runtime error: Canonical template generic plan differs from the original WIT\n status: 2,\n\n      at compile (/Users/youxianshi/.local/state/wasmc-maintenance/20261026-lib-memory-json-32/numeric-459-controlled-packaging-20261027/current/canonical-host.mjs:104:29)\n\nBun v1.3.14 (macOS arm64)\n",
+    "duration_s": 0.07
+  },
+  {
+    "command": [
+      "bun",
+      "scripts/test-unit-result-match.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"compiler_sha256\":\"ac2f8ce5555d130d2f4dea9827cf7f1d06fdd080dc691bc310f10e10b9ac1c9e\",\"source_cases\":4,\"guest_calls\":1152,\"host_effects\":1280,\"error_handles_dropped\":384,\"malformed_traps\":640,\"negative_sources_rejected\":6,\"same_instance_recovery\":true,\"live_handles\":0,\"real_Host_effects\":false}\n",
+    "stderr": "",
+    "duration_s": 0.06
+  },
+  {
+    "command": [
+      "bun",
+      "scripts/test-canonical-checked-results-v031.mjs"
+    ],
+    "status": 1,
+    "stdout": "",
+    "stderr": " 6 | const read=p=>fs.readFileSync(new URL(p,root)),hash=b=>crypto.createHash('sha256').update(b).digest('hex');\n 7 | const proof=JSON.parse(read(fixture+'expected.json'));assert.equal(proof.version,JSON.parse(read('current/compiler-release.json')).version);\n 8 | const check=row=>{const b=read(row.path);assert.equal(b.length,row.bytes,row.path);assert.equal(hash(b),row.sha256,row.path);return b;};\n 9 | for(const row of [...proof.files,proof.Root,...Object.values(proof.Host_contracts).flatMap(Object.values),...proof.composition.inputs])check(row);\n10 | assert.equal(hash(check(proof.complete_App)),proof.composition.output_sha256);\n11 | const bytes=read('current/wasmc_compiler.wasm');assert.equal(hash(bytes),proof.compiler_sha256);\n                                                            ^\nAssertionError: Expected values to be strictly equal:\n+ actual - expected\n\n+ 'ac2f8ce5555d130d2f4dea9827cf7f1d06fdd080dc691bc310f10e10b9ac1c9e'\n- 'b27229753141562c6bde0c876647ab7d3f27548d89b90a559524075fc8a699a2'\n\n generatedMessage: true,\n     actual: \"ac2f8ce5555d130d2f4dea9827cf7f1d06fdd080dc691bc310f10e10b9ac1c9e\",\n   expected: \"b27229753141562c6bde0c876647ab7d3f27548d89b90a559524075fc8a699a2\",\n   operator: \"strictEqual\",\n       code: \"ERR_ASSERTION\"\n\n      at /Users/youxianshi/.local/state/wasmc-maintenance/20261026-lib-memory-json-32/numeric-459-controlled-packaging-20261027/scripts/test-canonical-checked-results-v031.mjs:11:56\n\nBun v1.3.14 (macOS arm64)\n",
+    "duration_s": 0.02
+  },
+  {
+    "command": [
+      "bun",
+      "scripts/test-current-string-support-v031.mjs"
+    ],
+    "status": 1,
+    "stdout": "",
+    "stderr": "1 | import fs from 'node:fs';import assert from 'node:assert/strict';import {createHash} from 'node:crypto';import {createCanonicalHostCompiler} from '../current/canonical-host.mjs';\n2 | const root=new URL('../',import.meta.url),fixture='examples/current/string-support-v2/',read=p=>fs.readFileSync(new URL(p,root)),sha=b=>createHash('sha256').update(b).digest('hex');const profile=JSON.parse(read(fixture+'profile.json'));\n3 | assert.equal(profile.schema,'wasmc.current-string-profile/v2');assert.equal(profile.version,'0.0.31');assert.equal(profile.CoreLib_version,'4.12.0-candidate.1');\n4 | for(const p of [profile.compiler,profile.facade,profile.CoreLib,profile.Root,profile.Root_core,profile.Root_wit,...profile.fixture_files]){const b=read(p.path);assert.equal(b.length,p.bytes,p.path);assert.equal(sha(b),p.sha256,p.path);}\n                                                                                                                                                                           ^\nAssertionError: current/wasmc_compiler.wasm\n+ actual - expected\n\n+ 1840829\n- 2054208\n\n generatedMessage: false,\n     actual: 1840829,\n   expected: 2054208,\n   operator: \"strictEqual\",\n       code: \"ERR_ASSERTION\"\n\n      at /Users/youxianshi/.local/state/wasmc-maintenance/20261026-lib-memory-json-32/numeric-459-controlled-packaging-20261027/scripts/test-current-string-support-v031.mjs:4:168\n\nBun v1.3.14 (macOS arm64)\n",
+    "duration_s": 0.02
+  },
+  {
+    "command": [
+      "deno",
+      "run",
+      "--allow-read",
+      "--allow-write",
+      "--allow-run",
+      "--allow-env",
+      "scripts/test-current-compiler.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"runtime\":\"deno\",\"compiler_sha256\":\"ac2f8ce5555d130d2f4dea9827cf7f1d06fdd080dc691bc310f10e10b9ac1c9e\",\"frozen_outputs\":35,\"execution_oracles\":7,\"cli_outputs\":25}\n",
+    "stderr": "",
+    "duration_s": 1.51
+  },
+  {
+    "command": [
+      "deno",
+      "run",
+      "--allow-read",
+      "examples/current/standard.mjs"
+    ],
+    "status": 1,
+    "stdout": "",
+    "stderr": "error: Uncaught (in promise) AssertionError: Expected values to be strictly equal:\n+ actual - expected\n\n+ 'ac2f8ce5555d130d2f4dea9827cf7f1d06fdd080dc691bc310f10e10b9ac1c9e'\n- 'b27229753141562c6bde0c876647ab7d3f27548d89b90a559524075fc8a699a2'\n\n    at file:///Users/youxianshi/.local/state/wasmc-maintenance/20261026-lib-memory-json-32/numeric-459-controlled-packaging-20261027/examples/current/standard.mjs:28:8\n",
+    "duration_s": 0.15
+  },
+  {
+    "command": [
+      "deno",
+      "run",
+      "--allow-read",
+      "scripts/test-current-lib-api-v021.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"provider\":\"4.12.0-candidate.1\",\"provider_sha256\":\"62182db9d8859acfc79f0e9cebe960d90321829a96ea9d5a9fa041ca42f71c32\",\"abi_namespace\":\"wasmc:lib/wasmc.lib_managed_object_heap@4.9.0\",\"compileLib_oracles\":3,\"instantiateLib_oracles\":3,\"calls\":768,\"boolean_conditional_calls\":1536,\"boolean_numeric_rejections\":6,\"old_provider_fallback\":false}\n",
+    "stderr": "",
+    "duration_s": 0.2
+  },
+  {
+    "command": [
+      "deno",
+      "run",
+      "--allow-read",
+      "scripts/test-current-private-helpers.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"source_cases\":20,\"guest_calls\":66,\"repeats_per_instance\":3,\"basic_scalar_types\":11,\"long_helper_terms\":2098,\"invalid_sources_rejected\":5,\"selected_guest_trap\":true,\"healthy_after_rejections\":true,\"imports\":0,\"real_MCP_acceptance\":false}\n",
+    "stderr": "",
+    "duration_s": 0.17
+  },
+  {
+    "command": [
+      "deno",
+      "run",
+      "--allow-read",
+      "scripts/test-canonical-host-sdk-v031.mjs"
+    ],
+    "status": 1,
+    "stdout": "",
+    "stderr": "error: Uncaught (in promise) AssertionError: Expected values to be strictly equal:\n+ actual - expected\n\n+ 'ac2f8ce5555d130d2f4dea9827cf7f1d06fdd080dc691bc310f10e10b9ac1c9e'\n- 'b27229753141562c6bde0c876647ab7d3f27548d89b90a559524075fc8a699a2'\n\nassert.equal(hash(read('current/wasmc_compiler.wasm')), expected.compiler_sha256);\n       ^\n    at file:///Users/youxianshi/.local/state/wasmc-maintenance/20261026-lib-memory-json-32/numeric-459-controlled-packaging-20261027/scripts/test-canonical-host-sdk-v031.mjs:20:8\n",
+    "duration_s": 0.05
+  },
+  {
+    "command": [
+      "deno",
+      "run",
+      "--allow-read",
+      "scripts/test-if-branch-scope.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"engine\":\"deno\",\"compiler_sha256\":\"ac2f8ce5555d130d2f4dea9827cf7f1d06fdd080dc691bc310f10e10b9ac1c9e\",\"source_cases\":5,\"scalar_calls\":1200,\"managed_calls\":192,\"scope_rejections\":24,\"carrier_forms\":3,\"physical_owner_slots_preserved\":true}\n",
+    "stderr": "",
+    "duration_s": 0.12
+  },
+  {
+    "command": [
+      "deno",
+      "run",
+      "--allow-read",
+      "scripts/test-canonical-host-import-demand-v031.mjs"
+    ],
+    "status": 1,
+    "stdout": "",
+    "stderr": "error: Uncaught (in promise) Error: runtime error: Canonical template generic plan differs from the original WIT\n          const error = new Error(message || 'Canonical Host compilation failed');\n                        ^\n    at Object.compile (file:///Users/youxianshi/.local/state/wasmc-maintenance/20261026-lib-memory-json-32/numeric-459-controlled-packaging-20261027/current/canonical-host.mjs:104:25)\n    at async file:///Users/youxianshi/.local/state/wasmc-maintenance/20261026-lib-memory-json-32/numeric-459-controlled-packaging-20261027/scripts/test-canonical-host-import-demand-v031.mjs:21:16\n",
+    "duration_s": 0.08
+  },
+  {
+    "command": [
+      "deno",
+      "run",
+      "--allow-read",
+      "scripts/test-unit-result-match.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"compiler_sha256\":\"ac2f8ce5555d130d2f4dea9827cf7f1d06fdd080dc691bc310f10e10b9ac1c9e\",\"source_cases\":4,\"guest_calls\":1152,\"host_effects\":1280,\"error_handles_dropped\":384,\"malformed_traps\":640,\"negative_sources_rejected\":6,\"same_instance_recovery\":true,\"live_handles\":0,\"real_Host_effects\":false}\n",
+    "stderr": "",
+    "duration_s": 0.07
+  },
+  {
+    "command": [
+      "deno",
+      "run",
+      "--allow-read",
+      "scripts/test-canonical-checked-results-v031.mjs"
+    ],
+    "status": 1,
+    "stdout": "",
+    "stderr": "error: Uncaught (in promise) AssertionError: Expected values to be strictly equal:\n+ actual - expected\n\n+ 'ac2f8ce5555d130d2f4dea9827cf7f1d06fdd080dc691bc310f10e10b9ac1c9e'\n- 'b27229753141562c6bde0c876647ab7d3f27548d89b90a559524075fc8a699a2'\n\nconst bytes=read('current/wasmc_compiler.wasm');assert.equal(hash(bytes),proof.compiler_sha256);\n                                                       ^\n    at file:///Users/youxianshi/.local/state/wasmc-maintenance/20261026-lib-memory-json-32/numeric-459-controlled-packaging-20261027/scripts/test-canonical-checked-results-v031.mjs:11:56\n",
+    "duration_s": 0.03
+  },
+  {
+    "command": [
+      "deno",
+      "run",
+      "--allow-read",
+      "scripts/test-current-string-support-v031.mjs"
+    ],
+    "status": 1,
+    "stdout": "",
+    "stderr": "error: Uncaught (in promise) AssertionError: current/wasmc_compiler.wasm\n+ actual - expected\n\n+ 1840829\n- 2054208\n\n    at file:///Users/youxianshi/.local/state/wasmc-maintenance/20261026-lib-memory-json-32/numeric-459-controlled-packaging-20261027/scripts/test-current-string-support-v031.mjs:4:168\n",
+    "duration_s": 0.03
+  }
+]
