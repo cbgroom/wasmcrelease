@@ -1,0 +1,31 @@
+[
+  {
+    "command": [
+      "node",
+      "scripts/test-canonical-checked-results-v031.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"runtime\":\"node\",\"compiler_sha256\":\"ac2f8ce5555d130d2f4dea9827cf7f1d06fdd080dc691bc310f10e10b9ac1c9e\",\"compiled_frames\":4,\"modules_per_frame\":8,\"http_only_imports\":13,\"old_cold_tuple_rejected\":true,\"app_engine_admitted\":true,\"execution_profile\":\"canonical-app-multi-memory\",\"guest_calls\":800,\"same_instance\":true,\"service_calls\":800,\"response_drops\":580,\"owned_error_drops\":760,\"malformed_rejections\":180,\"pending_counters_zero\":3,\"fresh_dynamic_inputs\":true,\"exact_error_case_decisions\":5,\"rejection_then_recovery\":true,\"real_Host_effects\":false,\"business_Guest_executed\":false}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "bun",
+      "scripts/test-canonical-checked-results-v031.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"runtime\":\"bun\",\"compiler_sha256\":\"ac2f8ce5555d130d2f4dea9827cf7f1d06fdd080dc691bc310f10e10b9ac1c9e\",\"compiled_frames\":4,\"modules_per_frame\":8,\"http_only_imports\":13,\"old_cold_tuple_rejected\":true,\"guest_calls\":0,\"app_engine_admitted\":false,\"execution_profile\":\"compiler-frames-only\",\"unsupported_feature\":\"multi-memory\",\"rejection_then_recovery\":true,\"real_Host_effects\":false,\"business_Guest_executed\":false}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "deno",
+      "run",
+      "--allow-read",
+      "scripts/test-canonical-checked-results-v031.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"runtime\":\"deno\",\"compiler_sha256\":\"ac2f8ce5555d130d2f4dea9827cf7f1d06fdd080dc691bc310f10e10b9ac1c9e\",\"compiled_frames\":4,\"modules_per_frame\":8,\"http_only_imports\":13,\"old_cold_tuple_rejected\":true,\"app_engine_admitted\":true,\"execution_profile\":\"canonical-app-multi-memory\",\"guest_calls\":800,\"same_instance\":true,\"service_calls\":800,\"response_drops\":580,\"owned_error_drops\":760,\"malformed_rejections\":180,\"pending_counters_zero\":3,\"fresh_dynamic_inputs\":true,\"exact_error_case_decisions\":5,\"rejection_then_recovery\":true,\"real_Host_effects\":false,\"business_Guest_executed\":false}\n",
+    "stderr": ""
+  }
+]

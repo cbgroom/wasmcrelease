@@ -1,0 +1,60 @@
+[
+  {
+    "command": [
+      "node",
+      "scripts/test-current-string-support-v031.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"host\":\"node\",\"CoreLib_version\":\"4.12.0-candidate.1\",\"CoreLib_sha256\":\"62182db9d8859acfc79f0e9cebe960d90321829a96ea9d5a9fa041ca42f71c32\",\"compiler_sha256\":\"ac2f8ce5555d130d2f4dea9827cf7f1d06fdd080dc691bc310f10e10b9ac1c9e\",\"Root_APIs\":30,\"compiled_frames\":4,\"modules_per_frame\":8,\"candidate_profile\":true,\"basic_Guest_calls\":544,\"Guest_calls\":583,\"large_input_bytes\":[131072,262144,524288,1048576,1200000],\"Unicode_case_expansion\":true,\"explicit_host_limit_rejected\":true,\"same_instance_recovery\":true,\"pending_counters_zero\":2,\"Host_imports\":13,\"Host_calls_per_success\":13,\"Source_rejection_recovery\":true,\"business_effects\":false}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "node",
+      "scripts/test-canonical-checked-results-v031.mjs"
+    ],
+    "status": 1,
+    "stdout": "",
+    "stderr": "node:internal/modules/run_main:111\n    triggerUncaughtException(\n    ^\n\nAssertionError [ERR_ASSERTION]: examples/current/canonical-checked-results-v2/checked-profile.json\n+ actual - expected\n\n+ '82d688f2523098246ae3a76534d4c6e63f97e72c1c9f1cd298714b3649d43fa6'\n- '02c6ce9926f4cf6fb64777f643c2c6a1880ef99cc31cac86b5c59ef4e735f63e'\n\n    at check (file:///Users/youxianshi/.local/state/wasmc-maintenance/20261026-lib-memory-json-32/numeric-459-controlled-packaging-20261027/scripts/test-canonical-checked-results-v031.mjs:8:91)\n    at file:///Users/youxianshi/.local/state/wasmc-maintenance/20261026-lib-memory-json-32/numeric-459-controlled-packaging-20261027/scripts/test-canonical-checked-results-v031.mjs:9:136\n    at ModuleJob.run (node:internal/modules/esm/module_job:569:25)\n    at async node:internal/modules/esm/loader:650:26\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:105:5) {\n  generatedMessage: false,\n  code: 'ERR_ASSERTION',\n  actual: '82d688f2523098246ae3a76534d4c6e63f97e72c1c9f1cd298714b3649d43fa6',\n  expected: '02c6ce9926f4cf6fb64777f643c2c6a1880ef99cc31cac86b5c59ef4e735f63e',\n  operator: 'strictEqual',\n  diff: 'simple'\n}\n\nNode.js v26.12.1\n"
+  },
+  {
+    "command": [
+      "bun",
+      "scripts/test-current-string-support-v031.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"host\":\"bun\",\"CoreLib_version\":\"4.12.0-candidate.1\",\"CoreLib_sha256\":\"62182db9d8859acfc79f0e9cebe960d90321829a96ea9d5a9fa041ca42f71c32\",\"compiler_sha256\":\"ac2f8ce5555d130d2f4dea9827cf7f1d06fdd080dc691bc310f10e10b9ac1c9e\",\"Root_APIs\":30,\"compiled_frames\":4,\"modules_per_frame\":8,\"candidate_profile\":true,\"Guest_calls\":0,\"execution_profile\":\"compiler-frames-only\",\"unsupported_feature\":\"multi-memory\",\"Source_rejection_recovery\":true,\"business_effects\":false}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "bun",
+      "scripts/test-canonical-checked-results-v031.mjs"
+    ],
+    "status": 1,
+    "stdout": "",
+    "stderr": "3 | import crypto from 'node:crypto';\n4 | import {createCanonicalHostCompiler} from '../current/canonical-host.mjs';\n5 | const root=new URL('../',import.meta.url),fixture='examples/current/canonical-checked-results-v2/',kit='lib-releases/wasmc-json/0.0.7/';\n6 | const read=p=>fs.readFileSync(new URL(p,root)),hash=b=>crypto.createHash('sha256').update(b).digest('hex');\n7 | const proof=JSON.parse(read(fixture+'expected.json'));assert.equal(proof.version,JSON.parse(read('current/compiler-release.json')).version);\n8 | const check=row=>{const b=read(row.path);assert.equal(b.length,row.bytes,row.path);assert.equal(hash(b),row.sha256,row.path);return b;};\n                                                                                              ^\nAssertionError: examples/current/canonical-checked-results-v2/checked-profile.json\n+ actual - expected\n\n+ '82d688f2523098246ae3a76534d4c6e63f97e72c1c9f1cd298714b3649d43fa6'\n- '02c6ce9926f4cf6fb64777f643c2c6a1880ef99cc31cac86b5c59ef4e735f63e'\n\n generatedMessage: false,\n     actual: \"82d688f2523098246ae3a76534d4c6e63f97e72c1c9f1cd298714b3649d43fa6\",\n   expected: \"02c6ce9926f4cf6fb64777f643c2c6a1880ef99cc31cac86b5c59ef4e735f63e\",\n   operator: \"strictEqual\",\n       code: \"ERR_ASSERTION\"\n\n      at check (/Users/youxianshi/.local/state/wasmc-maintenance/20261026-lib-memory-json-32/numeric-459-controlled-packaging-20261027/scripts/test-canonical-checked-results-v031.mjs:8:91)\n\nBun v1.3.14 (macOS arm64)\n"
+  },
+  {
+    "command": [
+      "deno",
+      "run",
+      "--allow-read",
+      "scripts/test-current-string-support-v031.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"host\":\"deno\",\"CoreLib_version\":\"4.12.0-candidate.1\",\"CoreLib_sha256\":\"62182db9d8859acfc79f0e9cebe960d90321829a96ea9d5a9fa041ca42f71c32\",\"compiler_sha256\":\"ac2f8ce5555d130d2f4dea9827cf7f1d06fdd080dc691bc310f10e10b9ac1c9e\",\"Root_APIs\":30,\"compiled_frames\":4,\"modules_per_frame\":8,\"candidate_profile\":true,\"basic_Guest_calls\":544,\"Guest_calls\":583,\"large_input_bytes\":[131072,262144,524288,1048576,1200000],\"Unicode_case_expansion\":true,\"explicit_host_limit_rejected\":true,\"same_instance_recovery\":true,\"pending_counters_zero\":2,\"Host_imports\":13,\"Host_calls_per_success\":13,\"Source_rejection_recovery\":true,\"business_effects\":false}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "deno",
+      "run",
+      "--allow-read",
+      "scripts/test-canonical-checked-results-v031.mjs"
+    ],
+    "status": 1,
+    "stdout": "",
+    "stderr": "error: Uncaught (in promise) AssertionError: examples/current/canonical-checked-results-v2/checked-profile.json\n+ actual - expected\n\n+ '82d688f2523098246ae3a76534d4c6e63f97e72c1c9f1cd298714b3649d43fa6'\n- '02c6ce9926f4cf6fb64777f643c2c6a1880ef99cc31cac86b5c59ef4e735f63e'\n\nconst check=row=>{const b=read(row.path);assert.equal(b.length,row.bytes,row.path);assert.equal(hash(b),row.sha256,row.path);return b;};\n                                                                                          ^\n    at check (file:///Users/youxianshi/.local/state/wasmc-maintenance/20261026-lib-memory-json-32/numeric-459-controlled-packaging-20261027/scripts/test-canonical-checked-results-v031.mjs:8:91)\n    at file:///Users/youxianshi/.local/state/wasmc-maintenance/20261026-lib-memory-json-32/numeric-459-controlled-packaging-20261027/scripts/test-canonical-checked-results-v031.mjs:9:136\n"
+  }
+]
