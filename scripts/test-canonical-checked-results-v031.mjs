@@ -7,6 +7,7 @@ const read=p=>fs.readFileSync(new URL(p,root)),hash=b=>crypto.createHash('sha256
 const proof=JSON.parse(read(fixture+'expected.json'));assert.equal(proof.version,JSON.parse(read('current/compiler-release.json')).version);
 const check=row=>{const b=read(row.path);assert.equal(b.length,row.bytes,row.path);assert.equal(hash(b),row.sha256,row.path);return b;};
 for(const row of [...proof.files,proof.Root,...Object.values(proof.Host_contracts).flatMap(Object.values),...proof.composition.inputs])check(row);
+assert.equal(hash(check(proof.complete_App)),proof.composition.output_sha256);
 const bytes=read('current/wasmc_compiler.wasm');assert.equal(hash(bytes),proof.compiler_sha256);
 const tuple=n=>Object.fromEntries([['wit','lib.wit'],['executionAbi','execution-abi.json'],['providerContract','provider-contract.json'],['binding','binding.json']].map(([key,p])=>[key,read(kit+'host/'+n+'/'+p)]));
 const source=read(fixture+'ordinary.wasmc').toString(),activation=JSON.parse(read(fixture+'activation.json'));

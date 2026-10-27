@@ -461,3 +461,6 @@ Using exact Source 017d native producer and the immutable JSON 0.0.7 Root, regen
 
 
 2026-10-27 checked profile Host qualification: rebuilt native SDK at Source 017d with checked-chunk-transfer-v1 and matched actual portable frame bb808374f6184316127b04b100850dd11d6aa876573981b3f3ff87c96cddabb5 plus all eight sealed native module bytes. Added independent v031 fixture and version-aware SDK/import-demand tests; six Node/Bun/Deno runs passed, retaining chunk import checks, rejection/recovery and source rebinding. Existing v030 SDK/import-demand tests and version validator remain passing. Details: qualification/checked-host-profile-v031-20261027. Source-free staging metadata is synthetic; no full release/installation claimed.
+
+
+2026-10-27 checked profile strings/results: regenerated candidate fixtures with compiler 0c07, keeping old candidate evidence in prior commits. Node/Deno each passed 583 string Guest calls including 1.2MB, and 800 checked-result Guest calls; Bun passed frame checks only (multi-memory unsupported). Three altered-asset controls rejected. Composition receipt now also checks its actual App hash. Receipts at qualification/checked-string-results-v031-20261027; full source-free compiler cohort and release remain pending.

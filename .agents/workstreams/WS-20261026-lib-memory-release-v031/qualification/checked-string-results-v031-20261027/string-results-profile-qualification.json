@@ -1,0 +1,60 @@
+[
+  {
+    "command": [
+      "node",
+      "scripts/test-current-string-support-v031.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"host\":\"node\",\"CoreLib_version\":\"4.12.0-candidate.1\",\"CoreLib_sha256\":\"8231aba425ef1bb0aa07a760ff4c77917e247382ef73a41408db6b6b1cb40b1e\",\"compiler_sha256\":\"0c07d9b6b2edf9b18117860259c350346db1b8b79b667604fd32a2fddf851c17\",\"Root_APIs\":30,\"compiled_frames\":4,\"modules_per_frame\":8,\"candidate_profile\":true,\"basic_Guest_calls\":544,\"Guest_calls\":583,\"large_input_bytes\":[131072,262144,524288,1048576,1200000],\"Unicode_case_expansion\":true,\"explicit_host_limit_rejected\":true,\"same_instance_recovery\":true,\"pending_counters_zero\":2,\"Host_imports\":13,\"Host_calls_per_success\":13,\"Source_rejection_recovery\":true,\"business_effects\":false}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "node",
+      "scripts/test-canonical-checked-results-v031.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"runtime\":\"node\",\"compiler_sha256\":\"0c07d9b6b2edf9b18117860259c350346db1b8b79b667604fd32a2fddf851c17\",\"compiled_frames\":4,\"modules_per_frame\":8,\"http_only_imports\":13,\"old_cold_tuple_rejected\":true,\"app_engine_admitted\":true,\"execution_profile\":\"canonical-app-multi-memory\",\"guest_calls\":800,\"same_instance\":true,\"service_calls\":800,\"response_drops\":580,\"owned_error_drops\":760,\"malformed_rejections\":180,\"pending_counters_zero\":3,\"fresh_dynamic_inputs\":true,\"exact_error_case_decisions\":5,\"rejection_then_recovery\":true,\"real_Host_effects\":false,\"business_Guest_executed\":false}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "bun",
+      "scripts/test-current-string-support-v031.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"host\":\"bun\",\"CoreLib_version\":\"4.12.0-candidate.1\",\"CoreLib_sha256\":\"8231aba425ef1bb0aa07a760ff4c77917e247382ef73a41408db6b6b1cb40b1e\",\"compiler_sha256\":\"0c07d9b6b2edf9b18117860259c350346db1b8b79b667604fd32a2fddf851c17\",\"Root_APIs\":30,\"compiled_frames\":4,\"modules_per_frame\":8,\"candidate_profile\":true,\"Guest_calls\":0,\"execution_profile\":\"compiler-frames-only\",\"unsupported_feature\":\"multi-memory\",\"Source_rejection_recovery\":true,\"business_effects\":false}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "bun",
+      "scripts/test-canonical-checked-results-v031.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"runtime\":\"bun\",\"compiler_sha256\":\"0c07d9b6b2edf9b18117860259c350346db1b8b79b667604fd32a2fddf851c17\",\"compiled_frames\":4,\"modules_per_frame\":8,\"http_only_imports\":13,\"old_cold_tuple_rejected\":true,\"guest_calls\":0,\"app_engine_admitted\":false,\"execution_profile\":\"compiler-frames-only\",\"unsupported_feature\":\"multi-memory\",\"rejection_then_recovery\":true,\"real_Host_effects\":false,\"business_Guest_executed\":false}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "deno",
+      "run",
+      "--allow-read",
+      "scripts/test-current-string-support-v031.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"host\":\"deno\",\"CoreLib_version\":\"4.12.0-candidate.1\",\"CoreLib_sha256\":\"8231aba425ef1bb0aa07a760ff4c77917e247382ef73a41408db6b6b1cb40b1e\",\"compiler_sha256\":\"0c07d9b6b2edf9b18117860259c350346db1b8b79b667604fd32a2fddf851c17\",\"Root_APIs\":30,\"compiled_frames\":4,\"modules_per_frame\":8,\"candidate_profile\":true,\"basic_Guest_calls\":544,\"Guest_calls\":583,\"large_input_bytes\":[131072,262144,524288,1048576,1200000],\"Unicode_case_expansion\":true,\"explicit_host_limit_rejected\":true,\"same_instance_recovery\":true,\"pending_counters_zero\":2,\"Host_imports\":13,\"Host_calls_per_success\":13,\"Source_rejection_recovery\":true,\"business_effects\":false}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "deno",
+      "run",
+      "--allow-read",
+      "scripts/test-canonical-checked-results-v031.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"runtime\":\"deno\",\"compiler_sha256\":\"0c07d9b6b2edf9b18117860259c350346db1b8b79b667604fd32a2fddf851c17\",\"compiled_frames\":4,\"modules_per_frame\":8,\"http_only_imports\":13,\"old_cold_tuple_rejected\":true,\"app_engine_admitted\":true,\"execution_profile\":\"canonical-app-multi-memory\",\"guest_calls\":800,\"same_instance\":true,\"service_calls\":800,\"response_drops\":580,\"owned_error_drops\":760,\"malformed_rejections\":180,\"pending_counters_zero\":3,\"fresh_dynamic_inputs\":true,\"exact_error_case_decisions\":5,\"rejection_then_recovery\":true,\"real_Host_effects\":false,\"business_Guest_executed\":false}\n",
+    "stderr": ""
+  }
+]
