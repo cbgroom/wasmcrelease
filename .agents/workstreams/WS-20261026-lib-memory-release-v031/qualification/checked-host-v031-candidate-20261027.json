@@ -1,0 +1,58 @@
+{
+  "schema": "wasmc.checked-host-successor-candidate/v1",
+  "accepted": true,
+  "scope": "source-free candidate stage, test-only v031 compiler metadata; in-memory Host callbacks",
+  "source_commit": "017d0466bcb44274f72a19990c425153e1df8f81",
+  "compiler_sha256": "d725ecc9e6fe5b2717b566bdc86b7a571f76b4abc71f111f048f91bb539ded09",
+  "CoreLib_sha256": "8231aba425ef1bb0aa07a760ff4c77917e247382ef73a41408db6b6b1cb40b1e",
+  "original_root_manifest_sha256": "be20f9443c091b77d60838add8a0a7e6a3a8b2fd8a246fa2355a8faca883fc61",
+  "app_sha256": "db8988d370cbdcb5171bd6077b22c33bda16e285e11cb265fbd48fad9b4f1bbf",
+  "profile_sha256": "3f4e64720aeb4366043ee0cd6b388c2d56d9a26ab56868cfd3af0423fe3f2482",
+  "proof_sha256": "3201f30b0b4e0d5db62e4ca01c45d18dce461c83ad4cba381c046e80c69bc985",
+  "frame_sha256": "4a5e5d6220b2fbf32bb2274cf4417ce2b510472fac2c07f9d59166d22095689d",
+  "runs": [
+    {
+      "engine": "node",
+      "exit_code": 0,
+      "log_sha256": "4fcbac967b4bcb11b673ec69a3686610885c1dc26d0352cf0f9b862af1484568"
+    },
+    {
+      "engine": "deno",
+      "exit_code": 0,
+      "log_sha256": "2b7d569e23fcbaa51c3722a3df9ceaf9e9c673ece4614d5279a9a0895ba8c0e2"
+    },
+    {
+      "engine": "bun",
+      "exit_code": 0,
+      "log_sha256": "80d30c73745cefb8e1f5261f26619884e13628ccdbb68b94d8ebb483cd56d4ea"
+    }
+  ],
+  "controls": [
+    {
+      "case": "app",
+      "status": 1,
+      "rejected": true,
+      "log_sha256": "c4ca09059af2c2faeba518d9df94f85197a0478e49b5fe1e610b63cf20f5f5dc"
+    },
+    {
+      "case": "transfer",
+      "status": 1,
+      "rejected": true,
+      "log_sha256": "cbd6d95affb332a09ce541d919b2510ae5fff17e7fbebf1cce960be7bc2cc5aa"
+    },
+    {
+      "case": "template",
+      "status": 1,
+      "rejected": true,
+      "log_sha256": "b578144dbc158a7c11c250bcbc24ad62fb204b971775414bc6b676a3b1c8db25"
+    }
+  ],
+  "first_failure": "Activation construction mistakenly selected service operations for entry as well; rejected before modules emitted. Corrected entry selection to empty; original error remains in session.",
+  "nonclaims": [
+    "live Host effect",
+    "business Guest execution",
+    "complete v031 qualification",
+    "Source integration",
+    "formal release"
+  ]
+}

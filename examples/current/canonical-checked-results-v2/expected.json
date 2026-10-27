@@ -1,0 +1,360 @@
+{
+  "schema": "wasmc.canonical-checked-result-conformance/v1",
+  "Root": {
+    "path": "lib-releases/wasmc-json/0.0.7/root/lib.json",
+    "sha256": "be20f9443c091b77d60838add8a0a7e6a3a8b2fd8a246fa2355a8faca883fc61",
+    "bytes": 8610
+  },
+  "Host_contracts": {
+    "entry": {
+      "lib.wit": {
+        "path": "lib-releases/wasmc-json/0.0.7/host/entry/lib.wit",
+        "sha256": "b9986cc5188185e89915d60e9a0a9ac0b448372bc02d379784b7a71effcc4d53",
+        "bytes": 7845
+      },
+      "execution-abi.json": {
+        "path": "lib-releases/wasmc-json/0.0.7/host/entry/execution-abi.json",
+        "sha256": "03c2bca5bdfd6174a021cfbc7ec12fe1183b39ed2f2a15623498b8c53c2e44c9",
+        "bytes": 5205
+      },
+      "provider-contract.json": {
+        "path": "lib-releases/wasmc-json/0.0.7/host/entry/provider-contract.json",
+        "sha256": "f50cb2636d1f0072a7c01964335c4188ec1c797d96e49e62d2059349cfd02530",
+        "bytes": 328
+      },
+      "binding.json": {
+        "path": "lib-releases/wasmc-json/0.0.7/host/entry/binding.json",
+        "sha256": "3db4b5c10627cc9e81ea8372385cffa7e943e3e905859d1532c3d26e8f8204fe",
+        "bytes": 6682
+      }
+    },
+    "operations": {
+      "lib.wit": {
+        "path": "lib-releases/wasmc-json/0.0.7/host/operations/lib.wit",
+        "sha256": "b9986cc5188185e89915d60e9a0a9ac0b448372bc02d379784b7a71effcc4d53",
+        "bytes": 7845
+      },
+      "execution-abi.json": {
+        "path": "lib-releases/wasmc-json/0.0.7/host/operations/execution-abi.json",
+        "sha256": "03c2bca5bdfd6174a021cfbc7ec12fe1183b39ed2f2a15623498b8c53c2e44c9",
+        "bytes": 5205
+      },
+      "provider-contract.json": {
+        "path": "lib-releases/wasmc-json/0.0.7/host/operations/provider-contract.json",
+        "sha256": "f50cb2636d1f0072a7c01964335c4188ec1c797d96e49e62d2059349cfd02530",
+        "bytes": 328
+      },
+      "binding.json": {
+        "path": "lib-releases/wasmc-json/0.0.7/host/operations/binding.json",
+        "sha256": "b5eafa21fd2d80a31f4dbc695ef9721d7a89f3c1d9838ee8523d8d53bc46a797",
+        "bytes": 4885
+      }
+    }
+  },
+  "version": "0.0.31",
+  "compiler_sha256": "d725ecc9e6fe5b2717b566bdc86b7a571f76b4abc71f111f048f91bb539ded09",
+  "frame_sha256": "4a5e5d6220b2fbf32bb2274cf4417ce2b510472fac2c07f9d59166d22095689d",
+  "source": {
+    "path": "examples/current/canonical-checked-results-v2/ordinary.wasmc",
+    "bytes": 1932,
+    "sha256": "53b404a31ad219a9b4f29ab24fb4345dfb65962d88b7aae53c4a5d9a0c746f5c"
+  },
+  "activation": {
+    "path": "examples/current/canonical-checked-results-v2/activation.json",
+    "bytes": 868,
+    "sha256": "ca6390c1ce0c3ae2b33131bb412e8b28f49e3756860850ef54c1db6c70318eb9"
+  },
+  "modules": [
+    {
+      "bytes": 8174,
+      "module": "wasmc-snapshot-caller",
+      "offset": 0,
+      "path": "caller.wasm",
+      "sha256": "ec4299b6e1e2308d73e811ada7d79978dc19d6abfaf2ea0bb621b05befd43bed"
+    },
+    {
+      "bytes": 13250,
+      "module": "wasmc-native-value-projection",
+      "offset": 8174,
+      "path": "lib-projection.wasm",
+      "sha256": "16e0819853ca52325b5582c0214eb5959fee836e628ce53d4046c6fc052ce6e1"
+    },
+    {
+      "bytes": 6427,
+      "module": "wasmc-native-value-calls",
+      "offset": 21424,
+      "path": "lib-calls.wasm",
+      "sha256": "3578eac70f3c361ecf8245e83b82f613e9d9e115f3582e39c2b2374d3bad610f"
+    },
+    {
+      "bytes": 499,
+      "module": "wasmc-canonical-app-entry",
+      "offset": 27851,
+      "path": "canonical-entry.wasm",
+      "sha256": "6691e05dc68a3b758939191790c8b3dd1b1eb8e376feb3cb7268b5fbcc65706b"
+    },
+    {
+      "bytes": 6401,
+      "module": "wasmc-app-value-projection",
+      "offset": 28350,
+      "path": "app-projection.wasm",
+      "sha256": "a2f662e91085d80fe80eb6fc02b15ee094fd1bb33bf56d064e49d2cc00e1d410"
+    },
+    {
+      "bytes": 1318,
+      "module": "wasmc-host-entry",
+      "offset": 34751,
+      "path": "host-entry.wasm",
+      "sha256": "419444b623d01152a59bff8af2b71a7dfd3136147b4e29a2fdfcb890c9f4839f"
+    },
+    {
+      "bytes": 4983,
+      "module": "wasmc-host-value-projection",
+      "offset": 36069,
+      "path": "host-projection.wasm",
+      "sha256": "a3b1c93635bea9e649e8ec2b363d8c725a5efb8a0d7881a6bab7cd1d8916564a"
+    },
+    {
+      "bytes": 1992,
+      "module": "wasmc-native-host-calls",
+      "offset": 41052,
+      "path": "host-calls.wasm",
+      "sha256": "843affe4298c1a607a7840f57816de78e0d1ef3f118ac8d66d0b267cc43a4ebd"
+    }
+  ],
+  "files": [
+    {
+      "path": "examples/current/canonical-checked-results-v2/README.md",
+      "bytes": 313,
+      "sha256": "6274d6dcd2feab21ffbe7820b037d3f364ebcac8f051c928839b3890b09ccbbc"
+    },
+    {
+      "path": "examples/current/canonical-checked-results-v2/activation.json",
+      "bytes": 868,
+      "sha256": "ca6390c1ce0c3ae2b33131bb412e8b28f49e3756860850ef54c1db6c70318eb9"
+    },
+    {
+      "path": "examples/current/canonical-checked-results-v2/app.wasm",
+      "bytes": 247435,
+      "sha256": "db8988d370cbdcb5171bd6077b22c33bda16e285e11cb265fbd48fad9b4f1bbf"
+    },
+    {
+      "path": "examples/current/canonical-checked-results-v2/canonical-template.json",
+      "bytes": 52320,
+      "sha256": "9c967dd012c6de1ee02af2090b9ff27a70c825d827ee328606b1d682efc7bf43"
+    },
+    {
+      "path": "examples/current/canonical-checked-results-v2/checked-profile.json",
+      "bytes": 5391,
+      "sha256": "3f4e64720aeb4366043ee0cd6b388c2d56d9a26ab56868cfd3af0423fe3f2482"
+    },
+    {
+      "path": "examples/current/canonical-checked-results-v2/composition/input-0.wasm",
+      "bytes": 37500,
+      "sha256": "1a76edd8c3bd6828695d017520a34ae533d77bd9ebbb1c9422090e18515ad119"
+    },
+    {
+      "path": "examples/current/canonical-checked-results-v2/composition/input-1.wasm",
+      "bytes": 8174,
+      "sha256": "ec4299b6e1e2308d73e811ada7d79978dc19d6abfaf2ea0bb621b05befd43bed"
+    },
+    {
+      "path": "examples/current/canonical-checked-results-v2/composition/input-10.wasm",
+      "bytes": 84594,
+      "sha256": "8231aba425ef1bb0aa07a760ff4c77917e247382ef73a41408db6b6b1cb40b1e"
+    },
+    {
+      "path": "examples/current/canonical-checked-results-v2/composition/input-2.wasm",
+      "bytes": 90704,
+      "sha256": "fa19d44a9371f787ef5b57aa3b4ac5b193d71d139922c7236733f9caabfbea18"
+    },
+    {
+      "path": "examples/current/canonical-checked-results-v2/composition/input-3.wasm",
+      "bytes": 13250,
+      "sha256": "16e0819853ca52325b5582c0214eb5959fee836e628ce53d4046c6fc052ce6e1"
+    },
+    {
+      "path": "examples/current/canonical-checked-results-v2/composition/input-4.wasm",
+      "bytes": 6427,
+      "sha256": "3578eac70f3c361ecf8245e83b82f613e9d9e115f3582e39c2b2374d3bad610f"
+    },
+    {
+      "path": "examples/current/canonical-checked-results-v2/composition/input-5.wasm",
+      "bytes": 499,
+      "sha256": "6691e05dc68a3b758939191790c8b3dd1b1eb8e376feb3cb7268b5fbcc65706b"
+    },
+    {
+      "path": "examples/current/canonical-checked-results-v2/composition/input-6.wasm",
+      "bytes": 6401,
+      "sha256": "a2f662e91085d80fe80eb6fc02b15ee094fd1bb33bf56d064e49d2cc00e1d410"
+    },
+    {
+      "path": "examples/current/canonical-checked-results-v2/composition/input-7.wasm",
+      "bytes": 1318,
+      "sha256": "419444b623d01152a59bff8af2b71a7dfd3136147b4e29a2fdfcb890c9f4839f"
+    },
+    {
+      "path": "examples/current/canonical-checked-results-v2/composition/input-8.wasm",
+      "bytes": 4983,
+      "sha256": "a3b1c93635bea9e649e8ec2b363d8c725a5efb8a0d7881a6bab7cd1d8916564a"
+    },
+    {
+      "path": "examples/current/canonical-checked-results-v2/composition/input-9.wasm",
+      "bytes": 1992,
+      "sha256": "843affe4298c1a607a7840f57816de78e0d1ef3f118ac8d66d0b267cc43a4ebd"
+    },
+    {
+      "path": "examples/current/canonical-checked-results-v2/frame-descriptor.json",
+      "bytes": 19760,
+      "sha256": "efd7db6c65decc7b44fd966e6ec833dfbe8754b63798852201cfaf11a9bc40be"
+    },
+    {
+      "path": "examples/current/canonical-checked-results-v2/http-only.wasmc",
+      "bytes": 516,
+      "sha256": "df39f28689ee14d8e9fef1687aa151cbe25788dd8d9ac4c8e3cdecb2a069498e"
+    },
+    {
+      "path": "examples/current/canonical-checked-results-v2/modules/app-projection.wasm",
+      "bytes": 6401,
+      "sha256": "a2f662e91085d80fe80eb6fc02b15ee094fd1bb33bf56d064e49d2cc00e1d410"
+    },
+    {
+      "path": "examples/current/canonical-checked-results-v2/modules/caller.wasm",
+      "bytes": 8174,
+      "sha256": "ec4299b6e1e2308d73e811ada7d79978dc19d6abfaf2ea0bb621b05befd43bed"
+    },
+    {
+      "path": "examples/current/canonical-checked-results-v2/modules/canonical-entry.wasm",
+      "bytes": 499,
+      "sha256": "6691e05dc68a3b758939191790c8b3dd1b1eb8e376feb3cb7268b5fbcc65706b"
+    },
+    {
+      "path": "examples/current/canonical-checked-results-v2/modules/host-calls.wasm",
+      "bytes": 1992,
+      "sha256": "843affe4298c1a607a7840f57816de78e0d1ef3f118ac8d66d0b267cc43a4ebd"
+    },
+    {
+      "path": "examples/current/canonical-checked-results-v2/modules/host-entry.wasm",
+      "bytes": 1318,
+      "sha256": "419444b623d01152a59bff8af2b71a7dfd3136147b4e29a2fdfcb890c9f4839f"
+    },
+    {
+      "path": "examples/current/canonical-checked-results-v2/modules/host-projection.wasm",
+      "bytes": 4983,
+      "sha256": "a3b1c93635bea9e649e8ec2b363d8c725a5efb8a0d7881a6bab7cd1d8916564a"
+    },
+    {
+      "path": "examples/current/canonical-checked-results-v2/modules/lib-calls.wasm",
+      "bytes": 6427,
+      "sha256": "3578eac70f3c361ecf8245e83b82f613e9d9e115f3582e39c2b2374d3bad610f"
+    },
+    {
+      "path": "examples/current/canonical-checked-results-v2/modules/lib-projection.wasm",
+      "bytes": 13250,
+      "sha256": "16e0819853ca52325b5582c0214eb5959fee836e628ce53d4046c6fc052ce6e1"
+    },
+    {
+      "path": "examples/current/canonical-checked-results-v2/ordinary.wasmc",
+      "bytes": 1932,
+      "sha256": "53b404a31ad219a9b4f29ab24fb4345dfb65962d88b7aae53c4a5d9a0c746f5c"
+    },
+    {
+      "path": "examples/current/canonical-checked-results-v2/prepared-lib-core.wasm",
+      "bytes": 90704,
+      "sha256": "fa19d44a9371f787ef5b57aa3b4ac5b193d71d139922c7236733f9caabfbea18"
+    },
+    {
+      "path": "examples/current/canonical-checked-results-v2/prepared-transfer.wasm",
+      "bytes": 37500,
+      "sha256": "1a76edd8c3bd6828695d017520a34ae533d77bd9ebbb1c9422090e18515ad119"
+    },
+    {
+      "path": "examples/current/canonical-checked-results-v2/raw-transfer.wasm",
+      "bytes": 42564,
+      "sha256": "9d9e3e699a5c06ceca447af9f6ca73a74bb9da2ba203ade2b97cdb519b79b14b"
+    },
+    {
+      "path": "examples/current/canonical-checked-results-v2/transfer.rs",
+      "bytes": 39219,
+      "sha256": "343b220e14e2a7209f7420af7acaf43e9d86c512b9e0622032471cc176a35ed3"
+    }
+  ],
+  "complete_App": {
+    "path": "examples/current/canonical-checked-results-v2/app.wasm",
+    "bytes": 247435,
+    "sha256": "db8988d370cbdcb5171bd6077b22c33bda16e285e11cb265fbd48fad9b4f1bbf"
+  },
+  "composition": {
+    "schema": "wasmc.canonical-composition-candidate/v1",
+    "inputs": [
+      {
+        "path": "examples/current/canonical-checked-results-v2/composition/input-0.wasm",
+        "bytes": 37500,
+        "sha256": "1a76edd8c3bd6828695d017520a34ae533d77bd9ebbb1c9422090e18515ad119",
+        "module": "wasmc-value-staging"
+      },
+      {
+        "path": "examples/current/canonical-checked-results-v2/composition/input-1.wasm",
+        "bytes": 8174,
+        "sha256": "ec4299b6e1e2308d73e811ada7d79978dc19d6abfaf2ea0bb621b05befd43bed",
+        "module": "wasmc-snapshot-caller"
+      },
+      {
+        "path": "examples/current/canonical-checked-results-v2/composition/input-2.wasm",
+        "bytes": 90704,
+        "sha256": "fa19d44a9371f787ef5b57aa3b4ac5b193d71d139922c7236733f9caabfbea18",
+        "module": "wasmc:lib/wasmc-json@0.0.7"
+      },
+      {
+        "path": "examples/current/canonical-checked-results-v2/composition/input-3.wasm",
+        "bytes": 13250,
+        "sha256": "16e0819853ca52325b5582c0214eb5959fee836e628ce53d4046c6fc052ce6e1",
+        "module": "wasmc-native-value-projection"
+      },
+      {
+        "path": "examples/current/canonical-checked-results-v2/composition/input-4.wasm",
+        "bytes": 6427,
+        "sha256": "3578eac70f3c361ecf8245e83b82f613e9d9e115f3582e39c2b2374d3bad610f",
+        "module": "wasmc-native-value-calls"
+      },
+      {
+        "path": "examples/current/canonical-checked-results-v2/composition/input-5.wasm",
+        "bytes": 499,
+        "sha256": "6691e05dc68a3b758939191790c8b3dd1b1eb8e376feb3cb7268b5fbcc65706b",
+        "module": "wasmc-canonical-app-entry"
+      },
+      {
+        "path": "examples/current/canonical-checked-results-v2/composition/input-6.wasm",
+        "bytes": 6401,
+        "sha256": "a2f662e91085d80fe80eb6fc02b15ee094fd1bb33bf56d064e49d2cc00e1d410",
+        "module": "wasmc-app-value-projection"
+      },
+      {
+        "path": "examples/current/canonical-checked-results-v2/composition/input-7.wasm",
+        "bytes": 1318,
+        "sha256": "419444b623d01152a59bff8af2b71a7dfd3136147b4e29a2fdfcb890c9f4839f",
+        "module": "wasmc-host-entry"
+      },
+      {
+        "path": "examples/current/canonical-checked-results-v2/composition/input-8.wasm",
+        "bytes": 4983,
+        "sha256": "a3b1c93635bea9e649e8ec2b363d8c725a5efb8a0d7881a6bab7cd1d8916564a",
+        "module": "wasmc-host-value-projection"
+      },
+      {
+        "path": "examples/current/canonical-checked-results-v2/composition/input-9.wasm",
+        "bytes": 1992,
+        "sha256": "843affe4298c1a607a7840f57816de78e0d1ef3f118ac8d66d0b267cc43a4ebd",
+        "module": "wasmc-native-host-calls"
+      },
+      {
+        "path": "examples/current/canonical-checked-results-v2/composition/input-10.wasm",
+        "bytes": 84594,
+        "sha256": "8231aba425ef1bb0aa07a760ff4c77917e247382ef73a41408db6b6b1cb40b1e",
+        "module": "wasmc:lib/wasmc.lib_managed_object_heap@4.9.0"
+      }
+    ],
+    "output_sha256": "db8988d370cbdcb5171bd6077b22c33bda16e285e11cb265fbd48fad9b4f1bbf"
+  },
+  "scope": "candidate; no formal release claim"
+}
