@@ -84,6 +84,37 @@ browser/mobile support.
 Choose the smallest layer that satisfies the caller. Do not add a wrapper when
 copyable reference code exposes the contract more clearly.
 
+## Dual-language glue qualification
+
+For a release that offers both ordinary WAsmC and Rust callers, continuously
+qualify both paths against the same actual selected release inputs. Pin and
+read back the compiler, CoreLib, Lib Root, generated SDK and relevant Host
+contract by exact version and digest. Compile and execute real WAsmC source
+and a real Rust consumer through their supported entry points. Where both use a
+Lib, resolve the same published Root and provider bytes; do not substitute a
+mock, an independently rebuilt lookalike or a version label for that identity.
+Record which path actually imports CoreLib: a standalone Rust SDK that does not
+use it is useful evidence for that SDK, but is not shared-CoreLib parity.
+
+Compare the overlapping public operations with the same inputs and observable
+results, including ordinary success, invalid input or Host error and recovery on
+the same instance. Exercise non-UTF-8 bytes for byte APIs, and actual caller
+capability rejection where the Host contract exposes it. Check cleanup using
+the available ownership or pending-resource oracles. Record uncovered API
+families and engine or Host limitations explicitly; a narrower passing case
+does not qualify the entire API. Pin the app and test inputs and distinguish
+simulated Host, actual Host, installed artifact and Hosted route results.
+Qualify the final published tuple again through its real installation path;
+pre-release candidate tests are not evidence of publication or installation.
+
+The 2026-10-27 HTTP comparison in the
+[workstream evidence](../../workstreams/WS-20261026-lib-memory-release-v031/qualification/http-language-pair-20261027/)
+ran Rust and WAsmC guests against a simulated common Host in Node and Deno. It
+matched response status, header, non-UTF-8 body and control, and a header
+failure followed by same-instance recovery. The Rust guest did not consume the
+selected WAsmC CoreLib or JSON Lib, so that observation does not establish
+shared-Lib or shared-CoreLib parity, real Hosted acceptance, or a release.
+
 ## Host authority and lifecycle
 
 Real asynchronous I/O cancellation suppresses delivery, not already-issued
