@@ -9,10 +9,10 @@ jobs:
   assembly-and-install:
     runs-on: ubuntu-24.04
     timeout-minutes: 12
-    env:
-      WASMC_MAINTENANCE_ROOT: ${{ runner.temp }}/wasmc-assembled-reuse
     steps:
       - uses: actions/checkout@v4
+      - name: Set isolated assembly directory
+        run: echo "WASMC_MAINTENANCE_ROOT=$RUNNER_TEMP/wasmc-assembled-reuse" >> "$GITHUB_ENV"
       - name: Assemble candidate from exact qualified inputs
         shell: bash
         run: |
