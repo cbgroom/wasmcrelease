@@ -1,0 +1,61 @@
+{
+  "schema": "wasmc.lib-build/v0",
+  "skill": {
+    "name": "wasmc-owned-algorithms",
+    "version": "0.1.2",
+    "description": "Owned Rust string, list and record algorithms with explicit Unicode and signed-sum behavior."
+  },
+  "wit": "lib.wit",
+  "apis": [
+    {
+      "api": "count-true",
+      "delta": "Count true values in an owned Boolean list.",
+      "ecosystem": "Rust iterators",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "request-score",
+      "delta": "UTF-8 byte length times 1000 plus signed sum and optional 100 bonus.",
+      "ecosystem": "Rust strings and integers",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "sum-s32",
+      "delta": "Sum signed 32-bit elements into a signed 64-bit accumulator.",
+      "ecosystem": "Rust iterators",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "utf8-score",
+      "delta": "Unicode scalar count times 1000 plus UTF-8 byte count.",
+      "ecosystem": "Rust Unicode strings",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    }
+  ],
+  "core": {
+    "root": {
+      "module": "facade",
+      "artifact": "facade.wasm",
+      "sha256": "316d1de92b103693f4e09034d6eba7280b45d81b0aa0f7f1d3306ef994a99923"
+    },
+    "dependencies": [
+      {
+        "module": "rust-implementation",
+        "artifact": "implementation.wasm",
+        "sha256": "7d8f30df09e7ddc8063a7ce56284e23a97cefa32b2cb1a4310b0d0880add8a03"
+      }
+    ]
+  }
+}

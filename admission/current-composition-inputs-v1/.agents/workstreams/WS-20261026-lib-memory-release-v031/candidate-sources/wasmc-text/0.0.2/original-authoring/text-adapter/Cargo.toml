@@ -1,0 +1,21 @@
+[package]
+name = "wasmc-lib-text"
+version = "0.0.1"
+edition = "2021"
+publish = false
+
+[dependencies]
+memchr = { version = "=2.8.0", default-features = false, features = ["std"] }
+wit-bindgen = { version = "=0.57.1", default-features = false, features = ["macros", "realloc", "std"] }
+
+[lib]
+crate-type = ["cdylib"]
+
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = "symbols"
+
+[workspace]

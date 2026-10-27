@@ -1,0 +1,52 @@
+{
+  "schema": "wasmc.lib-build/v0",
+  "skill": {
+    "name": "wasmc-data-compute",
+    "version": "0.0.3",
+    "description": "Arrow-backed data filter, projection and sort over the shared Data snapshot adapter."
+  },
+  "wit": "lib.wit",
+  "apis": [
+    {
+      "api": "filter",
+      "delta": "Filter rows with a nullable boolean mask after shared batch validation.",
+      "ecosystem": "Arrow Select 60",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "project",
+      "delta": "Project unique columns while preserving row count and schema.",
+      "ecosystem": "Arrow 60",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "sort",
+      "delta": "Lexicographic multi-key sort with limit and null ordering.",
+      "ecosystem": "Arrow Ord/Select 60",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    }
+  ],
+  "core": {
+    "root": {
+      "module": "facade",
+      "artifact": "facade.wasm",
+      "sha256": "21a9de52861963b6a7c95e140a7f6e2a75e46eb7600bbe07a965429a13c973f6"
+    },
+    "dependencies": [
+      {
+        "module": "implementation",
+        "artifact": "implementation.wasm",
+        "sha256": "b591598800584b59e80c1cc8f09cef68f5a299eea27eb4e61d93ffe3d0af2f5f"
+      }
+    ]
+  }
+}

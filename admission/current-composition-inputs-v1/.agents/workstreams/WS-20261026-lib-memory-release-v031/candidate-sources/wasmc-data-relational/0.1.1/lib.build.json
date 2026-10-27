@@ -1,0 +1,88 @@
+{
+  "schema": "wasmc.lib-build/v0",
+  "skill": {
+    "version": "0.1.1",
+    "description": "Relational grouping, union, joins, distinct and window algorithms over the shared neutral Data snapshot model. No Lib-local capacity quotas.",
+    "name": "wasmc-data-relational"
+  },
+  "wit": "lib.wit",
+  "apis": [
+    {
+      "api": "distinct",
+      "delta": "Distinct rows by selected key columns. Capacity follows aggregate memory; type/schema/overflow checks remain.",
+      "ecosystem": "Arrow 60 + ordered-float 5.5",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "equi-join",
+      "delta": "Inner/left equi-join with output. Capacity follows aggregate memory; type/schema/overflow checks remain.",
+      "ecosystem": "Rust ordered maps + neutral columns",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "group-aggregate",
+      "delta": "Grouped count/sum/min/max/mean/first/last/variance/stddev. Capacity follows aggregate memory; type/schema/overflow checks remain.",
+      "ecosystem": "Arrow Arith 60",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "union-all",
+      "delta": "Schema-checked append of compatible batches. Capacity follows aggregate memory; type/schema/overflow checks remain.",
+      "ecosystem": "neutral Data model",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "window-aggregate",
+      "delta": "ROWS-frame window aggregates. Capacity follows aggregate memory; type/schema/overflow checks remain.",
+      "ecosystem": "Arrow Arith 60",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "window-offset",
+      "delta": "Lag/lead over ordered partitions. Capacity follows aggregate memory; type/schema/overflow checks remain.",
+      "ecosystem": "neutral Data model",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "window-rank",
+      "delta": "row-number/rank/dense-rank over ordered partitions. Capacity follows aggregate memory; type/schema/overflow checks remain.",
+      "ecosystem": "neutral Data model",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    }
+  ],
+  "core": {
+    "root": {
+      "module": "facade",
+      "artifact": "facade.wasm",
+      "sha256": "c2ae6c3e60e9927b0100023a399f93535cf89080724770d220af15784b1b6974"
+    },
+    "dependencies": [
+      {
+        "module": "implementation",
+        "artifact": "implementation.wasm",
+        "sha256": "baf77ccf8bb1ab8a5065a82a9af14b0b3ae0048cb8244e0d108467575ca4dfb5"
+      }
+    ]
+  }
+}

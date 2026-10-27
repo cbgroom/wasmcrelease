@@ -526,12 +526,15 @@ export function verifyCurrentCandidateComposition(repo,options){
   assert.equal(cohort.schema,'wasmc.public-current-composition-cohort/v1');
   assert.equal(cohort.input_prefix,'admission/current-composition-inputs-v1');
   assert.equal(cohort.source_lineage_sha256,options.source_lineage_sha256,'independent source lineage identity drift');
-  const inputPaths=currentProductPaths(repo,cohort.input_prefix);
-  const authoringPaths=catalog.packages.flatMap(row=>currentProductPaths(repo,row.source.spec.path.slice(0,-'/lib.json'.length)));
+  const inputPaths=cohort.input_files.map(pin=>cohort.input_prefix+'/'+pin.path);
+  const admittedIds=new Set(cohort.source_lineage.admitted_original_sources.map(({source})=>source.id));
+  const authoringPaths=catalog.packages.flatMap(row=>admittedIds.has(row.id)
+    ?Object.values(row.source).map(pin=>pin.path)
+    :currentProductPaths(repo,row.source.spec.path.slice(0,-'/lib.json'.length)));
   const commonAuthoring=['libspec/registry.json','libspec/rust-policy.json','libspec/Cargo.lock'];
   const carrierPaths=cohort.source_lineage.admitted_original_sources.flatMap(({source})=>
     [...currentProductPaths(repo,source.root.locator),...currentProductPaths(repo,source.source_packet.root)]);
-  const paths=[...inputPaths,...currentProductPaths(repo),...authoringPaths,...commonAuthoring,...carrierPaths];
+  const paths=[...inputPaths,...catalog.packages.flatMap(row=>currentProductPaths(repo,row.root)),...authoringPaths,...commonAuthoring,...carrierPaths];
   const closure=verifyCurrentRelease(bytes,options.catalog_sha256,read,paths);
   assert.equal(closure.schema,'wasmc.current-composition-release-closure/v1');
   assert.equal(closure.source_lineage_sha256,options.source_lineage_sha256);
@@ -552,7 +555,7 @@ export async function createCurrentCandidate(repo,{compilerSource,libSource,vers
     return s.isDirectory()?walk(path):[path];
   });
   const catalogBytes=read('catalog/libs-current-v2.json'),catalog=checkedCurrentCatalog(catalogBytes,hash(catalogBytes));
-  const directories=['current','dist','package','examples/current','examples/base64','examples/agent-quickstart','examples/lib-search','examples/agent-start','standard','sdk','runtime','current-libs','licenses',
+  const directories=['current','dist','package','examples/current','examples/base64','examples/agent-quickstart','examples/lib-search','examples/agent-start','standard','sdk','runtime',...(composed?catalog.packages.map(row=>row.root):['current-libs']),'licenses',
     ...(Number(version.split('.')[2])>=29?['lib-releases/wasmc-json/0.0.7/root','lib-releases/wasmc-json/0.0.7/host']:[]),
     'skills',
     'host/contract','host/sdk','host/drivers/file/rust','host/drivers/memory/rust'];

@@ -1,0 +1,110 @@
+{
+  "schema": "wasmc.lib-native/v2",
+  "id": "wasmc-system-android-input",
+  "version": "0.1.0",
+  "profile": "native",
+  "wit": {
+    "path": "lib.wit",
+    "bytes": 237,
+    "sha256": "d4a66301595d45e3489c1174b96f7ba6ba74a1d69970fa6241f3c360011c9189"
+  },
+  "implementation": [
+    {
+      "path": "platform/native-adapter.c",
+      "bytes": 2655,
+      "sha256": "a143bcaf66dce555c907728838ee4504e8bbf94ffec6db894ceb4cff366b9127"
+    },
+    {
+      "path": "platform/native-boundary.template.json",
+      "bytes": 316,
+      "sha256": "4828cc7b49ce60b606393d7ac9f85a53fc8163984f523c9dd4f0c3e57d3ae0f3"
+    },
+    {
+      "path": "platform/encode.mjs",
+      "bytes": 857,
+      "sha256": "e844335477fb370225e1574ec714b0a8b64560798a10c76d9a06803b5a73cf3c"
+    }
+  ],
+  "artifact": null,
+  "native_boundary": null,
+  "native": {
+    "kind": "c-boundary",
+    "target": "android",
+    "status": "embedded_source_packaged",
+    "build_host": "darwin",
+    "build_arch": "arm64",
+    "device_qualified": false,
+    "wasm_lowered": false,
+    "component_sdk": false
+  },
+  "build": {
+    "input_authority": "libspec",
+    "producer_sha256": "befbc81bbcb83ada838bac9172b39f8a9f480d3840eb542bb64338f43359ea53",
+    "native_toolchain": {
+      "platform": "darwin",
+      "arch": "arm64",
+      "node": "v26.12.1"
+    }
+  },
+  "bindings": {
+    "native": {
+      "schema": "wasmc.lib-native-binding/v2",
+      "kind": "c-boundary",
+      "entry": "platform/native-adapter.c",
+      "target": "android"
+    }
+  },
+  "lifecycle": {
+    "source_packaged": true,
+    "runtime_qualified": false,
+    "admitted": false,
+    "released": false,
+    "installable": false
+  },
+  "license": {
+    "schema": "wasmc.lib-license/v1",
+    "identifier": "WAsmC Research-Only Non-Commercial License 1.0",
+    "files": [
+      {
+        "path": "LICENSE",
+        "bytes": 3823,
+        "sha256": "7bca2d5818178e0bc14546700d39bf113d15139b1c3b6d1e62f621d4a276d6e3"
+      },
+      {
+        "path": "licenses/DEPENDENCY-NOTICES-001.txt",
+        "bytes": 245760,
+        "sha256": "66302f6dd71da97391ab2270d29b10e67bdbac6d7eb782bed043c2ff596ec5cc"
+      },
+      {
+        "path": "licenses/DEPENDENCY-NOTICES-002.txt",
+        "bytes": 245760,
+        "sha256": "0065cf38006c9a66a6c3ee9cbaf8db10422b1e5301d3c1d5132b7855e71f18ea"
+      },
+      {
+        "path": "licenses/DEPENDENCY-NOTICES-003.txt",
+        "bytes": 245760,
+        "sha256": "201dbac93dff17177b6379ee630b9658b4cec9cb9d46ce3982b3da87c4b740c8"
+      },
+      {
+        "path": "licenses/DEPENDENCY-NOTICES-004.txt",
+        "bytes": 245760,
+        "sha256": "c439e1a409b6f23d5797cec339403a0ffce97e9fcf2ae91d6a923c36d619bb76"
+      },
+      {
+        "path": "licenses/DEPENDENCY-NOTICES-005.txt",
+        "bytes": 245760,
+        "sha256": "04118f32afc6b2ce0fbfd559c56a78614016ab00167be2425c8c778fc7b064fe"
+      },
+      {
+        "path": "licenses/DEPENDENCY-NOTICES-006.txt",
+        "bytes": 8357,
+        "sha256": "aa6000805f56d3c6009ffa09dbe224083cf2e63e2498e1939deefe6ca7c43d9a"
+      },
+      {
+        "path": "licenses/DEPENDENCY-NOTICES-007.txt",
+        "bytes": 25602,
+        "sha256": "f0429335a0831b75f3b3277e20303d94bbf7af5719769055178aab3e2dce6e7a"
+      }
+    ]
+  }
+}

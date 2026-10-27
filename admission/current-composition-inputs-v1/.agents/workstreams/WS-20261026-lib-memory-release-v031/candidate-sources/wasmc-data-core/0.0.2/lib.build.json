@@ -1,0 +1,43 @@
+{
+  "schema": "wasmc.lib-build/v0",
+  "skill": {
+    "name": "wasmc-data-core",
+    "version": "0.0.2",
+    "description": "Portable WAsmC data batch semantics backed by one shared Arrow/Data adapter."
+  },
+  "wit": "lib.wit",
+  "apis": [
+    {
+      "api": "take",
+      "delta": "Take rows by index after shared batch validation.",
+      "ecosystem": "Arrow Select 60",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    },
+    {
+      "api": "validate",
+      "delta": "Validate a neutral BatchSnapshot through the shared Arrow adapter.",
+      "ecosystem": "Arrow 60",
+      "host_authorities": [],
+      "implementation": "lib",
+      "origin": "adapted",
+      "support": "supported"
+    }
+  ],
+  "core": {
+    "root": {
+      "module": "facade",
+      "artifact": "facade.wasm",
+      "sha256": "4f1b2f3405337ac208e978e19e7f35dbed9bad0ed04c94325c472e170e2bf93e"
+    },
+    "dependencies": [
+      {
+        "module": "rust-implementation",
+        "artifact": "implementation.wasm",
+        "sha256": "207c996f90b69bf7b5fd7c64e6989e3d95e9b46e31bb1704b0dde66f537b9498"
+      }
+    ]
+  }
+}
