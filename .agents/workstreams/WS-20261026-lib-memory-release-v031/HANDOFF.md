@@ -491,3 +491,6 @@ Using exact Source 017d native producer and the immutable JSON 0.0.7 Root, regen
 
 
 2026-10-27 ordinary JSON 32MiB: regenerated real Native transfer and portable App for explicit 64MiB Host body contract and fresh anonymously installed JSON 0.2 Root. Node and Deno each processed 33,554,463 input bytes with checked-unbounded compiler b272, two ordered edits, local atomic write, subsequent same-instance inputs and zero pending counters. Original strict reopen symlink failure and realpath recovery retained. Exact evidence qualification/unbounded-32m-ordinary-json-v031-20261027. Host bound is explicit; no infinite-memory or formal release claim.
+
+
+2026-10-27 Source 49310c88 six-Root successor subset: own isolated L1 worktree with the same one-line historical fixture path override and independently pinned successor consumers passed the real cargo dual-engine test 1/1: 6 Roots, 33 operations and 528 Wasmtime/Wasmi calls, with original fixture verification and test controls. Checked SDK profile enabled; 326.6s, no disk floor reached. Exact receipt, override and raw compressed log at qualification/unbounded-six-root-v031-20261027. This is not unmodified full L2. Remote hwlinux has 110GiB free and historical fixtures but lacks 49310c88 object and no confirmed warm full-workspace cache; no remote build was started.

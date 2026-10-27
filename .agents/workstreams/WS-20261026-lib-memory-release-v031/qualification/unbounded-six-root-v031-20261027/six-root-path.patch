@@ -1,0 +1,13 @@
+diff --git a/src/lib_tool_rust_build_host.rs b/src/lib_tool_rust_build_host.rs
+index b5e497c90..c44b30f25 100644
+--- a/src/lib_tool_rust_build_host.rs
++++ b/src/lib_tool_rust_build_host.rs
+@@ -4241,7 +4241,7 @@ mod canonical_root_tests {
+     #[test]
+     fn canonical_package_root_pinned_consumers_and_negatives() {
+         use crate::lib_tool_rust_consumer_sdk::prepare_rust_canonical_package_caller;
+-        let base = Path::new("/home/huawei/code/.cache/wasmc-evidence/sdk-adapter-linux-20261002/generated-callers/canonical-published-roots-1942652");
++        let base = PathBuf::from(std::env::var_os("WASMC_HISTORICAL_CANONICAL_ROOTS").expect("exact historical Roots"));
+         let pins = [
+             ("wasmc-data-core", "16b9f343e597f8800cdae36ca446aec6abdbb56f747835c6451c2dec9fbd6cd5", "ed002618e093e293888a143eddd0edd9c73c74548b929330b85d765f5c399d1b", "eca6565903b33a1c1f205ad0bf134bb7600223d9a42cd9be77a8dac812341803", 4),
+             ("wasmc-data-compute", "6d95b6f12023ca2cc387e790a6be1598560c95b83818dc9cec5a274051e06576", "d36eed99ec40f4477dfd732cfa2d81bd2f01903fcd55829ab1e1a839a822d0ff", "79eca5d97c09551b0e80ccd9b1bbe7b8939bdd2b8218d371fd23253e09f8e796", 5),
