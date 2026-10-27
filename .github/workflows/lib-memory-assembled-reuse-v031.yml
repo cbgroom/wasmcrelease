@@ -1,0 +1,44 @@
+name: Normal Lib assembled Native reuse
+on:
+  push:
+    branches: [work/WS-20261026-lib-memory-release-v031]
+    paths: [.github/workflows/lib-memory-assembled-reuse-v031.yml]
+permissions:
+  contents: read
+jobs:
+  assembly-and-install:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    env:
+      WASMC_MAINTENANCE_ROOT: ${{ runner.temp }}/wasmc-assembled-reuse
+    steps:
+      - uses: actions/checkout@v4
+      - name: Assemble candidate from exact qualified inputs
+        shell: bash
+        run: |
+          mkdir -p "$WASMC_MAINTENANCE_ROOT" "$RUNNER_TEMP/assembled-evidence"
+          own=.agents/workstreams/WS-20261026-lib-memory-release-v031
+          node "$own/assemble-json020-fixture.mjs" native-reuse "$own/qualification/native-reuse-composition/native-reuse-composition-archive-check.json" | tee "$RUNNER_TEMP/assembled-evidence/assembly.log"
+          git rev-parse HEAD > "$RUNNER_TEMP/assembled-evidence/source.txt"
+      - name: Install candidate Roots through the actual v2 installer
+        shell: bash
+        run: |
+          own=.agents/workstreams/WS-20261026-lib-memory-release-v031
+          for id in wasmc-system-linux-socket wasmc-system-linux-uinput wasmc-system-android-uinput; do
+            node "$own/install-datacore-closure-fixture.mjs" "$id" native-reuse
+            cp "$WASMC_MAINTENANCE_ROOT/native-reuse-install-$id/qualification.json" "$RUNNER_TEMP/assembled-evidence/$id-install.json"
+          done
+      - name: Execute installed Linux artifacts and check Android source
+        shell: bash
+        run: |
+          own=.agents/workstreams/WS-20261026-lib-memory-release-v031
+          export WASMC_SOCKET_ROOT="$(node -p "require(process.env.WASMC_MAINTENANCE_ROOT+'/native-reuse-install-wasmc-system-linux-socket/qualification.json').installed_root")"
+          export WASMC_UINPUT_ROOT="$(node -p "require(process.env.WASMC_MAINTENANCE_ROOT+'/native-reuse-install-wasmc-system-linux-uinput/qualification.json').installed_root")"
+          export WASMC_ANDROID_ROOT="$(node -p "require(process.env.WASMC_MAINTENANCE_ROOT+'/native-reuse-install-wasmc-system-android-uinput/qualification.json').installed_root")"
+          node "$own/test-native-reuse-capacity.mjs" "$RUNNER_TEMP/assembled-evidence/installed-runtime.json" | tee "$RUNNER_TEMP/assembled-evidence/installed-runtime.log"
+          node --input-type=module -e 'import fs from "node:fs";import assert from "node:assert/strict";import crypto from "node:crypto";const r=process.env.WASMC_ANDROID_ROOT,m=JSON.parse(fs.readFileSync(r+"/lib.json")),d=JSON.parse(fs.readFileSync(r+"/platform/native-boundary.template.json")),f=fs.readFileSync(r+"/platform/native-adapter.c"),h=crypto.createHash("sha256").update(f).digest("hex"),pin=m.implementation.find(x=>x.path==="platform/native-adapter.c");assert.equal(d.limits,undefined);assert.equal(h,pin.sha256);assert.equal(m.native.device_qualified,false);console.log(JSON.stringify({accepted:true,installed_source_sha256:h,device_qualified:false,formal_release:false}));' | tee "$RUNNER_TEMP/assembled-evidence/android-source.log"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: native-reuse-assembled-evidence
+          path: ${{ runner.temp }}/assembled-evidence
+          if-no-files-found: error
