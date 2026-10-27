@@ -473,3 +473,6 @@ Using exact Source 017d native producer and the immutable JSON 0.0.7 Root, regen
 
 
 2026-10-27 full candidate cohort: all 30 compiler qualification commands pass on a single source-free archive after correcting a stale CoreLib hash in test-only manifest. Original 27/30 run and three recovery checks retained alongside full 30/30 rerun at qualification/full-cohort-candidate-v031-20261027. Bun only compiles multi-memory Guest frames. Manifest source/provenance and runtime metadata remain unrefreshed, so integrity, release and installation not claimed.
+
+
+2026-10-27 fresh anonymous JSON install: actual v2 installer fetched public catalog at 6468cc13 and JSON 0.2 Root from immutable ddb40056 via anonymous HTTPS, all 19 files and lock read back. Checked compiler 0c07 consumed that installed Root, generated App f3f946fa; Node and Deno each ran six new inputs and two ordered JSON edit/atomic file writes. Compiler supplied directly, not installed product. Raw inherited Node execution receipt labels controlled_transport=true; see qualification/checked-profile-anonymous-json-20261027/summary.json for correction and original evidence. Not formal release.
