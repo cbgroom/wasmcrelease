@@ -1,0 +1,72 @@
+{
+  "schema": "wasmc.source-exact-l1-and-regression-v1",
+  "accepted": true,
+  "source_commit": "017d0466bcb44274f72a19990c425153e1df8f81",
+  "isolated_make_check": {
+    "status": 0,
+    "floor_reached": false,
+    "timeout": false,
+    "duration_s": 68.1,
+    "free_gib": 108.86,
+    "head": "017d0466bcb44274f72a19990c425153e1df8f81",
+    "command": [
+      "make",
+      "check",
+      "CARGO=cargo +1.96.0"
+    ],
+    "log_sha256": "8baa787f811d0fd2251259fbc69faaa8e35048f99c436282ab3cf80a09d2e0cf",
+    "log_bytes": 195122,
+    "compile_lines": [
+      "Compiling wasmc-core-runtime v0.1.0 (/Users/youxianshi/code/.worktrees/wasmc/WS-20261027-lib-memory-l1-isolated-v2/crates/wasmc_core_runtime)",
+      "Compiling wasmc_component_encoder v0.1.0 (/Users/youxianshi/code/.worktrees/wasmc/WS-20261027-lib-memory-l1-isolated-v2/crates/wasmc_component_encoder)",
+      "Compiling wasmc v0.1.0 (/Users/youxianshi/code/.worktrees/wasmc/WS-20261027-lib-memory-l1-isolated-v2)"
+    ],
+    "tail": ""
+  },
+  "targeted_automated_regression": {
+    "status": 0,
+    "floor_reached": false,
+    "timeout": false,
+    "duration_s": 22.1,
+    "free_gib": 110.26,
+    "command": [
+      "cargo",
+      "+1.96.0",
+      "test",
+      "--locked",
+      "--offline",
+      "--features",
+      "wasmi-runtime",
+      "--lib",
+      "atomic_dual_sdk_root_exact_inventory_and_regeneration",
+      "--",
+      "--nocapture"
+    ],
+    "source_sha256": "f379db170ead37d869b33f1a863e51794eadf7344a6d4fbd07075136b10f9194",
+    "source_stable": true,
+    "log_sha256": "e6adce69b859d68be856788312e16ca0edfaf087d230d03da627ffda13a26ed4",
+    "compiling": [
+      "Compiling wasmc v0.1.0 (/Users/youxianshi/code/.worktrees/wasmc/WS-20261026-lib-memory-json-v1)"
+    ]
+  },
+  "portable_warm_build": {
+    "status": 0,
+    "floor_reached": false,
+    "duration_s": 2.1,
+    "free_gib": 108.85,
+    "head": "017d0466bcb44274f72a19990c425153e1df8f81",
+    "inputs_stable": true,
+    "input_count": 711,
+    "artifact_sha256": "d725ecc9e6fe5b2717b566bdc86b7a571f76b4abc71f111f048f91bb539ded09",
+    "compiling": [],
+    "log_sha256": "eb28fc11e01befc37ba8d7ee4c0d80d71699345b365303567e66ba86fcd0134d",
+    "tail": ""
+  },
+  "previous_a63_qualification_retained": true,
+  "nonclaims": [
+    "full L2 workspace tests",
+    "GitHub CI success",
+    "master integration",
+    "formal release"
+  ]
+}
