@@ -1,0 +1,249 @@
+{
+  "schema": "wasmc.lib-refresh-source/v2",
+  "id": "wasmc-json",
+  "version": "0.2.1",
+  "profile": "value",
+  "crate": "wasmc_json_memory_constructors_v033",
+  "artifact_name": "wasmc_json_memory_constructors_v033",
+  "world": "json",
+  "description": "Rust serde_json-backed construction, selection, atomic edits and typed reads; no Lib-local capacity ceilings.",
+  "dependencies": [
+    "serde_json"
+  ],
+  "apis": [
+    {
+      "api": "array-from-values",
+      "ecosystem": "serde_json 1.0.151 RawValue, Number, string codecs and Rust standard collections",
+      "origin": "adapted",
+      "support": "supported",
+      "implementation": "lib",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "host_authorities": []
+    },
+    {
+      "api": "array-from-values-or",
+      "ecosystem": "serde_json 1.0.151 RawValue, Number, string codecs and Rust standard collections",
+      "origin": "adapted",
+      "support": "supported",
+      "implementation": "lib",
+      "delta": "Reuse the exact Rust constructor; return the caller-supplied fallback on invalid JSON. No per-Lib capacity ceiling.",
+      "host_authorities": []
+    },
+    {
+      "api": "compact",
+      "ecosystem": "serde_json 1.0.151 RawValue, Number, string codecs and Rust standard collections",
+      "origin": "adapted",
+      "support": "supported",
+      "implementation": "lib",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "host_authorities": []
+    },
+    {
+      "api": "compact-bytes",
+      "ecosystem": "serde_json 1.0.151 RawValue, Number, string codecs and Rust standard collections",
+      "origin": "adapted",
+      "support": "supported",
+      "implementation": "lib",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "host_authorities": []
+    },
+    {
+      "api": "compact-or",
+      "ecosystem": "serde_json 1.0.151 RawValue, Number, string codecs and Rust standard collections",
+      "origin": "adapted",
+      "support": "supported",
+      "implementation": "lib",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "host_authorities": []
+    },
+    {
+      "api": "compact-or-bytes",
+      "ecosystem": "serde_json 1.0.151 RawValue, Number, string codecs and Rust standard collections",
+      "origin": "adapted",
+      "support": "supported",
+      "implementation": "lib",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "host_authorities": []
+    },
+    {
+      "api": "decode-string-or",
+      "ecosystem": "serde_json 1.0.151 RawValue, Number, string codecs and Rust standard collections",
+      "origin": "adapted",
+      "support": "supported",
+      "implementation": "lib",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "host_authorities": []
+    },
+    {
+      "api": "edit-bytes",
+      "ecosystem": "serde_json 1.0.151 RawValue, Number, string codecs and Rust standard collections",
+      "origin": "adapted",
+      "support": "supported",
+      "implementation": "lib",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "host_authorities": []
+    },
+    {
+      "api": "edit-or-bytes",
+      "ecosystem": "serde_json 1.0.151 RawValue, Number, string codecs and Rust standard collections",
+      "origin": "adapted",
+      "support": "supported",
+      "implementation": "lib",
+      "delta": "Calls the same ordered atomic Rust edit path and returns JSON text or explicit caller fallback. Detailed errors remain available from edit-bytes.",
+      "host_authorities": []
+    },
+    {
+      "api": "encode",
+      "ecosystem": "serde_json 1.0.151 RawValue, Number, string codecs and Rust standard collections",
+      "origin": "adapted",
+      "support": "supported",
+      "implementation": "lib",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "host_authorities": []
+    },
+    {
+      "api": "encode-parts",
+      "ecosystem": "serde_json 1.0.151 RawValue, Number, string codecs and Rust standard collections",
+      "origin": "adapted",
+      "support": "supported",
+      "implementation": "lib",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "host_authorities": []
+    },
+    {
+      "api": "inspect-values-bytes",
+      "ecosystem": "serde_json 1.0.151 RawValue, Number, string codecs and Rust standard collections",
+      "origin": "adapted",
+      "support": "supported",
+      "implementation": "lib",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "host_authorities": []
+    },
+    {
+      "api": "object-from-fields",
+      "ecosystem": "serde_json 1.0.151 RawValue, Number, string codecs and Rust standard collections",
+      "origin": "adapted",
+      "support": "supported",
+      "implementation": "lib",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "host_authorities": []
+    },
+    {
+      "api": "object-from-fields-or",
+      "ecosystem": "serde_json 1.0.151 RawValue, Number, string codecs and Rust standard collections",
+      "origin": "adapted",
+      "support": "supported",
+      "implementation": "lib",
+      "delta": "Reuse the exact Rust constructor; return the caller-supplied fallback on invalid JSON. No per-Lib capacity ceiling.",
+      "host_authorities": []
+    },
+    {
+      "api": "quote-string",
+      "ecosystem": "serde_json 1.0.151 RawValue, Number, string codecs and Rust standard collections",
+      "origin": "adapted",
+      "support": "supported",
+      "implementation": "lib",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "host_authorities": []
+    },
+    {
+      "api": "read-bool",
+      "ecosystem": "serde_json 1.0.151 RawValue, Number, string codecs and Rust standard collections",
+      "origin": "adapted",
+      "support": "supported",
+      "implementation": "lib",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "host_authorities": []
+    },
+    {
+      "api": "read-f64",
+      "ecosystem": "serde_json 1.0.151 RawValue, Number, string codecs and Rust standard collections",
+      "origin": "adapted",
+      "support": "supported",
+      "implementation": "lib",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "host_authorities": []
+    },
+    {
+      "api": "read-i64",
+      "ecosystem": "serde_json 1.0.151 RawValue, Number, string codecs and Rust standard collections",
+      "origin": "adapted",
+      "support": "supported",
+      "implementation": "lib",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "host_authorities": []
+    },
+    {
+      "api": "read-u64",
+      "ecosystem": "serde_json 1.0.151 RawValue, Number, string codecs and Rust standard collections",
+      "origin": "adapted",
+      "support": "supported",
+      "implementation": "lib",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "host_authorities": []
+    },
+    {
+      "api": "select",
+      "ecosystem": "serde_json 1.0.151 RawValue, Number, string codecs and Rust standard collections",
+      "origin": "adapted",
+      "support": "supported",
+      "implementation": "lib",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "host_authorities": []
+    },
+    {
+      "api": "select-bytes",
+      "ecosystem": "serde_json 1.0.151 RawValue, Number, string codecs and Rust standard collections",
+      "origin": "adapted",
+      "support": "supported",
+      "implementation": "lib",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "host_authorities": []
+    },
+    {
+      "api": "select-string-or-bytes",
+      "ecosystem": "serde_json 1.0.151 RawValue, Number, string codecs and Rust standard collections",
+      "origin": "adapted",
+      "support": "supported",
+      "implementation": "lib",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "host_authorities": []
+    },
+    {
+      "api": "select-values",
+      "ecosystem": "serde_json 1.0.151 RawValue, Number, string codecs and Rust standard collections",
+      "origin": "adapted",
+      "support": "supported",
+      "implementation": "lib",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "host_authorities": []
+    },
+    {
+      "api": "select-values-bytes",
+      "ecosystem": "serde_json 1.0.151 RawValue, Number, string codecs and Rust standard collections",
+      "origin": "adapted",
+      "support": "supported",
+      "implementation": "lib",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "host_authorities": []
+    },
+    {
+      "api": "validate",
+      "ecosystem": "serde_json 1.0.151 RawValue, Number, string codecs and Rust standard collections",
+      "origin": "adapted",
+      "support": "supported",
+      "implementation": "lib",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "host_authorities": []
+    },
+    {
+      "api": "validate-bytes",
+      "ecosystem": "serde_json 1.0.151 RawValue, Number, string codecs and Rust standard collections",
+      "origin": "adapted",
+      "support": "supported",
+      "implementation": "lib",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "host_authorities": []
+    }
+  ]
+}
