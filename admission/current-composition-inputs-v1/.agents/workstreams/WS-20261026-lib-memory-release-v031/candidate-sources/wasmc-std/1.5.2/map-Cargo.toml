@@ -1,0 +1,17 @@
+[package]
+name = "wasmc-std-s32-map-core"
+version = "1.5.1"
+edition = "2024"
+publish = false
+
+[lib]
+crate-type = ["cdylib"]
+
+[profile.release]
+opt-level = "s"
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = "symbols"
+
+[workspace]
