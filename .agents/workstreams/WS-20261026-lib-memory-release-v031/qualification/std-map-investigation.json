@@ -1,0 +1,40 @@
+{
+  "schema": "wasmc.std-map-investigation/v1",
+  "accepted": false,
+  "prior_run": {
+    "scope": "anonymous-installed std 1.5.0 Core with CoreLib 4.12 candidate, one million insertions followed by checks",
+    "started": true,
+    "termination": "operator sent SIGTERM to own live test after 61 seconds",
+    "exit_code": 143,
+    "observed_cpu_percent": 99.7,
+    "progress_count": "unknown",
+    "raw_log": "qualification/authority-d489-anonymous-std-map-first.log",
+    "result": "incomplete; no capacity failure or completion inferred"
+  },
+  "algorithm": "Existing Core Map searches a managed entry list sequentially on each operation; repeated unique insertion is quadratic. Replacement uses Rust BTreeMap behind CoreLib-owned tokens and retains existing nine exported APIs.",
+  "inputs": {
+    "std-map-fast/Cargo.toml": "47d11fcde65f1537c4e25d2bcfa79d77e7ea2becb319b55280eab25d29f0a2d7",
+    "std-map-fast/Cargo.lock": "63e3b7a2871c1b7659a4a20d371356e212b8edee079455ae36be8e24d68f88d1",
+    "std-map-fast/src/lib.rs": "ac1cc5aad36b89d6532ff22ecbc406570676aa5ea6668abdaa214a31b19fadf8",
+    "std-map-fast/artifacts/map-core.wasm": "b003fe584ec10cf9f1fa60b262349aa18b83e9a32a9f02781a1a333a84d8565d",
+    "std-map-fast/artifacts/std-composite.wasm": "b9501d32e8704cc5da74698231468f1e93a4c4f9cbe0ff49dcb7f4a876db4250"
+  },
+  "million_entry_success": "qualification/std-map-composite-million-first.log",
+  "normal_sdk_regression": "qualification/std-map-composite-regression-first.json",
+  "versioned_root": false,
+  "component_qualified": false,
+  "installed": false,
+  "formal_release": false,
+  "first_source_archive": "qualification/std-map-fast-source-first.rs.gz",
+  "stale_handle_first_failure": "qualification/std-map-fast-first-stale-probe.log",
+  "recovery": {
+    "reason": "release RefCell borrow before invalid-reference trap; same instance remains usable",
+    "source_sha256": "64c7a708d1c0fb59eefa600a94b251a9a1bffcbf41f6a938cf205fa94ee6a75e",
+    "raw_sha256": "c0940af169abcadb9ff0b09b399dd3c02e64f544e65b24921a485bb2e6db4286",
+    "composite_sha256": "52466d3a82fde687001094e70922da28d900e74b6d8f9dee42b6eecebee4d464",
+    "million_entry_test": "qualification/std-map-composite-million-recovery.log",
+    "standalone_test": "qualification/std-map-fast-recovery.json",
+    "sdk_regression": "qualification/std-map-composite-regression-recovery.json",
+    "engine_regression": "qualification/std-map-composite-engines-recovery.log"
+  }
+}
