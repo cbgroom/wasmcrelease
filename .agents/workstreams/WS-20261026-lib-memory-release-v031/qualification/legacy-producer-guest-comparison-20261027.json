@@ -1,0 +1,102 @@
+{
+  "schema": "wasmc.legacy-producer-guest-compatibility/v1",
+  "accepted": true,
+  "scope": "local in-memory HTTP callbacks; exact old Root and new generated producer; candidate only",
+  "old_app_sha256": "14aa9cf64f9729f820a421aa3ac5d0a89f4d114a16a6022a851a08404e0b1660",
+  "new_app_sha256": "8c00e4710f13c6af2a939c590fd1e0d0f2da8e938d3c814ebca45bfb5352b926",
+  "new_template_sha256": "9a7146580e8227612caaad59cb2da600a57ec787f4520dad050ceda168010538",
+  "new_transfer_source_sha256": "07e6d760158a8c4724d1552ebfe72f94f8b2041374d86e95e131e37a7acbd62e",
+  "new_prepared_transfer_sha256": "81a17bc5d28445922c0e2b7bdc90cb380d40c4fd4a5eafad3a8631671962ec89",
+  "new_compiler_sha256": "d725ecc9e6fe5b2717b566bdc86b7a571f76b4abc71f111f048f91bb539ded09",
+  "new_corelib_sha256": "8231aba425ef1bb0aa07a760ff4c77917e247382ef73a41408db6b6b1cb40b1e",
+  "source_commit": "a63fea2b2ca9bf17eee5dbc5d3d93df33e62904a",
+  "inputs_stable": true,
+  "engines": [
+    {
+      "engine": "node",
+      "exit_code": 0,
+      "log_sha256": "f3dfe4d32df2f2717498038ed1b9fdf982d369aa77a9fc7e9ceff69efd830899",
+      "results": [
+        {
+          "accepted": true,
+          "input_bytes": 17,
+          "response_bytes": 17,
+          "response_sha256": "cde2af6194eaa643cb765cb8ea1e930253887d4c9b849ec6045a21c9814b14e2"
+        },
+        {
+          "accepted": true,
+          "input_bytes": 7,
+          "response_bytes": 2,
+          "response_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+        },
+        {
+          "accepted": true,
+          "input_bytes": 70014,
+          "response_bytes": 2,
+          "response_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+        },
+        {
+          "accepted": true,
+          "input_bytes": 13,
+          "response_bytes": 13,
+          "response_sha256": "6cd0536974ff4080ac0b296e30328660e9f0630e8027af4a4ac61fa7765bae63"
+        },
+        {
+          "accepted": true,
+          "old_app_sha256": "14aa9cf64f9729f820a421aa3ac5d0a89f4d114a16a6022a851a08404e0b1660",
+          "new_app_sha256": "8c00e4710f13c6af2a939c590fd1e0d0f2da8e938d3c814ebca45bfb5352b926",
+          "same_instance": true,
+          "response_failure_recovered": true,
+          "pending_zero": true
+        }
+      ]
+    },
+    {
+      "engine": "deno",
+      "exit_code": 0,
+      "log_sha256": "f3dfe4d32df2f2717498038ed1b9fdf982d369aa77a9fc7e9ceff69efd830899",
+      "results": [
+        {
+          "accepted": true,
+          "input_bytes": 17,
+          "response_bytes": 17,
+          "response_sha256": "cde2af6194eaa643cb765cb8ea1e930253887d4c9b849ec6045a21c9814b14e2"
+        },
+        {
+          "accepted": true,
+          "input_bytes": 7,
+          "response_bytes": 2,
+          "response_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+        },
+        {
+          "accepted": true,
+          "input_bytes": 70014,
+          "response_bytes": 2,
+          "response_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+        },
+        {
+          "accepted": true,
+          "input_bytes": 13,
+          "response_bytes": 13,
+          "response_sha256": "6cd0536974ff4080ac0b296e30328660e9f0630e8027af4a4ac61fa7765bae63"
+        },
+        {
+          "accepted": true,
+          "old_app_sha256": "14aa9cf64f9729f820a421aa3ac5d0a89f4d114a16a6022a851a08404e0b1660",
+          "new_app_sha256": "8c00e4710f13c6af2a939c590fd1e0d0f2da8e938d3c814ebca45bfb5352b926",
+          "same_instance": true,
+          "response_failure_recovered": true,
+          "pending_zero": true
+        }
+      ]
+    }
+  ],
+  "first_failure": "First candidate execution expected 70014-byte JSON to round-trip but received fallback; original tool output preserved in conversation, deterministic local rerun raw log retained privately. Subsequent old-versus-new comparison independently shows both return identical fallback.",
+  "failure_replay_log_sha256": "521572711747908267a80f64085373ca63715dd527b677d66a477b1cc86cb953",
+  "nonclaims": [
+    "historical JSON Root size cap removed",
+    "production Host or network effect",
+    "Source L1/L2",
+    "formal publication"
+  ]
+}
