@@ -1,0 +1,31 @@
+[
+  {
+    "command": [
+      "node",
+      "scripts/test-core-compatibility.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"host\":{\"name\":\"node\",\"version\":\"v26.12.1\",\"v8\":\"14.6.202.34-node.40\"},\"features\":{\"function-references\":true,\"tail-call\":true},\"negative_tests\":6,\"supported_probe_oracle\":7}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "bun",
+      "scripts/test-core-compatibility.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"host\":{\"name\":\"bun\",\"version\":\"1.3.14\",\"v8\":\"13.6.233.10-node.18\"},\"features\":{\"function-references\":true,\"tail-call\":true},\"negative_tests\":6,\"supported_probe_oracle\":7}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "deno",
+      "run",
+      "--allow-read",
+      "scripts/test-core-compatibility.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"host\":{\"name\":\"deno\",\"version\":\"2.9.4\",\"v8\":\"15.0.245.2-rusty\"},\"features\":{\"function-references\":true,\"tail-call\":true},\"negative_tests\":6,\"supported_probe_oracle\":7}\n",
+    "stderr": ""
+  }
+]

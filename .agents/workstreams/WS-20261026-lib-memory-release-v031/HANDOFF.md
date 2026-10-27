@@ -464,3 +464,6 @@ Using exact Source 017d native producer and the immutable JSON 0.0.7 Root, regen
 
 
 2026-10-27 checked profile strings/results: regenerated candidate fixtures with compiler 0c07, keeping old candidate evidence in prior commits. Node/Deno each passed 583 string Guest calls including 1.2MB, and 800 checked-result Guest calls; Bun passed frame checks only (multi-memory unsupported). Three altered-asset controls rejected. Composition receipt now also checks its actual App hash. Receipts at qualification/checked-string-results-v031-20261027; full source-free compiler cohort and release remain pending.
+
+
+2026-10-27 ordinary cohort: added real v031 compatibility manifest and Std fixture compiled with checked compiler 0c07; output exactly matches v030 fixture. All Node/Bun/Deno standard tests each execute 7680 calls, and ordinary Lib API, helper, if-scope, unit-result tests pass on all three; Core compatibility tests with negative controls pass. Initial incomplete-staging missing-file errors preserved; see qualification/ordinary-compiler-cohort-v031-20261027. This is partial staging with synthetic metadata; complete compiler integrity and release qualification remain.

@@ -1,0 +1,147 @@
+[
+  {
+    "command": [
+      "node",
+      "examples/current/standard.mjs"
+    ],
+    "status": 1,
+    "stdout": "",
+    "stderr": "node:fs:555\n  return binding.open(\n                 ^\n\nError: ENOENT: no such file or directory, open '/Users/youxianshi/.local/state/wasmc-maintenance/20261026-lib-memory-json-32/current-host-checked-v031-staging-20261027/compatibility/core-artifacts-v031.json'\n    at Object.openSync (node:fs:555:18)\n    at readFileSync (node:fs:439:35)\n    at file:///Users/youxianshi/.local/state/wasmc-maintenance/20261026-lib-memory-json-32/current-host-checked-v031-staging-20261027/scripts/core-compatibility.mjs:6:40\n    at ModuleJob.run (node:internal/modules/esm/module_job:430:25)\n    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:655:26)\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {\n  errno: -2,\n  code: 'ENOENT',\n  syscall: 'open',\n  path: '/Users/youxianshi/.local/state/wasmc-maintenance/20261026-lib-memory-json-32/current-host-checked-v031-staging-20261027/compatibility/core-artifacts-v031.json'\n}\n\nNode.js v25.6.0\n"
+  },
+  {
+    "command": [
+      "node",
+      "scripts/test-current-lib-api-v021.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"provider\":\"4.12.0-candidate.1\",\"provider_sha256\":\"8231aba425ef1bb0aa07a760ff4c77917e247382ef73a41408db6b6b1cb40b1e\",\"abi_namespace\":\"wasmc:lib/wasmc.lib_managed_object_heap@4.9.0\",\"compileLib_oracles\":3,\"instantiateLib_oracles\":3,\"calls\":768,\"boolean_conditional_calls\":1536,\"boolean_numeric_rejections\":6,\"old_provider_fallback\":false}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "node",
+      "scripts/test-current-private-helpers.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"source_cases\":20,\"guest_calls\":66,\"repeats_per_instance\":3,\"basic_scalar_types\":11,\"long_helper_terms\":2098,\"invalid_sources_rejected\":5,\"selected_guest_trap\":true,\"healthy_after_rejections\":true,\"imports\":0,\"real_MCP_acceptance\":false}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "node",
+      "scripts/test-if-branch-scope.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"engine\":\"node\",\"compiler_sha256\":\"0c07d9b6b2edf9b18117860259c350346db1b8b79b667604fd32a2fddf851c17\",\"source_cases\":5,\"scalar_calls\":1200,\"managed_calls\":192,\"scope_rejections\":24,\"carrier_forms\":3,\"physical_owner_slots_preserved\":true}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "node",
+      "scripts/test-unit-result-match.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"compiler_sha256\":\"0c07d9b6b2edf9b18117860259c350346db1b8b79b667604fd32a2fddf851c17\",\"source_cases\":4,\"guest_calls\":1152,\"host_effects\":1280,\"error_handles_dropped\":384,\"malformed_traps\":640,\"negative_sources_rejected\":6,\"same_instance_recovery\":true,\"live_handles\":0,\"real_Host_effects\":false}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "bun",
+      "examples/current/standard.mjs"
+    ],
+    "status": 1,
+    "stdout": "",
+    "stderr": "1 | import { readFileSync } from 'node:fs';\n2 | import { createHash } from 'node:crypto';\n3 | \n4 | const compilerAuthority=JSON.parse(readFileSync(new URL('../current/compiler-release.json',import.meta.url)));\n5 | if(!/^0\\.0\\.[0-9]+$/.test(compilerAuthority.version))throw Error('invalid compiler product version');\n6 | export const coreContract = JSON.parse(readFileSync(new URL('../compatibility/core-artifacts-v0'+compilerAuthority.version.split('.')[2]+'.json', import.meta.url)));\n                                           ^\nENOENT: no such file or directory, open '/Users/youxianshi/.local/state/wasmc-maintenance/20261026-lib-memory-json-32/current-host-checked-v031-staging-20261027/compatibility/core-artifacts-v031.json'\n    path: \"/Users/youxianshi/.local/state/wasmc-maintenance/20261026-lib-memory-json-32/current-host-checked-v031-staging-20261027/compatibility/core-artifacts-v031.json\",\n syscall: \"open\",\n   errno: -2,\n    code: \"ENOENT\"\n\n      at /Users/youxianshi/.local/state/wasmc-maintenance/20261026-lib-memory-json-32/current-host-checked-v031-staging-20261027/scripts/core-compatibility.mjs:6:40\n\nBun v1.3.14 (macOS arm64)\n"
+  },
+  {
+    "command": [
+      "bun",
+      "scripts/test-current-lib-api-v021.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"provider\":\"4.12.0-candidate.1\",\"provider_sha256\":\"8231aba425ef1bb0aa07a760ff4c77917e247382ef73a41408db6b6b1cb40b1e\",\"abi_namespace\":\"wasmc:lib/wasmc.lib_managed_object_heap@4.9.0\",\"compileLib_oracles\":3,\"instantiateLib_oracles\":3,\"calls\":768,\"boolean_conditional_calls\":1536,\"boolean_numeric_rejections\":6,\"old_provider_fallback\":false}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "bun",
+      "scripts/test-current-private-helpers.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"source_cases\":20,\"guest_calls\":66,\"repeats_per_instance\":3,\"basic_scalar_types\":11,\"long_helper_terms\":2098,\"invalid_sources_rejected\":5,\"selected_guest_trap\":true,\"healthy_after_rejections\":true,\"imports\":0,\"real_MCP_acceptance\":false}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "bun",
+      "scripts/test-if-branch-scope.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"engine\":\"bun\",\"compiler_sha256\":\"0c07d9b6b2edf9b18117860259c350346db1b8b79b667604fd32a2fddf851c17\",\"source_cases\":5,\"scalar_calls\":1200,\"managed_calls\":192,\"scope_rejections\":24,\"carrier_forms\":3,\"physical_owner_slots_preserved\":true}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "bun",
+      "scripts/test-unit-result-match.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"compiler_sha256\":\"0c07d9b6b2edf9b18117860259c350346db1b8b79b667604fd32a2fddf851c17\",\"source_cases\":4,\"guest_calls\":1152,\"host_effects\":1280,\"error_handles_dropped\":384,\"malformed_traps\":640,\"negative_sources_rejected\":6,\"same_instance_recovery\":true,\"live_handles\":0,\"real_Host_effects\":false}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "deno",
+      "run",
+      "--allow-read",
+      "examples/current/standard.mjs"
+    ],
+    "status": 1,
+    "stdout": "",
+    "stderr": "error: Uncaught (in promise) Error: ENOENT: no such file or directory, open '/Users/youxianshi/.local/state/wasmc-maintenance/20261026-lib-memory-json-32/current-host-checked-v031-staging-20261027/compatibility/core-artifacts-v031.json'\n    at readFileSync (ext:deno_node/fs.ts:1:9972)\n    at file:///Users/youxianshi/.local/state/wasmc-maintenance/20261026-lib-memory-json-32/current-host-checked-v031-staging-20261027/scripts/core-compatibility.mjs:6:40\n"
+  },
+  {
+    "command": [
+      "deno",
+      "run",
+      "--allow-read",
+      "scripts/test-current-lib-api-v021.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"provider\":\"4.12.0-candidate.1\",\"provider_sha256\":\"8231aba425ef1bb0aa07a760ff4c77917e247382ef73a41408db6b6b1cb40b1e\",\"abi_namespace\":\"wasmc:lib/wasmc.lib_managed_object_heap@4.9.0\",\"compileLib_oracles\":3,\"instantiateLib_oracles\":3,\"calls\":768,\"boolean_conditional_calls\":1536,\"boolean_numeric_rejections\":6,\"old_provider_fallback\":false}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "deno",
+      "run",
+      "--allow-read",
+      "scripts/test-current-private-helpers.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"source_cases\":20,\"guest_calls\":66,\"repeats_per_instance\":3,\"basic_scalar_types\":11,\"long_helper_terms\":2098,\"invalid_sources_rejected\":5,\"selected_guest_trap\":true,\"healthy_after_rejections\":true,\"imports\":0,\"real_MCP_acceptance\":false}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "deno",
+      "run",
+      "--allow-read",
+      "scripts/test-if-branch-scope.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"engine\":\"deno\",\"compiler_sha256\":\"0c07d9b6b2edf9b18117860259c350346db1b8b79b667604fd32a2fddf851c17\",\"source_cases\":5,\"scalar_calls\":1200,\"managed_calls\":192,\"scope_rejections\":24,\"carrier_forms\":3,\"physical_owner_slots_preserved\":true}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "deno",
+      "run",
+      "--allow-read",
+      "scripts/test-unit-result-match.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"compiler_sha256\":\"0c07d9b6b2edf9b18117860259c350346db1b8b79b667604fd32a2fddf851c17\",\"source_cases\":4,\"guest_calls\":1152,\"host_effects\":1280,\"error_handles_dropped\":384,\"malformed_traps\":640,\"negative_sources_rejected\":6,\"same_instance_recovery\":true,\"live_handles\":0,\"real_Host_effects\":false}\n",
+    "stderr": ""
+  }
+]
