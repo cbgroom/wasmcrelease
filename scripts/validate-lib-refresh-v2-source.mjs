@@ -1,10 +1,12 @@
 #!/usr/bin/env node
 import assert from 'node:assert/strict';
 import { readFile, readdir, stat } from 'node:fs/promises';
+import { existsSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { validateUpstreamSourceContract } from './lib-refresh-upstream-source-v2.mjs';
 import { inventory as fileInventory } from './lib-refresh-cache-v2.mjs';
 import {currentProductReader,currentProductPaths,verifyCurrentRelease} from './current-lib-release-v3.mjs';
+import {createHash} from 'node:crypto';
 
 const root = process.cwd();
 const registry = JSON.parse(await readFile(resolve(root, 'libspec/registry.json'), 'utf8'));
@@ -26,11 +28,28 @@ const forbiddenDelta = [
   'Linker<',
 ];
 const allowedProfiles = new Set(['value', 'resource', 'host', 'native']);
-let originalProducerClosure=null,originalProducerSources=0;
+let originalProducerClosure=null,originalProducerSources=0,projectedProducerSources=0,verifiedSourcePackets=[];
+const projectedSchemas=new Set([
+  'wasmc.current-original-producer-source/v1','wasmc.current-published-producer-source/v1',
+  'wasmc.current-built-rust-producer-source/v1','wasmc.current-wit-rebind-producer-source/v1',
+  'wasmc.current-cohort-reexport-producer-source/v1','wasmc.current-reexported-rust-producer-source/v1',
+  'wasmc.current-std-resource-producer-source/v1','wasmc.current-native-source-only-producer-source/v1',
+  'wasmc.current-native-node-producer-source/v1','wasmc.current-native-c-producer-source/v1',
+  'wasmc.current-native-reused-c-producer-source/v1',
+]);
+const args=process.argv.slice(2);
+assert.ok(args.length===0||(args.length===2&&args[0]==='--candidate-assembly-sha256'&&/^[a-f0-9]{64}$/.test(args[1])),'invalid source validation options');
 function verifiedOriginalProducerSource(row,spec){
   const read=currentProductReader(root);
   if(!originalProducerClosure){
-    const admission=JSON.parse(read('admission/current-product-v3.json'));
+    let admission;
+    if(args.length){
+      const bytes=read('admission/current-composition-assembly-v1.json');
+      assert.equal(createHash('sha256').update(bytes).digest('hex'),args[1],'independent candidate assembly pin');
+      const receipt=JSON.parse(bytes);assert.equal(receipt.schema,'wasmc.current-composition-assembly/v1');
+      assert.equal(receipt.accepted,true);assert.equal(receipt.formal_release,false);assert.equal(receipt.fresh_builds,0);
+      admission=receipt.closure;assert.equal(receipt.catalog_sha256,admission.catalog_sha256);
+    }else admission=JSON.parse(read('admission/current-product-v3.json'));
     assert.equal(admission.schema,'wasmc.current-composition-release-closure/v1','original source requires independently retained composition closure');
     const bytes=read('catalog/libs-current-v2.json'),catalog=JSON.parse(bytes),cohort=JSON.parse(read(catalog.cohort.path));
     assert.equal(cohort.schema,'wasmc.public-current-composition-cohort/v1');
@@ -40,6 +59,7 @@ function verifiedOriginalProducerSource(row,spec){
         [...currentProductPaths(root,source.root.locator),...currentProductPaths(root,source.source_packet.root)])];
     originalProducerClosure=verifyCurrentRelease(bytes,admission.catalog_sha256,read,paths);
     assert.deepEqual(originalProducerClosure,admission,'actual full base/source/Root lineage differs from independent closure');
+    verifiedSourcePackets=cohort.source_lineage.admitted_original_sources.flatMap(({source})=>source.source_packet.files);
   }
   const catalog=JSON.parse(read('catalog/libs-current-v2.json')),selected=catalog.packages.find(item=>item.id===row.id);
   assert.ok(selected&&selected.source.spec.path===row.source+'/lib.json','original source must be a selected current registry identity');
@@ -51,10 +71,12 @@ for (const row of registry.libs) {
   assert.equal(row.source, 'libspec/' + row.id, row.id + ': source must use canonical libspec/<id>');
   const dir = resolve(root, row.source);
   const spec = JSON.parse(await readFile(join(dir, 'lib.json'), 'utf8'));
-  if(['wasmc.current-original-producer-source/v1','wasmc.current-published-producer-source/v1'].includes(spec.schema)){
+  if(projectedSchemas.has(spec.schema)){
     verifiedOriginalProducerSource(row,spec);
     assert.deepEqual(Object.keys(await fileInventory(dir)).sort(),['lib.json','lib.wit'],row.id+': exact admitted original-source projection');
-    originalProducerSources++;continue;
+    projectedProducerSources++;
+    if(['wasmc.current-original-producer-source/v1','wasmc.current-published-producer-source/v1'].includes(spec.schema))originalProducerSources++;
+    continue;
   }
   assert.equal(spec.schema, 'wasmc.lib-refresh-source/v2');
   assert.equal(spec.id, row.id);
@@ -101,7 +123,17 @@ for (const row of registry.libs) {
 for (const [name, shared] of Object.entries(policy.shared_modules ?? {})) {
   assert.equal(Boolean(shared.source), !Boolean(shared.upstream_source), 'one current shared source authority required');
   if (shared.upstream_source) { validateUpstreamSourceContract(shared); continue; }
-  const source = await readFile(resolve(root, shared.source), 'utf8');
+  let source;
+  if(args.length&&!existsSync(resolve(root,shared.source))){
+    assert.ok(originalProducerClosure,'candidate source lineage must be verified first');
+    const suffix='/'+shared.source.replace(/^libspec\//,'');
+    const pins=verifiedSourcePackets.filter(pin=>pin.path.endsWith(suffix));
+    assert.ok(pins.length>0,'shared source missing from verified candidate packets: '+shared.source);
+    const first=pins[0];assert.ok(pins.every(pin=>pin.bytes===first.bytes&&pin.sha256===first.sha256),'shared source packet drift');
+    const bytes=currentProductReader(root)(first.path);
+    assert.equal(bytes.length,first.bytes);assert.equal(createHash('sha256').update(bytes).digest('hex'),first.sha256);
+    source=new TextDecoder('utf-8',{fatal:true}).decode(bytes);
+  }else source=await readFile(resolve(root, shared.source), 'utf8');
   for (const token of forbiddenDelta) {
     assert.ok(!source.includes(token), 'shared module ' + name + ' contains generated/runtime concern ' + token);
   }
@@ -115,7 +147,7 @@ console.log(JSON.stringify({
   shared_lock: true,
   authoring_authority: 'libspec',
   legacy_fallback: false,
-  ...(originalProducerSources?{original_producer_sources:originalProducerSources,
+  ...(projectedProducerSources?{original_producer_sources:originalProducerSources,projected_producer_sources:projectedProducerSources,
     composition_catalog_sha256:originalProducerClosure.catalog_sha256,fresh_full_q0:false,
     original_receipt_bytes_verified:false}:{}),
 }));

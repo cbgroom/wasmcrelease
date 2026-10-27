@@ -1,0 +1,10 @@
+{
+  "args": [
+    "scripts/validate-lib-refresh-v2-source.mjs",
+    "--candidate-assembly-sha256",
+    "0000000000000000000000000000000000000000000000000000000000000000"
+  ],
+  "status": 1,
+  "stdout": "",
+  "stderr": "node:internal/modules/run_main:111\n    triggerUncaughtException(\n    ^\n\nAssertionError [ERR_ASSERTION]: independent candidate assembly pin\n+ actual - expected\n\n+ '64c9d556a5d280b8cf5fa354e4237eaacd9703970ea3f6fc0b7541ce95e074a4'\n- '0000000000000000000000000000000000000000000000000000000000000000'\n\n    at verifiedOriginalProducerSource (file:///private/var/folders/y0/0l0zt2_d10jcmb0xd_08bjfh0000gn/T/wasmc-source-validation-jiyIzn/wrong-assembly-pin/scripts/validate-lib-refresh-v2-source.mjs:48:14)\n    at file:///private/var/folders/y0/0l0zt2_d10jcmb0xd_08bjfh0000gn/T/wasmc-source-validation-jiyIzn/wrong-assembly-pin/scripts/validate-lib-refresh-v2-source.mjs:75:5 {\n  generatedMessage: false,\n  code: 'ERR_ASSERTION',\n  actual: '64c9d556a5d280b8cf5fa354e4237eaacd9703970ea3f6fc0b7541ce95e074a4',\n  expected: '0000000000000000000000000000000000000000000000000000000000000000',\n  operator: 'strictEqual',\n  diff: 'simple'\n}\n\nNode.js v26.12.1\n"
+}

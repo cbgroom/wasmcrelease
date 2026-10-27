@@ -1,0 +1,10 @@
+{
+  "args": [
+    "scripts/validate-lib-refresh-v2-source.mjs",
+    "--candidate-assembly-sha256",
+    "64c9d556a5d280b8cf5fa354e4237eaacd9703970ea3f6fc0b7541ce95e074a4"
+  ],
+  "status": 1,
+  "stdout": "",
+  "stderr": "node:internal/modules/run_main:111\n    triggerUncaughtException(\n    ^\n\nAssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n23901 !== 23900\n\n    at readPin (file:///private/var/folders/y0/0l0zt2_d10jcmb0xd_08bjfh0000gn/T/wasmc-source-validation-FzDrcL/source-projection-drift/scripts/current-lib-composition-release-v1.mjs:19:107)\n    at verifyComposedCurrentRelease (file:///private/var/folders/y0/0l0zt2_d10jcmb0xd_08bjfh0000gn/T/wasmc-source-validation-FzDrcL/source-projection-drift/scripts/current-lib-composition-release-v1.mjs:93:24)\n    at verifyCurrentRelease (file:///private/var/folders/y0/0l0zt2_d10jcmb0xd_08bjfh0000gn/T/wasmc-source-validation-FzDrcL/source-projection-drift/scripts/current-lib-release-v3.mjs:75:12)\n    at verifiedOriginalProducerSource (file:///private/var/folders/y0/0l0zt2_d10jcmb0xd_08bjfh0000gn/T/wasmc-source-validation-FzDrcL/source-projection-drift/scripts/validate-lib-refresh-v2-source.mjs:60:29)\n    at file:///private/var/folders/y0/0l0zt2_d10jcmb0xd_08bjfh0000gn/T/wasmc-source-validation-FzDrcL/source-projection-drift/scripts/validate-lib-refresh-v2-source.mjs:75:5 {\n  generatedMessage: true,\n  code: 'ERR_ASSERTION',\n  actual: 23901,\n  expected: 23900,\n  operator: 'strictEqual',\n  diff: 'simple'\n}\n\nNode.js v26.12.1\n"
+}
