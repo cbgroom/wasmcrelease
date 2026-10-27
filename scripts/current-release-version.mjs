@@ -82,7 +82,7 @@ export function assertCompilerQualification(q, version, compilerSha256, manifest
       const c = result(currentHostQualificationScript(version));
       assert.equal(c.compiler_sha256, compilerSha256);
       assert.equal(c.compiled_frames, 4); assert.equal(c.modules_per_frame, 8);
-      assert.equal(c.native_parity, patch(version)>=31 ? 'bb808374f6184316127b04b100850dd11d6aa876573981b3f3ff87c96cddabb5' : requiresCheckedChunkQualification(version)
+      assert.equal(c.native_parity, patch(version)>=31 ? '91209ccc10ac3e2d7864498492164838b2d966f4116cbfa3c6d12befe9333af1' : requiresCheckedChunkQualification(version)
         ? '6c48c4bdade45afc63d2eaf372552bcdc85ac3f88c58fc4ce6866ec52ea1eecb'
         : requiresUnusedHostImportsQualification(version)
         ? 'd407267385d46f6ec4cdcd199fed5e2bc1320aea641140ac34b6b63014fe1c1f'

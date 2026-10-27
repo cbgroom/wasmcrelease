@@ -12,7 +12,7 @@ assert.equal(check(q), true);
 // Validator-only synthetic successor: real execution receipts are produced separately.
 const successor = structuredClone(q); successor.version = '0.0.31';
 for (const run of successor.runs) {
-  if (run.args.at(-1) === 'scripts/test-canonical-host-sdk.mjs') { run.args[run.args.length-1] = currentHostQualificationScript('0.0.31'); run.result.native_parity = 'bb808374f6184316127b04b100850dd11d6aa876573981b3f3ff87c96cddabb5'; }
+  if (run.args.at(-1) === 'scripts/test-canonical-host-sdk.mjs') { run.args[run.args.length-1] = currentHostQualificationScript('0.0.31'); run.result.native_parity = '91209ccc10ac3e2d7864498492164838b2d966f4116cbfa3c6d12befe9333af1'; }
   if (run.args.at(-1) === 'scripts/test-canonical-host-import-demand.mjs') run.args[run.args.length-1] = currentImportDemandQualificationScript('0.0.31');
   if (run.args.at(-1) === 'scripts/test-canonical-checked-results.mjs') run.args[run.args.length-1] = 'scripts/test-canonical-checked-results-v031.mjs';
   if (run.args.at(-1) === 'scripts/test-current-lib-api-v021.mjs') {
