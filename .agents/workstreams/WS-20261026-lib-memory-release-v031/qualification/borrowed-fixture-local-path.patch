@@ -1,0 +1,13 @@
+diff --git a/.agents/workstreams/WS-20261002-resource-sdk-complex-closure-v1/probes/core-sdk-adapter/src/borrowed_snapshot_tests.rs b/.agents/workstreams/WS-20261002-resource-sdk-complex-closure-v1/probes/core-sdk-adapter/src/borrowed_snapshot_tests.rs
+index 890e95a73..baea6813e 100644
+--- a/.agents/workstreams/WS-20261002-resource-sdk-complex-closure-v1/probes/core-sdk-adapter/src/borrowed_snapshot_tests.rs
++++ b/.agents/workstreams/WS-20261002-resource-sdk-complex-closure-v1/probes/core-sdk-adapter/src/borrowed_snapshot_tests.rs
+@@ -1609,7 +1609,7 @@ fn borrowed_snapshot_preserves_owner_on_both_engines() {
+     let owned = crate::compile_lib_auto_snapshot_core_artifact(SOURCE, 71).unwrap();
+     assert_eq!(artifact.caller_wasm, owned.caller_wasm);
+     // The external baseline is created before this emitter change on exact START.
+-    let baseline = std::fs::read("/home/huawei/code/.cache/wasmc-evidence/sdk-adapter-linux-20261002/owned-projection-before-366fd3c3.wasm").unwrap();
++    let baseline = std::fs::read(std::env::var_os("WASMC_OWNED_PROJECTION_BASELINE").expect("exact historical baseline")).unwrap();
+     assert_eq!(hex(&sha256(&baseline)), "676f4b986829037c2a1e4625555050c4ffef2a9cb03d51a136edb633de7c07e1");
+     // START remains a frozen byte witness; the current default is a new
+     // Provider namespace and does not promise historical byte compatibility.

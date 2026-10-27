@@ -1,0 +1,52 @@
+{
+  "status": 0,
+  "floor_reached": false,
+  "timeout": false,
+  "duration_s": 152.4,
+  "free_gib": 109.93,
+  "command": [
+    "cargo",
+    "+1.96.0",
+    "test",
+    "--locked",
+    "--offline",
+    "--features",
+    "wasmi-runtime",
+    "--lib",
+    "borrowed_snapshot_preserves_owner_on_both_engines",
+    "--",
+    "--nocapture"
+  ],
+  "source_base": "017d0466bcb44274f72a19990c425153e1df8f81",
+  "test_only_path_override": true,
+  "baseline_sha256": "676f4b986829037c2a1e4625555050c4ffef2a9cb03d51a136edb633de7c07e1",
+  "provider_sha256": "8231aba425ef1bb0aa07a760ff4c77917e247382ef73a41408db6b6b1cb40b1e",
+  "log_sha256": "24e0a1fe34aafd267a688f25be22d7f7de81a10612fed78dc12e4ee311efa31a",
+  "compiling": [
+    "Compiling wasmc-core-runtime v0.1.0 (/Users/youxianshi/code/.worktrees/wasmc/WS-20261027-lib-memory-l1-isolated-v2/crates/wasmc_core_runtime)",
+    "Compiling wasmc_component_encoder v0.1.0 (/Users/youxianshi/code/.worktrees/wasmc/WS-20261027-lib-memory-l1-isolated-v2/crates/wasmc_component_encoder)",
+    "Compiling wasmc v0.1.0 (/Users/youxianshi/code/.worktrees/wasmc/WS-20261027-lib-memory-l1-isolated-v2)"
+  ],
+  "schema": "wasmc.l2-historical-borrowed-fixture/v1",
+  "accepted": true,
+  "scope": "isolated Source copy with only historical baseline path override; exact SHA unchanged; not full L2",
+  "baseline_source_peer": "lgw_60b9b37d14c4447f919196105a1a8b8a",
+  "source_route": "peer_direct",
+  "copy_source_route": "peer_direct",
+  "copy_destination_route": "peer_direct",
+  "baseline_size": 1296,
+  "test_patch_sha256": "8bf503bd3533ff6cd97d31ae74c99fb1844a79615d28b3afd56256ff3b6834a2",
+  "engines": [
+    "Wasmtime49",
+    "Wasmi2"
+  ],
+  "shapes": 12,
+  "owners_per_shape_per_engine": 512,
+  "copies_per_shape_per_engine": 1024,
+  "raw_log_private": "/Users/youxianshi/.local/state/wasmc-maintenance/20261026-lib-memory-json-32/source-l2-borrowed-fixture-20261027/test.log",
+  "nonclaims": [
+    "unmodified full L2",
+    "Source integration",
+    "formal release"
+  ]
+}
