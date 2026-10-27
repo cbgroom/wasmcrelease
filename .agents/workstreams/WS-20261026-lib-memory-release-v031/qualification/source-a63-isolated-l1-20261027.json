@@ -1,0 +1,62 @@
+{
+  "schema": "wasmc.source-isolated-l1-v1",
+  "accepted": true,
+  "source_commit": "a63fea2b2ca9bf17eee5dbc5d3d93df33e62904a",
+  "isolation": "new linked detached worktree; exact Source commit; generated runtime cache stayed there",
+  "cargo_cache": "own APFS clone of compatible existing native cache; locked/offline; no registry dependencies rebuilt",
+  "make_check": {
+    "status": 0,
+    "floor_reached": false,
+    "timeout": false,
+    "duration_s": 72.1,
+    "free_gib": 110.79,
+    "head": "a63fea2b2ca9bf17eee5dbc5d3d93df33e62904a",
+    "command": [
+      "make",
+      "check",
+      "CARGO=cargo +1.96.0"
+    ],
+    "log_sha256": "6ab3d88262d230b542073079b959d9235b18d9eed053de10db46b314cea96b74",
+    "log_bytes": 195105,
+    "compile_lines": [
+      "Compiling wasmc_component_encoder v0.1.0 (/Users/youxianshi/code/.worktrees/wasmc/WS-20261027-lib-memory-l1-isolated/crates/wasmc_component_encoder)",
+      "Compiling wasmc-core-runtime v0.1.0 (/Users/youxianshi/code/.worktrees/wasmc/WS-20261027-lib-memory-l1-isolated/crates/wasmc_core_runtime)",
+      "Compiling wasmc v0.1.0 (/Users/youxianshi/code/.worktrees/wasmc/WS-20261027-lib-memory-l1-isolated)"
+    ],
+    "tail": ""
+  },
+  "legacy_root_native_test": {
+    "status": 0,
+    "floor_reached": false,
+    "timeout": false,
+    "duration_s": 20.1,
+    "free_gib": 110.5,
+    "command": [
+      "cargo",
+      "+1.96.0",
+      "test",
+      "--locked",
+      "--offline",
+      "--features",
+      "wasmi-runtime",
+      "--test",
+      "canonical_host_import_demand_v1",
+      "--",
+      "--nocapture"
+    ],
+    "fixture": "public release worktree examples/canonical-host and JSON0.0.6",
+    "log_sha256": "9c9459e8fc83946691c0a14a7da97c550619a85a9e3503958b20c35cc86800a1",
+    "compile_lines": [
+      "Compiling wasmc-core-runtime v0.1.0 (/Users/youxianshi/code/.worktrees/wasmc/WS-20261027-lib-memory-l1-isolated/crates/wasmc_core_runtime)",
+      "Compiling wasmc_component_encoder v0.1.0 (/Users/youxianshi/code/.worktrees/wasmc/WS-20261027-lib-memory-l1-isolated/crates/wasmc_component_encoder)",
+      "Compiling wasmc v0.1.0 (/Users/youxianshi/code/.worktrees/wasmc/WS-20261027-lib-memory-l1-isolated)"
+    ]
+  },
+  "private_raw_logs": "/Users/youxianshi/.local/state/wasmc-maintenance/20261026-lib-memory-json-32/source-l1-isolated-a63-20261027",
+  "nonclaims": [
+    "L2 workspace tests",
+    "GitHub Actions success",
+    "master integration",
+    "formal publication"
+  ]
+}
