@@ -1,0 +1,40 @@
+{
+  "schema": "wasmc.approved-correction-authority-route/v1",
+  "history_result": "734/735, bcabb status21 strict-canonical remains unresolved",
+  "existing_authority": ".agents/context-owner-correction-authority.json",
+  "existing_verifier": "src/bootstrap_context.rs::prove_owner_correction",
+  "existing_authority_is_compiled_bound_single_record": true,
+  "existing_contract": {
+    "local_path_count": 4,
+    "order": [
+      "local",
+      "global",
+      "local",
+      "global"
+    ],
+    "identity": "e5c4452b8be9828895303ab9a121d030894b7576"
+  },
+  "requested_contract": {
+    "identity": "bcabb9209917499d60e1541c413875fe2c299cf7",
+    "local_path_count": 3,
+    "order": [
+      "global",
+      "local",
+      "global",
+      "local"
+    ],
+    "source_tip": "f70e5d2f063ee0e74fbc17e63a114b6a53787ac8",
+    "correction_tip": "e5cf8c2174507a62897618d54238e7bccd138d9e"
+  },
+  "proposed_minimum": "A separately bound exact authority and an additional verifier path for this exact approved tuple, preserving the existing authority and canonical evaluation. Verify original rejection 21, source ancestry, exact three local paths, four linear commits, individual status 0 and full inverse/replay tree identities. Never turn original canonical result into pass; report approved correction separately. Test deviations and full actual history before any push.",
+  "responsible_role": "WAsmC Source governance maintainer/integrator holding exclusive authority for src/bootstrap_context.rs and a new source-bound correction record; no current live owner confirmed",
+  "constraints": [
+    "existing frozen correction record remains byte-identical",
+    "canonical kernel and historical exceptions remain unchanged",
+    "current master has a later global record and cannot receive original first patch directly",
+    "four correction commits are local only",
+    "no source push after actual rejection"
+  ],
+  "local_installed_e2e": "../installed-compiler-json-e2e-20261027/summary.json",
+  "formal_release": false
+}
