@@ -482,3 +482,6 @@ Using exact Source 017d native producer and the immutable JSON 0.0.7 Root, regen
 
 
 2026-10-27 unbounded compiler fixture migration: for b272/Source 49310c88, native frame 91209ccc and all 8 sealed modules exactly match portable; candidate Host, import-demand, strings and checked-results fixture checks pass 4 x 3 engines, Bun frames only for multi-memory. Actual b272-compiled standard App is byte-identical to previous and standard plus Core compatibility pass 2 x 3 engines. Updated v031 candidate fixture pins, compatibility and Std records; see qualification/unbounded-candidate-fixtures-v031-20261027. Test-only metadata; full candidate cohort and formal source/release qualification remain.
+
+
+2026-10-27 full unbounded cohort: checked compiler b272 and regenerated fixtures pass all 30 Node/Bun/Deno compiler qualification commands on one source-free candidate archive, preserving Bun multi-memory limitation. First integrity check correctly rejected absent current/source-build-custody-v031.json; no synthetic master custody. CI check 121982255349 for Source 49310c88 did not start because account payments/spending limit. Evidence: qualification/unbounded-full-cohort-v031-20261027. Source L1 independently underway; L2, provenance, public install and release pending.
