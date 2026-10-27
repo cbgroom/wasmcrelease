@@ -1,0 +1,131 @@
+{
+  "schema": "wasmc.lib-native/v2",
+  "id": "wasmc-system-linux-uinput",
+  "version": "0.1.0",
+  "profile": "native",
+  "wit": {
+    "path": "lib.wit",
+    "bytes": 419,
+    "sha256": "d9e892e2f57671609262b077f84de3445415e7cf1e733d88e9814ec3d8e2def5"
+  },
+  "implementation": [
+    {
+      "path": "platform/native-adapter.c",
+      "bytes": 7840,
+      "sha256": "3fca80faf00b9fa4d9480ad5975731c8c2fa6c1a59acbc767282ec4645d7e553"
+    },
+    {
+      "path": "platform/native-boundary.template.json",
+      "bytes": 322,
+      "sha256": "82b12c63213170cbdd7b58d5881f6838cba7e5ed48edacacf68f8e84e0616253"
+    },
+    {
+      "path": "platform/wfc-profile.json",
+      "bytes": 498,
+      "sha256": "ea53e0558eb9a389744485440693048bcde748b1a4df333a42f50380cdcf34da"
+    },
+    {
+      "path": "platform/native-slots.h",
+      "bytes": 788,
+      "sha256": "cb44e22259e0b8d1fdadaa65b0c1a615c01aeabff6deb663b1b470762b9471ee"
+    }
+  ],
+  "artifact": {
+    "path": "native-adapter.so",
+    "bytes": 16216,
+    "sha256": "4ac2a390314e06c518b4b5b0bb4737920f6fb18c2af8f82d381e401ed01642f3"
+  },
+  "native_boundary": {
+    "path": "native-boundary.json",
+    "bytes": 362,
+    "sha256": "a84119de81c6b912f09e107830600ba2899c4e7c5e86a3a451ffc1b6c2f4fe95"
+  },
+  "native": {
+    "kind": "c-boundary",
+    "target": "linux",
+    "status": "native_binary_ci_reused_not_runtime_qualified",
+    "build_host": "linux",
+    "build_arch": "x64",
+    "device_qualified": false,
+    "wasm_lowered": false,
+    "component_sdk": false
+  },
+  "build": {
+    "input_authority": "versioned-workstream-source",
+    "producer_sha256": "f6050a0d235da3d3bedc29eb7ee50ab128b59fd09b793e5dd9bb9a9d8cac7513",
+    "native_toolchain": {
+      "platform": "linux",
+      "arch": "x64",
+      "cc": "cc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0\nCopyright (C) 2023 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n"
+    },
+    "artifact_custody": {
+      "kind": "exact-qualified-ci-artifact-reuse",
+      "run": 40407682475,
+      "source": "a0eaa7091e6cbaf764776d35135c6e452fd43bc4",
+      "artifact_zip_sha256": "7e264ba2106aad46535f8875ca56b42633cb2d0a1a9bbc66346d90c3930b45cd",
+      "binary_sha256": "4ac2a390314e06c518b4b5b0bb4737920f6fb18c2af8f82d381e401ed01642f3",
+      "fresh_compile": false
+    }
+  },
+  "bindings": {
+    "native": {
+      "schema": "wasmc.lib-native-binding/v2",
+      "kind": "c-boundary",
+      "entry": "platform/native-adapter.c",
+      "target": "linux"
+    }
+  },
+  "lifecycle": {
+    "source_packaged": true,
+    "runtime_qualified": false,
+    "admitted": false,
+    "released": false,
+    "installable": false
+  },
+  "license": {
+    "schema": "wasmc.lib-license/v1",
+    "identifier": "WAsmC Research-Only Non-Commercial License 1.0",
+    "files": [
+      {
+        "path": "LICENSE",
+        "bytes": 3823,
+        "sha256": "7bca2d5818178e0bc14546700d39bf113d15139b1c3b6d1e62f621d4a276d6e3"
+      },
+      {
+        "path": "licenses/DEPENDENCY-NOTICES-001.txt",
+        "bytes": 245760,
+        "sha256": "66302f6dd71da97391ab2270d29b10e67bdbac6d7eb782bed043c2ff596ec5cc"
+      },
+      {
+        "path": "licenses/DEPENDENCY-NOTICES-002.txt",
+        "bytes": 245760,
+        "sha256": "0065cf38006c9a66a6c3ee9cbaf8db10422b1e5301d3c1d5132b7855e71f18ea"
+      },
+      {
+        "path": "licenses/DEPENDENCY-NOTICES-003.txt",
+        "bytes": 245760,
+        "sha256": "201dbac93dff17177b6379ee630b9658b4cec9cb9d46ce3982b3da87c4b740c8"
+      },
+      {
+        "path": "licenses/DEPENDENCY-NOTICES-004.txt",
+        "bytes": 245760,
+        "sha256": "c439e1a409b6f23d5797cec339403a0ffce97e9fcf2ae91d6a923c36d619bb76"
+      },
+      {
+        "path": "licenses/DEPENDENCY-NOTICES-005.txt",
+        "bytes": 245760,
+        "sha256": "04118f32afc6b2ce0fbfd559c56a78614016ab00167be2425c8c778fc7b064fe"
+      },
+      {
+        "path": "licenses/DEPENDENCY-NOTICES-006.txt",
+        "bytes": 8357,
+        "sha256": "aa6000805f56d3c6009ffa09dbe224083cf2e63e2498e1939deefe6ca7c43d9a"
+      },
+      {
+        "path": "licenses/DEPENDENCY-NOTICES-007.txt",
+        "bytes": 25602,
+        "sha256": "f0429335a0831b75f3b3277e20303d94bbf7af5719769055178aab3e2dce6e7a"
+      }
+    ]
+  }
+}

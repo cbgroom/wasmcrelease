@@ -1,0 +1,22 @@
+name: Normal Lib reused Native capacity
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  linux-reuse:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run exact existing binaries without rebuilding
+        run: |
+          mkdir -p "$RUNNER_TEMP/native-reuse"
+          node .agents/workstreams/WS-20261026-lib-memory-release-v031/test-native-reuse-capacity.mjs "$RUNNER_TEMP/native-reuse/receipt.json" | tee "$RUNNER_TEMP/native-reuse/test.log"
+          git rev-parse HEAD > "$RUNNER_TEMP/native-reuse/source.txt"
+          sha256sum .agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-host/native-linux-direct-capacity/executor > "$RUNNER_TEMP/native-reuse/host.sha256"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: native-reuse-capacity
+          path: ${{ runner.temp }}/native-reuse
+          if-no-files-found: error
