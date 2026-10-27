@@ -1,0 +1,16 @@
+{
+  "schema": "wasmc.ordinary-typed-json-v1",
+  "compiler_sha256": "b27229753141562c6bde0c876647ab7d3f27548d89b90a559524075fc8a699a2",
+  "source_head": "49310c88ba579b53a6f9d894ddc76fe2be2075ed",
+  "threshold_app_sha256": "c764f74b48f551f0ded39ab5f1f3570172f46a17430cf6240d96483e6631a9dc",
+  "exact_app_sha256": "17e973b83a209bbf8477bc49dd3f4dfc28725ddba3824405a561d27ba323ab95",
+  "engines": [
+    "node",
+    "deno"
+  ],
+  "threshold_cases_per_engine": 15,
+  "exact_cases_per_engine": 13,
+  "coverage": "actual WAsmC calls read-u64/read-i64/read-f64/read-bool; exact equality for u64 max and i64 min, adjacent integer rejection, overflow/missing/null/type errors, same-instance recovery, ordered edits and zero pending counters",
+  "raw_threshold_receipt_correction": "threshold logs inherited exact_u64_max_i64_min=true but only tested broad comparisons; exact equality is independently established by exact-source and exact logs. Raw evidence preserved.",
+  "scope": "installed JSON candidate Root; direct candidate compiler; in-memory Host callbacks, no formal release"
+}

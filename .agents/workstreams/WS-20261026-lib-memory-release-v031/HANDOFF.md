@@ -497,3 +497,6 @@ Using exact Source 017d native producer and the immutable JSON 0.0.7 Root, regen
 
 
 2026-10-27 committed b272 source build custody: clean Source 49310c88 tree 5c266971 checked-profile warm locked/offline build returned 0, exact same compiler b272. All 711 tracked compiler inputs independently matched Git blobs and remained byte-identical before/after; private per-file manifest SHA 0fd86242762aa681c40620548874467722a749e809adb58fae398abd0d9fb7ad, receipt and raw compressed log under qualification/unbounded-committed-build-v031-20261027. This binds workstream commit only; main integration, L2, CI, final integrity and release remain pending.
+
+
+2026-10-27 ordinary typed JSON: actual WAsmC Guest using anonymous JSON 0.2 Root and compiler b272 directly called read-u64/i64/f64/bool. Node/Deno each passed 15 threshold and 13 exact cases, including exact equality at u64 max/i64 min, adjacent values and overflow rejected by Guest decision, missing/null/type cases, ordered edits, same-instance recovery and zero pending counters. Host calls are in memory. The threshold test initially labeled extremal precision despite only checking range; raw receipt retained and exact equality separately established in qualification/unbounded-ordinary-typed-json-v031-20261027. No formal release claim.

@@ -1,0 +1,52 @@
+package conformance:checked;
+interface api {
+ record boolean_value {present:bool,value:bool}
+ record unsigned_value {present:bool,value:u64}
+ record signed_value {present:bool,value:i64}
+ record float_value {present:bool,value:f64}
+ enum edit_kind {set,remove}
+ record edit {kind:edit_kind,path:string,value_json:string}
+ enum json_error {invalid_json,invalid_pointer,missing_target,type_mismatch,invalid_index,out_of_range,invalid_operation,allocation_failed}
+ record query_pair {name:string,value:string}
+ record header {name:string,value:list<u8>}
+ record request {method:string,path:string,parameters:list<query_pair>,query:list<query_pair>,headers:list<header>,body:list<u8>}
+ record response {status:u16,body:list<u8>}
+ run:func(req:request)->response {
+  let payload:string = document::compact_or_bytes(req.body,"{}");
+  let input:list<u8> = utf8::encode(payload);
+  let flag:result<boolean_value,json_error> = document::read_bool(input,"/commit");
+  let u:result<unsigned_value,json_error> = document::read_u64(utf8::encode(payload),"/u");
+  let i:result<signed_value,json_error> = document::read_i64(utf8::encode(payload),"/i");
+  let f:result<float_value,json_error> = document::read_f64(utf8::encode(payload),"/f");
+  let uok:bool = match u {ok(value)=>value.present && value.value >= 100,err=>false};
+  let iok:bool = match i {ok(value)=>value.present && value.value <= -5,err=>false};
+  let fok:bool = match f {ok(value)=>value.present && value.value == 1.25,err=>false};
+  let flagok:bool = match flag {ok(value)=>value.present && value.value,err=>false};
+  let allowed:bool = flagok && uok && iok && fok;
+  let mut status:u16 = 204;
+  if (allowed) {
+  let mut changes:list<edit> = list.new();
+  changes.push({kind:0,path:"/processed",value_json:"true"});
+  changes.push({kind:0,path:"/sequence",value_json:"42"});
+  let edited_payload:string = document::edit_or_bytes(utf8::encode(payload),changes,"bad");
+  let called:result<u32,variant {invalid_argument(string),permission_denied(string),stale_revision(string),transaction_rejected(string),budget_exceeded(string)}> = service::invoke(req.path,edited_payload);
+  let live:u32 = match called {ok(handle)=>handle,err=>0};
+  status = match called {ok=>200,err=>503};
+  if (status == 200) {
+   let sized:result<u32,variant {invalid_argument(string),permission_denied(string),stale_revision(string),transaction_rejected(string),budget_exceeded(string)}> = table::response_len(live);
+   let count:u32 = match sized {ok(length)=>length,err=>0};
+   status = match sized {ok=>200,err=>502};
+   if (status == 200) {if (count != 4294967295) {status=598;}}
+   let retired:result<unit,variant {invalid_argument(string),permission_denied(string),stale_revision(string),transaction_rejected(string),budget_exceeded(string)}> = table::response_drop(live);
+   status = match retired {ok=>status,err=>502};
+   if (status == 200) {
+    let stale:result<u32,variant {invalid_argument(string),permission_denied(string),stale_revision(string),transaction_rejected(string),budget_exceeded(string)}> = table::response_len(live);
+    let released:bool = match stale {ok=>false,err(failure)=>match failure {invalid_argument=>true,permission_denied=>false,stale_revision=>false,transaction_rejected=>false,budget_exceeded=>false}};
+    if (released) {status=201;}else{status=597;}
+   }
+  }
+  }
+  let body:list<u8> = utf8::encode(payload);
+  return {status:status,body:body};
+ }
+} world app {export api;}
