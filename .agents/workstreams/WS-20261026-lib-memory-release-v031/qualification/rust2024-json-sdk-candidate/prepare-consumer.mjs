@@ -2,6 +2,9 @@ import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
 import {readFileSync,writeFileSync} from 'node:fs';
 import {join} from 'node:path';
+const policy=JSON.parse(readFileSync(new URL('../rust-glue-edition-policy.json',import.meta.url)));
+assert.equal(policy.schema,'wasmc.rust-glue-edition-policy-candidate/v1');
+assert.equal(policy.edition,'2024');
 
 // One already-built SDK and one installed Root; no Cargo or SDK rewriting.
 const [sdkDir,root,businessPath,expectedSdkHash,outPath]=process.argv.slice(2);
@@ -10,7 +13,7 @@ assert.match(expectedSdkHash,/^[0-9a-f]{64}$/);
 const sha=bytes=>createHash('sha256').update(bytes).digest('hex');
 const pkg=JSON.parse(readFileSync(join(sdkDir,'sdk.json')));
 assert.equal(pkg.schema,'wasmc.rust-core-sdk-edition2024-candidate/v1');
-assert.equal(pkg.status,'candidate-not-released');assert.equal(pkg.edition,'2024');
+assert.equal(pkg.status,'candidate-not-released');assert.equal(pkg.edition,policy.edition);
 const sdk=readFileSync(join(sdkDir,'src/lib.rs'));
 assert.equal(sha(sdk),expectedSdkHash,'independently selected SDK');
 assert.equal(pkg.sdk_sha256,expectedSdkHash,'SDK package pin');

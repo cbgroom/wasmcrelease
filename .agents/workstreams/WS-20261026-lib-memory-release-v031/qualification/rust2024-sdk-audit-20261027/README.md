@@ -28,3 +28,15 @@ request limit is 256 KiB. Headers and original response are preserved here.
 The 16 candidates exist in separate local state, not installed or published
 Roots. One-time derivation does not justify changing frozen SDKs, accepting
 rehashed identities, or claiming broad 2024 parity.
+
+The neighboring `rust-glue-edition-policy.json` is the single selected edition
+for the candidate JSON SDK builder, general candidate SDK builder and consumer
+source assembler. They require edition 2024 and preserve the candidate SDK
+bytes. This is workstream-local policy: the actual WAsmC producer and MCPGit
+compiler service are not yet wired to it, and it is not release authority.
+
+`compile-matrix.json` independently tests each of the 16 derived SDK sources
+as a separate edition-2024 crate through the live local Rust translation service,
+with a small exported probe. Fifteen return HTTP 200 with Wasm magic; the
+relational source returns HTTP 413. These are compiler/SDK syntax checks, not
+15 Lib execution tests. JSON and Text have separate scoped behavioral proofs.

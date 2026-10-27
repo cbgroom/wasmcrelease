@@ -2,6 +2,9 @@ import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
 import {mkdirSync,readFileSync,writeFileSync} from 'node:fs';
 import {join} from 'node:path';
+const policy=JSON.parse(readFileSync(new URL('../rust-glue-edition-policy.json',import.meta.url)));
+assert.equal(policy.schema,'wasmc.rust-glue-edition-policy-candidate/v1');
+assert.equal(policy.edition,'2024');
 const [root,expectedRoot,out]=process.argv.slice(2);
 if(!root||!expectedRoot||!out)throw Error('usage: build-edition2024-sdk <installed-root> <expected-root-sha256> <new-output-dir>');
 assert.match(expectedRoot,/^[0-9a-f]{64}$/);const sha=b=>createHash('sha256').update(b).digest('hex');
@@ -12,4 +15,4 @@ assert.equal(sha(sdk),b.source.sha256);assert.equal(sha(toml),b.cargo_toml.sha25
 let text=sdk.toString('utf8'),ex=0,attrs=0;assert.ok(text.includes('extern crate self as wit_bindgen;'));
 text=text.replace(/(?<!unsafe )extern\s+"C"\s*\{/g,()=>{ex++;return 'unsafe extern "C" {'}).replace(/#\[no_mangle\]/g,()=>{attrs++;return '#[unsafe(no_mangle)]'});assert.ok(ex>0&&attrs>0,'expected canonical SDK 2021 source');
 const output=Buffer.from(text);mkdirSync(out);mkdirSync(join(out,'src'));writeFileSync(join(out,'src/lib.rs'),output,{flag:'wx'});writeFileSync(join(out,'LICENSE'),license,{flag:'wx'});
-const receipt={schema:'wasmc.rust-core-sdk-edition2024-candidate/v1',status:'candidate-not-released',lib:b.import_module,version:m.version,edition:'2024',root_manifest_sha256:sha(raw),lib_artifact_sha256:sha(lib),original_sdk_sha256:sha(sdk),sdk_sha256:sha(output),license_sha256:sha(license),derivation:'verified original SDK with Rust 2024 syntax adaptation, not producer-generated',extern_blocks:ex,export_attributes:attrs};writeFileSync(join(out,'sdk.json'),JSON.stringify(receipt,null,2)+'\n',{flag:'wx'});console.log(JSON.stringify(receipt));
+const receipt={schema:'wasmc.rust-core-sdk-edition2024-candidate/v1',status:'candidate-not-released',lib:b.import_module,version:m.version,edition:policy.edition,root_manifest_sha256:sha(raw),lib_artifact_sha256:sha(lib),original_sdk_sha256:sha(sdk),sdk_sha256:sha(output),license_sha256:sha(license),derivation:'verified original SDK with Rust 2024 syntax adaptation, not producer-generated',extern_blocks:ex,export_attributes:attrs};writeFileSync(join(out,'sdk.json'),JSON.stringify(receipt,null,2)+'\n',{flag:'wx'});console.log(JSON.stringify(receipt));
