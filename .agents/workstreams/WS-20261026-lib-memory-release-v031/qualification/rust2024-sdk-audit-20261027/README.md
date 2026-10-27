@@ -40,3 +40,12 @@ as a separate edition-2024 crate through the live local Rust translation service
 with a small exported probe. Fifteen return HTTP 200 with Wasm magic; the
 relational source returns HTTP 413. These are compiler/SDK syntax checks, not
 15 Lib execution tests. JSON and Text have separate scoped behavioral proofs.
+
+The candidate edition policy now also sets `max_bytes` to 16777216 (16 MiB).
+The candidate JSON/other SDK builders and consumer assembler share that value
+through `rust-glue-capacity-policy.mjs`, checking inputs and generated or
+combined source. Exact 16 MiB succeeds at the policy boundary; 16 MiB + 1 and
+invalid sizes reject. Rebuilt JSON and Text SDKs and the JSON request remain
+byte-identical to the previously executed evidence. This changes candidate
+scripts only; the live translator, its client, package/Object upload and Root
+loaders still have their earlier independent limits.
