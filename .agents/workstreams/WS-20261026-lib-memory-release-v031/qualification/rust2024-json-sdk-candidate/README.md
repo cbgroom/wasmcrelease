@@ -27,3 +27,14 @@ Host or published-install evidence.
 Producer-level general Rust 2024 generation, multi-Lib composition, release
 admission and installed public distribution remain open. Do not overwrite the
 original Root manifest or advertise this candidate as producer-generated.
+
+`prepare-consumer.mjs <candidate-dir> <installed-root> <business.rs>
+<independently-pinned-sdk-sha256> <new-output.rs>` composes the already-built
+candidate SDK and business source without modifying either. It verifies the
+SDK, license, installed Root and Lib pins before creating the new source file;
+the caller must choose the exact SDK hash independently. The compiler service
+remains responsible for compiling that source. The assembler's actual service
+cache-miss response and Node/Deno executions are recorded in the
+`assembler-*` files. Negative controls reject a wrong selected SDK hash and a
+modified installed Lib before writing output. This is still a single-SDK
+prototype, not installed compiler-service integration.
