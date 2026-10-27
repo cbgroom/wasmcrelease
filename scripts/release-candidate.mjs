@@ -444,6 +444,7 @@ export const currentV3ProductInputs=Object.freeze([
 export function currentV3ProductInputsForVersion(version){
   return [...currentV3ProductInputs,currentCompatibilityPath(version),
     ...(Number(version.split('.')[2])>=30?['scripts/ci-rust-search-recovery.mjs','admission/string-storage-v030.json','admission/string-text-v030/options-v2.json','admission/string-text-v030/previous-cohort-v1.json']:[]),
+    ...(Number(version.split('.')[2])>=31?['scripts/update-current-corelib.mjs','scripts/corelib-abi.mjs']:[]),
     ...(requiresCheckedChunkQualification(version)?['admission/checked-chunk-v0'+version.split('.')[2]+'.json']:[]),
     ...(Number(version.split('.')[2])>=28?['scripts/test-unit-result-match.mjs']:[]),
     ...(Number(version.split('.')[2])>=29?['scripts/test-canonical-checked-results.mjs']:[]),

@@ -10,6 +10,10 @@ const compiler = JSON.parse(read('current/compiler-release.json'));
 const check = value => assertCompilerQualification(value, compiler.version, compiler.compiler.sha256, hash(read('current/compiler-release.json')));
 assert.equal(check(q), true);
 assert.equal(usesCurrentProductV3('0.0.20'), false);
+for(const p of ['scripts/update-current-corelib.mjs','scripts/corelib-abi.mjs']) {
+  assert.equal(currentV3ProductInputsForVersion('0.0.30').includes(p),false);
+  assert.equal(currentV3ProductInputsForVersion('0.0.31').includes(p),true);
+}
 for (const version of ['0.0.21', '0.0.22', '0.0.23', '0.0.100']) {
   assert.equal(usesCurrentProductV3(version), true);
   const path = currentCompatibilityPath(version);
