@@ -467,3 +467,6 @@ Using exact Source 017d native producer and the immutable JSON 0.0.7 Root, regen
 
 
 2026-10-27 ordinary cohort: added real v031 compatibility manifest and Std fixture compiled with checked compiler 0c07; output exactly matches v030 fixture. All Node/Bun/Deno standard tests each execute 7680 calls, and ordinary Lib API, helper, if-scope, unit-result tests pass on all three; Core compatibility tests with negative controls pass. Initial incomplete-staging missing-file errors preserved; see qualification/ordinary-compiler-cohort-v031-20261027. This is partial staging with synthetic metadata; complete compiler integrity and release qualification remain.
+
+
+2026-10-27 full candidate entrypoints: archive snapshot 3080dcf5 staged checked compiler 0c07 and CoreLib 8231 without refreshing product provenance. Node/Bun/Deno each passed 35 API outputs, seven runtime oracles, 25 CLI outputs across seven APIs and five CLIs. See qualification/checked-entrypoints-v031-20261027. Live Source PR #26 remains draft; job 121962269141 has no steps and annotation says billing payment/spending limit, so do not claim CI acceptance. Complete provenance, qualification, installation and release pending.

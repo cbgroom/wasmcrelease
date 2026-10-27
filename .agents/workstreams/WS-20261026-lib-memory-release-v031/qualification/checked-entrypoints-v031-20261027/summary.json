@@ -1,0 +1,19 @@
+{
+  "schema": "wasmc.candidate-entrypoints-qualification/v1",
+  "compiler_sha256": "0c07d9b6b2edf9b18117860259c350346db1b8b79b667604fd32a2fddf851c17",
+  "repository_snapshot": "3080dcf52a6cdcd0a6b1ad269586bea9212321c1",
+  "source_commit": "017d0466bcb44274f72a19990c425153e1df8f81",
+  "engines": [
+    "node",
+    "bun",
+    "deno"
+  ],
+  "per_engine": {
+    "api_outputs": 35,
+    "execution_oracles": 7,
+    "cli_outputs": 25
+  },
+  "staging": "git archive snapshot; candidate compiler and CoreLib installed only into temporary archive; dist embedded compiler and runtime binary replaced after old digest check; product manifest version/sha changed for testing but provenance not refreshed",
+  "ci_live": "source PR #26 head 017d; GitHub check 121962269141 failure, no steps, check annotation says account payments failed or spending limit needs increasing",
+  "scope": "entrypoint behavior only; runtime manifest provenance, full integrity/qualification, installed public release and formal release not claimed"
+}

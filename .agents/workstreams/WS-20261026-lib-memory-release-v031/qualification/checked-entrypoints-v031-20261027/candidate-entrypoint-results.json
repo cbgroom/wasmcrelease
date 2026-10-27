@@ -1,0 +1,34 @@
+[
+  {
+    "command": [
+      "node",
+      "scripts/test-current-compiler.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"runtime\":\"node\",\"compiler_sha256\":\"0c07d9b6b2edf9b18117860259c350346db1b8b79b667604fd32a2fddf851c17\",\"frozen_outputs\":35,\"execution_oracles\":7,\"cli_outputs\":25}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "bun",
+      "scripts/test-current-compiler.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"runtime\":\"bun\",\"compiler_sha256\":\"0c07d9b6b2edf9b18117860259c350346db1b8b79b667604fd32a2fddf851c17\",\"frozen_outputs\":35,\"execution_oracles\":7,\"cli_outputs\":25}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "deno",
+      "run",
+      "--allow-read",
+      "--allow-write",
+      "--allow-run",
+      "--allow-env",
+      "scripts/test-current-compiler.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"runtime\":\"deno\",\"compiler_sha256\":\"0c07d9b6b2edf9b18117860259c350346db1b8b79b667604fd32a2fddf851c17\",\"frozen_outputs\":35,\"execution_oracles\":7,\"cli_outputs\":25}\n",
+    "stderr": ""
+  }
+]
