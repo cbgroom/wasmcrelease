@@ -1,0 +1,120 @@
+{
+  "schema": "wasmc.legacy-producer-migration-investigation/v1",
+  "accepted": false,
+  "actual_release_artifact_generated": false,
+  "notes": [
+    "Old 0.0.6 transfer template embeds 16 MiB byte, 1048576 node and depth 32 budgets; using it would violate the capacity objective.",
+    "Replacing the generated scratch and Host-window fragments allowed all three old-source frame compiles against the old template on three engines; the activation retained an old transfer binary digest as a placeholder and those frames were not linked or executed. This is a source-binding diagnostic only.",
+    "Producer helper reproduced existing JSON 0.2 template byte-for-byte, but strict SDK regeneration rejected historical 0.0.6 and 0.0.7 Roots before generating new templates. This is a helper result and must be independently established against the exact Source version before classifying it as a current Source regression.",
+    "canonical_bridge.rs contains static 16 MiB value-layout/window checks and other type/source bounds requiring classification; these are distinct from already removed dynamic transfer budgets."
+  ],
+  "known_020_template_sha256": "9c708c1123b5b9decf127e223071e5118175c34ea35375341ad9d370ed3b6479",
+  "unpublished_legacy_source_sha256": "bf78622febbef96366738c9b387b2d8c38f8194c1b4cd14cdf655e70aacadda1",
+  "engine_preflights": [
+    {
+      "engine": "node",
+      "exit_code": 0,
+      "log_sha256": "ca058855ab7ff4523498f8a37f1c96e722856d093b1706728eb527a00014c7ce",
+      "results": [
+        {
+          "name": "static",
+          "accepted": true,
+          "frame_sha256": "59d7e5a8b4a9c4054850aa548b9b18bccec86359f3ea18903a3751c54e9dd9ba",
+          "host_imports": 13,
+          "host_projection": 0,
+          "placeholder_transfer_sha256": "85ed44f0c0b7c532cc49a66dfbf94aa94519deac06864ea5bdc240074b993a06"
+        },
+        {
+          "name": "json_read",
+          "accepted": true,
+          "frame_sha256": "4f4eeb4c9223ba2e941977e28ae648f2c76daa0421e970eddcc38d0bb3edec1f",
+          "host_imports": 13,
+          "host_projection": 0,
+          "placeholder_transfer_sha256": "85ed44f0c0b7c532cc49a66dfbf94aa94519deac06864ea5bdc240074b993a06"
+        },
+        {
+          "name": "table_control",
+          "accepted": true,
+          "frame_sha256": "97c2b03c20e716a0dd05c57565d52b096152bb556e6b9f4a86554de7f4dd5565",
+          "host_imports": 18,
+          "host_projection": 1,
+          "placeholder_transfer_sha256": "85ed44f0c0b7c532cc49a66dfbf94aa94519deac06864ea5bdc240074b993a06"
+        }
+      ]
+    },
+    {
+      "engine": "bun",
+      "exit_code": 0,
+      "log_sha256": "ca058855ab7ff4523498f8a37f1c96e722856d093b1706728eb527a00014c7ce",
+      "results": [
+        {
+          "name": "static",
+          "accepted": true,
+          "frame_sha256": "59d7e5a8b4a9c4054850aa548b9b18bccec86359f3ea18903a3751c54e9dd9ba",
+          "host_imports": 13,
+          "host_projection": 0,
+          "placeholder_transfer_sha256": "85ed44f0c0b7c532cc49a66dfbf94aa94519deac06864ea5bdc240074b993a06"
+        },
+        {
+          "name": "json_read",
+          "accepted": true,
+          "frame_sha256": "4f4eeb4c9223ba2e941977e28ae648f2c76daa0421e970eddcc38d0bb3edec1f",
+          "host_imports": 13,
+          "host_projection": 0,
+          "placeholder_transfer_sha256": "85ed44f0c0b7c532cc49a66dfbf94aa94519deac06864ea5bdc240074b993a06"
+        },
+        {
+          "name": "table_control",
+          "accepted": true,
+          "frame_sha256": "97c2b03c20e716a0dd05c57565d52b096152bb556e6b9f4a86554de7f4dd5565",
+          "host_imports": 18,
+          "host_projection": 1,
+          "placeholder_transfer_sha256": "85ed44f0c0b7c532cc49a66dfbf94aa94519deac06864ea5bdc240074b993a06"
+        }
+      ]
+    },
+    {
+      "engine": "deno",
+      "exit_code": 0,
+      "log_sha256": "ca058855ab7ff4523498f8a37f1c96e722856d093b1706728eb527a00014c7ce",
+      "results": [
+        {
+          "name": "static",
+          "accepted": true,
+          "frame_sha256": "59d7e5a8b4a9c4054850aa548b9b18bccec86359f3ea18903a3751c54e9dd9ba",
+          "host_imports": 13,
+          "host_projection": 0,
+          "placeholder_transfer_sha256": "85ed44f0c0b7c532cc49a66dfbf94aa94519deac06864ea5bdc240074b993a06"
+        },
+        {
+          "name": "json_read",
+          "accepted": true,
+          "frame_sha256": "4f4eeb4c9223ba2e941977e28ae648f2c76daa0421e970eddcc38d0bb3edec1f",
+          "host_imports": 13,
+          "host_projection": 0,
+          "placeholder_transfer_sha256": "85ed44f0c0b7c532cc49a66dfbf94aa94519deac06864ea5bdc240074b993a06"
+        },
+        {
+          "name": "table_control",
+          "accepted": true,
+          "frame_sha256": "97c2b03c20e716a0dd05c57565d52b096152bb556e6b9f4a86554de7f4dd5565",
+          "host_imports": 18,
+          "host_projection": 1,
+          "placeholder_transfer_sha256": "85ed44f0c0b7c532cc49a66dfbf94aa94519deac06864ea5bdc240074b993a06"
+        }
+      ]
+    }
+  ],
+  "failures": [
+    {
+      "root": "wasmc-json@0.0.6",
+      "log_sha256": "0ff90833be789bfbedae96bef5b693be74a90ae836e54eafdb520d81fd9074fe"
+    },
+    {
+      "root": "wasmc-json@0.0.7",
+      "log_sha256": "85f055faa9371d10ec05ffb0f294a793d607d057eef4a028a1a423c3bff32aa2"
+    }
+  ],
+  "private_logs": "import-demand-candidate-producer-20261027",
+  "next": "Investigate strict historical Root SDK reopen with exact current Source, regenerate unbounded templates and real prepared transfer Wasm, verify old behavior and new capacity without modifying frozen Roots."
+}
