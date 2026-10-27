@@ -1,0 +1,28 @@
+package conformance:checked;
+interface api {
+ record query_pair {name:string,value:string}
+ record header {name:string,value:list<u8>}
+ record request {method:string,path:string,parameters:list<query_pair>,query:list<query_pair>,headers:list<header>,body:list<u8>}
+ record response {status:u16,body:list<u8>}
+ run:func(req:request)->response {
+  let payload:string = document::compact_or_bytes(req.body,"{}");
+  let called:result<u32,variant {invalid_argument(string),permission_denied(string),stale_revision(string),transaction_rejected(string),budget_exceeded(string)}> = service::invoke(req.path,payload);
+  let live:u32 = match called {ok(handle)=>handle,err=>0};
+  let mut status:u16 = match called {ok=>200,err=>503};
+  if (status == 200) {
+   let sized:result<u32,variant {invalid_argument(string),permission_denied(string),stale_revision(string),transaction_rejected(string),budget_exceeded(string)}> = table::response_len(live);
+   let count:u32 = match sized {ok(length)=>length,err=>0};
+   status = match sized {ok=>200,err=>502};
+   if (status == 200) {if (count != 4294967295) {status=598;}}
+   let retired:result<unit,variant {invalid_argument(string),permission_denied(string),stale_revision(string),transaction_rejected(string),budget_exceeded(string)}> = table::response_drop(live);
+   status = match retired {ok=>status,err=>502};
+   if (status == 200) {
+    let stale:result<u32,variant {invalid_argument(string),permission_denied(string),stale_revision(string),transaction_rejected(string),budget_exceeded(string)}> = table::response_len(live);
+    let released:bool = match stale {ok=>false,err(failure)=>match failure {invalid_argument=>true,permission_denied=>false,stale_revision=>false,transaction_rejected=>false,budget_exceeded=>false}};
+    if (released) {status=201;}else{status=597;}
+   }
+  }
+  let body:list<u8> = utf8::encode(payload);
+  return {status:status,body:body};
+ }
+} world app {export api;}
