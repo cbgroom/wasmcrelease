@@ -1,0 +1,129 @@
+{
+  "schema": "wasmc.checked-profile-guest/v1",
+  "compiler_sha256": "0c07d9b6b2edf9b18117860259c350346db1b8b79b667604fd32a2fddf851c17",
+  "old_root_control_app_sha256": "14aa9cf64f9729f820a421aa3ac5d0a89f4d114a16a6022a851a08404e0b1660",
+  "new_legacy_root_app_sha256": "a085771266fb7a03d2963540e2d83ecda9240a79956e5f7c929b4f064d18a6d4",
+  "json020_app_sha256": "f3f946fa3a917cdef5624115462265f716d648a1e31d2c38793d6663c97aedf5",
+  "json020_frame_sha256": "9222748977adb9e3b20180c4d2322fa26a04ad23bf5709c1029cf652f125bef5",
+  "node": {
+    "accepted": true,
+    "compiler_sha256": "0c07d9b6b2edf9b18117860259c350346db1b8b79b667604fd32a2fddf851c17",
+    "artifact_sha256": "f3f946fa3a917cdef5624115462265f716d648a1e31d2c38793d6663c97aedf5",
+    "source_sha256": "2dad6e0c64c9c4a60b891b824a803c8f4b2e83a244530488882ea302772b4f13",
+    "same_instance": true,
+    "actual_external_effect": "local same-directory write and rename on own test file",
+    "host_decision": "Guest reads /commit, performs two ordered JSON edits and passes edited output to Host for atomic file replacement",
+    "rows": [
+      {
+        "round": 0,
+        "input_bytes": 16,
+        "write": false,
+        "status": 204,
+        "target_sha256": null
+      },
+      {
+        "round": 1,
+        "input_bytes": 91031,
+        "write": true,
+        "status": 201,
+        "target_sha256": "891902332e24f87fd56cad24202a068e12fd2edef1e47aeec91877f51f371942"
+      },
+      {
+        "round": 2,
+        "input_bytes": 2,
+        "write": false,
+        "status": 204,
+        "target_sha256": "891902332e24f87fd56cad24202a068e12fd2edef1e47aeec91877f51f371942"
+      },
+      {
+        "round": 3,
+        "input_bytes": 15,
+        "write": false,
+        "status": 204,
+        "target_sha256": "891902332e24f87fd56cad24202a068e12fd2edef1e47aeec91877f51f371942"
+      },
+      {
+        "round": 4,
+        "input_bytes": 17,
+        "write": false,
+        "status": 204,
+        "target_sha256": "891902332e24f87fd56cad24202a068e12fd2edef1e47aeec91877f51f371942"
+      },
+      {
+        "round": 5,
+        "input_bytes": 54,
+        "write": true,
+        "status": 201,
+        "target_sha256": "072c4462cfb25146c69b3d2eff1b372a5fce40c433304b4f5b9ba59d0b7e6263"
+      }
+    ],
+    "invokes": 2,
+    "drops": 2,
+    "installed_candidate": true,
+    "controlled_transport": true,
+    "public_installed_product": false,
+    "formal_release": false
+  },
+  "deno": {
+    "accepted": true,
+    "compiler_sha256": "0c07d9b6b2edf9b18117860259c350346db1b8b79b667604fd32a2fddf851c17",
+    "artifact_sha256": "f3f946fa3a917cdef5624115462265f716d648a1e31d2c38793d6663c97aedf5",
+    "source_sha256": "2dad6e0c64c9c4a60b891b824a803c8f4b2e83a244530488882ea302772b4f13",
+    "same_instance": true,
+    "actual_external_effect": "local same-directory write and rename on own test file",
+    "host_decision": "Guest reads /commit, performs two ordered JSON edits and passes edited output to Host for atomic file replacement",
+    "rows": [
+      {
+        "round": 0,
+        "input_bytes": 16,
+        "write": false,
+        "status": 204,
+        "target_sha256": null
+      },
+      {
+        "round": 1,
+        "input_bytes": 91031,
+        "write": true,
+        "status": 201,
+        "target_sha256": "891902332e24f87fd56cad24202a068e12fd2edef1e47aeec91877f51f371942"
+      },
+      {
+        "round": 2,
+        "input_bytes": 2,
+        "write": false,
+        "status": 204,
+        "target_sha256": "891902332e24f87fd56cad24202a068e12fd2edef1e47aeec91877f51f371942"
+      },
+      {
+        "round": 3,
+        "input_bytes": 15,
+        "write": false,
+        "status": 204,
+        "target_sha256": "891902332e24f87fd56cad24202a068e12fd2edef1e47aeec91877f51f371942"
+      },
+      {
+        "round": 4,
+        "input_bytes": 17,
+        "write": false,
+        "status": 204,
+        "target_sha256": "891902332e24f87fd56cad24202a068e12fd2edef1e47aeec91877f51f371942"
+      },
+      {
+        "round": 5,
+        "input_bytes": 54,
+        "write": true,
+        "status": 201,
+        "target_sha256": "072c4462cfb25146c69b3d2eff1b372a5fce40c433304b4f5b9ba59d0b7e6263"
+      }
+    ],
+    "invokes": 2,
+    "drops": 2,
+    "installed_candidate": true,
+    "controlled_transport": true,
+    "public_installed_product": false,
+    "formal_release": false
+  },
+  "legacy_root_comparison": "same-instance fresh inputs and response failure recovery on Node and Deno; old frozen Root retains its fallback",
+  "chunk_imports": "all three expected chunk operations in each of lib and app projections",
+  "scope": "JSON 0.2 is from earlier locally installed candidate Root; compiler is directly supplied candidate, not an installed or published product; Host file operation uses own local fixture; formal release not claimed"
+}
