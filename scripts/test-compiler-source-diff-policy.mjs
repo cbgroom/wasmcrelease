@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import {admissibleCompilerSourceDiff as accept} from './compiler-source-diff-policy.mjs';
+const workflow='.github/workflows/lib-memory-v031.yml',inputs=[{path:'src/lib.rs'},{path:'Cargo.lock'}];
+assert(accept('0.0.30',['.agents/work/a'],inputs));
+assert(!accept('0.0.30',[workflow],inputs));
+assert(accept('0.0.31',['.agents/work/a',workflow],inputs));
+assert(!accept('0.0.31',['.github/workflows/other.yml'],inputs));
+assert(!accept('0.0.31',['src/lib.rs'],inputs));
+assert(!accept('0.0.31',[workflow],[...inputs,{path:workflow}]));
+assert(!accept('0.0.31',['.agents/work/a'],[...inputs,{path:'.agents/work/a'}]));
+assert(!accept('0.0.31',[null],inputs));
+assert(!accept('0.0.31',['.agents/../src/lib.rs'],inputs));
+console.log(JSON.stringify({accepted:true,controls:9,scope:'v031 source diff policy only; no compiler build or release claim'}));

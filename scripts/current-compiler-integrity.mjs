@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import {admissibleCompilerSourceDiff} from './compiler-source-diff-policy.mjs';
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
 import {readFileSync,writeFileSync,readdirSync,lstatSync,existsSync} from 'node:fs';
@@ -47,7 +48,7 @@ assert.equal(build.lock_sha256,refresh?options['--cargo-lock-sha256']:prior.carg
 assert.equal(proof.source_inputs.length,proof.source_input_count);assert.ok(proof.source_input_count>0);
 assert.equal(new Set(proof.source_inputs.map(x=>x.path)).size,proof.source_input_count);
 for(const input of proof.source_inputs){assert.match(input.sha256,/^[a-f0-9]{64}$/);assert.match(input.build_blob,/^[a-f0-9]{40}$/);assert.equal(input.build_blob,input.canonical_blob);}
-assert.ok(proof.all_changed_paths.every(p=>p.startsWith('.agents/')));
+assert.ok(admissibleCompilerSourceDiff(productVersion,proof.all_changed_paths,proof.source_inputs),'only non-input source governance differences are permitted');
 assert.equal(proof.actual_compiler_dependencies_and_Cargo_inputs_equal,true);assert.equal(proof.tracked_non_governance_tree_equal,true);
 assert.equal(proof.private_implementation_source_included,false);assert.equal(proof.new_builds,0);
 const cm=new WebAssembly.Module(canonical);assert.deepEqual(WebAssembly.Module.imports(cm),[]);
@@ -79,6 +80,7 @@ if(refresh){
  ...(Number(productVersion.split('.')[2])>=31?['scripts/test-canonical-checked-results-v031.mjs','scripts/test-canonical-host-sdk-v031.mjs','scripts/test-canonical-host-import-demand-v031.mjs']:[]),
  ...(Number(productVersion.split('.')[2])>=30?['scripts/test-current-string-support.mjs']:[]),
  ...(Number(productVersion.split('.')[2])>=31?['scripts/test-current-string-support-v031.mjs']:[]),
+ ...(Number(productVersion.split('.')[2])>=31?['scripts/compiler-source-diff-policy.mjs','scripts/test-compiler-source-diff-policy.mjs']:[]),
  'compatibility/core-artifacts-'+versionKey+'.json','scripts/core-compatibility.mjs','scripts/test-current-lib-api-v021.mjs','scripts/current-compiler-integrity.mjs','scripts/test-current-compiler-integrity.mjs','scripts/test-current-compiler.mjs','scripts/test-current-private-helpers.mjs','scripts/qualify-current-compiler.mjs',
  'runtime/wasmc-runtime-v0/compiler.wasm','runtime/wasmc-runtime-v0/manifest.json','runtime/wasmc-runtime-v0/receipts/compiler-wasm.json','runtime/registry-v0/packages/wasmc-runtime/0.1.0-runtime-v0.json','runtime/registry-v0/channels/dev.json'].sort();
  put('current/compiler-release.json',{schema:'wasmc.current-compiler/v2',version:options['--version'],source_commit:options['--source-commit'],source_branch:options['--source-branch'],source_build_receipt_sha256:options['--build-receipt-sha256'],cargo_lock_sha256:options['--cargo-lock-sha256'],compiler:row('current/wasmc_compiler.wasm'),imports:0,max_bytes:2097152,standard_app_sha256:options['--standard-app-sha256'],active_compiler_versions:1,binary_paths:binaries,embedded_paths:embeddings,artifacts:paths.map(row),immutable_selection:'Use the whole product candidate digest and fixed public commit; mutable main is discovery.',scope:'Current compiler identity and carrier integrity; whole product and publication require independent release admission'});
