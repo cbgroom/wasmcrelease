@@ -6,7 +6,7 @@ import * as single from '../current/wasmc.mjs';
 (0,eval)(readFileSync(new URL('../current/wasmc.global.js',import.meta.url),'utf8'));
 const authority=JSON.parse(readFileSync(new URL('../current/compiler-release.json',import.meta.url),'utf8'));
 const checked=Number(authority.version.split('.')[2])>=27;
-const providerVersion=Number(authority.version.split('.')[2])>=30?'4.11.0-candidate.2':checked?'4.11.0-candidate.1':'4.9.1';
+const providerVersion=Number(authority.version.split('.')[2])>=31?'4.12.0-candidate.1':Number(authority.version.split('.')[2])>=30?'4.11.0-candidate.2':checked?'4.11.0-candidate.1':'4.9.1';
 const providerPin=authority.artifacts.find(x=>x.path==='current/lib_core.wasm').sha256;
 const digest=b=>createHash('sha256').update(b).digest('hex');
 const source='package local:current_lib_api; interface api {run: func() -> u32 {let mut values: list<u32> = list.new(); values.push(7); return values.len();}} world app {export api;}';

@@ -1,0 +1,78 @@
+{
+  "schema": "wasmc.string-successor-candidate/v1",
+  "accepted": true,
+  "scope": "source-free candidate staging, test-only compiler manifest version; not release admission",
+  "source_commit": "017d0466bcb44274f72a19990c425153e1df8f81",
+  "compiler_sha256": "d725ecc9e6fe5b2717b566bdc86b7a571f76b4abc71f111f048f91bb539ded09",
+  "CoreLib_sha256": "8231aba425ef1bb0aa07a760ff4c77917e247382ef73a41408db6b6b1cb40b1e",
+  "text_root_manifest_sha256": "9dedc34b98181f2be57d80fd985af8760a74dd1cf87b177634ced81085ff759a",
+  "profile_sha256": "57f454669112c680a8447898daa02235b75cce79209054c5d2b012274b0c2d31",
+  "app_sha256": "fdcbd31b8b291f9dcecabed08b4f4b7c98db918caaccac6848e8b809df248584",
+  "frame_sha256": "24e84cca2fddb6d03c6cfed341fa4795bdd8b3d8415ba109208e8bada4671b12",
+  "runs": [
+    {
+      "engine": "node",
+      "test": "test-current-string-support-v031.mjs",
+      "exit_code": 0,
+      "log_sha256": "652d827696298ddec6db487461525f19453bf92d834e9d4c7c7c723fecda343c"
+    },
+    {
+      "engine": "deno",
+      "test": "test-current-string-support-v031.mjs",
+      "exit_code": 0,
+      "log_sha256": "5d873892dffef785b897f8639a271fc26a545471fcd08ab3c0e593e7d3440c61"
+    },
+    {
+      "engine": "bun",
+      "test": "test-current-string-support-v031.mjs",
+      "exit_code": 0,
+      "log_sha256": "92ec957ba945878993b6b74b9e514def65290fc82beed5c7638992c1835c1d7b"
+    },
+    {
+      "engine": "node",
+      "test": "test-current-lib-api-v021.mjs",
+      "exit_code": 0,
+      "log_sha256": "aa93d8fca8be7bf2a01ed42e3c742802317d5e9d7d9f8e3859ebbd1cd278c3d6"
+    },
+    {
+      "engine": "deno",
+      "test": "test-current-lib-api-v021.mjs",
+      "exit_code": 0,
+      "log_sha256": "aa93d8fca8be7bf2a01ed42e3c742802317d5e9d7d9f8e3859ebbd1cd278c3d6"
+    },
+    {
+      "engine": "bun",
+      "test": "test-current-lib-api-v021.mjs",
+      "exit_code": 0,
+      "log_sha256": "aa93d8fca8be7bf2a01ed42e3c742802317d5e9d7d9f8e3859ebbd1cd278c3d6"
+    }
+  ],
+  "controls": [
+    {
+      "case": "app",
+      "rejected": true,
+      "log_sha256": "15d43c5bb0cdcd6e0c636314eefddc2d5a6a66e650071db93b2f09df658f2355"
+    },
+    {
+      "case": "compiler",
+      "rejected": true,
+      "log_sha256": "e1cf6c39e6ed94ee0fdc382bdd72ed13b0054620c160aacda1dbf4f81bf0848f"
+    },
+    {
+      "case": "core",
+      "rejected": true,
+      "log_sha256": "f7d1ef173f076b7f585e5efc8fc4e591899578558ae6efc898afe54a03db4581"
+    }
+  ],
+  "historical_error_notes": [
+    "first helper link attempt used stale native cache rlib and failed crate resolution; exact current Source was then built in the own warm pool and helper succeeded",
+    "unrelated updater control invoked at a nonexistent path then at a fixed existing validation directory and failed before mutation; previous successful updater evidence remains unchanged"
+  ],
+  "host_contract": "explicit body maximum 1500000 bytes retained",
+  "nonclaims": [
+    "production Host",
+    "complete compiler qualification",
+    "master integration",
+    "formal release"
+  ]
+}
