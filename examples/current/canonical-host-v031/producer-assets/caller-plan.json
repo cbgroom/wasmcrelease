@@ -1,0 +1,842 @@
+{
+  "activation": "none; exact Host binding and runtime admission remain embedding-owned",
+  "artifact": {
+    "bytes": 268801,
+    "path": "app.wasm",
+    "sha256": "588b08f508dc60fbe3980ceded8f20756b70f061c750c2caa4a44e251915cb56"
+  },
+  "canonical_entries": [
+    {
+      "argument_alignment": 4,
+      "argument_kind": "value",
+      "argument_projection": "__wasmc_app_arg_0_0",
+      "argument_shape": {
+        "alignment": 4,
+        "fields": [
+          {
+            "name": "method",
+            "offset": 0,
+            "value": {
+              "alignment": 4,
+              "kind": "string",
+              "size": 8
+            }
+          },
+          {
+            "name": "path",
+            "offset": 8,
+            "value": {
+              "alignment": 4,
+              "kind": "string",
+              "size": 8
+            }
+          },
+          {
+            "name": "parameters",
+            "offset": 16,
+            "value": {
+              "alignment": 4,
+              "element": {
+                "alignment": 4,
+                "fields": [
+                  {
+                    "name": "name",
+                    "offset": 0,
+                    "value": {
+                      "alignment": 4,
+                      "kind": "string",
+                      "size": 8
+                    }
+                  },
+                  {
+                    "name": "value",
+                    "offset": 8,
+                    "value": {
+                      "alignment": 4,
+                      "kind": "string",
+                      "size": 8
+                    }
+                  }
+                ],
+                "kind": "record",
+                "size": 16
+              },
+              "kind": "list",
+              "size": 8
+            }
+          },
+          {
+            "name": "query",
+            "offset": 24,
+            "value": {
+              "alignment": 4,
+              "element": {
+                "alignment": 4,
+                "fields": [
+                  {
+                    "name": "name",
+                    "offset": 0,
+                    "value": {
+                      "alignment": 4,
+                      "kind": "string",
+                      "size": 8
+                    }
+                  },
+                  {
+                    "name": "value",
+                    "offset": 8,
+                    "value": {
+                      "alignment": 4,
+                      "kind": "string",
+                      "size": 8
+                    }
+                  }
+                ],
+                "kind": "record",
+                "size": 16
+              },
+              "kind": "list",
+              "size": 8
+            }
+          },
+          {
+            "name": "headers",
+            "offset": 32,
+            "value": {
+              "alignment": 4,
+              "element": {
+                "alignment": 4,
+                "fields": [
+                  {
+                    "name": "name",
+                    "offset": 0,
+                    "value": {
+                      "alignment": 4,
+                      "kind": "string",
+                      "size": 8
+                    }
+                  },
+                  {
+                    "name": "value",
+                    "offset": 8,
+                    "value": {
+                      "alignment": 4,
+                      "element": {
+                        "alignment": 1,
+                        "kind": "scalar",
+                        "size": 1,
+                        "type": "U8"
+                      },
+                      "kind": "list",
+                      "size": 8
+                    }
+                  }
+                ],
+                "kind": "record",
+                "size": 16
+              },
+              "kind": "list",
+              "size": 8
+            }
+          },
+          {
+            "name": "body",
+            "offset": 40,
+            "value": {
+              "alignment": 4,
+              "element": {
+                "alignment": 1,
+                "kind": "scalar",
+                "size": 1,
+                "type": "U8"
+              },
+              "kind": "list",
+              "size": 8
+            }
+          }
+        ],
+        "kind": "record",
+        "size": 48
+      },
+      "argument_size": 48,
+      "canonical_export": "__wasmc_invoke_canonical_run",
+      "owned_result": {
+        "drop_function": "object_drop",
+        "drop_module": "wasmc:lib/wasmc.lib_managed_object_heap@4.9.0",
+        "projection": "__wasmc_app_result_0",
+        "shape": {
+          "alignment": 4,
+          "fields": [
+            {
+              "name": "status",
+              "offset": 0,
+              "value": {
+                "alignment": 2,
+                "kind": "scalar",
+                "size": 2,
+                "type": "U16"
+              }
+            },
+            {
+              "name": "body",
+              "offset": 4,
+              "value": {
+                "alignment": 4,
+                "element": {
+                  "alignment": 1,
+                  "kind": "scalar",
+                  "size": 1,
+                  "type": "U8"
+                },
+                "kind": "list",
+                "size": 8
+              }
+            }
+          ],
+          "kind": "record",
+          "size": 12
+        },
+        "type_ordinal": 21
+      },
+      "result_lane": "i32",
+      "source_export": "run"
+    }
+  ],
+  "corelib_instances": 1,
+  "corelib_sha256": "8231aba425ef1bb0aa07a760ff4c77917e247382ef73a41408db6b6b1cb40b1e",
+  "host_binding_sha256": "3db4b5c10627cc9e81ea8372385cffa7e943e3e905859d1532c3d26e8f8204fe",
+  "imports": [
+    {
+      "function": "request-method-len",
+      "module": "mcpgit:http/v1",
+      "params": [],
+      "results": [
+        "i32"
+      ]
+    },
+    {
+      "function": "request-method-read",
+      "module": "mcpgit:http/v1",
+      "params": [
+        "i32",
+        "i32",
+        "i32"
+      ],
+      "results": [
+        "i32"
+      ]
+    },
+    {
+      "function": "request-path-len",
+      "module": "mcpgit:http/v1",
+      "params": [],
+      "results": [
+        "i32"
+      ]
+    },
+    {
+      "function": "request-path-read",
+      "module": "mcpgit:http/v1",
+      "params": [
+        "i32",
+        "i32",
+        "i32"
+      ],
+      "results": [
+        "i32"
+      ]
+    },
+    {
+      "function": "request-parameters-len",
+      "module": "mcpgit:http/v1",
+      "params": [],
+      "results": [
+        "i32"
+      ]
+    },
+    {
+      "function": "request-parameters-read",
+      "module": "mcpgit:http/v1",
+      "params": [
+        "i32",
+        "i32",
+        "i32"
+      ],
+      "results": [
+        "i32"
+      ]
+    },
+    {
+      "function": "request-query-len",
+      "module": "mcpgit:http/v1",
+      "params": [],
+      "results": [
+        "i32"
+      ]
+    },
+    {
+      "function": "request-query-read",
+      "module": "mcpgit:http/v1",
+      "params": [
+        "i32",
+        "i32",
+        "i32"
+      ],
+      "results": [
+        "i32"
+      ]
+    },
+    {
+      "function": "request-headers-len",
+      "module": "mcpgit:http/v1",
+      "params": [],
+      "results": [
+        "i32"
+      ]
+    },
+    {
+      "function": "request-headers-read",
+      "module": "mcpgit:http/v1",
+      "params": [
+        "i32",
+        "i32",
+        "i32"
+      ],
+      "results": [
+        "i32"
+      ]
+    },
+    {
+      "function": "request-body-len",
+      "module": "mcpgit:http/v1",
+      "params": [],
+      "results": [
+        "i32"
+      ]
+    },
+    {
+      "function": "request-body-read",
+      "module": "mcpgit:http/v1",
+      "params": [
+        "i32",
+        "i32",
+        "i32"
+      ],
+      "results": [
+        "i32"
+      ]
+    },
+    {
+      "function": "response-canonical-write",
+      "module": "mcpgit:http/v1",
+      "params": [
+        "i32",
+        "i32",
+        "i32"
+      ],
+      "results": [
+        "i32"
+      ]
+    },
+    {
+      "function": "wit-table-transact",
+      "module": "mcpgit:lib/v1",
+      "params": [
+        "i32",
+        "i32"
+      ],
+      "results": [
+        "i32",
+        "i32"
+      ]
+    },
+    {
+      "function": "error-case",
+      "module": "mcpgit:lib-error/v1",
+      "params": [
+        "i32"
+      ],
+      "results": [
+        "i32"
+      ]
+    },
+    {
+      "function": "error-message-len",
+      "module": "mcpgit:lib-error/v1",
+      "params": [
+        "i32"
+      ],
+      "results": [
+        "i32"
+      ]
+    },
+    {
+      "function": "error-message-read",
+      "module": "mcpgit:lib-error/v1",
+      "params": [
+        "i32",
+        "i32",
+        "i32"
+      ],
+      "results": [
+        "i32"
+      ]
+    },
+    {
+      "function": "error-drop",
+      "module": "mcpgit:lib-error/v1",
+      "params": [
+        "i32"
+      ],
+      "results": [
+        "i32"
+      ]
+    }
+  ],
+  "inputs": [
+    {
+      "bytes": 36929,
+      "module": "wasmc-value-staging",
+      "path": "input-0.wasm",
+      "sha256": "81a17bc5d28445922c0e2b7bdc90cb380d40c4fd4a5eafad3a8631671962ec89"
+    },
+    {
+      "bytes": 23895,
+      "module": "wasmc-snapshot-caller",
+      "path": "input-1.wasm",
+      "sha256": "d9b9686a5ac48d11fec67b9ab6015db088f86c379eb7171d6c1676a57a784e50"
+    },
+    {
+      "bytes": 92553,
+      "module": "wasmc:lib/wasmc-json@0.0.6",
+      "path": "input-2.wasm",
+      "sha256": "24fe10b0716260dbad6106da856143a98b9e190dfaeb1da16d0c5c0f6c11ee9a"
+    },
+    {
+      "bytes": 13747,
+      "module": "wasmc-native-value-projection",
+      "path": "input-3.wasm",
+      "sha256": "f502cbe2da8ad40aedbc3878f9132fe805c4665a71e05e15564b3e42c454df63"
+    },
+    {
+      "bytes": 5971,
+      "module": "wasmc-native-value-calls",
+      "path": "input-4.wasm",
+      "sha256": "ffbe0ebcca78e2391fbc45da536ea10ab513baa2d0ebf49c42c952b224ffb499"
+    },
+    {
+      "bytes": 499,
+      "module": "wasmc-canonical-app-entry",
+      "path": "input-5.wasm",
+      "sha256": "6691e05dc68a3b758939191790c8b3dd1b1eb8e376feb3cb7268b5fbcc65706b"
+    },
+    {
+      "bytes": 7289,
+      "module": "wasmc-app-value-projection",
+      "path": "input-6.wasm",
+      "sha256": "169ec2727909eca18cb857d66707d10f6db44cc6d569805c8b7b48034286f042"
+    },
+    {
+      "bytes": 1318,
+      "module": "wasmc-host-entry",
+      "path": "input-7.wasm",
+      "sha256": "419444b623d01152a59bff8af2b71a7dfd3136147b4e29a2fdfcb890c9f4839f"
+    },
+    {
+      "bytes": 9877,
+      "module": "wasmc-host-value-projection",
+      "path": "input-8.wasm",
+      "sha256": "123fd32c6a059c99a9ee7cbbdc4b0387b5f9fbfcefb4a3b011194521547165c3"
+    },
+    {
+      "bytes": 872,
+      "module": "wasmc-native-host-calls",
+      "path": "input-9.wasm",
+      "sha256": "eb019bbf6c212e7fd8c35d8d61d1db9bfba1128231f6e426e98443c210a4d403"
+    },
+    {
+      "bytes": 84594,
+      "module": "wasmc:lib/wasmc.lib_managed_object_heap@4.9.0",
+      "path": "input-10.wasm",
+      "sha256": "8231aba425ef1bb0aa07a760ff4c77917e247382ef73a41408db6b6b1cb40b1e"
+    }
+  ],
+  "lib": {
+    "id": "wasmc-json",
+    "manifest_sha256": "07a15fe29afe16a058a26850672fc7b91a8e8301fcc8dda5d356a00adacaec7f",
+    "version": "0.0.6",
+    "wit_sha256": "2c12fb7ee9795183fce66264c35324ec55b5c93032ab77dd8a33dad32fa4f925"
+  },
+  "memory_binding": {
+    "allocation": "actual Lib cabi_realloc; actual transfer allocator",
+    "host_memory": "wasmc-value-staging.memory",
+    "lib_memory": "exact Lib artifact memory; Canonical transfer imports it explicitly",
+    "post_return": "original WIT-generated lease/post-return protocol"
+  },
+  "merge_tool_sha256": "125a6252b0e60a9165612e151417bc2b7121868f734645ed28d6b94b8916995d",
+  "native_host_projection": [
+    {
+      "argument_shape": {
+        "alignment": 4,
+        "fields": [
+          {
+            "name": "table-path",
+            "offset": 0,
+            "value": {
+              "alignment": 4,
+              "kind": "string",
+              "size": 8
+            }
+          },
+          {
+            "name": "expected-revision",
+            "offset": 8,
+            "value": {
+              "alignment": 4,
+              "kind": "string",
+              "size": 8
+            }
+          },
+          {
+            "name": "transaction-id",
+            "offset": 16,
+            "value": {
+              "alignment": 4,
+              "kind": "string",
+              "size": 8
+            }
+          },
+          {
+            "name": "idempotency-key",
+            "offset": 24,
+            "value": {
+              "alignment": 4,
+              "cases": [
+                {
+                  "alignment": 1,
+                  "kind": "unit",
+                  "size": 0
+                },
+                {
+                  "alignment": 4,
+                  "kind": "string",
+                  "size": 8
+                }
+              ],
+              "kind": "option",
+              "payload_offset": 4,
+              "size": 12,
+              "tag_size": 1
+            }
+          },
+          {
+            "name": "operations",
+            "offset": 36,
+            "value": {
+              "alignment": 4,
+              "element": {
+                "alignment": 8,
+                "cases": [
+                  {
+                    "alignment": 4,
+                    "fields": [
+                      {
+                        "name": "operation-id",
+                        "offset": 0,
+                        "value": {
+                          "alignment": 4,
+                          "kind": "string",
+                          "size": 8
+                        }
+                      },
+                      {
+                        "name": "key",
+                        "offset": 8,
+                        "value": {
+                          "alignment": 4,
+                          "kind": "string",
+                          "size": 8
+                        }
+                      },
+                      {
+                        "name": "row-json",
+                        "offset": 16,
+                        "value": {
+                          "alignment": 4,
+                          "kind": "string",
+                          "size": 8
+                        }
+                      }
+                    ],
+                    "kind": "record",
+                    "size": 24
+                  },
+                  {
+                    "alignment": 8,
+                    "fields": [
+                      {
+                        "name": "operation-id",
+                        "offset": 0,
+                        "value": {
+                          "alignment": 4,
+                          "kind": "string",
+                          "size": 8
+                        }
+                      },
+                      {
+                        "name": "key",
+                        "offset": 8,
+                        "value": {
+                          "alignment": 4,
+                          "kind": "string",
+                          "size": 8
+                        }
+                      },
+                      {
+                        "name": "expected-row-version",
+                        "offset": 16,
+                        "value": {
+                          "alignment": 8,
+                          "kind": "scalar",
+                          "size": 8,
+                          "type": "U64"
+                        }
+                      },
+                      {
+                        "name": "field-updates",
+                        "offset": 24,
+                        "value": {
+                          "alignment": 4,
+                          "element": {
+                            "alignment": 4,
+                            "cases": [
+                              {
+                                "alignment": 4,
+                                "fields": [
+                                  {
+                                    "name": "field",
+                                    "offset": 0,
+                                    "value": {
+                                      "alignment": 4,
+                                      "kind": "string",
+                                      "size": 8
+                                    }
+                                  },
+                                  {
+                                    "name": "value-json",
+                                    "offset": 8,
+                                    "value": {
+                                      "alignment": 4,
+                                      "kind": "string",
+                                      "size": 8
+                                    }
+                                  }
+                                ],
+                                "kind": "record",
+                                "size": 16
+                              },
+                              {
+                                "alignment": 4,
+                                "kind": "string",
+                                "size": 8
+                              },
+                              {
+                                "alignment": 4,
+                                "fields": [
+                                  {
+                                    "name": "field",
+                                    "offset": 0,
+                                    "value": {
+                                      "alignment": 4,
+                                      "kind": "string",
+                                      "size": 8
+                                    }
+                                  },
+                                  {
+                                    "name": "patch",
+                                    "offset": 8,
+                                    "value": {
+                                      "alignment": 4,
+                                      "kind": "string",
+                                      "size": 8
+                                    }
+                                  },
+                                  {
+                                    "name": "expected-value-sha256",
+                                    "offset": 16,
+                                    "value": {
+                                      "alignment": 4,
+                                      "cases": [
+                                        {
+                                          "alignment": 1,
+                                          "kind": "unit",
+                                          "size": 0
+                                        },
+                                        {
+                                          "alignment": 4,
+                                          "kind": "string",
+                                          "size": 8
+                                        }
+                                      ],
+                                      "kind": "option",
+                                      "payload_offset": 4,
+                                      "size": 12,
+                                      "tag_size": 1
+                                    }
+                                  }
+                                ],
+                                "kind": "record",
+                                "size": 28
+                              }
+                            ],
+                            "kind": "variant",
+                            "payload_offset": 4,
+                            "size": 32,
+                            "tag_size": 1
+                          },
+                          "kind": "list",
+                          "size": 8
+                        }
+                      }
+                    ],
+                    "kind": "record",
+                    "size": 32
+                  },
+                  {
+                    "alignment": 8,
+                    "fields": [
+                      {
+                        "name": "operation-id",
+                        "offset": 0,
+                        "value": {
+                          "alignment": 4,
+                          "kind": "string",
+                          "size": 8
+                        }
+                      },
+                      {
+                        "name": "key",
+                        "offset": 8,
+                        "value": {
+                          "alignment": 4,
+                          "kind": "string",
+                          "size": 8
+                        }
+                      },
+                      {
+                        "name": "expected-row-version",
+                        "offset": 16,
+                        "value": {
+                          "alignment": 8,
+                          "kind": "scalar",
+                          "size": 8,
+                          "type": "U64"
+                        }
+                      }
+                    ],
+                    "kind": "record",
+                    "size": 24
+                  }
+                ],
+                "kind": "variant",
+                "payload_offset": 8,
+                "size": 40,
+                "tag_size": 1
+              },
+              "kind": "list",
+              "size": 8
+            }
+          }
+        ],
+        "kind": "record",
+        "size": 44
+      },
+      "error_cases": [
+        "invalid-argument",
+        "permission-denied",
+        "stale-revision",
+        "transaction-rejected",
+        "budget-exceeded"
+      ],
+      "error_family": "table-error",
+      "host_authorities": [
+        "mcpgit.table.write"
+      ],
+      "maximum_message_bytes": 65536,
+      "maximum_window_bytes": 4294967295,
+      "original_operation_id": 10,
+      "original_result": "Result { ok: Record(7), err: ErrorVariantString(\"table-error\") }",
+      "original_source_name": "transact",
+      "private_function": "__wasmc_host_operation_10",
+      "private_module": "wasmc-native-host-calls",
+      "private_source_name": "transact-discarded",
+      "raw_function": "wit-table-transact",
+      "raw_module": "mcpgit:lib/v1",
+      "raw_params": [
+        "I32",
+        "I32"
+      ],
+      "raw_results": [
+        "I32",
+        "I32"
+      ],
+      "result_open": "__wasmc_host_make_result_10",
+      "result_shape": {
+        "alignment": 4,
+        "cases": [
+          {
+            "alignment": 1,
+            "kind": "unit",
+            "size": 0
+          },
+          {
+            "alignment": 4,
+            "cases": [
+              {
+                "alignment": 4,
+                "kind": "string",
+                "size": 8
+              },
+              {
+                "alignment": 4,
+                "kind": "string",
+                "size": 8
+              },
+              {
+                "alignment": 4,
+                "kind": "string",
+                "size": 8
+              },
+              {
+                "alignment": 4,
+                "kind": "string",
+                "size": 8
+              },
+              {
+                "alignment": 4,
+                "kind": "string",
+                "size": 8
+              }
+            ],
+            "kind": "variant",
+            "payload_offset": 4,
+            "size": 12,
+            "tag_size": 1
+          }
+        ],
+        "kind": "result",
+        "payload_offset": 4,
+        "size": 16,
+        "tag_size": 1
+      },
+      "runtime_bridge": "complete-value-window/error-handle-wire",
+      "schema": "wasmc.native-host-projection/v1",
+      "success_projection": "explicit-discard-to-unit",
+      "window_open": "__wasmc_host_window_10"
+    }
+  ],
+  "operation_host_binding_sha256": "b5eafa21fd2d80a31f4dbc695ef9721d7a89f3c1d9838ee8523d8d53bc46a797",
+  "schema": "wasmc.host-canonical-package-plan/v1",
+  "source_sha256": "011041202dcd18b34504f535950508cc6defb157a979efa47c14559db5e8b3dc",
+  "transfer_raw_sha256": "dde8b860a2db12e2f9257ace03de41bbc7cc23514652861fbb468c055e47d985"
+}

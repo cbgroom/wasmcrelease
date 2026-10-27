@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
-import {usesCurrentProductV3, requiresPrivateHelperQualification, requiresCanonicalHostQualification, requiresIfBranchScopeQualification, requiresUnitResultMatchQualification, requiresCanonicalCheckedResultsQualification, currentCheckedQualificationScript, requiresStringStorageQualification, currentStringQualificationScript, currentCompatibilityPath, assertCompilerQualification} from './current-release-version.mjs';
+import {usesCurrentProductV3, requiresPrivateHelperQualification, requiresCanonicalHostQualification, requiresIfBranchScopeQualification, requiresUnitResultMatchQualification, requiresCanonicalCheckedResultsQualification, currentCheckedQualificationScript, currentHostQualificationScript, currentImportDemandQualificationScript, requiresStringStorageQualification, currentStringQualificationScript, currentCompatibilityPath, assertCompilerQualification} from './current-release-version.mjs';
 import {currentV3ProductInputsForVersion} from './release-candidate.mjs';
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
 const read = p => readFileSync(new URL('../' + p, import.meta.url));
@@ -12,6 +12,8 @@ assert.equal(check(q), true);
 // Validator-only synthetic successor: real execution receipts are produced separately.
 const successor = structuredClone(q); successor.version = '0.0.31';
 for (const run of successor.runs) {
+  if (run.args.at(-1) === 'scripts/test-canonical-host-sdk.mjs') { run.args[run.args.length-1] = currentHostQualificationScript('0.0.31'); run.result.native_parity = 'bb808374f6184316127b04b100850dd11d6aa876573981b3f3ff87c96cddabb5'; }
+  if (run.args.at(-1) === 'scripts/test-canonical-host-import-demand.mjs') run.args[run.args.length-1] = currentImportDemandQualificationScript('0.0.31');
   if (run.args.at(-1) === 'scripts/test-canonical-checked-results.mjs') run.args[run.args.length-1] = 'scripts/test-canonical-checked-results-v031.mjs';
   if (run.args.at(-1) === 'scripts/test-current-lib-api-v021.mjs') {
     run.result.provider = '4.12.0-candidate.1';
@@ -31,9 +33,12 @@ assert.equal(checkSuccessor(successor), true);
 const badSuccessor = structuredClone(successor);
 badSuccessor.runs.find(r=>r.engine==='node' && r.args.at(-1)==='scripts/test-current-string-support-v031.mjs').result.large_input_bytes.pop();
 assert.throws(()=>checkSuccessor(badSuccessor));
+const badHostSuccessor = structuredClone(successor);
+badHostSuccessor.runs.find(r=>r.engine==='node' && r.args.at(-1)==='scripts/test-canonical-host-sdk-v031.mjs').result.native_parity = '0'.repeat(64);
+assert.throws(()=>checkSuccessor(badHostSuccessor));
 
 assert.equal(usesCurrentProductV3('0.0.20'), false);
-for(const p of ['scripts/update-current-corelib.mjs','scripts/corelib-abi.mjs','scripts/test-current-string-support-v031.mjs','scripts/test-canonical-checked-results-v031.mjs']) {
+for(const p of ['scripts/update-current-corelib.mjs','scripts/corelib-abi.mjs','scripts/test-current-string-support-v031.mjs','scripts/test-canonical-checked-results-v031.mjs','scripts/test-canonical-host-sdk-v031.mjs','scripts/test-canonical-host-import-demand-v031.mjs']) {
   assert.equal(currentV3ProductInputsForVersion('0.0.30').includes(p),false);
   assert.equal(currentV3ProductInputsForVersion('0.0.31').includes(p),true);
 }
@@ -53,6 +58,10 @@ assert.equal(requiresIfBranchScopeQualification('0.0.24'), false);
 assert.equal(requiresIfBranchScopeQualification('0.0.25'), true);
 assert.equal(requiresUnitResultMatchQualification('0.0.27'), false);
 assert.equal(requiresUnitResultMatchQualification('0.0.28'), true);
+assert.equal(currentHostQualificationScript('0.0.30'),'scripts/test-canonical-host-sdk.mjs');
+assert.equal(currentHostQualificationScript('0.0.31'),'scripts/test-canonical-host-sdk-v031.mjs');
+assert.equal(currentImportDemandQualificationScript('0.0.30'),'scripts/test-canonical-host-import-demand.mjs');
+assert.equal(currentImportDemandQualificationScript('0.0.31'),'scripts/test-canonical-host-import-demand-v031.mjs');
 assert.equal(currentCheckedQualificationScript('0.0.30'),'scripts/test-canonical-checked-results.mjs');
 assert.equal(currentCheckedQualificationScript('0.0.31'),'scripts/test-canonical-checked-results-v031.mjs');
 assert.equal(requiresCanonicalCheckedResultsQualification('0.0.28'), false);

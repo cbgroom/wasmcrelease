@@ -76,7 +76,7 @@ if(refresh){
  ...(Number(productVersion.split('.')[2])>=27?['admission/checked-chunk-v0'+productVersion.split('.')[2]+'.json']:[]),
  ...(Number(productVersion.split('.')[2])>=28?['scripts/test-unit-result-match.mjs']:[]),
  ...(Number(productVersion.split('.')[2])>=29?['scripts/test-canonical-checked-results.mjs']:[]),
- ...(Number(productVersion.split('.')[2])>=31?['scripts/test-canonical-checked-results-v031.mjs']:[]),
+ ...(Number(productVersion.split('.')[2])>=31?['scripts/test-canonical-checked-results-v031.mjs','scripts/test-canonical-host-sdk-v031.mjs','scripts/test-canonical-host-import-demand-v031.mjs']:[]),
  ...(Number(productVersion.split('.')[2])>=30?['scripts/test-current-string-support.mjs']:[]),
  ...(Number(productVersion.split('.')[2])>=31?['scripts/test-current-string-support-v031.mjs']:[]),
  'compatibility/core-artifacts-'+versionKey+'.json','scripts/core-compatibility.mjs','scripts/test-current-lib-api-v021.mjs','scripts/current-compiler-integrity.mjs','scripts/test-current-compiler-integrity.mjs','scripts/test-current-compiler.mjs','scripts/test-current-private-helpers.mjs','scripts/qualify-current-compiler.mjs',

@@ -12,6 +12,8 @@ function patch(version) {
 export const usesCurrentProductV3 = version => patch(version) >= 21;
 export const requiresPrivateHelperQualification = version => patch(version) >= 23;
 export const requiresCanonicalHostQualification = version => patch(version) >= 24;
+export const currentHostQualificationScript = version => patch(version) >= 31 ? 'scripts/test-canonical-host-sdk-v031.mjs' : 'scripts/test-canonical-host-sdk.mjs';
+export const currentImportDemandQualificationScript = version => patch(version) >= 31 ? 'scripts/test-canonical-host-import-demand-v031.mjs' : 'scripts/test-canonical-host-import-demand.mjs';
 export const requiresIfBranchScopeQualification = version => patch(version) >= 25;
 export const requiresUnusedHostImportsQualification = version => patch(version) >= 26;
 export const requiresCheckedChunkQualification = version => patch(version) >= 27;
@@ -38,9 +40,9 @@ export function assertCompilerQualification(q, version, compilerSha256, manifest
   const helpers = requiresPrivateHelperQualification(version);
   const commands = ['scripts/test-current-compiler.mjs', 'examples/current/standard.mjs',
     'scripts/test-current-lib-api-v021.mjs', ...(helpers ? ['scripts/test-current-private-helpers.mjs'] : []),
-    ...(requiresCanonicalHostQualification(version) ? ['scripts/test-canonical-host-sdk.mjs'] : []),
+    ...(requiresCanonicalHostQualification(version) ? [currentHostQualificationScript(version)] : []),
     ...(requiresIfBranchScopeQualification(version) ? ['scripts/test-if-branch-scope.mjs'] : []),
-    ...(requiresUnusedHostImportsQualification(version) ? ['scripts/test-canonical-host-import-demand.mjs'] : []),
+    ...(requiresUnusedHostImportsQualification(version) ? [currentImportDemandQualificationScript(version)] : []),
     ...(requiresUnitResultMatchQualification(version) ? ['scripts/test-unit-result-match.mjs'] : []),
     ...(requiresCanonicalCheckedResultsQualification(version) ? [currentCheckedQualificationScript(version)] : []),
     ...(requiresStringStorageQualification(version) ? [currentStringQualificationScript(version)] : [])];
@@ -77,10 +79,10 @@ export function assertCompilerQualification(q, version, compilerSha256, manifest
         healthy_after_rejections:true, imports:0, real_MCP_acceptance:false})) assert.equal(h[key], value, key);
     }
     if (requiresCanonicalHostQualification(version)) {
-      const c = result('scripts/test-canonical-host-sdk.mjs');
+      const c = result(currentHostQualificationScript(version));
       assert.equal(c.compiler_sha256, compilerSha256);
       assert.equal(c.compiled_frames, 4); assert.equal(c.modules_per_frame, 8);
-      assert.equal(c.native_parity, requiresCheckedChunkQualification(version)
+      assert.equal(c.native_parity, patch(version)>=31 ? 'bb808374f6184316127b04b100850dd11d6aa876573981b3f3ff87c96cddabb5' : requiresCheckedChunkQualification(version)
         ? '6c48c4bdade45afc63d2eaf372552bcdc85ac3f88c58fc4ce6866ec52ea1eecb'
         : requiresUnusedHostImportsQualification(version)
         ? 'd407267385d46f6ec4cdcd199fed5e2bc1320aea641140ac34b6b63014fe1c1f'
@@ -90,7 +92,7 @@ export function assertCompilerQualification(q, version, compilerSha256, manifest
       assert.equal(c.real_Host_invocation, false);
     }
     if (requiresUnusedHostImportsQualification(version)) {
-      const demand = result('scripts/test-canonical-host-import-demand.mjs');
+      const demand = result(currentImportDemandQualificationScript(version));
       assert.equal(demand.compiler_sha256, compilerSha256);
       for (const [key,value] of Object.entries({cases:3,static_imports:13,json_read_imports:13,table_imports:18,modules_per_frame:8,exact_frame_pins:true,real_Host_invocation:false})) assert.equal(demand[key],value,key);
     }

@@ -1,0 +1,59 @@
+package ordinary:http_table;
+interface api {
+ enum json_error {input_too_large,depth_limit,invalid_json,too_many_pointers,pointer_too_long,invalid_pointer,output_too_large}
+ record selected_value {present:bool,json:string}
+ record selection_view {valid:bool,values:list<selected_value>,error:option<json_error>}
+ record query_pair {name:string,value:string}
+ record header {name:string,value:list<u8>}
+ record request {method:string,path:string,parameters:list<query_pair>,query:list<query_pair>,headers:list<header>,body:list<u8>}
+ record response {status:u16,body:list<u8>}
+ record set_field {field:string,value_json:string}
+ record patch_field {field:string,patch:string,expected_value_sha256:option<string>}
+ record insert_operation {operation_id:string,key:string,row_json:string}
+ record update_operation {operation_id:string,key:string,expected_row_version:u64,field_updates:list<variant {set(set_field),unset(string),apply_patch(patch_field)}>}
+ record delete_operation {operation_id:string,key:string,expected_row_version:u64}
+ record transaction {table_path:string,expected_revision:string,transaction_id:string,idempotency_key:option<string>,operations:list<variant {insert(insert_operation),update(update_operation),delete(delete_operation)}>}
+ run:func(req:request)->response {
+  let mut pointers:list<string> = list.new();
+  pointers.push("/allow");pointers.push("/value");pointers.push("/key");pointers.push("/second_key");
+  pointers.push("/revision");pointers.push("/txid");pointers.push("/operation_id");pointers.push("/second_operation_id");pointers.push("");
+  let selected:selection_view = document::inspect_values_bytes(req.body,pointers);
+  let allowed:bool = selected.valid && selected.values.get(0).present && selected.values.get(0).json == "true";
+  let mut status:u16=422;
+  if (selected.valid) {
+   if (selected.values.get(1).present) {if (allowed) {status=200;} else {status=403;}} else {status=404;}
+  }
+  if (allowed) {
+   let value_json:string = selected.values.get(1).json;
+   let allowed_body:list<u8> = utf8::encode(value_json);
+   if (status == 200) {
+    let row_json:string = document::compact_or(selected.values.get(8).json,"{}");
+    let second_json:string = document::compact_or(selected.values.get(8).json,"{}");
+    let key:string = document::decode_string_or(selected.values.get(2).json,"");
+    let second_key:string = document::decode_string_or(selected.values.get(3).json,"");
+    let revision:string = document::decode_string_or(selected.values.get(4).json,"");
+    let txid:string = document::decode_string_or(selected.values.get(5).json,"");
+    let operation_id:string = document::decode_string_or(selected.values.get(6).json,"");
+    let second_operation_id:string = document::decode_string_or(selected.values.get(7).json,"");
+    let action:variant {insert(insert_operation),update(update_operation),delete(delete_operation)} =
+     variant.insert({operation_id:operation_id,key:key,row_json:row_json});
+    let mut operations:list<variant {insert(insert_operation),update(update_operation),delete(delete_operation)}> = list.new();
+    operations.push(action);
+    let second_action:variant {insert(insert_operation),update(update_operation),delete(delete_operation)} =
+     variant.insert({operation_id:second_operation_id,key:second_key,row_json:second_json});
+    operations.push(second_action);
+    let committed:result<unit,variant {invalid_argument(string),permission_denied(string),stale_revision(string),transaction_rejected(string),budget_exceeded(string)}> =
+     table::transact_discarded({table_path:"tables/ordinary-json",expected_revision:revision,transaction_id:txid,idempotency_key:none,operations:operations});
+    status = match committed {ok=>200,err=>409};
+   }
+   return {status:status,body:allowed_body};
+  }
+  if (status == 422) {
+   let fallback_json:string = document::compact_or_bytes(req.body,"{}");
+   let fallback_body:list<u8> = utf8::encode(fallback_json);
+   return {status:status,body:fallback_body};
+  }
+  let empty_body:list<u8> = list.new();
+  return {status:status,body:empty_body};
+ }
+} world app {export api;}
