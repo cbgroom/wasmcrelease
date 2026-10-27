@@ -488,3 +488,6 @@ Using exact Source 017d native producer and the immutable JSON 0.0.7 Root, regen
 
 
 2026-10-27 Source L1 at exact 49310c88: make check passed status 0 in own linked detached worktree and APFS-cloned warm Cargo cache with checked profile, offline, disk monitored; 68.2s, log SHA 1accd8e04b6b51330742ae722313dd4d6391b7b2a0194e9b8374261fca89cba2. Exact receipt and lossless log under qualification/unbounded-source-l1-v031-20261027. Source L2, main integration, CI billing and formal release remain pending.
+
+
+2026-10-27 ordinary JSON 32MiB: regenerated real Native transfer and portable App for explicit 64MiB Host body contract and fresh anonymously installed JSON 0.2 Root. Node and Deno each processed 33,554,463 input bytes with checked-unbounded compiler b272, two ordered edits, local atomic write, subsequent same-instance inputs and zero pending counters. Original strict reopen symlink failure and realpath recovery retained. Exact evidence qualification/unbounded-32m-ordinary-json-v031-20261027. Host bound is explicit; no infinite-memory or formal release claim.

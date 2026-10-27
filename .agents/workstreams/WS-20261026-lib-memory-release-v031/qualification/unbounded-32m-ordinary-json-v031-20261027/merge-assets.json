@@ -1,0 +1,42 @@
+{
+  "app_source_binding": "separate activation/frame/build receipt",
+  "cold_source_sha256": "209797478c009309ddc4e200aa0eb30536856dc97ff10a3f1f9e90663dd09864",
+  "entry_binding_sha256": "d9cde03a0bc6f52f91c12be02c01c70c3d241d2a1e8ca7727c8c910c2cb68ec7",
+  "lib_import_module": "wasmc:lib/wasmc-json@0.2.0",
+  "operation_binding_sha256": "b5eafa21fd2d80a31f4dbc695ef9721d7a89f3c1d9838ee8523d8d53bc46a797",
+  "prepared_cold": {
+    "bytes": 48144,
+    "path": "prepared-transfer.wasm",
+    "sha256": "f4e9225a0ff40d7f4c703fe4373d7f905b4c93afb5bd445027de86f8d74cf31b"
+  },
+  "prepared_lib_core": {
+    "bytes": 152441,
+    "path": "prepared-lib-core.wasm",
+    "sha256": "11805dcb0f20874e1c1c2886cb98c2cd0295e9a071bfff2bc5c3fba3dc4700a5"
+  },
+  "raw_cold": {
+    "bytes": 54921,
+    "sha256": "5d74165e3750ac23213beb501e3d95ab216972dbdc20e4e4f7b78378d4cf163c"
+  },
+  "raw_lib_core": {
+    "bytes": 152441,
+    "sha256": "11805dcb0f20874e1c1c2886cb98c2cd0295e9a071bfff2bc5c3fba3dc4700a5"
+  },
+  "recipe": {
+    "original_root": "immutable",
+    "raw_cold_limit": 4194304,
+    "schema": "wasmc.canonical-merge-preparation-recipe/v1",
+    "staging_exports": "all emitted import signatures plus original Lib lease validation",
+    "steps": [
+      "prepare-rust-wit-canonical-core-caller",
+      "normalize-only-wasmc-snapshot-provider-to-wasmc:lib/wasmc.lib_managed_object_heap@4.9.0"
+    ]
+  },
+  "recipe_sha256": "4f3278269983f827d16f07cc208662ad57311b571ec6653a8a302a19b0dd438f",
+  "root": {
+    "artifact_sha256": "11805dcb0f20874e1c1c2886cb98c2cd0295e9a071bfff2bc5c3fba3dc4700a5",
+    "manifest_sha256": "611e4b2eadb5c6e9b12ec5518aa22888a77d51f81e1ecc301c7fbd274a0c1d7c",
+    "wit_sha256": "27b009f7bec5949d253afc70926e4a369d89e82f2fb277f7096e1dd34136b8f5"
+  },
+  "schema": "wasmc.canonical-merge-assets/v1"
+}
