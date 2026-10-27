@@ -470,3 +470,6 @@ Using exact Source 017d native producer and the immutable JSON 0.0.7 Root, regen
 
 
 2026-10-27 full candidate entrypoints: archive snapshot 3080dcf5 staged checked compiler 0c07 and CoreLib 8231 without refreshing product provenance. Node/Bun/Deno each passed 35 API outputs, seven runtime oracles, 25 CLI outputs across seven APIs and five CLIs. See qualification/checked-entrypoints-v031-20261027. Live Source PR #26 remains draft; job 121962269141 has no steps and annotation says billing payment/spending limit, so do not claim CI acceptance. Complete provenance, qualification, installation and release pending.
+
+
+2026-10-27 full candidate cohort: all 30 compiler qualification commands pass on a single source-free archive after correcting a stale CoreLib hash in test-only manifest. Original 27/30 run and three recovery checks retained alongside full 30/30 rerun at qualification/full-cohort-candidate-v031-20261027. Bun only compiles multi-memory Guest frames. Manifest source/provenance and runtime metadata remain unrefreshed, so integrity, release and installation not claimed.

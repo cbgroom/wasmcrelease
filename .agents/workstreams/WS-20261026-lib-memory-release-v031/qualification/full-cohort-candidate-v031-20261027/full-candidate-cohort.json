@@ -1,0 +1,295 @@
+[
+  {
+    "command": [
+      "node",
+      "scripts/test-current-compiler.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"runtime\":\"node\",\"compiler_sha256\":\"0c07d9b6b2edf9b18117860259c350346db1b8b79b667604fd32a2fddf851c17\",\"frozen_outputs\":35,\"execution_oracles\":7,\"cli_outputs\":25}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "node",
+      "examples/current/standard.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"standard_lib\":\"wasmc:std@1.4.1\",\"functions\":73,\"consumer_count\":3,\"consumer_calls\":7680,\"current_app_sha256\":\"f704d2c4d99f9efc97ef6d3c99bfd29c3987e1a96601ec7ff026dd0ac6e0581a\",\"rust_sdk_sha256\":\"4d2c55eda7cdbe4d14084de2d579ae6dcea97332e18ca9894d210a5a71472d65\"}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "node",
+      "scripts/test-current-lib-api-v021.mjs"
+    ],
+    "status": 1,
+    "stdout": "",
+    "stderr": "node:internal/modules/run_main:111\n    triggerUncaughtException(\n    ^\n\nAssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ '8231aba425ef1bb0aa07a760ff4c77917e247382ef73a41408db6b6b1cb40b1e'\n- '1fac280b1d3f2d82399e61e49fcb47f1c6ffc6c3d5b3b27e5d98059952fefabd'\n\n    at file:///Users/youxianshi/.local/state/wasmc-maintenance/20261026-lib-memory-json-32/current-full-checked-staging-20261027/scripts/test-current-lib-api-v021.mjs:16:9 {\n  generatedMessage: true,\n  code: 'ERR_ASSERTION',\n  actual: '8231aba425ef1bb0aa07a760ff4c77917e247382ef73a41408db6b6b1cb40b1e',\n  expected: '1fac280b1d3f2d82399e61e49fcb47f1c6ffc6c3d5b3b27e5d98059952fefabd',\n  operator: 'strictEqual',\n  diff: 'simple'\n}\n\nNode.js v26.12.1\n"
+  },
+  {
+    "command": [
+      "node",
+      "scripts/test-current-private-helpers.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"source_cases\":20,\"guest_calls\":66,\"repeats_per_instance\":3,\"basic_scalar_types\":11,\"long_helper_terms\":2098,\"invalid_sources_rejected\":5,\"selected_guest_trap\":true,\"healthy_after_rejections\":true,\"imports\":0,\"real_MCP_acceptance\":false}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "node",
+      "scripts/test-canonical-host-sdk-v031.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"runtime\":\"node\",\"compiler_sha256\":\"0c07d9b6b2edf9b18117860259c350346db1b8b79b667604fd32a2fddf851c17\",\"compiled_frames\":4,\"modules_per_frame\":8,\"native_parity\":\"bb808374f6184316127b04b100850dd11d6aa876573981b3f3ff87c96cddabb5\",\"frame_bytes\":73376,\"checked_chunk_profile\":true,\"exact_native_modules\":8,\"rejection_then_recovery\":true,\"source_rebinding\":true,\"real_Host_invocation\":false}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "node",
+      "scripts/test-if-branch-scope.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"engine\":\"node\",\"compiler_sha256\":\"0c07d9b6b2edf9b18117860259c350346db1b8b79b667604fd32a2fddf851c17\",\"source_cases\":5,\"scalar_calls\":1200,\"managed_calls\":192,\"scope_rejections\":24,\"carrier_forms\":3,\"physical_owner_slots_preserved\":true}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "node",
+      "scripts/test-canonical-host-import-demand-v031.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"runtime\":\"node\",\"compiler_sha256\":\"0c07d9b6b2edf9b18117860259c350346db1b8b79b667604fd32a2fddf851c17\",\"baseline_producer_compiler_sha256\":\"0c07d9b6b2edf9b18117860259c350346db1b8b79b667604fd32a2fddf851c17\",\"cases\":3,\"static_imports\":13,\"json_read_imports\":13,\"table_imports\":18,\"modules_per_frame\":8,\"exact_frame_pins\":true,\"real_Host_invocation\":false,\"merged_execution_scope\":\"JSON-read separately executed; static and table execution not claimed\"}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "node",
+      "scripts/test-unit-result-match.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"compiler_sha256\":\"0c07d9b6b2edf9b18117860259c350346db1b8b79b667604fd32a2fddf851c17\",\"source_cases\":4,\"guest_calls\":1152,\"host_effects\":1280,\"error_handles_dropped\":384,\"malformed_traps\":640,\"negative_sources_rejected\":6,\"same_instance_recovery\":true,\"live_handles\":0,\"real_Host_effects\":false}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "node",
+      "scripts/test-canonical-checked-results-v031.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"runtime\":\"node\",\"compiler_sha256\":\"0c07d9b6b2edf9b18117860259c350346db1b8b79b667604fd32a2fddf851c17\",\"compiled_frames\":4,\"modules_per_frame\":8,\"http_only_imports\":13,\"old_cold_tuple_rejected\":true,\"app_engine_admitted\":true,\"execution_profile\":\"canonical-app-multi-memory\",\"guest_calls\":800,\"same_instance\":true,\"service_calls\":800,\"response_drops\":580,\"owned_error_drops\":760,\"malformed_rejections\":180,\"pending_counters_zero\":3,\"fresh_dynamic_inputs\":true,\"exact_error_case_decisions\":5,\"rejection_then_recovery\":true,\"real_Host_effects\":false,\"business_Guest_executed\":false}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "node",
+      "scripts/test-current-string-support-v031.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"host\":\"node\",\"CoreLib_version\":\"4.12.0-candidate.1\",\"CoreLib_sha256\":\"8231aba425ef1bb0aa07a760ff4c77917e247382ef73a41408db6b6b1cb40b1e\",\"compiler_sha256\":\"0c07d9b6b2edf9b18117860259c350346db1b8b79b667604fd32a2fddf851c17\",\"Root_APIs\":30,\"compiled_frames\":4,\"modules_per_frame\":8,\"candidate_profile\":true,\"basic_Guest_calls\":544,\"Guest_calls\":583,\"large_input_bytes\":[131072,262144,524288,1048576,1200000],\"Unicode_case_expansion\":true,\"explicit_host_limit_rejected\":true,\"same_instance_recovery\":true,\"pending_counters_zero\":2,\"Host_imports\":13,\"Host_calls_per_success\":13,\"Source_rejection_recovery\":true,\"business_effects\":false}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "bun",
+      "scripts/test-current-compiler.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"runtime\":\"bun\",\"compiler_sha256\":\"0c07d9b6b2edf9b18117860259c350346db1b8b79b667604fd32a2fddf851c17\",\"frozen_outputs\":35,\"execution_oracles\":7,\"cli_outputs\":25}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "bun",
+      "examples/current/standard.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"standard_lib\":\"wasmc:std@1.4.1\",\"functions\":73,\"consumer_count\":3,\"consumer_calls\":7680,\"current_app_sha256\":\"f704d2c4d99f9efc97ef6d3c99bfd29c3987e1a96601ec7ff026dd0ac6e0581a\",\"rust_sdk_sha256\":\"4d2c55eda7cdbe4d14084de2d579ae6dcea97332e18ca9894d210a5a71472d65\"}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "bun",
+      "scripts/test-current-lib-api-v021.mjs"
+    ],
+    "status": 1,
+    "stdout": "",
+    "stderr": "11 | const digest=b=>createHash('sha256').update(b).digest('hex');\n12 | const source='package local:current_lib_api; interface api {run: func() -> u32 {let mut values: list<u32> = list.new(); values.push(7); return values.len();}} world app {export api;}';\n13 | let oracles=0,calls=0;\n14 | for(const api of [sidecar,single,globalThis.Wasmc]){\n15 |  const compiled=await api.compileLib(source);\n16 |  assert.equal(digest(compiled.libWasm),providerPin);\n             ^\nAssertionError: Expected values to be strictly equal:\n+ actual - expected\n\n+ '8231aba425ef1bb0aa07a760ff4c77917e247382ef73a41408db6b6b1cb40b1e'\n- '1fac280b1d3f2d82399e61e49fcb47f1c6ffc6c3d5b3b27e5d98059952fefabd'\n\n generatedMessage: true,\n     actual: \"8231aba425ef1bb0aa07a760ff4c77917e247382ef73a41408db6b6b1cb40b1e\",\n   expected: \"1fac280b1d3f2d82399e61e49fcb47f1c6ffc6c3d5b3b27e5d98059952fefabd\",\n   operator: \"strictEqual\",\n       code: \"ERR_ASSERTION\"\n\n      at /Users/youxianshi/.local/state/wasmc-maintenance/20261026-lib-memory-json-32/current-full-checked-staging-20261027/scripts/test-current-lib-api-v021.mjs:16:9\n\nBun v1.3.14 (macOS arm64)\n"
+  },
+  {
+    "command": [
+      "bun",
+      "scripts/test-current-private-helpers.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"source_cases\":20,\"guest_calls\":66,\"repeats_per_instance\":3,\"basic_scalar_types\":11,\"long_helper_terms\":2098,\"invalid_sources_rejected\":5,\"selected_guest_trap\":true,\"healthy_after_rejections\":true,\"imports\":0,\"real_MCP_acceptance\":false}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "bun",
+      "scripts/test-canonical-host-sdk-v031.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"runtime\":\"bun\",\"compiler_sha256\":\"0c07d9b6b2edf9b18117860259c350346db1b8b79b667604fd32a2fddf851c17\",\"compiled_frames\":4,\"modules_per_frame\":8,\"native_parity\":\"bb808374f6184316127b04b100850dd11d6aa876573981b3f3ff87c96cddabb5\",\"frame_bytes\":73376,\"checked_chunk_profile\":true,\"exact_native_modules\":8,\"rejection_then_recovery\":true,\"source_rebinding\":true,\"real_Host_invocation\":false}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "bun",
+      "scripts/test-if-branch-scope.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"engine\":\"bun\",\"compiler_sha256\":\"0c07d9b6b2edf9b18117860259c350346db1b8b79b667604fd32a2fddf851c17\",\"source_cases\":5,\"scalar_calls\":1200,\"managed_calls\":192,\"scope_rejections\":24,\"carrier_forms\":3,\"physical_owner_slots_preserved\":true}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "bun",
+      "scripts/test-canonical-host-import-demand-v031.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"runtime\":\"bun\",\"compiler_sha256\":\"0c07d9b6b2edf9b18117860259c350346db1b8b79b667604fd32a2fddf851c17\",\"baseline_producer_compiler_sha256\":\"0c07d9b6b2edf9b18117860259c350346db1b8b79b667604fd32a2fddf851c17\",\"cases\":3,\"static_imports\":13,\"json_read_imports\":13,\"table_imports\":18,\"modules_per_frame\":8,\"exact_frame_pins\":true,\"real_Host_invocation\":false,\"merged_execution_scope\":\"JSON-read separately executed; static and table execution not claimed\"}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "bun",
+      "scripts/test-unit-result-match.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"compiler_sha256\":\"0c07d9b6b2edf9b18117860259c350346db1b8b79b667604fd32a2fddf851c17\",\"source_cases\":4,\"guest_calls\":1152,\"host_effects\":1280,\"error_handles_dropped\":384,\"malformed_traps\":640,\"negative_sources_rejected\":6,\"same_instance_recovery\":true,\"live_handles\":0,\"real_Host_effects\":false}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "bun",
+      "scripts/test-canonical-checked-results-v031.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"runtime\":\"bun\",\"compiler_sha256\":\"0c07d9b6b2edf9b18117860259c350346db1b8b79b667604fd32a2fddf851c17\",\"compiled_frames\":4,\"modules_per_frame\":8,\"http_only_imports\":13,\"old_cold_tuple_rejected\":true,\"guest_calls\":0,\"app_engine_admitted\":false,\"execution_profile\":\"compiler-frames-only\",\"unsupported_feature\":\"multi-memory\",\"rejection_then_recovery\":true,\"real_Host_effects\":false,\"business_Guest_executed\":false}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "bun",
+      "scripts/test-current-string-support-v031.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"host\":\"bun\",\"CoreLib_version\":\"4.12.0-candidate.1\",\"CoreLib_sha256\":\"8231aba425ef1bb0aa07a760ff4c77917e247382ef73a41408db6b6b1cb40b1e\",\"compiler_sha256\":\"0c07d9b6b2edf9b18117860259c350346db1b8b79b667604fd32a2fddf851c17\",\"Root_APIs\":30,\"compiled_frames\":4,\"modules_per_frame\":8,\"candidate_profile\":true,\"Guest_calls\":0,\"execution_profile\":\"compiler-frames-only\",\"unsupported_feature\":\"multi-memory\",\"Source_rejection_recovery\":true,\"business_effects\":false}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "deno",
+      "run",
+      "--allow-read",
+      "--allow-write",
+      "--allow-run",
+      "--allow-env",
+      "scripts/test-current-compiler.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"runtime\":\"deno\",\"compiler_sha256\":\"0c07d9b6b2edf9b18117860259c350346db1b8b79b667604fd32a2fddf851c17\",\"frozen_outputs\":35,\"execution_oracles\":7,\"cli_outputs\":25}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "deno",
+      "run",
+      "--allow-read",
+      "examples/current/standard.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"standard_lib\":\"wasmc:std@1.4.1\",\"functions\":73,\"consumer_count\":3,\"consumer_calls\":7680,\"current_app_sha256\":\"f704d2c4d99f9efc97ef6d3c99bfd29c3987e1a96601ec7ff026dd0ac6e0581a\",\"rust_sdk_sha256\":\"4d2c55eda7cdbe4d14084de2d579ae6dcea97332e18ca9894d210a5a71472d65\"}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "deno",
+      "run",
+      "--allow-read",
+      "scripts/test-current-lib-api-v021.mjs"
+    ],
+    "status": 1,
+    "stdout": "",
+    "stderr": "error: Uncaught (in promise) AssertionError: Expected values to be strictly equal:\n+ actual - expected\n\n+ '8231aba425ef1bb0aa07a760ff4c77917e247382ef73a41408db6b6b1cb40b1e'\n- '1fac280b1d3f2d82399e61e49fcb47f1c6ffc6c3d5b3b27e5d98059952fefabd'\n\n assert.equal(digest(compiled.libWasm),providerPin);\n        ^\n    at file:///Users/youxianshi/.local/state/wasmc-maintenance/20261026-lib-memory-json-32/current-full-checked-staging-20261027/scripts/test-current-lib-api-v021.mjs:16:9\n"
+  },
+  {
+    "command": [
+      "deno",
+      "run",
+      "--allow-read",
+      "scripts/test-current-private-helpers.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"source_cases\":20,\"guest_calls\":66,\"repeats_per_instance\":3,\"basic_scalar_types\":11,\"long_helper_terms\":2098,\"invalid_sources_rejected\":5,\"selected_guest_trap\":true,\"healthy_after_rejections\":true,\"imports\":0,\"real_MCP_acceptance\":false}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "deno",
+      "run",
+      "--allow-read",
+      "scripts/test-canonical-host-sdk-v031.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"runtime\":\"deno\",\"compiler_sha256\":\"0c07d9b6b2edf9b18117860259c350346db1b8b79b667604fd32a2fddf851c17\",\"compiled_frames\":4,\"modules_per_frame\":8,\"native_parity\":\"bb808374f6184316127b04b100850dd11d6aa876573981b3f3ff87c96cddabb5\",\"frame_bytes\":73376,\"checked_chunk_profile\":true,\"exact_native_modules\":8,\"rejection_then_recovery\":true,\"source_rebinding\":true,\"real_Host_invocation\":false}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "deno",
+      "run",
+      "--allow-read",
+      "scripts/test-if-branch-scope.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"engine\":\"deno\",\"compiler_sha256\":\"0c07d9b6b2edf9b18117860259c350346db1b8b79b667604fd32a2fddf851c17\",\"source_cases\":5,\"scalar_calls\":1200,\"managed_calls\":192,\"scope_rejections\":24,\"carrier_forms\":3,\"physical_owner_slots_preserved\":true}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "deno",
+      "run",
+      "--allow-read",
+      "scripts/test-canonical-host-import-demand-v031.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"runtime\":\"deno\",\"compiler_sha256\":\"0c07d9b6b2edf9b18117860259c350346db1b8b79b667604fd32a2fddf851c17\",\"baseline_producer_compiler_sha256\":\"0c07d9b6b2edf9b18117860259c350346db1b8b79b667604fd32a2fddf851c17\",\"cases\":3,\"static_imports\":13,\"json_read_imports\":13,\"table_imports\":18,\"modules_per_frame\":8,\"exact_frame_pins\":true,\"real_Host_invocation\":false,\"merged_execution_scope\":\"JSON-read separately executed; static and table execution not claimed\"}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "deno",
+      "run",
+      "--allow-read",
+      "scripts/test-unit-result-match.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"compiler_sha256\":\"0c07d9b6b2edf9b18117860259c350346db1b8b79b667604fd32a2fddf851c17\",\"source_cases\":4,\"guest_calls\":1152,\"host_effects\":1280,\"error_handles_dropped\":384,\"malformed_traps\":640,\"negative_sources_rejected\":6,\"same_instance_recovery\":true,\"live_handles\":0,\"real_Host_effects\":false}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "deno",
+      "run",
+      "--allow-read",
+      "scripts/test-canonical-checked-results-v031.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"runtime\":\"deno\",\"compiler_sha256\":\"0c07d9b6b2edf9b18117860259c350346db1b8b79b667604fd32a2fddf851c17\",\"compiled_frames\":4,\"modules_per_frame\":8,\"http_only_imports\":13,\"old_cold_tuple_rejected\":true,\"app_engine_admitted\":true,\"execution_profile\":\"canonical-app-multi-memory\",\"guest_calls\":800,\"same_instance\":true,\"service_calls\":800,\"response_drops\":580,\"owned_error_drops\":760,\"malformed_rejections\":180,\"pending_counters_zero\":3,\"fresh_dynamic_inputs\":true,\"exact_error_case_decisions\":5,\"rejection_then_recovery\":true,\"real_Host_effects\":false,\"business_Guest_executed\":false}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "deno",
+      "run",
+      "--allow-read",
+      "scripts/test-current-string-support-v031.mjs"
+    ],
+    "status": 0,
+    "stdout": "{\"accepted\":true,\"host\":\"deno\",\"CoreLib_version\":\"4.12.0-candidate.1\",\"CoreLib_sha256\":\"8231aba425ef1bb0aa07a760ff4c77917e247382ef73a41408db6b6b1cb40b1e\",\"compiler_sha256\":\"0c07d9b6b2edf9b18117860259c350346db1b8b79b667604fd32a2fddf851c17\",\"Root_APIs\":30,\"compiled_frames\":4,\"modules_per_frame\":8,\"candidate_profile\":true,\"basic_Guest_calls\":544,\"Guest_calls\":583,\"large_input_bytes\":[131072,262144,524288,1048576,1200000],\"Unicode_case_expansion\":true,\"explicit_host_limit_rejected\":true,\"same_instance_recovery\":true,\"pending_counters_zero\":2,\"Host_imports\":13,\"Host_calls_per_success\":13,\"Source_rejection_recovery\":true,\"business_effects\":false}\n",
+    "stderr": ""
+  }
+]
