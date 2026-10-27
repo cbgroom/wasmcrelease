@@ -9,6 +9,6 @@ for(const [prefix,isLib] of [['',true],['own_',false]])for(const width of [8,32,
 }
 const module=new WebAssembly.Module(wasm),imports={'wasmc:private/canonical-memory@1':api,'wasmc:lib/wasmc-json@0.2.0':lib.exports,'wasmc:json/document@0.2.0':{'edit-or-bytes':(...args)=>app.exports.__wasmc_canonical_bridge_17(...args)}};
 for(const i of WebAssembly.Module.imports(module))assert.equal(typeof imports[i.module]?.[i.name],'function',`${i.module}/${i.name}`);
-app=new WebAssembly.Instance(module,imports);const cases=[[8,0],[1048577,1],[3145728,0],[11,1]],observed=[];
+app=new WebAssembly.Instance(module,imports);const cases=[[8,0],[1048577,1],[3145728,0],...(process.env.WASMC_JSON_LARGE==='1'?[[17825793,1],[33554433,0]]:[]),[11,1]],observed=[];
 for(const [length,seed] of cases){const start=Date.now();assert.equal(app.exports.run(length,seed),length);observed.push({length,seed,elapsed_ms:Date.now()-start});console.log(JSON.stringify({accepted:true,length,seed}));}
 fs.writeFileSync(process.argv[3],JSON.stringify({accepted:true,consumer_sha256:sha(wasm),root_artifact_sha256:sha(libbytes),root_manifest_sha256:sha(fs.readFileSync(path.join(root,'lib.json'))),cases:observed,generated_rust_sdk_executed:true,actual_canonical_transfer:true,same_instance_new_inputs:true,elapsed_is_not_upper_bound:true,current_catalog:false,formal_release:false},null,2)+'\n');
