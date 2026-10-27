@@ -1,0 +1,249 @@
+{
+  "host": "simulated",
+  "engine": "deno",
+  "results": {
+    "rust": {
+      "sha256": "2aef2dacbe244134843c81fd5527db079b677193e37b885149a659fb36a5f480",
+      "imports": [
+        {
+          "module": "mcpgit:http/v1",
+          "name": "exchange-response-status-get",
+          "kind": "function"
+        },
+        {
+          "module": "mcpgit:http/v1",
+          "name": "exchange-response-headers-read",
+          "kind": "function"
+        },
+        {
+          "module": "mcpgit:http/v1",
+          "name": "exchange-phase",
+          "kind": "function"
+        },
+        {
+          "module": "mcpgit:http/v1",
+          "name": "exchange-failed",
+          "kind": "function"
+        },
+        {
+          "module": "mcpgit:http/v1",
+          "name": "exchange-control",
+          "kind": "function"
+        },
+        {
+          "module": "mcpgit:http/v1",
+          "name": "exchange-request-method-write",
+          "kind": "function"
+        },
+        {
+          "module": "mcpgit:http/v1",
+          "name": "exchange-request-path-write",
+          "kind": "function"
+        },
+        {
+          "module": "mcpgit:http/v1",
+          "name": "exchange-request-header-set",
+          "kind": "function"
+        },
+        {
+          "module": "mcpgit:http/v1",
+          "name": "exchange-request-header-append",
+          "kind": "function"
+        },
+        {
+          "module": "mcpgit:http/v1",
+          "name": "exchange-request-header-remove",
+          "kind": "function"
+        },
+        {
+          "module": "mcpgit:http/v1",
+          "name": "exchange-response-header-append",
+          "kind": "function"
+        },
+        {
+          "module": "mcpgit:http/v1",
+          "name": "exchange-response-header-remove",
+          "kind": "function"
+        },
+        {
+          "module": "mcpgit:http/v1",
+          "name": "exchange-request-parameter-set",
+          "kind": "function"
+        },
+        {
+          "module": "mcpgit:http/v1",
+          "name": "exchange-request-parameter-remove",
+          "kind": "function"
+        },
+        {
+          "module": "mcpgit:http/v1",
+          "name": "exchange-request-query-append",
+          "kind": "function"
+        },
+        {
+          "module": "mcpgit:http/v1",
+          "name": "exchange-request-query-remove",
+          "kind": "function"
+        },
+        {
+          "module": "mcpgit:http/v1",
+          "name": "exchange-resource-select",
+          "kind": "function"
+        },
+        {
+          "module": "mcpgit:http/v1",
+          "name": "exchange-request-body-write",
+          "kind": "function"
+        },
+        {
+          "module": "mcpgit:http/v1",
+          "name": "exchange-response-status",
+          "kind": "function"
+        },
+        {
+          "module": "mcpgit:http/v1",
+          "name": "exchange-response-body-write",
+          "kind": "function"
+        },
+        {
+          "module": "mcpgit:http/v1",
+          "name": "exchange-response-body-len",
+          "kind": "function"
+        },
+        {
+          "module": "mcpgit:http/v1",
+          "name": "exchange-response-headers-len",
+          "kind": "function"
+        },
+        {
+          "module": "mcpgit:http/v1",
+          "name": "exchange-response-body-read",
+          "kind": "function"
+        }
+      ],
+      "same_instance": true,
+      "cases": [
+        {
+          "failure": false,
+          "ret": 200,
+          "status": 206,
+          "body": [
+            0,
+            255,
+            128
+          ],
+          "headers": [
+            [
+              "x-reply",
+              [
+                98
+              ]
+            ]
+          ],
+          "control": 1
+        },
+        {
+          "failure": true,
+          "ret": 500,
+          "status": 0,
+          "body": [],
+          "headers": [],
+          "control": 0
+        },
+        {
+          "failure": false,
+          "ret": 200,
+          "status": 206,
+          "body": [
+            0,
+            255,
+            128
+          ],
+          "headers": [
+            [
+              "x-reply",
+              [
+                98
+              ]
+            ]
+          ],
+          "control": 1
+        }
+      ]
+    },
+    "wasmc": {
+      "sha256": "54d78904c26e4be097061fc8816824c09fc0fa122c3ca23a95b0340d9078c7f1",
+      "imports": [
+        {
+          "module": "mcpgit:http/v1",
+          "name": "exchange-response-status",
+          "kind": "function"
+        },
+        {
+          "module": "mcpgit:http/v1",
+          "name": "exchange-response-header-append",
+          "kind": "function"
+        },
+        {
+          "module": "mcpgit:http/v1",
+          "name": "exchange-response-body-write",
+          "kind": "function"
+        },
+        {
+          "module": "mcpgit:http/v1",
+          "name": "exchange-control",
+          "kind": "function"
+        }
+      ],
+      "same_instance": true,
+      "cases": [
+        {
+          "failure": false,
+          "ret": 200,
+          "status": 206,
+          "body": [
+            0,
+            255,
+            128
+          ],
+          "headers": [
+            [
+              "x-reply",
+              [
+                98
+              ]
+            ]
+          ],
+          "control": 1
+        },
+        {
+          "failure": true,
+          "ret": 500,
+          "status": 0,
+          "body": [],
+          "headers": [],
+          "control": 0
+        },
+        {
+          "failure": false,
+          "ret": 200,
+          "status": 206,
+          "body": [
+            0,
+            255,
+            128
+          ],
+          "headers": [
+            [
+              "x-reply",
+              [
+                98
+              ]
+            ]
+          ],
+          "control": 1
+        }
+      ]
+    }
+  }
+}
