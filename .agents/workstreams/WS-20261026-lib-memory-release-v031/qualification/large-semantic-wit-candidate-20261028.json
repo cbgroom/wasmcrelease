@@ -1,0 +1,26 @@
+{
+  "schema": "wasmc.large-semantic-wit-candidate/v1",
+  "source_base": "c1306cc8ec4497d2190f7ac72501979e4038bfae",
+  "source_mode": "isolated private archive; not integrated",
+  "change": "remove fixed 4096 visited-type count from semantic import classification; retain cycle detection and type-kind semantics; combined patch includes previous WIT byte and dependency-count work",
+  "baseline": "large valid pure-value WIT rejected as unsupported because classifier stopped after 4096 types",
+  "semantic_wit": "9,000 record declarations, 72,000 fields; sealed WIT 2,654,543 bytes; exact type count verified; build/reopen and Core/Component scalar call pass",
+  "foreign_record": "actual request record is imported and used by Component in presence of 9,000 extra records; Rust Component SDK cargo check passed and typed call result 4102; separate run verified all 9,000 extra record identities in delivered WIT",
+  "runtime_limits": "only request record used as argument; extra 9,000 are not all individually executed",
+  "regression": "large pure, function and resource import type-kind classification controls pass; WIT unit17 and Core composition7 pass",
+  "performance": "foreign record SDK check test elapsed 142.71 seconds on macOS; not a benchmark",
+  "patch_validation": "initial patch contains extra final blank line and fails git apply whitespace check; clean patch passes; original retained",
+  "limitations": "no anonymous installation, real Host, source admission or release; other capacity limits remain",
+  "hashes": {
+    "large-semantic-wit-candidate-20261028.patch": "9efb67e43b8d7c901ff77576b6296f3cac74c0b5c680a9820fe65a574b928691",
+    "large-semantic-wit-candidate-clean-20261028.patch": "7a395bb1b663e1e45a5b35151d519d62a90fdb1425691940d561ea012fde683e",
+    "large-semantic-wit-first-20261028.log": "f18192c3e2f1b11651c07dccd3f19ef2f43a0efb790fa7cec152ffd09c439415",
+    "large-semantic-wit-second-20261028.log": "b812e544b8d63b9ce6df6e52c0c4be0573c6f273bd7d0875a891bd6dede14942",
+    "large-foreign-record-graph-first-20261028.log": "da6e89380f36cde0352fb3de9d421fad61f201cab864ff516e9fb5ad1b366854",
+    "large-foreign-record-retained-20261028.log": "c63c7ba1adff1031f3ea92cb64b760037c810d5e4844d63baa921034d247e2e4",
+    "large-wit-type-graph-classification-20261028.log": "b64409a2705b0a8b855daf7d57758f41b3f74f5b8b64e53de542d6139a953a72",
+    "large-semantic-wit-unit-final-20261028.log": "545d74a15e8802b0a45a0f1a686f981266793557ee3a07a62b7e960cce439954",
+    "large-semantic-core-regression-20261028.log": "0a4ed3d59133e4727744a22f20a57f98960d5a548cc68525c568554dda38ed51"
+  },
+  "formal_release": false
+}
