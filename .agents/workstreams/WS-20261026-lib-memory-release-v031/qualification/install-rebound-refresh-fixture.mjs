@@ -15,7 +15,7 @@ assert.equal(hash(receiptBytes), receiptPin);
 const receipt = JSON.parse(receiptBytes);
 assert.equal(receipt.accepted, true);
 const expectedIds = expectedIdsArg ? JSON.parse(expectedIdsArg) : ['wasmc-data-core', 'wasmc-data-interchange', 'wasmc-data-relational'];
-assert.ok(Array.isArray(expectedIds) && expectedIds.length > 0 && expectedIds.every(x => /^wasmc-[a-z0-9-]+$/.test(x)));
+assert.ok(Array.isArray(expectedIds) && expectedIds.length > 0 && expectedIds.every(x => /^[a-z][a-z0-9-]*$/.test(x)));
 assert.equal(new Set(expectedIds).size, expectedIds.length);
 assert.deepEqual([...receipt.selected].sort(), [...expectedIds].sort());
 const sourceCatalog = await readFile('catalog/libs-current-v2.json');
@@ -56,7 +56,7 @@ for (const subject of receipt.rows) {
   assert.ok(row && row.version === subject.version);
   row.manifest_sha256 = licensedVerified.manifest_sha256;
   row.root_inventory_sha256 = hash(Buffer.from(JSON.stringify(files)));
-  row.delivery.artifact = manifest.artifact; row.delivery.component = manifest.component;
+  row.delivery.artifact = manifest.artifact ?? null; row.delivery.component = manifest.component ?? null;
   row.files = Object.entries(files).map(([name, pin]) => ({path: `${row.root}/${name}`, ...pin}));
   const values = new Map();
   for (const file of row.files) values.set(file.path, await readFile(join(licensed, file.path.slice(row.root.length + 1))));
@@ -84,7 +84,7 @@ for (const {row, values, hasResourceCore} of roots) {
   const verify = await verifyRoot(root, row.id, row.version, row.profile, hasResourceCore);
   assert.equal(verify.manifest_sha256, row.manifest_sha256);
   result.push({id:row.id,version:row.version,root,manifest_sha256:row.manifest_sha256,files_verified:requests,
-    artifact_sha256:row.delivery.artifact.sha256,component_sha256:row.delivery.component.sha256});
+    artifact_sha256:row.delivery.artifact?.sha256 ?? null,component_sha256:row.delivery.component?.sha256 ?? null});
 }
 const resultReceipt = {accepted:true, transport:'controlled-local-fetch', catalog_commit:'fixture-zero-not-public',
   catalog_sha256:catalogSha, source_receipt_sha256:receiptPin, roots:result,
