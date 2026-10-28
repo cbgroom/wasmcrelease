@@ -1,0 +1,36 @@
+{
+  "schema": "wasmc.combined-expression-partial-candidate/v1",
+  "status": "isolated candidate, incomplete deep-expression fix; not Source admitted or released",
+  "candidate": "Iterative binary type inference and projection integrated with combined record/SDK/WIT candidate; original binary projection semantics retained.",
+  "success": {
+    "deep70": "default stack, 70 live record terms; both compiler APIs and both engines, 160 calls each. Test print says 4.9 but exact verified provider hash 8231aba is 4.12 candidate.",
+    "regression": "4 logical projection plus 73 expression/record/ownership tests pass using pinned CoreLib 4.9",
+    "json": "ordinary WAsmC, temporary JSON 2024 Root, dual engine valid/invalid/empty cases pass"
+  },
+  "remaining_defect": {
+    "deep140": "default stack SIGABRT; ordinary compile completed, compile_lib_auto failed",
+    "phase": "private probes localize first overflow to lower_aggregate_value_recipes. A diagnostic iterative binary recipe patch advances to lower_aggregate_executable_actions, which still overflows.",
+    "stack32": "diagnostic build passes both APIs and engines only with 32 MiB thread stack; this is not a production fix"
+  },
+  "evidence_sha256": {
+    "aggregate-binary-tree-scalar-inference-code-only-20261028.patch": "75dc5aac2906e309df0337542720cd645868e7213303655826d8e995cc6ba07e",
+    "combined-expression-iterative-recipe-diagnostic-20261028.patch": "af43561d78f4ddf3e9c38ba61ce3e58b2fa0c3480b7f8cc909e53389fc6931e7",
+    "combined-expression-deep-default-20261028.log": "468c0094dae443270026e05b5c33ee8e49c97cfa65d61e65da2212c0fbe75599",
+    "combined-expression-regressions-20261028.log": "a0b2f4742d90441b7dc0805fad4ba0e759dd38149eb04766d4b644ff8ccded6a",
+    "combined-expression-regressions-v2-20261028.log": "a7b9a19d9433a47d754f19d09ec97a1342032b39d05d96d3dc803eb91af80ee9",
+    "combined-expression-json-run-20261028.log": "aeaa63c2e717fc849d0a44d51f88ea31fe7e1ba7ac0bafaabc11a1319dda6242",
+    "combined-expression-deep140-default-20261028.log": "d0fc3064b854529e54b8093df4e2067591d628780e770771ced8d5af23f2aa70",
+    "combined-expression-deep140-phase-20261028.log": "3f8c18bc31364ad037170f11c85bd768645aa716f3a704da9ef8b440b2f53e54",
+    "combined-expression-deep140-phase2-20261028.log": "ad088d95636c639ec5479e380a2ed86216c779a9f89bf4e463116182e8f9c2d3",
+    "combined-expression-deep140-phase3-20261028.log": "6294eb378b6e6bb48b6bf4b22a43de15254e66688c29247872bd6ba0c192532c",
+    "combined-expression-deep140-phase4-20261028.log": "03dcd085de83b11eb1f813a03fb1d3db25787d072d5f916a8092af7f00e81d9e",
+    "combined-expression-deep140-phase5-20261028.log": "b389ec0c5d3b014049233fca58d97319d24de9483d033aba3f13474efc572937",
+    "combined-expression-deep140-stack32-20261028.log": "b0ef17eebc9754f4fb12e26d34896ecabedabb7f4be77ee25ecc8d1c15b24cd4",
+    "combined-expression-deep70-20261028.rs": "eb8f3111a55f5cb3273209277b61ef7451d65e7fb8d6575ceeef270a24da3491",
+    "combined-expression-deep140-phase-20261028.rs": "42a2dab5e180cf1a15884bf30a32f80d09b4e096df31292fdda7369e0ad00ec0"
+  },
+  "limits": [
+    "No end-to-end stack-safe claim; further recursive stages remain.",
+    "Source admission, real Host, complete cohort validation and formal publication remain open."
+  ]
+}
