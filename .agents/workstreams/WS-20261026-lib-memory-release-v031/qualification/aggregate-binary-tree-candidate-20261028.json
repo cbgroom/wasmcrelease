@@ -1,0 +1,22 @@
+{
+  "schema": "wasmc.aggregate-binary-tree-experiment/v1",
+  "source_base": "e5cf8c2174507a62897618d54238e7bccd138d9e",
+  "private_patch_sha256": "eb5d9681a0168314d83ce41c3adcf17eae44a866382f20813392c6a3862c8d7a",
+  "patch_apply_check": true,
+  "implementation": "Iterative binary-node traversal with left-before-right projection, per-node expected operand types and original AST shape; other expression forms remain recursive and retain existing depth check.",
+  "right_70_default": "Both prior left-spine candidate and new binary-tree candidate aborted from stack overflow. Instrumentation shows failure inside ordinary parser before parse completion.",
+  "right_70_32m": "With RUST_MIN_STACK=33554432 the binary-tree candidate compiled both APIs and ran 160 inputs on each of Wasmi and Wasmtime. This is not a default-stack fix.",
+  "left_regression": "Default stack: 70-record additions, mixed add/subtract, and boolean short-circuit with divide-by-zero/recovery passed, two APIs and two engines.",
+  "provider_sha256": "8231aba425ef1bb0aa07a760ff4c77917e247382ef73a41408db6b6b1cb40b1e",
+  "label_correction": "All-additions test printed 4.9 but pinned 4.12 candidate SHA above.",
+  "log_sha256": {
+    "right_baseline": "c0020704c4c4bdf0c36434b0f5ebd380a14e911ce05ee9cd60f213faeca4c887",
+    "right_tree_default": "b20541dd4fd8f7261bf28e58b6df4b70243cc908a80ef441eed1f0511ac580fc",
+    "parser_phase": "6ddd1421e0fba7dec692716577442300eef873f75392ee73373e12a2437a7dd9",
+    "right_tree_32m": "c343e7d5a1296ea130fb8fd07f8781a57872b77c695a0215fa8d27e9c44f5c92",
+    "left_regressions": "cfbb562ac3fa115cb8d29c69e89a3f2ecdc68df0e8ace190a74cae2360e838e4"
+  },
+  "remaining": "Stack-safe parser, non-binary expressions, semantic and side-effect regression, Source admission and release. Full private logs and original failures retained.",
+  "source_admitted": false,
+  "formal_release": false
+}
