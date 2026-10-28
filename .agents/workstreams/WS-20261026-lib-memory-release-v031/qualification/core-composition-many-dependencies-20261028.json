@@ -1,0 +1,21 @@
+{
+  "schema": "wasmc.core-composition-many-dependencies/v1",
+  "source_base": "c1306cc8ec4497d2190f7ac72501979e4038bfae",
+  "source_mode": "private Git archive, not integrated",
+  "change": "remove fixed 64 dependency rows while retaining nonempty dependencies, unique names, exact digest, unresolved import and package validation",
+  "baseline": "65 valid dependencies rejected with 1..=64 rows before publication",
+  "candidate": "65 and 130 distinct named modules all imported and called by root; reverse input order produces matching Core, Component and manifest hashes; verify_complete_package accepts; Wasmtime Core execution checked 3 inputs",
+  "negative_controls": "duplicate module name, bad digest and unresolved dependency rejected before publication for both graph sizes",
+  "regression": "all 6 integration tests passed",
+  "fixture_limit": "same dependency Wasm reused under distinct module names; not a heterogeneous Lib portfolio; Component produced and verified but not executed",
+  "separate_unresolved_limits": "WIT dependency snapshot count and package count 64, byte/path/directory and other producer limits remain; no real Host, Source admission or release",
+  "preserved_failure": "first expanded negative test expected CompositionFailed but actual InvalidArtifact; test corrected to assert rejection and no publication",
+  "hashes": {
+    "core-deps130-producer-candidate-20261028.patch": "92d71150012de3ffc790a2c9eefed90ab75e84f0b45bf845086ac370668c13cf",
+    "core-deps65-baseline-20261028.log": "f25a2f032f19b0a592f772bc1bd2c67aab01d02862724ce33208c0e20d1fd6c8",
+    "core-deps65-candidate-first-20261028.log": "fbf2a3df564c19a3e9f95f67b5465e72e5cdcdd40985344b63544a636460c359",
+    "core-deps65-candidate-full-regression-20261028.log": "358eaa824e60fa8bb9d90d3ee2d8b0eaf52bfe03feb28abde91fa095315b365f",
+    "core-deps130-full-final-20261028.log": "89a4bfb1ceffb9ce17aea67437b010bc5119065f08cb72a7f3e3459fe3597463"
+  },
+  "formal_release": false
+}
