@@ -7,13 +7,16 @@ import {attachReleaseLicense, inventory, verifyRoot} from '../../../../scripts/l
 import {hash, resolveCurrentPackage} from '../../../../scripts/current-lib-release-v3.mjs';
 import {installCurrentLib, artifactUrl} from '../../../../scripts/lib-install.mjs';
 
-const [runRoot, receiptPin, out] = process.argv.slice(2);
+const [runRoot, receiptPin, out, expectedIdsArg] = process.argv.slice(2);
 assert.ok(isAbsolute(runRoot ?? '') && isAbsolute(out ?? '') && /^[a-f0-9]{64}$/.test(receiptPin ?? ''));
 const receiptBytes = await readFile(join(runRoot, 'refresh-receipt.json'));
 assert.equal(hash(receiptBytes), receiptPin);
 const receipt = JSON.parse(receiptBytes);
 assert.equal(receipt.accepted, true);
-assert.deepEqual([...receipt.selected].sort(), ['wasmc-data-core', 'wasmc-data-interchange', 'wasmc-data-relational']);
+const expectedIds = expectedIdsArg ? JSON.parse(expectedIdsArg) : ['wasmc-data-core', 'wasmc-data-interchange', 'wasmc-data-relational'];
+assert.ok(Array.isArray(expectedIds) && expectedIds.length > 0 && expectedIds.every(x => /^wasmc-[a-z0-9-]+$/.test(x)));
+assert.equal(new Set(expectedIds).size, expectedIds.length);
+assert.deepEqual([...receipt.selected].sort(), [...expectedIds].sort());
 const sourceCatalog = await readFile('catalog/libs-current-v2.json');
 assert.equal(hash(sourceCatalog), '6cd97c3e8aa9eb94739c62fb15465243ddb0906831ae7ccd16d6d0289ba1c8fb');
 const catalog = JSON.parse(sourceCatalog); catalog.package_authority_commit = '0'.repeat(40);

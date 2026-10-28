@@ -1,6 +1,6 @@
 import fs from 'node:fs';import path from 'node:path';import assert from 'node:assert/strict';import crypto from 'node:crypto';
 import {CoreCaller,bool,u8,u32,string,list,option} from '../../../scripts/current-core-value-codec-v3.mjs';
-const root=path.resolve('.agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-text/0.0.2'),m=JSON.parse(fs.readFileSync(path.join(root,'lib.json'))),binary=fs.readFileSync(path.join(root,'artifact.wasm')),sha=b=>crypto.createHash('sha256').update(b).digest('hex');assert.equal(sha(binary),m.artifact.sha256);
+const root=path.resolve(process.argv[3]??'.agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-text/0.0.2'),m=JSON.parse(fs.readFileSync(path.join(root,'lib.json'))),binary=fs.readFileSync(path.join(root,'artifact.wasm')),sha=b=>crypto.createHash('sha256').update(b).digest('hex');assert.equal(sha(binary),m.artifact.sha256);
 const sdk=fs.readFileSync(path.join(root,'bindings/rust-core/src/lib.rs'),'utf8');assert(!sdk.includes('struct Budget'));assert(!sdk.includes('MAX_VALUE_NODES'));assert(sdk.includes('wasmc-text@0.0.2'));
 const c=new CoreCaller(new WebAssembly.Module(binary),JSON.parse(fs.readFileSync(path.join(root,'core-abi.json')))),covered=new Set(),checks=[];
 const call=(name,types,values,result)=>{covered.add(name);const v=c.call(name,types,values,result);return result===bool?Boolean(v):v;};

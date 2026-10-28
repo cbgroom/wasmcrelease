@@ -1,0 +1,16 @@
+import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
+import {mkdtempSync,readFileSync,existsSync} from 'node:fs';
+import {tmpdir} from 'node:os';
+import {join,resolve} from 'node:path';
+import {spawnSync} from 'node:child_process';
+const [receipt,pin]=process.argv.slice(2), script=resolve(import.meta.dirname,'prepare-text-refresh-stage.mjs');
+assert.equal(createHash('sha256').update(readFileSync(receipt)).digest('hex'),pin);
+const temp=mkdtempSync(join(tmpdir(),'wasmc-text-stage-'));
+const call=(p,out)=>spawnSync(process.execPath,[script,receipt,p,out],{encoding:'utf8'});
+const bad=join(temp,'bad');assert.notEqual(call('0'.repeat(64),bad).status,0);assert.equal(existsSync(bad),false);
+const out=join(temp,'ok'), result=call(pin,out);assert.equal(result.status,0,result.stderr);
+const r=JSON.parse(result.stdout),policy=JSON.parse(readFileSync(join(out,'libspec/rust-policy.json')));
+assert.equal(r.edition,'2024');assert.equal(policy.edition,'2024');assert.match(policy.dependencies.memchr,/=2\.8\.0/);
+assert.notEqual(call(pin,out).status,0);assert.equal(JSON.parse(readFileSync(join(out,'libspec/registry.json'))).libs[0].id,'wasmc-text');
+console.log('PASS Text refresh stage pin, edition, exact dependency and no-overwrite');
