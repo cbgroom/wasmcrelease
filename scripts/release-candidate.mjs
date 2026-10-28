@@ -7,7 +7,7 @@ import {createHash} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 import {resolve,relative,dirname} from 'node:path';
 import {spawnSync} from 'node:child_process';
-import {checkedCurrentCatalog,verifyCurrentRelease,currentProductReader,currentProductPaths} from './current-lib-release-v3.mjs';
+import {checkedCurrentCatalog,verifyCurrentRelease,verifyCurrentReleaseV4,currentProductReader,currentProductPaths} from './current-lib-release-v3.mjs';
 import {buildHistoricalClosure} from './lib-route-closure.mjs';
 import {parseCatalog,resolveCatalog} from './lib-catalog.mjs';
 import {instantiateLibSearch} from '../examples/lib-search/client.mjs';
@@ -451,6 +451,26 @@ export function currentV3ProductInputsForVersion(version){
     ...(requiresIfBranchScopeQualification(version)?['scripts/ci-normal-summary.mjs','scripts/test-ci-normal-summary.mjs','.github/workflows/normal-source-free-consumer.yml','.github/workflows/current-compiler.yml','scripts/test-native-compiler.mjs','scripts/native-package.mjs']:[]),
     ...(requiresPrivateHelperQualification(version)?['scripts/current-release-version.mjs','scripts/test-current-release-version.mjs','scripts/fresh-agent-learning-v1.mjs','agent-evaluation/fresh-agent-learning-v2.json','agent-evaluation/fresh-agent-learning-v3.json']:[])];
 }
+export function currentProductVariant(catalogBytes,catalogSha256,read){
+  const catalog=checkedCurrentCatalog(catalogBytes,catalogSha256), bytes=read(catalog.cohort.path);
+  assert.equal(bytes.length,catalog.cohort.bytes,'candidate cohort bytes');
+  assert.equal(hash(bytes),catalog.cohort.sha256,'candidate cohort independent identity');
+  const schema=JSON.parse(bytes).schema;
+  if(schema==='wasmc.public-current-refresh-cohort/v2')return 'v4';
+  assert.ok(['wasmc.public-current-refresh-cohort/v1','wasmc.public-current-composition-cohort/v1'].includes(schema),'unknown candidate cohort schema');
+  return 'v3';
+}
+export function currentProductInputsForVersion(version,variant){
+  const base=currentV3ProductInputsForVersion(version);
+  if(variant==='v3')return base;
+  assert.equal(variant,'v4');
+  return [...base.filter(path=>path!=='admission/current-product-v3.json'),
+    'admission/current-product-v4.json','catalog/current-v4-license-policy.json',
+    'catalog/frozen-v030-notices-v1.json','scripts/current-license-policy-v4.mjs',
+    'scripts/frozen-v030-notices-v1.mjs','scripts/lib-refresh-license-receipt-v1.mjs',
+    'scripts/assemble-current-product-v4.mjs','scripts/test-current-product-v4.mjs',
+    'scripts/test-current-license-policy-v4.mjs'];
+}
 export function currentCandidateClosure(candidate,read){
   const rows=new Map(candidate.product_files.map(r=>[r.path,r]));
   const exact=path=>{
@@ -458,11 +478,12 @@ export function currentCandidateClosure(candidate,read){
     const bytes=read(path);if(bytes.length!==row.bytes||hash(bytes)!==row.sha256)throw Error('current product input drift: '+path);
     return bytes;
   };
-  for(const path of currentV3ProductInputsForVersion(candidate.version))exact(path);
-  validateCurrentCIProductInputs(candidate,read);
   const catalogBytes=exact('catalog/libs-current-v2.json');
   if(candidate.current_catalog?.path!=='catalog/libs-current-v2.json'||hash(catalogBytes)!==candidate.current_catalog.sha256)throw Error('current catalog independent candidate pin');
   const catalog=checkedCurrentCatalog(catalogBytes,candidate.current_catalog.sha256);
+  const variant=currentProductVariant(catalogBytes,candidate.current_catalog.sha256,exact);
+  for(const path of currentProductInputsForVersion(candidate.version,variant))exact(path);
+  validateCurrentCIProductInputs(candidate,read);
   if(catalog.version!==candidate.version)throw Error('current catalog release version drift');
   const compiler=JSON.parse(exact('current/compiler-release.json'));
   if(compiler.schema!=='wasmc.current-compiler/v2'||compiler.version!==candidate.version||
@@ -496,7 +517,8 @@ export function currentCandidateClosure(candidate,read){
   assert.deepEqual(embeddings.sort(),['current/wasmc.global.js','current/wasmc.mjs','dist/wasmc.global.js']);
   assert.equal(compiler.active_compiler_versions,1);
   for(const pin of compiler.artifacts){const bytes=exact(pin.path);if(bytes.length!==pin.bytes||hash(bytes)!==pin.sha256)throw Error('compiler manifest artifact drift '+pin.path);}
-  const closure=verifyCurrentRelease(catalogBytes,candidate.current_catalog.sha256,exact,[...rows.keys()]);
+  const verifier=variant==='v4'?verifyCurrentReleaseV4:verifyCurrentRelease;
+  const closure=verifier(catalogBytes,candidate.current_catalog.sha256,exact,[...rows.keys()]);
   historicalNoticeProductInputs(JSON.parse(exact(catalog.cohort.path)),exact);
   return{...closure,compiler_manifest_sha256:hash(exact('current/compiler-release.json')),
     compiler_sha256:compiler.compiler.sha256,compiler_source_commit:compiler.source_commit,
@@ -556,6 +578,7 @@ export async function createCurrentCandidate(repo,{compilerSource,libSource,vers
     return s.isDirectory()?walk(path):[path];
   });
   const catalogBytes=read('catalog/libs-current-v2.json'),catalog=checkedCurrentCatalog(catalogBytes,hash(catalogBytes));
+  const variant=currentProductVariant(catalogBytes,hash(catalogBytes),read);
   const directories=['current','dist','package','examples/current','examples/base64','examples/agent-quickstart','examples/lib-search','examples/agent-start','standard','sdk','runtime',...(composed?catalog.packages.map(row=>row.root):['current-libs']),'licenses',
     ...(Number(version.split('.')[2])>=29?['lib-releases/wasmc-json/0.0.7/root','lib-releases/wasmc-json/0.0.7/host']:[]),
     'skills',
@@ -563,7 +586,7 @@ export async function createCurrentCandidate(repo,{compilerSource,libSource,vers
   const compiler=JSON.parse(read('current/compiler-release.json'));
   assert.equal(compiler.version,version);assert.equal(compiler.source_commit,compilerSource);
   const compilerPaths=compiler.artifacts.map(row=>{assert.ok(safe(row.path),'unsafe compiler product input');return row.path;});
-  const paths=new Set([...(Number(version.split('.')[2])>=29?['lib-releases/wasmc-json/0.0.7/cold/canonical-template.json']:[]),...currentV3ProductInputsForVersion(version),...(composed?.product_inputs??[]),...compilerPaths,...directories.flatMap(walk),
+  const paths=new Set([...(Number(version.split('.')[2])>=29?['lib-releases/wasmc-json/0.0.7/cold/canonical-template.json']:[]),...currentProductInputsForVersion(version,variant),...(composed?.product_inputs??[]),...compilerPaths,...directories.flatMap(walk),
     'AGENTS.md','README.md','HOSTING.md','LANGUAGE.md','LIB.md','license-policy.json',
     '.github/workflows/lib-search.yml','.github/workflows/agent-discovery.yml','.github/workflows/source-free-consumer.yml','.github/workflows/host-lib-e2e.yml',
     'agent-evaluation/fresh-agent-learning-v2.json','docs/AGENT_DECISION_MODEL.md',`docs/RELEASE_V${version.split('.').slice(1).join('')}.md`,'scripts/release-candidate.mjs']);

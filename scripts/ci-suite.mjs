@@ -6,10 +6,23 @@ import { createHash } from 'node:crypto';
 
 const root=fileURLToPath(new URL('../',import.meta.url));
 const js=(runtime,script,args=[],permissions=[])=>({command:runtime,args:runtime==='deno'?['run',...permissions,script,...args]:[script,...args]});
+function currentProductControls() {
+  const catalogBytes=readFileSync(join(root,'catalog/libs-current-v2.json')),catalog=JSON.parse(catalogBytes);
+  const cohort=readFileSync(join(root,catalog.cohort.path));
+  if(cohort.length!==catalog.cohort.bytes||createHash('sha256').update(cohort).digest('hex')!==catalog.cohort.sha256)throw Error('CI current cohort identity drift');
+  if(JSON.parse(cohort).schema!=='wasmc.public-current-refresh-cohort/v2')return {
+    product:'scripts/test-current-product-v3.mjs',license:'scripts/test-current-license-policy-v3.mjs',
+    catalog:'e12684efb3e475ad551eddabda12bc4c196f19edb48e7ace9069fda1ef5e7871'};
+  const policy=JSON.parse(readFileSync(join(root,'catalog/current-v4-license-policy.json')));
+  if(policy.schema!=='wasmc.current-license-policy/v2'||policy.catalog_sha256!==createHash('sha256').update(catalogBytes).digest('hex'))throw Error('CI v4 catalog identity drift');
+  return {product:'scripts/test-current-product-v4.mjs',license:'scripts/test-current-license-policy-v4.mjs',catalog:policy.catalog_sha256};
+}
+
 export function suiteCases(family,runtime='node',mirror='github') {
   if(!['node','bun','deno'].includes(runtime)||!['github','jsdelivr'].includes(mirror))throw Error('invalid CI matrix');
   const item=(id,script,args=[],permissions=['--allow-read'])=>({id,...js(runtime,script,args,permissions)});
   const fixturePermissions=['--allow-read','--allow-write','--allow-env=TMPDIR,TMP,TEMP'];
+  const current=['integrity','candidate'].includes(family)?currentProductControls():null;
   if(family==='compatibility')return [
     item('core-feature-probes-and-negatives','scripts/test-core-compatibility.mjs'),
     item('catalog-exact-resolution','scripts/test-lib-catalog.mjs',[],fixturePermissions),
@@ -29,8 +42,8 @@ export function suiteCases(family,runtime='node',mirror='github') {
     item('sdk-agent-routing','scripts/validate-sdk-agent-routes.mjs'),
     item('release-channel-promotion-negatives','scripts/test-release-channel.mjs'),
     item('current-release-version-and-qualification-contract','scripts/test-current-release-version.mjs'),
-    item('current-complete-product-reopen-negatives','scripts/test-current-product-v3.mjs',['--product','.', '--catalog-sha256','e12684efb3e475ad551eddabda12bc4c196f19edb48e7ace9069fda1ef5e7871','--out','target/ci/current-product-controls'],fixturePermissions),
-    item('current-original-license-reopen-negatives','scripts/test-current-license-policy-v3.mjs'),
+    item('current-complete-product-reopen-negatives',current.product,['--product','.', '--catalog-sha256',current.catalog,'--out','target/ci/current-product-controls'],fixturePermissions),
+    item('current-original-license-reopen-negatives',current.license),
     item('release-product-identity','scripts/current-release-identity.mjs'),
     item('release-surface-model','scripts/validate-release-surfaces.mjs'),
     item('same-platform-performance-baseline','scripts/test-performance-baseline.mjs'),
@@ -41,8 +54,8 @@ export function suiteCases(family,runtime='node',mirror='github') {
   ];
   if(family==='candidate')return [
     item('current-v3-product-identity','scripts/current-release-identity.mjs'),
-    item('current-complete-product-reopen-negatives','scripts/test-current-product-v3.mjs',['--product','.', '--catalog-sha256','e12684efb3e475ad551eddabda12bc4c196f19edb48e7ace9069fda1ef5e7871','--out','target/ci/current-product-controls'],fixturePermissions),
-    item('current-original-license-reopen-negatives','scripts/test-current-license-policy-v3.mjs'),
+    item('current-complete-product-reopen-negatives',current.product,['--product','.', '--catalog-sha256',current.catalog,'--out','target/ci/current-product-controls'],fixturePermissions),
+    item('current-original-license-reopen-negatives',current.license),
     item('library-first-teaching-and-routes','scripts/test-library-first.mjs'),
     item('live-agent-trace-evaluator','scripts/test-live-agent-trace-evaluation-v1.mjs'),
     item('fresh-pi-two-model-cohort-contract','scripts/test-fresh-agent-learning-v1.mjs'),

@@ -1,0 +1,20 @@
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {join,resolve} from 'node:path';
+import {createHash} from 'node:crypto';
+import {currentProductVariant,currentProductInputsForVersion} from '../../../../scripts/release-candidate.mjs';
+import {currentProductReader} from '../../../../scripts/current-lib-release-v3.mjs';
+const [newRoot,oldRoot]=process.argv.slice(2).map(value=>resolve(value)),sha=b=>createHash('sha256').update(b).digest('hex');
+function input(root){const bytes=readFileSync(join(root,'catalog/libs-current-v2.json'));return {bytes,pin:sha(bytes),read:currentProductReader(root),catalog:JSON.parse(bytes)};}
+const fresh=input(newRoot),frozen=input(oldRoot);
+assert.equal(fresh.catalog.package_authority_commit,'0'.repeat(40));assert.equal(currentProductVariant(fresh.bytes,fresh.pin,fresh.read),'v4');
+assert.equal(currentProductVariant(frozen.bytes,frozen.pin,frozen.read),'v3');
+const old=currentProductInputsForVersion('0.0.31','v3'),now=currentProductInputsForVersion('0.0.31','v4');
+assert.ok(old.includes('admission/current-product-v3.json'));assert.ok(!now.includes('admission/current-product-v3.json'));
+for(const path of ['admission/current-product-v4.json','catalog/current-v4-license-policy.json','catalog/frozen-v030-notices-v1.json','scripts/current-license-policy-v4.mjs','scripts/frozen-v030-notices-v1.mjs','scripts/lib-refresh-license-receipt-v1.mjs','scripts/assemble-current-product-v4.mjs','scripts/test-current-product-v4.mjs','scripts/test-current-license-policy-v4.mjs'])assert.ok(now.includes(path),path);
+assert.throws(()=>currentProductInputsForVersion('0.0.31','unknown'));
+assert.throws(()=>currentProductVariant(fresh.bytes,'0'.repeat(64),fresh.read));
+assert.throws(()=>currentProductVariant(fresh.bytes,fresh.pin,path=>{const b=fresh.read(path);if(path!==fresh.catalog.cohort.path)return b;const modified=Buffer.from(b);modified[0]^=1;return modified;}));
+const fake=structuredClone(fresh.catalog),badCohort=Buffer.from(JSON.stringify({schema:'unknown'}));fake.cohort.bytes=badCohort.length;fake.cohort.sha256=sha(badCohort);const fakeBytes=Buffer.from(JSON.stringify(fake));
+assert.throws(()=>currentProductVariant(fakeBytes,sha(fakeBytes),path=>path===fake.cohort.path?badCohort:fresh.read(path)),/unknown candidate cohort schema/);
+console.log(JSON.stringify({accepted:true,actual_v4_candidate:'v4',frozen_v030:'v3',required_v4_files:true,incorrect_identity_and_unknown_schema_rejected:true,fixture_only:true,formal_release:false}));
