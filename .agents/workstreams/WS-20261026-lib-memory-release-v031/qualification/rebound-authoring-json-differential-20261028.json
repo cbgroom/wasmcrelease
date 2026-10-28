@@ -1,0 +1,104 @@
+{
+  "schema": "wasmc.rebound-authoring-and-json-differential/v1",
+  "assembly_sha256": "64c9d556a5d280b8cf5fa354e4237eaacd9703970ea3f6fc0b7541ce95e074a4",
+  "rebound_sources": [
+    {
+      "schema": "wasmc.verified-authoring-source/v1",
+      "id": "wasmc-data-interchange",
+      "version": "0.1.1",
+      "assembly_sha256": "64c9d556a5d280b8cf5fa354e4237eaacd9703970ea3f6fc0b7541ce95e074a4",
+      "catalog_sha256": "6cd97c3e8aa9eb94739c62fb15465243ddb0906831ae7ccd16d6d0289ba1c8fb",
+      "source_packet_inventory_sha256": "398d0babf19c5f6231e5d8edb93f12e2a60937c46920f0fc960aaa9fb70b8d8d",
+      "files": {
+        "adapter.rs": "e59d1ff7f9cb7bdaf3ce571f3beb90857ab105b9402eaf241b9e170c02d53e36",
+        "delta.rs": "dd51205b176533d484451b2d04b21efaae4b228b1bfc10b2aa2a120846560e62",
+        "lib.json": "a9627af675dc3e9c10c4426ad031531779b458c03b8e33ae2bbb993d51efd6fe",
+        "lib.wit": "efb8d53242ea252d5539e5c5b30fa1ea02a4ef52448f99dc1ceac3daedf9a8c8"
+      },
+      "wit_closure": {
+        "mode": "standard-tool-normalization",
+        "authored_sha256": "efb8d53242ea252d5539e5c5b30fa1ea02a4ef52448f99dc1ceac3daedf9a8c8",
+        "delivered_sha256": "bbee42bef19b89ab759f75b5cd17c1e4f361f0d2bd420c3bddde987a3b458f01",
+        "normalized_sha256": "bbee42bef19b89ab759f75b5cd17c1e4f361f0d2bd420c3bddde987a3b458f01",
+        "tool": {
+          "path": "/Users/youxianshi/.cargo/bin/wasm-tools",
+          "sha256": "40c3d0e890e86cc86ef186fe3e504cd62d03da90fe0a1fc81b6588d078bd0a65"
+        },
+        "dependencies": [
+          {
+            "id": "wasmc-data-core",
+            "sha256": "bb3b6193e5721cdaba46b69b72c1ed27434354877ef9e756b5ca91c00283e5ef"
+          }
+        ]
+      },
+      "output": "/Users/youxianshi/.local/state/wasmc-maintenance/rustc-service-1991-20261028/interchange-rebound-authoring-20261028",
+      "formal_release": false
+    },
+    {
+      "schema": "wasmc.verified-authoring-source/v1",
+      "id": "wasmc-data-relational",
+      "version": "0.1.1",
+      "assembly_sha256": "64c9d556a5d280b8cf5fa354e4237eaacd9703970ea3f6fc0b7541ce95e074a4",
+      "catalog_sha256": "6cd97c3e8aa9eb94739c62fb15465243ddb0906831ae7ccd16d6d0289ba1c8fb",
+      "source_packet_inventory_sha256": "0423fd46317e77825ea8ce18c8c57687570fc334683ee22696cf213aac50db50",
+      "files": {
+        "adapter.rs": "d9de70c4185d185680b12175b80e429c14e0f2b830a2ac72f2e129b65dc7f279",
+        "delta.rs": "ac17eb2023e739a5b09c71daf3965389a24af540db9286964227ac9951ec688c",
+        "lib.json": "defd26b00dcb8a6a583100a3494a404bf1182c0ca7e3723460d90d01be123fb5",
+        "lib.wit": "47e3f34e0c93370137b357ac5881721bc0345acadd7d1bea5ba5e0c1cb543612"
+      },
+      "wit_closure": {
+        "mode": "standard-tool-normalization",
+        "authored_sha256": "47e3f34e0c93370137b357ac5881721bc0345acadd7d1bea5ba5e0c1cb543612",
+        "delivered_sha256": "fd01aa9a565a8d8532a766c2b8c8de85dc49b52c4b729cef5948b940debe6d2a",
+        "normalized_sha256": "fd01aa9a565a8d8532a766c2b8c8de85dc49b52c4b729cef5948b940debe6d2a",
+        "tool": {
+          "path": "/Users/youxianshi/.cargo/bin/wasm-tools",
+          "sha256": "40c3d0e890e86cc86ef186fe3e504cd62d03da90fe0a1fc81b6588d078bd0a65"
+        },
+        "dependencies": [
+          {
+            "id": "wasmc-data-core",
+            "sha256": "bb3b6193e5721cdaba46b69b72c1ed27434354877ef9e756b5ca91c00283e5ef"
+          }
+        ]
+      },
+      "output": "/Users/youxianshi/.local/state/wasmc-maintenance/rustc-service-1991-20261028/relational-rebound-authoring-20261028",
+      "formal_release": false
+    }
+  ],
+  "controls": [
+    "verified original source",
+    "wrong WIT tool pin rejected",
+    "missing authoring parent rejected",
+    "tampered parent rejected",
+    "prior built-source controls"
+  ],
+  "json_differential": {
+    "rust2024_core_sha256": "dc9a46d2de97f5a3ec13b5e338d1b40ea5bbf7f533b7788d2189e3300c8657ca",
+    "public2021_core_sha256": "09b833d6b1910ef1e345e73c9b2698deb6f78b6077e4ab31b3ed9c5e0c1e2c06",
+    "2024_engines": [
+      "Node",
+      "Bun",
+      "Deno"
+    ],
+    "public2021_engines": [
+      "Node"
+    ],
+    "cases_per_engine": 300,
+    "operations_per_case": 5,
+    "independent_oracle": "JavaScript construction and sequential edits",
+    "scope": "installed candidate Core, not formal release"
+  },
+  "logs_sha256": {
+    "interchange-rebound-authoring-original.log": "318c1448ecf43f4e2415104e17978849c450407b87fee8933fb65ceaa2d5006e",
+    "relational-rebound-authoring.log": "b0afba4a6fad6a5320afcce2d026190c6a6f7ee42a2ad59f50c14f65aab57286",
+    "rebound-authoring-controls.log": "d8644eb91a76f9d0714c6690bd5e5e70dd434e299d788e392e96922f4c14cf47",
+    "json-core-differential-2024-node.log": "092e5fd9d1881a74628e2ccd0f97d5ab900f7b3edcc06f16b67e6407add89365",
+    "json-core-differential-2024-3engines.log": "e91ed7cadca16034dfd5917d81031b2f48adc2196287d68fc41f10e0a7496555",
+    "json-core-differential-public-2021-node.log": "c29ab9f926aadccf6f7849675d8f9e3a508dfd3680f3ba75d348c2205a2d1e7b"
+  },
+  "source_rebuild_performed": false,
+  "canonical_refresh_integration": false,
+  "formal_release": false
+}
