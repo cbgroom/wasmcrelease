@@ -1,0 +1,23 @@
+{
+  "schema": "wasmc.deep-u64-ordinary-control/v1",
+  "candidate_patch_sha256": "75dc5aac2906e309df0337542720cd645868e7213303655826d8e995cc6ba07e",
+  "provider_sha256": "8231aba425ef1bb0aa07a760ff4c77917e247382ef73a41408db6b6b1cb40b1e",
+  "source": "Ordinary WAsmC constructs a record holding u64, adds zero repeatedly, and compares against 5; inputs include 0, 1, 5, 6, 2^32+5, 2^63 and u64::MAX.",
+  "candidate_70_default": "Both compiler APIs and Wasmi/Wasmtime passed all seven inputs.",
+  "old_inference_control": "The same 70-term test also passed with the old depth-limited type-constraint function and iterative binary projection. This case does not prove the new inference changed observable behavior.",
+  "candidate_150_default": "Test process SIGABRT from stack overflow; original output retained.",
+  "candidate_150_stack32": "Both APIs and both engines passed seven values at RUST_MIN_STACK=33554432.",
+  "label_correction": "Inherited diagnostic print says 70 declarations/160 calls; the actual tests have one record and seven input values.",
+  "source_sha256": {
+    "150": "f6f44daf15716e6c9fb57ebcb79dffbae6f59fceae9d6c8d9fce005f4fab4854",
+    "70": "fb60ea55096311563610d85222f0d732cf4c8df1044d59ad6ddd922cda78449f"
+  },
+  "logs_sha256": {
+    "candidate_150_default": "2dc6a99e0418296c6c74a1b23a65cde5c232eccab89815b51beba9a63d8ec83b",
+    "candidate_150_stack32": "1d962e650de38811d8c9deb071ef15879d68ecb7d337b5cc6106cde5c9d4951c",
+    "candidate_70_default": "370f5fa88376a839bfeea1d95674e5d03d84010220e37c43062fe32c5d0e4fe0",
+    "old_70_default": "78ca36e3a682d9f2c5eae11c047d95327b6de15390d98ef15020a5da95f3e224"
+  },
+  "limitations": "Experiment does not fix default-stack failure or prove arbitrary type-constraint semantics. No Source admission or formal release.",
+  "formal_release": false
+}
