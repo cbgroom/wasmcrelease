@@ -1,0 +1,20 @@
+{
+  "schema": "wasmc.checked-record-extra-fields-candidate/v1",
+  "candidate_mode": "isolated archive over SDK16MiB, wide-record and list-cleanup candidates; not Source-admitted",
+  "patch_sha256": "9a08ffe1cac764cd0037b2b93a7113a618bcae7d8bb8b4c094c0f34b18ad9511",
+  "baseline": "same synthetically extended plan with valid normalized names rejects total record fields at 256",
+  "candidate": "removes per-record and total-field counters, retains empty record, duplicate names, cycles, type, ABI lane and source size checks",
+  "test": "six additional unused record types with 300 fields in total; selected checked result has unchanged 11 payload lanes",
+  "dual_engine": "actual rustc-generated consumer and adapted fixture run 2048 calls each Wasmi and Wasmtime; error and scalar correctness checks",
+  "independent_negative_regression": "existing invalid graph/type/duplicate/cycle/actual-lane-limit controls pass",
+  "full_wit_scope": "added record types were inserted into an in-memory validated descriptor, not regenerated from independently pinned actual WIT; real 300-field used checked return remains unproven",
+  "limits_remaining": "record count 64, result lane count 64 and other source/tooling constraints remain; no unlimited claim",
+  "logs_sha256": {
+    "valid_baseline": "b689ff9918e4d89c5bea95ff762640cbe7e0a3ca9a30112eb305de7978146e54",
+    "first_invalid_names": "6061eb353e6de3735e3d118fb783fd04615731d45328fad5d91be0864ea7ea66",
+    "dual_engine": "deef6dbcac10ae2f235e6f13ac8adcb5dd9a582c5029e7fe68628e71b65e303a",
+    "negative_regression": "84f6690b930f5e50d494d4923edca1fe06849fdc9a00c51aaf6b076b40b6b219",
+    "existing_engine": "b081f4f9736367ab6cdaa2ee3f99d8d7a4f768a56b3c52f96b6c7a7b1e9d2f93"
+  },
+  "formal_release": false
+}
