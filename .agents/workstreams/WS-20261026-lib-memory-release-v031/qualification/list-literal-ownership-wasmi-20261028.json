@@ -1,0 +1,14 @@
+{
+  "schema": "wasmc.list-literal-ownership-wasmi/v1",
+  "private_candidate_sha256": "d0ceb05ed43f612480c017c884e0ab74f440feab30331693e10a0fbd9a8be8a4",
+  "provider_sha256": "c3ac42b93f4c27e24065abe804b91f54761eff782e2971e947847b3d20ee7e00",
+  "engine": "Wasmi 2.0.0",
+  "scope": "Ordinary compile_lib_auto creates list of two records each owning a string, same Store; 32 normal calls, 192 failures at first/second list push, record-child move and string-builder push, each followed immediately by a successful call.",
+  "ledger": "1824 tracked roots created, 1152 transferred to parents, 672 dropped, zero unowned roots after every call. Accounting relies on CoreLib to release transferred descendants, and does not directly inspect internal allocations.",
+  "test_sha256": "74a3720e01eacfd5f264785feed5df6eee2bd420507a4e1a6136e803798cab4b",
+  "log_sha256": "95a7de2a1fd5f73fb465136f1584e2ec30502ade59a3e4399ae5ea9f9ff4449e",
+  "preserved_first_build_failure": "Wrong Wasmi Linker.define signature; original log sha256 c41c3c5927308c61c9aa7132ff3126928139bc89dcb99f2a3b7f95bf26738323",
+  "comparison": "Wasmtime equivalent independently passed in list-literal-ownership-multifault-20261028.json",
+  "limitations": "No direct internal heap count or installed external Lib fault injection; private candidate, Source not admitted, formal release not achieved.",
+  "formal_release": false
+}
