@@ -253,11 +253,11 @@ export function currentProductReader(root){
   };
 }
 export function currentProductPaths(root,prefix='current-libs'){
-  root=resolve(root);assert.ok(safe(prefix));let count=0;
+  root=resolve(root);assert.ok(safe(prefix));
   const walk=path=>{
     const info=lstatSync(join(root,path));assert.ok(!info.isSymbolicLink(),'linked product inventory');
     if(info.isDirectory())return readdirSync(join(root,path)).sort().flatMap(n=>walk(path+'/'+n));
-    assert.ok(info.isFile()&&++count<=10000,'bounded regular product inventory');return[path];
+    assert.ok(info.isFile(),'regular product inventory');return[path];
   };
   return walk(prefix).sort();
 }
