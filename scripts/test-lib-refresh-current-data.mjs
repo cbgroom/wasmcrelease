@@ -190,6 +190,26 @@ const csvInput = [...new TextEncoder().encode('id,value\n2,10\n1,20\n2,30\n')];
 const csvOpts = { has_header: true, validate_header: true, delimiter: 44, batch_rows: 10 };
 await check(csv, 'parse-typed', async () => assert.deepEqual(await invoke(csv, 'parse', [list(u8), list(field), csvOptions], [csvInput, base.fields, csvOpts], result(list(batch), csvErrors)), ok([base])));
 await check(csv, 'invalid-options', async () => assert.deepEqual(await invoke(csv, 'parse', [list(u8), list(field), csvOptions], [csvInput, base.fields, { ...csvOpts, batch_rows: 0 }], result(list(batch), csvErrors)), err('invalid-options')));
+await check(csv, 'many-rows-and-same-instance-recovery', async () => {
+  const rows=20000, text='id\n'+Array.from({length:rows},(_,i)=>`${i}\n`).join('');
+  const caller=new CoreCaller((await load(csv)).module,(await load(csv)).abi);
+  const parse=(input,options)=>caller.call('parse',[list(u8),list(field),csvOptions],
+    [[...new TextEncoder().encode(input)],[F('id')],options],result(list(batch),csvErrors));
+  const parsed=parse(text,{...csvOpts,batch_rows:rows});
+  assert.equal(parsed.tag,'ok'); assert.equal(parsed.value.reduce((n,v)=>n+v.rows,0),rows);
+  assert.deepEqual(parsed.value.flatMap(v=>v.columns[0].value),Array.from({length:rows},(_,i)=>BigInt(i)));
+  assert.deepEqual(parse('id\n0\n',{...csvOpts,batch_rows:0}),err('invalid-options'));
+  assert.deepEqual(parse('id\n7\n',{...csvOpts,batch_rows:1}),ok([{rows:1,fields:[F('id')],columns:[C('int64',[7n])]}]));
+});
+await check(relational, 'distinct-many-rows-and-same-instance-recovery', async () => {
+  const rows=20000, value={rows,fields:[F('x')],columns:[C('int64',Array.from({length:rows},(_,i)=>BigInt(i)))]};
+  const subject=await load(relational), caller=new CoreCaller(subject.module,subject.abi);
+  const distinct=(v,keys)=>caller.call('distinct',[batch,list(u32)],[v,keys],relationalResult);
+  const actual=distinct(value,[0]); assert.equal(actual.tag,'ok'); assert.equal(actual.value.rows,rows);
+  assert.deepEqual(new Set(actual.value.columns[0].value),new Set(value.columns[0].value));
+  assert.deepEqual(distinct(value,[1]),err('column-out-of-bounds'));
+  assert.deepEqual(distinct({...value,rows:1,columns:[C('int64',[7n])]},[0]),ok({...value,rows:1,columns:[C('int64',[7n])]}));
+});
 
 const coverage = [...subjects].map(([id, s]) => {
   const expected = s.abi.exports.filter(e => e.kind === 'function' && !e.name.startsWith('cabi_') && e.name.includes('#')).map(e => e.name.split('#')[1]).sort();
