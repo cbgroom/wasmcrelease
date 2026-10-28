@@ -37,14 +37,15 @@ for (const subject of receipt.rows) {
   assert.equal(subject.state, 'verified');
   const expectedRoot = join(runRoot, 'packages', subject.id);
   assert.equal(subject.package_root, expectedRoot);
-  const verified = await verifyRoot(expectedRoot, subject.id, subject.version, subject.profile);
+  const hasResourceCore = Boolean(subject.resource_core_inputs);
+  const verified = await verifyRoot(expectedRoot, subject.id, subject.version, subject.profile, hasResourceCore);
   assert.equal(verified.manifest_sha256, subject.manifest_sha256);
   const sourceFiles = await inventory(expectedRoot);
   assert.equal(hash(Buffer.from(JSON.stringify(sourceFiles))), subject.root_inventory_sha256);
   const licensed = join(out, `licensed-${subject.id}`);
   await cp(expectedRoot, licensed, {recursive:true,force:false,errorOnExist:true});
   await attachReleaseLicense(licensed, license, hash(license), notices);
-  const licensedVerified = await verifyRoot(licensed, subject.id, subject.version, subject.profile);
+  const licensedVerified = await verifyRoot(licensed, subject.id, subject.version, subject.profile, hasResourceCore);
   const files = await inventory(licensed), manifest = JSON.parse(await readFile(join(licensed, 'lib.json')));
   const row = catalog.packages.find(item => item.id === subject.id);
   assert.ok(row && row.version === subject.version);
@@ -54,11 +55,11 @@ for (const subject of receipt.rows) {
   row.files = Object.entries(files).map(([name, pin]) => ({path: `${row.root}/${name}`, ...pin}));
   const values = new Map();
   for (const file of row.files) values.set(file.path, await readFile(join(licensed, file.path.slice(row.root.length + 1))));
-  roots.push({row, files, values});
+  roots.push({row, files, values, hasResourceCore});
 }
 const catalogBytes = Buffer.from(JSON.stringify(catalog)), catalogSha = hash(catalogBytes);
 const result = [];
-for (const {row, values} of roots) {
+for (const {row, values, hasResourceCore} of roots) {
   const read = path => { assert.ok(values.has(path)); return values.get(path); };
   const lock = resolveCurrentPackage(catalogBytes, catalogSha,
     {id:row.id,version:row.version,manifest_sha256:row.manifest_sha256,root_inventory_sha256:row.root_inventory_sha256}, read);
@@ -75,7 +76,7 @@ for (const {row, values} of roots) {
   }
   assert.equal(requests, row.files.length);
   const root = join(actual, row.root);
-  const verify = await verifyRoot(root, row.id, row.version, row.profile);
+  const verify = await verifyRoot(root, row.id, row.version, row.profile, hasResourceCore);
   assert.equal(verify.manifest_sha256, row.manifest_sha256);
   result.push({id:row.id,version:row.version,root,manifest_sha256:row.manifest_sha256,files_verified:requests,
     artifact_sha256:row.delivery.artifact.sha256,component_sha256:row.delivery.component.sha256});
