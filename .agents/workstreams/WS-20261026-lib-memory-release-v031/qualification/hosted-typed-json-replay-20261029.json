@@ -1,0 +1,20 @@
+{
+  "schema": "wasmc.hosted-typed-json-replay-witness/v1",
+  "source": "isolated eb8683ac7f6eb83163820ee488e115f539c83e4c in-process Hosted dispatcher and real temporary Service",
+  "app_sha256": "122d97960a994875147c44062f0f0586bd7500c4153ce534b08e87e0796f30c5",
+  "method": "Same app artifact, route and identity submit two-row JSON transaction then exact same input with same idempotency key; both return 201; independent reads confirm unchanged revision and two rows. Changing many from false to true under the same key returns 409, revision and row count unchanged.",
+  "limitations": [
+    "Fresh Wasm store per request; not live production or deployment.",
+    "Example maps all transaction errors to 409 and is not a complete production API.",
+    "Rust SDK dynamic Hosted route, Source admission, release and anonymous readback remain outstanding."
+  ],
+  "evidence_sha256": {
+    "producer2024-hosted-typed-replay-20261029.log": "ef35fe092292d06a8a0e3b04d2dac74cfa1fba16ee8c6382eab7ea72130f896f",
+    "producer2024-hosted-typed-replay-v2-20261029.log": "1c3b4712a58f8a978b7e7a52632ac83eae2e69789be93d94ddad3099ab7cc56d",
+    "combined-portable-build-20261028/replay-prepare.log": "322533bea048753d161177f4d6b723d3f2d574e7302082be01f715617886604a",
+    "combined-portable-build-20261028/replay-compile.log": "44ab17404d92da84e4977369067c59caff5ba8556e9b8b48d5c50946401a81e4",
+    "producer2024-hosted-replay-fixture-20261029.patch": "976dd7d89e6763cd9957a31912e088f50865c1601a643d841dac5f89ed4a62d2",
+    "hosted-typed-json-replay-test-20261029.rs": "21cccd63f17611b101263a92f62c43b1dfeb929676fc338537c7ab76dc326b65",
+    "hosted-typed-json-replay-20261029.wasmc": "4a0aa258ab9311bc914aa24eebd3242f16e57bf5ee0b2feb1cbe0c98a74b23c8"
+  }
+}
