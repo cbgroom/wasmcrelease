@@ -1,0 +1,19 @@
+{
+  "schema": "wasmc.hwlinux-evidence-cleanup/v1",
+  "target": "hwlinux/mb",
+  "peer_id": "lgw_d963e53fd10749bca098e97de131bb3c",
+  "route": "peer_direct via agentweb-m4dd",
+  "hostname": "huawei-ThinkCentre-M920t",
+  "initial_available_bytes": 99652911104,
+  "before_first_cleanup_bytes": 102326435840,
+  "after_final_readback_bytes": 102389399552,
+  "concurrent_disk_changes_mean_initial_to_final_is_not_cleanup_yield": true,
+  "cleanups": [
+    {"operation_id":"exec-00000000000009e4","target":"/home/huawei/code/.cache/wasmc-evidence/current-std73-production-20261008/fresh-bootstrap-qohnmhlp/provider49-Std-fresh-graph-c04836lt/cargo-target","cargo_files_removed":210,"cargo_reported_mib":32.2,"df_before_bytes":102326435840,"df_after_bytes":102358196224,"receipt_sha256":"f6616df58abc163e893e1d5a3a17a237dca7834f7a35f81dfccb7651d3e6a8bf","receipt_unchanged":true},
+    {"operation_id":"exec-00000000000009e5","target":"/home/huawei/code/.cache/wasmc-evidence/current-std73-production-20261008/fresh-bootstrap-qohnmhlp/provider49-Std-fresh-graph-lbuoslzd/cargo-target","cargo_files_removed":210,"cargo_reported_mib":32.2,"df_before_bytes":102357897216,"df_after_bytes":102389657600,"receipt_sha256":"666bbdace1bc3d1cef5fe2d3b92615253b9ebd108c9aad6e7315c2a04134da12","receipt_unchanged":true}
+  ],
+  "guards": ["exact peer and force-direct route", "canonical exact target path", "Cargo CACHEDIR.TAG", "completed accepted receipt and exact SHA", "no cargo or rustc process", "no lsof handle", "cargo clean --offline --locked to exact target", "receipt and workspace retained", "post-readback"],
+  "retained": {"std73_evidence_gib_approx":15,"sdk_adapter_gib_approx":5.2,"native_cli_copies":37,"native_cli_paths_referenced":37,"reflink_supported":false,"generated_caller_evidence_retained":true},
+  "safety_scope":"two explicitly identified regenerable Cargo targets only; no bulk evidence or repository deletion",
+  "follow_up":"Make new producers retain receipts, failure witnesses and explicitly pinned outputs separately from marked regenerable Cargo targets; use dry-run inventory and exact process/fd/mount/identity checks, clean only completed unreferenced targets after their evidence is committed. Preserve unknown runs and avoid ordinary hardlinks to mutable evidence."
+}
