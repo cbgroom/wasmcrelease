@@ -1,0 +1,27 @@
+{
+  "schema": "wasmc.ordinary-iterative-binary-fold-candidate/v1",
+  "status": "isolated Source candidate; not admitted or released",
+  "base": "wasmc-combined-expression-ownership-candidate-20261028",
+  "change": "binary constant-fold traversal uses explicit work stack while retaining typed arithmetic, comparison handling and short-circuit behavior",
+  "diagnosis": "original default-stack failure occurred after shape validation and before constant folding returned",
+  "results": {
+    "deep1024": "1024 distinct live record terms on default test stack; both compile APIs, Wasmi and Wasmtime, 2 calls per API per engine",
+    "regressions": "184 expression/runtime/ownership integration tests and 9 optimizer unit tests pass including short-circuit and trap behavior",
+    "json": "ordinary WAsmC calls temporary JSON 2024 Root on both engines with valid, invalid and empty cases"
+  },
+  "evidence_sha256": {
+    "ordinary-iterative-binary-fold-20261028.patch": "fca3fd696726052d8073fe12d06c0722683bf4ddd5b1c4677ddbef91661c0500",
+    "ordinary-deep1024-phase-20261028.log": "e8de0bc536ec492cb2c92c30f50d1b0486684a8dfddc4bc6e027c0ee29354a2a",
+    "ordinary-deep1024-fold-candidate-20261028.log": "e3ebabee2abf7ee3586c4a1360231f8ef6f66eb902a6556dbe3aeb77f84e4395",
+    "combined-expression-fold1024-runtime-20261028.log": "7034a384c51ab67d827f64d0e9dea97c2e658ee94d85adf116ada076983620ae",
+    "ordinary-fold-regressions-20261028.log": "5225d9891bc64ff6fe8356a0089bd08b7f433e8323234a8a67487af215962858",
+    "ordinary-fold-unit-20261028.log": "240869e8f5cd0e85bfe673dac0abb9dac44383d3a822a69c6e98b18bb2c3c9ea",
+    "ordinary-fold-json-run-20261028.log": "c71d1f3e4bfd17041bc6b0fa56137848d8f6d7dcb19db4543eac38cb2d00415e",
+    "ordinary-fold-deep1024-runtime-20261028.rs": "0e284ff3e8c4785c0a2987a05cbff572013c56a0567f8a3b1a6cde2510816a57"
+  },
+  "limits": [
+    "No arbitrary-depth, production performance, real Host or complete release claim.",
+    "Other recursive AST forms and reference lifetime bound remain to be audited.",
+    "Source candidates remain unadmitted and hosted CI blocked."
+  ]
+}
