@@ -1,0 +1,14 @@
+{
+  "schema": "wasmc.hosted-json-rejected-transaction-witness/v1",
+  "status": "open defect in experimental Guest sample, no production deployment claim",
+  "reproduction": "Temporary real MCPGit Service transaction contains two inserts with the same key. Independently read back zero rows, but sample returned HTTP 201 because it treated a response handle as transaction success. Expected rejection assertion fails.",
+  "attempted_fix": "Read complete response using response_read and inspect /applied, releasing response handle. Candidate preparation rejected the mixed Host operations with Native checked projection cannot mix unnormalized Host operations or resources. Fix is not validated; idempotent replay disposition also needs correct handling.",
+  "evidence_sha256": {
+    "producer2024-hosted-route-rejected-20261029.log": "e067ae192048bc7da996c47bb44f0753e77e5375be44691e304fc0a765e5cf7e",
+    "producer2024-hosted-route-rejected-readback-20261029.log": "5d9da2422f356ad84aaf609fb69e98b62656a4e5731c35d5a01807da7e362fa4",
+    "combined-portable-build-20261028/disposition-prepare.log": "eec6d3b4ca4d22645888672532ef8ebb9d70880a0ff9993cc543a3f1f173b633",
+    "producer2024-hosted-write-fixture-20261029-v3.patch": "721539a9d49f00ec2b7a3427f8141e8faa2383c3d310d7d7c27d9142418fb9eb",
+    "hosted-rejected-json-test-20261029.rs": "fa4726fa83274292ea40533ea1ace09f566611c915121368f4e43da5da890db0"
+  },
+  "follow_up": "Use existing typed table transaction or a general Lib/SDK response decoder where possible; establish success, rejection, replay and same-session recovery before production route or release."
+}
