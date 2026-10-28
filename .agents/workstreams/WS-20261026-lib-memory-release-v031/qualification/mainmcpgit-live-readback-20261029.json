@@ -1,0 +1,42 @@
+{
+  "schema": "wasmc.mainmcpgit-live-readback/v1",
+  "date_utc": "2026-10-28",
+  "instance_id": "mainmcpgitm4dd",
+  "instance_scope": "releasemain",
+  "instance_name": "MCPGit Main Validation",
+  "method": "Public service_metadata, skill_get and guest skill_run_read through the running container local MCP endpoint. No changes or authenticated write operations.",
+  "container_image_revision": "0937418b57dd42b349b504bf73910dc8a040b811",
+  "container_image_note": "Offline bootstrap image label; does not establish active child binary source revision.",
+  "wasmc_status": {
+    "outcome": "ready",
+    "compiler_mode": "system_bundle",
+    "release_tag": "v0.0.29",
+    "release_commit": "681c976fd2b99ec0827a6a13dfd96a5ec1cc0770",
+    "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+    "runtime_compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+    "runtime_sdk_revision": "bddf8a371698ac7f1ced87b02952df5be5359dad",
+    "rust_compiler_configured": true,
+    "router_state": "configured",
+    "release_lock_available": false,
+    "official_libs": [
+      "wasmc-std",
+      "wasmc-lib-search",
+      "wasmc-owned-algorithms",
+      "wasmc-resource-counter",
+      "wasmc-host-clock"
+    ]
+  },
+  "guest_context_route_status": {
+    "state": "ready",
+    "generation": 0,
+    "head": null,
+    "limits_schema": "http-route-resource-policy-v1",
+    "invocations": 0
+  },
+  "limitations": [
+    "Guest current-organization context only; generation zero is not proof that every organization has no routes.",
+    "Public status does not prove live Rust compiler version, candidate JSON Root activation, or selected resource profile.",
+    "The current instance selects released compiler v0.0.29, not candidate bc994b4f68422cb9a8c28daf1e2fee0a039d074c6d6e05fb04f690c38a3ca62d; candidate is not adopted by this status.",
+    "No production mutation or publication performed."
+  ]
+}
