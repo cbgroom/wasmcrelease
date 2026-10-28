@@ -17,10 +17,15 @@ parser.add_argument('--lock', required=True, type=Path)
 parser.add_argument('--lock-sha256', required=True)
 parser.add_argument('--notices-dir', required=True, type=Path)
 parser.add_argument('--cargo-cache', required=True, type=Path)
+parser.add_argument('--extra-cargo-cache', action='append', type=Path, default=[])
 parser.add_argument('--output', required=True, type=Path)
 parser.add_argument('--rust-copyright', type=Path)
 parser.add_argument('--rust-copyright-sha256')
 parser.add_argument('--rust-version')
+parser.add_argument('--previous-delta', type=Path)
+parser.add_argument('--previous-delta-sha256')
+parser.add_argument('--fallback-manifest', type=Path)
+parser.add_argument('--fallback-manifest-sha256')
 args = parser.parse_args()
 lock_bytes = args.lock.read_bytes()
 if sha(lock_bytes) != args.lock_sha256:
@@ -33,6 +38,31 @@ text = notice_bytes.decode('utf-8')
 start = text.index('[\n')
 inventory, _ = json.JSONDecoder().raw_decode(text[start:])
 seen = {(p['name'], p['version'], p['registry_source']) for p in inventory}
+if bool(args.previous_delta) != bool(args.previous_delta_sha256):
+    raise SystemExit('previous delta path and digest must be supplied together')
+if args.previous_delta:
+    previous_bytes = args.previous_delta.read_bytes()
+    if sha(previous_bytes) != args.previous_delta_sha256:
+        raise SystemExit('previous delta digest mismatch')
+    previous = json.loads(previous_bytes)
+    if previous.get('baseline_notices_sha256') != sha(notice_bytes):
+        raise SystemExit('previous delta baseline mismatch')
+    seen.update((p['name'], p['version'], p['registry_source']) for p in previous['packages'])
+fallbacks = {}
+if bool(args.fallback_manifest) != bool(args.fallback_manifest_sha256):
+    raise SystemExit('fallback manifest path and digest must be supplied together')
+if args.fallback_manifest:
+    fallback_bytes = args.fallback_manifest.read_bytes()
+    if sha(fallback_bytes) != args.fallback_manifest_sha256:
+        raise SystemExit('fallback manifest digest mismatch')
+    document = json.loads(fallback_bytes)
+    if document['schema'] != 'wasmc.notice-source-fallback/v1':
+        raise SystemExit('fallback manifest schema mismatch')
+    for fallback in document['fallbacks']:
+        key = (fallback['name'], fallback['version'], fallback['registry_source'])
+        if key in fallbacks or Path(fallback['path']).name != fallback['path']:
+            raise SystemExit('duplicate or invalid fallback path')
+        fallbacks[key] = fallback
 packages = tomllib.loads(lock_bytes.decode('utf-8'))['package']
 missing = sorted((p for p in packages if p.get('source', '').startswith('registry+') and
                   (p['name'], p['version'], p['source']) not in seen),
@@ -40,7 +70,8 @@ missing = sorted((p for p in packages if p.get('source', '').startswith('registr
 rows = []
 for package in missing:
     name, version = package['name'], package['version']
-    matches = list(args.cargo_cache.glob('*/' + name + '-' + version + '.crate'))
+    matches = [p for root in [args.cargo_cache, *args.extra_cargo_cache]
+               for p in root.glob('*/' + name + '-' + version + '.crate')]
     if not matches:
         raise SystemExit(f'archive unavailable: {name} {version}')
     if any(sha(p.read_bytes()) != package['checksum'] for p in matches):
@@ -59,7 +90,24 @@ for package in missing:
                               'content_base64': base64.b64encode(content).decode('ascii')})
         manifest_entry = tar.getmember(name + '-' + version + '/Cargo.toml')
         manifest = tar.extractfile(manifest_entry).read()
+        try:
+            vcs_entry = tar.extractfile(name + '-' + version + '/.cargo_vcs_info.json')
+        except KeyError:
+            vcs_entry = None
+        vcs = json.load(vcs_entry) if vcs_entry else None
     info = tomllib.loads(manifest.decode('utf-8')).get('package', {})
+    fallback = fallbacks.get((name, version, package['source']))
+    if not snapshots and fallback:
+        if not vcs or vcs['git']['sha1'] != fallback['git_commit'] or info.get('repository') != fallback['repository'] or info.get('license') != fallback['spdx']:
+            raise SystemExit('fallback source identity mismatch: ' + name)
+        content = (args.fallback_manifest.parent / fallback['path']).read_bytes()
+        git_blob = hashlib.sha1(b'blob ' + str(len(content)).encode() + b'\0' + content).hexdigest()
+        if sha(content) != fallback['sha256'] or git_blob != fallback['git_blob']:
+            raise SystemExit('fallback source blob mismatch: ' + name)
+        snapshots.append({'path': 'LICENSE', 'bytes': len(content), 'sha256': sha(content),
+                          'content_base64': base64.b64encode(content).decode('ascii'),
+                          'origin': {'repository': fallback['repository'], 'commit': fallback['git_commit'],
+                                     'tree': fallback['git_tree'], 'blob': git_blob}})
     rows.append({'name': name, 'version': version, 'registry_source': package['source'],
                  'archive_sha256': package['checksum'], 'manifest_sha256': sha(manifest),
                  'declared_license': info.get('license'), 'declared_license_file': info.get('license-file'),
@@ -67,6 +115,10 @@ for package in missing:
 result = {'schema': 'wasmc.notice-delta-candidate/v1', 'cargo_lock_sha256': sha(lock_bytes),
           'baseline_notices_sha256': sha(notice_bytes), 'packages': rows,
           'complete_release_notice': False}
+if args.previous_delta:
+    result['previous_delta_sha256'] = args.previous_delta_sha256
+if args.fallback_manifest:
+    result['fallback_manifest_sha256'] = args.fallback_manifest_sha256
 if any((args.rust_copyright, args.rust_copyright_sha256, args.rust_version)):
     if not all((args.rust_copyright, args.rust_copyright_sha256, args.rust_version)):
         raise SystemExit('Rust copyright path, digest and version must be supplied together')

@@ -1,0 +1,21 @@
+import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
+import {readFileSync} from 'node:fs';
+import {spawnSync} from 'node:child_process';
+import {CoreCaller,bool,enumeration,f64,i64,u64,u8,u32,list,option,record,result,string,variant} from '../../../../scripts/current-core-value-codec-v3.mjs';
+const [root,artifactSha,componentSha]=process.argv.slice(2), sha=b=>createHash('sha256').update(b).digest('hex');
+const wasm=readFileSync(root+'/artifact.wasm'), component=readFileSync(root+'/component.wasm'), abi=JSON.parse(readFileSync(root+'/core-abi.json'));
+assert.equal(sha(wasm),artifactSha);assert.equal(sha(component),componentSha);assert.equal(abi.artifact_sha256,artifactSha);
+const caller=new CoreCaller(new WebAssembly.Module(wasm),abi);
+const dtype=enumeration(['boolean','int64','uint64','float64','utf8','binary']);
+const field=record({name:string,data_type:dtype,nullable:bool});
+const column=variant(Object.fromEntries([['boolean',bool],['int64',i64],['uint64',u64],['float64',f64],['utf8',string],['binary',list(u8)]].map(([n,t])=>[n,list(option(t))])));
+const batch=record({rows:u32,fields:list(field),columns:list(column)});
+const options=record({has_header:bool,validate_header:bool,delimiter:u8,batch_rows:u32}), errors=['invalid-options','invalid-data','unsupported-type'];
+const fields=[{name:'id',data_type:'int64',nullable:false},{name:'name',data_type:'utf8',nullable:false}],opts={has_header:true,validate_header:true,delimiter:44,batch_rows:4};
+const expected={tag:'ok',value:[{rows:2,fields,columns:[{tag:'int64',value:[2n,1n]},{tag:'utf8',value:['雪,🦀','plain']}]}]};
+const bytes=[...new TextEncoder().encode('id,name\n2,"雪,🦀"\n1,plain\n')];
+for(let i=0;i<16;i++){assert.deepEqual(caller.call('parse',[list(u8),list(field),options],[bytes,fields,opts],result(list(batch),errors)),expected);assert.deepEqual(caller.call('parse',[list(u8),list(field),options],[bytes,fields,{...opts,batch_rows:0}],result(list(batch),errors)),{tag:'err',value:'invalid-options'});}
+const expression='parse([105, 100, 44, 110, 97, 109, 101, 10, 50, 44, 97, 10], [{name: "id", data-type: int64, nullable: false}, {name: "name", data-type: utf8, nullable: false}], {has-header: true, validate-header: true, delimiter: 44, batch-rows: 4})';
+const componentRun=spawnSync('wasmtime',['run','--invoke',expression,root+'/component.wasm'],{encoding:'utf8',timeout:30000});assert.equal(componentRun.status,0,componentRun.stderr);assert.equal(componentRun.stdout.trim(),'ok([{rows: 1, fields: [{name: "id", data-type: int64, nullable: false}, {name: "name", data-type: utf8, nullable: false}], columns: [int64-column([some(2)]), utf8-column([some("a")])]}])');
+console.log(JSON.stringify({accepted:true,artifact_sha256:artifactSha,component_sha256:componentSha,core_rounds:16,core_same_instance:true,core_cases:['quoted unicode','invalid options','recovery'],component:'wasmtime CLI fresh process',release:false}));

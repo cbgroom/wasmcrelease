@@ -9,6 +9,8 @@ p.add_argument('--baseline', required=True, type=Path)
 p.add_argument('--baseline-sha256', required=True)
 p.add_argument('--delta', required=True, type=Path)
 p.add_argument('--delta-sha256', required=True)
+p.add_argument('--additional-delta', type=Path)
+p.add_argument('--additional-delta-sha256')
 p.add_argument('--output', required=True, type=Path)
 a = p.parse_args()
 files = sorted(a.baseline.glob('DEPENDENCY-NOTICES-[0-9][0-9][0-9].txt'))
@@ -23,12 +25,25 @@ if sha(delta_bytes) != a.delta_sha256:
 delta = json.loads(delta_bytes)
 if delta['baseline_notices_sha256'] != a.baseline_sha256:
     raise SystemExit('delta was collected against a different baseline')
+deltas = [delta]
+if bool(a.additional_delta) != bool(a.additional_delta_sha256):
+    raise SystemExit('additional delta path and digest must be supplied together')
+if a.additional_delta:
+    extra_bytes = a.additional_delta.read_bytes()
+    if sha(extra_bytes) != a.additional_delta_sha256:
+        raise SystemExit('additional delta digest mismatch')
+    extra = json.loads(extra_bytes)
+    if extra['baseline_notices_sha256'] != a.baseline_sha256 or extra.get('previous_delta_sha256') != a.delta_sha256:
+        raise SystemExit('additional delta chain mismatch')
+    deltas.append(extra)
 text = b''.join(baseline).decode('utf-8')
 inventory, _ = json.JSONDecoder().raw_decode(text[text.index('[\n'):])
 known = {row['sha256'] for package in inventory for row in package['snapshots']}
 new = {}
 packages = []
-for package in delta['packages']:
+for package in [p for d in deltas for p in d['packages']]:
+    if package['requires_manual_followup']:
+        raise SystemExit('unresolved license snapshot: ' + package['name'])
     entry = {k: v for k, v in package.items() if k != 'snapshots'}
     entry['snapshots'] = []
     for snapshot in package['snapshots']:
@@ -49,6 +64,8 @@ header = {'schema': 'wasmc.release-notice-supplement-candidate/v1',
           'cargo_lock_sha256': delta['cargo_lock_sha256'], 'packages': packages,
           'rust_library_copyright': {k: v for k, v in rust.items() if k != 'content_base64'},
           'release_notice_complete': False}
+if len(deltas) > 1:
+    header['additional_cargo_lock_sha256'] = [d['cargo_lock_sha256'] for d in deltas[1:]]
 addition = b'\n\nCandidate supplement; original baseline remains unchanged.\n' + json.dumps(header, sort_keys=True, indent=2).encode() + b'\n'
 for digest, content in sorted(new.items()):
     addition += ('\n===== Original snapshot SHA256 ' + digest + ' =====\n\n').encode() + content + b'\n'
