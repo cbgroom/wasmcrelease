@@ -88,6 +88,13 @@ export async function assembleCurrentProductV4(repo,{runRoot,receiptSha256,produ
   for(const path of Object.keys(all))data.set(path,await readFile(join(out,path)));
   const read=path=>{assert.ok(data.has(path),'missing public package input: '+path);return data.get(path);};
   const checked=verifyCurrentReleaseV4(catalogBytes,sha(catalogBytes),read,Object.keys(all));
+  const frozenNotices=await readFile(new URL('../catalog/frozen-v030-notices-v1.json',import.meta.url));
+  assert.equal(sha(frozenNotices),'1aac7ddafa47bd0a5497202ce95d1fa8cfba759cdb15a1a570f479d2f422ea58','immutable historical notice inventory');
+  await writeFile(join(out,'catalog/frozen-v030-notices-v1.json'),frozenNotices,{flag:'wx'});
+  await atomicJson(join(out,'catalog/current-v4-license-policy.json'),{
+    schema:'wasmc.current-license-policy/v2',version,catalog_sha256:sha(catalogBytes),
+    package_authority_commit:artifactCommit,current_packages:packages.length,standard_root_mirrors:[],
+  });
   assert.equal(sha(await readFile(join(runRoot,'refresh-receipt.json'))),receiptSha256);
   for(const row of receipt.rows)assert.equal(digest(await inventory(row.package_root)),row.root_inventory_sha256);
   await atomicJson(join(out,'admission/current-product-v4.json'),checked);

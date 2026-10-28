@@ -5,6 +5,9 @@ import { fileURLToPath } from "node:url";
 import {collectStandaloneReleaseNotices} from './standalone-release-notices-v1.mjs';
 import {isExactDeclaredNotice} from './declared-thirdparty-notices.mjs';
 import {collectCurrentDeclaredThirdPartyNotices} from './current-license-policy-v3.mjs';
+import {collectCurrentDeclaredThirdPartyNoticesV4} from './current-license-policy-v4.mjs';
+import {checkedCurrentCatalog,currentProductPaths,hash} from './current-lib-release-v3.mjs';
+import {collectFrozenV030Notices} from './frozen-v030-notices-v1.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const read = (relative) => readFile(path.join(root, relative), "utf8");
@@ -81,19 +84,36 @@ assert.match(maintainers, /^## License boundary$/m);
 assert.match(maintainers, /Material first added after v0\.0\.19/);
 assert.match(maintainers, /Never rewrite its frozen product inventory/);
 
-const noticePolicy = JSON.parse(await read('catalog/current-v3-license-policy.json'));
-const declaredNotices = await collectCurrentDeclaredThirdPartyNotices(
-  await readFile(path.join(root,'catalog/libs-current-v2.json')),
-  noticePolicy,
-  async relative => {
-    let current=root;
-    for(const segment of relative.split('/')){current=path.join(current,segment);assert.ok(!(await lstat(current)).isSymbolicLink(),`linked declared notice input rejected: ${relative}`);}
-    const before=await lstat(current);assert.ok(before.isFile(),`regular declared notice input required: ${relative}`);
-    const bytes=await readFile(current),after=await lstat(current);
-    assert.ok(!after.isSymbolicLink()&&after.ino===before.ino&&after.size===before.size&&after.mtimeMs===before.mtimeMs,`declared notice input drift: ${relative}`);
-    return bytes;
-  },
-);
+const catalogBytes = await readFile(path.join(root,'catalog/libs-current-v2.json'));
+// The first parse only selects the versioned policy. Each collector then
+// requires the policy's independent catalog pin and verifies the full graph.
+const selected = checkedCurrentCatalog(catalogBytes,hash(catalogBytes));
+const readDeclared = async relative => {
+  let current=root;
+  for(const segment of relative.split('/')){current=path.join(current,segment);assert.ok(!(await lstat(current)).isSymbolicLink(),`linked declared notice input rejected: ${relative}`);}
+  const before=await lstat(current);assert.ok(before.isFile(),`regular declared notice input required: ${relative}`);
+  const bytes=await readFile(current),after=await lstat(current);
+  assert.ok(!after.isSymbolicLink()&&after.ino===before.ino&&after.size===before.size&&after.mtimeMs===before.mtimeMs,`declared notice input drift: ${relative}`);
+  return bytes;
+};
+const cohortBytes=await readDeclared(selected.cohort.path);
+assert.equal(cohortBytes.length,selected.cohort.bytes);assert.equal(hash(cohortBytes),selected.cohort.sha256);
+const cohortSchema=JSON.parse(cohortBytes).schema;
+let declaredNotices;
+if(cohortSchema==='wasmc.public-current-refresh-cohort/v2') {
+  const noticePolicy=JSON.parse(await read('catalog/current-v4-license-policy.json'));
+  declaredNotices=await collectCurrentDeclaredThirdPartyNoticesV4(catalogBytes,noticePolicy,readDeclared,currentProductPaths(root));
+  const actual=(await walk(root)).map(p=>p.replaceAll(path.sep,'/')).filter(p=>!declaredNotices.has(p));
+  for(const [noticePath,pin] of await collectFrozenV030Notices(readDeclared,actual)) {
+    if(declaredNotices.has(noticePath))assert.deepEqual(declaredNotices.get(noticePath),pin,'duplicate notice authorities');
+    declaredNotices.set(noticePath,pin);
+  }
+} else {
+  assert.ok(['wasmc.public-current-refresh-cohort/v1','wasmc.public-current-composition-cohort/v1'].includes(cohortSchema));
+  const noticePolicy=JSON.parse(await read('catalog/current-v3-license-policy.json'));
+  declaredNotices=await collectCurrentDeclaredThirdPartyNotices(catalogBytes,noticePolicy,readDeclared);
+}
+
 
 // Source-free standalone releases retain their independently pinned original notices.
 for(const [noticePath,pin] of await collectStandaloneReleaseNotices(async relative=>{
