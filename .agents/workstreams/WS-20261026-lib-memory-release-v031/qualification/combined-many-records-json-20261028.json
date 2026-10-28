@@ -1,0 +1,31 @@
+{
+  "schema": "wasmc.combined-many-records-evidence/v1",
+  "status": "isolated candidate; not Source admitted or published",
+  "base": "wasmc-combined-normal-candidate-20261028; requires prior private candidate prerequisites",
+  "overlay": "combined-many-records-overlay-20261028.patch; clean apply check on exact base",
+  "implementation": "Merge previously tested record-count and registration-count guard removals with JSON list-literal, SDK 2024, checked fields and WIT fixes; preserve identity, type, cycle and physical lane semantics.",
+  "merge_resolution": "Partial patch had overlapping earlier checked-fields and entry-window edits. Already-applied changes preserved, record limit removed, larger 70-record test fixture selected. Reject files and log retained.",
+  "tests": {
+    "ordinary_records": "three integration tests pass; 128 distinct live objects with all values read, both compiler APIs and Wasmi/Wasmtime 160 calls each",
+    "codec": "70 extra record types, 3500 extra fields, WIT-derived plan; 2048 original-operation calls per engine and 32 additional 50-field calls per engine",
+    "invalid_graph": "duplicate identity, cycle, type and lane mismatch tests pass",
+    "json": "ordinary WAsmC with temporary 2024 JSON Root; valid/invalid/empty examples on both engines, 2 rounds, new Store each invocation",
+    "first_failures": "incorrect test target then missing explicit CoreLib provider; both retained, corrected v3 passes"
+  },
+  "evidence_sha256": {
+    "combined-many-records-overlay-20261028.patch": "1c42618bdf160abc669b9c60158d01dad6c1ca3cc1eeb8826901922659a9133b",
+    "combined-many-records-first-20261028.log": "616fc96d463178a1d9e2a06a5978e2cefb9b68ce4b34d22fa0aef6b9ed2c67b6",
+    "combined-many-records-tests-20261028.log": "cfec66d7ad832843eda45bd59fa7dfd617dcfe98ca5f7829354bfc09fe401d61",
+    "combined-many-records-tests-v2-20261028.log": "338533f36e042b88722e71889f09e67502c17bf49dc15ee233a2bd4b45766151",
+    "combined-many-records-tests-v3-20261028.log": "7f325b527b61692894e45dc6ea96ba7911d07e0a37efceaf4452a00940506353",
+    "combined-many-records-codec-20261028.log": "9685440ad25530941893753340a10c0753b983a7c49877a5cb84c80cbdb86d79",
+    "combined-many-records-negative-20261028.log": "ea1f90122a64956235c3c736948b1a4dfd09e648dbaa74584569843dc8354798",
+    "combined-many-records-json-build-20261028.log": "c4b671f2da46d0eaa385024b1b439801ca9238fd62179b29743798d471936b40",
+    "combined-many-records-json-run-20261028.log": "931c9ffae4edef0c7cfd62a9bb573c15fbb682c0d88da87be4c5c72140d418a0"
+  },
+  "limits": [
+    "Temporary fixture Root and controlled host are not public installation or real MCPGit Host.",
+    "No claim of arbitrary-size operation, full 43-Lib qualification, Source admission or release.",
+    "Existing CoreLib 4.9 provider has a 192-live-object limit; 4.12 candidate still needs admission."
+  ]
+}
