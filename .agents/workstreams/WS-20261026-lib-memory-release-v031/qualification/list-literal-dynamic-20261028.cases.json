@@ -1,0 +1,36 @@
+[
+  {
+    "export": "run",
+    "arguments": [
+      31
+    ],
+    "expected": {
+      "ok": [
+        0,
+        1,
+        127,
+        128,
+        255,
+        0,
+        65,
+        66
+      ]
+    }
+  },
+  {
+    "export": "run",
+    "arguments": [
+      0
+    ],
+    "expected": {
+      "err": "invalid-stream"
+    }
+  },
+  {
+    "export": "empty",
+    "arguments": [],
+    "expected": {
+      "err": "invalid-stream"
+    }
+  }
+]
