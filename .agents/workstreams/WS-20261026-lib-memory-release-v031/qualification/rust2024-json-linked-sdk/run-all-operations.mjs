@@ -3,13 +3,14 @@ import path from 'node:path';
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
 
-const [root, guestPath] = process.argv.slice(2);
+const [root, guestPath, expectedProvider = '09b833d6b1910ef1e345e73c9b2698deb6f78b6077e4ab31b3ed9c5e0c1e2c06'] = process.argv.slice(2);
 assert.ok(root && guestPath);
+assert.match(expectedProvider, /^[a-f0-9]{64}$/);
 const sha = b => createHash('sha256').update(b).digest('hex');
 const manifest = JSON.parse(fs.readFileSync(path.join(root, 'lib.json')));
 const providerBytes = fs.readFileSync(path.join(root, 'artifact.wasm'));
 const guestBytes = fs.readFileSync(guestPath);
-assert.equal(sha(providerBytes), '09b833d6b1910ef1e345e73c9b2698deb6f78b6077e4ab31b3ed9c5e0c1e2c06');
+assert.equal(sha(providerBytes), expectedProvider);
 assert.equal(sha(providerBytes), manifest.artifact.sha256);
 assert.equal(sha(guestBytes), 'fa84817dad5b88b1a0b2fdcc0019716577931f0a82dccb4babd171121d800caf');
 const provider = new WebAssembly.Instance(new WebAssembly.Module(providerBytes), {});

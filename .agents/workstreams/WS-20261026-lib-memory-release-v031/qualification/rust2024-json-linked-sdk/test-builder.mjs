@@ -4,11 +4,12 @@ import {spawnSync} from 'node:child_process';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {fileURLToPath} from 'node:url';
-const [sdk,root,wrongRoot] = process.argv.slice(2);
+const [sdk,root,wrongRoot,expectedSdk,expectedRoot] = process.argv.slice(2);
 assert.ok(sdk && root && wrongRoot);
+assert.ok((expectedSdk && expectedRoot) || (!expectedSdk && !expectedRoot));
 const script=fileURLToPath(new URL('./build-linked-sdk.mjs',import.meta.url));
 const temp=mkdtempSync(join(tmpdir(),'wasmc-linked-sdk-'));
-const run=(source,selected,out)=>spawnSync(process.execPath,[script,source,selected,out],{encoding:'utf8'});
+const run=(source,selected,out)=>spawnSync(process.execPath,[script,source,selected,out,...(expectedSdk?[expectedSdk,expectedRoot]:[])],{encoding:'utf8'});
 try {
   const a=join(temp,'a'),b=join(temp,'b');
   for(const out of [a,b]) { const r=run(sdk,root,out); assert.equal(r.status,0,r.stderr); }
@@ -20,5 +21,16 @@ try {
   assert.notEqual(badSdk.status,0);assert.ok(!existsSync(noSdk));
   const noRoot=join(temp,'bad-root');const badRoot=run(sdk,wrongRoot,noRoot);
   assert.notEqual(badRoot.status,0);assert.ok(!existsSync(noRoot));
-  console.log(JSON.stringify({accepted:true,independent_rebuild_byte_equal:true,changed_sdk_rejected:true,wrong_root_rejected:true,no_output_on_rejection:true}));
+  const badMeta=join(temp,'corrupted-metadata');cpSync(sdk,badMeta,{recursive:true});
+  const metaPath=join(badMeta,'sdk.json'),meta=JSON.parse(readFileSync(metaPath));
+  meta.original_sdk_sha256='0'.repeat(64);writeFileSync(metaPath,JSON.stringify(meta));
+  const noMeta=join(temp,'bad-predecessor');const badPredecessor=run(badMeta,root,noMeta);
+  assert.notEqual(badPredecessor.status,0);assert.ok(!existsSync(noMeta));
+  const noPin=join(temp,'bad-independent-pin');
+  const badPin=spawnSync(process.execPath,[script,sdk,root,noPin,'0'.repeat(64),meta.root_manifest_sha256],{encoding:'utf8'});
+  assert.notEqual(badPin.status,0);assert.ok(!existsSync(noPin));
+  const noPair=join(temp,'missing-root-pin');
+  const badPair=spawnSync(process.execPath,[script,sdk,root,noPair,meta.sdk_sha256],{encoding:'utf8'});
+  assert.notEqual(badPair.status,0);assert.ok(!existsSync(noPair));
+  console.log(JSON.stringify({accepted:true,independent_rebuild_byte_equal:true,changed_sdk_rejected:true,wrong_root_rejected:true,wrong_predecessor_rejected:true,wrong_independent_pin_rejected:true,incomplete_pin_pair_rejected:true,no_output_on_rejection:true}));
 } finally {rmSync(temp,{recursive:true,force:true});}
