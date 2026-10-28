@@ -7,6 +7,11 @@ const [interchange, interchangeSha, interchangeWat, relational, relationalSha, r
 const sha = bytes => createHash('sha256').update(bytes).digest('hex');
 function load(path, expected, watPath) {
   const data = readFileSync(path); assert.equal(sha(data), expected);
+  if (watPath.endsWith('.json')) {
+    const abi = JSON.parse(readFileSync(watPath));
+    assert.equal(abi.artifact_sha256, expected, 'Root ABI artifact identity');
+    return new CoreCaller(new WebAssembly.Module(data), abi);
+  }
   const wat = readFileSync(watPath, 'utf8'), functions = new Map(), exports = [];
   for (const line of wat.split('\n')) {
     const m = line.match(/^  \(func (\S+) .*\(type \d+\)(.*)$/); if (!m) continue;

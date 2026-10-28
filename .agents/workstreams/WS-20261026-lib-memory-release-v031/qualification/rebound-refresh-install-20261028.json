@@ -1,0 +1,95 @@
+{
+  "schema": "wasmc.rebound-refresh-installed-fixture/v1",
+  "normal_refresh": "three-source isolated stage; actual unmodified refresh runner; explicit locked offline dependencies after isolated lock update",
+  "refresh_receipt_sha256": "50afd369474e95a995f1fec88b730143133bb7285c3cb3a9ecbc8fc743a074a8",
+  "refresh_fingerprint": "614d90a7b9bd20b4374e37bc922ff9505fd67dbafafe6504e8c99f82c2acbb30",
+  "producer_sha256": "816c69ee662a8ef3e4191b014abc5f27b1eb32b91ed109bd4a26a3776e94d86c",
+  "producer_source_provenance": "preexisting local experimental binary; no new clean-source or formal release provenance claim",
+  "rustc": "1.99.1",
+  "implementation_edition": "2024",
+  "generated_core_sdk_edition": "2021",
+  "roots": [
+    {
+      "id": "wasmc-data-core",
+      "version": "0.0.2",
+      "manifest_sha256": "221d76ecae00a79b39fc6780a0aaf8c11a29bb69903ed30a913f903a38310021",
+      "files_verified": 19,
+      "artifact_sha256": "46e4f46eafec2b692c64b0c0a0deffc163934e6d337ad9da23c308bf87134ff9",
+      "component_sha256": "2956b0ffd97900c6b01ed5deb21287975a057bca02407af42172680af579c7c9"
+    },
+    {
+      "id": "wasmc-data-interchange",
+      "version": "0.1.1",
+      "manifest_sha256": "096802a7452c501f1b01273d2937b787a9afd9247260aee997dd5a5bf44d679a",
+      "files_verified": 19,
+      "artifact_sha256": "ccc49a13bcfacf93a357e272199fe33ab18902834e7afaabee1348e921fc51ce",
+      "component_sha256": "5164a93f422f2b1f8ed4bb150ff68307c24c2528d2d0dcc9c73806252e75b538"
+    },
+    {
+      "id": "wasmc-data-relational",
+      "version": "0.1.1",
+      "manifest_sha256": "4e29d09a69220880cb701e2b1ffe321135bed080f331802fda70c5fb7df6595e",
+      "files_verified": 19,
+      "artifact_sha256": "35861c612356681144020ce70e74557a6da6dd15332091a8355f458343099d73",
+      "component_sha256": "3fb2df4f7151db9c63170d35c671d9bfdfaceb1f010e817d0edcdeb40d76f0db"
+    }
+  ],
+  "installed_fixture_sha256": "acf9c29cb2538c5a0bc19485c16d238efe0381db43d620b957e2aa7048b98247",
+  "installation": "actual v2 installer, synthetic all-zero catalog commit, controlled local fetch; 19 files per root independently hashed",
+  "notice_scope": "license and prior notices attached in fixture; completeness for new dependency lock not qualified",
+  "installed_runtime": "Core Node/Bun/Deno same-instance data-core up to 3145745 bytes and fresh recovery; 16 IPC/Parquet/union rounds; Component Wasmtime validate, IPC/Parquet/union/join",
+  "native_root_verification": "three actual installed real paths pass; initial symlink rejection preserved",
+  "sdk_2024_probes": [
+    {
+      "id": "wasmc-data-core",
+      "sdk_sha256": "edcc08a812e0401c0715c374dbb4956eeea3431b6320c65c202bd5af69204ef5",
+      "probe_source_bytes": 88901,
+      "probe_source_sha256": "0ae161b48e37d7fdc0dee849cccd9b2d1308d16e7b533c6c4ccd311902f14ad3",
+      "http_result": "200",
+      "wasm_sha256": "e57fdd6cd3cb6c14bae6bb96cd0bb1c2496b94985e4fa9f8a9a71fd89996933c"
+    },
+    {
+      "id": "wasmc-data-interchange",
+      "sdk_sha256": "7246cbe44936631eecc07706265bdb2d1165d88f0b1ce83a3fe42f36c3e8ce95",
+      "probe_source_bytes": 123789,
+      "probe_source_sha256": "210631cbb7ecfd9cafe90ca8d63e044aedda7bc014c8fe8f7779668dde01d4b6",
+      "http_result": "200",
+      "wasm_sha256": "cef3f1b08b31cde6bc6ad24827cbade3e05f5ef4c6d4709125cdf7be2156707e"
+    },
+    {
+      "id": "wasmc-data-relational",
+      "sdk_sha256": "9c450f2ecb5cee3ca5567066c4121e2472146969b8976840b60605b0d678916b",
+      "probe_source_bytes": 484088,
+      "probe_source_sha256": "334a29bd23084ec655b843d51f2f1dddc3d3bbb16aeefbb581d3510b3a3dc896",
+      "http_result": "413",
+      "wasm_sha256": null
+    }
+  ],
+  "live_service_relational_failure": "413 for 484088-byte exact source; live service still uses old source limit; source fix exists on separate MCPGit branch but not integrated/deployed",
+  "logs_sha256": {
+    "rebound-refresh-stage-prepare.log": "409e2144bd55989cc8e8978daa8437535fb42fe749d285f618d5740c635b21bd",
+    "rebound-refresh-stage-controls.log": "5cc1806a1aac859e0cffa8f66a4e3d1b1c5876a24cceed88eb32fa9c95fae78a",
+    "rebound-refresh-first.log": "4703d698514c380f5a3a854735b3e6486e6f8c78a8e15adb69ef60cb3bd0c9ef",
+    "rebound-refresh-core-node.log": "a69baa7d162819a19a9da06de3bf6c5110e4d29ed060cb804ae5c941582337e9",
+    "rebound-refresh-core-bun.log": "a69baa7d162819a19a9da06de3bf6c5110e4d29ed060cb804ae5c941582337e9",
+    "rebound-refresh-core-deno.log": "a69baa7d162819a19a9da06de3bf6c5110e4d29ed060cb804ae5c941582337e9",
+    "rebound-refresh-components.log": "e93a36cffb60e95371c6fc3c68b9711e8dbf9783d46c3f26b43fae6e4d0977f7",
+    "rebound-refresh-install-first.log": "2acd3392019de513f20255164b20edb815a0d4826dc44517c5d57d7e8096b66f",
+    "rebound-refresh-install-v2.log": "f4b45f77ed9dba368f3146e4e5fe50ca3102252837250685a33b0b816f3cd5ae",
+    "rebound-installed-core-node.log": "a69baa7d162819a19a9da06de3bf6c5110e4d29ed060cb804ae5c941582337e9",
+    "rebound-installed-core-bun.log": "a69baa7d162819a19a9da06de3bf6c5110e4d29ed060cb804ae5c941582337e9",
+    "rebound-installed-core-deno.log": "a69baa7d162819a19a9da06de3bf6c5110e4d29ed060cb804ae5c941582337e9",
+    "rebound-installed-components.log": "e93a36cffb60e95371c6fc3c68b9711e8dbf9783d46c3f26b43fae6e4d0977f7",
+    "rebound-installed-datacore-node.log": "6c5d27b32d7b1a97face48b0af2e640fe3c9bdc7d1a1dc1bd0e793009f26f043",
+    "rebound-installed-datacore-bun.log": "6c5d27b32d7b1a97face48b0af2e640fe3c9bdc7d1a1dc1bd0e793009f26f043",
+    "rebound-installed-datacore-deno.log": "6c5d27b32d7b1a97face48b0af2e640fe3c9bdc7d1a1dc1bd0e793009f26f043",
+    "rebound-installed-datacore-component.log": "16b3630b65afa119d8faf4b2fce7cf239fb952b8e8b501353d2337d2161f377d",
+    "rebound-installed-native-verify.log": "1a93d44bf5fe1e82498799b99c8a27b0400a84bbc7fba36d677efd9f12666a75",
+    "rebound-installed-native-verify-v2.log": "e1799dedcdbfdf31ab6ce8e4aeb740c0f820428592a9e823957433e1112b5db9",
+    "rebound-installed-sdk2024-derive.log": "e2c725af1cbba5886a1fb009049b34c892140344bdc18e04946da68d22b020a4",
+    "wasmc-data-relational-sdk2024-probe.log": "09b284c62f229fbd509884344f1ab48639e7bef57a5ea2cecfae3af77334c54b"
+  },
+  "anonymous_network_installation": false,
+  "full_43_cohort": false,
+  "formal_release": false
+}
