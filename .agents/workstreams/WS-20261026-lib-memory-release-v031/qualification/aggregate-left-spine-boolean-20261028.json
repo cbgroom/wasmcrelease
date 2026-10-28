@@ -1,0 +1,15 @@
+{
+  "schema": "wasmc.aggregate-left-spine-boolean/v1",
+  "candidate_patch_sha256": "f6c78130af8e8f577ff19800212e263e862552ccc28b74003dbc9a46d324720e",
+  "provider_sha256": "8231aba425ef1bb0aa07a760ff4c77917e247382ef73a41408db6b6b1cb40b1e",
+  "default_stack": true,
+  "engines": ["Wasmi", "Wasmtime"],
+  "compiler_apis": ["compile", "compile_lib_auto"],
+  "cases": [
+    {"name": "70-record sum comparison and boolean conditional", "inputs_per_engine_and_api": 160, "result": "pass", "source_sha256": "0d032167f018c54c7e8592ba77ac904c80a7e949348e85cfaa62bd7bdce22be8", "log_sha256": "a34958f9d72fc2e365f9fca83b2ead397d88bf51e829e30d178cab5452904872"},
+    {"name": "70-record comparison, OR short circuit, divide-by-zero trap and same-instance recovery", "inputs_per_engine_and_api": 160, "result": "pass", "source_sha256": "04d8ff29ad5ac70ea14aabf610dc24e1464df904c9069a0bd8a04e83c5b569a4", "log_sha256": "08264bfae7b75c59549f4e7746e163ba1749e9214b660040d8e7c743865b9970"}
+  ],
+  "sum_fixture": "Exact CoreLib4.9 found by SHA256; expected JSON Root manifest SHA256 7269ade73e97b0ebf37a7c33a8ee811176ba407c870d11e41dfef1b209f73272 was not found in searched local maintenance and worktree locations. Previous three setup failures remain; no sum regression pass claimed.",
+  "limits": "These cases do not prove arbitrary expression shapes, side-effecting Host calls or removal of the remaining recursion limit. Private candidate, not admitted Source or a release.",
+  "formal_release": false
+}
