@@ -1,0 +1,41 @@
+{
+  "status": "isolated private Source candidate; not admitted, merged or released",
+  "patch_sha256": "61250cd2c37bd5c290f494d962fc0877fb39b9e302da61ae4b6f4d304c8fc8ce",
+  "patch_base": "wasmc-native-transfer-edition2024-experiment-20261028, including earlier candidate prerequisites",
+  "scope": "New canonical SDK generation emits Rust 2024; strict verification accepts exact historical Rust 2021 pairs and new 2024 pairs, rejecting mixed pairs. Frozen packages are not changed.",
+  "historical_ordinary_roots": {
+    "total": 20,
+    "failed": 0,
+    "scope": "old producer candidate before central helper; current helper generates identical full SDK bytes for matching artifact",
+    "exclusions": "three native prototypes, outside verifier profile; security-related packages excluded"
+  },
+  "full_sdk": {
+    "functions": 26,
+    "source_sha256": "e09ba8bff6a2c5672c37e82cf42ce36a8656e8e00addc1923a906309538cde9a",
+    "artifact_sha256": "82e93fb61e11627d74b086693587fbb1a72d340432445236ae49f7df29670fe7",
+    "current_producer_byte_identical": true,
+    "test": "ordinary WAsmC dual engine against temporary rehashed SDK Root; 26 operations in linked SDK with controlled host on Node, Deno, Bun"
+  },
+  "low_level_sdk": {
+    "functions": 26,
+    "source_sha256": "091dc4dee5a1fc6ba8d344468495e07eb2bf21e64c3beaf4ab4738f54fa06911",
+    "artifact_sha256": "dc9a46d2de97f5a3ec13b5e338d1b40ea5bbf7f533b7788d2189e3300c8657ca",
+    "test": "rustc 1.99.1 --edition=2024 wasm32-unknown-unknown compilation"
+  },
+  "limitations": [
+    "Controlled host is not a real MCPGit Hosted end-to-end test.",
+    "Source audit rejection and failed remote checks remain unresolved; no Source push or release claimed.",
+    "Full release and anonymous readback remain outstanding."
+  ],
+  "evidence_sha256": {
+    "core-sdk-producer2024-ordinary-roots-reopen-20261028.json": "cf6864c5a7f3c99f41bee3f8563c2e51b551b6546ea40f5e519b98dc90d48dda",
+    "core-sdk-producer2024-old-roots-reopen-20261028.json": "a9902408a5a7dfe3c7b9d6bbfa465c277be965a6705bb308278f69359e11c9d6",
+    "core-sdk-producer2024-old-root-json-20261028.log": "72c430da72c12ea973bbc361d54ce736654901e080fe30b585c5642f5615fa48",
+    "core-sdk-producer2024-mixed-source21-20261028.log": "be31b552bd8eda40a918e88e5daa7a8cdd1c7df69ccda6f26ae633dfc13a5327",
+    "core-sdk-producer2024-mixed-cargo21-20261028.log": "be31b552bd8eda40a918e88e5daa7a8cdd1c7df69ccda6f26ae633dfc13a5327",
+    "core-sdk2024-lowlevel-generate-20261028.log": "de3a27acc68396e629225fddfaa0a40dc12b7f27497a35b3e92a640535ec0642",
+    "core-sdk2024-lowlevel-rustc-20261028.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "core-sdk2024-central-matched-generate-20261028.log": "e96606ecbe5eaba71c756a7a8f14839db400b9ed68c41c18ca054bfbeaa7dfbc",
+    "core-sdk-producer2024-all-node-first-20261028.log": "b87d0221a3230504e5269164c2daea2938ba89c28c851343b950e1480b953ab2"
+  }
+}
