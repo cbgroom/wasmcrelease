@@ -1,0 +1,14 @@
+{
+  "schema": "wasmc.list-literal-ownership-multifault/v1",
+  "private_candidate_sha256": "d0ceb05ed43f612480c017c884e0ab74f440feab30331693e10a0fbd9a8be8a4",
+  "corelib_sha256": "c3ac42b93f4c27e24065abe804b91f54761eff782e2971e947847b3d20ee7e00",
+  "engine": "Wasmtime 49.0.2",
+  "source": "Ordinary WAsmC compile_lib_auto creates list of two records each owning one string; returns list length.",
+  "coverage": "32 normal calls, 192 injected failures across first/second list push, record-child move and string builder push, with 192 immediate successful calls in the same Store after each failure.",
+  "ledger": "Intercepted successful root constructors, root drops, and transfers into parent record/list. 1824 roots created, 1152 transferred, 672 dropped at boundary, 0 unowned root handles after every call. This relies on CoreLib parent destruction to release transferred children; it is not an independent count of all internal live allocations.",
+  "test_sha256": "ab2d21325eb130bf4c353bc53e312e884b5038ebcecb5a9e2e8ea9e36479c75a",
+  "log_sha256": "390a91649d1f6253a9c1174a0285450a01d375a6f08db0cb7f5cbe22090c609d",
+  "prior_log_sha256": "06cb0d0bb752b8f23152e286e05cf86d15f4b1c5fc03e4f3898004c6455e57e2",
+  "limitations": "Wasmtime only for injected faults; earlier normal calls independently passed Wasmi and Wasmtime. No installed external Lib fault injection, physical heap introspection, Source admission or release.",
+  "formal_release": false
+}
