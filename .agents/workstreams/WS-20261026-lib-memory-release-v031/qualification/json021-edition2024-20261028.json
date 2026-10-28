@@ -1,0 +1,76 @@
+{
+  "schema": "wasmc.json021-edition2024-probe/v1",
+  "source_head": "c1306cc8ec4497d2190f7ac72501979e4038bfae",
+  "toolchain": "rustc 1.96.0, macOS aarch64; wasm32-unknown-unknown",
+  "materialization": "separate exact-source candidate, only crate Cargo edition changed",
+  "manifest": {
+    "sha256": "768e4902adcc14884d1eab30a1b05d6e301769857ba64b1b10d57f310f99b12f",
+    "bytes": 356
+  },
+  "source_receipt": {
+    "sha256": "77961546d7109dfc891df4a866c24c09a219d875b4db676286ec6e96a291047f",
+    "bytes": 703
+  },
+  "old_2021_raw": {
+    "sha256": "aa2613fd51f1a13b34e08257bb778c0bdfcfa5c3ee6dee0da1752c6079927746",
+    "bytes": 268461
+  },
+  "candidate_2024_raw": {
+    "sha256": "25424e6e5dfa005532f558abd7c92853ef6e2f1756e17a0604471ed9142fcce0",
+    "bytes": 268460
+  },
+  "candidate_2024_component": {
+    "sha256": "4b32cbfb5c6f890a7c76833979bcbe3eecd8be68c0f0a57462aa5d45385fda06",
+    "bytes": 278182
+  },
+  "native_tests": "9 passed",
+  "component_tests": [
+    "300 values, fallback, unicode, recovery",
+    "5000 nested arrays and pointer segments",
+    "17825793-byte string, construction and recovery"
+  ],
+  "logs": {
+    "json021-edition2024-native.log": {
+      "sha256": "6d1b89d5f099cf87c95368993ff50c396f351d0219ca4e8145a409d86e2c1cee",
+      "bytes": 7256
+    },
+    "json021-edition2024-wasm.log": {
+      "sha256": "99ee48a92ff5dc5e60d57cb41e1f23605d05fd89c218ba113c0a9949f5da8736",
+      "bytes": 1305
+    },
+    "json021-edition2024-component.log": {
+      "sha256": "2d46dc0d2b19e9f835f84735ed15b3527331345218f1955686834d0646a47915",
+      "bytes": 160
+    },
+    "json021-edition2024-component-deep.log": {
+      "sha256": "112850d67dc36e76ac25b3d673e8e2131c074064bd2db5c11471e20c0b8cc7af",
+      "bytes": 141
+    },
+    "json021-edition2024-component-large.log": {
+      "sha256": "f9a0e60334bc97c73be17886d564eb12d1e9fc480421d2f6754b8a8ab71b58d1",
+      "bytes": 145
+    }
+  },
+  "limits": [
+    "experimental candidate, not integrated producer or published Root",
+    "no ordinary WAsmC or installed product proof for these bytes",
+    "Rust Core SDK generator remains 2021",
+    "Source PR checks unstarted due to billing"
+  ],
+  "reproducer": "qualification/materialize-json021-edition2024.mjs",
+  "reproducer_result": "independent second materialization byte-equal; altered delta input rejected before output",
+  "negative_log_sha256": "e772d56dc6aa2f74f780139f4b919c05f7cae7fdcd7a89c56db472f86b7b6204",
+  "license_gate": {
+    "result": "failed on candidate catalog digest not matching frozen current metadata",
+    "log_sha256": "9ad2baf76be7e469a69c32a574f50d3cd604039ba4ae5875f9c382a205b9386e"
+  },
+  "source_ci": {
+    "head": "c1306cc8ec4497d2190f7ac72501979e4038bfae",
+    "unstarted_billing_check_ids": [
+      121993800785,
+      121993765758,
+      121993765754
+    ],
+    "qualification": "provider reported billing or spending limit; no CI execution result"
+  }
+}
