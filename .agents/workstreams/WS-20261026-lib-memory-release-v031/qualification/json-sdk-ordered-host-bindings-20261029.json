@@ -1,0 +1,28 @@
+{
+  "schema": "wasmc.json-sdk-ordered-host-bindings-candidate/v1",
+  "status": "isolated MCPGit source candidate, not integrated or deployed",
+  "base": "eb8683ac7f6eb83163820ee488e115f539c83e4c",
+  "problem": "Core scalar runtime requires exact Wasm import order; prior CoreLibCallPlan session binds all Lib imports first but this Rust SDK guest imports three MCPGit functions before Lib imports.",
+  "change": "Expose fresh provider and append one exact reviewed Lib import to an existing typed Host session, preserving instance check and allowing caller to interleave existing Host bindings in original module order. Existing session still verifies selected provider and delegates to the same binding.",
+  "validation": "Actual temporary MCPGit Service stores and activates exact JSON Root; Rust 2024 SDK Guest invokes all 26 JSON operations plus real QueryHost bindings for table.status, response-len and response-drop. Table status provider is a test stub, not live Service. Two fresh sessions pass with 62 imports, 2 charged Host calls, one handle retired, zero live handles. Regression verifies old JSON SDK sessions and 1MiB+ and 3MiB inputs.",
+  "failure_evidence": "v1 wrong cargo feature selection; v2/v3 passed guest but test wrongly expected 3 charged calls instead of 2; cleanup was already correct; logs retained.",
+  "guest_sha256": "adc0cbc9c361b012bfc796ba75e1b8ab69a7c7274ff4f4d3052dfbc4ebc44ed7",
+  "root_manifest_sha256": "4afaac1a820001fce70dbe883e18052e6f981f27509888752d22511bcf5c25a7",
+  "evidence_sha256": {
+    "json-sdk-host-composition-compile-20261029.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "json-sdk-mixed-host-v1-20261029.log": "31066d51b6ff51eaba66fc1c244812a1fcfb9ab3e313da43941697f69afb2184",
+    "json-sdk-mixed-host-v2-20261029.log": "8814970d2d106fd324f3feb4e62016050e6f770715d8edef1874878254e68d2a",
+    "json-sdk-mixed-host-v3-20261029.log": "8d0fc376ab175c4025a4bcecd5c66ea2b96ffa6983ff59511d8761820219f8e0",
+    "json-sdk-mixed-host-v4-20261029.log": "dae87cb6877589d8af69054d21efa959c096fce9cc33a0fd04a17c6c881cfc3b",
+    "json-sdk-mixed-host-regression-20261029.log": "9e02c4fb0b99954d29e585935ccf0661d496bb7a049e7e6a6619d8fc85d593a6",
+    "json-sdk-ordered-host-bindings-20261029.patch": "0e9b276fb7bdf7a0f50f1ff31b8cfc33728a80705409b22e55fd7f9b9edf32a4",
+    "json-sdk-ordered-host-test-fixture-20261029.patch": "dd8d2473116739de33a346c33ed8b7e714ca6cf449d3394b3223639badfc2f44",
+    "json-sdk-ordered-host-guest-20261029.rs": "d00320c6bcf5c05e954b5626014be00b6c19ac0b7e66248118db1e231dc4384c"
+  },
+  "limitations": [
+    "Production route inspection and binding do not yet load or select this plan; live Hosted route not proven.",
+    "Separate provider store memory/fuel is not yet coordinated with overall invocation policy.",
+    "Only Wasmi was exercised here; Wasmtime parity remains open.",
+    "Source admission, CI, formal release and anonymous readback remain outstanding."
+  ]
+}

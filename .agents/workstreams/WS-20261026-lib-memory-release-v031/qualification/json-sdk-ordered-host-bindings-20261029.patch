@@ -1,0 +1,68 @@
+--- a/crates/mcpgit-executable-runtime/src/core_lib_call_plan.rs
++++ b/crates/mcpgit-executable-runtime/src/core_lib_call_plan.rs
+@@ -96,32 +96,46 @@
+         make_state: impl FnOnce(FreshCoreLibInstance) -> S,
+         select: fn(&mut S) -> &mut FreshCoreLibInstance,
+     ) -> Result<Session<S>> {
+-        let instance = self.provider.instantiate_fresh()?;
++        let instance = self.instantiate()?;
+         let expected_instance = instance.instance();
+         let mut state = make_state(instance);
+-        ensure!(
+-            select(&mut state).instance() == expected_instance,
+-            "Core Lib session selected a different provider"
+-        );
++        ensure!(select(&mut state).instance() == expected_instance, "Core Lib session selected a different provider");
+         let mut session = Session::new(state);
+         for import in &self.imports {
+-            let name = import.name().to_string();
+-            let is_memory = import.module() == MEMORY_MODULE;
+-            let results = import.results().to_vec();
+-            session = session.bind(import.clone(), move |state, memory, args| {
+-                let provider = select(state);
+-                if provider.instance() != expected_instance {
+-                    return Err(HostError::callback("Core Lib session provider changed"));
+-                }
+-                if is_memory {
+-                    bridge(provider, memory, &name, args)
+-                } else {
+-                    provider_call(provider, &name, args, &results)
+-                }
+-            });
++            session = self.bind_import(session, import, expected_instance, select)?;
+         }
+         Ok(session)
+     }
++
++    /// Start a fresh provider for an invocation. The caller must keep this
++    /// instance inside the same state selected by every Lib callback.
++    pub fn instantiate(&self) -> Result<FreshCoreLibInstance> {
++        self.provider.instantiate_fresh()
++    }
++
++    /// Append one validated Lib binding, allowing other reviewed Host imports
++    /// to be interleaved in the exact Wasm import order.
++    pub fn bind_import<S: Send + 'static>(
++        &self,
++        session: Session<S>,
++        import: &Import,
++        expected_instance: wasmtime::Instance,
++        select: fn(&mut S) -> &mut FreshCoreLibInstance,
++    ) -> Result<Session<S>> {
++        ensure!(self.imports.iter().any(|i| i == import), "Core Lib import outside reviewed plan");
++        let name = import.name().to_string();
++        let is_memory = import.module() == MEMORY_MODULE;
++        let results = import.results().to_vec();
++        Ok(session.bind(import.clone(), move |state, memory, args| {
++            let provider = select(state);
++            if provider.instance() != expected_instance {
++                return Err(HostError::callback("Core Lib session provider changed"));
++            }
++            if is_memory { bridge(provider, memory, &name, args) }
++            else { provider_call(provider, &name, args, &results) }
++        }))
++    }
++
+ }
+ fn provider_memory(provider: &mut FreshCoreLibInstance) -> Result<wasmtime::Memory, HostError> {
+     let instance = provider.instance();
