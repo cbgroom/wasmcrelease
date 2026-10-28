@@ -85,7 +85,7 @@ export async function installLib({catalogBytes,catalogAuthority=catalogAuthoriti
 
 export async function installCurrentLib({catalogBytes,catalogSha256,lockBytes,lockSha256,destination,mirror='github'},fetcher=globalThis.fetch) {
   const {checkedCurrentCatalog,resolveCurrentPackage}=await import('./current-lib-release-v3.mjs');
-  if (!(lockBytes instanceof Uint8Array)||lockBytes.length>262144||!/^[a-f0-9]{64}$/.test(lockSha256??'')||sha256(lockBytes)!==lockSha256)fail('install.lock_identity_mismatch');
+  if (!(lockBytes instanceof Uint8Array)||!/^[a-f0-9]{64}$/.test(lockSha256??'')||sha256(lockBytes)!==lockSha256)fail('install.lock_identity_mismatch');
   let lock;try{lock=JSON.parse(lockBytes);}catch{fail('install.lock_invalid');}
   if(lock?.schema!=='wasmc.public-lib-lock/v2')fail('install.lock_invalid');
   const catalog=checkedCurrentCatalog(catalogBytes,catalogSha256);
