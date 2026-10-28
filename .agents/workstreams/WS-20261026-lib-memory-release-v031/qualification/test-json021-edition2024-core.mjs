@@ -3,10 +3,10 @@ import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { CoreCaller, string, list, u8, u64, bool, record, result, enumeration } from '../../../../scripts/current-core-value-codec-v3.mjs';
 
-const [artifactPath, watPath] = process.argv.slice(2);
+const [artifactPath, watPath, expectedSha = 'dc9a46d2de97f5a3ec13b5e338d1b40ea5bbf7f533b7788d2189e3300c8657ca'] = process.argv.slice(2);
 assert(artifactPath && watPath, 'usage: test-json021-edition2024-core.mjs ARTIFACT WAT');
 const artifact = fs.readFileSync(artifactPath), wat = fs.readFileSync(watPath, 'utf8');
-assert.equal(createHash('sha256').update(artifact).digest('hex'), 'dc9a46d2de97f5a3ec13b5e338d1b40ea5bbf7f533b7788d2189e3300c8657ca');
+assert.equal(createHash('sha256').update(artifact).digest('hex'), expectedSha);
 const functions = new Map();
 for (const line of wat.split('\n')) {
   const m = line.match(/^  \(func (\S+) .*\(type \d+\)(.*)$/); if (!m) continue;
@@ -33,4 +33,4 @@ assert.equal(json, '{"a":18446744073709551615,"b":["雪",true]}');
 assert.deepEqual(c.call('read-u64', [list(u8),string], [bytes(json),'/a'], result(record({present:bool,value:u64}), errors)), {tag:'ok',value:{present:true,value:18446744073709551615n}});
 assert.equal(c.call('array-from-values-or', [list(string),string], [['bad'],'fallback'], string), 'fallback');
 assert.deepEqual(c.call('array-from-values', [list(string)], [['true']], result(string, errors)), {tag:'ok',value:'[true]'});
-console.log(JSON.stringify({accepted:true,engine:globalThis.Deno?'deno':globalThis.Bun?'bun':'node',artifact_sha256:createHash('sha256').update(artifact).digest('hex'),checks:['construction','ordered-edits','u64-max','invalid-fallback','same-instance-recovery'],scope:'experimental Core candidate, not installed or released'}));
+console.log(JSON.stringify({accepted:true,engine:globalThis.Deno?'deno':globalThis.Bun?'bun':'node',artifact_sha256:createHash('sha256').update(artifact).digest('hex'),checks:['construction','ordered-edits','u64-max','invalid-fallback','same-instance-recovery'],scope:'selected exact Core artifact; installation and release require separate evidence'}));

@@ -1,0 +1,45 @@
+{
+  "schema": "wasmc.json021-anonymous-core-lockfix/v1",
+  "installer_commit": "688397d3ed2882128108e9da9f4afde8901b0a44",
+  "public_artifact_commit": "43440548ae82990851b3806a149a25187ec88d03",
+  "candidate_catalog_sha256": "6cd97c3e8aa9eb94739c62fb15465243ddb0906831ae7ccd16d6d0289ba1c8fb",
+  "manifest_sha256": "d0dcc046018ac37523e079b0990e5427aac1b2220a0df5da5d4610a19dfc2af0",
+  "core_sha256": "09b833d6b1910ef1e345e73c9b2698deb6f78b6077e4ab31b3ed9c5e0c1e2c06",
+  "anonymous_https": true,
+  "files_independently_verified": 19,
+  "engines": [
+    "node",
+    "deno",
+    "bun"
+  ],
+  "checks": [
+    "array and object construction",
+    "ordered edits",
+    "u64 maximum",
+    "invalid fallback and same instance recovery"
+  ],
+  "additional_node_tests": [
+    "3MiB compact crosses document allocation and output ceilings",
+    "70000 byte output crosses list and output-node ceilings",
+    "70000 input parts cross input list ceiling",
+    "typed integer exactness and missing distinction",
+    "atomic batch edits and later independent call",
+    "direct edit preserves exact atomic output and explicit fallback",
+    "actual memory above64MiB remains usable",
+    "actual out-of-memory range and invalid bool remain rejected"
+  ],
+  "limitations": [
+    "public branch candidate, not a formal release",
+    "core artifact differs from the locally rebuilt Rust 2024 candidate",
+    "not a real MCPGit Host or ordinary WAsmC invocation"
+  ],
+  "log_directory": "/Users/youxianshi/.local/state/wasmc-maintenance/rustc-service-1991-20261028",
+  "log_sha256": {
+    "json021-anonymous-install-lockfix-20261028.log": "7e4baadb4088c182983b71505a05ef951183aad2291aea3278e4bfa15f820221",
+    "json021-anonymous-core-lockfix.log": "94c53950ea8c8c0c35920299e124192bea356499c5f657729daebbe95c9e2223",
+    "json021-anonymous-core-lockfix-result.json": "b3b5f7c800005212d5e69cfcb74c71e84447ea3850bfa1a2389c91dbd1d72e10",
+    "json021-anonymous-node-lockfix.log": "0881532c4cbc89a80be7b6cdf05f826c630e4f84b05a8d53786563e6b7f2adea",
+    "json021-anonymous-deno-lockfix.log": "a26f47b56dcaf591f73cca1424a5c09f2c3c9fef162843470ef01851ca8a5253",
+    "json021-anonymous-bun-lockfix.log": "eb0a2a3a598f898417f51ccb800a4dfd5d1a0c17e228ac9d0f281efcfa3513d6"
+  }
+}
