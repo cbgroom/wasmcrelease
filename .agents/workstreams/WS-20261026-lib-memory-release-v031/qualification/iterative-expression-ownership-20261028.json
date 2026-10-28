@@ -1,0 +1,27 @@
+{
+  "schema": "wasmc.iterative-expression-ownership-candidate/v1",
+  "status": "isolated Source candidate, partial stack-safety fix; not admitted or released",
+  "base": "wasmc-combined-expression-iterative-candidate-20261028",
+  "change": "ownership validation traverses binary subtrees iteratively in identical left-to-right order; non-binary semantics and ownership checks retained",
+  "results": {
+    "256": "previous default-stack auto compiler overflow fixed; both APIs and engines, 160 calls each",
+    "512": "both APIs and engines with 512 simultaneously live records, 8 calls each on default stack",
+    "regression": "77 short-circuit/expression/record tests, checked large-record codec and temporary JSON Root dual-engine cases pass",
+    "1024": "default-stack SIGABRT during ordinary compile before result; automatic API not reached; no execution claim"
+  },
+  "evidence_sha256": {
+    "combined-expression-ownership-iterative-20261028.patch": "8311cfe1ce5b8ddd12f8dee52ff535e77219ddd8618c3cd375ed1e7dab4ae5e2",
+    "combined-expression-ownership256-first-20261028.log": "df0cb9bb349ef1d40724f7d22c8b5ca47649e4e04e7e7f07dfb63ba08339c83d",
+    "combined-expression-ownership-regressions-20261028.log": "1040048aee004998b7ed01ed6003171723e4c11ebea04836dfbe468477e2621b",
+    "combined-expression-ownership-codec-20261028.log": "27b4672dd36340984c3eea9f029e1cc0e4f8778e2bfdc66aae7c5a576e325069",
+    "combined-expression-ownership-json-run-20261028.log": "40db08995874058398086d5bb1aeb551e311cd5db1aa3c522631c9828c10a738",
+    "combined-expression-ownership512-first-20261028.log": "8d7afbfeedd2699af5c304cd735eaaf6b81f8d0a6660e6d3e856ee9b6acd0c17",
+    "combined-expression-ownership1024-first-20261028.log": "43bc10c2a9954c9da7daedd2c7c1952dab1963fcdfc4e07978967f807de6f4ea",
+    "iterative-ownership-deep512-20261028.rs": "9f900719dded39bb44a36163023fe14f0513b54c729a5322a1efedefaafd09ce",
+    "iterative-ownership-deep1024-20261028.rs": "e9e5818955552be0a850d5a27fe4c32b7d2f9422212c92550debbfd91f5acf97"
+  },
+  "limits": [
+    "No claim of unlimited depth; 1024 default-stack failure remains.",
+    "Compiler and CoreLib candidates not Source admitted; real Host and formal release remain open."
+  ]
+}
