@@ -1,0 +1,16 @@
+{
+  "schema": "wasmc.aggregate-expression-depth-diagnostic/v1",
+  "source_mode": "private isolated copy of many-records experiment; not admitted Source",
+  "source_base": "e5cf8c2174507a62897618d54238e7bccd138d9e",
+  "experiment": "Remove only the expression depth 64 rejection in ordinary aggregate IR projection, and change the existing 70-record test from shallow incremental sums to one left-associated expression. Existing experiment changes remain in the private copy.",
+  "experiment_source_sha256": "07c838d78f97106b8a598f7851950c3db02f71bb3ff8d817753f556375a6974c",
+  "experiment_test_sha256": "eb8f3111a55f5cb3273209277b61ef7451d65e7fb8d6575ceeef270a24da3491",
+  "provider_sha256": "8231aba425ef1bb0aa07a760ff4c77917e247382ef73a41408db6b6b1cb40b1e",
+  "provider_label_correction": "The inherited test prints corelib4.9; the test actually verifies and runs the SHA256 above, the 4.12 candidate.",
+  "large_stack": {"rust_min_stack_bytes": 33554432, "exit": 0, "compiled_apis": ["compile", "compile_lib_auto"], "engines": ["Wasmtime", "Wasmi"], "calls_per_api_per_engine": 160, "log_sha256": "89e4b04075102e4f82ec884ed4e5f21c328324825c005523257af95a9c91c1e3"},
+  "default_stack": {"exit": 101, "test_process": "SIGABRT from stack overflow", "log_sha256": "01ccd12850facf2daa9fd8c37e9123efb477330e601c7a83b473d9f606ec29e0"},
+  "conclusion": "Removing the fixed check permits this 70-term case only when the test thread has a larger stack. It does not fix ordinary default-stack behavior; replacing recursive processing with stack-safe traversal and validating the whole compilation path remains necessary.",
+  "logs": "Original full logs retained in private local maintenance state; previous failures retained separately.",
+  "source_admitted": false,
+  "formal_release": false
+}
