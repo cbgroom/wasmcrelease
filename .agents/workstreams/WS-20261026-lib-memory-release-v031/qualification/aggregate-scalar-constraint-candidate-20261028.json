@@ -1,0 +1,20 @@
+{
+  "schema": "wasmc.aggregate-scalar-constraint-candidate/v1",
+  "source_base": "e5cf8c2174507a62897618d54238e7bccd138d9e",
+  "candidate": "Iterative left-before-right type-constraint search alongside prior iterative binary projection; removes fixed depth cutoff for this type search only.",
+  "old_failure": "150-level AST with u64 typed leaf returned None rather than Some(U64); original log preserved.",
+  "unit_checks": "150-level typed leaf, right fallback, left priority, boolean result: passed. AST-level only; no full deep WAsmC source parser claim.",
+  "regressions": "Default-stack boolean and OR short-circuit tests each passed two compiler APIs and two engines; restored exact JSON and CoreLib4.9 sum tests 3/3 passed.",
+  "code_only_patch_sha256": "75dc5aac2906e309df0337542720cd645868e7213303655826d8e995cc6ba07e",
+  "code_only_patch_applies_to_base": true,
+  "combined_patch_with_test_sha256": "294f60d104ee2aec4a7633f88c4efc4398a31aadc5d1173b11caa549eb2fe4b9",
+  "combined_patch_at_base": "does not apply because unrelated test context differs; original apply failure retained",
+  "logs_sha256": {
+    "baseline": "976347448a0c74b7d910f514fed9d1dfffa310b1f4baccab9ded6ac5d17172b9",
+    "unit_final": "03a8ae45c7d30b51cfbd32ea4225777c09372ba92638a053ecfe97913e02ca92",
+    "dual_engine": "dc11b2975250c6ef8b1f92eaf5e87b70e0dfb315c496d7041a3280f56583bb7a",
+    "sum": "d2b5648e4c4238409c9ae618f21efa2e313324e9a714ea284204085c3482be71"
+  },
+  "limits": "Deep right-nested source still overflows default parser stack; other recursive bounds remain. Source admission and full release are not established.",
+  "formal_release": false
+}
