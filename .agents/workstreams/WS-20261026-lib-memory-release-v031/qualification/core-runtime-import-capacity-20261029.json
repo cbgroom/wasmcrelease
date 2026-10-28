@@ -1,0 +1,21 @@
+{
+  "schema": "wasmc.core-runtime-import-capacity-candidate/v1",
+  "base": "c1306cc8ec4497d2190f7ac72501979e4038bfae source files; isolated combined source experiment, not Source admission",
+  "changes": "Remove fixed count ceilings of 64 scalar and 32 i32 Host imports, and 16 scalar parameters/results. Retain nonempty plan, unique module/name, exact signatures and configured runtime resources.",
+  "tests": "Original scalar 130 imports and 24-value signature failed, preserved; corrected suite 21/21 passes. New tests call all 130 scalar and i32 imports, and 24 scalar arguments/results, on both Wasmi and Wasmtime. Existing signature drift and resource limit tests pass.",
+  "evidence_sha256": {
+    "scalar-host-130-before-20261029.log": "2a21a56c9810ac90158f8810bf252c2aade0cdd1aec98e9c93fff17428007b75",
+    "scalar-host-24-values-before-20261029.log": "28f5ca0af57235fd84261c64db64909943772e85f8ebc4770fbab71990b08490",
+    "core-runtime-capacity-full-20261029.log": "2d2203c84b7d94ab60f5904a500613c2b263bda33ba08bb4aea02d3e11905c6f",
+    "i32-host-130-after-20261029.log": "6145adb60f99abfae232d50a85b56c2d8b03b5042e335e7e8a0b094c58c1a8cd",
+    "core-runtime-capacity-full-v2-20261029.log": "a077a8ae7e2da856b3761700f816ba48fcab3d0655bcad6840c42bfc5855845f",
+    "core-runtime-import-capacity-20261029.patch": "70331c360ad7615b0a53552d7ee2fd9c94ad7a872e2425511cb264ee6d300f36"
+  },
+  "remaining": [
+    "i32 lane still has 8 parameter ceiling and u8 arity API; removing it needs a compatible public API and dynamic argument storage.",
+    "Overall Guest and external Lib Store memory/fuel are not yet jointly accounted.",
+    "Production route does not yet consume the new SDK; Source history audit and hosted CI remain unresolved.",
+    "This patch is a candidate and not a release or anonymous download."
+  ],
+  "patch_application": "Zero-context patch; git apply --unidiff-zero --check against exact Source PR head"
+}

@@ -1,0 +1,123 @@
+--- a/crates/wasmc_core_runtime/src/scalar_host_lane.rs
++++ b/crates/wasmc_core_runtime/src/scalar_host_lane.rs
+@@ -29,3 +28,0 @@
+-#[cfg(feature = "wasmtime-runtime")]
+-const MAX_IMPORTS: usize = 64;
+-const MAX_VALUES: usize = 16;
+@@ -407,3 +403,0 @@
+-        if let Err(error) = validate_call_shape(arguments) {
+-            return state_on_error(error, session);
+-        }
+@@ -487 +480,0 @@
+-            validate_result_shape(&result_types)?;
+@@ -675,3 +667,0 @@
+-        if let Err(error) = validate_call_shape(arguments) {
+-            return state_on_error(error, session);
+-        }
+@@ -726 +715,0 @@
+-            validate_result_shape(&result_types)?;
+@@ -825 +814 @@
+-    if reviewed.is_empty() || reviewed.len() > MAX_IMPORTS {
++    if reviewed.is_empty() {
+@@ -828 +817 @@
+-            format!("scalar Host plan must contain 1..={MAX_IMPORTS} rows"),
++            "scalar Host plan must not be empty",
+@@ -833,5 +822 @@
+-        if import.module.is_empty()
+-            || import.name.is_empty()
+-            || import.params.len() > MAX_VALUES
+-            || import.results.len() > MAX_VALUES
+-        {
++        if import.module.is_empty() || import.name.is_empty() {
+@@ -855,20 +839,0 @@
+-    }
+-    Ok(())
+-}
+-
+-fn validate_call_shape(arguments: &[CoreScalarValue]) -> Result<(), CoreScalarHostError> {
+-    if arguments.len() > MAX_VALUES {
+-        return Err(CoreScalarHostError::new(
+-            CoreScalarHostErrorCode::InvalidPlan,
+-            format!("scalar call exceeds {MAX_VALUES} values"),
+-        ));
+-    }
+-    Ok(())
+-}
+-
+-fn validate_result_shape(results: &[CoreScalarType]) -> Result<(), CoreScalarHostError> {
+-    if results.len() > MAX_VALUES {
+-        return Err(CoreScalarHostError::new(
+-            CoreScalarHostErrorCode::InvalidPlan,
+-            format!("scalar call exceeds {MAX_VALUES} results"),
+-        ));
+--- a/crates/wasmc_core_runtime/src/host_lane.rs
++++ b/crates/wasmc_core_runtime/src/host_lane.rs
+@@ -32 +31,0 @@
+-const MAX_IMPORTS: usize = 32;
+@@ -693 +692 @@
+-    if reviewed.is_empty() || reviewed.len() > MAX_IMPORTS {
++    if reviewed.is_empty() {
+@@ -696 +695 @@
+-            format!("i32-lane Host plan must contain 1..={MAX_IMPORTS} rows"),
++            "i32-lane Host plan must not be empty",
+--- a/crates/wasmc_core_runtime/tests/runtime_sdk.rs
++++ b/crates/wasmc_core_runtime/tests/runtime_sdk.rs
+@@ -930,0 +931,58 @@
++
++#[test]
++fn host_plans_scale_beyond_legacy_import_counts_on_both_engines() {
++    let count=130usize;
++    let mut source=String::from("(module ");
++    for i in 0..count { source.push_str(&format!("(import \"host\" \"f{i}\" (func $f{i} (result i32))) ")); }
++    source.push_str("(func (export \"run\") (result i32) i32.const 0 ");
++    for i in 0..count { source.push_str(&format!("call $f{i} i32.add ")); }
++    source.push_str("))");
++    let wasm=wat::parse_str(source).unwrap();
++    let imports=(0..count).map(|i|CoreScalarHostImport::new("host",format!("f{i}"),vec![],vec![CoreScalarType::I32])).collect::<Vec<_>>();
++    let sdk=CoreRuntimeSdk::new(CoreRuntimeSdkConfig::new(4,1)).unwrap();
++    let artifact=sdk.prepare_scalar_host_core(&wasm,policy(80),&imports).unwrap();
++    let session=|| {let mut s=CoreScalarHostSession::new(0usize);for (i,import) in imports.iter().cloned().enumerate() {s=s.bind(import,move |state,_,args|{assert!(args.is_empty());*state+=1;Ok(vec![CoreScalarValue::I32(i as i32)])});}s};
++    let expected=(0..count as i32).sum::<i32>();
++    let first=artifact.invoke_scalar_with_session(session(),"run",&[]).unwrap();
++    assert_eq!(first.backend,CoreRuntimeBackend::Wasmi);assert_eq!(first.values,[CoreScalarValue::I32(expected)]);
++    promote(&sdk,&artifact);
++    let second=artifact.invoke_scalar_with_session(session(),"run",&[]).unwrap();
++    assert_eq!(second.backend,CoreRuntimeBackend::Wasmtime);assert_eq!(second.values,first.values);
++}
++
++#[test]
++fn scalar_host_values_scale_past_sixteen_on_both_engines() {
++    let count=24usize;
++    let types="i32 ".repeat(count);
++    let mut source=format!("(module (import \"host\" \"wide\" (func $wide (param {types})(result {types}))) (func (export \"run\") (param {types})(result {types}) ");
++    for i in 0..count { source.push_str(&format!("local.get {i} ")); }
++    source.push_str("call $wide))");
++    let wasm=wat::parse_str(source).unwrap();
++    let import=CoreScalarHostImport::new("host","wide",vec![CoreScalarType::I32;count],vec![CoreScalarType::I32;count]);
++    let sdk=CoreRuntimeSdk::new(CoreRuntimeSdkConfig::new(4,1)).unwrap();
++    let artifact=sdk.prepare_scalar_host_core(&wasm,policy(81),std::slice::from_ref(&import)).unwrap();
++    let session=||CoreScalarHostSession::new(()).bind(import.clone(),|_,_,args|Ok(args.to_vec()));
++    let args=(0..count).map(|v|CoreScalarValue::I32(v as i32)).collect::<Vec<_>>();
++    let first=artifact.invoke_scalar_with_session(session(),"run",&args).unwrap();assert_eq!(first.backend,CoreRuntimeBackend::Wasmi);assert_eq!(first.values,args);
++    promote(&sdk,&artifact);
++    let second=artifact.invoke_scalar_with_session(session(),"run",&args).unwrap();assert_eq!(second.backend,CoreRuntimeBackend::Wasmtime);assert_eq!(second.values,first.values);
++}
++
++#[test]
++fn i32_host_plans_scale_past_thirty_two_on_both_engines() {
++    let count=130usize;
++    let mut source=String::from("(module ");
++    for i in 0..count { source.push_str(&format!("(import \"host\" \"f{i}\" (func $f{i} (result i32))) ")); }
++    source.push_str("(func (export \"run\") (result i32) i32.const 0 ");
++    for i in 0..count { source.push_str(&format!("call $f{i} i32.add ")); }
++    source.push_str("))");
++    let wasm=wat::parse_str(source).unwrap();
++    let imports=(0..count).map(|i|I32LaneHostImport::new("host",format!("f{i}"),0)).collect::<Vec<_>>();
++    let sdk=CoreRuntimeSdk::new(CoreRuntimeSdkConfig::new(4,1)).unwrap();
++    let artifact=sdk.prepare_i32_lane_host_core(&wasm,policy(82),&imports).unwrap();
++    let bindings=|| imports.iter().cloned().enumerate().map(|(i,import)|I32LaneHostBinding::new(import,move |_,args|{assert!(args.is_empty());Ok(i as i32)})).collect::<Vec<_>>();
++    let expected=(0..count as i32).sum::<i32>();
++    let first=artifact.invoke_i32_lane_with_host(bindings(),"run",&[]).unwrap();assert_eq!(first.backend,CoreRuntimeBackend::Wasmi);assert_eq!(first.value,expected);
++    promote(&sdk,&artifact);
++    let second=artifact.invoke_i32_lane_with_host(bindings(),"run",&[]).unwrap();assert_eq!(second.backend,CoreRuntimeBackend::Wasmtime);assert_eq!(second.value,first.value);
++}
