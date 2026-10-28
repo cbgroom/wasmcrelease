@@ -1,0 +1,28 @@
+{
+  "schema": "wasmc.hosted-typed-json-recovery-witness/v1",
+  "source": "temporary in-process Hosted dispatcher and real MCPGit Service from isolated eb8683ac7f6eb83163820ee488e115f539c83e4c archive; not live production",
+  "app_sha256": "7d25111eaea1dc17a9372049a1b8edc815dadbab3f5ab5bc904d39da273b5762",
+  "root_manifest_sha256": "4afaac1a820001fce70dbe883e18052e6f981f27509888752d22511bcf5c25a7",
+  "lib_sha256": "82e93fb61e11627d74b086693587fbb1a72d340432445236ae49f7df29670fe7",
+  "method": "Use existing table.transact_discarded Host adapter to check transaction disposition and release retained response. One dispatcher and artifact receive duplicate-key transaction followed by two successful two-row transactions with new input; independent Service reads show no row after conflict and both rows after each successful transaction, including JSON arrays of 1 and 300. Each dispatch uses a fresh Wasm store.",
+  "failed_attempts": "v1 manifest had extra service capability; v2 lacked table.write and its apparent rejection was permission denial, not conflict. v3 corrected permissions and passed. Two prior source variants failed preparation due to ownership constraints. Logs retained.",
+  "limitations": [
+    "Temporary in-process Service, not live deployed route; dynamic Rust SDK Hosted selection not proven.",
+    "Example uses no idempotency key, maps all table errors to 409, and is a validation fixture rather than complete production API.",
+    "Same dispatcher and artifact, not same Wasm store.",
+    "Source merge, release and anonymous download readback remain incomplete."
+  ],
+  "evidence_sha256": {
+    "producer2024-hosted-typed-v1-20261029.log": "896db6a2f21a41a30c57b6290592157ab1d13c7caccfb0959defefbbd2c68a7c",
+    "producer2024-hosted-typed-v2-20261029.log": "a48b454a65c8117490f9979b0f37b409b1b3393e4b9b02e82579de07b0788be7",
+    "producer2024-hosted-typed-v3-20261029.log": "23f275efd726f1d84160879ede3a2f29927809d86dc93f1c6f5248e254f68337",
+    "producer2024-hosted-typed-recovery-v2-20261029.log": "3588d9380978763d2066bb9c293afa35d5d08632b0f860a7fe3af06e435cb677",
+    "combined-portable-build-20261028/typed-prepare-v2.log": "46dd6927847aed4d0407d75a53b4bcedb1687e9856a868209d0c60114e2713e3",
+    "combined-portable-build-20261028/typed-prepare-v3.log": "364fab9dbaa109014807c8e3f94c304a68cf9cc1494fe03a5b6c3f8de2774e8e",
+    "combined-portable-build-20261028/typed-prepare-v4.log": "b89744eb98d2b96b5179a3639bee0b4151edd2e4ee791b5512521646514926f2",
+    "combined-portable-build-20261028/typed-compile.log": "40ef272b4f9da41be5fb91c4d5afeca2a8882efa258b4542c149ec70985edbcd",
+    "producer2024-hosted-typed-fixture-20261029.patch": "5ef4d4561bdad9fada19a71dc3e964f6a512aa9f6c9321c3257a0d2e2b412804",
+    "hosted-typed-json-recovery-test-20261029.rs": "90c5ab9d54219b95c17c2c2062235bb172205838337a19115086ac2d3ac4d370",
+    "hosted-typed-json-wasmc-20261029.wasmc": "90a31c49c9e3d3b38f04d97d01f2688dbe1d32bdca511f76ba957fc11a06caf2"
+  }
+}
