@@ -1,0 +1,44 @@
+{
+  "schema": "wasmc.rebound-rust2024-build-validation/v1",
+  "source_revision": "86ac65c438de9edb0b288c54343f094b98e2683b",
+  "source_basis": "verified authoring and DataCore WIT from prior separately pinned assembly",
+  "baseline_workspace_activation_sha256": "369e76e2807eab792d0151a0c34a1a66228e0e91364b1c92702cdaf6c29a34d1",
+  "lock_sha256": "a3c8d92eeed0c4bcb693b0acbdf5a5703e8f72018b61ac9186d87945f67de1e4",
+  "rustc": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+  "cargo": "cargo 1.99.1 (5f94df478 2026-08-27)",
+  "edition": "2024 for the two built packages; other workspace packages retain prior edition",
+  "command": "cargo +stable build --offline --locked --release --target wasm32-unknown-unknown -p wasmc_data_interchange_memory_v031 -p wasmc_data_relational_memory_v031",
+  "build_seconds": 35.55,
+  "artifacts_sha256": {
+    "interchange_core": "5a40e01ef15e96563a0c92142dbb8bb3b45bdc14bf38d67335391fd287858625",
+    "relational_core": "ff82cee34d63a37a5490b260bee914f99956af94be16599e4a8ba8b878e3de53",
+    "interchange_component": "d5b93e160f01273bad81e0dec851a756d4ff45d9e6478f5a7651fcd966aea492",
+    "relational_component": "34eb66d41a9875eef58aed0b4573f9c64738ae3a9d238095d574ec45c9f0e57a"
+  },
+  "core": "Node, Bun, Deno each 16 same-instance rounds IPC and Parquet roundtrip, invalid input and relational union",
+  "component": "wasm-tools component new and validate; Wasmtime 47.0.3 IPC/Parquet roundtrip, empty-input error, union and equi-join; fresh process per invocation",
+  "preparation_first_failure": "directory existed due to own mkdir before exclusive copy; retained original failure and empty directory; separately named corrected outputs byte-identical",
+  "preparation_controls": "wrong independent activation/authoring/DataCore pins and preexisting output reject",
+  "wat_files_sha256": {
+    "interchange.wat": "fd9c3155247aaa735f0c2055196d30ea093ed20917f2088cf5c6f684e3de2a96",
+    "relational.wat": "f39a34105ce289a52edade7aea2ca95559dbba2d45994b094575809d842c6ced"
+  },
+  "logs_sha256": {
+    "rebound-rust2024-preparation-original.log": "5e3a6df62600b6a5620d98e98f55134fcdcc0f3ad0bcd23da76d6a337f5b345c",
+    "rebound-rust2024-preparation-v2.log": "69e6bb1ecf24145031bdf6ef90ad9a8aafe2355c38a352e6f81506573c9b6304",
+    "rebound-rust2024-preparation-v4.log": "07b236e2c392d74a55c0ec24a6781c6da8cf0ffa681015eff5a73d0aa95dcb9d",
+    "rebound-rust2024-preparation-controls.log": "c429f39efcff4d2342606f206edebe622e9b26718f75f220ce4cb824e1f776c4",
+    "rebound-rust2024-build-original.log": "c89acdf96478e4d6a825434987565dffa69f2d0db1655951883155a1d83479e7",
+    "rebound-rust2024-components-original.log": "554555281ef91f102d3f06f108ebd00a108f542073c7d6743aafd2e38bc13d2f",
+    "rebound-rust2024-core-node-original.log": "6af7da7af8de0dd1c33fdf933488eab26bb0f3123f93a979529fb5523125e97e",
+    "rebound-rust2024-core-bun.log": "6af7da7af8de0dd1c33fdf933488eab26bb0f3123f93a979529fb5523125e97e",
+    "rebound-rust2024-core-deno.log": "6af7da7af8de0dd1c33fdf933488eab26bb0f3123f93a979529fb5523125e97e"
+  },
+  "limitations": [
+    "not full 43-package refresh",
+    "not canonical producer packaging or installation",
+    "no new ordinary WAsmC App",
+    "new artifact no published Root",
+    "not formal release"
+  ]
+}
