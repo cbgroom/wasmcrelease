@@ -1,0 +1,20 @@
+{
+  "schema": "wasmc.aggregate-left-spine-experiment/v1",
+  "source_base": "e5cf8c2174507a62897618d54238e7bccd138d9e",
+  "scope": "Private isolated candidate: project a left-associated binary expression iteratively, preserving node order and expected operand types. The existing depth check remains for other recursion.",
+  "patch_sha256": "f6c78130af8e8f577ff19800212e263e862552ccc28b74003dbc9a46d324720e",
+  "patch_apply_check_at_source_base": true,
+  "phase_diagnosis": "Default-stack overflow occurred in compile_lib_auto aggregate projection; ordinary compile and the automatic parser and plan derivation finished first. Diagnostic projection reached depth 27 before abort.",
+  "default_stack_tests": "Two separate 70-record cases: all additions and alternating addition/subtraction, each compiled by compile and compile_lib_auto and run for 160 inputs on each of Wasmi and Wasmtime.",
+  "provider_sha256": "8231aba425ef1bb0aa07a760ff4c77917e247382ef73a41408db6b6b1cb40b1e",
+  "log_label_correction": "The all-addition test inherited an incorrect 4.9 label; the test pins and actually uses the provider SHA above.",
+  "focused_regressions": "ordinary-expression 13/13 and aggregate-payload 4/4 passed. Three ordinary-sum tests failed setup: missing pinned JSON Root and wrong CoreLib fixture; no sum regression pass claimed. All logs retained.",
+  "log_sha256": {
+    "default_additions": "967e6b37ad2c8319c82692aa5b310444ed8cfa28e63c2fb219eb8c0390311032",
+    "default_mixed": "bd779751c6158d00a7e2e75e0ec6439259bdb6d03f1345324ea8390b75ab3d72",
+    "focused_regressions": "5ceaa4165d72dca00a1eda2b2b67c3c055682a682adfe9b0109f43e229ed7472"
+  },
+  "remaining": "Restore exact sum fixtures and test comparisons, booleans, side effects and non-left-spine depth. Complete stack-safe traversal and Source admission before claiming the capacity limit fixed.",
+  "source_admitted": false,
+  "formal_release": false
+}
