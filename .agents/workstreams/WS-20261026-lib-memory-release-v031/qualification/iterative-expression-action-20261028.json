@@ -1,0 +1,30 @@
+{
+  "schema": "wasmc.iterative-expression-action-candidate/v1",
+  "status": "isolated Source candidate, partially resolves stack exhaustion; not admitted or released",
+  "base": "wasmc-combined-expression-candidate-20261028, dependent on prior combined candidates",
+  "patch": "iterative non-short-circuit binary recipe and action traversal; logical and/or use existing conditional lowering; left-to-right order retained",
+  "results": {
+    "140": "previous default-stack SIGABRT now passes both compile APIs and Wasmi/Wasmtime 160 calls per engine per API",
+    "regression": "77 expression, short-circuit and record tests pass; large checked-record codec and ordinary temporary JSON Root dual-engine cases pass",
+    "256": "default stack overflows in compile_lib_auto; ordinary compile completes. Explicit 8 MiB stack control passes both APIs and engines but is not a fix.",
+    "diagnosis": "after forcing diagnostic library rebuild, 256 overflows in aggregate ownership checking before recipe generation; initial phase attempt reused a cached noninstrumented binary, retained and not used for localization"
+  },
+  "evidence_sha256": {
+    "combined-expression-iterative-recipe-action-20261028.patch": "14e92a9f05cedc87f79ce246214c7e22f438474d4847a3681678931b559752cc",
+    "combined-expression-deep140-action-fix-20261028.log": "a062b8221ff26e426d83774fac7029672d3de762da96be68bba59330f8283436",
+    "combined-expression-deep140-final-20261028.log": "4364df35232214db4a9e248ac17a96b224043cf1e379397362d2c838d4f016fd",
+    "combined-expression-iterative-regressions-20261028.log": "472218d9d1f9d935cfe8dfdfe04280d28c257875967ba7b4eabce004c82b6511",
+    "combined-expression-iterative-codec-20261028.log": "ae44698ae39595c743df7a18bab5d16f2397c534c821a44ae3ffcdb8358058e5",
+    "combined-expression-iterative-json-run-20261028.log": "8e982563c2ab5e83de39d7b03057c32b634ceb488fea3c9be77166ff1c0e7294",
+    "combined-expression-deep256-final-20261028.log": "21bd0c500d5f48f765c8ddbf05fdce1ee40c12892d53d5c83214c182b4aa923c",
+    "combined-expression-deep256-phase-20261028.log": "efadbebc815cc345c2e65a34fb64a76e93c1ca02ebfcea71cf667e8585fb5aff",
+    "combined-expression-deep256-phase-rebuilt-20261028.log": "679df2c2fbcd13308d1dee92ad8eca12906ecb1639515931d8035c7abff72833",
+    "combined-expression-deep256-stack8-20261028.log": "f22f44e84dc19f409981049245c4edd8f08e869fe24d3696927d095d47e14649",
+    "iterative-expression-deep140-20261028.rs": "237465feed2593e745fb942c559c13cb760e52c4f502b9ac0ca78d22503e4c06",
+    "iterative-expression-deep256-20261028.rs": "a1e503a1a39363cd44cf1562652aa082dca0ce38b657daa8c5c2bc74ef65d51f"
+  },
+  "limits": [
+    "Deep-expression stack-safety is incomplete, including ownership checking and potentially other recursive stages.",
+    "CoreLib 4.12 and Source candidates are not admitted; real Host and formal release remain open."
+  ]
+}
