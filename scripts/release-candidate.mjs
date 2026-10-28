@@ -470,7 +470,7 @@ export function currentProductInputsForVersion(version,variant){
     'scripts/frozen-v030-notices-v1.mjs','scripts/lib-refresh-license-receipt-v1.mjs',
     'scripts/assemble-current-product-v4.mjs','scripts/test-current-product-v4.mjs',
     'scripts/test-current-license-policy-v4.mjs','scripts/qualify-current-lib-refresh-v3.mjs',
-    'scripts/test-lib-refresh-current-values.mjs','scripts/test-lib-refresh-current-data.mjs',
+    'scripts/test-lib-refresh-current-values.mjs','scripts/test-lib-refresh-current-data.mjs','scripts/test-current-values-component.mjs',
     'scripts/test-json-current-differential.mjs'];
 }
 export function currentCandidateClosure(candidate,read){
