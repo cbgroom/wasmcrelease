@@ -1,0 +1,24 @@
+{
+  "schema": "wasmc.native-list-cleanup-isolated-evidence/v1",
+  "guard_patch_sha256": "9175b22d9681cf40529d55f138f4e51d780729e93e95b32a96451bba178cacff",
+  "list_cleanup_patch_sha256": "4b9495fa5a8e312893bd9d5505e0778b648b946f63f7b1e3d425246960192181",
+  "source_mode": "isolated archive, based on SDK16MiB candidate; not formal Source",
+  "root_cause": "NativeLogicalApp used object_drop for a list root; real CoreLib returns 0x103 invalid-reference; use list_drop and validate its ABI for list exports",
+  "real_provider_sha256": "f33243512a8544abb6e35e20bfc650b42c7ed72826525edc6377e1cfe49a2936",
+  "root_manifest_sha256": "101a0693ae99e4d67190f170061909229d5ba0cacd28e4f8607585d97d825e6f",
+  "corelib_sha256": "62182db9d8859acfc79f0e9cebe960d90321829a96ea9d5a9fa041ca42f71c32",
+  "runtime": "real 160-field Rust list echo, ordinary WAsmC, exact all field output and pending-allocation cleanup; Wasmi and Wasmtime twice each; same test separately verifies string return on both engines",
+  "native_invoke_regression": "4 passed, 1 ignored external fixture",
+  "original_high_cost_test": "own duplicate 160-comparison stress task stopped by SIGINT after successful stronger full-output test; prior compilation output retained and not claimed as passed",
+  "logs_sha256": {
+    "wide-record-local-original-guard-control1-20261028.log": "0f8fe5bc26a5b0a8ad9619c4d3e75c568647808879dce8f2c52c5b9dcb338395",
+    "wide-record-real-provider-first-20261028.log": "221add0f7218bb3dadd4a21ff52df30040c9ffb3cb53aa0cc13cfe75bd5901ef",
+    "list-cleanup-real160-first-20261028.log": "fca0805b41e0db867b6b58032c0ecc0d7243cab1a78bd2cd6d0203834483dd8c",
+    "list-cleanup-real160-final-20261028.log": "d855f24730296479ba91c2714241a6c1ddc22245ced53f0a8bd0cc4f144436cc",
+    "list-cleanup-list-string-regression-20261028.log": "f5b0e09cf5f8085a87d52abf0ba919d243b816548ee3495e398ac2fac157be66",
+    "list-cleanup-native-invoke-regression-20261028.log": "020609e2126d6b2c6411a0b8c4292d433fc82e5372c65e84da6d21b203def1c2",
+    "wide-record-real160-all-fields-20261028.log": "f7a9035dc9bd54364594c7569bb0604a0763b598f8f32d43a8911a2b45aebf18"
+  },
+  "formal_source_admission": false,
+  "formal_release": false
+}
