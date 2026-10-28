@@ -18,6 +18,9 @@ parser.add_argument('--lock-sha256', required=True)
 parser.add_argument('--notices-dir', required=True, type=Path)
 parser.add_argument('--cargo-cache', required=True, type=Path)
 parser.add_argument('--output', required=True, type=Path)
+parser.add_argument('--rust-copyright', type=Path)
+parser.add_argument('--rust-copyright-sha256')
+parser.add_argument('--rust-version')
 args = parser.parse_args()
 lock_bytes = args.lock.read_bytes()
 if sha(lock_bytes) != args.lock_sha256:
@@ -49,7 +52,7 @@ for package in missing:
             parts = PurePosixPath(entry.name).parts
             if not entry.isfile() or len(parts) != 2 or parts[0] != name + '-' + version:
                 continue
-            if not parts[-1].upper().startswith(('LICENSE', 'LICENCE', 'COPYING', 'NOTICE')):
+            if not parts[-1].upper().startswith(('LICENSE', 'LICENCE', 'COPYING', 'NOTICE', 'AUTHORS')):
                 continue
             content = tar.extractfile(entry).read()
             snapshots.append({'path': parts[-1], 'bytes': len(content), 'sha256': sha(content),
@@ -64,6 +67,15 @@ for package in missing:
 result = {'schema': 'wasmc.notice-delta-candidate/v1', 'cargo_lock_sha256': sha(lock_bytes),
           'baseline_notices_sha256': sha(notice_bytes), 'packages': rows,
           'complete_release_notice': False}
+if any((args.rust_copyright, args.rust_copyright_sha256, args.rust_version)):
+    if not all((args.rust_copyright, args.rust_copyright_sha256, args.rust_version)):
+        raise SystemExit('Rust copyright path, digest and version must be supplied together')
+    rust_bytes = args.rust_copyright.read_bytes()
+    if sha(rust_bytes) != args.rust_copyright_sha256:
+        raise SystemExit('Rust copyright digest mismatch')
+    result['rust_library_copyright'] = {'toolchain_version': args.rust_version, 'bytes': len(rust_bytes),
+                                      'sha256': sha(rust_bytes),
+                                      'content_base64': base64.b64encode(rust_bytes).decode('ascii')}
 payload = (json.dumps(result, indent=2, sort_keys=True) + '\n').encode()
 with args.output.open('xb') as output:
     output.write(payload)
