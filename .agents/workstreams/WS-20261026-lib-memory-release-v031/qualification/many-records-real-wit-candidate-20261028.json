@@ -1,0 +1,37 @@
+{
+  "schema": "wasmc.many-records-isolated-candidate/v1",
+  "source_base": "e5cf8c2174507a62897618d54238e7bccd138d9e",
+  "source_mode": "private archive only; includes earlier checked-field candidate",
+  "changes": "remove four fixed 64-record count gates; retain empty, identities, type and cycle checks and checked u32 record IDs",
+  "real_wit_fixture": {
+    "added_record_count": 70,
+    "added_field_count": 3500,
+    "total_fields": 3511,
+    "provider": "purpose-built Core Wasm fixture, not deployed Lib",
+    "wit_sha256": "d8c8ca4be6b1aec63ccd65dabae59ef8c2a7ee315d073e4979b14a4107260136",
+    "binding_sha256": "d7e3cb1cf26810d46bc8546dc98aa14d2793a316e9fa77cdf180feacf734cf7e",
+    "provider_sha256": "6421c56ad93d288aead196ffa0e95142ccd68bbb9ac49455ebeefafff08eea0c"
+  },
+  "old_wit_activation": "failed: typed-resource aggregate record count is outside the bounded profile",
+  "old_serialized_plan_decode": "failed: typed-resource aggregate record count is outside the bounded profile",
+  "candidate_evidence": [
+    "WAsmC automatic 70-record plan and validation passed",
+    "serialized 70-record decoding passed; duplicate ID/name and empty array rejected",
+    "actual WIT-derived generated Rust caller exercised original checked result semantics 2048 times on each Wasmtime and Wasmi",
+    "one additional real WIT method decoded 50 fields 32 times on each engine",
+    "existing invalid graph and lane drift regression passed",
+    "git apply --check against exact base passed"
+  ],
+  "limitations": "Only two methods invoked; not deployed Lib, real MCPGit Host, installed product or Source admission; 64-lane and other independent bounds remain",
+  "sha256": {
+    "many-records-real-wit-candidate-20261028.patch": "e773592d529ef1f5d01e24449dcdaa1ee60b5cf3873e36f9e0a4f94c8bb0af12",
+    "many-records-real70-baseline-20261028.log": "3e92466cf45b29860898e1d1495355f7b878b62ef0d577f70bf694cf3fc0ca5b",
+    "many-records-decode-baseline-20261028.log": "da9f870cd0832b1a437d6c21d2d72c47df3dc7d6593269e851e5bfdce3cddabb",
+    "many-records-real70-final-20261028.log": "04f83c8cabadec85196efe60d70e8987d7db193c88dcefd5613103ac64f26457",
+    "many-records-auto-plan-candidate-20261028.log": "82ec768cd7cf27e0905b02071e847e3b41e64ab4a70e0bddf43f9d52bbe370ab",
+    "many-records-decode-final-20261028.log": "f5a997b2833dcb9089b1953068530f0048078e045dfc2d362997c20fe9b99f3e",
+    "many-records-negative-regression-20261028.log": "aba08ac9c238ff575327bbd2ca4bf55cd91aac88340681bf92edbc83bfd80627"
+  },
+  "source_mainline_modified": false,
+  "formal_release": false
+}
