@@ -1,0 +1,29 @@
+{
+  "schema": "wasmc.many-records-simultaneous-capacity/v1",
+  "source_base": "e5cf8c2174507a62897618d54238e7bccd138d9e",
+  "source_mode": "isolated private archive; not admitted",
+  "provider_49_sha256": "c3ac42b93f4c27e24065abe804b91f54761eff782e2971e947847b3d20ee7e00",
+  "provider_current_sha256": "1fac280b1d3f2d82399e61e49fcb47f1c6ffc6c3d5b3b27e5d98059952fefabd",
+  "shallow_70": "70 distinct record objects concurrently constructed, all read; both compiler APIs, Wasmtime and Wasmi each 160 calls passed",
+  "shallow_128_original": "ordinary compile passed, compile_lib_auto rejected aggregate transport registration count exceeds 128",
+  "shallow_128_candidate": "removing registration-count guard permits both compiler APIs, both engines, 160 calls each",
+  "deep_expression_control": "70-term expression default test thread stack overflow; with 32 MiB test thread stack ordinary compile runs but compile_lib_auto rejects ordinary aggregate IR expression depth exceeds 64; no fix claimed",
+  "shallow_256": "ordinary compile passed; compile_lib_auto traps during call on both CoreLib artifacts; Wasmtime provider trace object_new ordinal193 returned status256; generated cleanup path precedes unreachable; complete reclamation not asserted",
+  "source_observation": "v5 bounded-capacity profile declares MAX_OBJECTS 192 and 8-bit compact slot relationships; exact binary-to-source build not independently established",
+  "regressions": "unit result registration tests and invalid graph/lane test passed",
+  "limits": "No memory-bound CoreLib redesign, Component or real Host proof; no Source admission or release",
+  "hashes": {
+    "many-records-registration128-candidate-20261028.patch": "e588c379d67640cf23f3ba9cb9f2ae93fdcef7e3373f1d1226551231d73106d7",
+    "many-records-simultaneous-corelib-first-20261028.log": "15f451f04578c2e36ffb86f0c223210e48b87ca1d0821cb278ecbc8eaa3b8ac7",
+    "many-records-simultaneous-corelib-stack32m-20261028.log": "c3d5f457df3b9af0bbd9fd732e5eba9dcffb8745a6924c527366d0f60b5e25a6",
+    "many-records-simultaneous-shallow-first-20261028.log": "0b702f87b54dbb11b5be8bdc4017a8b75e9bb4d43735134f0f32bed699da7c29",
+    "many-records-simultaneous128-first-20261028.log": "7af5a0a27345133e670f389b9705ac0f5c8b5fccd1c05373589b8edbd0f6a1d9",
+    "many-records-simultaneous128-candidate-20261028.log": "ac5784afa0bd2a778d58fbb268286a0cad24009d68dc768ffa5e9c775ff3072c",
+    "many-records-simultaneous256-candidate-20261028.log": "8a1b4fe2b55cadb2387f89ba7dd170a9ba564d10608dc9b8839b11dfee1a021d",
+    "many-records-simultaneous256-current-20261028.log": "44f06d11d4301bffd05e52bb09ab6b6bbc2dd38c0e5adbd4ac0873e2fccf6502",
+    "many-records-simultaneous256-trace-20261028.log": "582492b0a90921132a31fdb599fa7e35945935007b975dfa0f3aaf9fab3093d2",
+    "many-records-registration-regression-20261028.log": "3287034e0776acebb3d17127f7808fdbec15becc74acb24319c541265b7af69a",
+    "many-records-registration-negative-20261028.log": "efe0a71cf64493d66902cdf49a1815b19b955b08299387a5e16a11139f75c1fe"
+  },
+  "formal_release": false
+}
