@@ -1,0 +1,31 @@
+{
+  "schema": "wasmc.hosted-json-route-service-witness/v1",
+  "status": "disposable in-process Hosted dispatcher and Service; not live deployment or formal release",
+  "mcpgit_source": "eb8683ac7f6eb83163820ee488e115f539c83e4c isolated archive. Compared against main 5010aec14 route executor: one unrelated max buffered object read change; exact current-main execution is not claimed.",
+  "wasmc_compiler_sha256": "bc994b4f68422cb9a8c28daf1e2fee0a039d074c6d6e05fb04f690c38a3ca62d",
+  "installed_json_root_manifest_sha256": "4afaac1a820001fce70dbe883e18052e6f981f27509888752d22511bcf5c25a7",
+  "lib_artifact_sha256": "82e93fb61e11627d74b086693587fbb1a72d340432445236ae49f7df29670fe7",
+  "app_sha256": "06696562b73ce148c877bf1587e9054685e238cc4e11f3239ca0e5c921260d7f",
+  "source_sha256": "8218031920d4030ebf479e8ba66e3e9d88afaf543dc57f2207310701cde42650",
+  "witness": "Actual temporary McpGitService and TableGit SkillsTable, exact artifact activation, OrganizationRouteRegistry, TableGitWasmtimeRouteExecutor and RegistryHostedPluginDispatcher. Two fresh POST inputs invoked real table.status through Host and returned status 201 with expected JSON.",
+  "host_effect": "Read-only table.status against temporary Service. JSON edits are passed as request data; this test does not independently observe edits persisted or prove production atomic write.",
+  "first_failures": "initial locked test refused stale standalone lab lock; offline metadata added three missing dependency records without replacing all versions. Next build found three unrelated historical fixture struct-field changes, then route activation required programmable-query.wit. All logs retained; corrected test passed.",
+  "receipt_correction": "compile-route.log inherits old fixture scope wording; actual script used newly generated route-preparation Rust 2024 template and transfer, exact input pinned by receipt.",
+  "evidence_sha256": {
+    "producer2024-hosted-route-first-20261028.log": "4c7d3c200751c4632694365498d24f55b614cc17355d27713320880f1be4c977",
+    "producer2024-hosted-route-metadata-v2-20261028.log": "a7b6598699851f5a1d0e46b3ff5814bfd6341532dbd7ec377c11a6a7cf4e07dd",
+    "producer2024-hosted-route-v2-20261028.log": "de66944b25c5f4619088d677058828c878007f7105cc2e68259dd445d24e7b8a",
+    "producer2024-hosted-route-v3-20261028.log": "24f35309d1de84eb641d7733236f3ab29a163aa7d187fbbd6371795d9d8e7b63",
+    "producer2024-hosted-route-v4-20261028.log": "cd3fc83b20cd5e2f347597801063c1674a5af917ffccaead7188fab3057c37c4",
+    "producer2024-hosted-route-fixture-20261028.patch": "bc2fff83ca59574f7a6204e890a7f59e9b0e48e3059cf982120c1b4b7694d50e",
+    "compile-route.log": "ab0508997a6d37d416a609fc9d8481963cfc55b329b31c0e7965eb21960b86ad",
+    "route-prepare.log": "dd04810d44c0c2ffb84675c074a6c1648cfe1117153fc744c9940a50309fb500",
+    "hosted-table-status-wasmc-20261029.wasmc": "8218031920d4030ebf479e8ba66e3e9d88afaf543dc57f2207310701cde42650",
+    "hosted-json-route-test-20261029.rs": "74d34cec48a6841b0076e1507466a7c7b7709a093b870057992ddf2668ccae88"
+  },
+  "limitations": [
+    "This is a temporary in-process Hosted dispatcher, not HTTP against the running mainmcpgit instance.",
+    "JSON Lib is linked into WAsmC application; dynamic production Lib selection and independent Rust SDK production route are not demonstrated.",
+    "Private Source changes and release remain unadmitted; public release and anonymous readback remain incomplete."
+  ]
+}
