@@ -1,0 +1,21 @@
+{
+  "schema": "wasmc.native-wide300-cleanup-regression/v1",
+  "candidate_mode": "isolated SDK16MiB, 64-field guard removal and list-drop correction; not admitted Source",
+  "sdk_bytes": 6979161,
+  "sdk_sha256": "9319633b43d6b9bbaa8f0d73e72627356283c232f1cab09d06c283cb105f1948",
+  "provider_sha256": "919b4d275add2e26809359f136749ad958f5393e2e00a5040ded4861f4c13da9",
+  "manifest_sha256": "41e2be9507b21e94c473324d6925e67962ac7deb786e29854b792cbc8830a426",
+  "test_patch_sha256": "afa9f2c37d855fa5660e74cb86f12dc623d4a54153f32e37ca353afc0aa5d48d",
+  "cleanup_patch_sha256": "4b9495fa5a8e312893bd9d5505e0778b648b946f63f7b1e3d425246960192181",
+  "real_300_test": "ordinary WAsmC, real Rust/WIT provider, 300 distinct string fields checked as complete returned list on Wasmi and Wasmtime, three successful calls per engine; string return regression",
+  "projection_failure": "on each engine injected invalid view, received window error and verified cleanup count, then original valid call succeeded",
+  "engines_new_store_per_call": true,
+  "logs_sha256": {
+    "wide160_projection_failure": "d35d28af61821bb95dd74612fa2486b5d0d0dcb5cdd4fd72d511be9ea38138ac",
+    "real_rust300_build": "a67bfb359011bcffaeba8f59d4f35ca4c8d42fde824bbe5febd85d1929b6cb29",
+    "wide300_end_to_end": "65da34471a08096035f11d97d03b9af6e596cd6ec95294a175de60f582c67983"
+  },
+  "limit_classification": "value_codec MAX_FIELDS 256 is checked-record SDK path; this 300-field test covers Canonical path only, not checked-record SDK",
+  "formal_source_admission": false,
+  "formal_release": false
+}
