@@ -2,7 +2,7 @@
 import {join,dirname,resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {readFileSync,lstatSync} from 'node:fs';
-import {checkedCurrentCatalog,hash,resolveCurrentPackage,searchCurrentRelease,verifyCurrentRelease,currentProductReader,currentProductPaths} from './current-lib-release-v3.mjs';
+import {checkedCurrentCatalog,hash,resolveCurrentPackage,searchCurrentRelease,searchCurrentReleaseV4,verifyCurrentRelease,verifyCurrentReleaseV4,currentProductReader,currentProductPaths} from './current-lib-release-v3.mjs';
 import {installCurrentLib} from './lib-install.mjs';
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
 const read=currentProductReader(root);
@@ -14,6 +14,14 @@ const flags=(values,allowed)=>{
 };
 try{
   const bytes=read('catalog/libs-current-v2.json');let output;
+  const policyFor=pin=>{
+    const catalog=checkedCurrentCatalog(bytes,pin),cohortBytes=read(catalog.cohort.path);
+    if(cohortBytes.length!==catalog.cohort.bytes||hash(cohortBytes)!==catalog.cohort.sha256)throw Error('cohort identity mismatch');
+    const schema=JSON.parse(cohortBytes).schema;
+    if(schema==='wasmc.public-current-refresh-cohort/v2')return {verify:verifyCurrentReleaseV4,search:searchCurrentReleaseV4};
+    if(schema==='wasmc.public-current-refresh-cohort/v1'||schema==='wasmc.public-current-composition-cohort/v1')return {verify:verifyCurrentRelease,search:searchCurrentRelease};
+    throw Error('unsupported current cohort schema');
+  };
   if(command==='search'){
     const words=[],pairs=[];
     for(let i=0;i<args.length;i++){if(args[i].startsWith('--')){pairs.push(args[i],args[++i]);}else words.push(args[i]);}
@@ -21,13 +29,13 @@ try{
     if(!v['--catalog-sha256'])throw Error('independent catalog SHA256 required');
     for(const key of ['--offset','--limit'])if(v[key]&&!/^(0|[1-9][0-9]*)$/.test(v[key]))throw Error('invalid pagination');
     if(v['--bound-only']&&!['true','false'].includes(v['--bound-only']))throw Error('invalid bound-only');
-    output=searchCurrentRelease(bytes,v['--catalog-sha256'],read,
+    output=policyFor(v['--catalog-sha256']).search(bytes,v['--catalog-sha256'],read,
       {text:words.join(' '),package_id:v['--package']??null,profile:v['--profile']??null,bound_only:v['--bound-only']==='true'},
       Number(v['--offset']??0),Number(v['--limit']??64),currentProductPaths(root));
   }else if(command==='resolve'){
     const [id,version,...options]=args,v=flags(options,['--catalog-sha256','--manifest-sha256','--root-inventory-sha256']);
     if(Object.keys(v).length!==3)throw Error('exact catalog/manifest/root identities required');
-    verifyCurrentRelease(bytes,v['--catalog-sha256'],read,currentProductPaths(root));
+    policyFor(v['--catalog-sha256']).verify(bytes,v['--catalog-sha256'],read,currentProductPaths(root));
     output=resolveCurrentPackage(bytes,v['--catalog-sha256'],{id,version,manifest_sha256:v['--manifest-sha256'],root_inventory_sha256:v['--root-inventory-sha256']},read);
   }else if(command==='install'){
     const [lockPath,destination,...options]=args,v=flags(options,['--catalog-sha256','--lock-sha256','--mirror']);
