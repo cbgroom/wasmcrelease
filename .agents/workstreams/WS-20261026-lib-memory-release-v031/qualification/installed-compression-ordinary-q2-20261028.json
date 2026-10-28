@@ -1,0 +1,25 @@
+{
+  "schema": "wasmc.installed-compression-ordinary-q2/v1",
+  "root_manifest_sha256": "b3b8ccc8965264dd8fad2b91eed71c2e600071ebba58987858a3be8f7080cfe0",
+  "artifact_sha256": "3948c1432c8c8e55fbb390cd50aa00f4699ca4f20964744e1bc7756a3df8bba0",
+  "provider_sha256": "8231aba425ef1bb0aa07a760ff4c77917e247382ef73a41408db6b6b1cb40b1e",
+  "ordinary_source_sha256": "25fd5f4ce07bfa59e035fe753da99cad2077e0d8be2052a7d9c1c87674fa6c66",
+  "cases_sha256": "178c3fcebbbd77adb436fdc7eabedbbb0fc54eed8c6f572dacf9e1300bd829c2",
+  "runtime": "Wasmi 2.0.0 and Wasmtime 49.0.2; two cases x two rounds per engine, each invocation a new Store",
+  "coverage": "Ordinary WAsmC builds byte lists, calls exact installed Lib to decompress a host-generated gzip and returns exact eight bytes; malformed gzip returns invalid-stream. Wrong root and bundle pins and missing export rejected. Independent checkQ2Evidence passed.",
+  "compiler": "private isolated SDK-and-license 16 MiB producer candidate; not Source-admitted",
+  "transfer": "test-only syntax adaptation of generated bridge, Rust 1.99.1 edition 2024; not the official producer or proof of universal edition policy",
+  "transfer_source_sha256": "f929a249e66560c147734f0fab03d4bea4f317eec0d506743a7ad04fcc03df39",
+  "runner_source_sha256": "2b7b4d5611afdc6629f09d26df531da19c6cd951915e9cdd72acc5302b75edb6",
+  "runner_binary_sha256": "354cd6453233f5afc3cc72a65ab60a1011ac2d4ae9c17abf8b8da410feaf8430",
+  "app_sha256": "8edc4e10de81ef56b2e308b20c69c8a6cc1195342128fee5ef1430eb69bc9ebd",
+  "bundle_sha256": "950e2d63fd8a5faaf050ba73350823f5d55d54a8e649292c6b8748c23b50286c",
+  "receipt_sha256": "af6a5aa9d7f6421179cc3b4e9fdc3229e4a82ca25314f35224d530feabfe6b54",
+  "preserved_failures": {
+    "old_2m_license_reopen": "380a862ffdf99677509ea51e3fa68751db0a83c02c1bd88f34cd720486c9bf47",
+    "merge_tool_symlink": "ea6c63a08256915e51a473b3763e1f6a84e5a89a058f7c567fbb861dfdf966f4",
+    "list_literal_projection": "172c86d83e2b37094f5d5199166a74a46e351b31fcab44b0882fcf8d6662ae91"
+  },
+  "limitations": "Controlled installation, small-input Core app, no Component, no same-Store soak, real Host or formal release. List literal rejection remains open.",
+  "formal_release": false
+}
