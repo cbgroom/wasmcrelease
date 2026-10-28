@@ -1,0 +1,30 @@
+{
+  "schema": "wasmc.large-wit-end-to-end-candidate/v1",
+  "source_base": "c1306cc8ec4497d2190f7ac72501979e4038bfae",
+  "source_mode": "private archive, not integrated",
+  "changes": "remove explicit WIT 1/2 MiB caps from input, dependency reader, sealing, package verifier and scalar caller preparation; retains semantic/identity validation; includes earlier Core/WIT dependency-count changes",
+  "baseline": "valid >2 MiB dependency rejected in discovery; after discovery-only change rejected in sealing; scalar caller subsequently rejected separate package-read and scalar-preparation WIT caps",
+  "payload": "2,200,657-byte sealed WIT, mostly valid documentation; separate root and dependency variants",
+  "proof": "actual wasmc lib build, package reopen, Core and Component choose-u64 execution for both variants; separate composed Root reopens and real Rust 2024-generated SDK caller is prepared and executed, result42",
+  "tests": "16 WIT unit, one package-reader, seven Core-composition, seven WIT integration tests pass",
+  "preserved_failures": "baseline discovery/sealing, initial test borrow error, wrong import namespace, initial Rust rlib name and intermediate WIT caps retained",
+  "limitations": "large payload mainly documentation; canonical and typed caller WIT read limits changed but not independently exercised with >2 MiB; SDK/artifact/metadata and path/depth caps, real Host, source admission and release remain; no overall-memory-only claim",
+  "hashes": {
+    "large-wit-composition-candidate-20261028.patch": "4ad82518ee4dce6dde2038f470625f51a6652e860c4af76a2a4955d4003dace4",
+    "large-wit-baseline-20261028.log": "7fb95e38bb9481b03574f995af604c5beac3018c11c9b20b298dc2554f84c67b",
+    "large-wit-discovery-candidate-20261028.log": "970625fbb9bf35a8d4e8cf3f1bc4ed4a7ee546af84eeaf92f05db83b2db2d27d",
+    "large-wit-candidate-first-20261028.log": "fb3116b755271d2275c86e641b16b3ab06b2ae217164bcf5eb374a563efaf124",
+    "large-root-wit-candidate-first-20261028.log": "46c605704078462e1aba62adc8495b975d87a88576d196f9a6879aec632f8d54",
+    "large-wit-prepared-caller-first-20261028.log": "8ac10290c72004682f501ce3a25e62b134505b994c1a6c074fdaded64eefb283",
+    "large-wit-prepared-caller-second-20261028.log": "9e691abd1940aff75289c6e13b40a5d2ca842b4abbb6e0777fea228e7522b81a",
+    "large-wit-prepared-caller-candidate-first-20261028.log": "d6a54c40511a205ae09e50cd1d9887277ac8037b41efac2cfc716e8775f81a0e",
+    "large-wit-prepared-caller-candidate-second-20261028.log": "af8ea571430cb9764a050e9ef450564572a2d758e278cd91fec5608f379441c6",
+    "large-wit-real-rust-caller-first-20261028.log": "cba7cfc20b6cfb26c86e7e7877be8a19580f688508d8a0ad0f0b4191d5b0942c",
+    "large-wit-real-rust-caller-second-20261028.log": "81298aadef82629193bb7224341f20f164758a7d971502247b41c7f16b702c2a",
+    "large-wit-unit-final-20261028.log": "07cb97e979cc5f057b108e03c2639024e18106bd6e5c8a666f697ee1dbd75378",
+    "large-wit-package-reader-regression-20261028.log": "961b05497153da71006dd674c633d3edf1ce7d17c9a72e1ec65f6a2abc544f40",
+    "large-wit-core-final-20261028.log": "ed0ef01736546ad40f1370c78e180d6aae3fdb04b95ed9ba3afaaa809ccc5e85",
+    "large-wit-integration-final-20261028.log": "8be809433091636c2d4a1778cfabefd80711cb1c4eea2a2957b4493342748e91"
+  },
+  "formal_release": false
+}
