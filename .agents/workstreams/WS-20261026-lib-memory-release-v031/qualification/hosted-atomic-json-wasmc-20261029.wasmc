@@ -1,0 +1,58 @@
+package conformance:checked;
+interface api {
+ record boolean_value {present:bool,value:bool}
+ record json_field {name:string,value_json:string}
+ enum edit_kind {set,remove}
+ record edit {kind:edit_kind,path:string,value_json:string}
+ enum json_error {invalid_json,invalid_pointer,missing_target,type_mismatch,invalid_index,out_of_range,invalid_operation,allocation_failed}
+ record query_pair {name:string,value:string}
+ record header {name:string,value:list<u8>}
+ record request {method:string,path:string,parameters:list<query_pair>,query:list<query_pair>,headers:list<header>,body:list<u8>}
+ record response {status:u16,body:list<u8>}
+ run:func(req:request)->response {
+  let payload:string = document::compact_or_bytes(req.body,"{}");
+  let many_result:result<boolean_value,json_error> = document::read_bool(utf8::encode(payload),"/many");
+  let invalid_result:result<boolean_value,json_error> = document::read_bool(utf8::encode(payload),"/invalid");
+  let many:bool = match many_result {ok(value)=>value.present && value.value,err=>false};
+  let invalid:bool = match invalid_result {ok(value)=>value.present && value.value,err=>false};
+  let mut array_count:u32 = 1;
+  if (many) { array_count=300; }
+  let mut parts:list<string> = list.new();
+  let mut index:u32 = 0;
+  while (index < array_count) {
+   if (invalid) {parts.push("not-json");} else {parts.push("123");}
+   index=index+1;
+  }
+  let array_text:string = document::array_from_values_or(parts,"[]");
+  let mut fields:list<json_field> = list.new();
+  fields.push({name:"items",value_json:array_text});
+  fields.push({name:"name",value_json:document::quote_string("雪")});
+  let object_text:string = document::object_from_fields_or(fields,"{}");
+  let mut changes:list<edit> = list.new();
+  changes.push({kind:0,path:"/operations/0/row/value",value_json:object_text});
+  changes.push({kind:0,path:"/operations/0/row/processed",value_json:"true"});
+  changes.push({kind:0,path:"/operations/0/row/sequence",value_json:"42"});
+  let edited_payload:string = document::edit_or_bytes(utf8::encode(payload),changes,"bad");
+  let mut status:u16 = 204;
+  if (true) {
+  let called:result<u32,variant {invalid_argument(string),permission_denied(string),stale_revision(string),transaction_rejected(string),budget_exceeded(string)}> = service::invoke("table.transact",edited_payload);
+  let live:u32 = match called {ok(handle)=>handle,err=>0};
+  status = match called {ok=>200,err=>503};
+  if (status == 200) {
+   let sized:result<u32,variant {invalid_argument(string),permission_denied(string),stale_revision(string),transaction_rejected(string),budget_exceeded(string)}> = table::response_len(live);
+   let count:u32 = match sized {ok(length)=>length,err=>0};
+   status = match sized {ok=>200,err=>502};
+   if (status == 200) {if (count == 0) {status=598;}}
+   let retired:result<unit,variant {invalid_argument(string),permission_denied(string),stale_revision(string),transaction_rejected(string),budget_exceeded(string)}> = table::response_drop(live);
+   status = match retired {ok=>status,err=>502};
+   if (status == 200) {
+    let stale:result<u32,variant {invalid_argument(string),permission_denied(string),stale_revision(string),transaction_rejected(string),budget_exceeded(string)}> = table::response_len(live);
+    let released:bool = match stale {ok=>false,err(failure)=>match failure {invalid_argument=>true,permission_denied=>false,stale_revision=>false,transaction_rejected=>false,budget_exceeded=>false}};
+    if (released) {status=201;}else{status=597;}
+   }
+  }
+  }
+  let body:list<u8> = utf8::encode(payload);
+  return {status:status,body:body};
+ }
+} world app {export api;}

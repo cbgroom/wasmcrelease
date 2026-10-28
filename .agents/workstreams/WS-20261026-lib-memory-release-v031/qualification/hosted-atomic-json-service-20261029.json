@@ -1,0 +1,26 @@
+{
+  "schema": "wasmc.hosted-json-atomic-write-witness/v1",
+  "status": "controlled in-process Hosted dispatcher and temporary MCPGit Service; not production deployment or formal release",
+  "mcpgit_source": "eb8683ac7f6eb83163820ee488e115f539c83e4c isolated source archive; not exact current main",
+  "compiler_sha256": "bc994b4f68422cb9a8c28daf1e2fee0a039d074c6d6e05fb04f690c38a3ca62d",
+  "json_root_manifest_sha256": "4afaac1a820001fce70dbe883e18052e6f981f27509888752d22511bcf5c25a7",
+  "json_lib_sha256": "82e93fb61e11627d74b086693587fbb1a72d340432445236ae49f7df29670fe7",
+  "app_sha256": "27ca90371c02835a3a6cf4a0d89def4c8fed731b4d4cddc36bc3ab05857a6304",
+  "test": "Two fresh POST requests through actual Hosted dispatcher and route executor to temporary Service table.transact; exact same app artifact, separate Wasm stores. Read back two rows and assert JSON constructed by guest, one and 300 items, and edited fields.",
+  "fuel": "default 10000000 failed with fuel exhaustion; independently read back zero rows. Both writes passed with explicit test budget 1000000000; no claim of actual fuel usage or production sizing.",
+  "evidence_sha256": {
+    "producer2024-hosted-route-write-first-20261029.log": "e009bfa570b8c06e93b4bca8103a0efb7d5eb598841a7f5036af2cf3f6f9b5d9",
+    "producer2024-hosted-route-write-diagnostic-20261029.log": "c1c5f10dbbebdd55feed75b6339f666915d6b70f0fe4b445112904e22cd68004",
+    "producer2024-hosted-route-write-fuel1b-20261029.log": "5ae562b62830bcef881357c5be4d2946310180a602ee147805c856d40059732c",
+    "producer2024-hosted-write-fixture-20261029.patch": "59a0c41639f8e8d8d6aed2de14585d1bd02b7c32d511dc43f443dca95f2b5bf4",
+    "hosted-atomic-json-wasmc-20261029.wasmc": "0a6a1572285a318c73c857a69bc3983ac21206eea418403fcc4ad25a441f2b73",
+    "hosted-atomic-json-test-20261029.rs": "4db579af9fb6e35398d814e2e848bdd5a230812c856b612b2f1cfe53295f3a30"
+  },
+  "limitations": [
+    "No live production Hosted route or deployed adoption established.",
+    "The WAsmC application embeds JSON Lib; dynamic Rust SDK Lib selection in a production route is not demonstrated.",
+    "Successful transactions verified; multi-operation rollback and guest handling of rejected transaction responses remain unverified.",
+    "Source admission, release and anonymous release readback remain incomplete."
+  ],
+  "receipt_correction": "Compile helper inherited stale fixture scope wording; actual helper used newly generated Rust 2024 route preparation template and transfer."
+}
