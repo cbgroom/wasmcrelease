@@ -48,15 +48,32 @@ const wrongTool = join(tmp, 'wrong-tool');
 assert.notEqual(rebind(resolve(source), 'wasmc-data-relational', wrongTool, '0'.repeat(64)).status, 0);
 assert.equal(existsSync(wrongTool), false);
 const missingSource = join(tmp, 'missing-parent-source');
-assert.notEqual(rebind(resolve(source), 'wasmc-csv', missingSource).status, 0);
+assert.notEqual(rebind(resolve(source), 'wasmc-text', missingSource).status, 0);
 assert.equal(existsSync(missingSource), false);
 const changedParent = join(copy, 'libspec/wasmc-data-relational/lib.json');
 const parentProjection = JSON.parse(readFileSync(changedParent));
 const parentDelta = join(copy, parentProjection.source_packet.root, 'parent-source/delta.rs');
-writeFileSync(parentDelta, Buffer.concat([readFileSync(parentDelta), Buffer.from('\n// altered\n')]));
+const originalParent = readFileSync(parentDelta);
+writeFileSync(parentDelta, Buffer.concat([originalParent, Buffer.from('\n// altered\n')]));
 const parentOutput = join(tmp, 'changed-parent');
 assert.notEqual(rebind(copy, 'wasmc-data-relational', parentOutput).status, 0);
 assert.equal(existsSync(parentOutput), false);
+writeFileSync(parentDelta, originalParent);
+for (const [id, version] of [['wasmc-data-core', '0.0.2'], ['wasmc-owned-algorithms', '0.1.2'],
+  ['wasmc-csv', '0.0.3'], ['wasmc-data-compute', '0.0.3'], ['wasmc-data-expr', '0.0.3'], ['wasmc-data-profile', '0.0.3']]) {
+  const out = join(tmp, id), r = rebind(resolve(source), id, out);
+  assert.equal(r.status, 0, r.stderr);
+  const data = JSON.parse(r.stdout);
+  assert.equal(data.version, version);
+  assert.equal(data.base_source_fingerprint, '10b7d95f6ec08bb128e494c91a8710c1e3e9a293aeb95e91dd531cfffc3ed042');
+  assert.equal(data.wit_closure.normalized_sha256 ?? data.wit_closure.authored_sha256, data.wit_closure.delivered_sha256);
+}
+const baseDelta = join(copy, 'admission/current-composition-inputs-v1/libspec/wasmc-data-core/delta.rs');
+writeFileSync(baseDelta, Buffer.concat([readFileSync(baseDelta), Buffer.from('\n// altered\n')]));
+const baseOutput = join(tmp, 'changed-base');
+assert.notEqual(rebind(copy, 'wasmc-data-core', baseOutput).status, 0);
+assert.equal(existsSync(baseOutput), false);
 console.log(JSON.stringify({accepted: true, controls: ['valid exact packet', 'existing output', 'wrong assembly pin', 'tampered packet',
-  'two WIT-rebound sources', 'wrong WIT tool pin', 'missing authoring parent', 'tampered parent'],
+  'two WIT-rebound sources', 'wrong WIT tool pin', 'unsupported projection', 'tampered parent',
+  'six base cohort sources', 'tampered base source'],
   output_delta_sha256: receipt.files['delta.rs'], temporary_root: tmp, formal_release: false}));
