@@ -1,0 +1,24 @@
+{
+  "schema": "wasmc.corelib-source-reference-lifetime-bound/v1",
+  "source_commit": "ff9a3a1ac7a4e68690ec2179cf896ad18f3dfd6c",
+  "source_commit_in_pr26": true,
+  "current_source_files_unchanged_between_ff9_and_pr26": true,
+  "input_hashes_matched": 16,
+  "prior_raw_build_sha256": "38d73df5674a2ebf0897e8cfd2de7428e522cf6299a78c6e22164ecdd75985f9",
+  "raw_artifact_hash_matches_prior_receipt": true,
+  "sealed_artifact_sha256": "8231aba425ef1bb0aa07a760ff4c77917e247382ef73a41408db6b6b1cb40b1e",
+  "provenance_limit": "16 source input hashes and earlier source/raw receipt agree; no independent rebuild performed",
+  "representation": "one success bit, 32-bit store identity and 31-bit never-reused reference token; IDs shared across reference classes",
+  "source_limit": "cumulative identity allocation exhausts at 0x7fffffff even when live objects are freed; object slots grow dynamically",
+  "diagnostic": "native unit test sets counter to 0x7ffffffe, creates and drops two objects, verifies third object_new returns resource_limit 256 and stale handle remains invalid; this does not execute 2^31 real allocations",
+  "unit_suite": "47 passed, 0 failed under stable Rust and selected feature set",
+  "initial_diagnostic_feature_failure": "omitting std_string_list_v0 prevented test compilation due to list_clear; preserved, then selected complete feature set",
+  "remaining": "requires lifetime/ABI design that preserves stale-handle and store isolation semantics; no fix, Wasm exhaustion proof, Source admission or formal release",
+  "hashes": {
+    "corelib-reference-exhaustion-diagnostic-20261028.patch": "50d7ff82386bf687349d28eceaba310bad368a6644c38c3d8d33f9c3d659b36f",
+    "corelib-reference-exhaustion-baseline-20261028.log": "35e5a1b914a2c405d6c36071c2e6402290d8f17237abbdce283c808e94b8b448",
+    "corelib-reference-exhaustion-fullfeatures-20261028.log": "5afa39cb874f7293ae81dc9f8da9220798f4ede8f5c64477b0dd75378c01e9a3",
+    "corelib-reference-exhaustion-full-suite-20261028.log": "2a43e664a6c49ae38f0b022f7762594c1b4afa7ff9873a277f6ab1bae3bd685f"
+  },
+  "formal_release": false
+}
