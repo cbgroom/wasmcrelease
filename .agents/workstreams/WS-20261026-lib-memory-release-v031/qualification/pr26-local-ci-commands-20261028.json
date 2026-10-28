@@ -1,0 +1,30 @@
+{
+  "schema": "wasmc.pr26-local-ci-commands/v1",
+  "source_head": "c1306cc8ec4497d2190f7ac72501979e4038bfae",
+  "base_head": "55415f7ced6ad2408e3f44ae7964bd0385fcc569",
+  "host": "macOS aarch64",
+  "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+  "wasm_tools": "1.255.0",
+  "wasm_opt": "126",
+  "node": "26.12.1",
+  "bun": "1.3.14",
+  "deno": "2.9.4",
+  "local_results": {
+    "agent_views_cargo_check": "pass",
+    "generates_exact_cross_runtime_documents": "1 pass",
+    "builds_and_publishes_one_complete_root_skill_package": "1 pass, isolated fixture",
+    "make_rust_standard_lib_aggregate_v0_acceptance": "6 tests pass; Core and Component package, reopen and SDK test"
+  },
+  "remote_checks": {
+    "run_40444914318_job_121993765758": "completed failure, steps empty, logs unavailable",
+    "run_40444914285_job_121993765754": "completed failure, steps empty, logs unavailable"
+  },
+  "sha256": {
+    "pr26-agent-views-check-20261028.log": "ab9ada280bdc5571a4335a7eb3cc956b9ce3763f7f3057d36f2252f14ef8c5b9",
+    "pr26-agent-views-document-20261028.log": "da9d28a290a113d038f6b63f485566ed98b88395f2c3ee03a257ce9d0e1dcf79",
+    "pr26-agent-views-publish-20261028.log": "f75bd3ee7b107fc27c953b39b556ccc7b3af7f8b32d0eb422dbde5e5e973b92a",
+    "pr26-standard-lib-acceptance-20261028.log": "82188bea2db0bfcac246290ec99e9d9a36c82f230bbcb1e1dc13840237a35aa5"
+  },
+  "limitations": "macOS local result is not Linux hosted CI; different Node version; no replacement of remote checks, no PR merge, no formal release",
+  "formal_release": false
+}
