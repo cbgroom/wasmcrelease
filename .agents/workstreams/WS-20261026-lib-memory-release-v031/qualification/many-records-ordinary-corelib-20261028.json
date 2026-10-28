@@ -1,0 +1,28 @@
+{
+  "schema": "wasmc.many-records-ordinary-corelib/v1",
+  "source_base": "e5cf8c2174507a62897618d54238e7bccd138d9e",
+  "source_mode": "private archive; includes record-count and checked-field candidates",
+  "provider": "CoreLib 4.9.0 exact artifact",
+  "provider_sha256": "c3ac42b93f4c27e24065abe804b91f54761eff782e2971e947847b3d20ee7e00",
+  "source": "70 declared records; creates and reads the final record; varying integer inputs",
+  "baseline": {
+    "compile": "160 calls on each engine pass",
+    "compile_lib_auto": "fails automatic FastAPI plan accepts at most 64 record declarations"
+  },
+  "candidate": {
+    "compile": "160 calls on each engine pass",
+    "compile_lib_auto": "160 calls on each engine pass",
+    "engines": [
+      "Wasmtime",
+      "Wasmi"
+    ],
+    "artifact": "Core Wasm validated before execution"
+  },
+  "evidence_sha256": {
+    "many-records-ordinary-corelib-candidate-20261028.patch": "09e326af3d4d63eb590c38a70345801f7a5ae2810849d02a2484d6347a6a7dea",
+    "many-records-ordinary-corelib-baseline-20261028.log": "c5127ce98a08f1b7d760437ad5e2b1d97c66ae757133ff0148f8430b0b93c0b0",
+    "many-records-ordinary-corelib-first-20261028.log": "c050bd053c6c984396be97a6b8d5e25629eddcc24e8413c1e5607fb41a270ba3"
+  },
+  "limitations": "one of the 70 types is instantiated; no Component, installer or real MCPGit Host verification; candidate not Source-admitted or released",
+  "formal_release": false
+}
