@@ -1,0 +1,82 @@
+{
+  "schema": "wasmc.text-host-16m-witness/v1",
+  "root": "installed controlled fixture ce6747575b4a1f7c093665730fe0e3768b975daffd6a474e897de9d390d1f5e0",
+  "artifact_sha256": "5abf5dfbc96a7eb077f549c4e3fcf58e103286ea4432d3cd2a209f3e27b06e45",
+  "compiler_sha256": "b27229753141562c6bde0c876647ab7d3f27548d89b90a559524075fc8a699a2",
+  "wasmc_app_sha256": "cee0e677127d61d8e2d4ced1b58d2e062252a3340686ca41ab29b1231ffc71bf",
+  "host_binding_sha256": "db2860dff2c4758aa6e44bbfa204cf2486d0c83b3deafbc1424d69b57d8967c5",
+  "test_host_request_limit_bytes": 16777216,
+  "migration": {
+    "schema": "wasmc.candidate-transfer-edition2024/v1",
+    "source_sha256": "9d8f114196d54b729048916e73249211dcaef8572241d63843e5c231fd6b213f",
+    "converted_sha256": "10ad46c9fa2f7228d7a4a559b680764abdf4b6bfe72b132c85f69cf1a7c87297",
+    "extern_blocks": 32,
+    "no_mangle": 155,
+    "export_names": 1,
+    "scope": "syntax-derived candidate; does not repair the producer",
+    "formal_release": false
+  },
+  "derived_rust_wasm_sha256": "71582474607ea7195191bfa59ba259b2f053a8234fba8df3323023823499b54b",
+  "rustc": "1.99.1, edition 2024",
+  "first_unadapted_rust2024_failure_sha256": "1cc44e076627a2cfa29e3273116f7b1c358715ab2a285c4682ae590759e62a38",
+  "first_partial_syntax_migration_failure_sha256": "3f3907f61517f61f602c68205e8ab35a8456405d53101e285b508ee01e6ce00b",
+  "checks": {
+    "node": {
+      "accepted": true,
+      "host": "node",
+      "app_sha256": "cee0e677127d61d8e2d4ced1b58d2e062252a3340686ca41ab29b1231ffc71bf",
+      "cases": 34,
+      "basic_calls": 544,
+      "guest_calls": 585,
+      "large_input_bytes": [
+        131072,
+        262144,
+        524288,
+        1048576,
+        1200000
+      ],
+      "unicode_expansion": true,
+      "explicit_host_limit_rejected": true,
+      "host_limit_bytes": 16777216,
+      "exact_host_limit_passed": true,
+      "same_instance_recovery": true,
+      "pending_zero": true
+    },
+    "deno": {
+      "accepted": true,
+      "host": "deno",
+      "app_sha256": "cee0e677127d61d8e2d4ced1b58d2e062252a3340686ca41ab29b1231ffc71bf",
+      "cases": 34,
+      "basic_calls": 544,
+      "guest_calls": 585,
+      "large_input_bytes": [
+        131072,
+        262144,
+        524288,
+        1048576,
+        1200000
+      ],
+      "unicode_expansion": true,
+      "explicit_host_limit_rejected": true,
+      "host_limit_bytes": 16777216,
+      "exact_host_limit_passed": true,
+      "same_instance_recovery": true,
+      "pending_zero": true
+    },
+    "bun": {
+      "accepted": true,
+      "host": "bun",
+      "execution": "unsupported-multi-memory"
+    }
+  },
+  "limitations": [
+    "selected input limit is explicit test Host configuration, not a global production policy",
+    "cold transfer source undergoes syntax-only candidate adaptation; original generator is not fixed",
+    "test Host, not real MCPGit Host",
+    "Bun cannot instantiate multi-memory app",
+    "not formal release"
+  ],
+  "source_control": "Frozen original fixtures unchanged; standalone host binding copy and transferred candidate source",
+  "prior_host_limit_bytes": 1500000,
+  "artifacts_dir": "/Users/youxianshi/.local/state/wasmc-maintenance/rustc-service-1991-20261028/text16-host-20261028"
+}
