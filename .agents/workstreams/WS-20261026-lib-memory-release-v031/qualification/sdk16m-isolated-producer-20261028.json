@@ -1,0 +1,19 @@
+{
+  "schema": "wasmc.sdk-source-16m-experiment-evidence/v1",
+  "candidate_receipt_sha256": "4e09e0232794e89e31fc2fc1e1e201d121e93cf11a1f7c3665df3f9a2e421959",
+  "private_patch_sha256": "03978b27734fe4d8baa0c170b8617987584b6d081414422cfc21cc9bd07c20b1",
+  "producer_sha256": "04ff43e6212caf3b6e4b2ba2907e8f79d5b16fb3cf10ed87bd2cc4eec73be568",
+  "source_base_commit": "c1306cc8ec4497d2190f7ac72501979e4038bfae",
+  "source_mode": "isolated archive based on previous license16m experiment; no Source worktree edit",
+  "tests": [
+    "SDK source reader accepts 16MiB and rejects +1",
+    "strict SDK document verifier accepts 16MiB, rejects +1, preserves other document bound",
+    "atomic dual SDK publication and legacy reopen regression passes",
+    "actual candidate JSON, compression, Data Relational package verify passes"
+  ],
+  "limitations": [
+    "no actual SDK generation above 2MiB demonstrated",
+    "legacy frozen bridge and remaining tooling limits are separate",
+    "no Source history admission or formal release"
+  ]
+}
