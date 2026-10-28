@@ -1,0 +1,17 @@
+--- a/native-value-runner.rs
++++ b/native-value-runner.rs
+@@ -33,12 +33,12 @@
+     if cases.is_empty() || cases.len()>128 || !(1..=128).contains(&rounds) {return Err("case/round budget".into());}
+     let execute = || -> Result<Value, Box<dyn Error>> {
+         let mut bridge = generate_rust_wit_canonical_value_core_bridge(&artifact, &pin(&artifact), &wit, &pin(&wit), module)?;
+-        bridge.source.push_str("\n#[export_name=\"allocate\"] pub unsafe extern \"C\" fn __q2_allocate(n:u32,a:u32)->u32 { __wasmc_canonical_transfer::__wasmc_value_stage_allocate(n,a) }\n");
++        bridge.source.push_str("\n#[unsafe(export_name=\"allocate\")] pub unsafe extern \"C\" fn __q2_allocate(n:u32,a:u32)->u32 { __wasmc_canonical_transfer::__wasmc_value_stage_allocate(n,a) }\n");
+         let transfer_source = output.join("transfer.rs");
+         fs::write(&transfer_source, bridge.source)?;
+         let transfer = output.join("transfer.wasm");
+         let built = Command::new("rustc").args([
+-            "+1.96.0", "--edition=2021", "--crate-type=cdylib", "--target=wasm32-unknown-unknown",
++            "--edition=2024", "--crate-type=cdylib", "--target=wasm32-unknown-unknown",
+             "-Cpanic=abort", "-Copt-level=s", "-Clto=fat", "-Cstrip=symbols",
+         ]).arg(&transfer_source).arg("-o").arg(&transfer).output()?;
+         fs::write(output.join("transfer.stdout"), &built.stdout)?;
