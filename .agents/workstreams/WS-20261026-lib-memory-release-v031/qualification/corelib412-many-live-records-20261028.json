@@ -1,0 +1,44 @@
+{
+  "schema": "wasmc.corelib412-many-live-records/v1",
+  "source_base": "e5cf8c2174507a62897618d54238e7bccd138d9e",
+  "compiler_source": "isolated private archive with record-count/registration and checked-fields changes",
+  "provider": "existing CoreLib 4.12.0-candidate.1; sealed source-free, not admitted",
+  "provider_sha256": "8231aba425ef1bb0aa07a760ff4c77917e247382ef73a41408db6b6b1cb40b1e",
+  "baseline_provider_49_sha256": "c3ac42b93f4c27e24065abe804b91f54761eff782e2971e947847b3d20ee7e00",
+  "baseline": "256 types: ordinary compile passes, managed compile traps; traced object_new call193 returned status256",
+  "results": {
+    "256": {
+      "calls_per_engine_per_api": 160,
+      "outcome": "pass"
+    },
+    "512": {
+      "calls_per_engine_per_api": 8,
+      "outcome": "pass"
+    },
+    "1024": {
+      "calls_per_engine_per_api": 2,
+      "outcome": "pass",
+      "elapsed_test_seconds": 144.25
+    }
+  },
+  "engines": [
+    "Wasmtime",
+    "Wasmi"
+  ],
+  "compiler_apis": [
+    "compile",
+    "compile_lib_auto"
+  ],
+  "behavior": "all distinct record types instantiated concurrently and each value contributes to the exact result; repeated calls reuse each Store",
+  "sample": "one-second process sample captured during 1024 test observed Wasmtime Module::new compilation; not a comparative benchmark",
+  "hashes": {
+    "many-records-core412-1024-candidate-20261028.patch": "10e7000288b620f7a35564c752499261f6d496aa03788a52cfaf9cfa0f1d3eb2",
+    "many-records-simultaneous256-trace-20261028.log": "582492b0a90921132a31fdb599fa7e35945935007b975dfa0f3aaf9fab3093d2",
+    "many-records-simultaneous256-core412-20261028.log": "70089b8a3a64b762e94db56c1285140d28c0e88dee8412a79c80a23bad921768",
+    "many-records-simultaneous512-core412-20261028.log": "da87434d4c571ebcd1e8d1a42ccab9eb70c91a2a7b143f4b7e67b011ecd1c0c0",
+    "many-records-simultaneous1024-core412-20261028.log": "69fb7677632976cc58e0ce006667067b8f829ae6c995ce3e83eef14b59e6e08a",
+    "many-records-1024-sample-20261028.txt": "5e81cd94412dc3ad1f408470cfda4bc6a36e756c54dd91595323fca326efa36d"
+  },
+  "limitations": "does not prove arbitrary capacity, production performance, Source provenance, installed/Component/real Host behavior, formal source admission or release; earlier deep expression issue remains",
+  "formal_release": false
+}
