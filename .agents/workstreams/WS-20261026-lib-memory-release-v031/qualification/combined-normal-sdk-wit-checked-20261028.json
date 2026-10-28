@@ -1,0 +1,33 @@
+{
+  "schema": "wasmc.combined-normal-candidate-evidence/v1",
+  "status": "isolated Source archive; no Source admission, merge or release",
+  "base": "wasmc-core-sdk-edition2024-experiment-20261028; depends on prior license16m, sdk16m, owned list and native-transfer 2024 candidates",
+  "overlay": "combined-normal-sdk-wit-checked-overlay-20261028.patch; git apply --check passes against exact base",
+  "change": "Integrates checked-record field-count removal with large semantic WIT and dependency cardinality capacity fixes while preserving 2021/2024 exact SDK pair verification.",
+  "conflict": "large WIT patch had one rejected hunk at Component SDK WIT read because Rust 2024 verifier changed nearby lines; applied same bound change manually. Original reject log retained.",
+  "tests": {
+    "core_composition_integration": "7 passed including 65/130 dependencies and prepared Rust caller",
+    "wit_dependency_integration": "10 passed including large WIT, 130 dependency packages, 9000 record identities and typed Component execution",
+    "checked_record": "1 passed for many unrelated valid fields",
+    "historical_ordinary_installed_roots": {
+      "total": 20,
+      "failed": 0,
+      "excluded": "security work and three native prototype Roots outside this verifier profile"
+    },
+    "sdk": "2024 JSON SDK byte-identical to earlier tested e09ba8b source for identical 82e93fb provider"
+  },
+  "evidence_sha256": {
+    "combined-normal-sdk-wit-checked-overlay-20261028.patch": "bdcd00bf50b28d6f65b5f8cfae6902cbf6793a2a900b8688c97f2e2af4e348aa",
+    "combined-candidate-patch-first-20261028.log": "cf9b4aa3709a2b8ebed1c2ea10eaff7695a5169b8bb9081687cd5dea77941e8e",
+    "combined-normal-integration-20261028.log": "5abbc65d82b0a75b40b967577b0c806013f20c38974bd02b4ec457b2262fd3a4",
+    "combined-normal-examples-build-20261028.log": "a4686d2db1dfef2dcaeb9cf7cde010ee3f1a45c12ba3e7c4c08909dd83034f84",
+    "combined-normal-old-roots-20261028.json": "cf6864c5a7f3c99f41bee3f8563c2e51b551b6546ea40f5e519b98dc90d48dda",
+    "combined-normal-sdk-20261028.log": "e96606ecbe5eaba71c756a7a8f14839db400b9ed68c41c18ca054bfbeaa7dfbc",
+    "combined-normal-checked-record-20261028.log": "cec7fafcc6e88bdd0d6078c09aabfb5fe823abb86550ca379ebfe21e1ab39070"
+  },
+  "limitations": [
+    "No full-cohort Q2 or actual MCPGit Host proof.",
+    "Overlay depends on isolated private prerequisites and has not been admitted into Source.",
+    "Hosted PR26 checks and historical Source audit remain failing; no release or anonymous public download claim."
+  ]
+}
