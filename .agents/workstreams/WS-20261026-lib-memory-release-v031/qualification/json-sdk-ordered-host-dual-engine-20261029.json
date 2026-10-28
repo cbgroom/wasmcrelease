@@ -1,0 +1,17 @@
+{
+  "schema": "wasmc.json-sdk-ordered-host-dual-engine/v1",
+  "base": "eb8683ac7f6eb83163820ee488e115f539c83e4c",
+  "candidate_patch_sha256": "0e9b276fb7bdf7a0f50f1ff31b8cfc33728a80705409b22e55fd7f9b9edf32a4",
+  "guest_sha256": "adc0cbc9c361b012bfc796ba75e1b8ab69a7c7274ff4f4d3052dfbc4ebc44ed7",
+  "result": "Wasmi then optimized Wasmtime execute all 26 JSON operations and MCPGit QueryHost bindings; unreviewed import and wrong provider rejected; subsequent fresh Wasmtime session passes with zero live handles. Existing single-Lib and large-input regression passes.",
+  "evidence_sha256": {
+    "json-sdk-mixed-dual-engine-20261029.log": "b352201d886efe960ca80038819d54fca1caa7037f2ce650813248b4cb1ed69a",
+    "json-sdk-mixed-recovery-dual-20261029.log": "68c986965fc1fcbb02a22b1ef3a43413324038b606603fdfbacb717d0f55a296",
+    "json-sdk-ordered-host-dual-test-fixture-20261029.patch": "f8c6eb58a2156d44d8f87e34b7b0d7d730e3b27d36afb67dca5243b66ab980ef"
+  },
+  "limitations": [
+    "Provider table response is a stub; activated JSON Root was loaded through temporary real Service. Not a deployed Hosted route.",
+    "Recovery uses a new invocation and Store; not a same-Store recovery claim.",
+    "No shared overall memory/fuel accounting across Guest and separately instantiated Lib stores; production route integration and both Source/CI admission and release remain open."
+  ]
+}
