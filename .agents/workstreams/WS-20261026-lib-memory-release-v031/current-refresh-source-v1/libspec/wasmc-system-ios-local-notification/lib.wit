@@ -1,0 +1,30 @@
+package wasmc:system-local-notification@0.0.1;
+
+interface local-notification {
+  enum authorization-state {
+    not-determined,
+    denied,
+    authorized,
+    provisional,
+    ephemeral,
+    unknown,
+  }
+
+  record notification {
+    identifier: string,
+    title: string,
+    body: string,
+    payload-json: string,
+    delivery-unix-ms: u64,
+  }
+
+  authorization: func() -> authorization-state;
+  request-authorization: func() -> result<authorization-state, s32>;
+  schedule: func(item: notification, delay-ms: u64) -> result<_, s32>;
+  delivered: func() -> list<notification>;
+  remove: func(identifier: string) -> result<_, s32>;
+}
+
+world system-local-notification {
+  export local-notification;
+}

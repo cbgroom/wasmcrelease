@@ -1,0 +1,46 @@
+package wasmc:data-interchange@0.1.1;
+
+interface adapter {
+  use wasmc:data-core/types@0.0.2.{batch-snapshot};
+
+  record decode-options {
+    batch-rows: u32,
+  }
+
+  enum interchange-error {
+    invalid-options,
+    invalid-batch,
+    empty-input,
+    schema-mismatch,
+    unsupported-type,
+    input-limit-exceeded,
+    batch-limit-exceeded,
+    row-limit-exceeded,
+    output-limit-exceeded,
+    invalid-data,
+    encode-failure,
+    overflow,
+  }
+
+  ipc-file-encode: func(
+    values: list<batch-snapshot>,
+  ) -> result<list<u8>, interchange-error>;
+
+  ipc-file-decode: func(
+    input: list<u8>,
+    options: decode-options,
+  ) -> result<list<batch-snapshot>, interchange-error>;
+
+  parquet-encode: func(
+    values: list<batch-snapshot>,
+  ) -> result<list<u8>, interchange-error>;
+
+  parquet-decode: func(
+    input: list<u8>,
+    options: decode-options,
+  ) -> result<list<batch-snapshot>, interchange-error>;
+}
+
+world data-interchange {
+  export adapter;
+}

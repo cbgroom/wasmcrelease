@@ -1,0 +1,16 @@
+{
+  "schema": "wasmc.lib-refresh-source/v2",
+  "id": "wasmc-resource-counter",
+  "version": "0.0.2",
+  "profile": "resource",
+  "crate": "wasmc_resource_counter_refresh_v2",
+  "artifact_name": "wasmc_resource_counter_refresh_v2",
+  "world": "resource-counter",
+  "description": "Owned stateful counter with wrapping signed arithmetic and isolated resource lifetimes.",
+  "dependencies": [],
+  "apis": [
+    {"api":"constructor","delta":"Create independent counter state.","ecosystem":"Rust Cell","host_authorities":[],"implementation":"lib","origin":"adapted","support":"supported"},
+    {"api":"add","delta":"Wrapping signed addition through a borrowed receiver.","ecosystem":"Rust Cell","host_authorities":[],"implementation":"lib","origin":"adapted","support":"supported"},
+    {"api":"value","delta":"Read current state without transferring ownership.","ecosystem":"Rust Cell","host_authorities":[],"implementation":"lib","origin":"adapted","support":"supported"}
+  ]
+}
