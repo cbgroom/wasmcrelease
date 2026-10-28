@@ -1,0 +1,31 @@
+{
+  "schema": "wasmc.combined-corelib412-records-evidence/v1",
+  "status": "isolated candidate only; not Source admitted or published",
+  "compiler_base": "wasmc-combined-many-records-candidate-20261028, includes WIT, JSON, SDK and record capacity candidates",
+  "provider_sha256": "8231aba425ef1bb0aa07a760ff4c77917e247382ef73a41408db6b6b1cb40b1e",
+  "results": {
+    "256": "160 calls per engine per compiler API, same Store reused",
+    "512": "8 calls per engine per compiler API, same Store reused",
+    "apis": [
+      "compile",
+      "compile_lib_auto"
+    ],
+    "engines": [
+      "Wasmi",
+      "Wasmtime"
+    ],
+    "behavior": "all record objects simultaneously live; every field contributes to exact return value"
+  },
+  "json_crosscheck": "previous combined JSON run used same provider SHA in ordinary WAsmC",
+  "evidence_sha256": {
+    "combined-core412-tests-20261028.log": "726a570e6ce9f775a9237caaf4234498362be8aef3a53864d74f59dca7a68480",
+    "combined-core412-record-256-20261028.rs": "ca52b69a977cb1a41bad5ffb1ec5fba7e16043a700c92ea7d19f9fbb19b8c265",
+    "combined-core412-record-512-20261028.rs": "a5c48c1e125578bd1670ac439380a2260b65ec176a658857f258d3a146ab83e3"
+  },
+  "limitations": [
+    "CoreLib4.12 candidate is not source admitted; no independent reproducible rebuild in this test.",
+    "This does not prove arbitrary capacity or installed Component and real Host behavior.",
+    "The 31-bit never-reused reference identity can exhaust over Store lifetime; independent ABI design remains open.",
+    "Formal release and anonymous download remain incomplete."
+  ]
+}
