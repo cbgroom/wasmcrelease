@@ -1,0 +1,28 @@
+{
+  "schema": "wasmc.aggregate-owned-list-literal-candidate/v1",
+  "patch_sha256": "d0ceb05ed43f612480c017c884e0ab74f440feab30331693e10a0fbd9a8be8a4",
+  "base": "private SDK/license 16 MiB candidate; patch passes git apply check at e5cf8c2174507a62897618d54238e7bccd138d9e",
+  "change": "Managed parser retains list element expressions for automatic aggregate compilation; aggregate projection constructs lists with existing CoreLib move/push and ownership CFG.",
+  "root_manifest_sha256": "4afaac1a820001fce70dbe883e18052e6f981f27509888752d22511bcf5c25a7",
+  "json_artifact_sha256": "82e93fb61e11627d74b086693587fbb1a72d340432445236ae49f7df29670fe7",
+  "ordinary_wasmc": "JSON array constructor with moved string local, Unicode, invalid JSON and empty list; JSON object constructor with record list, nested strings and invalid JSON. Both on Wasmi 2.0 and Wasmtime 49.0.2, two rounds with new Store per invocation. Q2 independent evidence checker passed.",
+  "receipts_sha256": {
+    "string": "215dcf3b84da26b0e07513d4da6cc85e582339ae3ef8de286b7119740ef3ce40",
+    "record": "46a73bf93dca073016e1c70cdd9a7cf891b91ae91cf19856c56069711a2eb83e",
+    "bytes": "913948db83307df657379c18c1b025acc28599b6a6d9612fb140944ba0303cc7"
+  },
+  "same_store": "compile_lib_auto string and scalar literal repeated 160 times each on Wasmi and Wasmtime with CoreLib4.12; string repeated 160 times with CoreLib4.9 as well. Exact live allocation counts are not observed.",
+  "core49_test_sha256": "47248a6fdadb8dcf8d534cb8648b5ea162c800f63e751fb556ef9c6a7488b89e",
+  "negative": "Existing string moved into list cannot be used after move; original AST rejects 256 as u8.",
+  "preserved_logs_sha256": {
+    "scalar_only_rejection": "8dca8b8872370229e7f63711fa20cabe9ad8574c29fcdb65a46df6934987858a",
+    "harness_string_argument_unsupported": "d0b73b1a499c3a7035efd18d3b833ee163a8d24c11d849b17eb65cc2ff3a1f93",
+    "local_string_parser_old_rejection": "f382ac4d087ec9ed7b2a9ef952b719e723570fd64f8770db738f919416910f95",
+    "same_store_dual": "819593978dc7a647e0e4a5beab8b5686aba07ff268b70112646c58d803058228",
+    "same_store_core49": "eb8226c40bd3aa00cbce65aa86e0e3b852d1298f71588b246c787114acb908d5",
+    "sum_regression": "aeeeb68a0875e8a209198f98b3b6116ce56cc8ec6bd990e4a58185d62f1c97a5",
+    "move_negative": "46dd6927847aed4d0407d75a53b4bcedb1687e9856a868209d0c60114e2713e3"
+  },
+  "limitations": "Private candidate, no exact live allocation accounting, other aggregate element graphs, large literal scaling or comprehensive semantic regression. No Source admission, Component/real Host proof or release.",
+  "formal_release": false
+}
