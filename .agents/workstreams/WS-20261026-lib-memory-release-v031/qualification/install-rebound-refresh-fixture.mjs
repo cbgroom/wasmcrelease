@@ -7,7 +7,8 @@ import {attachReleaseLicense, inventory, verifyRoot} from '../../../../scripts/l
 import {hash, resolveCurrentPackage} from '../../../../scripts/current-lib-release-v3.mjs';
 import {installCurrentLib, artifactUrl} from '../../../../scripts/lib-install.mjs';
 
-const [runRoot, receiptPin, out, expectedIdsArg] = process.argv.slice(2);
+const [runRoot, receiptPin, out, expectedIdsArg, licenseMode] = process.argv.slice(2);
+assert.ok(licenseMode === undefined || licenseMode === "preserve-existing");
 assert.ok(isAbsolute(runRoot ?? '') && isAbsolute(out ?? '') && /^[a-f0-9]{64}$/.test(receiptPin ?? ''));
 const receiptBytes = await readFile(join(runRoot, 'refresh-receipt.json'));
 assert.equal(hash(receiptBytes), receiptPin);
@@ -44,7 +45,11 @@ for (const subject of receipt.rows) {
   assert.equal(hash(Buffer.from(JSON.stringify(sourceFiles))), subject.root_inventory_sha256);
   const licensed = join(out, `licensed-${subject.id}`);
   await cp(expectedRoot, licensed, {recursive:true,force:false,errorOnExist:true});
-  await attachReleaseLicense(licensed, license, hash(license), notices);
+  if (licenseMode === "preserve-existing") {
+    assert.equal(verified.manifest.license?.files?.[0]?.sha256, hash(license));
+  } else {
+    await attachReleaseLicense(licensed, license, hash(license), notices);
+  }
   const licensedVerified = await verifyRoot(licensed, subject.id, subject.version, subject.profile, hasResourceCore);
   const files = await inventory(licensed), manifest = JSON.parse(await readFile(join(licensed, 'lib.json')));
   const row = catalog.packages.find(item => item.id === subject.id);
