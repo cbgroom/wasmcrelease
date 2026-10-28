@@ -1,0 +1,118 @@
+{
+  "schema": "wasmc.native-normal-refresh-20261028/v1",
+  "assembly_sha256": "64c9d556a5d280b8cf5fa354e4237eaacd9703970ea3f6fc0b7541ce95e074a4",
+  "recovered_projected_sources": 11,
+  "direct_native_sources": 9,
+  "normal_refresh_packages": 20,
+  "mac_refresh_receipt_sha256": "3fe0abd730713a9fb779db87ad54bc2860f1a18a21b737434c946de1cdf0d72c",
+  "mac_native_status": "17 embedded source only; 3 Node modules syntax checked",
+  "linux_refresh_receipt_sha256": "76dc735806985cde5d8d050d74a27716bd0eba4c609984caae4d77adb686177b",
+  "linux_platform": "linux/arm64 container",
+  "linux_rustc": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+  "linux_c_artifacts": {
+    "wasmc-system-linux-endpoint": "501c20f026e141cd9a8df2bc2bc9e50f7d14fc8914326aa1db8d70c860a1dc2d",
+    "wasmc-system-linux-socket": "89145a8bf4994682827f9c34105f963a18cf797a9e7c37b4318a1bafcddfb5dd",
+    "wasmc-system-linux-uinput": "cfbb59c705f6d3f385d1707d4c46aa8ce1ad81b642c712b183dbac81786cfd42"
+  },
+  "native_producer_argument": "/usr/bin/true: native-only refresh does not call the Wasm producer; no compiler provenance implied",
+  "linux_source_fixtures": {
+    "endpoint": {
+      "accepted": true,
+      "fixture": "endpoint",
+      "handles": 4096,
+      "mappings": 2048,
+      "large_mapping_bytes": 314572800,
+      "retained_completed_operations": 1100,
+      "pending_worker_address_stable": true,
+      "epoll_requested_events": 8192,
+      "kernel_iov_max": 1024,
+      "cleanup": true
+    },
+    "socket": {
+      "accepted": true,
+      "fixture": "socket",
+      "live_handles": 4096,
+      "allocation_refusal_preserves_prior_state": true,
+      "cleanup": true
+    },
+    "uinput": {
+      "accepted": true,
+      "adapter": "Linux-uinput",
+      "keyboards": 256,
+      "configured_keys": 512,
+      "batch_events": 2048,
+      "kernel_boundary": "explicit fixture",
+      "device_qualification": false,
+      "cleanup": true
+    }
+  },
+  "source_fixture_first_failure_sha256": "ff88e301ec5eda7a6102f3020adc279a01890f5393b9c99884168719e21b7a97",
+  "source_fixture_retry": "PASS with explicit nofile 8192, initial container could not allocate required 4096 descriptors",
+  "file_reference_host": {
+    "accepted": true,
+    "large_input_bytes": 17825809,
+    "sha256": "0276b36d27ccb952fd6f89ff9ceeb77ad37726fc481a4385c4583482d2d38fd3",
+    "same_resource_fresh_input": true,
+    "final_counts": {
+      "resources": 0,
+      "windows": 0,
+      "operations": 0
+    },
+    "scope": "reference native boundary on local disposable file; not device or formal release"
+  },
+  "process_reference_host": {
+    "accepted": true,
+    "checks": [
+      "default output17MiB exceeds both old1MiB default and16MiB maximum",
+      "same installed resource accepts fresh2MiB stdin and full output",
+      "caller deadline above single Node timer interval does not overflow or kill early",
+      "explicit caller output limit and timeout retained, subsequent normal call succeeds",
+      "no adapter thirty-second timeout for normal31second process"
+    ],
+    "platform": "darwin",
+    "arch": "arm64",
+    "node": "v26.12.1",
+    "root_manifest_sha256": "032317d60a33b353e5b3d2f8725b1c92162752cdc51d6ccdd9b2a1fa1618dbd5",
+    "host_executor_sha256": "27d36a846a1ce1b887f8b6259b2f43bf6de96157931019ad9f2aeb2c09c308a0",
+    "one_installed_resource_new_inputs": true,
+    "final_counts": {
+      "resources": 0,
+      "windows": 0,
+      "operations": 0
+    },
+    "wasm": false,
+    "current_catalog": false,
+    "formal_release": false
+  },
+  "fresh_linux_host_sha256": "b09c5367d0f6cbbc0bc60753c9b29c52d811fcdaabd3c21e2f2a35c42f81c0b7",
+  "fresh_linux_host_rustc": "1.96.1; host is a separate test executable, not Rust compiler service",
+  "host_build_initial_failure_sha256": "1dcbf78fa1ff3b008837b70d1251d89232ba8de0eef8a669bf98308dff2969bd",
+  "host_build_initial_failure": "offline registry lacks cfg-if 1.0.5; locked online retry passed",
+  "linux_actual_dlopen_host": {
+    "accepted": true,
+    "scope": "Linux exact independently pinned refreshed binaries and Host, real loopback socket; uinput invalid-handle transfer only",
+    "socket_bytes": 3145735,
+    "fresh_input_bytes": 11,
+    "returned_bytes": 3145735,
+    "output_capacity": 3145735,
+    "uinput_transfer_bytes": 12299,
+    "uinput_device_effect": false,
+    "reused_artifacts": false,
+    "fresh_build": true,
+    "installed_roots": false,
+    "socket_manifest_sha256": "162dd5ffc81479f7e9137c49b72f177e2033d654187b22994d8a86d304a0f244",
+    "uinput_manifest_sha256": "8c996d11a94e8e1be351c376ba4e4c1d5b8c421b8d98f3270b2c4f354e1b7996",
+    "formal_release": false
+  },
+  "linux_host_first_receipt_sha256": "76904d4fcc03b0e661cb151a71077fc001e22f0fce263f0ae837ae1dfed577c9",
+  "linux_host_receipt_correction": "first host test incorrectly labelled refreshed package roots installed; corrected in v2; no installer used",
+  "controls": "complete candidate validation, wrong assembly pin, tampered source and no-overwrite passed",
+  "limitations": [
+    "Linux source fixture uinput uses a simulated kernel boundary; no device qualification",
+    "Node file/process reference Host is not MCPGit production Host",
+    "Android and iOS sources packaged only; no physical device qualification",
+    "native-only Linux refresh producer argument is not a Wasm compiler",
+    "dependency notices, full 43-source refresh and formal release remain open"
+  ],
+  "formal_release": false
+}

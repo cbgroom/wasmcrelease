@@ -3,7 +3,7 @@ import {readFile,writeFile} from 'node:fs/promises';
 import {resolve,join} from 'node:path';
 import {createHash} from 'node:crypto';
 import {LibDefinedBoundary} from '../../../host/runtime/lib-boundary/reference.mjs';
-const own=resolve('.agents/workstreams/WS-20261026-lib-memory-release-v031'),root=join(own,'candidate-roots/wasmc-system-process-prototype/0.1.0'),boundary=new LibDefinedBoundary(),resource=await boundary.install(root),checks=[];
+const own=resolve('.agents/workstreams/WS-20261026-lib-memory-release-v031'),root=process.argv[3]?resolve(process.argv[3]):join(own,'candidate-roots/wasmc-system-process-prototype/0.1.0'),boundary=new LibDefinedBoundary(),resource=await boundary.install(root),checks=[];
 const invoke=async(request)=>{const window=boundary.acquireWindow(Buffer.from(JSON.stringify(request))),op=boundary.submit(resource,window),watchdog=setTimeout(()=>boundary.cancel(op),45000);try{const [done]=await boundary.wait([op]);assert.equal(done.state,'completed');const result=boundary.claim(op);return JSON.parse(Buffer.from(result.bytes));}finally{clearTimeout(watchdog);boundary.releaseOperation(op);boundary.releaseWindow(window);}};
 const call=(script,extra={})=>invoke({operation:'process-run',executable:process.execPath,arguments:['-e',script],...extra});
 const check=async(name,fn)=>{await fn();checks.push(name);console.log(JSON.stringify({accepted:true,check:name}));};
