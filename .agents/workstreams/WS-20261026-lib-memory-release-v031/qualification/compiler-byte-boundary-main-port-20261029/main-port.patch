@@ -1,0 +1,65 @@
+--- a/scripts/release-candidate.mjs
++++ b/scripts/release-candidate.mjs
+@@ -443,12 +443,24 @@
+ ]);
+ export function currentV3ProductInputsForVersion(version){
+   return [...currentV3ProductInputs,currentCompatibilityPath(version),
++    ...(usesExpandedCompilerCarrier(version)?['scripts/test-current-compiler-byte-boundary-v031.mjs']:[]),
+     ...(Number(version.split('.')[2])>=30?['scripts/ci-rust-search-recovery.mjs','admission/string-storage-v030.json','admission/string-text-v030/options-v2.json','admission/string-text-v030/previous-cohort-v1.json']:[]),
+     ...(requiresCheckedChunkQualification(version)?['admission/checked-chunk-v0'+version.split('.')[2]+'.json']:[]),
+     ...(Number(version.split('.')[2])>=28?['scripts/test-unit-result-match.mjs']:[]),
+     ...(Number(version.split('.')[2])>=29?['scripts/test-canonical-checked-results.mjs']:[]),
+     ...(requiresIfBranchScopeQualification(version)?['scripts/ci-normal-summary.mjs','scripts/test-ci-normal-summary.mjs','.github/workflows/normal-source-free-consumer.yml','.github/workflows/current-compiler.yml','scripts/test-native-compiler.mjs','scripts/native-package.mjs']:[]),
+     ...(requiresPrivateHelperQualification(version)?['scripts/current-release-version.mjs','scripts/test-current-release-version.mjs','scripts/fresh-agent-learning-v1.mjs','agent-evaluation/fresh-agent-learning-v2.json','agent-evaluation/fresh-agent-learning-v3.json']:[])];
++}
++function usesExpandedCompilerCarrier(version) {
++  assert.match(version,/^\d+\.\d+\.\d+$/);
++  const [major,minor,patch]=version.split('.').map(Number);
++  return major>0||minor>0||patch>=31;
++}
++export function validateCurrentCompilerBytes(raw, compiler, version) {
++  const limit=usesExpandedCompilerCarrier(version) ? 16*1024*1024 : 2*1024*1024;
++  if(hash(raw)!==compiler.sha256||raw.length!==compiler.bytes||raw.length>limit)
++    throw Error('compiler identity or byte budget drift');
++  if(WebAssembly.Module.imports(new WebAssembly.Module(raw)).length)throw Error('compiler imports forbidden');
+ }
+ export function currentCandidateClosure(candidate,read){
+   const rows=new Map(candidate.product_files.map(r=>[r.path,r]));
+@@ -475,9 +487,7 @@
+     const selected=loadBoundProtocol(exact);assert.equal(selected.protocol.release_binding.version,candidate.version);
+   }
+   const raw=exact('current/wasmc_compiler.wasm');
+-  if(hash(raw)!==compiler.compiler.sha256||raw.length!==compiler.compiler.bytes||raw.length>2097152)
+-    throw Error('compiler identity or byte budget drift');
+-  if(WebAssembly.Module.imports(new WebAssembly.Module(raw)).length)throw Error('compiler imports forbidden');
++  validateCurrentCompilerBytes(raw,compiler.compiler,candidate.version);
+   const binaries=[],embeddings=[];
+   for(const [path]of rows){
+     if(path.endsWith('.wasm')){
+--- a/scripts/ci-suite.mjs
++++ b/scripts/ci-suite.mjs
+@@ -39,7 +39,11 @@
+     item('agent-start-execution','examples/agent-start/run.mjs'),
+     item('deterministic-fresh-agent-regression','scripts/wasmc-fresh-agent-evaluation-v0.mjs',['--release-root','.', '--json-out','target/ci/fresh-agent.json'])
+   ];
++  const version=['integrity','candidate'].includes(family) ? JSON.parse(readFileSync(join(root,'catalog/libs-current-v2.json'))).version.split('.').map(Number) : null;
++  const compilerBoundaryChecks=version&&(version[0]>0||version[1]>0||version[2]>=31)
++    ?[item('current-compiler-byte-boundary','scripts/test-current-compiler-byte-boundary-v031.mjs')]:[];
+   if(family==='candidate')return [
++    ...compilerBoundaryChecks,
+     item('current-v3-product-identity','scripts/current-release-identity.mjs'),
+     item('current-complete-product-reopen-negatives','scripts/test-current-product-v3.mjs',['--product','.', '--catalog-sha256','e12684efb3e475ad551eddabda12bc4c196f19edb48e7ace9069fda1ef5e7871','--out','target/ci/current-product-controls'],fixturePermissions),
+     item('current-original-license-reopen-negatives','scripts/test-current-license-policy-v3.mjs'),
+--- a/scripts/test-release-channel.mjs
++++ b/scripts/test-release-channel.mjs
+@@ -44,8 +44,9 @@
+ const ciRows=currentCIProductInputs.map(path=>({path,bytes:bytes.length,sha256:hash(bytes)}));
+ assert.equal(validateCurrentCIProductInputs({product_files:ciRows},()=>bytes),true);
+ const {suiteCases}=await import('./ci-suite.mjs');
++const currentSuiteVersion=JSON.parse((await import('node:fs')).readFileSync(new URL('../catalog/libs-current-v2.json',import.meta.url))).version;
+ for(const family of ['compatibility','integrity','candidate','runtime','security','rust'])for(const test of suiteCases(family))for(const arg of test.args){
+-  if(/^(scripts|examples|sdk)\/.*\.(mjs|sh|toml)$/.test(arg))assert.ok(currentV3ProductInputsForVersion('0.0.23').includes(arg),'CI executable omitted: '+arg);
++  if(/^(scripts|examples|sdk)\/.*\.(mjs|sh|toml)$/.test(arg))assert.ok(currentV3ProductInputsForVersion(currentSuiteVersion).includes(arg),'CI executable omitted: '+arg);
+ }
+ for(const path of ['scripts/validate-source-free-runtime.sh','scripts/validate-current.mjs','scripts/pi-pre-release-gate-v1.mjs','Cargo.toml','scripts/run-pi-learning-model-v1.mjs','scripts/aggregate-native-cli-perf.mjs','scripts/qualify-current-compiler.mjs','scripts/fixtures/ios-wss-cert.pem','scripts/fixtures/ios-wss-key.pem','docs/DYNAMIC_LIB_GRAPH_MODEL.md','host/drivers/tcp/rust/Cargo.toml','scripts/lib-refresh-runner-v2.mjs']){
+   assert.ok(currentCIProductInputs.includes(path));
