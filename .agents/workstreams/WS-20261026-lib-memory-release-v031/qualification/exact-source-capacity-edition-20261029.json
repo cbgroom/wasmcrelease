@@ -1,0 +1,26 @@
+{
+  "schema": "wasmc.exact-source-capacity-edition-verification/v1",
+  "source_commit": "c1306cc8ec4497d2190f7ac72501979e4038bfae",
+  "method": "Git archive of exact Source PR head in isolated directory; apply both reviewed zero-context candidate patches in sequence; no Source push.",
+  "results": [
+    "Core runtime 23/23 tests passed with dual engine and width regressions.",
+    "cargo check --offline --locked --workspace --all-targets --features core-runtime-sdk passed with warnings.",
+    "Independent cdylib cargo check --offline --locked for wasm32 passed with warnings."
+  ],
+  "first_failure": "Default-feature all-targets check failed because wasmi_vs_wasmtime_baseline requires both engine features and has no main otherwise; exact retry enabling core-runtime-sdk passed.",
+  "source_worktree_recovery": "First command accidentally applied capacity patch to clean Source worktree rather than archive. Exact reverse of the same patch completed successfully; subsequent git status and staged/unstaged diffs confirmed clean and HEAD remained source_commit. No Source commit or push.",
+  "evidence_sha256": {
+    "source-c130-capacity-edition-test-20261029.log": "f63d9c4bdd10620e96c7465785bcf6662261ba6b7ae25f637cc48f76bde6753b",
+    "source-c130-capacity-edition-all-targets-20261029.log": "a6c77a1456e66099b67ecb6e916dce5aa067da2400c56c4b6ac5dbaf04d7ff3d",
+    "source-c130-capacity-edition-all-targets-v2-20261029.log": "4bc45e87ffce401030d45c3ad3bd4a471b8f036e30cfb8db2de555ed574e5e88",
+    "source-c130-edition-cdylib-20261029.log": "ac3eadd52ffa123f571929c9aa2954826135f55d365c9571c7a5bfa40f48c1ba",
+    "core-runtime-wide-arity-20261029.patch": "21464ec66304795aa4440b731e62a86d705f30fc7387755a304073b2e29f8589",
+    "wasmc-workspace-edition2024-20261029.patch": "7a395edb87762980eeb8606d6ae6a8d71faac699a3fdda4edb457865d6654869"
+  },
+  "limitations": [
+    "Checks qualify only the two patches together on exact PR snapshot; other isolated JSON/compiler/Lib overlays are not included or validated by this run.",
+    "Default-feature all-targets remains broken; this run does not fix it.",
+    "Root compiler and Core runtime checks emit warnings, including Rust 2024 migration warnings.",
+    "Separate adapter/fuzz lockfile and target status, production route, unified guest/provider memory budget, Source audit, hosted CI, release and anonymous readback remain open."
+  ]
+}
