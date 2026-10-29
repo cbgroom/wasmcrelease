@@ -1,0 +1,72 @@
+{
+  "schema": "wasmc.rust2024-text-sdk-runtime/v1",
+  "status": "isolated generated SDK and existing candidate Text Core; not integrated or released",
+  "source": "55415f7ced6ad2408e3f44ae7964bd0385fcc569 plus exact-master-combined-v2.patch; SDK generation is recorded in sdk2024-multi-lib-generation-20261029",
+  "root_manifest_sha256": "9dedc34b98181f2be57d80fd985af8760a74dd1cf87b177634ced81085ff759a",
+  "root_core_sha256": "520f2624d9aa602e9360ce06d78163a4baf5ede36c20b24ca29e374d3dff3b74",
+  "sdk_sha256": "60ff89e5e0ec31d2562cb11c6cf0f33e775e5311f4039c65905bd698f5d28686",
+  "rustc": "1.99.1 (58cf8f9c3 2026-10-13), edition 2024, wasm32-unknown-unknown",
+  "operations": [
+    "contains",
+    "ends_with",
+    "eq_ignore_ascii_case",
+    "find",
+    "from_utf8_lossy",
+    "from_utf8_or",
+    "get_or",
+    "into_bytes",
+    "is_ascii",
+    "is_char_boundary",
+    "is_empty",
+    "join",
+    "lines",
+    "replace",
+    "replacen",
+    "rfind",
+    "split",
+    "split_ascii_whitespace",
+    "split_whitespace",
+    "splitn",
+    "starts_with",
+    "strip_prefix_or",
+    "strip_suffix_or",
+    "to_ascii_lowercase",
+    "to_ascii_uppercase",
+    "to_lowercase",
+    "to_uppercase",
+    "trim",
+    "trim_end",
+    "trim_start"
+  ],
+  "validation": [
+    "All 30 Text interfaces called by a Rust Guest and results checked against Rust std or explicit invalid-UTF8 fallback; Unicode, valid/invalid byte boundary and missing pattern covered.",
+    "One Guest/Lib instance in each Node and Deno processed 0, 5242897 and 3-byte inputs consecutively; each run checked large uppercase, 70000-item join, UTF8 fallback and later Unicode recovery.",
+    "Independently rebuilt the SDK rlib directly from generated source and Guest with rustc; repeated Node/Deno tests passed. The two guest binaries differ and both logs are retained."
+  ],
+  "limitations": [
+    "The Host memory-copy bridge is a controlled JS fixture, not MCPGit Service or production route.",
+    "No aggregate memory cap; not production memory/RSS qualification.",
+    "SDK source is an isolated producer candidate and the Text root is a candidate; no formal release or anonymous download claim."
+  ],
+  "rebuild": [
+    "gzip -dc sdk.rs.gz > sdk.rs  # sha256 must match sdk_sha256",
+    "rustc --edition=2024 --target wasm32-unknown-unknown --crate-name sdk --crate-type rlib -C opt-level=2 -Awarnings sdk.rs -o libsdk.rlib",
+    "rustc --edition=2024 --target wasm32-unknown-unknown --crate-type cdylib -C opt-level=2 --extern sdk=libsdk.rlib guest.rs -o guest.wasm",
+    "node run.mjs <exact Text Core artifact.wasm> guest.wasm",
+    "deno run --allow-read run.mjs <exact Text Core artifact.wasm> guest.wasm"
+  ],
+  "files_sha256": {
+    "build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "deno-rebuilt.log": "de3d005b377e27f8e8a2ecbd0f05a29d6af192f5d621f775a38605e050c14318",
+    "deno.log": "6994ccd166ad9a12aa7b397a3630352ec0da2161df84f768b20faffc26dbc05d",
+    "guest-rebuilt.wasm": "d546ebb079adc99877a06d31b3fce8033306b6bf699d65ec1d27fd3fb1237884",
+    "guest.rs": "2edb3dd053f0b15e745451185fda979e6ef3a35570b41dd7d8efbf0512d2e187",
+    "guest.wasm": "90b8211aab31774ec0c4a8fd544227216f7ff871b9b9e3f7aa81d16981109910",
+    "node-rebuilt.log": "cd99b87771d8a49c9ea6e51d806a25209c86f680c6fb4f884457bafc6f4d213a",
+    "node.log": "8a3932caaf8d330c7cfb9d2930764d016947a2197f47bc462bc96f7d37aae5b4",
+    "run.mjs": "f7e6c390c41617bf27670f87b1253499dda881b441bd2a2095d3d148ce6cc9b8",
+    "sdk-Cargo.toml": "6b29f4b2d14cab123f503363d7d9ed9299c4422135152fa324691dd00e872623",
+    "sdk-build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "sdk.rs.gz": "ea964f4a19fc195f3898c6ee2d7360384dcc687d5a70fda02acbc0becac0a23c"
+  }
+}
