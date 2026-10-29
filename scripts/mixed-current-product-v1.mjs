@@ -5,6 +5,8 @@ import { fileURLToPath } from 'node:url';
 import { currentProductPaths, currentProductReader, verifyCurrentRelease, verifyCurrentReleaseV4 } from './current-lib-release-v3.mjs';
 import { projectFrozenIndex } from './project-frozen-search-index-v1.mjs';
 import { CurrentSearchCaller } from './current-lib-search-v3.mjs';
+import { collectCurrentDeclaredThirdPartyNotices } from './current-license-policy-v3.mjs';
+import { collectCurrentDeclaredThirdPartyNoticesV4 } from './current-license-policy-v4.mjs';
 import { inventory, sha } from './lib-refresh-cache-v2.mjs';
 
 const prefix='admission/mixed-product-inputs-v1';
@@ -83,7 +85,8 @@ export function verifyMixedFromCatalog(catalogBytes,catalogSha,read,productPaths
   assert.equal(cohortBytes.length,catalog.cohort.bytes);assert.equal(sha(cohortBytes),catalog.cohort.sha256);
   const cohort=parse(cohortBytes);assert.equal(cohort.schema,'wasmc.mixed-current-cohort/v1');
   assert.deepEqual(read('catalog/libs-current-v2.json'),catalogBytes);
-  return verifyMixedCurrentProductData(read,productPaths,catalogSha,cohort.old_catalog_sha256,cohort.candidate_catalog_sha256);
+  assert.ok(Array.isArray(productPaths),'independent product inventory required');
+  return verifyMixedCurrentProductData(read,productPaths.filter(p=>p.startsWith('current-libs/')),catalogSha,cohort.old_catalog_sha256,cohort.candidate_catalog_sha256);
 }
 export function searchMixedCurrentRelease(catalogBytes,catalogSha,read,selection,offset=0,limit=64,productPaths) {
   verifyMixedFromCatalog(catalogBytes,catalogSha,read,productPaths);
@@ -102,6 +105,12 @@ export async function assembleMixedCurrentProduct({oldRoot,oldSha,candidateRoot,
   };
   const old=load('old',oldRoot,oldSha,verifyCurrentRelease),candidate=load('candidate',candidateRoot,candidateSha,verifyCurrentReleaseV4);
   const projected=projectFrozenIndex(old.catalog,old.index,candidate.catalog,candidate.index),packages=select(old,candidate,projected);
+  // Capture all inputs used by the original notice collectors, including
+  // historical composition carriers not read by the product verifier alone.
+  const oldPolicy=parse(old.read('catalog/current-v3-license-policy.json'));
+  const candidatePolicy=parse(candidate.read('catalog/current-v4-license-policy.json'));
+  await collectCurrentDeclaredThirdPartyNotices(old.read('catalog/libs-current-v2.json'),oldPolicy,async p=>old.read(p));
+  await collectCurrentDeclaredThirdPartyNoticesV4(candidate.read('catalog/libs-current-v2.json'),candidatePolicy,async p=>candidate.read(p),candidate.paths);
   const common=['LICENSE',...currentProductPaths(candidateRoot,'licenses')];
   for(const path of common)candidate.read(path);
   for(const row of packages){const source=projected.reused.some(x=>x.id===row.id)?old:candidate;
@@ -125,6 +134,8 @@ export async function assembleMixedCurrentProduct({oldRoot,oldSha,candidateRoot,
   const catalog={schema:'wasmc.public-lib-catalog/v2',version,package_authority_commit:'0'.repeat(40),registry:candidate.catalog.registry,
     index:descriptor(indexPath,indexBytes),cohort:descriptor(cohortPath,cohortBytes),packages};
   const catalogBytes=bytes(catalog);await put('catalog/libs-current-v2.json',catalogBytes);
+  await put('catalog/current-mixed-license-policy-v1.json',bytes({schema:'wasmc.current-license-policy/mixed-v1',
+    version,catalog_sha256:sha(catalogBytes),package_authority_commit:catalog.package_authority_commit,current_packages:packages.length}));
   const verification=verifyMixedCurrentProduct(out,sha(catalogBytes),oldSha,candidateSha);
   await put('admission/mixed-product-verification-v1.json',bytes(verification));return verification;
 }

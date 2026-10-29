@@ -100,7 +100,16 @@ const cohortBytes=await readDeclared(selected.cohort.path);
 assert.equal(cohortBytes.length,selected.cohort.bytes);assert.equal(hash(cohortBytes),selected.cohort.sha256);
 const cohortSchema=JSON.parse(cohortBytes).schema;
 let declaredNotices;
-if(cohortSchema==='wasmc.public-current-refresh-cohort/v2') {
+if(cohortSchema==='wasmc.mixed-current-cohort/v1') {
+  const {collectMixedDeclaredNotices}=await import('./current-license-policy-mixed-v1.mjs');
+  const noticePolicy=JSON.parse(await read('catalog/current-mixed-license-policy-v1.json'));
+  declaredNotices=await collectMixedDeclaredNotices(catalogBytes,noticePolicy,readDeclared,currentProductPaths(root));
+  const actual=(await walk(root)).map(p=>p.replaceAll(path.sep,'/')).filter(p=>!declaredNotices.has(p));
+  for(const [noticePath,pin] of await collectFrozenV030Notices(readDeclared,actual)) {
+    if(declaredNotices.has(noticePath))assert.deepEqual(declaredNotices.get(noticePath),pin,'duplicate notice authorities');
+    declaredNotices.set(noticePath,pin);
+  }
+} else if(cohortSchema==='wasmc.public-current-refresh-cohort/v2') {
   const noticePolicy=JSON.parse(await read('catalog/current-v4-license-policy.json'));
   declaredNotices=await collectCurrentDeclaredThirdPartyNoticesV4(catalogBytes,noticePolicy,readDeclared,currentProductPaths(root));
   const actual=(await walk(root)).map(p=>p.replaceAll(path.sep,'/')).filter(p=>!declaredNotices.has(p));

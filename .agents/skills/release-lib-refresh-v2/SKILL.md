@@ -25,6 +25,8 @@ A mixed fixture can embed independently pinned old and Q0 input graphs, replay b
 
 Mixed cohort CLI dispatch must verify both source graphs using the independently pinned outer catalog before resolving or searching. Keep old cohort dispatch usable without the new modules; CLI fixture success is not release-policy or actual public-install acceptance.
 
+For mixed notice classification, capture and replay each original v3/v4 notice collector, including historical carrier inputs omitted by the narrower product verifier. Classify only exact verified original notices and selected aliases. A scanner run over a workstream copy with unrelated experiments is not a release-product result; retain failures and construct the exact release file set.
+
 ## Decision
 
 `libspec/` is the sole current Lib source authority. Do not extend the historical
