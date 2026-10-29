@@ -40,8 +40,16 @@ const forgedIndexBytes=Buffer.from(JSON.stringify(forgedIndex)+'\n'),forgedCatal
 forgedCatalog.index.bytes=forgedIndexBytes.length;forgedCatalog.index.sha256=hash(forgedIndexBytes);
 const forgedCatalogBytes=serialize(forgedCatalog),forgedIndexRead=p=>p==='catalog/libs-current-v2.json'?forgedCatalogBytes:p===catalog.index.path?forgedIndexBytes:read(p);
 assert.throws(()=>verifyPublicJsonOverlay({...args,catalogBytes:forgedCatalogBytes,catalogSha:hash(forgedCatalogBytes),read:forgedIndexRead}));
+// A derived receipt must not be reinterpreted as a historical overlay, even
+// when the caller independently pins the rewritten catalog and cohort.
+const changedCohort=JSON.parse(read(catalog.cohort.path));
+changedCohort.schema=changedCohort.schema==='wasmc.json-derived-overlay-cohort/v1'?'wasmc.json-overlay-cohort/v1':'wasmc.json-derived-overlay-cohort/v1';
+const changedCohortBytes=serialize(changedCohort),cohortCatalog=structuredClone(catalog);
+cohortCatalog.cohort.bytes=changedCohortBytes.length;cohortCatalog.cohort.sha256=hash(changedCohortBytes);
+const cohortCatalogBytes=serialize(cohortCatalog),cohortRead=p=>p==='catalog/libs-current-v2.json'?cohortCatalogBytes:p===catalog.cohort.path?changedCohortBytes:read(p);
+assert.throws(()=>verifyPublicJsonOverlay({...args,catalogBytes:cohortCatalogBytes,catalogSha:hash(cohortCatalogBytes),read:cohortRead}),undefined,'cross-schema reinterpretation');
 let successorControls=0;
-if(catalog.packages.find(p=>p.id==='wasmc-json').version==='0.2.3'){
+if(['0.2.3','0.2.4'].includes(catalog.packages.find(p=>p.id==='wasmc-json').version)){
  for(const mutation of ['package-description','api-description','api-route']){
   const changedIndex=JSON.parse(read(catalog.index.path)),item=changedIndex.packages.find(p=>p.package_id==='wasmc-json');
   if(mutation==='package-description')item.description='unexpected';
@@ -53,4 +61,4 @@ if(catalog.packages.find(p=>p.id==='wasmc-json').version==='0.2.3'){
   assert.throws(()=>verifyPublicJsonOverlay({...args,catalogBytes,catalogSha:hash(catalogBytes),read:changedRead}),undefined,mutation);successorControls++;
  }
 }
-console.log(JSON.stringify({...result,negative_controls:12+successorControls,actual_catalog_sha256:hash(catalogBytes),scope:'public bytes and pinned projection only; no private producer provenance or release admission'}));
+console.log(JSON.stringify({...result,negative_controls:13+successorControls,actual_catalog_sha256:hash(catalogBytes),scope:'public bytes and pinned projection only; no private producer provenance or release admission'}));
