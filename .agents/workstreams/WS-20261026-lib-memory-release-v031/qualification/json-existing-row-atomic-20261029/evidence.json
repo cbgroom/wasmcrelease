@@ -1,0 +1,19 @@
+{
+  "schema": "wasmc.json-existing-row-atomic/v1",
+  "status": "temporary real Service and Hosted dispatcher, isolated candidate",
+  "source": "extends hosted-typed-json-recovery-20261029 test; test-only patch, no production source changed",
+  "root_manifest_sha256": "34df79187958af5bfcc15b2e66647524d70ba56aaf8c3fed7b9d79d4ed049ab3",
+  "guest_sha256": "78092689f3320eedef1c8293038369765a84553967ca1aa1482f6b83854c1081",
+  "scenario": "One unchanged installed-root WAsmC app and dispatcher: first transaction writes row-1 and row-1-extra; second attempts fresh row-0 and existing row-1 with distinct operations, returns 409, independently read back absent row-0, unchanged row-1 payload and unchanged repository revision; third transaction writes row-2 and row-2-extra using new input, and both are read back, including array of 300 elements. Each dispatch creates fresh Wasm store.",
+  "limits": [
+    "isolated in-process Service and route, not deployed production",
+    "controlled package installation, not public distribution",
+    "transaction conflict outcome mapped to 409 without detailed cause; actual existing key and unchanged rows/revision independently checked",
+    "does not prove invalid JSON write behavior or idempotent replay",
+    "Source integration, CI, formal release and anonymous readback incomplete"
+  ],
+  "files_sha256": {
+    "existing-row-conflict.patch": "2da30ce656cb71c9e97b85644013b5b23b6e1844be3ffeba7b2bb763f15682b5",
+    "json-atomic-existing-conflict-v1-20261029.log": "b4f558822a3f0969ac4fbfeee176cffe8df41c6252b09118e79011b1c33cc3d5"
+  }
+}

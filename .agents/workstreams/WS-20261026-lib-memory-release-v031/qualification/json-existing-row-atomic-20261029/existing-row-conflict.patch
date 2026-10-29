@@ -1,0 +1,32 @@
+--- a/labs/executable-skill-runtime/tests/end_to_end.rs
++++ b/labs/executable-skill-runtime/tests/end_to_end.rs
+@@ -4979,17 +4979,26 @@
+     let registry=Arc::new(OrganizationRouteRegistry::restore("organization-a",authority,route_executor).await?);
+     registry.publish(&publication.publication_id,None,Duration::ZERO).await?;
+     let dispatcher=RegistryHostedPluginDispatcher::new(REPO,registry);
+-    for n in [0,1,2] {
++    let mut first_row: Option<Value> = None;
++    for n in [1,0,2] {
+         let status=client.table_status(sdk::GetTableStatusRequest{repo:REPO.into(),view:sdk::TableView::Worktree{topic_id:Some("main".into())},path:"json_results".into()}).await?;
+         let head=status.revision.context("missing current table revision")?;
+         let key=format!("row-{n}");
+-        let body=serde_json::to_string(&json!({"repo":REPO,"worktree":{"topic_id":"main"},"path":"json_results","expected_revision":head,"transaction_id":Uuid::new_v4().to_string(),"idempotency_key":null,"actor":null,"message":null,"many":n==2,"operations":[{"op":"insert","operation_id":Uuid::new_v4().to_string(),"key":key,"row":{"id":key,"value":{},"processed":false,"sequence":0}},{"op":"insert","operation_id":Uuid::new_v4().to_string(),"key":if n==0 {key.clone()} else {format!("{key}-extra")},"row":{"id":if n==0 {key.clone()} else {format!("{key}-extra")},"value":{},"processed":false,"sequence":0}}]}))?;
++        let body=serde_json::to_string(&json!({"repo":REPO,"worktree":{"topic_id":"main"},"path":"json_results","expected_revision":head,"transaction_id":Uuid::new_v4().to_string(),"idempotency_key":null,"actor":null,"message":null,"many":n==2,"operations":[{"op":"insert","operation_id":Uuid::new_v4().to_string(),"key":key,"row":{"id":key,"value":{},"processed":false,"sequence":0}},{"op":"insert","operation_id":Uuid::new_v4().to_string(),"key":if n==0 {"row-1".to_owned()} else {format!("{key}-extra")},"row":{"id":if n==0 {"row-1".to_owned()} else {format!("{key}-extra")},"value":{},"processed":false,"sequence":0}}]}))?;
+         let request=hosting::HostedPluginRequest{organization_id:"organization-a".into(),repository_id:REPO.into(),site_id:"prototype".into(),method:"POST".into(),path:"/json".into(),query:vec![],headers:BTreeMap::new(),header_fields:vec![],body:Bytes::from(body.clone()),caller:hosting::HostedPluginCaller{principal_id:"hosted:fixture".into(),person_id:Some(PERSON.into()),authentication_mode:"fixture".into(),permissions:BTreeSet::from(["repo.read".into(),"table.write".into()]),capabilities:capabilities.clone(),table_scope_restricted:false}};
+         let result=hosting::HostedPluginDispatcher::dispatch(&dispatcher,request).await;
+         match result {hosting::HostedPluginDispatch::Response(response)=>{eprintln!("HOSTED_ROUTE_STATUS={} BODY={}",response.status,String::from_utf8_lossy(&response.body));ensure!(response.status==if n==0 {409}else{201},"unexpected HTTP status {}",response.status);ensure!(serde_json::from_slice::<Value>(&response.body)?==serde_json::from_str::<Value>(&body)?,"JSON response drift");},other=>anyhow::bail!("unexpected route result: {other:?}")}
+         let rows=client.get_table_rows(sdk::GetTableRowsRequest{repo:REPO.into(),view:sdk::TableView::Worktree{topic_id:Some("main".into())},path:"json_results".into(),keys:vec![key.clone()],select:None,include_deleted:Some(false)}).await?;
+-        if n==0 { ensure!(rows.rows.is_empty(),"rejected transaction left rows"); eprintln!("CONFLICT_ROLLBACK_OK"); continue; }
++        if n==0 {
++            ensure!(rows.rows.is_empty(),"rejected transaction left fresh row");
++            ensure!(rows.revision == head, "conflicting transaction changed revision");
++            let existing=client.get_table_rows(sdk::GetTableRowsRequest{repo:REPO.into(),view:sdk::TableView::Worktree{topic_id:Some("main".into())},path:"json_results".into(),keys:vec!["row-1".into()],select:None,include_deleted:Some(false)}).await?;
++            ensure!(existing.rows.len()==1 && existing.rows[0].row.as_ref()==first_row.as_ref(), "existing row changed after conflict");
++            eprintln!("EXISTING_ROW_CONFLICT_ROLLBACK_OK fresh_absent=true existing_unchanged=true revision_unchanged=true");
++            continue;
++        }
+         ensure!(rows.rows.len()==1,"written row missing");let row=rows.rows[0].row.as_ref().context("missing row payload")?;
++        if n==1 { first_row=Some(row.clone()); }
+         ensure!(row["id"]==key && row["processed"]==true && row["sequence"]==42,"row scalar values drift: {row}");
+         ensure!(row["value"]["name"]=="雪" && row["value"]["items"]==json!(vec![123; if n==2 {300}else{1}]),"constructed JSON drift: {row}");
+         let second_key=format!("{key}-extra");
