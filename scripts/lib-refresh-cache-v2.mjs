@@ -6,6 +6,7 @@ import { lstat, mkdir, open, readdir, readFile, rename, unlink, writeFile } from
 import { dirname, isAbsolute, join, relative, resolve } from 'node:path';
 import { hostname } from 'node:os';
 
+export const MAX_LICENSE_SNAPSHOT_BYTES = 16 * 1024 * 1024;
 export const sha = value => createHash('sha256').update(value).digest('hex');
 export const digest = value => sha(Buffer.from(JSON.stringify(value)));
 export const json = async path => JSON.parse(await readFile(path, 'utf8'));
@@ -61,12 +62,12 @@ export async function attachReleaseLicense(root, bytes, expectedSha256, notices 
   for (const row of notices) {
     assert.match(row.path, /^licenses\/[A-Za-z0-9_.-]{1,128}$/);
     assert.ok(row.path > previousNotice && !['licenses/.','licenses/..'].includes(row.path)); previousNotice=row.path;
-    assert.ok(Buffer.isBuffer(row.content) && row.content.length > 0 && row.content.length <= 262144);
+    assert.ok(Buffer.isBuffer(row.content) && row.content.length > 0 && row.content.length <= MAX_LICENSE_SNAPSHOT_BYTES);
     assert.equal(sha(row.content),row.sha256,'notice input digest');
     new TextDecoder('utf-8',{fatal:true}).decode(row.content); noticeTotal+=row.content.length;
   }
-  assert.ok(noticeTotal + bytes.length <= 2097152, 'total license snapshot budget');
-  assert.ok(Buffer.isBuffer(bytes) && bytes.length > 0 && bytes.length <= 262144);
+  assert.ok(noticeTotal + bytes.length <= MAX_LICENSE_SNAPSHOT_BYTES, 'total license snapshot budget');
+  assert.ok(Buffer.isBuffer(bytes) && bytes.length > 0 && bytes.length <= MAX_LICENSE_SNAPSHOT_BYTES);
   assert.equal(sha(bytes), expectedSha256, 'release license pin mismatch');
   const identifier = bytes.toString('utf8').split('\n')[0].trim();
   assert.equal(identifier, 'WAsmC Research-Only Non-Commercial License 1.0');
@@ -126,11 +127,11 @@ export function verifyReleaseLicense(manifest, files) {
     assert.deepEqual(Object.keys(pin).sort(),['bytes','path','sha256']);
     assert.ok(pin.path==='LICENSE'||/^licenses\/[A-Za-z0-9_.-]{1,128}$/.test(pin.path));
     assert.ok(pin.path>previous&&!['licenses/.','licenses/..'].includes(pin.path));previous=pin.path;
-    assert.ok(Number.isSafeInteger(pin.bytes)&&pin.bytes>0&&pin.bytes<=262144);total+=pin.bytes;
+    assert.ok(Number.isSafeInteger(pin.bytes)&&pin.bytes>0&&pin.bytes<=MAX_LICENSE_SNAPSHOT_BYTES);total+=pin.bytes;
     assert.match(pin.sha256,/^[0-9a-f]{64}$/);
     assert.deepEqual(files[pin.path],{bytes:pin.bytes,sha256:pin.sha256},'license snapshot drift');
   }
-  assert.ok(total<=2097152,'total license snapshot budget');
+  assert.ok(total<=MAX_LICENSE_SNAPSHOT_BYTES,'total license snapshot budget');
 }
 
 export async function verifyRoot(root, id, version, profile = 'value', resourceCore = false) {

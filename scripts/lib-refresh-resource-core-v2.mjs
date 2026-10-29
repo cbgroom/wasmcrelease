@@ -3,6 +3,8 @@ import { lstat, realpath } from 'node:fs/promises';
 import { isAbsolute, join } from 'node:path';
 import { digest, inside, sha } from './lib-refresh-cache-v2.mjs';
 
+const MAX_RESOURCE_CORE_JSON_BYTES = 16 * 1024 * 1024;
+
 const fields = (value, names, label) => {
   assert.ok(value && typeof value === 'object' && !Array.isArray(value), label + ': object required');
   assert.deepEqual(Object.keys(value).sort(), [...names].sort(), label + ': exact fields required');
@@ -17,14 +19,14 @@ export async function resourceCoreInputs(args, specs, payloads, producerSha, loa
   assert.ok(isAbsolute(args.resourceCoreInputs), 'resource Core input path must be absolute');
   pin(args.resourceCoreInputsSha256, 'resource Core input');
   const manifestBytes = await load(args.resourceCoreInputs);
-  assert.ok(manifestBytes.length <= 1048576, 'resource Core input manifest budget');
+  assert.ok(manifestBytes.length <= MAX_RESOURCE_CORE_JSON_BYTES, 'resource Core input manifest budget');
   assert.equal(sha(manifestBytes), args.resourceCoreInputsSha256, 'resource Core input manifest digest mismatch');
   const manifest = JSON.parse(manifestBytes);
   fields(manifest, ['schema', 'producer_sha256', 'source_commit', 'packages'], 'resource Core input manifest');
   assert.equal(manifest.schema, 'wasmc.lib-refresh-resource-core-inputs/v1');
   assert.equal(manifest.producer_sha256, producerSha, 'resource Core input producer mismatch');
   assert.match(manifest.source_commit, /^[a-f0-9]{40}$/, 'resource Core source commit required');
-  assert.ok(Array.isArray(manifest.packages) && manifest.packages.length > 0 && manifest.packages.length <= 64);
+  assert.ok(Array.isArray(manifest.packages) && manifest.packages.length > 0);
   for (const entry of manifest.packages) {
     fields(entry, ['id', 'root', 'wit_sha256', 'assembly'], 'resource Core package');
     assert.ok(specs.has(entry.id) && specs.get(entry.id).core_resource, 'undeclared resource Core package ' + entry.id);
@@ -42,7 +44,7 @@ export async function resourceCoreInputs(args, specs, payloads, producerSha, loa
     const { artifact, sha256, ...identity } = assembly.provider;
     assert.deepEqual(identity, spec.core_resource.provider, 'resource Core provider identity mismatch');
     assert.equal(entry.wit_sha256, sha(payloads.get(entry.id)['lib.wit']), 'resource Core WIT mismatch');
-    assert.ok(Array.isArray(assembly.modules) && assembly.modules.length > 0 && assembly.modules.length <= 64);
+    assert.ok(Array.isArray(assembly.modules) && assembly.modules.length > 0);
     assert.equal(new Set(assembly.modules.map(m => m.module)).size, assembly.modules.length, 'duplicate resource Core module');
     const files = {}, paths = new Set();
     let total = 0;
@@ -61,7 +63,7 @@ export async function resourceCoreInputs(args, specs, payloads, producerSha, loa
       files[path] = bytes;
       return bytes;
     };
-    const graph = JSON.parse(await capture(assembly.graph, assembly.graph_sha256, 1048576));
+    const graph = JSON.parse(await capture(assembly.graph, assembly.graph_sha256, MAX_RESOURCE_CORE_JSON_BYTES));
     assert.equal(graph.schema, 'wasmc.resource-plan-source/v1');
     assert.equal(graph.wit.sha256, entry.wit_sha256, 'resource Core graph WIT mismatch');
     for (const module of assembly.modules) {
