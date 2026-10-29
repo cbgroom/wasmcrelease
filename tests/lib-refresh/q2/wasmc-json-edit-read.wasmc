@@ -1,0 +1,41 @@
+package local:json_edit_read_q2;
+interface api {
+  enum json_error {invalid_json,invalid_pointer,missing_target,type_mismatch,invalid_index,out_of_range,invalid_operation,allocation_failed}
+  enum edit_kind {set,remove}
+  record edit {kind:edit_kind,path:string,value_json:string}
+  record unsigned_value {present:bool,value:u64}
+  record signed_value {present:bool,value:i64}
+  record float_value {present:bool,value:f64}
+  record boolean_value {present:bool,value:bool}
+  edits:func()->string {
+    let mut changes:list<edit> = list.new();
+    changes.push({kind:0,path:"/a",value_json:"42"});
+    changes.push({kind:1,path:"/b",value_json:""});
+    return document::edit_or_bytes(utf8::encode("{\"a\":1,\"b\":2}"),changes,"failed");
+  }
+  invalid_edit:func()->string {
+    let mut changes:list<edit> = list.new();
+    changes.push({kind:0,path:"/a",value_json:"42"});
+    changes.push({kind:1,path:"/missing",value_json:""});
+    return document::edit_or_bytes(utf8::encode("{\"a\":1}"),changes,"failed");
+  }
+  max_u64:func()->result<unsigned_value,json_error> {
+    return document::read_u64(utf8::encode("{\"u\":18446744073709551615}"),"/u");
+  }
+  missing_u64:func()->result<unsigned_value,json_error> {
+    return document::read_u64(utf8::encode("{}"),"/u");
+  }
+  min_i64:func()->result<signed_value,json_error> {
+    return document::read_i64(utf8::encode("{\"i\":-9223372036854775808}"),"/i");
+  }
+  read_float:func()->result<float_value,json_error> {
+    return document::read_f64(utf8::encode("{\"f\":1.25}"),"/f");
+  }
+  read_bool:func()->result<boolean_value,json_error> {
+    return document::read_bool(utf8::encode("{\"b\":true}"),"/b");
+  }
+  wrong_u64:func()->result<unsigned_value,json_error> {
+    return document::read_u64(utf8::encode("{\"u\":\"bad\"}"),"/u");
+  }
+}
+world app {export api;}

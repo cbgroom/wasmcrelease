@@ -1,0 +1,23 @@
+{
+  "schema": "wasmc.json-q2-current-interface-repair/v1",
+  "status": "candidate verification, no publication",
+  "root_manifest_sha256": "a40499304c4078c8034473e552730cd460556c81d8679b8afe040cf2407f7397",
+  "root_core_sha256": "007eac4dbfe32f53462f866a66e6bb191fec13c01ac7d90baf2572b27ec22722",
+  "producer_candidate_sha256": "961919aabda4c87097c732410d1ef499b5ea6422820b37af8ac49e13234fe5f7",
+  "runner_sha256": "b083c787c352b0278860696c02dc0941ff5635e3cec9f53f69735eac21eb3b69",
+  "source_provenance": "Native runner built against the same private source candidate as producer; its build and producer logs are in the previous candidate evidence. It uses Rust 2024 but constructs its transfer separately.",
+  "repair": "Update three current Q2 sources to the exact current JSON Root json-error enum; previous old enum was rejected due to selected operation drift. Add a dedicated ordinary-WAsmC batch-edit and typed-read source and exact oracles.",
+  "validation": "Installed candidate JSON Root: full 9, compact 2, select 1 and edit/read 8 cases, two rounds each on Wasmi 2.0.0 and Wasmtime 49.0.2. Independent checkQ2Evidence validated each report against its source, Root and separate expected outcomes. The standalone checker regression reports 16 tests passed.",
+  "scope": "Each call uses a fresh bounded Store. A failed batch returns fallback; this alone does not prove persistence-level atomicity. No full public-API, Component, production Hosted or anonymous installation claim. Prior source-admission, release and resource ceilings remain.",
+  "failures": "Preserved the original mismatched enum compile failure and two initial test-oracle failures: u64 zero is represented as a decimal string, and f64 is represented by exact bits. Corrected oracle reflects the runner wire format.",
+  "files_sha256": {
+    "full.json": "ebe93c2c0aff40b3a700807ef0de1853a4e3df87d63725da20e19fbaa8f897ff",
+    "compact.json": "133e6f061a074531bb37e2eeb5deaef68f2b90c9851e7d587bc377049aed60bb",
+    "select.json": "cf5b7ce393431f13d8d9d973f162ccba7dd0c9eb091555c4b8948277a19deac9",
+    "edit-read.json": "c176fd4f8365f5661342802d8e8f345230455592a510dc5d563c662f8c5c7506",
+    "oracles.jsonl": "bc1ebef266433314e347650e58960be09c70c5de9582b83f428a8fc54d292fac",
+    "original-drift-failure.log": "1cfba8888e319439be65997f0a5a05c2d936ab0c0fb784033fe1b53c1bda44c4",
+    "initial-unsigned-oracle-failure.log": "06604ec6e025c55af5b56aa7d7c46e43808035c53efd9d108fa62063f3f4a41a",
+    "initial-float-oracle-failure.log": "50e82f89ac3d6b5fec3cba4a1aac70a7898b07333c01a2ed1920107709bda0cf"
+  }
+}

@@ -1,0 +1,71 @@
+[
+  {
+    "export": "edits",
+    "arguments": [],
+    "expected": "{\"a\":42}"
+  },
+  {
+    "export": "invalid_edit",
+    "arguments": [],
+    "expected": "failed"
+  },
+  {
+    "export": "max_u64",
+    "arguments": [],
+    "expected": {
+      "ok": {
+        "present": true,
+        "value": "18446744073709551615"
+      }
+    }
+  },
+  {
+    "export": "missing_u64",
+    "arguments": [],
+    "expected": {
+      "ok": {
+        "present": false,
+        "value": "0"
+      }
+    }
+  },
+  {
+    "export": "wrong_u64",
+    "arguments": [],
+    "expected": {
+      "err": "type-mismatch"
+    }
+  },
+  {
+    "export": "min_i64",
+    "arguments": [],
+    "expected": {
+      "ok": {
+        "present": true,
+        "value": "-9223372036854775808"
+      }
+    }
+  },
+  {
+    "export": "read_float",
+    "arguments": [],
+    "expected": {
+      "ok": {
+        "present": true,
+        "value": {
+          "bits": "0x3ff4000000000000"
+        }
+      }
+    }
+  },
+  {
+    "export": "read_bool",
+    "arguments": [],
+    "expected": {
+      "ok": {
+        "present": true,
+        "value": true
+      }
+    }
+  }
+]
