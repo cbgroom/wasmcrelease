@@ -1,0 +1,32 @@
+{
+  "schema": "mcpgit.hosted-json-shared-linear-memory/v1",
+  "status": "temporary real Service and lab dispatcher with isolated candidate runtime; not production",
+  "root_manifest_sha256": "a8f551838bb5b83125adcccb0201f036480a3da1a0c9a0dcee86ffcb731cd3ef",
+  "lib_core_sha256": "e369108df493771f4bf719ac073f5acd4bc77a45b2b2cdd8a8049f4885b8753c",
+  "guest_sha256": "370143e235199f7e6a3f19d21a3d708fca3ec9542b18a0aae019c83f1c9afd80",
+  "module_initial_pages": {
+    "guest": 17,
+    "lib": 17
+  },
+  "instrumentation": "Test-only environment-gated diagnostics record common CoreSharedMemoryBudget reserved bytes and invocation error after Lib initialization/call. Instrumentation is not a product patch.",
+  "tests": [
+    "At 33 pages (2162688 bytes), each 17-page initial memory individually fits; Lib reserves 1114112 bytes, Guest instantiation is rejected with explicit resource limiter denied shared memory allocation, route returns BadGateway.",
+    "At 64 pages (4194304 bytes), small JSON returns 200, a 1000008-byte JSON request returns BadGateway with Wasmtime trap, and a later small request returns 200 on the same dispatcher with a fresh Store. Diagnostic does not identify the exact failing growth operation.",
+    "At 256 pages (16777216 bytes), identical small, large and recovery requests all return 200. Other request, response and fuel limits remained identical; this supports memory-related failure in the lower-budget comparison but does not by itself expose the exact failing allocation."
+  ],
+  "limits": [
+    "Only linear Wasm memories are accounted; Host heap, request buffers, Store metadata, and total RSS are not included.",
+    "fresh Stores on each invocation; same dispatcher, not same Store",
+    "1 MB request is a test choice, not a product byte limit or performance ceiling",
+    "temporary Service and route, no production deployment or formal release",
+    "diagnostic-only instrumentation changes tested candidate; production candidate not changed"
+  ],
+  "files_sha256": {
+    "diagnostic-only.patch": "951565f064f4d9999888c616731e07f6246a2eb2658a02c60f41658272cbb4ac",
+    "hosted-shared-budget-growth-high-v1-20261029.log": "3f4f3817b74cd49fe12655e9faf5ba73106aef0df2baf13c38e795dcc08ec3ea",
+    "hosted-shared-budget-growth-v1-20261029.log": "ae2842f03d64eeddcd56d080b8cba44ba71e6bcd16de28dd0bdbb35dbd44ec95",
+    "hosted-shared-budget-high-v1-20261029.log": "3e4aa172c3490dea9783b3ddf64d4febcb3ac942fbcaacea34951b7f26fb6524",
+    "hosted-shared-budget-low-v1-20261029.log": "309e98b50c0b8882fc1087c6f7238e01c8489bd67c345a65fe0bb4c7f29f99f6",
+    "shared-budget-fixture.patch": "28ad9a154683bfeabe74b05d409704794818fb3a21626c49380e90631a326496"
+  }
+}

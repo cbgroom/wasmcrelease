@@ -1,0 +1,23 @@
+--- a/crates/mcpgit-executable-runtime/src/route_wasm_executor.rs
++++ b/crates/mcpgit-executable-runtime/src/route_wasm_executor.rs
+@@ -5682,6 +5682,10 @@
+         (Some(plan), Some(budget)) => Some(plan.lib.instantiate_with_memory_budget(budget)?),
+         _ => None,
+     };
++    let diagnostic_budget = shared_budget.clone();
++    if std::env::var_os("WASMC_TEST_BUDGET_TRACE").is_some() {
++        if let Some(b) = diagnostic_budget.as_ref() { eprintln!("SHARED_BUDGET_AFTER_LIB used={} limit={}",b.reserved_bytes(),b.limit_bytes()); }
++    }
+     let host = QueryHost::new_with_table_mutations(
+         lease,
+         query_limits,
+@@ -5775,6 +5779,9 @@
+             &[],
+             &cancellation,
+         );
++        if std::env::var_os("WASMC_TEST_BUDGET_TRACE").is_some() {
++            if let Some(b) = diagnostic_budget.as_ref() { eprintln!("SHARED_BUDGET_AFTER_CALL used={} limit={} error={:?}",b.reserved_bytes(),b.limit_bytes(),outcome.invocation.as_ref().err().map(|e|e.to_string())); }
++        }
+         let invocation = outcome.invocation.map_err(|error| {
+             if error.code() == crate::core_runtime::CoreDomainInvocationErrorCode::Cancelled {
+                 anyhow::Error::from(RouteRuntimeFailure::Cancelled)
