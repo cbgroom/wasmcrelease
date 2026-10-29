@@ -21,3 +21,7 @@ Parent follow-up after the168 readback: final frame-pin correction in parent-own
 ## Same-owner scoped serial release (2026-10-29)
 
 Owner 01a129c3-6473-7c62-8856-2cb7a6abca28 releases only exclusive scope `scripts/release-candidate.mjs` to successor WS-20261026-lib-memory-release-v031. This checkpoint and all other claims, Git history, original evidence and frozen artifacts remain unchanged. Future writes to this file from this workstream require fresh coordination.
+
+## Same-owner JSON successor scope release (2026-10-29)
+
+Owner 01a129c3-6473-7c62-8856-2cb7a6abca28 releases exclusive `libspec/wasmc-json` to successor WS-20261026-lib-memory-release-v031. All other scopes, prior JSON0.0.6/source evidence, checkpoint state and frozen products remain unchanged. This branch-local release does not itself update the authoritative main claim index or admit a successor.
