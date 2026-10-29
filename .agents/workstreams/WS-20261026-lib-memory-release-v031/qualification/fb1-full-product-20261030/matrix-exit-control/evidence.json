@@ -1,0 +1,34 @@
+{
+  "status": "MATRIX_EXIT_CODE_REPAIRED",
+  "old_behavior": "15/18 previously printed failure but returned exit 0; existing first-failure evidence retained",
+  "negative_control": "deliberately changed the disposable Std compiler pin; matrix completed all 18, reported 15/18 and returned exit 1",
+  "failed_cases": [
+    {
+      "test": "examples/current/standard.mjs",
+      "runtime": "node",
+      "exit": 1
+    },
+    {
+      "test": "examples/current/standard.mjs",
+      "runtime": "bun",
+      "exit": 1
+    },
+    {
+      "test": "examples/current/standard.mjs",
+      "runtime": "deno",
+      "exit": 1
+    }
+  ],
+  "positive_control": "independent unchanged candidate stage passed 18/18 and returned exit 0",
+  "limitations": [
+    "validation harness repair only; no product source integration, live Host or release",
+    "Bun multi-memory is compile-only as recorded in individual test logs"
+  ],
+  "runner_sha256": "79fc62aca17988738756119ff84de1bc39d736d004b5d87e26a411c76b04c459",
+  "logs": {
+    "examples_current_standard-node.log": "0982413783a8124ce7fe1cc54bc350bd21365a5abd9e09c14839eb4a21c43791",
+    "integration-matrix.json": "2db9de0bd04f025e70e48648abba57b55e9bf794f0092daa1f132076151d7e19",
+    "negative.log": "f03317c6d361dc654772f2cdab840199571b2ddcc69daad61aac938ddd0f3c88",
+    "positive.log": "c04ca35d9209cd82ea411dff5c96dca3e8940bf1df2b1b8852a04702c5b0efa2"
+  }
+}
