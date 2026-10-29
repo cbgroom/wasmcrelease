@@ -1,0 +1,70 @@
+{
+  "status": "ISOLATED_HOSTED_BUDGET_PASS_NOT_RELEASE",
+  "source": "temporary actual McpGitService + lab Hosted dispatcher; reconstructed MCPGit source with shared-memory/call-plan candidate and one test-only version selection",
+  "guest_source_sha256": "acf1583cad0fa8b0893157815eb46cf1b6a413efce827a75e1d2a42355fd7c2f",
+  "guest_wasm_sha256": "11f6627ebcd0ca498396e26730a5452ec802d755c16f0ca8023df81f5c315031",
+  "sdk_sha256": "0684fd80795ff2f0208bb1d5b686d3ebef95f505ec353c7157eb831975c936f0",
+  "root_manifest_sha256": "ae5292263fd278c8bae6f27dce456dfb4a5566613c07688b051c66b7fae929da",
+  "core_sha256": "08d0d60134228dabbfc467429b2e54c97910d9d1d8e0a3f49f11228668b11384",
+  "source_patch_sha256": "bbbc6274653b6ccd545a3182842caeb41be54f0bf074ac682abeac63d166b688",
+  "scenario": "same actual generated Rust2024 SDK Guest compacts external JSON via real Hosted route, invokes temporary real TableGit status, returns compact response; repeated calls use one dispatcher and fresh invocation stores",
+  "results": [
+    {
+      "pages": 33,
+      "bytes": 2162688,
+      "inputs": [
+        2
+      ],
+      "responses": [
+        "BadGateway"
+      ],
+      "trace": "Wasmtime instantiation: resource limiter denied shared memory allocation"
+    },
+    {
+      "pages": 64,
+      "bytes": 4194304,
+      "inputs": [
+        2,
+        1000008,
+        11
+      ],
+      "responses": [
+        "200",
+        "BadGateway",
+        "200"
+      ],
+      "trace": "large call: resource limiter denied shared memory allocation in Guest UTF-8 gather; subsequent small call succeeds"
+    },
+    {
+      "pages": 256,
+      "bytes": 16777216,
+      "inputs": [
+        2,
+        1000008,
+        11
+      ],
+      "responses": [
+        "200",
+        "200",
+        "200"
+      ],
+      "trace": "large successful call observed 6291456 bytes reserved at post-call observation"
+    }
+  ],
+  "scope_limits": [
+    "shared budget accounts guest and provider Wasm linear memory, not Host heap, request buffers, compiled code, store metadata or provider fuel/deadlines",
+    "small-after-failure uses a fresh invocation; no guarantee that a trapped instance resumes",
+    "one Wasmtime path, 1B fuel and 8MiB HTTP-body limit in this fixture; neither represents production policy",
+    "diagnostic same-version optimized Root is private scratch and cannot replace a published or shared immutable identity",
+    "not current integrated Source, live production Hosted route or formal release"
+  ],
+  "log_sha256": {
+    "growth64.log": "055e32f5ce4cc200a3da2fe833fba78ad9f36189ddc2f74407e067dca23c9bda",
+    "growth64-trace.log": "8728d1bd881752494993f20208c5cf7a010d507ce8a2c740b704fe722483aa87",
+    "growth256-trace.log": "ba77b7eb567f78af121e23d9f0793f743f45ff1033268ff5593077a2289a3ba3",
+    "low33-trace.log": "e75c2c9d99780c89cf11e801cd4b634eaefe3cce1374c9fac50ea4475614ee50"
+  },
+  "test_source_sha256": "6889ccabdcd106577559a2c731b9b1f67d98122a4cf396817b37b28b92ca70ba",
+  "route_executor_sha256": "547d1dc9654e8f4213d4c16a4b03218f0831ca6d83b2db85b0310519b9f4a131",
+  "shared_budget_impl_sha256": "0b55c38066ca3715f9a735419340bddfc6c444ed17ceda5042944b4c2c054c88"
+}
