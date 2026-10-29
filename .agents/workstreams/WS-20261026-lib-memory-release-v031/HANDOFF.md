@@ -1012,3 +1012,5 @@ E5 exact Source6fcfe lib-agent workflow execution started on peer lgw_9749422d9a
 2026-10-30 standard fixture compiler binding started: bind only v031 standard pin to actual 2172 checked compiler after scratch byte equality and three-engine Std/Rust/WAsmC execution; retain all frozen binaries.
 
 2026-10-30 v031 standard candidate pin migrated to compiler2172: real ordinary Std compile produces exact existing f704d2c4 candidate bytes; Node/Bun/Deno each execute 7680 calls across compiled WAsmC, sealed candidate and Rust SDK with frozen Std1.4.1/Core4.9.1. No immutable artifact changed. Evidence qualification/standard-2172-20261030. Source integration, master custody and release remain pending.
+
+2026-10-30 whole-product integration defect: assembled ac32312f 43-Root candidate selects Text0.0.2 manifest db884f9b/Core5abf5dfb while the isolated string fixture used same-version manifest9dedc34b/Core520f2624. Initial product matrix records this exact mismatch. Regenerate the v031 fixture against the actual selected Root via Rust native template/cold source and portable compiler; do not alter either Root or historical version.
