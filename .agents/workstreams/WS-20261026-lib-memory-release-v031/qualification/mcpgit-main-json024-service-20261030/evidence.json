@@ -1,0 +1,24 @@
+{
+  "status": "PASS_ISOLATED_SERVICE_NOT_RELEASE",
+  "mcpgit_main": "6c4e1782830fc5af5a68646f0678f751f0cbacc9",
+  "call_plan_patch_sha256": "4d2fe25fc55b87db21981dfc6f8eba46704dccf56c0c273f943af63e8552a9aa",
+  "json_manifest_sha256": "8b2c659b8b28327a6945f08f1168e07d4526ed8a1705cadc05b9f544eab6c284",
+  "json_core_sha256": "08d0d60134228dabbfc467429b2e54c97910d9d1d8e0a3f49f11228668b11384",
+  "rust_2024_guest_sha256": "4b1ca7b9ce1dfaf5b5ef321750adaa398ff880c452f3a2b823d0da558c3fea5c",
+  "fixture_sha256": "5757d02f0703b337241b3af41e2990a5b587140fb160ad38c5fc6d0b4f5bd60a",
+  "helper_sha256": "09169bc96daa26645d7c85e6125e677f319b2af2378feecca9054edb99a09779",
+  "full_log_sha256": {
+    "recheck.log": "2ec01a1b8b6f62d565bb04415dd45b0201db7bf65d993c543a29d6cc91250c5d",
+    "real-service.log": "fa10e30f45474ca3e17cd0a2cb4140dfcc5d275bf94760a916e496c64ca464eb",
+    "real-service-run.log": "62dccacb87ba12b5d222ed32801e08a9986474b91c966a6d39c29931f471bf6a",
+    "real-service-run-v2.log": "6f6443faf32ef1fb01d3c369c2fec3e81e29886a3918d2151eb93d07325ac62c"
+  },
+  "result": "Two call-plan unit controls pass on current main snapshot; actual temporary Service loads anonymously installed JSON 0.2.4 and invokes 26 Rust 2024 guest operations three rounds each on Wasmi and Wasmtime.",
+  "initial_attempts": "First command selected ignored tests and executed zero. Next executed and failed on stale 60-import fixture expectation; exact Guest has 59 imports. Only the scratch test helper was adjusted and the successful run executed one test.",
+  "limitations": [
+    "private unintegrated call-plan patch and test-only support; not exact main production behavior",
+    "fresh provider and guest stores; no shared total memory, fuel, deadline or cancellation proof",
+    "temporary Service; no Hosted route, production deployment or formal release",
+    "fixed guest inputs; 26 operation witness is not all APIs or full capacity proof"
+  ]
+}
