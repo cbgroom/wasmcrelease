@@ -5,7 +5,7 @@ import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {inventory,sha,digest,verifyRoot} from './lib-refresh-cache-v2.mjs';
-export async function verify({capsule,receiptSha,witPath,witSha}) {
+export async function verify({capsule,receiptSha,witPath,witSha,producerPath}) {
  const bytes=await readFile(join(capsule,'receipt.json'));assert.equal(sha(bytes),receiptSha);
  const receipt=JSON.parse(bytes);assert.equal(receipt.schema,'wasmc.derived-json-lineage-receipt/v1');assert.equal(receipt.public_admission,false);
  const parent=join(capsule,'parent'),source=join(capsule,'source'),parentSource=join(parent,'source'),root=join(capsule,'root');
@@ -20,7 +20,7 @@ export async function verify({capsule,receiptSha,witPath,witSha}) {
  const row={id:'wasmc-json',version:'0.2.4',profile:'value',manifest_sha256:verified.manifest_sha256,root_inventory_sha256:digest(verified.files)};
  assert.deepEqual(receipt.rows,[row]);assert.equal(receipt.parent_receipt_sha256,'ed77a0cc1fd4ee50673aa0921ef8b046ce62bcb23972e8792315d9571b78ccd8');
  assert.equal(witSha,'40c3d0e890e86cc86ef186fe3e504cd62d03da90fe0a1fc81b6588d078bd0a65');
- const producer=process.env.WASMC_DERIVED_PRODUCER;assert.ok(producer,'explicit producer path required');
+ const producer=producerPath??process.env.WASMC_DERIVED_PRODUCER;assert.ok(producer,'explicit producer path required');
  const lineage=fileURLToPath(new URL('./json-derived-lineage-v1.mjs',import.meta.url));
  assert.equal(sha(await readFile(join(capsule,'lib.build.json'))),receipt.build_input_sha256);
  const tmp=await mkdtemp(join(tmpdir(),'wasmc-derived-json-'));

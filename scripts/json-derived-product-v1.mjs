@@ -14,9 +14,9 @@ const serialize=x=>Buffer.from(JSON.stringify(x,null,2)+'\n');
 const descriptor=(path,b)=>({path,bytes:b.length,sha256:sha(b)});
 async function put(root,path,b){const dst=inside(root,path);await mkdir(dirname(dst),{recursive:true});await writeFile(dst,b,{flag:'wx'});}
 const pinRead=(read,pin)=>{const b=read(pin.path);assert.equal(b.length,pin.bytes);assert.equal(sha(b),pin.sha256);return b;};
-async function derive(oldRoot,oldSha,capsule,receiptSha,witPath,witSha){
+async function derive(oldRoot,oldSha,capsule,receiptSha,witPath,witSha,producerPath){
  const read=currentProductReader(oldRoot),oldBytes=read('catalog/libs-current-v2.json');verifyMixedFromCatalog(oldBytes,oldSha,read,currentProductPaths(oldRoot));
- const old=JSON.parse(oldBytes),q0=await verifyQ0({capsule,receiptSha,witPath,witSha});
+ const old=JSON.parse(oldBytes),q0=await verifyQ0({capsule,receiptSha,witPath,witSha,producerPath});
  const receipt=JSON.parse(await readFile(join(capsule,'receipt.json'))),r=receipt.rows[0],root=await verifyRoot(join(capsule,'root'),r.id,r.version,r.profile);
  const prev=old.packages.find(p=>p.id===r.id);assert.ok(prev);const prefix='current-libs/'+r.id+'/'+r.version;
  const source={};for(const [key,name] of [['spec','lib.json'],['wit','lib.wit']]){const path='libspec/'+r.id+'/'+name,b=await readFile(join(capsule,'source',path));source[key]=descriptor(path,b);}
@@ -32,9 +32,9 @@ async function derive(oldRoot,oldSha,capsule,receiptSha,witPath,witSha){
  const projection=projectJsonIndex(JSON.parse(pinRead(read,old.index)),fresh.index,receiptSha);assert.equal(projection.reused,packages.length-1);
  return {read,old,packages,candidate,index:projection.index,q0};
 }
-export async function assemble({oldRoot,oldSha,capsule,receiptSha,witPath,witSha,out,commit,version}){
+export async function assemble({oldRoot,oldSha,capsule,receiptSha,witPath,witSha,out,commit,version,producerPath}){
  for(const p of [oldRoot,capsule,witPath,out])assert.ok(isAbsolute(p));assert.match(commit,/^[0-9a-f]{40}$/);assert.match(version,/^\d+\.\d+\.\d+$/);
- const d=await derive(oldRoot,oldSha,capsule,receiptSha,witPath,witSha);await mkdir(out);
+ const d=await derive(oldRoot,oldSha,capsule,receiptSha,witPath,witSha,producerPath);await mkdir(out);
  await mkdir(join(out,'proof'),{recursive:true});
  await cp(oldRoot,join(out,'proof/old-product'),{recursive:true,mode:constants.COPYFILE_FICLONE,errorOnExist:true,force:false});
  await cp(capsule,join(out,'proof/json-q0'),{recursive:true,mode:constants.COPYFILE_FICLONE,errorOnExist:true,force:false});
@@ -46,13 +46,13 @@ export async function assemble({oldRoot,oldSha,capsule,receiptSha,witPath,witSha
  const indexPath='catalog/current-index-v2.json',indexBytes=Buffer.from(JSON.stringify(d.index)+'\n');await put(out,indexPath,indexBytes);
  const cohortPath='admission/json-overlay-cohort-v1.json',cohortBytes=serialize({schema:'wasmc.json-derived-overlay-cohort/v1',old_catalog_sha256:oldSha,json_receipt_sha256:receiptSha,public_admission:false});await put(out,cohortPath,cohortBytes);
  const catalogBytes=serialize({schema:'wasmc.public-lib-catalog/v2',version,package_authority_commit:commit,registry:d.old.registry,index:descriptor(indexPath,indexBytes),cohort:descriptor(cohortPath,cohortBytes),packages:d.packages});await put(out,'catalog/libs-current-v2.json',catalogBytes);
- return verify({root:out,catalogSha:sha(catalogBytes),oldSha,receiptSha,witPath,witSha,commit});
+ return verify({root:out,catalogSha:sha(catalogBytes),oldSha,receiptSha,witPath,witSha,commit,producerPath});
 }
-export async function verify({root,catalogSha,oldSha,receiptSha,witPath,witSha,commit}){
+export async function verify({root,catalogSha,oldSha,receiptSha,witPath,witSha,commit,producerPath}){
  for(const p of [root,witPath])assert.ok(isAbsolute(p));for(const p of [catalogSha,oldSha,receiptSha,witSha])assert.match(p,/^[0-9a-f]{64}$/);assert.match(commit,/^[0-9a-f]{40}$/);
  const read=currentProductReader(root),catalogBytes=read('catalog/libs-current-v2.json'),catalog=checkedCurrentCatalog(catalogBytes,catalogSha);
  assert.equal(catalog.package_authority_commit,commit);const cohort=JSON.parse(pinRead(read,catalog.cohort));assert.deepEqual(cohort,{schema:'wasmc.json-derived-overlay-cohort/v1',old_catalog_sha256:oldSha,json_receipt_sha256:receiptSha,public_admission:false});
- const d=await derive(join(root,'proof/old-product'),oldSha,join(root,'proof/json-q0'),receiptSha,witPath,witSha);
+ const d=await derive(join(root,'proof/old-product'),oldSha,join(root,'proof/json-q0'),receiptSha,witPath,witSha,producerPath);
  assert.deepEqual(catalog.registry,d.old.registry);pinRead(read,catalog.registry);assert.deepEqual(catalog.packages,d.packages);
  const expectedIndex=Buffer.from(JSON.stringify(d.index)+'\n');assert.deepEqual(pinRead(read,catalog.index),expectedIndex);
  const all=[];for(const row of catalog.packages){for(const file of row.files){const b=pinRead(read,file);const original=row.id===d.candidate.id?await readFile(join(root,'proof/json-q0/root',file.path.slice(row.root.length+1))):d.read(file.path);assert.deepEqual(b,original);all.push(file.path);}
