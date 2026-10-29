@@ -83,6 +83,19 @@ export function verifyPublicJsonOverlayFromCatalog({catalogBytes,catalogSha,read
   return verifyPublicJsonOverlay({catalogBytes,catalogSha,priorCatalogBytes,priorCatalogSha:cohort.old_catalog_sha256,priorIndexBytes,read,productPaths,receiptSha,authorityCommit});
 }
 
+// Consumer selection is bound by the independently supplied catalog hash. The
+// cohort commitment is not itself a verification of private build provenance.
+export function verifyPublicJsonOverlayPinned(catalogBytes,catalogSha,read,productPaths){
+  const catalog=checkedCurrentCatalog(catalogBytes,catalogSha),cohort=parse(pinned(catalog.cohort,read));
+  return verifyPublicJsonOverlayFromCatalog({catalogBytes,catalogSha,read,productPaths,receiptSha:cohort.json_receipt_sha256,authorityCommit:catalog.package_authority_commit});
+}
+export function searchPublicJsonOverlay(catalogBytes,catalogSha,read,selection,offset=0,limit=64,productPaths){
+  verifyPublicJsonOverlayPinned(catalogBytes,catalogSha,read,productPaths);
+  const catalog=checkedCurrentCatalog(catalogBytes,catalogSha),search=catalog.packages.find(p=>p.id==='wasmc-lib-search');
+  const index=pinned(catalog.index,read),caller=new CurrentSearchCaller(index,read(search.root+'/artifact.wasm'),read(search.root+'/core-abi.json'));
+  return {schema:'wasmc.public-current-lib-search/json-overlay-v1',catalog_sha256:catalogSha,index_sha256:catalog.index.sha256,selection_authority:false,offset,limit,result:caller.search(selection,offset,limit)};
+}
+
 // Copy only catalog-bound public bytes after independent input verification.
 // This creates a projection, not a complete release or private provenance seal.
 export function materializePublicJsonOverlay({sourceRoot,out,catalogSha,priorCatalogBytes,priorCatalogSha,priorIndexBytes,receiptSha,authorityCommit}){

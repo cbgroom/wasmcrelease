@@ -19,6 +19,10 @@ try{
     if(cohortBytes.length!==catalog.cohort.bytes||hash(cohortBytes)!==catalog.cohort.sha256)throw Error('cohort identity mismatch');
     const schema=JSON.parse(cohortBytes).schema;
     if(schema==='wasmc.public-current-refresh-cohort/v2')return {verify:verifyCurrentReleaseV4,search:searchCurrentReleaseV4};
+    if(schema==='wasmc.json-overlay-cohort/v1'){
+      const {verifyPublicJsonOverlayPinned,searchPublicJsonOverlay}=await import('./json-overlay-public-v1.mjs');
+      return {verify:verifyPublicJsonOverlayPinned,search:searchPublicJsonOverlay};
+    }
     if(schema==='wasmc.mixed-current-cohort/v1'){
       const {verifyMixedFromCatalog,searchMixedCurrentRelease}=await import('./mixed-current-product-v1.mjs');
       return {verify:verifyMixedFromCatalog,search:searchMixedCurrentRelease};
