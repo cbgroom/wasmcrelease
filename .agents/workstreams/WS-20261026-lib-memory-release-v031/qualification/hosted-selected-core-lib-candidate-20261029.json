@@ -1,0 +1,33 @@
+{
+  "schema": "mcpgit.hosted-selected-core-lib-candidate/v1",
+  "status": "isolated source candidate, no deployed route",
+  "baseline": "eb8683ac private archive with selected 7797450d overlays and WAsmC shared-memory SDK v2; not full exact 779 tree",
+  "requires": [
+    "mcpgit-json-shared-memory-host-v2-20261029.patch",
+    "hosted-json-import-boundary-20261029.patch",
+    "hosted-mixed-import-plan-candidate-20261029.patch",
+    "mixed-http-json-executor-candidate-20261029.patch",
+    "mixed-http-json-service-candidate-20261029.patch",
+    "core-runtime-shared-memory-budget-v2-20261029.patch and prerequisites"
+  ],
+  "patch_sha256": "da207bb1852049173c77b8c568d2f6960a530d9a992f82f3df8e137ff3dc565f",
+  "change": "Optional HTTP plugin manifest core_lib selects an activation ID and row version at the route publication revision. load_route resolves it with the CoreLibActivationLoader; resolved activation and publication revision produce a cache/policy fingerprint. The route module preparation uses ordered mixed Host/Lib plan and validates declared programmable and HTTP capabilities. Dynamic limits reuse the same resolved provider identity. Existing manifest without core_lib uses legacy path.",
+  "validation": "Production route module preparation: exact JSON Root and Rust HTTP guest accepted with Table capability; omitted capability and omitted provider rejected. Real temporary Service selects exact JSON activation; its provider and actual TableGit provider are manually passed to HTTP executor; distinct inputs, invalid JSON/recovery, baseline/optimized runtime and original budgeted JSON tests pass. Cache test: same fingerprint reuses Arc, different fingerprint compiles separate entry. Legacy binary package/WIT test and mixed-plan controls pass. Incremental patch applies to reconstructed prerequisite files and byte-compares.",
+  "limitations": [
+    "load_route automatic activation resolution, caller capability intersection and Hosted dispatcher have not been exercised end-to-end yet",
+    "Service test manually injects loaded provider, not production route selection; no production deployment",
+    "only one selected Lib supported",
+    "shared budget covers linear Wasm memory, not host heap, provider fuel, deadline or cancellation",
+    "candidate not Source-integrated; formal release and anonymous download remain open"
+  ],
+  "logs_sha256": {
+    "hosted-selected-lib-route-v1-20261029.log": "aaeb1d402678f79ceab9c225e5f69f142c6224f4a0105d2103aa02d7f8bff5eb",
+    "hosted-selected-lib-route-v2-20261029.log": "ecb2f57fc2a5a6a8d7bb4fafac7a6d326518b33fc97cc6fc3a9b65a1fef0781e",
+    "hosted-selected-lib-route-v3-20261029.log": "0b3cfeac5dd24a421fc8565e52e62c5321afb2c30afc3f9ca45856a95ad4a5cd",
+    "hosted-selected-lib-service-v1-20261029.log": "0d570aaecb596c20b7710a9d741abfaa226602680b00ee4e153303f3fa5160bd",
+    "hosted-selected-lib-cache-v1-20261029.log": "a135516573492a226b5374ea20070c0717c19b30b2f346e60c62c06d3990b411",
+    "hosted-selected-lib-legacy-regression-20261029.log": "dd8209c334e1f47c0dea828308aefef6bcb2dbfb4686ff1250e98b45817c6048",
+    "hosted-selected-lib-plan-regression-20261029.log": "0a75db46b71f10895ae6413068431922a5fef2d67be2d210a030862ce69a01f4",
+    "hosted-selected-lib-branch-readback-20261029.log": "74b4d0077c49d7da65118d29e22374b1c94134d3513ca90d1e58f7394ce0c96f"
+  }
+}

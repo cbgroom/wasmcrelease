@@ -1,0 +1,319 @@
+--- a/crates/mcpgit-executable-runtime/src/route_wasm_executor.rs
++++ b/crates/mcpgit-executable-runtime/src/route_wasm_executor.rs
+@@ -174,0 +175,14 @@
++    #[serde(default, skip_serializing_if = "Option::is_none")]
++    core_lib: Option<HttpCoreLibSelection>,
++}
++
++#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
++#[serde(deny_unknown_fields)]
++struct HttpCoreLibSelection {
++    activation_id: String,
++    activation_row_version: u64,
++}
++#[derive(Clone)]
++struct ResolvedRouteLib {
++    provider: crate::core_lib::PreparedCoreLib,
++    fingerprint: String,
+@@ -448,0 +463 @@
++    core_lib: Option<ResolvedRouteLib>,
+@@ -2897,0 +2913,11 @@
++        key: ModuleCacheKey,
++        artifact: &[u8],
++        manifest_capabilities: &BTreeSet<String>,
++        limits: &HttpRouteLimits,
++    ) -> Result<Arc<CachedModule>> {
++        self.compile_or_reuse_module_with_lib(key, artifact, manifest_capabilities, limits, None)
++            .await
++    }
++
++    async fn compile_or_reuse_module_with_lib(
++        &self,
+@@ -2901,0 +2928 @@
++        core_lib: Option<ResolvedRouteLib>,
+@@ -2902,0 +2930,6 @@
++        if let Some(lib) = &core_lib {
++            key.capability_schema_sha256 = sha256(&serde_json::to_vec(&(
++                key.capability_schema_sha256.clone(),
++                &lib.fingerprint,
++            ))?);
++        }
+@@ -2931 +2964 @@
+-                prepare_cached_module_for_profile(
++                prepare_cached_module_for_profile_with_lib(
+@@ -2936,0 +2970 @@
++                    core_lib.map(|lib| lib.provider),
+@@ -3343,0 +3378,27 @@
++        let core_lib = if let Some(selection) = &manifest.core_lib {
++            let loader = crate::core_lib::CoreLibActivationLoader::with_default_engine(
++                &self.repo,
++                self.client.clone(),
++            );
++            let pin = crate::core_lib::CoreLibActivationPin {
++                activation_id: selection.activation_id.clone(),
++                activation_row_version: selection.activation_row_version,
++                source_revision: publication.source_revision.clone(),
++            };
++            let loaded = loader
++                .load(&pin)
++                .await
++                .context("resolve route Core Lib activation")?;
++            let fingerprint = sha256(&serde_json::to_vec(&(
++                &pin.source_revision,
++                &pin.activation_id,
++                pin.activation_row_version,
++                loaded.activation(),
++            ))?);
++            Some(ResolvedRouteLib {
++                provider: loaded.prepared().clone(),
++                fingerprint,
++            })
++        } else {
++            None
++        };
+@@ -3367 +3428 @@
+-            .compile_or_reuse_module(
++            .compile_or_reuse_module_with_lib(
+@@ -3380,0 +3442 @@
++                core_lib.clone(),
+@@ -3396,0 +3459 @@
++            core_lib,
+@@ -4462 +4525 @@
+-                    .compile_or_reuse_module(
++                    .compile_or_reuse_module_with_lib(
+@@ -4478,0 +4542 @@
++                        route.core_lib.clone(),
+@@ -4942,0 +5007 @@
++    mixed: Option<&MixedRoutePlan>,
+@@ -4973 +5038,2 @@
+-    for import in inspection.imports() {
++    for (index, import) in inspection.imports().iter().enumerate() {
++        if mixed.is_some_and(|plan| matches!(plan.ordered.get(index), Some(MixedRouteImport::Lib(lib)) if lib.module() == import.module() && lib.name() == import.name())) { continue; }
+@@ -5033 +5099 @@
+-        current_core_host_plan_from_inspection(inspection)?.is_some(),
++        mixed.is_some() || current_core_host_plan_from_inspection(inspection)?.is_some(),
+@@ -5201,0 +5268,17 @@
++    prepare_cached_module_for_profile_with_lib(
++        core_runtime,
++        wasm,
++        reviewed_policy_sha256,
++        manifest_capabilities,
++        binary_profile,
++        None,
++    )
++}
++fn prepare_cached_module_for_profile_with_lib(
++    core_runtime: &Arc<CoreDomainRuntime>,
++    wasm: &[u8],
++    reviewed_policy_sha256: [u8; 32],
++    manifest_capabilities: &BTreeSet<String>,
++    binary_profile: bool,
++    provider: Option<crate::core_lib::PreparedCoreLib>,
++) -> Result<CachedModule> {
+@@ -5205,8 +5288,24 @@
+-    validate_http_inspection(&inspection, manifest_capabilities, binary_profile)?;
+-    let functions = current_core_host_plan_from_inspection(&inspection)?
+-        .context("HTTP Core Wasm imports are not the current canonical Router profile")?;
+-    let imports = functions
+-        .iter()
+-        .copied()
+-        .map(mcpgit_programmable_query_runtime::programmable_core_import)
+-        .collect::<Vec<_>>();
++    let mixed = provider
++        .map(|provider| mixed_route_plan_from_inspection(&inspection, provider))
++        .transpose()?;
++    validate_http_inspection(
++        &inspection,
++        manifest_capabilities,
++        binary_profile,
++        mixed.as_ref(),
++    )?;
++    let functions = if mixed.is_some() {
++        Vec::new()
++    } else {
++        current_core_host_plan_from_inspection(&inspection)?
++            .context("HTTP Core Wasm imports are not the current canonical Router profile")?
++    };
++    let imports = if let Some(plan) = &mixed {
++        plan.imports.clone()
++    } else {
++        functions
++            .iter()
++            .copied()
++            .map(mcpgit_programmable_query_runtime::programmable_core_import)
++            .collect::<Vec<_>>()
++    };
+@@ -5219 +5318 @@
+-            mixed: None,
++            mixed: mixed.map(Arc::new),
+@@ -5232,3 +5331,2 @@
+-    let plan = mixed_route_plan_from_inspection(&inspection, provider)?;
+-    let memory = inspection
+-        .exports()
++    let capabilities = inspection
++        .imports()
+@@ -5236,23 +5334,13 @@
+-        .find(|e| e.name() == "memory")
+-        .context("HTTP memory missing")?;
+-    ensure!(
+-        matches!(memory.external_type(), CoreDomainModuleExternType::Memory),
+-        "HTTP memory type drift"
+-    );
+-    let handle = inspection
+-        .exports()
+-        .iter()
+-        .find(|e| e.name() == HTTP_ENTRYPOINT)
+-        .context("HTTP handle missing")?;
+-    ensure_i32_core_signature(handle.external_type(), 0, 1)?;
+-    let artifact = runtime.prepare_scalar_host(wasm, [91; 32], &plan.imports)?;
+-    Ok(CachedModule {
+-        source_bytes: Arc::from(wasm),
+-        kind: CachedModuleKind::Core {
+-            runtime: Arc::clone(runtime),
+-            artifact,
+-            functions: Arc::from([]),
+-            mixed: Some(Arc::new(plan)),
+-        },
+-        compiled_image_bytes: 0,
+-    })
++        .filter_map(|import| {
++            mcpgit_guest_contract::capability_for_import(import.module(), import.name())
++                .map(str::to_owned)
++        })
++        .collect::<BTreeSet<_>>();
++    prepare_cached_module_for_profile_with_lib(
++        runtime,
++        wasm,
++        [91; 32],
++        &capabilities,
++        true,
++        Some(provider),
++    )
+@@ -5990 +6078 @@
+-        let err = validate_http_inspection(&inspection, &BTreeSet::new(), true).unwrap_err();
++        let err = validate_http_inspection(&inspection, &BTreeSet::new(), true, None).unwrap_err();
+@@ -6132,0 +6221,36 @@
++        let table_guest =
++            include_bytes!("../tests/fixtures/mixed-http-json-20261029/guest-with-table.wasm");
++        let table_caps = BTreeSet::from([mcpgit_guest_contract::TABLE_CAPABILITY_V1.to_string()]);
++        assert!(
++            prepare_cached_module_for_profile_with_lib(
++                &runtime,
++                table_guest,
++                [0; 32],
++                &table_caps,
++                true,
++                Some(provider.clone())
++            )
++            .is_ok()
++        );
++        assert!(
++            prepare_cached_module_for_profile_with_lib(
++                &runtime,
++                table_guest,
++                [0; 32],
++                &BTreeSet::new(),
++                true,
++                Some(provider.clone())
++            )
++            .is_err()
++        );
++        assert!(
++            prepare_cached_module_for_profile_with_lib(
++                &runtime,
++                table_guest,
++                [0; 32],
++                &table_caps,
++                true,
++                None
++            )
++            .is_err()
++        );
+@@ -6190,0 +6315,83 @@
++    }
++
++    #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
++    async fn mixed_route_cache_distinguishes_exact_lib_fingerprint() {
++        use super::*;
++        use crate::core_lib::{CoreLibPackage, CoreLibPin, PreparedCoreLib};
++        const MANIFEST: &[u8] =
++            include_bytes!("../tests/fixtures/wasmc-core-algorithms-0.1.0/lib.json");
++        const WIT: &[u8] = include_bytes!("../tests/fixtures/wasmc-core-algorithms-0.1.0/lib.wit");
++        const ARTIFACT: &[u8] =
++            include_bytes!("../tests/fixtures/wasmc-core-algorithms-0.1.0/artifact.wasm");
++        const ABI: &[u8] =
++            include_bytes!("../tests/fixtures/wasmc-core-algorithms-0.1.0/core-abi.json");
++        fn digest(b: &[u8]) -> String {
++            format!("{:x}", Sha256::digest(b))
++        }
++        let provider = PreparedCoreLib::prepare(
++            &Engine::default(),
++            CoreLibPackage {
++                manifest: MANIFEST,
++                wit: WIT,
++                artifact: ARTIFACT,
++                core_abi: ABI,
++            },
++            &CoreLibPin {
++                package_id: "wasmc-core-algorithms".into(),
++                version: "0.1.0".into(),
++                manifest_sha256: digest(MANIFEST),
++                wit_sha256: digest(WIT),
++                artifact_sha256: digest(ARTIFACT),
++                artifact_bytes: ARTIFACT.len(),
++            },
++        )
++        .unwrap();
++        let client = sdk::McpGitClient::new(Arc::new(ReadOnlyTableStatusTransport {
++            calls: Arc::new(std::sync::atomic::AtomicUsize::new(0)),
++        }));
++        let limits = HttpRouteLimits::bounded_default();
++        let executor = TableGitWasmtimeRouteExecutor::new_with_policies(
++            "tablegit",
++            client,
++            limits.clone(),
++            WasmModuleCacheLimits::bounded_default(),
++            RouteLogPolicy::none(),
++        )
++        .unwrap();
++        let wasm = wat::parse_str(r#"(module (import "wasmc:lib/wasmc-core-algorithms@0.1.0" "wasmc:core-algorithms/algorithms@0.1.0#wrapping-add-s32" (func (param i32 i32) (result i32))) (memory (export "memory") 1) (func (export "handle") (result i32) i32.const 200))"#).unwrap();
++        let mut key = module_key(&executor.engine, &wasm);
++        key.binary_profile = true;
++        let selected = |fingerprint: &str| {
++            Some(ResolvedRouteLib {
++                provider: provider.clone(),
++                fingerprint: fingerprint.into(),
++            })
++        };
++        let caps = BTreeSet::new();
++        let a = executor
++            .compile_or_reuse_module_with_lib(
++                key.clone(),
++                &wasm,
++                &caps,
++                &limits,
++                selected("activation-a"),
++            )
++            .await
++            .unwrap();
++        let again = executor
++            .compile_or_reuse_module_with_lib(
++                key.clone(),
++                &wasm,
++                &caps,
++                &limits,
++                selected("activation-a"),
++            )
++            .await
++            .unwrap();
++        let b = executor
++            .compile_or_reuse_module_with_lib(key, &wasm, &caps, &limits, selected("activation-b"))
++            .await
++            .unwrap();
++        assert!(Arc::ptr_eq(&a, &again));
++        assert!(!Arc::ptr_eq(&a, &b));
++        println!("MIXED_LIB_CACHE_OK same_activation_hit=true different_activation_distinct=true");
+@@ -9744,0 +9952 @@
++                core_lib: None,
+@@ -10042,0 +10251 @@
++                    core_lib: None,
