@@ -11,7 +11,7 @@
   "rust_1991_install_idempotency_key": "json023-e5-rust-1991-install-20261029-v1",
   "offline_build_terminal_failure_operation": "exec-0000000000000a48",
   "stable_network_build_idempotency_key": "json023-e5-wasm-stable-network-build-cf2d13e4-v1",
-  "note": "Only Rust 1.99.1 installation exec-0000000000000a43 was still running at last observation. Poll exact handle before retry. Rust 1.99.0 one-Lib Core/Component execution passed; this is not Q0, formal Root, release or production.",
+  "note": "Poll exact SDK producer build and Rust1.99.1 installation operations; old producer Root self-verifies but its Rust Core SDK is Edition2021, so it is not releaseable. Snapshot + patch is an unadmitted private compiler experiment, not Source integration.",
   "stable_network_build_terminal_failure_operation": "exec-0000000000000a49",
   "reconciled_lock_sha256": "e5f4e53184cf1581a26a3cdc8b03032b44eaad84003e825c47377969f06b40f3",
   "reconciled_lock_scope": "34 packages, all name/version/source/checksum identities appear in the 226-package original; standalone feature/dependency graph differs, not equivalent to original full Q0 workspace",
@@ -19,5 +19,14 @@
   "reconciled_build_idempotency_key": "json023-e5-wasm-reconciled-lock-build-v1",
   "reconciled_build_terminal_failure_operation": "exec-0000000000000a4c",
   "fixed_metadata_build_terminal_success_operation": "exec-0000000000000a4e",
-  "component_validation_success_operation": "exec-0000000000000a4f"
+  "component_validation_success_operation": "exec-0000000000000a4f",
+  "old_producer_sha256": "5a91bdbc550b56b590ac6a05f7eb514afe9debcc366bd0de875f6b916e4973f7",
+  "old_producer_build_operation": "exec-0000000000000a5b",
+  "old_producer_verify_operation": "exec-0000000000000a5d",
+  "old_producer_core_sdk_edition": "2021",
+  "sdk_source_commit": "482fb98b040f0b6fe99378afed9ae4dbcb1dd3bf",
+  "sdk_patch_sha256": "b97da19043709b1b7fe3b82eae9f31d68c31e7d8279423207fd010364a14f8f9",
+  "sdk_source_snapshot": "/tmp/wasmc-json023-sdk-producer-482f",
+  "sdk_producer_build_operation": "exec-0000000000000a67",
+  "sdk_producer_build_idempotency_key": "json023-e5-sdk-producer-build-stable-482f-v1"
 }
