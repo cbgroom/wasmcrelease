@@ -1,0 +1,16 @@
+{
+  "status": "test-only diagnostic; production routing remains unimplemented",
+  "baseline": "MCPGit 7797450d route source overlaid in eb8683ac archive; private candidate SDK path, not an exact full 779 tree",
+  "patch_sha256": "74a10e3164e9bcce0746ad229b1bd2472b18381d3781735be66a897d7b89fb9f",
+  "rust_guest_sha256": "adc0cbc9c361b012bfc796ba75e1b8ab69a7c7274ff4f4d3052dfbc4ebc44ed7",
+  "evidence": "Actual Rust 2024 mixed JSON/TableGit Guest inspection contains JSON and canonical-memory imports. Existing current_core_host_plan_from_inspection rejects the import set; binary-profile HTTP inspection rejects first canonical-memory import. Two additional minimal HTTP-shaped Core modules with exported memory and handle independently show route preparation rejects canonical-memory own_read8 and JSON cabi_realloc respectively. One test passed. The Rust Guest is not itself an HTTP handle, so it is not a live Hosted request.",
+  "engineering_consequence": "Route preparation must classify and bind an exact activated Lib and canonical-memory imports in original order alongside authorized Router and TableGit functions; route selection must carry and resolve the exact activation pin and include its identity in cache/policy decisions. Each invocation needs one budget and a fresh provider. Existing test-support mixed binding alone is not production routing.",
+  "limitations": [
+    "No production Hosted request, activation configuration, deployment, full resource budget, integration or release demonstrated",
+    "Diagnostics retain existing route rejections; the test patch adds no product behavior"
+  ],
+  "logs_sha256": {
+    "hosted-json-import-boundary-20261029.log": "446f3f29a8ccd5df67f2f6bc1245122c170edb98e28fc182c3dcdd1a9a549edb",
+    "hosted-json-import-boundary-v2-20261029.log": "42c0824a1c83d98fe7df41a0ddf318e1187c85dff1757323b187ee7bab22adcf"
+  }
+}

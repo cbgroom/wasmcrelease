@@ -1,0 +1,26 @@
+--- a/crates/mcpgit-executable-runtime/src/route_wasm_executor.rs
++++ b/crates/mcpgit-executable-runtime/src/route_wasm_executor.rs
+@@ -5708,0 +5709,23 @@
++    fn json_rust_guest_is_rejected_by_current_hosted_import_planner() {
++        use super::*;
++        let wasm = include_bytes!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../.agents/workstreams/WS-20261028-rust-lib-real-host-v1/fixtures/json-sdk-real-service/guest.wasm"));
++        let runtime = Arc::new(CoreDomainRuntime::default());
++        let inspection = runtime.inspect_core(wasm).unwrap();
++        assert!(inspection.imports().iter().any(|i| i.module() == "wasmc:lib/wasmc-json@0.2.1"));
++        assert!(inspection.imports().iter().any(|i| i.module() == "wasmc:private/canonical-memory@1"));
++        assert!(current_core_host_plan_from_inspection(&inspection).unwrap().is_none());
++        let err = validate_http_inspection(&inspection, &BTreeSet::new(), true).unwrap_err();
++        println!("HOSTED_JSON_CURRENT_REJECTION: {err:#}");
++        assert!(err.to_string().contains("unsupported programmable query Host import"));
++        for (module, name, signature) in [
++            ("wasmc:private/canonical-memory@1", "own_read8", "(param i32) (result i32)"),
++            ("wasmc:lib/wasmc-json@0.2.1", "cabi_realloc", "(param i32 i32 i32 i32) (result i32)"),
++        ] {
++            let wat = format!(r#"(module (import "{module}" "{name}" (func {signature})) (memory (export "memory") 1) (func (export "handle") (result i32) i32.const 200))"#);
++            let bytes = wat::parse_str(wat).unwrap();
++            let err = prepare_cached_module_for_profile(&runtime, &bytes, [0; 32], &BTreeSet::new(), true).err().expect("unsupported Lib import must be rejected");
++            println!("HOSTED_SINGLE_IMPORT_REJECTION: {err:#}");
++            assert!(err.to_string().contains(module));
++        }
++    }
++    #[test]
