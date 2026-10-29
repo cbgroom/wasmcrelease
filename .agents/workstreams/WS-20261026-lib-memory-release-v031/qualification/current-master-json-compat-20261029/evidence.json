@@ -1,0 +1,47 @@
+{
+  "schema": "wasmc.current-master-sdk-compatibility/v1",
+  "source_commit": "482fb98b040f0b6fe99378afed9ae4dbcb1dd3bf",
+  "source_equality": {
+    "tracked_non_agent_git_blobs": 2037,
+    "mismatches": 0
+  },
+  "builder": "cargo build --offline --locked --bin wasmc on exact non-agent source snapshot",
+  "builder_binary_sha256": "01152a078fa7ae71010a7be8a10958da9afc7d92cbdd568f54f013b8731579f8",
+  "anonymous_json022_manifest_sha256": "e7167f189acb71cd67a15236c318f066fa9a09794d285d7e8ee20ce4745d0402",
+  "anonymous_json022_verify": "fail: licensed Rust SDK Cargo.toml does not regenerate exactly",
+  "frozen_json006_verify": "pass",
+  "json020_verify": "fail: Core-composition Rust SDK does not regenerate exactly",
+  "prior_sdk_patch": "git apply --check fails on current master snapshot; no claimed files altered",
+  "static_current_main": "Core SDK manifest edition 2021; generated canonical bridge has 2 MiB staging, 16 MiB transfer bytes, 1 Mi node, 32 depth budgets. Static inspection alone does not establish a runtime trigger.",
+  "logs": {
+    "master-non-agent-source-equality.json": {
+      "raw_sha256": "e5ad27cd3990fd156b4b454a723ce2b3d1c4f6f7b7c67335d183b98b6d054ae2",
+      "gzip_sha256": "e1e05e07484d85e98421b32c09cb5c9ebe8b5e862121710284aa4a6139949f7d"
+    },
+    "master-wasmc-build.log": {
+      "raw_sha256": "31c917dd14705e9dd8dd4a1edcab381ff07df03f7b9e7baeaa1d1494dc70e3ee",
+      "gzip_sha256": "49298884b011dec1189f44e50fbea53f447eab6146d62a2799648f355a138871"
+    },
+    "master-json022-anonymous-verify.log": {
+      "raw_sha256": "1a93d44bf5fe1e82498799b99c8a27b0400a84bbc7fba36d677efd9f12666a75",
+      "gzip_sha256": "9e4fc4ae09ba72c6c5d2de35dc127979839d68858f0480088ad7de31ba6e9045"
+    },
+    "master-json022-anonymous-verify-canonical.log": {
+      "raw_sha256": "e05beaaa62ce83f2f09021d863dee9f661be8e430f90bff804d3d034103866e6",
+      "gzip_sha256": "c118636049fd6ce8d459802aed5edd72ec3ce064ca9a30dd15b8412b4eaca581"
+    },
+    "master-json006-frozen-verify.log": {
+      "raw_sha256": "dea142b44d6f4015ad1d42b65cce1433bcfd6f7835a9524db6d3bc59e95bc091",
+      "gzip_sha256": "c7a28c894dfd07e3b9d98f8df35de2fadf2896a40282effef8e2e0425b48d79d"
+    },
+    "master-json020-verify.log": {
+      "raw_sha256": "e261f0a3b51f28f3ca07f7957637aaea3ba66bcaae487ecb67cccd9ccd7ddad8",
+      "gzip_sha256": "eadc6c6938134c691f31a03a9231a07c17ed3a4c6f796c95d64e30cc29ba08c6"
+    },
+    "master-sdk-patch-check.log": {
+      "raw_sha256": "96bffdbdaf6722022eeb3d0ef9841903f2b52c94d6c801ff902dbb39f9da4944",
+      "gzip_sha256": "bb941f820a821795b54efff0ce387f7d02c3f0f0422198ec3854e4cdc159b4ee"
+    }
+  },
+  "scope": "Source-level exact non-agent snapshot and real CLI strict reopen; no admitted fix, runtime failure, production or release claim."
+}
