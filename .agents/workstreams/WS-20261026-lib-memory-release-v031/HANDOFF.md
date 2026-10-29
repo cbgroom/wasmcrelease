@@ -816,3 +816,6 @@ Current integrated Source 482fb98b compatibility 2026-10-29: exact master non-ag
 
 
 Task state: started. Claim the two new JSON overlay public verifier/test paths. Design independent pinned prior catalog plus public Root/index identity and exact search validation; retain the private producer and Q0 capsule outside the distributable. This does not substitute for private provenance, Source admission, production route, or release qualification.
+
+
+2026-10-29 public overlay verification: `scripts/json-overlay-public-v1.mjs` validates exact externally pinned previous and new catalog, retained package/index rows, JSON Root identity, all selected file digests, actual Search snapshot/lookup/pagination, and independent inventory without importing private Q0/producer. Standalone public-only candidate and prior metadata fixture passed 43 packages, 822 files, 332 entries and 10 negatives; first native metadata failure retained in qualification/json-overlay-public-20261029. Candidate catalog remains synthetic 0.0.0 and receipt SHA is a commitment, not proof of private provenance. Next wire public verifier into successor candidate and independently require private Q0 qualification; do not publish private capsule or mistake either check for release. Governance PR28 has an explicitly excluded security check failure; other CI remains in progress.
