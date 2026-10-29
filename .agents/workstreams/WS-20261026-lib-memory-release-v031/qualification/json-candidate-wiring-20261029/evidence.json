@@ -1,0 +1,39 @@
+{
+  "schema": "wasmc.json-candidate-wiring-experiment/v1",
+  "status": "SCOPED_EXPERIMENT_NOT_ADMITTED",
+  "source_base": "19649dfae1cf331c48322db3f67c386777389b95",
+  "version": "0.0.31",
+  "checks": [
+    "Actual public 0.0.31 catalog variant recognized; independent private Q0 and public projection preflight pass, 43 roots / 822 files.",
+    "Absent or duplicate JSON flags and incorrect operator entry hash reject.",
+    "Full create on projection proceeds through real preflight then stops because the projection has no compiler-release.json.",
+    "v0.0.30 overlay selection rejects; old composition argument and v0.0.30 v3 selection pass.",
+    "Existing module import inventory test passes; public literal entrypoint graph remains 42 modules with no private operator preflight import."
+  ],
+  "first_failure": "Initial literal import of preflight triggered the existing public/private module boundary test; preserved in graph-first-failure.log.",
+  "limitations": [
+    "Patch is isolated and is not applied to shared Source.",
+    "The separately supplied operator entry hash alone does not authenticate its transitive modules or establish reviewed source authority; solve this before applying or considering admission.",
+    "This is not a fully assembled product, compiler/SDK release, production route, CI qualification or formal release.",
+    "Current release checkout compiler manifest remains version 0.0.30; do not relabel.",
+    "Literal import graph does not validate computed dynamic imports."
+  ],
+  "files": [
+    {
+      "path": "experimental.patch",
+      "sha256": "70f6500c99c7549cdba5f28e8709d2fd29b594b50b6f69a7efaa8ca9ca55c168"
+    },
+    {
+      "path": "test-wiring.mjs",
+      "sha256": "1e63fe7c757528945a20f06d679e34a34457f0ab67f44df28deba225e4c65ca3"
+    },
+    {
+      "path": "test-wiring-v3.log",
+      "sha256": "c901cd211a2b1095dcdf21ab1af84e0e42673aa3c6aee9bf47febf950575c18b"
+    },
+    {
+      "path": "graph-first-failure.log",
+      "sha256": "b15ce63a5139018056935ed8832eb97df8fcda5ac03c464ff0d2ab7961ed2f73"
+    }
+  ]
+}

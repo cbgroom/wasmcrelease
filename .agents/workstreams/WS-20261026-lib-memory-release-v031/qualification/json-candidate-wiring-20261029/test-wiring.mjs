@@ -1,0 +1,18 @@
+import assert from 'node:assert/strict';
+import {currentCandidateArguments,currentProductVariant,currentProductInputsForVersion,createCurrentCandidate} from './scripts/release-candidate.mjs';
+import {currentProductReader} from './scripts/current-lib-release-v3.mjs';
+import {createHash} from 'node:crypto';
+import {readFileSync} from 'node:fs';
+import {qualifyJsonOverlayCandidate} from './scripts/json-overlay-candidate-admission-v1.mjs';
+const state='/Users/youxianshi/.local/state/wasmc-maintenance/rustc-service-1991-20261028',publicRoot=state+'/json-v031-overlay-public-20261029';
+const op=state+'/json-candidate-wiring-experiment-20261029/scripts/json-overlay-candidate-admission-v1.mjs',opSha=createHash('sha256').update(readFileSync(op)).digest('hex');
+const flags=['--json-operator-entry',op,'--json-operator-sha256',opSha,'--json-private-root',state+'/json-v031-overlay-private-qualified-20261029','--json-catalog-sha256','86054f539c43dbb2c40f33a89f99b830bce0c979dedf9417d5873abfc832af62','--json-prior-catalog-sha256','355bcc7cf6e006616f9e7938b9c5222d922ef76590e27db633e88c64036816c2','--json-receipt-sha256','f047c0bd870d9b2b2c1e0e619fe0993d8041d981d7cd0c781867e5323b731d51','--json-wit-tool','/Users/youxianshi/.cargo/bin/wasm-tools','--json-wit-tool-sha256','40c3d0e890e86cc86ef186fe3e504cd62d03da90fe0a1fc81b6588d078bd0a65','--json-authority-commit','47e6859792d7e1f6a38560dddf6cf2afa0a9959b'];
+const opts=await currentCandidateArguments(flags),r=currentProductReader(publicRoot),b=r('catalog/libs-current-v2.json');
+assert.equal(currentProductVariant(b,opts.catalogSha,r),'json-overlay');
+assert.throws(()=>currentProductInputsForVersion('0.0.30','json-overlay'),/successor version/);
+const paths=currentProductInputsForVersion('0.0.31','json-overlay');assert.ok(paths.includes('admission/json-overlay-prior-catalog-v1.json'));
+for(const bad of [flags.slice(0,-2),[...flags,'--json-receipt-sha256','0'.repeat(64)]])await assert.rejects(currentCandidateArguments(bad));
+await assert.rejects(createCurrentCandidate(publicRoot,{compilerSource:'1'.repeat(40),libSource:'2'.repeat(40),version:'0.0.31',currentOptions:{...opts,operatorSha:'0'.repeat(64)}}),/operator preflight entry identity/);
+await assert.rejects(createCurrentCandidate(publicRoot,{compilerSource:'1'.repeat(40),libSource:'2'.repeat(40),version:'0.0.31',currentOptions:opts}),/current\/compiler-release.json/);
+const q=await qualifyJsonOverlayCandidate({...opts,publicRoot,version:'0.0.31'});assert.equal(q.private_q0_verified,true);assert.equal(q.public_projection_verified,true);
+console.log(JSON.stringify({status:'PASS_SCOPED',variant:'json-overlay',packages:q.packages,files:q.root_files,private_proof_omitted:q.public_input_paths.every(p=>!p.startsWith('proof/')),full_product_candidate:false}));
