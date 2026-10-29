@@ -1,0 +1,40 @@
+{
+  "schema": "wasmc.wit16-native2024-literal/v1",
+  "status": "private source candidate; not integrated or formally released",
+  "parent_producer_sha256": "201a01fc9a98a8a181ac5a663a98f3f207de55ce57912be98ab5eddceac42f8b",
+  "producer_sha256": "961919aabda4c87097c732410d1ef499b5ea6422820b37af8ac49e13234fe5f7",
+  "private_incremental_patch_sha256": "1c27aba8f71381bcee3527ff9c1edcedd478304b9d2dba7ac4291f8526d5ff46",
+  "private_patch_location": "~/.local/state/wasmc-maintenance/rustc-service-1991-20261028/wit16-native2024-literal-incremental-20261029.patch",
+  "change": "Restore ownership-aware list literal lowering and current Native Canonical transfer Rust 2024 compilation; centralize the current SDK and Native transfer edition in one SDK generator constant. Historical Rust 2021 SDK exact-regeneration branches are retained. Patch applies to the pinned previous candidate.",
+  "validation": [
+    "Old candidate explicitly failed the new Native edition assertion; fixed candidate passes. Synthetic pure/mixed Native WIT path uses producer Rust 2024 flags and runs 3456 calls on each Wasmi/Wasmtime engine.",
+    "Exact installed JSON Root manifest a40499304c4078c8034473e552730cd460556c81d8679b8afe040cf2407f7397: producer-generated Native transfer covers 26 operations, compiles as Rust 2024, passes strict preparation and Wasm validation.",
+    "Ordinary WAsmC string-list array construction and record-list object construction execute this same Root on both engines. String cases: 3; record cases: 2; 2 rounds each. Independent checkQ2Evidence passes both. The Q2 test harness separately constructs its Rust 2024 transfer; its result does not by itself prove the production Native transfer builder.",
+    "Previously failed 311-field checked record WIT passes again on final combined source on both engines; old frozen JSON 0.0.6 Root strictly verifies with final producer."
+  ],
+  "preserved_failures": [
+    "Edition assertion on old candidate rejected --edition=2021.",
+    "The current wasmc-json.wasmc Q2 fixture rejected ordinary aggregate call drift; this separate fixture is not shown repaired.",
+    "String-list source rejected unsupported expression on the old combination; same input succeeds after restoring list literal support."
+  ],
+  "limits": [
+    "Q2 uses a new bounded Store per invocation, not same-Store soak or Hosted production.",
+    "Final producer has not been used for a new complete 43-package refresh or anonymous installation.",
+    "The six missing retained-input historical tests from the previous stage remain unresolved.",
+    "Other count and Native output limits remain; source admission, production Host and formal release are incomplete."
+  ],
+  "logs_sha256": {
+    "baseline": "2c8250ac21dd8a26a155b896ca4f076a4f8398eb579519c7273fc5288d1db0c8",
+    "flags": "471e0f1f58ce583881b8c603946d1c8a5350a3384af6a27cc2faaa0d15843649",
+    "native_direct": "b6ec79725d6ea6fb1157dc63a3515d9580cf42834f5b8e3de21c7e893d46f7c3",
+    "final_installed_transfer": "3d7ff66d5ac7fb48dd3b663dfa699de5c48383c4ceb0088bac9055f385bb947b",
+    "final_checked": "2c79cea32c61e86011032efee9492f81e9c7947174e2b1d73fef3d5055e69533",
+    "unrepaired_q2_fixture": "1cfba8888e319439be65997f0a5a05c2d936ab0c0fb784033fe1b53c1bda44c4",
+    "old_literal_failure": "172c86d83e2b37094f5d5199166a74a46e351b31fcab44b0882fcf8d6662ae91",
+    "string_q2": "1bfe5aa883e461276eb2ac84e1f33f6e52505cd013b9cfdd009edb3dbaa33c19",
+    "record_q2": "e6cb714c04da3a93dbfc8f79ffe13194f6b18dacc607a9e877575d27f7100212",
+    "oracles": "fe4cac9ec07dba3244e043ea0eefd1d1ebc729554a44901ddf2b5c3d7634ed55",
+    "legacy_root": "dea142b44d6f4015ad1d42b65cce1433bcfd6f7835a9524db6d3bc59e95bc091",
+    "producer_build": "d2e374d3dad49a7daf273896342698af29fe32790741e3deb407b1f66cd41fe5"
+  }
+}
