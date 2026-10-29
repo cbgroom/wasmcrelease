@@ -1,0 +1,44 @@
+--- a/crates/mcpgit-executable-runtime/src/test_support_json_lib.rs
++++ b/crates/mcpgit-executable-runtime/src/test_support_json_lib.rs
+@@ -369 +369 @@
+-pub fn invoke_mixed_host(provider: &PreparedCoreLib, wasm: &[u8]) -> Result<()> {
++pub fn invoke_mixed_host(provider: &PreparedCoreLib, wasm: &[u8], table_provider: std::sync::Arc<dyn mcpgit_programmable_query_runtime::TableMutationProvider>) -> Result<()> {
+@@ -372,2 +372 @@
+-    use mcpgit_programmable_query_runtime::{QueryHost, ProgrammableQueryLimits, TableMutationProvider, TableMutationProviderError};
+-    use std::sync::Arc;
++    use mcpgit_programmable_query_runtime::{QueryHost, ProgrammableQueryLimits};
+@@ -376,7 +374,0 @@
+-    struct TableFixture;
+-    impl TableMutationProvider for TableFixture {
+-        fn status(&self, path: &str) -> std::result::Result<Vec<u8>, TableMutationProviderError> {
+-            assert_eq!(path,"json_results"); Ok(br#"{"revision":"r1","table_path":"json_results"}"#.to_vec())
+-        }
+-        fn transact(&self, _request: &[u8]) -> std::result::Result<Vec<u8>, TableMutationProviderError> { unreachable!() }
+-    }
+@@ -410 +402 @@
+-        let host=QueryHost::new_with_table_mutations(pool.checkout("mixed-fixture")?,limits,store_limits,Extension{lib:instance},Some(Arc::new(TableFixture)));
++        let host=QueryHost::new_with_table_mutations(pool.checkout("mixed-fixture")?,limits,store_limits,Extension{lib:instance},Some(table_provider.clone()));
+--- a/tests/core_lib_activation.rs
++++ b/tests/core_lib_activation.rs
+@@ -309 +309,9 @@
+-    drop(client);
++    create_named_activation_table(&client, revision.clone(), "json_results").await?;
++    let route_provider = std::sync::Arc::new(mcpgit_executable_runtime::route_wasm_executor::TableGitRouteMutationProvider::new(
++        REPO, client.clone(), tokio::runtime::Handle::current(),
++        mcpgit_executable_runtime::route_registry::RouteCallerContext {
++            principal_id: "json-sdk-service-test".into(), person_id: Some(PERSON.into()),
++            permissions: BTreeSet::from(["table.read".into()]),
++            capabilities: BTreeSet::from([mcpgit_guest_contract::TABLE_CAPABILITY_V1.into()]),
++            table_scope_restricted: false,
++        }));
+@@ -344 +352,2 @@
+-        mcpgit_executable_runtime::test_support_json_lib::invoke_mixed_host(loaded.prepared(),&mixed)?;
++        let prepared=loaded.prepared().clone();
++        tokio::task::spawn_blocking(move || mcpgit_executable_runtime::test_support_json_lib::invoke_mixed_host(&prepared,&mixed,route_provider)).await??;
+@@ -831,0 +841,3 @@
++    create_named_activation_table(client, revision, CORE_LIB_ACTIVATION_TABLE).await
++}
++async fn create_named_activation_table(client: &sdk::McpGitClient, revision: String, path: &str) -> Result<String> {
+@@ -883 +895 @@
+-            path: CORE_LIB_ACTIVATION_TABLE.to_string(),
++            path: path.to_string(),

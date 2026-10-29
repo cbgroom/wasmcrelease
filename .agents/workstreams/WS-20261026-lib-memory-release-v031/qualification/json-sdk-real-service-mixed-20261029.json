@@ -1,0 +1,20 @@
+{
+  "schema": "wasmc.json-sdk-real-service-mixed/v1",
+  "status": "isolated temporary real MCPGit Service, not deployed",
+  "base": "eb8683ac7f6eb83163820ee488e115f539c83e4c plus previously recorded ordered-host and dual-engine test patches",
+  "root_manifest_sha256": "4afaac1a820001fce70dbe883e18052e6f981f27509888752d22511bcf5c25a7",
+  "guest_sha256": "adc0cbc9c361b012bfc796ba75e1b8ab69a7c7274ff4f4d3052dfbc4ebc44ed7",
+  "result": "Rust 2024 Guest calls 26 JSON APIs and table.status via actual TableGitRouteMutationProvider, QueryHost and real temporary McpGitService; Wasmi and Wasmtime pass, wrong provider rejected, Wasmtime subsequent invocation recovers; each successful invocation releases one handle and leaves zero live handles.",
+  "limitations": [
+    "table.status is read-only; JSON inputs are fixed in this SDK guest",
+    "This is not production Hosted route admission or dynamic route selection",
+    "Guest and provider use separate resource accounting",
+    "Source admission, hosted CI, formal release and anonymous download remain open"
+  ],
+  "files": {
+    "json-sdk-real-service-mixed-20261029.patch": "83262c045a19f8c15739562b393a92bae036c393bd9d05b4a8d46dd4c016d153",
+    "json-sdk-real-service-mixed-v1-20261029.log": "756bdaeeedf0ceba9ba594f860b416215d026fbf40fcd9a96d69cb05b261e202",
+    "json-sdk-real-service-mixed-v2-20261029.log": "83b47b8d689cdf095098a6323719ed8f64fa202d29adb04ef160f704e21f46e3"
+  },
+  "patch_application": "git apply --unidiff-zero after prior test fixture patches"
+}
