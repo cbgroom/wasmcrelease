@@ -1,0 +1,45 @@
+{
+  "schema": "wasmc.json-candidate-operator-snapshot/v1",
+  "status": "SCOPED_EXPERIMENT_NOT_ADMITTED",
+  "operator_source_commit": "e2730da8c1994d54b670430a4bab30fff26f5bd6",
+  "checks": [
+    "Real v031 public candidate and private Q0 verified using operator script extracted with all scripts from an exact Git commit.",
+    "Wrong entry digest and nonexistent operator commit reject.",
+    "A separate temporary Git fixture changed a transitive working-tree script to throw; the exact committed snapshot still executed successfully and reached the expected missing compiler manifest.",
+    "Legacy v030 selection and composition arguments pass; v030 overlay rejects.",
+    "Existing module-inventory tests and 42-module public literal dependency graph pass."
+  ],
+  "limitations": [
+    "Scratch patch only; not integrated in claimed Source, production or formal release.",
+    "Caller-provided commit is an identity fence, not independent evidence of review, approval or release.",
+    "No complete v031 product or compiler manifest was present; end-to-end candidate creation is not yet proven.",
+    "Literal dependency scan is not a complete JavaScript parser; runtime host and Node installation are external to the Git snapshot.",
+    "Public and private artifacts remain separate; no claim that Source SDK or CI has passed."
+  ],
+  "files": [
+    {
+      "path": "experimental.patch",
+      "sha256": "d3de3d5d36f2352df38ed832ddda86e425b1094ce4a43dabd0aaf476613a9792"
+    },
+    {
+      "path": "test-wiring.mjs",
+      "sha256": "e8ec70d4b8ef68f95ca6ca40e128163eb27b472c2decc75ade5fe3e2a44711ea"
+    },
+    {
+      "path": "test-wiring-v4.log",
+      "sha256": "c901cd211a2b1095dcdf21ab1af84e0e42673aa3c6aee9bf47febf950575c18b"
+    },
+    {
+      "path": "snapshot-isolation.log",
+      "sha256": "98b57e40ba21591f4c1591c7464714eddee02659b36714a262fafa884eadd072"
+    },
+    {
+      "path": "scoped-compatibility.log",
+      "sha256": "e1603405f95d07491f2dd1ee67922d3f3e7f9ff02116220f6c29abeb8748008c"
+    },
+    {
+      "path": "module-inventory.log",
+      "sha256": "016b36e2199377701ebbe0b78efa3e763af185441ddecabaab2a6437cb3f2091"
+    }
+  ]
+}
