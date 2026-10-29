@@ -1,0 +1,44 @@
+{
+  "status": "PARTIAL_ISOLATED_CANDIDATE_NOT_INTEGRATED",
+  "candidate_patch_sha256": "3b41ce1d834e3f91adfff19e1812b859539f1d68e0e628521e94651b3a840ada",
+  "candidate_patch_private_path": "/Users/youxianshi/.local/state/wasmc-maintenance/rustc-service-1991-20261028/hosted-budget-sdk-gather-20261030/response-body-reservation-candidate.patch",
+  "prerequisite_request_reservation_patch_sha256": "f901679ee39e251161974d75a5ec6dd37e77f14964206bb34de045bd111db065",
+  "patch_scope": [
+    "crates/mcpgit-executable-runtime/src/route_wasm_executor.rs",
+    "crates/mcpgit-executable-runtime/src/core_http_adapter.rs"
+  ],
+  "design": "For mixed routes, reserve request or response body allocation against the same invocation budget before guest-memory copy; reserve Vec capacity and attach reservation to Bytes owner so clones retain accounting until last drop. Existing no-budget adapter path remains.",
+  "source": "isolated reconstructed MCPGit candidate with shared Wasm budget and prerequisite input reservation; not current main or live deployment",
+  "guest_sha256": "1cbbdfb3bdbc70f3cdb92adb9d6597e256972f0ea9e3bfdc3af2e29505be1962",
+  "sdk_sha256": "0684fd80795ff2f0208bb1d5b686d3ebef95f505ec353c7157eb831975c936f0",
+  "service_tests": [
+    "At 127 pages (8323072 bytes), 3MB output reservation denied with 5373969 bytes already reserved; Guest verifies earlier 3-byte response remains intact, emits its own 507 fallback, and later fresh input returns 200.",
+    "At 128 pages (8388608 bytes), same Guest returns exact 3000000-byte response; reported reservation at write 8373969 bytes; later fresh input returns 200.",
+    "Host adapter unit suite 5/5 passes, including request/response mutations and failed out-of-bounds/budget writes on Wasmi and Wasmtime; cloned request/response owners retain 6 bytes until their last clones drop.",
+    "Separate owner lifetime unit 1/1 confirms reservation held across Bytes clones."
+  ],
+  "preserved_observations": [
+    "Initial 120-page baseline expected success but failed earlier at Wasm allocation; retained and not interpreted as response accounting.",
+    "128-page candidate initially expected rejection but succeeded with 8373966/8388608 reserved; corrected the boundary to 127 pages and retained the first log.",
+    "First lifetime test used partial name with --exact and selected zero tests; corrected rerun passed 1/1."
+  ],
+  "limitations": [
+    "Tracks logical and Vec capacity for new binary request/response body writes, not allocator metadata or all Host heap, shared input backing, context, HTTP ingress, tables or compiled code.",
+    "Preexisting incoming request reservation occurs after transport allocation; does not cap the ingress peak.",
+    "Budget is invocation-local, not a system-wide or cross-invocation limit; reservations outlive owner clones but are not shared with later independent budgets.",
+    "Response outside binary exchange and other Host allocations still need accounting; no global memory proof.",
+    "Only isolated candidate Service, no integration or production Hosted validation; route files have active foreign claim.",
+    "Same-version optimized JSON Root is scratch, not permission to overwrite immutable identity; no formal release."
+  ],
+  "logs_sha256": {
+    "response-replace-127.log": "d36d714de94bde26ba3d60308d6147ecbf3587f56b30a428e37aa6d0708e37c9",
+    "response-replace-128.log": "b0046a1bc968854d396e2b76ee29cba2ec5353c834d2d49e0ba06013ce5072f8",
+    "response-budgeted-adapter-tests-v2.log": "1775746f3d1ee95883b0912d1a52229dbbac0cfebca2962b5cc80f3f99e4d584",
+    "response-before-120.log": "0eb28d36c11b0176c1ae16cd06bdcb4e1b2d86d479555decb3e8057765a0156e",
+    "response-before-128.log": "6f42c54d10956be734bada1f1ff47a0883f7ac5929bc915170d944941e84d7ab",
+    "response-candidate-128.log": "5129a8c4344114b04b1a1269f31662c6705f21bb505510ab98d3c28d9869ca93",
+    "response-owner-unit.log": "31a7978269af737159f8dd8b9517aa15ee9286de8692ae8b555d205cb445ac95",
+    "response-owner-unit-v2.log": "aaac5f30a7c1aef206525f6b0b5dfef2df8daf05cd72e12ab8efa2bbcab38638"
+  },
+  "guest_source_sha256": "7f207579df06710d372d9fdd38770edbd9e24e1cfdc4b24eff79a802c0a6838c"
+}
