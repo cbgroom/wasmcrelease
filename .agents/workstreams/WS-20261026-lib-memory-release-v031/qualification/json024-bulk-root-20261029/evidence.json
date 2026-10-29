@@ -1,0 +1,33 @@
+{
+  "status": "CANDIDATE_NOT_RELEASED",
+  "package": "wasmc-json@0.2.4",
+  "based_on_manifest_sha256": "e4828ea55693c415203bc996e25af6a3c2a8e974a4c6dd05d35799fe31ff4c4d",
+  "unlicensed_manifest_sha256": "28aaa394222442c986c70c621e8c1e5e0a880c590c5ce7aacbcd3ef1c389d9d7",
+  "licensed_manifest_sha256": "24d9f721eed39d73ed57bfee2882afeaf5fd8ca8123619fc408d40554f961825",
+  "core_artifact_sha256": "2721005c4f1c91cb058fa3dde601071cb828ff50e4c7b998468db16b54ea7e4e",
+  "component_sha256": "2764a454940120ededd94a4c7d9dd3a44ea7d88d80bf3a3511eab6986716e0f8",
+  "rust2024_sdk_source_sha256": "9c2015e6aead957086f1aed15f73885c3e87ff5cbbd491c11c9eae2c797f38a6",
+  "sdk_consumer_guest_sha256": "59754260359ea9fcf3d709acdd0d528fd14c49b73a698efaeb8f32483d0e2c43",
+  "ordinary_wasmc_linux": "PASS 14 cases, 1.5MB atomic 2 rows, bound rejection and recovery; private unlicensed manifest with identical artifact",
+  "ordinary_wasmc_fuel": "3378825741 at 4 billion budget, prior 0.2.3 3378827112; scalar bridge unchanged, no upper-bound claim",
+  "component": "PASS 1 million fields, 100000 edits, typed reads, invalid batch atomicity, fresh input; private unlicensed manifest with identical component",
+  "hosted_service": "PASS on exact licensed Root in isolated local MCPGit Service/Hosted: Rust 2024 SDK guest, resource selection, 16MiB body, four commits, conflict, disabled, invalid and fresh-input recovery; explicit 60B fuel, 256MiB memory, 180s; not deployed production",
+  "license": "attached with existing release helper; native lib verify PASS",
+  "production_route": "NOT ADMITTED: policy publisher mismatch on observed IDEV; IDEV is not production",
+  "hosted_ci": "NOT PASS: hosted CI billing failure on source PR 29, no hosted x86 result",
+  "preserved_failures": [
+    "service-first-failure.log",
+    "component-first-failure.log"
+  ],
+  "logs_sha256": {
+    "component-first-failure.log": "369e14535aa67a1639fc3ff405adc52d837e0e5e18ccfa90be92b7e0c0eccc58",
+    "component-pass.log": "e17abdb043defc4f2997ff66cf54f49a24477affd6a66773fff888f0f93464d5",
+    "licensed-verify.log": "0232122722d1cab3129f11044f3f4bd3f1965c2a81b261f16c3b3194e4c5a20f",
+    "ordinary-linux-pass.log": "9a7e5a7b4189fbd963bd10df3e8367cb40f4416e4aa24330b7d75e14e881b2d2",
+    "service-first-failure.log": "43b02aed6c2d2c6865d24250c9255a845c27b7c4379163a0309536d0d451e1a8",
+    "service-licensed-pass.log": "2ae0477bfabdb36f921755e4323cc705560030f543a3847e4bd1222dc05faea5",
+    "service-unlicensed-pass.log": "93b913d14e9a5ae561728b0c72cec7262e5d8bb840315cf7f1641d6cdba9b63b"
+  },
+  "hosted_test_source_sha256": "4270492e4ca69969b948c492489fe0bfd97cb2c40b1f955d7bd5d036f434583d",
+  "service_source": "isolated copy of existing local service fixture snapshot; revision not independently asserted"
+}
