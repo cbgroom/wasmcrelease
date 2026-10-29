@@ -1,0 +1,22 @@
+{
+  "schema": "wasmc.cohort43-values-component-check/v1",
+  "status": "isolated Q0 Component outputs, not production or formal release",
+  "q0_receipt_sha256": "624fe04a6af7200bdd6f8ce9473edc3145f2e7f4cc78237c3db5335faa49e224",
+  "engine": "wasmtime 47.0.3 (5554cc1a6 2026-07-31)",
+  "packages": [
+    "wasmc-json",
+    "wasmc-compression",
+    "wasmc-http1"
+  ],
+  "cases": 13,
+  "validation": "13 independent Component invocations exercise JSON construction, edits and typed values, gzip decompress and invalid input, HTTP request parsing and framing. Tested Component and manifest hashes match the independently verified controlled installation.",
+  "limitations": [
+    "Each case uses a new Wasmtime process, not a persistent Component instance.",
+    "Only three Components; no complete cohort, live Host, CI or release claimed."
+  ],
+  "test_script_sha256": "f0e1cd119f662a26b666f1fea0c63acedfea149a9850ac054bd7579fbde571f1",
+  "files_sha256": {
+    "cohort43-json2024-components-20261029.json": "4b9f758fc759e0ab04a7e1d91bb4d4aba561979724b589c4ed70b8fbdbd8accb",
+    "cohort43-json2024-components-20261029.log": "9f89bc395f421806213be7485376ca551e9d13e38de53525183614a036ef2db3"
+  }
+}
