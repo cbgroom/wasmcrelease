@@ -7,22 +7,10 @@ use parquet::arrow::arrow_reader::ParquetRecordBatchReaderBuilder;
 use parquet::arrow::ArrowWriter;
 use parquet::basic::Compression;
 use parquet::file::properties::WriterProperties;
-use std::io::{Cursor, Error as IoError, Result as IoResult, Write};
-use std::sync::atomic::{AtomicBool, Ordering};
-use std::sync::Arc;
-
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub struct EncodeOptions {
-    pub max_batches: u32,
-    pub max_rows: u32,
-    pub max_output_bytes: u32,
-}
+use std::io::Cursor;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct DecodeOptions {
-    pub max_input_bytes: u32,
-    pub max_batches: u32,
-    pub max_rows: u32,
     pub batch_rows: u32,
 }
 
@@ -42,49 +30,25 @@ pub enum Error {
     Overflow,
 }
 
-struct BoundedWriter {
-    bytes: Vec<u8>,
-    limit: usize,
-    exceeded: Arc<AtomicBool>,
-}
-impl Write for BoundedWriter {
-    fn write(&mut self, value: &[u8]) -> IoResult<usize> {
-        let next = self.bytes.len().checked_add(value.len())
-            .ok_or_else(|| IoError::other("output size overflow"))?;
-        if next > self.limit {
-            self.exceeded.store(true, Ordering::Relaxed);
-            return Err(IoError::other("output limit exceeded"));
-        }
-        self.bytes.extend_from_slice(value);
-        Ok(value.len())
-    }
-    fn flush(&mut self) -> IoResult<()> { Ok(()) }
-}
-fn encode_error(exceeded: &AtomicBool) -> Error {
-    if exceeded.load(Ordering::Relaxed) { Error::OutputLimitExceeded } else { Error::EncodeFailure }
-}
 fn map_data_error(error: data_arrow::Error) -> Error {
     match error {
         data_arrow::Error::UnsupportedType => Error::UnsupportedType,
         _ => Error::InvalidBatch,
     }
 }
-fn validate_encode(
-    values: &[BatchSnapshot],
-    options: EncodeOptions,
-) -> Result<Vec<RecordBatch>, Error> {
-    if options.max_batches == 0 || options.max_rows == 0 || options.max_output_bytes == 0 {
-        return Err(Error::InvalidOptions);
+fn validate_encode(values: &[BatchSnapshot]) -> Result<Vec<RecordBatch>, Error> {
+    if values.is_empty() {
+        return Err(Error::EmptyInput);
     }
-    if values.is_empty() { return Err(Error::EmptyInput); }
-    if values.len() > options.max_batches as usize { return Err(Error::BatchLimitExceeded); }
-    let mut rows = 0u32;
-    let batches = values.iter().map(|value| {
-        if value.fields.is_empty() { return Err(Error::InvalidBatch); }
-        rows = rows.checked_add(value.rows).ok_or(Error::Overflow)?;
-        if rows > options.max_rows { return Err(Error::RowLimitExceeded); }
-        data_arrow::validate_snapshot(value).map_err(map_data_error)
-    }).collect::<Result<Vec<_>,_>>()?;
+    let batches = values
+        .iter()
+        .map(|value| {
+            if value.fields.is_empty() {
+                return Err(Error::InvalidBatch);
+            }
+            data_arrow::validate_snapshot(value).map_err(map_data_error)
+        })
+        .collect::<Result<Vec<_>, _>>()?;
     let schema = batches[0].schema();
     if batches.iter().skip(1).any(|batch| batch.schema() != schema) {
         return Err(Error::SchemaMismatch);
@@ -92,57 +56,118 @@ fn validate_encode(
     Ok(batches)
 }
 fn validate_decode(input: &[u8], options: DecodeOptions) -> Result<(), Error> {
-    if options.max_input_bytes == 0 || options.max_batches == 0
-        || options.max_rows == 0 || options.batch_rows == 0 {
+    if options.batch_rows == 0 {
         return Err(Error::InvalidOptions);
     }
-    if input.is_empty() { return Err(Error::EmptyInput); }
-    if input.len() > options.max_input_bytes as usize { return Err(Error::InputLimitExceeded); }
+    if input.is_empty() {
+        return Err(Error::EmptyInput);
+    }
     Ok(())
 }
 fn collect_decoded(
-    batches: impl Iterator<Item=Result<RecordBatch,arrow_schema::ArrowError>>,
-    options: DecodeOptions,
-) -> Result<Vec<BatchSnapshot>,Error> {
-    let mut output=Vec::new(); let mut rows=0u32;
+    batches: impl Iterator<Item = Result<RecordBatch, arrow_schema::ArrowError>>,
+) -> Result<Vec<BatchSnapshot>, Error> {
+    let mut output = Vec::new();
     for batch in batches {
-        if output.len() >= options.max_batches as usize { return Err(Error::BatchLimitExceeded); }
-        let batch=batch.map_err(|_|Error::InvalidData)?;
-        rows=rows.checked_add(u32::try_from(batch.num_rows()).map_err(|_|Error::Overflow)?).ok_or(Error::Overflow)?;
-        if rows>options.max_rows { return Err(Error::RowLimitExceeded); }
-        output.push(data_arrow::snapshot_from_batch_schema(&batch).map_err(|e|match e{
-            data_arrow::Error::UnsupportedType=>Error::UnsupportedType,
-            _=>Error::InvalidData,
-        })?);
+        let batch = batch.map_err(|_| Error::InvalidData)?;
+        output.push(
+            data_arrow::snapshot_from_batch_schema(&batch).map_err(|e| match e {
+                data_arrow::Error::UnsupportedType => Error::UnsupportedType,
+                _ => Error::InvalidData,
+            })?,
+        );
     }
-    if output.is_empty(){return Err(Error::InvalidData)}
+    if output.is_empty() {
+        return Err(Error::InvalidData);
+    }
     Ok(output)
 }
-pub fn ipc_file_encode(values:Vec<BatchSnapshot>,options:EncodeOptions)->Result<Vec<u8>,Error>{
-    let batches=validate_encode(&values,options)?;
-    let exceeded=Arc::new(AtomicBool::new(false));
-    let sink=BoundedWriter{bytes:Vec::new(),limit:options.max_output_bytes as usize,exceeded:exceeded.clone()};
-    let mut writer=FileWriter::try_new(sink,batches[0].schema().as_ref()).map_err(|_|encode_error(&exceeded))?;
-    for batch in &batches{writer.write(batch).map_err(|_|encode_error(&exceeded))?;}
-    writer.into_inner().map(|w|w.bytes).map_err(|_|encode_error(&exceeded))
+pub fn ipc_file_encode(values: Vec<BatchSnapshot>) -> Result<Vec<u8>, Error> {
+    let batches = validate_encode(&values)?;
+    let sink = Vec::new();
+    let mut writer = FileWriter::try_new(sink, batches[0].schema().as_ref())
+        .map_err(|_| Error::EncodeFailure)?;
+    for batch in &batches {
+        writer.write(batch).map_err(|_| Error::EncodeFailure)?;
+    }
+    writer
+        .into_inner()
+        .map(|w| w)
+        .map_err(|_| Error::EncodeFailure)
 }
-pub fn ipc_file_decode(input:Vec<u8>,options:DecodeOptions)->Result<Vec<BatchSnapshot>,Error>{
-    validate_decode(&input,options)?;
-    let reader=FileReader::try_new(Cursor::new(input),None).map_err(|_|Error::InvalidData)?;
-    collect_decoded(reader,options)
+pub fn ipc_file_decode(
+    input: Vec<u8>,
+    options: DecodeOptions,
+) -> Result<Vec<BatchSnapshot>, Error> {
+    validate_decode(&input, options)?;
+    let reader = FileReader::try_new(Cursor::new(input), None).map_err(|_| Error::InvalidData)?;
+    collect_decoded(reader)
 }
-pub fn parquet_encode(values:Vec<BatchSnapshot>,options:EncodeOptions)->Result<Vec<u8>,Error>{
-    let batches=validate_encode(&values,options)?;
-    let exceeded=Arc::new(AtomicBool::new(false));
-    let sink=BoundedWriter{bytes:Vec::new(),limit:options.max_output_bytes as usize,exceeded:exceeded.clone()};
-    let properties=WriterProperties::builder().set_compression(Compression::UNCOMPRESSED).build();
-    let mut writer=ArrowWriter::try_new(sink,batches[0].schema(),Some(properties)).map_err(|_|encode_error(&exceeded))?;
-    for batch in &batches{writer.write(batch).map_err(|_|encode_error(&exceeded))?;}
-    writer.into_inner().map(|w|w.bytes).map_err(|_|encode_error(&exceeded))
+pub fn parquet_encode(values: Vec<BatchSnapshot>) -> Result<Vec<u8>, Error> {
+    let batches = validate_encode(&values)?;
+    let sink = Vec::new();
+    let properties = WriterProperties::builder()
+        .set_compression(Compression::UNCOMPRESSED)
+        .build();
+    let mut writer = ArrowWriter::try_new(sink, batches[0].schema(), Some(properties))
+        .map_err(|_| Error::EncodeFailure)?;
+    for batch in &batches {
+        writer.write(batch).map_err(|_| Error::EncodeFailure)?;
+    }
+    writer
+        .into_inner()
+        .map(|w| w)
+        .map_err(|_| Error::EncodeFailure)
 }
-pub fn parquet_decode(input:Vec<u8>,options:DecodeOptions)->Result<Vec<BatchSnapshot>,Error>{
-    validate_decode(&input,options)?;
-    let reader=ParquetRecordBatchReaderBuilder::try_new(Bytes::from(input)).map_err(|_|Error::InvalidData)?
-        .with_batch_size(options.batch_rows as usize).build().map_err(|_|Error::InvalidData)?;
-    collect_decoded(reader,options)
+pub fn parquet_decode(input: Vec<u8>, options: DecodeOptions) -> Result<Vec<BatchSnapshot>, Error> {
+    validate_decode(&input, options)?;
+    let reader = ParquetRecordBatchReaderBuilder::try_new(Bytes::from(input))
+        .map_err(|_| Error::InvalidData)?
+        .with_batch_size(options.batch_rows as usize)
+        .build()
+        .map_err(|_| Error::InvalidData)?;
+    collect_decoded(reader)
+}
+
+#[cfg(test)]
+mod memory_tests {
+    use super::*;
+    use crate::data_arrow::{Column, DataType, Field};
+    fn batch(rows: u32) -> BatchSnapshot {
+        BatchSnapshot {
+            rows,
+            fields: vec![Field {
+                name: "value".into(),
+                data_type: DataType::Utf8,
+                nullable: false,
+            }],
+            columns: vec![Column::Utf8(
+                (0..rows)
+                    .map(|n| Some(format!("{n:08}-{}", "中abcdef".repeat(10))))
+                    .collect(),
+            )],
+        }
+    }
+    #[test]
+    fn ipc_large_bytes_rows_and_many_batches_without_capacity_options() {
+        let values = vec![batch(10000); 3];
+        let bytes = ipc_file_encode(values.clone()).unwrap();
+        assert!(bytes.len() > 2 * 1024 * 1024);
+        assert_eq!(
+            ipc_file_decode(bytes, DecodeOptions { batch_rows: 1000 }).unwrap(),
+            values
+        );
+    }
+    #[test]
+    fn parquet_round_trip_and_schema_validation_remain() {
+        let value = batch(30000);
+        let bytes = parquet_encode(vec![value.clone()]).unwrap();
+        let decoded = parquet_decode(bytes, DecodeOptions { batch_rows: 30000 }).unwrap();
+        assert_eq!(decoded, vec![value]);
+        assert_eq!(ipc_file_encode(vec![]), Err(Error::EmptyInput));
+        assert_eq!(
+            parquet_decode(vec![0], DecodeOptions { batch_rows: 0 }),
+            Err(Error::InvalidOptions)
+        );
+    }
 }

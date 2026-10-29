@@ -1,23 +1,18 @@
-package wasmc:json@0.0.6;
+package wasmc:json@0.2.1;
 
 interface document {
   enum json-error {
-    input-too-large,
-    depth-limit,
-    invalid-json,
-    too-many-pointers,
-    pointer-too-long,
-    invalid-pointer,
-    output-too-large,
+    invalid-json, invalid-pointer, missing-target, type-mismatch,
+    invalid-index, out-of-range, invalid-operation, allocation-failed,
   }
   compact: func(input: string) -> result<string, json-error>;
   select: func(input: string, pointers: list<string>) -> result<list<option<string>>, json-error>;
   validate: func(input: string) -> result<_, json-error>;
-  /// Identical bounded semantics with binary input, parsed directly by serde_json.
+  /// Identical Rust JSON semantics with binary input, parsed directly by serde_json.
   compact-bytes: func(input: list<u8>) -> result<string, json-error>;
   select-bytes: func(input: list<u8>, pointers: list<string>) -> result<list<option<string>>, json-error>;
   validate-bytes: func(input: list<u8>) -> result<_, json-error>;
-  /// Record view of the same bounded selection; missing has present=false and empty json.
+  /// Record view of the same Rust selection; missing has present=false and empty json.
   /// Present JSON null has present=true and json="null".
   record selected-value {
     present: bool,
@@ -25,7 +20,7 @@ interface document {
   }
   select-values: func(input: string, pointers: list<string>) -> result<list<selected-value>, json-error>;
   select-values-bytes: func(input: list<u8>, pointers: list<string>) -> result<list<selected-value>, json-error>;
-  /// Same bounded compact parse; return caller fallback on any JsonError.
+  /// Same compact parse; return caller fallback on any JsonError.
   compact-or-bytes: func(input: list<u8>, fallback: string) -> string;
   /// Read a JSON string at a strict pointer; fallback for missing/non-string or JsonError.
   select-string-or-bytes: func(input: list<u8>, pointer: string, fallback: string) -> string;
@@ -36,19 +31,46 @@ interface document {
   }
   /// Plain record view of the same parse-once selection and documented errors.
   inspect-values-bytes: func(input: list<u8>, pointers: list<string>) -> selection-view;
-  /// Same bounded text compact, with caller fallback on JsonError.
+  /// Same Rust text compact, with caller fallback on JsonError.
   compact-or: func(input: string, fallback: string) -> string;
-  /// Decode a bounded JSON string; fallback on non-string or JsonError.
+  /// Decode a JSON string; fallback on non-string or JsonError.
   decode-string-or: func(input: string, fallback: string) -> string;
+
+  record json-field { name: string, value-json: string }
+  enum edit-kind { %set, remove }
+  record edit { kind: edit-kind, path: string, value-json: string }
+  record unsigned-value { present: bool, value: u64 }
+  record signed-value { present: bool, value: s64 }
+  record float-value { present: bool, value: f64 }
+  record boolean-value { present: bool, value: bool }
+  /// Rust serde_json string serialization, including proper escaping.
+  quote-string: func(input: string) -> string;
+  /// Values are JSON, not string concatenation. Duplicate keys follow serde_json last-wins semantics.
+  object-from-fields: func(fields: list<json-field>) -> result<string, json-error>;
+  array-from-values: func(values: list<string>) -> result<string, json-error>;
+  /// Construct an object or return the caller-supplied fallback on invalid JSON.
+  object-from-fields-or: func(fields: list<json-field>, fallback: string) -> string;
+  /// Construct an array or return the caller-supplied fallback on invalid JSON.
+  array-from-values-or: func(values: list<string>, fallback: string) -> string;
+  /// Parse once; ordered set/remove actions; publish only the complete successful result.
+  /// Set inserts/replaces object keys, replaces array items, or appends at '-'. Missing parents fail.
+  /// Empty pointer replaces the document; removing the whole document is invalid-operation.
+  edit-bytes: func(input: list<u8>, edits: list<edit>) -> result<list<u8>, json-error>;
+  /// Apply ordered edits and return JSON text, or the caller's fallback if any edit fails.
+  /// Use edit-bytes when the precise error is needed.
+  edit-or-bytes: func(input: list<u8>, edits: list<edit>, fallback: string) -> string;
+  /// Missing has present=false. Null and wrong types are errors, not missing.
+  read-u64: func(input: list<u8>, pointer: string) -> result<unsigned-value, json-error>;
+  read-i64: func(input: list<u8>, pointer: string) -> result<signed-value, json-error>;
+  /// Matches serde_json Number::as_f64, including its documented integer-to-float conversion.
+  read-f64: func(input: list<u8>, pointer: string) -> result<float-value, json-error>;
+  read-bool: func(input: list<u8>, pointer: string) -> result<boolean-value, json-error>;
 
 }
 
 interface utf8 {
-  /// Exact UTF-8 bytes of the input string, including embedded NUL bytes.
   encode: func(input: string) -> list<u8>;
+  /// Concatenate exact UTF8 bytes in order. No per-Lib byte or part-count quota.
+  encode-parts: func(parts: list<string>) -> list<u8>;
 }
-
-world json {
-  export document;
-  export utf8;
-}
+world json { export document; export utf8; }

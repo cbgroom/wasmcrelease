@@ -13,12 +13,8 @@
 #include <sys/mman.h>
 #include <sys/uio.h>
 #include <unistd.h>
+#include "native-slots.h"
 
-#define MAX_HANDLES 1024
-#define MAX_MAPPINGS 1024
-#define MAX_MAPPING_BYTES (UINT64_C(256) * 1024 * 1024)
-#define MAX_READINESS_OPERATIONS 1024
-#define MAX_WRITE_VECTORS 1024
 
 #define READINESS_PENDING 0
 #define READINESS_READY 1
@@ -32,7 +28,8 @@ struct handle_slot {
   uint8_t active;
 };
 
-static struct handle_slot handles[MAX_HANDLES];
+static struct handle_slot *handles;
+static size_t handles_capacity;
 
 struct mapping_slot {
   void *address;
@@ -41,7 +38,8 @@ struct mapping_slot {
   uint8_t active;
 };
 
-static struct mapping_slot mappings[MAX_MAPPINGS];
+static struct mapping_slot *mappings;
+static size_t mappings_capacity;
 
 struct readiness_slot {
   pthread_t thread;
@@ -57,7 +55,9 @@ struct readiness_slot {
   uint8_t thread_started;
 };
 
-static struct readiness_slot readiness_operations[MAX_READINESS_OPERATIONS];
+/* Worker threads retain slot pointers, so grow only the pointer table. */
+static struct readiness_slot **readiness_operations;
+static size_t readiness_capacity;
 static pthread_mutex_t readiness_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 static uint16_t read_u16(const uint8_t *bytes) {
@@ -100,23 +100,27 @@ static int32_t path_from_input(
 }
 
 static int32_t register_handle(int descriptor, uint64_t *token) {
-  for (uint32_t index = 0; index < MAX_HANDLES; index += 1) {
-    if (!handles[index].active) {
-      handles[index].generation += 1;
-      if (handles[index].generation == 0) handles[index].generation = 1;
-      handles[index].descriptor = descriptor;
-      handles[index].active = 1;
-      *token = ((uint64_t)handles[index].generation << 32) | ((uint64_t)index + 1);
-      return 0;
-    }
+  size_t index;
+  for (index = 0; index < handles_capacity; index += 1)
+    if (!handles[index].active && handles[index].generation != UINT32_MAX) break;
+  if (index == handles_capacity) {
+    void *grown = NULL;
+    const int32_t status = grow_slot_table(handles, &handles_capacity, sizeof(*handles), &grown);
+    if (status != 0) return status;
+    handles = grown;
   }
-  return -EMFILE;
+  handles[index].generation += 1;
+  handles[index].descriptor = descriptor;
+
+  handles[index].active = 1;
+  *token = ((uint64_t)handles[index].generation << 32) | ((uint64_t)index + 1);
+  return 0;
 }
 
 static int32_t resolve_handle(uint64_t token, uint32_t *index, int *descriptor) {
   const uint32_t encoded_index = (uint32_t)token;
   const uint32_t generation = (uint32_t)(token >> 32);
-  if (encoded_index == 0 || encoded_index > MAX_HANDLES || generation == 0) return -EBADF;
+  if (encoded_index == 0 || encoded_index > handles_capacity || generation == 0) return -EBADF;
   const uint32_t slot = encoded_index - 1;
   if (!handles[slot].active || handles[slot].generation != generation) return -EBADF;
   if (index) *index = slot;
@@ -125,24 +129,27 @@ static int32_t resolve_handle(uint64_t token, uint32_t *index, int *descriptor) 
 }
 
 static int32_t register_mapping(void *address, size_t length, uint64_t *token) {
-  for (uint32_t index = 0; index < MAX_MAPPINGS; index += 1) {
-    if (!mappings[index].active) {
-      mappings[index].generation += 1;
-      if (mappings[index].generation == 0) mappings[index].generation = 1;
-      mappings[index].address = address;
-      mappings[index].length = length;
-      mappings[index].active = 1;
-      *token = ((uint64_t)mappings[index].generation << 32) | ((uint64_t)index + 1);
-      return 0;
-    }
+  size_t index;
+  for (index = 0; index < mappings_capacity; index += 1)
+    if (!mappings[index].active && mappings[index].generation != UINT32_MAX) break;
+  if (index == mappings_capacity) {
+    void *grown = NULL;
+    const int32_t status = grow_slot_table(mappings, &mappings_capacity, sizeof(*mappings), &grown);
+    if (status != 0) return status;
+    mappings = grown;
   }
-  return -EMFILE;
+  mappings[index].generation += 1;
+  mappings[index].address = address;
+  mappings[index].length = length;
+  mappings[index].active = 1;
+  *token = ((uint64_t)mappings[index].generation << 32) | ((uint64_t)index + 1);
+  return 0;
 }
 
 static int32_t resolve_mapping(uint64_t token, uint32_t *index, void **address, size_t *length) {
   const uint32_t encoded_index = (uint32_t)token;
   const uint32_t generation = (uint32_t)(token >> 32);
-  if (encoded_index == 0 || encoded_index > MAX_MAPPINGS || generation == 0) return -EBADF;
+  if (encoded_index == 0 || encoded_index > mappings_capacity || generation == 0) return -EBADF;
   const uint32_t slot = encoded_index - 1;
   if (!mappings[slot].active || mappings[slot].generation != generation) return -EBADF;
   if (index) *index = slot;
@@ -331,7 +338,7 @@ static int32_t invoke_write_vectors(
     uint8_t *output, size_t output_capacity, size_t *output_len) {
   if (input_len < 13 || output_capacity < 8) return -EINVAL;
   const uint32_t vector_count = read_u32(input + 9);
-  if (vector_count == 0 || vector_count > MAX_WRITE_VECTORS) return -EINVAL;
+  if (vector_count == 0 || vector_count > INT32_MAX) return -EINVAL;
   const long native_iov_max = sysconf(_SC_IOV_MAX);
   if (native_iov_max <= 0 || (uint64_t)vector_count > (uint64_t)native_iov_max) return -EINVAL;
 
@@ -400,7 +407,7 @@ static int32_t invoke_map(
   const uint32_t protection = read_u32(input + 25);
   const uint32_t flags = read_u32(input + 29);
   const size_t native_length = (size_t)length;
-  if (length == 0 || length > MAX_MAPPING_BYTES || (uint64_t)native_length != length || offset > INT64_MAX) return -EINVAL;
+  if (length == 0 || (uint64_t)native_length != length || offset > INT64_MAX) return -EINVAL;
   void *address = mmap(NULL, native_length, (int)protection, (int)flags, descriptor, (off_t)offset);
   if (address == MAP_FAILED) return -errno;
   uint64_t token = 0;
@@ -507,7 +514,7 @@ static int32_t invoke_epoll_wait(
   if (status != 0) return status;
   const uint32_t maximum = read_u32(input + 9);
   const int32_t timeout = (int32_t)read_u32(input + 13);
-  if (output_capacity < 4 || maximum == 0 || maximum > 4096 || maximum > (output_capacity - 4) / 12) return -EINVAL;
+  if (output_capacity < 4 || maximum == 0 || maximum > INT32_MAX || maximum > (output_capacity - 4) / 12) return -EINVAL;
   struct epoll_event *events = calloc(maximum, sizeof(*events));
   if (!events) return -ENOMEM;
   const int count = epoll_wait(epoll_descriptor, events, (int)maximum, timeout);
@@ -607,9 +614,9 @@ static void *run_readiness_operation(void *argument) {
 static int32_t resolve_readiness_operation(uint64_t token, uint32_t *index) {
   const uint32_t encoded_index = (uint32_t)token;
   const uint32_t generation = (uint32_t)(token >> 32);
-  if (encoded_index == 0 || encoded_index > MAX_READINESS_OPERATIONS || generation == 0) return -EBADF;
+  if (encoded_index == 0 || encoded_index > readiness_capacity || generation == 0) return -EBADF;
   const uint32_t slot = encoded_index - 1;
-  if (!readiness_operations[slot].active || readiness_operations[slot].generation != generation) return -EBADF;
+  if (!readiness_operations[slot] || !readiness_operations[slot]->active || readiness_operations[slot]->generation != generation) return -EBADF;
   *index = slot;
   return 0;
 }
@@ -630,22 +637,29 @@ static int32_t invoke_readiness_start(
     return status;
   }
   pthread_mutex_lock(&readiness_mutex);
-  uint32_t index = MAX_READINESS_OPERATIONS;
-  for (uint32_t candidate = 0; candidate < MAX_READINESS_OPERATIONS; candidate += 1) {
-    if (!readiness_operations[candidate].active) {
-      index = candidate;
-      break;
-    }
+  size_t index;
+  for (index = 0; index < readiness_capacity; index += 1) {
+    const struct readiness_slot *candidate = readiness_operations[index];
+    if (!candidate || (!candidate->active && candidate->generation != UINT32_MAX)) break;
   }
-  if (index == MAX_READINESS_OPERATIONS) {
+  if (index == readiness_capacity) {
+    void *grown = NULL;
+    status = grow_slot_table(readiness_operations, &readiness_capacity,
+                             sizeof(*readiness_operations), &grown);
+    if (status == 0) readiness_operations = grown;
+  }
+  if (status == 0 && !readiness_operations[index]) {
+    readiness_operations[index] = calloc(1, sizeof(**readiness_operations));
+    if (!readiness_operations[index]) status = -ENOMEM;
+  }
+  if (status != 0) {
     pthread_mutex_unlock(&readiness_mutex);
     close(retained_descriptor);
     close(cancel_descriptor);
-    return -EMFILE;
+    return status;
   }
-  struct readiness_slot *slot = &readiness_operations[index];
+  struct readiness_slot *slot = readiness_operations[index];
   slot->generation += 1;
-  if (slot->generation == 0) slot->generation = 1;
   slot->target_descriptor = retained_descriptor;
   slot->cancel_descriptor = cancel_descriptor;
   slot->timeout_milliseconds = (int32_t)read_u32(input + 11);
@@ -684,7 +698,7 @@ static int32_t invoke_readiness_status(
     pthread_mutex_unlock(&readiness_mutex);
     return status;
   }
-  const struct readiness_slot *slot = &readiness_operations[index];
+  const struct readiness_slot *slot = readiness_operations[index];
   output[0] = slot->state;
   write_u32(output + 1, (uint32_t)slot->status);
   write_u16(output + 5, slot->returned_events);
@@ -702,7 +716,7 @@ static int32_t invoke_readiness_cancel(const uint8_t *input, size_t input_len) {
     pthread_mutex_unlock(&readiness_mutex);
     return status;
   }
-  struct readiness_slot *slot = &readiness_operations[index];
+  struct readiness_slot *slot = readiness_operations[index];
   if (slot->state != READINESS_PENDING) status = -EALREADY;
   else {
     const uint64_t signal = 1;
@@ -721,7 +735,7 @@ static int32_t invoke_readiness_release(const uint8_t *input, size_t input_len) 
     pthread_mutex_unlock(&readiness_mutex);
     return status;
   }
-  struct readiness_slot *slot = &readiness_operations[index];
+  struct readiness_slot *slot = readiness_operations[index];
   if (slot->state == READINESS_PENDING) {
     pthread_mutex_unlock(&readiness_mutex);
     return -EBUSY;
@@ -776,9 +790,10 @@ int32_t wasmc_boundary_v1_invoke(
 
 __attribute__((destructor))
 static void close_retained_handles(void) {
-  for (size_t index = 0; index < MAX_READINESS_OPERATIONS; index += 1) {
+  for (size_t index = 0; index < readiness_capacity; index += 1) {
     pthread_mutex_lock(&readiness_mutex);
-    struct readiness_slot *slot = &readiness_operations[index];
+    struct readiness_slot *slot = readiness_operations[index];
+    if (!slot) { pthread_mutex_unlock(&readiness_mutex); continue; }
     const uint8_t active = slot->active;
     const uint8_t thread_started = slot->thread_started;
     const pthread_t thread = slot->thread;
@@ -794,15 +809,19 @@ static void close_retained_handles(void) {
     slot->thread_started = 0;
     pthread_mutex_unlock(&readiness_mutex);
   }
-  for (size_t index = 0; index < MAX_MAPPINGS; index += 1) {
+  for (size_t index = 0; index < readiness_capacity; index += 1) free(readiness_operations[index]);
+  free(readiness_operations); readiness_operations = NULL; readiness_capacity = 0;
+  for (size_t index = 0; index < mappings_capacity; index += 1) {
     if (mappings[index].active) munmap(mappings[index].address, mappings[index].length);
     mappings[index].active = 0;
     mappings[index].address = NULL;
     mappings[index].length = 0;
   }
-  for (size_t index = 0; index < MAX_HANDLES; index += 1) {
+  free(mappings); mappings = NULL; mappings_capacity = 0;
+  for (size_t index = 0; index < handles_capacity; index += 1) {
     if (handles[index].active) close(handles[index].descriptor);
     handles[index].active = 0;
     handles[index].descriptor = -1;
   }
+  free(handles); handles = NULL; handles_capacity = 0;
 }

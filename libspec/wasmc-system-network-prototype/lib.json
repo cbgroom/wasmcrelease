@@ -1,10 +1,10 @@
 {
   "schema": "wasmc.lib-refresh-source/v2",
   "id": "wasmc-system-network-prototype",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "profile": "native",
   "world": "system-network-prototype",
-  "description": "Lib-defined platform implementation: wasmc-system-network-prototype",
+  "description": "Node network implementation with transfer capacity governed by the enclosing process memory policy.",
   "dependencies": [],
   "apis": [
     {
@@ -12,7 +12,7 @@
       "delta": "Actual platform implementation, not a simulated Wasm export.",
       "ecosystem": "node-boundary",
       "host_authorities": [
-        "wasmc:system-network-prototype@0.0.2"
+        "wasmc:system-network-prototype@0.1.0"
       ],
       "implementation": "native",
       "origin": "adapted",
@@ -33,7 +33,7 @@
     "script": "scripts/test-lib-defined-boundary-runtime.mjs",
     "hosts": [],
     "requires": [],
-    "current_runtime_status": "not-requalified",
+    "current_runtime_status": "candidate-pending",
     "remaining": [
       "descriptor-schema-review",
       "wasm-lowering",

@@ -2,10 +2,6 @@ import { spawn } from "node:child_process";
 
 const decoder = new TextDecoder("utf-8", { fatal: true });
 const encoder = new TextEncoder();
-const DEFAULT_OUTPUT_LIMIT = 1024 * 1024;
-const MAX_OUTPUT_LIMIT = 16 * 1024 * 1024;
-const DEFAULT_TIMEOUT_MS = 30_000;
-const MAX_TIMEOUT_MS = 10 * 60_000;
 
 const fail = (message) => {
   throw new Error(`invalid process request: ${message}`);
@@ -22,9 +18,9 @@ const decodeRequest = (input) => {
   return request;
 };
 
-const boundedInteger = (value, fallback, maximum, name) => {
-  if (value === undefined) return fallback;
-  if (!Number.isSafeInteger(value) || value < 1 || value > maximum) fail(`${name} is out of range`);
+const optionalInteger = (value, name) => {
+  if (value === undefined) return undefined;
+  if (!Number.isSafeInteger(value) || value < 0) fail(`${name} is out of range`);
   return value;
 };
 
@@ -107,8 +103,8 @@ const run = (request, signal) => new Promise((resolve, reject) => {
       (typeof request.working_directory !== "string" || !request.working_directory || request.working_directory.includes("\0"))) {
     fail("working_directory must be a non-empty NUL-free string");
   }
-  const timeoutMs = boundedInteger(request.timeout_ms, DEFAULT_TIMEOUT_MS, MAX_TIMEOUT_MS, "timeout_ms");
-  const outputLimit = boundedInteger(request.max_output_bytes, DEFAULT_OUTPUT_LIMIT, MAX_OUTPUT_LIMIT, "max_output_bytes");
+  const timeoutMs = optionalInteger(request.timeout_ms, "timeout_ms");
+  const outputLimit = optionalInteger(request.max_output_bytes, "max_output_bytes");
   const started = process.hrtime.bigint();
   let timedOut = false;
   let outputExceeded = false;
@@ -125,15 +121,29 @@ const run = (request, signal) => new Promise((resolve, reject) => {
     stdio: ["pipe", "pipe", "pipe"],
     signal,
   });
-  const timer = setTimeout(() => {
-    timedOut = true;
-    child.kill();
-  }, timeoutMs);
+  // Caller deadlines can exceed Node's single-timer interval. Re-arm against
+  // the monotonic deadline instead of overflowing to a one-millisecond timer.
+  let timer;
+  if (timeoutMs !== undefined) {
+    const deadline = started + BigInt(timeoutMs) * 1_000_000n;
+    const checkDeadline = () => {
+      if (settled) return;
+      const remaining = deadline - process.hrtime.bigint();
+      if (remaining <= 0n) {
+        timedOut = true;
+        child.kill();
+      } else {
+        const milliseconds = Number((remaining + 999_999n) / 1_000_000n);
+        timer = setTimeout(checkDeadline, Math.min(milliseconds, 0x7fff_ffff));
+      }
+    };
+    checkDeadline();
+  }
 
   const collect = (chunks, streamName) => (chunk) => {
     if (streamName === "stdout") stdoutBytes += chunk.length;
     else stderrBytes += chunk.length;
-    if (stdoutBytes + stderrBytes > outputLimit) {
+    if (outputLimit !== undefined && stdoutBytes + stderrBytes > outputLimit) {
       outputExceeded = true;
       child.kill();
       return;

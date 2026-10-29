@@ -8,8 +8,8 @@
 #include <string.h>
 #include <sys/socket.h>
 #include <unistd.h>
+#include "native-slots.h"
 
-#define MAX_HANDLES 1024
 #define HANDLE_LISTENER 1
 #define HANDLE_STREAM 2
 
@@ -20,7 +20,8 @@ struct handle_slot {
   uint8_t kind;
 };
 
-static struct handle_slot handles[MAX_HANDLES];
+static struct handle_slot *handles;
+static size_t handles_capacity;
 
 static uint16_t read_u16(const uint8_t *bytes) {
   return (uint16_t)bytes[0] | ((uint16_t)bytes[1] << 8);
@@ -47,18 +48,21 @@ static void write_u64(uint8_t *bytes, uint64_t value) {
 }
 
 static int32_t register_handle(int descriptor, uint8_t kind, uint64_t *token) {
-  for (uint32_t index = 0; index < MAX_HANDLES; index += 1) {
-    if (!handles[index].active) {
-      handles[index].generation += 1;
-      if (handles[index].generation == 0) handles[index].generation = 1;
-      handles[index].descriptor = descriptor;
-      handles[index].kind = kind;
-      handles[index].active = 1;
-      *token = ((uint64_t)handles[index].generation << 32) | ((uint64_t)index + 1);
-      return 0;
-    }
+  size_t index;
+  for (index = 0; index < handles_capacity; index += 1)
+    if (!handles[index].active && handles[index].generation != UINT32_MAX) break;
+  if (index == handles_capacity) {
+    void *grown = NULL;
+    const int32_t status = grow_slot_table(handles, &handles_capacity, sizeof(*handles), &grown);
+    if (status != 0) return status;
+    handles = grown;
   }
-  return -EMFILE;
+  handles[index].generation += 1;
+  handles[index].descriptor = descriptor;
+  handles[index].kind = kind;
+  handles[index].active = 1;
+  *token = ((uint64_t)handles[index].generation << 32) | ((uint64_t)index + 1);
+  return 0;
 }
 
 static int32_t resolve_handle(
@@ -66,7 +70,7 @@ static int32_t resolve_handle(
     uint32_t *index, int *descriptor) {
   const uint32_t encoded_index = (uint32_t)token;
   const uint32_t generation = (uint32_t)(token >> 32);
-  if (encoded_index == 0 || encoded_index > MAX_HANDLES || generation == 0) return -EBADF;
+  if (encoded_index == 0 || encoded_index > handles_capacity || generation == 0) return -EBADF;
   const uint32_t slot = encoded_index - 1;
   if (!handles[slot].active || handles[slot].generation != generation) return -EBADF;
   if (expected_kind != 0 && handles[slot].kind != expected_kind) return -ENOTSOCK;
@@ -302,10 +306,11 @@ int32_t wasmc_boundary_v1_invoke(
 
 __attribute__((destructor))
 static void close_retained_handles(void) {
-  for (size_t index = 0; index < MAX_HANDLES; index += 1) {
+  for (size_t index = 0; index < handles_capacity; index += 1) {
     if (handles[index].active) close(handles[index].descriptor);
     handles[index].active = 0;
     handles[index].descriptor = -1;
     handles[index].kind = 0;
   }
+  free(handles); handles = NULL; handles_capacity = 0;
 }

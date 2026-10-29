@@ -3,12 +3,6 @@ use indexmap::IndexMap;
 use serde::{Deserialize, Serialize};
 use std::cell::RefCell;
 
-// Match the qualified resource implementation's explicit bounds.
-const MAX_BYTES: usize = 128;
-const MAX_LABEL: usize = 48;
-const MAX_RECORDS: usize = 4;
-const MAX_KEY: usize = 24;
-
 #[derive(Default)]
 pub struct Text(RefCell<String>);
 impl Text {
@@ -119,7 +113,7 @@ impl S32Map {
         self.0.borrow_mut().insert(key, item)
     }
     pub fn remove(&self, key: i32) -> Option<i32> {
-        self.0.borrow_mut().shift_remove(&key)
+        self.0.borrow_mut().swap_remove(&key)
     }
     pub fn clear(&self) {
         self.0.borrow_mut().clear();
@@ -153,10 +147,6 @@ impl ByteBuffer {
     }
     pub fn push(&self, item: u8) {
         let mut value = self.0.borrow_mut();
-        assert!(
-            value.len() < MAX_BYTES,
-            "CoreLib byte-buffer capacity exceeded"
-        );
         value.push(item);
     }
     pub fn byte_at(&self, index: u32) -> Option<u8> {
@@ -189,9 +179,6 @@ impl ByteBuffer {
         *self.0.borrow() == *right.0.borrow()
     }
     fn replace(&self, value: Vec<u8>) -> bool {
-        if value.len() > MAX_BYTES {
-            return false;
-        }
         *self.0.borrow_mut() = value;
         true
     }
@@ -271,9 +258,6 @@ pub fn write_reading(id: i32, value: i32, active: bool, output: &ByteBuffer) -> 
 }
 pub fn from_utf8(input: &ByteBuffer) -> Option<Text> {
     let bytes = input.0.borrow();
-    if bytes.len() > MAX_LABEL {
-        return None;
-    }
     Some(Text::from_string(
         std::str::from_utf8(&bytes).ok()?.to_owned(),
     ))
@@ -283,9 +267,6 @@ pub struct Reading(LabeledReading);
 impl Reading {
     pub fn parse(input: &ByteBuffer) -> Option<Self> {
         let value: LabeledReading = serde_json::from_slice(input.0.borrow().as_slice()).ok()?;
-        if value.label.len() > MAX_LABEL {
-            return None;
-        }
         Some(Self(value))
     }
     pub fn label(&self) -> Text {
@@ -313,9 +294,6 @@ impl ReadingList {
     pub fn parse(input: &ByteBuffer) -> Option<Self> {
         let values: Vec<LabeledReading> =
             serde_json::from_slice(input.0.borrow().as_slice()).ok()?;
-        if values.len() > MAX_RECORDS || values.iter().any(|v| v.label.len() > MAX_LABEL) {
-            return None;
-        }
         Some(Self(values))
     }
     pub fn len(&self) -> u32 {
@@ -337,13 +315,6 @@ impl ReadingMap {
     pub fn parse(input: &ByteBuffer) -> Option<Self> {
         let values: IndexMap<String, LabeledReading> =
             serde_json::from_slice(input.0.borrow().as_slice()).ok()?;
-        if values.len() > MAX_RECORDS
-            || values
-                .iter()
-                .any(|(k, v)| k.len() > MAX_KEY || v.label.len() > MAX_LABEL)
-        {
-            return None;
-        }
         Some(Self(RefCell::new(values)))
     }
     pub fn len(&self) -> u32 {
@@ -358,10 +329,6 @@ impl ReadingMap {
     pub fn insert(&self, key: &Text, item: &Reading) -> Option<Reading> {
         let key = key.0.borrow().clone();
         let mut values = self.0.borrow_mut();
-        assert!(
-            values.contains_key(&key) || values.len() < MAX_RECORDS,
-            "CoreLib reading-map capacity exceeded"
-        );
         values.insert(key, item.0.clone()).map(Reading)
     }
     pub fn write(&self, output: &ByteBuffer) -> bool {
@@ -369,5 +336,59 @@ impl ReadingMap {
             return false;
         };
         output.replace(encoded)
+    }
+}
+
+#[cfg(test)]
+mod memory_tests {
+    use super::*;
+    #[test]
+    fn bytes_utf8_and_encoding_are_not_fixture_bounded() {
+        let input = ByteBuffer::new();
+        let value = "a\0雪🦀".repeat(256 * 1024);
+        for byte in value.bytes() {
+            input.push(byte);
+        }
+        assert_eq!(from_utf8(&input).unwrap().len() as usize, value.len());
+        let encoded = ByteBuffer::new();
+        assert!(encode_base64(&input, &encoded));
+        assert!(encoded.len() > input.len());
+        let decoded = ByteBuffer::new();
+        assert!(decode_base64(&encoded, &decoded));
+        assert!(input.eq(&decoded));
+        let invalid = ByteBuffer::new();
+        invalid.push(255);
+        assert!(from_utf8(&invalid).is_none());
+    }
+    #[test]
+    fn structured_lists_maps_keys_labels_and_output_follow_memory() {
+        let row = serde_json::json!({"id":1,"value":2,"active":true,"label":"雪".repeat(2048)});
+        let input = ByteBuffer::new();
+        assert!(input.replace(serde_json::to_vec(&vec![row.clone(); 1024]).unwrap()));
+        let list = ReadingList::parse(&input).unwrap();
+        assert_eq!(list.len(), 1024);
+        assert_eq!(list.get(1023).unwrap().label().len(), 6144);
+        let output = ByteBuffer::new();
+        assert!(list.write(&output));
+        assert!(output.len() > 2 * 1024 * 1024);
+        let map_input = ByteBuffer::new();
+        assert!(map_input.replace(b"{}".to_vec()));
+        let map = ReadingMap::parse(&map_input).unwrap();
+        let row_input = ByteBuffer::new();
+        assert!(row_input.replace(serde_json::to_vec(&row).unwrap()));
+        let reading = Reading::parse(&row_input).unwrap();
+        for n in 0..10000 {
+            assert!(map
+                .insert(
+                    &Text::from_string(format!("{n:08}-{}", "key".repeat(40))),
+                    &reading
+                )
+                .is_none());
+        }
+        assert_eq!(map.len(), 10000);
+        assert!(map.write(&output));
+        assert!(output.len() > 60 * 1024 * 1024);
+        let reparsed = ReadingMap::parse(&output).unwrap();
+        assert_eq!(reparsed.len(), 10000);
     }
 }

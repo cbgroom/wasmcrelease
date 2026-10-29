@@ -1,10 +1,10 @@
 {
   "schema": "wasmc.lib-refresh-source/v2",
   "id": "wasmc-system-process-prototype",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "profile": "native",
   "world": "system-process",
-  "description": "Lib-defined platform implementation: wasmc-system-process-prototype",
+  "description": "Process and shell execution with no adapter output or timeout defaults; explicit caller limits remain supported.",
   "dependencies": [],
   "apis": [
     {
@@ -12,7 +12,7 @@
       "delta": "Actual platform implementation, not a simulated Wasm export.",
       "ecosystem": "node-boundary",
       "host_authorities": [
-        "wasmc:system-process@0.0.1"
+        "wasmc:system-process@0.1.0"
       ],
       "implementation": "native",
       "origin": "adapted",
@@ -23,7 +23,7 @@
       "delta": "Actual platform implementation, not a simulated Wasm export.",
       "ecosystem": "node-boundary",
       "host_authorities": [
-        "wasmc:system-process@0.0.1"
+        "wasmc:system-process@0.1.0"
       ],
       "implementation": "native",
       "origin": "adapted",
@@ -41,7 +41,7 @@
     "descriptor_template": "platform/native-boundary.json",
     "binding_contract": "wasmc.lib-defined-host-boundary/v1",
     "binding": {
-      "implements": "wasmc:system-process@0.0.1",
+      "implements": "wasmc:system-process@0.1.0",
       "boundary": "wasmc.lib-defined-host-boundary/v1",
       "descriptor": "platform/native-boundary.json",
       "artifact_format": "native-adapter",
@@ -75,7 +75,7 @@
       "win32"
     ],
     "requires": [],
-    "current_runtime_status": "not-requalified",
+    "current_runtime_status": "candidate-pending",
     "remaining": [
       "additional-desktop-architecture-parity-v2",
       "android-app-uid-native-provider",

@@ -30,9 +30,11 @@ static int32_t capture(
     if (total == output_capacity) {
       uint8_t extra;
       ssize_t count = read(descriptors[0], &extra, 1);
+      if (count == 0) break;
+      int32_t status = count < 0 ? -errno : -EOVERFLOW;
       close(descriptors[0]);
       waitpid(child, NULL, 0);
-      return count == 0 ? 0 : -EOVERFLOW;
+      return status;
     }
     ssize_t count = read(descriptors[0], output + total, output_capacity - total);
     if (count < 0) {

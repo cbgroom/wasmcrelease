@@ -1,8 +1,3 @@
-const MAX_INPUT_BYTES: usize = 64 << 10;
-const MAX_BODY_BYTES: usize = 1 << 20;
-const MAX_HEADERS: usize = 32;
-const MAX_OUTPUT_BYTES: usize = 64 << 10;
-
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Header {
     pub name: String,
@@ -35,38 +30,41 @@ pub enum Error {
 }
 
 fn parse_head(bytes: &[u8]) -> Result<RequestHead, Error> {
-    if bytes.len() > MAX_INPUT_BYTES {
-        return Err(Error::InputTooLarge);
+    let mut capacity = 8usize;
+    loop {
+        let mut headers = vec![httparse::EMPTY_HEADER; capacity];
+        let mut request = httparse::Request::new(&mut headers);
+        let body_offset = match request.parse(bytes) {
+            Ok(httparse::Status::Complete(offset)) => offset,
+            Ok(httparse::Status::Partial) => return Err(Error::Incomplete),
+            Err(httparse::Error::TooManyHeaders) => {
+                capacity = capacity.checked_mul(2).ok_or(Error::TooManyHeaders)?;
+                continue;
+            }
+            Err(_) => return Err(Error::InvalidSyntax),
+        };
+        let method = request.method.ok_or(Error::InvalidSyntax)?.to_string();
+        let target = request.path.ok_or(Error::InvalidSyntax)?.to_string();
+        let minor = request.version.ok_or(Error::InvalidVersion)?;
+        if minor > 1 {
+            return Err(Error::InvalidVersion);
+        }
+        let headers = request
+            .headers
+            .iter()
+            .map(|header| Header {
+                name: header.name.to_string(),
+                value: header.value.to_vec(),
+            })
+            .collect();
+        return Ok(RequestHead {
+            method,
+            target,
+            minor_version: minor,
+            headers,
+            body_offset: u32::try_from(body_offset).map_err(|_| Error::InputTooLarge)?,
+        });
     }
-    let mut headers = [httparse::EMPTY_HEADER; MAX_HEADERS];
-    let mut request = httparse::Request::new(&mut headers);
-    let body_offset = match request.parse(bytes) {
-        Ok(httparse::Status::Complete(offset)) => offset,
-        Ok(httparse::Status::Partial) => return Err(Error::Incomplete),
-        Err(httparse::Error::TooManyHeaders) => return Err(Error::TooManyHeaders),
-        Err(_) => return Err(Error::InvalidSyntax),
-    };
-    let method = request.method.ok_or(Error::InvalidSyntax)?.to_string();
-    let target = request.path.ok_or(Error::InvalidSyntax)?.to_string();
-    let minor = request.version.ok_or(Error::InvalidVersion)?;
-    if minor > 1 {
-        return Err(Error::InvalidVersion);
-    }
-    let headers = request
-        .headers
-        .iter()
-        .map(|header| Header {
-            name: header.name.to_string(),
-            value: header.value.to_vec(),
-        })
-        .collect();
-    Ok(RequestHead {
-        method,
-        target,
-        minor_version: minor,
-        headers,
-        body_offset: body_offset as u32,
-    })
 }
 
 fn ascii_eq_ignore_case(left: &str, right: &str) -> bool {
@@ -81,37 +79,23 @@ fn parse_content_length(value: &[u8]) -> Result<usize, Error> {
     let value = text
         .parse::<usize>()
         .map_err(|_| Error::InvalidContentLength)?;
-    if value > MAX_BODY_BYTES {
-        Err(Error::BodyTooLarge)
-    } else {
-        Ok(value)
-    }
+    Ok(value)
 }
 
 fn frame_length(bytes: &[u8]) -> Result<Option<u32>, Error> {
-    if bytes.len() > MAX_INPUT_BYTES {
-        return Err(Error::InputTooLarge);
-    }
-    let mut headers = [httparse::EMPTY_HEADER; MAX_HEADERS];
-    let mut request = httparse::Request::new(&mut headers);
-    let body_offset = match request.parse(bytes) {
-        Ok(httparse::Status::Complete(offset)) => offset,
-        Ok(httparse::Status::Partial) => return Ok(None),
-        Err(httparse::Error::TooManyHeaders) => return Err(Error::TooManyHeaders),
-        Err(_) => return Err(Error::InvalidSyntax),
+    let head = match parse_head(bytes) {
+        Ok(head) => head,
+        Err(Error::Incomplete) => return Ok(None),
+        Err(error) => return Err(error),
     };
-    let minor = request.version.ok_or(Error::InvalidVersion)?;
-    if minor > 1 {
-        return Err(Error::InvalidVersion);
-    }
-
+    let body_offset = head.body_offset as usize;
     let mut content_length = None;
-    for header in request.headers.iter() {
-        if ascii_eq_ignore_case(header.name, "transfer-encoding") && !header.value.is_empty() {
+    for header in head.headers.iter() {
+        if ascii_eq_ignore_case(&header.name, "transfer-encoding") && !header.value.is_empty() {
             return Err(Error::UnsupportedFraming);
         }
-        if ascii_eq_ignore_case(header.name, "content-length") {
-            let parsed = parse_content_length(header.value)?;
+        if ascii_eq_ignore_case(&header.name, "content-length") {
+            let parsed = parse_content_length(&header.value)?;
             match content_length {
                 Some(existing) if existing != parsed => return Err(Error::InvalidContentLength),
                 _ => content_length = Some(parsed),
@@ -123,7 +107,9 @@ fn frame_length(bytes: &[u8]) -> Result<Option<u32>, Error> {
     if bytes.len() < total {
         Ok(None)
     } else {
-        u32::try_from(total).map(Some).map_err(|_| Error::BodyTooLarge)
+        u32::try_from(total)
+            .map(Some)
+            .map_err(|_| Error::BodyTooLarge)
     }
 }
 
@@ -245,9 +231,6 @@ pub fn serialize_response_head(
         return Err(Error::InvalidVersion);
     }
     let reason = reason(status)?;
-    if headers.len() > MAX_HEADERS {
-        return Err(Error::TooManyHeaders);
-    }
     let mut output = Vec::new();
     output.extend_from_slice(if minor_version == 0 {
         b"HTTP/1.0 "
@@ -269,14 +252,47 @@ pub fn serialize_response_head(
         output.extend_from_slice(b": ");
         output.extend_from_slice(&header.value);
         output.extend_from_slice(b"\r\n");
-        if output.len() > MAX_OUTPUT_BYTES {
-            return Err(Error::OutputTooLarge);
-        }
     }
     output.extend_from_slice(b"\r\n");
-    if output.len() > MAX_OUTPUT_BYTES {
-        Err(Error::OutputTooLarge)
-    } else {
-        Ok(output)
+    Ok(output)
+}
+
+#[cfg(test)]
+mod memory_tests {
+    use super::*;
+    #[test]
+    fn dynamic_headers_large_head_and_body_frame() {
+        let mut bytes = b"POST / HTTP/1.1\r\n".to_vec();
+        for n in 0..512 {
+            bytes.extend_from_slice(format!("x-{n}: {}\r\n", "a".repeat(256)).as_bytes());
+        }
+        let body = vec![b'b'; 2 * 1024 * 1024];
+        bytes.extend_from_slice(format!("content-length: {}\r\n\r\n", body.len()).as_bytes());
+        let head = parse_request(bytes.clone()).unwrap();
+        assert_eq!(head.headers.len(), 513);
+        assert_eq!(request_frame_length(bytes.clone()).unwrap(), None);
+        bytes.extend_from_slice(&body);
+        assert_eq!(
+            request_frame_length(bytes.clone()).unwrap(),
+            Some(bytes.len() as u32)
+        );
+        let headers = (0..512)
+            .map(|n| Header {
+                name: format!("x-{n}"),
+                value: vec![b'a'; 256],
+            })
+            .collect();
+        assert!(serialize_response_head(1, 200, headers).unwrap().len() > 65536);
+    }
+    #[test]
+    fn syntax_and_incomplete_input_are_not_capacity_errors() {
+        assert_eq!(
+            parse_request(b"GET / HTTP/1.1\r\n".to_vec()),
+            Err(Error::Incomplete)
+        );
+        assert_eq!(
+            serialize_response_head(2, 200, vec![]),
+            Err(Error::InvalidVersion)
+        );
     }
 }

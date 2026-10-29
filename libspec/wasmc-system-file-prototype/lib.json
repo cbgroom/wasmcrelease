@@ -1,10 +1,10 @@
 {
   "schema": "wasmc.lib-refresh-source/v2",
   "id": "wasmc-system-file-prototype",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "profile": "native",
   "world": "system-file-prototype",
-  "description": "Lib-defined platform implementation: wasmc-system-file-prototype",
+  "description": "Node file implementation with transfer capacity governed by the enclosing process memory policy.",
   "dependencies": [],
   "apis": [
     {
@@ -12,7 +12,7 @@
       "delta": "Actual platform implementation, not a simulated Wasm export.",
       "ecosystem": "node-boundary",
       "host_authorities": [
-        "wasmc:system-file-prototype@0.0.1"
+        "wasmc:system-file-prototype@0.1.0"
       ],
       "implementation": "native",
       "origin": "adapted",
@@ -33,7 +33,7 @@
     "script": "scripts/test-lib-defined-boundary-runtime.mjs",
     "hosts": [],
     "requires": [],
-    "current_runtime_status": "not-requalified",
+    "current_runtime_status": "candidate-pending",
     "remaining": [
       "descriptor-schema-review",
       "wasm-lowering",

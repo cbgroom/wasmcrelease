@@ -44,9 +44,11 @@ static int32_t read_file(uint8_t *output, size_t output_capacity, size_t *output
     if (total == output_capacity) {
       uint8_t extra;
       ssize_t count = read(descriptor, &extra, 1);
+      if (count == 0) break;
+      int32_t status = count < 0 ? -errno : -EOVERFLOW;
       close(descriptor);
       unlink(snapshot_path);
-      return count == 0 ? 0 : -EOVERFLOW;
+      return status;
     }
     ssize_t count = read(descriptor, output + total, output_capacity - total);
     if (count < 0) {
@@ -98,10 +100,12 @@ static int32_t capture(
   }
   uint8_t extra;
   ssize_t overflow = total == output_capacity ? read(descriptors[0], &extra, 1) : 0;
+  int32_t read_status = overflow < 0 ? -errno : 0;
   close(descriptors[0]);
   int32_t status = wait_child(child);
-  if (status != 0) return status;
+  if (read_status != 0) return read_status;
   if (overflow > 0) return -EOVERFLOW;
+  if (status != 0) return status;
   *output_len = total;
   return 0;
 }

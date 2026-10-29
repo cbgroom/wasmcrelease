@@ -1,15 +1,37 @@
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum Error { InputTooLarge, BodyTooLarge, TooManyHeaders, InvalidSyntax, InvalidVersion, InvalidMethod, InvalidTarget, InvalidStatus, InvalidHeaderName, InvalidHeaderValue, HostRequired, InvalidContentLength, ConflictingFraming, UnsupportedTransferCoding, InvalidChunk, PrematureEof, OutputTooLarge }
+pub enum Error {
+    InputTooLarge,
+    BodyTooLarge,
+    TooManyHeaders,
+    InvalidSyntax,
+    InvalidVersion,
+    InvalidMethod,
+    InvalidTarget,
+    InvalidStatus,
+    InvalidHeaderName,
+    InvalidHeaderValue,
+    HostRequired,
+    InvalidContentLength,
+    ConflictingFraming,
+    UnsupportedTransferCoding,
+    InvalidChunk,
+    PrematureEof,
+    OutputTooLarge,
+}
 
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub struct Header { pub name:String, pub value:Vec<u8> }
+pub struct Header {
+    pub name: String,
+    pub value: Vec<u8>,
+}
 #[derive(Clone, Debug, PartialEq, Eq)]
-pub struct Response { pub minor_version:u8, pub status:u16, pub headers:Vec<Header>, pub body:Vec<u8>, pub consumed:u32 }
-const MAX_HEAD_BYTES: usize = 64 << 10;
-const MAX_BODY_BYTES: usize = 1 << 20;
-const MAX_HEADERS: usize = 32;
-const MAX_WIRE_BYTES: usize = MAX_HEAD_BYTES + MAX_BODY_BYTES + 4096;
-
+pub struct Response {
+    pub minor_version: u8,
+    pub status: u16,
+    pub headers: Vec<Header>,
+    pub body: Vec<u8>,
+    pub consumed: u32,
+}
 
 fn valid_token(value: &str) -> bool {
     !value.is_empty()
@@ -50,11 +72,7 @@ fn parse_decimal(value: &[u8]) -> Result<usize, Error> {
     let parsed = text
         .parse::<usize>()
         .map_err(|_| Error::InvalidContentLength)?;
-    if parsed > MAX_BODY_BYTES {
-        Err(Error::BodyTooLarge)
-    } else {
-        Ok(parsed)
-    }
+    Ok(parsed)
 }
 
 fn trim_ascii(mut value: &[u8]) -> &[u8] {
@@ -79,12 +97,6 @@ pub fn serialize_request(
     if target.is_empty() || target.bytes().any(|byte| byte <= 0x20 || byte == 0x7f) {
         return Err(Error::InvalidTarget);
     }
-    if headers.len() > MAX_HEADERS {
-        return Err(Error::TooManyHeaders);
-    }
-    if body.len() > MAX_BODY_BYTES {
-        return Err(Error::BodyTooLarge);
-    }
 
     let mut has_host = false;
     let mut content_length = None;
@@ -107,9 +119,7 @@ pub fn serialize_request(
         if header.name.eq_ignore_ascii_case("content-length") {
             let parsed = parse_decimal(&header.value)?;
             match content_length {
-                Some(existing) if existing != parsed => {
-                    return Err(Error::InvalidContentLength)
-                }
+                Some(existing) if existing != parsed => return Err(Error::InvalidContentLength),
                 _ => content_length = Some(parsed),
             }
         }
@@ -139,11 +149,7 @@ pub fn serialize_request(
     }
     output.extend_from_slice(b"\r\n");
     output.extend_from_slice(body);
-    if output.len() > MAX_WIRE_BYTES {
-        Err(Error::OutputTooLarge)
-    } else {
-        Ok(output)
-    }
+    Ok(output)
 }
 
 struct ParsedHead {
@@ -156,65 +162,64 @@ struct ParsedHead {
 }
 
 fn parse_response_head(bytes: &[u8]) -> Result<Option<ParsedHead>, Error> {
-    if bytes.len() > MAX_WIRE_BYTES {
-        return Err(Error::InputTooLarge);
-    }
-    let head_limit = bytes.len().min(MAX_HEAD_BYTES + 1);
-    let mut raw_headers = [httparse::EMPTY_HEADER; MAX_HEADERS];
-    let mut response = httparse::Response::new(&mut raw_headers);
-    let body_offset = match response.parse(&bytes[..head_limit]) {
-        Ok(httparse::Status::Partial) if bytes.len() > MAX_HEAD_BYTES => {
-            return Err(Error::InputTooLarge)
+    let mut capacity = 8usize;
+    loop {
+        let mut raw_headers = vec![httparse::EMPTY_HEADER; capacity];
+        let mut response = httparse::Response::new(&mut raw_headers);
+        let body_offset = match response.parse(bytes) {
+            Ok(httparse::Status::Partial) => return Ok(None),
+            Ok(httparse::Status::Complete(offset)) => offset,
+            Err(httparse::Error::TooManyHeaders) => {
+                capacity = capacity.checked_mul(2).ok_or(Error::TooManyHeaders)?;
+                continue;
+            }
+            Err(_) => return Err(Error::InvalidSyntax),
+        };
+        let minor_version = response.version.ok_or(Error::InvalidVersion)?;
+        if minor_version > 1 {
+            return Err(Error::InvalidVersion);
         }
-        Ok(httparse::Status::Partial) => return Ok(None),
-        Ok(httparse::Status::Complete(offset)) => offset,
-        Err(httparse::Error::TooManyHeaders) => return Err(Error::TooManyHeaders),
-        Err(_) => return Err(Error::InvalidSyntax),
-    };
-    let minor_version = response.version.ok_or(Error::InvalidVersion)?;
-    if minor_version > 1 {
-        return Err(Error::InvalidVersion);
-    }
-    let status = response.code.ok_or(Error::InvalidStatus)?;
-    if !(100..=999).contains(&status) {
-        return Err(Error::InvalidStatus);
-    }
+        let status = response.code.ok_or(Error::InvalidStatus)?;
+        if !(100..=999).contains(&status) {
+            return Err(Error::InvalidStatus);
+        }
 
-    let mut content_length = None;
-    let mut chunked = false;
-    let mut headers = Vec::with_capacity(response.headers.len());
-    for header in response.headers.iter() {
-        if header.name.eq_ignore_ascii_case("content-length") {
-            let parsed = parse_decimal(header.value)?;
-            match content_length {
-                Some(existing) if existing != parsed => {
-                    return Err(Error::InvalidContentLength)
+        let mut content_length = None;
+        let mut chunked = false;
+        let mut headers = Vec::with_capacity(response.headers.len());
+        for header in response.headers.iter() {
+            if header.name.eq_ignore_ascii_case("content-length") {
+                let parsed = parse_decimal(header.value)?;
+                match content_length {
+                    Some(existing) if existing != parsed => {
+                        return Err(Error::InvalidContentLength)
+                    }
+                    _ => content_length = Some(parsed),
                 }
-                _ => content_length = Some(parsed),
             }
-        }
-        if header.name.eq_ignore_ascii_case("transfer-encoding") {
-            if !trim_ascii(header.value).eq_ignore_ascii_case(b"chunked") {
-                return Err(Error::UnsupportedTransferCoding);
+            if header.name.eq_ignore_ascii_case("transfer-encoding") {
+                if !trim_ascii(header.value).eq_ignore_ascii_case(b"chunked") {
+                    return Err(Error::UnsupportedTransferCoding);
+                }
+                chunked = true;
             }
-            chunked = true;
+            headers.push(Header {
+                name: header.name.to_ascii_lowercase(),
+                value: header.value.to_vec(),
+            });
         }
-        headers.push(Header {
-            name: header.name.to_ascii_lowercase(),
-            value: header.value.to_vec(),
-        });
+        if chunked && content_length.is_some() {
+            return Err(Error::ConflictingFraming);
+        }
+        return Ok(Some(ParsedHead {
+            minor_version,
+            status,
+            headers,
+            body_offset,
+            content_length,
+            chunked,
+        }));
     }
-    if chunked && content_length.is_some() {
-        return Err(Error::ConflictingFraming);
-    }
-    Ok(Some(ParsedHead {
-        minor_version,
-        status,
-        headers,
-        body_offset,
-        content_length,
-        chunked,
-    }))
 }
 
 fn find_crlf(bytes: &[u8], start: usize) -> Option<usize> {
@@ -260,29 +265,23 @@ fn decode_chunked(bytes: &[u8], start: usize) -> Result<Option<(Vec<u8>, usize)>
                     return Err(Error::InvalidChunk);
                 }
                 cursor = trailer_end + 2;
-                if cursor - start > MAX_HEAD_BYTES {
-                    return Err(Error::InputTooLarge);
-                }
             }
         }
-        if body
-            .len()
-            .checked_add(size)
-            .is_none_or(|total| total > MAX_BODY_BYTES)
-        {
+        if body.len().checked_add(size).is_none() {
             return Err(Error::BodyTooLarge);
         }
         let Some(data_end) = cursor.checked_add(size) else {
             return Err(Error::BodyTooLarge);
         };
-        if bytes.len() < data_end + 2 {
+        let chunk_end = data_end.checked_add(2).ok_or(Error::BodyTooLarge)?;
+        if bytes.len() < chunk_end {
             return Ok(None);
         }
-        if &bytes[data_end..data_end + 2] != b"\r\n" {
+        if &bytes[data_end..chunk_end] != b"\r\n" {
             return Err(Error::InvalidChunk);
         }
         body.extend_from_slice(&bytes[cursor..data_end]);
-        cursor = data_end + 2;
+        cursor = chunk_end;
     }
 }
 
@@ -327,9 +326,6 @@ pub fn decode_response(
         (bytes[head.body_offset..end].to_vec(), end)
     } else if eof {
         let body = &bytes[head.body_offset..];
-        if body.len() > MAX_BODY_BYTES {
-            return Err(Error::BodyTooLarge);
-        }
         (body.to_vec(), bytes.len())
     } else {
         return Ok(None);
@@ -440,5 +436,64 @@ mod tests {
             decode_response(bytes, "GET", false),
             Err(Error::ConflictingFraming)
         ));
+    }
+}
+
+#[cfg(test)]
+mod memory_tests {
+    use super::*;
+    #[test]
+    fn large_wire_headers_and_bodies_follow_memory() {
+        let body = vec![b'x'; 2 * 1024 * 1024];
+        let mut headers = vec![Header {
+            name: "host".into(),
+            value: b"example.test".to_vec(),
+        }];
+        for n in 0..512 {
+            headers.push(Header {
+                name: format!("x-{n}"),
+                value: vec![b'a'; 256],
+            });
+        }
+        assert!(
+            serialize_request("POST", "/", &headers, &body)
+                .unwrap()
+                .len()
+                > body.len() + 65536
+        );
+        let mut wire = b"HTTP/1.1 200 OK\r\n".to_vec();
+        for h in headers {
+            wire.extend_from_slice(h.name.as_bytes());
+            wire.extend_from_slice(b": ");
+            wire.extend_from_slice(&h.value);
+            wire.extend_from_slice(b"\r\n");
+        }
+        wire.extend_from_slice(format!("content-length: {}\r\n\r\n", body.len()).as_bytes());
+        wire.extend_from_slice(&body);
+        let v = decode_response(&wire, "GET", true).unwrap().unwrap();
+        assert_eq!(v.body, body);
+        assert_eq!(v.headers.len(), 514);
+    }
+    #[test]
+    fn large_chunked_body_and_trailers_follow_memory() {
+        let body = vec![b'x'; 2 * 1024 * 1024];
+        let mut wire = b"HTTP/1.1 200 OK\r\ntransfer-encoding: chunked\r\n\r\n".to_vec();
+        wire.extend_from_slice(format!("{:x}\r\n", body.len()).as_bytes());
+        wire.extend_from_slice(&body);
+        wire.extend_from_slice(b"\r\n0\r\nx-trailer: ");
+        wire.extend_from_slice(&vec![b'a'; 70000]);
+        wire.extend_from_slice(b"\r\n\r\n");
+        assert_eq!(
+            decode_response(&wire, "GET", true).unwrap().unwrap().body,
+            body
+        );
+        assert_eq!(
+            decode_response(
+                b"HTTP/1.1 200 OK\r\ncontent-length: invalid\r\n\r\n",
+                "GET",
+                true
+            ),
+            Err(Error::InvalidContentLength)
+        );
     }
 }

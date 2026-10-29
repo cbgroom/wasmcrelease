@@ -16,6 +16,21 @@ static uint32_t read_u32(const uint8_t *bytes) {
          ((uint32_t)bytes[2] << 16) | ((uint32_t)bytes[3] << 24);
 }
 
+// Operation 2 keeps the original u16 framing; operation 4 carries a u32
+// length for larger input. Neither format imposes a separate text quota.
+static int32_t text_argument(const uint8_t *input, size_t input_len, char **value) {
+  size_t header = input[0] == 2 ? 3u : 5u;
+  if (input_len < header) return -EINVAL;
+  size_t length = input[0] == 2 ? (size_t)read_u16(input + 1) : (size_t)read_u32(input + 1);
+  if (length == 0 || input_len - header != length || memchr(input + header, 0, length)) return -EINVAL;
+  if (length == SIZE_MAX) return -ENOMEM;
+  *value = malloc(length + 1u);
+  if (!*value) return -ENOMEM;
+  memcpy(*value, input + header, length);
+  (*value)[length] = 0;
+  return 0;
+}
+
 static int32_t run(char *const arguments[]) {
   pid_t child = fork();
   if (child < 0) return -errno;
@@ -44,14 +59,10 @@ int32_t wasmc_boundary_v1_invoke(
     char *const arguments[] = {"/system/bin/input", "tap", x, y, NULL};
     return run(arguments);
   }
-  if (input[0] == 2) {
-    if (input_len < 3) return -EINVAL;
-    uint16_t length = read_u16(input + 1);
-    if (length == 0 || length > 1024 || input_len != 3u + (size_t)length) return -EINVAL;
-    if (memchr(input + 3, 0, length)) return -EINVAL;
-    char *value = calloc((size_t)length + 1u, 1);
-    if (!value) return -ENOMEM;
-    memcpy(value, input + 3, length);
+  if (input[0] == 2 || input[0] == 4) {
+    char *value = NULL;
+    int32_t result = text_argument(input, input_len, &value);
+    if (result != 0) return result;
     char *const arguments[] = {"/system/bin/input", "text", value, NULL};
     int32_t status = run(arguments);
     free(value);
