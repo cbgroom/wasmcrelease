@@ -1,0 +1,37 @@
+{
+  "status": "ISOLATED_DYNAMIC_LIST_BOUNDARY_PASS_NOT_RELEASE",
+  "source_base": "51ddc3c2c790d25186e4441274edb8d2bd665f20",
+  "private_patch_sha256": "ae5a2e3e2a32966fb74f9512c8f639050dad7045d6e725945a6cd3569f763263",
+  "root_manifest_sha256": "8b2c659b8b28327a6945f08f1168e07d4526ed8a1705cadc05b9f544eab6c284",
+  "original_host_projection_sha256": "c21b1bd524fe40fd4301fec4cbb02c9ee21a399a34a94d7318b22e7197953868",
+  "dynamic_host_projection_sha256": "43b04e4d742749fced4ff6de7f7c72a17438ce101b01afd6db893114cec23611",
+  "test": "A test-only export was added to each retained host projection via wasm-tools print/parse, without modifying the projection instructions. Mock Provider returns a valid list of 32-byte canonical variant records; Node/Bun/Deno exercised 65537 elements and checked output endpoints and borrowed-handle cleanup.",
+  "result": {
+    "version": "v2",
+    "elements": 65537,
+    "encoded_bytes": 2097184,
+    "first_last_variant": 0,
+    "borrowed": 65539,
+    "dropped": 262156,
+    "max_safe_count_bytes": 4294967264,
+    "overflow_count_rejected": true,
+    "rejected_before_allocate": true,
+    "debug_module_sha256": "95fea81056a2e91d963166b99e97aac8c4916a2a8d0d82d05b71e0804f3ab8f3",
+    "scope": "test-only export; mock provider"
+  },
+  "controls": "old dynamic implementation rejects 65537 before allocation; patched dynamic accepts; maximum nonoverflowing 134217727 elements requests 4294967264 bytes and mock allocator refuses; 134217728 elements traps before allocator",
+  "limitations": [
+    "test-only export and mock Provider, not full application or real Provider list traversal",
+    "does not allocate or run the 4GiB case; tests arithmetic and pre-allocation rejection",
+    "fixed snapshot legacy test failure retained separately; no source integration, production Host or release"
+  ],
+  "files": {
+    "list-probe.mjs": "ed83c9fabfe425fd2e837455ec789ec1cdb482041d45b39c85a0234ed48a238b",
+    "list-v1-bun.log": "982e57d39935d86ededc5af3ba0bf10bdf0e789e3afae1915c961896c4d4d601",
+    "list-v1-deno.log": "982e57d39935d86ededc5af3ba0bf10bdf0e789e3afae1915c961896c4d4d601",
+    "list-v1-node.log": "982e57d39935d86ededc5af3ba0bf10bdf0e789e3afae1915c961896c4d4d601",
+    "list-v2-bun.log": "8cadb45f817cc24716405938b2f7d405a9903d2bce4ce7f964152cda7e15affd",
+    "list-v2-deno.log": "8cadb45f817cc24716405938b2f7d405a9903d2bce4ce7f964152cda7e15affd",
+    "list-v2-node.log": "8cadb45f817cc24716405938b2f7d405a9903d2bce4ce7f964152cda7e15affd"
+  }
+}
