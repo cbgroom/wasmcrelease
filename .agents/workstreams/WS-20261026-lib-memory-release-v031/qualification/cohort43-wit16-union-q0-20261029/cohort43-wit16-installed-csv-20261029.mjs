@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+import {CoreCaller,bool,enumeration,f64,i64,u64,u8,u32,list,option,record,result,string,variant} from '/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-lib-memory-release-v031/scripts/current-core-value-codec-v3.mjs';
+const root=process.argv[2], pin='7ecf281690a297d4bb0646fbd96203e3fa791df6e3f65f12fa35360a47efc3f1';
+const raw=readFileSync(`${root}/artifact.wasm`),abi=JSON.parse(readFileSync(`${root}/core-abi.json`));assert.equal(createHash('sha256').update(raw).digest('hex'),pin);assert.equal(abi.artifact_sha256,pin);
+const dtype=enumeration(['boolean','int64','uint64','float64','utf8','binary']), field=record({name:string,data_type:dtype,nullable:bool}),column=variant(Object.fromEntries([['boolean',bool],['int64',i64],['uint64',u64],['float64',f64],['utf8',string],['binary',list(u8)]].map(([name,t])=>[name,list(option(t))]))),batch=record({rows:u32,fields:list(field),columns:list(column)}), opts=record({has_header:bool,validate_header:bool,delimiter:u8,batch_rows:u32}),errors=['invalid-options','invalid-data','unsupported-type'];
+const caller=new CoreCaller(new WebAssembly.Module(raw),abi), fields=[{name:'id',data_type:'int64',nullable:false}], options={has_header:true,validate_header:true,delimiter:44,batch_rows:4};
+const parse=(body,o=options)=>caller.call('parse',[list(u8),list(field),opts],[[...new TextEncoder().encode(body)],fields,o],result(list(batch),errors));
+assert.deepEqual(parse('id\n2\n1\n'),{tag:'ok',value:[{rows:2,fields,columns:[{tag:'int64',value:[2n,1n]}]}]});
+assert.deepEqual(parse('id\n1\n',{...options,batch_rows:0}),{tag:'err',value:'invalid-options'});
+assert.deepEqual(parse('id\n7\n'),{tag:'ok',value:[{rows:1,fields,columns:[{tag:'int64',value:[7n]}]}]});
+console.log(JSON.stringify({accepted:true,engine:globalThis.Deno?'deno':globalThis.Bun?'bun':'node',core_sha256:pin,checks:['two rows','invalid option','same-instance recovery'],scope:'controlled installed Q0 CSV Core'}));
