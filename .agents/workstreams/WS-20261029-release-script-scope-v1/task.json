@@ -1,0 +1,42 @@
+{
+  "schema": "wasmc-public-release-workstream/v1",
+  "task_id": "WS-20261029-release-script-scope-v1",
+  "owner": "01a129c3-6473-7c62-8856-2cb7a6abca28",
+  "state": "in-progress",
+  "base": "3ed99aa6f558f25940d4baa09a31cbae3336b911",
+  "branch": "work/WS-20261029-release-script-scope-v1",
+  "scope": "Serial owner release and successor compiler-carrier byte boundary; preserve old versions, existing source claims, and product semantics.",
+  "claims": [
+    {
+      "kind": "file",
+      "scope": ".agents/workstreams/WS-20261029-release-script-scope-v1",
+      "mode": "exclusive"
+    },
+    {
+      "kind": "file",
+      "scope": "scripts/release-candidate.mjs",
+      "mode": "exclusive"
+    },
+    {
+      "kind": "file",
+      "scope": "scripts/ci-suite.mjs",
+      "mode": "exclusive"
+    },
+    {
+      "kind": "file",
+      "scope": "scripts/test-release-channel.mjs",
+      "mode": "exclusive"
+    },
+    {
+      "kind": "file",
+      "scope": "scripts/test-current-compiler-byte-boundary-v031.mjs",
+      "mode": "exclusive"
+    }
+  ],
+  "source_releases": {
+    "WS-20261021-formal-normal-functional-v022": "3e06e12c0310411ee99b6b28eb9940127940c0a4",
+    "WS-20261021-normal-functional-successor-v023": "8f8a20d20d38523e597f61174cc3af77c06c8007",
+    "WS-20261022-json006-current-admission-v024": "2713cc94366f839fdef788f1710d201fbb7da06a"
+  },
+  "next": "Integrate owner scope release, then apply exact isolated patch and validate before any product admission."
+}

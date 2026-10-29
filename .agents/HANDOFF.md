@@ -1420,3 +1420,8 @@ formats. Do not mutate immutable admitted/released `libs/*` roots in place.
 ## Unpublished v024 current006 composition checkpoint — 2026-10-22
 
 Owned WS-20261022-json006-current-admission-v024 now materializes strict42/247/289 at independent catalogc583d5444d9bcba8f5932660d5b632fd64aa9a212c2002f1a91fa03b9d4e0aa9, using artifactauthority0e91db5e63ab5750cb621add5ad48a5581aedfa1 and41 originalRoot reuse. ActualGitHub18-file install and sameinstalledRoot four newinputs pass; new/old fullproduct43 controls each and old005 composition27 pass. Generic exactnotice aliases require complete current/base/originalproducer/source verification; historical005 originalchain is separately pinned and reverified. Actual558 notice paths,8 original negatives and36 composed/historical negatives pass; actualinitial failures remain in own evidence. Root_Q0 projection is41 inherited plusone originalproducer/source, never freshfullQ0. Compiler-family168 artifacts remain exact9ea. Read owned HANDOFF/evidence for full pins. Parent retains final qualification/candidate/protocol/docs/channel publication; no formalv024 release claimed here.
+
+
+## Same-owner release script scope transfer (2026-10-29)
+
+Three prior owner branches released only the release-candidate, CI suite and release-channel-test script scopes to WS-20261029-release-script-scope-v1; exact pushed release commits are in that task.json. Historical workstream states, other claims, frozen products and existing evidence remain intact. This metadata is not a product release.

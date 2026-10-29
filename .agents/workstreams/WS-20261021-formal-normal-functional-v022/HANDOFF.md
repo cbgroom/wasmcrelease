@@ -55,3 +55,6 @@ Private PR14 SourceReady8d9 carries generic copied-byte correctness and additive
 Publish this START/claim before product edits. Receive only exact artifact/package bytes and sanitized provenance, never private compiler source or raw warning logs containing implementation. Preserve old immutable tags/versioned products, licenses, foreign WIP, installed-consumer and Map-million evidence. Refresh actual claim/source/job facts before each release effect. Build no unchanged compiler, Provider or Lib as a shortcut.
 
 Next: exact candidate inputs and public pipeline admission, generated carrier/CLI/API/install qualification, current final commit CI/Pi and ordered channel promotion, actual GitHub formal release and independent asset/consumer readback. Existing inline/general WAsmC Canonical JSON route remains explicitly unsupported; no network-security work or license-policy change.
+
+
+Same-owner scoped release 2026-10-29: release only scripts/ci-suite.mjs, scripts/release-candidate.mjs to WS-20261029-release-script-scope-v1. Owner-branch release commit 3e06e12c0310411ee99b6b28eb9940127940c0a4 was pushed and read back. Other claims, task state, WIP and frozen release evidence remain unchanged. Future writes to released scopes require coordination.

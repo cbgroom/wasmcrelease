@@ -159,3 +159,6 @@ Final local maintained checks now complete exit0 after required lifecycle SDK/re
 ## Initial573 retained; final lifecycle coherence correction
 
 Initial exact573 GLM sixcase structural/independentreview PASS and DeepSeek allsixstructural PASS are actual observations, retained unchanged. Finalreview found inherited prod default_prod_advanced=false and pendingpublication readiness would conflict with actualpublishedprod. Remove prerelease effectflag fromprod only (dev/main unchanged); readiness nowstates complete productrouteclosure, exactfinalPi receipt/channel authorities remain mandatory and projection grants no publicationauthority. No modelprompt/oracle/budget/product change. Preserve old573commit/archive7c and summaries; prepare newexactmetadata tree and rerun complete pair before tag/push.
+
+
+Same-owner scoped release 2026-10-29: release only scripts/ci-suite.mjs, scripts/release-candidate.mjs, scripts/test-release-channel.mjs to WS-20261029-release-script-scope-v1. Owner-branch release commit 8f8a20d20d38523e597f61174cc3af77c06c8007 was pushed and read back. Other claims, task state, WIP and frozen release evidence remain unchanged. Future writes to released scopes require coordination.
