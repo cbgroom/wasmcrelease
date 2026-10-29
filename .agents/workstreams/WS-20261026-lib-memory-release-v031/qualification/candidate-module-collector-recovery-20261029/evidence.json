@@ -1,0 +1,15 @@
+{
+  "schema": "wasmc.successor-module-collector-recovery/v1",
+  "previous_commit": "a8ef82009dcfd9a6b9d8732e292bcc19c7881657",
+  "previous_failure": "Conservative import scanner treated fixture source strings in its own test as actual imports; its outside-root negative fixture caused collection to reject. Original failure retained in first-failure.log.",
+  "repair": "Construct test fixture source at runtime and assert the actual collector discovers only the test file's real local import. The collector remains deliberately conservative, not a complete JavaScript parser.",
+  "source_sha256": {
+    "scripts/release-candidate.mjs": "62d522e349e19533e4457472a91f8edf4a33d61642f08c5c20d41ba802147c0a",
+    "scripts/test-product-module-imports-v1.mjs": "81b95350ecfeb4a10f30abf7a12acecc610d7cee271105c85549859b4001252e"
+  },
+  "collector_log_sha256": "0482fe6096476337a01232e9132dafdecc98f1228228957ccb5baa55371e3f42",
+  "collector_log_path": "/Users/youxianshi/.local/state/wasmc-maintenance/rustc-service-1991-20261028/successor-module-collector-20261029.log",
+  "collector_result": "109 selected script seeds and 149 transitive modules collected from scoped mixed fixture and current script overlay; no bogus static fixture module",
+  "checks": "Node, Bun and Deno negative tests plus Node release-channel and CI reporting pass",
+  "scope": "This is not full exact successor candidate generation, real CI, compiler admission, production deployment or release."
+}

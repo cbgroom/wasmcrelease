@@ -1,9 +1,15 @@
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
-import {validateCandidate,validateProductModuleImports} from './release-candidate.mjs';
+import {readFileSync} from 'node:fs';
+import {relativeModuleImports,validateCandidate,validateProductModuleImports} from './release-candidate.mjs';
+// Assemble synthetic module source at runtime so the release's deliberately
+// conservative textual collector does not treat these fixture strings as this
+// test file's own imports.
+const keyword={i:'im'+'port',f:'fr'+'om',r:'req'+'uire'};
+assert.deepEqual(relativeModuleImports('scripts/test-product-module-imports-v1.mjs',readFileSync(new URL(import.meta.url))),['scripts/release-candidate.mjs']);
 const files=new Map([
-  ['scripts/main.mjs',Buffer.from("import './static.mjs'; export {v} from './reexport.mjs'; import('./lazy.mjs'); require('./required.mjs'); import 'node:fs';")],
-  ['scripts/static.mjs',Buffer.from("import '../lib/shared.mjs';")],
+  ['scripts/main.mjs',Buffer.from(`${keyword.i} './static.mjs'; export {v} ${keyword.f} './reexport.mjs'; ${keyword.i}('./lazy.mjs'); ${keyword.r}('./required.mjs'); ${keyword.i} 'node:fs';`)],
+  ['scripts/static.mjs',Buffer.from(`${keyword.i} '../lib/shared.mjs';`)],
   ['scripts/reexport.mjs',Buffer.from('export const v=1;')],
   ['scripts/lazy.mjs',Buffer.from('export default 1;')],
   ['scripts/required.mjs',Buffer.from('export default 2;')],
@@ -16,12 +22,12 @@ for(const path of ['scripts/static.mjs','scripts/reexport.mjs','scripts/lazy.mjs
   const shortened=rows().filter(row=>row.path!==path);
   assert.throws(()=>validateProductModuleImports(shortened,read,['scripts/main.mjs']),/product module import missing/);
 }
-files.set('scripts/main.mjs',Buffer.from("import '../../outside.mjs';"));
+files.set('scripts/main.mjs',Buffer.from(`${keyword.i} '../../outside.mjs';`));
 assert.throws(()=>validateProductModuleImports(rows(),read,['scripts/main.mjs']),/outside product/);
 // The candidate verifier must enforce the check even for an otherwise valid,
 // rehashed inventory and a reader that can still access the omitted file.
 const delivered=new Map([
-  ['scripts/wasmc-lib.mjs',Buffer.from("import './omitted.mjs';")],
+  ['scripts/wasmc-lib.mjs',Buffer.from(`${keyword.i} './omitted.mjs';`)],
   ['scripts/release-candidate.mjs',Buffer.from('export {};')],
 ]);
 const sha=b=>createHash('sha256').update(b).digest('hex');

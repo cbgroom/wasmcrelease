@@ -18,7 +18,7 @@ const root=fileURLToPath(new URL('../',import.meta.url));
 const require=createRequire(import.meta.url);
 const hash=b=>createHash('sha256').update(b).digest('hex');
 const safe=p=>typeof p==='string'&&p.split('/').every(x=>x&&x!=='.'&&x!=='..')&&!p.includes('\\')&&!p.startsWith('/');
-function relativeModuleImports(path,bytes){
+export function relativeModuleImports(path,bytes){
   const targets=[];
   for(const match of bytes.toString('utf8').matchAll(/(?:from\s*|import\s*\(\s*|import\s*|require\s*\(\s*)['"](\.[^'"]+)['"]/g)){
     const target=posix.normalize(posix.join(posix.dirname(path),match[1]));

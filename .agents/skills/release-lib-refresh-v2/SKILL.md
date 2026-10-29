@@ -39,6 +39,8 @@ CI must dispatch the mixed cohort to its own complete two-source product and per
 
 For successor mixed products, reopening a hashed inventory must also confirm the literal relative module dependencies reachable from the delivered CLI and candidate verifier are themselves in that inventory. A reader may have access to omitted checkout files, so a successful read alone is insufficient. Check the active entrypoint graphs, not embedded historical proof-graph scripts that are not execution entrypoints. Dynamic nonliteral imports require separate evidence; this structural check is not a full JavaScript parser.
 
+The existing conservative textual collector can treat import-looking fixture text as an actual module dependency. A delivered collector test must check its own scanned dependencies and construct synthetic module source without embedding misleading import text verbatim. Run the collector across the selected successor script seeds as well as the negative controls; this does not establish arbitrary JavaScript parsing.
+
 After anonymous installation of a mixed cohort, compile each selected 2024 Core SDK directly from its installed and pinned bytes with the pinned Rust toolchain. Report historical editions and Component manifest declarations separately; neither direct SDK compilation nor temporary-Service execution proves deployed routing or release.
 
 ## Decision
