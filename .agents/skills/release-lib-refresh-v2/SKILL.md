@@ -29,6 +29,8 @@ For mixed notice classification, capture and replay each original v3/v4 notice c
 
 Before selecting mixed Roots, compare all currently listed remote tag identities and complete matching Root blob inventories, including alternate delivery surfaces. Pin the remote ref list and verify each local tag ref against it. This does not cover other refs or undiscovered delivery surfaces; repeat after a tag-set change.
 
+For real mixed artifact authority, start from the exact released main, stage only successor Root blobs and pinned public Lib inputs, and preserve the earlier candidate branch. Bind the catalog to the pushed commit only after its complete selected Root/source/registry Git trees match and anonymous commit/tree readback succeeds. A public candidate commit and install remain separate from Source admission and formal release.
+
 ## Decision
 
 `libspec/` is the sole current Lib source authority. Do not extend the historical

@@ -1,5 +1,7 @@
 import assert from 'node:assert/strict';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { execFileSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { dirname, isAbsolute, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { currentProductPaths, currentProductReader, verifyCurrentRelease, verifyCurrentReleaseV4 } from './current-lib-release-v3.mjs';
@@ -26,6 +28,24 @@ function select(old, candidate, projected) {
   const reused=new Set(projected.reused.map(x=>x.id));
   return candidate.catalog.packages.map(row=>reused.has(row.id)
     ? structuredClone(old.catalog.packages.find(x=>x.id===row.id)) : structuredClone(row));
+}
+export function verifyMixedArtifactAuthority(repo,commit,packages,registry,oldRead,candidateRead,reused) {
+  assert.ok(isAbsolute(repo));assert.match(commit,/^[0-9a-f]{40}$/);assert.notEqual(commit,'0'.repeat(40));
+  const git=(...args)=>execFileSync('git',args,{cwd:repo,maxBuffer:100*1024*1024});
+  assert.equal(git('rev-parse','--verify',`${commit}^{commit}`).toString().trim(),commit);
+  assert.equal(git('rev-parse','--show-object-format').toString().trim(),'sha1');
+  const rows=git('ls-tree','-r','-z',commit,'--','current-libs','libspec').toString().split('\0').filter(Boolean);
+  const tree=new Map(rows.map(line=>{const m=/^(100644|100755) blob ([0-9a-f]{40})\t(.+)$/.exec(line);assert.ok(m,'regular authority blob');return [m[3],m[2]];}));
+  const used=new Set(),oldIds=new Set(reused.map(r=>r.id));
+  const verify=(pin,reader)=>{const b=reader(pin.path);assert.equal(b.length,pin.bytes);assert.equal(sha(b),pin.sha256);
+    const blob=createHash('sha1').update(`blob ${b.length}\0`).update(b).digest('hex');
+    assert.equal(tree.get(pin.path),blob,'artifact authority blob: '+pin.path);used.add(pin.path);};
+  verify(registry,candidateRead);
+  for(const row of packages){const original=oldIds.has(row.id)?oldRead:candidateRead;
+    for(const pin of row.files)verify(pin,original);for(const pin of Object.values(row.source))verify(pin,candidateRead);
+    assert.equal([...tree.keys()].filter(p=>p.startsWith(row.root+'/')).length,row.files.length,'complete authority Root: '+row.root);
+  }
+  return {commit,files:used.size};
 }
 
 // Verification requires caller-provided old and candidate catalog pins. The
@@ -96,7 +116,7 @@ export function searchMixedCurrentRelease(catalogBytes,catalogSha,read,selection
     selection_authority:false,offset,limit,result:caller.search(selection,offset,limit)};
 }
 
-export async function assembleMixedCurrentProduct({oldRoot,oldSha,candidateRoot,candidateSha,out,version}) {
+export async function assembleMixedCurrentProduct({oldRoot,oldSha,candidateRoot,candidateSha,out,version,authorityRepo,artifactCommit='0'.repeat(40)}) {
   for(const p of [oldRoot,candidateRoot,out])assert.ok(isAbsolute(p));assert.match(version,/^\d+\.\d+\.\d+$/);
   const captured={old:new Map(),candidate:new Map()};
   const load=(name,root,shaPin,verify)=>{
@@ -105,6 +125,8 @@ export async function assembleMixedCurrentProduct({oldRoot,oldSha,candidateRoot,
   };
   const old=load('old',oldRoot,oldSha,verifyCurrentRelease),candidate=load('candidate',candidateRoot,candidateSha,verifyCurrentReleaseV4);
   const projected=projectFrozenIndex(old.catalog,old.index,candidate.catalog,candidate.index),packages=select(old,candidate,projected);
+  assert.match(artifactCommit,/^[0-9a-f]{40}$/);
+  if(artifactCommit!=='0'.repeat(40))verifyMixedArtifactAuthority(authorityRepo,artifactCommit,packages,candidate.catalog.registry,old.read,candidate.read,projected.reused);
   // Capture all inputs used by the original notice collectors, including
   // historical composition carriers not read by the product verifier alone.
   const oldPolicy=parse(old.read('catalog/current-v3-license-policy.json'));
@@ -131,7 +153,7 @@ export async function assembleMixedCurrentProduct({oldRoot,oldSha,candidateRoot,
     old_catalog_sha256:oldSha,candidate_catalog_sha256:candidateSha,inputs,reused:projected.reused,
     common_files:common.map(path=>descriptor(path,candidate.read(path))),public_admission:false};
   const cohortBytes=bytes(cohort);await put(cohortPath,cohortBytes);
-  const catalog={schema:'wasmc.public-lib-catalog/v2',version,package_authority_commit:'0'.repeat(40),registry:candidate.catalog.registry,
+  const catalog={schema:'wasmc.public-lib-catalog/v2',version,package_authority_commit:artifactCommit,registry:candidate.catalog.registry,
     index:descriptor(indexPath,indexBytes),cohort:descriptor(cohortPath,cohortBytes),packages};
   const catalogBytes=bytes(catalog);await put('catalog/libs-current-v2.json',catalogBytes);
   await put('catalog/current-mixed-license-policy-v1.json',bytes({schema:'wasmc.current-license-policy/mixed-v1',
@@ -140,7 +162,7 @@ export async function assembleMixedCurrentProduct({oldRoot,oldSha,candidateRoot,
   await put('admission/mixed-product-verification-v1.json',bytes(verification));return verification;
 }
 if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)){
-  const [oldRoot,oldSha,candidateRoot,candidateSha,out,version]=process.argv.slice(2);
-  assembleMixedCurrentProduct({oldRoot,oldSha,candidateRoot,candidateSha,out,version}).then(r=>console.log(JSON.stringify(r)))
+  const [oldRoot,oldSha,candidateRoot,candidateSha,out,version,authorityRepo,artifactCommit]=process.argv.slice(2);
+  assembleMixedCurrentProduct({oldRoot,oldSha,candidateRoot,candidateSha,out,version,authorityRepo,artifactCommit}).then(r=>console.log(JSON.stringify(r)))
     .catch(e=>{console.error(e);process.exitCode=1;});
 }
