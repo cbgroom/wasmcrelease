@@ -1,0 +1,728 @@
+--- a/Cargo.lock
++++ b/Cargo.lock
+@@ -1226,0 +1227 @@
++ "wasmi_core",
+--- a/crates/wasmc_core_runtime/Cargo.toml
++++ b/crates/wasmc_core_runtime/Cargo.toml
+@@ -14 +14 @@
+-wasmi-runtime = ["dep:wasmi"]
++wasmi-runtime = ["dep:wasmi", "dep:wasmi_core"]
+@@ -21,0 +22 @@
++wasmi_core = { version = "=2.0.0", optional = true, default-features = false }
+--- a/crates/wasmc_core_runtime/src/lib.rs
++++ b/crates/wasmc_core_runtime/src/lib.rs
+@@ -19,0 +20 @@
++mod shared_memory;
+@@ -57,0 +59 @@
++pub use shared_memory::{CoreSharedMemoryBudget, CoreSharedMemoryReservation};
+--- a/crates/wasmc_core_runtime/src/scalar_host_lane.rs
++++ b/crates/wasmc_core_runtime/src/scalar_host_lane.rs
+@@ -10,2 +10 @@
+-    StoreLimits as WasmiStoreLimits, StoreLimitsBuilder as WasmiStoreLimitsBuilder,
+-    Val as WasmiVal, ValType as WasmiValType,
++    StoreLimitsBuilder as WasmiStoreLimitsBuilder, Val as WasmiVal, ValType as WasmiValType,
+@@ -17,3 +16,2 @@
+-    Store as WasmtimeStore, StoreLimits as WasmtimeStoreLimits,
+-    StoreLimitsBuilder as WasmtimeStoreLimitsBuilder, UpdateDeadline, Val as WasmtimeVal,
+-    ValType as WasmtimeValType,
++    Store as WasmtimeStore, StoreLimitsBuilder as WasmtimeStoreLimitsBuilder, UpdateDeadline,
++    Val as WasmtimeVal, ValType as WasmtimeValType,
+@@ -24,0 +23 @@
++    CoreRuntimeCancellation, CoreRuntimeLimitProfile, WasmiCompletionRuntime,
+@@ -26 +24,0 @@
+-    CoreRuntimeCancellation, CoreRuntimeLimitProfile, WasmiCompletionRuntime,
+@@ -145,0 +144 @@
++    memory_budget: Option<crate::CoreSharedMemoryBudget>,
+@@ -156 +155,8 @@
+-        }
++            memory_budget: None,
++        }
++    }
++
++    /// Share one invocation memory budget with other stores owned by the Host.
++    pub fn with_memory_budget(mut self, budget: crate::CoreSharedMemoryBudget) -> Self {
++        self.memory_budget = Some(budget);
++        self
+@@ -199,0 +206 @@
++            memory_budget: self.memory_budget,
+@@ -266,0 +274 @@
++    memory_budget: Option<crate::CoreSharedMemoryBudget>,
+@@ -312 +320 @@
+-    wasmi_limits: WasmiStoreLimits,
++    wasmi_limits: crate::shared_memory::WasmiSharedLimits,
+@@ -314 +322,2 @@
+-    wasmtime_limits: WasmtimeStoreLimits,
++    wasmtime_limits: crate::shared_memory::WasmtimeSharedLimits,
++    has_shared_memory_budget: bool,
+@@ -452,0 +462,3 @@
++        if profile.is_bounded() || store.data().has_shared_memory_budget {
++            store.limiter(|data| &mut data.wasmi_limits);
++        }
+@@ -454 +465,0 @@
+-            store.limiter(|data| &mut data.wasmi_limits);
+@@ -678,0 +690,3 @@
++        if profile.is_bounded() || store.data().has_shared_memory_budget {
++            store.limiter(|data| &mut data.wasmtime_limits);
++        }
+@@ -680 +693,0 @@
+-            store.limiter(|data| &mut data.wasmtime_limits);
+@@ -877,0 +891,32 @@
++    let memory_limit = if profile.is_bounded() {
++        profile.max_memory_bytes()
++    } else {
++        usize::MAX
++    };
++    let table_limit = if profile.is_bounded() {
++        profile.max_table_elements()
++    } else {
++        usize::MAX
++    };
++    let mut wasmi_builder = WasmiStoreLimitsBuilder::new()
++        .memory_size(memory_limit)
++        .table_elements(table_limit)
++        .trap_on_grow_failure(true);
++    #[cfg(feature = "wasmtime-runtime")]
++    let mut wasmtime_builder = WasmtimeStoreLimitsBuilder::new()
++        .memory_size(memory_limit)
++        .table_elements(table_limit)
++        .trap_on_grow_failure(true);
++    if !profile.is_bounded() {
++        wasmi_builder = wasmi_builder
++            .instances(usize::MAX)
++            .tables(usize::MAX)
++            .memories(usize::MAX);
++        #[cfg(feature = "wasmtime-runtime")]
++        {
++            wasmtime_builder = wasmtime_builder
++                .instances(usize::MAX)
++                .tables(usize::MAX)
++                .memories(usize::MAX);
++        }
++    }
+@@ -885,5 +930,4 @@
+-        wasmi_limits: WasmiStoreLimitsBuilder::new()
+-            .memory_size(profile.max_memory_bytes())
+-            .table_elements(profile.max_table_elements())
+-            .trap_on_grow_failure(true)
+-            .build(),
++        wasmi_limits: crate::shared_memory::WasmiSharedLimits {
++            limits: wasmi_builder.build(),
++            reservation: session.memory_budget.as_ref().map(|b| b.reservation()),
++        },
+@@ -891,5 +935,5 @@
+-        wasmtime_limits: WasmtimeStoreLimitsBuilder::new()
+-            .memory_size(profile.max_memory_bytes())
+-            .table_elements(profile.max_table_elements())
+-            .trap_on_grow_failure(true)
+-            .build(),
++        wasmtime_limits: crate::shared_memory::WasmtimeSharedLimits {
++            limits: wasmtime_builder.build(),
++            reservation: session.memory_budget.as_ref().map(|b| b.reservation()),
++        },
++        has_shared_memory_budget: session.memory_budget.is_some(),
+--- a/crates/wasmc_core_runtime/tests/runtime_sdk.rs
++++ b/crates/wasmc_core_runtime/tests/runtime_sdk.rs
+@@ -1014,0 +1015,384 @@
++
++#[test]
++fn shared_memory_budget_joins_guest_and_provider_stores() {
++    use wasmc_core_runtime::{CoreSharedMemoryBudget, CoreSharedMemoryReservation};
++    const PAGE: usize = 65536;
++    struct ProviderLimits(CoreSharedMemoryReservation);
++    impl wasmtime::ResourceLimiter for ProviderLimits {
++        fn memory_growing(
++            &mut self,
++            current: usize,
++            desired: usize,
++            maximum: Option<usize>,
++        ) -> wasmtime::Result<bool> {
++            if maximum.is_some_and(|m| desired > m) {
++                return Ok(false);
++            }
++            Ok(self.0.try_grow(current, desired))
++        }
++        fn memory_grow_failed(&mut self, _error: wasmtime::Error) -> wasmtime::Result<()> {
++            self.0.growth_failed();
++            Ok(())
++        }
++        fn table_growing(
++            &mut self,
++            _current: usize,
++            _desired: usize,
++            _maximum: Option<usize>,
++        ) -> wasmtime::Result<bool> {
++            Ok(true)
++        }
++    }
++    struct State {
++        store: wasmtime::Store<ProviderLimits>,
++        memory: wasmtime::Memory,
++        budget: CoreSharedMemoryBudget,
++    }
++    fn provider(budget: &CoreSharedMemoryBudget, pages: u32) -> State {
++        let engine = wasmtime::Engine::default();
++        let mut store = wasmtime::Store::new(&engine, ProviderLimits(budget.reservation()));
++        store.limiter(|s| s);
++        let memory =
++            wasmtime::Memory::new(&mut store, wasmtime::MemoryType::new(pages, None)).unwrap();
++        State {
++            store,
++            memory,
++            budget: budget.clone(),
++        }
++    }
++    let wasm = wat::parse_str(
++        r#"(module
++      (import "host" "total" (func $total (result i32)))
++      (memory (export "memory") 2)
++      (func (export "run") (result i32) call $total)
++      (func (export "grow") (result i32) i32.const 1 memory.grow))"#,
++    )
++    .unwrap();
++    let import = CoreScalarHostImport::new("host", "total", vec![], vec![CoreScalarType::I32]);
++    let profile = CoreRuntimeLimitProfile::bounded(
++        1_000_000,
++        1_000_000,
++        1_000_000_000,
++        1_000,
++        4 * PAGE,
++        8,
++        1,
++    );
++    let sdk = CoreRuntimeSdk::new(CoreRuntimeSdkConfig::new(2, 1).with_limits(profile)).unwrap();
++    let artifact = sdk
++        .prepare_scalar_host_core(&wasm, policy(90), std::slice::from_ref(&import))
++        .unwrap();
++    for optimized in [false, true] {
++        if optimized {
++            promote(&sdk, &artifact);
++        }
++        // Two provider pages plus two Guest pages exceed a three-page budget.
++        let budget = CoreSharedMemoryBudget::new(3 * PAGE);
++        let state = provider(&budget, 2);
++        let session = CoreScalarHostSession::new(state)
++            .with_memory_budget(budget.clone())
++            .bind(import.clone(), |_, _, _| Ok(vec![CoreScalarValue::I32(0)]));
++        let rejected = artifact.invoke_scalar_with_session_state(session, "run", &[]);
++        assert!(
++            rejected.invocation.is_err(),
++            "combined memory budget was bypassed"
++        );
++        assert_eq!(
++            budget.reserved_bytes(),
++            2 * PAGE,
++            "failed Guest instantiation retained a reservation"
++        );
++        drop(rejected.state);
++        assert_eq!(budget.reserved_bytes(), 0);
++        // With one provider page, both stores fit exactly. A further provider grow
++        // is rejected without corrupting accounting; a fresh invocation recovers.
++        for _ in 0..2 {
++            let state = provider(&budget, 1);
++            let session = CoreScalarHostSession::new(state)
++                .with_memory_budget(budget.clone())
++                .bind(import.clone(), |state, memory, _| {
++                    assert_eq!(memory.byte_len()?, 2 * PAGE);
++                    assert_eq!(state.budget.reserved_bytes(), 3 * PAGE);
++                    assert!(state.memory.grow(&mut state.store, 1).is_err());
++                    assert_eq!(state.budget.reserved_bytes(), 3 * PAGE);
++                    Ok(vec![CoreScalarValue::I32(3 * PAGE as i32)])
++                });
++            let outcome = artifact.invoke_scalar_with_session_state(session, "run", &[]);
++            let value = outcome.invocation.unwrap();
++            assert_eq!(
++                value.backend,
++                if optimized {
++                    CoreRuntimeBackend::Wasmtime
++                } else {
++                    CoreRuntimeBackend::Wasmi
++                }
++            );
++            assert_eq!(value.values, [CoreScalarValue::I32(3 * PAGE as i32)]);
++            assert_eq!(budget.reserved_bytes(), PAGE, "Guest memory not released");
++            drop(outcome.state);
++            assert_eq!(budget.reserved_bytes(), 0, "provider memory not released");
++        }
++        // Guest growth is also charged while the provider remains alive.
++        let budget = CoreSharedMemoryBudget::new(3 * PAGE);
++        let state = provider(&budget, 1);
++        let session = CoreScalarHostSession::new(state)
++            .with_memory_budget(budget.clone())
++            .bind(import.clone(), |_, _, _| unreachable!());
++        let rejected = artifact.invoke_scalar_with_session_state(session, "grow", &[]);
++        assert!(
++            rejected.invocation.is_err(),
++            "Guest growth bypassed combined budget"
++        );
++        assert_eq!(budget.reserved_bytes(), PAGE);
++        drop(rejected.state);
++        assert_eq!(budget.reserved_bytes(), 0);
++        let budget = CoreSharedMemoryBudget::new(4 * PAGE);
++        let state = provider(&budget, 1);
++        let session = CoreScalarHostSession::new(state)
++            .with_memory_budget(budget.clone())
++            .bind(import.clone(), |_, _, _| unreachable!());
++        let grown = artifact.invoke_scalar_with_session_state(session, "grow", &[]);
++        assert_eq!(grown.invocation.unwrap().values, [CoreScalarValue::I32(2)]);
++        assert_eq!(budget.reserved_bytes(), PAGE);
++        drop(grown.state);
++        assert_eq!(budget.reserved_bytes(), 0);
++        // Both stores may grow up to the common ceiling, with no fixed partition.
++        let budget = CoreSharedMemoryBudget::new(4 * PAGE);
++        let state = provider(&budget, 1);
++        let session = CoreScalarHostSession::new(state)
++            .with_memory_budget(budget.clone())
++            .bind(import.clone(), |state, _, _| {
++                state.memory.grow(&mut state.store, 1).unwrap();
++                assert_eq!(state.budget.reserved_bytes(), 4 * PAGE);
++                Ok(vec![CoreScalarValue::I32(4 * PAGE as i32)])
++            });
++        let outcome = artifact.invoke_scalar_with_session_state(session, "run", &[]);
++        assert_eq!(
++            outcome.invocation.unwrap().values,
++            [CoreScalarValue::I32(4 * PAGE as i32)]
++        );
++        assert_eq!(budget.reserved_bytes(), 2 * PAGE);
++        drop(outcome.state);
++        assert_eq!(budget.reserved_bytes(), 0);
++    }
++    // Explicit shared accounting also applies when the SDK profile is unbounded.
++    let unbounded_sdk = CoreRuntimeSdk::new(CoreRuntimeSdkConfig::new(2, 1)).unwrap();
++    let unbounded_artifact = unbounded_sdk
++        .prepare_scalar_host_core(&wasm, policy(91), std::slice::from_ref(&import))
++        .unwrap();
++    for optimized in [false, true] {
++        if optimized {
++            promote(&unbounded_sdk, &unbounded_artifact);
++        }
++        let budget = CoreSharedMemoryBudget::new(2 * PAGE);
++        let state = provider(&budget, 1);
++        let session = CoreScalarHostSession::new(state)
++            .with_memory_budget(budget.clone())
++            .bind(import.clone(), |_, _, _| unreachable!());
++        let rejected = unbounded_artifact.invoke_scalar_with_session_state(session, "run", &[]);
++        assert!(
++            rejected.invocation.is_err(),
++            "unbounded SDK ignored explicit shared budget"
++        );
++        assert_eq!(budget.reserved_bytes(), PAGE);
++        drop(rejected.state);
++        assert_eq!(budget.reserved_bytes(), 0);
++        let budget = CoreSharedMemoryBudget::new(3 * PAGE);
++        let state = provider(&budget, 1);
++        let session = CoreScalarHostSession::new(state)
++            .with_memory_budget(budget.clone())
++            .bind(import.clone(), |state, _, _| {
++                Ok(vec![CoreScalarValue::I32(
++                    state.budget.reserved_bytes() as i32
++                )])
++            });
++        let accepted = unbounded_artifact.invoke_scalar_with_session_state(session, "run", &[]);
++        assert_eq!(
++            accepted.invocation.unwrap().values,
++            [CoreScalarValue::I32(3 * PAGE as i32)]
++        );
++        assert_eq!(budget.reserved_bytes(), PAGE);
++        drop(accepted.state);
++        assert_eq!(budget.reserved_bytes(), 0);
++    }
++    // Concurrent stores contend for the same total, not independent per-store caps.
++    let concurrent = CoreSharedMemoryBudget::new(3 * PAGE);
++    let successes = std::sync::atomic::AtomicUsize::new(0);
++    let barrier = std::sync::Barrier::new(4);
++    std::thread::scope(|scope| {
++        for _ in 0..4 {
++            let budget = concurrent.clone();
++            let successes = &successes;
++            let barrier = &barrier;
++            scope.spawn(move || {
++                let engine = wasmtime::Engine::default();
++                let mut store = wasmtime::Store::new(&engine, ProviderLimits(budget.reservation()));
++                store.limiter(|s| s);
++                let memory = wasmtime::Memory::new(&mut store, wasmtime::MemoryType::new(1, None));
++                if memory.is_ok() {
++                    successes.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
++                }
++                barrier.wait();
++                drop(memory);
++                drop(store);
++            });
++        }
++    });
++    assert_eq!(successes.load(std::sync::atomic::Ordering::SeqCst), 3);
++    assert_eq!(concurrent.reserved_bytes(), 0);
++    let budget = CoreSharedMemoryBudget::new(PAGE);
++    let mut reservation = budget.reservation();
++    assert!(reservation.try_grow(0, PAGE));
++    reservation.growth_failed();
++    assert_eq!(budget.reserved_bytes(), 0);
++}
++
++#[test]
++fn shared_memory_budget_with_real_json_core() {
++    use sha2::{Digest, Sha256};
++    use wasmc_core_runtime::{CoreSharedMemoryBudget, CoreSharedMemoryReservation};
++    const PAGE: usize = 65536;
++    const CORE: &[u8] = include_bytes!("fixtures/wasmc-json-0.2.1-shared-memory.wasm");
++    assert_eq!(
++        format!("{:x}", Sha256::digest(CORE)),
++        "82e93fb61e11627d74b086693587fbb1a72d340432445236ae49f7df29670fe7"
++    );
++    struct Limits(CoreSharedMemoryReservation);
++    impl wasmtime::ResourceLimiter for Limits {
++        fn memory_growing(
++            &mut self,
++            current: usize,
++            desired: usize,
++            maximum: Option<usize>,
++        ) -> wasmtime::Result<bool> {
++            if maximum.is_some_and(|m| desired > m) {
++                return Ok(false);
++            }
++            Ok(self.0.try_grow(current, desired))
++        }
++        fn memory_grow_failed(&mut self, _error: wasmtime::Error) -> wasmtime::Result<()> {
++            self.0.growth_failed();
++            Ok(())
++        }
++        fn table_growing(
++            &mut self,
++            _: usize,
++            _: usize,
++            _: Option<usize>,
++        ) -> wasmtime::Result<bool> {
++            Ok(true)
++        }
++    }
++    struct JsonProvider {
++        store: wasmtime::Store<Limits>,
++        instance: wasmtime::Instance,
++        budget: CoreSharedMemoryBudget,
++    }
++    fn provider(budget: &CoreSharedMemoryBudget) -> JsonProvider {
++        let engine = wasmtime::Engine::default();
++        let module = wasmtime::Module::new(&engine, CORE).unwrap();
++        let mut store = wasmtime::Store::new(&engine, Limits(budget.reservation()));
++        store.limiter(|s| s);
++        let instance = wasmtime::Instance::new(&mut store, &module, &[]).unwrap();
++        assert_eq!(budget.reserved_bytes(), 17 * PAGE);
++        JsonProvider {
++            store,
++            instance,
++            budget: budget.clone(),
++        }
++    }
++    let wasm = wat::parse_str(
++        r#"(module
++      (import "host" "validate" (func $validate (param i32) (result i32)))
++      (memory (export "memory") 2)
++      (data (i32.const 64) "{\22a\22:1}") (data (i32.const 80) "{")
++      (func (export "run") (param i32) (result i32) local.get 0 call $validate))"#,
++    )
++    .unwrap();
++    let import = CoreScalarHostImport::new(
++        "host",
++        "validate",
++        vec![CoreScalarType::I32],
++        vec![CoreScalarType::I32],
++    );
++    let sdk = CoreRuntimeSdk::new(CoreRuntimeSdkConfig::new(2, 1)).unwrap();
++    let artifact = sdk
++        .prepare_scalar_host_core(&wasm, policy(92), std::slice::from_ref(&import))
++        .unwrap();
++    for optimized in [false, true] {
++        if optimized {
++            promote(&sdk, &artifact);
++        }
++        let insufficient = CoreSharedMemoryBudget::new(18 * PAGE);
++        let state = provider(&insufficient);
++        let session = CoreScalarHostSession::new(state)
++            .with_memory_budget(insufficient.clone())
++            .bind(import.clone(), |_, _, _| unreachable!());
++        let result =
++            artifact.invoke_scalar_with_session_state(session, "run", &[CoreScalarValue::I32(0)]);
++        assert!(result.invocation.is_err());
++        assert_eq!(insufficient.reserved_bytes(), 17 * PAGE);
++        drop(result.state);
++        assert_eq!(insufficient.reserved_bytes(), 0);
++        for (which, expected) in [(0, 0), (1, 1)] {
++            let budget = CoreSharedMemoryBudget::new(24 * PAGE);
++            let state = provider(&budget);
++            let session = CoreScalarHostSession::new(state)
++                .with_memory_budget(budget.clone())
++                .bind(import.clone(), |state, guest, args| {
++                    let [CoreScalarValue::I32(which)] = args else {
++                        unreachable!()
++                    };
++                    let (offset, len) = if *which == 0 { (64, 7) } else { (80, 1) };
++                    let mut input = vec![0; len];
++                    guest.read(offset, &mut input)?;
++                    let realloc = state
++                        .instance
++                        .get_typed_func::<(i32, i32, i32, i32), i32>(
++                            &mut state.store,
++                            "cabi_realloc",
++                        )
++                        .unwrap();
++                    let ptr = realloc
++                        .call(&mut state.store, (0, 0, 1, len as i32))
++                        .unwrap();
++                    let memory = state
++                        .instance
++                        .get_memory(&mut state.store, "memory")
++                        .unwrap();
++                    memory
++                        .write(&mut state.store, ptr as usize, &input)
++                        .unwrap();
++                    let validate = state
++                        .instance
++                        .get_typed_func::<(i32, i32), i32>(
++                            &mut state.store,
++                            "wasmc:json/document@0.2.1#validate",
++                        )
++                        .unwrap();
++                    let result_ptr = validate.call(&mut state.store, (ptr, len as i32)).unwrap();
++                    let mut tag = [0u8; 1];
++                    memory
++                        .read(&state.store, result_ptr as usize, &mut tag)
++                        .unwrap();
++                    assert_eq!(
++                        state.budget.reserved_bytes(),
++                        guest.byte_len()? + memory.data_size(&state.store)
++                    );
++                    Ok(vec![CoreScalarValue::I32(i32::from(tag[0]))])
++                });
++            let result = artifact.invoke_scalar_with_session_state(
++                session,
++                "run",
++                &[CoreScalarValue::I32(which)],
++            );
++            assert_eq!(
++                result.invocation.unwrap().values,
++                [CoreScalarValue::I32(expected)]
++            );
++            assert!(budget.reserved_bytes() >= 17 * PAGE);
++            drop(result.state);
++            assert_eq!(budget.reserved_bytes(), 0);
++        }
++    }
++}
+--- /dev/null
++++ b/crates/wasmc_core_runtime/src/shared_memory.rs
+@@ -0,0 +1,216 @@
++//! Shared, invocation-owned accounting for linear memories in separate stores.
++use std::sync::{
++    Arc,
++    atomic::{AtomicUsize, Ordering},
++};
++
++#[derive(Clone, Debug)]
++pub struct CoreSharedMemoryBudget(Arc<Inner>);
++
++#[derive(Debug)]
++struct Inner {
++    limit: usize,
++    reserved: AtomicUsize,
++}
++
++/// A store-owned reservation. Drop it only after the associated store is gone.
++#[derive(Debug)]
++pub struct CoreSharedMemoryReservation {
++    budget: CoreSharedMemoryBudget,
++    held: usize,
++    pending: usize,
++}
++
++impl CoreSharedMemoryBudget {
++    pub fn new(limit_bytes: usize) -> Self {
++        Self(Arc::new(Inner {
++            limit: limit_bytes,
++            reserved: AtomicUsize::new(0),
++        }))
++    }
++    pub fn limit_bytes(&self) -> usize {
++        self.0.limit
++    }
++    pub fn reserved_bytes(&self) -> usize {
++        self.0.reserved.load(Ordering::Acquire)
++    }
++    pub fn reservation(&self) -> CoreSharedMemoryReservation {
++        CoreSharedMemoryReservation {
++            budget: self.clone(),
++            held: 0,
++            pending: 0,
++        }
++    }
++}
++
++impl CoreSharedMemoryReservation {
++    /// Reserve a growth delta before allowing an engine to grow one memory.
++    /// The store's limiter must call `growth_failed` when an allowed grow fails.
++    pub fn try_grow(&mut self, current: usize, desired: usize) -> bool {
++        self.pending = 0;
++        let Some(delta) = desired.checked_sub(current) else {
++            return false;
++        };
++        let mut used = self.budget.0.reserved.load(Ordering::Acquire);
++        loop {
++            let Some(next) = used.checked_add(delta) else {
++                return false;
++            };
++            if next > self.budget.0.limit {
++                return false;
++            }
++            match self.budget.0.reserved.compare_exchange_weak(
++                used,
++                next,
++                Ordering::AcqRel,
++                Ordering::Acquire,
++            ) {
++                Ok(_) => {
++                    self.held += delta;
++                    self.pending = delta;
++                    return true;
++                }
++                Err(actual) => used = actual,
++            }
++        }
++    }
++    /// Undo the most recently admitted grow when the engine could not allocate it.
++    pub fn growth_failed(&mut self) {
++        self.held -= self.pending;
++        self.budget
++            .0
++            .reserved
++            .fetch_sub(self.pending, Ordering::AcqRel);
++        self.pending = 0;
++    }
++}
++impl Drop for CoreSharedMemoryReservation {
++    fn drop(&mut self) {
++        self.budget
++            .0
++            .reserved
++            .fetch_sub(self.held, Ordering::AcqRel);
++    }
++}
++
++#[cfg(feature = "wasmi-runtime")]
++pub(crate) struct WasmiSharedLimits {
++    pub limits: wasmi::StoreLimits,
++    pub reservation: Option<CoreSharedMemoryReservation>,
++}
++
++#[cfg(feature = "wasmi-runtime")]
++impl wasmi::ResourceLimiter for WasmiSharedLimits {
++    fn memory_growing(
++        &mut self,
++        current: usize,
++        desired: usize,
++        maximum: Option<usize>,
++    ) -> Result<bool, wasmi_core::LimiterError> {
++        if !wasmi::ResourceLimiter::memory_growing(&mut self.limits, current, desired, maximum)? {
++            return Ok(false);
++        }
++        if self
++            .reservation
++            .as_mut()
++            .is_some_and(|r| !r.try_grow(current, desired))
++        {
++            return Err(wasmi_core::LimiterError::ResourceLimiterDeniedAllocation);
++        }
++        Ok(true)
++    }
++    fn memory_grow_failed(
++        &mut self,
++        error: &wasmi::errors::MemoryError,
++    ) -> Result<(), wasmi_core::LimiterError> {
++        if let Some(r) = &mut self.reservation {
++            r.growth_failed();
++        }
++        // A fuel quantum can be replenished by the resumable Wasmi driver.
++        // Turning it into a limiter denial would prevent that recovery.
++        if matches!(error, wasmi::errors::MemoryError::OutOfFuel { .. }) {
++            return Ok(());
++        }
++        wasmi::ResourceLimiter::memory_grow_failed(&mut self.limits, error)
++    }
++    fn table_growing(
++        &mut self,
++        current: usize,
++        desired: usize,
++        maximum: Option<usize>,
++    ) -> Result<bool, wasmi_core::LimiterError> {
++        wasmi::ResourceLimiter::table_growing(&mut self.limits, current, desired, maximum)
++    }
++    fn table_grow_failed(
++        &mut self,
++        error: &wasmi::errors::TableError,
++    ) -> Result<(), wasmi_core::LimiterError> {
++        wasmi::ResourceLimiter::table_grow_failed(&mut self.limits, error)
++    }
++    fn instances(&self) -> usize {
++        wasmi::ResourceLimiter::instances(&self.limits)
++    }
++    fn tables(&self) -> usize {
++        wasmi::ResourceLimiter::tables(&self.limits)
++    }
++    fn memories(&self) -> usize {
++        wasmi::ResourceLimiter::memories(&self.limits)
++    }
++}
++
++#[cfg(all(feature = "wasmi-runtime", feature = "wasmtime-runtime"))]
++pub(crate) struct WasmtimeSharedLimits {
++    pub limits: wasmtime::StoreLimits,
++    pub reservation: Option<CoreSharedMemoryReservation>,
++}
++
++#[cfg(all(feature = "wasmi-runtime", feature = "wasmtime-runtime"))]
++impl wasmtime::ResourceLimiter for WasmtimeSharedLimits {
++    fn memory_growing(
++        &mut self,
++        current: usize,
++        desired: usize,
++        maximum: Option<usize>,
++    ) -> wasmtime::Result<bool> {
++        if !wasmtime::ResourceLimiter::memory_growing(&mut self.limits, current, desired, maximum)?
++        {
++            return Ok(false);
++        }
++        if self
++            .reservation
++            .as_mut()
++            .is_some_and(|r| !r.try_grow(current, desired))
++        {
++            return Err(wasmtime::Error::msg(
++                "resource limiter denied shared memory allocation",
++            ));
++        }
++        Ok(true)
++    }
++    fn memory_grow_failed(&mut self, error: wasmtime::Error) -> wasmtime::Result<()> {
++        if let Some(r) = &mut self.reservation {
++            r.growth_failed();
++        }
++        wasmtime::ResourceLimiter::memory_grow_failed(&mut self.limits, error)
++    }
++    fn table_growing(
++        &mut self,
++        current: usize,
++        desired: usize,
++        maximum: Option<usize>,
++    ) -> wasmtime::Result<bool> {
++        wasmtime::ResourceLimiter::table_growing(&mut self.limits, current, desired, maximum)
++    }
++    fn table_grow_failed(&mut self, error: wasmtime::Error) -> wasmtime::Result<()> {
++        wasmtime::ResourceLimiter::table_grow_failed(&mut self.limits, error)
++    }
++    fn instances(&self) -> usize {
++        wasmtime::ResourceLimiter::instances(&self.limits)
++    }
++    fn tables(&self) -> usize {
++        wasmtime::ResourceLimiter::tables(&self.limits)
++    }
++    fn memories(&self) -> usize {
++        wasmtime::ResourceLimiter::memories(&self.limits)
++    }
++}

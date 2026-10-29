@@ -1,0 +1,35 @@
+{
+  "schema": "wasmc.core-runtime-shared-memory-candidate/v1",
+  "status": "isolated candidate; not admitted, integrated, deployed or released",
+  "baseline": "WAsmC Source c1306cc8 plus core-runtime-wide-arity and workspace Edition 2024 candidate patches",
+  "patch_sha256": "61666037d94857cf611ff0222cd9f9ccfcc57e8e134aacf7286a81f3211108c6",
+  "fixture_sha256": "82e93fb61e11627d74b086693587fbb1a72d340432445236ae49f7df29670fe7",
+  "fixture_install": "copy json-core-shared-memory-fixture-20261029.wasm to crates/wasmc_core_runtime/tests/fixtures/wasmc-json-0.2.1-shared-memory.wasm after applying patch",
+  "before": "bounded Guest two pages plus separate provider two pages ran at 262144 bytes despite invocation limit 196608",
+  "change": "Optional shared invocation budget and per-store reservations, with Wasmi and Wasmtime scalar Host limiters counting growth against one common ceiling. On Wasmi OutOfFuel during memory growth, release speculative reservation and preserve resumable fuel behavior; unbounded runtime plus explicit shared budget preserves unbounded per-store policy.",
+  "validation": "actual Wasmi and Wasmtime Guest plus Wasmtime provider exercise initial total rejection, exact limit, provider and Guest growth rejection/success, fresh-invocation recovery, release-to-zero; 4 concurrent provider Stores contend for 3 pages with 3 success; exact 0.2.1 JSON Core validates real valid and invalid Guest input under the shared limit in both engines; SDK tests 2+25+14 pass; feature checks none, wasmi, wasmtime pass",
+  "failure_evidence": "baseline aggregate overrun, initial test field compilation, Wasmi memory-grow fuel quantum failure, and unbounded-profile zero-limit failure retained and corrected",
+  "limitations": [
+    "JSON Core runs in a test provider, MCPGit provider and Hosted route have not adopted the shared budget",
+    "budget accounts linear Wasm memory, not total host heap/store metadata or precise peak RSS",
+    "provider fuel, wall-time and cancellation remain separately uncoordinated",
+    "no formal Source admission, production deployment, release or anonymous readback"
+  ],
+  "logs": {
+    "shared-memory-budget-before-20261029.log": "57bef40012b0ca65fcb58cb6240aa6114147249f5f5fe72b04d887dbea809d13",
+    "shared-memory-sdk-check-v1-20261029.log": "65fad0c33fc883ebf7745dc01ff680cfbcf5a54f0786b14548c52dcdf8fe537e",
+    "shared-memory-budget-after-v1-20261029.log": "fb1b83839503db6c96b0f2363828512f703f9bf486d438b4752eccd6dcdf57cb",
+    "shared-memory-budget-after-v2-20261029.log": "0629650b32c7d894936c94197abbbc814bbd85a7bdf779897087fde96e964bc2",
+    "shared-memory-budget-after-v3-20261029.log": "b2cf5c8f9bec93d1b58d80a69eef601b68da2e27a439a98cc30fcdc8ce78cfff",
+    "shared-memory-budget-diagnostic-v4-20261029.log": "a7f36ac4886451a6b8fc6661b666f2cf33cc1abd57a62e8ae3f795ebaa587bf4",
+    "shared-memory-budget-after-v5-20261029.log": "7b091ee5ef6ddb98a3d3bc43dd7996258bd5002c0eaccc9a32700b9d4f9af87c",
+    "shared-memory-budget-concurrent-20261029.log": "3e59fd0e5cf4c57887b09bc99842d8b8d6887efcdc54dd1d918b99bbadee2f72",
+    "shared-memory-budget-unbounded-20261029.log": "70154e7a083c94c0e7030d7839a6e72e60cd610d76f87a8788a2de8504696517",
+    "shared-memory-budget-unbounded-v2-20261029.log": "2053d8f7a829f8501f515414d5dcbf7f0fb7fb55d12d5a1f54416d930f0d5df0",
+    "shared-memory-json-core-v1-20261029.log": "6b3da36d83c7c5a099d12712fbcaa721952d5a8b8a9de8c2d99950c8c4024829",
+    "shared-memory-sdk-final-regression-20261029.log": "eb7351c13c543980c1b426626913c4cdf05703f99f1ab8cafee2c9f7d2a8ee6b",
+    "shared-memory-sdk-final-none-20261029.log": "10e81b79d134c4b6ae479e386015cc2a1e6e840ff6e3a8f2df27a7b7d0caa39b",
+    "shared-memory-sdk-final-wasmi-20261029.log": "09b945f1708b9c6a2403189e99b848bfaa65088c1cc8b9858a672c5abd12f948",
+    "shared-memory-sdk-final-wasmtime-20261029.log": "09b945f1708b9c6a2403189e99b848bfaa65088c1cc8b9858a672c5abd12f948"
+  }
+}
