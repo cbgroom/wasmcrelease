@@ -1,0 +1,270 @@
+{
+  "schema": "wasmc.lib-refresh-current-data-q1/v1",
+  "accepted": true,
+  "fingerprint": "995bed87fdea5e4b8090414106c0df01059f927f32fde29a29a8f6b2b9644241",
+  "engine": "bun",
+  "public_apis_exercised": 20,
+  "packages": [
+    {
+      "id": "wasmc-data-core",
+      "artifact_sha256": "94ffe1d939e41010eacade15c8b54d67db49cbbd8d22f3b7e384985210667a32",
+      "apis": [
+        "take",
+        "validate"
+      ]
+    },
+    {
+      "id": "wasmc-data-compute",
+      "artifact_sha256": "4c3a29cdc1af62a8173af07b1080a02cc2e591cdd83926e36ce2db57604b437e",
+      "apis": [
+        "filter",
+        "project",
+        "sort"
+      ]
+    },
+    {
+      "id": "wasmc-data-expr",
+      "artifact_sha256": "f71c377fd2e7a29d6b5f9acd33fc0f9f01f860c20c627715ba7b441a0b800645",
+      "apis": [
+        "evaluate",
+        "validate"
+      ]
+    },
+    {
+      "id": "wasmc-data-profile",
+      "artifact_sha256": "a839bcde72f8a2e79eee90586395b806865b4a4743ae268129183ef7485e57ad",
+      "apis": [
+        "describe"
+      ]
+    },
+    {
+      "id": "wasmc-data-interchange",
+      "artifact_sha256": "6b64ed9d5c0ac30559f141e438ba9a1c18686c7d0ecf20e736909bd8a58d9b61",
+      "apis": [
+        "ipc-file-decode",
+        "ipc-file-encode",
+        "parquet-decode",
+        "parquet-encode"
+      ]
+    },
+    {
+      "id": "wasmc-data-relational",
+      "artifact_sha256": "55273d50bd6c7830335dc193411338e680e4e512561846f648bf060cb2b332df",
+      "apis": [
+        "distinct",
+        "equi-join",
+        "group-aggregate",
+        "union-all",
+        "window-aggregate",
+        "window-offset",
+        "window-rank"
+      ]
+    },
+    {
+      "id": "wasmc-csv",
+      "artifact_sha256": "aee34768148323b644cf56867e348827966a741848c4e8cec19cd0f464a5d276",
+      "apis": [
+        "parse"
+      ]
+    }
+  ],
+  "cases": [
+    {
+      "id": "wasmc-data-core",
+      "name": "validate-nonempty",
+      "pass": true
+    },
+    {
+      "id": "wasmc-data-core",
+      "name": "take-order",
+      "pass": true
+    },
+    {
+      "id": "wasmc-data-core",
+      "name": "six-types-null-and-extremes",
+      "pass": true
+    },
+    {
+      "id": "wasmc-data-core",
+      "name": "row-mismatch",
+      "pass": true
+    },
+    {
+      "id": "wasmc-data-core",
+      "name": "nullability",
+      "pass": true
+    },
+    {
+      "id": "wasmc-data-core",
+      "name": "duplicate-field",
+      "pass": true
+    },
+    {
+      "id": "wasmc-data-core",
+      "name": "index-bound",
+      "pass": true
+    },
+    {
+      "id": "wasmc-data-core",
+      "name": "empty-field",
+      "pass": true
+    },
+    {
+      "id": "wasmc-data-core",
+      "name": "column-count",
+      "pass": true
+    },
+    {
+      "id": "wasmc-data-core",
+      "name": "type-mismatch",
+      "pass": true
+    },
+    {
+      "id": "wasmc-data-core",
+      "name": "zero-column-row-count",
+      "pass": true
+    },
+    {
+      "id": "wasmc-data-core",
+      "name": "persistent-instance-error-recovery-and-cleanup",
+      "pass": true
+    },
+    {
+      "id": "wasmc-data-compute",
+      "name": "filter-null-false",
+      "pass": true
+    },
+    {
+      "id": "wasmc-data-compute",
+      "name": "project",
+      "pass": true
+    },
+    {
+      "id": "wasmc-data-compute",
+      "name": "project-zero-columns",
+      "pass": true
+    },
+    {
+      "id": "wasmc-data-compute",
+      "name": "sort-limit",
+      "pass": true
+    },
+    {
+      "id": "wasmc-data-compute",
+      "name": "duplicate-projection",
+      "pass": true
+    },
+    {
+      "id": "wasmc-data-expr",
+      "name": "validate-program",
+      "pass": true
+    },
+    {
+      "id": "wasmc-data-expr",
+      "name": "evaluate-program",
+      "pass": true
+    },
+    {
+      "id": "wasmc-data-expr",
+      "name": "empty-program",
+      "pass": true
+    },
+    {
+      "id": "wasmc-data-profile",
+      "name": "describe-values",
+      "pass": true
+    },
+    {
+      "id": "wasmc-data-profile",
+      "name": "describe-duplicate",
+      "pass": true
+    },
+    {
+      "id": "wasmc-data-profile",
+      "name": "describe-10000-integers",
+      "pass": true
+    },
+    {
+      "id": "wasmc-data-interchange",
+      "name": "ipc-file-roundtrip",
+      "pass": true
+    },
+    {
+      "id": "wasmc-data-interchange",
+      "name": "ipc-file-invalid",
+      "pass": true
+    },
+    {
+      "id": "wasmc-data-interchange",
+      "name": "parquet-roundtrip",
+      "pass": true
+    },
+    {
+      "id": "wasmc-data-interchange",
+      "name": "parquet-invalid",
+      "pass": true
+    },
+    {
+      "id": "wasmc-data-relational",
+      "name": "group-sum",
+      "pass": true
+    },
+    {
+      "id": "wasmc-data-relational",
+      "name": "union",
+      "pass": true
+    },
+    {
+      "id": "wasmc-data-relational",
+      "name": "join",
+      "pass": true
+    },
+    {
+      "id": "wasmc-data-relational",
+      "name": "distinct",
+      "pass": true
+    },
+    {
+      "id": "wasmc-data-relational",
+      "name": "window-rank",
+      "pass": true
+    },
+    {
+      "id": "wasmc-data-relational",
+      "name": "window-offset",
+      "pass": true
+    },
+    {
+      "id": "wasmc-data-relational",
+      "name": "window-aggregate",
+      "pass": true
+    },
+    {
+      "id": "wasmc-data-relational",
+      "name": "union-empty",
+      "pass": true
+    },
+    {
+      "id": "wasmc-csv",
+      "name": "parse-typed",
+      "pass": true
+    },
+    {
+      "id": "wasmc-csv",
+      "name": "invalid-options",
+      "pass": true
+    },
+    {
+      "id": "wasmc-csv",
+      "name": "many-rows-and-same-instance-recovery",
+      "pass": true
+    },
+    {
+      "id": "wasmc-data-relational",
+      "name": "distinct-many-rows-and-same-instance-recovery",
+      "pass": true
+    }
+  ],
+  "failures": [],
+  "scope": "Generated import-free Core artifact semantics; not ordinary WAsmC/Component/multi-engine Q2 or release admission"
+}

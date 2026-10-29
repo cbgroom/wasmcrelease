@@ -1,0 +1,79 @@
+{
+  "schema": "wasmc.cohort43-values-data-q1/v1",
+  "status": "isolated Q0 and controlled installed Roots; not production or formal release",
+  "q0_receipt_sha256": "624fe04a6af7200bdd6f8ce9473edc3145f2e7f4cc78237c3db5335faa49e224",
+  "q0_fingerprint": "995bed87fdea5e4b8090414106c0df01059f927f32fde29a29a8f6b2b9644241",
+  "scoped_q1": {
+    "values_packages": [
+      "wasmc-json",
+      "wasmc-compression",
+      "wasmc-http1"
+    ],
+    "data_csv_packages": 7,
+    "data_cases": 39,
+    "data_public_apis": 20,
+    "json_differential_cases": 300,
+    "operations_per_case": 5,
+    "engines": [
+      "Node",
+      "Bun",
+      "Deno"
+    ]
+  },
+  "data_scale": {
+    "packages": {
+      "wasmc-data-core": {
+        "manifest_sha256": "090c15c769a528fa630a8e9d29d9b814defa90ff2e69e79d74737a5234aa9686",
+        "artifact_sha256": "94ffe1d939e41010eacade15c8b54d67db49cbbd8d22f3b7e384985210667a32"
+      },
+      "wasmc-data-profile": {
+        "manifest_sha256": "604e1eaf597cdf529fc14441d36f4c5de7ddb16a91d505b6444b971f12f606e5",
+        "artifact_sha256": "a839bcde72f8a2e79eee90586395b806865b4a4743ae268129183ef7485e57ad"
+      }
+    },
+    "calls": "Data Core validate and Data Profile describe over 100000, 1000000, then 3 rows in the same two instances on each engine; checked exact counts, min/max/mean, invalid row count and recovery",
+    "linear_memory_bytes_at_million": {
+      "core": 54329344,
+      "profile": 54263808
+    },
+    "overall_memory_cap": "not configured"
+  },
+  "limitations": [
+    "The Q1 runner exercises selected values and seven Data/CSV packages; it is not full public API Q2.",
+    "Data scale tests use controlled JS Core ABI adapter and do not qualify Component, MCPGit Hosted, total Host memory or production throughput.",
+    "20 Native packages and live deployment remain outside this evidence.",
+    "No Source acceptance, CI, formal release or anonymous download."
+  ],
+  "test_script_sha256": {
+    "scripts/qualify-current-lib-refresh-v3.mjs": "1762eb29c13cb35315e51c413e27cea16ce5b70785a3b300b429dd63dee649b5",
+    "scripts/test-lib-refresh-current-values.mjs": "dc0b280a304b52f5e830864cf95e7cece3365a9bf114464944347e825d2a40a7",
+    "scripts/test-lib-refresh-current-data.mjs": "fa3f6384cdb91c4aff57451a42222f79efa0c362418a68d91bd443e3c093e872",
+    "scripts/test-json-current-differential.mjs": "7e16f95ae777092dee3ea7cd15d3a20e12d3a165873e461d3cd1166a3988fe8f",
+    "scripts/current-core-value-codec-v3.mjs": "94eb2d250a714ce7c69239ea9dd020eead1464faeff45fb9955a3eade5790a67"
+  },
+  "files_sha256": {
+    "cohort43-json2024-data-bun-20261029.json": "b7196db409d6967dc2ad172f42b7c58b5c5fa4031245cbcfb48c16c101cd18c7",
+    "cohort43-json2024-data-bun-20261029.log": "2796ce2a6586df68ccbe8a6eb019060a68e9b6e42dc2f8b28ba229b5304ea776",
+    "cohort43-json2024-data-deno-20261029.json": "71ece53e431efb65cc976ef57c92118a854333884d65076803d2080c47b3381b",
+    "cohort43-json2024-data-deno-20261029.log": "2796ce2a6586df68ccbe8a6eb019060a68e9b6e42dc2f8b28ba229b5304ea776",
+    "cohort43-json2024-json-diff-bun-20261029.log": "cf948f950f4f19b45ecbd9f7733bee2a18d1fac0596b35e3dbdb462e095d0cd2",
+    "cohort43-json2024-json-diff-deno-20261029.log": "cf948f950f4f19b45ecbd9f7733bee2a18d1fac0596b35e3dbdb462e095d0cd2",
+    "cohort43-json2024-large-data-20261029.log": "3cab3bd2c8e39606d2537bc2ef7e40fb38a725237acbbad37895dbc222af4baa",
+    "cohort43-json2024-large-data-20261029.mjs": "22f04ead2daecc5d39bc25b6cbd70df67de277efa722688f950656dc525459c7",
+    "cohort43-json2024-large-data-bun-20261029.log": "c0513d9bd8edfc1e614db6d7a91bcf346027e77cbfbfb3d0c243720c6bb672cf",
+    "cohort43-json2024-large-data-deno-20261029.log": "67b2c7726becc055dd0430f77ac5c161a0ec3c2d9072030747601651ec1f40f2",
+    "cohort43-json2024-values-bun-20261029.json": "27b0cb3cf246f1caa7485bbe965acedffbe9528e25c947c25f4f31a765848047",
+    "cohort43-json2024-values-bun-20261029.log": "87823924133d80387263654c30a4c1eb7e15cdd38f9f776487f656b36cd7f1c7",
+    "cohort43-json2024-values-deno-20261029.json": "43b4e982e36525fdd409365715b5147a9bf4b23019825bc6cf50767459cf9605",
+    "cohort43-json2024-values-deno-20261029.log": "3ac31b48609078aaae2df4289649667832605ef6af6ab582346fc06c5bf9b6b0",
+    "node-q1/data.json": "c80367095b2d1cdee11a0352e1f0a6fb67237fc2460434e3f4731c0bd51683c4",
+    "node-q1/data.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "node-q1/data.stdout": "2796ce2a6586df68ccbe8a6eb019060a68e9b6e42dc2f8b28ba229b5304ea776",
+    "node-q1/json-differential.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "node-q1/json-differential.stdout": "cf948f950f4f19b45ecbd9f7733bee2a18d1fac0596b35e3dbdb462e095d0cd2",
+    "node-q1/receipt.json": "537ffd18db0da83db7f4006a3ee88ff207a9e6041e1f8daff15eff88ff024fee",
+    "node-q1/values.json": "ef962b37f5d2860281f0ae7cdd2ae314b77396602fcd82c85f4e9d5b0a468d9b",
+    "node-q1/values.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "node-q1/values.stdout": "91a96518293c71c11930af86eaab49e3192738c8f61cb28114b3a478f5f7e4a2"
+  }
+}

@@ -1,0 +1,99 @@
+{
+  "schema": "wasmc.current-lib-scoped-q1/v1",
+  "accepted": true,
+  "receipt_sha256": "624fe04a6af7200bdd6f8ce9473edc3145f2e7f4cc78237c3db5335faa49e224",
+  "fingerprint": "995bed87fdea5e4b8090414106c0df01059f927f32fde29a29a8f6b2b9644241",
+  "results": [
+    {
+      "label": "values",
+      "script": "scripts/test-lib-refresh-current-values.mjs",
+      "stdout_sha256": "91a96518293c71c11930af86eaab49e3192738c8f61cb28114b3a478f5f7e4a2",
+      "output": {
+        "accepted": true,
+        "schema": "wasmc.lib-refresh-current-values-q1/v1",
+        "engine": "node",
+        "fingerprint": "995bed87fdea5e4b8090414106c0df01059f927f32fde29a29a8f6b2b9644241",
+        "producer_sha256": "45e229a3201de33ef0e4e362b6b2ea7abe45f2097913c5f8c22b1992fa50fc59",
+        "cargo_lock_sha256": "88b502728ad8a3a7563de64d4b6e6e67290ef456a9c834905d19eb93a112a5b7",
+        "packages": [
+          {
+            "id": "wasmc-json",
+            "apis": [
+              "compact",
+              "select",
+              "validate"
+            ],
+            "artifact_sha256": "007eac4dbfe32f53462f866a66e6bb191fec13c01ac7d90baf2572b27ec22722",
+            "cases": 4,
+            "semantics": [
+              "compact",
+              "validate-invalid",
+              "select",
+              "large-input-accepted"
+            ]
+          },
+          {
+            "id": "wasmc-compression",
+            "apis": [
+              "compress",
+              "decompress"
+            ],
+            "artifact_sha256": "3948c1432c8c8e55fbb390cd50aa00f4699ca4f20964744e1bc7756a3df8bba0",
+            "cases": 5,
+            "semantics": [
+              "round-trip",
+              "invalid-stream",
+              "large-round-trip"
+            ]
+          },
+          {
+            "id": "wasmc-http1",
+            "apis": [
+              "parse-request",
+              "request-frame-length",
+              "serialize-response-head"
+            ],
+            "artifact_sha256": "55a7dce3894c66303c389e1cb727d76d10172ef0af85fd5bbe1ab4361fbeca89",
+            "cases": 6,
+            "semantics": [
+              "parse",
+              "frame-length",
+              "serialize",
+              "invalid-status",
+              "large-valid-header"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "label": "data",
+      "script": "scripts/test-lib-refresh-current-data.mjs",
+      "stdout_sha256": "2796ce2a6586df68ccbe8a6eb019060a68e9b6e42dc2f8b28ba229b5304ea776",
+      "output": {
+        "accepted": true,
+        "cases": 39,
+        "public_apis_exercised": 20,
+        "failures": [],
+        "run_root": "/Users/youxianshi/.local/state/wasmc-maintenance/rustc-service-1991-20261028/cohort43-json2024-union-evidence-20261029/runs/refresh-pwfcVA"
+      }
+    },
+    {
+      "label": "json-differential",
+      "script": "scripts/test-json-current-differential.mjs",
+      "stdout_sha256": "cf948f950f4f19b45ecbd9f7733bee2a18d1fac0596b35e3dbdb462e095d0cd2",
+      "output": {
+        "result": "PASS",
+        "artifact_sha256": "007eac4dbfe32f53462f866a66e6bb191fec13c01ac7d90baf2572b27ec22722",
+        "cases": 300,
+        "operations_per_case": 5,
+        "deterministic_seed": "9e3779b9",
+        "same_instance": true,
+        "escaped_pointers": true,
+        "invalid_pointer_and_recovery": true,
+        "oracle": "independent JavaScript values and sequential edits"
+      }
+    }
+  ],
+  "scope": "Node Core values, seven Data/CSV Roots and selected JSON operations; full Q2, Host and release remain independent"
+}
