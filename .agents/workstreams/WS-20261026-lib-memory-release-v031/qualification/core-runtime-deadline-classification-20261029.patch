@@ -1,0 +1,222 @@
+--- a/crates/wasmc_core_runtime/src/scalar_host_lane.rs
++++ b/crates/wasmc_core_runtime/src/scalar_host_lane.rs
+@@ -236,0 +237 @@
++    deadline_exceeded: bool,
+@@ -243,0 +245 @@
++            deadline_exceeded: false,
+@@ -256,0 +259,4 @@
++    }
++
++    pub(crate) const fn deadline_exceeded(&self) -> bool {
++        self.deadline_exceeded
+@@ -487 +493,2 @@
+-        let result = (|| {
++        let deadline_observed = std::sync::atomic::AtomicBool::new(false);
++        let result: Result<Vec<CoreScalarValue>, CoreScalarHostError> = (|| {
+@@ -519,0 +527 @@
++                Some(&deadline_observed),
+@@ -529,0 +538,4 @@
++        let result = result.map_err(|mut error| {
++            error.deadline_exceeded = deadline_observed.load(std::sync::atomic::Ordering::Acquire);
++            error
++        });
+@@ -702,0 +715 @@
++        let deadline_observed = Arc::new(std::sync::atomic::AtomicBool::new(false));
+@@ -717,0 +731 @@
++            let observed = Arc::clone(&deadline_observed);
+@@ -719 +733,4 @@
+-                if cancellation.is_cancelled() || std::time::Instant::now() >= deadline {
++                if cancellation.is_cancelled() {
++                    Ok(UpdateDeadline::Interrupt)
++                } else if std::time::Instant::now() >= deadline {
++                    observed.store(true, std::sync::atomic::Ordering::Release);
+@@ -727 +744 @@
+-        let result = (|| {
++        let result: Result<Vec<CoreScalarValue>, CoreScalarHostError> = (|| {
+@@ -766,0 +784,4 @@
++        let result = result.map_err(|mut error| {
++            error.deadline_exceeded = deadline_observed.load(std::sync::atomic::Ordering::Acquire);
++            error
++        });
+--- a/crates/wasmc_core_runtime/src/limits.rs
++++ b/crates/wasmc_core_runtime/src/limits.rs
+@@ -5,0 +6 @@
++    Arc,
+@@ -7 +7,0 @@
+-    Arc,
+@@ -387 +387 @@
+-    invoke_wasmi_bounded_with_cancellation(store, function, inputs, outputs, profile, None)
++    invoke_wasmi_bounded_with_cancellation(store, function, inputs, outputs, profile, None, None)
+@@ -397,0 +398 @@
++    deadline_observed: Option<&std::sync::atomic::AtomicBool>,
+@@ -426,0 +428,3 @@
++                    if let Some(flag) = deadline_observed {
++                        flag.store(true, Ordering::Release);
++                    }
+@@ -441,0 +446,3 @@
++                    if let Some(flag) = deadline_observed {
++                        flag.store(true, Ordering::Release);
++                    }
+--- a/crates/wasmc_core_runtime/src/promotion.rs
++++ b/crates/wasmc_core_runtime/src/promotion.rs
+@@ -15,0 +16 @@
++        Arc, Condvar, Mutex, MutexGuard,
+@@ -17,2 +18 @@
+-        mpsc::{sync_channel, Receiver, SyncSender, TrySendError},
+-        Arc, Condvar, Mutex, MutexGuard,
++        mpsc::{Receiver, SyncSender, TrySendError, sync_channel},
+@@ -24,0 +25,2 @@
++    CoreModuleInspection, CoreRuntimeCancellation, CoreRuntimeLimitProfile, WasmiCompletionModule,
++    WasmiCompletionRuntime, WasmtimeSpeedModule, WasmtimeSpeedRuntime,
+@@ -30 +32 @@
+-    limits::{is_resource_limit_message, ConcurrentStoreAdmission},
++    limits::{ConcurrentStoreAdmission, is_resource_limit_message},
+@@ -35,2 +37 @@
+-    sha256, CoreModuleInspection, CoreRuntimeCancellation, CoreRuntimeLimitProfile,
+-    WasmiCompletionModule, WasmiCompletionRuntime, WasmtimeSpeedModule, WasmtimeSpeedRuntime,
++    sha256,
+@@ -228,0 +230 @@
++    deadline_exceeded: bool,
+@@ -238,0 +241,4 @@
++    /// True only when the scalar runtime observed its wall-clock deadline.
++    pub const fn deadline_exceeded(&self) -> bool {
++        self.deadline_exceeded
++    }
+@@ -821,0 +828 @@
++                    deadline_exceeded: false,
+@@ -849,0 +857 @@
++                    deadline_exceeded: false,
+@@ -907,0 +916 @@
++                    deadline_exceeded: false,
+@@ -935,0 +945 @@
++                    deadline_exceeded: false,
+@@ -1006,0 +1017 @@
++                    deadline_exceeded: false,
+@@ -1028,0 +1040 @@
++                    deadline_exceeded: false,
+@@ -1125 +1137,4 @@
+-                    (result.map_err(|error| error.to_string()), state)
++                    (
++                        result.map_err(|error| (error.to_string(), error.deadline_exceeded())),
++                        state,
++                    )
+@@ -1128 +1143,4 @@
+-                    Err("artifact does not use the scalar Host contract".to_string()),
++                    Err((
++                        "artifact does not use the scalar Host contract".to_string(),
++                        false,
++                    )),
+@@ -1139 +1157,4 @@
+-                    (result.map_err(|error| error.to_string()), state)
++                    (
++                        result.map_err(|error| (error.to_string(), error.deadline_exceeded())),
++                        state,
++                    )
+@@ -1142 +1163,4 @@
+-                    Err("artifact does not use the scalar Host contract".to_string()),
++                    Err((
++                        "artifact does not use the scalar Host contract".to_string(),
++                        false,
++                    )),
+@@ -1153 +1177,2 @@
+-            .map_err(|message| PromotionInvocationError {
++            .map_err(|(message, deadline_exceeded)| PromotionInvocationError {
++                deadline_exceeded: deadline_exceeded && !cancellation.is_cancelled(),
+@@ -1175,0 +1201 @@
++                deadline_exceeded: false,
+@@ -1189,0 +1216 @@
++        deadline_exceeded: false,
+--- a/crates/wasmc_core_runtime/tests/runtime_sdk.rs
++++ b/crates/wasmc_core_runtime/tests/runtime_sdk.rs
+@@ -1530,0 +1531,91 @@
++
++#[test]
++fn scalar_host_deadline_is_distinct_from_fuel_trap_and_cancellation() {
++    let wasm = wat::parse_str(
++        r#"(module
++       (import "host" "observe" (func $observe (result i32)))
++       (memory (export "memory") 1)
++       (func (export "loop") (result i32) call $observe drop (loop br 0) i32.const 0)
++       (func (export "trap") (result i32) unreachable))"#,
++    )
++    .unwrap();
++    let import = CoreScalarHostImport::new("host", "observe", vec![], vec![CoreScalarType::I32]);
++    let session = || {
++        CoreScalarHostSession::new(0usize).bind(import.clone(), |state, _, _| {
++            *state += 1;
++            Ok(vec![CoreScalarValue::I32(0)])
++        })
++    };
++    let profile = CoreRuntimeLimitProfile::bounded(
++        1_000_000_000_000,
++        1_000_000_000_000,
++        5_000_000,
++        1_000,
++        65_536,
++        1,
++        1,
++    );
++    let sdk = CoreRuntimeSdk::new(CoreRuntimeSdkConfig::new(4, 1).with_limits(profile)).unwrap();
++    let artifact = sdk
++        .prepare_scalar_host_core(&wasm, policy(93), std::slice::from_ref(&import))
++        .unwrap();
++    for backend in [CoreRuntimeBackend::Wasmi, CoreRuntimeBackend::Wasmtime] {
++        if backend == CoreRuntimeBackend::Wasmtime {
++            promote(&sdk, &artifact);
++        }
++        let out = artifact.invoke_scalar_with_session_state(session(), "loop", &[]);
++        let error = out.invocation.unwrap_err();
++        assert_eq!(error.backend, backend);
++        assert!(error.deadline_exceeded(), "{backend:?}: {error}");
++        assert_eq!(out.state, 1);
++        let spoofed = CoreScalarHostSession::new(0usize).bind(import.clone(), |_, _, _| {
++            Err(wasmc_core_runtime::CoreScalarHostError::callback(
++                "Core wall-clock limit exceeded",
++            ))
++        });
++        let callback_error = artifact
++            .invoke_scalar_with_session_state(spoofed, "loop", &[])
++            .invocation
++            .unwrap_err();
++        assert!(
++            !callback_error.deadline_exceeded(),
++            "callback text became deadline: {callback_error}"
++        );
++        let trap = artifact
++            .invoke_scalar_with_session_state(session(), "trap", &[])
++            .invocation
++            .unwrap_err();
++        assert!(
++            !trap.deadline_exceeded(),
++            "ordinary trap became deadline: {trap}"
++        );
++        let cancelled = CoreRuntimeCancellation::new();
++        cancelled.cancel();
++        let error = artifact
++            .invoke_scalar_with_session_state_and_cancellation(session(), "loop", &[], &cancelled)
++            .invocation
++            .unwrap_err();
++        assert_eq!(error.code(), CoreRuntimeInvocationErrorCode::Cancelled);
++        assert!(!error.deadline_exceeded());
++    }
++    let fuel = CoreRuntimeLimitProfile::bounded(1_000, 1_000, 1_000_000_000, 100, 65_536, 1, 1);
++    let sdk = CoreRuntimeSdk::new(CoreRuntimeSdkConfig::new(4, 1).with_limits(fuel)).unwrap();
++    let artifact = sdk
++        .prepare_scalar_host_core(&wasm, policy(94), std::slice::from_ref(&import))
++        .unwrap();
++    for backend in [CoreRuntimeBackend::Wasmi, CoreRuntimeBackend::Wasmtime] {
++        if backend == CoreRuntimeBackend::Wasmtime {
++            promote(&sdk, &artifact);
++        }
++        let error = artifact
++            .invoke_scalar_with_session_state(session(), "loop", &[])
++            .invocation
++            .unwrap_err();
++        assert_eq!(error.backend, backend);
++        assert_eq!(error.code(), CoreRuntimeInvocationErrorCode::ResourceLimit);
++        assert!(
++            !error.deadline_exceeded(),
++            "fuel exhaustion became deadline: {error}"
++        );
++    }
++}

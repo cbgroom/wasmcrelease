@@ -1,0 +1,35 @@
+{
+  "schema": "wasmc.scalar-deadline-route-candidate/v1",
+  "status": "isolated SDK and MCPGit candidates; not admitted or deployed",
+  "diagnosis": "20 repeated original real temporary-Service legacy route tests: 16 returned a Wasmtime interrupt as a generic invocation failure before outer timeout, 4 returned Deadline. Original first failure and all test logs retained.",
+  "change": "Runtime SDK scalar lane records an internally observed wall-clock deadline separately from cancellation, fuel exhaustion and callback/trap text; public error accessor is additive, existing error-code enum unchanged. MCPGit HTTP executor maps this explicit flag to Deadline, keeping cancellation precedence. This is runtime/Host code, no compiler semantic change.",
+  "validation": "Two-engine targeted tests distinguish elapsed deadline, normal trap, fuel exhaustion, cancellation and a callback whose error text imitates a deadline; SDK full 2+26+14 passes, and no-engine/Wasmi/Wasmtime feature checks pass. Real temporary-Service legacy route first post-fix test and 20 repeat runs returned Deadline and passed. The real temporary-Service lab Hosted JSON end-to-end test passed after the repair. Prior branch non-budgeted Service test passed after shared-target use.",
+  "patches": {
+    "core-runtime-deadline-classification-20261029.patch": "050c43da78a610a85b1ad69ef0f686f31f388f6e47ce0cbf65f3772630188449",
+    "hosted-deadline-classification-20261029.patch": "8bbf416e534a55b64133c8e449858b1d44e0797e44ef18c30fab98234bb9e90d"
+  },
+  "patch_validation": "SDK incremental patch applied to reconstructed c130 plus wide-arity, Edition2024 and shared-memory-v2 prerequisites; changed SDK files byte-match private candidate. The private candidate host_lane.rs differs from this partial reconstruction and was not compared; it is an existing prerequisite provenance gap. MCP patch applies after previous Hosted candidates to selected exact 779 files; changed files byte-match private candidate. Neither is an exact full Source tree.",
+  "limitations": [
+    "20-run reproduction is bounded evidence, not proof of all timing scenarios",
+    "new deadline accessor covers scalar Host lane; other execution lanes retain previous behavior",
+    "host heap, provider fuel, deadline and cancellation are not unified with Guest resources",
+    "isolated temporary Service/lab dispatcher, no live production Hosted test, Source admission, merge, release or anonymous download"
+  ],
+  "logs_sha256": {
+    "hosted-selected-lib-e2e-legacy-20261029.log": "07d29250182f46ab28378e3def928705bdde5b5ff0b34a648b1bbaa5ced0e5c6",
+    "hosted-selected-lib-e2e-legacy-diagnostic-20261029.log": "37e02c2fd2f1238c2c7d09967305b56565ac99c6e19343902aead36004f0ec67",
+    "hosted-legacy-deadline-repeat-20261029.log": "9709366106e24d5b9bf0196af03582fef46482e5401e97bf2be611b4ab61ed10",
+    "shared-deadline-sdk-v1-20261029.log": "953e357063bde5b61aaf74e733b085d853c0f367e547b078ffc45ac33ba2a7ca",
+    "shared-deadline-sdk-v2-20261029.log": "478438c47773ec2e90d9efce1b9775ba927ac0e3b201f351cefd509a7e100ae6",
+    "shared-deadline-sdk-controls-v1-20261029.log": "c57625b5d3233bf161ee722c753ce3fdd5056cda41a16aa915cd6575823f5e75",
+    "shared-deadline-sdk-controls-v2-20261029.log": "1a6beb659f77bce3a362e5f0dcb7fb4c65c4270cf4413574d7b91c8119466692",
+    "shared-deadline-sdk-full-20261029.log": "7f09fd04c16d00397fb805455111bba9cdb66cfd032824d4ba63e80cc1b68d47",
+    "shared-deadline-sdk-none-20261029.log": "fea55d199a0982b35af3855812ad7de5c09cd3a2d4924e7a2024f99f65bdd6f0",
+    "shared-deadline-sdk-wasmi-20261029.log": "d7973f9f3c9056c6fb621f6484c287c928acd7be8aae01b5d7db10fdd4aa5acb",
+    "shared-deadline-sdk-wasmtime-20261029.log": "10ce4024dfa9aff451b55def5984d5d749479bdc92a31bbc361482781916dfc6",
+    "hosted-deadline-fix-first-20261029.log": "363e8e303d0cb4e4972bab8c987e2b0b70b3fe3c4dccff5a2b9618605f4f6e96",
+    "hosted-deadline-fix-repeat-20261029.log": "0f4bedc89d6df8f9faae66a095b73ecef45aaa9475609b48c63099c5e10e92f3",
+    "hosted-deadline-fix-json-regression-20261029.log": "a75df23e8b1f6c6bf99f18abe85d2216a59e457b6af9253203b5a53a75f21520",
+    "hosted-deadline-fix-branch-readback-20261029.log": "2eed48fd3d91c828fb2cd8f1161edb022b9e68a5c03fff6cbc44a41df5567540"
+  }
+}

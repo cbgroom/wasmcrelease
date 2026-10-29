@@ -1,0 +1,5 @@
+--- a/crates/mcpgit-executable-runtime/src/route_wasm_executor.rs
++++ b/crates/mcpgit-executable-runtime/src/route_wasm_executor.rs
+@@ -5780,0 +5781,2 @@
++            } else if error.deadline_exceeded() {
++                anyhow::Error::from(RouteRuntimeFailure::Deadline)
