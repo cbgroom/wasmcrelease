@@ -1,0 +1,100 @@
+diff --git a/scripts/ci-suite.mjs b/scripts/ci-suite.mjs
+index bc3ef327..7707066b 100644
+--- a/scripts/ci-suite.mjs
++++ b/scripts/ci-suite.mjs
+@@ -14,14 +14,14 @@ function currentProductControls() {
+   if(schema==='wasmc.mixed-current-cohort/v1'){
+     const policy=JSON.parse(readFileSync(join(root,'catalog/current-mixed-license-policy-v1.json')));
+     if(policy.schema!=='wasmc.current-license-policy/mixed-v1'||policy.catalog_sha256!==createHash('sha256').update(catalogBytes).digest('hex'))throw Error('CI mixed catalog identity drift');
+-    return {product:'scripts/test-current-product-mixed-v1.mjs',license:'scripts/test-current-license-policy-mixed-v1.mjs',catalog:policy.catalog_sha256};
++    return {product:'scripts/test-current-product-mixed-v1.mjs',license:'scripts/test-current-license-policy-mixed-v1.mjs',catalog:policy.catalog_sha256,version:catalog.version};
+   }
+   if(schema!=='wasmc.public-current-refresh-cohort/v2')return {
+     product:'scripts/test-current-product-v3.mjs',license:'scripts/test-current-license-policy-v3.mjs',
+-    catalog:'e12684efb3e475ad551eddabda12bc4c196f19edb48e7ace9069fda1ef5e7871'};
++    catalog:'e12684efb3e475ad551eddabda12bc4c196f19edb48e7ace9069fda1ef5e7871',version:catalog.version};
+   const policy=JSON.parse(readFileSync(join(root,'catalog/current-v4-license-policy.json')));
+   if(policy.schema!=='wasmc.current-license-policy/v2'||policy.catalog_sha256!==createHash('sha256').update(catalogBytes).digest('hex'))throw Error('CI v4 catalog identity drift');
+-  return {product:'scripts/test-current-product-v4.mjs',license:'scripts/test-current-license-policy-v4.mjs',catalog:policy.catalog_sha256};
++  return {product:'scripts/test-current-product-v4.mjs',license:'scripts/test-current-license-policy-v4.mjs',catalog:policy.catalog_sha256,version:catalog.version};
+ }
+ 
+ export function suiteCases(family,runtime='node',mirror='github') {
+@@ -31,6 +31,9 @@ export function suiteCases(family,runtime='node',mirror='github') {
+   const current=['integrity','candidate'].includes(family)?currentProductControls():null;
+   const mixedModuleChecks=current?.product==='scripts/test-current-product-mixed-v1.mjs'
+     ?[item('product-module-import-closure','scripts/test-product-module-imports-v1.mjs')]:[];
++  const currentVersion=current?.version?.split('.').map(Number);
++  const compilerBoundaryChecks=currentVersion&&(currentVersion[0]>0||currentVersion[1]>0||currentVersion[2]>=31)
++    ?[item('current-compiler-byte-boundary','scripts/test-current-compiler-byte-boundary-v031.mjs')]:[];
+   if(family==='compatibility')return [
+     item('core-feature-probes-and-negatives','scripts/test-core-compatibility.mjs'),
+     item('catalog-exact-resolution','scripts/test-lib-catalog.mjs',[],fixturePermissions),
+@@ -63,6 +66,7 @@ export function suiteCases(family,runtime='node',mirror='github') {
+   ];
+   if(family==='candidate')return [
+     ...mixedModuleChecks,
++    ...compilerBoundaryChecks,
+     item('current-v3-product-identity','scripts/current-release-identity.mjs'),
+     item('current-complete-product-reopen-negatives',current.product,['--product','.', '--catalog-sha256',current.catalog,'--out','target/ci/current-product-controls'],fixturePermissions),
+     item('current-original-license-reopen-negatives',current.license),
+diff --git a/scripts/release-candidate.mjs b/scripts/release-candidate.mjs
+index e8d57ab3..015396d3 100644
+--- a/scripts/release-candidate.mjs
++++ b/scripts/release-candidate.mjs
+@@ -471,7 +471,7 @@ export const currentV3ProductInputs=Object.freeze([
+ export function currentV3ProductInputsForVersion(version){
+   return [...currentV3ProductInputs,currentCompatibilityPath(version),
+     ...(Number(version.split('.')[2])>=30?['scripts/ci-rust-search-recovery.mjs','admission/string-storage-v030.json','admission/string-text-v030/options-v2.json','admission/string-text-v030/previous-cohort-v1.json']:[]),
+-    ...(Number(version.split('.')[2])>=31?['scripts/current-normal-core-sdk-quota-check.mjs','scripts/test-current-normal-core-sdk-quota-check.mjs','scripts/update-current-corelib.mjs','scripts/corelib-abi.mjs','scripts/test-current-string-support-v031.mjs','scripts/test-canonical-checked-results-v031.mjs','scripts/test-canonical-host-sdk-v031.mjs','scripts/test-canonical-host-import-demand-v031.mjs','scripts/mixed-current-product-v1.mjs','scripts/project-frozen-search-index-v1.mjs']:[]),
++    ...(usesExpandedCompilerCarrier(version)?['scripts/test-current-compiler-byte-boundary-v031.mjs','scripts/current-normal-core-sdk-quota-check.mjs','scripts/test-current-normal-core-sdk-quota-check.mjs','scripts/update-current-corelib.mjs','scripts/corelib-abi.mjs','scripts/test-current-string-support-v031.mjs','scripts/test-canonical-checked-results-v031.mjs','scripts/test-canonical-host-sdk-v031.mjs','scripts/test-canonical-host-import-demand-v031.mjs','scripts/mixed-current-product-v1.mjs','scripts/project-frozen-search-index-v1.mjs']:[]),
+     ...(requiresCheckedChunkQualification(version)?['admission/checked-chunk-v0'+version.split('.')[2]+'.json']:[]),
+     ...(Number(version.split('.')[2])>=28?['scripts/test-unit-result-match.mjs']:[]),
+     ...(Number(version.split('.')[2])>=29?['scripts/test-canonical-checked-results.mjs']:[]),
+@@ -507,6 +507,20 @@ export function currentProductInputsForVersion(version,variant){
+     'scripts/test-lib-refresh-current-values.mjs','scripts/test-lib-refresh-current-data.mjs','scripts/test-current-values-component.mjs',
+     'scripts/test-json-current-differential.mjs'];
+ }
++// Existing released candidates keep their original product identity rules.
++// The successor admits a larger compiler carrier while retaining exact pins and
++// validation of the actual Core module and its import-free contract.
++function usesExpandedCompilerCarrier(version) {
++  assert.match(version,/^\d+\.\d+\.\d+$/);
++  const [major,minor,patch]=version.split('.').map(Number);
++  return major>0||minor>0||patch>=31;
++}
++export function validateCurrentCompilerBytes(raw, compiler, version) {
++  const limit=usesExpandedCompilerCarrier(version) ? 16*1024*1024 : 2*1024*1024;
++  if(hash(raw)!==compiler.sha256||raw.length!==compiler.bytes||raw.length>limit)
++    throw Error('compiler identity or byte budget drift');
++  if(WebAssembly.Module.imports(new WebAssembly.Module(raw)).length)throw Error('compiler imports forbidden');
++}
+ export function currentCandidateClosure(candidate,read){
+   const rows=new Map(candidate.product_files.map(r=>[r.path,r]));
+   const exact=path=>{
+@@ -533,9 +547,7 @@ export function currentCandidateClosure(candidate,read){
+     const selected=loadBoundProtocol(exact);assert.equal(selected.protocol.release_binding.version,candidate.version);
+   }
+   const raw=exact('current/wasmc_compiler.wasm');
+-  if(hash(raw)!==compiler.compiler.sha256||raw.length!==compiler.compiler.bytes||raw.length>2097152)
+-    throw Error('compiler identity or byte budget drift');
+-  if(WebAssembly.Module.imports(new WebAssembly.Module(raw)).length)throw Error('compiler imports forbidden');
++  validateCurrentCompilerBytes(raw,compiler.compiler,candidate.version);
+   const binaries=[],embeddings=[];
+   for(const [path]of rows){
+     if(path.endsWith('.wasm')){
+diff --git a/scripts/test-release-channel.mjs b/scripts/test-release-channel.mjs
+index 09e234d4..7ae9a935 100644
+--- a/scripts/test-release-channel.mjs
++++ b/scripts/test-release-channel.mjs
+@@ -44,8 +44,9 @@ for(const mutate of [
+ const ciRows=currentCIProductInputs.map(path=>({path,bytes:bytes.length,sha256:hash(bytes)}));
+ assert.equal(validateCurrentCIProductInputs({product_files:ciRows},()=>bytes),true);
+ const {suiteCases}=await import('./ci-suite.mjs');
++const currentSuiteVersion=JSON.parse((await import('node:fs')).readFileSync(new URL('../catalog/libs-current-v2.json',import.meta.url))).version;
+ for(const family of ['compatibility','integrity','candidate','runtime','security','rust'])for(const test of suiteCases(family))for(const arg of test.args){
+-  if(/^(scripts|examples|sdk)\/.*\.(mjs|sh|toml)$/.test(arg))assert.ok(currentV3ProductInputsForVersion('0.0.23').includes(arg),'CI executable omitted: '+arg);
++  if(/^(scripts|examples|sdk)\/.*\.(mjs|sh|toml)$/.test(arg))assert.ok(currentV3ProductInputsForVersion(currentSuiteVersion).includes(arg),'CI executable omitted: '+arg);
+ }
+ for(const path of ['scripts/validate-source-free-runtime.sh','scripts/validate-current.mjs','scripts/pi-pre-release-gate-v1.mjs','Cargo.toml','scripts/run-pi-learning-model-v1.mjs','scripts/aggregate-native-cli-perf.mjs','scripts/qualify-current-compiler.mjs','scripts/fixtures/ios-wss-cert.pem','scripts/fixtures/ios-wss-key.pem','docs/DYNAMIC_LIB_GRAPH_MODEL.md','host/drivers/tcp/rust/Cargo.toml','scripts/lib-refresh-runner-v2.mjs']){
+   assert.ok(currentCIProductInputs.includes(path));

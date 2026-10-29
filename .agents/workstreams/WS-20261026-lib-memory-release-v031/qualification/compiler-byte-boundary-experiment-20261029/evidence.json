@@ -1,0 +1,61 @@
+{
+  "schema": "wasmc.compiler-release-byte-boundary-experiment/v1",
+  "release_branch_base": "4cac15c19b97eb287f14435171528ac2322287ec",
+  "release_main": "3ed99aa6f558f25940d4baa09a31cbae3336b911",
+  "patch_sha256": "bc293def2168047686ac33573f5fe5a3d73a77edab69732c90b1f62c6afd6eab",
+  "test_source_sha256": "e54fd60b6fa15cef21b6fca5f438b773be30adc7cfd03e6a547a40ecff0cab62",
+  "experiment": "retains 2 MiB for old candidate versions and sets 16 MiB compiler carrier limit for v0.0.31 and later; module validity, import checks and exact byte/hash pins remain; adds version-bound candidate CI test",
+  "testing": "isolated snapshot with historical 4.8.0 and LibSearch fixtures and separately pinned mixed/legacy CLI fixtures; boundary/channel/version/future-route/future-inputs tests pass; full logs retained. Frozen historical candidate route test remains unresolved because historical release set mismatch.",
+  "claim_issue": "Three changed shared files were discovered after the initial local edit to be under same-owner claims of other release workstreams. Initial edits were restored to HEAD and preserved here; no claim transfer or official implementation is asserted. Source main marks v022 and v023 in-progress, but branch v023 is complete and branch v022 remains in-progress.",
+  "scope": "isolated experiment, not public admission, deployed production, or formal release",
+  "files": [
+    {
+      "name": "test-final-boundary.log.gz",
+      "sha256": "e35cd36ca8a478daf7026d6bb4be6ef78b6714811253fe4e83f153d1d92c4ae7"
+    },
+    {
+      "name": "test-final-channel.log.gz",
+      "sha256": "29c35ec4ba9bc9560138c398d3fc36912fda4f9e3bae806502ecf371329276ee"
+    },
+    {
+      "name": "test-final-version.log.gz",
+      "sha256": "00f0092ed0ee95e0bb5d9740ada4b4e5f96f716b43bcd619092088b61c076ad4"
+    },
+    {
+      "name": "test-final-future-route.log.gz",
+      "sha256": "cafb0d89af1e9bc37afdedf22e09f8b66bbc2fe2808d80ed38dc12270b7aaae8"
+    },
+    {
+      "name": "test-final-future-inputs.log.gz",
+      "sha256": "4d4bc350b72723647ba7363962202290677a480d19de842d80792d2f40471741"
+    },
+    {
+      "name": "test-release-routes.log.gz",
+      "sha256": "3e575110732250171f4c3e412fcac17c8658280e15548c25df87462cfd01dcc8"
+    },
+    {
+      "name": "test-future-route.log.gz",
+      "sha256": "3908cc8b8ddf472cffb19399a923683cade7cb7a4bd0d8a3fdc28049cd55d017"
+    },
+    {
+      "name": "test-future-inputs.log.gz",
+      "sha256": "1473f6173a65474f72cd71e4756ac4749ad865876d7c928905e8697ce8692ae8"
+    },
+    {
+      "name": "test-future-inputs-complete-fixture.log.gz",
+      "sha256": "88aa46706939af1d6e990d0d8ba14b442a9419a13d38fd6d35339a510f110cf0"
+    },
+    {
+      "name": "test-future-inputs-pinned-fixtures.log.gz",
+      "sha256": "387a4a2cf097ee78b8f8949b28d0a0009a28eec830289cd9bca2fa5c147b93c7"
+    },
+    {
+      "name": "test-future-inputs-standalone-fixtures.log.gz",
+      "sha256": "79661b5aa8b6bc6cbfe6e5770015ab54a6e28d7f7677f862a5889d5d1be97c7e"
+    },
+    {
+      "name": "test-future-inputs-current-scripts.log.gz",
+      "sha256": "4d4bc350b72723647ba7363962202290677a480d19de842d80792d2f40471741"
+    }
+  ]
+}
