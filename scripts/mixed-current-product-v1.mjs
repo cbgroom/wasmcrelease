@@ -4,6 +4,7 @@ import { dirname, isAbsolute, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { currentProductPaths, currentProductReader, verifyCurrentRelease, verifyCurrentReleaseV4 } from './current-lib-release-v3.mjs';
 import { projectFrozenIndex } from './project-frozen-search-index-v1.mjs';
+import { CurrentSearchCaller } from './current-lib-search-v3.mjs';
 import { inventory, sha } from './lib-refresh-cache-v2.mjs';
 
 const prefix='admission/mixed-product-inputs-v1';
@@ -73,6 +74,23 @@ export function verifyMixedCurrentProductData(read, productPaths, mixedSha, oldS
 }
 export function verifyMixedCurrentProduct(root, mixedSha, oldSha, candidateSha) {
   return verifyMixedCurrentProductData(currentProductReader(root),currentProductPaths(root),mixedSha,oldSha,candidateSha);
+}
+// The pinned outer catalog authenticates the cohort and its two input pins.
+// Callers still supply the outer catalog identity independently.
+export function verifyMixedFromCatalog(catalogBytes,catalogSha,read,productPaths) {
+  assert.equal(sha(catalogBytes),catalogSha);
+  const catalog=parse(catalogBytes),cohortBytes=read(catalog.cohort.path);
+  assert.equal(cohortBytes.length,catalog.cohort.bytes);assert.equal(sha(cohortBytes),catalog.cohort.sha256);
+  const cohort=parse(cohortBytes);assert.equal(cohort.schema,'wasmc.mixed-current-cohort/v1');
+  assert.deepEqual(read('catalog/libs-current-v2.json'),catalogBytes);
+  return verifyMixedCurrentProductData(read,productPaths,catalogSha,cohort.old_catalog_sha256,cohort.candidate_catalog_sha256);
+}
+export function searchMixedCurrentRelease(catalogBytes,catalogSha,read,selection,offset=0,limit=64,productPaths) {
+  verifyMixedFromCatalog(catalogBytes,catalogSha,read,productPaths);
+  const catalog=parse(catalogBytes),search=catalog.packages.find(x=>x.id==='wasmc-lib-search');assert.ok(search);
+  const caller=new CurrentSearchCaller(read(catalog.index.path),read(search.root+'/artifact.wasm'),read(search.root+'/core-abi.json'));
+  return {schema:'wasmc.mixed-current-lib-search/v1',catalog_sha256:catalogSha,index_sha256:catalog.index.sha256,
+    selection_authority:false,offset,limit,result:caller.search(selection,offset,limit)};
 }
 
 export async function assembleMixedCurrentProduct({oldRoot,oldSha,candidateRoot,candidateSha,out,version}) {

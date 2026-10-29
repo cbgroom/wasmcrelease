@@ -23,6 +23,8 @@ A mixed Search index must retain the historical delivery receipt and exact manif
 
 A mixed fixture can embed independently pinned old and Q0 input graphs, replay both original verifiers, and require every selected Root, source, notice and index byte to match the correct original. A zero-authority fixture and a new verifier contract do not establish installer compatibility or public release authority.
 
+Mixed cohort CLI dispatch must verify both source graphs using the independently pinned outer catalog before resolving or searching. Keep old cohort dispatch usable without the new modules; CLI fixture success is not release-policy or actual public-install acceptance.
+
 ## Decision
 
 `libspec/` is the sole current Lib source authority. Do not extend the historical
