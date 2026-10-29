@@ -33,6 +33,8 @@ For real mixed artifact authority, start from the exact released main, stage onl
 
 For a mixed candidate, bind the original Q0 preflight, exact public artifact commit, current remote tag set, ordinary Search Q2 case oracles and installed-file readback into one independent input qualification. Reused historical Roots retain their actual SDK edition and product identity. This qualification does not admit compiler Source, full product CI, devices, Hosted routing or publication.
 
+Mixed release candidate creation must independently requalify Q0, tags, Q2 and the exact network-installed cohort, then carry both complete original proof graphs and only the selected current Roots. Use conditional mixed verification so legacy candidate execution does not require new modules. Candidate creation must still reject an old-version or unadmitted compiler.
+
 ## Decision
 
 `libspec/` is the sole current Lib source authority. Do not extend the historical

@@ -7,6 +7,7 @@ import {createHash} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 import {resolve,relative,dirname} from 'node:path';
 import {spawnSync} from 'node:child_process';
+import {createRequire} from 'node:module';
 import {checkedCurrentCatalog,verifyCurrentRelease,verifyCurrentReleaseV4,currentProductReader,currentProductPaths} from './current-lib-release-v3.mjs';
 import {buildHistoricalClosure} from './lib-route-closure.mjs';
 import {parseCatalog,resolveCatalog} from './lib-catalog.mjs';
@@ -14,6 +15,7 @@ import {instantiateLibSearch} from '../examples/lib-search/client.mjs';
 import {all18Targets,needsFutureLibLicenseGate,validateFutureLibLicenses} from './future-lib-license-admission.mjs';
 import {historicalNoticeProductInputs} from './current-license-policy-v3.mjs';
 const root=fileURLToPath(new URL('../',import.meta.url));
+const require=createRequire(import.meta.url);
 const hash=b=>createHash('sha256').update(b).digest('hex');
 const safe=p=>typeof p==='string'&&p.split('/').every(x=>x&&x!=='.'&&x!=='..')&&!p.includes('\\')&&!p.startsWith('/');
 const legacyV1ProductSets=Object.freeze({
@@ -456,6 +458,7 @@ export function currentProductVariant(catalogBytes,catalogSha256,read){
   assert.equal(bytes.length,catalog.cohort.bytes,'candidate cohort bytes');
   assert.equal(hash(bytes),catalog.cohort.sha256,'candidate cohort independent identity');
   const schema=JSON.parse(bytes).schema;
+  if(schema==='wasmc.mixed-current-cohort/v1')return 'mixed';
   if(schema==='wasmc.public-current-refresh-cohort/v2')return 'v4';
   assert.ok(['wasmc.public-current-refresh-cohort/v1','wasmc.public-current-composition-cohort/v1'].includes(schema),'unknown candidate cohort schema');
   return 'v3';
@@ -463,6 +466,10 @@ export function currentProductVariant(catalogBytes,catalogSha256,read){
 export function currentProductInputsForVersion(version,variant){
   const base=currentV3ProductInputsForVersion(version);
   if(variant==='v3')return base;
+  if(variant==='mixed')return [...base.filter(path=>!['admission/current-product-v3.json','admission/current-refresh-cohort-v2.json','catalog/current-v3-license-policy.json'].includes(path)),
+    'admission/mixed-current-cohort-v1.json','catalog/current-mixed-license-policy-v1.json',
+    'catalog/frozen-v030-notices-v1.json','scripts/frozen-v030-notices-v1.mjs','scripts/current-license-policy-mixed-v1.mjs',
+    'scripts/mixed-current-product-v1.mjs','scripts/project-frozen-search-index-v1.mjs','scripts/qualify-mixed-release-inputs-v1.mjs'];
   assert.equal(variant,'v4');
   return [...base.filter(path=>path!=='admission/current-product-v3.json'),
     'admission/current-product-v4.json','catalog/current-v4-license-policy.json',
@@ -520,7 +527,7 @@ export function currentCandidateClosure(candidate,read){
   assert.deepEqual(embeddings.sort(),['current/wasmc.global.js','current/wasmc.mjs','dist/wasmc.global.js']);
   assert.equal(compiler.active_compiler_versions,1);
   for(const pin of compiler.artifacts){const bytes=exact(pin.path);if(bytes.length!==pin.bytes||hash(bytes)!==pin.sha256)throw Error('compiler manifest artifact drift '+pin.path);}
-  const verifier=variant==='v4'?verifyCurrentReleaseV4:verifyCurrentRelease;
+  const verifier=variant==='mixed'?require('./mixed-current-product-v1.mjs').verifyMixedFromCatalog:variant==='v4'?verifyCurrentReleaseV4:verifyCurrentRelease;
   const closure=verifier(catalogBytes,candidate.current_catalog.sha256,exact,[...rows.keys()]);
   historicalNoticeProductInputs(JSON.parse(exact(catalog.cohort.path)),exact);
   return{...closure,compiler_manifest_sha256:hash(exact('current/compiler-release.json')),
@@ -529,7 +536,20 @@ export function currentCandidateClosure(candidate,read){
     compiler_carriers:{binaries,embeddings},active_compiler_versions:1};
 }
 const compositionCreationKeys=['catalog_sha256','composition_cohort_sha256','source_lineage_sha256'];
+const mixedCreationFlags={
+  '--mixed-catalog-sha256':'catalogSha','--mixed-source-root':'sourceRoot','--mixed-authority-repo':'repo',
+  '--mixed-run-root':'runRoot','--mixed-receipt-sha256':'receiptSha','--mixed-producer-sha256':'producerSha',
+  '--mixed-wit-tool':'witTool','--mixed-wit-tool-sha256':'witToolSha','--mixed-refs-path':'refsPath',
+  '--mixed-refs-sha256':'refsSha','--mixed-q2-path':'q2Path','--mixed-q2-sha256':'q2Sha',
+  '--mixed-network-path':'networkPath','--mixed-network-sha256':'networkSha',
+  '--mixed-network-root':'networkRoot','--mixed-previous-parent':'previousParent'};
 export async function currentCandidateArguments(argv){
+  if(argv.some(value=>Object.hasOwn(mixedCreationFlags,value))){
+    assert.equal(argv.length,Object.keys(mixedCreationFlags).length*2,'all independent mixed inputs required');
+    const options={kind:'mixed'};for(let i=0;i<argv.length;i+=2){const key=mixedCreationFlags[argv[i]];
+      assert.ok(key&&!Object.hasOwn(options,key)&&argv[i+1]&&!argv[i+1].startsWith('--'),'unknown, duplicate or missing mixed input');options[key]=argv[i+1];}
+    return options;
+  }
   const names={'--current-catalog-sha256':'catalog_sha256',
     '--current-composition-cohort-sha256':'composition_cohort_sha256','--current-source-lineage-sha256':'source_lineage_sha256'};
   if(!argv.some(value=>Object.hasOwn(names,value))){
@@ -568,10 +588,27 @@ export function verifyCurrentCandidateComposition(repo,options){
   return {closure,product_inputs:[catalog.cohort.path,...inputPaths,...authoringPaths,...commonAuthoring,...carrierPaths,
     ...historicalNoticeProductInputs(cohort,read)]};
 }
+export async function verifyCurrentCandidateMixed(repo,options){
+  assert.equal(options?.kind,'mixed');
+  const {qualifyMixedReleaseInputs}=await import('./qualify-mixed-release-inputs-v1.mjs');
+  const {verifyMixedFromCatalog}=await import('./mixed-current-product-v1.mjs');
+  const qualification=await qualifyMixedReleaseInputs({...options,product:repo});assert.equal(qualification.accepted,true);
+  const read=currentProductReader(repo),bytes=read('catalog/libs-current-v2.json');
+  const catalog=checkedCurrentCatalog(bytes,options.catalogSha),cohort=JSON.parse(read(catalog.cohort.path));
+  const productInputs=new Set([catalog.cohort.path,catalog.registry.path,catalog.index.path,...cohort.common_files.map(p=>p.path)]);
+  for(const [name,graph] of Object.entries(cohort.inputs))for(const file of graph.files)
+    productInputs.add(`admission/mixed-product-inputs-v1/${name}/${file.path}`);
+  for(const row of catalog.packages){for(const file of row.files)productInputs.add(file.path);
+    for(const pin of Object.values(row.source))productInputs.add(pin.path);}
+  const closure=verifyMixedFromCatalog(bytes,options.catalogSha,read,[...productInputs]);
+  assert.equal(closure.catalog_sha256,qualification.catalog_sha256);
+  return {qualification,closure,product_inputs:[...productInputs].sort()};
+}
 export async function createCurrentCandidate(repo,{compilerSource,libSource,version,currentOptions}){
+  const mixed=currentOptions?.kind==='mixed'?await verifyCurrentCandidateMixed(repo,currentOptions):null;
   const composed=currentOptions&&Object.hasOwn(currentOptions,'composition_cohort_sha256')
     ?verifyCurrentCandidateComposition(repo,currentOptions):null;
-  if(!composed){const {requireCurrentReleaseCohort}=await import('./lib-current-release-preflight.mjs');
+  if(!composed&&!mixed){const {requireCurrentReleaseCohort}=await import('./lib-current-release-preflight.mjs');
     await requireCurrentReleaseCohort(repo,currentOptions);}
   const read=path=>readFileSync(resolve(repo,path));
   const walk=p=>readdirSync(resolve(repo,p)).sort().flatMap(n=>{
@@ -582,14 +619,15 @@ export async function createCurrentCandidate(repo,{compilerSource,libSource,vers
   });
   const catalogBytes=read('catalog/libs-current-v2.json'),catalog=checkedCurrentCatalog(catalogBytes,hash(catalogBytes));
   const variant=currentProductVariant(catalogBytes,hash(catalogBytes),read);
-  const directories=['current','dist','package','examples/current','examples/base64','examples/agent-quickstart','examples/lib-search','examples/agent-start','standard','sdk','runtime',...(composed?catalog.packages.map(row=>row.root):['current-libs']),'licenses',
+  if(mixed){assert.equal(variant,'mixed');assert.equal(mixed.qualification.catalog_sha256,hash(catalogBytes));}
+  const directories=['current','dist','package','examples/current','examples/base64','examples/agent-quickstart','examples/lib-search','examples/agent-start','standard','sdk','runtime',...((composed||mixed)?catalog.packages.map(row=>row.root):['current-libs']),'licenses',
     ...(Number(version.split('.')[2])>=29?['lib-releases/wasmc-json/0.0.7/root','lib-releases/wasmc-json/0.0.7/host']:[]),
     'skills',
     'host/contract','host/sdk','host/drivers/file/rust','host/drivers/memory/rust'];
   const compiler=JSON.parse(read('current/compiler-release.json'));
   assert.equal(compiler.version,version);assert.equal(compiler.source_commit,compilerSource);
   const compilerPaths=compiler.artifacts.map(row=>{assert.ok(safe(row.path),'unsafe compiler product input');return row.path;});
-  const paths=new Set([...(Number(version.split('.')[2])>=29?['lib-releases/wasmc-json/0.0.7/cold/canonical-template.json']:[]),...currentProductInputsForVersion(version,variant),...(composed?.product_inputs??[]),...compilerPaths,...directories.flatMap(walk),
+  const paths=new Set([...(Number(version.split('.')[2])>=29?['lib-releases/wasmc-json/0.0.7/cold/canonical-template.json']:[]),...currentProductInputsForVersion(version,variant),...(composed?.product_inputs??[]),...(mixed?.product_inputs??[]),...compilerPaths,...directories.flatMap(walk),
     'AGENTS.md','README.md','HOSTING.md','LANGUAGE.md','LIB.md','license-policy.json',
     '.github/workflows/lib-search.yml','.github/workflows/agent-discovery.yml','.github/workflows/source-free-consumer.yml','.github/workflows/host-lib-e2e.yml',
     'agent-evaluation/fresh-agent-learning-v2.json','docs/AGENT_DECISION_MODEL.md',`docs/RELEASE_V${version.split('.').slice(1).join('')}.md`,'scripts/release-candidate.mjs']);
@@ -611,6 +649,7 @@ export async function createCurrentCandidate(repo,{compilerSource,libSource,vers
     product_files,product_set_sha256:hash(JSON.stringify(product_files))};
   candidate.current_release_closure=currentCandidateClosure(candidate,read);
   if(composed)assert.deepEqual(composed.closure,verifyCurrentRelease(catalogBytes,currentOptions.catalog_sha256,read,[...paths]),'composition creation read fence');
+  else if(mixed){assert.deepEqual(candidate.current_release_closure,mixed.closure,'mixed creation read fence');}
   else if(candidate.current_release_closure.refresh_receipt_sha256!==currentOptions.receipt_sha256||
      candidate.current_release_closure.producer_sha256!==currentOptions.producer_sha256)throw Error('independent creation cohort identity drift');
   validateCandidate(candidate,read);return candidate;
