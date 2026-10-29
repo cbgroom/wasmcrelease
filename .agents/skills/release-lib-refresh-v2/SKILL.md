@@ -78,6 +78,19 @@ Authoring cutover applies to every registered implementation.
 Reject unsupported profiles explicitly; no old build or source-directory
 fallback is allowed. Device/runtime qualification must be recorded separately.
 
+## Published Root identity fence
+
+The v4 product assembler requires an independently captured published base
+catalog via `--base-catalog` and `--base-catalog-sha256`. It checks each Q0 row
+against that catalog before creating an output directory: a matching package
+ID/version must retain both its published manifest hash and complete Root
+inventory hash. Changed bytes require a new version or exact prior Root reuse;
+reusing only a manifest while changing licenses, SDKs or other files is not
+sufficient. The caller must choose and independently verify the real published
+base. This check covers that catalog only; it is not a complete historical tag
+audit and does not admit the producer, release or mixed-version cohort. Preserve
+original Q0 and rejection receipts. Run `node scripts/test-frozen-root-identities-v1.mjs`.
+
 ## Persistent build cache and immutable evidence
 
 The current executor consists of `lib-refresh-v2.mjs`,

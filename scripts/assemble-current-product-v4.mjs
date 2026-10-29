@@ -5,16 +5,22 @@ import {fileURLToPath} from 'node:url';
 import {currentReleasePreflight} from './lib-current-release-preflight.mjs';
 import {inventory,digest,sha,atomicJson} from './lib-refresh-cache-v2.mjs';
 import {verifyCurrentReleaseV4} from './current-lib-release-v3.mjs';
+import {assertFrozenRootIdentities} from './frozen-root-identities-v1.mjs';
 export async function assembleCurrentProductV4(repo,{runRoot,receiptSha256,producerSha256,indexPath,indexSha256,
-  version,artifactCommit,out,witTool,witToolSha256}) {
-  for(const pin of [receiptSha256,producerSha256,indexSha256,witToolSha256])assert.match(pin,/^[0-9a-f]{64}$/);
+  version,artifactCommit,out,witTool,witToolSha256,baseCatalog,baseCatalogSha256}) {
+  for(const pin of [receiptSha256,producerSha256,indexSha256,witToolSha256,baseCatalogSha256])assert.match(pin,/^[0-9a-f]{64}$/);
   assert.match(artifactCommit,/^[0-9a-f]{40}$/);assert.match(version,/^\d+\.\d+\.\d+$/);
-  assert.ok(isAbsolute(runRoot)&&isAbsolute(indexPath)&&isAbsolute(out)&&isAbsolute(witTool));
+  assert.ok(isAbsolute(runRoot)&&isAbsolute(indexPath)&&isAbsolute(out)&&isAbsolute(witTool)&&isAbsolute(baseCatalog));
+  const receiptBytes=await readFile(join(runRoot,'refresh-receipt.json'));assert.equal(sha(receiptBytes),receiptSha256);
+  const receipt=JSON.parse(receiptBytes);assert.ok(isAbsolute(receipt.release_license_input?.path??''));
+  const frozenBytes=await readFile(baseCatalog);assert.equal(sha(frozenBytes),baseCatalogSha256,'independent published base catalog pin');
+  const frozenCatalog=JSON.parse(frozenBytes);
+  assert.match(frozenCatalog.version,/^\d+\.\d+\.\d+$/);
+  assert.match(frozenCatalog.package_authority_commit,/^[0-9a-f]{40}$/);
+  assertFrozenRootIdentities(frozenCatalog,receipt.rows);
   const preflight=await currentReleasePreflight(repo,{run_root:runRoot,receipt_sha256:receiptSha256,
     producer_sha256:producerSha256,wit_tool:witTool,wit_tool_sha256:witToolSha256});
   assert.equal(preflight.accepted,true,JSON.stringify(preflight.blockers));
-  const receiptBytes=await readFile(join(runRoot,'refresh-receipt.json'));assert.equal(sha(receiptBytes),receiptSha256);
-  const receipt=JSON.parse(receiptBytes);assert.ok(isAbsolute(receipt.release_license_input?.path??''));
   const license=await readFile(receipt.release_license_input.path);assert.equal(sha(license),receipt.release_license_input.sha256);
   const inputPin=path=>path.startsWith(repo+'/')?receipt.source_digests[path.slice(repo.length+1)]:receipt.producer_input_digests[path];
   assert.equal(inputPin(receipt.release_license_input.path),sha(license),'explicit Q0 license input');
@@ -67,6 +73,8 @@ export async function assembleCurrentProductV4(repo,{runRoot,receiptSha256,produ
   const releaseNotices={manifest:{path:noticePath,bytes:noticeBytes.length,sha256:sha(noticeBytes)},files:noticeManifest.files};
   const cohort={schema:'wasmc.public-current-refresh-cohort/v2',q0_accepted:true,
     refresh_receipt_sha256:receiptSha256,producer_sha256:producerSha256,
+    published_base_catalog:{sha256:baseCatalogSha256,version:frozenCatalog.version,
+      package_authority_commit:frozenCatalog.package_authority_commit},
     source_fingerprint:index.source_fingerprint,source_inputs:publicSourceInputs,release_notices:releaseNotices,
     wit_tool_sha256:witToolSha256,wit_normalizations:preflight.wit_normalizations.map(p=>({id:p.id,mode:p.mode,
       authored_sha256:p.authored_sha256,delivered_sha256:p.delivered_sha256,normalized_sha256:p.normalized_sha256??null,
@@ -104,7 +112,8 @@ export async function assembleCurrentProductV4(repo,{runRoot,receiptSha256,produ
 if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)){
   const names={'--run-root':'runRoot','--receipt-sha256':'receiptSha256','--producer-sha256':'producerSha256',
     '--index':'indexPath','--index-sha256':'indexSha256','--version':'version',
-    '--artifact-commit':'artifactCommit','--out':'out','--wit-tool':'witTool','--wit-tool-sha256':'witToolSha256'};
+    '--artifact-commit':'artifactCommit','--out':'out','--wit-tool':'witTool','--wit-tool-sha256':'witToolSha256',
+    '--base-catalog':'baseCatalog','--base-catalog-sha256':'baseCatalogSha256'};
   const args=process.argv.slice(2),options={};
   for(let i=0;i<args.length;i+=2){assert.ok(names[args[i]]&&!options[names[args[i]]]&&args[i+1]);options[names[args[i]]]=args[i+1];}
   assert.deepEqual(Object.keys(options).sort(),Object.values(names).sort(),'all independent assembly inputs required');

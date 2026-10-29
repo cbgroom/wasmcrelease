@@ -1,0 +1,27 @@
+{
+  "schema": "wasmc.published-root-identity-fence/v1",
+  "status": "candidate guard and comparison, not a released product",
+  "base": "v0.0.30 latest public catalog, origin/main 3ed99aa6f558f25940d4baa09a31cbae3336b911, catalog sha256 e12684efb3e475ad551eddabda12bc4c196f19edb48e7ace9069fda1ef5e7871",
+  "candidate_q0_receipt_sha256": "22be7ccfd4547c099fc8ae0e901a74741fcc56f886550d31cbfc070e22d7d624",
+  "counts": {
+    "same_identity_changed": 16,
+    "version_changed": 27
+  },
+  "change": "The v4 assembler requires an independent base catalog path and sha256, rejects same id/version with different manifest or complete inventory before creating output, records the base catalog identity in new cohort metadata, and bundles the new guard and its tests in the release inputs.",
+  "validation": [
+    "Five focused identity tests pass: matching, successor, manifest drift, full-inventory drift and duplicate identities.",
+    "Actual assembler against pinned public v0.0.30 and prior Q0 rejects incorrect base pin and rejects same-version changes before creating output.",
+    "Current-release-version control accepts existing current receipt and rejects 37 mutations; syntax and diff checks pass."
+  ],
+  "preserved_failure": "Existing historical release route test targeted v0.0.18 and failed before candidate creation because standard/wasmc-lib-search/0.4.0/lib.json is absent in current main and v0.0.30 trees. No historical route regression pass claimed; failure was observed in command output.",
+  "remaining": [
+    "The guard covers only the explicitly supplied published catalog, not every older released version or the authenticity of an arbitrary supplied base.",
+    "The 16 conflicts remain unresolved; choose exact frozen Root reuse or a real successor version and rebuild/rebind all required indexes, notices and provenance without altering frozen files.",
+    "Current v4 verifier expects one Q0 and one notice input; mixed historical-root reuse must be designed and verified, not forged by changing receipts.",
+    "Compiler Source admission, full Q0 with latest candidate, overall memory, Host route and official release remain incomplete."
+  ],
+  "files_sha256": {
+    "comparison.json": "5f2dc8052937990cca0eb0ee0f6e192cdb89cb07a8aa3821a46802f750c2ae6a",
+    "assembler-guard.json": "180baa8342f5aa00e8b9fd6a2832721d71118366d68ed7acb12867c9c832aae3"
+  }
+}

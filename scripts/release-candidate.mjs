@@ -469,6 +469,7 @@ export function currentProductInputsForVersion(version,variant){
     'catalog/frozen-v030-notices-v1.json','scripts/current-license-policy-v4.mjs',
     'scripts/frozen-v030-notices-v1.mjs','scripts/lib-refresh-license-receipt-v1.mjs',
     'scripts/assemble-current-product-v4.mjs','scripts/test-current-product-v4.mjs',
+    'scripts/frozen-root-identities-v1.mjs','scripts/test-frozen-root-identities-v1.mjs',
     'scripts/test-current-license-policy-v4.mjs','scripts/qualify-current-lib-refresh-v3.mjs',
     'scripts/test-lib-refresh-current-values.mjs','scripts/test-lib-refresh-current-data.mjs','scripts/test-current-values-component.mjs',
     'scripts/test-json-current-differential.mjs'];
