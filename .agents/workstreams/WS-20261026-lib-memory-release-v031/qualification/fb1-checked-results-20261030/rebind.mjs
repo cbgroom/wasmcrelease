@@ -1,0 +1,14 @@
+import fs from 'node:fs';import assert from 'node:assert/strict';import {createHash} from 'node:crypto';import {resolve} from 'node:path';import {pathToFileURL} from 'node:url';
+assert.equal(process.argv.length,3,'provide disposable stage');const base=resolve(process.argv[2]);const {createCanonicalHostCompiler}=await import(pathToFileURL(resolve(base,'current/canonical-host.mjs')));
+const read=p=>fs.readFileSync(resolve(base,p)),write=(p,b)=>fs.writeFileSync(resolve(base,p),b),sha=b=>createHash('sha256').update(b).digest('hex');
+const f='./examples/current/canonical-checked-results-v2/',kit='./lib-releases/wasmc-json/0.0.7/',tuple=n=>Object.fromEntries([['wit','lib.wit'],['executionAbi','execution-abi.json'],['providerContract','provider-contract.json'],['binding','binding.json']].map(([k,p])=>[k,read(kit+'host/'+n+'/'+p)]));
+const source=read(f+'ordinary.wasmc').toString(),a=JSON.parse(read(f+'activation.json')),activation=Buffer.from(JSON.stringify({...a,source_sha256:sha(Buffer.from(source))}));
+const compiler=await createCanonicalHostCompiler(read('./current/wasmc_compiler.wasm'));let out;try{out=await compiler.compile({source,activation,entry:tuple('entry'),operations:tuple('operations'),libCore:read(kit+'root/artifact.wasm'),libWit:read(kit+'root/lib.wit'),template:read(f+'canonical-template.json')})}finally{compiler.dispose()}
+const names=['caller.wasm','lib-projection.wasm','lib-calls.wasm','canonical-entry.wasm','app-projection.wasm','host-entry.wasm','host-projection.wasm','host-calls.wasm'],indices=[1,3,4,5,6,7,8,9];
+for(let i=0;i<8;i++){let b=out.modules.get(names[i]);assert.deepEqual(Buffer.from(b),read('./native-sealed-parity-output/input-'+indices[i]+'.wasm'),names[i]);write(f+'modules/'+names[i],b)}
+for(let i=0;i<11;i++)write(f+'composition/input-'+i+'.wasm',read('./native-sealed-parity-output/input-'+i+'.wasm'));
+write(f+'app.wasm',read('./native-sealed-parity-output/app.wasm'));write(f+'frame-descriptor.json',Buffer.from(JSON.stringify(out.descriptor,null,2)+'\n'));
+const profile=JSON.parse(read(f+'checked-profile.json'));profile.compiler.bytes=read('./current/wasmc_compiler.wasm').length;profile.compiler.sha256=sha(read('./current/wasmc_compiler.wasm'));write(f+'checked-profile.json',JSON.stringify(profile,null,2)+'\n');
+const proof=JSON.parse(read(f+'expected.json'));proof.compiler_sha256=profile.compiler.sha256;proof.frame_sha256=sha(out.frame);proof.modules=out.descriptor.modules;
+const refresh=r=>{let b=read('./'+r.path);r.bytes=b.length;r.sha256=sha(b)};for(const row of proof.files)refresh(row);for(const row of proof.composition.inputs)refresh(row);refresh(proof.complete_App);proof.composition.output_sha256=proof.complete_App.sha256;write(f+'expected.json',JSON.stringify(proof,null,2)+'\n');
+console.log(JSON.stringify({frame:proof.frame_sha256,app:proof.complete_App.sha256,parity_modules:8,frame_bytes:out.frame.length}));
