@@ -1,23 +1,28 @@
 {
-  "schema": "wasmc.current-built-rust-producer-source/v1",
+  "schema": "wasmc.lib-refresh-source/v2",
   "id": "wasmc-json",
-  "version": "0.2.1",
+  "version": "0.2.3",
   "profile": "value",
+  "crate": "wasmc_json_memory_constructors_v033",
+  "artifact_name": "wasmc_json_memory_constructors_v033",
   "world": "json",
-  "description": "Rust serde_json-backed construction, selection, atomic edits and typed reads; no Lib-local capacity ceilings.",
+  "description": "Rust serde_json-backed construction, selection, atomic edits and typed reads; iterative single-scan parsing without Lib-local capacity ceilings.",
+  "dependencies": [
+    "serde_json"
+  ],
   "apis": [
     {
       "api": "array-from-values",
-      "ecosystem": "serde_json 1.0.151 RawValue, Number, string codecs and Rust standard collections",
+      "ecosystem": "Rust serde_json 1.0.151 and standard collections",
       "origin": "adapted",
       "support": "supported",
       "implementation": "lib",
-      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Single-scan parsing and iterative index storage avoid recursive drop; no JSONPath or JSON Patch standard claim.",
       "host_authorities": []
     },
     {
       "api": "array-from-values-or",
-      "ecosystem": "serde_json 1.0.151 RawValue, Number, string codecs and Rust standard collections",
+      "ecosystem": "Rust serde_json 1.0.151 and standard collections",
       "origin": "adapted",
       "support": "supported",
       "implementation": "lib",
@@ -26,61 +31,61 @@
     },
     {
       "api": "compact",
-      "ecosystem": "serde_json 1.0.151 RawValue, Number, string codecs and Rust standard collections",
+      "ecosystem": "Rust serde_json 1.0.151 and standard collections",
       "origin": "adapted",
       "support": "supported",
       "implementation": "lib",
-      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Single-scan parsing and iterative index storage avoid recursive drop; no JSONPath or JSON Patch standard claim.",
       "host_authorities": []
     },
     {
       "api": "compact-bytes",
-      "ecosystem": "serde_json 1.0.151 RawValue, Number, string codecs and Rust standard collections",
+      "ecosystem": "Rust serde_json 1.0.151 and standard collections",
       "origin": "adapted",
       "support": "supported",
       "implementation": "lib",
-      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Single-scan parsing and iterative index storage avoid recursive drop; no JSONPath or JSON Patch standard claim.",
       "host_authorities": []
     },
     {
       "api": "compact-or",
-      "ecosystem": "serde_json 1.0.151 RawValue, Number, string codecs and Rust standard collections",
+      "ecosystem": "Rust serde_json 1.0.151 and standard collections",
       "origin": "adapted",
       "support": "supported",
       "implementation": "lib",
-      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Single-scan parsing and iterative index storage avoid recursive drop; no JSONPath or JSON Patch standard claim.",
       "host_authorities": []
     },
     {
       "api": "compact-or-bytes",
-      "ecosystem": "serde_json 1.0.151 RawValue, Number, string codecs and Rust standard collections",
+      "ecosystem": "Rust serde_json 1.0.151 and standard collections",
       "origin": "adapted",
       "support": "supported",
       "implementation": "lib",
-      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Single-scan parsing and iterative index storage avoid recursive drop; no JSONPath or JSON Patch standard claim.",
       "host_authorities": []
     },
     {
       "api": "decode-string-or",
-      "ecosystem": "serde_json 1.0.151 RawValue, Number, string codecs and Rust standard collections",
+      "ecosystem": "Rust serde_json 1.0.151 and standard collections",
       "origin": "adapted",
       "support": "supported",
       "implementation": "lib",
-      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Single-scan parsing and iterative index storage avoid recursive drop; no JSONPath or JSON Patch standard claim.",
       "host_authorities": []
     },
     {
       "api": "edit-bytes",
-      "ecosystem": "serde_json 1.0.151 RawValue, Number, string codecs and Rust standard collections",
+      "ecosystem": "Rust serde_json 1.0.151 and standard collections",
       "origin": "adapted",
       "support": "supported",
       "implementation": "lib",
-      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Single-scan parsing and iterative index storage avoid recursive drop; no JSONPath or JSON Patch standard claim.",
       "host_authorities": []
     },
     {
       "api": "edit-or-bytes",
-      "ecosystem": "serde_json 1.0.151 RawValue, Number, string codecs and Rust standard collections",
+      "ecosystem": "Rust serde_json 1.0.151 and standard collections",
       "origin": "adapted",
       "support": "supported",
       "implementation": "lib",
@@ -89,43 +94,43 @@
     },
     {
       "api": "encode",
-      "ecosystem": "serde_json 1.0.151 RawValue, Number, string codecs and Rust standard collections",
+      "ecosystem": "Rust serde_json 1.0.151 and standard collections",
       "origin": "adapted",
       "support": "supported",
       "implementation": "lib",
-      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Single-scan parsing and iterative index storage avoid recursive drop; no JSONPath or JSON Patch standard claim.",
       "host_authorities": []
     },
     {
       "api": "encode-parts",
-      "ecosystem": "serde_json 1.0.151 RawValue, Number, string codecs and Rust standard collections",
+      "ecosystem": "Rust serde_json 1.0.151 and standard collections",
       "origin": "adapted",
       "support": "supported",
       "implementation": "lib",
-      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Single-scan parsing and iterative index storage avoid recursive drop; no JSONPath or JSON Patch standard claim.",
       "host_authorities": []
     },
     {
       "api": "inspect-values-bytes",
-      "ecosystem": "serde_json 1.0.151 RawValue, Number, string codecs and Rust standard collections",
+      "ecosystem": "Rust serde_json 1.0.151 and standard collections",
       "origin": "adapted",
       "support": "supported",
       "implementation": "lib",
-      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Single-scan parsing and iterative index storage avoid recursive drop; no JSONPath or JSON Patch standard claim.",
       "host_authorities": []
     },
     {
       "api": "object-from-fields",
-      "ecosystem": "serde_json 1.0.151 RawValue, Number, string codecs and Rust standard collections",
+      "ecosystem": "Rust serde_json 1.0.151 and standard collections",
       "origin": "adapted",
       "support": "supported",
       "implementation": "lib",
-      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Single-scan parsing and iterative index storage avoid recursive drop; no JSONPath or JSON Patch standard claim.",
       "host_authorities": []
     },
     {
       "api": "object-from-fields-or",
-      "ecosystem": "serde_json 1.0.151 RawValue, Number, string codecs and Rust standard collections",
+      "ecosystem": "Rust serde_json 1.0.151 and standard collections",
       "origin": "adapted",
       "support": "supported",
       "implementation": "lib",
@@ -134,315 +139,111 @@
     },
     {
       "api": "quote-string",
-      "ecosystem": "serde_json 1.0.151 RawValue, Number, string codecs and Rust standard collections",
+      "ecosystem": "Rust serde_json 1.0.151 and standard collections",
       "origin": "adapted",
       "support": "supported",
       "implementation": "lib",
-      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Single-scan parsing and iterative index storage avoid recursive drop; no JSONPath or JSON Patch standard claim.",
       "host_authorities": []
     },
     {
       "api": "read-bool",
-      "ecosystem": "serde_json 1.0.151 RawValue, Number, string codecs and Rust standard collections",
+      "ecosystem": "Rust serde_json 1.0.151 and standard collections",
       "origin": "adapted",
       "support": "supported",
       "implementation": "lib",
-      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Single-scan parsing and iterative index storage avoid recursive drop; no JSONPath or JSON Patch standard claim.",
       "host_authorities": []
     },
     {
       "api": "read-f64",
-      "ecosystem": "serde_json 1.0.151 RawValue, Number, string codecs and Rust standard collections",
+      "ecosystem": "Rust serde_json 1.0.151 and standard collections",
       "origin": "adapted",
       "support": "supported",
       "implementation": "lib",
-      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Single-scan parsing and iterative index storage avoid recursive drop; no JSONPath or JSON Patch standard claim.",
       "host_authorities": []
     },
     {
       "api": "read-i64",
-      "ecosystem": "serde_json 1.0.151 RawValue, Number, string codecs and Rust standard collections",
+      "ecosystem": "Rust serde_json 1.0.151 and standard collections",
       "origin": "adapted",
       "support": "supported",
       "implementation": "lib",
-      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Single-scan parsing and iterative index storage avoid recursive drop; no JSONPath or JSON Patch standard claim.",
       "host_authorities": []
     },
     {
       "api": "read-u64",
-      "ecosystem": "serde_json 1.0.151 RawValue, Number, string codecs and Rust standard collections",
+      "ecosystem": "Rust serde_json 1.0.151 and standard collections",
       "origin": "adapted",
       "support": "supported",
       "implementation": "lib",
-      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Single-scan parsing and iterative index storage avoid recursive drop; no JSONPath or JSON Patch standard claim.",
       "host_authorities": []
     },
     {
       "api": "select",
-      "ecosystem": "serde_json 1.0.151 RawValue, Number, string codecs and Rust standard collections",
+      "ecosystem": "Rust serde_json 1.0.151 and standard collections",
       "origin": "adapted",
       "support": "supported",
       "implementation": "lib",
-      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Single-scan parsing and iterative index storage avoid recursive drop; no JSONPath or JSON Patch standard claim.",
       "host_authorities": []
     },
     {
       "api": "select-bytes",
-      "ecosystem": "serde_json 1.0.151 RawValue, Number, string codecs and Rust standard collections",
+      "ecosystem": "Rust serde_json 1.0.151 and standard collections",
       "origin": "adapted",
       "support": "supported",
       "implementation": "lib",
-      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Single-scan parsing and iterative index storage avoid recursive drop; no JSONPath or JSON Patch standard claim.",
       "host_authorities": []
     },
     {
       "api": "select-string-or-bytes",
-      "ecosystem": "serde_json 1.0.151 RawValue, Number, string codecs and Rust standard collections",
+      "ecosystem": "Rust serde_json 1.0.151 and standard collections",
       "origin": "adapted",
       "support": "supported",
       "implementation": "lib",
-      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Single-scan parsing and iterative index storage avoid recursive drop; no JSONPath or JSON Patch standard claim.",
       "host_authorities": []
     },
     {
       "api": "select-values",
-      "ecosystem": "serde_json 1.0.151 RawValue, Number, string codecs and Rust standard collections",
+      "ecosystem": "Rust serde_json 1.0.151 and standard collections",
       "origin": "adapted",
       "support": "supported",
       "implementation": "lib",
-      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Single-scan parsing and iterative index storage avoid recursive drop; no JSONPath or JSON Patch standard claim.",
       "host_authorities": []
     },
     {
       "api": "select-values-bytes",
-      "ecosystem": "serde_json 1.0.151 RawValue, Number, string codecs and Rust standard collections",
+      "ecosystem": "Rust serde_json 1.0.151 and standard collections",
       "origin": "adapted",
       "support": "supported",
       "implementation": "lib",
-      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Single-scan parsing and iterative index storage avoid recursive drop; no JSONPath or JSON Patch standard claim.",
       "host_authorities": []
     },
     {
       "api": "validate",
-      "ecosystem": "serde_json 1.0.151 RawValue, Number, string codecs and Rust standard collections",
+      "ecosystem": "Rust serde_json 1.0.151 and standard collections",
       "origin": "adapted",
       "support": "supported",
       "implementation": "lib",
-      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Single-scan parsing and iterative index storage avoid recursive drop; no JSONPath or JSON Patch standard claim.",
       "host_authorities": []
     },
     {
       "api": "validate-bytes",
-      "ecosystem": "serde_json 1.0.151 RawValue, Number, string codecs and Rust standard collections",
+      "ecosystem": "Rust serde_json 1.0.151 and standard collections",
       "origin": "adapted",
       "support": "supported",
       "implementation": "lib",
-      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Single-scan parsing and iterative index storage avoid recursive drop; no JSONPath or JSON Patch standard claim.",
       "host_authorities": []
     }
-  ],
-  "source_spec": {
-    "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-json/0.2.1-ci/lib.json",
-    "bytes": 13792,
-    "sha256": "13bc7090f18cd062dd0a9acf67b1566d43969d5c8aeaf23823e679d77e14378f"
-  },
-  "source_packet": {
-    "root": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-json/0.2.1-ci",
-    "inventory_sha256": "2c47964bb747406febf2035a01744f76fc2d5c550da5b63b9da1b2e2413245e0",
-    "files": [
-      {
-        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-json/0.2.1-ci/Cargo.lock",
-        "bytes": 8289,
-        "sha256": "3ce3b65917c86aac618b321d37ee13d67b19c34702370c5b067198e7c3a44021"
-      },
-      {
-        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-json/0.2.1-ci/adapter.rs",
-        "bytes": 7047,
-        "sha256": "0d01813631d4dfb5a9dbc846756a0e7b678aa42da9bc1c098997e0deee1c7f22"
-      },
-      {
-        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-json/0.2.1-ci/ci-archive.zip",
-        "bytes": 95735,
-        "sha256": "9c68b0b380fcf8bbabf0e50173792331c04a5eabb708d11ca9fe7f8554541984"
-      },
-      {
-        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-json/0.2.1-ci/ci-evidence.json",
-        "bytes": 514,
-        "sha256": "3dd45a4c41ca8ccc1451be73ec22ad5286e46dc0cdb9492c6313deaf117a2eb2"
-      },
-      {
-        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-json/0.2.1-ci/ci-native.log.gz",
-        "bytes": 1586,
-        "sha256": "6be125aee38ced2031ff59e9644a4a1bea480bfa51937834877fc39484a0cd72"
-      },
-      {
-        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-json/0.2.1-ci/ci-source.txt",
-        "bytes": 41,
-        "sha256": "6b2a86a00c82843665555575362434edaede25531711e0397fc4de2a497cec4d"
-      },
-      {
-        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-json/0.2.1-ci/delta.rs",
-        "bytes": 18357,
-        "sha256": "3281c64a97f1e10a802b82d99563a187f9f413abdcc7d982ff4ce3a3a4d43a79"
-      },
-      {
-        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-json/0.2.1-ci/facade.wasm",
-        "bytes": 5934,
-        "sha256": "e572e61af54b739e75a056722ee2c6102268c6e22541041002cd3e5ed4adfa40"
-      },
-      {
-        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-json/0.2.1-ci/lib.build.json",
-        "bytes": 13188,
-        "sha256": "ee2263233e64e14d653fc9a2c322a8340d694c059b45b589b8093468fc13aef0"
-      },
-      {
-        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-json/0.2.1-ci/lib.json",
-        "bytes": 13792,
-        "sha256": "13bc7090f18cd062dd0a9acf67b1566d43969d5c8aeaf23823e679d77e14378f"
-      },
-      {
-        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-json/0.2.1-ci/lib.wit",
-        "bytes": 4526,
-        "sha256": "d8d7812950772a962736355082f6ca65db5ec0c8edf4565715746b54b29b621c"
-      },
-      {
-        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-json/0.2.1-ci/original-seal.log",
-        "bytes": 691,
-        "sha256": "7e59c3a58aa372d583813e51a9d33899666b0f87d164257f105b6a598fe053d9"
-      },
-      {
-        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-json/0.2.1-ci/raw.wasm",
-        "bytes": 268061,
-        "sha256": "a0a673bf2dd4b908349fae6416628400b33ebd3f85d8d695b27df322ea65e064"
-      },
-      {
-        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-json/0.2.1-ci/seal-receipt.json",
-        "bytes": 739,
-        "sha256": "3acd50d5e4b7e59bf6a92447e661c198a69cd15f30031d562075ef9ed41a6cf8"
-      },
-      {
-        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-json/0.2.1-ci/source-receipt.json",
-        "bytes": 703,
-        "sha256": "77961546d7109dfc891df4a866c24c09a219d875b4db676286ec6e96a291047f"
-      }
-    ]
-  },
-  "producer": {
-    "original_receipt_sha256": null,
-    "driver_sha256": null,
-    "ci_run": 40446801402,
-    "source_commit": "53c404ac5253f85936996b499325d37b24cd0b14",
-    "ci_archive_sha256": "9c68b0b380fcf8bbabf0e50173792331c04a5eabb708d11ca9fe7f8554541984",
-    "original_receipt_bytes_verified": false
-  },
-  "root": {
-    "locator": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-json/0.2.1-ci",
-    "manifest_sha256": "d0dcc046018ac37523e079b0990e5427aac1b2220a0df5da5d4610a19dfc2af0",
-    "inventory_sha256": "a2a16f8f48f7356072b9aa954c7ca9eb16f60c431e4256fc1e37e3b21b0bbbd7",
-    "files": [
-      {
-        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-json/0.2.1-ci/LICENSE",
-        "bytes": 3823,
-        "sha256": "7bca2d5818178e0bc14546700d39bf113d15139b1c3b6d1e62f621d4a276d6e3"
-      },
-      {
-        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-json/0.2.1-ci/SKILL.md",
-        "bytes": 868,
-        "sha256": "573b9743c1e93088a88a706ba06848c6d5152f52be981ffbe21e4a9983eec042"
-      },
-      {
-        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-json/0.2.1-ci/artifact.wasm",
-        "bytes": 152751,
-        "sha256": "09b833d6b1910ef1e345e73c9b2698deb6f78b6077e4ab31b3ed9c5e0c1e2c06"
-      },
-      {
-        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-json/0.2.1-ci/bindings/rust-component/Cargo.toml",
-        "bytes": 297,
-        "sha256": "5c530b9d6b2be179cf2a9bf04e3e36fc6ab198dd1ebb8d83d2cba7d556e5754e"
-      },
-      {
-        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-json/0.2.1-ci/bindings/rust-component/src/lib.rs",
-        "bytes": 630,
-        "sha256": "7f5526c6236a9144c3bc8dae0173bf84ce5d03d6d5ac5c36430a598145f3e8df"
-      },
-      {
-        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-json/0.2.1-ci/bindings/rust-core/Cargo.toml",
-        "bytes": 159,
-        "sha256": "279640d9ebb93c9ada890c5174c0896fd44a8088de39619e35d02c1687e3167e"
-      },
-      {
-        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-json/0.2.1-ci/bindings/rust-core/src/lib.rs",
-        "bytes": 121898,
-        "sha256": "29ace9875454531252db0d36761130950040a6e85d6aaec914bcef8a30f560bc"
-      },
-      {
-        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-json/0.2.1-ci/component.wasm",
-        "bytes": 162555,
-        "sha256": "7ad7f99abef5c843d54144618895a1dc08cdc90ef34423f22ef4ac0bb4990f9d"
-      },
-      {
-        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-json/0.2.1-ci/core-abi.json",
-        "bytes": 11054,
-        "sha256": "397925af04fe8e142c88817ab61458ce18d477a30ba411858055d2421563051b"
-      },
-      {
-        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-json/0.2.1-ci/lib.json",
-        "bytes": 5143,
-        "sha256": "d0dcc046018ac37523e079b0990e5427aac1b2220a0df5da5d4610a19dfc2af0"
-      },
-      {
-        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-json/0.2.1-ci/lib.wit",
-        "bytes": 4526,
-        "sha256": "d8d7812950772a962736355082f6ca65db5ec0c8edf4565715746b54b29b621c"
-      },
-      {
-        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-json/0.2.1-ci/licenses/DEPENDENCY-NOTICES-001.txt",
-        "bytes": 245760,
-        "sha256": "66302f6dd71da97391ab2270d29b10e67bdbac6d7eb782bed043c2ff596ec5cc"
-      },
-      {
-        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-json/0.2.1-ci/licenses/DEPENDENCY-NOTICES-002.txt",
-        "bytes": 245760,
-        "sha256": "0065cf38006c9a66a6c3ee9cbaf8db10422b1e5301d3c1d5132b7855e71f18ea"
-      },
-      {
-        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-json/0.2.1-ci/licenses/DEPENDENCY-NOTICES-003.txt",
-        "bytes": 245760,
-        "sha256": "201dbac93dff17177b6379ee630b9658b4cec9cb9d46ce3982b3da87c4b740c8"
-      },
-      {
-        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-json/0.2.1-ci/licenses/DEPENDENCY-NOTICES-004.txt",
-        "bytes": 245760,
-        "sha256": "c439e1a409b6f23d5797cec339403a0ffce97e9fcf2ae91d6a923c36d619bb76"
-      },
-      {
-        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-json/0.2.1-ci/licenses/DEPENDENCY-NOTICES-005.txt",
-        "bytes": 245760,
-        "sha256": "04118f32afc6b2ce0fbfd559c56a78614016ab00167be2425c8c778fc7b064fe"
-      },
-      {
-        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-json/0.2.1-ci/licenses/DEPENDENCY-NOTICES-006.txt",
-        "bytes": 8357,
-        "sha256": "aa6000805f56d3c6009ffa09dbe224083cf2e63e2498e1939deefe6ca7c43d9a"
-      },
-      {
-        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-json/0.2.1-ci/licenses/DEPENDENCY-NOTICES-007.txt",
-        "bytes": 25602,
-        "sha256": "f0429335a0831b75f3b3277e20303d94bbf7af5719769055178aab3e2dce6e7a"
-      },
-      {
-        "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-roots/wasmc-json/0.2.1-ci/references/agent-delta.json",
-        "bytes": 9720,
-        "sha256": "9413b83610c4e093b0bceea972960ffd30b1af9ec48a07fb5641ce387d75daf4"
-      }
-    ]
-  },
-  "wit": {
-    "path": ".agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-json/0.2.1-ci/lib.wit",
-    "bytes": 4526,
-    "sha256": "d8d7812950772a962736355082f6ca65db5ec0c8edf4565715746b54b29b621c"
-  },
-  "source_mode": "already-qualified-changed-rust-root",
-  "fresh_build_performed": false,
-  "fresh_full_q0": false
+  ]
 }

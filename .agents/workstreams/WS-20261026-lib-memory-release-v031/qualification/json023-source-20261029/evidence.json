@@ -1,0 +1,42 @@
+{
+  "schema": "wasmc.json023-source-checkpoint/v1",
+  "status": "BRANCH_SOURCE_NOT_ADMITTED",
+  "version": "0.2.3",
+  "predecessor_source_scope_release": "c67f5689652b4fe369f456b9c91a99c272d956bd",
+  "baseline_json022_delta_sha256": "082a83259e6a3c8f519a53ba6ddaa34383d8d591188ee877e9222968814bb676",
+  "source_sha256": {
+    "adapter.rs": "0d01813631d4dfb5a9dbc846756a0e7b678aa42da9bc1c098997e0deee1c7f22",
+    "delta.rs": "274a19a25be6a7ecd6f8b2074ed1e263454248857553681ea9dcc5643d8d045b",
+    "lib.json": "318c92faf66117c3c12c30cd685c6a42dac3159416c9fd78850fc3c32e4b844f",
+    "lib.wit": "2d6ed174ab796783a346c58060f9277a6fe805765c7ac6976cf850f002a29c94"
+  },
+  "validation": "13 native Rust tests include 20000 nested arrays; 5006 generated/invalid cases match prior JSON0.2.2 for validation, compact, selection and ordered edits. Single-Lib scoped source validator passes.",
+  "retained_failure": "Full 43-source fixture validation fails at unrelated wasmc-data-relational adapter line review budget 217/176; original log retained. No full source validation pass claimed.",
+  "limitations": [
+    "Same-owner source scope release is branch-local and main Source index still needs governance integration.",
+    "No JSON0.2.3 Wasm build, Q0, Core/Component, installed WAsmC, hosted/production runtime or formal release yet.",
+    "Existing JSON0.2.2 Root, receipt and frozen products remain unchanged."
+  ],
+  "files": [
+    {
+      "path": "successor-differential.rs",
+      "sha256": "39c38b802bcafd31435bef89d82d804d1f102116ef41d42a427ced6565b21730"
+    },
+    {
+      "path": "successor-differential.log",
+      "sha256": "9591f302f3bfb5a8b71f2971cc9f768e76604d19c838de63fb1be21acda987a9"
+    },
+    {
+      "path": "successor-tests.log",
+      "sha256": "4a323f69ff1658cc61a55e72041a7bc59c2f4466f195eac54cf7befed0d602ec"
+    },
+    {
+      "path": "json-v023-scoped-source-validation.log",
+      "sha256": "75731fc5b0f487855f77104c3e6432ef12db0894cb043617ece81687f69a6de0"
+    },
+    {
+      "path": "full-stage-first-failure.log.gz",
+      "sha256": "c3f0316eef8e3dc647b7d927100fbc8c1032b4a293f41b344f42d548e6ea4383"
+    }
+  ]
+}
