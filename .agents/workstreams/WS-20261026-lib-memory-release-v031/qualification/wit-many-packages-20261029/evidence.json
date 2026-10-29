@@ -1,0 +1,43 @@
+{
+  "schema": "wasmc.wit-many-dependencies-candidate/v1",
+  "status": "private producer candidate; no Source admission or formal release",
+  "base": "wasmc-resource-many-candidate-20261029 (itself an isolated candidate)",
+  "cli_patch_sha256": "7661d6519f34253d675681f27d7ba4efc6e9e3f02044046e297d9039c7ce8c08",
+  "sdk_patch_sha256": "ad8d53197df8abd1ff64763efcd01c714d5a3658f1ac7c5bebd390e4bc12197b",
+  "producer_sha256": "1550397926a2860e0a31d52f6afd9ddbf46ca3f21e777c1733243f587de6fc5d",
+  "results": [
+    "Private CLI removes file, directory-entry, package and dependency count ceilings; retains WIT byte and existing path/depth checks",
+    "130 distinct WIT package files parsed and sealed; reversing input preserves exact sealed output; duplicate identity still rejected; 15 WIT tests pass",
+    "Actual CSV build with 130 additional synthetic independent packages plus its existing DataCore dependency: old producer rejected >64 files; first candidate was blocked by SDK 64-package limit, second candidate built and verified Root",
+    "Output WIT retains all 130 synthetic package declarations; generated Rust 2024 Core SDK compiled; Component validates; CSV Core parses, rejects invalid options and recovers on Node, Bun and Deno",
+    "New producer still verifies frozen wasmc-json 0.0.6 Root"
+  ],
+  "known_failures": [
+    "Initial fixture creation assumed absent deps directory; old attempt then failed on missing publication directory; v2 retains existing dependency",
+    "Original count and SDK rejection logs retained",
+    "Legacy six-contract canonical consumer regression failed before testing because WASMC_CANONICAL_DATA_RECEIPT and its exact pinned fixture were unavailable; full 6-contract regression remains unverified"
+  ],
+  "limits": [
+    "130 synthetic packages are unused by CSV public API; no claim of 130 mutually dependent real packages",
+    "2 MiB WIT byte budget, 256 API rows and additional limits remain",
+    "Component only structurally validated, not executed for this fixture; output not formally installed or released",
+    "Source patches unadmitted; previous exact Q0 fingerprint does not bind new producer"
+  ],
+  "log_sha256": {
+    "wit-many-before-20261029.log": "25a0f87bfa6b5f365b2876be6f5f796a443d7d345dbb34c7565ba06552538277",
+    "wit-many-after-20261029.log": "dbdb56745d1f48011b57bb94b45d8395d39b137cfefc044ac789e467d79c7d74",
+    "wit-many-after-fixed-20261029.log": "0f86a46bcea0b686c1a481fc343faa63e1ccb4b79072fa8a546ae53a20e96e27",
+    "wit-many-final-tests-20261029.log": "e1d268e943d11f1a9611bbbc8aef19c0e14f35f98502a85e7edc2c2db95ae0e2",
+    "wit-many-consumer-tests-20261029.log": "0d007a0ad8a61d0bc5cc3018b7e4616c41abedc37288fc974a0a12653a029532",
+    "wit-many-csv-before-20261029.log": "78758566ecca84b8115695328293c4ac8321919a37687a2e640d8d439f1a6f3f",
+    "wit-many-csv-before-v2-20261029.log": "3b528cdd88d6c1d2fff842cecc47271b2786cc039753199146d8393107d2b366",
+    "wit-many-csv-after-20261029.log": "1c67ad93e144e259878840f6c81c655844403a7ae76c280220ed918a9c818bf5",
+    "wit-many-csv-after-v2-20261029.log": "3afe13c5cc1e6ff5d5c22ddaa22175f6d593bf3e694dda438ba9f709da71b6e8",
+    "wit-many-csv-verify-20261029.log": "60b3288dfaec5fd0dc3cedf4ff5b35ddc9801cbb5ef1f92292e09a0ff5804fda",
+    "wit-many-frozen-json-verify-20261029.log": "dea142b44d6f4015ad1d42b65cce1433bcfd6f7835a9524db6d3bc59e95bc091",
+    "wit-many-csv-sdk2024-20261029.log": "47fafb6e36aff68ee5ea61ec3490dac2bbf88266ed0b364cf113ee61292bea96",
+    "wit-many-csv-node-20261029.log": "a4d330024f57e924b3260e09dfe39c765b010cd4a1f43a80ac0dcb49b3a703f7",
+    "wit-many-csv-bun-20261029.log": "0797c1fa5527d786b0f457d91c47ea2fa78cb6d08ff5eaf6107262618396e876",
+    "wit-many-csv-deno-20261029.log": "6f65c1ac7c75c4d5471b40d6b9340cf67e3c624e6b998ad51ddf26f25fd7b6d1"
+  }
+}

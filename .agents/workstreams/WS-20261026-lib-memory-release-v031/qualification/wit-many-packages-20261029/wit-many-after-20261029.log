@@ -1,0 +1,32 @@
+test lib_tool_cli::wit_dependencies_tests::wit_dependencies_reject_cross_platform_ambiguous_names ... ok
+test lib_tool_cli::wit_dependencies_tests::wit_dependencies_reject_oversized_sparse_file_before_read ... ok
+test lib_tool_cli::wit_dependencies_tests::wit_dependencies_are_sorted_exact_snapshots ... ok
+test lib_tool_cli::wit_dependencies_tests::sealing_resolves_transitive_split_packages_and_normalizes_file_order ... ok
+test lib_tool_cli::wit_dependencies_tests::wit_dependencies_reject_oversized_paths_and_non_directory_roots ... ok
+test lib_tool_cli::wit_dependencies_tests::wit_dependencies_reject_root_directory_and_file_symlinks ... ok
+test lib_tool_cli::wit_dependencies_tests::type_import_classification_never_hides_functions_resources_or_async_values ... ok
+test lib_tool_cli::wit_dependencies_tests::wit_dependencies_reject_file_count_and_bad_contents ... FAILED
+test lib_tool_cli::wit_dependencies_tests::wit_dependencies_reject_deep_and_wide_directory_trees ... FAILED
+test lib_tool_cli::wit_dependencies_tests::wit_dependencies_support_many_distinct_files_and_packages ... ok
+
+failures:
+
+---- lib_tool_cli::wit_dependencies_tests::wit_dependencies_reject_file_count_and_bad_contents stdout ----
+
+thread 'lib_tool_cli::wit_dependencies_tests::wit_dependencies_reject_file_count_and_bad_contents' (62714593) panicked at src/lib_tool_cli.rs:1071:22:
+called `Result::unwrap_err()` on an `Ok` value: [LibToolWitDependency { path: "00.wit", source: "x" }, LibToolWitDependency { path: "01.wit", source: "x" }, LibToolWitDependency { path: "02.wit", source: "x" }, LibToolWitDependency { path: "03.wit", source: "x" }, LibToolWitDependency { path: "04.wit", source: "x" }, LibToolWitDependency { path: "05.wit", source: "x" }, LibToolWitDependency { path: "06.wit", source: "x" }, LibToolWitDependency { path: "07.wit", source: "x" }, LibToolWitDependency { path: "08.wit", source: "x" }, LibToolWitDependency { path: "09.wit", source: "x" }, LibToolWitDependency { path: "10.wit", source: "x" }, LibToolWitDependency { path: "11.wit", source: "x" }, LibToolWitDependency { path: "12.wit", source: "x" }, LibToolWitDependency { path: "13.wit", source: "x" }, LibToolWitDependency { path: "14.wit", source: "x" }, LibToolWitDependency { path: "15.wit", source: "x" }, LibToolWitDependency { path: "16.wit", source: "x" }, LibToolWitDependency { path: "17.wit", source: "x" }, LibToolWitDependency { path: "18.wit", source: "x" }, LibToolWitDependency { path: "19.wit", source: "x" }, LibToolWitDependency { path: "20.wit", source: "x" }, LibToolWitDependency { path: "21.wit", source: "x" }, LibToolWitDependency { path: "22.wit", source: "x" }, LibToolWitDependency { path: "23.wit", source: "x" }, LibToolWitDependency { path: "24.wit", source: "x" }, LibToolWitDependency { path: "25.wit", source: "x" }, LibToolWitDependency { path: "26.wit", source: "x" }, LibToolWitDependency { path: "27.wit", source: "x" }, LibToolWitDependency { path: "28.wit", source: "x" }, LibToolWitDependency { path: "29.wit", source: "x" }, LibToolWitDependency { path: "30.wit", source: "x" }, LibToolWitDependency { path: "31.wit", source: "x" }, LibToolWitDependency { path: "32.wit", source: "x" }, LibToolWitDependency { path: "33.wit", source: "x" }, LibToolWitDependency { path: "34.wit", source: "x" }, LibToolWitDependency { path: "35.wit", source: "x" }, LibToolWitDependency { path: "36.wit", source: "x" }, LibToolWitDependency { path: "37.wit", source: "x" }, LibToolWitDependency { path: "38.wit", source: "x" }, LibToolWitDependency { path: "39.wit", source: "x" }, LibToolWitDependency { path: "40.wit", source: "x" }, LibToolWitDependency { path: "41.wit", source: "x" }, LibToolWitDependency { path: "42.wit", source: "x" }, LibToolWitDependency { path: "43.wit", source: "x" }, LibToolWitDependency { path: "44.wit", source: "x" }, LibToolWitDependency { path: "45.wit", source: "x" }, LibToolWitDependency { path: "46.wit", source: "x" }, LibToolWitDependency { path: "47.wit", source: "x" }, LibToolWitDependency { path: "48.wit", source: "x" }, LibToolWitDependency { path: "49.wit", source: "x" }, LibToolWitDependency { path: "50.wit", source: "x" }, LibToolWitDependency { path: "51.wit", source: "x" }, LibToolWitDependency { path: "52.wit", source: "x" }, LibToolWitDependency { path: "53.wit", source: "x" }, LibToolWitDependency { path: "54.wit", source: "x" }, LibToolWitDependency { path: "55.wit", source: "x" }, LibToolWitDependency { path: "56.wit", source: "x" }, LibToolWitDependency { path: "57.wit", source: "x" }, LibToolWitDependency { path: "58.wit", source: "x" }, LibToolWitDependency { path: "59.wit", source: "x" }, LibToolWitDependency { path: "60.wit", source: "x" }, LibToolWitDependency { path: "61.wit", source: "x" }, LibToolWitDependency { path: "62.wit", source: "x" }, LibToolWitDependency { path: "63.wit", source: "x" }, LibToolWitDependency { path: "64.wit", source: "x" }]
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- lib_tool_cli::wit_dependencies_tests::wit_dependencies_reject_deep_and_wide_directory_trees stdout ----
+
+thread 'lib_tool_cli::wit_dependencies_tests::wit_dependencies_reject_deep_and_wide_directory_trees' (62714592) panicked at src/lib_tool_cli.rs:1071:22:
+called `Result::unwrap_err()` on an `Ok` value: []
+
+
+failures:
+    lib_tool_cli::wit_dependencies_tests::wit_dependencies_reject_deep_and_wide_directory_trees
+    lib_tool_cli::wit_dependencies_tests::wit_dependencies_reject_file_count_and_bad_contents
+
+test result: FAILED. 13 passed; 2 failed; 0 ignored; 0 measured; 325 filtered out; finished in 0.33s
+
+error: test failed, to rerun pass `--lib`
