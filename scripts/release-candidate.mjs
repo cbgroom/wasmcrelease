@@ -15,6 +15,7 @@ import {parseCatalog,resolveCatalog} from './lib-catalog.mjs';
 import {instantiateLibSearch} from '../examples/lib-search/client.mjs';
 import {all18Targets,needsFutureLibLicenseGate,validateFutureLibLicenses} from './future-lib-license-admission.mjs';
 import {historicalNoticeProductInputs} from './current-license-policy-v3.mjs';
+import {validateJsonDerivedSourceAdmission} from './json-derived-source-admission-v1.mjs';
 const root=fileURLToPath(new URL('../',import.meta.url));
 const require=createRequire(import.meta.url);
 const hash=b=>createHash('sha256').update(b).digest('hex');
@@ -487,6 +488,7 @@ export function currentProductVariant(catalogBytes,catalogSha256,read){
   const schema=JSON.parse(bytes).schema;
   if(schema==='wasmc.mixed-current-cohort/v1')return 'mixed';
   if(schema==='wasmc.json-overlay-cohort/v1')return 'json-overlay';
+  if(schema==='wasmc.json-derived-overlay-cohort/v1')return 'json-derived';
   if(schema==='wasmc.public-current-refresh-cohort/v2')return 'v4';
   assert.ok(['wasmc.public-current-refresh-cohort/v1','wasmc.public-current-composition-cohort/v1'].includes(schema),'unknown candidate cohort schema');
   return 'v3';
@@ -494,7 +496,7 @@ export function currentProductVariant(catalogBytes,catalogSha256,read){
 export function currentProductInputsForVersion(version,variant){
   const base=currentV3ProductInputsForVersion(version);
   if(variant==='v3')return base;
-  if(variant==='json-overlay'){assert.ok(/^0\.0\.(?:3[1-9]|[4-9][0-9]|[1-9][0-9]{2,})$/.test(version),'JSON overlay requires successor version');return [...base.filter(path=>!['admission/current-product-v3.json','admission/current-refresh-cohort-v2.json','catalog/current-v3-license-policy.json'].includes(path)),
+  if(variant==='json-overlay'||variant==='json-derived'){assert.ok(/^0\.0\.(?:3[1-9]|[4-9][0-9]|[1-9][0-9]{2,})$/.test(version),'JSON overlay requires successor version');return [...base.filter(path=>!['admission/current-product-v3.json','admission/current-refresh-cohort-v2.json','catalog/current-v3-license-policy.json'].includes(path)),
     'admission/json-overlay-cohort-v1.json','admission/json-overlay-prior-catalog-v1.json','admission/json-overlay-prior-index-v1.json','scripts/json-overlay-public-v1.mjs','scripts/test-json-overlay-product-ci-v1.mjs'];}
   if(variant==='mixed')return [...base.filter(path=>!['admission/current-product-v3.json','admission/current-refresh-cohort-v2.json','catalog/current-v3-license-policy.json'].includes(path)),
     'admission/mixed-current-cohort-v1.json','catalog/current-mixed-license-policy-v1.json',
@@ -535,6 +537,7 @@ export function currentCandidateClosure(candidate,read){
   if(candidate.current_catalog?.path!=='catalog/libs-current-v2.json'||hash(catalogBytes)!==candidate.current_catalog.sha256)throw Error('current catalog independent candidate pin');
   const catalog=checkedCurrentCatalog(catalogBytes,candidate.current_catalog.sha256);
   const variant=currentProductVariant(catalogBytes,candidate.current_catalog.sha256,exact);
+  if(variant==='json-derived')validateJsonDerivedSourceAdmission(candidate.derived_source_admission);
   for(const path of currentProductInputsForVersion(candidate.version,variant))exact(path);
   validateCurrentCIProductInputs(candidate,read);
   if(catalog.version!==candidate.version)throw Error('current catalog release version drift');
@@ -569,7 +572,7 @@ export function currentCandidateClosure(candidate,read){
   assert.equal(compiler.active_compiler_versions,1);
   for(const pin of compiler.artifacts){const bytes=exact(pin.path);if(bytes.length!==pin.bytes||hash(bytes)!==pin.sha256)throw Error('compiler manifest artifact drift '+pin.path);}
   const verifier=variant==='mixed'?require('./mixed-current-product-v1.mjs').verifyMixedFromCatalog:variant==='v4'?verifyCurrentReleaseV4:verifyCurrentRelease;
-  const closure=variant==='json-overlay'?require('./json-overlay-public-v1.mjs').verifyPublicJsonOverlayPinned(catalogBytes,candidate.current_catalog.sha256,exact,[...rows.keys()].filter(path=>path.startsWith('current-libs/'))):verifier(catalogBytes,candidate.current_catalog.sha256,exact,[...rows.keys()]);
+  const closure=(variant==='json-overlay'||variant==='json-derived')?require('./json-overlay-public-v1.mjs').verifyPublicJsonOverlayPinned(catalogBytes,candidate.current_catalog.sha256,exact,[...rows.keys()].filter(path=>path.startsWith('current-libs/'))):verifier(catalogBytes,candidate.current_catalog.sha256,exact,[...rows.keys()]);
   historicalNoticeProductInputs(JSON.parse(exact(catalog.cohort.path)),exact);
   return{...closure,compiler_manifest_sha256:hash(exact('current/compiler-release.json')),
     compiler_sha256:compiler.compiler.sha256,compiler_source_commit:compiler.source_commit,
@@ -585,7 +588,14 @@ const mixedCreationFlags={
   '--mixed-network-path':'networkPath','--mixed-network-sha256':'networkSha',
   '--mixed-network-root':'networkRoot','--mixed-previous-parent':'previousParent'};
 const jsonCreationFlags={'--json-operator-repo':'operatorRepo','--json-operator-commit':'operatorCommit','--json-operator-sha256':'operatorSha','--json-private-root':'privateRoot','--json-catalog-sha256':'catalogSha','--json-prior-catalog-sha256':'oldSha','--json-receipt-sha256':'receiptSha','--json-wit-tool':'witPath','--json-wit-tool-sha256':'witSha','--json-authority-commit':'commit'};
+const jsonDerivedCreationFlags={'--derived-json-operator-repo':'operatorRepo','--derived-json-operator-commit':'operatorCommit','--derived-json-operator-sha256':'operatorSha','--derived-json-private-root':'privateRoot','--derived-json-catalog-sha256':'catalogSha','--derived-json-prior-catalog-sha256':'oldSha','--derived-json-receipt-sha256':'receiptSha','--derived-json-wit-tool':'witPath','--derived-json-wit-tool-sha256':'witSha','--derived-json-authority-commit':'commit','--derived-json-producer':'producerPath','--derived-json-producer-sha256':'producerSha','--derived-json-source-repo':'sourceRepo','--derived-json-source-commit':'buildSource'};
 export async function currentCandidateArguments(argv){
+  if(argv.some(value=>Object.hasOwn(jsonDerivedCreationFlags,value))){
+    assert.equal(argv.length,Object.keys(jsonDerivedCreationFlags).length*2,'all independent derived JSON inputs required');
+    const options={kind:'json-derived'};for(let i=0;i<argv.length;i+=2){const key=jsonDerivedCreationFlags[argv[i]];
+      assert.ok(key&&!Object.hasOwn(options,key)&&argv[i+1]&&!argv[i+1].startsWith('--'),'unknown, duplicate or missing derived JSON input');options[key]=argv[i+1];}
+    return options;
+  }
   if(argv.some(value=>Object.hasOwn(jsonCreationFlags,value))){
     assert.equal(argv.length,Object.keys(jsonCreationFlags).length*2,'all independent JSON inputs required');
     const options={kind:'json-overlay'};for(let i=0;i<argv.length;i+=2){const key=jsonCreationFlags[argv[i]];
@@ -655,7 +665,12 @@ export async function verifyCurrentCandidateMixed(repo,options){
 export async function createCurrentCandidate(repo,{compilerSource,libSource,version,currentOptions}){
   const mixed=currentOptions?.kind==='mixed'?await verifyCurrentCandidateMixed(repo,currentOptions):null;
   let jsonOverlay=null;
-  if(currentOptions?.kind==='json-overlay'){
+  let derivedSource=null;
+  if(currentOptions?.kind==='json-derived'){
+    const {verifyJsonDerivedSource}=await import('./json-derived-source-admission-v1.mjs');
+    derivedSource=verifyJsonDerivedSource({sourceRepo:currentOptions.sourceRepo,buildSource:currentOptions.buildSource,producerSha256:currentOptions.producerSha});
+  }
+  if(currentOptions?.kind==='json-overlay'||currentOptions?.kind==='json-derived'){
     assert.ok(isAbsolute(currentOptions.operatorRepo??''),'absolute operator repository required');
     assert.match(currentOptions.operatorCommit??'',/^[0-9a-f]{40}$/);
     assert.match(currentOptions.operatorSha??'',/^[0-9a-f]{64}$/);
@@ -667,10 +682,10 @@ export async function createCurrentCandidate(repo,{compilerSource,libSource,vers
       const extract=spawnSync('tar',['-xf','-','-C',tmp],{input:archive.stdout,maxBuffer:1024*1024});
       if(extract.error)throw extract.error;
       assert.equal(extract.status,0,'operator archive extraction failed');
-      const entry=join(tmp,'scripts/json-overlay-candidate-admission-v1.mjs');
+      const entry=join(tmp,currentOptions.kind==='json-derived'?'scripts/json-derived-candidate-admission-v1.mjs':'scripts/json-overlay-candidate-admission-v1.mjs');
       assert.equal(hash(readFileSync(entry)),currentOptions.operatorSha,'operator preflight entry identity');
       const operator=await import(pathToFileURL(entry).href);
-      jsonOverlay=await operator.qualifyJsonOverlayCandidate({...currentOptions,publicRoot:repo,version});
+      jsonOverlay=currentOptions.kind==='json-derived'?await operator.qualifyJsonDerivedCandidate({...currentOptions,publicRoot:repo,version}):await operator.qualifyJsonOverlayCandidate({...currentOptions,publicRoot:repo,version});
     } finally {rmSync(tmp,{recursive:true,force:true});}
   }
   const composed=currentOptions&&Object.hasOwn(currentOptions,'composition_cohort_sha256')
@@ -687,7 +702,7 @@ export async function createCurrentCandidate(repo,{compilerSource,libSource,vers
   const catalogBytes=read('catalog/libs-current-v2.json'),catalog=checkedCurrentCatalog(catalogBytes,hash(catalogBytes));
   const variant=currentProductVariant(catalogBytes,hash(catalogBytes),read);
   if(mixed){assert.equal(variant,'mixed');assert.equal(mixed.qualification.catalog_sha256,hash(catalogBytes));}
-  if(jsonOverlay){assert.equal(variant,'json-overlay');assert.equal(jsonOverlay.catalog_sha256,hash(catalogBytes));}
+  if(jsonOverlay){assert.equal(variant,currentOptions.kind);assert.equal(jsonOverlay.catalog_sha256,hash(catalogBytes));}
   const directories=['current','dist','package','examples/current','examples/base64','examples/agent-quickstart','examples/lib-search','examples/agent-start','standard','sdk','runtime',...((composed||mixed||jsonOverlay)?catalog.packages.map(row=>row.root):['current-libs']),'licenses',
     ...(Number(version.split('.')[2])>=29?['lib-releases/wasmc-json/0.0.7/root','lib-releases/wasmc-json/0.0.7/host']:[]),
     'skills',
@@ -717,6 +732,7 @@ export async function createCurrentCandidate(repo,{compilerSource,libSource,vers
     current_catalog:{path:'catalog/libs-current-v2.json',sha256:hash(catalogBytes)},
     stage_metadata_paths:[...currentStageMetadataPaths],
     product_files,product_set_sha256:hash(JSON.stringify(product_files))};
+  if(derivedSource)candidate.derived_source_admission=derivedSource;
   candidate.current_release_closure=currentCandidateClosure(candidate,read);
   if(composed)assert.deepEqual(composed.closure,verifyCurrentRelease(catalogBytes,currentOptions.catalog_sha256,read,[...paths]),'composition creation read fence');
   else if(mixed){assert.deepEqual(candidate.current_release_closure,mixed.closure,'mixed creation read fence');}

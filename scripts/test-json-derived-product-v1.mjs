@@ -14,7 +14,7 @@ const [root,capsule,oldSha,receiptSha,witPath,witSha,expectedCommit='0'.repeat(4
 for(const p of [root,capsule,witPath]) assert.equal(resolve(p),p);
 const catalogBytes=await readFile(join(root,'catalog/libs-current-v2.json')),catalog=JSON.parse(catalogBytes);
 assert.match(expectedCommit,/^[0-9a-f]{40}$/);assert.equal(catalog.package_authority_commit,expectedCommit);
-assert.throws(()=>currentProductVariant(catalogBytes,sha(catalogBytes),currentProductReader(root)),/unknown candidate cohort schema/);
+assert.equal(currentProductVariant(catalogBytes,sha(catalogBytes),currentProductReader(root)),'json-derived');
 const result=await verifyProduct({root,catalogSha:sha(catalogBytes),oldSha,receiptSha,witPath,witSha,commit:catalog.package_authority_commit});
 assert.equal(result.packages,43);assert.equal(result.root_files,823);assert.equal(result.derived_lineage_verified,true);
 const oldRoot=join(root,'proof/old-product'),oldCat=JSON.parse(await readFile(join(oldRoot,'catalog/libs-current-v2.json')));
@@ -29,4 +29,4 @@ try{
  await assert.rejects(verifyDerived({capsule:clone,receiptSha,witPath,witSha}));
  await assert.rejects(verifyDerived({capsule,receiptSha:'0'.repeat(64),witPath,witSha}));
 }finally{await rm(tmp,{recursive:true,force:true});}
-console.log(JSON.stringify({accepted:true,packages:result.packages,root_files:result.root_files,legacy_rejects_024:true,legacy_release_rejects_derived:true,derived_reuses:projection.reused,controls:['tampered build input','wrong receipt pin'],public_admission:false,formal_release:false}));
+console.log(JSON.stringify({accepted:true,packages:result.packages,root_files:result.root_files,legacy_rejects_024:true,derived_variant_recognized:true,derived_reuses:projection.reused,controls:['tampered build input','wrong receipt pin'],public_admission:false,formal_release:false}));

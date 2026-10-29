@@ -1,0 +1,30 @@
+{
+  "status": "DERIVED_RELEASE_WIRING_READY_SOURCE_NOT_ADMITTED",
+  "source_build_commit": "6fcfe8d86b19b491919b96b9bade8d8556477671",
+  "observed_remote_master": "482fb98b040f0b6fe99378afed9ae4dbcb1dd3bf",
+  "producer_sha256": "1813308d058e38b511e7ff0011507631be2a828c4d2b5a77e7669f31cf3b25af",
+  "scope": "separate derived product variant, 14 explicit inputs, public projection plus private lineage preflight, independent exact Source master file identities before candidate creation",
+  "source_gate": "requires canonical remote and exact 123 tracked Source build inputs (paths, modes and Git blob IDs) matching independently read remote master; checks master twice; no local writes",
+  "current_source": "real master inputs differ; candidate creation rejects before output",
+  "validation": "real source mismatch rejection; synthetic source receipt schema controls only; missing Source receipt rejects; separate old JSON overlay wiring passes; public product and notice CI fixture checks pass",
+  "limits": [
+    "Source input equality does not prove CI; source_ci_verified explicitly false",
+    "positive real Source admission unavailable until master changes and is verified",
+    "no production route, formal release or anonymous release-tag readback"
+  ],
+  "scripts_sha256": {
+    "scripts/release-candidate.mjs": "31e763f323397f52fee21c8d6614cd4f3806e66dd501c65d2c82d9a33b0f7f08",
+    "scripts/json-derived-source-admission-v1.mjs": "ce505a5153898fbaeffce5d84fa722c667c3ddb5cceddd04456122119980a06e",
+    "scripts/test-json-derived-product-v1.mjs": "f214982c0a5df5854739072880f972d7832d3d01f775b4d4d14734db39e412bd"
+  },
+  "files_sha256": {
+    "current-source.log": "fb95fd0e2648e333e637a13406b161b81b038f2d1dd252298f1fe71cf1fd4750",
+    "derived-product.log": "c3dacd97933f757bb1b9ed20d7bb2a00969772928e4634f689a34ff866ecba40",
+    "legacy-wiring.log": "c901cd211a2b1095dcdf21ab1af84e0e42673aa3c6aee9bf47febf950575c18b",
+    "public-ci-notices.log": "050679aba494ad91982d402d97f57fcd411462b03f312ceef92c9801df47a21a",
+    "public-ci-product.log": "bf3f603d797f1aaf857c4bfc2cae7a0adf4fddba942dc3bae96c43f5bf908b05",
+    "test-wiring.mjs": "2ad8f55e9df1077650f9fd29b3e087d77e3529b8accbc946445661a244de2f9e",
+    "wiring-v2.log": "18ca758ba359b9580dbdd2d8d9bbdf4ab7d56d6daaa9a3c07f5721511fb53568",
+    "wiring.log": "18ca758ba359b9580dbdd2d8d9bbdf4ab7d56d6daaa9a3c07f5721511fb53568"
+  }
+}
