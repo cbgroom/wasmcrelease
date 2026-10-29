@@ -17,6 +17,8 @@ logs. On stage completion update this Skill or record its reviewed unchanged
 status, owning HANDOFF and same-task Works L2; ordinary push and exact readback
 are required independently of local commit.
 
+Published Roots with conflicting candidate identities can be retained only by checking the complete pinned historical Git tree and every blob against the published catalog. Staged historical Roots are not Q0-generated; a mixed product needs explicit per-Root provenance and independent index, notices and installation verification before admission.
+
 ## Decision
 
 `libspec/` is the sole current Lib source authority. Do not extend the historical
