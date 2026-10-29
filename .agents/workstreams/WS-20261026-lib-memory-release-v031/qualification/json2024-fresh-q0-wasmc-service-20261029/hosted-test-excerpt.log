@@ -1,0 +1,12 @@
+running 1 test
+HOSTED_ROUTE_STATUS=409 BODY={"actor":null,"expected_revision":"1645a75c5f8a529d73a5044c17290bc76b92eb1d","idempotency_key":null,"many":false,"message":null,"operations":[{"key":"row-0","op":"insert","operation_id":"36b123fe-1a30-4ae5-8600-2ffc0fc0c26d","row":{"id":"row-0","processed":false,"sequence":0,"value":{}}},{"key":"row-0","op":"insert","operation_id":"0ed1a35a-8625-497a-a850-00f2ed5b9959","row":{"id":"row-0","processed":false,"sequence":0,"value":{}}}],"path":"json_results","repo":"executable-skill-prototype","transaction_id":"f5d1f4b4-ebdc-4862-b7ec-c4ea8891239c","worktree":{"topic_id":"main"}}
+CONFLICT_ROLLBACK_OK
+HOSTED_ROUTE_STATUS=201 BODY={"actor":null,"expected_revision":"1645a75c5f8a529d73a5044c17290bc76b92eb1d","idempotency_key":null,"many":false,"message":null,"operations":[{"key":"row-1","op":"insert","operation_id":"abfba7ad-f265-453b-893f-01232b54bb4d","row":{"id":"row-1","processed":false,"sequence":0,"value":{}}},{"key":"row-1-extra","op":"insert","operation_id":"44b73b6e-e134-4cfb-ad7c-85d576554a33","row":{"id":"row-1-extra","processed":false,"sequence":0,"value":{}}}],"path":"json_results","repo":"executable-skill-prototype","transaction_id":"8c4497ca-8782-47c8-b96d-00949b5a3bf5","worktree":{"topic_id":"main"}}
+SECOND_ATOMIC_ROW_OK key=row-1-extra
+HOSTED_ATOMIC_ROW_OK key=row-1 item_count=1 revision=5aa8d84dc63ae73d9aba49d71123d2e229b3935b
+HOSTED_ROUTE_STATUS=201 BODY={"actor":null,"expected_revision":"5aa8d84dc63ae73d9aba49d71123d2e229b3935b","idempotency_key":null,"many":true,"message":null,"operations":[{"key":"row-2","op":"insert","operation_id":"cc8c952d-c93f-4ac8-8cb1-81e6d4406c18","row":{"id":"row-2","processed":false,"sequence":0,"value":{}}},{"key":"row-2-extra","op":"insert","operation_id":"46a7994d-f6c3-4005-adca-b651c52928b3","row":{"id":"row-2-extra","processed":false,"sequence":0,"value":{}}}],"path":"json_results","repo":"executable-skill-prototype","transaction_id":"9a5c85f7-c738-4b70-a54c-1f2ee3e954e9","worktree":{"topic_id":"main"}}
+SECOND_ATOMIC_ROW_OK key=row-2-extra
+HOSTED_ATOMIC_ROW_OK key=row-2 item_count=300 revision=d3999ee4771f74172a3170c376106b8b986e2b08
+test candidate_wasmc_json_hosted_typed_conflict_then_recovery ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 16 filtered out; finished in 0.70s

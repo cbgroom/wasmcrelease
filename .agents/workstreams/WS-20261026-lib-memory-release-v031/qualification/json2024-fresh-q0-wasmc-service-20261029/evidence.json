@@ -1,0 +1,31 @@
+{
+  "schema": "wasmc.json2024-fresh-q0-wasmc-service/v1",
+  "status": "isolated candidate, temporary Service and lab dispatcher; no production deployment or formal release",
+  "root_manifest_sha256": "a40499304c4078c8034473e552730cd460556c81d8679b8afe040cf2407f7397",
+  "root_core_sha256": "007eac4dbfe32f53462f866a66e6bb191fec13c01ac7d90baf2572b27ec22722",
+  "prepared_core_sha256": "bf32c205835cf4877fbedaff5835cae382c51c4ceb35cc676c06e6dbb2ac5af5",
+  "app_sha256": "fbe0745d7f461d509d68a20a9352ec4e175dce547883a4a7185078c89a801bbb",
+  "compiler_sha256": "30171c7589a96f565212336a64c429ad0b1b64487288a05fce09828bb028718e",
+  "preparer_binary_sha256": "c17fa825bc6b90d3cef3e981b9e7e046b0b7ee53f267a81fdf865c3ec5f4c5c8",
+  "test_log_raw_sha256": "2cd3c61afe47f3cab150b8c43adc839489ea5a3fcfa84f926253258c4c2024e7",
+  "validation": [
+    "The combined Source-candidate preparer generated canonical host assets from exact Q0 Root; its receipt binds both original and prepared Core hashes. WAsmC candidate compiled ordinary typed JSON source against the same controlled-installed Root; eight modules were joined.",
+    "The resulting single app ran through a temporary real McpGitService and lab Hosted dispatcher. An initial request with duplicate operation keys returned 409 and left no rows, then two different inputs each committed two rows and readback succeeded."
+  ],
+  "preserved_failure": "First compile helper incorrectly asserted raw and prepared Lib bytes must be identical; actual preparation receipt records their distinct hashes. Helper was corrected to verify both hashes and root binding; original failure remains.",
+  "limits": [
+    "The conflict is duplicate operations in one transaction; this run does not prove the distinct existing-row conflict scenario.",
+    "Preparer is a composite Source candidate, compiler is an earlier candidate, and Host is an isolated lab source; Source admission and exact deployment remain open.",
+    "The complete 43-package Q0 is still running separately; no formal release or anonymous install."
+  ],
+  "files_sha256": {
+    "app.wasm": "fbe0745d7f461d509d68a20a9352ec4e175dce547883a4a7185078c89a801bbb",
+    "cohort43-json2024-union-compile-wasmc-20261029.log": "c87a340997dbcb4448de029232b1acdccccb4df4162f722d8f52577bdf369134",
+    "cohort43-json2024-union-compile-wasmc-20261029.mjs": "408a97232c223a90ec7045538289d6c39a1313e89ea31befdcbb11bc43cce111",
+    "cohort43-json2024-union-compile-wasmc-fixed-20261029.log": "de66a97ac258df3024e654902deec9a49944b22094e71d64f6d3548f9d6dc63f",
+    "cohort43-json2024-union-typed-preparation-20261029.log": "5c666fbd1914c816794f8cf06ad230478beb2cc71effeeef0852305fcfb40390",
+    "compile-receipt.json": "079228cf7a01dec0e79d5a9afa03795b96e1d777cada49511e5ed008cc68d353",
+    "hosted-test-excerpt.log": "be011c53923aaee27609e33babd4a96169ddf284c416ed3ba3a23c24ee6a2084",
+    "merge-assets.json": "c1dc8310f0a6c3c85051e739a99b31a96bfdc777ee73662b850ae6898527c806"
+  }
+}
