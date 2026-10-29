@@ -1,0 +1,26 @@
+{
+  "source_master": "482fb98b040f0b6fe99378afed9ae4dbcb1dd3bf",
+  "producer_sha256": "93dea9e7624975f927c120d31114d2d6e8cd9e52587592855621c62100a7eb1a",
+  "candidate_manifest_sha256": "8b2c659b8b28327a6945f08f1168e07d4526ed8a1705cadc05b9f544eab6c284",
+  "master_manifest_sha256": "20295c1f9c0cfe32be13533eb104dc69d09abaa2818e7a2d36f443b2619bf743",
+  "changed_files": [
+    {
+      "path": "bindings/rust-core/Cargo.toml",
+      "master_sha256": "7e7a9ba337661506977a3a93967cee60ab124bc507f18062c3c727d984cf3804",
+      "candidate_sha256": "b37c452562bc67d7d2b299f15c830184a181a7fd74a16039554591a7e9d77ec9"
+    },
+    {
+      "path": "bindings/rust-core/src/lib.rs",
+      "master_sha256": "870589d4531f02614d112c2c523f105b1c00b5f3bed55a06db0fa43c6cc6fd55",
+      "candidate_sha256": "885a36e38048f91ac31c1a1dd36376929bd6f2d8c697b4f885a9a9896c9bb275"
+    },
+    {
+      "path": "lib.json",
+      "master_sha256": "20295c1f9c0cfe32be13533eb104dc69d09abaa2818e7a2d36f443b2619bf743",
+      "candidate_sha256": "8b2c659b8b28327a6945f08f1168e07d4526ed8a1705cadc05b9f544eab6c284"
+    }
+  ],
+  "method": "private Source master archive and release-owned existing PortableV0 API glue; existing lineage verifier run with only temporary producer pin changed",
+  "outcome": "reproduction failed: Rust Core SDK differs; no release admission",
+  "scope": "Core Wasm and Component bytes identical; Edition 2021 and Core SDK bridge differ; no complete call-path or production claim"
+}
