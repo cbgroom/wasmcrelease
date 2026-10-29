@@ -1,0 +1,42 @@
+{
+  "status": "ISOLATED_DESIGN_ONLY_NOT_ADMITTED",
+  "source_base": "51ddc3c2c790d25186e4441274edb8d2bd665f20",
+  "source_authority_unchanged": true,
+  "private_patch_sha256": "ff30656511cd13107a1dd6f0eab25ac612726725cabc48500ca568aa206eb93f",
+  "private_patch_path": "/Users/youxianshi/.local/state/wasmc-maintenance/rustc-service-1991-20261028/canonical-dynamic-entry-design-OIyN55ur/private-design.patch",
+  "patch_applies_cleanly_to_source": true,
+  "modified_scopes": [
+    "typed-resource plan validation",
+    "WIT activation private dynamic mode",
+    "Canonical Host selection"
+  ],
+  "approach": "Canonical dynamic field windows validate nonzero and signature and use declared bound; static WIT and legacy utf8/bytes windows retain existing 2MiB frame rule. No change to caller-declared max or runtime memory checks.",
+  "actual_app_sha256": "c1d69ee44f06e96bf1941ff6ae87ec7d2e9f3d17fed2072a8e8843473025bc88",
+  "root_manifest_sha256": "db884f9bea412a80d615ea69f673a9d6ec86ea3381c15a4fc82c6bb58750adf6",
+  "tests": [
+    "Node/Deno: 16777217-byte real uppercase result, caller limit+1 rejected and 11-byte recovery, zero pending",
+    "Node: UTF8 multibyte 2097153 bytes and invalid UTF8 fallback",
+    "standalone legacy activation rejects same >16MiB declaration",
+    "dynamic canonical path rejects zero-bound and duplicate-field bindings",
+    "legacy utf8 metadata and ordered field WIT tests 1/1 each",
+    "Canonical input integration 1/1"
+  ],
+  "initial_test_selection": "--exact omitted module prefix; selected zero tests; retained log, corrected by name and verified 1/1",
+  "limitations": [
+    "Diagnostic source snapshot only; no source authorization, integration, portable compiler rebuild, real MCPGit, CI or formal release",
+    "independent reviewer and broader tests needed before adoption; field count, type graph and signed i32 transport bounds remain",
+    "private patch includes claimed compiler source and is not published"
+  ],
+  "files": {
+    "canonical-input.log": "5493ca7e1a2281f3aa98c93dc95deec4318a8952a6d4f412db697e9e76b70b02",
+    "duplicate.log": "0c623a97e25e5895514ffd0fee298e55e58e15071f817cac623a66d691862ca3",
+    "field-unit.log": "3b915b60bd34898eb952093962d79c98f729c4d4c8f27967bbb29931a3642ecb",
+    "legacy-control.log": "366e10736a01e97c188cecf5746bf1266a166842d63a7e9184cbe1029a1eb3f7",
+    "legacy-unit-zero-selection.log": "70fef350237e71175ad94240a802ea2e5be1ae4b636f77e6eaaf4f8b6a9ddad8",
+    "legacy-unit.log": "51e2dd38be74e2eee391e176e64a9ed11f3ed3bc775821636d6b8c4890222bc5",
+    "runtime-deno.log": "0c2a4ee32b11134089868decc4ce929feda08d0faa7de86f943924b0cdc9d020",
+    "runtime-node.log": "0c2a4ee32b11134089868decc4ce929feda08d0faa7de86f943924b0cdc9d020",
+    "unicode-node.log": "88a30a6cc0cc0f8e9172b7f2e848b50e8f7b144e52788efdd06a3cb2f7b91d34",
+    "zero.log": "0687bc7797e19e3e0c92e28b79a72527ec2a94c66189d12ea6a2ce0ce6078b5a"
+  }
+}
