@@ -19,6 +19,8 @@ are required independently of local commit.
 
 Published Roots with conflicting candidate identities can be retained only by checking the complete pinned historical Git tree and every blob against the published catalog. Staged historical Roots are not Q0-generated; a mixed product needs explicit per-Root provenance and independent index, notices and installation verification before admission.
 
+A mixed Search index must retain the historical delivery receipt and exact manifest/artifact bindings for each reused Root. Require independently verified old and new catalogs plus identical source and API metadata before projection; execute the selected Search Core against the resulting full index. This alone does not establish mixed-product admission.
+
 ## Decision
 
 `libspec/` is the sole current Lib source authority. Do not extend the historical
