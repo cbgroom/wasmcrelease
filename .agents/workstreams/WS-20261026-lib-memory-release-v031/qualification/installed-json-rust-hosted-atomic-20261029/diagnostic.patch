@@ -1,0 +1,10 @@
+--- a/labs/executable-skill-runtime/src/hosted_dispatch.rs
++++ b/labs/executable-skill-runtime/src/hosted_dispatch.rs
+@@ -79,6 +79,7 @@
+         let output = match invocation.execute_with_caller_and_http(caller, http).await {
+             Ok(output) => output,
+             Err(error) => {
++                eprintln!("ATOMIC_FIXTURE_DIAGNOSTIC: {error:#}");
+                 let diagnostic = error.to_string();
+                 return if diagnostic.contains("overloaded") || diagnostic.contains("cancelled") {
+                     HostedPluginDispatch::Unavailable
