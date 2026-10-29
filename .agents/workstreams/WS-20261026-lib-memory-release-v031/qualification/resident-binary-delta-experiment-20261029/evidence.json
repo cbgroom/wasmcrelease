@@ -1,0 +1,23 @@
+{
+  "schema": "wasmc.resident-binary-delta-experiment/v1",
+  "status": "isolated Lib source experiment; not generated Root, integrated product or formal release",
+  "baseline_source_commit": "47f3dc59a9bd7323421351a1e143f44474a89cef",
+  "baseline_delta_sha256": "0c38583174a705e7e19019de7f7da645cf27cc46b13ee19f59796ec08c4d8daa",
+  "kernel_source_commit": "e0e1a0cd3debcbaec7592f010b54f13d3fdbdfc4",
+  "kernel_source_sha256": "0c1e80b4226b8e72c71d9642ab75a1f756d3f0a466ced28f09f04a66996b8869",
+  "candidate_patch_sha256": "c7a4be5e54d79c3253607b5e8f9dfd84ce23582e462bb16920c7823ee53b2682",
+  "candidate_delta_sha256": "0522d02ecc81c16f4f856ceaff1c29cc3f0d5e7c6603bcb1e4329a27ad3dbc37",
+  "experiment_cargo_lock_sha256": "a4f19e8ac1ae2f06a23e34d2ff29b7017dfdd6aa51c07551026ef1b8f7ebb836",
+  "harness_sha256": "2cfc0bdc14ebf0dd95f33c689082956d7e822a96e96f737ad914bbe6f50b420e",
+  "native_log_sha256": "23c7019b5f7afc20df6d9b7351856f26a216f5d07218027ba785e3ecf65b8d01",
+  "wasm_check_log_sha256": "81e36735532ce232ff03ff08266869d3932f0a1d4827068e03291b64ad2d086c",
+  "local_state": "/Users/youxianshi/.local/state/wasmc-maintenance/rustc-service-1991-20261028/resident-binary-experiment-20261029",
+  "changes": "Replace internal serde_json collection serialization with bincode 1.3.3 for both encode and decode; no compiler or frozen bytes modified.",
+  "checks": "Exact pinned candidate Lib source and exact upstream kernel: four smaller binary-pattern inputs and 16777217-byte input, full reads, snapshot preservation across publish, range patch, wrong version and stale-parent rejection. Native run and wasm32 cargo check passed offline with locked dependencies. Patch applies to exact baseline.",
+  "large_payload_bytes": 16777217,
+  "old_open_budget_bytes": 50332456,
+  "new_open_budget_bytes": 16777976,
+  "old_after_publish_budget_bytes": 100664825,
+  "new_after_publish_budget_bytes": 33555866,
+  "limits": "Accounting counters, not process peak memory or latency. Exact candidate source is not the previously frozen binary. Q0 producer must explicitly admit and lock bincode, collect its notices, assign a new version and rebuild/verify actual Core and Component. Public API coverage, migration/integration, Host and release are unproven."
+}
