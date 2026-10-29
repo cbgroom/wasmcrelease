@@ -1,0 +1,153 @@
+warning: use of deprecated method `std::sync::atomic::Atomic::<usize>::fetch_update`: renamed to `try_update` for consistency
+   --> /Users/youxianshi/.local/state/wasmc-maintenance/rustc-service-1991-20261028/mcpgit-shared-memory-host-20261029/crates/tablegit-sqlite-query/src/agent_ir.rs:428:25
+    |
+428 |         let _ = counter.fetch_update(
+    |                         ^^^^^^^^^^^^
+    |
+    = note: `#[warn(deprecated)]` on by default
+help: replace the use of the deprecated method
+    |
+428 -         let _ = counter.fetch_update(
+428 +         let _ = counter.try_update(
+    |
+
+warning: use of deprecated method `std::sync::atomic::Atomic::<usize>::fetch_update`: renamed to `try_update` for consistency
+   --> /Users/youxianshi/.local/state/wasmc-maintenance/rustc-service-1991-20261028/mcpgit-shared-memory-host-20261029/crates/tablegit-sqlite-query/src/agent_ir.rs:434:31
+    |
+434 |     let _ = EXECUTION_SAMPLES.fetch_update(
+    |                               ^^^^^^^^^^^^
+    |
+help: replace the use of the deprecated method
+    |
+434 -     let _ = EXECUTION_SAMPLES.fetch_update(
+434 +     let _ = EXECUTION_SAMPLES.try_update(
+    |
+
+warning: use of deprecated method `std::sync::atomic::Atomic::<usize>::fetch_update`: renamed to `try_update` for consistency
+   --> /Users/youxianshi/.local/state/wasmc-maintenance/rustc-service-1991-20261028/mcpgit-shared-memory-host-20261029/crates/tablegit-sqlite-query/src/search_hits.rs:168:14
+    |
+168 |             .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |calls| {
+    |              ^^^^^^^^^^^^
+    |
+help: replace the use of the deprecated method
+    |
+168 -             .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |calls| {
+168 +             .try_update(Ordering::Relaxed, Ordering::Relaxed, |calls| {
+    |
+
+warning: `tablegit-sqlite-query` (lib) generated 3 warnings (run `cargo fix --lib -p tablegit-sqlite-query` to apply 3 suggestions)
+warning: use of deprecated method `std::sync::atomic::Atomic::<u64>::fetch_update`: renamed to `try_update` for consistency
+   --> /Users/youxianshi/.local/state/wasmc-maintenance/rustc-service-1991-20261028/mcpgit-shared-memory-host-20261029/crates/mcpgit-executable-runtime/src/route_log.rs:678:14
+    |
+678 |             .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |value| {
+    |              ^^^^^^^^^^^^
+    |
+    = note: `#[warn(deprecated)]` on by default
+help: replace the use of the deprecated method
+    |
+678 -             .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |value| {
+678 +             .try_update(Ordering::Relaxed, Ordering::Relaxed, |value| {
+    |
+
+warning: use of deprecated method `std::sync::atomic::Atomic::<u64>::fetch_update`: renamed to `try_update` for consistency
+   --> /Users/youxianshi/.local/state/wasmc-maintenance/rustc-service-1991-20261028/mcpgit-shared-memory-host-20261029/crates/mcpgit-executable-runtime/src/route_log.rs:684:14
+    |
+684 |             .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |value| {
+    |              ^^^^^^^^^^^^
+    |
+help: replace the use of the deprecated method
+    |
+684 -             .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |value| {
+684 +             .try_update(Ordering::Relaxed, Ordering::Relaxed, |value| {
+    |
+
+warning: use of deprecated method `std::sync::atomic::Atomic::<u64>::fetch_update`: renamed to `try_update` for consistency
+   --> /Users/youxianshi/.local/state/wasmc-maintenance/rustc-service-1991-20261028/mcpgit-shared-memory-host-20261029/crates/mcpgit-executable-runtime/src/route_log.rs:701:14
+    |
+701 |             .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |value| {
+    |              ^^^^^^^^^^^^
+    |
+help: replace the use of the deprecated method
+    |
+701 -             .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |value| {
+701 +             .try_update(Ordering::Relaxed, Ordering::Relaxed, |value| {
+    |
+
+warning: use of deprecated method `std::sync::atomic::Atomic::<u64>::fetch_update`: renamed to `try_update` for consistency
+   --> /Users/youxianshi/.local/state/wasmc-maintenance/rustc-service-1991-20261028/mcpgit-shared-memory-host-20261029/crates/mcpgit-executable-runtime/src/route_log.rs:707:14
+    |
+707 |             .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |value| {
+    |              ^^^^^^^^^^^^
+    |
+help: replace the use of the deprecated method
+    |
+707 -             .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |value| {
+707 +             .try_update(Ordering::Relaxed, Ordering::Relaxed, |value| {
+    |
+
+warning: method `compile_or_reuse_module` is never used
+    --> /Users/youxianshi/.local/state/wasmc-maintenance/rustc-service-1991-20261028/mcpgit-shared-memory-host-20261029/crates/mcpgit-executable-runtime/src/route_wasm_executor.rs:2911:14
+     |
+2432 | impl TableGitWasmtimeRouteExecutor {
+     | ---------------------------------- method in this implementation
+...
+2911 |     async fn compile_or_reuse_module(
+     |              ^^^^^^^^^^^^^^^^^^^^^^^
+     |
+     = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `prepare_cached_module_for_profile` is never used
+    --> /Users/youxianshi/.local/state/wasmc-maintenance/rustc-service-1991-20261028/mcpgit-shared-memory-host-20261029/crates/mcpgit-executable-runtime/src/route_wasm_executor.rs:5261:4
+     |
+5261 | fn prepare_cached_module_for_profile(
+     |    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: `mcpgit-executable-runtime` (lib) generated 6 warnings (run `cargo fix --lib -p mcpgit-executable-runtime` to apply 4 suggestions)
+warning: use of deprecated method `std::sync::atomic::Atomic::<u64>::fetch_update`: renamed to `try_update` for consistency
+   --> /Users/youxianshi/.local/state/wasmc-maintenance/rustc-service-1991-20261028/mcpgit-shared-memory-host-20261029/src/binary_transport/client.rs:453:14
+    |
+453 |             .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |current| {
+    |              ^^^^^^^^^^^^
+    |
+    = note: `#[warn(deprecated)]` on by default
+help: replace the use of the deprecated method
+    |
+453 -             .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |current| {
+453 +             .try_update(Ordering::Relaxed, Ordering::Relaxed, |current| {
+    |
+
+warning: use of deprecated method `std::sync::atomic::Atomic::<u64>::fetch_update`: renamed to `try_update` for consistency
+  --> /Users/youxianshi/.local/state/wasmc-maintenance/rustc-service-1991-20261028/mcpgit-shared-memory-host-20261029/src/materialized_cache.rs:26:18
+   |
+26 |                 .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |v| v.checked_add(1))
+   |                  ^^^^^^^^^^^^
+   |
+help: replace the use of the deprecated method
+   |
+26 -                 .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |v| v.checked_add(1))
+26 +                 .try_update(Ordering::Relaxed, Ordering::Relaxed, |v| v.checked_add(1))
+   |
+
+warning: use of deprecated method `std::sync::atomic::Atomic::<u64>::fetch_update`: renamed to `try_update` for consistency
+   --> /Users/youxianshi/.local/state/wasmc-maintenance/rustc-service-1991-20261028/mcpgit-shared-memory-host-20261029/src/table_access_observability.rs:363:45
+    |
+363 |         let _ = QUERY_PROFILE_MAX_NS[index].fetch_update(
+    |                                             ^^^^^^^^^^^^
+    |
+help: replace the use of the deprecated method
+    |
+363 -         let _ = QUERY_PROFILE_MAX_NS[index].fetch_update(
+363 +         let _ = QUERY_PROFILE_MAX_NS[index].try_update(
+    |
+
+warning: `mcpgit` (lib) generated 3 warnings (run `cargo fix --lib -p mcpgit` to apply 3 suggestions)
+    Finished `release` profile [optimized] target(s) in 0.89s
+     Running tests/end_to_end.rs (/Users/youxianshi/code/.worktrees/MCPGit/rustc-1991-runtime-v1/target/release/deps/end_to_end-e911f6df79534f8b)
+
+running 1 test
+MISSING_CALLER_CAPABILITY_RESULT=BadGateway
+REAL_SERVICE_HOSTED_SELECTED_JSON_OK valid=3 invalid_recovery=true missing_capability_bad_gateway=true
+test hosted_route_selects_service_json_lib_and_processes_new_inputs ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 15 filtered out; finished in 0.66s
+

@@ -1,0 +1,208 @@
+error[E0433]: cannot find `json` in `wasmc`
+ --> .agents/workstreams/WS-20261026-lib-memory-release-v031/qualification/rust2024-json-linked-sdk/all-operations.rs:2:12
+  |
+2 | use wasmc::json::{document::*, utf8::*};
+  |            ^^^^ could not find `json` in `wasmc`
+
+error[E0422]: cannot find struct, variant or union type `JsonField` in this scope
+  --> .agents/workstreams/WS-20261026-lib-memory-release-v031/qualification/rust2024-json-linked-sdk/all-operations.rs:27:23
+   |
+27 |     let fields = vec![JsonField {name:"x".into(), value_json:"1".into()}];
+   |                       ^^^^^^^^^ not found in this scope
+
+error[E0422]: cannot find struct, variant or union type `Edit` in this scope
+  --> .agents/workstreams/WS-20261026-lib-memory-release-v031/qualification/rust2024-json-linked-sdk/all-operations.rs:33:22
+   |
+33 |     let edits = vec![Edit {kind:EditKind::Set, path:"/a".into(), value_json:"77".into()},
+   |                      ^^^^ not found in this scope
+
+error[E0422]: cannot find struct, variant or union type `Edit` in this scope
+  --> .agents/workstreams/WS-20261026-lib-memory-release-v031/qualification/rust2024-json-linked-sdk/all-operations.rs:34:9
+   |
+34 |         Edit {kind:EditKind::Remove, path:"/flag".into(), value_json:"".into()}];
+   |         ^^^^ not found in this scope
+
+error[E0425]: cannot find function `compact` in this scope
+ --> .agents/workstreams/WS-20261026-lib-memory-release-v031/qualification/rust2024-json-linked-sdk/all-operations.rs:9:16
+  |
+9 |     assert_eq!(compact(doc).unwrap(), doc);
+  |                ^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `compact_bytes` in this scope
+  --> .agents/workstreams/WS-20261026-lib-memory-release-v031/qualification/rust2024-json-linked-sdk/all-operations.rs:10:16
+   |
+10 |     assert_eq!(compact_bytes(bytes).unwrap(), doc);
+   |                ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `validate` in this scope
+  --> .agents/workstreams/WS-20261026-lib-memory-release-v031/qualification/rust2024-json-linked-sdk/all-operations.rs:11:13
+   |
+11 |     assert!(validate(doc).is_ok());
+   |             ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `validate_bytes` in this scope
+  --> .agents/workstreams/WS-20261026-lib-memory-release-v031/qualification/rust2024-json-linked-sdk/all-operations.rs:12:13
+   |
+12 |     assert!(validate_bytes(bytes).is_ok());
+   |             ^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `validate` in this scope
+  --> .agents/workstreams/WS-20261026-lib-memory-release-v031/qualification/rust2024-json-linked-sdk/all-operations.rs:13:13
+   |
+13 |     assert!(validate("{").is_err());
+   |             ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `select` in this scope
+  --> .agents/workstreams/WS-20261026-lib-memory-release-v031/qualification/rust2024-json-linked-sdk/all-operations.rs:14:16
+   |
+14 |     assert_eq!(select(doc, &pointers).unwrap(), vec![Some("42".into()), None]);
+   |                ^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `select_bytes` in this scope
+  --> .agents/workstreams/WS-20261026-lib-memory-release-v031/qualification/rust2024-json-linked-sdk/all-operations.rs:15:16
+   |
+15 |     assert_eq!(select_bytes(bytes, &pointers).unwrap(), vec![Some("42".into()), None]);
+   |                ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `select_values` in this scope
+  --> .agents/workstreams/WS-20261026-lib-memory-release-v031/qualification/rust2024-json-linked-sdk/all-operations.rs:16:23
+   |
+16 |     let text_values = select_values(doc, &pointers).unwrap();
+   |                       ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `select_values_bytes` in this scope
+  --> .agents/workstreams/WS-20261026-lib-memory-release-v031/qualification/rust2024-json-linked-sdk/all-operations.rs:18:23
+   |
+18 |     let byte_values = select_values_bytes(bytes, &pointers).unwrap();
+   |                       ^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `inspect_values_bytes` in this scope
+  --> .agents/workstreams/WS-20261026-lib-memory-release-v031/qualification/rust2024-json-linked-sdk/all-operations.rs:20:16
+   |
+20 |     let view = inspect_values_bytes(bytes, &pointers);
+   |                ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `compact_or_bytes` in this scope
+  --> .agents/workstreams/WS-20261026-lib-memory-release-v031/qualification/rust2024-json-linked-sdk/all-operations.rs:22:16
+   |
+22 |     assert_eq!(compact_or_bytes(b"bad", "fallback"), "fallback");
+   |                ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `select_string_or_bytes` in this scope
+  --> .agents/workstreams/WS-20261026-lib-memory-release-v031/qualification/rust2024-json-linked-sdk/all-operations.rs:23:16
+   |
+23 |     assert_eq!(select_string_or_bytes(bytes, "/b", "fallback"), "雪");
+   |                ^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `compact_or` in this scope
+  --> .agents/workstreams/WS-20261026-lib-memory-release-v031/qualification/rust2024-json-linked-sdk/all-operations.rs:24:16
+   |
+24 |     assert_eq!(compact_or(doc, "fallback"), doc);
+   |                ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `decode_string_or` in this scope
+  --> .agents/workstreams/WS-20261026-lib-memory-release-v031/qualification/rust2024-json-linked-sdk/all-operations.rs:25:16
+   |
+25 |     assert_eq!(decode_string_or("\"雪\"", "fallback"), "雪");
+   |                ^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `quote_string` in this scope
+  --> .agents/workstreams/WS-20261026-lib-memory-release-v031/qualification/rust2024-json-linked-sdk/all-operations.rs:26:16
+   |
+26 |     assert_eq!(quote_string("a\nb"), "\"a\\nb\"");
+   |                ^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `object_from_fields` in this scope
+  --> .agents/workstreams/WS-20261026-lib-memory-release-v031/qualification/rust2024-json-linked-sdk/all-operations.rs:28:16
+   |
+28 |     assert_eq!(object_from_fields(&fields).unwrap(), "{\"x\":1}");
+   |                ^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `array_from_values` in this scope
+  --> .agents/workstreams/WS-20261026-lib-memory-release-v031/qualification/rust2024-json-linked-sdk/all-operations.rs:30:16
+   |
+30 |     assert_eq!(array_from_values(&items).unwrap(), "[1,true]");
+   |                ^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `object_from_fields_or` in this scope
+  --> .agents/workstreams/WS-20261026-lib-memory-release-v031/qualification/rust2024-json-linked-sdk/all-operations.rs:31:16
+   |
+31 |     assert_eq!(object_from_fields_or(&fields, "fallback"), "{\"x\":1}");
+   |                ^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `array_from_values_or` in this scope
+  --> .agents/workstreams/WS-20261026-lib-memory-release-v031/qualification/rust2024-json-linked-sdk/all-operations.rs:32:16
+   |
+32 |     assert_eq!(array_from_values_or(&items, "fallback"), "[1,true]");
+   |                ^^^^^^^^^^^^^^^^^^^^ not found in this scope
+
+error[E0433]: cannot find type `EditKind` in this scope
+  --> .agents/workstreams/WS-20261026-lib-memory-release-v031/qualification/rust2024-json-linked-sdk/all-operations.rs:33:33
+   |
+33 |     let edits = vec![Edit {kind:EditKind::Set, path:"/a".into(), value_json:"77".into()},
+   |                                 ^^^^^^^^ use of undeclared type `EditKind`
+
+error[E0433]: cannot find type `EditKind` in this scope
+  --> .agents/workstreams/WS-20261026-lib-memory-release-v031/qualification/rust2024-json-linked-sdk/all-operations.rs:34:20
+   |
+34 |         Edit {kind:EditKind::Remove, path:"/flag".into(), value_json:"".into()}];
+   |                    ^^^^^^^^ use of undeclared type `EditKind`
+
+error[E0425]: cannot find function `edit_bytes` in this scope
+  --> .agents/workstreams/WS-20261026-lib-memory-release-v031/qualification/rust2024-json-linked-sdk/all-operations.rs:36:16
+   |
+36 |     assert_eq!(edit_bytes(bytes, &edits).unwrap(), edited.as_bytes());
+   |                ^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `edit_or_bytes` in this scope
+  --> .agents/workstreams/WS-20261026-lib-memory-release-v031/qualification/rust2024-json-linked-sdk/all-operations.rs:37:16
+   |
+37 |     assert_eq!(edit_or_bytes(bytes, &edits, "fallback"), edited);
+   |                ^^^^^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `read_u64` in this scope
+  --> .agents/workstreams/WS-20261026-lib-memory-release-v031/qualification/rust2024-json-linked-sdk/all-operations.rs:38:16
+   |
+38 |     assert_eq!(read_u64(bytes, "/a").unwrap().value, 42);
+   |                ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `read_i64` in this scope
+  --> .agents/workstreams/WS-20261026-lib-memory-release-v031/qualification/rust2024-json-linked-sdk/all-operations.rs:39:16
+   |
+39 |     assert_eq!(read_i64(bytes, "/neg").unwrap().value, -5);
+   |                ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `read_f64` in this scope
+  --> .agents/workstreams/WS-20261026-lib-memory-release-v031/qualification/rust2024-json-linked-sdk/all-operations.rs:40:16
+   |
+40 |     assert_eq!(read_f64(bytes, "/pi").unwrap().value, 1.5);
+   |                ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `read_bool` in this scope
+  --> .agents/workstreams/WS-20261026-lib-memory-release-v031/qualification/rust2024-json-linked-sdk/all-operations.rs:41:13
+   |
+41 |     assert!(read_bool(bytes, "/flag").unwrap().value);
+   |             ^^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `read_u64` in this scope
+  --> .agents/workstreams/WS-20261026-lib-memory-release-v031/qualification/rust2024-json-linked-sdk/all-operations.rs:42:14
+   |
+42 |     assert!(!read_u64(bytes, "/missing").unwrap().present);
+   |              ^^^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `encode` in this scope
+  --> .agents/workstreams/WS-20261026-lib-memory-release-v031/qualification/rust2024-json-linked-sdk/all-operations.rs:43:16
+   |
+43 |     assert_eq!(encode("雪"), "雪".as_bytes());
+   |                ^^^^^^ not found in this scope
+
+error[E0425]: cannot find function `encode_parts` in this scope
+  --> .agents/workstreams/WS-20261026-lib-memory-release-v031/qualification/rust2024-json-linked-sdk/all-operations.rs:44:16
+   |
+44 |     assert_eq!(encode_parts(&["雪".into(), "!".into()]), "雪!".as_bytes());
+   |                ^^^^^^^^^^^^ not found in this scope
+
+error: aborting due to 34 previous errors
+
+Some errors have detailed explanations: E0422, E0425, E0433.
+For more information about an error, try `rustc --explain E0422`.

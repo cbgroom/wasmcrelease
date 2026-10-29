@@ -1,0 +1,1421 @@
+--- a/src/lib_tool_cli.rs
++++ b/src/lib_tool_cli.rs
+@@ -234,11 +234,18 @@
+     }
+ 
+     if root.contains_key("core") {
+-        let core = exact_object(
+-            field(root, "core", "root")?,
+-            &["dependencies", "root"],
+-            "core",
+-        )?;
++        let core_value = field(root, "core", "root")?;
++        let keys: &[&str] = if core_value.get("target_profile").is_some() {
++            &["dependencies", "root", "target_profile"]
++        } else {
++            &["dependencies", "root"]
++        };
++        let core = exact_object(core_value, keys, "core")?;
++        let portable = match core.get("target_profile") {
++            None => false,
++            Some(value) if value.as_str() == Some("portable-v0") => true,
++            Some(_) => return Err(invalid("core.target_profile must be portable-v0")),
++        };
+         let parse_module =
+             |value: &Value, label: &str| -> Result<LibToolCoreModuleInput, LibToolCliError> {
+                 let row = exact_object(value, &["artifact", "module", "sha256"], label)?;
+@@ -286,9 +293,13 @@
+             invalid(format!("cannot encode Core composition wiring: {failure}"))
+         })?;
+         let root_sha256 = core_root.sha256.clone();
++        let mut config = build_host_config(workspace_root, publication_root)?;
++        if portable {
++            config.core_optimization_profile = crate::lib_tool_rust_build_host::core_target_profile::LibToolCoreOptimizationProfile::PortableV0;
++        }
+         let host = LibToolRustBuildHost::new(
+             document_tool_wasm,
+-            build_host_config(workspace_root, publication_root)?,
++            config,
+         )
+         .map_err(|failure| invalid(format!("cannot create Lib build Host: {failure}")))?
+         .with_license_bundle(license);
+--- a/src/lib_tool_rust_consumer_sdk.rs
++++ b/src/lib_tool_rust_consumer_sdk.rs
+@@ -29,6 +29,15 @@
+ mod canonical_sdk;
+ pub use canonical_sdk::{generate_rust_wit_canonical_sdk_source, CanonicalRustSdkSource};
+ mod canonical_bridge;
++mod canonical_bridge_legacy;
++const MAX_SDK_SOURCE_BYTES: usize = 16 * 1024 * 1024;
++pub(crate) fn rust_2024_generated_syntax(source: &str) -> String {
++    source.replace("#[no_mangle]", "#[unsafe(no_mangle)]")
++        .replace("extern \"C\" {", "unsafe extern \"C\" {")
++        .replace("extern \"C\"{", "unsafe extern \"C\"{")
++        .replace("unsafe unsafe extern", "unsafe extern")
++}
++
+ mod canonical_app;
+ pub mod native_build;
+ pub mod native_invoke;
+@@ -60,6 +69,68 @@
+ const MAX_ALIAS_DEPTH: usize = 16;
+ pub const MANAGED_CORE_API_V1_WIT_SHA256: &str =
+     "e53c8ed5d0d05eafbbd8acf027c26732bf0ca5330db48e54f231a0d1b2532013";
++// Bind the WIT declarations to this SDK's own canonical adapters at generation
++// time. Require a bijection so a generator layout change fails rather than
++// silently producing a SDK whose methods call the wrong operation.
++fn link_generated_canonical_sdk(source: &str) -> Result<String, LibToolRustConsumerSdkError> {
++    use std::collections::{BTreeMap, BTreeSet};
++    let mut bridges = BTreeMap::<String, String>::new();
++    let mut remaining = source;
++    let marker = "#[link_name=\"";
++    while let Some(offset) = remaining.find(marker) {
++        remaining = &remaining[offset + marker.len()..];
++        let Some(end) = remaining.find("\"]") else { break };
++        let name = &remaining[..end];
++        let suffix = &remaining[end + 2..];
++        let Some(after) = suffix.strip_prefix("fn raw") else { remaining = suffix; continue };
++        let digits = after.bytes().take_while(u8::is_ascii_digit).count();
++        if name.contains('#') && digits > 0 && after.as_bytes().get(digits) == Some(&b'(') {
++            if bridges.insert(name.to_owned(), after[..digits].to_owned()).is_some() {
++                return Err(invalid("duplicate generated canonical bridge"));
++            }
++        }
++        remaining = after;
++    }
++    if bridges.is_empty() { return Err(invalid("missing generated canonical bridges")); }
++    let mut result = source.to_owned();
++    let mut seen = BTreeSet::new();
++    for (key, index) in &bridges {
++        let (interface, operation) = key.rsplit_once('#').ok_or_else(|| invalid("invalid generated canonical bridge"))?;
++        let attribute = format!("#[link(wasm_import_module = {interface:?})]");
++        let operation_attr = format!("#[link_name = {operation:?}]");
++        let start = result.find(&attribute).ok_or_else(|| invalid("missing generated WIT import"))?;
++        let tail = &result[start + attribute.len()..];
++        let end = tail.find('}').ok_or_else(|| invalid("invalid generated WIT import block"))?;
++        let block = &tail[..end];
++        if !block.contains("unsafe extern \"C\"") || !block.contains(&operation_attr) {
++            // More than one operation can share an interface. Search the block
++            // associated with the exact attribute, not an arbitrary interface.
++            let mut cursor = start;
++            let mut selected = None;
++            while let Some(relative) = result[cursor..].find(&attribute) {
++                let at = cursor + relative;
++                let following = &result[at + attribute.len()..];
++                let close = following.find('}').ok_or_else(|| invalid("invalid generated WIT import block"))?;
++                if following[..close].contains(&operation_attr) { selected = Some(at); break; }
++                cursor = at + attribute.len();
++            }
++            let at = selected.ok_or_else(|| invalid("missing generated WIT operation"))?;
++            let attr_end = at + attribute.len();
++            let op_at = attr_end + result[attr_end..].find(&operation_attr).ok_or_else(|| invalid("missing operation attribute"))?;
++            result.replace_range(op_at..op_at + operation_attr.len(), &format!("#[link_name = \"__wasmc_canonical_bridge_{index}\"]"));
++            result.replace_range(at..attr_end, "");
++        } else {
++            let attr_end = start + attribute.len();
++            let op_at = attr_end + result[attr_end..].find(&operation_attr).ok_or_else(|| invalid("missing operation attribute"))?;
++            result.replace_range(op_at..op_at + operation_attr.len(), &format!("#[link_name = \"__wasmc_canonical_bridge_{index}\"]"));
++            result.replace_range(start..attr_end, "");
++        }
++        seen.insert(key);
++    }
++    if seen.len() != bridges.len() { return Err(invalid("incomplete generated bridge bindings")); }
++    Ok(result)
++}
++
+ pub const MANAGED_CORE_API_V1_IMPORT_MODULE: &str = "wasmc:lib/wasmc.lib_managed_object_core@4.3.0";
+ 
+ #[derive(Debug, Clone, PartialEq, Eq)]
+@@ -91,13 +162,27 @@
+     artifact_sha256: &str,
+     wit_sha256: &str,
+ ) -> Result<LibToolRustConsumerSdk, LibToolRustConsumerSdkError> {
++    generate_canonical_core_sdk_for_edition(package_id, version, wit, artifact, artifact_sha256, wit_sha256, true)
++}
++
++#[allow(clippy::too_many_arguments)]
++pub(crate) fn generate_2021_canonical_core_consumer_sdk(
++    package_id: &str, version: &str, wit: &str, artifact: &[u8], artifact_sha256: &str, wit_sha256: &str,
++) -> Result<LibToolRustConsumerSdk, LibToolRustConsumerSdkError> {
++    generate_canonical_core_sdk_for_edition(package_id, version, wit, artifact, artifact_sha256, wit_sha256, false)
++}
++
++#[allow(clippy::too_many_arguments)]
++fn generate_canonical_core_sdk_for_edition(
++    package_id: &str, version: &str, wit: &str, artifact: &[u8], artifact_sha256: &str, wit_sha256: &str, edition2024: bool,
++) -> Result<LibToolRustConsumerSdk, LibToolRustConsumerSdkError> {
+     let crate_name = format!("{package_id}-core");
+     if !valid_cargo_name(&crate_name) {
+         return Err(invalid("Lib package id cannot form a safe Rust SDK crate name"));
+     }
+     let import_module = format!("wasmc:lib/{package_id}@{version}");
+-    let generated = generate_rust_wit_canonical_sdk_source(
+-        artifact, artifact_sha256, wit.as_bytes(), wit_sha256, &import_module,
++    let generated = canonical_sdk::generate_canonical_sdk_for_edition(
++        artifact, artifact_sha256, wit.as_bytes(), wit_sha256, &import_module, !edition2024,
+     )?;
+     // Upstream notices are verbatim and covered by exact source regeneration;
+     // they do not replace or broaden the package-owned LICENSE grant.
+@@ -112,12 +197,23 @@
+ /* Upstream wit-bindgen runtime LICENSE-APACHE\n{}*/\n",
+         generated.runtime_license_mit, generated.runtime_license_apache,
+     ).into_bytes();
+-    source.extend_from_slice(&generated.source);
++    if edition2024 {
++        let generated = std::str::from_utf8(&generated.source).map_err(|_| invalid("generated SDK source is not UTF-8"))?;
++        let modern = generated.replace("#[no_mangle]", "#[unsafe(no_mangle)]")
++            .replace("extern \"C\" {", "unsafe extern \"C\" {")
++            .replace("extern \"C\"{", "unsafe extern \"C\"{")
++            .replace("unsafe unsafe extern", "unsafe extern");
++        source.splice(0..0, b"#![allow(static_mut_refs, unsafe_op_in_unsafe_fn)]\n".iter().copied());
++        let linked = link_generated_canonical_sdk(&modern)?;
++        source.extend_from_slice(linked.as_bytes());
++    } else {
++        source.extend_from_slice(&generated.source);
++    }
+     if source.len() > 2 * 1024 * 1024 {
+         return Err(invalid("Canonical Root SDK source budget exceeded"));
+     }
+     Ok(LibToolRustConsumerSdk {
+-        cargo_toml: sdk_cargo_toml(&crate_name, version, LibToolRustConsumerSdkProfile::CoreCanonical, false),
++        cargo_toml: sdk_cargo_toml_for_edition(&crate_name, version, LibToolRustConsumerSdkProfile::CoreCanonical, false, if edition2024 { "2024" } else { "2021" }),
+         source,
+         crate_name,
+         import_module,
+@@ -135,6 +231,13 @@
+     profile: LibToolRustConsumerSdkProfile,
+     licensed: bool,
+ ) -> Vec<u8> {
++    sdk_cargo_toml_for_edition(crate_name, version, profile, licensed, "2024")
++}
++
++pub(crate) fn sdk_cargo_toml_2021(crate_name: &str, version: &str, profile: LibToolRustConsumerSdkProfile, licensed: bool) -> Vec<u8> {
++    sdk_cargo_toml_for_edition(crate_name, version, profile, licensed, "2021")
++}
++fn sdk_cargo_toml_for_edition(crate_name: &str, version: &str, profile: LibToolRustConsumerSdkProfile, licensed: bool, edition: &str) -> Vec<u8> {
+     let license = if licensed {
+         "license-file = \"../../LICENSE\"\n"
+     } else {
+@@ -145,9 +248,6 @@
+     } else {
+         ""
+     };
+-    // The official declaration/transfer source uses Rust 2021 syntax. The
+-    // emitted SDK is its own crate; Rust 2024 consumers remain compatible.
+-    let edition = if profile == LibToolRustConsumerSdkProfile::CoreCanonical { "2021" } else { "2024" };
+     format!("[package]\nname = {crate_name:?}\nversion = {version:?}\nedition = {edition:?}\npublish = false\n{license}\n{dependencies}[lib]\ncrate-type = [\"rlib\"]\n\n[workspace]\n").into_bytes()
+ }
+ 
+--- a/src/lib_tool_rust_build_host.rs
++++ b/src/lib_tool_rust_build_host.rs
+@@ -1208,7 +1208,8 @@
+             1024 * 1024,
+             "licensed Rust SDK Cargo.toml",
+         )?;
+-        if cargo != sdk_cargo_toml(crate_name, version, profile, true) {
++        if cargo != sdk_cargo_toml(crate_name, version, profile, true)
++            && !(canonical_profile && cargo == crate::lib_tool_rust_consumer_sdk::sdk_cargo_toml_2021(crate_name, version, profile, true)) {
+             return Err(invalid_input(
+                 "licensed Rust SDK Cargo.toml does not regenerate exactly",
+             ));
+@@ -1438,10 +1439,21 @@
+             1024 * 1024,
+             "Rust SDK Cargo.toml",
+         )?;
+-        if cargo != generated.cargo_toml || source.as_bytes() != generated.source {
+-            return Err(invalid_input(
+-                "Core-composition Rust SDK does not regenerate exactly",
+-            ));
++        let current_matches = cargo == generated.cargo_toml && source.as_bytes() == generated.source;
++        let historical_matches = canonical_profile && {
++            let old = crate::lib_tool_rust_consumer_sdk::generate_2021_canonical_core_consumer_sdk(
++                package_id, version, wit, &artifact, artifact_sha256, wit_sha256,
++            );
++            old.is_ok_and(|mut old| {
++                if manifest.contains_key("license") {
++                    old.cargo_toml = crate::lib_tool_rust_consumer_sdk::sdk_cargo_toml_2021(
++                        &old.crate_name, version, old.profile, true);
++                }
++                cargo == old.cargo_toml && source.as_bytes() == old.source
++            })
++        };
++        if !(current_matches || historical_matches) {
++            return Err(invalid_input("Core-composition Rust SDK does not regenerate exactly"));
+         }
+     } else if component_profile && dual {
+         let wit = read_bounded(&package_root.join("lib.wit"), 2 * 1024 * 1024, "lib.wit")?;
+--- a/src/lib_tool_rust_consumer_sdk/canonical_bridge.rs
++++ b/src/lib_tool_rust_consumer_sdk/canonical_bridge.rs
+@@ -17,7 +17,7 @@
+ };
+ 
+ const PREFIX: &str = "__wasmc_canonical_bridge_";
+-const MAX_SOURCE: usize = 2 * 1024 * 1024;
++const MAX_SOURCE: usize = super::MAX_SDK_SOURCE_BYTES;
+ type Sig = (Vec<wasmparser::ValType>, Vec<wasmparser::ValType>);
+ #[derive(Debug, Clone)]
+ pub struct CanonicalCoreBridge {
+@@ -52,7 +52,6 @@
+ struct Gen<'a> {
+     r: &'a Resolve,
+     s: SizeAlign,
+-    weights: BTreeMap<wit_parser::TypeId, u32>,
+     // Preserve published Core SDK bytes; optimize only value-window transfer.
+     bulk_string_gather: bool,
+ }
+@@ -400,13 +399,13 @@
+         if size > 16 * 1024 * 1024 {
+             return Err(fail("value layout byte budget"));
+         }
+-        let mut out=format!("fn {}(s:u32,d:u32,from:bool,to:bool,b:&mut Budget){{b.enter();range(from,s,{size},{align});range(to,d,{size},{align});",Self::name(t));
++        let mut out=format!("fn {}(s:u32,d:u32,from:bool,to:bool){{range(from,s,{size},{align});range(to,d,{size},{align});",Self::name(t));
+         if self.plain(t, 0) {
+             out += &format!("blit(from,to,s,d,{size});");
+         } else if let Some(fields) = self.fields(t) {
+             for (o, x) in self.s.field_offsets(fields.iter()) {
+                 out += &format!(
+-                    "{}(add(s,{}),add(d,{}),from,to,b);",
++                    "{}(add(s,{}),add(d,{}),from,to);",
+                     Self::name(*x),
+                     o.size_wasm32(),
+                     o.size_wasm32()
+@@ -425,7 +424,7 @@
+             for (i, x) in cases.iter().enumerate() {
+                 out += &format!("{i}=>{{");
+                 if let Some(x) = x {
+-                    out += &format!("{}(add(s,{off}),add(d,{off}),from,to,b);", Self::name(*x));
++                    out += &format!("{}(add(s,{off}),add(d,{off}),from,to);", Self::name(*x));
+                 }
+                 out += "},";
+             }
+@@ -434,18 +433,18 @@
+             match t{
+             Type::Bool=>out+="let x=r(from,s,1);assert!(x<=1);w(to,d,x,1);",
+             Type::Char=>out+="let x=r(from,s,4);assert!(char::from_u32(x as u32).is_some());w(to,d,x,4);",
+-            Type::String=>out+=if self.bulk_string_gather { "let p=r(from,s,4) as u32;let n=r(from,add(s,4),4) as u32;range(from,p,n,1);b.charge(n);let mut v=Vec::with_capacity(n as usize);if from{if n!=0{unsafe{copy_from_lib(v.as_mut_ptr() as usize as i32,p as i32,n as i32);v.set_len(n as usize);}}}else{for i in 0..n{v.push(r(from,add(p,i),1) as u8);}}assert!(std::str::from_utf8(&v).is_ok());let q=allocate(!from,n,1,b);blit(from,!from,p,q,n);w(to,d,q as u64,4);w(to,add(d,4),n as u64,4);" } else { "let p=r(from,s,4) as u32;let n=r(from,add(s,4),4) as u32;range(from,p,n,1);b.charge(n);let mut v=Vec::with_capacity(n as usize);for i in 0..n{v.push(r(from,add(p,i),1) as u8);}assert!(std::str::from_utf8(&v).is_ok());let q=allocate(!from,n,1,b);blit(from,!from,p,q,n);w(to,d,q as u64,4);w(to,add(d,4),n as u64,4);" },
++            Type::String=>out+=if self.bulk_string_gather { "let p=r(from,s,4) as u32;let n=r(from,add(s,4),4) as u32;range(from,p,n,1);let mut v=Vec::with_capacity(n as usize);if from{if n!=0{unsafe{copy_from_lib(v.as_mut_ptr() as usize as i32,p as i32,n as i32);v.set_len(n as usize);}}}else{for i in 0..n{v.push(r(from,add(p,i),1) as u8);}}assert!(std::str::from_utf8(&v).is_ok());let q=allocate(!from,n,1);blit(from,!from,p,q,n);w(to,d,q as u64,4);w(to,add(d,4),n as u64,4);" } else { "let p=r(from,s,4) as u32;let n=r(from,add(s,4),4) as u32;range(from,p,n,1);let mut v=Vec::with_capacity(n as usize);for i in 0..n{v.push(r(from,add(p,i),1) as u8);}assert!(std::str::from_utf8(&v).is_ok());let q=allocate(!from,n,1);blit(from,!from,p,q,n);w(to,d,q as u64,4);w(to,add(d,4),n as u64,4);" },
+             Type::Id(id)=>match &self.r.types[id].kind{
+-                TypeDefKind::Type(x)=>out+=&format!("{}(s,d,from,to,b);",Self::name(*x)),
+-                TypeDefKind::List(x)=>{let stride=self.s.size(x).size_wasm32();let a=self.s.align(x).align_wasm32();out+=&format!("let p=r(from,s,4) as u32;let n=r(from,add(s,4),4) as u32;");if self.plain(*x,0){let weight=match x{Type::Id(id)=>self.weights[id],_=>1};out+=&format!("b.elements(n.checked_mul({weight}).expect(\"transfer node budget\"));");}else{out+="assert!(n<=b.nodes);";}out+=&format!("let bytes=n.checked_mul({stride}).expect(\"list size\");range(from,p,bytes,{a});let q=allocate(!from,bytes,{a},b);");if self.plain(*x,0){out+="blit(from,!from,p,q,bytes);";}else{out+=&format!("for i in 0..n{{{}(add(p,i*{stride}),add(q,i*{stride}),from,!from,b);}}",Self::name(*x));}out+="w(to,d,q as u64,4);w(to,add(d,4),n as u64,4);";},
++                TypeDefKind::Type(x)=>out+=&format!("{}(s,d,from,to);",Self::name(*x)),
++                TypeDefKind::List(x)=>{let stride=self.s.size(x).size_wasm32();let a=self.s.align(x).align_wasm32();out+=&format!("let p=r(from,s,4) as u32;let n=r(from,add(s,4),4) as u32;");out+=&format!("let bytes=n.checked_mul({stride}).expect(\"list size\");range(from,p,bytes,{a});let q=allocate(!from,bytes,{a});");if self.plain(*x,0){out+="blit(from,!from,p,q,bytes);";}else{out+=&format!("for i in 0..n{{{}(add(p,i*{stride}),add(q,i*{stride}),from,!from);}}",Self::name(*x));}out+="w(to,d,q as u64,4);w(to,add(d,4),n as u64,4);";},
+                 TypeDefKind::Enum(e)=>out+=&format!("let x=r(from,s,{size});assert!(x<{});w(to,d,x,{size});",e.cases.len()),
+                 TypeDefKind::Flags(f)=>{let word=match f.repr(){FlagsRepr::U8=>1,FlagsRepr::U16=>2,FlagsRepr::U32(_)=>4};for i in 0..f.repr().count(){let bits=f.flags.len().saturating_sub(i*word*8).min(word*8);let mask=if bits==32{u32::MAX as u64}else{(1u64<<bits)-1};out+=&format!("let x=r(from,add(s,{}),{word});assert!(x&!{mask}u64==0);w(to,add(d,{}),x,{word});",i*word,i*word);}},
+-                TypeDefKind::FixedLengthList(x,n)=>out+=&format!("for i in 0..{n}u32{{{}(add(s,i*{}),add(d,i*{}),from,to,b);}}",Self::name(*x),self.s.size(x).size_wasm32(),self.s.size(x).size_wasm32()),
++                TypeDefKind::FixedLengthList(x,n)=>out+=&format!("for i in 0..{n}u32{{{}(add(s,i*{}),add(d,i*{}),from,to);}}",Self::name(*x),self.s.size(x).size_wasm32(),self.s.size(x).size_wasm32()),
+                 _=>return Err(fail("unsupported complete type inventory")),
+             },_=>return Err(fail("unsupported value type"))
+         }
+         }
+-        out += "b.leave();}\n";
++        out += "}\n";
+         Ok(out)
+     }
+ }
+@@ -463,17 +462,15 @@
+  fn own_memory_size()->i32;fn lib_memory_size()->i32;
+  fn copy_to_lib(d:i32,s:i32,n:i32);fn copy_from_lib(d:i32,s:i32,n:i32);
+ }
+-struct Budget{bytes:u32,nodes:u32,depth:u32}
+-impl Budget{fn new()->Self{Self{bytes:16*1024*1024,nodes:1024*1024,depth:0}}fn charge(&mut self,n:u32){self.bytes=self.bytes.checked_sub(n).expect("transfer byte budget");}fn elements(&mut self,n:u32){self.nodes=self.nodes.checked_sub(n).expect("transfer node budget");}fn enter(&mut self){self.elements(1);self.depth+=1;assert!(self.depth<=32);}fn leave(&mut self){self.depth-=1;}}
+ fn add(p:u32,n:u32)->u32{p.checked_add(n).expect("pointer overflow")}
+ fn range(lib:bool,p:u32,n:u32,a:u32){assert!(a.is_power_of_two()&&p%a==0);let pages=unsafe{if lib{lib_memory_size()}else{own_memory_size()}} as u32 as u64;assert!((p as u64)+(n as u64)<=pages*65536);}
+ fn r(lib:bool,p:u32,n:u32)->u64{range(lib,p,n,1);unsafe{match n{1=>if lib{read8(p as i32) as u32 as u64}else{own_read8(p as i32) as u32 as u64},2=>r(lib,p,1)|(r(lib,add(p,1),1)<<8),4=>if lib{read32(p as i32) as u32 as u64}else{own_read32(p as i32) as u32 as u64},8=>if lib{read64(p as i32) as u64}else{own_read64(p as i32) as u64},_=>panic!("read width")}}}
+ fn w(lib:bool,p:u32,x:u64,n:u32){range(lib,p,n,1);unsafe{match n{1=>if lib{write8(p as i32,x as i32)}else{own_write8(p as i32,x as i32)},2=>{w(lib,p,x,1);w(lib,add(p,1),x>>8,1)},4=>if lib{write32(p as i32,x as i32)}else{own_write32(p as i32,x as i32)},8=>if lib{write64(p as i32,x as i64)}else{own_write64(p as i32,x as i64)},_=>panic!("write width")}}}
+ fn zero(lib:bool,p:u32,n:u32){range(lib,p,n,1);for i in 0..n{w(lib,add(p,i),0,1);}}
+ fn blit(from:bool,to:bool,s:u32,d:u32,n:u32){range(from,s,n,1);range(to,d,n,1);if from==to{if s!=d{for i in 0..n{w(to,add(d,i),r(from,add(s,i),1),1);}}}else{unsafe{if from{copy_from_lib(d as i32,s as i32,n as i32)}else{copy_to_lib(d as i32,s as i32,n as i32)}}}}
+-fn allocate(lib:bool,n:u32,a:u32,b:&mut Budget)->u32{b.charge(n);if n==0{return a;}let p=if lib{unsafe{realloc(0,0,a as i32,n as i32) as u32}}else{let l=Layout::from_size_align(n as usize,a as usize).unwrap();let p=unsafe{alloc_zeroed(l)};assert!(!p.is_null());p as usize as u32};range(lib,p,n,a);if lib{zero(true,p,n);}p}
++fn allocate(lib:bool,n:u32,a:u32)->u32{if n==0{return a;}let p=if lib{unsafe{realloc(0,0,a as i32,n as i32) as u32}}else{let l=Layout::from_size_align(n as usize,a as usize).unwrap();let p=unsafe{alloc_zeroed(l)};assert!(!p.is_null());p as usize as u32};range(lib,p,n,a);if lib{zero(true,p,n);}p}
+ struct Scratch{p:u32,l:Layout}
+-impl Scratch{fn new(n:u32,a:u32,b:&mut Budget)->Self{let l=Layout::from_size_align(n.max(1) as usize,a as usize).unwrap();let p=allocate(false,n.max(1),a,b);Self{p,l}}}
++impl Scratch{fn new(n:u32,a:u32)->Self{let l=Layout::from_size_align(n.max(1) as usize,a as usize).unwrap();let p=allocate(false,n.max(1),a);Self{p,l}}}
+ impl Drop for Scratch{fn drop(&mut self){unsafe{dealloc(self.p as usize as *mut u8,self.l);}}}
+ "#;
+ 
+@@ -485,14 +482,12 @@
+ static mut VALUE_CAPTURE:bool=false;
+ static mut VALUE_ALLOCATIONS:Vec<(u32,u32,u32)>=Vec::new();
+ static mut VALUE_STAGING:Option<(u32,u32)>=None;
+-static mut VALUE_STAGE_BYTES:u32=2*1024*1024;
+-static mut VALUE_STAGE_NODES:u32=1024*1024;
+-fn value_allocation(p:u32,n:u32,a:u32){unsafe{if VALUE_CAPTURE{assert!(VALUE_ALLOCATIONS.len()<1024*1024);VALUE_ALLOCATIONS.push((p,n,a));}}}
++fn value_allocation(p:u32,n:u32,a:u32){unsafe{if VALUE_CAPTURE{VALUE_ALLOCATIONS.push((p,n,a));}}}
+ fn value_scratch_drop(p:u32){unsafe{if VALUE_CAPTURE{let i=VALUE_ALLOCATIONS.iter().position(|x|x.0==p).expect("scratch allocation lease");VALUE_ALLOCATIONS.swap_remove(i);}}}
+ fn value_begin(i:u32,d:u32){unsafe{assert!(VALUE_ACTIVE.is_none()&&!VALUE_CAPTURE&&VALUE_ALLOCATIONS.is_empty());VALUE_ACTIVE=Some((i,d));VALUE_CAPTURE=true;}}
+ fn value_call_begin(i:u32,p:u32,d:u32){unsafe{if VALUE_ACTIVE.is_none(){value_begin(i,d);}else{assert!(VALUE_ACTIVE==Some((i,d))&&VALUE_CAPTURE&&VALUE_STAGING==Some((p,d)));VALUE_STAGING=None;}}}
+-#[no_mangle]pub unsafe extern "C" fn __wasmc_value_stage_allocate(n:u32,a:u32)->u32{assert!(VALUE_CAPTURE&&VALUE_STAGING.is_some()&&a.is_power_of_two()&&a<=8);VALUE_STAGE_BYTES=VALUE_STAGE_BYTES.checked_sub(n).expect("staging byte budget");VALUE_STAGE_NODES=VALUE_STAGE_NODES.checked_sub(1).expect("staging node budget");allocate(false,n,a,&mut Budget::new())}
+-fn value_open(i:u32,pn:u32,pa:u32,dn:u32,da:u32)->u64{unsafe{value_begin(i,0);VALUE_STAGE_BYTES=2*1024*1024;VALUE_STAGE_NODES=1024*1024;VALUE_STAGING=Some((0,0));let p=__wasmc_value_stage_allocate(pn,pa);let d=__wasmc_value_stage_allocate(dn,da);VALUE_ACTIVE=Some((i,d));VALUE_STAGING=Some((p,d));((d as u64)<<32)|(p as u64)}}
++#[no_mangle]pub unsafe extern "C" fn __wasmc_value_stage_allocate(n:u32,a:u32)->u32{assert!(VALUE_CAPTURE&&VALUE_STAGING.is_some()&&a.is_power_of_two()&&a<=8);allocate(false,n,a)}
++fn value_open(i:u32,pn:u32,pa:u32,dn:u32,da:u32)->u64{unsafe{value_begin(i,0);VALUE_STAGING=Some((0,0));let p=__wasmc_value_stage_allocate(pn,pa);let d=__wasmc_value_stage_allocate(dn,da);VALUE_ACTIVE=Some((i,d));VALUE_STAGING=Some((p,d));((d as u64)<<32)|(p as u64)}}
+ fn value_cancel(i:u32,d:u32){unsafe{assert!(VALUE_ACTIVE==Some((i,d))&&VALUE_CAPTURE&&VALUE_STAGING.is_some_and(|(_,q)|q==d));VALUE_STAGING=None;VALUE_CAPTURE=false;value_post(i,d);}}
+ fn value_ready(){unsafe{assert!(VALUE_CAPTURE);VALUE_CAPTURE=false;}}
+ fn value_post(i:u32,d:u32){unsafe{assert!(VALUE_ACTIVE==Some((i,d))&&!VALUE_CAPTURE&&VALUE_STAGING.is_none());VALUE_ACTIVE=None;let allocations=std::mem::take(&mut VALUE_ALLOCATIONS);for(p,n,a)in allocations{dealloc(p as usize as *mut u8,Layout::from_size_align(n as usize,a as usize).unwrap());}}}
+@@ -563,11 +558,9 @@
+     }
+     let mut s = SizeAlign::default();
+     s.fill(&resolve);
+-    let weights = super::canonical_memory::bounded_value_weights(&resolve).map_err(fail)?;
+     let g = Gen {
+         r: &resolve,
+         s,
+-        weights,
+         bulk_string_gather: value_windows,
+     };
+     for (id, _) in resolve.types.iter() {
+@@ -667,7 +660,7 @@
+             source += &format!("#[link_name={post:?}]fn post{i}(p:i32);");
+         }
+         source += "}\n";
+-        source+=&format!("#[no_mangle]pub unsafe extern \"C\" fn {PREFIX}{i}({public_params}){ret}{{let mut b=Budget::new();let args=Scratch::new({}, {}, &mut b);",layout.size.size_wasm32(),layout.align.align_wasm32());
++        source+=&format!("#[no_mangle]pub unsafe extern \"C\" fn {PREFIX}{i}({public_params}){ret}{{let args=Scratch::new({}, {});",layout.size.size_wasm32(),layout.align.align_wasm32());
+         let mut at = 0;
+         for (o, t) in &offsets {
+             let flat = g.flat(**t)?;
+@@ -683,7 +676,7 @@
+         }
+         for (o, t) in &offsets {
+             source += &format!(
+-                "{}(add(args.p,{}),add(args.p,{}),false,false,&mut b);",
++                "{}(add(args.p,{}),add(args.p,{}),false,false);",
+                 Gen::name(**t),
+                 o.size_wasm32(),
+                 o.size_wasm32()
+@@ -699,14 +692,14 @@
+             let align = g.s.align(&t).align_wasm32();
+             if exported.retptr {
+                 let target = imported.params.len() - 1;
+-                source+=&format!("let dst=p{target} as u32;range(false,dst,{size},{align});zero(false,dst,{size});{}(result as u32,dst,true,false,&mut b);",Gen::name(t));
++                source+=&format!("let dst=p{target} as u32;range(false,dst,{size},{align});zero(false,dst,{size});{}(result as u32,dst,true,false);",Gen::name(t));
+                 if has_post {
+                     source += &format!("post{i}(result as i32);");
+                 }
+             } else if !exported.results.is_empty() {
+-                source += &format!("let out=Scratch::new({size},{align},&mut b);");
++                source += &format!("let out=Scratch::new({size},{align});");
+                 source += &g.store(t, "out.p", &[("result".into(), exported.results[0])], 0)?;
+-                source += &format!("{}(out.p,out.p,false,false,&mut b);", Gen::name(t));
++                source += &format!("{}(out.p,out.p,false,false);", Gen::name(t));
+                 if has_post {
+                     source += &format!("post{i}(result as i32);");
+                 }
+@@ -777,7 +770,11 @@
+     artifact:&[u8],ap:&str,wit:&[u8],wp:&str,module:&str,
+ ) -> Result<CanonicalValueCoreBridge,LibToolRustConsumerSdkError> {
+     let (bridge,bindings)=build_with_value_windows(artifact,ap,wit,wp,module,true)?;
+-    Ok(CanonicalValueCoreBridge {source:bridge.source,
++    // Only the newly generated value-transfer source adopts the current Rust
++    // edition; the historical Canonical SDK regeneration path stays byte exact.
++    let source = format!("#![allow(static_mut_refs, unsafe_op_in_unsafe_fn)]\n{}",
++        super::rust_2024_generated_syntax(&bridge.source));
++    Ok(CanonicalValueCoreBridge {source,
+         operations:bindings.into_iter().map(|b|b.value_window.expect("value window generation selected")).collect()})
+ }
+ 
+--- a/src/lib_tool_rust_consumer_sdk/canonical_sdk.rs
++++ b/src/lib_tool_rust_consumer_sdk/canonical_sdk.rs
+@@ -30,16 +30,20 @@
+     wit_sha256: &str,
+     import_module: &str,
+ ) -> Result<CanonicalRustSdkSource, LibToolRustConsumerSdkError> {
++    generate_canonical_sdk_for_edition(artifact, artifact_sha256, wit, wit_sha256, import_module, false)
++}
++
++pub(super) fn generate_canonical_sdk_for_edition(
++    artifact: &[u8], artifact_sha256: &str, wit: &[u8], wit_sha256: &str, import_module: &str, legacy: bool,
++) -> Result<CanonicalRustSdkSource, LibToolRustConsumerSdkError> {
+     let fail = |e: String| invalid(format!("Official Canonical Rust SDK: {e}"));
+     // Validate the complete physical/semantic and bounded transfer inventory
+     // before handing the projected world to the official generator.
+-    let bridge = generate_rust_wit_canonical_core_bridge(
+-        artifact,
+-        artifact_sha256,
+-        wit,
+-        wit_sha256,
+-        import_module,
+-    )?;
++    let bridge_source = if legacy {
++        super::canonical_bridge_legacy::generate_rust_wit_canonical_core_bridge(artifact, artifact_sha256, wit, wit_sha256, import_module)?.source
++    } else {
++        generate_rust_wit_canonical_core_bridge(artifact, artifact_sha256, wit, wit_sha256, import_module)?.source
++    };
+     let consumer_wit =
+         generate_wit_canonical_core_consumer_world(artifact, artifact_sha256, wit, wit_sha256)?;
+     let mut resolve = wit_bindgen_core::wit_parser::Resolve::default();
+@@ -79,7 +83,7 @@
+     // Verbatim upstream Cleanup is the only required external runtime helper
+     // in this synchronous value profile. No provider or dependency code enters
+     // the SDK; Root publication must also carry the returned license texts.
+-    let source = format!("extern crate alloc;\nextern crate self as wit_bindgen;\npub mod rt {{\nuse core::alloc::Layout;\nuse core::ptr::{{self,NonNull}};\n{CLEANUP}\n}}\n{text}\n#[cfg(target_arch=\"wasm32\")]\n{}", bridge.source);
++    let source = format!("extern crate alloc;\nextern crate self as wit_bindgen;\npub mod rt {{\nuse core::alloc::Layout;\nuse core::ptr::{{self,NonNull}};\n{CLEANUP}\n}}\n{text}\n#[cfg(target_arch=\"wasm32\")]\n{}", bridge_source);
+     if source.len() > 4 * 1024 * 1024 {
+         return Err(fail("complete SDK source budget".into()));
+     }
+--- /dev/null
++++ b/src/lib_tool_rust_consumer_sdk/canonical_bridge_legacy.rs
+@@ -0,0 +1,966 @@
++//! Generated transfer shims around the official guest-import SDK.
++//! Layout/signatures come from WIT, never Rust layout or package/API names.
++use super::{
++    canonical_memory::{pinned_inventory, wasm32},
++    invalid, prepare_rust_wit_canonical_core_caller, LibToolRustConsumerSdkError,
++};
++use crate::self_bundle::{hex, sha256};
++use std::collections::{BTreeMap, BTreeSet};
++use wasm_encoder::{
++    reencode::{self, Reencode},
++    ExportSection, ImportSection, Module,
++};
++use wasmparser::{Parser, Payload, TypeRef};
++use wit_parser::{
++    abi::{AbiVariant, FlatTypes, WasmType},
++    FlagsRepr, Int, Resolve, SizeAlign, Type, TypeDefKind, WorldItem,
++};
++
++const PREFIX: &str = "__wasmc_canonical_bridge_";
++const MAX_SOURCE: usize = 2 * 1024 * 1024;
++type Sig = (Vec<wasmparser::ValType>, Vec<wasmparser::ValType>);
++#[derive(Debug, Clone)]
++pub struct CanonicalCoreBridge {
++    pub source: String,
++}
++/// Native, compiler-private packed value entrypoints. Not an Agent/public ABI.
++#[derive(Debug, Clone)]
++pub struct CanonicalValueCoreBridge {
++    pub source: String,
++    pub operations: Vec<CanonicalValueOperation>,
++}
++#[derive(Debug, Clone)]
++pub struct CanonicalValueOperation {
++    pub interface: String,
++    pub operation: String,
++    pub call_export: String,
++    pub post_export: String,
++    pub open_export: String,
++    pub cancel_export: String,
++    pub parameter_bytes: u32,
++    pub parameter_alignment: u32,
++    pub result_bytes: u32,
++    pub result_alignment: u32,
++}
++struct Binding {
++    module: String,
++    name: String,
++    export: String,
++    signature: Sig,
++    value_window: Option<CanonicalValueOperation>,
++}
++struct Gen<'a> {
++    r: &'a Resolve,
++    s: SizeAlign,
++    weights: BTreeMap<wit_parser::TypeId, u32>,
++    // Preserve published Core SDK bytes; optimize only value-window transfer.
++    bulk_string_gather: bool,
++}
++fn fail(s: impl Into<String>) -> LibToolRustConsumerSdkError {
++    invalid(format!("Canonical SDK bridge: {}", s.into()))
++}
++fn rust(t: WasmType) -> &'static str {
++    match t {
++        WasmType::I32 | WasmType::Pointer | WasmType::Length => "i32",
++        WasmType::I64 | WasmType::PointerOrI64 => "i64",
++        WasmType::F32 => "f32",
++        WasmType::F64 => "f64",
++    }
++}
++fn cast(e: &str, from: WasmType, to: WasmType) -> String {
++    let a = rust(from);
++    let b = rust(to);
++    if a == b {
++        return e.into();
++    }
++    let bits = match a {
++        "f32" => format!("({e}).to_bits()"),
++        "f64" => format!("({e}).to_bits()"),
++        _ => format!("({e})"),
++    };
++    match b {
++        "f32" => format!("f32::from_bits({bits} as u32)"),
++        "f64" => format!("f64::from_bits({bits} as u64)"),
++        _ => format!("({bits} as {b})"),
++    }
++}
++fn tag_size(tag: Int) -> usize {
++    match tag {
++        Int::U8 => 1,
++        Int::U16 => 2,
++        Int::U32 => 4,
++        Int::U64 => 8,
++    }
++}
++impl Gen<'_> {
++    fn depth(&self, t: Type, n: usize) -> Result<bool, LibToolRustConsumerSdkError> {
++        if n >= 32 {
++            return Err(fail("complete value type depth budget"));
++        }
++        let nested = match t {
++            Type::String => return Ok(true),
++            Type::Id(id) => match &self.r.types[id].kind {
++                TypeDefKind::Type(t)
++                | TypeDefKind::Option(t)
++                | TypeDefKind::FixedLengthList(t, _) => vec![*t],
++                TypeDefKind::List(t) => {
++                    self.depth(*t, n + 1)?;
++                    return Ok(true);
++                }
++                TypeDefKind::Record(r) => r.fields.iter().map(|f| f.ty).collect(),
++                TypeDefKind::Tuple(r) => r.types.clone(),
++                TypeDefKind::Variant(v) => v.cases.iter().filter_map(|c| c.ty).collect(),
++                TypeDefKind::Result(r) => r.ok.into_iter().chain(r.err).collect(),
++                TypeDefKind::Enum(_) | TypeDefKind::Flags(_) => vec![],
++                _ => return Err(fail("unsupported complete value type")),
++            },
++            Type::ErrorContext => return Err(fail("error-context")),
++            _ => vec![],
++        };
++        let mut owns = false;
++        for t in nested {
++            owns |= self.depth(t, n + 1)?;
++        }
++        Ok(owns)
++    }
++    fn flat(&self, t: Type) -> Result<Vec<WasmType>, LibToolRustConsumerSdkError> {
++        let mut a = [WasmType::I32; 256];
++        let mut f = FlatTypes::new(&mut a);
++        if !self.r.push_flat(&t, &mut f) {
++            return Err(fail("flat type budget"));
++        }
++        Ok(f.to_vec())
++    }
++    fn name(t: Type) -> String {
++        match t {
++            Type::Id(id) => format!("c{}", id.index()),
++            _ => format!("c_{t:?}").to_lowercase(),
++        }
++    }
++    fn plain(&self, t: Type, depth: usize) -> bool {
++        if depth > 32 {
++            return false;
++        }
++        match t {
++            Type::U8
++            | Type::S8
++            | Type::U16
++            | Type::S16
++            | Type::U32
++            | Type::S32
++            | Type::U64
++            | Type::S64
++            | Type::F32
++            | Type::F64 => true,
++            Type::Id(id) => match &self.r.types[id].kind {
++                TypeDefKind::Type(t) => self.plain(*t, depth + 1),
++                TypeDefKind::Record(r) => r.fields.iter().all(|f| self.plain(f.ty, depth + 1)),
++                TypeDefKind::Tuple(r) => r.types.iter().all(|t| self.plain(*t, depth + 1)),
++                TypeDefKind::FixedLengthList(t, _) => self.plain(*t, depth + 1),
++                _ => false,
++            },
++            _ => false,
++        }
++    }
++    fn cases(&self, t: Type) -> Option<(Int, Vec<Option<Type>>)> {
++        let Type::Id(id) = t else { return None };
++        match &self.r.types[id].kind {
++            TypeDefKind::Variant(v) => Some((v.tag(), v.cases.iter().map(|c| c.ty).collect())),
++            TypeDefKind::Option(t) => Some((Int::U8, vec![None, Some(*t)])),
++            TypeDefKind::Result(r) => Some((Int::U8, vec![r.ok, r.err])),
++            _ => None,
++        }
++    }
++    fn fields(&self, t: Type) -> Option<Vec<Type>> {
++        let Type::Id(id) = t else { return None };
++        match &self.r.types[id].kind {
++            TypeDefKind::Record(r) => Some(r.fields.iter().map(|f| f.ty).collect()),
++            TypeDefKind::Tuple(r) => Some(r.types.clone()),
++            _ => None,
++        }
++    }
++    fn store(
++        &self,
++        t: Type,
++        d: &str,
++        values: &[(String, WasmType)],
++        depth: usize,
++    ) -> Result<String, LibToolRustConsumerSdkError> {
++        if depth > 32 {
++            return Err(fail("flat construction depth"));
++        }
++        let width = self.s.size(&t).size_wasm32();
++        if let Type::Id(id) = t {
++            if let TypeDefKind::Type(x) = self.r.types[id].kind {
++                return self.store(x, d, values, depth + 1);
++            }
++        }
++        if let Some(fields) = self.fields(t) {
++            let mut out = String::new();
++            let mut pos = 0;
++            for (o, x) in self.s.field_offsets(fields.iter()) {
++                let n = self.flat(*x)?.len();
++                out += &self.store(
++                    *x,
++                    &format!("add({d},{})", o.size_wasm32()),
++                    &values[pos..pos + n],
++                    depth + 1,
++                )?;
++                pos += n;
++            }
++            return Ok(out);
++        }
++        if let Some((tag, cases)) = self.cases(t) {
++            let off = self
++                .s
++                .payload_offset(tag, cases.iter().map(|t| t.as_ref()))
++                .size_wasm32();
++            let mut out = format!(
++                "let tag=({}) as u32;assert!(tag<{});w(false,{d},tag as u64,{});match tag{{",
++                values[0].0,
++                cases.len(),
++                tag_size(tag)
++            );
++            for (i, case) in cases.iter().enumerate() {
++                out += &format!("{i}=>{{");
++                if let Some(x) = case {
++                    let flat = self.flat(*x)?;
++                    let v = flat
++                        .iter()
++                        .enumerate()
++                        .map(|(j, t)| (cast(&values[j + 1].0, values[j + 1].1, *t), *t))
++                        .collect::<Vec<_>>();
++                    out += &self.store(*x, &format!("add({d},{off})"), &v, depth + 1)?;
++                }
++                out += "},";
++            }
++            out += "_=>unreachable!()};";
++            return Ok(out);
++        }
++        if matches!(t, Type::String)
++            || matches!(t,Type::Id(id) if matches!(self.r.types[id].kind,TypeDefKind::List(_)))
++        {
++            return Ok(format!(
++                "w(false,{d},({}) as u32 as u64,4);w(false,add({d},4),({}) as u32 as u64,4);",
++                values[0].0, values[1].0
++            ));
++        }
++        if let Type::Id(id) = t {
++            match &self.r.types[id].kind {
++                TypeDefKind::Flags(f) => {
++                    let word = match f.repr() {
++                        FlagsRepr::U8 => 1,
++                        FlagsRepr::U16 => 2,
++                        FlagsRepr::U32(_) => 4,
++                    };
++                    return Ok(values
++                        .iter()
++                        .enumerate()
++                        .map(|(i, (e, _))| {
++                            let bits = f.flags.len().saturating_sub(i * word * 8).min(word * 8);
++                            let mask = if bits == 32 { u32::MAX as u64 } else { (1u64 << bits) - 1 };
++                            format!("let bits=({e}) as u32 as u64;assert!(bits&!{mask}u64==0);w(false,add({d},{}),bits,{word});", i * word)
++                        })
++                        .collect());
++                }
++                TypeDefKind::FixedLengthList(x, n) => {
++                    let mut out = String::new();
++                    let stride = self.s.size(x).size_wasm32();
++                    let k = self.flat(*x)?.len();
++                    for i in 0..*n as usize {
++                        out += &self.store(
++                            *x,
++                            &format!("add({d},{})", i * stride),
++                            &values[i * k..(i + 1) * k],
++                            depth + 1,
++                        )?;
++                    }
++                    return Ok(out);
++                }
++                TypeDefKind::Enum(e) => {
++                    let v = &values[0].0;
++                    return Ok(format!(
++                        "let tag=({v}) as u32;assert!(tag<{});w(false,{d},tag as u64,{width});",
++                        e.cases.len()
++                    ));
++                }
++                _ => return Err(fail("unsupported flat value")),
++            }
++        }
++        let (e, ty) = &values[0];
++        if t == Type::Bool {
++            return Ok(format!(
++                "let bit=({e}) as u32;assert!(bit<=1);w(false,{d},bit as u64,1);"
++            ));
++        }
++        let bits = match rust(*ty) {
++            "f32" => format!("({e}).to_bits() as u64"),
++            "f64" => format!("({e}).to_bits()"),
++            _ => format!("({e}) as u64"),
++        };
++        Ok(format!("w(false,{d},{bits},{width});"))
++    }
++    fn load(
++        &self,
++        t: Type,
++        p: &str,
++        depth: usize,
++    ) -> Result<Vec<String>, LibToolRustConsumerSdkError> {
++        if depth > 32 {
++            return Err(fail("flat reading depth"));
++        }
++        if let Type::Id(id) = t {
++            if let TypeDefKind::Type(x) = self.r.types[id].kind {
++                return self.load(x, p, depth + 1);
++            }
++        }
++        if let Some(fields) = self.fields(t) {
++            let mut out = Vec::new();
++            for (o, t) in self.s.field_offsets(fields.iter()) {
++                out.extend(self.load(*t, &format!("add({p},{})", o.size_wasm32()), depth + 1)?);
++            }
++            return Ok(out);
++        }
++        if let Some((tag, cases)) = self.cases(t) {
++            let flat = self.flat(t)?;
++            let offset = self
++                .s
++                .payload_offset(tag, cases.iter().map(|x| x.as_ref()))
++                .size_wasm32();
++            let disc = format!("r(false,{p},{}) as u32", tag_size(tag));
++            let mut out = vec![format!("({disc}) as i32")];
++            for (j, joint) in flat.iter().skip(1).enumerate() {
++                let mut expr = format!("match {disc} {{");
++                for (i, case) in cases.iter().enumerate() {
++                    let e = if let Some(x) = case {
++                        let f = self.flat(*x)?;
++                        let vals = self.load(*x, &format!("add({p},{offset})"), depth + 1)?;
++                        if j < f.len() {
++                            cast(&vals[j], f[j], *joint)
++                        } else {
++                            format!("0 as {}", rust(*joint))
++                        }
++                    } else {
++                        format!("0 as {}", rust(*joint))
++                    };
++                    expr += &format!("{i}=>{e},");
++                }
++                expr += "_=>unreachable!()}";
++                out.push(expr);
++            }
++            return Ok(out);
++        }
++        if matches!(t, Type::String)
++            || matches!(t,Type::Id(id) if matches!(self.r.types[id].kind,TypeDefKind::List(_)))
++        {
++            return Ok(vec![
++                format!("r(false,{p},4) as i32"),
++                format!("r(false,add({p},4),4) as i32"),
++            ]);
++        }
++        if let Type::Id(id) = t {
++            match &self.r.types[id].kind {
++                TypeDefKind::Flags(f) => {
++                    let word = match f.repr() {
++                        FlagsRepr::U8 => 1,
++                        FlagsRepr::U16 => 2,
++                        FlagsRepr::U32(_) => 4,
++                    };
++                    return Ok((0..f.repr().count())
++                        .map(|i| format!("r(false,add({p},{}),{word}) as i32", i * word))
++                        .collect());
++                }
++                TypeDefKind::FixedLengthList(x, n) => {
++                    let mut v = Vec::new();
++                    for i in 0..*n as usize {
++                        v.extend(self.load(
++                            *x,
++                            &format!("add({p},{})", i * self.s.size(x).size_wasm32()),
++                            depth + 1,
++                        )?);
++                    }
++                    return Ok(v);
++                }
++                _ => {}
++            }
++        }
++        let flat = self.flat(t)?;
++        let width = self.s.size(&t).size_wasm32();
++        let bits = format!("r(false,{p},{width})");
++        let e = match rust(flat[0]) {
++            "f32" => format!("f32::from_bits({bits} as u32)"),
++            "f64" => format!("f64::from_bits({bits})"),
++            _ => format!("({bits} as {})", rust(flat[0])),
++        };
++        Ok(vec![e])
++    }
++    fn copier(&self, t: Type) -> Result<String, LibToolRustConsumerSdkError> {
++        let size = self.s.size(&t).size_wasm32();
++        let align = self.s.align(&t).align_wasm32();
++        if size > 16 * 1024 * 1024 {
++            return Err(fail("value layout byte budget"));
++        }
++        let mut out=format!("fn {}(s:u32,d:u32,from:bool,to:bool,b:&mut Budget){{b.enter();range(from,s,{size},{align});range(to,d,{size},{align});",Self::name(t));
++        if self.plain(t, 0) {
++            out += &format!("blit(from,to,s,d,{size});");
++        } else if let Some(fields) = self.fields(t) {
++            for (o, x) in self.s.field_offsets(fields.iter()) {
++                out += &format!(
++                    "{}(add(s,{}),add(d,{}),from,to,b);",
++                    Self::name(*x),
++                    o.size_wasm32(),
++                    o.size_wasm32()
++                );
++            }
++        } else if let Some((tag, cases)) = self.cases(t) {
++            let width = tag_size(tag);
++            let off = self
++                .s
++                .payload_offset(tag, cases.iter().map(|t| t.as_ref()))
++                .size_wasm32();
++            out += &format!(
++                "let tag=r(from,s,{width});assert!(tag<{});w(to,d,tag,{width});match tag{{",
++                cases.len()
++            );
++            for (i, x) in cases.iter().enumerate() {
++                out += &format!("{i}=>{{");
++                if let Some(x) = x {
++                    out += &format!("{}(add(s,{off}),add(d,{off}),from,to,b);", Self::name(*x));
++                }
++                out += "},";
++            }
++            out += "_=>unreachable!()};";
++        } else {
++            match t{
++            Type::Bool=>out+="let x=r(from,s,1);assert!(x<=1);w(to,d,x,1);",
++            Type::Char=>out+="let x=r(from,s,4);assert!(char::from_u32(x as u32).is_some());w(to,d,x,4);",
++            Type::String=>out+=if self.bulk_string_gather { "let p=r(from,s,4) as u32;let n=r(from,add(s,4),4) as u32;range(from,p,n,1);b.charge(n);let mut v=Vec::with_capacity(n as usize);if from{if n!=0{unsafe{copy_from_lib(v.as_mut_ptr() as usize as i32,p as i32,n as i32);v.set_len(n as usize);}}}else{for i in 0..n{v.push(r(from,add(p,i),1) as u8);}}assert!(std::str::from_utf8(&v).is_ok());let q=allocate(!from,n,1,b);blit(from,!from,p,q,n);w(to,d,q as u64,4);w(to,add(d,4),n as u64,4);" } else { "let p=r(from,s,4) as u32;let n=r(from,add(s,4),4) as u32;range(from,p,n,1);b.charge(n);let mut v=Vec::with_capacity(n as usize);for i in 0..n{v.push(r(from,add(p,i),1) as u8);}assert!(std::str::from_utf8(&v).is_ok());let q=allocate(!from,n,1,b);blit(from,!from,p,q,n);w(to,d,q as u64,4);w(to,add(d,4),n as u64,4);" },
++            Type::Id(id)=>match &self.r.types[id].kind{
++                TypeDefKind::Type(x)=>out+=&format!("{}(s,d,from,to,b);",Self::name(*x)),
++                TypeDefKind::List(x)=>{let stride=self.s.size(x).size_wasm32();let a=self.s.align(x).align_wasm32();out+=&format!("let p=r(from,s,4) as u32;let n=r(from,add(s,4),4) as u32;");if self.plain(*x,0){let weight=match x{Type::Id(id)=>self.weights[id],_=>1};out+=&format!("b.elements(n.checked_mul({weight}).expect(\"transfer node budget\"));");}else{out+="assert!(n<=b.nodes);";}out+=&format!("let bytes=n.checked_mul({stride}).expect(\"list size\");range(from,p,bytes,{a});let q=allocate(!from,bytes,{a},b);");if self.plain(*x,0){out+="blit(from,!from,p,q,bytes);";}else{out+=&format!("for i in 0..n{{{}(add(p,i*{stride}),add(q,i*{stride}),from,!from,b);}}",Self::name(*x));}out+="w(to,d,q as u64,4);w(to,add(d,4),n as u64,4);";},
++                TypeDefKind::Enum(e)=>out+=&format!("let x=r(from,s,{size});assert!(x<{});w(to,d,x,{size});",e.cases.len()),
++                TypeDefKind::Flags(f)=>{let word=match f.repr(){FlagsRepr::U8=>1,FlagsRepr::U16=>2,FlagsRepr::U32(_)=>4};for i in 0..f.repr().count(){let bits=f.flags.len().saturating_sub(i*word*8).min(word*8);let mask=if bits==32{u32::MAX as u64}else{(1u64<<bits)-1};out+=&format!("let x=r(from,add(s,{}),{word});assert!(x&!{mask}u64==0);w(to,add(d,{}),x,{word});",i*word,i*word);}},
++                TypeDefKind::FixedLengthList(x,n)=>out+=&format!("for i in 0..{n}u32{{{}(add(s,i*{}),add(d,i*{}),from,to,b);}}",Self::name(*x),self.s.size(x).size_wasm32(),self.s.size(x).size_wasm32()),
++                _=>return Err(fail("unsupported complete type inventory")),
++            },_=>return Err(fail("unsupported value type"))
++        }
++        }
++        out += "b.leave();}\n";
++        Ok(out)
++    }
++}
++
++const RUNTIME: &str = r#"
++#[allow(dead_code,unused_variables)]
++mod __wasmc_canonical_transfer {
++use std::alloc::{Layout,alloc_zeroed,dealloc};
++#[link(wasm_import_module="wasmc:private/canonical-memory@1")]
++extern "C" {
++ fn read8(p:i32)->i32;fn read32(p:i32)->i32;fn read64(p:i32)->i64;
++ fn write8(p:i32,v:i32);fn write32(p:i32,v:i32);fn write64(p:i32,v:i64);
++ fn own_read8(p:i32)->i32;fn own_read32(p:i32)->i32;fn own_read64(p:i32)->i64;
++ fn own_write8(p:i32,v:i32);fn own_write32(p:i32,v:i32);fn own_write64(p:i32,v:i64);
++ fn own_memory_size()->i32;fn lib_memory_size()->i32;
++ fn copy_to_lib(d:i32,s:i32,n:i32);fn copy_from_lib(d:i32,s:i32,n:i32);
++}
++struct Budget{bytes:u32,nodes:u32,depth:u32}
++impl Budget{fn new()->Self{Self{bytes:16*1024*1024,nodes:1024*1024,depth:0}}fn charge(&mut self,n:u32){self.bytes=self.bytes.checked_sub(n).expect("transfer byte budget");}fn elements(&mut self,n:u32){self.nodes=self.nodes.checked_sub(n).expect("transfer node budget");}fn enter(&mut self){self.elements(1);self.depth+=1;assert!(self.depth<=32);}fn leave(&mut self){self.depth-=1;}}
++fn add(p:u32,n:u32)->u32{p.checked_add(n).expect("pointer overflow")}
++fn range(lib:bool,p:u32,n:u32,a:u32){assert!(a.is_power_of_two()&&p%a==0);let pages=unsafe{if lib{lib_memory_size()}else{own_memory_size()}} as u32 as u64;assert!((p as u64)+(n as u64)<=pages*65536);}
++fn r(lib:bool,p:u32,n:u32)->u64{range(lib,p,n,1);unsafe{match n{1=>if lib{read8(p as i32) as u32 as u64}else{own_read8(p as i32) as u32 as u64},2=>r(lib,p,1)|(r(lib,add(p,1),1)<<8),4=>if lib{read32(p as i32) as u32 as u64}else{own_read32(p as i32) as u32 as u64},8=>if lib{read64(p as i32) as u64}else{own_read64(p as i32) as u64},_=>panic!("read width")}}}
++fn w(lib:bool,p:u32,x:u64,n:u32){range(lib,p,n,1);unsafe{match n{1=>if lib{write8(p as i32,x as i32)}else{own_write8(p as i32,x as i32)},2=>{w(lib,p,x,1);w(lib,add(p,1),x>>8,1)},4=>if lib{write32(p as i32,x as i32)}else{own_write32(p as i32,x as i32)},8=>if lib{write64(p as i32,x as i64)}else{own_write64(p as i32,x as i64)},_=>panic!("write width")}}}
++fn zero(lib:bool,p:u32,n:u32){range(lib,p,n,1);for i in 0..n{w(lib,add(p,i),0,1);}}
++fn blit(from:bool,to:bool,s:u32,d:u32,n:u32){range(from,s,n,1);range(to,d,n,1);if from==to{if s!=d{for i in 0..n{w(to,add(d,i),r(from,add(s,i),1),1);}}}else{unsafe{if from{copy_from_lib(d as i32,s as i32,n as i32)}else{copy_to_lib(d as i32,s as i32,n as i32)}}}}
++fn allocate(lib:bool,n:u32,a:u32,b:&mut Budget)->u32{b.charge(n);if n==0{return a;}let p=if lib{unsafe{realloc(0,0,a as i32,n as i32) as u32}}else{let l=Layout::from_size_align(n as usize,a as usize).unwrap();let p=unsafe{alloc_zeroed(l)};assert!(!p.is_null());p as usize as u32};range(lib,p,n,a);if lib{zero(true,p,n);}p}
++struct Scratch{p:u32,l:Layout}
++impl Scratch{fn new(n:u32,a:u32,b:&mut Budget)->Self{let l=Layout::from_size_align(n.max(1) as usize,a as usize).unwrap();let p=allocate(false,n.max(1),a,b);Self{p,l}}}
++impl Drop for Scratch{fn drop(&mut self){unsafe{dealloc(self.p as usize as *mut u8,self.l);}}}
++"#;
++
++// Capture allocator facts, not mutable Canonical pointers. Every copied
++// result allocation has its original exact Layout; Scratch removes itself
++// before its unchanged Drop. A trap abandons the Store, never drains/retries.
++const VALUE_LEASE_RUNTIME: &str = r#"
++static mut VALUE_ACTIVE:Option<(u32,u32)>=None;
++static mut VALUE_CAPTURE:bool=false;
++static mut VALUE_ALLOCATIONS:Vec<(u32,u32,u32)>=Vec::new();
++static mut VALUE_STAGING:Option<(u32,u32)>=None;
++static mut VALUE_STAGE_BYTES:u32=2*1024*1024;
++static mut VALUE_STAGE_NODES:u32=1024*1024;
++fn value_allocation(p:u32,n:u32,a:u32){unsafe{if VALUE_CAPTURE{assert!(VALUE_ALLOCATIONS.len()<1024*1024);VALUE_ALLOCATIONS.push((p,n,a));}}}
++fn value_scratch_drop(p:u32){unsafe{if VALUE_CAPTURE{let i=VALUE_ALLOCATIONS.iter().position(|x|x.0==p).expect("scratch allocation lease");VALUE_ALLOCATIONS.swap_remove(i);}}}
++fn value_begin(i:u32,d:u32){unsafe{assert!(VALUE_ACTIVE.is_none()&&!VALUE_CAPTURE&&VALUE_ALLOCATIONS.is_empty());VALUE_ACTIVE=Some((i,d));VALUE_CAPTURE=true;}}
++fn value_call_begin(i:u32,p:u32,d:u32){unsafe{if VALUE_ACTIVE.is_none(){value_begin(i,d);}else{assert!(VALUE_ACTIVE==Some((i,d))&&VALUE_CAPTURE&&VALUE_STAGING==Some((p,d)));VALUE_STAGING=None;}}}
++#[no_mangle]pub unsafe extern "C" fn __wasmc_value_stage_allocate(n:u32,a:u32)->u32{assert!(VALUE_CAPTURE&&VALUE_STAGING.is_some()&&a.is_power_of_two()&&a<=8);VALUE_STAGE_BYTES=VALUE_STAGE_BYTES.checked_sub(n).expect("staging byte budget");VALUE_STAGE_NODES=VALUE_STAGE_NODES.checked_sub(1).expect("staging node budget");allocate(false,n,a,&mut Budget::new())}
++fn value_open(i:u32,pn:u32,pa:u32,dn:u32,da:u32)->u64{unsafe{value_begin(i,0);VALUE_STAGE_BYTES=2*1024*1024;VALUE_STAGE_NODES=1024*1024;VALUE_STAGING=Some((0,0));let p=__wasmc_value_stage_allocate(pn,pa);let d=__wasmc_value_stage_allocate(dn,da);VALUE_ACTIVE=Some((i,d));VALUE_STAGING=Some((p,d));((d as u64)<<32)|(p as u64)}}
++fn value_cancel(i:u32,d:u32){unsafe{assert!(VALUE_ACTIVE==Some((i,d))&&VALUE_CAPTURE&&VALUE_STAGING.is_some_and(|(_,q)|q==d));VALUE_STAGING=None;VALUE_CAPTURE=false;value_post(i,d);}}
++fn value_ready(){unsafe{assert!(VALUE_CAPTURE);VALUE_CAPTURE=false;}}
++fn value_post(i:u32,d:u32){unsafe{assert!(VALUE_ACTIVE==Some((i,d))&&!VALUE_CAPTURE&&VALUE_STAGING.is_none());VALUE_ACTIVE=None;let allocations=std::mem::take(&mut VALUE_ALLOCATIONS);for(p,n,a)in allocations{dealloc(p as usize as *mut u8,Layout::from_size_align(n as usize,a as usize).unwrap());}}}
++#[no_mangle]pub unsafe extern "C" fn __wasmc_value_pending_allocations()->u32{VALUE_ALLOCATIONS.len() as u32}
++"#;
++
++fn value_lease_runtime() -> Result<String, LibToolRustConsumerSdkError> {
++    let allocation = "assert!(!p.is_null());p as usize as u32";
++    let drop = "dealloc(self.p as usize as *mut u8,self.l);";
++    if RUNTIME.matches(allocation).count() != 1 || RUNTIME.matches(drop).count() != 1 {
++        return Err(fail("value lease allocator/Scratch hooks drifted"));
++    }
++    Ok(RUNTIME.replace(allocation, "assert!(!p.is_null());value_allocation(p as usize as u32,n,a);p as usize as u32")
++        .replace(drop,"value_scratch_drop(self.p);dealloc(self.p as usize as *mut u8,self.l);") + VALUE_LEASE_RUNTIME)
++}
++
++fn build(
++    artifact:&[u8],ap:&str,wit:&[u8],wp:&str,module:&str,
++) -> Result<(CanonicalCoreBridge,Vec<Binding>),LibToolRustConsumerSdkError> {
++    build_with_value_windows(artifact,ap,wit,wp,module,false)
++}
++
++fn build_with_value_windows(
++    artifact: &[u8],
++    ap: &str,
++    wit: &[u8],
++    wp: &str,
++    module: &str,
++    value_windows: bool,
++) -> Result<(CanonicalCoreBridge, Vec<Binding>), LibToolRustConsumerSdkError> {
++    if artifact.len() > 16 * 1024 * 1024
++        || wit.len() > 1024 * 1024
++        || module.is_empty()
++        || module.len() > 256
++        || module == "wasmc:private/canonical-memory@1"
++    {
++        return Err(fail("input budget/module"));
++    }
++    if hex(&sha256(artifact)) != ap || hex(&sha256(wit)) != wp {
++        return Err(fail("externally pinned Core/WIT identity drift"));
++    }
++    let (inventory, _) = pinned_inventory(wit, artifact).map_err(fail)?;
++    let mut resolve = Resolve::default();
++    let p = resolve
++        .push_str(
++            "lib.wit",
++            std::str::from_utf8(wit).map_err(|e| fail(e.to_string()))?,
++        )
++        .map_err(|e| fail(e.to_string()))?;
++    let world = resolve
++        .select_world(&[p], None)
++        .map_err(|e| fail(e.to_string()))?;
++    if resolve.types.len() > 1024 {
++        return Err(fail("type inventory budget"));
++    }
++    if resolve.types.iter().any(|(_, t)| {
++        matches!(
++            t.kind,
++            TypeDefKind::Map(..)
++                | TypeDefKind::Resource
++                | TypeDefKind::Handle(_)
++                | TypeDefKind::Future(_)
++                | TypeDefKind::Stream(_)
++                | TypeDefKind::Unknown
++        )
++    }) {
++        return Err(fail("unsupported complete type inventory"));
++    }
++    let mut s = SizeAlign::default();
++    s.fill(&resolve);
++    let weights = super::canonical_memory::bounded_value_weights(&resolve).map_err(fail)?;
++    let g = Gen {
++        r: &resolve,
++        s,
++        weights,
++        bulk_string_gather: value_windows,
++    };
++    for (id, _) in resolve.types.iter() {
++        g.depth(Type::Id(id), 0)?;
++    }
++    let mut source = if value_windows { value_lease_runtime()? } else { RUNTIME.to_string() };
++    source+=&format!("#[link(wasm_import_module={module:?})] extern \"C\" {{#[link_name=\"cabi_realloc\"]fn realloc(p:i32,n:i32,a:i32,m:i32)->i32;}}\n");
++    for t in [
++        Type::Bool,
++        Type::U8,
++        Type::S8,
++        Type::U16,
++        Type::S16,
++        Type::U32,
++        Type::S32,
++        Type::U64,
++        Type::S64,
++        Type::F32,
++        Type::F64,
++        Type::Char,
++        Type::String,
++    ] {
++        source += &g.copier(t)?;
++    }
++    for (id, _) in resolve.types.iter() {
++        source += &g.copier(Type::Id(id))?;
++        if source.len() > MAX_SOURCE {
++            return Err(fail("generated source budget"));
++        }
++    }
++    let mut rows = Vec::new();
++    for (key, item) in &resolve.worlds[world].exports {
++        match item {
++            WorldItem::Interface { id, .. } => {
++                let name = resolve.name_world_key(key);
++                for f in resolve.interfaces[*id].functions.values() {
++                    rows.push((Some(name.clone()), f));
++                }
++            }
++            WorldItem::Function(f) => rows.push((None, f)),
++            WorldItem::Type { .. } => {}
++        }
++    }
++    let mut bindings = Vec::new();
++    for (i, (iface, f)) in rows.into_iter().enumerate() {
++        let imported = resolve.wasm_signature(AbiVariant::GuestImport, f);
++        let exported = resolve.wasm_signature(AbiVariant::GuestExport, f);
++        if imported.indirect_params || exported.indirect_params {
++            return Err(fail(
++                "indirect parameter ownership requires separate qualification",
++            ));
++        }
++        let names = [
++            f.legacy_core_export_name(iface.as_deref()).into_owned(),
++            f.standard32_core_export_name(iface.as_deref()).into_owned(),
++        ];
++        let name = names
++            .into_iter()
++            .find(|n| inventory.contains_key(n))
++            .ok_or_else(|| fail("exact export missing"))?;
++        let post = format!("cabi_post_{name}");
++        let has_post = inventory.contains_key(&post);
++        if let Some(t) = f.result {
++            if g.depth(t, 0)? && !has_post {
++                return Err(fail("owned value result requires exact post-return"));
++            }
++        }
++        let ptypes = f.params.iter().map(|p| p.ty).collect::<Vec<_>>();
++        let layout = g.s.record(ptypes.iter());
++        let offsets = g.s.field_offsets(ptypes.iter());
++        let public_params = imported
++            .params
++            .iter()
++            .enumerate()
++            .map(|(j, t)| format!("p{j}:{}", rust(*t)))
++            .collect::<Vec<_>>()
++            .join(",");
++        let ret = imported
++            .results
++            .first()
++            .map(|t| format!("->{}", rust(*t)))
++            .unwrap_or_default();
++        let raw_params = exported
++            .params
++            .iter()
++            .enumerate()
++            .map(|(j, t)| format!("p{j}:{}", rust(*t)))
++            .collect::<Vec<_>>()
++            .join(",");
++        let raw_ret = exported
++            .results
++            .first()
++            .map(|t| format!("->{}", rust(*t)))
++            .unwrap_or_default();
++        source+=&format!("#[link(wasm_import_module={module:?})]extern \"C\"{{#[link_name={name:?}]fn raw{i}({raw_params}){raw_ret};");
++        if has_post {
++            source += &format!("#[link_name={post:?}]fn post{i}(p:i32);");
++        }
++        source += "}\n";
++        source+=&format!("#[no_mangle]pub unsafe extern \"C\" fn {PREFIX}{i}({public_params}){ret}{{let mut b=Budget::new();let args=Scratch::new({}, {}, &mut b);",layout.size.size_wasm32(),layout.align.align_wasm32());
++        let mut at = 0;
++        for (o, t) in &offsets {
++            let flat = g.flat(**t)?;
++            let vs = flat
++                .iter()
++                .map(|ty| {
++                    let e = (format!("p{at}"), *ty);
++                    at += 1;
++                    e
++                })
++                .collect::<Vec<_>>();
++            source += &g.store(**t, &format!("add(args.p,{})", o.size_wasm32()), &vs, 0)?;
++        }
++        for (o, t) in &offsets {
++            source += &format!(
++                "{}(add(args.p,{}),add(args.p,{}),false,false,&mut b);",
++                Gen::name(**t),
++                o.size_wasm32(),
++                o.size_wasm32()
++            );
++        }
++        let mut args = Vec::new();
++        for (o, t) in &offsets {
++            args.extend(g.load(**t, &format!("add(args.p,{})", o.size_wasm32()), 0)?);
++        }
++        source += &format!("let result=raw{i}({});", args.join(","));
++        if let Some(t) = f.result {
++            let size = g.s.size(&t).size_wasm32();
++            let align = g.s.align(&t).align_wasm32();
++            if exported.retptr {
++                let target = imported.params.len() - 1;
++                source+=&format!("let dst=p{target} as u32;range(false,dst,{size},{align});zero(false,dst,{size});{}(result as u32,dst,true,false,&mut b);",Gen::name(t));
++                if has_post {
++                    source += &format!("post{i}(result as i32);");
++                }
++            } else if !exported.results.is_empty() {
++                source += &format!("let out=Scratch::new({size},{align},&mut b);");
++                source += &g.store(t, "out.p", &[("result".into(), exported.results[0])], 0)?;
++                source += &format!("{}(out.p,out.p,false,false,&mut b);", Gen::name(t));
++                if has_post {
++                    source += &format!("post{i}(result as i32);");
++                }
++                let values = g.load(t, "out.p", 0)?;
++                source += &values[0];
++            }
++        }
++        source += "}\n";
++        let value_window = if value_windows {
++            let bounded=|n:usize|u32::try_from(n).map_err(|_|fail("value window layout exceeds wasm32"));
++            let parameter_bytes=bounded(layout.size.size_wasm32())?;
++            let parameter_alignment=bounded(layout.align.align_wasm32())?;
++            let result_bytes=bounded(f.result.map_or(0,|t|g.s.size(&t).size_wasm32()))?;
++            let result_alignment=bounded(f.result.map_or(1,|t|g.s.align(&t).align_wasm32()))?;
++            if parameter_bytes>16*1024*1024||result_bytes>16*1024*1024{return Err(fail("value window byte budget"));}
++            let call_export=format!("__wasmc_value_call_{i}");
++            let post_export=format!("__wasmc_value_post_{i}");
++            let open_export=format!("__wasmc_value_open_{i}");
++            let cancel_export=format!("__wasmc_value_cancel_{i}");
++            let mut arguments=Vec::new();
++            for (o,t) in &offsets { arguments.extend(g.load(**t,&format!("add(p,{})",o.size_wasm32()),0)?); }
++            if imported.retptr { arguments.push("d as i32".into()); }
++            source+=&format!("#[no_mangle]pub unsafe extern \"C\" fn {open_export}()->u64{{value_open({i},{parameter_bytes},{parameter_alignment},{result_bytes},{result_alignment})}}\n#[no_mangle]pub unsafe extern \"C\" fn {cancel_export}(d:u32){{value_cancel({i},d);}}\n");
++            source+=&format!("#[no_mangle]pub unsafe extern \"C\" fn {call_export}(p:u32,d:u32){{range(false,p,{parameter_bytes},{parameter_alignment});range(false,d,{result_bytes},{result_alignment});assert!(add(p,{parameter_bytes})<=d||add(d,{result_bytes})<=p);value_call_begin({i},p,d);let result={PREFIX}{i}({});",arguments.join(","));
++            if !imported.retptr {
++                if let (Some(t),Some(lane))=(f.result,imported.results.first()) {
++                    source+=&g.store(t,"d",&[("result".into(),*lane)],0)?;
++                }
++            }
++            source+="value_ready();}\n";
++            source+=&format!("#[no_mangle]pub unsafe extern \"C\" fn {post_export}(d:u32){{value_post({i},d);}}\n");
++            Some(CanonicalValueOperation { interface:iface.clone().unwrap_or_else(||"$root".into()),
++                operation:f.name.clone(),call_export,post_export,open_export,cancel_export,parameter_bytes,parameter_alignment,result_bytes,result_alignment })
++        } else {None};
++        bindings.push(Binding {
++            module: iface.unwrap_or_else(|| "$root".into()),
++            name: f.name.clone(),
++            export: format!("{PREFIX}{i}"),
++            signature: (
++                imported.params.into_iter().map(wasm32).collect(),
++                imported.results.into_iter().map(wasm32).collect(),
++            ),
++            value_window,
++        });
++    }
++    source += "}\n";
++    if source.len() > MAX_SOURCE {
++        return Err(fail("generated source budget"));
++    }
++    Ok((CanonicalCoreBridge { source }, bindings))
++}
++
++pub fn generate_rust_wit_canonical_core_bridge(
++    artifact: &[u8],
++    ap: &str,
++    wit: &[u8],
++    wp: &str,
++    module: &str,
++) -> Result<CanonicalCoreBridge, LibToolRustConsumerSdkError> {
++    Ok(build(artifact, ap, wit, wp, module)?.0)
++}
++
++/// Generate per-Lib private value calls and exact-once result leases. App
++/// compilation consumes only the compiled bridge and data-only WIT layouts.
++/// Every successful call requires its matching post after copying its result;
++/// a trap terminates the Store. Default SDK generation remains byte-identical.
++pub fn generate_rust_wit_canonical_value_core_bridge(
++    artifact:&[u8],ap:&str,wit:&[u8],wp:&str,module:&str,
++) -> Result<CanonicalValueCoreBridge,LibToolRustConsumerSdkError> {
++    let (bridge,bindings)=build_with_value_windows(artifact,ap,wit,wp,module,true)?;
++    Ok(CanonicalValueCoreBridge {source:bridge.source,
++        operations:bindings.into_iter().map(|b|b.value_window.expect("value window generation selected")).collect()})
++}
++
++struct Redirect {
++    imported: u32,
++    retained: u32,
++    mapping: Vec<u32>,
++    removed: BTreeMap<(String, String), u32>,
++    hidden: Vec<String>,
++}
++impl Reencode for Redirect {
++    type Error = String;
++    fn function_index(&mut self, i: u32) -> u32 {
++        if i < self.imported {
++            self.mapping[i as usize]
++        } else {
++            self.retained + i - self.imported
++        }
++    }
++    fn parse_import_section(
++        &mut self,
++        s: &mut ImportSection,
++        r: wasmparser::ImportSectionReader<'_>,
++    ) -> Result<(), reencode::Error<Self::Error>> {
++        for i in r {
++            let i = i?;
++            if !self
++                .removed
++                .contains_key(&(i.module.to_owned(), i.name.to_owned()))
++            {
++                self.parse_import(s, i)?;
++            }
++        }
++        Ok(())
++    }
++    fn parse_export_section(
++        &mut self,
++        s: &mut ExportSection,
++        r: wasmparser::ExportSectionReader<'_>,
++    ) -> Result<(), reencode::Error<Self::Error>> {
++        for e in r {
++            let e = e?;
++            if !self.hidden.iter().any(|n| n == e.name) {
++                self.parse_export(s, e);
++            }
++        }
++        Ok(())
++    }
++}
++/// Replace official guest-import calls with exact private compiled shims, then
++/// lower all memory intrinsics. Original Lib and public WIT remain unchanged.
++pub fn prepare_rust_wit_canonical_sdk_caller(
++    caller: &[u8],
++    artifact: &[u8],
++    ap: &str,
++    wit: &[u8],
++    wp: &str,
++    module: &str,
++) -> Result<Vec<u8>, LibToolRustConsumerSdkError> {
++    if caller.len() > 4 * 1024 * 1024 {
++        return Err(fail("caller byte budget"));
++    }
++    let (_, bindings) = build(artifact, ap, wit, wp, module)?;
++    wasmparser::Validator::new()
++        .validate_all(caller)
++        .map_err(|e| fail(e.to_string()))?;
++    let mut types = Vec::new();
++    let mut imports = Vec::new();
++    let mut functions = Vec::new();
++    let mut exports = BTreeMap::new();
++    for p in Parser::new(0).parse_all(caller) {
++        match p.map_err(|e| fail(e.to_string()))? {
++            Payload::TypeSection(s) => {
++                for t in s.into_iter_err_on_gc_types() {
++                    let t = t.map_err(|e| fail(e.to_string()))?;
++                    types.push((t.params().to_vec(), t.results().to_vec()));
++                }
++            }
++            Payload::ImportSection(s) => {
++                for i in s {
++                    let i = i.map_err(|e| fail(e.to_string()))?;
++                    let TypeRef::Func(t) = i.ty else {
++                        return Err(fail("caller initially imports functions only"));
++                    };
++                    imports.push((i.module.to_owned(), i.name.to_owned(), t));
++                }
++            }
++            Payload::FunctionSection(s) => {
++                for t in s {
++                    functions.push(t.map_err(|e| fail(e.to_string()))?);
++                }
++            }
++            Payload::ExportSection(s) => {
++                for e in s {
++                    let e = e.map_err(|e| fail(e.to_string()))?;
++                    if e.kind == wasmparser::ExternalKind::Func {
++                        exports.insert(e.name.to_owned(), e.index);
++                    }
++                }
++            }
++            _ => {}
++        }
++    }
++    if imports.len() > 1024 {
++        return Err(fail("original import budget"));
++    }
++    let mut seen = BTreeSet::new();
++    for (m, n, _) in &imports {
++        if !seen.insert((m, n)) {
++            return Err(fail("duplicate original import"));
++        }
++    }
++    let mut removed = BTreeMap::new();
++    let mut hidden = Vec::new();
++    for b in bindings {
++        let Some(&index) = exports.get(&b.export) else {
++            continue;
++        };
++        if index < (imports.len() as u32) {
++            return Err(fail("bridge must be caller-local"));
++        }
++        let ty = functions
++            .get(index as usize - imports.len())
++            .ok_or_else(|| fail("bridge function index"))?;
++        if types.get(*ty as usize) != Some(&b.signature) {
++            return Err(fail("bridge signature drift"));
++        }
++        removed.insert((b.module, b.name), index);
++        hidden.push(b.export);
++    }
++    let mut retained = 0;
++    for (m, n, t) in &imports {
++        if let Some(&index) = removed.get(&(m.clone(), n.clone())) {
++            let _ = index;
++            let b = hidden
++                .iter()
++                .find(|x| exports.get(*x) == Some(&index))
++                .unwrap();
++            let own_ty = functions[index as usize - imports.len()];
++            if types.get(*t as usize) != types.get(own_ty as usize) {
++                return Err(fail(format!("official SDK import differs from {b}")));
++            }
++        } else {
++            retained += 1;
++        }
++    }
++    let mapping = imports
++        .iter()
++        .map(|(m, n, _)| {
++            if let Some(i) = removed.get(&(m.clone(), n.clone())) {
++                retained + *i - imports.len() as u32
++            } else {
++                0
++            }
++        })
++        .collect::<Vec<_>>();
++    let mut mapping = mapping;
++    let mut next = 0;
++    let mut actual = 0;
++    for (i, (m, n, _)) in imports.iter().enumerate() {
++        if !removed.contains_key(&(m.clone(), n.clone())) {
++            mapping[i] = next;
++            next += 1;
++        } else {
++            actual += 1;
++        }
++    }
++    if actual == 0 {
++        return Err(fail("no actual SDK call import"));
++    }
++    let mut re = Redirect {
++        imported: imports.len() as u32,
++        retained,
++        mapping,
++        removed,
++        hidden,
++    };
++    let mut out = Module::new();
++    re.parse_core_module(&mut out, Parser::new(0), caller)
++        .map_err(|e| fail(e.to_string()))?;
++    prepare_rust_wit_canonical_core_caller(&out.finish(), artifact, ap, wit, wp, module)
++}
++
++#[cfg(test)]
++#[path = "../../.agents/workstreams/WS-20261002-resource-sdk-complex-closure-v1/probes/core-sdk-adapter/src/canonical_bridge_tests.rs"]
++mod tests;
