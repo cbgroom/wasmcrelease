@@ -1,0 +1,31 @@
+{
+  "status": "SCOPED_LOCAL_COMPILER_AND_HOST_LIMIT_REPAIR_EXPERIMENT",
+  "wasmc_master": "482fb98b040f0b6fe99378afed9ae4dbcb1dd3bf",
+  "private_sdk_patch_sha256": "b97da19043709b1b7fe3b82eae9f31d68c31e7d8279423207fd010364a14f8f9",
+  "private_dynamic_adapter_patch_sha256": "71575517f1d3e1f9d81e3f75363ce6cdac8277acfceaf33ca73ec2fef31ce53c",
+  "private_host_entry_patch_sha256": "f692c9e354234795ae7f8a568b148116a781328a87e60dc9816be605caf41b71",
+  "portable_compiler_sha256": "4ce35395a947a06f5bfc993e6edc740c6a67c1019eadc3cbb0b26c87ee6395ad",
+  "portable_compiler_bytes": 1979707,
+  "host_binding_sha256": "db2860dff2c4758aa6e44bbfa204cf2486d0c83b3deafbc1424d69b57d8967c5",
+  "anonymous_json_root_manifest": "e4828ea55693c415203bc996e25af6a3c2a8e974a4c6dd05d35799fe31ff4c4d",
+  "app_sha256": "92de8ee83b27f95e6e868ba6572c7d58eee80c52227121b14af50054c780813b",
+  "baseline": "published Host binding rejects 4MiB input above 1500000-byte configured max; exact unmodified compiler rejects caller-selected 16MiB due per-field and summed 2MiB plan bounds",
+  "repair": "scratch-only per-field 16MiB, checked aggregate arithmetic without aggregate quota, candidate Host request-body 16MiB; no frozen binding changed",
+  "results": "Node/Bun/Deno portable compile produces 8 modules matching native after existing CoreLib alias normalization; Node and Deno same compiled app process exact 16777216 bytes, reject 16777217 at explicit Host bound, and recover with new input in same instance",
+  "prior_binary_mismatch_logs": [
+    {
+      "path": "/Users/youxianshi/.local/state/wasmc-maintenance/rustc-service-1991-20261028/json023-portable-compile-node.log",
+      "sha256": "dc0eb4ba1cc2e5f0cf2fafac78b164f2ad6b68b98d7f471c0bb30f246be25ea6"
+    },
+    {
+      "path": "/Users/youxianshi/.local/state/wasmc-maintenance/rustc-service-1991-20261028/json023-portable-compile-v2-node.log",
+      "sha256": "5a88afcf03c89d0be9bfda231dc0ae989935f1febec0480a96d386902cf68af0"
+    }
+  ],
+  "limitations": [
+    "isolated private compiler patch, not admitted or owner-released Source",
+    "Host contract is a local candidate; production Service and route not altered",
+    "simulation does not prove real Service deployed path or formal release",
+    "only JSON compact and recovery on this path, not full JSON operation coverage"
+  ]
+}
