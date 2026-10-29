@@ -5,7 +5,7 @@ import {loadBoundProtocol} from './fresh-agent-learning-v1.mjs';
 import {readFileSync,writeFileSync,readdirSync,lstatSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
-import {resolve,relative,dirname} from 'node:path';
+import {resolve,relative,dirname,posix} from 'node:path';
 import {spawnSync} from 'node:child_process';
 import {createRequire} from 'node:module';
 import {checkedCurrentCatalog,verifyCurrentRelease,verifyCurrentReleaseV4,currentProductReader,currentProductPaths} from './current-lib-release-v3.mjs';
@@ -18,6 +18,29 @@ const root=fileURLToPath(new URL('../',import.meta.url));
 const require=createRequire(import.meta.url);
 const hash=b=>createHash('sha256').update(b).digest('hex');
 const safe=p=>typeof p==='string'&&p.split('/').every(x=>x&&x!=='.'&&x!=='..')&&!p.includes('\\')&&!p.startsWith('/');
+function relativeModuleImports(path,bytes){
+  const targets=[];
+  for(const match of bytes.toString('utf8').matchAll(/(?:from\s*|import\s*\(\s*|import\s*|require\s*\(\s*)['"](\.[^'"]+)['"]/g)){
+    const target=posix.normalize(posix.join(posix.dirname(path),match[1]));
+    if(!safe(target))throw Error('module import path outside product');
+    targets.push(target);
+  }
+  return targets;
+}
+export function validateProductModuleImports(rows,read,entrypoints=['scripts/wasmc-lib.mjs','scripts/release-candidate.mjs']){
+  const paths=new Set(rows.map(row=>row.path));
+  const queue=[...entrypoints],visited=new Set();
+  while(queue.length){
+    const path=queue.pop();if(visited.has(path))continue;
+    if(!paths.has(path))throw Error(`product module entry missing: ${path}`);
+    visited.add(path);
+    for(const target of relativeModuleImports(path,read(path))){
+      if(!paths.has(target))throw Error(`product module import missing: ${path} -> ${target}`);
+      if(target.endsWith('.mjs')||target.endsWith('.js'))queue.push(target);
+    }
+  }
+  return true;
+}
 const legacyV1ProductSets=Object.freeze({
   '0.0.10':'dd01d2fef9a4010e0bf4ed50f2fbf790a2771c92e4a4252bd6889441bc2059d8',
   '0.0.11':'101a8a3783d52fc3d06e15731b20ec5fbe5a2bdbd7d9e964876f76ce44e33662',
@@ -261,6 +284,8 @@ export function validateCandidate(candidate,read) {
     const bytes=read(row.path);if(bytes.length!==row.bytes||hash(bytes)!==row.sha256)throw Error('product drift rejected');previous=row.path;
   }
   if(candidate.product_set_sha256!==hash(JSON.stringify(rows)))throw Error('product set identity rejected');
+  if(candidate.schema==='wasmc.release-product-candidate/v3'&&/^0\.0\.(?:3[1-9]|[4-9][0-9]|[1-9][0-9]{2,})$/.test(candidate.version))
+    validateProductModuleImports(rows,read);
   if(candidate.schema==='wasmc.release-product-candidate/v2'){
     const closure=candidate.lib_route_closure;
     if(closure?.schema!=='wasmc.release-candidate-lib-route-closure/v1'||!safe(closure.authority_receipt?.path)||!/^[0-9a-f]{64}$/.test(closure.authority_receipt?.sha256??'')||!safe(closure.catalog?.path)||!/^[0-9a-f]{64}$/.test(closure.catalog?.sha256??'')||!safe(closure.search_index?.path)||!/^[0-9a-f]{64}$/.test(closure.search_index?.sha256??'')||!Number.isSafeInteger(closure.release_packages)||closure.release_packages<1||!Number.isSafeInteger(closure.package_routes)||closure.package_routes!==closure.release_packages||!Number.isSafeInteger(closure.api_routes)||closure.api_routes<1||closure.candidate_extras!==0||closure.exact!==true||closure.candidate_extra_grants_release!==false)throw Error('candidate Lib route closure rejected');
@@ -470,7 +495,7 @@ export function currentProductInputsForVersion(version,variant){
     'admission/mixed-current-cohort-v1.json','catalog/current-mixed-license-policy-v1.json',
     'catalog/frozen-v030-notices-v1.json','scripts/frozen-v030-notices-v1.mjs','scripts/current-license-policy-mixed-v1.mjs',
     'scripts/mixed-current-product-v1.mjs','scripts/project-frozen-search-index-v1.mjs','scripts/qualify-mixed-release-inputs-v1.mjs',
-    'scripts/test-current-product-mixed-v1.mjs','scripts/test-current-license-policy-mixed-v1.mjs'];
+    'scripts/test-current-product-mixed-v1.mjs','scripts/test-current-license-policy-mixed-v1.mjs','scripts/test-product-module-imports-v1.mjs'];
   assert.equal(variant,'v4');
   return [...base.filter(path=>path!=='admission/current-product-v3.json'),
     'admission/current-product-v4.json','catalog/current-v4-license-policy.json',
@@ -635,8 +660,10 @@ export async function createCurrentCandidate(repo,{compilerSource,libSource,vers
   for(const row of catalog.packages)for(const pin of Object.values(row.source))paths.add(pin.path);
   const addImports=path=>{
     const source=read(path).toString('utf8');
-    for(const match of source.matchAll(/(?:from\s*|import\s*\(\s*|import\s*)['"](\.[^'"]+)['"]/g)){
-      const target=relative(repo,resolve(repo,dirname(path),match[1])).split('\\').join('/');
+    const targets=Number(version.split('.')[2])>=31?relativeModuleImports(path,Buffer.from(source)):
+      [...source.matchAll(/(?:from\s*|import\s*\(\s*|import\s*)['"](\.[^'"]+)['"]/g)]
+        .map(match=>relative(repo,resolve(repo,dirname(path),match[1])).split('\\').join('/'));
+    for(const target of targets){
       if(!safe(target))throw Error('module import path outside product');
       if(paths.has(target))continue;paths.add(target);if(target.endsWith('.mjs')||target.endsWith('.js'))addImports(target);
     }

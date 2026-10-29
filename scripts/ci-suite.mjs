@@ -29,6 +29,8 @@ export function suiteCases(family,runtime='node',mirror='github') {
   const item=(id,script,args=[],permissions=['--allow-read'])=>({id,...js(runtime,script,args,permissions)});
   const fixturePermissions=['--allow-read','--allow-write','--allow-env=TMPDIR,TMP,TEMP'];
   const current=['integrity','candidate'].includes(family)?currentProductControls():null;
+  const mixedModuleChecks=current?.product==='scripts/test-current-product-mixed-v1.mjs'
+    ?[item('product-module-import-closure','scripts/test-product-module-imports-v1.mjs')]:[];
   if(family==='compatibility')return [
     item('core-feature-probes-and-negatives','scripts/test-core-compatibility.mjs'),
     item('catalog-exact-resolution','scripts/test-lib-catalog.mjs',[],fixturePermissions),
@@ -36,6 +38,7 @@ export function suiteCases(family,runtime='node',mirror='github') {
     item('compiler-expression-only','scripts/validate-current.mjs',['--compile-only'],['--allow-read','--allow-write','--allow-run','--allow-env'])
   ];
   if(family==='integrity')return [
+    ...mixedModuleChecks,
     item('library-first-teaching-and-routes','scripts/test-library-first.mjs'),
     item('current-lib-search-complete-index-regression','examples/lib-search/run.mjs'),
     item('live-agent-trace-evaluator','scripts/test-live-agent-trace-evaluation-v1.mjs'),
@@ -59,6 +62,7 @@ export function suiteCases(family,runtime='node',mirror='github') {
     item('deterministic-fresh-agent-regression','scripts/wasmc-fresh-agent-evaluation-v0.mjs',['--release-root','.', '--json-out','target/ci/fresh-agent.json'])
   ];
   if(family==='candidate')return [
+    ...mixedModuleChecks,
     item('current-v3-product-identity','scripts/current-release-identity.mjs'),
     item('current-complete-product-reopen-negatives',current.product,['--product','.', '--catalog-sha256',current.catalog,'--out','target/ci/current-product-controls'],fixturePermissions),
     item('current-original-license-reopen-negatives',current.license),

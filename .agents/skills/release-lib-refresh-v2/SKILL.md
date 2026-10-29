@@ -37,6 +37,8 @@ Mixed release candidate creation must independently requalify Q0, tags, Q2 and t
 
 CI must dispatch the mixed cohort to its own complete two-source product and per-Root notice checks, with a catalog-pinned mixed policy; run each under supported Node, Bun and Deno hosts. These checks do not replace whole-product CI or compiler admission.
 
+For successor mixed products, reopening a hashed inventory must also confirm the literal relative module dependencies reachable from the delivered CLI and candidate verifier are themselves in that inventory. A reader may have access to omitted checkout files, so a successful read alone is insufficient. Check the active entrypoint graphs, not embedded historical proof-graph scripts that are not execution entrypoints. Dynamic nonliteral imports require separate evidence; this structural check is not a full JavaScript parser.
+
 After anonymous installation of a mixed cohort, compile each selected 2024 Core SDK directly from its installed and pinned bytes with the pinned Rust toolchain. Report historical editions and Component manifest declarations separately; neither direct SDK compilation nor temporary-Service execution proves deployed routing or release.
 
 ## Decision

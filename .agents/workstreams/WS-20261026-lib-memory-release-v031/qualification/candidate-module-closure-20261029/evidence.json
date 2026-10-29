@@ -1,0 +1,20 @@
+{
+  "schema": "wasmc.candidate-module-closure/v1",
+  "scope": "Successor candidate reopens literal relative modules reachable from delivered CLI and candidate verifier; embedded historical proof graphs are not execution roots. Not a full JavaScript parser or formal release.",
+  "source_sha256": {
+    "scripts/release-candidate.mjs": "0cac9bacdecac11c995fae521f44204a073e45b10c6f5e0af6cc7ac6b0f589ea",
+    "scripts/test-product-module-imports-v1.mjs": "fa52fd4455f124acae0fddbca274ff2af7d5b3375fc13377aa34e06d1cd28587",
+    "scripts/ci-suite.mjs": "93f2623ae724e5aad4aa9ba979f1196f6a9a049fc9fda79d2d197974873a24b6"
+  },
+  "checks": [
+    "Node/Bun/Deno: five missing imports, one path escape and rehashed candidate omitted dependency rejected",
+    "scoped mixed fixture plus current scripts: two entrypoint graphs pass; removing indirect module rejected",
+    "mixed CI selector includes test for candidate and integrity on Node/Bun/Deno",
+    "release-channel, release-version, CI reporting regressions pass"
+  ],
+  "first_failures": [
+    "stale-fixture-first.log: old fixture lacked current qualification script",
+    "missing-transitive-second.log: selected-only overlay omitted auto-discovered audit script"
+  ],
+  "scope_limit": "Scoped fixture plus script overlay, not exact release candidate, Hosted route, CI execution or formal publication."
+}
