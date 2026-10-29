@@ -1,0 +1,58 @@
+{
+  "schema": "wasmc.json2024-fresh-single-q0/v1",
+  "status": "isolated candidate; full 43 run separately in progress",
+  "source_delta_sha256": "082a83259e6a3c8f519a53ba6ddaa34383d8d591188ee877e9222968814bb676",
+  "receipt_sha256": "80ee75f4075b90593ca677444b78ffc8435d0852cba9fb6aa29687a322c20c07",
+  "producer_sha256": "45e229a3201de33ef0e4e362b6b2ea7abe45f2097913c5f8c22b1992fa50fc59",
+  "root_manifest_sha256": "a40499304c4078c8034473e552730cd460556c81d8679b8afe040cf2407f7397",
+  "root_core_sha256": "007eac4dbfe32f53462f866a66e6bb191fec13c01ac7d90baf2572b27ec22722",
+  "root_component_sha256": "5bab76a0fa8b7d079add3aa9c9986725f4f5248c456f4d6e4dcfc81f431233be",
+  "rust2024_sdk_sha256": "8dd1cecb80f4afd8f76258ffa333ccf3efd0ab11fffb873b9f6a473839c0d5a7",
+  "guest_sha256": "43fca13562330288f198f373469af15ba9cb69f2af16aa080278a81385445758",
+  "root_files": 25,
+  "validation": [
+    "Normal refresh runner built JSON from repaired source, generated Rust 2024 SDK and added full notice bundle; independent producer verification passed.",
+    "Actual installCurrentLib installed 25 files via synthetic catalog and controlled in-memory transport; Rust 2024 generated SDK and guest passed 26 JSON calls three times per same instance on Node, Bun and Deno.",
+    "Node, Bun, Deno each rejected duplicate keys hiding invalid numeric input, retained last-key behavior and recovered; flags [31,31,31].",
+    "Wasmtime Component test compared six cases with old Q0 and newly installed Component, including invalid hidden number and invalid surrogate.",
+    "Node used the installed Core and same Rust SDK guest for 16,777,217 payload bytes and then small-input recovery, with no aggregate memory cap configured."
+  ],
+  "provenance_correction": "In prior json2024-union-notices-20261029/evidence.json producer_sha256 recorded 45e229 after a subsequent cargo test relink; initial 23-Root checks ran on executable hash 85d7f9eeada2e4add38532d1c97284714a9e36e7ed21112f0b77e71757983be4 observed before the tests. To avoid treating the two identities as identical, all 23 checks were rerun on 45e229 with producer hash verified before and after; 23/23 passed.",
+  "preserved_failures": [
+    "Initial three all-operations runs rejected the new Guest because the reused harness still pinned the old Guest digest; corrected harness pins the exact new binary, all reruns passed.",
+    "Original prior notice and canonical-path failures retained in earlier qualification."
+  ],
+  "limitations": [
+    "Single package refresh is not full-cohort Q0 or a public-authority catalog.",
+    "Component cases are separate invocations, not a persistent Component instance.",
+    "JS bridge runs with no total memory cap; no production Hosted route, Source admission, CI, formal release or anonymous install."
+  ],
+  "files_sha256": {
+    "bun-fixed.log": "4b4a9dd5d63ced157f1857a478e4920f87211595e1c8983cfb5f0c355be144b4",
+    "bun.log": "7b180965fdd15f43ee6c02fbe9ddf1b63bd96a48fce9a8388092a723d5251626",
+    "cohort43-json2024-union-single-20261029.log": "200ae9d8e92402ff796886b50f2b4fa4e715931f2ce503f0af62b0d5ee9b39e0",
+    "cohort43-json2024-union-single-install-20261029.log": "d1e51cb9740774eb690bf376b25b2dc5fe32c6e06c1db89348d02663d8f050a8",
+    "cohort43-json2024-union-single-install-20261029.mjs": "ab9bf64d08c2337a593dfdcf74ce86450cbbfbdfb3cd302b37b8f3a265180b35",
+    "cohort43-json2024-union-single-install-result-20261029.json": "465975f83fe8539e08b5742379a597ffeba9bdcaf0b1af503c1ee8dec923d97d",
+    "component.log": "2b0d226c2fbfd83b6938531690e872df5927bfdfb2dd50ccdb8b51cc0e4ba3e3",
+    "deno-fixed.log": "269414f57af2402416577ff139bb063fba22c2d97eccdcc6eac061343d8dcdfe",
+    "deno.log": "5a1e997c1618d1c573385795e95bc031d614ceeacb7aaae983e2025cd91034f5",
+    "duplicates-bun.log": "ef9e4bae162ca64b96beb4cdfb4c401e21e25e569b06ca78cae9ccfbd08585ba",
+    "duplicates-deno.log": "ef9e4bae162ca64b96beb4cdfb4c401e21e25e569b06ca78cae9ccfbd08585ba",
+    "duplicates-node.log": "ef9e4bae162ca64b96beb4cdfb4c401e21e25e569b06ca78cae9ccfbd08585ba",
+    "duplicates.wasm": "fa6c42d82154f8c855b3c9194bedb6a47bf6d8ab38c4450a2924fc09de8d88a6",
+    "guest.wasm": "43fca13562330288f198f373469af15ba9cb69f2af16aa080278a81385445758",
+    "installed-bun.log": "4b4a9dd5d63ced157f1857a478e4920f87211595e1c8983cfb5f0c355be144b4",
+    "installed-deno.log": "269414f57af2402416577ff139bb063fba22c2d97eccdcc6eac061343d8dcdfe",
+    "installed-large-node.log": "c3c681f2c7e66f0bee5dcbaaffa3f83aac35b0fc5dcec1ea362dfa1ded14f983",
+    "installed-node.log": "61d1781e2effeb0328e4fc84800a275a2b277166283bee546c9aeb7b575de61d",
+    "large.wasm": "9565c88cf39d21bf1c33f17454242d33c527854f0852037de26bc15f97354a66",
+    "node-fixed.log": "61d1781e2effeb0328e4fc84800a275a2b277166283bee546c9aeb7b575de61d",
+    "node.log": "78d6f5786c83f35186fd1341f24512000cff78249014ed23a8e96d49321c9de6",
+    "root.tar.gz": "4bacf5a4ae84629343da277d2258cbcb952ec7eaa6f4c6621f99974d0737fff5",
+    "run.mjs": "010231442ce07c2792ce6b9bf256d10bf5080fc66d22406ab32c8aae9ce8b673",
+    "single-refresh-receipt.json": "80ee75f4075b90593ca677444b78ffc8435d0852cba9fb6aa29687a322c20c07",
+    "wasmc-2024-notice-union-cohort-fenced-20261029.log": "08230cc0be5efc326c3496e47cfa0ededdfb040e8ed26b566f80424227b48391",
+    "wasmc-2024-notice-union-cohort-fenced-20261029.py": "1ea0ce2183d82b684a7d5029bbb37d272c971dc87f75cd32ab365ff7bb439f1f"
+  }
+}

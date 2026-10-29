@@ -1,0 +1,22 @@
+10 | const manifest = JSON.parse(fs.readFileSync(path.join(root, 'lib.json')));
+11 | const providerBytes = fs.readFileSync(path.join(root, 'artifact.wasm'));
+12 | const guestBytes = fs.readFileSync(guestPath);
+13 | assert.equal(sha(providerBytes), expectedProvider);
+14 | assert.equal(sha(providerBytes), manifest.artifact.sha256);
+15 | assert.equal(sha(guestBytes), 'b7209482e45c767cac1e79c966cd2f4fceaa5f8737099d553a232415b87e02d6');
+            ^
+AssertionError: Expected values to be strictly equal:
++ actual - expected
+
++ '43fca13562330288f198f373469af15ba9cb69f2af16aa080278a81385445758'
+- 'b7209482e45c767cac1e79c966cd2f4fceaa5f8737099d553a232415b87e02d6'
+
+ generatedMessage: true,
+     actual: "43fca13562330288f198f373469af15ba9cb69f2af16aa080278a81385445758",
+   expected: "b7209482e45c767cac1e79c966cd2f4fceaa5f8737099d553a232415b87e02d6",
+   operator: "strictEqual",
+       code: "ERR_ASSERTION"
+
+      at /Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-lib-memory-release-v031/.agents/workstreams/WS-20261026-lib-memory-release-v031/qualification/json-master-2024-autolink-20261029/run-all-operations.mjs:15:8
+
+Bun v1.3.14 (macOS arm64)
