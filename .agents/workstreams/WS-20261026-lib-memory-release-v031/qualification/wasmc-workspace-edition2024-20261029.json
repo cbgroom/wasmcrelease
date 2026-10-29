@@ -1,0 +1,30 @@
+{
+  "schema": "wasmc.workspace-edition2024-candidate/v1",
+  "base": "c1306cc8ec4497d2190f7ac72501979e4038bfae selected source paths; other combined candidate overlays also present during tests",
+  "changes": "Main workspace packages inherit edition 2024 from one workspace.package declaration; three independent Cargo workspaces explicitly set 2024. wasm compiler and cdylib export attributes use Rust 2024 syntax. Frozen historical fixtures are not modified.",
+  "validation": "Main workspace libs/bins locked offline check passed; cdylib locked offline wasm32 check passed; core-runtime 23 tests passed. Edition 2024 wasm compiler built and validated; compilation of typed JSON transaction app yields byte-identical artifact previously verified with temporary MCPGit Service.",
+  "compiler_sha256": "30171c7589a96f565212336a64c429ad0b1b64487288a05fce09828bb028718e",
+  "app_sha256": "7d25111eaea1dc17a9372049a1b8edc815dadbab3f5ab5bc904d39da273b5762",
+  "failures_and_scope": [
+    "All-target check fails in preexisting isolated experimental native_value_runner_candidate_20261028 example, not claimed full target validation.",
+    "First main check found 18 edition export attribute errors; fixed in both wrapper sources.",
+    "Adapter and fuzz locked checks failed due stale independent lockfiles in this combined candidate. Adapter offline temporary lock refresh compiled; original lock restored. Fuzz remains unchecked.",
+    "Edition-2024 Rust compiler emits existing E0133 warnings; warnings not presented as clean.",
+    "Prior successful route is in-process temporary Service, not live deployment.",
+    "No Source integration, official release or anonymous readback."
+  ],
+  "patch_application": "git apply --unidiff-zero --check against exact Source PR head",
+  "evidence_sha256": {
+    "wasmc-workspace-2024-check-first-20261029.log": "34f84265a13668aee5cb711cd56eb4e5cee0588b24797c14773c69c013328663",
+    "wasmc-workspace-2024-check-core-20261029.log": "60fc1887011540869878b9e192905defb7c928dda517162f1e8407e91311e052",
+    "wasmc-workspace-2024-check-core-v2-20261029.log": "cbc17982e2f870b1502f394a583991b078e1d8d35456c5fb79362420214a121b",
+    "core-runtime-2024-wide-suite-20261029.log": "228f58b08c2c8835a48432b4c2614fc50f3090358446ca0a365f4aeb347e268c",
+    "wasmc-cdylib-2024-check-20261029.log": "04ed91f14846884aed484c95351244531b70d678e184e5cadb7cf9eada275a01",
+    "wasmc-adapter-2024-check-20261029.log": "5e7027ae4351597114106914b6e18a218d8d04e3b5d25a53d1d6faf3fbd28eb0",
+    "wasmc-adapter-2024-check-v2-20261029.log": "575a7935d8d324fa090affe3a3c631a5221e546220bc341f46492db91d6c54cc",
+    "wasmc-fuzz-2024-check-20261029.log": "1810e64d510f205d502fca193ea27e7755c9d413a258c9fdcf258104430ef942",
+    "wasmc-compiler-2024-build-20261029.log": "d519d91ee56e38221b04978622711a5870b3b365d1cdeea47dad74050592b2b9",
+    "wasmc-compiler-2024-compile-route-20261029.log": "39756f89008fd71dafb9c8622dbff4b2e6fa97feed95e28f21c8a4de59274376",
+    "wasmc-workspace-edition2024-20261029.patch": "7a395edb87762980eeb8606d6ae6a8d71faac699a3fdda4edb457865d6654869"
+  }
+}

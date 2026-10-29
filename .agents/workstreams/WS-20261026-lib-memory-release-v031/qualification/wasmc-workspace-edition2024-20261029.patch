@@ -1,0 +1,171 @@
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -4 +4 @@
+-edition = "2021"
++edition.workspace = true
+@@ -99,0 +100,3 @@
++[workspace.package]
++edition = "2024"
++
+--- a/crates/wasmc_aot_runtime/Cargo.toml
++++ b/crates/wasmc_aot_runtime/Cargo.toml
+@@ -4 +4 @@
+-edition = "2021"
++edition.workspace = true
+--- a/crates/wasmc_core_runtime/Cargo.toml
++++ b/crates/wasmc_core_runtime/Cargo.toml
+@@ -4 +4 @@
+-edition = "2021"
++edition.workspace = true
+--- a/crates/wasmc_wasm/Cargo.toml
++++ b/crates/wasmc_wasm/Cargo.toml
+@@ -4 +4 @@
+-edition = "2021"
++edition.workspace = true
+--- a/crates/wasmc_cabi/Cargo.toml
++++ b/crates/wasmc_cabi/Cargo.toml
+@@ -4 +4 @@
+-edition = "2021"
++edition.workspace = true
+--- a/crates/wasmc_component/Cargo.toml
++++ b/crates/wasmc_component/Cargo.toml
+@@ -4 +4 @@
+-edition = "2021"
++edition.workspace = true
+--- a/crates/wasmc_component_async/Cargo.toml
++++ b/crates/wasmc_component_async/Cargo.toml
+@@ -4 +4 @@
+-edition = "2021"
++edition.workspace = true
+--- a/crates/wasmc_component_encoder/Cargo.toml
++++ b/crates/wasmc_component_encoder/Cargo.toml
+@@ -4 +4 @@
+-edition = "2021"
++edition.workspace = true
+--- a/crates/wasmc_wasm_cdylib/Cargo.toml
++++ b/crates/wasmc_wasm_cdylib/Cargo.toml
+@@ -4 +4 @@
+-edition = "2021"
++edition = "2024"
+--- a/adapters/http-framework-axum-wasmtime/Cargo.toml
++++ b/adapters/http-framework-axum-wasmtime/Cargo.toml
+@@ -4 +4 @@
+-edition = "2021"
++edition = "2024"
+--- a/fuzz/Cargo.toml
++++ b/fuzz/Cargo.toml
+@@ -5 +5 @@
+-edition = "2021"
++edition = "2024"
+--- a/crates/wasmc_wasm/src/lib.rs
++++ b/crates/wasmc_wasm/src/lib.rs
+@@ -384 +384 @@
+-#[no_mangle]
++#[unsafe(no_mangle)]
+@@ -390 +390 @@
+-#[no_mangle]
++#[unsafe(no_mangle)]
+@@ -396 +396 @@
+-#[no_mangle]
++#[unsafe(no_mangle)]
+@@ -402 +402 @@
+-#[no_mangle]
++#[unsafe(no_mangle)]
+@@ -408 +408 @@
+-#[no_mangle]
++#[unsafe(no_mangle)]
+@@ -414 +414 @@
+-#[no_mangle]
++#[unsafe(no_mangle)]
+@@ -425 +425 @@
+-#[no_mangle]
++#[unsafe(no_mangle)]
+@@ -431 +431 @@
+-#[no_mangle]
++#[unsafe(no_mangle)]
+@@ -437 +437 @@
+-#[no_mangle]
++#[unsafe(no_mangle)]
+@@ -443 +443 @@
+-#[no_mangle]
++#[unsafe(no_mangle)]
+@@ -449 +449 @@
+-#[no_mangle]
++#[unsafe(no_mangle)]
+@@ -455 +455 @@
+-#[no_mangle]
++#[unsafe(no_mangle)]
+@@ -461 +461 @@
+-#[no_mangle]
++#[unsafe(no_mangle)]
+@@ -467 +467 @@
+-#[no_mangle]
++#[unsafe(no_mangle)]
+@@ -473 +473 @@
+-#[no_mangle]
++#[unsafe(no_mangle)]
+@@ -479 +479 @@
+-#[no_mangle]
++#[unsafe(no_mangle)]
+@@ -485 +485 @@
+-#[no_mangle]
++#[unsafe(no_mangle)]
+@@ -807 +807 @@
+-#[no_mangle]
++#[unsafe(no_mangle)]
+--- a/crates/wasmc_wasm_cdylib/src/lib.rs
++++ b/crates/wasmc_wasm_cdylib/src/lib.rs
+@@ -7 +7 @@
+-#[no_mangle]
++#[unsafe(no_mangle)]
+@@ -12 +12 @@
+-#[no_mangle]
++#[unsafe(no_mangle)]
+@@ -17 +17 @@
+-#[no_mangle]
++#[unsafe(no_mangle)]
+@@ -22 +22 @@
+-#[no_mangle]
++#[unsafe(no_mangle)]
+@@ -27 +27 @@
+-#[no_mangle]
++#[unsafe(no_mangle)]
+@@ -32 +32 @@
+-#[no_mangle]
++#[unsafe(no_mangle)]
+@@ -42 +42 @@
+-#[no_mangle]
++#[unsafe(no_mangle)]
+@@ -47 +47 @@
+-#[no_mangle]
++#[unsafe(no_mangle)]
+@@ -52 +52 @@
+-#[no_mangle]
++#[unsafe(no_mangle)]
+@@ -57 +57 @@
+-#[no_mangle]
++#[unsafe(no_mangle)]
+@@ -62 +62 @@
+-#[no_mangle]
++#[unsafe(no_mangle)]
+@@ -67 +67 @@
+-#[no_mangle]
++#[unsafe(no_mangle)]
+@@ -72 +72 @@
+-#[no_mangle]
++#[unsafe(no_mangle)]
+@@ -77 +77 @@
+-#[no_mangle]
++#[unsafe(no_mangle)]
+@@ -82 +82 @@
+-#[no_mangle]
++#[unsafe(no_mangle)]
+@@ -87 +87 @@
+-#[no_mangle]
++#[unsafe(no_mangle)]
+@@ -92 +92 @@
+-#[no_mangle]
++#[unsafe(no_mangle)]
+@@ -97 +97 @@
+-#[no_mangle]
++#[unsafe(no_mangle)]
