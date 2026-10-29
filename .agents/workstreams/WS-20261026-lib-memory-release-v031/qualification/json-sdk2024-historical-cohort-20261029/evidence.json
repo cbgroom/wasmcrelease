@@ -1,0 +1,33 @@
+{
+  "schema": "wasmc.sdk2024-historical-cohort-verification/v1",
+  "status": "isolated exact-master candidate, not integrated or released",
+  "base": "55415f7ced6ad2408e3f44ae7964bd0385fcc569",
+  "change": "strict canonical SDK verifier distinguishes generated Rust 2024 package and two byte-exact Rust 2021 historical generator forms (budgeted and variable-size); manifest and source must agree. For 2021 Cargo, generate matching historical path before any 2024 work.",
+  "original_failure": "initial candidate accepted only the budgeted 2021 form and rejected 15 of 18 observed candidate Roots; log retained. First correction used unnecessarily expensive modern generation and timed out on data-interchange after 35s; preserved. Second chooses legacy generator based on exact Cargo bytes and passed.",
+  "validation": [
+    "18/18 roots across 13 ordinary compute Lib IDs passed with exact manifest hashes in log",
+    "new 2024 auto-linked Root and frozen wasmc-json 0.0.6 both passed",
+    "two mixed 2021/2024 SDK source and Cargo controls rejected, even after manifest hash update",
+    "one independent data-interchange verify passed after legacy-path selection"
+  ],
+  "limitations": [
+    "not full public historical release inventory",
+    "current snapshot derived from exact master but not Source-integrated",
+    "candidate Roots are not official release or public installation",
+    "production routing, shared total memory, CI and release remain open"
+  ],
+  "files_sha256": {
+    "exact-master-combined-v2.patch": "d6585751324e1bd010d254483f58fb4d4a8f8de8b20b8d3deb5effc3e7b9779d",
+    "json-sdk2024-dual-legacy-build-20261029.log": "39552917ff5db8b2711caa81071d9d9da35ff6eda175bfafb1a347a9d423042a",
+    "json-sdk2024-dual-legacy-build-v2-20261029.log": "54cc6bb6437aaf645486e1f68cfc264c7ece512b9f255d607129316cea657b41",
+    "json-sdk2024-dual-legacy-compression-20261029.log": "3d1b13bd45fb29e4047fba4f212ab7ceb8644272af3b8ab7d3a6625c58f0eb40",
+    "json-sdk2024-dual-legacy-frozen-v2-20261029.log": "dea142b44d6f4015ad1d42b65cce1433bcfd6f7835a9524db6d3bc59e95bc091",
+    "json-sdk2024-dual-legacy-interchange-v2-20261029.log": "9f4d70167d99a83700ae11f2342500bca0a343d356db7e591bcef2b71f49bc89",
+    "json-sdk2024-dual-legacy-mixed-cargo-v2-20261029.log": "e261f0a3b51f28f3ca07f7957637aaea3ba66bcaae487ecb67cccd9ccd7ddad8",
+    "json-sdk2024-dual-legacy-mixed-v2-20261029.log": "e261f0a3b51f28f3ca07f7957637aaea3ba66bcaae487ecb67cccd9ccd7ddad8",
+    "json-sdk2024-dual-legacy-multi-20261029.log": "64d46e590143b57fb874c0d50eef4bf9b513511c9329d68338cc738f400aa19f",
+    "json-sdk2024-dual-legacy-multi-v2-20261029.log": "25f8eb595cdd903a4f69190700d8588a1efd5bd1b5a74a766ca47c7cf8c36ddd",
+    "json-sdk2024-dual-legacy-new-v2-20261029.log": "b900c3544220ce8c053adca114f1143ad0e76e8efc690fd34b655849a3610c4d",
+    "json-sdk2024-multi-root-verify-20261029.log": "06fc9ab06fe0cf1603ea260240733c5b599d8d78ed8d4195a4f2e681d7628e62"
+  }
+}
