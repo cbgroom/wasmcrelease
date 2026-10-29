@@ -1,0 +1,19 @@
+{
+  "status": "SCOPED_UNADMITTED_COMPILER_CANDIDATE",
+  "source_base": "482fb98b040f0b6fe99378afed9ae4dbcb1dd3bf",
+  "source_patch_sha256": "b97da19043709b1b7fe3b82eae9f31d68c31e7d8279423207fd010364a14f8f9",
+  "build": "cargo +stable build --release --target wasm32-unknown-unknown --locked --offline; isolated copy of previous compatible target cache",
+  "cargo_lock_sha256": "8308ac2c488f1b843a8d991cd69b3922c78c1a74454bd5081961e7d6e7045ba8",
+  "compiler_sha256": "fdca88eb5db7f88788a14e5157a822cd2a44f4a98cb2d57c98a4683671e350a9",
+  "compiler_bytes": 1979934,
+  "build_log_sha256": "726cadd9df20607856b918b607dd91a9f30f4a3a05ed01b36530c8383e729bd3",
+  "build_log_retained_local": "/Users/youxianshi/.local/state/wasmc-maintenance/rustc-service-1991-20261028/compiler023-build.log",
+  "native_comparator_sha256": "490b6d0d6263a6d51b94398447e61e63aa161ef3ce171ec5865fa3d99e7ef59b",
+  "tests": "wasm-tools validate; zero imports; Node/Bun/Deno each compiled 5 existing sources byte-identically to native comparator; small scalar actual output oracle passed",
+  "limitations": [
+    "private SDK patch and source not admitted or reviewed on master",
+    "not a release compiler manifest or complete current-host/version qualification",
+    "no ordinary JSON portable-compiler caller, deployed route or formal release established",
+    "compiler source and binary retained private locally"
+  ]
+}
