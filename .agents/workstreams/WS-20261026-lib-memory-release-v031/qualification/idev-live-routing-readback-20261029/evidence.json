@@ -1,0 +1,35 @@
+{
+  "schema": "wasmc.live-routing-readback/v1",
+  "date": "2026-10-29",
+  "instance": "idevm4dd",
+  "scope": "Read-only live MCPGit discovery; not a production route invocation, new Root admission or release.",
+  "executable_build": {
+    "release_tag": "v0.0.29",
+    "release_commit": "681c976fd2b99ec0827a6a13dfd96a5ec1cc0770",
+    "compiler_sha256": "098b470d6537c55bf167e3d380e2e44f9057d7572906422fe90166faa1554817",
+    "runtime_sdk_revision": "bddf8a371698ac7f1ced87b02952df5be5359dad",
+    "execution_repository_authenticated_read": "tablegit",
+    "rust_compiler_configured": true,
+    "official_libs_display": ["wasmc-std", "wasmc-lib-search", "wasmc-owned-algorithms", "wasmc-resource-counter", "wasmc-host-clock"],
+    "note": "Display list alone does not prove which additional Lib roots can be selected. New JSON 0.2.2 is not asserted to be present."
+  },
+  "route_status_read": {
+    "state": "ready",
+    "generation": 1,
+    "publication_id": "2836a56b-a5de-4c54-9a4c-8f7a434a8688",
+    "publication_manifest_sha256": "sha256:a03d68a576758aeff53bfbc1fcb8d06508ff3a5e92c4ba2c7c155d33adb944cd",
+    "matcher_sha256": "sha256:924ba6a7000119852cec2c3a78e4a640070cf8671f873fef835fbe2beb82ea94"
+  },
+  "system_bundle_activation_status_read": {
+    "default_sha256": "95ad237870d90162779ca58fef4b4fe045ce9410ad0fa751318bf72995eb0bdc",
+    "effective_generation": 32,
+    "runtime_generation": 0,
+    "head": null,
+    "synchronized": true,
+    "reconciliation_supported": false
+  },
+  "identity_caveat": "Basic-authenticated status and read operations returned data, but the attempted explicit person_select returned error; the selected Person context was not established in this probe. Do not use this as evidence of approved publisher identity or authorization for writes.",
+  "other_observation": "cbgroomtpc public wasmc_status: v0.0.29 and rust_compiler_configured=false; this is not IDEV and is not evidence of Rust execution.",
+  "release_governance_pr": {"number": 28, "head": "cc2db8cb414a5edb52ac2d5316a544955db7108a", "state": "open", "checks": {"success": 109, "skipped": 2, "failure": 2}, "note": "The aggregate required check remains failed. User excludes security investigation; retain existing failure evidence."},
+  "remaining": ["Admit official Rust 2024 SDK source and publish verified successor", "Create and admit an exact system package with the new Root and SDK through current lifecycle", "Obtain actual application/package authority, review decision, contract pins and complete preserved route bindings", "Validate and invoke the installed artifact on the real intended route with varying inputs and independently read effects"]
+}
