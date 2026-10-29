@@ -1,0 +1,19 @@
+{
+  "schema": "mcpgit.narrow-plan-service-fixture/v1",
+  "main": "5010aec14a54c4224a3c8906116322e029125335",
+  "narrow_patch_sha256": "4d2fe25fc55b87db21981dfc6f8eba46704dccf56c0c273f943af63e8552a9aa",
+  "root_manifest_sha256": "a40499304c4078c8034473e552730cd460556c81d8679b8afe040cf2407f7397",
+  "root_core_sha256": "007eac4dbfe32f53462f866a66e6bb191fec13c01ac7d90baf2572b27ec22722",
+  "guest_sha256": "fa84817dad5b88b1a0b2fdcc0019716577931f0a82dccb4babd171121d800caf",
+  "test_source_sha256": "73f31b858cdeab5bdbfefe3b2ad84ad513fad013820d195741c5522942c17c04",
+  "test_support_sha256": "363567d11cd6209892c9cb8b4c0ae5d8d640caa2c0aaf398695cfb933092cbb6",
+  "test_binary_sha256": "1b4d80a0cb2ae8e88a4560486250052127a9a55a0570bb186d3f742935d99846",
+  "log_sha256": "993721b90420bbd5735190e51792f85ae0f4b78e897245e9ea07053d9ea2b022",
+  "result": "Temporary real Service stores and activates exact controlled-installed JSON Root; linked Rust 2024 Guest executes 26 operations three times on Wasmi and three times after promotion to Wasmtime.",
+  "test_only_changes": "Copied 779 test_support_json_lib.rs, enabled feature export and made empty_query_pool pub(crate) for compiling the helper; two-engine optimization loop added to the helper. Real Service fixture test added. These are not part of narrow production patch.",
+  "limitations": [
+    "fixed Guest inputs; separate fresh Store per call",
+    "Service fixture is temporary; no actual Hosted dispatcher or production route",
+    "no shared provider memory/fuel/deadline/cancellation; no source integration or release"
+  ]
+}
