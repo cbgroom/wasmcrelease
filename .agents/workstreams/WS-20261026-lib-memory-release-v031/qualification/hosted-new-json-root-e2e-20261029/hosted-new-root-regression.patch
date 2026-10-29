@@ -1,0 +1,21 @@
+--- a/labs/executable-skill-runtime/tests/end_to_end.rs
++++ b/labs/executable-skill-runtime/tests/end_to_end.rs
+@@ -6753,7 +6753,7 @@
+             "---\nname: json-lib\ndescription: JSON Core Lib\nmetadata:\n  yxs.skillsgit.id: {LIB_ID}\n  mcpgit.kind: core-lib\n---\n# JSON\n"
+         ),
+     )?;
+-    let source = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../.agents/workstreams/WS-20261028-rust-lib-real-host-v1/fixtures/json-sdk-real-service/root");
++    let source = std::env::var_os("WASMC_TEST_JSON_ROOT").map(PathBuf::from).unwrap_or_else(|| Path::new(env!("CARGO_MANIFEST_DIR")).join("../../.agents/workstreams/WS-20261028-rust-lib-real-host-v1/fixtures/json-sdk-real-service/root"));
+     for file in ["lib.json", "lib.wit", "artifact.wasm", "core-abi.json"] {
+         fs::copy(source.join(file), lib_root.join(file))?;
+     }
+@@ -7022,6 +7022,9 @@
+         (r#"{ "n": 11 }"#, 200, r#"{"n":11}"#),
+         (r#"[ 9, 8 ]"#, 200, "[9,8]"),
+         ("{", 400, "invalid json"),
++        (r#"{"x":1e400,"x":1}"#, 400, "invalid json"),
++        (r#"{"x":"\ud800","x":1}"#, 400, "invalid json"),
++        (r#"{"x":2,"x":1}"#, 200, r#"{"x":1}"#),
+         (r#"{ "ok": true }"#, 200, r#"{"ok":true}"#),
+     ] {
+         let request = hosting::HostedPluginRequest {

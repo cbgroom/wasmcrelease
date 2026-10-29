@@ -1,0 +1,25 @@
+{
+  "schema": "mcpgit.hosted-new-json-root-e2e/v1",
+  "status": "temporary actual Service with lab Hosted dispatcher; not deployed production",
+  "candidate_baseline": "eb8683ac private archive with selected 7797450d overlays and candidate SDK/route patches, see hosted-selected-lib-service-e2e-20261029.json",
+  "root_manifest_sha256": "2dbd547665ba66e9dc558c99261feeeecf8820d6c846fbe054e03f15f9139948",
+  "root_artifact_sha256": "68768f9eecb8d4158a446e054bcc748a16bd61363700fa51fadda541b8c1f29f",
+  "guest_sha256": "703f25cee7ce0249d02d4788cef27ec6827966fc2f2c3fe1de141563dd897bd0",
+  "mechanism": "Service-backed package and activation objects; RegistryHostedPluginDispatcher publishes test route and resolves selected Root automatically; Rust 2024 HTTP guest calls JSON compact and actual TableGit status",
+  "checks": "same routed guest and Root: 4 valid JSON inputs, 3 invalid inputs including out-of-range number and lone surrogate hidden by duplicate keys, recovery; old Root fails first invalid duplicate (expected 400, got 200); missing caller capability yields BadGateway, not proof of specific denial cause",
+  "failures": "first command used incorrect workspace package selector and failed before test; preserved",
+  "limitations": [
+    "temporary Service and route authority, no live endpoint",
+    "does not test atomic write",
+    "candidate not Source-integrated",
+    "single provider; linear memory budget only",
+    "legacy intermittent deadline failure remains unresolved",
+    "formal release and anonymous readback absent"
+  ],
+  "files_sha256": {
+    "hosted-new-json-root-e2e-v1-20261029.log": "43b02aed6c2d2c6865d24250c9255a845c27b7c4379163a0309536d0d451e1a8",
+    "hosted-new-json-root-e2e-v2-20261029.log": "bdf81e412c64778f55e8bf5578d7d3c1b37a4a61f585767e6f530c535fc23535",
+    "hosted-new-root-regression.patch": "ac75e7261bcc8496f8f96c96d93b983d89325d29cffe91ec0a74c7dcd484c421",
+    "hosted-old-json-root-control-20261029.log": "6033464cc91e293f30519d722f2065b8556be6b850c767cd9d1e94073197cfc5"
+  }
+}
