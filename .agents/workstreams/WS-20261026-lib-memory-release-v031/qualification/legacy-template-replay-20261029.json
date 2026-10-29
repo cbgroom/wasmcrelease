@@ -1,0 +1,20 @@
+{
+  "schema": "wasmc.legacy-template-replay-experiment/v1",
+  "base": "Source c1306cc8ec4497d2190f7ac72501979e4038bfae isolated combined candidate; not integrated",
+  "finding": "Supplying exact frozen Lib template plus exact complete cold transfer source restored source SHA b2dfce3592e0d14897bafa82a2a9ef49968788806cd107dbcfd7852c60ab945a, but newly generated lib-projection.wasm still differs from the frozen module; 4/5 canonical Host tests pass, historical full module equality fails.",
+  "successful_replay": "Verified all eleven frozen input byte lengths and SHA-256 values against v0.0.28 caller-plan.json, merged with original Binaryen 126 recipe, and validated Wasm. Final artifact SHA 9bc7ee1d06e56e61635ba7cf2e00c27f52bec01eba3b881f141af6d3591aa057 exactly matches historical receipt; original release untouched.",
+  "prototype": "An isolated additive API tests caller-pinned template and transfer, Root-derived plan and operation windows; wrong template/source digest rejected. It is incomplete because it does not yet reuse or admit all exact frozen projection modules, so it must not be treated as a Source-ready fix.",
+  "evidence_sha256": {
+    "source-c130-pinned-template-first-20261029.log": "d9e845b7cee429e3014b90f8d3ef6e7cf6914e997ee7b6c23706b1e6a46bea83",
+    "source-c130-pinned-template-v2-20261029.log": "ffbee61db6a9cd15901f75b8d4033f3a6c128d1b3f1a8ac6b9bed6f5f3e340b3",
+    "source-c130-pinned-template-diag-20261029.log": "722d5d40409d510f5318629efc33bfefba698bf0e0bac6868796da10800ce6a7",
+    "legacy-transfer-pinned-20261029.rs": "bf78622febbef96366738c9b387b2d8c38f8194c1b4cd14cdf655e70aacadda1",
+    "historical-v028-exact-replay-20261029.wasm": "9bc7ee1d06e56e61635ba7cf2e00c27f52bec01eba3b881f141af6d3591aa057",
+    "legacy-template-experiment-20261029.patch": "bbdaa8bb802f40b9f5782fe9a9c377e554ee8d1e6c8391f7dab51b5a83f5e1f1"
+  },
+  "limitations": [
+    "Static byte reproduction is not a new deployed execution.",
+    "No automatic compatibility path yet consumes the historic eleven-module receipt.",
+    "Production JSON route, complete memory policy, Source audit, hosted CI and release remain open."
+  ]
+}
