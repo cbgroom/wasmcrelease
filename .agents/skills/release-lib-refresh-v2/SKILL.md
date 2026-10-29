@@ -27,6 +27,8 @@ Mixed cohort CLI dispatch must verify both source graphs using the independently
 
 For mixed notice classification, capture and replay each original v3/v4 notice collector, including historical carrier inputs omitted by the narrower product verifier. Classify only exact verified original notices and selected aliases. A scanner run over a workstream copy with unrelated experiments is not a release-product result; retain failures and construct the exact release file set.
 
+Before selecting mixed Roots, compare all currently listed remote tag identities and complete matching Root blob inventories, including alternate delivery surfaces. Pin the remote ref list and verify each local tag ref against it. This does not cover other refs or undiscovered delivery surfaces; repeat after a tag-set change.
+
 ## Decision
 
 `libspec/` is the sole current Lib source authority. Do not extend the historical
