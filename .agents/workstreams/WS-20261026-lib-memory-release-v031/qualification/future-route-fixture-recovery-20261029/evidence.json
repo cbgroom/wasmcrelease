@@ -1,0 +1,19 @@
+{
+  "schema": "wasmc.future-route-historical-fixture-recovery/v1",
+  "worktree_base": "6b0cbff1",
+  "historical_tag": "v0.0.20",
+  "historical_commit": "4674d65c2650e6cbdddc3a4d0f4510911ae97ea3",
+  "historical_product_files": 309,
+  "missing_in_current_checkout": 47,
+  "recovery": "All 309 product bytes recovered from the historical tag and checked individually against the existing candidate's size and SHA256; the current checkout and frozen tag were not modified. WASMC_V020_PRODUCT_ROOT selects this explicit snapshot and rejects drift.",
+  "fixture_change": "Use the immutable 0.0.20 candidate inventory for the historical standard Core companion rather than assuming the evolving current catalog has the historical companion field.",
+  "fixture_sha256": "3c7cff7fc5145fe86bdeae73bba49ad1cb628172a3a53111a42681d75b6160f5",
+  "worktree_route_test": "WASMC_V020_PRODUCT_ROOT=<verified snapshot> node scripts/test-future-current-route.mjs",
+  "worktree_route_result": "exit 0; four positives, 165 negatives, 18 synthetic packages, 95 API routes, 1110 synthetic observable calls",
+  "worktree_route_log_sha256": "25a72e784ca90ed1d189279c66fdf784b4d85d31e864235e6ba3722648daeaf6",
+  "worktree_route_log_path": "/Users/youxianshi/.local/state/wasmc-maintenance/rustc-service-1991-20261028/future-product-recovery-20261029/future-route-worktree.log",
+  "tamper_control": "Appending a byte to historical LICENSE is rejected as historical product identity drift, exit 1",
+  "tamper_log_sha256": "1179b7704ee679f4d3cb38384dc2bbdd59e5be56f019eda4ece49834a78b26c0",
+  "preserved_failures": ["catalog-failure.log: historical fixture assumed old companion exists in newer catalog", "cli-fixture-failure.log: older full product-input test omits modules required by newer CLI"],
+  "limits": "Synthetic historical route fixture only; full future product-input test, actual successor product, compiler admission, CI, production route and release are not proven."
+}

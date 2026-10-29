@@ -2,6 +2,7 @@
 // This file deliberately imports no candidate, route, WIT or license gate.
 import {readFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
+import {join} from 'node:path';
 
 export const routeTargets=Object.freeze(['mcpgit-resident-memory','wasmc-compression','wasmc-csv','wasmc-data-compute','wasmc-data-core','wasmc-data-expr','wasmc-data-interchange','wasmc-data-profile','wasmc-data-relational','wasmc-host-clock','wasmc-http1','wasmc-json','wasmc-lib-search','wasmc-owned-algorithms','wasmc-resource-counter','wasmc-router-policy','wasmc-std','wasmc-system-telemetry']);
 export const routePublicInputs=Object.freeze(['LICENSE','catalog/current-v2-policy.json','catalog/libs-current-v2.json','examples/lib-search/client.mjs','license-policy.json','scripts/declared-thirdparty-notices.mjs','scripts/future-lib-license-admission.mjs','scripts/lib-catalog.mjs','scripts/lib-install.mjs','scripts/lib-route-closure.mjs','scripts/release-candidate.mjs','scripts/wasmc-lib.mjs']);
@@ -74,7 +75,15 @@ export function makeRouteFixture({variant='a'}={}){
   const oldCandidate=JSON.parse(readFileSync(new URL('../channels/candidates/0.0.20.json',import.meta.url)));
   // Historical product compatibility bytes coexist, but are never the selected
   //18 denominator. Keeping them reproduces the old genuine22/140 route bypass.
-  for(const f of oldCandidate.product_files)bytes.set(f.path,readFileSync(new URL('../'+f.path,import.meta.url)));
+  // The current checkout need not carry every frozen 0.0.20 product file.
+  // An explicitly supplied snapshot is checked against the frozen candidate,
+  // rather than allowing missing or changed historical bytes to go unnoticed.
+  const historicalRoot=process.env.WASMC_V020_PRODUCT_ROOT;
+  for(const f of oldCandidate.product_files){
+    const data=historicalRoot?readFileSync(join(historicalRoot,f.path)):readFileSync(new URL('../'+f.path,import.meta.url));
+    if(historicalRoot)assertBound(data.length===f.bytes&&routeSha(data)===f.sha256,'historical product identity '+f.path);
+    bytes.set(f.path,data);
+  }
   for(const p of routePublicInputs)if(p!=='catalog/libs-current-v2.json')bytes.set(p,readFileSync(new URL('../'+p,import.meta.url)));
   const put=(p,b)=>bytes.set(p,Buffer.from(b));
   const n=variant==='a'?{iface:'api',aux:'aux',run:'run',resource:'token',method:'bump',static:'zero',signal:'signal',noop:'noop',outcome:'outcome'}:{iface:'ops',aux:'second',run:'execute',resource:'other-token',method:'advance',static:'initial',signal:'notify',noop:'finish',outcome:'answer'};
@@ -87,7 +96,7 @@ export function makeRouteFixture({variant='a'}={}){
     const skill=Buffer.from(`Synthetic ${variant} skill for ${id}; not a published grant.\n`),license=Buffer.from('Structural research fixture; not a distribution license.\n'),cargo=Buffer.from(`[package]\nname = "fixture-${id}"\nversion = "${version}"\nlicense-file = "../../LICENSE"\n`);
     const manifest={schema:'wasmc.lib/v2',id,version,wit:{path:'lib.wit',package:identity,world,sha256:routeSha(wit)},artifact:{path:'artifact.wasm',format:'core-wasm',bytes:8,sha256:routeSha(Buffer.from([0,97,115,109,1,0,0,0]))},agent:{skill:{path:skillPath,sha256:routeSha(skill)}},bindings:{rust_core:{cargo_toml:{path:'bindings/rust/Cargo.toml',sha256:routeSha(cargo)}}},license:{schema:'wasmc.lib-license/v1',identifier:'LicenseRef-Structural-Test',files:[{path:'LICENSE',bytes:license.length,sha256:routeSha(license)}]}};
     put(root+'/lib.wit',wit);put(root+'/'+skillPath,skill);put(root+'/LICENSE',license);put(root+'/bindings/rust/Cargo.toml',cargo);put(root+'/artifact.wasm',Buffer.from([0,97,115,109,1,0,0,0]));put(root+'/lib.json',jsonBytes(manifest));
-    const row={id,version,root,wit_package:identity,wit_sha256:routeSha(wit),artifact_sha256:manifest.artifact.sha256,keywords:[`fixture-${variant}`],historical:false,files:[],...(id==='wasmc-std'?{companion:JSON.parse(readFileSync(new URL('../catalog/libs-current-v2.json',import.meta.url))).packages.find(p=>p.id==='wasmc-std').companion}: {})};packages.push(row);
+    const row={id,version,root,wit_package:identity,wit_sha256:routeSha(wit),artifact_sha256:manifest.artifact.sha256,keywords:[`fixture-${variant}`],historical:false,files:[],...(id==='wasmc-std'?{companion:oldCandidate.product_files.find(p=>p.path==='standard/corelib/4.8.0/corelib.wasm')}: {})};packages.push(row);
     const common={skill_path:root+'/'+skillPath,wit_path:root+'/lib.wit',artifact_path:root+'/artifact.wasm',historical:false,package_identity:identity};
     expectedEntries.push({...common,identity,signature:'',search_text:`${identity} ${id} ${row.keywords.join(' ')}`});
     const api=(iface,key,signature)=>expectedEntries.push({...common,identity:`${identity}/${iface}#${key}`,signature,search_text:`${identity}/${iface}#${key} ${signature}`});
