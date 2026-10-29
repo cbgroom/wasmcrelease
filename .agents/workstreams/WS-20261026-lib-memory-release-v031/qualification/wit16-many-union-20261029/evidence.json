@@ -1,0 +1,43 @@
+{
+  "schema": "wasmc.wit16-many-union-candidate/v1",
+  "status": "isolated private producer candidate, not Source-admitted or released",
+  "parent": "wasmc-wit-many-candidate-20261029",
+  "producer_sha256": "924dc71ebaa01f027d0ce8a247b7d22f9743dee1c10bc57aef6470996f373179",
+  "private_incremental_patch_sha256": "af7ef352a98e5ff31dc1267a85162c0782c6f6a76c5ecbe827f8ff287204480f",
+  "private_patch_location": "/Users/youxianshi/.local/state/wasmc-maintenance/rustc-service-1991-20261028/wit16-union-incremental-20261029.patch",
+  "changes": "WIT input, dependency total, semantic workspace, consumer world, bridge and reopen WIT byte boundaries adjusted to 16 MiB; official and final SDK source limits use existing shared 16 MiB constant. Historical legacy bridge remains unchanged.",
+  "results": [
+    "Old candidate rejected 2247476-byte root at 2 MiB. Two follow-up candidates failed at separate consumer-output and official SDK-output caps before final candidate passed; logs retained.",
+    "Real CSV build sealed 2259079-byte WIT retaining 130 unused synthetic package declarations and original DataCore dependency; Root verifies, Component validates, 2401641-byte Rust 2024 SDK compiles.",
+    "CSV Core parses and recovers on Node, Bun, Deno; frozen JSON0.0.6 Root verifies; 16 WIT unit tests pass.",
+    "Input reader accepts exact 16 MiB and rejects +1; real build input +1 rejects before publication."
+  ],
+  "root_wit_bytes": 2259079,
+  "source_wit_bytes": 2247476,
+  "root_manifest_sha256": "e625ae87670f83a5b38cd924d3ebf9fae4217e68add7e3982417fba5d449c785",
+  "root_core_sha256": "5c00a6613881013c689d1b276e489107e2a0d174f5d0d1c5ff153fc8e2d314ad",
+  "root_component_sha256": "3ba32158c90b00bbb288533a4af98a0a6ca9585c2d5a3ed5dcf749764b6871ad",
+  "sdk_bytes": 2401641,
+  "sdk_sha256": "3a54e3f00ce4d3ef572bd8a50def16b368e1d1184a5d88975f85a3821d6a1c9f",
+  "logs_sha256": {
+    "wit-large-csv-before-20261029.log": "623cbd41b47254188bb1dc4482bf9560c1d651ff56b231e08b9b097130368564",
+    "wit-large-csv-after-20261029.log": "b0b7b6a99182c6203bec121fb1e2cbcee9a53f55a81a21226fffe53fc20ffb49",
+    "wit-large-csv-after-v2-20261029.log": "199c540dfe97738b9dde3e7f8598252ec9b4d2a49c629306ec791d78bb709c28",
+    "wit-large-csv-after-v3-20261029.log": "67a8d52f1c471649491caefe0f3b12577d0e32be5566591fe6ac19aa33e289c8",
+    "wit-large-csv-verify-20261029.log": "a69828b058b3f82388ec9ff612f3b478bb196118afbd134b13a730174c879c25",
+    "wit16-plus-csv-20261029.log": "cf5820ab028ee0bfc944fd936d1ec03c48bc8012506290ab212052797856218f",
+    "wit16-union-frozen-20261029.log": "dea142b44d6f4015ad1d42b65cce1433bcfd6f7835a9524db6d3bc59e95bc091",
+    "wit-large-csv-sdk2024-20261029.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "wit-large-csv-node-20261029.log": "9f2f5027720f7a9876c1476883d3cf50db27d842a2bf6fc421c428181dadfc4a",
+    "wit-large-csv-bun-20261029.log": "39d7eab946b21634eb9348b83320e93e868d9257345d2aeb000d3f6460a9e713",
+    "wit-large-csv-deno-20261029.log": "14d14392c69741c0759fb190bc1b513998c3fe03776f9cda251da65d05e24789",
+    "wit16-union-unit-v2-20261029.log": "7c73752f2764a076aa042d7540c55057f34f95175dfed8678eb89fed5cd5c762"
+  },
+  "other_failures": "Initial partial edit hit assertion and subsequent candidate build failed private constant visibility; corrected. Full compiler logs retained under private local state.",
+  "limitations": [
+    "Full producer build tested at 2.26 MiB WIT; exact 16 MiB tested only at file reader, not end-to-end",
+    "Large WIT bytes are mainly documentation; 130 extra packages unused, not a large active semantic graph",
+    "Component structurally validated only; no installation, production Host or formal release",
+    "Private producer patches unadmitted; typed owner paths, semantic counts and prior six-contract fixture remain unresolved"
+  ]
+}
