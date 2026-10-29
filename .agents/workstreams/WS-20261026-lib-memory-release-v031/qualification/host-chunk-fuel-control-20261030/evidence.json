@@ -1,0 +1,33 @@
+{
+  "status": "HOST_CHUNK_EXPERIMENT_REJECTED",
+  "base_source": "51ddc3c2c790d25186e4441274edb8d2bd665f20",
+  "correctness_patch_sha256": "ae5a2e3e2a32966fb74f9512c8f639050dad7045d6e725945a6cd3569f763263",
+  "changed_layer": "isolated SDK host-projection applied existing checked chunk transport; no new compiler lowering",
+  "input_sha256": "eab29265810b9e5280c29f4ef4b5efdb7fe05f3ce1cd3c61a2d2e13b39fcbd51",
+  "input_bytes": 16777217,
+  "fuel_budget": 80000000000,
+  "baseline_consumed": 37796884774,
+  "chunk_consumed": 38639958690,
+  "difference": 843073916,
+  "percent_increase": 2.231,
+  "both": "same 14 initial inputs, same actual 16MiB+1 JSON, 2-row mock atomic success, bound+1 rejection and fresh recovery",
+  "host_chunk_imports": "string_read_chunk_le and list_u8_read_chunk_le observed in generated host projection",
+  "result": "experiment did not reduce deterministic fuel; reverted in isolated snapshot and not proposed for product",
+  "cause": "not established; do not infer chunk fallback or overall performance from one workload",
+  "limitations": [
+    "fuel accounting, not wall time performance benchmark or 10-100x theoretical ceiling",
+    "mock Host, 512MiB per-memory limiter and explicit 80B fuel, not production",
+    "correctness patch remains private and not integrated or released"
+  ],
+  "raw_evidence": {
+    "baseline_receipt_sha256": "cbe107dcd68908ea9221c29ae1074adb0c192758181da4f971554454c34d5bf1",
+    "chunk_receipt_sha256": "4b90ec6b959a1bad1db2c6db077fee02e46a42db8f4c5610654b090788fff6db",
+    "baseline_full_log_sha256": "5450e2264a9afa797712a3dcbc9e91215fcaebbb2cb1cfac94460695d7fe1dab",
+    "chunk_full_log_sha256": "e5af077785c34823388b23678de06eeca30c5007d0d6c22dabd5c98d2098a4b7",
+    "rejected_source_sha256": "93cdfb29cae30edb03637a9a5dcafad6b005b61554c90ac84ccd9eed2d1059d6"
+  },
+  "files": {
+    "baseline-test.log": "50c5bee461d10390d975992a45a910fdc9c4317a40a2a7e8c07ec7f1b232b66a",
+    "chunk-test.log": "89412c9e90570a2fd30e17a4bed1827e4934071030717cb77be8be7141cc7fdd"
+  }
+}
