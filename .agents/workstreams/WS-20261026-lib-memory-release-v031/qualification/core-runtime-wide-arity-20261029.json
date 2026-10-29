@@ -1,0 +1,20 @@
+{
+  "schema": "wasmc.core-runtime-wide-arity-candidate/v1",
+  "base": "c1306cc8ec4497d2190f7ac72501979e4038bfae source files; isolated candidate, not Source admission",
+  "change": "Remove i32 Host 8-parameter fixed ceiling and replace fixed argument storage with 8 inline slots plus dynamic allocation for larger calls; 8 is storage threshold only. Existing u8 constructor and const param_count remain compatible for original domain; new_wide, arity and try_param_count support counts exceeding u8.",
+  "legacy_accessor": "param_count returns u8 and explicitly panics for a new_wide count above 255; use arity or try_param_count for wide values. No silent truncation; this API tradeoff needs review before admission.",
+  "tests": "Legacy constructor with 24 parameters and wide constructor with 300 both execute on Wasmi and Wasmtime; original 24-parameter rejection preserved. Full 23-test SDK suite passes including import counts, scalar multi-value, resource constraints and signature validation.",
+  "patch_application": "git apply --unidiff-zero --check against exact Source PR head",
+  "evidence_sha256": {
+    "i32-host-24-before-20261029.log": "9b13cc3abafbbfc1d44b3e05b6f57acbbe997ccb6a9e59e96cf00a576ae88a66",
+    "i32-host-24-after-20261029.log": "beaae67f6d932fb769e974163f6ff10ee72ee7a9eb804c304de89348ce119919",
+    "core-runtime-capacity-wide-v1-20261029.log": "c5d13dd860836b0316655f67f35f9d7f25cced0eb0cef1326744722093ca6a7c",
+    "core-runtime-capacity-wide-v2-20261029.log": "28f4cb01a539a2db7a7daa2b078db1e49a8f76838765ec8114620c0d211180f5",
+    "core-runtime-wide-arity-20261029.patch": "21464ec66304795aa4440b731e62a86d705f30fc7387755a304073b2e29f8589"
+  },
+  "limits": [
+    "No Host memory or fuel budget has yet been coordinated between separate Guest and Lib stores.",
+    "Edition fields in this isolated candidate Cargo.toml and core runtime manifest are 2021; requested 2024 alignment not yet established for this candidate.",
+    "Production route adoption, Source governance and CI, formal release and anonymous readback remain incomplete."
+  ]
+}
