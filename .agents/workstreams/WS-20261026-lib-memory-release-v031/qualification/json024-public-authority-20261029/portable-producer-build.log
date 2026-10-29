@@ -1,0 +1,382 @@
+   Compiling wasmc v0.1.0 (/Users/youxianshi/.local/state/wasmc-maintenance/rustc-service-1991-20261028/json024-portable-producer-source-20261029)
+warning: unused imports: `CodeSection`, `EntityType`, `FunctionSection`, `Function`, `ImportSection`, `Instruction as I`, `MemArg`, `TypeSection`, and `ValType`
+ --> src/lib_tool_rust_consumer_sdk/canonical_app.rs:4:20
+  |
+4 | use wasm_encoder::{CodeSection,ExportSection,Function,FunctionSection,ImportSection,
+  |                    ^^^^^^^^^^^               ^^^^^^^^ ^^^^^^^^^^^^^^^ ^^^^^^^^^^^^^
+5 |     Instruction as I,MemArg,Module,TypeSection,ValType,EntityType,ExportKind,MemoryType};
+  |     ^^^^^^^^^^^^^^^^ ^^^^^^        ^^^^^^^^^^^ ^^^^^^^ ^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused imports: `SizeAlign` and `WorldItem`
+ --> src/lib_tool_rust_consumer_sdk/canonical_app.rs:6:26
+  |
+6 | use wit_parser::{Resolve,WorldItem,SizeAlign};
+  |                          ^^^^^^^^^ ^^^^^^^^^
+
+warning: unused imports: `app_projection_allocator`, `canonical_shape`, `emit_canonical_entry_adapter`, `emit_native_host_wire`, and `entry_result_lane`
+ --> src/lib_tool_rust_consumer_sdk/canonical_host.rs:6:62
+  |
+6 | pub(crate) use crate::canonical_host_assets::{NativeHostWire,entry_result_lane,emit_canonical_entry_adapter,
+  |                                                              ^^^^^^^^^^^^^^^^^ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+7 |     canonical_shape,app_projection_allocator,compose_plan,emit_native_host_wire,
+  |     ^^^^^^^^^^^^^^^ ^^^^^^^^^^^^^^^^^^^^^^^^              ^^^^^^^^^^^^^^^^^^^^^
+
+warning: use of deprecated method `std::sync::atomic::Atomic::<u16>::fetch_update`: renamed to `try_update` for consistency
+   --> src/language/managed_object.rs:282:14
+    |
+282 |             .fetch_update(Ordering::SeqCst, Ordering::SeqCst, |next| {
+    |              ^^^^^^^^^^^^
+    |
+    = note: `#[warn(deprecated)]` on by default
+help: replace the use of the deprecated method
+    |
+282 -             .fetch_update(Ordering::SeqCst, Ordering::SeqCst, |next| {
+282 +             .try_update(Ordering::SeqCst, Ordering::SeqCst, |next| {
+    |
+
+warning: use of deprecated method `std::sync::atomic::Atomic::<u32>::fetch_update`: renamed to `try_update` for consistency
+   --> src/language/managed_object.rs:424:14
+    |
+424 |             .fetch_update(Ordering::SeqCst, Ordering::SeqCst, |next| {
+    |              ^^^^^^^^^^^^
+    |
+help: replace the use of the deprecated method
+    |
+424 -             .fetch_update(Ordering::SeqCst, Ordering::SeqCst, |next| {
+424 +             .try_update(Ordering::SeqCst, Ordering::SeqCst, |next| {
+    |
+
+warning: use of deprecated method `std::sync::atomic::Atomic::<u32>::fetch_update`: renamed to `try_update` for consistency
+   --> src/language/managed_object.rs:754:14
+    |
+754 |             .fetch_update(Ordering::SeqCst, Ordering::SeqCst, |next| {
+    |              ^^^^^^^^^^^^
+    |
+help: replace the use of the deprecated method
+    |
+754 -             .fetch_update(Ordering::SeqCst, Ordering::SeqCst, |next| {
+754 +             .try_update(Ordering::SeqCst, Ordering::SeqCst, |next| {
+    |
+
+warning: use of deprecated method `std::sync::atomic::Atomic::<u64>::fetch_update`: renamed to `try_update` for consistency
+   --> src/wasmtime_core_task_pool.rs:301:14
+    |
+301 |             .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |id| id.checked_add(1))
+    |              ^^^^^^^^^^^^
+    |
+help: replace the use of the deprecated method
+    |
+301 -             .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |id| id.checked_add(1))
+301 +             .try_update(Ordering::Relaxed, Ordering::Relaxed, |id| id.checked_add(1))
+    |
+
+warning: use of deprecated method `std::sync::atomic::Atomic::<u64>::fetch_update`: renamed to `try_update` for consistency
+   --> src/../research/profiles/resident/src/wasmtime_host_cache.rs:747:14
+    |
+747 |             .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |current| {
+    |              ^^^^^^^^^^^^
+    |
+help: replace the use of the deprecated method
+    |
+747 -             .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |current| {
+747 +             .try_update(Ordering::Relaxed, Ordering::Relaxed, |current| {
+    |
+
+warning: use of deprecated method `std::sync::atomic::Atomic::<u64>::fetch_update`: renamed to `try_update` for consistency
+   --> src/wasmtime_lib_host.rs:262:14
+    |
+262 |             .fetch_update(Ordering::SeqCst, Ordering::SeqCst, |current| {
+    |              ^^^^^^^^^^^^
+    |
+help: replace the use of the deprecated method
+    |
+262 -             .fetch_update(Ordering::SeqCst, Ordering::SeqCst, |current| {
+262 +             .try_update(Ordering::SeqCst, Ordering::SeqCst, |current| {
+    |
+
+warning: use of deprecated method `std::sync::atomic::Atomic::<u32>::fetch_update`: renamed to `try_update` for consistency
+   --> src/wasmtime_lib_host.rs:577:14
+    |
+577 |             .fetch_update(Ordering::SeqCst, Ordering::SeqCst, |current| {
+    |              ^^^^^^^^^^^^
+    |
+help: replace the use of the deprecated method
+    |
+577 -             .fetch_update(Ordering::SeqCst, Ordering::SeqCst, |current| {
+577 +             .try_update(Ordering::SeqCst, Ordering::SeqCst, |current| {
+    |
+
+warning: unused variable: `operand_ty`
+     --> src/core/codegen.rs:20164:21
+      |
+20164 |                 let operand_ty = operation_ty
+      |                     ^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_operand_ty`
+      |
+      = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `emit_managed_value_canonical_ingress_adapter` is never used
+    --> src/core/codegen.rs:6448:15
+     |
+6448 | pub(crate) fn emit_managed_value_canonical_ingress_adapter(
+     |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+     = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: struct `ManagedS3Program` is never constructed
+     --> src/core/codegen.rs:12616:8
+      |
+12616 | struct ManagedS3Program {
+      |        ^^^^^^^^^^^^^^^^
+
+warning: function `exact_s32_result` is never used
+     --> src/core/codegen.rs:12622:4
+      |
+12622 | fn exact_s32_result(ty: &Type) -> bool {
+      |    ^^^^^^^^^^^^^^^^
+
+warning: function `analyze_managed_s3_program` is never used
+     --> src/core/codegen.rs:12630:4
+      |
+12630 | fn analyze_managed_s3_program(
+      |    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `emit_managed_s3_checked_delta` is never used
+     --> src/core/codegen.rs:12800:4
+      |
+12800 | fn emit_managed_s3_checked_delta() -> Function {
+      |    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `emit_s3_status_to_result` is never used
+     --> src/core/codegen.rs:12816:4
+      |
+12816 | fn emit_s3_status_to_result(function: &mut Function, payload: u32, tag: u32) {
+      |    ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `emit_managed_s3_run` is never used
+     --> src/core/codegen.rs:12827:4
+      |
+12827 | fn emit_managed_s3_run(program: &ManagedS3Program) -> Function {
+      |    ^^^^^^^^^^^^^^^^^^^
+
+warning: function `acquire_native_catalog_root` is never used
+  --> src/lib_resolver.rs:72:15
+   |
+72 | pub(crate) fn acquire_native_catalog_root(
+   |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `acquire_native_cache_root` is never used
+   --> src/lib_resolver.rs:117:15
+    |
+117 | pub(crate) fn acquire_native_cache_root(
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `acquire_native_root_with_ensure` is never used
+   --> src/lib_resolver.rs:155:15
+    |
+155 | pub(crate) fn acquire_native_root_with_ensure<F>(
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `native_namespace_receipt` is never used
+   --> src/lib_resolver.rs:175:4
+    |
+175 | fn native_namespace_receipt(cache:&Path,namespace:&str)->PathBuf {
+    |    ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `native_metadata_parent` is never used
+   --> src/lib_resolver.rs:178:4
+    |
+178 | fn native_metadata_parent(base:&Path,file:&Path,allow_missing:bool)->Result<()> {
+    |    ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `native_real_base` is never used
+   --> src/lib_resolver.rs:194:4
+    |
+194 | fn native_real_base(path:&Path)->Result<()> {
+    |    ^^^^^^^^^^^^^^^^
+
+warning: function `native_real_relative_root` is never used
+   --> src/lib_resolver.rs:198:4
+    |
+198 | fn native_real_relative_root(base:&Path,relative:&Path)->Result<PathBuf> {
+    |    ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `native_read_file` is never used
+   --> src/lib_resolver.rs:209:4
+    |
+209 | fn native_read_file(path:&Path,max:usize)->Result<Vec<u8>> {
+    |    ^^^^^^^^^^^^^^^^
+
+warning: function `native_wit_namespace_present` is never used
+   --> src/lib_resolver.rs:220:4
+    |
+220 | fn native_wit_namespace_present(wit:&[u8],namespace:&str)->Result<bool> {
+    |    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: struct `CanonicalValueCoreBridge` is never constructed
+  --> src/lib_tool_rust_consumer_sdk/canonical_bridge_legacy.rs:28:12
+   |
+28 | pub struct CanonicalValueCoreBridge {
+   |            ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: multiple fields are never read
+  --> src/lib_tool_rust_consumer_sdk/canonical_bridge_legacy.rs:34:9
+   |
+33 | pub struct CanonicalValueOperation {
+   |            ----------------------- fields in this struct
+34 |     pub interface: String,
+   |         ^^^^^^^^^
+35 |     pub operation: String,
+   |         ^^^^^^^^^
+36 |     pub call_export: String,
+   |         ^^^^^^^^^^^
+37 |     pub post_export: String,
+   |         ^^^^^^^^^^^
+38 |     pub open_export: String,
+   |         ^^^^^^^^^^^
+39 |     pub cancel_export: String,
+   |         ^^^^^^^^^^^^^
+40 |     pub parameter_bytes: u32,
+   |         ^^^^^^^^^^^^^^^
+41 |     pub parameter_alignment: u32,
+   |         ^^^^^^^^^^^^^^^^^^^
+42 |     pub result_bytes: u32,
+   |         ^^^^^^^^^^^^
+43 |     pub result_alignment: u32,
+   |         ^^^^^^^^^^^^^^^^
+   |
+   = note: `CanonicalValueOperation` has derived impls for the traits `Clone` and `Debug`, but these are intentionally ignored during dead code analysis
+
+warning: fields `module`, `name`, `export`, `signature`, and `value_window` are never read
+  --> src/lib_tool_rust_consumer_sdk/canonical_bridge_legacy.rs:46:5
+   |
+45 | struct Binding {
+   |        ------- fields in this struct
+46 |     module: String,
+   |     ^^^^^^
+47 |     name: String,
+   |     ^^^^
+48 |     export: String,
+   |     ^^^^^^
+49 |     signature: Sig,
+   |     ^^^^^^^^^
+50 |     value_window: Option<CanonicalValueOperation>,
+   |     ^^^^^^^^^^^^
+
+warning: function `generate_rust_wit_canonical_value_core_bridge` is never used
+   --> src/lib_tool_rust_consumer_sdk/canonical_bridge_legacy.rs:776:8
+    |
+776 | pub fn generate_rust_wit_canonical_value_core_bridge(
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: struct `Redirect` is never constructed
+   --> src/lib_tool_rust_consumer_sdk/canonical_bridge_legacy.rs:784:8
+    |
+784 | struct Redirect {
+    |        ^^^^^^^^
+
+warning: function `prepare_rust_wit_canonical_sdk_caller` is never used
+   --> src/lib_tool_rust_consumer_sdk/canonical_bridge_legacy.rs:832:8
+    |
+832 | pub fn prepare_rust_wit_canonical_sdk_caller(
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: struct `NativeCanonicalPackageApp` is never constructed
+  --> src/lib_tool_rust_consumer_sdk/canonical_app.rs:19:19
+   |
+19 | pub(crate) struct NativeCanonicalPackageApp {
+   |                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `prepare_native_canonical_package_app` is never used
+   --> src/lib_tool_rust_consumer_sdk/canonical_app.rs:125:15
+    |
+125 | pub(crate) fn prepare_native_canonical_package_app(
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `native_canonical_transfer_rustc_args` is never used
+   --> src/lib_tool_rust_consumer_sdk/canonical_app.rs:141:15
+    |
+141 | pub(crate) fn native_canonical_transfer_rustc_args(source_directory: &std::path::Path) -> Result<Vec<String>> {
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `prepare_native_canonical_value_app` is never used
+   --> src/lib_tool_rust_consumer_sdk/canonical_app.rs:154:15
+    |
+154 | pub(crate) fn prepare_native_canonical_value_app(
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: field `payload_lanes` is never read
+  --> src/lib_tool_rust_consumer_sdk/value_codec.rs:59:9
+   |
+50 | pub(super) struct CheckedRecordCodec {
+   |                   ------------------ field in this struct
+...
+59 |     pub payload_lanes: usize,
+   |         ^^^^^^^^^^^^^
+
+warning: method `source` is never used
+  --> src/lib_tool_rust_consumer_sdk/value_codec.rs:63:12
+   |
+62 | impl CheckedRecordCodec {
+   | ----------------------- method in this implementation
+63 |     pub fn source(&self) -> String {
+   |            ^^^^^^
+
+warning: fields `source`, `constructor_fallible`, and `bindings` are never read
+   --> src/lib_tool_rust_consumer_sdk/value_codec.rs:662:9
+    |
+661 | pub(super) struct CheckedOwnerCodec {
+    |                   ----------------- fields in this struct
+662 |     pub source: String,
+    |         ^^^^^^
+...
+672 |     pub constructor_fallible: bool,
+    |         ^^^^^^^^^^^^^^^^^^^^
+673 |     pub bindings: Vec<Binding>,
+    |         ^^^^^^^^
+
+warning: variant `Return` is never constructed
+  --> src/language/managed_lifetime.rs:27:5
+   |
+21 | pub(crate) enum SlotOrigin {
+   |                 ---------- variant in this enum
+...
+27 |     Return,
+   |     ^^^^^^
+   |
+   = note: `SlotOrigin` has derived impls for the traits `Clone` and `Debug`, but these are intentionally ignored during dead code analysis
+
+warning: variant `ProviderErr` is never constructed
+   --> src/language/managed_lifetime.rs:212:5
+    |
+207 | pub(crate) enum ExitKind {
+    |                 -------- variant in this enum
+...
+212 |     ProviderErr,
+    |     ^^^^^^^^^^^
+    |
+    = note: `ExitKind` has derived impls for the traits `Clone` and `Debug`, but these are intentionally ignored during dead code analysis
+
+warning: variant `FieldGet` is never constructed
+   --> src/language/managed_lifetime.rs:266:5
+    |
+223 | pub(crate) enum LifetimeOp {
+    |                 ---------- variant in this enum
+...
+266 |     FieldGet {
+    |     ^^^^^^^^
+    |
+    = note: `LifetimeOp` has derived impls for the traits `Clone` and `Debug`, but these are intentionally ignored during dead code analysis
+
+warning: method `with_operation` is never used
+   --> src/language/parser.rs:118:19
+    |
+ 61 | impl ExternalSymbolEnvironment {
+    | ------------------------------ method in this implementation
+...
+118 |     pub(crate) fn with_operation(
+    |                   ^^^^^^^^^^^^^^
+
+warning: `wasmc` (lib) generated 44 warnings (run `cargo fix --lib -p wasmc` to apply 11 suggestions)
+    Finished `dev` profile [unoptimized] target(s) in 11.36s
