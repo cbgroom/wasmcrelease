@@ -1,0 +1,36 @@
+{
+  "status": "NOTICE_COMPLETE_CANDIDATE_NOT_RELEASED",
+  "supersedes_candidate_manifest": "24d9f721eed39d73ed57bfee2882afeaf5fd8ca8123619fc408d40554f961825",
+  "candidate_manifest_sha256": "592bae26412f3c8779b156a11133e592d8349f70d4175095cc8de2cce2cb938a",
+  "inventory_sha256": "d85573e659bcdbda42e455649732b2009931cfb8336f41397b9d3b1919c3a90f",
+  "finding": "old candidate reused predecessor artifact but differed from predecessor license manifest: predecessor has 13 notices and old candidate had 7, with a different seventh; no conclusion on licensing compatibility",
+  "repair": "preserve exact 14 predecessor license and notice descriptors, retain old candidate seventh notice as additional notice 014",
+  "replay": "full parent notice set and additional notice regenerate same candidate manifest/inventory; predecessor Q0 and derived lineage pass",
+  "negative_control": "previous 7-notice candidate rejected by predecessor notice preservation check",
+  "runtime": "unchanged Core/Component hashes; exact new manifest passed lib verify, controlled install 26 files, 300 JSON differential cases and duplicate regression, and local real Service/Hosted 16MiB atomic scenarios",
+  "product": "experimental 43 package product and controlled installer readback 823 files pass under zero commit; not public authority",
+  "notices_sha256": {
+    "attach-parent-notices.mjs": "fd342ea05e82dff10d0c0392e2b8cea40315d940d6f0c5baec7861980fa8c21d",
+    "experimental-assembler.mjs": "e5ff226754b41f0361d3b43c6a669739f824420238ad3aec5811ea5ef48b7edb",
+    "experimental-index.mjs": "7cb563c17a692084e670f4708b99f87c0fa7bc5b0c93b13bdd38e7f152af13ca",
+    "install-all.log": "0667f61749513adb75fd9a4f7182c4a20f04cc8dbcb70054e84fc2f0701eae6c",
+    "install.log": "f66949adcac80373523a3b95bc06899fb0d3c2bd57901a974496382a067f5c90",
+    "installed-duplicates.log": "ebb3fd49af8e72308ea318f1bf27b7d6e8a5d977a6cc810c3948046ad80e9db7",
+    "installed-json.log": "a6c57f63436bd932100f81118a841e83797c17e76d74ff56ac3a259003a80194",
+    "lineage.log": "6f5a8316085f4456dad24c99b63af67f36e5dfcf2006f9a53dd45843c37cdb92",
+    "native-verify.log": "0232122722d1cab3129f11044f3f4bd3f1965c2a81b261f16c3b3194e4c5a20f",
+    "notice-missing-rejection.log": "fdea4a4642f753bb622668df4a298d992f1959027aed423c388abdfdd005d96d",
+    "notice-replay.log": "017f555b5b034dc9d0efd3b8202bfad35dc4565f1a719e051d014ab5eb47c6c1",
+    "prepare.log": "13b86a06e2130c6f8b14a485a29d0e70a263dd205210400e91d934c6a6503730",
+    "product.log": "dca291807e3936a4a02f1dfeaa2a4f6a13d39e61346344b0c2f795e669d52516",
+    "receipt.json": "fbeb7d7957f586d0c50402d918c5fb1b2bf20ff22ed1ddbf9023f9a07fb361d9",
+    "service.log": "0696018db87191a188ebca9d743e164f0c84ea4030b236c74381f205ee488c4c",
+    "verify-derived-capsule.mjs": "12e8e37ed7c9442eb38a1050e1f6384df0266b2d0030c4a290b631104c22c7f3",
+    "verify-lineage.mjs": "138f6efa490a7e4d92ab12711367be53cbd79516728334f0b70cb43ed978bed4"
+  },
+  "limitations": [
+    "not a legal-compatibility conclusion",
+    "producer Source not admitted; no official Q0",
+    "no actual production route, hosted CI, formal release, or anonymous release install"
+  ]
+}
