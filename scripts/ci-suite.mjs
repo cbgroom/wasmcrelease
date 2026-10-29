@@ -10,7 +10,13 @@ function currentProductControls() {
   const catalogBytes=readFileSync(join(root,'catalog/libs-current-v2.json')),catalog=JSON.parse(catalogBytes);
   const cohort=readFileSync(join(root,catalog.cohort.path));
   if(cohort.length!==catalog.cohort.bytes||createHash('sha256').update(cohort).digest('hex')!==catalog.cohort.sha256)throw Error('CI current cohort identity drift');
-  if(JSON.parse(cohort).schema!=='wasmc.public-current-refresh-cohort/v2')return {
+  const schema=JSON.parse(cohort).schema;
+  if(schema==='wasmc.mixed-current-cohort/v1'){
+    const policy=JSON.parse(readFileSync(join(root,'catalog/current-mixed-license-policy-v1.json')));
+    if(policy.schema!=='wasmc.current-license-policy/mixed-v1'||policy.catalog_sha256!==createHash('sha256').update(catalogBytes).digest('hex'))throw Error('CI mixed catalog identity drift');
+    return {product:'scripts/test-current-product-mixed-v1.mjs',license:'scripts/test-current-license-policy-mixed-v1.mjs',catalog:policy.catalog_sha256};
+  }
+  if(schema!=='wasmc.public-current-refresh-cohort/v2')return {
     product:'scripts/test-current-product-v3.mjs',license:'scripts/test-current-license-policy-v3.mjs',
     catalog:'e12684efb3e475ad551eddabda12bc4c196f19edb48e7ace9069fda1ef5e7871'};
   const policy=JSON.parse(readFileSync(join(root,'catalog/current-v4-license-policy.json')));

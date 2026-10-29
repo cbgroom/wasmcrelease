@@ -469,7 +469,8 @@ export function currentProductInputsForVersion(version,variant){
   if(variant==='mixed')return [...base.filter(path=>!['admission/current-product-v3.json','admission/current-refresh-cohort-v2.json','catalog/current-v3-license-policy.json'].includes(path)),
     'admission/mixed-current-cohort-v1.json','catalog/current-mixed-license-policy-v1.json',
     'catalog/frozen-v030-notices-v1.json','scripts/frozen-v030-notices-v1.mjs','scripts/current-license-policy-mixed-v1.mjs',
-    'scripts/mixed-current-product-v1.mjs','scripts/project-frozen-search-index-v1.mjs','scripts/qualify-mixed-release-inputs-v1.mjs'];
+    'scripts/mixed-current-product-v1.mjs','scripts/project-frozen-search-index-v1.mjs','scripts/qualify-mixed-release-inputs-v1.mjs',
+    'scripts/test-current-product-mixed-v1.mjs','scripts/test-current-license-policy-mixed-v1.mjs'];
   assert.equal(variant,'v4');
   return [...base.filter(path=>path!=='admission/current-product-v3.json'),
     'admission/current-product-v4.json','catalog/current-v4-license-policy.json',

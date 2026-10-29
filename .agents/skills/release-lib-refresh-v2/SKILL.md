@@ -35,6 +35,8 @@ For a mixed candidate, bind the original Q0 preflight, exact public artifact com
 
 Mixed release candidate creation must independently requalify Q0, tags, Q2 and the exact network-installed cohort, then carry both complete original proof graphs and only the selected current Roots. Use conditional mixed verification so legacy candidate execution does not require new modules. Candidate creation must still reject an old-version or unadmitted compiler.
 
+CI must dispatch the mixed cohort to its own complete two-source product and per-Root notice checks, with a catalog-pinned mixed policy; run each under supported Node, Bun and Deno hosts. These checks do not replace whole-product CI or compiler admission.
+
 ## Decision
 
 `libspec/` is the sole current Lib source authority. Do not extend the historical
