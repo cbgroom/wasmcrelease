@@ -1,0 +1,60 @@
+{
+  "status": "ISOLATED_CANDIDATE_PASS_NOT_INTEGRATED",
+  "source_base": "6fcfe8d86b19b491919b96b9bade8d8556477671",
+  "candidate_patch_sha256": "bbbc6274653b6ccd545a3182842caeb41be54f0bf074ac682abeac63d166b688",
+  "candidate_patch_private_path": "/Users/youxianshi/.local/state/wasmc-maintenance/rustc-service-1991-20261028/wasmc-sdk-gather-generator-20261030/candidate-generator.patch",
+  "patch_files": [
+    "src/lib_tool_rust_consumer_sdk/canonical_bridge.rs",
+    "src/lib_tool_rust_consumer_sdk/canonical_sdk.rs",
+    "src/lib_tool_rust_consumer_sdk.rs",
+    "src/lib_tool_rust_build_host.rs"
+  ],
+  "finding": "previous single-file patch only changes value-window output and did not change released Core SDK; isolated four-file candidate opts the current SDK into bulk gathering and keeps old 2021, scalar 2024 and previous bulk-zero 2024 regeneration paths",
+  "producer": "actual LibToolRustBuildHost PortableV0 through release-owned glue; source archive plus private candidate, not admitted Source",
+  "generated_manifest_sha256": "ae5292263fd278c8bae6f27dce456dfb4a5566613c07688b051c66b7fae929da",
+  "generated_root": "scratch only, same nominal 0.2.4 identity; do not publish over candidate or frozen version",
+  "core_sha256": "08d0d60134228dabbfc467429b2e54c97910d9d1d8e0a3f49f11228668b11384",
+  "generated_sdk_sha256": "0684fd80795ff2f0208bb1d5b686d3ebef95f505ec353c7157eb831975c936f0",
+  "guest_sha256": "fe30682f5f3874f107478d13594c96ddda60a2f48914b5d0110028738a393ae3",
+  "checks": [
+    "Generated SDK matches previous synthesized optimized SDK byte-for-byte after removal of test-only function visibility",
+    "Strict verification passes newly generated Root, anonymous-installed 0.2.4 prior-2024 Root, anonymous-installed 0.2.1 2021 Root, and historical scalar-2024 fixture",
+    "Changed SDK source is rejected by exact manifest verification",
+    "Existing atomic dual SDK exact inventory and regeneration test passes 1/1 with negative controls",
+    "Temporary actual McpGitService activates the newly generated Root and runs 26 API calls on Rust 2024 Guest, three rounds each on Wasmi and Wasmtime",
+    "Prior synthetic Guest from installed Root likewise passes six real-Service rounds"
+  ],
+  "preserved_failures": [
+    "first Cargo producer invocation launched outside source directory",
+    "historical package verifier rejected the symlinked root; canonical path retry passed",
+    "six-original-root test failed because its external receipt environment was not supplied; no six-root pass claimed"
+  ],
+  "source_log_sha256": {
+    "build.log": "49f950ddb4194b0b8c3fdfed2fbed8d2d5987fe5523d1224abdf6887cefaffe1",
+    "build-source.log": "d798fdf40a862f5d45203db335c7aabd593b56b55941e256c5a18dfa6905b692",
+    "compose.log": "b72618844d8b22b2283ff1d229707b16234cfab16d213f564e3df85f73351d8d",
+    "build-profile.log": "e0b96915764e163d6a55cab6607c769740b395da2830d8aa9174c9dd92875b05",
+    "compose-optimized.log": "e6ff7e4162335ac9a540e4f6f26597cdb3e6524d484759247e9e617e4e5f7f25",
+    "build-verify.log": "714b091a67dbcf782630130bb2dd032ee0096341def28423b7b8909c8a52732e",
+    "verify-historical.log": "5bf9e45bab5e5e7bcd78e3a3f37d72fc4daee6751e442333d8c9841d037e9350",
+    "verify-historical-realpath.log": "6aed0ad83e79c8446b1b353c7ee2d553e909c21760512a6baa9a43aa4aaea7a6",
+    "verify-optimized.log": "6aed0ad83e79c8446b1b353c7ee2d553e909c21760512a6baa9a43aa4aaea7a6",
+    "verify-2021.log": "6aed0ad83e79c8446b1b353c7ee2d553e909c21760512a6baa9a43aa4aaea7a6",
+    "verify-scalar2024.log": "6aed0ad83e79c8446b1b353c7ee2d553e909c21760512a6baa9a43aa4aaea7a6",
+    "verify-corrupt.log": "7d488fa819abbc2db52b5642fa157c8c6798c681bc484551a8dcdec7b205c757",
+    "actual-sdk-rustc.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "test-six-legacy.log": "ae8c9f3deaa98cea2f2a5277af1bda8d48ef048763e97163d9d85c26cdba377a",
+    "test-dual-root.log": "9ef6445ab82c62ff838d9ae4655143cdca835e6a4ec013ee96f0a2575fd11826"
+  },
+  "service_log_sha256": {
+    "real-service.log": "218a0174e92020320168094ab578fa6e035713796834f0487ab86469e9b62c73",
+    "generated-sdk-service.log": "db828b70477ecb7cdb495eb02487a2cb5eaf25bbbac81f4190da934f5e4da094"
+  },
+  "limitations": [
+    "No source integration: relevant SDK files have overlapping active claims, no foreign WIP changed",
+    "Real Service uses isolated main-based archive plus candidate call-plan and test harness modifications; not live Hosted or deployment",
+    "Candidate SDK adds own_read64 import; complete Host compatibility, large real-Service inputs and resource accounting remain open",
+    "Generated nominal 0.2.4 root is a disposable laboratory artifact, not authority to overwrite released or publicly shared identity",
+    "No formal release, public release-tag download or aggregate memory proof"
+  ]
+}
