@@ -24,7 +24,7 @@ for(const [label,change] of [
  ['wrong prior catalog identity',{priorCatalogSha:'0'.repeat(64)}],
  ['wrong prior index bytes',{priorIndexBytes:Buffer.from('{}')}],
  ['wrong private receipt commitment',{receiptSha:'0'.repeat(64)}],
- ['wrong artifact authority',{authorityCommit:'0'.repeat(40)}],
+ ['wrong artifact authority',{authorityCommit:authorityCommit==='0'.repeat(40)?'f'.repeat(40):'0'.repeat(40)}],
  ['corrupt public root',{read:corrupt(first)}],
  ['corrupt current index',{read:corrupt(catalog.index.path)}],
  ['extra public root file',{productPaths:[...productPaths,'current-libs/extra/unexpected']}],
@@ -40,4 +40,17 @@ const forgedIndexBytes=Buffer.from(JSON.stringify(forgedIndex)+'\n'),forgedCatal
 forgedCatalog.index.bytes=forgedIndexBytes.length;forgedCatalog.index.sha256=hash(forgedIndexBytes);
 const forgedCatalogBytes=serialize(forgedCatalog),forgedIndexRead=p=>p==='catalog/libs-current-v2.json'?forgedCatalogBytes:p===catalog.index.path?forgedIndexBytes:read(p);
 assert.throws(()=>verifyPublicJsonOverlay({...args,catalogBytes:forgedCatalogBytes,catalogSha:hash(forgedCatalogBytes),read:forgedIndexRead}));
-console.log(JSON.stringify({...result,negative_controls:12,actual_catalog_sha256:hash(catalogBytes),scope:'public bytes and pinned projection only; no private producer provenance or release admission'}));
+let successorControls=0;
+if(catalog.packages.find(p=>p.id==='wasmc-json').version==='0.2.3'){
+ for(const mutation of ['package-description','api-description','api-route']){
+  const changedIndex=JSON.parse(read(catalog.index.path)),item=changedIndex.packages.find(p=>p.package_id==='wasmc-json');
+  if(mutation==='package-description')item.description='unexpected';
+  else if(mutation==='api-description')item.apis[0].description='unexpected';
+  else item.apis[0].route='document#unexpected';
+  const bytes=Buffer.from(JSON.stringify(changedIndex)+'\n'),changedCatalog=structuredClone(catalog);
+  changedCatalog.index.bytes=bytes.length;changedCatalog.index.sha256=hash(bytes);
+  const catalogBytes=serialize(changedCatalog),changedRead=p=>p==='catalog/libs-current-v2.json'?catalogBytes:p===catalog.index.path?bytes:read(p);
+  assert.throws(()=>verifyPublicJsonOverlay({...args,catalogBytes,catalogSha:hash(catalogBytes),read:changedRead}),undefined,mutation);successorControls++;
+ }
+}
+console.log(JSON.stringify({...result,negative_controls:12+successorControls,actual_catalog_sha256:hash(catalogBytes),scope:'public bytes and pinned projection only; no private producer provenance or release admission'}));

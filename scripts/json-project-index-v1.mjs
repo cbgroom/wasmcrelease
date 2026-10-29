@@ -15,9 +15,11 @@ export function projectJsonIndex(old, fresh, newReceipt) {
   for (const p of index.packages) {
     const prior = previous.get(p.package_id); assert.ok(prior, 'new package');
     if (p.package_id === 'wasmc-json') {
-      assert.equal(prior.version, '0.2.1'); assert.equal(p.version, '0.2.2');
+      assert.equal(prior.version, '0.2.1'); assert.ok(['0.2.2','0.2.3'].includes(p.version),'unsupported JSON successor');
       assert.ok(prior.delivery && p.delivery); assert.equal(p.delivery.receipt_sha256, newReceipt);
-      assert.deepEqual(prior.apis, p.apis, 'JSON API changed'); changed++; continue;
+      if(p.version==='0.2.2') assert.deepEqual(prior.apis, p.apis, 'JSON API changed');
+      else assert.deepEqual(prior.apis.map(({description,...api})=>api),p.apis.map(({description,...api})=>api),'JSON API routes changed');
+      changed++; continue;
     }
     assert.equal(p.delivery, null, 'unexpected fresh binding'); assert.ok(prior.delivery, 'old delivery missing');
     assert.deepEqual({ ...prior, delivery:null }, { ...p, delivery:null }, p.package_id + ': index source drift');

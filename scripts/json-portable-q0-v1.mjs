@@ -27,7 +27,8 @@ export async function capture({source,run,receiptSha,producer,out}){
     if(!captured.has(expected)){await put(join(out,'external',expected),b);captured.add(expected);}
   }
   const pb=await readFile(producer);assert.equal(sha(pb),r.producer.sha256);await put(join(out,'producer'),pb);
-  const original=join(run,'packages/wasmc-json'),verified=await verifyRoot(original,'wasmc-json','0.2.2','value');
+  assert.ok(['0.2.2','0.2.3'].includes(r.rows[0].version),'unsupported JSON successor');
+  const original=join(run,'packages/wasmc-json'),verified=await verifyRoot(original,'wasmc-json',r.rows[0].version,'value');
   assert.equal(digest(verified.files),r.rows[0].root_inventory_sha256);
   for(const path of Object.keys(verified.files)){const target=inside(join(out,'root'),path);await mkdir(dirname(target),{recursive:true});await copyFile(inside(original,path),target);}
 }
@@ -35,7 +36,7 @@ export async function verify({capsule,receiptSha,witPath,witSha}){
   for(const p of [capsule,witPath])assert.ok(isAbsolute(p));for(const p of [receiptSha,witSha])assert.match(p,pin);
   const rb=await readFile(join(capsule,'receipt.json'));assert.equal(sha(rb),receiptSha);const r=JSON.parse(rb);
   assert.equal(r.schema,'wasmc.lib-refresh-receipt/v2');assert.equal(r.accepted,true);
-  assert.deepEqual(r.rows.map(x=>x.id),['wasmc-json']);const row=r.rows[0];assert.equal(row.version,'0.2.2');assert.equal(row.profile,'value');
+  assert.deepEqual(r.rows.map(x=>x.id),['wasmc-json']);const row=r.rows[0];assert.ok(['0.2.2','0.2.3'].includes(row.version),'unsupported JSON successor');assert.equal(row.profile,'value');
   assert.equal(r.resource_core_input_manifest,null);assert.deepEqual(r.resource_core_inputs,{});
   const src=join(capsule,'source');
   for(const [path,expected] of Object.entries(r.source_digests)){assert.match(expected,pin);assert.equal(sha(await readFile(inside(src,path))),expected,'source '+path);}

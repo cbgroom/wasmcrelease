@@ -12,6 +12,7 @@ const parse=b=>JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(b));
 const pinned=(pin,read)=>{const b=read(pin.path);assert.equal(b.length,pin.bytes,'pinned byte count');assert.equal(hash(b),pin.sha256,'pinned digest');return b;};
 const inventory=row=>Object.fromEntries(row.files.map(f=>[f.path.slice(row.root.length+1),{bytes:f.bytes,sha256:f.sha256}]));
 const normalizedIndex=p=>{const{version,wit_sha256,wit_route,delivery,...rest}=p;return rest;};
+const normalizedSuccessorIndex=p=>{const{description,...rest}=normalizedIndex(p);return {...rest,apis:rest.apis.map(({description,...api})=>api)};};
 const fixedRow=p=>{const{version,root,manifest_sha256,root_inventory_sha256,wit_sha256,source,views,delivery,files,...rest}=p;return rest;};
 export function verifyPublicJsonOverlay({catalogBytes,catalogSha,priorCatalogBytes,priorCatalogSha,priorIndexBytes,read,productPaths,receiptSha,authorityCommit}){
   assert.match(receiptSha,/^[a-f0-9]{64}$/);assert.match(authorityCommit,/^[a-f0-9]{40}$/);
@@ -23,7 +24,7 @@ export function verifyPublicJsonOverlay({catalogBytes,catalogSha,priorCatalogByt
   assert.equal(priorIndexBytes.length,prior.index.bytes);assert.equal(hash(priorIndexBytes),prior.index.sha256,'independent previous index pin');
   const previous=new Map(prior.packages.map(row=>[row.id,row]));assert.equal(previous.size,catalog.packages.length);
   for(const row of catalog.packages){const old=previous.get(row.id);assert.ok(old,'package not in previous catalog');
-    if(row.id==='wasmc-json'){assert.equal(old.version,'0.2.1');assert.equal(row.version,'0.2.2');assert.deepEqual(fixedRow(row),fixedRow(old),'JSON fixed metadata drift');}
+    if(row.id==='wasmc-json'){assert.equal(old.version,'0.2.1');assert.ok(['0.2.2','0.2.3'].includes(row.version),'unsupported JSON successor');assert.deepEqual(fixedRow(row),fixedRow(old),'JSON fixed metadata drift');}
     else assert.deepEqual(row,old,'unchanged package row drift: '+row.id);
   }
   const indexBytes=pinned(catalog.index,read),index=parse(indexBytes),oldIndex=parse(priorIndexBytes);
@@ -33,7 +34,7 @@ export function verifyPublicJsonOverlay({catalogBytes,catalogSha,priorCatalogByt
   assert.deepEqual(index.packages.map(p=>p.package_id).sort(),catalog.packages.map(p=>p.id).sort(),'index and catalog identities');
   assert.deepEqual(oldIndex.packages.map(p=>p.package_id).sort(),prior.packages.map(p=>p.id).sort(),'previous index and catalog identities');
   for(const p of index.packages){const old=oldItems.get(p.package_id);assert.ok(old,'index package not in previous');
-    if(p.package_id==='wasmc-json'){const row=catalog.packages.find(x=>x.id===p.package_id);assert.equal(old.version,'0.2.1');assert.equal(p.version,row.version);assert.equal(p.wit_sha256,row.wit_sha256);assert.equal(p.wit_route,'wasmc:json@'+row.version);assert.deepEqual(normalizedIndex(p),normalizedIndex(old),'JSON API projection drift');
+    if(p.package_id==='wasmc-json'){const row=catalog.packages.find(x=>x.id===p.package_id);assert.equal(old.version,'0.2.1');assert.equal(p.version,row.version);assert.equal(p.wit_sha256,row.wit_sha256);assert.equal(p.wit_route,'wasmc:json@'+row.version);const normalize=row.version==='0.2.2'?normalizedIndex:normalizedSuccessorIndex;assert.deepEqual(normalize(p),normalize(old),'JSON API projection drift');
       assert.deepEqual(p.delivery,{manifest_sha256:row.manifest_sha256,receipt_sha256:receiptSha,artifact_kind:row.delivery.kind,artifact_path:row.delivery.artifact.path,artifact_sha256:row.delivery.artifact.sha256,component_sha256:row.delivery.component.sha256});
     }else assert.deepEqual(p,old,'unchanged index entry drift: '+p.package_id);
   }
@@ -46,6 +47,7 @@ export function verifyPublicJsonOverlay({catalogBytes,catalogSha,priorCatalogByt
     for(const pin of Object.values(row.source))pinned(pin,read);
     if(row.id==='wasmc-json'){
       const spec=parse(pinned(row.source.spec,read));assert.equal(spec.id,row.id);assert.equal(spec.version,row.version);assert.equal(spec.profile,row.profile);
+      if(row.version==='0.2.3'){const item=index.packages.find(p=>p.package_id===row.id);assert.equal(item.description,spec.description,'JSON package description source drift');const descriptions=new Map(spec.apis.map(a=>[a.api,a.delta]));assert.equal(descriptions.size,spec.apis.length,'duplicate JSON API');for(const api of item.apis){const name=api.route.split('#').at(-1);assert.equal(api.description,descriptions.get(name),'JSON API description source drift');}}
       assert.deepEqual(pinned(row.source.wit,read),read(row.root+'/lib.wit'),'JSON source and Root WIT');
       assert.deepEqual(Object.keys(manifest.bindings).sort(),row.views);
       for(const [field,pin] of [['artifact',row.delivery.artifact],['component',row.delivery.component]]){
