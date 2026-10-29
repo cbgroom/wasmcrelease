@@ -1,0 +1,27 @@
+{
+  "status": "CI_ROUTING_FIXED_CANDIDATE_NOT_RELEASE",
+  "catalog_sha256": "ac32312f3e06f7ca2b3f8e20d66ecd4914f1ffd10ad45ae1cef4ff06a9628192",
+  "original_issue": "derived JSON cohort was incorrectly routed to v3 checks with unrelated frozen catalog digest",
+  "fixed": "derived cohort uses the same exact candidate/catalog identity checks, public product and notice controls as overlay; includes successor-only routing test",
+  "validation": "Node, Bun and Deno actual derived catalog and synthetic historical/negative controls; Deno exact CI permissions; 491 actual declared notice files; existing CI reporting; product input variants unchanged except derived test; historical release-channel transition and 32 negative controls",
+  "functional_compiler_stage": "Node and Deno full 192 managed calls; Bun compile only; 30 frozen outputs and 23 expression cases each",
+  "scope_limit": [
+    "candidate manifest absent and rejected, never fabricated",
+    "test-only compiler manifest has no integrated Source custody",
+    "formal release and real production Host pending"
+  ],
+  "logs": {
+    "ci-route-bun.log": "18457359d445fefaf80dcd206febcd071f12b13207c1a0fe373721fe9dbf42e1",
+    "ci-route-node.log": "18457359d445fefaf80dcd206febcd071f12b13207c1a0fe373721fe9dbf42e1",
+    "ci-route-deno.log": "18457359d445fefaf80dcd206febcd071f12b13207c1a0fe373721fe9dbf42e1",
+    "public-product-check.log": "bf3f603d797f1aaf857c4bfc2cae7a0adf4fddba942dc3bae96c43f5bf908b05",
+    "ci-derived-routing-before.log": "49ececf3eba1ca9284a7a601540fbb9cab8541cbc91b2a67aa962d6b75f17759",
+    "ci-derived-notices.log": "050679aba494ad91982d402d97f57fcd411462b03f312ceef92c9801df47a21a",
+    "ci-route-deno-exact-permissions.log": "18457359d445fefaf80dcd206febcd071f12b13207c1a0fe373721fe9dbf42e1",
+    "validate-current-bun.log": "7fc462b5f6e9302b978cfd3610ffbc74dc2d6c98ec6c4398b5c3f89c74a4ca3d",
+    "validate-current-node.log": "fbb3340f5a7f97cfff08c1b104423971fb681c2330e9fe3b578a3d3ae92b1a16",
+    "validate-current-deno.log": "2cbb5f46dd61acae1aac2e92f3349d0064279bc38c209f1ddd49533955869c32",
+    "ci-derived-real-candidate-absent.log": "b11cde0a3d74eafe6bf9a7c15e52b24b9a41abdf5d66bd792e0aee7ba8e91961",
+    "release-channel-routing-regression.log": "29c35ec4ba9bc9560138c398d3fc36912fda4f9e3bae806502ecf371329276ee"
+  }
+}
