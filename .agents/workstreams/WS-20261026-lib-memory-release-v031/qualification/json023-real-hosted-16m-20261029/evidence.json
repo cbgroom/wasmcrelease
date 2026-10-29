@@ -1,0 +1,41 @@
+{
+  "status": "LOCAL_REAL_SERVICE_16M_CONFIGURED_PASS_NOT_PRODUCTION",
+  "candidate_commit": "a73f35ee19dd59db7f26e775bc9107b5543c225b",
+  "service_main_observed": "9afdd3f7ccd4ce1e0197876decbec2bf5c26fc36",
+  "service_snapshot_note": "local experimental source snapshot; not byte-identical to observed main and no live route claim",
+  "source_test_sha256": "159a877e142a18084d732e981188d6fdbcb4de5bd70616920a0442f0436459e8",
+  "guest_sha256": "6c6fc0b07c7c2091dfd87a0d0259853f458af74871f8871a5f649df027baa85d",
+  "root_artifact_sha256": "75e35f9cafcea36407f2d9c9e3e29db411ae8afb3b3ea855b5d6a66272202d0c",
+  "request_body_bytes": 16777216,
+  "default": "failed before guest: HTTP request body exceeds the guest body limit",
+  "configured_first": "4 billion fuel exhausted in SDK transfer",
+  "configured_pass": {
+    "request_body_limit": 16777216,
+    "request_limit": 20971520,
+    "response_limit": 20971520,
+    "guest_memory": 268435456,
+    "fuel": 60000000000,
+    "wall_clock_ms": 180000,
+    "elapsed_test_seconds": 33.78,
+    "steps": "4 atomic success, 1 conflict, 1 disabled, invalid then same-install recovery"
+  },
+  "limits": "60 billion is configured ceiling, not measured fuel consumed; test includes large echoed response; no production or release assertion",
+  "logs": {
+    "wrong_install_path": {
+      "full_log_sha256": "d46d8cb768f90212c008741fb1618f2c5ae8b76ac11f467a796dd6e0369e3381",
+      "full_log_path": "/Users/youxianshi/.local/state/wasmc-maintenance/rustc-service-1991-20261028/service-json023-16m-default.log"
+    },
+    "default_body_rejected": {
+      "full_log_sha256": "edc860d4ef13b2589a79b28a54b0f05dd5e52288bef93083d21994661e9df0e5",
+      "full_log_path": "/Users/youxianshi/.local/state/wasmc-maintenance/rustc-service-1991-20261028/service-json023-16m-default-correct-root.log"
+    },
+    "configured_4b_fuel_exhausted": {
+      "full_log_sha256": "044b836de581196bc1d2e8803950b7e99a487810d82b97829dd28c19b3ef50a2",
+      "full_log_path": "/Users/youxianshi/.local/state/wasmc-maintenance/rustc-service-1991-20261028/service-json023-16m-configured.log"
+    },
+    "configured_60b_pass": {
+      "full_log_sha256": "e08ec8e57f093e7f28fd1e1a07fb4bab62ec0980caf015aa7aa78f2287d5bf84",
+      "full_log_path": "/Users/youxianshi/.local/state/wasmc-maintenance/rustc-service-1991-20261028/service-json023-16m-configured-high-fuel.log"
+    }
+  }
+}

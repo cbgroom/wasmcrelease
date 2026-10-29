@@ -1,0 +1,38 @@
+--- existing-service-fixture.rs	2026-10-29 17:04:46
++++ experimental-service-fixture.rs	2026-10-29 18:11:40
+@@ -7346,7 +7346,15 @@
+         row_sha256: http_route_binding_sha256(&raw)?,
+         binding: raw,
+     };
+-    let limits = HttpRouteLimits::bounded_default();
++    let mut limits = HttpRouteLimits::bounded_default();
++    if std::env::var_os("MCPGIT_TEST_16M_LIMITS").is_some() {
++        limits.request_body_bytes = 16 * 1024 * 1024;
++        limits.request_bytes = 20 * 1024 * 1024;
++        limits.response_bytes = 20 * 1024 * 1024;
++        limits.memory_bytes = 256 * 1024 * 1024;
++        limits.fuel = 60_000_000_000;
++        limits.guest_wall_clock_ms = 180_000;
++    }
+     let publication = RoutePublication::ready(
+         "publication-json-mixed",
+         1,
+@@ -7381,7 +7389,17 @@
+         let first=if step==2 {"row-0".to_string()} else {format!("row-{step}")};
+         let second=format!("row-{step}-extra");
+         let body=serde_json::to_string(&json!({"execute":step!=4,"transaction":{"table_path":"json_results","expected_revision":head,"transaction_id":Uuid::new_v4().to_string(),"idempotency_key":Uuid::new_v4().to_string(),"operations":[{"op":"insert","operation_id":Uuid::new_v4().to_string(),"key":first,"row_json":json!({"id":"requires-guest-edit-0"}).to_string()},{"op":"insert","operation_id":Uuid::new_v4().to_string(),"key":second,"row_json":json!({"id":"requires-guest-edit-1"}).to_string()}]}}))?;
+-        let body=if step==5 {"{".to_string()} else {body};
++        let body=if step==0 {
++            let mut value: Value=serde_json::from_str(&body)?;
++            value["padding"]=json!("");
++            let empty=serde_json::to_string(&value)?;
++            let desired=16*1024*1024;
++            ensure!(empty.len() < desired);
++            value["padding"]=json!("x".repeat(desired-empty.len()));
++            let out=serde_json::to_string(&value)?;
++            ensure!(out.len()==desired,"unexpected padded size {}",out.len());
++            out
++        } else if step==5 {"{".to_string()} else {body};
+         let request=hosting::HostedPluginRequest {organization_id:"organization-a".into(),repository_id:REPO.into(),site_id:"prototype".into(),method:"POST".into(),path:"/json".into(),query:vec![],headers:BTreeMap::new(),header_fields:vec![],body:Bytes::from(body.clone()),caller:hosting::HostedPluginCaller {principal_id:"hosted:fixture".into(),person_id:Some(PERSON.into()),authentication_mode:"fixture".into(),permissions:BTreeSet::from(["repo.read".into(),"table.write".into()]),capabilities:capabilities.clone(),table_scope_restricted:false}};
+         match hosting::HostedPluginDispatcher::dispatch(&dispatcher,request).await {
+             hosting::HostedPluginDispatch::Response(response)=>{

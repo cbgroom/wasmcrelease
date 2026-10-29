@@ -1,0 +1,28 @@
+   --> /Users/youxianshi/.local/state/wasmc-maintenance/rustc-service-1991-20261028/hosted-selected-json-atomic-20261029/source/src/table_access_observability.rs:363:45
+    |
+363 |         let _ = QUERY_PROFILE_MAX_NS[index].fetch_update(
+    |                                             ^^^^^^^^^^^^
+    |
+help: replace the use of the deprecated method
+    |
+363 -         let _ = QUERY_PROFILE_MAX_NS[index].fetch_update(
+363 +         let _ = QUERY_PROFILE_MAX_NS[index].try_update(
+    |
+
+warning: `mcpgit` (lib) generated 3 warnings (run `cargo fix --lib -p mcpgit` to apply 3 suggestions)
+   Compiling mcpgit-executable-skill-runtime-lab v0.0.0 (/Users/youxianshi/.local/state/wasmc-maintenance/rustc-service-1991-20261028/hosted-selected-json-atomic-20261029/source/labs/executable-skill-runtime)
+    Finished `release` profile [optimized] target(s) in 31.65s
+     Running tests/end_to_end_json023_16m_local.rs (/Users/youxianshi/.local/state/wasmc-maintenance/rustc-service-1991-20261028/hosted-selected-json-atomic-20261029/target/release/deps/end_to_end_json023_16m_local-f7e5077d1c100920)
+
+running 1 test
+Error: No such file or directory (os error 2)
+test selected_json_rust_guest_atomic_transactions_and_recovery ... FAILED
+
+failures:
+
+failures:
+    selected_json_rust_guest_atomic_transactions_and_recovery
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 17 filtered out; finished in 0.06s
+
+error: test failed, to rerun pass `--test end_to_end_json023_16m_local`
