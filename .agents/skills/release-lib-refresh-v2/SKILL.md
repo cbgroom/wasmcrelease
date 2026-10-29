@@ -21,6 +21,8 @@ Published Roots with conflicting candidate identities can be retained only by ch
 
 A mixed Search index must retain the historical delivery receipt and exact manifest/artifact bindings for each reused Root. Require independently verified old and new catalogs plus identical source and API metadata before projection; execute the selected Search Core against the resulting full index. This alone does not establish mixed-product admission.
 
+A mixed fixture can embed independently pinned old and Q0 input graphs, replay both original verifiers, and require every selected Root, source, notice and index byte to match the correct original. A zero-authority fixture and a new verifier contract do not establish installer compatibility or public release authority.
+
 ## Decision
 
 `libspec/` is the sole current Lib source authority. Do not extend the historical
