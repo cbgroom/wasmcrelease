@@ -169,7 +169,7 @@ fn validate_object(object: &ObjectInput) -> Result<()> {
     nonempty(&object.mode, "mode")
 }
 fn encode(collection: &Collection) -> Result<Vec<u8>> {
-    serde_json::to_vec(collection).map_err(|e| fail(ErrorCode::Internal, e.to_string()))
+    bincode::serialize(collection).map_err(|e| fail(ErrorCode::Internal, e.to_string()))
 }
 fn row(collection: &Collection, sequence: u64) -> Result<kernel::ResidentRowInput> {
     Ok(kernel::ResidentRowInput {
@@ -182,7 +182,7 @@ fn row(collection: &Collection, sequence: u64) -> Result<kernel::ResidentRowInpu
 fn decode(snapshot: &kernel::ResidentSnapshot) -> Result<Collection> {
     match snapshot.cell(0, 0) {
         Some(kernel::ResidentCell::Blob(bytes)) => {
-            serde_json::from_slice(bytes).map_err(|e| fail(ErrorCode::Integrity, e.to_string()))
+            bincode::deserialize(bytes).map_err(|e| fail(ErrorCode::Integrity, e.to_string()))
         }
         _ => Err(fail(
             ErrorCode::Integrity,
