@@ -1,0 +1,34 @@
+    9:  0x2cfd7 - <unknown>!<wasm function 849>
+
+Caused by:
+    wasm trap: wasm `unreachable` instruction executed
+
+fuel_trace=[("body_read", 79999997637)]
+
+thread 'native_http_table_profiles_drive_json_decision_and_atomic_fixture' (71951523) panicked at tests/ordinary_canonical_host_lib_v1.rs:1117:25:
+large JSON Guest call: error while executing at wasm backtrace:
+    0:  0x2d07c - <unknown>!<wasm function 851>
+    1:  0x2d1e2 - <unknown>!<wasm function 853>
+    2:  0x2d657 - <unknown>!<wasm function 860>
+    3:  0x2d765 - <unknown>!<wasm function 861>
+    4:  0x2d88a - <unknown>!<wasm function 862>
+    5:  0x2daa5 - <unknown>!<wasm function 865>
+    6:  0x2f1c5 - <unknown>!<wasm function 899>
+    7:   0xf8f5 - <unknown>!<wasm function 251>
+    8:  0x2b85c - <unknown>!<wasm function 809>
+    9:  0x2cfd7 - <unknown>!<wasm function 849>
+
+Caused by:
+    wasm trap: wasm `unreachable` instruction executed
+
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test native_http_table_profiles_drive_json_decision_and_atomic_fixture ... FAILED
+
+failures:
+
+failures:
+    native_http_table_profiles_drive_json_decision_and_atomic_fixture
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 10 filtered out; finished in 14.44s
+
+error: test failed, to rerun pass `--test ordinary_canonical_host_lib_v1`

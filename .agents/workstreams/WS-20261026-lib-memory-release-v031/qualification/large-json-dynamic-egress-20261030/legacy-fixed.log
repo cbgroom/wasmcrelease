@@ -1,0 +1,12 @@
+STRING_INGRESS engine=wasmi2 fresh_owners=3072 explicit_drops=3072 bytes_unchanged=true boundary_rejections=4
+STRING_INGRESS_FAILURE engine=wasmi2 mode=1 trace=[("new", 1)] store_abandoned=false
+STRING_INGRESS_FAILURE engine=wasmi2 mode=2 trace=[("new", 0), ("push", 0), ("push", 1), ("drop", 0)] store_abandoned=false
+STRING_INGRESS_FAILURE engine=wasmi2 mode=3 trace=[("new", 0), ("push", 0), ("push", 0), ("push", 0), ("finish", 1), ("drop", 0)] store_abandoned=false
+STRING_INGRESS_FAILURE engine=wasmi2 mode=4 trace=[("new", 0), ("push", 1), ("drop", 1)] store_abandoned=true
+STRING_INGRESS_UTF8 engine=wasmi2 pre_effect_rejections=6
+STRING_INGRESS_FAILURE engine=wasmi2 mode=7 trace=[("new", 0)] store_abandoned=true
+STRING_INGRESS_FAILURE engine=wasmi2 mode=8 trace=[("new", 0)] store_abandoned=true
+test codegen::borrowed_snapshot_tests::canonical_string_ingress_on_both_engines ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 379 filtered out; finished in 4.90s
+

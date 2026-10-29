@@ -1,0 +1,55 @@
+{
+  "status": "ISOLATED_JSON_16M_PROOF_NOT_INTEGRATED",
+  "source_base": "51ddc3c2c790d25186e4441274edb8d2bd665f20",
+  "private_patch_path": "/Users/youxianshi/.local/state/wasmc-maintenance/rustc-service-1991-20261028/canonical-dynamic-entry-design-OIyN55ur/private-design-v2.patch",
+  "private_patch_sha256": "ae5a2e3e2a32966fb74f9512c8f639050dad7045d6e725945a6cd3569f763263",
+  "root_manifest_sha256": "8b2c659b8b28327a6945f08f1168e07d4526ed8a1705cadc05b9f544eab6c284",
+  "root_core_sha256": "08d0d60134228dabbfc467429b2e54c97910d9d1d8e0a3f49f11228668b11384",
+  "first_runtime_failure": "With only dynamic Host admission changed, 16777217-byte request trapped after body read and before transaction with 47106413384 fuel remaining; function 851 dynamic snapshot String conversion includes i32 constant 2097152. Original source logs retained.",
+  "fix": "Private source additionally uses full u32 length for dynamically leased managed string snapshot and checked u32/element-size limit for dynamically leased list snapshots. Fixed staging continues using original limits.",
+  "result": {
+    "input_bytes": 16777217,
+    "input_sha256": "eab29265810b9e5280c29f4ef4b5efdb7fe05f3ce1cd3c61a2d2e13b39fcbd51",
+    "caller_limit": 16777217,
+    "fuel_budget": 80000000000,
+    "remaining_fuel": 42203115226,
+    "fuel_consumed": 37796884774,
+    "wasm_memory_limit_per_memory": 536870912,
+    "two_rows_verified": true,
+    "plus_one_rejected": true,
+    "fresh_input_recovered": true,
+    "initial_cases": 14,
+    "host": "local mock Table",
+    "runtime": "Wasmtime"
+  },
+  "retest_correction": "Earlier successful run mistakenly recorded 64MiB in receipt while Store was configured for 512MiB; retained and reran with corrected receipt.",
+  "legacy": "fixed string ingress Wasmi/Wasmtime pass 1/1; scalar list test fails both candidate and unchanged Source at same shape, identical assertion and generated caller/adapter hashes; original and baseline failures retained, no pass claimed",
+  "limitations": [
+    "private snapshot and modified test fixture; no source claim release, integration, portable rebuild of v2 patch or formal release",
+    "512MiB is per-Wasm-memory Store limiter, not a comprehensive total-memory accounting proof",
+    "80B diagnostic fuel, not default production budget; only mocked Table Host, not production route",
+    "limited to this JSON request and bound; no blanket Lib capacity or >i32 ABI claim"
+  ],
+  "full_private_log_sha256": {
+    "test-first.log": "71825ba6d1ad82edcb04d17980cf839a80ffb144ca385b6f0ee58fff9484cd2b",
+    "test-v2.log": "82e942aaab5f77669c3ed2510680dec95d55aeb4c822e0290d046818323af7ae",
+    "test-v3.log": "82887f32ad407737f6ce563b751cc167e73351d12c839b69701e075ef1c6a60b",
+    "test-v4.log": "5450e2264a9afa797712a3dcbc9e91215fcaebbb2cb1cfac94460695d7fe1dab",
+    "legacy-fixed.log": "921e645038362838d7bccf6ce6a7bd8526d230ee7039b2849cc83feba9016652",
+    "legacy-fixed-v2.log": "5f76072875ec88689e6ff4c19d1877d1c65239875f7d70d4b754888769704a07",
+    "legacy-list.log": "af3c423e1947669d020c0c3802575206346ce47452b1ec11a6e49dff82b7b305",
+    "legacy-list-baseline.log": "010915360375138757ab6f0d53109b21850305d351d3c406ed8c86fa2e91e268"
+  },
+  "corrected_runtime_receipt_sha256": "cbe107dcd68908ea9221c29ae1074adb0c192758181da4f971554454c34d5bf1",
+  "files": {
+    "first-binding-pin-failure.log": "9a661aa860d5196206960e5b85a24ad3fc697ea3c35009f5651e385ac71a122a",
+    "fixed-runtime.log": "50c5bee461d10390d975992a45a910fdc9c4317a40a2a7e8c07ec7f1b232b66a",
+    "ingress-only-runtime-failure.log": "1673d3563b9d58b6127da0b36a34a6a7f26f86aa3d15a90114e0ac574e306737",
+    "legacy-fixed.log": "696fda33b35fefa146ec1f8ba42092c853aa4d4e42be4ebf3628e6d959811101",
+    "legacy-list-baseline-failure.log": "a9b77c1e6b5ccf944768019fcde7ae70c605cd064fd7fa549a221203bf30fdfc",
+    "legacy-list-candidate-failure.log": "c0a0fdf94a2291dccbae459e5f2647d2e34a7260c5e25571bc2b708650175921",
+    "legacy-missing-provider-failure.log": "e710ca0fc81eae0dab73b30972dc3400545871f0246676fe1aca06807ed8f32c",
+    "preflight-first.log": "497ba29ee8558a87d5a6cb0e98cfda26a0458a2ce0e90657c8bc4e515359b10d",
+    "runtime-summary.json": "72b010f838fca68513176ebbc13831115524f1d3ad264ccf757a894429307d7b"
+  }
+}
