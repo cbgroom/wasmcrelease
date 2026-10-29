@@ -1,0 +1,289 @@
+--- a/crates/mcpgit-executable-runtime/src/test_support_json_lib.rs
++++ b/crates/mcpgit-executable-runtime/src/test_support_json_lib.rs
+@@ -553,27 +553,8 @@
+-    let guest = Module::new(&Engine::default(), wasm)?;
+-    let mut lib_imports = Vec::new();
+-    let mut full = Vec::new();
+-    for entry in guest.imports() {
+-        let ExternType::Func(f) = entry.ty() else {
+-            anyhow::bail!("non-function import")
+-        };
+-        let import = Import::new(
+-            entry.module(),
+-            entry.name(),
+-            f.params().map(kind).collect::<Result<Vec<_>>>()?,
+-            f.results().map(kind).collect::<Result<Vec<_>>>()?,
+-        );
+-        if entry.module() == "wasmc:private/canonical-memory@1"
+-            || entry.module() == "wasmc:lib/wasmc-json@0.2.1"
+-        {
+-            lib_imports.push(import.clone());
+-        } else {
+-            ensure!(
+-                mcpgit_guest_contract::find(entry.module(), entry.name()).is_some(),
+-                "unknown Host import"
+-            );
+-        }
+-        full.push(import);
+-    }
+-    ensure!(
+-        lib_imports.len() == 59 && full.len() == 62,
++    let runtime = CoreDomainRuntime::default();
++    let inspection = runtime.inspect_core(wasm)?;
++    let mixed = crate::route_wasm_executor::mixed_route_plan_from_inspection(
++        &inspection,
++        provider.clone(),
++    )?;
++    ensure!(
++        mixed.lib.imports().len() == 59 && mixed.imports.len() == 62,
+@@ -582,3 +563,2 @@
+-    let plan = CoreLibCallPlan::new(provider.clone(), lib_imports)?;
+-    let runtime = CoreDomainRuntime::default();
+-    let artifact = runtime.prepare_scalar_host(wasm, [96; 32], &full)?;
++    let artifact = runtime.prepare_scalar_host(wasm, [96; 32], &mixed.imports)?;
++    let plan = &mixed.lib;
+@@ -667,13 +647,12 @@
+-        for import in &full {
+-            if import.module() == "wasmc:private/canonical-memory@1"
+-                || import.module() == "wasmc:lib/wasmc-json@0.2.1"
+-            {
+-                session = plan.bind_budgeted_import(session, import, expected, |host| {
+-                    &mut host.extension_mut::<Extension>().expect("extension").lib
+-                })?;
+-            } else {
+-                let function = *mcpgit_guest_contract::find(import.module(), import.name())
+-                    .expect("checked Host import");
+-                session = mcpgit_programmable_query_runtime::bind_programmable_wit_core(
+-                    session, function,
+-                )?;
++        for entry in &mixed.ordered {
++            match entry {
++                crate::route_wasm_executor::MixedRouteImport::Lib(import) => {
++                    session = plan.bind_budgeted_import(session, import, expected, |host| {
++                        &mut host.extension_mut::<Extension>().expect("extension").lib
++                    })?;
++                }
++                crate::route_wasm_executor::MixedRouteImport::Host(function) => {
++                    session = mcpgit_programmable_query_runtime::bind_programmable_wit_core(
++                        session, *function,
++                    )?;
++                }
+--- a/crates/mcpgit-executable-runtime/src/route_wasm_executor.rs
++++ b/crates/mcpgit-executable-runtime/src/route_wasm_executor.rs
+@@ -5062,0 +5063,84 @@
++// Ordered physical plan only: the caller is responsible for resolving the
++// exact activation and checking the route's declared capabilities.
++pub(crate) enum MixedRouteImport {
++    Host(mcpgit_guest_contract::Function),
++    Lib(crate::core_runtime::CoreDomainScalarHostImport),
++}
++pub(crate) struct MixedRoutePlan {
++    pub(crate) ordered: Vec<MixedRouteImport>,
++    pub(crate) imports: Vec<crate::core_runtime::CoreDomainScalarHostImport>,
++    pub(crate) lib: crate::core_lib_call_plan::CoreLibCallPlan,
++}
++pub(crate) fn mixed_route_plan_from_inspection(
++    inspection: &CoreDomainModuleInspection,
++    provider: crate::core_lib::PreparedCoreLib,
++) -> Result<MixedRoutePlan> {
++    use crate::core_runtime::{
++        CoreDomainScalarHostImport as Import, CoreDomainScalarType as Scalar,
++    };
++    fn scalar(value: &CoreDomainModuleValueType) -> Result<Scalar> {
++        match value {
++            CoreDomainModuleValueType::I32 => Ok(Scalar::I32),
++            CoreDomainModuleValueType::I64 => Ok(Scalar::I64),
++            CoreDomainModuleValueType::F32 => Ok(Scalar::F32),
++            CoreDomainModuleValueType::F64 => Ok(Scalar::F64),
++            _ => Err(anyhow!("unsupported mixed route scalar type")),
++        }
++    }
++    let provider_module = format!("wasmc:lib/{}@{}", provider.package_id(), provider.version());
++    let mut ordered = Vec::new();
++    let mut all = Vec::new();
++    let mut lib = Vec::new();
++    let mut provider_import = false;
++    for item in inspection.imports() {
++        let CoreDomainModuleExternType::Function { params, results } = item.external_type() else {
++            return Err(anyhow!("mixed route import is not a function"));
++        };
++        let import = Import::new(
++            item.module(),
++            item.name(),
++            params.iter().map(scalar).collect::<Result<Vec<_>>>()?,
++            results.iter().map(scalar).collect::<Result<Vec<_>>>()?,
++        );
++        if item.module() == "wasmc:private/canonical-memory@1" || item.module() == provider_module {
++            provider_import |= item.module() == provider_module;
++            lib.push(import.clone());
++            ordered.push(MixedRouteImport::Lib(import.clone()));
++        } else {
++            let function = if item.module() == HTTP_HOST_MODULE {
++                let function = mcpgit_guest_contract::find_router(item.module(), item.name())
++                    .ok_or_else(|| anyhow!("unknown route Host import"))?;
++                ensure!(
++                    mcpgit_guest_contract::CANONICAL_ROUTER_FUNCTIONS.contains(function)
++                        || mcpgit_guest_contract::BINARY_EXCHANGE_FUNCTIONS.contains(function),
++                    "unsupported HTTP Host import"
++                );
++                *function
++            } else {
++                let function = mcpgit_guest_contract::find(item.module(), item.name())
++                    .ok_or_else(|| anyhow!("unknown route Host import"))?;
++                ensure!(
++                    programmable_wit_core_supports(*function),
++                    "unsupported programmable Host import"
++                );
++                *function
++            };
++            ensure!(
++                import == mcpgit_programmable_query_runtime::programmable_core_import(function),
++                "route Host import signature mismatch"
++            );
++            ordered.push(MixedRouteImport::Host(function));
++        }
++        all.push(import);
++    }
++    ensure!(
++        provider_import,
++        "selected Core Lib has no imported function"
++    );
++    Ok(MixedRoutePlan {
++        ordered,
++        imports: all,
++        lib: crate::core_lib_call_plan::CoreLibCallPlan::new(provider, lib)?,
++    })
++}
++
+@@ -5711 +5795,4 @@
+-        let wasm = include_bytes!(concat!(env!("CARGO_MANIFEST_DIR"), "/../../.agents/workstreams/WS-20261028-rust-lib-real-host-v1/fixtures/json-sdk-real-service/guest.wasm"));
++        let wasm = include_bytes!(concat!(
++            env!("CARGO_MANIFEST_DIR"),
++            "/../../.agents/workstreams/WS-20261028-rust-lib-real-host-v1/fixtures/json-sdk-real-service/guest.wasm"
++        ));
+@@ -5714,3 +5801,17 @@
+-        assert!(inspection.imports().iter().any(|i| i.module() == "wasmc:lib/wasmc-json@0.2.1"));
+-        assert!(inspection.imports().iter().any(|i| i.module() == "wasmc:private/canonical-memory@1"));
+-        assert!(current_core_host_plan_from_inspection(&inspection).unwrap().is_none());
++        assert!(
++            inspection
++                .imports()
++                .iter()
++                .any(|i| i.module() == "wasmc:lib/wasmc-json@0.2.1")
++        );
++        assert!(
++            inspection
++                .imports()
++                .iter()
++                .any(|i| i.module() == "wasmc:private/canonical-memory@1")
++        );
++        assert!(
++            current_core_host_plan_from_inspection(&inspection)
++                .unwrap()
++                .is_none()
++        );
+@@ -5719 +5820,4 @@
+-        assert!(err.to_string().contains("unsupported programmable query Host import"));
++        assert!(
++            err.to_string()
++                .contains("unsupported programmable query Host import")
++        );
+@@ -5721,2 +5825,10 @@
+-            ("wasmc:private/canonical-memory@1", "own_read8", "(param i32) (result i32)"),
+-            ("wasmc:lib/wasmc-json@0.2.1", "cabi_realloc", "(param i32 i32 i32 i32) (result i32)"),
++            (
++                "wasmc:private/canonical-memory@1",
++                "own_read8",
++                "(param i32) (result i32)",
++            ),
++            (
++                "wasmc:lib/wasmc-json@0.2.1",
++                "cabi_realloc",
++                "(param i32 i32 i32 i32) (result i32)",
++            ),
+@@ -5724 +5836,3 @@
+-            let wat = format!(r#"(module (import "{module}" "{name}" (func {signature})) (memory (export "memory") 1) (func (export "handle") (result i32) i32.const 200))"#);
++            let wat = format!(
++                r#"(module (import "{module}" "{name}" (func {signature})) (memory (export "memory") 1) (func (export "handle") (result i32) i32.const 200))"#
++            );
+@@ -5726 +5840,9 @@
+-            let err = prepare_cached_module_for_profile(&runtime, &bytes, [0; 32], &BTreeSet::new(), true).err().expect("unsupported Lib import must be rejected");
++            let err = prepare_cached_module_for_profile(
++                &runtime,
++                &bytes,
++                [0; 32],
++                &BTreeSet::new(),
++                true,
++            )
++            .err()
++            .expect("unsupported Lib import must be rejected");
+@@ -5730,0 +5853,69 @@
++    #[test]
++    fn mixed_route_planner_rejects_wrong_imports_and_preserves_order() {
++        use super::*;
++        use crate::core_lib::{CoreLibPackage, CoreLibPin, PreparedCoreLib};
++        const MANIFEST: &[u8] =
++            include_bytes!("../tests/fixtures/wasmc-core-algorithms-0.1.0/lib.json");
++        const WIT: &[u8] = include_bytes!("../tests/fixtures/wasmc-core-algorithms-0.1.0/lib.wit");
++        const ARTIFACT: &[u8] =
++            include_bytes!("../tests/fixtures/wasmc-core-algorithms-0.1.0/artifact.wasm");
++        const ABI: &[u8] =
++            include_bytes!("../tests/fixtures/wasmc-core-algorithms-0.1.0/core-abi.json");
++        fn digest(b: &[u8]) -> String {
++            format!("{:x}", Sha256::digest(b))
++        }
++        let provider = PreparedCoreLib::prepare(
++            &Engine::default(),
++            CoreLibPackage {
++                manifest: MANIFEST,
++                wit: WIT,
++                artifact: ARTIFACT,
++                core_abi: ABI,
++            },
++            &CoreLibPin {
++                package_id: "wasmc-core-algorithms".into(),
++                version: "0.1.0".into(),
++                manifest_sha256: digest(MANIFEST),
++                wit_sha256: digest(WIT),
++                artifact_sha256: digest(ARTIFACT),
++                artifact_bytes: ARTIFACT.len(),
++            },
++        )
++        .unwrap();
++        let runtime = CoreDomainRuntime::default();
++        let inspect = |imports: &str| {
++            runtime
++                .inspect_core(&wat::parse_str(format!("(module {imports})")).unwrap())
++                .unwrap()
++        };
++        let lib = r#"(import "wasmc:lib/wasmc-core-algorithms@0.1.0" "wasmc:core-algorithms/algorithms@0.1.0#wrapping-add-s32" (func (param i32 i32) (result i32)))"#;
++        let host = r#"(import "mcpgit:table/v1" "response-drop" (func (param i32) (result i32)))"#;
++        let mixed =
++            mixed_route_plan_from_inspection(&inspect(&format!("{host} {lib}")), provider.clone())
++                .unwrap();
++        assert!(matches!(mixed.ordered[0], MixedRouteImport::Host(_)));
++        assert!(matches!(mixed.ordered[1], MixedRouteImport::Lib(_)));
++        assert_eq!(mixed.imports.len(), 2);
++        let bad_host =
++            r#"(import "mcpgit:table/v1" "response-drop" (func (param i64) (result i32)))"#;
++        assert!(
++            mixed_route_plan_from_inspection(
++                &inspect(&format!("{bad_host} {lib}")),
++                provider.clone()
++            )
++            .is_err()
++        );
++        let bad_lib = r#"(import "wasmc:lib/wasmc-core-algorithms@0.1.0" "wasmc:core-algorithms/algorithms@0.1.0#wrapping-add-s32" (func (param i64) (result i32)))"#;
++        assert!(mixed_route_plan_from_inspection(&inspect(bad_lib), provider.clone()).is_err());
++        let wrong_lib = lib.replace("@0.1.0", "@0.1.1");
++        assert!(mixed_route_plan_from_inspection(&inspect(&wrong_lib), provider.clone()).is_err());
++        assert!(mixed_route_plan_from_inspection(&inspect(host), provider.clone()).is_err());
++        assert!(
++            mixed_route_plan_from_inspection(
++                &inspect(r#"(import "unknown" "memory" (memory 1))"#),
++                provider
++            )
++            .is_err()
++        );
++    }
++

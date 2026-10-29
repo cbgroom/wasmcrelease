@@ -1,0 +1,29 @@
+{
+  "schema": "mcpgit.hosted-mixed-import-plan-candidate/v1",
+  "status": "isolated candidate; production routing not integrated",
+  "baseline": "MCPGit 7797450d selected-file overlay on eb8683ac archive, WAsmC private shared-memory SDK v2; not full exact 779 tree",
+  "requires": [
+    "core-runtime-shared-memory-budget-v2-20261029.patch and its prerequisites",
+    "mcpgit-json-shared-memory-host-v2-20261029.patch",
+    "hosted-json-import-boundary-20261029.patch"
+  ],
+  "patch_sha256": "3e22379a2c9ceaabd9373bf8c990542d5b56fd5ded6faa3c7d80a68d5c7824f6",
+  "implementation": "Engine-neutral inspection builds an ordered Host/one-exact-Lib plan, verifies supported Host signatures and exact Lib exports and canonical-memory signatures via CoreLibCallPlan; rejects absent selected provider import, unsupported scalar lanes and non-functions. The plan performs no route authority or capability approval. Existing budgeted Service test now uses it.",
+  "validation": "Actual temporary Service with Rust 2024 JSON Guest, TableGit status and 62 ordered imports: both Wasmi and Wasmtime run 26 JSON operations, budget failure and recovery and wrong provider controls pass, reservations/handles released. Separate controls cover original order, wrong Host/Lib signatures, wrong version, no selected Lib import and non-function. Previous non-budgeted branch witness passed after shared target use. Patch applied against reconstructed candidate and changed files byte compared.",
+  "failure_evidence": "first control test compile failed due to quoting typo, corrected; both original and passing logs retained.",
+  "limitations": [
+    "new plan used only by test support, production Hosted routing, activation selection, route capability approval and cache identity not yet implemented",
+    "single Lib provider only; no multi-Lib claim",
+    "Guest input fixed and Guest is not an HTTP handler",
+    "temporary Service only; no production deployment, Source integration or formal release",
+    "shared budget covers Wasm linear memory, not Host heap, provider fuel, deadline or cancellation"
+  ],
+  "logs_sha256": {
+    "hosted-mixed-planner-v1-20261029.log": "2a542525ad17663c51685428fcee29fb3937ecd4ccff430cc008c4d05eee191d",
+    "hosted-mixed-planner-controls-v1-20261029.log": "984c30fcc26af9e3dc37e10d57ecffa5b0a444758fd33eb32be0804072dcbf2f",
+    "hosted-mixed-planner-controls-v2-20261029.log": "d088b3519bdfd9fd795977ca81e37a21024e259cdd3a2819558e3a2b9d3d0cae",
+    "hosted-mixed-planner-final-service-20261029.log": "11270150e60c269e174fa071db18fdc0c836041e458cbe09721a87efb63a5a70",
+    "hosted-mixed-planner-final-controls-20261029.log": "368396093a896ac5c44560ff276edd6dc04ac6279ee11816e412fc6c4b72277f",
+    "hosted-mixed-planner-branch-readback-20261029.log": "aa8954d616fd5b70f62efa299e8db02696ea0a52d14559dd8ec45e0f415c6d58"
+  }
+}
