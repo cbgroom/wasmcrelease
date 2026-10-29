@@ -1,0 +1,24 @@
+{
+  "schema": "mcpgit.narrow-call-plan-main-candidate/v1",
+  "status": "isolated main-archive candidate, not integrated or deployed",
+  "main": "5010aec14a54c4224a3c8906116322e029125335",
+  "source_candidate": "7797450d5bd93db7a3cdea8a943b567ac25994d6",
+  "private_patch_sha256": "4d2fe25fc55b87db21981dfc6f8eba46704dccf56c0c273f943af63e8552a9aa",
+  "private_patch_location": "/Users/youxianshi/.local/state/wasmc-maintenance/rustc-service-1991-20261028/mcpgit-main-call-plan-narrow-20261029.patch",
+  "scope": [
+    "core_lib.rs identity and static export inspection",
+    "core_lib_call_plan.rs implementation and two tests",
+    "lib.rs module export"
+  ],
+  "excluded": "No route file, SDK buffer limit, activation changes, test-support harness or 16MiB changes; original main capacity constants preserved.",
+  "checks": "git apply --check against clean exact main and reverse-check on staged archive pass; isolated cargo test --offline --locked selected two module tests and both passed: normal provider instance, wrong identity, duplicate imports, wrong signatures and memory import; preparation does not execute trapping provider start.",
+  "test_log_sha256": {
+    "mcpgit-call-plan-main-isolated-20261029.log": "f1f9b0dfa2841a9b406878ead099895ebf884fb61814a28f2e3bf80d88c4c54c",
+    "mcpgit-call-plan-main-controls-20261029.log": "0194beed5b96c9d058c2ca8971090dc39615a8036ca7aaa4b4569a44b6b3e03c"
+  },
+  "limits": [
+    "No actual Service or JSON caller test of this three-file subset",
+    "Private source candidate only; no serialized integration, full gate, route, shared provider budgets, deployment or release",
+    "Existing runtime Test profile build in cloned target; copied target and original candidate remain intact"
+  ]
+}
