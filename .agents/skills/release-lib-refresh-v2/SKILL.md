@@ -37,6 +37,8 @@ Mixed release candidate creation must independently requalify Q0, tags, Q2 and t
 
 CI must dispatch the mixed cohort to its own complete two-source product and per-Root notice checks, with a catalog-pinned mixed policy; run each under supported Node, Bun and Deno hosts. These checks do not replace whole-product CI or compiler admission.
 
+After anonymous installation of a mixed cohort, compile each selected 2024 Core SDK directly from its installed and pinned bytes with the pinned Rust toolchain. Report historical editions and Component manifest declarations separately; neither direct SDK compilation nor temporary-Service execution proves deployed routing or release.
+
 ## Decision
 
 `libspec/` is the sole current Lib source authority. Do not extend the historical
