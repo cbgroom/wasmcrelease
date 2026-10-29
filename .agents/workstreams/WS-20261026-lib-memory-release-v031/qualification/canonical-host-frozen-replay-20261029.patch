@@ -1,0 +1,85 @@
+--- a/src/lib_tool_rust_consumer_sdk/canonical_host.rs
++++ b/src/lib_tool_rust_consumer_sdk/canonical_host.rs
+@@ -269,0 +270,62 @@
++
++/// Reconstruct a previously sealed Host app from its exact published receipt
++/// and inputs. The receipt, each input and the tool must be independently
++/// pinned by the caller. The operation neither executes nor activates the app.
++pub fn replay_pinned_host_canonical(
++    receipt_file: &super::NativePinnedFile,
++    inputs: &[super::NativePinnedFile],
++    merge_tool: &super::NativePinnedFile,
++    host: &impl CanonicalHostContracts,
++    stage: &std::path::Path,
++) -> Result<SealedHostCanonicalApp> {
++    let expected=host_profile_bindings(host)?;
++    if !stage.is_absolute() || std::fs::symlink_metadata(stage).is_ok() {
++        return Err(reject("Canonical Host replay stage must be absent absolute directory"));
++    }
++    let receipt_bytes=super::pinned(receipt_file,usize::MAX - 1)?;
++    let mut plan:serde_json::Value=serde_json::from_slice(&receipt_bytes).map_err(|e|Error::runtime(e.to_string()))?;
++    if plan["schema"]!="wasmc.host-canonical-package-plan/v1"
++        || plan["host_binding_sha256"]!=host.entry_contract().binding_sha256
++        || plan["operation_host_binding_sha256"]!=host.operation_contract().binding_sha256 {
++        return Err(reject("Canonical Host replay receipt/contract mismatch"));
++    }
++    let rows=plan["inputs"].as_array().ok_or_else(||reject("Canonical Host replay input inventory missing"))?;
++    if rows.is_empty() || rows.len()!=inputs.len() {return Err(reject("Canonical Host replay input count mismatch"));}
++    let mut names=std::collections::BTreeSet::new();
++    let mut checked=Vec::with_capacity(inputs.len());
++    for (row,input) in rows.iter().zip(inputs) {
++        let module=row["module"].as_str().filter(|s|!s.is_empty()).ok_or_else(||reject("Canonical Host replay input module missing"))?;
++        if !names.insert(module.to_owned()) || row["sha256"].as_str()!=Some(input.sha256.as_str()) {
++            return Err(reject("Canonical Host replay input identity mismatch"));
++        }
++        let bytes=super::pinned(input,usize::MAX - 1)?;
++        if row["bytes"].as_u64()!=u64::try_from(bytes.len()).ok() {return Err(reject("Canonical Host replay input size mismatch"));}
++        checked.push((module.to_owned(),bytes));
++    }
++    super::pinned(merge_tool,usize::MAX - 1)?;
++    std::fs::create_dir(stage)?;
++    let mut command=std::process::Command::new(&merge_tool.path);
++    for (i,(module,bytes)) in checked.iter().enumerate() {
++        let path=stage.join(format!("input-{i}.wasm"));
++        super::write_new(&path,bytes)?;
++        command.arg(path).arg(module);
++    }
++    let target=stage.join("app.wasm");
++    let result=command.args(["--rename-export-conflicts","--all-features","--quiet","-o"]).arg(&target).output()?;
++    if !result.status.success() { return Err(Error::runtime(format!("Canonical Host replay failed: {}",String::from_utf8_lossy(&result.stderr).chars().take(2048).collect::<String>()))); }
++    let wasm=super::read_file(&target,usize::MAX - 1)?;
++    if plan["artifact"]["sha256"].as_str()!=Some(hex(&sha256(&wasm)).as_str())
++        || plan["artifact"]["bytes"].as_u64()!=u64::try_from(wasm.len()).ok() {
++        return Err(reject("Canonical Host replay final artifact mismatch"));
++    }
++    let module=wasmtime::Module::new(&wasmtime::Engine::default(),&wasm).map_err(|e|Error::runtime(e.to_string()))?;
++    for import in module.imports() {
++        let wasmtime::ExternType::Func(function)=import.ty() else {return Err(reject("Replayed Canonical Host artifact retains a non-function import"));};
++        let signature=(function.params().map(|v|v.to_string()).collect::<Vec<_>>(),function.results().map(|v|v.to_string()).collect::<Vec<_>>());
++        if expected.get(&(import.module().into(),import.name().into()))!=Some(&signature) {
++            return Err(reject("Replayed Canonical Host import or signature drift"));
++        }
++    }
++    plan["replay"] = serde_json::json!({"receipt_sha256": receipt_file.sha256, "merge_tool_sha256": merge_tool.sha256});
++    Ok(SealedHostCanonicalApp{wasm,plan})
++}
+--- a/tests/canonical_host_checked_results_v1.rs
++++ b/tests/canonical_host_checked_results_v1.rs
+@@ -177,0 +178,17 @@
++
++#[test]
++fn frozen_host_receipt_replays_exact_input_modules_without_regeneration() {
++ use wasmc::lib_tool_rust_consumer_sdk::native_build::host::replay_pinned_host_canonical;
++ let product=std::env::var("WASMC_CANONICAL_PRIOR_PRODUCT").unwrap();let fixture=Path::new(&product).join("examples/canonical-host");let assets=fixture.join("producer-assets");
++ let host=HostContractPair{entry:contract(&fixture.join("host/entry"),&[]),operations:contract(&fixture.join("host/operations"),&["table.transact"])};
++ let names=["prepared-transfer.wasm","modules/caller.wasm","prepared-lib-core.wasm","modules/lib-projection.wasm","modules/lib-calls.wasm","modules/canonical-entry.wasm","modules/app-projection.wasm","modules/host-entry.wasm","modules/host-projection.wasm","modules/host-calls.wasm","prepared-core-provider.wasm"];
++ let inputs=names.iter().map(|name|pinned(&assets.join(name))).collect::<Vec<_>>();
++ let receipt=pinned(&assets.join("caller-plan.json"));assert_eq!(receipt.sha256,"f0976bae297b4f1d0788cadfc06ff7ba1b1127824cfe779321a2d9bc30c54b44");let tool=pinned(Path::new(&std::env::var("WASMC_NATIVE_MERGE_TOOL").unwrap()));
++ let out=std::env::var("WASMC_CANONICAL_CHECKED_OUTPUT").unwrap();let stage=Path::new(&out).join(format!("frozen-replay-{}",std::process::id()));let bad_stage=Path::new(&out).join(format!("frozen-replay-invalid-{}",std::process::id()));
++ let mut wrong=inputs.clone();wrong[3].sha256="0".repeat(64);
++ assert!(replay_pinned_host_canonical(&receipt,&wrong,&tool,&host,&bad_stage).is_err());assert!(!bad_stage.exists());
++ let app=replay_pinned_host_canonical(&receipt,&inputs,&tool,&host,&stage).unwrap();
++ assert_eq!(hash(&app.wasm),"9bc7ee1d06e56e61635ba7cf2e00c27f52bec01eba3b881f141af6d3591aa057");
++ assert_eq!(app.plan["artifact"]["sha256"],hash(&app.wasm));
++ assert_eq!(app.plan["replay"]["merge_tool_sha256"],tool.sha256);
++}

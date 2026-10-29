@@ -1,0 +1,21 @@
+{
+  "schema": "wasmc.canonical-host-frozen-replay-candidate/v1",
+  "base": "Source c1306cc8ec4497d2190f7ac72501979e4038bfae; tested with capacity, Edition 2024 and other isolated compiler overlays",
+  "change": "Add native Host replay API consuming caller-pinned receipt, exact ordered inputs and pinned merge tool; verify host binding, input lengths and digests, final Wasm digest and Host import signatures; output records actual replay tool identity. Existing release files and normal successor compilation remain untouched.",
+  "validation": "Exact v0.0.28 11-module receipt f0976bae297b4f1d0788cadfc06ff7ba1b1127824cfe779321a2d9bc30c54b44 replays to exact artifact 9bc7ee1d06e56e61635ba7cf2e00c27f52bec01eba3b881f141af6d3591aa057. Wrong module digest rejected before stage creation. Current tool differs from historical tool but final bytes agree; actual tool digest is recorded. Full workspace all-targets dual-engine check passes with warnings.",
+  "failures": "Initial unbounded read passed usize::MAX into existing max+1 code and overflowed; fixed using representable bound. Next rejected a different but compatible tool identity; exact output verification and separate actual-tool receipt permit this case. Logs retained.",
+  "limitations": [
+    "Replay is explicit API, not yet wired into existing activation or installed production route.",
+    "Existing test demanding regenerated modules match historical bytes still fails; this API instead reuses pinned modules and is not a claim that regeneration matches.",
+    "No live execution of this replayed artifact or formal publication. Source audit and hosted CI remain unresolved."
+  ],
+  "patch_application": "git apply --unidiff-zero --check against exact Source PR head",
+  "evidence_sha256": {
+    "source-c130-replay-api-first-20261029.log": "b9ccb2e99cc2e0c8065b1da4a77f617fef56791e38a6f606711ef7c401fd7473",
+    "source-c130-replay-api-v2-20261029.log": "bfee076c2b9de0d20aeb6aeba6a93a8a184a5d19d4a695fc153046ee10a60e86",
+    "source-c130-replay-api-v3-20261029.log": "a7bcc24cd47762531fc3328e904f46046a7f6daca35583b39c1cf451e24bfd41",
+    "source-c130-replay-api-v4-20261029.log": "a503886763a985aa4c2d24e98ad569f7b60a16bb662f9d8c8be264251b07bb77",
+    "source-c130-replay-api-alltargets-20261029.log": "44874f881cb9a343e6aa45d64bfa731c60467e43e28faf9e3dd3db4c781b397b",
+    "canonical-host-frozen-replay-20261029.patch": "c249df25a48477e444ea3a8360e4125f8ee2289473ae80e8348d8f58c01984c2"
+  }
+}
