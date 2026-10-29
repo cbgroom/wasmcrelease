@@ -1,0 +1,15 @@
+{
+  "schema": "wasmc.q0-installed-sdk-hosted/v1",
+  "status": "isolated candidate; temporary real Service and lab Hosted dispatcher",
+  "root_manifest_sha256": "a40499304c4078c8034473e552730cd460556c81d8679b8afe040cf2407f7397",
+  "root_core_sha256": "007eac4dbfe32f53462f866a66e6bb191fec13c01ac7d90baf2572b27ec22722",
+  "root_core_abi_sha256": "fb19290202938e55ef71aafceb65579f312638b8b40e11e7273a5e9d24ea6488",
+  "installed_rust_core_sdk_sha256": "8dd1cecb80f4afd8f76258ffa333ccf3efd0ab11fffb873b9f6a473839c0d5a7",
+  "guest_source_sha256": "dbf94d50e9d952d99a64753707041ba5063ea139254e71df3ce5b55cde911e65",
+  "guest_wasm_sha256": "60aefdac71f27d72081306d23590b23f259e6e229ce4b45da60955acfbd525e7",
+  "lab_test_source_sha256": "04f692a48a8f750f16a9819b5dd9dfef1a3b69d478927a5f2281b9259193983b",
+  "test_log_sha256": "5c887f3e5f9f7f03cd338bd6e89ca50c5a86df4bdce79880dbf900189a8dd850",
+  "build": "rustc --edition 2024 --target wasm32-unknown-unknown -O; directly build installed bindings/rust-core/src/lib.rs as wasmc rlib and link guest.rs as cdylib",
+  "result": "Actual disposable McpGitService stores and activates exact installed Q0 JSON Root; candidate route publication selects activation, RegistryHostedPluginDispatcher invokes same SDK-linked Rust Guest over distinct JSON inputs, malformed inputs, duplicate keys and recovery; Guest calls real temporary TableGit status. Missing caller capability yields BadGateway. cargo test --offline --locked --release --manifest-path labs/executable-skill-runtime/Cargo.toml --test end_to_end hosted_route_selects_service_json_lib_and_processes_new_inputs -- --exact --nocapture passed 1/1.",
+  "scope": "Lab source and Host candidate are not current integrated or deployed production; caller capability BadGateway alone does not identify the internal cause. The test uses read-only Table status, not atomic production writes. One provider; shared budget covers linear Wasm memory only. Earlier intermittent legacy deadline failure remains unresolved. No formal release or anonymous network install."
+}
