@@ -1,0 +1,31 @@
+{
+  "status": "ISOLATED_PORTABLE_JSON_16M_PARITY_PASS_NOT_RELEASE",
+  "source_base": "51ddc3c2c790d25186e4441274edb8d2bd665f20",
+  "private_patch_sha256": "ae5a2e3e2a32966fb74f9512c8f639050dad7045d6e725945a6cd3569f763263",
+  "portable_compiler_sha256": "4cbac42a0b782cd870d71abdac10d9b90eaf2ea086d2f5f406783779c56abac5",
+  "portable_compiler_bytes": 2036810,
+  "compiler_profile": "checked-chunk-transfer-v1",
+  "wasm_validation": "wasm-tools validate pass",
+  "root_manifest_sha256": "8b2c659b8b28327a6945f08f1168e07d4526ed8a1705cadc05b9f544eab6c284",
+  "native_portable_frame_sha256": "6b008c129d28db48f3a07a0375d38ee7f7956785282a91e710ed8927d8ebb568",
+  "result": "Node/Bun/Deno exact frame equality to native compiler for same 16MiB+1-declared JSON Host program; wrong cold source pin rejected, valid input recompiles",
+  "execution": "native sealed app inputs were independently matched byte-for-byte to frame by source test; Wasmtime ran exact app with 16777217-byte JSON, mocked atomic write and recovery",
+  "frozen": "old frozen Host fixture compiles and recovers on Node/Bun/Deno; does not claim same output frame as historical compiler",
+  "limits": [
+    "isolated patch includes foreign-claimed paths; not Source integrated or released",
+    "only native sealed Wasmtime mock Host executed the large JSON; Node/Bun/Deno verified compiler frames",
+    "512MiB per-Wasm-memory and 80B diagnostic fuel; not total memory accounting or default budget",
+    "other fixed windows and broader capacity audit remain"
+  ],
+  "portable_build_log_sha256": "daba383f6c60d0ea8f39d122a539472e755dc200f325bddc3bf9caf2d962361e",
+  "native_runtime_receipt_sha256": "cbe107dcd68908ea9221c29ae1074adb0c192758181da4f971554454c34d5bf1",
+  "files": {
+    "frozen-v2-bun.log": "531c9c4f52dcd407015161b37a33f001e491be709a25c7183949c2cf8d52df2a",
+    "frozen-v2-deno.log": "f08d87f8485050973e1eb4d48d755bc5bd8efdbf234a55fd7849c43182436e20",
+    "frozen-v2-node.log": "dfc39b8a7061a550ba49acc051ab3db600c493d817a91fc959b374c2111abbd9",
+    "json-large-portable-parity.mjs": "5274573a41e6d57ab56e9fa6f30c7fc777f12c19628b510058a39f0fe4bf0170",
+    "portable-v2-bun.log": "b2ad6f4fb7e182a306f1e62e5a4f6edb00101a3fe1771c19582a3027f75f9be9",
+    "portable-v2-deno.log": "2301e2bcbc13c8aa964a341f441e0792aab5931e5e5d906e7afb461c9c72b328",
+    "portable-v2-node.log": "bba2de8b3e842fd0a456d92a7afdec3b910c8867a4e152732754d72315c0096b"
+  }
+}
