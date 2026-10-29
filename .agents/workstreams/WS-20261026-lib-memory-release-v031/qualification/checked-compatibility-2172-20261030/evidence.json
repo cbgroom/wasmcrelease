@@ -1,0 +1,26 @@
+{
+  "status": "CANDIDATE_NATIVE_PARITY_AND_COMPATIBILITY_PASS_NOT_RELEASE",
+  "wasm_compiler_source": "e5b719273a44f1759ebb73e34d214a59802f246b",
+  "native_source": "6fcfe8d86b19b491919b96b9bade8d8556477671",
+  "source_inputs": "git diff e5b719273a44f1759ebb73e34d214a59802f246b..6fcfe8d86b19b491919b96b9bade8d8556477671 -- Cargo.lock Cargo.toml src crates build.rs is empty",
+  "compiler_sha256": "2172f1821a6cac9c78158806b918fd013069a9b79a11fa34ed1fcc1708ff5164",
+  "native_rlib_sha256": "955be631aaec1b6d82327accb7a415a0eae1b6b175d484318e27c31d5411d409",
+  "frame_sha256": "38c0a3a77b69f11135edd4a559aac7173abb77bf25de8d9f8638c3c1e893bf0d",
+  "fixture_app_sha256": "b45367beb69ef5e50ec89c91ead9c99bfc6f2ea4d192e8455ce5ee4350ac6463",
+  "compatibility_sha256": "c62932ea0e511681542bd31fae9eb5cfb2efd63e49cfb1da3faf67cdb15abce1",
+  "engine_tests": "Node/Bun/Deno complete compatibility artifacts plus six negative controls",
+  "limitations": [
+    "native frame equality does not establish complete native sealed-module equality",
+    "fixture uses mock Host callbacks",
+    "compiler source master and build custody are not integrated",
+    "formal checked-chunk admission and release are not complete"
+  ],
+  "logs": {
+    "core-node.log": "2048806a9dfd6176dba27804f7161bda57f68dec42299e636900cb41723ed57f",
+    "core-deno.log": "b803507db376f7724a1ae516f8ecab120cec980d249d69219cc9d0a2e79e0129",
+    "cargo.log": "5b68674d2a6ef3d19479f075353018b4b7fc8027fa981286301f9c9c8d46b9ff",
+    "native-parity.log": "286e380fdf42c9df875d6b6a19755b5d7b7880bdfb9d263a9187d5bad1a9335f",
+    "core-bun.log": "4aff590459e62dab23af5b5fbcf75c5fc8a3a4f05836b334c03e4a13c519dc5b",
+    "native-build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}
