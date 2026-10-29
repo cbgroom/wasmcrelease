@@ -1,0 +1,21 @@
+node:internal/modules/run_main:111
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: wasmc-json: descriptor/hash mismatch artifact.wasm
++ actual - expected
+
++ 'c74ec82fef11e949085fc5637e6c286a454d4785be44e2e77cf903bd6048ec11'
+- '2721005c4f1c91cb058fa3dde601071cb828ff50e4c7b998468db16b54ea7e4e'
+
+    at verifyRoot (file:///Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-lib-memory-release-v031/scripts/lib-refresh-cache-v2.mjs:188:12)
+    at async file:///Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-lib-memory-release-v031/.agents/workstreams/WS-20261026-lib-memory-release-v031/qualification/json024-derived-lineage-20261029/verify-lineage.mjs:22:12 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 'c74ec82fef11e949085fc5637e6c286a454d4785be44e2e77cf903bd6048ec11',
+  expected: '2721005c4f1c91cb058fa3dde601071cb828ff50e4c7b998468db16b54ea7e4e',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v26.12.1

@@ -1,0 +1,30 @@
+{
+  "status": "DERIVED_LINEAGE_VERIFIED_NOT_FORMAL_Q0",
+  "checks": [
+    "verify predecessor complete existing portable Q0",
+    "exact predecessor implementation digest",
+    "version-only WIT and identical 26 API declarations",
+    "generate pinned facade from predecessor using pinned wasm-tools",
+    "run pinned producer on exact generated facade and predecessor artifact",
+    "attach pinned release license and notices",
+    "match complete candidate Root inventory and manifest"
+  ],
+  "negative_controls": [
+    "altered predecessor WIT rejected",
+    "altered candidate artifact rejected",
+    "different producer binary rejected"
+  ],
+  "limitations": [
+    "producer binary identity pinned but its source not established as admitted main",
+    "experimental verifier is not connected to official Q0 or product assembler",
+    "local proof is not production route, formal release or anonymous installation"
+  ],
+  "file_sha256": {
+    "bad-candidate.log": "eaae72c45ccde8ded4500b5fcbae97d827d9be3dd45164f59ac97743ae69480e",
+    "bad-parent.log": "4716461acd98c567c67cd87f87e9a7d9603b002bd8d601e83d573c32ef98c168",
+    "bad-producer.log": "de075a4bc4cae93f5eb18fbd84b0254edda1908e58fead7f14b1ce8f5d56973c",
+    "lineage-receipt.json": "077c796702986469dda19062b02f96d8408b0db33145646845811e57785a5e3c",
+    "lineage.log": "286e2473d31c4731c65db6e0d7f506d6894acd49a56927b12e746024a5b8c4c1",
+    "verify-lineage.mjs": "49425ca7fe7de063617a63605ea39c4d7ea296687e6d4f1cdf53018d66953ce9"
+  }
+}
