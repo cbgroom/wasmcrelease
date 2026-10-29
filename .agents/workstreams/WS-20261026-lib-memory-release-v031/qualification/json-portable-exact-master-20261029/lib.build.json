@@ -1,0 +1,260 @@
+{
+  "schema": "wasmc.lib-build/v0",
+  "skill": {
+    "name": "wasmc-json",
+    "version": "0.2.1",
+    "description": "Rust serde_json-backed construction, selection, atomic edits and typed reads; no Lib-local capacity ceilings."
+  },
+  "wit": "lib.wit",
+  "apis": [
+    {
+      "api": "array-from-values",
+      "ecosystem": "Rust serde_json 1.0.151 and standard collections",
+      "origin": "adapted",
+      "support": "supported",
+      "implementation": "lib",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "host_authorities": []
+    },
+    {
+      "api": "array-from-values-or",
+      "ecosystem": "Rust serde_json 1.0.151 and standard collections",
+      "origin": "adapted",
+      "support": "supported",
+      "implementation": "lib",
+      "delta": "Reuse the exact Rust constructor; return the caller-supplied fallback on invalid JSON. No per-Lib capacity ceiling.",
+      "host_authorities": []
+    },
+    {
+      "api": "compact",
+      "ecosystem": "Rust serde_json 1.0.151 and standard collections",
+      "origin": "adapted",
+      "support": "supported",
+      "implementation": "lib",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "host_authorities": []
+    },
+    {
+      "api": "compact-bytes",
+      "ecosystem": "Rust serde_json 1.0.151 and standard collections",
+      "origin": "adapted",
+      "support": "supported",
+      "implementation": "lib",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "host_authorities": []
+    },
+    {
+      "api": "compact-or",
+      "ecosystem": "Rust serde_json 1.0.151 and standard collections",
+      "origin": "adapted",
+      "support": "supported",
+      "implementation": "lib",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "host_authorities": []
+    },
+    {
+      "api": "compact-or-bytes",
+      "ecosystem": "Rust serde_json 1.0.151 and standard collections",
+      "origin": "adapted",
+      "support": "supported",
+      "implementation": "lib",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "host_authorities": []
+    },
+    {
+      "api": "decode-string-or",
+      "ecosystem": "Rust serde_json 1.0.151 and standard collections",
+      "origin": "adapted",
+      "support": "supported",
+      "implementation": "lib",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "host_authorities": []
+    },
+    {
+      "api": "edit-bytes",
+      "ecosystem": "Rust serde_json 1.0.151 and standard collections",
+      "origin": "adapted",
+      "support": "supported",
+      "implementation": "lib",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "host_authorities": []
+    },
+    {
+      "api": "edit-or-bytes",
+      "ecosystem": "Rust serde_json 1.0.151 and standard collections",
+      "origin": "adapted",
+      "support": "supported",
+      "implementation": "lib",
+      "delta": "Calls the same ordered atomic Rust edit path and returns JSON text or explicit caller fallback. Detailed errors remain available from edit-bytes.",
+      "host_authorities": []
+    },
+    {
+      "api": "encode",
+      "ecosystem": "Rust serde_json 1.0.151 and standard collections",
+      "origin": "adapted",
+      "support": "supported",
+      "implementation": "lib",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "host_authorities": []
+    },
+    {
+      "api": "encode-parts",
+      "ecosystem": "Rust serde_json 1.0.151 and standard collections",
+      "origin": "adapted",
+      "support": "supported",
+      "implementation": "lib",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "host_authorities": []
+    },
+    {
+      "api": "inspect-values-bytes",
+      "ecosystem": "Rust serde_json 1.0.151 and standard collections",
+      "origin": "adapted",
+      "support": "supported",
+      "implementation": "lib",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "host_authorities": []
+    },
+    {
+      "api": "object-from-fields",
+      "ecosystem": "Rust serde_json 1.0.151 and standard collections",
+      "origin": "adapted",
+      "support": "supported",
+      "implementation": "lib",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "host_authorities": []
+    },
+    {
+      "api": "object-from-fields-or",
+      "ecosystem": "Rust serde_json 1.0.151 and standard collections",
+      "origin": "adapted",
+      "support": "supported",
+      "implementation": "lib",
+      "delta": "Reuse the exact Rust constructor; return the caller-supplied fallback on invalid JSON. No per-Lib capacity ceiling.",
+      "host_authorities": []
+    },
+    {
+      "api": "quote-string",
+      "ecosystem": "Rust serde_json 1.0.151 and standard collections",
+      "origin": "adapted",
+      "support": "supported",
+      "implementation": "lib",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "host_authorities": []
+    },
+    {
+      "api": "read-bool",
+      "ecosystem": "Rust serde_json 1.0.151 and standard collections",
+      "origin": "adapted",
+      "support": "supported",
+      "implementation": "lib",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "host_authorities": []
+    },
+    {
+      "api": "read-f64",
+      "ecosystem": "Rust serde_json 1.0.151 and standard collections",
+      "origin": "adapted",
+      "support": "supported",
+      "implementation": "lib",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "host_authorities": []
+    },
+    {
+      "api": "read-i64",
+      "ecosystem": "Rust serde_json 1.0.151 and standard collections",
+      "origin": "adapted",
+      "support": "supported",
+      "implementation": "lib",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "host_authorities": []
+    },
+    {
+      "api": "read-u64",
+      "ecosystem": "Rust serde_json 1.0.151 and standard collections",
+      "origin": "adapted",
+      "support": "supported",
+      "implementation": "lib",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "host_authorities": []
+    },
+    {
+      "api": "select",
+      "ecosystem": "Rust serde_json 1.0.151 and standard collections",
+      "origin": "adapted",
+      "support": "supported",
+      "implementation": "lib",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "host_authorities": []
+    },
+    {
+      "api": "select-bytes",
+      "ecosystem": "Rust serde_json 1.0.151 and standard collections",
+      "origin": "adapted",
+      "support": "supported",
+      "implementation": "lib",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "host_authorities": []
+    },
+    {
+      "api": "select-string-or-bytes",
+      "ecosystem": "Rust serde_json 1.0.151 and standard collections",
+      "origin": "adapted",
+      "support": "supported",
+      "implementation": "lib",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "host_authorities": []
+    },
+    {
+      "api": "select-values",
+      "ecosystem": "Rust serde_json 1.0.151 and standard collections",
+      "origin": "adapted",
+      "support": "supported",
+      "implementation": "lib",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "host_authorities": []
+    },
+    {
+      "api": "select-values-bytes",
+      "ecosystem": "Rust serde_json 1.0.151 and standard collections",
+      "origin": "adapted",
+      "support": "supported",
+      "implementation": "lib",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "host_authorities": []
+    },
+    {
+      "api": "validate",
+      "ecosystem": "Rust serde_json 1.0.151 and standard collections",
+      "origin": "adapted",
+      "support": "supported",
+      "implementation": "lib",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "host_authorities": []
+    },
+    {
+      "api": "validate-bytes",
+      "ecosystem": "Rust serde_json 1.0.151 and standard collections",
+      "origin": "adapted",
+      "support": "supported",
+      "implementation": "lib",
+      "delta": "WIT owns values. Memory is caller/runtime-owned; no per-Lib byte/count/depth/output quota. Missing, JSON null, type and integer-range errors remain distinct. Iterative index storage avoids recursive drop; no JSONPath or JSON Patch standard claim.",
+      "host_authorities": []
+    }
+  ],
+  "core": {
+    "root": {
+      "module": "facade",
+      "artifact": "facade.wasm",
+      "sha256": "e572e61af54b739e75a056722ee2c6102268c6e22541041002cd3e5ed4adfa40"
+    },
+    "dependencies": [
+      {
+        "module": "rust-implementation",
+        "artifact": "json.wasm",
+        "sha256": "2773267b7d15b82ec75c1ec09f51f2b71219e3e7bae6232815793a7815b4f629"
+      }
+    ],
+    "target_profile": "portable-v0"
+  }
+}

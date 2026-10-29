@@ -1,0 +1,12 @@
+{"candidate": "old", "function": "validate", "input": "{\"x\":1e400,\"x\":1}", "exit": 0, "stdout": "ok", "stderr": ""}
+{"candidate": "old", "function": "validate", "input": "{\"x\":{\"z\":1e400},\"x\":1}", "exit": 0, "stdout": "ok", "stderr": ""}
+{"candidate": "old", "function": "validate", "input": "{\"x\":\"\\ud800\",\"x\":1}", "exit": 0, "stdout": "ok", "stderr": ""}
+{"candidate": "old", "function": "compact", "input": "{\"x\":1e400,\"x\":1}", "exit": 0, "stdout": "ok(\"{\\\"x\\\":1}\")", "stderr": ""}
+{"candidate": "old", "function": "compact", "input": "{\"x\":1,\"x\":2}", "exit": 0, "stdout": "ok(\"{\\\"x\\\":2}\")", "stderr": ""}
+{"candidate": "old", "function": "validate", "input": "{\"ok\":true}", "exit": 0, "stdout": "ok", "stderr": ""}
+{"candidate": "new", "function": "validate", "input": "{\"x\":1e400,\"x\":1}", "exit": 0, "stdout": "err(invalid-json)", "stderr": ""}
+{"candidate": "new", "function": "validate", "input": "{\"x\":{\"z\":1e400},\"x\":1}", "exit": 0, "stdout": "err(invalid-json)", "stderr": ""}
+{"candidate": "new", "function": "validate", "input": "{\"x\":\"\\ud800\",\"x\":1}", "exit": 0, "stdout": "err(invalid-json)", "stderr": ""}
+{"candidate": "new", "function": "compact", "input": "{\"x\":1e400,\"x\":1}", "exit": 0, "stdout": "err(invalid-json)", "stderr": ""}
+{"candidate": "new", "function": "compact", "input": "{\"x\":1,\"x\":2}", "exit": 0, "stdout": "ok(\"{\\\"x\\\":2}\")", "stderr": ""}
+{"candidate": "new", "function": "validate", "input": "{\"ok\":true}", "exit": 0, "stdout": "ok", "stderr": ""}
