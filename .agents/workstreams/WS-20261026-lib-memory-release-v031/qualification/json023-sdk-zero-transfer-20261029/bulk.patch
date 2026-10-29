@@ -1,0 +1,11 @@
+--- installed-sdk.rs	2026-10-29 17:15:58
++++ experimental-sdk.rs	2026-10-29 18:14:44
+@@ -2019,7 +2019,7 @@
+ fn range(lib:bool,p:u32,n:u32,a:u32){assert!(a.is_power_of_two()&&p%a==0);let pages=unsafe{if lib{lib_memory_size()}else{own_memory_size()}} as u32 as u64;assert!((p as u64)+(n as u64)<=pages*65536);}
+ fn r(lib:bool,p:u32,n:u32)->u64{range(lib,p,n,1);unsafe{match n{1=>if lib{read8(p as i32) as u32 as u64}else{own_read8(p as i32) as u32 as u64},2=>r(lib,p,1)|(r(lib,add(p,1),1)<<8),4=>if lib{read32(p as i32) as u32 as u64}else{own_read32(p as i32) as u32 as u64},8=>if lib{read64(p as i32) as u64}else{own_read64(p as i32) as u64},_=>panic!("read width")}}}
+ fn w(lib:bool,p:u32,x:u64,n:u32){range(lib,p,n,1);unsafe{match n{1=>if lib{write8(p as i32,x as i32)}else{own_write8(p as i32,x as i32)},2=>{w(lib,p,x,1);w(lib,add(p,1),x>>8,1)},4=>if lib{write32(p as i32,x as i32)}else{own_write32(p as i32,x as i32)},8=>if lib{write64(p as i32,x as i64)}else{own_write64(p as i32,x as i64)},_=>panic!("write width")}}}
+-fn zero(lib:bool,p:u32,n:u32){range(lib,p,n,1);for i in 0..n{w(lib,add(p,i),0,1);}}
++fn zero(lib:bool,p:u32,n:u32){range(lib,p,n,1);if lib && n>0{let z=vec![0u8;n.min(65536) as usize];let mut i=0;while i<n{let k=(n-i).min(z.len() as u32);unsafe{copy_to_lib(add(p,i) as i32,z.as_ptr() as usize as i32,k as i32);}i+=k;}}else{for i in 0..n{w(lib,add(p,i),0,1);}}}
+ fn blit(from:bool,to:bool,s:u32,d:u32,n:u32){range(from,s,n,1);range(to,d,n,1);if from==to{if s!=d{for i in 0..n{w(to,add(d,i),r(from,add(s,i),1),1);}}}else{unsafe{if from{copy_from_lib(d as i32,s as i32,n as i32)}else{copy_to_lib(d as i32,s as i32,n as i32)}}}}
+ fn allocate(lib:bool,n:u32,a:u32)->u32{if n==0{return a;}let p=if lib{unsafe{realloc(0,0,a as i32,n as i32) as u32}}else{let l=Layout::from_size_align(n as usize,a as usize).unwrap();let p=unsafe{alloc_zeroed(l)};assert!(!p.is_null());p as usize as u32};range(lib,p,n,a);if lib{zero(true,p,n);}p}
+ struct Scratch{p:u32,l:Layout}

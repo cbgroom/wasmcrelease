@@ -1,0 +1,22 @@
+    |
+363 -         let _ = QUERY_PROFILE_MAX_NS[index].fetch_update(
+363 +         let _ = QUERY_PROFILE_MAX_NS[index].try_update(
+    |
+
+warning: `mcpgit` (lib) generated 3 warnings (run `cargo fix --lib -p mcpgit` to apply 3 suggestions)
+    Finished `release` profile [optimized] target(s) in 0.52s
+     Running tests/end_to_end_json023_16m_local.rs (/Users/youxianshi/.local/state/wasmc-maintenance/rustc-service-1991-20261028/hosted-selected-json-atomic-20261029/target/release/deps/end_to_end_json023_16m_local-f7e5077d1c100920)
+
+running 1 test
+ATOMIC_SELECTED_JSON step=0 rows=2
+ATOMIC_SELECTED_JSON step=1 rows=2
+ATOMIC_SELECTED_JSON step=2 rows=1
+ATOMIC_SELECTED_JSON step=3 rows=2
+ATOMIC_SELECTED_JSON step=4 rows=0
+ATOMIC_SELECTED_JSON step=5 rows=0
+ATOMIC_SELECTED_JSON step=6 rows=2
+REAL_SERVICE_HOSTED_SELECTED_JSON_ATOMIC_OK success=4 conflict=1 disabled=1 invalid_recovery=true
+test selected_json_rust_guest_atomic_transactions_and_recovery ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 17 filtered out; finished in 15.83s
+

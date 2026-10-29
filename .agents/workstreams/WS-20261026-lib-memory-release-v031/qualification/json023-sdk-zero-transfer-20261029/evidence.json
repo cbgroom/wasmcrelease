@@ -1,0 +1,36 @@
+{
+  "status": "PRIVATE_EXPERIMENT_NOT_ADMITTED",
+  "input": "anonymous installed JSON 0.2.3 unchanged",
+  "guest_source": "/Users/youxianshi/.local/state/wasmc-maintenance/rustc-service-1991-20261028/hosted-json023-atomic-20261029/guest.rs",
+  "sdk_source_sha256": "62f2216ad2c5fded76937e5fe6457a78a6e6534b1c8a419e8fd0f5da6a76f8c5",
+  "experimental_source_sha256": {
+    "word": "a656ba7c50c878d150ee079059dba128db9f271d75f6c7cdc8fb49ac0d98f84b",
+    "bulk": "a6171b10e93ea11a63dd4b2b081bc507e21ce5aed771dc2aeb0f9e8f67510ea8"
+  },
+  "wasm_sha256": {
+    "baseline": "e14fbb7d491222e6d830ce82f7b60227f7d40a326059c58b1ed3e349b00e260a",
+    "word": "997bb5181f557d6587dcc539c9b482fbc2ac20e676fefffacb4ace54f8b5b607",
+    "bulk": "b951c84e4b5e02916084c6edacd93a26b0503075b8f754e5f0c3c43b49875602"
+  },
+  "fixture_sha256": "83f656651e6bd848a57cbd922e01081f725ff49616ab8e5cceb2d36ede501b2c",
+  "compilation": "all three Rust 2024 wasm32 rlibs and guests built by rustc +stable -O using same command",
+  "test": "local real MCPGit Service/Hosted; 16MiB body, four atomic success and conflict/disabled/invalid/recovery",
+  "60b_fuel_test_seconds": {
+    "baseline": 15.83,
+    "word": 5.9,
+    "bulk": 4.16
+  },
+  "4b_fuel": "baseline and bulk pass",
+  "1b_fuel": "baseline consumed fuel and failed, bulk passed in 4.09 seconds",
+  "bulk_buffer": "65536 bytes is reused chunk buffer; total input not limited to 65536",
+  "logs_sha256": {
+    "service-baseline": "0078a4b26be7f92f48b5979191eacdbb37f373eeb964d4eed8974d00b3ba9f44",
+    "service": "dddac504b61cb82053fdf68d98db83374f780ecee5d9d8267d71841ba24f8774",
+    "service-bulk": "65a4768d42891af965ab26c886e9bcd487af9a1c1cc5cb4adbb34ef4f183190c",
+    "service-baseline-4b": "0074fc2520d5b7913b116b9146eba9ae21703b13bfc953e01730d15991620150",
+    "service-bulk-4b": "5aabdc7414d1019fa9b5840f11c8f4402e594ccd81e825501395fcd16ada3678",
+    "service-baseline-1b": "226fd28310592aee4dbbdf4d8e4ac83e5aab031ff97ad065557e773293581b15",
+    "service-bulk-1b": "8793a0a1de49af38d7f82e167de61c04aba87e335790a1d7b41288f89a835be2"
+  },
+  "limits": "single runs, timings not performance upper bound; modified generated SDK private experiment, exact installed Root remains unchanged; no admitted source, production route, release, broader correctness or portability claim"
+}

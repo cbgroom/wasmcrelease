@@ -1,0 +1,22 @@
+warning: `mcpgit` (lib) generated 3 warnings (run `cargo fix --lib -p mcpgit` to apply 3 suggestions)
+    Finished `release` profile [optimized] target(s) in 0.17s
+     Running tests/end_to_end_json023_16m_local.rs (/Users/youxianshi/.local/state/wasmc-maintenance/rustc-service-1991-20261028/hosted-selected-json-atomic-20261029/target/release/deps/end_to_end_json023_16m_local-f7e5077d1c100920)
+
+running 1 test
+ATOMIC_FIXTURE_DIAGNOSTIC: HTTP Core SDK guest call failed: Wasmtime scalar Host invocation failed without replay: Wasmtime call failed: error while executing at wasm backtrace:
+    0:   0x367d - guest-baseline.wasm!_RNvNtCseWCie5JT3k_5wasmc26___wasmc_canonical_transfer8c_string.llvm.10293779546278241307
+    1:   0x3917 - guest-baseline.wasm!_RNvNtCseWCie5JT3k_5wasmc26___wasmc_canonical_transfer3c12.llvm.10293779546278241307
+    2:   0x909e - guest-baseline.wasm!__wasmc_canonical_bridge_3
+    3:   0xa66d - guest-baseline.wasm!_RNvNtNtNtCseWCie5JT3k_5wasmc5wasmc4json8document13compact_bytes
+    4:   0x1adc - guest-baseline.wasm!handle: wasm trap: all fuel consumed by WebAssembly
+Error: unexpected step 0: BadGateway
+test selected_json_rust_guest_atomic_transactions_and_recovery ... FAILED
+
+failures:
+
+failures:
+    selected_json_rust_guest_atomic_transactions_and_recovery
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 17 filtered out; finished in 6.95s
+
+error: test failed, to rerun pass `--test end_to_end_json023_16m_local`

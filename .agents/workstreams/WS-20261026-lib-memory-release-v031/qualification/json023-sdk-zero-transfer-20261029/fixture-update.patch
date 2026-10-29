@@ -1,0 +1,11 @@
+--- fixture-before.rs	2026-10-29 18:15:08
++++ fixture-after.rs	2026-10-29 18:15:03
+@@ -7352,7 +7352,7 @@
+         limits.request_bytes = 20 * 1024 * 1024;
+         limits.response_bytes = 20 * 1024 * 1024;
+         limits.memory_bytes = 256 * 1024 * 1024;
+-        limits.fuel = 60_000_000_000;
++        limits.fuel = std::env::var("MCPGIT_TEST_FUEL").ok().and_then(|v| v.parse().ok()).unwrap_or(60_000_000_000);
+         limits.guest_wall_clock_ms = 180_000;
+     }
+     let publication = RoutePublication::ready(
