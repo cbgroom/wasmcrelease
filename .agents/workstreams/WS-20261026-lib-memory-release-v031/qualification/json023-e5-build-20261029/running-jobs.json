@@ -11,7 +11,7 @@
   "rust_1991_install_idempotency_key": "json023-e5-rust-1991-install-20261029-v1",
   "offline_build_terminal_failure_operation": "exec-0000000000000a48",
   "stable_network_build_idempotency_key": "json023-e5-wasm-stable-network-build-cf2d13e4-v1",
-  "note": "Poll exact SDK producer build and Rust1.99.1 installation operations; old producer Root self-verifies but its Rust Core SDK is Edition2021, so it is not releaseable. Snapshot + patch is an unadmitted private compiler experiment, not Source integration.",
+  "note": "Poll SDK producer build exec-0000000000000a67 before retry. Rust1.99.1 installation is terminal timeout with incomplete toolchain; preserve partial state and reconcile before retry. Old producer Root self-verifies but Core SDK is Edition2021 and not releaseable. Snapshot + patch remains an unadmitted private compiler experiment.",
   "stable_network_build_terminal_failure_operation": "exec-0000000000000a49",
   "reconciled_lock_sha256": "e5f4e53184cf1581a26a3cdc8b03032b44eaad84003e825c47377969f06b40f3",
   "reconciled_lock_scope": "34 packages, all name/version/source/checksum identities appear in the 226-package original; standalone feature/dependency graph differs, not equivalent to original full Q0 workspace",
@@ -28,5 +28,6 @@
   "sdk_patch_sha256": "b97da19043709b1b7fe3b82eae9f31d68c31e7d8279423207fd010364a14f8f9",
   "sdk_source_snapshot": "/tmp/wasmc-json023-sdk-producer-482f",
   "sdk_producer_build_operation": "exec-0000000000000a67",
-  "sdk_producer_build_idempotency_key": "json023-e5-sdk-producer-build-stable-482f-v1"
+  "sdk_producer_build_idempotency_key": "json023-e5-sdk-producer-build-stable-482f-v1",
+  "rust_1991_install_terminal": "timed out after 900002ms; toolchain listed but rustc +1.99.1 fails Missing manifest; do not treat as installed or delete partial state"
 }
