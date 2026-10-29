@@ -1,0 +1,30 @@
+{
+  "status": "PASS_CANDIDATE_NOT_RELEASE",
+  "public_commit": "f0166ba76b8613f6decd1ab7c362ca8a9cd90031",
+  "manifest_sha256": "8b2c659b8b28327a6945f08f1168e07d4526ed8a1705cadc05b9f544eab6c284",
+  "provider_sha256": "08d0d60134228dabbfc467429b2e54c97910d9d1d8e0a3f49f11228668b11384",
+  "seed": 20261030,
+  "oracle": "Python stdlib random and json; independently mutate Python dict/list and serialize sorted compact JSON",
+  "coverage": "300 distinct batches of 12 ordered edits each, nested objects, pointer escaped / and ~, array append/index replacement/removal and object insertion; late invalid removal rejects and subsequent fresh call works",
+  "guest_source_sha256": "82a2f1745815b610efd3f466ff9bbf66c92118657a04503f98e77a9569065150",
+  "guest_sha256": "cf4362821512fc389a7db8df19c315580cbadf20960a8aebe5bd1467298fa2dd",
+  "fixtures_sha256": "ecdf3fa9115391b86f55a9c56b94ce90bae59cd44fbd75850efc00f2d9775f12",
+  "guest_app_sha256": "a13dcbb91812c87d1a2103b27ee6917e525edbb503444f9fa8316878188c591e",
+  "rustc": "1.99.1 --edition 2024",
+  "result": "Node, Bun and Deno each ran 300 batches three times in the same instance; all expected bytes matched",
+  "negative_control": "same fixture with an intentionally wrong expected first result traps in Node",
+  "limits": [
+    "fixed deterministic scenario family, not exhaustive property proof",
+    "controlled memory adapter rather than live MCPGit route",
+    "candidate branch install, not formal release",
+    "does not establish aggregate resource limit or large-input performance"
+  ],
+  "logs_sha256": {
+    "rustc.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "node.log": "e424c36d793408aae8be3f5725a1c8036ec44cea78adb19a65e4a847f8d5832d",
+    "bun.log": "0d882f00c041379192b99fe2c7140ee030428421d3aacd5b769f3c4d784899f9",
+    "deno.log": "dc8d8842f6a9bb8487f00a453296345f4420e5164ffba4df140222a48a9f6552",
+    "rustc-bad.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bad-oracle.log": "bbb3ef0edd7a9997740d68dbd961eb779627d832d44cced7a4d2283e9f54f437"
+  }
+}
