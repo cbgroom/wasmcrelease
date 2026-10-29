@@ -1,0 +1,23 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: baseline: examples/current/canonical-host-v031/expected-frame.json
++ actual - expected
+
++ 'c7ee788a29ad64ca890d34ff8d6b52e6ee8a410637e14e678916b17291cab9e1'
+- 'd9296e658ba642d4625e3e3066e3a6f7ecac0f9f72372d7869df325d224a46e6'
+
+    at file:///Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-lib-memory-release-v031/.agents/workstreams/WS-20261026-lib-memory-release-v031/qualification/fb1-host-rebind-20261030/rebind.mjs:15:50
+    at ModuleJob.run (node:internal/modules/esm/module_job:430:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:655:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 'c7ee788a29ad64ca890d34ff8d6b52e6ee8a410637e14e678916b17291cab9e1',
+  expected: 'd9296e658ba642d4625e3e3066e3a6f7ecac0f9f72372d7869df325d224a46e6',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v25.6.0
