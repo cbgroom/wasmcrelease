@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import {constants} from 'node:fs';
+import {readFile,writeFile,copyFile,mkdir,cp} from 'node:fs/promises';
+import {join,resolve} from 'node:path';
+import {verifyRoot,digest,sha} from './lib-refresh-cache-v2.mjs';
+const [parent,candidate,buildInput,out]=process.argv.slice(2).map(p=>resolve(p));
+await mkdir(out);const clone=async (a,b)=>cp(a,b,{recursive:true,mode:constants.COPYFILE_FICLONE,errorOnExist:true,force:false});
+await clone(parent,join(out,'parent'));await clone(join(parent,'source'),join(out,'source'));await clone(candidate,join(out,'root'));await copyFile(buildInput,join(out,'lib.build.json'));
+const specPath=join(out,'source/libspec/wasmc-json/lib.json'),spec=JSON.parse(await readFile(specPath));assert.equal(spec.version,'0.2.3');spec.version='0.2.4';await writeFile(specPath,JSON.stringify(spec,null,2)+'\n');
+await copyFile(join(out,'root/lib.wit'),join(out,'source/libspec/wasmc-json/lib.wit'));
+const root=await verifyRoot(join(out,'root'),'wasmc-json','0.2.4','value');
+const receipt={schema:'wasmc.derived-json-lineage-receipt/v1',public_admission:false,parent_receipt_sha256:'ed77a0cc1fd4ee50673aa0921ef8b046ce62bcb23972e8792315d9571b78ccd8',build_input_sha256:sha(await readFile(buildInput)),rows:[{id:'wasmc-json',version:'0.2.4',profile:'value',manifest_sha256:root.manifest_sha256,root_inventory_sha256:digest(root.files)}]};
+const b=Buffer.from(JSON.stringify(receipt,null,2)+'\n');await writeFile(join(out,'receipt.json'),b,{flag:'wx'});console.log(JSON.stringify({schema:receipt.schema,receipt_sha256:sha(b),public_admission:false}));

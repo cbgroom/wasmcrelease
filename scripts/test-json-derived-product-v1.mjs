@@ -1,0 +1,32 @@
+import assert from 'node:assert/strict';
+import {constants} from 'node:fs';
+import {readFile,writeFile,cp,mkdtemp,rm} from 'node:fs/promises';
+import {join,resolve} from 'node:path';
+import {tmpdir} from 'node:os';
+import {projectJsonIndex as legacy} from './json-project-index-v1.mjs';
+import {projectJsonIndex as derived} from './json-derived-index-v1.mjs';
+import {verify as verifyDerived} from './json-derived-q0-v1.mjs';
+import {verify as verifyProduct} from './json-derived-product-v1.mjs';
+import {sha} from './lib-refresh-cache-v2.mjs';
+import {currentProductVariant} from './release-candidate.mjs';
+import {currentProductReader} from './current-lib-release-v3.mjs';
+const [root,capsule,oldSha,receiptSha,witPath,witSha]=process.argv.slice(2);
+for(const p of [root,capsule,witPath]) assert.equal(resolve(p),p);
+const catalogBytes=await readFile(join(root,'catalog/libs-current-v2.json')),catalog=JSON.parse(catalogBytes);
+assert.equal(catalog.package_authority_commit,'0'.repeat(40));
+assert.throws(()=>currentProductVariant(catalogBytes,sha(catalogBytes),currentProductReader(root)),/unknown candidate cohort schema/);
+const result=await verifyProduct({root,catalogSha:sha(catalogBytes),oldSha,receiptSha,witPath,witSha,commit:catalog.package_authority_commit});
+assert.equal(result.packages,43);assert.equal(result.root_files,823);assert.equal(result.derived_lineage_verified,true);
+const oldRoot=join(root,'proof/old-product'),oldCat=JSON.parse(await readFile(join(oldRoot,'catalog/libs-current-v2.json')));
+const old=JSON.parse(await readFile(join(oldRoot,oldCat.index.path))),fresh=JSON.parse(await readFile(join(root,catalog.index.path)));
+for(const p of fresh.packages)if(p.package_id!=='wasmc-json')p.delivery=null;
+assert.throws(()=>legacy(old,fresh,receiptSha),/unsupported JSON successor/);
+const projection=derived(old,fresh,receiptSha);assert.equal(projection.reused,42);
+const tmp=await mkdtemp(join(tmpdir(),'wasmc-derived-controls-'));
+try{
+ const clone=join(tmp,'capsule');await cp(capsule,clone,{recursive:true,mode:constants.COPYFILE_FICLONE});
+ const build=join(clone,'lib.build.json');await writeFile(build,Buffer.concat([await readFile(build),Buffer.from(' ')]));
+ await assert.rejects(verifyDerived({capsule:clone,receiptSha,witPath,witSha}));
+ await assert.rejects(verifyDerived({capsule,receiptSha:'0'.repeat(64),witPath,witSha}));
+}finally{await rm(tmp,{recursive:true,force:true});}
+console.log(JSON.stringify({accepted:true,packages:result.packages,root_files:result.root_files,legacy_rejects_024:true,legacy_release_rejects_derived:true,derived_reuses:projection.reused,controls:['tampered build input','wrong receipt pin'],public_admission:false,formal_release:false}));
