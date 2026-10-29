@@ -24,5 +24,12 @@
     "result": "exit 0; array construction, ordered set/append/remove, invalid edit error and recovery in same instance",
     "first_attempt": "host-batch-first-failure.log; compile failed because SDK requires owned String values, corrected caller argument types",
     "first_attempt_sha256": "fd6edb22e306980c588dd83642298bbb0405ade694376d56b94959082479441f"
+  },
+  "scale_extension": {
+    "host_source_sha256": "ea7b34780e3f55fc1562d3f0edebbc677c34d8fee49befe81fef00b986b06234",
+    "run_log_sha256": "7dd739c557541e0291939f2399bbb2793fb230de4c875c4bf8d3b8917a8333fb",
+    "run_log_path": "/Users/youxianshi/.local/state/wasmc-maintenance/rustc-service-1991-20261028/mixed-network-component-sdk-20261029/host-scale-1.log",
+    "result": "exit 0; construct and compare full 100000-value array; 10000 ordered set edits, compare entire result independently, check typed reads at first, last edited and last array element, invalid JSON and recovery",
+    "limitations": "One JSON Component and local native Wasmtime instance; not memory exhaustion, deployed Service, production routing or release."
   }
 }
