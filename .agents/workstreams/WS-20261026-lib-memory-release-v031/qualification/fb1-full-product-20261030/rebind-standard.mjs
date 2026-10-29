@@ -1,0 +1,8 @@
+// Rebind only a disposable successor stage, after checking exact compiler and historical fixture.
+import assert from 'node:assert/strict';import {readFileSync,writeFileSync} from 'node:fs';import {createHash} from 'node:crypto';import {resolve} from 'node:path';import {pathToFileURL} from 'node:url';
+assert.equal(process.argv.length,3,'provide disposable stage');const root=resolve(process.argv[2]),read=p=>readFileSync(resolve(root,p)),sha=b=>createHash('sha256').update(b).digest('hex'),f='examples/current/';
+const compiler='fb1d34e75427c2629a62b00bb9ca1ce4e4c0f2fb224e2305c1ec2d5e39cc2f7c',old='2172f1821a6cac9c78158806b918fd013069a9b79a11fa34ed1fcc1708ff5164',pins=JSON.parse(read(f+'standard-fixtures-v031.json'));
+assert.equal(sha(read('current/wasmc_compiler.wasm')),compiler);assert.equal(pins.compiler_sha256,old);assert.equal(pins.release,'0.0.31');
+const source=read(f+'standard.wasmc');assert.equal(sha(source),pins.source_sha256);assert.equal(sha(read(f+'standard-wasmc-v031.wasm')),pins.wasmc_sha256);
+const {compileLib}=await import(pathToFileURL(resolve(root,'current/index.mjs')));const compiled=Buffer.from((await compileLib(source.toString(),{plan:read('standard/wasmc-std/1.4.1/typed-resource-plan.json'),libWasmBytes:read('standard/wasmc-std/1.4.1/artifact.wasm')})).appWasm);assert.equal(sha(compiled),pins.wasmc_sha256,'standard app changed; do not silently repin');
+pins.compiler_sha256=compiler;writeFileSync(resolve(root,f+'standard-fixtures-v031.json'),JSON.stringify(pins,null,2)+'\n');console.log(JSON.stringify({candidate_only:true,compiler_sha256:compiler,standard_wasmc_sha256:sha(compiled),app_bytes_unchanged:true}));
