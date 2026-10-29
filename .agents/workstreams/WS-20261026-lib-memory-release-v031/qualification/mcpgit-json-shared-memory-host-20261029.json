@@ -1,0 +1,24 @@
+{
+  "schema": "mcpgit.json-shared-memory-host-candidate/v1",
+  "status": "isolated source candidate, not integrated or deployed",
+  "baseline": "archive of eb8683ac with core_lib, call_plan, test_support, activation test, route executor, hosting and fixture files overlaid from MCPGit workstream 7797450d; three local manifest paths point to the candidate WAsmC runtime SDK. This is not a full exact 7797450d tree.",
+  "patch_sha256": "427e4eaf074d1f8d58041787da3ef6d67bf8d84e1c9485e960c44e2388b94a7d",
+  "requires": "WAsmC candidate core-runtime-shared-memory-budget-20261029.patch and its prerequisites; remove test-only local path overrides before any admission",
+  "witness": "Real temporary MCPGit Service activates exact JSON Root and supplies actual TableGit status provider. Pinned Rust 2024 Guest performs 26 JSON operations in Wasmi and Wasmtime. For each engine a 33-page combined budget rejects Guest plus JSON provider, foreign provider is rejected, then a 128-page budget completes normally and returns all memory reservations to zero. A 16-page budget rejects the JSON provider before Guest creation and releases all reservations.",
+  "regression": "Core Lib activation suite 4 passed, 1 intentionally ignored on same product implementation; existing call-plan test passed; workstream baseline non-budgeted dual-engine test passed after shared target use.",
+  "limitations": [
+    "input values fixed in this Rust Guest",
+    "temporary Service, no actual Hosted route or production deployment",
+    "linear memory only; host heap, provider fuel, deadline and cancellation not shared",
+    "candidate SDK and MCPGit code are unintegrated; no formal release"
+  ],
+  "sha256": {
+    "mcpgit-shared-budget-check-v1-20261029.log": "353d261598bebed34858f796a3be6a84996a45522f5a1348f0addb2f28f477f0",
+    "mcpgit-shared-budget-real-service-v1-20261029.log": "ad731fe6a0f48ea91935d5540d9a4689937af25ff1cc76c6319a5211ec0953d4",
+    "mcpgit-shared-budget-real-service-v2-20261029.log": "bfc1c376b22bd578b5ba4578269535d103b6af85aef1720fcac53bdcde87c305",
+    "mcpgit-shared-budget-real-service-v3-20261029.log": "642b55be536e32a4604dd48b66e44bea8dc596d201026eebad420c1d22043836",
+    "mcpgit-shared-budget-activation-suite-20261029.log": "5144ec09d24c7320630e55ac1026dd1b34b6550a653396287f452021bddb6306",
+    "mcpgit-shared-budget-plan-suite-20261029.log": "b32408a627980d8ea69630f7b4e94ef5d6b5985823098910e8d5949d419a6c65",
+    "mcpgit-shared-budget-branch-cache-readback-20261029.log": "f9d3204f797225742d7678bb20987ba95fea72ea741a72f22d9586085eb9be27"
+  }
+}

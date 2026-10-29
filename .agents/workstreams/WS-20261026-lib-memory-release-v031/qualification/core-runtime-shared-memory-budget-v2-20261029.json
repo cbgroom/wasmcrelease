@@ -1,0 +1,16 @@
+{
+  "schema": "wasmc.core-runtime-shared-memory-candidate/v2",
+  "status": "isolated candidate; not admitted, integrated, deployed or released",
+  "baseline": "WAsmC c1306cc8 plus wide-arity and Edition 2024 candidate patches; supersedes v1 candidate without overwriting it",
+  "patch_sha256": "758e1bcdef9d118a9647e59eb2aa1e55bfa022dfd2d77b6f4ff1b1faa6ae0097",
+  "fixture_sha256": "82e93fb61e11627d74b086693587fbb1a72d340432445236ae49f7df29670fe7",
+  "fixture_install": "copy json-core-shared-memory-fixture-20261029.wasm to crates/wasmc_core_runtime/tests/fixtures/wasmc-json-0.2.1-shared-memory.wasm",
+  "change": "v1 shared linear memory accounting plus budget identity comparison and host session state access, enabling the consumer to reject mismatched budgets before execution",
+  "validation": "patch applied to reconstructed prerequisites and resulting files byte-compared to tested candidate; SDK tests 2+25+14 passed",
+  "limitations": [
+    "linear Wasm memory only, excludes host heap and store metadata",
+    "provider fuel, deadline and cancellation not shared",
+    "no Source admission, production deployment or formal release"
+  ],
+  "regression_log_sha256": "4415eb226a86c801b16e9211cbb49f895b2bd54b9157ea8fe7e112f9e493bd1f"
+}

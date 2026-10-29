@@ -1,0 +1,22 @@
+{
+  "schema": "mcpgit.json-shared-memory-host-candidate/v2",
+  "status": "isolated source candidate; not integrated or deployed",
+  "baseline": "eb8683ac archive overlaid with selected files from MCPGit 7797450d5bd93db7a3cdea8a943b567ac25994d6; not a full exact 779 tree; three test-only manifest overrides point to private SDK",
+  "patch_sha256": "7e1847cf323f96c2b9c958e470fb69fb0ec7feb9915d48493bc7f0207c6d35a0",
+  "requires": "core-runtime-shared-memory-budget-v2-20261029.patch and its prerequisites; resolve SDK dependency properly before Source integration",
+  "witness": "Temporary real MCPGit Service activates JSON Root and actual TableGit status provider. Pinned Rust 2024 Guest executes 26 JSON operations under one shared linear memory budget on Wasmi and Wasmtime; 33 pages rejects combined initial allocation, 128 pages succeeds, 16 pages rejects provider; wrong provider and absent or different shared budget are rejected; reservations return to zero.",
+  "regression": "Activation suite 4 passed, 1 ignored; old branch non-budgeted dual-engine test passed after candidate shared-target run. Original mismatched-budget failure retained. Patch application checked against exact workstream HEAD.",
+  "limitations": [
+    "Guest inputs fixed",
+    "temporary Service only; production Hosted route and live deployment not verified",
+    "linear Wasm memory only; host heap, provider fuel, deadline and cancellation not shared",
+    "SDK and MCPGit candidate unintegrated; no formal release"
+  ],
+  "logs_sha256": {
+    "mcpgit-shared-budget-mismatch-before-20261029.log": "8b6d70f5536ddda854f04287c9d00c60cc7e5bc2179951f909cf280894737585",
+    "mcpgit-shared-budget-mismatch-after-20261029.log": "35621e4d518241886cc9c102c16559d23c19eb73cedcaddcafd581e4ecad3aaa",
+    "mcpgit-shared-budget-activation-suite-v2-20261029.log": "77023bab91c4e8632da9ad1aaec3d1821fe411f5da30844794ef77c63b7c12c7",
+    "mcpgit-shared-budget-branch-cache-readback-v2-20261029.log": "2397c089a65320d724d3389124b1820bdc1146834a0db7e7ae57c72abbff0e03",
+    "shared-memory-sdk-identity-regression-20261029.log": "4415eb226a86c801b16e9211cbb49f895b2bd54b9157ea8fe7e112f9e493bd1f"
+  }
+}

@@ -1,0 +1,393 @@
+--- a/crates/mcpgit-executable-runtime/src/core_lib.rs
++++ b/crates/mcpgit-executable-runtime/src/core_lib.rs
+@@ -129,0 +130,47 @@
++}
++
++/// Fresh provider whose linear memory participates in a Host-owned invocation budget.
++pub struct BudgetedCoreLibInstance {
++    store: Store<BudgetedCoreLibStore>,
++    instance: Instance,
++    package_id: String,
++    version: String,
++    artifact_sha256: String,
++}
++
++pub(crate) struct BudgetedCoreLibStore {
++    reservation: wasmc_core_runtime::CoreSharedMemoryReservation,
++}
++impl wasmtime::ResourceLimiter for BudgetedCoreLibStore {
++    fn memory_growing(
++        &mut self,
++        current: usize,
++        desired: usize,
++        maximum: Option<usize>,
++    ) -> wasmtime::Result<bool> {
++        if maximum.is_some_and(|max| desired > max) {
++            return Ok(false);
++        }
++        Ok(self.reservation.try_grow(current, desired))
++    }
++    fn memory_grow_failed(&mut self, _error: wasmtime::Error) -> wasmtime::Result<()> {
++        self.reservation.growth_failed();
++        Ok(())
++    }
++    fn table_growing(
++        &mut self,
++        _current: usize,
++        desired: usize,
++        maximum: Option<usize>,
++    ) -> wasmtime::Result<bool> {
++        Ok(maximum.is_none_or(|max| desired <= max))
++    }
++    fn instances(&self) -> usize {
++        usize::MAX
++    }
++    fn tables(&self) -> usize {
++        usize::MAX
++    }
++    fn memories(&self) -> usize {
++        usize::MAX
++    }
+@@ -456,0 +504,22 @@
++    pub fn instantiate_fresh_with_memory_budget(
++        &self,
++        budget: &wasmc_core_runtime::CoreSharedMemoryBudget,
++    ) -> Result<BudgetedCoreLibInstance> {
++        let mut store = Store::new(
++            &self.engine,
++            BudgetedCoreLibStore {
++                reservation: budget.reservation(),
++            },
++        );
++        store.limiter(|state| state);
++        let instance = Instance::new(&mut store, &self.module, &[])
++            .map_err(|error| anyhow!("instantiate budgeted import-free Core Lib: {error}"))?;
++        Ok(BudgetedCoreLibInstance {
++            store,
++            instance,
++            package_id: self.package_id.clone(),
++            version: self.version.clone(),
++            artifact_sha256: self.artifact_sha256.clone(),
++        })
++    }
++
+@@ -488,0 +558,19 @@
++    }
++}
++
++impl BudgetedCoreLibInstance {
++    pub(crate) fn store_mut(&mut self) -> &mut Store<BudgetedCoreLibStore> {
++        &mut self.store
++    }
++    pub fn instance(&self) -> Instance {
++        self.instance
++    }
++    pub(crate) fn matches_identity(
++        &self,
++        package_id: &str,
++        version: &str,
++        artifact_sha256: &str,
++    ) -> bool {
++        self.package_id == package_id
++            && self.version == version
++            && self.artifact_sha256 == artifact_sha256
+--- a/crates/mcpgit-executable-runtime/src/core_lib_call_plan.rs
++++ b/crates/mcpgit-executable-runtime/src/core_lib_call_plan.rs
+@@ -4 +4,3 @@
+-    core_lib::{FreshCoreLibInstance, PreparedCoreLib},
++    core_lib::{
++        BudgetedCoreLibInstance, BudgetedCoreLibStore, FreshCoreLibInstance, PreparedCoreLib,
++    },
+@@ -127,0 +130,27 @@
++        self.bind_selected(session, import, expected_instance, select)
++    }
++
++    pub fn instantiate_with_memory_budget(
++        &self,
++        budget: &wasmc_core_runtime::CoreSharedMemoryBudget,
++    ) -> Result<BudgetedCoreLibInstance> {
++        self.provider.instantiate_fresh_with_memory_budget(budget)
++    }
++
++    pub fn bind_budgeted_import<S: Send + 'static>(
++        &self,
++        session: Session<S>,
++        import: &Import,
++        expected_instance: wasmtime::Instance,
++        select: fn(&mut S) -> &mut BudgetedCoreLibInstance,
++    ) -> Result<Session<S>> {
++        self.bind_selected(session, import, expected_instance, select)
++    }
++
++    fn bind_selected<S: Send + 'static, P: ProviderAccess + 'static>(
++        &self,
++        session: Session<S>,
++        import: &Import,
++        expected_instance: wasmtime::Instance,
++        select: fn(&mut S) -> &mut P,
++    ) -> Result<Session<S>> {
+@@ -153 +182,31 @@
+-fn provider_memory(provider: &mut FreshCoreLibInstance) -> Result<wasmtime::Memory, HostError> {
++trait ProviderAccess {
++    type Data: Send + 'static;
++    fn store_mut(&mut self) -> &mut wasmtime::Store<Self::Data>;
++    fn instance(&self) -> wasmtime::Instance;
++    fn matches_identity(&self, package_id: &str, version: &str, artifact_sha256: &str) -> bool;
++}
++impl ProviderAccess for FreshCoreLibInstance {
++    type Data = ();
++    fn store_mut(&mut self) -> &mut wasmtime::Store<()> {
++        self.store_mut()
++    }
++    fn instance(&self) -> wasmtime::Instance {
++        self.instance()
++    }
++    fn matches_identity(&self, package_id: &str, version: &str, artifact_sha256: &str) -> bool {
++        self.matches_identity(package_id, version, artifact_sha256)
++    }
++}
++impl ProviderAccess for BudgetedCoreLibInstance {
++    type Data = BudgetedCoreLibStore;
++    fn store_mut(&mut self) -> &mut wasmtime::Store<BudgetedCoreLibStore> {
++        self.store_mut()
++    }
++    fn instance(&self) -> wasmtime::Instance {
++        self.instance()
++    }
++    fn matches_identity(&self, package_id: &str, version: &str, artifact_sha256: &str) -> bool {
++        self.matches_identity(package_id, version, artifact_sha256)
++    }
++}
++fn provider_memory<P: ProviderAccess>(provider: &mut P) -> Result<wasmtime::Memory, HostError> {
+@@ -165,2 +224,2 @@
+-fn bridge(
+-    provider: &mut FreshCoreLibInstance,
++fn bridge<P: ProviderAccess>(
++    provider: &mut P,
+@@ -262,2 +321,2 @@
+-fn provider_call(
+-    provider: &mut FreshCoreLibInstance,
++fn provider_call<P: ProviderAccess>(
++    provider: &mut P,
+--- a/crates/mcpgit-executable-runtime/src/test_support_json_lib.rs
++++ b/crates/mcpgit-executable-runtime/src/test_support_json_lib.rs
+@@ -538,0 +539,211 @@
++
++/// Experimental real-Service invocation with a shared Guest/provider memory budget.
++pub fn invoke_mixed_host_budgeted(
++    provider: &PreparedCoreLib,
++    wasm: &[u8],
++    table_provider: std::sync::Arc<dyn mcpgit_programmable_query_runtime::TableMutationProvider>,
++) -> Result<()> {
++    use crate::core_lib::BudgetedCoreLibInstance;
++    use crate::core_runtime::CoreDomainScalarHostSession;
++    use mcpgit_programmable_query_runtime::{ProgrammableQueryLimits, QueryHost};
++    use wasmtime::StoreLimitsBuilder;
++    struct Extension {
++        lib: BudgetedCoreLibInstance,
++    }
++    let guest = Module::new(&Engine::default(), wasm)?;
++    let mut lib_imports = Vec::new();
++    let mut full = Vec::new();
++    for entry in guest.imports() {
++        let ExternType::Func(f) = entry.ty() else {
++            anyhow::bail!("non-function import")
++        };
++        let import = Import::new(
++            entry.module(),
++            entry.name(),
++            f.params().map(kind).collect::<Result<Vec<_>>>()?,
++            f.results().map(kind).collect::<Result<Vec<_>>>()?,
++        );
++        if entry.module() == "wasmc:private/canonical-memory@1"
++            || entry.module() == "wasmc:lib/wasmc-json@0.2.1"
++        {
++            lib_imports.push(import.clone());
++        } else {
++            ensure!(
++                mcpgit_guest_contract::find(entry.module(), entry.name()).is_some(),
++                "unknown Host import"
++            );
++        }
++        full.push(import);
++    }
++    ensure!(
++        lib_imports.len() == 59 && full.len() == 62,
++        "unexpected mixed imports"
++    );
++    let plan = CoreLibCallPlan::new(provider.clone(), lib_imports)?;
++    let runtime = CoreDomainRuntime::default();
++    let artifact = runtime.prepare_scalar_host(wasm, [96; 32], &full)?;
++    const PAGE: usize = 65536;
++    let insufficient_provider = wasmc_core_runtime::CoreSharedMemoryBudget::new(16 * PAGE);
++    ensure!(
++        plan.instantiate_with_memory_budget(&insufficient_provider)
++            .is_err(),
++        "JSON provider exceeded initial budget"
++    );
++    ensure!(
++        insufficient_provider.reserved_bytes() == 0,
++        "failed JSON provider instantiation leaked memory"
++    );
++    for round in 0..6 {
++        if round == 3 {
++            ensure!(
++                runtime.request_optimization(&artifact)?,
++                "optimization request rejected"
++            );
++            ensure!(
++                artifact
++                    .wait_for_optimization(std::time::Duration::from_secs(30))
++                    .state
++                    == crate::core_runtime::CoreDomainState::Candidate,
++                "Wasmtime candidate unavailable"
++            );
++            ensure!(
++                artifact.publish_optimization(true, true, u64::MAX, 0)?,
++                "candidate promotion rejected"
++            );
++        }
++        let budget = wasmc_core_runtime::CoreSharedMemoryBudget::new(if round % 3 == 0 {
++            33 * PAGE
++        } else {
++            128 * PAGE
++        });
++        let instance = if round % 3 == 1 {
++            other_provider_fixture()?.instantiate_fresh_with_memory_budget(&budget)?
++        } else {
++            plan.instantiate_with_memory_budget(&budget)?
++        };
++        if round % 3 != 1 {
++            ensure!(
++                budget.reserved_bytes() == 17 * PAGE,
++                "unexpected JSON provider initial memory"
++            );
++        }
++        let expected = instance.instance();
++        let limits = ProgrammableQueryLimits::default();
++        let store_limits = StoreLimitsBuilder::new()
++            .memory_size(limits.max_memory_bytes)
++            .instances(1)
++            .memories(1)
++            .tables(1)
++            .build();
++        let pool = crate::route_wasm_executor::empty_query_pool("mixed-fixture", 1)?;
++        let host = QueryHost::new_with_table_mutations(
++            pool.checkout("mixed-fixture")?,
++            limits,
++            store_limits,
++            Extension { lib: instance },
++            Some(table_provider.clone()),
++        );
++        let mut session = CoreDomainScalarHostSession::new(host).with_memory_budget(budget.clone());
++        for import in &full {
++            if import.module() == "wasmc:private/canonical-memory@1"
++                || import.module() == "wasmc:lib/wasmc-json@0.2.1"
++            {
++                session = plan.bind_budgeted_import(session, import, expected, |host| {
++                    &mut host.extension_mut::<Extension>().expect("extension").lib
++                })?;
++            } else {
++                let function = *mcpgit_guest_contract::find(import.module(), import.name())
++                    .expect("checked Host import");
++                session = mcpgit_programmable_query_runtime::bind_programmable_wit_core(
++                    session, function,
++                )?;
++            }
++        }
++        let mut outcome = artifact.invoke_scalar_with_session_state(session, "run", &[]);
++        if round % 3 == 1 {
++            let error = outcome
++                .invocation
++                .expect_err("foreign budgeted provider accepted");
++            ensure!(
++                error
++                    .to_string()
++                    .contains("Core Lib session provider changed"),
++                "wrong identity failure: {error}"
++            );
++            ensure!(
++                outcome.state.live_handles() == 0,
++                "foreign provider leaked Host handles"
++            );
++            drop(outcome.state);
++            ensure!(
++                budget.reserved_bytes() == 0,
++                "foreign provider reservation leaked"
++            );
++            println!(
++                "BUDGETED_FOREIGN_REJECTED backend={}",
++                if round < 3 { "Wasmi" } else { "Wasmtime" }
++            );
++            continue;
++        }
++        if round % 3 == 0 {
++            ensure!(
++                outcome.invocation.is_err(),
++                "combined Guest and JSON provider memory bypassed the budget"
++            );
++            ensure!(
++                budget.reserved_bytes() == 17 * PAGE,
++                "failed Guest instantiation retained memory"
++            );
++            drop(outcome.state);
++            ensure!(
++                budget.reserved_bytes() == 0,
++                "provider memory retained after failed invocation"
++            );
++            println!(
++                "BUDGET_REJECTED backend={}",
++                if round < 3 { "Wasmi" } else { "Wasmtime" }
++            );
++            continue;
++        }
++        let result = outcome.invocation.map_err(|e| anyhow::anyhow!("{e}"))?;
++        ensure!(
++            result.backend
++                == if round < 3 {
++                    crate::core_runtime::CoreDomainBackend::Wasmi
++                } else {
++                    crate::core_runtime::CoreDomainBackend::Wasmtime
++                },
++            "unexpected backend"
++        );
++        ensure!(
++            result.values == [Scalar::I32(26)]
++                && outcome.state.live_handles() == 0
++                && outcome.state.host_calls() == 2,
++            "budgeted mixed execution mismatch"
++        );
++        let provider = &mut outcome
++            .state
++            .extension_mut::<Extension>()
++            .expect("extension")
++            .lib;
++        let instance = provider.instance();
++        let memory = instance
++            .get_memory(provider.store_mut(), "memory")
++            .expect("JSON memory");
++        let provider_bytes = memory.data_size(provider.store_mut());
++        ensure!(
++            budget.reserved_bytes() == provider_bytes,
++            "Guest memory retained or provider not accounted"
++        );
++        drop(outcome.state);
++        ensure!(
++            budget.reserved_bytes() == 0,
++            "provider memory retained after successful invocation"
++        );
++        println!(
++            "BUDGETED_JSON_HOST_OK operations=26 backend={:?}",
++            result.backend
++        );
++    }
++    Ok(())
++}
+--- a/tests/core_lib_activation.rs
++++ b/tests/core_lib_activation.rs
+@@ -490,0 +491,5 @@
++            route_provider.clone(),
++        )?;
++        mcpgit_executable_runtime::test_support_json_lib::invoke_mixed_host_budgeted(
++            &prepared,
++            &mixed,
