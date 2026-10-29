@@ -1,0 +1,20 @@
+import assert from 'node:assert/strict';
+import {readFileSync,readdirSync,statSync,writeFileSync} from 'node:fs';
+import {join,relative} from 'node:path';
+import {hash,checkedCurrentCatalog,resolveCurrentPackage} from '/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-lib-memory-release-v031/scripts/current-lib-release-v3.mjs';
+import {installCurrentLib,artifactUrl} from '/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-lib-memory-release-v031/scripts/lib-install.mjs';
+const base='/Users/youxianshi/.local/state/wasmc-maintenance/rustc-service-1991-20261028',root=join(base,'json-2024-union-notices-20261029');
+const manifestBytes=readFileSync(join(root,'lib.json')),manifest=JSON.parse(manifestBytes),id=manifest.id,version=manifest.version,rootPath=`current-libs/${id}/${version}`;
+function walk(dir){return readdirSync(dir,{withFileTypes:true}).flatMap(e=>e.isDirectory()?walk(join(dir,e.name)):[join(dir,e.name)]);}
+const paths=walk(root).map(p=>relative(root,p).split('\\').join('/')).sort(),files=paths.map(p=>{const b=readFileSync(join(root,p));return {path:`${rootPath}/${p}`,bytes:b.length,sha256:hash(b)};});
+const local={};for(const f of files)local[f.path.slice(rootPath.length+1)]={bytes:f.bytes,sha256:f.sha256};
+const template=JSON.parse(readFileSync('/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-lib-memory-release-v031/catalog/libs-current-v2.json'));
+const dummy={bytes:1,sha256:'0'.repeat(64)};const row={id,version,profile:'value',target:'wasm32-unknown-unknown',root:rootPath,manifest_sha256:hash(manifestBytes),root_inventory_sha256:hash(JSON.stringify(local)),wit_sha256:manifest.wit.sha256,wit_world:manifest.wit.world,source:{spec:{path:`libspec/${id}/lib.json`,...dummy},wit:{path:`libspec/${id}/lib.wit`,...dummy}},views:['rust_component','rust_core'],delivery:{kind:'wasm-core-component',artifact:manifest.artifact,component:manifest.component,native_status:null,device_qualified:false},files};
+const catalog={...template,package_authority_commit:'0'.repeat(40),packages:[row]},catalogBytes=Buffer.from(JSON.stringify(catalog)),catalogHash=hash(catalogBytes);checkedCurrentCatalog(catalogBytes,catalogHash);
+const read=path=>{assert.ok(path.startsWith(rootPath+'/'));return readFileSync(join(root,path.slice(rootPath.length+1)));};
+const lock=resolveCurrentPackage(catalogBytes,catalogHash,{id,version,manifest_sha256:row.manifest_sha256,root_inventory_sha256:row.root_inventory_sha256},read),lockBytes=Buffer.from(JSON.stringify(lock));
+const transport=async(url,opts)=>{assert.equal(opts.redirect,'manual');const prefix=artifactUrl('github',catalog.package_authority_commit,'');assert.ok(url.startsWith(prefix));return new Response(read(url.slice(prefix.length).split('/').map(decodeURIComponent).join('/')));};
+const destination=join(base,'json-2024-union-installed-20261029'),receipt=await installCurrentLib({catalogBytes,catalogSha256:catalogHash,lockBytes,lockSha256:hash(lockBytes),destination,mirror:'github'},transport);
+const reread=resolveCurrentPackage(catalogBytes,catalogHash,lock,p=>readFileSync(join(destination,p)));assert.deepEqual(reread,lock);
+const result={schema:'wasmc.json-duplicate-controlled-install/v1',accepted:true,transport:'in-memory controlled fixture; no network',catalog_authority:'synthetic zero commit; not public release',catalog_sha256:catalogHash,lock_sha256:hash(lockBytes),root:rootPath,wit_bytes:statSync(join(destination,rootPath,'lib.wit')).size,files_verified:files.length,manifest_sha256:row.manifest_sha256,receipt};
+writeFileSync(join(base,'json-2024-union-install-result-20261029.json'),JSON.stringify(result,null,2)+'\n',{flag:'wx'});console.log(JSON.stringify(result));

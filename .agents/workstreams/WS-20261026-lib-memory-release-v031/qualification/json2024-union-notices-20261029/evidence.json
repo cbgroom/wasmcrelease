@@ -1,0 +1,57 @@
+{
+  "schema": "wasmc.json2024-union-notices-qualification/v1",
+  "status": "isolated candidate; no Source admission, production, or formal release",
+  "base_source": "55415f7ced6ad2408e3f44ae7964bd0385fcc569 plus exact-master-combined-v2.patch from json-sdk2024-historical-cohort-20261029",
+  "incremental_candidate": "16 MiB per-file and total notice allowance, plus matching machine-readable contract; no Lib computation quota introduced",
+  "private_incremental_patch_sha256": "237d3a5178b3fc63ff09c559fc2902d1978e2637eb6e23892527c3cefd707910",
+  "producer_sha256": "45e229a3201de33ef0e4e362b6b2ea7abe45f2097913c5f8c22b1992fa50fc59",
+  "notice_manifest_sha256": "e750581fa5c338ab82f53d03a6ad3e556223df8032e2c19274d0efc9b9a89c29",
+  "notice_files": 13,
+  "notice_total_bytes": 2834022,
+  "json_manifest_sha256": "0f09f8a8323759148f24b205dc6fbffd52e0d77c102024d98110f1dc94f98045",
+  "json_core_sha256": "e369108df493771f4bf719ac073f5acd4bc77a45b2b2cdd8a8049f4885b8753c",
+  "json_sdk_sha256": "5e5f3a8739ba794e29fe90572e000b19c6ed306d9f3ac9473a07e6019f89c6a0",
+  "validation": [
+    "The prior 2024 producer rejected an existing full-notice JSON Root at its 2 MiB total; full error retained. The combined candidate verifies the old Q0 JSON Root, the prior new Root and the new 13-notice Root.",
+    "All 23 non-Native Roots of the existing 43-Root Q0 receipt independently verify under the combined producer; 20 Native packages were not verified by this check.",
+    "Actual installCurrentLib used a synthetic zero-commit catalog and in-memory transport; 25 Root files were independently read back. Installed canonical real path passes combined producer verification.",
+    "Installed Root ran the existing Rust 2024 Guest with 26 JSON API checks in 3 same-instance runs in each of Node, Bun and Deno with a controlled JS memory Host.",
+    "Combined source suite lib_tool_license_binding_v1 passed 15/15 after matching contract to 16 MiB. Original 14/15 failure from stale contract is retained."
+  ],
+  "preserved_failures": [
+    "old producer rejects the full Q0 notice bundle",
+    "first candidate test run failed 1/15 because the public contract still named old limits",
+    "first installed-root verify used installer symlink rather than canonical path"
+  ],
+  "limits": [
+    "This is an incremental isolated Source candidate; complete 43-package Q0 must be rebuilt using one producer and the repaired JSON source; an older receipt cannot authenticate a substituted Root.",
+    "The 2024 SDK candidate and notice patch have not passed Source history admission or hosted CI; no release tag, public catalog, anonymous network install, or production route.",
+    "20 Native Roots have no runtime or device qualification in this check."
+  ],
+  "private_logs_sha256": {
+    "wasmc-2024-notice-union-build-20261029.log": "faa4feb81ad4181b9b1b221c02a3db1747ec728694ecb316031aaaca9145bb03",
+    "wasmc-2024-notice-union-boundaries-20261029.log": "024dcd675aa3130a3b1541609b4fb2c79e95b9e57ba4e8d2b85fa4c47ef09e01",
+    "wasmc-2024-notice-union-boundaries-fixed-20261029.log": "d8ebeec1b2542d39964efa25fe565dfe5801c90325889acc57f123d8c2492dc6"
+  },
+  "files_sha256": {
+    "attach-json-union-notices-20261029.log": "ca2326db40817f1f83948b568f1187b2192289199fefac85e40e170f82fdd381",
+    "attach-json-union-notices-20261029.mjs": "8e6b79381b1455a421b8f9795b62c2bc6f3beac9a0b1163524cebb19de746a0f",
+    "install-json-union-notices-20261029.log": "20225c9379508aad438ba1e6e13aa66756334b59623a195babea622a49d09f82",
+    "install-json-union-notices-20261029.mjs": "c8e26203f47aab8f15b8b7b04910c4510d47e8e51c3937ace1ba3ae0ec8d65fd",
+    "json-2024-union-install-result-20261029.json": "bcbb610237aeaf5ba0afcdcaaae691a061ef7c11b5972ad3fe3e35948841b412",
+    "json-2024-union-installed-bun-20261029.log": "cb70daf79a686e6e8675a6624d9b507aee6c33673efe59f4d368603366e776ed",
+    "json-2024-union-installed-deno-20261029.log": "864b7069b05de33856c6c8b29e4a7786b0f3bfc445108cdf92c43e87eaa5c281",
+    "json-2024-union-installed-node-20261029.log": "a9e3e6b1acd8fc1689dd9394b3b8022292c889c17e634fa6aa5ba07acffeb1a8",
+    "root.tar.gz": "527de37eaa2efb8d8778f85bef7013e553ca4b4122ac9f1a340a57eeec9595d8",
+    "wasmc-2024-notice-union-before-20261029.log": "f9cba575a5aa2ab29dea5a62c19a85a86cf477d893b4492770b51a2eb6bce4fe",
+    "wasmc-2024-notice-union-boundaries-20261029.log": "b01eea510742d15987c53b99c5172831105adf4cef83ad6d58362024a008b830",
+    "wasmc-2024-notice-union-boundaries-fixed-20261029.log": "96be44b50ce3d1a42796b2bce6213f0adbf73216993b7eccbfa262b5168a49b7",
+    "wasmc-2024-notice-union-cohort-20261029.log": "a95101e67bfc9a1a422a41f16eedd0b2601abbc7a7d4bfd304fec402bd660ef8",
+    "wasmc-2024-notice-union-cohort-20261029.py": "e78be1ee0879559e6e34dcfe78e23d274efe4899109a997dcc9ab49a92a5ca68",
+    "wasmc-2024-notice-union-installed-20261029.log": "1a93d44bf5fe1e82498799b99c8a27b0400a84bbc7fba36d677efd9f12666a75",
+    "wasmc-2024-notice-union-installed-canonical-20261029.log": "b4a26803433f0a31a64cc4f6aed43edccc140add33299e44a21b92fd66c01d48",
+    "wasmc-2024-notice-union-new-json-20261029.log": "b900c3544220ce8c053adca114f1143ad0e76e8efc690fd34b655849a3610c4d",
+    "wasmc-2024-notice-union-old-json-20261029.log": "cbb5486e7687df8e19aae7952fadc217939d18771ba9704a6f654371d71567c8",
+    "wasmc-2024-notice-union-rebound-20261029.log": "b900c3544220ce8c053adca114f1143ad0e76e8efc690fd34b655849a3610c4d"
+  }
+}

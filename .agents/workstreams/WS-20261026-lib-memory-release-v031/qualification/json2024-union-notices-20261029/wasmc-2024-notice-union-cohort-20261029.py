@@ -1,0 +1,19 @@
+import concurrent.futures,hashlib,json,subprocess,sys
+from pathlib import Path
+base=Path('/Users/youxianshi/.local/state/wasmc-maintenance/rustc-service-1991-20261028')
+run=base/'notice-budget-refresh-evidence-20261028/runs/refresh-axo8hB'
+producer=base/'wasmc-2024-notice-union-target-20261029/debug/wasmc'
+receipt=json.loads((run/'refresh-receipt.json').read_text())
+rows=[r for r in receipt['rows'] if r['profile']!='native']
+def one(row):
+ root=Path(row['package_root']); h=hashlib.sha256((root/'lib.json').read_bytes()).hexdigest()
+ assert h==row['manifest_sha256']
+ try:
+  p=subprocess.run([str(producer),'lib','verify',str(root)],capture_output=True,text=True,timeout=120)
+  return {'id':row['id'],'manifest_sha256':h,'exit':p.returncode,'stdout':p.stdout.strip(),'stderr':p.stderr.strip()}
+ except subprocess.TimeoutExpired:return {'id':row['id'],'manifest_sha256':h,'exit':'timeout'}
+with concurrent.futures.ThreadPoolExecutor(max_workers=2) as ex:
+ results=list(ex.map(one,rows))
+for row in results: print(json.dumps(row),flush=True)
+print(json.dumps({'total':len(results),'passed':sum(x['exit']==0 for x in results)}),flush=True)
+if any(x['exit']!=0 for x in results):sys.exit(1)

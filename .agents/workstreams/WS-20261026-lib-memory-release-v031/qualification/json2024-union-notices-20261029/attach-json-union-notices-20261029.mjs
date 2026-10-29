@@ -1,0 +1,13 @@
+import { readFile } from 'node:fs/promises';
+import { join, dirname } from 'node:path';
+import { createHash } from 'node:crypto';
+import { attachReleaseLicense } from '/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-lib-memory-release-v031/scripts/lib-refresh-cache-v2.mjs';
+const base='/Users/youxianshi/.local/state/wasmc-maintenance/rustc-service-1991-20261028';
+const root=join(base,'json-2024-union-notices-20261029');
+const noticePath=join(base,'cohort43-compiler-notice-bundle-candidate-20261028/dependency-notices.json');
+const d=JSON.parse(await readFile(noticePath));
+const notices=await Promise.all(d.files.map(async x=>({...x,content:await readFile(join(dirname(noticePath),x.path.slice('licenses/'.length)))})));
+const license=await readFile('/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-lib-memory-release-v031/LICENSE');
+const sha=b=>createHash('sha256').update(b).digest('hex');
+await attachReleaseLicense(root,license,sha(license),notices);
+console.log(JSON.stringify({root,notice_count:notices.length,notice_bytes:notices.reduce((n,x)=>n+x.content.length,0),manifest_sha256:sha(await readFile(join(root,'lib.json'))),artifact_sha256:sha(await readFile(join(root,'artifact.wasm'))),sdk_sha256:sha(await readFile(join(root,'bindings/rust-core/src/lib.rs')))}));
