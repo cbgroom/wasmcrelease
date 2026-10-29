@@ -1,5 +1,6 @@
-import fs from 'node:fs';import assert from 'node:assert/strict';import {createHash} from 'node:crypto';import {createCanonicalHostCompiler} from './current/canonical-host.mjs';
+import fs from 'node:fs';import assert from 'node:assert/strict';import {createHash} from 'node:crypto';import {pathToFileURL} from 'node:url';
 const root=process.argv[2],f=root+'/examples/current/string-support-v2/',read=p=>fs.readFileSync(p),sha=b=>createHash('sha256').update(b).digest('hex');
+const {createCanonicalHostCompiler}=await import(pathToFileURL(root+'/current/canonical-host.mjs'));
 const tuple=n=>Object.fromEntries([['wit','lib.wit'],['executionAbi','execution-abi.json'],['providerContract','provider-contract.json'],['binding','binding.json']].map(([k,p])=>[k,read(f+'host/'+n+'/'+p)]));
 const input={source:read(f+'source.wasmc').toString(),activation:read(f+'activation.json'),entry:tuple('entry'),operations:tuple('operations'),libCore:read(root+'/current-libs/wasmc-text/0.0.2/artifact.wasm'),libWit:read(root+'/current-libs/wasmc-text/0.0.2/lib.wit'),template:read(f+'cold/canonical-template.json')};
 const compiler=await createCanonicalHostCompiler(read(root+'/current/wasmc_compiler.wasm'));try{
