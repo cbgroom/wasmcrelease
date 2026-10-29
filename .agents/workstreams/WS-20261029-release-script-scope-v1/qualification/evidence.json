@@ -1,0 +1,68 @@
+{
+  "scope": "candidate tooling only; no release or hosted CI claim",
+  "branch_base": "844ef363",
+  "source_releases": [
+    "dc1e99d5b645fc97f46a07d0cd9fa953aabd42fd",
+    "3e06e12c0310411ee99b6b28eb9940127940c0a4",
+    "8f8a20d20d38523e597f61174cc3af77c06c8007",
+    "2713cc94366f839fdef788f1710d201fbb7da06a"
+  ],
+  "runs": [
+    {
+      "name": "node-boundary",
+      "command": [
+        "node",
+        "scripts/test-current-compiler-byte-boundary-v031.mjs"
+      ],
+      "exit_code": 0,
+      "log_sha256": "e35cd36ca8a478daf7026d6bb4be6ef78b6714811253fe4e83f153d1d92c4ae7"
+    },
+    {
+      "name": "bun-boundary",
+      "command": [
+        "bun",
+        "scripts/test-current-compiler-byte-boundary-v031.mjs"
+      ],
+      "exit_code": 0,
+      "log_sha256": "e35cd36ca8a478daf7026d6bb4be6ef78b6714811253fe4e83f153d1d92c4ae7"
+    },
+    {
+      "name": "deno-boundary",
+      "command": [
+        "deno",
+        "run",
+        "--allow-read",
+        "scripts/test-current-compiler-byte-boundary-v031.mjs"
+      ],
+      "exit_code": 0,
+      "log_sha256": "e35cd36ca8a478daf7026d6bb4be6ef78b6714811253fe4e83f153d1d92c4ae7"
+    },
+    {
+      "name": "version",
+      "command": [
+        "node",
+        "scripts/test-current-release-version.mjs"
+      ],
+      "exit_code": 0,
+      "log_sha256": "00f0092ed0ee95e0bb5d9740ada4b4e5f96f716b43bcd619092088b61c076ad4"
+    },
+    {
+      "name": "channel",
+      "command": [
+        "node",
+        "scripts/test-release-channel.mjs"
+      ],
+      "exit_code": 0,
+      "log_sha256": "29c35ec4ba9bc9560138c398d3fc36912fda4f9e3bae806502ecf371329276ee"
+    },
+    {
+      "name": "v030-candidate",
+      "command": [
+        "node",
+        ".agents/workstreams/WS-20261029-release-script-scope-v1/qualification/reopen-v030.mjs"
+      ],
+      "exit_code": 0,
+      "log_sha256": "e461acfcee6d8b98cefda14a0e733d9f2da7782d1188d14e7fc2d3d7d7f95642"
+    }
+  ]
+}

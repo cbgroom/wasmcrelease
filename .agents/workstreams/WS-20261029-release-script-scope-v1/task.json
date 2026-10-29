@@ -39,5 +39,12 @@
     "WS-20261022-json006-current-admission-v024": "2713cc94366f839fdef788f1710d201fbb7da06a",
     "WS-20261026-lib-memory-release-v031": "dc1e99d5b645fc97f46a07d0cd9fa953aabd42fd"
   },
-  "next": "Adapt the retained compiler-carrier boundary patch to this exact older baseline; verify old releases and successor separately."
+  "next": "Independent target integration, normal hosted CI, the real v031 candidate/compiler manifest and full production route remain open.",
+  "validation": {
+    "node_bun_deno": "v030 2MiB / v031 16MiB exact boundaries, overflow and identity controls pass",
+    "version_channel": "normal version and channel regressions pass",
+    "v030_reopen": "actual frozen candidate 2333 files, exact pinned fallback, pass",
+    "future_ci": "explicit 0.0.30 vs 0.0.31, 0.0.32, 0.1.0 selection on Node/Bun/Deno validated",
+    "receipt": ".agents/workstreams/WS-20261029-release-script-scope-v1/qualification/evidence.json"
+  }
 }

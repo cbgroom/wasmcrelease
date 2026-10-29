@@ -44,8 +44,9 @@ for(const mutate of [
 const ciRows=currentCIProductInputs.map(path=>({path,bytes:bytes.length,sha256:hash(bytes)}));
 assert.equal(validateCurrentCIProductInputs({product_files:ciRows},()=>bytes),true);
 const {suiteCases}=await import('./ci-suite.mjs');
+const currentSuiteVersion=JSON.parse((await import('node:fs')).readFileSync(new URL('../catalog/libs-current-v2.json',import.meta.url))).version;
 for(const family of ['compatibility','integrity','candidate','runtime','security','rust'])for(const test of suiteCases(family))for(const arg of test.args){
-  if(/^(scripts|examples|sdk)\/.*\.(mjs|sh|toml)$/.test(arg))assert.ok(currentV3ProductInputsForVersion('0.0.23').includes(arg),'CI executable omitted: '+arg);
+  if(/^(scripts|examples|sdk)\/.*\.(mjs|sh|toml)$/.test(arg))assert.ok(currentV3ProductInputsForVersion(currentSuiteVersion).includes(arg),'CI executable omitted: '+arg);
 }
 for(const path of ['scripts/validate-source-free-runtime.sh','scripts/validate-current.mjs','scripts/pi-pre-release-gate-v1.mjs','Cargo.toml','scripts/run-pi-learning-model-v1.mjs','scripts/aggregate-native-cli-perf.mjs','scripts/qualify-current-compiler.mjs','scripts/fixtures/ios-wss-cert.pem','scripts/fixtures/ios-wss-key.pem','docs/DYNAMIC_LIB_GRAPH_MODEL.md','host/drivers/tcp/rust/Cargo.toml','scripts/lib-refresh-runner-v2.mjs']){
   assert.ok(currentCIProductInputs.includes(path));

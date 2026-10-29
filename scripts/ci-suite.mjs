@@ -6,10 +6,18 @@ import { createHash } from 'node:crypto';
 
 const root=fileURLToPath(new URL('../',import.meta.url));
 const js=(runtime,script,args=[],permissions=[])=>({command:runtime,args:runtime==='deno'?['run',...permissions,script,...args]:[script,...args]});
+export function compilerCarrierCheck(version,runtime='node') {
+  const parts=version?.split('.').map(Number);
+  return parts&&(parts[0]>0||parts[1]>0||parts[2]>=31)
+    ?{id:'current-compiler-byte-boundary',...js(runtime,'scripts/test-current-compiler-byte-boundary-v031.mjs',[],['--allow-read'])}:null;
+}
 export function suiteCases(family,runtime='node',mirror='github') {
   if(!['node','bun','deno'].includes(runtime)||!['github','jsdelivr'].includes(mirror))throw Error('invalid CI matrix');
   const item=(id,script,args=[],permissions=['--allow-read'])=>({id,...js(runtime,script,args,permissions)});
   const fixturePermissions=['--allow-read','--allow-write','--allow-env=TMPDIR,TMP,TEMP'];
+  const catalogVersion=family==='candidate' ? JSON.parse(readFileSync(join(root,'catalog/libs-current-v2.json'))).version : null;
+  const carrierCheck=compilerCarrierCheck(catalogVersion,runtime);
+  const carrierChecks=carrierCheck?[carrierCheck]:[];
   if(family==='compatibility')return [
     item('core-feature-probes-and-negatives','scripts/test-core-compatibility.mjs'),
     item('catalog-exact-resolution','scripts/test-lib-catalog.mjs',[],fixturePermissions),
@@ -40,6 +48,7 @@ export function suiteCases(family,runtime='node',mirror='github') {
     item('deterministic-fresh-agent-regression','scripts/wasmc-fresh-agent-evaluation-v0.mjs',['--release-root','.', '--json-out','target/ci/fresh-agent.json'])
   ];
   if(family==='candidate')return [
+    ...carrierChecks,
     item('current-v3-product-identity','scripts/current-release-identity.mjs'),
     item('current-complete-product-reopen-negatives','scripts/test-current-product-v3.mjs',['--product','.', '--catalog-sha256','e12684efb3e475ad551eddabda12bc4c196f19edb48e7ace9069fda1ef5e7871','--out','target/ci/current-product-controls'],fixturePermissions),
     item('current-original-license-reopen-negatives','scripts/test-current-license-policy-v3.mjs'),
