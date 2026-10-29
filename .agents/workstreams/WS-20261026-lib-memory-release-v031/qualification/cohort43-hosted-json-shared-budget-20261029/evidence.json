@@ -1,0 +1,25 @@
+{
+  "schema": "mcpgit.cohort43-hosted-json-shared-memory/v1",
+  "status": "private prebuilt candidate, temporary real Service and lab Hosted dispatcher; not production or release",
+  "installed_root_manifest_sha256": "a40499304c4078c8034473e552730cd460556c81d8679b8afe040cf2407f7397",
+  "installed_root_artifact_sha256": "007eac4dbfe32f53462f866a66e6bb191fec13c01ac7d90baf2572b27ec22722",
+  "rust2024_guest_sha256": "370143e235199f7e6a3f19d21a3d708fca3ec9542b18a0aae019c83f1c9afd80",
+  "test_binary_sha256": "474a60fa12ce9e0d4612915ea0c595e282a7d41c883983e61bde3aca8b021b5e",
+  "logs_sha256": {
+    "cohort43-json2024-budget-low-20261029.log": "f803fd96fc2d12f32334d86a1bfa2826418c470469efbec083a5905fcaf867de",
+    "cohort43-json2024-budget-growth-20261029.log": "96453378d177a73257f32412b31ed52902b441487c7637b900aa1dbc97db849a",
+    "cohort43-json2024-budget-growth-ok-20261029.log": "23f41551fcc6adcae1a2473954e23a0623f370b39d1ce4c4ef34cfdbf2d09ad6"
+  },
+  "results": [
+    "33 pages: small request produces BadGateway",
+    "64 pages: small request succeeds, 1000008-byte request produces BadGateway, later small request succeeds",
+    "256 pages: same small, 1000008-byte and later small requests all succeed"
+  ],
+  "interpretation": "Memory-budget comparison is consistent with shared linear memory enforcement, but generic BadGateway is not a direct classification of the failure or its exact allocation site. Each request uses a fresh Store.",
+  "limits": [
+    "Wasm linear memory only; Host heap and buffers excluded",
+    "No live deployed production route or network transport",
+    "Candidate SDK and MCPGit route have not been admitted to Source, no release",
+    "Reused prebuilt test binary; not newly compiled source attestation"
+  ]
+}
