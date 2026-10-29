@@ -1,0 +1,158 @@
+--- a/libspec/wasmc-json/delta.rs
++++ b/libspec/wasmc-json/delta.rs
+@@ -38,34 +38,6 @@
+ fn json<T>(r: serde_json::Result<T>) -> Result<T> {
+     r.map_err(|_| Error::InvalidJson)
+ }
+-// `RawValue` has already checked the complete JSON grammar. Decode entries
+-// in input order so values hidden by a later duplicate key are still parsed.
+-fn object_entries(text: &str) -> Result<Vec<(String, &RawValue)>> {
+-    let mut rest = text[1..text.len() - 1].trim_start();
+-    let mut entries = Vec::new();
+-    while !rest.is_empty() {
+-        let mut keys = serde_json::Deserializer::from_str(rest).into_iter::<String>();
+-        let key = json(keys.next().ok_or(Error::InvalidJson)?)?;
+-        rest = &rest[keys.byte_offset()..];
+-        rest = rest
+-            .trim_start()
+-            .strip_prefix(':')
+-            .ok_or(Error::InvalidJson)?
+-            .trim_start();
+-        let mut values = serde_json::Deserializer::from_str(rest).into_iter::<&RawValue>();
+-        let value = json(values.next().ok_or(Error::InvalidJson)?)?;
+-        rest = rest[values.byte_offset()..].trim_start();
+-        push(&mut entries, (key, value))?;
+-        if rest.is_empty() {
+-            break;
+-        }
+-        rest = rest
+-            .strip_prefix(',')
+-            .ok_or(Error::InvalidJson)?
+-            .trim_start();
+-    }
+-    Ok(entries)
+-}
+ 
+ impl Document {
+     fn new(input: &[u8]) -> Result<Self> {
+@@ -86,53 +58,78 @@
+         Ok(i)
+     }
+     fn parse(&mut self, input: &[u8]) -> Result<usize> {
++        // serde_json owns grammar validation, escapes and scalar semantics.
++        // Once validated, scan the raw value once rather than re-parsing every
++        // nested subtree. Arena indices keep traversal and drop iterative.
+         let raw: &RawValue = json(serde_json::from_slice(input))?;
+-        let root = self.slot()?;
+-        let mut work = vec![(root, raw)];
+-        let mut garbage = Vec::new();
+-        while let Some((index, raw)) = work.pop() {
+-            let text = raw.get();
+-            self.nodes[index] = match text.as_bytes()[0] {
+-                b'[' => {
+-                    let values: Vec<&RawValue> = json(serde_json::from_str(text))?;
+-                    let mut children = Vec::new();
+-                    children
+-                        .try_reserve(values.len())
+-                        .map_err(|_| Error::AllocationFailed)?;
+-                    for value in values {
+-                        let i = self.slot()?;
+-                        children.push(i);
+-                        push(&mut work, (i, value))?;
+-                    }
+-                    Node::Array(children)
++        let bytes = raw.get().as_bytes();
++        enum Frame { Array(usize), Object(usize, Option<String>) }
++        fn string_end(bytes: &[u8], start: usize) -> Result<usize> {
++            let mut i = start + 1;
++            while i < bytes.len() {
++                match bytes[i] {
++                    b'\\' => i += 2,
++                    b'"' => return Ok(i + 1),
++                    _ => i += 1,
+                 }
+-                b'{' => {
+-                    // Keep duplicates until their values have been checked; the
+-                    // last decoded key wins exactly as with serde_json::Value.
+-                    let values = object_entries(text)?;
+-                    let mut children = BTreeMap::new();
+-                    for (key, value) in values {
+-                        let i = self.slot()?;
+-                        if let Some(old) = children.insert(key, i) {
+-                            push(&mut garbage, old)?;
+-                        }
+-                        push(&mut work, (i, value))?;
+-                    }
+-                    Node::Object(children)
++            }
++            Err(Error::InvalidJson)
++        }
++        let mut pos = 0;
++        let mut root = None;
++        let mut stack: Vec<Frame> = Vec::new();
++        let mut garbage = Vec::new();
++        while pos < bytes.len() {
++            match bytes[pos] {
++                b' ' | b'\n' | b'\r' | b'\t' | b',' | b':' => { pos += 1; continue; }
++                b']' | b'}' => { stack.pop().ok_or(Error::InvalidJson)?; pos += 1; continue; }
++                b'"' if matches!(stack.last(), Some(Frame::Object(_, None))) => {
++                    let end = string_end(bytes, pos)?;
++                    let key: String = json(serde_json::from_slice(&bytes[pos..end]))?;
++                    if let Some(Frame::Object(_, pending)) = stack.last_mut() { *pending = Some(key); }
++                    pos = end; continue;
+                 }
+-                _ => match json(serde_json::from_str::<Value>(text))? {
+-                    Value::Null => Node::Null,
+-                    Value::Bool(v) => Node::Bool(v),
+-                    Value::Number(v) => Node::Number(v),
+-                    Value::String(v) => Node::String(v),
+-                    _ => unreachable!(),
++                _ => {}
++            }
++            let index = self.slot()?;
++            match stack.last_mut() {
++                Some(Frame::Array(parent)) => match &mut self.nodes[*parent] {
++                    Node::Array(children) => push(children, index)?,
++                    _ => return Err(Error::InvalidJson),
+                 },
+-            };
+-        }
+-        for old in garbage {
+-            self.retire(old)?;
++                Some(Frame::Object(parent, key)) => {
++                    let key = key.take().ok_or(Error::InvalidJson)?;
++                    match &mut self.nodes[*parent] {
++                        Node::Object(children) => if let Some(old) = children.insert(key, index) { push(&mut garbage, old)?; },
++                        _ => return Err(Error::InvalidJson),
++                    }
++                }
++                None if root.is_none() => root = Some(index),
++                None => return Err(Error::InvalidJson),
++            }
++            match bytes[pos] {
++                b'[' => { self.nodes[index] = Node::Array(Vec::new()); push(&mut stack, Frame::Array(index))?; pos += 1; }
++                b'{' => { self.nodes[index] = Node::Object(BTreeMap::new()); push(&mut stack, Frame::Object(index, None))?; pos += 1; }
++                first => {
++                    let end = if first == b'"' { string_end(bytes, pos)? } else {
++                        let mut end = pos;
++                        while end < bytes.len() && !matches!(bytes[end], b' ' | b'\n' | b'\r' | b'\t' | b',' | b']' | b'}') { end += 1; }
++                        end
++                    };
++                    self.nodes[index] = match json(serde_json::from_slice::<Value>(&bytes[pos..end]))? {
++                        Value::Null => Node::Null,
++                        Value::Bool(value) => Node::Bool(value),
++                        Value::Number(value) => Node::Number(value),
++                        Value::String(value) => Node::String(value),
++                        _ => return Err(Error::InvalidJson),
++                    };
++                    pos = end;
++                }
++            }
+         }
+-        Ok(root)
++        if !stack.is_empty() { return Err(Error::InvalidJson); }
++        for old in garbage { self.retire(old)?; }
++        root.ok_or(Error::InvalidJson)
+     }
+     fn render(&self, root: usize) -> Result<String> {
+         enum Part<'a> {

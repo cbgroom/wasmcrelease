@@ -1,0 +1,48 @@
+{
+  "schema": "wasmc.json-depth-linear-experiment/v1",
+  "status": "SOURCE_EXPERIMENT_NOT_ADMITTED",
+  "baseline_source_sha256": "082a83259e6a3c8f519a53ba6ddaa34383d8d591188ee877e9222968814bb676",
+  "rustc": "1.99.1 (58cf8f9c3 2026-10-13)",
+  "observations": "Native optimized harness, existing serde_json dependency; deep nested array of 8000 levels: baseline 89036 us, experiment 321 us, one observed run. Input and output bytes equal. This is workload-specific and not a production or Wasm benchmark.",
+  "reason": "The prior implementation parses every nested subtree again; the experiment validates complete input via Rust serde_json, scans structure once, delegates scalar semantics to serde_json and retains iterative arena/drop.",
+  "validation": "12 existing native unit tests pass, including deep nesting and duplicate-key invalid-value controls. 5006 generated/invalid cases match old implementation for validate, compact, select and two ordered edits.",
+  "limitations": [
+    "Isolated Rust Lib patch only; not applied to protected source or already-fixed Root 0.2.2.",
+    "Requires legitimate source scope and a new version with fresh Q0, Core, Component, installed WAsmC and real Service qualification.",
+    "No general performance upper bound, complete fuzz proof, Wasm test, CI, production or release claim."
+  ],
+  "files": [
+    {
+      "path": "successor-experiment.patch",
+      "sha256": "7fad6ac9c2447fc1e5e100d499707fb0a8dc561a701fc7b00e9a15404fe6074c"
+    },
+    {
+      "path": "main.rs",
+      "sha256": "b3d682b63c65d119abde9ff88ce14a54558b927be798a2090a9e0070dd430111"
+    },
+    {
+      "path": "linear-main.rs",
+      "sha256": "a8f0ab317bacc5b465d2cdb955b8056258a40a3b379e4236e13d4b4904eda144"
+    },
+    {
+      "path": "differential.rs",
+      "sha256": "4c16d243dd29f74f70320549d8fc0cae82b46431f2cafe58f1dfddf9b8520fce"
+    },
+    {
+      "path": "baseline.log",
+      "sha256": "9a670712727939c0d97742c27e5b0489bbcbf8a6fa476776cdb8028107c35f2b"
+    },
+    {
+      "path": "linear.log",
+      "sha256": "c8b406cd16d6bf67126fafb64b60a20821ed1742f3739c931b18a4a0dac98262"
+    },
+    {
+      "path": "differential-v2.log",
+      "sha256": "9591f302f3bfb5a8b71f2971cc9f768e76604d19c838de63fb1be21acda987a9"
+    },
+    {
+      "path": "unit.log",
+      "sha256": "6de35ce1a516cd545313a97e1624b4d905a7978cc34db976dcf9381dfb647d45"
+    }
+  ]
+}
