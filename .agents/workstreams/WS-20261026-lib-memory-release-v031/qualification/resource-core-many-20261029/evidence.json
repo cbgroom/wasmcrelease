@@ -1,0 +1,31 @@
+{
+  "schema": "wasmc.resource-core-many-modules/v1",
+  "status": "release workstream and isolated private producer candidate; not admitted or released",
+  "input_change": "Remove 64 package and module row ceilings; preserve nonempty input, unique identities, paths, pins, schema and 16 MiB input JSON bounds.",
+  "producer_private_patch_sha256": "d7d36664427944f8a36c7aac0e271afbab743493835035fcdf86a3db118c7247",
+  "producer_candidate_sha256": "dcb0d9f8680cca0574d94d11aa01f2ffd4f1099c2ecbc15ce0b58c87dff934ff",
+  "producer_private_patch_location": "/Users/youxianshi/.local/state/wasmc-maintenance/rustc-service-1991-20261028/resource-core-many-producer-20261029.patch",
+  "producer_parent": "wasmc-resource-graph16-candidate-20261029; includes earlier graph byte fix",
+  "evidence": "Old graph16 producer rejected 66 modules/66 exports; candidate accepted 66 and 130 total distinct modules/exports, generated verified complete Core+Component Roots. Real Node Core instantiation called each of 65 and 129 synthetic added exports, respectively. Empty modules, duplicate identity, bad digest and unknown export each reject before output.",
+  "input_tests": "35 JS resource input, workflow, cache tests pass including 130 module and 65 package envelope; previous failure retained.",
+  "output_core_66_sha256": "70c44bb2dad28a092a585ab35694988d172e77a79bc65f44cb6a712857663664",
+  "output_core_130_sha256": "ba7d8cb502fa3134003f7965c900239f9cb6256f157328f326badcf4fdaec86d",
+  "logs_sha256": {
+    "resource-core-count-before-20261029.log": "68e71c40b923aa2fcf4439a23c568dd2d41b244e265af9a5358fbdcd02cfc3b6",
+    "resource-core-count-after-20261029.log": "a6d1f6199579221060577dfa7736d040b7d0a90cac1c5aa9b2c43f4b503dedd6",
+    "resource-core-many-before-20261029.log": "4b6ee2a7e830771234ad35f75fa43ecb784a01368db4d6332ca608a0de806e4b",
+    "resource-core-many-after-20261029.log": "d42400f8eb28a04a99699e5893b90b955fa2d1bba9429c82ea01072d7215c786",
+    "resource-core-130-build-20261029.log": "49c33375d11efdf2981aa47fe509d82e0ce176ebefa678ad94e2d6a261c97acb",
+    "resource-core-many-negative-20261029.log": "f42a4e51a45d009f053efba31b4fdda0dcc6950b440f9030fa1116e8dc45e510",
+    "resource-core-many-call-66-20261029.log": "755ec36a2e5b27ce8666566559a6959bcf66906befc58afa338cc51a4f63374b",
+    "resource-core-many-call-130-20261029.log": "aad14f7d33ae9bf91e4c2b15272264517f75a54ad26a0602a5de9b8fd704a0d4",
+    "resource-core-many-verify-20261029.log": "b41b2cc0962a6280120dbd02694bbd2c7eea7f732fa213c35750d65f6113b5b7",
+    "resource-core-130-verify-20261029.log": "821d614ad22cf97c4e6916204b2dde60bb28650ff9a54d6241564a456867aee9"
+  },
+  "limitations": [
+    "Synthetic independent trivial functions; provider imports stubbed for the extra exports and actual Std operations not re-executed on these changed artifacts",
+    "Synthetic 65-package input shares one fixture root; it is not 65 independently authored packages",
+    "512 graph binding/lifecycle count, 64 physical lanes and other producer limits remain",
+    "Producer source and release candidate not integrated; changed tool source requires new full refresh and release qualification"
+  ]
+}

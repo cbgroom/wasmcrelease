@@ -163,3 +163,31 @@ test('resource Core input manifest and graph accept 16 MiB and reject one byte m
     } finally { await rm(f.root, { recursive: true, force: true }); }
   }
 });
+
+test('resource Core input accepts more than 64 distinct modules', async () => {
+  const f = await fixture();
+  try {
+    const template=f.manifest.packages[0].assembly.modules[0];
+    for (let i=1;i<130;i++) {
+      const artifact=`module-${i}.wasm`;
+      await writeFile(join(f.root,artifact), Buffer.from([0,97,115,109,1,0,0,0]));
+      f.manifest.packages[0].assembly.modules.push({...template,artifact,module:`generic-${i}`});
+    }
+    const result=await resourceCoreInputs(await f.seal(),f.specs,f.payloads,f.producer,readFile);
+    assert.equal(result.get(f.id).assembly.modules.length,130);
+  } finally { await rm(f.root,{recursive:true,force:true}); }
+});
+
+test('resource Core input accepts more than 64 distinct packages', async () => {
+  const f = await fixture();
+  try {
+    for(let i=1;i<65;i++) {
+      const id=`generic-resource-${i}`;
+      f.manifest.packages.push({...structuredClone(f.manifest.packages[0]),id});
+      f.specs.set(id,{...f.specs.get(f.id),id});
+      f.payloads.set(id,f.payloads.get(f.id));
+    }
+    const result=await resourceCoreInputs(await f.seal(),f.specs,f.payloads,f.producer,readFile);
+    assert.equal(result.size,65);
+  } finally { await rm(f.root,{recursive:true,force:true}); }
+});

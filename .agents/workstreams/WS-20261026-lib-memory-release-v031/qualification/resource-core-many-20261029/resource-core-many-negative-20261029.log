@@ -1,0 +1,22 @@
+[
+  {
+    "case": "empty",
+    "exit_code": 1,
+    "message": "error: runtime error: Lib build failed: invalid-input: resource Core requires at least one module"
+  },
+  {
+    "case": "duplicate",
+    "exit_code": 1,
+    "message": "error: runtime error: Lib build failed: invalid-input: duplicate/reserved resource Core module identity"
+  },
+  {
+    "case": "bad-digest",
+    "exit_code": 1,
+    "message": "error: runtime error: Lib build failed: invalid-input: resource Core module digest mismatch"
+  },
+  {
+    "case": "unknown-export",
+    "exit_code": 1,
+    "message": "error: runtime error: Lib build failed: invalid-input: caller Core export missing"
+  }
+]

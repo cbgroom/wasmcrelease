@@ -1,0 +1,48 @@
+✖ resource Core input accepts more than 64 distinct modules (40.269875ms)
+✖ resource Core input accepts more than 64 distinct packages (5.737292ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 0
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 145.392542
+
+✖ failing tests:
+
+test at scripts/test-lib-refresh-resource-core-v2.mjs:167:1
+✖ resource Core input accepts more than 64 distinct modules (40.269875ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(Array.isArray(assembly.modules) && assembly.modules.length > 0 && assembly.modules.length <= 64)
+  
+      at resourceCoreInputs (file:///Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-lib-memory-release-v031/scripts/lib-refresh-resource-core-v2.mjs:47:12)
+      at async TestContext.<anonymous> (file:///Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-lib-memory-release-v031/scripts/test-lib-refresh-resource-core-v2.mjs:176:18)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at scripts/test-lib-refresh-resource-core-v2.mjs:181:1
+✖ resource Core input accepts more than 64 distinct packages (5.737292ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(Array.isArray(manifest.packages) && manifest.packages.length > 0 && manifest.packages.length <= 64)
+  
+      at resourceCoreInputs (file:///Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-lib-memory-release-v031/scripts/lib-refresh-resource-core-v2.mjs:29:10)
+      at async TestContext.<anonymous> (file:///Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-lib-memory-release-v031/scripts/test-lib-refresh-resource-core-v2.mjs:190:18)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

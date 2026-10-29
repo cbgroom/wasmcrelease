@@ -26,7 +26,7 @@ export async function resourceCoreInputs(args, specs, payloads, producerSha, loa
   assert.equal(manifest.schema, 'wasmc.lib-refresh-resource-core-inputs/v1');
   assert.equal(manifest.producer_sha256, producerSha, 'resource Core input producer mismatch');
   assert.match(manifest.source_commit, /^[a-f0-9]{40}$/, 'resource Core source commit required');
-  assert.ok(Array.isArray(manifest.packages) && manifest.packages.length > 0 && manifest.packages.length <= 64);
+  assert.ok(Array.isArray(manifest.packages) && manifest.packages.length > 0);
   for (const entry of manifest.packages) {
     fields(entry, ['id', 'root', 'wit_sha256', 'assembly'], 'resource Core package');
     assert.ok(specs.has(entry.id) && specs.get(entry.id).core_resource, 'undeclared resource Core package ' + entry.id);
@@ -44,7 +44,7 @@ export async function resourceCoreInputs(args, specs, payloads, producerSha, loa
     const { artifact, sha256, ...identity } = assembly.provider;
     assert.deepEqual(identity, spec.core_resource.provider, 'resource Core provider identity mismatch');
     assert.equal(entry.wit_sha256, sha(payloads.get(entry.id)['lib.wit']), 'resource Core WIT mismatch');
-    assert.ok(Array.isArray(assembly.modules) && assembly.modules.length > 0 && assembly.modules.length <= 64);
+    assert.ok(Array.isArray(assembly.modules) && assembly.modules.length > 0);
     assert.equal(new Set(assembly.modules.map(m => m.module)).size, assembly.modules.length, 'duplicate resource Core module');
     const files = {}, paths = new Set();
     let total = 0;

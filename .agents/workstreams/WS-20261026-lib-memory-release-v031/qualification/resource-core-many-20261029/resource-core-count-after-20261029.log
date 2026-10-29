@@ -1,0 +1,43 @@
+✔ writeChanged preserves unchanged source mtimes (19.705417ms)
+✔ writer is exclusive and releases only its own lock (7.432667ms)
+✔ paths and symlinked package files fail closed (2.878583ms)
+✔ sealed cache verifies all files and rejects a wrong input key (46.393084ms)
+✔ tampered SDK source is rejected, not silently rebuilt (19.302459ms)
+✔ extra package files are rejected against sealed inventory (34.839667ms)
+✔ manifest references cannot point to absent files (47.827875ms)
+✔ timeout terminates a child that ignores SIGTERM and saves the reason (1163.6795ms)
+✔ failed command retains stdout, stderr and terminal status (61.661959ms)
+✔ atomic progress replacement never treats partial work as success (6.296875ms)
+✔ generic renamed identities stage exactly the independently pinned input bytes (27.70825ms)
+✔ input manifest requires an independent digest and never infers inputs (14.235709ms)
+✔ producer drift rejects (2.933958ms)
+✔ authored WIT drift rejects (3.447ms)
+✔ module digest drift rejects (3.5025ms)
+✔ provider identity drift rejects (3.315ms)
+✔ graph digest drift rejects (4.638083ms)
+✔ duplicate package rejects (13.281917ms)
+✔ duplicate physical module rejects (3.67525ms)
+✔ unknown package rejects (14.816958ms)
+✔ extra source fields reject (9.317375ms)
+✔ relative root rejects (7.788583ms)
+✔ path traversal rejects (7.256458ms)
+✔ symlink source parent rejects (5.634875ms)
+✔ graph WIT substitution rejects despite a correct new graph digest (7.242041ms)
+✔ pinned refresh receipt revalidates the current resource Core input closure (27.531625ms)
+✔ resource receipt rejects missing manifest locator (13.307458ms)
+✔ resource receipt rejects changed provider bytes after build (16.327708ms)
+✔ resource receipt rejects changed row identity (41.141333ms)
+✔ resource receipt rejects unbound external digest (22.831708ms)
+✔ resource receipt rejects self-rehashed input replacement (7.809ms)
+✔ resource Core input manifest and graph accept 16 MiB and reject one byte more (270.715583ms)
+✔ resource Core input accepts more than 64 distinct modules (105.184834ms)
+✔ resource Core input accepts more than 64 distinct packages (70.067208ms)
+✔ whole runner: miss -> hit -> one delta; failure retains journal; tamper rejects (2849.338375ms)
+ℹ tests 35
+ℹ suites 0
+ℹ pass 35
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3062.908625
