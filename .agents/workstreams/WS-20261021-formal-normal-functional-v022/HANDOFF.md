@@ -59,3 +59,8 @@ Private PR14 SourceReady8d9 carries generic copied-byte correctness and additive
 Publish this START/claim before product edits. Receive only exact artifact/package bytes and sanitized provenance, never private compiler source or raw warning logs containing implementation. Preserve old immutable tags/versioned products, licenses, foreign WIP, installed-consumer and Map-million evidence. Refresh actual claim/source/job facts before each release effect. Build no unchanged compiler, Provider or Lib as a shortcut.
 
 Next: exact candidate inputs and public pipeline admission, generated carrier/CLI/API/install qualification, current final commit CI/Pi and ordered channel promotion, actual GitHub formal release and independent asset/consumer readback. Existing inline/general WAsmC Canonical JSON route remains explicitly unsupported; no network-security work or license-policy change.
+
+
+## Same-owner scoped serial release (2026-10-29)
+
+Owner 01a129c3-6473-7c62-8856-2cb7a6abca28 releases only exclusive scopes `scripts/release-candidate.mjs` and `scripts/ci-suite.mjs` for the successor WS-20261026-lib-memory-release-v031. This workstream remains in-progress and its other claims, jobs, history and evidence remain unchanged. Future writes to these two files from this workstream require fresh coordination. Known GitHub branch checks on the pre-release head were terminal before this change; this does not assert unrelated job termination or v022 formal publication.
