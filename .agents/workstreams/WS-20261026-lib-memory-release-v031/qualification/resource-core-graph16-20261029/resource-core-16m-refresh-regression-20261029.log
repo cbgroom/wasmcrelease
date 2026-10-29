@@ -1,0 +1,48 @@
+✔ generic renamed identities stage exactly the independently pinned input bytes (26.064125ms)
+✔ input manifest requires an independent digest and never infers inputs (5.461417ms)
+✔ producer drift rejects (4.01325ms)
+✔ authored WIT drift rejects (4.405ms)
+✔ module digest drift rejects (5.567834ms)
+✔ provider identity drift rejects (5.453208ms)
+✔ graph digest drift rejects (4.839ms)
+✔ duplicate package rejects (4.839292ms)
+✔ duplicate physical module rejects (3.422291ms)
+✔ unknown package rejects (5.468375ms)
+✔ extra source fields reject (4.079875ms)
+✔ relative root rejects (3.359041ms)
+✔ path traversal rejects (3.342458ms)
+✔ symlink source parent rejects (4.583542ms)
+✔ graph WIT substitution rejects despite a correct new graph digest (3.701625ms)
+✔ pinned refresh receipt revalidates the current resource Core input closure (9.653708ms)
+✔ resource receipt rejects missing manifest locator (7.840167ms)
+✔ resource receipt rejects changed provider bytes after build (8.689666ms)
+✔ resource receipt rejects changed row identity (9.592333ms)
+✔ resource receipt rejects unbound external digest (7.747ms)
+✔ resource receipt rejects self-rehashed input replacement (9.669667ms)
+✔ resource Core input manifest and graph accept 16 MiB and reject one byte more (159.376584ms)
+file:///Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-lib-memory-release-v031/scripts/test-lib-refresh-v2.mjs:14
+  throw new Error('usage: node scripts/test-lib-refresh-v2.mjs --run-root /absolute/refresh/run/root');
+        ^
+
+Error: usage: node scripts/test-lib-refresh-v2.mjs --run-root /absolute/refresh/run/root
+    at file:///Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-lib-memory-release-v031/scripts/test-lib-refresh-v2.mjs:14:9
+    at ModuleJob.run (node:internal/modules/esm/module_job:569:25)
+    at async node:internal/modules/esm/loader:650:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:105:5)
+
+Node.js v26.12.1
+✖ scripts/test-lib-refresh-v2.mjs (94.889417ms)
+ℹ tests 23
+ℹ suites 0
+ℹ pass 22
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 416.601458
+
+✖ failing tests:
+
+test at scripts/test-lib-refresh-v2.mjs:1:1
+✖ scripts/test-lib-refresh-v2.mjs (94.889417ms)
+  'test failed'

@@ -141,3 +141,25 @@ for (const [name, mutate, expected] of [
   try { await mutate(f); await assert.rejects(verifyResourceCoreReceipt(f.repo, f.receipt, readFile), expected); }
   finally { await rm(f.root, { recursive: true, force: true }); }
 });
+
+test('resource Core input manifest and graph accept 16 MiB and reject one byte more', async () => {
+  const limit = 16 * 1024 * 1024;
+  for (const which of ['manifest', 'graph']) {
+    const f = await fixture();
+    try {
+      const path = which === 'manifest' ? join(f.root, 'inputs.json') : join(f.root, 'graph.json');
+      const original = which === 'manifest' ? Buffer.from(JSON.stringify(f.manifest)) : await readFile(path);
+      const padded = Buffer.concat([original, Buffer.alloc(limit - original.length, 0x20)]);
+      await writeFile(path, padded);
+      if (which === 'graph') f.manifest.packages[0].assembly.graph_sha256 = sha(padded);
+      const args = which === 'manifest' ? {resourceCoreInputs:path,resourceCoreInputsSha256:sha(padded)} : await f.seal();
+      const result = await resourceCoreInputs(args, f.specs, f.payloads, f.producer, readFile);
+      assert.equal(result.size, 1);
+      const oversized = Buffer.concat([padded, Buffer.from(' ')]);
+      await writeFile(path, oversized);
+      if (which === 'graph') f.manifest.packages[0].assembly.graph_sha256 = sha(oversized);
+      const tooLarge = which === 'manifest' ? {resourceCoreInputs:path,resourceCoreInputsSha256:sha(oversized)} : await f.seal();
+      await assert.rejects(resourceCoreInputs(tooLarge, f.specs, f.payloads, f.producer, readFile), /budget/);
+    } finally { await rm(f.root, { recursive: true, force: true }); }
+  }
+});

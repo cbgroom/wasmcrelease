@@ -3,6 +3,8 @@ import { lstat, realpath } from 'node:fs/promises';
 import { isAbsolute, join } from 'node:path';
 import { digest, inside, sha } from './lib-refresh-cache-v2.mjs';
 
+const MAX_RESOURCE_CORE_JSON_BYTES = 16 * 1024 * 1024;
+
 const fields = (value, names, label) => {
   assert.ok(value && typeof value === 'object' && !Array.isArray(value), label + ': object required');
   assert.deepEqual(Object.keys(value).sort(), [...names].sort(), label + ': exact fields required');
@@ -17,7 +19,7 @@ export async function resourceCoreInputs(args, specs, payloads, producerSha, loa
   assert.ok(isAbsolute(args.resourceCoreInputs), 'resource Core input path must be absolute');
   pin(args.resourceCoreInputsSha256, 'resource Core input');
   const manifestBytes = await load(args.resourceCoreInputs);
-  assert.ok(manifestBytes.length <= 1048576, 'resource Core input manifest budget');
+  assert.ok(manifestBytes.length <= MAX_RESOURCE_CORE_JSON_BYTES, 'resource Core input manifest budget');
   assert.equal(sha(manifestBytes), args.resourceCoreInputsSha256, 'resource Core input manifest digest mismatch');
   const manifest = JSON.parse(manifestBytes);
   fields(manifest, ['schema', 'producer_sha256', 'source_commit', 'packages'], 'resource Core input manifest');
@@ -61,7 +63,7 @@ export async function resourceCoreInputs(args, specs, payloads, producerSha, loa
       files[path] = bytes;
       return bytes;
     };
-    const graph = JSON.parse(await capture(assembly.graph, assembly.graph_sha256, 1048576));
+    const graph = JSON.parse(await capture(assembly.graph, assembly.graph_sha256, MAX_RESOURCE_CORE_JSON_BYTES));
     assert.equal(graph.schema, 'wasmc.resource-plan-source/v1');
     assert.equal(graph.wit.sha256, entry.wit_sha256, 'resource Core graph WIT mismatch');
     for (const module of assembly.modules) {

@@ -1,0 +1,41 @@
+{
+  "schema": "wasmc.resource-core-input-json-16m/v1",
+  "status": "release tool branch fix plus isolated private producer candidate; not admitted or released",
+  "input_limit": 16777216,
+  "refresh_tool_change": "Manifest and resource graph per-file limits raised from 1 MiB to 16 MiB; digest, exact schema, source and WIT checks unchanged.",
+  "producer_private_patch_sha256": "ede8c0bc7a28fbb72e955d91895aa5f3e058017251b3b160f94bf555e30b2d69",
+  "producer_candidate_sha256": "849293ed44c7af972b3130758d211bf6f28dd555593c62fd2869d12e5b9f2e30",
+  "producer_build_log_sha256": "2f4a4457bf7621f3bc4aa43870c2853e54785058e1483c743901850037cbbfc9",
+  "producer_private_patch_location": "/Users/youxianshi/.local/state/wasmc-maintenance/rustc-service-1991-20261028/resource-core-graph16-producer-20261029.patch",
+  "boundary_method": "Actual Std graph JSON padded with whitespace to exactly 16 MiB, without changing semantics, in an isolated copy of the Q0 workspace; same input and exact digest used for both producers.",
+  "graph_sha256": "0a66af775f4441a2026ca4f1e6f8b1e1cf49019c9892177d2bff8661bf62f42a",
+  "results": [
+    "Old producer rejects 16 MiB graph at 1 MiB; candidate accepts and produces verified Std Root",
+    "Candidate producer rejects 16 MiB + 1 byte graph",
+    "JS input-envelope tests accept exact 16 MiB and reject +1 for both manifest and graph",
+    "33 resource input, workflow and cache tests pass; original failed tests retained"
+  ],
+  "output": {
+    "core_sha256": "f9eb082ac6bfeb0434453aef185341d5d809d0465f32ee6a7cefe89ae8457f69",
+    "component_sha256": "68981327afe1ded590c151f0ea3294bde809d85df89dd10f2253cfb4b010001d",
+    "abi_sha256": "9195687714ea9c769dcbb62dc3b297ca880f3668bf9b532728a83c65b0afd5dd",
+    "manifest_sha256": "219072cb92f2ecf5e9af3673c1b6860bed308f6ad6c01ac7d90a5e9d24ea6488",
+    "functions": 73
+  },
+  "logs_sha256": {
+    "resource-core-16m-before-20261029.log": "c9baa36b6ebea82243a51c6d471ccbf6c0302fdc5d49edaafb9d0fe63307c0fc",
+    "resource-core-16m-after-20261029.log": "0a08a8684750f3202aea4a903d880171e0e4b782308fc7a3ee223fd883abf424",
+    "resource-core-16m-refresh-regression-20261029.log": "9fc4bac55afe3e9bbb576c5d0004711647f86d99ebbd8bbb6dc277affb7fcb1b",
+    "resource-core-16m-refresh-regression-v2-20261029.log": "276a18fb841c3df31f848ca2efa7210b677da700086c06abcb6e4e5d3ce9c1ca",
+    "resource-core-graph16-old-build-20261029.log": "eb1e0ad98fc9b833842ad86ff6a9d895f8cb9646a5bee28032d9d260704a90ea",
+    "resource-core-graph16-new-build-20261029.log": "b642aa1876613e5062823d69a0ecb1526f38e37cebac01ea556d877ec168e4ba",
+    "resource-core-graph16-plus-one-20261029.log": "70c9ccd3f0e2c401f6448c65bbd6f5d9b8927f47ec52eb5e0b739d9e2b2463fe",
+    "resource-core-graph16-verify-20261029.log": "5475d22bdbc9fc172924aa98a1d586842fed342e092b7d30ff54af84a32f3823"
+  },
+  "limitations": [
+    "Padding verifies byte handling, not a 16 MiB graph with distinct semantic nodes",
+    "Producer source patch is isolated and not admitted; changed refresh tool invalidates previous exact Q0 source fingerprints and requires a new qualified refresh before release",
+    "Existing 64 module/export limits and other producer limits remain separately unresolved",
+    "Output is a nonlicensed build fixture, not installed product or publication"
+  ]
+}
