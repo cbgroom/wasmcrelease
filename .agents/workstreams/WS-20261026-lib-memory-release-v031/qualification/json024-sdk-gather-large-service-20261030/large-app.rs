@@ -1,0 +1,1 @@
+#[unsafe(no_mangle)] pub extern "C" fn run_large(n:u32)->u32 { let input=format!("\"{}雪\"", "x".repeat(n as usize)); let value=wasmc::json::document::compact(&input).unwrap(); assert_eq!(value,input); value.len() as u32 }

@@ -1,0 +1,42 @@
+{
+  "status": "SCOPED_SERVICE_COMPARISON_NOT_RELEASE",
+  "core_sha256": "08d0d60134228dabbfc467429b2e54c97910d9d1d8e0a3f49f11228668b11384",
+  "baseline_manifest_sha256": "8b2c659b8b28327a6945f08f1168e07d4526ed8a1705cadc05b9f544eab6c284",
+  "candidate_manifest_sha256": "ae5292263fd278c8bae6f27dce456dfb4a5566613c07688b051c66b7fae929da",
+  "baseline_guest_sha256": "fafd061aeb9567f09e643a6615cc2b5a6e68382a7d19ff76fda9134c187d37c3",
+  "candidate_guest_sha256": "fa92a869bfe54f2728cdd2fb1f0713324c7545d72c6691d3a3a72b18e0dc4135",
+  "candidate_source_patch_sha256": "bbbc6274653b6ccd545a3182842caeb41be54f0bf074ac682abeac63d166b688",
+  "service_fixture": "isolated exact-main-based temporary McpGitService + candidate Core Lib call plan and test-only glue; default unbounded CoreDomainRuntime, separate guest/provider stores",
+  "scenario": "same application source and identical JSON Core; host supplies lengths 0,7,8,9,1050000,16, Guest constructs JSON strings with UTF8 suffix, invokes generated SDK compact, checks complete output; also 26 API cases",
+  "results": "baseline and generated candidate each pass on Wasmi and Wasmtime, including small input after large; one 1050005-byte result each per engine",
+  "elapsed_ms_single_samples": {
+    "baseline": {
+      "Wasmi": 15534,
+      "Wasmtime": 6870
+    },
+    "candidate": {
+      "Wasmi": 2961,
+      "Wasmtime": 483
+    }
+  },
+  "timing_limits": "single diagnostic run per engine, different SDK source and associated guest/manifest, no CPU controls, throughput distribution, fuel, upper-bound or production performance claim",
+  "limits": [
+    "input bytes generated inside Guest from host-provided lengths, not an external JSON payload",
+    "unbounded runtime and separately owned stores; no overall memory, concurrency or exhaustion proof",
+    "no live Hosted or production route; candidate not source-integrated",
+    "same-version optimized Root is a laboratory artifact and must not overwrite public identity",
+    "no formal release"
+  ],
+  "log_sha256": {
+    "large-baseline-service.log": "c3010f5c7d1ecc6cf3ba59197bc2e3a53dd2bffb45ee0c649ab74b1296d300b6",
+    "large-candidate-service.log": "b73c05fc746612b7993e41b95cf0f4f5d1a93c488749b014fa9513c7decb819b"
+  },
+  "build_log_sha256": {
+    "baseline-build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "candidate-build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "test_glue_sha256": {
+    "activation": "5757d02f0703b337241b3af41e2990a5b587140fb160ad38c5fc6d0b4f5bd60a",
+    "adapter": "cee088fdf149c2f9f88584baf4ef167692bc2af761ca16737a89ea5903f80975"
+  }
+}
