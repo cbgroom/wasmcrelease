@@ -1,0 +1,18 @@
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+import {CoreCaller, string, list, u8, result, record, bool, u64} from '../../../../../scripts/current-core-value-codec-v3.mjs';
+const root=process.argv[2];
+const artifact=readFileSync(`${root}/artifact.wasm`), abi=JSON.parse(readFileSync(`${root}/core-abi.json`));
+const sha=createHash('sha256').update(artifact).digest('hex');
+assert.equal(sha,'2721005c4f1c91cb058fa3dde601071cb828ff50e4c7b998468db16b54ea7e4e');
+assert.equal(abi.artifact_sha256,sha);
+const caller=new CoreCaller(new WebAssembly.Module(artifact),abi);
+const errors=['invalid-json','invalid-pointer','missing-target','type-mismatch','invalid-index','out-of-range','invalid-operation','allocation-failed'];
+const bytes=s=>Array.from(Buffer.from(s));
+const compact=s=>caller.call('compact-bytes',[list(u8)],[bytes(s)],result(string,errors));
+for(const input of ['{"x":1e400,"x":1}','{"x":"\\ud800","x":1}','{"x":{"a":1e400},"x":1}']) assert.equal(compact(input).tag,'err',input);
+assert.deepEqual(JSON.parse(compact('{"x":1,"x":7}').value),{x:7});
+const got=caller.call('read-u64',[list(u8),string],[bytes('{"x":7}'),'/x'],result(record({present:bool,value:u64}),errors));
+assert.deepEqual(got,{tag:'ok',value:{present:true,value:7n}});
+console.log(JSON.stringify({result:'PASS',artifact_sha256:sha,invalid_duplicate_cases:3,last_key_wins:true,same_instance_recovery:true}));

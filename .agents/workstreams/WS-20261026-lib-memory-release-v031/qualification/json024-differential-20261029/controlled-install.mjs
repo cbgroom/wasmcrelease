@@ -1,0 +1,23 @@
+import assert from 'node:assert/strict';
+import {readFile,writeFile,mkdir} from 'node:fs/promises';
+import {readFileSync} from 'node:fs';
+import {join,resolve} from 'node:path';
+import {inventory,sha,digest} from '../../../../../scripts/lib-refresh-cache-v2.mjs';
+import {resolveCurrentPackage} from '../../../../../scripts/current-lib-release-v3.mjs';
+import {installCurrentLib} from '../../../../../scripts/lib-install.mjs';
+const [root,oldCatalogPath,oldSpecPath,out]=process.argv.slice(2).map(p=>resolve(p));
+const old=JSON.parse(await readFile(oldCatalogPath)),manifest=JSON.parse(await readFile(join(root,'lib.json'))),files=await inventory(root);
+const oldRow=old.packages.find(x=>x.id==='wasmc-json'),prefix='current-libs/wasmc-json/0.2.4';
+const oldSpec=JSON.parse(await readFile(oldSpecPath));assert.equal(oldSpec.version,'0.2.3');oldSpec.version='0.2.4';
+const spec=Buffer.from(JSON.stringify(oldSpec,null,2)+'\n'),wit=await readFile(join(root,'lib.wit'));
+const pin=(name,b)=>({path:'libspec/wasmc-json/'+name,bytes:b.length,sha256:sha(b)});
+const row={...oldRow,version:'0.2.4',root:prefix,manifest_sha256:files['lib.json'].sha256,root_inventory_sha256:digest(files),wit_sha256:files['lib.wit'].sha256,source:{spec:pin('lib.json',spec),wit:pin('lib.wit',wit)},views:Object.keys(manifest.bindings).sort(),delivery:{kind:'wasm-core-component',artifact:{path:manifest.artifact.path,bytes:manifest.artifact.bytes,sha256:manifest.artifact.sha256},component:{path:manifest.component.path,bytes:manifest.component.bytes,sha256:manifest.component.sha256},native_status:null,device_qualified:false},files:Object.entries(files).map(([path,p])=>({path:prefix+'/'+path,...p})).sort((a,b)=>a.path<b.path?-1:a.path>b.path?1:0)};
+const catalog={...old,package_authority_commit:'0'.repeat(40),packages:[row]},bytes=Buffer.from(JSON.stringify(catalog)),catalogSha=sha(bytes);
+const read=p=>{assert.ok(p.startsWith(prefix+'/'));return readFileSync(join(root,p.slice(prefix.length+1)));};
+const lock=resolveCurrentPackage(bytes,catalogSha,row,read),lockBytes=Buffer.from(JSON.stringify(lock));
+const mirror='https://raw.githubusercontent.com/cbgroom/wasmcrelease/'+catalog.package_authority_commit+'/';
+const fetcher=async url=>{assert.ok(url.startsWith(mirror));return new Response(read(url.slice(mirror.length).split('/').map(decodeURIComponent).join('/')),{status:200});};
+await mkdir(out);const dest=join(out,'installed');const receipt=await installCurrentLib({catalogBytes:bytes,catalogSha256:catalogSha,lockBytes,lockSha256:sha(lockBytes),destination:dest,mirror:'github'},fetcher);
+for(const f of row.files){const b=await readFile(join(dest,f.path));assert.equal(b.length,f.bytes);assert.equal(sha(b),f.sha256);}
+await writeFile(join(out,'catalog.json'),bytes,{flag:'wx'});await writeFile(join(out,'lock.json'),lockBytes,{flag:'wx'});await writeFile(join(out,'source-spec.json'),spec,{flag:'wx'});
+console.log(JSON.stringify({status:'PASS_SCOPED',catalog_sha256:catalogSha,manifest_sha256:row.manifest_sha256,root_inventory_sha256:row.root_inventory_sha256,files:receipt.files_verified,transport:'synthetic catalog and controlled local bytes',formal_release:false}));
