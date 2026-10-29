@@ -1,0 +1,28 @@
+{
+  "status": "ISOLATED_LOW_MEMORY_CONTROL_PASS_NOT_RELEASE",
+  "private_patch_sha256": "ae5a2e3e2a32966fb74f9512c8f639050dad7045d6e725945a6cd3569f763263",
+  "app_sha256": "2cb1317fc8db26db2a85b2466d7f3d8511bc6e57520d410280d5ba680af8da1e",
+  "same_app_as_sufficient_memory": true,
+  "input_sha256": "eab29265810b9e5280c29f4ef4b5efdb7fe05f3ce1cd3c61a2d2e13b39fcbd51",
+  "input_bytes": 16777217,
+  "memory_limit_per_wasm_memory": 33554432,
+  "fuel_budget": 80000000000,
+  "failure_status": 256,
+  "table_state": "4 prior commits and 8 rows remain; no new transaction before failed request",
+  "same_instance_recovery": "fresh small denied request succeeds; all three pending counters zero after failure and recovery",
+  "first_attempt": "existing test asserted success and returned failure when observing status 256; retained before adding explicit negative expectation",
+  "limitations": [
+    "mock Table Host and isolated source patch, not live MCPGit or release",
+    "limit is per Wasm linear memory, excludes aggregate of memories, native Host heap and request buffers",
+    "one controlled failure, no exhaustive OOM, engine parity or overall budget guarantee"
+  ],
+  "full_private_log_sha256": {
+    "first": "b720e7bbd38043611263fa1b1a75df10fc14a961043d85d6f8310f7c6f0175f3",
+    "qualified": "df1b93561a007816cb1b17de270c982cd198be1cc16f87d98a86b5242783e3c6"
+  },
+  "files": {
+    "first-control.log": "15cc2a2f782ddc8ed6ab98948106df653262cd8ff2da3936429e7e9afcf03c85",
+    "low-memory-receipt.json": "afc9df94dd1c3343c1f5878bec24cbb2e855986fb6c80777124283083bfc60db",
+    "qualified-control.log": "9a698983108e77010da3e60b710b6166cd6e5ad8ff07c0eb032c32ccf0146a50"
+  }
+}
