@@ -1,0 +1,22 @@
+15 | for(const row of [profile.compiler,profile.facade,...Object.values(profile.entry),...Object.values(profile.operations),profile.libCore,profile.libWit,profile.template,...Object.values(profile.prepared),profile.producer.raw_transfer,profile.producer.transfer_source])check(row);
+16 | for(const key of ['domain','root','entry_operation_selection','operation_selection','cold_transfer'])assert.deepEqual(profile[key],activation[key]);
+17 | assert.equal(profile.prepared.transfer.sha256,profile.cold_transfer.sha256);assert.equal(profile.producer.transfer_source.sha256,profile.cold_transfer.source_sha256);
+18 | const input=source=>({...{source,entry:tuple('entry'),operations:tuple('operations'),libCore:read(kit+'root/artifact.wasm'),libWit:read(kit+'root/lib.wit'),template:read(fixture+'canonical-template.json')},activation:Buffer.from(JSON.stringify({...activation,source_sha256:hash(Buffer.from(source))}))});
+19 | const compiler=await createCanonicalHostCompiler(bytes);let frames=0;
+20 | const checkFrame=r=>{assert.equal(hash(r.frame),proof.frame_sha256);assert.equal(r.modules.size,8);for(const row of proof.modules)assert.equal(hash(r.modules.get(row.path)),row.sha256,row.path);frames++;};
+                                 ^
+AssertionError: Expected values to be strictly equal:
++ actual - expected
+
++ '38c0a3a77b69f11135edd4a559aac7173abb77bf25de8d9f8638c3c1e893bf0d'
+- 'eb5e61240e5d4c3119f8c9ad3f047bae0f7bd8a407c9c32de9a3eedba2f1b98b'
+
+ generatedMessage: true,
+     actual: "38c0a3a77b69f11135edd4a559aac7173abb77bf25de8d9f8638c3c1e893bf0d",
+   expected: "eb5e61240e5d4c3119f8c9ad3f047bae0f7bd8a407c9c32de9a3eedba2f1b98b",
+   operator: "strictEqual",
+       code: "ERR_ASSERTION"
+
+      at checkFrame (/Users/youxianshi/.local/state/wasmc-maintenance/rustc-service-1991-20261028/v031-checked-2172-oISXqH/scripts/test-canonical-checked-results-v031.mjs:20:29)
+
+Bun v1.3.14 (macOS arm64)

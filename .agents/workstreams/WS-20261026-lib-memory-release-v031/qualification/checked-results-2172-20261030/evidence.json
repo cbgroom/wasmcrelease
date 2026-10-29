@@ -1,0 +1,29 @@
+{
+  "status": "SCOPED_CANDIDATE_NOT_RELEASE",
+  "compiler_sha256": "2172f1821a6cac9c78158806b918fd013069a9b79a11fa34ed1fcc1708ff5164",
+  "frame_sha256": "38c0a3a77b69f11135edd4a559aac7173abb77bf25de8d9f8638c3c1e893bf0d",
+  "app_sha256": "b45367beb69ef5e50ec89c91ead9c99bfc6f2ea4d192e8455ce5ee4350ac6463",
+  "modules": 8,
+  "source": "6fcfe8d86b19b491919b96b9bade8d8556477671 is the current workstream; compiler build is earlier candidate and must be rebound to integrated source",
+  "execution": "Node and Deno 800 same-instance Guest calls each; Bun frame-only due to multi-memory",
+  "limitations": [
+    "not native producer frame parity",
+    "not source integration or source-build custody",
+    "not live Host",
+    "not checked-chunk admission",
+    "not formal release"
+  ],
+  "retained_failures": [
+    "initial isolated stage omitted current/lib_core.wasm; copied exact provider from fixture input-10",
+    "node.log, bun.log, deno.log preserve frame mismatch caused by raw versus canonical activation serialization"
+  ],
+  "logs": {
+    "node.log": "a94f11c31d7d86cbd69966a119540ddbf4d2eb0dacac869d4d6675be97c7b265",
+    "merge.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "deno.log": "e796bd286a6c12c45b629b811fef98b642bea0e65df80b8ef00744785ef9159d",
+    "deno-v3.log": "613afe06ef3ebda37138436cd33635e9ae57e9cb7bfa9db37f0a6dc9d30f77ba",
+    "bun.log": "124c3252844acafcf9c95f8a2b23dd519f6404beabe7b40cf1c9272d6815a351",
+    "bun-v3.log": "6f1a1dbd2ad267bebaba4717d3904de99763b83e05ce5d2deb73d2f824e036f5",
+    "node-v3.log": "9d7c5b686ec1101145babb9a17cbc191ea06293536fcf1b2808b34e425ad6326"
+  }
+}
