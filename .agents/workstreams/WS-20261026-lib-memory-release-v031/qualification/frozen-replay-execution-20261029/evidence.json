@@ -1,0 +1,19 @@
+{
+  "schema": "wasmc.frozen-replay-runtime-evidence/v1",
+  "artifact_sha256": "9bc7ee1d06e56e61635ba7cf2e00c27f52bec01eba3b881f141af6d3591aa057",
+  "artifact_source": "explicit replay API output from canonical-host-frozen-replay-20261029.json; exact byte match frozen v0.0.28 receipt",
+  "test": "Node 25 and Deno run same exact artifact in separate instances. Each instance handles malformed JSON, denied request, missing value, and two allowed requests with distinct inputs; response statuses and bodies and callback counts asserted, three pending counters zero after each call. Table transact callback always returns success and does not inspect payload or write external state.",
+  "first_failure": "test expected missing-value response body null, actual empty string; corrected to match frozen source and preserved failing log",
+  "limitations": [
+    "not a real TableGit or deployed route transaction",
+    "does not integrate replay API into activation",
+    "does not prove new compiler regenerates frozen byte-identical modules",
+    "formal Source integration, CI and release remain open"
+  ],
+  "files_sha256": {
+    "frozen-replay-execution-20261029.mjs": "8095eac6c79dd514ff1b3f261487d68ea254e8364e9a8a682e99bb875e7aee58",
+    "frozen-replay-execution-deno-v2-20261029.log": "0a813cfa5a2f85ccb50f37e599b0fdf1025f6a4036d93db8fdcda66437d3eee5",
+    "frozen-replay-execution-node-v1-20261029.log": "d90a7a74cd98ec053289b1d6f85bacf0436dc797dacd7015908741a7476fccc3",
+    "frozen-replay-execution-node-v2-20261029.log": "26f2d186a021f405298d3cf3294d5ca03c21ad1b00259e78f35276a74ffac15e"
+  }
+}
