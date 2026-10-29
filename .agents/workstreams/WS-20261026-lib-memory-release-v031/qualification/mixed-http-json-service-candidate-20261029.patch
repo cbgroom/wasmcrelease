@@ -1,0 +1,119 @@
+--- a/tests/core_lib_activation.rs
++++ b/tests/core_lib_activation.rs
+@@ -470,0 +471,11 @@
++    let bad = loader
++        .load(&CoreLibActivationPin {
++            activation_id: ACTIVATION_ID.into(),
++            source_revision: revision.clone(),
++            activation_row_version: 2,
++        })
++        .await;
++    ensure!(
++        bad.is_err(),
++        "stale Core Lib activation row version accepted"
++    );
+@@ -496 +507,7 @@
+-            route_provider,
++            route_provider.clone(),
++        )?;
++        let http_guest = include_bytes!(
++            "../crates/mcpgit-executable-runtime/tests/fixtures/mixed-http-json-20261029/guest-with-table.wasm"
++        );
++        mcpgit_executable_runtime::route_wasm_executor::test_service_selected_json_http(
++            &prepared, http_guest, route_provider,
+--- a/crates/mcpgit-executable-runtime/src/route_wasm_executor.rs
++++ b/crates/mcpgit-executable-runtime/src/route_wasm_executor.rs
+@@ -5225 +5225 @@
+-#[cfg(test)]
++#[cfg(any(test, feature = "test-support"))]
+@@ -5511 +5511 @@
+-#[cfg(test)]
++#[cfg(any(test, feature = "test-support"))]
+@@ -5872,0 +5873,87 @@
++}
++
++/// Explicit integration witness. The caller must obtain this provider from
++/// Service activation; this does not perform route admission or publication.
++#[cfg(feature = "test-support")]
++pub fn test_service_selected_json_http(
++    provider: &crate::core_lib::PreparedCoreLib,
++    wasm: &[u8],
++    table_provider: Arc<dyn TableMutationProvider>,
++) -> Result<()> {
++    let runtime = Arc::new(CoreDomainRuntime::default());
++    let module = prepare_mixed_route_fixture(&runtime, wasm, provider.clone())?;
++    let engine = Engine::default();
++    let request = |body: &'static [u8]| EncodedHttpRequestEnvelope {
++        prefix: Bytes::new(),
++        body: Bytes::new(),
++        canonical: Some(CanonicalHttpRequest {
++            method: "POST".into(),
++            path: "/json".into(),
++            parameters: Vec::new(),
++            query: Vec::new(),
++            headers: Vec::new(),
++            body: Bytes::from_static(body),
++        }),
++    };
++    let limits = HttpRouteLimits::bounded_default();
++    let invoke = |body| {
++        execute_http_module_with_query(
++            &engine,
++            &module,
++            HttpInvocationInput {
++                query_pool: empty_query_pool("service-mixed-http", 1)?,
++                table_mutations: Some(table_provider.clone()),
++                request_envelope: request(body),
++                binary_stage: None,
++                derived_head: false,
++            },
++            &limits,
++            HttpExecutionControl {
++                blocking_dispatch_us: 0,
++            },
++        )
++    };
++    let first = invoke(br#"{ "source": 11 }"#)?;
++    ensure!(
++        first.response.status == 200 && first.response.body == br#"{"source":11}"#,
++        "first HTTP JSON response mismatch"
++    );
++    let CachedModuleKind::Core { artifact, .. } = &module.kind;
++    let status = artifact.wait_for_optimization(Duration::from_secs(30));
++    if status.state == crate::core_runtime::CoreDomainState::Candidate {
++        ensure!(
++            artifact.publish_optimization(true, true, u64::MAX, 0)?,
++            "HTTP optimization promotion failed"
++        );
++    }
++    ensure!(
++        artifact.status().state == crate::core_runtime::CoreDomainState::Ready,
++        "HTTP optimization unavailable"
++    );
++    ensure!(
++        first.query.handles_released == 1 && first.query.live_handles_after_run == 0,
++        "HTTP Table handle leak"
++    );
++    let second = invoke(br#"[ 9, 8 ]"#)?;
++    ensure!(
++        second.response.status == 200 && second.response.body == b"[9,8]",
++        "second HTTP JSON response mismatch"
++    );
++    ensure!(
++        second.query.handles_released == 1 && second.query.live_handles_after_run == 0,
++        "optimized HTTP Table handle leak"
++    );
++    let bad = invoke(b"{")?;
++    ensure!(
++        bad.response.status == 400 && bad.response.body == b"invalid json",
++        "HTTP invalid input result mismatch"
++    );
++    let recovery = invoke(br#"{ "ok": true }"#)?;
++    ensure!(
++        recovery.response.status == 200 && recovery.response.body == br#"{"ok":true}"#,
++        "HTTP JSON recovery mismatch"
++    );
++    println!(
++        "SERVICE_SELECTED_JSON_HTTP_TABLE_OK distinct_inputs=3 invalid_recovery=true baseline_and_optimized=true handles=0"
++    );
++    Ok(())

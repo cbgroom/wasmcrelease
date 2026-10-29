@@ -1,0 +1,33 @@
+{
+  "schema": "mcpgit.mixed-http-json-service-candidate/v1",
+  "status": "temporary real Service, in-process HTTP executor; production route and deployment not integrated",
+  "baseline": "eb8683ac archive with selected 7797450d source overlays and private WAsmC SDK; not an exact 779 tree",
+  "requires": [
+    "core-runtime-shared-memory-budget-v2 and prerequisites",
+    "mcpgit-json-shared-memory-host-v2-20261029.patch",
+    "hosted-json-import-boundary-20261029.patch",
+    "hosted-mixed-import-plan-candidate-20261029.patch",
+    "mixed-http-json-executor-candidate-20261029.patch and guest fixture"
+  ],
+  "patch_sha256": "e63bf6d821824b30c96e07cdebc45a0c66223b333ed4efe27bfd64f48c7a4641",
+  "fixture_install": "copy mixed-http-json-table-guest-20261029.rs and .wasm to crates/mcpgit-executable-runtime/tests/fixtures/mixed-http-json-20261029/guest-with-table.rs and guest-with-table.wasm",
+  "guest_source_sha256": "c4903ac12baf20194ea665cd0235a8511dff381624732a98e2c2c83aa1f55ee8",
+  "guest_wasm_sha256": "bcb3994c824b72fd0a97ba9b065244ff272fb5d8ae5dba889a597d78cc4eee1f",
+  "evidence": "Temporary real McpGitService stores and activates the exact JSON Root; stale activation row version rejected, correct revision/version loaded through CoreLibActivationLoader. The selected provider and actual TableGitRouteMutationProvider are passed to the in-process HTTP executor. Same Rust 2024 Guest processes three different valid request bodies, rejects invalid JSON with 400 and recovers; each request invokes table.status and releases its response handle. Baseline and optimized runtime executions pass. Existing 26-operation JSON and budget controls also pass. Full Core Lib activation suite: 4 passed, 1 ignored; branch non-budgeted test passed after shared-target use.",
+  "patch_check": "prerequisite patches applied to reconstructed exact selected 779 files; incremental patch applies and all affected files byte-match private candidate",
+  "retained_failure": "initial script aborted before test edit and its own compile stopped; first table-guest test failed compilation from missing third function argument, fixed before passing run",
+  "limitations": [
+    "No Hosted dispatcher, route publication, automatic Lib route selection, capability validation or cache identity tested",
+    "Temporary Service and manually injected selected provider, not production instance or deployment",
+    "Only shared linear Wasm memory; host heap, provider fuel, deadline and cancellation remain outside shared budget",
+    "Source integration, formal release and anonymous download remain open"
+  ],
+  "logs_sha256": {
+    "mixed-http-service-activation-v1-20261029.log": "6a2739c0a6997c4e0abc132a5ea21677f8bc757134a1db385e086b978c3af084",
+    "mixed-http-service-activation-v2-20261029.log": "52fb82f86917d5dceaf3d52620e3732aacc038f952617764daf5171360dfb6ff",
+    "mixed-http-service-table-v1-20261029.log": "16ad0705e48629584464a8a77969b2447be63b7e51ba34b0cdb4fea29e6c1b39",
+    "mixed-http-service-table-v2-20261029.log": "0318d52692df61be762410f08c6e99c7aae7aa64d4044199a0d6b0c3b2fec231",
+    "mixed-http-service-table-suite-20261029.log": "6440ac94ec548e3431f56b5d0c580b7d49476a74c3d02e7ae2ec179af0afbb38",
+    "mixed-http-service-branch-readback-20261029.log": "6ea963502c4fc3a8aa8c12001931af4f9413da7d81e0966bd6fb8972055f1236"
+  }
+}
