@@ -1,0 +1,31 @@
+{
+  "schema": "wasmc.json-million-ordinary-q2/v1",
+  "status": "candidate qualification, not official release",
+  "source_sha256": "7d853d36858d67a256681a6972df6f1cedb6c3bd04cbcfd9b5713e1342e640f6",
+  "case_sha256": "60ee41e1469a046224451ca735040ce37c619bc9b1a02158033f9047ba6d6eb9",
+  "root_manifest_sha256": "a40499304c4078c8034473e552730cd460556c81d8679b8afe040cf2407f7397",
+  "root_core_sha256": "007eac4dbfe32f53462f866a66e6bb191fec13c01ac7d90baf2572b27ec22722",
+  "candidate_corelib_sha256": "8231aba425ef1bb0aa07a760ff4c77917e247382ef73a41408db6b6b1cb40b1e",
+  "runner_sha256": "123616b63ac1def1166cd117bf43128635eab2de401a061433fdd9455d2862c6",
+  "producer_candidate_sha256": "9bdb049a6da5479537271d37a37f93c379c0b9dfc1ba35e33da065073abbe0c5",
+  "result": "Ordinary WAsmC creates one million JSON number strings, sends the list through the exact candidate JSON Lib, and returns the complete JSON array. Wasmi 2.0.0 and Wasmtime 49.0.2 each returned 11000001 bytes with exact independent expected content. The actual Q2 pipeline separately reran both engines and parsed the complete over-22-MiB dual-engine receipt.",
+  "result_sha256": "744faa9a192c6dd85e6ad6c3cdafb1487384751ce26be1d529547daa489757a9",
+  "timing": "One local optimized direct test real 45.35 seconds, not a capacity or performance ceiling.",
+  "scope": [
+    "Fresh Store per invocation; no long-lived reuse, production Hosted, Component or shared total-memory accounting.",
+    "Q0 Root is from earlier refresh; exact manifest and Core identities are pinned and have not been formally released with this candidate.",
+    "No Source integration or formal release."
+  ],
+  "files_sha256": {
+    "pipeline.json.gz": "e9e38d377da8e4a2811d674bdf811348ee5a667512882ff52c79fba248d21e29",
+    "oracle.json": "747a85d6e4acae8f41c46ba9f1d04867711bc8a0c6d56797cca2439027393566",
+    "generate-cases.py": "df8fc406e39ef46286a65ab2fca237bed6832923e017ae93d936623332d4668a",
+    "source.wasmc": "7d853d36858d67a256681a6972df6f1cedb6c3bd04cbcfd9b5713e1342e640f6",
+    "time.log": "cfee4d7f0c6f9687141f5797f1819b038585a9b5d825ade74885d83076ed74c1"
+  },
+  "local_logs_sha256": {
+    "native-json-million-dual-20261029.log": "aa57ffb8c9646bb6e18f28971b831703f6556c91f4dd3cd8eea9db7080574aef",
+    "native-json-million-dual-time-20261029.log": "cfee4d7f0c6f9687141f5797f1819b038585a9b5d825ade74885d83076ed74c1",
+    "native-json-million-q2-pipeline-20261029.log": "9610ee7c9ca055338eafd4af8e1e343a4bd892e72dbbe980dd424ee1150d8708"
+  }
+}
