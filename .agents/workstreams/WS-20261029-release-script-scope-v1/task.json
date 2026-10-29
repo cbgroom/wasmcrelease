@@ -11,21 +11,6 @@
       "kind": "file",
       "scope": ".agents/workstreams/WS-20261029-release-script-scope-v1",
       "mode": "exclusive"
-    },
-    {
-      "kind": "file",
-      "scope": "scripts/ci-suite.mjs",
-      "mode": "exclusive"
-    },
-    {
-      "kind": "file",
-      "scope": "scripts/test-release-channel.mjs",
-      "mode": "exclusive"
-    },
-    {
-      "kind": "file",
-      "scope": "scripts/test-current-compiler-byte-boundary-v031.mjs",
-      "mode": "exclusive"
     }
   ],
   "source_releases": {
@@ -47,5 +32,14 @@
     "scope": "scripts/release-candidate.mjs",
     "to": "WS-20261026-lib-memory-release-v031",
     "status": "released by same owner; remaining carrier files and candidate patch retained"
+  },
+  "serial_release_carrier": {
+    "scopes": [
+      "scripts/ci-suite.mjs",
+      "scripts/test-current-compiler-byte-boundary-v031.mjs",
+      "scripts/test-release-channel.mjs"
+    ],
+    "to": "WS-20261026-lib-memory-release-v031",
+    "status": "same-owner released for integration"
   }
 }
