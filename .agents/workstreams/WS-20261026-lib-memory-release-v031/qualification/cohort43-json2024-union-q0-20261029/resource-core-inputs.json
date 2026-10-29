@@ -1,0 +1,37 @@
+{
+  "schema": "wasmc.lib-refresh-resource-core-inputs/v1",
+  "producer_sha256": "45e229a3201de33ef0e4e362b6b2ea7abe45f2097913c5f8c22b1992fa50fc59",
+  "source_commit": "9b0e533a89df295be761c40f5a08c3998065e164",
+  "packages": [
+    {
+      "id": "wasmc-std",
+      "root": "/Users/youxianshi/.local/state/wasmc-maintenance/20261026-lib-memory-json-32/json021-ci-assembled-product-actual-inventory-20261027/.agents/workstreams/WS-20261026-lib-memory-release-v031/candidate-sources/wasmc-std/1.5.2",
+      "wit_sha256": "ffc3dfdce7da92df33118f0af5d4cb819228a0b4f4420743610f6031f64029e9",
+      "assembly": {
+        "target_profile": "portable-v0",
+        "graph": "graph.json",
+        "graph_sha256": "e29be39d63ded94fd6ce60a731284092028780c21fc7e680f04072216cc678ae",
+        "modules": [
+          {
+            "module": "std-composite",
+            "artifact": "composite.wasm",
+            "sha256": "52466d3a82fde687001094e70922da28d900e74b6d8f9dee42b6eecebee4d464"
+          }
+        ],
+        "exports": [
+          {
+            "module": "std-composite",
+            "name": "std_init"
+          }
+        ],
+        "provider": {
+          "artifact": "provider.wasm",
+          "module": "wasmc:lib/wasmc.lib_managed_object_heap@4.9.0",
+          "id": "wasmc.lib_managed_object_heap",
+          "version": "4.9.0",
+          "sha256": "8231aba425ef1bb0aa07a760ff4c77917e247382ef73a41408db6b6b1cb40b1e"
+        }
+      }
+    }
+  ]
+}
