@@ -1,0 +1,40 @@
+{
+  "schema": "wasmc.json-large-rust2024-sdk/v1",
+  "status": "controlled installed Root and in-memory canonical bridge; not production",
+  "root_manifest_sha256": "4904107e3103039e5f0e6c27a99255093e973f8cca12816d711af4e4b43d6a4d",
+  "root_core_sha256": "e369108df493771f4bf719ac073f5acd4bc77a45b2b2cdd8a8049f4885b8753c",
+  "sdk_source_sha256": "759d341d07eaee73b3a28d0207d72e9de756babe9206bda0201d55c3bd499fae",
+  "linked_sdk_sha256": "b99a687377227fcc40ab1e0d03122f55afb71c80d4c2bc58f246f54b0a0b99b9",
+  "guest_sha256": "1dc26bdb8497b86caa0c8bf8e225c1f92b35378c6c8b6c93002d793ced9b4077",
+  "compilation": "Rust 1.99.1 edition 2024, wasm32-unknown-unknown. Generated SDK locally bound 26 verified named WIT imports to matching generated canonical bridge functions using same strategy as rust2024-json-linked-sdk/build-linked-sdk.mjs. Public generated SDK alone still imports WIT module; two original instantiation failures preserved.",
+  "cases": "Node 25.6 and Deno: same instance sizes 0, 16777217 and 3 payload characters; validate bytes, read u64 max, compact equality, invalid hidden duplicate rejection, and subsequent recovery all returned flags 31. No configured aggregate memory ceiling in this test.",
+  "master_sdk_issue": {
+    "manifest_sha256": "34df79187958af5bfcc15b2e66647524d70ba56aaf8c3fed7b9d79d4ed049ab3",
+    "observed_edition": "2021",
+    "source_sha256": "6e127f21c06757f6f45fcab9f751367420c6ec3ed10d7aa0176d78c04c2f821e",
+    "evidence": "direct --edition=2024 compilation fails because generated extern blocks are not unsafe; first failure preserved",
+    "interpretation": "previous test used 2024 application with 2021 SDK crate, not 2024 SDK. The edition migration candidate is not integrated into exact master build."
+  },
+  "limitations": [
+    "Controlled in-memory host bridge, not real Service",
+    "Total memory was not capped; page counts are retained in logs and do not establish production upper limits",
+    "SDK bridge linking is an experimental local derivation, not default supported install integration",
+    "No Source integration, formal release or anonymous readback"
+  ],
+  "files_sha256": {
+    "guest-v3.wasm": "1dc26bdb8497b86caa0c8bf8e225c1f92b35378c6c8b6c93002d793ced9b4077",
+    "guest.rs": "75765463137b112d3cf7f34e65a2b56c0f21ed44d31d58098be39e912b852d97",
+    "json-large-installed-guest-build-20261029.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "json-large-installed-guest-build-v2-20261029.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "json-large-installed-sdk-build-20261029.log": "22d258d14d4bf3e1606c022e41ab119eef2c41a8377fa26fef22320be433f943",
+    "json-large-installed-sdk-build-v2-20261029.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "json-large-installed-sdk-deno-v3-20261029.log": "c0b5278c5751e9fef95b4c35c39906a842125ce8172e5e7fdb0549919c902299",
+    "json-large-installed-sdk-node-20261029.log": "92c15082c3358c5e2a438210069506de47f983fe8362ab9d0a9fd9110c17d436",
+    "json-large-installed-sdk-node-v2-20261029.log": "cca61f6bf55eff4a49fcec5f5cbe0c9a084761808aeee23b7e66345caadba242",
+    "json-large-installed-sdk-node-v3-20261029.log": "b5c341e6147254580c23bb899028f2342519c71a672fa0ae0323426fb90f8b31",
+    "json-large-linked-guest-build-20261029.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "json-large-linked-sdk-build-20261029.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "linked-sdk.rs": "b99a687377227fcc40ab1e0d03122f55afb71c80d4c2bc58f246f54b0a0b99b9",
+    "run.mjs": "bbd1f7dbc0a89214c1cdac41c77a4fef1b107c6317f0fb5368bff094b370d27d"
+  }
+}

@@ -1,0 +1,11 @@
+file:///Users/youxianshi/.local/state/wasmc-maintenance/rustc-service-1991-20261028/json-large-installed-sdk-20261029/run.mjs:7
+const mod=new WebAssembly.Module(fs.readFileSync(guestfile));app=new WebAssembly.Instance(mod,{'wasmc:private/canonical-memory@1':api,'wasmc:lib/wasmc-json@0.2.1':lib.exports});
+                                                                 ^
+
+TypeError: WebAssembly.Instance(): Import #63 "wasmc:json/document@0.2.1": module is not an object or function
+    at file:///Users/youxianshi/.local/state/wasmc-maintenance/rustc-service-1991-20261028/json-large-installed-sdk-20261029/run.mjs:7:66
+    at ModuleJob.run (node:internal/modules/esm/module_job:430:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:655:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v25.6.0
