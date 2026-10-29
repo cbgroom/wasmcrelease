@@ -1,0 +1,5 @@
+The first verifier run checked its inputs and then failed before writing output:
+TypeError: Path.write_text() got an unexpected keyword argument 'mode'
+The exclusive create was corrected to Path.open('x'); no first-run output was created.
+
+The initial upstream and resource-core unit test invocations failed because macOS TMPDIR used /var while realpath returned /private/var. Their raw diagnostics appeared in tool output. Both suites passed after using the canonical TMPDIR=/private/tmp; no package inputs were changed. Two other test scripts were initially invoked without their documented required run-root arguments; neither was treated as a pass.
