@@ -1,0 +1,33 @@
+{
+  "status": "LOCAL_Q0_COMPONENT_16M_PLUS_PASS_NOT_RELEASE",
+  "package": "wasmc-csv@0.0.3",
+  "q0_manifest_sha256": "c8b645ecf5383ba3882f86ee1cf6c08c2a5edb9e8da39bfce013078040f1d463",
+  "component_sha256": "0fada979a8c4b1234f57799a2ec6e36c7417e3b9df94d1ab31dcb1a327f69cc6",
+  "wit_sha256": "1cfdd4fd3686399ee3f23cd269336104adb198768dbc4dbb825e0a75e7e27324",
+  "host": "Rust 2024 Wasmtime49.0.0 WIT bindgen",
+  "same_instance_field_bytes": [
+    8,
+    1048577,
+    16777216,
+    16777217,
+    17825793,
+    11
+  ],
+  "verification": "one UTF8 field, exact byte-for-byte returned value, six sequential new inputs; invalid integer followed by valid integer on same instance",
+  "store_limit_control": "4 MiB per linear memory, 16 MiB input rejected; trapped Component cannot be reentered, a fresh Store with the same limit handles a small input",
+  "baseline_previous_component_sha256": "f3c6ccf46eadea7f2dbbed5d8148eb98af46f126dbaab3cc53a690783a5b2c3c",
+  "logs_sha256": {
+    "previous_component": "5d680652b205aa9767cb700bcda37731f6562d6a2267b6f74b2d081ef3a1e1cb",
+    "q0_initial": "4f51f0d0df9712683550fca72b2e894077d0e0a91803d07fea2d47c5c8407612",
+    "same_store_after_trap_failure": "2f5407298d6fcdc3d74b8f9006383c88b44836850d49d23a27ec1b0c5baec664",
+    "q0_final": "f570c83abcd5c3f23492dfcada73f82ebeb49aec3a1a90b5a8f2734260708744"
+  },
+  "host_source_sha256": "23d807e22593a20bf2c92c7f0aada11ab7f18cb7f63aaa25b49fde63fa180d3c",
+  "replay": "copy component-host.rs into src/main.rs, Q0 lib.wit into csv-root/lib.wit, run cargo +stable --offline --locked with pinned component path",
+  "limitations": [
+    "controlled Q0 product, not anonymous installation or formal release",
+    "Component only; not ordinary WAsmC, Core large-input, real service or device",
+    "per-linear-memory Store limit is not complete process aggregate memory accounting",
+    "17 MiB cases are samples and do not prove arbitrary sizes"
+  ]
+}
