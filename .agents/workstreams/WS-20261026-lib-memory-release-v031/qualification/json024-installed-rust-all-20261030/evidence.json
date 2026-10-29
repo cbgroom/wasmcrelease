@@ -1,0 +1,27 @@
+{
+  "status": "PASS_CANDIDATE_NOT_RELEASE",
+  "root_commit": "f0166ba76b8613f6decd1ab7c362ca8a9cd90031",
+  "manifest_sha256": "8b2c659b8b28327a6945f08f1168e07d4526ed8a1705cadc05b9f544eab6c284",
+  "root_files_reverified": 26,
+  "sdk_sha256": "885a36e38048f91ac31c1a1dd36376929bd6f2d8c697b4f885a9a9896c9bb275",
+  "guest_source_sha256": "9512e107c98cec39d0fc3ff89f8301083f28759f40a3ddaf32f6550c8ddeb1a1",
+  "guest_wasm_sha256": "4b1ca7b9ce1dfaf5b5ef321750adaa398ff880c452f3a2b823d0da558c3fea5c",
+  "provider_sha256": "08d0d60134228dabbfc467429b2e54c97910d9d1d8e0a3f49f11228668b11384",
+  "rustc": "1.99.1",
+  "edition": "2024",
+  "validation": "actual anonymously installed Root and its generated SDK; 26 guest API cases, 3 same-instance rounds per Node, Bun, Deno; controlled canonical memory adapter",
+  "controls": "wrong guest and wrong provider SHA rejected",
+  "limits": [
+    "candidate branch install, not formal release tag",
+    "controlled adapter, not live MCPGit Service or production route",
+    "fixed test inputs, no exhaustive all-API or global memory proof"
+  ],
+  "evidence_sha256": {
+    "rustc.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "node.log": "fad9193c1a5a353d3b5a95fcc9df5f463e232c9c5befdfc3a7a656dd9bf9f7d3",
+    "bun.log": "abad2b719bc34c485c7e228699b6aa899c98833cc481c7f132c162764f656e4f",
+    "deno.log": "9ca423adaf1e5154ca0b3e557beda7540d29b82b1a705215048f64af4115e2f9",
+    "wrong-provider.log": "85920eb0697255ad0a33d83e753ccd885b7cc2423e6a76f96c7a2745c312cb4a",
+    "wrong-guest.log": "80a8c45daa938950843ac7458b16d93b06a5ff7991bad9bd5a2b5dde3d11658d"
+  }
+}
