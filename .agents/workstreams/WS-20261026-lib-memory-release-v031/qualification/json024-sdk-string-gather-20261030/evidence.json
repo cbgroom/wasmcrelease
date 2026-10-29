@@ -1,0 +1,34 @@
+{
+  "status": "ISOLATED_SDK_CANDIDATE_NOT_INTEGRATED",
+  "source_head": "6fcfe8d86b19b491919b96b9bade8d8556477671",
+  "private_patch_sha256": "7a5c49c85b5d783029cd3b39a64dafd9f6d8fedc5cbf89adc7091b843654a410",
+  "private_patch_path": "/Users/youxianshi/.local/state/wasmc-maintenance/rustc-service-1991-20261028/json024-sdk-string-profile-20261030/candidate.patch",
+  "change": "current new-value-window generator gathers guest-owned string bytes in validated 8-byte reads and byte tail; existing historical branch and provider bulk gather stay unchanged",
+  "source_provenance": "source patch cleanly apply-checks against Source 6fc; generated installed SDK was patched independently for this experiment, not produced by patched generator",
+  "root_manifest_sha256": "8b2c659b8b28327a6945f08f1168e07d4526ed8a1705cadc05b9f544eab6c284",
+  "provider_sha256": "08d0d60134228dabbfc467429b2e54c97910d9d1d8e0a3f49f11228668b11384",
+  "guest_sha256": {
+    "profile": "c02238f410737f00857d4a0312a21ffb3c91eb0812e41fe21510927ff97218e4",
+    "optimized": "0e29c6b9e761d65a04a0b7079b4a553a4780d2c9bfac6a7e36dd13938748be3f"
+  },
+  "test": "installed Core with synthesized profile and optimized Rust2024 SDK guests; 26 APIs three times, 32 tail lengths, invalid UTF8 trap and fresh instance recovery on Node/Bun/Deno",
+  "measured": "1,050,002-byte string; own_read8 1,050,002 to 2 plus 131,250 own_read64, per Node; counts are bridge calls not throughput, CPU, fuel or upper-bound measurements",
+  "limitations": [
+    "isolated candidate modifies generated SDK for tests; actual source generator not built or tested",
+    "adds own_read64 import where prior optimized profile required only own_read8; compatibility must be proven on real Host/engines",
+    "SDK source file has overlapping active exclusive claims; no source or foreign worktree mutated",
+    "not ordinary WAsmC, live Service/Hosted, release, or total-memory proof"
+  ],
+  "logs_sha256": {
+    "profile-node.log": "a46ee91dddd9c796b4bdd27faca97eaaa74d2186f066e5b58c78f5c5450d67bf",
+    "profile-bun.log": "0a1a5191510c21c34f65ce675c582153477b439055273c2999438de07a9a87cd",
+    "profile-deno.log": "eccc6614c8759601bd543cf2ae69e13005b352a5c0ac96af8fcd6eecba00ef5c",
+    "optimized-node.log": "72d25bce7bfba3ec1043d9f872540c2a3cd64e529f2550df8cf0dc0f2cd851cd",
+    "optimized-bun.log": "5dc8e0a619753939c8b540fcb1b8bca318a73e647eaa52fead87a57698ce9413",
+    "optimized-deno.log": "000e370243334d93a8c98bdb4857a0a8f6c901810eadbbbd02139eab1f9aa9b0"
+  },
+  "build_sha256": {
+    "profile-build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "optimized-build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}
