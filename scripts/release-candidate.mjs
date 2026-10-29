@@ -475,6 +475,7 @@ export function currentV3ProductInputsForVersion(version){
     ...(Number(version.split('.')[2])>=30?['scripts/ci-rust-search-recovery.mjs','admission/string-storage-v030.json','admission/string-text-v030/options-v2.json','admission/string-text-v030/previous-cohort-v1.json']:[]),
     ...(usesExpandedCompilerCarrier(version)?['scripts/test-current-compiler-byte-boundary-v031.mjs','scripts/materialize-canonical-host-v031.mjs','scripts/test-canonical-host-capacity-v031.mjs']:[]),
     ...(Number(version.split('.')[2])>=31?['scripts/current-normal-core-sdk-quota-check.mjs','scripts/test-current-normal-core-sdk-quota-check.mjs','scripts/update-current-corelib.mjs','scripts/corelib-abi.mjs','scripts/test-current-string-support-v031.mjs','scripts/test-canonical-checked-results-v031.mjs','scripts/test-canonical-host-sdk-v031.mjs','scripts/test-canonical-host-import-demand-v031.mjs','scripts/mixed-current-product-v1.mjs','scripts/project-frozen-search-index-v1.mjs']:[]),
+    ...(version==='0.0.31'?['scripts/test-checked-chunk-admission-v031.mjs']:[]),
     ...(requiresCheckedChunkQualification(version)?['admission/checked-chunk-v0'+version.split('.')[2]+'.json']:[]),
     ...(Number(version.split('.')[2])>=28?['scripts/test-unit-result-match.mjs']:[]),
     ...(Number(version.split('.')[2])>=29?['scripts/test-canonical-checked-results.mjs']:[]),
@@ -527,6 +528,32 @@ export function validateCurrentCompilerBytes(raw, compiler, version) {
     throw Error('compiler identity or byte budget drift');
   if(WebAssembly.Module.imports(new WebAssembly.Module(raw)).length)throw Error('compiler imports forbidden');
 }
+export function validateCheckedChunkAdmission(admission,compiler,read){
+  assert.equal(admission.schema,'wasmc.canonical-checked-chunk-admission/v1');
+  assert.equal(admission.accepted,true,'checked-chunk admission is not complete');
+  assert.equal(admission.version,compiler.version,'checked-chunk version mismatch');
+  assert.match(compiler.source_commit??'',/^[0-9a-f]{40}$/);
+  assert.equal(compiler.source_branch,'master');
+  assert.equal(admission.canonical_source,compiler.source_commit,'checked-chunk source mismatch');
+  const pin=(row,path)=>{
+    assert.equal(row?.path,path,'checked-chunk input path');
+    const bytes=read(path);assert.equal(bytes.length,row.bytes,'checked-chunk input bytes: '+path);
+    assert.equal(hash(bytes),row.sha256,'checked-chunk input digest: '+path);return bytes;
+  };
+  const compilerBytes=pin(admission.compiler,'current/wasmc_compiler.wasm');
+  assert.equal(hash(compilerBytes),compiler.compiler.sha256,'checked-chunk compiler mismatch');
+  assert.equal(compilerBytes.length,compiler.compiler.bytes);
+  const provider=pin(admission.canonical_provider,'current/lib_core.wasm');
+  const profile=JSON.parse(pin(admission.profile_map,'examples/current/canonical-host-v031/checked-chunk-profile.json'));
+  const plan=pin(admission.native_plan,'examples/current/canonical-host-v031/producer-assets/caller-plan.json');
+  const frame=JSON.parse(pin(admission.frame_expected,'examples/current/canonical-host-v031/expected-frame.json'));
+  assert.equal(profile.schema,'wasmc.canonical-checked-chunk-assets/v1');assert.equal(profile.version,compiler.version);
+  assert.equal(profile.compiler.sha256,compiler.compiler.sha256);assert.equal(profile.compiler.bytes,compiler.compiler.bytes);
+  assert.equal(profile.assets?.['provider.core']?.sha256,hash(provider));
+  assert.equal(frame.compiler_sha256,compiler.compiler.sha256);assert.equal(frame.caller_plan_sha256,hash(plan));
+  assert.equal(admission.native_sealed_modules,8);assert.equal(frame.module_count,8);
+  return true;
+}
 export function currentCandidateClosure(candidate,read){
   const rows=new Map(candidate.product_files.map(r=>[r.path,r]));
   const exact=path=>{
@@ -546,6 +573,8 @@ export function currentCandidateClosure(candidate,read){
   if(compiler.schema!=='wasmc.current-compiler/v2'||compiler.version!==candidate.version||
      compiler.source_commit!==candidate.compiler_source_authority||compiler.source_branch!=='master')
     throw Error('canonical compiler source/version authority drift');
+  if(candidate.version==='0.0.31')
+    validateCheckedChunkAdmission(JSON.parse(exact('admission/checked-chunk-v0'+candidate.version.split('.')[2]+'.json')),compiler,exact);
   const compatibility=JSON.parse(exact(currentCompatibilityPath(candidate.version)));
   assert.equal(compatibility.schema,'wasmc.core-compatibility/v1');assert.equal(compatibility.candidate_version,candidate.version);
   const compatibleCompiler=compatibility.artifacts.find(row=>row.id==='compiler');

@@ -41,6 +41,10 @@ export function canonicalHostCapacityCheck(version,runtime='node') {
   return parts&&(parts[0]>0||parts[1]>0||parts[2]>=31)
     ?{id:'canonical-host-source-capacity',...js(runtime,'scripts/test-canonical-host-capacity-v031.mjs',[],['--allow-read'])}:null;
 }
+export function checkedChunkAdmissionCheck(version,runtime='node') {
+  return version==='0.0.31'
+    ?{id:'checked-chunk-admission-contract',...js(runtime,'scripts/test-checked-chunk-admission-v031.mjs',[],['--allow-read'])}:null;
+}
 export function suiteCases(family,runtime='node',mirror='github') {
   if(!['node','bun','deno'].includes(runtime)||!['github','jsdelivr'].includes(mirror))throw Error('invalid CI matrix');
   const item=(id,script,args=[],permissions=['--allow-read'])=>({id,...js(runtime,script,args,permissions)});
@@ -56,6 +60,7 @@ export function suiteCases(family,runtime='node',mirror='github') {
   ];
   if(family==='integrity')return [
     ...mixedModuleChecks,
+    ...[checkedChunkAdmissionCheck(JSON.parse(readFileSync(join(root,'catalog/libs-current-v2.json'))).version,runtime)].filter(Boolean),
     ...(current.jsonDerived?[item('json-derived-ci-routing','scripts/test-ci-json-derived-routing-v1.mjs',[],fixturePermissions)]:[]),
     item('library-first-teaching-and-routes','scripts/test-library-first.mjs'),
     item('current-lib-search-complete-index-regression','examples/lib-search/run.mjs'),
@@ -82,6 +87,7 @@ export function suiteCases(family,runtime='node',mirror='github') {
   if(family==='candidate')return [
     ...[compilerCarrierCheck(JSON.parse(readFileSync(join(root,'catalog/libs-current-v2.json'))).version,runtime)].filter(Boolean),
     ...[canonicalHostCapacityCheck(JSON.parse(readFileSync(join(root,'catalog/libs-current-v2.json'))).version,runtime)].filter(Boolean),
+    ...[checkedChunkAdmissionCheck(JSON.parse(readFileSync(join(root,'catalog/libs-current-v2.json'))).version,runtime)].filter(Boolean),
     ...mixedModuleChecks,
     ...(current.jsonDerived?[item('json-derived-ci-routing','scripts/test-ci-json-derived-routing-v1.mjs',[],fixturePermissions)]:[]),
     item('current-v3-product-identity','scripts/current-release-identity.mjs'),
