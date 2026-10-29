@@ -2,7 +2,10 @@
 // separate prerequisite and is deliberately neither imported nor distributed.
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
-import {checkedCurrentCatalog,resolveCurrentPackage} from './current-lib-release-v3.mjs';
+import {mkdirSync,writeFileSync} from 'node:fs';
+import {dirname,isAbsolute,join,resolve} from 'node:path';
+import {fileURLToPath} from 'node:url';
+import {checkedCurrentCatalog,resolveCurrentPackage,currentProductReader,currentProductPaths} from './current-lib-release-v3.mjs';
 import {CurrentSearchCaller,currentIndexEntries} from './current-lib-search-v3.mjs';
 const hash=b=>createHash('sha256').update(b).digest('hex');
 const parse=b=>JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(b));
@@ -59,4 +62,45 @@ export function verifyPublicJsonOverlay({catalogBytes,catalogSha,priorCatalogByt
   for(const entry of entries)assert.deepEqual(caller.lookup(entry.identity),{tag:'ok',value:entry});
   const pages=[];for(let i=0;i<entries.length;i+=64){const page=caller.search({text:'',package_id:null,profile:null,bound_only:false},i,64);assert.equal(page.tag,'ok');pages.push(...page.value);}assert.deepEqual(pages,entries);
   return {schema:'wasmc.public-json-overlay-projection/v1',accepted:true,catalog_sha256:catalogSha,prior_catalog_sha256:priorCatalogSha,receipt_sha256:receiptSha,authority_commit:authorityCommit,packages:catalog.packages.length,root_files:paths.length,index_entries:entries.length,private_provenance_verified:false,release:false};
+}
+
+// A distributable carries only these two previous public metadata files. Their
+// identities are chained from the independently pinned successor catalog; the
+// private producer capsule is never a required consumer input.
+export const publicOverlayPriorPaths=Object.freeze({
+  catalog:'admission/json-overlay-prior-catalog-v1.json',
+  index:'admission/json-overlay-prior-index-v1.json',
+});
+export function verifyPublicJsonOverlayFromCatalog({catalogBytes,catalogSha,read,productPaths,receiptSha,authorityCommit}){
+  const catalog=checkedCurrentCatalog(catalogBytes,catalogSha);
+  const cohort=parse(pinned(catalog.cohort,read));
+  assert.equal(cohort.schema,'wasmc.json-overlay-cohort/v1');
+  const priorCatalogBytes=read(publicOverlayPriorPaths.catalog);
+  const prior=checkedCurrentCatalog(priorCatalogBytes,cohort.old_catalog_sha256);
+  const priorIndexBytes=read(publicOverlayPriorPaths.index);
+  assert.equal(priorIndexBytes.length,prior.index.bytes,'previous public index bytes');
+  assert.equal(hash(priorIndexBytes),prior.index.sha256,'previous public index pin');
+  return verifyPublicJsonOverlay({catalogBytes,catalogSha,priorCatalogBytes,priorCatalogSha:cohort.old_catalog_sha256,priorIndexBytes,read,productPaths,receiptSha,authorityCommit});
+}
+
+// Copy only catalog-bound public bytes after independent input verification.
+// This creates a projection, not a complete release or private provenance seal.
+export function materializePublicJsonOverlay({sourceRoot,out,catalogSha,priorCatalogBytes,priorCatalogSha,priorIndexBytes,receiptSha,authorityCommit}){
+  assert.ok(isAbsolute(sourceRoot)&&isAbsolute(out),'absolute source and absent output required');
+  const read=currentProductReader(sourceRoot),catalogBytes=read('catalog/libs-current-v2.json');
+  verifyPublicJsonOverlay({catalogBytes,catalogSha,priorCatalogBytes,priorCatalogSha,priorIndexBytes,read,productPaths:currentProductPaths(sourceRoot),receiptSha,authorityCommit});
+  const catalog=checkedCurrentCatalog(catalogBytes,catalogSha),paths=new Set(['catalog/libs-current-v2.json',catalog.registry.path,catalog.index.path,catalog.cohort.path]);
+  for(const row of catalog.packages){for(const pin of Object.values(row.source))paths.add(pin.path);for(const pin of row.files)paths.add(pin.path);}
+  mkdirSync(out);const put=(path,bytes)=>{const dest=join(out,path);mkdirSync(dirname(dest),{recursive:true});writeFileSync(dest,bytes,{flag:'wx'});};
+  for(const path of [...paths].sort())put(path,read(path));
+  put(publicOverlayPriorPaths.catalog,priorCatalogBytes);put(publicOverlayPriorPaths.index,priorIndexBytes);
+  const outputRead=currentProductReader(out);
+  return verifyPublicJsonOverlayFromCatalog({catalogBytes:outputRead('catalog/libs-current-v2.json'),catalogSha,read:outputRead,productPaths:currentProductPaths(out),receiptSha,authorityCommit});
+}
+
+if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)){
+  const [root,catalogSha,receiptSha,authorityCommit,...rest]=process.argv.slice(2);
+  assert.equal(rest.length,0);assert.ok(isAbsolute(root??''),'absolute product root required');
+  const read=currentProductReader(root);
+  console.log(JSON.stringify(verifyPublicJsonOverlayFromCatalog({catalogBytes:read('catalog/libs-current-v2.json'),catalogSha,read,productPaths:currentProductPaths(root),receiptSha,authorityCommit})));
 }

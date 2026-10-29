@@ -3,7 +3,7 @@ import {existsSync} from 'node:fs';
 import {join} from 'node:path';
 import {createHash} from 'node:crypto';
 import {currentProductReader,currentProductPaths} from './current-lib-release-v3.mjs';
-import {verifyPublicJsonOverlay} from './json-overlay-public-v1.mjs';
+import {verifyPublicJsonOverlay,verifyPublicJsonOverlayFromCatalog,publicOverlayPriorPaths} from './json-overlay-public-v1.mjs';
 const root=process.env.WASMC_JSON_OVERLAY_PUBLIC_FIXTURE;
 assert.ok(root,'explicit independently pinned overlay fixture required');
 const priorRoot=process.env.WASMC_JSON_OVERLAY_PRIOR_ROOT;assert.ok(priorRoot,'explicit independently pinned prior fixture required');
@@ -14,6 +14,9 @@ const read=currentProductReader(root),priorRead=currentProductReader(priorRoot),
 const prior=JSON.parse(priorCatalogBytes),priorIndexBytes=priorRead(prior.index.path),productPaths=currentProductPaths(root);
 const args={catalogBytes,catalogSha,priorCatalogBytes,priorCatalogSha,priorIndexBytes,read,productPaths,receiptSha,authorityCommit};
 const result=verifyPublicJsonOverlay(args);assert.equal(result.private_provenance_verified,false);assert.equal(result.release,false);
+const portable={catalogBytes,catalogSha,read,productPaths,receiptSha,authorityCommit};assert.deepEqual(verifyPublicJsonOverlayFromCatalog(portable),result);
+assert.throws(()=>verifyPublicJsonOverlayFromCatalog({...portable,read:p=>p===publicOverlayPriorPaths.catalog?Buffer.from('{}'):read(p)}));
+assert.throws(()=>verifyPublicJsonOverlayFromCatalog({...portable,read:p=>p===publicOverlayPriorPaths.index?Buffer.from('{}'):read(p)}));
 const catalog=JSON.parse(catalogBytes),first=catalog.packages[0].files[0].path;
 const corrupt=(path)=>p=>p===path?Buffer.from('independent substitution'):read(p);
 for(const [label,change] of [
@@ -37,4 +40,4 @@ const forgedIndexBytes=Buffer.from(JSON.stringify(forgedIndex)+'\n'),forgedCatal
 forgedCatalog.index.bytes=forgedIndexBytes.length;forgedCatalog.index.sha256=hash(forgedIndexBytes);
 const forgedCatalogBytes=serialize(forgedCatalog),forgedIndexRead=p=>p==='catalog/libs-current-v2.json'?forgedCatalogBytes:p===catalog.index.path?forgedIndexBytes:read(p);
 assert.throws(()=>verifyPublicJsonOverlay({...args,catalogBytes:forgedCatalogBytes,catalogSha:hash(forgedCatalogBytes),read:forgedIndexRead}));
-console.log(JSON.stringify({...result,negative_controls:10,actual_catalog_sha256:hash(catalogBytes),scope:'public bytes and pinned projection only; no private producer provenance or release admission'}));
+console.log(JSON.stringify({...result,negative_controls:12,actual_catalog_sha256:hash(catalogBytes),scope:'public bytes and pinned projection only; no private producer provenance or release admission'}));
