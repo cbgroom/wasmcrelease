@@ -1,0 +1,29 @@
+{
+  "schema": "wasmc.exact-source-fivepatch-compatibility-v1",
+  "base": "c1306cc8ec4497d2190f7ac72501979e4038bfae private archive plus capacity/edition/default-feature patches and two isolated compiler patches",
+  "source_snapshot": "75 previously recorded staged source differences matched all 75 hashes from 43-Lib candidate source; does not integrate or authorize unrelated WIP.",
+  "results": [
+    "Full workspace all-targets check with core-runtime-sdk passes.",
+    "Expression integration tests pass 184/184 with exact CoreLib 4.9; initial run lacked required provider and failed 13 tests.",
+    "Canonical Host tests with exact bundle, provider and real merge tool pass 4/5; frozen v0.0.28 original transfer source hash check fails."
+  ],
+  "compatibility_findings": "Expected prior transfer source SHA b2dfce3592e0d14897bafa82a2a9ef49968788806cd107dbcfd7852c60ab945a; current generated SHA 858de70b17f930d04644ee0f8be59416aa865ee11621b4d51fe7c3a31b2ca32c. Diff shows both changed Host Rust 2024 attributes and prior Core transfer budget-removal changes. Edition-only conversion cannot restore exact old source.",
+  "attempt": "Edition-inference experiment still failed old source hash (07e6d760...); reverted without Source modification. Initial Host test lacked fixtures; second used wrong CoreLib pin and symlinked merge tool; corrected run preserved.",
+  "remaining": [
+    "Resolve frozen consumer compatibility using the exact pinned legacy template/producer rather than restoring arbitrary limitations to the successor.",
+    "Two wider Source overlay patches still do not apply cleanly; no automatic partial application.",
+    "Current validation is local temporary snapshot, not Source integration or release. Production route, unified memory budget, CI and anonymous readback remain open."
+  ],
+  "evidence_sha256": {
+    "source-c130-fivepatch-alltargets-20261029.log": "d424be7d0feb705f444977b6f7d277a5ae664b0f569c29d6cd74d58b24a35553",
+    "source-c130-fivepatch-expression-regression-20261029.log": "3669882ae2f9d5013d7be6ceb7934f2fb710f4f378224fb101e689377116f9e3",
+    "source-c130-fivepatch-expression-regression-v2-20261029.log": "8df0aa61aa707eb7cd9c3431c2a5a8252358cd4d0f1137b485de2ef1321c43fe",
+    "source-c130-fivepatch-canonical-host-20261029.log": "bf7418ea44eac393106c91064d7c88214a4d7c468b0227741a069d559e243fe6",
+    "source-c130-fivepatch-canonical-host-v2-20261029.log": "a28155580b1496ba31891024d31cbe5d86cce8ad056f120e6cb64f02cfdc0787",
+    "source-c130-fivepatch-canonical-host-v3-20261029.log": "b3d7e180c06306cf8328e03265105d51ee3e267a83d8979b03a0e2a1972493fa",
+    "source-c130-fivepatch-canonical-host-v4-20261029.log": "0d19ec06d3289a1365671b5d2e4057f1cb200dd58175a90e0ff7db87e8350121",
+    "legacy-transfer-current-20261029.rs": "07e6d760158a8c4724d1552ebfe72f94f8b2041374d86e95e131e37a7acbd62e",
+    "ordinary-iterative-binary-fold-20261028.patch": "fca3fd696726052d8073fe12d06c0722683bf4ddd5b1c4677ddbef91661c0500",
+    "canonical-host2024-generator-20261028.patch": "1bc2afc8951c031c98f4e51e31273d75d46edec51589e71e7b28262e4c994460"
+  }
+}
