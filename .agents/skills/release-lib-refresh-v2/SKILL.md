@@ -31,6 +31,8 @@ Before selecting mixed Roots, compare all currently listed remote tag identities
 
 For real mixed artifact authority, start from the exact released main, stage only successor Root blobs and pinned public Lib inputs, and preserve the earlier candidate branch. Bind the catalog to the pushed commit only after its complete selected Root/source/registry Git trees match and anonymous commit/tree readback succeeds. A public candidate commit and install remain separate from Source admission and formal release.
 
+For a mixed candidate, bind the original Q0 preflight, exact public artifact commit, current remote tag set, ordinary Search Q2 case oracles and installed-file readback into one independent input qualification. Reused historical Roots retain their actual SDK edition and product identity. This qualification does not admit compiler Source, full product CI, devices, Hosted routing or publication.
+
 ## Decision
 
 `libspec/` is the sole current Lib source authority. Do not extend the historical
