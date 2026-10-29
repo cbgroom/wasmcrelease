@@ -1,0 +1,40 @@
+{
+  "schema": "mcpgit.hosted-main-integration-preflight/v1",
+  "main_ref_readback": "5010aec14a54c4224a3c8906116322e029125335",
+  "candidate_branch": "7797450d5bd93db7a3cdea8a943b567ac25994d6",
+  "main_is_ancestor": true,
+  "candidate_only_commits": [
+    "7797450d5 Bind ordered Host and Core Lib imports",
+    "7cce312c8 Support uploaded 16 MiB Hosted artifacts",
+    "eb8683ac7 Transfer translator capacity scope for narrow integration",
+    "cdbe6651b Exercise external JSON with linked Rust 2024 SDK",
+    "8b0c62baa Exercise all linked JSON operations through Service",
+    "69cbaae7e Exercise external Rust JSON with atomic output",
+    "e1269faa2 Inspect Core Lib exports without running provider start",
+    "ca59d4eab Add exact per-invocation Core Lib call plans",
+    "e13ac0c69 Verify Rust 2024 JSON through Service activation",
+    "bb02dc73e Read 16 MiB uploaded objects in build controller",
+    "9db54702d Support 16 MiB resumable Table Object uploads",
+    "87ae0a9e0 Support 16 MiB Core Lib object loading",
+    "b30e705b4 Raise Rust translation byte ceilings to 16 MiB",
+    "77b2578cb test: join JSON activation and Rust Host invocation",
+    "400e63535 test: activate installed JSON Core Lib through Service",
+    "398d32a5d test: witness Rust JSON Lib on CoreDomain Host",
+    "2740aedec Prove Rust caller through real Core Lib Host lane",
+    "039765a27 Start real Rust caller and Core Lib Host proof"
+  ],
+  "mainline_missing": "crates/mcpgit-executable-runtime/src/core_lib_call_plan.rs",
+  "first_patch": "mcpgit-json-shared-memory-host-v2-20261029.patch",
+  "first_patch_sha256": "7e1847cf323f96c2b9c958e470fb69fb0ec7feb9915d48493bc7f0207c6d35a0",
+  "apply_results": [
+    {
+      "patch": "mcpgit-json-shared-memory-host-v2-20261029.patch",
+      "exit": 1,
+      "stderr": "error: crates/mcpgit-executable-runtime/src/core_lib_call_plan.rs: No such file or directory\n"
+    }
+  ],
+  "scope": "git archive of exact main; first candidate patch fails before changes. Later patches were not attempted because they depend on preceding changes.",
+  "route_owner_branch_ref": "f00d03a4b8d79c8fd5f4c205f94c6a1a10ba4047",
+  "route_claim_status": "remote task in-progress/not-ready and claims route_wasm_executor.rs; no release observed",
+  "next": "Integrate or rebase prerequisite 779 call plan and serialized route candidate against current main after the route owner releases or coordinates scope; then build and exercise actual deployed Hosted path. Separate WAsmC Source audit and CI remain."
+}
