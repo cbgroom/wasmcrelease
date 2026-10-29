@@ -1,0 +1,38 @@
+{
+  "status": "REUSABLE_CANDIDATE_OVERLAY_NOT_RELEASE",
+  "source_head": "51ddc3c2c790d25186e4441274edb8d2bd665f20",
+  "source_clean_before_after": true,
+  "source_tracked_inputs": 121,
+  "tracked_input_manifest_sha256": "41328653c95ed92dedf8952761cccf48086e159f6d2d1c08d8fb6258e01376af",
+  "portable_compiler_sha256": "fb1d34e75427c2629a62b00bb9ca1ce4e4c0f2fb224e2305c1ec2d5e39cc2f7c",
+  "portable_warm_build_log_sha256": "33125862410fb7f4088995b3121a28f2bc85bdbce8f0d5926c927de83a0d0cb6",
+  "selected_text_root_sha256": "db884f9bea412a80d615ea69f673a9d6ec86ea3381c15a4fc82c6bb58750adf6",
+  "candidate_app_sha256": "fd8dc2502b3c0097798d8c1276eb0c6703d2c54e0f8282e1094f87c18c646d61",
+  "native_portable_match": 8,
+  "native_build": "Fresh actual branch native library compiled using cargo rustc extra cfg wasmc_source_fresh_witness to invalidate mixed-source cache; no code references this cfg. 16MiB+1 declaration rejects at the unchanged 2MiB typed guard.",
+  "cache_issue": "First ordinary warm cargo build returned success but negative control unexpectedly accepted 16MiB+1, proving the library came from previously patched isolated source. That unsafe artifact was not used. The forced source recompilation and repeated negative control rejected it; both logs retained.",
+  "fixture": "Six changed source-free files retained as strict overlay with baseline/compiler/Root digest guards; product and frozen fixtures not overwritten.",
+  "runtime": "Node/Deno 584 same-instance calls including exactly 1500000 bytes, explicit bound+1 rejection and recovery; Bun frame-only because multi-memory unavailable.",
+  "independent_replay": "Fresh baseline staging rejected wrong compiler before writes, applied six files with matching pins, rejected duplicate application and passed Node fixture.",
+  "overlay_manifest_sha256": "31a3d834b059704ce725801758be1fcfb5f449e8505087e74c48b5afa5666513",
+  "parity_sha256": "134a66dd6f3b6537f5f8e93bc792efd0820a066342b81053e92f2452368b86d4",
+  "logs_sha256": {
+    "string-node.log": "d4daa4075fe755b73eda11b9189ca539bf914d55766cd870fc38dd3ae70c283e",
+    "string-deno.log": "33c267516f6f5941f564e1541010d7dedbc4a39eed2d0f1cef37c0dd27920ff8",
+    "string-bun.log": "c740250a0ed03c0f15e4946ec2b5238bab932bc0fa762ddb5ce728da2510860b",
+    "typed-guard-control.log": "e3e1532dcf0a1ed0c7b296899c49b8bc2d90338140f22aa28bb1508e9b40d209",
+    "typed-guard-control-v2.log": "c0f792fbfaf8d668df90a549077139c907a179b896f00649c9ab31cb22c616db",
+    "prepare-exact.log": "336595a4c8803e2f52e4123d1a5745501bbbe201828e609fdedb5a72a1ea8b42",
+    "prepare-exact-v2.log": "e3e1532dcf0a1ed0c7b296899c49b8bc2d90338140f22aa28bb1508e9b40d209",
+    "replay-apply.log": "7fabfb993ea096a76e42e0a5b3784f83599cc0d8ea9a68853fa1568ee4a0485d",
+    "replay-wrong-compiler.log": "b0c3ad74bdd1d9183bb6ffac144fb1fe8c5c696644c35160bfe27e4adf81cf36",
+    "replay-replay.log": "3411cd8713cd24969ff227f1e07710b70fb7776132373560afc782d09d137bdf",
+    "replay-string.log": "d4daa4075fe755b73eda11b9189ca539bf914d55766cd870fc38dd3ae70c283e"
+  },
+  "limitations": [
+    "This is one candidate fixture, not integrated Source, full v031 closure or formal release.",
+    "Compiler and several other fixture pins remain on the earlier product branch candidate and must converge coherently.",
+    "Normal >2MiB Host declaration remains blocked by a separate active source claim.",
+    "Cached native result problem means any other prior result that used that shared library requires independent provenance review; passing this check cannot retroactively validate those results."
+  ]
+}
