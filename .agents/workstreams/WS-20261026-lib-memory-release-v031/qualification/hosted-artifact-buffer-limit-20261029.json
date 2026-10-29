@@ -1,0 +1,24 @@
+{
+  "schema": "wasmc.hosted-artifact-buffer-boundary/v1",
+  "status": "isolated source candidate and temporary Service; no production change",
+  "source_base": "eb8683ac7f6eb83163820ee488e115f539c83e4c plus previous MCPGit 16MiB buffered object candidate",
+  "change": "route artifact reads use sdk::MAX_BUFFERED_TABLE_OBJECT_BYTES instead of route-local 4MiB; the cited isolated SDK value is 16MiB, current main SDK value must be updated separately",
+  "evidence": "same valid WAsmC JSON app plus custom-section padding: 5242881 bytes was rejected at 4194304 before and accepted after via real temporary Service, route activation and Hosted dispatcher; two external requests passed. Exact 16777216-byte variant accepted and served two requests; 16777217-byte variant rejected at 16777216",
+  "method": "5MiB artifact was added through normal table transaction; boundary variants were seeded into the temporary Git fixture before skill-table initialization, so no 16MiB upload claim",
+  "limitations": [
+    "existing main source currently has 8MiB buffered-object limit",
+    "does not implement Rust SDK dynamic Lib route selection or shared provider resources",
+    "no live deployment, release or anonymous readback"
+  ],
+  "sha256": {
+    "hosted-json-large-route-before-20261029.log": "7ee1fa530d73d4f5a6e2a2a248d38d549e276bb395976926d8e2243d7719a978",
+    "hosted-json-large-route-after-20261029.log": "8f9d2eedf075bedf4a2e9b57d9ff15c797fd8283df7ac0b7d096ad66dad22d9c",
+    "hosted-json-large-route-16m-20261029.log": "f12c9aff579dd8ec55422d3412352381052f5464d647bbb51e9a869a6b82360d",
+    "hosted-json-large-route-16m-plus-one-20261029.log": "a1c20f68f24ba76516b43680e68b6d125e56aaaf6a58ea7a875511f032b30232",
+    "hosted-json-large-artifact-5m-20261029.wasm": "65e0fa6b0ea9550f7740954d8b7ba7fc3830a5ebda8293e60b8a798fb201de45",
+    "hosted-json-large-artifact-16777216-20261029.wasm": "2ae09d7bf413b463d58e92961eb69a8c00a5814397360d1e31a0154731ae1b38",
+    "hosted-json-large-artifact-16777217-20261029.wasm": "7c0c05828c4dc2c5a0263c32f47157612ecb619aa3c7784202049d405725f074",
+    "hosted-artifact-buffer-limit-20261029.patch": "9f75fffc52903dc2db4b1034837c4620fb30cbecd7e3ea965d3f3454f358696f",
+    "hosted-json-large-route-test-20261029.rs": "7e72ec0ee2fdd7b2d5aa91e32a3bd377649fbc510fe7447e599db2b34334e696"
+  }
+}
