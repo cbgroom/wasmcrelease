@@ -1,0 +1,12 @@
+{
+  "schema": "wasmc.future-product-input-recovery/v1",
+  "fixture_basis": "Frozen historical route product v0.0.20 and historical current-five CLI source commit 2f5efe2738de200210614b63ce7d580b4f9eb630; explicit catalog and CLI script SHA256 pins are in the test.",
+  "mixed_fixture": "Synthetic mixed current catalog 1eb246739e0ac6db2e9a19c3e7dfbd8eae7277a45a7afd3f4f6a03a40d62864c; zero authority, complete local product-like directory; selected modern CLI scripts match current worktree bytes.",
+  "script_sha256": "8129ca116b387829b3abd1c75e7b3f90e7156aecc48e8778f993097f2cdf72d0",
+  "test_log_sha256": "4d4bc350b72723647ba7363962202290677a480d19de842d80792d2f40471741",
+  "test_log_path": "/Users/youxianshi/.local/state/wasmc-maintenance/rustc-service-1991-20261028/future-product-recovery-20261029/test-worktree-final.log",
+  "result": "Exit 0; 40 historical candidate input negatives, three historical product-only commands, current mixed search and exact JSON resolve, incorrect catalog pin rejected.",
+  "additional_controls": {"incorrect_mixed_pin_sha256": "86b1dc4d24a4b6a1cc07e6032145467f0b08616f064582253776a0d17edaeb29", "altered_legacy_cli_sha256": "674abef54dd1f73a4a8734be0afe947aa4f1d92502f750ec8ca710eaf93d50ae"},
+  "prior_failure": "stale-mixed-fixture.log: previous mixed fixture's verifier did not match current worktree; an isolated copy with five exact current CLI dependencies was used for the successful test. Earlier original catalog and missing-module failures retained in adjacent future-route-fixture-recovery-20261029.",
+  "scope": "Test fixtures and synthetic product verification only, not candidate compiler provenance, actual release product, production Service route, CI, or formal release."
+}
