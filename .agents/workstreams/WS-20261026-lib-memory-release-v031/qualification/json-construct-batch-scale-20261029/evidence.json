@@ -1,0 +1,18 @@
+{
+  "schema": "wasmc.installed-json-construct-batch-scale/v1",
+  "status": "controlled installed Core candidate, not production or release",
+  "root_manifest_sha256": "a40499304c4078c8034473e552730cd460556c81d8679b8afe040cf2407f7397",
+  "artifact_sha256": "007eac4dbfe32f53462f866a66e6bb191fec13c01ac7d90baf2572b27ec22722",
+  "test_sha256": "6f329bedc14ce16ac4febd3a84ffe75264e574fdfa1d8aa7c0463de3311009d3",
+  "logs_sha256": {
+    "json-construct-batch-scale-node-20261029.log": "8fef7e961f275eca15119a2d5c1f0f34c6c34fdf546631ec5e0d2a720c7aaa71",
+    "json-construct-batch-scale-bun-20261029.log": "45521288c415f5b0c598340746fe110d328bb5569f7feb46b0351090e7d8e239",
+    "json-construct-batch-scale-deno-20261029.log": "478d952394dd35760699325c13b8715630fce7242f50ed4eedc8e837a7d7a906"
+  },
+  "checks": "In one instance per runtime, construct and fully check 100000 JSON array items and 10000 object fields, then apply and fully check 10000 ordered edits, read exact typed value, reject invalid later edit and verify same-instance recovery.",
+  "limitations": [
+    "No configured aggregate memory cap or exhaustion proof",
+    "Core only; no Component, Hosted route, production or release admission",
+    "Input remains caller-owned; failed-batch check does not assert a persistent transaction"
+  ]
+}
