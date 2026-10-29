@@ -1,0 +1,34 @@
+{
+  "status": "PARTIAL_ISOLATED_CANDIDATE_NOT_INTEGRATED",
+  "patch_sha256": "f901679ee39e251161974d75a5ec6dd37e77f14964206bb34de045bd111db065",
+  "patch_private_path": "/Users/youxianshi/.local/state/wasmc-maintenance/rustc-service-1991-20261028/hosted-budget-sdk-gather-20261030/request-body-reservation-candidate.patch",
+  "patch_base": "reconstructed local MCPGit candidate route with existing shared-Wasm budget; clean apply-check on original isolated source, not current main",
+  "route_before_sha256": "547d1dc9654e8f4213d4c16a4b03218f0831ca6d83b2db85b0310519b9f4a131",
+  "route_after_sha256": "eb6eff1c23a5352d231748baf36ee5f64e461bf5f47999944b610344608ecd08",
+  "change": "For mixed Lib calls only, reserve logical request body bytes against the same invocation budget as Guest and Lib linear memories before provider instantiation, retaining reservation until invocation returns. Does not introduce a per-value constant.",
+  "guest_sha256": "11f6627ebcd0ca498396e26730a5452ec802d755c16f0ca8023df81f5c315031",
+  "sdk_manifest_sha256": "ae5292263fd278c8bae6f27dce456dfb4a5566613c07688b051c66b7fae929da",
+  "scenarios": [
+    "before candidate: 1000008-byte body and 16MiB budget reports 1114112 reserved after Lib instantiation, not body bytes",
+    "candidate: same input and budget reports 1000008 reserved before and 2114120 after Lib instantiation; small-large-small responses all 200",
+    "candidate: 5242888-byte body and 4MiB budget rejected by input reservation before provider instantiation",
+    "candidate: same 5242888-byte body and 64MiB budget yields 200; 5242888 reserved initially and 32833544 after call",
+    "candidate: 4MiB budget small-large-small gives 200, memory denial, 200 on fresh invocations"
+  ],
+  "scope_limits": [
+    "Only logical incoming body length is charged. Host response and other heap allocations, metadata, retained capacity and transport buffers are not accounted.",
+    "Reservation occurs after transport has allocated request body, so it does not bound ingress peak memory.",
+    "Stage body mutation and shared Bytes ownership require explicit accounting; no full-process or cross-invocation budget guarantee.",
+    "Mixed route only; normal nonmixed route was not newly qualified.",
+    "Temporary Service/Wasmtime candidate; not integrated Source, live production route or formal release.",
+    "SDK/Root remain diagnostic same-version scratch; do not overwrite immutable identity."
+  ],
+  "log_sha256": {
+    "growth256-trace.log": "ba77b7eb567f78af121e23d9f0793f743f45ff1033268ff5593077a2289a3ba3",
+    "input-reserve-over.log": "f92d7cb6884dfbf30d6e3c9c50b16c7d4a499fc7a14de3d38e9fda0ff0b89745",
+    "input-reserve-growth64.log": "f8fa4036118847d44228d596a9bb5053b92a37e6af55aa7f4f4f24fe8988a1e6",
+    "input-reserve-growth256.log": "99a699aeb51d0a6289b11b851aa54f9aba1b1c22b055378fb4f5ca2848abf89c",
+    "input-reserve-high-5m.log": "cf04ea398b73e1d1e8da4d954b5eb58890e5587f606b927094675d051446472c"
+  },
+  "fixture_test_sha256": "88c5d4e3b2b016067b88a4678e7030b946b3098db81cb673158afed644879163"
+}
