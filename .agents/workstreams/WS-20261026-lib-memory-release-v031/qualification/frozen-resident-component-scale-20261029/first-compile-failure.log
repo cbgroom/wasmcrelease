@@ -1,0 +1,33 @@
+     Locking 121 packages to highest Rust 1.99.1 compatible versions
+      Adding cranelift-bforest v0.136.0 (available: v0.136.2)
+      Adding cranelift-bitset v0.136.0 (available: v0.136.2)
+      Adding cranelift-codegen v0.136.0 (available: v0.136.2)
+      Adding cranelift-codegen-meta v0.136.0 (available: v0.136.2)
+      Adding cranelift-entity v0.136.0 (available: v0.136.2)
+      Adding cranelift-frontend v0.136.0 (available: v0.136.2)
+      Adding cranelift-isle v0.136.0 (available: v0.136.2)
+      Adding cranelift-native v0.136.0 (available: v0.136.2)
+      Adding pulley-interpreter v49.0.0 (available: v49.0.2)
+      Adding pulley-macros v49.0.0 (available: v49.0.2)
+      Adding wasmtime v49.0.0 (available: v49.0.2)
+      Adding wasmtime-environ v49.0.0 (available: v49.0.2)
+      Adding wasmtime-internal-component-macro v49.0.0 (available: v49.0.2)
+      Adding wasmtime-internal-component-util v49.0.0 (available: v49.0.2)
+      Adding wasmtime-internal-core v49.0.0 (available: v49.0.2)
+      Adding wasmtime-internal-cranelift v49.0.0 (available: v49.0.2)
+      Adding wasmtime-internal-fiber v49.0.0 (available: v49.0.2)
+      Adding wasmtime-internal-jit-debug v49.0.0 (available: v49.0.2)
+      Adding wasmtime-internal-jit-icache-coherence v49.0.0 (available: v49.0.2)
+      Adding wasmtime-internal-unwinder v49.0.0 (available: v49.0.2)
+      Adding wasmtime-internal-versioned-export-macros v49.0.0 (available: v49.0.2)
+      Adding wasmtime-internal-wit-bindgen v49.0.0 (available: v49.0.2)
+   Compiling mcpgit-resident-memory-component v0.2.0 (/Users/youxianshi/.local/state/wasmc-maintenance/rustc-service-1991-20261028/frozen-resident-component-20261029/root/bindings/rust)
+   Compiling installed-resident-component-host v0.1.0 (/Users/youxianshi/.local/state/wasmc-maintenance/rustc-service-1991-20261028/frozen-resident-component-20261029/host)
+error[E0599]: no method named `call_static_store_open` found for reference `&Guest` in the current scope
+  --> src/main.rs:11:22
+   |
+11 |     let resource=mem.call_static_store_open(&mut store,&[1u8;20],&[],67108864,&history)?;
+   |                      ^^^^^^^^^^^^^^^^^^^^^^ method not found in `&Guest`
+
+For more information about this error, try `rustc --explain E0599`.
+error: could not compile `installed-resident-component-host` (bin "installed-resident-component-host") due to 1 previous error

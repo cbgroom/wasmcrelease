@@ -1,0 +1,17 @@
+{
+  "schema": "wasmc.frozen-resident-component-scale/v1",
+  "installation_receipt_sha256": "4f3050846e2cfc9957753647596faea2214758a95a67e8057db84d4e794df28c",
+  "root": "mcpgit-resident-memory@0.2.0",
+  "manifest_sha256": "0c4c15c39db528cc2aeb85123fd47964e297ec6153f96ae5f371c4e5a18f5e47",
+  "component_sha256": "c174b02cb81a65a58f87cfab1d6856d5b0620b5c6b8a0f01de36635fc76e334a",
+  "wit_sha256": "4a25855db497d33309ce696e0ce2adfc53fbe7f70a16090c16b921c151b66902",
+  "rust_component_sdk_sha256": "b925f61261f1912114d4b8fd60b67530e35ed0d374e1263e72002cfbb9d16606",
+  "host_source_sha256": "679f4e6de6e272bbc919b68d505af129b1fba4856849aea63c3c6ab7caf3caa6",
+  "success_log_sha256": "892c7e639966cca8b905438b8efdee466d61d8c88460ce3abb7f34ed28714e94",
+  "success_log_path": "/Users/youxianshi/.local/state/wasmc-maintenance/rustc-service-1991-20261028/frozen-resident-component-20261029/run-3.log",
+  "test": "Rust 1.99.1 Edition 2024 host, generated installed Component SDK, Wasmtime 49; 16,777,217-byte object rejected with explicit 1 MiB budget, then accepted under 128 MiB budget and read back byte-for-byte from a snapshot in the same Component instance; both resources explicitly dropped.",
+  "reported_budget_used_bytes": 50332219,
+  "initial_failures": ["first-compile-failure.log: wrong generated resource method name", "second-oracle-failure.log: compared Debug text instead of typed enum; actual small-budget error was BudgetExceeded"],
+  "note": "The exact accounting includes internal representation and is about three times the object size for this byte pattern; current candidate delta serializes the collection to JSON, but this single observation does not establish whole-process peak or an exact production cost profile.",
+  "limits": "One frozen Component, one object and one native Wasmtime host; caller-specified resource budget is not a global system-memory limit. No deployed MCPGit Service, exhaustive capacity audit, or formal release proven."
+}
