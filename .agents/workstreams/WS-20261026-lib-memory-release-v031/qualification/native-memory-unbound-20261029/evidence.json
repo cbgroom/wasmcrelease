@@ -1,0 +1,47 @@
+{
+  "schema": "wasmc.native-memory-unbound-candidate/v1",
+  "status": "private source candidate, no Source integration or release",
+  "parent_producer_sha256": "961919aabda4c87097c732410d1ef499b5ea6422820b37af8ac49e13234fe5f7",
+  "producer_sha256": "e4ff9cb1205de9408f064af085838002f81ca5d4adddceaa002a44057bebe06a",
+  "private_incremental_patch_sha256": "7bcf1efd9ce2c4337b6dab8fc64efb684a1c8df2687c72ada7deb394dfe520ed",
+  "private_patch_location": "~/.local/state/wasmc-maintenance/rustc-service-1991-20261028/wit16-native-memory-unbound-incremental-20261029.patch",
+  "change": "Restore earlier removal of fixed Native per-result byte, node, record-field and depth quotas and per-Store memory/instance caps; preserve checked windows, alignment, type, tag, duplicate and arithmetic validation. Caller owns overall memory admission, which is not proved here. Raise separate Native Source tooling byte limit from 1 MiB to existing 16 MiB source ceiling.",
+  "evidence": [
+    "Native logical unit suite: 4 passed, 2 fixture tests explicitly ignored; covers 2 MiB string, 70000-element list, 512 fields and 64 nested options, plus malformed memory and semantic checks.",
+    "Same old pinned ordinary JSON 0.1.0 bundle manifest 582b28c1d4240aae7cae6b5af7c887397e73e8ae47ca3e7191149f00c27ec73d: old candidate fails at 3 MiB; after source recompilation Wasmtime returns exact 3145730-byte JSON result, checks four exact sizes and all 4 cleanups.",
+    "New JSON 0.2.1 Root manifest a40499304c4078c8034473e552730cd460556c81d8679b8afe040cf2407f7397 and CoreLib candidate 8231aba425ef1bb0aa07a760ff4c77917e247382ef73a41408db6b6b1cb40b1e: exact 1000 and 10000-element array passes Wasmtime; 100000-element array still traps. Older published provider 1fac280b1d3f2d82399e61e49fcb47f1c6ffc6c3d5b3b27e5d98059952fefabd traps at 256 elements; these are different provider identities.",
+    "New producer verifies installed JSON 0.2.1 Root."
+  ],
+  "preserved_failures": [
+    "First attempt to test fixed code reused a stale shared-target binary; the failure is retained and not treated as a result of the fixed implementation. Touching the changed source forced recompilation and then the Wasmtime test passed.",
+    "Wasmi test of the old JSON bundle passed 0/8-byte inputs; 70000-byte case did not finish within more than a minute and the test was interrupted. No Wasmi large-input pass is claimed.",
+    "Large literal source over 1 MiB was rejected by the old Native source guard. After widening the guard the compiler was still using one CPU after more than two minutes; the experiment was interrupted, so successful 16 MiB source compilation is not proved.",
+    "A 100000-element and a 10000-element wide-string JSON array trap even with candidate CoreLib; reason not yet diagnosed."
+  ],
+  "limits": [
+    "No verified shared overall memory accounting or process-wide limit in this path.",
+    "Small-input operation 3 MiB proof uses a retained old JSON bundle and Wasmtime; new Root is not yet proved beyond 1 MiB result.",
+    "No production Host, full refreshed cohort, Source admission or formal release."
+  ],
+  "local_logs_sha256": {
+    "native-memory-original-bundle-baseline-20261029.log": "ebd13d27a6a7ed9a801dbe7f0ed27a9757b1cbcb3ae31a9491d4520847b18f4f",
+    "native-memory-original-bundle-fixed-20261029.log": "224a052dc5d97c845cdcd18ff286dd16a5ac898239e7672604c2ce1a15449b90",
+    "native-memory-original-bundle-fixed-v2-20261029.log": "7f2e9037d428afe5901fa7037c52630b66c2057f844d7612531bb69748eac058",
+    "native-memory-original-bundle-wasmi-20261029.log": "2ade3ade2242ad765fc2f9998adadca4246133d9a60a283fbb629a5c548044ed",
+    "native-memory-unbound-unit-final-20261029.log": "6938c749d8dae2612deef855c52b9eac5c527e0608467f05ff4ceda6c1573cfd",
+    "native-json-large-output-source-fixed-20261029.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "native-json-array-1000-provider823-20261029.log": "f0894dbd776387e3893d80df0aa5f154b4cc7e72595f2cdeeedf4dd2bad755b7",
+    "native-json-large-array-provider823-20261029.log": "995ab17f0c0514b0116be472c1133b24b9c652366b967dffd40a4230dca22b2e",
+    "native-json-array-256-wasmtime-20261029.log": "5148b865926949afedbb52c4608b74829ef8fc3eadc062e52737ca918ec20f0c",
+    "native-json-array-wide-20261029.log": "189d839cf1e5f0671228041d70ddcda0016cf43bf28060189841d2717ae195d6",
+    "native-json-array-10000-provider823-20261029.log": "b04150453b41ae9b1d9dce6da823223fa5f5980326fd23be9fc5428c8980b158",
+    "native-memory-unbound-producer-build-20261029.log": "00dcf20c8efe79f55c9da3d6d6b01c47b75e7fb16b742a8d35a4147bd7bdfdb2",
+    "native-memory-unbound-verify-json-20261029.log": "8330a724c809b9769f202dca97167679712211e3b9bf47a71ae11e43f2263eab"
+  },
+  "saved_files_sha256": {
+    "old-provider-256-failure.log": "5148b865926949afedbb52c4608b74829ef8fc3eadc062e52737ca918ec20f0c",
+    "old-source-1m-failure.log": "357dafe3b8ddec54fda1ed765fadb6df14f93feeaae1ded9e2a4e0e869ac2327",
+    "array-100000-failure.log": "995ab17f0c0514b0116be472c1133b24b9c652366b967dffd40a4230dca22b2e",
+    "array-1000.wasmc": "209fc0e90586602ccd1822b6b89063f195c813f04fecf298b840c976a546132f"
+  }
+}
