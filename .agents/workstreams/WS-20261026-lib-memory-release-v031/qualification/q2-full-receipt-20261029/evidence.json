@@ -1,0 +1,35 @@
+{
+  "schema": "wasmc.q2-full-receipt/v1",
+  "status": "candidate qualification, not formal release",
+  "change": "Q2 and Search Q2 read complete successful runner receipt.json from its execution directory after the command finishes, retaining full logs and existing independent result validation. They no longer parse the command wrapper diagnostic stdout tail.",
+  "root_manifest_sha256": "a40499304c4078c8034473e552730cd460556c81d8679b8afe040cf2407f7397",
+  "producer_candidate_sha256": "9bdb049a6da5479537271d37a37f93c379c0b9dfc1ba35e33da065073abbe0c5",
+  "release_runner_sha256": "123616b63ac1def1166cd117bf43128635eab2de401a061433fdd9455d2862c6",
+  "candidate_corelib_sha256": "8231aba425ef1bb0aa07a760ff4c77917e247382ef73a41408db6b6b1cb40b1e",
+  "evidence": [
+    "The original debug dual-engine 100000-element run completed on both engines after the earlier checkpoint; the independently validated complete receipt is 2201757 bytes, while parsing its last 1 MiB as JSON fails.",
+    "An optimized runner independently produced the exact 100000-element, 1100001-byte result on both engines; wall time 6.17 seconds on this local run, not a throughput or performance ceiling claim.",
+    "The modified real test-generated-wasmc-q2.mjs selected the 43-root Q0 refresh and candidate CoreLib, ran the exact 100000-element source in both engines, parsed the complete receipt and independently checked the full expected result.",
+    "17 Q2 checker tests include a 2 MiB receipt and truncated stdout negative; 10 cache/command tests pass. The ordinary JSON edit/read case set runs through the actual modified script."
+  ],
+  "scope": [
+    "One call per engine in fresh Store for the 100000-element test; no same-Store soak or real Hosted production proof.",
+    "Q0 refresh used the earlier producer; the latest compiler candidate, CoreLib and full release are not admitted or published.",
+    "No overall memory or production route qualification claimed."
+  ],
+  "files_sha256": {
+    "release-time.log": "48c6a0b74031f3fb4d0a08353c187fc24b8ddc1782d2beb3ad2eeb0dc8d998ee",
+    "debug-oracle.json": "d2d7dba265b4d50dee6654f72bdd6db3c96e49ab60416aefb0e2d709b4a8c11c",
+    "release-oracle.json": "7e4a315a777a1d7e3051e3adb8ab523c73cc2720a4a821e34432cc2185853518",
+    "pipeline-scale-receipt.json.gz": "271d365f1d33623e5d69ff37fe313f07ac42f0e7befbcf6eded2522b1d7fe203"
+  },
+  "local_logs_sha256": {
+    "native-q2-large-receipt-test-20261029.log": "df92f1eb25938dcf8d541b38e5b632b5bddeacf3029c7da36330ab9526fc317b",
+    "native-q2-complete-file-actual-20261029.log": "573688893263c35d516aff9c3a78eb5a33b33f197290d350a96f7b23e26b1973",
+    "native-projection-array100k-dual-20261029.log": "f9c984370e2524106d4ff4db5128ae0f42a8465189f9394144e928e61bfc6cbb",
+    "native-projection-array100k-release-20261029.log": "f92e071f42e4093c2c09128b018db96d4297a15ea2131ae5d9783a1425a67ddc",
+    "native-projection-q2-release-build-20261029.log": "8c22860ebd8b0594d394cb48da14959fa8acf14e370557b81551ca22301cf1c8",
+    "native-q2-complete-file-scale-20261029.log": "0580fb3edf10f7b1c506395fe8cc61c25524af1ef3a0404848562cc956490dd3",
+    "wasmi-100k-sample-20261029.txt": "11f3368231c36a83c1803d27af840ea4cdd325e5ad5be378410e669ff4e2a579"
+  }
+}

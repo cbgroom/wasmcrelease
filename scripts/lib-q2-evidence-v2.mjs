@@ -1,4 +1,12 @@
 import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
+import { join } from 'node:path';
+
+// The command wrapper retains only a diagnostic stdout tail. The runner writes
+// its complete result separately, so large valid values are read from that file.
+export async function readQ2Receipt(executionDirectory) {
+  return JSON.parse(await readFile(join(executionDirectory, 'receipt.json'), 'utf8'));
+}
 
 // Reuse only an explicitly selected attempt with the identical test workload
 // and exact executable/provider inputs. Individual results still go through

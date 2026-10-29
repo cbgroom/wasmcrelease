@@ -5,7 +5,7 @@ import { readFile, mkdtemp } from 'node:fs/promises';
 import { isAbsolute, join, resolve } from 'node:path';
 import { generatedLib, selectedRun } from './generated-lib-v2.mjs';
 import { atomicJson, command, sha } from './lib-refresh-cache-v2.mjs';
-import { checkQ2Evidence } from './lib-q2-evidence-v2.mjs';
+import { checkQ2Evidence, readQ2Receipt } from './lib-q2-evidence-v2.mjs';
 
 const args=process.argv.slice(2);
 function option(name) {
@@ -42,9 +42,9 @@ const receipt={schema:'wasmc.generated-ordinary-q2-attempt/v2',accepted:false,id
   tooling,source_sha256:sha(await readFile(source)),cases_sha256:sha(await readFile(cases)),
   ordinary_wasmc_source:true,public_admission:false};
 try {
-  const output=await command(tooling.runner.path,[join(attempt,'input.json'),join(attempt,'execution')],
+  await command(tooling.runner.path,[join(attempt,'input.json'),join(attempt,'execution')],
     {cwd:process.cwd(),timeout:240000,logs:join(attempt,'run')});
-  receipt.result=JSON.parse(output.stdout.trim().split('\n').at(-1));
+  receipt.result=await readQ2Receipt(join(attempt,'execution'));
   checkQ2Evidence(receipt.result,caseRows,{root:receipt.manifest_sha256,
     source:receipt.source_sha256,wasmi:tooling.engines.wasmi,wasmtime:tooling.engines.wasmtime},rounds);
   receipt.checker_sha256=sha(await readFile('scripts/lib-q2-evidence-v2.mjs'));

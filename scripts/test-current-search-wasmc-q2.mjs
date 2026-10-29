@@ -5,7 +5,7 @@ import { join, resolve, isAbsolute } from 'node:path';
 import { generatedLib, selectedRun } from './generated-lib-v2.mjs';
 import { indexEntries } from './lib-current-index-v2.mjs';
 import { sha, atomicJson, command, acquireWriter } from './lib-refresh-cache-v2.mjs';
-import { checkQ2Evidence, checkQ2Resume } from './lib-q2-evidence-v2.mjs';
+import { checkQ2Evidence, checkQ2Resume, readQ2Receipt } from './lib-q2-evidence-v2.mjs';
 
 const args=process.argv.slice(2),run=selectedRun(args);
 // Complete current-index Apps include cold JIT admission before bounded calls.
@@ -110,9 +110,9 @@ try{
     await atomicJson(planPath,plan);
     console.error(JSON.stringify({case:name,state:'building-and-executing',attempt}));
     const execution=name+'-execution'+(resumePosition>=0?'-resume-'+Date.now():'');
-    const output=await command(tooling.runner.path,[planPath,join(attempt,execution)],
+    await command(tooling.runner.path,[planPath,join(attempt,execution)],
       {cwd:process.cwd(),timeout:caseTimeoutMs,logs:join(attempt,execution+'-run')});
-    const result=JSON.parse(output.stdout.trim().split('\n').at(-1));
+    const result=await readQ2Receipt(join(attempt,execution));
     checkQ2Evidence(result,[cases[i]],pins,4);
     report.results.push(result);await atomicJson(join(attempt,'progress.json'),report);
   }
