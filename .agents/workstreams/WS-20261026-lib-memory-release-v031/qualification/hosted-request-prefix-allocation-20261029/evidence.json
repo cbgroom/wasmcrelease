@@ -1,0 +1,20 @@
+{
+  "schema": "mcpgit.hosted-request-prefix-allocation/v1",
+  "status": "isolated candidate and temporary real Service; not production",
+  "change": "Do not reserve request body length in the envelope prefix Vec; body is stored separately as shared Bytes. No new capacity limit.",
+  "baseline": "Old source requests capacity path length + body length + 256. Old allocator capacity was not instrumented.",
+  "measurement": "Test-only trace immediately before conversion to Bytes: for 1,000,008-byte body, prefix length 37 and actual Vec capacity 261 bytes.",
+  "test": "Actual temporary McpGitService and Hosted dispatcher, Rust 2024 installed SDK and selected JSON Root, 16 MiB shared linear-memory limit: small, 1,000,008-byte, and subsequent different small JSON requests each return 200 with exact body; test result 1 passed.",
+  "caveats": [
+    "Only the prefix allocation was measured; Host heap and process RSS are not comprehensively budgeted.",
+    "Tested Host includes prior isolated mixed-route and budget candidates plus environment-gated diagnostics.",
+    "Patch is incremental to the isolated Host candidate, not admitted MCPGit Source or deployed production.",
+    "No formal release or public readback.",
+    "Incremental candidate patch did not apply unchanged to the separate local MCPGit checkout at 1085a711; failure retained. Integration requires rebasing and its own validation."
+  ],
+  "files_sha256": {
+    "request-prefix-allocation.patch": "8c296334edf32ee5d8a9795d21a55343a1a52e6906f283c94508d96485874906",
+    "hosted-test.log": "663448ecbde7b230aa0a7ea043036d043f9d98763659c8fa97b320936f885303",
+    "main-apply-check.log": "6e728cf85f619e17b01118a047d4fabebfa32ac69b274d85fcc5b85dbba3c902"
+  }
+}

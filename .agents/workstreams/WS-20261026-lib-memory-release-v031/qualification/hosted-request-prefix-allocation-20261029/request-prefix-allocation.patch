@@ -1,0 +1,18 @@
+--- a/crates/mcpgit-executable-runtime/src/route_wasm_executor.rs
++++ b/crates/mcpgit-executable-runtime/src/route_wasm_executor.rs
+@@ -4794,13 +4794,8 @@
+         request.body.len() <= limits.request_bytes,
+         "HTTP exchange carrier exceeds the configured request envelope"
+     );
+-    let mut envelope = Vec::with_capacity(
+-        request
+-            .normalized_path
+-            .len()
+-            .saturating_add(request.body.len())
+-            .saturating_add(256),
+-    );
++    // The body is retained separately as shared Bytes, not appended to this prefix.
++    let mut envelope = Vec::with_capacity(request.normalized_path.len().saturating_add(256));
+     envelope.extend_from_slice(HTTP_REQUEST_ENVELOPE_MAGIC);
+     envelope_write_bytes(&mut envelope, request.method.as_bytes())?;
+     envelope_write_bytes(&mut envelope, request.normalized_path.as_bytes())?;
