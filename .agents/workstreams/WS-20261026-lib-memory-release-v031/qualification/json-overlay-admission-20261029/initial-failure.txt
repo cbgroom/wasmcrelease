@@ -1,0 +1,1 @@
+Initial admission test failed with AssertionError: Missing expected rejection in negative controls. Investigation: the WIT verifier deliberately accepts exact byte equality without invoking the optional parser, so a wrong parser hash was not checked by that route. Candidate admission now explicitly verifies the independently supplied tool hash before qualification.
