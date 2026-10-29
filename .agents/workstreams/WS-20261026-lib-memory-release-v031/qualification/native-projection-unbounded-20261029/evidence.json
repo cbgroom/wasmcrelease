@@ -1,0 +1,39 @@
+{
+  "schema": "wasmc.native-projection-unbounded/v1",
+  "status": "private candidate, no Source integration or formal release",
+  "parent_producer_sha256": "e4ff9cb1205de9408f064af085838002f81ca5d4adddceaa002a44057bebe06a",
+  "producer_sha256": "9bdb049a6da5479537271d37a37f93c379c0b9dfc1ba35e33da065073abbe0c5",
+  "private_incremental_patch_sha256": "00a96a2ee8cd78ffffd809e0392ebc0677706de10b98a2145250dcb2718e9b1d",
+  "private_patch_location": "~/.local/state/wasmc-maintenance/rustc-service-1991-20261028/wit16-native-projection-incremental-20261029.patch",
+  "diagnosis": "Original exact ordinary App returned a generic trap. A diagnostic-only modified copy replaced failure branches with immediate traps and localized failure to nonzero status from the Native canonical ingress projection. The generated wrapper reset a 2 MiB byte counter and 1048576 work counter; it was not a JSON Lib error. Original failure is retained in native-memory-unbound-20261029. The altered binary was used for diagnosis only.",
+  "change": "Restore the previously developed dynamic snapshot staging and canonical ingress implementation, removing the fixed aggregate byte/work quotas while checking real memory windows and integer overflow. Existing Native generated memory can grow and caller owns overall memory admission. No new application-specific compiler special case.",
+  "validation": [
+    "With current installed JSON 0.2.1 manifest a40499304c4078c8034473e552730cd460556c81d8679b8afe040cf2407f7397 and candidate CoreLib 8231aba425ef1bb0aa07a760ff4c77917e247382ef73a41408db6b6b1cb40b1e, the same 100000-element ordinary App now returns exactly 1100001 bytes on Wasmtime, independently compared with full expected value. 10000 wide strings return 1130001 exact bytes.",
+    "1000-element current JSON test passes both Wasmi and Wasmtime. Full 9-case and batch-edit/type-read 8-case JSON ordinary suites pass both engines, two rounds; independent checkQ2Evidence passes.",
+    "Eight codegen tests pass, including dynamic staging growth under an explicitly configured overall Store memory limit, schema validation and ownership cleanup. New candidate producer verifies installed JSON Root."
+  ],
+  "running_at_2026_10_29T0644Z": "100000-element dual-engine test launched separately, not yet observed terminal. This receipt does not claim its result; recheck its exact running process/session and log before any retry.",
+  "limits": [
+    "No production Host, Component, long-lived Store, full cohort refresh, Source admission, public release or anonymous download claim.",
+    "The host-wide memory accounting is a caller responsibility and remains unproved on the production route.",
+    "Candidate CoreLib is not released. Earlier old-provider 256-item failure remains; do not treat current product CoreLib as updated."
+  ],
+  "files_sha256": {
+    "instrumented-trap.log": "0cc9f048a02b4415c002dd44e87a1b0dcc6b6cc9822a9d6897dbbe1be748d2dc",
+    "array-wide-wasmtime.json.gz": "8f54c3c7f78b94f922c92f6507f978ffb1b4927ed4ed67b95272d22e7b8a240f",
+    "full.json": "88dee8ab52895279e12997ea7b3289f32303a824d1fb74ea4983e6dce3316db8",
+    "array-100k.wasmc": "8568ee578ecdfbfccf6fff95e57015c6798e8a958b4ad3e04b7fc814f74098c0",
+    "edit-read.json": "47b66484f1a83b45925dbc3e6eb90eee7f797e28bd6665f1b64972a3af50cb89",
+    "array100k-wasmtime.json.gz": "c0cf3fcb6a15bd26b1153baa3aa25ae7fd13fc7483642097ea0f87e998ebbc53",
+    "independent.jsonl": "bbb6de7160aaf1e7331270e077ab57b0682efe42bf947c90448b18dfc906d38b"
+  },
+  "local_log_sha256": {
+    "native-projection-codegen-regression-20261029.log": "177f1a203c4012f9340bc6fc56a37b5bb0e3d85bbb6f82aa84b3ebe4906803c5",
+    "native-projection-unbounded-producer-build-20261029.log": "e0c43283622c50800770dbc2cb1548d00767cbbb926d706b096fbda096170dfe",
+    "native-projection-unbounded-verify-json-20261029.log": "8330a724c809b9769f202dca97167679712211e3b9bf47a71ae11e43f2263eab",
+    "native-projection-array1000-dual-20261029.log": "f391952f8f48c3cca3288e79b5287139c88d0f67e18efec8d9b98e88d0f40129",
+    "native-projection-array100k-fixed-20261029.log": "ec0b7bcddf8dfeb0ea31b92915b3d8f20f6761b84ff35219d9007eff426abd10",
+    "native-projection-array-wide-fixed-20261029.log": "10ca9d1755aee517859dc17b575972a546d1549a9da2fa3c2529b3e86b1cccbe",
+    "native-array-fault-probe-20261029.log": "0cc9f048a02b4415c002dd44e87a1b0dcc6b6cc9822a9d6897dbbe1be748d2dc"
+  }
+}

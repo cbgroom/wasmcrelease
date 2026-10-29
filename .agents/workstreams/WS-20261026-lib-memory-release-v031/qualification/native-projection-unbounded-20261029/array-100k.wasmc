@@ -1,0 +1,4 @@
+package local:large_json; interface api {
+ enum json_error {invalid_json,invalid_pointer,missing_target,type_mismatch,invalid_index,out_of_range,invalid_operation,allocation_failed}
+ run:func()->result<string,json_error> {let mut parts:list<string> = list.new();let mut i:u32=0;while(i<100000){parts.push("1234567890");i=i+1;}return document::array_from_values(parts);}
+} world app {export api;}
