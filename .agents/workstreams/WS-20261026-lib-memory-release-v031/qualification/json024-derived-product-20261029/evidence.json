@@ -1,0 +1,31 @@
+{
+  "status": "DERIVED_PRODUCT_EXPERIMENT_PASS_NOT_RELEASE",
+  "catalog_sha256": "6d78ec0b5d724937f491ab05c0a05cd9f66cde2fb2ed52df456a14e0bbb1b7ba",
+  "experimental_lineage_receipt_sha256": "2870df0a27c9755c6e4763274c01216a1703ac359f600f0f06930dab2029d8f1",
+  "authority_commit": "0000000000000000000000000000000000000000",
+  "assembly": "experimental copies of existing combined assembler and index projector, with derived lineage verifier and 0.2.4 explicitly added; original official files untouched",
+  "verified": "parent Q0 and derived full Root, 43-package old mixed closure, 332 search entries, all locks, 816 Root files",
+  "controlled_install": "actual v2 installer installs and independently reads back all 43 packages/816 files with local injected transport; installed 0.2.4 passes 300 differential cases and duplicate recovery",
+  "negative_control": "altered JSON API route rejected after recomputing index and catalog SHA",
+  "first_failure": "official index projection explicitly rejects 0.2.4; original error preserved; experimental copy extended only supported versions",
+  "limits": [
+    "zero Git authority commit and controlled transport",
+    "experimental proof and product, not official Q0 or admitted catalog",
+    "producer Source not admitted",
+    "no hosted CI, production routing, official release or anonymous install"
+  ],
+  "files_sha256": {
+    "assemble-first-failure.log": "0a3227cddbef39ec9aeb9acee5053fc1b43834c2da5865c6d0afa1b95ca5b3f8",
+    "assemble-v2.log": "cd172e3bfafba8784154cefdc788de5ea84ce57afce554a8402b256d1cd8f2ad",
+    "controlled-install-all.mjs": "a8cb77441eaed1bea77a35ea8539e18bd95f53250b7bcfc2a718aff4b7347206",
+    "experimental-assembler.mjs": "e5ff226754b41f0361d3b43c6a669739f824420238ad3aec5811ea5ef48b7edb",
+    "experimental-index.mjs": "7cb563c17a692084e670f4708b99f87c0fa7bc5b0c93b13bdd38e7f152af13ca",
+    "install-all.log": "fbbd559f574d6f944fc6bdceac58f45b4ec50dca3e0719b4d7e5670d19cfbb4d",
+    "installed-duplicates.log": "ebb3fd49af8e72308ea318f1bf27b7d6e8a5d977a6cc810c3948046ad80e9db7",
+    "installed-json.log": "a6c57f63436bd932100f81118a841e83797c17e76d74ff56ac3a259003a80194",
+    "prepare-capsule.mjs": "eb74a86588e7315b7ce930537ef449168d167782036cb0e34fd0c17c955e27e8",
+    "prepare-replay.log": "3fa78ef9f529bfbfaeb70c0c47a51d782f1b5f3702c23d63c0232da26f2894e5",
+    "tamper-index.log": "dcf1a5f0617da63c13584500da78974b43448b126732d2fbdc8928c02b5df16d",
+    "verify-derived-capsule.mjs": "81157c1274683c2e15cb2d8a22afe1cfa35bea68867e11fb38d485510e22916d"
+  }
+}
