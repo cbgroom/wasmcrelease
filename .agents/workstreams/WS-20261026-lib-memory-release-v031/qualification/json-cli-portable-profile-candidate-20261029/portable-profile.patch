@@ -1,0 +1,41 @@
+--- a/src/lib_tool_cli.rs
++++ b/src/lib_tool_cli.rs
+@@ -235,11 +235,18 @@
+     }
+ 
+     if root.contains_key("core") {
+-        let core = exact_object(
+-            field(root, "core", "root")?,
+-            &["dependencies", "root"],
+-            "core",
+-        )?;
++        let core_value = field(root, "core", "root")?;
++        let keys: &[&str] = if core_value.get("target_profile").is_some() {
++            &["dependencies", "root", "target_profile"]
++        } else {
++            &["dependencies", "root"]
++        };
++        let core = exact_object(core_value, keys, "core")?;
++        let portable = match core.get("target_profile") {
++            None => false,
++            Some(value) if value.as_str() == Some("portable-v0") => true,
++            Some(_) => return Err(invalid("core.target_profile must be portable-v0")),
++        };
+         let parse_module =
+             |value: &Value, label: &str| -> Result<LibToolCoreModuleInput, LibToolCliError> {
+                 let row = exact_object(value, &["artifact", "module", "sha256"], label)?;
+@@ -287,9 +294,13 @@
+             invalid(format!("cannot encode Core composition wiring: {failure}"))
+         })?;
+         let root_sha256 = core_root.sha256.clone();
++        let mut config = build_host_config(workspace_root, publication_root)?;
++        if portable {
++            config.core_optimization_profile = crate::lib_tool_rust_build_host::core_target_profile::LibToolCoreOptimizationProfile::PortableV0;
++        }
+         let host = LibToolRustBuildHost::new(
+             document_tool_wasm,
+-            build_host_config(workspace_root, publication_root)?,
++            config,
+         )
+         .map_err(|failure| invalid(format!("cannot create Lib build Host: {failure}")))?
+         .with_license_bundle(license);

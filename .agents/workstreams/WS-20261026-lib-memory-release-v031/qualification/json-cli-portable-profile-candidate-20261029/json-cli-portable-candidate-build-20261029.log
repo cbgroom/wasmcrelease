@@ -1,0 +1,712 @@
+   Compiling wasmc-core-runtime v0.1.0 (/Users/youxianshi/.local/state/wasmc-maintenance/rustc-service-1991-20261028/wasmc-combined-host2024-candidate-20261028/crates/wasmc_core_runtime)
+   Compiling wasmc v0.1.0 (/Users/youxianshi/.local/state/wasmc-maintenance/rustc-service-1991-20261028/wasmc-combined-host2024-candidate-20261028)
+warning: unused imports: `CodeSection`, `EntityType`, `FunctionSection`, `Function`, `ImportSection`, `Instruction as I`, `MemArg`, `TypeSection`, and `ValType`
+ --> src/lib_tool_rust_consumer_sdk/canonical_app.rs:4:20
+  |
+4 | use wasm_encoder::{CodeSection,ExportSection,Function,FunctionSection,ImportSection,
+  |                    ^^^^^^^^^^^               ^^^^^^^^ ^^^^^^^^^^^^^^^ ^^^^^^^^^^^^^
+5 |     Instruction as I,MemArg,Module,TypeSection,ValType,EntityType,ExportKind,MemoryType};
+  |     ^^^^^^^^^^^^^^^^ ^^^^^^        ^^^^^^^^^^^ ^^^^^^^ ^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused imports: `SizeAlign` and `WorldItem`
+ --> src/lib_tool_rust_consumer_sdk/canonical_app.rs:6:26
+  |
+6 | use wit_parser::{Resolve,WorldItem,SizeAlign};
+  |                          ^^^^^^^^^ ^^^^^^^^^
+
+warning: unused imports: `app_projection_allocator`, `canonical_shape`, `emit_canonical_entry_adapter`, `emit_native_host_wire`, and `entry_result_lane`
+ --> src/lib_tool_rust_consumer_sdk/canonical_host.rs:6:62
+  |
+6 | pub(crate) use crate::canonical_host_assets::{NativeHostWire,entry_result_lane,emit_canonical_entry_adapter,
+  |                                                              ^^^^^^^^^^^^^^^^^ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+7 |     canonical_shape,app_projection_allocator,compose_plan,emit_native_host_wire,
+  |     ^^^^^^^^^^^^^^^ ^^^^^^^^^^^^^^^^^^^^^^^^              ^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused macro definition: `prepare`
+   --> src/lib_tool_rust_consumer_sdk/native_invoke.rs:166:14
+    |
+166 | macro_rules! prepare {($method:ident,$engine:ident)=>{
+    |              ^^^^^^^
+    |
+    = note: `#[warn(unused_macros)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused macro definition: `runner`
+   --> src/lib_tool_rust_consumer_sdk/native_invoke.rs:180:14
+    |
+180 | macro_rules! runner {($method:ident,$prepare:ident,$engine:ident,$val:ident,$start:ident,$bind:ident)=>{
+    |              ^^^^^^
+
+warning: unused macro definition: `native_engine`
+   --> src/lib_tool_rust_consumer_sdk/native_invoke.rs:219:14
+    |
+219 | macro_rules! native_engine {(wasmi,$config:ident)=>{wasmi::Engine::new(&$config)};(wasmtime,$config:ident)=>{wasmtime::Engine::new(...
+    |              ^^^^^^^^^^^^^
+
+warning: unused macro definition: `native_start`
+   --> src/lib_tool_rust_consumer_sdk/native_invoke.rs:220:14
+    |
+220 | macro_rules! native_start {(wasmi,$l:ident,$s:ident,$m:ident)=>{$l.instantiate_and_start(&mut $s,&$m).map_err(|e|bad(e.to_string())...
+    |              ^^^^^^^^^^^^
+
+warning: unused macro definition: `native_bind`
+   --> src/lib_tool_rust_consumer_sdk/native_invoke.rs:221:14
+    |
+221 | macro_rules! native_bind {(wasmi,$l:ident,$s:ident,$module:expr,$name:expr,$f:expr)=>{$l.define($module,$name,$f).map_err(|e|bad(e....
+    |              ^^^^^^^^^^^
+
+warning: unused macro definition: `native_float`
+   --> src/lib_tool_rust_consumer_sdk/native_invoke.rs:222:14
+    |
+222 | macro_rules! native_float {(wasmi,F32,$n:expr)=>{wasmi::Val::F32(wasmi::F32::from_bits($n))};(wasmi,F64,$n:expr)=>{wasmi::Val::F64(...
+    |              ^^^^^^^^^^^^
+
+warning: unused macro definition: `native_bits`
+   --> src/lib_tool_rust_consumer_sdk/native_invoke.rs:223:14
+    |
+223 | macro_rules! native_bits {(wasmi,$n:ident)=>{$n.to_bits()};(wasmtime,$n:ident)=>{$n}}
+    |              ^^^^^^^^^^^
+
+warning: use of deprecated method `std::sync::atomic::Atomic::<u16>::fetch_update`: renamed to `try_update` for consistency
+   --> src/language/managed_object.rs:282:14
+    |
+282 |             .fetch_update(Ordering::SeqCst, Ordering::SeqCst, |next| {
+    |              ^^^^^^^^^^^^
+    |
+    = note: `#[warn(deprecated)]` on by default
+help: replace the use of the deprecated method
+    |
+282 -             .fetch_update(Ordering::SeqCst, Ordering::SeqCst, |next| {
+282 +             .try_update(Ordering::SeqCst, Ordering::SeqCst, |next| {
+    |
+
+warning: use of deprecated method `std::sync::atomic::Atomic::<u32>::fetch_update`: renamed to `try_update` for consistency
+   --> src/language/managed_object.rs:424:14
+    |
+424 |             .fetch_update(Ordering::SeqCst, Ordering::SeqCst, |next| {
+    |              ^^^^^^^^^^^^
+    |
+help: replace the use of the deprecated method
+    |
+424 -             .fetch_update(Ordering::SeqCst, Ordering::SeqCst, |next| {
+424 +             .try_update(Ordering::SeqCst, Ordering::SeqCst, |next| {
+    |
+
+warning: use of deprecated method `std::sync::atomic::Atomic::<u32>::fetch_update`: renamed to `try_update` for consistency
+   --> src/language/managed_object.rs:754:14
+    |
+754 |             .fetch_update(Ordering::SeqCst, Ordering::SeqCst, |next| {
+    |              ^^^^^^^^^^^^
+    |
+help: replace the use of the deprecated method
+    |
+754 -             .fetch_update(Ordering::SeqCst, Ordering::SeqCst, |next| {
+754 +             .try_update(Ordering::SeqCst, Ordering::SeqCst, |next| {
+    |
+
+warning: use of deprecated method `std::sync::atomic::Atomic::<u64>::fetch_update`: renamed to `try_update` for consistency
+   --> src/wasmtime_core_task_pool.rs:301:14
+    |
+301 |             .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |id| id.checked_add(1))
+    |              ^^^^^^^^^^^^
+    |
+help: replace the use of the deprecated method
+    |
+301 -             .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |id| id.checked_add(1))
+301 +             .try_update(Ordering::Relaxed, Ordering::Relaxed, |id| id.checked_add(1))
+    |
+
+warning: use of deprecated method `std::sync::atomic::Atomic::<u64>::fetch_update`: renamed to `try_update` for consistency
+   --> src/../research/profiles/resident/src/wasmtime_host_cache.rs:747:14
+    |
+747 |             .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |current| {
+    |              ^^^^^^^^^^^^
+    |
+help: replace the use of the deprecated method
+    |
+747 -             .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |current| {
+747 +             .try_update(Ordering::Relaxed, Ordering::Relaxed, |current| {
+    |
+
+warning: use of deprecated method `std::sync::atomic::Atomic::<u64>::fetch_update`: renamed to `try_update` for consistency
+   --> src/wasmtime_lib_host.rs:262:14
+    |
+262 |             .fetch_update(Ordering::SeqCst, Ordering::SeqCst, |current| {
+    |              ^^^^^^^^^^^^
+    |
+help: replace the use of the deprecated method
+    |
+262 -             .fetch_update(Ordering::SeqCst, Ordering::SeqCst, |current| {
+262 +             .try_update(Ordering::SeqCst, Ordering::SeqCst, |current| {
+    |
+
+warning: use of deprecated method `std::sync::atomic::Atomic::<u32>::fetch_update`: renamed to `try_update` for consistency
+   --> src/wasmtime_lib_host.rs:577:14
+    |
+577 |             .fetch_update(Ordering::SeqCst, Ordering::SeqCst, |current| {
+    |              ^^^^^^^^^^^^
+    |
+help: replace the use of the deprecated method
+    |
+577 -             .fetch_update(Ordering::SeqCst, Ordering::SeqCst, |current| {
+577 +             .try_update(Ordering::SeqCst, Ordering::SeqCst, |current| {
+    |
+
+warning: unused variable: `operand_ty`
+     --> src/core/codegen.rs:20112:21
+      |
+20112 |                 let operand_ty = operation_ty
+      |                     ^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_operand_ty`
+      |
+      = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning[E0133]: dereference of raw pointer is unsafe and requires unsafe block
+   --> src/../research/profiles/resident/src/wasmtime_libuv_runner.rs:108:24
+    |
+108 |     let context = &mut *(get_data(async_handle) as *mut UvContext);
+    |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ dereference of raw pointer
+    |
+    = note: raw pointers may be null, dangling or unaligned; they can violate aliasing rules and cause data races: all of these are undefined behavior
+note: an unsafe function restricts its caller, but its body is safe by default
+   --> src/../research/profiles/resident/src/wasmtime_libuv_runner.rs:106:1
+    |
+106 | unsafe extern "C" fn dispatch(async_handle: *mut c_void) {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+    = note: `#[warn(unsafe_op_in_unsafe_fn)]` (part of `#[warn(rust_2024_compatibility)]`) on by default
+
+warning[E0133]: call to unsafe function is unsafe and requires unsafe block
+   --> src/../research/profiles/resident/src/wasmtime_libuv_runner.rs:108:26
+    |
+108 |     let context = &mut *(get_data(async_handle) as *mut UvContext);
+    |                          ^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning[E0133]: call to unsafe function is unsafe and requires unsafe block
+   --> src/../research/profiles/resident/src/wasmtime_libuv_runner.rs:132:17
+    |
+132 |                 (context.api.stop)(context.loop_address as *mut c_void);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning[E0133]: call to unsafe function is unsafe and requires unsafe block
+   --> src/../research/profiles/resident/src/wasmtime_libuv_runner.rs:137:17
+    |
+137 |                 (context.api.stop)(context.loop_address as *mut c_void);
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning[E0133]: call to unsafe function `wasmtime_libuv_runner::load_uv::dlopen` is unsafe and requires unsafe block
+   --> src/../research/profiles/resident/src/wasmtime_libuv_runner.rs:356:19
+    |
+356 |         library = dlopen(name.as_ptr(), RTLD_NOW);
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+note: an unsafe function restricts its caller, but its body is safe by default
+   --> src/../research/profiles/resident/src/wasmtime_libuv_runner.rs:337:1
+    |
+337 | unsafe fn load_uv() -> Result<(*mut c_void, UvApi, String), WasmtimeLibuvRunnerError> {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning[E0133]: call to unsafe function `wasmtime_libuv_runner::load_uv::symbol` is unsafe and requires unsafe block
+   --> src/../research/profiles/resident/src/wasmtime_libuv_runner.rs:380:13
+    |
+380 | /             symbol(
+381 | |                 library,
+382 | |                 CStr::from_bytes_with_nul(concat!($name, "\0").as_bytes())
+383 | |                     .expect("static nul-terminated symbol"),
+384 | |             )?
+    | |_____________^ call to unsafe function
+...
+390 |               loop_size: sym!("uv_loop_size"),
+    |                          -------------------- in this macro invocation
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+    = note: this warning originates in the macro `sym` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+warning[E0133]: call to unsafe function `wasmtime_libuv_runner::load_uv::symbol` is unsafe and requires unsafe block
+   --> src/../research/profiles/resident/src/wasmtime_libuv_runner.rs:380:13
+    |
+380 | /             symbol(
+381 | |                 library,
+382 | |                 CStr::from_bytes_with_nul(concat!($name, "\0").as_bytes())
+383 | |                     .expect("static nul-terminated symbol"),
+384 | |             )?
+    | |_____________^ call to unsafe function
+...
+391 |               handle_size: sym!("uv_handle_size"),
+    |                            ---------------------- in this macro invocation
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+    = note: this warning originates in the macro `sym` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+warning[E0133]: call to unsafe function `wasmtime_libuv_runner::load_uv::symbol` is unsafe and requires unsafe block
+   --> src/../research/profiles/resident/src/wasmtime_libuv_runner.rs:380:13
+    |
+380 | /             symbol(
+381 | |                 library,
+382 | |                 CStr::from_bytes_with_nul(concat!($name, "\0").as_bytes())
+383 | |                     .expect("static nul-terminated symbol"),
+384 | |             )?
+    | |_____________^ call to unsafe function
+...
+392 |               loop_init: sym!("uv_loop_init"),
+    |                          -------------------- in this macro invocation
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+    = note: this warning originates in the macro `sym` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+warning[E0133]: call to unsafe function `wasmtime_libuv_runner::load_uv::symbol` is unsafe and requires unsafe block
+   --> src/../research/profiles/resident/src/wasmtime_libuv_runner.rs:380:13
+    |
+380 | /             symbol(
+381 | |                 library,
+382 | |                 CStr::from_bytes_with_nul(concat!($name, "\0").as_bytes())
+383 | |                     .expect("static nul-terminated symbol"),
+384 | |             )?
+    | |_____________^ call to unsafe function
+...
+393 |               loop_close: sym!("uv_loop_close"),
+    |                           --------------------- in this macro invocation
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+    = note: this warning originates in the macro `sym` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+warning[E0133]: call to unsafe function `wasmtime_libuv_runner::load_uv::symbol` is unsafe and requires unsafe block
+   --> src/../research/profiles/resident/src/wasmtime_libuv_runner.rs:380:13
+    |
+380 | /             symbol(
+381 | |                 library,
+382 | |                 CStr::from_bytes_with_nul(concat!($name, "\0").as_bytes())
+383 | |                     .expect("static nul-terminated symbol"),
+384 | |             )?
+    | |_____________^ call to unsafe function
+...
+394 |               run: sym!("uv_run"),
+    |                    -------------- in this macro invocation
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+    = note: this warning originates in the macro `sym` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+warning[E0133]: call to unsafe function `wasmtime_libuv_runner::load_uv::symbol` is unsafe and requires unsafe block
+   --> src/../research/profiles/resident/src/wasmtime_libuv_runner.rs:380:13
+    |
+380 | /             symbol(
+381 | |                 library,
+382 | |                 CStr::from_bytes_with_nul(concat!($name, "\0").as_bytes())
+383 | |                     .expect("static nul-terminated symbol"),
+384 | |             )?
+    | |_____________^ call to unsafe function
+...
+395 |               stop: sym!("uv_stop"),
+    |                     --------------- in this macro invocation
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+    = note: this warning originates in the macro `sym` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+warning[E0133]: call to unsafe function `wasmtime_libuv_runner::load_uv::symbol` is unsafe and requires unsafe block
+   --> src/../research/profiles/resident/src/wasmtime_libuv_runner.rs:380:13
+    |
+380 | /             symbol(
+381 | |                 library,
+382 | |                 CStr::from_bytes_with_nul(concat!($name, "\0").as_bytes())
+383 | |                     .expect("static nul-terminated symbol"),
+384 | |             )?
+    | |_____________^ call to unsafe function
+...
+396 |               async_init: sym!("uv_async_init"),
+    |                           --------------------- in this macro invocation
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+    = note: this warning originates in the macro `sym` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+warning[E0133]: call to unsafe function `wasmtime_libuv_runner::load_uv::symbol` is unsafe and requires unsafe block
+   --> src/../research/profiles/resident/src/wasmtime_libuv_runner.rs:380:13
+    |
+380 | /             symbol(
+381 | |                 library,
+382 | |                 CStr::from_bytes_with_nul(concat!($name, "\0").as_bytes())
+383 | |                     .expect("static nul-terminated symbol"),
+384 | |             )?
+    | |_____________^ call to unsafe function
+...
+397 |               async_send: sym!("uv_async_send"),
+    |                           --------------------- in this macro invocation
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+    = note: this warning originates in the macro `sym` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+warning[E0133]: call to unsafe function `wasmtime_libuv_runner::load_uv::symbol` is unsafe and requires unsafe block
+   --> src/../research/profiles/resident/src/wasmtime_libuv_runner.rs:380:13
+    |
+380 | /             symbol(
+381 | |                 library,
+382 | |                 CStr::from_bytes_with_nul(concat!($name, "\0").as_bytes())
+383 | |                     .expect("static nul-terminated symbol"),
+384 | |             )?
+    | |_____________^ call to unsafe function
+...
+398 |               close: sym!("uv_close"),
+    |                      ---------------- in this macro invocation
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+    = note: this warning originates in the macro `sym` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+warning[E0133]: call to unsafe function `wasmtime_libuv_runner::load_uv::symbol` is unsafe and requires unsafe block
+   --> src/../research/profiles/resident/src/wasmtime_libuv_runner.rs:380:13
+    |
+380 | /             symbol(
+381 | |                 library,
+382 | |                 CStr::from_bytes_with_nul(concat!($name, "\0").as_bytes())
+383 | |                     .expect("static nul-terminated symbol"),
+384 | |             )?
+    | |_____________^ call to unsafe function
+...
+399 |               get_data: sym!("uv_handle_get_data"),
+    |                         -------------------------- in this macro invocation
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+    = note: this warning originates in the macro `sym` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+warning[E0133]: call to unsafe function `wasmtime_libuv_runner::load_uv::symbol` is unsafe and requires unsafe block
+   --> src/../research/profiles/resident/src/wasmtime_libuv_runner.rs:380:13
+    |
+380 | /             symbol(
+381 | |                 library,
+382 | |                 CStr::from_bytes_with_nul(concat!($name, "\0").as_bytes())
+383 | |                     .expect("static nul-terminated symbol"),
+384 | |             )?
+    | |_____________^ call to unsafe function
+...
+400 |               set_data: sym!("uv_handle_set_data"),
+    |                         -------------------------- in this macro invocation
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+    = note: this warning originates in the macro `sym` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+warning[E0133]: call to unsafe function `wasmtime_libuv_runner::load_uv::symbol::dlsym` is unsafe and requires unsafe block
+   --> src/../research/profiles/resident/src/wasmtime_libuv_runner.rs:372:23
+    |
+372 |         let address = dlsym(library, name.as_ptr());
+    |                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+note: an unsafe function restricts its caller, but its body is safe by default
+   --> src/../research/profiles/resident/src/wasmtime_libuv_runner.rs:365:5
+    |
+365 | /     unsafe fn symbol<T: Copy>(
+366 | |         library: *mut c_void,
+367 | |         name: &CStr,
+368 | |     ) -> Result<T, WasmtimeLibuvRunnerError> {
+    | |____________________________________________^
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning[E0133]: call to unsafe function `std::mem::transmute_copy` is unsafe and requires unsafe block
+   --> src/../research/profiles/resident/src/wasmtime_libuv_runner.rs:376:12
+    |
+376 |         Ok(std::mem::transmute_copy(&address))
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ call to unsafe function
+    |
+    = note: consult the function's documentation for information on how to avoid undefined behavior
+    = note: for more information, see <https://doc.rust-lang.org/edition-guide/rust-2024/unsafe-op-in-unsafe-fn.html>
+
+warning: function `emit_managed_value_canonical_ingress_adapter` is never used
+    --> src/core/codegen.rs:6440:15
+     |
+6440 | pub(crate) fn emit_managed_value_canonical_ingress_adapter(
+     |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+     = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: struct `ManagedS3Program` is never constructed
+     --> src/core/codegen.rs:12564:8
+      |
+12564 | struct ManagedS3Program {
+      |        ^^^^^^^^^^^^^^^^
+
+warning: function `exact_s32_result` is never used
+     --> src/core/codegen.rs:12570:4
+      |
+12570 | fn exact_s32_result(ty: &Type) -> bool {
+      |    ^^^^^^^^^^^^^^^^
+
+warning: function `analyze_managed_s3_program` is never used
+     --> src/core/codegen.rs:12578:4
+      |
+12578 | fn analyze_managed_s3_program(
+      |    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `emit_managed_s3_checked_delta` is never used
+     --> src/core/codegen.rs:12748:4
+      |
+12748 | fn emit_managed_s3_checked_delta() -> Function {
+      |    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `emit_s3_status_to_result` is never used
+     --> src/core/codegen.rs:12764:4
+      |
+12764 | fn emit_s3_status_to_result(function: &mut Function, payload: u32, tag: u32) {
+      |    ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `emit_managed_s3_run` is never used
+     --> src/core/codegen.rs:12775:4
+      |
+12775 | fn emit_managed_s3_run(program: &ManagedS3Program) -> Function {
+      |    ^^^^^^^^^^^^^^^^^^^
+
+warning: function `acquire_native_catalog_root` is never used
+  --> src/lib_resolver.rs:72:15
+   |
+72 | pub(crate) fn acquire_native_catalog_root(
+   |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `acquire_native_cache_root` is never used
+   --> src/lib_resolver.rs:117:15
+    |
+117 | pub(crate) fn acquire_native_cache_root(
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `acquire_native_root_with_ensure` is never used
+   --> src/lib_resolver.rs:155:15
+    |
+155 | pub(crate) fn acquire_native_root_with_ensure<F>(
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `native_namespace_receipt` is never used
+   --> src/lib_resolver.rs:175:4
+    |
+175 | fn native_namespace_receipt(cache:&Path,namespace:&str)->PathBuf {
+    |    ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `native_metadata_parent` is never used
+   --> src/lib_resolver.rs:178:4
+    |
+178 | fn native_metadata_parent(base:&Path,file:&Path,allow_missing:bool)->Result<()> {
+    |    ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `native_real_base` is never used
+   --> src/lib_resolver.rs:194:4
+    |
+194 | fn native_real_base(path:&Path)->Result<()> {
+    |    ^^^^^^^^^^^^^^^^
+
+warning: function `native_real_relative_root` is never used
+   --> src/lib_resolver.rs:198:4
+    |
+198 | fn native_real_relative_root(base:&Path,relative:&Path)->Result<PathBuf> {
+    |    ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `native_read_file` is never used
+   --> src/lib_resolver.rs:209:4
+    |
+209 | fn native_read_file(path:&Path,max:usize)->Result<Vec<u8>> {
+    |    ^^^^^^^^^^^^^^^^
+
+warning: function `native_wit_namespace_present` is never used
+   --> src/lib_resolver.rs:220:4
+    |
+220 | fn native_wit_namespace_present(wit:&[u8],namespace:&str)->Result<bool> {
+    |    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: struct `NativeCanonicalPackageApp` is never constructed
+  --> src/lib_tool_rust_consumer_sdk/canonical_app.rs:19:19
+   |
+19 | pub(crate) struct NativeCanonicalPackageApp {
+   |                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `prepare_native_canonical_package_app` is never used
+   --> src/lib_tool_rust_consumer_sdk/canonical_app.rs:125:15
+    |
+125 | pub(crate) fn prepare_native_canonical_package_app(
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `native_canonical_transfer_rustc_args` is never used
+   --> src/lib_tool_rust_consumer_sdk/canonical_app.rs:141:15
+    |
+141 | pub(crate) fn native_canonical_transfer_rustc_args(source_directory: &std::path::Path) -> Result<Vec<String>> {
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `prepare_native_canonical_value_app` is never used
+   --> src/lib_tool_rust_consumer_sdk/canonical_app.rs:154:15
+    |
+154 | pub(crate) fn prepare_native_canonical_value_app(
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: method `lane` is never used
+  --> src/lib_tool_rust_consumer_sdk/native_invoke.rs:14:8
+   |
+12 | impl Scalar {
+   | ----------- method in this implementation
+13 |     fn layout(&self)->(u32,u32) {let n=match self{Self::Bool|Self::S8|Self::U8|Self::Enum{..}=>1,Self::S16|Self::...
+14 |     fn lane(&self)->&'static str {match self{Self::S64|Self::U64=>"i64",Self::F32=>"f32",Self::F64=>"f64",_=>"i32"}}
+   |        ^^^^
+
+warning: method `result_lanes` is never used
+  --> src/lib_tool_rust_consumer_sdk/native_invoke.rs:34:8
+   |
+32 | impl Export {
+   | ----------- method in this implementation
+33 |     fn owned(&self)->bool {!matches!(self.result.kind,Kind::Unit|Kind::Scalar{..})}
+34 |     fn result_lanes(&self)->Vec<String> {match &self.result.kind {Kind::Unit=>vec![],Kind::Scalar{scalar}=>vec![scalar.lane().into()...
+   |        ^^^^^^^^^^^^
+
+warning: struct `ValueReader` is never constructed
+  --> src/lib_tool_rust_consumer_sdk/native_invoke.rs:65:8
+   |
+65 | struct ValueReader;
+   |        ^^^^^^^^^^^
+
+warning: methods `read`, `word`, and `value` are never used
+  --> src/lib_tool_rust_consumer_sdk/native_invoke.rs:67:8
+   |
+66 | impl ValueReader {
+   | ---------------- methods in this implementation
+67 |     fn read<'a>(&mut self,m:&'a[u8],p:usize,n:usize)->Result<&'a[u8]> {let end=p.checked_add(n).ok_or_else(||bad("Native result poin...
+   |        ^^^^
+68 |     fn word(&mut self,m:&[u8],p:usize)->Result<u32>{Ok(u32::from_le_bytes(self.read(m,p,4)?.try_into().unwrap()))}
+   |        ^^^^
+69 |     fn value(&mut self,n:&Node,m:&[u8],p:usize)->Result<Value> {
+   |        ^^^^^
+
+warning: function `decode_scalar` is never used
+  --> src/lib_tool_rust_consumer_sdk/native_invoke.rs:82:4
+   |
+82 | fn decode_scalar(s:&Scalar,b:&[u8])->Result<Value> {Ok(match s {
+   |    ^^^^^^^^^^^^^
+
+warning: enum `Input` is never used
+  --> src/lib_tool_rust_consumer_sdk/native_invoke.rs:90:6
+   |
+90 | enum Input {I32(i32),I64(i64),F32(u32),F64(u64)}
+   |      ^^^^^
+
+warning: function `scalar_output` is never used
+  --> src/lib_tool_rust_consumer_sdk/native_invoke.rs:91:4
+   |
+91 | fn scalar_output(s:&Scalar,lane:Input)->Result<Value> {
+   |    ^^^^^^^^^^^^^
+
+warning: function `input` is never used
+  --> src/lib_tool_rust_consumer_sdk/native_invoke.rs:98:4
+   |
+98 | fn input(s:&Scalar,v:&Value)->Result<Input> {
+   |    ^^^^^
+
+warning: struct `Prepared` is never constructed
+   --> src/lib_tool_rust_consumer_sdk/native_invoke.rs:112:8
+    |
+112 | struct Prepared<E,M> {engine:E,provider:M,app:M,view:M}
+    |        ^^^^^^^^
+
+warning: fields `app`, `provider`, and `view` are never read
+   --> src/lib_tool_rust_consumer_sdk/native_invoke.rs:114:25
+    |
+113 | pub struct NativeLogicalApp {
+    |            ---------------- fields in this struct
+114 |     exports:Vec<Export>,app:Vec<u8>,provider:Vec<u8>,view:Vec<u8>,
+    |                         ^^^         ^^^^^^^^         ^^^^
+
+warning: method `arguments` is never used
+   --> src/lib_tool_rust_consumer_sdk/native_invoke.rs:150:8
+    |
+119 | impl NativeLogicalApp {
+    | --------------------- method in this implementation
+...
+150 |     fn arguments(&self,name:&str,args:&[Value])->Result<(&Export,Vec<Input>)>{let e=self.exports.iter().find(|e|e.name==name).ok_or...
+    |        ^^^^^^^^^
+
+warning: field `payload_lanes` is never read
+  --> src/lib_tool_rust_consumer_sdk/value_codec.rs:57:9
+   |
+48 | pub(super) struct CheckedRecordCodec {
+   |                   ------------------ field in this struct
+...
+57 |     pub payload_lanes: usize,
+   |         ^^^^^^^^^^^^^
+
+warning: method `source` is never used
+  --> src/lib_tool_rust_consumer_sdk/value_codec.rs:61:12
+   |
+60 | impl CheckedRecordCodec {
+   | ----------------------- method in this implementation
+61 |     pub fn source(&self) -> String {
+   |            ^^^^^^
+
+warning: fields `source`, `constructor_fallible`, and `bindings` are never read
+   --> src/lib_tool_rust_consumer_sdk/value_codec.rs:654:9
+    |
+653 | pub(super) struct CheckedOwnerCodec {
+    |                   ----------------- fields in this struct
+654 |     pub source: String,
+    |         ^^^^^^
+...
+664 |     pub constructor_fallible: bool,
+    |         ^^^^^^^^^^^^^^^^^^^^
+665 |     pub bindings: Vec<Binding>,
+    |         ^^^^^^^^
+
+warning: variant `Return` is never constructed
+  --> src/language/managed_lifetime.rs:27:5
+   |
+21 | pub(crate) enum SlotOrigin {
+   |                 ---------- variant in this enum
+...
+27 |     Return,
+   |     ^^^^^^
+   |
+   = note: `SlotOrigin` has derived impls for the traits `Clone` and `Debug`, but these are intentionally ignored during dead code analysis
+
+warning: variant `ProviderErr` is never constructed
+   --> src/language/managed_lifetime.rs:212:5
+    |
+207 | pub(crate) enum ExitKind {
+    |                 -------- variant in this enum
+...
+212 |     ProviderErr,
+    |     ^^^^^^^^^^^
+    |
+    = note: `ExitKind` has derived impls for the traits `Clone` and `Debug`, but these are intentionally ignored during dead code analysis
+
+warning: variant `FieldGet` is never constructed
+   --> src/language/managed_lifetime.rs:266:5
+    |
+223 | pub(crate) enum LifetimeOp {
+    |                 ---------- variant in this enum
+...
+266 |     FieldGet {
+    |     ^^^^^^^^
+    |
+    = note: `LifetimeOp` has derived impls for the traits `Clone` and `Debug`, but these are intentionally ignored during dead code analysis
+
+warning: method `with_operation` is never used
+   --> src/language/parser.rs:118:19
+    |
+ 61 | impl ExternalSymbolEnvironment {
+    | ------------------------------ method in this implementation
+...
+118 |     pub(crate) fn with_operation(
+    |                   ^^^^^^^^^^^^^^
+
+For more information about this error, try `rustc --explain E0133`.
+warning: `wasmc` (lib) generated 74 warnings (run `cargo fix --lib -p wasmc` to apply 14 suggestions)
+    Finished `dev` profile [unoptimized] target(s) in 12.12s

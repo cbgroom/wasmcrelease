@@ -1,0 +1,3 @@
+#!/bin/sh
+set -- "$@" --mvp-features --enable-mutable-globals --enable-sign-ext --enable-nontrapping-float-to-int --enable-bulk-memory --enable-multivalue --enable-reference-types --enable-multimemory --multi-memory-lowering
+exec /opt/homebrew/bin/wasm-opt "$@"
