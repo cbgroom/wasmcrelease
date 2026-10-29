@@ -1,0 +1,81 @@
+{
+  "schema": "wasmc.json023-e5-runtime-evidence/v1",
+  "status": "SCOPED_STANDALONE_WASM_PASS",
+  "source_commit": "7b8730f9052f4fe5df8b33d8b9e9b737dd2c530a",
+  "rustc": "1.99.0 (b940084d7 2026-09-28)",
+  "rust_edition": "2024",
+  "peer_id": "lgw_6b8e95dc7ad84c83bfe938ace469f7cf",
+  "route": "peer_direct",
+  "lock_sha256": "e5f4e53184cf1581a26a3cdc8b03032b44eaad84003e825c47377969f06b40f3",
+  "core_sha256": "29996c26ceef100880d7aa09fa7f6e39656cb618d1c750ea40cec8ebf3a7b2ba",
+  "core_bytes": 117566,
+  "component_sha256": "77717fdffbc75bf99194fe07d31bf88889a0b2b7a7156c60556e6192b95d7132",
+  "component_bytes": 127315,
+  "wasm_tools": "1.255.0",
+  "validation": "E5 built selected JSON alone; both binaries validate with wasm-tools. Exact Core copied and digest checked on Mac: Node, Bun and Deno exercise Unicode, malformed input, same-instance recovery and 20000 nested arrays. Exact Component copied and digest checked: Wasmtime49 runs 17825793-byte construction, ordered edits, typed reads, invalid input, new-input recovery and 20000-level compact/select.",
+  "first_failure": "Core harness initially assumed JavaScript insertion order instead of Rust sorted object keys; corrected comparison to JSON value semantics; original output retained. Mac tar introduced AppleDouble files on E5; exact compiler failure retained, seven temporary metadata files removed after terminal job, cached dependencies reused.",
+  "limitations": [
+    "Rust1.99.1 toolchain installation operation exec-0000000000000a43 remained running at last poll.",
+    "Standalone adjusted 34-package lock differs in graph/features from original full workspace; not Q0 or source provenance.",
+    "No generated official Root, installed SDK, ordinary WAsmC, real MCPGit production route, CI or formal release.",
+    "Public Core uses direct low-level ABI harness, not the published generated SDK."
+  ],
+  "files": [
+    {
+      "path": "offline-first-failure.log",
+      "sha256": "d07e50d0b74b64f1df5698c7d1ef846c4281336a06b5a8e466e7017ec4d935a3"
+    },
+    {
+      "path": "network-first-failure.log",
+      "sha256": "9b590a81f48ecfcce8b2867cc25895bc0ca6a179b78bfcac929bcf7df4d5db63"
+    },
+    {
+      "path": "reconciled-first-build-failure.log",
+      "sha256": "2dbd562935e185a252bf12b1572f0f67e8f449cbff1b28d60255f926c5d5121b"
+    },
+    {
+      "path": "stable-build-success.log",
+      "sha256": "49ec6307aa7048ec809064e2f9f0964a65b46107e1632466cf3e03b81c70eb7a"
+    },
+    {
+      "path": "vendor-copy-first-failure.log",
+      "sha256": "36c4802c461eadbb5d7e22c4961dfcd418902441dcfd4fb248ae5a16e9371417"
+    },
+    {
+      "path": "running-jobs.json",
+      "sha256": "aa6d49eb58b6d0b6bb44387cd051189c0fc45b1026fc725909399cc40bd7b5e9"
+    },
+    {
+      "path": "json023-core-test-20261029.mjs",
+      "sha256": "54122513ddd118865bc53cab54566ed771009f6a87689c4d650800e8ff049051"
+    },
+    {
+      "path": "json023-core-test-first-failure.log",
+      "sha256": "fcbed172a659df004e628ef430db5b9b6023c94e9bd20e22cbd9020355a01d00"
+    },
+    {
+      "path": "json023-core-node.log",
+      "sha256": "6cac69ca5193a9b4a701553748902fe5d6570511ec24bac566c4835133deb52f"
+    },
+    {
+      "path": "json023-core-bun.log",
+      "sha256": "5b58ee1e81ca2bb30d8cf47d05c08c9371575d781d29acac879f1254239dc2f7"
+    },
+    {
+      "path": "json023-core-deno.log",
+      "sha256": "cfcac3187872f993df0090401bba29f65f1f0594974d4dc4e4ea2ec8f709e481"
+    },
+    {
+      "path": "json023-component-host-run.log",
+      "sha256": "0bfe74d56d364ee2b9b28d6fa53d9172809194a1c80fb1dacc8af71ad2be902e"
+    },
+    {
+      "path": "component-host.rs",
+      "sha256": "1cc8b6d6e749dd7b8dd5d31deb339d80285ddd7c435ee80eb24af52de2260a7f"
+    },
+    {
+      "path": "component-host-Cargo.toml",
+      "sha256": "2a3f5b943ce349e2e3ec23aba4c12bf3e83fa8aba8dad04f2e8610036b40b130"
+    }
+  ]
+}
