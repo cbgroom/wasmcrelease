@@ -1,0 +1,23 @@
+{
+  "results": [
+    {
+      "name": "mixed-checkout",
+      "command": "node scripts/test-current-product-mixed-v1.mjs",
+      "exit_status": 1,
+      "sha256": "cc264dcd2102c9fd2e4e9c730df460b23b30a2199dd7f61a18ceb1fd37d7c4de"
+    },
+    {
+      "name": "current-product-missing-args",
+      "command": "node scripts/test-current-product-v3.mjs",
+      "exit_status": 1,
+      "sha256": "47a8893acb23ed28bf26e3155e0df6f7ed4ef9d6fd211d0730431c197d8e7398"
+    },
+    {
+      "name": "index-regression",
+      "command": "node --test scripts/test-lib-current-index-v2.mjs",
+      "exit_status": 0,
+      "sha256": "cf0c5e0917512d23f0045345ae9552dff680d6c9f978e533bb992f21170e4d14"
+    }
+  ],
+  "interpretation": "mixed check assumes a constructed mixed product in repository root; current-product-v3 requires three explicit arguments; neither invocation constitutes a candidate regression failure. Index fixture tests passed."
+}

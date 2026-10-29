@@ -1,0 +1,18 @@
+node:fs:2153
+  const stats = binding.lstat(
+                        ^
+
+Error: ENOENT: no such file or directory, lstat '/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-lib-memory-release-v031/catalog/current-mixed-license-policy-v1.json'
+    at lstatSync (node:fs:2153:25)
+    at file:///Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-lib-memory-release-v031/scripts/current-lib-release-v3.mjs:266:78
+    at file:///Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-lib-memory-release-v031/scripts/test-current-product-mixed-v1.mjs:8:68
+    at ModuleJob.run (node:internal/modules/esm/module_job:569:25)
+    at async node:internal/modules/esm/loader:650:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:105:5) {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'lstat',
+  path: '/Users/youxianshi/code/.worktrees/wasmcrelease/WS-20261026-lib-memory-release-v031/catalog/current-mixed-license-policy-v1.json'
+}
+
+Node.js v26.12.1
