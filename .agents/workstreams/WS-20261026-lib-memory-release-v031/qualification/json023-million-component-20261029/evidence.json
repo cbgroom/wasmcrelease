@@ -1,0 +1,24 @@
+{
+  "status": "CANDIDATE_COMPONENT_SCALE_PASS_NOT_RELEASE",
+  "candidate_commit": "a73f35ee19dd59db7f26e775bc9107b5543c225b",
+  "root_manifest_sha256": "e4828ea55693c415203bc996e25af6a3c2a8e974a4c6dd05d35799fe31ff4c4d",
+  "component_sha256": "cf8a5283e5aa8f75ce2d833c1d5299cb0c4364e444897a9d235a863c0c3df605",
+  "source": "git archive of exact candidate commit; generated Rust Component SDK from same archive; Wasmtime; Rust 2024 host",
+  "checks": [
+    "100000 fields and 10000 ordered edits, typed reads, error result and same-instance new input",
+    "1000000 fields and 100000 ordered edits, 18100001 output bytes, typed reads, error result and same-instance new input"
+  ],
+  "limitations": [
+    "Local Component run; no production Host or route, no end-to-end WAsmC test at this scale",
+    "Failed batch produced an error; original input bytes were unchanged in caller and still read successfully; no Host transaction claim",
+    "No throughput, peak memory, concurrent capacity or universal unboundedness claim",
+    "Candidate not main-integrated or formally released"
+  ],
+  "files": {
+    "million.rs": "96abaf7257f261a9a4aa379466a119c73fc01c9f951b2a76c9baa3a602f1354b",
+    "million.log": "544810b99aec79c3789d26bb076f252cfaafe1fb5837424a20d77239b848e2f0",
+    "hundred-thousand.rs": "25ae8af26d23cb1489c312666631a884c172f464c7ffa05637a183f7c36565e3",
+    "Cargo.lock": "d7e192de0c40a18c5b045f740741023872ef347681452195240c401f6d2a85bd",
+    "hundred-thousand.log": "807c7260f8e34af4a6dbe05093231886faf613f2de4d3cc2256231c935ea0ad7"
+  }
+}
